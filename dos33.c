@@ -33,7 +33,7 @@ unsigned char dos33_file_type(int value) {
  
     unsigned char result;
    
-    switch(value){ 
+    switch(value&0x7f){ 
        case 0x0: result='T'; break;
        case 0x1: result='I'; break;
        case 0x2: result='A'; break;
@@ -159,13 +159,17 @@ catalog_loop:
     }
     catalog_track=buffer[CATALOG_NEXT_T];
     catalog_sector=buffer[CATALOG_NEXT_S];
-    if (catalog_sector!=0) goto catalog_loop;
+    if (catalog_sector!=0) {
+       catalog_file=0;
+       goto catalog_loop;
+    }
+   
     return -1;
 }
 
 int dos33_print_file_info(int fd,int catalog_tsf,unsigned char *buffer) {
 
-    int catalog_track,catalog_sector,catalog_file;
+    int catalog_track,catalog_sector,catalog_file,i;
     char temp_string[BUFSIZ];
    
     catalog_file=catalog_tsf>>16;
@@ -187,9 +191,16 @@ int dos33_print_file_info(int fd,int catalog_tsf,unsigned char *buffer) {
     printf("%.3i ",buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE+FILE_SIZE_L)]+
 	          (buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE+FILE_SIZE_H)]<<8));
      
+
+    strncpy(temp_string,dos33_filename_to_ascii(temp_string,
+		buffer+(CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE+FILE_NAME))),BUFSIZ);
+
+    for(i=0;i<strlen(temp_string);i++) {
+       if (temp_string[i]<0x20) printf("^%c",temp_string[i]+0x40);
+       else printf("%c",temp_string[i]);
+    }
    
-    printf("%s",dos33_filename_to_ascii(temp_string,
-		buffer+(CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE+FILE_NAME))));
+	
    
     printf("\n");
    
@@ -702,6 +713,154 @@ keep_deleting:
    return 0;
 }
 
+int dump_sector(unsigned char *buffer) {
+    int i,j;
+   
+    for(i=0;i<16;i++) {
+       printf("$%02X : ",i*16);
+       for(j=0;j<16;j++) 
+	  printf("%02X ",buffer[i*16+j]);
+       printf("\n");
+    }
+    return 0;
+}
+
+   
+
+
+int dos33_dump(int fd, unsigned char *buffer) {
+   
+    int num_tracks,i,j,catalog_t,catalog_s,file,ts_t,ts_s,ts_total,track,sector;
+    int deleted=0;
+    char temp_string[BUFSIZ];
+    unsigned char tslist[BYTES_PER_SECTOR];
+   
+    dos33_read_vtoc(fd,buffer);
+    
+    dump_sector(buffer);
+   
+    printf("\n\n");
+    printf("VTOC INFORMATION:\n");
+    catalog_t=buffer[VTOC_CATALOG_T];
+    catalog_s=buffer[VTOC_CATALOG_S];
+    printf("\tFirst Catalog = %02X/%02X\n",catalog_t,catalog_s);
+    printf("\tDOS RELEASE = 3.%i\n",buffer[VTOC_DOS_RELEASE]);
+    printf("\tDISK VOLUME = %i\n",buffer[VTOC_DISK_VOLUME]);
+    ts_total=buffer[VTOC_MAX_TS_PAIRS];
+    printf("\tT/S pairs that will fit in T/S List = %i\n",ts_total);
+	                          
+    printf("\tLast track where sectors were allocated = $%02X\n",
+	                          buffer[VTOC_LAST_ALLOC_T]);
+    printf("\tDirection of track allocation = %i\n",
+	                          buffer[VTOC_ALLOC_DIRECT]);
+   
+    num_tracks=buffer[VTOC_NUM_TRACKS];
+    printf("\tNumber of tracks per disk = %i\n",num_tracks);
+    printf("\tNumber of sectors per track = %i\n",
+	                          buffer[VTOC_S_PER_TRACK]);
+    printf("\tNumber of bytes per sector = %i\n",
+	        (buffer[VTOC_BYTES_PER_SH]<<8)+buffer[VTOC_BYTES_PER_SL]);
+    
+    printf("\nFree sector bitmap:\n");
+    printf("\tTrack  FEDCBA98 76543210\n");
+    for(i=0;i<num_tracks;i++) {
+       printf("\t $%02X:  ",i);
+       for(j=0;j<8;j++) { 
+	  if ((buffer[VTOC_FREE_BITMAPS+(i*4)]<<j)&0x80) printf("."); 
+          else printf("U");
+       }
+       printf(" ");
+       for(j=0;j<8;j++) { 
+	  if ((buffer[VTOC_FREE_BITMAPS+(i*4)+1]<<j)&0x80) printf("."); 
+          else printf("U");
+       }
+       
+       printf("\n");
+    }
+
+repeat_catalog:
+   
+    printf("\nCatalog Sector $%02X/$%02x\n",catalog_t,catalog_s);
+    lseek(fd,DISK_OFFSET(catalog_t,catalog_s),SEEK_SET);
+    read(fd,buffer,BYTES_PER_SECTOR);
+
+    dump_sector(buffer);    
+
+   
+    for(file=0;file<7;file++) {
+       printf("\n\n");	
+
+       ts_t=buffer[(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_TS_LIST_T))];
+       ts_s=buffer[(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_TS_LIST_S))];
+
+       printf("%i+$%02X/$%02X - ",file,catalog_t,catalog_s);
+       deleted=0;
+       
+       if (ts_t==0xff) {
+          printf("**DELETED** ");
+          deleted=1;
+	  ts_t=buffer[(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_NAME+0x1e))];
+       }
+   
+       if (ts_t==0x00) {
+          printf("UNUSED!\n");
+          goto continue_dump;
+       }
+   
+       strncpy(temp_string,dos33_filename_to_ascii(temp_string,
+		buffer+(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_NAME))),BUFSIZ);
+
+       for(i=0;i<strlen(temp_string);i++) {
+          if (temp_string[i]<0x20) printf("^%c",temp_string[i]+0x40);
+          else printf("%c",temp_string[i]);
+       }
+       printf("\n");
+       printf("\tLocked = %s\n",
+	    buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE)+FILE_TYPE]>0x7f?
+	   "YES":"NO");
+       printf("\tType = %c\n", 
+           dos33_file_type(buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE)+FILE_TYPE]));
+       printf("\tSize in sectors = %i\n",
+                   buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_SIZE_L)]+
+	          (buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_SIZE_H)]<<8));
+repeat_tsl:
+       printf("\tT/S List $%02X/$%02X:\n",ts_t,ts_s);
+       if (deleted) goto continue_dump;
+       lseek(fd,DISK_OFFSET(ts_t,ts_s),SEEK_SET);
+       read(fd,&tslist,BYTES_PER_SECTOR);
+
+       for(i=0;i<ts_total;i++) {
+          track=tslist[TSL_LIST+(i*TSL_ENTRY_SIZE)];
+          sector=tslist[TSL_LIST+(i*TSL_ENTRY_SIZE)+1];
+          if ((track==0) && (sector==0)) printf(".");
+          else printf("\n\t\t%02X/%02X",track,sector);
+       }
+       ts_t=tslist[TSL_NEXT_TRACK];
+       ts_s=tslist[TSL_NEXT_SECTOR];
+   
+       if (!((ts_s==0) && (ts_t==0))) goto repeat_tsl;
+continue_dump:
+    }
+    
+    catalog_t=buffer[CATALOG_NEXT_T];
+    catalog_s=buffer[CATALOG_NEXT_S];
+   
+    if (catalog_s!=0) {
+       file=0;
+       goto repeat_catalog;
+    }
+   
+	   
+
+   
+	
+   
+    printf("\n");
+    
+   
+    return 0;
+}
+
 
 
 int display_help(char *name) {
@@ -733,6 +892,7 @@ int display_help(char *name) {
 #define COMMAND_VERIFY  13
 #define COMMAND_RENAME  14
 #define COMMAND_COPY    15
+#define COMMAND_DUMP    16
 
 int main(int argc, char **argv) {
    
@@ -801,6 +961,9 @@ int main(int argc, char **argv) {
     else if (!strncmp(temp_string,"COPY",4)) {
        command=COMMAND_COPY;
     }
+    else if (!strncmp(temp_string,"DUMP",4)) {
+       command=COMMAND_DUMP;
+    }	
     else {
        display_help(argv[0]);
        goto exit_program;
@@ -931,44 +1094,15 @@ int main(int argc, char **argv) {
      case COMMAND_VERIFY:
      case COMMAND_RENAME:
      case COMMAND_COPY:
+     case COMMAND_DUMP:
+          printf("Dumping %s!\n",argv[1]);
+          dos33_dump(dos_fd,scratch_sector);
+          break;
      default:
        printf("Sorry, unsupported command\n");
        goto exit_and_close;
     }
-#if 0   
-   
-    
 
-    type=argv[3][0];
- 
-    if (type<'a') type+=0x20;
-    if ((type!='a') && (type!='b') && (type!='t')) {
-       printf("Error! Type must be A, B, or T!\n");
-       exit(2);
-    }
-   
-    printf("Adding \"%s\" to image \"%s\" type %c\n\n",
-	   filename,image,type);
-   
-    
-    if (dos33_check_file_exists(dos_fd,filename)) {
-       char temp_input[BUFSIZ];
-       printf("Error! File %s already exists on %s!\n",filename,image);
-       printf("Overwrite? (y/n)");
-       scanf("%s",temp_input);
-       if (temp_input[0]=='y') {
-          dos33_delete_file(dos_fd,filename);
-	  printf("Deleting old file %s\n",filename);
-	  exit(5);
-       }
-       else {
-	  exit(5);
-       }
-    }
-
-    dos33_add_file(dos_fd,filename,file_size,type);
-#endif
-   
    
 exit_and_close:
     close(dos_fd);
