@@ -301,6 +301,8 @@ int dos33_allocate_sector(int fd) {
        /* We can use to avoid fragmentation possibly */
     start_track=buffer[VTOC_LAST_ALLOC_T]%TRACKS_PER_DISK;
     track_dir=buffer[VTOC_ALLOC_DIRECT];
+  
+    if (track_dir==255) track_dir=-1;
    
     if ((track_dir!=1) && (track_dir!=-1))
        printf("ERROR!  Invalid track dir %i\n",track_dir);
