@@ -1,0 +1,2 @@
+21 June 2003
++ Fix error where we could allocate a used sector!  ARGH!

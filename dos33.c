@@ -250,6 +250,8 @@ int find_first_one(unsigned char byte) {
  
    int i=0;
    
+   if (byte==0) return -1;
+   
    while((byte& (0x1<<i))==0) {
        i++;
    }
@@ -313,7 +315,7 @@ int dos33_allocate_sector(int fd) {
 
     do {
        
-       for(byte=0;byte<2;byte++) {
+       for(byte=1;byte>-1;byte--) {
 	  
           bitmap[byte]=buffer[VTOC_FREE_BITMAPS+(i*4)+byte];
           if (bitmap[byte]!=0x00) {
@@ -321,7 +323,7 @@ int dos33_allocate_sector(int fd) {
 	     found_track=i;
 	        /* clear bit indicating in use */
 	     buffer[VTOC_FREE_BITMAPS+(i*4)+byte]&=~(0x1<<found_sector);
-	     found_sector+=(8*byte);
+	     found_sector+=(8*(1-byte));
 	     goto found_one;
 	  }
        } 
