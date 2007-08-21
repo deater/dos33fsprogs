@@ -843,7 +843,7 @@ repeat_tsl:
        ts_s=tslist[TSL_NEXT_SECTOR];
    
        if (!((ts_s==0) && (ts_t==0))) goto repeat_tsl;
-continue_dump:
+continue_dump:;
     }
     
     catalog_t=buffer[CATALOG_NEXT_T];

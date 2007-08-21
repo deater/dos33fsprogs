@@ -1,0 +1,24 @@
+1 May 2003
+
+RELEASE 0.0.2
+
+1 June 2003
+
+RELEASE 0.0.4
+
+21 June 2003
++ Fix error where we could allocate a used sector!  ARGH!
+
+RELEASE 0.0.5
+
+18 July 2004
++ Minor bug fix
+
+RELEASE 0.0.6
+
+19 August 2007
++ Fix so compiles with newish gcc
++ Update asoft_detoken to match documentation found online
++ Create tokenize_asoft
+
+RELEASE 0.0.7

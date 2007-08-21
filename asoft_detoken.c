@@ -22,130 +22,36 @@ char applesoft_tokens[][8]={
 /* F8 */ "","","","","","(","(","("
 };
 
-/*
-Integer Basic
+#if 0
+/* Integer Basic */
 
-         $03: :
-         $04: LOAD
-         $05: SAVE
-         $07: RUN
-         $09: DEL
-         $0A: ,
-         $0B: NEW
-         $0C: CLR
-         $0D: AUTO
-         $0F: MAN
-         $10: HIMEM:
-         $11: LOMEM:
-         $12: +
-         $13: -
-         $14: *
-         $15: /
-         $16: =
-         $17: #
-         $18: >=
-         $19: >
-         $1A: <=
-         $1B: <>
-         $1C: <
-         $1D:  AND
-         $1E:  OR
-         $1F:  MOD
-         $20: ^
-         $22: (
-         $23: ,
-         $24,
-         $25:  THEN
-         $26,
-         $27: ,
-         $28, $29: \"
-         $2A: (
-         $2D: (
-         $2E:  PEEK
-         $2F: RND
-         $30: SGN
-         $31: ABS
-         $32: PDL
-         $34: (
-         $35: +
-         $36: -
-         $37: NOT
-         $38: (
-         $39: =
-         $3A: #
-         $3B: LEN (
-         $3C: ASC (
-         $3D: SCRN (
-         $3E: ,
-         $3F:  (
-         $40: $
-         $42: (
-         $43,
-         $44: ,
-         $45,
-         $46,
-         $47: ;
-         $48,
-         $49: ,
-         $4A: ,
-         $4B: TEXT
-         $4C: GR
-         $4D: CALL
-         $4E,
-         $4F: DIM
-         $50: TAB
-         $51: END
-         $52,  $53,  $54: INPUT
-         $55: FOR
-         $56:  =
-         $57:  TO
-         $58:  STEP
-         $59: NEXT
-         $5A: ,
-         $5B: RETURN
-         $5C: GOSUB
-         $5D: REM
-         $5E: LET
-         $5F: GOTO
-         $60: IF
-         $61,
-         $62: PRINT
-         $63: PRINT
-         $64:    POKE
-         $65: ,
-         $66: COLOR=
-         $67: PLOT
-         $68: ,
-         $69: HLIN
-         $6A: ,
-         $6B:  AT
-         $6C: VLIN
-         $6D: ,
-         $6E:  AT
-         $6F: VTAB
-         $70,
-         $71:  =
-         $72: )
-         $74: LIST
-         $75: ,
-         $77: POP
-         $79: NO DSP
-         $7A: NO TRACE
-         $7B,
-         $7C: DSP
-         $7D: TRACE
-         $7E: PR #
-         $7F: IN #
-
-*/
+char integer_tokens[][8]={   
+/* 00 */ "","","",":","LOAD","SAVE","","RUN",
+/* 08 */ "","DEL",",","NEW","CLR","AUTO","","MAN",
+/* 10 */ "HIMEM:","LOMEM:","+","-","*","/","=","#",
+/* 18 */ ">=",">","<=","<>","<"," AND"," OR"," MOD",
+/* 20 */ "^","","(",",",""," THEN","",",",
+/* 28 */ "\"","\"","(","","","("," PEEK","RND",
+/* 30 */ "SGN","ABS","PDL","","(","+","-","NOT",
+/* 38 */ "(","=","LEN (","ASC (","SCRN (",","," (",
+/* 40 */ "$","(","",",","","",";",
+/* 48 */ "",",",",","TEXT","GR","CALL","","DIM",
+/* 50 */ "TAB","END","","","INPUT","FOR","=","TO",
+/* 58 */ " STEP","NEXT",",","RETURN","GOSUB","REM","LET","GOTO",
+/* 60 */ "IF","","PRINT","PRINT","   POKE",",","COLOR=","PLOT",
+/* 68 */ ",","HLIN",","," AT","VLIN",","," AT","VTAB",
+/* 70 */ "","=",")","","LIST",",","","POP",
+/* 78 */ "","NO DSP","NO TRACE","","DSP","TRACE","PR #","IN #"
+};
+#endif 
 		
 		
 int main(int argc, char **argv) {
    
    int ch1,i;
-   unsigned char size1,size2;
-   unsigned char line1,line2;
-   unsigned char eight,line_length;
+   int size1,size2;
+   int line1,line2;
+   int link1,link2,link;
    
    
        /* read size, first two bytes */
@@ -153,17 +59,24 @@ int main(int argc, char **argv) {
    size2=fgetc(stdin);
    
    while(!feof(stdin)) {
-  
+        
+      /* link points to the next line */
+      /* assumes asoft program starts at address $801 */
+      link1=fgetc(stdin);
+      link2=fgetc(stdin);
+      link=(link1<<8)|link2;
+      /* link==0 indicates EOF */
+      if (link==0) goto the_end;
       
-      line_length=fgetc(stdin);
-      eight=fgetc(stdin);   /* sometimes 8, sometimes 9? */
-      if (eight==0) goto the_end;
+      /* line number is little endian 16-bit value */
       line1=fgetc(stdin);
       line2=fgetc(stdin);
       if (feof(stdin)) goto the_end;
-      printf("%4d ",(((int)line2)<<8)+line1);
-	
+      printf("%4d ",((line2)<<8)+line1);
+      
+      /* repeat until EOL character (0) */
       while( (ch1=fgetc(stdin))!=0 ) {
+	     /* if > 0x80 it's a token */
 	  if (ch1>=0x80) {
 	     fputc(' ',stdout);
 	     for(i=0;i<strlen(applesoft_tokens[ch1-0x80]);i++) {
@@ -171,7 +84,11 @@ int main(int argc, char **argv) {
 	     }
 	     fputc(' ',stdout);
 	  }
-          else fputc(ch1,stdout);
+            /* otherwise it is an ascii char */
+	  else {
+	     fputc(ch1,stdout);
+	  }
+	 
       }
       printf("\n");
    }

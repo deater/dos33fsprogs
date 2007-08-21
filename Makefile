@@ -2,7 +2,7 @@ CC = gcc
 C_FLAGS = -O2 -Wall
 L_FLAGS =
 
-all:	dos33 asoft_detoken mkdos33fs make_b
+all:	dos33 asoft_detoken mkdos33fs make_b tokenize_asoft
 
 
 
@@ -12,7 +12,11 @@ asoft_detoken:		   asoft_detoken.o
 asoft_detoken.o:	   asoft_detoken.c
 			   $(CC) $(C_FLAGS) -c asoft_detoken.c
 			 
+tokenize_asoft:		   tokenize_asoft.o
+			   $(CC) $(L_FLAGS) -o tokenize_asoft tokenize_asoft.o
 			   
+tokenize_asoft.o:	   tokenize_asoft.c
+			   $(CC) $(C_FLAGS) -c tokenize_asoft.c
 
 dos33:	dos33.o
 		$(CC) $(L_FLAGS) -o dos33 dos33.o
@@ -35,7 +39,7 @@ mkdos33fs.o:	mkdos33fs.c dos33.h
 
 
 install:	
-		cp dos33 asoft_detoken mkdos33fs make_b /usr/local/bin
+		cp dos33 asoft_detoken mkdos33fs tokenize_asoft make_b /usr/local/bin
 
 clean:		
-		rm -f *~ *.o asoft_detoken dos33 make_b mkdos33fs
+		rm -f *~ *.o asoft_detoken dos33 make_b mkdos33fs tokenize_asoft
