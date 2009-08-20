@@ -22,3 +22,15 @@ RELEASE 0.0.6
 + Create tokenize_asoft
 
 RELEASE 0.0.7
+
+18 August 2009
++ Fix warnings on recent gcc.
++ Audit much of the extisting dos33 code.
+
+19 August 2009
++ Add integer basic detokenizer
++ Implement lock/unlock in dos33
++ Implement undelete in dos33
++ Implement rename in dos33
+
+RELEASE 0.0.8

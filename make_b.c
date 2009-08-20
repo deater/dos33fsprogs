@@ -4,6 +4,8 @@
 #include <fcntl.h>  /* open() */
 #include <unistd.h> /* close() */
 
+#include "version.h"
+
 int main(int argc, char **argv) {
    
     int in_fd,out_fd,offset;
@@ -14,7 +16,8 @@ int main(int argc, char **argv) {
     struct stat file_info;
    
     if (argc!=4) {
-       printf("Usage: %s in_file out_file offset\n\n",argv[0]);
+       printf("MAKE_B version %s\b",VERSION);
+       printf(" Usage: %s in_file out_file offset\n\n",argv[0]);
        printf("\tin_file  : input file\n");
        printf("\tout_file : output file\n");
        printf("\toffset   : offset which file should be loaded\n\n");

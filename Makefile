@@ -1,45 +1,59 @@
 CC = gcc
-C_FLAGS = -O2 -Wall
-L_FLAGS =
+CFLAGS = -O2 -Wall
+LFLAGS =
 
-all:	dos33 asoft_detoken mkdos33fs make_b tokenize_asoft
+all:	dos33 asoft_detoken mkdos33fs make_b tokenize_asoft \
+	dos33_text2ascii integer_detoken
 
 
 
 asoft_detoken:		   asoft_detoken.o
-			   $(CC) $(L_FLAGS) -o asoft_detoken asoft_detoken.o
+			   $(CC) $(LFLAGS) -o asoft_detoken asoft_detoken.o
 
 asoft_detoken.o:	   asoft_detoken.c
-			   $(CC) $(C_FLAGS) -c asoft_detoken.c
+			   $(CC) $(CFLAGS) -c asoft_detoken.c
+			   
+integer_detoken:	   integer_detoken.o
+			   $(CC) $(LFLAGS) -o integer_detoken integer_detoken.o
+
+integer_detoken.o:	   integer_detoken.c
+			   $(CC) $(CFLAGS) -c integer_detoken.c
 			 
 tokenize_asoft:		   tokenize_asoft.o
-			   $(CC) $(L_FLAGS) -o tokenize_asoft tokenize_asoft.o
+			   $(CC) $(LFLAGS) -o tokenize_asoft tokenize_asoft.o
 			   
 tokenize_asoft.o:	   tokenize_asoft.c
-			   $(CC) $(C_FLAGS) -c tokenize_asoft.c
+			   $(CC) $(CFLAGS) -c tokenize_asoft.c
 
 dos33:	dos33.o
-		$(CC) $(L_FLAGS) -o dos33 dos33.o
+		$(CC) $(LFLAGS) -o dos33 dos33.o
 		
 dos33.o:	dos33.c dos33.h
-		$(CC) $(C_FLAGS) -c dos33.c
-		
+		$(CC) $(CFLAGS) -c dos33.c
+
+dos33_text2ascii:     dos33_text2ascii.o
+		      $(CC) $(LFLGAS) -o dos33_text2ascii dos33_text2ascii.o
+		      
+dos33_text2ascii.o:   dos33_text2ascii.c
+		      $(CC) $(CFLAGS) -c dos33_text2ascii.c
+
 make_b:	make_b.o
-		$(CC) $(L_FLAGS) -o make_b make_b.o
+		$(CC) $(LFLAGS) -o make_b make_b.o
 		
 make_b.o:	make_b.c
-		$(CC) $(C_FLAGS) -c make_b.c
+		$(CC) $(CFLAGS) -c make_b.c
 		
 		
 mkdos33fs:	mkdos33fs.o
-		$(CC) $(L_FLAGS) -o mkdos33fs mkdos33fs.o
+		$(CC) $(LFLAGS) -o mkdos33fs mkdos33fs.o
 		
 mkdos33fs.o:	mkdos33fs.c dos33.h
-		$(CC) $(C_FLAGS) -c mkdos33fs.c
+		$(CC) $(CFLAGS) -c mkdos33fs.c
 
 
 install:	
-		cp dos33 asoft_detoken mkdos33fs tokenize_asoft make_b /usr/local/bin
+		cp dos33 asoft_detoken mkdos33fs tokenize_asoft make_b dos33_text2ascii.c integer_detoken /usr/local/bin
 
 clean:		
-		rm -f *~ *.o asoft_detoken dos33 make_b mkdos33fs tokenize_asoft
+		rm -f *~ *.o asoft_detoken dos33 make_b mkdos33fs tokenize_asoft dos33_text2ascii integer_detoken
+		cd tests && make clean

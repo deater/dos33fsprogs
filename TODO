@@ -1,8 +1,21 @@
-check lock before delete
 
++ Validate that apple filenames are valid in all cases
+
+FUSE driver
++ How to map permissions to file types?  LOCK=w
+
++ How to handle file sizes?
+  No special cases, just always multiples of 256?
+  Only truncate if in window?
+  
+  Enforce in writing "b" type that the fields are correct.
+  Generic Linux writes are of type "S".
+  Figure out how to represent in Linux the file types?
+  
 defrag utility
 test-suite
 
 test mkdosfs copy over DOS functionality
 
 find out why dos33 SAVE puts extra linefeed at end of basic prog?
+(turns out that's normal.  it is ignored)

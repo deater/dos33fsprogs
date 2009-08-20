@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h> /* strlen() */
+#include "version.h"
 
    /* Starting at 0x80 */
 char applesoft_tokens[][8]={

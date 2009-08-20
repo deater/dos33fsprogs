@@ -3,10 +3,9 @@
 #include <fcntl.h>  /* open() */
 #include <unistd.h> /* close() */
 #include <stdlib.h> /* strtol() */
+#include "version.h"
 
 #include "dos33.h"
-
-#define VERSION "0.0.1"
 
 void usage(char *binary,int help) {
 	          

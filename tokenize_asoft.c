@@ -2,6 +2,8 @@
 #include <string.h> /* strlen() */
 #include <stdlib.h> /* exit() */
 
+#include "version.h"
+
 /* TODO */
 /* match lowecase tokens as well as upper case ones */
 
@@ -38,29 +40,6 @@ char applesoft_tokens[][8]={
 /* F0 */ "","","","","","","","",
 /* F8 */ "","","","","","(","(","("
 };
-
-#if 0
-/* Integer Basic */
-
-char integer_tokens[][8]={   
-/* 00 */ "","","",":","LOAD","SAVE","","RUN",
-/* 08 */ "","DEL",",","NEW","CLR","AUTO","","MAN",
-/* 10 */ "HIMEM:","LOMEM:","+","-","*","/","=","#",
-/* 18 */ ">=",">","<=","<>","<"," AND"," OR"," MOD",
-/* 20 */ "^","","(",",",""," THEN","",",",
-/* 28 */ "\"","\"","(","","","("," PEEK","RND",
-/* 30 */ "SGN","ABS","PDL","","(","+","-","NOT",
-/* 38 */ "(","=","LEN (","ASC (","SCRN (",","," (",
-/* 40 */ "$","(","",",","","",";",
-/* 48 */ "",",",",","TEXT","GR","CALL","","DIM",
-/* 50 */ "TAB","END","","","INPUT","FOR","=","TO",
-/* 58 */ " STEP","NEXT",",","RETURN","GOSUB","REM","LET","GOTO",
-/* 60 */ "IF","","PRINT","PRINT","   POKE",",","COLOR=","PLOT",
-/* 68 */ ",","HLIN",","," AT","VLIN",","," AT","VTAB",
-/* 70 */ "","=",")","","LIST",",","","POP",
-/* 78 */ "","NO DSP","NO TRACE","","DSP","TRACE","PR #","IN #"
-};
-#endif 
 
 #define LOW(_x)  ((_x)&0xff) 
 #define HIGH(_x) (((_x)>>8)&0xff)
