@@ -52,7 +52,7 @@ mkdos33fs.o:	mkdos33fs.c dos33.h
 
 
 install:	
-		cp dos33 asoft_detoken mkdos33fs tokenize_asoft make_b dos33_text2ascii.c integer_detoken /usr/local/bin
+		cp dos33 asoft_detoken mkdos33fs tokenize_asoft make_b dos33_text2ascii integer_detoken /usr/local/bin
 
 clean:		
 		rm -f *~ *.o asoft_detoken dos33 make_b mkdos33fs tokenize_asoft dos33_text2ascii integer_detoken

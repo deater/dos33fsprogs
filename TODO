@@ -1,3 +1,6 @@
+Fix undelete, it doesn't re-allocate all the sectors.
+
+
 
 + Validate that apple filenames are valid in all cases
 
