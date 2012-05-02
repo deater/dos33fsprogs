@@ -8,7 +8,7 @@
 
 int main(int argc, char **argv) {
    
-    int in_fd,out_fd,offset;
+  int in_fd,out_fd,offset,write_result;
 
     unsigned char buffer[256];
     int result,file_size;
@@ -47,12 +47,13 @@ int main(int argc, char **argv) {
     buffer[2]=file_size&0xff;
     buffer[3]=(file_size>>8)&0xff;
    
-    write(out_fd,&buffer,4);
+    write_result=write(out_fd,&buffer,4);
    
     while( (result=read(in_fd,&buffer,256))>0) {
-       write(out_fd,&buffer,result);
+       write_result=write(out_fd,&buffer,result);
     }
     
+    if (write_result<0) fprintf(stderr,"Error writing\n");
    
     close(in_fd);
     close(out_fd);

@@ -64,11 +64,13 @@ int main(int argc, char **argv) {
    int line1,line2;
    int int1,int2;
    int in_rem=0,in_quote=0,last_was_alpha=0,last_was_token=0;
+   int debug=0;
    
        /* read size, first two bytes */
    size1=fgetc(stdin);
    size2=fgetc(stdin);
-   
+   if (debug) fprintf(stderr,"Sign bytes: %x %x\n",size1,size2);
+
    while(!feof(stdin)) {
 
       in_rem=0;
@@ -77,7 +79,8 @@ int main(int argc, char **argv) {
       last_was_token=0;
       
       line_length=fgetc(stdin);
-      
+      if (debug) fprintf(stderr,"Line length: %d\n",line_length);
+
       /* line number is little endian 16-bit value */
       line1=fgetc(stdin);
       line2=fgetc(stdin);
@@ -115,6 +118,7 @@ int main(int argc, char **argv) {
       }
       printf("\n");
    }
+   if (debug) fprintf(stderr,"Last was token: %d\n",last_was_token);
    the_end:;
    return 0;
 }

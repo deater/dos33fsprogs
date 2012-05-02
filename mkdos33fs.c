@@ -32,8 +32,7 @@ int main(int argc, char **argv) {
     char device[BUFSIZ],dos_src[BUFSIZ];
     char *buffer,*endptr;
     int i,c,copy_dos=0;
-   
-
+    int result;
    
        /* Parse Command Line Arguments */
    
@@ -101,7 +100,7 @@ int main(int argc, char **argv) {
    
        /* zero out file */
     for(i=0;i<num_tracks*num_sectors;i++) {
-       write(fd,buffer,block_size);
+       result=write(fd,buffer,block_size);
     }
 
        /* Copy over OS from elsewhere, if desired */   
@@ -115,8 +114,8 @@ int main(int argc, char **argv) {
        lseek(fd,0,SEEK_SET);
           /* copy first 3 sectors */
        for(i=0;i<3*(num_sectors);i++) {
-	  read(dos_fd,buffer,block_size);
-	  write(fd,buffer,block_size);
+	  result=read(dos_fd,buffer,block_size);
+	  result=write(fd,buffer,block_size);
        }
        close(dos_fd);
        
@@ -182,8 +181,9 @@ int main(int argc, char **argv) {
    
        /* Write out VTOC to disk */
     lseek(fd,((17*num_sectors)+0)*block_size,SEEK_SET);
-    write(fd,buffer,block_size);
+    result=write(fd,buffer,block_size);
    
+    if (result<0) fprintf(stderr,"Error writing!\n");
 
 
    
