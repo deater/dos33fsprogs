@@ -551,7 +551,8 @@ static int dos33_add_file(int fd,char type,char *filename,
 
           /* read from input */
        bytes_read=read(input_fd,sector_buffer,BYTES_PER_SECTOR);
-       
+       if (bytes_read<0) fprintf(stderr,"Error reading bytes!\n");
+
           /* write to disk image */
        lseek(fd,DISK_OFFSET((data_ts>>8)&0xff,data_ts&0xff),SEEK_SET);
        result=write(fd,sector_buffer,BYTES_PER_SECTOR);
