@@ -31,6 +31,15 @@ static int ones_lookup[16]={
   /* 0xf = 1111 */ 4,
 };
 
+static unsigned char get_high_byte(int value) {
+  return (value>>8)&0xff;
+}
+
+static unsigned char get_low_byte(int value) {
+  return (value&0xff);
+}
+
+
 #define FILE_NORMAL 0
 #define FILE_DELETED 1
 
@@ -505,19 +514,27 @@ static int dos33_add_file(int fd,char type,char *filename,
 	        /* we aren't the first t/s list so do special stuff */
 
 	        /* load in the old t/s list */
-             lseek(fd,DISK_OFFSET((old_ts_list>>8)&0xff,old_ts_list&0xff),SEEK_SET);
+             lseek(fd,
+                   DISK_OFFSET(get_high_byte(old_ts_list),
+                               get_low_byte(old_ts_list)),
+                   SEEK_SET);
+
              result=read(fd,&sector_buffer,BYTES_PER_SECTOR);
 	     
 	        /* point from old ts list to new one we just made */
-	     sector_buffer[TSL_NEXT_TRACK]=(ts_list>>8)&0xff;
-	     sector_buffer[TSL_NEXT_SECTOR]=(ts_list)&0xff;
+	     sector_buffer[TSL_NEXT_TRACK]=get_high_byte(ts_list);
+	     sector_buffer[TSL_NEXT_SECTOR]=get_low_byte(ts_list);
 	     
 	        /* set offset into file */
-	     sector_buffer[TSL_OFFSET_H]=(((i-122)*256)>>8)&0xff;
-	     sector_buffer[TSL_OFFSET_L]=(((i-122)*256)&0xff);
+	     sector_buffer[TSL_OFFSET_H]=get_high_byte((i-122)*256);
+	     sector_buffer[TSL_OFFSET_L]=get_low_byte((i-122)*256);
 	        
 	        /* write out the old t/s list with updated info */
-	     lseek(fd,DISK_OFFSET((old_ts_list>>8)&0xff,old_ts_list&0xff),SEEK_SET);
+	     lseek(fd,
+                   DISK_OFFSET(get_high_byte(old_ts_list),
+                               get_low_byte(old_ts_list)),
+                   SEEK_SET);
+
 	     result=write(fd,sector_buffer,BYTES_PER_SECTOR);
 	  }
        }       
