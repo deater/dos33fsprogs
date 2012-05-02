@@ -3,7 +3,7 @@ CFLAGS = -O2 -Wall
 LFLAGS =
 
 all:	dos33 asoft_detoken mkdos33fs make_b tokenize_asoft \
-	dos33_text2ascii integer_detoken
+	dos33_text2ascii integer_detoken char2hex
 
 
 
@@ -24,6 +24,12 @@ tokenize_asoft:		   tokenize_asoft.o
 			   
 tokenize_asoft.o:	   tokenize_asoft.c
 			   $(CC) $(CFLAGS) -c tokenize_asoft.c
+
+char2hex:	char2hex.o
+	$(CC) $(LFLAGS) -o char2hex char2hex.o
+
+char2hex.o:	char2hex.c
+	$(CC) $(CFLAGS) -c char2hex.c
 
 dos33:	dos33.o
 		$(CC) $(LFLAGS) -o dos33 dos33.o
@@ -55,5 +61,5 @@ install:
 		cp dos33 asoft_detoken mkdos33fs tokenize_asoft make_b dos33_text2ascii integer_detoken /usr/local/bin
 
 clean:		
-		rm -f *~ *.o asoft_detoken dos33 make_b mkdos33fs tokenize_asoft dos33_text2ascii integer_detoken
+		rm -f *~ *.o asoft_detoken dos33 make_b mkdos33fs tokenize_asoft dos33_text2ascii integer_detoken char2hex
 		cd tests && make clean
