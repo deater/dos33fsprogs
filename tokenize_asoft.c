@@ -7,8 +7,6 @@
 /* TODO */
 /* match lowecase tokens as well as upper case ones */
 
-
-
 /* Info from http://docs.info.apple.com/article.html?coll=ap&artnum=57 */
 
 /* In memory, applesoft file starts at address $801        */
@@ -19,6 +17,7 @@
 /*    a series of bytes either ASCII or tokens (see below) */
 /*    a $0 char indicating end of line                     */
 
+#define NUM_TOKENS 107
 
    /* Starting at 0x80 */
 char applesoft_tokens[][8]={
@@ -88,43 +87,56 @@ static int getnum(void) {
    return num;	
 }
 
-static int in_quotes;
+static int in_quotes=0,in_rem=0;
 
 static int find_token() {
    
-   int ch,i;
+    int ch,i;
    
-   ch=*line_ptr;
-   /* don't skip whitespace in quotes */
-   if (!in_quotes) {	
-      while(ch<=' ') {	
-         if ((ch=='\n') || (ch=='\r') || (ch=='\0')) {
-            return 0;
-         }
-         line_ptr++;
-         ch=*line_ptr;
-      }
-   }
-   
+    ch=*line_ptr;
+
+    /* end remarks if end of line */
+    if (in_rem && (ch=='\n')) {
+       in_rem=0;
+       return 0;
+    }
+
+    /* don't skip whitespace in quotes or remarks */
+    if ((!in_quotes)&&(!in_rem)) {
+       while(ch<=' ') {	
+          if ((ch=='\n') || (ch=='\r') || (ch=='\0')) {
+             return 0;
+	  }
+          line_ptr++;
+          ch=*line_ptr;
+       }
+    }
    
       /* toggle quotes mode */
-   if (ch=='\"') in_quotes=!in_quotes;
+    if (ch=='\"') in_quotes=!in_quotes;
 	
-      /* don't tokenize if in quotes */
-   if (!in_quotes) {
+       /* don't tokenize if in quotes */
+    if ((!in_quotes)&&(!in_rem)) {
 	
-  // fprintf(stderr,"%s",line_ptr);
-   for(i=0;i<107;i++) {
-      if (!strncmp(line_ptr,applesoft_tokens[i],strlen(applesoft_tokens[i]))) {
-//	 fprintf(stderr,"Found token %x (%s) %d\n",0x80+i,applesoft_tokens[i],i);
-	 line_ptr+=strlen(applesoft_tokens[i]);
-	 return 0x80+i;
-      }
-//      fprintf(stderr,"%s ",applesoft_tokens[i]);
-   }
-   }
-   
-//   fprintf(stderr,"\n");
+       // fprintf(stderr,"%s",line_ptr);
+       for(i=0;i<NUM_TOKENS;i++) {
+          if (!strncmp(line_ptr,applesoft_tokens[i],
+                                strlen(applesoft_tokens[i]))) {
+              // fprintf(stderr,
+              //         "Found token %x (%s) %d\n",0x80+i,
+              //         applesoft_tokens[i],i);
+	      line_ptr+=strlen(applesoft_tokens[i]);
+
+	      /* REM is 0x32 */
+	      if (i==0x32) in_rem=1;
+	      return 0x80+i;
+	  }
+          //fprintf(stderr,"%s ",applesoft_tokens[i]);
+       }
+    }
+
+      //fprintf(stderr,"\n");
+
       /* not a token, just ascii */
    line_ptr++;
    return ch;
@@ -172,7 +184,9 @@ int main(int argc, char **argv) {
 	 check_oflo(offset);
 	 if (!token) break;
       }
-      
+
+      /* remarks end at end of line */
+      in_rem=0;
 	 
       /* 2 bytes is to ignore size from beginning of file */
       link_value=0x801+(offset-2);
