@@ -13,7 +13,7 @@ TEST:	test.bas
 	../tokenize_asoft < test.bas > TEST
 
 test.bas:		generate_presentation
-	./generate_presentation > test.bas
+	./generate_presentation test > test.bas
 
 generate_presentation:	generate_presentation.o
 	$(CC) $(LFLAGS) -o generate_presentation generate_presentation.o
