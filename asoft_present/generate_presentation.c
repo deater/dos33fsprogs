@@ -38,7 +38,7 @@ void generate_footer(char *left, char *center, int cols) {
   /* without scrolling.                                           */
   printf("1015 TP$=STR$(TP%%) : X$=RIGHT$(TP$,1) : X=VAL(X$): POKE 2039,X+48\n"); 
   /* reset text, move cursor up */
-  printf("1020 NORMAL : VTAB 23: PRINT\"\"\n");
+  printf("1020 NORMAL : VTAB 1: PRINT\"\"\n");
   printf("1030 RETURN\n");
 }
 
