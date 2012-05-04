@@ -126,14 +126,66 @@ struct project_info {
   int slides;
 };
 
+struct footer_info {
+  char *left;
+  char *center;
+};
+
+#define SLIDE_40COL 0
+#define SLIDE_80COL 1
+#define SLIDE_HGR   2
+#define SLIDE_HGR2  3
+
+#define MAX_SLIDES 100
+
+struct slide_info {
+  int type;
+  char *filename;
+};
+
+#define LINES_PER_SLIDE 25
+
+static void generate_slide(int num, int max, char*filename) {
+
+  int line_num;
+
+   /* line numbers start at 100 and run LINES_PER_SLIDE per slide */
+   line_num=100+(num*LINES_PER_SLIDE);
+
+   printf("%d REM ",line_num);                                 line_num++;
+   print_line('*',strlen(filename)+8);
+   printf("\n");
+   printf("%d REM *** %s ***\n",line_num,filename);            line_num++;
+   printf("%d REM ",line_num);                                 line_num++;
+   print_line('*',strlen(filename)+8);
+   printf("\n");
+   printf("%d GOSUB 10000\n",line_num);                        line_num++;
+   printf("%d VTAB 1: PRINT \"    RAPL %d\"\n",line_num,num);  line_num++;
+   printf("%d PRINT\n",line_num);                              line_num++;
+   printf("%d PRINT \"* RAPL is awesome\"\n",line_num);        line_num++;
+   printf("%d GOSUB 9000\n",line_num);                         line_num++;
+   printf("%d ON N%% GOTO %d,%d,%d\n",
+	  line_num,
+          /* previous */
+	  num==0?(100+(num*LINES_PER_SLIDE)):(100+((num-1)*LINES_PER_SLIDE)),
+	  /* current  */
+	  100+(num*LINES_PER_SLIDE),                      
+	  /* next */
+	  num<(max-1)?(100+((num+1)*LINES_PER_SLIDE)):
+                      (100+(num*LINES_PER_SLIDE))); 
+}
+
 int main(int argc, char **argv) {
 
+   int i;
    char project_directory[BUFSIZ];
    char filename[BUFSIZ],string[BUFSIZ];
    char *result;
    FILE *fff;
 
    struct project_info info;
+   struct footer_info footer;
+   struct slide_info slides[MAX_SLIDES];
 
    if (argc<2) {
       fprintf(stderr,"\n");
@@ -152,24 +204,103 @@ int main(int argc, char **argv) {
       exit(1);
    }
 
+   /* Get Title */
+   while(1) {
+      result=fgets(string,BUFSIZ,fff);
+      if (result==NULL) {
+	 fprintf(stderr,"Unexpected EOF finding TITLE in %s\n",filename);
+	 exit(1);
+      }
+      if (!strncmp("TITLE",string,5)) break;
+   }
    result=fgets(string,BUFSIZ,fff);
    string[strlen(string)-1]='\0';
    info.title=strdup(string);
 
+   /* Get Author */
+   while(1) {
+      result=fgets(string,BUFSIZ,fff);
+      if (result==NULL) {
+	 fprintf(stderr,"Unexpected EOF finding AUTHOR in %s\n",filename);
+	 exit(1);
+      }
+      if (!strncmp("AUTHOR",string,6)) break;
+   }
    result=fgets(string,BUFSIZ,fff);
    string[strlen(string)-1]='\0';
    info.author=strdup(string);
-   
+
+   /* Get E-mail */
+   while(1) {
+      result=fgets(string,BUFSIZ,fff);
+      if (result==NULL) {
+	 fprintf(stderr,"Unexpected EOF finding EMAIL in %s\n",filename);
+	 exit(1);
+      }
+      if (!strncmp("EMAIL",string,5)) break;
+   }
    result=fgets(string,BUFSIZ,fff);
    string[strlen(string)-1]='\0';
    info.email=strdup(string);
 
-   result=fgets(string,BUFSIZ,fff);
-   sscanf(string,"%d",&info.slides);
+   /* Get list of slides */
+
+   while(1) {
+      result=fgets(string,BUFSIZ,fff);
+      if (result==NULL) {
+	 fprintf(stderr,"Unexpected EOF finding SLIDES in %s\n",filename);
+	 exit(1);
+      }
+      if (!strncmp("SLIDES",string,6)) break;
+   }
+
+   info.slides=0;
+
+   while(1) {
+      result=fgets(string,BUFSIZ,fff);
+      if (result==NULL) {
+	 fprintf(stderr,"Unexpected EOF finding END_SLIDES in %s\n",filename);
+	 exit(1);
+      }
+      if (!strncmp("END_SLIDES",string,10)) break;
+
+      string[strlen(string)-1]='\0';
+      slides[info.slides].filename=strdup(string);
+
+      info.slides++;
+   }
 
    if (result==NULL) fprintf(stderr,"Error reading!\n");
 
    fclose(fff);
+
+   /************************/
+   /* read in footer info  */
+   /************************/
+
+   strncpy(project_directory,argv[1],BUFSIZ);
+   sprintf(filename,"%s/footer",project_directory);
+
+   fff=fopen(filename,"r");
+   if (fff==NULL) {
+      fprintf(stderr,"Error!  Could not open %s\n",filename);
+      exit(1);
+   }
+
+   result=fgets(string,BUFSIZ,fff);
+   string[strlen(string)-1]='\0';
+   footer.left=strdup(string);
+
+   result=fgets(string,BUFSIZ,fff);
+   string[strlen(string)-1]='\0';
+   footer.center=strdup(string);
+
+   fclose(fff);
+   
+
+   /**************************/
+   /* Generate the program   */
+   /**************************/
 
    /* Print the initial program remarks */
    generate_initial_comment(info.title,info.author,info.email);
@@ -177,38 +308,14 @@ int main(int argc, char **argv) {
    printf("20 HOME\n");
    printf("30 P%%=0 : TP%%=%d\n",info.slides-1);
 
-   printf("100 GOSUB 10000\n");
-   printf("101 VTAB 1: PRINT \"    RAPL\"\n");
-   printf("102 PRINT\n");
-   printf("103 PRINT \"* RAPL is awesome\"\n");
-   printf("130 GOSUB 9000\n");
-   printf("131 ON N%% GOTO 100,100,200\n");
-
-   printf("200 GOSUB 10000\n");
-   printf("201 VTAB 1: PRINT \"    RAPL1\"\n");
-   printf("202 PRINT\n");
-   printf("203 PRINT \"* RAPL2 is awesome\"\n");
-   printf("230 GOSUB 9000\n");
-   printf("231 ON N%% GOTO 200,100,300\n");
-
-   printf("300 GOSUB 10000\n");
-   printf("301 VTAB 1: PRINT \"    RAPL2\"\n");
-   printf("302 PRINT\n");
-   printf("303 PRINT \"* RAPL3 is awesome\"\n");
-   printf("330 GOSUB 9000\n");
-   printf("331 ON N%% GOTO 300,200,400\n");
-
-   printf("400 GOSUB 10000\n");
-   printf("401 VTAB 1: PRINT \"    RAPL3\"\n");
-   printf("402 PRINT\n");
-   printf("403 PRINT \"* RAPL4 is awesome\"\n");
-   printf("430 GOSUB 9000\n");
-   printf("431 ON N%% GOTO 400,300,400\n");
+   for(i=0;i<info.slides;i++) {
+     generate_slide(i,info.slides,slides[i].filename);
+   }
 
    printf("999 END\n");
 
    generate_keyhandler();
-   generate_footer("11 MAY 2012","ICL/UTK",40);
+   generate_footer(footer.left,footer.center,40);
 
    return 0;
 }

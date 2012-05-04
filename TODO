@@ -1,3 +1,8 @@
+pcx2hgr:
+   error checking
+   complain if not 140x160 or 140x192
+
+
 Fix undelete, it doesn't re-allocate all the sectors.
 
 

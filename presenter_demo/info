@@ -1,4 +1,15 @@
+TITLE
 Measuring Power and Energy with PAPI
+
+AUTHOR
 Vince Weaver
+
+EMAIL
 vweaver1@eecs.utk.edu
-4
+
+SLIDES
+slide_rapl_continued
+slide_rapl_finish
+slide_rapl_intro
+slide_rapl_more
+END_SLIDES
