@@ -1,5 +1,7 @@
 dos33fsprogs
 
+    http://www.deater.net/weave/vmwprod/apple/dos33fs.html
+
     by Vince Weaver <vince _at_ deater.net>
     
 
@@ -17,3 +19,10 @@ tokenize_asoft: takes an ASCII text file and converts it
 		
 dos33:		a tool for manipulating dos33 .dsk images
 
+dos33_text2ascii: convert a dos33 text file to ASCII
+
+integer_detoken: detokenize an Apple Integer BASIC program
+
+pcx2hgr:	converts a 140x160 (or 140x192) PCX image file
+                into an Apple II HGR graphics file that can 
+		be loaded with "BLOAD IMAGE,A$2000"
