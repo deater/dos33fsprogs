@@ -5,9 +5,13 @@ LFLAGS =
 
 all:	test.dsk
 
-test.dsk:	TEST
+test.dsk:	TEST VINCE.IMG
 	../dos33 test.dsk SAVE A TEST
+	../dos33 test.dsk SAVE B VINCE.IMG
 
+
+VINCE.IMG:	vince.pcx ../pcx2hgr
+	../pcx2hgr vince.pcx > VINCE.IMG
 
 TEST:	test.bas
 	../tokenize_asoft < test.bas > TEST
