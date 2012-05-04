@@ -8,7 +8,7 @@ static void generate_keyhandler(void) {
   printf("9002 REM * GET KEYPRESSES *\n");
   printf("9004 REM ******************\n");
 
-  printf("9006 N%%=1\n");
+  printf("9006 N%%=2\n");
 
   /* memory location -16384 holds keyboard strobe */
   /* Loop until a key is pressed.                 */
@@ -16,11 +16,11 @@ static void generate_keyhandler(void) {
   /* get the key value, convert to ASCII */
   printf("9010 X=PEEK(-16368)-128\n");
   /* Exit if escape or Q pressed */
-  printf("9020 IF X=27 OR X=81 THEN END\n");
+  printf("9020 IF X=27 OR X=81 THEN TEXT:HOME:END\n");
   /* increment page count if space or -> */
   printf("9030 IF X=21 OR X=32 THEN P%%=P%%+1:N%%=3\n");
   /* decrement page count if <- */
-  printf("9040 IF X=8 THEN P%%=P%%-1:N%%=2\n");
+  printf("9040 IF X=8 THEN P%%=P%%-1:N%%=1\n");
   /* keep from going off the end */
   printf("9050 IF P%%>TP%% THEN P%%=TP%%\n");
   printf("9060 IF P%%<0 THEN P%%=0\n");
@@ -143,15 +143,18 @@ struct slide_info {
   char *filename;
 };
 
-#define LINES_PER_SLIDE 25
+#define LINES_PER_SLIDE 30
 
 static void generate_slide(int num, int max, char*filename) {
 
-  int line_num;
+   int line_num;
+   FILE *fff;
+   char string[BUFSIZ],*result;
 
    /* line numbers start at 100 and run LINES_PER_SLIDE per slide */
    line_num=100+(num*LINES_PER_SLIDE);
 
+   /* print a REMARK block */
    printf("%d REM ",line_num);                                 line_num++;
    print_line('*',strlen(filename)+8);
    printf("\n");
@@ -159,10 +162,30 @@ static void generate_slide(int num, int max, char*filename) {
    printf("%d REM ",line_num);                                 line_num++;
    print_line('*',strlen(filename)+8);
    printf("\n");
+
+   /* print the footer */
    printf("%d GOSUB 10000\n",line_num);                        line_num++;
-   printf("%d VTAB 1: PRINT \"    RAPL %d\"\n",line_num,num);  line_num++;
-   printf("%d PRINT\n",line_num);                              line_num++;
-   printf("%d PRINT \"* RAPL is awesome\"\n",line_num);        line_num++;
+
+   /* generate the slide */
+
+   fff=fopen(filename,"r");
+   if (fff==NULL) {
+     fprintf(stderr,"Couldn't open %s!\n",filename);
+   }
+   else {
+
+     printf("%d VTAB 1\n",line_num);                           line_num++;
+      while(1) {
+	 result=fgets(string,BUFSIZ,fff);
+	 if (result==NULL) break;
+	 string[strlen(string)-1]='\0';
+	 printf("%d  PRINT \"%s\"\n",line_num,string);         line_num++;
+      }
+
+      fclose(fff);
+   }
+
+   /* wait for keypress and move to next slide */
    printf("%d GOSUB 9000\n",line_num);                         line_num++;
    printf("%d ON N%% GOTO %d,%d,%d\n",
 	  line_num,
