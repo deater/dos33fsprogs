@@ -149,7 +149,7 @@ static void generate_slide(int num, int max, char*filename) {
 
    int line_num;
    FILE *fff;
-   char string[BUFSIZ],*result;
+   char string[BUFSIZ],*result,type[BUFSIZ];
 
    /* line numbers start at 100 and run LINES_PER_SLIDE per slide */
    line_num=100+(num*LINES_PER_SLIDE);
@@ -174,13 +174,30 @@ static void generate_slide(int num, int max, char*filename) {
    }
    else {
 
-     printf("%d VTAB 1\n",line_num);                           line_num++;
-      while(1) {
-	 result=fgets(string,BUFSIZ,fff);
-	 if (result==NULL) break;
-	 string[strlen(string)-1]='\0';
-	 printf("%d  PRINT \"%s\"\n",line_num,string);         line_num++;
-      }
+     result=fgets(type,BUFSIZ,fff);
+
+     if (strstr(type,"HGR2")) {
+        printf("%d HGR2\n",line_num);                           line_num++;
+        printf("%d PRINT CHR$(4);\"BLOAD TITLE.IMG,A$4000\"\n",
+	       line_num);                                       line_num++;
+     }
+     else if (strstr(type,"HGR")) {
+
+     }
+     else if (strstr(type,"80COL")) {
+
+     }
+     else if (strstr(type,"40COL")) {
+
+        printf("%d VTAB 1\n",line_num);                           line_num++;
+        while(1) {
+	   result=fgets(string,BUFSIZ,fff);
+	   if (result==NULL) break;
+	   string[strlen(string)-1]='\0';
+	   printf("%d  PRINT \"%s\"\n",line_num,string);         line_num++;
+	}
+     }
+
 
       fclose(fff);
    }
