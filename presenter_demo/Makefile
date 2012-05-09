@@ -23,5 +23,5 @@ demo.bas:		../asoft_presenter
 	../asoft_presenter . > demo.bas
 
 clean:	
-	rm -f *~ *.IMG *.bas PRESENTER_DEMO
+	rm -f *~ *.IMG *.bas PRESENTER_DEMO NUM.SHAPE
 

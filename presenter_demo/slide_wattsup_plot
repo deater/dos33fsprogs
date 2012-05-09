@@ -1,8 +1,25 @@
 HGR_PLOT
+# data x and y size
 40 70
-1
+# Axes ticks
+4 4
+# Labels
 START
+65  150 10
+135 150 20
+205 150 30
+#
+11 40 60
+11 80 40
+11 120 20
+STOP
+# number of plots
 1
+# beginning of plot 1 (Power vs Time)
+START
+# Color of Plot (Red/Orange)
+5
+# Data
 0 32.4
 1 32.3
 2 52.8
@@ -44,6 +61,6 @@ START
 38 35.4
 39 35.1
 STOP
-WATTS         TIME(seconds)
+    Average Power (W) versus Time (s)
 
-Blah Blah Blah Measured
+     PLASMA Cholesky on Intel Core2

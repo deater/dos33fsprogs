@@ -148,6 +148,22 @@ struct slide_info {
 
 #define LINES_PER_SLIDE 100
 
+static void print_number(int line_num, int x, int y, char *string) {
+  int i,first=1,ourx=x;
+  printf("%d",line_num);
+  for(i=0;i<strlen(string);i++) {
+     printf("%s XDRAW %d AT %d,%d ",
+	    first?" ":":",(string[i]-'0')+1,
+	    ourx,y);
+     first=0;
+     ourx+=10;
+  }
+  printf("\n");
+
+
+}
+
+
 static void generate_slide(int num, int max, char*filename) {
 
    int line_num;
@@ -180,8 +196,11 @@ static void generate_slide(int num, int max, char*filename) {
      int num_plots=0,plot,color;
      double maxx,maxy,x,y;
      int applex,appley,hplot_num,first=1;
+     int xpoints,ypoints;
+     int axesx,axesy;
+     char axes_string[BUFSIZ];
 
-#define HPLOTS_ON_LINE 5
+#define HPLOTS_ON_LINE 6
 
      result=fgets(type,BUFSIZ,fff);
 
@@ -201,6 +220,52 @@ static void generate_slide(int num, int max, char*filename) {
 	   sscanf(string,"%lf %lf",&maxx,&maxy);
 	   break;
 	}
+
+	/* Draw the Axes */
+	printf("%d HCOLOR=3:HPLOT 0,0 TO 0,159: HPLOT 1,1 TO 1,159\n",
+	       line_num);                                        line_num++;
+	printf("%d HPLOT 0,159 TO 279,159\n",
+	       line_num);                                        line_num++;
+
+
+	/* get the axes ticks */
+
+	while(1) {   
+	   result=fgets(string,BUFSIZ,fff);
+	   if (result==NULL) break;
+      	   if ((string[0]=='#') || (string[0]=='\n')) continue;
+	   sscanf(string,"%d %d",&xpoints,&ypoints);
+	   break;
+	}
+
+	printf("%d FOR I=0 TO 279 STEP %d: "
+	       "HPLOT I,155 TO I,159: NEXT I\n",
+	       line_num,280/xpoints);                            line_num++;
+
+	printf("%d FOR I=159 TO 0 STEP -%d: "
+	       "HPLOT 0,I TO 4,I: NEXT I\n",
+	       line_num,160/ypoints);                            line_num++;
+
+	/* Look for START */
+	while(1) {
+	   result=fgets(string,BUFSIZ,fff);
+	   if (result==NULL) break;
+      	   if ((string[0]=='#') || (string[0]=='\n')) continue;
+	   if (strstr(string,"START")) break;
+	}
+
+
+	/* Number the Axes */
+	while(1) {   
+	   result=fgets(string,BUFSIZ,fff);
+	   if (result==NULL) break;
+      	   if ((string[0]=='#') || (string[0]=='\n')) continue;
+	   if (strstr(string,"STOP")) break;
+	   sscanf(string,"%d %d %s",&axesx,&axesy,axes_string);
+	   print_number(line_num,axesx,axesy,axes_string);	  line_num++;
+	}
+	
+
 
 	/* get number of plots */
 	while(1) {
@@ -258,6 +323,16 @@ static void generate_slide(int num, int max, char*filename) {
 	   }
 	   printf("\n");
 	}
+
+	/* Print remaining text */
+	printf("%d VTAB 21\n",line_num);                       line_num++;
+	while(1) {
+	   result=fgets(string,BUFSIZ,fff);
+	   if (result==NULL) break;
+	   string[strlen(string)-1]='\0';
+	   printf("%d PRINT \"%s\"\n",line_num,string);         line_num++;
+	}
+
 
      }
      else if (strstr(type,"HGR2")) {
