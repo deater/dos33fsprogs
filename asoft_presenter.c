@@ -77,6 +77,8 @@ static void print_line(unsigned char c, int num) {
 
 }
 
+
+
 static void center_comment(unsigned char c, int max_len, char *string) {
 
    int half_len;
@@ -131,19 +133,20 @@ struct footer_info {
   char *center;
 };
 
-#define SLIDE_40COL 0
-#define SLIDE_80COL 1
-#define SLIDE_HGR   2
-#define SLIDE_HGR2  3
+#define SLIDE_40COL    0
+#define SLIDE_80COL    1
+#define SLIDE_HGR      2
+#define SLIDE_HGR2     3
+#define SLIDE_HGR_PLOT 4
 
-#define MAX_SLIDES 100
+#define MAX_SLIDES 89
 
 struct slide_info {
   int type;
   char *filename;
 };
 
-#define LINES_PER_SLIDE 30
+#define LINES_PER_SLIDE 100
 
 static void generate_slide(int num, int max, char*filename) {
 
@@ -173,23 +176,118 @@ static void generate_slide(int num, int max, char*filename) {
      fprintf(stderr,"Couldn't open %s!\n",filename);
    }
    else {
+     int address=0x6000;
+     int num_plots=0,plot,color;
+     double maxx,maxy,x,y;
+     int applex,appley,hplot_num,first=1;
+
+#define HPLOTS_ON_LINE 5
 
      result=fgets(type,BUFSIZ,fff);
 
-     if (strstr(type,"HGR2")) {
+     if (strstr(type,"HGR_PLOT")) {
+        printf("%d IF ST%%=1 GOTO %d\n",line_num,line_num+3);      line_num++;
+        printf("%d PRINT CHR$(4);\"BLOAD NUM.SHAPE\"\n",line_num); line_num++;
+        printf("%d POKE 232,%d: POKE 233,%d : ROT=0: SCALE=3: ST%%=1\n",   
+	       line_num,address&0xff,(address>>8)&0xff);           line_num++;
+
+	printf("%d HGR\n",line_num);                               line_num++;
+
+	/* get the size */
+	while(1) {   
+	   result=fgets(string,BUFSIZ,fff);
+	   if (result==NULL) break;
+      	   if ((string[0]=='#') || (string[0]=='\n')) continue;
+	   sscanf(string,"%lf %lf",&maxx,&maxy);
+	   break;
+	}
+
+	/* get number of plots */
+	while(1) {
+	   result=fgets(string,BUFSIZ,fff);   
+	   if (result==NULL) break;
+      	   if ((string[0]=='#') || (string[0]=='\n')) continue;
+	   sscanf(string,"%d",&num_plots);
+	   break;
+	}
+
+	for(plot=0;plot<num_plots;plot++) {
+	   first=1;
+
+	   /* Look for START */
+	   while(1) {
+	      result=fgets(string,BUFSIZ,fff);
+	      if (result==NULL) break;
+      	      if ((string[0]=='#') || (string[0]=='\n')) continue;
+	      if (strstr(string,"START")) break;
+	   }
+
+	   /* get the color of the plot */
+	   while(1) {
+	      result=fgets(string,BUFSIZ,fff);
+	      if (result==NULL) break;
+	      if ((string[0]=='#') || (string[0]=='\n')) continue;
+	      sscanf(string,"%d",&color);
+	      break;
+	   }
+	   printf("%d HCOLOR=%d\n",line_num,color);                line_num++;
+
+	   /* Plot the points */
+	   while(1) {
+	      result=fgets(string,BUFSIZ,fff);
+	      if (result==NULL) break;
+      	      if ((string[0]=='#') || (string[0]=='\n')) continue;
+	      if (strstr(string,"STOP")) break;
+
+	      sscanf(string,"%lf %lf",&x,&y);
+	      applex=(int)((x/maxx)*280.0);
+	      appley=159-(int)((y/maxy)*160.0);
+	      if (first) {
+	         printf("%d HPLOT %d,%d ",line_num,applex,appley); line_num++;
+		 hplot_num=1;
+	         first=0;
+	      }
+	      else if (hplot_num%HPLOTS_ON_LINE!=0) {
+	         printf("TO %d,%d ",applex,appley);
+		 hplot_num++;
+	      } else {
+	         printf("\n%d HPLOT TO %d,%d ",
+			line_num,applex,appley);                   line_num++;
+		 hplot_num++;
+	      }
+	   }
+	   printf("\n");
+	}
+
+     }
+     else if (strstr(type,"HGR2")) {
         printf("%d HGR2\n",line_num);                           line_num++;
-        printf("%d PRINT CHR$(4);\"BLOAD TITLE.IMG,A$4000\"\n",
-	       line_num);                                       line_num++;
+	while(1) {
+	   result=fgets(string,BUFSIZ,fff);
+	   if (result==NULL) break;
+      	   if ((string[0]=='#') || (string[0]=='\n')) continue;	   
+	}
+	string[strlen(string)-1]='\0';
+        printf("%d PRINT CHR$(4);\"BLOAD %s,A$4000\"\n",
+	       line_num,string);                                line_num++;
      }
      else if (strstr(type,"HGR")) {
-
+        printf("%d HGR\n",line_num);                            line_num++;
+	while(1) {
+	   result=fgets(string,BUFSIZ,fff);
+	   if (result==NULL) break;
+      	   if ((string[0]=='#') || (string[0]=='\n')) continue;	   
+	}
+	string[strlen(string)-1]='\0';
+        printf("%d PRINT CHR$(4);\"BLOAD %s,A$2000\"\n",
+	       line_num,string);                                line_num++;
      }
      else if (strstr(type,"80COL")) {
 
      }
      else if (strstr(type,"40COL")) {
 
-        printf("%d VTAB 1\n",line_num);                           line_num++;
+        printf("%d TEXT:VTAB 1\n",line_num);                     line_num++;
         while(1) {
 	   result=fgets(string,BUFSIZ,fff);
 	   if (result==NULL) break;
@@ -346,7 +444,7 @@ int main(int argc, char **argv) {
    generate_initial_comment(info.title,info.author,info.email);
 
    printf("20 HOME\n");
-   printf("30 P%%=0 : TP%%=%d\n",info.slides-1);
+   printf("30 P%%=0 : TP%%=%d: ST%%=0\n",info.slides-1);
 
    for(i=0;i<info.slides;i++) {
      generate_slide(i,info.slides,slides[i].filename);
@@ -356,6 +454,7 @@ int main(int argc, char **argv) {
 
    generate_keyhandler();
    generate_footer(footer.left,footer.center,40);
+
 
    return 0;
 }

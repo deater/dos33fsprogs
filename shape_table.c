@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define MAX_SIZE 8192 /* not really, but anything larger would be crazy */
 
@@ -35,6 +36,15 @@ static void warn_if_zero(unsigned char byte, int line) {
 
 }
 
+void print_usage(char *exe) {
+   printf("Usage:\t%s [-h] [-a] [-b]\n\n",exe);
+   printf("\t-h\tprint this help message\n");
+   printf("\t-a\toutput shape table in applesoft BASIC format\n");
+   printf("\t-b\toutput shape table in binary format for BLOADing\n");
+   printf("\n");
+   exit(1);
+}
+
 int main(int argc, char **argv) {
 
   char string[BUFSIZ];
@@ -45,6 +55,28 @@ int main(int argc, char **argv) {
   int i,line=1;
 
   int command=0,sub_pointer;
+
+  int output_binary=0;
+
+  if (argc<2) {
+     output_binary=0;
+  }
+
+  else {
+     if (argv[1][0]=='-') {
+
+        switch(argv[1][1]) {
+
+           case 'h': print_usage(argv[0]);
+           case 'b': output_binary=1;
+	             break;
+           case 'a': output_binary=0;
+                     break;
+           default:  printf("Unknown options %s\n",argv[1]);
+                     print_usage(argv[0]);
+	}
+     }
+  }
 
   while(1) {
     result=fgets(string,BUFSIZ,stdin);
@@ -155,24 +187,43 @@ int main(int argc, char **argv) {
 
   table_size=current_offset;
 
-  /* put near highmem */
-  int address=0x1ff0-table_size;
+  if (output_binary) {
+     unsigned char header[4];
+     int offset=0x6000;
+    
+     header[0]=offset&0xff;
+     header[1]=(offset>>8)&0xff;
+     header[2]=table_size&0xff;
+     header[3]=(table_size>>8)&0xff;
 
-  printf("10 HIMEM:%d\n",address);
-  printf("20 POKE 232,%d:POKE 233,%d\n",(address&0xff),(address>>8)&0xff);
-  printf("30 FOR L=%d TO %d: READ B:POKE L,B:NEXT L\n",
-	 address,(address+table_size)-1);
-  printf("35 HGR:ROT=0:SCALE=2\n");
-  printf("40 FOR I=1 TO %d: XDRAW I AT I*10,100:NEXT I\n",
-	 num_shapes);
-  printf("90 END\n");
+     fprintf(stderr,"Be sure to POKE 232,%d : POKE 233,%d\n"
+	     "\tto let applesoft know the location of the table\n",
+	     offset&0xff,(offset>>8)&0xff);
 
-  for(i=0;i<current_offset;i++) {
-    if(i%10==0) printf("%d DATA ",100+i/10);
-    printf("%d",table[i]);
+     fwrite(header,sizeof(unsigned char),4,stdout);
 
-    if ((i%10==9)||(i==current_offset-1)) printf("\n");
-    else printf(",");
+     fwrite(table,sizeof(unsigned char),table_size,stdout);
+  }
+  else {
+
+     /* put near highmem */
+     int address=0x1ff0-table_size;
+
+     printf("10 HIMEM:%d\n",address);
+     printf("20 POKE 232,%d:POKE 233,%d\n",(address&0xff),(address>>8)&0xff);
+     printf("30 FOR L=%d TO %d: READ B:POKE L,B:NEXT L\n",
+	    address,(address+table_size)-1);
+     printf("35 HGR:ROT=0:SCALE=2\n");
+     printf("40 FOR I=1 TO %d: XDRAW I AT I*10,100:NEXT I\n",
+	    num_shapes);
+     printf("90 END\n");
+
+     for(i=0;i<current_offset;i++) {
+        if(i%10==0) printf("%d DATA ",100+i/10);
+        printf("%d",table[i]);
+        if ((i%10==9)||(i==current_offset-1)) printf("\n");
+        else printf(",");
+     }
   }
 
   return 0;
