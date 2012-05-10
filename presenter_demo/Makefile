@@ -4,12 +4,18 @@ LFLAGS =
 
 all:	presenter_demo.dsk
 
-presenter_demo.dsk:	PRESENTER_DEMO TITLE.IMG NUM.SHAPE MMM
+presenter_demo.dsk:	PRESENTER_DEMO \
+	TITLE.HGR PLASMA_DPOSV.HGR \
+	NUM.SHAPE MMM
 	../dos33 presenter_demo.dsk SAVE A PRESENTER_DEMO
-	../dos33 presenter_demo.dsk SAVE B TITLE.IMG
+	../dos33 presenter_demo.dsk SAVE B TITLE.HGR
+	../dos33 presenter_demo.dsk SAVE B PLASMA_DPOSV.HGR
 	../dos33 presenter_demo.dsk SAVE B NUM.SHAPE
 	../dos33 presenter_demo.dsk SAVE A MMM
 
+
+PLASMA_DPOSV.HGR:	plasma-dposv-power.pcx
+	../pcx2hgr plasma-dposv-power.pcx > PLASMA_DPOSV.HGR
 
 MMM:		mmm.bas
 	../tokenize_asoft < mmm.bas > MMM
@@ -17,8 +23,8 @@ MMM:		mmm.bas
 NUM.SHAPE:	num.table
 	../shape_table -b < num.table > NUM.SHAPE
 
-TITLE.IMG:	title.pcx ../pcx2hgr
-	../pcx2hgr title.pcx > TITLE.IMG
+TITLE.HGR:	title.pcx ../pcx2hgr
+	../pcx2hgr title.pcx > TITLE.HGR
 
 PRESENTER_DEMO:	demo.bas
 	../tokenize_asoft < demo.bas > PRESENTER_DEMO
@@ -27,5 +33,5 @@ demo.bas:		../asoft_presenter
 	../asoft_presenter . > demo.bas
 
 clean:	
-	rm -f *~ *.IMG demo.bas PRESENTER_DEMO NUM.SHAPE MMM
+	rm -f *~ *.IMG *.HGR demo.bas PRESENTER_DEMO NUM.SHAPE MMM
 

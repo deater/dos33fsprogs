@@ -4,6 +4,7 @@
   40 A(I,J) = I / 2 + J * 5
   50 B(I,J) = I / 4 * (I + 8) * J
   60  NEXT J,I
+  65  PRINT "10x10 Matrix-Matrix-multiply"
   70  PRINT  CHR$ (7);"START!"
  100  FOR J = 0 TO 9
  110  FOR I = 0 TO 9
