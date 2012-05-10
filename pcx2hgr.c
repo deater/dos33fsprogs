@@ -204,31 +204,72 @@ static int vmwLoadPCX(char *filename, unsigned char *framebuffer)  {
 }
 
 
-int main(int argc, char **argv) {
 
-  int xsize=0,ysize=0,type,x,y;
-  unsigned char *in_framebuffer,*pointer;
-  unsigned char *out_framebuffer,*pcx,*hgr;
 
-  char *filename;
+static int make_bw_image(unsigned char *in_framebuffer,
+			    unsigned char *out_framebuffer,
+			    int xsize, int ysize) {
 
-  if (argc<2) {
-    fprintf(stderr,"\nUsage: %s PCXFILE\n\n",argv[0]);
-    exit(1);
+  short fourteen_bits;
+
+  int i,yoffset=0;
+  int y,x;
+  unsigned char byte1,byte2;
+
+  int page,block,leaf;
+
+  unsigned char *pointer;
+  unsigned char *pcx,*hgr;
+
+  pointer=in_framebuffer;
+
+  pcx=in_framebuffer;
+  hgr=out_framebuffer;
+
+  for(y=0;y<ysize;y++) {
+     for(x=0;x<20;x++) {
+
+       fourteen_bits=0;
+
+       for(i=0;i<14;i++) {
+	  fourteen_bits|= ((colors[(*pcx)&0x7]&0x1)<<i);	  
+	  pcx++;
+       }
+       byte1=(fourteen_bits&0x7f)|(0<<7);
+       byte2=((fourteen_bits>>7)&0x7f)|(0<<7);
+
+       page=(y%8);
+       block=((y/8)%8);
+       leaf=(y/64);
+
+       yoffset=(page*1024) + (block*128) + (leaf*40);
+       /* 
+       printf("%d %d = %x %x %x\n",x,y,fourteen_bits,yoffset,
+	      yoffset+(x*2));
+       */
+       hgr=out_framebuffer+yoffset+(x*2);
+
+       *hgr=byte1;
+       *(hgr+1)=byte2;
+     }
   }
+  return 0;
+}
 
-  filename=strdup(argv[1]);
+static int make_color_image(unsigned char *in_framebuffer,
+			    unsigned char *out_framebuffer,
+			    int xsize, int ysize) {
 
+  short fourteen_bits;
 
-  vmwGetPCXInfo(filename,&xsize,&ysize,&type);
+  int i,pal[2],yoffset=0;
+  int y,x;
+  unsigned char byte1,byte2;
 
-  in_framebuffer=calloc(xsize*ysize,sizeof(unsigned char));
-  if (in_framebuffer==NULL) {
-     fprintf(stderr,"Error allocating memory!\n");
-     return -1;
-  }
+  int page,block,leaf;
 
-  vmwLoadPCX(filename,in_framebuffer);
+  unsigned char *pointer;
+  unsigned char *pcx,*hgr;
 
   pointer=in_framebuffer;
 #if 0
@@ -240,20 +281,6 @@ int main(int argc, char **argv) {
     printf("\n");
   }
 #endif
-
-
-  out_framebuffer=calloc(8192,sizeof(unsigned char));
-  if (out_framebuffer==NULL) {
-     fprintf(stderr,"Error allocating memory!\n");
-     return -1;
-  }  
-
-  short fourteen_bits;
-
-  int i,pal[2],yoffset=0;
-  unsigned char byte1,byte2;
-
-  int page,block,leaf;
 
   pcx=in_framebuffer;
   hgr=out_framebuffer;
@@ -290,12 +317,69 @@ int main(int argc, char **argv) {
        *(hgr+1)=byte2;
      }
   }
+  return 0;
+}
+
+
+
+int main(int argc, char **argv) {
+
+  int xsize=0,ysize=0,type;
+  unsigned char *in_framebuffer;
+  unsigned char *out_framebuffer;
+
+  char *filename;
+
+  if (argc<2) {
+    fprintf(stderr,"\nUsage: %s PCXFILE\n\n",argv[0]);
+    exit(1);
+  }
+
+  filename=strdup(argv[1]);
+
+
+  vmwGetPCXInfo(filename,&xsize,&ysize,&type);
+
+  in_framebuffer=calloc(xsize*ysize,sizeof(unsigned char));
+  if (in_framebuffer==NULL) {
+     fprintf(stderr,"Error allocating memory!\n");
+     return -1;
+  }
+
+  vmwLoadPCX(filename,in_framebuffer);
+
+  out_framebuffer=calloc(8192,sizeof(unsigned char));
+  if (out_framebuffer==NULL) {
+     fprintf(stderr,"Error allocating memory!\n");
+     return -1;
+  }  
+
+  if ((ysize==160) || (ysize=192)) {
+    /* HGR or HGR2 */
+  }
+  else {
+    fprintf(stderr,"Warning, possibly truncating due to ysize: %d\n",ysize);
+  }
+
+
+  if (xsize==140) {
+    make_color_image(in_framebuffer,out_framebuffer,xsize,ysize);
+  }
+  else if (xsize==280) {
+    make_bw_image(in_framebuffer,out_framebuffer,xsize,ysize);
+  }
+  else {
+    fprintf(stderr,"Error!  PCX file wrong xsize %d\n",xsize);
+  }
 
   unsigned char header[4];
 
   
   /* assume HGR page 1 */
   int offset=8192;
+
+  /* Last 8 bytes are ignored anyway; by not saving them we can fit */
+  /* in 33 disk sectors rather than 34                              */
   int file_size=8184;
 
   header[0]=offset&0xff;
