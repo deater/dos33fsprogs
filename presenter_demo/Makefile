@@ -6,12 +6,18 @@ all:	presenter_demo.dsk
 
 presenter_demo.dsk:	PRESENTER_DEMO \
 	TITLE.HGR PLASMA_DPOSV.HGR \
+	RAPL_MICRO.HGR \
 	NUM.SHAPE MMM
 	../dos33 presenter_demo.dsk SAVE A PRESENTER_DEMO
 	../dos33 presenter_demo.dsk SAVE B TITLE.HGR
 	../dos33 presenter_demo.dsk SAVE B PLASMA_DPOSV.HGR
+	../dos33 presenter_demo.dsk SAVE B RAPL_MICRO.HGR
 	../dos33 presenter_demo.dsk SAVE B NUM.SHAPE
 	../dos33 presenter_demo.dsk SAVE A MMM
+
+
+RAPL_MICRO.HGR:	rapl_micro.pcx
+	../pcx2hgr rapl_micro.pcx > RAPL_MICRO.HGR
 
 
 PLASMA_DPOSV.HGR:	plasma-dposv-power.pcx
@@ -29,7 +35,7 @@ TITLE.HGR:	title.pcx ../pcx2hgr
 PRESENTER_DEMO:	demo.bas
 	../tokenize_asoft < demo.bas > PRESENTER_DEMO
 
-demo.bas:		../asoft_presenter
+demo.bas:		../asoft_presenter info
 	../asoft_presenter . > demo.bas
 
 clean:	
