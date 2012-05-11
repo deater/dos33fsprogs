@@ -6,17 +6,24 @@ all:	presenter_demo.dsk
 
 presenter_demo.dsk:	PRESENTER_DEMO \
 	TITLE.HGR PLASMA_DPOSV.HGR \
-	RAPL_MICRO.HGR \
-	NUM.SHAPE MMM
+	RAPL_MICRO.HGR WATTSUP.HGR \
+	NUM.SHAPE MMM LOAD_DEMO
 	../dos33 presenter_demo.dsk SAVE A PRESENTER_DEMO
 	../dos33 presenter_demo.dsk SAVE B TITLE.HGR
 	../dos33 presenter_demo.dsk SAVE B PLASMA_DPOSV.HGR
 	../dos33 presenter_demo.dsk SAVE B RAPL_MICRO.HGR
 	../dos33 presenter_demo.dsk SAVE B NUM.SHAPE
+	../dos33 presenter_demo.dsk SAVE B WATTSUP.HGR
 	../dos33 presenter_demo.dsk SAVE A MMM
+	../dos33 presenter_demo.dsk SAVE A LOAD_DEMO
 
+LOAD_DEMO:	load_demo.bas
+	../tokenize_asoft < load_demo.bas > LOAD_DEMO
 
-RAPL_MICRO.HGR:	rapl_micro.pcx
+WATTSUP.HGR:		wattsup.pcx
+	../pcx2hgr wattsup.pcx > WATTSUP.HGR
+
+RAPL_MICRO.HGR:		rapl_micro.pcx
 	../pcx2hgr rapl_micro.pcx > RAPL_MICRO.HGR
 
 
@@ -39,5 +46,5 @@ demo.bas:		../asoft_presenter info
 	../asoft_presenter . > demo.bas
 
 clean:	
-	rm -f *~ *.IMG *.HGR demo.bas PRESENTER_DEMO NUM.SHAPE MMM
+	rm -f *~ *.IMG *.HGR demo.bas PRESENTER_DEMO NUM.SHAPE MMM LOAD_DEMO
 

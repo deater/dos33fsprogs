@@ -61,6 +61,6 @@ START
 38 35.4
 39 35.1
 STOP
-    Average Power (W) versus Time (s)
+%c%Average Power (W) versus Time (s)
 
-     PLASMA Cholesky on Intel Core2
+%c%PLASMA Cholesky on Intel Core2
