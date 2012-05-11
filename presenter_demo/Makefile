@@ -7,17 +7,26 @@ all:	presenter_demo.dsk
 presenter_demo.dsk:	PRESENTER_DEMO \
 	TITLE.HGR PLASMA_DPOSV.HGR \
 	RAPL_MICRO.HGR WATTSUP.HGR \
+	MKL_PLASMA.HGR PLASMA_CHOLESKY.HGR\
 	NUM.SHAPE MMM LOAD_DEMO
 	../dos33 presenter_demo.dsk SAVE A PRESENTER_DEMO
 	../dos33 presenter_demo.dsk SAVE B TITLE.HGR
 	../dos33 presenter_demo.dsk SAVE B PLASMA_DPOSV.HGR
 	../dos33 presenter_demo.dsk SAVE B RAPL_MICRO.HGR
+	../dos33 presenter_demo.dsk SAVE B MKL_PLASMA.HGR
 	../dos33 presenter_demo.dsk SAVE B NUM.SHAPE
 	../dos33 presenter_demo.dsk SAVE B WATTSUP.HGR
+	../dos33 presenter_demo.dsk SAVE B PLASMA_CHOLESKY.HGR
 	../dos33 presenter_demo.dsk SAVE A MMM
 	../dos33 presenter_demo.dsk SAVE A LOAD_DEMO
 
-LOAD_DEMO:	load_demo.bas
+PLASMA_CHOLESKY.HGR:	plasma_cholesky.pcx
+	../pcx2hgr plasma_cholesky.pcx > PLASMA_CHOLESKY.HGR
+
+MKL_PLASMA.HGR:		mkl_plasma_energy.pcx
+	../pcx2hgr mkl_plasma_energy.pcx > MKL_PLASMA.HGR
+
+LOAD_DEMO:		load_demo.bas
 	../tokenize_asoft < load_demo.bas > LOAD_DEMO
 
 WATTSUP.HGR:		wattsup.pcx
