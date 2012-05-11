@@ -1111,16 +1111,19 @@ int display_help(char *name) {
     printf("\ndos33 version %s\n",VERSION);
     printf("by Vince Weaver <vince@deater.net>\n");
     printf("\n");
-    printf("Usage: %s disk_image COMMAND\n",name);
+    printf("Usage: %s [-h] [-y] disk_image COMMAND [options]\n",name);
+    printf("\t-h : this help message\n");
+    printf("\t-y : always answer yes for anying warning questions\n");
+    printf("\n");
     printf("  Where disk_image is a valid dos3.3 disk image\n"
 	   "  and COMMAND is one of the following:\n");
     printf("\tCATALOG\n");
-    printf("\tLOAD  apple_file <local_file>\n");
-    printf("\tSAVE type loadl_file <apple_file>\n");
-    printf("\tDELETE apple_file\n");   
-    printf("\tLOCK apple_file\n");
-    printf("\tUNLOCK apple_file\n");
-    printf("\tRENAME apple_file_old apple_file_new\n");
+    printf("\tLOAD     apple_file <local_file>\n");
+    printf("\tSAVE     type local_file <apple_file>\n");
+    printf("\tDELETE   apple_file\n");   
+    printf("\tLOCK     apple_file\n");
+    printf("\tUNLOCK   apple_file\n");
+    printf("\tRENAME   apple_file_old apple_file_new\n");
     printf("\tUNDELETE apple_file\n");
     printf("\tDUMP\n");   
 #if 0
@@ -1155,17 +1158,45 @@ int main(int argc, char **argv) {
     char apple_filename[31],new_filename[31];
     char output_filename[BUFSIZ];
     char *result_string;
+    int always_yes=0,firstarg=1,extra_ops=0;
 
 
-       /* Check command line arguments */
+    /* Check command line arguments */
+    /* Ugh I should use getopt() or something similar here */
+
+    if (argc<2) {
+       display_help(argv[0]);
+       goto exit_program;
+    }
+
+    if (!strncmp(argv[1],"-h",2)) {
+       display_help(argv[1]);
+       goto exit_program;
+    }
+
+    if (!strncmp(argv[1],"-y",2)) {
+       always_yes=1;
+       extra_ops++;
+       firstarg++;
+    }
+
+
     if (argc<3) {
        printf("\nInvalid arguments!\n");
        display_help(argv[0]);
        goto exit_program;
     }
 
+      /* get argument 1, which is image name */
+    strncpy(image,argv[firstarg],BUFSIZ);    
+    dos_fd=open(image,O_RDWR);
+    if (dos_fd<0) {
+       printf("Error opening disk_image: %s\n",image);
+       exit(4);
+    }
+
        /* Check argument #2 which is command */
-    strncpy(temp_string,argv[2],BUFSIZ);
+    strncpy(temp_string,argv[firstarg+1],BUFSIZ);
        /* Make command be uppercase */
     for(i=0;i<strlen(temp_string);i++) {
        temp_string[i]=toupper(temp_string[i]);
@@ -1209,33 +1240,28 @@ int main(int argc, char **argv) {
        goto exit_program;
     }
 
-      /* get argument 1, which is image name */
-    strncpy(image,argv[1],BUFSIZ);    
-    dos_fd=open(image,O_RDWR);
-    if (dos_fd<0) {
-       printf("Error opening disk_image: %s\n",image);
-       exit(4);
-    }
+
    
     switch(command) {
             /* Load a file from disk image to local machine */
        case COMMAND_LOAD:
                /* check and make sure we have apple_filename */
-            if (argc<4) {
+            if (argc<4+extra_ops) {
 	       printf("Error! Need apple file_name\n");
 	       printf("%s %s LOAD apple_filename\n",argv[0],image);
 	       goto exit_and_close;
 	    }
                /* Truncate filename if too long */
-            if (strlen(argv[3])>30) {
-	       printf("Warning!  Truncating %s to 30 chars\n",argv[3]);
+            if (strlen(argv[firstarg+2])>30) {
+	       printf("Warning!  Truncating %s to 30 chars\n",
+		      argv[firstarg+2]);
 	    }
-            strncpy(apple_filename,argv[3],30);
+            strncpy(apple_filename,argv[firstarg+2],30);
 	    apple_filename[30]='\0';
 		
                /* get output filename */
-            if (argc==5) {
-	       strncpy(output_filename,argv[4],BUFSIZ);
+            if (argc==5+extra_ops) {
+	       strncpy(output_filename,argv[firstarg+3],BUFSIZ);
 	    }
             else {
 	       strncpy(output_filename,apple_filename,30);
@@ -1277,20 +1303,20 @@ int main(int argc, char **argv) {
                /* argv4 == name of local file */
                /* argv5 == optional name of file on disk image */
        
-            if (argc<5) {
+            if (argc<5+extra_ops) {
 	       printf("Error! Need type and file_name\n");
 	       printf("%s %s SAVE type file_name apple_filename\n",
 		      argv[0],image);
 	       goto exit_and_close;
 	    }
             
-            type=argv[3][0];
+            type=argv[firstarg+2][0];
        
-            if (argc==6) {
-	       if (strlen(argv[5])>30) {
+            if (argc==6+extra_ops) {
+	       if (strlen(argv[firstarg+4])>30) {
 		  printf("Warning!  Truncating filename to 30 chars!\n");
 	       }
-	       strncpy(apple_filename,argv[5],30);
+	       strncpy(apple_filename,argv[firstarg+4],30);
 	       apple_filename[30]=0;
 	    }
             else {
@@ -1300,9 +1326,9 @@ int main(int argc, char **argv) {
 	          /* path info isn't used                       */
 		 {
 		    char *temp;
-		    temp=argv[4]+(strlen(argv[4])-1);
+		    temp=argv[firstarg+3]+(strlen(argv[firstarg+3])-1);
 		
-		    while(temp!=argv[4]) {
+		    while(temp!=argv[firstarg+3]) {
 		       temp--;
 		       if (*temp == '/') {
 			  temp++;
@@ -1334,43 +1360,44 @@ int main(int argc, char **argv) {
 	       dos33_delete_file(dos_fd,catalog_entry);
 	    }
 
-            dos33_add_file(dos_fd,type,argv[4],apple_filename);
+            dos33_add_file(dos_fd,type,argv[firstarg+3],apple_filename);
                    
             break;
 
      case COMMAND_DELETE:
-            if (argc<4) {
+            if (argc+extra_ops<4) {
 	       printf("Error! Need file_name\n");
 	       printf("%s %s DELETE apple_filename\n",argv[0],image);
 	       goto exit_and_close;
 	    }
-            catalog_entry=dos33_check_file_exists(dos_fd,argv[3],FILE_NORMAL);
+            catalog_entry=dos33_check_file_exists(dos_fd,argv[firstarg+2],
+						  FILE_NORMAL);
             if (catalog_entry<0) {
-	       printf("Error!  File %s does not exist\n",argv[3]);
+	       printf("Error!  File %s does not exist\n",argv[firstarg+2]);
 	       goto exit_and_close;
 	    } 
 	    dos33_delete_file(dos_fd,catalog_entry);
 	    break;
        
      case COMMAND_DUMP:
-          printf("Dumping %s!\n",argv[1]);
+          printf("Dumping %s!\n",argv[firstarg]);
           dos33_dump(dos_fd);
           break;
        
      case COMMAND_LOCK:
      case COMMAND_UNLOCK:       
              /* check and make sure we have apple_filename */
-          if (argc<4) {
+          if (argc<4+extra_ops) {
 	     printf("Error! Need apple file_name\n");
 	     printf("%s %s LOCK apple_filename\n",argv[0],image);
 	     goto exit_and_close;
 	  }
        
              /* Truncate filename if too long */
-          if (strlen(argv[3])>30) {
-	     printf("Warning!  Truncating %s to 30 chars\n",argv[3]);
+          if (strlen(argv[firstarg+2])>30) {
+	     printf("Warning!  Truncating %s to 30 chars\n",argv[firstarg+2]);
 	  }
-          strncpy(apple_filename,argv[3],30);
+          strncpy(apple_filename,argv[firstarg+2],30);
 	  apple_filename[30]='\0';
 		
              /* get the entry/track/sector for file */
@@ -1388,7 +1415,7 @@ int main(int argc, char **argv) {
        
      case COMMAND_RENAME:
              /* check and make sure we have apple_filename */
-          if (argc<5) {
+          if (argc<5+extra_ops) {
 	     printf("Error! Need two filenames\n");
 	     printf("%s %s LOCK apple_filename_old apple_filename_new\n",
 		    argv[0],image);
@@ -1396,17 +1423,17 @@ int main(int argc, char **argv) {
 	  }
        
              /* Truncate filename if too long */
-          if (strlen(argv[3])>30) {
-	     printf("Warning!  Truncating %s to 30 chars\n",argv[3]);
+          if (strlen(argv[firstarg+2])>30) {
+	     printf("Warning!  Truncating %s to 30 chars\n",argv[firstarg+2]);
 	  }
-          strncpy(apple_filename,argv[3],30);
+          strncpy(apple_filename,argv[firstarg+2],30);
 	  apple_filename[30]='\0';
        
              /* Truncate filename if too long */
-          if (strlen(argv[4])>30) {
-	     printf("Warning!  Truncating %s to 30 chars\n",argv[4]);
+          if (strlen(argv[firstarg+3])>30) {
+	     printf("Warning!  Truncating %s to 30 chars\n",argv[firstarg+3]);
 	  }
-          strncpy(new_filename,argv[4],30);
+          strncpy(new_filename,argv[firstarg+3],30);
 	  new_filename[30]='\0';       
 		
              /* get the entry/track/sector for file */
@@ -1432,10 +1459,10 @@ int main(int argc, char **argv) {
        
              /* Truncate filename if too long */
              /* what to do about last char ? */
-          if (strlen(argv[3])>30) {
-	     printf("Warning!  Truncating %s to 30 chars\n",argv[3]);
+          if (strlen(argv[firstarg+2])>30) {
+	     printf("Warning!  Truncating %s to 30 chars\n",argv[firstarg+2]);
 	  }
-          strncpy(apple_filename,argv[3],30);
+          strncpy(apple_filename,argv[firstarg+2],30);
 	  apple_filename[30]='\0';
 		
              /* get the entry/track/sector for file */
