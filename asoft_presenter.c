@@ -163,6 +163,45 @@ static void print_number(int line_num, int x, int y, char *string) {
 
 }
 
+void center_print(int line_num,char *string,int cols) {
+
+   int i,centering=(cols-strlen(string))/2;
+   
+   printf("%d PRINT ",line_num);
+   if (centering<5) {
+      printf("\"");
+      for(i=0;i<centering;i++) printf(" ");
+   }
+   else {
+      printf("SPC(%d);\"",centering);
+   }
+   printf("%s\"\n",string);
+   
+}
+
+static void print_til_eof(FILE *fff,int *line_num) {	
+   
+   char *result;
+   char string[BUFSIZ];
+   
+   while(1) {
+      result=fgets(string,BUFSIZ,fff);
+      if (result==NULL) break;
+      
+      if (string[0]=='\n') {
+	 printf("%d PRINT\n",*line_num);                        (*line_num)++;
+	 continue;
+      }
+      
+      string[strlen(string)-1]='\0';
+      	   
+      if ((string[0]=='%') && (string[1]=='c') && (string[2]=='%')) {
+	 center_print(*line_num,string+3,40);                    (*line_num)++;
+      } else {	     
+	 printf("%d PRINT \"%s\"\n",*line_num,string);          (*line_num)++;
+      }
+   }
+}
 
 static void generate_slide(int num, int max, char*filename) {
 
@@ -192,7 +231,8 @@ static void generate_slide(int num, int max, char*filename) {
      fprintf(stderr,"Couldn't open %s!\n",filename);
    }
    else {
-     int address=0x6000;
+      /* assume we load ourselves high */
+     int address=0x1000;
      int num_plots=0,plot,color;
      double maxx,maxy,x,y;
      int applex,appley,hplot_num,first=1;
@@ -206,7 +246,7 @@ static void generate_slide(int num, int max, char*filename) {
 
      if (strstr(type,"HGR_PLOT")) {
         printf("%d IF ST%%=1 GOTO %d\n",line_num,line_num+3);      line_num++;
-        printf("%d PRINT CHR$(4);\"BLOAD NUM.SHAPE\"\n",line_num); line_num++;
+        printf("%d PRINT CHR$(4);\"BLOAD NUM.SHAPE,A$1000\"\n",line_num); line_num++;
         printf("%d POKE 232,%d: POKE 233,%d : ROT=0: SCALE=3: ST%%=1\n",   
 	       line_num,address&0xff,(address>>8)&0xff);           line_num++;
 
@@ -326,28 +366,12 @@ static void generate_slide(int num, int max, char*filename) {
 
 	/* Print remaining text */
 	printf("%d VTAB 21\n",line_num);                       line_num++;
-	while(1) {
-	   result=fgets(string,BUFSIZ,fff);
-	   if (result==NULL) break;
-	   string[strlen(string)-1]='\0';
-	   printf("%d PRINT \"%s\"\n",line_num,string);         line_num++;
-	}
-
-
+	print_til_eof(fff,&line_num);
      }
      else if (strstr(type,"HGR2")) {
-        printf("%d HGR2\n",line_num);                           line_num++;
-	while(1) {
-	   result=fgets(string,BUFSIZ,fff);
-	   if (result==NULL) break;
-      	   if ((string[0]=='#') || (string[0]=='\n')) continue;	   
-	}
-	string[strlen(string)-1]='\0';
-        printf("%d PRINT CHR$(4);\"BLOAD %s,A$4000\"\n",
-	       line_num,string);                                line_num++;
-     }
-     else if (strstr(type,"HGR")) {
-        printf("%d HGR\n",line_num);                            line_num++;
+	/* cheat and use HGR page 1 but text turned off */
+        printf("%d HGR:POKE -16302,0\n",line_num);                           line_num++;
+	
 	while(1) {
 	   result=fgets(string,BUFSIZ,fff);
 	   if (result==NULL) break;
@@ -357,18 +381,31 @@ static void generate_slide(int num, int max, char*filename) {
         printf("%d PRINT CHR$(4);\"BLOAD %s,A$2000\"\n",
 	       line_num,string);                                line_num++;
      }
+     else if (strstr(type,"HGR")) {
+        printf("%d HGR\n",line_num);                            line_num++;
+	while(1) {
+	   result=fgets(string,BUFSIZ,fff);
+	   if (result==NULL) break;
+      	   if ((string[0]=='#') || (string[0]=='\n')) continue;
+	   break;
+	}
+	string[strlen(string)-1]='\0';
+        printf("%d PRINT CHR$(4);\"BLOAD %s,A$2000\"\n",
+	       line_num,string);                                line_num++;
+	/* print rest of stuff */
+	printf("%d VTAB 21\n",line_num);                       line_num++;
+	
+	print_til_eof(fff,&line_num);
+
+     }
      else if (strstr(type,"80COL")) {
 
      }
      else if (strstr(type,"40COL")) {
 
         printf("%d TEXT:VTAB 1\n",line_num);                     line_num++;
-        while(1) {
-	   result=fgets(string,BUFSIZ,fff);
-	   if (result==NULL) break;
-	   string[strlen(string)-1]='\0';
-	   printf("%d  PRINT \"%s\"\n",line_num,string);         line_num++;
-	}
+	print_til_eof(fff,&line_num);
+
      }
 
 
@@ -475,6 +512,7 @@ int main(int argc, char **argv) {
 	 fprintf(stderr,"Unexpected EOF finding END_SLIDES in %s\n",filename);
 	 exit(1);
       }
+      if ((string[0]=='#') || (string[0]=='\n')) continue;
       if (!strncmp("END_SLIDES",string,10)) break;
 
       string[strlen(string)-1]='\0';
@@ -524,8 +562,6 @@ int main(int argc, char **argv) {
    for(i=0;i<info.slides;i++) {
      generate_slide(i,info.slides,slides[i].filename);
    }
-
-   printf("999 END\n");
 
    generate_keyhandler();
    generate_footer(footer.left,footer.center,40);
