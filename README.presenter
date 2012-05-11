@@ -1,0 +1,102 @@
+ASOFT_PRESENTER
+~~~~~~~~~~~~~~~
+
+Background:
+
+   I was inspired to write this when a co-worked used an iPad for a
+   talk.  The iPad is as powerful as early Cray supercomputers;
+   why waste that much processing power on a slide show?
+   
+   
+In present mode:
+   Q quits
+   space or -> goes to next slide
+   <- goes to previous slide
+   
+How to Create Presentations:
+
+   ./asoft_presenter DIRECTORY
+   
+   Directory must contain "info" and "footer" files
+   
+   In general empty lines (just linefeed) and lines starting with #
+   are ignored
+   
+   info: has the slide info.  First key is
+         TITLE
+	 followed by title
+	 AUTHOR
+	 followed by author
+	 EMAIL
+	 followed by e-mail
+	 SLIDES
+	 followed by a list of files to be parsed in-order with slide info
+	 END_SLIDES
+	 
+    footer: has info on footer
+         first line: text to be left justified
+	 second line: text to be centered
+	 
+    slide files:
+         starting a line with %c% will center the following text
+	 
+	 First line describes slide type
+	    40COL - 40 column text
+	    80COL - 80 column text (not implemented)
+	    HGR   - HGR with 4-lines of text
+	    HGR2  - HGR with no text (note, uses page 1)
+	    HGR_PLOT - plots data on HGR display
+	    
+	  40COL - text as follows is printed to 40 column text display
+	  
+	  HGR - first line indicates file to BLOAD.
+	        following lines are text at bottom
+		
+	  HGR2 - first line indicated file to BLOAD
+	         actually is page1 (HGR) with soft-switch thrown
+		 this is because presentations get so large
+		 I load them high by default into HGR page2
+		 
+	  HGR_PLOT - loads a shape table to $1000 and uses it for
+	             labeling axes
+	  
+	             first line x and y size of data
+	             next line how many tick marks on x and y axis
+		     START
+		     followed by x y NUM where NUM is number to 
+		         write at x y
+		     STOP
+		     number of plots
+		     for each plot,
+		     START
+		     color of plot
+		     list of data points (x y)
+		     STOP
+		     
+		     Then list of text to put in bottom 4 lines
+
+
+NOTES while developing:
+
+   ARGH I've been programming in C too long can't handle things that start
+   numbering with "1" rather than "0".
+
+   AppleSoft BASIC was my first programming language; it's amazing how
+   I can still program it all these years later.
+   
+   On-line documentation that can be found for shape table construction
+   is misleading at best.  The original BASIC manual is best for this.
+   
+   The BASIC code generated is really wasteful, especially for the
+   extravagant REM statements.
+   
+   I am most proud of the code that puts the slide number at end
+   of text w/o scrolling.  There's probably a better way to do it.
+   
+   I should probably use page-flipping to avoid flicker, but I use
+   so much RAM it might not be doable.  Probably also would
+   require assembly.
+   
+   
+   
+	

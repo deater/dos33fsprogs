@@ -61,6 +61,9 @@ pcx2hgr:	converts a 140x160 (or 140x192) PCX image file
 		Scale to 140x160.  Save as indexed with the 
 		included "hgr.pal" palette.
 
+                It also works with 280x160 but in that case it ignores
+		colors and only generates black and white output.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -74,10 +77,14 @@ asoft_presenter:
 
     creates a slide presentation disk image for use on apple II
 
+    see README.presenter for more documentation
 
-    ARGH programming in C too long can't handle things that start 
-    numbering with "1" rather than "0".
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
+shape_table:  create an Apple shape table for use with
+              DRAW and XDRAW commands
+	      
+	      can generate BASIC code to load it (via DATA) or
+	      else a binary version that can be BLOADed
+	      
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -34,3 +34,13 @@ RELEASE 0.0.7
 + Implement rename in dos33
 
 RELEASE 0.0.8
+
+11 May 2012
++ Make a lot of changes for presentation code
++ Add asoft_presenter
++ Add pcx2hgr
++ Add shape_table
++ Update dos33 to accept -y argument
++ Fix some minor bugs
+
+RELEASE 0.0.10
