@@ -10,17 +10,17 @@ presenter_demo.dsk:	PRESENTER_DEMO \
 	MKL_PLASMA.HGR PLASMA_CHOLESKY.HGR \
 	RAPL_INT_FP.HGR \
 	NUM.SHAPE MMM LOAD_DEMO
-	../dos33 presenter_demo.dsk SAVE A PRESENTER_DEMO
-	../dos33 presenter_demo.dsk SAVE B TITLE.HGR
-	../dos33 presenter_demo.dsk SAVE B PLASMA_DPOSV.HGR
-	../dos33 presenter_demo.dsk SAVE B RAPL_MICRO.HGR
-	../dos33 presenter_demo.dsk SAVE B MKL_PLASMA.HGR
-	../dos33 presenter_demo.dsk SAVE B NUM.SHAPE
-	../dos33 presenter_demo.dsk SAVE B WATTSUP.HGR
-	../dos33 presenter_demo.dsk SAVE B PLASMA_CHOLESKY.HGR
-	../dos33 presenter_demo.dsk SAVE B RAPL_INT_FP.HGR
-	../dos33 presenter_demo.dsk SAVE A MMM
-	../dos33 presenter_demo.dsk SAVE A LOAD_DEMO
+	../dos33 -y presenter_demo.dsk SAVE A PRESENTER_DEMO
+	../dos33 -y presenter_demo.dsk SAVE B TITLE.HGR
+	../dos33 -y presenter_demo.dsk SAVE B PLASMA_DPOSV.HGR
+	../dos33 -y presenter_demo.dsk SAVE B RAPL_MICRO.HGR
+	../dos33 -y presenter_demo.dsk SAVE B MKL_PLASMA.HGR
+	../dos33 -y presenter_demo.dsk SAVE B NUM.SHAPE
+	../dos33 -y presenter_demo.dsk SAVE B WATTSUP.HGR
+	../dos33 -y presenter_demo.dsk SAVE B PLASMA_CHOLESKY.HGR
+	../dos33 -y presenter_demo.dsk SAVE B RAPL_INT_FP.HGR
+	../dos33 -y presenter_demo.dsk SAVE A MMM
+	../dos33 -y presenter_demo.dsk SAVE A LOAD_DEMO
 
 RAPL_INT_FP.HGR:	rapl_int_fp.pcx
 	../pcx2hgr rapl_int_fp.pcx > RAPL_INT_FP.HGR
