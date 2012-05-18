@@ -30,6 +30,7 @@ int main(int argc, char **argv) {
    int line1,line2;
    int link1,link2,link;
    int debug=0;
+   int offset=0x801;
    
        /* read size, first two bytes */
    size1=fgetc(stdin);
@@ -43,7 +44,9 @@ int main(int argc, char **argv) {
       /* assumes asoft program starts at address $801 */
       link1=fgetc(stdin);
       link2=fgetc(stdin);
-      link=(link1<<8)|link2;
+      link=(link2<<8)|link1;
+      offset+=2;
+
       /* link==0 indicates EOF */
       if (link==0) goto the_end;
       
@@ -52,9 +55,11 @@ int main(int argc, char **argv) {
       line2=fgetc(stdin);
       if (feof(stdin)) goto the_end;
       printf("%4d ",((line2)<<8)+line1);
+      offset+=2;
       
       /* repeat until EOL character (0) */
       while( (ch1=fgetc(stdin))!=0 ) {
+	  offset++;
 	     /* if > 0x80 it's a token */
 	  if (ch1>=0x80) {
 	     fputc(' ',stdout);
@@ -69,7 +74,10 @@ int main(int argc, char **argv) {
 	  }
 	 
       }
+      offset++;
       printf("\n");
+      if (link!=offset) fprintf(stderr,"WARNING! link!=offset %x %x\n",
+				link,offset);
    }
    the_end:;
    return 0;
