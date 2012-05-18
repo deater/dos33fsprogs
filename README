@@ -88,3 +88,8 @@ shape_table:  create an Apple shape table for use with
 	      else a binary version that can be BLOADed
 	      
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+asoft_compact: tries to compress your Applesoft basic program
+               to make it as small as possible
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
