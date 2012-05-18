@@ -79,7 +79,7 @@ static int getnum(void) {
       line_ptr++;
    }
 
-   if (!line_ptr) {
+   if (!(*line_ptr)) {
       fprintf(stderr,"Missing line number line %d\n",line);
       exit(-1);
    }
@@ -175,8 +175,7 @@ int main(int argc, char **argv) {
       output[offset+2]=LOW(linenum);
       output[offset+3]=HIGH(linenum);
       offset+=4;
-      
-      
+            
       while(1) {
 	 token=find_token();
 	 output[offset]=token;
