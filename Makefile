@@ -4,9 +4,14 @@ LFLAGS =
 
 all:	dos33 asoft_detoken mkdos33fs make_b tokenize_asoft \
 	dos33_text2ascii integer_detoken char2hex pcx2hgr \
-	asoft_presenter	shape_table
+	asoft_presenter	shape_table asoft_compact
 
 
+asoft_compact:		asoft_compact.o
+			$(CC) $(LFLAGS) -o asoft_compact asoft_compact.o
+
+asoft_compact.o:	asoft_compact.c
+			$(CC) $(CFLAGS) -c asoft_compact.c
 
 asoft_detoken:		asoft_detoken.o
 			$(CC) $(LFLAGS) -o asoft_detoken asoft_detoken.o
@@ -82,7 +87,8 @@ install:
 clean:		
 		rm -f *~ *.o asoft_detoken dos33 make_b mkdos33fs \
 			tokenize_asoft dos33_text2ascii integer_detoken \
-			char2hex pcx2hgr asoft_presenter shape_table
+			char2hex pcx2hgr asoft_presenter shape_table \
+			asoft_compact
 		cd tests && make clean
 		cd presenter_demo && make clean
 
