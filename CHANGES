@@ -44,3 +44,8 @@ RELEASE 0.0.8
 + Fix some minor bugs
 
 RELEASE 0.0.10
+
+21 September 2012
++ Add -f option to mkdos33fs that lets you specify the name of
+  the HELLO file
++ Add HELLO option to dos33 that does something similar

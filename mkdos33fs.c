@@ -14,11 +14,12 @@ void usage(char *binary,int help) {
     printf("\thttp://www.deater.net/weave/vmwprod/apple/\n\n");
     if (help) {
        printf("Usage:\t%s [-t track] [-s sector] [-b size] "
-	      "[-d filename] device_name\n\n",binary);
+	      "[-d filename] [-f filename] device_name\n\n",binary);
        printf("\t-t tracks    : number of tracks in filesystem\n");
        printf("\t-s sectors   : number of sectors in filesystem\n");
        printf("\t-b blocksize : size of sector, in bytes\n");
        printf("\t-d filename  : file to copy first 3 tracks over from\n");
+       printf("\t-f filename  : name of BASIC file to autoboot.  Default is HELLO\n");
        printf("\n\n"); 
     }
     exit(0);
@@ -33,10 +34,12 @@ int main(int argc, char **argv) {
     char *buffer,*endptr;
     int i,c,copy_dos=0;
     int result;
+
+    char boot_filename[30]="HELLO                         ";
    
        /* Parse Command Line Arguments */
    
-    while ((c = getopt (argc, argv,"t:s:b:d:hv"))!=-1) {
+    while ((c = getopt (argc, argv,"t:s:b:d:f:hv"))!=-1) {
        switch (c) {
 	  
 	case 't': num_tracks=strtol(optarg,&endptr,10);
@@ -53,6 +56,16 @@ int main(int argc, char **argv) {
 	case 'd': copy_dos=1;
 	          strncpy(dos_src,optarg,BUFSIZ);
 	          break;
+	  
+	case 'f': 
+	          if (strlen(optarg)>30) {
+		     fprintf(stderr,"Auto boot filename too long!\n");
+		     exit(1);
+		  }
+	          memcpy(boot_filename,optarg,strlen(optarg));
+	          for(i=strlen(optarg);i<30;i++) boot_filename[i]=' ';
+//	  printf("Writing boot filename \"%s\"\n",boot_filename);
+	          break;	  
 	  
 	case 'v': usage(argv[0],0);
 	case 'h': usage(argv[0],1);
@@ -92,7 +105,7 @@ int main(int argc, char **argv) {
     buffer=calloc(1,sizeof(char)*block_size);
    
        /* Open device */
-    fd=open(device,O_WRONLY|O_CREAT,0666);
+    fd=open(device,O_RDWR|O_CREAT,0666);
     if (fd<0) {
        fprintf(stderr,"Error opening %s\n",device);  
        goto end_of_program;
@@ -119,6 +132,18 @@ int main(int argc, char **argv) {
        }
        close(dos_fd);
        
+       /* Set boot filename */
+       
+       /* Track 1 sector 9 */
+       lseek(fd,((1*num_sectors)+9)*block_size,SEEK_SET);
+       result=read(fd,buffer,block_size);
+       
+       /* filename begins at offset 75 */
+       for(i=0;i<30;i++) {
+	  buffer[0x75+i]=boot_filename[i]|0x80;
+       }
+       lseek(fd,((1*num_sectors)+9)*block_size,SEEK_SET);       
+       result=write(fd,buffer,block_size);
     }
 
        /* clear buffer */
@@ -159,6 +184,7 @@ int main(int argc, char **argv) {
     buffer[VTOC_FREE_BITMAPS+2]=0x00;
     buffer[VTOC_FREE_BITMAPS+3]=0x00;
 
+          /* if copying dos reserve tracks 1 and 2 as well */
     if (copy_dos) {
        buffer[VTOC_FREE_BITMAPS+4]=0x00;
        buffer[VTOC_FREE_BITMAPS+5]=0x00;
@@ -176,8 +202,6 @@ int main(int argc, char **argv) {
     buffer[VTOC_FREE_BITMAPS+17*4+1]=0x00;
     buffer[VTOC_FREE_BITMAPS+17*4+2]=0x00;
     buffer[VTOC_FREE_BITMAPS+17*4+3]=0x00;
-
-
    
        /* Write out VTOC to disk */
     lseek(fd,((17*num_sectors)+0)*block_size,SEEK_SET);

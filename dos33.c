@@ -959,7 +959,7 @@ keep_deleting:
    return 0;
 }
 
-static int dump_sector() {
+static int dump_sector(void) {
     int i,j;
    
     for(i=0;i<16;i++) {
@@ -983,8 +983,19 @@ static int dos33_dump(int fd) {
     unsigned char tslist[BYTES_PER_SECTOR];
     int result;
    
+    /* Read Track 1 Sector 9 */
+    lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
+    result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+
+    printf("Finding name of startup file, Track 1 Sector 9 offset $75\n");
+    dump_sector();
+    printf("Startup Filename: ");
+    for(i=0;i<30;i++) printf("%c",sector_buffer[0x75+i]&0x7f);						
+    printf("\n");
+   
     dos33_read_vtoc(fd);
     
+    printf("\nVTOC Sector:\n");
     dump_sector();
    
     printf("\n\n");
@@ -1032,7 +1043,7 @@ repeat_catalog:
     lseek(fd,DISK_OFFSET(catalog_t,catalog_s),SEEK_SET);
     result=read(fd,sector_buffer,BYTES_PER_SECTOR);
 
-    dump_sector(sector_buffer);    
+    dump_sector();
    
     for(file=0;file<7;file++) {
        printf("\n\n");	
@@ -1105,7 +1116,27 @@ continue_dump:;
     return 0;
 }
 
-
+int dos33_rename_hello(int fd, char *new_name) {
+   char buffer[BYTES_PER_SECTOR];
+   int i;
+   
+   lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
+   read(fd,buffer,BYTES_PER_SECTOR);
+       
+   for(i=0;i<30;i++) {
+      if (i<strlen(new_name)) {
+	 buffer[0x75+i]=new_name[i]|0x80;
+      }
+      else {
+	 buffer[0x75+i]=' '|0x80;
+      }
+   }
+       
+   lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
+   write(fd,buffer,BYTES_PER_SECTOR);       
+   
+   return 0;
+}
 
 int display_help(char *name) {
     printf("\ndos33 version %s\n",VERSION);
@@ -1125,7 +1156,8 @@ int display_help(char *name) {
     printf("\tUNLOCK   apple_file\n");
     printf("\tRENAME   apple_file_old apple_file_new\n");
     printf("\tUNDELETE apple_file\n");
-    printf("\tDUMP\n");   
+    printf("\tDUMP\n");
+    printf("\tHELLO    apple_file\n");
 #if 0
     printf("\tINIT\n");
     printf("\tCOPY\n");
@@ -1146,6 +1178,7 @@ int display_help(char *name) {
 #define COMMAND_RENAME   9
 #define COMMAND_COPY    10
 #define COMMAND_DUMP    11
+#define COMMAND_HELLO   12
 
 int main(int argc, char **argv) {
    
@@ -1235,6 +1268,9 @@ int main(int argc, char **argv) {
     else if (!strncmp(temp_string,"DUMP",4)) {
        command=COMMAND_DUMP;
     }	
+    else if (!strncmp(temp_string,"HELLO",5)) {
+       command=COMMAND_HELLO;
+    }	   
     else {
        display_help(argv[0]);
        goto exit_program;
@@ -1487,7 +1523,22 @@ int main(int argc, char **argv) {
           dos33_undelete_file(dos_fd,catalog_entry,apple_filename);
             
           break;
+     case COMMAND_HELLO:
+            if (argc+extra_ops<4) {
+	       fprintf(stderr,"Error! Need file_name\n");
+	       fprintf(stderr,"%s %s HELLO apple_filename\n",argv[0],image);
+	       goto exit_and_close;
+	    }
+            catalog_entry=dos33_check_file_exists(dos_fd,argv[firstarg+2],
+						  FILE_NORMAL);
+            if (catalog_entry<0) {
+	       fprintf(stderr,
+		       "Warning!  File %s does not exist\n",argv[firstarg+2]);
+	    }
        
+            dos33_rename_hello(dos_fd,argv[firstarg+2]);
+       
+            break;
      case COMMAND_INIT:
           /* use common code from mkdos33fs? */
      case COMMAND_COPY:
