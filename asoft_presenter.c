@@ -2,7 +2,20 @@
 #include <string.h>
 #include <stdlib.h>
 
-static void generate_keyhandler(void) {
+#define SLIDE_40COL    0
+#define SLIDE_80COL    1
+#define SLIDE_HGR      2
+#define SLIDE_HGR2     3
+#define SLIDE_HGR_PLOT 4
+
+#define TARGET_DEFAULT 0
+#define TARGET_PLUS    1
+
+#define MAX_SLIDES 89
+#define LINES_PER_SLIDE 100
+#define HPLOTS_ON_LINE 6
+
+static void generate_keyhandler(int target) {
 
   printf("9000 REM ******************\n");
   printf("9002 REM * GET KEYPRESSES *\n");
@@ -10,11 +23,22 @@ static void generate_keyhandler(void) {
 
   printf("9006 N%%=2\n");
 
-  /* memory location -16384 holds keyboard strobe */
-  /* Loop until a key is pressed.                 */
-  printf("9008 X=PEEK(-16384): IF X < 128 THEN 9008\n");
-  /* get the key value, convert to ASCII */
-  printf("9010 X=PEEK(-16368)-128\n");
+  /* key handling varies slightly for the Apple II Plus. */
+  if (target == TARGET_PLUS) {
+    /* memory location -16384 holds key pressed - loop until this happens */
+    printf("9008 X=PEEK(-16384): IF X < 128 THEN 9008\n");
+    /* clear keyboard strobe */
+    printf("9009 POKE-16368,0");
+    /* get the key value, convert to ASCII */
+    printf("9010 X=X-128\n");
+  }
+  else {
+    /* memory location -16384 holds keyboard strobe */
+    /* Loop until a key is pressed.                 */
+    printf("9008 X=PEEK(-16384): IF X < 128 THEN 9008\n");
+    /* get the key value, convert to ASCII */
+    printf("9010 X=PEEK(-16368)-128\n");
+  }
   /* Exit if escape or Q pressed */
   printf("9020 IF X=27 OR X=81 THEN TEXT:HOME:END\n");
   /* increment page count if space or -> */
@@ -42,7 +66,7 @@ static void generate_footer(char *left, char *center, int cols) {
   printf("10007 L%%=LEN(X$)\n");
 
   printf("10010 PRINT \"%s",left);
-  
+
   center_len=strlen(center);
   center_count=(cols-center_len)/2;
   center_count-=strlen(left);
@@ -60,10 +84,10 @@ static void generate_footer(char *left, char *center, int cols) {
   printf("10012 FOR I=0 TO %d-L%%:PRINT \" \";: NEXT I\n",right_count-1);
 
   printf("10014 PRINT LEFT$(X$,L%%-1);\n");
-  
+
   /* set last character to the right most char of the total pages */
   /* without scrolling.                                           */
-  printf("10015 TP$=STR$(TP%%) : X$=RIGHT$(TP$,1) : X=VAL(X$): POKE 2039,X+48\n"); 
+  printf("10015 TP$=STR$(TP%%) : X$=RIGHT$(TP$,1) : X=VAL(X$): POKE 2039,X+48\n");
   /* reset text, move cursor up */
   printf("10020 NORMAL : VTAB 1: PRINT\"\"\n");
   printf("10030 RETURN\n");
@@ -77,8 +101,6 @@ static void print_line(unsigned char c, int num) {
 
 }
 
-
-
 static void center_comment(unsigned char c, int max_len, char *string) {
 
    int half_len;
@@ -91,7 +113,7 @@ static void center_comment(unsigned char c, int max_len, char *string) {
    print_line(' ',max_len-half_len-strlen(string));
 }
 
-static void generate_initial_comment(char *title, char *author, char *email) {
+static void generate_initial_comment(char *title, char *author, char *email, int target) {
 
   int max_len;
 
@@ -111,21 +133,28 @@ static void generate_initial_comment(char *title, char *author, char *email) {
    center_comment(' ',max_len,author);
    printf(" *\n");
 
-   printf("8 REM * ");
+   printf("7 REM * ");
    center_comment(' ',max_len,email);
    printf(" *\n");
+
+   if (target == TARGET_PLUS) {
+     printf("8 REM * ");
+     center_comment(' ',max_len,"TARGET: APPLE II PLUS");
+     printf(" *\n");
+   }
 
    printf("9 REM ");
    print_line('*',max_len+4);
    printf("\n");
 
-} 
+}
 
 struct project_info {
   char *title;
   char *author;
   char *email;
   int slides;
+  int target;
 };
 
 struct footer_info {
@@ -133,20 +162,10 @@ struct footer_info {
   char *center;
 };
 
-#define SLIDE_40COL    0
-#define SLIDE_80COL    1
-#define SLIDE_HGR      2
-#define SLIDE_HGR2     3
-#define SLIDE_HGR_PLOT 4
-
-#define MAX_SLIDES 89
-
 struct slide_info {
   int type;
   char *filename;
 };
-
-#define LINES_PER_SLIDE 100
 
 static void print_number(int line_num, int x, int y, char *string) {
   int i,first=1,ourx=x;
@@ -159,14 +178,12 @@ static void print_number(int line_num, int x, int y, char *string) {
      ourx+=10;
   }
   printf("\n");
-
-
 }
 
 void center_print(int line_num,char *string,int cols) {
 
    int i,centering=(cols-strlen(string))/2;
-   
+
    printf("%d PRINT ",line_num);
    if (centering<5) {
       printf("\"");
@@ -176,28 +193,28 @@ void center_print(int line_num,char *string,int cols) {
       printf("SPC(%d);\"",centering);
    }
    printf("%s\"\n",string);
-   
+
 }
 
-static void print_til_eof(FILE *fff,int *line_num) {	
-   
+static void print_til_eof(FILE *fff,int *line_num) {
+
    char *result;
    char string[BUFSIZ];
-   
+
    while(1) {
       result=fgets(string,BUFSIZ,fff);
       if (result==NULL) break;
-      
+
       if (string[0]=='\n') {
 	 printf("%d PRINT\n",*line_num);                        (*line_num)++;
 	 continue;
       }
-      
+
       string[strlen(string)-1]='\0';
-      	   
+
       if ((string[0]=='%') && (string[1]=='c') && (string[2]=='%')) {
 	 center_print(*line_num,string+3,40);                    (*line_num)++;
-      } else {	     
+      } else {
 	 printf("%d PRINT \"%s\"\n",*line_num,string);          (*line_num)++;
       }
    }
@@ -240,20 +257,18 @@ static void generate_slide(int num, int max, char*filename) {
      int axesx,axesy;
      char axes_string[BUFSIZ];
 
-#define HPLOTS_ON_LINE 6
-
      result=fgets(type,BUFSIZ,fff);
 
      if (strstr(type,"HGR_PLOT")) {
         printf("%d IF ST%%=1 GOTO %d\n",line_num,line_num+3);      line_num++;
         printf("%d PRINT CHR$(4);\"BLOAD NUM.SHAPE,A$1000\"\n",line_num); line_num++;
-        printf("%d POKE 232,%d: POKE 233,%d : ROT=0: SCALE=3: ST%%=1\n",   
+        printf("%d POKE 232,%d: POKE 233,%d : ROT=0: SCALE=3: ST%%=1\n",
 	       line_num,address&0xff,(address>>8)&0xff);           line_num++;
 
 	printf("%d HGR\n",line_num);                               line_num++;
 
 	/* get the size */
-	while(1) {   
+	while(1) {
 	   result=fgets(string,BUFSIZ,fff);
 	   if (result==NULL) break;
       	   if ((string[0]=='#') || (string[0]=='\n')) continue;
@@ -269,8 +284,7 @@ static void generate_slide(int num, int max, char*filename) {
 
 
 	/* get the axes ticks */
-
-	while(1) {   
+	while(1) {
 	   result=fgets(string,BUFSIZ,fff);
 	   if (result==NULL) break;
       	   if ((string[0]=='#') || (string[0]=='\n')) continue;
@@ -296,7 +310,7 @@ static void generate_slide(int num, int max, char*filename) {
 
 
 	/* Number the Axes */
-	while(1) {   
+	while(1) {
 	   result=fgets(string,BUFSIZ,fff);
 	   if (result==NULL) break;
       	   if ((string[0]=='#') || (string[0]=='\n')) continue;
@@ -304,12 +318,10 @@ static void generate_slide(int num, int max, char*filename) {
 	   sscanf(string,"%d %d %s",&axesx,&axesy,axes_string);
 	   print_number(line_num,axesx,axesy,axes_string);	  line_num++;
 	}
-	
-
 
 	/* get number of plots */
 	while(1) {
-	   result=fgets(string,BUFSIZ,fff);   
+	   result=fgets(string,BUFSIZ,fff);
 	   if (result==NULL) break;
       	   if ((string[0]=='#') || (string[0]=='\n')) continue;
 	   sscanf(string,"%d",&num_plots);
@@ -371,11 +383,11 @@ static void generate_slide(int num, int max, char*filename) {
      else if (strstr(type,"HGR2")) {
 	/* cheat and use HGR page 1 but text turned off */
         printf("%d HGR:POKE -16302,0\n",line_num);                           line_num++;
-	
+
 	while(1) {
 	   result=fgets(string,BUFSIZ,fff);
 	   if (result==NULL) break;
-      	   if ((string[0]=='#') || (string[0]=='\n')) continue;	   
+      	   if ((string[0]=='#') || (string[0]=='\n')) continue;
 	}
 	string[strlen(string)-1]='\0';
         printf("%d PRINT CHR$(4);\"BLOAD %s,A$2000\"\n",
@@ -394,7 +406,7 @@ static void generate_slide(int num, int max, char*filename) {
 	       line_num,string);                                line_num++;
 	/* print rest of stuff */
 	printf("%d VTAB 21\n",line_num);                       line_num++;
-	
+
 	print_til_eof(fff,&line_num);
 
      }
@@ -419,10 +431,10 @@ static void generate_slide(int num, int max, char*filename) {
           /* previous */
 	  num==0?(100+(num*LINES_PER_SLIDE)):(100+((num-1)*LINES_PER_SLIDE)),
 	  /* current  */
-	  100+(num*LINES_PER_SLIDE),                      
+	  100+(num*LINES_PER_SLIDE),
 	  /* next */
 	  num<(max-1)?(100+((num+1)*LINES_PER_SLIDE)):
-                      (100+(num*LINES_PER_SLIDE))); 
+                      (100+(num*LINES_PER_SLIDE)));
 }
 
 int main(int argc, char **argv) {
@@ -494,7 +506,6 @@ int main(int argc, char **argv) {
    info.email=strdup(string);
 
    /* Get list of slides */
-
    while(1) {
       result=fgets(string,BUFSIZ,fff);
       if (result==NULL) {
@@ -521,6 +532,26 @@ int main(int argc, char **argv) {
       info.slides++;
    }
 
+   /************************/
+   /* Get target machine   */
+   /************************/
+   while(1) {
+      result=fgets(string,BUFSIZ,fff);
+      if (result==NULL) {
+	       fprintf(stderr,"Unexpected EOF finding TARGET in %s\n",filename);
+	        exit(1);
+      }
+      if (!strncmp("TARGET",string,6)) break;
+   }
+   result=fgets(string,BUFSIZ,fff);
+   string[strlen(string)-1]='\0';
+   if (!strncmp("plus",string,4)) {
+     info.target = TARGET_PLUS;
+   }
+   else {
+     info.target = TARGET_DEFAULT;
+   }
+   fprintf(stderr,"target id is %d\n",info.target);
    if (result==NULL) fprintf(stderr,"Error reading!\n");
 
    fclose(fff);
@@ -547,14 +578,14 @@ int main(int argc, char **argv) {
    footer.center=strdup(string);
 
    fclose(fff);
-   
+
 
    /**************************/
    /* Generate the program   */
    /**************************/
 
    /* Print the initial program remarks */
-   generate_initial_comment(info.title,info.author,info.email);
+   generate_initial_comment(info.title,info.author,info.email,info.target);
 
    printf("20 HOME\n");
    printf("30 P%%=0 : TP%%=%d: ST%%=0\n",info.slides-1);
@@ -563,7 +594,7 @@ int main(int argc, char **argv) {
      generate_slide(i,info.slides,slides[i].filename);
    }
 
-   generate_keyhandler();
+   generate_keyhandler(info.target);
    generate_footer(footer.left,footer.center,40);
 
 
