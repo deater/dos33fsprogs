@@ -1,0 +1,31 @@
+%%%%%%%%%%%%
+dos33fsprogs
+%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	 
+
+asoft_detoken: takes an applesoft file obtained with dos33
+               and converts it to an ASCII text file
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	       
+tokenize_asoft: takes an ASCII text file and converts it
+                into a tokenized applesoft file
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+integer_detoken: detokenize an Apple Integer BASIC program
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+asoft_compact: tries to compress your Applesoft basic program
+               to make it as small as possible
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
