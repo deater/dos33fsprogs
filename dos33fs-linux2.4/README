@@ -1,0 +1,134 @@
+NOTE!!!! This driver only works with the ancient Linux-2.4 kernel
+
+It will not run on anything recent.
+
+Plans are to make a FUSE-capable driver, see the ../dos33fs-fuse directory
+
+
+
+Apple II DOS 3.3 Filesystem for Linux
+
+by Vince Weaver (vince@deater.net)
+                http://www.deater.net/weave/vmwprod/apple
+
+based on ProDos filesystem code 
+    Copyright (c) 2001 Matt Jensen (mjensen@obvion.com)
+    http://www.obvion.com/matt/prodos/
+    
+[-------------------------------------------------------------------]
+
+Background:
+
+In January of 1978, Apple Computer demoed the DISK ][ drive, 
+arguably the first inexpensive 5 1/4" floppy drive for a personal
+computer.  It was a very clever hack by Steve Wozniak, and was
+welcomed by Apple ][ users who until now had to make do with
+a casette tape interface.
+
+Dos 3.1 was released in 1978.  Dos 3.2 and 3.2.1 were released 
+in 1979.  While both worked, neither were integrated very well 
+with the Apple ][ computers of the time and had their share of bugs.
+
+In August of 1980 Dos 3.3 was released.  It required not only 
+an OS upgrade, but also a hardware one as well.  Older DOS's
+could read 113.75k  (35 tracks*13 sectors*256bytes).  Under 
+Dos 3.3 the disks could hold 140k (35tracks*16sectors*256bytes).
+
+Dos 3.3 was the standard disk OS on Apple ]['s for a long time,
+but it was limited to only 5 1/4" disks.  Eventually it was
+replaced by ProDos, which was a weird combination of Dos 3.3 and HFS+.
+
+[------------------------------------------------------------------]
+
+Technical Info:
+
+* Partition size: 140k  (in theory the filesystem can support more,
+                         but I doubt it ever did it most cases).
+			 
+* sector [block] size: 256bytes.  Which makes it fun trying to make
+                       Linux deal with it properly.
+		       
+* Filenames:  up to 30 characters in length, 7-bit ASCII.
+              First character had to be > 63.  No commas or colons.
+	      Padded on the right with spaces.
+	      Besides that, anything goes [including control characters,
+	      NULL's, and \, which make it interesting as a Unix filesystem]
+	      
+* 7bits of metadata:  Indicate file type [binary, BASIC, text, etc]
+
+* "Lock": possible to "LOCK" files, that is make read-only
+
+* holes:  filesystem supports holes in files [though Linux support of 
+          this a bit troublesome because of 256 byte block issues].
+
+* Timestamp:  no timestamp possible.  The driver assigns an arbitrary
+              date of 13 February 1978 to all files.  [2 1/2 years
+	      too early for DOS 3.3, but it is my birthday....]
+
+
+[---------------------------------------------------------------]
+
+Usage:
+
+      You need to be running a 2.4.x linux kernel.  Older versions
+      not supported currently.
+
+      The easiest way to do this is get a "disk image" of the type
+      used for Apple II emulators.  
+      
+      Various web pages can help you make these from your old Apple Disks, 
+      assuming you have a working Apple II, a modern PC, and a serial
+      connection between the two.
+      
+      First, be sure your Linux kernel has "loopback filesystem support"
+      
+      Then, set up the disk image you want as a loopback device as root:
+      
+              /sbin/losetup /dev/loop0 ./green.dsk
+      
+      Where "green.dsk" can be any image you might have.
+      
+      Next, compile the included driver [ "make"].  As root, install
+      the dos33.o module
+      
+              /sbin/insmod ./dos33.o
+	      
+      Next, mount the filesystem
+      
+              mount -t dos33 /dev/loop0 /mnt
+
+      And if all went well, you can now do an "ls /mnt" or wherever,
+      and get the file listing.
+      
+      You can use the "asoft_detoken" program in the ./util
+      directory to dump Applesoft basic programs into plain text 
+      
+              asoft_detoken < /mnt/HELLO
+	      
+[----------------------------------------------------------]
+
+Future plans:
+
+   Make the driver read/write.  Right now it is read-only.
+
+   Maybe add some more utilities.
+   
+   Handle the file-type metadata somehow.
+   
+   Far-out-there.... write a linux block-device for the DISK ][
+   drive, so you can actually hook the old drives and disks up
+   directly to your linux box....
+   
+[-------------------------------------------------------------------]
+
+References:
+    http://apple2history.org/               -- great history site
+    http://ground.icaen.uiowa.edu/apple2/   -- treasure trove of apple][ info
+    
+[-------------------------------------------------------------------]
+
+Added note:
+
+   if anyone has a copy of "Inside Apple DOS" they'd be willing
+   to part with, please let me know....
+   

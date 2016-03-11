@@ -1,0 +1,3 @@
+* unsure if reading files > 30k works properly.
+  [no errors, but have no files that big to easily check that
+   all the data is being transferred properly]

@@ -1,0 +1,19 @@
+	This file follows the same format as Linus Torvalds' CREDITS file. See
+	/usr/src/linux/CREDITS for more information.
+
+----------
+
+N: Matt Jensen
+E: mjensen@obvion.com
+D: Creator and chief programmer
+S: Wisconsin, United States of America
+
+N: Linus Torvalds et al
+E: Various
+D: Model works and documentation: Minix FS, VFS interface, etc.
+S: Various
+
+N: David Wilson
+E:
+D: Interface and code suggestions
+S: Australia

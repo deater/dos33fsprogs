@@ -1,0 +1,11 @@
+11 October 2001
++ After about 3 weeks of work, read-only support 99% working!
++ version 0.0.3
+
+12 October 2001
++ Fix apple-detokenizer
++ Fix file permissions
++ In theory fix files with > 30k (multiple TSL lists)
+
+4 February 2002
++ Fix an endian bug so it works on my iBook
