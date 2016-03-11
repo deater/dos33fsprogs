@@ -18,7 +18,6 @@ clean:
 	cd asoft_presenter && make clean
 	cd dos33fs-utils && make clean
 	cd hgr-utils && make clean
-	cd tests && make clean
 	rm *~
 
 test:
