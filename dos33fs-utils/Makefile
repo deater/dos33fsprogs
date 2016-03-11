@@ -40,3 +40,4 @@ install:
 
 clean:		
 		rm -f *~ *.o dos33 mkdos33fs make_b dos33_text2ascii char2hex
+		cd tests && make clean
