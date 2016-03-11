@@ -1,0 +1,27 @@
+These are some tools for manipulating HGR Apple 2 graphics.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+pcx2hgr:	converts a 140x160 (or 140x192) PCX image file
+                into an Apple II HGR graphics file that can 
+		be loaded with "BLOAD IMAGE,A$2000"
+
+		To get it to work, create an image with the GIMP.
+		Scale to 140x160.  Save as indexed with the 
+		included "hgr.pal" palette.
+
+                It also works with 280x160 but in that case it ignores
+		colors and only generates black and white output.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+shape_table:  create an Apple shape table for use with
+              DRAW and XDRAW commands
+	      
+	      can generate BASIC code to load it (via DATA) or
+	      else a binary version that can be BLOADed
+	      
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
