@@ -53,11 +53,11 @@ int main(int argc, char **argv) {
 	printf("Available:\n");
 	printf("1. Jebediah\tPilot\tS ***\tC ***\n");
 	printf("2. Valentina\tPilot\tS ***\tC ***\n");
-	printf("3. Kai\tEngineer\s ***\tC ***\n");
-	printf("4. Kuroshin\tEngineer\s ***\tC ***\n");
-	printf("5. Desktop\tScientist\s ***\tC ***\n");
-	printf("6. Slashdot\tPilot\s ***\tC ***\n");
-	printf("7. Zurgtroyd\tPilot\s ***\tC ***\n");
+	printf("3. Kai\tEngineer\t ***\tC ***\n");
+	printf("4. Kuroshin\tEngineer\t ***\tC ***\n");
+	printf("5. Desktop\tScientist\t ***\tC ***\n");
+	printf("6. Slashdot\tPilot\t ***\tC ***\n");
+	printf("7. Zurgtroyd\tPilot\t ***\tC ***\n");
 
 	printf("Select three astronauts\n"); // highlight and say correct?
 
