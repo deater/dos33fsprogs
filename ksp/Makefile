@@ -4,16 +4,20 @@ TXT2BAS = ../asoft_basic-utils/tokenize_asoft
 
 all:	ksp.dsk
 
-basic:	VAB.BAS
+basic:	VAB.BAS THEME.BAS
 
 VAB.BAS:	vab.bas
 	$(TXT2BAS) < vab.bas > VAB.BAS
 
-ksp.dsk:	LOADING.HGR SQUAD.HGR TITLE.HGR VAB.BAS
+THEME.BAS:	theme.bas
+	$(TXT2BAS) < theme.bas > THEME.BAS
+
+ksp.dsk:	LOADING.HGR SQUAD.HGR TITLE.HGR THEME.BAS VAB.BAS
 	$(DOS33) -y ksp.dsk SAVE B LOADING.HGR
 	$(DOS33) -y ksp.dsk SAVE B SQUAD.HGR
 	$(DOS33) -y ksp.dsk SAVE B TITLE.HGR
 	$(DOS33) -y ksp.dsk SAVE A VAB.BAS
+	$(DOS33) -y ksp.dsk SAVE A THEME.BAS
 
 
 LOADING.HGR:	loading.pcx
