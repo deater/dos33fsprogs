@@ -9,15 +9,15 @@ basic:	VAB.BAS THEME.BAS
 VAB.BAS:	vab.bas
 	$(TXT2BAS) < vab.bas > VAB.BAS
 
-THEME.BAS:	theme.bas
-	$(TXT2BAS) < theme.bas > THEME.BAS
+LOADING.BAS:	loading.bas
+	$(TXT2BAS) < loading.bas > LOADING.BAS
 
-ksp.dsk:	LOADING.HGR SQUAD.HGR TITLE.HGR THEME.BAS VAB.BAS
+ksp.dsk:	LOADING.HGR SQUAD.HGR TITLE.HGR LOADING.BAS VAB.BAS
 	$(DOS33) -y ksp.dsk SAVE B LOADING.HGR
 	$(DOS33) -y ksp.dsk SAVE B SQUAD.HGR
 	$(DOS33) -y ksp.dsk SAVE B TITLE.HGR
 	$(DOS33) -y ksp.dsk SAVE A VAB.BAS
-	$(DOS33) -y ksp.dsk SAVE A THEME.BAS
+	$(DOS33) -y ksp.dsk SAVE A LOADING.BAS
 
 
 LOADING.HGR:	loading.pcx
