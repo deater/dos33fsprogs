@@ -9,6 +9,9 @@ basic:	VAB.BAS THEME.BAS
 ACMPLX.BAS:	acmplx.bas
 	$(TXT2BAS) < acmplx.bas > ACMPLX.BAS
 
+LAUNCH.BAS:	launch.bas
+	$(TXT2BAS) < launch.bas > LAUNCH.BAS
+
 LOADING.BAS:	loading.bas
 	$(TXT2BAS) < loading.bas > LOADING.BAS
 
@@ -18,6 +21,7 @@ VAB.BAS:	vab.bas
 
 
 ksp.dsk:	ACMPLX.BAS \
+		LAUNCH.BAS \
 		LOADING.BAS LOADING.HGR SQUAD.HGR TITLE.HGR \
 		VAB.BAS VAB.HGR
 	$(DOS33) -y ksp.dsk SAVE B LOADING.HGR
@@ -27,6 +31,7 @@ ksp.dsk:	ACMPLX.BAS \
 	$(DOS33) -y ksp.dsk SAVE B VAB.HGR
 	$(DOS33) -y ksp.dsk SAVE A LOADING.BAS
 	$(DOS33) -y ksp.dsk SAVE A ACMPLX.BAS
+	$(DOS33) -y ksp.dsk SAVE A LAUNCH.BAS
 
 
 LOADING.HGR:	loading.pcx
