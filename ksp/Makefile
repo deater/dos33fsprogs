@@ -12,11 +12,12 @@ VAB.BAS:	vab.bas
 LOADING.BAS:	loading.bas
 	$(TXT2BAS) < loading.bas > LOADING.BAS
 
-ksp.dsk:	LOADING.HGR SQUAD.HGR TITLE.HGR LOADING.BAS VAB.BAS
+ksp.dsk:	LOADING.HGR SQUAD.HGR TITLE.HGR LOADING.BAS VAB.BAS VAB.HGR
 	$(DOS33) -y ksp.dsk SAVE B LOADING.HGR
 	$(DOS33) -y ksp.dsk SAVE B SQUAD.HGR
 	$(DOS33) -y ksp.dsk SAVE B TITLE.HGR
 	$(DOS33) -y ksp.dsk SAVE A VAB.BAS
+	$(DOS33) -y ksp.dsk SAVE B VAB.HGR
 	$(DOS33) -y ksp.dsk SAVE A LOADING.BAS
 
 
@@ -28,6 +29,9 @@ SQUAD.HGR:	squad.pcx
 
 TITLE.HGR:	title.pcx
 	$(PCX2HGR) title.pcx > TITLE.HGR
+
+VAB.HGR:	vab.pcx
+	$(PCX2HGR) vab.pcx > VAB.HGR
 
 clean:	
 	rm -f *~ *.HGR
