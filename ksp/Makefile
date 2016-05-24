@@ -6,19 +6,27 @@ all:	ksp.dsk
 
 basic:	VAB.BAS THEME.BAS
 
-VAB.BAS:	vab.bas
-	$(TXT2BAS) < vab.bas > VAB.BAS
+ACMPLX.BAS:	acmplx.bas
+	$(TXT2BAS) < acmplx.bas > ACMPLX.BAS
 
 LOADING.BAS:	loading.bas
 	$(TXT2BAS) < loading.bas > LOADING.BAS
 
-ksp.dsk:	LOADING.HGR SQUAD.HGR TITLE.HGR LOADING.BAS VAB.BAS VAB.HGR
+VAB.BAS:	vab.bas
+	$(TXT2BAS) < vab.bas > VAB.BAS
+
+
+
+ksp.dsk:	ACMPLX.BAS \
+		LOADING.BAS LOADING.HGR SQUAD.HGR TITLE.HGR \
+		VAB.BAS VAB.HGR
 	$(DOS33) -y ksp.dsk SAVE B LOADING.HGR
 	$(DOS33) -y ksp.dsk SAVE B SQUAD.HGR
 	$(DOS33) -y ksp.dsk SAVE B TITLE.HGR
 	$(DOS33) -y ksp.dsk SAVE A VAB.BAS
 	$(DOS33) -y ksp.dsk SAVE B VAB.HGR
 	$(DOS33) -y ksp.dsk SAVE A LOADING.BAS
+	$(DOS33) -y ksp.dsk SAVE A ACMPLX.BAS
 
 
 LOADING.HGR:	loading.pcx
