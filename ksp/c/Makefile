@@ -11,7 +11,7 @@ ksp_acpx.o:	ksp_acpx.c
 	$(CC) $(CFLAGS) -c ksp_acpx.c
 
 ksp_launch:	ksp_launch.o
-	$(CC) $(LFLAGS) -o ksp_launch ksp_launch.o
+	$(CC) $(LFLAGS) -o ksp_launch ksp_launch.o -lm
 
 ksp_launch.o:	ksp_launch.c
 	$(CC) $(CFLAGS) -c ksp_launch.c

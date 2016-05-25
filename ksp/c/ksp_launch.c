@@ -5,38 +5,67 @@
 
 /* Also, high school physics (thanks Mr. Brennen) */
 
+#define PI 3.14159265358979323846264338327
 
-void home(void) {
+static double sin_degrees(double degrees) {
+
+	return sin(degrees*PI/180);
+}
+
+static double cos_degrees(double degrees) {
+	return cos(degrees*PI/180);
+}
+
+static double vector_magnitude(double a,double b) {
+	return sqrt(a*a+b*b);
+}
+
+static void home(void) {
 	printf("%c[2J%c[1;1H",27,27);
 }
 
-void htabvtab(int x,int y) {
+static void htabvtab(int x,int y) {
 	printf("%c[%d;%dH",27,y,x);
 }
 
 
 /* TODO: want 2d-vectors at least */
 
+#define KERBIN_RADIUS	600000.0
+
 int main(int argc, char **argv) {
 
-	double angle=0;
+	double angle=45;
 
 	double capsule_mass=1.0;
 
+	double engines=3;
 	double engine_isp=270.0;	/* s */
-	double engine_mass=1.5;		/* tons */
-	double engine_thrust=168.0;	/* kN */
+	double engine_mass=(1.5)*engines;		/* tons */
+	double engine_thrust=(168.0)*engines;	/* kN */
 	double fuel_flow_rate;
 
-	double tank_mass=0.5;		/* tons */
-	double fuel_mass=4.0;		/* tons */
+	double tanks=6;
+	double tank_mass=(0.5)*tanks;		/* tons */
+	double fuel_mass=(4.0)*tanks;		/* tons */
 	double total_fuel=fuel_mass;
 
-	double gravity=9.8;		/* m/s^2 */
+	double gravity=-9.8;		/* m/s^2 */
+	double gravity_x=0.0;
+	double gravity_y=-9.8;
+	double gravity_angle=0.0;
+	/* Kerbin radius = 600km */
 
-	double rocket_velocity=0.0;	/* m/s */
-	double rocket_acceleration=0.0;	/* m/s^2 */
-	double rocket_altitude=0.0;	/* m */
+
+	double rocket_velocity_x=0.0;	/* m/s */
+	double rocket_velocity_y=0.0;	/* m/s */
+
+	double rocket_acceleration_x=0.0;	/* m/s^2 */
+	double rocket_acceleration_y=0.0;	/* m/s^2 */
+
+	double rocket_x=0;
+	double rocket_y=KERBIN_RADIUS+1000;
+	double rocket_altitude=KERBIN_RADIUS;	/* m */
 
 	double deltav,twr;
 	double total_mass,empty_mass;
@@ -52,47 +81,75 @@ int main(int argc, char **argv) {
 
 	deltav=engine_isp*gravity*log(total_mass/empty_mass);
 
-	twr=engine_thrust/(total_mass*gravity);
+	twr=engine_thrust/(total_mass*-gravity);
 
-	fuel_flow_rate=(engine_thrust)/(engine_isp*gravity);
+	fuel_flow_rate=(engine_thrust)/(engine_isp*-gravity);
 
 	printf("DeltaV=%lf m/s\n",deltav);
 	printf("Thrust/weight=%lf\n",twr);
 	printf("Fuel flow rate=%lf, time=%lfs\n",
 		fuel_flow_rate,fuel_mass/fuel_flow_rate);
 
+	scanf("%c",&input);
+
 	while(1) {
+
 		if (fuel_mass<0.1) {
 			fuel_mass=0.0;
-			rocket_acceleration=-gravity;
-			rocket_velocity=rocket_velocity+rocket_acceleration*1.0;
-			rocket_altitude=rocket_altitude+
-				(rocket_velocity*1.0)+
-				0.5*rocket_acceleration+1.0*1.0;
-			if (rocket_altitude<0.0) {
-				printf("CRASH!\n");
-				break;
-			}
+			rocket_acceleration_x=0;
+			rocket_acceleration_y=0;
+
 		}
 		else {
-			rocket_acceleration=(engine_thrust/total_mass)-gravity;
-			rocket_velocity=rocket_velocity+rocket_acceleration*1.0;
-			rocket_altitude=rocket_altitude+
-				(rocket_velocity*1.0)+
-				0.5*rocket_acceleration+1.0*1.0;
+			rocket_acceleration_x=(engine_thrust/total_mass)*sin_degrees(angle);
+			rocket_acceleration_y=(engine_thrust/total_mass)*cos_degrees(angle);
+
 			fuel_mass=fuel_mass-fuel_flow_rate;
 			total_mass=engine_mass+tank_mass+fuel_mass+capsule_mass;
+
 		}
+
+		gravity_angle=atan(rocket_x/rocket_y);
+		gravity_y=cos(gravity_angle)*gravity;
+		gravity_x=sin(gravity_angle)*gravity;
+
+		rocket_acceleration_y+=gravity_y;
+		rocket_acceleration_x+=gravity_x;
+
+		rocket_velocity_y=rocket_velocity_y+rocket_acceleration_y*1.0;
+		rocket_velocity_x=rocket_velocity_x+rocket_acceleration_x*1.0;
+
+		rocket_y=rocket_y+
+			(rocket_velocity_y*1.0)+
+			0.5*rocket_acceleration_y*1.0*1.0;
+
+		rocket_x=rocket_x+
+			(rocket_velocity_x*1.0)+
+			0.5*rocket_acceleration_x*1.0*1.0;
+
+		rocket_altitude=vector_magnitude(rocket_x,rocket_y);
+
+		if (rocket_altitude<KERBIN_RADIUS) {
+			printf("CRASH!\n");
+			break;
+		}
+
+		/* Adjust gravity */
+		gravity=-9.8/(
+			((rocket_altitude)/KERBIN_RADIUS)*
+			((rocket_altitude)/KERBIN_RADIUS));
 
 		home();
 
 		htabvtab(1,21);
 
 		printf("Time: %lf\n",time);
-		printf("ALT: %lf m\n",rocket_altitude);
-		printf("VEL: %lf m/s\tStage: %d\n",rocket_velocity,stage);
-		printf("ACCEL: %lf g\tFuel: %lf%%\n",
-			rocket_acceleration/gravity,
+		printf("ALT: %lf m\tg=%lf\n",rocket_altitude-KERBIN_RADIUS,gravity);
+		printf("VEL: %lf m/s\tStage: %d\n",
+			vector_magnitude(rocket_velocity_x,rocket_velocity_y),
+			stage);
+		printf("ACCEL: %lf g\tFuel: %lf%%",
+			vector_magnitude(rocket_acceleration_x,rocket_acceleration_y)/9.8,
 			fuel_mass*100.0/total_fuel);
 
 		htabvtab(30,21);
@@ -100,11 +157,32 @@ int main(int argc, char **argv) {
 
 		htabvtab(30,20);
 		if ((angle>90) && (angle<270)) printf("SCREAM");
-		else if (rocket_velocity>100) printf("SMILE");
-		else if (rocket_acceleration<0) printf("FROWN");
+		else if (rocket_velocity_y>100) printf("SMILE");
+		else if (rocket_acceleration_y<0) printf("FROWN");
 		else printf("NEUTRAL");
 
+		htabvtab(20,13);
+		printf("grav angle=%lf\n",gravity_angle*180.0/PI);
 
+		htabvtab(20,12);
+		printf("x=%lf y=%lf\n",rocket_x,rocket_y);
+
+		htabvtab(20,11);
+		printf("vx=%lf vy=%lf\n",rocket_velocity_x,
+			rocket_velocity_y);
+		htabvtab(20,10);
+		printf("angle=%lf\n",angle);
+
+		htabvtab(20,9);
+		if (angle<22.5) printf("^");
+		else if (angle<67.5) printf("/");
+		else if (angle<112.5) printf(">");
+		else if (angle<157.5) printf("\\");
+		else if (angle<205.5) printf("V");
+		else if (angle<250.5) printf("/");
+		else if (angle<295.5) printf("<");
+		else if (angle<340.5) printf("\\");
+		else printf("^");
 
 		scanf("%c",&input);
 
