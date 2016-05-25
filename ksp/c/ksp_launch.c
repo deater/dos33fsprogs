@@ -120,9 +120,10 @@ int main(int argc, char **argv) {
 
 	while(1) {
 
+		/* 4010 */
 		fuel_left=fuel_mass*100.0/total_fuel;
 
-		thrusting=autopilot(fuel_left, rocket_altitude,&angle);
+		thrusting=1;//autopilot(fuel_left, rocket_altitude,&angle);
 
 		if (thrusting) {
 			if (fuel_mass<0.1) {
@@ -144,12 +145,15 @@ int main(int argc, char **argv) {
 			rocket_acceleration_y=0.0;
 		}
 
-		if (rocket_y<0) gravity_angle=PI+atan(rocket_x/rocket_y);
-		else gravity_angle=atan(rocket_x/rocket_y);
+		/* 4060 */
+		gravity_angle=atan(rocket_x/rocket_y);
+		if (rocket_y<0) gravity_angle+=PI;
 
+		/* 4070 */
 		gravity_y=cos(gravity_angle)*gravity;
 		gravity_x=sin(gravity_angle)*gravity;
 
+		/* 4080 */
 		rocket_acceleration_y+=gravity_y;
 		rocket_acceleration_x+=gravity_x;
 
@@ -168,6 +172,8 @@ int main(int argc, char **argv) {
 
 		rocket_altitude=vector_magnitude(rocket_x,rocket_y);
 
+		/* 5020 */
+
 		if (rocket_altitude<KERBIN_RADIUS) {
 			if (rocket_velocity<20.0) {
 				printf("LANDED!\n");
@@ -178,6 +184,7 @@ int main(int argc, char **argv) {
 			break;
 		}
 
+		/* 5030 */
 		/* Adjust gravity */
 		gravity=-9.8/(
 			((rocket_altitude)/KERBIN_RADIUS)*
@@ -188,13 +195,14 @@ int main(int argc, char **argv) {
 		htabvtab(1,21);
 
 		printf("Time: %lf\n",time);
-		printf("ALT: %lf m\tg=%lf\n",rocket_altitude-KERBIN_RADIUS,gravity);
+		printf("ALT: %lf km\tg=%lf\n",(rocket_altitude-KERBIN_RADIUS)/1000.0,
+				gravity);
 		printf("VEL: %lf m/s\tStage: %d\n",
 			rocket_velocity,
 			stage);
 		printf("ACCEL: %lf g\tFuel: %lf%%",
 			vector_magnitude(rocket_acceleration_x,rocket_acceleration_y)/9.8,
-			fuel_mass*100.0/total_fuel);
+			fuel_left);
 
 		htabvtab(30,21);
 		printf("ZURGTROYD");
@@ -212,8 +220,9 @@ int main(int argc, char **argv) {
 		printf("x=%lf y=%lf\n",rocket_x,rocket_y);
 
 		htabvtab(20,11);
-		printf("vx=%lf vy=%lf\n",rocket_velocity_x,
-			rocket_velocity_y);
+		printf("vx=%lf vy=%lf ax=%lf ay=%lf\n",
+			rocket_velocity_x,rocket_velocity_y,
+			rocket_acceleration_x,rocket_acceleration_y);
 		htabvtab(20,10);
 		printf("angle=%lf\n",angle);
 
