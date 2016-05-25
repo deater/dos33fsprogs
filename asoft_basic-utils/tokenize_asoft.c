@@ -89,6 +89,8 @@ static int getnum(void) {
 
 static int in_quotes=0,in_rem=0;
 
+/* note: try to find longest possible token */
+/* otherwise ATN is turned into AT N */
 static int find_token(void) {
 
 	int ch,i;
@@ -118,13 +120,16 @@ static int find_token(void) {
 	/* don't tokenize if in quotes */
 	if ((!in_quotes)&&(!in_rem)) {
 
-		// fprintf(stderr,"%s",line_ptr);
+//		fprintf(stderr,"%s",line_ptr);
 		for(i=0;i<NUM_TOKENS;i++) {
 			if (!strncmp(line_ptr,applesoft_tokens[i],
 					strlen(applesoft_tokens[i]))) {
-				// fprintf(stderr,
-				//		"Found token %x (%s) %d\n",0x80+i,
-				//		applesoft_tokens[i],i);
+
+				/* HACK: special case to avoid AT/ATN problem */
+				if ((i==69) && (line_ptr[2]=='N')) continue;
+//				fprintf(stderr,
+//						"Found token %x (%s) %d\n",0x80+i,
+//						applesoft_tokens[i],i);
 
 				line_ptr+=strlen(applesoft_tokens[i]);
 
