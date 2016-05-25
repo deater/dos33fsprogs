@@ -157,7 +157,7 @@ int main(int argc, char **argv) {
 
 	int offset=2,i;
 
-	int linenum,link_offset;
+	int linenum=0,lastline=0,link_offset;
 	int link_value=0x801; /* start of applesoft program */
 	int token;
 
@@ -166,11 +166,19 @@ int main(int argc, char **argv) {
 		line_ptr=fgets(input_line,BUFSIZ,stdin);
 		line++;
 		if (line_ptr==NULL) break;
+
 		linenum=getnum();
-		if (linenum>65535) {
-			printf("Invalid line number %d\n",linenum);
+		if ((linenum>65535) || (linenum<0)) {
+			fprintf(stderr,"Invalid line number %d\n",linenum);
 			exit(-1);
 		}
+		if (linenum<lastline) {
+			fprintf(stderr,"Line counted backwards %d->%d\n",
+				lastline,linenum);
+			exit(-1);
+		}
+		lastline=linenum;
+
 		link_offset=offset;
 		check_oflo(offset+4);
 		output[offset+2]=LOW(linenum);
