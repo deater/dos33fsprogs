@@ -21,7 +21,7 @@
 
    /* Starting at 0x80 */
 char applesoft_tokens[][8]={
-   
+
 /* 80 */ "END","FOR","NEXT","DATA","INPUT","DEL","DIM","READ",
 /* 88 */ "GR","TEXT","PR #","IN #","CALL","PLOT","HLIN","VLIN",
 /* 90 */ "HGR2","HGR","HCOLOR=","HPLOT","DRAW","XDRAW","HTAB","HOME",
@@ -52,161 +52,162 @@ int line=0;
 char input_line[BUFSIZ];
 
 static void show_problem(char *line_ptr) {
-   int offset,i;
-   
-   offset=(int)(line_ptr-input_line);
-   fprintf(stderr,"%s",input_line);
-   for(i=0;i<offset;i++) fputc(' ',stderr);
-   fprintf(stderr,"^\n");
+
+	int offset,i;
+
+	offset=(int)(line_ptr-input_line);
+	fprintf(stderr,"%s",input_line);
+	for(i=0;i<offset;i++) fputc(' ',stderr);
+	fprintf(stderr,"^\n");
 }
 
-   
-
 static int getnum(void) {
-   int num=0;
-   
-   /* skip any whitespace */
-   while((*line_ptr<=' ') && (*line_ptr!=0)) line_ptr++;
-   
-   while (*line_ptr>' ') {
-      if ((*line_ptr<'0')||(*line_ptr>'9')) {
-	 fprintf(stderr,"Invalid line number line %d\n",line);
-	 show_problem(line_ptr);
-	 exit(-1);
-      }
-      num*=10;
-      num+=(*line_ptr)-'0';
-      line_ptr++;
-   }
 
-   if (!(*line_ptr)) {
-      fprintf(stderr,"Missing line number line %d\n",line);
-      exit(-1);
-   }
-      
-   return num;	
+	int num=0;
+
+	/* skip any whitespace */
+	while((*line_ptr<=' ') && (*line_ptr!=0)) line_ptr++;
+
+	while (*line_ptr>' ') {
+		if ((*line_ptr<'0')||(*line_ptr>'9')) {
+			fprintf(stderr,"Invalid line number line %d\n",line);
+			show_problem(line_ptr);
+			exit(-1);
+		}
+		num*=10;
+		num+=(*line_ptr)-'0';
+		line_ptr++;
+	}
+
+	if (!(*line_ptr)) {
+		fprintf(stderr,"Missing line number line %d\n",line);
+		exit(-1);
+	}
+
+	return num;
 }
 
 static int in_quotes=0,in_rem=0;
 
-static int find_token() {
-   
-    int ch,i;
-   
-    ch=*line_ptr;
+static int find_token(void) {
 
-    /* end remarks if end of line */
-    if (in_rem && (ch=='\n')) {
-       in_rem=0;
-       return 0;
-    }
+	int ch,i;
 
-    /* don't skip whitespace in quotes or remarks */
-    if ((!in_quotes)&&(!in_rem)) {
-       while(ch<=' ') {	
-          if ((ch=='\n') || (ch=='\r') || (ch=='\0')) {
-             return 0;
-	  }
-          line_ptr++;
-          ch=*line_ptr;
-       }
-    }
-   
-      /* toggle quotes mode */
-    if (ch=='\"') in_quotes=!in_quotes;
-	
-       /* don't tokenize if in quotes */
-    if ((!in_quotes)&&(!in_rem)) {
-	
-       // fprintf(stderr,"%s",line_ptr);
-       for(i=0;i<NUM_TOKENS;i++) {
-          if (!strncmp(line_ptr,applesoft_tokens[i],
-                                strlen(applesoft_tokens[i]))) {
-              // fprintf(stderr,
-              //         "Found token %x (%s) %d\n",0x80+i,
-              //         applesoft_tokens[i],i);
-	      line_ptr+=strlen(applesoft_tokens[i]);
+	ch=*line_ptr;
 
-	      /* REM is 0x32 */
-	      if (i==0x32) in_rem=1;
-	      return 0x80+i;
-	  }
-          //fprintf(stderr,"%s ",applesoft_tokens[i]);
-       }
-    }
+	/* end remarks if end of line */
+	if (in_rem && (ch=='\n')) {
+		in_rem=0;
+		return 0;
+	}
 
-      //fprintf(stderr,"\n");
+	/* don't skip whitespace in quotes or remarks */
+	if ((!in_quotes)&&(!in_rem)) {
+		while(ch<=' ') {
+			if ((ch=='\n') || (ch=='\r') || (ch=='\0')) {
+				return 0;
+			}
+			line_ptr++;
+			ch=*line_ptr;
+		}
+	}
 
-      /* not a token, just ascii */
-   line_ptr++;
-   return ch;
+	/* toggle quotes mode */
+	if (ch=='\"') in_quotes=!in_quotes;
+
+	/* don't tokenize if in quotes */
+	if ((!in_quotes)&&(!in_rem)) {
+
+		// fprintf(stderr,"%s",line_ptr);
+		for(i=0;i<NUM_TOKENS;i++) {
+			if (!strncmp(line_ptr,applesoft_tokens[i],
+					strlen(applesoft_tokens[i]))) {
+				// fprintf(stderr,
+				//		"Found token %x (%s) %d\n",0x80+i,
+				//		applesoft_tokens[i],i);
+
+				line_ptr+=strlen(applesoft_tokens[i]);
+
+				/* REM is 0x32 */
+				if (i==0x32) in_rem=1;
+
+				return 0x80+i;
+			}
+
+			//fprintf(stderr,"%s ",applesoft_tokens[i]);
+		}
+	}
+
+	//fprintf(stderr,"\n");
+
+	/* not a token, just ascii */
+	line_ptr++;
+	return ch;
 }
 
 static void check_oflo(int size) {
-   if (size>MAXSIZE) {
-      fprintf(stderr,"Output file too big!\n");
-      exit(-1);
-   }   
+
+	if (size>MAXSIZE) {
+		fprintf(stderr,"Output file too big!\n");
+		exit(-1);
+	}
 }
 
-	
-   
-
 int main(int argc, char **argv) {
-   
-   int offset=2,i;
 
-   int linenum,link_offset;
-   int link_value=0x801; /* start of applesoft program */
-   int token;
+	int offset=2,i;
 
-   while(1) {
-         /* get line from input file */
-      line_ptr=fgets(input_line,BUFSIZ,stdin);
-      line++;
-      if (line_ptr==NULL) break;
-      linenum=getnum();
-      if (linenum>65535) {
-	 printf("Invalid line number %d\n",linenum);
-	 exit(-1);
-      }
-      link_offset=offset;
-      check_oflo(offset+4);
-      output[offset+2]=LOW(linenum);
-      output[offset+3]=HIGH(linenum);
-      offset+=4;
-            
-      while(1) {
-	 token=find_token();
-	 output[offset]=token;
-	 offset++;
-	 check_oflo(offset);
-	 if (!token) break;
-      }
+	int linenum,link_offset;
+	int link_value=0x801; /* start of applesoft program */
+	int token;
 
-      /* remarks end at end of line */
-      in_rem=0;
-	 
-      /* 2 bytes is to ignore size from beginning of file */
-      link_value=0x801+(offset-2);
-      
-      /* point link value to next line */
-      check_oflo(offset+2);
-      output[link_offset]=LOW(link_value);
-      output[link_offset+1]=HIGH(link_value);
-   }
-   /* set last link field to $00 $00 which indicates EOF */
-   check_oflo(offset+2);
-   output[offset]='\0';
-   output[offset+1]='\0';
-   offset+=2;
-   
-     /* Set filesize */
-     /* -1 to match observed values */
-   output[0]=LOW(offset-1);
-   output[1]=HIGH(offset-1);
-   /* output our file */
-   for(i=0;i<offset;i++) putchar(output[i]);
-   
-   return 0;
+	while(1) {
+		/* get line from input file */
+		line_ptr=fgets(input_line,BUFSIZ,stdin);
+		line++;
+		if (line_ptr==NULL) break;
+		linenum=getnum();
+		if (linenum>65535) {
+			printf("Invalid line number %d\n",linenum);
+			exit(-1);
+		}
+		link_offset=offset;
+		check_oflo(offset+4);
+		output[offset+2]=LOW(linenum);
+		output[offset+3]=HIGH(linenum);
+		offset+=4;
+
+		while(1) {
+			token=find_token();
+			output[offset]=token;
+			offset++;
+			check_oflo(offset);
+			if (!token) break;
+		}
+
+		/* remarks end at end of line */
+		in_rem=0;
+
+		/* 2 bytes is to ignore size from beginning of file */
+		link_value=0x801+(offset-2);
+
+		/* point link value to next line */
+		check_oflo(offset+2);
+		output[link_offset]=LOW(link_value);
+		output[link_offset+1]=HIGH(link_value);
+	}
+	/* set last link field to $00 $00 which indicates EOF */
+	check_oflo(offset+2);
+	output[offset]='\0';
+	output[offset+1]='\0';
+	offset+=2;
+
+	/* Set filesize */
+	/* -1 to match observed values */
+	output[0]=LOW(offset-1);
+	output[1]=HIGH(offset-1);
+	/* output our file */
+	for(i=0;i<offset;i++) putchar(output[i]);
+
+	return 0;
 }
