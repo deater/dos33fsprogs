@@ -24,7 +24,7 @@ VAB.BAS:	vab.bas
 
 
 ksp.dsk:	ACMPLX.BAS \
-		LAUNCH.BAS GLOBE.HGR \
+		LAUNCH.BAS GLOBE.HGR LAUNCHPAD.HGR ORBIT_TOP.HGR ORBIT_RIGHT.HGR \
 		LOADING.BAS LOADING.HGR SQUAD.HGR TITLE.HGR \
 		PHYSICS.BAS \
 		VAB.BAS VAB.HGR
@@ -37,8 +37,20 @@ ksp.dsk:	ACMPLX.BAS \
 	$(DOS33) -y ksp.dsk SAVE A ACMPLX.BAS
 	$(DOS33) -y ksp.dsk SAVE A LAUNCH.BAS
 	$(DOS33) -y ksp.dsk SAVE B GLOBE.HGR
+	$(DOS33) -y ksp.dsk SAVE B LAUNCHPAD.HGR
+	$(DOS33) -y ksp.dsk SAVE B ORBIT_RIGHT.HGR
+	$(DOS33) -y ksp.dsk SAVE B ORBIT_TOP.HGR
 	$(DOS33) -y ksp.dsk SAVE A PHYSICS.BAS
 
+
+LAUNCHPAD.HGR:	launchpad.pcx
+	$(PCX2HGR) launchpad.pcx > LAUNCHPAD.HGR
+
+ORBIT_TOP.HGR:	orbit_top.pcx
+	$(PCX2HGR) orbit_top.pcx > ORBIT_TOP.HGR
+
+ORBIT_RIGHT.HGR:	orbit_right.pcx
+	$(PCX2HGR) orbit_right.pcx > ORBIT_RIGHT.HGR
 
 GLOBE.HGR:	globe.pcx
 	$(PCX2HGR) globe.pcx > GLOBE.HGR
