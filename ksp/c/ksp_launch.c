@@ -142,7 +142,7 @@ int main(int argc, char **argv) {
 		/* 4010 */
 		fuel_left=fuel_mass[stage]*100.0/stage_fuel_total[stage];
 
-		thrusting=1;//autopilot(fuel_left, rocket_altitude,&angle);
+		//thrusting=1;//autopilot(fuel_left, rocket_altitude,&angle);
 
 		if (thrusting) {
 			if (fuel_mass[stage]<0.1) {
@@ -267,6 +267,15 @@ int main(int argc, char **argv) {
 		if (input=='a') {
 			angle-=45.0;
 			if (angle<0.0) angle+=360.0;
+		}
+		if (input=='z') {
+			thrusting=1;
+		}
+		if (input=='x') {
+			thrusting=0;
+		}
+		if (input=='q') {
+			break;
 		}
 
 		time+=1.0;
