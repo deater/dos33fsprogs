@@ -1,0 +1,66 @@
+# Number of shapes
+1
+# 
+START
+# Get to edge
+NLT
+NLT
+NLT
+UP
+UP
+UP
+UP
+# Start on Capsule
+UP
+RT
+UP
+RT
+UP
+RT
+RT
+DN
+RT
+DN
+RT
+DN
+# TANK AGAIN
+DN
+DN
+DN
+DN
+# TANK TWO
+DN
+DN
+DN
+DN
+LT
+LT
+LT
+LT
+RT
+RT
+# BELL
+DN
+RT
+DN
+RT
+DN
+LT
+LT
+LT
+LT
+LT
+LT
+UP
+RT
+UP
+RT
+UP
+# TANK AGAIN
+LT
+LT
+UP
+UP
+UP
+UP
+STOP

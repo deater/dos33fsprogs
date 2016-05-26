@@ -9,6 +9,9 @@ basic:	VAB.BAS THEME.BAS
 ACMPLX.BAS:	acmplx.bas
 	$(TXT2BAS) < acmplx.bas > ACMPLX.BAS
 
+FLIGHT.BAS:	flight.bas
+	$(TXT2BAS) < flight.bas > FLIGHT.BAS
+
 LAUNCH.BAS:	launch.bas
 	$(TXT2BAS) < launch.bas > LAUNCH.BAS
 
@@ -24,6 +27,7 @@ VAB.BAS:	vab.bas
 
 
 ksp.dsk:	ACMPLX.BAS \
+		FLIGHT.BAS \
 		LAUNCH.BAS GLOBE.HGR LAUNCHPAD.HGR ORBIT_TOP.HGR ORBIT_RIGHT.HGR \
 		LOADING.BAS LOADING.HGR SQUAD.HGR TITLE.HGR \
 		PHYSICS.BAS \
@@ -41,6 +45,7 @@ ksp.dsk:	ACMPLX.BAS \
 	$(DOS33) -y ksp.dsk SAVE B ORBIT_RIGHT.HGR
 	$(DOS33) -y ksp.dsk SAVE B ORBIT_TOP.HGR
 	$(DOS33) -y ksp.dsk SAVE A PHYSICS.BAS
+	$(DOS33) -y ksp.dsk SAVE A FLIGHT.BAS
 
 
 LAUNCHPAD.HGR:	launchpad.pcx
