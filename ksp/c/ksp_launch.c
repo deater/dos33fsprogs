@@ -140,6 +140,7 @@ int main(int argc, char **argv) {
 
 	scanf("%c",&input);
 
+	/* 4000 */
 	while(1) {
 
 		/* 4010 */
