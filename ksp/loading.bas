@@ -32,6 +32,7 @@
   857 HTAB 10:PRINT "Unleashing the Kraken":RETURN
   900  REM *** TITLE SCREEN ***
   902  HOME: PRINT: PRINT CHR$(4);"BLOAD TITLE.HGR,A$2000"
+  903 HTAB 27:VTAB 24: PRINT "VERSION 1.3.7";
   905  REM ****************
   906  REM  KSP THEME MUSIC
   907  REM  SEE http://eightbitsoundandfury.ld8.org/programming.html
