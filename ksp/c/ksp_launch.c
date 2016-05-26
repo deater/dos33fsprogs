@@ -50,20 +50,20 @@ int main(int argc, char **argv) {
 
 	FILE *logfile;
 
-	double angle=45;
+	double angle=0;
 
 	double capsule_mass=1.0;
 
-	double engines=3;
+//	double engines=3;
 	double engine_isp=270.0;	/* s */
-	double engine_mass=(1.5)*engines;		/* tons */
-	double engine_thrust=(168.0)*engines;	/* kN */
-	double fuel_flow_rate;
+//	double engine_mass=(1.5)*engines;		/* tons */
+//	double engine_thrust=(168.0)*engines;	/* kN */
+//	double fuel_flow_rate;
 
-	double tanks=6;
-	double tank_mass=(0.5)*tanks;		/* tons */
-	double fuel_mass=(4.0)*tanks;		/* tons */
-	double total_fuel=fuel_mass;
+//	double tanks=6;
+//	double tank_mass=(0.5)*tanks;		/* tons */
+//	double fuel_mass=(4.0)*tanks;		/* tons */
+//	double total_fuel=fuel_mass;
 	double fuel_left=100.0;
 
 	double gravity=-9.8;		/* m/s^2 */
@@ -84,60 +84,79 @@ int main(int argc, char **argv) {
 	double rocket_y=KERBIN_RADIUS+10;
 	double rocket_altitude=KERBIN_RADIUS;	/* m */
 
-	double deltav,twr;
-	double total_mass,empty_mass;
 
 	double v0_x,v0_y;
 
 	double time=0.0;		/* s */
 
-	int stage=1;
+	int stage=2;
 
 	int log_step=0;
 
 	char input;
 
-	int thrusting=1;
+	int thrusting=1,i,j;
 
+	int stages=3;
+	int engines[3],stacks[3],tanks[3];
+	double stage_empty_mass[3],stage_full_mass[3],total_mass[3],thrust[3];
+	double fuel_mass[3],stage_fuel_total[3];
+	double deltav[3],twr[3],fuel_flow[3];
 
 	logfile=fopen("log.jgr","w");
 
-	total_mass=engine_mass+tank_mass+fuel_mass+capsule_mass;
-	empty_mass=total_mass-fuel_mass;
+	engines[0]=1; stacks[0]=1; tanks[0]=1;
+	engines[1]=2; stacks[1]=2; tanks[1]=1;
+	engines[2]=3; stacks[2]=3; tanks[2]=1;
 
-	deltav=engine_isp*gravity*log(total_mass/empty_mass);
+	for(i=0;i<stages;i++) {
+		stage_empty_mass[i]=(engines[i]*1.5)+(stacks[i]*tanks[i]*0.5)+capsule_mass;/* tons */
+		fuel_mass[i]=(stacks[i]*tanks[i]*4.0);
+		stage_fuel_total[i]=fuel_mass[i];
+		stage_full_mass[i]=stage_empty_mass[i]+fuel_mass[i];
 
-	twr=engine_thrust/(total_mass*-gravity);
+		total_mass[i]=0.0;
+		for(j=i;j>=0;j--) {
+			total_mass[i]+=stage_full_mass[j];
+		}
+		thrust[i]=engines[i]*168.0;	/* kN */
+		deltav[i]=engine_isp*-gravity*log(total_mass[i]/(total_mass[i]-fuel_mass[i]));
+		twr[i]=thrust[i]/(total_mass[i]*-gravity);
+		fuel_flow[i]=(thrust[i])/(engine_isp*-gravity);
+		printf("Stage %d\n",i+1);
+		printf("\ttanks=%d engines=%d\n",stacks[i]*tanks[i],engines[i]);
+		printf("\tstage mass=%lf total_mass=%lf\n",stage_full_mass[i],
+			total_mass[i]);
+		printf("\tdeltaV=%lf\n",deltav[i]);
+		printf("\tTWR=%lf\n",twr[i]);
 
-	fuel_flow_rate=(engine_thrust)/(engine_isp*-gravity);
+	}
 
-	printf("DeltaV=%lf m/s\n",deltav);
-	printf("Thrust/weight=%lf\n",twr);
-	printf("Fuel flow rate=%lf, time=%lfs\n",
-		fuel_flow_rate,fuel_mass/fuel_flow_rate);
+//	printf("Fuel flow rate=%lf, time=%lfs\n",
+//		fuel_flow_rate,fuel_mass/fuel_flow_rate);
 
 	scanf("%c",&input);
 
 	while(1) {
 
 		/* 4010 */
-		fuel_left=fuel_mass*100.0/total_fuel;
+		fuel_left=fuel_mass[stage]*100.0/stage_fuel_total[stage];
 
 		thrusting=1;//autopilot(fuel_left, rocket_altitude,&angle);
 
 		if (thrusting) {
-			if (fuel_mass<0.1) {
-				fuel_mass=0.0;
+			if (fuel_mass[stage]<0.1) {
+				fuel_mass[stage]=0.0;
 				rocket_acceleration_x=0;
 				rocket_acceleration_y=0;
 
 			}
 			else {
-				rocket_acceleration_x=(engine_thrust/total_mass)*sin_degrees(angle);
-				rocket_acceleration_y=(engine_thrust/total_mass)*cos_degrees(angle);
+				rocket_acceleration_x=(thrust[stage]/total_mass[stage])*sin_degrees(angle);
+				rocket_acceleration_y=(thrust[stage]/total_mass[stage])*cos_degrees(angle);
 
-				fuel_mass=fuel_mass-fuel_flow_rate;
-				total_mass=engine_mass+tank_mass+fuel_mass+capsule_mass;
+				fuel_mass[stage]=fuel_mass[stage]-fuel_flow[stage];
+				total_mass[stage]=total_mass[stage]-fuel_flow[stage];
 			}
 		}
 		else {
@@ -238,6 +257,17 @@ int main(int argc, char **argv) {
 		else printf("^");
 
 		scanf("%c",&input);
+		if (input==' ') {
+			if (stage>0) stage--;
+		}
+		if (input=='d') {
+			angle+=45.0;
+			if (angle>=360) angle=0.0;
+		}
+		if (input=='a') {
+			angle-=45.0;
+			if (angle<0.0) angle+=360.0;
+		}
 
 		time+=1.0;
 
