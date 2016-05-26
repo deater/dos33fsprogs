@@ -1,5 +1,5 @@
 # Number of shapes
-2
+6
 ####################
 # 1-stage, no thrust
 ####################
@@ -145,6 +145,408 @@ UP
 # TANK AGAIN
 LT
 LT
+UP
+UP
+UP
+UP
+STOP
+####################
+# 2-stage, no thrust
+####################
+START
+# Get to edge
+NLT
+NLT
+NLT
+UP
+UP
+UP
+UP
+# Extra
+UP
+UP
+UP
+UP
+# Start on Capsule
+UP
+RT
+UP
+RT
+UP
+RT
+RT
+DN
+RT
+DN
+RT
+DN
+# TANK AGAIN
+DN
+DN
+DN
+DN
+# TANK TWO
+DN
+DN
+DN
+DN
+# TANK THREE
+DN
+DN
+DN
+DN
+# TANK FOUR
+DN
+DN
+DN
+DN
+LT
+LT
+LT
+LT
+RT
+RT
+# BELL
+DN
+RT
+DN
+RT
+DN
+LT
+LT
+LT
+LT
+LT
+LT
+UP
+RT
+UP
+RT
+UP
+# TANK AGAIN
+LT
+LT
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+STOP
+####################
+# 2-stage, thrusting
+####################
+START
+# Get to edge
+NLT
+NLT
+NLT
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+# Start on Capsule
+UP
+RT
+UP
+RT
+UP
+RT
+RT
+DN
+RT
+DN
+RT
+DN
+# TANK AGAIN
+DN
+DN
+DN
+DN
+# TANK TWO
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+LT
+LT
+LT
+LT
+RT
+RT
+# BELL
+DN
+RT
+DN
+RT
+DN
+LT
+LT
+LT
+LT
+LT
+# FLAME
+NRT
+NRT
+NRT
+NRT
+DN
+LT
+DN
+DN
+DN
+LT
+LT
+UP
+UP
+UP
+LT
+UP
+# Back to bell
+LT
+UP
+RT
+UP
+RT
+UP
+# TANK AGAIN
+LT
+LT
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+STOP
+####################
+# 3-stage, no thrust
+####################
+START
+# Get to edge
+NLT
+NLT
+NLT
+UP
+UP
+UP
+UP
+# Extra
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+# Start on Capsule
+UP
+RT
+UP
+RT
+UP
+RT
+RT
+DN
+RT
+DN
+RT
+DN
+# TANK AGAIN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+# TANK TWO
+DN
+DN
+DN
+DN
+# TANK THREE
+DN
+DN
+DN
+DN
+# TANK FOUR
+DN
+DN
+DN
+DN
+LT
+LT
+LT
+LT
+RT
+RT
+# BELL
+DN
+RT
+DN
+RT
+DN
+LT
+LT
+LT
+LT
+LT
+LT
+UP
+RT
+UP
+RT
+UP
+# TANK AGAIN
+LT
+LT
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+STOP
+####################
+# 3-stage, thrusting
+####################
+START
+# Get to edge
+NLT
+NLT
+NLT
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+# Start on Capsule
+UP
+RT
+UP
+RT
+UP
+RT
+RT
+DN
+RT
+DN
+RT
+DN
+# TANK AGAIN
+DN
+DN
+DN
+DN
+# TANK TWO
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+DN
+LT
+LT
+LT
+LT
+RT
+RT
+# BELL
+DN
+RT
+DN
+RT
+DN
+LT
+LT
+LT
+LT
+LT
+# FLAME
+NRT
+NRT
+NRT
+NRT
+DN
+LT
+DN
+DN
+DN
+LT
+LT
+UP
+UP
+UP
+LT
+UP
+# Back to bell
+LT
+UP
+RT
+UP
+RT
+UP
+# TANK AGAIN
+LT
+LT
+UP
+UP
+UP
+UP
+UP
+UP
+UP
+UP
 UP
 UP
 UP
