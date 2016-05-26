@@ -13,6 +13,9 @@ CONTRACT.BAS:	contract.bas
 FLIGHT.BAS:	flight.bas
 	$(TXT2BAS) < flight.bas > FLIGHT.BAS
 
+KSP.BAS:	ksp.bas
+	$(TXT2BAS) < ksp.bas > KSP.BAS
+
 LAUNCH.BAS:	launch.bas
 	$(TXT2BAS) < launch.bas > LAUNCH.BAS
 
@@ -30,6 +33,7 @@ VAB.BAS:	vab.bas
 ksp.dsk:	ACMPLX.BAS \
 		CONTRACT.BAS \
 		FLIGHT.BAS \
+		KSP.BAS \
 		LAUNCH.BAS GLOBE.HGR LAUNCHPAD.HGR ORBIT_TOP.HGR ORBIT_RIGHT.HGR \
 		LOADING.BAS LOADING.HGR SQUAD.HGR TITLE.HGR \
 		PHYSICS.BAS \
@@ -49,6 +53,7 @@ ksp.dsk:	ACMPLX.BAS \
 	$(DOS33) -y ksp.dsk SAVE A PHYSICS.BAS
 	$(DOS33) -y ksp.dsk SAVE A FLIGHT.BAS
 	$(DOS33) -y ksp.dsk SAVE A CONTRACT.BAS
+	$(DOS33) -y ksp.dsk SAVE A KSP.BAS
 
 
 LAUNCHPAD.HGR:	launchpad.pcx
