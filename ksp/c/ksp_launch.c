@@ -109,12 +109,15 @@ int main(int argc, char **argv) {
 	engines[1]=2; stacks[1]=2; tanks[1]=1;
 	engines[2]=3; stacks[2]=3; tanks[2]=1;
 
+	/* 1000 */
 	for(i=0;i<stages;i++) {
-		stage_empty_mass[i]=(engines[i]*1.5)+(stacks[i]*tanks[i]*0.5)+capsule_mass;/* tons */
+		stage_empty_mass[i]=(engines[i]*1.5)+(stacks[i]*tanks[i]*0.5);
+		if (i==0) stage_empty_mass[i]+=capsule_mass;/* tons */
 		fuel_mass[i]=(stacks[i]*tanks[i]*4.0);
 		stage_fuel_total[i]=fuel_mass[i];
 		stage_full_mass[i]=stage_empty_mass[i]+fuel_mass[i];
 
+		/* 1020 */
 		total_mass[i]=0.0;
 		for(j=i;j>=0;j--) {
 			total_mass[i]+=stage_full_mass[j];
