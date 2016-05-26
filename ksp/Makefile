@@ -24,7 +24,7 @@ VAB.BAS:	vab.bas
 
 
 ksp.dsk:	ACMPLX.BAS \
-		LAUNCH.BAS \
+		LAUNCH.BAS GLOBE.HGR \
 		LOADING.BAS LOADING.HGR SQUAD.HGR TITLE.HGR \
 		PHYSICS.BAS \
 		VAB.BAS VAB.HGR
@@ -36,8 +36,12 @@ ksp.dsk:	ACMPLX.BAS \
 	$(DOS33) -y ksp.dsk SAVE A LOADING.BAS
 	$(DOS33) -y ksp.dsk SAVE A ACMPLX.BAS
 	$(DOS33) -y ksp.dsk SAVE A LAUNCH.BAS
+	$(DOS33) -y ksp.dsk SAVE B GLOBE.HGR
 	$(DOS33) -y ksp.dsk SAVE A PHYSICS.BAS
 
+
+GLOBE.HGR:	globe.pcx
+	$(PCX2HGR) globe.pcx > GLOBE.HGR
 
 LOADING.HGR:	loading.pcx
 	$(PCX2HGR) loading.pcx > LOADING.HGR
