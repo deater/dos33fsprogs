@@ -4,10 +4,11 @@ TXT2BAS = ../asoft_basic-utils/tokenize_asoft
 
 all:	ksp.dsk
 
-basic:	VAB.BAS THEME.BAS
-
 ACMPLX.BAS:	acmplx.bas
 	$(TXT2BAS) < acmplx.bas > ACMPLX.BAS
+
+CONTRACT.BAS:	contract.bas
+	$(TXT2BAS) < contract.bas > CONTRACT.BAS
 
 FLIGHT.BAS:	flight.bas
 	$(TXT2BAS) < flight.bas > FLIGHT.BAS
@@ -27,6 +28,7 @@ VAB.BAS:	vab.bas
 
 
 ksp.dsk:	ACMPLX.BAS \
+		CONTRACT.BAS \
 		FLIGHT.BAS \
 		LAUNCH.BAS GLOBE.HGR LAUNCHPAD.HGR ORBIT_TOP.HGR ORBIT_RIGHT.HGR \
 		LOADING.BAS LOADING.HGR SQUAD.HGR TITLE.HGR \
@@ -46,6 +48,7 @@ ksp.dsk:	ACMPLX.BAS \
 	$(DOS33) -y ksp.dsk SAVE B ORBIT_TOP.HGR
 	$(DOS33) -y ksp.dsk SAVE A PHYSICS.BAS
 	$(DOS33) -y ksp.dsk SAVE A FLIGHT.BAS
+	$(DOS33) -y ksp.dsk SAVE A CONTRACT.BAS
 
 
 LAUNCHPAD.HGR:	launchpad.pcx
