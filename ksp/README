@@ -1,0 +1,43 @@
+KSP 1.3.7 for Apple II.
+
+This is a "port" of the awesome Kerbal Space Program to the Apple II.
+Just for fun, I am in no way affiliated with Squad.
+
+The game is written entirely in Applesoft BASIC.
+
+Directions:
+	The key bindings are similar to KSP.
+
+	A,D   - STEER SHIP LEFT/RIGHT
+	Z     - START ENGINES
+	X     - CUT ENGINES
+	SPACE - LAUNCH,STAGE
+	M     - SWITCH TO/FROM ORBITAL VIEW
+	<,>   - FAST FORWARD
+	Q     - QUIT
+
+
+Hardware required:
+	Apple II and probably 64k of RAM
+
+Thanks to:
++ Steve Wozniak for an awesome machine
++ Lyle Brennen and all my other physics teachers
++ My ever patient wife
++ kdenlive (although it crashes a lot)
++ linapple2 which works nicely
++ vokoscreen which I used to grab the screen grabs
+
+No thanks to:
++ The Linux audio sound ALSA/pulseaudio people
+  Seriously, I couldn't record decent audio from a microphone.
+  I eventually had to give up and redub it with sound I recorded on a Mac
+  (the same hardware even, I had to boot it out of Linux and back to OSX)
+
+
+APPLE II FOREVER!
+
+Vince Weaver
+vince@deater.net
+http://www.deater.net/weave/vmwprod/ksp
+27 May 2016
