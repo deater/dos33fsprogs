@@ -1,6 +1,7 @@
 PCX2HGR = ../hgr-utils/pcx2hgr
 DOS33 = ../dos33fs-utils/dos33
 TXT2BAS = ../asoft_basic-utils/tokenize_asoft
+SHAPETABLE = ../hgr-utils/shape_table
 
 all:	ksp.dsk
 
@@ -28,14 +29,14 @@ PHYSICS.BAS:	physics.bas
 VAB.BAS:	vab.bas
 	$(TXT2BAS) < vab.bas > VAB.BAS
 
-LOAD_DEMO.BAS:	load_demo.bas
-	$(TXT2BAS) < load_demo.bas > LOAD_DEMO.BAS
+LOAD_KSP.BAS:	load_ksp.bas
+	$(TXT2BAS) < load_ksp.bas > LOAD_KSP.BAS
 
 ROCKET.SHAPE:	ship2.table
-	../hgr-utils/shape_table -b < ship2.table > ROCKET.SHAPE
+	$(SHAPETABLE) -b < ship2.table > ROCKET.SHAPE
 
 VAB.SHAPE:	ship.table
-	../hgr-utils/shape_table -b < ship.table > VAB.SHAPE
+	$(SHAPETABLE) -b < ship.table > VAB.SHAPE
 
 
 ksp.dsk:	ACMPLX.BAS \
@@ -44,7 +45,7 @@ ksp.dsk:	ACMPLX.BAS \
 		KSP.BAS \
 		ROCKET.SHAPE \
 		VAB.SHAPE \
-		LOAD_DEMO.BAS \
+		LOAD_KSP.BAS \
 		LAUNCH.BAS GLOBE.HGR LAUNCHPAD.HGR ORBIT_TOP.HGR ORBIT_RIGHT.HGR \
 		LOADING.BAS LOADING.HGR SQUAD.HGR TITLE.HGR \
 		PHYSICS.BAS \
@@ -65,7 +66,7 @@ ksp.dsk:	ACMPLX.BAS \
 	$(DOS33) -y ksp.dsk SAVE A FLIGHT.BAS
 	$(DOS33) -y ksp.dsk SAVE A CONTRACT.BAS
 	$(DOS33) -y ksp.dsk SAVE A KSP.BAS
-	$(DOS33) -y ksp.dsk SAVE A LOAD_DEMO.BAS
+	$(DOS33) -y ksp.dsk SAVE A LOAD_KSP.BAS
 	$(DOS33) -y ksp.dsk SAVE B ROCKET.SHAPE
 	$(DOS33) -y ksp.dsk SAVE B VAB.SHAPE
 
@@ -95,4 +96,4 @@ VAB.HGR:	vab.pcx
 	$(PCX2HGR) vab.pcx > VAB.HGR
 
 clean:	
-	rm -f *~ *.HGR *.SHAPE
+	rm -f *~ *.HGR *.SHAPE *.BAS
