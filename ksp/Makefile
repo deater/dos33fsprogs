@@ -95,4 +95,4 @@ VAB.HGR:	vab.pcx
 	$(PCX2HGR) vab.pcx > VAB.HGR
 
 clean:	
-	rm -f *~ *.HGR
+	rm -f *~ *.HGR *.SHAPE
