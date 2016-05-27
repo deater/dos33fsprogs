@@ -28,12 +28,19 @@ PHYSICS.BAS:	physics.bas
 VAB.BAS:	vab.bas
 	$(TXT2BAS) < vab.bas > VAB.BAS
 
+LOAD_DEMO.BAS:	load_demo.bas
+	$(TXT2BAS) < load_demo.bas > LOAD_DEMO.BAS
+
+ROCKET.SHAPE:	ship2.table
+	../hgr-utils/shape_table -b < ship2.table > ROCKET.SHAPE
 
 
 ksp.dsk:	ACMPLX.BAS \
 		CONTRACT.BAS \
 		FLIGHT.BAS \
 		KSP.BAS \
+		ROCKET.SHAPE \
+		LOAD_DEMO.BAS \
 		LAUNCH.BAS GLOBE.HGR LAUNCHPAD.HGR ORBIT_TOP.HGR ORBIT_RIGHT.HGR \
 		LOADING.BAS LOADING.HGR SQUAD.HGR TITLE.HGR \
 		PHYSICS.BAS \
@@ -54,6 +61,8 @@ ksp.dsk:	ACMPLX.BAS \
 	$(DOS33) -y ksp.dsk SAVE A FLIGHT.BAS
 	$(DOS33) -y ksp.dsk SAVE A CONTRACT.BAS
 	$(DOS33) -y ksp.dsk SAVE A KSP.BAS
+	$(DOS33) -y ksp.dsk SAVE A LOAD_DEMO.BAS
+	$(DOS33) -y ksp.dsk SAVE B ROCKET.SHAPE
 
 
 LAUNCHPAD.HGR:	launchpad.pcx
