@@ -25,7 +25,6 @@ void centerprint(int y, char *string) {
 
 int main(int argc, char **argv) {
 
-	int x,y,z;
 	int stages;
 	int s;
 
