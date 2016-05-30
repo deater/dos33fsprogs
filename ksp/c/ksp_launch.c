@@ -88,6 +88,7 @@ int main(int argc, char **argv) {
 	double v0_x,v0_y;
 
 	double time=0.0;		/* s */
+	double deltat=1.0;
 
 	int stage=2;
 
@@ -181,17 +182,18 @@ int main(int argc, char **argv) {
 		rocket_acceleration_x+=gravity_x;
 
 		/* v=v0+at */
+
 		v0_x=rocket_velocity_x;
 		v0_y=rocket_velocity_y;
 
-		rocket_velocity_y=v0_y+rocket_acceleration_y*1.0;
-		rocket_velocity_x=v0_x+rocket_acceleration_x*1.0;
+		rocket_velocity_y=v0_y+rocket_acceleration_y*deltat;
+		rocket_velocity_x=v0_x+rocket_acceleration_x*deltat;
 		rocket_velocity=vector_magnitude(rocket_velocity_x,rocket_velocity_y),
 
 		/* deltaX=1/2 (v+v0)t */
 		/* could also use deltax=v0t+(1/2)*a*t*t */
-		rocket_y=rocket_y+0.5*(v0_y+rocket_velocity_y)*1.0;
-		rocket_x=rocket_x+0.5*(v0_x+rocket_velocity_x)*1.0;
+		rocket_y=rocket_y+0.5*(v0_y+rocket_velocity_y)*deltat;
+		rocket_x=rocket_x+0.5*(v0_x+rocket_velocity_x)*deltat;
 
 		rocket_altitude=vector_magnitude(rocket_x,rocket_y);
 
@@ -273,7 +275,8 @@ int main(int argc, char **argv) {
 			if (angle<0.0) angle+=360.0;
 		}
 		if (input=='z') {
-			thrusting=1;
+			/* no thrusting while fast-forwarding */
+			if (deltat<1.5) thrusting=1;
 		}
 		if (input=='x') {
 			thrusting=0;
@@ -282,7 +285,16 @@ int main(int argc, char **argv) {
 			break;
 		}
 
-		time+=1.0;
+		if (input=='>') {
+			/* no fast-forwarding while thrusting */
+			if (!thrusting) deltat+=1.0;
+		}
+		if (input=='<') {
+			deltat-=1.0;
+			if (deltat<1.0) deltat=1.0;
+		}
+
+		time+=deltat;
 
 		if (log_step==0) {
 			if (logfile) {
