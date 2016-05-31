@@ -15,16 +15,49 @@
 '       as well as slow down execution as BASIC is interpreted.
 '
 ' Variable List: (Note, in Applesoft only first 2 chars matters)
+'   A$   = keypressed
+'   AN$  = astrounat name
+'   C$   = contract name
 '   D$   = ASCII(4) indicating we have a DOS command
+'   AD() = astronaut dead
+'   AN   = rocket angle
+'   AX/AY= rocket x/y acceleration
+'   BF   =
+'   CQ   = current quadrant (i.e. background to display)
+'   DT   = 
+'   DV() = deltaV
+'   EM() = per-stage empty mass
+'   FM() = per-stage fuel mass
 '   EN() = engines per stage
+'   FF() = fuel flow
 '   FT() = fuel tanks per stack
+'   G    = gravity
+'   GX/GY= gravity X/Y vector
+'   H    = horizon
 '   I    = loop iterator
 '   J    = loop iterator
+'   KE   = astronaut eyes
+'   KR   = planet radius
+'   LN   = launched
+'   MX   = maximum altitude reached
+'   OM   = orbit mode (view)
 '   P    = number of parachutes
+'   RA   = distance to center of planet
+'   RR   = altitude
+'   RX/RY= rocket x,y position
 '   S    = Current Stage Number
 '   SR   = Number of struts
 '   SS   = Number of stages
+'   TH() = stage thrust
+'   TR   =
+'   T    = time
+'   SM() = per-stage stage mass
 '   ST() = Stacks per stage
+'   TM() = per-stage total mass
+'   TW() = thrust/weight ratio
+'   V    = velocity magnitude
+'   VX/VY= velocity x/y vector
+'   W    = Which astronaut
 '
 ' Clear screen
   10  HOME:HGR:D$=CHR$(4)
@@ -110,77 +143,104 @@
  1330 PRINT "HOW MANY PARACHUTES? (0-3)";:INPUT P
  1350 PRINT "HOW MANY STRUTS? (0-20000)";:INPUT SR
  1370 SS=S
-1500 REM *** ASTRONAUT COMPLEX ***
-1505 TEXT: HOME
-1510 HTAB 11
-1515 INVERSE: PRINT "ASTRONAUT COMPLEX": NORMAL
-1520 PRINT
-1522 PRINT "CHOOSE ONE KERBAL FOR THIS MISSION:"
-1525 PRINT
-1530 FOR I=1 TO 8
-1540 IF AD(I) GOTO 1600
-1550 ON I GOSUB 1641,1642,1643,1644,1645,1646,1647,1648
-1560 PRINT " ";I;". ";AN$,AJ$;" S: ";AS$;" C: ";AC$
-1600 NEXT I
-1605 PRINT
-1610 INPUT W
-1615 IF W<1 OR W>8 THEN PRINT "INVALID INPUT, PLEASE TRY AGAIN!": GOTO 1610
-1630 ON W GOSUB 1641,1642,1643,1644,1645,1646,1647,1648
-1630 GOTO 1700
-1641 AN$="JEBEDIAH" :AJ$="PILOT":AS$="****":AC$="****":RETURN
-1642 AN$="VALENTINA":AJ$="PILOT":AS$="****":AC$="****":RETURN
-1643 AN$="KAI"      :AJ$="SCI  ":AS$="*** ":AC$="***":RETURN
-1644 AN$="KUROSHIN" :AJ$="ENGR ":AS$="**  ":AC$="*":RETURN
-1645 AN$="DESKTOP"  :AJ$="ENGR ":AS$="*   ":AC$="***":RETURN
-1646 AN$="SLASHDOT" :AJ$="SCI  ":AS$="*** ":AC$="*":RETURN
-1647 AN$="ZURGTROYD":AJ$="PILOT":AS$="**  ":AC$="***":RETURN
-1648 AN$="DAPHTY"   :AJ$="ENGR ":AS$="*** ":AC$="***":RETURN
-1700 REM TEXT:HOME
-1720 REM AN$="ZURGTROYD":SS=3
-1750 REM EN(1)=1:ST(1)=1:FT(1)=1
-1751 REM EN(2)=2:ST(2)=2:FT(2)=1
-1752 REM EN(3)=3:ST(3)=3:FT(3)=1
-1776 POKE 232,0:POKE 233,16
-1783 PRINT CHR$(4);"BLOAD ROCKET.SHAPE,A$1000"
-1800 HOME:PRINT "ROCKET SUMMARY:":PRINT
-1802 G=-9.8:LN=0:CQ=0:OM=0:S=SS:DT=1
-1805 FOR I=1 TO S
-1810 EM(I)=EN(I)*1.5+ST(I)*FT(I)*0.5
-1812 IF I=1 THEN EM(I)=EM(I)+1.0
-1814 FM(I)=ST(I)*FT(I)*4.0
-1815 SF(I)=FM(I)
-1816 SM(I)=EM(I)+FM(I)
-1820 TM(I)=0
-1822 FOR J=1 TO I
-1825 TM(I)=TM(I)+SM(J)
-1830 NEXT J
-1835 TH(I)=EN(I)*168
-1840 DV(I)=270*-G*LOG(TM(I)/(TM(I)-FM(I)))
-1850 TW(I)=TH(I)/(TM(I)*-G)
-1855 FF(I)=TH(I)/(270*-G)
-1990 PRINT "STAGE: ";4-I
-1991 PRINT "  TANKS=";ST(I)*FT(I);" ENGINES=";EN(I)
-1992 PRINT "  STAGE MASS=";SM(I);" TOTAL MASS=";TM(I)
-1993 PRINT "  DELTAV=";DV(I)
-1995 PRINT "  TWR=";TW(I)
-2000 NEXT I
-2998 GET A$
-2999 HOME
-3000 AN=0:GX=0:GY=-9.8:GA=0:V=0:VX=0:VY=0:AX=0:AY=0:KR=600000
-3016 RX=0:RY=KR+10:RA=KR+10:TR=0:T=0:BF=0:MX=0
-3020 HGR:ROT=0:SCALE=2:H=0
-3030 REM ** LAUNCHPAD **
-3035 PRINT:PRINT CHR$(4);"BLOAD LAUNCHPAD.HGR,A$2000"
-3038 HCOLOR=1:HPLOT 1,80 TO 132,80: HPLOT 148,80 TO 247,80
-3039 HCOLOR=3:HPLOT 110,110 TO 110,60:HPLOT TO 130,60: HPLOT 110,70 TO 130,70
-3040 XDRAW 1+((S-1)*2)+TR AT 140,80
-4000 REM ** LOOP **
-4002 IF LN=0 GOTO 5032
-4003 RR=RA-KR:IF RR>MX THEN MX=RR
-4004 IF OM=1 GOTO 4018
-4005 IF RR>1800 OR OM=1 THEN GOTO 4012
-4007 HCOLOR=0:HPLOT 1,80+H TO 132,80+H:HPLOT 148,80+H TO 247,80+H
-4010 H=RR/20:HCOLOR=1:HPLOT 1,80+H TO 132,80+H:HPLOT 148,80+H TO 247,80+H
+' *********************************
+' ***     ASTRONAUT COMPLEX     ***
+' *********************************
+ 1500 TEXT: HOME: HTAB 11
+ 1515 INVERSE: PRINT "ASTRONAUT COMPLEX": NORMAL
+ 1520 PRINT:PRINT "CHOOSE ONE KERBAL FOR THIS MISSION:":PRINT
+ 1530 FOR I=1 TO 8
+ 1540    IF AD(I) GOTO 1600
+ 1550    ON I GOSUB 1641,1642,1643,1644,1645,1646,1647,1648
+ 1560    PRINT " ";I;". ";AN$,AJ$;" S: ";AS$;" C: ";AC$
+ 1600 NEXT I
+ 1605 PRINT: INPUT W
+ 1615 IF W<1 OR W>8 THEN PRINT "INVALID INPUT, PLEASE TRY AGAIN!": GOTO 1610
+ 1630 ON W GOSUB 1641,1642,1643,1644,1645,1646,1647,1648
+ 1630 GOTO 1776
+ 1641 AN$="JEBEDIAH" :AJ$="PILOT":AS$="****":AC$="****":RETURN
+ 1642 AN$="VALENTINA":AJ$="PILOT":AS$="****":AC$="****":RETURN
+ 1643 AN$="KAI"      :AJ$="SCI  ":AS$="*** ":AC$="***":RETURN
+ 1644 AN$="KUROSHIN" :AJ$="ENGR ":AS$="**  ":AC$="*":RETURN
+ 1645 AN$="DESKTOP"  :AJ$="ENGR ":AS$="*   ":AC$="***":RETURN
+ 1646 AN$="SLASHDOT" :AJ$="SCI  ":AS$="*** ":AC$="*":RETURN
+ 1647 AN$="ZURGTROYD":AJ$="PILOT":AS$="**  ":AC$="***":RETURN
+ 1648 AN$="DAPHTY"   :AJ$="ENGR ":AS$="*** ":AC$="***":RETURN
+'*** REM DEBUG, Uncomment and Jump here to skip loading
+'1700 REM TEXT:HOME
+'1720 REM AN$="ZURGTROYD":SS=3
+'1750 REM EN(1)=1:ST(1)=1:FT(1)=1
+'1751 REM EN(2)=2:ST(2)=2:FT(2)=1
+'1752 REM EN(3)=3:ST(3)=3:FT(3)=1
+'************************
+'*   Rocket Summary   ***
+'************************
+'*** REM Load Rocket Shape Table
+ 1776 POKE 232,0:POKE 233,16
+ 1783 PRINT D$"BLOAD ROCKET.SHAPE,A$1000"
+ 1800 HOME:PRINT "ROCKET SUMMARY:":PRINT
+ 1802 G=-9.8:LN=0:CQ=0:OM=0:S=SS:DT=1
+ 1805 FOR I=1 TO S
+'*** REM EmptyMass=Engines*1.5T+(Stacks*FuelTanks)*0.5T
+ 1810    EM(I)=EN(I)*1.5+ST(I)*FT(I)*0.5
+'*** REM First stage also has a 1T capsule
+ 1812    IF I=1 THEN EM(I)=EM(I)+1.0
+'*** REM FuelMass=(Stacks*FuelTanks)*4T
+ 1814    FM(I)=ST(I)*FT(I)*4.0
+'*** REM StageFuel=FuelMass (one gets decremented as we use it up)
+ 1815    SF(I)=FM(I)
+'*** REM StageMass=EmptyMass+FuelMass
+ 1816    SM(I)=EM(I)+FM(I)
+'*** REM Total mass of stage includes all higher stages
+ 1820    TM(I)=0
+ 1822    FOR J=1 TO I
+ 1825       TM(I)=TM(I)+SM(J)
+ 1830    NEXT J
+'***    Thrust=NumberOfEngines*168kN
+ 1835    TH(I)=EN(I)*168
+'***    DeltaV=ISP*gravity*ln(total_mass/empty_mass)
+ 1840    DV(I)=270*-G*LOG(TM(I)/(TM(I)-FM(I)))
+'***    Thrust/Weight Ratio
+ 1850    TW(I)=TH(I)/(TM(I)*-G)
+'***    Fuel Flow
+ 1855    FF(I)=TH(I)/(270*-G)
+ 1990    PRINT "STAGE: ";4-I
+ 1991    PRINT "  TANKS=";ST(I)*FT(I);" ENGINES=";EN(I)
+ 1992    PRINT "  STAGE MASS=";SM(I);" TOTAL MASS=";TM(I)
+ 1993    PRINT "  DELTAV=";DV(I)
+ 1995    PRINT "  TWR=";TW(I)
+ 2000 NEXT I
+ 2998 GET A$
+ 2999 HOME
+'******************************
+'***       Main Loop       ****
+'******************************
+ 3000 AN=0:GX=0:GY=-9.8:GA=0:V=0:VX=0:VY=0:AX=0:AY=0:KR=600000
+ 3016 RX=0:RY=KR+10:RA=KR+10:TR=0:T=0:BF=0:MX=0
+ 3020 HGR:ROT=0:SCALE=2:H=0
+'**** REM ** LAUNCHPAD **
+ 3035 PRINT:PRINT D$"BLOAD LAUNCHPAD.HGR,A$2000"
+'**** REM DRAW HORIZON (GREEN)
+ 3038 HCOLOR=1:HPLOT 1,80 TO 132,80: HPLOT 148,80 TO 247,80
+'**** REM DRAW GANTRY (WHITE)
+ 3039 HCOLOR=3:HPLOT 110,110 TO 110,60:HPLOT TO 130,60: HPLOT 110,70 TO 130,70
+'**** DRAW SHIP
+ 3040 XDRAW 1+((S-1)*2)+TR AT 140,80
+ 4000 REM ** MAIN LOOP **
+'**** REM ** if not launched yet then skip physics
+ 4002 IF LN=0 GOTO 5032
+'**** Calculate altitude and set maximum if we are at new record
+ 4003 RR=RA-KR:IF RR>MX THEN MX=RR
+'**** If orbit mode then skip drawing horizon, etc
+ 4004 IF OM=1 GOTO 4018
+'**** If above 1.8km don't draw horizon
+'**** FIXME: do we need to check OM again?
+'**** FIXME: we draw the horizon one pixel too far to right
+ 4005 IF RR>1800 OR OM=1 THEN GOTO 4012
+'**** Erase old horizon
+ 4007 HCOLOR=0:HPLOT 1,80+H TO 132,80+H:HPLOT 148,80+H TO 247,80+H
+'**** Calculate and draw new horizon
+ 4010 H=RR/20:HCOLOR=1:HPLOT 1,80+H TO 132,80+H:HPLOT 148,80+H TO 247,80+H
 4012 IF RR<40000 AND CQ<>0 THEN GOSUB 7600
 4014 IF RR<40000 GOTO 4018
 4016 IF RR>40000 AND CQ<>1 THEN GOSUB 7700
@@ -276,45 +336,48 @@
 8225 HCOLOR=1:HPLOT 259,155 TO 271,155:HPLOT 259,156 TO 271,156
 8226 HCOLOR=0:HPLOT 259,155 TO 271,155:HPLOT 261,156 TO 269,156
 8227 RETURN
-9000 REM *** CONTRACT COMPLETE ***
-9005 IF MX<40000 THEN C$="CRASH SHIP":F$="0.30":E$="-1":GOTO 9010
-9007 C$="REACH SPACE":F$="200":E$="20"
-9010 TEXT:HOME
-9020 HTAB 10:VTAB 9
-9021 FOR I=1 TO 20: PRINT "*";: NEXT I: PRINT "*"
-9023 HTAB 10: PRINT "* ";:INVERSE: PRINT "CONTRACT COMPLETE";:NORMAL: PRINT " *"
-9024 HTAB 10: PRINT "* ";
-9026 L=10-(LEN(C$))/2
-9027 HTAB 10+L:PRINT C$;:HTAB 30: PRINT "*"
-9030 HTAB 10:PRINT "*      FUNDS ";F$;:HTAB 30: PRINT "*"
-9030 HTAB 10:PRINT "*   EXPERIENCE ";E$;:HTAB 30: PRINT "*"
-9040 HTAB 10
-9042 FOR I=1 TO 20: PRINT "*";: NEXT I:PRINT "*"
-9100 VTAB 16
-9110 PRINT "NOW WHAT?"
-9120 PRINT "  1. RETURN TO THE VAB"
-9130 PRINT "  2. RETURN TO ASTRO COMPLEX"
-9140 PRINT "  3. RETURN TO LAUNCH"
-9145 PRINT "  4. HELP"
-9150 PRINT "  5. QUIT GAME"
-9160 PRINT "---> ";
-9170 GET A$
-9171 IF A$="1" GOTO 1000
-9172 IF A$="2" GOTO 1500
-9173 IF A$="3" GOTO 1776
-9174 IF A$="4" OR A$="H" GOTO 9200
-9175 IF A$="5" OR A$="Q" THEN TEXT:HOME:END
-9176 GOTO 9160
-9200 REM *** HELP ***
-9210 HOME
-9220 PRINT "KSP-APPLE-II BY VINCE WEAVER"
-9230 PRINT "     APPLE II FOREVER"
-9240 PRINT " A,D   - STEER SHIP LEFT/RIGHT"
-9250 PRINT " Z     - START ENGINES"
-9260 PRINT " X     - CUT ENGINES"
-9270 PRINT " SPACE - LAUNCH,STAGE"
-9275 PRINT " M     - SWITCH TO ORBITAL VIEW"
-9277 PRINT " <,>   - FAST FORWARD"
-9280 PRINT " ESC   - QUIT" 
-9300 GET A$
-9320 GOTO 9010
+'*****************************
+'***   CONTRACT COMPLETE   ***
+'*****************************
+ 9000 IF MX<40000 THEN C$="CRASH SHIP":F$="0.30":E$="-1":GOTO 9010
+ 9007 C$="REACH SPACE":F$="200":E$="20"
+ 9010 TEXT:HOME
+ 9020 HTAB 10:VTAB 9
+ 9021 FOR I=1 TO 20: PRINT "*";: NEXT I: PRINT "*"
+ 9023 HTAB 10: PRINT "* ";:INVERSE: PRINT "CONTRACT COMPLETE";:NORMAL: PRINT " *"
+ 9024 HTAB 10: PRINT "* ";
+ 9026 L=10-(LEN(C$))/2
+ 9027 HTAB 10+L:PRINT C$;:HTAB 30: PRINT "*"
+ 9030 HTAB 10:PRINT "*      FUNDS ";F$;:HTAB 30: PRINT "*"
+ 9030 HTAB 10:PRINT "*   EXPERIENCE ";E$;:HTAB 30: PRINT "*"
+ 9040 HTAB 10
+ 9042 FOR I=1 TO 20: PRINT "*";: NEXT I:PRINT "*"
+ 9100 VTAB 16
+ 9110 PRINT "NOW WHAT?"
+ 9120 PRINT "  1. RETURN TO THE VAB"
+ 9130 PRINT "  2. RETURN TO ASTRO COMPLEX"
+ 9140 PRINT "  3. RETURN TO LAUNCH"
+ 9145 PRINT "  4. HELP"
+ 9150 PRINT "  5. QUIT GAME"
+ 9160 PRINT "---> ";
+ 9170 GET A$
+ 9171 IF A$="1" GOTO 1000
+ 9172 IF A$="2" GOTO 1500
+ 9173 IF A$="3" GOTO 1776
+ 9174 IF A$="4" OR A$="H" GOTO 9200
+ 9175 IF A$="5" OR A$="Q" THEN TEXT:HOME:END
+ 9176 GOTO 9160
+'*******************
+'*** HELP SCREEN ***
+'*******************
+ 9200 HOME:PRINT "KSP-APPLE-II BY VINCE WEAVER"
+ 9230 PRINT "     APPLE II FOREVER"
+ 9240 PRINT " A,D   - STEER SHIP LEFT/RIGHT"
+ 9250 PRINT " Z     - START ENGINES"
+ 9260 PRINT " X     - CUT ENGINES"
+ 9270 PRINT " SPACE - LAUNCH,STAGE"
+ 9275 PRINT " M     - SWITCH TO ORBITAL VIEW"
+ 9277 PRINT " <,>   - FAST FORWARD"
+ 9280 PRINT " ESC   - QUIT" 
+ 9300 GET A$
+ 9320 GOTO 9010
