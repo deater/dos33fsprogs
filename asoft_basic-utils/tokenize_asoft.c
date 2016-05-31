@@ -12,7 +12,7 @@
 /* In memory, applesoft file starts at address $801        */
 /* format is <LINE><LINE><LINE>$00$00                      */
 /* Where <LINE> is:                                        */
-/*    2 bytes (little endian) of LINK indicating addy of next line */ 
+/*    2 bytes (little endian) of LINK indicating addy of next line */
 /*    2 bytes (little endian) giving the line number       */
 /*    a series of bytes either ASCII or tokens (see below) */
 /*    a $0 char indicating end of line                     */
@@ -40,7 +40,7 @@ char applesoft_tokens[][8]={
 /* F8 */ "","","","","","(","(","("
 };
 
-#define LOW(_x)  ((_x)&0xff) 
+#define LOW(_x)  ((_x)&0xff)
 #define HIGH(_x) (((_x)>>8)&0xff)
 #define MAXSIZE 65535
 
@@ -126,6 +126,10 @@ static int find_token(void) {
 					strlen(applesoft_tokens[i]))) {
 
 				/* HACK: special case to avoid AT/ATN problem */
+				/* Update, apparently actual applesoft uses   */
+				/*         a similar hack.  Also the 'A TO'   */
+				/*         case which we don't handle because */
+				/*         we like sane whitespace.           */
 				if ((i==69) && (line_ptr[2]=='N')) continue;
 //				fprintf(stderr,
 //						"Found token %x (%s) %d\n",0x80+i,
@@ -171,6 +175,12 @@ int main(int argc, char **argv) {
 		line_ptr=fgets(input_line,BUFSIZ,stdin);
 		line++;
 		if (line_ptr==NULL) break;
+
+		/* VMW extension: use leading ' as a comment char */
+		if (line_ptr[0]=='\'') continue;
+
+		/* skip empty lines */
+		if (line_ptr[0]=='\n') continue;
 
 		linenum=getnum();
 		if ((linenum>65535) || (linenum<0)) {
