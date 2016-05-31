@@ -22,18 +22,22 @@
 '   AD() = astronaut dead
 '   AN   = rocket angle
 '   AX/AY= rocket x/y acceleration
-'   BF   =
+'   BF   = bingo fuel (out of fuel) in stage
+'   C    = temp color
 '   CQ   = current quadrant (i.e. background to display)
-'   DT   = 
+'   DT   = delta time (for time acceleration)
 '   DV() = deltaV
 '   EM() = per-stage empty mass
 '   FM() = per-stage fuel mass
 '   EN() = engines per stage
 '   FF() = fuel flow
+'   FL   = fuel left (percent)
 '   FT() = fuel tanks per stack
 '   G    = gravity
+'   GA   = gravity angle (radians)
 '   GX/GY= gravity X/Y vector
 '   H    = horizon
+'   HX/HY= orbital points in orbit mode
 '   I    = loop iterator
 '   J    = loop iterator
 '   KE   = astronaut eyes
@@ -49,7 +53,7 @@
 '   SR   = Number of struts
 '   SS   = Number of stages
 '   TH() = stage thrust
-'   TR   =
+'   TR   = engines are thrusting
 '   T    = time
 '   SM() = per-stage stage mass
 '   ST() = Stacks per stage
@@ -58,6 +62,8 @@
 '   V    = velocity magnitude
 '   VX/VY= velocity x/y vector
 '   W    = Which astronaut
+'   X/Y  = temp X/Y
+'   ZX/ZY= Vx0 and Vy0
 '
 ' Clear screen
   10  HOME:HGR:D$=CHR$(4)
@@ -228,107 +234,176 @@
  3040 XDRAW 1+((S-1)*2)+TR AT 140,80
  4000 REM ** MAIN LOOP **
 '**** REM ** if not launched yet then skip physics
- 4002 IF LN=0 GOTO 5032
+ 4002    IF LN=0 GOTO 5032
 '**** Calculate altitude and set maximum if we are at new record
- 4003 RR=RA-KR:IF RR>MX THEN MX=RR
+ 4003    RR=RA-KR:IF RR>MX THEN MX=RR
 '**** If orbit mode then skip drawing horizon, etc
- 4004 IF OM=1 GOTO 4018
+ 4004    IF OM=1 GOTO 4018
 '**** If above 1.8km don't draw horizon
 '**** FIXME: do we need to check OM again?
 '**** FIXME: we draw the horizon one pixel too far to right
- 4005 IF RR>1800 OR OM=1 THEN GOTO 4012
+ 4005    IF RR>1800 OR OM=1 THEN GOTO 4012
 '**** Erase old horizon
- 4007 HCOLOR=0:HPLOT 1,80+H TO 132,80+H:HPLOT 148,80+H TO 247,80+H
+ 4007    HCOLOR=0:HPLOT 1,80+H TO 132,80+H:HPLOT 148,80+H TO 247,80+H
 '**** Calculate and draw new horizon
- 4010 H=RR/20:HCOLOR=1:HPLOT 1,80+H TO 132,80+H:HPLOT 148,80+H TO 247,80+H
-4012 IF RR<40000 AND CQ<>0 THEN GOSUB 7600
-4014 IF RR<40000 GOTO 4018
-4016 IF RR>40000 AND CQ<>1 THEN GOSUB 7700
-4018 FL=FM(S)*100/SF(S)
-4020 IF TR<>1 THEN GOTO 4050
-4025 IF FM(S)<0.1 THEN FM(S)=0:BF=1:AX=0:AY=0:GOTO 4050
-4030 AX=(TH(S)/TM(S))*SIN(AN):AY=(TH(S)/TM(S))*COS(AN)
-4040 FM(S)=FM(S)-FF(S):TM(S)=TM(S)-FF(S)
-4047 GOTO 4060
-4050 REM NOT THRUSTING
-4055 AX=0:AY=0
-4060 GA=ATN(RX/RY)
-4065 IF RY<0 THEN GA=GA+3.14
-4070 GY=COS(GA)*G:GX=SIN(GA)*G:AY=AY+GY:AX=AX+GX
-4090 ZX=VX:ZY=VY:VY=ZY+AY*DT:VX=ZX+AX*DT:V=SQR(VX*VX+VY*VY)
-5012 RY=RY+0.5*(ZY+VY)*DT:RX=RX+0.5*(ZX+VX)*DT:RA=SQR(RX*RX+RY*RY)
-5020 IF RA<KR THEN GOTO 8000
-5030 G=-9.8/((RA/KR)*(RA/KR))
-5032 VTAB 21:PRINT "TIME: ";T,"STAGE: ";4-S;"      ";AN$
-5045 PRINT "ALT: ";INT((RA-KR)/1000);"KM","ANGLE=";R*5.625;"   "
-5060 PRINT "VEL: ";INT(V);"M/S","FUEL: ";INT(FL);"%  "
-5100 IF BF=1 THEN BF=0:A$="X":GOTO 5555
-5115 Q=PEEK(-16384):IF Q<128 THEN GOTO 6095
-5222 A$=CHR$(Q-128):POKE 49168,0
-5555 IF OM<>1 THEN XDRAW 1+((S-1)*2)+TR AT 140,80
-6060 IF A$="Q" THEN GOTO 9000
-6061 IF A$="A" THEN R=R-8:AN=AN-0.7853
-6062 IF A$="D" THEN R=R+8:AN=AN+0.7853
-6063 IF A$="C" THEN GOTO 8000
-6064 IF A$="Z" THEN TR=1
-6065 IF A$="X" THEN TR=0
-6066 IF A$=">" THEN DT=DT+1
-6067 IF A$="<" THEN DT=DT-1:IF DT<1 THEN DT=1
-6068 IF A$="M" AND OM=1 THEN OM=0:CQ=-1:GOTO 4000
-6069 IF A$="M" AND OM=0 THEN OM=1:HOME:PRINT:PRINT CHR$(4);"BLOAD GLOBE.HGR,A$2000":GOTO 6095
-6070 IF A$=" " AND LN=1 THEN S=S-1:XX=PEEK(-16336):IF S<1 THEN S=1
-6071 IF A$=" " AND LN=0 THEN GOSUB 7500
-6072 IF A$="E" THEN GOSUB 8100
-6073 IF R=64 THEN R=0:AN=0
-6074 IF R=-8 THEN R=56
-6075 IF OM<>1 THEN GOSUB 8200
-6076 IF OM<>1 AND R>20 AND R<48 THEN GOSUB 8210:GOTO 6080
-6076 IF OM<>1 AND VY>100 THEN GOSUB 8220
-6080 ROT=R
-6090 IF OM<>1 THEN XDRAW 1+((S-1)*2)+TR AT 140,80
-6095 IF OM=1 THEN HX=INT(RX/25000)+140:HY=INT(-RY/25000)+85:HCOLOR=3:HPLOT HX,HY
-6118 T=T+DT:EC=EC+DT
-6150 IF OM<>1 AND EC>30 THEN EC=0:GOSUB 8100
-6200 GOTO 4000
-7500 REM *** LAUNCH ***
-7510 HCOLOR=0:HPLOT 110,110 TO 110,60:HPLOT TO 130,60: HPLOT 110,70 TO 130,70
-7520 XX=PEEK(-16336)
-7530 TR=1:LN=1
-7535 GOSUB 8220
-7540 RETURN
-7600 REM *** GROUND ***
-7610 HOME:PRINT:PRINT CHR$(4);"BLOAD LAUNCHPAD.HGR,A$2000"
-7615 XDRAW 1+((S-1)*2)+TR AT 140,80
-7620 CQ=0
-7650 RETURN
-7700 REM *** SPACE_UP ***
-7710 HOME:PRINT:PRINT CHR$(4);"BLOAD ORBIT_TOP.HGR,A$2000"
-7715 XDRAW 1+((S-1)*2)+TR AT 140,80
-7720 CQ=1
-7750 RETURN
-8000 REM *** CRASH ***
-8010 SCALE=3
-8015 GOSUB 8200
-8020 FOR I=0 TO 64 STEP 8: ROT=I:XDRAW 1+((S-1)*2)+TR AT 140,80: XX=PEEK(-16336):NEXT I
-8030 FOR I=1 TO 50
-8040 X=INT(RND(1)*80)+1:Y=INT(RND(1)*80)+1
-8050 C=INT(RND(1)*7)+1:HCOLOR=C
-8060 HPLOT 140,80 TO 100+X,40+Y
-8070 XX=PEEK(-16336)
-8080 NEXT I
-8085 AD(W)=1
-8090 GOTO 9000
+ 4010    H=RR/20:HCOLOR=1:HPLOT 1,80+H TO 132,80+H:HPLOT 148,80+H TO 247,80+H
+'****    REM *** Check if need to change to surface mode
+ 4012    IF RR<40000 AND CQ<>0 THEN GOSUB 7600
+'****    REM *** If in surface mode, skip ahead
+ 4014    IF RR<40000 GOTO 4018
+'****    REM *** See if need to change to high-altitude mode 
+ 4016    IF RR>40000 AND CQ<>1 THEN GOSUB 7700
+'****    REM *** Calculate Fuel Left
+ 4018    FL=FM(S)*100/SF(S)
+'****    REM *** If not thrusting then skip ahead
+ 4020    IF TR<>1 THEN GOTO 4050
+'****       REM *** If out of fuel then shut down engines
+ 4025       IF FM(S)<0.1 THEN FM(S)=0:BF=1:AX=0:AY=0:GOTO 4050
+'****       REM *** Calculate acceleration vectors based on thrust and mass
+ 4030       AX=(TH(S)/TM(S))*SIN(AN):AY=(TH(S)/TM(S))*COS(AN)
+'****       REM *** Update masses now that fuel was used
+ 4040       FM(S)=FM(S)-FF(S):TM(S)=TM(S)-FF(S)
+ 4047       GOTO 4060
+'****    REM ELSE NOT THRUSTING
+ 4050       AX=0:AY=0
+'****    REM ENDIF
+'****    REM *** Calculate angle to center of planet
+ 4060    GA=ATN(RX/RY)
+'****    REM *** Wrap since ATN can only return -PI/2 to PI/2
+ 4065    IF RY<0 THEN GA=GA+3.14
+'****    REM *** Calculate gravity vectors
+ 4070    GY=COS(GA)*G:GX=SIN(GA)*G:AY=AY+GY:AX=AX+GX
+'****    REM *** v=v0+at
+ 4090    ZX=VX:ZY=VY:VY=ZY+AY*DT:VX=ZX+AX*DT:V=SQR(VX*VX+VY*VY)
+'****    REM *** deltaX=0.5(V0+V)t
+ 5012    RY=RY+0.5*(ZY+VY)*DT:RX=RX+0.5*(ZX+VX)*DT:RA=SQR(RX*RX+RY*RY)
+'****    REM *** If new position below surface then crash
+ 5020    IF RA<KR THEN GOTO 8000
+'****    REM *** Calculate new gravity value based on altitude
+ 5030    G=-9.8/((RA/KR)*(RA/KR))
+'*****************************************
+'*** Print status on bottom of screen  ***
+'*****************************************
+ 5032    VTAB 21:PRINT "TIME: ";T,"STAGE: ";4-S;"      ";AN$
+ 5045    PRINT "ALT: ";INT((RA-KR)/1000);"KM","ANGLE=";R*5.625;"   "
+ 5060    PRINT "VEL: ";INT(V);"M/S","FUEL: ";INT(FL);"%  "
+'****    REM *** If out of fuel then cut off thrusting
+ 5100    IF BF=1 THEN BF=0:A$="X":GOTO 5555
+'********************************
+'*** Check for keyboard input ***
+'********************************
+'*** No non-blocking input in Applesoft
+'*** so need to check keyboard buffer directly
+ 5115    Q=PEEK(-16384):IF Q<128 THEN GOTO 6095
+ 5222    A$=CHR$(Q-128):POKE 49168,0
+'********************************
+'*** Erase the old ship
+'********************************
+ 5555    IF OM<>1 THEN XDRAW 1+((S-1)*2)+TR AT 140,80
+'********************************
+'*** Handle keypresses
+'********************************
+ 6060    IF A$="Q" THEN GOTO 9000
+'****    A/D rotate ship
+ 6061    IF A$="A" THEN R=R-8:AN=AN-0.7853
+ 6062    IF A$="D" THEN R=R+8:AN=AN+0.7853
+'****    C (undocumented) forces crash
+ 6063    IF A$="C" THEN GOTO 8000
+'****    Z/X enable/disable engines
+ 6064    IF A$="Z" THEN TR=1
+ 6065    IF A$="X" THEN TR=0
+'****    >/< speed/slow time
+ 6066    IF A$=">" THEN DT=DT+1
+ 6067    IF A$="<" THEN DT=DT-1:IF DT<1 THEN DT=1
+'****    M switched to/from orbit mode
+ 6068    IF A$="M" AND OM=1 THEN OM=0:CQ=-1:GOTO 4000
+ 6069    IF A$="M" AND OM=0 THEN OM=1:HOME:PRINT:PRINT D$"BLOAD GLOBE.HGR,A$2000":GOTO 6095
+'****    space launches ship or stages/parachutes
+'****    we make a click noise on the speaker if we stage
+ 6070    IF A$=" " AND LN=1 THEN S=S-1:XX=PEEK(-16336):IF S<1 THEN S=1
+ 6071    IF A$=" " AND LN=0 THEN GOSUB 7500
+'**************************************
+'*** Adjust values after keypresses ***
+'**************************************
+'****    Adjust rotation
+ 6073    IF R=64 THEN R=0:AN=0
+ 6074    IF R=-8 THEN R=56
+'****    REM Adjust astronaut face: FIXME better cues
+'****    REM always start neutral
+ 6075    IF OM<>1 THEN GOSUB 8200
+'****    REM If flying upside down then frown
+ 6076    IF OM<>1 AND R>20 AND R<48 THEN GOSUB 8210:GOTO 6080
+'****    REM If going up then smile
+ 6076    IF OM<>1 AND VY>100 THEN GOSUB 8220
+'****    Adjust rotation
+ 6080    ROT=R
+'****    Re-draw ship
+ 6090    IF OM<>1 THEN XDRAW 1+((S-1)*2)+TR AT 140,80
+'****    In orbit mode, plot orbit
+ 6095    IF OM=1 THEN HX=INT(RX/25000)+140:HY=INT(-RY/25000)+85:HCOLOR=3:HPLOT HX,HY
+'****    Adjust Time plus astronaut eye count
+ 6118    T=T+DT:EC=EC+DT
+'****    If enough time has passed update eyes
+ 6150    IF OM<>1 AND EC>30 THEN EC=0:GOSUB 8100
+'****    REM Loop forever
+ 6200 GOTO 4000
+'***************
+'*** LAUNCH ****
+'***************
+'**** REM Erase gantry
+ 7500 HCOLOR=0:HPLOT 110,110 TO 110,60:HPLOT TO 130,60: HPLOT 110,70 TO 130,70
+'**** REM click the speaker
+ 7520 XX=PEEK(-16336)
+ 7530 TR=1:LN=1
+'**** Make astronaut smile
+ 7535 GOSUB 8220
+ 7540 RETURN
+'********************
+'**** Ground Mode ***
+'********************
+ 7600 HOME:PRINT:PRINT D$"BLOAD LAUNCHPAD.HGR,A$2000"
+ 7615 XDRAW 1+((S-1)*2)+TR AT 140,80
+ 7620 CQ=0
+ 7650 RETURN
+'********************
+'*** Space Mode *****
+'********************
+'*** Up mode, sort of intend to have up/down/left/right images
+'*** but only up implemented right now
+ 7700 HOME:PRINT:PRINT D$"BLOAD ORBIT_TOP.HGR,A$2000"
+ 7710 XDRAW 1+((S-1)*2)+TR AT 140,80
+ 7720 CQ=1
+ 7750 RETURN
+'***************
+'**** CRASH ****
+'***************
+'**** Make ship bigger
+ 8000 SCALE=3
+'**** Make astronaut frown
+ 8015 GOSUB 8200
+'**** Spin ship around while clicking
+ 8020 FOR I=0 TO 64 STEP 8: ROT=I:XDRAW 1+((S-1)*2)+TR AT 140,80: XX=PEEK(-16336):NEXT I
+'**** Draw explosion
+ 8030 FOR I=1 TO 50
+ 8040    X=INT(RND(1)*80)+1:Y=INT(RND(1)*80)+1
+ 8050    C=INT(RND(1)*7)+1:HCOLOR=C
+ 8060    HPLOT 140,80 TO 100+X,40+Y
+ 8070    XX=PEEK(-16336)
+ 8080 NEXT I
+'**** Kill off the astronaut
+ 8085 AD(W)=1
+ 8090 GOTO 9000
 '**************************
 '***   Astronaut Eyes   ***
 '**************************
-'*** Erase old ones
-8100 HCOLOR=3:HPLOT 258,150 TO 263,150:HPLOT 265,150 TO 270,150
+'**** Erase old ones
+ 8100 HCOLOR=3:HPLOT 258,150 TO 263,150:HPLOT 265,150 TO 270,150
 '*** Randomly pick new ones
-8110 KE=INT(RND(1)*3)
-'*** Draw new ones
-8120 HCOLOR=0:HPLOT 258+(2*KE),150 TO 259+(2*KE),150
-8125 HPLOT 265+(2*KE),150 TO 266+(2*KE),150
-8130 RETURN
+ 8110 KE=INT(RND(1)*3)
+'**** Draw new ones
+ 8120 HCOLOR=0:HPLOT 258+(2*KE),150 TO 259+(2*KE),150
+ 8125 HPLOT 265+(2*KE),150 TO 266+(2*KE),150
+ 8130 RETURN
 '**************************
 '*** Astronaut Frown    ***
 '**************************
