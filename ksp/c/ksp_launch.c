@@ -48,7 +48,7 @@ int autopilot(double fuel_left, double altitude, double *angle) {
 
 int main(int argc, char **argv) {
 
-	FILE *logfile;
+	FILE *logfile,*vlogfile;
 
 	double angle=0;
 
@@ -90,6 +90,8 @@ int main(int argc, char **argv) {
 	double time=0.0;		/* s */
 	double deltat=1.0;
 
+	/* atmospheric pressure */
+
 	int stage=2;
 
 	int log_step=0;
@@ -105,6 +107,7 @@ int main(int argc, char **argv) {
 	double deltav[3],twr[3],fuel_flow[3];
 
 	logfile=fopen("log.jgr","w");
+	vlogfile=fopen("vlog.jgr","w");
 
 	engines[0]=1; stacks[0]=1; tanks[0]=1;
 	engines[1]=2; stacks[1]=2; tanks[1]=1;
@@ -300,6 +303,9 @@ int main(int argc, char **argv) {
 			if (logfile) {
 				fprintf(logfile,"%lf %lf\n",rocket_x/1000.0,rocket_y/1000.0);
 			}
+			if (vlogfile) {
+				fprintf(vlogfile,"%lf %lf %lf\n",time,rocket_altitude,rocket_velocity);
+			}
 		}
 		log_step++;
 		if (log_step>10) {
@@ -308,6 +314,7 @@ int main(int argc, char **argv) {
 	}
 
 	if (logfile) fclose(logfile);
+	if (vlogfile) fclose(vlogfile);
 
 	return 0;
 }
