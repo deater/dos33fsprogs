@@ -15,10 +15,16 @@
 '       as well as slow down execution as BASIC is interpreted.
 '
 ' Variable List: (Note, in Applesoft only first 2 chars matters)
-'   D$ = ASCII(4) indicating we have a DOS command
-'   I  = loop iterator
-'   J  = loop iterator
-'   S  = Stage Number
+'   D$   = ASCII(4) indicating we have a DOS command
+'   EN() = engines per stage
+'   FT() = fuel tanks per stack
+'   I    = loop iterator
+'   J    = loop iterator
+'   P    = number of parachutes
+'   S    = Current Stage Number
+'   SR   = Number of struts
+'   SS   = Number of stages
+'   ST() = Stacks per stage
 '
 ' Clear screen
   10  HOME:HGR:D$=CHR$(4)
@@ -77,46 +83,33 @@
 ' *******************
 '**** REM *** Point to shape table location and load in VAB table 
  1000 POKE 232,0:POKE 233,16
- 1015 PRINT:PRINT CHR$(4);"BLOAD VAB.SHAPE,A$1000"
-1020  REM POKE 232,199: POKE 233,31
-1030  REM FOR L = 8135 TO 8175: READ B: POKE L,B: NEXT L
-1035  HGR : ROT= 0: SCALE= 2
-1037  PRINT CHR$(4);"BLOAD VAB.HGR,A$2000"
-1150  X=132:Y=28
-1155  XDRAW 1 AT X,Y+2 
-1200  HOME
-1205  INVERSE : VTAB  21: HTAB 7
-1207  PRINT " VEHICLE ASSEMBLY BUILDING "
-1208  NORMAL 
-1209  PRINT
-1220  PRINT "HOW MANY STAGES? (1-3)";
-1225  INPUT S
-1230  FOR I = 1 TO S
-1240  PRINT "HOW MANY STACKS, STAGE ";I;" (1-3)";
-1245  INPUT T
-1247 ST(I) = T
-1260  PRINT "HOW MANY FUEL TANKS PER STACK, STAGE ";I;" (1-2)";
-1265  INPUT F
-1267 FT(I) = F
-1268  FOR J = 1 TO F
-1270  XDRAW 2 AT X, Y+13*J
-1272  IF T >1 THEN XDRAW 2 AT X-14, Y+13*J
-1274  IF T >2 THEN XDRAW 2 AT X+14, Y+13*J
-1278  NEXT J
-1279  Y=Y+13*F
-1280  PRINT "HOW MANY ENGINES, STAGE ";I;" (1-";T;")";
-1285  INPUT E
-1287 EN(I) = E
-1290 XDRAW 1 AT X, Y+8
-1292  IF E >1 THEN XDRAW 1 AT X-14, Y+8
-1294  IF E >2 THEN XDRAW 1 AT X+14, Y+8
-1297 Y=Y+6
-1300  NEXT I
-1330  PRINT "HOW MANY PARACHUTES? (0-3)";
-1340 INPUT P
-1350  PRINT "HOW MANY STRUTS? (0-20000)";
-1360 INPUT SR
-1370 SS=S
+ 1015 PRINT:PRINT D$"BLOAD VAB.SHAPE,A$1000"
+ 1035 HGR : ROT= 0: SCALE= 2
+ 1037 PRINT D$"BLOAD VAB.HGR,A$2000"
+ 1150 X=132:Y=28
+ 1155 XDRAW 1 AT X,Y+2 
+ 1200 HOME: INVERSE : VTAB  21: HTAB 7: PRINT " VEHICLE ASSEMBLY BUILDING "
+ 1205 NORMAL:PRINT:PRINT "HOW MANY STAGES? (1-3)";:INPUT S
+ 1230 FOR I = 1 TO S
+ 1240    PRINT "HOW MANY STACKS, STAGE ";I;" (1-3)";:INPUT T:ST(I) = T
+ 1260    PRINT "HOW MANY FUEL TANKS PER STACK, STAGE ";I;" (1-2)";
+ 1265    INPUT F: FT(I) = F
+ 1268    FOR J = 1 TO F
+ 1270       XDRAW 2 AT X, Y+13*J
+ 1272       IF T >1 THEN XDRAW 2 AT X-14, Y+13*J
+ 1274       IF T >2 THEN XDRAW 2 AT X+14, Y+13*J
+ 1278    NEXT J
+ 1279    Y=Y+13*F
+ 1280    PRINT "HOW MANY ENGINES, STAGE ";I;" (1-";T;")";:INPUT E
+ 1285    EN(I) = E
+ 1290    XDRAW 1 AT X, Y+8
+ 1292    IF E >1 THEN XDRAW 1 AT X-14, Y+8
+ 1294    IF E >2 THEN XDRAW 1 AT X+14, Y+8
+ 1297    Y=Y+6
+ 1300 NEXT I
+ 1330 PRINT "HOW MANY PARACHUTES? (0-3)";:INPUT P
+ 1350 PRINT "HOW MANY STRUTS? (0-20000)";:INPUT SR
+ 1370 SS=S
 1500 REM *** ASTRONAUT COMPLEX ***
 1505 TEXT: HOME
 1510 HTAB 11
