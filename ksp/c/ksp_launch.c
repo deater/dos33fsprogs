@@ -91,6 +91,14 @@ int main(int argc, char **argv) {
 	double deltat=1.0;
 
 	/* atmospheric pressure */
+	double pressure=101325;		/* Pascals */
+	double pressure0=101325;
+	double density=0;	/* kg/m^3 */
+	double temperature=273;	/* K */
+	double drag=0.0,drag_a=0.0;
+
+	int parachutes_deployed=0;
+	int parachutes=3;
 
 	int stage=2;
 
@@ -184,6 +192,26 @@ int main(int argc, char **argv) {
 		rocket_acceleration_y+=gravity_y;
 		rocket_acceleration_x+=gravity_x;
 
+
+		/* Adjust pressure */
+		pressure=pressure0*exp(-(rocket_altitude-KERBIN_RADIUS)/5600);
+		density=pressure/(287*temperature);
+		/* 0.5*rho*v^2*d*A */
+		/* d=coefficient of drag, A=surface area */
+		/* d=1.05 for cube (wikipedia) */
+		/* d=0.8 for long cylinder */
+		/* d=0.5 for long cone */
+		if (parachutes_deployed) {
+			drag=0.5*density*rocket_velocity*rocket_velocity*1.5*1000.0*parachutes;
+		}
+		else {
+			drag=0.5*density*rocket_velocity*rocket_velocity*0.5*1.0;
+		}
+		drag_a=drag/(total_mass[stage]*1000);
+		if (rocket_velocity_y>0) drag_a=-drag_a;
+
+		rocket_acceleration_y+=drag_a;
+
 		/* v=v0+at */
 
 		v0_x=rocket_velocity_x;
@@ -218,6 +246,7 @@ int main(int argc, char **argv) {
 			((rocket_altitude)/KERBIN_RADIUS)*
 			((rocket_altitude)/KERBIN_RADIUS));
 
+
 		home();
 
 		htabvtab(1,21);
@@ -240,6 +269,10 @@ int main(int argc, char **argv) {
 		else if (rocket_velocity_y>100) printf("SMILE");
 		else if (rocket_acceleration_y<0) printf("FROWN");
 		else printf("NEUTRAL");
+
+		htabvtab(20,14);
+		printf("pressure=%lf density=%lf drag=%lf drag_a=%lf\n",
+			pressure,density,drag,drag_a);
 
 		htabvtab(20,13);
 		printf("grav angle=%lf\n",gravity_angle*180.0/PI);
@@ -268,6 +301,7 @@ int main(int argc, char **argv) {
 		scanf("%c",&input);
 		if (input==' ') {
 			if (stage>0) stage--;
+			else parachutes_deployed=1;
 		}
 		if (input=='d') {
 			angle+=45.0;
@@ -304,7 +338,10 @@ int main(int argc, char **argv) {
 				fprintf(logfile,"%lf %lf\n",rocket_x/1000.0,rocket_y/1000.0);
 			}
 			if (vlogfile) {
-				fprintf(vlogfile,"%lf %lf %lf\n",time,rocket_altitude,rocket_velocity);
+				fprintf(vlogfile,
+			"t=%lf h=%lf v=%lf g=%lf d=%lf ray=%lf\n",
+			time,rocket_altitude-KERBIN_RADIUS,rocket_velocity,
+			gravity_y,drag_a,rocket_acceleration_y);
 			}
 		}
 		log_step++;
