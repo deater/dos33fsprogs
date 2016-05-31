@@ -46,6 +46,7 @@
 '   MX   = maximum altitude reached
 '   OM   = orbit mode (view)
 '   P    = number of parachutes
+'   PD   = parachutes deployed
 '   RA   = distance to center of planet
 '   RR   = altitude
 '   RX/RY= rocket x,y position
@@ -221,8 +222,12 @@
 '******************************
 '***       Main Loop       ****
 '******************************
+'
+'******************************
+'***  Initialize Variables  ***
+'******************************
  3000 AN=0:GX=0:GY=-9.8:GA=0:V=0:VX=0:VY=0:AX=0:AY=0:KR=600000
- 3016 RX=0:RY=KR+10:RA=KR+10:TR=0:T=0:BF=0:MX=0
+ 3016 RX=0:RY=KR+10:RA=KR+10:TR=0:T=0:BF=0:MX=0:PD=0
  3020 HGR:ROT=0:SCALE=2:H=0
 '**** REM ** LAUNCHPAD **
  3035 PRINT:PRINT D$"BLOAD LAUNCHPAD.HGR,A$2000"
@@ -320,21 +325,22 @@
  6069    IF A$="M" AND OM=0 THEN OM=1:HOME:PRINT:PRINT D$"BLOAD GLOBE.HGR,A$2000":GOTO 6095
 '****    space launches ship or stages/parachutes
 '****    we make a click noise on the speaker if we stage
- 6070    IF A$=" " AND LN=1 THEN S=S-1:XX=PEEK(-16336):IF S<1 THEN S=1
- 6071    IF A$=" " AND LN=0 THEN GOSUB 7500
+ 6070    IF A$=" " AND LN=1 THEN S=S-1:XX=PEEK(-16336):IF S<1 AND P>0 AND PD=0 THEN PD=1:GOSUB 7800
+ 6072    IF S<1 THEN S=1
+ 6074    IF A$=" " AND LN=0 THEN GOSUB 7500
 '**************************************
 '*** Adjust values after keypresses ***
 '**************************************
 '****    Adjust rotation
- 6073    IF R=64 THEN R=0:AN=0
- 6074    IF R=-8 THEN R=56
+ 6075    IF R=64 THEN R=0:AN=0
+ 6076    IF R=-8 THEN R=56
 '****    REM Adjust astronaut face: FIXME better cues
 '****    REM always start neutral
- 6075    IF OM<>1 THEN GOSUB 8200
+ 6077    IF OM<>1 THEN GOSUB 8200
 '****    REM If flying upside down then frown
- 6076    IF OM<>1 AND R>20 AND R<48 THEN GOSUB 8210:GOTO 6080
+ 6078    IF OM<>1 AND R>20 AND R<48 THEN GOSUB 8210:GOTO 6080
 '****    REM If going up then smile
- 6076    IF OM<>1 AND VY>100 THEN GOSUB 8220
+ 6079    IF OM<>1 AND VY>100 THEN GOSUB 8220
 '****    Adjust rotation
  6080    ROT=R
 '****    Re-draw ship
@@ -374,6 +380,14 @@
  7710 XDRAW 1+((S-1)*2)+TR AT 140,80
  7720 CQ=1
  7750 RETURN
+'*************************
+'*** Deploy Parachutes ***
+'*************************
+ 7800 HX=0:HY=0
+ 7805 IF PD=1 THEN HX=5:HY=3
+ 7810 HCOLOR=HX:HPLOT 120,20 TO 160,20 TO 180,40 TO 100,40 TO 120,20
+ 7820 HCOLOR=HY:HPLOT 100,40 TO 140,80 TO 180,40
+ 7830 RETURN
 '***************
 '**** CRASH ****
 '***************
