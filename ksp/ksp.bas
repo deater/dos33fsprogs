@@ -318,24 +318,41 @@
 8080 NEXT I
 8085 AD(W)=1
 8090 GOTO 9000
-8100 REM *** KERBAL EYES ***
-8105 HCOLOR=3:HPLOT 258,150 TO 263,150:HPLOT 265,150 TO 270,150
+'**************************
+'***   Astronaut Eyes   ***
+'**************************
+'*** Erase old ones
+8100 HCOLOR=3:HPLOT 258,150 TO 263,150:HPLOT 265,150 TO 270,150
+'*** Randomly pick new ones
 8110 KE=INT(RND(1)*3)
+'*** Draw new ones
 8120 HCOLOR=0:HPLOT 258+(2*KE),150 TO 259+(2*KE),150
 8125 HPLOT 265+(2*KE),150 TO 266+(2*KE),150
 8130 RETURN
-8200 REM *** KERBAL FROWN ***
-8205 HCOLOR=1:HPLOT 259,155 TO 271,155:HPLOT 259,156 TO 271,156
-8206 HCOLOR=0:HPLOT 261,155 TO 269,155:HPLOT 259,156 TO 271,156
-8207 RETURN
-8210 REM *** KERBAL NEUTRAL ***
-8215 HCOLOR=1:HPLOT 259,155 TO 271,155:HPLOT 259,156 TO 271,156
-8216 HCOLOR=0:HPLOT 259,155 TO 271,155
-8217 RETURN
-8220 REM *** KERBAL SMILE ***
-8225 HCOLOR=1:HPLOT 259,155 TO 271,155:HPLOT 259,156 TO 271,156
-8226 HCOLOR=0:HPLOT 259,155 TO 271,155:HPLOT 261,156 TO 269,156
-8227 RETURN
+'**************************
+'*** Astronaut Frown    ***
+'**************************
+'**** Erase old mouth
+ 8200 HCOLOR=1:HPLOT 259,155 TO 271,155:HPLOT 259,156 TO 271,156
+'**** Draw frown
+ 8205 HCOLOR=0:HPLOT 261,155 TO 269,155:HPLOT 259,156 TO 271,156
+ 8207 RETURN
+'**************************
+'*** Astronaut Neutral  ***
+'**************************
+'**** Erase old mouth
+ 8210 HCOLOR=1:HPLOT 259,155 TO 271,155:HPLOT 259,156 TO 271,156
+'**** Draw new mouth
+ 8215 HCOLOR=0:HPLOT 259,155 TO 271,155
+ 8217 RETURN
+'**************************
+'*** Astronaut Smile    ***
+'**************************
+'**** Erase old mouth
+ 8220 HCOLOR=1:HPLOT 259,155 TO 271,155:HPLOT 259,156 TO 271,156
+'**** Draw new mouth
+ 8225 HCOLOR=0:HPLOT 259,155 TO 271,155:HPLOT 261,156 TO 269,156
+ 8227 RETURN
 '*****************************
 '***   CONTRACT COMPLETE   ***
 '*****************************
