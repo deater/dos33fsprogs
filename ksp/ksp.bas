@@ -1,24 +1,44 @@
-  5    REM *** KSP by Vince Weaver ***
-  6    REM *** A VMW Software Production ***
-  10   HOME
-  20   HGR
-  100  REM *** SQUAD SCREEN ***
-  110  PRINT CHR$(4);"BLOAD SQUAD.HGR,A$2000"
-  580  S=0
-  585  I=INT(RND(1)*8)+1
-  590  VTAB 21: PRINT "    ";
-  600  FOR I=1 TO 32: PRINT ".";: NEXT I
+' *********************************************
+' *** KSP by Vince Weaver, vince@deater.net ***
+' ***                                       ***
+' ***       A VMW Software Production       ***
+' *********************************************
+' 
+' http://www.deater.net/weave/vmwprod/ksp/
+' https://github.com/deater/dos33fsprogs
+'
+' Note: you'll want to run this through my tokenize_asoft
+'       routine to remove these comments and create a proper
+'       Applesoft BASIC file
+'       Why not use REM statements?  They take up valuable space
+'       in RAM (we optimistically only have around 12kB to play with)
+'       as well as slow down execution as BASIC is interpreted.
+'
+' Variable List: (Note, in Applesoft only first 2 chars matters)
+'   D$ = ASCII(4) indicating we have a DOS command
+'   I  = loop iterator
+'   J  = loop iterator
+'   S  = Stage Number
+'
+' Clear screen
+  10  HOME:HGR:D$=CHR$(4)
+' *** REM *** SQUAD LOADING SCREEN ***
+  100 PRINT D$"BLOAD SQUAD.HGR,A$2000"
+' *** REM *** Randmoize the start of the witty loading comments
+  580 S=0:I=INT(RND(1)*8)+1
+' *** REM *** Prepare for the status bar
+  590 VTAB 21: PRINT "    ";:FOR I=1 TO 32: PRINT ".";: NEXT I
+' *** REM *** LOADING SCREEN ***
   700 FOR J=1 TO 32
-  704  REM *** LOADING SCREEN ***
-  708  IF J=16 THEN PRINT: PRINT CHR$(4);"BLOAD LOADING.HGR,A$2000"
+  708 IF J=16 THEN PRINT: PRINT D$"BLOAD LOADING.HGR,A$2000"
   710 HTAB J+4:VTAB 21
   720 INVERSE: PRINT " ";: NORMAL
   790 S=S+1: IF S=4 THEN S=0
   795 IF S<>1 GOTO 840
   800 I=I+1: IF I > 8 THEN I=1
-  802 VTAB 22: HTAB 1
-  803 PRINT "                              ";
+  802 VTAB 22: HTAB 1:PRINT "                              ";
   805 ON I GOSUB 850,851,852,853,854,855,856,857
+' *** REM *** Slow down so we don't load so fast
   840 FOR T=1 TO 250: NEXT T
   842 NEXT J
   845 GOTO 900
@@ -30,30 +50,34 @@
   855 HTAB 11:PRINT "Warming up the 6502":RETURN
   856 HTAB 10:PRINT "Preparing Explosions":RETURN
   857 HTAB 10:PRINT "Unleashing the Kraken":RETURN
-  900  REM *** TITLE SCREEN ***
-  902  HOME: PRINT: PRINT CHR$(4);"BLOAD TITLE.HGR,A$2000"
-  903 HTAB 27:VTAB 24: PRINT "VERSION 1.3.7";
-  905  REM ****************
-  906  REM  KSP THEME MUSIC
-  907  REM  SEE http://eightbitsoundandfury.ld8.org/programming.html
-  908  REM ****************
-  910  FOR L = 770 TO 790: READ V: POKE L,V: NEXT L
-  920  DATA  173,48,192,136,208,5,206,1,3,240,9
-  930  DATA  202,208,245,174,0,3,76,2,3,96
-  935  REM L2ECGL4CEGL2B-AGL4CEGL2B-AGCD
-  940  FOR I=1 TO 17: READ F: READ D: POKE 768,F: POKE 769,D: CALL 770: NEXT I
-  950  DATA 202,216,255,216,170,216
-  955  DATA 255,108,202,108,170,108
-  960  DATA 143,216,152,216,170,216
+' *** REM *** TITLE SCREEN ***
+  900 HOME: PRINT: PRINT D$"BLOAD TITLE.HGR,A$2000"
+  905 HTAB 25:VTAB 24: PRINT "VERSION 1.3.7.1";
+' *** REM ****************
+' *** REM  KSP THEME MUSIC
+' *** REM  SEE http://eightbitsoundandfury.ld8.org/programming.html
+' *** REM  This loads an assembly language routine that generates 
+' *** REM  Square waves on the speaker output
+' *** REM ****************
+  910 FOR L = 770 TO 790: READ V: POKE L,V: NEXT L
+  920 DATA  173,48,192,136,208,5,206,1,3,240,9
+  930 DATA  202,208,245,174,0,3,76,2,3,96
+' *** REM on qbasic this would be PLAY "L2ECGL4CEGL2B-AGL4CEGL2B-AGCD"
+  940 FOR I=1 TO 17: READ F: READ D: POKE 768,F: POKE 769,D: CALL 770: NEXT I
+  950 DATA 202,216,255,216,170,216
+  955 DATA 255,108,202,108,170,108
+  960 DATA 143,216,152,216,170,216
   965 DATA 255,108,202,108,170,108
   970 DATA 143,216,152,216,170,216,255,216,227,255
-  989 REM *** DONE LOADING ***
-  990 VTAB 1
-  999 GET A$
-1000  REM *** VAB ***
-1010  REM HIMEM: 8135
-1012 POKE 232,0:POKE 233,16
-1015 PRINT:PRINT CHR$(4);"BLOAD VAB.SHAPE,A$1000"
+' *** REM *** DONE LOADING ***
+' *** REM *** Wait for keypress
+  990 VTAB 1: GET A$
+' *******************
+' ***     VAB     ***
+' *******************
+'**** REM *** Point to shape table location and load in VAB table 
+ 1000 POKE 232,0:POKE 233,16
+ 1015 PRINT:PRINT CHR$(4);"BLOAD VAB.SHAPE,A$1000"
 1020  REM POKE 232,199: POKE 233,31
 1030  REM FOR L = 8135 TO 8175: READ B: POKE L,B: NEXT L
 1035  HGR : ROT= 0: SCALE= 2
