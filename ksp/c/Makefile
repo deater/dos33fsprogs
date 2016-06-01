@@ -1,14 +1,26 @@
 CC = gcc
 CFLAGS = -Wall -O2
-LFLAGS =
+LFLAGS = -lm
 
-all:	ksp_acpx ksp_launch ksp_loading ksp_vab
+all:	ksp_acpx ksp_atan ksp_drag ksp_launch ksp_loading ksp_vab
 
 ksp_acpx:	ksp_acpx.o
 	$(CC) $(LFLAGS) -o ksp_acpx ksp_acpx.o
 
 ksp_acpx.o:	ksp_acpx.c
 	$(CC) $(CFLAGS) -c ksp_acpx.c
+
+ksp_atan:	ksp_atan.o
+	$(CC) $(LFLAGS) -o ksp_atan ksp_atan.o
+
+ksp_atan.o:	ksp_atan.c
+	$(CC) $(CFLAGS) -c ksp_atan.c
+
+ksp_drag:	ksp_drag.o
+	$(CC) $(LFLAGS) -o ksp_drag ksp_drag.o
+
+ksp_drag.o:	ksp_drag.c
+	$(CC) $(CFLAGS) -c ksp_drag.c
 
 ksp_launch:	ksp_launch.o
 	$(CC) $(LFLAGS) -o ksp_launch ksp_launch.o -lm
@@ -30,5 +42,5 @@ ksp_vab.o:	ksp_vab.c
 
 
 clean:	
-	rm -f *~ *.o ksp_launch ksp_loading ksp_vab ksp_acpx
+	rm -f *~ *.o ksp_launch ksp_loading ksp_vab ksp_acpx ksp_drag ksp_atan
 
