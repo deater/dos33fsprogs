@@ -14,7 +14,7 @@
 '       in RAM (we optimistically only have around 12kB to play with)
 '       as well as slow down execution as BASIC is interpreted.
 '
-' Variable List: (Note, in Applesoft only first 2 chars matters)
+' Variable List: (Note, in Applesoft only first 2 chars matter)
 '   A$   = keypressed
 '   AN$  = astrounat name
 '   C$   = contract name
@@ -59,6 +59,7 @@
 '   SM() = per-stage stage mass
 '   ST() = Stacks per stage
 '   TM() = per-stage total mass
+'   TV   = terminal velocity
 '   TW() = thrust/weight ratio
 '   V    = velocity magnitude
 '   VX/VY= velocity x/y vector
@@ -186,7 +187,7 @@
  1776 POKE 232,0:POKE 233,16
  1783 PRINT D$"BLOAD ROCKET.SHAPE,A$1000"
  1800 HOME:PRINT "ROCKET SUMMARY:":PRINT
- 1802 G=-9.8:LN=0:CQ=0:OM=0:S=SS:DT=1
+ 1802 G=-9.8:S=SS:DT=1
  1805 FOR I=1 TO S
 '*** REM EmptyMass=Engines*1.5T+(Stacks*FuelTanks)*0.5T
  1810    EM(I)=EN(I)*1.5+ST(I)*FT(I)*0.5
@@ -227,7 +228,7 @@
 '***  Initialize Variables  ***
 '******************************
  3000 AN=0:GX=0:GY=-9.8:GA=0:V=0:VX=0:VY=0:AX=0:AY=0:KR=600000
- 3016 RX=0:RY=KR+10:RA=KR+10:TR=0:T=0:BF=0:MX=0:PD=0
+ 3016 RX=0:RY=KR+10:RA=KR+10:TR=0:T=0:BF=0:MX=0:PD=0:LN=0:CQ=0:OM=0
  3020 HGR:ROT=0:SCALE=2:H=0
 '**** REM ** LAUNCHPAD **
  3035 PRINT:PRINT D$"BLOAD LAUNCHPAD.HGR,A$2000"

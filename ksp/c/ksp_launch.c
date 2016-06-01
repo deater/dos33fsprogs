@@ -7,6 +7,7 @@
 
 #define PI 3.14159265358979323846264338327
 
+#if 0
 static double sin_degrees(double degrees) {
 
 	return sin(degrees*PI/180);
@@ -15,6 +16,8 @@ static double sin_degrees(double degrees) {
 static double cos_degrees(double degrees) {
 	return cos(degrees*PI/180);
 }
+#endif
+
 
 static double vector_magnitude(double a,double b) {
 	return sqrt(a*a+b*b);
@@ -30,6 +33,7 @@ static void htabvtab(int x,int y) {
 
 #define KERBIN_RADIUS	600000.0
 
+#if 0
 int autopilot(double fuel_left, double altitude, double *angle) {
 
 	if (fuel_left>25.0) {
@@ -45,6 +49,8 @@ int autopilot(double fuel_left, double altitude, double *angle) {
 	return 0;
 
 }
+#endif
+
 
 int main(int argc, char **argv) {
 
@@ -90,6 +96,10 @@ int main(int argc, char **argv) {
 	double time=0.0;		/* s */
 	double deltat=1.0;
 
+	int bingo_fuel=0;
+	double max_altitude=0.0;
+	double height=0.0;
+
 	/* atmospheric pressure */
 	double pressure=101325;		/* Pascals */
 	double pressure0=101325;
@@ -97,9 +107,14 @@ int main(int argc, char **argv) {
 	double temperature=273;	/* K */
 	double drag=0.0,drag_a=0.0;
 
+	int orbit_map_view=0,current_quadrant=0;
+
 	int parachutes_deployed=0;
 	int parachutes=3;
+	double terminal_velocity=0.0;
+	double adjusted_altitude;
 
+	int launched=1;
 	int stage=2;
 
 	int log_step=0;
@@ -113,6 +128,7 @@ int main(int argc, char **argv) {
 	double stage_empty_mass[3],stage_full_mass[3],total_mass[3],thrust[3];
 	double fuel_mass[3],stage_fuel_total[3];
 	double deltav[3],twr[3],fuel_flow[3];
+
 
 	logfile=fopen("log.jgr","w");
 	vlogfile=fopen("vlog.jgr","w");
@@ -152,24 +168,82 @@ int main(int argc, char **argv) {
 
 	scanf("%c",&input);
 
+	/* Initialize variables */
+
+	/* 3000 */
+	angle=0.0;
+	gravity_x=0.0;
+	gravity_y=-9.8;
+	gravity_angle=0.0;
+	rocket_velocity=0.0;
+	rocket_velocity_x=0.0;
+	rocket_velocity_y=0.0;
+	rocket_acceleration_x=0.0;
+	rocket_acceleration_y=0.0;
+
+	/* 3016 */
+	rocket_x=0.0;
+	rocket_y=KERBIN_RADIUS+10.0;
+	rocket_altitude=KERBIN_RADIUS+10.0;
+	thrusting=0;
+	time=0.0;
+	bingo_fuel=0.0;
+	max_altitude=0.0;
+	parachutes_deployed=0;
+	launched=0;
+	current_quadrant=0;
+	orbit_map_view=0;
+
+	/* 3020 */
+	/* init_graphics() */
+	height=0;
+	/* draw_launchpad() */
+	/* draw_horizon() */
+	/* draw_gantry() */
+	/* draw_ship() */
+
+	/* Main Loop */
 	/* 4000 */
 	while(1) {
 
-		/* 4010 */
+		/* 4002 */
+		if (!launched) goto after_physics;
+
+		/* 4003 */
+		adjusted_altitude=rocket_altitude-KERBIN_RADIUS;
+		if (adjusted_altitude>max_altitude) max_altitude=adjusted_altitude;
+
+		/* 4004 */
+		if (!orbit_map_view) {
+			/* draw horizon if necessary */
+			if (adjusted_altitude<1800) {
+				/* draw_horizon() */
+			}
+			/* 4012 */
+			/* check to see if need to change mode */
+			if ((adjusted_altitude<40000) && (current_quadrant!=0)) {
+				/* switch_to_surface() */
+			}
+			if ((adjusted_altitude>40000) && (current_quadrant!=1)) {
+				/* switch_to_orbit() */
+			}
+		}
+
+		/* 4018 */
 		fuel_left=fuel_mass[stage]*100.0/stage_fuel_total[stage];
 
-		//thrusting=1;//autopilot(fuel_left, rocket_altitude,&angle);
-
+		/* 4020 */
 		if (thrusting) {
 			if (fuel_mass[stage]<0.1) {
 				fuel_mass[stage]=0.0;
+				bingo_fuel=1;
 				rocket_acceleration_x=0;
 				rocket_acceleration_y=0;
 
 			}
 			else {
-				rocket_acceleration_x=(thrust[stage]/total_mass[stage])*sin_degrees(angle);
-				rocket_acceleration_y=(thrust[stage]/total_mass[stage])*cos_degrees(angle);
+				rocket_acceleration_x=(thrust[stage]/total_mass[stage])*sin(angle);
+				rocket_acceleration_y=(thrust[stage]/total_mass[stage])*cos(angle);
 
 				fuel_mass[stage]=fuel_mass[stage]-fuel_flow[stage];
 				total_mass[stage]=total_mass[stage]-fuel_flow[stage];
@@ -182,17 +256,16 @@ int main(int argc, char **argv) {
 
 		/* 4060 */
 		gravity_angle=atan(rocket_x/rocket_y);
+		/* 4065 */
 		if (rocket_y<0) gravity_angle+=PI;
 
 		/* 4070 */
 		gravity_y=cos(gravity_angle)*gravity;
 		gravity_x=sin(gravity_angle)*gravity;
-
-		/* 4080 */
 		rocket_acceleration_y+=gravity_y;
 		rocket_acceleration_x+=gravity_x;
 
-
+/* TODO */
 		/* Adjust pressure */
 		pressure=pressure0*exp(-(rocket_altitude-KERBIN_RADIUS)/5600);
 		density=pressure/(287*temperature);
@@ -202,25 +275,65 @@ int main(int argc, char **argv) {
 		/* d=0.8 for long cylinder */
 		/* d=0.5 for long cone */
 		if (parachutes_deployed) {
-			drag=0.5*density*rocket_velocity*rocket_velocity*1.5*1000.0*parachutes;
+			drag=0.5*density*rocket_velocity_y*rocket_velocity_y*1.5*1000.0*parachutes;
+			/* sqrt ((2*m*g)/(rho*A*C)) */
+			terminal_velocity=sqrt( (2*total_mass[stage]*1000.0*-gravity)/(density*(4+500.0*parachutes)*1.5));
 		}
 		else {
-			drag=0.5*density*rocket_velocity*rocket_velocity*0.5*1.0;
+			drag=0.5*density*rocket_velocity_y*rocket_velocity_y*0.5*4.0;
+			terminal_velocity=sqrt( (2*total_mass[stage]*1000.0*-gravity)/(density*4.0*0.5));
 		}
-		drag_a=drag/(total_mass[stage]*1000);
+		drag_a=drag/(total_mass[stage]*1000.0);
 		if (rocket_velocity_y>0) drag_a=-drag_a;
 
 		rocket_acceleration_y+=drag_a;
 
-		/* v=v0+at */
+		/* calculate velocity */
 
-		v0_x=rocket_velocity_x;
-		v0_y=rocket_velocity_y;
+		/* If above atmosphere, no drag */
+		if (rocket_altitude>KERBIN_RADIUS+70000) {
+			/* v=v0+at */
 
-		rocket_velocity_y=v0_y+rocket_acceleration_y*deltat;
-		rocket_velocity_x=v0_x+rocket_acceleration_x*deltat;
-		rocket_velocity=vector_magnitude(rocket_velocity_x,rocket_velocity_y),
+			v0_x=rocket_velocity_x;
+			v0_y=rocket_velocity_y;
 
+			rocket_velocity_y=v0_y+rocket_acceleration_y*deltat;
+			rocket_velocity_x=v0_x+rocket_acceleration_x*deltat;
+			rocket_velocity=vector_magnitude(rocket_velocity_x,rocket_velocity_y);
+
+		}
+		/* In in atmosphere and traveling upward */
+		else if (rocket_velocity_y>=0.0) {
+			/* v=v0+at */
+
+			v0_x=rocket_velocity_x;
+			v0_y=rocket_velocity_y;
+
+			rocket_velocity_y=v0_y+rocket_acceleration_y*deltat;
+			rocket_velocity_x=v0_x+rocket_acceleration_x*deltat;
+			rocket_velocity=vector_magnitude(rocket_velocity_x,rocket_velocity_y);
+
+		}
+		else if (!launched) {
+			v0_x=rocket_velocity_x;
+			v0_y=rocket_velocity_y;
+
+			rocket_velocity_y=0;
+			rocket_velocity_x=0;
+			rocket_velocity=vector_magnitude(rocket_velocity_x,rocket_velocity_y);
+		}
+		else {
+
+			v0_x=rocket_velocity_x;
+			v0_y=rocket_velocity_y;
+
+			rocket_velocity_y=-terminal_velocity;
+			rocket_velocity_x=0;
+			rocket_velocity=vector_magnitude(rocket_velocity_x,rocket_velocity_y);
+		}
+
+
+		/* 5012 */
 		/* deltaX=1/2 (v+v0)t */
 		/* could also use deltax=v0t+(1/2)*a*t*t */
 		rocket_y=rocket_y+0.5*(v0_y+rocket_velocity_y)*deltat;
@@ -246,33 +359,23 @@ int main(int argc, char **argv) {
 			((rocket_altitude)/KERBIN_RADIUS)*
 			((rocket_altitude)/KERBIN_RADIUS));
 
+after_physics:
 
 		home();
-
+		/* 5032 */
 		htabvtab(1,21);
 
-		printf("Time: %lf\n",time);
-		printf("ALT: %lf km\tg=%lf\n",(rocket_altitude-KERBIN_RADIUS)/1000.0,
-				gravity);
-		printf("VEL: %lf m/s\tStage: %d\n",
+		printf("Time: %lfs\tStage: %d\t\t%s\n",time,3-stage,"Zurgtroyd");
+		printf("ALT: %lf km\tAngle=%lf\n",(rocket_altitude-KERBIN_RADIUS)/1000.0,
+				angle*(180.0/PI));
+		printf("VEL: %lf m/s\tFuel: %lf%%\n",
 			rocket_velocity,
-			stage);
-		printf("ACCEL: %lf g\tFuel: %lf%%",
-			vector_magnitude(rocket_acceleration_x,rocket_acceleration_y)/9.8,
 			fuel_left);
 
-		htabvtab(30,21);
-		printf("ZURGTROYD");
-
-		htabvtab(30,20);
-		if ((angle>90) && (angle<270)) printf("SCREAM");
-		else if (rocket_velocity_y>100) printf("SMILE");
-		else if (rocket_acceleration_y<0) printf("FROWN");
-		else printf("NEUTRAL");
-
+/* DEBUG */
 		htabvtab(20,14);
-		printf("pressure=%lf density=%lf drag=%lf drag_a=%lf\n",
-			pressure,density,drag,drag_a);
+		printf("pressure=%lf density=%lf drag=%lf drag_a=%lf tv=%lf\n",
+			pressure,density,drag,drag_a,terminal_velocity);
 
 		htabvtab(20,13);
 		printf("grav angle=%lf\n",gravity_angle*180.0/PI);
@@ -285,41 +388,44 @@ int main(int argc, char **argv) {
 			rocket_velocity_x,rocket_velocity_y,
 			rocket_acceleration_x,rocket_acceleration_y);
 		htabvtab(20,10);
-		printf("angle=%lf\n",angle);
+		printf("angle=%lf\n",(angle*180)/PI);
+/* end DEBUG */
 
-		htabvtab(20,9);
-		if (angle<22.5) printf("^");
-		else if (angle<67.5) printf("/");
-		else if (angle<112.5) printf(">");
-		else if (angle<157.5) printf("\\");
-		else if (angle<205.5) printf("V");
-		else if (angle<250.5) printf("/");
-		else if (angle<295.5) printf("<");
-		else if (angle<340.5) printf("\\");
-		else printf("^");
 
-		scanf("%c",&input);
-		if (input==' ') {
-			if (stage>0) stage--;
-			else parachutes_deployed=1;
+		/* 5100 */
+		if (bingo_fuel) {
+			input='x';
 		}
-		if (input=='d') {
-			angle+=45.0;
-			if (angle>=360) angle=0.0;
+		else {
+			scanf("%c",&input);
+		}
+
+		/* 5555 */
+		/* if (!orbit_map_view) erase_old_ship() */
+
+		/* 6060 */
+		if (input=='q') {
+			break;
 		}
 		if (input=='a') {
-			angle-=45.0;
-			if (angle<0.0) angle+=360.0;
+			angle-=0.7853;
 		}
+		if (input=='d') {
+			angle+=0.7853;
+		}
+		/* 6063 */
+		if (input=='c') {
+			/* crash_ship() */
+		}
+
+		/* 6064 */
 		if (input=='z') {
 			/* no thrusting while fast-forwarding */
 			if (deltat<1.5) thrusting=1;
 		}
 		if (input=='x') {
 			thrusting=0;
-		}
-		if (input=='q') {
-			break;
+			bingo_fuel=0;
 		}
 
 		if (input=='>') {
@@ -331,17 +437,82 @@ int main(int argc, char **argv) {
 			if (deltat<1.0) deltat=1.0;
 		}
 
-		time+=deltat;
+		if (input=='M') {
+			if (orbit_map_view) {
+				orbit_map_view=0;
+				current_quadrant=-1;
+				continue;
+			}
+			else {
+				orbit_map_view=1;
+				/* load_orbit_map() */
+				/* skip drawing rocket */
+			}
+		}
 
-		if (log_step==0) {
+
+		if (input==' ') {
+			if (launched) {
+				stage--;
+				if ((stage<1) && (parachutes>0) && (!parachutes_deployed)) {
+					parachutes_deployed=1;
+					/* draw_parachutes() */
+				}
+				if (stage<0) stage=0;
+
+			}
+			else {
+				/* 7500 */
+				/* erase_gantry() */
+				/* noise() */
+				thrusting=1;
+				launched=1;
+				/* make_astronaut_smile() */
+			}
+		}
+
+		/* 6075 */
+		if (angle<0.0) angle+=2*PI;
+		if (angle>=2*PI) angle=0.0;
+
+		if (!orbit_map_view) {
+			htabvtab(30,19);
+			if ((angle>90) && (angle<270)) printf("SCREAM");
+			else if (rocket_velocity_y>100) printf("SMILE");
+			else if (rocket_acceleration_y<0) printf("FROWN");
+			else printf("NEUTRAL");
+		}
+
+		/* 6090 */
+		/* re-draw ship */
+		htabvtab(20,9);
+		if (angle<0.392) printf("^");
+		else if (angle<1.178) printf("/");
+		else if (angle<1.963) printf(">");
+		else if (angle<2.748) printf("\\");
+		else if (angle<3.534) printf("V");
+		else if (angle<4.320) printf("/");
+		else if (angle<5.105) printf("<");
+		else if (angle<5.890) printf("\\");
+		else printf("^");
+
+		/* 6118 */
+		time+=deltat;
+		/* adjust_eyes() */
+
+//		if (log_step==0) {
+		if (0==0) {
 			if (logfile) {
 				fprintf(logfile,"%lf %lf\n",rocket_x/1000.0,rocket_y/1000.0);
 			}
 			if (vlogfile) {
 				fprintf(vlogfile,
-			"t=%lf h=%lf v=%lf g=%lf d=%lf ray=%lf\n",
-			time,rocket_altitude-KERBIN_RADIUS,rocket_velocity,
+			"time=%.0lf altitude=%.0lf vel_y=%lf grav_y=%lf drag_a=%lf rock_ay=%lf\n",
+			time,rocket_altitude-KERBIN_RADIUS,rocket_velocity_y,
 			gravity_y,drag_a,rocket_acceleration_y);
+				fprintf(vlogfile,
+			"\tdensity=%lf vel_y^2=%lf drag=%lf\n",
+			density,rocket_velocity_y*rocket_velocity_y,drag);
 			}
 		}
 		log_step++;
@@ -352,6 +523,11 @@ int main(int argc, char **argv) {
 
 	if (logfile) fclose(logfile);
 	if (vlogfile) fclose(vlogfile);
+
+	(void)height;
+	(void)max_altitude;
+	(void)bingo_fuel;
+	(void)current_quadrant;
 
 	return 0;
 }
