@@ -51,6 +51,135 @@ int autopilot(double fuel_left, double altitude, double *angle) {
 }
 #endif
 
+static void draw_ship(int stage, int thrusting, int rotation) {
+
+	if (stage) {
+		if (rotation==0) {
+			printf("\033[1;40;37m"
+				"\033[7;40H_"
+				"\033[8;39H/O\\"
+				"\033[9;38H/___\\"
+				"\033[10;38H| R |"
+				"\033[11;38H|___|"
+				"\033[12;39H/_\\");
+			if (thrusting) printf("\033[13;39H\\|/");
+		}
+		if (rotation==16) {
+			printf("\033[1;40;37m");
+			if (thrusting) {
+				printf(
+					"\033[8;35H_ ____  _"
+					"\033[9;34H- |    |- |-"
+					"\033[10;33H|O |R   |  |--"
+					"\033[11;34H-_|____|-_|-"
+				);
+			}
+		}
+		if (rotation==32) {
+			if (thrusting) printf("\033[7;39H/|\\");
+			printf(
+				"\033[1;40;37m"
+				"\033[8;39H\\-/"
+				"\033[9;38H|   |"
+				"\033[10;38H| R |"
+				"\033[11;38H\\---/"
+				"\033[12;39H\\O/"
+				"\033[7;40H_"
+				);
+
+
+		}
+		if (rotation==48) {
+			printf("\033[1;40;37m");
+			if (thrusting) {
+				printf(
+					"\033[8;35H_ ____  _"
+					"\033[9;34H- |    |- |-"
+					"\033[10;33H|O |R   |  |--"
+					"\033[11;34H-_|____|-_|-"
+				);
+			}
+			else {
+				printf(
+					"\033[8;35H_ ____  _"
+					"\033[9;34H- |    |- |"
+					"\033[10;33H|O |R   |  |"
+					"\033[11;34H-_|____|-_|"
+				);
+			}
+		}
+
+		if (rotation==56) {
+			printf("\033[1;40;37m");
+			printf(
+				"\033[7;37H_"
+				"\033[8;36H/o/\\"
+				"\033[9;36H|/R \\"
+				"\033[10;37H\\   \\"
+				"\033[11;38H\\  /_"
+				"\033[12;39H\\/|/\\"
+				"\033[13;41H--"
+				);
+
+		}
+
+	}
+
+#if 0
+      40,10=middle, so want 40,7
+_______________
+       _       |
+      /O\      |
+     /___\     |
+     | R |     |
+     |___|     |
+      /_\      |
+      \|/      |
+---------------|
+_______________
+               |
+   _ ____  _   |
+  - |    |- |- |
+ |O |R   |  |--|
+  -_|____|-_|- |
+               |
+               |
+---------------|
+_______________
+               |
+   _ ____  _   |
+  - |    |- |- |
+ |O |R   |  |--|
+  -_|____|-_|- |
+               |
+               |
+---------------|
+_______________
+     _         |
+    /o/\       |
+    |/R \      |
+     \   \     |
+      \  /_    |
+       \/|/\   |
+          --   |
+---------------|
+
+
+#endif
+#if 0
+	htabvtab(20,9);
+	if (angle<0.392) printf("^");
+	else if (angle<1.178) printf("/");
+	else if (angle<1.963) printf(">");
+	else if (angle<2.748) printf("\\");
+	else if (angle<3.534) printf("V");
+	else if (angle<4.320) printf("/");
+	else if (angle<5.105) printf("<");
+	else if (angle<5.890) printf("\\");
+	else printf("^");
+#endif
+}
+
 
 int main(int argc, char **argv) {
 
@@ -59,6 +188,8 @@ int main(int argc, char **argv) {
 	double angle=0;
 
 	double capsule_mass=1.0;
+
+	int rotation=0;
 
 //	double engines=3;
 	double engine_isp=270.0;	/* s */
@@ -115,6 +246,7 @@ int main(int argc, char **argv) {
 	double adjusted_altitude;
 
 	int launched=1;
+	int landed=0;
 	int stage=2;
 
 	int log_step=0;
@@ -172,6 +304,7 @@ int main(int argc, char **argv) {
 
 	/* 3000 */
 	angle=0.0;
+	rotation=0;
 	gravity_x=0.0;
 	gravity_y=-9.8;
 	gravity_angle=0.0;
@@ -195,12 +328,13 @@ int main(int argc, char **argv) {
 	orbit_map_view=0;
 
 	/* 3020 */
+	home();
 	/* init_graphics() */
 	height=0;
 	/* draw_launchpad() */
 	/* draw_horizon() */
 	/* draw_gantry() */
-	/* draw_ship() */
+	draw_ship(stage,thrusting,rotation);
 
 	/* Main Loop */
 	/* 4000 */
@@ -262,8 +396,6 @@ int main(int argc, char **argv) {
 		/* 4070 */
 		gravity_y=cos(gravity_angle)*gravity;
 		gravity_x=sin(gravity_angle)*gravity;
-		rocket_acceleration_y+=gravity_y;
-		rocket_acceleration_x+=gravity_x;
 
 /* TODO */
 		/* Adjust pressure */
@@ -286,52 +418,45 @@ int main(int argc, char **argv) {
 		drag_a=drag/(total_mass[stage]*1000.0);
 		if (rocket_velocity_y>0) drag_a=-drag_a;
 
-		rocket_acceleration_y+=drag_a;
+
 
 		/* calculate velocity */
+		v0_x=rocket_velocity_x;
+		v0_y=rocket_velocity_y;
+
 
 		/* If above atmosphere, no drag */
 		if (rocket_altitude>KERBIN_RADIUS+70000) {
 			/* v=v0+at */
-
-			v0_x=rocket_velocity_x;
-			v0_y=rocket_velocity_y;
+			rocket_acceleration_y+=gravity_y;
+			rocket_acceleration_x+=gravity_x;
 
 			rocket_velocity_y=v0_y+rocket_acceleration_y*deltat;
 			rocket_velocity_x=v0_x+rocket_acceleration_x*deltat;
-			rocket_velocity=vector_magnitude(rocket_velocity_x,rocket_velocity_y);
 
 		}
-		/* In in atmosphere and traveling upward */
-		else if (rocket_velocity_y>=0.0) {
+		/* In atmosphere and traveling upward or rocket firing */
+		else if ((rocket_velocity_y>=0.0) || (rocket_acceleration_x>0) ||
+			(rocket_acceleration_y>0)) {
+			rocket_acceleration_y+=gravity_y;
+			rocket_acceleration_x+=gravity_x;
+			rocket_acceleration_y+=drag_a;
+
 			/* v=v0+at */
-
-			v0_x=rocket_velocity_x;
-			v0_y=rocket_velocity_y;
-
 			rocket_velocity_y=v0_y+rocket_acceleration_y*deltat;
 			rocket_velocity_x=v0_x+rocket_acceleration_x*deltat;
-			rocket_velocity=vector_magnitude(rocket_velocity_x,rocket_velocity_y);
 
 		}
-		else if (!launched) {
-			v0_x=rocket_velocity_x;
-			v0_y=rocket_velocity_y;
-
-			rocket_velocity_y=0;
-			rocket_velocity_x=0;
-			rocket_velocity=vector_magnitude(rocket_velocity_x,rocket_velocity_y);
-		}
+//		else if (!launched) {
+//			rocket_velocity_y=0;
+//			rocket_velocity_x=0;
+//			rocket_velocity=vector_magnitude(rocket_velocity_x,rocket_velocity_y);
+//		}
 		else {
-
-			v0_x=rocket_velocity_x;
-			v0_y=rocket_velocity_y;
-
 			rocket_velocity_y=-terminal_velocity;
 			rocket_velocity_x=0;
-			rocket_velocity=vector_magnitude(rocket_velocity_x,rocket_velocity_y);
 		}
-
+		rocket_velocity=vector_magnitude(rocket_velocity_x,rocket_velocity_y);
 
 		/* 5012 */
 		/* deltaX=1/2 (v+v0)t */
@@ -345,12 +470,17 @@ int main(int argc, char **argv) {
 
 		if (rocket_altitude<KERBIN_RADIUS) {
 			if (rocket_velocity<20.0) {
+				landed=1;
+				parachutes_deployed=0;
+				rocket_velocity_x=0;
+				rocket_velocity_y=0;
 				printf("LANDED!\n");
 			}
 			else {
 				printf("CRASHED!\n");
+				/* show_crash() */
+				break;
 			}
-			break;
 		}
 
 		/* 5030 */
@@ -361,7 +491,7 @@ int main(int argc, char **argv) {
 
 after_physics:
 
-		home();
+//		home();
 		/* 5032 */
 		htabvtab(1,21);
 
@@ -372,6 +502,7 @@ after_physics:
 			rocket_velocity,
 			fuel_left);
 
+#if 0
 /* DEBUG */
 		htabvtab(20,14);
 		printf("pressure=%lf density=%lf drag=%lf drag_a=%lf tv=%lf\n",
@@ -390,7 +521,7 @@ after_physics:
 		htabvtab(20,10);
 		printf("angle=%lf\n",(angle*180)/PI);
 /* end DEBUG */
-
+#endif
 
 		/* 5100 */
 		if (bingo_fuel) {
@@ -408,9 +539,11 @@ after_physics:
 			break;
 		}
 		if (input=='a') {
+			rotation-=8;
 			angle-=0.7853;
 		}
 		if (input=='d') {
+			rotation+=8;
 			angle+=0.7853;
 		}
 		/* 6063 */
@@ -474,6 +607,8 @@ after_physics:
 		/* 6075 */
 		if (angle<0.0) angle+=2*PI;
 		if (angle>=2*PI) angle=0.0;
+		if (rotation==64) rotation=0;
+		if (rotation==-8) rotation=56;
 
 		if (!orbit_map_view) {
 			htabvtab(30,19);
@@ -485,16 +620,7 @@ after_physics:
 
 		/* 6090 */
 		/* re-draw ship */
-		htabvtab(20,9);
-		if (angle<0.392) printf("^");
-		else if (angle<1.178) printf("/");
-		else if (angle<1.963) printf(">");
-		else if (angle<2.748) printf("\\");
-		else if (angle<3.534) printf("V");
-		else if (angle<4.320) printf("/");
-		else if (angle<5.105) printf("<");
-		else if (angle<5.890) printf("\\");
-		else printf("^");
+		draw_ship(stage,thrusting,rotation);
 
 		/* 6118 */
 		time+=deltat;
