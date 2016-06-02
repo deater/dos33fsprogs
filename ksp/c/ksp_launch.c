@@ -64,6 +64,18 @@ static void draw_ship(int stage, int thrusting, int rotation) {
 				"\033[12;39H/_\\");
 			if (thrusting) printf("\033[13;39H\\|/");
 		}
+		if (rotation==8) {
+			printf(
+				"\033[1;40;37m"
+				"\033[7;42H_"
+				"\033[8;41H/\\o\\"
+				"\033[9;40H/ R\\|"
+				"\033[10;39H/   /"
+				"\033[11;38H_\\  /"
+				"\033[12;38H/\\/\\/"
+				"\033[13;39H--"
+			);
+		}
 		if (rotation==16) {
 			printf("\033[1;40;37m");
 			if (thrusting) {
@@ -163,6 +175,15 @@ _______________
        \/|/\   |
           --   |
 ---------------|
+_______________
+         _     |
+       /\o\    |
+      / R\|    |
+     /   /     |
+    _\  /      |
+   /\/\/       |
+   --          |
+---------------|
 
 
 #endif
@@ -237,6 +258,7 @@ int main(int argc, char **argv) {
 	double density=0;	/* kg/m^3 */
 	double temperature=273;	/* K */
 	double drag=0.0,drag_a=0.0;
+	double drag_angle,drag_x,drag_y,drag_a_x,drag_a_y;
 
 	int orbit_map_view=0,current_quadrant=0;
 
@@ -406,17 +428,25 @@ int main(int argc, char **argv) {
 		/* d=1.05 for cube (wikipedia) */
 		/* d=0.8 for long cylinder */
 		/* d=0.5 for long cone */
+
+		drag_angle=atan(rocket_velocity_x/rocket_velocity_y);
+		if (rocket_velocity_y<0) drag_angle+=PI;
+
 		if (parachutes_deployed) {
-			drag=0.5*density*rocket_velocity_y*rocket_velocity_y*1.5*1000.0*parachutes;
+			drag_x=0.5*density*rocket_velocity_x*rocket_velocity_x*1.5*1000.0*parachutes;
+			drag_y=0.5*density*rocket_velocity_y*rocket_velocity_y*1.5*1000.0*parachutes;
 			/* sqrt ((2*m*g)/(rho*A*C)) */
 			terminal_velocity=sqrt( (2*total_mass[stage]*1000.0*-gravity)/(density*(4+500.0*parachutes)*1.5));
 		}
 		else {
-			drag=0.5*density*rocket_velocity_y*rocket_velocity_y*0.5*4.0;
+			drag_x=0.5*density*rocket_velocity_x*rocket_velocity_x*0.5*4.0;
+			drag_y=0.5*density*rocket_velocity_y*rocket_velocity_y*0.5*4.0;
 			terminal_velocity=sqrt( (2*total_mass[stage]*1000.0*-gravity)/(density*4.0*0.5));
 		}
-		drag_a=drag/(total_mass[stage]*1000.0);
-		if (rocket_velocity_y>0) drag_a=-drag_a;
+		drag_a_x=drag_x/(total_mass[stage]*1000.0);
+		drag_a_y=drag_y/(total_mass[stage]*1000.0);
+		if (rocket_velocity_y>0) drag_a_y=-drag_a_y;
+		if (rocket_velocity_x>0) drag_a_x=-drag_a_x;
 
 
 
@@ -440,7 +470,8 @@ int main(int argc, char **argv) {
 			(rocket_acceleration_y>0)) {
 			rocket_acceleration_y+=gravity_y;
 			rocket_acceleration_x+=gravity_x;
-			rocket_acceleration_y+=drag_a;
+			rocket_acceleration_x+=drag_a_x;
+			rocket_acceleration_y+=drag_a_y;
 
 			/* v=v0+at */
 			rocket_velocity_y=v0_y+rocket_acceleration_y*deltat;
@@ -454,7 +485,7 @@ int main(int argc, char **argv) {
 //		}
 		else {
 			rocket_velocity_y=-terminal_velocity;
-			rocket_velocity_x=0;
+			//rocket_velocity_x=0;
 		}
 		rocket_velocity=vector_magnitude(rocket_velocity_x,rocket_velocity_y);
 
@@ -495,11 +526,12 @@ after_physics:
 		/* 5032 */
 		htabvtab(1,21);
 
-		printf("Time: %lfs\tStage: %d\t\t%s\n",time,3-stage,"Zurgtroyd");
-		printf("ALT: %lf km\tAngle=%lf\n",(rocket_altitude-KERBIN_RADIUS)/1000.0,
+		printf("Time: %.1lfs\tStage: %d\t\t%s\n",time,3-stage,"Zurgtroyd");
+		printf("ALT: %lf km\tAngle=%.1lf\n",(rocket_altitude-KERBIN_RADIUS)/1000.0,
 				angle*(180.0/PI));
-		printf("VEL: %lf m/s\tFuel: %lf%%\n",
-			rocket_velocity,
+		printf("VEL: %.0lf m/s (%.0lfx %.0lfy %.0lftv)\tFuel: %.1lf%%\n",
+			rocket_velocity,rocket_velocity_x,rocket_velocity_y,
+			terminal_velocity,
 			fuel_left);
 
 #if 0
