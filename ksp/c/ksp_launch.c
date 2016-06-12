@@ -8,17 +8,6 @@
 
 #define PI 3.14159265358979323846264338327
 
-#if 0
-static double sin_degrees(double degrees) {
-
-	return sin(degrees*PI/180);
-}
-
-static double cos_degrees(double degrees) {
-	return cos(degrees*PI/180);
-}
-#endif
-
 
 static double vector_magnitude(double a,double b) {
 	return sqrt(a*a+b*b);
@@ -66,7 +55,7 @@ static void erase_old_ship(void) {
 
 static void draw_ship(int stage, int thrusting, int rotation) {
 
-	if (stage) {
+//	if (stage) {
 		if (rotation==0) {
 			printf("\033[1;40;37m"
 				"\033[7;40H_"
@@ -221,7 +210,7 @@ static void draw_ship(int stage, int thrusting, int rotation) {
 
 		}
 
-	}
+//	}
 
 #if 0
       40,10=middle, so want 40,7
@@ -321,6 +310,21 @@ _______________
 }
 
 
+static void draw_parachutes(void) {
+
+	printf(
+		"\033[3;39H\033[41m   "
+		"\033[4;34H  \033[47m   \033[41m   \033[47m   \033[41m  "
+		"\033[5;33H  \033[47m   \033[41m     \033[47m   \033[41m  "
+		"\033[40m"
+		"\033[6;34H\\\033[6;46H/"
+		"\033[7;35H\\\033[7;45H/"
+		"\033[8;36H\\\033[8;44H/"
+		"\033[9;37H\\\033[9;43H/"
+	);
+
+}
+
 static void draw_horizon(int height,int erase) {
 
 	printf("\033[%d;1H",10+height);
@@ -346,9 +350,8 @@ static void draw_gantry(void) {
 
 }
 
-static void switch_to_surface(void) {
+static void draw_astronaut(void) {
 
-	/* mostly just draw kerbal blank */
 	printf(
 		"\033[42m"
 		"\033[15;74H     "
@@ -361,8 +364,26 @@ static void switch_to_surface(void) {
 	);
 }
 
+static void switch_to_surface(void) {
+	home();
+	/* mostly just draw kerbal blank */
+	draw_astronaut();
+}
+
 static void switch_to_orbit(void) {
 
+	int s;
+
+	home();
+
+	for(s=0;s<30;s++) {
+		printf("\033[%d;%dH.",(rand()%20)+1,(rand()%80)+1);
+	}
+	printf("\033[19;20H\033[44m                                        ");
+	printf("\033[20;10H                    \033[42m                    \033[47m                    ");
+	printf("\033[40m");
+
+	draw_astronaut();
 }
 
 #define FACE_NEUTRAL	0
@@ -830,7 +851,6 @@ after_physics:
 				stage--;
 				if ((stage<1) && (parachutes>0) && (!parachutes_deployed)) {
 					parachutes_deployed=1;
-					/* draw_parachutes() */
 				}
 				if (stage<0) stage=0;
 
@@ -864,9 +884,11 @@ after_physics:
 			/* check to see if need to change mode */
 			if ((adjusted_altitude<40000) && (current_quadrant!=0)) {
 				switch_to_surface();
+				current_quadrant=0;
 			}
 			if ((adjusted_altitude>40000) && (current_quadrant!=1)) {
 				switch_to_orbit();
+				current_quadrant=1;
 			}
 		}
 
@@ -889,6 +911,7 @@ after_physics:
 
 		/* 6090 */
 		/* re-draw ship */
+		if (parachutes_deployed) draw_parachutes();
 		draw_ship(stage,thrusting,rotation);
 
 		/* 6118 */
