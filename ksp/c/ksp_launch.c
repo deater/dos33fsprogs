@@ -320,6 +320,18 @@ _______________
 }
 
 
+void draw_horizon(int height,int erase) {
+
+	printf("\033[%d;1H",10+height);
+	if (erase) {
+		printf("                                                            ");
+	}
+	else {
+		printf("\033[32m------------------------------------------------------------\033[37m");
+	}
+}
+
+
 int main(int argc, char **argv) {
 
 	FILE *logfile,*vlogfile;
@@ -368,7 +380,7 @@ int main(int argc, char **argv) {
 
 	int bingo_fuel=0;
 	double max_altitude=0.0;
-	double height=0.0;
+	int height=0;
 
 	/* atmospheric pressure */
 	double pressure=101325;		/* Pascals */
@@ -383,7 +395,7 @@ int main(int argc, char **argv) {
 	int parachutes_deployed=0;
 	int parachutes=3;
 	double terminal_velocity=0.0;
-	double adjusted_altitude;
+	double adjusted_altitude=0.0;
 
 	int launched=1;
 	int landed=0;
@@ -472,7 +484,7 @@ int main(int argc, char **argv) {
 	/* init_graphics() */
 	height=0;
 	/* draw_launchpad() */
-	/* draw_horizon() */
+	draw_horizon(height,0);
 	/* draw_gantry() */
 	draw_ship(stage,thrusting,rotation);
 
@@ -487,21 +499,6 @@ int main(int argc, char **argv) {
 		adjusted_altitude=rocket_altitude-KERBIN_RADIUS;
 		if (adjusted_altitude>max_altitude) max_altitude=adjusted_altitude;
 
-		/* 4004 */
-		if (!orbit_map_view) {
-			/* draw horizon if necessary */
-			if (adjusted_altitude<1800) {
-				/* draw_horizon() */
-			}
-			/* 4012 */
-			/* check to see if need to change mode */
-			if ((adjusted_altitude<40000) && (current_quadrant!=0)) {
-				/* switch_to_surface() */
-			}
-			if ((adjusted_altitude>40000) && (current_quadrant!=1)) {
-				/* switch_to_orbit() */
-			}
-		}
 
 		/* 4018 */
 		fuel_left=fuel_mass[stage]*100.0/stage_fuel_total[stage];
@@ -768,6 +765,25 @@ after_physics:
 			else printf("NEUTRAL");
 		}
 
+
+		/* 4004 */
+		if (!orbit_map_view) {
+			/* draw horizon if necessary */
+			if (adjusted_altitude<1800) {
+				draw_horizon(height,1);
+				height=adjusted_altitude/180;
+				draw_horizon(height,0);
+			}
+			/* 4012 */
+			/* check to see if need to change mode */
+			if ((adjusted_altitude<40000) && (current_quadrant!=0)) {
+				/* switch_to_surface() */
+			}
+			if ((adjusted_altitude>40000) && (current_quadrant!=1)) {
+				/* switch_to_orbit() */
+			}
+		}
+
 		/* 6090 */
 		/* re-draw ship */
 		draw_ship(stage,thrusting,rotation);
@@ -800,7 +816,6 @@ after_physics:
 	if (logfile) fclose(logfile);
 	if (vlogfile) fclose(vlogfile);
 
-	(void)height;
 	(void)max_altitude;
 	(void)bingo_fuel;
 	(void)current_quadrant;
