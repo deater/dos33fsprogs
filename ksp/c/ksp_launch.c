@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
 /* http://wiki.kerbalspaceprogram.com/wiki/Tutorial:Advanced_Rocket_Design */
@@ -320,18 +321,18 @@ _______________
 }
 
 
-void draw_horizon(int height,int erase) {
+static void draw_horizon(int height,int erase) {
 
 	printf("\033[%d;1H",10+height);
 	if (erase) {
-		printf("                                                            ");
+		printf("                                                                       ");
 	}
 	else {
-		printf("\033[32m------------------------------------------------------------\033[37m");
+		printf("\033[32m-----------------------------------------------------------------------\033[37m");
 	}
 }
 
-void draw_gantry(void) {
+static void draw_gantry(void) {
 	printf(
 		"\033[31m"
 		"\033[7;33H_____ "
@@ -343,6 +344,85 @@ void draw_gantry(void) {
 		"\033[37m"
 	);
 
+}
+
+static void switch_to_surface(void) {
+
+	/* mostly just draw kerbal blank */
+	printf(
+		"\033[42m"
+		"\033[15;74H     "
+		"\033[16;74H     "
+		"\033[17;74H \033[47;30mO\033[42m \033[47mO\033[42m "
+		"\033[18;74H     "
+		"\033[19;74H --- "
+		"\033[20;74H     "
+		"\033[40;37m"
+	);
+}
+
+static void switch_to_orbit(void) {
+
+}
+
+#define FACE_NEUTRAL	0
+#define FACE_SCREAM	1
+#define FACE_SMILE	2
+#define FACE_FROWN	3
+
+static void update_mouth(int type) {
+
+	switch(type) {
+		case FACE_SCREAM:
+				printf(
+					"\033[30;42m"
+					"\033[18;74H     "
+					"\033[19;74H  O  "
+					"\033[37;40m"
+					);
+				break;
+		case FACE_SMILE:
+				printf(
+					"\033[30;42m"
+					"\033[18;74H     "
+					"\033[19;74H \\_/ "
+					"\033[37;40m"
+					);
+				break;
+		case FACE_FROWN:
+				printf(
+					"\033[30;42m"
+					"\033[18;74H  _  "
+					"\033[19;74H / \\ "
+					"\033[37;40m"
+					);
+				break;
+		case FACE_NEUTRAL:
+		default:
+				printf(
+					"\033[30;42m"
+					"\033[18;74H     "
+					"\033[19;74H --- "
+					"\033[37;40m"
+					);
+				break;
+	}
+}
+
+static void adjust_eyes(void) {
+
+	int r;
+
+	r=rand()%4;
+
+	printf("\033[30;42m\033[17;74H");
+	switch(r) {
+		case 0: printf(" \033[47mO\033[42m \033[47mO\033[42m "); break;
+		case 1: printf(" \033[47mo\033[42m \033[47mO\033[42m "); break;
+		case 2: printf(" \033[47mO\033[42m \033[47mo\033[42m "); break;
+		case 3: printf(" \033[47mo\033[42m \033[47mo\033[42m "); break;
+	}
+	printf("\033[37;40m");
 }
 
 int main(int argc, char **argv) {
@@ -390,6 +470,7 @@ int main(int argc, char **argv) {
 
 	double time=0.0;		/* s */
 	double deltat=1.0;
+	double eye_count=0.0;
 
 	int bingo_fuel=0;
 	double max_altitude=0.0;
@@ -496,7 +577,7 @@ int main(int argc, char **argv) {
 	home();
 	/* init_graphics() */
 	height=0;
-	/* draw_launchpad() */
+	switch_to_surface();
 	draw_horizon(height,0);
 	draw_gantry();
 	draw_ship(stage,thrusting,rotation);
@@ -654,7 +735,7 @@ after_physics:
 		/* 5032 */
 		htabvtab(1,21);
 
-		printf("Time: %.1lfs\tStage: %d\t\t%s\n",time,3-stage,"Zurgtroyd");
+		printf("Time: %.1lfs\tStage: %d\t\t\t\t\t     %s\n",time,3-stage,"Zurgtroyd");
 		printf("ALT: %lf km\tAngle=%.1lf\n",(rocket_altitude-KERBIN_RADIUS)/1000.0,
 				angle*(180.0/PI));
 		printf("VEL: %.0lf m/s (%.0lfx %.0lfy %.0lftv)\tFuel: %.1lf%%\n",
@@ -760,7 +841,8 @@ after_physics:
 				/* noise() */
 				thrusting=1;
 				launched=1;
-				/* make_astronaut_smile() */
+				update_mouth(FACE_SMILE);
+
 			}
 		}
 
@@ -769,15 +851,6 @@ after_physics:
 		if (angle>=2*PI) angle=0.0;
 		if (rotation==64) rotation=0;
 		if (rotation==-8) rotation=56;
-
-		if (!orbit_map_view) {
-			htabvtab(30,19);
-			if ((angle>90) && (angle<270)) printf("SCREAM");
-			else if (rocket_velocity_y>100) printf("SMILE");
-			else if (rocket_acceleration_y<0) printf("FROWN");
-			else printf("NEUTRAL");
-		}
-
 
 		/* 4004 */
 		if (!orbit_map_view) {
@@ -790,12 +863,29 @@ after_physics:
 			/* 4012 */
 			/* check to see if need to change mode */
 			if ((adjusted_altitude<40000) && (current_quadrant!=0)) {
-				/* switch_to_surface() */
+				switch_to_surface();
 			}
 			if ((adjusted_altitude>40000) && (current_quadrant!=1)) {
-				/* switch_to_orbit() */
+				switch_to_orbit();
 			}
 		}
+
+		/* Update kerbal expression */
+		if (!orbit_map_view) {
+			if ((angle>90) && (angle<270)) {
+				update_mouth(FACE_SCREAM);
+			}
+			else if (rocket_velocity_y>100) {
+				update_mouth(FACE_SMILE);
+			}
+			else if (rocket_acceleration_y<0) {
+				update_mouth(FACE_FROWN);
+			}
+			else {
+				update_mouth(FACE_NEUTRAL);
+			}
+		}
+
 
 		/* 6090 */
 		/* re-draw ship */
@@ -803,7 +893,11 @@ after_physics:
 
 		/* 6118 */
 		time+=deltat;
-		/* adjust_eyes() */
+		eye_count+=deltat;
+		if ((!orbit_map_view) && (eye_count>30.0)) {
+			eye_count=0;
+			adjust_eyes();
+		}
 
 //		if (log_step==0) {
 		if (0==0) {
