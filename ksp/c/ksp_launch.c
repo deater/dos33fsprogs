@@ -331,6 +331,19 @@ void draw_horizon(int height,int erase) {
 	}
 }
 
+void draw_gantry(void) {
+	printf(
+		"\033[31m"
+		"\033[7;33H_____ "
+		"\033[8;33H||"
+		"\033[9;33H||"
+		"\033[10;33H||=="
+		"\033[11;33H||"
+		"\033[12;33H||"
+		"\033[37m"
+	);
+
+}
 
 int main(int argc, char **argv) {
 
@@ -485,7 +498,7 @@ int main(int argc, char **argv) {
 	height=0;
 	/* draw_launchpad() */
 	draw_horizon(height,0);
-	/* draw_gantry() */
+	draw_gantry();
 	draw_ship(stage,thrusting,rotation);
 
 	/* Main Loop */
@@ -817,8 +830,7 @@ after_physics:
 	if (vlogfile) fclose(vlogfile);
 
 	(void)max_altitude;
-	(void)bingo_fuel;
-	(void)current_quadrant;
+	(void)landed;
 
 	return 0;
 }
