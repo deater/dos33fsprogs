@@ -4,7 +4,7 @@ TXT2BAS = ../../asoft_basic-utils/tokenize_asoft
 SHAPETABLE = ../../hgr-utils/shape_table
 MAKEB = ../../dos33fs-utils/make_b
 LD65 = /usr/local/bin/ld65
-AS65 = /usr/local/bin/as65
+CA65 = /usr/local/bin/ca65
 
 DISKNAME=ksp_1.3.7.dsk
 
@@ -17,7 +17,7 @@ ksp:	ksp.o
 	$(LD65) -o ksp ksp.o -C ./apple2_c00.inc
 
 ksp.o:	ksp.s
-	$(AS65) -o ksp.o ksp.s -l ksp.lst
+	$(CA65) -o ksp.o ksp.s -l ksp.lst
 
 
 $(DISKNAME):	KSP \
