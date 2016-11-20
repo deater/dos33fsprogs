@@ -3,9 +3,15 @@
 
 int main(int argc, char **argv) {
 
-	char device[]="wlan0";
+	char *device_name,errbuf[PCAP_ERRBUF_SIZE];
 
-	printf("Using device: %s\n", device);
+	device_name=pcap_lookupdev(errbuf);
+	if (device_name==NULL) {
+		fprintf(stderr,"Can't find default device\n");
+		return -1;
+	}
+
+	printf("Using device: %s\n", device_name);
 
 	return 0;
 

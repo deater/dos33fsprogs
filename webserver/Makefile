@@ -1,5 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -O2
+LFLAGS =-lpcap
 
 all:	testarp
 
