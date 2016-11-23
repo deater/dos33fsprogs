@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
 /* http://wiki.kerbalspaceprogram.com/wiki/Tutorial:Advanced_Rocket_Design */
@@ -6,17 +7,6 @@
 /* Also, high school physics (thanks Mr. Brennen) */
 
 #define PI 3.14159265358979323846264338327
-
-#if 0
-static double sin_degrees(double degrees) {
-
-	return sin(degrees*PI/180);
-}
-
-static double cos_degrees(double degrees) {
-	return cos(degrees*PI/180);
-}
-#endif
 
 
 static double vector_magnitude(double a,double b) {
@@ -51,72 +41,148 @@ int autopilot(double fuel_left, double altitude, double *angle) {
 }
 #endif
 
+static void erase_old_ship(void) {
+
+	printf("\033[1;40;37m"
+		"\033[7;33H              "
+		"\033[8;33H              "
+		"\033[9;33H              "
+		"\033[10;33H              "
+		"\033[11;33H              "
+		"\033[12;33H              ");
+	printf("\033[13;33H              ");
+}
+
 static void draw_ship(int stage, int thrusting, int rotation) {
 
-	if (stage) {
+//	if (stage) {
 		if (rotation==0) {
 			printf("\033[1;40;37m"
 				"\033[7;40H_"
-				"\033[8;39H/O\\"
+				"\033[8;39H/\033[36mo\033[37m\\"
 				"\033[9;38H/___\\"
-				"\033[10;38H| R |"
+				"\033[10;38H| \033[41m \033[40m |"
 				"\033[11;38H|___|"
-				"\033[12;39H/_\\");
-			if (thrusting) printf("\033[13;39H\\|/");
+				"\033[12;39H\033[36m/_\\\033[37m");
+			if (thrusting) {
+				printf("\033[13;39H\033[33m\\\033[31m|\033[33m/\033[37m");
+			}
 		}
 		if (rotation==8) {
 			printf(
 				"\033[1;40;37m"
 				"\033[7;42H_"
-				"\033[8;41H/\\o\\"
-				"\033[9;40H/ R\\|"
+				"\033[8;41H/\\\033[36mo\033[37m\\"
+				"\033[9;40H/ \033[41m \033[40m\\|"
 				"\033[10;39H/   /"
-				"\033[11;38H_\\  /"
-				"\033[12;38H/\\/\\/"
-				"\033[13;39H--"
+				"\033[11;38H\033[36m_\033[37m\\  /"
 			);
+			if (thrusting) {
+				printf(
+				"\033[12;37H\033[33m/\033[36m\\/\033[37m\\/"
+				"\033[13;37H\033[33m--\033[37m");
+			}
+			else {
+				printf(
+				"\033[12;37H \033[36m\\/\033[37m\\/");
+			}
+
 		}
 		if (rotation==16) {
 			printf("\033[1;40;37m");
 			if (thrusting) {
 				printf(
-					"\033[8;35H_ ____  _"
-					"\033[9;34H- |    |- |-"
-					"\033[10;33H|O |R   |  |--"
-					"\033[11;34H-_|____|-_|-"
-				);
-			}
-		}
-		if (rotation==32) {
-			if (thrusting) printf("\033[7;39H/|\\");
-			printf(
-				"\033[1;40;37m"
-				"\033[8;39H\\-/"
-				"\033[9;38H|   |"
-				"\033[10;38H| R |"
-				"\033[11;38H\\---/"
-				"\033[12;39H\\O/"
-				"\033[7;40H_"
-				);
-
-
-		}
-		if (rotation==48) {
-			printf("\033[1;40;37m");
-			if (thrusting) {
-				printf(
-					"\033[8;35H_ ____  _"
-					"\033[9;34H- |    |- |-"
-					"\033[10;33H|O |R   |  |--"
-					"\033[11;34H-_|____|-_|-"
+				"\033[8;36H\033[36m_  \033[37m____ _"
+				"\033[9;34H\033[33m-\033[36m| -\033[37m|    | \\"
+				"\033[10;33H\033[33m-\033[31m-\033[36m|  \033[37m|   \033[41m \033[40m| \033[36mo\033[37m|"
+				"\033[11;34H\033[33m-\033[36m|_-\033[37m|____|_/"
 				);
 			}
 			else {
 				printf(
-					"\033[8;35H_ ____  _"
-					"\033[9;34H- |    |- |"
-					"\033[10;33H|O |R   |  |"
-					"\033[11;34H-_|____|-_|"
+				"\033[8;36H\033[36m_ \033[37m ____ _"
+				"\033[9;34H \033[36m| -\033[37m|    | \\"
+				"\033[10;33H  \033[36m|  \033[37m|   \033[41m \033[40m| \033[36mo\033[37m|"
+				"\033[11;34H \033[36m|_-\033[37m|____|_/"
+				);
+
+			}
+
+		}
+		if (rotation==24) {
+			printf("\033[1;40;37m");
+
+			if (thrusting) {
+				printf(
+				"\033[7;38H\033[33m__\033[37m"
+				"\033[8;38H\033[33m\\\033[36m/|\033[37m/\\"
+				);
+			}
+			else {
+				printf(
+				"\033[8;38H \033[36m/|\033[37m/\\"
+				);
+			}
+			printf(
+				"\033[9;38H\033[36m'-\033[37m/  \\"
+				"\033[10;40H\\   \\"
+				"\033[11;41H\\ \033[41m \033[40m/|"
+				"\033[12;42H\\/\033[36mo\033[37m/"
+				"\033[13;43H-/"
+			);
+		}
+		if (rotation==32) {
+			printf("\033[1;40;37m");
+			if (thrusting) {
+				printf("\033[7;39H\033[33m/\033[31m|\033[33m\\");
+			}
+			printf(
+				"\033[8;39H\033[36m\\-/\033[37m"
+				"\033[9;38H|   |"
+				"\033[10;38H| \033[41m \033[40m |"
+				"\033[11;38H\\---/"
+				"\033[12;39H\\\033[36mo\033[37m/"
+				"\033[13;40H-"
+				);
+		}
+		if (rotation==40) {
+			printf("\033[1;40;37m");
+			if (thrusting) {
+				printf(
+				"\033[7;44H\033[33m__\033[37m"
+				"\033[8;41H/\\\033[36m|\\\033[33m/\033[36m"
+				);
+			}
+			else {
+				printf(
+				"\033[8;41H/\\\033[36m|\\\033[37m"
+				);
+			}
+			printf(
+				"\033[9;40H/  \\\033[36m-'\033[37m"
+				"\033[10;39H/   /"
+				"\033[11;38H|\\\033[41m \033[40m /"
+				"\033[12;38H\\\033[36mo\033[37m\\/"
+				"\033[13;39H\\-"
+			);
+		}
+
+		if (rotation==48) {
+			printf("\033[1;40;37m");
+			if (thrusting) {
+				printf(
+					"\033[8;35H_ ____  \033[36m_\033[37m"
+					"\033[9;34H/ |    |\033[36m- |\033[33m-\033[37m"
+					"\033[10;33H|\033[36mo\033[37m |\033[41m \033[40m   |  \033[36m|\033[31m-\033[33m-\033[37m"
+					"\033[11;34H\\_|____|\033[36m-_|\033[33m-\033[37m"
+				);
+			}
+			else {
+				printf(
+					"\033[8;35H_ ____  \033[36m_\033[37m"
+					"\033[9;34H/ |    |\033[36m- |\033[36m"
+					"\033[10;33H|\033[36mo\033[37m |\033[41m \033[40m   |  \033[36m|\033[37m"
+					"\033[11;34H\\_|____|\033[36m-_|\033[37m"
 				);
 			}
 		}
@@ -125,17 +191,26 @@ static void draw_ship(int stage, int thrusting, int rotation) {
 			printf("\033[1;40;37m");
 			printf(
 				"\033[7;37H_"
-				"\033[8;36H/o/\\"
-				"\033[9;36H|/R \\"
+				"\033[8;36H/\033[36mo\033[37m/\\"
+				"\033[9;36H|/\033[41m \033[40m \\"
 				"\033[10;37H\\   \\"
-				"\033[11;38H\\  /_"
-				"\033[12;39H\\/|/\\"
-				"\033[13;41H--"
+				"\033[11;38H\\  /\033[36m_\033[37m"
+			);
+			if (thrusting) {
+				printf(
+				"\033[12;39H\\/\033[36m|/\033[33m\\\033[37m"
+				"\033[13;42H\033[33m--\033[37m"
 				);
+			}
+			else {
+				printf(
+				"\033[12;39H\\/\033[36m|/\033[37m"
+				);
+			}
 
 		}
 
-	}
+//	}
 
 #if 0
       40,10=middle, so want 40,7
@@ -149,24 +224,6 @@ _______________
       \|/      |
 ---------------|
 _______________
-               |
-   _ ____  _   |
-  - |    |- |- |
- |O |R   |  |--|
-  -_|____|-_|- |
-               |
-               |
----------------|
-_______________
-               |
-   _ ____  _   |
-  - |    |- |- |
- |O |R   |  |--|
-  -_|____|-_|- |
-               |
-               |
----------------|
-_______________
      _         |
     /o/\       |
     |/R \      |
@@ -174,6 +231,57 @@ _______________
       \  /_    |
        \/|/\   |
           --   |
+---------------|
+
+_______________
+               |
+   _ ____  _   |
+  / |    |- |- |
+ |O |R   |  |--|
+  \_|____|-_|- |
+               |
+               |
+---------------|
+
+_______________
+          __   |
+       /\|\/   |
+      /  \-'   |'
+     /   /     |
+    |\R /      |
+    \o\/       |
+     \-        |
+_______________
+
+
+_______________
+      /|\      |
+      \-/      |
+     |---|     |
+     | R |     |
+     \---/     |
+      \O/      |
+       -       |
+_______________
+
+_______________
+  __           |
+  \/|/\        |
+  '-/  \       |'
+    \   \      |
+     \ R/|     |
+      \/o/     |
+       -/      |
+_______________
+
+_______________
+               |
+   _  ____ _   |
+ -| -|    | \  |
+--|  |   R| O| |
+ -|_-|____|_/  |
+               |
+               |
 ---------------|
 _______________
          _     |
@@ -201,6 +309,142 @@ _______________
 #endif
 }
 
+
+static void draw_parachutes(void) {
+
+	printf(
+		"\033[3;39H\033[41m   "
+		"\033[4;34H  \033[47m   \033[41m   \033[47m   \033[41m  "
+		"\033[5;33H  \033[47m   \033[41m     \033[47m   \033[41m  "
+		"\033[40m"
+		"\033[6;34H\\\033[6;46H/"
+		"\033[7;35H\\\033[7;45H/"
+		"\033[8;36H\\\033[8;44H/"
+		"\033[9;37H\\\033[9;43H/"
+	);
+
+}
+
+static void draw_horizon(int height,int erase) {
+
+	printf("\033[%d;1H",10+height);
+	if (erase) {
+		printf("                                                                       ");
+	}
+	else {
+		printf("\033[32m-----------------------------------------------------------------------\033[37m");
+	}
+}
+
+static void draw_gantry(void) {
+	printf(
+		"\033[31m"
+		"\033[7;33H_____ "
+		"\033[8;33H||"
+		"\033[9;33H||"
+		"\033[10;33H||=="
+		"\033[11;33H||"
+		"\033[12;33H||"
+		"\033[37m"
+	);
+
+}
+
+static void draw_astronaut(void) {
+
+	printf(
+		"\033[42m"
+		"\033[15;74H     "
+		"\033[16;74H     "
+		"\033[17;74H \033[47;30mO\033[42m \033[47mO\033[42m "
+		"\033[18;74H     "
+		"\033[19;74H --- "
+		"\033[20;74H     "
+		"\033[40;37m"
+	);
+}
+
+static void switch_to_surface(void) {
+	home();
+	/* mostly just draw kerbal blank */
+	draw_astronaut();
+}
+
+static void switch_to_orbit(void) {
+
+	int s;
+
+	home();
+
+	for(s=0;s<30;s++) {
+		printf("\033[%d;%dH.",(rand()%20)+1,(rand()%80)+1);
+	}
+	printf("\033[19;20H\033[44m                                        ");
+	printf("\033[20;10H                    \033[42m                    \033[47m                    ");
+	printf("\033[40m");
+
+	draw_astronaut();
+}
+
+#define FACE_NEUTRAL	0
+#define FACE_SCREAM	1
+#define FACE_SMILE	2
+#define FACE_FROWN	3
+
+static void update_mouth(int type) {
+
+	switch(type) {
+		case FACE_SCREAM:
+				printf(
+					"\033[30;42m"
+					"\033[18;74H     "
+					"\033[19;74H  O  "
+					"\033[37;40m"
+					);
+				break;
+		case FACE_SMILE:
+				printf(
+					"\033[30;42m"
+					"\033[18;74H     "
+					"\033[19;74H \\_/ "
+					"\033[37;40m"
+					);
+				break;
+		case FACE_FROWN:
+				printf(
+					"\033[30;42m"
+					"\033[18;74H  _  "
+					"\033[19;74H / \\ "
+					"\033[37;40m"
+					);
+				break;
+		case FACE_NEUTRAL:
+		default:
+				printf(
+					"\033[30;42m"
+					"\033[18;74H     "
+					"\033[19;74H --- "
+					"\033[37;40m"
+					);
+				break;
+	}
+}
+
+static void adjust_eyes(void) {
+
+	int r;
+
+	r=rand()%4;
+
+	printf("\033[30;42m\033[17;74H");
+	switch(r) {
+		case 0: printf(" \033[47mO\033[42m \033[47mO\033[42m "); break;
+		case 1: printf(" \033[47mo\033[42m \033[47mO\033[42m "); break;
+		case 2: printf(" \033[47mO\033[42m \033[47mo\033[42m "); break;
+		case 3: printf(" \033[47mo\033[42m \033[47mo\033[42m "); break;
+	}
+	printf("\033[37;40m");
+}
 
 int main(int argc, char **argv) {
 
@@ -247,10 +491,11 @@ int main(int argc, char **argv) {
 
 	double time=0.0;		/* s */
 	double deltat=1.0;
+	double eye_count=0.0;
 
 	int bingo_fuel=0;
 	double max_altitude=0.0;
-	double height=0.0;
+	int height=0;
 
 	/* atmospheric pressure */
 	double pressure=101325;		/* Pascals */
@@ -265,7 +510,7 @@ int main(int argc, char **argv) {
 	int parachutes_deployed=0;
 	int parachutes=3;
 	double terminal_velocity=0.0;
-	double adjusted_altitude;
+	double adjusted_altitude=0.0;
 
 	int launched=1;
 	int landed=0;
@@ -353,9 +598,9 @@ int main(int argc, char **argv) {
 	home();
 	/* init_graphics() */
 	height=0;
-	/* draw_launchpad() */
-	/* draw_horizon() */
-	/* draw_gantry() */
+	switch_to_surface();
+	draw_horizon(height,0);
+	draw_gantry();
 	draw_ship(stage,thrusting,rotation);
 
 	/* Main Loop */
@@ -369,21 +614,6 @@ int main(int argc, char **argv) {
 		adjusted_altitude=rocket_altitude-KERBIN_RADIUS;
 		if (adjusted_altitude>max_altitude) max_altitude=adjusted_altitude;
 
-		/* 4004 */
-		if (!orbit_map_view) {
-			/* draw horizon if necessary */
-			if (adjusted_altitude<1800) {
-				/* draw_horizon() */
-			}
-			/* 4012 */
-			/* check to see if need to change mode */
-			if ((adjusted_altitude<40000) && (current_quadrant!=0)) {
-				/* switch_to_surface() */
-			}
-			if ((adjusted_altitude>40000) && (current_quadrant!=1)) {
-				/* switch_to_orbit() */
-			}
-		}
 
 		/* 4018 */
 		fuel_left=fuel_mass[stage]*100.0/stage_fuel_total[stage];
@@ -526,7 +756,7 @@ after_physics:
 		/* 5032 */
 		htabvtab(1,21);
 
-		printf("Time: %.1lfs\tStage: %d\t\t%s\n",time,3-stage,"Zurgtroyd");
+		printf("Time: %.1lfs\tStage: %d\t\t\t\t\t     %s\n",time,3-stage,"Zurgtroyd");
 		printf("ALT: %lf km\tAngle=%.1lf\n",(rocket_altitude-KERBIN_RADIUS)/1000.0,
 				angle*(180.0/PI));
 		printf("VEL: %.0lf m/s (%.0lfx %.0lfy %.0lftv)\tFuel: %.1lf%%\n",
@@ -564,7 +794,7 @@ after_physics:
 		}
 
 		/* 5555 */
-		/* if (!orbit_map_view) erase_old_ship() */
+		if (!orbit_map_view) erase_old_ship();
 
 		/* 6060 */
 		if (input=='q') {
@@ -621,7 +851,6 @@ after_physics:
 				stage--;
 				if ((stage<1) && (parachutes>0) && (!parachutes_deployed)) {
 					parachutes_deployed=1;
-					/* draw_parachutes() */
 				}
 				if (stage<0) stage=0;
 
@@ -632,7 +861,8 @@ after_physics:
 				/* noise() */
 				thrusting=1;
 				launched=1;
-				/* make_astronaut_smile() */
+				update_mouth(FACE_SMILE);
+
 			}
 		}
 
@@ -642,21 +872,55 @@ after_physics:
 		if (rotation==64) rotation=0;
 		if (rotation==-8) rotation=56;
 
+		/* 4004 */
 		if (!orbit_map_view) {
-			htabvtab(30,19);
-			if ((angle>90) && (angle<270)) printf("SCREAM");
-			else if (rocket_velocity_y>100) printf("SMILE");
-			else if (rocket_acceleration_y<0) printf("FROWN");
-			else printf("NEUTRAL");
+			/* draw horizon if necessary */
+			if (adjusted_altitude<1800) {
+				draw_horizon(height,1);
+				height=adjusted_altitude/180;
+				draw_horizon(height,0);
+			}
+			/* 4012 */
+			/* check to see if need to change mode */
+			if ((adjusted_altitude<40000) && (current_quadrant!=0)) {
+				switch_to_surface();
+				current_quadrant=0;
+			}
+			if ((adjusted_altitude>40000) && (current_quadrant!=1)) {
+				switch_to_orbit();
+				current_quadrant=1;
+			}
 		}
+
+		/* Update kerbal expression */
+		if (!orbit_map_view) {
+			if ((angle>90) && (angle<270)) {
+				update_mouth(FACE_SCREAM);
+			}
+			else if (rocket_velocity_y>100) {
+				update_mouth(FACE_SMILE);
+			}
+			else if (rocket_acceleration_y<0) {
+				update_mouth(FACE_FROWN);
+			}
+			else {
+				update_mouth(FACE_NEUTRAL);
+			}
+		}
+
 
 		/* 6090 */
 		/* re-draw ship */
+		if (parachutes_deployed) draw_parachutes();
 		draw_ship(stage,thrusting,rotation);
 
 		/* 6118 */
 		time+=deltat;
-		/* adjust_eyes() */
+		eye_count+=deltat;
+		if ((!orbit_map_view) && (eye_count>30.0)) {
+			eye_count=0;
+			adjust_eyes();
+		}
 
 //		if (log_step==0) {
 		if (0==0) {
@@ -682,10 +946,8 @@ after_physics:
 	if (logfile) fclose(logfile);
 	if (vlogfile) fclose(vlogfile);
 
-	(void)height;
 	(void)max_altitude;
-	(void)bingo_fuel;
-	(void)current_quadrant;
+	(void)landed;
 
 	return 0;
 }
