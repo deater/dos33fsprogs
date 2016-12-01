@@ -25,15 +25,15 @@
 110 POKE 43367,3: REM 8kB RX buffer
 115 POKE 43367,3: REM 8kB TX buffer
 
-START:
-/* sets TCP mode */
-Sn_MR = 0x01;
-/* sets source port number */
-Sn_PORT = source_port;
-/* sets OPEN command */
-Sn_CR = OPEN;
-if (Sn_SR != SOCK_INIT) Sn_CR = CLOSE; goto START;
-}
-{
-If (Sn_SR == SOCK_ESTABLISHED) goto ESTABLISHED stage;
+'START:
+'/* sets TCP mode */
+'Sn_MR = 0x01;
+'/* sets source port number */
+'Sn_PORT = source_port;
+'/* sets OPEN command */
+'Sn_CR = OPEN;
+'if (Sn_SR != SOCK_INIT) Sn_CR = CLOSE; goto START;
+'}
+'{
+'If (Sn_SR == SOCK_ESTABLISHED) goto ESTABLISHED stage;
 
