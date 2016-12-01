@@ -66,6 +66,39 @@
 ;   W    = Which astronaut
 ;   X/Y  = temp X/Y
 ;   ZX/ZY= Vx0 and Vy0
+
+.define EQU =
+
+LOCATE_FILEM_PARAM EQU $3DC
+LOCATE_RWTS_PARAM  EQU $3E3
+FILEMANAGER        EQU $3D6
+
+; Zero Page
+
+;; For the disk-read code
+RWTSH     EQU $F1
+RWTSL     EQU $F0
+DOSBUFH   EQU $EF
+DOSBUFL   EQU $EE
+FILEMH    EQU $ED
+FILEML    EQU $EC
+
+;; DOS Constants
+OPEN     EQU $01
+CLOSE    EQU $02
+READ     EQU $03
+WRITE    EQU $04
+DELETE   EQU $05
+CATALOG  EQU $06
+LOCK     EQU $07
+UNLOCK   EQU $08
+RENAME   EQU $09
+POSITION EQU $0A
+INIT     EQU $0B
+VERIFY   EQU $0C
+
+
+
 ;
 ; Clear screen
 ;  10  HOME:HGR:D$=CHR$(4)
@@ -491,38 +524,45 @@
 ;9320 GOTO 9010
 
 BLOAD:
-	jsr	find_free_dos_buffer
-	rts
+	jsr	LOCATE_FILEM_PARAM	; load file manager param list
+					; Y=low, A=high
 
-	; See Beneath Apple DOS
-find_free_dos_buffer:
-	lda	$3D2		; dos load point
-	sta	$1
-	ldy	#0
-	sty	$0
-gbuf0:
-	lda	($0),Y
-	pha
+	sta	FILEMH			; store pointer in page0
+	sty	FILEML
+
+	ldy	#7			; file type in offset 7
+	lda	#4			; binary file
+	sta	(FILEML),y
+
+	iny				; filename pointer in offset 8
+	lda	#<filename
+	sta	(FILEML),y
+	lda	#>filename
 	iny
-	lda	($0),Y
-	sta	$1
-	pla
-	sta	$0
-	bne	gbuf		; got one
-	lda	$1
-	beq	nbuf		; no buffers
-gbuf:
-	ldy	#0		; get filename
-	lda	($0),Y
-	beq	gotbuf		; it's free
-	ldy	#36		; it's not free
-	bne	gbuf0		; get next buffer
-gotbuf:
-	clc			; indicate got buffer
-	rts
-nbuf:
-	sec			; indicate not free
-	rts
+	sta	(FILEML),y
+
+	ldx	#1			; open existing file
+
+	jsr 	open
+
+	jsr	read
+
+	jsr	close
+
+open:
+read:
+close:
 
 
-	
+; --- string with high-bit set, null-terminated
+.macro  aschiz  str
+	.repeat .strlen (str), c
+		.byte   .strat (str, c) | $80
+	.endrep
+	.byte   0
+.endmacro
+
+.data
+filename: aschiz "LOADING.HGR                  "
+
+
