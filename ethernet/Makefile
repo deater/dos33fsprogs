@@ -13,9 +13,12 @@ WEBSERVER.BAS:	webserver.bas
 
 
 ethernet.dsk:	SETUP.BAS \
-		WEBSERVER.BAS
+		WEBSERVER.BAS \
+		R.TXT
 	$(DOS33) -y ethernet.dsk SAVE A SETUP.BAS
 	$(DOS33) -y ethernet.dsk SAVE A WEBSERVER.BAS
+	$(DOS33) -y ethernet.dsk SAVE T R.TXT
+
 
 clean:	
 	rm -f *~ *.BAS
