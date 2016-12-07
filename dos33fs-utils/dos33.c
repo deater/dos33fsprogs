@@ -13,30 +13,30 @@
 static unsigned char sector_buffer[BYTES_PER_SECTOR];
 
 static int ones_lookup[16]={
-  /* 0x0 = 0000 */ 0,
-  /* 0x1 = 0001 */ 1,
-  /* 0x2 = 0010 */ 1,
-  /* 0x3 = 0011 */ 2,
-  /* 0x4 = 0100 */ 1,
-  /* 0x5 = 0101 */ 2,
-  /* 0x6 = 0110 */ 2,
-  /* 0x7 = 0111 */ 3,
-  /* 0x8 = 1000 */ 1,
-  /* 0x9 = 1001 */ 2,
-  /* 0xA = 1010 */ 2,
-  /* 0xB = 1011 */ 3,
-  /* 0xC = 1100 */ 2,
-  /* 0xd = 1101 */ 3,
-  /* 0xe = 1110 */ 3,
-  /* 0xf = 1111 */ 4,
+	/* 0x0 = 0000 */ 0,
+	/* 0x1 = 0001 */ 1,
+	/* 0x2 = 0010 */ 1,
+	/* 0x3 = 0011 */ 2,
+	/* 0x4 = 0100 */ 1,
+	/* 0x5 = 0101 */ 2,
+	/* 0x6 = 0110 */ 2,
+	/* 0x7 = 0111 */ 3,
+	/* 0x8 = 1000 */ 1,
+	/* 0x9 = 1001 */ 2,
+	/* 0xA = 1010 */ 2,
+	/* 0xB = 1011 */ 3,
+	/* 0xC = 1100 */ 2,
+	/* 0xd = 1101 */ 3,
+	/* 0xe = 1110 */ 3,
+	/* 0xf = 1111 */ 4,
 };
 
 static unsigned char get_high_byte(int value) {
-  return (value>>8)&0xff;
+	return (value>>8)&0xff;
 }
 
 static unsigned char get_low_byte(int value) {
-  return (value&0xff);
+	return (value&0xff);
 }
 
 
@@ -44,49 +44,49 @@ static unsigned char get_low_byte(int value) {
 #define FILE_DELETED 1
 
 static unsigned char dos33_file_type(int value) {
- 
-    unsigned char result;
-   
-    switch(value&0x7f){ 
-       case 0x0: result='T'; break;
-       case 0x1: result='I'; break;
-       case 0x2: result='A'; break;
-       case 0x4: result='B'; break;
-       case 0x8: result='S'; break;
-       case 0x10: result='R'; break;
-       case 0x20: result='N'; break;
-       case 0x40: result='L'; break;
-       default: result='?'; break;
-    }
-    return result;
+
+	unsigned char result;
+
+	switch(value&0x7f) {
+		case 0x0: result='T'; break;
+		case 0x1: result='I'; break;
+		case 0x2: result='A'; break;
+		case 0x4: result='B'; break;
+		case 0x8: result='S'; break;
+		case 0x10: result='R'; break;
+		case 0x20: result='N'; break;
+		case 0x40: result='L'; break;
+		default: result='?'; break;
+	}
+	return result;
 }
 
 
 static unsigned char dos33_char_to_type(char type,int lock) {
- 
-    unsigned char result,temp_type;
-    
-    temp_type=type;
-       /* Covert to upper case */
-    if (temp_type>='a') temp_type=temp_type-0x20;
-   
-    switch(temp_type) {    
-       case 'T': result=0x0; break;
-       case 'I': result=0x1; break;
-       case 'A': result=0x2; break;
-       case 'B': result=0x4; break;
-       case 'S': result=0x8; break;
-       case 'R': result=0x10; break;
-       case 'N': result=0x20; break;
-       case 'L': result=0x40; break;
-       default: result=0x0;
-    }
-    if (lock) result|=0x80;
-    return result;
+
+	unsigned char result,temp_type;
+
+	temp_type=type;
+	/* Covert to upper case */
+	if (temp_type>='a') temp_type=temp_type-0x20;
+
+	switch(temp_type) {
+		case 'T': result=0x0; break;
+		case 'I': result=0x1; break;
+		case 'A': result=0x2; break;
+		case 'B': result=0x4; break;
+		case 'S': result=0x8; break;
+		case 'R': result=0x10; break;
+		case 'N': result=0x20; break;
+		case 'L': result=0x40; break;
+		default: result=0x0;
+	}
+	if (lock) result|=0x80;
+	return result;
 }
 
-    /* dos33 filenames have top bit set on ascii chars */
-    /* and are padded with spaces */
+	/* dos33 filenames have top bit set on ascii chars */
+	/* and are padded with spaces */
 static char *dos33_filename_to_ascii(char *dest,unsigned char *src,int len) {
    
     int i=0,last_nonspace=0;
@@ -1534,24 +1534,20 @@ int main(int argc, char **argv) {
             if (catalog_entry<0) {
 	       fprintf(stderr,
 		       "Warning!  File %s does not exist\n",argv[firstarg+2]);
-	    }
-       
-            dos33_rename_hello(dos_fd,argv[firstarg+2]);
-       
-            break;
-     case COMMAND_INIT:
-          /* use common code from mkdos33fs? */
-     case COMMAND_COPY:
-          /* use temp file?  Walking a sector at a time seems a pain */
-     default:
-       fprintf(stderr,"Sorry, unsupported command\n");
-       goto exit_and_close;
-    }
+			}
+			dos33_rename_hello(dos_fd,argv[firstarg+2]);
+			break;
+		case COMMAND_INIT:
+		/* use common code from mkdos33fs? */
+		case COMMAND_COPY:
+		/* use temp file?  Walking a sector at a time seems a pain */
+		default:
+			fprintf(stderr,"Sorry, unsupported command\n");
+			goto exit_and_close;
+	}
 
-   
 exit_and_close:
-    close(dos_fd);
+	close(dos_fd);
 exit_program:
-   
-    return 0;  
+	return 0;
 }
