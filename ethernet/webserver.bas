@@ -84,7 +84,7 @@
 840 GOTO 800
 '
 900 POKE HA,4: POKE LA,40: REM *** 0x428 Received ptr
-905 OL=PEEK(DP):OH=PEEK(DP)
+905 OH=PEEK(DP):OL=PEEK(DP)
 910 RO=(OH*256)+OL
 920 REM *** SHOULD MASK WITH 0x1ff but how?
 930 RA=RO+24576:REM $6000
@@ -100,8 +100,40 @@
 ' TODO: handle wraparound of 8kb buffer
 '
 1100 REM *** Update read pointer
+'"HTTP/1.1 200 OK\r\n"
+'"Date: %s\r\n"
+'"Server: VMW-web\r\n"
+'"Last-Modified: %s\r\n"
+'"Content-Length: %ld\r\n"
+'"Content-Type: %s\r\n"
+'"\r\n",
 1200 REM *** SEND RESPONSE
-2000 REM *** CLOSE
-
-
-
+1205 A$="HTTP/1.1 200 OK"+CHR$(13)+CHR$(10)
+1210 A$=A$+"Server: VMW-web"+CHR$(13)+CHR$(10)
+1220 A$=A$+"Content-Length: 58"+CHR$(13)+CHR$(10)
+1230 A$=A$+"Content-Type: text/html"+CHR$(13)+CHR$(10)
+1250 A$=A$+CHR$(13)+CHR$(10)
+1260 A$=A$+"<html><head>test</head><body><h3>Apple2 Test</h3></html>"
+1270 A$=A$+CHR$(13)+CHR$(10)
+1280 PRINT "SENDING:":PRINT A$
+' TODO: read TX free size reg (0x420)
+1900 POKE HA,4: POKE LA,34: REM *** 0x422 TX read ptr
+1905 OH=PEEK(DP):OL=PEEK(DP)
+1910 TF=(OH*256)+OL
+1920 REM *** SHOULD MASK WITH 0x1ff
+1925 T=TF/8192:TF=TF-(8192*T)
+1930 TA=TF+16384:REM $4000
+1935 SI=LEN(A$)
+1940 PRINT "TX OFFSET=";TF;" TX ADDRESS=";TA;" TX SIZE=";SI
+2005 POKE HA,TA/256: POKE LA,TA-((TA/256)*256)
+2010 FOR I=1 TO SI
+2020 POKE DP,ASC(MID$(A$,I,1))
+2040 NEXT I
+2050 REM ** UPDATE TX WRITE PTR
+2060 POKE HA,4: POKE LA,36: REM *** 0x424 TX write ptr
+2075 TA=TA+SI
+2085 POKE HA,TA/256: POKE LA,TA-((TA/256)*256)
+2100 REM *** SEND
+2105 POKE HA,4: POKE LA,1: REM *** 0x401 command register
+2110 POKE DP, 32: REM *** SEND
+5000 REM *** CLOSE
