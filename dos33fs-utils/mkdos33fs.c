@@ -148,72 +148,69 @@ int main(int argc, char **argv) {
 
        /* clear buffer */
     for(i=0;i<block_size;i++) buffer[i]=0;
-   
-       /* Create VTOC */
-    buffer[VTOC_DOS_RELEASE]=0x3;      /* fake dos 3.3 */
-    buffer[VTOC_CATALOG_T]=17;
-    buffer[VTOC_CATALOG_S]=1;          /* 1st Catalog typically at 0x11/0x1 */
-    buffer[VTOC_DISK_VOLUME]=254;      /* typical volume 254 */
-    buffer[VTOC_MAX_TS_PAIRS]=((block_size-0xc)/2)&0xff;
-                                       /* Number of T/S pairs fitting */
-                                       /* in a T/S list sector */
-                                       /* Note, overflows if block_size>524 */
-    buffer[VTOC_LAST_ALLOC_T]=18;      /* last track space was allocated */
-                                       /* Start at middle, work way out  */
-    buffer[VTOC_ALLOC_DIRECT]=1;          /* Working our way outward */
-    buffer[VTOC_NUM_TRACKS]=num_tracks;
-    buffer[VTOC_S_PER_TRACK]=num_sectors;
-    buffer[VTOC_BYTES_PER_SL]=block_size&0xff;
-    buffer[VTOC_BYTES_PER_SH]=(block_size>>8)&0xff;
-    
-       /* Set sector bitmap so whole disk is free */
-    for(i=VTOC_FREE_BITMAPS;i<block_size;i+=4) {
-       buffer[i]=0xff;
-       buffer[i+1]=0xff;
-       if (num_sectors>16) {
-          buffer[i+2]=0xff;
-          buffer[i+3]=0xff;
-       }
-    }
 
-          /* reserve track 0 */
-          /* No user data can be stored here as track=0 is special case */
-          /* end of file indicator */
-    buffer[VTOC_FREE_BITMAPS]=0x00;
-    buffer[VTOC_FREE_BITMAPS+1]=0x00;
-    buffer[VTOC_FREE_BITMAPS+2]=0x00;
-    buffer[VTOC_FREE_BITMAPS+3]=0x00;
+	/* Create VTOC */
+	buffer[VTOC_DOS_RELEASE]=0x3;	/* fake dos 3.3 */
+	buffer[VTOC_CATALOG_T]=0x11;
+	buffer[VTOC_CATALOG_S]=0xf;	/* 1st Catalog typically at 0x11/0xf */
+	buffer[VTOC_DISK_VOLUME]=254;	/* typical volume 254 */
+	buffer[VTOC_MAX_TS_PAIRS]=((block_size-0xc)/2)&0xff;
+					/* Number of T/S pairs fitting */
+					/* in a T/S list sector */
+					/* Note, overflows if block_size>524 */
+	buffer[VTOC_LAST_ALLOC_T]=0x12;	/* last track space was allocated */
+					/* Start at middle, work way out  */
+	buffer[VTOC_ALLOC_DIRECT]=1;	/* Working our way outward */
+	buffer[VTOC_NUM_TRACKS]=num_tracks;
+	buffer[VTOC_S_PER_TRACK]=num_sectors;
+	buffer[VTOC_BYTES_PER_SL]=block_size&0xff;
+	buffer[VTOC_BYTES_PER_SH]=(block_size>>8)&0xff;
 
-          /* if copying dos reserve tracks 1 and 2 as well */
-    if (copy_dos) {
-       buffer[VTOC_FREE_BITMAPS+4]=0x00;
-       buffer[VTOC_FREE_BITMAPS+5]=0x00;
-       buffer[VTOC_FREE_BITMAPS+6]=0x00;
-       buffer[VTOC_FREE_BITMAPS+7]=0x00;
-       buffer[VTOC_FREE_BITMAPS+8]=0x00;
-       buffer[VTOC_FREE_BITMAPS+9]=0x00;
-       buffer[VTOC_FREE_BITMAPS+10]=0x00;
-       buffer[VTOC_FREE_BITMAPS+11]=0x00;
-    }
-   
-          /* reserve track 17 */
-          /* reserved for vtoc and catalog stuff */
-    buffer[VTOC_FREE_BITMAPS+17*4]=0x00;
-    buffer[VTOC_FREE_BITMAPS+17*4+1]=0x00;
-    buffer[VTOC_FREE_BITMAPS+17*4+2]=0x00;
-    buffer[VTOC_FREE_BITMAPS+17*4+3]=0x00;
-   
-       /* Write out VTOC to disk */
-    lseek(fd,((17*num_sectors)+0)*block_size,SEEK_SET);
-    result=write(fd,buffer,block_size);
-   
-    if (result<0) fprintf(stderr,"Error writing!\n");
+	/* Set sector bitmap so whole disk is free */
+	for(i=VTOC_FREE_BITMAPS;i<block_size;i+=4) {
+		buffer[i]=0xff;
+		buffer[i+1]=0xff;
+		if (num_sectors>16) {
+			buffer[i+2]=0xff;
+			buffer[i+3]=0xff;
+		}
+	}
 
+	/* reserve track 0 */
+	/* No user data can be stored here as track=0 is special case */
+	/* end of file indicator */
+	buffer[VTOC_FREE_BITMAPS]=0x00;
+	buffer[VTOC_FREE_BITMAPS+1]=0x00;
+	buffer[VTOC_FREE_BITMAPS+2]=0x00;
+	buffer[VTOC_FREE_BITMAPS+3]=0x00;
 
-   
-    close(fd);
-   
-end_of_program:   
-   
-    return 0;
+	/* if copying dos reserve tracks 1 and 2 as well */
+	if (copy_dos) {
+		buffer[VTOC_FREE_BITMAPS+4]=0x00;
+		buffer[VTOC_FREE_BITMAPS+5]=0x00;
+		buffer[VTOC_FREE_BITMAPS+6]=0x00;
+		buffer[VTOC_FREE_BITMAPS+7]=0x00;
+		buffer[VTOC_FREE_BITMAPS+8]=0x00;
+		buffer[VTOC_FREE_BITMAPS+9]=0x00;
+		buffer[VTOC_FREE_BITMAPS+10]=0x00;
+		buffer[VTOC_FREE_BITMAPS+11]=0x00;
+	}
+
+	/* reserve track 17 (0x11) */
+	/* reserved for vtoc and catalog stuff */
+	buffer[VTOC_FREE_BITMAPS+17*4]=0x00;
+	buffer[VTOC_FREE_BITMAPS+17*4+1]=0x00;
+	buffer[VTOC_FREE_BITMAPS+17*4+2]=0x00;
+	buffer[VTOC_FREE_BITMAPS+17*4+3]=0x00;
+
+	/* Write out VTOC to disk */
+	lseek(fd,((17*num_sectors)+0)*block_size,SEEK_SET);
+	result=write(fd,buffer,block_size);
+
+	if (result<0) fprintf(stderr,"Error writing!\n");
+
+	close(fd);
+
+end_of_program:
+	return 0;
 }
