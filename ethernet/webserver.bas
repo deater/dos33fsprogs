@@ -97,6 +97,10 @@
 1030 IF C<>13 THEN PRINT CHR$(C);
 1040 NEXT I
 '
+' TODO: handle wraparound of 8kb buffer
+'
+1100 REM *** Update read pointer
+1200 REM *** SEND RESPONSE
 2000 REM *** CLOSE
 
 
