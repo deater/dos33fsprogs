@@ -1201,8 +1201,15 @@ static struct command_type {
 };
 
 static int lookup_command(char *name) {
-	int which=COMMAND_UNKNOWN;
 
+	int which=COMMAND_UNKNOWN,i;
+
+	for(i=1;i<MAX_COMMAND;i++) {
+		if(!strncmp(name,commands[i].name,strlen(commands[i].name))) {
+			which=commands[i].type;
+			break;
+		}
+	}
 	return which;
 
 }
@@ -1261,53 +1268,18 @@ int main(int argc, char **argv) {
 		temp_string[i]=toupper(temp_string[i]);
 	}
 
-	if (!strncmp(temp_string,"LOAD",4)) {
-		command=COMMAND_LOAD;
-	}
-	else if (!strncmp(temp_string,"SAVE",4)) {
-		command=COMMAND_SAVE;
-	}
-    else if (!strncmp(temp_string,"CATALOG",7)) {
-       command=COMMAND_CATALOG;
-    }
-    else if (!strncmp(temp_string,"DELETE",6)) {
-       command=COMMAND_DELETE;
-    }
-    else if (!strncmp(temp_string,"UNDELETE",8)) {
-       command=COMMAND_UNDELETE;
-    }
-    else if (!strncmp(temp_string,"LOCK",4)) {
-       command=COMMAND_LOCK;
-    }
-    else if (!strncmp(temp_string,"UNLOCK",6)) {
-       command=COMMAND_UNLOCK;
-    }
-    else if (!strncmp(temp_string,"INIT",4)) {
-       command=COMMAND_INIT;
-    }
-	else if (!strncmp(temp_string,"RENAME",6)) {
-		command=COMMAND_RENAME;
-	}
-	else if (!strncmp(temp_string,"COPY",4)) {
-		command=COMMAND_COPY;
-	}
-	else if (!strncmp(temp_string,"DUMP",4)) {
-		command=COMMAND_DUMP;
-	}
-	else if (!strncmp(temp_string,"HELLO",5)) {
-		command=COMMAND_HELLO;
-	}
-	else {
+	command=lookup_command(temp_string);
+
+	switch(command) {
+
+	case COMMAND_UNKNOWN:
 		display_help(argv[0]);
 		goto exit_program;
-	}
+		break;
 
-
-   
-    switch(command) {
-            /* Load a file from disk image to local machine */
-       case COMMAND_LOAD:
-               /* check and make sure we have apple_filename */
+	/* Load a file from disk image to local machine */
+	case COMMAND_LOAD:
+		/* check and make sure we have apple_filename */
             if (argc<4+extra_ops) {
 	       fprintf(stderr,"Error! Need apple file_name\n");
 	       fprintf(stderr,"%s %s LOAD apple_filename\n",argv[0],image);
@@ -1320,7 +1292,7 @@ int main(int argc, char **argv) {
 	    }
             strncpy(apple_filename,argv[firstarg+2],30);
 	    apple_filename[30]='\0';
-		
+
                /* get output filename */
             if (argc==5+extra_ops) {
 	       strncpy(output_filename,argv[firstarg+3],BUFSIZ);
@@ -1328,7 +1300,7 @@ int main(int argc, char **argv) {
             else {
 	       strncpy(output_filename,apple_filename,30);
 	    }
-       
+
                /* get the entry/track/sector for file */
             catalog_entry=dos33_check_file_exists(dos_fd,
 					    apple_filename,
