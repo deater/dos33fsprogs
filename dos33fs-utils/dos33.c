@@ -990,71 +990,81 @@ static int dump_sector(void) {
     return 0;
 }
 
-   
-
 
 static int dos33_dump(int fd) {
-   
-    int num_tracks,catalog_t,catalog_s,file,ts_t,ts_s,ts_total,track,sector;
-    int i,j;
-    int deleted=0;
-    char temp_string[BUFSIZ];
-    unsigned char tslist[BYTES_PER_SECTOR];
-    int result;
-   
-    /* Read Track 1 Sector 9 */
-    lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
-    result=read(fd,sector_buffer,BYTES_PER_SECTOR);
 
-    printf("Finding name of startup file, Track 1 Sector 9 offset $75\n");
-    dump_sector();
-    printf("Startup Filename: ");
-    for(i=0;i<30;i++) printf("%c",sector_buffer[0x75+i]&0x7f);						
-    printf("\n");
-   
-    dos33_read_vtoc(fd);
-    
-    printf("\nVTOC Sector:\n");
-    dump_sector();
-   
-    printf("\n\n");
-    printf("VTOC INFORMATION:\n");
-    catalog_t=sector_buffer[VTOC_CATALOG_T];
-    catalog_s=sector_buffer[VTOC_CATALOG_S];
-    printf("\tFirst Catalog = %02X/%02X\n",catalog_t,catalog_s);
-    printf("\tDOS RELEASE = 3.%i\n",sector_buffer[VTOC_DOS_RELEASE]);
-    printf("\tDISK VOLUME = %i\n",sector_buffer[VTOC_DISK_VOLUME]);
-    ts_total=sector_buffer[VTOC_MAX_TS_PAIRS];
-    printf("\tT/S pairs that will fit in T/S List = %i\n",ts_total);
-	                          
-    printf("\tLast track where sectors were allocated = $%02X\n",
-	                          sector_buffer[VTOC_LAST_ALLOC_T]);
-    printf("\tDirection of track allocation = %i\n",
-	                          sector_buffer[VTOC_ALLOC_DIRECT]);
-   
-    num_tracks=sector_buffer[VTOC_NUM_TRACKS];
-    printf("\tNumber of tracks per disk = %i\n",num_tracks);
-    printf("\tNumber of sectors per track = %i\n",
-	                          sector_buffer[VTOC_S_PER_TRACK]);
-    printf("\tNumber of bytes per sector = %i\n",
-	        (sector_buffer[VTOC_BYTES_PER_SH]<<8)+sector_buffer[VTOC_BYTES_PER_SL]);
-    
-    printf("\nFree sector bitmap:\n");
-    printf("\tTrack  FEDCBA98 76543210\n");
-    for(i=0;i<num_tracks;i++) {
-       printf("\t $%02X:  ",i);
-       for(j=0;j<8;j++) { 
-	  if ((sector_buffer[VTOC_FREE_BITMAPS+(i*4)]<<j)&0x80) printf("."); 
-          else printf("U");
-       }
-       printf(" ");
-       for(j=0;j<8;j++) { 
-	  if ((sector_buffer[VTOC_FREE_BITMAPS+(i*4)+1]<<j)&0x80) printf("."); 
-          else printf("U");
-       }
-       
-       printf("\n");
-    }
+	int num_tracks,catalog_t,catalog_s,file,ts_t,ts_s,ts_total;
+	int track,sector;
+	int i,j;
+	int deleted=0;
+	char temp_string[BUFSIZ];
+	unsigned char tslist[BYTES_PER_SECTOR];
+	int result;
+
+	/* Read Track 1 Sector 9 */
+	lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
+	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+
+	printf("Finding name of startup file, Track 1 Sector 9 offset $75\n");
+	dump_sector();
+
+	printf("Startup Filename: ");
+	for(i=0;i<30;i++) {
+		printf("%c",sector_buffer[0x75+i]&0x7f);
+	}
+	printf("\n");
+
+	dos33_read_vtoc(fd);
+
+	printf("\nVTOC Sector:\n");
+	dump_sector();
+
+	printf("\n\n");
+	printf("VTOC INFORMATION:\n");
+	catalog_t=sector_buffer[VTOC_CATALOG_T];
+	catalog_s=sector_buffer[VTOC_CATALOG_S];
+	printf("\tFirst Catalog = %02X/%02X\n",catalog_t,catalog_s);
+	printf("\tDOS RELEASE = 3.%i\n",sector_buffer[VTOC_DOS_RELEASE]);
+	printf("\tDISK VOLUME = %i\n",sector_buffer[VTOC_DISK_VOLUME]);
+	ts_total=sector_buffer[VTOC_MAX_TS_PAIRS];
+	printf("\tT/S pairs that will fit in T/S List = %i\n",ts_total);
+
+	printf("\tLast track where sectors were allocated = $%02X\n",
+		sector_buffer[VTOC_LAST_ALLOC_T]);
+	printf("\tDirection of track allocation = %i\n",
+		sector_buffer[VTOC_ALLOC_DIRECT]);
+
+	num_tracks=sector_buffer[VTOC_NUM_TRACKS];
+	printf("\tNumber of tracks per disk = %i\n",num_tracks);
+	printf("\tNumber of sectors per track = %i\n",
+		sector_buffer[VTOC_S_PER_TRACK]);
+	printf("\tNumber of bytes per sector = %i\n",
+		(sector_buffer[VTOC_BYTES_PER_SH]<<8)+
+		sector_buffer[VTOC_BYTES_PER_SL]);
+
+	printf("\nFree sector bitmap:\n");
+	printf("\tTrack  FEDCBA98 76543210\n");
+	for(i=0;i<num_tracks;i++) {
+		printf("\t $%02X:  ",i);
+		for(j=0;j<8;j++) {
+			if ((sector_buffer[VTOC_FREE_BITMAPS+(i*4)]<<j)&0x80) {
+				printf(".");
+			}
+			else {
+				printf("U");
+			}
+		}
+		printf(" ");
+		for(j=0;j<8;j++) {
+			if ((sector_buffer[VTOC_FREE_BITMAPS+(i*4)+1]<<j)&0x80) {
+				printf(".");
+			}
+			else {
+				printf("U");
+			}
+		}
+		printf("\n");
+	}
 
 repeat_catalog:
    
@@ -1135,26 +1145,28 @@ continue_dump:;
     return 0;
 }
 
-int dos33_rename_hello(int fd, char *new_name) {
-   char buffer[BYTES_PER_SECTOR];
-   int i;
-   
-   lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
-   read(fd,buffer,BYTES_PER_SECTOR);
-       
-   for(i=0;i<30;i++) {
-      if (i<strlen(new_name)) {
-	 buffer[0x75+i]=new_name[i]|0x80;
-      }
-      else {
-	 buffer[0x75+i]=' '|0x80;
-      }
-   }
-       
-   lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
-   write(fd,buffer,BYTES_PER_SECTOR);       
-   
-   return 0;
+/* ??? */
+static int dos33_rename_hello(int fd, char *new_name) {
+
+	char buffer[BYTES_PER_SECTOR];
+	int i;
+
+	lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
+	read(fd,buffer,BYTES_PER_SECTOR);
+
+	for(i=0;i<30;i++) {
+		if (i<strlen(new_name)) {
+			buffer[0x75+i]=new_name[i]|0x80;
+		}
+		else {
+			buffer[0x75+i]=' '|0x80;
+		}
+	}
+
+	lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
+	write(fd,buffer,BYTES_PER_SECTOR);
+
+	return 0;
 }
 
 static int display_help(char *name) {
@@ -1170,6 +1182,7 @@ static int display_help(char *name) {
 	printf("\tCATALOG\n");
 	printf("\tLOAD     apple_file <local_file>\n");
 	printf("\tSAVE     type local_file <apple_file>\n");
+	printf("\tBSAVE    type local_file <apple_file>\n");
 	printf("\tDELETE   apple_file\n");
 	printf("\tLOCK     apple_file\n");
 	printf("\tUNLOCK   apple_file\n");
@@ -1185,20 +1198,21 @@ static int display_help(char *name) {
 	return 0;
 }
 
-#define COMMAND_UNKNOWN  0
-#define COMMAND_LOAD     1
-#define COMMAND_SAVE     2
-#define COMMAND_CATALOG  3
-#define COMMAND_DELETE   4
+#define COMMAND_UNKNOWN	 0
+#define COMMAND_LOAD	 1
+#define COMMAND_SAVE	 2
+#define COMMAND_CATALOG	 3
+#define COMMAND_DELETE	 4
 #define COMMAND_UNDELETE 5
-#define COMMAND_LOCK     6
-#define COMMAND_UNLOCK   7
-#define COMMAND_INIT     8
-#define COMMAND_RENAME   9
-#define COMMAND_COPY    10
-#define COMMAND_DUMP    11
-#define COMMAND_HELLO   12
-#define MAX_COMMAND	13
+#define COMMAND_LOCK	 6
+#define COMMAND_UNLOCK	 7
+#define COMMAND_INIT	 8
+#define COMMAND_RENAME	 9
+#define COMMAND_COPY	10
+#define COMMAND_DUMP	11
+#define COMMAND_HELLO	12
+#define COMMAND_BSAVE	13
+#define MAX_COMMAND	14
 
 static struct command_type {
 	int type;
@@ -1216,6 +1230,7 @@ static struct command_type {
 	{COMMAND_COPY,"COPY"},
 	{COMMAND_DUMP,"DUMP"},
 	{COMMAND_HELLO,"HELLO"},
+	{COMMAND_BSAVE,"BSAVE"},
 };
 
 static int lookup_command(char *name) {
@@ -1298,39 +1313,41 @@ int main(int argc, char **argv) {
 	/* Load a file from disk image to local machine */
 	case COMMAND_LOAD:
 		/* check and make sure we have apple_filename */
-            if (argc<4+extra_ops) {
-	       fprintf(stderr,"Error! Need apple file_name\n");
-	       fprintf(stderr,"%s %s LOAD apple_filename\n",argv[0],image);
-	       goto exit_and_close;
-	    }
-               /* Truncate filename if too long */
-            if (strlen(argv[firstarg+2])>30) {
-	       fprintf(stderr,"Warning!  Truncating %s to 30 chars\n",
-		      argv[firstarg+2]);
-	    }
-            strncpy(apple_filename,argv[firstarg+2],30);
-	    apple_filename[30]='\0';
+		if (argc<4+extra_ops) {
+			fprintf(stderr,"Error! Need apple file_name\n");
+			fprintf(stderr,"%s %s LOAD apple_filename\n",
+				argv[0],image);
+			goto exit_and_close;
+		}
+		/* Truncate filename if too long */
+		if (strlen(argv[firstarg+2])>30) {
+			fprintf(stderr,"Warning!  Truncating %s to 30 chars\n",
+				argv[firstarg+2]);
+		}
+		strncpy(apple_filename,argv[firstarg+2],30);
+		apple_filename[30]='\0';
 
-               /* get output filename */
-            if (argc==5+extra_ops) {
-	       strncpy(output_filename,argv[firstarg+3],BUFSIZ);
-	    }
-            else {
-	       strncpy(output_filename,apple_filename,30);
-	    }
+		/* get output filename */
+		if (argc==5+extra_ops) {
+			strncpy(output_filename,argv[firstarg+3],BUFSIZ);
+		}
+		else {
+			strncpy(output_filename,apple_filename,30);
+		}
 
-               /* get the entry/track/sector for file */
-            catalog_entry=dos33_check_file_exists(dos_fd,
-					    apple_filename,
-					    FILE_NORMAL);
-            if (catalog_entry<0) {
-	       fprintf(stderr,"Error!  %s not found!\n",apple_filename);
-	       goto exit_and_close;
-	    }
+		/* get the entry/track/sector for file */
+		catalog_entry=dos33_check_file_exists(dos_fd,
+							apple_filename,
+							FILE_NORMAL);
+		if (catalog_entry<0) {
+			fprintf(stderr,"Error!  %s not found!\n",
+				apple_filename);
+			goto exit_and_close;
+		}
 
-            dos33_load_file(dos_fd,catalog_entry,output_filename);
+		dos33_load_file(dos_fd,catalog_entry,output_filename);
 
-            break;
+		break;
 
        case COMMAND_CATALOG:
 
