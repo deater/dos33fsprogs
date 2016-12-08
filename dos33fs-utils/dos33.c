@@ -10,7 +10,7 @@
 
 #include "dos33.h"
 
-static int debug=1;
+static int debug=0;
 
 static unsigned char sector_buffer[BYTES_PER_SECTOR];
 
@@ -195,124 +195,128 @@ catalog_loop:
 
 static int dos33_print_file_info(int fd,int catalog_tsf) {
 
-    int catalog_track,catalog_sector,catalog_file,i;
-    char temp_string[BUFSIZ];
-    int result;
+	int catalog_track,catalog_sector,catalog_file,i;
+	char temp_string[BUFSIZ];
+	int result;
 
-    catalog_file=catalog_tsf>>16;
-    catalog_track=(catalog_tsf>>8)&0xff;
-    catalog_sector=(catalog_tsf&0xff);
+	catalog_file=catalog_tsf>>16;
+	catalog_track=(catalog_tsf>>8)&0xff;
+	catalog_sector=(catalog_tsf&0xff);
 
-       /* Read in Catalog Sector */
-    lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-    result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+	/* Read in Catalog Sector */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
 
-    if (sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TYPE]>0x7f) {
-       printf("*");
-    }
-    else printf(" ");
-   
-    printf("%c",dos33_file_type(sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TYPE]));
-    printf(" ");
-    printf("%.3i ",sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE+FILE_SIZE_L)]+
-	          (sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE+FILE_SIZE_H)]<<8));
-     
+	if (sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TYPE]>0x7f) {
+		printf("*");
+	}
+	else {
+		printf(" ");
+	}
 
-    strncpy(temp_string,
-	    dos33_filename_to_ascii(temp_string,sector_buffer+(CATALOG_FILE_LIST+
-			            (catalog_file*CATALOG_ENTRY_SIZE+FILE_NAME)),30),
-	    BUFSIZ);
+	printf("%c",dos33_file_type(sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TYPE]));
+	printf(" ");
+	printf("%.3i ",sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE+FILE_SIZE_L)]+
+		(sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE+FILE_SIZE_H)]<<8));
 
-    for(i=0;i<strlen(temp_string);i++) {
-       if (temp_string[i]<0x20) printf("^%c",temp_string[i]+0x40);
-       else printf("%c",temp_string[i]);
-    }
-      
-    printf("\n");
+	strncpy(temp_string,
+			dos33_filename_to_ascii(temp_string,sector_buffer+(CATALOG_FILE_LIST+
+			(catalog_file*CATALOG_ENTRY_SIZE+FILE_NAME)),30),
+			BUFSIZ);
 
-    if (result<0) fprintf(stderr,"Error on I/O\n");
-   
-    return 0;
+	for(i=0;i<strlen(temp_string);i++) {
+		if (temp_string[i]<0x20) {
+			printf("^%c",temp_string[i]+0x40);
+		}
+		else {
+			printf("%c",temp_string[i]);
+		}
+	}
+
+	printf("\n");
+
+	if (result<0) fprintf(stderr,"Error on I/O\n");
+
+	return 0;
 }
 
 
-    /* Checks if "filename" exists */
-    /* returns entry/track/sector  */
+	/* Checks if "filename" exists */
+	/* returns entry/track/sector  */
 static int dos33_check_file_exists(int fd,
-				   char *filename,
-				   int file_deleted) {
-    
-    int catalog_track,catalog_sector;
-    int i,file_track;
-    char file_name[31];
-    int result;
- 
-       /* read the VTOC into buffer */
-    dos33_read_vtoc(fd);
-   
-       /* get the catalog track and sector from the VTOC */
-    catalog_track=sector_buffer[VTOC_CATALOG_T];
-    catalog_sector=sector_buffer[VTOC_CATALOG_S];
-    
-repeat_catalog:
-   
-       /* Read in Catalog Sector */
-    lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-    result=read(fd,sector_buffer,BYTES_PER_SECTOR);
-      
-       /* scan all file entries in catalog sector */
-    for(i=0;i<7;i++) {
-       file_track=sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)];
-          /* 0xff means file deleted */
-          /* 0x0 means empty */
-       if (file_track!=0x0) { 
-	  
-	  if (file_track==0xff) {
-	     	  dos33_filename_to_ascii(file_name,
-		sector_buffer+(CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE+FILE_NAME)),29);
-	     
-	     if (file_deleted) {
-		/* return if we found the file */
-	        if (!strncmp(filename,file_name,29)) {
-	 	   return ((i<<16)+(catalog_track<<8)+catalog_sector);
-		}
-	     }
-	  }
-	  else {
-	      dos33_filename_to_ascii(file_name,
-		sector_buffer+(CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE+FILE_NAME)),30);
-	     /* return if we found the file */
-	     if (!strncmp(filename,file_name,30)) {	     	
-	        return ((i<<16)+(catalog_track<<8)+catalog_sector);
-	     }
-	  }
-       }
-    }
-       /* point to next catalog track/sector */
-    catalog_track=sector_buffer[CATALOG_NEXT_T];
-    catalog_sector=sector_buffer[CATALOG_NEXT_S];
-   
-    if (catalog_sector!=0) goto repeat_catalog;
+					char *filename,
+					int file_deleted) {
 
-    if (result<0) fprintf(stderr,"Error on I/O\n");
-    
-    return -1;
+	int catalog_track,catalog_sector;
+	int i,file_track;
+	char file_name[31];
+	int result;
+
+	/* read the VTOC into buffer */
+	dos33_read_vtoc(fd);
+
+	/* get the catalog track and sector from the VTOC */
+	catalog_track=sector_buffer[VTOC_CATALOG_T];
+	catalog_sector=sector_buffer[VTOC_CATALOG_S];
+
+repeat_catalog:
+
+	/* Read in Catalog Sector */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+
+	/* scan all file entries in catalog sector */
+	for(i=0;i<7;i++) {
+		file_track=sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)];
+		/* 0xff means file deleted */
+		/* 0x0 means empty */
+		if (file_track!=0x0) {
+
+			if (file_track==0xff) {
+				dos33_filename_to_ascii(file_name,
+					sector_buffer+(CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE+FILE_NAME)),29);
+
+				if (file_deleted) {
+					/* return if we found the file */
+					if (!strncmp(filename,file_name,29)) {
+						return ((i<<16)+(catalog_track<<8)+catalog_sector);
+					}
+				}
+			}
+			else {
+				dos33_filename_to_ascii(file_name,
+					sector_buffer+(CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE+FILE_NAME)),30);
+				/* return if we found the file */
+				if (!strncmp(filename,file_name,30)) {
+					return ((i<<16)+(catalog_track<<8)+catalog_sector);
+				}
+			}
+		}
+	}
+
+	/* point to next catalog track/sector */
+	catalog_track=sector_buffer[CATALOG_NEXT_T];
+	catalog_sector=sector_buffer[CATALOG_NEXT_S];
+
+	if (catalog_sector!=0) goto repeat_catalog;
+
+	if (result<0) fprintf(stderr,"Error on I/O\n");
+
+	return -1;
 }
 
    /* could be replaced by "find leading 1" instruction */
    /* if available                                      */
-int find_first_one(unsigned char byte) {
- 
-   int i=0;
-   
-   if (byte==0) return -1;
-   
-   while((byte& (0x1<<i))==0) {
-       i++;
-   }
-   
-   return i;
-   
+static int find_first_one(unsigned char byte) {
+
+	int i=0;
+
+	if (byte==0) return -1;
+
+	while((byte& (0x1<<i))==0) {
+		i++;
+	}
+	return i;
 }
 
 
@@ -848,7 +852,6 @@ static int dos33_rename_file(int fd,int fts,char *new_name) {
 }
 
     /* undelete a file.  fts=entry/track/sector */
-    /* FIXME: can we rename a locked file?    */
     /* FIXME: validate the new filename is valid */
 static int dos33_undelete_file(int fd,int fts,char *new_name) {
  
@@ -979,15 +982,17 @@ keep_deleting:
 }
 
 static int dump_sector(void) {
-    int i,j;
-   
-    for(i=0;i<16;i++) {
-       printf("$%02X : ",i*16);
-       for(j=0;j<16;j++) 
-	  printf("%02X ",sector_buffer[i*16+j]);
-       printf("\n");
-    }
-    return 0;
+
+	int i,j;
+
+	for(i=0;i<16;i++) {
+		printf("$%02X : ",i*16);
+		for(j=0;j<16;j++) {
+			printf("%02X ",sector_buffer[i*16+j]);
+		}
+		printf("\n");
+	}
+	return 0;
 }
 
 
@@ -1067,82 +1072,87 @@ static int dos33_dump(int fd) {
 	}
 
 repeat_catalog:
-   
-    printf("\nCatalog Sector $%02X/$%02x\n",catalog_t,catalog_s);
-    lseek(fd,DISK_OFFSET(catalog_t,catalog_s),SEEK_SET);
-    result=read(fd,sector_buffer,BYTES_PER_SECTOR);
 
-    dump_sector();
-   
-    for(file=0;file<7;file++) {
-       printf("\n\n");	
+	printf("\nCatalog Sector $%02X/$%02x\n",catalog_t,catalog_s);
+	lseek(fd,DISK_OFFSET(catalog_t,catalog_s),SEEK_SET);
+	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
 
-       ts_t=sector_buffer[(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_TS_LIST_T))];
-       ts_s=sector_buffer[(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_TS_LIST_S))];
+	dump_sector();
 
-       printf("%i+$%02X/$%02X - ",file,catalog_t,catalog_s);
-       deleted=0;
-       
-       if (ts_t==0xff) {
-          printf("**DELETED** ");
-          deleted=1;
-	  ts_t=sector_buffer[(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_NAME+0x1e))];
-       }
-   
-       if (ts_t==0x00) {
-          printf("UNUSED!\n");
-          goto continue_dump;
-       }
-   
-       strncpy(temp_string,dos33_filename_to_ascii(temp_string,
-		sector_buffer+(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_NAME)),30),
-	       BUFSIZ);
+	for(file=0;file<7;file++) {
+		printf("\n\n");
 
-       for(i=0;i<strlen(temp_string);i++) {
-          if (temp_string[i]<0x20) printf("^%c",temp_string[i]+0x40);
-          else printf("%c",temp_string[i]);
-       }
-       printf("\n");
-       printf("\tLocked = %s\n",
-	    sector_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE)+FILE_TYPE]>0x7f?
-	   "YES":"NO");
-       printf("\tType = %c\n", 
-           dos33_file_type(sector_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE)+FILE_TYPE]));
-       printf("\tSize in sectors = %i\n",
-                   sector_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_SIZE_L)]+
-	          (sector_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_SIZE_H)]<<8));
+		ts_t=sector_buffer[(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_TS_LIST_T))];
+		ts_s=sector_buffer[(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_TS_LIST_S))];
+
+		printf("%i+$%02X/$%02X - ",file,catalog_t,catalog_s);
+		deleted=0;
+
+		if (ts_t==0xff) {
+			printf("**DELETED** ");
+			deleted=1;
+			ts_t=sector_buffer[(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_NAME+0x1e))];
+		}
+
+		if (ts_t==0x00) {
+			printf("UNUSED!\n");
+			goto continue_dump;
+		}
+
+		strncpy(temp_string,
+			dos33_filename_to_ascii(temp_string,
+				sector_buffer+(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_NAME)),30),
+				BUFSIZ);
+
+		for(i=0;i<strlen(temp_string);i++) {
+			if (temp_string[i]<0x20) {
+				printf("^%c",temp_string[i]+0x40);
+			}
+			else {
+				printf("%c",temp_string[i]);
+			}
+		}
+		printf("\n");
+		printf("\tLocked = %s\n",
+			sector_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE)+FILE_TYPE]>0x7f?
+			"YES":"NO");
+		printf("\tType = %c\n",
+			dos33_file_type(sector_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE)+FILE_TYPE]));
+		printf("\tSize in sectors = %i\n",
+			sector_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_SIZE_L)]+
+			(sector_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_SIZE_H)]<<8));
 repeat_tsl:
-       printf("\tT/S List $%02X/$%02X:\n",ts_t,ts_s);
-       if (deleted) goto continue_dump;
-       lseek(fd,DISK_OFFSET(ts_t,ts_s),SEEK_SET);
-       result=read(fd,&tslist,BYTES_PER_SECTOR);
+		printf("\tT/S List $%02X/$%02X:\n",ts_t,ts_s);
+		if (deleted) goto continue_dump;
+		lseek(fd,DISK_OFFSET(ts_t,ts_s),SEEK_SET);
+		result=read(fd,&tslist,BYTES_PER_SECTOR);
 
-       for(i=0;i<ts_total;i++) {
-          track=tslist[TSL_LIST+(i*TSL_ENTRY_SIZE)];
-          sector=tslist[TSL_LIST+(i*TSL_ENTRY_SIZE)+1];
-          if ((track==0) && (sector==0)) printf(".");
-          else printf("\n\t\t%02X/%02X",track,sector);
-       }
-       ts_t=tslist[TSL_NEXT_TRACK];
-       ts_s=tslist[TSL_NEXT_SECTOR];
-   
-       if (!((ts_s==0) && (ts_t==0))) goto repeat_tsl;
+		for(i=0;i<ts_total;i++) {
+			track=tslist[TSL_LIST+(i*TSL_ENTRY_SIZE)];
+			sector=tslist[TSL_LIST+(i*TSL_ENTRY_SIZE)+1];
+			if ((track==0) && (sector==0)) printf(".");
+			else printf("\n\t\t%02X/%02X",track,sector);
+		}
+		ts_t=tslist[TSL_NEXT_TRACK];
+		ts_s=tslist[TSL_NEXT_SECTOR];
+
+		if (!((ts_s==0) && (ts_t==0))) goto repeat_tsl;
 continue_dump:;
-    }
-    
-    catalog_t=sector_buffer[CATALOG_NEXT_T];
-    catalog_s=sector_buffer[CATALOG_NEXT_S];
-   
-    if (catalog_s!=0) {
-       file=0;
-       goto repeat_catalog;
-    }
-      
-    printf("\n");
+	}
 
-    if (result<0) fprintf(stderr,"Error on I/O\n");
-   
-    return 0;
+	catalog_t=sector_buffer[CATALOG_NEXT_T];
+	catalog_s=sector_buffer[CATALOG_NEXT_S];
+
+	if (catalog_s!=0) {
+		file=0;
+		goto repeat_catalog;
+	}
+
+	printf("\n");
+
+	if (result<0) fprintf(stderr,"Error on I/O\n");
+
+	return 0;
 }
 
 /* ??? */
