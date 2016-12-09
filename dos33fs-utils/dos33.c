@@ -321,111 +321,106 @@ static int find_first_one(unsigned char byte) {
 
 
 static int dos33_free_sector(int fd,int track,int sector) {
- 
-      
-    unsigned char vtoc[BYTES_PER_SECTOR];
-    int result;
 
-       /* Seek to VTOC */
-    lseek(fd,DISK_OFFSET(VTOC_TRACK,VTOC_SECTOR),SEEK_SET);
-       /* read in VTOC */
-    result=read(fd,&vtoc,BYTES_PER_SECTOR); 
-   
-       /* each bitmap is 32 bits.  With 16-sector tracks only first 16 used */
-       /* 1 indicates free, 0 indicates used */
-    if (sector<8) {
-       vtoc[VTOC_FREE_BITMAPS+(track*4)+1]|=(0x1<<sector);
-    }
-    else {
-       vtoc[VTOC_FREE_BITMAPS+(track*4)]|=(0x1<<(sector-8));
-    }
-   
-       /* write modified VTOC back out */
-    lseek(fd,DISK_OFFSET(VTOC_TRACK,VTOC_SECTOR),SEEK_SET);
-    result=write(fd,&vtoc,BYTES_PER_SECTOR);
+	unsigned char vtoc[BYTES_PER_SECTOR];
+	int result;
 
-    if (result<0) fprintf(stderr,"Error on I/O\n");
-   
-    return 0;
-   
+	/* Seek to VTOC */
+	lseek(fd,DISK_OFFSET(VTOC_TRACK,VTOC_SECTOR),SEEK_SET);
+	/* read in VTOC */
+	result=read(fd,&vtoc,BYTES_PER_SECTOR);
+
+	/* each bitmap is 32 bits.  With 16-sector tracks only first 16 used */
+	/* 1 indicates free, 0 indicates used */
+	if (sector<8) {
+		vtoc[VTOC_FREE_BITMAPS+(track*4)+1]|=(0x1<<sector);
+	}
+	else {
+		vtoc[VTOC_FREE_BITMAPS+(track*4)]|=(0x1<<(sector-8));
+	}
+
+	/* write modified VTOC back out */
+	lseek(fd,DISK_OFFSET(VTOC_TRACK,VTOC_SECTOR),SEEK_SET);
+	result=write(fd,&vtoc,BYTES_PER_SECTOR);
+
+	if (result<0) fprintf(stderr,"Error on I/O\n");
+
+	return 0;
 }
 
 static int dos33_allocate_sector(int fd) {
- 
-    int found_track=0,found_sector=0;
-    unsigned char bitmap[4];
-    int i,start_track,track_dir,byte;
-    int result;
-      
-    dos33_read_vtoc(fd);
-    
-       /* Originally used to keep things near center of disk for speed */
-       /* We can use to avoid fragmentation possibly */
-    start_track=sector_buffer[VTOC_LAST_ALLOC_T]%TRACKS_PER_DISK;
-    track_dir=sector_buffer[VTOC_ALLOC_DIRECT];
-  
-    if (track_dir==255) track_dir=-1;
-   
-    if ((track_dir!=1) && (track_dir!=-1)) {
-       fprintf(stderr,"ERROR!  Invalid track dir %i\n",track_dir);
-    }
-   
-    if (((start_track>VTOC_TRACK) && (track_dir!=1)) ||
-        ((start_track<VTOC_TRACK) && (track_dir!=-1))) {
-       fprintf(stderr,"Warning! Non-optimal values for track dir t=%i d=%i!\n",
-	      start_track,track_dir);
-    }
-  
-   
-    i=start_track;
 
-    do {
-       
-       for(byte=1;byte>-1;byte--) {
-	  
-          bitmap[byte]=sector_buffer[VTOC_FREE_BITMAPS+(i*4)+byte];
-          if (bitmap[byte]!=0x00) {
-	     found_sector=find_first_one(bitmap[byte]);
-	     found_track=i;
-	        /* clear bit indicating in use */
-	     sector_buffer[VTOC_FREE_BITMAPS+(i*4)+byte]&=~(0x1<<found_sector);
-	     found_sector+=(8*(1-byte));
-	     goto found_one;
-	  }
-       } 
-              
-          /* Move to next track, handling overflows */
-       i+=track_dir;
-       if (i<0) {
-	  i=VTOC_TRACK;
-	  track_dir=1;
-       }
-       
-       if (i>=TRACKS_PER_DISK) {
-	  i=VTOC_TRACK;
-	  track_dir=-1;
-       }
-       
-    } while (i!=start_track);
-   
-    fprintf(stderr,"No room left!\n");
-    return -1;
-   
+	int found_track=0,found_sector=0;
+	unsigned char bitmap[4];
+	int i,start_track,track_dir,byte;
+	int result;
+
+	dos33_read_vtoc(fd);
+
+	/* Originally used to keep things near center of disk for speed */
+	/* We can use to avoid fragmentation possibly */
+	start_track=sector_buffer[VTOC_LAST_ALLOC_T]%TRACKS_PER_DISK;
+	track_dir=sector_buffer[VTOC_ALLOC_DIRECT];
+
+	if (track_dir==255) track_dir=-1;
+
+	if ((track_dir!=1) && (track_dir!=-1)) {
+		fprintf(stderr,"ERROR!  Invalid track dir %i\n",track_dir);
+	}
+
+	if (((start_track>VTOC_TRACK) && (track_dir!=1)) ||
+		((start_track<VTOC_TRACK) && (track_dir!=-1))) {
+		fprintf(stderr,"Warning! Non-optimal values for track dir t=%i d=%i!\n",
+			start_track,track_dir);
+	}
+
+	i=start_track;
+
+	do {
+		for(byte=1;byte>-1;byte--) {
+			bitmap[byte]=sector_buffer[VTOC_FREE_BITMAPS+(i*4)+byte];
+			if (bitmap[byte]!=0x00) {
+				found_sector=find_first_one(bitmap[byte]);
+				found_track=i;
+				/* clear bit indicating in use */
+				sector_buffer[VTOC_FREE_BITMAPS+(i*4)+byte]&=~(0x1<<found_sector);
+				found_sector+=(8*(1-byte));
+				goto found_one;
+			}
+		}
+
+		/* Move to next track, handling overflows */
+		i+=track_dir;
+		if (i<0) {
+			i=VTOC_TRACK;
+			track_dir=1;
+		}
+
+		if (i>=TRACKS_PER_DISK) {
+			i=VTOC_TRACK;
+			track_dir=-1;
+		}
+	} while (i!=start_track);
+
+	fprintf(stderr,"No room left!\n");
+	return -1;
+
 found_one:
-       /* store new track/direction info */ 
-    sector_buffer[VTOC_LAST_ALLOC_T]=found_track;
-   
-    if (found_track>VTOC_TRACK) sector_buffer[VTOC_ALLOC_DIRECT]=1;
-    else sector_buffer[VTOC_ALLOC_DIRECT]=-1;
-   
-       /* Seek to VTOC */
-    lseek(fd,DISK_OFFSET(VTOC_TRACK,VTOC_SECTOR),SEEK_SET);
-       /* Write out VTOC */
-    result=write(fd,&sector_buffer,BYTES_PER_SECTOR);
+	/* store new track/direction info */
+	sector_buffer[VTOC_LAST_ALLOC_T]=found_track;
 
-    if (result<0) fprintf(stderr,"Error on I/O\n");
+	if (found_track>VTOC_TRACK) sector_buffer[VTOC_ALLOC_DIRECT]=1;
+	else sector_buffer[VTOC_ALLOC_DIRECT]=-1;
 
-    return ((found_track<<8)+found_sector);
+	/* Seek to VTOC */
+	lseek(fd,DISK_OFFSET(VTOC_TRACK,VTOC_SECTOR),SEEK_SET);
+
+	/* Write out VTOC */
+	result=write(fd,&sector_buffer,BYTES_PER_SECTOR);
+
+	if (result<0) fprintf(stderr,"Error on I/O\n");
+
+	return ((found_track<<8)+found_sector);
 }
 
 #define ERROR_INVALID_FILENAME	1
@@ -1538,35 +1533,35 @@ int main(int argc, char **argv) {
             
           break;
 
-     case COMMAND_UNDELETE:       
-             /* check and make sure we have apple_filename */
-          if (argc<4) {
-	     fprintf(stderr,"Error! Need apple file_name\n");
-	     fprintf(stderr,"%s %s LOCK apple_filename\n",argv[0],image);
-	     goto exit_and_close;
-	  }
-       
-             /* Truncate filename if too long */
-             /* what to do about last char ? */
-          if (strlen(argv[firstarg+2])>30) {
-	     fprintf(stderr,
-		     "Warning!  Truncating %s to 30 chars\n",argv[firstarg+2]);
-	  }
-          strncpy(apple_filename,argv[firstarg+2],30);
-	  apple_filename[30]='\0';
-		
-             /* get the entry/track/sector for file */
-          catalog_entry=dos33_check_file_exists(dos_fd,
-					    apple_filename,
-					    FILE_DELETED);
-          if (catalog_entry<0) {
-	     fprintf(stderr,"Error!  %s not found!\n",apple_filename);
-	     goto exit_and_close;
-	  }
+	case COMMAND_UNDELETE:
+		/* check and make sure we have apple_filename */
+		if (argc<4) {
+			fprintf(stderr,"Error! Need apple file_name\n");
+			fprintf(stderr,"%s %s LOCK apple_filename\n",argv[0],image);
+			goto exit_and_close;
+		}
 
-          dos33_undelete_file(dos_fd,catalog_entry,apple_filename);
-            
-          break;
+		/* Truncate filename if too long */
+		/* what to do about last char ? */
+		if (strlen(argv[firstarg+2])>30) {
+			fprintf(stderr,
+				"Warning!  Truncating %s to 30 chars\n",argv[firstarg+2]);
+		}
+		strncpy(apple_filename,argv[firstarg+2],30);
+		apple_filename[30]='\0';
+
+		/* get the entry/track/sector for file */
+		catalog_entry=dos33_check_file_exists(dos_fd,
+						apple_filename,
+						FILE_DELETED);
+		if (catalog_entry<0) {
+			fprintf(stderr,"Error!  %s not found!\n",apple_filename);
+			goto exit_and_close;
+		}
+
+		dos33_undelete_file(dos_fd,catalog_entry,apple_filename);
+
+		break;
      case COMMAND_HELLO:
             if (argc+extra_ops<4) {
 	       fprintf(stderr,"Error! Need file_name\n");
