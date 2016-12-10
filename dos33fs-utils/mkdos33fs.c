@@ -39,39 +39,40 @@ int main(int argc, char **argv) {
 
 	/* Parse Command Line Arguments */
 
-    while ((c = getopt (argc, argv,"t:s:b:d:f:hv"))!=-1) {
-       switch (c) {
+	while ((c = getopt (argc, argv,"t:s:b:d:f:hv"))!=-1) {
+		switch (c) {
 
-	case 't': num_tracks=strtol(optarg,&endptr,10);
-	          if ( endptr == optarg ) usage(argv[0], 1);
-	          break;
+			case 't':
+				num_tracks=strtol(optarg,&endptr,10);
+				if ( endptr == optarg ) usage(argv[0], 1);
+				break;
 
-	case 's': num_sectors=strtol(optarg,&endptr,10);
-	          if ( endptr == optarg ) usage(argv[0], 1);
-	          break;
-	case 'b': block_size=strtol(optarg,&endptr,10);
-	          if ( endptr == optarg ) usage(argv[0], 1);
-	          break;
+			case 's':
+				num_sectors=strtol(optarg,&endptr,10);
+				if ( endptr == optarg ) usage(argv[0], 1);
+				break;
 
-	case 'd': copy_dos=1;
-	          strncpy(dos_src,optarg,BUFSIZ);
-	          break;
-
-	case 'f': 
-	          if (strlen(optarg)>30) {
-		     fprintf(stderr,"Auto boot filename too long!\n");
-		     exit(1);
-		  }
-	          memcpy(boot_filename,optarg,strlen(optarg));
-	          for(i=strlen(optarg);i<30;i++) boot_filename[i]=' ';
-//	  printf("Writing boot filename \"%s\"\n",boot_filename);
-	          break;	  
-	  
-	case 'v': usage(argv[0],0);
-	case 'h': usage(argv[0],1);
-
-       }
-    }
+			case 'b':
+				block_size=strtol(optarg,&endptr,10);
+				if ( endptr == optarg ) usage(argv[0], 1);
+				break;
+			case 'd':
+				copy_dos=1;
+				strncpy(dos_src,optarg,BUFSIZ);
+				break;
+			case 'f':
+				if (strlen(optarg)>30) {
+					fprintf(stderr,"Auto boot filename too long!\n");
+					exit(1);
+				}
+				memcpy(boot_filename,optarg,strlen(optarg));
+				for(i=strlen(optarg);i<30;i++) boot_filename[i]=' ';
+//				printf("Writing boot filename \"%s\"\n",boot_filename);
+				break;
+			case 'v': usage(argv[0],0);
+			case 'h': usage(argv[0],1);
+		}
+	}
 
 	if (optind==argc) {
 		printf("Error!  Must include device name\n\n");
