@@ -10,7 +10,7 @@
 
 #include "dos33.h"
 
-static int debug=0;
+static int debug=1;
 
 static unsigned char sector_buffer[BYTES_PER_SECTOR];
 
@@ -1175,10 +1175,13 @@ static int dos33_rename_hello(int fd, char *new_name) {
 	return 0;
 }
 
-static int display_help(char *name) {
+static void display_help(char *name, int version_only) {
 	printf("\ndos33 version %s\n",VERSION);
 	printf("by Vince Weaver <vince@deater.net>\n");
 	printf("\n");
+
+	if (version_only) return;
+
 	printf("Usage: %s [-h] [-y] disk_image COMMAND [options]\n",name);
 	printf("\t-h : this help message\n");
 	printf("\t-y : always answer yes for anying warning questions\n");
@@ -1201,24 +1204,26 @@ static int display_help(char *name) {
 	printf("\tCOPY\n");
 #endif
 	printf("\n");
-	return 0;
+	return;
 }
 
-#define COMMAND_UNKNOWN	 0
-#define COMMAND_LOAD	 1
-#define COMMAND_SAVE	 2
-#define COMMAND_CATALOG	 3
-#define COMMAND_DELETE	 4
-#define COMMAND_UNDELETE 5
-#define COMMAND_LOCK	 6
-#define COMMAND_UNLOCK	 7
-#define COMMAND_INIT	 8
-#define COMMAND_RENAME	 9
-#define COMMAND_COPY	10
-#define COMMAND_DUMP	11
-#define COMMAND_HELLO	12
-#define COMMAND_BSAVE	13
+#define COMMAND_LOAD	 0
+#define COMMAND_SAVE	 1
+#define COMMAND_CATALOG	 2
+#define COMMAND_DELETE	 3
+#define COMMAND_UNDELETE 4
+#define COMMAND_LOCK	 5
+#define COMMAND_UNLOCK	 6
+#define COMMAND_INIT	 7
+#define COMMAND_RENAME	 8
+#define COMMAND_COPY	 9
+#define COMMAND_DUMP	10
+#define COMMAND_HELLO	11
+#define COMMAND_BSAVE	12
+#define COMMAND_BLOAD	13
+
 #define MAX_COMMAND	14
+#define COMMAND_UNKNOWN	255
 
 static struct command_type {
 	int type;
@@ -1243,7 +1248,7 @@ static int lookup_command(char *name) {
 
 	int which=COMMAND_UNKNOWN,i;
 
-	for(i=1;i<MAX_COMMAND;i++) {
+	for(i=0;i<MAX_COMMAND;i++) {
 		if(!strncmp(name,commands[i].name,strlen(commands[i].name))) {
 			which=commands[i].type;
 			break;
@@ -1251,6 +1256,21 @@ static int lookup_command(char *name) {
 	}
 	return which;
 
+}
+
+static int truncate_filename(char *out, char *in) {
+
+	int truncated=0;
+
+	/* Truncate filename if too long */
+	if (strlen(in)>30) {
+		fprintf(stderr,"Warning!  Truncating %s to 30 chars\n",in);
+		truncated=1;
+	}
+	strncpy(out,in,30);
+	out[30]='\0';
+
+	return truncated;
 }
 
 int main(int argc, char **argv) {
@@ -1262,85 +1282,95 @@ int main(int argc, char **argv) {
 	int command,catalog_entry;
 	char temp_string[BUFSIZ];
 	char apple_filename[31],new_filename[31];
-	char output_filename[BUFSIZ];
+	char local_filename[BUFSIZ];
 	char *result_string;
-	int always_yes=0,firstarg=1,extra_ops=0;
+	int always_yes=0;
 	char *temp;
+	int c;
 
 	/* Check command line arguments */
-	/* Ugh I should use getopt() or something similar here */
+	while ((c = getopt (argc, argv,"hvy"))!=-1) {
+		switch (c) {
 
-	if (argc<2) {
-		display_help(argv[0]);
-		goto exit_program;
+		case 'v':
+			display_help(argv[0],1);
+			return 0;
+		case 'h': display_help(argv[0],0);
+			return 0;
+		case 'y':
+			always_yes=1;
+			break;
+		}
 	}
 
-	if (!strncmp(argv[1],"-h",2)) {
-		display_help(argv[1]);
-		goto exit_program;
-	}
-
-	if (!strncmp(argv[1],"-y",2)) {
-		always_yes=1;
-		extra_ops++;
-		firstarg++;
-	}
-
-	if (argc<3) {
-		printf("\nInvalid arguments!\n");
-		display_help(argv[0]);
-		goto exit_program;
+	if (optind==argc) {
+		fprintf(stderr,"ERROR!  Must specify disk image!\n\n");
+		return -1;
 	}
 
 	/* get argument 1, which is image name */
-	strncpy(image,argv[firstarg],BUFSIZ);
+	strncpy(image,argv[optind],BUFSIZ);
 	dos_fd=open(image,O_RDWR);
 	if (dos_fd<0) {
 		fprintf(stderr,"Error opening disk_image: %s\n",image);
-		exit(4);
+		return -1;
 	}
 
-	/* Check argument #2 which is command */
-	strncpy(temp_string,argv[firstarg+1],BUFSIZ);
+	/* Move to next argument */
+	optind++;
+
+	if (optind==argc) {
+		fprintf(stderr,"ERROR!  Must specify command!\n\n");
+		return -2;
+	}
+
+	/* Grab command */
+	strncpy(temp_string,argv[optind],BUFSIZ);
 
 	/* Make command be uppercase */
 	for(i=0;i<strlen(temp_string);i++) {
 		temp_string[i]=toupper(temp_string[i]);
 	}
 
+	/* Move to next argument */
+	optind++;
+
 	command=lookup_command(temp_string);
 
 	switch(command) {
 
 	case COMMAND_UNKNOWN:
-		display_help(argv[0]);
-		goto exit_program;
+		fprintf(stderr,"ERROR!  Unknown command %s\n",temp_string);
+		fprintf(stderr,"\tTry \"%s -h\" for help.\n\n",argv[0]);
+		goto exit_and_close;
 		break;
 
 	/* Load a file from disk image to local machine */
 	case COMMAND_LOAD:
+
 		/* check and make sure we have apple_filename */
-		if (argc<4+extra_ops) {
+		if (argc==optind) {
 			fprintf(stderr,"Error! Need apple file_name\n");
 			fprintf(stderr,"%s %s LOAD apple_filename\n",
 				argv[0],image);
 			goto exit_and_close;
 		}
-		/* Truncate filename if too long */
-		if (strlen(argv[firstarg+2])>30) {
-			fprintf(stderr,"Warning!  Truncating %s to 30 chars\n",
-				argv[firstarg+2]);
-		}
-		strncpy(apple_filename,argv[firstarg+2],30);
-		apple_filename[30]='\0';
+
+		truncate_filename(apple_filename,argv[optind]);
+
+		if (debug) printf("\tApple filename: %s\n",apple_filename);
 
 		/* get output filename */
-		if (argc==5+extra_ops) {
-			strncpy(output_filename,argv[firstarg+3],BUFSIZ);
+		optind++;
+		if (argc>=optind) {
+			strncpy(local_filename,argv[optind],BUFSIZ);
 		}
 		else {
-			strncpy(output_filename,apple_filename,30);
+			strncpy(local_filename,apple_filename,30);
 		}
+
+		if (debug) printf("\tOutput filename: %s\n",local_filename);
+
 
 		/* get the entry/track/sector for file */
 		catalog_entry=dos33_check_file_exists(dos_fd,
@@ -1352,7 +1382,7 @@ int main(int argc, char **argv) {
 			goto exit_and_close;
 		}
 
-		dos33_load_file(dos_fd,catalog_entry,output_filename);
+		dos33_load_file(dos_fd,catalog_entry,local_filename);
 
 		break;
 
@@ -1366,6 +1396,7 @@ int main(int argc, char **argv) {
 			catalog_entry=dos33_find_next_file(dos_fd,catalog_entry);
 			if (catalog_entry>0) {
 				dos33_print_file_info(dos_fd,catalog_entry);
+				/* why 1<<16 ? */
 				catalog_entry+=(1<<16);
 				/* dos33_find_next_file() handles wrapping issues */
 			}
@@ -1378,24 +1409,46 @@ int main(int argc, char **argv) {
 		/* argv4 == name of local file */
 		/* argv5 == optional name of file on disk image */
 
-		if (argc<5+extra_ops) {
+		if (argc==optind) {
 			fprintf(stderr,"Error! Need type and file_name\n");
 			fprintf(stderr,"%s %s SAVE type "
-					"file_name apple_filename\n",
+					"file_name apple_filename\n\n",
 					argv[0],image);
 			goto exit_and_close;
 		}
 
-		type=argv[firstarg+2][0];
+		type=argv[optind][0];
+		optind++;
 
-		if (argc==6+extra_ops) {
-			if (strlen(argv[firstarg+4])>30) {
-				fprintf(stderr,
-					"Warning!  Truncating filename "
-					"to 30 chars!\n");
+	case COMMAND_BSAVE:
+
+		if (debug) printf("\ttype=%c\n",type);
+
+		if (argc==optind) {
+			fprintf(stderr,"Error! Need file_name\n");
+
+			if (command==COMMAND_BSAVE) {
+				fprintf(stderr,"%s %s BSAVE "
+						"file_name apple_filename\n\n",
+						argv[0],image);
+
 			}
-			strncpy(apple_filename,argv[firstarg+4],30);
-			apple_filename[30]=0;
+			else {
+				fprintf(stderr,"%s %s SAVE type "
+						"file_name apple_filename\n\n",
+						argv[0],image);
+			}
+			goto exit_and_close;
+		}
+
+		strncpy(local_filename,argv[optind],BUFSIZ);
+		optind++;
+
+		if (debug) printf("\tLocal filename: %s\n",local_filename);
+
+		if (argc>optind) {
+			/* apple filename specified */
+			truncate_filename(apple_filename,argv[optind]);
 		}
 		else {
 			/* If no filename specified for apple name    */
@@ -1403,10 +1456,9 @@ int main(int argc, char **argv) {
 			/* everything up to the last slash so useless */
 			/* path info isn't used                       */
 
+			temp=local_filename+(strlen(local_filename)-1);
 
-			temp=argv[firstarg+3]+(strlen(argv[firstarg+3])-1);
-
-			while(temp!=argv[firstarg+3]) {
+			while(temp!=local_filename) {
 				temp--;
 				if (*temp == '/') {
 					temp++;
@@ -1414,14 +1466,10 @@ int main(int argc, char **argv) {
 				}
 			}
 
-			if (strlen(temp)>30) {
-				fprintf(stderr,
-					"Warning!  Truncating filename to 30 chars!\n");
-			}
-
-			strncpy(apple_filename,temp,30);
-			apple_filename[30]=0;
+			truncate_filename(apple_filename,temp);
 		}
+
+		if (debug) printf("\tApple filename: %s\n",apple_filename);
 
 		catalog_entry=dos33_check_file_exists(dos_fd,apple_filename,
 							FILE_NORMAL);
@@ -1440,154 +1488,163 @@ int main(int argc, char **argv) {
 			dos33_delete_file(dos_fd,catalog_entry);
 		}
 
-		dos33_add_file(dos_fd,type,argv[firstarg+3],apple_filename);
+		dos33_add_file(dos_fd,type,local_filename,apple_filename);
 
 		break;
 
-     case COMMAND_DELETE:
-            if (argc+extra_ops<4) {
-	       fprintf(stderr,"Error! Need file_name\n");
-	       fprintf(stderr,"%s %s DELETE apple_filename\n",argv[0],image);
-	       goto exit_and_close;
-	    }
-            catalog_entry=dos33_check_file_exists(dos_fd,argv[firstarg+2],
-						  FILE_NORMAL);
-            if (catalog_entry<0) {
-	       fprintf(stderr,
-		       "Error!  File %s does not exist\n",argv[firstarg+2]);
-	       goto exit_and_close;
-	    } 
-	    dos33_delete_file(dos_fd,catalog_entry);
-	    break;
-       
-     case COMMAND_DUMP:
-          printf("Dumping %s!\n",argv[firstarg]);
-          dos33_dump(dos_fd);
-          break;
-       
-     case COMMAND_LOCK:
-     case COMMAND_UNLOCK:       
-             /* check and make sure we have apple_filename */
-          if (argc<4+extra_ops) {
-	     fprintf(stderr,"Error! Need apple file_name\n");
-	     fprintf(stderr,"%s %s LOCK apple_filename\n",argv[0],image);
-	     goto exit_and_close;
-	  }
-       
-             /* Truncate filename if too long */
-          if (strlen(argv[firstarg+2])>30) {
-	     fprintf(stderr,
-		    "Warning!  Truncating %s to 30 chars\n",argv[firstarg+2]);
-	  }
-          strncpy(apple_filename,argv[firstarg+2],30);
-	  apple_filename[30]='\0';
-		
-             /* get the entry/track/sector for file */
-          catalog_entry=dos33_check_file_exists(dos_fd,
-					    apple_filename,
-					    FILE_NORMAL);
-          if (catalog_entry<0) {
-	     fprintf(stderr,"Error!  %s not found!\n",apple_filename);
-	     goto exit_and_close;
-	  }
+	case COMMAND_DELETE:
 
-          dos33_lock_file(dos_fd,catalog_entry,command==COMMAND_LOCK);
-            
-          break;
-       
-     case COMMAND_RENAME:
-             /* check and make sure we have apple_filename */
-          if (argc<5+extra_ops) {
-	     fprintf(stderr,"Error! Need two filenames\n");
-	     fprintf(stderr,"%s %s LOCK apple_filename_old "
-		     "apple_filename_new\n",
-		     argv[0],image);
-	     goto exit_and_close;
-	  }
-       
-             /* Truncate filename if too long */
-          if (strlen(argv[firstarg+2])>30) {
-	     fprintf(stderr,
-		     "Warning!  Truncating %s to 30 chars\n",argv[firstarg+2]);
-	  }
-          strncpy(apple_filename,argv[firstarg+2],30);
-	  apple_filename[30]='\0';
-       
-             /* Truncate filename if too long */
-          if (strlen(argv[firstarg+3])>30) {
-	     fprintf(stderr,
-		     "Warning!  Truncating %s to 30 chars\n",argv[firstarg+3]);
-	  }
-          strncpy(new_filename,argv[firstarg+3],30);
-	  new_filename[30]='\0';       
-		
-             /* get the entry/track/sector for file */
-          catalog_entry=dos33_check_file_exists(dos_fd,
-					    apple_filename,
-					    FILE_NORMAL);
-          if (catalog_entry<0) {
-	     fprintf(stderr,"Error!  %s not found!\n",apple_filename);
-	     goto exit_and_close;
-	  }
+		if (argc==optind) {
+			fprintf(stderr,"Error! Need file_name\n");
+			fprintf(stderr,"%s %s DELETE apple_filename\n",
+				argv[0],image);
+			goto exit_and_close;
+		}
 
-          dos33_rename_file(dos_fd,catalog_entry,new_filename);
-            
-          break;
+		truncate_filename(apple_filename,argv[optind]);
+
+		catalog_entry=dos33_check_file_exists(dos_fd,
+						apple_filename,
+						FILE_NORMAL);
+		if (catalog_entry<0) {
+			fprintf(stderr, "Error!  File %s does not exist\n",
+					apple_filename);
+			goto exit_and_close;
+		}
+		dos33_delete_file(dos_fd,catalog_entry);
+
+		break;
+
+	case COMMAND_DUMP:
+		printf("Dumping %s!\n",image);
+		dos33_dump(dos_fd);
+		break;
+
+	case COMMAND_LOCK:
+	case COMMAND_UNLOCK:
+		/* check and make sure we have apple_filename */
+		if (argc==optind) {
+			fprintf(stderr,"Error! Need apple file_name\n");
+			fprintf(stderr,"%s %s %s apple_filename\n",
+				argv[0],image,temp_string);
+			goto exit_and_close;
+		}
+
+		truncate_filename(apple_filename,argv[optind]);
+
+		/* get the entry/track/sector for file */
+		catalog_entry=dos33_check_file_exists(dos_fd,
+							apple_filename,
+							FILE_NORMAL);
+		if (catalog_entry<0) {
+			fprintf(stderr,"Error!  %s not found!\n",
+				apple_filename);
+			goto exit_and_close;
+		}
+
+		dos33_lock_file(dos_fd,catalog_entry,command==COMMAND_LOCK);
+
+		break;
+
+	case COMMAND_RENAME:
+		/* check and make sure we have apple_filename */
+		if (argc==optind) {
+			fprintf(stderr,"Error! Need two filenames\n");
+			fprintf(stderr,"%s %s LOCK apple_filename_old "
+				"apple_filename_new\n",
+				argv[0],image);
+	     		goto exit_and_close;
+		}
+
+		/* Truncate filename if too long */
+		truncate_filename(apple_filename,argv[optind]);
+		optind++;
+
+		if (argc==optind) {
+			fprintf(stderr,"Error! Need two filenames\n");
+			fprintf(stderr,"%s %s LOCK apple_filename_old "
+				"apple_filename_new\n",
+				argv[0],image);
+	     		goto exit_and_close;
+		}
+
+		truncate_filename(new_filename,argv[optind]);
+
+		/* get the entry/track/sector for file */
+		catalog_entry=dos33_check_file_exists(dos_fd,
+						apple_filename,
+						FILE_NORMAL);
+		if (catalog_entry<0) {
+			fprintf(stderr,"Error!  %s not found!\n",
+							apple_filename);
+			goto exit_and_close;
+		}
+
+		dos33_rename_file(dos_fd,catalog_entry,new_filename);
+
+		break;
 
 	case COMMAND_UNDELETE:
 		/* check and make sure we have apple_filename */
-		if (argc<4) {
+		if (argc==optind) {
 			fprintf(stderr,"Error! Need apple file_name\n");
-			fprintf(stderr,"%s %s LOCK apple_filename\n",argv[0],image);
+			fprintf(stderr,"%s %s UNDELETE apple_filename\n\n",
+				argv[0],image);
 			goto exit_and_close;
 		}
 
 		/* Truncate filename if too long */
 		/* what to do about last char ? */
-		if (strlen(argv[firstarg+2])>30) {
-			fprintf(stderr,
-				"Warning!  Truncating %s to 30 chars\n",argv[firstarg+2]);
-		}
-		strncpy(apple_filename,argv[firstarg+2],30);
-		apple_filename[30]='\0';
+
+		truncate_filename(apple_filename,argv[optind]);
 
 		/* get the entry/track/sector for file */
 		catalog_entry=dos33_check_file_exists(dos_fd,
 						apple_filename,
 						FILE_DELETED);
 		if (catalog_entry<0) {
-			fprintf(stderr,"Error!  %s not found!\n",apple_filename);
+			fprintf(stderr,"Error!  %s not found!\n",
+				apple_filename);
 			goto exit_and_close;
 		}
 
 		dos33_undelete_file(dos_fd,catalog_entry,apple_filename);
 
 		break;
-     case COMMAND_HELLO:
-            if (argc+extra_ops<4) {
-	       fprintf(stderr,"Error! Need file_name\n");
-	       fprintf(stderr,"%s %s HELLO apple_filename\n",argv[0],image);
-	       goto exit_and_close;
-	    }
-            catalog_entry=dos33_check_file_exists(dos_fd,argv[firstarg+2],
-						  FILE_NORMAL);
-            if (catalog_entry<0) {
-	       fprintf(stderr,
-		       "Warning!  File %s does not exist\n",argv[firstarg+2]);
-			}
-			dos33_rename_hello(dos_fd,argv[firstarg+2]);
-			break;
-		case COMMAND_INIT:
-		/* use common code from mkdos33fs? */
-		case COMMAND_COPY:
-		/* use temp file?  Walking a sector at a time seems a pain */
-		default:
-			fprintf(stderr,"Sorry, unsupported command\n");
+
+	case COMMAND_HELLO:
+		if (argc==optind) {
+			fprintf(stderr,"Error! Need file_name\n");
+			fprintf(stderr,"%s %s HELLO apple_filename\n\n",
+				argv[0],image);
 			goto exit_and_close;
+		}
+
+		truncate_filename(apple_filename,argv[optind]);
+
+		catalog_entry=dos33_check_file_exists(dos_fd,
+						apple_filename,
+						FILE_NORMAL);
+
+		if (catalog_entry<0) {
+			fprintf(stderr,
+				"Warning!  File %s does not exist\n",
+					apple_filename);
+		}
+		dos33_rename_hello(dos_fd,apple_filename);
+		break;
+
+	case COMMAND_INIT:
+		/* use common code from mkdos33fs? */
+	case COMMAND_COPY:
+		/* use temp file?  Walking a sector at a time seems a pain */
+	default:
+		fprintf(stderr,"Sorry, unsupported command %s\n\n",temp_string);
+		goto exit_and_close;
 	}
 
 exit_and_close:
 	close(dos_fd);
-exit_program:
+
 	return 0;
 }
