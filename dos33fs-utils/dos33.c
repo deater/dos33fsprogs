@@ -506,88 +506,89 @@ static int dos33_add_file(int fd,char type,char *filename,
 	i=0;
 	while (i<size_in_sectors) {
 
-          /* Create new T/S list if necessary */
-       if (i%TSL_MAX_NUMBER==0) {
-		old_ts_list=ts_list;
+		/* Create new T/S list if necessary */
+		if (i%TSL_MAX_NUMBER==0) {
+			old_ts_list=ts_list;
 
-		/* allocate a sector for the new list */
-		ts_list=dos33_allocate_sector(fd);
+			/* allocate a sector for the new list */
+			ts_list=dos33_allocate_sector(fd);
+			sectors_used++;
+			if (ts_list<0) return -1;
+
+			/* clear the t/s sector */
+			for(x=0;x<BYTES_PER_SECTOR;x++) {
+				sector_buffer[x]=0;
+			}
+			lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
+			result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+
+			if (i==0) {
+				initial_ts_list=ts_list;
+			}
+			else {
+				/* we aren't the first t/s list so do special stuff */
+
+				/* load in the old t/s list */
+				lseek(fd,
+					DISK_OFFSET(get_high_byte(old_ts_list),
+					get_low_byte(old_ts_list)),
+					SEEK_SET);
+
+				result=read(fd,&sector_buffer,BYTES_PER_SECTOR);
+
+				/* point from old ts list to new one we just made */
+				sector_buffer[TSL_NEXT_TRACK]=get_high_byte(ts_list);
+				sector_buffer[TSL_NEXT_SECTOR]=get_low_byte(ts_list);
+
+				/* set offset into file */
+				sector_buffer[TSL_OFFSET_H]=get_high_byte((i-122)*256);
+				sector_buffer[TSL_OFFSET_L]=get_low_byte((i-122)*256);
+
+				/* write out the old t/s list with updated info */
+				lseek(fd,
+					DISK_OFFSET(get_high_byte(old_ts_list),
+					get_low_byte(old_ts_list)),
+					SEEK_SET);
+
+				result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+			}
+		}
+
+		/* allocate a sector */
+		data_ts=dos33_allocate_sector(fd);
 		sectors_used++;
-		if (ts_list<0) return -1;
 
-	     /* clear the t/s sector */
-	  for(x=0;x<BYTES_PER_SECTOR;x++) sector_buffer[x]=0;
-	  lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
-	  result=write(fd,sector_buffer,BYTES_PER_SECTOR);
-	  
-	  if (i==0) initial_ts_list=ts_list;
-	  else {
-	        /* we aren't the first t/s list so do special stuff */
+		if (data_ts<0) return -1;
 
-	        /* load in the old t/s list */
-             lseek(fd,
-                   DISK_OFFSET(get_high_byte(old_ts_list),
-                               get_low_byte(old_ts_list)),
-                   SEEK_SET);
+		/* clear sector */
+		for(x=0;x<BYTES_PER_SECTOR;x++) sector_buffer[x]=0;
 
-             result=read(fd,&sector_buffer,BYTES_PER_SECTOR);
-	     
-	        /* point from old ts list to new one we just made */
-	     sector_buffer[TSL_NEXT_TRACK]=get_high_byte(ts_list);
-	     sector_buffer[TSL_NEXT_SECTOR]=get_low_byte(ts_list);
-	     
-	        /* set offset into file */
-	     sector_buffer[TSL_OFFSET_H]=get_high_byte((i-122)*256);
-	     sector_buffer[TSL_OFFSET_L]=get_low_byte((i-122)*256);
-	        
-	        /* write out the old t/s list with updated info */
-	     lseek(fd,
-                   DISK_OFFSET(get_high_byte(old_ts_list),
-                               get_low_byte(old_ts_list)),
-                   SEEK_SET);
+		/* read from input */
+		bytes_read=read(input_fd,sector_buffer,BYTES_PER_SECTOR);
+		if (bytes_read<0) fprintf(stderr,"Error reading bytes!\n");
 
-	     result=write(fd,sector_buffer,BYTES_PER_SECTOR);
-	  }
-       }       
-       
-       
-          /* allocate a sector */
-       data_ts=dos33_allocate_sector(fd);
-       sectors_used++;
-       
-       if (data_ts<0) return -1;
-       
-          /* clear sector */
-       for(x=0;x<BYTES_PER_SECTOR;x++) sector_buffer[x]=0;
+		/* write to disk image */
+		lseek(fd,DISK_OFFSET((data_ts>>8)&0xff,data_ts&0xff),SEEK_SET);
+		result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+//		printf("Writing %i bytes to %i/%i\n",bytes_read,(data_ts>>8)&0xff,
+//			data_ts&0xff);
 
-          /* read from input */
-       bytes_read=read(input_fd,sector_buffer,BYTES_PER_SECTOR);
-       if (bytes_read<0) fprintf(stderr,"Error reading bytes!\n");
+		/* add to T/s table */
 
-          /* write to disk image */
-       lseek(fd,DISK_OFFSET((data_ts>>8)&0xff,data_ts&0xff),SEEK_SET);
-       result=write(fd,sector_buffer,BYTES_PER_SECTOR);
-//       printf("Writing %i bytes to %i/%i\n",bytes_read,(data_ts>>8)&0xff,
-//	       data_ts&0xff);
-       
+		/* read in t/s list */
+		lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
+		result=read(fd,sector_buffer,BYTES_PER_SECTOR);
 
-       
-          /* add to T/s table */
-       
-          /* read in t/s list */
-       lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
-       result=read(fd,sector_buffer,BYTES_PER_SECTOR);
-       
-          /* point to new data sector */
-       sector_buffer[((i%TSL_MAX_NUMBER)*2)+TSL_LIST]=(data_ts>>8)&0xff;
-       sector_buffer[((i%TSL_MAX_NUMBER)*2)+TSL_LIST+1]=(data_ts&0xff);
-       
-          /* write t/s list back out */
-       lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
-       result=write(fd,sector_buffer,BYTES_PER_SECTOR);	  
-       
-       i++;   
-    }
+		/* point to new data sector */
+		sector_buffer[((i%TSL_MAX_NUMBER)*2)+TSL_LIST]=(data_ts>>8)&0xff;
+		sector_buffer[((i%TSL_MAX_NUMBER)*2)+TSL_LIST+1]=(data_ts&0xff);
+
+		/* write t/s list back out */
+		lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
+		result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+
+		i++;
+	}
 
 	/* Add new file to Catalog */
 
@@ -632,43 +633,43 @@ continue_parsing_catalog:
 
 	goto continue_parsing_catalog;
 
-got_a_dentry:      
-//     printf("Adding file at entry %i of catalog 0x%x:0x%x\n",
-//	    i,catalog_track,catalog_sector);
-   
-       /* Point entry to initial t/s list */
-    sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)]=(initial_ts_list>>8)&0xff;
-    sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+1]=(initial_ts_list&0xff);
-       /* set file type */
-    sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_TYPE]=
-        dos33_char_to_type(type,0);
+got_a_dentry:
+//	printf("Adding file at entry %i of catalog 0x%x:0x%x\n",
+//		i,catalog_track,catalog_sector);
 
-//     printf("Pointing T/S to %x/%x\n",(initial_ts_list>>8)&0xff,initial_ts_list&0xff);
+	/* Point entry to initial t/s list */
+	sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)]=(initial_ts_list>>8)&0xff;
+	sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+1]=(initial_ts_list&0xff);
+	/* set file type */
+	sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_TYPE]=
+		dos33_char_to_type(type,0);
 
-       /* copy over filename */
-    for(x=0;x<strlen(apple_filename);x++) {
-       sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_NAME+x]=
-             apple_filename[x]^0x80;
-    }
-   
-       /* pad out the filename with spaces */
-    for(x=strlen(apple_filename);x<FILE_NAME_SIZE;x++) {
-        sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_NAME+x]=' '^0x80;
-    }
-   
-       /* fill in filesize in sectors */
-    sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_SIZE_L]=
-        sectors_used&0xff;
-    sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_SIZE_H]=
-        (sectors_used>>8)&0xff;
-   
-       /* write out catalog sector */
-    lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-    result=write(fd,sector_buffer,BYTES_PER_SECTOR);   
+//	printf("Pointing T/S to %x/%x\n",(initial_ts_list>>8)&0xff,initial_ts_list&0xff);
 
-    if (result<0) fprintf(stderr,"Error on I/O\n");
-   
-    return 0;
+	/* copy over filename */
+	for(x=0;x<strlen(apple_filename);x++) {
+		sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_NAME+x]=
+		apple_filename[x]^0x80;
+	}
+
+	/* pad out the filename with spaces */
+	for(x=strlen(apple_filename);x<FILE_NAME_SIZE;x++) {
+		sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_NAME+x]=' '^0x80;
+	}
+
+	/* fill in filesize in sectors */
+	sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_SIZE_L]=
+		sectors_used&0xff;
+	sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_SIZE_H]=
+		(sectors_used>>8)&0xff;
+
+	/* write out catalog sector */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+
+	if (result<0) fprintf(stderr,"Error on I/O\n");
+
+	return 0;
 }
 
     /* load a file.  fts=entry/track/sector */
