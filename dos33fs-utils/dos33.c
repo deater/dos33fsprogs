@@ -1265,6 +1265,7 @@ int main(int argc, char **argv) {
 	char output_filename[BUFSIZ];
 	char *result_string;
 	int always_yes=0,firstarg=1,extra_ops=0;
+	char *temp;
 
 	/* Check command line arguments */
 	/* Ugh I should use getopt() or something similar here */
@@ -1357,20 +1358,20 @@ int main(int argc, char **argv) {
 
        case COMMAND_CATALOG:
 
-            /* get first catalog */
-            catalog_entry=dos33_get_catalog_ts(dos_fd);
+		/* get first catalog */
+		catalog_entry=dos33_get_catalog_ts(dos_fd);
 
-            printf("\nDISK VOLUME %i\n\n",sector_buffer[VTOC_DISK_VOLUME]);
-            while(catalog_entry>0) {
-               catalog_entry=dos33_find_next_file(dos_fd,catalog_entry);
-               if (catalog_entry>0) {
-		  dos33_print_file_info(dos_fd,catalog_entry);
-	          catalog_entry+=(1<<16);
-		  /* dos33_find_next_file() handles wrapping issues */
-	       }
-	    }
-            printf("\n");
-            break;
+		printf("\nDISK VOLUME %i\n\n",sector_buffer[VTOC_DISK_VOLUME]);
+		while(catalog_entry>0) {
+			catalog_entry=dos33_find_next_file(dos_fd,catalog_entry);
+			if (catalog_entry>0) {
+				dos33_print_file_info(dos_fd,catalog_entry);
+				catalog_entry+=(1<<16);
+				/* dos33_find_next_file() handles wrapping issues */
+			}
+		}
+		printf("\n");
+		break;
 
 	case COMMAND_SAVE:
 		/* argv3 == type == A,B,T,I,N,L etc */
@@ -1401,44 +1402,43 @@ int main(int argc, char **argv) {
 			/* Then use the input name.  Note, we strip   */
 			/* everything up to the last slash so useless */
 			/* path info isn't used                       */
-		 {
-		    char *temp;
-		    temp=argv[firstarg+3]+(strlen(argv[firstarg+3])-1);
-		
-		    while(temp!=argv[firstarg+3]) {
-		       temp--;
-		       if (*temp == '/') {
-			  temp++;
-			  break;
-		       }
-		    }
-		 
-	            if (strlen(temp)>30) {
-		       fprintf(stderr,
-			       "Warning!  Truncating filename to 30 chars!\n");
-	            }
-	       
-	            strncpy(apple_filename,temp,30);
-	            apple_filename[30]=0;
-		 }
-	    }
-       
-            catalog_entry=dos33_check_file_exists(dos_fd,apple_filename,
-						  FILE_NORMAL);
-       
-            if (catalog_entry>=0) {
-	       fprintf(stderr,"Warning!  %s exists!\n",apple_filename);
-	       if (!always_yes) {
-	          printf("Over-write (y/n)?");
-	          result_string=fgets(temp_string,BUFSIZ,stdin);
-	          if ((result_string==NULL) || (temp_string[0]!='y')) {
-		     printf("Exiting early...\n");
-		     goto exit_and_close;
-	          }
-	       }
-	       fprintf(stderr,"Deleting previous version...\n");
-	       dos33_delete_file(dos_fd,catalog_entry);
-	    }
+
+
+			temp=argv[firstarg+3]+(strlen(argv[firstarg+3])-1);
+
+			while(temp!=argv[firstarg+3]) {
+				temp--;
+				if (*temp == '/') {
+					temp++;
+					break;
+				}
+			}
+
+			if (strlen(temp)>30) {
+				fprintf(stderr,
+					"Warning!  Truncating filename to 30 chars!\n");
+			}
+
+			strncpy(apple_filename,temp,30);
+			apple_filename[30]=0;
+		}
+
+		catalog_entry=dos33_check_file_exists(dos_fd,apple_filename,
+							FILE_NORMAL);
+
+		if (catalog_entry>=0) {
+			fprintf(stderr,"Warning!  %s exists!\n",apple_filename);
+			if (!always_yes) {
+				printf("Over-write (y/n)?");
+				result_string=fgets(temp_string,BUFSIZ,stdin);
+				if ((result_string==NULL) || (temp_string[0]!='y')) {
+					printf("Exiting early...\n");
+					goto exit_and_close;
+				}
+			}
+			fprintf(stderr,"Deleting previous version...\n");
+			dos33_delete_file(dos_fd,catalog_entry);
+		}
 
 		dos33_add_file(dos_fd,type,argv[firstarg+3],apple_filename);
 
