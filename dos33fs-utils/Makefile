@@ -14,7 +14,7 @@ dos33:			dos33.o
 			$(CC) $(LFLAGS) -o dos33 dos33.o
 
 dos33.o:		dos33.c dos33.h
-			$(CC) $(CFLAGS) -c dos33.c
+			$(CC) $(CFLAGS) -g -c dos33.c
 
 dos33_text2ascii:	dos33_text2ascii.o
 			$(CC) $(LFLGAS) -o dos33_text2ascii dos33_text2ascii.o
