@@ -429,10 +429,14 @@ found_one:
 #define ERROR_IMAGE_NOT_FOUND	4
 #define ERROR_CATALOG_FULL	5
 
+#define ADD_RAW		0
+#define ADD_BINARY	1
+
 	/* creates file apple_filename on the image from local file filename */
 	/* returns ?? */
-static int dos33_add_file(int fd,char type,char *filename,
-		char *apple_filename) {
+static int dos33_add_file(int fd, char dos_type,
+		int file_type, int address, int length,
+		char *filename, char *apple_filename) {
 
 	int free_space,file_size,needed_sectors;
 	struct stat file_info;
@@ -441,6 +445,7 @@ static int dos33_add_file(int fd,char type,char *filename,
 	int catalog_track,catalog_sector,sectors_used=0;
 	int input_fd;
 	int result;
+	int first_write=1;
 
 	if (apple_filename[0]<64) {
 		fprintf(stderr,"Error!  First char of filename "
@@ -470,6 +475,12 @@ static int dos33_add_file(int fd,char type,char *filename,
 	file_size=(int)file_info.st_size;
 
 	if (debug) printf("Filesize: %d\n",file_size);
+
+	if (file_type==ADD_BINARY) {
+		if (debug) printf("Adding 4 bytes for size/offset\n");
+		if (length==0) length=file_size;
+		file_size+=4;
+	}
 
 	/* We need to round up to nearest sector size */
 	/* Add an extra sector for the T/S list */
@@ -564,14 +575,30 @@ static int dos33_add_file(int fd,char type,char *filename,
 		for(x=0;x<BYTES_PER_SECTOR;x++) sector_buffer[x]=0;
 
 		/* read from input */
-		bytes_read=read(input_fd,sector_buffer,BYTES_PER_SECTOR);
+		if ((first_write) && (file_type==ADD_BINARY)) {
+			first_write=0;
+			sector_buffer[0]=address&0xff;
+			sector_buffer[1]=(address>>16)&0xff;
+			sector_buffer[2]=(length)&0xff;
+			sector_buffer[3]=((length)>>16)&0xff;
+			bytes_read=read(input_fd,sector_buffer+4,
+					BYTES_PER_SECTOR-4);
+			bytes_read+=4;
+		}
+		else {
+			bytes_read=read(input_fd,sector_buffer,
+					BYTES_PER_SECTOR);
+		}
+		first_write=0;
+
 		if (bytes_read<0) fprintf(stderr,"Error reading bytes!\n");
 
 		/* write to disk image */
 		lseek(fd,DISK_OFFSET((data_ts>>8)&0xff,data_ts&0xff),SEEK_SET);
 		result=write(fd,sector_buffer,BYTES_PER_SECTOR);
-//		printf("Writing %i bytes to %i/%i\n",bytes_read,(data_ts>>8)&0xff,
-//			data_ts&0xff);
+
+		if (debug) printf("Writing %i bytes to %i/%i\n",
+				bytes_read,(data_ts>>8)&0xff,data_ts&0xff);
 
 		/* add to T/s table */
 
@@ -642,7 +669,7 @@ got_a_dentry:
 	sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+1]=(initial_ts_list&0xff);
 	/* set file type */
 	sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_TYPE]=
-		dos33_char_to_type(type,0);
+		dos33_char_to_type(dos_type,0);
 
 //	printf("Pointing T/S to %x/%x\n",(initial_ts_list>>8)&0xff,initial_ts_list&0xff);
 
@@ -1191,7 +1218,7 @@ static void display_help(char *name, int version_only) {
 	printf("\tCATALOG\n");
 	printf("\tLOAD     apple_file <local_file>\n");
 	printf("\tSAVE     type local_file <apple_file>\n");
-	printf("\tBSAVE    type local_file <apple_file>\n");
+	printf("\tBSAVE    [-a addr] [-l len] local_file <apple_file>\n");
 	printf("\tDELETE   apple_file\n");
 	printf("\tLOCK     apple_file\n");
 	printf("\tUNLOCK   apple_file\n");
@@ -1285,13 +1312,20 @@ int main(int argc, char **argv) {
 	char local_filename[BUFSIZ];
 	char *result_string;
 	int always_yes=0;
-	char *temp;
+	char *temp,*endptr;
 	int c;
+	int address=0, length=0;
 
 	/* Check command line arguments */
-	while ((c = getopt (argc, argv,"hvy"))!=-1) {
+	while ((c = getopt (argc, argv,"a:l:hvy"))!=-1) {
 		switch (c) {
 
+		case 'a':
+			address=strtol(optarg,&endptr,0);
+			break;
+		case 'l':
+			length=strtol(optarg,&endptr,0);
+			break;
 		case 'v':
 			display_help(argv[0],1);
 			return 0;
@@ -1487,9 +1521,16 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"Deleting previous version...\n");
 			dos33_delete_file(dos_fd,catalog_entry);
 		}
-
-		dos33_add_file(dos_fd,type,local_filename,apple_filename);
-
+		if (command==COMMAND_SAVE) {
+			dos33_add_file(dos_fd,type,
+				ADD_RAW, address, length,
+				local_filename,apple_filename);
+		}
+		else {
+			dos33_add_file(dos_fd,type,
+				ADD_BINARY, address, length,
+				local_filename,apple_filename);
+		}
 		break;
 
 	case COMMAND_DELETE:
