@@ -116,12 +116,25 @@
 ' Print received packet
 '
 1000 REM *** PRINT PACKET
+1001 FL=1:FL$=""
 1003 R%=RA/256
 1005 POKE HA,R%: POKE LA,RA-(R%*256)
 1010 FOR I=1 TO SI
 1020 C=PEEK(DP):C$=CHR$(C)
+1025 IF FL=1 THEN FL$=FL$+C$
+1027 IF C=10 THEN FL=0
 1030 IF C<>10 THEN PRINT C$;
 1040 NEXT I
+1050 PRINT "FIRST LINE=";FL$
+1060 IF LEFT$(FL$,3)<>"GET" GOTO 7000
+1065 N$=""
+1070 FOR I=6 TO LEN(FL$)
+1075 M$=MID$(FL$,I,1)
+1080 IF M$=" " GOTO 1090
+1085 N$=N$+M$
+1087 NEXT I
+1090 IF N$="" THEN N$="index.html"
+1095 PRINT "SENDING FILE: ";N$
 '
 ' TODO: handle wraparound of 8kb buffer
 '
@@ -140,37 +153,25 @@
 ' Load file from disk
 '
 1200 REM *** LOAD FILE
-1210 PRINT CHR$(4)+"BLOAD index.html"
+1202 X$=RIGHT$(N$,3):M$="text/html"
+1205 IF X$="txt" THEN M$="text/plain"
+1206 IF X$="png" THEN M$="image/png"
+1207 IF X$="jpg" THEN M$="image/jpg"
+1208 IF N$="teapot.html" GOTO 9000
+1209 ONERR GOTO 8000
+1210 PRINT CHR$(4)+"BLOAD ";N$
+1215 POKE 216,0: REM CANCEL ONERR
 1220 FS=PEEK(43616)+256*PEEK(43617): REM FILESIZE
 ' assume loaded at 0x4000, text page 2
 ' and that max size is 8kb
-1225 A$="HTTP/1.1 200 OK"+CHR$(13)+CHR$(10)
-1230 A$=A$+"Server: VMW-web"+CHR$(13)+CHR$(10)
-1235 A$=A$+"Content-Length: "+STR$(FS)+CHR$(13)+CHR$(10)
-1240 A$=A$+"Content-Type: text/html"+CHR$(13)+CHR$(10)+CHR$(13)+CHR$(10)
+1240 A$="HTTP/1.1 200 OK"+CHR$(13)+CHR$(10)
+1250 A$=A$+"Server: VMW-web"+CHR$(13)+CHR$(10)
+1260 A$=A$+"Content-Length: "+STR$(FS)+CHR$(13)+CHR$(10)
+1280 A$=A$+"Content-Type: "+M$+CHR$(13)+CHR$(10)+CHR$(13)+CHR$(10)
 '
-'"HTTP/1.1 200 OK\r\n"
-'"Date: %s\r\n"
-'"Server: VMW-web\r\n"
-'"Last-Modified: %s\r\n"
-'"Content-Length: %ld\r\n"
-'"Content-Type: %s\r\n"
-'"\r\n",
-'1300 REM *** SEND RESPONSE
-'1301 M$="<html><head><title>test</title></head><body><h3>Apple2 Test</h3></body></html>"+CHR$(13)+CHR$(10)
-'1305 A$="HTTP/1.1 200 OK"+CHR$(13)+CHR$(10)
-'1310 A$=A$+"Server: VMW-web"+CHR$(13)+CHR$(10)
-'1320 A$=A$+"Content-Length: "+STR$(LEN(M$))+CHR$(13)+CHR$(10)
-'1330 A$=A$+"Content-Type: text/html"+CHR$(13)+CHR$(10)
-'1350 A$=A$+CHR$(13)+CHR$(10)
-'1370 A$=A$+M$
 1380 PRINT "SENDING:":PRINT A$
 '
-' TODO: read TX free size reg (0x420)
-'  FREESIZE:
-'      get_free_size = Sn_TX_FSR;
-'      if (get_free_size < send_size) goto FREESIZE;
-'
+' read TX free size reg (0x420)
 '
 1700 SI=LEN(A$)+FS
 1710 IF (SI>8192) THEN PRINT "FILE TOO BIG!": REM GOTO 403?
@@ -240,6 +241,36 @@
 6020 POKE DP, 16: REM *** CLOSE
 ' Check status?
 6030 GOTO 400
+'
+'
+' ERROR MESSAGES
+'
+'
+7000 REM 400 BAD REQUEST
+7005 S$="400 Bad Request"
+7010 M$="<html><head><title>400 Bad Request</title></head><body><h1>Bad Request</h1><p>Your browser sent a request that this server could not understand.<br /></p></body></html>"+CHR$(13)+CHR$(10)
+7020 GOTO 9100
+8000 REM 404 NOT FOUND
+8003 POKE 216,0: REM CANCEL ONERR
+8004 PRINT "DISK ERROR: ";PEEK(222)
+8005 S$="404 Not Found"
+8010 M$="<html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>File not found.<br /></p></body></html>"+CHR$(13)+CHR$(10)
+8020 GOTO 9100
+9000 REM 418 TEAPOT
+9005 S$="418 I'm a Teapot"
+9010 M$="<html><head><title>418 I'm a Teapot</title></head><body><h1>I'm a Teapot</h1><p>Short *and* stout.<br /></p></body></html>"+CHR$(13)+CHR$(10)
+'
+' Make header
+'
+9100 A$="HTTP/1.1 "+S$+CHR$(13)+CHR$(10)+"Server: VMW-web"+CHR$(13)+CHR$(10)
+9105 A$=A$+"Content-Length: "+STR$(LEN(M$))+CHR$(13)+CHR$(10)
+9110 A$=A$+"Connection: close"+CHR$(13)+CHR$(10)+"Content-Type: text/html; charset=iso-8859-1"+CHR$(13)+CHR$(10)+CHR$(13)+CHR$(10)
+' Poke as if we had loaded from disk
+9200 FS=LEN(M$)
+9210 FOR I=1 TO FS
+9220 POKE 16383+I,ASC(MID$(M$,I,1))
+9300 NEXT I
+9310 GOTO 1380
 '
 ' STATUSES
 '	p28 of W5100 manual
