@@ -578,9 +578,9 @@ static int dos33_add_file(int fd, char dos_type,
 		if ((first_write) && (file_type==ADD_BINARY)) {
 			first_write=0;
 			sector_buffer[0]=address&0xff;
-			sector_buffer[1]=(address>>16)&0xff;
+			sector_buffer[1]=(address>>8)&0xff;
 			sector_buffer[2]=(length)&0xff;
-			sector_buffer[3]=((length)>>16)&0xff;
+			sector_buffer[3]=((length)>>8)&0xff;
 			bytes_read=read(input_fd,sector_buffer+4,
 					BYTES_PER_SECTOR-4);
 			bytes_read+=4;
@@ -1322,9 +1322,11 @@ int main(int argc, char **argv) {
 
 		case 'a':
 			address=strtol(optarg,&endptr,0);
+			if (debug) printf("Address=%d\n",address);
 			break;
 		case 'l':
 			length=strtol(optarg,&endptr,0);
+			if (debug) printf("Length=%d\n",address);
 			break;
 		case 'v':
 			display_help(argv[0],1);
