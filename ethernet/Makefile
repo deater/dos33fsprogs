@@ -10,18 +10,6 @@ SETUP.BAS:	setup.bas
 WEBSERVER.BAS:	webserver.bas
 	$(TXT2BAS) < webserver.bas > WEBSERVER.BAS
 
-#about.html:	./c/about.html
-#	$(MAKEB) ./c/about.html about.html 0xc000
-
-#index.html:	./c/index.html
-#	$(MAKEB) ./c/index.html index.html 0xc000
-
-#favicon.ico:	./c/favicon.ico
-#	$(MAKEB) ./c/favicon.ico favicon.ico 0xc000
-
-#vmw_logo.png:	./c/vmw_logo.png
-#	$(MAKEB) ./c/vmw_logo.png vmw_logo.png 0xc000
-
 R.TXT:	request.txt
 	$(MAKEB) request.txt R.TXT 0xc000
 
