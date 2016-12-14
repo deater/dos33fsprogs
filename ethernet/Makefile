@@ -32,10 +32,10 @@ ethernet.dsk:	SETUP.BAS \
 	$(DOS33) -y ethernet.dsk SAVE A SETUP.BAS
 	$(DOS33) -y ethernet.dsk SAVE A WEBSERVER.BAS
 	$(DOS33) -y ethernet.dsk BSAVE R.TXT
-	$(DOS33) -y ethernet.dsk BSAVE ./c/about.html
-	$(DOS33) -y ethernet.dsk BSAVE ./c/index.html
-	$(DOS33) -y ethernet.dsk BSAVE ./c/favicon.ico
-	$(DOS33) -y ethernet.dsk BSAVE ./c/vmw_logo.png
+	$(DOS33) -y ethernet.dsk BSAVE -a 0x4000 ./c/about.html
+	$(DOS33) -y ethernet.dsk BSAVE -a 0x4000 ./c/index.html
+	$(DOS33) -y ethernet.dsk BSAVE -a 0x4000 ./c/favicon.ico
+	$(DOS33) -y ethernet.dsk BSAVE -a 0x4000 ./c/vmw_logo.png
 
 clean:	
 	rm -f *~ *.BAS R.TXT
