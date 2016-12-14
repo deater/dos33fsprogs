@@ -130,7 +130,7 @@
 '
 1100 REM *** Update read pointer
 1110 POKE HA,4: POKE LA,40: REM *** 0x428 Received ptr
-1120 RA=RA+SI
+1120 RA=RF+SI
 1130 R%=RA/256
 1140 POKE DP,R%: POKE DP,RA-(R%*256)
 '
@@ -142,7 +142,7 @@
 '"Content-Type: %s\r\n"
 '"\r\n",
 1200 REM *** SEND RESPONSE
-1201 M$="<html><head>test</head><body><h3>Apple2 Test</h3></body></html>"+CHR$(13)+CHR$(10)
+1201 M$="<html><head><title>test</title></head><body><h3>Apple2 Test</h3></body></html>"+CHR$(13)+CHR$(10)
 1205 A$="HTTP/1.1 200 OK"+CHR$(13)+CHR$(10)
 1210 A$=A$+"Server: VMW-web"+CHR$(13)+CHR$(10)
 1220 A$=A$+"Content-Length: "+STR$(LEN(M$))+CHR$(13)+CHR$(10)
@@ -152,32 +152,52 @@
 1280 PRINT "SENDING:":PRINT A$
 '
 ' TODO: read TX free size reg (0x420)
+'  FREESIZE:
+'      get_free_size = Sn_TX_FSR;
+'      if (get_free_size < send_size) goto FREESIZE;
 '
-1900 POKE HA,4: POKE LA,34: REM *** 0x422 TX read ptr
+'
+1900 POKE HA,4: POKE LA,36: REM *** 0x424 TX write ptr
 1905 OH=PEEK(DP):OL=PEEK(DP)
 1910 TF=(OH*256)+OL
-1920 REM *** SHOULD MASK WITH 0x1ff
+1920 REM *** MASK WITH 0x1ff
 1925 T%=TF/8192:TF=TF-(8192*T%)
 1930 TA=TF+16384:REM $4000
 1935 SI=LEN(A$)
-1940 PRINT "TX OFFSET=";TF;" TX ADDRESS=";TA;" TX SIZE=";SI
+1940 PRINT "OH/OL=";OH;"/";OL;" TX OFFSET=";TF;" TX ADDRESS=";TA;" TX SIZE=";SI
+'
+' Write data to TX buffer
+'
 2000 T%=TA/256
 2005 POKE HA,T%: POKE LA,TA-(T%*256)
 2010 FOR I=1 TO SI
 2020 POKE DP,ASC(MID$(A$,I,1))
 2040 NEXT I
+'
+' Update TX write ptr
+'
 2050 REM ** UPDATE TX WRITE PTR
 2060 POKE HA,4: POKE LA,36: REM *** 0x424 TX write ptr
-2075 TA=TA+SI
+2075 TA=TF+SI
 2080 T%=TA/256
-2085 POKE HA,T%: POKE LA,TA-(T%*256)
+2085 POKE DP,T%: POKE DP,TA-(T%*256)
+'
+' SEND packet
+'
 2100 REM *** SEND
 2105 POKE HA,4: POKE LA,1: REM *** 0x401 command register
 2110 POKE DP, 32: REM *** SEND
 '
 ' Return to reading
 '
-4000 GOTO 802
+4000 REM *** Check if successful
+4010 POKE HA,4: POKE LA,3: REM *** 0x403 status register
+4020 RE=PEEK(DP)
+4030 PRINT "STATUS AFTER SEND ";RE
+4060 REM *** RECEIVE
+4075 POKE HA,4: POKE LA,1: REM *** 0x401 command register
+4080 POKE DP, 64: REM *** RECV
+4090 GOTO 802
 '
 ' Close the socket
 '
