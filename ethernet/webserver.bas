@@ -119,8 +119,8 @@
 1003 R%=RA/256
 1005 POKE HA,R%: POKE LA,RA-(R%*256)
 1010 FOR I=1 TO SI
-1020 C=PEEK(DP)
-1030 IF C<>10 THEN PRINT CHR$(C);
+1020 C=PEEK(DP):C$=CHR$(C)
+1030 IF C<>10 THEN PRINT C$;
 1040 NEXT I
 '
 ' TODO: handle wraparound of 8kb buffer
@@ -136,7 +136,18 @@
 1150 REM *** RECEIVE
 1160 POKE HA,4: POKE LA,1: REM *** 0x401 command register
 1170 POKE DP, 64: REM *** RECV
-'1180 GOTO 802
+'
+' Load file from disk
+'
+1200 REM *** LOAD FILE
+1210 PRINT CHR$(4)+"BLOAD index.html"
+1220 FS=PEEK(43616)+256*PEEK(43617): REM FILESIZE
+' assume loaded at 0x4000, text page 2
+' and that max size is 8kb
+1225 A$="HTTP/1.1 200 OK"+CHR$(13)+CHR$(10)
+1230 A$=A$+"Server: VMW-web"+CHR$(13)+CHR$(10)
+1235 A$=A$+"Content-Length: "+STR$(FS)+CHR$(13)+CHR$(10)
+1240 A$=A$+"Content-Type: text/html"+CHR$(13)+CHR$(10)+CHR$(13)+CHR$(10)
 '
 '"HTTP/1.1 200 OK\r\n"
 '"Date: %s\r\n"
@@ -145,15 +156,15 @@
 '"Content-Length: %ld\r\n"
 '"Content-Type: %s\r\n"
 '"\r\n",
-1200 REM *** SEND RESPONSE
-1201 M$="<html><head><title>test</title></head><body><h3>Apple2 Test</h3></body></html>"+CHR$(13)+CHR$(10)
-1205 A$="HTTP/1.1 200 OK"+CHR$(13)+CHR$(10)
-1210 A$=A$+"Server: VMW-web"+CHR$(13)+CHR$(10)
-1220 A$=A$+"Content-Length: "+STR$(LEN(M$))+CHR$(13)+CHR$(10)
-1230 A$=A$+"Content-Type: text/html"+CHR$(13)+CHR$(10)
-1250 A$=A$+CHR$(13)+CHR$(10)
-1270 A$=A$+M$
-1280 PRINT "SENDING:":PRINT A$
+'1300 REM *** SEND RESPONSE
+'1301 M$="<html><head><title>test</title></head><body><h3>Apple2 Test</h3></body></html>"+CHR$(13)+CHR$(10)
+'1305 A$="HTTP/1.1 200 OK"+CHR$(13)+CHR$(10)
+'1310 A$=A$+"Server: VMW-web"+CHR$(13)+CHR$(10)
+'1320 A$=A$+"Content-Length: "+STR$(LEN(M$))+CHR$(13)+CHR$(10)
+'1330 A$=A$+"Content-Type: text/html"+CHR$(13)+CHR$(10)
+'1350 A$=A$+CHR$(13)+CHR$(10)
+'1370 A$=A$+M$
+1380 PRINT "SENDING:":PRINT A$
 '
 ' TODO: read TX free size reg (0x420)
 '  FREESIZE:
@@ -161,7 +172,8 @@
 '      if (get_free_size < send_size) goto FREESIZE;
 '
 '
-1700 SI=LEN(A$)
+1700 SI=LEN(A$)+FS
+1710 IF (SI>8192) THEN PRINT "FILE TOO BIG!": REM GOTO 403?
 1800 POKE HA,4: POKE LA,32: REM *** 0x420 FREESIZE
 1810 OH=PEEK(DP):OL=PEEK(DP)
 1815 FR=(OH*256)+OL
@@ -182,9 +194,12 @@
 '
 2000 T%=TA/256
 2005 POKE HA,T%: POKE LA,TA-(T%*256)
-2010 FOR I=1 TO SI
-2020 POKE DP,ASC(MID$(A$,I,1))
-2040 NEXT I
+2010 FOR I=1 TO LEN(A$)
+2015 POKE DP,ASC(MID$(A$,I,1))
+2020 NEXT I
+2025 FOR I=1 TO FS
+2030 POKE DP,PEEK(16383+I)
+2035 NEXT I
 '
 ' Update TX write ptr
 '
