@@ -1,3 +1,6 @@
+' Applesoft BASIC Webserver
+' by Vince Weaver <vince@deater.net>
+'
 1 REM *** Setup UTHERNET II - W5100
 ' SLOT0=$C080	49280	SLOT4=$C0C0	49344
 ' SLOT1=$C090	49296	SLOT5=$C0D0	49360
