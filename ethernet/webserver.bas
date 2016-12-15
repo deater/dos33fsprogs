@@ -164,14 +164,16 @@
 '
 1200 REM *** LOAD FILE
 1202 X$=RIGHT$(N$,3):M$="text/html"
-1205 IF X$="txt" THEN M$="text/plain"
-1206 IF X$="png" THEN M$="image/png"
-1207 IF X$="jpg" THEN M$="image/jpg"
-1208 IF N$="teapot.html" GOTO 9000
-1209 ONERR GOTO 8000
+1203 IF X$="txt" THEN M$="text/plain"
+1204 IF X$="png" THEN M$="image/png"
+1205 IF X$="jpg" THEN M$="image/jpg"
+1206 IF N$="teapot.html" GOTO 9000
+1207 ONERR GOTO 8000
+1208 PRINT "LOADING ";N$
 1210 PRINT CHR$(4)+"BLOAD ";N$
 1215 POKE 216,0: REM CANCEL ONERR
 1220 FS=PEEK(43616)+256*PEEK(43617): REM FILESIZE
+1225 PRINT "DONE LOADING"
 ' assume loaded at 0x4000, text page 2
 ' and that max size is 8kb
 1240 A$="HTTP/1.1 200 OK"+CHR$(13)+CHR$(10)
@@ -180,6 +182,7 @@
 1280 A$=A$+"Content-Type: "+M$+CHR$(13)+CHR$(10)+CHR$(13)+CHR$(10)
 '
 1380 PRINT "SENDING:":PRINT A$
+1385 C=0
 '
 ' read TX free size reg (0x420)
 '
@@ -216,10 +219,12 @@
 2018 BO=BO-1: IF BO=0 THEN POKE HA,64:POKE LA,0:BW=0
 2020 NEXT I
 2025 FOR I=1 TO FS
+2026 C=C+1: IF C=50 THEN PRINT ".";:C=0
 2030 POKE DP,PEEK(16383+I)
 2032 IF BW=0 THEN GOTO 2035
 2033 BO=BO-1: IF BO=0 THEN POKE HA,64:POKE LA,0:BW=0
 2035 NEXT I
+2040 PRINT
 '
 ' Update TX write ptr
 '
@@ -233,6 +238,7 @@
 ' SEND packet
 '
 2100 REM *** SEND
+2102 PRINT "SENDING"
 2105 POKE HA,4: POKE LA,1: REM *** 0x401 command register
 2110 POKE DP, 32: REM *** SEND
 '
