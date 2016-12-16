@@ -28,7 +28,10 @@
 33 POKE DP,192:POKE DP,168:POKE DP,8:POKE DP,15
 40 PRINT "UTHERNET II READY: 192.168.8.15"
 '
-' Setup Memcpy routine
+' Setup Machine Language Memcpy routine
+'   NOTE! This code assumes the Uthernet is in slot 3
+'   FIXME: patch on the fly once it works
+'   See Appendix 1 at the end of this for more details
 '
 50 FOR I=0 TO 72: READ X: POKE 768+I,X:NEXT I
 51 DATA 169,0,133,6,169,64,133,7,162,11,240,36,160,0,177,6
@@ -332,3 +335,72 @@
 '	0x32		SOCK_IPRAW
 '	0x42		SOCK_MACRAW
 '	0x5f		SOCK_PPOE
+
+'
+' Appendix 1: The memcpy machine code
+'
+'
+'PTR	EQU	$06
+'PTRH	EQU	$07
+'
+'WRAPL	EQU	$08
+'WRAPH	EQU	$09
+'
+'SIZEL	EQU	$0A
+'SIZEH	EQU	$0B
+'
+'tx_copy:
+'
+'	lda	#0		; always copying from 0x4000
+'	sta	PTR
+'	lda	#$40
+'	sta	PTR+1
+'
+'	ldx	#SIZEH		; number of 256-byte blocks
+'	beq	copy_remainder	; if none, skip ahead
+'
+'	ldy	#0
+'copy256:
+'	lda	(PTR),y
+'	sta	$C0B7		; change based on uthernet slot
+'
+'	cmp	WRAPH,x
+'	bne	nowrap256
+'
+'	cmp	WRAPL,y
+'	bne	nowrap256
+'
+'	lda	#$40
+'	sta	$C0B5
+'	lda	#$00
+'	sta	$C0B6		; wrap tx buffer address to 0x4000
+'
+'nowrap256:
+'	iny
+'	bne	copy256
+'
+'	inc	PTR+1		; update 16-bit pointer
+'	dex			; finish a 256 byte block
+'	bne	copy256
+'
+'	ldx	#SIZEL
+'copy_remainder:
+'	lda	(PTR),y
+'	sta	$C0B7		; change based on uthernet slot
+'
+'	cmp	WRAPL,y
+'	bne	nowrap_r
+'
+'	lda	#$40
+'	sta	$C0B5
+'	lda	#$00
+'	sta	$C0B6		; wrap tx buffer address to 0x4000
+'
+'nowrap_r:
+'	iny
+'	dex
+'	bne	copy_remainder
+'
+'	rts
+
+
