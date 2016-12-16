@@ -2,7 +2,10 @@ DOS33 = ../dos33fs-utils/dos33
 TXT2BAS = ../asoft_basic-utils/tokenize_asoft
 MAKEB = ../dos33fs-utils/make_b
 
-all:	ethernet.dsk
+all:	ethernet.dsk memcpy.o
+
+memcpy.o:	memcpy.s
+	ca65 -o memcpy.o memcpy.s -l memcpy.lst
 
 SETUP.BAS:	setup.bas
 	$(TXT2BAS) < setup.bas > SETUP.BAS
@@ -26,4 +29,4 @@ ethernet.dsk:	SETUP.BAS \
 	$(DOS33) -y ethernet.dsk BSAVE -a 0x4000 ./c/vmw_logo.png
 
 clean:	
-	rm -f *~ *.BAS R.TXT
+	rm -f *~ *.BAS R.TXT *.o *.lst
