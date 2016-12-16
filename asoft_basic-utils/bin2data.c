@@ -35,7 +35,8 @@ int main(int argc, char **argv) {
 	}
 
 	printf("%d FOR I=0 TO %d: READ X: POKE %d+I,X:NEXT I\n",
-		line,bytes,address);
+		line,bytes-1,address);
+	line+=10;
 
 	for(i=0;i<bytes;i++) {
 		read(fd,&c,1);
