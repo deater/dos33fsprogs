@@ -378,7 +378,7 @@
 'REM SOUND 440, 1
 'REM SOUND 369.9, 1
 'NEXT i
-380 T$="to"+C$:GOSUB 20
+380 T$="to ":GOSUB 20
 'FOR i = 1 TO 7.2
 'REM SOUND 369.9, 1
 'REM SOUND 293.6, 1
@@ -508,343 +508,233 @@
 'REM SOUND 369.9, 4.8
 'REM SOUND 0, .1
 'REM SOUND 369.9, 24
+'
+'
+516 HOME:C$=CHR$(13)
+518 T$="Forms FORM-55551-6:"+C$:GOSUB 30
+520 T$="Personnel File Addendum ":GOSUB 30
+522 T$="Addendum:"+C$:GOSUB 30
+523 PRINT
+524 T$="One last thing:"+C$:GOSUB 20
+526 PRINT
+'FOR i = 1 TO 3
+'REM SOUND 123.4, 14.4
+'REM SOUND 0, .1
+'REM SOUND 123.4, 4.8
+'REM SOUND 146.6, 14.4
+'REM SOUND 0, .1
+'REM SOUND 146.6, 4.8
+'NEXT i
+'
+' Go ahead and leave me
+'
+528 T$="Go ":GOSUB 20:REM SOUND 391.9, 4.8
+530 T$="ahead:"GOSUB 20:REM SOUND 369.9, 4.8
+532 T$="and ":GOSUB 20:REM SOUND 329.6, 4.8
+534 T$="leave ":GOSUB 20:REM SOUND 0, .1:REM SOUND 329.6, 9.6
+536 T$="me"+C$:GOSUB 20:REM SOUND 369.9, 14.2
+'REM SOUND 123.4, 4.8
+'REM SOUND 146.8, 4.8
+'REM SOUND 184.9, 4.8
+'REM SOUND 146.8, 4.8
+'REM SOUND 110, 4.8
+'REM SOUND 123.4, 4.8
+'REM SOUND 146.8, 4.8
+'
+'  think I prefer to stay inside.
+'
+538 T$="I ":GOSUB 20:REM SOUND 220, 4.8
+540 T$="think ":GOSUB 20:REM SOUND 391.9, 4.8
+542 T$="I ":GOSUB 20:REM SOUND 369.9, 4.8
+544 T$="pre":GOSUB 20:REM SOUND 329.6, 4.8
+546 T$="fer ":GOSUB 20:REM SOUND 0, .1:REM SOUND 329.6, 14.2
+548 T$="to ":GOSUB 20:REM SOUND 369.9, 4.8
+550 T$="stay ":GOSUB 20:REM SOUND 293.6, 14.2
+552 T$="in":GOSUB 20:REM SOUND 329.6, 4.8
+554 T$="side."+C$:GOSUB 20: REM SOUND 220, 24
+'
+'REM SOUND 123.4, 4.8
+'REM SOUND 146.8, 4.8
+'REM SOUND 184.9, 4.8
+'REM SOUND 146.8, 4.8
+'
+' Maybe you'll find someone else
+'
+556 T$="May":GOSUB 20:REM SOUND 329.6, 9.6
+558 T$="be ":GOSUB 20:REM SOUND 369.9, 4.8
+560 T$="you'll ":GOSUB 20:REM SOUND 391.9, 14.2
+562 T$="find ":GOSUB 20:REM SOUND 329.6, 9.6
+564 T$="some":GOSUB 20:REM SOUND 277.1, 9.6
+566 T$="one ":GOSUB 20:REM SOUND 293.6, 4.8
+568 T$="else"+C$:GOSUB 20:REM SOUND 329.6, 9.6
+'delaytime = .48
+'
+' to help you.
+'
+570 T$="to ":GOSUB 20:REM SOUND 220, 4.8
+572 T$="help ":GOSUB 20:REM SOUND 0, .1:REM SOUND 220, 9.6
+574 T$="you."+C$:GOSUB 20:REM SOUND 369.9, 24
+'REM SOUND 184.9, 4.8
+'REM SOUND 146.8, 4.8
+'REM SOUND 110, 4.8
+'REM SOUND 146.8, 4.8
+'REM SOUND 184.9, 4.8
+'REM SOUND 146.8, 4.8
+'
+' Black Mesa
+'
+576 GOSUB 18:GOSUB 15:HOME:GOSUB 2800: GOSUB 10:GOSUB 19:PRINT
+'
+' Maybe Black Mesa.
+'
+578 T$="May":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 391.9, 1
+'REM SOUND 493.8, 1
+'NEXT i
+580 T$="be ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 369.9, 1
+'REM SOUND 440, 1
+'NEXT i
+582 T$="Black ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 329.6, 1
+'REM SOUND 391.9, 1
+'NEXT i
+584 T$="Me":GOSUB 20
+'REM SOUND 0, .1
+'FOR i = 1 TO 4.755
+'REM SOUND 329.6, 1
+'REM SOUND 391.9, 1
+'NEXT i
+586 T$="sa.":GOSUB 20
+'FOR i = 1 TO 4.8
+'REM SOUND 440, 1
+'REM SOUND 369.9, 1
+'NEXT i
+'REM SOUND 0, .1
+'
+'REM SOUND 146.8, 4.8
+'REM SOUND 123.4, 14.4
+'delay
+'REM SOUND 123.4, 4.8
+'REM SOUND 146.8, 14.4
+'delay
+'REM SOUND 146.8, 4.8
+'
+' THAT WAS A JOKE.
+'
+588 T$=".."+C$:GOSUB 20
+590 T$="THAT ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 391.9, 1
+'REM SOUND 493.8, 1
+'NEXT i
+592 T$="WAS ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 440, 1
+'REM SOUND 369.9, 1
+'NEXT i
+594 T$="A ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 329.6, 1
+'REM SOUND 391.9, 1
+'NEXT i
+596 T$="JOKE. ":GOSUB 20
+'FOR i = 1 TO 7.2
+'REM SOUND 391.9, 1
+'REM SOUND 329.6, 1
+'NEXT i
+'
+' HAHA
+'
+'FOR i = 1 TO 2.4
+'REM SOUND 440, 1
+'REM SOUND 369.9, 1
+'NEXT i
+'FOR i = 1 TO 7.2
+'REM SOUND 369.9, 1
+'REM SOUND 293.6, 1
+'NEXT i
+'
+' FAT CHANCE.
+'
+598 T$="FAT ":GOSUB 30
+'FOR i = 1 TO 2.4
+'REM SOUND 391.9, 1
+'REM SOUND 329.6, 1
+'NEXT i
+600 T$="CHANCE."+C$:GOSUB 30
+'FOR i = 1 TO 7.2
+'REM SOUND 293.6, 1
+'REM SOUND 220, 1
+'NEXT i
+'
+'delaytime = .48
+'
+'REM SOUND 146.8, 4.8
+'REM SOUND 123.4, 14.4
+'REM SOUND 0, .1
+'REM SOUND 123.4, 4.8
+'
+' Anyway, this cake is
+'
+602 T$="A":GOSUB 20:REM SOUND 329.6, 9.6
+604 T$="ny":GOSUB 20:REM SOUND 369.9, 4.8
+606 T$="way, ":GOSUB 20:REM SOUND 391.9, 14.4
+608 T$="this ":GOSUB 20:REM SOUND 329.6, 9.6
+610 T$="cake ":GOSUB 20:REM SOUND 277.1, 9.6
+612 T$="is ":GOSUB 20:REM SOUND 293.6, 4.8
+'
+' CAKE
+'
+614 GOSUB 18:GOSUB 15:HOME:GOSUB 2900: GOSUB 10:GOSUB 19:PRINT
+616 POKE 36,X
+'
+' great.
+'
+616 T$="great."+C$:GOSUB 20:REM SOUND 329.6, 9.6
+'
+' It's so delicious and moist.
+'
+618 T$="It's ":GOSUB 20:REM SOUND 220, 4.8
+620 T$="so ":GOSUB 20:REM SOUND 293.6, 4.8
+622 T$="de":GOSUB 20:REM SOUND 329.6, 4.8
+624 T$="li":GOSUB 20:REM SOUND 349.2, 4.8
+626 T$="cious ":GOSUB 20:REM SOUND 329.6, 4.8
+628 T$="and ":GOSUB 20:REM SOUND 293.6, 4.8
+630 T$="moist."+C$:GOSUB 20:REM SOUND 261.6, 14.4
+'
+' GLaDOS
+'
+632 GOSUB 18:GOSUB 15:HOME:GOSUB 3000: GOSUB 10:GOSUB 19:PRINT
+'
+' Look at me still talking.
+'
+634 T$="Look ":GOSUB 20:REM SOUND 220, 4.8
+636 T$="at ":GOSUB 20:REM SOUND 233, 4.8
+638 T$="me ":GOSUB 20:REM SOUND 261.6, 9.6
+640 T$="still ":GOSUB 20:REM SOUND 349.2, 9.6
+642 T$="tal":GOSUB 20:REM SOUND 329.6, 4.8
+644 T$="king"+C$:GOSUB 20:REM SOUND 293.6, 4.8
+'
+' when there's Science to do.
+'
+646 T$="when ":GOSUB 20:REM SOUND 0, .1:REM SOUND 293.6, 4.8
+648 T$="there's"+C$:GOSUB 20:REM SOUND 261.6, 4.8
+'
+' RADIATION
+650 GOSUB 18:GOSUB 15:HOME:GOSUB 2100: GOSUB 10:GOSUB 19:PRINT
+652 POKE 36,X
+'
+'Science to do.
+'
+654 T$="|Sci":GOSUB 20:REM SOUND 293.6, 4.8
+656 T$="ence ":GOSUB 20:REM SOUND 261.6, 4.8
+658 T$="to ":GOSUB 20:REM SOUND 0, .1:REM SOUND 261.6, 9.6
+660 T$="do."+C$:GOSUB 20:REM SOUND 0, .1:REM SOUND 261.6, 9.6
 '.if 0
-
-clearleft
-T$="|Forms FORM-55551-6:"+C$ + "|Personnel File Addendum"+C$ + "|Addendum:"+C$ + "|"+C$
-fasttext
-T$="|One last thing:"+C$ + "|"+C$
-GOSUB 20:
-
-FOR i = 1 TO 3
-REM SOUND 123.4, 14.4
-REM SOUND 0, .1
-REM SOUND 123.4, 4.8
-REM SOUND 146.6, 14.4
-REM SOUND 0, .1
-REM SOUND 146.6, 4.8
-NEXT i
-
-T$="|Go "
-GOSUB 20:
-REM SOUND 391.9, 4.8
-T$="ahead "
-GOSUB 20:
-REM SOUND 369.9, 4.8
-T$="and "
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="leave "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 329.6, 9.6
-T$="me"+C$
-GOSUB 20:
-REM SOUND 369.9, 14.2
-REM                             "|Go ahead and leave me"+C$
-
-REM SOUND 123.4, 4.8
-REM SOUND 146.8, 4.8
-REM SOUND 184.9, 4.8
-REM SOUND 146.8, 4.8
-REM SOUND 110, 4.8
-REM SOUND 123.4, 4.8
-REM SOUND 146.8, 4.8
-
-T$="|I "
-GOSUB 20:
-REM SOUND 220, 4.8
-T$="think "
-GOSUB 20:
-REM SOUND 391.9, 4.8
-T$="I "
-GOSUB 20:
-REM SOUND 369.9, 4.8
-T$="pre"
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="fer "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 329.6, 14.2
-T$="to "
-GOSUB 20:
-REM SOUND 369.9, 4.8
-T$="stay"+C$
-GOSUB 20:
-REM SOUND 293.6, 14.2
-T$="|in"
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="side."+C$
-GOSUB 20:
-REM SOUND 220, 24
-REM                             "|I think I prefer to stay"+C$ + "|inside."+C$
-
-REM SOUND 123.4, 4.8
-REM SOUND 146.8, 4.8
-REM SOUND 184.9, 4.8
-REM SOUND 146.8, 4.8
-
-T$="|May"
-GOSUB 20:
-REM SOUND 329.6, 9.6
-T$="be "
-GOSUB 20:
-REM SOUND 369.9, 4.8
-T$="you'll "
-GOSUB 20:
-REM SOUND 391.9, 14.2
-T$="find "
-GOSUB 20:
-REM SOUND 329.6, 9.6
-T$="some"
-GOSUB 20:
-REM SOUND 277.1, 9.6
-T$="one"+C$
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="|else "
-GOSUB 20:
-REM SOUND 329.6, 9.6
-
-REM 480
-delaytime = .48
-delay
-
-T$="to "
-GOSUB 20:
-REM SOUND 220, 4.8
-T$="help "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 220, 9.6
-T$="you."+C$
-GOSUB 20:
-REM SOUND 369.9, 24
-REM                             "|Maybe you'll find someone"+C$ + "|else to help you."+C$
-
-REM SOUND 184.9, 4.8
-REM SOUND 146.8, 4.8
-REM SOUND 110, 4.8
-REM SOUND 146.8, 4.8
-REM SOUND 184.9, 4.8
-REM SOUND 146.8, 4.8
-
-bmesa
-LOCATE 13, 1
-
-T$="|May"
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 391.9, 1
-REM SOUND 493.8, 1
-NEXT i
-T$="be "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 369.9, 1
-REM SOUND 440, 1
-NEXT i
-T$="Black "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 329.6, 1
-REM SOUND 391.9, 1
-NEXT i
-T$="Me"
-GOSUB 20:
-REM SOUND 0, .1
-FOR i = 1 TO 4.755
-REM SOUND 329.6, 1
-REM SOUND 391.9, 1
-NEXT i
-T$="sa."
-GOSUB 20:
-FOR i = 1 TO 4.8
-REM SOUND 440, 1
-REM SOUND 369.9, 1
-NEXT i
-REM                             "|Maybe Black Mesa."
-
-REM SOUND 0, .1
-
-REM SOUND 146.8, 4.8
-REM SOUND 123.4, 14.4
-delay
-REM SOUND 123.4, 4.8
-REM SOUND 146.8, 14.4
-delay
-REM SOUND 146.8, 4.8
-
-LOCATE 13, 19
-FOR i = 1 TO 2
-PRINT ".";
-NEXT i
-PRINT CHR$(13)+C$
-
-T$="|THAT "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 391.9, 1
-REM SOUND 493.8, 1
-NEXT i
-T$="WAS "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 440, 1
-REM SOUND 369.9, 1
-NEXT i
-T$="A "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 329.6, 1
-REM SOUND 391.9, 1
-NEXT i
-T$="JOKE."+C$
-GOSUB 20:
-FOR i = 1 TO 7.2
-REM SOUND 391.9, 1
-REM SOUND 329.6, 1
-NEXT i
-REM                             "|THAT WAS A JOKE."+C$
-
-REM <HAHA>
-FOR i = 1 TO 2.4
-REM SOUND 440, 1
-REM SOUND 369.9, 1
-NEXT i
-FOR i = 1 TO 7.2
-REM SOUND 369.9, 1
-REM SOUND 293.6, 1
-NEXT i
-T$="|FAT "
-fasttext
-FOR i = 1 TO 2.4
-REM SOUND 391.9, 1
-REM SOUND 329.6, 1
-NEXT i
-T$="CHANCE."+C$
-fasttext
-FOR i = 1 TO 7.2
-REM SOUND 293.6, 1
-REM SOUND 220, 1
-NEXT i
-REM                             "|FAT CHANCE."+C$
-
-REM 480
-delaytime = .48
-delay
-
-REM SOUND 146.8, 4.8
-REM SOUND 123.4, 14.4
-REM SOUND 0, .1
-REM SOUND 123.4, 4.8
-
-T$="|A"
-GOSUB 20:
-REM SOUND 329.6, 9.6
-T$="ny"
-GOSUB 20:
-REM SOUND 369.9, 4.8
-text = "way, "
-GOSUB 20:
-REM SOUND 391.9, 14.4
-text = "this "
-GOSUB 20:
-REM SOUND 329.6, 9.6
-T$="cake "
-GOSUB 20:
-REM SOUND 277.1, 9.6
-T$="is"+C$
-GOSUB 20:
-REM SOUND 293.6, 4.8
-REM                             "|Anyway, this cake is"+C$
-
-cake
-LOCATE 19, 1
-
-T$="|great."+C$
-GOSUB 20:
-REM SOUND 329.6, 9.6
-REM                             "|great."+C$
-
-T$="|It's "
-GOSUB 20:
-REM SOUND 220, 4.8
-T$="so "
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="de"
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="li"
-GOSUB 20:
-REM SOUND 349.2, 4.8
-T$="cious "
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="and"+C$
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="|moist."+C$
-GOSUB 20:
-REM SOUND 261.6, 14.4
-REM                             "|It's so delicious and"+C$ + "|moist."+C$
-
-GLaDOS
-LOCATE 22, 1
-
-T$="|Look "
-GOSUB 20:
-REM SOUND 220, 4.8
-T$="at "
-GOSUB 20:
-REM SOUND 233, 4.8
-T$="me "
-GOSUB 20:
-REM SOUND 261.6, 9.6
-T$="still"+C$
-GOSUB 20:
-REM SOUND 349.2, 9.6
-REM                             "|Look at me still"+C$
-
-scroll
-
-T$="tal"
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="king "
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="when "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 293.6, 4.8
-T$="there's"+C$
-GOSUB 20:
-REM SOUND 261.6, 4.8
-REM                             "talking when there's"+C$
-
-scroll
-radiation
-LOCATE 22, 1
-
-T$="|Sci"
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="ence "
-GOSUB 20:
-REM SOUND 261.6, 4.8
-T$="to "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 261.6, 9.6
-T$="do."+C$
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 261.6, 9.6
-REM                             "|Science to do."+C$
 
 aplabs
 scroll
@@ -1469,78 +1359,78 @@ LOCATE 22, 2
 2630 RETURN
 '
 2800 REM BLACK MESA
-2801 PRINT "           .-;+$XHHHHHHX$+;-.           "
-2802 PRINT "        ,;X@@X%/;=----=:/%X@@X/,        "
-2803 PRINT "      =$@@%=.              .=+H@X:      "
-2804 PRINT "    -XMX:                      =XMX=    "
-2805 PRINT "   /@@:                          =H@+   "
-2806 PRINT "  %@X,                            .$@$  "
-2807 PRINT " +@X.                               $@% "
-2808 PRINT "-@@,                                .@@="
-2809 PRINT "%@%                                  +@$"
-2810 PRINT "H@:                                  :@H"
-2811 PRINT "H@:         :HHHHHHHHHHHHHHHHHHX,    =@H"
-2812 PRINT "%@%         ;@M@@@@@@@@@@@@@@@@@H-   +@$"
-2813 PRINT "=@@,        :@@@@@@@@@@@@@@@@@@@@@= .@@:"
-2814 PRINT " +@X        :@@@@@@@@@@@@@@@M@@@@@@:%@% "
-2815 PRINT "  $@$,      ;@@@@@@@@@@@@@@@@@M@@@@@@$. "
-2816 PRINT "   +@@HHHHHHH@@@@@@@@@@@@@@@@@@@@@@@+   "
-2817 PRINT "    =X@@@@@@@@@@@@@@@@@@@@@@@@@@@@X=    "
-2818 PRINT "      :$@@@@@@@@@@@@@@@@@@@M@@@@$:      "
-2819 PRINT "        ,;$@@@@@@@@@@@@@@@@@@X/-        "
-2820 PRINT "           .-;+$XXHHHHHX$+;-.           "
+2801 PRINT "           .-;+$XHHHHHHX$+;-."
+2802 PRINT "        ,;X@@X%/;=----=:/%X@@X/,"
+2803 PRINT "      =$@@%=.              .=+H@X:"
+2804 PRINT "    -XMX:                      =XMX="
+2805 PRINT "   /@@:                          =H@+"
+2806 PRINT "  %@X,                            .$@$"
+2807 PRINT " +@X.                               $@%"
+2808 PRINT "-@@,                                .@@=";
+2809 PRINT "%@%                                  +@$";
+2810 PRINT "H@:                                  :@H";
+2811 PRINT "H@:         :HHHHHHHHHHHHHHHHHHX,    =@H";
+2812 PRINT "%@%         ;@M@@@@@@@@@@@@@@@@@H-   +@$";
+2813 PRINT "=@@,        :@@@@@@@@@@@@@@@@@@@@@= .@@:";
+2814 PRINT " +@X        :@@@@@@@@@@@@@@@M@@@@@@:%@%"
+2815 PRINT "  $@$,      ;@@@@@@@@@@@@@@@@@M@@@@@@$."
+2816 PRINT "   +@@HHHHHHH@@@@@@@@@@@@@@@@@@@@@@@+"
+2817 PRINT "    =X@@@@@@@@@@@@@@@@@@@@@@@@@@@@X="
+2818 PRINT "      :$@@@@@@@@@@@@@@@@@@@M@@@@$:"
+2819 PRINT "        ,;$@@@@@@@@@@@@@@@@@@X/-"
+2820 PRINT "           .-;+$XXHHHHHX$+;-."
 2830 RETURN
 '
 2900 REM CAKE DELICIOUS AND MOIST
-2901 PRINT "            ,:/+/-                      "
-2902 PRINT "            /M/              .,-=;//;-  "
-2903 PRINT "       .:/= ;MH/,    ,=/+%$XH@MM#@:     "
-2904 PRINT "      -$##@+$###@H@MMM#######H:.    -/H#"
-2905 PRINT " .,H@H@ X######@ -H#####@+-     -+H###@X"
-2906 PRINT "  .,@##H;      +XM##M/,     =%@###@X;-  "
-2907 PRINT "X%-  :M##########$.    .:%M###@%:       "
-2908 PRINT "M##H,   +H@@@$/-.  ,;$M###@%,          -"
-2909 PRINT "M####M=,,---,.-%%H####M$:          ,+@##"
-2910 PRINT "@##################@/.         :%H##@$- "
-2911 PRINT "M###############H,         ;HM##M$=     "
-2912 PRINT "#################.    .=$M##M$=         "
-2913 PRINT "################H..;XM##M$=          .:+"
-2914 PRINT "M###################@%=           =+@MH%"
-2915 PRINT "@################M/.          =+H#X%=   "
-2916 PRINT "=+M##############M,       -/X#X+;.      "
-2917 PRINT "  .;XM##########H=    ,/X#H+:,          "
-2918 PRINT "     .=+HM######M+/+HM@+=.              "
-2919 PRINT "         ,:/%XM####H/.                  "
-2920 PRINT "              ,.:=-.                    "
+2901 PRINT "            ,:/+/-"
+2902 PRINT "            /M/              .,-=;//;-"
+2903 PRINT "       .:/= ;MH/,    ,=/+%$XH@MM#@:"
+2904 PRINT "      -$##@+$###@H@MMM#######H:.    -/H#";
+2905 PRINT " .,H@H@ X######@ -H#####@+-     -+H###@X";
+2906 PRINT "  .,@##H;      +XM##M/,     =%@###@X;-"
+2907 PRINT "X%-  :M##########$.    .:%M###@%:"
+2908 PRINT "M##H,   +H@@@$/-.  ,;$M###@%,          -";
+2909 PRINT "M####M=,,---,.-%%H####M$:          ,+@##";
+2910 PRINT "@##################@/.         :%H##@$-"
+2911 PRINT "M###############H,         ;HM##M$="
+2912 PRINT "#################.    .=$M##M$="
+2913 PRINT "################H..;XM##M$=          .:+";
+2914 PRINT "M###################@%=           =+@MH%";
+2915 PRINT "@################M/.          =+H#X%="
+2916 PRINT "=+M##############M,       -/X#X+;."
+2917 PRINT "  .;XM##########H=    ,/X#H+:,"
+2918 PRINT "     .=+HM######M+/+HM@+=."
+2919 PRINT "         ,:/%XM####H/."
+2920 PRINT "              ,.:=-."
 2930 RETURN
 '
 3000 REM GLaDOS
-3001 PRINT "       #+ @      # #              M#@   "
-3002 PRINT " .    .X  X.%##@;# #   +@#######X. @#%  "
-3003 PRINT "   ,==.   ,######M+  -#####%M####M-    #"
-3004 PRINT "  :H##M%:=##+ .M##M,;#####/+#######% ,M#"
-3005 PRINT " .M########=  =@#@.=#####M=M#######=  X#"
-3006 PRINT " :@@MMM##M.  -##M.,#######M#######. =  M"
-3007 PRINT "             @##..###:.    .H####. @@ X,"
-3008 PRINT "   ############: ###,/####;  /##= @#. M "
-3009 PRINT "           ,M## ;##,@#M;/M#M  @# X#% X# "
-3010 PRINT ".%=   ######M## ##.M#:   ./#M ,M #M ,#$ "
-3011 PRINT "##/         $## #+;#: #### ;#/ M M- @# :"
-3012 PRINT "#+ #M@MM###M-;M #:$#-##$H# .#X @ + $#. #"
-3013 PRINT "      ######/.: #%=# M#:MM./#.-#  @#: H#"
-3014 PRINT "+,.=   @###: /@ %#,@  ##@X #,-#@.##% .@#"
-3015 PRINT "#####+;/##/ @##  @#,+       /#M    . X, "
-3016 PRINT "   ;###M#@ M###H .#M-     ,##M  ;@@; ###"
-3017 PRINT "   .M#M##H ;####X ,@#######M/ -M###$  -H"
-3018 PRINT "    .M###%  X####H  .@@MM@;  ;@#M@      "
-3019 PRINT "      H#M    /@####/      ,++.  / ==-,  "
-3020 PRINT "               ,=/:, .+X@MMH@#H  #####$="
+3001 PRINT "       #+ @      # #              M#@"
+3002 PRINT " .    .X  X.%##@;# #   +@#######X. @#%"
+3003 PRINT "   ,==.   ,######M+  -#####%M####M-    #";
+3004 PRINT "  :H##M%:=##+ .M##M,;#####/+#######% ,M#";
+3005 PRINT " .M########=  =@#@.=#####M=M#######=  X#";
+3006 PRINT " :@@MMM##M.  -##M.,#######M#######. =  M";
+3007 PRINT "             @##..###:.    .H####. @@ X,";
+3008 PRINT "   ############: ###,/####;  /##= @#. M"
+3009 PRINT "           ,M## ;##,@#M;/M#M  @# X#% X#"
+3010 PRINT ".%=   ######M## ##.M#:   ./#M ,M #M ,#$"
+3011 PRINT "##/         $## #+;#: #### ;#/ M M- @# :";
+3012 PRINT "#+ #M@MM###M-;M #:$#-##$H# .#X @ + $#. #";
+3013 PRINT "      ######/.: #%=# M#:MM./#.-#  @#: H#";
+3014 PRINT "+,.=   @###: /@ %#,@  ##@X #,-#@.##% .@#";
+3015 PRINT "#####+;/##/ @##  @#,+       /#M    . X,"
+3016 PRINT "   ;###M#@ M###H .#M-     ,##M  ;@@; ###";
+3017 PRINT "   .M#M##H ;####X ,@#######M/ -M###$  -H";
+3018 PRINT "    .M###%  X####H  .@@MM@;  ;@#M@"
+3019 PRINT "      H#M    /@####/      ,++.  / ==-,"
+3020 PRINT "               ,=/:, .+X@MMH@#H  #####$=";
 3030 RETURN
 '
-3100 REM hl
-3101 REM SOUND 146.6, 4.8
-3102 REM SOUND 0, .1
-3103 REM SOUND 146.6, 4.8
-3104 REM SOUND 123.4, 4.8
-3105 RETURN
+'3100 REM hl
+'3101 REM SOUND 146.6, 4.8
+'3102 REM SOUND 0, .1
+'3103 REM SOUND 146.6, 4.8
+'3104 REM SOUND 123.4, 4.8
+'3105 RETURN
 '
