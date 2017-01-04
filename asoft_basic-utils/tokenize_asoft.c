@@ -5,7 +5,7 @@
 #include "version.h"
 
 /* TODO */
-/* match lowecase tokens as well as upper case ones */
+/* match lowercase tokens as well as upper case ones */
 
 /* Info from http://docs.info.apple.com/article.html?coll=ap&artnum=57 */
 
@@ -176,8 +176,23 @@ int main(int argc, char **argv) {
 		line++;
 		if (line_ptr==NULL) break;
 
+		/* VMW extension, skip between 'if 0 and 'endif */
+		if (line_ptr[0]=='\'') {
+			if (!strncmp(line_ptr,"\'.if 0",6)) {
+				while(1) {
+					line_ptr=fgets(input_line,BUFSIZ,stdin);
+					line++;
+					if (line_ptr==NULL) break;
+					if (!strncmp(line_ptr,"\'.endif",7)) break;
+				}
+			}
+		}
+		if (line_ptr==NULL) break;
+
 		/* VMW extension: use leading ' as a comment char */
 		if (line_ptr[0]=='\'') continue;
+
+
 
 		/* skip empty lines */
 		if (line_ptr[0]=='\n') continue;
