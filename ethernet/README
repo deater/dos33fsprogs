@@ -1,2 +1,29 @@
 Working on getting the Uthernet II card to do something interesting.
+	http://a2retrosystems.com/
+
+Hardware Background:
+
+	This board has a WIZnet W5100 on board.  You can get raw Ethernet
+	packets on the board, but I am using it in hardware TCP/IP mode
+	where I set up the MAC/IP and then get raw packets from a TCP socket
+	(up to 4 sockets can be active at once).
+
+Webserver:
+	Included is a webserver written for Fall 2015 ECE435
+
+	It is written entirely in Applesoft BASIC
+
+	It runs very slowly, but works.  
+
+	firefox and wget can get files just fine,
+	although they tend to send duplicate requests for some reason.
+
+	You can serve arbitrary png, jpg, txt, or html files, however
+	they currently have to be less than 8kB.
+
+	Much of the slowness is using peek/poke as a memcpy routine.
+
+	Of course this would all be faster in assembly language, but
+	what's the fun of that.
+
 

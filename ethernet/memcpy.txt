@@ -1,0 +1,46 @@
+Test 1:
+	5 FOR J=1 to 1000: NEXT J
+	10 PRINT CHR$(7)
+	20 FOR I=16384 to 20479
+	30 POKE 20480,PEEK(I)
+	40 NEXT I
+	100 PRINT CHR$(7)
+
+	Time (linapple2) 38s
+
+All one one line
+
+	5 FOR J=1 to 1000: NEXT J
+	10 PRINT CHR$(7)
+	20 FOR I=16384 to 20479
+	30 POKE 20480,PEEK(I)
+	40 NEXT I
+	100 PRINT CHR$(7)
+	
+	Time (linapple2) 37s
+
+Assembly language:
+
+	PTR     EQU     $06
+
+        lda     #0
+        sta     PTR
+        lda     #$40
+        sta     PTR+1
+
+        ldx     #8
+        ldy     #0
+copy_loop:
+        lda     (PTR),y
+        sta     $5000
+        iny
+        bne     copy_loop
+        dex
+        bne     copy_loop
+
+        rts
+
+Runs more or less instantaenously
+
+	
+

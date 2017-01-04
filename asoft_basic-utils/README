@@ -29,3 +29,10 @@ asoft_compact: tries to compress your Applesoft basic program
                to make it as small as possible
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+bin2data:	takes binary image and converts it to suitable
+		BASIC to poke into memory.
+
+		Useful for getting machine language routines usable
+		in BASIC programs
+
