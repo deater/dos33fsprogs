@@ -10,7 +10,7 @@
 16 POKE 32,39:POKE 33,40:POKE 34,1:POKE 35,23
 17 RETURN
 '
-18 X=PEEK(36):Y=PEEK(37):RETURN
+18 X=PEEK(1403):Y=PEEK(37):RETURN
 19 POKE 36,X:POKE 37,Y-1:RETURN
 '
 20 REM SLOWTEXT
@@ -19,6 +19,13 @@
 23 FOR I = 1 TO 50:NEXT I
 24 NEXT C
 25 RETURN
+'
+30 REM FASTTEXT
+31 FOR C = 1 TO LEN(T$)
+32 PRINT MID$(T$, C, 1);
+33 FOR I = 1 TO 25:NEXT I
+34 NEXT C
+35 RETURN
 '
 50 PRINT " ------------------------------------ "
 55 FOR I=1 TO 20: PRINT "|                                    |":NEXT I
@@ -237,467 +244,271 @@
 'REM SOUND 123.4, 4.8
 'NEXT i
 'REM SOUND 146.8, 14.4
+'
+'
+'
+292 HOME:C$=CHR$(13)
+294 T$="Forms FORM-55551-5:"+C$:GOSUB 30
+296 T$="Personnel File Addendum:"+C$:GOSUB 30
+298 T$=C$+"Dear <<Subject Name Here>>":GOSUB 30
+300 PRINT:PRINT
+'
+' I'm not even angry.
+'
+302 T$="I'm ":GOSUB 20:REM SOUND 220, 4.8
+304 T$="not ":GOSUB 20:REM SOUND 391.9, 4.8
+306 T$="e":GOSUB 20:REM SOUND 369.9, 4.8
+308 T$="ven ":GOSUB 20:REM SOUND 329.6, 4.8
+310 T$="an":GOSUB 20:REM SOUND 0, .1:REM SOUND 329.6, 7.2
+312 T$="gry."+C$:GOSUB 20:REM SOUND 369.9, 1.68
+'
+'REM SOUND 123.4, 14.4
+'REM SOUND 0, .1
+'REM SOUND 123.4, 4.8
+'REM SOUND 146.8, 14.4
+'delay
+'REM SOUND 146.6, 4.8
+'
+' I'm being so sincere right now.
+'
+314 T$="I'm ":GOSUB 20:REM SOUND 391.9, 4.8
+316 T$="be":GOSUB 20:REM SOUND 369.9, 4.8
+320 T$="ing ":GOSUB 20:REM SOUND 329.6, 4.8
+322 T$="so ":GOSUB 20:REM SOUND 0, .1:REM SOUND 329.6, 14.4
+324 T$="sin":GOSUB 20:REM SOUND 369.9, 4.8
+326 T$="cere ":GOSUB 20:REM SOUND 293.6, 9.6
+328 T$="right ":GOSUB 20:REM SOUND 329.6, 9.6
+330 T$="now."+C$:GOSUB 20:REM SOUND 220, 14.4
+'
+'REM SOUND 146.8, 4.8
+'REM SOUND 0, .1
+'REM SOUND 146.8, 4.8
+'REM SOUND 123.4, 14.4
+'REM SOUND 0, .1
+'REM SOUND 123.4, 4.8
+'
+' Even though you broke my
+'
+332 T$="E":GOSUB 20:REM SOUND 329.6, 9.6
+334 T$="ven ":GOSUB 20:REM SOUND 369.9, 4.8
+336 T$="though ":GOSUB 20:REM SOUND 391.9, 14.4
+338 T$="you ":GOSUB 20:REM SOUND 329.6, 9.6
+340 T$="broke ":GOSUB 20:REM SOUND 277.1, 9.6
+342 T$="my ":GOSUB 20:REM SOUND 293.6, 4.8
+'
+' HEART
+344 GOSUB 18:GOSUB 15:HOME:GOSUB 2300: GOSUB 10:GOSUB 19:PRINT
+345 POKE 36,X
+'
+' heart.\nAnd killed me.
+'
+346 T$="heart."+C$:GOSUB 20:REM SOUND 329.6, 14.4
+348 T$="And ":GOSUB 20:REM SOUND 220, 4.8
+350 T$="killed ":GOSUB 20:REM SOUND 0, .1:REM SOUND 220, 9.6
+352 T$="me."+C$:GOSUB 20:REM SOUND 369.9, 2.4
+'
+'delaytime = .48
+'REM SOUND 123.4, 4.8
+'REM SOUND 146.8, 14.4
+'
+' EXPLOSION
+354 GOSUB 18:GOSUB 15:HOME:GOSUB 2400: GOSUB 10:GOSUB 19:PRINT
+'
+' And tore me to pieces.
+'
+356 T$="And ":GOSUB 20:REM SOUND 220, 4.8
+358 T$="tore ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 391.9, 1
+'REM SOUND 493.8, 1
+'NEXT i
+360 T$="me ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 369.9, 1
+'REM SOUND 440, 1
+'NEXT i
+362 T$="to ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 329.6, 1
+'REM SOUND 391.9, 1
+'NEXT i
+364 T$="pie":GOSUB 20:REM SOUND 0, .1
+'FOR i = 1 TO 2.4
+'REM SOUND 329.6, 1
+'REM SOUND 391.9, 1
+'NEXT i
+366 T$="ces."+C$:GOSUB 20
+'FOR i = 1 TO 4.8
+'REM SOUND 369.9, 1
+'REM SOUND 440, 1
+'NEXT i
+'delaytime = .48
+'REM SOUND 146.8, 4.8
+'REM SOUND 123.4, 14.4
+'REM SOUND 0, .1
+'REM SOUND 123.4, 4.8
+'REM SOUND 146.8, 14.4
+'
+' And threw every peice into
+'
+368 T$="And ":GOSUB 20:REM SOUND 220, 4.8
+370 T$="threw ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 391.9, 1
+'REM SOUND 493.8, 1
+'NEXT i
+372 T$="ev":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 369.9, 1
+'REM SOUND 440, 1
+'NEXT i
+374 T$="ery ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 329.6, 1
+'REM SOUND 391.9, 1
+'NEXT i
+376 T$="piece ":GOSUB 20
+'REM SOUND 0, .1
+'FOR i = 1 TO 7.2
+'REM SOUND 329.6, 1
+'REM SOUND 391.9, 1
+'NEXT i
+378 T$="in":GOSUB 20
+'FOR i = 1 TO 2.6
+'REM SOUND 440, 1
+'REM SOUND 369.9, 1
+'NEXT i
+380 T$="to"+C$:GOSUB 20
+'FOR i = 1 TO 7.2
+'REM SOUND 369.9, 1
+'REM SOUND 293.6, 1
+'NEXT i
+'
+' FIRE
+382 GOSUB 18:GOSUB 15:HOME:GOSUB 2500: GOSUB 10:GOSUB 19:PRINT
+383 POKE 36,X
+'
+' a fire.
+'
+384 T$="a ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 329.6, 1
+'REM SOUND 391.9, 1
+'NEXT i
+386 T$="fire."+C$:GOSUB 20
+'FOR i = 1 TO 7.2
+'REM SOUND 293.6, 1
+'REM SOUND 220, 1
+'NEXT i
+' delaytime = .48
+'REM SOUND 146.8, 4.8
+'REM SOUND 123.4, 14.4
+'REM SOUND 0, .1
+'REM SOUND 123.4, 4.8
+'
+' As they burned it hurt because
+'
+388 T$="As ":GOSUB 20:REM SOUND 329.6, 9.6
+390 T$="they ":GOSUB 20:REM SOUND 369.9, 4.8
+392 T$="burned ":GOSUB 20:REM SOUND 391.9, 14.4
+394 T$="it ":GOSUB 20:REM SOUND 329.6, 9.6
+396 T$="hurt ":GOSUB 20:REM SOUND 277.1, 9.6
+398 T$="be":GOSUB 20:REM SOUND 293.6, 4.8
+400 T$="cause"+C$:GOSUB 20:REM SOUND 329.6, 9.6
+'
+' I was so happy for you!
+'
+402 T$="I ":GOSUB 20:REM SOUND 220, 4.8
+404 T$="was ":GOSUB 20:REM SOUND 293.6, 4.8
+406 T$="so ":GOSUB 20:REM SOUND 329.6, 4.8
+408 T$="hap":GOSUB 20:REM SOUND 349.2, 4.8
+410 T$="py ":GOSUB 20:REM SOUND 329.6, 4.8
+412 T$="for ":GOSUB 20:REM SOUND 293.6, 4.8
+414 T$="you!"+C$:GOSUB 20:REM SOUND 261.6, 14.4
+' CHECK
+416 GOSUB 18:GOSUB 15:HOME:GOSUB 2600: GOSUB 10:GOSUB 19:PRINT
+'delaytime = .5
+'
+' Now these points of data\nmake a beautiful line.
+'
+418 T$="Now ":GOSUB 20:REM SOUND 220, 4.8
+420 T$="these ":GOSUB 20:REM SOUND 233, 4.8
+422 T$="points ":GOSUB 20:REM SOUND 261.6, 9.6
+424 T$="of ":GOSUB 20:REM SOUND 349.2, 9.6
+426 T$="da":GOSUB 20:REM SOUND 329.6, 4.8
+428 T$="ta"+C$:GOSUB 20:REM SOUND 293.6, 4.8
+430 T$="make ":GOSUB 20:REM SOUND 0, .1:REM SOUND 293.6, 4.8
+432 T$="a ":GOSUB 20:REM SOUND 261.6, 4.8
+434 T$="beau":GOSUB 20:REM SOUND 293.6, 4.8
+436 T$="ti":GOSUB 20:REM SOUND 261.6, 4.8
+438 T$="ful ":GOSUB 20:REM SOUND 0, .1:REM SOUND 261.6, 9.6
+440 T$="line."+C$:GOSUB 20:REM SOUND 0, .1:REM SOUND 261.6, 9.6
+'
+' And we're out of beta.\nWe're releasing on time.
+'
+442 T$="And ":GOSUB 20:REM SOUND 220, 4.8
+444 T$="we're ":GOSUB 20:REM SOUND 233, 4.8
+446 T$="out ":GOSUB 20:REM SOUND 261.6, 9.6
+448 T$="of ":GOSUB 20:REM SOUND 349.2, 9.6
+450 T$="be":GOSUB 20:REM SOUND 391.9, 4.8
+452 T$="ta."+C$:GOSUB 20:REM SOUND 349.2, 4.8
+454 T$="We're ":GOSUB 20:REM SOUND 329.6, 4.8
+456 T$="re":GOSUB 20:REM SOUND 293.6, 4.8
+458 T$="lea":GOSUB 20:REM SOUND 0, .1:REM SOUND 293.6, 4.8
+460 T$="sing ":GOSUB 20:REM SOUND 329.6, 4.8
+462 T$="on ":GOSUB 20:REM SOUND 349.2, 9.6
+464 T$="time."+C$:GOSUB 20:REM SOUND 0, .1:REM SOUND 349.2, 9.6
+'
+' EXPLOSION
+466 GOSUB 18:GOSUB 15:HOME:GOSUB 2400: GOSUB 10:GOSUB 19:PRINT
+'
+' So I'm GLaD. I got burned.
+'
+468 T$="So ":GOSUB 20:REM SOUND 391.9, 4.8
+470 T$="I'm ":GOSUB 20:REM SOUND 440, 4.8
+472 T$="GLaD. ":GOSUB 20:REM SOUND 466.1, 4.8
+474  T$="I ":GOSUB 20:REM SOUND 466.1, 4.8
+476 T$="got ":GOSUB 20:REM SOUND 440, 9.6
+478 T$="burned."+C$:GOSUB 20: REM SOUND 391.9, 9.6
+'
+' ATOM
+'
+480 GOSUB 18:GOSUB 15:HOME:GOSUB 2200: GOSUB 10:GOSUB 19:PRINT
+'
+' Think of all the things we learned
+'
+482 T$="Think ":GOSUB 20:REM SOUND 349.2, 4.8
+484 T$="of ":GOSUB 20:REM SOUND 391.9, 4.8
+486 T$="all ":GOSUB 20:REM SOUND 440, 4.8
+488 T$="the ":GOSUB 20:REM SOUND 0, .1:REM SOUND 440, 4.8
+490 T$="things ":GOSUB 20:REM SOUND 391.9, 4.8
+492 T$="we ":GOSUB 20: REM SOUND 349.2, 4.8
+494 T$="learned"+C$:GOSUB 20:REM SOUND 349.2, 9.6
+'
+' APERTURE SCIENCE LOGO
+'
+496 GOSUB 18:GOSUB 15:HOME:GOSUB 2000: GOSUB 10:GOSUB 19:PRINT
+'
+' for the people who are
+'
+498 T$="for ":GOSUB 20:REM SOUND 293.6, 4.8
+500 T$="the ":GOSUB 20:REM SOUND 261.6, 4.8
+502 T$="peo":GOSUB 20:REM SOUND 293.6, 4.8
+504 T$="ple ":GOSUB 20:REM SOUND 349.2, 4.8
+506 T$="who ":GOSUB 20:REM SOUND 0, .1:REM SOUND 349.2, 4.8
+510 T$="are"+C$:GOSUB 20:REM SOUND 329.6, 9.6
+'
+' still alive.
+'
+512 T$="still ":GOSUB 20:REM SOUND 329.6, 4.8
+'
+' FIXME: CAN WE DO ALIVE SLOWLY LIKE IN THE VIDEO?
+'
+514 T$="alive."+C$:GOSUB 20
+'REM SOUND 369.9, 4.8
+'REM SOUND 0, .1
+'REM SOUND 369.9, 24
 '.if 0
-
-clearleft
-LOCATE 2, 2
-T$="Forms FORM-55551-5:"+C$ + "|Personnel File Addendum:"+C$ + "|"+C$ + "|Dear <<Subject Name Here>>"
-fasttext
-PRINT "|"
-PRINT "|"
-
-T$="|I'm "
-GOSUB 20:
-REM SOUND 220, 4.8
-T$="not "
-GOSUB 20:
-REM SOUND 391.9, 4.8
-T$="e"
-GOSUB 20:
-REM SOUND 369.9, 4.8
-T$="ven "
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="an"
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 329.6, 7.2
-T$="gry."+C$
-GOSUB 20:
-REM SOUND 369.9, 1.68
-
-REM                             "|I'm not even angry."+C$
-
-REM SOUND 123.4, 14.4
-REM SOUND 0, .1
-REM SOUND 123.4, 4.8
-REM SOUND 146.8, 14.4
-delay
-REM SOUND 146.6, 4.8
-
-T$="|I'm "
-GOSUB 20:
-REM SOUND 391.9, 4.8
-T$="be"
-GOSUB 20:
-REM SOUND 369.9, 4.8
-T$="ing "
-GOSUB 20:
-REM SOUND 329.6, 4.8
-text = "so "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 329.6, 14.4
-text = "sin"
-GOSUB 20:
-REM SOUND 369.9, 4.8
-text = "cere "
-GOSUB 20:
-REM SOUND 293.6, 9.6
-text = "right"+C$
-GOSUB 20:
-REM SOUND 329.6, 9.6
-text = "|now."+C$
-GOSUB 20:
-REM SOUND 220, 14.4
-REM                             "|I'm being so sincere right"+C$ + "|now."+C$
-
-REM SOUND 146.8, 4.8
-REM SOUND 0, .1
-REM SOUND 146.8, 4.8
-REM SOUND 123.4, 14.4
-REM SOUND 0, .1
-REM SOUND 123.4, 4.8
-
-T$="|E"
-GOSUB 20:
-REM SOUND 329.6, 9.6
-T$="ven "
-GOSUB 20:
-REM SOUND 369.9, 4.8
-T$="though "
-GOSUB 20:
-REM SOUND 391.9, 14.4
-T$="you "
-GOSUB 20:
-REM SOUND 329.6, 9.6
-T$="broke "
-GOSUB 20:
-REM SOUND 277.1, 9.6
-T$="my"+C$
-GOSUB 20:
-REM SOUND 293.6, 4.8
-REM                             "|Even though you broke my"+C$
-
-heart
-LOCATE 11, 1
-
-T$="|heart."+C$
-GOSUB 20:
-REM SOUND 329.6, 14.4
-LOCATE 12, 1
-
-T$="|And "
-GOSUB 20:
-REM SOUND 220, 4.8
-T$="killed "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 220, 9.6
-T$="me."+C$
-GOSUB 20:
-REM SOUND 369.9, 2.4
-REM                             "|heart. And killed me."+C$
-
-REM 480
-delaytime = .48
-delay
-
-REM SOUND 123.4, 4.8
-REM SOUND 146.8, 14.4
-
-explode
-LOCATE 13, 1
-T$="|And "
-GOSUB 20:
-REM SOUND 220, 4.8
-T$="tore "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 391.9, 1
-REM SOUND 493.8, 1
-NEXT i
-T$="me "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 369.9, 1
-REM SOUND 440, 1
-NEXT i
-T$="to "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 329.6, 1
-REM SOUND 391.9, 1
-NEXT i
-T$="pie"
-GOSUB 20:
-REM SOUND 0, .1
-FOR i = 1 TO 2.4
-REM SOUND 329.6, 1
-REM SOUND 391.9, 1
-NEXT i
-text = "ces."+C$
-GOSUB 20:
-FOR i = 1 TO 4.8
-REM SOUND 369.9, 1
-REM SOUND 440, 1
-NEXT i
-REM                             "|And tore me to pieces."+C$
-
-REM 480
-delaytime = .48
-delay
-
-REM SOUND 146.8, 4.8
-REM SOUND 123.4, 14.4
-REM SOUND 0, .1
-REM SOUND 123.4, 4.8
-REM SOUND 146.8, 14.4
-
-T$="|And "
-GOSUB 20:
-REM SOUND 220, 4.8
-T$="threw "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 391.9, 1
-REM SOUND 493.8, 1
-NEXT i
-T$="ev"
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 369.9, 1
-REM SOUND 440, 1
-NEXT i
-T$="ery "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 329.6, 1
-REM SOUND 391.9, 1
-NEXT i
-T$="piece "
-GOSUB 20:
-REM SOUND 0, .1
-FOR i = 1 TO 7.2
-REM SOUND 329.6, 1
-REM SOUND 391.9, 1
-NEXT i
-T$="in"
-GOSUB 20:
-FOR i = 1 TO 2.6
-REM SOUND 440, 1
-REM SOUND 369.9, 1
-NEXT i
-T$="to"+C$
-GOSUB 20:
-FOR i = 1 TO 7.2
-REM SOUND 369.9, 1
-REM SOUND 293.6, 1
-NEXT i
-REM                             "|And threw every peice into"+C$
-
-fire
-LOCATE 15, 1
-
-T$="|a "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 329.6, 1
-REM SOUND 391.9, 1
-NEXT i
-T$="fire."+C$
-GOSUB 20:
-FOR i = 1 TO 7.2
-REM SOUND 293.6, 1
-REM SOUND 220, 1
-NEXT i
-
-REM                             "|a fire."+C$
-
-REM 480
-delaytime = .48
-delay
-
-REM SOUND 146.8, 4.8
-REM SOUND 123.4, 14.4
-REM SOUND 0, .1
-REM SOUND 123.4, 4.8
-
-T$="|As "
-GOSUB 20:
-REM SOUND 329.6, 9.6
-T$="they "
-GOSUB 20:
-REM SOUND 369.9, 4.8
-T$="burned "
-GOSUB 20:
-REM SOUND 391.9, 14.4
-T$="it "
-GOSUB 20:
-REM SOUND 329.6, 9.6
-T$="hurt"+C$
-GOSUB 20:
-REM SOUND 277.1, 9.6
-REM                             "|As they burned it hurt"+C$
-
-T$="|be"
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="cause "
-GOSUB 20:
-REM SOUND 329.6, 9.6
-T$="I "
-GOSUB 20:
-REM SOUND 220, 4.8
-T$="was "
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="so "
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="hap"
-GOSUB 20:
-REM SOUND 349.2, 4.8
-text = "py "
-GOSUB 20:
-REM SOUND 329.6, 4.8
-text = "for"+C$
-GOSUB 20:
-REM SOUND 293.6, 4.8
-text = "|you!"+C$
-GOSUB 20:
-REM SOUND 261.6, 14.4
-REM                             "|becuase I was so happy for"+C$ + "|you!"+C$
-
-tick
-delaytime = .5
-delay
-LOCATE 19, 1
-
-T$="|Now "
-GOSUB 20:
-REM SOUND 220, 4.8
-T$="these "
-GOSUB 20:
-REM SOUND 233, 4.8
-T$="points "
-GOSUB 20:
-REM SOUND 261.6, 9.6
-T$="of "
-GOSUB 20:
-REM SOUND 349.2, 9.6
-T$="da"
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="ta"+C$
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="|make "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 293.6, 4.8
-T$="a "
-GOSUB 20:
-REM SOUND 261.6, 4.8
-T$="beau"
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="ti"
-GOSUB 20:
-REM SOUND 261.6, 4.8
-T$="ful "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 261.6, 9.6
-T$="line."+C$
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 261.6, 9.6
-REM                             "|Now these points of data"+C$ + "|make a beautiful line."+C$
-
-T$="|And "
-GOSUB 20:
-REM SOUND 220, 4.8
-T$="we're "
-GOSUB 20:
-REM SOUND 233, 4.8
-T$="out "
-GOSUB 20:
-REM SOUND 261.6, 9.6
-T$="of "
-GOSUB 20:
-REM SOUND 349.2, 9.6
-T$="be"
-GOSUB 20:
-REM SOUND 391.9, 4.8
-T$="ta."+C$
-GOSUB 20:
-REM SOUND 349.2, 4.8
-
-T$="|We're "
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="re"
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="lea"
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 293.6, 4.8
-T$="sing "
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="on "
-GOSUB 20:
-REM SOUND 349.2, 9.6
-T$="time."+C$
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 349.2, 9.6
-REM                             "|And we're out of beta."+C$ + "|We're releasing on time."
-
-explode
-scroll
-LOCATE 22, 1
-
-T$="|So "
-GOSUB 20:
-REM SOUND 391.9, 4.8
-T$="I'm "
-GOSUB 20:
-REM SOUND 440, 4.8
-T$="GLaD. "
-GOSUB 20:
-REM SOUND 466.1, 4.8
-scroll
-
-T$="I "
-GOSUB 20:
-REM SOUND 466.1, 4.8
-T$="got "
-GOSUB 20:
-REM SOUND 440, 9.6
-T$="burned."+C$
-GOSUB 20:
-REM SOUND 391.9, 9.6
-REM                             "|So I'm GLaD. I got burned."+C$
-
-scroll
-atom
-
-T$="|Think "
-GOSUB 20:
-REM SOUND 349.2, 4.8
-T$="of "
-GOSUB 20:
-REM SOUND 391.9, 4.8
-T$="all "
-GOSUB 20:
-REM SOUND 440, 4.8
-T$="the "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 440, 4.8
-T$="things "
-GOSUB 20:
-REM SOUND 391.9, 4.8
-T$="we"+C$
-GOSUB 20:
-REM SOUND 349.2, 4.8
-REM                             "|Think of all the things we"+C$
-
-scroll
-
-T$="learned"+C$
-GOSUB 20:
-REM SOUND 349.2, 9.6
-REM                             "learned"+C$
-
-aplabs
-scroll
-
-T$="for "
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="the "
-GOSUB 20:
-REM SOUND 261.6, 4.8
-T$="peo"
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="ple "
-GOSUB 20:
-REM SOUND 349.2, 4.8
-T$="who "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 349.2, 4.8
-T$="are"+C$
-GOSUB 20:
-REM SOUND 329.6, 9.6
-REM                             "for the people who are"+C$
-
-scroll
-
-T$="still "
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="alive."+C$
-GOSUB 20:
-REM SOUND 369.9, 4.8
-REM SOUND 0, .1
-REM SOUND 369.9, 24
-REM                             "still alive."+C$
 
 clearleft
 T$="|Forms FORM-55551-6:"+C$ + "|Personnel File Addendum"+C$ + "|Addendum:"+C$ + "|"+C$
@@ -1566,95 +1377,95 @@ LOCATE 22, 2
 2230 RETURN
 '
 2300 REM BROKEN HEART
-2301 PRINT "                          .,---.        "
-2302 PRINT "                        ,/XM#MMMX;,     "
-2303 PRINT "                      -%##########M%,   "
-2304 PRINT "                     -@######%  $###@=  "
-2305 PRINT "      .,--,         -H#######$   $###M: "
-2306 PRINT "   ,;$M###MMX;     .;##########$;HM###X="
-2307 PRINT " ,/@##########H=      ;################+"
-2308 PRINT "-+#############M/,      %##############+"
-2309 PRINT "%M###############=      /##############:"
-2310 PRINT "H################      .M#############;."
-2311 PRINT "@###############M      ,@###########M:. "
-2312 PRINT "X################,      -$=X#######@:   "
-2313 PRINT "/@##################%-     +######$-    "
-2314 PRINT ".;##################X     .X#####+,     "
-2315 PRINT " .;H################/     -X####+.      "
-2316 PRINT "   ,;X##############,       .MM/        "
-2317 PRINT "      ,:+$H@M#######M#$-    .$$=        "
-2318 PRINT "           .,-=;+$@###X:    ;/=.        "
-2319 PRINT "                  .,/X$;   .::,         "
-2320 PRINT "                      .,    ..          "
+2301 PRINT "                          .,---."
+2302 PRINT "                        ,/XM#MMMX;,"
+2303 PRINT "                      -%##########M%,"
+2304 PRINT "                     -@######%  $###@="
+2305 PRINT "      .,--,         -H#######$   $###M:"
+2306 PRINT "   ,;$M###MMX;     .;##########$;HM###X=";
+2307 PRINT " ,/@##########H=      ;################+";
+2308 PRINT "-+#############M/,      %##############+";
+2309 PRINT "%M###############=      /##############:";
+2310 PRINT "H################      .M#############;.";
+2311 PRINT "@###############M      ,@###########M:."
+2312 PRINT "X################,      -$=X#######@:"
+2313 PRINT "/@##################%-     +######$-"
+2314 PRINT ".;##################X     .X#####+,"
+2315 PRINT " .;H################/     -X####+."
+2316 PRINT "   ,;X##############,       .MM/"
+2317 PRINT "      ,:+$H@M#######M#$-    .$$="
+2318 PRINT "           .,-=;+$@###X:    ;/=."
+2319 PRINT "                  .,/X$;   .::,"
+2320 PRINT "                      .,    .."
 2330 RETURN
 '
 2400 REM EXPLOSION
-2401 PRINT "            .+                          "
-2402 PRINT "             /M;                        "
-2403 PRINT "              H#@:              ;,      "
-2404 PRINT "              -###H-          -@/       "
-2405 PRINT "               %####$.  -;  .%#X        "
-2406 PRINT "                M#####+;#H :M#M.        "
-2407 PRINT "..          .+/;%#########X###-         "
-2408 PRINT " -/%H%+;-,    +##############/          "
-2409 PRINT "    .:$M###MH$%+############X  ,--=;-   "
-2410 PRINT "        -/H#####################H+=.    "
-2411 PRINT "           .+#################X.        "
-2412 PRINT "         =%M####################H;.     "
-2413 PRINT "            /@###############+;;/%%;,   "
-2414 PRINT "         -%###################$.        "
-2415 PRINT "       ;H######################M=       "
-2416 PRINT "    ,%#####MH$%;+#####M###-/@####%      "
-2417 PRINT "  :$H%+;=-      -####X.,H#   -+M##@-    "
-2418 PRINT " .              ,###;    ;      =$##+   "
-2419 PRINT "                .#H,               :XH, "
-2420 PRINT "                 +                   .;-"
+2401 PRINT "            .+"
+2402 PRINT "             /M;"
+2403 PRINT "              H#@:              ;,"
+2404 PRINT "              -###H-          -@/"
+2405 PRINT "               %####$.  -;  .%#X"
+2406 PRINT "                M#####+;#H :M#M."
+2407 PRINT "..          .+/;%#########X###-"
+2408 PRINT " -/%H%+;-,    +##############/"
+2409 PRINT "    .:$M###MH$%+############X  ,--=;-"
+2410 PRINT "        -/H#####################H+=."
+2411 PRINT "           .+#################X."
+2412 PRINT "         =%M####################H;."
+2413 PRINT "            /@###############+;;/%%;,"
+2414 PRINT "         -%###################$."
+2415 PRINT "       ;H######################M="
+2416 PRINT "    ,%#####MH$%;+#####M###-/@####%"
+2417 PRINT "  :$H%+;=-      -####X.,H#   -+M##@-"
+2418 PRINT " .              ,###;    ;      =$##+"
+2419 PRINT "                .#H,               :XH,"
+2420 PRINT "                 +                   .;-";
 2430 RETURN
 '
 2500 REM FIRE
-2501 PRINT "                     -$-                "
-2502 PRINT "                    .H##H,              "
-2503 PRINT "                   +######+             "
-2504 PRINT "                .+#########H.           "
-2505 PRINT "              -$############@.          "
-2506 PRINT "            =H###############@  -X:     "
-2507 PRINT "          .$##################:  @#@-   "
-2508 PRINT "     ,;  .M###################;  H###;  "
-2509 PRINT "   ;@#:  @###################@  ,#####: "
-2510 PRINT " -M###.  M#################@.  ;######H "
-2511 PRINT " M####-  +###############$   =@#######X "
-2512 PRINT " H####$   -M###########+   :#########M, "
-2513 PRINT "  /####X-   =########%   :M########@/.  "
-2514 PRINT "    ,;%H@X;   .$###X   :##MM@%+;:-      "
-2515 PRINT "                 ..                     "
-2516 PRINT "  -/;:-,.              ,,-==+M########H "
-2517 PRINT " -##################@HX%%+%%$%%%+:,,    "
-2518 PRINT "    .-/H%%%+%%$H@###############M@+=:/+:"
-2519 PRINT "/XHX%:#####MH%=    ,---:;;;;/%%XHM,:###$"
-2520 PRINT "$@#MX %+;-                           .  "
+2501 PRINT "                     -$-"
+2502 PRINT "                    .H##H,"
+2503 PRINT "                   +######+"
+2504 PRINT "                .+#########H."
+2505 PRINT "              -$############@."
+2506 PRINT "            =H###############@  -X:"
+2507 PRINT "          .$##################:  @#@-"
+2508 PRINT "     ,;  .M###################;  H###;"
+2509 PRINT "   ;@#:  @###################@  ,#####:"
+2510 PRINT " -M###.  M#################@.  ;######H"
+2511 PRINT " M####-  +###############$   =@#######X"
+2512 PRINT " H####$   -M###########+   :#########M,"
+2513 PRINT "  /####X-   =########%   :M########@/."
+2514 PRINT "    ,;%H@X;   .$###X   :##MM@%+;:-"
+2515 PRINT "                 .."
+2516 PRINT "  -/;:-,.              ,,-==+M########H"
+2517 PRINT " -##################@HX%%+%%$%%%+:,,"
+2518 PRINT "    .-/H%%%+%%$H@###############M@+=:/+:";
+2519 PRINT "/XHX%:#####MH%=    ,---:;;;;/%%XHM,:###$";
+2520 PRINT "$@#MX %+;-                           ."
 2530 RETURN
 '
 2600 REM CHECK
-2601 PRINT "                                     :X-"
-2602 PRINT "                                  :X### "
-2603 PRINT "                                ;@####@ "
-2604 PRINT "                              ;M######X "
-2605 PRINT "                            -@########$ "
-2606 PRINT "                          .$##########@ "
-2607 PRINT "                         =M############-"
-2608 PRINT "                        +##############$"
-2609 PRINT "                      .H############$=. "
-2610 PRINT "         ,/:         ,M##########M;.    "
-2611 PRINT "      -+@###;       =##########M;       "
-2612 PRINT "   =%M#######;     :#########M/         "
-2613 PRINT "-$M###########;   :#########/           "
-2614 PRINT " ,;X###########; =########$.            "
-2615 PRINT "     ;H#########+#######M=              "
-2616 PRINT "       ,+##############+                "
-2617 PRINT "          /M#########@-                 "
-2618 PRINT "            ;M######%                   "
-2619 PRINT "              +####:                    "
-2620 PRINT "               ,$M-                     "
+2601 PRINT "                                     :X-";
+2602 PRINT "                                  :X###"
+2603 PRINT "                                ;@####@"
+2604 PRINT "                              ;M######X"
+2605 PRINT "                            -@########$"
+2606 PRINT "                          .$##########@"
+2607 PRINT "                         =M############-";
+2608 PRINT "                        +##############$";
+2609 PRINT "                      .H############$=."
+2610 PRINT "         ,/:         ,M##########M;."
+2611 PRINT "      -+@###;       =##########M;"
+2612 PRINT "   =%M#######;     :#########M/"
+2613 PRINT "-$M###########;   :#########/"
+2614 PRINT " ,;X###########; =########$."
+2615 PRINT "     ;H#########+#######M="
+2616 PRINT "       ,+##############+"
+2617 PRINT "          /M#########@-"
+2618 PRINT "            ;M######%"
+2619 PRINT "              +####:"
+2620 PRINT "               ,$M-"
 2630 RETURN
 '
 2800 REM BLACK MESA
