@@ -1667,27 +1667,28 @@ SLEEP 5
 LOCATE 22, 2
 '.endif
 '
+1999 END
 2000 REM APETURE
-2001 PRINT "              .,-:;//;:=,               "
-2002 PRINT "          . :H@@@MM@M#H/.,+%;,          "
-2003 PRINT "       ,/X+ +M@@M@MM%=,-%HMMM@X/,       "
-2004 PRINT "     -+@MM; $M@@MH+-,;XMMMM@MMMM@+-     "
-2005 PRINT "    ;@M@@M- XM@X;. -+XXXXXHHH@M@M#@/.   "
-2006 PRINT "  ,%MM@@MH ,@%=            .---=-=:=,.  "
-2007 PRINT "  =@#@@@MX .,              -%HX$$%%%+;  "
-2008 PRINT " =-./@M@M$                  .;@MMMM@MM: "
-2009 PRINT " X@/ -$MM/                    .+MM@@@M$ "
-2010 PRINT ",@M@H: :@:                    . =X#@@@@-"
-2011 PRINT ",@@@MMX, .                    /H- ;@M@M="
-2012 PRINT ".H@@@@M@+,                    %MM+..%#$."
-2013 PRINT " /MMMM@MMH/.                  XM@MH; =; "
-2014 PRINT "  /%+%$XHH@$=              , .H@@@@MX,  "
-2015 PRINT "   .=--------.           -%H.,@@@@@MX,  "
-2016 PRINT "   .%MM@@@HHHXX$$$%+- .:$MMX =M@@MM%.   "
-2017 PRINT "     =XMMM@MM@MM#H;,-+HMM@M+ /MMMX=     "
-2018 PRINT "       =%@M@M#@$-.=$@MM@@@M; %M%=       "
-2019 PRINT "         ,:+$+-,/H#MMMMMMM@= =,         "
-2020 PRINT "               =++%%%%+/:-.             "
+2001 PRINT "              .,-:;//;:=,"
+2002 PRINT "          . :H@@@MM@M#H/.,+%;,"
+2003 PRINT "       ,/X+ +M@@M@MM%=,-%HMMM@X/,"
+2004 PRINT "     -+@MM; $M@@MH+-,;XMMMM@MMMM@+-"
+2005 PRINT "    ;@M@@M- XM@X;. -+XXXXXHHH@M@M#@/."
+2006 PRINT "  ,%MM@@MH ,@%=            .---=-=:=,."
+2007 PRINT "  =@#@@@MX .,              -%HX$$%%%+;"
+2008 PRINT " =-./@M@M$                  .;@MMMM@MM:"
+2009 PRINT " X@/ -$MM/                    .+MM@@@M$"
+2010 PRINT ",@M@H: :@:                    . =X#@@@@-";
+2011 PRINT ",@@@MMX, .                    /H- ;@M@M=";
+2012 PRINT ".H@@@@M@+,                    %MM+..%#$.";
+2013 PRINT " /MMMM@MMH/.                  XM@MH; =;"
+2014 PRINT "  /%+%$XHH@$=              , .H@@@@MX,"
+2015 PRINT "   .=--------.           -%H.,@@@@@MX,"
+2016 PRINT "   .%MM@@@HHHXX$$$%+- .:$MMX =M@@MM%."
+2017 PRINT "     =XMMM@MM@MM#H;,-+HMM@M+ /MMMX="
+2018 PRINT "       =%@M@M#@$-.=$@MM@@@M; %M%="
+2019 PRINT "         ,:+$+-,/H#MMMMMMM@= =,"
+2020 PRINT "               =++%%%%+/:-."
 2030 RETURN
 '
 2100 REM RADIOACTIVE
