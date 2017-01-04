@@ -1,1364 +1,1192 @@
 1 REM PORTAL CLOSING CREDITS APPLESOFT
 2 REM BASED ON QBASIC VERSION BY Thomas Moss (spinneretsystems)
-5 TEXT:HOME
+5 TEXT:PRINT CHR$(4)+"PR#3": REM 80 COLUMN MODE
+7 HOME:C$=CHR$(13):GOTO 50
 '
-10 PRINT "----------------------------------------"
-20 PRINT "| Forms FORM-29827281-12:              |"
-30 PRINT "| Test Assessment Report               |"
-40 REM SLEEP 2
+10 REM SET LEFT WINDOW
+11 POKE 32,2:POKE 33,35:POKE 34,1:POKE 35,21
+12 RETURN
+15 REM SET RIGHT WINDOW
+16 POKE 32,39:POKE 33,40:POKE 34,1:POKE 35,23
+17 RETURN
 '
-' This was a triump.
+18 X=PEEK(36):Y=PEEK(37):RETURN
+19 POKE 36,X:POKE 37,Y-1:RETURN
 '
-50 PRINT "| This ";
-51 REM SOUND 392, 4.8
-52 PRINT "was ";
-53 REM SOUND 370, 4.8
-54 PRINT "a ";
-55 REM SOUND 330, 4.8
-56 PRINT "tri";
-57 REM SOUND 0, .01
-58 REM SOUND 330, 4.8
-59 PRINT "umph."
-60 REM SOUND 370, 19.2
+20 REM SLOWTEXT
+21 FOR C = 1 TO LEN(T$)
+22 PRINT MID$(T$, C, 1);
+23 FOR I = 1 TO 50:NEXT I
+24 NEXT C
+25 RETURN
 '
-'SOUND 123.4, 4.8
-'SOUND 146.8, 4.8
-'SOUND 184.9, 4.8
-'SOUND 146.8, 4.8
-'SOUND 110, 4.8
-'SOUND 146.8, 4.8
-'SOUND 184.9, 4.8
+50 PRINT " ------------------------------------ "
+55 FOR I=1 TO 20: PRINT "|                                    |":NEXT I
+60 PRINT " ------------------------------------ "
+65 GOSUB 10
 '
-70 REM I'm making a note here:
-'text$ = "|I'm "
-'slowtext
-'SOUND 220, 4.8
-'text$ = "ma"
-'slowtext
-'SOUND 392, 4.8
-'text$ = "king "
-'slowtext
-'SOUND 370, 4.8
-'text$ = "a "
-'slowtext
-'SOUND 330, 4.8
-'text$ = "note "
-'slowtext
-'SOUND 0, .1
-'SOUND 330, 9.6
-'text$ = "here:" + CHR$(13)
-'slowtext
-'SOUND 370, 14.4
+70 HOME
+72 T$="Forms FORM-29827281-12:"+C$:GOSUB 20
+74 T$="Test Assessment Report"+C$:GOSUB 20
+76 PRINT:PRINT
+78 FOR I=1 TO 1000: NEXT I
 '
-80 REM HUGE SUCCESS.
+' This was a triumph.
 '
-'text$ = "|HUGE "
-'slowtext
-'SOUND 294, 9.6
-'text$ = "SUC"
-'slowtext
-'SOUND 330, 4.8
-'text$ = "CESS." + CHR$(13)
-'slowtext
-'SOUND 220, 3.36
-'delaytime = .48
-'delay
+80 T$="This ":GOSUB 20:REM SOUND 392, 4.8
+82 T$="was ":GOSUB 20:REM SOUND 370, 4.8
+84 T$="a ":GOSUB 20:REM SOUND 330, 4.8
+86 T$="tri":GOSUB 20
+87 REM SOUND 0, .01
+88 REM SOUND 330, 4.8
+89 T$="umph."+C$:GOSUB 20
+90 REM SOUND 370, 19.2
+'
+'REM SOUND 123.4, 4.8
+'REM SOUND 146.8, 4.8
+'REM SOUND 184.9, 4.8
+'REM SOUND 146.8, 4.8
+'REM SOUND 110, 4.8
+'REM SOUND 146.8, 4.8
+'REM SOUND 184.9, 4.8
+'
+' I'm making a note here:
+'
+94 T$="I'm ":GOSUB 20: REM SOUND 220, 4.8
+96 T$="ma":GOSUB 20: REM SOUND 392, 4.8
+98 T$="king ":GOSUB 20: REM SOUND 370, 4.8
+100 T$="a ":GOSUB 20:REM SOUND 330, 4.8
+102 T$="note ":GOSUB 20:REM SOUND 0, .1:REM SOUND 330, 9.6
+104 T$ = "here:"+C$:GOSUB 20:REM SOUND 370, 14.4
+'
+' HUGE SUCCESS.
+'
+106 T$ = "HUGE ":GOSUB 20:REM SOUND 294, 9.6
+108 T$ = "SUC":GOSUB 20:REM SOUND 330, 4.8
+110 T$ = "CESS."+C$:GOSUB 20:REM SOUND 220, 3.36
+'delay .48
 '
 ' It's hard to overstate
 '
-'text$ = "|It's "
-'slowtext
-'SOUND 220, 4.8
-'text$ = "hard "
-'slowtext
-'SOUND 330, 9.6
-'text$ = "to "
-'slowtext
-'SOUND 370, 4.8
-'text$ = "o"
-'slowtext
-'SOUND 392, 14.4
-'text$ = "ver"
-'slowtext
-'SOUND 330, 4.8
-'text$ = "state" + CHR$(13)
-'slowtext
-'SOUND 277, 9.6
+112 T$="It's ":GOSUB 20:REM SOUND 220, 4.8
+114 T$="hard ":GOSUB 20:REM SOUND 330, 9.6
+116 T$="to ":GOSUB 20:REM SOUND 370, 4.8
+118 T$="o":GOSUB 20:REM SOUND 392, 14.4
+120 T$="ver":GOSUB 20:REM SOUND 330, 4.8
+122 T$="state"+C$:GOSUB 20:REM SOUND 277, 9.6
 '
 ' my satisfaction.
 '
-'text$ = "|my "
-'slowtext
-'SOUND 294, 14.4
-'text$ = "sa"
-'slowtext
-'SOUND 330, 9.6
-'text$ = "tis"
-'slowtext
-'SOUND 220, 4.8
-'text$ = "fac"
-'slowtext
-'SOUND 0, .01
-'SOUND 220, 9.6
-'text$ = "tion." + CHR$(13)
-'slowtext
-'SOUND 370, 3.36
+124 T$="my ":GOSUB 20:REM SOUND 294, 14.4
+126 T$="sa":GOSUB 20:REM SOUND 330, 9.6
+128 T$="tis":GOSUB 20:REM SOUND 220, 4.8
+130 T$="fac":GOSUB 20:REM SOUND 0, .01:SOUND 220, 9.6
+132 T$="tion."+C$:GOSUB 20:REM SOUND 370, 3.36
 '
 'SOUND 110, 4.8
 'SOUND 146.8, 4.8
 'SOUND 184.9, 4.8
 'SOUND 146.8, 4.8
 '
-100 GOSUB 2000: REM APETURE SCIENCE LOGO
+' APERTURE SCIENCE LOGO
+134 GOSUB 18:GOSUB 15:HOME:GOSUB 2000: GOSUB 10:GOSUB 19:PRINT
+'
+' Aperture Science
+136 T$="A":GOSUB 20:REM SOUND 392, 4.8
+138 T$="per":GOSUB 20:REM SOUND 370, 4.8
+140 T$="ture ":GOSUB 20:REM SOUND 330, 4.8
+142 T$="Sci":GOSUB 20:REM SOUND 0, .01REM SOUND 330, 4.8
+144 T$="ence"+C$:GOSUB 20:REM SOUND 370, 1.92
+'
+'REM SOUND 123.4, 4.8
+'REM SOUND 146.8, 4.8
+'REM SOUND 184.9, 4.8
+'REM SOUND 146.8, 4.8
+'REM SOUND 110, 4.8
+'REM SOUND 146.8, 4.8
+'REM SOUND 184.8, 4.8
+'
+' We do what we must
+'
+146 T$="We ":GOSUB 20:REM SOUND 220, 4.8
+148 T$="do ":GOSUB 20:REM SOUND 392, 4.8
+150 T$="what ":GOSUB 20:REM SOUND 370, 4.8
+152 T$="we ":GOSUB 20:REM SOUND 330, 4.8
+154 T$="must"+C$:GOSUB 20:REM SOUND 0, .1REM SOUND 330, 14.4
+'
+' because we can.
+'
+156 T$="be":GOSUB 20:REM SOUND 370, 4.8
+158 T$="cause ":GOSUB 20:REM SOUND 294, 14.4
+160 T$="we ":GOSUB 20:REM SOUND 330, 4.8
+162 T$="can."+C$:GOSUB 20:REM SOUND 220, 14.4
+'REM SOUND 184.9, 4.8
+'REM SOUND 146.8, 4.8
+'REM SOUND 123.4, 4.8
+'REM SOUND 146.8, 4.8
+'REM SOUND 184.9, 4.8
+'REM SOUND 146.8, 4.8
+'
+'
+' For the good of all of us.
+'
+164 T$="For ":GOSUB 20:REM SOUND 330, 9.6
+166 T$="the ":GOSUB 20:REM SOUND 370, 4.8
+168 T$="good ":GOSUB 20:REM SOUND 392, 14.4
+170 T$="of ":GOSUB 20:REM SOUND 330, 4.8
+172 T$="all ":GOSUB 20:REM SOUND 277.2, 14.4
+174 T$="of ":GOSUB 20:REM SOUND 294, 4.8
+176 T$="us."+C$:GOSUB 20:REM SOUND 330, 9.6
+'
+' RADIATION
+178 GOSUB 18:GOSUB 15:HOME:GOSUB 2100: GOSUB 10:GOSUB 19:PRINT
+'
+' Except the ones who are dead.
+'
+180 T$="Ex":GOSUB 20:REM SOUND 220, 4.8
+182 T$="cept ":GOSUB 20:REM SOUND 294, 4.8
+184 T$="the ":GOSUB 20:REM SOUND 330, 4.8
+186 T$="ones ":GOSUB 20:REM SOUND 349.2, 4.8
+188 T$="who ":GOSUB 20:REM SOUND 330, 4.8
+190 T$="are ":GOSUB 20:REM SOUND 293.6, 4.8
+192 T$="dead."+C$:GOSUB 20:REM SOUND 261.6, 4.8
+'
+'
+'REM SOUND 0, 9.6
+'
+' APERTURE SCIENCE LOGO
+194 GOSUB 18:GOSUB 15:HOME:GOSUB 2000: GOSUB 10:GOSUB 19:PRINT
+'
+' But there's no sense crying\nover every mistake.
+'
+196 PRINT
+198 T$="But ":GOSUB 20:REM SOUND 220, 4.8
+200 T$="there's ":GOSUB 20:REM SOUND 233, 4.8
+202 T$="no ":GOSUB 20:REM SOUND 261.6, 9.6
+204 T$="sense ":GOSUB 20:REM SOUND 349.2, 9.6
+206 T$="cry":GOSUB 20:REM SOUND 330, 4.8
+208 T$="ing"+C$:GOSUB 20:REM SOUND 293.6, 4.8
+210 T$="o":GOSUB 20:REM SOUND 0, .1REM SOUND 293.6, 4.8
+212 T$="ver ":GOSUB 20:REM SOUND 261.6, 4.8
+214 T$="e":GOSUB 20:REM SOUND 293.6, 4.8
+216 T$="very ":GOSUB 20:REM SOUND 261.6, 4.8
+218 T$="mis":GOSUB 20:REM SOUND 0, .1:REM SOUND 261.6, 9.6
+220 T$="take."+C$:GOSUB 20:REM SOUND 0, .1REM SOUND 261.6, 9.6
+'
+' You just keep on trying\ntill you run out of cake.
+'
+222 T$="You ":GOSUB 20:REM SOUND 220, 4.8
+224 T$="just ":GOSUB 20:REM SOUND 233, 4.8
+226 T$="keep ":GOSUB 20:REM SOUND 261.6, 9.6
+228 T$="on ":GOSUB 20:REM SOUND 349.2, 9.6
+230 T$="try":GOSUB 20:REM SOUND 391.9, 4.8
+232 T$="ing"+C$:GOSUB 20:REM SOUND 349.2, 4.8
+234 T$="till ":GOSUB 20:REM SOUND 329.6, 4.8
+236 T$="you ":GOSUB 20:REM SOUND 293.6, 4.8
+238 T$="run ":GOSUB 20:REM SOUND 0, .2:REM SOUND 293.6, 4.8
+240 T$="out ":GOSUB 20:REM SOUND 329.6, 4.8
+242 T$="of ":GOSUB 20:REM SOUND 349.2, 9.6:REM SOUND 0, .2
+244 T$="cake."+C$:GOSUB 20:REM SOUND 0, .2:REM SOUND 349.2, 9.6
+'
+' ATOM
+'
+246 GOSUB 18:GOSUB 15:HOME:GOSUB 2200: GOSUB 10:GOSUB 19:PRINT
+'
+' And the Science gets done.
+'
+248 T$="And ":GOSUB 20:REM SOUND 391.9, 4.8
+250 T$="the ":GOSUB 20:REM SOUND 440, 4.8
+252 T$="Sci":GOSUB 20:REM SOUND 466.1, 4.8
+254 T$="ence ":GOSUB 20:REM delaytime = .01:REM SOUND 466.1, 4.8
+256 T$="gets ":GOSUB 20:REM SOUND 440, 9.6
+258 T$="done."+C$:GOSUB 20:REM SOUND 391.9, 9.6
+'
+' And you make a neat gun
+'
+260 T$="And ":GOSUB 20:REM SOUND 349.2, 4.8
+262 T$="you ":GOSUB 20:REM SOUND 391.9, 4.8
+264 T$="make ":GOSUB 20:REM SOUND 440, 4.8
+266 T$="a ":GOSUB 20:REM SOUND 0, .1:REM SOUND 440, 4.8
+268 T$="neat ":GOSUB 20:REM SOUND 391.9, 9.6
+270 T$="gun."+C$:GOSUB 20:REM SOUND 349.2, 9.6
+'
+' APERTURE SCIENCE LOGO
+272 GOSUB 18:GOSUB 15:HOME:GOSUB 2000: GOSUB 10:GOSUB 19:PRINT
+'
+' For the people who are
+'
+274 T$="For ":GOSUB 20:REM SOUND 293.6, 4.8
+276 T$="the ":GOSUB 20:REM SOUND 261.6, 4.8
+278 T$="peo":GOSUB 20:REM SOUND 293.6, 4.8
+280 T$="ple ":GOSUB 20:REM SOUND 349.2, 4.8
+282 T$="who ":GOSUB 20:REM SOUND 0, .1:REM SOUND 349.2, 4.8
+284 T$="are"+C$:GOSUB 20:REM SOUND 329.6, 9.6
+'
+' still alive.
+'
+286 T$="still ":GOSUB 20:REM SOUND 329.6, 4.8
+288 T$="a":GOSUB 20:REM SOUND 369.9, 4.8
+290 T$="live."+C$:GOSUB 20:REM SOUND 0, .1:REM SOUND 369.9, 4.8
+'
+'FOR i = 1 TO 3
+'REM SOUND 146.8, 14.4
+'REM SOUND 0, .1
+'REM SOUND 146.8, 4.8
+'REM SOUND 123.4, 14.4
+'REM SOUND 0, .1
+'REM SOUND 123.4, 4.8
+'NEXT i
+'REM SOUND 146.8, 14.4
 '.if 0
-text$ = "|A"
-slowtext
-SOUND 392, 4.8
-text$ = "per"
-slowtext
-SOUND 370, 4.8
-text$ = "ture "
-slowtext
-SOUND 330, 4.8
-text$ = "Sci"
-slowtext
-SOUND 0, .01
-SOUND 330, 4.8
-text$ = "ence" + CHR$(13)
-slowtext
-SOUND 370, 1.92
-REM                             "|Aperture Science" + CHR$(13)
-
-SOUND 123.4, 4.8
-SOUND 146.8, 4.8
-SOUND 184.9, 4.8
-SOUND 146.8, 4.8
-SOUND 110, 4.8
-SOUND 146.8, 4.8
-SOUND 184.8, 4.8
-
-text$ = "|We "
-slowtext
-SOUND 220, 4.8
-text$ = "do "
-slowtext
-SOUND 392, 4.8
-text$ = "what "
-slowtext
-SOUND 370, 4.8
-text$ = "we "
-slowtext
-SOUND 330, 4.8
-text$ = "must" + CHR$(13)
-slowtext
-SOUND 0, .1
-SOUND 330, 14.4
-REM                             "|We do what we must" + CHR$(13)
-
-text$ = "|be"
-slowtext
-SOUND 370, 4.8
-text$ = "cause "
-slowtext
-SOUND 294, 14.4
-text$ = "we "
-slowtext
-SOUND 330, 4.8
-text$ = "can." + CHR$(13)
-slowtext
-SOUND 220, 14.4
-REM                             "|because we can." + CHR$(13)
-
-SOUND 184.9, 4.8
-SOUND 146.8, 4.8
-SOUND 123.4, 4.8
-SOUND 146.8, 4.8
-SOUND 184.9, 4.8
-SOUND 146.8, 4.8
-
-text$ = "|For "
-slowtext
-SOUND 330, 9.6
-text$ = "the "
-slowtext
-SOUND 370, 4.8
-text$ = "good "
-slowtext
-SOUND 392, 14.4
-text$ = "of "
-slowtext
-SOUND 330, 4.8
-text$ = "all "
-slowtext
-SOUND 277.2, 14.4
-text$ = "of "
-slowtext
-SOUND 294, 4.8
-text$ = "us." + CHR$(13)
-slowtext
-SOUND 330, 9.6
-REM                             "|For the good of all of us." + CHR$(13)
-
-radiation
-LOCATE 16, 1
-
-text$ = "|Ex"
-slowtext
-SOUND 220, 4.8
-text$ = "cept "
-slowtext
-SOUND 294, 4.8
-text$ = "the "
-slowtext
-SOUND 330, 4.8
-text$ = "ones "
-slowtext
-SOUND 349.2, 4.8
-text$ = "who "
-slowtext
-SOUND 330, 4.8
-text$ = "are" + CHR$(13)
-slowtext
-SOUND 293.6, 4.8
-text$ = "|dead." + CHR$(13)
-slowtext
-SOUND 261.6, 4.8
-REM                             "|Except the ones who are" + CHR$(13) + "|dead." + CHR$(13)
-
-SOUND 0, 9.6
-
-aplabs
-LOCATE 17, 1
-PRINT "|"
-
-text$ = "|But "
-slowtext
-SOUND 220, 4.8
-text$ = "there's "
-slowtext
-SOUND 233, 4.8
-text$ = "no "
-slowtext
-SOUND 261.6, 9.6
-text$ = "sense" + CHR$(13)
-slowtext
-SOUND 349.2, 9.6
-text$ = "|cry"
-slowtext
-SOUND 330, 4.8
-text$ = "ing "
-slowtext
-SOUND 293.6, 4.8
-text$ = "o"
-slowtext
-SOUND 0, .1
-SOUND 293.6, 4.8
-text$ = "ver "
-slowtext
-SOUND 261.6, 4.8
-text$ = "e"
-slowtext
-SOUND 293.6, 4.8
-text$ = "very" + CHR$(13)
-slowtext
-SOUND 261.6, 4.8
-text$ = "|mis"
-slowtext
-SOUND 0, .1
-SOUND 261.6, 9.6
-text$ = "take." + CHR$(13)
-slowtext
-SOUND 0, .1
-SOUND 261.6, 9.6
-REM                             "|But there's no sense" + CHR$(13) + "|crying over every" + CHR$(13) + "|mistake." + CHR$(13)
-
-text$ = "|You "
-slowtext
-SOUND 220, 4.8
-text$ = "just "
-slowtext
-SOUND 233, 4.8
-text$ = "keep "
-slowtext
-SOUND 261.6, 9.6
-text$ = "on "
-slowtext
-SOUND 349.2, 9.6
-text$ = "try"
-slowtext
-SOUND 391.9, 4.8
-text$ = "ing" + CHR$(13)
-slowtext
-SOUND 349.2, 4.8
-text$ = "|till "
-slowtext
-SOUND 329.6, 4.8
-text$ = "you "
-slowtext
-SOUND 293.6, 4.8
-text$ = "run "
-slowtext
-SOUND 0, .2
-SOUND 293.6, 4.8
-text$ = "out "
-slowtext
-SOUND 329.6, 4.8
-text$ = "of "
-slowtext
-SOUND 349.2, 9.6
-SOUND 0, .2
-text$ = "cake." + CHR$(13)
-slowtext
-SOUND 0, .2
-SOUND 349.2, 9.6
-REM                             "|You just keep on trying" + CHR$(13) + "|till you run out of cake." + CHR$(13)
-
-atom
-LOCATE 22, 1
-scroll
-
-text$ = "And "
-slowtext
-SOUND 391.9, 4.8
-text$ = "the "
-slowtext
-SOUND 440, 4.8
-text$ = "Sci"
-slowtext
-SOUND 466.1, 4.8
-text$ = "ence "
-slowtext
-delaytime = .01
-delay
-SOUND 466.1, 4.8
-text$ = "gets "
-slowtext
-SOUND 440, 9.6
-text$ = "done." + CHR$(13)
-slowtext
-SOUND 391.9, 9.6
-REM                             "And the Science gets done." + CHR$(13)
-
-scroll
-
-text$ = "And "
-slowtext
-SOUND 349.2, 4.8
-text$ = "you "
-slowtext
-SOUND 391.9, 4.8
-text$ = "make "
-slowtext
-SOUND 440, 4.8
-text$ = "a "
-slowtext
-SOUND 0, .1
-SOUND 440, 4.8
-text$ = "neat "
-slowtext
-SOUND 391.9, 9.6
-text$ = "gun." + CHR$(13)
-slowtext
-SOUND 349.2, 9.6
-REM                             "And you make a neat gun." + CHR$(13)
-
-scroll
-aplabs
-LOCATE 22, 1
-
-text$ = "|For "
-slowtext
-SOUND 293.6, 4.8
-text$ = "the "
-slowtext
-SOUND 261.6, 4.8
-text$ = "peo"
-slowtext
-SOUND 293.6, 4.8
-text$ = "ple "
-slowtext
-SOUND 349.2, 4.8
-text$ = "who "
-slowtext
-SOUND 0, .1
-SOUND 349.2, 4.8
-text$ = "are" + CHR$(13)
-slowtext
-SOUND 329.6, 9.6
-REM                             "|For the people who are" + CHR$(13)
-
-scroll
-
-text$ = "still "
-slowtext
-SOUND 329.6, 4.8
-text$ = "a"
-slowtext
-SOUND 369.9, 4.8
-text$ = "live." + CHR$(13)
-slowtext
-SOUND 0, .1
-SOUND 369.9, 4.8
-REM                             "still alive." + CHR$(13)
-
-FOR i = 1 TO 3
-SOUND 146.8, 14.4
-SOUND 0, .1
-SOUND 146.8, 4.8
-SOUND 123.4, 14.4
-SOUND 0, .1
-SOUND 123.4, 4.8
-NEXT i
-SOUND 146.8, 14.4
 
 clearleft
 LOCATE 2, 2
-text$ = "Forms FORM-55551-5:" + CHR$(13) + "|Personnel File Addendum:" + CHR$(13) + "|" + CHR$(13) + "|Dear <<Subject Name Here>>"
+T$="Forms FORM-55551-5:"+C$ + "|Personnel File Addendum:"+C$ + "|"+C$ + "|Dear <<Subject Name Here>>"
 fasttext
 PRINT "|"
 PRINT "|"
 
-text$ = "|I'm "
-slowtext
-SOUND 220, 4.8
-text$ = "not "
-slowtext
-SOUND 391.9, 4.8
-text$ = "e"
-slowtext
-SOUND 369.9, 4.8
-text$ = "ven "
-slowtext
-SOUND 329.6, 4.8
-text$ = "an"
-slowtext
-SOUND 0, .1
-SOUND 329.6, 7.2
-text$ = "gry." + CHR$(13)
-slowtext
-SOUND 369.9, 1.68
+T$="|I'm "
+GOSUB 20:
+REM SOUND 220, 4.8
+T$="not "
+GOSUB 20:
+REM SOUND 391.9, 4.8
+T$="e"
+GOSUB 20:
+REM SOUND 369.9, 4.8
+T$="ven "
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="an"
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 329.6, 7.2
+T$="gry."+C$
+GOSUB 20:
+REM SOUND 369.9, 1.68
 
-REM                             "|I'm not even angry." + CHR$(13)
+REM                             "|I'm not even angry."+C$
 
-SOUND 123.4, 14.4
-SOUND 0, .1
-SOUND 123.4, 4.8
-SOUND 146.8, 14.4
+REM SOUND 123.4, 14.4
+REM SOUND 0, .1
+REM SOUND 123.4, 4.8
+REM SOUND 146.8, 14.4
 delay
-SOUND 146.6, 4.8
+REM SOUND 146.6, 4.8
 
-text$ = "|I'm "
-slowtext
-SOUND 391.9, 4.8
-text$ = "be"
-slowtext
-SOUND 369.9, 4.8
-text$ = "ing "
-slowtext
-SOUND 329.6, 4.8
+T$="|I'm "
+GOSUB 20:
+REM SOUND 391.9, 4.8
+T$="be"
+GOSUB 20:
+REM SOUND 369.9, 4.8
+T$="ing "
+GOSUB 20:
+REM SOUND 329.6, 4.8
 text = "so "
-slowtext
-SOUND 0, .1
-SOUND 329.6, 14.4
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 329.6, 14.4
 text = "sin"
-slowtext
-SOUND 369.9, 4.8
+GOSUB 20:
+REM SOUND 369.9, 4.8
 text = "cere "
-slowtext
-SOUND 293.6, 9.6
-text = "right" + CHR$(13)
-slowtext
-SOUND 329.6, 9.6
-text = "|now." + CHR$(13)
-slowtext
-SOUND 220, 14.4
-REM                             "|I'm being so sincere right" + CHR$(13) + "|now." + CHR$(13)
+GOSUB 20:
+REM SOUND 293.6, 9.6
+text = "right"+C$
+GOSUB 20:
+REM SOUND 329.6, 9.6
+text = "|now."+C$
+GOSUB 20:
+REM SOUND 220, 14.4
+REM                             "|I'm being so sincere right"+C$ + "|now."+C$
 
-SOUND 146.8, 4.8
-SOUND 0, .1
-SOUND 146.8, 4.8
-SOUND 123.4, 14.4
-SOUND 0, .1
-SOUND 123.4, 4.8
+REM SOUND 146.8, 4.8
+REM SOUND 0, .1
+REM SOUND 146.8, 4.8
+REM SOUND 123.4, 14.4
+REM SOUND 0, .1
+REM SOUND 123.4, 4.8
 
-text$ = "|E"
-slowtext
-SOUND 329.6, 9.6
-text$ = "ven "
-slowtext
-SOUND 369.9, 4.8
-text$ = "though "
-slowtext
-SOUND 391.9, 14.4
-text$ = "you "
-slowtext
-SOUND 329.6, 9.6
-text$ = "broke "
-slowtext
-SOUND 277.1, 9.6
-text$ = "my" + CHR$(13)
-slowtext
-SOUND 293.6, 4.8
-REM                             "|Even though you broke my" + CHR$(13)
+T$="|E"
+GOSUB 20:
+REM SOUND 329.6, 9.6
+T$="ven "
+GOSUB 20:
+REM SOUND 369.9, 4.8
+T$="though "
+GOSUB 20:
+REM SOUND 391.9, 14.4
+T$="you "
+GOSUB 20:
+REM SOUND 329.6, 9.6
+T$="broke "
+GOSUB 20:
+REM SOUND 277.1, 9.6
+T$="my"+C$
+GOSUB 20:
+REM SOUND 293.6, 4.8
+REM                             "|Even though you broke my"+C$
 
 heart
 LOCATE 11, 1
 
-text$ = "|heart." + CHR$(13)
-slowtext
-SOUND 329.6, 14.4
+T$="|heart."+C$
+GOSUB 20:
+REM SOUND 329.6, 14.4
 LOCATE 12, 1
 
-text$ = "|And "
-slowtext
-SOUND 220, 4.8
-text$ = "killed "
-slowtext
-SOUND 0, .1
-SOUND 220, 9.6
-text$ = "me." + CHR$(13)
-slowtext
-SOUND 369.9, 2.4
-REM                             "|heart. And killed me." + CHR$(13)
+T$="|And "
+GOSUB 20:
+REM SOUND 220, 4.8
+T$="killed "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 220, 9.6
+T$="me."+C$
+GOSUB 20:
+REM SOUND 369.9, 2.4
+REM                             "|heart. And killed me."+C$
 
 REM 480
 delaytime = .48
 delay
 
-SOUND 123.4, 4.8
-SOUND 146.8, 14.4
+REM SOUND 123.4, 4.8
+REM SOUND 146.8, 14.4
 
 explode
 LOCATE 13, 1
-text$ = "|And "
-slowtext
-SOUND 220, 4.8
-text$ = "tore "
-slowtext
+T$="|And "
+GOSUB 20:
+REM SOUND 220, 4.8
+T$="tore "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 391.9, 1
-SOUND 493.8, 1
+REM SOUND 391.9, 1
+REM SOUND 493.8, 1
 NEXT i
-text$ = "me "
-slowtext
+T$="me "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 369.9, 1
-SOUND 440, 1
+REM SOUND 369.9, 1
+REM SOUND 440, 1
 NEXT i
-text$ = "to "
-slowtext
+T$="to "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 329.6, 1
-SOUND 391.9, 1
+REM SOUND 329.6, 1
+REM SOUND 391.9, 1
 NEXT i
-text$ = "pie"
-slowtext
-SOUND 0, .1
+T$="pie"
+GOSUB 20:
+REM SOUND 0, .1
 FOR i = 1 TO 2.4
-SOUND 329.6, 1
-SOUND 391.9, 1
+REM SOUND 329.6, 1
+REM SOUND 391.9, 1
 NEXT i
-text = "ces." + CHR$(13)
-slowtext
+text = "ces."+C$
+GOSUB 20:
 FOR i = 1 TO 4.8
-SOUND 369.9, 1
-SOUND 440, 1
+REM SOUND 369.9, 1
+REM SOUND 440, 1
 NEXT i
-REM                             "|And tore me to pieces." + CHR$(13)
+REM                             "|And tore me to pieces."+C$
 
 REM 480
 delaytime = .48
 delay
 
-SOUND 146.8, 4.8
-SOUND 123.4, 14.4
-SOUND 0, .1
-SOUND 123.4, 4.8
-SOUND 146.8, 14.4
+REM SOUND 146.8, 4.8
+REM SOUND 123.4, 14.4
+REM SOUND 0, .1
+REM SOUND 123.4, 4.8
+REM SOUND 146.8, 14.4
 
-text$ = "|And "
-slowtext
-SOUND 220, 4.8
-text$ = "threw "
-slowtext
+T$="|And "
+GOSUB 20:
+REM SOUND 220, 4.8
+T$="threw "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 391.9, 1
-SOUND 493.8, 1
+REM SOUND 391.9, 1
+REM SOUND 493.8, 1
 NEXT i
-text$ = "ev"
-slowtext
+T$="ev"
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 369.9, 1
-SOUND 440, 1
+REM SOUND 369.9, 1
+REM SOUND 440, 1
 NEXT i
-text$ = "ery "
-slowtext
+T$="ery "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 329.6, 1
-SOUND 391.9, 1
+REM SOUND 329.6, 1
+REM SOUND 391.9, 1
 NEXT i
-text$ = "piece "
-slowtext
-SOUND 0, .1
+T$="piece "
+GOSUB 20:
+REM SOUND 0, .1
 FOR i = 1 TO 7.2
-SOUND 329.6, 1
-SOUND 391.9, 1
+REM SOUND 329.6, 1
+REM SOUND 391.9, 1
 NEXT i
-text$ = "in"
-slowtext
+T$="in"
+GOSUB 20:
 FOR i = 1 TO 2.6
-SOUND 440, 1
-SOUND 369.9, 1
+REM SOUND 440, 1
+REM SOUND 369.9, 1
 NEXT i
-text$ = "to" + CHR$(13)
-slowtext
+T$="to"+C$
+GOSUB 20:
 FOR i = 1 TO 7.2
-SOUND 369.9, 1
-SOUND 293.6, 1
+REM SOUND 369.9, 1
+REM SOUND 293.6, 1
 NEXT i
-REM                             "|And threw every peice into" + CHR$(13)
+REM                             "|And threw every peice into"+C$
 
 fire
 LOCATE 15, 1
 
-text$ = "|a "
-slowtext
+T$="|a "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 329.6, 1
-SOUND 391.9, 1
+REM SOUND 329.6, 1
+REM SOUND 391.9, 1
 NEXT i
-text$ = "fire." + CHR$(13)
-slowtext
+T$="fire."+C$
+GOSUB 20:
 FOR i = 1 TO 7.2
-SOUND 293.6, 1
-SOUND 220, 1
+REM SOUND 293.6, 1
+REM SOUND 220, 1
 NEXT i
 
-REM                             "|a fire." + CHR$(13)
+REM                             "|a fire."+C$
 
 REM 480
 delaytime = .48
 delay
 
-SOUND 146.8, 4.8
-SOUND 123.4, 14.4
-SOUND 0, .1
-SOUND 123.4, 4.8
+REM SOUND 146.8, 4.8
+REM SOUND 123.4, 14.4
+REM SOUND 0, .1
+REM SOUND 123.4, 4.8
 
-text$ = "|As "
-slowtext
-SOUND 329.6, 9.6
-text$ = "they "
-slowtext
-SOUND 369.9, 4.8
-text$ = "burned "
-slowtext
-SOUND 391.9, 14.4
-text$ = "it "
-slowtext
-SOUND 329.6, 9.6
-text$ = "hurt" + CHR$(13)
-slowtext
-SOUND 277.1, 9.6
-REM                             "|As they burned it hurt" + CHR$(13)
+T$="|As "
+GOSUB 20:
+REM SOUND 329.6, 9.6
+T$="they "
+GOSUB 20:
+REM SOUND 369.9, 4.8
+T$="burned "
+GOSUB 20:
+REM SOUND 391.9, 14.4
+T$="it "
+GOSUB 20:
+REM SOUND 329.6, 9.6
+T$="hurt"+C$
+GOSUB 20:
+REM SOUND 277.1, 9.6
+REM                             "|As they burned it hurt"+C$
 
-text$ = "|be"
-slowtext
-SOUND 293.6, 4.8
-text$ = "cause "
-slowtext
-SOUND 329.6, 9.6
-text$ = "I "
-slowtext
-SOUND 220, 4.8
-text$ = "was "
-slowtext
-SOUND 293.6, 4.8
-text$ = "so "
-slowtext
-SOUND 329.6, 4.8
-text$ = "hap"
-slowtext
-SOUND 349.2, 4.8
+T$="|be"
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="cause "
+GOSUB 20:
+REM SOUND 329.6, 9.6
+T$="I "
+GOSUB 20:
+REM SOUND 220, 4.8
+T$="was "
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="so "
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="hap"
+GOSUB 20:
+REM SOUND 349.2, 4.8
 text = "py "
-slowtext
-SOUND 329.6, 4.8
-text = "for" + CHR$(13)
-slowtext
-SOUND 293.6, 4.8
-text = "|you!" + CHR$(13)
-slowtext
-SOUND 261.6, 14.4
-REM                             "|becuase I was so happy for" + CHR$(13) + "|you!" + CHR$(13)
+GOSUB 20:
+REM SOUND 329.6, 4.8
+text = "for"+C$
+GOSUB 20:
+REM SOUND 293.6, 4.8
+text = "|you!"+C$
+GOSUB 20:
+REM SOUND 261.6, 14.4
+REM                             "|becuase I was so happy for"+C$ + "|you!"+C$
 
 tick
 delaytime = .5
 delay
 LOCATE 19, 1
 
-text$ = "|Now "
-slowtext
-SOUND 220, 4.8
-text$ = "these "
-slowtext
-SOUND 233, 4.8
-text$ = "points "
-slowtext
-SOUND 261.6, 9.6
-text$ = "of "
-slowtext
-SOUND 349.2, 9.6
-text$ = "da"
-slowtext
-SOUND 329.6, 4.8
-text$ = "ta" + CHR$(13)
-slowtext
-SOUND 293.6, 4.8
-text$ = "|make "
-slowtext
-SOUND 0, .1
-SOUND 293.6, 4.8
-text$ = "a "
-slowtext
-SOUND 261.6, 4.8
-text$ = "beau"
-slowtext
-SOUND 293.6, 4.8
-text$ = "ti"
-slowtext
-SOUND 261.6, 4.8
-text$ = "ful "
-slowtext
-SOUND 0, .1
-SOUND 261.6, 9.6
-text$ = "line." + CHR$(13)
-slowtext
-SOUND 0, .1
-SOUND 261.6, 9.6
-REM                             "|Now these points of data" + CHR$(13) + "|make a beautiful line." + CHR$(13)
+T$="|Now "
+GOSUB 20:
+REM SOUND 220, 4.8
+T$="these "
+GOSUB 20:
+REM SOUND 233, 4.8
+T$="points "
+GOSUB 20:
+REM SOUND 261.6, 9.6
+T$="of "
+GOSUB 20:
+REM SOUND 349.2, 9.6
+T$="da"
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="ta"+C$
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="|make "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 293.6, 4.8
+T$="a "
+GOSUB 20:
+REM SOUND 261.6, 4.8
+T$="beau"
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="ti"
+GOSUB 20:
+REM SOUND 261.6, 4.8
+T$="ful "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 261.6, 9.6
+T$="line."+C$
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 261.6, 9.6
+REM                             "|Now these points of data"+C$ + "|make a beautiful line."+C$
 
-text$ = "|And "
-slowtext
-SOUND 220, 4.8
-text$ = "we're "
-slowtext
-SOUND 233, 4.8
-text$ = "out "
-slowtext
-SOUND 261.6, 9.6
-text$ = "of "
-slowtext
-SOUND 349.2, 9.6
-text$ = "be"
-slowtext
-SOUND 391.9, 4.8
-text$ = "ta." + CHR$(13)
-slowtext
-SOUND 349.2, 4.8
+T$="|And "
+GOSUB 20:
+REM SOUND 220, 4.8
+T$="we're "
+GOSUB 20:
+REM SOUND 233, 4.8
+T$="out "
+GOSUB 20:
+REM SOUND 261.6, 9.6
+T$="of "
+GOSUB 20:
+REM SOUND 349.2, 9.6
+T$="be"
+GOSUB 20:
+REM SOUND 391.9, 4.8
+T$="ta."+C$
+GOSUB 20:
+REM SOUND 349.2, 4.8
 
-text$ = "|We're "
-slowtext
-SOUND 329.6, 4.8
-text$ = "re"
-slowtext
-SOUND 293.6, 4.8
-text$ = "lea"
-slowtext
-SOUND 0, .1
-SOUND 293.6, 4.8
-text$ = "sing "
-slowtext
-SOUND 329.6, 4.8
-text$ = "on "
-slowtext
-SOUND 349.2, 9.6
-text$ = "time." + CHR$(13)
-slowtext
-SOUND 0, .1
-SOUND 349.2, 9.6
-REM                             "|And we're out of beta." + CHR$(13) + "|We're releasing on time."
+T$="|We're "
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="re"
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="lea"
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 293.6, 4.8
+T$="sing "
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="on "
+GOSUB 20:
+REM SOUND 349.2, 9.6
+T$="time."+C$
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 349.2, 9.6
+REM                             "|And we're out of beta."+C$ + "|We're releasing on time."
 
 explode
 scroll
 LOCATE 22, 1
 
-text$ = "|So "
-slowtext
-SOUND 391.9, 4.8
-text$ = "I'm "
-slowtext
-SOUND 440, 4.8
-text$ = "GLaD. "
-slowtext
-SOUND 466.1, 4.8
+T$="|So "
+GOSUB 20:
+REM SOUND 391.9, 4.8
+T$="I'm "
+GOSUB 20:
+REM SOUND 440, 4.8
+T$="GLaD. "
+GOSUB 20:
+REM SOUND 466.1, 4.8
 scroll
 
-text$ = "I "
-slowtext
-SOUND 466.1, 4.8
-text$ = "got "
-slowtext
-SOUND 440, 9.6
-text$ = "burned." + CHR$(13)
-slowtext
-SOUND 391.9, 9.6
-REM                             "|So I'm GLaD. I got burned." + CHR$(13)
+T$="I "
+GOSUB 20:
+REM SOUND 466.1, 4.8
+T$="got "
+GOSUB 20:
+REM SOUND 440, 9.6
+T$="burned."+C$
+GOSUB 20:
+REM SOUND 391.9, 9.6
+REM                             "|So I'm GLaD. I got burned."+C$
 
 scroll
 atom
 
-text$ = "|Think "
-slowtext
-SOUND 349.2, 4.8
-text$ = "of "
-slowtext
-SOUND 391.9, 4.8
-text$ = "all "
-slowtext
-SOUND 440, 4.8
-text$ = "the "
-slowtext
-SOUND 0, .1
-SOUND 440, 4.8
-text$ = "things "
-slowtext
-SOUND 391.9, 4.8
-text$ = "we" + CHR$(13)
-slowtext
-SOUND 349.2, 4.8
-REM                             "|Think of all the things we" + CHR$(13)
+T$="|Think "
+GOSUB 20:
+REM SOUND 349.2, 4.8
+T$="of "
+GOSUB 20:
+REM SOUND 391.9, 4.8
+T$="all "
+GOSUB 20:
+REM SOUND 440, 4.8
+T$="the "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 440, 4.8
+T$="things "
+GOSUB 20:
+REM SOUND 391.9, 4.8
+T$="we"+C$
+GOSUB 20:
+REM SOUND 349.2, 4.8
+REM                             "|Think of all the things we"+C$
 
 scroll
 
-text$ = "learned" + CHR$(13)
-slowtext
-SOUND 349.2, 9.6
-REM                             "learned" + CHR$(13)
+T$="learned"+C$
+GOSUB 20:
+REM SOUND 349.2, 9.6
+REM                             "learned"+C$
 
 aplabs
 scroll
 
-text$ = "for "
-slowtext
-SOUND 293.6, 4.8
-text$ = "the "
-slowtext
-SOUND 261.6, 4.8
-text$ = "peo"
-slowtext
-SOUND 293.6, 4.8
-text$ = "ple "
-slowtext
-SOUND 349.2, 4.8
-text$ = "who "
-slowtext
-SOUND 0, .1
-SOUND 349.2, 4.8
-text$ = "are" + CHR$(13)
-slowtext
-SOUND 329.6, 9.6
-REM                             "for the people who are" + CHR$(13)
+T$="for "
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="the "
+GOSUB 20:
+REM SOUND 261.6, 4.8
+T$="peo"
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="ple "
+GOSUB 20:
+REM SOUND 349.2, 4.8
+T$="who "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 349.2, 4.8
+T$="are"+C$
+GOSUB 20:
+REM SOUND 329.6, 9.6
+REM                             "for the people who are"+C$
 
 scroll
 
-text$ = "still "
-slowtext
-SOUND 329.6, 4.8
-text$ = "alive." + CHR$(13)
-slowtext
-SOUND 369.9, 4.8
-SOUND 0, .1
-SOUND 369.9, 24
-REM                             "still alive." + CHR$(13)
+T$="still "
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="alive."+C$
+GOSUB 20:
+REM SOUND 369.9, 4.8
+REM SOUND 0, .1
+REM SOUND 369.9, 24
+REM                             "still alive."+C$
 
 clearleft
-text$ = "|Forms FORM-55551-6:" + CHR$(13) + "|Personnel File Addendum" + CHR$(13) + "|Addendum:" + CHR$(13) + "|" + CHR$(13)
+T$="|Forms FORM-55551-6:"+C$ + "|Personnel File Addendum"+C$ + "|Addendum:"+C$ + "|"+C$
 fasttext
-text$ = "|One last thing:" + CHR$(13) + "|" + CHR$(13)
-slowtext
+T$="|One last thing:"+C$ + "|"+C$
+GOSUB 20:
 
 FOR i = 1 TO 3
-SOUND 123.4, 14.4
-SOUND 0, .1
-SOUND 123.4, 4.8
-SOUND 146.6, 14.4
-SOUND 0, .1
-SOUND 146.6, 4.8
+REM SOUND 123.4, 14.4
+REM SOUND 0, .1
+REM SOUND 123.4, 4.8
+REM SOUND 146.6, 14.4
+REM SOUND 0, .1
+REM SOUND 146.6, 4.8
 NEXT i
 
-text$ = "|Go "
-slowtext
-SOUND 391.9, 4.8
-text$ = "ahead "
-slowtext
-SOUND 369.9, 4.8
-text$ = "and "
-slowtext
-SOUND 329.6, 4.8
-text$ = "leave "
-slowtext
-SOUND 0, .1
-SOUND 329.6, 9.6
-text$ = "me" + CHR$(13)
-slowtext
-SOUND 369.9, 14.2
-REM                             "|Go ahead and leave me" + CHR$(13)
+T$="|Go "
+GOSUB 20:
+REM SOUND 391.9, 4.8
+T$="ahead "
+GOSUB 20:
+REM SOUND 369.9, 4.8
+T$="and "
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="leave "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 329.6, 9.6
+T$="me"+C$
+GOSUB 20:
+REM SOUND 369.9, 14.2
+REM                             "|Go ahead and leave me"+C$
 
-SOUND 123.4, 4.8
-SOUND 146.8, 4.8
-SOUND 184.9, 4.8
-SOUND 146.8, 4.8
-SOUND 110, 4.8
-SOUND 123.4, 4.8
-SOUND 146.8, 4.8
+REM SOUND 123.4, 4.8
+REM SOUND 146.8, 4.8
+REM SOUND 184.9, 4.8
+REM SOUND 146.8, 4.8
+REM SOUND 110, 4.8
+REM SOUND 123.4, 4.8
+REM SOUND 146.8, 4.8
 
-text$ = "|I "
-slowtext
-SOUND 220, 4.8
-text$ = "think "
-slowtext
-SOUND 391.9, 4.8
-text$ = "I "
-slowtext
-SOUND 369.9, 4.8
-text$ = "pre"
-slowtext
-SOUND 329.6, 4.8
-text$ = "fer "
-slowtext
-SOUND 0, .1
-SOUND 329.6, 14.2
-text$ = "to "
-slowtext
-SOUND 369.9, 4.8
-text$ = "stay" + CHR$(13)
-slowtext
-SOUND 293.6, 14.2
-text$ = "|in"
-slowtext
-SOUND 329.6, 4.8
-text$ = "side." + CHR$(13)
-slowtext
-SOUND 220, 24
-REM                             "|I think I prefer to stay" + CHR$(13) + "|inside." + CHR$(13)
+T$="|I "
+GOSUB 20:
+REM SOUND 220, 4.8
+T$="think "
+GOSUB 20:
+REM SOUND 391.9, 4.8
+T$="I "
+GOSUB 20:
+REM SOUND 369.9, 4.8
+T$="pre"
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="fer "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 329.6, 14.2
+T$="to "
+GOSUB 20:
+REM SOUND 369.9, 4.8
+T$="stay"+C$
+GOSUB 20:
+REM SOUND 293.6, 14.2
+T$="|in"
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="side."+C$
+GOSUB 20:
+REM SOUND 220, 24
+REM                             "|I think I prefer to stay"+C$ + "|inside."+C$
 
-SOUND 123.4, 4.8
-SOUND 146.8, 4.8
-SOUND 184.9, 4.8
-SOUND 146.8, 4.8
+REM SOUND 123.4, 4.8
+REM SOUND 146.8, 4.8
+REM SOUND 184.9, 4.8
+REM SOUND 146.8, 4.8
 
-text$ = "|May"
-slowtext
-SOUND 329.6, 9.6
-text$ = "be "
-slowtext
-SOUND 369.9, 4.8
-text$ = "you'll "
-slowtext
-SOUND 391.9, 14.2
-text$ = "find "
-slowtext
-SOUND 329.6, 9.6
-text$ = "some"
-slowtext
-SOUND 277.1, 9.6
-text$ = "one" + CHR$(13)
-slowtext
-SOUND 293.6, 4.8
-text$ = "|else "
-slowtext
-SOUND 329.6, 9.6
+T$="|May"
+GOSUB 20:
+REM SOUND 329.6, 9.6
+T$="be "
+GOSUB 20:
+REM SOUND 369.9, 4.8
+T$="you'll "
+GOSUB 20:
+REM SOUND 391.9, 14.2
+T$="find "
+GOSUB 20:
+REM SOUND 329.6, 9.6
+T$="some"
+GOSUB 20:
+REM SOUND 277.1, 9.6
+T$="one"+C$
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="|else "
+GOSUB 20:
+REM SOUND 329.6, 9.6
 
 REM 480
 delaytime = .48
 delay
 
-text$ = "to "
-slowtext
-SOUND 220, 4.8
-text$ = "help "
-slowtext
-SOUND 0, .1
-SOUND 220, 9.6
-text$ = "you." + CHR$(13)
-slowtext
-SOUND 369.9, 24
-REM                             "|Maybe you'll find someone" + CHR$(13) + "|else to help you." + CHR$(13)
+T$="to "
+GOSUB 20:
+REM SOUND 220, 4.8
+T$="help "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 220, 9.6
+T$="you."+C$
+GOSUB 20:
+REM SOUND 369.9, 24
+REM                             "|Maybe you'll find someone"+C$ + "|else to help you."+C$
 
-SOUND 184.9, 4.8
-SOUND 146.8, 4.8
-SOUND 110, 4.8
-SOUND 146.8, 4.8
-SOUND 184.9, 4.8
-SOUND 146.8, 4.8
+REM SOUND 184.9, 4.8
+REM SOUND 146.8, 4.8
+REM SOUND 110, 4.8
+REM SOUND 146.8, 4.8
+REM SOUND 184.9, 4.8
+REM SOUND 146.8, 4.8
 
 bmesa
 LOCATE 13, 1
 
-text$ = "|May"
-slowtext
+T$="|May"
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 391.9, 1
-SOUND 493.8, 1
+REM SOUND 391.9, 1
+REM SOUND 493.8, 1
 NEXT i
-text$ = "be "
-slowtext
+T$="be "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 369.9, 1
-SOUND 440, 1
+REM SOUND 369.9, 1
+REM SOUND 440, 1
 NEXT i
-text$ = "Black "
-slowtext
+T$="Black "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 329.6, 1
-SOUND 391.9, 1
+REM SOUND 329.6, 1
+REM SOUND 391.9, 1
 NEXT i
-text$ = "Me"
-slowtext
-SOUND 0, .1
+T$="Me"
+GOSUB 20:
+REM SOUND 0, .1
 FOR i = 1 TO 4.755
-SOUND 329.6, 1
-SOUND 391.9, 1
+REM SOUND 329.6, 1
+REM SOUND 391.9, 1
 NEXT i
-text$ = "sa."
-slowtext
+T$="sa."
+GOSUB 20:
 FOR i = 1 TO 4.8
-SOUND 440, 1
-SOUND 369.9, 1
+REM SOUND 440, 1
+REM SOUND 369.9, 1
 NEXT i
 REM                             "|Maybe Black Mesa."
 
-SOUND 0, .1
+REM SOUND 0, .1
 
-SOUND 146.8, 4.8
-SOUND 123.4, 14.4
+REM SOUND 146.8, 4.8
+REM SOUND 123.4, 14.4
 delay
-SOUND 123.4, 4.8
-SOUND 146.8, 14.4
+REM SOUND 123.4, 4.8
+REM SOUND 146.8, 14.4
 delay
-SOUND 146.8, 4.8
+REM SOUND 146.8, 4.8
 
 LOCATE 13, 19
 FOR i = 1 TO 2
 PRINT ".";
 NEXT i
-PRINT CHR$(13) + CHR$(13)
+PRINT CHR$(13)+C$
 
-text$ = "|THAT "
-slowtext
+T$="|THAT "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 391.9, 1
-SOUND 493.8, 1
+REM SOUND 391.9, 1
+REM SOUND 493.8, 1
 NEXT i
-text$ = "WAS "
-slowtext
+T$="WAS "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 440, 1
-SOUND 369.9, 1
+REM SOUND 440, 1
+REM SOUND 369.9, 1
 NEXT i
-text$ = "A "
-slowtext
+T$="A "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 329.6, 1
-SOUND 391.9, 1
+REM SOUND 329.6, 1
+REM SOUND 391.9, 1
 NEXT i
-text$ = "JOKE." + CHR$(13)
-slowtext
+T$="JOKE."+C$
+GOSUB 20:
 FOR i = 1 TO 7.2
-SOUND 391.9, 1
-SOUND 329.6, 1
+REM SOUND 391.9, 1
+REM SOUND 329.6, 1
 NEXT i
-REM                             "|THAT WAS A JOKE." + CHR$(13)
+REM                             "|THAT WAS A JOKE."+C$
 
 REM <HAHA>
 FOR i = 1 TO 2.4
-SOUND 440, 1
-SOUND 369.9, 1
+REM SOUND 440, 1
+REM SOUND 369.9, 1
 NEXT i
 FOR i = 1 TO 7.2
-SOUND 369.9, 1
-SOUND 293.6, 1
+REM SOUND 369.9, 1
+REM SOUND 293.6, 1
 NEXT i
-text$ = "|FAT "
+T$="|FAT "
 fasttext
 FOR i = 1 TO 2.4
-SOUND 391.9, 1
-SOUND 329.6, 1
+REM SOUND 391.9, 1
+REM SOUND 329.6, 1
 NEXT i
-text$ = "CHANCE." + CHR$(13)
+T$="CHANCE."+C$
 fasttext
 FOR i = 1 TO 7.2
-SOUND 293.6, 1
-SOUND 220, 1
+REM SOUND 293.6, 1
+REM SOUND 220, 1
 NEXT i
-REM                             "|FAT CHANCE." + CHR$(13)
+REM                             "|FAT CHANCE."+C$
 
 REM 480
 delaytime = .48
 delay
 
-SOUND 146.8, 4.8
-SOUND 123.4, 14.4
-SOUND 0, .1
-SOUND 123.4, 4.8
+REM SOUND 146.8, 4.8
+REM SOUND 123.4, 14.4
+REM SOUND 0, .1
+REM SOUND 123.4, 4.8
 
-text$ = "|A"
-slowtext
-SOUND 329.6, 9.6
-text$ = "ny"
-slowtext
-SOUND 369.9, 4.8
+T$="|A"
+GOSUB 20:
+REM SOUND 329.6, 9.6
+T$="ny"
+GOSUB 20:
+REM SOUND 369.9, 4.8
 text = "way, "
-slowtext
-SOUND 391.9, 14.4
+GOSUB 20:
+REM SOUND 391.9, 14.4
 text = "this "
-slowtext
-SOUND 329.6, 9.6
-text$ = "cake "
-slowtext
-SOUND 277.1, 9.6
-text$ = "is" + CHR$(13)
-slowtext
-SOUND 293.6, 4.8
-REM                             "|Anyway, this cake is" + CHR$(13)
+GOSUB 20:
+REM SOUND 329.6, 9.6
+T$="cake "
+GOSUB 20:
+REM SOUND 277.1, 9.6
+T$="is"+C$
+GOSUB 20:
+REM SOUND 293.6, 4.8
+REM                             "|Anyway, this cake is"+C$
 
 cake
 LOCATE 19, 1
 
-text$ = "|great." + CHR$(13)
-slowtext
-SOUND 329.6, 9.6
-REM                             "|great." + CHR$(13)
+T$="|great."+C$
+GOSUB 20:
+REM SOUND 329.6, 9.6
+REM                             "|great."+C$
 
-text$ = "|It's "
-slowtext
-SOUND 220, 4.8
-text$ = "so "
-slowtext
-SOUND 293.6, 4.8
-text$ = "de"
-slowtext
-SOUND 329.6, 4.8
-text$ = "li"
-slowtext
-SOUND 349.2, 4.8
-text$ = "cious "
-slowtext
-SOUND 329.6, 4.8
-text$ = "and" + CHR$(13)
-slowtext
-SOUND 293.6, 4.8
-text$ = "|moist." + CHR$(13)
-slowtext
-SOUND 261.6, 14.4
-REM                             "|It's so delicious and" + CHR$(13) + "|moist." + CHR$(13)
+T$="|It's "
+GOSUB 20:
+REM SOUND 220, 4.8
+T$="so "
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="de"
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="li"
+GOSUB 20:
+REM SOUND 349.2, 4.8
+T$="cious "
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="and"+C$
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="|moist."+C$
+GOSUB 20:
+REM SOUND 261.6, 14.4
+REM                             "|It's so delicious and"+C$ + "|moist."+C$
 
 GLaDOS
 LOCATE 22, 1
 
-text$ = "|Look "
-slowtext
-SOUND 220, 4.8
-text$ = "at "
-slowtext
-SOUND 233, 4.8
-text$ = "me "
-slowtext
-SOUND 261.6, 9.6
-text$ = "still" + CHR$(13)
-slowtext
-SOUND 349.2, 9.6
-REM                             "|Look at me still" + CHR$(13)
+T$="|Look "
+GOSUB 20:
+REM SOUND 220, 4.8
+T$="at "
+GOSUB 20:
+REM SOUND 233, 4.8
+T$="me "
+GOSUB 20:
+REM SOUND 261.6, 9.6
+T$="still"+C$
+GOSUB 20:
+REM SOUND 349.2, 9.6
+REM                             "|Look at me still"+C$
 
 scroll
 
-text$ = "tal"
-slowtext
-SOUND 329.6, 4.8
-text$ = "king "
-slowtext
-SOUND 293.6, 4.8
-text$ = "when "
-slowtext
-SOUND 0, .1
-SOUND 293.6, 4.8
-text$ = "there's" + CHR$(13)
-slowtext
-SOUND 261.6, 4.8
-REM                             "talking when there's" + CHR$(13)
+T$="tal"
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="king "
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="when "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 293.6, 4.8
+T$="there's"+C$
+GOSUB 20:
+REM SOUND 261.6, 4.8
+REM                             "talking when there's"+C$
 
 scroll
 radiation
 LOCATE 22, 1
 
-text$ = "|Sci"
-slowtext
-SOUND 293.6, 4.8
-text$ = "ence "
-slowtext
-SOUND 261.6, 4.8
-text$ = "to "
-slowtext
-SOUND 0, .1
-SOUND 261.6, 9.6
-text$ = "do." + CHR$(13)
-slowtext
-SOUND 0, .1
-SOUND 261.6, 9.6
-REM                             "|Science to do." + CHR$(13)
+T$="|Sci"
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="ence "
+GOSUB 20:
+REM SOUND 261.6, 4.8
+T$="to "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 261.6, 9.6
+T$="do."+C$
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 261.6, 9.6
+REM                             "|Science to do."+C$
 
 aplabs
 scroll
 LOCATE 22, 1
 
-text$ = "|When "
-slowtext
-SOUND 220, 4.8
-text$ = "I "
-slowtext
-SOUND 233, 4.8
-text$ = "look "
-slowtext
-SOUND 261.6, 9.6
-text$ = "out "
-slowtext
-SOUND 349.2, 9.6
-text$ = "there "
-slowtext
-SOUND 391.9, 4.8
-text$ = "it" + CHR$(13)
-slowtext
-SOUND 349.2, 4.8
-REM                             "|When I look out there it" + CHR$(13)
+T$="|When "
+GOSUB 20:
+REM SOUND 220, 4.8
+T$="I "
+GOSUB 20:
+REM SOUND 233, 4.8
+T$="look "
+GOSUB 20:
+REM SOUND 261.6, 9.6
+T$="out "
+GOSUB 20:
+REM SOUND 349.2, 9.6
+T$="there "
+GOSUB 20:
+REM SOUND 391.9, 4.8
+T$="it"+C$
+GOSUB 20:
+REM SOUND 349.2, 4.8
+REM                             "|When I look out there it"+C$
 
 scroll
 LOCATE 22, 1
 
-text$ = "|Makes "
-slowtext
-SOUND 329.6, 4.8
-text$ = "me "
-slowtext
-SOUND 293.6, 4.8
-text$ = "GLaD "
-slowtext
-SOUND 0, .1
-SOUND 293.6, 4.8
-text$ = "I'm "
-slowtext
-SOUND 329.6, 4.8
-text$ = "not "
-slowtext
-SOUND 349.2, 9.6
-text$ = "you." + CHR$(13)
-slowtext
-SOUND 0, .1
-SOUND 349.2, 9.6
-REM                             "|Makes me GLaD I'm not you." + CHR$(13)
+T$="|Makes "
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="me "
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="GLaD "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 293.6, 4.8
+T$="I'm "
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="not "
+GOSUB 20:
+REM SOUND 349.2, 9.6
+T$="you."+C$
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 349.2, 9.6
+REM                             "|Makes me GLaD I'm not you."+C$
 
 atom
 scroll
 LOCATE 22, 1
 
-text$ = "|I've "
-slowtext
-SOUND 391.9, 4.8
-text$ = "ex"
-slowtext
-SOUND 440, 4.8
-text$ = "pe"
-slowtext
-SOUND 466.1, 4.8
-text$ = "ri"
-slowtext
-SOUND 0, .1
-SOUND 466.1, 4.8
-text$ = "ments "
-slowtext
-SOUND 440, 4.7
-text$ = "to "
-slowtext
-SOUND 391.9, 4.7
+T$="|I've "
+GOSUB 20:
+REM SOUND 391.9, 4.8
+T$="ex"
+GOSUB 20:
+REM SOUND 440, 4.8
+T$="pe"
+GOSUB 20:
+REM SOUND 466.1, 4.8
+T$="ri"
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 466.1, 4.8
+T$="ments "
+GOSUB 20:
+REM SOUND 440, 4.7
+T$="to "
+GOSUB 20:
+REM SOUND 391.9, 4.7
 
 REM 18
-SOUND 0, .18
+REM SOUND 0, .18
 
-text$ = "run." + CHR$(13)
-slowtext
-SOUND 0, .1
-SOUND 391.9, 9.6
-REM                             "|I've experiments to run." + CHR$(13)
+T$="run."+C$
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 391.9, 9.6
+REM                             "|I've experiments to run."+C$
 
 scroll
 explode
 LOCATE 22, 1
 
-text$ = "|There "
-slowtext
-SOUND 349.2, 4.8
-text$ = "is "
-slowtext
-SOUND 391.9, 4.8
-text$ = "re"
-slowtext
-SOUND 440, 4.8
-text$ = "search "
-slowtext
-SOUND 0, .1
-SOUND 440, 4.8
-text$ = "to "
-slowtext
-SOUND 391.9, 4.8
-text$ = "be" + CHR$(13)
-slowtext
-SOUND 349.2, 4.8
-REM                             "|There is research to be" + CHR$(13)
+T$="|There "
+GOSUB 20:
+REM SOUND 349.2, 4.8
+T$="is "
+GOSUB 20:
+REM SOUND 391.9, 4.8
+T$="re"
+GOSUB 20:
+REM SOUND 440, 4.8
+T$="search "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 440, 4.8
+T$="to "
+GOSUB 20:
+REM SOUND 391.9, 4.8
+T$="be"+C$
+GOSUB 20:
+REM SOUND 349.2, 4.8
+REM                             "|There is research to be"+C$
 
 scroll
 
-text$ = "done." + CHR$(13)
-slowtext
-SOUND 349.2, 9.6
-REM                             "done." + CHR$(13)
+T$="done."+C$
+GOSUB 20:
+REM SOUND 349.2, 9.6
+REM                             "done."+C$
 
 scroll
 aplabs
 LOCATE 22, 1
 
-text$ = "|On "
-slowtext
-SOUND 293.6, 4.8
-text$ = "the "
-slowtext
-SOUND 261.6, 4.8
-text$ = "peo"
-slowtext
-SOUND 293.6, 4.8
-text$ = "ple "
-slowtext
-SOUND 349.2, 4.8
-text$ = "who "
-slowtext
-SOUND 0, .1
-SOUND 349.2, 4.8
-text$ = "are" + CHR$(13)
-slowtext
-SOUND 329.6, 9.6
-REM                             "|On the people who are" + CHR$(13)
+T$="|On "
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="the "
+GOSUB 20:
+REM SOUND 261.6, 4.8
+T$="peo"
+GOSUB 20:
+REM SOUND 293.6, 4.8
+T$="ple "
+GOSUB 20:
+REM SOUND 349.2, 4.8
+T$="who "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 349.2, 4.8
+T$="are"+C$
+GOSUB 20:
+REM SOUND 329.6, 9.6
+REM                             "|On the people who are"+C$
 
 scroll
 
-text$ = "still "
-slowtext
-SOUND 329.6, 4.8
-text$ = "a"
-slowtext
-SOUND 369.9, 4.8
-text$ = "live." + CHR$(13)
-slowtext
-SOUND 0, .1
-SOUND 369.9, 24
-REM                             "still alive." + CHR$(13)
+T$="still "
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="a"
+GOSUB 20:
+REM SOUND 369.9, 4.8
+T$="live."+C$
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 369.9, 24
+REM                             "still alive."+C$
 
 hl
 
@@ -1367,255 +1195,255 @@ LOCATE 5, 2
 
 hl
 
-text$ = "PS: And "
-slowtext
-SOUND 440, 4.7
+T$="PS: And "
+GOSUB 20:
+REM SOUND 440, 4.7
 
-text$ = "be"
-slowtext
-SOUND 440, 4.7
-
-REM 9
-delaytime = .09
-delay
-
-text$ = "lieve "
-slowtext
-SOUND 493.8, 4.7
+T$="be"
+GOSUB 20:
+REM SOUND 440, 4.7
 
 REM 9
 delaytime = .09
 delay
 
-text$ = "me "
-slowtext
-SOUND 440, 4.7
+T$="lieve "
+GOSUB 20:
+REM SOUND 493.8, 4.7
 
 REM 9
 delaytime = .09
 delay
 
-text$ = "I "
-slowtext
-SOUND 369.9, 4.7
+T$="me "
+GOSUB 20:
+REM SOUND 440, 4.7
 
 REM 9
 delaytime = .09
 delay
 
-text$ = "am" + CHR$(13)
-slowtext
-SOUND 293.6, 9.6
-text$ = "|still "
-slowtext
-SOUND 329.6, 4.8
-text$ = "a"
-slowtext
-SOUND 369.9, 4.8
-text$ = "live." + CHR$(13)
-slowtext
+T$="I "
+GOSUB 20:
+REM SOUND 369.9, 4.7
+
+REM 9
+delaytime = .09
+delay
+
+T$="am"+C$
+GOSUB 20:
+REM SOUND 293.6, 9.6
+T$="|still "
+GOSUB 20:
+REM SOUND 329.6, 4.8
+T$="a"
+GOSUB 20:
+REM SOUND 369.9, 4.8
+T$="live."+C$
+GOSUB 20:
 FOR i = 1 TO 7.2
-SOUND 369.9, 1
-SOUND 440, 1
+REM SOUND 369.9, 1
+REM SOUND 440, 1
 NEXT i
-REM                             "PS: And believe me I am" + CHR$(13) + "|still alive." + CHR$(13)
+REM                             "PS: And believe me I am"+C$ + "|still alive."+C$
 
 hl
 
-text$ = "|PPS: "
+T$="|PPS: "
 fasttext
 
-text$ = "I'm "
-slowtext
-SOUND 440, 4.8
-text$ = "do"
-slowtext
+T$="I'm "
+GOSUB 20:
+REM SOUND 440, 4.8
+T$="do"
+GOSUB 20:
 delaytime = .01
 delay
-SOUND 440, 4.8
-text$ = "ing "
-slowtext
+REM SOUND 440, 4.8
+T$="ing "
+GOSUB 20:
 delay
-SOUND 440, 4.8
-text$ = "Sci"
-slowtext
-SOUND 493.8, 4.8
-text$ = "ence" + CHR$(13)
-slowtext
-SOUND 440, 4.8
-text$ = "|and "
-slowtext
-SOUND 369.9, 4.8
-text$ = "I'm" + CHR$(13)
-slowtext
-SOUND 293.6, 9.6
-text$ = "|still "
-slowtext
+REM SOUND 440, 4.8
+T$="Sci"
+GOSUB 20:
+REM SOUND 493.8, 4.8
+T$="ence"+C$
+GOSUB 20:
+REM SOUND 440, 4.8
+T$="|and "
+GOSUB 20:
+REM SOUND 369.9, 4.8
+T$="I'm"+C$
+GOSUB 20:
+REM SOUND 293.6, 9.6
+T$="|still "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 391.9, 1
-SOUND 329.6, 1
+REM SOUND 391.9, 1
+REM SOUND 329.6, 1
 NEXT i
-text$ = "a"
-slowtext
+T$="a"
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 440, 1
-SOUND 369.9, 1
+REM SOUND 440, 1
+REM SOUND 369.9, 1
 NEXT i
-text$ = "live." + CHR$(13)
-slowtext
+T$="live."+C$
+GOSUB 20:
 FOR i = 1 TO 7.2
-SOUND 440, 1
-SOUND 369.9, 1
+REM SOUND 440, 1
+REM SOUND 369.9, 1
 NEXT i
-REM                             "|PPS: I'm doing Science" + CHR$(13) + "|and I'm" + CHR$(13) + "|still alive." + CHR$(13)
+REM                             "|PPS: I'm doing Science"+C$ + "|and I'm"+C$ + "|still alive."+C$
 
 hl
 
-text$ = "|PPPS: "
+T$="|PPPS: "
 fasttext
 
-text$ = "I "
-slowtext
-SOUND 440, 4.8
-text$ = "feel "
-slowtext
+T$="I "
+GOSUB 20:
+REM SOUND 440, 4.8
+T$="feel "
+GOSUB 20:
 delaytime = .01
 delay
-SOUND 440, 4.8
-text$ = "FAN"
-slowtext
+REM SOUND 440, 4.8
+T$="FAN"
+GOSUB 20:
 delaytime = .01
 delay
-SOUND 440, 4.8
-text$ = "TAS"
-slowtext
-SOUND 493.8, 4.8
-text$ = "TIC" + CHR$(13)
-slowtext
-SOUND 440, 4.8
-text$ = "|and "
-slowtext
-SOUND 369.9, 4.8
-text$ = "I'm" + CHR$(13)
-slowtext
-SOUND 293.6, 9.6
-text$ = "|still "
-slowtext
+REM SOUND 440, 4.8
+T$="TAS"
+GOSUB 20:
+REM SOUND 493.8, 4.8
+T$="TIC"+C$
+GOSUB 20:
+REM SOUND 440, 4.8
+T$="|and "
+GOSUB 20:
+REM SOUND 369.9, 4.8
+T$="I'm"+C$
+GOSUB 20:
+REM SOUND 293.6, 9.6
+T$="|still "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 391.9, 1
-SOUND 329.6, 1
+REM SOUND 391.9, 1
+REM SOUND 329.6, 1
 NEXT i
-text$ = "a"
-slowtext
+T$="a"
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 440, 1
-SOUND 369.9, 1
+REM SOUND 440, 1
+REM SOUND 369.9, 1
 NEXT i
-text$ = "live." + CHR$(13)
-slowtext
+T$="live."+C$
+GOSUB 20:
 delaytime = .01
 delay
 FOR i = 1 TO 7.2
-SOUND 440, 1
-SOUND 369.9, 1
+REM SOUND 440, 1
+REM SOUND 369.9, 1
 NEXT i
-REM                             "|PPPS: I feel FANTASTIC" + CHR$(13) + "|and I'm" + CHR$(13) + "|still alive" + CHR$(13)
+REM                             "|PPPS: I feel FANTASTIC"+C$ + "|and I'm"+C$ + "|still alive"+C$
 
 PRINT "|"
-text$ = "|FINAL THOUGHT:" + CHR$(13)
+T$="|FINAL THOUGHT:"+C$
 fasttext
 
 hl
 
-text$ = "|While "
-slowtext
-SOUND 440, 4.8
-text$ = "you're "
-slowtext
+T$="|While "
+GOSUB 20:
+REM SOUND 440, 4.8
+T$="you're "
+GOSUB 20:
 delaytime = .01
 delay
-SOUND 440, 4.8
-text$ = "dy"
-slowtext
-SOUND 493.8, 4.8
-text$ = "ing "
-slowtext
-SOUND 440, 4.8
-text$ = "I'll "
-slowtext
-SOUND 369.9, 4.8
-text$ = "be" + CHR$(13)
-slowtext
-SOUND 293.6, 9.6
-text$ = "|still "
-slowtext
+REM SOUND 440, 4.8
+T$="dy"
+GOSUB 20:
+REM SOUND 493.8, 4.8
+T$="ing "
+GOSUB 20:
+REM SOUND 440, 4.8
+T$="I'll "
+GOSUB 20:
+REM SOUND 369.9, 4.8
+T$="be"+C$
+GOSUB 20:
+REM SOUND 293.6, 9.6
+T$="|still "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 391.9, 1
-SOUND 329.6, 1
+REM SOUND 391.9, 1
+REM SOUND 329.6, 1
 NEXT i
-text$ = "a"
-slowtext
+T$="a"
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 369.9, 1
-SOUND 440, 1
+REM SOUND 369.9, 1
+REM SOUND 440, 1
 NEXT i
-text$ = "live"
-slowtext
-SOUND 0, .1
+T$="live"
+GOSUB 20:
+REM SOUND 0, .1
 FOR i = 1 TO 9.6
-SOUND 440, 1
-SOUND 369.9, 1
+REM SOUND 440, 1
+REM SOUND 369.9, 1
 NEXT i
-REM                             "|FINAL THOUGHT:" + CHR$(13) + "|While you're dying I'll be" + CHR$(13) + "|still alive." + CHR$(13)
+REM                             "|FINAL THOUGHT:"+C$ + "|While you're dying I'll be"+C$ + "|still alive."+C$
 
-text$ = CHR$(13) + "|" + CHR$(13) + "|FINAL THOUGHT PS:" + CHR$(13)
+text$ = CHR$(13) + "|"+C$ + "|FINAL THOUGHT PS:"+C$
 fasttext
 
 hl
 
-text$ = "|And "
-slowtext
-SOUND 440, 4.8
-text$ = "when "
-slowtext
-SOUND 0, .1
-SOUND 440, 4.8
-text$ = "you're "
-slowtext
-SOUND 0, .1
-SOUND 440, 4.8
-text$ = "dead "
-slowtext
-SOUND 493.8, 4.8
-text$ = "I" + CHR$(13)
-slowtext
-SOUND 440, 4.8
-text$ = "|will "
-slowtext
-SOUND 369.9, 4.8
-text$ = "be" + CHR$(13)
-slowtext
-SOUND 293.6, 9.6
-text$ = "|still "
-slowtext
+T$="|And "
+GOSUB 20:
+REM SOUND 440, 4.8
+T$="when "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 440, 4.8
+T$="you're "
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 440, 4.8
+T$="dead "
+GOSUB 20:
+REM SOUND 493.8, 4.8
+T$="I"+C$
+GOSUB 20:
+REM SOUND 440, 4.8
+T$="|will "
+GOSUB 20:
+REM SOUND 369.9, 4.8
+T$="be"+C$
+GOSUB 20:
+REM SOUND 293.6, 9.6
+T$="|still "
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 329.6, 1
-SOUND 391.9, 1
+REM SOUND 329.6, 1
+REM SOUND 391.9, 1
 NEXT i
-text$ = "a"
-slowtext
+T$="a"
+GOSUB 20:
 FOR i = 1 TO 2.4
-SOUND 440, 1
-SOUND 369.9, 1
+REM SOUND 440, 1
+REM SOUND 369.9, 1
 NEXT i
-text$ = "live" + CHR$(13)
-slowtext
-SOUND 0, .1
+T$="live"+C$
+GOSUB 20:
+REM SOUND 0, .1
 FOR i = 1 TO 7.2
-SOUND 440, 1
-SOUND 369.9, 1
+REM SOUND 440, 1
+REM SOUND 369.9, 1
 NEXT i
-REM                             "|FINAL THOUGHT PS:" + CHR$(13) + "|And when you're dead I" + CHR$(13) + "|will be" + CHR$(13) +"|still alive" + CHR$(13)
+REM                             "|FINAL THOUGHT PS:"+C$ + "|And when you're dead I"+C$ + "|will be"+C$ +"|still alive"+C$
 
 REM 1440
 delaytime = 1.44
@@ -1623,43 +1451,43 @@ delay
 
 scroll
 text$ = CHR$(13)
-slowtext
+GOSUB 20:
 scroll
 
 REM <STILL ALIVE>
-SOUND 391.9, 4.8
-SOUND 440, 4.8
-SOUND 0, .1
-SOUND 440, 14.4
+REM SOUND 391.9, 4.8
+REM SOUND 440, 4.8
+REM SOUND 0, .1
+REM SOUND 440, 14.4
 delaytime = 1.44
 delay
 REM </STILL ALIVE>
 
-text$ = "STILL "
-slowtext
-SOUND 391.9, 4.8
-text$ = "ALIVE"
-slowtext
-SOUND 0, .1
-SOUND 369.9, 4.8
-SOUND 0, .1
-SOUND 369.9, 4.8
+T$="STILL "
+GOSUB 20:
+REM SOUND 391.9, 4.8
+T$="ALIVE"
+GOSUB 20:
+REM SOUND 0, .1
+REM SOUND 369.9, 4.8
+REM SOUND 0, .1
+REM SOUND 369.9, 4.8
 REM                             "STILL ALIVE"
 
 SLEEP 2
 clearleft
 LOCATE 22, 1
-text$ = "|THANK YOU FOR" + CHR$(13)
-slowtext
+T$="|THANK YOU FOR"+C$
+GOSUB 20:
 scroll
-text$ = "PARTICIPATING IN THIS" + CHR$(13)
-slowtext
+T$="PARTICIPATING IN THIS"+C$
+GOSUB 20:
 scroll
-text$ = "ENRICHMENT CENTER" + CHR$(13)
-slowtext
+T$="ENRICHMENT CENTER"+C$
+GOSUB 20:
 scroll
-text$ = "ACTIVITY!!"
-slowtext
+T$="ACTIVITY!!"
+GOSUB 20:
 FOR i = 1 TO 6
 scroll
 NEXT i
@@ -1692,49 +1520,49 @@ LOCATE 22, 2
 2030 RETURN
 '
 2100 REM RADIOACTIVE
-2101 PRINT "             =+$HM####@H%;,             "
-2102 PRINT "          /H###############M$,          "
-2103 PRINT "          ,@################+           "
-2104 PRINT "           .H##############+            "
-2105 PRINT "             X############/             "
-2106 PRINT "              $##########/              "
-2107 PRINT "               %########/               "
-2108 PRINT "                /X/;;+X/                "
+2101 PRINT "             =+$HM####@H%;,"
+2102 PRINT "          /H###############M$,"
+2103 PRINT "          ,@################+"
+2104 PRINT "           .H##############+"
+2105 PRINT "             X############/"
+2106 PRINT "              $##########/"
+2107 PRINT "               %########/"
+2108 PRINT "                /X/;;+X/"
 2109 PRINT
-2110 PRINT "                 -XHHX-                 "
-2111 PRINT "                ,######,                "
-2112 PRINT "#############X  .M####M.  X#############"
-2113 PRINT "##############-   -//-   -##############"
-2114 PRINT "X##############%,      ,+##############X"
-2115 PRINT "-##############X        X##############-"
-2116 PRINT " %############%          %############% "
-2117 PRINT "  %##########;            ;##########%  "
-2118 PRINT "   ;#######M=              =M#######;   "
-2119 PRINT "    .+M###@,                ,@###M+.    "
-2120 PRINT "       :XH.                  .HX:       "
+2110 PRINT "                 -XHHX-"
+2111 PRINT "                ,######,"
+2112 PRINT "#############X  .M####M.  X#############";
+2113 PRINT "##############-   -//-   -##############";
+2114 PRINT "X##############%,      ,+##############X";
+2115 PRINT "-##############X        X##############-";
+2116 PRINT " %############%          %############%"
+2117 PRINT "  %##########;            ;##########%"
+2118 PRINT "   ;#######M=              =M#######;"
+2119 PRINT "    .+M###@,                ,@###M+."
+2120 PRINT "       :XH.                  .HX:"
 2130 RETURN
 '
 2200 REM ATOM
-2201 PRINT "                 =/;;/-                 "
-2202 PRINT "                +:    //                "
-2203 PRINT "               /;      /;               "
-2204 PRINT "              -X        H.              "
-2205 PRINT ".//;;;:;;-,   X=        :+   .-;:=;:;%;."
-2206 PRINT "M-       ,=;;;#:,      ,:#;;:=,       ,@"
-2207 PRINT ":%           :%.=/++++/=.$=           %="
-2208 PRINT " ,%;         %/:+/;,,/++:+/         ;+. "
-2209 PRINT "   ,+/.    ,;@+,        ,%H;,    ,/+,   "
-2210 PRINT "      ;+;;/= @.  .H##X   -X :///+;      "
-2211 PRINT "      ;+=;;;.@,  .XM@$.  =X.//;=%/.     "
-2212 PRINT "   ,;:      :@%=        =$H:     .+%-   "
-2213 PRINT " ,%=         %;-///==///-//         =%, "
-2214 PRINT ";+           :%-;;;:;;;;-X-           +:"
-2215 PRINT "@-      .-;;;;M-        =M/;;;-.      -X"
-2216 PRINT " :;;::;;-.    %-        :+    ,-;;-;:== "
-2217 PRINT "              ,X        H.              "
-2218 PRINT "               ;/      %=               "
-2219 PRINT "                //    +;                "
-2220 PRINT "                 ,////,                 "
+2201 PRINT "                 =/;;/-"
+2202 PRINT "                +:    //"
+2203 PRINT "               /;      /;"
+2204 PRINT "              -X        H."
+2205 PRINT ".//;;;:;;-,   X=        :+   .-;:=;:;%;.";
+2206 PRINT "M-       ,=;;;#:,      ,:#;;:=,       ,@";
+2207 PRINT ":%           :%.=/++++/=.$=           %=";
+2208 PRINT " ,%;         %/:+/;,,/++:+/         ;+."
+2209 PRINT "   ,+/.    ,;@+,        ,%H;,    ,/+,"
+2210 PRINT "      ;+;;/= @.  .H##X   -X :///+;"
+2211 PRINT "      ;+=;;;.@,  .XM@$.  =X.//;=%/."
+2212 PRINT "   ,;:      :@%=        =$H:     .+%-"
+2213 PRINT " ,%=         %;-///==///-//         =%,"
+2214 PRINT ";+           :%-;;;:;;;;-X-           +:";
+2215 PRINT "@-      .-;;;;M-        =M/;;;-.      -X";
+2216 PRINT " :;;::;;-.    %-        :+    ,-;;-;:=="
+2217 PRINT "              ,X        H."
+2218 PRINT "               ;/      %="
+2219 PRINT "                //    +;"
+2220 PRINT "                 ,////,"
 2230 RETURN
 '
 2300 REM BROKEN HEART
@@ -1905,8 +1733,3 @@ LOCATE 22, 2
 3104 REM SOUND 123.4, 4.8
 3105 RETURN
 '
-3200 REM SLOWTEXT
-3201 REM FOR count = 1 TO LEN(text$)
-3202 REM PRINT MID$(text$, count, 1);
-3203 REM FOR i = 1 TO 100:NEXT i
-3204 REM NEXT count
