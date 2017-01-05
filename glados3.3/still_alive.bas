@@ -427,6 +427,7 @@
 532 T$="and ":D=54:F=102:GOSUB 8
 534 T$="leave ":D=108:F=102:GOSUB 8
 536 T$="me"+C$:D=54:F=91:GOSUB 8
+537 FOR I=1 TO 520:NEXT
 '
 '  I think I prefer to stay inside.
 '
