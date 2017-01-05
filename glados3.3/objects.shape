@@ -1,0 +1,26 @@
+# Number of shapes
+1
+# "Cross Hair"
+#   |                
+#   |                  
+# -- --           >>X   
+#   |                   
+#   |                   
+START
+NLT
+NLT
+RT
+RT
+NRT
+NRT
+NRT
+LT
+LT
+UP
+UP
+NDN
+NDN
+NDN
+DN
+DN
+STOP
