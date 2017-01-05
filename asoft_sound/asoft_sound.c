@@ -158,10 +158,35 @@ int main(int argc, char **argv) {
 	int note;
 
 	/* Routine from http://eightbitsoundandfury.ld8.org/programming.html */
-	printf("50 FOR L = 770 TO 790: READ V: POKE L,V: NEXT L\n");
-	printf("51 DATA 173,48,192,136,208,5,206,1,3,240,9\n");
-	printf("52 DATA 202,208,245,174,0,3,76,2,3,96\n");
-	printf("53 GOTO 100\n");
+	printf("40 FOR L = 770 TO 790: READ V: POKE L,V: NEXT L\n");
+	printf("41 DATA 173,48,192,136,208,5,206,1,3,240,9\n");
+	printf("42 DATA 202,208,245,174,0,3,76,2,3,96\n");
+	printf("43 GOTO 100\n");
+
+
+	/* Improved by Carlsson */
+	/* http://atariage.com/forums/topic/246369-music-in-applesoft-basic/ */
+	printf("50 DATA 173,48,192,174,0,3,202,240,247,234,234,136,208,248,206,1,3,208,243,96\n");
+	printf("51 FOR L=770 TO 789:READ V:POKE L,V:NEXT L\n");
+	printf("52 GOTO 100\n");
+
+	/* Lighter/faster by Carlsson */
+	printf("60 DATA 173,48,192,174,0,3,202,240,247,234,136,208,249,206,1,3,208,244,96\n");
+	printf("61 FOR L=770 TO 788:READ V:POKE L,V:NEXT L\n");
+	printf("62 GOTO 100\n");
+
+	/* Darker/lower by Calsson */
+	printf("70 DATA 173,48,192,174,0,3,202,240,247,234,234,234,136,208,247,206,1,3,208,242,96\n");
+	printf("71 FOR L=770 TO 790:READ V:POKE L,V:NEXT L\n");
+	printf("72 GOTO 100\n");
+
+	/* Violin sound: https://gist.github.com/thelbane/9291cc81ed0d8e0266c8 */
+	printf("80 DATA 172,1,3,173,0,3,133,250,174,0,3,228,250,208,3,173,48,"
+			"192,202,208,246,173,48,192,136,240,7,198,250,208,"
+			"233,76,5,3,96\n");
+	printf("81 FOR L=770 TO 804:READ V:POKE L,V:NEXT L\n");
+	printf("82 GOTO 100\n");
+
 	printf("90 POKE 768,F:POKE 769,D:CALL 770:RETURN\n");
 
 	while(1) {
