@@ -529,7 +529,7 @@
 ' Go ahead and leave me
 '
 528 T$="Go ":GOSUB 20:REM SOUND 391.9, 4.8
-530 T$="ahead:"GOSUB 20:REM SOUND 369.9, 4.8
+530 T$="ahead ":GOSUB 20:REM SOUND 369.9, 4.8
 532 T$="and ":GOSUB 20:REM SOUND 329.6, 4.8
 534 T$="leave ":GOSUB 20:REM SOUND 0, .1:REM SOUND 329.6, 9.6
 536 T$="me"+C$:GOSUB 20:REM SOUND 369.9, 14.2
@@ -722,7 +722,7 @@
 ' when there's Science to do.
 '
 646 T$="when ":GOSUB 20:REM SOUND 0, .1:REM SOUND 293.6, 4.8
-648 T$="there's"+C$:GOSUB 20:REM SOUND 261.6, 4.8
+648 T$="there's ":GOSUB 20:REM SOUND 261.6, 4.8
 '
 ' RADIATION
 650 GOSUB 18:GOSUB 15:HOME:GOSUB 2100: GOSUB 10:GOSUB 19:PRINT
@@ -730,472 +730,255 @@
 '
 'Science to do.
 '
-654 T$="|Sci":GOSUB 20:REM SOUND 293.6, 4.8
+654 T$="Sci":GOSUB 20:REM SOUND 293.6, 4.8
 656 T$="ence ":GOSUB 20:REM SOUND 261.6, 4.8
 658 T$="to ":GOSUB 20:REM SOUND 0, .1:REM SOUND 261.6, 9.6
 660 T$="do."+C$:GOSUB 20:REM SOUND 0, .1:REM SOUND 261.6, 9.6
-'.if 0
-
-aplabs
-scroll
-LOCATE 22, 1
-
-T$="|When "
-GOSUB 20:
-REM SOUND 220, 4.8
-T$="I "
-GOSUB 20:
-REM SOUND 233, 4.8
-T$="look "
-GOSUB 20:
-REM SOUND 261.6, 9.6
-T$="out "
-GOSUB 20:
-REM SOUND 349.2, 9.6
-T$="there "
-GOSUB 20:
-REM SOUND 391.9, 4.8
-T$="it"+C$
-GOSUB 20:
-REM SOUND 349.2, 4.8
-REM                             "|When I look out there it"+C$
-
-scroll
-LOCATE 22, 1
-
-T$="|Makes "
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="me "
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="GLaD "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 293.6, 4.8
-T$="I'm "
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="not "
-GOSUB 20:
-REM SOUND 349.2, 9.6
-T$="you."+C$
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 349.2, 9.6
-REM                             "|Makes me GLaD I'm not you."+C$
-
-atom
-scroll
-LOCATE 22, 1
-
-T$="|I've "
-GOSUB 20:
-REM SOUND 391.9, 4.8
-T$="ex"
-GOSUB 20:
-REM SOUND 440, 4.8
-T$="pe"
-GOSUB 20:
-REM SOUND 466.1, 4.8
-T$="ri"
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 466.1, 4.8
-T$="ments "
-GOSUB 20:
-REM SOUND 440, 4.7
-T$="to "
-GOSUB 20:
-REM SOUND 391.9, 4.7
-
-REM 18
-REM SOUND 0, .18
-
-T$="run."+C$
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 391.9, 9.6
-REM                             "|I've experiments to run."+C$
-
-scroll
-explode
-LOCATE 22, 1
-
-T$="|There "
-GOSUB 20:
-REM SOUND 349.2, 4.8
-T$="is "
-GOSUB 20:
-REM SOUND 391.9, 4.8
-T$="re"
-GOSUB 20:
-REM SOUND 440, 4.8
-T$="search "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 440, 4.8
-T$="to "
-GOSUB 20:
-REM SOUND 391.9, 4.8
-T$="be"+C$
-GOSUB 20:
-REM SOUND 349.2, 4.8
-REM                             "|There is research to be"+C$
-
-scroll
-
-T$="done."+C$
-GOSUB 20:
-REM SOUND 349.2, 9.6
-REM                             "done."+C$
-
-scroll
-aplabs
-LOCATE 22, 1
-
-T$="|On "
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="the "
-GOSUB 20:
-REM SOUND 261.6, 4.8
-T$="peo"
-GOSUB 20:
-REM SOUND 293.6, 4.8
-T$="ple "
-GOSUB 20:
-REM SOUND 349.2, 4.8
-T$="who "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 349.2, 4.8
-T$="are"+C$
-GOSUB 20:
-REM SOUND 329.6, 9.6
-REM                             "|On the people who are"+C$
-
-scroll
-
-T$="still "
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="a"
-GOSUB 20:
-REM SOUND 369.9, 4.8
-T$="live."+C$
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 369.9, 24
-REM                             "still alive."+C$
-
-hl
-
-clearleft
-LOCATE 5, 2
-
-hl
-
-T$="PS: And "
-GOSUB 20:
-REM SOUND 440, 4.7
-
-T$="be"
-GOSUB 20:
-REM SOUND 440, 4.7
-
-REM 9
-delaytime = .09
-delay
-
-T$="lieve "
-GOSUB 20:
-REM SOUND 493.8, 4.7
-
-REM 9
-delaytime = .09
-delay
-
-T$="me "
-GOSUB 20:
-REM SOUND 440, 4.7
-
-REM 9
-delaytime = .09
-delay
-
-T$="I "
-GOSUB 20:
-REM SOUND 369.9, 4.7
-
-REM 9
-delaytime = .09
-delay
-
-T$="am"+C$
-GOSUB 20:
-REM SOUND 293.6, 9.6
-T$="|still "
-GOSUB 20:
-REM SOUND 329.6, 4.8
-T$="a"
-GOSUB 20:
-REM SOUND 369.9, 4.8
-T$="live."+C$
-GOSUB 20:
-FOR i = 1 TO 7.2
-REM SOUND 369.9, 1
-REM SOUND 440, 1
-NEXT i
-REM                             "PS: And believe me I am"+C$ + "|still alive."+C$
-
-hl
-
-T$="|PPS: "
-fasttext
-
-T$="I'm "
-GOSUB 20:
-REM SOUND 440, 4.8
-T$="do"
-GOSUB 20:
-delaytime = .01
-delay
-REM SOUND 440, 4.8
-T$="ing "
-GOSUB 20:
-delay
-REM SOUND 440, 4.8
-T$="Sci"
-GOSUB 20:
-REM SOUND 493.8, 4.8
-T$="ence"+C$
-GOSUB 20:
-REM SOUND 440, 4.8
-T$="|and "
-GOSUB 20:
-REM SOUND 369.9, 4.8
-T$="I'm"+C$
-GOSUB 20:
-REM SOUND 293.6, 9.6
-T$="|still "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 391.9, 1
-REM SOUND 329.6, 1
-NEXT i
-T$="a"
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 440, 1
-REM SOUND 369.9, 1
-NEXT i
-T$="live."+C$
-GOSUB 20:
-FOR i = 1 TO 7.2
-REM SOUND 440, 1
-REM SOUND 369.9, 1
-NEXT i
-REM                             "|PPS: I'm doing Science"+C$ + "|and I'm"+C$ + "|still alive."+C$
-
-hl
-
-T$="|PPPS: "
-fasttext
-
-T$="I "
-GOSUB 20:
-REM SOUND 440, 4.8
-T$="feel "
-GOSUB 20:
-delaytime = .01
-delay
-REM SOUND 440, 4.8
-T$="FAN"
-GOSUB 20:
-delaytime = .01
-delay
-REM SOUND 440, 4.8
-T$="TAS"
-GOSUB 20:
-REM SOUND 493.8, 4.8
-T$="TIC"+C$
-GOSUB 20:
-REM SOUND 440, 4.8
-T$="|and "
-GOSUB 20:
-REM SOUND 369.9, 4.8
-T$="I'm"+C$
-GOSUB 20:
-REM SOUND 293.6, 9.6
-T$="|still "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 391.9, 1
-REM SOUND 329.6, 1
-NEXT i
-T$="a"
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 440, 1
-REM SOUND 369.9, 1
-NEXT i
-T$="live."+C$
-GOSUB 20:
-delaytime = .01
-delay
-FOR i = 1 TO 7.2
-REM SOUND 440, 1
-REM SOUND 369.9, 1
-NEXT i
-REM                             "|PPPS: I feel FANTASTIC"+C$ + "|and I'm"+C$ + "|still alive"+C$
-
-PRINT "|"
-T$="|FINAL THOUGHT:"+C$
-fasttext
-
-hl
-
-T$="|While "
-GOSUB 20:
-REM SOUND 440, 4.8
-T$="you're "
-GOSUB 20:
-delaytime = .01
-delay
-REM SOUND 440, 4.8
-T$="dy"
-GOSUB 20:
-REM SOUND 493.8, 4.8
-T$="ing "
-GOSUB 20:
-REM SOUND 440, 4.8
-T$="I'll "
-GOSUB 20:
-REM SOUND 369.9, 4.8
-T$="be"+C$
-GOSUB 20:
-REM SOUND 293.6, 9.6
-T$="|still "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 391.9, 1
-REM SOUND 329.6, 1
-NEXT i
-T$="a"
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 369.9, 1
-REM SOUND 440, 1
-NEXT i
-T$="live"
-GOSUB 20:
-REM SOUND 0, .1
-FOR i = 1 TO 9.6
-REM SOUND 440, 1
-REM SOUND 369.9, 1
-NEXT i
-REM                             "|FINAL THOUGHT:"+C$ + "|While you're dying I'll be"+C$ + "|still alive."+C$
-
-text$ = CHR$(13) + "|"+C$ + "|FINAL THOUGHT PS:"+C$
-fasttext
-
-hl
-
-T$="|And "
-GOSUB 20:
-REM SOUND 440, 4.8
-T$="when "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 440, 4.8
-T$="you're "
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 440, 4.8
-T$="dead "
-GOSUB 20:
-REM SOUND 493.8, 4.8
-T$="I"+C$
-GOSUB 20:
-REM SOUND 440, 4.8
-T$="|will "
-GOSUB 20:
-REM SOUND 369.9, 4.8
-T$="be"+C$
-GOSUB 20:
-REM SOUND 293.6, 9.6
-T$="|still "
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 329.6, 1
-REM SOUND 391.9, 1
-NEXT i
-T$="a"
-GOSUB 20:
-FOR i = 1 TO 2.4
-REM SOUND 440, 1
-REM SOUND 369.9, 1
-NEXT i
-T$="live"+C$
-GOSUB 20:
-REM SOUND 0, .1
-FOR i = 1 TO 7.2
-REM SOUND 440, 1
-REM SOUND 369.9, 1
-NEXT i
-REM                             "|FINAL THOUGHT PS:"+C$ + "|And when you're dead I"+C$ + "|will be"+C$ +"|still alive"+C$
-
-REM 1440
-delaytime = 1.44
-delay
-
-scroll
-text$ = CHR$(13)
-GOSUB 20:
-scroll
-
-REM <STILL ALIVE>
-REM SOUND 391.9, 4.8
-REM SOUND 440, 4.8
-REM SOUND 0, .1
-REM SOUND 440, 14.4
-delaytime = 1.44
-delay
-REM </STILL ALIVE>
-
-T$="STILL "
-GOSUB 20:
-REM SOUND 391.9, 4.8
-T$="ALIVE"
-GOSUB 20:
-REM SOUND 0, .1
-REM SOUND 369.9, 4.8
-REM SOUND 0, .1
-REM SOUND 369.9, 4.8
-REM                             "STILL ALIVE"
-
-SLEEP 2
-clearleft
-LOCATE 22, 1
-T$="|THANK YOU FOR"+C$
-GOSUB 20:
-scroll
-T$="PARTICIPATING IN THIS"+C$
-GOSUB 20:
-scroll
-T$="ENRICHMENT CENTER"+C$
-GOSUB 20:
-scroll
-T$="ACTIVITY!!"
-GOSUB 20:
-FOR i = 1 TO 6
-scroll
-NEXT i
-SLEEP 5
-LOCATE 22, 2
-'.endif
 '
+' APERTURE SCIENCE LOGO
+'
+662 GOSUB 18:GOSUB 15:HOME:GOSUB 2000: GOSUB 10:GOSUB 19:PRINT
+'
+' When I look out there
+'
+664 T$="When ":GOSUB 20:REM SOUND 220, 4.8
+666 T$="I ":GOSUB 20:REM SOUND 233, 4.8
+668 T$="look ":GOSUB 20:REM SOUND 261.6, 9.6
+670 T$="out ":GOSUB 20:REM SOUND 349.2, 9.6
+672 T$="there, "+C$:GOSUB 20:REM SOUND 391.9, 4.8
+'
+' it makes me GLaD I'm not you."+C$
+'
+674 T$="it ":GOSUB 20:REM SOUND 349.2, 4.8
+676 T$="Makes ":GOSUB 20:REM SOUND 329.6, 4.8
+678 T$="me ":GOSUB 20:REM SOUND 293.6, 4.8
+680 T$="GLaD ":GOSUB 20:REM SOUND 0, .1:REM SOUND 293.6, 4.8
+682 T$="I'm ":GOSUB 20:REM SOUND 329.6, 4.8
+684 T$="not ":GOSUB 20:REM SOUND 349.2, 9.6
+686 T$="you."+C$:GOSUB 20:REM SOUND 0, .1:REM SOUND 349.2, 9.6
+'
+' ATOM
+'
+688 GOSUB 18:GOSUB 15:HOME:GOSUB 2200: GOSUB 10:GOSUB 19:PRINT
+'
+' I've experiments to run.
+'
+690 T$="I've ":GOSUB 20:REM SOUND 391.9, 4.8
+692 T$="ex":GOSUB 20:REM SOUND 440, 4.8
+694 T$="pe":GOSUB 20:REM SOUND 466.1, 4.8
+696 T$="ri":GOSUB 20:REM SOUND 0, .1:REM SOUND 466.1, 4.8:
+698 T$="ments ":GOSUB 20:REM SOUND 440, 4.7
+700 T$="to ":GOSUB 20:REM SOUND 391.9, 4.7:REM SOUND 0, .18
+702 T$="run."+C$:GOSUB 20:REM SOUND 0, .1:REM SOUND 391.9, 9.6
+'
+' EXPLOSION
+'
+704 GOSUB 18:GOSUB 15:HOME:GOSUB 2400: GOSUB 10:GOSUB 19:PRINT
+'
+' There is research to be done"
+'
+706 T$="There ":GOSUB 20:REM SOUND 349.2, 4.8
+708 T$="is ":GOSUB 20:REM SOUND 391.9, 4.8
+710 T$="re":GOSUB 20:REM SOUND 440, 4.8
+712 T$="search ":GOSUB 20::REM SOUND 0, .1:REM SOUND 440, 4.8
+714 T$="to ":GOSUB 20:REM SOUND 391.9, 4.8
+716 T$="be ":GOSUB 20:REM SOUND 349.2, 4.8
+718 T$="done."+C$:GOSUB 20:REM SOUND 349.2, 9.6
+'
+' APERTURE SCIENCE LOGO
+'
+720 GOSUB 18:GOSUB 15:HOME:GOSUB 2000: GOSUB 10:GOSUB 19:PRINT
+'
+' On the people who are
+'
+722 T$="On ":GOSUB 20:REM SOUND 293.6, 4.8
+724 T$="the ":GOSUB 20:REM SOUND 261.6, 4.8
+726 T$="peo":GOSUB 20:REM SOUND 293.6, 4.8
+728 T$="ple ":GOSUB 20:REM SOUND 349.2, 4.8
+730 T$="who ":GOSUB 20:REM SOUND 0, .1:REM SOUND 349.2, 4.8
+732 T$="are"+C$:GOSUB 20:REM SOUND 329.6, 9.6
+'
+' still alive.
+'
+734 T$="still ":GOSUB 20:REM SOUND 329.6, 4.8
+736 T$="a":GOSUB 20:REM SOUND 369.9, 4.8
+738 T$="live."+C$:GOSUB 20:REM SOUND 0, .1:REM SOUND 369.9, 24
+'
+' hl
+'
+740 HOME:PRINT:PRINT:PRINT
+'
+' hl
+'
+' PS: And believe me I am\nstill alive.
+'
+742 T$="PS: And ":GOSUB 20:REM SOUND 440, 4.7
+744 T$="be":GOSUB 20:REM SOUND 440, 4.7
+' delaytime = .09
+746 T$="lieve ":GOSUB 20:REM SOUND 493.8, 4.7
+' delaytime = .09
+748 T$="me ":GOSUB 20:REM SOUND 440, 4.7
+'delaytime = .09
+750 T$="I ":GOSUB 20:REM SOUND 369.9, 4.7
+' delaytime = .09
+752 T$="am"+C$:GOSUB 20:REM SOUND 293.6, 9.6
+754 T$="still ":GOSUB 20:REM SOUND 329.6, 4.8
+756 T$="a":GOSUB 20:REM SOUND 369.9, 4.8
+758 T$="live."+C$:GOSUB 20
+'FOR i = 1 TO 7.2
+'REM SOUND 369.9, 1
+'REM SOUND 440, 1
+'NEXT i
+'
+'hl
+'
+'
+' PPS: I'm doing Science and I'm\nstill alive.
+'
+760 T$="|PPS: ":GOSUB 30
+762 T$="I'm ":GOSUB 20:REM SOUND 440, 4.8
+764 T$="do":GOSUB 20:REM SOUND 440, 4.8
+766 T$="ing ":GOSUB 20
+'delaytime = .01
+'REM SOUND 440, 4.8
+768 T$="Sci":GOSUB 20:REM SOUND 493.8, 4.8
+770 T$="ence ":GOSUB 20:REM SOUND 440, 4.8
+772 T$="and ":GOSUB 20:REM SOUND 369.9, 4.8
+774 T$="I'm"+C$:GOSUB 20:REM SOUND 293.6, 9.6
+776 T$="still ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 391.9, 1
+'REM SOUND 329.6, 1
+'NEXT i
+778 T$="a":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 440, 1
+'REM SOUND 369.9, 1
+'NEXT i
+780 T$="live."+C$:GOSUB 20
+'FOR i = 1 TO 7.2
+'REM SOUND 440, 1
+'REM SOUND 369.9, 1
+'NEXT i
+'
+'hl
+'
+'
+' PPPS: I feel FANTASTIC and I'm\nstill alive
+'
+782 T$="|PPPS: ":GOSUB 30
+784 T$="I ":GOSUB 20:REM SOUND 440, 4.8
+786 T$="feel ":GOSUB 20
+'delaytime = .01
+'REM SOUND 440, 4.8
+788 T$="FAN":GOSUB 20
+'delaytime = .01
+'REM SOUND 440, 4.8
+790 T$="TAS":GOSUB 20:REM SOUND 493.8, 4.8
+792 T$="TIC ":GOSUB 20:REM SOUND 440, 4.8
+794 T$="and ":GOSUB 20:REM SOUND 369.9, 4.8
+796 T$="I'm"+C$:GOSUB 20:REM SOUND 293.6, 9.6
+798 T$="still ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 391.9, 1
+'REM SOUND 329.6, 1
+'NEXT i
+800 T$="a":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 440, 1
+'REM SOUND 369.9, 1
+'NEXT i
+802 T$="live."+C$:GOSUB 20:
+'delaytime = .01
+'FOR i = 1 TO 7.2
+'REM SOUND 440, 1
+'REM SOUND 369.9, 1
+'NEXT i
+804 PRINT
+806 T$="|FINAL THOUGHT:"+C$:GOSUB 30
+'
+'hl
+'
+'
+' FINAL THOUGHT:\nWhile you're dying I'll be\nstill alive.
+'
+808 T$="While ":GOSUB 20:REM SOUND 440, 4.8
+810 T$="you're ":GOSUB 20
+'delaytime = .01
+'REM SOUND 440, 4.8
+812 T$="dy":GOSUB 20:REM SOUND 493.8, 4.8
+814 T$="ing ":GOSUB 20:REM SOUND 440, 4.8
+816 T$="I'll ":GOSUB 20:REM SOUND 369.9, 4.8
+818 T$="be"+C$:GOSUB 20:REM SOUND 293.6, 9.6
+820 T$="still ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 391.9, 1
+'REM SOUND 329.6, 1
+'NEXT i
+822 T$="a":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 369.9, 1
+'REM SOUND 440, 1
+'NEXT i
+824 T$="live":GOSUB 20:REM SOUND 0, .1
+'FOR i = 1 TO 9.6
+'REM SOUND 440, 1
+'REM SOUND 369.9, 1
+'NEXT i
+826 T$=C$+C$+FINAL THOUGHT PS:"+C$:GOSUB 30
+'
+'hl
+'
+'
+' FINAL THOUGHT PS\nAnd when you're dead I will be\nstill alive
+'
+828 T$="And ":GOSUB 20:REM SOUND 440, 4.8
+830 T$="when ":GOSUB 20:REM SOUND 0, .1:REM SOUND 440, 4.8
+832 T$="you're ":GOSUB 20:REM SOUND 0, .1:REM SOUND 440, 4.8
+834 T$="dead ":GOSUB 20:REM SOUND 493.8, 4.8
+836 T$="I ":GOSUB 20:REM SOUND 440, 4.8
+838 T$="will ":GOSUB 20:REM SOUND 369.9, 4.8
+840 T$="be"+C$:GOSUB 20:REM SOUND 293.6, 9.6
+842 T$="|still ":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 329.6, 1
+'REM SOUND 391.9, 1
+'NEXT i
+844 T$="a":GOSUB 20
+'FOR i = 1 TO 2.4
+'REM SOUND 440, 1
+'REM SOUND 369.9, 1
+'NEXT i
+846 T$="live"+C$:GOSUB 20:REM SOUND 0, .1
+'FOR i = 1 TO 7.2
+'REM SOUND 440, 1
+'REM SOUND 369.9, 1
+'NEXT i
+'delaytime = 1.44
+848 PRINT:PRINT
+'
+'REM <STILL ALIVE>
+'REM SOUND 391.9, 4.8
+'REM SOUND 440, 4.8
+'REM SOUND 0, .1
+'REM SOUND 440, 14.4
+'delaytime = 1.44
+'REM </STILL ALIVE>
+'
+' STILL ALIVE
+'
+850 T$="STILL ":GOSUB 20:REM SOUND 391.9, 4.8
+852 T$="ALIVE":GOSUB 20:REM SOUND 0, .1:REM SOUND 369.9, 4.8
+'REM SOUND 0, .1
+'REM SOUND 369.9, 4.8
+854 HOME
+856 FOR I=1 TO 1000:NEXT I
+858 T$="THANK YOU FOR"+C$:GOSUB 20
+860 T$="PARTICIPATING IN THIS"+C$:GOSUB 20
+862 T$="ENRICHMENT CENTER"+C$:GOSUB 20
+864 T$="ACTIVITY!!":GOSUB 20
+868 FOR I=1 TO 2000: NEXT I
+1000 TEXT:HOME
 1999 END
 2000 REM APETURE
 2001 PRINT "              .,-:;//;:=,"
