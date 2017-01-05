@@ -1,7 +1,15 @@
 1 REM PORTAL CLOSING CREDITS APPLESOFT
 2 REM BASED ON QBASIC VERSION BY Thomas Moss (spinneretsystems)
+'
+' Size Opt: Final Version = 20557
+'	Move Line 20 to Line 8 = 20182
+'
 5 TEXT:PRINT CHR$(4)+"PR#3": REM 80 COLUMN MODE
 7 HOME:C$=CHR$(13):GOTO 50
+'
+' SLOWTEXT 
+'
+8 FOR C = 1 TO LEN(T$):PRINT MID$(T$, C, 1);:FOR I = 1 TO 1:NEXT I: NEXT C:POKE 768,F:POKE 769,D:CALL 770:RETURN
 '
 10 REM SET LEFT WINDOW
 11 POKE 32,2:POKE 33,35:POKE 34,1:POKE 35,21
@@ -10,19 +18,10 @@
 16 POKE 32,39:POKE 33,40:POKE 34,1:POKE 35,23
 17 RETURN
 '
+' Restore Cursor
+'
 18 X=PEEK(1403):Y=PEEK(37):RETURN
 19 POKE 36,X:POKE 37,Y-1:RETURN
-'
-20 REM SLOWTEXT
-21 FOR C = 1 TO LEN(T$)
-22 PRINT MID$(T$, C, 1);
-23 FOR I = 1 TO 1:NEXT I
-24 NEXT C
-'
-' Sound routine
-'
-28 POKE 768,F:POKE 769,D:CALL 770:RETURN
-29 RETURN
 '
 30 REM FASTTEXT
 31 FOR C = 1 TO LEN(T$)
@@ -48,100 +47,100 @@
 '
 ' This was a triumph.
 '
-80 T$="This ":D=54:F=85:GOSUB 20
-82 T$="was ":F=91:GOSUB 20
-84 T$="a ":F=102:GOSUB 20
-86 T$="tri":GOSUB 20
-89 T$="umph."+C$:F=91:GOSUB 20
+80 T$="This ":D=54:F=85:GOSUB 8
+82 T$="was ":F=91:GOSUB 8
+84 T$="a ":F=102:GOSUB 8
+86 T$="tri":GOSUB 8
+89 T$="umph."+C$:F=91:GOSUB 8
 90 FOR I=1 TO 800:NEXT
 '
 ' I'm making a note here:
 '
-94 T$="I'm ":F=152:GOSUB 20
-96 T$="ma":F=85:GOSUB 20
-98 T$="king ":F=91:GOSUB 20
-100 T$="a ":F=102:GOSUB 20
-102 T$="note ":D=108:F=102:GOSUB 20
-104 T$ = "here:"+C$:D=54:F=91:GOSUB 20
+94 T$="I'm ":F=152:GOSUB 8
+96 T$="ma":F=85:GOSUB 8
+98 T$="king ":F=91:GOSUB 8
+100 T$="a ":F=102:GOSUB 8
+102 T$="note ":D=108:F=102:GOSUB 8
+104 T$ = "here:"+C$:D=54:F=91:GOSUB 8
 105 FOR I=1 TO 160: NEXT
 '
 ' HUGE SUCCESS.
 '
-106 T$ = "HUGE ":D=108:F=114:GOSUB 20
-108 T$ = "SUC":D=54:F=102:GOSUB 20
-110 T$ = "CESS."+C$:D=108:F=152:GOSUB 20
+106 T$ = "HUGE ":D=108:F=114:GOSUB 8
+108 T$ = "SUC":D=54:F=102:GOSUB 8
+110 T$ = "CESS."+C$:D=108:F=152:GOSUB 8
 111 FOR I=1 TO 480: NEXT
 '
 ' It's hard to overstate
 '
-112 T$="It's ":D=54:F=152:GOSUB 20
-114 T$="hard ":D=108:F=102:GOSUB 20
-116 T$="to ":D=54:F=91:GOSUB 20
-118 T$="o":D=162:F=85:GOSUB 20
-120 T$="ver":D=54:F=91:GOSUB 20
-122 T$="state"+C$:D=108:F=121:GOSUB 20
+112 T$="It's ":D=54:F=152:GOSUB 8
+114 T$="hard ":D=108:F=102:GOSUB 8
+116 T$="to ":D=54:F=91:GOSUB 8
+118 T$="o":D=162:F=85:GOSUB 8
+120 T$="ver":D=54:F=91:GOSUB 8
+122 T$="state"+C$:D=108:F=121:GOSUB 8
 '
 ' my satisfaction.
 '
-124 T$="my ":D=162:F=114:GOSUB 20
-126 T$="sa":D=108:F=102:GOSUB 20
-128 T$="tis":D=54:F=152:GOSUB 20
-130 T$="fac":D=108:F=152:GOSUB 20
-132 T$="tion."+C$:F=91:GOSUB 20
+124 T$="my ":D=162:F=114:GOSUB 8
+126 T$="sa":D=108:F=102:GOSUB 8
+128 T$="tis":D=54:F=152:GOSUB 8
+130 T$="fac":D=108:F=152:GOSUB 8
+132 T$="tion."+C$:F=91:GOSUB 8
 133 FOR I=1 TO 720:NEXT
 '
 ' APERTURE SCIENCE LOGO
-134 GOSUB 18:GOSUB 15:HOME:GOSUB 2000: GOSUB 10:GOSUB 19:PRINT
+134 GOSUB 18:GOSUB 15:HOME:GOSUB 2000:GOSUB 10:GOSUB 19:PRINT
 '
 ' Aperture Science
-136 T$="A":D=54:F=85:GOSUB 20
-138 T$="per":F=91:GOSUB 20
-140 T$="ture ":F=102:GOSUB 20
-142 T$="Sci":GOSUB 20
-144 T$="ence"+C$:F=91:GOSUB 20
+136 T$="A":D=54:F=85:GOSUB 8
+138 T$="per":F=91:GOSUB 8
+140 T$="ture ":F=102:GOSUB 8
+142 T$="Sci":GOSUB 8
+144 T$="ence"+C$:F=91:GOSUB 8
 145 FOR I=1 TO 800:NEXT
 '
 ' We do what we must
 '
-146 T$="We ":F=152:GOSUB 20
-148 T$="do ":F=85:GOSUB 20
-150 T$="what ":F=91:GOSUB 20
-152 T$="we ":F=102:GOSUB 20
-154 T$="must"+C$:GOSUB 20
+146 T$="We ":F=152:GOSUB 8
+148 T$="do ":F=85:GOSUB 8
+150 T$="what ":F=91:GOSUB 8
+152 T$="we ":F=102:GOSUB 8
+154 T$="must"+C$:GOSUB 8
 155 FOR I=1 TO 160: NEXT
 '
 ' because we can.
 '
-156 T$="be":F=91:GOSUB 20
-158 T$="cause ":F=114:GOSUB 20
+156 T$="be":F=91:GOSUB 8
+158 T$="cause ":F=114:GOSUB 8
 159 FOR I=1 TO 160: NEXT
-160 T$="we ":F=102:GOSUB 20
-162 T$="can."+C$:D=162:F=152:GOSUB 20
+160 T$="we ":F=102:GOSUB 8
+162 T$="can."+C$:D=162:F=152:GOSUB 8
 163 FOR I=1 TO 560: NEXT
 '
 ' For the good of all of us.
 '
-164 T$="For ":D=108:F=102:GOSUB 20
-166 T$="the ":D=54:F=91:GOSUB 20
-168 T$="good ":D=162:F=85:GOSUB 20
-170 T$="of ":D=54:F=102:GOSUB 20
-172 T$="all ":D=162:F=121:GOSUB 20
-174 T$="of ":D=54:F=114:GOSUB 20
-176 T$="us."+C$:F=102:GOSUB 20
-177 FOR I=1 TO 80: NEXT
+164 T$="For ":D=108:F=102:GOSUB 8
+166 T$="the ":D=54:F=91:GOSUB 8
+168 T$="good ":D=162:F=85:GOSUB 8
+170 T$="of ":D=54:F=102:GOSUB 8
+172 T$="all ":D=162:F=121:GOSUB 8
+174 T$="of ":D=54:F=114:GOSUB 8
+176 T$="us."+C$:F=102:GOSUB 8
+'177 FOR I=1 TO 80: NEXT
 '
 ' RADIATION
 178 GOSUB 18:GOSUB 15:HOME:GOSUB 2100: GOSUB 10:GOSUB 19:PRINT
 '
 ' Except the ones who are dead.
 '
-180 T$="Ex":F=152:GOSUB 20
-182 T$="cept ":F=114:GOSUB 20
-184 T$="the ":F=102:GOSUB 20
-186 T$="ones ":F=96:GOSUB 20
-188 T$="who ":F=102:GOSUB 20
-190 T$="are ":F=114:GOSUB 20
-192 T$="dead."+C$:F=128:GOSUB 20
+180 T$="Ex":F=152:GOSUB 8
+182 T$="cept ":F=114:GOSUB 8
+184 T$="the ":F=102:GOSUB 8
+186 T$="ones ":F=96:GOSUB 8
+188 T$="who ":F=102:GOSUB 8
+190 T$="are ":F=114:GOSUB 8
+192 T$="dead."+C$:F=128:GOSUB 8
 193 FOR I=1 TO 160: NEXT
 '
 ' APERTURE SCIENCE LOGO
@@ -150,33 +149,33 @@
 ' But there's no sense crying\nover every mistake.
 '
 196 PRINT
-198 T$="But ":F=152:GOSUB 20
-200 T$="there's ":F=143:GOSUB 20
-202 T$="no ":D=108:F=128:GOSUB 20
-204 T$="sense ":F=96:GOSUB 20
-206 T$="cry":D=54:F=102:GOSUB 20
-208 T$="ing"+C$:F=114:GOSUB 20
-210 T$="o":GOSUB 20
-212 T$="ver ":F=128:GOSUB 20
-214 T$="e":F=114:GOSUB 20
-216 T$="very ":F=128:GOSUB 20
-218 T$="mis":D=108:F=128:GOSUB 20
-220 T$="take."+C$:F=128:GOSUB 20
+198 T$="But ":F=152:GOSUB 8
+200 T$="there's ":F=143:GOSUB 8
+202 T$="no ":D=108:F=128:GOSUB 8
+204 T$="sense ":F=96:GOSUB 8
+206 T$="cry":D=54:F=102:GOSUB 8
+208 T$="ing"+C$:F=114:GOSUB 8
+210 T$="o":GOSUB 8
+212 T$="ver ":F=128:GOSUB 8
+214 T$="e":F=114:GOSUB 8
+216 T$="very ":F=128:GOSUB 8
+218 T$="mis":D=108:F=128:GOSUB 8
+220 T$="take."+C$:F=128:GOSUB 8
 '
 ' You just keep on trying\ntill you run out of cake.
 '
-222 T$="You ":D=54:F=152:GOSUB 20
-224 T$="just ":F=143:GOSUB 20
-226 T$="keep ":D=108:F=128:GOSUB 20
-228 T$="on ":F=96:GOSUB 20
-230 T$="try":D=54:F=85:GOSUB 20
-232 T$="ing"+C$:F=96:GOSUB 20
-234 T$="till ":F=102:GOSUB 20
-236 T$="you ":F=114:GOSUB 20
-238 T$="run ":GOSUB 20
-240 T$="out ":F=102:GOSUB 20
-242 T$="of ":D=108:F=96:GOSUB 20
-244 T$="cake."+C$:F=96:GOSUB 20
+222 T$="You ":D=54:F=152:GOSUB 8
+224 T$="just ":F=143:GOSUB 8
+226 T$="keep ":D=108:F=128:GOSUB 8
+228 T$="on ":F=96:GOSUB 8
+230 T$="try":D=54:F=85:GOSUB 8
+232 T$="ing"+C$:F=96:GOSUB 8
+234 T$="till ":F=102:GOSUB 8
+236 T$="you ":F=114:GOSUB 8
+238 T$="run ":GOSUB 8
+240 T$="out ":F=102:GOSUB 8
+242 T$="of ":D=108:F=96:GOSUB 8
+244 T$="cake."+C$:F=96:GOSUB 8
 '
 ' ATOM
 '
@@ -184,44 +183,44 @@
 '
 ' And the Science gets done.
 '
-248 T$="And ":D=54:F=85:GOSUB 20
-250 T$="the ":F=76:GOSUB 20
-252 T$="Sci":F=72:GOSUB 20
-254 T$="ence ":GOSUB 20
-256 T$="gets ":D=108:F=76:GOSUB 20
-258 T$="done."+C$:F=85:GOSUB 20
+248 T$="And ":D=54:F=85:GOSUB 8
+250 T$="the ":F=76:GOSUB 8
+252 T$="Sci":F=72:GOSUB 8
+254 T$="ence ":GOSUB 8
+256 T$="gets ":D=108:F=76:GOSUB 8
+258 T$="done."+C$:F=85:GOSUB 8
 '
 ' And you make a neat gun
 '
-260 T$="And ":D=54:F=96:GOSUB 20
-262 T$="you ":F=85:GOSUB 20
-264 T$="make ":F=76:GOSUB 20
-266 T$="a ":F=76:GOSUB 20
-268 T$="neat ":D=108:F=85:GOSUB 20
-270 T$="gun."+C$:F=96:GOSUB 20
+260 T$="And ":D=54:F=96:GOSUB 8
+262 T$="you ":F=85:GOSUB 8
+264 T$="make ":F=76:GOSUB 8
+266 T$="a ":F=76:GOSUB 8
+268 T$="neat ":D=108:F=85:GOSUB 8
+270 T$="gun."+C$:F=96:GOSUB 8
 '
 ' APERTURE SCIENCE LOGO
 272 GOSUB 18:GOSUB 15:HOME:GOSUB 2000: GOSUB 10:GOSUB 19:PRINT
 '
 ' For the people who are
 '
-274 T$="For ":D=54:F=114:GOSUB 20
-276 T$="the ":F=128:GOSUB 20
-278 T$="peo":F=114:GOSUB 20
-280 T$="ple ":F=96:GOSUB 20
-282 T$="who ":GOSUB 20
-284 T$="are"+C$:D=108:F=102:GOSUB 20
+274 T$="For ":D=54:F=114:GOSUB 8
+276 T$="the ":F=128:GOSUB 8
+278 T$="peo":F=114:GOSUB 8
+280 T$="ple ":F=96:GOSUB 8
+282 T$="who ":GOSUB 8
+284 T$="are"+C$:D=108:F=102:GOSUB 8
 '
 ' still alive.
 '
-286 T$="still ":D=54:F=102:GOSUB 20
-288 T$="a":F=91:GOSUB 20
-290 T$="live."+C$:D=162:F=91:GOSUB 20
+286 T$="still ":D=54:F=102:GOSUB 8
+288 T$="a":F=91:GOSUB 8
+290 T$="live."+C$:D=162:F=91:GOSUB 8
 291 FOR I=1 TO 1900: NEXT
 '
 '
 '
-292 HOME:C$=CHR$(13)
+292 HOME:C$=CHR$(13):X=FRE(0)
 294 T$="Forms FORM-55551-5:"+C$:GOSUB 30
 296 T$="Personnel File Addendum:"+C$:GOSUB 30
 298 T$=C$+"Dear <<Subject Name Here>>":GOSUB 30
@@ -229,34 +228,34 @@
 '
 ' I'm not even angry.
 '
-302 T$="I'm ":D=54:F=152:GOSUB 20
-304 T$="not ":F=85:GOSUB 20
-306 T$="e":F=91:GOSUB 20
-308 T$="ven ":F=102:GOSUB 20
-310 T$="an":GOSUB 20
-312 T$="gry."+C$:F=91:GOSUB 20
+302 T$="I'm ":D=54:F=152:GOSUB 8
+304 T$="not ":F=85:GOSUB 8
+306 T$="e":F=91:GOSUB 8
+308 T$="ven ":F=102:GOSUB 8
+310 T$="an":GOSUB 8
+312 T$="gry."+C$:F=91:GOSUB 8
 313 FOR I=1 TO 800: NEXT
 '
 ' I'm being so sincere right now.
 '
-314 T$="I'm ":F=85:GOSUB 20
-316 T$="be":F=91:GOSUB 20
-320 T$="ing ":F=102:GOSUB 20
-322 T$="so ":D=162:F=102:GOSUB 20
-324 T$="sin":D=54:F=91:GOSUB 20
-326 T$="cere ":D=108:F=114:GOSUB 20
-328 T$="right ":F=102:GOSUB 20
-330 T$="now."+C$:F=152:GOSUB 20
+314 T$="I'm ":F=85:GOSUB 8
+316 T$="be":F=91:GOSUB 8
+320 T$="ing ":F=102:GOSUB 8
+322 T$="so ":D=162:F=102:GOSUB 8
+324 T$="sin":D=54:F=91:GOSUB 8
+326 T$="cere ":D=108:F=114:GOSUB 8
+328 T$="right ":F=102:GOSUB 8
+330 T$="now."+C$:F=152:GOSUB 8
 331 FOR I=1 TO 560: NEXT
 '
 ' Even though you broke my
 '
-332 T$="E":F=102:GOSUB 20
-334 T$="ven ":D=54:F=91:GOSUB 20
-336 T$="though ":D=162:F=85:GOSUB 20
-338 T$="you ":D=108:F=102:GOSUB 20
-340 T$="broke ":F=121:GOSUB 20
-342 T$="my ":D=54:F=114:GOSUB 20
+332 T$="E":F=102:GOSUB 8
+334 T$="ven ":D=54:F=91:GOSUB 8
+336 T$="though ":D=162:F=85:GOSUB 8
+338 T$="you ":D=108:F=102:GOSUB 8
+340 T$="broke ":F=121:GOSUB 8
+342 T$="my ":D=54:F=114:GOSUB 8
 '
 ' HEART
 344 GOSUB 18:GOSUB 15:HOME:GOSUB 2300: GOSUB 10:GOSUB 19:PRINT
@@ -264,10 +263,10 @@
 '
 ' heart.\nAnd killed me.
 '
-346 T$="heart."+C$:D=162:F=102:GOSUB 20
-348 T$="And ":D=54:F=152:GOSUB 20
-350 T$="killed ":D=108:F=152:GOSUB 20
-352 T$="me."+C$:D=54:F=91:GOSUB 20
+346 T$="heart."+C$:D=162:F=102:GOSUB 8
+348 T$="And ":D=54:F=152:GOSUB 8
+350 T$="killed ":D=108:F=152:GOSUB 8
+352 T$="me."+C$:D=54:F=91:GOSUB 8
 353 FOR I=1 TO 720: NEXT
 '
 ' EXPLOSION
@@ -276,24 +275,24 @@
 '
 ' And tore me to pieces.
 '
-356 T$="And ":F=152:GOSUB 20
-358 T$="tore ":F=85:GOSUB 20
-360 T$="me ":F=91:GOSUB 20
-362 T$="to ":F=102:GOSUB 20
-364 T$="pie":GOSUB 20
-366 T$="ces."+C$:F=91:GOSUB 20
+356 T$="And ":F=152:GOSUB 8
+358 T$="tore ":F=85:GOSUB 8
+360 T$="me ":F=91:GOSUB 8
+362 T$="to ":F=102:GOSUB 8
+364 T$="pie":GOSUB 8
+366 T$="ces."+C$:F=91:GOSUB 8
 367 FOR I=1 TO 800:NEXT
 '
 ' And threw every peice into
 '
-368 T$="And ":F=152:GOSUB 20:REM SOUND 220, 4.8
-370 T$="threw ":F=85:GOSUB 20
-372 T$="ev":F=91:GOSUB 20
-374 T$="ery ":F=102:GOSUB 20
-376 T$="piece ":GOSUB 20
+368 T$="And ":F=152:GOSUB 8:REM SOUND 220, 4.8
+370 T$="threw ":F=85:GOSUB 8
+372 T$="ev":F=91:GOSUB 8
+374 T$="ery ":F=102:GOSUB 8
+376 T$="piece ":GOSUB 8
 377 FOR I=1 TO 160: NEXT
-378 T$="in":F=91:GOSUB 20
-380 T$="to ":F=114:GOSUB 20
+378 T$="in":F=91:GOSUB 8
+380 T$="to ":F=114:GOSUB 8
 '381 FOR I=1 TO 160: NEXT
 '
 ' FIRE
@@ -302,30 +301,30 @@
 '
 ' a fire.
 '
-384 T$="a ":F=102:GOSUB 20
-386 T$="fire."+C$:D=108:F=152:GOSUB 20
+384 T$="a ":F=102:GOSUB 8
+386 T$="fire."+C$:D=108:F=152:GOSUB 8
 387 FOR I=1 TO 560:NEXT
 '
 ' As they burned it hurt because
 '
-388 T$="As ":F=102:GOSUB 20
-390 T$="they ":F=91:GOSUB 20
-392 T$="burned ":D=162:F=85:GOSUB 20
-394 T$="it ":D=108:F=102:GOSUB 20
-396 T$="hurt ":F=121:GOSUB 20
-398 T$="be":D=54:F=114:GOSUB 20
-400 T$="cause"+C$:F=102:GOSUB 20
+388 T$="As ":F=102:GOSUB 8
+390 T$="they ":D=54:F=91:GOSUB 8
+392 T$="burned ":D=162:F=85:GOSUB 8
+394 T$="it ":D=108:F=102:GOSUB 8
+396 T$="hurt ":F=121:GOSUB 8
+398 T$="be":D=54:F=114:GOSUB 8
+400 T$="cause"+C$:F=102:GOSUB 8
 401 FOR I=1 TO 80: NEXT
 '
 ' I was so happy for you!
 '
-402 T$="I ":F=152:GOSUB 20:REM SOUND 220, 4.8
-404 T$="was ":F=114:GOSUB 20:REM SOUND 293.6, 4.8
-406 T$="so ":F=102:GOSUB 20:REM SOUND 329.6, 4.8
-408 T$="hap":F=96:GOSUB 20:REM SOUND 349.2, 4.8
-410 T$="py ":F=102:GOSUB 20:REM SOUND 329.6, 4.8
-412 T$="for ":F=114:GOSUB 20:REM SOUND 293.6, 4.8
-414 T$="you!"+C$:F=128:GOSUB 20:REM SOUND 261.6, 14.4
+402 T$="I ":F=152:GOSUB 8:REM SOUND 220, 4.8
+404 T$="was ":F=114:GOSUB 8:REM SOUND 293.6, 4.8
+406 T$="so ":F=102:GOSUB 8:REM SOUND 329.6, 4.8
+408 T$="hap":F=96:GOSUB 8:REM SOUND 349.2, 4.8
+410 T$="py ":F=102:GOSUB 8:REM SOUND 329.6, 4.8
+412 T$="for ":F=114:GOSUB 8:REM SOUND 293.6, 4.8
+414 T$="you!"+C$:F=128:GOSUB 8:REM SOUND 261.6, 14.4
 '415 FOR I=1 TO 160: NEXT
 '
 ' CHECK
@@ -333,45 +332,45 @@
 '
 ' Now these points of data\nmake a beautiful line.
 '
-418 T$="Now ":F=152:GOSUB 20
-420 T$="these ":F=143:GOSUB 20
-422 T$="points ":D=108:F=128:GOSUB 20
-424 T$="of ":F=96:GOSUB 20
-426 T$="da":D=54:F=102:GOSUB 20
-428 T$="ta"+C$:F=114:GOSUB 20
-430 T$="make ":GOSUB 20
-432 T$="a ":F=128:GOSUB 20
-434 T$="beau":F=114:GOSUB 20
-436 T$="ti":F=128:GOSUB 20
-438 T$="ful ":D=108:F=128:GOSUB 20
-440 T$="line."+C$:F=128:GOSUB 20
+418 T$="Now ":F=152:GOSUB 8
+420 T$="these ":F=143:GOSUB 8
+422 T$="points ":D=108:F=128:GOSUB 8
+424 T$="of ":F=96:GOSUB 8
+426 T$="da":D=54:F=102:GOSUB 8
+428 T$="ta"+C$:F=114:GOSUB 8
+430 T$="make ":GOSUB 8
+432 T$="a ":F=128:GOSUB 8
+434 T$="beau":F=114:GOSUB 8
+436 T$="ti":F=128:GOSUB 8
+438 T$="ful ":D=108:F=128:GOSUB 8
+440 T$="line."+C$:F=128:GOSUB 8
 '
 ' And we're out of beta.\nWe're releasing on time.
 '
-442 T$="And ":D=54:F=152:GOSUB 20
-444 T$="we're ":F=143:GOSUB 20
-446 T$="out ":D=108:F=128:GOSUB 20
-448 T$="of ":F=96:GOSUB 20
-450 T$="be":D=54:F=85:GOSUB 20
-452 T$="ta."+C$:F=96:GOSUB 20
-454 T$="We're ":F=102:GOSUB 20
-456 T$="re":F=114:GOSUB 20
-458 T$="lea":GOSUB 20
-460 T$="sing ":F=102:GOSUB 20
-462 T$="on ":D=108:F=96:GOSUB 20
-464 T$="time."+C$:F=96:GOSUB 20
+442 T$="And ":D=54:F=152:GOSUB 8
+444 T$="we're ":F=143:GOSUB 8
+446 T$="out ":D=108:F=128:GOSUB 8
+448 T$="of ":F=96:GOSUB 8
+450 T$="be":D=54:F=85:GOSUB 8
+452 T$="ta."+C$:F=96:GOSUB 8
+454 T$="We're ":F=102:GOSUB 8
+456 T$="re":F=114:GOSUB 8
+458 T$="lea":GOSUB 8
+460 T$="sing ":F=102:GOSUB 8
+462 T$="on ":D=108:F=96:GOSUB 8
+464 T$="time."+C$:F=96:GOSUB 8
 '
 ' EXPLOSION
 466 GOSUB 18:GOSUB 15:HOME:GOSUB 2400: GOSUB 10:GOSUB 19:PRINT
 '
 ' So I'm GLaD. I got burned.
 '
-468 T$="So ":D=54:F=85:GOSUB 20
-470 T$="I'm ":F=76:GOSUB 20
-472 T$="GLaD. ":F=72:GOSUB 20
-474  T$="I ":GOSUB 20
-476 T$="got ": D=108:F=76:GOSUB 20
-478 T$="burned."+C$:F=85:GOSUB 20
+468 T$="So ":D=54:F=85:GOSUB 8
+470 T$="I'm ":F=76:GOSUB 8
+472 T$="GLaD. ":F=72:GOSUB 8
+474  T$="I ":GOSUB 8
+476 T$="got ": D=108:F=76:GOSUB 8
+478 T$="burned."+C$:F=85:GOSUB 8
 '
 ' ATOM
 '
@@ -379,13 +378,13 @@
 '
 ' Think of all the things we learned
 '
-482 T$="Think ":D=54:F=96:GOSUB 20
-484 T$="of ":F=85:GOSUB 20
-486 T$="all ":F=76:GOSUB 20
-488 T$="the ":GOSUB 20
-490 T$="things ":F=85:GOSUB 20
-492 T$="we ":F=96:GOSUB 20
-494 T$="learned"+C$:D=108:F=96:GOSUB 20
+482 T$="Think ":D=54:F=96:GOSUB 8
+484 T$="of ":F=85:GOSUB 8
+486 T$="all ":F=76:GOSUB 8
+488 T$="the ":GOSUB 8
+490 T$="things ":F=85:GOSUB 8
+492 T$="we ":F=96:GOSUB 8
+494 T$="learned"+C$:D=108:F=96:GOSUB 8
 '
 ' APERTURE SCIENCE LOGO
 '
@@ -393,68 +392,69 @@
 '
 ' for the people who are
 '
-498 T$="for ":D=54:F=114:GOSUB 20
-500 T$="the ":F=128:GOSUB 20
-502 T$="peo":F=114:GOSUB 20
-504 T$="ple ":F=96:GOSUB 20
-506 T$="who ":GOSUB 20
-510 T$="are"+C$: D=108:F=102:GOSUB 20
+498 T$="for ":D=54:F=114:GOSUB 8
+500 T$="the ":F=128:GOSUB 8
+502 T$="peo":F=114:GOSUB 8
+504 T$="ple ":F=96:GOSUB 8
+506 T$="who ":GOSUB 8
+510 T$="are"+C$: D=108:F=102:GOSUB 8
 '
 ' still alive.
 '
-512 T$="still ":D=54:F=102:GOSUB 20
+512 T$="still ":D=54:F=102:GOSUB 8
 '
 ' FIXME: CAN WE DO ALIVE SLOWLY LIKE IN THE VIDEO?
 '
-513 T$="a":F=91:GOSUB 20
-514 T$="live."+C$:D=162:F=91:GOSUB 20
+513 T$="a":F=91:GOSUB 8
+514 T$="live."+C$:D=162:F=91:GOSUB 8
 '
 ' PAGE 3
 '
 516 HOME:C$=CHR$(13)
+517 X=FRE(0)
 518 T$="Forms FORM-55551-6:"+C$:GOSUB 30
 520 T$="Personnel File Addendum ":GOSUB 30
 522 T$="Addendum:"+C$:GOSUB 30
 523 PRINT
-524 T$="One last thing:"+C$:GOSUB 20
+524 T$="One last thing:"+C$:GOSUB 30
 526 PRINT
 '
 ' Go ahead and leave me
 '
-528 T$="Go ":D=54:F=85:GOSUB 20
-530 T$="a":D=27:F=91:GOSUB 20
-531 T$="head ":GOSUB 20
-532 T$="and ":D=54:F=102:GOSUB 20
-534 T$="leave ":D=108:F=102:GOSUB 20
-536 T$="me"+C$:D=54:F=91:GOSUB 20
+528 T$="Go ":D=54:F=85:GOSUB 8
+530 T$="a":D=27:F=91:GOSUB 8
+531 T$="head ":GOSUB 8
+532 T$="and ":D=54:F=102:GOSUB 8
+534 T$="leave ":D=108:F=102:GOSUB 8
+536 T$="me"+C$:D=54:F=91:GOSUB 8
 '
 '  I think I prefer to stay inside.
 '
-538 T$="I ":F=152:GOSUB 20:REM SOUND 220, 4.8
-540 T$="think ":F=85:GOSUB 20:REM SOUND 391.9, 4.8
-542 T$="I ":F=91:GOSUB 20:REM SOUND 369.9, 4.8
-544 T$="pre":F=102:GOSUB 20:REM SOUND 329.6, 4.8
-546 T$="fer ":F=102:GOSUB 20:REM SOUND 0, .1:REM SOUND 329.6, 14.2
+538 T$="I ":F=152:GOSUB 8
+540 T$="think ":F=85:GOSUB 8
+542 T$="I ":F=91:GOSUB 8
+544 T$="pre":F=102:GOSUB 8
+546 T$="fer ":F=102:GOSUB 8
 547 FOR I=1 TO 160: NEXT
-548 T$="to ":F=91:GOSUB 20:REM SOUND 369.9, 4.8
-550 T$="stay ":F=114:GOSUB 20:REM SOUND 293.6, 14.2
+548 T$="to ":F=91:GOSUB 8
+550 T$="stay ":F=114:GOSUB 8
 551 FOR I=1 TO 160: NEXT
-552 T$="in":F=102:GOSUB 20:REM SOUND 329.6, 4.8
-554 T$="side."+C$:D=108:F=152:GOSUB 20: REM SOUND 220, 24
+552 T$="in":F=102:GOSUB 8
+554 T$="side."+C$:D=108:F=152:GOSUB 8
 555 FOR I=1 TO 560: NEXT
 '
 ' Maybe you'll find someone else
 '
-556 T$="May":F=102:GOSUB 20:REM SOUND 329.6, 9.6
-558 T$="be ":D=54:F=91:GOSUB 20:REM SOUND 369.9, 4.8
-560 T$="you'll ":D=162:F=85:GOSUB 20:REM SOUND 391.9, 14.2
-562 T$="find ":D=108:F=102:GOSUB 20:REM SOUND 329.6, 9.6
-564 T$="some":F=121:GOSUB 20:REM SOUND 277.1, 9.6
-566 T$="one ":D=54:F=114:GOSUB 20:REM SOUND 293.6, 4.8
-568 T$="else"+C$:D=162:F=102:GOSUB 20:REM SOUND 329.6, 9.6
-570 T$="to ":D=54:F=152:GOSUB 20:REM SOUND 220, 4.8
-572 T$="help ":D=108:F=152:GOSUB 20:REM SOUND 0, .1:REM SOUND 220, 9.6
-574 T$="you."+C$:D=54:F=91:GOSUB 20:REM SOUND 369.9, 24
+556 T$="May":F=102:GOSUB 8
+558 T$="be ":D=54:F=91:GOSUB 8
+560 T$="you'll ":D=162:F=85:GOSUB 8
+562 T$="find ":D=108:F=102:GOSUB 8
+564 T$="some":F=121:GOSUB 8
+566 T$="one ":D=54:F=114:GOSUB 8
+568 T$="else"+C$:D=162:F=102:GOSUB 8
+570 T$="to ":D=54:F=152:GOSUB 8
+572 T$="help ":D=108:F=152:GOSUB 8
+574 T$="you."+C$:D=54:F=91:GOSUB 8
 575 FOR I=1 TO 800:NEXT
 '
 ' Black Mesa
@@ -463,42 +463,42 @@
 '
 ' Maybe Black Mesa.
 '
-578 T$="May":F=85:GOSUB 20
-580 T$="be ":F=91:GOSUB 20
-582 T$="Black ":F=102:GOSUB 20
-584 T$="Me":D=108:F=102:GOSUB 20
-586 T$="sa.":D=54:F=91:GOSUB 20
+578 T$="May":F=85:GOSUB 8
+580 T$="be ":F=91:GOSUB 8
+582 T$="Black ":F=102:GOSUB 8
+584 T$="Me":D=108:F=102:GOSUB 8
+586 T$="sa.":D=54:F=91:GOSUB 8
 587 FOR I=1 TO 800:NEXT I
 '
 ' THAT WAS A JOKE.
 '
 588 T$=".."+C$:GOSUB 30
-590 T$="THAT ":F=85:GOSUB 20
-591 T$="WAS ":F=91:GOSUB 20
-592 T$="A ":F=102:GOSUB 20
-593 T$="JOKE.":F=102:GOSUB 20
+590 T$="THAT ":F=85:GOSUB 8
+591 T$="WAS ":F=91:GOSUB 8
+592 T$="A ":F=102:GOSUB 8
+593 T$="JOKE.":F=102:GOSUB 8
 594 FOR I=1 TO 160: NEXT
 '
 ' HAHA
 '
-595 T$=" ":F=91:GOSUB 20
-596 T$=" ":F=114:GOSUB 20
+595 T$=" ":F=91:GOSUB 8
+596 T$=" ":F=114:GOSUB 8
 597 FOR I=1 TO 160: NEXT
 '
 ' FAT CHANCE.
 '
-598 T$="FAT ":F=102:GOSUB 20
-600 T$="CHANCE."+C$:D=108:F=152:GOSUB 30
+598 T$="FAT ":F=102:GOSUB 8
+600 T$="CHANCE."+C$:D=108:F=152:GOSUB 8
 601 FOR I=1 TO 560: NEXT
 '
 ' Anyway, this cake is
 '
-602 T$="A":F=102:GOSUB 20
-604 T$="ny":D=54:F=91:GOSUB 20
-606 T$="way, ":D=162:F=85:GOSUB 20
-608 T$="this ":D=108:F=102:GOSUB 20
-610 T$="cake ":F=121:GOSUB 20
-612 T$="is ":D=54:F=114:GOSUB 20
+602 T$="A":F=102:GOSUB 8
+604 T$="ny":D=54:F=91:GOSUB 8
+606 T$="way, ":D=162:F=85:GOSUB 8
+608 T$="this ":D=108:F=102:GOSUB 8
+610 T$="cake ":F=121:GOSUB 8
+612 T$="is ":D=54:F=114:GOSUB 8
 '
 ' CAKE
 '
@@ -507,18 +507,18 @@
 '
 ' great.
 '
-616 T$="great."+C$:F=102:GOSUB 20
+616 T$="great."+C$:F=102:GOSUB 8
 617 FOR I=1 TO 80: NEXT
 '
 ' It's so delicious and moist.
 '
-618 T$="It's ":F=152:GOSUB 20
-620 T$="so ":F=114:GOSUB 20
-622 T$="de":F=102:GOSUB 20
-624 T$="li":F=96:GOSUB 20
-626 T$="cious ":F=102:GOSUB 20
-628 T$="and ":F=114:GOSUB 20
-630 T$="moist."+C$:F=128:GOSUB 20
+618 T$="It's ":F=152:GOSUB 8
+620 T$="so ":F=114:GOSUB 8
+622 T$="de":F=102:GOSUB 8
+624 T$="li":F=96:GOSUB 8
+626 T$="cious ":F=102:GOSUB 8
+628 T$="and ":F=114:GOSUB 8
+630 T$="moist."+C$:F=128:GOSUB 8
 631 FOR I=1 TO 160: NEXT
 '
 ' GLaDOS
@@ -527,17 +527,17 @@
 '
 ' Look at me still talking.
 '
-634 T$="Look ":F=152:GOSUB 20
-636 T$="at ":F=143:GOSUB 20
-638 T$="me ":D=108:F=128:GOSUB 20
-640 T$="still ":F=96:GOSUB 20
-642 T$="tal":D=54:F=102:GOSUB 20
-644 T$="king"+C$:F=114:GOSUB 20
+634 T$="Look ":F=152:GOSUB 8
+636 T$="at ":F=143:GOSUB 8
+638 T$="me ":D=108:F=128:GOSUB 8
+640 T$="still ":F=96:GOSUB 8
+642 T$="tal":D=54:F=102:GOSUB 8
+644 T$="king"+C$:F=114:GOSUB 8
 '
 ' when there's 
 '
-646 T$="when ":F=114:GOSUB 20
-648 T$="there's ":F=128:GOSUB 20
+646 T$="when ":F=114:GOSUB 8
+648 T$="there's ":F=128:GOSUB 8
 '
 ' RADIATION
 650 GOSUB 18:GOSUB 15:HOME:GOSUB 2100: GOSUB 10:GOSUB 19:PRINT
@@ -545,10 +545,10 @@
 '
 'Science to do.
 '
-654 T$="Sci":F=114:GOSUB 20
-656 T$="ence ":F=128:GOSUB 20
-658 T$="to ":D=108:F=128:GOSUB 20
-660 T$="do."+C$:F=128:GOSUB 20
+654 T$="Sci":F=114:GOSUB 8
+656 T$="ence ":F=128:GOSUB 8
+658 T$="to ":D=108:F=128:GOSUB 8
+660 T$="do."+C$:F=128:GOSUB 8
 '
 ' APERTURE SCIENCE LOGO
 '
@@ -556,21 +556,21 @@
 '
 ' When I look out there
 '
-664 T$="When ":D=54:F=152:GOSUB 20
-666 T$="I ":F=143:GOSUB 20
-668 T$="look ":D=108:F=128:GOSUB 20
-670 T$="out ":F=96:GOSUB 20
-672 T$="there, "+C$:D=54:F=85:GOSUB 20
+664 T$="When ":D=54:F=152:GOSUB 8
+666 T$="I ":F=143:GOSUB 8
+668 T$="look ":D=108:F=128:GOSUB 8
+670 T$="out ":F=96:GOSUB 8
+672 T$="there, "+C$:D=54:F=85:GOSUB 8
 '
 ' it makes me GLaD I'm not you."+C$
 '
-674 T$="it ":F=96:GOSUB 20
-676 T$="Makes ":F=102:GOSUB 20
-678 T$="me ":F=114:GOSUB 20
-680 T$="GLaD ":F=114:GOSUB 20
-682 T$="I'm ":F=102:GOSUB 20
-684 T$="not ":D=108:F=96:GOSUB 20
-686 T$="you."+C$:F=96:GOSUB 20
+674 T$="it ":F=96:GOSUB 8
+676 T$="Makes ":F=102:GOSUB 8
+678 T$="me ":F=114:GOSUB 8
+680 T$="GLaD ":F=114:GOSUB 8
+682 T$="I'm ":F=102:GOSUB 8
+684 T$="not ":D=108:F=96:GOSUB 8
+686 T$="you."+C$:F=96:GOSUB 8
 '
 ' ATOM
 '
@@ -578,13 +578,13 @@
 '
 ' I've experiments to run.
 '
-690 T$="I've ":D=54:F=85:GOSUB 20
-692 T$="ex":F=76:GOSUB 20
-694 T$="pe":F=72:GOSUB 20
-696 T$="ri":F=72:GOSUB 20
-698 T$="ments ":F=76:GOSUB 20
-700 T$="to ":F=85:GOSUB 20
-702 T$="run."+C$:D=108:F=85:GOSUB 20
+690 T$="I've ":D=54:F=85:GOSUB 8
+692 T$="ex":F=76:GOSUB 8
+694 T$="pe":F=72:GOSUB 8
+696 T$="ri":F=72:GOSUB 8
+698 T$="ments ":F=76:GOSUB 8
+700 T$="to ":F=85:GOSUB 8
+702 T$="run."+C$:D=108:F=85:GOSUB 8
 '
 ' EXPLOSION
 '
@@ -592,13 +592,13 @@
 '
 ' There is research to be done"
 '
-706 T$="There ":D=54:F=96:GOSUB 20
-708 T$="is ":F=85:GOSUB 20
-710 T$="re":F=76:GOSUB 20
-712 T$="search ":F=76:GOSUB 20
-714 T$="to ":F=85:GOSUB 20
-716 T$="be ":F=96:GOSUB 20
-718 T$="done."+C$:D=108:F=96:GOSUB 20
+706 T$="There ":D=54:F=96:GOSUB 8
+708 T$="is ":F=85:GOSUB 8
+710 T$="re":F=76:GOSUB 8
+712 T$="search ":F=76:GOSUB 8
+714 T$="to ":F=85:GOSUB 8
+716 T$="be ":F=96:GOSUB 8
+718 T$="done."+C$:D=108:F=96:GOSUB 8
 '
 ' APERTURE SCIENCE LOGO
 '
@@ -606,18 +606,18 @@
 '
 ' On the people who are
 '
-722 T$="On ":D=54:F=114:GOSUB 20
-724 T$="the ":F=128:GOSUB 20
-726 T$="peo":F=114:GOSUB 20
-728 T$="ple ":F=96:GOSUB 20
-730 T$="who ":F=96:GOSUB 20
-732 T$="are"+C$:D=108:GOSUB 20
+722 T$="On ":D=54:F=114:GOSUB 8
+724 T$="the ":F=128:GOSUB 8
+726 T$="peo":F=114:GOSUB 8
+728 T$="ple ":F=96:GOSUB 8
+730 T$="who ":F=96:GOSUB 8
+732 T$="are"+C$:D=108:F=102:GOSUB 8
 '
 ' still alive.
 '
-734 T$="still ":D=54:F=102:GOSUB 20
-736 T$="a":F=91:GOSUB 20
-738 T$="live."+C$:D=162:F=91:GOSUB 20
+734 T$="still ":D=54:F=102:GOSUB 8
+736 T$="a":F=91:GOSUB 8
+738 T$="live."+C$:D=162:F=91:GOSUB 8
 739 FOR I=1 TO 160: NEXT
 '
 '
@@ -626,45 +626,45 @@
 '
 ' PS: And believe me I am\nstill alive.
 '
-742 T$="PS: And ":D=54:F=76:GOSUB 20
-744 T$="be":F=76:GOSUB 20
-746 T$="lieve ":F=68:GOSUB 20
-748 T$="me ":F=76:GOSUB 20
-750 T$="I ":F=91:GOSUB 20
-752 T$="am"+C$:D=108:F=114:GOSUB 20
-754 T$="still ":D=54:F=102:GOSUB 20
-756 T$="a":F=91:GOSUB 20
-758 T$="live."+C$:D=162:F=91:GOSUB 20
+742 T$="PS: And ":D=54:F=76:GOSUB 8
+744 T$="be":F=76:GOSUB 8
+746 T$="lieve ":F=68:GOSUB 8
+748 T$="me ":F=76:GOSUB 8
+750 T$="I ":F=91:GOSUB 8
+752 T$="am"+C$:D=108:F=114:GOSUB 8
+754 T$="still ":D=54:F=102:GOSUB 8
+756 T$="a":F=91:GOSUB 8
+758 T$="live."+C$:D=162:F=91:GOSUB 8
 759 FOR I=1 TO 240:NEXT
 '
 ' PPS: I'm doing Science and I'm\nstill alive.
 '
 760 T$="PPS: ":GOSUB 30
-762 T$="I'm ":D=54:F=76:GOSUB 20
-764 T$="do":F=76:GOSUB 20
-766 T$="ing ":F=76:GOSUB 20
-768 T$="Sci":F=68:GOSUB 20
-770 T$="ence ":F=76:GOSUB 20
-772 T$="and ":F=91:GOSUB 20
-774 T$="I'm"+C$:D=108:F=114:GOSUB 20
-776 T$="still ":D=54:F=102:GOSUB 20
-778 T$="a":F=91:GOSUB 20
-780 T$="live."+C$:D=162:F=91:GOSUB 20
+762 T$="I'm ":D=54:F=76:GOSUB 8
+764 T$="do":F=76:GOSUB 8
+766 T$="ing ":F=76:GOSUB 8
+768 T$="Sci":F=68:GOSUB 8
+770 T$="ence ":F=76:GOSUB 8
+772 T$="and ":F=91:GOSUB 8
+774 T$="I'm"+C$:D=108:F=114:GOSUB 8
+776 T$="still ":D=54:F=102:GOSUB 8
+778 T$="a":F=91:GOSUB 8
+780 T$="live."+C$:D=162:F=91:GOSUB 8
 781 FOR I=1 TO 240:NEXT
 '
 ' PPPS: I feel FANTASTIC and I'm\nstill alive
 '
 782 T$="PPPS: ":GOSUB 30
-784 T$="I ":D=54:F=76:GOSUB 20
-786 T$="feel ":F=76:GOSUB 20
-788 T$="FAN":F=76:GOSUB 20
-790 T$="TAS":F=68:GOSUB 20
-792 T$="TIC ":F=76:GOSUB 20
-794 T$="and ":F=91:GOSUB 20
-796 T$="I'm"+C$:D=108:F=114:GOSUB 20
-798 T$="still ":D=54:F=102:GOSUB 20
-800 T$="a":F=91:GOSUB 20
-802 T$="live."+C$:D=162:F=91:GOSUB 20
+784 T$="I ":D=54:F=76:GOSUB 8
+786 T$="feel ":F=76:GOSUB 8
+788 T$="FAN":F=76:GOSUB 8
+790 T$="TAS":F=68:GOSUB 8
+792 T$="TIC ":F=76:GOSUB 8
+794 T$="and ":F=91:GOSUB 8
+796 T$="I'm"+C$:D=108:F=114:GOSUB 8
+798 T$="still ":D=54:F=102:GOSUB 8
+800 T$="a":F=91:GOSUB 8
+802 T$="live."+C$:D=162:F=91:GOSUB 8
 803 FOR I=1 TO 320:NEXT
 804 PRINT
 '
@@ -674,15 +674,15 @@
 '
 ' While you're dying I'll be\nstill alive.
 '
-808 T$="While ":D=54:F=76:GOSUB 20
-810 T$="you're ":F=76:GOSUB 20
-812 T$="dy":F=68:GOSUB 20
-814 T$="ing ":F=76:GOSUB 20
-816 T$="I'll ":F=91:GOSUB 20
-818 T$="be"+C$:D=108:F=114:GOSUB 20
-820 T$="still ":D=54:F=102:GOSUB 20
-822 T$="a":F=91:GOSUB 20
-824 T$="live":D=162:F=91:GOSUB 20
+808 T$="While ":D=54:F=76:GOSUB 8
+810 T$="you're ":F=76:GOSUB 8
+812 T$="dy":F=68:GOSUB 8
+814 T$="ing ":F=76:GOSUB 8
+816 T$="I'll ":F=91:GOSUB 8
+818 T$="be"+C$:D=108:F=114:GOSUB 8
+820 T$="still ":D=54:F=102:GOSUB 8
+822 T$="a":F=91:GOSUB 8
+824 T$="live":D=162:F=91:GOSUB 8
 825 FOR I=1 TO 240:NEXT
 '
 ' FINAL THOUGHT PS
@@ -691,16 +691,16 @@
 '
 ' And when you're dead I will be\nstill alive
 '
-828 T$="And ":D=54:F=76:GOSUB 20
-830 T$="when ":F=76:GOSUB 20
-832 T$="you're ":F=76:GOSUB 20
-834 T$="dead ":F=68:GOSUB 20
-836 T$="I ":F=76:GOSUB 20
-838 T$="will ":F=91:GOSUB 20
-840 T$="be"+C$:D=108:F=114:GOSUB 20
-842 T$="still ":D=54:F=102:GOSUB 20
-844 T$="a":F=91:GOSUB 20
-846 T$="live"+C$:D=162:F=91:GOSUB 20
+828 T$="And ":D=54:F=76:GOSUB 8
+830 T$="when ":F=76:GOSUB 8
+832 T$="you're ":F=76:GOSUB 8
+834 T$="dead ":F=68:GOSUB 8
+836 T$="I ":F=76:GOSUB 8
+838 T$="will ":F=91:GOSUB 8
+840 T$="be"+C$:D=108:F=114:GOSUB 8
+842 T$="still ":D=54:F=102:GOSUB 8
+844 T$="a":F=91:GOSUB 8
+846 T$="live"+C$:D=162:F=91:GOSUB 8
 847 FOR I=1 TO 240:NEXT
 '
 '
@@ -709,17 +709,17 @@
 '
 ' STILL ALIVE
 '
-850 T$="STILL ":D=54:F=85:GOSUB 20
-851 T$="A":F=76:GOSUB 20
-852 T$="LIVE":D=162:F=76:GOSUB 20
+850 T$="STILL ":D=54:F=85:GOSUB 8
+851 T$="A":F=76:GOSUB 8
+852 T$="LIVE":D=162:F=76:GOSUB 8
 853 FOR I=1 TO 240:NEXT
 854 PRINT:PRINT
 '
 ' STILL ALIVE
 '
-855 T$="STILL ":D=54:F=85:GOSUB 20
-856 T$="A":F=91:GOSUB 20
-857 T$="LIVE":D=162:F=91:GOSUB 20
+855 T$="   ":D=54:F=85:GOSUB 8
+856 T$="   ":F=91:GOSUB 8
+857 T$="   ":D=162:F=91:GOSUB 8
 858 FOR I=1 TO 240:NEXT
 '
 '
@@ -732,7 +732,8 @@
 870 T$="ENRICHMENT CENTER ACTIVITY!!"+C$:GOSUB 30
 872 PRINT:PRINT
 874 FOR I=1 TO 3000: NEXT I
-1000 TEXT:HOME
+1000 PRINT CHR$(4)+"PR#0"
+1001 TEXT:HOME
 1999 END
 '
 '
