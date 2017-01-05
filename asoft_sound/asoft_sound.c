@@ -194,7 +194,10 @@ int main(int argc, char **argv) {
 		line++;
 		if (result==NULL) break;
 
-		if (string[0]=='\'') continue;
+		if (string[0]=='\'') {
+			printf("%s",string);
+			continue;
+		}
 
 		i=0;
 		while(1) {
