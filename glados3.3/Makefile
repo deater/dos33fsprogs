@@ -1,7 +1,7 @@
 DOS33 = ../dos33fs-utils/dos33
 TXT2BAS = ../asoft_basic-utils/tokenize_asoft
 SHAPETABLE = ../hgr-utils/shape_table
-
+SOUNDCONVERT = ../asoft_sound/asoft_sound
 
 all:	glados33.dsk
 
@@ -17,11 +17,19 @@ shape_test.bas:	objects.shape
 SHAPE_TEST.BAS:	shape_test.bas
 	$(TXT2BAS) < shape_test.bas > SHAPE_TEST.BAS
 
-glados33.dsk:	STILL_ALIVE.BAS OBJECTS.SHAPE SHAPE_TEST.BAS
+sound_test.bas:	still_alive.notes
+	$(SOUNDCONVERT) < still_alive.notes > sound_test.bas
+
+SOUND_TEST.BAS:	sound_test.bas
+
+	$(TXT2BAS) < sound_test.bas > SOUND_TEST.BAS
+
+glados33.dsk:	STILL_ALIVE.BAS OBJECTS.SHAPE SHAPE_TEST.BAS SOUND_TEST.BAS
 	$(DOS33) -y glados33.dsk SAVE A STILL_ALIVE.BAS
 	$(DOS33) -y glados33.dsk SAVE B OBJECTS.SHAPE
 	$(DOS33) -y glados33.dsk SAVE A SHAPE_TEST.BAS
+	$(DOS33) -y glados33.dsk SAVE A SOUND_TEST.BAS
 
 clean:	
-	rm -f *~ *.BAS *.SHAPE *.lst
+	rm -f *~ *.BAS *.SHAPE sound_test.bas shape_test.bas *.lst
 
