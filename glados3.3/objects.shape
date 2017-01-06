@@ -1,27 +1,59 @@
 # Number of shapes
-1
+3
 # "Cross Hair"
 #   |                
 #   |                  
-# -- --           >>X   
+# -- --    
 #   |                   
 #   |                   
 START
-NLT
-NLT
-RT
-RT
-NRT
-NRT
-NRT
-LT
-LT
-NUP
-UP
-UP
-NDN
-NDN
-NDN
-DN
-DN
+NLT NLT
+RT RT NRT 
+NRT LT LT 
+NUP UP UP
+NDN NDN NDN NDN DN DN
+STOP
+#
+# "Portal"
+#   #
+#  # #
+#  # #
+#  # #
+# #   #
+# #   #
+# # * #
+# #   #
+# #   #
+#  # #
+#  # #
+#  # #
+#   #
+START
+NLT NLT UP UP UP NRT UP UP UP NRT RT NDN
+DN DN DN NRT DN DN DN DN DN NLT DN DN DN NLT
+UP NLT UP UP UP NLT UP UP UP
+STOP
+# Chell 1
+#
+#  ###.
+# # #
+# ####
+# ###
+# #    ### #
+#      #  #
+#      ### #
+#
+#
+# #
+# #
+# #
+#  #
+START
+NLT LT LT LT NDN
+RT NRT RT NDN
+LT LT LT LT NDN NRT
+RT RT RT NDN
+NLT NLT NLT RT NRT NRT NRT NRT RT RT RT NRT RT NDN
+NLT LT NLT NLT LT NDN
+NRT RT RT RT NRT RT
 STOP
