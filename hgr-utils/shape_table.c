@@ -9,6 +9,8 @@
 
 #define MAX_SIZE 8192 /* not really, but anything larger would be crazy */
 
+static int debug=0,line=1;
+
 static unsigned char table[MAX_SIZE];
 
 static void set_offset(int current_shape,int current_offset) {
@@ -47,14 +49,54 @@ static void print_usage(char *exe) {
 	exit(1);
 }
 
+static int get_token(char *token, FILE *fff) {
+
+	int ch;
+	int ptr=0;
+
+	/* skip leading spaces/comments */
+	while(1) {
+		ch=fgetc(fff);
+		if (ch<0) return -1;
+
+		if (ch=='#') {
+			while(ch!='\n') ch=fgetc(fff);
+		}
+		if ((ch==' ') || (ch=='\t') || (ch=='\n')) {
+			if (ch=='\n') line++;
+			continue;
+		}
+
+		break;
+	}
+
+	while(1) {
+		token[ptr]=ch;
+		ptr++;
+
+		ch=fgetc(fff);
+		if (ch<0) return -1;
+
+		if ((ch==' ') || (ch=='\t') || (ch=='\n')) {
+			if (ch=='\n') line++;
+			break;
+		}
+	}
+	token[ptr]=0;
+
+
+	return 0;
+
+}
+
 int main(int argc, char **argv) {
 
 	char string[BUFSIZ];
-	char *result;
+	int result;
 	int table_size=0;
 	int num_shapes=0;
 	int current_offset=0,current_shape=0;
-	int i,line=1;
+	int i;
 
 	int command=0,sub_pointer;
 
@@ -84,20 +126,18 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	while(1) {
-		result=fgets(string,BUFSIZ,stdin);
-		if (result==NULL) break;
-		line++;
-
-		/* skip comments and blank lines */
-		if ((string[0]=='#') || (string[0]=='\n')) continue;
-
-		sscanf(string,"%d",&num_shapes);
-		break;
-
+	result=get_token(string,stdin);
+	if (result<0) {
+		fprintf(stderr,"Error getting number\n");
+		return -1;
 	}
 
-	//fprintf(stderr,"Num shapes: %d\n",num_shapes);
+	num_shapes=atoi(string);
+	if (num_shapes<1) {
+		fprintf(stderr,"Error getting numshapes\n");
+		return -2;
+	}
+	if (debug) fprintf(stderr,"Number of shapes = %d\n",num_shapes);
 
 	table[0]=num_shapes;
 	table[1]=0;
@@ -112,41 +152,47 @@ int main(int argc, char **argv) {
 		/* Find START */
 
 		while(1) {
-			result=fgets(string,BUFSIZ,stdin);
-			if (result==NULL) break;
-			line++;
+			result=get_token(string,stdin);
+			if (result<0) {
+				fprintf(stderr,"Unexpected EOF!\n");
+				return -1;
+			}
 
-			/* skip comments and blank lines */
-			if ((string[0]=='#') || (string[0]=='\n')) continue;
-
-			if (strstr(string,"START")) break;
-
+			if (!strcmp(string,"START")) {
+				if (debug) fprintf(stderr,"START\n");
+				break;
+			}
 		}
 
 		/* READ DATA */
-
 		sub_pointer=LOC_A;
+
 		while(1) {
-			result=fgets(string,BUFSIZ,stdin);
-			if (result==NULL) break;
-			line++;
+			result=get_token(string,stdin);
+			if (result<0) {
+				fprintf(stderr,"Unexpected end of file!\n");
+				return -2;
+			}
 
-			/* skip comments and blank lines */
-			if ((string[0]=='#') || (string[0]=='\n')) continue;
-
-			if (strstr(string,"STOP")) break;
+			if (!strcmp(string,"STOP")) {
+				if (debug) fprintf(stderr,"STOP\n");
+				break;
+			}
 
 			/* yes, this is inefficient... */
 
-			if (strstr(string,"NUP")) command=0;
-			else if (strstr(string,"NRT")) command=1;
-			else if (strstr(string,"NDN")) command=2;
-			else if (strstr(string,"NLT")) command=3;
-			else if (strstr(string,"UP")) command=4;
-			else if (strstr(string,"RT")) command=5;
-			else if (strstr(string,"DN")) command=6;
-			else if (strstr(string,"LT")) command=7;
-			else fprintf(stderr,"Unknown command %s",string);
+			if (!strcmp(string,"NUP")) command=0;
+			else if (!strcmp(string,"NRT")) command=1;
+			else if (!strcmp(string,"NDN")) command=2;
+			else if (!strcmp(string,"NLT")) command=3;
+			else if (!strcmp(string,"UP")) command=4;
+			else if (!strcmp(string,"RT")) {
+				if (debug) fprintf(stderr,"RT\n");
+				command=5;
+			}
+			else if (!strcmp(string,"DN")) command=6;
+			else if (!strcmp(string,"LT")) command=7;
+			else fprintf(stderr,"Unknown command '%s'",string);
 
 			if (sub_pointer==LOC_A) {
 				table[current_offset]=(command&0x7);
@@ -226,6 +272,7 @@ int main(int argc, char **argv) {
 			if ((i%10==9)||(i==current_offset-1)) printf("\n");
 			else printf(",");
 		}
+
 	}
 
 	return 0;
