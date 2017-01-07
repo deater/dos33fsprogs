@@ -1,6 +1,12 @@
 include ../Makefile.inc
 
-all:	pcx2hgr shape_table
+all:	pcx2hgr shape_table dump_table
+
+dump_table:		dump_table.o
+			$(CC) $(LFLAGS) -o dump_table dump_table.o
+
+dump_table.o:		dump_table.c
+			$(CC) $(CFLAGS) -c dump_table.c
 
 
 shape_table:		shape_table.o
@@ -20,6 +26,6 @@ install:
 		cp pcx2hgr shape_table $(INSTALL_LOC)
 
 clean:		
-		rm -f *~ *.o pcx2hgr shape_table
+		rm -f *~ *.o pcx2hgr shape_table dump_table
 
 
