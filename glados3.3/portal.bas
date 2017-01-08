@@ -30,18 +30,19 @@
 '
 ' COLLISION DETECTION
 '
+' Portals
+200 IF BO=0 OR GO=0 GOTO 210
+202 IF CX>BX-5 AND CX<BX+5 AND CY<BY+12 AND CY>BY-12 THEN CX=GX+5*VX:CY=GY
+204 IF CX>GX-5 AND CX<GX+5 AND CY<GY+12 AND CY>GY-12 THEN CX=BX+5*VX:CY=BY
 ' Edges
-200 IF CX<7 THEN CX=7:VX=0
-205 IF CX>271 THEN CX=271:VX=0
-210 IF CY<7 THEN CY=7:VY=-VY
+210 IF CX<7 THEN CX=7:VX=0
+212 IF CX>271 THEN CX=271:VX=0
+214 IF CY<7 THEN CY=7:VY=-VY
 ' Floors
 220 IF CX < 119 AND CY > 112 THEN CY=112:VY=0:VX=VX/2
 225 IF CX > 161 AND CY > 112 THEN CY=112:VY=0:VX=VX/2
 230 IF CX > 119 AND CX < 161 AND CY>140 THEN GOTO 800
-' Portals
-235 IF BO=0 OR GO=0 GOTO 240
-236 IF CX>BX-5 AND CX<BX+5 AND CY<BY+12 AND CY>BY-12 THEN CX=GX+5*VX:CY=GY
-238 IF CX>GX-5 AND CX<GX+5 AND CY<GY+12 AND CY>GY-12 THEN CX=BX+5*VX:CY=BY
+'
 240 REM
 ' DRAW AT UPDATE CO-ORDS
 245 IF OX=CX AND OY=CY GOTO 255
@@ -114,4 +115,29 @@
 ' BUGS:
 '  Shouldn't be able to create portals underground
 '  Artifacts when deleting portals
-
+'
+' TODO:
+'  Opening:
+'    Aperture Science Logo
+'    Print Level 1/19
+'  Level 1/19
+'   Have sentry "talk" on text screen
+'   Clear screen to black4 so chell's colors are right
+'   Only allow chell on odd X co-ord
+'   Use xdraw for portals
+'   Allow Chell to face backward
+'   Walking animation?
+'   Sentries kill
+'   Sentries shoot/laser through portal
+'   Walk on platform
+'   Sentries can be knocked over from behind
+'   Sentries an object that can go through portal
+'   Companion cube?
+'
+'   End level
+'    GLADOS
+'    Have GLADOS talk?
+'    Objects through portal
+'    Incinerator
+'    Die if go into incinerator
+'    Call out to Still Alive
