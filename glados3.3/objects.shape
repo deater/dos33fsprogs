@@ -10,8 +10,8 @@ START
 NLT NLT
 RT RT NRT 
 NRT LT LT 
-NUP UP UP
-NDN NDN NDN NDN DN DN
+NDN NDN
+UP UP UP UP UP
 STOP
 #
 # "Portal"
@@ -35,25 +35,27 @@ UP NLT UP UP UP NLT UP UP UP
 STOP
 # Chell 1
 #
-#  ###.
-# # #
-# ####
-# ###
-# #    ### #
-#      #  #
-#      ### #
-#
-#
-# #
-# #
-# #
-#  #
+#   B B
+# B ##
+# B ###
+# B ##
+# B  O  ######
+#  O O ##  ## 
+#  O O .######
+#  O O
+#  O O
+#  O O
+# B  O
+# B  O
+# B  O O
 START
-NLT LT LT LT NDN
-RT NRT RT NDN
-LT LT LT LT NDN NRT
-RT RT RT NDN
-NLT NLT NLT RT NRT NRT NRT NRT RT RT RT NRT RT NDN
-NLT LT NLT NLT LT NDN
-NRT RT RT RT NRT RT
+NLT NLT DN DN DN DN DN DN RT NRT LT NLT NLT NLT NLT
+# FALL ARRESTOR BEGIN
+UP UP UP NRT UP UP UP UP UP NLT 
+# HAIR 
+UP UP UP UP NRT NRT RT NRT DN
+# FACE
+NLT LT DN RT RT DN NLT LT DN NRT DN RT NRT
+# GUN
+RT UP RT RT RT RT RT DN NLT LT LT NLT NLT NDN RT RT RT RT RT RT
 STOP
