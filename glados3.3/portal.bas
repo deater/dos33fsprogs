@@ -79,7 +79,34 @@
 1040 HCOLOR=5:HPLOT 244,41 TO 245,41:HPLOT 244,43 TO 245,43
 ' LASER
 1042 HPLOT 0,42 TO 240,42
-1050 RETURN
+'
+' COMPANION CUBE
+'  0123456789012
+'0 #### ### ####
+'1 ###       ###
+'2 ##         ##
+'3     ## ##
+'4 ##  #####  ##
+'5 ##  #####  ##
+'6      ###
+'7 ##    #     #
+'8 ###       ###
+'9 #### ### ####
+1050 HCOLOR=3:X=261:Y=39
+1052  HPLOT X,Y   TO X+3,Y  :HPLOT X+5,Y TO X+7,Y:HPLOT X+9,Y    TO X+12,Y
+1054  HPLOT X,Y+1 TO X+2,Y+1:                     HPLOT X+10,Y+1 TO X+12,Y+1
+1056  HPLOT X,Y+2 TO X+1,Y+2:                     HPLOT X+11,Y+2 TO X+12,Y+2
+1058  HPLOT X,Y+4 TO X+1,Y+4:                     HPLOT X+11,Y+4 TO X+12,Y+4
+1060  HPLOT X,Y+5 TO X+1,Y+5:                     HPLOT X+11,Y+5 TO X+12,Y+5
+1062  HPLOT X,Y+7 TO X+1,Y+7:                     HPLOT X+11,Y+7 TO X+12,Y+7
+1064  HPLOT X,Y+8 TO X+2,Y+8:                     HPLOT X+10,Y+8 TO X+12,Y+8
+1066 HPLOT X,Y+9 TO X+3,Y+9:HPLOT X+5,Y+9 TO X+7,Y+9:HPLOT X+9,Y+9 TO X+12,Y+9
+1068 HPLOT X+4,Y+3 TO X+5,Y+3:HPLOT X+7,Y+3 TO X+8,Y+3
+1070 HPLOT X+4,Y+4 TO X+8,Y+4
+1072 HPLOT X+4,Y+5 TO X+8,Y+5
+1074 HPLOT X+5,Y+6 TO X+7,Y+6
+1076 HPLOT X+6,Y+7
+1099 RETURN
 ' HELP
 5000 REM HELP
 5010 TEXT:HOME
@@ -117,9 +144,14 @@
 '  Artifacts when deleting portals
 '
 ' TODO:
+'
 '  Opening:
 '    Aperture Science Logo
 '    Print Level 1/19
+'  General
+'    Sound effects?
+'    Configurable Levels
+'
 '  Level 1/19
 '   Have sentry "talk" on text screen
 '   Clear screen to black4 so chell's colors are right
