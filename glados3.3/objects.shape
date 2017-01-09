@@ -1,5 +1,5 @@
 # Number of shapes
-4
+6
 # "Cross Hair"
 #   |                
 #   |                  
@@ -71,5 +71,35 @@ UP UP UP UP NLT NLT LT NLT DN
 NRT RT DN LT LT DN NRT RT DN NLT DN LT NLT
 # GUN
 LT UP LT LT LT LT LT DN NRT RT RT NRT NRT NDN LT LT LT LT LT LT
+STOP
+
+# FireBall #5
+# 
+#     #
+#    # #
+#   # . #
+#    # #
+#     #
+START
+NDN NDN UP NRT UP NRT UP NLT UP NLT DN NLT DN NLT DN NRT DN NRT
+STOP
+
+# Blue Core #6
+#      #######
+#     ##     ##
+#    ## # # # ##
+#    ## # . # ##
+#    ## # # # ##
+#     ##     ##
+#      #######
+
+
+START
+# Inner
+NDN LT NLT UP UP RT NRT RT NRT DN DN LT NLT NDN NDN
+# Outer
+LT LT LT UP LT UP LT UP RT UP LT UP NRT RT UP RT RT RT RT RT RT DN
+# Upper Left
+RT DN RT DN LT DN RT DN NLT LT DN LT LT LT 
 STOP
 

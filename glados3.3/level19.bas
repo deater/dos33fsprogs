@@ -34,7 +34,7 @@
 12 I=I+1:IF I<500 GOTO 11
 13 HGR
 '
-14 L=1
+14 L=19
 ' PRINT LEVEL INFO
 15 TEXT:GOSUB 9000
 ' Clear screen to black#2

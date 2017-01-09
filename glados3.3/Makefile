@@ -14,6 +14,9 @@ CUBE.BAS:	cube.bas
 PORTAL.BAS:	portal.bas
 	$(TXT2BAS) < portal.bas > PORTAL.BAS
 
+LEVEL19.BAS:	level19.bas
+	$(TXT2BAS) < level19.bas > LEVEL19.BAS
+
 STILL_ALIVE.BAS:	still_alive.bas
 	$(TXT2BAS) < still_alive.bas > STILL_ALIVE.BAS
 
@@ -31,13 +34,15 @@ SOUND_TEST.BAS:	sound_test.bas
 	$(TXT2BAS) < sound_test.bas > SOUND_TEST.BAS
 
 glados33.dsk:	STILL_ALIVE.BAS OBJECTS.SHAPE SHAPE_TEST.BAS SOUND_TEST.BAS \
-		PORTAL.BAS CUBE.BAS PORTAL_TITLE.HGR
+		PORTAL.BAS CUBE.BAS PORTAL_TITLE.HGR LEVEL19.BAS GLADOS.HGR
 	$(DOS33) -y glados33.dsk SAVE A STILL_ALIVE.BAS
 	$(DOS33) -y glados33.dsk SAVE B OBJECTS.SHAPE
 	$(DOS33) -y glados33.dsk SAVE B PORTAL_TITLE.HGR
+	$(DOS33) -y glados33.dsk SAVE B GLADOS.HGR
 	$(DOS33) -y glados33.dsk SAVE A SHAPE_TEST.BAS
 	$(DOS33) -y glados33.dsk SAVE A SOUND_TEST.BAS
 	$(DOS33) -y glados33.dsk SAVE A PORTAL.BAS
+	$(DOS33) -y glados33.dsk SAVE A LEVEL19.BAS
 	$(DOS33) -y glados33.dsk SAVE A CUBE.BAS
 
 clean:	
