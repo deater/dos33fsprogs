@@ -100,8 +100,8 @@
 948 PRINT"* ___________________  *"
 949 PRINT"* ";
 950 FOR I=1 TO L:PRINT "|";:NEXT I
-952 FOR I=L TO 18:PRINT " ";:NEXT I
-954 PRINT"  *"
+952 FOR I=L TO 19:PRINT " ";:NEXT I
+954 PRINT" *"
 956 PRINT"*                      *"
 958 PRINT"* ___________________  *"
 959 PRINT"*        ___           *"

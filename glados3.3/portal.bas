@@ -1,3 +1,7 @@
+' "Portal" in Applesoft BASIC
+'    by Vince Weaver (vince@deater.net)
+'    http://www.deater.net/weave/vmwprod/portal/
+'
 ' Variable Summary
 '
 ' CX,CY = Chell X, Y	OX,OY = Old Chell X,Y
@@ -6,14 +10,14 @@
 ' SX,SY = Cursor X,Y	LX,LY = Old Cursor X,Y
 ' BO=Blue Portal Out	BX,BY = Blue Portal X,Y
 ' GO=Orange Portal Out	GX,GY = Orange Portal X,Y
-' LY=Laser Y		LB,LE = BEGIN/END
+' ZY,PY=Laser Y		ZX,PX = BEGIN/END
 ' T = TIME
 '
 10 HOME:HGR:SCALE=2:ROT=0:HCOLOR=4:HPLOT 0,0:CALL 62454
 11 POKE 232,0:POKE 233,29
 12 PRINT CHR$(4)+"BLOAD OBJECTS.SHAPE,A$1D00"
-15 GOSUB 1000
-20 CX=21:CY=100:CD=0:VX=0:VY=0:SX=140:SY=80:BO=0:GO=0:T=0
+20 CX=21:CY=100:CD=0:VX=0:VY=0:SX=140:SY=80:BO=0:GO=0:T=0:ZY=42:ZX=0
+21 GOSUB 1000
 22 SCALE=2:XDRAW 1 AT SX,SY
 25 SCALE=1:XDRAW 3 AT CX,CY
 '
@@ -59,6 +63,7 @@
 230 IF CX > 119 AND CX < 161 AND CY>140 THEN GOTO 800
 ' LASER
 '
+232 IF ZY>CY-8 AND ZY<CY+8 AND CX+6>ZX AND CX-6<240 THEN GOTO 700
 240 REM
 ' DRAW AT UPDATE CO-ORDS
 245 IF OX=CX AND OY=CY AND OD=CD GOTO 255
@@ -70,8 +75,14 @@
 300 REM
 500 GOTO 30
 '
+700 REM LASER DEAD
+705 HCOLOR=3
+707 GOSUB 8010
+710 SCALE=1:XDRAW 3+OD AT OX,OY:ROT=32:XDRAW 3+CD AT CX,CY
+720 FOR I=240 TO CX STEP -6:HPLOT I,ZY TO I+3,ZY:X=PEEK(-16336):NEXT I
+'
 800 REM DEAD
-805 VTAB 21:PRINT "YOU DIED!":PRINT "TRY AGAIN? (Y/N) ";
+805 VTAB 22:PRINT "YOU DIED!":PRINT "TRY AGAIN? (Y/N) ";
 810 GET A$
 815 IF A$="Y" THEN GOTO 10
 820 IF A$="N" THEN GOTO 999
@@ -94,7 +105,7 @@
 1039 HPLOT 249,47 TO 250,47:HPLOT 250,48 TO 251,48:HPLOT 250,49 TO 251,49
 1040 HCOLOR=5:HPLOT 244,41 TO 245,41:HPLOT 244,43 TO 245,43
 ' LASER
-1042 HPLOT 0,42 TO 240,42
+1042 HPLOT 0,ZY TO 240,ZY
 '
 ' COMPANION CUBE
 '  0123456789012
@@ -161,9 +172,18 @@
 '
 8000 R=INT(RND(1)*2)
 8001 HTAB 20:VTAB 21
-8002 IF R=0 THEN PRINT "Searching..."
+8002 IF R=0 THEN PRINT "Searching...    "
 8003 IF R=1 THEN PRINT "Is anyone there?"
 8005 RETURN
+'
+' Turret Firing
+'
+8010 R=INT(RND(1)*3)
+8011 HTAB 20:VTAB 21
+8012 IF R=0 THEN PRINT "Firing.         "
+8013 IF R=1 THEN PRINT "There you are.  "
+8014 IF R=2 THEN PRINT "I see you.    "
+8015 RETURN
 '
 ' BUGS:
 '  Shouldn't be able to create portals underground
@@ -172,14 +192,11 @@
 ' TODO:
 '
 '  Opening:
-'    Aperture Science Logo
-'    Print Level 1/19
 '  General
 '    Sound effects?
 '    Parametric Levels (Generic Game Engine)
 '
 '  Level 1/19
-'   Only allow chell on odd X co-ord
 '   Walking animation?
 '   Sentries kill
 '   Sentries shoot/laser through portal
@@ -195,5 +212,3 @@
 '    Die if go into incinerator
 '    Call out to Still Alive
 '
-
-
