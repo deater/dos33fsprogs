@@ -1,22 +1,36 @@
-10 HOME:HGR:SCALE=2:ROT=0
+' Variable Summary
+'
+' CX,CY = Chell X, Y	OX,OY = Old Chell X,Y
+' CD = Chell Direction	OD = Old Direction	
+' VX,VY = Chell Velocity X/Y
+' SX,SY = Cursor X,Y	LX,LY = Old Cursor X,Y
+' BO=Blue Portal Out	BX,BY = Blue Portal X,Y
+' GO=Orange Portal Out	GX,GY = Orange Portal X,Y
+' LY=Laser Y		LB,LE = BEGIN/END
+' T = TIME
+'
+10 HOME:HGR:SCALE=2:ROT=0:HCOLOR=4:HPLOT 0,0:CALL 62454
 11 POKE 232,0:POKE 233,29
 12 PRINT CHR$(4)+"BLOAD OBJECTS.SHAPE,A$1D00"
 15 GOSUB 1000
-20 CX=20:CY=100:VX=0:VY=0:SX=140:SY=80:BO=0:GO=0
+20 CX=21:CY=100:CD=0:VX=0:VY=0:SX=140:SY=80:BO=0:GO=0:T=0
 22 SCALE=2:XDRAW 1 AT SX,SY
 25 SCALE=1:XDRAW 3 AT CX,CY
-30 REM
-35 OX=CX:OY=CY:LX=SX:LY=SY
+'
+30 REM MAIN LOOP
+'
+32 T=T+1:IF T>100 THEN T=0:GOSUB 8000
+35 OX=CX:OY=CY:OD=CD:LX=SX:LY=SY
 37 IF PEEK(-16384)<128 THEN GOTO 100
 40 GET A$
 42 IF A$="I" AND SY>4 THEN SY=SY-4
 44 IF A$="J" AND SX>4 THEN SX=SX-4
 46 IF A$="K" AND SX<275 THEN SX=SX+4
 48 IF A$="M" AND SY<150 THEN SY=SY+4
-50 IF A$="D" AND VX<0 THEN VX=0:GOTO 52
-51 IF A$="D" THEN VX=5
-52 IF A$="A" AND VX>0 THEN VX=0:GOTO 54
-53 IF A$="A" THEN VX=-5
+50 IF A$="D" AND VX<0 THEN VX=0:CD=0:GOTO 52
+51 IF A$="D" THEN VX=8:CD=0
+52 IF A$="A" AND VX>0 THEN VX=0:CD=1:GOTO 54
+53 IF A$="A" THEN VX=-8:CD=1
 54 IF A$="Q" THEN GOTO 800
 56 IF A$=" " THEN VY=5
 58 IF A$="H" THEN GOSUB 5000
@@ -25,8 +39,9 @@
 ' PHYSICS ENGINE
 100 CY=CY-VY
 105 VY=VY-4.5
-107 CX=CX+VX
-110 IF VX<0.5 AND VX>-0.5 THEN VX=0
+' Move X.  Ensure we are always odd so colors are right
+107 IF VX<2 AND VX>-2 THEN VX=0
+110 CX=CX+VX
 '
 ' COLLISION DETECTION
 '
@@ -42,12 +57,13 @@
 220 IF CX < 119 AND CY > 112 THEN CY=112:VY=0:VX=VX/2
 225 IF CX > 161 AND CY > 112 THEN CY=112:VY=0:VX=VX/2
 230 IF CX > 119 AND CX < 161 AND CY>140 THEN GOTO 800
+' LASER
 '
 240 REM
 ' DRAW AT UPDATE CO-ORDS
-245 IF OX=CX AND OY=CY GOTO 255
-250 SCALE=1:XDRAW 3 AT OX,OY
-251 XDRAW 3 AT CX,CY
+245 IF OX=CX AND OY=CY AND OD=CD GOTO 255
+250 SCALE=1:XDRAW 3+OD AT OX,OY
+251 XDRAW 3+CD AT CX,CY
 255 IF LX=SX AND LY=SY GOTO 300
 256 SCALE=2:XDRAW 1 AT LX,LY
 257 XDRAW 1 AT SX,SY
@@ -127,17 +143,27 @@
 ' DRAW BLUE PORTAL
 6000 REM DRAW BLUE
 ' Erase old
-6005 IF BO=1 THEN HCOLOR=0: DRAW 2 AT BX,BY
+6004 SCALE=2
+6005 IF BO=1 THEN XDRAW 2 AT BX,BY
 6010 BX=SX:BY=SY
-6020 BO=1:HCOLOR=6:DRAW 2 AT BX,BY
+6020 BO=1:XDRAW 2 AT BX,BY
 6030 RETURN
 ' DRAW ORANGE PORTAL
 7000 REM DRAW ORANGE
 ' Erase old
-7005 IF GO=1 THEN HCOLOR=0: DRAW 2 AT GX,GY
+7004 SCALE=2
+7005 IF GO=1 THEN XDRAW 2 AT GX,GY
 7010 GX=SX+1:GY=SY
-7020 GO=1:HCOLOR=5:DRAW 2 AT GX,GY
+7020 GO=1:XDRAW 2 AT GX,GY
 7030 RETURN
+' 
+' Turret Talking
+'
+8000 R=INT(RND(1)*2)
+8001 HTAB 20:VTAB 21
+8002 IF R=0 THEN PRINT "Searching..."
+8003 IF R=1 THEN PRINT "Is anyone there?"
+8005 RETURN
 '
 ' BUGS:
 '  Shouldn't be able to create portals underground
@@ -150,21 +176,16 @@
 '    Print Level 1/19
 '  General
 '    Sound effects?
-'    Configurable Levels
+'    Parametric Levels (Generic Game Engine)
 '
 '  Level 1/19
-'   Have sentry "talk" on text screen
-'   Clear screen to black4 so chell's colors are right
 '   Only allow chell on odd X co-ord
-'   Use xdraw for portals
-'   Allow Chell to face backward
 '   Walking animation?
 '   Sentries kill
 '   Sentries shoot/laser through portal
 '   Walk on platform
 '   Sentries can be knocked over from behind
 '   Sentries an object that can go through portal
-'   Companion cube?
 '
 '   End level
 '    GLADOS
@@ -173,3 +194,6 @@
 '    Incinerator
 '    Die if go into incinerator
 '    Call out to Still Alive
+'
+
+
