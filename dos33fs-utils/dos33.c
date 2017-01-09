@@ -1398,10 +1398,14 @@ int main(int argc, char **argv) {
 
 		/* get output filename */
 		optind++;
-		if (argc>=optind) {
+		if (argc>optind) {
+			if (debug) printf("Using %s for filename\n",
+						local_filename);
 			strncpy(local_filename,argv[optind],BUFSIZ);
 		}
 		else {
+			if (debug) printf("Using %s for filename\n",
+						apple_filename);
 			strncpy(local_filename,apple_filename,30);
 		}
 
