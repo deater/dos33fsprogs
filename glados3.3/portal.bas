@@ -64,6 +64,8 @@
 ' LASER
 '
 232 IF ZY>CY-8 AND ZY<CY+8 AND CX+6>ZX AND CX-6<240 THEN GOTO 700
+234 IF PY>CY-8 AND PY<CY+8 AND CX+6>0 AND CX-6<PX THEN GOTO 700
+'
 240 REM
 ' DRAW AT UPDATE CO-ORDS
 245 IF OX=CX AND OY=CY AND OD=CD GOTO 255
@@ -79,7 +81,10 @@
 705 HCOLOR=3
 707 GOSUB 8010
 710 SCALE=1:XDRAW 3+OD AT OX,OY:ROT=32:XDRAW 3+CD AT CX,CY
-720 FOR I=240 TO CX STEP -6:HPLOT I,ZY TO I+3,ZY:X=PEEK(-16336):NEXT I
+715 M=CX:IF ZX>CX THEN M=ZX
+720 FOR I=240 TO M STEP -6:HPLOT I,ZY TO I+3,ZY:X=PEEK(-16336):NEXT I
+730 FOR I=PX TO CX STEP -6:HPLOT I,PY TO I+3,PY:X=PEEK(-16336):NEXT I
+
 '
 800 REM DEAD
 805 VTAB 22:PRINT "YOU DIED!":PRINT "TRY AGAIN? (Y/N) ";
@@ -213,19 +218,20 @@
 ' TODO:
 '
 '  Opening:
-'  General
+'  General:
 '    Sound effects?
 '    Parametric Levels (Generic Game Engine)
 '
-'  Level 1/19
+'  Level 1/19:
 '   Walking animation?
-'   Sentries kill
 '   Sentries shoot/laser through portal
 '   Walk on platform
 '   Sentries can be knocked over from behind
 '   Sentries an object that can go through portal
+'   Objects can be picked up with gun?
+'   Chell changes color (turns into Mel) going through O->B portal?
 '
-'   End level
+'   End level:
 '    GLADOS
 '    Have GLADOS talk?
 '    Objects through portal
