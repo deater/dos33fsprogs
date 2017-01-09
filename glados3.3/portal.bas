@@ -29,7 +29,7 @@
 '
 ' Wait a few seconds, or until keypressed
 '
-10 I=0
+10 I=0:VTAB 24:PRINT "H FOR HELP"
 11 IF PEEK(-16384)>=128 THEN GET A$:GOTO 13
 12 I=I+1:IF I<500 GOTO 11
 13 HGR
@@ -295,7 +295,7 @@
 9066 PRINT"*                      *"
 9068 PRINT"************************"
 9090 POKE 32,0
-9091 FOR I=1 TO 3000:NEXT I
+9091 FOR I=1 TO 2500:NEXT I
 9099 RETURN
 '
 ' BUGS:
@@ -325,5 +325,4 @@
 '    Die if go into incinerator
 '    Call out to Still Alive
 '
-
 
