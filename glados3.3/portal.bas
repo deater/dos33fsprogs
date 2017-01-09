@@ -10,25 +10,39 @@
 ' SX,SY = Cursor X,Y	LX,LY = Old Cursor X,Y
 ' BO=Blue Portal Out	BX,BY = Blue Portal X,Y
 ' GO=Orange Portal Out	GX,GY = Orange Portal X,Y
-' ZY,PY=Laser Y		ZX,PX = BEGIN/END
-' T = TIME
+' ZY,PY=Laser Y		ZX,PX = Laser Begin/End
+' T = TIME		L = Current Level
 '
+' Title Screen
+'
+1 HOME:HGR:PRINT CHR$(4)+"BLOAD PORTAL_TITLE.HGR"
 '
 ' Load Sound Library
 ' Violin sound, based on: https://gist.github.com/thelbane/9291cc81ed0d8e0266c8
 5 DATA 172,1,3,173,0,3,133,250,174,0,3,228,250,208,3,173,48,192,202,208,246,173,48,192,136,240,7,198,250,208,233,76,5,3,96
 6 FOR L=770 TO 804:READ V:POKE L,V:NEXT L
-' Clear screen to black#2
-10 HOME:HGR:SCALE=2:ROT=0:HCOLOR=4:HPLOT 0,0:CALL 62454
 '
 ' Load Shape Table
 '
-11 POKE 232,0:POKE 233,29
-12 PRINT CHR$(4)+"BLOAD OBJECTS.SHAPE,A$1D00"
+8 POKE 232,0:POKE 233,29
+9 PRINT CHR$(4)+"BLOAD OBJECTS.SHAPE,A$1D00"
+'
+' Wait a few seconds, or until keypressed
+'
+10 I=0
+11 IF PEEK(-16384)>=128 THEN GET A$:GOTO 13
+12 I=I+1:IF I<500 GOTO 11
+13 HGR
+'
+14 L=1
+' PRINT LEVEL INFO
+15 TEXT:GOSUB 9000
+' Clear screen to black#2
+16 HOME:HGR:SCALE=2:ROT=0:HCOLOR=4:HPLOT 0,0:CALL 62454
 '
 ' Initialize Variables
 '
-20 CX=21:CY=100:CD=0:VX=0:VY=0:SX=140:SY=80:BO=0:GO=0:T=0:ZY=42:ZX=0:PX=0:PY=0:L=1
+20 CX=21:CY=100:CD=0:VX=0:VY=0:SX=140:SY=80:BO=0:GO=0:T=0:ZY=42:ZX=0:PX=0:PY=0
 '
 ' Draw Level Background
 '
@@ -114,7 +128,7 @@
 800 REM DEAD
 805 VTAB 22:PRINT "YOU DIED!":PRINT "TRY AGAIN? (Y/N) ";
 810 GET A$
-815 IF A$="Y" THEN GOTO 10
+815 IF A$="Y" THEN GOTO 15
 820 IF A$="N" THEN GOTO 999
 830 GOTO 810
 '
@@ -238,6 +252,52 @@
 8014 IF R=2 THEN PRINT "I see you.    "
 8015 RETURN
 '
+' Level Transition
+'
+9000 HOME:POKE 32,8:PRINT
+9001 PRINT"************************"
+9002 PRINT"*                      *"
+9003 IF L=1 GOTO 9020
+9004 IF L=19 GOTO 9030
+' Too lazy to implement full number printing routine
+9006 PRINT"*      ???    ???      *"
+9008 PRINT"*     ?   ?  ?   ?     *"
+9010 PRINT"*        ?      ?      *"
+9012 PRINT"*       ?      ?       *"
+9014 PRINT"*       o      o       *"
+9016 GOTO 9040 
+9020 PRINT"*     @@@@@   @@       *"
+9022 PRINT"*     @   @  @ @       *"
+9024 PRINT"*     @   @    @       *"
+9026 PRINT"*     @   @    @       *"
+9028 PRINT"*     @@@@@  @@@@@     *"
+9029 GOTO 9040
+9030 PRINT"*      @@    @@@@@     *"
+9032 PRINT"*     @ @    @   @     *"
+9034 PRINT"*       @    @@@@@     *"
+9036 PRINT"*       @        @     *"
+9038 PRINT"*     @@@@@  @@@@@     *"
+9040 REM
+9042 PRINT"*                      *"
+9044 PRINT"*  ";:IF L<10 THEN PRINT "0";
+9046 PRINT L;"/19               *"
+9048 PRINT"* ___________________  *"
+9049 PRINT"* ";
+9050 FOR I=1 TO L:PRINT "|";:NEXT I
+9052 FOR I=L TO 19:PRINT " ";:NEXT I
+9054 PRINT" *"
+9056 PRINT"*                      *"
+9058 PRINT"* ___________________  *"
+9059 PRINT"*        ___           *"
+9060 PRINT"*  \o/  [] []    o  () *"
+9062 PRINT"* ~~~~~ [ V ]    /< _  *"
+9064 PRINT"*  / \  []_[] <=>  |   *"
+9066 PRINT"*                      *"
+9068 PRINT"************************"
+9090 POKE 32,0
+9091 FOR I=1 TO 3000:NEXT I
+9099 RETURN
+'
 ' BUGS:
 '  Shouldn't be able to create portals underground
 '  Artifacts when deleting portals
@@ -265,3 +325,5 @@
 '    Die if go into incinerator
 '    Call out to Still Alive
 '
+
+
