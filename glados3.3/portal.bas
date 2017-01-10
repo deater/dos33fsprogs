@@ -328,35 +328,34 @@
 9091 FOR I=1 TO 2500:NEXT I
 9099 RETURN
 '
-' BUGS:
-'  Shouldn't be able to create portals underground
-'  Artifacts when deleting portals
-'  Can Jump through the air
+' ISSUES:
+'  BUG: Shouldn't be able to create portals underground
+'  BUG: Artifacts when deleting portals
 '
 ' TODO:
 '
 '  Opening:
 '  General:
-'    Parametric Levels (Generic Game Engine)
-'    Button to specify horizontal vs vertical portals
-'    Physics: can walk when in air
+'    FUTURE: Parametric Levels (Generic Game Engine)
+'    FUTURE: Button to specify horizontal vs vertical portals
+'    BUG: Physics: can walk when in air
 '
 '  Level 1/19:
-'   Walking animation?
-'   Sentries shoot/laser through portal
-'   Walk on platform
-'   Sentries can be knocked over from behind
-'   Sentries an object that can go through portal
-'   Objects can be picked up with gun?
-'   Chell changes color (turns into Mel) going through O->B portal?
+'   FUTURE: Walking animation?
+'   FUTURE: Walk on all platforms
+'   FUTURE: Knock over sentries from behind
+'   FUTURE: Sentries an object that can go through portal
+'   FUTURE: Objects can be picked up with gun?
+'   BUG: Chell changes color (turns into Mel) going through O->B portal?
 '
 '   End level:
-'    Have GLADOS talk?
-'    Objects through portal
-'    Incinerator
-'    Die if go into incinerator
-'    Call out to Still Alive
-'    Sound for blob gun?
+'    FUTURE: Have GLADOS talk?
+'    FUTURE: Objects through portal
+'    FUTURE: Incinerator
+'    FUTURE: Call out to Still Alive when finish
+'    FUTURE: Sound for blob gun?
+'    FUTURE: Erase blob at end
+'    FUTURE: Explosion at end (red moire circle?)
 '
 ' Impossible to draw an ASCII Cake
 '
