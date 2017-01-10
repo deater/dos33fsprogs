@@ -10,6 +10,7 @@
 ' SX,SY = Cursor X,Y	LX,LY = Old Cursor X,Y
 ' BO=Blue Portal Out	BX,BY = Blue Portal X,Y
 ' GO=Orange Portal Out	GX,GY = Orange Portal X,Y
+' JO=Object out		JX,JY = Object X,Y JA=J add
 ' ZY,PY=Laser Y		ZX,PX = Laser Begin/End
 ' T = TIME		L = Current Level
 '
@@ -24,8 +25,8 @@
 '
 ' Load Shape Table
 '
-8 POKE 232,0:POKE 233,29
-9 PRINT CHR$(4)+"BLOAD OBJECTS.SHAPE,A$1D00"
+8 POKE 232,0:POKE 233,31
+9 PRINT CHR$(4)+"BLOAD OBJECTS.SHAPE,A$1F00"
 '
 ' Wait a few seconds, or until keypressed
 '
@@ -42,12 +43,12 @@
 '
 ' Initialize Variables
 '
-20 CX=21:CY=100:CD=0:VX=0:VY=0:SX=140:SY=80:BO=0:GO=0:T=0:ZY=42:ZX=0:PX=0:PY=0
+20 CX=21:CY=100:CD=0:VX=0:VY=0:SX=140:SY=80:BO=0:GO=0:T=0:ZY=42:ZX=0:PX=0:PY=0:JO=0
 '
 ' Draw Level Background
 '
-21 IF L=1 THEN GOSUB 1000
-22 IF L=19 THEN GOSUB 2000
+22 IF L=1 THEN GOSUB 1000
+23 IF L=19 THEN GOSUB 2000
 '
 ' Draw Initial Chell and Gun Cursor
 '
@@ -57,8 +58,8 @@
 30 REM MAIN LOOP
 '
 ' Time related activities
-32 T=T+1
-33 IF L=1 AND T=50 THEN GOSUB 8000
+31 T=T+1
+32 IF L=1 AND T=50 THEN GOSUB 8000
 34 IF T>100 THEN T=0
 '
 35 OX=CX:OY=CY:OD=CD:LX=SX:LY=SY
@@ -88,13 +89,15 @@
 ' Move X.  Ensure we are always odd so colors are right
 107 IF VX<2 AND VX>-2 THEN VX=0
 110 CX=CX+VX
+115 IF JO=0 THEN JO=1:JX=45:JY=10:JA=5:SCALE=2:XDRAW 5 AT JX,JY
+120 IF JO=1 THEN SCALE=2:XDRAW 5 AT JX,JY:JY=JY+JA:XDRAW 5 AT JX,JY
 '
 ' COLLISION DETECTION
 '
 ' Portals
 200 IF BO=0 OR GO=0 GOTO 210
-202 IF CX>BX-5 AND CX<BX+5 AND CY<BY+12 AND CY>BY-12 THEN CX=GX+5*VX:CY=GY:POKE 768,180:POKE 769,40:CALL 770
-204 IF CX>GX-5 AND CX<GX+5 AND CY<GY+12 AND CY>GY-12 THEN CX=BX+5*VX:CY=BY:POKE 768,180:POKE 769,40:CALL 770
+202 IF CX>BX-6 AND CX<BX+6 AND CY<BY+12 AND CY>BY-12 THEN CX=GX+2*VX:CY=GY:POKE 768,180:POKE 769,40:CALL 770
+204 IF CX>GX-6 AND CX<GX+6 AND CY<GY+12 AND CY>GY-12 THEN CX=BX+2*VX:CY=BY:POKE 768,180:POKE 769,40:CALL 770
 ' Edges
 210 IF CX<7 THEN CX=7:VX=0
 212 IF CX>271 THEN CX=271:VX=0
@@ -102,9 +105,14 @@
 ' Floors
 220 IF L=1 THEN GOTO 227
 ' Level 19 Floors
-222 IF CY > 112 THEN CY=112:VY=0:VX=VX/2
-223 IF CX > 215 THEN CX=215:VX=0
-225 GOTO 240
+221 IF CY > 112 THEN CY=112:VY=0:VX=VX/2
+' Incinerator
+222 IF CX > 240 AND CY>100 THEN GOTO 800
+223 IF CX > 215 AND CY>105 THEN CX=215
+' Dropping Blob
+224 IF JO=1 AND CX>JX-5 AND CX<JX+5 AND CY<JY+5 AND CY>JY-5 THEN GOTO 800
+225 IF JO=1 AND JY>120 THEN JO=0
+226 GOTO 240
 ' Level 1 Floors 
 227 IF CX < 119 AND CY > 112 THEN CY=112:VY=0:VX=VX/2
 228 IF CX > 161 AND CY > 112 THEN CY=112:VY=0:VX=VX/2
@@ -131,7 +139,6 @@
 715 M=CX:IF ZX>CX THEN M=ZX
 720 FOR I=240 TO M STEP -6:HPLOT I,ZY TO I+3,ZY:X=PEEK(-16336):NEXT I
 730 FOR I=PX TO CX STEP -6:HPLOT I,PY TO I+3,PY:X=PEEK(-16336):NEXT I
-
 '
 800 REM DEAD
 805 VTAB 22:PRINT "YOU DIED!":PRINT "TRY AGAIN? (Y/N) ";
@@ -188,6 +195,8 @@
 1099 RETURN
 ' LEVEL 19
 2000 PRINT CHR$(4);"BLOAD GLADOS.HGR"
+' Draw the blue core
+2005 SCALE=1:XDRAW 6 AT 150,65
 2099 RETURN
 ' HELP
 5000 REM HELP
@@ -214,7 +223,7 @@
 6005 IF BO=1 THEN XDRAW 2 AT BX,BY
 6010 BX=SX:BY=SY
 6020 BO=1:XDRAW 2 AT BX,BY
-6025 IF BO=1 AND GO=1 THEN GOTO 7000
+6025 IF BO=1 AND GO=1 AND L=1 THEN GOTO 7000
 6030 RETURN
 ' DRAW ORANGE PORTAL
 6100 REM DRAW ORANGE
@@ -224,7 +233,7 @@
 6105 IF GO=1 THEN XDRAW 2 AT GX,GY
 6110 GX=SX+1:GY=SY
 6120 GO=1:XDRAW 2 AT GX,GY
-6125 IF BO=1 AND GO=1 THEN GOTO 7000
+6125 IF BO=1 AND GO=1 AND L=1 THEN GOTO 7000
 6130 RETURN
 '
 ' Handle Laser/Portal Interaction
@@ -320,6 +329,7 @@
 '  General:
 '    Parametric Levels (Generic Game Engine)
 '    Button to specify horizontal vs vertical portals
+'    Physics: can walk when in air
 '
 '  Level 1/19:
 '   Walking animation?
@@ -329,13 +339,12 @@
 '   Sentries an object that can go through portal
 '   Objects can be picked up with gun?
 '   Chell changes color (turns into Mel) going through O->B portal?
+'   Draw exit door
 '
 '   End level:
-'    GLADOS
 '    Have GLADOS talk?
 '    Objects through portal
 '    Incinerator
 '    Die if go into incinerator
 '    Call out to Still Alive
-'
-
+'    Sound for blob gun?
