@@ -1,0 +1,22 @@
+"Portal" in Applesoft BASIC!
+
+After finishing Portal (late to the game as always) I felt inspired
+to do the closing credits/still_alive song on an Apple II, as I found
+most other architectures already have a version.
+
+And once I've done that, it's a short step to implementing the rest of
+the game.
+
+It's not really complete (it was really meant as a demo for the video)
+but it's surprisingly playable.
+
+I'm about at the limit of what you can do in an 8kB Applesoft program.
+The frame rate is much worse than the early versions too.
+
+My biggest issue was with trying to get all 6 colors displaying properly,
+especially when using shape tables.  I guess one can curse and praise
+the Woz simultaneously.
+
+Vince Weaver
+vince@deater.net
+http://www.deater.net/weave/vmwprod/portal/
