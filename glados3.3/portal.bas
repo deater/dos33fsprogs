@@ -100,6 +100,7 @@
 204 IF CX>GX-6 AND CX<GX+6 AND CY<GY+12 AND CY>GY-12 THEN CX=BX+2*VX:CY=BY:POKE 768,180:POKE 769,40:CALL 770
 ' Edges
 210 IF CX<7 THEN CX=7:VX=0
+211 IF L=1 AND CX>271 THEN L=19:GOTO 15	
 212 IF CX>271 THEN CX=271:VX=0
 214 IF CY<7 THEN CY=7:VY=-VY
 ' Floors
@@ -348,7 +349,6 @@
 '   Sentries an object that can go through portal
 '   Objects can be picked up with gun?
 '   Chell changes color (turns into Mel) going through O->B portal?
-'   Draw exit door
 '
 '   End level:
 '    Have GLADOS talk?
@@ -357,7 +357,10 @@
 '    Die if go into incinerator
 '    Call out to Still Alive
 '    Sound for blob gun?
-
-
-
-
+'
+' Impossible to draw an ASCII Cake
+'
+'  __     /@/|
+' /@/|   | |/|
+' ///|   |_|/ 
+' |//
