@@ -1,5 +1,5 @@
 # Number of shapes
-6
+7
 # "Cross Hair"
 #   |                
 #   |                  
@@ -102,4 +102,17 @@ LT LT LT UP LT UP LT UP RT UP LT UP NRT RT UP RT RT RT RT RT RT DN
 # Upper Left
 RT DN RT DN LT DN RT DN NLT LT DN LT LT LT 
 STOP
-
+#
+# Sideways Portal
+#    #*#*#*#*#*#*#
+#  #*#           #*#
+# *#       .       #*
+#  #*#           #*#
+#    #*#*#*#*#*#*#
+START
+NDN NDN NRT RT NRT RT NRT RT NRT UP 
+RT NRT UP UP LT NLT UP
+LT NLT LT NLT LT NLT LT NLT LT NLT LT NLT DN 
+LT NLT DN DN RT NRT DN
+RT NRT RT NRT RT
+STOP
