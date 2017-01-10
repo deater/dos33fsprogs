@@ -11,7 +11,9 @@
 ' BO=Blue Portal Out	BX,BY = Blue Portal X,Y
 ' GO=Orange Portal Out	GX,GY = Orange Portal X,Y
 ' PR=Portal rotated,    LR=Last rotate
-' JO=Object out		JX,JY = Object X,Y JA=J add
+' JO=Blob out		JX,JY,JA = Blob X,Y,add
+' KO=object out		KX,KY,KV = Object X,Y,velocity
+'			UX,UY = old object X,Y
 ' ZY,PY=Laser Y		ZX,PX = Laser Begin/End
 ' T = TIME		L = Current Level
 '
@@ -44,7 +46,7 @@
 '
 ' Initialize Variables
 '
-20 CX=21:CY=100:CD=0:VX=0:VY=0:SX=140:SY=80:BO=0:GO=0:T=0:ZY=42:ZX=0:PX=0:PY=0:JO=0:PR=0:LR=0
+20 CX=21:CY=100:CD=0:VX=0:VY=0:SX=140:SY=80:BO=0:GO=0:T=0:ZY=42:ZX=0:PX=0:PY=0:JO=0:PR=0:LR=0:KO=0
 '
 ' Draw Level Background
 '
@@ -63,7 +65,7 @@
 32 IF L=1 AND T=50 THEN GOSUB 8000
 34 IF T>100 THEN T=0
 '
-35 OX=CX:OY=CY:OD=CD:LX=SX:LY=SY:LR=PR
+35 OX=CX:OY=CY:OD=CD:LX=SX:LY=SY:LR=PR:UX=KX:UY=KY
 '
 ' Check keyboard
 '
@@ -94,6 +96,8 @@
 ' Move the Level-19 blob object
 115 IF L=19 AND JO=0 THEN JO=1:JX=45:JY=10:JA=5:SCALE=2:XDRAW 6 AT JX,JY:POKE 768,200:POKE 769,10:CALL 770
 120 IF L=19 AND JO=1 THEN SCALE=2:XDRAW 6 AT JX,JY:JY=JY+JA:XDRAW 6 AT JX,JY
+' Move the Level-19 extra object
+125 IF L=19 AND KO=1 THEN KY=KY-KV:KV=KV-4.5
 '
 ' COLLISION DETECTION
 '
@@ -118,11 +122,13 @@
 222 IF CX > 240 AND CY>100 THEN GOTO 800
 223 IF CX > 215 AND CY>105 THEN CX=215
 ' Dropping Blob
-224 IF JO<=0 GOTO 240
+224 IF JO<=0 GOTO 229
 225 IF JX>CX-5 AND JX<CX+5 AND JY>CY-7 AND JY<CY+7 THEN GOTO 800
 226 IF JY>120 THEN SCALE=2:XDRAW 6 AT JX,JY:JO=0
 227 IF JA<0 AND JY<5 THEN SCALE=2:XDRAW 6 AT JX,JY:JO=0
 228 IF JX>110 AND JX<130 AND JY>60 AND JY<85 THEN GOSUB 3000 
+' Object
+229 IF KO=1 AND KY>115 THEN KY=115:KV=0
 230 GOTO 240
 ' Level 1 Floors 
 233 IF CX < 119 AND CY > 112 THEN CY=112:VY=0:VX=VX/2
@@ -134,13 +140,18 @@
 '
 240 REM
 ' DRAW AT UPDATE CO-ORDS
+' CHELL
 245 IF OX=CX AND OY=CY AND OD=CD GOTO 254
 250 SCALE=1:XDRAW 4+OD AT OX,OY
 251 XDRAW 4+CD AT CX,CY
-254 IF LX=SX AND LY=SY AND LR=PR GOTO 300
+' Crosshairs
+254 IF LX=SX AND LY=SY AND LR=PR GOTO 260
 255 SCALE=2:ROT=0:IF LR=1 THEN ROT=16
 256 XDRAW 1 AT LX,LY:ROT=0:IF PR=1 THEN ROT=16
 257 XDRAW 1 AT SX,SY:ROT=0
+' Object
+260 IF KO=1 AND UX=KX AND UY=KY  GOTO 300
+265 SCALE=1:XDRAW 7 AT UX,UY:XDRAW 7 AT KX,KY
 300 REM
 500 GOTO 30
 '
@@ -217,7 +228,7 @@
 ' LEVEL 19
 2000 PRINT D$;"BLOAD GLADOS.HGR"
 ' Draw the blue core
-2005 SCALE=1:XDRAW 7 AT 150,65
+2005 SCALE=1:KX=150:KY=65:XDRAW 7 AT KX,KY:JO=-1:KO=1
 2007 HTAB 3:VTAB 21: PRINT "Well, you found me. Congratulations."
 2099 RETURN
 ' GLADOS INJURED
@@ -228,6 +239,8 @@
 3020 XDRAW 7 AT 130,85:V=PEEK(-16336):XDRAW 7 AT 110,85
 3030 XDRAW 7 AT 120,85:V=PEEK(-16336)
 3040 NEXT I
+' Release the orb
+3050 KO=1
 3099 RETURN
 ' GLADOS DESTROYED
 4000 VTAB 20:PRINT:PRINT:PRINT:PRINT
@@ -381,13 +394,9 @@
 '	BUG: Chell changes color (turns into Mel) going through O->B portal?
 '
 '   End level:
-'	FUTURE: Have GLADOS talk?
 '	FUTURE: Objects through portal
 '	FUTURE: Incinerator
 '	FUTURE: Call out to Still Alive when finish
-'	FUTURE: Sound for blob gun?
-'	FUTURE: Erase blob at end
-'	FUTURE: Explosion at end (red moire circle?)
 '
 ' It turns out it is impossible to draw an ASCII Cake
 '
@@ -395,3 +404,10 @@
 ' /@/|   | |/|
 ' ///|   |_|/ 
 ' |//
+'
+' Fire?  Am I too lazy to update the icons for Level 19?
+'  # #
+' ## #
+' ####
+'  #*#
+'
