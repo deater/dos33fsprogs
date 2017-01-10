@@ -11,6 +11,16 @@
 #define PCX_8BIT	1
 #define PCX_24BIT	2
 
+/* If you want default black a different color try the below */
+/* Useful if you are trying to xdraw to get red/blue */
+#if 0
+/* Default is BLACK0 */
+#define DEFAULT_BLACK	-1
+#else
+/* DEFAULT is BLACK1 */
+#define DEFAULT_BLACK	1
+#endif
+
 static int debug=0;
 
 static int vmwGetPCXInfo(char *filename, int *xsize, int *ysize, int *type) {
@@ -288,9 +298,20 @@ static int make_color_image(unsigned char *in_framebuffer,
 				fourteen_bits|= ((colors[(*pcx)&0x7]&0x3)<<(i*2));
 
 				/* choose which palette */
-				pal[i/4]+= (colors[*pcx]&0x80) - (colors[*pcx]&0x40);
+				/* can't have colors 1/2 in same run as 4/5 */
+				/* If our graphic does, we vote for which to */
+				/* Use based on which occurs more */
+
+				/* if black or white, no change */
+				/* if low, 1-0 = add 1 */
+				/* if high, 0-1 = minus 1 */
+				pal[i/4]+= (colors[*pcx]&0x80) -
+						(colors[*pcx]&0x40);
 				pcx++;
 			}
+			if (pal[0]==0) pal[0]=DEFAULT_BLACK;
+			if (pal[1]==0) pal[1]=DEFAULT_BLACK;
+
 			byte1=(fourteen_bits&0x7f)|((pal[0]>0)<<7);
 			byte2=((fourteen_bits>>7)&0x7f)|((pal[1]>0)<<7);
 
