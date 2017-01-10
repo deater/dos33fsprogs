@@ -39,9 +39,10 @@
 10 I=0:VTAB 24:PRINT "H FOR HELP";
 11 IF PEEK(-16384)>=128 THEN GET A$:GOTO 13
 12 I=I+1:IF I<500 GOTO 11
-13 HGR:PR=0
+13 HGR:PR=0:LR=0
 '
-14 L=19:PR=1:LR=1
+'14 L=19:PR=1:LR=1
+14 L=1
 ' PRINT LEVEL INFO
 15 TEXT:GOSUB 9000
 ' Clear screen to black#2
@@ -58,7 +59,8 @@
 '
 ' Draw Initial Chell and Gun Cursor
 '
-25 SCALE=2:ROT=0:IF PR=1 THEN ROT=16:XDRAW 1 AT SX,SY:ROT=0
+25 SCALE=2:ROT=0:IF PR=1 THEN ROT=16
+26 XDRAW 1 AT SX,SY:ROT=0
 27 SCALE=1:XDRAW 4 AT CX,CY
 '
 30 REM MAIN LOOP
@@ -411,8 +413,12 @@
 '	BUG: Chell changes color (turns into Mel) going through O->B portal?
 '
 '   End level:
+'	BUG: Come into level with high VX?
 '	FUTURE: Objects can be picked up with gun?
 '		This is doable but would hugely complicate the code
+'
+'	FUTURE: Add countdown timer from 5 mins?
+'		Think it would just slow things down for no good reason
 '
 ' It turns out it is impossible to draw an ASCII Cake
 '
