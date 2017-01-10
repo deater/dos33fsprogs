@@ -2,6 +2,9 @@
 '    by Vince Weaver (vince@deater.net)
 '    http://www.deater.net/weave/vmwprod/portal/
 '
+' This program is pretty big (>7k) so you might need to load it high
+'  POKE 104,64:POKE 16384,0  before running
+'
 ' Variable Summary
 '
 ' CX,CY = Chell X, Y	OX,OY = Old Chell X,Y
@@ -10,7 +13,7 @@
 ' SX,SY = Cursor X,Y	LX,LY = Old Cursor X,Y
 ' BO=Blue Portal Out	BX,BY = Blue Portal X,Y
 ' GO=Orange Portal Out	GX,GY = Orange Portal X,Y
-' PR=Portal rotated,    LR=Last rotate
+' PR=Portal rotated     LR=Last rotate
 ' JO=Blob out		JX,JY,JA = Blob X,Y,add
 ' KO=object out		KX,KY,KV = Object X,Y,velocity
 '			UX,UY = old object X,Y
@@ -36,9 +39,9 @@
 10 I=0:VTAB 24:PRINT "H FOR HELP";
 11 IF PEEK(-16384)>=128 THEN GET A$:GOTO 13
 12 I=I+1:IF I<500 GOTO 11
-13 HGR
+13 HGR:PR=0
 '
-14 L=19
+14 L=19:PR=1:LR=1
 ' PRINT LEVEL INFO
 15 TEXT:GOSUB 9000
 ' Clear screen to black#2
@@ -46,7 +49,7 @@
 '
 ' Initialize Variables
 '
-20 CX=21:CY=100:CD=0:VX=0:VY=0:SX=140:SY=80:BO=0:GO=0:T=0:ZY=42:ZX=0:PX=0:PY=0:JO=0:PR=0:LR=0:KO=0
+20 CX=21:CY=100:CD=0:VX=0:VY=0:SX=140:SY=80:BO=0:GO=0:T=0:ZY=42:ZX=0:PX=0:PY=0:JO=0:LR=0:KO=0
 '
 ' Draw Level Background
 '
@@ -55,7 +58,7 @@
 '
 ' Draw Initial Chell and Gun Cursor
 '
-25 SCALE=2:XDRAW 1 AT SX,SY
+25 SCALE=2:ROT=0:IF PR=1 THEN ROT=16:XDRAW 1 AT SX,SY:ROT=0
 27 SCALE=1:XDRAW 4 AT CX,CY
 '
 30 REM MAIN LOOP
@@ -73,7 +76,9 @@
 40 GET A$
 42 IF A$="I" AND SY>4 THEN SY=SY-4
 44 IF A$="J" AND SX>4 THEN SX=SX-4
+45 IF A$="U" AND SX>24 THEN SX=SX-24
 46 IF A$="K" AND SX<275 THEN SX=SX+4
+47 IF A$="O" AND SX<255 THEN SX=SX+24
 48 IF A$="M" AND SY<150 THEN SY=SY+4
 50 IF A$="D" AND VX<0 THEN VX=0:CD=0:GOTO 52
 51 IF A$="D" THEN VX=8:CD=0
@@ -105,13 +110,18 @@
 200 IF BO=0 OR GO=0 GOTO 210
 201 IF CX>BX-6 AND CX<BX+6 AND CY<BY+12 AND CY>BY-12 THEN CX=GX+2*VX:CY=GY:POKE 768,180:POKE 769,40:CALL 770
 202 IF CX>GX-6 AND CX<GX+6 AND CY<GY+12 AND CY>GY-12 THEN CX=BX+2*VX:CY=BY:POKE 768,180:POKE 769,40:CALL 770
+' Portal/Object.  Cheat a bit
+203 IF KO=0 GOTO 206
+204 IF KX>BX-12 AND KX<BX+12 AND KY<BY+6 AND KY>BY-6 THEN SCALE=1:KX=GX:KY=GY+6
+205 IF KX>GX-12 AND KX<GX+12 AND KY<GY+6 AND KY>GY-6 THEN SCALE=1:KX=BX:KY=BY+6
 ' Portal/Blob
-203 IF L=1 OR JO=0 GOTO 210
-204 IF JX>BX-12 AND JX<BX+12 AND JY<BY+6 AND JY>BY-6 THEN SCALE=2:XDRAW 6 AT JX,JY:JX=GX:JY=GY-6:JA=-JA:XDRAW 6 AT JX,JY
-205 IF JX>GX-12 AND JX<GX+12 AND JY<GY+6 AND JY>GY-6 THEN SCALE=2:XDRAW 6 AT JX,JY:JX=BX:JY=BY-6:JA=-JA:XDRAW 6 AT JX,JY
+206 IF L=1 OR JO=0 GOTO 210
+207 IF JX>BX-12 AND JX<BX+12 AND JY<BY+6 AND JY>BY-6 THEN SCALE=2:XDRAW 6 AT JX,JY:JX=GX:JY=GY-6:JA=-JA:XDRAW 6 AT JX,JY
+208 IF JX>GX-12 AND JX<GX+12 AND JY<GY+6 AND JY>GY-6 THEN SCALE=2:XDRAW 6 AT JX,JY:JX=BX:JY=BY-6:JA=-JA:XDRAW 6 AT JX,JY
+
 ' Edges
 210 IF CX<7 THEN CX=7:VX=0
-211 IF L=1 AND CX>271 THEN L=19:GOTO 15	
+211 IF L=1 AND CX>271 THEN L=19:PR=1:GOTO 15	
 212 IF CX>271 THEN CX=271:VX=0
 214 IF CY<7 THEN CY=7:VY=-VY
 ' Floors
@@ -129,7 +139,9 @@
 228 IF JX>110 AND JX<130 AND JY>60 AND JY<85 THEN GOSUB 3000 
 ' Object
 229 IF KO=1 AND KY>115 THEN KY=115:KV=0
-230 GOTO 240
+' Object in Incinerator
+230 IF KO=1 AND KX>240 AND KY>100 THEN GOSUB 4000
+231 GOTO 240
 ' Level 1 Floors 
 233 IF CX < 119 AND CY > 112 THEN CY=112:VY=0:VX=VX/2
 234 IF CX > 161 AND CY > 112 THEN CY=112:VY=0:VX=VX/2
@@ -150,7 +162,7 @@
 256 XDRAW 1 AT LX,LY:ROT=0:IF PR=1 THEN ROT=16
 257 XDRAW 1 AT SX,SY:ROT=0
 ' Object
-260 IF KO=1 AND UX=KX AND UY=KY  GOTO 300
+260 IF UX=KX AND UY=KY GOTO 300
 265 SCALE=1:XDRAW 7 AT UX,UY:XDRAW 7 AT KX,KY
 300 REM
 500 GOTO 30
@@ -228,11 +240,11 @@
 ' LEVEL 19
 2000 PRINT D$;"BLOAD GLADOS.HGR"
 ' Draw the blue core
-2005 SCALE=1:KX=150:KY=65:XDRAW 7 AT KX,KY:JO=-1:KO=1
+2005 SCALE=1:KX=150:KY=65:XDRAW 7 AT KX,KY:KO=0
 2007 HTAB 3:VTAB 21: PRINT "Well, you found me. Congratulations."
 2099 RETURN
 ' GLADOS INJURED
-3000 HTAB 3:VTAB 21:HTAB 6:PRINT "    Nice job breaking it, hero.    "
+3000 HTAB 3:VTAB 21:PRINT "    Nice job breaking it, hero.    "
 3005 JO=-1
 3010 FOR I=1 TO 10
 3015 XDRAW 7 AT 110,60:V=PEEK(-16336):XDRAW 7 AT 130,60
@@ -243,14 +255,14 @@
 3050 KO=1
 3099 RETURN
 ' GLADOS DESTROYED
-4000 VTAB 20:PRINT:PRINT:PRINT:PRINT
+4000 VTAB 20:PRINT:PRINT:PRINT:PRINT:PRINT:PRINT
 4005 HCOLOR=5
 4010 FOR X=0 TO 278 STEP 5:HPLOT X,0 TO 120,85:V=PEEK(-16336):NEXT X
 4015 FOR Y=0 TO 159 STEP 5:HPLOT 278,Y TO 120,85:V=PEEK(-16336):NEXT Y
 4020 FOR X=278 TO 0 STEP -5:HPLOT X,159 TO 120,85:V=PEEK(-16336):NEXT X
 4025 FOR Y=159 TO 0 STEP -5:HPLOT 0,Y TO 120,85:V=PEEK(-16336):NEXT Y
 4097 GET A$
-4098 REM PRINT D$;"RUN STILL_ALIVE.BAS"
+4098 PRINT:PRINT D$;"RUN STILL_ALIVE.BAS"
 4099 END
 ' HELP
 5000 REM HELP
@@ -363,12 +375,18 @@
 9054 PRINT" *"
 9056 PRINT"*                      *"
 9058 PRINT"* ___________________  *"
-9059 PRINT"*        ___           *"
-9060 PRINT"*  \o/  [] []    o  () *"
-9062 PRINT"* ~~~~~ [ V ]    /< _  *"
-9064 PRINT"*  / \  []_[] <=>  |   *"
-9066 PRINT"*                      *"
-9068 PRINT"************************"
+9060 IF L=1 GOTO 9079
+9062 PRINT"*  #                   *"
+9064 PRINT"* ####   _()_   [=|=]  *"
+9066 PRINT"*  #*#  |____          *"
+9068 PRINT"* ===== |____     O    *"
+9078 GOTO 9086
+9079 PRINT"*        ___           *"
+9080 PRINT"*  \o/  [] []    o  () *"
+9082 PRINT"* ~~~~~ [ V ]    /< _  *"
+9084 PRINT"*  / \  []_[] <=>  |   *"
+9086 PRINT"*                      *"
+9088 PRINT"************************"
 9090 POKE 32,0
 9091 FOR I=1 TO 2500:NEXT I
 9099 RETURN
@@ -390,13 +408,11 @@
 '	FUTURE: Walk on all platforms
 '	FUTURE: Knock over sentries from behind
 '	FUTURE: Sentries an object that can go through portal
-'	FUTURE: Objects can be picked up with gun?
 '	BUG: Chell changes color (turns into Mel) going through O->B portal?
 '
 '   End level:
-'	FUTURE: Objects through portal
-'	FUTURE: Incinerator
-'	FUTURE: Call out to Still Alive when finish
+'	FUTURE: Objects can be picked up with gun?
+'		This is doable but would hugely complicate the code
 '
 ' It turns out it is impossible to draw an ASCII Cake
 '
