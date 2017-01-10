@@ -10,6 +10,7 @@
 ' SX,SY = Cursor X,Y	LX,LY = Old Cursor X,Y
 ' BO=Blue Portal Out	BX,BY = Blue Portal X,Y
 ' GO=Orange Portal Out	GX,GY = Orange Portal X,Y
+' PR=Portal rotated,    LR=Last rotate
 ' JO=Object out		JX,JY = Object X,Y JA=J add
 ' ZY,PY=Laser Y		ZX,PX = Laser Begin/End
 ' T = TIME		L = Current Level
@@ -24,9 +25,9 @@
 6 FOR L=770 TO 804:READ V:POKE L,V:NEXT L
 '
 ' Load Shape Table
-'
-8 POKE 232,0:POKE 233,31
-9 PRINT CHR$(4)+"BLOAD OBJECTS.SHAPE,A$1F00"
+' We just *barely* fit above the soud but below DOS vectors
+8 POKE 232,38:POKE 233,3
+9 PRINT CHR$(4)+"BLOAD OBJECTS.SHAPE,A$326"
 '
 ' Wait a few seconds, or until keypressed
 '
@@ -35,7 +36,7 @@
 12 I=I+1:IF I<500 GOTO 11
 13 HGR
 '
-14 L=1
+14 L=19
 ' PRINT LEVEL INFO
 15 TEXT:GOSUB 9000
 ' Clear screen to black#2
@@ -43,7 +44,7 @@
 '
 ' Initialize Variables
 '
-20 CX=21:CY=100:CD=0:VX=0:VY=0:SX=140:SY=80:BO=0:GO=0:T=0:ZY=42:ZX=0:PX=0:PY=0:JO=0
+20 CX=21:CY=100:CD=0:VX=0:VY=0:SX=140:SY=80:BO=0:GO=0:T=0:ZY=42:ZX=0:PX=0:PY=0:JO=0:PR=0:LR=0
 '
 ' Draw Level Background
 '
@@ -53,7 +54,7 @@
 ' Draw Initial Chell and Gun Cursor
 '
 25 SCALE=2:XDRAW 1 AT SX,SY
-27 SCALE=1:XDRAW 3 AT CX,CY
+27 SCALE=1:XDRAW 4 AT CX,CY
 '
 30 REM MAIN LOOP
 '
@@ -62,7 +63,7 @@
 32 IF L=1 AND T=50 THEN GOSUB 8000
 34 IF T>100 THEN T=0
 '
-35 OX=CX:OY=CY:OD=CD:LX=SX:LY=SY
+35 OX=CX:OY=CY:OD=CD:LX=SX:LY=SY:LR=PR
 '
 ' Check keyboard
 '
@@ -81,6 +82,7 @@
 58 IF A$="H" THEN GOSUB 5000
 60 IF A$="," THEN GOSUB 6000
 62 IF A$="." THEN GOSUB 6100
+63 IF A$=";" THEN PR=1-PR
 '
 ' PHYSICS ENGINE
 '
@@ -89,8 +91,9 @@
 ' Move X.  Ensure we are always odd so colors are right
 107 IF VX<2 AND VX>-2 THEN VX=0
 110 CX=CX+VX
-115 IF L=19 AND JO=0 THEN JO=1:JX=45:JY=10:JA=5:SCALE=2:XDRAW 5 AT JX,JY
-120 IF L=19 AND JO=1 THEN SCALE=2:XDRAW 5 AT JX,JY:JY=JY+JA:XDRAW 5 AT JX,JY
+' Move the Level19 blob object
+115 IF L=19 AND JO=0 THEN JO=1:JX=45:JY=10:JA=5:SCALE=2:XDRAW 6 AT JX,JY:POKE 768,200:POKE 769,10:CALL 770
+120 IF L=19 AND JO=1 THEN SCALE=2:XDRAW 6 AT JX,JY:JY=JY+JA:XDRAW 6 AT JX,JY
 '
 ' COLLISION DETECTION
 '
@@ -111,8 +114,8 @@
 222 IF CX > 240 AND CY>100 THEN GOTO 800
 223 IF CX > 215 AND CY>105 THEN CX=215
 ' Dropping Blob
-224 IF JO=1 AND CX>JX-5 AND CX<JX+5 AND CY<JY+5 AND CY>JY-5 THEN GOTO 800
-225 IF JO=1 AND JY>120 THEN JO=0
+224 IF JO=1 AND JX>CX-5 AND JX<CX+5 AND JY>CY-7 AND JY<CY+7 THEN GOTO 800
+225 IF JO=1 AND JY>120 THEN SCALE=2:XDRAW 6 AT JX,JY:JO=0
 226 GOTO 240
 ' Level 1 Floors 
 227 IF CX < 119 AND CY > 112 THEN CY=112:VY=0:VX=VX/2
@@ -124,19 +127,20 @@
 '
 240 REM
 ' DRAW AT UPDATE CO-ORDS
-245 IF OX=CX AND OY=CY AND OD=CD GOTO 255
-250 SCALE=1:XDRAW 3+OD AT OX,OY
-251 XDRAW 3+CD AT CX,CY
-255 IF LX=SX AND LY=SY GOTO 300
-256 SCALE=2:XDRAW 1 AT LX,LY
-257 XDRAW 1 AT SX,SY
+245 IF OX=CX AND OY=CY AND OD=CD GOTO 254
+250 SCALE=1:XDRAW 4+OD AT OX,OY
+251 XDRAW 4+CD AT CX,CY
+254 IF LX=SX AND LY=SY AND LR=PR GOTO 300
+255 SCALE=2:ROT=0:IF LR=1 THEN ROT=16
+256 XDRAW 1 AT LX,LY:ROT=0:IF PR=1 THEN ROT=16
+257 XDRAW 1 AT SX,SY:ROT=0
 300 REM
 500 GOTO 30
 '
 700 REM LASER DEAD
 705 HCOLOR=3
 707 GOSUB 8010
-710 SCALE=1:XDRAW 3+OD AT OX,OY:ROT=32:XDRAW 3+CD AT CX,CY
+710 SCALE=1:XDRAW 4+OD AT OX,OY:ROT=32:XDRAW 4+CD AT CX,CY
 715 M=CX:IF ZX>CX THEN M=ZX
 720 FOR I=240 TO M STEP -6:HPLOT I,ZY TO I+3,ZY:X=PEEK(-16336):NEXT I
 730 FOR I=PX TO CX STEP -6:HPLOT I,PY TO I+3,PY:X=PEEK(-16336):NEXT I
@@ -206,7 +210,8 @@
 ' LEVEL 19
 2000 PRINT CHR$(4);"BLOAD GLADOS.HGR"
 ' Draw the blue core
-2005 SCALE=1:XDRAW 6 AT 150,65
+2005 SCALE=1:XDRAW 7 AT 150,65
+2007 HTAB 3:VTAB 21: PRINT "Well, you found me. Congratulations."
 2099 RETURN
 ' HELP
 5000 REM HELP
@@ -216,11 +221,12 @@
 5030 PRINT "        CHELL           PORTAL GUN"
 5035 PRINT "    ~~~~~~~~~~~~~      ~~~~~~~~~~~~~"
 5040 PRINT "    A = MOVE LEFT      I = UP"
-5050 PRINT "    D = MOVE RIGHT     J = LEFT"
-5060 PRINT "    SPACE = JUMP       K = RIGHT"
-5070 PRINT "                       M = DOWN"
-5080 PRINT "                       , = SHOOT BLUE"
-5090 PRINT "    Q = QUIT           . = SHOOT ORANGE"
+5045 PRINT "    D = MOVE RIGHT     J = LEFT"
+5050 PRINT "    SPACE = JUMP       K = RIGHT"
+5055 HTAB 24:PRINT "M = DOWN"
+5060 HTAB 24:PRINT ", = SHOOT BLUE"
+5065 HTAB 24:PRINT ". = SHOOT ORANGE"
+5070 PRINT "    Q = QUIT           ; = ROTATE PORTAL"
 5100 PRINT:GET A$
 ' return to hires
 5110 POKE -16304,0
@@ -229,20 +235,20 @@
 6000 REM DRAW BLUE
 6002 POKE 768,143:POKE 769,40:CALL 770
 ' Erase old
-6004 SCALE=2
-6005 IF BO=1 THEN XDRAW 2 AT BX,BY
+6004 SCALE=2: IF PR=1 THEN SCALE=1
+6005 IF BO=1 THEN XDRAW 2+PR AT BX,BY
 6010 BX=SX:BY=SY
-6020 BO=1:XDRAW 2 AT BX,BY
+6020 BO=1:XDRAW 2+PR AT BX,BY
 6025 IF BO=1 AND GO=1 AND L=1 THEN GOTO 7000
 6030 RETURN
 ' DRAW ORANGE PORTAL
 6100 REM DRAW ORANGE
 6102 POKE 768,72:POKE 769,40:CALL 770
 ' Erase old
-6104 SCALE=2
-6105 IF GO=1 THEN XDRAW 2 AT GX,GY
+6104 SCALE=2: IF PR=1 THEN SCALE=1
+6105 IF GO=1 THEN XDRAW 2+PR AT GX,GY
 6110 GX=SX+1:GY=SY
-6120 GO=1:XDRAW 2 AT GX,GY
+6120 GO=1:XDRAW 2+PR AT GX,GY
 6125 IF BO=1 AND GO=1 AND L=1 THEN GOTO 7000
 6130 RETURN
 '
@@ -336,28 +342,28 @@
 '
 '  Opening:
 '  General:
-'    FUTURE: Parametric Levels (Generic Game Engine)
-'    FUTURE: Button to specify horizontal vs vertical portals
-'    BUG: Physics: can walk when in air
+'	FUTURE: Parametric Levels (Generic Game Engine)
+'	FUTURE: Button to specify horizontal vs vertical portals
+'	BUG: Physics: can walk when in air
 '
 '  Level 1/19:
-'   FUTURE: Walking animation?
-'   FUTURE: Walk on all platforms
-'   FUTURE: Knock over sentries from behind
-'   FUTURE: Sentries an object that can go through portal
-'   FUTURE: Objects can be picked up with gun?
-'   BUG: Chell changes color (turns into Mel) going through O->B portal?
+'	FUTURE: Walking animation?
+'	FUTURE: Walk on all platforms
+'	FUTURE: Knock over sentries from behind
+'	FUTURE: Sentries an object that can go through portal
+'	FUTURE: Objects can be picked up with gun?
+'	BUG: Chell changes color (turns into Mel) going through O->B portal?
 '
 '   End level:
-'    FUTURE: Have GLADOS talk?
-'    FUTURE: Objects through portal
-'    FUTURE: Incinerator
-'    FUTURE: Call out to Still Alive when finish
-'    FUTURE: Sound for blob gun?
-'    FUTURE: Erase blob at end
-'    FUTURE: Explosion at end (red moire circle?)
+'	FUTURE: Have GLADOS talk?
+'	FUTURE: Objects through portal
+'	FUTURE: Incinerator
+'	FUTURE: Call out to Still Alive when finish
+'	FUTURE: Sound for blob gun?
+'	FUTURE: Erase blob at end
+'	FUTURE: Explosion at end (red moire circle?)
 '
-' Impossible to draw an ASCII Cake
+' It turns out it is impossible to draw an ASCII Cake
 '
 '  __     /@/|
 ' /@/|   | |/|

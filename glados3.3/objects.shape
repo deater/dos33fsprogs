@@ -1,18 +1,21 @@
 # Number of shapes
 7
-# "Cross Hair"
-#   |                
-#   |                  
-# -- --    
-#   |                   
-#   |                   
+# "Cross Hair"  (why is this in quotes?)
+#   #
+#   #
+#   #                
+#   #                  
+# ##.##  
+#   #                   
+#   #
+#   #
+#   #
 START
 NLT NLT
-RT RT NRT 
-NRT LT LT 
-NDN NDN
-UP UP UP UP UP
+RT RT NRT NRT LT LT 
+NDN NDN NDN NDN UP UP UP UP UP UP UP UP UP
 STOP
+
 #
 # "Portal"
 #   #
@@ -28,11 +31,27 @@ STOP
 #  # #
 #  # #
 #   #
+#
 START
 NLT NLT UP UP UP NRT UP UP UP NRT RT NDN
 DN DN DN NRT DN DN DN DN DN NLT DN DN DN NLT
 UP NLT UP UP UP NLT UP UP UP
 STOP
+
+# Sideways Portal
+#    #*#*#*#*#*#*#
+#  #*#           #*#
+# *#       .       #*
+#  #*#           #*#
+#    #*#*#*#*#*#*#
+START
+NDN NDN NRT RT NRT RT NRT RT NRT UP 
+RT NRT UP UP LT NLT UP
+LT NLT LT NLT LT NLT LT NLT LT NLT LT NLT DN 
+LT NLT DN DN RT NRT DN
+RT NRT RT NRT RT
+STOP
+
 # Chell Right
 #
 #   B B
@@ -73,7 +92,7 @@ NRT RT DN LT LT DN NRT RT DN NLT DN LT NLT
 LT UP LT LT LT LT LT DN NRT RT RT NRT NRT NDN LT LT LT LT LT LT
 STOP
 
-# FireBall #5
+# FireBall #6
 # 
 #     #
 #    # #
@@ -84,7 +103,7 @@ START
 NDN NDN UP NRT UP NRT UP NLT UP NLT DN NLT DN NLT DN NRT DN NRT
 STOP
 
-# Blue Core #6
+# Blue Core #7
 #      #######
 #     ##     ##
 #    ## # # # ##
@@ -101,18 +120,4 @@ NDN LT NLT UP UP RT NRT RT NRT DN DN LT NLT NDN NDN
 LT LT LT UP LT UP LT UP RT UP LT UP NRT RT UP RT RT RT RT RT RT DN
 # Upper Left
 RT DN RT DN LT DN RT DN NLT LT DN LT LT LT 
-STOP
-#
-# Sideways Portal
-#    #*#*#*#*#*#*#
-#  #*#           #*#
-# *#       .       #*
-#  #*#           #*#
-#    #*#*#*#*#*#*#
-START
-NDN NDN NRT RT NRT RT NRT RT NRT UP 
-RT NRT UP UP LT NLT UP
-LT NLT LT NLT LT NLT LT NLT LT NLT LT NLT DN 
-LT NLT DN DN RT NRT DN
-RT NRT RT NRT RT
 STOP
