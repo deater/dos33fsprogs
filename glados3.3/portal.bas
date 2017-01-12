@@ -30,7 +30,7 @@
 6 FOR L=770 TO 804:READ V:POKE L,V:NEXT L
 '
 ' Load Shape Table
-' We just *barely* fit above the soud but below DOS vectors
+' We just *barely* fit above the sound but below DOS vectors
 8 POKE 232,38:POKE 233,3
 9 PRINT D$;"BLOAD OBJECTS.SHAPE,A$326"
 '
