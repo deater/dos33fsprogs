@@ -1,0 +1,2 @@
+10 PRINT PDL(0),PDL(1):GOTO 10
+
