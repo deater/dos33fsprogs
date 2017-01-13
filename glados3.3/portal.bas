@@ -19,6 +19,7 @@
 '			UX,UY = old object X,Y
 ' ZY,PY=Laser Y		ZX,PX = Laser Begin/End
 ' T = TIME		L = Current Level
+' JS = Joystick Enabled
 '
 ' Title Screen
 '
@@ -30,7 +31,7 @@
 6 FOR L=770 TO 804:READ V:POKE L,V:NEXT L
 '
 ' Load Shape Table
-' We just *barely* fit above the soud but below DOS vectors
+' We just *barely* fit above the sound but below DOS vectors
 8 POKE 232,38:POKE 233,3
 9 PRINT D$;"BLOAD OBJECTS.SHAPE,A$326"
 '
@@ -39,7 +40,7 @@
 10 I=0:VTAB 24:PRINT "H FOR HELP";
 11 IF PEEK(-16384)>=128 THEN GET A$:GOTO 13
 12 I=I+1:IF I<500 GOTO 11
-13 HGR:PR=0:LR=0
+13 HGR:PR=0:LR=0:JS=0
 '
 '14 L=19:PR=1:LR=1
 14 L=1
@@ -74,8 +75,9 @@
 '
 ' Check keyboard
 '
-37 IF PEEK(-16384)<128 THEN GOTO 100
+37 IF PEEK(-16384)<128 THEN GOTO 64
 40 GET A$
+41 IF A$="1" THEN JS=1-JS
 42 IF A$="I" AND SY>4 THEN SY=SY-4
 44 IF A$="J" AND SX>4 THEN SX=SX-4
 45 IF A$="U" AND SX>24 THEN SX=SX-24
@@ -92,6 +94,22 @@
 60 IF A$="," THEN GOSUB 6000
 62 IF A$="." THEN GOSUB 6100
 63 IF A$=";" THEN PR=1-PR
+64 IF JS=0 THEN GOTO 100
+' JOYSTICK CODE
+70 Q=PDL(0):R=PDL(1)
+71 O0=D0:O1=D1
+72 IF Q > 160 THEN SX=SX+4
+74 IF Q > 220 THEN SX=SX+24
+76 IF Q < 96 THEN SX=SX-4
+78 IF Q < 36 THEN SX=SX-24
+80 IF R > 160 THEN SY=SY+4
+82 IF R>220 THEN SY=SY+24
+84 IF R < 96 THEN SY=SY-4
+86 IF R < 36 THEN SY=SY-24
+88 D0=PEEK(-16287)
+90 D1=PEEK(-16286)
+92 IF D0>127 AND O0<127 THEN GOSUB 6000
+94 IF D1>127 AND O1<127 THEN GOSUB 6100
 '
 ' PHYSICS ENGINE
 '
@@ -274,12 +292,13 @@
 5030 PRINT "        CHELL           PORTAL GUN"
 5035 PRINT "    ~~~~~~~~~~~~~      ~~~~~~~~~~~~~"
 5040 PRINT "    A = MOVE LEFT      I = UP"
-5045 PRINT "    D = MOVE RIGHT     J = LEFT"
-5050 PRINT "    SPACE = JUMP       K = RIGHT"
+5045 PRINT "    D = MOVE RIGHT     J,U = LEFT"
+5050 PRINT "    SPACE = JUMP       K,O = RIGHT"
 5055 HTAB 24:PRINT "M = DOWN"
 5060 HTAB 24:PRINT ", = SHOOT BLUE"
 5065 HTAB 24:PRINT ". = SHOOT ORANGE"
 5070 PRINT "    Q = QUIT           ; = ROTATE PORTAL"
+5080 PRINT "    1 = ENABLE JOYSTICK"
 5100 PRINT:GET A$
 ' return to hires
 5110 POKE -16304,0
@@ -338,7 +357,7 @@
 8011 HTAB 20:VTAB 21
 8012 IF R=0 THEN PRINT "Firing.         "
 8013 IF R=1 THEN PRINT "There you are.  "
-8014 IF R=2 THEN PRINT "I see you.    "
+8014 IF R=2 THEN PRINT "I see you.      "
 8015 RETURN
 '
 ' Level Transition
