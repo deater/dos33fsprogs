@@ -7,12 +7,14 @@ Open bugs:
 
 Assuming we port to assembly language:
 
-+ Paramaterized level selection
++ Paramaterized level descriptions
 + 19 levels.  Properly paramaterized level open screen
 + Method of picking up objects with 'E' button
 + Have more than one object
 + Change the turret and cube into objects
-+ Limit the portals to appearing on walls
++ Turrets can be knocked over.
++ Limit the portals to appearing on walls.
+	Different colors (white vs purple?) if cannot support a portal?
 + Mouse support?
 + Allow making portals at various angles, multiples of 45 degrees?
 + Bouncy blue goo and sliding orange goo?
