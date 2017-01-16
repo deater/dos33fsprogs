@@ -1,0 +1,30 @@
+Open bugs:
++ Someone says one of the notes is wrong in still alive
++ Fix color change issues (on Apple II, this means ensure always
+	at odd or even screen address)
++ Start level with some residual velocity sometimes?
++ Can currently walk when falling
+
+Assuming we port to assembly language:
+
++ Paramaterized level selection
++ 19 levels.  Properly paramaterized level open screen
++ Method of picking up objects with 'E' button
++ Have more than one object
++ Change the turret and cube into objects
++ Limit the portals to appearing on walls
++ Mouse support?
++ Allow making portals at various angles, multiples of 45 degrees?
++ Bouncy blue goo and sliding orange goo?
++ Add a walking animation
+
+Final Level:
++ Multiple spheres, countdown timer
+
+
+Closing Credits:
++ Convert to assembly language?
++ If not on IIe, then use 40 column mode.
+	Pictures above, text below in that case..
+	Also auto-convert to uppercase?
++ Mockingboard AY-3-8910 chiptune version of song
