@@ -36,9 +36,13 @@ SOUND_TEST.BAS:	sound_test.bas
 
 	$(TXT2BAS) < sound_test.bas > SOUND_TEST.BAS
 
+asm/STILL_ALIVE.BIN:	asm/still_alive.s
+	cd asm && make
+
 glados33.dsk:	STILL_ALIVE.BAS OBJECTS.SHAPE SHAPE_TEST.BAS SOUND_TEST.BAS \
 		PORTAL.BAS CUBE.BAS PORTAL_TITLE.HGR GLADOS.HGR MOUSE_TEST.BAS \
-		JOYSTICK_TEST.BAS
+		JOYSTICK_TEST.BAS \
+		asm/STILL_ALIVE.BIN
 	$(DOS33) -y glados33.dsk SAVE A STILL_ALIVE.BAS
 	$(DOS33) -y glados33.dsk SAVE B OBJECTS.SHAPE
 	$(DOS33) -y glados33.dsk SAVE B PORTAL_TITLE.HGR
@@ -49,7 +53,9 @@ glados33.dsk:	STILL_ALIVE.BAS OBJECTS.SHAPE SHAPE_TEST.BAS SOUND_TEST.BAS \
 	$(DOS33) -y glados33.dsk SAVE A CUBE.BAS
 	$(DOS33) -y glados33.dsk SAVE A MOUSE_TEST.BAS
 	$(DOS33) -y glados33.dsk SAVE A JOYSTICK_TEST.BAS
+	$(DOS33) -y glados33.dsk BSAVE -a 0xc00 asm/STILL_ALIVE.BIN
 
 clean:	
+	cd asm && make clean
 	rm -f *~ *.BAS *.SHAPE sound_test.bas shape_test.bas *.lst
 

@@ -1,0 +1,185 @@
+<html>
+<head><title>Applesoft Portal FAQ</title></head>
+
+<body>
+
+<h1>Applesoft Portal FAQ</h1>
+
+This project turned out way more popular than I expected.  Usually
+I make a silly video, forward it to a few friends, and maybe send
+it to hackaday (or adafruit if it involved a raspberry pi).
+Rarely do I get more than a few thousand hits.
+<br><br>
+
+I'm too lazy to make an account on all the sites that covered this,
+so here's a bunch of responses to questions that came up.
+
+<ol>
+<li><b>Why was your announcement click-bait?  This isn't a fully
+	playable 3-hour long game!</b>
+<br><br>
+	I was exagerating for humorous effect, as I really didn't think
+	this would get quite so out of hand popular.  
+	The game definitely is
+	playable, though I guess I should have called it more of a 
+	"demo" than a "port".
+	<br><br>
+	Also, it's not really traditional click-bait, as I'm not getting
+	any ad revenue from this.
+	<br><br>
+
+<li><b>Have you tried a BASIC compiler?</b>
+<br><br>
+	The hackernews commentators seem to understand this best.
+	<br><br>
+
+	The challenge/fun of this project was trying to take something modern
+	and reimplementing it in a medium that seems impossible (see
+	the con-tiki project).
+	<br><br>
+
+	Using a BASIC compiler or using assembly language would definitely
+	make the game run faster/better/allow more features, but at
+	the same time then the project just becomes a standard Apple II
+	2-D platform game (of which there were many, the pinnacle
+	probably being Prince of Persia which is frankly amazing for
+	the hardware it was on).
+	<br><br>
+	
+<li><b>Wow your IIe platinum looks amazing.  Did you retrobrite it?</b>
+<br><br>
+
+No. I should post a picture, but shielded parts of the case are definitely
+much much whiter than exposed parts.  It's just compared to the tan
+of non-platinum IIes it looks original.
+<br><br>
+
+<li><b>Was it cool being interviewed by theregister?</b><br><br>
+
+Yes, though mildly disappointed I didn't get referred to as a "boffin".
+I did find their "The cake is a IIe" tagline particularly inspired
+<br><br>
+
+<li><b>Is the Apple II's hires mode as bad as you make it sound?</b><br><br>
+
+Worse actually.  BASIC typically hides most of the complexity from you.
+I was being difficult by trying
+to get colored output using the DRAW/XDRAW shapetable support which
+is a silly thing to even attempt.  You'll note in the code I cheated
+a bit to accomplish this.<br><br>
+
+I won't admit how much time I wasted trying to get the colors right
+on my VMW logo on the title screen.  If you'll look closely you'll
+see I had to compromise on at least one of the pixels.
+<br><br>
+
+<li><b>You said that it took a week to put this together?</b><br><br>
+
+Yes, though I had some pre-existing tools (for example the pcx to hgr
+converter, the shape table compiler, and the disk image writer)
+that sped up the process.  Though they also slowed things down
+as I wasted time re-writing (and re-indenting) the code as it was
+old and much of it is coded really inefficiently.
+<br><br>
+
+<li><b>Do you really code your webpages by hand?</b><br><br>
+
+Yes.  Using the nano editor.  You don't even want to know
+how I check my e-mail.
+<br><br>
+
+<li><b>What's the workflow for how you made this?</b><br><br>
+
+I edit the text on a Linux box, using a text editor (nano).
+I use a custom BASIC tokenizer and a dos33 utility to put the files
+in a disk image (a Makefile handles all this).  Then I run things
+under the Linapple emulator to test.  Once it all works I transfer
+to a USB key which I hook up to the CFFA3000 disk emulator inside
+of my IIe.  If I want to transfer to a floppy I use Copy II plus
+to the floppy drives in slot #5.
+<br><br>
+
+<li><b>This is your second Applesoft game conversion.
+	Do you plan any others?</b>
+<br><br>
+	No.  That doesn't mean it won't happen though.
+	Only certain kind of games map well to this kind of project,
+	and it has to be a game I enjoy playing enough to get a good
+	feel for the gameplay.  A certain amount of procrastination
+	is involved too.
+<br><br>
+
+<li><b>Why is the disk image called glados33.dsk?</b><br><br>
+
+	It was an obscure joke due to the fact that the disk image
+	is in Apple DOS 3.3 format.
+	<br><br>
+
+<li><b>Did you like the Portal games?</b>
+<br><br>
+	Yes.  Though I might be alone in thinking this, but
+	I really didn't like the Portal2 Wheatley character much, I found
+	him really annoying.
+<br><br>
+
+<li><b>Why is there no cake? Was it a lie?</b>
+	<br><br>
+	It turns out to be really hard to draw a convincing cake,
+	either in ASCII art or in pixel form.  After wasting a long
+	time perfecting the companion cube I decided not to bother.
+<br><br>
+
+<li><b>Why is the video so grainy in the "Still Alive" credits?</b>
+	<br><br>
+	The Apple II's "NTSC" output was a bit nonstandard at the
+	best of times, even when in 40 column mode.  The composite to VGA
+	scan converter I am using can barely display this, and
+	it doesn't really handle the higher-bandwidth 80 column mode 
+	well at all.  Yes, I was too lazy to find a CRT for purposes
+	of making this video.
+	<br><br>
+
+
+<li><b>Why does the title screen imply it has been "cracked"?</b>
+	<br><br>
+	Growing up many of the Apple II games I played were from floppies
+	of dubious provenance.  To me it feels traditional for there
+	to be some sort of cracked copy protection notice on
+	the title screen.
+<br><br>
+
+<li><b>How do you make your videos?</b>
+	<br><br>
+	A cheap Canon camera and a tripod.  I edit things together
+	with kdenlive which crashes a lot but mostly works.
+	The biggest issue I have is trying to record my desktop for
+	the emulator scenes, as I can never get the Linux microphone
+	support to work well.
+	<br><br>
+
+<li><b>Where did you get your time machine?</b>
+	<br><br>
+	Well I traded this crazy looking guy some plutonium...
+	<br><br>
+	No, really, I just like blinky LED lights and it's the perfect
+	project if you like that kind of thing.  I was vaguely trying
+	to get it all finished for the BTTF2/2015 anniversary and it was
+	mostly working but I had grand plans to put it in my car for
+	a while but that never happened.
+	You can find out more
+	<a href="http://www.deater.net/weave/vmwprod/hardware/time_circuit/">
+	here</a>.<br><br>
+	There are plans and mostly enough info to build your
+	own copy if you want.  
+	A few people have tried, but I've never heard back
+	on any successes.
+	<br><br>
+
+
+<li><b>Has Valve sent you a cease-and-desist letter yet?</b><br><br>
+
+	Not yet.
+<br><br>
+
+</body>
+</html>
