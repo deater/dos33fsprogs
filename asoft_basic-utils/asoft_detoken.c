@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
 		link=(link2<<8)|link1;
 		offset+=2;
 
-		if (print_link) printf("%04X:",link);
+		if (print_link) printf("*%04X",link);
 
 		/* link==0 indicates EOF */
 		if (link==0) goto the_end;
