@@ -97,11 +97,13 @@ int main(int argc, char **argv) {
 			offset++;
 			/* if > 0x80 it's a token */
 			if (ch1>=0x80) {
+				/* Leading space */
 				fputc(' ',stdout);
 				for(i=0;i<strlen(applesoft_tokens[ch1-0x80]);i++) {
 					fputc(applesoft_tokens[ch1-0x80][i],stdout);
 				}
-				fputc(' ',stdout);
+				/* Trailing space, but not if REM */
+				if ((ch1-0x80)!=0x32) fputc(' ',stdout);
 			}
 			/* otherwise it is an ascii char */
 			else {
