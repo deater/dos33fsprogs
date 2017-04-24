@@ -1,6 +1,10 @@
+/* tokenize_asoft: Tokenize an Applesoft BASIC program	*/
+/* by Vince Weaver <vince@deater.net>			*/
+
 #include <stdio.h>
 #include <string.h> /* strlen() */
 #include <stdlib.h> /* exit() */
+#include <unistd.h> /* getopt() */
 
 #include "version.h"
 
@@ -9,13 +13,13 @@
 
 /* Info from http://docs.info.apple.com/article.html?coll=ap&artnum=57 */
 
-/* In memory, applesoft file starts at address $801        */
-/* format is <LINE><LINE><LINE>$00$00                      */
-/* Where <LINE> is:                                        */
-/*    2 bytes (little endian) of LINK indicating addy of next line */
-/*    2 bytes (little endian) giving the line number       */
-/*    a series of bytes either ASCII or tokens (see below) */
-/*    a $0 char indicating end of line                     */
+/* In memory, applesoft file starts at address $801			*/
+/* format is <LINE><LINE><LINE>$00$00					*/
+/* Where <LINE> is:							*/
+/*    2 bytes (little endian) of LINK indicating addy of next line	*/
+/*    2 bytes (little endian) giving the line number			*/
+/*    a series of bytes either ASCII or tokens (see below)		*/
+/*    a $0 char indicating end of line					*/
 
 #define NUM_TOKENS 107
 
@@ -169,10 +173,36 @@ int main(int argc, char **argv) {
 	int linenum=0,lastline=0,link_offset;
 	int link_value=0x801; /* start of applesoft program */
 	int token;
+	int debug=0;
+	int c;
+	FILE *fff;
+
+	/* Check command line arguments */
+	while ((c = getopt (argc, argv,"d"))!=-1) {
+		switch (c) {
+
+		case 'd':
+			debug=1;
+			break;
+		}
+	}
+
+	/* No file specified, used stdin */
+	if (optind==argc) {
+		fff=stdin;
+	}
+	else {
+		fff=fopen(argv[optind],"r");
+		if (fff==NULL) {
+			fprintf(stderr,"Error, could not open %s\n",argv[optind]);
+			return -1;
+		}
+		if (debug) fprintf(stderr,"Opened file %s\n",argv[optind]);
+	}
 
 	while(1) {
 		/* get line from input file */
-		line_ptr=fgets(input_line,BUFSIZ,stdin);
+		line_ptr=fgets(input_line,BUFSIZ,fff);
 		line++;
 		if (line_ptr==NULL) break;
 
@@ -180,7 +210,7 @@ int main(int argc, char **argv) {
 		if (line_ptr[0]=='\'') {
 			if (!strncmp(line_ptr,"\'.if 0",6)) {
 				while(1) {
-					line_ptr=fgets(input_line,BUFSIZ,stdin);
+					line_ptr=fgets(input_line,BUFSIZ,fff);
 					line++;
 					if (line_ptr==NULL) break;
 					if (!strncmp(line_ptr,"\'.endif",7)) break;
@@ -191,8 +221,6 @@ int main(int argc, char **argv) {
 
 		/* VMW extension: use leading ' as a comment char */
 		if (line_ptr[0]=='\'') continue;
-
-
 
 		/* skip empty lines */
 		if (line_ptr[0]=='\n') continue;
