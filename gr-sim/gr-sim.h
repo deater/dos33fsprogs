@@ -6,3 +6,4 @@ int color_equals(int new_color);
 int plot(int x, int y);
 int hlin(int x1, int x2, int at);
 int vlin(int y1, int y2, int at);
+int gr(void);

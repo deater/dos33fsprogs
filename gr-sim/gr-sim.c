@@ -137,11 +137,28 @@ int grsim_init(void) {
 static int current_color=0;
 
 int color_equals(int new_color) {
-	current_color=new_color;
+	current_color=new_color%16;
 	return 0;
 }
 
 int plot(int x, int y) {
+	if (x>40) {
+		printf("X too big %d\n",x);
+		return -1;
+	}
+	if (y>40) {
+		printf("Y too big %d\n",y);
+		return -1;
+	}
+	if (x<0) {
+		printf("X too small %d\n",x);
+		return -1;
+	}
+	if (y<0) {
+		printf("Y too small %d\n",y);
+		return -1;
+	}
+
 	framebuffer[x][y]=current_color;
 	return 0;
 }
@@ -164,4 +181,11 @@ int vlin(int y1, int y2, int at) {
 	return 0;
 }
 
+int gr(void) {
+	int x,y;
 
+	/* Init screen */
+	for(y=0;y<YSIZE;y++) for(x=0;x<XSIZE;x++) framebuffer[x][y]=0;
+
+	return 0;
+}
