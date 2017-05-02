@@ -4,6 +4,8 @@
 
 #include <SDL.h>
 
+#include "gr-sim.h"
+
 #define XSIZE		40
 #define YSIZE		48
 
@@ -15,7 +17,13 @@ static int ysize=YSIZE*PIXEL_Y_SCALE;
 
 static unsigned char framebuffer[XSIZE][YSIZE];
 
-static int get_input(void) {
+/* 128kB of RAM */
+unsigned char ram[128*1024];
+
+
+static SDL_Surface *sdl_screen=NULL;
+
+int grsim_input(void) {
 
 	SDL_Event event;
 	int keypressed;
@@ -71,12 +79,12 @@ static unsigned int color[16]={
 	0xffffff,	/* 15 white */
 };
 
-static int gr_to_screen(SDL_Surface *screen) {
+int grsim_update(void) {
 
 	int x,y,i,j;
 	unsigned int *t_pointer;
 
-	t_pointer=((Uint32 *)screen->pixels);
+	t_pointer=((Uint32 *)sdl_screen->pixels);
 
 	for(y=0;y<YSIZE;y++) {
 		for(j=0;j<PIXEL_Y_SCALE;j++) {
@@ -89,19 +97,15 @@ static int gr_to_screen(SDL_Surface *screen) {
 		}
 	}
 
-	SDL_UpdateRect(screen, 0, 0, xsize, ysize);
+	SDL_UpdateRect(sdl_screen, 0, 0, xsize, ysize);
 
 	return 0;
 }
 
 
-int main(int argc, char **argv) {
-
-	SDL_Surface *sdl_screen=NULL;
+int grsim_init(void) {
 
 	int mode;
-	int ch;
-
 	int x,y;
 
 	mode=SDL_SWSURFACE|SDL_HWPALETTE|SDL_HWSURFACE;
@@ -127,18 +131,37 @@ int main(int argc, char **argv) {
 	/* Init screen */
 	for(y=0;y<YSIZE;y++) for(x=0;x<XSIZE;x++) framebuffer[x][y]=0;
 
-	/* Put rainbow on screen */
-	for(y=0;y<40;y++) for(x=0;x<XSIZE;x++) framebuffer[x][y]=y%16;
+	return 0;
+}
 
-	while(1) {
-		gr_to_screen(sdl_screen);
+static int current_color=0;
 
-		ch=get_input();
-		if (ch=='q') break;
+int color_equals(int new_color) {
+	current_color=new_color;
+	return 0;
+}
 
-		usleep(100000);
+int plot(int x, int y) {
+	framebuffer[x][y]=current_color;
+	return 0;
+}
 
-	}
+int hlin(int x1, int x2, int at) {
+
+	int i;
+
+	for(i=x1;i<x2;i++) plot(i,at);
 
 	return 0;
 }
+
+int vlin(int y1, int y2, int at) {
+
+	int i;
+
+	for(i=y1;i<y2;i++) plot(at,i);
+
+	return 0;
+}
+
+
