@@ -14,6 +14,7 @@ static void tooo(void) {
 
 	color_equals(r[n]);
 	plot(x2,y2);
+	grsim_update();
 	return;
 }
 
