@@ -1,0 +1,4 @@
+Apple II low-res graphics simulator in SDL
+
+Useful to prototype games, etc., before committing to 6502 assembly.
+
