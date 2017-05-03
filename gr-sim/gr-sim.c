@@ -17,8 +17,10 @@ static int ysize=YSIZE*PIXEL_Y_SCALE;
 
 static unsigned char framebuffer[XSIZE][YSIZE];
 
+
 /* 128kB of RAM */
-unsigned char ram[128*1024];
+#define RAMSIZE 128*1024
+unsigned char ram[RAMSIZE];
 
 
 static SDL_Surface *sdl_screen=NULL;
@@ -186,6 +188,36 @@ int gr(void) {
 
 	/* Init screen */
 	for(y=0;y<YSIZE;y++) for(x=0;x<XSIZE;x++) framebuffer[x][y]=0;
+
+	return 0;
+}
+
+int bload(char *filename, int address) {
+
+	FILE *fff;
+	int count=0,ch=0;
+
+	fff=fopen(filename,"r");
+	if (fff==NULL) {
+		fprintf(stderr,"Could not open %s\n",filename);
+		return -1;
+	}
+
+	while(1) {
+
+		if ((address+count)>RAMSIZE) {
+			fprintf(stderr,"ERROR ram too high\n");
+			return -1;
+		}
+
+
+		ch=fgetc(fff);
+		if (ch<0) break;
+
+		ram[address+count]=ch;
+		count++;
+	}
+	fclose(fff);
 
 	return 0;
 }
