@@ -15,12 +15,19 @@
 static int xsize=XSIZE*PIXEL_X_SCALE;
 static int ysize=YSIZE*PIXEL_Y_SCALE;
 
-static unsigned char framebuffer[XSIZE][YSIZE];
+static int debug=0;
 
 
 /* 128kB of RAM */
 #define RAMSIZE 128*1024
 unsigned char ram[RAMSIZE];
+
+/* Zero page addresses */
+#define GBASL	40
+#define GBASH	41
+#define MASK	50
+#define COLOR	56
+
 
 
 static SDL_Surface *sdl_screen=NULL;
@@ -81,6 +88,72 @@ static unsigned int color[16]={
 	0xffffff,	/* 15 white */
 };
 
+
+	/* a = ycoord */
+static int gbascalc(unsigned char a) {
+
+	unsigned char s,c;
+
+			/* input ABCD EFGH */
+	s=a;		/* store a on stack */
+	c=a&1;
+	a=a>>1;		/* lsr */
+	a=a&0x3;	/* mask */
+	a=a|0x4;	/* 00001FG */
+	ram[GBASH]=a;
+	a=s;
+
+	a=a&0x18;	/* 000D E000 */
+
+	/* if odd */
+	if (c) {
+		a=a+0x7f+1;
+	}
+	ram[GBASL]=a;
+	a=a<<2;
+	a=a|ram[GBASL];
+	ram[GBASL]=a;
+
+	if (debug) printf("GBAS=%02X%02X\n",ram[GBASH],ram[GBASL]);
+
+	return 0;
+}
+
+static short y_indirect(unsigned char base, unsigned char y) {
+
+	unsigned short addr;
+
+	addr=(((short)(ram[base+1]))<<8) | (short)ram[base];
+
+	if (debug) printf("Address=%x\n",addr+y);
+
+	return addr+y;
+
+}
+
+int scrn(unsigned char xcoord, unsigned char ycoord) {
+
+	unsigned char a,y,c;
+
+	a=ycoord;
+	y=xcoord;
+
+	c=a&1;
+	a=a>>1;
+	gbascalc(a);
+	a=ram[y_indirect(GBASL,y)];
+
+	if (c) {
+		return a>>4;
+	}
+	else {
+		return a&0xf;
+	}
+
+	return 0;
+}
+
+
 int grsim_update(void) {
 
 	int x,y,i,j;
@@ -92,7 +165,7 @@ int grsim_update(void) {
 		for(j=0;j<PIXEL_Y_SCALE;j++) {
 		for(x=0;x<XSIZE;x++) {
 			for(i=0;i<PIXEL_X_SCALE;i++) {
-				*t_pointer=color[framebuffer[x][y]];
+				*t_pointer=color[scrn(x,y)];
 				t_pointer++;
 			}
 		}
@@ -108,7 +181,7 @@ int grsim_update(void) {
 int grsim_init(void) {
 
 	int mode;
-	int x,y;
+	int x;
 
 	mode=SDL_SWSURFACE|SDL_HWPALETTE|SDL_HWSURFACE;
 
@@ -131,37 +204,69 @@ int grsim_init(void) {
 	}
 
 	/* Init screen */
-	for(y=0;y<YSIZE;y++) for(x=0;x<XSIZE;x++) framebuffer[x][y]=0;
+	for(x=0x400;x<0x800;x++) ram[x]=0;
 
 	return 0;
 }
-
-static int current_color=0;
 
 int color_equals(int new_color) {
-	current_color=new_color%16;
+
+	/* Top and Bottom both have color */
+	ram[COLOR]=((new_color%16)<<4)|(new_color%16);
+
 	return 0;
 }
 
-int plot(int x, int y) {
-	if (x>40) {
-		printf("X too big %d\n",x);
-		return -1;
-	}
-	if (y>40) {
-		printf("Y too big %d\n",y);
-		return -1;
-	}
-	if (x<0) {
-		printf("X too small %d\n",x);
-		return -1;
-	}
-	if (y<0) {
-		printf("Y too small %d\n",y);
+
+
+
+
+int plot(unsigned char xcoord, unsigned char ycoord) {
+
+	unsigned char c,a,y;
+
+	if (ycoord>40) {
+		printf("Y too big %d\n",ycoord);
 		return -1;
 	}
 
-	framebuffer[x][y]=current_color;
+	/* Applesoft Source Code	*/
+	/* F225	GET X,Y Values		*/
+	/* Y-coord in A			*/
+	/* X-coord in Y			*/
+	/* Check that X-coord<40	*/
+	a=ycoord;
+	y=xcoord;
+
+	if (y>=40) {
+		printf("X too big %d\n",y);
+		return -1;
+	}
+	/* Call into Monitor $F800 */
+
+	c=a&1;	/* save LSB in carry	*/
+	a=a>>1;	/* lsr A */
+	gbascalc(a);
+
+	if (c) {
+		/* If odd, mask is 0xf0 */
+		ram[MASK]=0xf0;
+	}
+	else {
+		/* If even, mask is 0x0f */
+		ram[MASK]=0x0f;
+	}
+
+	a=ram[y_indirect(GBASL,y)];
+
+	a=a^ram[COLOR];
+
+	a=a&ram[MASK];
+
+	a=a^ram[y_indirect(GBASL,y)];
+
+	ram[y_indirect(GBASL,y)]=a;
+
 	return 0;
 }
 
@@ -184,10 +289,10 @@ int vlin(int y1, int y2, int at) {
 }
 
 int gr(void) {
-	int x,y;
+	int x;
 
 	/* Init screen */
-	for(y=0;y<YSIZE;y++) for(x=0;x<XSIZE;x++) framebuffer[x][y]=0;
+	for(x=0x400;x<0x800;x++) ram[x]=0;
 
 	return 0;
 }
