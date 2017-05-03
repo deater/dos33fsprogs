@@ -15,10 +15,12 @@
 
 int main(int argc, char **argv) {
 
-	int image[40][40];
+	int image[40][48];
 	int x,y;
 	FILE *infile,*outfile;
 	int debug=0;
+
+	memset(image,0,sizeof(int)*40*48);
 
 	if (argc<3) {
 		fprintf(stderr,"Usage:\t%s INFILE OUTFILE\n\n",argv[0]);
@@ -32,12 +34,12 @@ int main(int argc, char **argv) {
 	}
 
 	int width, height;
-	png_byte color_type;
+//	png_byte color_type;
 	png_byte bit_depth;
 
 	png_structp png_ptr;
 	png_infop info_ptr;
-	int number_of_passes;
+//	int number_of_passes;
 	png_bytep * row_pointers;
 
 	unsigned char header[8];
@@ -69,31 +71,31 @@ int main(int argc, char **argv) {
 		exit(-1);
 	}
 
-        png_init_io(png_ptr, infile);
-        png_set_sig_bytes(png_ptr, 8);
+	png_init_io(png_ptr, infile);
+	png_set_sig_bytes(png_ptr, 8);
 
-        png_read_info(png_ptr, info_ptr);
+	png_read_info(png_ptr, info_ptr);
 
-        width = png_get_image_width(png_ptr, info_ptr);
-        height = png_get_image_height(png_ptr, info_ptr);
-        color_type = png_get_color_type(png_ptr, info_ptr);
-        bit_depth = png_get_bit_depth(png_ptr, info_ptr);
+	width = png_get_image_width(png_ptr, info_ptr);
+	height = png_get_image_height(png_ptr, info_ptr);
+//	color_type = png_get_color_type(png_ptr, info_ptr);
+	bit_depth = png_get_bit_depth(png_ptr, info_ptr);
 
 	if (debug) {
 		printf("PNG: width=%d height=%d depth=%d\n",width,height,bit_depth);
 	}
 
-        number_of_passes = png_set_interlace_handling(png_ptr);
-        png_read_update_info(png_ptr, info_ptr);
+//        number_of_passes = png_set_interlace_handling(png_ptr);
+	png_read_update_info(png_ptr, info_ptr);
 
-        row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
-        for (y=0; y<height; y++) {
-                row_pointers[y] = (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
+	row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
+	for (y=0; y<height; y++) {
+		row_pointers[y] = (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
 	}
 
-        png_read_image(png_ptr, row_pointers);
+	png_read_image(png_ptr, row_pointers);
 
-        fclose(infile);
+	fclose(infile);
 
 	int color;
 
@@ -178,6 +180,9 @@ int main(int argc, char **argv) {
 		if (x>0x3f8) break;
 		enough++;
 		if (enough>119) {
+			/* screen hole */
+			/* We should never BLOAD this image */
+			/* as we can corrupt important state here */
 			fputc(0,outfile);
 			fputc(0,outfile);
 			fputc(0,outfile);
