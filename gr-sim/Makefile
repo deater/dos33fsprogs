@@ -5,13 +5,26 @@ LFLAGS =
 SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 
-all:	rainbow sparkle kaleido tfv
+all:	rainbow sparkle kaleido tfv text
+
+
+
+####
 
 rainbow:	rainbow.o gr-sim.o
 	$(CC) $(LFLAGS) $(SDL_LIBS) -o rainbow rainbow.o gr-sim.o
 
 rainbow.o:	rainbow.c
 	$(CC) $(CFLAGS) -c rainbow.c
+
+####
+
+text:	text.o gr-sim.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o text text.o gr-sim.o
+
+text.o:	text.c
+	$(CC) $(CFLAGS) -c text.c
+
 
 ####
 
@@ -42,6 +55,6 @@ gr-sim.o:	gr-sim.c
 	$(CC) $(CFLAGS) $(SDL_INCLUDE) -c gr-sim.c
 
 clean:	
-	rm -f *~ *.o gr-sim rainbow sparkle kaleido tfv
+	rm -f *~ *.o gr-sim rainbow sparkle kaleido tfv text
 
 
