@@ -64,14 +64,14 @@ label140:
 				printf("ERROR! %d %d\n",x,r);
 				return -1;
 			}
-			plot(x+r,y+w);
-			plot(x+r,y-w);
-			plot(x-r,y-w);
-			plot(x-r,y+w);
-			plot(x+w,y+r);
-			plot(x+w,y-r);
-			plot(x-w,y-r);
-			plot(x-w,y+r);
+			basic_plot(x+r,y+w);
+			basic_plot(x+r,y-w);
+			basic_plot(x-r,y-w);
+			basic_plot(x-r,y+w);
+			basic_plot(x+w,y+r);
+			basic_plot(x+w,y-r);
+			basic_plot(x-w,y-r);
+			basic_plot(x-w,y+r);
 			grsim_update();
 	//320
 		}
@@ -97,7 +97,7 @@ label140:
 		color_equals(w);
 		for(l=(y-S);l<=(y+S);l+=(r/4)+1) {
 			for(k=(x-S);k<=(x+S);k+=r) {
-				plot(k,l);
+				basic_plot(k,l);
 			}
 		}
 	}

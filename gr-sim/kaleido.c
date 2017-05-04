@@ -13,7 +13,7 @@ static int x,y,j,a,b,x2,y2,n;
 static void tooo(void) {
 
 	color_equals(r[n]);
-	plot(x2,y2);
+	basic_plot(x2,y2);
 	grsim_update();
 	return;
 }
@@ -23,7 +23,7 @@ static void noo(void) {
 
 	// 900
 	color_equals(r[0]);
-	plot(x,y);
+	basic_plot(x,y);
 	grsim_update();
 	if (j==1) return;
 	// 920

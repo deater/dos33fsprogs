@@ -38,6 +38,7 @@ unsigned char a,y,x;
 #define GBASH	0x27
 #define BASL	0x28
 #define BASH	0x29
+#define V2	0x2D
 #define MASK	0x2E
 #define COLOR	0x30
 
@@ -239,29 +240,10 @@ int color_equals(int new_color) {
 
 
 
-
-
-int plot(unsigned char xcoord, unsigned char ycoord) {
+static void plot(void) {
 
 	unsigned char c;
 
-	if (ycoord>40) {
-		printf("Y too big %d\n",ycoord);
-		return -1;
-	}
-
-	/* Applesoft Source Code	*/
-	/* F225	GET X,Y Values		*/
-	/* Y-coord in A			*/
-	/* X-coord in Y			*/
-	/* Check that X-coord<40	*/
-	a=ycoord;
-	y=xcoord;
-
-	if (y>=40) {
-		printf("X too big %d\n",y);
-		return -1;
-	}
 	/* Call into Monitor $F800 */
 
 	c=a&1;	/* save LSB in carry	*/
@@ -287,32 +269,153 @@ int plot(unsigned char xcoord, unsigned char ycoord) {
 
 	ram[y_indirect(GBASL,y)]=a;
 
+}
+
+
+int basic_plot(unsigned char xcoord, unsigned char ycoord) {
+
+	if (ycoord>40) {
+		printf("Y too big %d\n",ycoord);
+		return -1;
+	}
+
+	/* Applesoft Source Code	*/
+	/* F225	GET X,Y Values		*/
+	/* Y-coord in A			*/
+	/* X-coord in Y			*/
+	/* Check that X-coord<40	*/
+	a=ycoord;
+	y=xcoord;
+
+	if (y>=40) {
+		printf("X too big %d\n",y);
+		return -1;
+	}
+
+	plot();
+
 	return 0;
 }
 
-int hlin(int x1, int x2, int at) {
+
+int basic_hlin(int x1, int x2, int at) {
 
 	int i;
 
-	for(i=x1;i<x2;i++) plot(i,at);
+	for(i=x1;i<x2;i++) basic_plot(i,at);
 
 	return 0;
 }
 
-int vlin(int y1, int y2, int at) {
+int basic_vlin(int y1, int y2, int at) {
 
 	int i;
 
-	for(i=y1;i<y2;i++) plot(at,i);
+	for(i=y1;i<y2;i++) basic_plot(at,i);
 
 	return 0;
+}
+
+static void bascalc(void) {
+	// FBC1
+
+	unsigned char s,c;
+
+	s=a;
+	c=a&0x1;
+
+	a=a>>1;
+	a=a&0x3;
+	a=a|0x4;
+	ram[BASH]=a;
+	a=s;
+	a=a&0x18;
+	if (c!=0) {
+		a=a+0x80;
+	}
+// BSCLC2
+	ram[BASL]=a;
+	a=a<<2;
+	a=a|ram[BASL];
+	ram[BASL]=a;
+
+}
+
+static void vtabz(void) {
+
+	bascalc();
+
+	a+=ram[WNDLFT];
+	ram[BASL]=a;
+
+}
+
+static void vtab(void) {
+
+	a=ram[CV];
+	vtabz();
+}
+
+static void setwnd(void) {
+
+	ram[WNDTOP]=a;
+	a=0x0;
+	ram[WNDLFT]=a;
+	a=0x28;
+	ram[WNDWDTH]=a;
+	a=0x18;
+	ram[WNDBTM]=a;
+	a=0x17;
+// TABV
+	ram[CV]=a;
+	vtab();
+}
+
+static void vline(void) {
+
+	unsigned char s;
+
+	// f828
+vline_loop:
+	s=a;
+	//plot();
+	// FIXME
+	a=s;
+	if (a<ram[V2]) {
+		a++;
+		goto vline_loop;
+	}
+}
+
+static void clrtop(void) {
+
+	// f836
+	y=0x27;
+	ram[V2]=y;
+	y=0x27;
+clrsc3:
+	a=0x0;
+	ram[COLOR]=a;
+	vline();
+	y--;
+	if (y>0) goto clrsc3;
 }
 
 int gr(void) {
-	int i;
 
-	/* Init screen */
-	for(i=0x400;i<0x800;i++) ram[i]=0;
+	// F390
+	// LDA SW.LORES
+	// LDA SW.MIXSET
+	//JMP MON.SETGR
+
+	// FB40
+	// LDA	TXTCLR
+	// LDA	MIXSET
+
+	clrtop();
+
+	a=0x14;
+	setwnd();
 
 	return 0;
 }
@@ -343,50 +446,6 @@ int bload(char *filename, int address) {
 		count++;
 	}
 	fclose(fff);
-
-	return 0;
-}
-
-static int bascalc(void) {
-	// FBC1
-
-	unsigned char s,c;
-
-	s=a;
-	c=a&0x1;
-
-	a=a>>1;
-	a=a&0x3;
-	a=a|0x4;
-	ram[BASH]=a;
-	a=s;
-	a=a&0x18;
-	if (c!=0) {
-		a=a+0x80;
-	}
-// BSCLC2
-	ram[BASL]=a;
-	a=a<<2;
-	a=a|ram[BASL];
-	ram[BASL]=a;
-
-	return 0;
-}
-
-static int vtabz(void) {
-
-	bascalc();
-
-	a+=ram[WNDLFT];
-	ram[BASL]=a;
-
-	return 0;
-}
-
-static int vtab(void) {
-
-	a=ram[CV];
-	vtabz();
 
 	return 0;
 }

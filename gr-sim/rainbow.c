@@ -13,14 +13,14 @@ int main(int argc, char **argv) {
 	/* Put rainbow on screen */
 	for(y=0;y<40;y++) for(x=0;x<40;x++) {
 		color_equals(y%16);
-		plot(x,y);
+		basic_plot(x,y);
 	}
 
 	color_equals(15);
-	vlin(0,40,20);
+	basic_vlin(0,40,20);
 
 	color_equals(0);
-	hlin(0,40,20);
+	basic_hlin(0,40,20);
 
 
 	while(1) {
