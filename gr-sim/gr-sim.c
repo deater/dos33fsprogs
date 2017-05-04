@@ -6,6 +6,8 @@
 
 #include "gr-sim.h"
 
+#include "apple2_font.h"
+
 #define XSIZE		40
 #define YSIZE		48
 
@@ -22,9 +24,20 @@ static int debug=0;
 #define RAMSIZE 128*1024
 unsigned char ram[RAMSIZE];
 
+/* Registers */
+unsigned char a,y,x;
+
 /* Zero page addresses */
+#define WNDLFT	0x20
+#define WNDWDTH	0x21
+#define WNDTOP	0x22
+#define WNDBTM	0x23
+#define	CH	0x24
+#define CV	0x25
 #define GBASL	0x26
 #define GBASH	0x27
+#define BASL	0x28
+#define BASH	0x29
 #define MASK	0x2E
 #define COLOR	0x30
 
@@ -205,6 +218,14 @@ int grsim_init(void) {
 	/* Init screen */
 	for(x=0x400;x<0x800;x++) ram[x]=0;
 
+	/* Set up some zero page values */
+	ram[WNDLFT]=0x00;
+	ram[WNDWDTH]=0x28;
+	ram[WNDTOP]=0x00;
+	ram[WNDBTM]=0x18;
+
+	a=0; y=0; x=0;
+
 	return 0;
 }
 
@@ -222,7 +243,7 @@ int color_equals(int new_color) {
 
 int plot(unsigned char xcoord, unsigned char ycoord) {
 
-	unsigned char c,a,y;
+	unsigned char c;
 
 	if (ycoord>40) {
 		printf("Y too big %d\n",ycoord);
@@ -288,10 +309,10 @@ int vlin(int y1, int y2, int at) {
 }
 
 int gr(void) {
-	int x;
+	int i;
 
 	/* Init screen */
-	for(x=0x400;x<0x800;x++) ram[x]=0;
+	for(i=0x400;i<0x800;i++) ram[i]=0;
 
 	return 0;
 }
@@ -322,6 +343,139 @@ int bload(char *filename, int address) {
 		count++;
 	}
 	fclose(fff);
+
+	return 0;
+}
+
+static int bascalc(void) {
+	// FBC1
+
+	unsigned char s,c;
+
+	s=a;
+	c=a&0x1;
+
+	a=a>>1;
+	a=a&0x3;
+	a=a|0x4;
+	ram[BASH]=a;
+	a=s;
+	a=a&0x18;
+	if (c!=0) {
+		a=a+0x80;
+	}
+// BSCLC2
+	ram[BASL]=a;
+	a=a<<2;
+	a=a|ram[BASL];
+	ram[BASL]=a;
+
+	return 0;
+}
+
+static int vtabz(void) {
+
+	bascalc();
+
+	a+=ram[WNDLFT];
+	ram[BASL]=a;
+
+	return 0;
+}
+
+static int vtab(void) {
+
+	a=ram[CV];
+	vtabz();
+
+	return 0;
+}
+
+
+static int cleolz(void) {
+	// FC9E
+
+	a=0xa0;
+clreol2:
+	ram[y_indirect(BASL,y)]=a;
+	y++;
+
+	if (y<ram[WNDWDTH]) goto clreol2;
+
+	return 0;
+}
+
+static int cleop1(void) {
+
+	unsigned char s;
+
+cleop1_begin:
+	s=a;
+	vtabz();
+	cleolz();
+	y=0x00;
+	a=s;
+	a++;
+	if (a<=ram[WNDBTM]) goto cleop1_begin;
+	vtab();
+
+	return 0;
+}
+
+int home(void) {
+
+	/* FC58 */
+	a=ram[WNDTOP];
+	ram[CV]=a;
+	y=0x00;
+	ram[CH]=y;
+	cleop1();
+
+	return 0;
+}
+
+int grsim_unrle(unsigned char *rle_data, int address) {
+
+	int i,total=0;
+//	int xoffset=0;
+//	int yoffset=0;
+
+	int xsize,ysize,end,run,value;
+	unsigned char *out_pointer;
+	int offset,x=0,y=0;
+
+	xsize=rle_data[0];
+	ysize=rle_data[1];
+
+	end=xsize*(ysize/2);
+	out_pointer=ram+address;
+	offset=2;
+
+	while(1) {
+		run=rle_data[offset];
+		offset++;
+		value=rle_data[offset];
+		offset++;
+
+		for(i=0;i<run;i++) {
+			*out_pointer=value;
+			out_pointer++;
+			total++;
+			x++;
+			if (x>=40) {
+				out_pointer+=0x58;
+				y+=2;
+				if (y>14) {
+					y=0;
+					out_pointer-=(0x400-0x28);
+//					printf("%d %x\n",y,address+(y/2)*0x80);
+				}
+				x=0;
+			}
+		}
+
+		if (total>=end) break;
+	}
 
 	return 0;
 }

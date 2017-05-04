@@ -9,4 +9,6 @@ int vlin(int y1, int y2, int at);
 int gr(void);
 int bload(char *filename, int address);
 int scrn(unsigned char xcoord, unsigned char ycoord);
+int grsim_unrle(unsigned char *rle_data, int address);
+int home(void);
 
