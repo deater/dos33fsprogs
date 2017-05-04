@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 
 	x=0;
 	enough=0;
-	fprintf(outfile,"0x%X,0x%x,\n",xsize,ysize);
+	fprintf(outfile,"{ 0x%X,0x%x,\n",xsize,ysize);
 	last=image[x] | (image[x+xsize]<<4);
 	run++;
 	x++;
@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 		next=image[x] | (image[x+xsize]<<4);
 
 		if (next!=last) {
-			fprintf(outfile,"0x%02X,0x%02X,\n",run,last);
+			fprintf(outfile,"0x%02X,0x%02X,",run,last);
 			run=0;
 			last=next;
 		}
@@ -61,12 +61,17 @@ int main(int argc, char **argv) {
 		if (enough>=xsize) {
 			enough=0;
 			x+=xsize;
-			fprintf(outfile," ");
+			fprintf(outfile,"\n");
 		}
 
 
-		if (x>xsize*ysize) break;
+		if (x>xsize*ysize) {
+			/* print tailing value */
+			fprintf(outfile,"0x%02X,0x%02X,",run,last);
+			break;
+		}
 	}
+	fprintf(outfile,"};\n");
 
 	fclose(outfile);
 
