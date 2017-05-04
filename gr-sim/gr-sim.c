@@ -23,11 +23,10 @@ static int debug=0;
 unsigned char ram[RAMSIZE];
 
 /* Zero page addresses */
-#define GBASL	40
-#define GBASH	41
-#define MASK	50
-#define COLOR	56
-
+#define GBASL	0x26
+#define GBASH	0x27
+#define MASK	0x2E
+#define COLOR	0x30
 
 
 static SDL_Surface *sdl_screen=NULL;
