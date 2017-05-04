@@ -38,10 +38,11 @@ unsigned char a,y,x;
 #define GBASH	0x27
 #define BASL	0x28
 #define BASH	0x29
+#define H2	0x2C
 #define V2	0x2D
 #define MASK	0x2E
 #define COLOR	0x30
-
+#define FIRST	0xF0
 
 static SDL_Surface *sdl_screen=NULL;
 
@@ -307,14 +308,6 @@ int basic_hlin(int x1, int x2, int at) {
 	return 0;
 }
 
-int basic_vlin(int y1, int y2, int at) {
-
-	int i;
-
-	for(i=y1;i<y2;i++) basic_plot(at,i);
-
-	return 0;
-}
 
 static void bascalc(void) {
 	// FBC1
@@ -378,8 +371,7 @@ static void vline(void) {
 	// f828
 vline_loop:
 	s=a;
-	//plot();
-	// FIXME
+	plot();
 	a=s;
 	if (a<ram[V2]) {
 		a++;
@@ -535,6 +527,46 @@ int grsim_unrle(unsigned char *rle_data, int address) {
 
 		if (total>=end) break;
 	}
+
+	return 0;
+}
+
+int basic_vlin(int y1, int y2, int at) {
+
+	// f244
+
+	// LINCOOR
+	// GET "A,B AT C"
+	// PUT SMALLER OF (A,B) IN FIRST,
+        // AND LARGER  OF (A,B) IN H2 AND V2.
+        // RETURN WITH (X) = C-VALUE.
+
+	if (y1>y2) { ram[H2]=y1; ram[V2]=y1; ram[FIRST]=y2; }
+	else       { ram[H2]=y2; ram[V2]=y2; ram[FIRST]=y1; }
+	x=at;
+
+	if (x>48) {
+		fprintf(stderr,"Error!  AT too large %d!\n",x);
+	}
+
+//VLIN  JSR LINCOOR
+//F244- 8A       2050        TXA          X-COORD IN Y-REG
+//F245- A8       2060        TAY
+//F246- C0 28    2070        CPY #40      X-COORD MUST BE < 40
+//F248- B0 BC    2080        BCS GOERR    TOO LARGE
+//F24A- A5 F0    2090        LDA FIRST    TOP END OF LINE IN A-REG
+//F24C- 4C 28 F8 2100        JMP MON.VLINE     LET MONITOR DRAW LINE
+
+	y=x;
+	if (y>=40) {
+		fprintf(stderr,"X value to big in vline %d\n",y);
+		return -1;
+	}
+	a=ram[FIRST];
+
+	vline();
+
+//	for(i=y1;i<y2;i++) basic_plot(at,i);
 
 	return 0;
 }
