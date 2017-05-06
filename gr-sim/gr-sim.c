@@ -44,6 +44,8 @@ unsigned char a,y,x;
 #define COLOR	0x30
 #define FIRST	0xF0
 
+#define TEMP	0xFA
+
 static SDL_Surface *sdl_screen=NULL;
 
 int grsim_input(void) {
@@ -487,45 +489,68 @@ int home(void) {
 
 int grsim_unrle(unsigned char *rle_data, int address) {
 
-	int i,total=0;
 //	int xoffset=0;
 //	int yoffset=0;
 
-	int xsize,ysize,end,run,value;
-	unsigned char *out_pointer;
-	int offset,x=0,y=0;
+	unsigned char s;
+//	int out_pointer;
 
-	xsize=rle_data[0];
-	ysize=rle_data[1];
+	ram[GBASL]=0;	// input address
+	ram[GBASH]=0;
 
-	end=xsize*(ysize/2);
-	out_pointer=ram+address;
-	offset=2;
+	x=0;
+	y=0;
+
+	ram[BASL]=address&0xff;
+	ram[BASH]=address>>8;
+
+	ram[CV]=0;
+	ram[CH]=rle_data[y_indirect(GBASL,y)];
+	y++;
+//	ysize=rle_data[1];
+	y++;
 
 	while(1) {
-		run=rle_data[offset];
-		offset++;
-		value=rle_data[offset];
-		offset++;
+		a=rle_data[y_indirect(GBASL,y)];
+		if (a==0xff) break;
+		ram[TEMP]=a;
 
-		for(i=0;i<run;i++) {
-			*out_pointer=value;
-			out_pointer++;
-			total++;
+		y++;
+		if (y==0) ram[GBASH]++;
+
+		a=rle_data[y_indirect(GBASL,y)];
+		y++;
+		if (y==0) ram[GBASH]++;
+
+		s=y;
+		y=0;
+
+		while(1) {
+			ram[y_indirect(BASL,y)]=a;
+			ram[BASL]++;
+			if (ram[BASL]==0) ram[BASH]++;
 			x++;
-			if (x>=40) {
-				out_pointer+=0x58;
-				y+=2;
-				if (y>14) {
-					y=0;
-					out_pointer-=(0x400-0x28);
-//					printf("%d %x\n",y,address+(y/2)*0x80);
+			if (x>=ram[CH]) {
+				if (ram[BASL]>0xa7) ram[BASH]++;
+				ram[BASL]+=0x58;
+				ram[CV]+=2;
+				if (ram[CV]>14) {
+					ram[CV]=0;
+					if (ram[BASL]<0xd8) {
+						ram[BASL]=ram[BASL]-0xd8;
+						ram[BASH]=ram[BASH]-0x4;
+					}
+					else {
+						ram[BASL]=ram[BASL]-0xd8;
+						ram[BASH]=ram[BASH]-0x3;
+					}
 				}
 				x=0;
 			}
+			ram[TEMP]--;
+			if (ram[TEMP]==0) break;
 		}
-
-		if (total>=end) break;
+		y=s;
 	}
 
 	return 0;
