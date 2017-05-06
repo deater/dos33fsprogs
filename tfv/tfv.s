@@ -108,56 +108,60 @@ rle_yskip2:
 	pla				; convoluted way to set y to 0
 
 rle_run_loop:
-	sta	(BASL),y
-	inc	BASL
-	bne	rle_skip3
-	inc	BASH			; write out value
+	sta	(BASL),y		; write out the value
+	inc	BASL			; increment the pointer
+	bne	rle_skip3		; if wrapped
+	inc	BASH			; then increment the high value
 rle_skip3:
-	inx
-	cpx	CH
-	bcc	rle_not_eol		; branch if less than
+	inx				; increment the X value
+	cpx	CH			; compare against the image width
+	bcc	rle_not_eol		; if less then keep going
 
-	pha
+	pha				; save out value on stack
 
-	lda	BASL
-	cmp	#$a7
-	bcc	rle_add_skip
+	lda	BASL			; cheat to avoid a 16-bit add
+	cmp	#$a7			; we are adding 0x58 to get
+	bcc	rle_add_skip		; to the next line
 	inc	BASH
 rle_add_skip:
 	clc
-	adc	#$58
-	sta	BASL
-	inc	CV
-	inc	CV
-	lda	CV
-	cmp	#15
-	bcc	rle_no_wrap
+	adc	#$58			; actually do the 0x58 add
+	sta	BASL			; and store it back
 
-	lda	#$0
+	inc	CV			; add 2 to ypos
+	inc	CV			; each "line" is two high
+
+	lda	CV			; load value
+	cmp	#15			; if it's greater than 14 it wraps
+	bcc	rle_no_wrap		; Thanks Woz
+
+	lda	#$0			; we wrapped, so set to zero
 	sta	CV
-	sec				; set carry for borrow purpose
+
+					; when wrapping have to sub 0x3d8
+	sec				; this is a 16-bit subtract routine
 	lda	BASL
-	sbc	#$d8			; perform subtraction on the LSBs
+	sbc	#$d8			; LSB
 	sta	BASL
-	lda	BASH			; do the same for the MSBs, with carry
-	sbc	#$3			; set according to the previous result
+	lda	BASH			; MSB
+	sbc	#$3			;
 	sta	BASH
 
 rle_no_wrap:
-	lda	#$0
+	lda	#$0			; set X value back to zero
 	tax
-	pla
+	pla				; restore value to write from stack
 
 rle_not_eol:
-	dec	RUN
-	bne	rle_run_loop
+	dec	RUN			; decrement run value
+	bne	rle_run_loop		; if not zero, keep looping
 
-	ldy	TEMP2
+	ldy	TEMP2			; restore the input pointer
 	sec
-	bcs	rle_loop
+	bcs	rle_loop		; and branch always
 
 rle_done:
-	lda	#$15
+	lda	#$15			; move the cursor somewhere sane
 	sta	CV
 	rts
 
