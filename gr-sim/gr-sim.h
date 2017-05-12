@@ -11,4 +11,5 @@ int bload(char *filename, int address);
 int scrn(unsigned char xcoord, unsigned char ycoord);
 int grsim_unrle(unsigned char *rle_data, int address);
 int home(void);
-
+int grsim_put_sprite(unsigned char *sprite_data, int xpos, int ypos);
+int gr_copy(short source, short dest);

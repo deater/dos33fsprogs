@@ -6,12 +6,12 @@ PNG2GR = ../gr-utils/png2gr
 all:	tfv.dsk
 
 tfv.dsk:	TITLE.GR TFV ED
-	$(DOS33) -y tfv.dsk BSAVE -a 0xc00 TFV
+	$(DOS33) -y tfv.dsk BSAVE -a 0x1000 TFV
 	$(DOS33) -y tfv.dsk BSAVE -a 0x400 TITLE.GR
 	$(DOS33) -y tfv.dsk BSAVE -a 0x900 ED
 
 TFV:	tfv.o
-	ld65 -o TFV tfv.o -C ./apple2_c00.inc
+	ld65 -o TFV tfv.o -C ./apple2_1000.inc
 
 tfv.o:	tfv.s title.inc
 	ca65 -o tfv.o tfv.s -l tfv.lst
@@ -27,3 +27,4 @@ TITLE.GR:	title.png
 
 clean:	
 	rm -f *~ TITLE.GR *.o *.lst ED
+
