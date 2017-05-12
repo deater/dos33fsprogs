@@ -605,23 +605,40 @@ short gr_addr_lookup[48]={
 
 int grsim_put_sprite(unsigned char *sprite_data, int xpos, int ypos) {
 
-	int i,j,xsize,ysize;
+	unsigned char i;
 	unsigned char *ptr;
 	short address;
+
 	ptr=sprite_data;
-	xsize=*ptr;
+	x=*ptr;
 	ptr++;
-	ysize=*ptr;
+	ram[CV]=*ptr;
 	ptr++;
 
-	for(j=0;j<ysize;j++) {
-		address=gr_addr_lookup[(ypos+j)/2];
+	while(1) {
+		address=gr_addr_lookup[ypos/2];
 		address+=xpos;
-		for(i=0;i<xsize;i++) {
-			if (*ptr) ram[address]=*ptr;
+		for(i=0;i<x;i++) {
+			a=*ptr;
+			if (a==0) {
+			}
+			else if ((a&0xf0)==0) {
+				ram[address]&=0xf0;
+				ram[address]|=a;
+			}
+			else if ((a&0x0f)==0) {
+				ram[address]&=0x0f;
+				ram[address]|=a;
+			}
+			else {
+				ram[address]=a;
+			}
 			ptr++;
 			address++;
 		}
+		ypos++;
+		ram[CV]--;
+		if (ram[CV]==0) break;
 	}
 
 	return 0;
