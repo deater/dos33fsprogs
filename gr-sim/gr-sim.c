@@ -595,3 +595,51 @@ int basic_vlin(int y1, int y2, int at) {
 
 	return 0;
 }
+
+
+short gr_addr_lookup[48]={
+	0x400,0x480,0x500,0x580,0x600,0x680,0x700,0x780,
+	0x428,0x4a8,0x528,0x5a8,0x628,0x6a8,0x728,0x7a8,
+	0x450,0x4d0,0x550,0x5d0,0x650,0x6d0,0x750,0x7d0,
+};
+
+int grsim_put_sprite(unsigned char *sprite_data, int xpos, int ypos) {
+
+	int i,j,xsize,ysize;
+	unsigned char *ptr;
+	short address;
+	ptr=sprite_data;
+	xsize=*ptr;
+	ptr++;
+	ysize=*ptr;
+	ptr++;
+
+	for(j=0;j<ysize;j++) {
+		address=gr_addr_lookup[(ypos+j)/2];
+		address+=xpos;
+		for(i=0;i<xsize;i++) {
+			if (*ptr) ram[address]=*ptr;
+			ptr++;
+			address++;
+		}
+	}
+
+	return 0;
+}
+
+int gr_copy(short source, short dest) {
+
+	short dest_addr,source_addr;
+	int i,j;
+
+	for(i=0;i<8;i++) {
+		source_addr=gr_addr_lookup[i]+0x400;
+		dest_addr=gr_addr_lookup[i];
+
+		for(j=0;j<120;j++) {
+			ram[dest_addr+j]=ram[source_addr+j];
+		}
+	}
+
+	return 0;
+}

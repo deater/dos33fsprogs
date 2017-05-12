@@ -32,23 +32,45 @@ static unsigned char title_rle[]=
 
 	};
 
+static unsigned char test_sprite[]={
+	0x8,0x4,
+	0x55,0x50,0x00,0x00,0x00,0x00,0x00,0x00,
+	0x55,0x55,0x55,0x00,0x00,0x00,0x00,0x00,
+	0xff,0x1f,0x4f,0x2f,0xff,0x22,0x20,0x00,
+	0x5f,0x5f,0x5f,0x5f,0xff,0xf2,0xf2,0xf2,
+};
+
 
 int main(int argc, char **argv) {
 
 	int ch;
+	int x,y;
 
 	grsim_init();
 
 	/* Title Screen */
-	grsim_unrle(title_rle,0x400);
+	grsim_unrle(title_rle,0x800);
+	gr_copy(0x800,0x400);
 
 	grsim_update();
+
+	x=20;	y=21;
+	color_equals(0);
 
 	while(1) {
 
 		ch=grsim_input();
 
 		if (ch=='q') break;
+		if (ch=='i') if (y>0) y-=2;
+		if (ch=='m') if (y<39) y+=2;
+		if (ch=='j') if (x>0) x--;
+		if (ch=='k') if (x<39) x++;
+
+		gr_copy(0x800,0x400);
+		grsim_put_sprite(test_sprite,x,y);
+
+		grsim_update();
 
 		usleep(100000);
 	}
