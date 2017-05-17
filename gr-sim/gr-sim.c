@@ -8,11 +8,17 @@
 
 #include "apple2_font.h"
 
+/* 40x48 low-res mode	*/
 #define XSIZE		40
 #define YSIZE		48
-
 #define PIXEL_X_SCALE	14
 #define PIXEL_Y_SCALE	8
+
+/* 40 column only for now */
+#define TEXT_XSIZE	40
+#define TEXT_YSIZE	24
+#define TEXT_X_SCALE	14
+#define TEXT_Y_SCALE	16
 
 static int xsize=XSIZE*PIXEL_X_SCALE;
 static int ysize=YSIZE*PIXEL_Y_SCALE;
@@ -43,7 +49,8 @@ unsigned char a,y,x;
 #define MASK	0x2E
 #define COLOR	0x30
 #define FIRST	0xF0
-
+#define SPEEDZ	0xF1
+#define FLASH	0xF3
 #define TEMP	0xFA
 
 
@@ -215,21 +222,70 @@ int scrn(unsigned char xcoord, unsigned char ycoord) {
 	return 0;
 }
 
+static short gr_addr_lookup[24]={
+	0x400,0x480,0x500,0x580,0x600,0x680,0x700,0x780,
+	0x428,0x4a8,0x528,0x5a8,0x628,0x6a8,0x728,0x7a8,
+	0x450,0x4d0,0x550,0x5d0,0x650,0x6d0,0x750,0x7d0,
+};
+
 
 int grsim_update(void) {
 
 	int x,y,i,j;
+	int bit_set,ch,inverse,flash;
 	unsigned int *t_pointer;
 
 	t_pointer=((Uint32 *)sdl_screen->pixels);
 
 	if (text_mode) {
-		for(y=0;y<YSIZE;y++) {
-			for(j=0;j<PIXEL_Y_SCALE;j++) {
-				for(x=0;x<XSIZE;x++) {
-					for(i=0;i<PIXEL_X_SCALE;i++) {
-						*t_pointer=color[15];
-						t_pointer++;
+		for(y=0;y<TEXT_YSIZE;y++) {
+			for(j=0;j<TEXT_Y_SCALE;j++) {
+				for(x=0;x<TEXT_XSIZE;x++) {
+					ch=ram[gr_addr_lookup[y]+x];
+		//			printf("%x ",ch);
+
+					if (ch&0x80) {
+						flash=0;
+						inverse=0;
+						ch=ch&0x7f;
+					}
+					else if (ch&0x40) {
+						flash=1;
+						inverse=0;
+						ch=ch&0x3f;
+					}
+					else {
+						inverse=1;
+						flash=0;
+						ch=ch&0x3f;
+					}
+
+					for(i=0;i<TEXT_X_SCALE;i++) {
+
+		/* 14 x 16 */
+		/* but font is 5x7 */
+
+		/* FIXME: handle page2 */
+
+
+		if (j>12) bit_set=0;
+		else if (i>10) bit_set=0;
+		else bit_set=(a2_font[ch][j/2])&(1<<(i/2));
+
+		if (inverse) {
+			if (bit_set) *t_pointer=color[0];
+			else *t_pointer=color[15];
+		}
+		else if (flash) {
+			if (bit_set) *t_pointer=color[9];
+			else *t_pointer=color[0];
+		}
+		else {
+			if (bit_set) *t_pointer=color[15];
+			else *t_pointer=color[0];
+		}
+
+		t_pointer++;
 					}
 				}
 			}
@@ -657,11 +713,6 @@ int basic_vlin(int y1, int y2, int at) {
 }
 
 
-short gr_addr_lookup[48]={
-	0x400,0x480,0x500,0x580,0x600,0x680,0x700,0x780,
-	0x428,0x4a8,0x528,0x5a8,0x628,0x6a8,0x728,0x7a8,
-	0x450,0x4d0,0x550,0x5d0,0x650,0x6d0,0x750,0x7d0,
-};
 
 int grsim_put_sprite(unsigned char *sprite_data, int xpos, int ypos) {
 
@@ -734,15 +785,75 @@ int text(void) {
 	return 0;
 }
 
-int basic_htab(int x) {
-	return 0;
+static void cout(void) {
+	// FDED
 }
 
-int basic_vtab(int y) {
-	return 0;
+static void wait(void) {
 }
 
-int basic_print(char *string) {
-	return 0;
+static void outdo(void) {
+
+	unsigned char s;
+
+	/* Print char in the accumulator */
+	a=a|0x80;		/* raw ascii has high bit on Apple II */
+	if (a<0xa0) {
+		/* skip if control char? */
+	}
+	else {
+		a=a|ram[FLASH];
+	}
+	cout();
+	a=a&0x7f;	// ?
+	s=a;		// pha
+	a=ram[SPEEDZ];
+	wait(); 	// this is BASIC, slow down if speed set
+	a=s;
+}
+
+static void crdo(void) {
+	// DAFB
+	a=13;	// carriage return
+	outdo();
+	a=a^0xff;		/* negate for some reason? */
+}
+
+void basic_htab(int xpos) {
+
+	unsigned char s;
+
+	// F7E7
+
+
+	x=xpos;	// JSR GETBYT
+	x--;	// DEX
+	a=x;	// TXA
+	while(a>=40) {
+		s=a;	// PHA
+		crdo();
+		a=s;	// PLA
+		a-=40;
+	}
+	ram[CH]=a;	// STA MON.CH
+
+
+	// KRW for the win!
+
+}
+
+void basic_vtab(int y) {
+	
+}
+
+void basic_print(char *string) {
+
+	int i;
+
+	for(i=0;i<strlen(string);i++) {
+		a=string[i];
+		outdo();
+	}
+
 }
 

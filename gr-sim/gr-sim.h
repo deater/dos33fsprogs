@@ -14,7 +14,7 @@ int home(void);
 int grsim_put_sprite(unsigned char *sprite_data, int xpos, int ypos);
 int gr_copy(short source, short dest);
 int text(void);
-int basic_htab(int x);
-int basic_vtab(int y);
-int basic_print(char *string);
+void basic_htab(int x);
+void basic_vtab(int y);
+void basic_print(char *string);
 

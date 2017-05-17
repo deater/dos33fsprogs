@@ -48,6 +48,8 @@ int main(int argc, char **argv) {
 
 	grsim_init();
 
+	gr();
+
 	/* Title Screen */
 	grsim_unrle(title_rle,0x800);
 	gr_copy(0x800,0x400);

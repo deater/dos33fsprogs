@@ -12,6 +12,8 @@ int main(int argc, char **argv) {
 
 	home();
 
+	gr();
+
 	text();
 
 	basic_htab(10);

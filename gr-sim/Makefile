@@ -51,7 +51,7 @@ sparkle.o:	sparkle.c
 	$(CC) $(CFLAGS) -c sparkle.c
 
 
-gr-sim.o:	gr-sim.c
+gr-sim.o:	gr-sim.c apple2_font.h
 	$(CC) $(CFLAGS) $(SDL_INCLUDE) -c gr-sim.c
 
 clean:	
