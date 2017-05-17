@@ -10,6 +10,8 @@ int main(int argc, char **argv) {
 
 	grsim_init();
 
+	gr();
+
 	/* Put rainbow on screen */
 	for(y=0;y<40;y++) for(x=0;x<40;x++) {
 		color_equals(y%16);
