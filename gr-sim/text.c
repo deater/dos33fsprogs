@@ -12,6 +12,14 @@ int main(int argc, char **argv) {
 
 	home();
 
+	text();
+
+	basic_htab(10);
+
+	basic_vtab(10);
+
+	basic_print("HELLO WORLD!\n");
+
 	while(1) {
 		grsim_update();
 

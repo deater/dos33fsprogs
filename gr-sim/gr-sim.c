@@ -46,6 +46,52 @@ unsigned char a,y,x;
 
 #define TEMP	0xFA
 
+
+/* Soft Switches */
+#define TXTCLR	0xc050
+#define TXTSET	0xc051
+#define	MIXCLR	0xc052
+#define MIXSET	0xc053
+#define	LOWSCR	0xc054
+#define HISCR	0xc055
+#define LORES	0xc056
+#define HIRES	0xc057
+
+static int text_mode=1;
+static int text_page_1=1;
+static int hires_on=0;
+static int mixed_graphics=1;
+
+static void soft_switch(unsigned short address) {
+
+	switch(address) {
+		case TXTCLR:	// $c050
+			text_mode=0;
+			break;
+		case TXTSET:	// $c051
+			text_mode=1;
+			break;
+		case MIXCLR:	// $c052
+			mixed_graphics=0;
+			break;
+		case MIXSET:	// $c053
+			mixed_graphics=1;
+			break;
+		case LOWSCR:	// $c054
+			text_page_1=1;
+			break;
+		case LORES:	// $c056
+			hires_on=0;
+			break;
+		case HIRES:	// $c057
+			hires_on=1;
+			break;
+		default:
+			fprintf(stderr,"Unknown soft switch %x\n",address);
+			break;
+	}
+}
+
 static SDL_Surface *sdl_screen=NULL;
 
 int grsim_input(void) {
@@ -177,14 +223,28 @@ int grsim_update(void) {
 
 	t_pointer=((Uint32 *)sdl_screen->pixels);
 
-	for(y=0;y<YSIZE;y++) {
-		for(j=0;j<PIXEL_Y_SCALE;j++) {
-		for(x=0;x<XSIZE;x++) {
-			for(i=0;i<PIXEL_X_SCALE;i++) {
-				*t_pointer=color[scrn(x,y)];
-				t_pointer++;
+	if (text_mode) {
+		for(y=0;y<YSIZE;y++) {
+			for(j=0;j<PIXEL_Y_SCALE;j++) {
+				for(x=0;x<XSIZE;x++) {
+					for(i=0;i<PIXEL_X_SCALE;i++) {
+						*t_pointer=color[15];
+						t_pointer++;
+					}
+				}
 			}
 		}
+	}
+	else {
+		for(y=0;y<YSIZE;y++) {
+			for(j=0;j<PIXEL_Y_SCALE;j++) {
+				for(x=0;x<XSIZE;x++) {
+					for(i=0;i<PIXEL_X_SCALE;i++) {
+						*t_pointer=color[scrn(x,y)];
+						t_pointer++;
+					}
+				}
+			}
 		}
 	}
 
@@ -398,13 +458,13 @@ clrsc3:
 int gr(void) {
 
 	// F390
-	// LDA SW.LORES
-	// LDA SW.MIXSET
+	soft_switch(LORES);	// LDA SW.LORES
+	soft_switch(MIXSET);	// LDA SW.MIXSET
 	//JMP MON.SETGR
 
 	// FB40
-	// LDA	TXTCLR
-	// LDA	MIXSET
+	soft_switch(TXTCLR);	// LDA	TXTCLR
+	soft_switch(MIXSET);	// LDA	MIXSET
 
 	clrtop();
 
@@ -660,3 +720,29 @@ int gr_copy(short source, short dest) {
 
 	return 0;
 }
+
+
+int text(void) {
+	// FB36
+
+	soft_switch(LOWSCR);	// LDA LOWSCR ($c054)
+	soft_switch(TXTSET);	// LDA TXTSET ($c051);
+	a=0;
+
+	setwnd();
+
+	return 0;
+}
+
+int basic_htab(int x) {
+	return 0;
+}
+
+int basic_vtab(int y) {
+	return 0;
+}
+
+int basic_print(char *string) {
+	return 0;
+}
+
