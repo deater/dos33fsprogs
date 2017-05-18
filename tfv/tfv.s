@@ -465,6 +465,8 @@ put_sprite_pixel:
 	cmp	#$0			; if all zero, transparent
 	beq	put_sprite_done_draw	; don't draw it
 
+					; FIXME: use BIT?
+
 	sta	COLOR			; save color for later
 	and	#$f0			; check if top nibble zero
 	bne	put_sprite_bottom	; if not skip ahead

@@ -44,10 +44,17 @@ unsigned char a,y,x;
 #define GBASH	0x27
 #define BASL	0x28
 #define BASH	0x29
+#define	BAS2L	0x2A
+#define BAS2H	0x2B
 #define H2	0x2C
 #define V2	0x2D
 #define MASK	0x2E
 #define COLOR	0x30
+#define INVFLG	0x32
+#define YSAV	0x34
+#define YSAV1	0x35
+#define CSWL	0x36
+#define CSWH	0x37
 #define FIRST	0xF0
 #define SPEEDZ	0xF1
 #define FLASH	0xF3
@@ -268,9 +275,9 @@ int grsim_update(void) {
 		/* FIXME: handle page2 */
 
 
-		if (j>12) bit_set=0;
-		else if (i>10) bit_set=0;
-		else bit_set=(a2_font[ch][j/2])&(1<<(i/2));
+		if (j>13) bit_set=0;
+		else if (i>11) bit_set=0;
+		else bit_set=(a2_font[ch][j/2])&(1<<(5-(i/2)));
 
 		if (inverse) {
 			if (bit_set) *t_pointer=color[0];
@@ -310,6 +317,13 @@ int grsim_update(void) {
 }
 
 
+void setnorm(void) {
+
+	y=0xff;
+	ram[INVFLG]=y;
+
+}
+
 int grsim_init(void) {
 
 	int mode;
@@ -345,6 +359,10 @@ int grsim_init(void) {
 	ram[WNDBTM]=0x18;
 
 	a=0; y=0; x=0;
+
+	//FA62 RESET
+
+	setnorm();
 
 	return 0;
 }
@@ -508,7 +526,21 @@ clrsc3:
 	ram[COLOR]=a;
 	vline();
 	y--;
-	if (y>0) goto clrsc3;
+	if (y<=0x80) goto clrsc3;
+}
+
+static void setgr(void) {
+
+	// FB40
+	// SETGR 
+	soft_switch(TXTCLR);	// LDA	TXTCLR
+	soft_switch(MIXSET);	// LDA	MIXSET
+
+	clrtop();
+
+	a=0x14;
+	setwnd();
+
 }
 
 int gr(void) {
@@ -518,14 +550,7 @@ int gr(void) {
 	soft_switch(MIXSET);	// LDA SW.MIXSET
 	//JMP MON.SETGR
 
-	// FB40
-	soft_switch(TXTCLR);	// LDA	TXTCLR
-	soft_switch(MIXSET);	// LDA	MIXSET
-
-	clrtop();
-
-	a=0x14;
-	setwnd();
+	setgr();
 
 	return 0;
 }
@@ -785,8 +810,176 @@ int text(void) {
 	return 0;
 }
 
+static void scroll(void) {
+	unsigned char s;
+
+	// fc70
+
+	a=ram[WNDTOP];
+	s=a;
+	vtabz();
+
+	// SCRL1
+scrl1:
+	a=ram[BASL];
+	ram[BAS2L]=a;
+	a=ram[BASH];
+	ram[BAS2H]=a;
+	y=ram[WNDWDTH];
+	y--;
+	a=s;
+	a+=1;
+	if (a>=ram[WNDBTM]) {
+		// SCRL3
+		y=0;
+		cleolz();
+		vtab();
+		return;
+	}
+	s=a;
+	vtabz();
+	// SCRL2
+scrl2:
+	a=ram[y_indirect(BASL,y)];
+	ram[y_indirect(BAS2L,y)]=a;
+	y--;
+	if (y<0x80) goto scrl2;
+	goto scrl1;
+}
+
+static void lf(void) {
+	ram[CV]=ram[CV]+1;
+	a=ram[CV];
+	if (a<ram[WNDBTM]) {
+		vtabz();
+		return;
+	}
+	ram[CV]=ram[CV]-1;
+	scroll();
+}
+
+static void cr(void) {
+	a=0x00;
+	ram[CH]=a;
+	lf();
+}
+
+
+
+static void bell1(void) {
+}
+
+static void up(void) {
+
+	a=ram[WNDTOP];
+	if (a>ram[CV]) return;
+
+	ram[CV]=ram[CV]-1;
+	vtab();
+}
+
+static void bs(void) {
+
+	ram[CH]=ram[CH]-1;
+
+	/* still positive */
+	if (ram[CH]<0x80) return;
+
+	a=ram[WNDWDTH];
+	ram[CH]=a;
+	ram[CH]=ram[CH]-1;
+
+	up();
+}
+
+static void storadv(void) {
+
+	// fbf0
+
+	y=ram[CH];
+	ram[y_indirect(BASL,y)]=a;
+
+	// advance
+
+	ram[CH]=ram[CH]+1;
+	a=ram[CH];
+	if (a>=ram[WNDWDTH]) {
+		cr();
+	}
+
+}
+
+static void vidout(void) {
+	// fbfd
+
+	if (a>=0xa0) {
+		storadv();
+		return;
+	}
+
+	/* Control Characters */
+	y=a;
+	// if bit 7 is set then we set negative flag
+	// BPL storadv
+	if (a<0x80) {
+		storadv();
+		return;
+	}
+
+	/* carriage return */
+	if (a==0x8d) {
+		cr();
+		return;
+	}
+
+	/* linefeed */
+	if (a==0x8a) {
+		lf();
+		return;
+	}
+
+	/* backspace */
+	if (a==0x88) {
+		bs();
+		return;
+	}
+
+	/* any other control code, beep */
+	bell1();
+	return;
+
+}
+
+static void vidwait(void) {
+	// check if control-S being pressed
+
+	vidout();
+}
+
+static void cout1(void) {
+
+	unsigned char s;
+
+	if (a<0xa0) {
+	}
+	else {
+		a=a&ram[INVFLG];
+	}
+	// coutz
+	ram[YSAV1]=y;
+	s=a;
+
+	vidwait();
+
+	a=s;
+	y=ram[YSAV1];
+
+}
+
 static void cout(void) {
 	// FDED
+	//	jmp (cswl)	custom handler
+	cout1();
 }
 
 static void wait(void) {
@@ -837,12 +1030,11 @@ void basic_htab(int xpos) {
 	}
 	ram[CH]=a;	// STA MON.CH
 
-
 	// KRW for the win!
 
 }
 
-void basic_vtab(int y) {
+void basic_vtab(int ypos) {
 	
 }
 

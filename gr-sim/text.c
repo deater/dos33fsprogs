@@ -6,7 +6,8 @@
 
 int main(int argc, char **argv) {
 
-	int x,y,ch;
+	int x,y,ch,i;
+	char output[BUFSIZ];
 
 	grsim_init();
 
@@ -20,7 +21,12 @@ int main(int argc, char **argv) {
 
 	basic_vtab(10);
 
-	basic_print("HELLO WORLD!\n");
+	basic_print("HELLO WORLD!\r\r");
+
+	for(i=0;i<128;i++) {
+		sprintf(output,"%c",i);
+		basic_print(output);
+	}
 
 	while(1) {
 		grsim_update();
