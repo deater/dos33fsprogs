@@ -17,4 +17,11 @@ int text(void);
 void basic_htab(int x);
 void basic_vtab(int y);
 void basic_print(char *string);
+void basic_inverse(void);
+void basic_normal(void);
+
+#define APPLE_UP        11
+#define APPLE_DOWN      10
+#define APPLE_LEFT      8
+#define APPLE_RIGHT     21
 

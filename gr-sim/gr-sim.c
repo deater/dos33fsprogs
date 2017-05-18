@@ -123,8 +123,20 @@ int grsim_input(void) {
 			switch (keypressed) {
 
 			case SDLK_ESCAPE:
-				return 'q';
+				return 27;
+			case 'a'...'z':
+			case 'A'...'Z':
+				return keypressed;
+			case SDLK_UP:
+				return 11;
+			case SDLK_DOWN:
+				return 10;
+			case SDLK_RIGHT:
+				return 21;
+			case SDLK_LEFT:
+				return 8;
 			default:
+				printf("Unknown %d\n",keypressed);
 				return keypressed;
 			}
 			break;
@@ -132,6 +144,9 @@ int grsim_input(void) {
 
 		case SDL_JOYBUTTONDOWN:
 		case SDL_JOYAXISMOTION:
+			printf("Joystick!\n");
+			break;
+
 		default:
 			printf("Unknown input action!\n");
 			break;
@@ -1034,8 +1049,25 @@ void basic_htab(int xpos) {
 
 }
 
+static void tabv(void) {
+
+	// TABV
+	// fb5b
+	ram[CV]=a;
+	vtab();
+}
+
 void basic_vtab(int ypos) {
-	
+	// f256
+	x=ypos;
+	x--;		/* base on zero */
+	a=x;
+
+	if (a>23) {
+		fprintf(stderr,"Error, vtab %d too big\n",ypos);
+		return;
+	}
+	tabv();
 }
 
 void basic_print(char *string) {
@@ -1049,3 +1081,22 @@ void basic_print(char *string) {
 
 }
 
+void basic_inverse(void) {
+	// F277
+	a=0x3f;
+	x=0;
+	ram[INVFLG]=a;
+	ram[FLASH]=x;
+
+	return;
+}
+
+void basic_normal(void) {
+	// F273
+	a=0xff;
+	x=0;
+	ram[INVFLG]=a;
+	ram[FLASH]=x;
+
+	return;
+}

@@ -45,6 +45,11 @@ int main(int argc, char **argv) {
 
 	int ch;
 	int x,y;
+	char tempst[BUFSIZ];
+	char nameo[9];
+
+	int name_x=0;
+	int cursor_x=0,cursor_y=0;
 
 	grsim_init();
 
@@ -56,25 +61,193 @@ int main(int argc, char **argv) {
 
 	grsim_update();
 
-	x=20;	y=21;
-	color_equals(0);
-
 	while(1) {
 
 		ch=grsim_input();
+		if (ch!=0) break;
 
-		if (ch=='q') break;
-		if (ch=='i') if (y>0) y-=2;
-		if (ch=='m') if (y<39) y+=2;
-		if (ch=='j') if (x>0) x--;
-		if (ch=='k') if (x<39) x++;
+		usleep(10000);
+	}
+
+	text();
+	home();
+
+	/* Enter your name */
+//            1         2         3         
+//  0123456789012345678901234567890123456789
+//00PLEASE ENTER A NAME:
+// 1
+// 2
+// 3            _ _ _ _ _ _ _ _
+// 4
+// 5            @ A B C D E F G
+// 6
+// 7            H I J K L M N O
+// 8
+// 9            P Q R S T U V W
+//10 
+//11            X Y Z [ \ ] ^ _
+//12
+//13              ! " # $ % & '
+//14
+//15            ( ) * + , - . /
+//16
+//17            0 1 2 3 4 5 6 7
+//18
+//19            8 9 : ' < = > ?
+//20
+//21               FINISHED
+//22
+//23
+//24
+	basic_print("PLEASE ENTER A NAME:");
+
+	for(x=0;x<9;x++) nameo[x]=0;
+
+	grsim_update();
+
+	while(1) {
+
+		basic_normal();
+		basic_htab(12);
+		basic_vtab(3);
+
+		for(x=0;x<8;x++) {
+			if (x==name_x) {
+				basic_inverse();
+				basic_print("+");
+				basic_normal();
+				basic_print(" ");
+			}
+			else if (nameo[x]==0) {
+				basic_print("_ ");
+			}
+			else {
+				sprintf(tempst,"%c ",nameo[x]);
+				basic_print(tempst);
+			}
+		}
+
+		for(y=0;y<8;y++) {
+			basic_htab(12);
+			basic_vtab(y*2+6);
+			for(x=0;x<8;x++) {
+				if (y<4) sprintf(tempst,"%c ",(y*8)+x+64);
+				else  sprintf(tempst,"%c ",(y*8)+x);
+
+				if ((x==cursor_x) && (y==cursor_y)) basic_inverse();
+				else basic_normal();
+
+				basic_print(tempst);
+			}
+		}
+
+		basic_htab(12);
+		basic_vtab(22);
+		basic_normal();
+
+		if ((cursor_y==8) && (cursor_x<4)) basic_inverse();
+		basic_print(" DONE ");
+		basic_normal();
+		basic_print("   ");
+		if ((cursor_y==8) && (cursor_x>=4)) basic_inverse();
+		basic_print(" BACK ");
+
+		while(1) {
+			ch=grsim_input();
+
+			if (ch==APPLE_UP) { // up
+				cursor_y--;
+			}
+
+			else if (ch==APPLE_DOWN) { // down
+				cursor_y++;
+			}
+
+			else if (ch==APPLE_LEFT) { // left
+				if (cursor_y==8) cursor_x-=4;
+				else cursor_x--;
+			}
+
+			else if (ch==APPLE_RIGHT) { // right
+				if (cursor_y==8) cursor_x+=4;
+				cursor_x++;
+			}
+
+			else if (ch=='\r') {
+				if (cursor_y==8) {
+					if (cursor_x<4) {
+						ch=27;
+						break;
+					}
+					else {
+						nameo[name_x]=0;
+						name_x--;
+						if (name_x<0) name_x=0;
+						break;
+					}
+				}
+
+				if (cursor_y<4) nameo[name_x]=(cursor_y*8)+
+							cursor_x+64;
+				else nameo[name_x]=(cursor_y*8)+cursor_x;
+//				printf("Set to %d\n",nameo[name_x]);
+				name_x++;
+			}
+
+			else if ((ch>32) && (ch<128)) {
+				nameo[name_x]=ch;
+				name_x++;
+
+			}
+
+			if (name_x>7) name_x=7;
+
+			if (cursor_x<0) {
+				cursor_x=7;
+				cursor_y--;
+			}
+			if (cursor_x>7) {
+				cursor_x=0;
+				cursor_y++;
+			}
+
+			if (cursor_y<0) cursor_y=8;
+			if (cursor_y>8) cursor_y=0;
+
+			if ((cursor_y==8) && (cursor_x<4)) cursor_x=0;
+			else if ((cursor_y==8) && (cursor_x>=4)) cursor_x=4;
+
+			if (ch!=0) break;
+
+			grsim_update();
+
+			usleep(10000);
+		}
+
+		if (ch==27) break;
+	}
+
+	gr();
+	x=20;	y=21;
+	color_equals(0);
+
+
+	while(1) {
+		ch=grsim_input();
+
+		if ((ch=='q') || (ch==27))  break;
+		if ((ch=='i') || (ch==APPLE_UP)) if (y>0) y-=2;
+		if ((ch=='m') || (ch==APPLE_DOWN)) if (y<39) y+=2;
+		if ((ch=='j') || (ch==APPLE_LEFT)) if (x>0) x--;
+		if ((ch=='k') || (ch==APPLE_RIGHT)) if (x<39) x++;
 
 		gr_copy(0x800,0x400);
 		grsim_put_sprite(test_sprite,x,y);
 
 		grsim_update();
 
-		usleep(100000);
+		usleep(10000);
 	}
 
 	return 0;

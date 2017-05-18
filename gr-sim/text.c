@@ -6,7 +6,7 @@
 
 int main(int argc, char **argv) {
 
-	int x,y,ch,i;
+	int ch,i;
 	char output[BUFSIZ];
 
 	grsim_init();
