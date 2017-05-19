@@ -40,6 +40,26 @@ static unsigned char test_sprite[]={
 	0x5f,0x5f,0x5f,0x5f,0xff,0xf2,0xf2,0xf2,
 };
 
+static unsigned char ship_forward[]={
+	0x5,0x3,
+	0x00,0x00,0x77,0x00,0x00,
+	0x50,0x55,0x77,0x55,0x50,
+	0x01,0x00,0x07,0x00,0x01,
+};
+
+static unsigned char ship_right[]={
+	0x5,0x3,
+	0x50,0x00,0x70,0x77,0x00,
+	0x01,0x55,0x77,0x55,0x50,
+	0x00,0x77,0x07,0x00,0x15,
+};
+
+static unsigned char ship_left[]={
+	0x5,0x3,
+	0x00,0x77,0x70,0x00,0x50,
+	0x50,0x55,0x77,0x55,0x01,
+	0x15,0x00,0x07,0x77,0x00,
+};
 
 int main(int argc, char **argv) {
 
@@ -228,22 +248,48 @@ int main(int argc, char **argv) {
 		if (ch==27) break;
 	}
 
+
+	/************************************************/
+	/* Flying					*/
+	/************************************************/
+
 	gr();
-	x=20;	y=21;
+	x=17;	y=30;
 	color_equals(0);
 
+	int direction=0;
+
+	color_equals(6);
+	int i;
+	for(i=0;i<20;i++) {
+		hlin(1, 0, 40, i);
+	}
+
+	color_equals(2);
+	for(i=20;i<48;i++) {
+		hlin(1, 0, 40, i);
+	}
 
 	while(1) {
 		ch=grsim_input();
 
 		if ((ch=='q') || (ch==27))  break;
-		if ((ch=='i') || (ch==APPLE_UP)) if (y>0) y-=2;
+		if ((ch=='i') || (ch==APPLE_UP)) if (y>20) y-=2;
 		if ((ch=='m') || (ch==APPLE_DOWN)) if (y<39) y+=2;
-		if ((ch=='j') || (ch==APPLE_LEFT)) if (x>0) x--;
-		if ((ch=='k') || (ch==APPLE_RIGHT)) if (x<39) x++;
+		if ((ch=='j') || (ch==APPLE_LEFT)) {
+			direction--;
+			if (direction<-1) direction=-1;
+		}
+		if ((ch=='k') || (ch==APPLE_RIGHT)) {
+			direction++;
+			if (direction>1) direction=1;
+		}
 
 		gr_copy(0x800,0x400);
-		grsim_put_sprite(test_sprite,x,y);
+
+		if (direction==0) grsim_put_sprite(ship_forward,x,y);
+		if (direction==-1) grsim_put_sprite(ship_left,x,y);
+		if (direction==1) grsim_put_sprite(ship_right,x,y);
 
 		grsim_update();
 

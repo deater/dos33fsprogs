@@ -766,6 +766,8 @@ int grsim_put_sprite(unsigned char *sprite_data, int xpos, int ypos) {
 	ram[CV]=*ptr;
 	ptr++;
 
+	ypos=ypos&0xfe;
+
 	while(1) {
 		address=gr_addr_lookup[ypos/2];
 		address+=xpos;
@@ -787,7 +789,7 @@ int grsim_put_sprite(unsigned char *sprite_data, int xpos, int ypos) {
 			ptr++;
 			address++;
 		}
-		ypos++;
+		ypos+=2;
 		ram[CV]--;
 		if (ram[CV]==0) break;
 	}
@@ -1099,4 +1101,30 @@ void basic_normal(void) {
 	ram[FLASH]=x;
 
 	return;
+}
+
+
+int hlin(int page, int x1, int x2, int at) {
+
+	unsigned short addr;
+	int i,hi;
+
+	addr=gr_addr_lookup[at/2];
+	hi=at&1;
+
+	addr+=(page*4)<<8;
+
+	for(i=x1;i<x2;i++) {
+		if (hi) {
+			ram[addr+i]=ram[addr+i]&0x0f;
+			ram[addr+i]|=ram[COLOR]&0xf0;
+		}
+		else {
+			ram[addr+i]=ram[addr+i]&0xf0;
+			ram[addr+i]|=ram[COLOR]&0x0f;
+		}
+
+	}
+
+	return 0;
 }

@@ -19,6 +19,7 @@ void basic_vtab(int y);
 void basic_print(char *string);
 void basic_inverse(void);
 void basic_normal(void);
+int hlin(int page, int x1, int x2, int at);
 
 #define APPLE_UP        11
 #define APPLE_DOWN      10
