@@ -93,7 +93,7 @@ static char sharps[12]={' ','#',' ',' ','#',' ','#',' ',' ','#',' ','#'};
 char *ed_to_note(int freq, char *out) {
 
 	int i,j;
-	int note=0,octave=0;
+	int note=0,octave=0,notefound=0;;
 
 //	printf("Freq=%d\n",freq);
 
@@ -108,10 +108,32 @@ char *ed_to_note(int freq, char *out) {
 	for(j=0;j<12;j++) {
 		if (freq==note_mapping[i].freq[j]) {
 			note=j;
+			notefound=1;
 			break;
 		}
 	}
-	if (j==12) {
+
+	if ((!notefound) && (freq>28)) {
+		for(j=0;j<12;j++) {
+			if ((freq+1)==note_mapping[i].freq[j]) {
+				note=j;
+				notefound=1;
+				break;
+			}
+		}
+	}
+
+	if ((!notefound) && (freq>28)) {
+		for(j=0;j<12;j++) {
+			if ((freq-1)==note_mapping[i].freq[j]) {
+				note=j;
+				notefound=1;
+				break;
+			}
+		}
+	}
+
+	if (!notefound) {
 		sprintf(out,"%3d",freq);
 	}
 	else {
