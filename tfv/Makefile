@@ -5,10 +5,12 @@ PNG2GR = ../gr-utils/png2gr
 
 all:	tfv.dsk
 
-tfv.dsk:	TITLE.GR TFV ED
+tfv.dsk:	TITLE.GR TFV ED HIGHWIND.ED FIGHTING.ED
 	$(DOS33) -y tfv.dsk BSAVE -a 0x1000 TFV
 	$(DOS33) -y tfv.dsk BSAVE -a 0x400 TITLE.GR
 	$(DOS33) -y tfv.dsk BSAVE -a 0x900 ED
+	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 HIGHWIND.ED
+	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 FIGHTING.ED
 
 TFV:	tfv.o
 	ld65 -o TFV tfv.o -C ./apple2_1000.inc

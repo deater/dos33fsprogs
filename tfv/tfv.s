@@ -4,8 +4,8 @@ KEYPRESS	EQU	$C000
 KEYRESET	EQU	$C010
 
 ;; SOFT SWITCHES
-GR		EQU	$C050
-TEXT		EQU	$C051
+SET_GR		EQU	$C050
+SET_TEXT	EQU	$C051
 FULLGR		EQU	$C052
 TEXTGR		EQU	$C053
 PAGE0		EQU	$C054
@@ -19,6 +19,7 @@ PTRIG		EQU	$C070
 
 
 ;; MONITOR ROUTINES
+TEXT	EQU $FB36
 HLINE	EQU $F819			;; HLINE Y,$2C at A
 VLINE	EQU $F828			;; VLINE A,$2D at Y
 CLRSCR	EQU $F832			;; Clear low-res screen
@@ -90,13 +91,45 @@ OUTH		EQU	$FF
 	lda	#20
 	sta	XPOS
 
-main_loop:
+title_screen:
 
+	jsr	gr_copy
+
+	jsr	wait_until_keypressed
+
+
+enter_name:
+
+	jsr	TEXT
+	jsr	HOME
+
+	lda     #>(enter_name_string)
+        sta     OUTH
+	lda     #<(enter_name_string)
+        sta     OUTL
+
+	jsr	print_string
+
+
+
+	jsr	wait_until_keypressed
+
+
+
+flying_start:
+
+	jsr     set_gr_page0
+
+flying_loop:
 	jsr	gr_copy
 
 	jsr	put_sprite
 
 	jsr	wait_until_keypressed
+
+
+
+
 
 	lda	LASTKEY
 
@@ -125,7 +158,7 @@ check_right:
 	inc	XPOS
 
 check_done:
-	jmp	main_loop
+	jmp	flying_loop
 
 
 
@@ -263,7 +296,7 @@ set_gr_page0:
 	bit	PAGE0			; set page 0
 	bit	LORES			; Lo-res graphics
 	bit	TEXTGR			; mixed gr/text mode
-	bit	GR			; set graphics
+	bit	SET_GR			; set graphics
 	rts
 
 	;=========================================================
@@ -510,9 +543,29 @@ put_sprite_done_draw:
 
 	rts				; return
 
+print_string:
+	ldy	#0
+print_string_loop:
+	lda	(OUTL),Y
+	beq	done_print_string
+	ora	$80
+	jsr	COUT1
+	iny
+	bne	print_string_loop
+done_print_string:
+	rts
+
+
+enter_name_string:
+	.asciiz	"PLEASE ENTER A NAME:"
+
+name:
+	.byte $0,$0,$0,$0,$0,$0,$0,$0
+
 
 	; waste memory with a lookup table
 	; maybe faster than using GBASCALC?
+
 gr_offsets:
 	.word	$400,$480,$500,$580,$600,$680,$700,$780
 	.word 	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
