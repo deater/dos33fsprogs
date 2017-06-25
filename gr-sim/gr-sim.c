@@ -508,7 +508,7 @@ static void vtabz(void) {
 }
 
 static void vtab(void) {
-
+	/* fb5b */
 	a=ram[CV];
 	vtabz();
 }

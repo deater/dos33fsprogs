@@ -19,12 +19,14 @@ PTRIG		EQU	$C070
 
 
 ;; MONITOR ROUTINES
-TEXT	EQU $FB36
+
 HLINE	EQU $F819			;; HLINE Y,$2C at A
 VLINE	EQU $F828			;; VLINE A,$2D at Y
 CLRSCR	EQU $F832			;; Clear low-res screen
 CLRTOP	EQU $F836			;; clear only top of low-res screen
 SETCOL	EQU $F864			;; COLOR=A
+TEXT	EQU $FB36
+VTAB	EQU $FB5B
 BASCALC	EQU $FBC1			;;
 HOME	EQU $FC58			;; Clear the text screen
 WAIT	EQU $FCA8			;; delay 1/2(26+27A+5A^2) us
@@ -48,6 +50,17 @@ V2	EQU $2D
 MASK	EQU $2E
 COLOR	EQU $30
 
+; Our zero-page addresses
+; we try not to conflict with anything DOS, MONITOR or BASIC related
+
+COLOR1		EQU	$E0
+COLOR2		EQU	$E1
+MATCH		EQU	$E2
+XX		EQU	$E3
+YY		EQU	$E4
+YADD		EQU	$E5
+LOOP		EQU	$E6
+
 FIRST		EQU	$F0
 LASTKEY		EQU	$F1
 PADDLE_STATUS	EQU	$F2
@@ -67,6 +80,43 @@ OUTH		EQU	$FF
 	;=============================
 	jsr     HOME
 	jsr     set_gr_page0
+
+	;=============================
+	; show VMW splash screen
+	;=============================
+	jsr     CLRTOP
+
+	lda	#100
+	sta	MATCH
+	jsr	draw_logo
+
+	lda	#0
+	sta	MATCH
+shine_loop:
+
+	jsr	draw_logo
+
+	inc	MATCH
+	lda	MATCH
+	cmp	#30
+	bne	shine_loop
+
+	lda	#8
+	sta	CH		; HTAB 9
+
+	lda	#20
+	jsr	VTAB		; VTAB 21
+
+
+	lda     #>(vmwsw_string)
+        sta     OUTH
+	lda     #<(vmwsw_string)
+        sta     OUTL
+
+	jsr	print_string		; print("A VMW SOFTWARE PRODUCTION");
+
+
+	jsr	wait_until_keypressed
 
 	;=================
 	; clear the screen
@@ -110,7 +160,10 @@ enter_name:
 
 	jsr	print_string
 
+name_loop:
 
+	; HTAB 12
+	; VTAB 3
 
 	jsr	wait_until_keypressed
 
@@ -180,6 +233,118 @@ exit:
 ;=====================================================================
 ;= ROUTINES
 ;=====================================================================
+
+	;=================
+	; display part of logo
+	;=================
+	;
+draw_segment:
+	lda	#0
+	sta	LOOP
+
+segment_loop:
+	lda	YADD
+	clc
+	adc	YY
+	sta	YY	; yy=yy+yadd
+
+	lda	COLOR1
+	sta	COLOR		; color=COLOR1
+
+	lda	MATCH		; if (ram[XX]==ram[MATCH])
+	cmp	XX
+	bne	nocolmatch1
+
+	lda	COLOR		; color_equals(ram[COLOR1]*3);
+	clc
+	adc	COLOR1
+	adc	COLOR1
+	sta	COLOR
+
+nocolmatch1:
+	lda	YY
+	sta	V2
+	lda	XX
+	clc
+	adc	#9
+	tay
+	lda	#10
+
+	jsr	VLINE	; A,V2 at Y	vlin(10,ram[YY],9+ram[XX]);
+
+	lda	COLOR2
+	sta	COLOR		; color=COLOR2
+
+	lda	MATCH		; if (ram[XX]==ram[MATCH])
+	cmp	XX
+	bne	nocolmatch2
+
+	lda	COLOR		; color_equals(ram[COLOR2]*3);
+	clc
+	adc	COLOR2
+	adc	COLOR2
+	sta	COLOR
+
+nocolmatch2:
+	lda	#34
+	sta	V2
+	lda	XX
+	clc
+	adc	#9
+	tay
+	lda	YY
+	cmp	#34
+	beq	skip_bottom		   ; if (ram[YY]==34) skip
+	jsr	VLINE	; A,V2 at Y	vlin(ram[YY],34,9+ram[XX]);
+
+skip_bottom:
+
+
+	inc	XX		; ram[XX]++;
+
+	inc	LOOP
+	lda	LOOP
+	cmp	#4
+	bne	segment_loop
+
+	lda	YADD		; ram[YADD]=-ram[YADD];
+	eor	#$ff
+	clc
+	adc	#1
+	sta	YADD
+
+	rts
+
+	;=================
+	; display VMW logo
+	;=================
+	;
+draw_logo:
+	lda	#0
+	sta	XX		; start of logo
+	lda	#10
+	sta	YY		; draw at Y=10
+	lda	#6
+	sta	YADD		; step of 6
+
+	lda	#$00
+	sta	COLOR2
+	lda	#$11
+	sta	COLOR1		; first colors are red/black
+	jsr	draw_segment
+	lda	#$44
+	sta	COLOR2		; now red/green
+	jsr	draw_segment
+	lda	#$22
+	sta	COLOR1		; now green/blue
+	jsr	draw_segment
+	jsr	draw_segment
+	jsr	draw_segment
+	lda	#$00
+	sta	COLOR2		; now blue/black
+	jsr	draw_segment
+
+	rts
 
 	;=================
 	; load RLE image
@@ -548,13 +713,15 @@ print_string:
 print_string_loop:
 	lda	(OUTL),Y
 	beq	done_print_string
-	ora	$80
+	ora	#$80
 	jsr	COUT1
 	iny
 	bne	print_string_loop
 done_print_string:
 	rts
 
+vmwsw_string:
+	.asciiz "A VMW SOFTWARE PRODUCTION"
 
 enter_name_string:
 	.asciiz	"PLEASE ENTER A NAME:"
