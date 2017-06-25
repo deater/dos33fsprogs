@@ -61,12 +61,31 @@ static unsigned char ship_left[]={
 	0x15,0x00,0x07,0x77,0x00,
 };
 
+static int xx,yy,yadd,match;
+
+void draw_segment(int color1, int color2) {
+	int i;
+
+	for(i=0;i<4;i++) {
+		yy+=yadd;
+		if (xx==match) color_equals(color1*3);
+		else color_equals(color1);
+		basic_vlin(10,yy,9+xx);
+		if (xx==match) color_equals(color2*3);
+		else color_equals(color2);
+		if (yy!=34) basic_vlin(yy,34,9+xx);
+		xx++;
+	}
+	yadd=-yadd;
+}
+
 int main(int argc, char **argv) {
 
 	int ch;
 	int x,y;
 	char tempst[BUFSIZ];
 	char nameo[9];
+	int i;
 
 	int name_x=0;
 	int cursor_x=0,cursor_y=0;
@@ -75,6 +94,55 @@ int main(int argc, char **argv) {
 
 	gr();
 
+	/* VMW splash */
+
+	yy=10;
+	xx=0;
+
+	yadd=6;
+	match=100;
+	draw_segment(1,0);
+	draw_segment(1,4);
+	draw_segment(2,4);
+	draw_segment(2,4);
+	draw_segment(2,4);
+	draw_segment(2,0);
+
+	grsim_update();
+
+	usleep(100000);
+
+	for(match=0;match<30;match++) {
+		yy=10;
+		xx=0;
+
+		yadd=6;
+		draw_segment(1,0);
+		draw_segment(1,4);
+		draw_segment(2,4);
+		draw_segment(2,4);
+		draw_segment(2,4);
+		draw_segment(2,0);
+
+		grsim_update();
+
+		usleep(20000);
+	}
+
+	basic_vtab(20);
+	basic_htab(9);
+	basic_print("A VMW SOFTWARE PRODUCTION");
+	grsim_update();
+
+	while(1) {
+		ch=grsim_input();
+		if (ch!=0) break;
+
+		usleep(10000);
+	}
+
+
+
 	/* Title Screen */
 	grsim_unrle(title_rle,0x800);
 	gr_copy(0x800,0x400);
@@ -82,7 +150,6 @@ int main(int argc, char **argv) {
 	grsim_update();
 
 	while(1) {
-
 		ch=grsim_input();
 		if (ch!=0) break;
 
@@ -93,7 +160,7 @@ int main(int argc, char **argv) {
 	home();
 
 	/* Enter your name */
-//            1         2         3         
+//            1         2         3
 //  0123456789012345678901234567890123456789
 //00PLEASE ENTER A NAME:
 // 1
@@ -105,7 +172,7 @@ int main(int argc, char **argv) {
 // 7            H I J K L M N O
 // 8
 // 9            P Q R S T U V W
-//10 
+//10
 //11            X Y Z [ \ ] ^ _
 //12
 //13              ! " # $ % & '
@@ -260,7 +327,7 @@ int main(int argc, char **argv) {
 	int direction=0;
 
 	color_equals(6);
-	int i;
+
 	for(i=0;i<20;i++) {
 		hlin(1, 0, 40, i);
 	}
