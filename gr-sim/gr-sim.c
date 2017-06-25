@@ -9,8 +9,8 @@
 #include "apple2_font.h"
 
 /* 40x48 low-res mode	*/
-#define XSIZE		40
-#define YSIZE		48
+#define GR_XSIZE	40
+#define GR_YSIZE	48
 #define PIXEL_X_SCALE	14
 #define PIXEL_Y_SCALE	8
 
@@ -20,8 +20,8 @@
 #define TEXT_X_SCALE	14
 #define TEXT_Y_SCALE	16
 
-static int xsize=XSIZE*PIXEL_X_SCALE;
-static int ysize=YSIZE*PIXEL_Y_SCALE;
+static int xsize=GR_XSIZE*PIXEL_X_SCALE;
+static int ysize=GR_YSIZE*PIXEL_Y_SCALE;
 
 static int debug=0;
 
@@ -256,33 +256,57 @@ int grsim_update(void) {
 	int x,y,i,j;
 	int bit_set,ch,inverse,flash;
 	unsigned int *t_pointer;
+	int text_start,text_end,gr_start,gr_end;
 
 	t_pointer=((Uint32 *)sdl_screen->pixels);
 
+	text_start=0; text_end=0;
+	gr_start=0;gr_end=GR_YSIZE;
+
 	if (text_mode) {
-		for(y=0;y<TEXT_YSIZE;y++) {
-			for(j=0;j<TEXT_Y_SCALE;j++) {
-				for(x=0;x<TEXT_XSIZE;x++) {
-					ch=ram[gr_addr_lookup[y]+x];
-		//			printf("%x ",ch);
+		text_start=0; text_end=TEXT_YSIZE;
+		gr_start=0; gr_end=0;
+	}
+	else if (mixed_graphics) {
+		text_start=20; text_end=TEXT_YSIZE;
+		gr_start=0; gr_end=40;
+	}
 
-					if (ch&0x80) {
-						flash=0;
-						inverse=0;
-						ch=ch&0x7f;
-					}
-					else if (ch&0x40) {
-						flash=1;
-						inverse=0;
-						ch=ch&0x3f;
-					}
-					else {
-						inverse=1;
-						flash=0;
-						ch=ch&0x3f;
-					}
+	for(y=gr_start;y<gr_end;y++) {
+		for(j=0;j<PIXEL_Y_SCALE;j++) {
+			for(x=0;x<GR_XSIZE;x++) {
+				for(i=0;i<PIXEL_X_SCALE;i++) {
+					*t_pointer=color[scrn(x,y)];
+					t_pointer++;
+				}
+			}
+		}
+	}
 
-					for(i=0;i<TEXT_X_SCALE;i++) {
+
+	for(y=text_start;y<text_end;y++) {
+		for(j=0;j<TEXT_Y_SCALE;j++) {
+			for(x=0;x<TEXT_XSIZE;x++) {
+				ch=ram[gr_addr_lookup[y]+x];
+	//			printf("%x ",ch);
+
+				if (ch&0x80) {
+					flash=0;
+					inverse=0;
+					ch=ch&0x7f;
+				}
+				else if (ch&0x40) {
+					flash=1;
+					inverse=0;
+					ch=ch&0x3f;
+				}
+				else {
+					inverse=1;
+					flash=0;
+					ch=ch&0x3f;
+				}
+
+				for(i=0;i<TEXT_X_SCALE;i++) {
 
 		/* 14 x 16 */
 		/* but font is 5x7 */
@@ -308,23 +332,12 @@ int grsim_update(void) {
 		}
 
 		t_pointer++;
-					}
+
 				}
 			}
 		}
 	}
-	else {
-		for(y=0;y<YSIZE;y++) {
-			for(j=0;j<PIXEL_Y_SCALE;j++) {
-				for(x=0;x<XSIZE;x++) {
-					for(i=0;i<PIXEL_X_SCALE;i++) {
-						*t_pointer=color[scrn(x,y)];
-						t_pointer++;
-					}
-				}
-			}
-		}
-	}
+
 
 	SDL_UpdateRect(sdl_screen, 0, 0, xsize, ysize);
 
@@ -547,7 +560,7 @@ clrsc3:
 static void setgr(void) {
 
 	// FB40
-	// SETGR 
+	// SETGR
 	soft_switch(TXTCLR);	// LDA	TXTCLR
 	soft_switch(MIXSET);	// LDA	MIXSET
 

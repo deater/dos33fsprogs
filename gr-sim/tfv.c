@@ -92,6 +92,7 @@ int main(int argc, char **argv) {
 
 	grsim_init();
 
+	home();
 	gr();
 
 	/* VMW splash */
@@ -129,7 +130,7 @@ int main(int argc, char **argv) {
 		usleep(20000);
 	}
 
-	basic_vtab(20);
+	basic_vtab(21);
 	basic_htab(9);
 	basic_print("A VMW SOFTWARE PRODUCTION");
 	grsim_update();
