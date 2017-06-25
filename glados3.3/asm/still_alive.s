@@ -85,18 +85,18 @@ music_done:
 	rts
 
 
-	while(1) {
-		click;			; LDA / 4-cycles
-loop:
-	y--;				; DEY / 2-cycles
-	if (y==0) {			; BNE 2/3
-		mainy--;
-		if (mainy==0) return;
-	}
-	x--;
-	if (x==0) {}
-	reload_x;
-	}
+;	while(1) {
+;		click;			; LDA / 4-cycles
+;loop:
+;	y--;				; DEY / 2-cycles
+;	if (y==0) {			; BNE 2/3
+;		mainy--;
+;		if (mainy==0) return;
+;	}
+;	x--;
+;	if (x==0) {}
+;	reload_x;
+;	}
 
 
 ;55 PRINT " ------------------------------------ "
