@@ -61,22 +61,47 @@ static unsigned char ship_left[]={
 	0x15,0x00,0x07,0x77,0x00,
 };
 
-static int xx,yy,yadd,match;
+#define COLOR1	0x00
+#define COLOR2	0x01
+#define MATCH	0x02
+#define XX	0x03
+#define YY	0x04
+#define YADD	0x05
+#define LOOP	0x06
 
-void draw_segment(int color1, int color2) {
-	int i;
+static void draw_segment(void) {
 
-	for(i=0;i<4;i++) {
-		yy+=yadd;
-		if (xx==match) color_equals(color1*3);
-		else color_equals(color1);
-		basic_vlin(10,yy,9+xx);
-		if (xx==match) color_equals(color2*3);
-		else color_equals(color2);
-		if (yy!=34) basic_vlin(yy,34,9+xx);
-		xx++;
+	for(ram[LOOP]=0;ram[LOOP]<4;ram[LOOP]++) {
+		ram[YY]=ram[YY]+ram[YADD];
+		if (ram[XX]==ram[MATCH]) color_equals(ram[COLOR1]*3);
+		else color_equals(ram[COLOR1]);
+		basic_vlin(10,ram[YY],9+ram[XX]);
+		if (ram[XX]==ram[MATCH]) color_equals(ram[COLOR2]*3);
+		else color_equals(ram[COLOR2]);
+		if (ram[YY]!=34) basic_vlin(ram[YY],34,9+ram[XX]);
+		ram[XX]++;
 	}
-	yadd=-yadd;
+	ram[YADD]=-ram[YADD];
+}
+
+static void draw_logo(void) {
+
+	ram[XX]=0;
+	ram[YY]=10;
+	ram[YADD]=6;
+	ram[COLOR1]=1;
+	ram[COLOR2]=0;
+	draw_segment();
+	ram[COLOR2]=4;
+	draw_segment();
+	ram[COLOR1]=2;
+	draw_segment();
+	draw_segment();
+	draw_segment();
+	ram[COLOR2]=0;
+	draw_segment();
+
+	grsim_update();
 }
 
 int main(int argc, char **argv) {
@@ -97,34 +122,13 @@ int main(int argc, char **argv) {
 
 	/* VMW splash */
 
-	yy=10;
-	xx=0;
-
-	yadd=6;
-	match=100;
-	draw_segment(1,0);
-	draw_segment(1,4);
-	draw_segment(2,4);
-	draw_segment(2,4);
-	draw_segment(2,4);
-	draw_segment(2,0);
-
-	grsim_update();
+	ram[MATCH]=100;
+	draw_logo();
 
 	usleep(100000);
 
-	for(match=0;match<30;match++) {
-		yy=10;
-		xx=0;
-
-		yadd=6;
-		draw_segment(1,0);
-		draw_segment(1,4);
-		draw_segment(2,4);
-		draw_segment(2,4);
-		draw_segment(2,4);
-		draw_segment(2,0);
-
+	for(ram[MATCH]=0;ram[MATCH]<30;ram[MATCH]++) {
+		draw_logo();
 		grsim_update();
 
 		usleep(20000);

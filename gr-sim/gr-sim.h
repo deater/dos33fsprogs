@@ -1,4 +1,6 @@
 extern unsigned char ram[128*1024];
+extern unsigned char a,y,x;
+
 int grsim_input(void);
 int grsim_update(void);
 int grsim_init(void);

@@ -739,7 +739,7 @@ int basic_vlin(int y1, int y2, int at) {
 	else       { ram[H2]=y2; ram[V2]=y2; ram[FIRST]=y1; }
 	x=at;
 
-	if (x>48) {
+	if (x>40) {
 		fprintf(stderr,"Error!  AT too large %d!\n",x);
 	}
 
