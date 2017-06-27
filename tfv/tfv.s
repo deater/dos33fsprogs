@@ -17,6 +17,9 @@ PADDLE_BUTTON0	EQU	$C061
 PADDL0		EQU	$C064
 PTRIG		EQU	$C070
 
+;; BASIC ROUTINES
+
+NORMAL	EQU	$F273
 
 ;; MONITOR ROUTINES
 
@@ -26,12 +29,14 @@ CLRSCR	EQU $F832			;; Clear low-res screen
 CLRTOP	EQU $F836			;; clear only top of low-res screen
 SETCOL	EQU $F864			;; COLOR=A
 TEXT	EQU $FB36
-VTAB	EQU $FB5B
+TABV	EQU $FB5B			;; VTAB to A
 BASCALC	EQU $FBC1			;;
+VTAB	EQU $FC22			;; VTAB to CV
 HOME	EQU $FC58			;; Clear the text screen
 WAIT	EQU $FCA8			;; delay 1/2(26+27A+5A^2) us
 SETINV	EQU $FE80			;; INVERSE
 SETNORM	EQU $FE84			;; NORMAL
+COUT	EQU $FDED			;; output A to screen
 COUT1	EQU $FDF0			;; output A to screen
 
 ;; Zero page addresses
@@ -49,6 +54,7 @@ H2	EQU $2C
 V2	EQU $2D
 MASK	EQU $2E
 COLOR	EQU $30
+INVFLG	EQU $32
 
 ; Our zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
@@ -60,6 +66,12 @@ XX		EQU	$E3
 YY		EQU	$E4
 YADD		EQU	$E5
 LOOP		EQU	$E6
+MEMPTRL		EQU	$E7
+MEMPTRH		EQU	$E8
+NAMEL		EQU	$E9
+NAMEH		EQU	$EA
+NAMEX		EQU	$EB
+CHAR		EQU	$EC
 
 FIRST		EQU	$F0
 LASTKEY		EQU	$F1
@@ -105,7 +117,7 @@ shine_loop:
 	sta	CH		; HTAB 9
 
 	lda	#20
-	jsr	VTAB		; VTAB 21
+	jsr	TABV		; VTAB 21
 
 
 	lda     #>(vmwsw_string)
@@ -118,9 +130,12 @@ shine_loop:
 
 	jsr	wait_until_keypressed
 
-	;=================
-	; clear the screen
-	;=================
+	;======================
+	; show the title screen
+	;======================
+
+title_screen:
+
 	jsr     CLRTOP
 
 	lda	#$c
@@ -141,8 +156,6 @@ shine_loop:
 	lda	#20
 	sta	XPOS
 
-title_screen:
-
 	jsr	gr_copy
 
 	jsr	wait_until_keypressed
@@ -160,13 +173,87 @@ enter_name:
 
 	jsr	print_string
 
+	; zero out name
+
+	lda	#<(name)
+	sta	MEMPTRL
+	sta	NAMEL
+	lda	#>(name)
+	sta	MEMPTRH
+	sta	NAMEH
+	lda	#0
+	ldx	#8
+	jsr	memset
+
 name_loop:
 
-	; HTAB 12
-	; VTAB 3
+	jsr	NORMAL
+
+	lda	#11
+	sta	CH		; HTAB 12
+
+	lda	#2
+	jsr	TABV		; VTAB 3
+
+	ldy	#0
+	sty	NAMEX
+
+name_line:
+	cpy	NAMEX
+	bne	name_notx
+	lda	#'+'
+	jmp	name_next
+
+name_notx:
+	lda	NAMEL,Y
+	beq	name_zero
+	ora	#$80
+	bne	name_next
+
+name_zero:
+	lda	#('_'+$80)
+name_next:
+	jsr	COUT
+	lda	#(' '+$80)
+	jsr	COUT
+	iny
+	cpy	#8
+	bne	name_line
+
+	lda	#7
+	sta	CV
+
+	lda	#('@'+$80)
+	sta	CHAR
+
+print_letters_loop:
+	lda	#11
+	sta	CH		; HTAB 12
+	jsr	VTAB
+
+	ldy	#0
+
+print_letters_inner_loop:
+	lda	CHAR
+	jsr	COUT
+	inc	CHAR
+	lda	#(' '+$80)
+	jsr	COUT
+	iny
+
+	cpy	#$8
+	bne	print_letters_inner_loop
+
+
+
+
+
 
 	jsr	wait_until_keypressed
 
+	;=====================
+	; Start the game
+	;=====================
 
 
 flying_start:
@@ -233,6 +320,21 @@ exit:
 ;=====================================================================
 ;= ROUTINES
 ;=====================================================================
+
+	;======================
+	; memset
+	;======================
+	; a=value
+	; x=length
+	; MEMPTRL/MEMPTRH is address
+memset:
+	ldy	#0
+memset_loop:
+	sta	MEMPTRL,Y
+	iny
+	dex
+	bne	memset_loop
+	rts
 
 	;=================
 	; display part of logo

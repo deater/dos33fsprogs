@@ -32,6 +32,7 @@ static unsigned char title_rle[]=
 
 	};
 
+#if 0
 static unsigned char test_sprite[]={
 	0x8,0x4,
 	0x55,0x50,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -39,6 +40,7 @@ static unsigned char test_sprite[]={
 	0xff,0x1f,0x4f,0x2f,0xff,0x22,0x20,0x00,
 	0x5f,0x5f,0x5f,0x5f,0xff,0xf2,0xf2,0xf2,
 };
+#endif
 
 static unsigned char ship_forward[]={
 	0x5,0x3,
@@ -68,6 +70,8 @@ static unsigned char ship_left[]={
 #define YY	0x04
 #define YADD	0x05
 #define LOOP	0x06
+#define MEMPTRL	0x07
+#define MEMPTRH	0x08
 
 static void draw_segment(void) {
 
@@ -104,13 +108,42 @@ static void draw_logo(void) {
 	grsim_update();
 }
 
+static int repeat_until_keypressed(void) {
+
+	int ch;
+
+	while(1) {
+		ch=grsim_input();
+		if (ch!=0) break;
+
+		usleep(10000);
+	}
+
+	return ch;
+}
+
+static void apple_memset(char *ptr, int value, int length) {
+
+	a=value;
+	x=length;
+	y=0;
+
+	while(x>0) {
+		ptr[y]=a;
+		y++;
+		x--;
+	}
+}
+
+
+
 int main(int argc, char **argv) {
 
 	int ch;
-	int x,y;
 	char tempst[BUFSIZ];
 	char nameo[9];
 	int i;
+	int xx,yy;
 
 	int name_x=0;
 	int cursor_x=0,cursor_y=0;
@@ -125,7 +158,7 @@ int main(int argc, char **argv) {
 	ram[MATCH]=100;
 	draw_logo();
 
-	usleep(100000);
+	usleep(200000);
 
 	for(ram[MATCH]=0;ram[MATCH]<30;ram[MATCH]++) {
 		draw_logo();
@@ -139,14 +172,7 @@ int main(int argc, char **argv) {
 	basic_print("A VMW SOFTWARE PRODUCTION");
 	grsim_update();
 
-	while(1) {
-		ch=grsim_input();
-		if (ch!=0) break;
-
-		usleep(10000);
-	}
-
-
+	repeat_until_keypressed();
 
 	/* Title Screen */
 	grsim_unrle(title_rle,0x800);
@@ -154,12 +180,7 @@ int main(int argc, char **argv) {
 
 	grsim_update();
 
-	while(1) {
-		ch=grsim_input();
-		if (ch!=0) break;
-
-		usleep(10000);
-	}
+	repeat_until_keypressed();
 
 	text();
 	home();
@@ -194,7 +215,7 @@ int main(int argc, char **argv) {
 //24
 	basic_print("PLEASE ENTER A NAME:");
 
-	for(x=0;x<9;x++) nameo[x]=0;
+	apple_memset(nameo,0,9);
 
 	grsim_update();
 
@@ -204,30 +225,30 @@ int main(int argc, char **argv) {
 		basic_htab(12);
 		basic_vtab(3);
 
-		for(x=0;x<8;x++) {
-			if (x==name_x) {
+		for(yy=0;yy<8;yy++) {
+			if (yy==name_x) {
 				basic_inverse();
 				basic_print("+");
 				basic_normal();
 				basic_print(" ");
 			}
-			else if (nameo[x]==0) {
+			else if (nameo[yy]==0) {
 				basic_print("_ ");
 			}
 			else {
-				sprintf(tempst,"%c ",nameo[x]);
+				sprintf(tempst,"%c ",nameo[yy]);
 				basic_print(tempst);
 			}
 		}
 
-		for(y=0;y<8;y++) {
+		for(yy=0;yy<8;yy++) {
 			basic_htab(12);
-			basic_vtab(y*2+6);
-			for(x=0;x<8;x++) {
-				if (y<4) sprintf(tempst,"%c ",(y*8)+x+64);
-				else  sprintf(tempst,"%c ",(y*8)+x);
+			basic_vtab(yy*2+6);
+			for(xx=0;xx<8;xx++) {
+				if (yy<4) sprintf(tempst,"%c ",(yy*8)+xx+64);
+				else  sprintf(tempst,"%c ",(yy*8)+xx);
 
-				if ((x==cursor_x) && (y==cursor_y)) basic_inverse();
+				if ((xx==cursor_x) && (yy==cursor_y)) basic_inverse();
 				else basic_normal();
 
 				basic_print(tempst);
@@ -326,7 +347,7 @@ int main(int argc, char **argv) {
 	/************************************************/
 
 	gr();
-	x=17;	y=30;
+	xx=17;	yy=30;
 	color_equals(0);
 
 	int direction=0;
@@ -346,8 +367,8 @@ int main(int argc, char **argv) {
 		ch=grsim_input();
 
 		if ((ch=='q') || (ch==27))  break;
-		if ((ch=='i') || (ch==APPLE_UP)) if (y>20) y-=2;
-		if ((ch=='m') || (ch==APPLE_DOWN)) if (y<39) y+=2;
+		if ((ch=='i') || (ch==APPLE_UP)) if (yy>20) yy-=2;
+		if ((ch=='m') || (ch==APPLE_DOWN)) if (yy<39) yy+=2;
 		if ((ch=='j') || (ch==APPLE_LEFT)) {
 			direction--;
 			if (direction<-1) direction=-1;
@@ -359,9 +380,9 @@ int main(int argc, char **argv) {
 
 		gr_copy(0x800,0x400);
 
-		if (direction==0) grsim_put_sprite(ship_forward,x,y);
-		if (direction==-1) grsim_put_sprite(ship_left,x,y);
-		if (direction==1) grsim_put_sprite(ship_right,x,y);
+		if (direction==0) grsim_put_sprite(ship_forward,xx,yy);
+		if (direction==-1) grsim_put_sprite(ship_left,xx,yy);
+		if (direction==1) grsim_put_sprite(ship_right,xx,yy);
 
 		grsim_update();
 
