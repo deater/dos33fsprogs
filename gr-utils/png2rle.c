@@ -19,6 +19,7 @@ int main(int argc, char **argv) {
 	unsigned char *image;
 	int xsize,ysize,last=-1,next;
 	FILE *outfile;
+	int size=0;
 
 	if (argc<3) {
 		fprintf(stderr,"Usage:\t%s INFILE OUTFILE\n\n",argv[0]);
@@ -41,6 +42,8 @@ int main(int argc, char **argv) {
 	x=0;
 	enough=0;
 	fprintf(outfile,"{ 0x%X,0x%x,\n",xsize,ysize);
+	size+=2;
+
 	last=image[x] | (image[x+xsize]<<4);
 	run++;
 	x++;
@@ -49,14 +52,14 @@ int main(int argc, char **argv) {
 
 		if (next!=last) {
 			fprintf(outfile,"0x%02X,0x%02X,",run,last);
+			size+=2;
 			run=0;
 			last=next;
 		}
 
-		run++;
-
-
 		x++;
+
+
 		enough++;
 		if (enough>=xsize) {
 			enough=0;
@@ -65,15 +68,26 @@ int main(int argc, char **argv) {
 		}
 
 
-		if (x>xsize*ysize) {
+		if (x>=xsize*ysize) {
 			/* print tailing value */
-			fprintf(outfile,"0x%02X,0x%02X,",run,last);
+			if (run!=0) {
+				fprintf(outfile,"0x%02X,0x%02X,",run,last);
+				size+=2;
+			}
 			break;
 		}
+
+		run++;
+
+
 	}
+	fprintf(outfile,"0xff,0xff,");
+	size+=2;
 	fprintf(outfile,"};\n");
 
 	fclose(outfile);
+
+	printf("Size %d bytes\n",size);
 
 	return 0;
 }

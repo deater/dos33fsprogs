@@ -2,20 +2,20 @@ GIMP Palette
 Name: Apple II Lowres
 Columns: 0
 #
-  0   0   0 Untitled
-227  30  96 Untitled
- 96  78 189 Untitled
-255  68 253 Untitled
-  0 163  96 Untitled
-156 156 156 Untitled
- 20 207 253 Untitled
-208 195 255 Untitled
- 96 114   3 Untitled
-255 106  60 Untitled
-157 157 157 Untitled
-255 160 208 Untitled
- 20 245  60 Untitled
-208 221 141 Untitled
-114 255 208 Untitled
-255 255 255 Untitled
+  0   0   0 Black.0
+227  30  96 Red.1
+ 96  78 189 DarkBlue.2
+255  68 253 Purple.3
+  0 163  96 DarkGreen.4
+156 156 156 Grey.5
+ 20 207 253 MediumBlue.6
+208 195 255 LightBlue.7
+ 96 114   3 Brown.8
+255 106  60 Orange.9
+157 157 157 Gray.A
+255 160 208 Pink.B
+ 20 245  60 LightGreen.C
+208 221 141 Yellow.D
+114 255 208 Aqua.E
+255 255 255 White.F
 

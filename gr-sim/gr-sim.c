@@ -813,6 +813,26 @@ int grsim_put_sprite(unsigned char *sprite_data, int xpos, int ypos) {
 int gr_copy(short source, short dest) {
 
 	short dest_addr,source_addr;
+	int i,j,l;
+
+	for(i=0;i<8;i++) {
+		source_addr=gr_addr_lookup[i]+0x400;
+		dest_addr=gr_addr_lookup[i];
+
+		if (i<4) l=120;
+		else l=80;
+
+		for(j=0;j<l;j++) {
+			ram[dest_addr+j]=ram[source_addr+j];
+		}
+	}
+
+	return 0;
+}
+
+int gr_copy48(short source, short dest) {
+
+	short dest_addr,source_addr;
 	int i,j;
 
 	for(i=0;i<8;i++) {
