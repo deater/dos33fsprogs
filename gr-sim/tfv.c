@@ -4,7 +4,7 @@
 
 #include "gr-sim.h"
 
-#include "vince_sprites.h"
+#include "tfv_sprites.h"
 #include "backgrounds.h"
 
 #define COLOR1	0x00
@@ -80,23 +80,7 @@ static void apple_memset(char *ptr, int value, int length) {
 }
 
 
-
-int main(int argc, char **argv) {
-
-	int ch;
-	char tempst[BUFSIZ];
-	char nameo[9];
-	int i;
-	int xx,yy;
-
-	int name_x=0;
-	int cursor_x=0,cursor_y=0;
-	int direction;
-
-	grsim_init();
-
-	home();
-	gr();
+static int opening(void) {
 
 	/* VMW splash */
 
@@ -119,7 +103,11 @@ int main(int argc, char **argv) {
 
 	repeat_until_keypressed();
 
-	/* Title Screen */
+	return 0;
+}
+
+static int title(void) {
+
 	grsim_unrle(title_rle,0x800);
 	gr_copy(0x800,0x400);
 
@@ -127,8 +115,21 @@ int main(int argc, char **argv) {
 
 	repeat_until_keypressed();
 
+	return 0;
+}
+
+static char nameo[9];
+
+
+static int name_screen(void) {
+
+	unsigned char xx,yy,cursor_x,cursor_y,ch,name_x;
+	char tempst[BUFSIZ];
+
 	text();
 	home();
+
+	cursor_x=0; cursor_y=0; name_x=0;
 
 	/* Enter your name */
 //            1         2         3
@@ -285,7 +286,15 @@ int main(int argc, char **argv) {
 
 		if (ch==27) break;
 	}
+	return 0;
+}
 
+static int flying(void) {
+
+	int i;
+	unsigned char ch;
+	int xx,yy;
+	int direction;
 
 	/************************************************/
 	/* Flying					*/
@@ -333,6 +342,35 @@ int main(int argc, char **argv) {
 
 		usleep(10000);
 	}
+	return 0;
+}
+
+
+/*
+	Map
+
+	0         1          2        3
+
+0     BEACH     ARTIC   AR/\TIC    BELAIR
+
+1     BEACH     LANDING   GR/\ASS   FORREST
+
+2     BEACH     GRASS     GR/\ASS   FORREST
+
+3     BEACH     BEACH     COLLEGE    BEACH
+
+*/
+
+
+
+
+static int world_map(void) {
+
+	int ch;
+	int direction=1;
+	int xx,yy;
+
+	xx=20; yy=20;
 
 	/************************************************/
 	/* Landed					*/
@@ -351,6 +389,7 @@ int main(int argc, char **argv) {
 	color_equals(0);
 
 	direction=1;
+	int odd=0;
 
 	grsim_unrle(worldmap_rle,0x800);
 	gr_copy(0x800,0x400);
@@ -359,18 +398,32 @@ int main(int argc, char **argv) {
 		ch=grsim_input();
 
 		if ((ch=='q') || (ch==27))  break;
-		if ((ch=='i') || (ch==APPLE_UP)) if (yy>10) yy-=2;
-		if ((ch=='m') || (ch==APPLE_DOWN)) if (yy<39) yy+=2;
+		if ((ch=='i') || (ch==APPLE_UP)) {
+			if (yy>8) yy-=2;
+			odd=!odd;
+		}
+		if ((ch=='m') || (ch==APPLE_DOWN)) {
+			if (yy<27) yy+=2;
+			odd=!odd;
+		}
 		if ((ch=='j') || (ch==APPLE_LEFT)) {
-			if (direction>0) direction=-1;
+			if (direction>0) {
+				direction=-1;
+				odd=0;
+			}
 			else {
+				odd=!odd;
 				xx--;
 				if (xx<0) xx=0;
 			}
 		}
 		if ((ch=='k') || (ch==APPLE_RIGHT)) {
-			if (direction<0) direction=1;
+			if (direction<0) {
+				direction=1;
+				odd=0;
+			}
 			else {
+				odd=!odd;
 				xx++;
 				if (xx>35) xx=35;
 			}
@@ -378,13 +431,79 @@ int main(int argc, char **argv) {
 
 		gr_copy(0x800,0x400);
 
-		if (direction==-1) grsim_put_sprite(vince_left,xx,yy);
-		if (direction==1) grsim_put_sprite(vince_right,xx,yy);
-
+		if (direction==-1) {
+			if (odd) grsim_put_sprite(tfv_walk_left,xx,yy);
+			else grsim_put_sprite(tfv_stand_left,xx,yy);
+		}
+		if (direction==1) {
+			if (odd) grsim_put_sprite(tfv_walk_right,xx,yy);
+			else grsim_put_sprite(tfv_stand_right,xx,yy);
+		}
 		grsim_update();
 
 		usleep(10000);
 	}
+
+	return 0;
+}
+
+/* Do Battle */
+
+/* Battle.
+Forest? Grassland? Artic? Ocean?
+
+
+
+
+                                       |
+---------------------------------------|
+         |           HP       LIMIT    |  -> FIGHT/LIMIT
+GRUMPO   | DEATER   128/255    128     |     ZAP
+         |                             |     REST
+         |                             |     RUN AWAY
+
+Sound effects?
+
+List hits
+
+******    **    ****    ****    **  **  ******    ****  ******  ******  ******
+**  **  ****        **      **  **  **  **      **          **  **  **  **  **
+**  **    **      ****  ****    ******  ****    ******    **    ******  ******
+**  **    **    **          **      **      **  **  **    **    **  **      **
+******  ******  ******  ****        **  ****    ******    **    ******      **
+
+*/
+
+static int do_battle(void) {
+
+	return 0;
+}
+
+
+int main(int argc, char **argv) {
+
+	grsim_init();
+
+	home();
+	gr();
+
+	/* Do Opening */
+	opening();
+
+	/* Title Screen */
+	title();
+
+	/* Get Name */
+	name_screen();
+
+	/* Flying */
+	flying();
+
+	/* World Map */
+	world_map();
+
+	/* Do Battle */
+	do_battle();
 
 	return 0;
 }

@@ -31,7 +31,7 @@ text.o:	text.c
 tfv:	tfv.o gr-sim.o
 	$(CC) $(LFLAGS) $(SDL_LIBS) -o tfv tfv.o gr-sim.o
 
-tfv.o:	tfv.c backgrounds.h vince_sprites.h
+tfv.o:	tfv.c backgrounds.h tfv_sprites.h
 	$(CC) $(CFLAGS) -c tfv.c
 
 
