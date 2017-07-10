@@ -123,7 +123,7 @@ static char nameo[9];
 
 static int name_screen(void) {
 
-	unsigned char xx,yy,cursor_x,cursor_y,ch,name_x;
+	int xx,yy,cursor_x,cursor_y,ch,name_x;
 	char tempst[BUFSIZ];
 
 	text();
@@ -302,17 +302,17 @@ static int flying(void) {
 
 	gr();
 	xx=17;	yy=30;
-	color_equals(0);
+	color_equals(COLOR_BLACK);
 
 	direction=0;
 
-	color_equals(6);
+	color_equals(COLOR_MEDIUMBLUE);
 
 	for(i=0;i<20;i++) {
 		hlin(1, 0, 40, i);
 	}
 
-	color_equals(2);
+	color_equals(COLOR_DARKBLUE);
 	for(i=20;i<48;i++) {
 		hlin(1, 0, 40, i);
 	}
@@ -342,6 +342,203 @@ static int flying(void) {
 
 		usleep(10000);
 	}
+	return 0;
+}
+
+
+static void game_over(void) {
+
+	text();
+	home();
+
+	/* Make a box around it? */
+
+	basic_htab(15);
+	basic_vtab(12);
+	basic_print("GAME OVER");
+
+	/* play the GROAN sound? */
+
+	grsim_update();
+
+	repeat_until_keypressed();
+}
+
+static void print_help(void) {
+	text();
+	home();
+
+	basic_htab(1);
+	basic_vtab(1);
+
+	basic_print("ARROW KEYS AND WASD MOVE\n");
+	basic_print("SPACE BAR ACTION\n");
+	basic_print("I INVENTORY\n");
+	basic_print("M MAP\n");
+	basic_print("Q QUITS\n");
+	grsim_update();
+
+	repeat_until_keypressed();
+
+	gr();
+}
+
+static void show_map(void) {
+	gr();
+	home();
+
+	grsim_unrle(worldmap_rle,0x800);
+	gr_copy(0x800,0x400);
+
+	grsim_update();
+	repeat_until_keypressed();
+}
+
+/*
+
+******************************************
+*  DEATER	   *	LEVEL 1          *
+******************************************
+* INVENTORY        *    STATS            *
+******************************************
+*		   *	HP:      50      *
+*		   *	MAX HP: 100      *
+*                  *                     *
+*		   *	EXPERIENCE:  0   *
+*		   *	NEXT LEVEL: 16   *
+*                  *                     *
+*		   *	TIME: 0:00       *
+******************************************
+Inc level at 4, so 64 levels
+
+*/
+
+static void print_info(void) {
+	text();
+	home();
+	basic_print("INFO");
+
+	grsim_update();
+
+	repeat_until_keypressed();
+	gr();
+}
+
+/* Do Battle */
+
+/* Battle.
+Forest? Grassland? Artic? Ocean?
+
+
+
+          1         2         3
+0123456789012345678901234567890123456789|
+----------------------------------------|
+            |            HP      LIMIT  |  -> FIGHT/LIMIT       21
+KILLER CRAB | DEATER   128/255    128   |     ZAP               22
+            |                           |     REST              23
+            |                           |     RUN AWAY          24
+
+Sound effects?
+
+List hits
+
+******    **    ****    ****    **  **  ******    ****  ******  ******  ******
+**  **  ****        **      **  **  **  **      **          **  **  **  **  **
+**  **    **      ****  ****    ******  ****    ******    **    ******  ******
+**  **    **    **          **      **      **  **  **    **    **  **      **
+******  ******  ******  ****        **  ****    ******    **    ******      **
+
+*/
+
+static int hp=50,max_hp=100;
+static int enemy_hp=20;
+static int limit=2;
+
+static void print_byte(unsigned char value) {
+	char temp[4];
+	sprintf(temp,"%3d",value);
+	temp[3]=0;
+	basic_print(temp);
+}
+
+
+static int do_battle(void) {
+
+	int i,ch;
+
+	int enemy_x=2;
+	int tfv_x=34;
+
+	home();
+	gr();
+
+	basic_htab(1);
+	basic_vtab(22);
+	basic_normal();
+	basic_print("KILLER CRAB");
+
+	basic_htab(27);
+	basic_vtab(21);
+	basic_print("HP");
+
+	basic_htab(34);
+	basic_vtab(21);
+	basic_print("LIMIT");
+
+	basic_htab(15);
+	basic_vtab(22);
+	basic_print("DEATER");
+
+	basic_htab(24);
+	basic_vtab(22);
+	print_byte(hp);
+	basic_print("/");
+	print_byte(max_hp);
+
+	basic_htab(34);
+	basic_vtab(22);
+	basic_inverse();
+	for(i=0;i<limit;i++) {
+		basic_print(" ");
+	}
+	basic_normal();
+	for(i=limit;i<5;i++) {
+		basic_print(" ");
+	}
+
+	basic_inverse();
+	for(i=21;i<25;i++) {
+		basic_vtab(i);
+		basic_htab(13);
+		basic_print(" ");
+	}
+	basic_normal();
+
+
+	while(1) {
+		color_equals(COLOR_MEDIUMBLUE);
+		for(i=0;i<10;i++) {
+			basic_hlin(0,39,i);
+		}
+		color_equals(COLOR_LIGHTGREEN);
+		for(i=10;i<40;i++) {
+			basic_hlin(0,39,i);
+		}
+
+		grsim_put_sprite(tfv_stand_left,tfv_x,20);
+		grsim_put_sprite(tfv_led_sword,tfv_x-5,20);
+
+		grsim_put_sprite(killer_crab,enemy_x,20);
+
+		grsim_update();
+
+		ch=grsim_input();
+		if (ch=='q') break;
+
+		usleep(100000);
+	}
+
 	return 0;
 }
 
@@ -386,27 +583,28 @@ static int world_map(void) {
 
 	gr();
 	xx=17;	yy=30;
-	color_equals(0);
+	color_equals(COLOR_BLACK);
 
 	direction=1;
 	int odd=0;
+	int refresh=1;
 
-	grsim_unrle(worldmap_rle,0x800);
-	gr_copy(0x800,0x400);
 
 	while(1) {
+
 		ch=grsim_input();
 
 		if ((ch=='q') || (ch==27))  break;
-		if ((ch=='i') || (ch==APPLE_UP)) {
+
+		if ((ch=='w') || (ch==APPLE_UP)) {
 			if (yy>8) yy-=2;
 			odd=!odd;
 		}
-		if ((ch=='m') || (ch==APPLE_DOWN)) {
+		if ((ch=='s') || (ch==APPLE_DOWN)) {
 			if (yy<27) yy+=2;
 			odd=!odd;
 		}
-		if ((ch=='j') || (ch==APPLE_LEFT)) {
+		if ((ch=='a') || (ch==APPLE_LEFT)) {
 			if (direction>0) {
 				direction=-1;
 				odd=0;
@@ -417,7 +615,7 @@ static int world_map(void) {
 				if (xx<0) xx=0;
 			}
 		}
-		if ((ch=='k') || (ch==APPLE_RIGHT)) {
+		if ((ch=='d') || (ch==APPLE_RIGHT)) {
 			if (direction<0) {
 				direction=1;
 				odd=0;
@@ -427,6 +625,19 @@ static int world_map(void) {
 				xx++;
 				if (xx>35) xx=35;
 			}
+		}
+
+		if (ch=='h') print_help();
+		if (ch=='b') do_battle();
+		if (ch=='i') print_info();
+		if (ch=='m') {
+			show_map();
+			refresh=1;
+		}
+
+		if (refresh) {
+			grsim_unrle(landing_rle,0x800);
+			refresh=0;
 		}
 
 		gr_copy(0x800,0x400);
@@ -443,38 +654,6 @@ static int world_map(void) {
 
 		usleep(10000);
 	}
-
-	return 0;
-}
-
-/* Do Battle */
-
-/* Battle.
-Forest? Grassland? Artic? Ocean?
-
-
-
-
-                                       |
----------------------------------------|
-         |           HP       LIMIT    |  -> FIGHT/LIMIT
-GRUMPO   | DEATER   128/255    128     |     ZAP
-         |                             |     REST
-         |                             |     RUN AWAY
-
-Sound effects?
-
-List hits
-
-******    **    ****    ****    **  **  ******    ****  ******  ******  ******
-**  **  ****        **      **  **  **  **      **          **  **  **  **  **
-**  **    **      ****  ****    ******  ****    ******    **    ******  ******
-**  **    **    **          **      **      **  **  **    **    **  **      **
-******  ******  ******  ****        **  ****    ******    **    ******      **
-
-*/
-
-static int do_battle(void) {
 
 	return 0;
 }
@@ -502,8 +681,8 @@ int main(int argc, char **argv) {
 	/* World Map */
 	world_map();
 
-	/* Do Battle */
-	do_battle();
+	/* Game Over, Man */
+	game_over();
 
 	return 0;
 }

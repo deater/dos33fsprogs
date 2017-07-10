@@ -28,3 +28,19 @@ int hlin(int page, int x1, int x2, int at);
 #define APPLE_LEFT      8
 #define APPLE_RIGHT     21
 
+#define COLOR_BLACK	0
+#define COLOR_RED	1
+#define COLOR_DARKBLUE	2
+#define COLOR_PURPLE	3
+#define COLOR_DARKGREEN	4
+#define COLOR_GREY	5
+#define COLOR_MEDIUMBLUE	6
+#define COLOR_LIGHTBLUE	7
+#define COLOR_BROWN	8
+#define COLOR_ORANGE	9
+#define COLOR_GREY2	10
+#define COLOR_PINK	11
+#define COLOR_LIGHTGREEN	12
+#define COLOR_YELLOW	13
+#define COLOR_AQUA	14
+#define COLOR_WHITE	15

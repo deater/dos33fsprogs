@@ -467,7 +467,7 @@ int basic_hlin(int x1, int x2, int at) {
 
 	int i;
 
-	for(i=x1;i<x2;i++) basic_plot(i,at);
+	for(i=x1;i<=x2;i++) basic_plot(i,at);
 
 	return 0;
 }
