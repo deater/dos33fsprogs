@@ -8,7 +8,7 @@
 #include "gr-sim.h"
 
 static int r[11];
-static int x,y,j,a,b,x2,y2,n;
+static int xx,yy,j,aa,b,x2,y2,n;
 
 static void tooo(void) {
 
@@ -19,42 +19,44 @@ static void tooo(void) {
 }
 
 static void noo(void) {
-	int t,w;
+	//int t;
+	int w;
 
 	// 900
 	color_equals(r[0]);
-	basic_plot(x,y);
+	basic_plot(xx,yy);
 	grsim_update();
 	if (j==1) return;
 	// 920
 	w=j/2;
-	t=j-w-1;
+	//t=j-w-1;
+
 	// 930
 	for(n=1;n<=w;n++) {
-		if (x==a) {
-			y2=y; x2=x+n; tooo();
-			x2=x-n;		tooo();
+		if (xx==aa) {
+			y2=yy; x2=xx+n; tooo();
+			x2=xx-n;		tooo();
 			continue;
 		}
-		if (y==b) {
-			x2=x; y2=y+n; tooo();
-			y2=y-n;		tooo();
+		if (yy==b) {
+			x2=xx; y2=yy+n; tooo();
+			y2=yy-n;		tooo();
 			continue;
 		}
-		y2=y;
-		if (x<a) {
-			x2=x+n;	tooo();
+		y2=yy;
+		if (xx<aa) {
+			x2=xx+n;	tooo();
 		}
 		else {
-			x2=x-n; tooo();
+			x2=xx-n; tooo();
 		}
 		// 990
-		x2=x;
-		if (y<b) {
-			y2=y+n; tooo();
+		x2=xx;
+		if (yy<b) {
+			y2=yy+n; tooo();
 		}
 		else {
-			y2=y-n; tooo();
+			y2=yy-n; tooo();
 		}
 	}
 
@@ -75,7 +77,7 @@ int main(int argc, char **argv) {
 	p=19;
 
 	// 130
-	a=p; b=p; d=-1;
+	aa=p; b=p; d=-1;
 
 	// 135
 	m=15;
@@ -94,14 +96,14 @@ label150:
 	}
 	// 200
 	for(j=k;j<=l;j+=d) {
-		x=a+j; y=b;	noo();
-		x=a-j;		noo();
-		x=a; y=b+j;	noo();
-		y=b-j;		noo();
-		x=a+j;y=b+j;	noo();
-		x=a-j;y=b-j;	noo();
-		y=b+j;		noo();
-		x=a+j; y=b-j;	noo();
+		xx=aa+j; yy=b;	noo();
+		xx=aa-j;		noo();
+		xx=aa; yy=b+j;	noo();
+		yy=b-j;		noo();
+		xx=aa+j;yy=b+j;	noo();
+		xx=aa-j;yy=b-j;	noo();
+		yy=b+j;		noo();
+		xx=aa+j; yy=b-j;	noo();
 	}
 
 	for(j=1;j<10;j++) {
