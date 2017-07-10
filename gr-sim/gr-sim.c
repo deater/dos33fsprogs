@@ -671,16 +671,22 @@ int grsim_unrle(unsigned char *rle_data, int address) {
 	y=0;
 
 	ram[BASL]=address&0xff;
-	ram[BASH]=address>>8;
+	ram[BASH]=(address>>8)&0xff;
 
 	ram[CV]=0;
+
+	/* CH = xsize */
 	ram[CH]=rle_data[y_indirect(GBASL,y)];
 	y++;
-//	ysize=rle_data[1];
+
+	/* Skip ysize */
 	y++;
 
 	while(1) {
+		/* Get run length into a */
 		a=rle_data[y_indirect(GBASL,y)];
+
+		/* 0xff is a special value meaning end */
 		if (a==0xff) break;
 		ram[TEMP]=a;
 

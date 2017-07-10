@@ -9,6 +9,36 @@
 
 #include <png.h>
 
+
+static int convert_color(int color) {
+
+	int c=0;
+
+	switch(color) {
+		case 0x000000:	c=0; break;	/* black */
+		case 0xe31e60:	c=1; break;	/* magenta */
+		case 0x604ebd:	c=2; break;	/* dark blue */
+		case 0xff44fd:	c=3; break;	/* purple */
+		case 0x00a360:	c=4; break;	/* dark green */
+		case 0x9c9c9c:	c=5; break;	/* grey 1 */
+		case 0x14cffd:	c=6; break;	/* medium blue */
+		case 0xd0c3ff:	c=7; break;	/* light blue */
+		case 0x607203:	c=8; break;	/* brown */
+		case 0xff6a3c:	c=9; break;	/* orange */
+		case 0x9d9d9d:	c=10; break;	/* grey 2 */
+		case 0xffa0d0:	c=11; break;	/* pink */
+		case 0x14f53c:	c=12; break;	/* bright green */
+		case 0xd0dd8d:	c=13; break;	/* yellow */
+		case 0x72ffd0:	c=14; break;	/* aqua */
+		case 0xffffff:	c=15; break;	/* white */
+		default:
+			printf("Unknown color %x\n",color);
+			break;
+	}
+
+	return c;
+}
+
 /* expects a PNG where the xsize is *2 */
 int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 
@@ -16,8 +46,9 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 	int color;
 	FILE *infile;
 	int debug=0;
-	unsigned char *image;
+	unsigned char *image,*out_ptr;
 	int width, height;
+	int a2_color;
 
 	png_byte bit_depth;
 	png_structp png_ptr;
@@ -84,63 +115,38 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 
 	fclose(infile);
 
-	image=calloc(width*height,sizeof(unsigned char));
+	image=calloc(width*height/2,sizeof(unsigned char));
 	if (image==NULL) {
 		fprintf(stderr,"Memory error!\n");
 		return -1;
 	}
+	out_ptr=image;
 
-	for(y=0;y<height;y++) {
+	for(y=0;y<height;y+=2) {
 		for(x=0;x<width/2;x++) {
+
+			/* top color */
 			color=	(row_pointers[y][x*2*4]<<16)+
 				(row_pointers[y][x*2*4+1]<<8)+
 				(row_pointers[y][x*2*4+2]);
 			if (debug) {
 				printf("%x ",color);
-//				printf("(%x,%x,%x,%x) ",
-//					row_pointers[y][x*2*4],
-//					row_pointers[y][x*2*4+1],
-//					row_pointers[y][x*2*4+2],
-//					row_pointers[y][x*2*4+3]);
 			}
-			switch(color) {
-				case 0:	image[(y*width/2)+x]=0;		/* black */
-					break;
-				case 0xe31e60: image[(y*width/2)+x]=1;	/* magenta */
-					break;
-				case 0x604ebd: image[(y*width/2)+x]=2;	/* dark blue */
-					break;
-				case 0xff44fd: image[(y*width/2)+x]=3;	/* purple */
-					break;
-				case 0xa360:   image[(y*width/2)+x]=4;	/* dark green */
-					break;
-				case 0x9c9c9c: image[(y*width/2)+x]=5;	/* grey 1 */
-					break;
-				case 0x14cffd: image[(y*width/2)+x]=6;	/* medium blue */
-					break;
-				case 0xd0c3ff: image[(y*width/2)+x]=7;	/* light blue */
-					break;
-				case 0x607203: image[(y*width/2)+x]=8;	/* brown */
-					break;
-				case 0xff6a3c: image[(y*width/2)+x]=9;	/* orange */
-					break;
-				case 0x9d9d9d: image[(y*width/2)+x]=10;	/* grey 2 */
-					break;
-				case 0xffa0d0: image[(y*width/2)+x]=11;	/* pink */
-					break;
-				case 0x14f53c: image[(y*width/2)+x]=12;	/* bright green */
-					break;
-				case 0xd0dd8d: image[(y*width/2)+x]=13;	/* yellow */
-					break;
-				case 0x72ffd0: image[(y*width/2)+x]=14;	/* aqua */
-					break;
-				case 0xffffff: image[(y*width/2)+x]=15;	/* white */
-					break;
 
-				default:
-					printf("Unknown color %x\n",color);
-					image[(y*width/2)+x]=0; break;
+			a2_color=convert_color(color);
+
+			/* bottom color */
+			color=	(row_pointers[y+1][x*2*4]<<16)+
+				(row_pointers[y+1][x*2*4+1]<<8)+
+				(row_pointers[y+1][x*2*4+2]);
+			if (debug) {
+				printf("%x ",color);
 			}
+
+			a2_color|=(convert_color(color)<<4);
+
+			*out_ptr=a2_color;
+			out_ptr++;
 		}
 		if (debug) printf("\n");
 	}

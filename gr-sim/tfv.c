@@ -462,6 +462,8 @@ static void print_byte(unsigned char value) {
 	basic_print(temp);
 }
 
+/* Enemies: */
+/*   Killer Crab, Big Fish, Procrastinon */
 
 static int do_battle(void) {
 
@@ -542,6 +544,23 @@ static int do_battle(void) {
 	return 0;
 }
 
+/* In Town */
+
+
+/* Puzzle Room */
+/* Get through office */
+/* Have to run away?  What happens if die?  No save game?  Code? */
+
+/* Construct the LED circuit */
+/* Zaps through cloud */
+/* Susie joins your party */
+
+/* Final Battle */
+/* Play music, lightning effects? */
+/* TFV only hit for one damage, susie for 100 */
+
+
+
 
 /*
 	Map
@@ -557,9 +576,6 @@ static int do_battle(void) {
 3     BEACH     BEACH     COLLEGE    BEACH
 
 */
-
-
-
 
 static int world_map(void) {
 
