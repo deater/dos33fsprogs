@@ -377,6 +377,8 @@ int grsim_init(void) {
 		return -1;
 	}
 
+	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+
 	/* Init screen */
 	for(x=0x400;x<0x800;x++) ram[x]=0;
 

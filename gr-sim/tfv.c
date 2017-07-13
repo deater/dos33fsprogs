@@ -407,6 +407,7 @@ static void show_map(void) {
 *		   *	EXPERIENCE:  0   *
 *		   *	NEXT LEVEL: 16   *
 *                  *                     *
+*		   *    MONEY: $1	 *
 *		   *	TIME: 0:00       *
 ******************************************
 Inc level at 4, so 64 levels
@@ -571,11 +572,14 @@ static int do_battle(void) {
 
 1     BEACH     LANDING   GR/\ASS   FORREST
 
-2     BEACH     GRASS     GR/\ASS   FORREST
+2     BEACH     GRASS     COLLEGE   FORREST
 
-3     BEACH     BEACH     COLLEGE    BEACH
+3     BEACH     BEACH     BEACH    BEACH
 
 */
+
+/* Walk through bushes, beach water */
+/* Make landing a sprite?  Stand behind things? */
 
 static int world_map(void) {
 
