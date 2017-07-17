@@ -31,7 +31,7 @@ text.o:	text.c
 tfv:	tfv.o gr-sim.o
 	$(CC) $(LFLAGS) $(SDL_LIBS) -o tfv tfv.o gr-sim.o
 
-tfv.o:	tfv.c backgrounds.h tfv_sprites.h
+tfv.o:	tfv.c gr-sim.h backgrounds.h tfv_sprites.h
 	$(CC) $(CFLAGS) -c tfv.c
 
 
@@ -51,7 +51,7 @@ sparkle.o:	sparkle.c
 	$(CC) $(CFLAGS) -c sparkle.c
 
 
-gr-sim.o:	gr-sim.c apple2_font.h
+gr-sim.o:	gr-sim.c gr-sim.h apple2_font.h
 	$(CC) $(CFLAGS) $(SDL_INCLUDE) -c gr-sim.c
 
 clean:	

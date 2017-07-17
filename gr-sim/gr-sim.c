@@ -1144,28 +1144,63 @@ void basic_normal(void) {
 	return;
 }
 
+static unsigned short hlin_addr;
+static unsigned short hlin_hi;
 
-int hlin(int page, int x1, int x2, int at) {
+int hlin_continue(int width) {
 
-	unsigned short addr;
-	int i,hi;
+	int i;
 
-	addr=gr_addr_lookup[at/2];
-	hi=at&1;
-
-	addr+=(page*4)<<8;
-
-	for(i=x1;i<x2;i++) {
-		if (hi) {
-			ram[addr+i]=ram[addr+i]&0x0f;
-			ram[addr+i]|=ram[COLOR]&0xf0;
+	for(i=0;i<width;i++) {
+		if (hlin_hi) {
+			ram[hlin_addr]=ram[hlin_addr]&0x0f;
+			ram[hlin_addr]|=ram[COLOR]&0xf0;
 		}
 		else {
-			ram[addr+i]=ram[addr+i]&0xf0;
-			ram[addr+i]|=ram[COLOR]&0x0f;
+			ram[hlin_addr]=ram[hlin_addr]&0xf0;
+			ram[hlin_addr]|=ram[COLOR]&0x0f;
 		}
-
+		hlin_addr++;
 	}
 
 	return 0;
 }
+
+
+int hlin(int page, int x1, int x2, int at) {
+
+	hlin_addr=gr_addr_lookup[at/2];
+	hlin_hi=at&1;
+
+	hlin_addr+=(page*4)<<8;
+
+	hlin_addr+=x1;
+	hlin_continue(x2-x1);
+
+	return 0;
+}
+
+int hlin_double_continue(int width) {
+
+	int i;
+
+	for(i=0;i<width;i++) {
+		ram[hlin_addr]=ram[COLOR];
+		hlin_addr++;
+	}
+
+	return 0;
+}
+
+int hlin_double(int page, int x1, int x2, int at) {
+
+	hlin_addr=gr_addr_lookup[at/2];
+
+	hlin_addr+=(page*4)<<8;
+
+	hlin_addr+=x1;
+	hlin_double_continue(x2-x1);
+
+	return 0;
+}
+

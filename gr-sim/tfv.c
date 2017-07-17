@@ -17,6 +17,17 @@
 #define MEMPTRL	0x07
 #define MEMPTRH	0x08
 
+/* stats */
+static unsigned char hp=50,max_hp=100;
+static unsigned char limit=2;
+static unsigned char money=0;
+static unsigned char time_hours=0,time_minutes=0;
+
+/* stats */
+static int map_x=1,map_y=1;
+static int tfv_x=15,tfv_y=15;
+
+
 static void draw_segment(void) {
 
 	for(ram[LOOP]=0;ram[LOOP]<4;ram[LOOP]++) {
@@ -390,6 +401,9 @@ static void show_map(void) {
 	grsim_unrle(worldmap_rle,0x800);
 	gr_copy(0x800,0x400);
 
+	color_equals(COLOR_RED);
+	basic_plot(8+(map_x*6)+(tfv_x/6),8+(map_y*6)+(tfv_y/6));
+
 	grsim_update();
 	repeat_until_keypressed();
 }
@@ -452,10 +466,6 @@ List hits
 
 */
 
-static int hp=50,max_hp=100;
-static int enemy_hp=20;
-static int limit=2;
-
 static void print_byte(unsigned char value) {
 	char temp[4];
 	sprintf(temp,"%3d",value);
@@ -471,6 +481,8 @@ static int do_battle(void) {
 	int i,ch;
 
 	int enemy_x=2;
+	int enemy_hp=20;
+
 	int tfv_x=34;
 
 	home();
@@ -581,13 +593,56 @@ static int do_battle(void) {
 /* Walk through bushes, beach water */
 /* Make landing a sprite?  Stand behind things? */
 
+static int load_map_bg(void) {
+
+	int i,temp;
+
+	if ((map_x==1) && (map_y==1)) {
+		grsim_unrle(landing_rle,0x800);
+		return 0;
+	}
+
+	/* Should we make a thick-hlin? twice as fast? */
+
+	/* Sky */
+	color_equals(COLOR_MEDIUMBLUE);
+	for(i=0;i<10;i++) {
+		hlin(1,0,40,i);
+	}
+
+	/* beach */
+	/*  / */
+	/* /  */
+	if (map_x==0) {
+		for(i=10;i<40;i++) {
+			temp=4+(40-i)/8;
+			color_equals(COLOR_DARKBLUE);
+			hlin(1,0,temp,i);
+			color_equals(COLOR_LIGHTBLUE);
+			hlin_continue(2);
+			color_equals(COLOR_YELLOW);
+			hlin_continue(2);
+			color_equals(COLOR_DARKGREEN);
+			hlin_continue(36-temp);
+		}
+	}
+	else {
+		/* Grassland */
+		for(i=10;i<40;i+=2) {
+			color_equals(COLOR_DARKGREEN);
+			hlin_double(1,0,40,i);
+		}
+	}
+
+//		grsim_put_sprite(tfv_stand_left,tfv_x,20);
+
+	return 0;
+}
+
 static int world_map(void) {
 
 	int ch;
 	int direction=1;
-	int xx,yy;
-
-	xx=20; yy=20;
 
 	/************************************************/
 	/* Landed					*/
@@ -602,13 +657,12 @@ static int world_map(void) {
 	// rotate when attacked
 
 	gr();
-	xx=17;	yy=30;
+
 	color_equals(COLOR_BLACK);
 
 	direction=1;
 	int odd=0;
 	int refresh=1;
-
 
 	while(1) {
 
@@ -617,11 +671,11 @@ static int world_map(void) {
 		if ((ch=='q') || (ch==27))  break;
 
 		if ((ch=='w') || (ch==APPLE_UP)) {
-			if (yy>8) yy-=2;
+			tfv_y-=2;
 			odd=!odd;
 		}
 		if ((ch=='s') || (ch==APPLE_DOWN)) {
-			if (yy<27) yy+=2;
+			tfv_y+=2;
 			odd=!odd;
 		}
 		if ((ch=='a') || (ch==APPLE_LEFT)) {
@@ -631,8 +685,7 @@ static int world_map(void) {
 			}
 			else {
 				odd=!odd;
-				xx--;
-				if (xx<0) xx=0;
+				tfv_x--;
 			}
 		}
 		if ((ch=='d') || (ch==APPLE_RIGHT)) {
@@ -642,9 +695,31 @@ static int world_map(void) {
 			}
 			else {
 				odd=!odd;
-				xx++;
-				if (xx>35) xx=35;
+				tfv_x++;
 			}
+		}
+
+		if (tfv_x>36) {
+			map_x++;
+			tfv_x=0;
+			refresh=1;
+		}
+		if (tfv_x<0) {
+			map_x--;
+			tfv_x=35;
+			refresh=1;
+		}
+
+		if (tfv_y<4) {
+			map_y--;
+			tfv_y=28;
+			refresh=1;
+		}
+
+		if (tfv_y>28) {
+			map_y++;
+			tfv_y=4;
+			refresh=1;
 		}
 
 		if (ch=='h') print_help();
@@ -656,19 +731,19 @@ static int world_map(void) {
 		}
 
 		if (refresh) {
-			grsim_unrle(landing_rle,0x800);
+			load_map_bg();
 			refresh=0;
 		}
 
 		gr_copy(0x800,0x400);
 
 		if (direction==-1) {
-			if (odd) grsim_put_sprite(tfv_walk_left,xx,yy);
-			else grsim_put_sprite(tfv_stand_left,xx,yy);
+			if (odd) grsim_put_sprite(tfv_walk_left,tfv_x,tfv_y);
+			else grsim_put_sprite(tfv_stand_left,tfv_x,tfv_y);
 		}
 		if (direction==1) {
-			if (odd) grsim_put_sprite(tfv_walk_right,xx,yy);
-			else grsim_put_sprite(tfv_stand_right,xx,yy);
+			if (odd) grsim_put_sprite(tfv_walk_right,tfv_x,tfv_y);
+			else grsim_put_sprite(tfv_stand_right,tfv_x,tfv_y);
 		}
 		grsim_update();
 
