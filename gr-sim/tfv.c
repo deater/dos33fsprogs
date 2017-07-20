@@ -24,7 +24,7 @@ static unsigned char money=0;
 static unsigned char time_hours=0,time_minutes=0;
 
 /* stats */
-static int map_x=1,map_y=1;
+static int map_x=5;
 static int tfv_x=15,tfv_y=15;
 
 
@@ -452,7 +452,7 @@ static void show_map(void) {
 	gr_copy(0x800,0x400);
 
 	color_equals(COLOR_RED);
-	basic_plot(8+(map_x*6)+(tfv_x/6),8+(map_y*6)+(tfv_y/6));
+	basic_plot(8+((map_x&0x3)*6)+(tfv_x/6),8+(((map_x&0xc)>>2)*6)+(tfv_y/6));
 
 	grsim_update();
 	repeat_until_keypressed();
@@ -645,9 +645,9 @@ static int do_battle(void) {
 
 static int load_map_bg(void) {
 
-	int i,temp;
+	int i,temp,ground_color;
 
-	if ((map_x==1) && (map_y==1)) {
+	if (map_x==5) {
 		grsim_unrle(landing_rle,0x800);
 		return 0;
 	}
@@ -660,10 +660,11 @@ static int load_map_bg(void) {
 		hlin(1,0,40,i);
 	}
 
-	/* beach */
-	/*  / */
-	/* /  */
-	if (map_x==0) {
+	if (map_x<4) ground_color=COLOR_WHITE;
+	else ground_color=COLOR_LIGHTGREEN;
+
+	/* grassland/sloped left beach */
+	if ((map_x&3)==0) {
 		for(i=10;i<40;i++) {
 			temp=4+(40-i)/8;
 			color_equals(COLOR_DARKBLUE);
@@ -672,17 +673,57 @@ static int load_map_bg(void) {
 			hlin_continue(2);
 			color_equals(COLOR_YELLOW);
 			hlin_continue(2);
-			color_equals(COLOR_DARKGREEN);
+			color_equals(ground_color);
 			hlin_continue(36-temp);
 		}
 	}
-	else {
-		/* Grassland */
+
+	/* Grassland */
+	if ((map_x&3)==1) {
 		for(i=10;i<40;i+=2) {
-			color_equals(COLOR_DARKGREEN);
+			color_equals(ground_color);
 			hlin_double(1,0,40,i);
 		}
 	}
+
+	/* Mountain */
+	if ((map_x&3)==2) {
+		for(i=10;i<40;i+=2) {
+			color_equals(ground_color);
+			hlin_double(1,0,40,i);
+		}
+	}
+
+	/* Forest/Right Beach */
+	if ((map_x&3)==3) {
+		for(i=10;i<40;i++) {
+			temp=4+(40-i)/8;
+
+			color_equals(ground_color);
+			hlin(1,0,temp,i);
+			color_equals(COLOR_YELLOW);
+			hlin_continue(2);
+			color_equals(COLOR_LIGHTBLUE);
+			hlin_continue(2);
+			color_equals(COLOR_DARKBLUE);
+			hlin_continue(36-temp);
+		}
+
+	}
+
+	/* Draw north shore */
+	if (map_x<4) {
+		color_equals(COLOR_DARKBLUE);
+		hlin_double(1,0,40,10);
+	}
+
+	/* Draw south shore */
+	if (map_x>=12) {
+		color_equals(COLOR_DARKBLUE);
+		hlin_double(1,0,40,38);
+	}
+
+
 
 //		grsim_put_sprite(tfv_stand_left,tfv_x,20);
 
@@ -761,13 +802,13 @@ static int world_map(void) {
 		}
 
 		if (tfv_y<4) {
-			map_y--;
+			map_x-=4;
 			tfv_y=28;
 			refresh=1;
 		}
 
 		if (tfv_y>28) {
-			map_y++;
+			map_x+=4;
 			tfv_y=4;
 			refresh=1;
 		}
@@ -825,6 +866,7 @@ title_loop:
 	name_screen();
 
 	/* Flying */
+	home();
 	flying();
 
 	/* World Map */
