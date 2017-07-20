@@ -77,6 +77,46 @@ static int repeat_until_keypressed(void) {
 	return ch;
 }
 
+static int select_menu(int x, int y, int num, char **items) {
+
+	int result=0;
+	int ch,i;
+
+	while(1) {
+		for(i=0;i<num;i++) {
+			basic_htab(x);
+			basic_vtab(y+i);
+
+			if (i==result) {
+				basic_inverse();
+				basic_print("--> ");
+			}
+			else {
+				basic_print("    ");
+			}
+
+			basic_print(items[i]);
+			basic_normal();
+			grsim_update();
+		}
+
+
+		ch=repeat_until_keypressed();
+		if (ch=='\r') break;
+		if (ch==' ') break;
+		if (ch==APPLE_RIGHT) result++;
+		if (ch==APPLE_DOWN) result++;
+		if (ch==APPLE_LEFT) result--;
+		if (ch==APPLE_UP) result--;
+		if (result>=num) result=num-1;
+		if (result<0) result=0;
+	}
+
+	return result;
+}
+
+
+
 static void apple_memset(char *ptr, int value, int length) {
 
 	a=value;
@@ -117,16 +157,26 @@ static int opening(void) {
 	return 0;
 }
 
+static char *title_menu[]={
+	"NEW GAME",
+	"LOAD GAME",
+	"CREDITS",
+};
+
 static int title(void) {
+
+	int result;
+
+	home();
 
 	grsim_unrle(title_rle,0x800);
 	gr_copy(0x800,0x400);
 
 	grsim_update();
 
-	repeat_until_keypressed();
+	result=select_menu(12, 21, 3, title_menu);
 
-	return 0;
+	return result;
 }
 
 static char nameo[9];
@@ -756,6 +806,8 @@ static int world_map(void) {
 
 int main(int argc, char **argv) {
 
+	int result;
+
 	grsim_init();
 
 	home();
@@ -765,7 +817,9 @@ int main(int argc, char **argv) {
 	opening();
 
 	/* Title Screen */
-	title();
+title_loop:
+	result=title();
+	if (result!=0) goto title_loop;
 
 	/* Get Name */
 	name_screen();
