@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "gr-sim.h"
 
@@ -20,7 +21,7 @@
 /* stats */
 static unsigned char hp=50,max_hp=100;
 static unsigned char limit=2;
-static unsigned char money=0;
+static unsigned char money=0,experience=0;
 static unsigned char time_hours=0,time_minutes=0;
 
 /* stats */
@@ -459,29 +460,66 @@ static void show_map(void) {
 }
 
 /*
+          1         2         3         4
+01234567890123456789012345678901234567890
+****************************************  1
+* DEATER	    * LEVEL 1          *  2
+****************************************  3
+* INVENTORY         * STATS            *  4
+****************************************  5
+*		    * HP:      50/100  *  6
+*		    * MP:         0/0  *  7
+*                   *                  *  8
+*		    * EXPERIENCE:   0  *  9
+*		    * NEXT LEVEL:  16  * 10
+*                   *                  * 11
+*		    * MONEY: $1        * 12   0-256
+*		    * TIME: 00:00      * 13
+*		    *		       * 14
+*		    *		       * 15
+*		    *		       * 16
+*		    *		       * 17
+*		    *		       * 18
+*		    *		       * 19
+*		    *		       * 20
+*		    *		       * 21
+*		    *		       * 22
+*		    *	               * 23
+**************************************** 24
 
-******************************************
-*  DEATER	   *	LEVEL 1          *
-******************************************
-* INVENTORY        *    STATS            *
-******************************************
-*		   *	HP:      50      *
-*		   *	MAX HP: 100      *
-*                  *                     *
-*		   *	EXPERIENCE:  0   *
-*		   *	NEXT LEVEL: 16   *
-*                  *                     *
-*		   *    MONEY: $1	 *
-*		   *	TIME: 0:00       *
-******************************************
-Inc level at 4, so 64 levels
-
+EXPERIENCE = 0...255
+LEVEL = EXPERIENCE /  = 0...63
+NEXT LEVEL = 
+MONEY   = 0...255
+MAX_HP  = 32+EXPERIENCE (maxing at 255)
 */
 
 static void print_info(void) {
 	text();
 	home();
-	basic_print("INFO");
+
+	/* Inverse Space */
+	/* 0x30=COLOR */
+	ram[0x30]=0x20;
+
+	/* Draw boxes */
+	hlin_double(0,0,40,0);
+	hlin_double(0,0,40,4);
+	hlin_double(0,0,40,8);
+	hlin_double(0,0,40,38);
+
+	basic_vlin(0,40,0);
+	basic_vlin(0,40,20);
+	basic_vlin(0,48,40);
+
+	basic_htab(2);
+	basic_vtab(2);
+	basic_print(nameo);
+
+	basic_htab(2);
+	basic_vtab(4);
+	basic_print("INVENTORY");
+
 
 	grsim_update();
 
@@ -531,7 +569,7 @@ static int do_battle(void) {
 	int i,ch;
 
 	int enemy_x=2;
-	int enemy_hp=20;
+	//int enemy_hp=20;
 
 	int tfv_x=34;
 
@@ -862,8 +900,13 @@ title_loop:
 	result=title();
 	if (result!=0) goto title_loop;
 
+	nameo[0]=0;
+
 	/* Get Name */
 	name_screen();
+	if (nameo[0]==0) {
+		strcpy(nameo,"DEATER");
+	}
 
 	/* Flying */
 	home();
