@@ -8,6 +8,8 @@
 #include "tfv_sprites.h"
 #include "backgrounds.h"
 
+/* Page Zero */
+
 #define COLOR1	0x00
 #define COLOR2	0x01
 #define MATCH	0x02
@@ -19,12 +21,14 @@
 #define MEMPTRH	0x08
 
 /* stats */
+static unsigned char level=0;
 static unsigned char hp=50,max_hp=100;
 static unsigned char limit=2;
 static unsigned char money=0,experience=0;
 static unsigned char time_hours=0,time_minutes=0;
+static unsigned char items1=0xff,items2=0xff;
 
-/* stats */
+/* location */
 static int map_x=5;
 static int tfv_x=15,tfv_y=15;
 
@@ -459,6 +463,17 @@ static void show_map(void) {
 	repeat_until_keypressed();
 }
 
+void print_u8(unsigned char value) {
+
+	char temp[4];
+
+	sprintf(temp,"%d",value);
+
+	basic_print(temp);
+
+}
+
+
 /*
           1         2         3         4
 01234567890123456789012345678901234567890
@@ -494,7 +509,32 @@ MONEY   = 0...255
 MAX_HP  = 32+EXPERIENCE (maxing at 255)
 */
 
+
+static char item_names1[8][15]={
+	"CUPCAKE",		// cafeteria lady
+	"CARROT",		// capabara
+	"SMARTPASS",		// metro worker
+	"ELF RUNES",		// mree
+	"LIZBETH STAR",		// Lizbeth
+	"KARTE SPIEL",		// Frau
+	"GLAMDRING",		// Gus
+	"VEGEMITE",		// Nicole
+};
+
+static char item_names2[8][15]={
+	"BLUE LED",		// bird
+	"RED LED",		//
+	"1K RESISTOR",		// brown black red, Elaine
+	"4.7K RESISTOR",	// yellow purple red, Tater
+	"9V BATTERY",		// Cindy
+	"1.5V BATTERY",		// Oscar
+	"LINUX CD",		// john
+	"ARMY KNIFE",		// Steve
+};
+
 static void print_info(void) {
+	int i;
+
 	text();
 	home();
 
@@ -506,24 +546,73 @@ static void print_info(void) {
 	hlin_double(0,0,40,0);
 	hlin_double(0,0,40,4);
 	hlin_double(0,0,40,8);
-	hlin_double(0,0,40,38);
+	hlin_double(0,0,40,46);
 
 	basic_vlin(0,40,0);
 	basic_vlin(0,40,20);
-	basic_vlin(0,48,40);
+	basic_vlin(0,48,39);
 
-	basic_htab(2);
+	basic_htab(3);
 	basic_vtab(2);
 	basic_print(nameo);
 
-	basic_htab(2);
+	basic_htab(23);
+	basic_print("LEVEL ");
+	print_u8(level);
+
+	basic_htab(3);
 	basic_vtab(4);
 	basic_print("INVENTORY");
+	basic_htab(23);
+	basic_print("STATS");
 
+
+	for(i=0;i<8;i++) {
+		basic_htab(4);
+		basic_vtab(6+i);
+		if (items1&(1<<i)) basic_print(item_names1[i]);
+
+		basic_htab(4);
+		basic_vtab(14+i);
+		if (items2&(1<<i)) basic_print(item_names2[i]);
+	}
+
+	basic_htab(23);
+	basic_vtab(6);
+	basic_print("HP:      ");
+	print_u8(hp);
+	basic_print("/");
+	print_u8(max_hp);
+
+	basic_htab(23);
+	basic_vtab(7);
+	basic_print("MP:       0/0");
+
+	basic_htab(23);
+	basic_vtab(9);
+	basic_print("EXPERIENCE: ");
+	print_u8(experience);
+
+	basic_htab(23);
+	basic_vtab(10);
+	basic_print("NEXT LEVEL: ");
+
+	basic_htab(23);
+	basic_vtab(12);
+	basic_print("MONEY: $");
+	print_u8(money);
+
+	basic_htab(23);
+	basic_vtab(13);
+	basic_print("TIME: ");
+	print_u8(time_minutes);
+	basic_print(":");
+	print_u8(time_hours);
 
 	grsim_update();
 
 	repeat_until_keypressed();
+	home();
 	gr();
 }
 
