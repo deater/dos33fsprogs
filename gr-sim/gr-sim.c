@@ -775,7 +775,7 @@ int basic_vlin(int y1, int y2, int at) {
 
 
 
-int grsim_put_sprite(unsigned char *sprite_data, int xpos, int ypos) {
+int grsim_put_sprite(int page,unsigned char *sprite_data, int xpos, int ypos) {
 
 	unsigned char i;
 	unsigned char *ptr;
@@ -791,6 +791,7 @@ int grsim_put_sprite(unsigned char *sprite_data, int xpos, int ypos) {
 
 	while(1) {
 		address=gr_addr_lookup[ypos/2];
+		address+=(page*4)<<8;
 		address+=xpos;
 		for(i=0;i<x;i++) {
 			a=*ptr;

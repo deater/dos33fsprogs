@@ -179,7 +179,7 @@ static int title(void) {
 
 	grsim_update();
 
-	result=select_menu(12, 21, 3, title_menu);
+	result=select_menu(12, 22, 3, title_menu);
 
 	return result;
 }
@@ -400,9 +400,9 @@ static int flying(void) {
 
 		gr_copy(0x800,0x400);
 
-		if (direction==0) grsim_put_sprite(ship_forward,xx,yy);
-		if (direction==-1) grsim_put_sprite(ship_left,xx,yy);
-		if (direction==1) grsim_put_sprite(ship_right,xx,yy);
+		if (direction==0) grsim_put_sprite(0,ship_forward,xx,yy);
+		if (direction==-1) grsim_put_sprite(0,ship_left,xx,yy);
+		if (direction==1) grsim_put_sprite(0,ship_right,xx,yy);
 
 		grsim_update();
 
@@ -718,10 +718,10 @@ static int do_battle(void) {
 			basic_hlin(0,39,i);
 		}
 
-		grsim_put_sprite(tfv_stand_left,tfv_x,20);
-		grsim_put_sprite(tfv_led_sword,tfv_x-5,20);
+		grsim_put_sprite(0,tfv_stand_left,tfv_x,20);
+		grsim_put_sprite(0,tfv_led_sword,tfv_x-5,20);
 
-		grsim_put_sprite(killer_crab,enemy_x,20);
+		grsim_put_sprite(0,killer_crab,enemy_x,20);
 
 		grsim_update();
 
@@ -757,14 +757,17 @@ static int do_battle(void) {
 
 	0         1          2        3
 
-0     BEACH     ARTIC   AR/\TIC    BELAIR
+0     BEACH     ARCTIC   ARCTIC        BELAIR
+                TREE    MOUNATIN
 
-1     BEACH     LANDING   GR/\ASS   FORREST
+1     BEACH     LANDING   GRASS      FOREST
+      PINETREE            MOUNTAIN
 
-2     BEACH     GRASS     COLLEGE   FORREST
+2     BEACH     GRASS     COLLEGE    FOREST
+      PALMTREE
 
-3     BEACH     BEACH     BEACH    BEACH
-
+3     BEACH     BEACH     BEACH      BEACH
+                          MOUNTAIN
 */
 
 /* Walk through bushes, beach water */
@@ -824,8 +827,8 @@ static int load_map_bg(void) {
 	/* Forest/Right Beach */
 	if ((map_x&3)==3) {
 		for(i=10;i<40;i++) {
-			temp=4+(40-i)/8;
-
+			temp=24+(i/4);
+			/* 32 ... 40 */
 			color_equals(ground_color);
 			hlin(1,0,temp,i);
 			color_equals(COLOR_YELLOW);
@@ -850,9 +853,15 @@ static int load_map_bg(void) {
 		hlin_double(1,0,40,38);
 	}
 
+	if ((map_x&3)==2) {
+		for(i=0;i<4;i++) {
+			grsim_put_sprite(1,mountain,10+(i%2)*5,(i*8)+2);
+		}
+	}
 
 
-//		grsim_put_sprite(tfv_stand_left,tfv_x,20);
+
+//		grsim_put_sprite(0,tfv_stand_left,tfv_x,20);
 
 	return 0;
 }
@@ -955,14 +964,27 @@ static int world_map(void) {
 
 		gr_copy(0x800,0x400);
 
+		/* Ground Scatter */
+
+		if (map_x==1) if (tfv_y>=20) grsim_put_sprite(0,snowy_tree,10,20);
+		if (map_x==4) if (tfv_y>=15) grsim_put_sprite(0,pine_tree,25,15);
+		if (map_x==8) if (tfv_y>=22) grsim_put_sprite(0,palm_tree,10,20);
+		if (map_x==12) if (tfv_y>=27) grsim_put_sprite(0,palm_tree,20,25);
+
 		if (direction==-1) {
-			if (odd) grsim_put_sprite(tfv_walk_left,tfv_x,tfv_y);
-			else grsim_put_sprite(tfv_stand_left,tfv_x,tfv_y);
+			if (odd) grsim_put_sprite(0,tfv_walk_left,tfv_x,tfv_y);
+			else grsim_put_sprite(0,tfv_stand_left,tfv_x,tfv_y);
 		}
 		if (direction==1) {
-			if (odd) grsim_put_sprite(tfv_walk_right,tfv_x,tfv_y);
-			else grsim_put_sprite(tfv_stand_right,tfv_x,tfv_y);
+			if (odd) grsim_put_sprite(0,tfv_walk_right,tfv_x,tfv_y);
+			else grsim_put_sprite(0,tfv_stand_right,tfv_x,tfv_y);
 		}
+
+		if (map_x==1) if (tfv_y<20) grsim_put_sprite(0,snowy_tree,10,20);
+		if (map_x==4) if (tfv_y<15) grsim_put_sprite(0,pine_tree,25,15);
+		if (map_x==8) if (tfv_y<22) grsim_put_sprite(0,palm_tree,10,20);
+		if (map_x==12) if (tfv_y<27) grsim_put_sprite(0,palm_tree,20,25);
+
 		grsim_update();
 
 		usleep(10000);
