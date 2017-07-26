@@ -27,6 +27,7 @@ static unsigned char limit=2;
 static unsigned char money=0,experience=0;
 static unsigned char time_hours=0,time_minutes=0;
 static unsigned char items1=0xff,items2=0xff;
+static unsigned char steps=0;
 
 /* location */
 static int map_x=5;
@@ -605,9 +606,9 @@ static void print_info(void) {
 	basic_htab(23);
 	basic_vtab(13);
 	basic_print("TIME: ");
-	print_u8(time_minutes);
-	basic_print(":");
 	print_u8(time_hours);
+	basic_print(":");
+	print_u8(time_minutes);
 
 	grsim_update();
 
@@ -900,10 +901,12 @@ static int world_map(void) {
 		if ((ch=='w') || (ch==APPLE_UP)) {
 			tfv_y-=2;
 			odd=!odd;
+			steps++;
 		}
 		if ((ch=='s') || (ch==APPLE_DOWN)) {
 			tfv_y+=2;
 			odd=!odd;
+			steps++;
 		}
 		if ((ch=='a') || (ch==APPLE_LEFT)) {
 			if (direction>0) {
@@ -914,6 +917,7 @@ static int world_map(void) {
 				odd=!odd;
 				tfv_x--;
 			}
+			steps++;
 		}
 		if ((ch=='d') || (ch==APPLE_RIGHT)) {
 			if (direction<0) {
@@ -924,6 +928,7 @@ static int world_map(void) {
 				odd=!odd;
 				tfv_x++;
 			}
+			steps++;
 		}
 
 		if (tfv_x>36) {
@@ -986,6 +991,15 @@ static int world_map(void) {
 		if (map_x==12) if (tfv_y<27) grsim_put_sprite(0,palm_tree,20,25);
 
 		grsim_update();
+
+		if (steps>=60) {
+			steps=0;
+			time_minutes++;
+			if (time_minutes>=60) {
+				time_hours++;
+				time_minutes=0;
+			}
+		}
 
 		usleep(10000);
 	}
