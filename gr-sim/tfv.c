@@ -549,8 +549,8 @@ static void print_info(void) {
 	hlin_double(0,0,40,8);
 	hlin_double(0,0,40,46);
 
-	basic_vlin(0,40,0);
-	basic_vlin(0,40,20);
+	basic_vlin(0,48,0);
+	basic_vlin(0,48,20);
 	basic_vlin(0,48,39);
 
 	basic_htab(3);
@@ -606,8 +606,10 @@ static void print_info(void) {
 	basic_htab(23);
 	basic_vtab(13);
 	basic_print("TIME: ");
+	if (time_hours<10) basic_print("0");
 	print_u8(time_hours);
 	basic_print(":");
+	if (time_minutes<10) basic_print("0");
 	print_u8(time_minutes);
 
 	grsim_update();
