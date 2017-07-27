@@ -654,7 +654,13 @@ static void print_byte(unsigned char value) {
 }
 
 /* Enemies: */
-/*   Killer Crab, Big Fish, Procrastinon */
+/*   Killer Crab, Tree, Big Fish, Procrastinon */
+
+/* Background depend on map location? */
+/* Room for guinea pig in party? */
+
+/* Attacks -> HIT, ZAP, HEAL, RUNAWAY */
+
 
 static int do_battle(void) {
 
@@ -779,6 +785,7 @@ static int do_battle(void) {
 static int load_map_bg(void) {
 
 	int i,temp,ground_color;
+	int start,end;
 
 	if (map_x==5) {
 		grsim_unrle(landing_rle,0x800);
@@ -852,8 +859,17 @@ static int load_map_bg(void) {
 
 	/* Draw south shore */
 	if (map_x>=12) {
+		start=0; end=40;
 		color_equals(COLOR_DARKBLUE);
 		hlin_double(1,0,40,38);
+		color_equals(COLOR_LIGHTBLUE);
+		if (map_x==12) start=6;
+		if (map_x==15) end=35;
+		hlin_double(1,start,end,36);
+		if (map_x==12) start=8;
+		if (map_x==15) end=32;
+		color_equals(COLOR_YELLOW);
+		hlin_double(1,start,end,34);
 	}
 
 	if ((map_x&3)==2) {
@@ -976,7 +992,7 @@ static int world_map(void) {
 		if (map_x==1) if (tfv_y>=20) grsim_put_sprite(0,snowy_tree,10,20);
 		if (map_x==4) if (tfv_y>=15) grsim_put_sprite(0,pine_tree,25,15);
 		if (map_x==8) if (tfv_y>=22) grsim_put_sprite(0,palm_tree,10,20);
-		if (map_x==12) if (tfv_y>=27) grsim_put_sprite(0,palm_tree,20,25);
+		if (map_x==12) if (tfv_y>=22) grsim_put_sprite(0,palm_tree,20,20);
 
 		if (direction==-1) {
 			if (odd) grsim_put_sprite(0,tfv_walk_left,tfv_x,tfv_y);
@@ -990,7 +1006,7 @@ static int world_map(void) {
 		if (map_x==1) if (tfv_y<20) grsim_put_sprite(0,snowy_tree,10,20);
 		if (map_x==4) if (tfv_y<15) grsim_put_sprite(0,pine_tree,25,15);
 		if (map_x==8) if (tfv_y<22) grsim_put_sprite(0,palm_tree,10,20);
-		if (map_x==12) if (tfv_y<27) grsim_put_sprite(0,palm_tree,20,25);
+		if (map_x==12) if (tfv_y<22) grsim_put_sprite(0,palm_tree,20,20);
 
 		grsim_update();
 
