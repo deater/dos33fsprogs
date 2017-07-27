@@ -54,7 +54,7 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 	png_structp png_ptr;
 	png_infop info_ptr;
 	png_bytep *row_pointers;
-//	png_byte color_type;
+	png_byte color_type;
 //	int number_of_passes;
 
 	unsigned char header[8];
@@ -96,11 +96,16 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 	*xsize=width/2;
 	*ysize=height;
 
-//	color_type = png_get_color_type(png_ptr, info_ptr);
+	color_type = png_get_color_type(png_ptr, info_ptr);
 	bit_depth = png_get_bit_depth(png_ptr, info_ptr);
+
+
 
 	if (debug) {
 		printf("PNG: width=%d height=%d depth=%d\n",width,height,bit_depth);
+		if (color_type==PNG_COLOR_TYPE_RGB) printf("Type RGB\n");
+		else if (color_type==PNG_COLOR_TYPE_RGB_ALPHA) printf("Type RGBA\n");
+		else if (color_type==PNG_COLOR_TYPE_PALETTE) printf("Type palette\n");
 	}
 
 //        number_of_passes = png_set_interlace_handling(png_ptr);
@@ -122,33 +127,60 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 	}
 	out_ptr=image;
 
-	for(y=0;y<height;y+=2) {
-		for(x=0;x<width/2;x++) {
+	if (color_type==PNG_COLOR_TYPE_RGB_ALPHA) {
+		for(y=0;y<height;y+=2) {
+			for(x=0;x<width/2;x++) {
 
-			/* top color */
-			color=	(row_pointers[y][x*2*4]<<16)+
-				(row_pointers[y][x*2*4+1]<<8)+
-				(row_pointers[y][x*2*4+2]);
-			if (debug) {
-				printf("%x ",color);
+				/* top color */
+				color=	(row_pointers[y][x*2*4]<<16)+
+					(row_pointers[y][x*2*4+1]<<8)+
+					(row_pointers[y][x*2*4+2]);
+				if (debug) {
+					printf("%x ",color);
+				}
+
+				a2_color=convert_color(color);
+
+				/* bottom color */
+				color=	(row_pointers[y+1][x*2*4]<<16)+
+					(row_pointers[y+1][x*2*4+1]<<8)+
+					(row_pointers[y+1][x*2*4+2]);
+				if (debug) {
+					printf("%x ",color);
+				}
+
+				a2_color|=(convert_color(color)<<4);
+
+				*out_ptr=a2_color;
+				out_ptr++;
 			}
-
-			a2_color=convert_color(color);
-
-			/* bottom color */
-			color=	(row_pointers[y+1][x*2*4]<<16)+
-				(row_pointers[y+1][x*2*4+1]<<8)+
-				(row_pointers[y+1][x*2*4+2]);
-			if (debug) {
-				printf("%x ",color);
-			}
-
-			a2_color|=(convert_color(color)<<4);
-
-			*out_ptr=a2_color;
-			out_ptr++;
+			if (debug) printf("\n");
 		}
-		if (debug) printf("\n");
+	}
+	else if (color_type==PNG_COLOR_TYPE_PALETTE) {
+		for(y=0;y<height;y+=2) {
+			for(x=0;x<width/2;x++) {
+
+				/* top color */
+				a2_color=row_pointers[y][x*2];
+
+				/* bottom color */
+				color=row_pointers[y+1][x*2];
+
+				a2_color|=(color<<4);
+
+				if (debug) {
+					printf("%x ",a2_color);
+				}
+
+				*out_ptr=a2_color;
+				out_ptr++;
+			}
+			if (debug) printf("\n");
+		}
+	}
+	else {
+		printf("Unknown color type\n");
 	}
 
 	/* Stripe test image */
