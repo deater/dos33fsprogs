@@ -787,17 +787,25 @@ static int load_map_bg(void) {
 	int i,temp,ground_color;
 	int start,end;
 
+	if (map_x==3) {
+		grsim_unrle(harfco_rle,0x800);
+		return 0;
+	}
+
 	if (map_x==5) {
 		grsim_unrle(landing_rle,0x800);
 		return 0;
 	}
+	if (map_x==14) {
+		grsim_unrle(collegep_rle,0x800);
+		return 0;
+	}
 
-	/* Should we make a thick-hlin? twice as fast? */
 
 	/* Sky */
 	color_equals(COLOR_MEDIUMBLUE);
-	for(i=0;i<10;i++) {
-		hlin(1,0,40,i);
+	for(i=0;i<10;i+=2) {
+		hlin_double(1,0,40,i);
 	}
 
 	if (map_x<4) ground_color=COLOR_WHITE;
@@ -889,6 +897,7 @@ static int world_map(void) {
 
 	int ch;
 	int direction=1;
+	int i,limit;
 
 	/************************************************/
 	/* Landed					*/
@@ -994,6 +1003,14 @@ static int world_map(void) {
 		if (map_x==8) if (tfv_y>=22) grsim_put_sprite(0,palm_tree,10,20);
 		if (map_x==12) if (tfv_y>=22) grsim_put_sprite(0,palm_tree,20,20);
 
+		if ((map_x==7) || (map_x==11)) {
+			for(i=10;i<tfv_y+8;i+=2) {
+				limit=22+(i/4);
+				color_equals(COLOR_DARKGREEN);
+				hlin_double(0,0,limit,i);
+			}
+		}
+
 		if (direction==-1) {
 			if (odd) grsim_put_sprite(0,tfv_walk_left,tfv_x,tfv_y);
 			else grsim_put_sprite(0,tfv_stand_left,tfv_x,tfv_y);
@@ -1007,6 +1024,45 @@ static int world_map(void) {
 		if (map_x==4) if (tfv_y<15) grsim_put_sprite(0,pine_tree,25,15);
 		if (map_x==8) if (tfv_y<22) grsim_put_sprite(0,palm_tree,10,20);
 		if (map_x==12) if (tfv_y<22) grsim_put_sprite(0,palm_tree,20,20);
+
+		if ((map_x==7) || (map_x==11)) {
+			for(i=tfv_y+8;i<36;i+=2) {
+				limit=22+(i/4);
+				color_equals(COLOR_DARKGREEN);
+				hlin_double(0,0,limit,i);
+			}
+
+			color_equals(COLOR_BROWN);
+			hlin_double(0,0,1,39);
+			for(i=0;i<13;i++) {
+				color_equals(COLOR_GREY);
+				hlin_double_continue(1);
+				color_equals(COLOR_BROWN);
+				hlin_double_continue(1);
+			}
+
+			color_equals(COLOR_BROWN);
+			hlin_double(0,0,1,37);
+			for(i=0;i<13;i++) {
+				color_equals(COLOR_GREY);
+				hlin_double_continue(1);
+				color_equals(COLOR_BROWN);
+				hlin_double_continue(1);
+			}
+		}
+
+		if (map_x==3) {
+			if ((steps&0xf)==0) {
+				grsim_put_sprite(0,lightning,25,4);
+				/* Hurt hit points if in range? */
+				if ((tfv_x>25) && (tfv_x<30) && (tfv_y<12)) {
+					printf("HIT! %d %d\n\n",steps,hp);
+					hp=hp-10;
+					if (hp<1) hp=1;
+					steps++;
+				}
+			}
+		}
 
 		grsim_update();
 
