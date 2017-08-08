@@ -1057,9 +1057,9 @@ static int world_map(void) {
 				/* Hurt hit points if in range? */
 				if ((tfv_x>25) && (tfv_x<30) && (tfv_y<12)) {
 					printf("HIT! %d %d\n\n",steps,hp);
-					hp=hp-10;
-					if (hp<1) hp=1;
-					steps++;
+					if (hp>11) {
+						hp=10;
+					}
 				}
 			}
 		}
