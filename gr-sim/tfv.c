@@ -772,11 +772,11 @@ static int do_battle(void) {
 1     BEACH     LANDING   GRASS      FOREST
       PINETREE            MOUNTAIN
 
-2     BEACH     GRASS     COLLEGE    FOREST
-      PALMTREE
+2     BEACH     GRASS     GRASS       FOREST
+      PALMTREE            MOUNTAIN
 
-3     BEACH     BEACH     BEACH      BEACH
-                          MOUNTAIN
+3     BEACH     DESERT    COLLEGE      BEACH
+                CACTUS   PARK
 */
 
 /* Walk through bushes, beach water */
@@ -796,6 +796,7 @@ static int load_map_bg(void) {
 		grsim_unrle(landing_rle,0x800);
 		return 0;
 	}
+
 	if (map_x==14) {
 		grsim_unrle(collegep_rle,0x800);
 		return 0;
@@ -809,6 +810,7 @@ static int load_map_bg(void) {
 	}
 
 	if (map_x<4) ground_color=COLOR_WHITE;
+	else if (map_x==13) ground_color=COLOR_ORANGE;
 	else ground_color=COLOR_LIGHTGREEN;
 
 	/* grassland/sloped left beach */
@@ -1002,6 +1004,8 @@ static int world_map(void) {
 		if (map_x==4) if (tfv_y>=15) grsim_put_sprite(0,pine_tree,25,15);
 		if (map_x==8) if (tfv_y>=22) grsim_put_sprite(0,palm_tree,10,20);
 		if (map_x==12) if (tfv_y>=22) grsim_put_sprite(0,palm_tree,20,20);
+		if (map_x==13) if (tfv_y>=15) grsim_put_sprite(0,cactus,25,15);
+
 
 		if ((map_x==7) || (map_x==11)) {
 			for(i=10;i<tfv_y+8;i+=2) {
@@ -1024,6 +1028,7 @@ static int world_map(void) {
 		if (map_x==4) if (tfv_y<15) grsim_put_sprite(0,pine_tree,25,15);
 		if (map_x==8) if (tfv_y<22) grsim_put_sprite(0,palm_tree,10,20);
 		if (map_x==12) if (tfv_y<22) grsim_put_sprite(0,palm_tree,20,20);
+		if (map_x==13) if (tfv_y<15) grsim_put_sprite(0,cactus,25,15);
 
 		if ((map_x==7) || (map_x==11)) {
 			for(i=tfv_y+8;i<36;i+=2) {
