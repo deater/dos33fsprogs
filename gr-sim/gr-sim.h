@@ -26,6 +26,7 @@ int hlin_continue(int width);
 int hlin_double_continue(int width);
 int hlin_double(int page, int x1, int x2, int at);
 
+int collision(int xx, int yy, int ground_color);
 
 #define APPLE_UP        11
 #define APPLE_DOWN      10

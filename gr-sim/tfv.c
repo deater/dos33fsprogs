@@ -30,9 +30,9 @@ static unsigned char items1=0xff,items2=0xff;
 static unsigned char steps=0;
 
 /* location */
-static int map_x=5;
-static int tfv_x=15,tfv_y=15;
-
+static unsigned char map_x=5;
+static char tfv_x=15,tfv_y=19;
+static unsigned char ground_color;
 
 static void draw_segment(void) {
 
@@ -784,8 +784,10 @@ static int do_battle(void) {
 
 static int load_map_bg(void) {
 
-	int i,temp,ground_color;
+	int i,temp;
 	int start,end;
+
+	ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4));
 
 	if (map_x==3) {
 		grsim_unrle(harfco_rle,0x800);
@@ -809,9 +811,9 @@ static int load_map_bg(void) {
 		hlin_double(1,0,40,i);
 	}
 
-	if (map_x<4) ground_color=COLOR_WHITE;
-	else if (map_x==13) ground_color=COLOR_ORANGE;
-	else ground_color=COLOR_LIGHTGREEN;
+	if (map_x<4) ground_color=(COLOR_WHITE|(COLOR_WHITE<<4));
+	else if (map_x==13) ground_color=(COLOR_ORANGE|(COLOR_ORANGE<<4));
+	else ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4));
 
 	/* grassland/sloped left beach */
 	if ((map_x&3)==0) {
@@ -900,6 +902,7 @@ static int world_map(void) {
 	int ch;
 	int direction=1;
 	int i,limit;
+	int newx=0,newy=0,moved;
 
 	/************************************************/
 	/* Landed					*/
@@ -922,20 +925,21 @@ static int world_map(void) {
 	int refresh=1;
 
 	while(1) {
+		moved=0;
+		newx=tfv_x;
+		newy=tfv_y;
 
 		ch=grsim_input();
 
 		if ((ch=='q') || (ch==27))  break;
 
 		if ((ch=='w') || (ch==APPLE_UP)) {
-			tfv_y-=2;
-			odd=!odd;
-			steps++;
+			newy=tfv_y-2;
+			moved=1;
 		}
 		if ((ch=='s') || (ch==APPLE_DOWN)) {
-			tfv_y+=2;
-			odd=!odd;
-			steps++;
+			newy=tfv_y+2;
+			moved=1;
 		}
 		if ((ch=='a') || (ch==APPLE_LEFT)) {
 			if (direction>0) {
@@ -943,10 +947,9 @@ static int world_map(void) {
 				odd=0;
 			}
 			else {
-				odd=!odd;
-				tfv_x--;
+				newx=tfv_x-1;
+				moved=1;
 			}
-			steps++;
 		}
 		if ((ch=='d') || (ch==APPLE_RIGHT)) {
 			if (direction<0) {
@@ -954,33 +957,9 @@ static int world_map(void) {
 				odd=0;
 			}
 			else {
-				odd=!odd;
-				tfv_x++;
+				newx=tfv_x+1;
+				moved=1;
 			}
-			steps++;
-		}
-
-		if (tfv_x>36) {
-			map_x++;
-			tfv_x=0;
-			refresh=1;
-		}
-		if (tfv_x<0) {
-			map_x--;
-			tfv_x=35;
-			refresh=1;
-		}
-
-		if (tfv_y<4) {
-			map_x-=4;
-			tfv_y=28;
-			refresh=1;
-		}
-
-		if (tfv_y>28) {
-			map_x+=4;
-			tfv_y=4;
-			refresh=1;
 		}
 
 		if (ch=='h') print_help();
@@ -1014,6 +993,45 @@ static int world_map(void) {
 				hlin_double(0,0,limit,i);
 			}
 		}
+
+
+		/* Collision detection + Movement */
+		if (moved) {
+			odd=!odd;
+			steps++;
+
+			if (collision(newx,newy+10,ground_color)) {
+			}
+			else {
+				tfv_x=newx;
+				tfv_y=newy;
+			}
+
+			if (tfv_x>36) {
+				map_x++;
+				tfv_x=0;
+				refresh=1;
+			}
+			if (tfv_x<=0) {
+				map_x--;
+				tfv_x=35;
+				refresh=1;
+			}
+
+			if ((tfv_y<4) && (map_x>=4)) {
+				map_x-=4;
+				tfv_y=28;
+				refresh=1;
+			}
+
+			if (tfv_y>=28) {
+				map_x+=4;
+				tfv_y=4;
+				refresh=1;
+			}
+		}
+
+
 
 		if (direction==-1) {
 			if (odd) grsim_put_sprite(0,tfv_walk_left,tfv_x,tfv_y);

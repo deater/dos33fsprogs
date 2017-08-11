@@ -1205,3 +1205,40 @@ int hlin_double(int page, int x1, int x2, int at) {
 	return 0;
 }
 
+
+int collision(int xx, int yy, int ground_color) {
+
+	int page=0;
+	int beach_color;
+	int collide=1;
+
+	hlin_addr=gr_addr_lookup[yy/2];
+
+	hlin_addr+=(page*4)<<8;
+
+	hlin_addr+=xx;
+
+	beach_color=COLOR_YELLOW|(COLOR_YELLOW<<4);
+
+	if ((ram[hlin_addr]==ground_color) &&
+		(ram[hlin_addr+1]==ground_color) &&
+		(ram[hlin_addr+2]==ground_color)) {
+
+		printf("NOCOLLIDE %x!\n",ground_color);
+		collide=0;
+	}
+
+	if ((ram[hlin_addr]==beach_color) &&
+		(ram[hlin_addr+1]==beach_color) &&
+		(ram[hlin_addr+2]==beach_color)) {
+
+		printf("NOCOLLIDE %x!\n",beach_color);
+		collide=0;
+	}
+
+	printf("COLLIDE %x %x %x not %x %x\n",
+		ram[hlin_addr],ram[hlin_addr+1],ram[hlin_addr+2],
+		ground_color,beach_color);
+
+	return collide;
+}
