@@ -19,6 +19,8 @@
 #define LOOP	0x06
 #define MEMPTRL	0x07
 #define MEMPTRH	0x08
+#define DISP_PAGE	0x09
+#define DRAW_PAGE	0x0a
 
 /* stats */
 static unsigned char level=0;
@@ -34,16 +36,30 @@ static unsigned char map_x=5;
 static char tfv_x=15,tfv_y=19;
 static unsigned char ground_color;
 
+static void page_flip(void) {
+
+	if (ram[DISP_PAGE]==0) {
+		soft_switch(HISCR);
+		ram[DISP_PAGE]=1;
+		ram[DRAW_PAGE]=0;
+	}
+	else {
+		soft_switch(LOWSCR);
+		ram[DISP_PAGE]=0;
+		ram[DRAW_PAGE]=1;
+	}
+}
+
 static void draw_segment(void) {
 
 	for(ram[LOOP]=0;ram[LOOP]<4;ram[LOOP]++) {
 		ram[YY]=ram[YY]+ram[YADD];
 		if (ram[XX]==ram[MATCH]) color_equals(ram[COLOR1]*3);
 		else color_equals(ram[COLOR1]);
-		basic_vlin(10,ram[YY],9+ram[XX]);
+		vlin(ram[DRAW_PAGE],10,ram[YY],9+ram[XX]);
 		if (ram[XX]==ram[MATCH]) color_equals(ram[COLOR2]*3);
 		else color_equals(ram[COLOR2]);
-		if (ram[YY]!=34) basic_vlin(ram[YY],34,9+ram[XX]);
+		if (ram[YY]!=34) vlin(ram[DRAW_PAGE],ram[YY],34,9+ram[XX]);
 		ram[XX]++;
 	}
 	ram[YADD]=-ram[YADD];
@@ -65,6 +81,8 @@ static void draw_logo(void) {
 	draw_segment();
 	ram[COLOR2]=0;
 	draw_segment();
+
+	page_flip();
 
 	grsim_update();
 }
@@ -1110,6 +1128,9 @@ int main(int argc, char **argv) {
 	int result;
 
 	grsim_init();
+
+	ram[DISP_PAGE]=0;
+	ram[DRAW_PAGE]=0;
 
 	home();
 	gr();

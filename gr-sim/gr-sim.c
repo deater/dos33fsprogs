@@ -60,50 +60,60 @@ unsigned char a,y,x;
 #define FLASH	0xF3
 #define TEMP	0xFA
 
+static int text_mode=0xff;
+static int text_page_1=0x00;
+static int hires_on=0x00;
+static int mixed_graphics=0xff;
 
-/* Soft Switches */
-#define TXTCLR	0xc050
-#define TXTSET	0xc051
-#define	MIXCLR	0xc052
-#define MIXSET	0xc053
-#define	LOWSCR	0xc054
-#define HISCR	0xc055
-#define LORES	0xc056
-#define HIRES	0xc057
-
-static int text_mode=1;
-static int text_page_1=1;
-static int hires_on=0;
-static int mixed_graphics=1;
-
-static void soft_switch(unsigned short address) {
+void soft_switch(unsigned short address) {
 
 	switch(address) {
 		case TXTCLR:	// $c050
-			text_mode=0;
+			text_mode=0x00;
 			break;
 		case TXTSET:	// $c051
-			text_mode=1;
+			text_mode=0xff;
 			break;
 		case MIXCLR:	// $c052
-			mixed_graphics=0;
+			mixed_graphics=0x00;
 			break;
 		case MIXSET:	// $c053
-			mixed_graphics=1;
+			mixed_graphics=0xff;
 			break;
 		case LOWSCR:	// $c054
-			text_page_1=1;
+			text_page_1=0x00;
+			break;
+		case HISCR:	// $c055
+			text_page_1=0xff;
 			break;
 		case LORES:	// $c056
-			hires_on=0;
+			hires_on=0x00;
 			break;
 		case HIRES:	// $c057
-			hires_on=1;
+			hires_on=0xff;
 			break;
 		default:
 			fprintf(stderr,"Unknown soft switch %x\n",address);
 			break;
 	}
+}
+
+int soft_switch_read(unsigned short address) {
+
+	switch(address) {
+		case TEXT_RD:	// $c01a
+			return text_mode;
+		case MIXED_RD:	// $c01b
+			return mixed_graphics;
+		case PAGE2_RD:	// $c01c
+			return text_page_1;
+		case HIRES_RD:	// $c01d
+			return hires_on;
+		default:
+			fprintf(stderr,"Unknown soft switch read %x\n",address);
+			break;
+	}
+	return 0;
 }
 
 static SDL_Surface *sdl_screen=NULL;
@@ -258,11 +268,16 @@ int grsim_update(void) {
 	unsigned int *t_pointer;
 	int text_start,text_end,gr_start,gr_end;
 
+	int gr_addr,gr_addr_hi;
+	int temp_col;
+
+	/* point to SDL output pixels */
 	t_pointer=((Uint32 *)sdl_screen->pixels);
 
 	text_start=0; text_end=0;
 	gr_start=0;gr_end=GR_YSIZE;
 
+	/* get the proper modes */
 	if (text_mode) {
 		text_start=0; text_end=TEXT_YSIZE;
 		gr_start=0; gr_end=0;
@@ -272,23 +287,50 @@ int grsim_update(void) {
 		gr_start=0; gr_end=40;
 	}
 
+	/* do the top 40/48 if in graphics mode */
 	for(y=gr_start;y<gr_end;y++) {
+
 		for(j=0;j<PIXEL_Y_SCALE;j++) {
+
+			gr_addr=gr_addr_lookup[y/2];
+			gr_addr_hi=y%2;
+
+			/* adjust for page */
+			if (text_page_1) {
+				gr_addr+=0x400;
+			}
+
 			for(x=0;x<GR_XSIZE;x++) {
+
+				if (gr_addr_hi) {
+					temp_col=(ram[gr_addr]&0xf0)>>4;
+				}
+				else {
+					temp_col=ram[gr_addr]&0x0f;
+				}
+
 				for(i=0;i<PIXEL_X_SCALE;i++) {
-					*t_pointer=color[scrn(x,y)];
+					*t_pointer=color[temp_col];
 					t_pointer++;
 				}
+				gr_addr++;
 			}
 		}
 	}
 
-
+	/* Do the remaining text */
 	for(y=text_start;y<text_end;y++) {
 		for(j=0;j<TEXT_Y_SCALE;j++) {
 			for(x=0;x<TEXT_XSIZE;x++) {
-				ch=ram[gr_addr_lookup[y]+x];
-	//			printf("%x ",ch);
+
+				gr_addr=gr_addr_lookup[y];
+
+				/* adjust for page */
+				if (text_page_1) {
+					gr_addr+=0x400;
+				}
+
+				ch=ram[gr_addr+x];
 
 				if (ch&0x80) {
 					flash=0;
@@ -310,9 +352,6 @@ int grsim_update(void) {
 
 		/* 14 x 16 */
 		/* but font is 5x7 */
-
-		/* FIXME: handle page2 */
-
 
 		if (j>13) bit_set=0;
 		else if (i>11) bit_set=0;
@@ -1147,6 +1186,8 @@ void basic_normal(void) {
 
 static unsigned short hlin_addr;
 static unsigned short hlin_hi;
+static unsigned short vlin_addr;
+static unsigned short vlin_hi;
 
 int hlin_continue(int width) {
 
@@ -1177,6 +1218,32 @@ int hlin(int page, int x1, int x2, int at) {
 
 	hlin_addr+=x1;
 	hlin_continue(x2-x1);
+
+	return 0;
+}
+
+int vlin(int page, int y1, int y2, int at) {
+
+	int i;
+
+	for(i=y1;i<y2;i++) {
+
+		vlin_addr=gr_addr_lookup[i/2];
+		vlin_hi=i&1;
+
+		vlin_addr+=(page*4)<<8;
+
+		vlin_addr+=at;
+
+		if (vlin_hi) {
+			ram[vlin_addr]=ram[vlin_addr]&0x0f;
+			ram[vlin_addr]|=ram[COLOR]&0xf0;
+		}
+		else {
+			ram[vlin_addr]=ram[vlin_addr]&0xf0;
+			ram[vlin_addr]|=ram[COLOR]&0x0f;
+		}
+	}
 
 	return 0;
 }

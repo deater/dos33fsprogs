@@ -25,7 +25,9 @@ int hlin(int page, int x1, int x2, int at);
 int hlin_continue(int width);
 int hlin_double_continue(int width);
 int hlin_double(int page, int x1, int x2, int at);
-
+void soft_switch(unsigned short address);
+int soft_switch_read(unsigned short address);
+int vlin(int page, int y1, int y2, int at);
 int collision(int xx, int yy, int ground_color);
 
 #define APPLE_UP        11
@@ -49,3 +51,37 @@ int collision(int xx, int yy, int ground_color);
 #define COLOR_YELLOW	13
 #define COLOR_AQUA	14
 #define COLOR_WHITE	15
+
+/* Soft Switches */
+#define EIGHTYSTORE_OFF	0xc000	// page2 selects AUX ram
+#define EIGHTYSTORE_ON	0xc001	// page2 selects MAIN ram
+#define EIGHTYCOL_OFF	0xc00c	// Display 40 columns
+#define EIGHTYCOLO_ON	0xc00d	// Display 80 columns
+#define ALTCHAR_OFF	0xc00e	// Use primary charset
+#define ALTCHAR_ON	0xc00f	// Use alternate charset
+#define EIGHTYSTORE_RD	0xc018	// Read 80stor switch (R7)
+#define TEXT_RD		0xc01a	// Read text switch (R7)
+#define MIXED_RD	0xc01b	// Read mixed switch (R7)
+#define PAGE2_RD	0xc01c	// Read Page2 (R7)
+#define HIRES_RD	0xc01d	// Read HIRES (R7)
+#define ALTCHAR_RD	0xc01e	// Read ALTCHAR switch (R7)
+#define EIGHTYCOL_RD	0xc01f	// Read 80col switch (1==on) (R7)
+#define TXTCLR		0xc050  // Display GR
+#define TEXT_OFF	0xc050	// Display GR
+#define TXTSET		0xc051	// Display Text
+#define TEXT_ON		0xc051	// Display Text
+#define MIXED_OFF	0xc052	// Mixed Text Off
+#define MIXCLR		0xc052	// Mixed Text Off
+#define MIXED_ON	0xc053	// Mixed Text On
+#define MIXSET		0xc053	// Mixed Text On
+#define PAGE2_OFF	0xc054	// Use Page 1
+#define LOWSCR		0xc054	// Use Page 1
+#define PAGE2_ON	0xc055	// Use Page 2
+#define HISCR		0xc055	// Use Page 2
+#define HIRES_OFF	0xc056	// lowres mode
+#define LORES		0xc056	// lowres mode
+#define HIRES_ON	0xc057	// hires mode
+#define HIRES		0xc057	// hires mode
+#define DHIRES_ON	0xc05e	// double-hires on
+#define DHIRES_OFF	0xc05f	// double-hires off
+#define DHIRES_RD	0xc07f	// double-hires read
