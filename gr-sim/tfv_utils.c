@@ -4,24 +4,7 @@
 #include <string.h>
 
 #include "gr-sim.h"
-
-#include "tfv_sprites.h"
-#include "backgrounds.h"
-
-/* Page Zero */
-
-#define COLOR1	0x00
-#define COLOR2	0x01
-#define MATCH	0x02
-#define XX	0x03
-#define YY	0x04
-#define YADD	0x05
-#define LOOP	0x06
-#define MEMPTRL	0x07
-#define MEMPTRH	0x08
-#define DISP_PAGE	0x09
-#define DRAW_PAGE	0x0a
-
+#include "tfv_zp.h"
 
 int repeat_until_keypressed(void) {
 
