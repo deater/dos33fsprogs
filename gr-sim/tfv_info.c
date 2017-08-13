@@ -51,7 +51,7 @@ void show_map(void) {
 	gr();
 	home();
 
-	grsim_unrle(worldmap_rle,0x800);
+	grsim_unrle(map_rle,0x800);
 	gr_copy(0x800,0x400);
 
 	color_equals(COLOR_RED);

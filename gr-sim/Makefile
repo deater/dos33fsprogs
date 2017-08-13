@@ -28,6 +28,37 @@ text.o:	text.c
 
 ####
 
+tfv_backgrounds.c:	../tfv/title.png \
+			../tfv/map.png \
+			../tfv/landing.png \
+			../tfv/harfco.png \
+			../tfv/belair.png \
+			../tfv/math_office.png \
+			../tfv/video_hr.png \
+			../tfv/collegep.png \
+			../tfv/umcp.png \
+			../tfv/dining.png \
+			../tfv/metro.png \
+			../tfv/talbot.png
+	../gr-utils/png2rle c ../tfv/title.png title_rle > tfv_backgrounds.c
+	../gr-utils/png2rle c ../tfv/map.png map_rle >> tfv_backgrounds.c
+	../gr-utils/png2rle c ../tfv/landing.png landing_rle >> tfv_backgrounds.c
+	../gr-utils/png2rle c ../tfv/harfco.png harfco_rle >> tfv_backgrounds.c
+	../gr-utils/png2rle c ../tfv/belair.png belair_rle >> tfv_backgrounds.c
+	../gr-utils/png2rle c ../tfv/math_office.png math_office_rle >> tfv_backgrounds.c
+	../gr-utils/png2rle c ../tfv/video_hr.png video_hr_rle >> tfv_backgrounds.c
+	../gr-utils/png2rle c ../tfv/collegep.png collegep_rle >> tfv_backgrounds.c
+	../gr-utils/png2rle c ../tfv/umcp.png umcp_rle >> tfv_backgrounds.c
+	../gr-utils/png2rle c ../tfv/dining.png dining_rle >> tfv_backgrounds.c
+	../gr-utils/png2rle c ../tfv/metro.png metro_rle >> tfv_backgrounds.c
+	../gr-utils/png2rle c ../tfv/talbot.png talbot_rle >> tfv_backgrounds.c
+
+
+
+
+
+####
+
 tfv_backgrounds.o:	tfv_backgrounds.c tfv_backgrounds.h
 	$(CC) $(CFLAGS) -c tfv_backgrounds.c
 

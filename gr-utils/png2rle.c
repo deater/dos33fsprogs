@@ -9,6 +9,9 @@
 
 #include "loadpng.h"
 
+#define OUTPUT_C	0
+#define OUTPUT_ASM	1
+
 /* Converts a PNG to RLE compressed data */
 
 int main(int argc, char **argv) {
@@ -18,33 +21,37 @@ int main(int argc, char **argv) {
 
 	unsigned char *image;
 	int xsize,ysize,last=-1,next;
-	FILE *outfile;
 	int size=0;
+	int out_type=OUTPUT_C;
 
-	if (argc<3) {
-		fprintf(stderr,"Usage:\t%s INFILE OUTFILE\n\n",argv[0]);
+	if (argc<4) {
+		fprintf(stderr,"Usage:\t%s type INFILE varname\n\n",argv[0]);
 		exit(-1);
 	}
 
-	outfile=fopen(argv[2],"w");
-	if (outfile==NULL) {
-		fprintf(stderr,"Error!  Could not open %s\n",argv[2]);
-		exit(-1);
+	if (!strcmp(argv[1],"c")) {
+		out_type=OUTPUT_C;
+	}
+	else if (!strcmp(argv[1],"asm")) {
+		out_type=OUTPUT_ASM;
 	}
 
-	if (loadpng(argv[1],&image,&xsize,&ysize)<0) {
+	if (loadpng(argv[2],&image,&xsize,&ysize)<0) {
 		fprintf(stderr,"Error loading png!\n");
 		exit(-1);
 	}
 
-	printf("Loaded image %d by %d\n",xsize,ysize);
+	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
 
 	x=0;
 	enough=0;
 
 	/* Write out xsize and ysize */
 
-	fprintf(outfile,"{ 0x%X,0x%X,\n",xsize,ysize);
+	if (out_type==OUTPUT_C) {
+		fprintf(stdout,"unsigned char %s[]=\n",argv[3]);
+		fprintf(stdout,"\t{ 0x%X,0x%X,\n",xsize,ysize);
+	}
 	size+=2;
 
 	/* Get first top/bottom color pair */
@@ -65,7 +72,7 @@ int main(int argc, char **argv) {
 		/* If color change (or too big) then output our run */
 		/* Note 0xff for run length is special case meaning "finished" */
 		if ((next!=last) || (run>253)) {
-			fprintf(outfile,"0x%02X,0x%02X, ",run,last);
+			fprintf(stdout,"0x%02X,0x%02X, ",run,last);
 
 //			printf("%x,%x\n",run,last);
 
@@ -80,7 +87,7 @@ int main(int argc, char **argv) {
 		enough++;
 		if (enough>=xsize) {
 			enough=0;
-			fprintf(outfile,"\n");
+			fprintf(stdout,"\n");
 		}
 
 		/* If we reach the end */
@@ -88,7 +95,7 @@ int main(int argc, char **argv) {
 			run++;
 			/* print tailing value */
 			if (run!=0) {
-				fprintf(outfile,"0x%02X,0x%02X, ",run,last);
+				fprintf(stdout,"0x%02X,0x%02X, ",run,last);
 				size+=2;
 			}
 			break;
@@ -101,13 +108,11 @@ int main(int argc, char **argv) {
 
 	/* Print closing marker */
 
-	fprintf(outfile,"0xFF,0xFF,");
+	fprintf(stdout,"0xFF,0xFF,");
 	size+=2;
-	fprintf(outfile,"};\n");
+	fprintf(stdout,"\t};\n");
 
-	fclose(outfile);
-
-	printf("Size %d bytes\n",size);
+	fprintf(stderr,"Size %d bytes\n",size);
 
 	return 0;
 }
