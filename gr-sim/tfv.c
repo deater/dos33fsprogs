@@ -8,7 +8,7 @@
 #include "tfv_zp.h"
 
 #include "tfv_sprites.h"
-#include "backgrounds.h"
+#include "tfv_backgrounds.h"
 
 /* stats */
 unsigned char level=0;
@@ -23,28 +23,6 @@ unsigned char steps=0;
 unsigned char map_x=5;
 char tfv_x=15,tfv_y=19;
 unsigned char ground_color;
-
-static char *title_menu[]={
-	"NEW GAME",
-	"LOAD GAME",
-	"CREDITS",
-};
-
-static int title(void) {
-
-	int result;
-
-	home();
-
-	grsim_unrle(title_rle,0x800);
-	gr_copy(0x800,0x400);
-
-	grsim_update();
-
-	result=select_menu(12, 22, 3, title_menu);
-
-	return result;
-}
 
 static char nameo[9];
 
@@ -89,7 +67,7 @@ static int name_screen(void) {
 //24
 	basic_print("PLEASE ENTER A NAME:");
 
-	apple_memset(nameo,0,9);
+	apple_memset((unsigned char *)nameo,0,9);
 
 	grsim_update();
 

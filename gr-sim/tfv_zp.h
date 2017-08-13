@@ -27,4 +27,4 @@ extern char tfv_x,tfv_y;
 extern unsigned char ground_color;
 
 int opening(void);
-
+int title(void);
