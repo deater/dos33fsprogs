@@ -26,5 +26,16 @@ extern unsigned char map_x;
 extern char tfv_x,tfv_y;
 extern unsigned char ground_color;
 
+extern char nameo[9];
+
+
 int opening(void);
 int title(void);
+int flying(void);
+
+void game_over(void);
+void show_map(void);
+void print_info(void);
+void print_help(void);
+
+int do_battle(void);
