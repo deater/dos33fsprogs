@@ -100,5 +100,8 @@ void page_flip(void) {
 		ram[DISP_PAGE]=0;
 		ram[DRAW_PAGE]=1;
 	}
+
+	grsim_update();
+
 }
 

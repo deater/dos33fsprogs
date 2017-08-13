@@ -31,6 +31,10 @@ int vlin(int page, int y1, int y2, int at);
 int collision(int xx, int yy, int ground_color);
 void clear_top(int page);
 void clear_bottom(int page);
+void vtab(int ypos);
+void htab(int xpos);
+void move_cursor(void);
+void print(char *string);
 
 
 #define APPLE_UP        11

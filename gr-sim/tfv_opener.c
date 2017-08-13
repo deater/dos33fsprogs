@@ -39,10 +39,6 @@ static void draw_logo(void) {
 	draw_segment();
 	ram[COLOR2]=0;
 	draw_segment();
-
-	page_flip();
-
-	grsim_update();
 }
 
 int opening(void) {
@@ -51,20 +47,22 @@ int opening(void) {
 
 	ram[MATCH]=100;
 	draw_logo();
+	page_flip();
 
 	usleep(200000);
 
 	for(ram[MATCH]=0;ram[MATCH]<30;ram[MATCH]++) {
 		draw_logo();
-		grsim_update();
+		page_flip();
 
 		usleep(20000);
 	}
 
-	basic_vtab(21);
-	basic_htab(9);
-	basic_print("A VMW SOFTWARE PRODUCTION");
-	grsim_update();
+	vtab(21);
+	htab(9);
+	move_cursor();
+	print("A VMW SOFTWARE PRODUCTION");
+	page_flip();
 
 	repeat_until_keypressed();
 

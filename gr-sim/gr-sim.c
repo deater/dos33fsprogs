@@ -5,6 +5,7 @@
 #include <SDL.h>
 
 #include "gr-sim.h"
+#include "tfv_zp.h"
 
 #include "apple2_font.h"
 
@@ -548,7 +549,7 @@ static void vtabz(void) {
 
 }
 
-static void vtab(void) {
+static void rom_vtab(void) {
 	/* fb5b */
 	a=ram[CV];
 	vtabz();
@@ -566,7 +567,7 @@ static void setwnd(void) {
 	a=0x17;
 // TABV
 	ram[CV]=a;
-	vtab();
+	rom_vtab();
 }
 
 static void vline(void) {
@@ -680,7 +681,7 @@ cleop1_begin:
 	a=s;
 	a++;
 	if (a<=ram[WNDBTM]) goto cleop1_begin;
-	vtab();
+	rom_vtab();
 
 	return 0;
 }
@@ -931,7 +932,7 @@ scrl1:
 		// SCRL3
 		y=0;
 		cleolz();
-		vtab();
+		rom_vtab();
 		return;
 	}
 	s=a;
@@ -973,7 +974,7 @@ static void up(void) {
 	if (a>ram[CV]) return;
 
 	ram[CV]=ram[CV]-1;
-	vtab();
+	rom_vtab();
 }
 
 static void bs(void) {
@@ -1137,7 +1138,7 @@ static void tabv(void) {
 	// TABV
 	// fb5b
 	ram[CV]=a;
-	vtab();
+	rom_vtab();
 }
 
 void basic_vtab(int ypos) {
@@ -1327,4 +1328,38 @@ void clear_bottom(int page) {
 	for(i=40;i<48;i+=2) {
 		hlin_double(page,0,40,i);
 	}
+}
+
+
+void vtab(int ypos) {
+	ram[CV]=ypos-1;
+}
+
+void htab(int xpos) {
+	ram[CH]=xpos-1;
+}
+
+void move_cursor(void) {
+
+	int address;
+
+	address=gr_addr_lookup[ram[CV]];
+	address+=ram[CH];
+
+	hlin_addr+=(ram[DRAW_PAGE]*4)<<8;
+
+	ram[BASL]=address&0xff;
+	ram[BASH]=address>>8;
+
+}
+
+
+void print(char *string) {
+
+	for(y=0;y<strlen(string);y++) {
+		a=string[y];
+		a=a|0x80;
+		ram[y_indirect(BASL,y)]=a;
+	}
+	ram[BASL]+=strlen(string);
 }

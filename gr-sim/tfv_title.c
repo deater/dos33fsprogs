@@ -20,8 +20,8 @@ int title(void) {
 
 	home();
 
-	grsim_unrle(title_rle,0x800);
-	gr_copy(0x800,0x400);
+	grsim_unrle(title_rle,0xc00);
+	gr_copy(0xc00,0x400);
 
 	grsim_update();
 
