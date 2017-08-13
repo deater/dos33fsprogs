@@ -58,7 +58,7 @@ int select_menu(int x, int y, int num, char **items) {
 	return result;
 }
 
-void apple_memset(char *ptr, int value, int length) {
+void apple_memset(unsigned char *ptr, int value, int length) {
 
 	a=value;
 	x=length;

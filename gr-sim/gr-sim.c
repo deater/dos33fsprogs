@@ -1309,3 +1309,22 @@ int collision(int xx, int yy, int ground_color) {
 
 	return collide;
 }
+
+void clear_top(int page) {
+	int i;
+
+	ram[COLOR]=0x0;
+	for(i=0;i<40;i+=2) {
+		hlin_double(page,0,40,i);
+	}
+}
+
+void clear_bottom(int page) {
+	int i;
+
+	/* NORMAL space */
+	ram[COLOR]=0xa0;
+	for(i=40;i<48;i+=2) {
+		hlin_double(page,0,40,i);
+	}
+}

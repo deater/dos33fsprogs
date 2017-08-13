@@ -955,11 +955,21 @@ int main(int argc, char **argv) {
 
 	grsim_init();
 
-	ram[DISP_PAGE]=0;
-	ram[DRAW_PAGE]=0;
-
 	home();
 	gr();
+
+	/* Clear bottom of zero page */
+	apple_memset(&ram[0],0,16);
+
+	/* clear top page0 */
+	/* clear top page1 */
+	clear_top(0);
+	clear_top(1);
+
+	/* clear bottom page0 */
+	/* clear bottom page1 */
+	clear_bottom(0);
+	clear_bottom(1);
 
 	/* Do Opening */
 	opening();
