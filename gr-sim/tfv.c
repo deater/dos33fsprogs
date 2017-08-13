@@ -4,182 +4,25 @@
 #include <string.h>
 
 #include "gr-sim.h"
+#include "tfv_utils.h"
+#include "tfv_zp.h"
 
 #include "tfv_sprites.h"
 #include "backgrounds.h"
 
-/* Page Zero */
-
-#define COLOR1	0x00
-#define COLOR2	0x01
-#define MATCH	0x02
-#define XX	0x03
-#define YY	0x04
-#define YADD	0x05
-#define LOOP	0x06
-#define MEMPTRL	0x07
-#define MEMPTRH	0x08
-#define DISP_PAGE	0x09
-#define DRAW_PAGE	0x0a
-
 /* stats */
-static unsigned char level=0;
-static unsigned char hp=50,max_hp=100;
-static unsigned char limit=2;
-static unsigned char money=0,experience=0;
-static unsigned char time_hours=0,time_minutes=0;
-static unsigned char items1=0xff,items2=0xff;
-static unsigned char steps=0;
+unsigned char level=0;
+unsigned char hp=50,max_hp=100;
+unsigned char limit=2;
+unsigned char money=0,experience=0;
+unsigned char time_hours=0,time_minutes=0;
+unsigned char items1=0xff,items2=0xff;
+unsigned char steps=0;
 
 /* location */
-static unsigned char map_x=5;
-static char tfv_x=15,tfv_y=19;
-static unsigned char ground_color;
-
-static void page_flip(void) {
-
-	if (ram[DISP_PAGE]==0) {
-		soft_switch(HISCR);
-		ram[DISP_PAGE]=1;
-		ram[DRAW_PAGE]=0;
-	}
-	else {
-		soft_switch(LOWSCR);
-		ram[DISP_PAGE]=0;
-		ram[DRAW_PAGE]=1;
-	}
-}
-
-static void draw_segment(void) {
-
-	for(ram[LOOP]=0;ram[LOOP]<4;ram[LOOP]++) {
-		ram[YY]=ram[YY]+ram[YADD];
-		if (ram[XX]==ram[MATCH]) color_equals(ram[COLOR1]*3);
-		else color_equals(ram[COLOR1]);
-		vlin(ram[DRAW_PAGE],10,ram[YY],9+ram[XX]);
-		if (ram[XX]==ram[MATCH]) color_equals(ram[COLOR2]*3);
-		else color_equals(ram[COLOR2]);
-		if (ram[YY]!=34) vlin(ram[DRAW_PAGE],ram[YY],34,9+ram[XX]);
-		ram[XX]++;
-	}
-	ram[YADD]=-ram[YADD];
-}
-
-static void draw_logo(void) {
-
-	ram[XX]=0;
-	ram[YY]=10;
-	ram[YADD]=6;
-	ram[COLOR1]=1;
-	ram[COLOR2]=0;
-	draw_segment();
-	ram[COLOR2]=4;
-	draw_segment();
-	ram[COLOR1]=2;
-	draw_segment();
-	draw_segment();
-	draw_segment();
-	ram[COLOR2]=0;
-	draw_segment();
-
-	page_flip();
-
-	grsim_update();
-}
-
-static int repeat_until_keypressed(void) {
-
-	int ch;
-
-	while(1) {
-		ch=grsim_input();
-		if (ch!=0) break;
-
-		usleep(10000);
-	}
-
-	return ch;
-}
-
-static int select_menu(int x, int y, int num, char **items) {
-
-	int result=0;
-	int ch,i;
-
-	while(1) {
-		for(i=0;i<num;i++) {
-			basic_htab(x);
-			basic_vtab(y+i);
-
-			if (i==result) {
-				basic_inverse();
-				basic_print("--> ");
-			}
-			else {
-				basic_print("    ");
-			}
-
-			basic_print(items[i]);
-			basic_normal();
-			grsim_update();
-		}
-
-
-		ch=repeat_until_keypressed();
-		if (ch=='\r') break;
-		if (ch==' ') break;
-		if (ch==APPLE_RIGHT) result++;
-		if (ch==APPLE_DOWN) result++;
-		if (ch==APPLE_LEFT) result--;
-		if (ch==APPLE_UP) result--;
-		if (result>=num) result=num-1;
-		if (result<0) result=0;
-	}
-
-	return result;
-}
-
-
-
-static void apple_memset(char *ptr, int value, int length) {
-
-	a=value;
-	x=length;
-	y=0;
-
-	while(x>0) {
-		ptr[y]=a;
-		y++;
-		x--;
-	}
-}
-
-
-static int opening(void) {
-
-	/* VMW splash */
-
-	ram[MATCH]=100;
-	draw_logo();
-
-	usleep(200000);
-
-	for(ram[MATCH]=0;ram[MATCH]<30;ram[MATCH]++) {
-		draw_logo();
-		grsim_update();
-
-		usleep(20000);
-	}
-
-	basic_vtab(21);
-	basic_htab(9);
-	basic_print("A VMW SOFTWARE PRODUCTION");
-	grsim_update();
-
-	repeat_until_keypressed();
-
-	return 0;
-}
+unsigned char map_x=5;
+char tfv_x=15,tfv_y=19;
+unsigned char ground_color;
 
 static char *title_menu[]={
 	"NEW GAME",
@@ -482,16 +325,6 @@ static void show_map(void) {
 	repeat_until_keypressed();
 }
 
-void print_u8(unsigned char value) {
-
-	char temp[4];
-
-	sprintf(temp,"%d",value);
-
-	basic_print(temp);
-
-}
-
 
 /*
           1         2         3         4
@@ -663,13 +496,6 @@ List hits
 ******  ******  ******  ****        **  ****    ******    **    ******      **
 
 */
-
-static void print_byte(unsigned char value) {
-	char temp[4];
-	sprintf(temp,"%3d",value);
-	temp[3]=0;
-	basic_print(temp);
-}
 
 /* Enemies: */
 /*   Killer Crab, Tree, Big Fish, Procrastinon */

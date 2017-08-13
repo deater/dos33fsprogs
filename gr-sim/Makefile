@@ -28,11 +28,19 @@ text.o:	text.c
 
 ####
 
-tfv:	tfv.o gr-sim.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o tfv tfv.o gr-sim.o
+tfv_opener.o:	tfv_opener.c tfv_utils.h
+	$(CC) $(CFLAGS) -c tfv_opener.c
+
+tfv_utils.o:	tfv_utils.c tfv_utils.h
+	$(CC) $(CFLAGS) -c tfv_utils.c
 
 tfv.o:	tfv.c gr-sim.h backgrounds.h tfv_sprites.h
 	$(CC) $(CFLAGS) -c tfv.c
+
+tfv:	tfv.o tfv_opener.o tfv_utils.o gr-sim.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o tfv tfv.o tfv_opener.o tfv_utils.o gr-sim.o
+
+
 
 
 ###

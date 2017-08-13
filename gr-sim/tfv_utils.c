@@ -1,0 +1,121 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+#include "gr-sim.h"
+
+#include "tfv_sprites.h"
+#include "backgrounds.h"
+
+/* Page Zero */
+
+#define COLOR1	0x00
+#define COLOR2	0x01
+#define MATCH	0x02
+#define XX	0x03
+#define YY	0x04
+#define YADD	0x05
+#define LOOP	0x06
+#define MEMPTRL	0x07
+#define MEMPTRH	0x08
+#define DISP_PAGE	0x09
+#define DRAW_PAGE	0x0a
+
+
+int repeat_until_keypressed(void) {
+
+	int ch;
+
+	while(1) {
+		ch=grsim_input();
+		if (ch!=0) break;
+
+		usleep(10000);
+	}
+
+	return ch;
+}
+
+int select_menu(int x, int y, int num, char **items) {
+
+	int result=0;
+	int ch,i;
+
+	while(1) {
+		for(i=0;i<num;i++) {
+			basic_htab(x);
+			basic_vtab(y+i);
+
+			if (i==result) {
+				basic_inverse();
+				basic_print("--> ");
+			}
+			else {
+				basic_print("    ");
+			}
+
+			basic_print(items[i]);
+			basic_normal();
+			grsim_update();
+		}
+
+
+		ch=repeat_until_keypressed();
+		if (ch=='\r') break;
+		if (ch==' ') break;
+		if (ch==APPLE_RIGHT) result++;
+		if (ch==APPLE_DOWN) result++;
+		if (ch==APPLE_LEFT) result--;
+		if (ch==APPLE_UP) result--;
+		if (result>=num) result=num-1;
+		if (result<0) result=0;
+	}
+
+	return result;
+}
+
+void apple_memset(char *ptr, int value, int length) {
+
+	a=value;
+	x=length;
+	y=0;
+
+	while(x>0) {
+		ptr[y]=a;
+		y++;
+		x--;
+	}
+}
+
+void print_u8(unsigned char value) {
+
+	char temp[4];
+
+	sprintf(temp,"%d",value);
+
+	basic_print(temp);
+
+}
+
+void print_byte(unsigned char value) {
+	char temp[4];
+	sprintf(temp,"%3d",value);
+	temp[3]=0;
+	basic_print(temp);
+}
+
+void page_flip(void) {
+
+	if (ram[DISP_PAGE]==0) {
+		soft_switch(HISCR);
+		ram[DISP_PAGE]=1;
+		ram[DRAW_PAGE]=0;
+	}
+	else {
+		soft_switch(LOWSCR);
+		ram[DISP_PAGE]=0;
+		ram[DRAW_PAGE]=1;
+	}
+}
+

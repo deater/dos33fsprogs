@@ -98,6 +98,7 @@ label140:
 		for(l=(y-S);l<=(y+S);l+=(r/4)+1) {
 			for(k=(x-S);k<=(x+S);k+=r) {
 				basic_plot(k,l);
+				grsim_update();
 			}
 		}
 	}
