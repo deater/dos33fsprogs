@@ -15,6 +15,7 @@ int grsim_unrle(unsigned char *rle_data, int address);
 int home(void);
 int grsim_put_sprite(int page,unsigned char *sprite_data, int xpos, int ypos);
 int gr_copy(short source, short dest);
+int gr_copy_to_current(short source);
 int text(void);
 void basic_htab(int x);
 void basic_vtab(int y);
@@ -35,6 +36,7 @@ void vtab(int ypos);
 void htab(int xpos);
 void move_cursor(void);
 void print(char *string);
+void print_inverse(char *string);
 
 
 #define APPLE_UP        11

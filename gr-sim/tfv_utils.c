@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 
+#include "tfv_utils.h"
 #include "gr-sim.h"
 #include "tfv_zp.h"
 
@@ -27,22 +28,20 @@ int select_menu(int x, int y, int num, char **items) {
 
 	while(1) {
 		for(i=0;i<num;i++) {
-			basic_htab(x);
-			basic_vtab(y+i);
+			htab(x);
+			vtab(y+i);
+			move_cursor();
 
 			if (i==result) {
-				basic_inverse();
-				basic_print("--> ");
+				print_inverse("--> ");
 			}
 			else {
-				basic_print("    ");
+				print("    ");
 			}
 
-			basic_print(items[i]);
-			basic_normal();
-			grsim_update();
+			print(items[i]);
 		}
-
+		page_flip();
 
 		ch=repeat_until_keypressed();
 		if (ch=='\r') break;

@@ -865,8 +865,28 @@ int gr_copy(short source, short dest) {
 	int i,j,l;
 
 	for(i=0;i<8;i++) {
-		source_addr=gr_addr_lookup[i]+0x400;
-		dest_addr=gr_addr_lookup[i];
+		source_addr=gr_addr_lookup[i]+(source-0x400);
+		dest_addr=gr_addr_lookup[i]+(dest-0x400);
+
+		if (i<4) l=120;
+		else l=80;
+
+		for(j=0;j<l;j++) {
+			ram[dest_addr+j]=ram[source_addr+j];
+		}
+	}
+
+	return 0;
+}
+
+int gr_copy_to_current(short source) {
+
+	short dest_addr,source_addr;
+	int i,j,l;
+
+	for(i=0;i<8;i++) {
+		source_addr=gr_addr_lookup[i]+(source-0x400);
+		dest_addr=gr_addr_lookup[i]+(0x400*ram[DRAW_PAGE]);
 
 		if (i<4) l=120;
 		else l=80;
@@ -1346,7 +1366,7 @@ void move_cursor(void) {
 	address=gr_addr_lookup[ram[CV]];
 	address+=ram[CH];
 
-	hlin_addr+=(ram[DRAW_PAGE]*4)<<8;
+	address+=(ram[DRAW_PAGE]*4)<<8;
 
 	ram[BASL]=address&0xff;
 	ram[BASH]=address>>8;
@@ -1359,6 +1379,16 @@ void print(char *string) {
 	for(y=0;y<strlen(string);y++) {
 		a=string[y];
 		a=a|0x80;
+		ram[y_indirect(BASL,y)]=a;
+	}
+	ram[BASL]+=strlen(string);
+}
+
+void print_inverse(char *string) {
+
+	for(y=0;y<strlen(string);y++) {
+		a=string[y];
+		a=a&0x3f;
 		ram[y_indirect(BASL,y)]=a;
 	}
 	ram[BASL]+=strlen(string);

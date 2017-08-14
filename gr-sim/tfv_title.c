@@ -18,12 +18,19 @@ int title(void) {
 
 	int result;
 
-	home();
+	clear_bottom(0);
+	clear_bottom(1);
 
 	grsim_unrle(title_rle,0xc00);
-	gr_copy(0xc00,0x400);
 
-	grsim_update();
+	gr_copy_to_current(0xc00);
+	page_flip();
+	gr_copy_to_current(0xc00);
+
+//	page_flip();
+//	page_flip();
+
+//	grsim_update();
 
 	result=select_menu(12, 22, 3, title_menu);
 
