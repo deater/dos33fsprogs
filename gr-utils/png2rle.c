@@ -16,13 +16,14 @@
 
 int main(int argc, char **argv) {
 
-	int enough=0,run=0;
+	int run=0;
 	int x;
 
 	unsigned char *image;
 	int xsize,ysize,last=-1,next;
 	int size=0;
 	int out_type=OUTPUT_C;
+	int count=0;
 
 	if (argc<4) {
 		fprintf(stderr,"Usage:\t%s type INFILE varname\n\n",argv[0]);
@@ -44,14 +45,18 @@ int main(int argc, char **argv) {
 	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
 
 	x=0;
-	enough=0;
 
 	/* Write out xsize and ysize */
 
 	if (out_type==OUTPUT_C) {
-		fprintf(stdout,"unsigned char %s[]=\n",argv[3]);
-		fprintf(stdout,"\t{ 0x%X,0x%X,\n",xsize,ysize);
+		fprintf(stdout,"unsigned char %s[]={\n",argv[3]);
+		fprintf(stdout,"\t0x%X,0x%X,",xsize,ysize);
 	}
+	else {
+		fprintf(stdout,"%s:",argv[3]);
+		fprintf(stdout,"\t.byte $%X,$%X",xsize,ysize);
+	}
+
 	size+=2;
 
 	/* Get first top/bottom color pair */
@@ -72,9 +77,22 @@ int main(int argc, char **argv) {
 		/* If color change (or too big) then output our run */
 		/* Note 0xff for run length is special case meaning "finished" */
 		if ((next!=last) || (run>253)) {
-			fprintf(stdout,"0x%02X,0x%02X, ",run,last);
-
-//			printf("%x,%x\n",run,last);
+			if (out_type==OUTPUT_C) {
+				if (count==0) {
+					printf("\n\t");
+				}
+				printf("0x%02X,0x%02X, ",run,last);
+			}
+			else {
+				if (count==0) {
+					printf("\n\t.byte ");
+				}
+				else {
+					printf(", ");
+				}
+				printf("$%02X,$%02X",run,last);
+			}
+			count++;
 
 			size+=2;
 			run=0;
@@ -84,33 +102,49 @@ int main(int argc, char **argv) {
 		x++;
 
 		/* Split up per-line */
-		enough++;
-		if (enough>=xsize) {
-			enough=0;
-			fprintf(stdout,"\n");
-		}
+//		enough++;
+//		if (enough>=xsize) {
+//			enough=0;
+//			fprintf(stdout,"\n");
+//		}
 
 		/* If we reach the end */
 		if (x>=xsize*(ysize/2)) {
 			run++;
 			/* print tailing value */
 			if (run!=0) {
-				fprintf(stdout,"0x%02X,0x%02X, ",run,last);
+				if (out_type==OUTPUT_C) {
+					printf("0x%02X,0x%02X, ",run,last);
+				}
+				else {
+					if (count==0) {
+						printf("\n\t.byte ");
+					}
+					else {
+						printf(", ");
+					}
+					printf("$%02X,$%02X\n",run,last);
+				}
 				size+=2;
 			}
 			break;
 		}
 
 		run++;
-
+		if (count>6) count=0;
 
 	}
 
 	/* Print closing marker */
 
-	fprintf(stdout,"0xFF,0xFF,");
+	if (out_type==OUTPUT_C) {
+		fprintf(stdout,"0xFF,0xFF,");
+		fprintf(stdout,"\t};\n");
+	} else {
+		fprintf(stdout,"\t.byte $FF,$FF\n");
+	}
+
 	size+=2;
-	fprintf(stdout,"\t};\n");
 
 	fprintf(stderr,"Size %d bytes\n",size);
 

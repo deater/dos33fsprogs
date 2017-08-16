@@ -143,9 +143,9 @@ title_screen:
 	lda	#$0
 	sta	BASL			; load image off-screen 0xc00
 
-	lda     #>(title_image)
+	lda     #>(title_rle)
         sta     GBASH
-	lda     #<(title_image)
+	lda     #<(title_rle)
         sta     GBASL
 	jsr	load_rle_gr
 
@@ -847,4 +847,4 @@ tb1_sprite:
 	.byte $ff,$1f,$4f,$2f,$ff,$22,$20,$00
 	.byte $5f,$5f,$5f,$5f,$ff,$f2,$f2,$f2
 
-.include "title.inc"
+.include "backgrounds.inc"
