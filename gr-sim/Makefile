@@ -26,9 +26,15 @@ text.o:	text.c
 	$(CC) $(CFLAGS) -c text.c
 
 
+###
+
+../gr-utils/png2rle:	
+	cd .. && cd gr-utils && make
+
 ####
 
-tfv_backgrounds.c:	../tfv/title.png \
+tfv_backgrounds.c:	../gr-utils/png2rle \
+			../tfv/title.png \
 			../tfv/map.png \
 			../tfv/landing.png \
 			../tfv/harfco.png \
@@ -77,17 +83,23 @@ tfv_opener.o:	tfv_opener.c tfv_utils.h
 tfv_sprites.o:	tfv_sprites.c tfv_sprites.c
 	$(CC) $(CFLAGS) -c tfv_sprites.c
 
+tfv_textentry.o:	tfv_textentry.c
+	$(CC) $(CFLAGS) -c tfv_textentry.c
+
 tfv_title.o:	tfv_title.c tfv_utils.h tfv_backgrounds.h
 	$(CC) $(CFLAGS) -c tfv_title.c
 
 tfv_utils.o:	tfv_utils.c tfv_utils.h
 	$(CC) $(CFLAGS) -c tfv_utils.c
 
+tfv_worldmap.o:	tfv_worldmap.c
+	$(CC) $(CFLAGS) -c tfv_worldmap.c
+
 tfv.o:	tfv.c gr-sim.h tfv_backgrounds.h tfv_sprites.h
 	$(CC) $(CFLAGS) -c tfv.c
 
-tfv:	tfv.o tfv_backgrounds.o tfv_battle.o tfv_flying.o tfv_info.o tfv_opener.o tfv_sprites.o tfv_title.o tfv_utils.o gr-sim.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o tfv tfv.o tfv_backgrounds.o tfv_battle.o tfv_flying.o tfv_info.o tfv_opener.o tfv_sprites.o tfv_title.o tfv_utils.o gr-sim.o
+tfv:	tfv.o tfv_backgrounds.o tfv_battle.o tfv_flying.o tfv_info.o tfv_opener.o tfv_sprites.o tfv_textentry.o tfv_title.o tfv_utils.o tfv_worldmap.o gr-sim.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o tfv tfv.o tfv_backgrounds.o tfv_battle.o tfv_flying.o tfv_info.o tfv_opener.o tfv_sprites.o tfv_textentry.o tfv_title.o tfv_utils.o tfv_worldmap.o gr-sim.o
 
 ###
 

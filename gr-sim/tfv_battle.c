@@ -13,6 +13,12 @@
 
 /* Do Battle */
 
+
+/* Metrocat Easter Egg (summon?) */
+
+/* Enemies: */
+/*   Killer Crab, Evil Tree, Deadly Bees, Big Fish, Procrastinon */
+
 /* Battle.
 Forest? Grassland? Artic? Ocean?
 
@@ -38,8 +44,7 @@ List hits
 
 */
 
-/* Enemies: */
-/*   Killer Crab, Tree, Big Fish, Procrastinon */
+
 
 /* Background depend on map location? */
 /* Room for guinea pig in party? */

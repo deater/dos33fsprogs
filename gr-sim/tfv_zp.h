@@ -38,4 +38,8 @@ void show_map(void);
 void print_info(void);
 void print_help(void);
 
+int name_screen(void);
+
 int do_battle(void);
+
+int world_map(void);
