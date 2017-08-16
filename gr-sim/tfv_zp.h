@@ -11,6 +11,9 @@
 #define MEMPTRH	0x08
 #define DISP_PAGE	0x09
 #define DRAW_PAGE	0x0a
+#define TEMPY		0xfb
+#define OUTL		0xfe
+#define OUTH		0xff
 
 /* stats */
 extern unsigned char level;

@@ -14,10 +14,10 @@ static void draw_segment(void) {
 		ram[YY]=ram[YY]+ram[YADD];
 		if (ram[XX]==ram[MATCH]) color_equals(ram[COLOR1]*3);
 		else color_equals(ram[COLOR1]);
-		vlin(ram[DRAW_PAGE],10,ram[YY],9+ram[XX]);
+		vlin(10,ram[YY],9+ram[XX]);
 		if (ram[XX]==ram[MATCH]) color_equals(ram[COLOR2]*3);
 		else color_equals(ram[COLOR2]);
-		if (ram[YY]!=34) vlin(ram[DRAW_PAGE],ram[YY],34,9+ram[XX]);
+		if (ram[YY]!=34) vlin(ram[YY],34,9+ram[XX]);
 		ram[XX]++;
 	}
 	ram[YADD]=-ram[YADD];

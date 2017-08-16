@@ -28,7 +28,7 @@ int hlin_double_continue(int width);
 int hlin_double(int page, int x1, int x2, int at);
 void soft_switch(unsigned short address);
 int soft_switch_read(unsigned short address);
-int vlin(int page, int y1, int y2, int at);
+int vlin(int y1, int y2, int at);
 int collision(int xx, int yy, int ground_color);
 void clear_top(int page);
 void clear_bottom(int page);

@@ -92,12 +92,12 @@ void page_flip(void) {
 	if (ram[DISP_PAGE]==0) {
 		soft_switch(HISCR);
 		ram[DISP_PAGE]=1;
-		ram[DRAW_PAGE]=0;
+		ram[DRAW_PAGE]=0x0;
 	}
 	else {
 		soft_switch(LOWSCR);
 		ram[DISP_PAGE]=0;
-		ram[DRAW_PAGE]=1;
+		ram[DRAW_PAGE]=0x4;
 	}
 
 	grsim_update();

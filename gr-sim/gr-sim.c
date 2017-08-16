@@ -886,7 +886,7 @@ int gr_copy_to_current(short source) {
 
 	for(i=0;i<8;i++) {
 		source_addr=gr_addr_lookup[i]+(source-0x400);
-		dest_addr=gr_addr_lookup[i]+(0x400*ram[DRAW_PAGE]);
+		dest_addr=gr_addr_lookup[i]+(ram[DRAW_PAGE]<<8);
 
 		if (i<4) l=120;
 		else l=80;
@@ -1207,8 +1207,7 @@ void basic_normal(void) {
 
 static unsigned short hlin_addr;
 static unsigned short hlin_hi;
-static unsigned short vlin_addr;
-static unsigned short vlin_hi;
+
 
 int hlin_continue(int width) {
 
@@ -1243,28 +1242,44 @@ int hlin(int page, int x1, int x2, int at) {
 	return 0;
 }
 
-int vlin(int page, int y1, int y2, int at) {
+static unsigned short vlin_hi;
 
-	int i;
+/* TODO: optimize */
+/* Could make twice as fast if draw neighboring two in one write */
+/* instead of two */
 
-	for(i=y1;i<y2;i++) {
+int vlin(int y1, int y2, int at) {
 
-		vlin_addr=gr_addr_lookup[i/2];
-		vlin_hi=i&1;
+	x=y1;
+	ram[V2]=y2;
+	y=at;
 
-		vlin_addr+=(page*4)<<8;
+vlin_loop:
+//	for(a=y1;a<y2;a++) {
 
-		vlin_addr+=at;
+		ram[TEMPY]=y;
+		a=x;
+		y=a/2;
+
+		ram[OUTL]=gr_addr_lookup[y]&0xff;
+		ram[OUTH]=(gr_addr_lookup[y]>>8)&0xff;
+
+		ram[OUTH]+=ram[DRAW_PAGE];
+
+		vlin_hi=x&1;
+
+		y=ram[TEMPY];	// y=at;
 
 		if (vlin_hi) {
-			ram[vlin_addr]=ram[vlin_addr]&0x0f;
-			ram[vlin_addr]|=ram[COLOR]&0xf0;
+			ram[y_indirect(OUTL,y)]=ram[y_indirect(OUTL,y)]&0x0f;
+			ram[y_indirect(OUTL,y)]|=ram[COLOR]&0xf0;
 		}
 		else {
-			ram[vlin_addr]=ram[vlin_addr]&0xf0;
-			ram[vlin_addr]|=ram[COLOR]&0x0f;
+			ram[y_indirect(OUTL,y)]=ram[y_indirect(OUTL,y)]&0xf0;
+			ram[y_indirect(OUTL,y)]|=ram[COLOR]&0x0f;
 		}
-	}
+	x++;
+	if (x<ram[V2]) goto vlin_loop;
 
 	return 0;
 }
@@ -1366,7 +1381,7 @@ void move_cursor(void) {
 	address=gr_addr_lookup[ram[CV]];
 	address+=ram[CH];
 
-	address+=(ram[DRAW_PAGE]*4)<<8;
+	address+=(ram[DRAW_PAGE]<<8);
 
 	ram[BASL]=address&0xff;
 	ram[BASH]=address>>8;
