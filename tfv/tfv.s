@@ -43,147 +43,22 @@
 
 	jsr	title_screen
 
-enter_name:
+	;======================
+	; get name
+	;======================
 
-	jsr	TEXT
-	jsr	HOME
-
-	lda     #>(enter_name_string)
-        sta     OUTH
-	lda     #<(enter_name_string)
-        sta     OUTL
-
-	jsr	print_string
-
-	; zero out name
-
-	lda	#<(name)
-	sta	MEMPTRL
-	sta	NAMEL
-	lda	#>(name)
-	sta	MEMPTRH
-	sta	NAMEH
-	lda	#0
-	ldx	#8
-	jsr	memset
-
-name_loop:
-
-	jsr	NORMAL
-
-	lda	#11
-	sta	CH		; HTAB 12
-
-	lda	#2
-	jsr	TABV		; VTAB 3
-
-	ldy	#0
-	sty	NAMEX
-
-name_line:
-	cpy	NAMEX
-	bne	name_notx
-	lda	#'+'
-	jmp	name_next
-
-name_notx:
-	lda	NAMEL,Y
-	beq	name_zero
-	ora	#$80
-	bne	name_next
-
-name_zero:
-	lda	#('_'+$80)
-name_next:
-	jsr	COUT
-	lda	#(' '+$80)
-	jsr	COUT
-	iny
-	cpy	#8
-	bne	name_line
-
-	lda	#7
-	sta	CV
-
-	lda	#('@'+$80)
-	sta	CHAR
-
-print_letters_loop:
-	lda	#11
-	sta	CH		; HTAB 12
-	jsr	VTAB
-
-	ldy	#0
-
-print_letters_inner_loop:
-	lda	CHAR
-	jsr	COUT
-	inc	CHAR
-	lda	#(' '+$80)
-	jsr	COUT
-	iny
-
-	cpy	#$8
-	bne	print_letters_inner_loop
-
-
-
-
-
-
-	jsr	wait_until_keypressed
+	jsr	enter_name
 
 	;=====================
-	; Start the game
+	; Flying
 	;=====================
 
-
-flying_start:
-
-	jsr     set_gr_page0
-
-flying_loop:
-	jsr	gr_copy_to_current
-
-	jsr	put_sprite
-
-	jsr	wait_until_keypressed
+	jsr	flying_start
 
 
-
-
-
-	lda	LASTKEY
-
-	cmp	#('Q')
-        beq	exit
-
-	cmp	#('I')
-	bne	check_down
-	dec	YPOS
-	dec	YPOS
-
-check_down:
-	cmp	#('M')
-	bne	check_left
-	inc	YPOS
-	inc	YPOS
-
-check_left:
-	cmp	#('J')
-	bne	check_right
-	dec	XPOS
-
-check_right:
-	cmp	#('K')
-	bne	check_done
-	inc	XPOS
-
-check_done:
-	jmp	flying_loop
-
-
-
+	;=====================
+	; All finished
+	;=====================
 exit:
 
 	lda	#$4
@@ -207,6 +82,8 @@ exit:
 .include "opener.s"
 .include "utils.s"
 .include "title.s"
+.include "textentry.s"
+.include "flying.s"
 
 ;===============================================
 ; Variables
