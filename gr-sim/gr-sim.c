@@ -1286,23 +1286,29 @@ vlin_loop:
 
 int hlin_double_continue(int width) {
 
-	int i;
+	y=width;
+hlin_loop:
+//	for(y=width;y>0;y--) {
+		ram[y_indirect(GBASL,y)]=ram[COLOR];
+	y--;
+	if (y!=255) goto hlin_loop;
 
-	for(i=0;i<width;i++) {
-		ram[hlin_addr]=ram[COLOR];
-		hlin_addr++;
-	}
+//	}
 
 	return 0;
 }
 
 int hlin_double(int page, int x1, int x2, int at) {
+	// page, y, V2, A
+	a=at;
+	y=at/2;
 
-	hlin_addr=gr_addr_lookup[at/2];
+	ram[GBASL]=(gr_addr_lookup[y])&0xff;
+	ram[GBASH]=(gr_addr_lookup[y]>>8);
 
-	hlin_addr+=(page*4)<<8;
+	ram[GBASH]+=(page*4);
 
-	hlin_addr+=x1;
+	ram[GBASL]+=x1;
 	hlin_double_continue(x2-x1);
 
 	return 0;

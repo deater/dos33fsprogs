@@ -423,34 +423,38 @@ done_print_string:
 vlin:
 ;int vlin(int page, int y1, int y2, int at) {
 
-
+	sty	TEMPY		; save Y (x location)
+vlin_loop:
 ;        for(i=A;i<V2;i++) {
-	sty	TEMPY		; save Y
-	txa			; a=x
-	lsr			; A/2
+
+
+	txa			; a=x	(get first y)
+	and	#$fe		; Clear bottom bit
 	tay			; y=A
 	lda	gr_offsets,Y	; lookup low-res memory address
-	sta	OUTL
+	sta	GBASL
 	iny
 	lda	gr_offsets,Y
 	clc
 	adc	DRAW_PAGE	; add in draw page offset
-	sta	OUTH
+	sta	GBASH
 
 ;               vlin_hi=i&1;
 
-	pha
+;	pha
 
 	ldy	TEMPY
 
-	lda	#$ff
-	sta	OUTL,Y
+	lda	COLOR
+	sta	(GBASL),Y
 
-;	lda	$0F
-;	and	OUTL,Y
+;	lda	#$0F
+;	and	(GBASL),Y
+;	sta	(GBASL),Y
 ;	lda	COLOR
-;	and	$f0
-;	ora	OUTL,Y
+;	and	#$f0
+;	ora	(GBASL),Y
+;	sta	(GBASL),Y
 
  ;               if (vlin_hi) {
   ;                      ram[vlin_addr]=ram[vlin_addr]&0x0f;
@@ -461,11 +465,113 @@ vlin:
        ;                 ram[vlin_addr]|=ram[COLOR]&0x0f;
         ;        }
 
-	pla
+;	pla
 
 	inx
 	cpx	V2
-	bne	vlin
+	bcc	vlin_loop
 
 	rts
 
+
+
+
+
+
+
+	;================================
+	; hlin_double:
+	;================================
+	; VLIN Y, V2 AT A
+hlin_double:
+;int hlin_double(int page, int x1, int x2, int at) {
+
+	sty	TEMPY
+	tay			; y=A
+	lda	gr_offsets,Y	; lookup low-res memory address
+	clc
+	adc	TEMPY
+	sta	GBASL
+	iny
+
+	lda	gr_offsets,Y
+	adc	DRAW_PAGE	; add in draw page offset
+	sta	GBASH
+
+	sec
+	lda	V2
+	sbc	TEMPY
+
+	tax
+
+;	jsr	hlin_double_continue
+
+;	rts
+	; fallthrough
+
+	;=================================
+	; hlin_double_continue:  width
+	;=================================
+	; width in X
+
+hlin_double_continue:
+
+hlin_loop:
+	ldy	#0
+	lda	COLOR
+	sta	(GBASL),Y
+	inc	GBASL
+	dex
+	bne	hlin_loop
+
+	rts
+
+
+	;=============================
+	; clear_top
+	;=============================
+clear_top:
+	lda	#$00
+	sta	COLOR
+
+	; VLIN Y, V2 AT A
+
+	lda	#40
+	sta	V2
+
+	lda	#0
+
+clear_top_loop:
+	ldy	#0
+	pha
+
+	jsr	hlin_double
+
+	pla
+	clc
+	adc	#$2
+	cmp	#40
+	bne	clear_top_loop
+
+	rts
+
+clear_bottom:
+	lda	#$a0	; NORMAL space
+	sta	COLOR
+
+	lda	#40
+	sta	V2
+
+clear_bottom_loop:
+	ldy	#0
+	pha
+
+	jsr	hlin_double
+
+	pla
+	clc
+	adc	#$2
+	cmp	#48
+	bne	clear_bottom_loop
+
+	rts

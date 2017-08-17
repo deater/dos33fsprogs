@@ -7,6 +7,10 @@ opening:
 	jsr	draw_logo
 	jsr	page_flip
 
+;clc
+;infinity:
+;bcc infinity
+
 	; Draw the shining band
 
 	lda	#0
@@ -99,9 +103,9 @@ nocolmatch2:
 	adc	#9
 	tay
 	lda	YY
-	tax
 	cmp	#34
 	beq	skip_bottom		   ; if (ram[YY]==34) skip
+	tax
 	jsr	vlin	; X,V2 at Y	vlin(ram[YY],34,9+ram[XX]);
 
 skip_bottom:

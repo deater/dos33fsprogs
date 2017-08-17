@@ -5,26 +5,34 @@
 	jsr	set_gr_page0
 
 	; memset()
-	; clear top page0
-	; clear top page1
-	; clear_top(0);
 
-	jsr	CLRTOP
+	; Clear page0 to 00
 
-	; clear_top(1);
-	; clear bottom page0
-	; clear bottom page1
-	; clear_bottom(0);
-	; clear_bottom(1);
+	lda	#$0
+	sta	DRAW_PAGE
+	jsr	clear_top
+
+	; Clear bottom page0 to ' '
+	jsr	clear_bottom
+
+;	clc
+;infinite:
+;	bcc	infinite
+
+	; Clear page1 to 00
+
+	lda	#$4
+	sta	DRAW_PAGE
+	jsr	clear_top
+
+	; Clear bottom page1 to ' '
+	jsr	clear_bottom
 
 	;==========================
 	; Do Opening
 	;==========================
 
 	jsr	opening
-
-
-
 
 	;======================
 	; show the title screen
