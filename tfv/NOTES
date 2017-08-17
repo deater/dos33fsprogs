@@ -1,0 +1,14 @@
+Could make VLIN faster by writing in chunks of two
+
+6502 assembly woes:
+	why do 
+		STA XX,Y
+	and
+		STA (XX),Y
+	do different things?
+
+	why are
+		LDA	$44
+	and
+		LDA	#$44
+	both valid?
