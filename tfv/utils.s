@@ -57,6 +57,8 @@ load_rle_gr:
 	iny				; (we should check if we had
 					;  bad luck and overflows page)
 
+	iny				; skip ysize
+
 rle_loop:
 	lda	(GBASL),y		; load run value
 	cmp	#$ff			; if 0xff
@@ -159,12 +161,12 @@ set_gr_page0:
 	rts
 
 	;=========================================================
-	; gr_copy
+	; gr_copy_to_current
 	;=========================================================
-	; for now copy 0xc00 to 0x400
+	; copy 0xc00 to DRAW_PAGE
 	; 2 + 8*38 + 4*80*23 + 4*120*26 + 13 = 20,159 = 20ms = 50Hz
-	; 
-gr_copy:
+	;
+gr_copy_to_current:
 	ldx	#0		; set y to zero				; 2
 
 gr_copy_loop:
@@ -176,7 +178,9 @@ gr_copy_loop:
 	sta	OUTL		; out and in are the same		; 3
 	sta	INL							; 3
 	lda	gr_offsets+1,Y	; lookup high byte for line addr	; 5
+	adc	DRAW_PAGE
 	sta	OUTH							; 3
+	lda	gr_offsets+1,Y	; lookup high byte for line addr	; 5
 	adc	#$8		; for now, fixed 0xc			; 2
 	sta	INH							; 3
 	ldx	TEMP		; restore y				; 3

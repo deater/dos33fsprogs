@@ -48,7 +48,7 @@ backgrounds.inc:	$(PNG2RLE) \
 TFV:	tfv.o
 	ld65 -o TFV tfv.o -C ./apple2_1000.inc
 
-tfv.o:	tfv.s opener.s utils.s backgrounds.inc zp.inc
+tfv.o:	tfv.s opener.s title.s utils.s backgrounds.inc zp.inc
 	ca65 -o tfv.o tfv.s -l tfv.lst
 
 

@@ -1,31 +1,34 @@
 .include "zp.inc"
 
+	;================================
+	; Clear screen and setup graphics
+	;================================
 
 	jsr	HOME
 	jsr	set_gr_page0
 
+	;===================================
+	; zero out the zero page that we use
+	;===================================
+
 	; memset()
 
-	; Clear page0 to 00
+	;===================================
+	; Clear top/bottom of page 0
+	;===================================
 
 	lda	#$0
 	sta	DRAW_PAGE
 	jsr	clear_top
-
-	; Clear bottom page0 to ' '
 	jsr	clear_bottom
 
-;	clc
-;infinite:
-;	bcc	infinite
-
-	; Clear page1 to 00
+	;===================================
+	; Clear top/bottom of page 1
+	;===================================
 
 	lda	#$4
 	sta	DRAW_PAGE
 	jsr	clear_top
-
-	; Clear bottom page1 to ' '
 	jsr	clear_bottom
 
 	;==========================
@@ -38,32 +41,7 @@
 	; show the title screen
 	;======================
 
-title_screen:
-
-	jsr     CLRTOP
-
-	lda	#$c
-	sta	BASH
-	lda	#$0
-	sta	BASL			; load image off-screen 0xc00
-
-	lda     #>(title_rle)
-        sta     GBASH
-	lda     #<(title_rle)
-        sta     GBASL
-	jsr	load_rle_gr
-
-	jsr	gr_copy
-
-	lda	#20
-	sta	YPOS
-	lda	#20
-	sta	XPOS
-
-	jsr	gr_copy
-
-	jsr	wait_until_keypressed
-
+	jsr	title_screen
 
 enter_name:
 
@@ -165,7 +143,7 @@ flying_start:
 	jsr     set_gr_page0
 
 flying_loop:
-	jsr	gr_copy
+	jsr	gr_copy_to_current
 
 	jsr	put_sprite
 
@@ -228,6 +206,7 @@ exit:
 
 .include "opener.s"
 .include "utils.s"
+.include "title.s"
 
 ;===============================================
 ; Variables
