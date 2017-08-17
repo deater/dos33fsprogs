@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -O2 -g
-LFLAGS =
+LFLAGS = -lm
 
 SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`

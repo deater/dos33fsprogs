@@ -13,3 +13,4 @@ extern unsigned char snowy_tree[];
 extern unsigned char cactus[];
 extern unsigned char mountain[];
 extern unsigned char lightning[];
+extern unsigned char ship_shadow[];
