@@ -39,9 +39,9 @@ static unsigned char flying_map[32][32]= {
 	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
 	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
 
-	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
-	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
-	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+	{2,2,2,2, 2,9,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+	{2,2,2,2, 9,0,9,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+	{2,2,2,2, 2,9,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
 	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
 
 	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
@@ -61,15 +61,17 @@ static int tile_w=32,tile_h=32;
 
 /* http://www.helixsoft.nl/articles/circle/sincos.htm */
 
-static double space_z=2.5; // height of the camera above the plane
+static double space_z=0.5; // height of the camera above the plane
 static int horizon=-2;    // number of pixels line 0 is below the horizon
-static double scale_x=20, scale_y=20; 
+static double scale_x=20, scale_y=20;
 		// scale of space coordinates to screen coordinates
 static double bmp_w=40, bmp_h=40;
 
 //void mode_7 (BITMAP *bmp, BITMAP *tile, fixed angle, fixed cx, fixed cy, MODE_7_PARAMS params)
 
-double BETA=-0.6;
+double BETA=-0.5;
+
+static int over_water;
 
 void draw_background_mode7(double angle, double cx, double cy) {
 
@@ -88,6 +90,9 @@ void draw_background_mode7(double angle, double cx, double cy) {
 
 	// current space position
 	double space_x, space_y;
+	int map_color;
+
+	over_water=0;
 
 	clear_top(0);
 
@@ -115,22 +120,39 @@ void draw_background_mode7(double angle, double cx, double cy) {
 		space_x = cx + (distance * cos(angle)) - bmp_w/2 * line_dx;
 		space_y = cy + (distance * sin(angle)) - bmp_w/2 * line_dy;
 
-		space_x+=(BETA*space_z*cos(angle));
-		space_y+=(BETA*space_z*sin(angle));
+		// Move camera back a bit
+
+		double factor;
+
+		factor=space_z*BETA;
+
+//		factor=2.0*BETA;
+
+		space_x+=factor*cos(angle);
+		space_y+=factor*sin(angle);
 
 
 		// go through all points in this screen line
 		for (screen_x = 0; screen_x < bmp_w; screen_x++) {
 			// get a pixel from the tile and put it on the screen
 
-			color_equals(flying_map[(int)space_x & mask_x]
+			map_color=(flying_map[(int)space_x & mask_x]
 					[(int)space_y&mask_y]);
+
+			color_equals(map_color);
+			if (screen_x==20) {
+				if (map_color==COLOR_DARKBLUE) over_water=1;
+				else over_water=0;
+			}
 
 			basic_plot(screen_x,screen_y);
 
 			// advance to the next position in space
 			space_x += line_dx;
 			space_y += line_dy;
+
+
+
 		}
 	}
 }
@@ -145,13 +167,14 @@ int flying(void) {
 	double flyx=0,flyy=0;
 	double our_angle=0.0;
 	double dy,dx,speed=0;
+	int draw_splash=0;
 
 	/************************************************/
 	/* Flying					*/
 	/************************************************/
 
 	gr();
-	xx=17;	yy=26;
+	xx=15;	yy=28;
 	color_equals(COLOR_BLACK);
 
 
@@ -167,6 +190,8 @@ int flying(void) {
 	}
 
 	while(1) {
+		if (draw_splash>0) draw_splash--;
+
 		ch=grsim_input();
 
 		if ((ch=='q') || (ch==27))  break;
@@ -195,9 +220,12 @@ int flying(void) {
 			printf("Z=%lf\n",space_z);
 		}
 		if ((ch=='m') || (ch==APPLE_DOWN)) {
-			if (yy<30) {
+			if (yy<28) {
 				yy+=2;
 				space_z-=1;
+			}
+			else {
+				draw_splash=10;
 			}
 			printf("Z=%lf\n",space_z);
 		}
@@ -211,6 +239,7 @@ int flying(void) {
 				our_angle-=(6.28/32.0);
 				if (our_angle<0.0) our_angle+=6.28;
 			}
+
 		//	printf("Angle %lf\n",our_angle);
 		}
 		if ((ch=='k') || (ch==APPLE_RIGHT)) {
@@ -223,14 +252,15 @@ int flying(void) {
 				if (our_angle>6.28) our_angle-=6.28;
 			}
 
-
 		}
 
 		if (ch=='z') {
+			if (speed>0.5) speed=0.5;
 			speed+=0.05;
 		}
 
 		if (ch=='x') {
+			if (speed<-0.5) speed=-0.5;
 			speed-=0.05;
 		}
 
@@ -251,14 +281,39 @@ int flying(void) {
 
 		draw_background_mode7(our_angle, flyx, flyy);
 
-		grsim_put_sprite(0,ship_shadow,xx,30);
 
-		if (turning==0) grsim_put_sprite(0,ship_forward,xx,yy);
+		printf("%d %d %d\n",over_water,draw_splash,yy);
+
+		if (turning==0) {
+			if ((speed>0.0) && (over_water)&&(draw_splash)) {
+				grsim_put_sprite(0,splash_forward,
+					xx+1,yy+9);
+			}
+			grsim_put_sprite(0,shadow_forward,xx+3,31+space_z);
+			grsim_put_sprite(0,ship_forward,xx,yy);
+		}
 		if (turning<0) {
+
+			if ((yy>25) && (speed>0.0)) draw_splash=1;
+
+			if (over_water&&draw_splash) {
+				grsim_put_sprite(0,splash_left,
+						xx+1,36);
+			}
+			grsim_put_sprite(0,shadow_left,xx+3,31+space_z);
 			grsim_put_sprite(0,ship_left,xx,yy);
 			turning++;
 		}
 		if (turning>0) {
+
+
+			if ((yy>25) && (speed>0.0)) draw_splash=1;
+
+			if (over_water&&draw_splash) {
+				grsim_put_sprite(0,splash_right,
+						xx+1,36);
+			}
+			grsim_put_sprite(0,shadow_right,xx+3,31+space_z);
 			grsim_put_sprite(0,ship_right,xx,yy);
 			turning--;
 		}
