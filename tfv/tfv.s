@@ -104,11 +104,5 @@ gr_offsets:
 	.word 	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
 	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
 
-tb1_sprite:
-	.byte $8,$4
-	.byte $55,$50,$00,$00,$00,$00,$00,$00
-	.byte $55,$55,$55,$00,$00,$00,$00,$00
-	.byte $ff,$1f,$4f,$2f,$ff,$22,$20,$00
-	.byte $5f,$5f,$5f,$5f,$ff,$f2,$f2,$f2
-
+.include "tfv_sprites.inc"
 .include "tfv_backgrounds.inc"
