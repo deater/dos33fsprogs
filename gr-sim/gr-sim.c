@@ -815,7 +815,7 @@ int basic_vlin(int y1, int y2, int at) {
 
 
 
-int grsim_put_sprite(int page,unsigned char *sprite_data, int xpos, int ypos) {
+int grsim_put_sprite_page(int page, unsigned char *sprite_data, int xpos, int ypos) {
 
 	unsigned char i;
 	unsigned char *ptr;
@@ -858,6 +858,14 @@ int grsim_put_sprite(int page,unsigned char *sprite_data, int xpos, int ypos) {
 
 	return 0;
 }
+
+int grsim_put_sprite(unsigned char *sprite_data, int xpos, int ypos) {
+
+	grsim_put_sprite_page(0,sprite_data,xpos,ypos);
+
+	return 0;
+}
+
 
 int gr_copy(short source, short dest) {
 

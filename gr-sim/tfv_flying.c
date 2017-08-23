@@ -273,22 +273,22 @@ int flying(void) {
 
 		if (turning==0) {
 			if ((speed>0.0) && (over_water)&&(draw_splash)) {
-				grsim_put_sprite(0,splash_forward,
+				grsim_put_sprite_page(0,splash_forward,
 					xx+1,yy+9);
 			}
-			grsim_put_sprite(0,shadow_forward,xx+3,31+space_z);
-			grsim_put_sprite(0,ship_forward,xx,yy);
+			grsim_put_sprite_page(0,shadow_forward,xx+3,31+space_z);
+			grsim_put_sprite_page(0,ship_forward,xx,yy);
 		}
 		if (turning<0) {
 
 			if ((yy>25) && (speed>0.0)) draw_splash=1;
 
 			if (over_water&&draw_splash) {
-				grsim_put_sprite(0,splash_left,
+				grsim_put_sprite_page(0,splash_left,
 						xx+1,36);
 			}
-			grsim_put_sprite(0,shadow_left,xx+3,31+space_z);
-			grsim_put_sprite(0,ship_left,xx,yy);
+			grsim_put_sprite_page(0,shadow_left,xx+3,31+space_z);
+			grsim_put_sprite_page(0,ship_left,xx,yy);
 			turning++;
 		}
 		if (turning>0) {
@@ -297,11 +297,11 @@ int flying(void) {
 			if ((yy>25) && (speed>0.0)) draw_splash=1;
 
 			if (over_water&&draw_splash) {
-				grsim_put_sprite(0,splash_right,
+				grsim_put_sprite_page(0,splash_right,
 						xx+1,36);
 			}
-			grsim_put_sprite(0,shadow_right,xx+3,31+space_z);
-			grsim_put_sprite(0,ship_right,xx,yy);
+			grsim_put_sprite_page(0,shadow_right,xx+3,31+space_z);
+			grsim_put_sprite_page(0,ship_right,xx,yy);
 			turning--;
 		}
 

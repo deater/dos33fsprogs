@@ -153,13 +153,13 @@ static int load_map_bg(void) {
 
 	if ((map_x&3)==2) {
 		for(i=0;i<4;i++) {
-			grsim_put_sprite(1,mountain,10+(i%2)*5,(i*8)+2);
+			grsim_put_sprite_page(1,mountain,10+(i%2)*5,(i*8)+2);
 		}
 	}
 
 
 
-//		grsim_put_sprite(0,tfv_stand_left,tfv_x,20);
+//		grsim_put_sprite_page(0,tfv_stand_left,tfv_x,20);
 
 	return 0;
 }
@@ -246,11 +246,11 @@ int world_map(void) {
 
 		/* Ground Scatter */
 
-		if (map_x==1) if (tfv_y>=20) grsim_put_sprite(0,snowy_tree,10,20);
-		if (map_x==4) if (tfv_y>=15) grsim_put_sprite(0,pine_tree,25,15);
-		if (map_x==8) if (tfv_y>=22) grsim_put_sprite(0,palm_tree,10,20);
-		if (map_x==12) if (tfv_y>=22) grsim_put_sprite(0,palm_tree,20,20);
-		if (map_x==13) if (tfv_y>=15) grsim_put_sprite(0,cactus,25,15);
+		if (map_x==1) if (tfv_y>=20) grsim_put_sprite_page(0,snowy_tree,10,20);
+		if (map_x==4) if (tfv_y>=15) grsim_put_sprite_page(0,pine_tree,25,15);
+		if (map_x==8) if (tfv_y>=22) grsim_put_sprite_page(0,palm_tree,10,20);
+		if (map_x==12) if (tfv_y>=22) grsim_put_sprite_page(0,palm_tree,20,20);
+		if (map_x==13) if (tfv_y>=15) grsim_put_sprite_page(0,cactus,25,15);
 
 
 		if ((map_x==7) || (map_x==11)) {
@@ -301,19 +301,19 @@ int world_map(void) {
 
 
 		if (direction==-1) {
-			if (odd) grsim_put_sprite(0,tfv_walk_left,tfv_x,tfv_y);
-			else grsim_put_sprite(0,tfv_stand_left,tfv_x,tfv_y);
+			if (odd) grsim_put_sprite_page(0,tfv_walk_left,tfv_x,tfv_y);
+			else grsim_put_sprite_page(0,tfv_stand_left,tfv_x,tfv_y);
 		}
 		if (direction==1) {
-			if (odd) grsim_put_sprite(0,tfv_walk_right,tfv_x,tfv_y);
-			else grsim_put_sprite(0,tfv_stand_right,tfv_x,tfv_y);
+			if (odd) grsim_put_sprite_page(0,tfv_walk_right,tfv_x,tfv_y);
+			else grsim_put_sprite_page(0,tfv_stand_right,tfv_x,tfv_y);
 		}
 
-		if (map_x==1) if (tfv_y<20) grsim_put_sprite(0,snowy_tree,10,20);
-		if (map_x==4) if (tfv_y<15) grsim_put_sprite(0,pine_tree,25,15);
-		if (map_x==8) if (tfv_y<22) grsim_put_sprite(0,palm_tree,10,20);
-		if (map_x==12) if (tfv_y<22) grsim_put_sprite(0,palm_tree,20,20);
-		if (map_x==13) if (tfv_y<15) grsim_put_sprite(0,cactus,25,15);
+		if (map_x==1) if (tfv_y<20) grsim_put_sprite_page(0,snowy_tree,10,20);
+		if (map_x==4) if (tfv_y<15) grsim_put_sprite_page(0,pine_tree,25,15);
+		if (map_x==8) if (tfv_y<22) grsim_put_sprite_page(0,palm_tree,10,20);
+		if (map_x==12) if (tfv_y<22) grsim_put_sprite_page(0,palm_tree,20,20);
+		if (map_x==13) if (tfv_y<15) grsim_put_sprite_page(0,cactus,25,15);
 
 		if ((map_x==7) || (map_x==11)) {
 			for(i=tfv_y+8;i<36;i+=2) {
@@ -343,7 +343,7 @@ int world_map(void) {
 
 		if (map_x==3) {
 			if ((steps&0xf)==0) {
-				grsim_put_sprite(0,lightning,25,4);
+				grsim_put_sprite_page(0,lightning,25,4);
 				/* Hurt hit points if in range? */
 				if ((tfv_x>25) && (tfv_x<30) && (tfv_y<12)) {
 					printf("HIT! %d %d\n\n",steps,hp);

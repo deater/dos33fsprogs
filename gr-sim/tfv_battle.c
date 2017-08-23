@@ -117,10 +117,10 @@ int do_battle(void) {
 			basic_hlin(0,39,i);
 		}
 
-		grsim_put_sprite(0,tfv_stand_left,tfv_x,20);
-		grsim_put_sprite(0,tfv_led_sword,tfv_x-5,20);
+		grsim_put_sprite_page(0,tfv_stand_left,tfv_x,20);
+		grsim_put_sprite_page(0,tfv_led_sword,tfv_x-5,20);
 
-		grsim_put_sprite(0,killer_crab,enemy_x,20);
+		grsim_put_sprite_page(0,killer_crab,enemy_x,20);
 
 		grsim_update();
 

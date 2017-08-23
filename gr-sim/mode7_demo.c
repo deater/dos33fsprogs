@@ -256,15 +256,15 @@ int flying(void) {
 
 		draw_background_mode7(our_angle, flyx, flyy);
 
-		grsim_put_sprite(0,ship_shadow,xx,30);
+		grsim_put_sprite_page(0,ship_shadow,xx,30);
 
-		if (turning==0) grsim_put_sprite(0,ship_forward,xx,yy);
+		if (turning==0) grsim_put_sprite_page(0,ship_forward,xx,yy);
 		if (turning<0) {
-			grsim_put_sprite(0,ship_left,xx,yy);
+			grsim_put_sprite_page(0,ship_left,xx,yy);
 			turning++;
 		}
 		if (turning>0) {
-			grsim_put_sprite(0,ship_right,xx,yy);
+			grsim_put_sprite_page(0,ship_right,xx,yy);
 			turning--;
 		}
 
