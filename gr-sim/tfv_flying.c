@@ -12,27 +12,27 @@
 #include "tfv_sprites.h"
 
 
-
+#if 0
 static unsigned char flying_map[32][32]= {
 	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+	{14,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+	{2,2,5,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+
+	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
 	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
 	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
 	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
 
-	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
-	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
-	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
-	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+	{2,2,2,2,  2,15,15,15, 15,15,15, 2,  2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+	{2,2,2,2, 13,12,12, 8,  4, 4, 0,13,  2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+	{2,2,2,2, 13,12,12,12,  8, 4, 4,13,  2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+	{2,2,2,2, 13,12,12, 8,  4, 4, 4,13,  2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
 
-	{2,2,2,2, 15,15,15,15, 2,2,2,0, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
-	{2,2,2,2, 13,12, 8, 4, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
-	{2,2,2,2, 13,12, 8, 4, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
-	{2,2,2,2, 13, 9, 8, 4, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
-
-	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
-	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
-	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
-	{2,2,2,2, 0,2,2,2, 2,2,2,0, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+	{2,2,2,2, 13,12, 9, 9,  8, 4, 4,13,  2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+	{2,2,2,2, 13,12, 9, 8,  4, 4, 4,13,  2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+	{2,2,2,2, 13,12, 9, 9,  1, 4, 4,13,  2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
+	{2,2,2,2,  2,13,13,13, 13,13,13, 2,  2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
 
 	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
 	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
@@ -54,14 +54,58 @@ static unsigned char flying_map[32][32]= {
 	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
 	{2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2, 2,2,2,2,},
 };
+#endif
+
+static unsigned char flying_map[64]= {
+	  2,15,15,15, 15,15,15, 2,
+	 13,12,12, 8,  4, 4, 0,13,
+	 13,12,12,12,  8, 4, 4,13,
+	 13,12,12, 8,  4, 4, 4,13,
+	 13,12, 9, 9,  8, 4, 4,13,
+	 13,12, 9, 8,  4, 4, 4,13,
+	 13,12, 9, 9,  1, 4, 4,13,
+	 2,13,13,13, 13,13,13, 2};
+
+#define TILE_W	64
+#define TILE_H	64
+
+static int mask_x = (TILE_W - 1);
+static int mask_y = (TILE_H - 1);
+
+static int lookup_map(int x, int y) {
+
+	int color;
+
+	color=2;
+
+	x=x&mask_x;
+	y=y&mask_y;
+
+	if ( ((y&0x3)==1) && ((x&7)==0) ) color=14;
+	if ( ((y&0x3)==3) && ((x&7)==4) ) color=14;
 
 
-static int tile_w=32,tile_h=32;
+	if ((y<8) && (x<8)) {
+		color=flying_map[(y*8)+x];
+	}
+
+
+	/* 2   2 2 2  2  2 2 2 */
+	/* 14 14 2 2  2  2 2 2 */
+	/* 2   2 2 2 14 14 2 2 */
+	/* 2   2 2 2  2  2 2 2 */
+
+	return color;
+
+}
+
+
+
 
 
 /* http://www.helixsoft.nl/articles/circle/sincos.htm */
 
-static double space_z=0.5; // height of the camera above the plane
+static double space_z=4.5; // height of the camera above the plane
 static int horizon=-2;    // number of pixels line 0 is below the horizon
 static double scale_x=20, scale_y=20;
 		// scale of space coordinates to screen coordinates
@@ -81,9 +125,7 @@ void draw_background_mode7(double angle, double cx, double cy) {
 	// the distance and horizontal scale of the line we are drawing
 	double distance, horizontal_scale;
 
-	// masks to make sure we don't read pixels outside the tile
-	int mask_x = (tile_w - 1);
-	int mask_y = (tile_h - 1);
+
 
 	// step for points in space between two pixels on a horizontal line
 	double  line_dx, line_dy;
@@ -102,6 +144,8 @@ void draw_background_mode7(double angle, double cx, double cy) {
 	}
 	color_equals(COLOR_GREY);
 	hlin_double(0, 0, 40, 6);
+
+	printf("%lf %lf\n",cx,cy);
 
 	for (screen_y = 8; screen_y < bmp_h; screen_y++) {
 		// first calculate the distance of the line we are drawing
@@ -136,8 +180,9 @@ void draw_background_mode7(double angle, double cx, double cy) {
 		for (screen_x = 0; screen_x < bmp_w; screen_x++) {
 			// get a pixel from the tile and put it on the screen
 
-			map_color=(flying_map[(int)space_x & mask_x]
-					[(int)space_y&mask_y]);
+			map_color=lookup_map((int)space_x,(int)space_y);
+					//(flying_map[(int)space_x & mask_x]
+					//[(int)space_y&mask_y]);
 
 			color_equals(map_color);
 			if (screen_x==20) {
@@ -174,7 +219,7 @@ int flying(void) {
 	/************************************************/
 
 	gr();
-	xx=15;	yy=28;
+	xx=15;	yy=20;
 	color_equals(COLOR_BLACK);
 
 
@@ -282,7 +327,7 @@ int flying(void) {
 		draw_background_mode7(our_angle, flyx, flyy);
 
 
-		printf("%d %d %d\n",over_water,draw_splash,yy);
+//		printf("%d %d %d\n",over_water,draw_splash,yy);
 
 		if (turning==0) {
 			if ((speed>0.0) && (over_water)&&(draw_splash)) {
