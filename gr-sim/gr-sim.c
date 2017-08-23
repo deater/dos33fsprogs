@@ -447,7 +447,7 @@ int color_equals(int new_color) {
 
 
 
-static void plot(void) {
+static void monitor_plot(void) {
 
 	unsigned char c;
 
@@ -499,7 +499,7 @@ int basic_plot(unsigned char xcoord, unsigned char ycoord) {
 		return -1;
 	}
 
-	plot();
+	monitor_plot();
 
 	return 0;
 }
@@ -577,7 +577,7 @@ static void vline(void) {
 	// f828
 vline_loop:
 	s=a;
-	plot();
+	monitor_plot();
 	a=s;
 	if (a<ram[V2]) {
 		a++;
@@ -1235,6 +1235,34 @@ int hlin_continue(int width) {
 
 	return 0;
 }
+
+
+int plot(unsigned char xcoord, unsigned char ycoord) {
+
+	unsigned char c;
+
+	hlin_addr=gr_addr_lookup[ycoord/2];
+	hlin_addr+=(ram[DRAW_PAGE])<<8;
+	hlin_addr+=xcoord;
+
+	hlin_hi=ycoord&1;
+
+	if (hlin_hi) {
+		/* If odd, mask is 0xf0 */
+		ram[MASK]=0xf0;
+	}
+	else {
+		/* If even, mask is 0x0f */
+		ram[MASK]=0x0f;
+	}
+
+	c=ram[COLOR]&ram[MASK];
+	ram[hlin_addr]&=~ram[MASK];
+	ram[hlin_addr]|=c;
+
+	return 0;
+}
+
 
 
 int hlin(int page, int x1, int x2, int at) {

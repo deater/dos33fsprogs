@@ -38,7 +38,7 @@ void htab(int xpos);
 void move_cursor(void);
 void print(char *string);
 void print_inverse(char *string);
-
+int plot(unsigned char xcoord, unsigned char ycoord);
 
 #define APPLE_UP        11
 #define APPLE_DOWN      10
