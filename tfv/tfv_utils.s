@@ -318,12 +318,15 @@ save_key:
 	;=============================================
 	; put_sprite
 	;=============================================
+	; Sprite to display in INH,INL
+	; Location is XPOS,YPOS
+
 put_sprite:
 
-	lda	#>tb1_sprite	; hardcoded for tb1 for now
-	sta	INH
-	lda	#<tb1_sprite
-	sta	INL
+;	lda	#>tb1_sprite	; hardcoded for tb1 for now
+;	sta	INH
+;	lda	#<tb1_sprite
+;	sta	INL
 
 	ldy	#0		; byte 0 is xsize
 	lda	(INL),Y
@@ -346,6 +349,7 @@ put_sprite_loop:
 	adc	XPOS		; add in xpos
 	sta	OUTL		; store out low byte of addy		; 3
 	lda	gr_offsets+1,Y	; look up high byte			; 5
+	adc	DRAW_PAGE	;
 	sta	OUTH		; and store it out			; 3
 	ldy	TEMP		; restore sprite pointer		; 3
 
@@ -482,6 +486,7 @@ vlin_too_slow:
 	; hlin_double:
 	;================================
 	; VLIN Y, V2 AT A
+	; Y, X, A trashed
 hlin_double:
 ;int hlin_double(int page, int x1, int x2, int at) {
 

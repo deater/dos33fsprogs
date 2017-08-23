@@ -41,13 +41,13 @@ int main(int argc, char **argv) {
 
 	/* clear top page0 */
 	/* clear top page1 */
-	clear_top(0);
-	clear_top(1);
+	clear_top(PAGE0);
+	clear_top(PAGE1);
 
 	/* clear bottom page0 */
 	/* clear bottom page1 */
-	clear_bottom(0);
-	clear_bottom(1);
+	clear_bottom(PAGE0);
+	clear_bottom(PAGE1);
 
 	/* Do Opening */
 	opening();

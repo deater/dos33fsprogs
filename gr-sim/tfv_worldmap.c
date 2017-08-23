@@ -75,7 +75,7 @@ static int load_map_bg(void) {
 	/* Sky */
 	color_equals(COLOR_MEDIUMBLUE);
 	for(i=0;i<10;i+=2) {
-		hlin_double(1,0,40,i);
+		hlin_double(4,0,40,i);
 	}
 
 	if (map_x<4) ground_color=(COLOR_WHITE|(COLOR_WHITE<<4));
@@ -87,7 +87,7 @@ static int load_map_bg(void) {
 		for(i=10;i<40;i++) {
 			temp=4+(40-i)/8;
 			color_equals(COLOR_DARKBLUE);
-			hlin(1,0,temp,i);
+			hlin(4,0,temp,i);
 			color_equals(COLOR_LIGHTBLUE);
 			hlin_continue(2);
 			color_equals(COLOR_YELLOW);
@@ -101,7 +101,7 @@ static int load_map_bg(void) {
 	if ((map_x&3)==1) {
 		for(i=10;i<40;i+=2) {
 			color_equals(ground_color);
-			hlin_double(1,0,40,i);
+			hlin_double(4,0,40,i);
 		}
 	}
 
@@ -109,7 +109,7 @@ static int load_map_bg(void) {
 	if ((map_x&3)==2) {
 		for(i=10;i<40;i+=2) {
 			color_equals(ground_color);
-			hlin_double(1,0,40,i);
+			hlin_double(4,0,40,i);
 		}
 	}
 
@@ -119,7 +119,7 @@ static int load_map_bg(void) {
 			temp=24+(i/4);
 			/* 32 ... 40 */
 			color_equals(ground_color);
-			hlin(1,0,temp,i);
+			hlin(4,0,temp,i);
 			color_equals(COLOR_YELLOW);
 			hlin_continue(2);
 			color_equals(COLOR_LIGHTBLUE);
@@ -133,22 +133,22 @@ static int load_map_bg(void) {
 	/* Draw north shore */
 	if (map_x<4) {
 		color_equals(COLOR_DARKBLUE);
-		hlin_double(1,0,40,10);
+		hlin_double(4,0,40,10);
 	}
 
 	/* Draw south shore */
 	if (map_x>=12) {
 		start=0; end=40;
 		color_equals(COLOR_DARKBLUE);
-		hlin_double(1,0,40,38);
+		hlin_double(4,0,40,38);
 		color_equals(COLOR_LIGHTBLUE);
 		if (map_x==12) start=6;
 		if (map_x==15) end=35;
-		hlin_double(1,start,end,36);
+		hlin_double(4,start,end,36);
 		if (map_x==12) start=8;
 		if (map_x==15) end=32;
 		color_equals(COLOR_YELLOW);
-		hlin_double(1,start,end,34);
+		hlin_double(4,start,end,34);
 	}
 
 	if ((map_x&3)==2) {

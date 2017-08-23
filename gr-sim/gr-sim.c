@@ -831,7 +831,7 @@ int grsim_put_sprite_page(int page, unsigned char *sprite_data, int xpos, int yp
 
 	while(1) {
 		address=gr_addr_lookup[ypos/2];
-		address+=(page*4)<<8;
+		address+=(page)<<8;
 		address+=xpos;
 		for(i=0;i<x;i++) {
 			a=*ptr;
@@ -861,7 +861,7 @@ int grsim_put_sprite_page(int page, unsigned char *sprite_data, int xpos, int yp
 
 int grsim_put_sprite(unsigned char *sprite_data, int xpos, int ypos) {
 
-	grsim_put_sprite_page(0,sprite_data,xpos,ypos);
+	grsim_put_sprite_page(ram[DRAW_PAGE],sprite_data,xpos,ypos);
 
 	return 0;
 }
@@ -1242,7 +1242,7 @@ int hlin(int page, int x1, int x2, int at) {
 	hlin_addr=gr_addr_lookup[at/2];
 	hlin_hi=at&1;
 
-	hlin_addr+=(page*4)<<8;
+	hlin_addr+=(page)<<8;
 
 	hlin_addr+=x1;
 	hlin_continue(x2-x1);
@@ -1314,7 +1314,7 @@ int hlin_double(int page, int x1, int x2, int at) {
 	ram[GBASL]=(gr_addr_lookup[y])&0xff;
 	ram[GBASH]=(gr_addr_lookup[y]>>8);
 
-	ram[GBASH]+=(page*4);
+	ram[GBASH]+=(page);
 
 	ram[GBASL]+=x1;
 	hlin_double_continue(x2-x1);
@@ -1331,7 +1331,7 @@ int collision(int xx, int yy, int ground_color) {
 
 	hlin_addr=gr_addr_lookup[yy/2];
 
-	hlin_addr+=(page*4)<<8;
+	hlin_addr+=(page)<<8;
 
 	hlin_addr+=xx;
 

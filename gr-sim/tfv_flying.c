@@ -24,9 +24,13 @@ static unsigned char flying_map[64]= {
 
 #define TILE_W	64
 #define TILE_H	64
+#define MASK_X	(TILE_W - 1)
+#define MASK_Y	(TILE_H - 1)
 
-static int mask_x = (TILE_W - 1);
-static int mask_y = (TILE_H - 1);
+#define LOWRES_W	40
+#define LOWRES_H	40
+
+
 
 static int lookup_map(int x, int y) {
 
@@ -34,8 +38,8 @@ static int lookup_map(int x, int y) {
 
 	color=2;
 
-	x=x&mask_x;
-	y=y&mask_y;
+	x=x&MASK_X;
+	y=y&MASK_Y;
 
 	if ( ((y&0x3)==1) && ((x&7)==0) ) color=14;
 	if ( ((y&0x3)==3) && ((x&7)==4) ) color=14;
@@ -64,8 +68,7 @@ static int lookup_map(int x, int y) {
 static double space_z=4.5; // height of the camera above the plane
 static int horizon=-2;    // number of pixels line 0 is below the horizon
 static double scale_x=20, scale_y=20;
-		// scale of space coordinates to screen coordinates
-static double bmp_w=40, bmp_h=40;
+
 
 //void mode_7 (BITMAP *bmp, BITMAP *tile, fixed angle, fixed cx, fixed cy, MODE_7_PARAMS params)
 
@@ -81,8 +84,6 @@ void draw_background_mode7(double angle, double cx, double cy) {
 	// the distance and horizontal scale of the line we are drawing
 	double distance, horizontal_scale;
 
-
-
 	// step for points in space between two pixels on a horizontal line
 	double  line_dx, line_dy;
 
@@ -92,23 +93,19 @@ void draw_background_mode7(double angle, double cx, double cy) {
 
 	over_water=0;
 
-	clear_top(0);
-
-
 	/* Draw Sky */
 	/* Originally wanted to be fancy and have sun too, but no */
 	color_equals(COLOR_MEDIUMBLUE);
 	for(screen_y=0;screen_y<6;screen_y+=2) {
-		hlin_double(0, 0, 40, screen_y);
+		hlin_double(ram[DRAW_PAGE], 0, 40, screen_y);
 	}
 
 	/* Draw hazy horizon */
 	color_equals(COLOR_GREY);
-	hlin_double(0, 0, 40, 6);
+	hlin_double(ram[DRAW_PAGE], 0, 40, 6);
 
-//	printf("%lf %lf\n",cx,cy);
 
-	for (screen_y = 8; screen_y < bmp_h; screen_y++) {
+	for (screen_y = 8; screen_y < LOWRES_H; screen_y++) {
 		// first calculate the distance of the line we are drawing
 		distance = (space_z * scale_y) / (screen_y + horizon);
 
@@ -122,8 +119,8 @@ void draw_background_mode7(double angle, double cx, double cy) {
 		line_dy = cos(angle) * horizontal_scale;
 
 		// calculate the starting position
-		space_x = cx + (distance * cos(angle)) - bmp_w/2 * line_dx;
-		space_y = cy + (distance * sin(angle)) - bmp_w/2 * line_dy;
+		space_x = cx + (distance * cos(angle)) - LOWRES_W/2 * line_dx;
+		space_y = cy + (distance * sin(angle)) - LOWRES_W/2 * line_dy;
 
 		// Move camera back a bit
 
@@ -138,36 +135,39 @@ void draw_background_mode7(double angle, double cx, double cy) {
 
 
 		// go through all points in this screen line
-		for (screen_x = 0; screen_x < bmp_w; screen_x++) {
+		for (screen_x = 0; screen_x < LOWRES_W-1; screen_x++) {
 			// get a pixel from the tile and put it on the screen
 
 			map_color=lookup_map((int)space_x,(int)space_y);
-					//(flying_map[(int)space_x & mask_x]
-					//[(int)space_y&mask_y]);
 
-			color_equals(map_color);
+			ram[COLOR]=map_color;
+			ram[COLOR]|=map_color<<4;
+
+
 			if (screen_x==20) {
 				if (map_color==COLOR_DARKBLUE) over_water=1;
 				else over_water=0;
 			}
 
-			basic_plot(screen_x,screen_y);
+			hlin_double(ram[DRAW_PAGE], screen_x, screen_x+1,
+				screen_y);
+
+			//basic_plot(screen_x,screen_y);
 
 			// advance to the next position in space
 			space_x += line_dx;
 			space_y += line_dy;
-
-
-
 		}
 	}
 }
 
 
+#define SHIPX	15
+
 int flying(void) {
 
 	unsigned char ch;
-	int xx,yy;
+	int shipy;
 	int turning=0;
 	double flyx=0,flyy=0;
 	double our_angle=0.0;
@@ -179,7 +179,7 @@ int flying(void) {
 	/************************************************/
 
 	gr();
-	xx=15;	yy=20;
+	shipy=20;
 
 	while(1) {
 		if (draw_splash>0) draw_splash--;
@@ -206,16 +206,16 @@ int flying(void) {
 #endif
 
 		if ((ch=='w') || (ch==APPLE_UP)) {
-			if (yy>16) {
-				yy-=2;
+			if (shipy>16) {
+				shipy-=2;
 				space_z+=1;
 			}
 
 			printf("Z=%lf\n",space_z);
 		}
 		if ((ch=='s') || (ch==APPLE_DOWN)) {
-			if (yy<28) {
-				yy+=2;
+			if (shipy<28) {
+				shipy+=2;
 				space_z-=1;
 			}
 			else {
@@ -273,39 +273,39 @@ int flying(void) {
 
 		if (turning==0) {
 			if ((speed>0.0) && (over_water)&&(draw_splash)) {
-				grsim_put_sprite_page(0,splash_forward,
-					xx+1,yy+9);
+				grsim_put_sprite(splash_forward,
+					SHIPX+1,shipy+9);
 			}
-			grsim_put_sprite_page(0,shadow_forward,xx+3,31+space_z);
-			grsim_put_sprite_page(0,ship_forward,xx,yy);
+			grsim_put_sprite(shadow_forward,SHIPX+3,31+space_z);
+			grsim_put_sprite(ship_forward,SHIPX,shipy);
 		}
 		if (turning<0) {
 
-			if ((yy>25) && (speed>0.0)) draw_splash=1;
+			if ((shipy>25) && (speed>0.0)) draw_splash=1;
 
 			if (over_water&&draw_splash) {
-				grsim_put_sprite_page(0,splash_left,
-						xx+1,36);
+				grsim_put_sprite(splash_left,
+						SHIPX+1,36);
 			}
-			grsim_put_sprite_page(0,shadow_left,xx+3,31+space_z);
-			grsim_put_sprite_page(0,ship_left,xx,yy);
+			grsim_put_sprite(shadow_left,SHIPX+3,31+space_z);
+			grsim_put_sprite(ship_left,SHIPX,shipy);
 			turning++;
 		}
 		if (turning>0) {
 
 
-			if ((yy>25) && (speed>0.0)) draw_splash=1;
+			if ((shipy>25) && (speed>0.0)) draw_splash=1;
 
 			if (over_water&&draw_splash) {
-				grsim_put_sprite_page(0,splash_right,
-						xx+1,36);
+				grsim_put_sprite(splash_right,
+						SHIPX+1,36);
 			}
-			grsim_put_sprite_page(0,shadow_right,xx+3,31+space_z);
-			grsim_put_sprite_page(0,ship_right,xx,yy);
+			grsim_put_sprite(shadow_right,SHIPX+3,31+space_z);
+			grsim_put_sprite(ship_right,SHIPX,shipy);
 			turning--;
 		}
 
-		grsim_update();
+		page_flip();
 
 		usleep(20000);
 

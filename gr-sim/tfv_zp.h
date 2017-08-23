@@ -15,6 +15,31 @@
 #define OUTL		0xfe
 #define OUTH		0xff
 
+/* Zero page addresses */
+#define WNDLFT  0x20
+#define WNDWDTH 0x21
+#define WNDTOP  0x22
+#define WNDBTM  0x23
+#define CH      0x24
+#define CV      0x25
+#define GBASL   0x26
+#define GBASH   0x27
+#define BASL    0x28
+#define BASH    0x29
+#define BAS2L   0x2A
+#define BAS2H   0x2B
+#define H2      0x2C
+#define V2      0x2D
+#define MASK    0x2E
+#define COLOR   0x30
+#define INVFLG  0x32
+#define YSAV    0x34
+#define YSAV1   0x35
+#define CSWL    0x36
+#define CSWH    0x37
+
+
+
 /* stats */
 extern unsigned char level;
 extern unsigned char hp,max_hp;

@@ -95,3 +95,8 @@ void print_inverse(char *string);
 #define DHIRES_ON	0xc05e	// double-hires on
 #define DHIRES_OFF	0xc05f	// double-hires off
 #define DHIRES_RD	0xc07f	// double-hires read
+
+
+#define PAGE0	0x0
+#define PAGE1	0x4
+#define PAGE2	0x8
