@@ -6,7 +6,13 @@ PNG2RLE = ../gr-utils/png2rle
 
 all:	tfv.dsk
 
-tfv.dsk:	TFV ED HIGHWIND.ED FIGHTING.ED
+$(PNG2RLE):	
+	cd ../gr-utils && make
+
+$(DOS33):	
+	cd ../dos33fs-utils && make
+
+tfv.dsk:	$(DOS33) TFV ED HIGHWIND.ED FIGHTING.ED
 	$(DOS33) -y tfv.dsk BSAVE -a 0x1000 TFV
 	$(DOS33) -y tfv.dsk BSAVE -a 0x900 ED
 	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 HIGHWIND.ED
@@ -19,8 +25,8 @@ duet.o:	duet.s
 	ca65 -o duet.o duet.s -l duet.lst
 
 
-$(PNG2RLE):	
-	cd ../gr-utils && make
+
+
 
 backgrounds.inc:	$(PNG2RLE) \
 	title.png map.png \
@@ -48,7 +54,7 @@ backgrounds.inc:	$(PNG2RLE) \
 TFV:	tfv.o
 	ld65 -o TFV tfv.o -C ./apple2_1000.inc
 
-tfv.o:	tfv.s flying.s opener.s title.s textentry.s utils.s backgrounds.inc zp.inc
+tfv.o:	tfv.s tfv_flying.s tfv_opener.s tfv_title.s tfv_textentry.s tfv_utils.s tfv_backgrounds.inc tfv_zp.inc
 	ca65 -o tfv.o tfv.s -l tfv.lst
 
 

@@ -1,4 +1,4 @@
-.include "zp.inc"
+.include "tfv_zp.inc"
 
 	;================================
 	; Clear screen and setup graphics
@@ -79,18 +79,15 @@ exit:
 ; External modules
 ;===============================================
 
-.include "opener.s"
-.include "utils.s"
-.include "title.s"
-.include "textentry.s"
-.include "flying.s"
+.include "tfv_opener.s"
+.include "tfv_utils.s"
+.include "tfv_title.s"
+.include "tfv_textentry.s"
+.include "tfv_flying.s"
 
 ;===============================================
 ; Variables
 ;===============================================
-
-vmwsw_string:
-	.asciiz "A VMW SOFTWARE PRODUCTION"
 
 enter_name_string:
 	.asciiz	"PLEASE ENTER A NAME:"
@@ -114,4 +111,4 @@ tb1_sprite:
 	.byte $ff,$1f,$4f,$2f,$ff,$22,$20,$00
 	.byte $5f,$5f,$5f,$5f,$ff,$f2,$f2,$f2
 
-.include "backgrounds.inc"
+.include "tfv_backgrounds.inc"

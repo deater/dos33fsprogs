@@ -157,3 +157,6 @@ draw_logo:
 
 	rts
 
+vmwsw_string:
+	.asciiz "A VMW SOFTWARE PRODUCTION"
+
