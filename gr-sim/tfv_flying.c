@@ -66,15 +66,71 @@ static int over_water;
 static int screen_x, screen_y;
 static char angle=0;
 
-// map coordinates
-double cx=0.0,cy=0.0;
+
 
 #if 1
 
-static double space_z=4.5; // height of the camera above the plane
-static int horizon=-2;    // number of pixels line 0 is below the horizon
+struct fixed_type {
+	char i;
+	unsigned char f;
+};
 
+
+#if 0
+// map coordinates
+struct fixed_type cx = {0,0};
+struct fixed_type cy = {0,0};
+struct fixed_type dx = {0,0};
+struct fixed_type dy = {0,0};
+struct fixed_type speed = {0,0};
+
+// the distance and horizontal scale of the line we are drawing
+struct fixed_type distance = {0,0};
+struct fixed_type horizontal_scale = {0,0};
+
+// step for points in space between two pixels on a horizontal line
+struct fixed_type line_dx = {0,0};
+struct fixed_type line_dy = {0,0};
+
+// current space position
+struct fixed_type space_x;
+struct fixed_type space_y;
+
+// height of the camera above the plane
+struct fixed_type space_z= {0x04,0x80};	// 4.5;
+
+struct fixed_type BETA = {0xff,0x80}; 	// -0.5;
+#else
+
+
+// map coordinates
+double cx=0;
+double cy=0;
+double dx=0;
+double dy=0;
+
+#define SPEED_STOPPED	0
+
+unsigned char speed=SPEED_STOPPED;	// 0..4, with 0=stopped
+
+// the distance and horizontal scale of the line we are drawing
+double distance=0;
+double horizontal_scale=0;
+
+// step for points in space between two pixels on a horizontal line
+double line_dx=0;
+double line_dy=0;
+
+// current space position
+double space_x,space_y;
+
+// height of the camera above the plane
+double space_z=4.5;
 double BETA=-0.5;
+
+#endif
+
+static int horizon=-2;    // number of pixels line 0 is below the horizon
 
 #define SCALE_X	20.0
 #define SCALE_Y	20.0
@@ -115,21 +171,9 @@ double our_cos(unsigned char angle) {
 //
 //
 
-
-struct fixed_type {unsigned char i; unsigned char f;};
-
-
-
 void draw_background_mode7(void) {
 
-	// the distance and horizontal scale of the line we are drawing
-	double distance, horizontal_scale;
 
-	// step for points in space between two pixels on a horizontal line
-	double  line_dx, line_dy;
-
-	// current space position
-	double space_x, space_y;
 	int map_color;
 
 	over_water=0;
@@ -145,7 +189,7 @@ void draw_background_mode7(void) {
 	color_equals(COLOR_GREY);
 	hlin_double(ram[DRAW_PAGE], 0, 40, 6);
 
-	for (screen_y = 8; screen_y < LOWRES_H; screen_y++) {
+	for (screen_y = 8; screen_y < LOWRES_H; screen_y+=2) {
 		// first calculate the distance of the line we are drawing
 		distance = (space_z * SCALE_Y) / (screen_y + horizon);
 
@@ -158,18 +202,19 @@ void draw_background_mode7(void) {
 		line_dx = -our_sin(angle) * horizontal_scale;
 		line_dy = our_cos(angle) * horizontal_scale;
 
-		// calculate the starting position
-		space_x = cx + (distance * our_cos(angle)) - LOWRES_W/2 * line_dx;
-		space_y = cy + (distance * our_sin(angle)) - LOWRES_W/2 * line_dy;
 
 		// Move camera back a bit
-
 		double factor;
-
 		factor=space_z*BETA;
 
-		space_x+=factor*our_cos(angle);
-		space_y+=factor*our_sin(angle);
+//		space_x+=factor*our_cos(angle);
+//		space_y+=factor*our_sin(angle);
+
+		// calculate the starting position
+		space_x = cx + ((distance+factor) * our_cos(angle)) - LOWRES_W/2 * line_dx;
+		space_y = cy + ((distance+factor) * our_sin(angle)) - LOWRES_W/2 * line_dy;
+
+
 
 
 		// go through all points in this screen line
@@ -180,7 +225,6 @@ void draw_background_mode7(void) {
 
 			ram[COLOR]=map_color;
 			ram[COLOR]|=map_color<<4;
-
 
 			if (screen_x==20) {
 				if (map_color==COLOR_DARKBLUE) over_water=1;
@@ -204,7 +248,6 @@ int flying(void) {
 	unsigned char ch;
 	int shipy;
 	int turning=0;
-	double dy,dx,speed=0;
 	int draw_splash=0;
 
 	/************************************************/
@@ -262,31 +305,39 @@ int flying(void) {
 
 		}
 
+		// increase speed
 		if (ch=='z') {
-			if (speed>0.5) speed=0.5;
-			speed+=0.05;
+			if (speed<3) speed++;
 		}
 
+		// decrease speed
 		if (ch=='x') {
-			if (speed<-0.5) speed=-0.5;
-			speed-=0.05;
+			if (speed>0) speed--;
 		}
 
+		// emergency break
 		if (ch==' ') {
-			speed=0;
+			speed=SPEED_STOPPED;
 		}
 
+		if (speed!=SPEED_STOPPED) {
 
-		dx = speed * our_cos (angle);
-		dy = speed * our_sin (angle);
+			int ii;
 
-		cx += dx;
-		cy += dy;
+			dx = our_cos(angle)/8.0;
+			dy = our_sin(angle)/8.0;
+
+			for(ii=0;ii<speed;ii++) {
+				cx += dx;
+				cy += dy;
+			}
+
+		}
 
 		draw_background_mode7();//our_angle, flyx, flyy);
 
 		if (turning==0) {
-			if ((speed>0.0) && (over_water)&&(draw_splash)) {
+			if ((speed!=SPEED_STOPPED) && (over_water)&&(draw_splash)) {
 				grsim_put_sprite(splash_forward,
 					SHIPX+1,shipy+9);
 			}
@@ -295,7 +346,7 @@ int flying(void) {
 		}
 		if (turning<0) {
 
-			if ((shipy>25) && (speed>0.0)) draw_splash=1;
+			if ((shipy>25) && (speed!=SPEED_STOPPED)) draw_splash=1;
 
 			if (over_water&&draw_splash) {
 				grsim_put_sprite(splash_left,
@@ -308,7 +359,7 @@ int flying(void) {
 		if (turning>0) {
 
 
-			if ((shipy>25) && (speed>0.0)) draw_splash=1;
+			if ((shipy>25) && (speed!=SPEED_STOPPED)) draw_splash=1;
 
 			if (over_water&&draw_splash) {
 				grsim_put_sprite(splash_right,
@@ -351,8 +402,16 @@ int flying(void) {
 
 
 
+
+
+
+
+
+
 #else
 
+// map coordinates
+double cx=0.0,cy=0.0;
 static double space_z=4.5; // height of the camera above the plane
 static int horizon=-2;    // number of pixels line 0 is below the horizon
 static double scale_x=20, scale_y=20;
@@ -425,19 +484,13 @@ void draw_background_mode7(void) {
 		line_dx = -our_sin(angle) * horizontal_scale;
 		line_dy = our_cos(angle) * horizontal_scale;
 
-		// calculate the starting position
-		space_x = cx + (distance * our_cos(angle)) - LOWRES_W/2 * line_dx;
-		space_y = cy + (distance * our_sin(angle)) - LOWRES_W/2 * line_dy;
-
-		// Move camera back a bit
-
 		double factor;
-
+		// Move camera back a bit
 		factor=space_z*BETA;
 
-		space_x+=factor*our_cos(angle);
-		space_y+=factor*our_sin(angle);
-
+		// calculate the starting position
+		space_x = cx + ((distance+factor) * our_cos(angle)) - LOWRES_W/2 * line_dx;
+		space_y = cy + ((distance+factor) * our_sin(angle)) - LOWRES_W/2 * line_dy;
 
 		// go through all points in this screen line
 		for (screen_x = 0; screen_x < LOWRES_W-1; screen_x++) {

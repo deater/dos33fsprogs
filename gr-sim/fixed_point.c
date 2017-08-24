@@ -10,17 +10,15 @@ struct fixed_type {
 
 void double_to_fixed(double d, struct fixed_type *f) {
 
-	double temp;
+	int temp;
 
-	f->i=(int)d;
+	temp=d*256;
 
-	temp=d-(f->i);
+	f->i=(temp>>8)&0xff;
 
-	temp*=256;
+	f->f=temp&0xff;
 
-	f->f=temp;
-
-	printf("%lf=%02x.%02x (%d/0x%x)\n",d,f->i,f->f,(int)temp,(int)temp);
+	printf("%lf=%02x.%02x\n",d,f->i,f->f);
 }
 
 void fixed_to_double(struct fixed_type *f, double *d) {
@@ -45,6 +43,23 @@ void fixed_add(struct fixed_type *x, struct fixed_type *y, struct fixed_type *z)
 
 	z->i=x->i+y->i+carry;
 }
+
+void fixed_mul(struct fixed_type *x, struct fixed_type *y, struct fixed_type *z) {
+
+	int a,b,c;
+
+	a=((x->i)<<8)+(x->f);
+	b=((y->i)<<8)+(y->f);
+
+	c=a*b;
+	printf("%x %x %x\n",a,b,c);
+
+	c>>=8;
+
+	z->i=(c>>8);
+	z->f=(c&0xff);
+}
+
 
 int main(int argc, char **argv) {
 
@@ -74,6 +89,26 @@ int main(int argc, char **argv) {
 	fixed_add(&fa,&fb,&fc);
 	fixed_to_double(&fc,&c);
 
+	double_to_fixed(2.5,&fa);
+	double_to_fixed(2.5,&fb);
+	fixed_mul(&fa,&fb,&fc);
+	fixed_to_double(&fc,&c);
+
+	double_to_fixed(-1.1,&fa);
+	double_to_fixed(-1.1,&fb);
+	fixed_mul(&fa,&fb,&fc);
+	fixed_to_double(&fc,&c);
+
+
+	double_to_fixed(-2.0,&fa);
+	double_to_fixed(5.0,&fb);
+	fixed_mul(&fa,&fb,&fc);
+	fixed_to_double(&fc,&c);
+
+	double_to_fixed(13.2,&fa);
+	double_to_fixed(-0.5,&fb);
+	fixed_mul(&fa,&fb,&fc);
+	fixed_to_double(&fc,&c);
 
 	return 0;
 }
