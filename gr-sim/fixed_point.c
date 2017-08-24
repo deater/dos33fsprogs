@@ -65,6 +65,7 @@ int main(int argc, char **argv) {
 
 	struct fixed_type f,fa,fb,fc;
 	double d,c;
+	int i;
 
 	double_to_fixed(4.25,&f);
 	fixed_to_double(&f,&d);
@@ -109,6 +110,11 @@ int main(int argc, char **argv) {
 	double_to_fixed(-0.5,&fb);
 	fixed_mul(&fa,&fb,&fc);
 	fixed_to_double(&fc,&c);
+
+	for(i=0;i<16;i++) {
+		d=sin((double)i/16.0*3.1415926535897932384*2.0);
+		double_to_fixed(d/8.0,&fa);
+	}
 
 	return 0;
 }

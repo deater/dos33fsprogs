@@ -78,10 +78,6 @@ struct fixed_type {
 
 #if 0
 // map coordinates
-struct fixed_type cx = {0,0};
-struct fixed_type cy = {0,0};
-struct fixed_type dx = {0,0};
-struct fixed_type dy = {0,0};
 struct fixed_type speed = {0,0};
 
 // the distance and horizontal scale of the line we are drawing
@@ -104,29 +100,31 @@ struct fixed_type BETA = {0xff,0x80}; 	// -0.5;
 
 
 // map coordinates
-double cx=0;
-double cy=0;
-double dx=0;
-double dy=0;
+static double double_cx;
+static double double_cy;
+static struct fixed_type cx = {0,0};
+static struct fixed_type cy = {0,0};
+static struct fixed_type dx;
+static struct fixed_type dy;
 
 #define SPEED_STOPPED	0
 
-unsigned char speed=SPEED_STOPPED;	// 0..4, with 0=stopped
+static unsigned char speed=SPEED_STOPPED;	// 0..4, with 0=stopped
 
 // the distance and horizontal scale of the line we are drawing
-double distance=0;
-double horizontal_scale=0;
+static double distance=0;
+static double horizontal_scale=0;
 
 // step for points in space between two pixels on a horizontal line
-double line_dx=0;
-double line_dy=0;
+static double line_dx=0;
+static double line_dy=0;
 
 // current space position
 double space_x,space_y;
 
 // height of the camera above the plane
-double space_z=4.5;
-double BETA=-0.5;
+static double space_z=4.5;
+static double BETA=-0.5;
 
 #endif
 
@@ -138,7 +136,48 @@ static int horizon=-2;    // number of pixels line 0 is below the horizon
 
 #define ANGLE_STEPS	16
 
-double sin_table[ANGLE_STEPS]={
+// FIXME: take advantage of symmetry?
+
+static struct fixed_type fixed_sin[ANGLE_STEPS]={
+	{0x00,0x00}, //  0.000000=00.00
+	{0x00,0x61}, //  0.382683=00.61
+	{0x00,0xb5}, //  0.707107=00.b5
+	{0x00,0xec}, //  0.923880=00.ec
+	{0x01,0x00}, //  1.000000=01.00
+	{0x00,0xec}, //  0.923880=00.ec
+	{0x00,0xb5}, //  0.707107=00.b5
+	{0x00,0x61}, //  0.382683=00.61
+	{0x00,0x00}, //  0.000000=00.00
+	{0xff,0x9f}, // -0.382683=ff.9f
+	{0xff,0x4b}, // -0.707107=ff.4b
+	{0xff,0x14}, // -0.923880=ff.14
+	{0xff,0x00}, // -1.000000=ff.00
+	{0xff,0x14}, // -0.923880=ff.14
+	{0xff,0x4b}, // -0.707107=ff.4b
+	{0xff,0x9f}, // -0.382683=ff.9f
+};
+
+// div by 8
+static struct fixed_type fixed_sin_scale[ANGLE_STEPS]={
+	{0x00,0x00},
+	{0x00,0x0c},
+	{0x00,0x16},
+	{0x00,0x1d},
+	{0x00,0x20},
+	{0x00,0x1d},
+	{0x00,0x16},
+	{0x00,0x0c},
+	{0x00,0x00},
+	{0xff,0xf4},
+	{0xff,0xea},
+	{0xff,0xe3},
+	{0xff,0xe0},
+	{0xff,0xe3},
+	{0xff,0xea},
+	{0xff,0xf4},
+};
+
+static double sin_table[ANGLE_STEPS]={
 	0.000000,
 	0.382683,
 	0.707107,
@@ -157,14 +196,36 @@ double sin_table[ANGLE_STEPS]={
 	-0.382683,
 };
 
-double our_sin(unsigned char angle) {
+static double our_sin(unsigned char angle) {
 	return sin_table[angle&0xf];
 }
 
-double our_cos(unsigned char angle) {
+static double our_cos(unsigned char angle) {
 
 	return sin_table[(angle+4)&0xf];
 }
+
+static void fixed_to_double(struct fixed_type *f, double *d) {
+
+	*d=f->i;
+	*d+=((double)(f->f))/256.0;
+}
+
+static void fixed_add(struct fixed_type *x, struct fixed_type *y, struct fixed_type *z) {
+	int carry;
+	short sum;
+
+	sum=(short)(x->f)+(short)(y->f);
+
+	if (sum>=256) carry=1;
+	else carry=0;
+
+	z->f=sum&0xff;
+
+	z->i=x->i+y->i+carry;
+}
+
+
 
 //
 // Non-detailed version
@@ -197,6 +258,9 @@ void draw_background_mode7(void) {
 		// space points on this horizontal line
 		horizontal_scale = (distance / SCALE_X);
 
+//		printf("Distance=%lf, horizontal-scale=%lf\n",
+//			distance,horizontal_scale);
+
 		// calculate the dx and dy of points in space when we step
 		// through all points on this line
 		line_dx = -our_sin(angle) * horizontal_scale;
@@ -211,11 +275,8 @@ void draw_background_mode7(void) {
 //		space_y+=factor*our_sin(angle);
 
 		// calculate the starting position
-		space_x = cx + ((distance+factor) * our_cos(angle)) - LOWRES_W/2 * line_dx;
-		space_y = cy + ((distance+factor) * our_sin(angle)) - LOWRES_W/2 * line_dy;
-
-
-
+		space_x = double_cx + ((distance+factor) * our_cos(angle)) - LOWRES_W/2 * line_dx;
+		space_y = double_cy + ((distance+factor) * our_sin(angle)) - LOWRES_W/2 * line_dy;
 
 		// go through all points in this screen line
 		for (screen_x = 0; screen_x < LOWRES_W-1; screen_x++) {
@@ -324,13 +385,18 @@ int flying(void) {
 
 			int ii;
 
-			dx = our_cos(angle)/8.0;
-			dy = our_sin(angle)/8.0;
+			dx.i = fixed_sin_scale[(angle+4)&0xf].i;	// cos
+			dx.f = fixed_sin_scale[(angle+4)&0xf].f;	// cos
+			dy.i = fixed_sin_scale[angle&0xf].i;
+			dy.f = fixed_sin_scale[angle&0xf].f;
+
 
 			for(ii=0;ii<speed;ii++) {
-				cx += dx;
-				cy += dy;
+				fixed_add(&cx,&dx,&cx);
+				fixed_add(&cy,&dy,&cy);
 			}
+			fixed_to_double(&cx,&double_cx);
+			fixed_to_double(&cy,&double_cy);
 
 		}
 
