@@ -67,68 +67,42 @@ static int screen_x, screen_y;
 static char angle=0;
 
 
-
-#if 1
-
 struct fixed_type {
 	char i;
 	unsigned char f;
 };
 
+// 1 = use reduced fixed point
+// 0 = use fancy hi-res floating point
+#if 1
 
-#if 0
-// map coordinates
-struct fixed_type speed = {0,0};
-
-// step for points in space between two pixels on a horizontal line
-struct fixed_type line_dx = {0,0};
-struct fixed_type line_dy = {0,0};
-
-// current space position
-
-// height of the camera above the plane
-struct fixed_type space_z= {0x04,0x80};	// 4.5;
-
-struct fixed_type BETA = {0xff,0x80}; 	// -0.5;
-#else
+// Speed
+#define SPEED_STOPPED	0
+static unsigned char speed=SPEED_STOPPED;	// 0..4, with 0=stopped
 
 
 // map coordinates
-static double double_cx;
-static double double_cy;
 static struct fixed_type cx = {0,0};
 static struct fixed_type cy = {0,0};
 static struct fixed_type dx;
 static struct fixed_type dy;
 
-#define SPEED_STOPPED	0
-
-static unsigned char speed=SPEED_STOPPED;	// 0..4, with 0=stopped
-
 // the distance and horizontal scale of the line we are drawing
-static double double_distance=0;
-static double double_horizontal_scale=0;
 static struct fixed_type distance;
 static struct fixed_type horizontal_scale;
 
-// step for points in space between two pixels on a horizontal line
-static double line_dx=0;
-static double line_dy=0;
-
 // current space position
-static double double_space_x,double_space_y;
 static struct fixed_type space_x;
 static struct fixed_type space_y;
 
 // height of the camera above the plane
-static double space_z=4.5;
-static double BETA=-0.5;
+static struct fixed_type space_z= {0x04,0x80};	// 4.5;
+static struct fixed_type BETA = {0xff,0x80}; 	// -0.5;
+static struct fixed_type factor;
 
-#endif
+static struct fixed_type fixed_temp;
 
-static int horizon=-2;    // number of pixels line 0 is below the horizon
-
-static double SCALE=16.0;
+static struct fixed_type scale={0x14,0x00};	// 20.0
 
 #define ANGLE_STEPS	16
 
@@ -173,38 +147,27 @@ static struct fixed_type fixed_sin_scale[ANGLE_STEPS]={
 	{0xff,0xf4},
 };
 
-static double sin_table[ANGLE_STEPS]={
-	0.000000,
-	0.382683,
-	0.707107,
-	0.923880,
-	1.000000,
-	0.923880,
-	0.707107,
-	0.382683,
-	0.000000,
-	-0.382683,
-	-0.707107,
-	-0.923880,
-	-1.000000,
-	-0.923880,
-	-0.707107,
-	-0.382683,
+static unsigned char horizontal_lookup[7][16] = {
+	{0x0C,0x0A,0x09,0x08,0x07,0x06,0x05,0x05,0x04,0x04,0x04,0x04,0x03,0x03,0x03,0x03,},
+	{0x26,0x20,0x1B,0x18,0x15,0x13,0x11,0x10,0x0E,0x0D,0x0C,0x0C,0x0B,0x0A,0x0A,0x09,},
+	{0x40,0x35,0x2D,0x28,0x23,0x20,0x1D,0x1A,0x18,0x16,0x15,0x14,0x12,0x11,0x10,0x10,},
+	{0x59,0x4A,0x40,0x38,0x31,0x2C,0x28,0x25,0x22,0x20,0x1D,0x1C,0x1A,0x18,0x17,0x16,},
+	{0x73,0x60,0x52,0x48,0x40,0x39,0x34,0x30,0x2C,0x29,0x26,0x24,0x21,0x20,0x1E,0x1C,},
+	{0x8C,0x75,0x64,0x58,0x4E,0x46,0x40,0x3A,0x36,0x32,0x2E,0x2C,0x29,0x27,0x25,0x23,},
+	{0xA6,0x8A,0x76,0x68,0x5C,0x53,0x4B,0x45,0x40,0x3B,0x37,0x34,0x30,0x2E,0x2B,0x29,},
 };
 
-static double our_sin(unsigned char angle) {
-	return sin_table[angle&0xf];
-}
 
-static double our_cos(unsigned char angle) {
 
-	return sin_table[(angle+4)&0xf];
-}
+double fixed_to_double(struct fixed_type *f) {
 
-static void fixed_to_double(struct fixed_type *f, double *d) {
+	double out;
 
-	*d=f->i;
-	*d+=((double)(f->f))/256.0;
+	out=f->i;
+	out+=((double)(f->f))/256.0;
+
+	return out;
+
 }
 
 static void fixed_add(struct fixed_type *x, struct fixed_type *y, struct fixed_type *z) {
@@ -221,16 +184,16 @@ static void fixed_add(struct fixed_type *x, struct fixed_type *y, struct fixed_t
 	z->i=x->i+y->i+carry;
 }
 
-static void double_to_fixed(double d, struct fixed_type *f) {
-
-        int temp;
-
-        temp=d*256;
-
-        f->i=(temp>>8)&0xff;
-
-        f->f=temp&0xff;
-}
+//static void double_to_fixed(double d, struct fixed_type *f) {
+//
+//	int temp;
+//
+//	temp=d*256;
+//
+//	f->i=(temp>>8)&0xff;
+//
+//	f->f=temp&0xff;
+//}
 
 static void fixed_mul(struct fixed_type *x, struct fixed_type *y, struct fixed_type *z) {
 
@@ -272,16 +235,28 @@ void draw_background_mode7(void) {
 	color_equals(COLOR_GREY);
 	hlin_double(ram[DRAW_PAGE], 0, 40, 6);
 
+//	fixed_to_double(&space_z,&double_space_z);
+//	double_factor=double_space_z*double_BETA;
+
+	fixed_mul(&space_z,&BETA,&factor);
+
+	printf("spacez=%lf beta=%lf factor=%lf\n",
+		fixed_to_double(&space_z),
+		fixed_to_double(&BETA),
+		fixed_to_double(&factor));
+
 	for (screen_y = 8; screen_y < LOWRES_H; screen_y+=2) {
 
 		// then calculate the horizontal scale, or the distance between
 		// space points on this horizontal line
-		double_horizontal_scale = space_z  / (screen_y + horizon);
-		double_to_fixed(double_horizontal_scale,&horizontal_scale);
+//		double_horizontal_scale = double_space_z  / (screen_y + horizon);
+//		double_to_fixed(double_horizontal_scale,&horizontal_scale);
+		horizontal_scale.i=0;
+		horizontal_scale.f=horizontal_lookup[space_z.i&0xf][(screen_y-8)/2];
 
 		// calculate the distance of the line we are drawing
-		double_distance = double_horizontal_scale * SCALE;
-		double_to_fixed(double_distance,&distance);
+		fixed_mul(&horizontal_scale,&scale,&distance);
+		//fixed_to_double(&distance,&double_distance);
 
 //		printf("Distance=%lf, horizontal-scale=%lf\n",
 //			distance,horizontal_scale);
@@ -296,24 +271,30 @@ void draw_background_mode7(void) {
 		dy.f=fixed_sin[(angle+4)&0xf].f;	// cos()
 		fixed_mul(&dy,&horizontal_scale,&dy);
 
-		fixed_to_double(&dx,&line_dx);
-		fixed_to_double(&dy,&line_dy);
-
-
-		// Move camera back a bit
-		double factor;
-		factor=space_z*BETA;
-
 		// calculate the starting position
-		double_space_x = double_cx +
-			((double_distance+factor) * our_cos(angle)) -
-			(LOWRES_W/2 * line_dx);
-		double_space_y = double_cy +
-			((double_distance+factor) * our_sin(angle)) -
-			(LOWRES_W/2 * line_dy);
+		//double_space_x =(double_distance+double_factor);
+		fixed_add(&distance,&factor,&space_x);
+//		double_to_fixed(double_space_x,&space_x);
+		fixed_temp.i=fixed_sin[(angle+4)&0xf].i; // cos
+		fixed_temp.f=fixed_sin[(angle+4)&0xf].f; // cos
+		fixed_mul(&space_x,&fixed_temp,&space_x);
+		fixed_add(&space_x,&cx,&space_x);
+		fixed_temp.i=0xec;	// -20 (LOWRES_W/2)
+		fixed_temp.f=0;
+		fixed_mul(&fixed_temp,&dx,&fixed_temp);
+		fixed_add(&space_x,&fixed_temp,&space_x);
 
-		double_to_fixed(double_space_x,&space_x);
-		double_to_fixed(double_space_y,&space_y);
+		fixed_add(&distance,&factor,&space_y);
+//		double_space_y =(double_distance+double_factor);
+//		double_to_fixed(double_space_y,&space_y);
+		fixed_temp.i=fixed_sin[angle&0xf].i;
+		fixed_temp.f=fixed_sin[angle&0xf].f;
+		fixed_mul(&space_y,&fixed_temp,&space_y);
+		fixed_add(&space_y,&cy,&space_y);
+		fixed_temp.i=0xec;	// -20 (LOWRES_W/2)
+		fixed_temp.f=0;
+		fixed_mul(&fixed_temp,&dy,&fixed_temp);
+		fixed_add(&space_y,&fixed_temp,&space_y);
 
 		// go through all points in this screen line
 		for (screen_x = 0; screen_x < LOWRES_W-1; screen_x++) {
@@ -365,20 +346,20 @@ int flying(void) {
 		if ((ch=='w') || (ch==APPLE_UP)) {
 			if (shipy>16) {
 				shipy-=2;
-				space_z+=1;
+				space_z.i++;
 			}
 
-			printf("Z=%lf\n",space_z);
+			printf("Z=%x.%x\n",space_z.i,space_z.f);
 		}
 		if ((ch=='s') || (ch==APPLE_DOWN)) {
 			if (shipy<28) {
 				shipy+=2;
-				space_z-=1;
+				space_z.i--;
 			}
 			else {
 				draw_splash=10;
 			}
-			printf("Z=%lf\n",space_z);
+			printf("Z=%x.%x\n",space_z.i,space_z.f);
 		}
 		if ((ch=='a') || (ch==APPLE_LEFT)) {
 			if (turning>0) {
@@ -403,18 +384,18 @@ int flying(void) {
 
 		}
 
-		if (ch=='h') {
-			horizon--;
-			if (horizon<-4) horizon=4;
+//		if (ch=='h') {
+//			horizon--;
+//			if (horizon<-4) horizon=4;
+//
+//			printf("horizon=%d\n",horizon);
+//		}
 
-			printf("horizon=%d\n",horizon);
-		}
-
-		if (ch=='y') {
-			if (SCALE==20) SCALE=16;
-			else SCALE=20;
-			printf("SCALE=%lf\n",SCALE);
-		}
+//		if (ch=='y') {
+//			if (SCALE==20) SCALE=16;
+//			else SCALE=20;
+//			printf("SCALE=%lf\n",SCALE);
+//		}
 
 		// increase speed
 		if (ch=='z') {
@@ -445,8 +426,6 @@ int flying(void) {
 				fixed_add(&cx,&dx,&cx);
 				fixed_add(&cy,&dy,&cy);
 			}
-			fixed_to_double(&cx,&double_cx);
-			fixed_to_double(&cy,&double_cy);
 
 		}
 
@@ -457,7 +436,7 @@ int flying(void) {
 				grsim_put_sprite(splash_forward,
 					SHIPX+1,shipy+9);
 			}
-			grsim_put_sprite(shadow_forward,SHIPX+3,31+space_z);
+			grsim_put_sprite(shadow_forward,SHIPX+3,31+space_z.i);
 			grsim_put_sprite(ship_forward,SHIPX,shipy);
 		}
 		if (turning<0) {
@@ -468,7 +447,7 @@ int flying(void) {
 				grsim_put_sprite(splash_left,
 						SHIPX+1,36);
 			}
-			grsim_put_sprite(shadow_left,SHIPX+3,31+space_z);
+			grsim_put_sprite(shadow_left,SHIPX+3,31+space_z.i);
 			grsim_put_sprite(ship_left,SHIPX,shipy);
 			turning++;
 		}
@@ -481,7 +460,7 @@ int flying(void) {
 				grsim_put_sprite(splash_right,
 						SHIPX+1,36);
 			}
-			grsim_put_sprite(shadow_right,SHIPX+3,31+space_z);
+			grsim_put_sprite(shadow_right,SHIPX+3,31+space_z.i);
 			grsim_put_sprite(ship_right,SHIPX,shipy);
 			turning--;
 		}
@@ -532,6 +511,7 @@ static double space_z=4.5; // height of the camera above the plane
 static int horizon=-2;    // number of pixels line 0 is below the horizon
 static double scale_x=20, scale_y=20;
 
+double factor;
 double BETA=-0.5;
 
 
@@ -587,6 +567,10 @@ void draw_background_mode7(void) {
 	hlin_double(ram[DRAW_PAGE], 0, 40, 6);
 
 
+	// Move camera back a bit
+	factor=space_z*BETA;
+	printf("space_z=%lf BETA=%lf factor=%lf\n",space_z,BETA,factor);
+
 	for (screen_y = 8; screen_y < LOWRES_H; screen_y++) {
 		// first calculate the distance of the line we are drawing
 		distance = (space_z * scale_y) / (screen_y + horizon);
@@ -599,10 +583,6 @@ void draw_background_mode7(void) {
 		// through all points on this line
 		line_dx = -our_sin(angle) * horizontal_scale;
 		line_dy = our_cos(angle) * horizontal_scale;
-
-		double factor;
-		// Move camera back a bit
-		factor=space_z*BETA;
 
 		// calculate the starting position
 		space_x = cx + ((distance+factor) * our_cos(angle)) - LOWRES_W/2 * line_dx;
