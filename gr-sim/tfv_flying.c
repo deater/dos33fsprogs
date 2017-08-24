@@ -130,9 +130,7 @@ static double BETA=-0.5;
 
 static int horizon=-2;    // number of pixels line 0 is below the horizon
 
-#define SCALE_X	20.0
-#define SCALE_Y	20.0
-
+static double SCALE=20.0;
 
 #define ANGLE_STEPS	16
 
@@ -251,12 +249,13 @@ void draw_background_mode7(void) {
 	hlin_double(ram[DRAW_PAGE], 0, 40, 6);
 
 	for (screen_y = 8; screen_y < LOWRES_H; screen_y+=2) {
-		// first calculate the distance of the line we are drawing
-		distance = (space_z * SCALE_Y) / (screen_y + horizon);
 
 		// then calculate the horizontal scale, or the distance between
 		// space points on this horizontal line
-		horizontal_scale = (distance / SCALE_X);
+		horizontal_scale = space_z  / (screen_y + horizon);
+
+		// calculate the distance of the line we are drawing
+		distance = horizontal_scale * SCALE;
 
 //		printf("Distance=%lf, horizontal-scale=%lf\n",
 //			distance,horizontal_scale);
@@ -364,6 +363,19 @@ int flying(void) {
 				if (angle>=ANGLE_STEPS) angle-=ANGLE_STEPS;
 			}
 
+		}
+
+		if (ch=='h') {
+			horizon--;
+			if (horizon<-4) horizon=4;
+
+			printf("horizon=%d\n",horizon);
+		}
+
+		if (ch=='y') {
+			if (SCALE==20) SCALE=16;
+			else SCALE=20;
+			printf("SCALE=%lf\n",SCALE);
 		}
 
 		// increase speed
