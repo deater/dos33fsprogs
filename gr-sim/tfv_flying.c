@@ -80,17 +80,11 @@ struct fixed_type {
 // map coordinates
 struct fixed_type speed = {0,0};
 
-// the distance and horizontal scale of the line we are drawing
-struct fixed_type distance = {0,0};
-struct fixed_type horizontal_scale = {0,0};
-
 // step for points in space between two pixels on a horizontal line
 struct fixed_type line_dx = {0,0};
 struct fixed_type line_dy = {0,0};
 
 // current space position
-struct fixed_type space_x;
-struct fixed_type space_y;
 
 // height of the camera above the plane
 struct fixed_type space_z= {0x04,0x80};	// 4.5;
@@ -112,15 +106,19 @@ static struct fixed_type dy;
 static unsigned char speed=SPEED_STOPPED;	// 0..4, with 0=stopped
 
 // the distance and horizontal scale of the line we are drawing
-static double distance=0;
-static double horizontal_scale=0;
+static double double_distance=0;
+static double double_horizontal_scale=0;
+static struct fixed_type distance;
+static struct fixed_type horizontal_scale;
 
 // step for points in space between two pixels on a horizontal line
 static double line_dx=0;
 static double line_dy=0;
 
 // current space position
-double space_x,space_y;
+static double double_space_x,double_space_y;
+static struct fixed_type space_x;
+static struct fixed_type space_y;
 
 // height of the camera above the plane
 static double space_z=4.5;
@@ -130,7 +128,7 @@ static double BETA=-0.5;
 
 static int horizon=-2;    // number of pixels line 0 is below the horizon
 
-static double SCALE=20.0;
+static double SCALE=16.0;
 
 #define ANGLE_STEPS	16
 
@@ -223,6 +221,32 @@ static void fixed_add(struct fixed_type *x, struct fixed_type *y, struct fixed_t
 	z->i=x->i+y->i+carry;
 }
 
+static void double_to_fixed(double d, struct fixed_type *f) {
+
+        int temp;
+
+        temp=d*256;
+
+        f->i=(temp>>8)&0xff;
+
+        f->f=temp&0xff;
+}
+
+static void fixed_mul(struct fixed_type *x, struct fixed_type *y, struct fixed_type *z) {
+
+        int a,b,c;
+
+        a=((x->i)<<8)+(x->f);
+        b=((y->i)<<8)+(y->f);
+
+        c=a*b;
+
+        c>>=8;
+
+        z->i=(c>>8);
+        z->f=(c&0xff);
+}
+
 
 
 //
@@ -252,36 +276,50 @@ void draw_background_mode7(void) {
 
 		// then calculate the horizontal scale, or the distance between
 		// space points on this horizontal line
-		horizontal_scale = space_z  / (screen_y + horizon);
+		double_horizontal_scale = space_z  / (screen_y + horizon);
+		double_to_fixed(double_horizontal_scale,&horizontal_scale);
 
 		// calculate the distance of the line we are drawing
-		distance = horizontal_scale * SCALE;
+		double_distance = double_horizontal_scale * SCALE;
+		double_to_fixed(double_distance,&distance);
 
 //		printf("Distance=%lf, horizontal-scale=%lf\n",
 //			distance,horizontal_scale);
 
 		// calculate the dx and dy of points in space when we step
 		// through all points on this line
-		line_dx = -our_sin(angle) * horizontal_scale;
-		line_dy = our_cos(angle) * horizontal_scale;
+		dx.i=fixed_sin[(angle+8)&0xf].i;	// -sin()
+		dx.f=fixed_sin[(angle+8)&0xf].f;	// -sin()
+		fixed_mul(&dx,&horizontal_scale,&dx);
+
+		dy.i=fixed_sin[(angle+4)&0xf].i;	// cos()
+		dy.f=fixed_sin[(angle+4)&0xf].f;	// cos()
+		fixed_mul(&dy,&horizontal_scale,&dy);
+
+		fixed_to_double(&dx,&line_dx);
+		fixed_to_double(&dy,&line_dy);
 
 
 		// Move camera back a bit
 		double factor;
 		factor=space_z*BETA;
 
-//		space_x+=factor*our_cos(angle);
-//		space_y+=factor*our_sin(angle);
-
 		// calculate the starting position
-		space_x = double_cx + ((distance+factor) * our_cos(angle)) - LOWRES_W/2 * line_dx;
-		space_y = double_cy + ((distance+factor) * our_sin(angle)) - LOWRES_W/2 * line_dy;
+		double_space_x = double_cx +
+			((double_distance+factor) * our_cos(angle)) -
+			(LOWRES_W/2 * line_dx);
+		double_space_y = double_cy +
+			((double_distance+factor) * our_sin(angle)) -
+			(LOWRES_W/2 * line_dy);
+
+		double_to_fixed(double_space_x,&space_x);
+		double_to_fixed(double_space_y,&space_y);
 
 		// go through all points in this screen line
 		for (screen_x = 0; screen_x < LOWRES_W-1; screen_x++) {
 			// get a pixel from the tile and put it on the screen
 
-			map_color=lookup_map((int)space_x,(int)space_y);
+			map_color=lookup_map(space_x.i,space_y.i);
 
 			ram[COLOR]=map_color;
 			ram[COLOR]|=map_color<<4;
@@ -295,8 +333,8 @@ void draw_background_mode7(void) {
 				screen_y);
 
 			// advance to the next position in space
-			space_x += line_dx;
-			space_y += line_dy;
+			fixed_add(&space_x,&dx,&space_x);
+			fixed_add(&space_y,&dy,&space_y);
 		}
 	}
 }
