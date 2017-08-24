@@ -59,11 +59,6 @@ static int lookup_map(int x, int y) {
 	return color;
 }
 
-static double space_z=4.5; // height of the camera above the plane
-static int horizon=-2;    // number of pixels line 0 is below the horizon
-static double scale_x=20, scale_y=20;
-
-double BETA=-0.5;
 
 static int over_water;
 
@@ -74,11 +69,15 @@ static char angle=0;
 // map coordinates
 double cx=0.0,cy=0.0;
 
-
-
-
-
 #if 1
+
+static double space_z=4.5; // height of the camera above the plane
+static int horizon=-2;    // number of pixels line 0 is below the horizon
+
+double BETA=-0.5;
+
+#define SCALE_X	20.0
+#define SCALE_Y	20.0
 
 
 #define ANGLE_STEPS	16
@@ -146,14 +145,13 @@ void draw_background_mode7(void) {
 	color_equals(COLOR_GREY);
 	hlin_double(ram[DRAW_PAGE], 0, 40, 6);
 
-
 	for (screen_y = 8; screen_y < LOWRES_H; screen_y++) {
 		// first calculate the distance of the line we are drawing
-		distance = (space_z * scale_y) / (screen_y + horizon);
+		distance = (space_z * SCALE_Y) / (screen_y + horizon);
 
 		// then calculate the horizontal scale, or the distance between
 		// space points on this horizontal line
-		horizontal_scale = (distance / scale_x);
+		horizontal_scale = (distance / SCALE_X);
 
 		// calculate the dx and dy of points in space when we step
 		// through all points on this line
@@ -169,8 +167,6 @@ void draw_background_mode7(void) {
 		double factor;
 
 		factor=space_z*BETA;
-
-//		factor=2.0*BETA;
 
 		space_x+=factor*our_cos(angle);
 		space_y+=factor*our_sin(angle);
@@ -224,23 +220,6 @@ int flying(void) {
 		ch=grsim_input();
 
 		if ((ch=='q') || (ch==27))  break;
-
-#if 0
-		if (ch=='g') {
-			BETA+=0.1;
-			printf("Horizon=%lf\n",BETA);
-		}
-		if (ch=='h') {
-			BETA-=0.1;
-			printf("Horizon=%lf\n",BETA);
-		}
-
-		if (ch=='s') {
-			scale_x++;
-			scale_y++;
-			printf("Scale=%lf\n",scale_x);
-		}
-#endif
 
 		if ((ch=='w') || (ch==APPLE_UP)) {
 			if (shipy>16) {
@@ -373,6 +352,13 @@ int flying(void) {
 
 
 #else
+
+static double space_z=4.5; // height of the camera above the plane
+static int horizon=-2;    // number of pixels line 0 is below the horizon
+static double scale_x=20, scale_y=20;
+
+double BETA=-0.5;
+
 
 #define ANGLE_STEPS	32
 

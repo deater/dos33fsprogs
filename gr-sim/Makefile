@@ -5,9 +5,17 @@ LFLAGS = -lm
 SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 
-all:	rainbow sparkle kaleido tfv mode7_demo text
+all:	fixed_point rainbow sparkle kaleido tfv mode7_demo text
 
 
+
+####
+
+fixed_point:	fixed_point.o
+	$(CC) $(LFLAGS) -o fixed_point fixed_point.o
+
+fixed_point.o:	fixed_point.c
+	$(CC) $(CFLAGS) -c fixed_point.c
 
 ####
 
@@ -129,6 +137,6 @@ gr-sim.o:	gr-sim.c gr-sim.h apple2_font.h
 	$(CC) $(CFLAGS) $(SDL_INCLUDE) -c gr-sim.c
 
 clean:	
-	rm -f *~ *.o gr-sim rainbow sparkle kaleido tfv text mode7_demo
+	rm -f *~ *.o gr-sim rainbow sparkle kaleido tfv text mode7_demo fixed_point
 
 
