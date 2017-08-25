@@ -477,19 +477,12 @@ vlin_too_slow:
 	rts			; return
 
 
-
-
-
-
-
 	;================================
-	; hlin_double:
+	; hlin_setup
 	;================================
-	; VLIN Y, V2 AT A
-	; Y, X, A trashed
-hlin_double:
-;int hlin_double(int page, int x1, int x2, int at) {
-
+	; put address in GBASL/GBASH
+	; Ycoord in A, X coord inY
+hlin_setup:
 	sty	TEMPY
 	tay			; y=A
 	lda	gr_offsets,Y	; lookup low-res memory address
@@ -501,6 +494,20 @@ hlin_double:
 	lda	gr_offsets,Y
 	adc	DRAW_PAGE	; add in draw page offset
 	sta	GBASH
+	rts
+
+
+
+
+	;================================
+	; hlin_double:
+	;================================
+	; HLIN Y, V2 AT A
+	; Y, X, A trashed
+hlin_double:
+;int hlin_double(int page, int x1, int x2, int at) {
+
+	jsr	hlin_setup
 
 	sec
 	lda	V2
@@ -527,7 +534,7 @@ hlin_loop:
 	inc	GBASL
 	dex
 	bne	hlin_loop
-
+return:
 	rts
 
 

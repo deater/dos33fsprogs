@@ -240,10 +240,10 @@ void draw_background_mode7(void) {
 
 	fixed_mul(&space_z,&BETA,&factor);
 
-	printf("spacez=%lf beta=%lf factor=%lf\n",
-		fixed_to_double(&space_z),
-		fixed_to_double(&BETA),
-		fixed_to_double(&factor));
+//	printf("spacez=%lf beta=%lf factor=%lf\n",
+//		fixed_to_double(&space_z),
+//		fixed_to_double(&BETA),
+//		fixed_to_double(&factor));
 
 	for (screen_y = 8; screen_y < LOWRES_H; screen_y+=2) {
 
