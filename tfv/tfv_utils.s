@@ -481,7 +481,7 @@ vlin_too_slow:
 	; hlin_setup
 	;================================
 	; put address in GBASL/GBASH
-	; Ycoord in A, X coord inY
+	; Ycoord in A, Xcoord in Y
 hlin_setup:
 	sty	TEMPY
 	tay			; y=A

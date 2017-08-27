@@ -1,12 +1,45 @@
 SHIPY		EQU	$E4
 
 ; FIXME, sort out available ZP page space
-TURNING		EQU	$40
-SCREEN_X	EQU	$41
-SCREEN_Y	EQU	$42
+TURNING		EQU	$60
+SCREEN_X	EQU	$61
+SCREEN_Y	EQU	$62
+ANGLE		EQU	$63
 
+HORIZ_SCALE_I	EQU	$64
+HORIZ_SCALE_F	EQU	$65
+FACTOR_I	EQU	$66
+FACTOR_F	EQU	$67
+DX_I		EQU	$68
+DX_F		EQU	$69
+SPACEX_I	EQU	$6A
+SPACEX_F	EQU	$6B
+CX_I		EQU	$6C
+CX_F		EQU	$6D
+DY_I		EQU	$6E
+DY_F		EQU	$6F
+SPACEY_I	EQU	$70
+SPACEY_F	EQU	$71
+CY_I		EQU	$72
+CY_F		EQU	$73
+TEMP_I		EQU	$74
+TEMP_F		EQU	$75
+DISTANCE_I	EQU	$76
+DISTANCE_F	EQU	$77
+SPACEZ_I	EQU	$78
+SPACEZ_F	EQU	$79
 
+;===========
+; CONSTANTS
+;===========
 SHIPX		EQU	15
+TILE_W		EQU	64
+TILE_H		EQU	64
+MAP_MASK	EQU	(TILE_W - 1)
+LOWRES_W	EQU	40
+LOWRES_H	EQU	40
+
+
 
 flying_start:
 
@@ -19,6 +52,8 @@ flying_start:
 	sta	SHIPY
 	lda	#0
 	sta	TURNING
+	sta	SPACEX_I
+	sta	SPACEY_I
 
 flying_loop:
 
@@ -191,9 +226,34 @@ screenx_loop:
 	; finds value in space_x.i,space_y.i
 	; returns color in A
 lookup_map:
-	lda	#COLOR_BOTH_DARKBLUE	; the color of the sea
+	lda	SPACEX_I
+	and	#MAP_MASK
+	sta	TEMPY
 
-	
+	lda	SPACEY_I
+	and	#MAP_MASK
+	lsr
+	lsr
+	lsr				; multiply by 8
+	clc
+	adc	TEMPY			; add in X value
+
+	ldy	SPACEX_I
+	cpy	#$8
+	bcc	ocean_color		; bgt
+	ldy	SPACEY_I
+	cpy	#$8
+	bcc	ocean_color		; bgt
+
+	tay
+	lda	flying_map,Y		; load from array
+
+	rts
+
+ocean_color:
+	and	#$1f
+	tay
+	lda	water_map,Y		; the color of the sea
 
 	rts
 
@@ -206,6 +266,13 @@ flying_map:
 	.byte $dd,$cc,$99,$88, $44,$44,$44,$dd
 	.byte $dd,$cc,$99,$99, $11,$44,$44,$dd
 	.byte $22,$dd,$dd,$dd, $dd,$dd,$dd,$22
+
+
+water_map:
+	.byte $22,$22,$22,$22,  $22,$22,$22,$22
+	.byte $ee,$22,$22,$22,  $22,$22,$22,$22
+	.byte $22,$22,$22,$22,  $22,$22,$22,$22
+	.byte $22,$22,$22,$22,  $ee,$22,$22,$22
 
 
 ; http://www.llx.com/~nparker/a2/mult.html

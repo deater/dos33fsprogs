@@ -24,6 +24,13 @@ static unsigned char flying_map[64]= {
 	 13,12, 9, 9,  1, 4, 4,13,
 	 2,13,13,13, 13,13,13, 2};
 
+static unsigned char water_map[32]={
+	2,2,2,2,  2,2,2,2,
+	14,2,2,2, 2,2,2,2,
+	2, 2,2,2, 2,2,2,2,
+	2,2,2,2,  14,2,2,2,
+};
+
 #define TILE_W	64
 #define TILE_H	64
 #define MASK_X	(TILE_W - 1)
@@ -43,18 +50,20 @@ static int lookup_map(int x, int y) {
 	x=x&MASK_X;
 	y=y&MASK_Y;
 
-	if ( ((y&0x3)==1) && ((x&7)==0) ) color=14;
-	if ( ((y&0x3)==3) && ((x&7)==4) ) color=14;
+//	if ( ((y&0x3)==1) && ((x&7)==0) ) color=14;
+//	if ( ((y&0x3)==3) && ((x&7)==4) ) color=14;
 
+	color=water_map[((y*8)+x)&0x1f];
+
+
+	/* 2 2 2 2  2 2 2 2 */
+	/* e 2 2 2  2 2 2 2 */
+	/* 2 2 2 2  2 2 2 2 */
+	/* 2 2 2 2  e 2 2 2 */
 
 	if ((y<8) && (x<8)) {
 		color=flying_map[(y*8)+x];
 	}
-
-	/* 2   2 2 2  2  2 2 2 */
-	/* 14 14 2 2  2  2 2 2 */
-	/* 2   2 2 2 14 14 2 2 */
-	/* 2   2 2 2  2  2 2 2 */
 
 	return color;
 }
