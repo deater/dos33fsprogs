@@ -185,7 +185,20 @@ sky_loop:				; draw line across screen
 	ldy	#0
 	jsr	hlin_double		; hlin	0,40 at 6
 
-	; Temporarily Draw Ocean Everywhere
+	; fixed_mul(&space_z,&BETA,&factor);
+	lda	SPACEZ_I
+	sta	NUM1
+	lda	SPACEZ_F
+	sta	NUM1+1
+	lda	#$ff	; BETA_I
+	sta	NUM2
+	lda	#$80	; BETA_F
+	sta	NUM2+1
+	jsr	multiply
+	lda	RESULT+1
+	sta	FACTOR_I
+	lda	RESULT+2
+	sta	FACTOR_F
 
 	lda	#8
 	sta	SCREEN_Y
@@ -194,6 +207,243 @@ screeny_loop:
 	ldy	#0
 	jsr	hlin_setup
 
+	lda	#0			; horizontal_scale.i = 0
+	sta	HORIZ_SCALE_I
+
+	;horizontal_scale.f=
+	;	horizontal_lookup[space_z.i&0xf][(screen_y-8)/2];
+
+	lda	SPACEZ_I
+	and	#$f
+	asl
+	asl
+	asl
+	asl
+	sta	TEMP_I
+
+	clc
+	lda	SCREEN_Y
+	adc	#-8
+	lsr
+	clc
+	adc	TEMP_I
+	tay
+	lda	horizontal_lookup,Y
+	sta	HORIZ_SCALE_F
+
+
+	; calculate the distance of the line we are drawing
+	; fixed_mul(&horizontal_scale,&scale,&distance);
+	lda	HORIZ_SCALE_I
+	sta	NUM1
+	lda	HORIZ_SCALE_F
+	sta	NUM1+1
+	lda	#$14	; SCALE_I
+	sta	NUM2
+	lda	#$00	; SCALE_F
+	sta	NUM2+1
+	jsr	multiply
+	lda	RESULT+1
+	sta	DISTANCE_I
+	lda	RESULT+2
+	sta	DISTANCE_F
+
+	; calculate the dx and dy of points in space when we step
+	; through all points on this line
+
+	lda	ANGLE	; dx.i=fixed_sin[(angle+8)&0xf].i; // -sin()
+	clc
+	adc	#8
+	and	#$f
+	tay
+	lda	fixed_sin,Y
+	sta	DX_I
+	iny		; dx.f=fixed_sin[(angle+8)&0xf].f; // -sin()
+	lda	fixed_sin,Y
+	sta	DX_F
+
+	; fixed_mul(&dx,&horizontal_scale,&dx);
+	lda	HORIZ_SCALE_I
+	sta	NUM1
+	lda	HORIZ_SCALE_F
+	sta	NUM1+1
+	lda	DX_I
+	sta	NUM2
+	lda	DX_F
+	sta	NUM2+1
+	jsr	multiply
+	lda	RESULT+1
+	sta	DX_I
+	lda	RESULT+2
+	sta	DX_F
+
+
+	lda	ANGLE		; dy.i=fixed_sin[(angle+4)&0xf].i; // cos()
+	clc
+	adc	#4
+	and	#$f
+	tay
+	lda	fixed_sin,Y
+	sta	DY_I
+	iny			; dy.f=fixed_sin[(angle+4)&0xf].f; // cos()
+	lda	fixed_sin,Y
+	sta	DY_F
+
+	; fixed_mul(&dy,&horizontal_scale,&dy);
+	lda	HORIZ_SCALE_I
+	sta	NUM1
+	lda	HORIZ_SCALE_F
+	sta	NUM1+1
+	lda	DY_I
+	sta	NUM2
+	lda	DY_F
+	sta	NUM2+1
+	jsr	multiply
+	lda	RESULT+1
+	sta	DY_I
+	lda	RESULT+2
+	sta	DY_F
+
+	; calculate the starting position
+
+				; fixed_add(&distance,&factor,&space_x);
+	clc			; fixed_add(&distance,&factor,&space_y);
+	lda	DISTANCE_F
+	adc	FACTOR_F
+	sta	SPACEY_F
+	sta	SPACEX_F
+	lda	DISTANCE_I
+	adc	FACTOR_I
+	sta	SPACEY_F
+	sta	SPACEX_F
+
+	lda	ANGLE	; fixed_temp.i=fixed_sin[(angle+4)&0xf].i; // cos
+	clc
+	adc	#4
+	and	#$f
+	tay
+	lda	fixed_sin,Y
+	sta	TEMP_I
+	iny		; fixed_temp.f=fixed_sin[(angle+4)&0xf].f; // cos
+	lda	fixed_sin,Y
+	sta	TEMP_F
+
+	; fixed_mul(&space_x,&fixed_temp,&space_x);
+	lda	SPACEX_I
+	sta	NUM1
+	lda	SPACEX_F
+	sta	NUM1+1
+	lda	TEMP_I
+	sta	NUM2
+	lda	TEMP_F
+	sta	NUM2+1
+	jsr	multiply
+	lda	RESULT+1
+	sta	SPACEX_I
+	lda	RESULT+2
+	sta	SPACEY_F
+
+
+	clc			; fixed_add(&space_x,&cx,&space_x);
+	lda	SPACEX_F
+	adc	CX_F
+	sta	SPACEX_F
+	lda	SPACEX_I
+	adc	CX_I
+	sta	SPACEX_I
+
+	lda	#$ec		; fixed_temp.i=0xec;      // -20 (LOWRES_W/2)
+	sta	TEMP_I
+	lda	#0		; fixed_temp.f=0;
+	sta	TEMP_F
+
+	; fixed_mul(&fixed_temp,&dx,&fixed_temp);
+	lda	TEMP_I
+	sta	NUM1
+	lda	TEMP_F
+	sta	NUM1+1
+	lda	DX_I
+	sta	NUM2
+	lda	DX_F
+	sta	NUM2+1
+	jsr	multiply
+	lda	RESULT+1
+	sta	TEMP_I
+	lda	RESULT+2
+	sta	TEMP_F
+
+
+	clc			; fixed_add(&space_x,&fixed_temp,&space_x);
+	lda	SPACEX_F
+	adc	TEMP_F
+	sta	SPACEX_F
+	lda	SPACEY_I
+	adc	TEMP_I
+	sta	SPACEX_I
+
+	lda	ANGLE	; fixed_temp.i=fixed_sin[angle&0xf].i;
+	and	#$f
+	tay
+	lda	fixed_sin,Y
+	sta	TEMP_I
+	iny		; fixed_temp.f=fixed_sin[angle&0xf].f;
+	lda	fixed_sin,Y
+	sta	TEMP_F
+
+
+	; fixed_mul(&space_y,&fixed_temp,&space_y);
+	lda	SPACEY_I
+	sta	NUM1
+	lda	SPACEY_F
+	sta	NUM1+1
+	lda	TEMP_I
+	sta	NUM2
+	lda	TEMP_F
+	sta	NUM2+1
+	jsr	multiply
+	lda	RESULT+1
+	sta	SPACEY_I
+	lda	RESULT+2
+	sta	SPACEY_F
+
+
+	clc			; fixed_add(&space_y,&cy,&space_y);
+	lda	SPACEY_F
+	adc	CY_F
+	sta	SPACEY_F
+	lda	SPACEY_I
+	adc	CY_I
+	sta	SPACEY_I
+
+	lda	#$ec		; fixed_temp.i=0xec;      // -20 (LOWRES_W/2)
+	sta	TEMP_I
+	lda	#0		; fixed_temp.f=0;
+	sta	TEMP_F
+
+	; fixed_mul(&fixed_temp,&dy,&fixed_temp);
+	lda	TEMP_I
+	sta	NUM1
+	lda	TEMP_F
+	sta	NUM1+1
+	lda	DX_I
+	sta	NUM2
+	lda	DY_F
+	sta	NUM2+1
+	jsr	multiply
+	lda	RESULT+1
+	sta	TEMP_I
+	lda	RESULT+2
+	sta	TEMP_F
+
+
+	clc			; fixed_add(&space_y,&fixed_temp,&space_y);
+	lda	SPACEY_F
+	adc	TEMP_F
+	sta	SPACEY_F
+	lda	SPACEY_I
+	adc	TEMP_I
+	sta	SPACEY_I
+
 
 	lda	#0
 	sta	SCREEN_X
@@ -201,8 +451,28 @@ screenx_loop:
 
 	jsr	lookup_map		; get color in A
 	ldy	#0
-	sta	(GBASL),Y
-	inc	GBASL
+	sta	(GBASL),Y		; plot double height
+	inc	GBASL			; point to next pixel
+
+	; advance to the next position in space
+
+	clc			; fixed_add(&space_x,&dx,&space_x);
+	lda	SPACEX_F
+	adc	DX_F
+	sta	SPACEX_F
+	lda	SPACEX_I
+	adc	DX_I
+	sta	SPACEX_I
+
+	clc			; fixed_add(&space_y,&dy,&space_y);
+	lda	SPACEY_F
+	adc	DY_F
+	sta	SPACEY_F
+	lda	SPACEY_I
+	adc	DY_I
+	sta	SPACEY_I
+
+
 
 	inc	SCREEN_X
 	lda	SCREEN_X
@@ -215,8 +485,9 @@ screenx_loop:
 	adc	#2
 	sta	SCREEN_Y
 	cmp	#40			; LOWRES height
-	bne	screeny_loop
-
+	beq	done_screeny
+	jmp	screeny_loop
+done_screeny:
 	rts
 
 
@@ -308,6 +579,7 @@ L2:
 	rts
 
 ; 8.8 fixed point
+; should we store as two arrays, one I one F?
 fixed_sin:
 	.byte $00,$00 ;  0.000000=00.00
 	.byte $00,$61 ;  0.382683=00.61

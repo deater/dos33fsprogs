@@ -261,7 +261,8 @@ void draw_background_mode7(void) {
 //		double_horizontal_scale = double_space_z  / (screen_y + horizon);
 //		double_to_fixed(double_horizontal_scale,&horizontal_scale);
 		horizontal_scale.i=0;
-		horizontal_scale.f=horizontal_lookup[space_z.i&0xf][(screen_y-8)/2];
+		horizontal_scale.f=
+			horizontal_lookup[space_z.i&0xf][(screen_y-8)/2];
 
 		// calculate the distance of the line we are drawing
 		fixed_mul(&horizontal_scale,&scale,&distance);
