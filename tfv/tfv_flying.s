@@ -52,6 +52,7 @@ flying_start:
 	sta	SHIPY
 	lda	#0
 	sta	TURNING
+	sta	ANGLE
 	sta	SPACEX_I
 	sta	SPACEY_I
 
@@ -79,6 +80,7 @@ skipskip:
 	bcc	check_down	; bgt
 	dec	SHIPY
 	dec	SHIPY
+	inc	SPACEZ_I
 
 check_down:
 	cmp	#('M')
@@ -88,18 +90,25 @@ check_down:
 	bcs	check_left	; ble
 	inc	SHIPY
 	inc	SHIPY
+	dec	SPACEZ_I
 
 check_left:
 	cmp	#('J')
 	bne	check_right
 	inc	TURNING
+	inc	ANGLE
 
 check_right:
 	cmp	#('K')
 	bne	check_done
 	dec	TURNING
+	dec	ANGLE
 
 check_done:
+
+	lda	ANGLE
+	and	#$f
+	sta	ANGLE
 
 	;====================
 	; Draw the background
@@ -191,23 +200,38 @@ sky_loop:				; draw line across screen
 	jsr	hlin_double		; hlin	0,40 at 6
 
 	; fixed_mul(&space_z,&BETA,&factor);
+
 	lda	SPACEZ_I
-	sta	NUM1+1
+	sta	NUM1H
 	lda	SPACEZ_F
-	sta	NUM1
+	sta	NUM1L
+
 	lda	#$ff	; BETA_I
-	sta	NUM2+1
+	sta	NUM2H
 	lda	#$80	; BETA_F
-	sta	NUM2
+	sta	NUM2L
+
+;; TEST
+;;	lda	#$0
+;;	sta	NUM1H
+;;	lda	#$2
+;;	sta	NUM1L
+
+;;	lda	#$0
+;;	sta	NUM2H
+;;	lda	#$3
+;;	sta	NUM2L
+
+
 
 	jsr	multiply
 
-	lda	RESULT+1
-	sta	FACTOR_I
 	lda	RESULT+2
+	sta	FACTOR_I
+	lda	RESULT+1
 	sta	FACTOR_F
 
-brk	;; SPACEZ=78  * ff80 = FACTOR=66
+	;; SPACEZ=78  * ff80 = FACTOR=66
 
 	;;  4 80 * ff 80 = 83 81
 
@@ -215,7 +239,10 @@ brk	;; SPACEZ=78  * ff80 = FACTOR=66
 
 	;; 4 80 * ffffffff 80 = fffffffd c0
 	;; spacez*beta=factor
-
+	;;	00 40 02 00
+	;;	00000000 01000000 00000010 00000000
+	;;	11111111 10111111 11111110 00000000
+	;;	ff        Bf         fe         00
 
 	;; C
 	;; GOOD 4 80 * ffffffff 80 = fffffffd c0
@@ -256,17 +283,17 @@ screeny_loop:
 	; calculate the distance of the line we are drawing
 	; fixed_mul(&horizontal_scale,&scale,&distance);
 	lda	HORIZ_SCALE_I
-	sta	NUM1
+	sta	NUM1H
 	lda	HORIZ_SCALE_F
-	sta	NUM1+1
+	sta	NUM1L
 	lda	#$14	; SCALE_I
-	sta	NUM2
+	sta	NUM2H
 	lda	#$00	; SCALE_F
-	sta	NUM2+1
+	sta	NUM2L
 	jsr	multiply
-	lda	RESULT+1
-	sta	DISTANCE_I
 	lda	RESULT+2
+	sta	DISTANCE_I
+	lda	RESULT+1
 	sta	DISTANCE_F
 
 	; calculate the dx and dy of points in space when we step
@@ -285,17 +312,17 @@ screeny_loop:
 
 	; fixed_mul(&dx,&horizontal_scale,&dx);
 	lda	HORIZ_SCALE_I
-	sta	NUM1
+	sta	NUM1H
 	lda	HORIZ_SCALE_F
-	sta	NUM1+1
+	sta	NUM1L
 	lda	DX_I
-	sta	NUM2
+	sta	NUM2H
 	lda	DX_F
-	sta	NUM2+1
+	sta	NUM2L
 	jsr	multiply
-	lda	RESULT+1
-	sta	DX_I
 	lda	RESULT+2
+	sta	DX_I
+	lda	RESULT+1
 	sta	DX_F
 
 
@@ -312,17 +339,17 @@ screeny_loop:
 
 	; fixed_mul(&dy,&horizontal_scale,&dy);
 	lda	HORIZ_SCALE_I
-	sta	NUM1
+	sta	NUM1H
 	lda	HORIZ_SCALE_F
-	sta	NUM1+1
+	sta	NUM1L
 	lda	DY_I
-	sta	NUM2
+	sta	NUM2H
 	lda	DY_F
-	sta	NUM2+1
+	sta	NUM2L
 	jsr	multiply
-	lda	RESULT+1
-	sta	DY_I
 	lda	RESULT+2
+	sta	DY_I
+	lda	RESULT+1
 	sta	DY_F
 
 	; calculate the starting position
@@ -335,8 +362,8 @@ screeny_loop:
 	sta	SPACEX_F
 	lda	DISTANCE_I
 	adc	FACTOR_I
-	sta	SPACEY_F
-	sta	SPACEX_F
+	sta	SPACEY_I
+	sta	SPACEX_I
 
 	lda	ANGLE	; fixed_temp.i=fixed_sin[(angle+4)&0xf].i; // cos
 	clc
@@ -351,17 +378,17 @@ screeny_loop:
 
 	; fixed_mul(&space_x,&fixed_temp,&space_x);
 	lda	SPACEX_I
-	sta	NUM1
+	sta	NUM1H
 	lda	SPACEX_F
-	sta	NUM1+1
+	sta	NUM1L
 	lda	TEMP_I
-	sta	NUM2
+	sta	NUM2H
 	lda	TEMP_F
-	sta	NUM2+1
+	sta	NUM2L
 	jsr	multiply
-	lda	RESULT+1
-	sta	SPACEX_I
 	lda	RESULT+2
+	sta	SPACEX_I
+	lda	RESULT+1
 	sta	SPACEY_F
 
 
@@ -380,17 +407,17 @@ screeny_loop:
 
 	; fixed_mul(&fixed_temp,&dx,&fixed_temp);
 	lda	TEMP_I
-	sta	NUM1
+	sta	NUM1H
 	lda	TEMP_F
-	sta	NUM1+1
+	sta	NUM1L
 	lda	DX_I
-	sta	NUM2
+	sta	NUM2H
 	lda	DX_F
-	sta	NUM2+1
+	sta	NUM2L
 	jsr	multiply
-	lda	RESULT+1
-	sta	TEMP_I
 	lda	RESULT+2
+	sta	TEMP_I
+	lda	RESULT+1
 	sta	TEMP_F
 
 
@@ -414,17 +441,17 @@ screeny_loop:
 
 	; fixed_mul(&space_y,&fixed_temp,&space_y);
 	lda	SPACEY_I
-	sta	NUM1
+	sta	NUM1H
 	lda	SPACEY_F
-	sta	NUM1+1
+	sta	NUM1L
 	lda	TEMP_I
-	sta	NUM2
+	sta	NUM2H
 	lda	TEMP_F
-	sta	NUM2+1
+	sta	NUM2L
 	jsr	multiply
-	lda	RESULT+1
-	sta	SPACEY_I
 	lda	RESULT+2
+	sta	SPACEY_I
+	lda	RESULT+1
 	sta	SPACEY_F
 
 
@@ -443,17 +470,17 @@ screeny_loop:
 
 	; fixed_mul(&fixed_temp,&dy,&fixed_temp);
 	lda	TEMP_I
-	sta	NUM1
+	sta	NUM1H
 	lda	TEMP_F
-	sta	NUM1+1
+	sta	NUM1L
 	lda	DX_I
-	sta	NUM2
+	sta	NUM2H
 	lda	DY_F
-	sta	NUM2+1
+	sta	NUM2L
 	jsr	multiply
-	lda	RESULT+1
-	sta	TEMP_I
 	lda	RESULT+2
+	sta	TEMP_I
+	lda	RESULT+1
 	sta	TEMP_F
 
 
@@ -524,9 +551,9 @@ lookup_map:
 
 	lda	SPACEY_I
 	and	#MAP_MASK
-	lsr
-	lsr
-	lsr				; multiply by 8
+	asl
+	asl
+	asl				; multiply by 8
 	clc
 	adc	TEMPY			; add in X value
 
@@ -566,42 +593,8 @@ water_map:
 	.byte $22,$22,$22,$22,  $22,$22,$22,$22
 	.byte $22,$22,$22,$22,  $ee,$22,$22,$22
 
+.include "tfv_multiply.s"
 
-; http://www.llx.com/~nparker/a2/mult.html
-; MULTIPLY NUM1H:NUM1L * NUM2H:NUM2L
-; NUM2 is zero in end
-
-NUM1:	.byte 0,0
-NUM2:	.byte 0,0
-RESULT:	.byte 0,0,0,0
-
-; If we have 2k to spare we should check out
-; http://codebase64.org/doku.php?id=base:seriously_fast_multiplication
-
-multiply:
-	lda	#0		; Initialize RESULT to 0
-	sta 	RESULT+2
-	ldx	#16		; There are 16 bits in NUM2
-L1:
-	lsr	NUM2+1		; Get low bit of NUM2
-	ror	NUM2
-	bcc	L2		; 0 or 1?
-	tay			; If 1, add NUM1 (hi byte of RESULT is in A)
-	clc
-	lda	NUM1
-	adc	RESULT+2
-	sta	RESULT+2
-	tya
-	adc	NUM1+1
-L2:
-	ror	A		; "Stairstep" shift
-	ror	RESULT+2
-	ror	RESULT+1
-	ror	RESULT
-	dex
-	bne	L1
-	sta	RESULT+3
-	rts
 
 ; 8.8 fixed point
 ; should we store as two arrays, one I one F?

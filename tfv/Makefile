@@ -55,7 +55,7 @@ TFV:	tfv.o
 	ld65 -o TFV tfv.o -C ./apple2_1000.inc
 
 tfv.o:	tfv.s \
-	tfv_flying.s tfv_opener.s tfv_title.s \
+	tfv_flying.s tfv_multiply.s tfv_opener.s tfv_title.s \
 	tfv_textentry.s tfv_utils.s \
 	tfv_backgrounds.inc tfv_sprites.inc tfv_zp.inc
 	ca65 -o tfv.o tfv.s -l tfv.lst

@@ -43,49 +43,50 @@ int fixed_mul(struct fixed_type *x,
 	int result3;
 	int result2,result1,result0;
 	int aa,xx,cc=0,cc2,yy;
-	int negative=0;
+	int negate=0;
 
 	num1h=x->i;
 	num1l=x->f;
 
-	if (num1h&0x80) {
-		negative^=1;
+	if (!(num1h&0x80)) goto check_num2;	// bpl check_num2
 
-		num1l=~num1l;
-		num1h=~num1h;
+	negate++;				// inc negate
 
-		num1l&=0xff;
-		num1h&=0xff;
+	num1l=~num1l;
+	num1h=~num1h;
 
-		num1l+=1;
-		cc=!!(num1l&0x100);
-		num1h+=cc;
+	num1l&=0xff;
+	num1h&=0xff;
 
-		num1l&=0xff;
-		num1h&=0xff;
+	num1l+=1;
+	cc=!!(num1l&0x100);
+	num1h+=cc;
 
-	}
+	num1l&=0xff;
+	num1h&=0xff;
+check_num2:
 
 	num2h=y->i;
 	num2l=y->f;
 
-	if (num2h&0x80) {
-		negative^=1;
+	if (!(num2h&0x80)) goto unsigned_multiply;
 
-		num2l=~num2l;
-		num2h=~num2h;
+	negate++;
 
-		num2l&=0xff;
-		num2h&=0xff;
+	num2l=~num2l;
+	num2h=~num2h;
 
-		num2l+=1;
-		cc=!!(num2l&0x100);
-		num2h+=cc;
+	num2l&=0xff;
+	num2h&=0xff;
 
-		num2l&=0xff;
-		num2h&=0xff;
+	num2l+=1;
+	cc=!!(num2l&0x100);
+	num2h+=cc;
 
-	}
+	num2l&=0xff;
+	num2h&=0xff;
+
+unsigned_multiply:
 
 	if (debug) {
 		printf("Using %02x:%02x * %02x:%02x\n",num1h,num1l,num2h,num2l);
@@ -165,7 +166,7 @@ label_l2:
 			result3&0xff,result2&0xff,result1&0xff,result0&0xff);
 	}
 
-	if (negative) {
+	if (negate&1) {
 //		printf("NEGATING!\n");
 
 		cc=0;
