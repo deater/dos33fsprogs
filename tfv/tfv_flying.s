@@ -556,6 +556,7 @@ lookup_map:
 	asl				; multiply by 8
 	clc
 	adc	TEMPY			; add in X value
+					; (use OR instead?)
 
 	ldy	SPACEX_I
 	cpy	#$8

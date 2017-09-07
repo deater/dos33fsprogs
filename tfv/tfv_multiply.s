@@ -1,6 +1,7 @@
 ; http://www.llx.com/~nparker/a2/mult.html
 ; MULTIPLY NUM1H:NUM1L * NUM2H:NUM2L
-; NUM2 is zero in end
+; NUM2 is zeroed out
+; result is in RESULT3:RESULT2:RESULT1:RESULT0
 
 NUM1L:	.byte 0
 NUM1H:	.byte 0
