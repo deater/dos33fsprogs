@@ -56,6 +56,15 @@ extern unsigned char ground_color;
 
 extern char nameo[9];
 
+struct fixed_type {
+        char i;
+        unsigned char f;
+};
+
+
+int fixed_mul(struct fixed_type *x,
+                struct fixed_type *y,
+                struct fixed_type *z, int debug);
 
 int opening(void);
 int title(void);

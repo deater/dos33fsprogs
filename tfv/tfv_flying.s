@@ -55,6 +55,11 @@ flying_start:
 	sta	SPACEX_I
 	sta	SPACEY_I
 
+	lda	#4
+	sta	SPACEZ_I
+	lda	#$80
+	sta	SPACEZ_F
+
 flying_loop:
 
 
@@ -187,18 +192,34 @@ sky_loop:				; draw line across screen
 
 	; fixed_mul(&space_z,&BETA,&factor);
 	lda	SPACEZ_I
-	sta	NUM1
-	lda	SPACEZ_F
 	sta	NUM1+1
+	lda	SPACEZ_F
+	sta	NUM1
 	lda	#$ff	; BETA_I
-	sta	NUM2
-	lda	#$80	; BETA_F
 	sta	NUM2+1
+	lda	#$80	; BETA_F
+	sta	NUM2
+
 	jsr	multiply
+
 	lda	RESULT+1
 	sta	FACTOR_I
 	lda	RESULT+2
 	sta	FACTOR_F
+
+brk	;; SPACEZ=78  * ff80 = FACTOR=66
+
+	;;  4 80 * ff 80 = 83 81
+
+	;; 4 80 * 00 00 = fc 83 81 40
+
+	;; 4 80 * ffffffff 80 = fffffffd c0
+	;; spacez*beta=factor
+
+
+	;; C
+	;; GOOD 4 80 * ffffffff 80 = fffffffd c0
+	;; BAD  4 80 * ffffffff 80 = 42 40
 
 	lda	#8
 	sta	SCREEN_Y
@@ -548,10 +569,14 @@ water_map:
 
 ; http://www.llx.com/~nparker/a2/mult.html
 ; MULTIPLY NUM1H:NUM1L * NUM2H:NUM2L
+; NUM2 is zero in end
 
 NUM1:	.byte 0,0
 NUM2:	.byte 0,0
 RESULT:	.byte 0,0,0,0
+
+; If we have 2k to spare we should check out
+; http://codebase64.org/doku.php?id=base:seriously_fast_multiplication
 
 multiply:
 	lda	#0		; Initialize RESULT to 0

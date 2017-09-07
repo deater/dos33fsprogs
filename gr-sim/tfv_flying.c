@@ -76,11 +76,6 @@ static int screen_x, screen_y;
 static char angle=0;
 
 
-struct fixed_type {
-	char i;
-	unsigned char f;
-};
-
 // 1 = use reduced fixed point
 // 0 = use fancy hi-res floating point
 #if 1
@@ -204,27 +199,13 @@ static void fixed_add(struct fixed_type *x, struct fixed_type *y, struct fixed_t
 //	f->f=temp&0xff;
 //}
 
-static void fixed_mul(struct fixed_type *x, struct fixed_type *y, struct fixed_type *z) {
-
-        int a,b,c;
-
-        a=((x->i)<<8)+(x->f);
-        b=((y->i)<<8)+(y->f);
-
-        c=a*b;
-
-        c>>=8;
-
-        z->i=(c>>8);
-        z->f=(c&0xff);
-}
-
-
 
 //
 // Non-detailed version
 //
 //
+
+static int displayed=0;
 
 void draw_background_mode7(void) {
 
@@ -247,7 +228,13 @@ void draw_background_mode7(void) {
 //	fixed_to_double(&space_z,&double_space_z);
 //	double_factor=double_space_z*double_BETA;
 
-	fixed_mul(&space_z,&BETA,&factor);
+	fixed_mul(&space_z,&BETA,&factor,0);
+
+	if (!displayed) {
+		printf("%x %x * %x %x = %x %x\n",
+			space_z.i,space_z.f,BETA.i,BETA.f,factor.i,factor.f);
+		displayed=1;
+	}
 
 //	printf("spacez=%lf beta=%lf factor=%lf\n",
 //		fixed_to_double(&space_z),
@@ -265,7 +252,7 @@ void draw_background_mode7(void) {
 			horizontal_lookup[space_z.i&0xf][(screen_y-8)/2];
 
 		// calculate the distance of the line we are drawing
-		fixed_mul(&horizontal_scale,&scale,&distance);
+		fixed_mul(&horizontal_scale,&scale,&distance,0);
 		//fixed_to_double(&distance,&double_distance);
 
 //		printf("Distance=%lf, horizontal-scale=%lf\n",
@@ -275,11 +262,11 @@ void draw_background_mode7(void) {
 		// through all points on this line
 		dx.i=fixed_sin[(angle+8)&0xf].i;	// -sin()
 		dx.f=fixed_sin[(angle+8)&0xf].f;	// -sin()
-		fixed_mul(&dx,&horizontal_scale,&dx);
+		fixed_mul(&dx,&horizontal_scale,&dx,0);
 
 		dy.i=fixed_sin[(angle+4)&0xf].i;	// cos()
 		dy.f=fixed_sin[(angle+4)&0xf].f;	// cos()
-		fixed_mul(&dy,&horizontal_scale,&dy);
+		fixed_mul(&dy,&horizontal_scale,&dy,0);
 
 		// calculate the starting position
 		//double_space_x =(double_distance+double_factor);
@@ -287,11 +274,11 @@ void draw_background_mode7(void) {
 //		double_to_fixed(double_space_x,&space_x);
 		fixed_temp.i=fixed_sin[(angle+4)&0xf].i; // cos
 		fixed_temp.f=fixed_sin[(angle+4)&0xf].f; // cos
-		fixed_mul(&space_x,&fixed_temp,&space_x);
+		fixed_mul(&space_x,&fixed_temp,&space_x,0);
 		fixed_add(&space_x,&cx,&space_x);
 		fixed_temp.i=0xec;	// -20 (LOWRES_W/2)
 		fixed_temp.f=0;
-		fixed_mul(&fixed_temp,&dx,&fixed_temp);
+		fixed_mul(&fixed_temp,&dx,&fixed_temp,0);
 		fixed_add(&space_x,&fixed_temp,&space_x);
 
 		fixed_add(&distance,&factor,&space_y);
@@ -299,11 +286,11 @@ void draw_background_mode7(void) {
 //		double_to_fixed(double_space_y,&space_y);
 		fixed_temp.i=fixed_sin[angle&0xf].i;
 		fixed_temp.f=fixed_sin[angle&0xf].f;
-		fixed_mul(&space_y,&fixed_temp,&space_y);
+		fixed_mul(&space_y,&fixed_temp,&space_y,0);
 		fixed_add(&space_y,&cy,&space_y);
 		fixed_temp.i=0xec;	// -20 (LOWRES_W/2)
 		fixed_temp.f=0;
-		fixed_mul(&fixed_temp,&dy,&fixed_temp);
+		fixed_mul(&fixed_temp,&dy,&fixed_temp,0);
 		fixed_add(&space_y,&fixed_temp,&space_y);
 
 		// go through all points in this screen line
