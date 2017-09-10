@@ -362,6 +362,8 @@ screeny_loop:
 	sta	SPACEY_I
 	sta	SPACEX_I
 
+	;; brk	space_x = 06:bc
+
 	lda	ANGLE	; fixed_temp.i=fixed_sin[(angle+4)&0xf].i; // cos
 	clc
 	adc	#4
@@ -387,7 +389,7 @@ screeny_loop:
 	lda	RESULT+2
 	sta	SPACEX_I
 	lda	RESULT+1
-	sta	SPACEY_F
+	sta	SPACEX_F
 
 
 	clc			; fixed_add(&space_x,&cx,&space_x);
@@ -423,7 +425,7 @@ screeny_loop:
 	lda	SPACEX_F
 	adc	TEMP_F
 	sta	SPACEX_F
-	lda	SPACEY_I
+	lda	SPACEX_I
 	adc	TEMP_I
 	sta	SPACEX_I
 
