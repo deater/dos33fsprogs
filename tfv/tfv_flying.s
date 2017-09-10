@@ -233,17 +233,6 @@ sky_loop:				; draw line across screen
 
 	;; SPACEZ=78  * ff80 = FACTOR=66
 
-	;;  4 80 * ff 80 = 83 81
-
-	;; 4 80 * 00 00 = fc 83 81 40
-
-	;; 4 80 * ffffffff 80 = fffffffd c0
-	;; spacez*beta=factor
-	;;	00 40 02 00
-	;;	00000000 01000000 00000010 00000000
-	;;	11111111 10111111 11111110 00000000
-	;;	ff        Bf         fe         00
-
 	;; C
 	;; GOOD 4 80 * ffffffff 80 = fffffffd c0
 	;; BAD  4 80 * ffffffff 80 = 42 40
@@ -279,6 +268,7 @@ screeny_loop:
 	lda	horizontal_lookup,Y
 	sta	HORIZ_SCALE_F
 
+	;; brk ASM, horiz_scale = 00:73
 
 	; calculate the distance of the line we are drawing
 	; fixed_mul(&horizontal_scale,&scale,&distance);
@@ -296,6 +286,8 @@ screeny_loop:
 	lda	RESULT+1
 	sta	DISTANCE_F
 
+	;; brk ASM, distance = 08:fc
+
 	; calculate the dx and dy of points in space when we step
 	; through all points on this line
 
@@ -303,12 +295,16 @@ screeny_loop:
 	clc
 	adc	#8
 	and	#$f
+	asl
 	tay
 	lda	fixed_sin,Y
 	sta	DX_I
 	iny		; dx.f=fixed_sin[(angle+8)&0xf].f; // -sin()
 	lda	fixed_sin,Y
 	sta	DX_F
+
+	;; ANGLE
+	;; brk ASM, dx = 00:00
 
 	; fixed_mul(&dx,&horizontal_scale,&dx);
 	lda	HORIZ_SCALE_I
@@ -330,6 +326,7 @@ screeny_loop:
 	clc
 	adc	#4
 	and	#$f
+	asl
 	tay
 	lda	fixed_sin,Y
 	sta	DY_I
@@ -369,6 +366,7 @@ screeny_loop:
 	clc
 	adc	#4
 	and	#$f
+	asl
 	tay
 	lda	fixed_sin,Y
 	sta	TEMP_I
@@ -431,6 +429,7 @@ screeny_loop:
 
 	lda	ANGLE	; fixed_temp.i=fixed_sin[angle&0xf].i;
 	and	#$f
+	asl
 	tay
 	lda	fixed_sin,Y
 	sta	TEMP_I
