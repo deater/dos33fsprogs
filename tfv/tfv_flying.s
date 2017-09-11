@@ -153,27 +153,27 @@ check_speedup:
 	;=========
 	lda	#$3
 	cmp	SPEED
-	bne	check_speeddown
+	beq	check_speeddown
 	inc	SPEED
 
 check_speeddown:
 	cmp	#('X')
-	bne	check_done
+	bne	check_brake
 
 	;===========
 	; SPEED DOWN
 	;===========
 
 	lda	SPEED
-	beq	check_break
+	beq	check_brake
 	dec	SPEED
 
-check_break:
-	cmp	#(' ')
+check_brake:
+	cmp	#(' '+128)
 	bne	check_land
 
 	;============
-	; BREAK
+	; BRAKE
 	;============
 	lda	#$0
 	sta	SPEED
@@ -210,23 +210,52 @@ check_done:
 	; Handle Movement
 	;================
 
-speed_loop:
+speed_move:
 	ldx	SPEED
 	beq	draw_background
 
-		;; int ii;
+	lda	ANGLE		; dx.i=fixed_sin[(angle+4)&0xf].i; // cos()
+	clc
+	adc	#4
+	and	#$f
+	asl
+	tay
+	lda	fixed_sin_scale,Y
+	sta	DX_I
+	iny			; dx.f=fixed_sin[(angle+4)&0xf].f; // cos()
+	lda	fixed_sin_scale,Y
+	sta	DX_F
 
-		;; dx.i = fixed_sin_scale[(angle+4)&0xf].i;	// cos
-		;; dx.f = fixed_sin_scale[(angle+4)&0xf].f;	// cos
-		;; dy.i = fixed_sin_scale[angle&0xf].i;		// sin
-		;; dy.f = fixed_sin_scale[angle&0xf].f;		// sin
+	lda	ANGLE		; dy.i=fixed_sin[angle&0xf].i; // sin()
+	and	#$f
+	asl
+	tay
+	lda	fixed_sin_scale,Y
+	sta	DY_I
+	iny			; dx.f=fixed_sin[angle&0xf].f; // sin()
+	lda	fixed_sin_scale,Y
+	sta	DY_F
 
-		;; for(ii=0;ii<speed;ii++) {
-		;;	fixed_add(&cx,&dx,&cx);
-		;;	fixed_add(&cy,&dy,&cy);
-		;; }
+speed_loop:
+
+	clc			; fixed_add(&cx,&dx,&cx);
+	lda	CX_F
+	adc	DX_F
+	sta	CX_F
+	lda	CX_I
+	adc	DX_I
+	sta	CX_I
+
+	clc			; fixed_add(&cy,&dy,&cy);
+	lda	CY_F
+	adc	DY_F
+	sta	CY_F
+	lda	CY_I
+	adc	DY_I
+	sta	CY_I
+
 	dex
-	jmp	speed_loop
+	bne	speed_loop
 
 
 	;====================
