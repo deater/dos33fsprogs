@@ -130,7 +130,19 @@ check_left:
 	; LEFT PRESSED
 	;=============
 
-	inc	TURNING
+	lda	TURNING
+	bmi	turn_left
+	beq	turn_left
+
+	lda	#$0
+	sta	TURNING
+	clv
+	bvc	check_right
+
+turn_left:
+	lda	#253	; -3
+	sta	TURNING
+
 	dec	ANGLE
 
 check_right:
@@ -141,7 +153,17 @@ check_right:
 	; RIGHT PRESSED
 	;==============
 
-	dec	TURNING
+	lda	TURNING		;; FIXME: optimize me
+	bpl	turn_right
+	lda	#0
+	sta	TURNING
+	clv
+	bvc	check_speedup
+
+turn_right:
+	lda	#3
+	sta	TURNING
+
 	inc	ANGLE
 
 check_speedup:
@@ -270,10 +292,24 @@ draw_background:
 
 	clv
 	lda	TURNING
-	bmi	draw_ship_right
-	bne	draw_ship_left
+	beq	draw_ship_forward
+	bpl	draw_ship_right
+	bmi	draw_ship_left		;; FIXME: optimize order
 
 draw_ship_forward:
+	; Draw Shadow
+	lda     #>shadow_forward
+        sta     INH
+        lda     #<shadow_forward
+        sta     INL
+	lda	#(SHIPX+3)
+	sta	XPOS
+	clc
+	lda	SPACEZ_I
+	adc	#31
+	sta	YPOS
+	jsr	put_sprite
+
 	lda     #>ship_forward
         sta     INH
         lda     #<ship_forward
@@ -281,6 +317,22 @@ draw_ship_forward:
 	bvc	draw_ship
 
 draw_ship_right:
+
+	dec	TURNING
+
+	; Draw Shadow
+	lda     #>shadow_right
+        sta     INH
+        lda     #<shadow_right
+        sta     INL
+	lda	#(SHIPX+3)
+	sta	XPOS
+	clc
+	lda	SPACEZ_I
+	adc	#31
+	sta	YPOS
+	jsr	put_sprite
+
 	lda     #>ship_right
         sta     INH
         lda     #<ship_right
@@ -288,6 +340,22 @@ draw_ship_right:
 	bvc	draw_ship
 
 draw_ship_left:
+
+	inc	TURNING
+
+	; Draw Shadow
+	lda     #>shadow_left
+        sta     INH
+        lda     #<shadow_left
+        sta     INL
+	lda	#(SHIPX+3)
+	sta	XPOS
+	clc
+	lda	SPACEZ_I
+	adc	#31
+	sta	YPOS
+	jsr	put_sprite
+
 	lda     #>ship_left
         sta     INH
         lda     #<ship_left
