@@ -14,22 +14,10 @@
 	; memset()
 
 	;===================================
-	; Clear top/bottom of page 0
+	; Clear top/bottom of page 0 and 1
 	;===================================
 
-	lda	#$0
-	sta	DRAW_PAGE
-	jsr	clear_top
-	jsr	clear_bottom
-
-	;===================================
-	; Clear top/bottom of page 1
-	;===================================
-
-	lda	#$4
-	sta	DRAW_PAGE
-	jsr	clear_top
-	jsr	clear_bottom
+	jsr	clear_screens
 
 	;==========================
 	; Do Opening

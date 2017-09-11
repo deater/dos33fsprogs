@@ -2,6 +2,28 @@
 ;= ROUTINES
 ;=====================================================================
 
+
+clear_screens:
+	;===================================
+	; Clear top/bottom of page 0
+	;===================================
+
+	lda     #$0
+	sta     DRAW_PAGE
+	jsr     clear_top
+	jsr     clear_bottom
+
+	;===================================
+	; Clear top/bottom of page 1
+	;===================================
+
+	lda     #$4
+	sta     DRAW_PAGE
+	jsr     clear_top
+	jsr     clear_bottom
+
+	rts
+
 	;==========
 	; page_flip
 	;==========

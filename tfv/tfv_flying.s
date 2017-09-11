@@ -45,6 +45,8 @@ flying_start:
 
 	; Clear screen/pages
 
+	jsr	clear_screens
+
 	jsr     set_gr_page0
 
 	; Init Variables
