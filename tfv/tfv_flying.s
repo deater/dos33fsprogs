@@ -69,6 +69,9 @@ flying_start:
 	sta	DRAW_SPLASH
 	sta	SPEED
 
+	lda	#1
+	sta	ANGLE
+
 	lda	#4
 	sta	SPACEZ_I
 	lda	#$80
@@ -647,7 +650,7 @@ screeny_loop:
 	adc	TEMP_I
 	sta	SPACEX_I
 
-	;; brk	space_x = 06:bc
+;;brk	;; brk	space_x = 06:bc
 
 	lda	ANGLE	; fixed_temp.i=fixed_sin[angle&0xf].i;
 	and	#$f
@@ -694,7 +697,7 @@ screeny_loop:
 	sta	NUM1H
 	lda	TEMP_F
 	sta	NUM1L
-	lda	DX_I
+	lda	DY_I
 	sta	NUM2H
 	lda	DY_F
 	sta	NUM2L
@@ -713,7 +716,7 @@ screeny_loop:
 	adc	TEMP_I
 	sta	SPACEY_I
 
-	;; brk	space_y = f7:04
+;;brk	;; brk	space_y = f7:04
 
 	lda	#0
 	sta	SCREEN_X

@@ -87,7 +87,7 @@ static int over_water;
 
 	// current screen position
 static int screen_x, screen_y;
-static char angle=0;
+static char angle=1;
 
 
 // 1 = use reduced fixed point
