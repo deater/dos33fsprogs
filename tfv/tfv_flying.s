@@ -28,6 +28,8 @@ DISTANCE_I	EQU	$76
 DISTANCE_F	EQU	$77
 SPACEZ_I	EQU	$78
 SPACEZ_F	EQU	$79
+DRAW_SPLASH	EQU	$7A
+SPEED		EQU	$7B
 
 ;===========
 ; CONSTANTS
@@ -43,13 +45,16 @@ LOWRES_H	EQU	40
 
 flying_start:
 
+	;===================
 	; Clear screen/pages
+	;===================
 
 	jsr	clear_screens
-
 	jsr     set_gr_page0
 
+	;===============
 	; Init Variables
+	;===============
 	lda	#20
 	sta	SHIPY
 	lda	#0
@@ -61,8 +66,8 @@ flying_start:
 	sta	CX_F
 	sta	CY_I
 	sta	CY_F
-
-
+	sta	DRAW_SPLASH
+	sta	SPEED
 
 	lda	#4
 	sta	SPACEZ_I
@@ -71,68 +76,163 @@ flying_start:
 
 flying_loop:
 
-	jsr	get_key ;;wait_until_keypressed
+	lda	DRAW_SPLASH
+	beq	flying_keyboard
+	dec	DRAW_SPLASH	; decrement splash count
+
+flying_keyboard:
+
+
+	jsr	get_key		; get keypress
 
 	lda	LASTKEY
 
-	cmp	#('Q')
+	cmp	#('Q')		; if quit, then return
 	bne	skipskip
 	rts
+
 skipskip:
 
 	cmp	#('I')
 	bne	check_down
 
+	;===========
 	; UP PRESSED
+	;===========
 
 	lda	SHIPY
 	cmp	#17
-	bcc	check_down	; bgt
+	bcc	check_down	; bgt, if shipy>16
 	dec	SHIPY
-	dec	SHIPY
-	inc	SPACEZ_I
+	dec	SHIPY		; move ship up
+	inc	SPACEZ_I	; incement height
 
 check_down:
 	cmp	#('M')
 	bne	check_left
-	lda	SHIPY
 
+	;=============
 	; DOWN PRESSED
+	;=============
 
+	lda	SHIPY
 	cmp	#28
-	bcs	check_left	; ble
+	bcs	check_left	; ble, if shipy < 28
 	inc	SHIPY
-	inc	SHIPY
-	dec	SPACEZ_I
+	inc	SHIPY		; move ship down
+	dec	SPACEZ_I	; decrement height
 
 check_left:
 	cmp	#('J')
 	bne	check_right
 
+	;=============
 	; LEFT PRESSED
+	;=============
 
 	inc	TURNING
 	dec	ANGLE
 
 check_right:
 	cmp	#('K')
-	bne	check_done
+	bne	check_speedup
 
+	;==============
 	; RIGHT PRESSED
+	;==============
 
 	dec	TURNING
 	inc	ANGLE
 
+check_speedup:
+	cmp	#('Z')
+	bne	check_speeddown
+
+	;=========
+	; SPEED UP
+	;=========
+	lda	#$3
+	cmp	SPEED
+	bne	check_speeddown
+	inc	SPEED
+
+check_speeddown:
+	cmp	#('X')
+	bne	check_done
+
+	;===========
+	; SPEED DOWN
+	;===========
+
+	lda	SPEED
+	beq	check_break
+	dec	SPEED
+
+check_break:
+	cmp	#(' ')
+	bne	check_land
+
+	;============
+	; BREAK
+	;============
+	lda	#$0
+	sta	SPEED
+
+check_land:
+	cmp	#13
+	bne	check_help
+
+	;=====
+	; LAND
+	;=====
+
+
+check_help:
+	cmp	#('H')
+	bne	check_done
+
+	;=====
+	; HELP
+	;=====
+
+
 check_done:
+
+	;================
+	; Wrap the Angle
+	;================
 
 	lda	ANGLE
 	and	#$f
 	sta	ANGLE
 
+	;================
+	; Handle Movement
+	;================
+
+speed_loop:
+	ldx	SPEED
+	beq	draw_background
+
+		;; int ii;
+
+		;; dx.i = fixed_sin_scale[(angle+4)&0xf].i;	// cos
+		;; dx.f = fixed_sin_scale[(angle+4)&0xf].f;	// cos
+		;; dy.i = fixed_sin_scale[angle&0xf].i;		// sin
+		;; dy.f = fixed_sin_scale[angle&0xf].f;		// sin
+
+		;; for(ii=0;ii<speed;ii++) {
+		;;	fixed_add(&cx,&dx,&cx);
+		;;	fixed_add(&cy,&dy,&cy);
+		;; }
+	dex
+	jmp	speed_loop
+
+
 	;====================
 	; Draw the background
 	;====================
-
+draw_background:
 	jsr	draw_background_mode7
 
 	;==============
