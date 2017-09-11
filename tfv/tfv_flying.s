@@ -55,6 +55,12 @@ flying_start:
 	sta	ANGLE
 	sta	SPACEX_I
 	sta	SPACEY_I
+	sta	CX_I
+	sta	CX_F
+	sta	CY_I
+	sta	CY_F
+
+
 
 	lda	#4
 	sta	SPACEZ_I
@@ -96,13 +102,13 @@ check_left:
 	cmp	#('J')
 	bne	check_right
 	inc	TURNING
-	inc	ANGLE
+	dec	ANGLE
 
 check_right:
 	cmp	#('K')
 	bne	check_done
 	dec	TURNING
-	dec	ANGLE
+	inc	ANGLE
 
 check_done:
 
@@ -242,7 +248,8 @@ sky_loop:				; draw line across screen
 
 screeny_loop:
 	ldy	#0
-	jsr	hlin_setup
+	jsr	hlin_setup		; y-coord in a, x-coord in y
+					; sets up GBASL/GBASH
 
 	lda	#0			; horizontal_scale.i = 0
 	sta	HORIZ_SCALE_I
@@ -303,9 +310,6 @@ screeny_loop:
 	lda	fixed_sin,Y
 	sta	DX_F
 
-	;; ANGLE
-	;; brk ASM, dx = 00:00
-
 	; fixed_mul(&dx,&horizontal_scale,&dx);
 	lda	HORIZ_SCALE_I
 	sta	NUM1H
@@ -321,6 +325,8 @@ screeny_loop:
 	lda	RESULT+1
 	sta	DX_F
 
+	;; ANGLE
+	;; brk ASM, dx = 00:00
 
 	lda	ANGLE		; dy.i=fixed_sin[(angle+4)&0xf].i; // cos()
 	clc
@@ -348,6 +354,8 @@ screeny_loop:
 	sta	DY_I
 	lda	RESULT+1
 	sta	DY_F
+
+	;; brk ASM, dy = 00:73
 
 	; calculate the starting position
 
@@ -429,6 +437,8 @@ screeny_loop:
 	adc	TEMP_I
 	sta	SPACEX_I
 
+	;; brk	space_x = 06:bc
+
 	lda	ANGLE	; fixed_temp.i=fixed_sin[angle&0xf].i;
 	and	#$f
 	asl
@@ -493,6 +503,7 @@ screeny_loop:
 	adc	TEMP_I
 	sta	SPACEY_I
 
+	;; brk	space_y = f7:04
 
 	lda	#0
 	sta	SCREEN_X
@@ -551,7 +562,9 @@ lookup_map:
 	sta	TEMPY
 
 	lda	SPACEY_I
-	and	#MAP_MASK
+	and	#MAP_MASK		; wrap to 64x64 grid
+
+
 	asl
 	asl
 	asl				; multiply by 8
@@ -561,10 +574,12 @@ lookup_map:
 
 	ldy	SPACEX_I
 	cpy	#$8
-	bcc	ocean_color		; bgt
+	beq	ocean_color		; bgt
+	bcs	ocean_color
 	ldy	SPACEY_I
 	cpy	#$8
-	bcc	ocean_color		; bgt
+	beq	ocean_color		; bgt
+	bcs	ocean_color
 
 	tay
 	lda	flying_map,Y		; load from array

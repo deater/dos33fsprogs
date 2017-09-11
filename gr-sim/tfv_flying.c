@@ -39,31 +39,45 @@ static unsigned char water_map[32]={
 #define LOWRES_W	40
 #define LOWRES_H	40
 
+static int displayed=0;
 
+static int lookup_map(int xx, int yy) {
 
-static int lookup_map(int x, int y) {
-
-	int color;
+	int color,offset;
 
 	color=2;
 
-	x=x&MASK_X;
-	y=y&MASK_Y;
+	xx=xx&MASK_X;
+	yy=yy&MASK_Y;
+
+	if (!displayed) {
+		printf("XX,YY! %x,%x\n",xx,yy);
+	}
+
 
 //	if ( ((y&0x3)==1) && ((x&7)==0) ) color=14;
 //	if ( ((y&0x3)==3) && ((x&7)==4) ) color=14;
 
-	color=water_map[((y*8)+x)&0x1f];
+	offset=yy<<3;
+	offset+=xx;
 
+//	color=water_map[((yy*8)+xx)&0x1f];
+	color=water_map[offset&0x1f];
 
 	/* 2 2 2 2  2 2 2 2 */
 	/* e 2 2 2  2 2 2 2 */
 	/* 2 2 2 2  2 2 2 2 */
 	/* 2 2 2 2  e 2 2 2 */
 
-	if ((y<8) && (x<8)) {
-		color=flying_map[(y*8)+x];
+	if ((yy<8) && (xx<8)) {
+		color=flying_map[offset];
 	}
+
+	if (!displayed) {
+		printf("COLOR! %x\n",color);
+	}
+
+
 
 	return color;
 }
@@ -205,7 +219,7 @@ static void fixed_add(struct fixed_type *x, struct fixed_type *y, struct fixed_t
 //
 //
 
-static int displayed=0;
+
 
 void draw_background_mode7(void) {
 
@@ -231,9 +245,8 @@ void draw_background_mode7(void) {
 	fixed_mul(&space_z,&BETA,&factor,0);
 
 	if (!displayed) {
-		printf("%x %x * %x %x = %x %x\n",
+		printf("SPACEZ/BETA/FACTOR %x %x * %x %x = %x %x\n",
 			space_z.i,space_z.f,BETA.i,BETA.f,factor.i,factor.f);
-		displayed=1;
 	}
 
 //	printf("spacez=%lf beta=%lf factor=%lf\n",
@@ -251,6 +264,11 @@ void draw_background_mode7(void) {
 		horizontal_scale.f=
 			horizontal_lookup[space_z.i&0xf][(screen_y-8)/2];
 
+		if (!displayed) {
+			printf("HORIZ_SCALE %x %x\n",
+			horizontal_scale.i,horizontal_scale.f);
+		}
+
 		// calculate the distance of the line we are drawing
 		fixed_mul(&horizontal_scale,&scale,&distance,0);
 		//fixed_to_double(&distance,&double_distance);
@@ -258,15 +276,32 @@ void draw_background_mode7(void) {
 //		printf("Distance=%lf, horizontal-scale=%lf\n",
 //			distance,horizontal_scale);
 
+
+		if (!displayed) {
+			printf("DISTANCE %x:%x\n",
+			distance.i,distance.f);
+		}
+
 		// calculate the dx and dy of points in space when we step
 		// through all points on this line
 		dx.i=fixed_sin[(angle+8)&0xf].i;	// -sin()
 		dx.f=fixed_sin[(angle+8)&0xf].f;	// -sin()
 		fixed_mul(&dx,&horizontal_scale,&dx,0);
 
+		if (!displayed) {
+			printf("DX %x:%x\n",
+			dx.i,dx.f);
+		}
+
+
 		dy.i=fixed_sin[(angle+4)&0xf].i;	// cos()
 		dy.f=fixed_sin[(angle+4)&0xf].f;	// cos()
 		fixed_mul(&dy,&horizontal_scale,&dy,0);
+
+		if (!displayed) {
+			printf("DY %x:%x\n",
+			dy.i,dy.f);
+		}
 
 		// calculate the starting position
 		//double_space_x =(double_distance+double_factor);
@@ -281,6 +316,11 @@ void draw_background_mode7(void) {
 		fixed_mul(&fixed_temp,&dx,&fixed_temp,0);
 		fixed_add(&space_x,&fixed_temp,&space_x);
 
+		if (!displayed) {
+			printf("SPACEX! %x:%x\n",
+			space_x.i,space_x.f);
+		}
+
 		fixed_add(&distance,&factor,&space_y);
 //		double_space_y =(double_distance+double_factor);
 //		double_to_fixed(double_space_y,&space_y);
@@ -292,6 +332,11 @@ void draw_background_mode7(void) {
 		fixed_temp.f=0;
 		fixed_mul(&fixed_temp,&dy,&fixed_temp,0);
 		fixed_add(&space_y,&fixed_temp,&space_y);
+
+		if (!displayed) {
+			printf("SPACEY! %x:%x\n",
+			space_y.i,space_y.f);
+		}
 
 		// go through all points in this screen line
 		for (screen_x = 0; screen_x < LOWRES_W-1; screen_x++) {
@@ -315,6 +360,7 @@ void draw_background_mode7(void) {
 			fixed_add(&space_y,&dy,&space_y);
 		}
 	}
+	displayed=1;
 }
 
 #define SHIPX	15
