@@ -69,8 +69,7 @@ flying_start:
 
 flying_loop:
 
-
-	jsr	wait_until_keypressed
+	jsr	get_key ;;wait_until_keypressed
 
 	lda	LASTKEY
 
@@ -81,8 +80,11 @@ skipskip:
 
 	cmp	#('I')
 	bne	check_down
+
+	; UP PRESSED
+
 	lda	SHIPY
-	cmp	#16
+	cmp	#17
 	bcc	check_down	; bgt
 	dec	SHIPY
 	dec	SHIPY
@@ -92,6 +94,9 @@ check_down:
 	cmp	#('M')
 	bne	check_left
 	lda	SHIPY
+
+	; DOWN PRESSED
+
 	cmp	#28
 	bcs	check_left	; ble
 	inc	SHIPY
@@ -101,12 +106,18 @@ check_down:
 check_left:
 	cmp	#('J')
 	bne	check_right
+
+	; LEFT PRESSED
+
 	inc	TURNING
 	dec	ANGLE
 
 check_right:
 	cmp	#('K')
 	bne	check_done
+
+	; RIGHT PRESSED
+
 	dec	TURNING
 	inc	ANGLE
 
@@ -265,9 +276,9 @@ screeny_loop:
 	asl
 	sta	TEMP_I
 
-	clc
+	sec
 	lda	SCREEN_Y
-	adc	#-8
+	sbc	#8
 	lsr
 	clc
 	adc	TEMP_I
