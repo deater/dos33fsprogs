@@ -89,15 +89,16 @@ static int over_water;
 static int screen_x, screen_y;
 static char angle=1;
 
-
-// 1 = use reduced fixed point
-// 0 = use fancy hi-res floating point
-#if 1
-
 // Speed
 #define SPEED_STOPPED	0
 static unsigned char speed=SPEED_STOPPED;	// 0..4, with 0=stopped
 
+// 1 = use reduced fixed point
+// 0 = use fancy hi-res floating point
+#define FIXEDPT	1
+
+
+#if FIXEDPT
 
 // map coordinates
 static struct fixed_type cx = {0,0};
@@ -363,171 +364,6 @@ void draw_background_mode7(void) {
 	displayed=1;
 }
 
-#define SHIPX	15
-
-int flying(void) {
-
-	unsigned char ch;
-	int shipy;
-	int turning=0;
-	int draw_splash=0;
-
-	/************************************************/
-	/* Flying					*/
-	/************************************************/
-
-	gr();
-	shipy=20;
-
-	while(1) {
-		if (draw_splash>0) draw_splash--;
-
-		ch=grsim_input();
-
-		if ((ch=='q') || (ch==27))  break;
-
-		if ((ch=='w') || (ch==APPLE_UP)) {
-			if (shipy>16) {
-				shipy-=2;
-				space_z.i++;
-			}
-
-			printf("Z=%x.%x\n",space_z.i,space_z.f);
-		}
-		if ((ch=='s') || (ch==APPLE_DOWN)) {
-			if (shipy<28) {
-				shipy+=2;
-				space_z.i--;
-			}
-			else {
-				draw_splash=10;
-			}
-			printf("Z=%x.%x\n",space_z.i,space_z.f);
-		}
-		if ((ch=='a') || (ch==APPLE_LEFT)) {
-			if (turning>0) {
-				turning=0;
-			}
-			else {
-				turning=-20;
-
-				angle-=1;
-				if (angle<0) angle+=ANGLE_STEPS;
-			}
-		}
-		if ((ch=='d') || (ch==APPLE_RIGHT)) {
-			if (turning<0) {
-				turning=0;
-			}
-			else {
-				turning=20;
-				angle+=1;
-				if (angle>=ANGLE_STEPS) angle-=ANGLE_STEPS;
-			}
-
-		}
-
-//		if (ch=='h') {
-//			horizon--;
-//			if (horizon<-4) horizon=4;
-//
-//			printf("horizon=%d\n",horizon);
-//		}
-
-//		if (ch=='y') {
-//			if (SCALE==20) SCALE=16;
-//			else SCALE=20;
-//			printf("SCALE=%lf\n",SCALE);
-//		}
-
-		// increase speed
-		if (ch=='z') {
-			if (speed<3) speed++;
-		}
-
-		// decrease speed
-		if (ch=='x') {
-			if (speed>0) speed--;
-		}
-
-		// emergency break
-		if (ch==' ') {
-			speed=SPEED_STOPPED;
-		}
-
-		if (speed!=SPEED_STOPPED) {
-
-			int ii;
-
-			dx.i = fixed_sin_scale[(angle+4)&0xf].i;	// cos
-			dx.f = fixed_sin_scale[(angle+4)&0xf].f;	// cos
-			dy.i = fixed_sin_scale[angle&0xf].i;
-			dy.f = fixed_sin_scale[angle&0xf].f;
-
-
-			for(ii=0;ii<speed;ii++) {
-				fixed_add(&cx,&dx,&cx);
-				fixed_add(&cy,&dy,&cy);
-			}
-
-		}
-
-		draw_background_mode7();//our_angle, flyx, flyy);
-
-		if (turning==0) {
-			if ((speed!=SPEED_STOPPED) && (over_water)&&(draw_splash)) {
-				grsim_put_sprite(splash_forward,
-					SHIPX+1,shipy+9);
-			}
-			grsim_put_sprite(shadow_forward,SHIPX+3,31+space_z.i);
-			grsim_put_sprite(ship_forward,SHIPX,shipy);
-		}
-		if (turning<0) {
-
-			if ((shipy>25) && (speed!=SPEED_STOPPED)) draw_splash=1;
-
-			if (over_water&&draw_splash) {
-				grsim_put_sprite(splash_left,
-						SHIPX+1,36);
-			}
-			grsim_put_sprite(shadow_left,SHIPX+3,31+space_z.i);
-			grsim_put_sprite(ship_left,SHIPX,shipy);
-			turning++;
-		}
-		if (turning>0) {
-
-
-			if ((shipy>25) && (speed!=SPEED_STOPPED)) draw_splash=1;
-
-			if (over_water&&draw_splash) {
-				grsim_put_sprite(splash_right,
-						SHIPX+1,36);
-			}
-			grsim_put_sprite(shadow_right,SHIPX+3,31+space_z.i);
-			grsim_put_sprite(ship_right,SHIPX,shipy);
-			turning--;
-		}
-
-		page_flip();
-
-		usleep(20000);
-
-	}
-	return 0;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -549,6 +385,7 @@ int flying(void) {
 #else
 
 // map coordinates
+double dx,dy;
 double cx=0.0,cy=0.0;
 static double space_z=4.5; // height of the camera above the plane
 static int horizon=-2;    // number of pixels line 0 is below the horizon
@@ -654,6 +491,7 @@ void draw_background_mode7(void) {
 }
 
 
+#endif
 
 
 #define SHIPX	15
@@ -663,8 +501,8 @@ int flying(void) {
 	unsigned char ch;
 	int shipy;
 	int turning=0;
-	double dy,dx,speed=0;
 	int draw_splash=0;
+	int zint;
 
 	/************************************************/
 	/* Flying					*/
@@ -700,20 +538,28 @@ int flying(void) {
 		if ((ch=='w') || (ch==APPLE_UP)) {
 			if (shipy>16) {
 				shipy-=2;
+#if FIXEDPT
+				space_z.i++;
+#else
 				space_z+=1;
+#endif
 			}
 
-			printf("Z=%lf\n",space_z);
+//			printf("Z=%lf\n",space_z);
 		}
 		if ((ch=='s') || (ch==APPLE_DOWN)) {
 			if (shipy<28) {
 				shipy+=2;
+#if FIXEDPT
+				space_z.i--;
+#else
 				space_z-=1;
+#endif
 			}
 			else {
 				draw_splash=10;
 			}
-			printf("Z=%lf\n",space_z);
+//			printf("Z=%lf\n",space_z);
 		}
 		if ((ch=='a') || (ch==APPLE_LEFT)) {
 			if (turning>0) {
@@ -738,35 +584,57 @@ int flying(void) {
 
 		}
 
+		/* Used to be able to go backwards */
 		if (ch=='z') {
-			if (speed>0.5) speed=0.5;
-			speed+=0.05;
+			if (speed<3) speed++;
 		}
 
 		if (ch=='x') {
-			if (speed<-0.5) speed=-0.5;
-			speed-=0.05;
+			if (speed>0) speed--;
 		}
 
 		if (ch==' ') {
-			speed=0;
+			speed=SPEED_STOPPED;
 		}
 
+		if (speed!=SPEED_STOPPED) {
+#if FIXEDPT
+			int ii;
 
-		dx = speed * our_cos (angle);
-		dy = speed * our_sin (angle);
+			dx.i = fixed_sin_scale[(angle+4)&0xf].i;        // cos
+			dx.f = fixed_sin_scale[(angle+4)&0xf].f;        // cos
+			dy.i = fixed_sin_scale[angle&0xf].i;
+			dy.f = fixed_sin_scale[angle&0xf].f;
 
-		cx += dx;
-		cy += dy;
+			for(ii=0;ii<speed;ii++) {
+				fixed_add(&cx,&dx,&cx);
+				fixed_add(&cy,&dy,&cy);
+			}
 
-		draw_background_mode7();//our_angle, flyx, flyy);
+#else
+			dx = (double)speed * 0.25 * our_cos (angle);
+			dy = (double)speed * 0.25 * our_sin (angle);
+
+			cx += dx;
+			cy += dy;
+#endif
+		}
+
+		draw_background_mode7();
+
+#if FIXEDPT
+		zint=space_z.i;
+#else
+		zint=space_z;
+#endif
+
 
 		if (turning==0) {
-			if ((speed>0.0) && (over_water)&&(draw_splash)) {
+			if ((speed>0) && (over_water)&&(draw_splash)) {
 				grsim_put_sprite(splash_forward,
 					SHIPX+1,shipy+9);
 			}
-			grsim_put_sprite(shadow_forward,SHIPX+3,31+space_z);
+			grsim_put_sprite(shadow_forward,SHIPX+3,31+zint);
 			grsim_put_sprite(ship_forward,SHIPX,shipy);
 		}
 		if (turning<0) {
@@ -777,7 +645,7 @@ int flying(void) {
 				grsim_put_sprite(splash_left,
 						SHIPX+1,36);
 			}
-			grsim_put_sprite(shadow_left,SHIPX+3,31+space_z);
+			grsim_put_sprite(shadow_left,SHIPX+3,31+zint);
 			grsim_put_sprite(ship_left,SHIPX,shipy);
 			turning++;
 		}
@@ -790,7 +658,7 @@ int flying(void) {
 				grsim_put_sprite(splash_right,
 						SHIPX+1,36);
 			}
-			grsim_put_sprite(shadow_right,SHIPX+3,31+space_z);
+			grsim_put_sprite(shadow_right,SHIPX+3,31+zint);
 			grsim_put_sprite(ship_right,SHIPX,shipy);
 			turning--;
 		}
@@ -803,4 +671,4 @@ int flying(void) {
 	return 0;
 }
 
-#endif
+
