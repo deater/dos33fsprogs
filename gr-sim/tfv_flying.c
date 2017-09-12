@@ -597,6 +597,28 @@ int flying(void) {
 			speed=SPEED_STOPPED;
 		}
 
+		if (ch=='h') {
+			print_help();
+		}
+
+		if (ch==13) {
+			int landing_color,tx,ty;
+#if FIXEDPT
+			tx=cx.i;	ty=cy.i;
+#else
+			tx=cx;		ty=cy;
+#endif
+			landing_color=lookup_map(tx,ty);
+			printf("Trying to land at %d %d\n",tx,ty);
+			printf("Color=%d\n",landing_color);
+			if (landing_color==12) return 0;
+			else {
+				printf("Need to land on grass!\n");
+			}
+		}
+
+
+
 		if (speed!=SPEED_STOPPED) {
 #if FIXEDPT
 			int ii;
