@@ -49,6 +49,7 @@
 /* Walk through bushes, beach water */
 /* Make landing a sprite?  Stand behind things? */
 
+/* Load background to 0xc00 */
 static int load_map_bg(void) {
 
 	int i,temp;
@@ -57,17 +58,17 @@ static int load_map_bg(void) {
 	ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4));
 
 	if (map_x==3) {
-		grsim_unrle(harfco_rle,0x800);
+		grsim_unrle(harfco_rle,0xc00);
 		return 0;
 	}
 
 	if (map_x==5) {
-		grsim_unrle(landing_rle,0x800);
+		grsim_unrle(landing_rle,0xc00);
 		return 0;
 	}
 
 	if (map_x==14) {
-		grsim_unrle(collegep_rle,0x800);
+		grsim_unrle(collegep_rle,0xc00);
 		return 0;
 	}
 
@@ -75,7 +76,7 @@ static int load_map_bg(void) {
 	/* Sky */
 	color_equals(COLOR_MEDIUMBLUE);
 	for(i=0;i<10;i+=2) {
-		hlin_double(4,0,40,i);
+		hlin_double(PAGE2,0,40,i);
 	}
 
 	if (map_x<4) ground_color=(COLOR_WHITE|(COLOR_WHITE<<4));
@@ -87,7 +88,7 @@ static int load_map_bg(void) {
 		for(i=10;i<40;i++) {
 			temp=4+(40-i)/8;
 			color_equals(COLOR_DARKBLUE);
-			hlin(4,0,temp,i);
+			hlin(PAGE2,0,temp,i);
 			color_equals(COLOR_LIGHTBLUE);
 			hlin_continue(2);
 			color_equals(COLOR_YELLOW);
@@ -101,7 +102,7 @@ static int load_map_bg(void) {
 	if ((map_x&3)==1) {
 		for(i=10;i<40;i+=2) {
 			color_equals(ground_color);
-			hlin_double(4,0,40,i);
+			hlin_double(PAGE2,0,40,i);
 		}
 	}
 
@@ -109,7 +110,7 @@ static int load_map_bg(void) {
 	if ((map_x&3)==2) {
 		for(i=10;i<40;i+=2) {
 			color_equals(ground_color);
-			hlin_double(4,0,40,i);
+			hlin_double(PAGE2,0,40,i);
 		}
 	}
 
@@ -119,7 +120,7 @@ static int load_map_bg(void) {
 			temp=24+(i/4);
 			/* 32 ... 40 */
 			color_equals(ground_color);
-			hlin(4,0,temp,i);
+			hlin(PAGE2,0,temp,i);
 			color_equals(COLOR_YELLOW);
 			hlin_continue(2);
 			color_equals(COLOR_LIGHTBLUE);
@@ -133,33 +134,29 @@ static int load_map_bg(void) {
 	/* Draw north shore */
 	if (map_x<4) {
 		color_equals(COLOR_DARKBLUE);
-		hlin_double(4,0,40,10);
+		hlin_double(PAGE2,0,40,10);
 	}
 
 	/* Draw south shore */
 	if (map_x>=12) {
 		start=0; end=40;
 		color_equals(COLOR_DARKBLUE);
-		hlin_double(4,0,40,38);
+		hlin_double(PAGE2,0,40,38);
 		color_equals(COLOR_LIGHTBLUE);
 		if (map_x==12) start=6;
 		if (map_x==15) end=35;
-		hlin_double(4,start,end,36);
+		hlin_double(PAGE2,start,end,36);
 		if (map_x==12) start=8;
 		if (map_x==15) end=32;
 		color_equals(COLOR_YELLOW);
-		hlin_double(4,start,end,34);
+		hlin_double(PAGE2,start,end,34);
 	}
 
 	if ((map_x&3)==2) {
 		for(i=0;i<4;i++) {
-			grsim_put_sprite_page(1,mountain,10+(i%2)*5,(i*8)+2);
+			grsim_put_sprite_page(PAGE2,mountain,10+(i%2)*5,(i*8)+2);
 		}
 	}
-
-
-
-//		grsim_put_sprite_page(0,tfv_stand_left,tfv_x,20);
 
 	return 0;
 }
@@ -242,22 +239,22 @@ int world_map(void) {
 			refresh=0;
 		}
 
-		gr_copy(0x800,0x400);
+		gr_copy_to_current(0xc00);
 
 		/* Ground Scatter */
 
-		if (map_x==1) if (tfv_y>=20) grsim_put_sprite_page(0,snowy_tree,10,20);
-		if (map_x==4) if (tfv_y>=15) grsim_put_sprite_page(0,pine_tree,25,15);
-		if (map_x==8) if (tfv_y>=22) grsim_put_sprite_page(0,palm_tree,10,20);
-		if (map_x==12) if (tfv_y>=22) grsim_put_sprite_page(0,palm_tree,20,20);
-		if (map_x==13) if (tfv_y>=15) grsim_put_sprite_page(0,cactus,25,15);
+		if (map_x==1) if (tfv_y>=20) grsim_put_sprite(snowy_tree,10,20);
+		if (map_x==4) if (tfv_y>=15) grsim_put_sprite(pine_tree,25,15);
+		if (map_x==8) if (tfv_y>=22) grsim_put_sprite(palm_tree,10,20);
+		if (map_x==12) if (tfv_y>=22) grsim_put_sprite(palm_tree,20,20);
+		if (map_x==13) if (tfv_y>=15) grsim_put_sprite(cactus,25,15);
 
 
 		if ((map_x==7) || (map_x==11)) {
 			for(i=10;i<tfv_y+8;i+=2) {
 				limit=22+(i/4);
 				color_equals(COLOR_DARKGREEN);
-				hlin_double(0,0,limit,i);
+				hlin_double(ram[DRAW_PAGE],0,limit,i);
 			}
 		}
 
@@ -267,19 +264,19 @@ int world_map(void) {
 			odd=!odd;
 			steps++;
 
-			if (collision(newx,newy+10,ground_color)) {
-			}
-			else {
+//			if (collision(newx,newy+10,ground_color)) {
+//			}
+//			else {
 				tfv_x=newx;
 				tfv_y=newy;
-			}
+//			}
 
 			if (tfv_x>36) {
 				map_x++;
 				tfv_x=0;
 				refresh=1;
 			}
-			if (tfv_x<=0) {
+			else if (tfv_x<=0) {
 				map_x--;
 				tfv_x=35;
 				refresh=1;
@@ -290,8 +287,7 @@ int world_map(void) {
 				tfv_y=28;
 				refresh=1;
 			}
-
-			if (tfv_y>=28) {
+			else if (tfv_y>=28) {
 				map_x+=4;
 				tfv_y=4;
 				refresh=1;
@@ -301,29 +297,29 @@ int world_map(void) {
 
 
 		if (direction==-1) {
-			if (odd) grsim_put_sprite_page(0,tfv_walk_left,tfv_x,tfv_y);
-			else grsim_put_sprite_page(0,tfv_stand_left,tfv_x,tfv_y);
+			if (odd) grsim_put_sprite(tfv_walk_left,tfv_x,tfv_y);
+			else grsim_put_sprite(tfv_stand_left,tfv_x,tfv_y);
 		}
 		if (direction==1) {
-			if (odd) grsim_put_sprite_page(0,tfv_walk_right,tfv_x,tfv_y);
-			else grsim_put_sprite_page(0,tfv_stand_right,tfv_x,tfv_y);
+			if (odd) grsim_put_sprite(tfv_walk_right,tfv_x,tfv_y);
+			else grsim_put_sprite(tfv_stand_right,tfv_x,tfv_y);
 		}
 
-		if (map_x==1) if (tfv_y<20) grsim_put_sprite_page(0,snowy_tree,10,20);
-		if (map_x==4) if (tfv_y<15) grsim_put_sprite_page(0,pine_tree,25,15);
-		if (map_x==8) if (tfv_y<22) grsim_put_sprite_page(0,palm_tree,10,20);
-		if (map_x==12) if (tfv_y<22) grsim_put_sprite_page(0,palm_tree,20,20);
-		if (map_x==13) if (tfv_y<15) grsim_put_sprite_page(0,cactus,25,15);
+		if (map_x==1) if (tfv_y<20) grsim_put_sprite(snowy_tree,10,20);
+		if (map_x==4) if (tfv_y<15) grsim_put_sprite(pine_tree,25,15);
+		if (map_x==8) if (tfv_y<22) grsim_put_sprite(palm_tree,10,20);
+		if (map_x==12) if (tfv_y<22) grsim_put_sprite(palm_tree,20,20);
+		if (map_x==13) if (tfv_y<15) grsim_put_sprite(cactus,25,15);
 
 		if ((map_x==7) || (map_x==11)) {
 			for(i=tfv_y+8;i<36;i+=2) {
 				limit=22+(i/4);
 				color_equals(COLOR_DARKGREEN);
-				hlin_double(0,0,limit,i);
+				hlin_double(ram[DRAW_PAGE],0,limit,i);
 			}
 
 			color_equals(COLOR_BROWN);
-			hlin_double(0,0,1,39);
+			hlin_double(ram[DRAW_PAGE],0,1,39);
 			for(i=0;i<13;i++) {
 				color_equals(COLOR_GREY);
 				hlin_double_continue(1);
@@ -332,7 +328,7 @@ int world_map(void) {
 			}
 
 			color_equals(COLOR_BROWN);
-			hlin_double(0,0,1,37);
+			hlin_double(ram[DRAW_PAGE],0,1,37);
 			for(i=0;i<13;i++) {
 				color_equals(COLOR_GREY);
 				hlin_double_continue(1);
@@ -343,7 +339,7 @@ int world_map(void) {
 
 		if (map_x==3) {
 			if ((steps&0xf)==0) {
-				grsim_put_sprite_page(0,lightning,25,4);
+				grsim_put_sprite(lightning,25,4);
 				/* Hurt hit points if in range? */
 				if ((tfv_x>25) && (tfv_x<30) && (tfv_y<12)) {
 					printf("HIT! %d %d\n\n",steps,hp);
@@ -354,7 +350,7 @@ int world_map(void) {
 			}
 		}
 
-		grsim_update();
+		page_flip();
 
 		if (steps>=60) {
 			steps=0;
@@ -370,7 +366,3 @@ int world_map(void) {
 
 	return 0;
 }
-
-
-
-
