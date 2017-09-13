@@ -1329,6 +1329,8 @@ hlin_loop:
 	y--;
 	if (y!=255) goto hlin_loop;
 
+	ram[GBASL]+=width;
+
 //	}
 
 	return 0;

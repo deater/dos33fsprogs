@@ -76,7 +76,7 @@ static int load_map_bg(void) {
 	/* Sky */
 	color_equals(COLOR_MEDIUMBLUE);
 	for(i=0;i<10;i+=2) {
-		hlin_double(PAGE2,0,40,i);
+		hlin_double(PAGE2,0,39,i);
 	}
 
 	if (map_x<4) ground_color=(COLOR_WHITE|(COLOR_WHITE<<4));
@@ -102,7 +102,7 @@ static int load_map_bg(void) {
 	if ((map_x&3)==1) {
 		for(i=10;i<40;i+=2) {
 			color_equals(ground_color);
-			hlin_double(PAGE2,0,40,i);
+			hlin_double(PAGE2,0,39,i);
 		}
 	}
 
@@ -110,7 +110,7 @@ static int load_map_bg(void) {
 	if ((map_x&3)==2) {
 		for(i=10;i<40;i+=2) {
 			color_equals(ground_color);
-			hlin_double(PAGE2,0,40,i);
+			hlin_double(PAGE2,0,39,i);
 		}
 	}
 
@@ -134,14 +134,14 @@ static int load_map_bg(void) {
 	/* Draw north shore */
 	if (map_x<4) {
 		color_equals(COLOR_DARKBLUE);
-		hlin_double(PAGE2,0,40,10);
+		hlin_double(PAGE2,0,39,10);
 	}
 
 	/* Draw south shore */
 	if (map_x>=12) {
-		start=0; end=40;
+		start=0; end=39;
 		color_equals(COLOR_DARKBLUE);
-		hlin_double(PAGE2,0,40,38);
+		hlin_double(PAGE2,0,39,38);
 		color_equals(COLOR_LIGHTBLUE);
 		if (map_x==12) start=6;
 		if (map_x==15) end=35;
@@ -234,30 +234,6 @@ int world_map(void) {
 			refresh=1;
 		}
 
-		if (refresh) {
-			load_map_bg();
-			refresh=0;
-		}
-
-		gr_copy_to_current(0xc00);
-
-		/* Ground Scatter */
-
-		if (map_x==1) if (tfv_y>=20) grsim_put_sprite(snowy_tree,10,20);
-		if (map_x==4) if (tfv_y>=15) grsim_put_sprite(pine_tree,25,15);
-		if (map_x==8) if (tfv_y>=22) grsim_put_sprite(palm_tree,10,20);
-		if (map_x==12) if (tfv_y>=22) grsim_put_sprite(palm_tree,20,20);
-		if (map_x==13) if (tfv_y>=15) grsim_put_sprite(cactus,25,15);
-
-
-		if ((map_x==7) || (map_x==11)) {
-			for(i=10;i<tfv_y+8;i+=2) {
-				limit=22+(i/4);
-				color_equals(COLOR_DARKGREEN);
-				hlin_double(ram[DRAW_PAGE],0,limit,i);
-			}
-		}
-
 
 		/* Collision detection + Movement */
 		if (moved) {
@@ -294,6 +270,34 @@ int world_map(void) {
 			}
 		}
 
+		if (refresh) {
+			load_map_bg();
+			refresh=0;
+		}
+
+		gr_copy_to_current(0xc00);
+
+		/* Draw Above Ground Scatter */
+
+		if (map_x==1) if (tfv_y>=20) grsim_put_sprite(snowy_tree,10,20);
+		if (map_x==4) if (tfv_y>=15) grsim_put_sprite(pine_tree,25,15);
+		if (map_x==8) if (tfv_y>=22) grsim_put_sprite(palm_tree,10,20);
+		if (map_x==12) if (tfv_y>=22) grsim_put_sprite(palm_tree,20,20);
+		if (map_x==13) if (tfv_y>=15) grsim_put_sprite(cactus,25,15);
+
+
+		/* Draw Background Trees */
+		if ((map_x==7) || (map_x==11)) {
+			for(i=10;i<tfv_y+8;i+=2) {
+				limit=22+(i/4);
+				color_equals(COLOR_DARKGREEN);
+				hlin_double(ram[DRAW_PAGE],0,limit,i);
+			}
+		}
+
+
+
+
 
 
 		if (direction==-1) {
@@ -305,6 +309,7 @@ int world_map(void) {
 			else grsim_put_sprite(tfv_stand_right,tfv_x,tfv_y);
 		}
 
+		/* Draw Below Ground Scatter */
 		if (map_x==1) if (tfv_y<20) grsim_put_sprite(snowy_tree,10,20);
 		if (map_x==4) if (tfv_y<15) grsim_put_sprite(pine_tree,25,15);
 		if (map_x==8) if (tfv_y<22) grsim_put_sprite(palm_tree,10,20);
@@ -312,14 +317,17 @@ int world_map(void) {
 		if (map_x==13) if (tfv_y<15) grsim_put_sprite(cactus,25,15);
 
 		if ((map_x==7) || (map_x==11)) {
+			/* Draw Below Forest */
 			for(i=tfv_y+8;i<36;i+=2) {
 				limit=22+(i/4);
 				color_equals(COLOR_DARKGREEN);
 				hlin_double(ram[DRAW_PAGE],0,limit,i);
 			}
 
+			/* Draw tree trunks */
 			color_equals(COLOR_BROWN);
 			hlin_double(ram[DRAW_PAGE],0,1,39);
+
 			for(i=0;i<13;i++) {
 				color_equals(COLOR_GREY);
 				hlin_double_continue(1);
@@ -335,6 +343,7 @@ int world_map(void) {
 				color_equals(COLOR_BROWN);
 				hlin_double_continue(1);
 			}
+
 		}
 
 		if (map_x==3) {
