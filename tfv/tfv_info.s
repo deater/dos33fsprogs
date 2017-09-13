@@ -1,0 +1,3 @@
+
+game_over:
+	rts

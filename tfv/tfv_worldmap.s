@@ -1,0 +1,6 @@
+
+;
+
+world_map:
+	rts
+
