@@ -110,25 +110,28 @@ int do_battle(void) {
 	while(1) {
 		color_equals(COLOR_MEDIUMBLUE);
 		for(i=0;i<10;i++) {
-			basic_hlin(0,39,i);
+			hlin_double(ram[DRAW_PAGE],0,39,i);
 		}
 		color_equals(COLOR_LIGHTGREEN);
 		for(i=10;i<40;i++) {
-			basic_hlin(0,39,i);
+			hlin_double(ram[DRAW_PAGE],0,39,i);
 		}
 
-		grsim_put_sprite_page(0,tfv_stand_left,tfv_x,20);
-		grsim_put_sprite_page(0,tfv_led_sword,tfv_x-5,20);
+		grsim_put_sprite(tfv_stand_left,tfv_x,20);
+		grsim_put_sprite(tfv_led_sword,tfv_x-5,20);
 
-		grsim_put_sprite_page(0,killer_crab,enemy_x,20);
+		grsim_put_sprite(killer_crab,enemy_x,20);
 
-		grsim_update();
+		page_flip();
 
 		ch=grsim_input();
 		if (ch=='q') break;
 
 		usleep(100000);
 	}
+
+	clear_bottom(PAGE0);
+	clear_bottom(PAGE1);
 
 	return 0;
 }
