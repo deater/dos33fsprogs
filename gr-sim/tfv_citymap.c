@@ -10,6 +10,76 @@
 #include "tfv_sprites.h"
 #include "tfv_backgrounds.h"
 
+
+
+
+#if 0
+
+WORLDMAP_LOCATIONS
+	COLLEGE_PARK
+	HARFORD_COUNTY
+	LANDING_SITE
+
+	umcp_rle
+		"TALBOT HALL",X1,Y1,X2,Y2,TALBOT_HALL,
+		"SOUTH CAMPUS DINING",X1,Y1,X2,Y2,SOUTH_CAMPUS,
+		"METRO STATION",X1,Y1,X2,Y2,METRO_STATION,
+	bel_air_rle
+		"C. MILTON",
+		"JOHN CARROLL",
+		"SHOPPING MALL",
+		"MINIGOLF",
+
+	jc_rle:
+		"VIDEO HOMEROOM"
+		"AP CALCULUS, TEAM I-1"
+		"DEUTSCH"
+		"HOMEROOM"
+		"MATH OFFICE"
+
+
+	dining_rle
+		"OSCAR",
+		"NICOLE",
+		"CINDY",
+		"ELAINE",
+		"CAFETERIA LADY",
+		"PATRIOT ROOM"
+
+	metro_rle:
+		"METRO WORKER",
+		"TINY CAPABARA",
+		"GIANT GUINEA PIG",
+		"LARGE BIRD",
+
+	talbot_rle:
+		"LIZ AND WILL",
+		"PETE",
+		"KENJESU",
+		"MATHEMAGICIAN",
+		"DARTH TATER",
+
+
+	math_office_rle:
+		"CAPTAIN STEVE",
+		"BRIGHID",
+		"RACHAEL YRBK",
+		"MREE",
+
+	video_hr_rle:
+		"GUS",
+		"RAISTLIN",
+		"FORD",
+		"SISTER SCARYNUN",
+
+#endif
+
+
+
+
+
+
+
 /* In Town */
 
 int city_map(void) {
