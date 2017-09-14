@@ -226,6 +226,11 @@ int world_map(void) {
 			}
 		}
 
+		if (ch==13) {
+			city_map();
+			refresh=1;
+		}
+
 		if (ch=='h') print_help();
 		if (ch=='b') do_battle();
 		if (ch=='i') print_info();
