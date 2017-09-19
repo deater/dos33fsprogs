@@ -16,13 +16,14 @@ void game_over(void) {
 
 	/* Make a box around it? */
 
-	basic_htab(15);
-	basic_vtab(12);
-	basic_print("GAME OVER");
+	vtab(12);
+	htab(15);
+	move_cursor();
+	print("GAME OVER");
 
 	/* play the GROAN sound? */
 
-	grsim_update();
+	page_flip();
 
 	repeat_until_keypressed();
 }
@@ -31,15 +32,17 @@ void print_help(void) {
 	text();
 	home();
 
-	basic_htab(1);
-	basic_vtab(1);
+	htab(1);
+	vtab(1);
+	move_cursor();
 
-	basic_print("ARROW KEYS AND WASD MOVE\n");
-	basic_print("SPACE BAR ACTION\n");
-	basic_print("I INVENTORY\n");
-	basic_print("M MAP\n");
-	basic_print("Q QUITS\n");
-	grsim_update();
+	print("ARROW KEYS AND WASD MOVE\n");
+	print("SPACE BAR ACTION\n");
+	print("I INVENTORY\n");
+	print("M MAP\n");
+	print("Q QUITS\n");
+
+	page_flip();
 
 	repeat_until_keypressed();
 
@@ -49,15 +52,15 @@ void print_help(void) {
 void show_map(void) {
 
 	gr();
-	home();
 
-	grsim_unrle(map_rle,0x800);
-	gr_copy(0x800,0x400);
+	grsim_unrle(map_rle,((int)ram[DRAW_PAGE]+0x4)<<8);
+	//gr_copy(0x800,0x400);
 
 	color_equals(COLOR_RED);
 	basic_plot(8+((map_x&0x3)*6)+(tfv_x/6),8+(((map_x&0xc)>>2)*6)+(tfv_y/6));
 
-	grsim_update();
+	page_flip();
+
 	repeat_until_keypressed();
 }
 

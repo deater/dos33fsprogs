@@ -68,4 +68,3 @@ int opening(void) {
 
 	return 0;
 }
-

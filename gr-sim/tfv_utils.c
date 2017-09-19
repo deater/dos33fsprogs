@@ -76,7 +76,7 @@ void print_u8(unsigned char value) {
 
 	sprintf(temp,"%d",value);
 
-	basic_print(temp);
+	print(temp);
 
 }
 
@@ -84,7 +84,7 @@ void print_byte(unsigned char value) {
 	char temp[4];
 	sprintf(temp,"%3d",value);
 	temp[3]=0;
-	basic_print(temp);
+	print(temp);
 }
 
 void page_flip(void) {

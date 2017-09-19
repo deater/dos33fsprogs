@@ -61,50 +61,64 @@ int do_battle(void) {
 
 	int tfv_x=34;
 
-	home();
-	gr();
+//	home();
+//	gr();
 
-	basic_htab(1);
-	basic_vtab(22);
-	basic_normal();
-	basic_print("KILLER CRAB");
 
-	basic_htab(27);
-	basic_vtab(21);
-	basic_print("HP");
+	vtab(22);
+	htab(1);
+	move_cursor();
+	print("KILLER CRAB");
 
-	basic_htab(34);
-	basic_vtab(21);
-	basic_print("LIMIT");
+	vtab(21);
+	htab(27);
+	move_cursor();
+	print("HP");
 
-	basic_htab(15);
-	basic_vtab(22);
-	basic_print("DEATER");
+	vtab(21);
+	htab(34);
+	move_cursor();
+	print("LIMIT");
 
-	basic_htab(24);
-	basic_vtab(22);
+	vtab(22);
+	htab(15);
+	move_cursor();
+	print("DEATER");
+
+	vtab(22);
+	htab(24);
+	move_cursor();
 	print_byte(hp);
-	basic_print("/");
+	print("/");
 	print_byte(max_hp);
 
-	basic_htab(34);
-	basic_vtab(22);
-	basic_inverse();
-	for(i=0;i<limit;i++) {
-		basic_print(" ");
-	}
-	basic_normal();
-	for(i=limit;i<5;i++) {
-		basic_print(" ");
-	}
+	ram[COLOR]=0x20;
+	hlin_double(ram[DRAW_PAGE],33,33+limit,42);
 
-	basic_inverse();
-	for(i=21;i<25;i++) {
-		basic_vtab(i);
-		basic_htab(13);
-		basic_print(" ");
+//	basic_htab(34);
+//	basic_vtab(22);
+//	basic_inverse();
+//	for(i=0;i<limit;i++) {
+//		basic_print(" ");
+//	}
+//	basic_normal();
+//	for(i=limit;i<5;i++) {
+//		basic_print(" ");
+//	}
+
+	ram[COLOR]=0xa0;
+	hlin_double_continue(5-limit);
+
+	ram[COLOR]=0x20;
+
+//	basic_inverse();
+	for(i=40;i<50;i+=2) {
+		hlin_double(ram[DRAW_PAGE],12,12,i);
+//		basic_vtab(i);
+//		basic_htab(13);
+//		basic_print(" ");
 	}
-	basic_normal();
+	//basic_normal();
 
 
 	while(1) {
