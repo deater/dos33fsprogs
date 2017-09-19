@@ -232,7 +232,10 @@ int world_map(void) {
 		}
 
 		if (ch=='h') print_help();
-		if (ch=='b') do_battle();
+		if (ch=='b') {
+			do_battle();
+			refresh=1;
+		}
 		if (ch=='i') print_info();
 		if (ch=='m') {
 			show_map();
@@ -276,6 +279,7 @@ int world_map(void) {
 		}
 
 		if (refresh) {
+			clear_bottom(PAGE2);
 			load_map_bg();
 			refresh=0;
 		}

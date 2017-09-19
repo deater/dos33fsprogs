@@ -509,6 +509,9 @@ int flying(void) {
 	/************************************************/
 
 	gr();
+	clear_bottom(PAGE0);
+	clear_bottom(PAGE1);
+
 	shipy=20;
 
 	while(1) {
@@ -613,7 +616,19 @@ int flying(void) {
 			printf("Color=%d\n",landing_color);
 			if (landing_color==12) return 0;
 			else {
-				printf("Need to land on grass!\n");
+				int draw_save;
+				draw_save=ram[DRAW_PAGE];
+				ram[DRAW_PAGE]=PAGE0;
+				htab(11);
+				vtab(22);
+				move_cursor();
+				print("NEED TO LAND ON GRASS!");
+				ram[DRAW_PAGE]=PAGE1;
+				htab(11);
+				vtab(22);
+				move_cursor();
+				print("NEED TO LAND ON GRASS!");
+				ram[DRAW_PAGE]=draw_save;
 			}
 		}
 

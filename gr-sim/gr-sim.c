@@ -896,8 +896,10 @@ int gr_copy_to_current(short source) {
 		source_addr=gr_addr_lookup[i]+(source-0x400);
 		dest_addr=gr_addr_lookup[i]+(ram[DRAW_PAGE]<<8);
 
-		if (i<4) l=120;
-		else l=80;
+//		if (i<4) l=120;	// only copy 40 lines
+//		else l=80;
+
+		l=120;	// copy 48 lines
 
 		for(j=0;j<l;j++) {
 			ram[dest_addr+j]=ram[source_addr+j];

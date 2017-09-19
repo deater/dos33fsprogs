@@ -18,8 +18,9 @@ int title(void) {
 
 	int result;
 
-	clear_bottom(0);
-	clear_bottom(1);
+	clear_bottom(PAGE0);
+	clear_bottom(PAGE1);
+	clear_bottom(PAGE2);
 
 	grsim_unrle(title_rle,0xc00);
 

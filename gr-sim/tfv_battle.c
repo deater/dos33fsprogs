@@ -57,6 +57,7 @@ int do_battle(void) {
 	int i,ch;
 
 	int enemy_x=2;
+	int saved_drawpage;
 	//int enemy_hp=20;
 
 	int tfv_x=34;
@@ -64,6 +65,11 @@ int do_battle(void) {
 //	home();
 //	gr();
 
+
+	clear_bottom(PAGE2);
+
+	saved_drawpage=ram[DRAW_PAGE];
+	ram[DRAW_PAGE]=PAGE2;	// 0xc00
 
 	vtab(22);
 	htab(1);
@@ -120,16 +126,20 @@ int do_battle(void) {
 	}
 	//basic_normal();
 
+	color_equals(COLOR_MEDIUMBLUE);
+	for(i=0;i<10;i++) {
+		hlin_double(ram[DRAW_PAGE],0,39,i);
+	}
+	color_equals(COLOR_LIGHTGREEN);
+	for(i=10;i<40;i++) {
+		hlin_double(ram[DRAW_PAGE],0,39,i);
+	}
+
+	ram[DRAW_PAGE]=saved_drawpage;
 
 	while(1) {
-		color_equals(COLOR_MEDIUMBLUE);
-		for(i=0;i<10;i++) {
-			hlin_double(ram[DRAW_PAGE],0,39,i);
-		}
-		color_equals(COLOR_LIGHTGREEN);
-		for(i=10;i<40;i++) {
-			hlin_double(ram[DRAW_PAGE],0,39,i);
-		}
+
+		gr_copy_to_current(0xc00);
 
 		grsim_put_sprite(tfv_stand_left,tfv_x,20);
 		grsim_put_sprite(tfv_led_sword,tfv_x-5,20);
