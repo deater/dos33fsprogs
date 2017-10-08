@@ -342,21 +342,17 @@ save_key:
 	;=============================================
 	; Sprite to display in INH,INL
 	; Location is XPOS,YPOS
+	; Note, only works if YPOS is multiple of two?
 
 put_sprite:
 
-;	lda	#>tb1_sprite	; hardcoded for tb1 for now
-;	sta	INH
-;	lda	#<tb1_sprite
-;	sta	INL
-
 	ldy	#0		; byte 0 is xsize
 	lda	(INL),Y
-	sta	CH
+	sta	CH		; xsize is in CH
 	iny
 
 	lda	(INL),Y		; byte 1 is ysize
-	sta	CV
+	sta	CV		; ysize is in CV
 	iny
 
 	lda	YPOS		; make a copy of ypos
@@ -375,7 +371,9 @@ put_sprite_loop:
 	sta	OUTH		; and store it out			; 3
 	ldy	TEMP		; restore sprite pointer		; 3
 
-	ldx	CH
+				; OUTH:OUTL now points at right place
+
+	ldx	CH		; load xsize into x
 
 put_sprite_pixel:
 	lda	(INL),Y			; get sprite colors
@@ -384,16 +382,21 @@ put_sprite_pixel:
 	sty	TEMP			; save sprite pointer
 	ldy	#$0
 
+	; check if completely transparent
+	; if so, skip
+
 	cmp	#$0			; if all zero, transparent
 	beq	put_sprite_done_draw	; don't draw it
-
 					; FIXME: use BIT?
 
 	sta	COLOR			; save color for later
+
+	; check if top pixel transparent
+
 	and	#$f0			; check if top nibble zero
 	bne	put_sprite_bottom	; if not skip ahead
 
-	lda	#$0f			; setup mask
+	lda	#$f0			; setup mask
 	sta	MASK
 	bmi	put_sprite_mask
 
@@ -431,6 +434,10 @@ put_sprite_done_draw:
 	bne	put_sprite_loop		; loop if not done
 
 	rts				; return
+
+	;================================
+	; print_string
+	;================================
 
 print_string:
 	ldy	#0
