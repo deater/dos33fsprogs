@@ -30,6 +30,8 @@ SPACEZ_I	EQU	$78
 SPACEZ_F	EQU	$79
 DRAW_SPLASH	EQU	$7A
 SPEED		EQU	$7B
+SPLASH_COUNT	EQU	$7C
+OVER_WATER	EQU	$7D
 
 ;===========
 ; CONSTANTS
@@ -68,6 +70,8 @@ flying_start:
 	sta	CY_F
 	sta	DRAW_SPLASH
 	sta	SPEED
+	sta	SPLASH_COUNT
+	sta	OVER_WATER
 
 	lda	#1
 	sta	ANGLE
@@ -79,9 +83,9 @@ flying_start:
 
 flying_loop:
 
-	lda	DRAW_SPLASH
+	lda	SPLASH_COUNT
 	beq	flying_keyboard
-	dec	DRAW_SPLASH	; decrement splash count
+	dec	SPLASH_COUNT	; decrement splash count
 
 flying_keyboard:
 
@@ -109,6 +113,8 @@ skipskip:
 	dec	SHIPY
 	dec	SHIPY		; move ship up
 	inc	SPACEZ_I	; incement height
+	lda	#0
+	sta	SPLASH_COUNT
 
 check_down:
 	cmp	#('M')
@@ -120,10 +126,15 @@ check_down:
 
 	lda	SHIPY
 	cmp	#28
-	bcs	check_left	; ble, if shipy < 28
+	bcs	splashy		; ble, if shipy < 28
 	inc	SHIPY
 	inc	SHIPY		; move ship down
 	dec	SPACEZ_I	; decrement height
+	bcc	check_left
+
+splashy:
+	lda	#10
+	sta	SPLASH_COUNT
 
 check_left:
 	cmp	#('J')
@@ -289,6 +300,39 @@ speed_loop:
 draw_background:
 	jsr	draw_background_mode7
 
+;	lda	#1
+;	sta	OVER_WATER
+
+	; Calculate whether to draw the splash
+
+	lda	#0			; set splash drawing to 0
+	sta	DRAW_SPLASH
+
+	lda	SPEED			; if speed==0, no splash
+	beq	no_splash
+
+	lda	TURNING
+	beq	no_turning_splash
+
+	lda	SHIPY
+	cmp	#27
+	bcc	no_turning_splash	; blt if shipy<25 skip
+
+	lda	#1
+	sta	SPLASH_COUNT
+
+no_turning_splash:
+	lda	OVER_WATER		; no splash if over land
+	beq	no_splash
+
+	lda	SPLASH_COUNT		; no splash if splash_count expired
+	beq	no_splash
+
+	lda	#1
+	sta	DRAW_SPLASH
+
+no_splash:
+
 	;==============
 	; Draw the ship
 	;==============
@@ -300,6 +344,23 @@ draw_background:
 	bmi	draw_ship_left		;; FIXME: optimize order
 
 draw_ship_forward:
+	lda	DRAW_SPLASH
+	beq	no_forward_splash
+
+	; Draw Splash
+	lda     #>splash_forward
+        sta     INH
+        lda     #<splash_forward
+        sta     INL
+	lda	#(SHIPX+1)
+	sta	XPOS
+	clc
+	lda	SHIPY
+	adc	#9
+	and	#$fe			; make sure it's even
+	sta	YPOS
+	jsr	put_sprite
+no_forward_splash:
 	; Draw Shadow
 	lda     #>shadow_forward
         sta     INH
@@ -310,6 +371,7 @@ draw_ship_forward:
 	clc
 	lda	SPACEZ_I
 	adc	#31
+	and	#$fe			; make sure it's even
 	sta	YPOS
 	jsr	put_sprite
 
@@ -320,8 +382,21 @@ draw_ship_forward:
 	bvc	draw_ship
 
 draw_ship_right:
+	lda	DRAW_SPLASH
+	beq	no_right_splash
 
-	dec	TURNING
+	; Draw Splash
+	lda     #>splash_right
+        sta     INH
+        lda     #<splash_right
+        sta     INL
+	lda	#(SHIPX+1)
+	sta	XPOS
+	clc
+	lda	#36
+	sta	YPOS
+	jsr	put_sprite
+no_right_splash:
 
 	; Draw Shadow
 	lda     #>shadow_right
@@ -333,6 +408,7 @@ draw_ship_right:
 	clc
 	lda	SPACEZ_I
 	adc	#31
+	and	#$fe			; make sure it's even
 	sta	YPOS
 	jsr	put_sprite
 
@@ -340,11 +416,27 @@ draw_ship_right:
         sta     INH
         lda     #<ship_right
         sta     INL
+
+	dec	TURNING
+
 	bvc	draw_ship
 
 draw_ship_left:
+	lda	DRAW_SPLASH
+	beq	no_left_splash
 
-	inc	TURNING
+	; Draw Splash
+	lda     #>splash_left
+        sta     INH
+        lda     #<splash_left
+        sta     INL
+	lda	#(SHIPX+1)
+	sta	XPOS
+	clc
+	lda	#36
+	sta	YPOS
+	jsr	put_sprite
+no_left_splash:
 
 	; Draw Shadow
 	lda     #>shadow_left
@@ -356,6 +448,7 @@ draw_ship_left:
 	clc
 	lda	SPACEZ_I
 	adc	#31
+	and	#$fe			; make sure it's even
 	sta	YPOS
 	jsr	put_sprite
 
@@ -363,6 +456,8 @@ draw_ship_left:
         sta     INH
         lda     #<ship_left
         sta     INL
+
+	inc	TURNING
 
 draw_ship:
 	lda	#SHIPX
@@ -396,6 +491,8 @@ draw_background_mode7:
 	sta	COLOR
 
 	lda	#0
+	sta	OVER_WATER
+
 sky_loop:				; draw line across screen
 	ldy	#40			; from y=0 to y=6
 	sty	V2
@@ -723,10 +820,27 @@ screeny_loop:
 screenx_loop:
 
 	jsr	lookup_map		; get color in A
+
 	ldy	#0
 	sta	(GBASL),Y		; plot double height
 	inc	GBASL			; point to next pixel
 
+	; Check if over water
+	cmp	#$22			; see if dark blue
+	bne	not_watery
+
+	lda	SCREEN_Y		; only check pixel in middle of screen
+	cmp	#38
+	bne	not_watery
+
+	lda	SCREEN_X		; only check pixel in middle of screen
+	cmp	#20
+	bne	not_watery
+
+	lda	#$1			; set over water
+	sta	OVER_WATER
+
+not_watery:
 	; advance to the next position in space
 
 	clc			; fixed_add(&space_x,&dx,&space_x);

@@ -41,6 +41,8 @@ static unsigned char water_map[32]={
 
 static int displayed=0;
 
+static int over_water=0;
+
 static int lookup_map(int xx, int yy) {
 
 	int color,offset;
@@ -83,7 +85,7 @@ static int lookup_map(int xx, int yy) {
 }
 
 
-static int over_water;
+
 
 	// current screen position
 static int screen_x, screen_y;
@@ -348,9 +350,8 @@ void draw_background_mode7(void) {
 			ram[COLOR]=map_color;
 			ram[COLOR]|=map_color<<4;
 
-			if (screen_x==20) {
+			if ((screen_x==20) && (screen_y==38)) {
 				if (map_color==COLOR_DARKBLUE) over_water=1;
-				else over_water=0;
 			}
 
 			hlin_double(ram[DRAW_PAGE], screen_x, screen_x+1,
@@ -420,6 +421,8 @@ double our_cos(unsigned char angle) {
 //
 //
 
+
+
 void draw_background_mode7(void) {
 
 
@@ -476,9 +479,8 @@ void draw_background_mode7(void) {
 
 			color_equals(map_color);
 
-			if (screen_x==20) {
+			if ((screen_x==20) && (screen_y==38)) {
 				if (map_color==COLOR_DARKBLUE) over_water=1;
-				else over_water=0;
 			}
 
 			plot(screen_x,screen_y);
@@ -501,8 +503,10 @@ int flying(void) {
 	unsigned char ch;
 	int shipy;
 	int turning=0;
-	int draw_splash=0;
+	int draw_splash=0,splash_count=0;
 	int zint;
+
+
 
 	/************************************************/
 	/* Flying					*/
@@ -515,7 +519,7 @@ int flying(void) {
 	shipy=20;
 
 	while(1) {
-		if (draw_splash>0) draw_splash--;
+		if (splash_count>0) splash_count--;
 
 		ch=grsim_input();
 
@@ -547,6 +551,7 @@ int flying(void) {
 				space_z+=1;
 #endif
 			}
+			splash_count=0;
 
 //			printf("Z=%lf\n",space_z);
 		}
@@ -560,7 +565,7 @@ int flying(void) {
 #endif
 			}
 			else {
-				draw_splash=10;
+				splash_count=10;
 			}
 //			printf("Z=%lf\n",space_z);
 		}
@@ -665,9 +670,24 @@ int flying(void) {
 		zint=space_z;
 #endif
 
+		draw_splash=0;
+
+
+		if (speed>0) {
+
+			if ((shipy>25) && (turning!=0)) {
+				splash_count=1;
+			}
+
+			if ((over_water) && (splash_count)) {
+				draw_splash=1;
+			}
+		}
+
+//		printf("VMW: %d %d\n",draw_splash,splash_count);
 
 		if (turning==0) {
-			if ((speed>0) && (over_water)&&(draw_splash)) {
+			if (draw_splash) {
 				grsim_put_sprite(splash_forward,
 					SHIPX+1,shipy+9);
 			}
@@ -676,9 +696,7 @@ int flying(void) {
 		}
 		if (turning<0) {
 
-			if ((shipy>25) && (speed>0.0)) draw_splash=1;
-
-			if (over_water&&draw_splash) {
+			if (draw_splash) {
 				grsim_put_sprite(splash_left,
 						SHIPX+1,36);
 			}
@@ -688,10 +706,7 @@ int flying(void) {
 		}
 		if (turning>0) {
 
-
-			if ((shipy>25) && (speed>0.0)) draw_splash=1;
-
-			if (over_water&&draw_splash) {
+			if (draw_splash) {
 				grsim_put_sprite(splash_right,
 						SHIPX+1,36);
 			}
@@ -707,5 +722,3 @@ int flying(void) {
 	}
 	return 0;
 }
-
-
