@@ -4,6 +4,16 @@ extern unsigned char tfv_stand_left[];
 extern unsigned char tfv_walk_left[];
 extern unsigned char tfv_led_sword[];
 
+extern unsigned char bird_stand_right[];
+extern unsigned char bird_walk_right[];
+extern unsigned char bird_stand_left[];
+extern unsigned char bird_walk_left[];
+
+extern unsigned char bird_rider_stand_right[];
+extern unsigned char bird_rider_walk_right[];
+extern unsigned char bird_rider_stand_left[];
+extern unsigned char bird_rider_walk_left[];
+
 extern unsigned char ship_forward[];
 extern unsigned char ship_right[];
 extern unsigned char ship_left[];

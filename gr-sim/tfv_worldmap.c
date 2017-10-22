@@ -187,6 +187,7 @@ int world_map(void) {
 	direction=1;
 	int odd=0;
 	int refresh=1;
+	int on_bird=1;
 
 	while(1) {
 		moved=0;
@@ -304,18 +305,25 @@ int world_map(void) {
 			}
 		}
 
-
-
-
-
-
-		if (direction==-1) {
-			if (odd) grsim_put_sprite(tfv_walk_left,tfv_x,tfv_y);
-			else grsim_put_sprite(tfv_stand_left,tfv_x,tfv_y);
+		if (on_bird) {
+			if (direction==-1) {
+				if (odd) grsim_put_sprite(bird_rider_walk_left,tfv_x,tfv_y);
+				else grsim_put_sprite(bird_rider_stand_left,tfv_x,tfv_y);
+			}
+			if (direction==1) {
+				if (odd) grsim_put_sprite(bird_rider_walk_right,tfv_x,tfv_y);
+				else grsim_put_sprite(bird_rider_stand_right,tfv_x,tfv_y);
+			}
 		}
-		if (direction==1) {
-			if (odd) grsim_put_sprite(tfv_walk_right,tfv_x,tfv_y);
-			else grsim_put_sprite(tfv_stand_right,tfv_x,tfv_y);
+		else {
+			if (direction==-1) {
+				if (odd) grsim_put_sprite(tfv_walk_left,tfv_x,tfv_y);
+				else grsim_put_sprite(tfv_stand_left,tfv_x,tfv_y);
+			}
+			if (direction==1) {
+				if (odd) grsim_put_sprite(tfv_walk_right,tfv_x,tfv_y);
+				else grsim_put_sprite(tfv_stand_right,tfv_x,tfv_y);
+			}
 		}
 
 		/* Draw Below Ground Scatter */

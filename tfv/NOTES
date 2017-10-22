@@ -1,3 +1,5 @@
+Add horizontal-flipped sprite mode to save sprite table space?
+
 Could make VLIN faster by writing in chunks of two
 
 6502 assembly woes:
