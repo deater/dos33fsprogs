@@ -609,6 +609,7 @@ int flying(void) {
 			print_help();
 		}
 
+		/* Ending */
 		if (ch==13) {
 			int landing_color,tx,ty;
 #if FIXEDPT
@@ -619,7 +620,38 @@ int flying(void) {
 			landing_color=lookup_map(tx,ty);
 			printf("Trying to land at %d %d\n",tx,ty);
 			printf("Color=%d\n",landing_color);
-			if (landing_color==12) return 0;
+			if (landing_color==12) {
+				int loop;
+
+#if FIXEDPT
+				zint=space_z.i;
+#else
+				zint=space_z;
+#endif
+
+				/* Land the ship */
+				for(loop=zint;loop>0;loop--) {
+
+					draw_background_mode7();
+					grsim_put_sprite(shadow_forward,SHIPX+3,31+zint);
+					grsim_put_sprite(ship_forward,SHIPX,shipy);
+					page_flip();
+					usleep(200000);
+
+#if FIXEDPT
+					space_z.i--;
+#else
+					space_z--;
+#endif
+
+				}
+
+
+
+
+
+				return 0;
+			}
 			else {
 				int draw_save;
 				draw_save=ram[DRAW_PAGE];
