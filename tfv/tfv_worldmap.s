@@ -189,7 +189,6 @@ check_high_x:
 	cmp	#36
 	bmi	check_low_x
 
-
 	; Off screen to right
 	lda	#0
 	sta	TFV_X
@@ -202,15 +201,37 @@ check_low_x:
 	bpl	check_high_y
 
 	dec	MAP_X
-	lda	#25
+	lda	#35
 	sta	TFV_X
 	inc	REFRESH
 
-
-
 check_high_y:
+	lda	TFV_Y			; load Y value
+	cmp	#28
+	bmi	check_low_y		; if less than 28, check low Y
+
+	clc
+	lda	#$4
+	sta	TFV_Y
+	adc	MAP_X
+	sta	MAP_X
+	inc	REFRESH
+	bne	done_map_check
 
 check_low_y:
+	lda	TFV_Y
+	cmp	#4
+	bpl	done_map_check
+
+	lda	#28
+	sta	TFV_Y
+	dec	MAP_X
+	dec	MAP_X
+	dec	MAP_X
+	dec	MAP_X
+	inc	REFRESH
+
+done_map_check:
 
 	;============================
 	; Refresh screen if needed
