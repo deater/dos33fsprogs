@@ -24,23 +24,6 @@ MAP_X		EQU	$85
 ; Play music, lightning effects?
 ; TFV only hit for one damage, susie for 100
 
-;	Map
-;
-;	0	1	2	3
-;
-; 0	BEACH	ARCTIC	ARCTIC	BELAIR
-;		TREE	MOUNATIN
-;
-; 1	BEACH	LANDING	GRASS	FOREST
-;	PINETREE	MOUNTAIN
-;
-; 2	BEACH	GRASS	GRASS	FOREST
-;	PALMTREE	MOUNTAIN
-;
-; 3	BEACH	DESERT	COLLEGE	BEACH
-;		CACTUS	PARK
-
-
 
 world_map:
 
@@ -215,8 +198,13 @@ check_high_x:
 	bne	check_high_y
 
 check_low_x:
+	lda	TFV_X
+	bpl	check_high_y
 
-	cmp	#0
+	dec	MAP_X
+	lda	#25
+	sta	TFV_X
+	inc	REFRESH
 
 
 
@@ -331,6 +319,28 @@ done_walking:
 
 
 
+;	Map
+;
+;	0	1	2	3
+;
+; 0	BEACH	ARCTIC	ARCTIC	BELAIR
+;		TREE	MOUNATIN
+;
+; 1	BEACH	LANDING	GRASS	FOREST
+;	PINETREE	MOUNTAIN
+;
+; 2	BEACH	GRASS	GRASS	FOREST
+;	PALMTREE	MOUNTAIN
+;
+; 3	BEACH	DESERT	COLLEGE	BEACH
+;		CACTUS	PARK
+
+
+	;=============================================
+	;=============================================
+	; Load World Map background
+	;=============================================
+	;=============================================
 
 load_map_bg:
 
@@ -339,12 +349,87 @@ load_map_bg:
 	lda	#$00
 	sta	BASL		; load image off-screen 0xc00
 
+	lda	MAP_X
+map_harfco:
+	cmp	#3
+	bne	map_landing
+
+	lda	#>(harfco_rle)
+	sta	GBASH
+        lda	#<(harfco_rle)
+        sta	GBASL
+        jsr	load_rle_gr
+	rts
+
+map_landing:
+	cmp	#5
+	bne	map_collegep
+
 	lda	#>(landing_rle)
 	sta	GBASH
         lda	#<(landing_rle)
         sta	GBASL
         jsr	load_rle_gr
+	rts
 
-	;; grsim_unrle(landing_rle,0x800);
+map_collegep:
+	cmp	#14
+	bne	map_custom
+
+	lda	#>(collegep_rle)
+	sta	GBASH
+        lda	#<(collegep_rle)
+        sta	GBASL
+        jsr	load_rle_gr
+	rts
+
+map_custom:
+
+	; Draw the Sky
+
+	lda	DRAW_PAGE
+	pha
+
+	lda	#$8
+	sta	DRAW_PAGE
+
+	lda	#COLOR_BOTH_MEDIUMBLUE	; MEDIUMBLUE color
+	sta	COLOR
+
+	lda	#0
+
+map_sky:				; draw line across screen
+	ldy     #40                     ; from y=0 to y=10
+	sty     V2
+	ldy     #0
+	pha
+	jsr	hlin_double		; hlin y,V2 at A
+	pla
+	clc
+	adc     #2
+	cmp     #10
+	bne     map_sky
+
+map_grassland:
+
+	lda	#COLOR_BOTH_LIGHTGREEN	; LIGHTGREEN color
+	sta	COLOR
+
+	lda	#10
+
+grassland_loop:				; draw line across screen
+	ldy     #40                     ; from y=0 to y=10
+	sty     V2
+	ldy     #0
+	pha
+	jsr	hlin_double		; hlin y,V2 at A
+	pla
+	clc
+	adc     #2
+	cmp     #40
+	bne     grassland_loop
+
+	pla				; restore the draw page
+	sta	DRAW_PAGE
 
 	rts
