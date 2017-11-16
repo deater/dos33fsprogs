@@ -8,7 +8,7 @@ TFV_X		EQU	$81
 TFV_Y		EQU	$82
 NEWX		EQU	$83
 NEWY		EQU	$84
-
+MAP_X		EQU	$85
 
 ; In Town
 
@@ -63,6 +63,9 @@ world_map:
 	sta	DIRECTION
 	sta	REFRESH
 
+	lda	#5
+	sta	MAP_X
+
 	lda	#15
 	sta	TFV_X
 
@@ -113,11 +116,36 @@ worldmap_handle_left:
 	cmp	#('A')
 	bne	worldmap_handle_right
 
-	
+	lda	DIRECTION		; 0=left, 1=right
+	beq	go_left			; if (0) already left, keep going
+
+left_turn:
+	lda	#0			; change direction to left
+	sta	DIRECTION
+	sta	ODD			; stand (not walk) if changing
+	beq	worldmap_handle_right	; skip ahead
+
+go_left:
+	dec	NEWX			; decrement x
+	inc	MOVED			; we moved
 
 worldmap_handle_right:
 	cmp	#('D')
 	bne	worldmap_handle_enter
+
+	lda	DIRECTION		; 0=left, 1=right
+	bne	go_right		; if (1) already right, keep going
+
+right_turn:
+	lda	#1			; change direction to right
+	sta	DIRECTION
+	lda	#0			; change to standing
+	sta	ODD
+	beq	worldmap_handle_enter	; skip ahead
+
+go_right:
+	inc	NEWX			; increment X
+	inc	MOVED
 
 worldmap_handle_enter:
 	cmp	#13
@@ -160,13 +188,41 @@ worldmap_done_keyboard:
 	;===========================
 
 	lda	MOVED
-	bne	worldmap_refresh_screen
+	beq	worldmap_refresh_screen
+
 	inc	ODD
 	inc	STEPS
 
 	; Handle Collision Detection
 
+	lda	NEWX
+	sta	TFV_X
 
+	lda	NEWY
+	sta	TFV_Y
+
+check_high_x:
+	lda	TFV_X
+	cmp	#36
+	bmi	check_low_x
+
+
+	; Off screen to right
+	lda	#0
+	sta	TFV_X
+	inc	MAP_X
+	inc	REFRESH
+	bne	check_high_y
+
+check_low_x:
+
+	cmp	#0
+
+
+
+check_high_y:
+
+check_low_y:
 
 	;============================
 	; Refresh screen if needed
@@ -191,26 +247,30 @@ worldmap_copy_background:
 
 	; Draw TFV
 
+
+	clc
+
 	lda	#1
 	bit	ODD
 	bne	standing
 
 walking:
-	lda	DIRECTION
-	bne	walking_right
+	lda	DIRECTION		; 0=left, 1=right
+	bne	walking_right		; if(!0) walk right
+
 walking_left:
 	lda	#>tfv_walk_left
 	sta	INH
 	lda	#<tfv_walk_left
 	sta	INL
-	beq	done_walking
+	bcc	done_walking
 
 walking_right:
 	lda	#>tfv_walk_right
 	sta	INH
 	lda	#<tfv_walk_right
 	sta	INL
-	bne	done_walking
+	bcc	done_walking
 
 standing:
 	lda	DIRECTION
@@ -220,7 +280,7 @@ standing_left:
 	sta	INH
 	lda	#<tfv_stand_left
 	sta	INL
-	beq	done_walking
+	bcc	done_walking
 
 standing_right:
 	lda	#>tfv_stand_right
