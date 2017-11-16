@@ -270,19 +270,19 @@ figure_out_key:
 check_right_arrow:
 	cmp	#$15
 	bne	check_left_arrow
-	lda	#'K'
+	lda	#'D'
 check_left_arrow:
 	cmp	#$08
 	bne	check_up_arrow
-	lda	#'J'
+	lda	#'A'
 check_up_arrow:
 	cmp	#$0B
 	bne	check_down_arrow
-	lda	#'I'
+	lda	#'W'
 check_down_arrow:
 	cmp	#$0A
 	bne	check_escape
-	lda	#'M'
+	lda	#'S'
 check_escape:
         cmp	#$1B
 	bne	save_key

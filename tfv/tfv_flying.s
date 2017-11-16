@@ -100,7 +100,7 @@ flying_keyboard:
 
 skipskip:
 
-	cmp	#('I')
+	cmp	#('W')
 	bne	check_down
 
 	;===========
@@ -117,7 +117,7 @@ skipskip:
 	sta	SPLASH_COUNT
 
 check_down:
-	cmp	#('M')
+	cmp	#('S')
 	bne	check_left
 
 	;=============
@@ -137,7 +137,7 @@ splashy:
 	sta	SPLASH_COUNT
 
 check_left:
-	cmp	#('J')
+	cmp	#('A')
 	bne	check_right
 
 	;=============
@@ -160,7 +160,7 @@ turn_left:
 	dec	ANGLE
 
 check_right:
-	cmp	#('K')
+	cmp	#('D')
 	bne	check_speedup
 
 	;==============
