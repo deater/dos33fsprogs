@@ -9,6 +9,7 @@ TFV_Y		EQU	$82
 NEWX		EQU	$83
 NEWY		EQU	$84
 MAP_X		EQU	$85
+GROUND_COLOR	EQU	$86
 
 ; In Town
 
@@ -431,9 +432,160 @@ map_sky:				; draw line across screen
 	cmp     #10
 	bne     map_sky
 
-map_grassland:
+	;=================
+	; Set Ground Color
+	;=================
 
-	lda	#COLOR_BOTH_LIGHTGREEN	; LIGHTGREEN color
+	ldx	#COLOR_BOTH_LIGHTGREEN	; grass color
+
+	lda	MAP_X
+	cmp	#4
+	bpl	not_artic
+	ldx	#COLOR_BOTH_WHITE	; snow color
+not_artic:
+	cmp	#13
+	bne	not_desert
+	ldx	#COLOR_BOTH_ORANGE
+not_desert:
+	stx	GROUND_COLOR
+
+
+	;=============================
+	; sloped left beach
+	;=============================
+
+	lda	#3
+	and	MAP_X
+	bne	not_sloped_left
+
+	lda	#10
+sloped_left_loop:
+	pha
+	eor	#$ff	; temp=4+(40-i)/8;
+	sec
+	adc	#40
+	lsr
+	lsr
+	lsr
+	sec
+	adc	#3
+	sta	TEMP
+	sta	V2
+	pla
+	pha
+
+	ldx	#COLOR_BOTH_DARKBLUE
+	stx	COLOR
+
+	ldy	#0
+
+	jsr	hlin_double
+
+	ldx	#COLOR_BOTH_LIGHTBLUE
+	stx	COLOR
+	ldx	#2
+	jsr	hlin_double_continue
+
+	ldx	#COLOR_BOTH_YELLOW
+	stx	COLOR
+	ldx	#2
+	jsr	hlin_double_continue
+
+	ldx	GROUND_COLOR
+	stx	COLOR
+
+	lda	TEMP
+	eor	#$ff
+	sec
+	adc	#36
+	tax
+
+	jsr	hlin_double_continue
+
+	pla
+	clc
+	adc	#2
+	cmp	#40
+	bne	sloped_left_loop
+
+	beq	done_base
+
+not_sloped_left:
+
+	;=============================
+	; sloped right beach
+	;=============================
+
+	lda	#3
+	and	MAP_X
+	cmp	#3
+	bne	not_sloped_right
+
+	lda	#10
+sloped_right_loop:
+	pha
+	lsr		; temp=24+(A/4)
+	lsr		; A/4
+	clc
+	adc	#24
+	sta	TEMP
+	sta	V2
+
+	pla
+	pha
+
+	ldx	GROUND_COLOR
+	stx	COLOR
+
+	ldy	#0
+
+	jsr	hlin_double
+
+	ldx	#COLOR_BOTH_YELLOW
+	stx	COLOR
+	ldx	#2
+	jsr	hlin_double_continue
+
+	ldx	#COLOR_BOTH_LIGHTBLUE
+	stx	COLOR
+	ldx	#2
+	jsr	hlin_double_continue
+
+	ldx	#COLOR_BOTH_DARKBLUE
+	stx	COLOR
+
+	lda	TEMP
+	eor	#$ff
+	sec
+	adc	#36
+	tax
+
+	jsr	hlin_double_continue
+
+
+   ;                     color_equals(ground_color);
+    ;                    hlin(PAGE2,0,temp,i);
+     ;                   color_equals(COLOR_YELLOW);
+      ;                  hlin_continue(2);
+       ;                 color_equals(COLOR_LIGHTBLUE);
+        ;                hlin_continue(2);
+         ;               color_equals(COLOR_DARKBLUE);
+          ;              hlin_continue(36-temp);
+
+	pla
+	clc
+	adc	#$2
+	cmp	#40
+	bne	sloped_right_loop
+	beq	done_base
+
+	;==============================
+	; grassland
+	;==============================
+
+not_sloped_right:
+
+	lda	GROUND_COLOR
 	sta	COLOR
 
 	lda	#10
@@ -450,6 +602,83 @@ grassland_loop:				; draw line across screen
 	cmp     #40
 	bne     grassland_loop
 
+done_base:
+
+	;==============================
+	; Draw North Shore
+	;==============================
+draw_north_shore:
+	lda	MAP_X
+	cmp	#4
+	bpl	draw_south_shore
+
+	ldx	#COLOR_BOTH_DARKBLUE
+	stx	COLOR
+
+	lda	#40
+	sta	V2
+	ldy	#0
+	lda	#10
+
+	jsr	hlin_double
+
+
+	;==============================
+	; Draw South Shore
+	;==============================
+draw_south_shore:
+	lda	MAP_X
+	cmp	#12
+	bmi	draw_mountains
+
+	;===============================
+	; Draw Mountains
+	;===============================
+draw_mountains:
+	lda	MAP_X
+	and	#3
+	cmp	#2
+	bne	done_drawing
+
+	lda	#0
+mountain_loop:
+	pha
+
+	lda	#>mountain
+	sta	INH
+	lda	#<mountain
+	sta	INL
+
+	pla
+	pha
+
+	and	#1
+	sta	XPOS
+	asl
+	asl
+	clc
+	adc	#10
+	adc	XPOS
+	sta	XPOS
+
+	pla
+	pha
+	asl
+	asl
+	asl
+	clc
+	adc	#2
+	sta	YPOS
+
+	jsr	put_sprite
+
+	pla
+	clc
+	adc	#1
+	cmp	#4
+	bne	mountain_loop
+
+done_drawing:
 	pla				; restore the draw page
 	sta	DRAW_PAGE
 

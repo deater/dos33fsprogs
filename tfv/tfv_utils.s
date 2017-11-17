@@ -525,9 +525,6 @@ hlin_setup:
 	sta	GBASH
 	rts
 
-
-
-
 	;================================
 	; hlin_double:
 	;================================
@@ -556,15 +553,75 @@ hlin_double:
 
 hlin_double_continue:
 
-hlin_loop:
+hlin_double_loop:
 	ldy	#0
 	lda	COLOR
 	sta	(GBASL),Y
 	inc	GBASL
 	dex
-	bne	hlin_loop
-return:
+	bne	hlin_double_loop
+
 	rts
+
+
+	;================================
+	; hlin_single:
+	;================================
+	; HLIN Y, V2 AT A
+	; Y, X, A trashed
+hlin_single:
+
+	jsr	hlin_setup
+
+	sec
+	lda	V2
+	sbc	TEMPY
+
+	tax
+
+	; fallthrough
+
+	;=================================
+	; hlin_single_continue:  width
+	;=================================
+	; width in X
+
+hlin_single_continue:
+
+hlin_single_top:
+	lda	COLOR
+	and	#$f0
+	sta	COLOR
+
+hlin_single_top_loop:
+	ldy	#0
+	lda	(GBASL),Y
+	and	#$0f
+	ora	COLOR
+	sta	(GBASL),Y
+	inc	GBASL
+	dex
+	bne	hlin_single_top_loop
+
+	rts
+
+hlin_single_bottom:
+
+	lda	COLOR
+	and	#$0f
+	sta	COLOR
+
+hlin_single_bottom_loop:
+	ldy	#0
+	lda	(GBASL),Y
+	and	#$f0
+	sta	(GBASL),Y
+	inc	GBASL
+	dex
+	bne	hlin_single_bottom_loop
+
+	rts
+
 
 
 	;=============================

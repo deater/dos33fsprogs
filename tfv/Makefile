@@ -28,7 +28,7 @@ duet.o:	duet.s
 
 
 
-backgrounds.inc:	$(PNG2RLE) \
+tfv_backgrounds.inc:	$(PNG2RLE) \
 	title.png map.png \
 	landing.png harfco.png \
 	belair.png \
@@ -36,18 +36,18 @@ backgrounds.inc:	$(PNG2RLE) \
 	collegep.png \
 	umcp.png \
 	dining.png metro.png talbot.png
-	$(PNG2RLE) asm title.png title_rle > backgrounds.inc
-	$(PNG2RLE) asm map.png map_rle >> backgrounds.inc
-	$(PNG2RLE) asm landing.png landing_rle >> backgrounds.inc
-	$(PNG2RLE) asm harfco.png harfco_rle >> backgrounds.inc
-	$(PNG2RLE) asm belair.png belair_rle >> backgrounds.inc
-	$(PNG2RLE) asm math_office.png math_office_rle >> backgrounds.inc
-	$(PNG2RLE) asm video_hr.png video_hr_rle >> backgrounds.inc
-	$(PNG2RLE) asm collegep.png collegep_rle >> backgrounds.inc
-	$(PNG2RLE) asm umcp.png umcp_rle >> backgrounds.inc
-	$(PNG2RLE) asm dining.png dining_rle >> backgrounds.inc
-	$(PNG2RLE) asm metro.png metro_rle >> backgrounds.inc
-	$(PNG2RLE) asm talbot.png talbot_rle >> backgrounds.inc
+	$(PNG2RLE) asm title.png title_rle > tfv_backgrounds.inc
+	$(PNG2RLE) asm map.png map_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm landing.png landing_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm harfco.png harfco_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm belair.png belair_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm math_office.png math_office_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm video_hr.png video_hr_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm collegep.png collegep_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm umcp.png umcp_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm dining.png dining_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm metro.png metro_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm talbot.png talbot_rle >> tfv_backgrounds.inc
 
 ###
 
