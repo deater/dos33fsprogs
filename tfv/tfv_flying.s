@@ -94,11 +94,11 @@ flying_keyboard:
 
 	lda	LASTKEY
 
-	cmp	#('Q')		; if quit, then return
-	bne	skipskip
-	rts
+;	cmp	#('Q')		; if quit, then return
+;	bne	skipskip
+;	rts
 
-skipskip:
+;skipskip:
 
 	cmp	#('W')
 	bne	check_down
@@ -222,6 +222,57 @@ check_land:
 	; LAND
 	;=====
 
+	; finds value in space_x.i,space_y.i
+	; returns color in A
+	lda	CX_I
+	sta	SPACEX_I
+	lda	CY_I
+	sta	SPACEY_I
+
+	jsr	lookup_map
+
+	cmp	#COLOR_BOTH_LIGHTGREEN
+	bne	landing_message
+
+landing_loop:
+
+	jsr	draw_background_mode7
+
+	; Draw Shadow
+	lda     #>shadow_forward
+        sta     INH
+        lda     #<shadow_forward
+        sta     INL
+	lda	#(SHIPX+3)
+	sta	XPOS
+	clc
+	lda	SPACEZ_I
+	adc	#31
+	and	#$fe			; make sure it's even
+	sta	YPOS
+	jsr	put_sprite
+
+	lda     #>ship_forward
+        sta     INH
+        lda     #<ship_forward
+        sta     INL
+
+	lda	#SHIPX
+	sta	XPOS
+	lda	SHIPY
+	sta	YPOS
+	jsr	put_sprite
+
+	jsr	page_flip
+
+	dec	SPACEZ_I
+	bpl	landing_loop
+
+
+	rts			; finish flying
+
+landing_message:
+
 
 check_help:
 	cmp	#('H')
@@ -230,7 +281,6 @@ check_help:
 	;=====
 	; HELP
 	;=====
-
 
 check_done:
 
