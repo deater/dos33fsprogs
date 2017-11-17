@@ -7,6 +7,11 @@
 	jsr	HOME
 	jsr	set_gr_page0
 
+	lda	#0
+	sta	DISP_PAGE	; Forgot to set initially
+				; real hardware and AppleWin default
+				; to different values
+
 	;===================================
 	; zero out the zero page that we use
 	;===================================

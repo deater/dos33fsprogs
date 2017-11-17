@@ -25,6 +25,10 @@ shine_loop:
 	cmp	#30
 	bne	shine_loop
 
+	jsr	page_flip
+
+	; Done, print string
+
 	lda	#8
 	sta	CH		; HTAB 9
 
@@ -39,13 +43,14 @@ shine_loop:
 
 	jsr	print_string		; print("A VMW SOFTWARE PRODUCTION");
 
-
 	jsr	wait_until_keypressed
 
+	rts
 
-	;=================
+
+	;=====================
 	; display part of logo
-	;=================
+	;=====================
 	;
 draw_segment:
 	lda	#0
