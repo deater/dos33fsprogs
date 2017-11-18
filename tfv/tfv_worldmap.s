@@ -142,7 +142,7 @@ worldmap_handle_help:
 	cmp	#('H')
 	bne	worldmap_handle_battle
 
-	; jsr	print_help
+	jsr	print_help
 
 worldmap_handle_battle:
 	cmp	#('B')

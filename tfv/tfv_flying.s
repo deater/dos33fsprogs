@@ -294,6 +294,8 @@ check_help:
 	; HELP
 	;=====
 
+	jsr	print_help
+
 check_done:
 
 	;================

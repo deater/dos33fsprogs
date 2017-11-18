@@ -470,6 +470,22 @@ print_string_loop:
 done_print_string:
 	rts
 
+	;====================
+	; point_to_end_string
+	;====================
+point_to_end_string:
+	iny
+	tya
+	clc
+	adc	OUTL
+	sta	OUTL
+	lda	#0
+	adc	OUTH
+	sta	OUTH
+
+	rts
+
+
 	;================================
 	; print_both_pages
 	;================================
@@ -659,12 +675,17 @@ hlin_single_bottom_loop:
 	rts
 
 
-
 	;=============================
 	; clear_top
 	;=============================
 clear_top:
 	lda	#$00
+
+	;=============================
+	; clear_top_a
+	;=============================
+clear_top_a:
+
 	sta	COLOR
 
 	; VLIN Y, V2 AT A
