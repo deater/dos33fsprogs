@@ -87,9 +87,9 @@ exit:
 .include "tfv_utils.s"
 .include "tfv_title.s"
 .include "tfv_textentry.s"
-.include "tfv_info.s"
 .include "tfv_flying.s"
 .include "tfv_worldmap.s"
+.include "tfv_info.s"
 
 ;===============================================
 ; Variables

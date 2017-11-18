@@ -162,7 +162,7 @@ worldmap_handle_map:
 	cmp	#('M')
 	bne	worldmap_done_keyboard
 
-	; jsr show_map
+	jsr show_map
 	inc	REFRESH
 
 worldmap_done_keyboard:

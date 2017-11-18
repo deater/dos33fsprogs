@@ -437,10 +437,10 @@ put_sprite_done_draw:
 
 
 	;================================
-	; move_and_print
+	; htab_vtab
 	;================================
 	; move to CH/CV
-move_and_print:
+htab_vtab:
 	lda	CV
 	asl
 	tay
@@ -453,6 +453,15 @@ move_and_print:
 	adc	DRAW_PAGE	;
 	sta	BASH		; and store it out
 				; BASH:BASL now points at right place
+
+	rts
+
+	;================================
+	; move_and_print
+	;================================
+	; move to CH/CV
+move_and_print:
+	jsr	htab_vtab
 
 	;================================
 	; print_string

@@ -1,6 +1,105 @@
 
 game_over:
+	lda	#$a0
+	jsr	clear_top_a
+
+	bit	SET_TEXT
+
+	lda	#10
+	sta	CV
+	lda	#15
+	sta	CH
+
+	lda     #>(game_over_man)
+        sta     OUTH
+        lda     #<(game_over_man)
+        sta     OUTL
+
+	jsr	move_and_print
+
+	jsr	page_flip
+
+hang_forever:
+	jmp	hang_forever
+
 	rts
+
+game_over_man:
+	.asciiz	"GAME OVER"
+
+show_map:
+
+	lda	DRAW_PAGE
+	clc
+	adc	#$4
+	sta	BASH
+	lda	#$00
+	sta	BASL
+
+	lda     #>(map_rle)
+	sta     GBASH
+	lda     #<(map_rle)
+	sta     GBASL
+	jsr     load_rle_gr
+
+
+	; basic_plot(8+((map_x&0x3)*6)+(tfv_x/6),
+	;	8+(((map_x&0xc)>>2)*6)+(tfv_y/6))
+
+	; horizontal
+
+	lda	MAP_X
+	and	#3
+	asl
+	sta	TEMP
+	asl
+	clc
+	adc	TEMP		; ( MAP_X & 3 ) * 6
+	sta	TEMP
+
+	lda	TFV_X
+	lsr
+	lsr
+	lsr			; TFV/8
+
+	adc	TEMP
+	adc	#8
+	sta	CH
+
+	; vertical
+
+	lda	MAP_X
+	and	#$c
+	lsr
+	sta	TEMP
+	asl
+	clc
+	adc	TEMP		; ( MAP_X & C ) * 6
+	sta	TEMP
+
+	lda	TFV_Y
+	lsr
+	lsr
+	lsr			; TFV/8
+
+	adc	TEMP
+	adc	#8
+	lsr			; divide by 2 as htab_vtab multiplies
+	sta	CV
+
+	jsr	htab_vtab
+	lda	#$19		; red/orange
+	ldy	#0
+	sta	(BASL),Y
+
+
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	rts
+
+
 
 print_help:
 	lda	#$a0
