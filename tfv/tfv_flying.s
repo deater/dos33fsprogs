@@ -232,7 +232,7 @@ check_land:
 	jsr	lookup_map
 
 	cmp	#COLOR_BOTH_LIGHTGREEN
-	bne	landing_message
+	bne	must_land_on_grass
 
 landing_loop:
 
@@ -271,8 +271,20 @@ landing_loop:
 
 	rts			; finish flying
 
-landing_message:
+must_land_on_grass:
 
+	lda     #10
+        sta     CH              ; HTAB 11
+
+        lda     #21
+        sta     CV              ; VTAB 22
+
+        lda     #>(grass_string)
+        sta     OUTH
+        lda     #<(grass_string)
+        sta     OUTL
+
+        jsr     print_both_pages	; "NEED TO LAND ON GRASS!"
 
 check_help:
 	cmp	#('H')
@@ -1036,3 +1048,6 @@ horizontal_lookup:
 	.byte $73,$60,$52,$48,$40,$39,$34,$30,$2C,$29,$26,$24,$21,$20,$1E,$1C
 	.byte $8C,$75,$64,$58,$4E,$46,$40,$3A,$36,$32,$2E,$2C,$29,$27,$25,$23
 	.byte $A6,$8A,$76,$68,$5C,$53,$4B,$45,$40,$3B,$37,$34,$30,$2E,$2B,$29
+
+grass_string:
+	.asciiz "NEED TO LAND ON GRASS!"

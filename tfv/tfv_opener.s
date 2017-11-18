@@ -25,15 +25,13 @@ shine_loop:
 	cmp	#30
 	bne	shine_loop
 
-	jsr	page_flip
-
 	; Done, print string
 
 	lda	#8
 	sta	CH		; HTAB 9
 
 	lda	#20
-	jsr	TABV		; VTAB 21
+	sta	CV		; VTAB 21
 
 
 	lda     #>(vmwsw_string)
@@ -41,7 +39,9 @@ shine_loop:
 	lda     #<(vmwsw_string)
         sta     OUTL
 
-	jsr	print_string		; print("A VMW SOFTWARE PRODUCTION");
+	jsr	move_and_print		; print("A VMW SOFTWARE PRODUCTION");
+
+	jsr	page_flip
 
 	jsr	wait_until_keypressed
 

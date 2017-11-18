@@ -435,6 +435,25 @@ put_sprite_done_draw:
 
 	rts				; return
 
+
+	;================================
+	; move_and_print
+	;================================
+	; move to CH/CV
+move_and_print:
+	lda	CV
+	asl
+	tay
+	lda	gr_offsets,Y    ; lookup low-res memory address
+	clc
+	adc	CH		; add in xpos
+	sta	BASL		; store out low byte of addy
+
+	lda	gr_offsets+1,Y	; look up high byte
+	adc	DRAW_PAGE	;
+	sta	BASH		; and store it out
+				; BASH:BASL now points at right place
+
 	;================================
 	; print_string
 	;================================
@@ -445,12 +464,29 @@ print_string_loop:
 	lda	(OUTL),Y
 	beq	done_print_string
 	ora	#$80
-	jsr	COUT1
+	sta	(BASL),Y
 	iny
 	bne	print_string_loop
 done_print_string:
 	rts
 
+	;================================
+	; print_both_pages
+	;================================
+print_both_pages:
+	lda	DRAW_PAGE
+	pha
+
+	lda	#0
+	sta	DRAW_PAGE
+	jsr	move_and_print
+
+	lda	#4
+	sta	DRAW_PAGE
+	jsr	move_and_print
+
+	pla
+	sta	DRAW_PAGE
 
 
 	;=========================================

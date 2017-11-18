@@ -36,7 +36,9 @@ void clear_bottom(int page);
 void vtab(int ypos);
 void htab(int xpos);
 void move_cursor(void);
+void move_and_print(char *string);
 void print(char *string);
+void print_both_pages(char *string);
 void print_inverse(char *string);
 int plot(unsigned char xcoord, unsigned char ycoord);
 

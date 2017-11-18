@@ -1434,6 +1434,37 @@ void move_cursor(void) {
 
 }
 
+void print_both_pages(char *string) {
+	unsigned char temp;
+
+	temp=ram[DRAW_PAGE];
+
+	ram[DRAW_PAGE]=0;
+	move_and_print(string);
+
+	ram[DRAW_PAGE]=4;
+	move_and_print(string);
+
+	ram[DRAW_PAGE]=temp;
+
+}
+
+void move_and_print(char *string) {
+
+	int address;
+
+	address=gr_addr_lookup[ram[CV]];
+	address+=ram[CH];
+
+	address+=(ram[DRAW_PAGE]<<8);
+
+	ram[BASL]=address&0xff;
+	ram[BASH]=address>>8;
+
+	print(string);
+}
+
+
 
 void print(char *string) {
 

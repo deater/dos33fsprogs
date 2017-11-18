@@ -646,26 +646,13 @@ int flying(void) {
 
 				}
 
-
-
-
-
 				return 0;
 			}
 			else {
-				int draw_save;
-				draw_save=ram[DRAW_PAGE];
-				ram[DRAW_PAGE]=PAGE0;
 				htab(11);
 				vtab(22);
 				move_cursor();
-				print("NEED TO LAND ON GRASS!");
-				ram[DRAW_PAGE]=PAGE1;
-				htab(11);
-				vtab(22);
-				move_cursor();
-				print("NEED TO LAND ON GRASS!");
-				ram[DRAW_PAGE]=draw_save;
+				print_both_pages("NEED TO LAND ON GRASS!");
 			}
 		}
 
