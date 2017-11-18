@@ -631,6 +631,66 @@ draw_south_shore:
 	cmp	#12
 	bmi	draw_mountains
 
+	ldx	#COLOR_BOTH_DARKBLUE
+	stx	COLOR
+
+	lda	#40
+	sta	V2
+	ldy	#0
+	lda	#38
+
+	jsr	hlin_double	; hlin 0,39 at 38
+
+	ldx	#COLOR_BOTH_LIGHTBLUE
+	stx	COLOR
+
+	lda	#40
+	sta	V2
+
+	lda	#15
+	cmp	MAP_X
+	bne	lblue_15
+	lda	#35
+	sta	V2
+lblue_15:
+
+	ldy	#0
+	lda	#12
+	cmp	MAP_X
+	bne	lblue_12
+	ldy	#6
+lblue_12:
+
+
+	lda	#36
+
+	jsr	hlin_double	; hlin 0,39 at 36
+
+	ldx	#COLOR_BOTH_YELLOW
+	stx	COLOR
+
+	lda	#40
+	sta	V2
+
+	lda	#15
+	cmp	MAP_X
+	bne	yellow_15
+	lda	#32
+	sta	V2
+yellow_15:
+
+	ldy	#0
+	lda	#12
+	cmp	MAP_X
+	bne	yellow_12
+	ldy	#8
+yellow_12:
+
+	lda	#34
+
+	jsr	hlin_double	; hlin 0,39 at 34
+
+
 	;===============================
 	; Draw Mountains
 	;===============================

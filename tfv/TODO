@@ -1,7 +1,9 @@
 short term:
-	finish drawing bottom ocean boundary
 	draw scatter/trees
 	put screenshot of being on giant bird
-	map
 
+longer term:
+	map -- adjust x/y to better match real position
+	name entry screen
+	inventory screen
 
