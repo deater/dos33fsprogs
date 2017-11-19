@@ -6,4 +6,8 @@ longer term:
 	map -- adjust x/y to better match real position
 	name entry screen
 	inventory screen
+	collision detection
+	after game over, return to title screen
+	save/restore game
+
 

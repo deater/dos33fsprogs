@@ -289,7 +289,7 @@ int world_map(void) {
 
 		/* Draw Above Ground Scatter */
 
-		if (map_x==1) if (tfv_y>=20) grsim_put_sprite(snowy_tree,10,20);
+		if (map_x==1) if (tfv_y>=22) grsim_put_sprite(snowy_tree,10,22);
 		if (map_x==4) if (tfv_y>=15) grsim_put_sprite(pine_tree,25,15);
 		if (map_x==8) if (tfv_y>=22) grsim_put_sprite(palm_tree,10,20);
 		if (map_x==12) if (tfv_y>=22) grsim_put_sprite(palm_tree,20,20);
@@ -327,7 +327,7 @@ int world_map(void) {
 		}
 
 		/* Draw Below Ground Scatter */
-		if (map_x==1) if (tfv_y<20) grsim_put_sprite(snowy_tree,10,20);
+		if (map_x==1) if (tfv_y<22) grsim_put_sprite(snowy_tree,10,22);
 		if (map_x==4) if (tfv_y<15) grsim_put_sprite(pine_tree,25,15);
 		if (map_x==8) if (tfv_y<22) grsim_put_sprite(palm_tree,10,20);
 		if (map_x==12) if (tfv_y<22) grsim_put_sprite(palm_tree,20,20);

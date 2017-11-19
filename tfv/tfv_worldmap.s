@@ -246,17 +246,142 @@ worldmap_refresh_screen:
 
 worldmap_copy_background:
 
-
+	;================
 	; Copy background
+	;================
 
 	jsr	gr_copy_to_current
 
-	; Handle ground scatter
+	;=================================
+	; Handle background ground scatter
+	;=================================
 
-	; Draw background trees
+	; if (map_x==1) if (tfv_y>=22) grsim_put_sprite(snowy_tree,10,20);
 
+	lda	MAP_X
+	cmp	#1
+	bne	back_not_snow
+
+	lda	TFV_Y
+	cmp	#22
+	bmi	no_back_scatter
+
+	; snowy tree
+
+	lda	#>snowy_tree
+	sta	INH
+	lda	#<snowy_tree
+	sta	INL
+
+	lda	#10
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+
+	bne	back_scatter_sprite
+
+back_not_snow:
+
+	; if (map_x==4) if (tfv_y>=16) grsim_put_sprite(pine_tree,25,16);
+
+	cmp	#4
+	bne	back_not_pine
+
+	lda	TFV_Y
+	cmp	#16
+	bmi	no_back_scatter
+
+	; pine tree
+
+	lda	#>pine_tree
+	sta	INH
+	lda	#<pine_tree
+	sta	INL
+
+	lda	#25
+	sta	XPOS
+	lda	#16
+	sta	YPOS
+
+	bne	back_scatter_sprite
+
+
+back_not_pine:
+	; palm tree
+	; if (map_x==8) if (tfv_y>=22) grsim_put_sprite(palm_tree,10,20);
+
+	cmp	#8
+	bne	back_not_palm
+
+	lda	#10
+	sta	XPOS
+
+	bne	back_palm
+
+back_not_palm:
+	; palm tree 2
+	; if (map_x==12) if (tfv_y>=22) grsim_put_sprite(palm_tree,20,20);
+
+	cmp	#12
+	bne	back_not_palm2
+
+	lda	#20
+	sta	XPOS
+
+back_palm:
+
+	lda	TFV_Y
+	cmp	#22
+	bmi	no_back_scatter
+
+	lda	#>palm_tree
+	sta	INH
+	lda	#<palm_tree
+	sta	INL
+
+	lda	#20
+	sta	YPOS
+
+	bne	back_scatter_sprite
+
+back_not_palm2:
+	cmp	#13
+	bne	no_back_scatter
+
+	lda	TFV_Y
+	cmp	#16
+	bmi	no_back_scatter
+
+	; cactus
+	; if (map_x==13) if (tfv_y>=16) grsim_put_sprite(cactus,25,16);
+	lda	#>cactus
+	sta	INH
+	lda	#<cactus
+	sta	INL
+
+	lda	#25
+	sta	XPOS
+	lda	#16
+	sta	YPOS
+
+back_scatter_sprite:
+
+	jsr	put_sprite
+
+no_back_scatter:
+	; Draw background forest
+	; if ((map_x==7) || (map_x==11)) {
+	;	for(i=10;i<tfv_y+8;i+=2) {
+	;		limit=22+(i/4);
+	;		color_equals(COLOR_DARKGREEN);
+	;		hlin_double(ram[DRAW_PAGE],0,limit,i);
+	;	}
+	; }
+
+
+	;=============
 	; Draw TFV
-
+	;=============
 
 	clc
 
@@ -319,8 +444,168 @@ done_walking:
        ;                 }
 
 
-	; Draw foreground scatter
+	;=================================
+	; Handle foreground ground scatter
+	;=================================
 
+	;if (map_x==1) if (tfv_y<22) grsim_put_sprite(snowy_tree,10,22);
+
+	lda	MAP_X
+	cmp	#1
+	bne	fore_not_snow
+
+	lda	TFV_Y
+	cmp	#22
+	bpl	no_fore_scatter
+
+	; snowy tree
+
+	lda	#>snowy_tree
+	sta	INH
+	lda	#<snowy_tree
+	sta	INL
+
+	lda	#10
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+
+	bne	fore_scatter_sprite
+
+fore_not_snow:
+
+	; if (map_x==4) if (tfv_y<15) grsim_put_sprite(pine_tree,25,15);
+
+	cmp	#4
+	bne	fore_not_pine
+
+	lda	TFV_Y
+	cmp	#16
+	bpl	no_fore_scatter
+
+	; pine tree
+
+	lda	#>pine_tree
+	sta	INH
+	lda	#<pine_tree
+	sta	INL
+
+	lda	#25
+	sta	XPOS
+	lda	#16
+	sta	YPOS
+
+	bne	fore_scatter_sprite
+
+fore_not_pine:
+	; palm tree
+	; if (map_x==8) if (tfv_y<22) grsim_put_sprite(palm_tree,10,20);
+
+	cmp	#8
+	bne	fore_not_palm
+
+	lda	#10
+	sta	XPOS
+
+	bne	fore_palm
+
+fore_not_palm:
+	; palm tree 2
+	; if (map_x==12) if (tfv_y<22) grsim_put_sprite(palm_tree,20,20);
+
+	cmp	#12
+	bne	fore_not_palm2
+
+	lda	#20
+	sta	XPOS
+
+fore_palm:
+
+	lda	TFV_Y
+	cmp	#22
+	bpl	no_fore_scatter
+
+	lda	#>palm_tree
+	sta	INH
+	lda	#<palm_tree
+	sta	INL
+
+	lda	#20
+	sta	YPOS
+
+	bne	fore_scatter_sprite
+
+fore_not_palm2:
+	cmp	#13
+	bne	no_fore_scatter
+
+	lda	TFV_Y
+	cmp	#16
+	bpl	no_fore_scatter
+
+	; cactus
+	; if (map_x==13) if (tfv_y<15) grsim_put_sprite(cactus,25,15);
+
+	lda	#>cactus
+	sta	INH
+	lda	#<cactus
+	sta	INL
+
+	lda	#25
+	sta	XPOS
+	lda	#16
+	sta	YPOS
+
+fore_scatter_sprite:
+
+	jsr	put_sprite
+
+no_fore_scatter:
+
+
+
+
+
+
+	; Draw foreground forest
+	; if ((map_x==7) || (map_x==11)) {
+	;	for(i=tfv_y+8;i<36;i+=2) {
+	;		limit=22+(i/4);
+	;		color_equals(COLOR_DARKGREEN);
+	;		hlin_double(ram[DRAW_PAGE],0,limit,i);
+	;	}
+	;	/* Draw tree trunks */
+	;	color_equals(COLOR_BROWN);
+	;	hlin_double(ram[DRAW_PAGE],0,1,39);
+	;	for(i=0;i<13;i++) {
+	;		color_equals(COLOR_GREY);
+	;		hlin_double_continue(1);
+	;		color_equals(COLOR_BROWN);
+	;		hlin_double_continue(1);
+	;	}
+	;	color_equals(COLOR_BROWN);
+	;	hlin_double(ram[DRAW_PAGE],0,1,37);
+	;	for(i=0;i<13;i++) {
+	;		color_equals(COLOR_GREY);
+	;		hlin_double_continue(1);
+	;		color_equals(COLOR_BROWN);
+	;		hlin_double_continue(1);
+	;	}
+	; }
+
+	; Draw lightning
+	; if (map_x==3) {
+	;	if ((steps&0xf)==0) {
+	;		grsim_put_sprite(lightning,25,4);
+	;		/* Hurt hit points if in range? */
+	;		if ((tfv_x>25) && (tfv_x<30) && (tfv_y<12)) {
+	;		printf("HIT! %d %d\n\n",steps,hp);
+	;			if (hp>11) {
+	;				hp=10;
+	;			}
+	;		}
+	;	}
+	; }
 
 
         jsr	page_flip
