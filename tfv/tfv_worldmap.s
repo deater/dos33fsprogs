@@ -700,20 +700,39 @@ treetrunk_loop:
 
 fore_no_forest:
 
+	;=============================
 	; Draw lightning
-	; if (map_x==3) {
-	;	if ((steps&0xf)==0) {
-	;		grsim_put_sprite(lightning,25,4);
-	;		/* Hurt hit points if in range? */
+	;=============================
+
+	lda	MAP_X
+	cmp	#3
+	bne	no_lightning
+
+	lda	STEPS
+	and	#$f
+	bne	no_lightning
+
+	lda	#>lightning
+	sta	INH
+	lda	#<lightning
+	sta	INL
+
+	lda	#25
+	sta	XPOS
+	lda	#4
+	sta	YPOS
+
+	jsr	put_sprite	; grsim_put_sprite(lightning,25,4);
+
+	;=============================
+	; Hurt hit points if in range?
+	;=============================
 	;		if ((tfv_x>25) && (tfv_x<30) && (tfv_y<12)) {
 	;		printf("HIT! %d %d\n\n",steps,hp);
 	;			if (hp>11) {
 	;				hp=10;
-	;			}
-	;		}
-	;	}
-	; }
 
+no_lightning:
 
         jsr	page_flip
 
