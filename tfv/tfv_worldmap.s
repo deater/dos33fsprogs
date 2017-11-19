@@ -385,7 +385,7 @@ back_forest:
 
 	lda	TFV_Y
 	clc
-	adc	#8
+	adc	#6
 back_forest_loop:
 	pha			; 10, ends at 23
 
@@ -615,6 +615,9 @@ fore_forest:
 	clc
 	adc	#8
 fore_forest_loop:
+	cmp	#36
+	beq	done_forest_loop
+
 	pha
 
 	lsr			; limit=22+(i/4);
@@ -635,8 +638,9 @@ fore_forest_loop:
 	pla
 	clc
 	adc	#2
-	cmp	#36
-	bmi	fore_forest_loop
+	bne	fore_forest_loop
+
+done_forest_loop:
 
 	;====================
 	; Draw tree trunks
@@ -1009,7 +1013,7 @@ draw_north_shore:
 	ldx	#COLOR_BOTH_DARKBLUE
 	stx	COLOR
 
-	lda	#40
+	lda	#39
 	sta	V2
 	ldy	#0
 	lda	#10
