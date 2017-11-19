@@ -157,10 +157,10 @@ void print_info(void) {
 	ram[0x30]=0x20;
 
 	/* Draw boxes */
-	hlin_double(0,0,40,0);
-	hlin_double(0,0,40,4);
-	hlin_double(0,0,40,8);
-	hlin_double(0,0,40,46);
+	hlin_double(0,0,39,0);
+	hlin_double(0,0,39,4);
+	hlin_double(0,0,39,8);
+	hlin_double(0,0,39,46);
 
 	basic_vlin(0,48,0);
 	basic_vlin(0,48,20);

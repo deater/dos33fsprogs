@@ -76,7 +76,7 @@ void print_u8(unsigned char value) {
 
 	sprintf(temp,"%d",value);
 
-	print(temp);
+	basic_print(temp);
 
 }
 
