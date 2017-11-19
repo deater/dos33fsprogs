@@ -1324,14 +1324,16 @@ vlin_loop:
 
 int hlin_double_continue(int width) {
 
-	y=width;
-hlin_loop:
-//	for(y=width;y>0;y--) {
-		ram[y_indirect(GBASL,y)]=ram[COLOR];
-	y--;
-	if (y!=255) goto hlin_loop;
+	x=width;
 
-	ram[GBASL]+=width;
+hlin_loop:
+	y=0;
+	ram[y_indirect(GBASL,y)]=ram[COLOR];
+	ram[GBASL]++;
+	x--;
+	if (x!=0) goto hlin_loop;
+
+//	ram[GBASL]+=width;
 
 //	}
 
@@ -1349,7 +1351,7 @@ int hlin_double(int page, int x1, int x2, int at) {
 	ram[GBASH]+=(page);
 
 	ram[GBASL]+=x1;
-	hlin_double_continue(x2-x1);
+	hlin_double_continue(x2-x1+1);
 
 	return 0;
 }

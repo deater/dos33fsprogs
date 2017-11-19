@@ -85,16 +85,16 @@ static int load_map_bg(void) {
 
 	/* grassland/sloped left beach */
 	if ((map_x&3)==0) {
-		for(i=10;i<40;i++) {
-			temp=4+(40-i)/8;
+		for(i=10;i<40;i+=2) {
+			temp=4+(39-i)/8;
 			color_equals(COLOR_DARKBLUE);
-			hlin(PAGE2,0,temp,i);
+			hlin_double(PAGE2,0,temp,i);
 			color_equals(COLOR_LIGHTBLUE);
-			hlin_continue(2);
+			hlin_double_continue(2);
 			color_equals(COLOR_YELLOW);
-			hlin_continue(2);
+			hlin_double_continue(2);
 			color_equals(ground_color);
-			hlin_continue(36-temp);
+			hlin_double_continue(35-temp);
 		}
 	}
 
@@ -114,19 +114,18 @@ static int load_map_bg(void) {
 		}
 	}
 
-	/* Forest/Right Beach */
+	/* Right Beach */
 	if ((map_x&3)==3) {
-		for(i=10;i<40;i++) {
-			temp=24+(i/4);
-			/* 32 ... 40 */
+		for(i=10;i<40;i+=2) {
+			temp=24+(i/4);	/* 26 ... 33 */
 			color_equals(ground_color);
-			hlin(PAGE2,0,temp,i);
+			hlin_double(PAGE2,0,temp,i);
 			color_equals(COLOR_YELLOW);
-			hlin_continue(2);
+			hlin_double_continue(2);	/* 28 ... 35 */
 			color_equals(COLOR_LIGHTBLUE);
-			hlin_continue(2);
+			hlin_double_continue(2);	/* 30 ... 37 */
 			color_equals(COLOR_DARKBLUE);
-			hlin_continue(36-temp);
+			hlin_double_continue(35-temp);
 		}
 
 	}
@@ -152,6 +151,7 @@ static int load_map_bg(void) {
 		hlin_double(PAGE2,start,end,34);
 	}
 
+	/* Mountains */
 	if ((map_x&3)==2) {
 		for(i=0;i<4;i++) {
 			grsim_put_sprite_page(PAGE2,mountain,10+(i%2)*5,(i*8)+2);
@@ -287,13 +287,13 @@ int world_map(void) {
 
 		gr_copy_to_current(0xc00);
 
-		/* Draw Above Ground Scatter */
+		/* Draw Background Ground Scatter */
 
 		if (map_x==1) if (tfv_y>=22) grsim_put_sprite(snowy_tree,10,22);
-		if (map_x==4) if (tfv_y>=15) grsim_put_sprite(pine_tree,25,15);
+		if (map_x==4) if (tfv_y>=15) grsim_put_sprite(pine_tree,25,16);
 		if (map_x==8) if (tfv_y>=22) grsim_put_sprite(palm_tree,10,20);
 		if (map_x==12) if (tfv_y>=22) grsim_put_sprite(palm_tree,20,20);
-		if (map_x==13) if (tfv_y>=15) grsim_put_sprite(cactus,25,15);
+		if (map_x==13) if (tfv_y>=15) grsim_put_sprite(cactus,25,16);
 
 
 		/* Draw Background Trees */
@@ -328,12 +328,13 @@ int world_map(void) {
 
 		/* Draw Below Ground Scatter */
 		if (map_x==1) if (tfv_y<22) grsim_put_sprite(snowy_tree,10,22);
-		if (map_x==4) if (tfv_y<15) grsim_put_sprite(pine_tree,25,15);
+		if (map_x==4) if (tfv_y<15) grsim_put_sprite(pine_tree,25,16);
 		if (map_x==8) if (tfv_y<22) grsim_put_sprite(palm_tree,10,20);
 		if (map_x==12) if (tfv_y<22) grsim_put_sprite(palm_tree,20,20);
-		if (map_x==13) if (tfv_y<15) grsim_put_sprite(cactus,25,15);
+		if (map_x==13) if (tfv_y<15) grsim_put_sprite(cactus,25,16);
 
 		if ((map_x==7) || (map_x==11)) {
+
 			/* Draw Below Forest */
 			for(i=tfv_y+8;i<36;i+=2) {
 				limit=22+(i/4);
@@ -341,24 +342,20 @@ int world_map(void) {
 				hlin_double(ram[DRAW_PAGE],0,limit,i);
 			}
 
+			int f;
 			/* Draw tree trunks */
-			color_equals(COLOR_BROWN);
-			hlin_double(ram[DRAW_PAGE],0,1,39);
+			for(f=36;f<40;f+=2) {
 
-			for(i=0;i<13;i++) {
-				color_equals(COLOR_GREY);
-				hlin_double_continue(1);
 				color_equals(COLOR_BROWN);
-				hlin_double_continue(1);
-			}
+				hlin_double(ram[DRAW_PAGE],0,0,f);
 
-			color_equals(COLOR_BROWN);
-			hlin_double(ram[DRAW_PAGE],0,1,37);
-			for(i=0;i<13;i++) {
-				color_equals(COLOR_GREY);
-				hlin_double_continue(1);
-				color_equals(COLOR_BROWN);
-				hlin_double_continue(1);
+				for(i=0;i<13;i++) {
+					color_equals(COLOR_GREY);
+					hlin_double_continue(1);
+					color_equals(COLOR_BROWN);
+					hlin_double_continue(1);
+				}
+
 			}
 
 		}

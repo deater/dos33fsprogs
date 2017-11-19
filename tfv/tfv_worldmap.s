@@ -369,14 +369,48 @@ back_scatter_sprite:
 	jsr	put_sprite
 
 no_back_scatter:
+	;========================
 	; Draw background forest
-	; if ((map_x==7) || (map_x==11)) {
-	;	for(i=10;i<tfv_y+8;i+=2) {
-	;		limit=22+(i/4);
-	;		color_equals(COLOR_DARKGREEN);
+	;========================
+
+	lda	MAP_X			; if ((map_x==7) || (map_x==11))
+	cmp	#7
+	beq	back_forest
+	cmp	#11
+	bne	back_no_forest
+
+back_forest:
+	lda	#COLOR_BOTH_DARKGREEN
+	sta	COLOR
+
+	lda	TFV_Y
+	clc
+	adc	#8
+back_forest_loop:
+	pha			; 10, ends at 23
+
+	lsr			; limit=22+(i/4);
+	lsr
+	clc
+	adc	#22
+	sta     V2
+
+	ldy     #0
+	pla
+	pha
+
+	jsr	hlin_double		; hlin y,V2 at A
+
+	;	for(i=10;i<tfv_y+8;i+=2)
 	;		hlin_double(ram[DRAW_PAGE],0,limit,i);
-	;	}
-	; }
+
+	pla
+	clc
+	adc	#$fe		; -2
+	cmp	#8
+	bne	back_forest_loop
+
+back_no_forest:
 
 
 	;=============
@@ -563,26 +597,93 @@ fore_scatter_sprite:
 no_fore_scatter:
 
 
-
-
-
-
+	;========================
 	; Draw foreground forest
-	; if ((map_x==7) || (map_x==11)) {
+	;========================
+
+	lda	MAP_X			; if ((map_x==7) || (map_x==11))
+	cmp	#7
+	beq	fore_forest
+	cmp	#11
+	bne	fore_no_forest
+
+fore_forest:
+	lda	#COLOR_BOTH_DARKGREEN
+	sta	COLOR
+
+	lda	TFV_Y
+	clc
+	adc	#8
+fore_forest_loop:
+	pha
+
+	lsr			; limit=22+(i/4);
+	lsr
+	clc
+	adc	#22
+	sta     V2
+
+	ldy     #0
+	pla
+	pha
+
+	jsr	hlin_double		; hlin y,V2 at A
+
 	;	for(i=tfv_y+8;i<36;i+=2) {
-	;		limit=22+(i/4);
-	;		color_equals(COLOR_DARKGREEN);
 	;		hlin_double(ram[DRAW_PAGE],0,limit,i);
-	;	}
-	;	/* Draw tree trunks */
-	;	color_equals(COLOR_BROWN);
-	;	hlin_double(ram[DRAW_PAGE],0,1,39);
-	;	for(i=0;i<13;i++) {
-	;		color_equals(COLOR_GREY);
-	;		hlin_double_continue(1);
-	;		color_equals(COLOR_BROWN);
-	;		hlin_double_continue(1);
-	;	}
+
+	pla
+	clc
+	adc	#2
+	cmp	#36
+	bmi	fore_forest_loop
+
+	;====================
+	; Draw tree trunks
+	;====================
+
+	lda	#36
+
+outer_treetrunk_loop:
+	pha
+
+	lda	#COLOR_BOTH_BROWN
+	sta	COLOR
+
+	lda	#0			; hlin_double(ram[DRAW_PAGE],0,0,36);
+	sta     V2
+	ldy     #0
+	pla
+	pha
+
+	jsr	hlin_double		; hlin y,V2 at A
+
+	lda	#0
+treetrunk_loop:
+	pha
+
+	lda	#COLOR_BOTH_GREY
+	sta	COLOR
+	ldx	#1
+	jsr	hlin_double_continue
+
+	lda	#COLOR_BOTH_BROWN
+	sta	COLOR
+	ldx	#1
+	jsr	hlin_double_continue
+
+	pla
+	clc
+	adc	#1
+	cmp	#13
+	bne	treetrunk_loop
+
+	pla
+	clc
+	adc	#2
+	cmp	#40
+	bne	outer_treetrunk_loop
+
 	;	color_equals(COLOR_BROWN);
 	;	hlin_double(ram[DRAW_PAGE],0,1,37);
 	;	for(i=0;i<13;i++) {
@@ -592,6 +693,8 @@ no_fore_scatter:
 	;		hlin_double_continue(1);
 	;	}
 	; }
+
+fore_no_forest:
 
 	; Draw lightning
 	; if (map_x==3) {
@@ -651,14 +754,18 @@ no_fore_scatter:
 
 load_map_bg:
 
+	; Set target for the background drawing
+
 	lda	#$0c
 	sta	BASH
 	lda	#$00
 	sta	BASL		; load image off-screen 0xc00
 
+	; Check for special cases
+
 	lda	MAP_X
 map_harfco:
-	cmp	#3
+	cmp	#3		; if map_x==3, harfco
 	bne	map_landing
 
 	lda	#>(harfco_rle)
@@ -669,7 +776,7 @@ map_harfco:
 	rts
 
 map_landing:
-	cmp	#5
+	cmp	#5		; if map_x==5, landing site
 	bne	map_collegep
 
 	lda	#>(landing_rle)
@@ -680,7 +787,7 @@ map_landing:
 	rts
 
 map_collegep:
-	cmp	#14
+	cmp	#14		; if map_x==14, collegep
 	bne	map_custom
 
 	lda	#>(collegep_rle)
@@ -690,23 +797,25 @@ map_collegep:
         jsr	load_rle_gr
 	rts
 
+	;============================
+	; draw parametric background
+	;============================
 map_custom:
 
 	; Draw the Sky
 
-	lda	DRAW_PAGE
+	lda	DRAW_PAGE		; save the DRAW_PAGE value for later
 	pha
 
-	lda	#$8
+	lda	#$8			; temporarily draw to 0xc00
 	sta	DRAW_PAGE
 
 	lda	#COLOR_BOTH_MEDIUMBLUE	; MEDIUMBLUE color
 	sta	COLOR
 
 	lda	#0
-
 map_sky:				; draw line across screen
-	ldy     #40                     ; from y=0 to y=10
+	ldy     #39			; from y=0 to y=10
 	sty     V2
 	ldy     #0
 	pha
@@ -721,23 +830,23 @@ map_sky:				; draw line across screen
 	; Set Ground Color
 	;=================
 
-	ldx	#COLOR_BOTH_LIGHTGREEN	; grass color
+	ldx	#COLOR_BOTH_LIGHTGREEN	; default is grass color
 
 	lda	MAP_X
 	cmp	#4
 	bpl	not_artic
-	ldx	#COLOR_BOTH_WHITE	; snow color
+	ldx	#COLOR_BOTH_WHITE	; snow white
 not_artic:
 	cmp	#13
 	bne	not_desert
-	ldx	#COLOR_BOTH_ORANGE
+	ldx	#COLOR_BOTH_ORANGE	; desert orange
 not_desert:
 	stx	GROUND_COLOR
 
 
-	;=============================
-	; sloped left beach
-	;=============================
+	;===========================================
+	; sloped left beach, of left side of island
+	;===========================================
 
 	lda	#3
 	and	MAP_X
@@ -746,9 +855,9 @@ not_desert:
 	lda	#10
 sloped_left_loop:
 	pha
-	eor	#$ff	; temp=4+(40-i)/8;
+	eor	#$ff	; temp=4+(39-i)/8;
 	sec
-	adc	#40
+	adc	#39
 	lsr
 	lsr
 	lsr
@@ -782,7 +891,7 @@ sloped_left_loop:
 	lda	TEMP
 	eor	#$ff
 	sec
-	adc	#36
+	adc	#35
 	tax
 
 	jsr	hlin_double_continue
@@ -797,9 +906,9 @@ sloped_left_loop:
 
 not_sloped_left:
 
-	;=============================
-	; sloped right beach
-	;=============================
+	;=============================================
+	; sloped right beach, on right side of island
+	;=============================================
 
 	lda	#3
 	and	MAP_X
@@ -842,7 +951,7 @@ sloped_right_loop:
 	lda	TEMP
 	eor	#$ff
 	sec
-	adc	#36
+	adc	#35
 	tax
 
 	jsr	hlin_double_continue
@@ -919,7 +1028,7 @@ draw_south_shore:
 	ldx	#COLOR_BOTH_DARKBLUE
 	stx	COLOR
 
-	lda	#40
+	lda	#39
 	sta	V2
 	ldy	#0
 	lda	#38
@@ -929,7 +1038,7 @@ draw_south_shore:
 	ldx	#COLOR_BOTH_LIGHTBLUE
 	stx	COLOR
 
-	lda	#40
+	lda	#39
 	sta	V2
 
 	lda	#15
@@ -954,7 +1063,7 @@ lblue_12:
 	ldx	#COLOR_BOTH_YELLOW
 	stx	COLOR
 
-	lda	#40
+	lda	#39
 	sta	V2
 
 	lda	#15

@@ -591,6 +591,7 @@ hlin_setup:
 	;================================
 	; HLIN Y, V2 AT A
 	; Y, X, A trashed
+	; start at Y, draw up to and including X
 hlin_double:
 ;int hlin_double(int page, int x1, int x2, int at) {
 
@@ -601,6 +602,7 @@ hlin_double:
 	sbc	TEMPY
 
 	tax
+	inx
 
 ;	jsr	hlin_double_continue
 
