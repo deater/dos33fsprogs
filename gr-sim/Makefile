@@ -90,7 +90,7 @@ tfv_battle.o:	tfv_battle.c
 tfv_citymap.o:	tfv_citymap.c
 	$(CC) $(CFLAGS) -c tfv_citymap.c
 
-tfv_flying.o:	tfv_flying.c
+tfv_flying.o:	tfv_flying.c tfv_flying_fixed.c tfv_flying_float.c tfv_flying_6502.c
 	$(CC) $(CFLAGS) -c tfv_flying.c
 
 tfv_info.o:	tfv_info.c
