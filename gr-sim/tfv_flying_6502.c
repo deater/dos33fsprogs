@@ -11,6 +11,11 @@
 
 #include "tfv_sprites.h"
 
+/* Zero page allocations */
+
+#define SHIPY	0xE4
+#define TURNING	0x60
+
 /* Mode7 code based on code from: */
 /* http://www.helixsoft.nl/articles/circle/sincos.htm */
 
@@ -365,24 +370,27 @@ void draw_background_mode7(void) {
 int flying(void) {
 
 	unsigned char ch;
-	int shipy;
-	int turning=0;
 	int draw_splash=0,splash_count=0;
 	int zint;
 
-
+	long long cycles=0;
 
 	/************************************************/
 	/* Flying					*/
 	/************************************************/
 
 	gr();
-	clear_bottom(PAGE0);
-	clear_bottom(PAGE1);
+	clear_bottom(PAGE0);	/* jsr clear_screens */
+	clear_bottom(PAGE1);	/* jsr set_gr_page0 */
 
-	shipy=20;
+	ram[SHIPY]=20;		/* lda #20 */
+				/* sta SHIPY */
+				/* lda #0 */
+	ram[TURNING]=0;		/* sta TURNING */
 
 	while(1) {
+		cycles=0;
+
 		if (splash_count>0) splash_count--;
 
 		ch=grsim_input();
@@ -407,8 +415,8 @@ int flying(void) {
 #endif
 
 		if ((ch=='w') || (ch==APPLE_UP)) {
-			if (shipy>16) {
-				shipy-=2;
+			if (ram[SHIPY]>16) {
+				ram[SHIPY]-=2;
 				space_z.i++;
 
 			}
@@ -417,8 +425,8 @@ int flying(void) {
 //			printf("Z=%lf\n",space_z);
 		}
 		if ((ch=='s') || (ch==APPLE_DOWN)) {
-			if (shipy<28) {
-				shipy+=2;
+			if (ram[SHIPY]<28) {
+				ram[SHIPY]+=2;
 				space_z.i--;
 			}
 			else {
@@ -427,22 +435,22 @@ int flying(void) {
 //			printf("Z=%lf\n",space_z);
 		}
 		if ((ch=='a') || (ch==APPLE_LEFT)) {
-			if (turning>0) {
-				turning=0;
+			if (ram[TURNING]>0) {
+				ram[TURNING]=0;
 			}
 			else {
-				turning=-20;
+				ram[TURNING]=-20;
 
 				angle-=1;
 				if (angle<0) angle+=ANGLE_STEPS;
 			}
 		}
 		if ((ch=='d') || (ch==APPLE_RIGHT)) {
-			if (turning<0) {
-				turning=0;
+			if (ram[TURNING]<0) {
+				ram[TURNING]=0;
 			}
 			else {
-				turning=20;
+				ram[TURNING]=20;
 				angle+=1;
 				if (angle>=ANGLE_STEPS) angle-=ANGLE_STEPS;
 			}
@@ -484,7 +492,7 @@ int flying(void) {
 
 					draw_background_mode7();
 					grsim_put_sprite(shadow_forward,SHIPX+3,31+zint);
-					grsim_put_sprite(ship_forward,SHIPX,shipy);
+					grsim_put_sprite(ship_forward,SHIPX,ram[SHIPY]);
 					page_flip();
 					usleep(200000);
 
@@ -530,7 +538,7 @@ int flying(void) {
 
 		if (speed>0) {
 
-			if ((shipy>25) && (turning!=0)) {
+			if ((ram[SHIPY]>25) && (ram[TURNING]!=0)) {
 				splash_count=1;
 			}
 
@@ -541,33 +549,33 @@ int flying(void) {
 
 //		printf("VMW: %d %d\n",draw_splash,splash_count);
 
-		if (turning==0) {
+		if (ram[TURNING]==0) {
 			if (draw_splash) {
 				grsim_put_sprite(splash_forward,
-					SHIPX+1,shipy+9);
+					SHIPX+1,ram[SHIPY]+9);
 			}
 			grsim_put_sprite(shadow_forward,SHIPX+3,31+zint);
-			grsim_put_sprite(ship_forward,SHIPX,shipy);
+			grsim_put_sprite(ship_forward,SHIPX,ram[SHIPY]);
 		}
-		if (turning<0) {
+		if (ram[TURNING]<0) {
 
 			if (draw_splash) {
 				grsim_put_sprite(splash_left,
 						SHIPX+1,36);
 			}
 			grsim_put_sprite(shadow_left,SHIPX+3,31+zint);
-			grsim_put_sprite(ship_left,SHIPX,shipy);
-			turning++;
+			grsim_put_sprite(ship_left,SHIPX,ram[SHIPY]);
+			ram[TURNING]++;
 		}
-		if (turning>0) {
+		if (ram[TURNING]>0) {
 
 			if (draw_splash) {
 				grsim_put_sprite(splash_right,
 						SHIPX+1,36);
 			}
 			grsim_put_sprite(shadow_right,SHIPX+3,31+zint);
-			grsim_put_sprite(ship_right,SHIPX,shipy);
-			turning--;
+			grsim_put_sprite(ship_right,SHIPX,ram[SHIPY]);
+			ram[TURNING]--;
 		}
 
 		page_flip();
