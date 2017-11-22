@@ -11,6 +11,8 @@
 
 #include "tfv_sprites.h"
 
+#include "tfv_multiply.c"
+
 /* Mode7 code based on code from: */
 /* http://www.helixsoft.nl/articles/circle/sincos.htm */
 

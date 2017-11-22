@@ -96,8 +96,8 @@ tfv_flying.o:	tfv_flying.c tfv_flying_fixed.c tfv_flying_float.c tfv_flying_6502
 tfv_info.o:	tfv_info.c
 	$(CC) $(CFLAGS) -c tfv_info.c
 
-tfv_multiply.o:	tfv_multiply.c
-	$(CC) $(CFLAGS) -c tfv_multiply.c
+#tfv_multiply.o:	tfv_multiply.c
+#	$(CC) $(CFLAGS) -c tfv_multiply.c
 
 tfv_opener.o:	tfv_opener.c tfv_utils.h
 	$(CC) $(CFLAGS) -c tfv_opener.c
@@ -120,8 +120,8 @@ tfv_worldmap.o:	tfv_worldmap.c
 tfv.o:	tfv.c gr-sim.h tfv_backgrounds.h tfv_sprites.h
 	$(CC) $(CFLAGS) -c tfv.c
 
-tfv:	tfv.o tfv_backgrounds.o tfv_battle.o tfv_citymap.o tfv_flying.o tfv_info.o tfv_multiply.o tfv_opener.o tfv_sprites.o tfv_textentry.o tfv_title.o tfv_utils.o tfv_worldmap.o gr-sim.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o tfv tfv.o tfv_backgrounds.o tfv_battle.o tfv_citymap.o tfv_flying.o tfv_info.o tfv_multiply.o tfv_opener.o tfv_sprites.o tfv_textentry.o tfv_title.o tfv_utils.o tfv_worldmap.o gr-sim.o
+tfv:	tfv.o tfv_backgrounds.o tfv_battle.o tfv_citymap.o tfv_flying.o tfv_info.o tfv_opener.o tfv_sprites.o tfv_textentry.o tfv_title.o tfv_utils.o tfv_worldmap.o gr-sim.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o tfv tfv.o tfv_backgrounds.o tfv_battle.o tfv_citymap.o tfv_flying.o tfv_info.o tfv_opener.o tfv_sprites.o tfv_textentry.o tfv_title.o tfv_utils.o tfv_worldmap.o gr-sim.o
 
 ###
 

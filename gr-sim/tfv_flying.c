@@ -1,7 +1,7 @@
 // 0 = use fancy hi-res floating point
 // 1 = use reduced fixed point
 // 2 = use 6502 instrumented code
-#define FIXEDPT	2
+#define FIXEDPT	42
 
 
 #if (FIXEDPT==0)

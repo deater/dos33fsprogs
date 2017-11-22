@@ -61,11 +61,6 @@ struct fixed_type {
         unsigned char f;
 };
 
-
-int fixed_mul(struct fixed_type *x,
-                struct fixed_type *y,
-                struct fixed_type *z, int debug);
-
 int opening(void);
 int title(void);
 int flying(void);

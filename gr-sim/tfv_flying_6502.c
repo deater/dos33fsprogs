@@ -13,8 +13,46 @@
 
 /* Zero page allocations */
 
-#define SHIPY	0xE4
-#define TURNING	0x60
+#define TURNING		0x60
+#define SCREEN_X	0x61	// current screen position
+#define SCREEN_Y	0x62
+#define ANGLE		0x63	// ship angle
+#define HORIZ_SCALE_I	0x64	// horizontal scale
+#define HORIZ_SCALE_F	0x65
+#define FACTOR_I	0x66
+#define FACTOR_F	0x67
+#define DX_I		0x68
+#define DX_F		0x69
+#define SPACEX_I	0x6a	// current space position
+#define SPACEX_F	0x6b
+#define CX_I		0x6c	// map coordinates
+#define CX_F		0x6d
+#define DY_I		0x6e
+#define DY_F		0x6f
+#define SPACEY_I	0x70
+#define SPACEY_F	0x71
+#define CY_I		0x72
+#define CY_F		0x73
+#define TEMP_I		0x74
+#define TEMP_F		0x75
+#define DISTANCE_I	0x76	// the distance and horizontal scale of the line we are drawing
+#define DISTANCE_F	0x77
+#define SPACEZ_I	0x78	// height of the camera above the plane
+#define SPACEZ_F	0x79
+#define DRAW_SPLASH	0x7a
+#define SPEED		0x7b
+#define SPLASH_COUNT	0x7c
+#define OVER_WATER	0x7d
+
+#define SHIPY		0xE4
+
+/* constants */
+#define	CONST_SCALE_I	0x14		// 20.0
+#define CONST_SCALE_F	0x00
+
+#define CONST_BETA_I	0xff		// -0.5 ??
+#define CONST_BETA_F	0x80
+
 
 /* Mode7 code based on code from: */
 /* http://www.helixsoft.nl/articles/circle/sincos.htm */
@@ -45,8 +83,6 @@ static unsigned char water_map[32]={
 #define LOWRES_H	40
 
 static int displayed=0;
-
-static int over_water=0;
 
 static int lookup_map(int xx, int yy) {
 
@@ -89,40 +125,8 @@ static int lookup_map(int xx, int yy) {
 	return color;
 }
 
-
-
-
-	// current screen position
-static int screen_x, screen_y;
-static char angle=1;
-
 // Speed
 #define SPEED_STOPPED	0
-static unsigned char speed=SPEED_STOPPED;	// 0..4, with 0=stopped
-
-
-// map coordinates
-static struct fixed_type cx = {0,0};
-static struct fixed_type cy = {0,0};
-static struct fixed_type dx;
-static struct fixed_type dy;
-
-// the distance and horizontal scale of the line we are drawing
-static struct fixed_type distance;
-static struct fixed_type horizontal_scale;
-
-// current space position
-static struct fixed_type space_x;
-static struct fixed_type space_y;
-
-// height of the camera above the plane
-static struct fixed_type space_z= {0x04,0x80};	// 4.5;
-static struct fixed_type BETA = {0xff,0x80}; 	// -0.5;
-static struct fixed_type factor;
-
-static struct fixed_type fixed_temp;
-
-static struct fixed_type scale={0x14,0x00};	// 20.0
 
 #define ANGLE_STEPS	16
 
@@ -178,187 +182,366 @@ static unsigned char horizontal_lookup[7][16] = {
 };
 
 
+static void fixed_add(unsigned char x_i,unsigned char x_f,
+			unsigned char y_i, unsigned char y_f,
+			unsigned char *z_i, unsigned char *z_f) {
 
-double fixed_to_double(struct fixed_type *f) {
-
-	double out;
-
-	out=f->i;
-	out+=((double)(f->f))/256.0;
-
-	return out;
-
-}
-
-static void fixed_add(struct fixed_type *x, struct fixed_type *y, struct fixed_type *z) {
 	int carry;
 	short sum;
 
-	sum=(short)(x->f)+(short)(y->f);
+	sum=(short)(x_f)+(short)(y_f);
 
 	if (sum>=256) carry=1;
 	else carry=0;
 
-	z->f=sum&0xff;
+	*z_f=sum&0xff;
 
-	z->i=x->i+y->i+carry;
+	*z_i=x_i+y_i+carry;
 }
 
-//static void double_to_fixed(double d, struct fixed_type *f) {
-//
-//	int temp;
-//
-//	temp=d*256;
-//
-//	f->i=(temp>>8)&0xff;
-//
-//	f->f=temp&0xff;
-//}
+
+static void fixed_mul(unsigned char x_i, unsigned char x_f,
+			unsigned char y_i, unsigned char y_f,
+			unsigned char *z_i, unsigned char *z_f) {
 
 
-//
-// Non-detailed version
-//
-//
+	int num1h,num1l;
+	int num2h,num2l;
+	int result3;
+	int result2,result1,result0;
+	int aa,xx,cc=0,cc2,yy;
+	int negate=0;
+
+	num1h=x_i;
+	num1l=x_f;
+
+	if (!(num1h&0x80)) goto check_num2;	// bpl check_num2
+
+	negate++;				// inc negate
+
+	num1l=~num1l;
+	num1h=~num1h;
+
+	num1l&=0xff;
+	num1h&=0xff;
+
+	num1l+=1;
+	cc=!!(num1l&0x100);
+	num1h+=cc;
+
+	num1l&=0xff;
+	num1h&=0xff;
+check_num2:
+
+	num2h=y_i;
+	num2l=y_f;
+
+	if (!(num2h&0x80)) goto unsigned_multiply;
+
+	negate++;
+
+	num2l=~num2l;
+	num2h=~num2h;
+
+	num2l&=0xff;
+	num2h&=0xff;
+
+	num2l+=1;
+	cc=!!(num2l&0x100);
+	num2h+=cc;
+
+	num2l&=0xff;
+	num2h&=0xff;
+
+unsigned_multiply:
+
+//	if (debug) {
+//		printf("Using %02x:%02x * %02x:%02x\n",num1h,num1l,num2h,num2l);
+//	}
+
+	result0=0;
+	result1=0;
+
+	aa=0;		// lda #0 (sz)
+	result2=aa;	// sta result+2
+	xx=16;		// ldx #16 (sz)
+label_l1:
+	cc=(num2h&1);	//lsr NUM2+1 (szc)
+	num2h>>=1;
+	num2h&=0x7f;
+//	if (num2_neg) {
+//		num2h|=0x80;
+//	}
+
+	cc2=(num2l&1);	// ror NUM2 (szc)
+	num2l>>=1;
+	num2l&=0x7f;
 
 
+	num2l|=(cc<<7);
+	cc=cc2;
+
+	if (cc==0) goto label_l2;	// bcc L2
+
+	yy=aa;				// tay (sz)
+	cc=0;				// clc
+	aa=num1l;			// lda NUM1 (sz)
+	aa=aa+cc+result2;		// adc RESULT+2 (svzc)
+	cc=!!(aa&0x100);
+	aa&=0xff;
+	result2=aa;			// sta RESULT+2
+	aa=yy;				// tya
+	aa=aa+cc+num1h;			// adc NUM1+1
+	cc=!!(aa&0x100);
+	aa=aa&0xff;
+
+label_l2:
+	cc2=aa&1;
+	aa=aa>>1;
+	aa&=0x7f;
+	aa|=cc<<7;
+	cc=cc2;		// ror A
+
+	cc2=result2&1;
+	result2=result2>>1;
+	result2&=0x7f;
+	result2|=(cc<<7);
+	cc=cc2;		// ror result+2
+
+	cc2=result1&1;
+	result1=result1>>1;
+	result1&=0x7f;
+	result1|=cc<<7;
+	cc=cc2;		// ror result+1
+
+	cc2=result0&1;
+	result0=result0>>1;
+	result0&=0x7f;
+	result0|=cc<<7;
+	cc=cc2;		// ror result+0
+
+	xx--;				// dex
+	if (xx!=0) goto label_l1;	// bne L1
+
+	result3=aa&0xff;		// sta result+3
+
+
+//	if (debug) {
+//		printf("RAW RESULT = %02x:%02x:%02x:%02x\n",
+//			result3&0xff,result2&0xff,result1&0xff,result0&0xff);
+//	}
+
+	if (negate&1) {
+//		printf("NEGATING!\n");
+
+		cc=0;
+
+		aa=0;
+		aa-=result0+cc;
+		cc=!!(aa&0x100);
+		result0=aa;
+
+		aa=0;
+		aa-=result1+cc;
+		cc=!!(aa&0x100);
+		result1=aa;
+
+		aa=0;
+		aa-=result2+cc;
+		cc=!!(aa&0x100);
+		result2=aa;
+
+		aa=0;
+		aa-=result3+cc;
+		cc=!!(aa&0x100);
+		result3=aa;
+
+	}
+
+	*z_i=result2&0xff;
+	*z_f=result1&0xff;
+
+	result3&=0xff;
+	result2&=0xff;
+	result1&=0xff;
+	result0&=0xff;
+
+
+//	if (debug) {
+//		printf("%02x:%02x * %02x:%02x = %02x:%02x:%02x:%02x\n",
+//			num1h,num1l,y->i,y->f,
+//			result3&0xff,result2&0xff,result1&0xff,result0&0xff);
+
+//		printf("%02x%02x * %02x%02x = %02x%02x%02x%02x\n",
+//			num1h,num1l,y->i,y->f,
+//			result3,result2,result1,result0);
+//	}
+
+//	int a2;
+//	int s1,s2;
+//	s1=(num1h<<8)|(num1l);
+//	s2=(y->i<<8)|(y->f);
+//	a2=(result3<<24)|(result2<<16)|(result1<<8)|result0;
+//	printf("%d * %d = %d (0x%x)\n",s1,s2,a2,a2);
+
+
+	return;
+
+}
 
 void draw_background_mode7(void) {
 
 
 	int map_color;
 
-	over_water=0;
+	ram[OVER_WATER]=0;
 
 	/* Draw Sky */
 	/* Originally wanted to be fancy and have sun too, but no */
 	color_equals(COLOR_MEDIUMBLUE);
-	for(screen_y=0;screen_y<6;screen_y+=2) {
-		hlin_double(ram[DRAW_PAGE], 0, 40, screen_y);
+	for(ram[SCREEN_Y]=0;ram[SCREEN_Y]<6;ram[SCREEN_Y]+=2) {
+		hlin_double(ram[DRAW_PAGE], 0, 40, ram[SCREEN_Y]);
 	}
 
 	/* Draw hazy horizon */
 	color_equals(COLOR_GREY);
 	hlin_double(ram[DRAW_PAGE], 0, 40, 6);
 
-//	fixed_to_double(&space_z,&double_space_z);
-//	double_factor=double_space_z*double_BETA;
-
-	fixed_mul(&space_z,&BETA,&factor,0);
+	fixed_mul(ram[SPACEZ_I],ram[SPACEZ_F],
+		CONST_BETA_I,CONST_BETA_F,
+		&ram[FACTOR_I],&ram[FACTOR_F]);
 
 	if (!displayed) {
 		printf("SPACEZ/BETA/FACTOR %x %x * %x %x = %x %x\n",
-			space_z.i,space_z.f,BETA.i,BETA.f,factor.i,factor.f);
+			ram[SPACEZ_I],ram[SPACEZ_F],
+			CONST_BETA_I, CONST_BETA_F,
+			ram[FACTOR_I],ram[FACTOR_F]);
 	}
 
 //	printf("spacez=%lf beta=%lf factor=%lf\n",
-//		fixed_to_double(&space_z),
+//		fixed_to_double(ram[SPACEZ_I],ram[SPACEZ_F],),
 //		fixed_to_double(&BETA),
-//		fixed_to_double(&factor));
+//		fixed_to_double(ram[FACTOR_I],ram[FACTOR_F]));
 
-	for (screen_y = 8; screen_y < LOWRES_H; screen_y+=2) {
+	for (ram[SCREEN_Y] = 8; ram[SCREEN_Y] < LOWRES_H; ram[SCREEN_Y]+=2) {
 
 		// then calculate the horizontal scale, or the distance between
 		// space points on this horizontal line
-//		double_horizontal_scale = double_space_z  / (screen_y + horizon);
-//		double_to_fixed(double_horizontal_scale,&horizontal_scale);
-		horizontal_scale.i=0;
-		horizontal_scale.f=
-			horizontal_lookup[space_z.i&0xf][(screen_y-8)/2];
+		ram[HORIZ_SCALE_I]=0;
+		ram[HORIZ_SCALE_F]=
+			horizontal_lookup[ram[SPACEZ_I]&0xf]
+						[(ram[SCREEN_Y]-8)/2];
 
 		if (!displayed) {
 			printf("HORIZ_SCALE %x %x\n",
-			horizontal_scale.i,horizontal_scale.f);
+			ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F]);
 		}
 
 		// calculate the distance of the line we are drawing
-		fixed_mul(&horizontal_scale,&scale,&distance,0);
-		//fixed_to_double(&distance,&double_distance);
-
-//		printf("Distance=%lf, horizontal-scale=%lf\n",
-//			distance,horizontal_scale);
-
+		fixed_mul(ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
+			CONST_SCALE_I,CONST_SCALE_F,
+			&ram[DISTANCE_I],&ram[DISTANCE_F]);
 
 		if (!displayed) {
-			printf("DISTANCE %x:%x\n",
-			distance.i,distance.f);
+			printf("DISTANCE %x:%x\n",ram[DISTANCE_I],ram[DISTANCE_F]);
 		}
 
 		// calculate the dx and dy of points in space when we step
 		// through all points on this line
-		dx.i=fixed_sin[(angle+8)&0xf].i;	// -sin()
-		dx.f=fixed_sin[(angle+8)&0xf].f;	// -sin()
-		fixed_mul(&dx,&horizontal_scale,&dx,0);
+		ram[DX_I]=fixed_sin[(ram[ANGLE]+8)&0xf].i;	// -sin()
+		ram[DX_F]=fixed_sin[(ram[ANGLE]+8)&0xf].f;	// -sin()
+		fixed_mul(ram[DX_I],ram[DX_F],
+			ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
+			&ram[DX_I],&ram[DX_F]);
 
 		if (!displayed) {
-			printf("DX %x:%x\n",
-			dx.i,dx.f);
+			printf("DX %x:%x\n",ram[DX_I],ram[DX_F]);
 		}
 
 
-		dy.i=fixed_sin[(angle+4)&0xf].i;	// cos()
-		dy.f=fixed_sin[(angle+4)&0xf].f;	// cos()
-		fixed_mul(&dy,&horizontal_scale,&dy,0);
+		ram[DY_I]=fixed_sin[(ram[ANGLE]+4)&0xf].i;	// cos()
+		ram[DY_F]=fixed_sin[(ram[ANGLE]+4)&0xf].f;	// cos()
+		fixed_mul(ram[DY_I],ram[DY_F],
+			ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
+			&ram[DY_I],&ram[DY_F]);
 
 		if (!displayed) {
-			printf("DY %x:%x\n",
-			dy.i,dy.f);
+			printf("DY %x:%x\n",ram[DY_I],ram[DY_F]);
 		}
 
 		// calculate the starting position
-		//double_space_x =(double_distance+double_factor);
-		fixed_add(&distance,&factor,&space_x);
-//		double_to_fixed(double_space_x,&space_x);
-		fixed_temp.i=fixed_sin[(angle+4)&0xf].i; // cos
-		fixed_temp.f=fixed_sin[(angle+4)&0xf].f; // cos
-		fixed_mul(&space_x,&fixed_temp,&space_x,0);
-		fixed_add(&space_x,&cx,&space_x);
-		fixed_temp.i=0xec;	// -20 (LOWRES_W/2)
-		fixed_temp.f=0;
-		fixed_mul(&fixed_temp,&dx,&fixed_temp,0);
-		fixed_add(&space_x,&fixed_temp,&space_x);
+		fixed_add(ram[DISTANCE_I],ram[DISTANCE_F],
+			ram[FACTOR_I],ram[FACTOR_F],
+			&ram[SPACEX_I],&ram[SPACEX_F]);
+		ram[TEMP_I]=fixed_sin[(ram[ANGLE]+4)&0xf].i; // cos
+		ram[TEMP_F]=fixed_sin[(ram[ANGLE]+4)&0xf].f; // cos
+		fixed_mul(ram[SPACEX_I],ram[SPACEX_F],
+			ram[TEMP_I],ram[TEMP_F],
+			&ram[SPACEX_I],&ram[SPACEX_F]);
+		fixed_add(ram[SPACEX_I],ram[SPACEX_F],
+			ram[CX_I],ram[CX_F],
+			&ram[SPACEX_I],&ram[SPACEX_F]);
+		ram[TEMP_I]=0xec;	// -20 (LOWRES_W/2)
+		ram[TEMP_F]=0;
+		fixed_mul(ram[TEMP_I],ram[TEMP_F],
+			ram[DX_I],ram[DX_F],
+			&ram[TEMP_I],&ram[TEMP_F]);
+		fixed_add(ram[SPACEX_I],ram[SPACEX_F],
+			ram[TEMP_I],ram[TEMP_F],
+			&ram[SPACEX_I],&ram[SPACEX_F]);
 
 		if (!displayed) {
 			printf("SPACEX! %x:%x\n",
-			space_x.i,space_x.f);
+			ram[SPACEX_I],ram[SPACEX_F]);
 		}
 
-		fixed_add(&distance,&factor,&space_y);
-//		double_space_y =(double_distance+double_factor);
-//		double_to_fixed(double_space_y,&space_y);
-		fixed_temp.i=fixed_sin[angle&0xf].i;
-		fixed_temp.f=fixed_sin[angle&0xf].f;
-		fixed_mul(&space_y,&fixed_temp,&space_y,0);
-		fixed_add(&space_y,&cy,&space_y);
-		fixed_temp.i=0xec;	// -20 (LOWRES_W/2)
-		fixed_temp.f=0;
-		fixed_mul(&fixed_temp,&dy,&fixed_temp,0);
-		fixed_add(&space_y,&fixed_temp,&space_y);
+		fixed_add(ram[DISTANCE_I],ram[DISTANCE_F],
+			ram[FACTOR_I],ram[FACTOR_F],
+			&ram[SPACEY_I],&ram[SPACEY_F]);
+		ram[TEMP_I]=fixed_sin[ram[ANGLE]&0xf].i;
+		ram[TEMP_F]=fixed_sin[ram[ANGLE]&0xf].f;
+		fixed_mul(ram[SPACEY_I],ram[SPACEY_F],
+			ram[TEMP_I],ram[TEMP_F],
+			&ram[SPACEY_I],&ram[SPACEY_F]);
+		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
+			ram[CY_I],ram[CY_F],
+			&ram[SPACEY_I],&ram[SPACEY_F]);
+		ram[TEMP_I]=0xec;	// -20 (LOWRES_W/2)
+		ram[TEMP_F]=0;
+		fixed_mul(ram[TEMP_I],ram[TEMP_F],
+			ram[DY_I],ram[DY_F],
+			&ram[TEMP_I],&ram[TEMP_F]);
+		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
+			ram[TEMP_I],ram[TEMP_F],
+			&ram[SPACEY_I],&ram[SPACEY_F]);
 
 		if (!displayed) {
-			printf("SPACEY! %x:%x\n",
-			space_y.i,space_y.f);
+			printf("SPACEY! %x:%x\n",ram[SPACEY_I],ram[SPACEY_F]);
 		}
 
 		// go through all points in this screen line
-		for (screen_x = 0; screen_x < LOWRES_W-1; screen_x++) {
+		for (ram[SCREEN_X] = 0; ram[SCREEN_X] < LOWRES_W-1; ram[SCREEN_X]++) {
 			// get a pixel from the tile and put it on the screen
 
-			map_color=lookup_map(space_x.i,space_y.i);
+			map_color=lookup_map(ram[SPACEX_I],ram[SPACEY_I]);
 
 			ram[COLOR]=map_color;
 			ram[COLOR]|=map_color<<4;
 
-			if ((screen_x==20) && (screen_y==38)) {
-				if (map_color==COLOR_DARKBLUE) over_water=1;
+			if ((ram[SCREEN_X]==20) && (ram[SCREEN_Y]==38)) {
+				if (map_color==COLOR_DARKBLUE) ram[OVER_WATER]=1;
 			}
 
-			hlin_double(ram[DRAW_PAGE], screen_x, screen_x+1,
-				screen_y);
+			hlin_double(ram[DRAW_PAGE], ram[SCREEN_X], ram[SCREEN_X]+1,
+				ram[SCREEN_Y]);
 
 			// advance to the next position in space
-			fixed_add(&space_x,&dx,&space_x);
-			fixed_add(&space_y,&dy,&space_y);
+			fixed_add(ram[SPACEX_I],ram[SPACEX_F],
+				ram[DX_I],ram[DX_F],
+				&ram[SPACEX_I],&ram[SPACEX_F]);
+			fixed_add(ram[SPACEY_I],ram[SPACEY_F],
+				ram[DY_I],ram[DY_F],
+				&ram[SPACEY_I],&ram[SPACEY_F]);
 		}
 	}
 	displayed=1;
@@ -387,6 +570,24 @@ int flying(void) {
 				/* sta SHIPY */
 				/* lda #0 */
 	ram[TURNING]=0;		/* sta TURNING */
+	ram[SPACEX_I]=0;	/* sta SPACEX_I */
+	ram[SPACEY_I]=0;	/* sta SPACEY_I */
+	ram[CX_I]=0;		/* sta CX_I */
+	ram[CX_F]=0;		/* sta CX_F */
+	ram[CY_I]=0;		/* sta CY_I */
+	ram[CY_F]=0;		/* sta CY_F */
+	ram[DRAW_SPLASH]=0;	/* sta DRAW_SPLASH */
+	ram[SPEED]=0;		/* sta SPEED */
+	ram[SPLASH_COUNT]=0;	/* sta SPLASH_COUNT */
+	ram[OVER_WATER]=0;	/* sta OVER_WATER */
+
+				/* lda #1 */
+	ram[ANGLE]=1;		/* sta ANGLE */
+
+				/* lda #4 */
+	ram[SPACEZ_I]=4;	/* sta SPACEZ_I */
+				/* lda #$80 */
+	ram[SPACEZ_F]=0x80;	/* sta SPACEZ_F */
 
 	while(1) {
 		cycles=0;
@@ -397,77 +598,56 @@ int flying(void) {
 
 		if ((ch=='q') || (ch==27))  break;
 
-#if 0
-		if (ch=='g') {
-			BETA+=0.1;
-			printf("Horizon=%lf\n",BETA);
-		}
-		if (ch=='h') {
-			BETA-=0.1;
-			printf("Horizon=%lf\n",BETA);
-		}
-
-		if (ch=='s') {
-			scale_x++;
-			scale_y++;
-			printf("Scale=%lf\n",scale_x);
-		}
-#endif
-
 		if ((ch=='w') || (ch==APPLE_UP)) {
 			if (ram[SHIPY]>16) {
 				ram[SHIPY]-=2;
-				space_z.i++;
-
+				ram[SPACEZ_I]++;
 			}
 			splash_count=0;
-
-//			printf("Z=%lf\n",space_z);
 		}
 		if ((ch=='s') || (ch==APPLE_DOWN)) {
 			if (ram[SHIPY]<28) {
 				ram[SHIPY]+=2;
-				space_z.i--;
+				ram[SPACEZ_I]--;
 			}
 			else {
 				splash_count=10;
 			}
-//			printf("Z=%lf\n",space_z);
 		}
 		if ((ch=='a') || (ch==APPLE_LEFT)) {
-			if (ram[TURNING]>0) {
+			if ((ram[TURNING]>0) && (!(ram[TURNING]&0x80))) {
 				ram[TURNING]=0;
 			}
 			else {
-				ram[TURNING]=-20;
+				ram[TURNING]=235; // -20
 
-				angle-=1;
-				if (angle<0) angle+=ANGLE_STEPS;
+				ram[ANGLE]-=1;
+				if (ram[ANGLE]<0) ram[ANGLE]+=ANGLE_STEPS;
 			}
 		}
 		if ((ch=='d') || (ch==APPLE_RIGHT)) {
-			if (ram[TURNING]<0) {
+			if (ram[TURNING]>128) {
 				ram[TURNING]=0;
 			}
 			else {
 				ram[TURNING]=20;
-				angle+=1;
-				if (angle>=ANGLE_STEPS) angle-=ANGLE_STEPS;
+				ram[ANGLE]+=1;
+				if (ram[ANGLE]>=ANGLE_STEPS) ram[ANGLE]-=ANGLE_STEPS;
 			}
 
 		}
 
 		/* Used to be able to go backwards */
 		if (ch=='z') {
-			if (speed<3) speed++;
+			if (ram[SPEED]<3) ram[SPEED]++;
 		}
 
 		if (ch=='x') {
-			if (speed>0) speed--;
+			if (ram[SPEED]>0) ram[SPEED]--;
 		}
 
 		if (ch==' ') {
-			speed=SPEED_STOPPED;
+			ram[SPEED]=SPEED_STOPPED;
 		}
 
 		if (ch=='h') {
@@ -477,7 +657,7 @@ int flying(void) {
 		/* Ending */
 		if (ch==13) {
 			int landing_color,tx,ty;
-			tx=cx.i;	ty=cy.i;
+			tx=ram[CX_I];	ty=ram[CY_I];
 
 			landing_color=lookup_map(tx,ty);
 			printf("Trying to land at %d %d\n",tx,ty);
@@ -485,7 +665,7 @@ int flying(void) {
 			if (landing_color==12) {
 				int loop;
 
-				zint=space_z.i;
+				zint=ram[SPACEZ_I];
 
 				/* Land the ship */
 				for(loop=zint;loop>0;loop--) {
@@ -496,7 +676,7 @@ int flying(void) {
 					page_flip();
 					usleep(200000);
 
-					space_z.i--;
+					ram[SPACEZ_I]--;
 
 
 				}
@@ -513,36 +693,40 @@ int flying(void) {
 
 
 
-		if (speed!=SPEED_STOPPED) {
+		if (ram[SPEED]!=SPEED_STOPPED) {
 
 			int ii;
 
-			dx.i = fixed_sin_scale[(angle+4)&0xf].i;        // cos
-			dx.f = fixed_sin_scale[(angle+4)&0xf].f;        // cos
-			dy.i = fixed_sin_scale[angle&0xf].i;
-			dy.f = fixed_sin_scale[angle&0xf].f;
+			ram[DX_I] = fixed_sin_scale[(ram[ANGLE]+4)&0xf].i;        // cos
+			ram[DX_F] = fixed_sin_scale[(ram[ANGLE]+4)&0xf].f;        // cos
+			ram[DY_I] = fixed_sin_scale[ram[ANGLE]&0xf].i;
+			ram[DY_F] = fixed_sin_scale[ram[ANGLE]&0xf].f;
 
-			for(ii=0;ii<speed;ii++) {
-				fixed_add(&cx,&dx,&cx);
-				fixed_add(&cy,&dy,&cy);
+			for(ii=0;ii<ram[SPEED];ii++) {
+				fixed_add(ram[CX_I],ram[CX_F],
+					ram[DX_I],ram[DX_F],
+					&ram[CX_I],&ram[CX_F]);
+				fixed_add(ram[CY_I],ram[CY_F],
+					ram[DY_I],ram[DY_F],
+					&ram[CY_I],&ram[CY_F]);
 			}
 
 		}
 
 		draw_background_mode7();
 
-		zint=space_z.i;
+		zint=ram[SPACEZ_I];
 
 		draw_splash=0;
 
 
-		if (speed>0) {
+		if (ram[SPEED]>0) {
 
 			if ((ram[SHIPY]>25) && (ram[TURNING]!=0)) {
 				splash_count=1;
 			}
 
-			if ((over_water) && (splash_count)) {
+			if ((ram[OVER_WATER]) && (splash_count)) {
 				draw_splash=1;
 			}
 		}
@@ -557,7 +741,7 @@ int flying(void) {
 			grsim_put_sprite(shadow_forward,SHIPX+3,31+zint);
 			grsim_put_sprite(ship_forward,SHIPX,ram[SHIPY]);
 		}
-		if (ram[TURNING]<0) {
+		else if (ram[TURNING]>128) {
 
 			if (draw_splash) {
 				grsim_put_sprite(splash_left,
@@ -567,7 +751,7 @@ int flying(void) {
 			grsim_put_sprite(ship_left,SHIPX,ram[SHIPY]);
 			ram[TURNING]++;
 		}
-		if (ram[TURNING]>0) {
+		else {
 
 			if (draw_splash) {
 				grsim_put_sprite(splash_right,
@@ -580,8 +764,15 @@ int flying(void) {
 
 		page_flip();
 
+		printf("Cycles: %lld\n",cycles);
 		usleep(20000);
 
 	}
 	return 0;
 }
+
+
+
+
+
+
