@@ -53,6 +53,7 @@
 #define CONST_BETA_I	0xff		// -0.5 ??
 #define CONST_BETA_F	0x80
 
+#define CONST_SHIPX	15
 
 /* Mode7 code based on code from: */
 /* http://www.helixsoft.nl/articles/circle/sincos.htm */
@@ -548,15 +549,19 @@ void draw_background_mode7(void) {
 }
 
 
-#define SHIPX	15
+
+
+struct cycle_counts {
+	int flying;
+	int getkey;
+	int page_flip;
+} cycles;
+
+static int iterations=0;
 
 int flying(void) {
 
 	unsigned char ch;
-	int draw_splash=0,splash_count=0;
-	int zint;
-
-	long long cycles=0;
 
 	/************************************************/
 	/* Flying					*/
@@ -590,11 +595,20 @@ int flying(void) {
 	ram[SPACEZ_F]=0x80;	/* sta SPACEZ_F */
 
 	while(1) {
-		cycles=0;
+		memset(&cycles,0,sizeof(cycles));
 
-		if (splash_count>0) splash_count--;
+						// lda SPLASH_COUNT 	3
+						cycles.flying+=3;
+						// beq flying_keyboard	nt2/3
+						cycles.flying+=3;
+		if (ram[SPLASH_COUNT]>0) {
+						cycles.flying--;
+			ram[SPLASH_COUNT]--;	// dec SPLASH_COUNT	5
+						cycles.flying+=5;
+		}
 
-		ch=grsim_input();
+		ch=grsim_input();		// jsr get_key		6+40
+						cycles.getkey=46;
 
 		if ((ch=='q') || (ch==27))  break;
 
@@ -603,7 +617,7 @@ int flying(void) {
 				ram[SHIPY]-=2;
 				ram[SPACEZ_I]++;
 			}
-			splash_count=0;
+			ram[SPLASH_COUNT]=0;
 		}
 		if ((ch=='s') || (ch==APPLE_DOWN)) {
 			if (ram[SHIPY]<28) {
@@ -611,7 +625,7 @@ int flying(void) {
 				ram[SPACEZ_I]--;
 			}
 			else {
-				splash_count=10;
+				ram[SPLASH_COUNT]=10;
 			}
 		}
 		if ((ch=='a') || (ch==APPLE_LEFT)) {
@@ -665,14 +679,12 @@ int flying(void) {
 			if (landing_color==12) {
 				int loop;
 
-				zint=ram[SPACEZ_I];
-
 				/* Land the ship */
-				for(loop=zint;loop>0;loop--) {
+				for(loop=ram[SPACEZ_I];loop>0;loop--) {
 
 					draw_background_mode7();
-					grsim_put_sprite(shadow_forward,SHIPX+3,31+zint);
-					grsim_put_sprite(ship_forward,SHIPX,ram[SHIPY]);
+					grsim_put_sprite(shadow_forward,CONST_SHIPX+3,31+ram[SPACEZ_I]);
+					grsim_put_sprite(ship_forward,CONST_SHIPX,ram[SHIPY]);
 					page_flip();
 					usleep(200000);
 
@@ -715,64 +727,66 @@ int flying(void) {
 
 		draw_background_mode7();
 
-		zint=ram[SPACEZ_I];
-
-		draw_splash=0;
-
+		ram[DRAW_SPLASH]=0;
 
 		if (ram[SPEED]>0) {
 
 			if ((ram[SHIPY]>25) && (ram[TURNING]!=0)) {
-				splash_count=1;
+				ram[SPLASH_COUNT]=1;
 			}
 
-			if ((ram[OVER_WATER]) && (splash_count)) {
-				draw_splash=1;
+			if ((ram[OVER_WATER]) && (ram[SPLASH_COUNT])) {
+				ram[DRAW_SPLASH]=1;
 			}
 		}
 
-//		printf("VMW: %d %d\n",draw_splash,splash_count);
-
 		if (ram[TURNING]==0) {
-			if (draw_splash) {
+			if (ram[DRAW_SPLASH]) {
 				grsim_put_sprite(splash_forward,
-					SHIPX+1,ram[SHIPY]+9);
+					CONST_SHIPX+1,ram[SHIPY]+9);
 			}
-			grsim_put_sprite(shadow_forward,SHIPX+3,31+zint);
-			grsim_put_sprite(ship_forward,SHIPX,ram[SHIPY]);
+			grsim_put_sprite(shadow_forward,CONST_SHIPX+3,31+ram[SPACEZ_I]);
+			grsim_put_sprite(ship_forward,CONST_SHIPX,ram[SHIPY]);
 		}
 		else if (ram[TURNING]>128) {
 
-			if (draw_splash) {
+			if (ram[DRAW_SPLASH]) {
 				grsim_put_sprite(splash_left,
-						SHIPX+1,36);
+						CONST_SHIPX+1,36);
 			}
-			grsim_put_sprite(shadow_left,SHIPX+3,31+zint);
-			grsim_put_sprite(ship_left,SHIPX,ram[SHIPY]);
+			grsim_put_sprite(shadow_left,CONST_SHIPX+3,31+ram[SPACEZ_I]);
+			grsim_put_sprite(ship_left,CONST_SHIPX,ram[SHIPY]);
 			ram[TURNING]++;
 		}
 		else {
 
-			if (draw_splash) {
+			if (ram[DRAW_SPLASH]) {
 				grsim_put_sprite(splash_right,
-						SHIPX+1,36);
+						CONST_SHIPX+1,36);
 			}
-			grsim_put_sprite(shadow_right,SHIPX+3,31+zint);
-			grsim_put_sprite(ship_right,SHIPX,ram[SHIPY]);
+			grsim_put_sprite(shadow_right,CONST_SHIPX+3,31+ram[SPACEZ_I]);
+			grsim_put_sprite(ship_right,CONST_SHIPX,ram[SHIPY]);
 			ram[TURNING]--;
 		}
 
-		page_flip();
+		page_flip();		cycles.page_flip+=26;
 
-		printf("Cycles: %lld\n",cycles);
+		iterations++;
+		if (iterations==100) {
+			int total_cycles;
+			total_cycles=cycles.flying+cycles.getkey+
+				cycles.page_flip;
+			printf("Cycles: flying=%d\n",cycles.flying);
+			printf("Cycles: getkey=%d\n",cycles.getkey);
+			printf("Cycles: page_flip=%d\n",cycles.page_flip);
+			printf("Total = %d\n",total_cycles);
+			printf("Frame Rate = %.2lf fps\n",
+				(1000000.0 / (double)total_cycles));
+			iterations=0;
+		}
+
 		usleep(20000);
 
 	}
 	return 0;
 }
-
-
-
-
-
-
