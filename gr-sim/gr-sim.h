@@ -24,6 +24,7 @@ void basic_print(char *string);
 void basic_inverse(void);
 void basic_normal(void);
 int hlin(int page, int x1, int x2, int at);
+int hlin_setup(int page, int x1, int x2, int at);
 int hlin_continue(int width);
 int hlin_double_continue(int width);
 int hlin_double(int page, int x1, int x2, int at);

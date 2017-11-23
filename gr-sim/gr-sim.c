@@ -1340,7 +1340,8 @@ hlin_loop:
 	return 0;
 }
 
-int hlin_double(int page, int x1, int x2, int at) {
+int hlin_setup(int page, int x1, int x2, int at) {
+
 	// page, y, V2, A
 	a=at;
 	y=at/2;
@@ -1351,6 +1352,15 @@ int hlin_double(int page, int x1, int x2, int at) {
 	ram[GBASH]+=(page);
 
 	ram[GBASL]+=x1;
+
+	return 0;
+
+}
+
+int hlin_double(int page, int x1, int x2, int at) {
+
+	hlin_setup(page,x1,x2,at);
+
 	hlin_double_continue(x2-x1+1);
 
 	return 0;

@@ -183,6 +183,17 @@ static unsigned char horizontal_lookup[7][16] = {
 };
 
 
+struct cycle_counts {
+	int flying;
+	int getkey;
+	int page_flip;
+	int mode7;
+	int multiply;
+	int lookup_map;
+	int put_sprite;
+} cycles;
+
+
 static void fixed_add(unsigned char x_i,unsigned char x_f,
 			unsigned char y_i, unsigned char y_f,
 			unsigned char *z_i, unsigned char *z_f) {
@@ -211,14 +222,23 @@ static void fixed_mul(unsigned char x_i, unsigned char x_f,
 	int result3;
 	int result2,result1,result0;
 	int aa,xx,cc=0,cc2,yy;
-	int negate=0;
+	unsigned char negate;
 
 	num1h=x_i;
 	num1l=x_f;
 
-	if (!(num1h&0x80)) goto check_num2;	// bpl check_num2
+	negate=0;				// lda	#0		2
+						// sta	NEGATE		4
 
-	negate++;				// inc negate
+						// lda	NUM1H		4
+
+						cycles.multiply+=13;
+
+
+	if (!(num1h&0x80)) goto check_num2;	// bpl check_num2	2nt/3
+						cycles.multiply--;
+
+	negate++;				// inc NEGATE		6
 
 	num1l=~num1l;
 	num1h=~num1h;
@@ -232,13 +252,15 @@ static void fixed_mul(unsigned char x_i, unsigned char x_f,
 
 	num1l&=0xff;
 	num1h&=0xff;
+						// total=26
+						cycles.multiply+=26;
 check_num2:
 
 	num2h=y_i;
 	num2l=y_f;
-
+						cycles.multiply+=7;
 	if (!(num2h&0x80)) goto unsigned_multiply;
-
+						cycles.multiply--;
 	negate++;
 
 	num2l=~num2l;
@@ -253,7 +275,7 @@ check_num2:
 
 	num2l&=0xff;
 	num2h&=0xff;
-
+						cycles.multiply+=30;
 unsigned_multiply:
 
 //	if (debug) {
@@ -266,7 +288,8 @@ unsigned_multiply:
 	aa=0;		// lda #0 (sz)
 	result2=aa;	// sta result+2
 	xx=16;		// ldx #16 (sz)
-label_l1:
+						cycles.multiply+=8;
+multiply_mainloop:
 	cc=(num2h&1);	//lsr NUM2+1 (szc)
 	num2h>>=1;
 	num2h&=0x7f;
@@ -281,8 +304,9 @@ label_l1:
 
 	num2l|=(cc<<7);
 	cc=cc2;
-
-	if (cc==0) goto label_l2;	// bcc L2
+						cycles.multiply+=15;
+	if (cc==0) goto shift_output;	// bcc L2
+						cycles.multiply--;
 
 	yy=aa;				// tay (sz)
 	cc=0;				// clc
@@ -295,8 +319,8 @@ label_l1:
 	aa=aa+cc+num1h;			// adc NUM1+1
 	cc=!!(aa&0x100);
 	aa=aa&0xff;
-
-label_l2:
+						cycles.multiply+=22;
+shift_output:
 	cc2=aa&1;
 	aa=aa>>1;
 	aa&=0x7f;
@@ -322,8 +346,9 @@ label_l2:
 	cc=cc2;		// ror result+0
 
 	xx--;				// dex
-	if (xx!=0) goto label_l1;	// bne L1
-
+						cycles.multiply+=25;
+	if (xx!=0) goto multiply_mainloop;	// bne L1
+						cycles.multiply--;
 	result3=aa&0xff;		// sta result+3
 
 
@@ -331,10 +356,10 @@ label_l2:
 //		printf("RAW RESULT = %02x:%02x:%02x:%02x\n",
 //			result3&0xff,result2&0xff,result1&0xff,result0&0xff);
 //	}
-
+						cycles.multiply+=13;
 	if (negate&1) {
 //		printf("NEGATING!\n");
-
+						cycles.multiply--;
 		cc=0;
 
 		aa=0;
@@ -356,7 +381,7 @@ label_l2:
 		aa-=result3+cc;
 		cc=!!(aa&0x100);
 		result3=aa;
-
+							cycles.multiply+=50;
 	}
 
 	*z_i=result2&0xff;
@@ -385,7 +410,7 @@ label_l2:
 //	a2=(result3<<24)|(result2<<16)|(result1<<8)|result0;
 //	printf("%d * %d = %d (0x%x)\n",s1,s2,a2,a2);
 
-
+						cycles.multiply+=6;
 	return;
 
 }
@@ -400,14 +425,18 @@ void draw_background_mode7(void) {
 	/* Draw Sky */
 	/* Originally wanted to be fancy and have sun too, but no */
 	color_equals(COLOR_MEDIUMBLUE);
+						cycles.mode7+=10;
+
 	for(ram[SCREEN_Y]=0;ram[SCREEN_Y]<6;ram[SCREEN_Y]+=2) {
 		hlin_double(ram[DRAW_PAGE], 0, 40, ram[SCREEN_Y]);
 	}
-
+						cycles.mode7+=(63+(16*40)+23)*5;
 	/* Draw hazy horizon */
 	color_equals(COLOR_GREY);
 	hlin_double(ram[DRAW_PAGE], 0, 40, 6);
+						cycles.mode7+=14+63+(16*40);
 
+						cycles.mode7+=28;
 	fixed_mul(ram[SPACEZ_I],ram[SPACEZ_F],
 		CONST_BETA_I,CONST_BETA_F,
 		&ram[FACTOR_I],&ram[FACTOR_F]);
@@ -423,8 +452,13 @@ void draw_background_mode7(void) {
 //		fixed_to_double(ram[SPACEZ_I],ram[SPACEZ_F],),
 //		fixed_to_double(&BETA),
 //		fixed_to_double(ram[FACTOR_I],ram[FACTOR_F]));
+							cycles.mode7+=22;
 
 	for (ram[SCREEN_Y] = 8; ram[SCREEN_Y] < LOWRES_H; ram[SCREEN_Y]+=2) {
+
+		y=0;
+		hlin_setup(ram[DRAW_PAGE],y,0,ram[SCREEN_Y]);
+							cycles.mode7+=43;
 
 		// then calculate the horizontal scale, or the distance between
 		// space points on this horizontal line
@@ -432,6 +466,7 @@ void draw_background_mode7(void) {
 		ram[HORIZ_SCALE_F]=
 			horizontal_lookup[ram[SPACEZ_I]&0xf]
 						[(ram[SCREEN_Y]-8)/2];
+							cycles.mode7+=44;
 
 		if (!displayed) {
 			printf("HORIZ_SCALE %x %x\n",
@@ -442,7 +477,7 @@ void draw_background_mode7(void) {
 		fixed_mul(ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
 			CONST_SCALE_I,CONST_SCALE_F,
 			&ram[DISTANCE_I],&ram[DISTANCE_F]);
-
+							cycles.mode7+=44;
 		if (!displayed) {
 			printf("DISTANCE %x:%x\n",ram[DISTANCE_I],ram[DISTANCE_F]);
 		}
@@ -451,10 +486,12 @@ void draw_background_mode7(void) {
 		// through all points on this line
 		ram[DX_I]=fixed_sin[(ram[ANGLE]+8)&0xf].i;	// -sin()
 		ram[DX_F]=fixed_sin[(ram[ANGLE]+8)&0xf].f;	// -sin()
+							cycles.mode7+=29;
+
 		fixed_mul(ram[DX_I],ram[DX_F],
 			ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
 			&ram[DX_I],&ram[DX_F]);
-
+							cycles.mode7+=48;
 		if (!displayed) {
 			printf("DX %x:%x\n",ram[DX_I],ram[DX_F]);
 		}
@@ -462,10 +499,11 @@ void draw_background_mode7(void) {
 
 		ram[DY_I]=fixed_sin[(ram[ANGLE]+4)&0xf].i;	// cos()
 		ram[DY_F]=fixed_sin[(ram[ANGLE]+4)&0xf].f;	// cos()
+							cycles.mode7+=29;
 		fixed_mul(ram[DY_I],ram[DY_F],
 			ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
 			&ram[DY_I],&ram[DY_F]);
-
+							cycles.mode7+=48;
 		if (!displayed) {
 			printf("DY %x:%x\n",ram[DY_I],ram[DY_F]);
 		}
@@ -474,48 +512,62 @@ void draw_background_mode7(void) {
 		fixed_add(ram[DISTANCE_I],ram[DISTANCE_F],
 			ram[FACTOR_I],ram[FACTOR_F],
 			&ram[SPACEX_I],&ram[SPACEX_F]);
+		fixed_add(ram[DISTANCE_I],ram[DISTANCE_F],
+			ram[FACTOR_I],ram[FACTOR_F],
+			&ram[SPACEY_I],&ram[SPACEY_F]);
+							cycles.mode7+=26;
+
 		ram[TEMP_I]=fixed_sin[(ram[ANGLE]+4)&0xf].i; // cos
 		ram[TEMP_F]=fixed_sin[(ram[ANGLE]+4)&0xf].f; // cos
+							cycles.mode7+=29;
+
 		fixed_mul(ram[SPACEX_I],ram[SPACEX_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEX_I],&ram[SPACEX_F]);
+							cycles.mode7+=48;
+
 		fixed_add(ram[SPACEX_I],ram[SPACEX_F],
 			ram[CX_I],ram[CX_F],
 			&ram[SPACEX_I],&ram[SPACEX_F]);
 		ram[TEMP_I]=0xec;	// -20 (LOWRES_W/2)
 		ram[TEMP_F]=0;
+							cycles.mode7+=30;
+
 		fixed_mul(ram[TEMP_I],ram[TEMP_F],
 			ram[DX_I],ram[DX_F],
 			&ram[TEMP_I],&ram[TEMP_F]);
+							cycles.mode7+=48;
+
 		fixed_add(ram[SPACEX_I],ram[SPACEX_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEX_I],&ram[SPACEX_F]);
-
+							cycles.mode7+=20;
 		if (!displayed) {
 			printf("SPACEX! %x:%x\n",
 			ram[SPACEX_I],ram[SPACEX_F]);
 		}
 
-		fixed_add(ram[DISTANCE_I],ram[DISTANCE_F],
-			ram[FACTOR_I],ram[FACTOR_F],
-			&ram[SPACEY_I],&ram[SPACEY_F]);
 		ram[TEMP_I]=fixed_sin[ram[ANGLE]&0xf].i;
 		ram[TEMP_F]=fixed_sin[ram[ANGLE]&0xf].f;
+							cycles.mode7+=25;
 		fixed_mul(ram[SPACEY_I],ram[SPACEY_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEY_I],&ram[SPACEY_F]);
+							cycles.mode7+=48;
 		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 			ram[CY_I],ram[CY_F],
 			&ram[SPACEY_I],&ram[SPACEY_F]);
 		ram[TEMP_I]=0xec;	// -20 (LOWRES_W/2)
 		ram[TEMP_F]=0;
+							cycles.mode7+=30;
 		fixed_mul(ram[TEMP_I],ram[TEMP_F],
 			ram[DY_I],ram[DY_F],
 			&ram[TEMP_I],&ram[TEMP_F]);
+							cycles.mode7+=48;
 		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEY_I],&ram[SPACEY_F]);
-
+							cycles.mode7+=25;
 		if (!displayed) {
 			printf("SPACEY! %x:%x\n",ram[SPACEY_I],ram[SPACEY_F]);
 		}
@@ -533,8 +585,8 @@ void draw_background_mode7(void) {
 				if (map_color==COLOR_DARKBLUE) ram[OVER_WATER]=1;
 			}
 
-			hlin_double(ram[DRAW_PAGE], ram[SCREEN_X], ram[SCREEN_X]+1,
-				ram[SCREEN_Y]);
+			hlin_double_continue(1);
+							cycles.mode7+=42;
 
 			// advance to the next position in space
 			fixed_add(ram[SPACEX_I],ram[SPACEX_F],
@@ -543,19 +595,17 @@ void draw_background_mode7(void) {
 			fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 				ram[DY_I],ram[DY_F],
 				&ram[SPACEY_I],&ram[SPACEY_F]);
+							cycles.mode7+=53;
 		}
+							cycles.mode7+=17;
 	}
 	displayed=1;
+							cycles.mode7+=6;
 }
 
 
 
 
-struct cycle_counts {
-	int flying;
-	int getkey;
-	int page_flip;
-} cycles;
 
 static int iterations=0;
 
@@ -775,10 +825,16 @@ int flying(void) {
 		if (iterations==100) {
 			int total_cycles;
 			total_cycles=cycles.flying+cycles.getkey+
-				cycles.page_flip;
+				cycles.page_flip+cycles.multiply+
+				cycles.mode7+cycles.lookup_map+
+				cycles.put_sprite;
 			printf("Cycles: flying=%d\n",cycles.flying);
 			printf("Cycles: getkey=%d\n",cycles.getkey);
 			printf("Cycles: page_flip=%d\n",cycles.page_flip);
+			printf("Cycles: multiply=%d\n",cycles.multiply);
+			printf("Cycles: mode7=%d\n",cycles.mode7);
+			printf("Cycles: lookup_map=%d\n",cycles.lookup_map);
+			printf("Cycles: put_sprite=%d\n",cycles.put_sprite);
 			printf("Total = %d\n",total_cycles);
 			printf("Frame Rate = %.2lf fps\n",
 				(1000000.0 / (double)total_cycles));

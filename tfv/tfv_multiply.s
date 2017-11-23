@@ -15,96 +15,96 @@ NEGATE:	.byte 0
 
 multiply:
 
-	lda	#$0
-	sta	NEGATE
+	lda	#$0							; 2
+	sta	NEGATE							; 4
 
 	; Handle Signed
-	lda	NUM1H
-	bpl	check_num2
+	lda	NUM1H							; 4
+	bpl	check_num2						; 2nt/3
 
-	inc	NEGATE
+	inc	NEGATE							; 4
 
-	clc
-	lda	NUM1L
-	eor	#$ff
-	adc	#$1
-	sta	NUM1L
+	clc		; 2s-complement NUM1H/NUM1L			; 2
+	lda	NUM1L							; 4
+	eor	#$ff							; 2
+	adc	#$1							; 2
+	sta	NUM1L							; 4
 
-	lda	NUM1H
-	eor	#$ff
-	adc	#$0
-	sta	NUM1H
+	lda	NUM1H							; 4
+	eor	#$ff							; 2
+	adc	#$0							; 2
+	sta	NUM1H							; 4
 
 check_num2:
-	lda	NUM2H
-	bpl	unsigned_multiply
+	lda	NUM2H							; 4
+	bpl	unsigned_multiply					; 2nt/3
 
-	inc	NEGATE
+	inc	NEGATE							; 4
 
-	clc
-	lda	NUM2L
-	eor	#$ff
-	adc	#$1
-	sta	NUM2L
+	clc								; 2
+	lda	NUM2L							; 4
+	eor	#$ff							; 2
+	adc	#$1							; 2
+	sta	NUM2L							; 4
 
-	lda	NUM2H
-	eor	#$ff
-	adc	#$0
-	sta	NUM2H
+	lda	NUM2H							; 4
+	eor	#$ff							; 2
+	adc	#$0							; 2
+	sta	NUM2H							; 4
 
 unsigned_multiply:
 
-	lda	#0		; Initialize RESULT to 0
-	sta 	RESULT+2
-	ldx	#16		; 16x16 multiply
+	lda	#0		; Initialize RESULT to 0		; 2
+	sta 	RESULT+2						; 4
+	ldx	#16		; 16x16 multiply			; 2
 multiply_mainloop:
-	lsr	NUM2H		; Shift right 16-bit NUM2
-	ror	NUM2L		; low bit goes into carry
-	bcc	shift_output	; 0 or 1?
-	tay			; If 1, add NUM1 (hi byte of RESULT is in A)
-	clc
-	lda	NUM1L
-	adc	RESULT+2
-	sta	RESULT+2
-	tya
-	adc	NUM1H
+	lsr	NUM2H		; Shift right 16-bit NUM2		; 6
+	ror	NUM2L		; low bit goes into carry		; 6
+	bcc	shift_output	; 0 or 1?				; 2nt/3
+	tay			; If 1, add NUM1 (hi byte RESULT in A)	; 2
+	clc								; 2
+	lda	NUM1L							; 4
+	adc	RESULT+2						; 4
+	sta	RESULT+2						; 4
+	tya								; 2
+	adc	NUM1H							; 4
 shift_output:
-	ror	A		; "Stairstep" shift
-	ror	RESULT+2
-	ror	RESULT+1
-	ror	RESULT
-	dex
-	bne	multiply_mainloop
-	sta	RESULT+3
+	ror	A		; "Stairstep" shift			; 2
+	ror	RESULT+2						; 6
+	ror	RESULT+1						; 6
+	ror	RESULT							; 6
+	dex								; 2
+	bne	multiply_mainloop					; 2nt/3
+	sta	RESULT+3						; 4
 
 	;; Negate if necessary
 
-	lda	NEGATE
-	and	#$1
-	beq	positive
+	lda	NEGATE							; 4
+	and	#$1							; 2
+	beq	positive						; 2nt/3
 
-	clc
-	lda	RESULT+0
-	eor	#$ff
-	adc	#$1
-	sta	RESULT+0
+	clc								; 2
+	lda	RESULT+0						; 4
+	eor	#$ff							; 2
+	adc	#$1							; 2
+	sta	RESULT+0						; 4
 
-	lda	RESULT+1
-	eor	#$ff
-	adc	#$0
-	sta	RESULT+1
+	lda	RESULT+1						; 4
+	eor	#$ff							; 2
+	adc	#$0							; 2
+	sta	RESULT+1						; 4
 
-	lda	RESULT+2
-	eor	#$ff
-	adc	#$0
-	sta	RESULT+2
+	lda	RESULT+2						; 4
+	eor	#$ff							; 2
+	adc	#$0							; 2
+	sta	RESULT+2						; 4
 
-	lda	RESULT+3
-	eor	#$ff
-	adc	#$0
-	sta	RESULT+3
+	lda	RESULT+3						; 4
+	eor	#$ff							; 2
+	adc	#$0							; 2
+	sta	RESULT+3						; 4
 
 positive:
 
-	rts
+	rts								; 6
 

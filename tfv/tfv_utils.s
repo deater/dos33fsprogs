@@ -579,19 +579,20 @@ vlin_too_slow:
 	; put address in GBASL/GBASH
 	; Ycoord in A, Xcoord in Y
 hlin_setup:
-	sty	TEMPY
-	tay			; y=A
-	lda	gr_offsets,Y	; lookup low-res memory address
-	clc
-	adc	TEMPY
-	sta	GBASL
-	iny
+	sty	TEMPY							; 3
+	tay			; y=A					; 2
+	lda	gr_offsets,Y	; lookup low-res memory address		; 4
+	clc								; 2
+	adc	TEMPY							; 3
+	sta	GBASL							; 3
+	iny								; 2
 
-	lda	gr_offsets,Y
-	adc	DRAW_PAGE	; add in draw page offset
-	sta	GBASH
-	rts
-
+	lda	gr_offsets,Y						; 4
+	adc	DRAW_PAGE	; add in draw page offset		; 3
+	sta	GBASH							; 3
+	rts								; 6
+								;===========
+								;	35
 	;================================
 	; hlin_double:
 	;================================
@@ -601,18 +602,16 @@ hlin_setup:
 hlin_double:
 ;int hlin_double(int page, int x1, int x2, int at) {
 
-	jsr	hlin_setup
+	jsr	hlin_setup						; 41
 
-	sec
-	lda	V2
-	sbc	TEMPY
+	sec								; 2
+	lda	V2							; 3
+	sbc	TEMPY							; 3
 
-	tax
-	inx
-
-;	jsr	hlin_double_continue
-
-;	rts
+	tax								; 2
+	inx								; 2
+								;===========
+								;	53
 	; fallthrough
 
 	;=================================
@@ -622,16 +621,17 @@ hlin_double:
 
 hlin_double_continue:
 
+	ldy	#0							; 2
+	lda	COLOR							; 3
 hlin_double_loop:
-	ldy	#0
-	lda	COLOR
-	sta	(GBASL),Y
-	inc	GBASL
-	dex
-	bne	hlin_double_loop
+	sta	(GBASL),Y						; 6
+	inc	GBASL							; 5
+	dex								; 2
+	bne	hlin_double_loop					; 2nt/3
 
-	rts
-
+	rts								; 6
+								;=============
+								; 53+5+X*16+5
 
 	;================================
 	; hlin_single:

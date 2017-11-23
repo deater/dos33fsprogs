@@ -550,66 +550,60 @@ draw_ship:
 draw_background_mode7:
 
 	; Draw Sky
+	; FIXME: the sky never changes?
 
-	lda	#COLOR_BOTH_MEDIUMBLUE	; MEDIUMBLUE color
-	sta	COLOR
+	lda	#COLOR_BOTH_MEDIUMBLUE	; MEDIUMBLUE color		; 2
+	sta	COLOR							; 3
 
-	lda	#0
-	sta	OVER_WATER
+	lda	#0							; 2
+	sta	OVER_WATER						; 3
+								;===========
+								;	 10
 
 sky_loop:				; draw line across screen
-	ldy	#40			; from y=0 to y=6
-	sty	V2
-	ldy	#0
-	pha
-	jsr	hlin_double		; hlin y,V2 at A
-	pla
-	clc
-	adc	#2
-	cmp	#6
-	bne	sky_loop
-
+	ldy	#40			; from y=0 to y=6		; 2
+	sty	V2							; 3
+	ldy	#0							; 2
+	pha								; 3
+	jsr	hlin_double		; hlin y,V2 at A	; 63+(X*16)
+	pla								; 4
+	clc								; 2
+	adc	#2							; 2
+	cmp	#6							; 2
+	bne	sky_loop						; 3/2nt
+								;=============
+								; (23+63+(X*16))*5
 	; Draw Horizon
 
-	lda	#COLOR_BOTH_GREY	; Horizon is Grey
-	sta	COLOR
-	lda	#6			; draw single line at 6/7
-	ldy	#40
-	sty	V2			; hlin	Y,V2 at A
-	ldy	#0
-	jsr	hlin_double		; hlin	0,40 at 6
-
+	lda	#COLOR_BOTH_GREY	; Horizon is Grey		; 2
+	sta	COLOR							; 3
+	lda	#6			; draw single line at 6/7	; 2
+	ldy	#40							; 2
+	sty	V2			; hlin	Y,V2 at A		; 3
+	ldy	#0							; 2
+	jsr	hlin_double		; hlin	0,40 at 6	; 63+(X*16)
+								;===========
+								; 63+(X*16)+14
 	; fixed_mul(&space_z,&BETA,&factor);
 
-	lda	SPACEZ_I
-	sta	NUM1H
-	lda	SPACEZ_F
-	sta	NUM1L
+	lda	SPACEZ_I						; 3
+	sta	NUM1H							; 3
+	lda	SPACEZ_F						; 3
+	sta	NUM1L							; 3
 
-	lda	#$ff	; BETA_I
-	sta	NUM2H
-	lda	#$80	; BETA_F
-	sta	NUM2L
+	lda	#$ff	; BETA_I					; 2
+	sta	NUM2H							; 3
+	lda	#$80	; BETA_F					; 2
+	sta	NUM2L							; 3
 
-;; TEST
-;;	lda	#$0
-;;	sta	NUM1H
-;;	lda	#$2
-;;	sta	NUM1L
+	jsr	multiply						; 6
+								;===========
+								;        28
 
-;;	lda	#$0
-;;	sta	NUM2H
-;;	lda	#$3
-;;	sta	NUM2L
-
-
-
-	jsr	multiply
-
-	lda	RESULT+2
-	sta	FACTOR_I
-	lda	RESULT+1
-	sta	FACTOR_F
+	lda	RESULT+2						; 4
+	sta	FACTOR_I						; 4
+	lda	RESULT+1						; 4
+	sta	FACTOR_F						; 4
 
 	;; SPACEZ=78  * ff80 = FACTOR=66
 
@@ -617,329 +611,356 @@ sky_loop:				; draw line across screen
 	;; GOOD 4 80 * ffffffff 80 = fffffffd c0
 	;; BAD  4 80 * ffffffff 80 = 42 40
 
-	lda	#8
-	sta	SCREEN_Y
-
+	lda	#8							; 2
+	sta	SCREEN_Y						; 4
+								;=============
+								;	 22
 screeny_loop:
-	ldy	#0
-	jsr	hlin_setup		; y-coord in a, x-coord in y
+	ldy	#0							; 2
+	jsr	hlin_setup		; y-coord in a, x-coord in y	; 41
 					; sets up GBASL/GBASH
+								;=============
+								;	 43
 
-	lda	#0			; horizontal_scale.i = 0
-	sta	HORIZ_SCALE_I
+	lda	#0			; horizontal_scale.i = 0	; 2
+	sta	HORIZ_SCALE_I						; 3
 
 	;horizontal_scale.f=
 	;	horizontal_lookup[space_z.i&0xf][(screen_y-8)/2];
 
-	lda	SPACEZ_I
-	and	#$f
-	asl
-	asl
-	asl
-	asl
-	sta	TEMP_I
+	lda	SPACEZ_I						; 3
+	and	#$f							; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	sta	TEMP_I							; 3
 
-	sec
-	lda	SCREEN_Y
-	sbc	#8
-	lsr
-	clc
-	adc	TEMP_I
-	tay
-	lda	horizontal_lookup,Y
-	sta	HORIZ_SCALE_F
-
+	sec								; 2
+	lda	SCREEN_Y						; 3
+	sbc	#8							; 2
+	lsr								; 2
+	clc								; 2
+	adc	TEMP_I							; 3
+	tay								; 2
+	lda	horizontal_lookup,Y					; 4
+	sta	HORIZ_SCALE_F						; 3
+								;============
+								;	 44
 	;; brk ASM, horiz_scale = 00:73
 
 	; calculate the distance of the line we are drawing
 	; fixed_mul(&horizontal_scale,&scale,&distance);
-	lda	HORIZ_SCALE_I
-	sta	NUM1H
-	lda	HORIZ_SCALE_F
-	sta	NUM1L
-	lda	#$14	; SCALE_I
-	sta	NUM2H
-	lda	#$00	; SCALE_F
-	sta	NUM2L
-	jsr	multiply
-	lda	RESULT+2
-	sta	DISTANCE_I
-	lda	RESULT+1
-	sta	DISTANCE_F
-
+	lda	HORIZ_SCALE_I						; 3
+	sta	NUM1H							; 4
+	lda	HORIZ_SCALE_F						; 3
+	sta	NUM1L							; 4
+	lda	#$14	; SCALE_I					; 2
+	sta	NUM2H							; 4
+	lda	#$00	; SCALE_F					; 2
+	sta	NUM2L							; 4
+	jsr	multiply						; 6
+	lda	RESULT+2						; 4
+	sta	DISTANCE_I						; 2
+	lda	RESULT+1						; 4
+	sta	DISTANCE_F						; 2
+								;==========
+								;	 44
 	;; brk ASM, distance = 08:fc
 
 	; calculate the dx and dy of points in space when we step
 	; through all points on this line
 
-	lda	ANGLE	; dx.i=fixed_sin[(angle+8)&0xf].i; // -sin()
-	clc
-	adc	#8
-	and	#$f
-	asl
-	tay
-	lda	fixed_sin,Y
-	sta	DX_I
-	iny		; dx.f=fixed_sin[(angle+8)&0xf].f; // -sin()
-	lda	fixed_sin,Y
-	sta	DX_F
+	lda	ANGLE	; dx.i=fixed_sin[(angle+8)&0xf].i; // -sin()	; 3
+	clc								; 2
+	adc	#8							; 2
+	and	#$f							; 2
+	asl								; 2
+	tay								; 2
+	lda	fixed_sin,Y						; 4
+	sta	DX_I							; 3
+	iny		; dx.f=fixed_sin[(angle+8)&0xf].f; // -sin()	; 2
+	lda	fixed_sin,Y						; 4
+	sta	DX_F							; 3
+								;==========
+								;	 29
 
 	; fixed_mul(&dx,&horizontal_scale,&dx);
-	lda	HORIZ_SCALE_I
-	sta	NUM1H
-	lda	HORIZ_SCALE_F
-	sta	NUM1L
-	lda	DX_I
-	sta	NUM2H
-	lda	DX_F
-	sta	NUM2L
-	jsr	multiply
-	lda	RESULT+2
-	sta	DX_I
-	lda	RESULT+1
-	sta	DX_F
-
+	lda	HORIZ_SCALE_I						; 3
+	sta	NUM1H							; 4
+	lda	HORIZ_SCALE_F						; 3
+	sta	NUM1L							; 4
+	lda	DX_I							; 3
+	sta	NUM2H							; 4
+	lda	DX_F							; 3
+	sta	NUM2L							; 4
+	jsr	multiply						; 6
+	lda	RESULT+2						; 4
+	sta	DX_I							; 3
+	lda	RESULT+1						; 4
+	sta	DX_F							; 3
+								;==========
+								;	 48
 	;; ANGLE
 	;; brk ASM, dx = 00:00
 
-	lda	ANGLE		; dy.i=fixed_sin[(angle+4)&0xf].i; // cos()
-	clc
-	adc	#4
-	and	#$f
-	asl
-	tay
-	lda	fixed_sin,Y
-	sta	DY_I
-	iny			; dy.f=fixed_sin[(angle+4)&0xf].f; // cos()
-	lda	fixed_sin,Y
-	sta	DY_F
-
+	lda	ANGLE	; dy.i=fixed_sin[(angle+4)&0xf].i; // cos()	; 3
+	clc								; 2
+	adc	#4							; 2
+	and	#$f							; 2
+	asl								; 2
+	tay								; 2
+	lda	fixed_sin,Y						; 4
+	sta	DY_I							; 3
+	iny		; dy.f=fixed_sin[(angle+4)&0xf].f; // cos()	; 2
+	lda	fixed_sin,Y						; 4
+	sta	DY_F							; 3
+								;==========
+								;	 29
 	; fixed_mul(&dy,&horizontal_scale,&dy);
-	lda	HORIZ_SCALE_I
-	sta	NUM1H
-	lda	HORIZ_SCALE_F
-	sta	NUM1L
-	lda	DY_I
-	sta	NUM2H
-	lda	DY_F
-	sta	NUM2L
-	jsr	multiply
-	lda	RESULT+2
-	sta	DY_I
-	lda	RESULT+1
-	sta	DY_F
-
+	lda	HORIZ_SCALE_I						; 3
+	sta	NUM1H							; 4
+	lda	HORIZ_SCALE_F						; 3
+	sta	NUM1L							; 4
+	lda	DY_I							; 3
+	sta	NUM2H							; 4
+	lda	DY_F							; 3
+	sta	NUM2L							; 4
+	jsr	multiply						; 6
+	lda	RESULT+2						; 4
+	sta	DY_I							; 3
+	lda	RESULT+1						; 4
+	sta	DY_F							; 3
+								;==========
+								;	 48
 	;; brk ASM, dy = 00:73
 
 	; calculate the starting position
 
-				; fixed_add(&distance,&factor,&space_x);
-	clc			; fixed_add(&distance,&factor,&space_y);
-	lda	DISTANCE_F
-	adc	FACTOR_F
-	sta	SPACEY_F
-	sta	SPACEX_F
-	lda	DISTANCE_I
-	adc	FACTOR_I
-	sta	SPACEY_I
-	sta	SPACEX_I
-
+			; fixed_add(&distance,&factor,&space_x);
+	clc		; fixed_add(&distance,&factor,&space_y);	; 2
+	lda	DISTANCE_F						; 3
+	adc	FACTOR_F						; 3
+	sta	SPACEY_F						; 3
+	sta	SPACEX_F						; 3
+	lda	DISTANCE_I						; 3
+	adc	FACTOR_I						; 3
+	sta	SPACEY_I						; 3
+	sta	SPACEX_I						; 3
+								;==========
+								;	 26
 	;; brk	space_x = 06:bc
 
-	lda	ANGLE	; fixed_temp.i=fixed_sin[(angle+4)&0xf].i; // cos
-	clc
-	adc	#4
-	and	#$f
-	asl
-	tay
-	lda	fixed_sin,Y
-	sta	TEMP_I
-	iny		; fixed_temp.f=fixed_sin[(angle+4)&0xf].f; // cos
-	lda	fixed_sin,Y
-	sta	TEMP_F
+	lda	ANGLE	; temp.i=fixed_sin[(angle+4)&0xf].i; // cos	; 3
+	clc								; 2
+	adc	#4							; 2
+	and	#$f							; 2
+	asl								; 2
+	tay								; 2
+	lda	fixed_sin,Y						; 4
+	sta	TEMP_I							; 3
+	iny		; temp.f=fixed_sin[(angle+4)&0xf].f; // cos	; 2
+	lda	fixed_sin,Y						; 4
+	sta	TEMP_F							; 3
+								;==========
+								;	 29
 
-	; fixed_mul(&space_x,&fixed_temp,&space_x);
-	lda	SPACEX_I
-	sta	NUM1H
-	lda	SPACEX_F
-	sta	NUM1L
-	lda	TEMP_I
-	sta	NUM2H
-	lda	TEMP_F
-	sta	NUM2L
-	jsr	multiply
-	lda	RESULT+2
-	sta	SPACEX_I
-	lda	RESULT+1
-	sta	SPACEX_F
+	; fixed_mul(&space_x,&temp,&space_x);
+	lda	SPACEX_I						; 3
+	sta	NUM1H							; 4
+	lda	SPACEX_F						; 3
+	sta	NUM1L							; 4
+	lda	TEMP_I							; 3
+	sta	NUM2H							; 4
+	lda	TEMP_F							; 3
+	sta	NUM2L							; 4
+	jsr	multiply						; 6
+	lda	RESULT+2						; 4
+	sta	SPACEX_I						; 3
+	lda	RESULT+1						; 4
+	sta	SPACEX_F						; 3
+								;==========
+								;	 48
+
+	clc			; fixed_add(&space_x,&cx,&space_x);	; 2
+	lda	SPACEX_F						; 3
+	adc	CX_F							; 3
+	sta	SPACEX_F						; 3
+	lda	SPACEX_I						; 3
+	adc	CX_I							; 3
+	sta	SPACEX_I						; 3
+
+	lda	#$ec		; temp.i=0xec;	// -20 (LOWRES_W/2)	; 2
+	sta	TEMP_I							; 3
+	lda	#0		; temp.f=0;				; 2
+	sta	TEMP_F							; 3
+								;==========
+								;	 30
+	; fixed_mul(&temp,&dx,&temp);
+	lda	TEMP_I							; 3
+	sta	NUM1H							; 4
+	lda	TEMP_F							; 3
+	sta	NUM1L							; 4
+	lda	DX_I							; 3
+	sta	NUM2H							; 4
+	lda	DX_F							; 3
+	sta	NUM2L							; 4
+	jsr	multiply						; 6
+	lda	RESULT+2						; 4
+	sta	TEMP_I							; 3
+	lda	RESULT+1						; 4
+	sta	TEMP_F							; 3
+								;==========
+								;	 48
 
 
-	clc			; fixed_add(&space_x,&cx,&space_x);
-	lda	SPACEX_F
-	adc	CX_F
-	sta	SPACEX_F
-	lda	SPACEX_I
-	adc	CX_I
-	sta	SPACEX_I
 
-	lda	#$ec		; fixed_temp.i=0xec;      // -20 (LOWRES_W/2)
-	sta	TEMP_I
-	lda	#0		; fixed_temp.f=0;
-	sta	TEMP_F
+	clc		; fixed_add(&space_x,&temp,&space_x);		; 2
+	lda	SPACEX_F						; 3
+	adc	TEMP_F							; 3
+	sta	SPACEX_F						; 3
+	lda	SPACEX_I						; 3
+	adc	TEMP_I							; 3
+	sta	SPACEX_I						; 3
+								;==========
+								;	 20
+	; brk	; space_x = 06:bc
 
-	; fixed_mul(&fixed_temp,&dx,&fixed_temp);
-	lda	TEMP_I
-	sta	NUM1H
-	lda	TEMP_F
-	sta	NUM1L
-	lda	DX_I
-	sta	NUM2H
-	lda	DX_F
-	sta	NUM2L
-	jsr	multiply
-	lda	RESULT+2
-	sta	TEMP_I
-	lda	RESULT+1
-	sta	TEMP_F
-
-
-	clc			; fixed_add(&space_x,&fixed_temp,&space_x);
-	lda	SPACEX_F
-	adc	TEMP_F
-	sta	SPACEX_F
-	lda	SPACEX_I
-	adc	TEMP_I
-	sta	SPACEX_I
-
-;;brk	;; brk	space_x = 06:bc
-
-	lda	ANGLE	; fixed_temp.i=fixed_sin[angle&0xf].i;
-	and	#$f
-	asl
-	tay
-	lda	fixed_sin,Y
-	sta	TEMP_I
-	iny		; fixed_temp.f=fixed_sin[angle&0xf].f;
-	lda	fixed_sin,Y
-	sta	TEMP_F
-
+	lda	ANGLE	; temp.i=fixed_sin[angle&0xf].i;		; 3
+	and	#$f							; 2
+	asl								; 2
+	tay								; 2
+	lda	fixed_sin,Y						; 4
+	sta	TEMP_I							; 3
+	iny		; fixed_temp.f=fixed_sin[angle&0xf].f;		; 2
+	lda	fixed_sin,Y						; 4
+	sta	TEMP_F							; 3
+								;==========
+								;	 25
 
 	; fixed_mul(&space_y,&fixed_temp,&space_y);
-	lda	SPACEY_I
-	sta	NUM1H
-	lda	SPACEY_F
-	sta	NUM1L
-	lda	TEMP_I
-	sta	NUM2H
-	lda	TEMP_F
-	sta	NUM2L
-	jsr	multiply
-	lda	RESULT+2
-	sta	SPACEY_I
-	lda	RESULT+1
-	sta	SPACEY_F
+	lda	SPACEY_I						; 3
+	sta	NUM1H							; 4
+	lda	SPACEY_F						; 3
+	sta	NUM1L							; 4
+	lda	TEMP_I							; 3
+	sta	NUM2H							; 4
+	lda	TEMP_F							; 3
+	sta	NUM2L							; 4
+	jsr	multiply						; 6
+	lda	RESULT+2						; 4
+	sta	SPACEY_I						; 3
+	lda	RESULT+1						; 4
+	sta	SPACEY_F						; 3
+								;==========
+								;	 48
 
+	clc			; fixed_add(&space_y,&cy,&space_y);	; 2
+	lda	SPACEY_F						; 3
+	adc	CY_F							; 3
+	sta	SPACEY_F						; 3
+	lda	SPACEY_I						; 3
+	adc	CY_I							; 3
+	sta	SPACEY_I						; 3
 
-	clc			; fixed_add(&space_y,&cy,&space_y);
-	lda	SPACEY_F
-	adc	CY_F
-	sta	SPACEY_F
-	lda	SPACEY_I
-	adc	CY_I
-	sta	SPACEY_I
-
-	lda	#$ec		; fixed_temp.i=0xec;      // -20 (LOWRES_W/2)
-	sta	TEMP_I
-	lda	#0		; fixed_temp.f=0;
-	sta	TEMP_F
-
+	lda	#$ec		; temp.i=0xec;	// -20 (LOWRES_W/2)	; 2
+	sta	TEMP_I							; 3
+	lda	#0		; temp.f=0;				; 2
+	sta	TEMP_F							; 3
+								;==========
+								;	 30
 	; fixed_mul(&fixed_temp,&dy,&fixed_temp);
-	lda	TEMP_I
-	sta	NUM1H
-	lda	TEMP_F
-	sta	NUM1L
-	lda	DY_I
-	sta	NUM2H
-	lda	DY_F
-	sta	NUM2L
-	jsr	multiply
-	lda	RESULT+2
-	sta	TEMP_I
-	lda	RESULT+1
-	sta	TEMP_F
+	lda	TEMP_I							; 3
+	sta	NUM1H							; 4
+	lda	TEMP_F							; 3
+	sta	NUM1L							; 4
+	lda	DY_I							; 3
+	sta	NUM2H							; 4
+	lda	DY_F							; 3
+	sta	NUM2L							; 4
+	jsr	multiply						; 6
+	lda	RESULT+2						; 4
+	sta	TEMP_I							; 3
+	lda	RESULT+1						; 4
+	sta	TEMP_F							; 3
+								;==========
+								;	 48
 
+	clc		; fixed_add(&space_y,&fixed_temp,&space_y);	; 2
+	lda	SPACEY_F						; 3
+	adc	TEMP_F							; 3
+	sta	SPACEY_F						; 3
+	lda	SPACEY_I						; 3
+	adc	TEMP_I							; 3
+	sta	SPACEY_I						; 3
 
-	clc			; fixed_add(&space_y,&fixed_temp,&space_y);
-	lda	SPACEY_F
-	adc	TEMP_F
-	sta	SPACEY_F
-	lda	SPACEY_I
-	adc	TEMP_I
-	sta	SPACEY_I
+	; brk	; space_y = f7:04
 
-;;brk	;; brk	space_y = f7:04
-
-	lda	#0
-	sta	SCREEN_X
+	lda	#0							; 2
+	sta	SCREEN_X						; 3
+								;==========
+								;	 25
 screenx_loop:
 
-	jsr	lookup_map		; get color in A
+	jsr	lookup_map		; get color in A		; 6
 
-	ldy	#0
-	sta	(GBASL),Y		; plot double height
-	inc	GBASL			; point to next pixel
+	ldy	#0							; 2
+	sta	(GBASL),Y		; plot double height		; 6
+	inc	GBASL			; point to next pixel		; 5
 
 	; Check if over water
-	cmp	#$22			; see if dark blue
-	bne	not_watery
+	cmp	#$22			; see if dark blue		; 2
+	bne	not_watery						; 2nt/3
 
-	lda	SCREEN_Y		; only check pixel in middle of screen
-	cmp	#38
-	bne	not_watery
+	lda	SCREEN_Y	; only check pixel in middle of screen	; 3
+	cmp	#38							; 2
+	bne	not_watery						; 2nt/3
 
-	lda	SCREEN_X		; only check pixel in middle of screen
-	cmp	#20
-	bne	not_watery
+	lda	SCREEN_X	; only check pixel in middle of screen	; 3
+	cmp	#20							; 2
+	bne	not_watery						; 2nt/3
 
-	lda	#$1			; set over water
-	sta	OVER_WATER
-
+	lda	#$1		; set over water			; 2
+	sta	OVER_WATER						; 3
+								;============
+								;	 42
 not_watery:
 	; advance to the next position in space
 
-	clc			; fixed_add(&space_x,&dx,&space_x);
-	lda	SPACEX_F
-	adc	DX_F
-	sta	SPACEX_F
-	lda	SPACEX_I
-	adc	DX_I
-	sta	SPACEX_I
+	clc			; fixed_add(&space_x,&dx,&space_x);	; 2
+	lda	SPACEX_F						; 3
+	adc	DX_F							; 3
+	sta	SPACEX_F						; 3
+	lda	SPACEX_I						; 3
+	adc	DX_I							; 3
+	sta	SPACEX_I						; 3
 
-	clc			; fixed_add(&space_y,&dy,&space_y);
-	lda	SPACEY_F
-	adc	DY_F
-	sta	SPACEY_F
-	lda	SPACEY_I
-	adc	DY_I
-	sta	SPACEY_I
+	clc			; fixed_add(&space_y,&dy,&space_y);	; 2
+	lda	SPACEY_F						; 3
+	adc	DY_F							; 3
+	sta	SPACEY_F						; 3
+	lda	SPACEY_I						; 3
+	adc	DY_I							; 3
+	sta	SPACEY_I						; 3
 
+	inc	SCREEN_X						; 5
+	lda	SCREEN_X						; 3
+	cmp	#40			; LOWRES width			; 2
+	bne	screenx_loop						; 2nt/3
+								;=============
+								;	53
 
-
-	inc	SCREEN_X
-	lda	SCREEN_X
-	cmp	#40			; LOWRES width
-	bne	screenx_loop
-
-
-	lda	SCREEN_Y
-	clc
-	adc	#2
-	sta	SCREEN_Y
-	cmp	#40			; LOWRES height
-	beq	done_screeny
-	jmp	screeny_loop
+	lda	SCREEN_Y						; 3
+	clc								; 2
+	adc	#2							; 2
+	sta	SCREEN_Y						; 3
+	cmp	#40			; LOWRES height			; 2
+	beq	done_screeny						; 2nt/3
+	jmp	screeny_loop						; 3
+								;=============
+								;	 17
 done_screeny:
-	rts
+	rts								; 6
 
 
 	;====================

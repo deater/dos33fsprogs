@@ -1,3 +1,9 @@
+mode7 speed fixes:
+	+ Don't draw sky every frame, only if needed
+	+ faster multiply routine
+	+ move multiply vars to zero page
+	+ leave one of multiply results in accumulator at end?
+
 short term:
 
 longer term:
