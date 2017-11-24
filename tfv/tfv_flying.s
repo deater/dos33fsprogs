@@ -1,47 +1,12 @@
-SHIPY		EQU	$E4
-
-; FIXME, sort out available ZP page space
-TURNING		EQU	$60
-SCREEN_X	EQU	$61
-SCREEN_Y	EQU	$62
-ANGLE		EQU	$63
-
-HORIZ_SCALE_I	EQU	$64
-HORIZ_SCALE_F	EQU	$65
-FACTOR_I	EQU	$66
-FACTOR_F	EQU	$67
-DX_I		EQU	$68
-DX_F		EQU	$69
-SPACEX_I	EQU	$6A
-SPACEX_F	EQU	$6B
-CX_I		EQU	$6C
-CX_F		EQU	$6D
-DY_I		EQU	$6E
-DY_F		EQU	$6F
-SPACEY_I	EQU	$70
-SPACEY_F	EQU	$71
-CY_I		EQU	$72
-CY_F		EQU	$73
-TEMP_I		EQU	$74
-TEMP_F		EQU	$75
-DISTANCE_I	EQU	$76
-DISTANCE_F	EQU	$77
-SPACEZ_I	EQU	$78
-SPACEZ_F	EQU	$79
-DRAW_SPLASH	EQU	$7A
-SPEED		EQU	$7B
-SPLASH_COUNT	EQU	$7C
-OVER_WATER	EQU	$7D
-
 ;===========
 ; CONSTANTS
 ;===========
-SHIPX		EQU	15
-TILE_W		EQU	64
-TILE_H		EQU	64
-MAP_MASK	EQU	(TILE_W - 1)
-LOWRES_W	EQU	40
-LOWRES_H	EQU	40
+CONST_SHIPX	EQU	15
+CONST_TILE_W	EQU	64
+CONST_TILE_H	EQU	64
+CONST_MAP_MASK	EQU	(CONST_TILE_W - 1)
+CONST_LOWRES_W	EQU	40
+CONST_LOWRES_H	EQU	40
 
 
 
@@ -242,7 +207,7 @@ landing_loop:
         sta     INH
         lda     #<shadow_forward
         sta     INL
-	lda	#(SHIPX+3)
+	lda	#(CONST_SHIPX+3)
 	sta	XPOS
 	clc
 	lda	SPACEZ_I
@@ -256,7 +221,7 @@ landing_loop:
         lda     #<ship_forward
         sta     INL
 
-	lda	#SHIPX
+	lda	#CONST_SHIPX
 	sta	XPOS
 	lda	SHIPY
 	sta	YPOS
@@ -414,7 +379,7 @@ draw_ship_forward:
         sta     INH							; 3
         lda     #<splash_forward					; 2
         sta     INL							; 3
-	lda	#(SHIPX+1)						; 2
+	lda	#(CONST_SHIPX+1)					; 2
 	sta	XPOS							; 3
 	clc								; 2
 	lda	SHIPY							; 3
@@ -430,7 +395,7 @@ no_forward_splash:
         sta     INH							; 3
         lda     #<shadow_forward					; 2
         sta     INL							; 3
-	lda	#(SHIPX+3)						; 2
+	lda	#(CONST_SHIPX+3)					; 2
 	sta	XPOS							; 3
 	clc								; 2
 	lda	SPACEZ_I						; 3
@@ -455,7 +420,7 @@ draw_ship_right:
         sta     INH							; 3
         lda     #<splash_right						; 2
         sta     INL							; 3
-	lda	#(SHIPX+1)						; 2
+	lda	#(CONST_SHIPX+1)					; 2
 	sta	XPOS							; 3
 	clc								; 2
 	lda	#36							; 2
@@ -470,7 +435,7 @@ no_right_splash:
         sta     INH							; 3
         lda     #<shadow_right						; 2
         sta     INL							; 3
-	lda	#(SHIPX+3)						; 2
+	lda	#(CONST_SHIPX+3)					; 2
 	sta	XPOS							; 3
 	clc								; 2
 	lda	SPACEZ_I						; 3
@@ -498,7 +463,7 @@ draw_ship_left:
         sta     INH							; 3
         lda     #<splash_left						; 2
         sta     INL							; 3
-	lda	#(SHIPX+1)						; 2
+	lda	#(CONST_SHIPX+1)					; 2
 	sta	XPOS							; 3
 	clc								; 2
 	lda	#36							; 2
@@ -513,7 +478,7 @@ no_left_splash:
         sta     INH							; 3
         lda     #<shadow_left						; 2
         sta     INL							; 3
-	lda	#(SHIPX+3)						; 2
+	lda	#(CONST_SHIPX+3)					; 2
 	sta	XPOS							; 3
 	clc								; 2
 	lda	SPACEZ_I						; 3
@@ -532,7 +497,7 @@ no_left_splash:
 								;	 48
 
 draw_ship:
-	lda	#SHIPX							; 2
+	lda	#CONST_SHIPX						; 2
 	sta	XPOS							; 3
 	lda	SHIPY							; 3
 	sta	YPOS							; 3
@@ -980,11 +945,11 @@ done_screeny:
 	; returns color in A
 lookup_map:
 	lda	SPACEX_I						; 3
-	and	#MAP_MASK						; 2
+	and	#CONST_MAP_MASK						; 2
 	sta	TEMPY							; 3
 
 	lda	SPACEY_I						; 3
-	and	#MAP_MASK		; wrap to 64x64 grid		; 2
+	and	#CONST_MAP_MASK		; wrap to 64x64 grid		; 2
 
 
 	asl								; 2

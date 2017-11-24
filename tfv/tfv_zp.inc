@@ -1,5 +1,60 @@
 .define EQU =
 
+;; Zero page monitor routines addresses
+WNDLFT	EQU $20
+WNDWDTH	EQU $21
+WNDTOP	EQU $22
+WNDBTM	EQU $23
+CH	EQU $24
+CV	EQU $25
+GBASL	EQU $26
+GBASH	EQU $27
+BASL	EQU $28
+BASH	EQU $29
+H2	EQU $2C
+V2	EQU $2D
+MASK	EQU $2E
+COLOR	EQU $30
+INVFLG	EQU $32
+
+;; Flying Routine
+
+TURNING         EQU     $60
+SCREEN_X        EQU     $61
+SCREEN_Y        EQU     $62
+ANGLE           EQU     $63
+HORIZ_SCALE_I   EQU     $64
+HORIZ_SCALE_F   EQU     $65
+FACTOR_I        EQU     $66
+FACTOR_F        EQU     $67
+DX_I            EQU     $68
+DX_F            EQU     $69
+SPACEX_I        EQU     $6A
+SPACEX_F        EQU     $6B
+CX_I            EQU     $6C
+CX_F            EQU     $6D
+DY_I            EQU     $6E
+DY_F            EQU     $6F
+SPACEY_I        EQU     $70
+SPACEY_F        EQU     $71
+CY_I            EQU     $72
+CY_F            EQU     $73
+TEMP_I          EQU     $74
+TEMP_F          EQU     $75
+DISTANCE_I      EQU     $76
+DISTANCE_F      EQU     $77
+SPACEZ_I        EQU     $78
+SPACEZ_F        EQU     $79
+DRAW_SPLASH     EQU     $7A
+SPEED           EQU     $7B
+SPLASH_COUNT    EQU     $7C
+OVER_WATER      EQU     $7D
+
+SHIPY           EQU     $E4
+
+
+
+
 KEYPRESS	EQU	$C000
 KEYRESET	EQU	$C010
 
@@ -39,22 +94,7 @@ SETNORM	EQU $FE84			;; NORMAL
 COUT	EQU $FDED			;; output A to screen
 COUT1	EQU $FDF0			;; output A to screen
 
-;; Zero page addresses
-WNDLFT	EQU $20
-WNDWDTH	EQU $21
-WNDTOP	EQU $22
-WNDBTM	EQU $23
-CH	EQU $24
-CV	EQU $25
-GBASL	EQU $26
-GBASH	EQU $27
-BASL	EQU $28
-BASH	EQU $29
-H2	EQU $2C
-V2	EQU $2D
-MASK	EQU $2E
-COLOR	EQU $30
-INVFLG	EQU $32
+
 
 ; Our zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
