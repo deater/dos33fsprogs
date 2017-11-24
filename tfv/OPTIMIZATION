@@ -1,0 +1,32 @@
+Original implementation:
+	Multiplying 1.0 * 2.0 = 2.0, took 707 cycles
+	Multiplying ff.ff * ff.ff = 0.0, took 761 cycles
+
+	Cycles: flying=               162
+	Cycles: getkey=                46
+	Cycles: page_flip=             26
+	Cycles: multiply=          88,179
+	Cycles: mode7=             76,077
+	Cycles: lookup_map=        33,920
+	Cycles: put_sprite=         2,561
+	==================================
+	Total =                   200,971
+	Frame Rate = 4.98 fps
+
+Update Multiply to use zero page addresses:
+	Multiplying 1.0 * 2.0 = 2.0, took 616 cycles
+	Multiplying ff.ff * ff.ff = 0.0, took 664 cycles
+
+	Cycles: flying=              162
+	Cycles: getkey=               46
+	Cycles: page_flip=            26
+	Cycles: multiply=         76,561
+	Cycles: mode7=            76,077
+	Cycles: lookup_map=       33,920
+	Cycles: put_sprite=        2,561
+	===================================
+	Total =                  189,353
+	Frame Rate = 5.28 fps
+
+
+

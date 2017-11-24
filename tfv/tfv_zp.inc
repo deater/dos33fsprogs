@@ -1,6 +1,7 @@
 .define EQU =
 
 ;; Zero page monitor routines addresses
+
 WNDLFT	EQU $20
 WNDWDTH	EQU $21
 WNDTOP	EQU $22
@@ -16,6 +17,40 @@ V2	EQU $2D
 MASK	EQU $2E
 COLOR	EQU $30
 INVFLG	EQU $32
+
+; More zero-page addresses
+; we try not to conflict with anything DOS, MONITOR or BASIC related
+
+COLOR1		EQU	$E0
+COLOR2		EQU	$E1
+MATCH		EQU	$E2
+XX		EQU	$E3
+YY		EQU	$E4
+YADD		EQU	$E5
+LOOP		EQU	$E6
+MEMPTRL		EQU	$E7
+MEMPTRH		EQU	$E8
+NAMEL		EQU	$E9
+NAMEH		EQU	$EA
+NAMEX		EQU	$EB
+CHAR		EQU	$EC
+DISP_PAGE       EQU	$ED
+DRAW_PAGE       EQU	$EE
+
+FIRST		EQU	$F0
+LASTKEY		EQU	$F1
+PADDLE_STATUS	EQU	$F2
+XPOS		EQU	$F3
+YPOS		EQU	$F4
+TEMP		EQU	$FA
+RUN		EQU	$FA
+TEMP2		EQU	$FB
+TEMPY		EQU	$FB
+INL		EQU	$FC
+INH		EQU	$FD
+OUTL		EQU	$FE
+OUTH		EQU	$FF
+
 
 ;; Flying Routine Only
 
@@ -49,6 +84,13 @@ DRAW_SPLASH     EQU     $7A
 SPEED           EQU     $7B
 SPLASH_COUNT    EQU     $7C
 OVER_WATER      EQU     $7D
+NUM1L		EQU	$7E
+NUM1H		EQU	$7F
+NUM2L		EQU	$80
+NUM2H		EQU	$81
+RESULT		EQU	$82 ; 83,84,85
+NEGATE		EQU	$86
+
 SHIPY           EQU     $E4
 
 ;; World Map Only
@@ -110,38 +152,6 @@ COUT1	EQU $FDF0			;; output A to screen
 
 
 
-; Our zero-page addresses
-; we try not to conflict with anything DOS, MONITOR or BASIC related
-
-COLOR1		EQU	$E0
-COLOR2		EQU	$E1
-MATCH		EQU	$E2
-XX		EQU	$E3
-YY		EQU	$E4
-YADD		EQU	$E5
-LOOP		EQU	$E6
-MEMPTRL		EQU	$E7
-MEMPTRH		EQU	$E8
-NAMEL		EQU	$E9
-NAMEH		EQU	$EA
-NAMEX		EQU	$EB
-CHAR		EQU	$EC
-DISP_PAGE       EQU	$ED
-DRAW_PAGE       EQU	$EE
-
-FIRST		EQU	$F0
-LASTKEY		EQU	$F1
-PADDLE_STATUS	EQU	$F2
-XPOS		EQU	$F3
-YPOS		EQU	$F4
-TEMP		EQU	$FA
-RUN		EQU	$FA
-TEMP2		EQU	$FB
-TEMPY		EQU	$FB
-INL		EQU	$FC
-INH		EQU	$FD
-OUTL		EQU	$FE
-OUTH		EQU	$FF
 
 
 

@@ -83,7 +83,7 @@ static unsigned char water_map[32]={
 #define LOWRES_W	40
 #define LOWRES_H	40
 
-static int displayed=0;
+static int displayed=1;
 
 struct cycle_counts {
 	int flying;
@@ -229,18 +229,11 @@ static void fixed_mul(unsigned char x_i, unsigned char x_f,
 	num1h=x_i;
 	num1l=x_f;
 
-	negate=0;				// lda	#0		2
-						// sta	NEGATE		4
-
-						// lda	NUM1H		4
-
-						cycles.multiply+=13;
-
-
-	if (!(num1h&0x80)) goto check_num2;	// bpl check_num2	2nt/3
+	negate=0;
+						cycles.multiply+=10;
+	if (!(num1h&0x80)) goto check_num2;
 						cycles.multiply--;
-
-	negate++;				// inc NEGATE		6
+	negate++;
 
 	num1l=~num1l;
 	num1h=~num1h;
@@ -254,13 +247,12 @@ static void fixed_mul(unsigned char x_i, unsigned char x_f,
 
 	num1l&=0xff;
 	num1h&=0xff;
-						// total=26
-						cycles.multiply+=26;
+						cycles.multiply+=25;
 check_num2:
 
 	num2h=y_i;
 	num2l=y_f;
-						cycles.multiply+=7;
+						cycles.multiply+=6;
 	if (!(num2h&0x80)) goto unsigned_multiply;
 						cycles.multiply--;
 	negate++;
@@ -277,7 +269,7 @@ check_num2:
 
 	num2l&=0xff;
 	num2h&=0xff;
-						cycles.multiply+=30;
+						cycles.multiply+=25;
 unsigned_multiply:
 
 //	if (debug) {
@@ -290,7 +282,7 @@ unsigned_multiply:
 	aa=0;		// lda #0 (sz)
 	result2=aa;	// sta result+2
 	xx=16;		// ldx #16 (sz)
-						cycles.multiply+=8;
+						cycles.multiply+=7;
 multiply_mainloop:
 	cc=(num2h&1);	//lsr NUM2+1 (szc)
 	num2h>>=1;
@@ -306,7 +298,7 @@ multiply_mainloop:
 
 	num2l|=(cc<<7);
 	cc=cc2;
-						cycles.multiply+=15;
+						cycles.multiply+=13;
 	if (cc==0) goto shift_output;	// bcc L2
 						cycles.multiply--;
 
@@ -321,7 +313,7 @@ multiply_mainloop:
 	aa=aa+cc+num1h;			// adc NUM1+1
 	cc=!!(aa&0x100);
 	aa=aa&0xff;
-						cycles.multiply+=22;
+						cycles.multiply+=18;
 shift_output:
 	cc2=aa&1;
 	aa=aa>>1;
@@ -348,7 +340,7 @@ shift_output:
 	cc=cc2;		// ror result+0
 
 	xx--;				// dex
-						cycles.multiply+=25;
+						cycles.multiply+=22;
 	if (xx!=0) goto multiply_mainloop;	// bne L1
 						cycles.multiply--;
 	result3=aa&0xff;		// sta result+3
@@ -358,7 +350,7 @@ shift_output:
 //		printf("RAW RESULT = %02x:%02x:%02x:%02x\n",
 //			result3&0xff,result2&0xff,result1&0xff,result0&0xff);
 //	}
-						cycles.multiply+=13;
+						cycles.multiply+=11;
 	if (negate&1) {
 //		printf("NEGATING!\n");
 						cycles.multiply--;
@@ -383,7 +375,7 @@ shift_output:
 		aa-=result3+cc;
 		cc=!!(aa&0x100);
 		result3=aa;
-							cycles.multiply+=50;
+							cycles.multiply+=42;
 	}
 
 	*z_i=result2&0xff;
@@ -618,6 +610,21 @@ int flying(void) {
 	/************************************************/
 	/* Flying					*/
 	/************************************************/
+
+	/* Benchmark the multiply */
+	memset(&cycles,0,sizeof(cycles));
+	fixed_mul(0x1,0x0,
+		0x2,0x0,
+		&ram[FACTOR_I],&ram[FACTOR_F]);
+	printf("Multiplying 1.0 * 2.0 = %d.%d, took %d cycles\n",
+		ram[FACTOR_I],ram[FACTOR_F],cycles.multiply);
+
+	memset(&cycles,0,sizeof(cycles));
+	fixed_mul(0xff,0xff,
+		0xff,0xff,
+		&ram[FACTOR_I],&ram[FACTOR_F]);
+	printf("Multiplying ff.ff * ff.ff = %d.%d, took %d cycles\n",
+		ram[FACTOR_I],ram[FACTOR_F],cycles.multiply);
 
 	gr();
 	clear_bottom(PAGE0);
