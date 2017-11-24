@@ -731,8 +731,8 @@ int flying(void) {
 				for(loop=ram[SPACEZ_I];loop>0;loop--) {
 
 					draw_background_mode7();
-					grsim_put_sprite(shadow_forward,CONST_SHIPX+3,31+ram[SPACEZ_I]);
-					grsim_put_sprite(ship_forward,CONST_SHIPX,ram[SHIPY]);
+					cycles.put_sprite+=grsim_put_sprite(shadow_forward,CONST_SHIPX+3,31+ram[SPACEZ_I]);
+					cycles.put_sprite+=grsim_put_sprite(ship_forward,CONST_SHIPX,ram[SHIPY]);
 					page_flip();
 					usleep(200000);
 
@@ -794,35 +794,35 @@ int flying(void) {
 
 		if (ram[TURNING]==0) {
 			if (ram[DRAW_SPLASH]) {
-				grsim_put_sprite(splash_forward,
+				cycles.put_sprite+=grsim_put_sprite(splash_forward,
 					CONST_SHIPX+1,ram[SHIPY]+9);
 						cycles.flying+=33;
 			}
-			grsim_put_sprite(shadow_forward,CONST_SHIPX+3,31+ram[SPACEZ_I]);
-			grsim_put_sprite(ship_forward,CONST_SHIPX,ram[SHIPY]);
+			cycles.put_sprite+=grsim_put_sprite(shadow_forward,CONST_SHIPX+3,31+ram[SPACEZ_I]);
+			cycles.put_sprite+=grsim_put_sprite(ship_forward,CONST_SHIPX,ram[SHIPY]);
 						cycles.flying+=46;
 		}
 		else if (ram[TURNING]>128) {
 
 			if (ram[DRAW_SPLASH]) {
-				grsim_put_sprite(splash_left,
+				cycles.put_sprite+=grsim_put_sprite(splash_left,
 						CONST_SHIPX+1,36);
 						cycles.flying+=28;
 			}
-			grsim_put_sprite(shadow_left,CONST_SHIPX+3,31+ram[SPACEZ_I]);
-			grsim_put_sprite(ship_left,CONST_SHIPX,ram[SHIPY]);
+			cycles.put_sprite+=grsim_put_sprite(shadow_left,CONST_SHIPX+3,31+ram[SPACEZ_I]);
+			cycles.put_sprite+=grsim_put_sprite(ship_left,CONST_SHIPX,ram[SHIPY]);
 			ram[TURNING]++;
 						cycles.flying+=48;
 		}
 		else {
 
 			if (ram[DRAW_SPLASH]) {
-				grsim_put_sprite(splash_right,
+				cycles.put_sprite+=grsim_put_sprite(splash_right,
 						CONST_SHIPX+1,36);
 						cycles.flying+=28;
 			}
-			grsim_put_sprite(shadow_right,CONST_SHIPX+3,31+ram[SPACEZ_I]);
-			grsim_put_sprite(ship_right,CONST_SHIPX,ram[SHIPY]);
+			cycles.put_sprite+=grsim_put_sprite(shadow_right,CONST_SHIPX+3,31+ram[SPACEZ_I]);
+			cycles.put_sprite+=grsim_put_sprite(ship_right,CONST_SHIPX,ram[SHIPY]);
 			ram[TURNING]--;
 						cycles.flying+=51;
 		}

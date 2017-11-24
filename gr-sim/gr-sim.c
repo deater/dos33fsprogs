@@ -820,6 +820,7 @@ int grsim_put_sprite_page(int page, unsigned char *sprite_data, int xpos, int yp
 	unsigned char i;
 	unsigned char *ptr;
 	short address;
+	int cycles=0;
 
 	ptr=sprite_data;
 	x=*ptr;
@@ -829,41 +830,55 @@ int grsim_put_sprite_page(int page, unsigned char *sprite_data, int xpos, int yp
 
 	ypos=ypos&0xfe;
 
+							cycles+=28;
+
 	while(1) {
 		address=gr_addr_lookup[ypos/2];
 		address+=(page)<<8;
 		address+=xpos;
+							cycles+=36;
 		for(i=0;i<x;i++) {
 			a=*ptr;
+							cycles+=17;
 			if (a==0) {
 			}
 			else if ((a&0xf0)==0) {
+							cycles+=8;
 				ram[address]&=0xf0;
 				ram[address]|=a;
+							cycles+=19;
 			}
 			else if ((a&0x0f)==0) {
+							cycles+=8;
 				ram[address]&=0x0f;
 				ram[address]|=a;
+							cycles+=19;
 			}
 			else {
+							cycles+=8;
 				ram[address]=a;
+							cycles+=19;
 			}
 			ptr++;
 			address++;
+							cycles+=13;
 		}
 		ypos+=2;
 		ram[CV]--;
 		if (ram[CV]==0) break;
+							cycles+=18;
 	}
-
-	return 0;
+							cycles+=6;
+	return cycles;
 }
 
 int grsim_put_sprite(unsigned char *sprite_data, int xpos, int ypos) {
 
-	grsim_put_sprite_page(ram[DRAW_PAGE],sprite_data,xpos,ypos);
+	int cycles;
 
-	return 0;
+	cycles=grsim_put_sprite_page(ram[DRAW_PAGE],sprite_data,xpos,ypos);
+
+	return cycles;
 }
 
 
