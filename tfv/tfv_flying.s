@@ -83,16 +83,15 @@ flying_start:
 
 flying_loop:
 
-	lda	SPLASH_COUNT
-	beq	flying_keyboard
-	dec	SPLASH_COUNT	; decrement splash count
+	lda	SPLASH_COUNT						; 3
+	beq	flying_keyboard						; 2nt/3
+	dec	SPLASH_COUNT	; decrement splash count		; 5
 
 flying_keyboard:
 
+	jsr	get_key		; get keypress				; 6
 
-	jsr	get_key		; get keypress
-
-	lda	LASTKEY
+	lda	LASTKEY							; 3
 
 ;	cmp	#('Q')		; if quit, then return
 ;	bne	skipskip
@@ -100,8 +99,8 @@ flying_keyboard:
 
 ;skipskip:
 
-	cmp	#('W')
-	bne	check_down
+	cmp	#('W')							; 2
+	bne	check_down						; 3/2nt
 
 	;===========
 	; UP PRESSED
@@ -301,99 +300,98 @@ check_done:
 	;================
 	; Wrap the Angle
 	;================
-
-	lda	ANGLE
-	and	#$f
-	sta	ANGLE
+	; FIXME: only do this in right/left routine?
+	lda	ANGLE							; 3
+	and	#$f							; 2
+	sta	ANGLE							; 3
 
 	;================
 	; Handle Movement
 	;================
 
 speed_move:
-	ldx	SPEED
-	beq	draw_background
+	ldx	SPEED							; 3
+	beq	draw_background						; 2nt/3
+								;=============
+	lda	ANGLE	; dx.i=fixed_sin[(angle+4)&0xf].i; // cos()	; 3
+	clc								; 2
+	adc	#4							; 2
+	and	#$f							; 2
+	asl								; 2
+	tay								; 2
+	lda	fixed_sin_scale,Y					; 4
+	sta	DX_I							; 3
+	iny		; dx.f=fixed_sin[(angle+4)&0xf].f; // cos()	; 2
+	lda	fixed_sin_scale,Y					; 4
+	sta	DX_F							; 3
 
-	lda	ANGLE		; dx.i=fixed_sin[(angle+4)&0xf].i; // cos()
-	clc
-	adc	#4
-	and	#$f
-	asl
-	tay
-	lda	fixed_sin_scale,Y
-	sta	DX_I
-	iny			; dx.f=fixed_sin[(angle+4)&0xf].f; // cos()
-	lda	fixed_sin_scale,Y
-	sta	DX_F
-
-	lda	ANGLE		; dy.i=fixed_sin[angle&0xf].i; // sin()
-	and	#$f
-	asl
-	tay
-	lda	fixed_sin_scale,Y
-	sta	DY_I
-	iny			; dx.f=fixed_sin[angle&0xf].f; // sin()
-	lda	fixed_sin_scale,Y
-	sta	DY_F
-
+	lda	ANGLE	; dy.i=fixed_sin[angle&0xf].i; // sin()		; 3
+	and	#$f							; 2
+	asl								; 2
+	tay								; 2
+	lda	fixed_sin_scale,Y					; 4
+	sta	DY_I							; 3
+	iny		; dx.f=fixed_sin[angle&0xf].f; // sin()		; 2
+	lda	fixed_sin_scale,Y					; 4
+	sta	DY_F							; 3
+								;============
+								;	 54
 speed_loop:
 
-	clc			; fixed_add(&cx,&dx,&cx);
-	lda	CX_F
-	adc	DX_F
-	sta	CX_F
-	lda	CX_I
-	adc	DX_I
-	sta	CX_I
+	clc			; fixed_add(&cx,&dx,&cx);		; 2
+	lda	CX_F							; 3
+	adc	DX_F							; 3
+	sta	CX_F							; 3
+	lda	CX_I							; 3
+	adc	DX_I							; 3
+	sta	CX_I							; 3
 
-	clc			; fixed_add(&cy,&dy,&cy);
-	lda	CY_F
-	adc	DY_F
-	sta	CY_F
-	lda	CY_I
-	adc	DY_I
-	sta	CY_I
+	clc			; fixed_add(&cy,&dy,&cy);		; 2
+	lda	CY_F							; 3
+	adc	DY_F							; 3
+	sta	CY_F							; 3
+	lda	CY_I							; 3
+	adc	DY_I							; 3
+	sta	CY_I							; 3
 
-	dex
-	bne	speed_loop
-
+	dex								; 2
+	bne	speed_loop						; 2nt/3
+								;============
+								;	45
 
 	;====================
 	; Draw the background
 	;====================
 draw_background:
-	jsr	draw_background_mode7
-
-;	lda	#1
-;	sta	OVER_WATER
+	jsr	draw_background_mode7					; 6
 
 	; Calculate whether to draw the splash
 
-	lda	#0			; set splash drawing to 0
-	sta	DRAW_SPLASH
+	lda	#0			; set splash drawing to 0	; 2
+	sta	DRAW_SPLASH						; 3
 
-	lda	SPEED			; if speed==0, no splash
-	beq	no_splash
+	lda	SPEED			; if speed==0, no splash	; 3
+	beq	no_splash						; 2nt/3
 
-	lda	TURNING
-	beq	no_turning_splash
+	lda	TURNING							; 3
+	beq	no_turning_splash					; 2nt/3
 
-	lda	SHIPY
-	cmp	#27
-	bcc	no_turning_splash	; blt if shipy<25 skip
+	lda	SHIPY							; 3
+	cmp	#27							; 2
+	bcc	no_turning_splash	; blt if shipy<25 skip		; 2nt/3
 
-	lda	#1
-	sta	SPLASH_COUNT
+	lda	#1							; 2
+	sta	SPLASH_COUNT						; 3
 
 no_turning_splash:
-	lda	OVER_WATER		; no splash if over land
-	beq	no_splash
+	lda	OVER_WATER	; no splash if over land		; 3
+	beq	no_splash						; 2nt/3
 
-	lda	SPLASH_COUNT		; no splash if splash_count expired
-	beq	no_splash
+	lda	SPLASH_COUNT	; no splash if splash_count expired	; 3
+	beq	no_splash						; 2nt/3
 
-	lda	#1
-	sta	DRAW_SPLASH
+	lda	#1							; 2
+	sta	DRAW_SPLASH						; 3
 
 no_splash:
 
@@ -401,146 +399,158 @@ no_splash:
 	; Draw the ship
 	;==============
 
-	clv
-	lda	TURNING
-	beq	draw_ship_forward
-	bpl	draw_ship_right
-	bmi	draw_ship_left		;; FIXME: optimize order
+	clv								; 2
+	lda	TURNING							; 3
+	beq	draw_ship_forward					; 2nt/3
+	bpl	draw_ship_right						; 2nt/3
+	bmi	draw_ship_left		;; FIXME: optimize order	; 2nt/3
 
 draw_ship_forward:
-	lda	DRAW_SPLASH
-	beq	no_forward_splash
+	lda	DRAW_SPLASH						; 2
+	beq	no_forward_splash					; 2nt/3
 
 	; Draw Splash
-	lda     #>splash_forward
-        sta     INH
-        lda     #<splash_forward
-        sta     INL
-	lda	#(SHIPX+1)
-	sta	XPOS
-	clc
-	lda	SHIPY
-	adc	#9
-	and	#$fe			; make sure it's even
-	sta	YPOS
-	jsr	put_sprite
+	lda     #>splash_forward					; 2
+        sta     INH							; 3
+        lda     #<splash_forward					; 2
+        sta     INL							; 3
+	lda	#(SHIPX+1)						; 2
+	sta	XPOS							; 3
+	clc								; 2
+	lda	SHIPY							; 3
+	adc	#9							; 2
+	and	#$fe			; make sure it's even		; 2
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
+								;==========
+								;	33
 no_forward_splash:
 	; Draw Shadow
-	lda     #>shadow_forward
-        sta     INH
-        lda     #<shadow_forward
-        sta     INL
-	lda	#(SHIPX+3)
-	sta	XPOS
-	clc
-	lda	SPACEZ_I
-	adc	#31
-	and	#$fe			; make sure it's even
-	sta	YPOS
-	jsr	put_sprite
+	lda     #>shadow_forward					; 2
+        sta     INH							; 3
+        lda     #<shadow_forward					; 2
+        sta     INL							; 3
+	lda	#(SHIPX+3)						; 2
+	sta	XPOS							; 3
+	clc								; 2
+	lda	SPACEZ_I						; 3
+	adc	#31							; 2
+	and	#$fe			; make sure it's even		; 2
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
 
-	lda     #>ship_forward
-        sta     INH
-        lda     #<ship_forward
-        sta     INL
-	bvc	draw_ship
-
+	lda     #>ship_forward						; 2
+        sta     INH							; 3
+        lda     #<ship_forward						; 2
+        sta     INL							; 3
+	bvc	draw_ship						; 3
+								;===========
+								;	46
 draw_ship_right:
-	lda	DRAW_SPLASH
-	beq	no_right_splash
+	lda	DRAW_SPLASH						; 3
+	beq	no_right_splash						; 2nt/3
 
 	; Draw Splash
-	lda     #>splash_right
-        sta     INH
-        lda     #<splash_right
-        sta     INL
-	lda	#(SHIPX+1)
-	sta	XPOS
-	clc
-	lda	#36
-	sta	YPOS
-	jsr	put_sprite
+	lda     #>splash_right						; 2
+        sta     INH							; 3
+        lda     #<splash_right						; 2
+        sta     INL							; 3
+	lda	#(SHIPX+1)						; 2
+	sta	XPOS							; 3
+	clc								; 2
+	lda	#36							; 2
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
+								;===========
+								;	28
 no_right_splash:
 
 	; Draw Shadow
-	lda     #>shadow_right
-        sta     INH
-        lda     #<shadow_right
-        sta     INL
-	lda	#(SHIPX+3)
-	sta	XPOS
-	clc
-	lda	SPACEZ_I
-	adc	#31
-	and	#$fe			; make sure it's even
-	sta	YPOS
-	jsr	put_sprite
+	lda     #>shadow_right						; 2
+        sta     INH							; 3
+        lda     #<shadow_right						; 2
+        sta     INL							; 3
+	lda	#(SHIPX+3)						; 2
+	sta	XPOS							; 3
+	clc								; 2
+	lda	SPACEZ_I						; 3
+	adc	#31							; 2
+	and	#$fe			; make sure it's even		; 2
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
 
-	lda     #>ship_right
-        sta     INH
-        lda     #<ship_right
-        sta     INL
+	lda     #>ship_right						; 2
+        sta     INH							; 3
+        lda     #<ship_right						; 2
+        sta     INL							; 3
 
-	dec	TURNING
+	dec	TURNING							; 5
 
-	bvc	draw_ship
-
+	bvc	draw_ship						; 3
+								;==========
+								;	51
 draw_ship_left:
-	lda	DRAW_SPLASH
-	beq	no_left_splash
+	lda	DRAW_SPLASH						; 3
+	beq	no_left_splash						; 2nt/3
 
 	; Draw Splash
-	lda     #>splash_left
-        sta     INH
-        lda     #<splash_left
-        sta     INL
-	lda	#(SHIPX+1)
-	sta	XPOS
-	clc
-	lda	#36
-	sta	YPOS
-	jsr	put_sprite
+	lda     #>splash_left						; 2
+        sta     INH							; 3
+        lda     #<splash_left						; 2
+        sta     INL							; 3
+	lda	#(SHIPX+1)						; 2
+	sta	XPOS							; 3
+	clc								; 2
+	lda	#36							; 2
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
+								;===========
+								;	28 
 no_left_splash:
 
 	; Draw Shadow
-	lda     #>shadow_left
-        sta     INH
-        lda     #<shadow_left
-        sta     INL
-	lda	#(SHIPX+3)
-	sta	XPOS
-	clc
-	lda	SPACEZ_I
-	adc	#31
-	and	#$fe			; make sure it's even
-	sta	YPOS
-	jsr	put_sprite
+	lda     #>shadow_left						; 2
+        sta     INH							; 3
+        lda     #<shadow_left						; 2
+        sta     INL							; 3
+	lda	#(SHIPX+3)						; 2
+	sta	XPOS							; 3
+	clc								; 2
+	lda	SPACEZ_I						; 3
+	adc	#31							; 2
+	and	#$fe			; make sure it's even		; 2
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
 
-	lda     #>ship_left
-        sta     INH
-        lda     #<ship_left
-        sta     INL
+	lda     #>ship_left						; 2
+        sta     INH							; 3
+        lda     #<ship_left						; 2
+        sta     INL							; 3
 
-	inc	TURNING
+	inc	TURNING							; 5
+								;==========
+								;	 48
 
 draw_ship:
-	lda	#SHIPX
-	sta	XPOS
-	lda	SHIPY
-	sta	YPOS
-	jsr	put_sprite
+	lda	#SHIPX							; 2
+	sta	XPOS							; 3
+	lda	SHIPY							; 3
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
+								;===========
+								;	17
 
 	;==================
 	; flip pages
 	;==================
 
-	jsr	page_flip
+	jsr	page_flip						; 6
 
 	;==================
 	; loop forever
 	;==================
 
-	jmp	flying_loop
+	jmp	flying_loop						; 3
 
 
 ;===========================
@@ -969,41 +979,41 @@ done_screeny:
 	; finds value in space_x.i,space_y.i
 	; returns color in A
 lookup_map:
-	lda	SPACEX_I
-	and	#MAP_MASK
-	sta	TEMPY
+	lda	SPACEX_I						; 3
+	and	#MAP_MASK						; 2
+	sta	TEMPY							; 3
 
-	lda	SPACEY_I
-	and	#MAP_MASK		; wrap to 64x64 grid
+	lda	SPACEY_I						; 3
+	and	#MAP_MASK		; wrap to 64x64 grid		; 2
 
 
-	asl
-	asl
-	asl				; multiply by 8
-	clc
-	adc	TEMPY			; add in X value
+	asl								; 2
+	asl								; 2
+	asl				; multiply by 8			; 2
+	clc								; 2
+	adc	TEMPY			; add in X value		; 2
 					; (use OR instead?)
 
-	ldy	SPACEX_I
-	cpy	#$8
-	beq	ocean_color		; bgt
-	bcs	ocean_color
-	ldy	SPACEY_I
-	cpy	#$8
-	beq	ocean_color		; bgt
-	bcs	ocean_color
+	ldy	SPACEX_I						; 3
+	cpy	#$8							; 2
+	beq	ocean_color		; bgt				; 2nt/3
+	bcs	ocean_color						; 2nt/3
+	ldy	SPACEY_I						; 3
+	cpy	#$8							; 2
+	beq	ocean_color		; bgt				; 2nt/3
+	bcs	ocean_color						; 2nt/3
 
-	tay
-	lda	flying_map,Y		; load from array
+	tay								; 2
+	lda	flying_map,Y		; load from array		; 4
 
-	rts
+	rts								; 6
 
 ocean_color:
-	and	#$1f
-	tay
-	lda	water_map,Y		; the color of the sea
+	and	#$1f							; 2
+	tay								; 2
+	lda	water_map,Y		; the color of the sea		; 4
 
-	rts
+	rts								; 6
 
 flying_map:
 	.byte $22,$ff,$ff,$ff, $ff,$ff,$ff,$22

@@ -85,6 +85,16 @@ static unsigned char water_map[32]={
 
 static int displayed=0;
 
+struct cycle_counts {
+	int flying;
+	int getkey;
+	int page_flip;
+	int mode7;
+	int multiply;
+	int lookup_map;
+	int put_sprite;
+} cycles;
+
 static int lookup_map(int xx, int yy) {
 
 	int color,offset;
@@ -122,7 +132,7 @@ static int lookup_map(int xx, int yy) {
 	}
 
 
-
+			cycles.lookup_map+=53;
 	return color;
 }
 
@@ -183,15 +193,7 @@ static unsigned char horizontal_lookup[7][16] = {
 };
 
 
-struct cycle_counts {
-	int flying;
-	int getkey;
-	int page_flip;
-	int mode7;
-	int multiply;
-	int lookup_map;
-	int put_sprite;
-} cycles;
+
 
 
 static void fixed_add(unsigned char x_i,unsigned char x_f,
@@ -573,7 +575,7 @@ void draw_background_mode7(void) {
 		}
 
 		// go through all points in this screen line
-		for (ram[SCREEN_X] = 0; ram[SCREEN_X] < LOWRES_W-1; ram[SCREEN_X]++) {
+		for (ram[SCREEN_X] = 0; ram[SCREEN_X] < LOWRES_W; ram[SCREEN_X]++) {
 			// get a pixel from the tile and put it on the screen
 
 			map_color=lookup_map(ram[SPACEX_I],ram[SPACEY_I]);
@@ -618,50 +620,43 @@ int flying(void) {
 	/************************************************/
 
 	gr();
-	clear_bottom(PAGE0);	/* jsr clear_screens */
-	clear_bottom(PAGE1);	/* jsr set_gr_page0 */
+	clear_bottom(PAGE0);
+	clear_bottom(PAGE1);
 
-	ram[SHIPY]=20;		/* lda #20 */
-				/* sta SHIPY */
-				/* lda #0 */
-	ram[TURNING]=0;		/* sta TURNING */
-	ram[SPACEX_I]=0;	/* sta SPACEX_I */
-	ram[SPACEY_I]=0;	/* sta SPACEY_I */
-	ram[CX_I]=0;		/* sta CX_I */
-	ram[CX_F]=0;		/* sta CX_F */
-	ram[CY_I]=0;		/* sta CY_I */
-	ram[CY_F]=0;		/* sta CY_F */
-	ram[DRAW_SPLASH]=0;	/* sta DRAW_SPLASH */
-	ram[SPEED]=0;		/* sta SPEED */
-	ram[SPLASH_COUNT]=0;	/* sta SPLASH_COUNT */
-	ram[OVER_WATER]=0;	/* sta OVER_WATER */
+	ram[SHIPY]=20;
+	ram[TURNING]=0;
+	ram[SPACEX_I]=0;
+	ram[SPACEY_I]=0;
+	ram[CX_I]=0;
+	ram[CX_F]=0;
+	ram[CY_I]=0;
+	ram[CY_F]=0;
+	ram[DRAW_SPLASH]=0;
+	ram[SPEED]=0;
+	ram[SPLASH_COUNT]=0;
+	ram[OVER_WATER]=0;
 
-				/* lda #1 */
-	ram[ANGLE]=1;		/* sta ANGLE */
+	ram[ANGLE]=1;		/* 1 so you can see island */
 
-				/* lda #4 */
-	ram[SPACEZ_I]=4;	/* sta SPACEZ_I */
-				/* lda #$80 */
-	ram[SPACEZ_F]=0x80;	/* sta SPACEZ_F */
+	ram[SPACEZ_I]=4;
+	ram[SPACEZ_F]=0x80;	/* Z=4.5 */
 
 	while(1) {
 		memset(&cycles,0,sizeof(cycles));
-
-						// lda SPLASH_COUNT 	3
-						cycles.flying+=3;
-						// beq flying_keyboard	nt2/3
-						cycles.flying+=3;
+						cycles.flying+=6;
 		if (ram[SPLASH_COUNT]>0) {
 						cycles.flying--;
-			ram[SPLASH_COUNT]--;	// dec SPLASH_COUNT	5
+			ram[SPLASH_COUNT]--;
 						cycles.flying+=5;
 		}
 
-		ch=grsim_input();		// jsr get_key		6+40
+		ch=grsim_input();
 						cycles.getkey=46;
 
-		if ((ch=='q') || (ch==27))  break;
+						cycles.flying+=3;
 
+		if ((ch=='q') || (ch==27))  break;
+						cycles.flying+=5;
 		if ((ch=='w') || (ch==APPLE_UP)) {
 			if (ram[SHIPY]>16) {
 				ram[SHIPY]-=2;
@@ -669,6 +664,7 @@ int flying(void) {
 			}
 			ram[SPLASH_COUNT]=0;
 		}
+						cycles.flying+=5;
 		if ((ch=='s') || (ch==APPLE_DOWN)) {
 			if (ram[SHIPY]<28) {
 				ram[SHIPY]+=2;
@@ -678,6 +674,7 @@ int flying(void) {
 				ram[SPLASH_COUNT]=10;
 			}
 		}
+						cycles.flying+=5;
 		if ((ch=='a') || (ch==APPLE_LEFT)) {
 			if ((ram[TURNING]>0) && (!(ram[TURNING]&0x80))) {
 				ram[TURNING]=0;
@@ -689,6 +686,7 @@ int flying(void) {
 				if (ram[ANGLE]<0) ram[ANGLE]+=ANGLE_STEPS;
 			}
 		}
+						cycles.flying+=5;
 		if ((ch=='d') || (ch==APPLE_RIGHT)) {
 			if (ram[TURNING]>128) {
 				ram[TURNING]=0;
@@ -700,24 +698,24 @@ int flying(void) {
 			}
 
 		}
-
+						cycles.flying+=5;
 		/* Used to be able to go backwards */
 		if (ch=='z') {
 			if (ram[SPEED]<3) ram[SPEED]++;
 		}
-
+						cycles.flying+=5;
 		if (ch=='x') {
 			if (ram[SPEED]>0) ram[SPEED]--;
 		}
-
+						cycles.flying+=5;
 		if (ch==' ') {
 			ram[SPEED]=SPEED_STOPPED;
 		}
-
+						cycles.flying+=5;
 		if (ch=='h') {
 			print_help();
 		}
-
+						cycles.flying+=5;
 		/* Ending */
 		if (ch==13) {
 			int landing_color,tx,ty;
@@ -752,10 +750,12 @@ int flying(void) {
 				print_both_pages("NEED TO LAND ON GRASS!");
 			}
 		}
+						cycles.flying+=5;
 
-
-
+// check_done:
+						cycles.flying+=14;
 		if (ram[SPEED]!=SPEED_STOPPED) {
+						cycles.flying--;
 
 			int ii;
 
@@ -763,7 +763,7 @@ int flying(void) {
 			ram[DX_F] = fixed_sin_scale[(ram[ANGLE]+4)&0xf].f;        // cos
 			ram[DY_I] = fixed_sin_scale[ram[ANGLE]&0xf].i;
 			ram[DY_F] = fixed_sin_scale[ram[ANGLE]&0xf].f;
-
+						cycles.flying+=54;
 			for(ii=0;ii<ram[SPEED];ii++) {
 				fixed_add(ram[CX_I],ram[CX_F],
 					ram[DX_I],ram[DX_F],
@@ -771,14 +771,16 @@ int flying(void) {
 				fixed_add(ram[CY_I],ram[CY_F],
 					ram[DY_I],ram[DY_F],
 					&ram[CY_I],&ram[CY_F]);
+						cycles.flying+=45;
 			}
+						cycles.flying--;
 
 		}
 
 		draw_background_mode7();
-
+						cycles.flying+=6;
 		ram[DRAW_SPLASH]=0;
-
+						cycles.flying+=11;
 		if (ram[SPEED]>0) {
 
 			if ((ram[SHIPY]>25) && (ram[TURNING]!=0)) {
@@ -794,32 +796,40 @@ int flying(void) {
 			if (ram[DRAW_SPLASH]) {
 				grsim_put_sprite(splash_forward,
 					CONST_SHIPX+1,ram[SHIPY]+9);
+						cycles.flying+=33;
 			}
 			grsim_put_sprite(shadow_forward,CONST_SHIPX+3,31+ram[SPACEZ_I]);
 			grsim_put_sprite(ship_forward,CONST_SHIPX,ram[SHIPY]);
+						cycles.flying+=46;
 		}
 		else if (ram[TURNING]>128) {
 
 			if (ram[DRAW_SPLASH]) {
 				grsim_put_sprite(splash_left,
 						CONST_SHIPX+1,36);
+						cycles.flying+=28;
 			}
 			grsim_put_sprite(shadow_left,CONST_SHIPX+3,31+ram[SPACEZ_I]);
 			grsim_put_sprite(ship_left,CONST_SHIPX,ram[SHIPY]);
 			ram[TURNING]++;
+						cycles.flying+=48;
 		}
 		else {
 
 			if (ram[DRAW_SPLASH]) {
 				grsim_put_sprite(splash_right,
 						CONST_SHIPX+1,36);
+						cycles.flying+=28;
 			}
 			grsim_put_sprite(shadow_right,CONST_SHIPX+3,31+ram[SPACEZ_I]);
 			grsim_put_sprite(ship_right,CONST_SHIPX,ram[SHIPY]);
 			ram[TURNING]--;
+						cycles.flying+=51;
 		}
 
-		page_flip();		cycles.page_flip+=26;
+						cycles.flying+=17;
+		page_flip();			cycles.page_flip+=26;
+						cycles.flying+=9;
 
 		iterations++;
 		if (iterations==100) {

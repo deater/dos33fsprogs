@@ -4,6 +4,8 @@ mode7 speed fixes:
 	+ move multiply vars to zero page
 	+ leave one of multiply results in accumulator at end?
 
+	+  Skip key parsing if no key read
+
 short term:
 
 longer term:
