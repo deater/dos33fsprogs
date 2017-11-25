@@ -5,7 +5,7 @@ LFLAGS = -lm
 SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 
-all:	fixed_point rainbow sparkle kaleido tfv mode7_demo text
+all:	fixed_point rainbow sparkle kaleido tfv mode7_demo text tfv_multiply
 
 
 
@@ -96,9 +96,6 @@ tfv_flying.o:	tfv_flying.c tfv_flying_fixed.c tfv_flying_float.c tfv_flying_6502
 tfv_info.o:	tfv_info.c
 	$(CC) $(CFLAGS) -c tfv_info.c
 
-#tfv_multiply.o:	tfv_multiply.c
-#	$(CC) $(CFLAGS) -c tfv_multiply.c
-
 tfv_opener.o:	tfv_opener.c tfv_utils.h
 	$(CC) $(CFLAGS) -c tfv_opener.c
 
@@ -116,6 +113,14 @@ tfv_utils.o:	tfv_utils.c tfv_utils.h
 
 tfv_worldmap.o:	tfv_worldmap.c
 	$(CC) $(CFLAGS) -c tfv_worldmap.c
+
+
+tfv_multiply.o:	tfv_multiply.c
+	$(CC) $(CFLAGS) -c tfv_multiply.c
+
+tfv_multiply:	tfv_multiply.o
+	$(CC) $(LFLAGS) -o tfv_multiply tfv_multiply.o
+
 
 tfv.o:	tfv.c gr-sim.h tfv_backgrounds.h tfv_sprites.h
 	$(CC) $(CFLAGS) -c tfv.c
@@ -143,6 +148,6 @@ gr-sim.o:	gr-sim.c gr-sim.h apple2_font.h
 	$(CC) $(CFLAGS) $(SDL_INCLUDE) -c gr-sim.c
 
 clean:	
-	rm -f *~ *.o gr-sim rainbow sparkle kaleido tfv text mode7_demo fixed_point
+	rm -f *~ *.o gr-sim rainbow sparkle kaleido tfv text mode7_demo fixed_point tfv_multiply
 
 
