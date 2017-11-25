@@ -43,6 +43,8 @@
 #define SPEED		0x7b
 #define SPLASH_COUNT	0x7c
 #define OVER_WATER	0x7d
+#define TEMP2_I		0x7e
+#define TEMP2_F		0x7f
 
 #define SHIPY		0xE4
 
@@ -236,6 +238,11 @@ static unsigned char square1_lo[512];
 static unsigned char square1_hi[512];
 static unsigned char square2_lo[512];
 static unsigned char square2_hi[512];
+static int sm1a,sm3a,sm5a,sm7a;
+static int sm2a,sm4a,sm6a,sm8a;
+static int sm1b,sm3b,sm5b,sm7b;
+static int sm2b,sm4b,sm6b,sm8b;
+
 
 static int table_ready=0;
 
@@ -279,7 +286,7 @@ static int fixed_mul_unsigned(
 		unsigned char x_i, unsigned char x_f,
 	 	unsigned char y_i, unsigned char y_f,
 		unsigned char *z_i, unsigned char *z_f,
-			int debug) {
+			int debug, int reuse) {
 
 //	<T1 * <T2 = AAaa
 //	<T1 * >T2 = BBbb
@@ -296,10 +303,6 @@ static int fixed_mul_unsigned(
 //                ; Setup T1 if changed
 	int c=0;
 	int a,x;
-	int sm1a,sm3a,sm5a,sm7a;
-	int sm2a,sm4a,sm6a,sm8a;
-	int sm1b,sm3b,sm5b,sm7b;
-	int sm2b,sm4b,sm6b,sm8b;
 
 	int _AA,_BB,_CC,_DD,_aa,_bb,_cc,_dd;
 
@@ -308,7 +311,7 @@ static int fixed_mul_unsigned(
 //	printf("\t\t\tMultiplying %2x:%2x * %2x:%2x\n",x_i,x_f,y_i,y_f);
 
 	/* Set up self-modifying code */
-	if (c==0) {
+	if (reuse==0) {
 		a=(x_f)&0xff;		// lda T1+0		; 3
 		sm1a=a;			// sta sm1a+1		; 3
 		sm3a=a;			// sta sm3a+1		; 3
@@ -510,11 +513,11 @@ urgh:
 /* signed */
 static void fixed_mul(unsigned char x_i, unsigned char x_f,
 		unsigned char y_i, unsigned char y_f,
-		unsigned char *z_i, unsigned char *z_f) {
+		unsigned char *z_i, unsigned char *z_f, int reuse) {
 
 	int a,c;
 
-	fixed_mul_unsigned(x_i,x_f,y_i,y_f,z_i,z_f,0);
+	fixed_mul_unsigned(x_i,x_f,y_i,y_f,z_i,z_f,0,reuse);
 					// jsr multiply_16bit_unsigned	; 6
 
 	a=(x_i&0xff);			// lda T1+1			; 3
@@ -785,9 +788,10 @@ void draw_background_mode7(void) {
 
 						cycles.mode7+=28;
 	/* FIXME: only do this if SPACEZ changes? */
+// mul
 	fixed_mul(ram[SPACEZ_I],ram[SPACEZ_F],
 		CONST_BETA_I,CONST_BETA_F,
-		&ram[FACTOR_I],&ram[FACTOR_F]);
+		&ram[FACTOR_I],&ram[FACTOR_F],0);
 
 	if (!displayed) {
 		printf("SPACEZ/BETA/FACTOR %x %x * %x %x = %x %x\n",
@@ -824,7 +828,7 @@ void draw_background_mode7(void) {
 //mul		// calculate the distance of the line we are drawing
 		fixed_mul(ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
 			CONST_SCALE_I,CONST_SCALE_F,
-			&ram[DISTANCE_I],&ram[DISTANCE_F]);
+			&ram[DISTANCE_I],&ram[DISTANCE_F],0);
 							cycles.mode7+=44;
 		if (!displayed) {
 			printf("DISTANCE %x:%x\n",ram[DISTANCE_I],ram[DISTANCE_F]);
@@ -837,9 +841,9 @@ void draw_background_mode7(void) {
 							cycles.mode7+=29;
 
 // mul
-		fixed_mul(ram[DX_I],ram[DX_F],
-			ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
-			&ram[DX_I],&ram[DX_F]);
+		fixed_mul(ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
+			ram[DX_I],ram[DX_F],
+			&ram[DX_I],&ram[DX_F],1);
 							cycles.mode7+=48;
 		if (!displayed) {
 			printf("DX %x:%x\n",ram[DX_I],ram[DX_F]);
@@ -849,9 +853,10 @@ void draw_background_mode7(void) {
 		ram[DY_I]=fixed_sin[(ram[ANGLE]+4)&0xf].i;	// cos()
 		ram[DY_F]=fixed_sin[(ram[ANGLE]+4)&0xf].f;	// cos()
 							cycles.mode7+=29;
-		fixed_mul(ram[DY_I],ram[DY_F],
-			ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
-			&ram[DY_I],&ram[DY_F]);
+// mul
+		fixed_mul(ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
+			ram[DY_I],ram[DY_F],
+			&ram[DY_I],&ram[DY_F],1);
 							cycles.mode7+=48;
 		if (!displayed) {
 			printf("DY %x:%x\n",ram[DY_I],ram[DY_F]);
@@ -869,23 +874,38 @@ void draw_background_mode7(void) {
 		ram[TEMP_I]=fixed_sin[(ram[ANGLE]+4)&0xf].i; // cos
 		ram[TEMP_F]=fixed_sin[(ram[ANGLE]+4)&0xf].f; // cos
 							cycles.mode7+=29;
-
+// mul
 		fixed_mul(ram[SPACEX_I],ram[SPACEX_F],
 			ram[TEMP_I],ram[TEMP_F],
-			&ram[SPACEX_I],&ram[SPACEX_F]);
+			&ram[SPACEX_I],&ram[SPACEX_F],0);
 							cycles.mode7+=48;
 
 		fixed_add(ram[SPACEX_I],ram[SPACEX_F],
 			ram[CX_I],ram[CX_F],
 			&ram[SPACEX_I],&ram[SPACEX_F]);
 
-		ram[TEMP_I]=0xec;	// -20 (LOWRES_W/2)
-		ram[TEMP_F]=0;
+
+		ram[TEMP_I]=fixed_sin[ram[ANGLE]&0xf].i;
+		ram[TEMP_F]=fixed_sin[ram[ANGLE]&0xf].f;
+							cycles.mode7+=25;
+// mul
+		fixed_mul(ram[SPACEY_I],ram[SPACEY_F],
+			ram[TEMP_I],ram[TEMP_F],
+			&ram[SPACEY_I],&ram[SPACEY_F],0);
+							cycles.mode7+=48;
+		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
+			ram[CY_I],ram[CY_F],
+			&ram[SPACEY_I],&ram[SPACEY_F]);
+
+
+		ram[TEMP2_I]=0xec;	// -20 (LOWRES_W/2)
+		ram[TEMP2_F]=0;
 							cycles.mode7+=30;
 
-		fixed_mul(ram[TEMP_I],ram[TEMP_F],
+// mul
+		fixed_mul(ram[TEMP2_I],ram[TEMP2_F],
 			ram[DX_I],ram[DX_F],
-			&ram[TEMP_I],&ram[TEMP_F]);
+			&ram[TEMP_I],&ram[TEMP_F],0);
 							cycles.mode7+=48;
 
 		fixed_add(ram[SPACEX_I],ram[SPACEX_F],
@@ -897,22 +917,14 @@ void draw_background_mode7(void) {
 			ram[SPACEX_I],ram[SPACEX_F]);
 		}
 
-		ram[TEMP_I]=fixed_sin[ram[ANGLE]&0xf].i;
-		ram[TEMP_F]=fixed_sin[ram[ANGLE]&0xf].f;
-							cycles.mode7+=25;
-		fixed_mul(ram[SPACEY_I],ram[SPACEY_F],
-			ram[TEMP_I],ram[TEMP_F],
-			&ram[SPACEY_I],&ram[SPACEY_F]);
-							cycles.mode7+=48;
-		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
-			ram[CY_I],ram[CY_F],
-			&ram[SPACEY_I],&ram[SPACEY_F]);
-		ram[TEMP_I]=0xec;	// -20 (LOWRES_W/2)
-		ram[TEMP_F]=0;
+
+//		ram[TEMP_I]=0xec;	// -20 (LOWRES_W/2)
+//		ram[TEMP_F]=0;
 							cycles.mode7+=30;
-		fixed_mul(ram[TEMP_I],ram[TEMP_F],
+// mul
+		fixed_mul(ram[TEMP2_I],ram[TEMP2_F],
 			ram[DY_I],ram[DY_F],
-			&ram[TEMP_I],&ram[TEMP_F]);
+			&ram[TEMP_I],&ram[TEMP_F],1);
 							cycles.mode7+=48;
 		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 			ram[TEMP_I],ram[TEMP_F],
@@ -971,14 +983,14 @@ int flying(void) {
 	memset(&cycles,0,sizeof(cycles));
 	fixed_mul(0x1,0x0,
 		0x2,0x0,
-		&ram[FACTOR_I],&ram[FACTOR_F]);
+		&ram[FACTOR_I],&ram[FACTOR_F],0);
 	printf("Multiplying 1.0 * 2.0 = %d.%d, took %d cycles\n",
 		ram[FACTOR_I],ram[FACTOR_F],cycles.multiply);
 
 	memset(&cycles,0,sizeof(cycles));
 	fixed_mul(0xff,0xff,
 		0xff,0xff,
-		&ram[FACTOR_I],&ram[FACTOR_F]);
+		&ram[FACTOR_I],&ram[FACTOR_F],0);
 	printf("Multiplying ff.ff * ff.ff = %d.%d, took %d cycles\n",
 		ram[FACTOR_I],ram[FACTOR_F],cycles.multiply);
 
