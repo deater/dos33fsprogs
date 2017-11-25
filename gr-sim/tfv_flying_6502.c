@@ -214,6 +214,357 @@ static void fixed_add(unsigned char x_i,unsigned char x_f,
 }
 
 
+// Description: Unsigned 16-bit multiplication with unsigned 32-bit result.
+// Input: 16-bit unsigned value in T1
+// 16-bit unsigned value in T2
+// Carry=0: Re-use T1 from previous multiplication (faster)
+// Carry=1: Set T1 (slower)
+//
+// Output: 32-bit unsigned value in PRODUCT
+// Clobbered: PRODUCT, X, A, C
+// Allocation setup: T1,T2 and PRODUCT preferably on Zero-page.
+//                   square1_lo, square1_hi, square2_lo, square2_hi must be
+//                   page aligned. Each table are 512 bytes. Total 2kb.
+//
+// Table generation: I:0..511
+//                   square1_lo = <((I*I)/4)
+//                   square1_hi = >((I*I)/4)
+//                   square2_lo = <(((I-255)*(I-255))/4)
+//                   square2_hi = >(((I-255)*(I-255))/4)
+
+static unsigned char square1_lo[512];
+static unsigned char square1_hi[512];
+static unsigned char square2_lo[512];
+static unsigned char square2_hi[512];
+
+static int table_ready=0;
+
+static void init_table(void) {
+
+	int i;
+
+	for(i=0;i<512;i++) {
+		square1_lo[i]=((i*i)/4)&0xff;
+		square1_hi[i]=(((i*i)/4)>>8)&0xff;
+		square2_lo[i]=( ((i-255)*(i-255))/4)&0xff;
+		square2_hi[i]=(( ((i-255)*(i-255))/4)>>8)&0xff;
+//		printf("%d %x:%x %x:%x\n",i,square1_hi[i],square1_lo[i],
+//			square2_hi[i],square2_lo[i]);
+	}
+	table_ready=1;
+
+	// 3 * 2
+	// 3+2 = 5
+	// 3-2 = 1
+	// (25 - 1) = 24/4 = 6
+
+//	int num1l,num2l,a1,a2;
+
+//	num1l=7;
+//	num2l=9;
+
+//	printf("Trying %d*%d\n",num1l,num2l);
+//	a1=square1_lo[num1l+num2l];
+//	printf("((%d+%d)^2)/4: %d\n",num1l,num2l,a1);
+//	a2=square2_lo[((~num1l)&0xff)+num2l];
+//	printf("((%d-%d)^2)/4: %d\n",num1l,num2l,a2);
+
+//	printf("%d*%d=%d\n",num1l,num2l,a1-a2);
+
+}
+
+static unsigned int product[4];
+
+static int fixed_mul_unsigned(
+		unsigned char x_i, unsigned char x_f,
+	 	unsigned char y_i, unsigned char y_f,
+		unsigned char *z_i, unsigned char *z_f,
+			int debug) {
+
+//	<T1 * <T2 = AAaa
+//	<T1 * >T2 = BBbb
+//	>T1 * <T2 = CCcc
+//	>T1 * >T2 = DDdd
+//
+//	       AAaa
+//	     BBbb
+//	     CCcc
+//	 + DDdd
+//	 ----------
+//	   PRODUCT!
+
+//                ; Setup T1 if changed
+	int c=0;
+	int a,x;
+	int sm1a,sm3a,sm5a,sm7a;
+	int sm2a,sm4a,sm6a,sm8a;
+	int sm1b,sm3b,sm5b,sm7b;
+	int sm2b,sm4b,sm6b,sm8b;
+
+	int _AA,_BB,_CC,_DD,_aa,_bb,_cc,_dd;
+
+	if (!table_ready) init_table();
+
+//	printf("\t\t\tMultiplying %2x:%2x * %2x:%2x\n",x_i,x_f,y_i,y_f);
+
+	/* Set up self-modifying code */
+	if (c==0) {
+		a=(x_f)&0xff;		// lda T1+0		; 3
+		sm1a=a;			// sta sm1a+1		; 3
+		sm3a=a;			// sta sm3a+1		; 3
+		sm5a=a;			// sta sm5a+1		; 3
+		sm7a=a;			// sta sm7a+1		; 3
+		a=(~a)&0xff;		// eor #$ff		; 2
+		sm2a=a;			// sta sm2a+1		; 3
+		sm4a=a;			// sta sm4a+1		; 3
+		sm6a=a;			// sta sm6a+1		; 3
+		sm8a=a;			// sta sm8a+1		; 3
+		a=(x_i)&0xff;		// lda T1+1		; 3
+		sm1b=a;			// sta sm1b+1		; 3
+		sm3b=a;			// sta sm3b+1		; 3
+		sm5b=a;			// sta sm5b+1		; 3
+		sm7b=a;			// sta sm7b+1		; 3
+		a=(~a)&0xff;		// eor #$ff		; 2
+		sm2b=a;			// sta sm2b+1		; 3
+		sm4b=a;			// sta sm4b+1		; 3
+		sm6b=a;			// sta sm6b+1		; 3
+		sm8b=a;			// sta sm8b+1		; 3
+					cycles.multiply+=58;
+	}
+
+	/* Perform <T1 * <T2 = AAaa */
+	x=(y_f)&0xff;			// ldx T2+0 (low le)		; 3
+	c=1;					// sec			; 2
+//sm1a:
+	a=square1_lo[sm1a+x];			// lda square1_lo,x	; 4
+//sm2a:
+	a+=~(square2_lo[sm2a+x])+c;		// sbc square2_lo,x	; 4
+	c=!(a&0x100);
+	a&=0xff;
+
+//	printf("\t\t\t\ta=(%d+%d)^2/4=%d "
+//		"b=(%d+%d)^2/4=%d\n",
+//		sm1a,x,square1_lo[sm1a+x],
+//		sm2a,x,square2_lo[sm2a+x]);
+	product[0]=a;				// sta PRODUCT+0	; 3
+	_aa=a;
+//	printf("\t\t\t\ta-b aa=%2x\n",a);
+//sm3a:
+	a=square1_hi[sm3a+x];			// lda square1_hi,x	; 4
+//sm4a:
+	a+=(~(square2_hi[sm4a+x]))+c;		// sbc square2_hi,x	; 4
+	c=!(a&0x100);
+	a&=0xff;
+	_AA=a;					// sta _AA+1		; 3
+						//		;===========
+						//		;	27
+
+					cycles.multiply+=27;
+
+	/* Perform >T1_hi * <T2 = CCcc */
+	c=1;					// sec			; 2
+//sm1b:
+	a=square1_lo[sm1b+x];			// lda square1_lo,x	; 4
+//sm2b:
+	a+=(~(square2_lo[sm2b+x]))+c;		// sbc square2_lo,x	; 4
+	c=!(a&0x100);
+	a&=0xff;
+
+	_cc=a;					// sta _cc+1		; 3
+//sm3b:
+	a=square1_hi[sm3b+x];			// lda square1_hi,x	; 4
+//sm4b:
+	a+=(~(square2_hi[sm4b+x]))+c;		// sbc square2_hi,x	; 4
+	c=!!(a&0x100);
+	a&=0xff;
+	_CC=a;					// sta _CC+1		; 3
+					cycles.multiply+=24;
+
+
+	/* Perform <T1 * >T2 = BBbb */
+	x=(y_i)&0xff;				// ldx T2+1		; 3
+	c=1;					// sec			; 2
+//sm5a:
+	a=square1_lo[sm5a+x];			// lda square1_lo,x	; 4
+//sm6a:
+	a+=(~(square2_lo[sm6a+x]))+c;		// sbc square2_lo,x	; 4
+	c=!(a&0x100);
+	a&=0xff;
+	_bb=a;					// sta _bb+1		; 3
+//	printf("\t\t\t\tbb=%x c=%d\n",_bb,c);
+//sm7a:
+	a=square1_hi[sm7a+x];			// lda square1_hi,x	; 4
+//sm8a:
+	a+=(~(square2_hi[sm8a+x]))+c;		// sbc square2_hi,x	; 4
+	c=!(a&0x100);
+	a&=0xff;
+	_BB=a;					// sta _BB+1		; 3
+					cycles.multiply+=27;
+
+	/* Perform >T1 * >T2 = DDdd */
+	c=1;					// sec			; 2
+//sm5b:
+	a=square1_lo[sm5b+x];			// lda square1_lo,x	; 4
+//sm6b:
+	a+=(~(square2_lo[sm6b+x]))+c;		// sbc square2_lo,x	; 4
+	c=!(a&0x100);
+	a&=0xff;
+	_dd=a;					// sta _dd+1		; 3
+//sm7b:
+	a=square1_hi[sm7b+x];			// lda square1_hi,x	; 4
+//sm8b:
+	a+=(~(square2_hi[sm8b+x]))+c;		// sbc square2_hi,x	; 4
+	c=!(a&0x100);
+	a&=0xff;
+
+	product[3]=a;				// sta PRODUCT+3	; 3
+	_DD=a;
+					cycles.multiply+=24;
+	/*********************************************/
+	/* Add the separate multiplications together */
+	/*********************************************/
+
+	// product[0]=_aa;
+	if (debug) printf("product[0]=0.%02x\n",_aa);
+
+	// product[1]=_AA+_bb+(_cc)
+	if (debug) printf("product[1]=%02x+%02x+0=",_AA,_bb);
+
+	c=0;					// clc			; 2
+//_AA:
+	a=_AA;					// lda #0		; 2
+//_bb:
+	a+=(c+_bb);				// adc #0		; 2
+	c=!!(a&0x100);
+	a&=0xff;
+	product[1]=a;				// sta PRODUCT+1	; 3
+	if (debug) printf("%x.%02x\n",c,a);
+					cycles.multiply+=9;
+	// product[2]=_BB+_CC+c
+	if (debug) printf("product[2]=%02x+%02x+%d=",_BB,_CC,c);
+//_BB:
+	a=_BB;					// lda #0		; 2
+//_CC:
+	a+=(c+_CC);				// adc #0		; 2
+	c=!!(a&0x100);
+	a&=0xff;
+	product[2]=a;				// sta PRODUCT+2	; 3
+	if (debug) printf("%x.%02x\n",c,a);
+					cycles.multiply+=10;
+	// product[3]=_DD+c
+	if (debug) printf("product[3]=%02x+%d=",_DD,c);
+	if (c==0) goto urgh2;			// bcc :+		; 2nt/3
+	product[3]++;				// inc PRODUCT+3	; 5
+	product[3]&=0xff;
+	c=0;					// clc			; 2
+					cycles.multiply+=6;
+urgh2:
+	if (debug) printf("%x.%02x\n",c,product[3]);
+	// product[1]=_AA+_bb+_cc
+	if (debug) printf("product[1]=%02x+%02x+%d=",product[1],_cc,c);
+//_cc:
+	a=_cc;					// lda #0		; 2
+	a+=c+product[1];			// adc PRODUCT+1	; 3
+	c=!!(a&0x100);
+	a&=0xff;
+	product[1]=a;				// sta PRODUCT+1	; 3
+	if (debug) printf("%x.%02x\n",c,product[1]);
+
+	// product[2]=_BB+_CC+_dd+c
+	if (debug) printf("product[2]=%02x+%02x+%d=",product[2],_dd,c);
+//_dd:
+	a=_dd;					// lda #0		; 2
+	a+=c+product[2];			// adc PRODUCT+2	; 3
+	c=!!(a&0x100);
+	a&=0xff;
+	product[2]=a;				// sta PRODUCT+2	; 3
+	if (debug) printf("%x.%02x\n",c,product[2]);
+
+	// product[3]=_DD+c
+	if (debug) printf("product[3]=%02x+%d=",product[3],c);
+					cycles.multiply+=19;
+	if (c==0) goto urgh;			// bcc :+		; 2nt/3
+	product[3]++;				// inc PRODUCT+3	; 5
+	product[3]&=0xff;
+					cycles.multiply+=4;
+urgh:
+	if (debug) printf("%x.%02x\n",c,product[3]);
+	*z_i=product[1];
+	*z_f=product[0];
+
+//	printf("Result=%02x:%02x\n",*z_i,*z_f);
+
+	if (debug) {
+		printf("    AAaa        %02x:%02x\n",_AA,_aa);
+		printf("  BBbb       %02x:%02x\n",_BB,_bb);
+		printf("  CCcc       %02x:%02x\n",_CC,_cc);
+		printf("DDdd      %02x:%02x\n",_DD,_dd);
+	}
+
+					cycles.multiply+=6;
+
+	return (product[3]<<24)|(product[2]<<16)|(product[1]<<8)|product[0];
+						// rts			; 6
+}
+
+/* signed */
+static void fixed_mul(unsigned char x_i, unsigned char x_f,
+		unsigned char y_i, unsigned char y_f,
+		unsigned char *z_i, unsigned char *z_f) {
+
+	int a,c;
+
+	fixed_mul_unsigned(x_i,x_f,y_i,y_f,z_i,z_f,0);
+					// jsr multiply_16bit_unsigned	; 6
+
+	a=(x_i&0xff);			// lda T1+1			; 3
+					cycles.multiply+=12;
+	if ((a&0x80)==0) goto x_positive;	// bpl :+		; 3/2nt
+					cycles.multiply--;
+	c=1;				// sec				; 2
+	a=product[2];			// lda PRODUCT+2		; 3
+	a+=(~y_f)+c;			// sbc T2+0			; 3
+	c=!(a&0x100);
+	a&=0xff;
+	product[2]=a;			// sta PRODUCT+2		; 3
+	a=product[3];			// lda PRODUCT+3		; 3
+	a+=(~y_i)+c;			// sbc T2+1			; 3
+	c=!(a&0x100);
+	a&=0xff;
+	product[3]=a;			// sta PRODUCT+3		; 3
+					cycles.multiply+=20;
+
+x_positive:
+
+	a=(y_i&0xff);			// lda T2+1			; 3
+					cycles.multiply+=6;
+	if ((a&0x80)==0) goto y_positive;	// bpl :+		; 3/2nt
+					cycles.multiply--;
+
+	c=1;				// sec				; 2
+	a=product[2];			// lda PRODUCT+2		; 3
+	a+=(~x_f)+c;			// sbc T1+0			; 3
+	c=!(a&0x100);
+	a&=0xff;
+	product[2]=a;			// sta PRODUCT+2		; 3
+	a=product[3];			// lda PRODUCT+3		; 3
+	a+=(~x_i)+c;			// sbc T1+1			; 3
+	c=!(a&0x100);
+	a&=0xff;
+	product[3]=a;			// sta PRODUCT+3		; 3
+					cycles.multiply+=20;
+y_positive:
+	*z_i=product[2];
+	*z_f=product[1];
+
+//	return (product[3]<<24)|(product[2]<<16)|(product[1]<<8)|product[0];
+						// rts			; 6
+					cycles.multiply+=6;
+}
+
+
+#if 0
+
 static void fixed_mul(unsigned char x_i, unsigned char x_f,
 			unsigned char y_i, unsigned char y_f,
 			unsigned char *z_i, unsigned char *z_f) {
@@ -409,6 +760,8 @@ shift_output:
 
 }
 
+#endif
+
 void draw_background_mode7(void) {
 
 
@@ -431,6 +784,7 @@ void draw_background_mode7(void) {
 						cycles.mode7+=14+63+(16*40);
 
 						cycles.mode7+=28;
+	/* FIXME: only do this if SPACEZ changes? */
 	fixed_mul(ram[SPACEZ_I],ram[SPACEZ_F],
 		CONST_BETA_I,CONST_BETA_F,
 		&ram[FACTOR_I],&ram[FACTOR_F]);
@@ -467,7 +821,7 @@ void draw_background_mode7(void) {
 			ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F]);
 		}
 
-		// calculate the distance of the line we are drawing
+//mul		// calculate the distance of the line we are drawing
 		fixed_mul(ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
 			CONST_SCALE_I,CONST_SCALE_F,
 			&ram[DISTANCE_I],&ram[DISTANCE_F]);
@@ -482,6 +836,7 @@ void draw_background_mode7(void) {
 		ram[DX_F]=fixed_sin[(ram[ANGLE]+8)&0xf].f;	// -sin()
 							cycles.mode7+=29;
 
+// mul
 		fixed_mul(ram[DX_I],ram[DX_F],
 			ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
 			&ram[DX_I],&ram[DX_F]);
@@ -523,6 +878,7 @@ void draw_background_mode7(void) {
 		fixed_add(ram[SPACEX_I],ram[SPACEX_F],
 			ram[CX_I],ram[CX_F],
 			&ram[SPACEX_I],&ram[SPACEX_F]);
+
 		ram[TEMP_I]=0xec;	// -20 (LOWRES_W/2)
 		ram[TEMP_F]=0;
 							cycles.mode7+=30;
@@ -863,3 +1219,4 @@ int flying(void) {
 	}
 	return 0;
 }
+

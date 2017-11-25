@@ -28,5 +28,17 @@ Update Multiply to use zero page addresses:
 	Total =                  189,353
 	Frame Rate = 5.28 fps
 
+Update to use "fast multiply" w 2kB squares table lookup:
+	Multiplying 1.0 * 2.0 = 2.0, took 228 cycles
+	Multiplying ff.ff * ff.ff = 0.0, took 272 cycles
 
-
+	Cycles: flying=              162
+	Cycles: getkey=               46
+	Cycles: page_flip=            26
+	Cycles: multiply=         27,041
+	Cycles: mode7=            76,077
+	Cycles: lookup_map=       33,920
+	Cycles: put_sprite=        2,561
+	=================================
+	Total =                  139,833
+	Frame Rate = 7.15 fps
