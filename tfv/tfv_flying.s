@@ -4,7 +4,8 @@
 CONST_SHIPX	EQU	15
 CONST_TILE_W	EQU	64
 CONST_TILE_H	EQU	64
-CONST_MAP_MASK	EQU	(CONST_TILE_W - 1)
+CONST_MAP_MASK_X	EQU	(CONST_TILE_W - 1)
+CONST_MAP_MASK_Y	EQU	(CONST_TILE_H - 1)
 CONST_LOWRES_W	EQU	40
 CONST_LOWRES_H	EQU	40
 CONST_BETA_I	EQU	$ff
@@ -159,7 +160,7 @@ check_speedup:
 	;=========
 	; SPEED UP
 	;=========
-	lda	#$3
+	lda	#$8
 	cmp	SPEED
 	beq	check_speeddown
 	inc	SPEED
@@ -1019,20 +1020,21 @@ lookup_map:
 	lda	SPACEX_I						; 3
 ;nomatch2:
 	sta	LAST_SPACEX_I						; 3
-	and	#CONST_MAP_MASK						; 2
-	sta	TEMPY							; 3
+	and	#CONST_MAP_MASK_X					; 2
+	sta	SPACEX_I						; 3
 	tay								; 2
 
 	lda	SPACEY_I						; 3
 	sta	LAST_SPACEY_I						; 3
-	and	#CONST_MAP_MASK		; wrap to 64x64 grid		; 2
+	and	#CONST_MAP_MASK_Y	; wrap to 64x64 grid		; 2
+	sta	SPACEY_I
 
 
 	asl								; 2
 	asl								; 2
 	asl				; multiply by 8			; 2
 	clc								; 2
-	adc	TEMPY			; add in X value		; 3
+	adc	SPACEX_I		; add in X value		; 3
 					; only valid if x<8 and y<8
 
 	; SPACEX_I is in y

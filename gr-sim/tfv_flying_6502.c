@@ -132,8 +132,7 @@ static int lookup_map(int xx, int yy) {
 
 	offset=yy<<3;
 	offset+=xx;
-
-				cycles.lookup_map+=34;
+				cycles.lookup_map+=37;
 
 	if ((yy>7) || (xx>7)) {
 			cycles.lookup_map+=14;
@@ -938,7 +937,7 @@ int flying(void) {
 				ram[TURNING]=0;
 			}
 			else {
-				ram[TURNING]=235; // -20
+				ram[TURNING]=250; // -5
 
 				ram[ANGLE]-=1;
 				if (ram[ANGLE]<0) ram[ANGLE]+=ANGLE_STEPS;
@@ -950,7 +949,7 @@ int flying(void) {
 				ram[TURNING]=0;
 			}
 			else {
-				ram[TURNING]=20;
+				ram[TURNING]=5;
 				ram[ANGLE]+=1;
 				if (ram[ANGLE]>=ANGLE_STEPS) ram[ANGLE]-=ANGLE_STEPS;
 			}
@@ -959,7 +958,7 @@ int flying(void) {
 						cycles.flying+=5;
 		/* Used to be able to go backwards */
 		if (ch=='z') {
-			if (ram[SPEED]<3) ram[SPEED]++;
+			if (ram[SPEED]<4) ram[SPEED]++;
 		}
 						cycles.flying+=5;
 		if (ch=='x') {
@@ -1099,7 +1098,7 @@ int flying(void) {
 						cycles.flying+=9;
 
 		iterations++;
-		if (iterations==100) {
+		if (iterations==20) {
 			int total_cycles;
 			total_cycles=cycles.flying+cycles.getkey+
 				cycles.page_flip+cycles.multiply+
@@ -1118,7 +1117,8 @@ int flying(void) {
 			iterations=0;
 		}
 
-		usleep(20000);
+		/* Limit to around 10 fps */
+		usleep(100000);
 
 	}
 	return 0;
