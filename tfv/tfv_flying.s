@@ -47,6 +47,9 @@ flying_start:
 	lda	#1
 	sta	ANGLE
 
+	lda	#2		; initialize sky both pages
+	sta	DRAW_SKY
+
 	lda	#4
 	sta	SPACEZ_I
 	lda	#$80
@@ -530,16 +533,24 @@ draw_ship:
 
 draw_background_mode7:
 
+	lda	#0							; 2
+	sta	OVER_WATER						; 3
+
+	lda	DRAW_SKY						; 3
+	beq	no_draw_sky						; 2nt/3
+
 	; Draw Sky
-	; FIXME: the sky never changes?
+	; Only draw sky if necessary (we never overwrite it)
+
+	dec	DRAW_SKY						; 5
 
 	lda	#COLOR_BOTH_MEDIUMBLUE	; MEDIUMBLUE color		; 2
 	sta	COLOR							; 3
 
 	lda	#0							; 2
-	sta	OVER_WATER						; 3
+
 								;===========
-								;	 10
+								;	 11
 
 sky_loop:				; draw line across screen
 	ldy	#40			; from y=0 to y=6		; 2
@@ -565,6 +576,9 @@ sky_loop:				; draw line across screen
 	jsr	hlin_double		; hlin	0,40 at 6	; 63+(X*16)
 								;===========
 								; 63+(X*16)+14
+
+no_draw_sky:
+
 	; FIXME: only do this if Z changes?
 	; fixed_mul(&space_z,&BETA,&factor);
 ;mul1

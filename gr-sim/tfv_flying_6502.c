@@ -43,6 +43,16 @@
 #define SPEED		0x7b
 #define SPLASH_COUNT	0x7c
 #define OVER_WATER	0x7d
+#define NUM1L		0x7E
+#define NUM1H		0x7F
+#define NUM2L		0x80
+#define NUM2H		0x81
+#define RESULT		0x82	// 83,84,85
+#define NEGATE		0x86	// UNUSED?
+#define LAST_SPACEX_I   0x87
+#define LAST_SPACEY_I	0x88
+#define LAST_MAP_COLOR	0x89
+#define DRAW_SKY	0x8A
 
 #define SHIPY		0xE4
 
@@ -795,20 +805,27 @@ void draw_background_mode7(void) {
 	int map_color;
 
 	ram[OVER_WATER]=0;
+						cycles.mode7+=11;
+	if (ram[DRAW_SKY]) {
 
-	/* Draw Sky */
-	/* Originally wanted to be fancy and have sun too, but no */
-	color_equals(COLOR_MEDIUMBLUE);
-						cycles.mode7+=10;
+		ram[DRAW_SKY]--;
 
-	for(ram[SCREEN_Y]=0;ram[SCREEN_Y]<6;ram[SCREEN_Y]+=2) {
-		hlin_double(ram[DRAW_PAGE], 0, 40, ram[SCREEN_Y]);
-	}
+		/* Draw Sky */
+		/* Originally wanted to be fancy and have sun too, but no */
+
+		color_equals(COLOR_MEDIUMBLUE);
+						cycles.mode7+=11;
+
+		for(ram[SCREEN_Y]=0;ram[SCREEN_Y]<6;ram[SCREEN_Y]+=2) {
+			hlin_double(ram[DRAW_PAGE], 0, 40, ram[SCREEN_Y]);
+		}
 						cycles.mode7+=(63+(16*40)+23)*5;
-	/* Draw hazy horizon */
-	color_equals(COLOR_GREY);
-	hlin_double(ram[DRAW_PAGE], 0, 40, 6);
+		/* Draw hazy horizon */
+		color_equals(COLOR_GREY);
+		hlin_double(ram[DRAW_PAGE], 0, 40, 6);
 						cycles.mode7+=14+63+(16*40);
+	}
+
 
 						cycles.mode7+=30;
 	/* FIXME: only do this if SPACEZ changes? */
@@ -1029,6 +1046,8 @@ int flying(void) {
 	ram[OVER_WATER]=0;
 
 	ram[ANGLE]=1;		/* 1 so you can see island */
+
+	ram[DRAW_SKY]=2;
 
 	ram[SPACEZ_I]=4;
 	ram[SPACEZ_F]=0x80;	/* Z=4.5 */
