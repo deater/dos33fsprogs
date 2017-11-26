@@ -115,16 +115,6 @@ static int lookup_map(int xx, int yy) {
 
 	int color,offset;
 
-	/* cache last value */
-				cycles.lookup_map+=9;
-	if (yy==last_yy) {
-				cycles.lookup_map+=8;
-		if (xx==last_xx) {
-				cycles.lookup_map+=8;
-			return last_color;
-		}
-	}
-
 	last_xx=xx;
 	xx=xx&MASK_X;
 
@@ -143,7 +133,7 @@ static int lookup_map(int xx, int yy) {
 	offset=yy<<3;
 	offset+=xx;
 
-				cycles.lookup_map+=37;
+				cycles.lookup_map+=34;
 
 	if ((yy>7) || (xx>7)) {
 			cycles.lookup_map+=14;
@@ -692,7 +682,7 @@ static void draw_background_mode7(void) {
 			horizontal_lookup[((ram[SPACEZ_I]&0xf)<<5)+
 						(ram[SCREEN_Y]-8)];
 
-							cycles.mode7+=39;
+							cycles.mode7+=37;
 
 		if (!displayed) {
 			printf("HORIZ_SCALE %x %x\n",
@@ -718,7 +708,7 @@ static void draw_background_mode7(void) {
 		fixed_mul(ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
 			ram[DX_I],ram[DX_F],
 			&ram[DX_I],&ram[DX_F],1);
-							cycles.mode7+=26;
+							cycles.mode7+=14;
 		if (!displayed) {
 			printf("DX %x:%x\n",ram[DX_I],ram[DX_F]);
 		}
@@ -731,7 +721,7 @@ static void draw_background_mode7(void) {
 		fixed_mul(ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
 			ram[DY_I],ram[DY_F],
 			&ram[DY_I],&ram[DY_F],1);
-							cycles.mode7+=28;
+							cycles.mode7+=14;
 		if (!displayed) {
 			printf("DY %x:%x\n",ram[DY_I],ram[DY_F]);
 		}
@@ -752,7 +742,7 @@ static void draw_background_mode7(void) {
 		fixed_mul(ram[SPACEX_I],ram[SPACEX_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEX_I],&ram[SPACEX_F],0);
-							cycles.mode7+=38;
+							cycles.mode7+=26;
 
 		fixed_add(ram[SPACEX_I],ram[SPACEX_F],
 			ram[CX_I],ram[CX_F],
@@ -766,7 +756,7 @@ static void draw_background_mode7(void) {
 		fixed_mul(ram[SPACEY_I],ram[SPACEY_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEY_I],&ram[SPACEY_F],0);
-							cycles.mode7+=38;
+							cycles.mode7+=26;
 
 		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 			ram[CY_I],ram[CY_F],
@@ -777,7 +767,7 @@ static void draw_background_mode7(void) {
 		fixed_mul(CONST_LOWRES_HALF_I,CONST_LOWRES_HALF_F,
 			ram[DX_I],ram[DX_F],
 			&ram[TEMP_I],&ram[TEMP_F],0);
-							cycles.mode7+=38;
+							cycles.mode7+=32;
 
 		fixed_add(ram[SPACEX_I],ram[SPACEX_F],
 			ram[TEMP_I],ram[TEMP_F],
@@ -792,7 +782,7 @@ static void draw_background_mode7(void) {
 		fixed_mul(CONST_LOWRES_HALF_I,CONST_LOWRES_HALF_F,
 			ram[DY_I],ram[DY_F],
 			&ram[TEMP_I],&ram[TEMP_F],1);
-							cycles.mode7+=26;
+							cycles.mode7+=20;
 		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEY_I],&ram[SPACEY_F]);
@@ -808,7 +798,20 @@ static void draw_background_mode7(void) {
 
 			// get a pixel from the tile and put it on the screen
 
+			/* cache last value */
+						cycles.mode7+=9;
+			if (ram[SPACEY_I]==last_yy) {
+						cycles.mode7+=8;
+				if (ram[SPACEX_I]==last_xx) {
+						cycles.mode7+=6;
+					map_color=last_color;
+					goto match;
+				}
+			}
+
 			map_color=lookup_map(ram[SPACEX_I],ram[SPACEY_I]);
+						cycles.mode7+=6;
+match:
 
 			ram[COLOR]=(map_color&0xf);
 //			ram[COLOR]|=map_color<<4;
@@ -824,7 +827,7 @@ static void draw_background_mode7(void) {
 			}
 
 			ram[GBASL]++;
-							cycles.mode7+=31;
+							cycles.mode7+=25;
 
 			// advance to the next position in space
 			fixed_add(ram[SPACEX_I],ram[SPACEX_F],

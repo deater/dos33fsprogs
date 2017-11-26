@@ -590,7 +590,7 @@ sky_loop:				; draw line across screen
 
 no_draw_sky:
 
-	; FIXME: only do this if Z changes?
+	; FIXME: only do the following if Z changes?
 	; 	only saves 200 cycles to do that with a lot of
 	; 	added complexity elsewhere
 
@@ -659,7 +659,8 @@ screeny_continue:
 	;		horizontal_lookup[(space_z<<5)+(screen_y-8)]
 
 	lda	SPACEZ_I						; 3
-	and	#$f							; 2
+;	and	#$f							;
+	; FIXME: would it be faster to ROR 4 times?
 	asl								; 2
 	asl								; 2
 	asl								; 2
@@ -676,7 +677,7 @@ screeny_continue:
 	lda	horizontal_lookup,Y					; 4
 	sta	HORIZ_SCALE_F						; 3
 								;============
-								;	 39
+								;	 37
 	;; brk ASM, horiz_scale = 00:73
 ; mul2
 	; calculate the distance of the line we are drawing
@@ -707,28 +708,27 @@ screeny_continue:
 	asl								; 2
 	tay								; 2
 	lda	fixed_sin,Y						; 4
-	sta	DX_I							; 3
+;	sta	DX_I							;
+	sta	NUM2H							; 3
 	iny		; dx.f=fixed_sin[(angle+8)&0xf].f; // -sin()	; 2
 	lda	fixed_sin,Y						; 4
-	sta	DX_F							; 3
+;	sta	DX_F							;
+	sta	NUM2L							; 3
 								;==========
 								;	 29
 ;mul3
 	; fixed_mul(&dx,&horizontal_scale,&dx);
-;	lda	HORIZ_SCALE_I
-;	sta	NUM1H
-;	lda	HORIZ_SCALE_F
-;	sta	NUM1L
-	lda	DX_I							; 3
-	sta	NUM2H							; 3
-	lda	DX_F							; 3
-	sta	NUM2L							; 3
+
+;	lda	DX_I							;
+;	sta	NUM2H							;
+;	lda	DX_F							;
+;	sta	NUM2L							;
 	clc			; reuse HORIZ_SCALE in NUM1		; 2
 	jsr	multiply						; 6
 	sta	DX_I							; 3
 	stx	DX_F							; 3
 								;==========
-								;	 26
+								;	 14
 	;; ANGLE
 	;; brk ASM, dx = 00:00
 
@@ -739,28 +739,27 @@ screeny_continue:
 	asl								; 2
 	tay								; 2
 	lda	fixed_sin,Y						; 4
-	sta	DY_I							; 3
+;	sta	DY_I							; 
+	sta	NUM2H							; 3
 	iny		; dy.f=fixed_sin[(angle+4)&0xf].f; // cos()	; 2
 	lda	fixed_sin,Y						; 4
-	sta	DY_F							; 3
+;	sta	DY_F							; 
+	sta	NUM2L							; 3
 								;==========
 								;	 29
 ;mul4
 	; fixed_mul(&dy,&horizontal_scale,&dy);
-;	lda	HORIZ_SCALE_I
-;	sta	NUM1H
-;	lda	HORIZ_SCALE_F
-;	sta	NUM1L
-	lda	DY_I							; 3
-	sta	NUM2H							; 4
-	lda	DY_F							; 3
-	sta	NUM2L							; 4
+
+;	lda	DY_I							; 
+;	sta	NUM2H							; 
+;	lda	DY_F							; 
+;	sta	NUM2L							; 
 	clc			; reuse horiz_scale in num1		; 2
 	jsr	multiply						; 6
 	sta	DY_I							; 3
 	stx	DY_F							; 3
 								;==========
-								;	 28
+								;	 14
 	;; brk ASM, dy = 00:73
 
 	; calculate the starting position
@@ -786,10 +785,12 @@ screeny_continue:
 	asl								; 2
 	tay								; 2
 	lda	fixed_sin,Y						; 4
-	sta	TEMP_I							; 3
+;	sta	TEMP_I							;
+	sta	NUM2H							; 3
 	iny		; temp.f=fixed_sin[(angle+4)&0xf].f; // cos	; 2
 	lda	fixed_sin,Y						; 4
-	sta	TEMP_F							; 3
+;	sta	TEMP_F							;
+	sta	NUM2L							; 3
 								;==========
 								;	 29
 
@@ -799,16 +800,16 @@ screeny_continue:
 	sta	NUM1H							; 3
 	lda	SPACEX_F						; 3
 	sta	NUM1L							; 3
-	lda	TEMP_I							; 3
-	sta	NUM2H							; 3
-	lda	TEMP_F							; 3
-	sta	NUM2L							; 3
+;	lda	TEMP_I							; 
+;	sta	NUM2H							; 
+;	lda	TEMP_F							; 
+;	sta	NUM2L							; 
 	sec								; 2
 	jsr	multiply						; 6
 	sta	SPACEX_I						; 3
 	stx	SPACEX_F						; 3
 								;==========
-								;	 38
+								;	 26
 
 	clc			; fixed_add(&space_x,&cx,&space_x);	; 2
 	lda	SPACEX_F						; 3
@@ -826,10 +827,12 @@ screeny_continue:
 	asl								; 2
 	tay								; 2
 	lda	fixed_sin,Y						; 4
-	sta	TEMP_I							; 3
+;	sta	TEMP_I							; 
+	sta	NUM2H							; 3
 	iny		; fixed_temp.f=fixed_sin[angle&0xf].f;		; 2
 	lda	fixed_sin,Y						; 4
-	sta	TEMP_F							; 3
+	sta	TEMP_F							;
+	sta	NUM2L							; 3
 								;==========
 								;	 25
 
@@ -839,16 +842,16 @@ screeny_continue:
 	sta	NUM1H							; 3
 	lda	SPACEY_F						; 3
 	sta	NUM1L							; 3
-	lda	TEMP_I							; 3
-	sta	NUM2H							; 3
-	lda	TEMP_F							; 3
-	sta	NUM2L							; 3
+;	lda	TEMP_I							;
+;	sta	NUM2H							;
+;	lda	TEMP_F							;
+;	sta	NUM2L							;
 	sec								; 2
 	jsr	multiply						; 6
 	sta	SPACEY_I						; 3
 	stx	SPACEY_F						; 3
 								;==========
-								;	 38
+								;	 26
 
 	clc			; fixed_add(&space_y,&cy,&space_y);	; 2
 	lda	SPACEY_F						; 3
@@ -858,14 +861,6 @@ screeny_continue:
 	adc	CY_I							; 3
 	sta	SPACEY_I						; 3
 
-
-;	lda	#$ec		; temp.i=0xec;	// -20 (LOWRES_W/2)	; 2
-;	sta	TEMP_I							; 3
-;	lda	#0		; temp.f=0;				; 2
-;	sta	TEMP_F							; 3
-;								;==========
-;
-								;	  0
 ; mul7
 	; fixed_mul(&temp,&dx,&temp);
 	lda	#CONST_LOWRES_HALF_I					; 3
@@ -878,55 +873,46 @@ screeny_continue:
 	sta	NUM2L							; 3
 	sec								; 2
 	jsr	multiply						; 6
-	sta	TEMP_I							; 3
-	stx	TEMP_F							; 3
+;	sta	TEMP_I							;
+;	stx	TEMP_F							;
 								;==========
-								;	 38
+								;	 32
 
 
 
 	clc		; fixed_add(&space_x,&temp,&space_x);		; 2
 	lda	SPACEX_F						; 3
-	adc	TEMP_F							; 3
+;	adc	TEMP_F							;
+	adc	RESULT+1						; 3
 	sta	SPACEX_F						; 3
 	lda	SPACEX_I						; 3
-	adc	TEMP_I							; 3
+;	adc	TEMP_I							; 
+	adc	RESULT+2						; 3
 	sta	SPACEX_I						; 3
 								;==========
 								;	 20
 
-
-
-
-;	lda	#$ec		; temp.i=0xec;	// -20 (LOWRES_W/2)	; 2
-;	sta	TEMP_I							; 3
-;	lda	#0		; temp.f=0;				; 2
-;	sta	TEMP_F							; 3
-								;==========
-								;	 30
 ;mul8
 	; fixed_mul(&fixed_temp,&dy,&fixed_temp);
-;	lda	#CONST_LOWRES_HALF_I
-;	sta	NUM1H
-;	lda	#CONST_LOWRES_HALF_F
-;	sta	NUM1L
 	lda	DY_I							; 3
 	sta	NUM2H							; 3
 	lda	DY_F							; 3
 	sta	NUM2L							; 3
 	clc	; reuse LOWRES_HALF_I from last time			; 2
 	jsr	multiply						; 6
-	sta	TEMP_I							; 3
-	stx	TEMP_F							; 3
+;	sta	TEMP_I							;
+;	stx	TEMP_F							;
 								;==========
-								;	 26
+								;	 20
 
-	clc		; fixed_add(&space_y,&fixed_temp,&space_y);	; 2
+	clc		; fixed_add(&space_y,&temp,&space_y);	; 2
 	lda	SPACEY_F						; 3
-	adc	TEMP_F							; 3
+;	adc	TEMP_F							;
+	adc	RESULT+1						; 3
 	sta	SPACEY_F						; 3
 	lda	SPACEY_I						; 3
-	adc	TEMP_I							; 3
+;	adc	TEMP_I							;
+	adc	RESULT+2						; 3
 	sta	SPACEY_I						; 3
 
 	; brk	; space_y = f7:04
@@ -937,21 +923,36 @@ screeny_continue:
 								;	 25
 screenx_loop:
 
+	; cache color and return if same as last time
+	lda	SPACEY_I						; 3
+	cmp	LAST_SPACEY_I						; 3
+	bne	nomatch							; 2nt/3
+	lda	SPACEX_I						; 3
+	cmp	LAST_SPACEX_I						; 3
+	bne	nomatch							; 2nt/3
+	lda	LAST_MAP_COLOR						; 3
+	jmp	match							; 3
+								;===========
+								;	22
+nomatch:
+	; do a full lookup, takes much longer
 	jsr	lookup_map		; get color in A		; 6
-
+								;============
+								;	  6
+match:
 	ldy	#0							; 2
 
 	and	COLOR_MASK						; 3
 	ldx	COLOR_MASK						; 3
 	bpl	big_bottom						; 2nt/3
 
-	ora	(GBASL),Y						; 4
+	ora	(GBASL),Y	; we're odd, or the bottom in		; 4
 big_bottom:
 
 	sta	(GBASL),Y		; plot double height		; 6
 	inc	GBASL			; point to next pixel		; 5
 								;============
-								;	 31
+								;	 25
 
 
 
@@ -996,22 +997,24 @@ done_screeny:
 	;====================
 	; finds value in space_x.i,space_y.i
 	; returns color in A
+	; CLOBBERS: A,Y
 lookup_map:
 
 
 	; cache color and return if same as last time
-	lda	SPACEY_I			; 3
-	cmp	LAST_SPACEY_I			; 3
-	bne	nomatch				; 2nt/3
-	lda	SPACEX_I			; 3
-	cmp	LAST_SPACEX_I			; 3
-	bne	nomatch2			; 2nt/3
-	lda	LAST_MAP_COLOR			; 3
-	rts					; 6
-
-nomatch:
+;	lda	SPACEY_I			; 3
+;	cmp	LAST_SPACEY_I			; 3
+;	bne	nomatch				; 2nt/3
+;	lda	SPACEX_I			; 3
+;	cmp	LAST_SPACEX_I			; 3
+;	bne	nomatch2			; 2nt/3
+;	lda	LAST_MAP_COLOR			; 3
+;	rts					; 6
+					;==========
+					;	 25
+;nomatch:
 	lda	SPACEX_I						; 3
-nomatch2:
+;nomatch2:
 	sta	LAST_SPACEX_I						; 3
 	and	#CONST_MAP_MASK						; 2
 	sta	TEMPY							; 3
@@ -1032,7 +1035,7 @@ nomatch2:
 	; SPACEX_I is in y
 	cpy	#$8							; 2
 								;============
-								;	 37
+								;	 34
 
 	bcs	ocean_color		; bgt 8				;^2nt/3
 	ldy	SPACEY_I						; 3
@@ -1120,7 +1123,7 @@ fixed_sin_scale:
 ;	.byte $8C,$75,$64,$58,$4E,$46,$40,$3A,$36,$32,$2E,$2C,$29,$27,$25,$23
 ;	.byte $A6,$8A,$76,$68,$5C,$53,$4B,$45,$40,$3B,$37,$34,$30,$2E,$2B,$29
 
-	; FIXME: we can guarantee faster indexed reads if we page-aligned this
+	; we can guarantee 4 cycle indexed reads if we page-aligned this
 .align 256
 horizontal_lookup:
 	.byte $0C,$0B,$0A,$09,$09,$08,$08,$07,$07,$06,$06,$06,$05,$05,$05,$05
