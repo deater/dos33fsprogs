@@ -7,7 +7,10 @@ CONST_TILE_H	EQU	64
 CONST_MAP_MASK	EQU	(CONST_TILE_W - 1)
 CONST_LOWRES_W	EQU	40
 CONST_LOWRES_H	EQU	40
-
+CONST_BETA_I	EQU	$ff
+CONST_BETA_F	EQU	$80
+CONST_SCALE_I	EQU	$14
+CONST_SCALE_F	EQU	$00
 
 
 flying_start:
@@ -18,7 +21,6 @@ flying_start:
 
 	jsr	clear_screens
 	jsr     set_gr_page0
-
 
 	jsr	init_multiply_tables
 
@@ -569,9 +571,9 @@ sky_loop:				; draw line across screen
 	lda	SPACEZ_F						; 3
 	sta	NUM1L							; 3
 
-	lda	#$ff	; BETA_I					; 2
+	lda	#CONST_BETA_I	; BETA_I				; 2
 	sta	NUM2H							; 3
-	lda	#$80	; BETA_F					; 2
+	lda	#CONST_BETA_F	; BETA_F				; 2
 	sta	NUM2L							; 3
 
 	jsr	multiply						; 6
@@ -633,9 +635,9 @@ screeny_loop:
 	sta	NUM1H							; 4
 	lda	HORIZ_SCALE_F						; 3
 	sta	NUM1L							; 4
-	lda	#$14	; SCALE_I					; 2
+	lda	#CONST_SCALE_I	; SCALE_I				; 2
 	sta	NUM2H							; 4
-	lda	#$00	; SCALE_F					; 2
+	lda	#CONST_SCALE_F	; SCALE_F				; 2
 	sta	NUM2L							; 4
 	jsr	multiply						; 6
 	lda	RESULT+2						; 4
