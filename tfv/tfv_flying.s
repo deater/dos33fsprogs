@@ -1027,7 +1027,7 @@ lookup_map:
 	lda	SPACEY_I						; 3
 	sta	LAST_SPACEY_I						; 3
 	and	#CONST_MAP_MASK_Y	; wrap to 64x64 grid		; 2
-	sta	SPACEY_I
+	sta	SPACEY_I						; 3
 
 
 	asl								; 2
@@ -1040,7 +1040,7 @@ lookup_map:
 	; SPACEX_I is in y
 	cpy	#$8							; 2
 								;============
-								;	 34
+								;	 37
 
 	bcs	ocean_color		; bgt 8				;^2nt/3
 	ldy	SPACEY_I						; 3

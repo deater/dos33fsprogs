@@ -110,3 +110,15 @@ Move to 40x40 mode
 	Total =                  224,981
 	Frame Rate = 4.44 fps
 
+Remove some unnecessary zero page copies in the mode7 code
+	Cycles: flying=              187
+	Cycles: getkey=               46
+	Cycles: page_flip=            26
+	Cycles: multiply=         49,613
+	Cycles: mode7=           141,269
+	Cycles: lookup_map=       21,718
+	Cycles: put_sprite=        2,561
+	================================
+	Total =                  215,420
+	Frame Rate = 4.64 fps
+

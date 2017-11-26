@@ -2,15 +2,8 @@ mode7 speed fixes:
 	+ faster multiply routine
 		- If result is AABBCCDD we only need BBCC for fixed point
 			result
-		- Pass NUM1H in A? no because used multiple places
-
-	+ inline hlin_setup? (save 12 cycles)
-
 	+  Skip key parsing if no key read
 
-	slower: move to 40x40 again
-		draw every other line.  First with color/black		
-		then xor in the second line
 
 short term:
 
