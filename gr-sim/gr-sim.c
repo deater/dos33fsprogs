@@ -221,7 +221,7 @@ static int gbascalc(unsigned char a) {
 	return 0;
 }
 
-static short y_indirect(unsigned char base, unsigned char y) {
+short y_indirect(unsigned char base, unsigned char y) {
 
 	unsigned short addr;
 

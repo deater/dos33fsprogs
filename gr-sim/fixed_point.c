@@ -193,10 +193,25 @@ int main(int argc, char **argv) {
 	double coach_z;
 	double horizon=-2.0;
 
-	printf("horizontal_scale_lookup:\n");
+	printf("horizontal_scale_lookup_20:\n");
 	for(space_z=0.5;space_z<7.5;space_z+=1.0) {
 		printf("{");
 		for(i=8;i<40;i+=2) {
+			coach_z=space_z/((double)i-horizon);
+			double_to_fixed(coach_z,&fa);
+			if (fa.i!=0) {
+				printf("CRITICAL ERROR TOP NOT 0\n");
+			}
+			printf("0x%02X,",fa.f);
+
+		}
+		printf("},\n");
+	}
+
+	printf("horizontal_scale_lookup_40:\n");
+	for(space_z=0.5;space_z<7.5;space_z+=1.0) {
+		printf("{");
+		for(i=8;i<40;i+=1) {
 			coach_z=space_z/((double)i-horizon);
 			double_to_fixed(coach_z,&fa);
 			if (fa.i!=0) {

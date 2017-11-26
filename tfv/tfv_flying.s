@@ -564,7 +564,7 @@ draw_background_mode7:
 								;	 11
 
 sky_loop:				; draw line across screen
-	ldy	#40			; from y=0 to y=6		; 2
+	ldy	#39			; from y=0 to y=6		; 2
 	sty	V2							; 3
 	ldy	#0							; 2
 	pha								; 3
@@ -581,7 +581,7 @@ sky_loop:				; draw line across screen
 	lda	#COLOR_BOTH_GREY	; Horizon is Grey		; 2
 	sta	COLOR							; 3
 	lda	#6			; draw single line at 6/7	; 2
-	ldy	#40							; 2
+	ldy	#39							; 2
 	sty	V2			; hlin	Y,V2 at A		; 3
 	ldy	#0							; 2
 	jsr	hlin_double		; hlin	0,40 at 6	; 63+(X*16)
@@ -621,24 +621,46 @@ no_draw_sky:
 	;; BAD  4 80 * ffffffff 80 = 42 40
 
 	lda	#8							; 2
-	sta	SCREEN_Y						; 4
+	sta	SCREEN_Y						; 3
 								;=============
-								;	 12
+								;	 11
 screeny_loop:
-	ldy	#0							; 2
-	jsr	hlin_setup		; y-coord in a, x-coord in y	; 41
-					; sets up GBASL/GBASH
+	tay			; y=A					; 2
+	and	#$1							; 2
+	bne	screeny_odd						; 2nt/3
+screeny_even:
+	lda	#$0f							; 2
+	bne	screeny_continue					; 3
+screeny_odd:
+	tya								; 2
+	and	#$fe							; 2
+	tay								; 2
+	lda	#$f0							; 2
+screeny_continue:
+	sta	COLOR_MASK						; 3
+
+	lda	gr_offsets,Y    ; lookup low-res memory address         ; 4
+	sta	GBASL                                                   ; 3
+	iny                                                             ; 2
+
+	lda	gr_offsets,Y                                            ; 4
+	clc								; 2
+	adc	DRAW_PAGE       ; add in draw page offset               ; 3
+	sta	GBASH                                                   ; 3
+
 								;=============
-								;	 43
+								;	39/35
 
 	lda	#0			; horizontal_scale.i = 0	; 2
 	sta	HORIZ_SCALE_I						; 3
-
+	;	unsigned char horizontal_lookup[7][32];
 	;horizontal_scale.f=
 	;	horizontal_lookup[space_z.i&0xf][(screen_y-8)/2];
+	;		horizontal_lookup[(space_z<<5)+(screen_y-8)]
 
 	lda	SPACEZ_I						; 3
 	and	#$f							; 2
+	asl								; 2
 	asl								; 2
 	asl								; 2
 	asl								; 2
@@ -648,14 +670,13 @@ screeny_loop:
 	sec								; 2
 	lda	SCREEN_Y						; 3
 	sbc	#8							; 2
-	lsr								; 2
 	clc								; 2
 	adc	TEMP_I							; 3
 	tay								; 2
 	lda	horizontal_lookup,Y					; 4
 	sta	HORIZ_SCALE_F						; 3
 								;============
-								;	 44
+								;	 39
 	;; brk ASM, horiz_scale = 00:73
 ; mul2
 	; calculate the distance of the line we are drawing
@@ -919,26 +940,21 @@ screenx_loop:
 	jsr	lookup_map		; get color in A		; 6
 
 	ldy	#0							; 2
+
+	and	COLOR_MASK						; 3
+	ldx	COLOR_MASK						; 3
+	bpl	big_bottom						; 2nt/3
+
+	ora	(GBASL),Y						; 4
+big_bottom:
+
 	sta	(GBASL),Y		; plot double height		; 6
 	inc	GBASL			; point to next pixel		; 5
-
-	; Check if over water
-;	cmp	#$22			; see if dark blue		; 2
-;	bne	not_watery						; 2nt/3
-
-;	lda	SCREEN_Y	; only check pixel in middle of screen	; 3
-;	cmp	#38							; 2
-;	bne	not_watery						; 2nt/3
-
-;	lda	SCREEN_X	; only check pixel in middle of screen	; 3
-;	cmp	#20							; 2
-;	bne	not_watery						; 2nt/3
-
-;	lda	#$1		; set over water			; 2
-;	sta	OVER_WATER						; 3
 								;============
-								;	 19
-;not_watery:
+								;	 31
+
+
+
 	; advance to the next position in space
 
 	clc			; fixed_add(&space_x,&dx,&space_x);	; 2
@@ -964,15 +980,13 @@ screenx_loop:
 								;=============
 								;	53
 
+	inc	SCREEN_Y						; 5
 	lda	SCREEN_Y						; 3
-	clc								; 2
-	adc	#2							; 2
-	sta	SCREEN_Y						; 3
 	cmp	#40			; LOWRES height			; 2
 	beq	done_screeny						; 2nt/3
 	jmp	screeny_loop						; 3
 								;=============
-								;	 17
+								;	 15
 done_screeny:
 	rts								; 6
 
@@ -1097,14 +1111,34 @@ fixed_sin_scale:
 	.byte $ff,$ea
 	.byte $ff,$f4
 
+;horizontal_lookup_20:
+;	.byte $0C,$0A,$09,$08,$07,$06,$05,$05,$04,$04,$04,$04,$03,$03,$03,$03
+;	.byte $26,$20,$1B,$18,$15,$13,$11,$10,$0E,$0D,$0C,$0C,$0B,$0A,$0A,$09
+;	.byte $40,$35,$2D,$28,$23,$20,$1D,$1A,$18,$16,$15,$14,$12,$11,$10,$10
+;	.byte $59,$4A,$40,$38,$31,$2C,$28,$25,$22,$20,$1D,$1C,$1A,$18,$17,$16
+;	.byte $73,$60,$52,$48,$40,$39,$34,$30,$2C,$29,$26,$24,$21,$20,$1E,$1C
+;	.byte $8C,$75,$64,$58,$4E,$46,$40,$3A,$36,$32,$2E,$2C,$29,$27,$25,$23
+;	.byte $A6,$8A,$76,$68,$5C,$53,$4B,$45,$40,$3B,$37,$34,$30,$2E,$2B,$29
+
+	; FIXME: we can guarantee faster indexed reads if we page-aligned this
+.align 256
 horizontal_lookup:
-	.byte $0C,$0A,$09,$08,$07,$06,$05,$05,$04,$04,$04,$04,$03,$03,$03,$03
-	.byte $26,$20,$1B,$18,$15,$13,$11,$10,$0E,$0D,$0C,$0C,$0B,$0A,$0A,$09
-	.byte $40,$35,$2D,$28,$23,$20,$1D,$1A,$18,$16,$15,$14,$12,$11,$10,$10
-	.byte $59,$4A,$40,$38,$31,$2C,$28,$25,$22,$20,$1D,$1C,$1A,$18,$17,$16
-	.byte $73,$60,$52,$48,$40,$39,$34,$30,$2C,$29,$26,$24,$21,$20,$1E,$1C
-	.byte $8C,$75,$64,$58,$4E,$46,$40,$3A,$36,$32,$2E,$2C,$29,$27,$25,$23
-	.byte $A6,$8A,$76,$68,$5C,$53,$4B,$45,$40,$3B,$37,$34,$30,$2E,$2B,$29
+	.byte $0C,$0B,$0A,$09,$09,$08,$08,$07,$07,$06,$06,$06,$05,$05,$05,$05
+	.byte $04,$04,$04,$04,$04,$04,$04,$03,$03,$03,$03,$03,$03,$03,$03,$03
+	.byte $26,$22,$20,$1D,$1B,$19,$18,$16,$15,$14,$13,$12,$11,$10,$10,$0F
+	.byte $0E,$0E,$0D,$0D,$0C,$0C,$0C,$0B,$0B,$0A,$0A,$0A,$0A,$09,$09,$09
+	.byte $40,$3A,$35,$31,$2D,$2A,$28,$25,$23,$21,$20,$1E,$1D,$1B,$1A,$19
+	.byte $18,$17,$16,$16,$15,$14,$14,$13,$12,$12,$11,$11,$10,$10,$10,$0F
+	.byte $59,$51,$4A,$44,$40,$3B,$38,$34,$31,$2F,$2C,$2A,$28,$26,$25,$23
+	.byte $22,$21,$20,$1E,$1D,$1C,$1C,$1B,$1A,$19,$18,$18,$17,$16,$16,$15
+	.byte $73,$68,$60,$58,$52,$4C,$48,$43,$40,$3C,$39,$36,$34,$32,$30,$2E
+	.byte $2C,$2A,$29,$27,$26,$25,$24,$22,$21,$20,$20,$1F,$1E,$1D,$1C,$1C
+	.byte $8C,$80,$75,$6C,$64,$5D,$58,$52,$4E,$4A,$46,$43,$40,$3D,$3A,$38
+	.byte $36,$34,$32,$30,$2E,$2D,$2C,$2A,$29,$28,$27,$26,$25,$24,$23,$22
+	.byte $A6,$97,$8A,$80,$76,$6E,$68,$61,$5C,$57,$53,$4F,$4B,$48,$45,$42
+	.byte $40,$3D,$3B,$39,$37,$35,$34,$32,$30,$2F,$2E,$2C,$2B,$2A,$29,$28
+
+
 
 grass_string:
 	.asciiz "NEED TO LAND ON GRASS!"

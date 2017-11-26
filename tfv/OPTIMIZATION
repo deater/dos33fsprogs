@@ -97,3 +97,16 @@ Move checking if over water out of critical section
 	Total =                  106,841
 	Frame Rate = 9.36 fps
 
+Move to 40x40 mode
+
+	Cycles: flying=              187
+	Cycles: getkey=               46
+	Cycles: page_flip=            26
+	Cycles: multiply=         49,613
+	Cycles: mode7=           123,701
+	Cycles: lookup_map=       48,847
+	Cycles: put_sprite=        2,561
+	=================================
+	Total =                  224,981
+	Frame Rate = 4.44 fps
+
