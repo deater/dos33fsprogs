@@ -19,6 +19,9 @@ flying_start:
 	jsr	clear_screens
 	jsr     set_gr_page0
 
+
+	jsr	init_multiply_tables
+
 	;===============
 	; Init Variables
 	;===============
