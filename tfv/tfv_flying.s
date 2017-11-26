@@ -576,9 +576,10 @@ sky_loop:				; draw line across screen
 	lda	#CONST_BETA_F	; BETA_F				; 2
 	sta	NUM2L							; 3
 
+	sec								; 2
 	jsr	multiply						; 6
 								;===========
-								;        28
+								;        30
 
 	lda	RESULT+2						; 4
 	sta	FACTOR_I						; 4
@@ -639,13 +640,14 @@ screeny_loop:
 	sta	NUM2H							; 4
 	lda	#CONST_SCALE_F	; SCALE_F				; 2
 	sta	NUM2L							; 4
+	sec								; 2
 	jsr	multiply						; 6
 	lda	RESULT+2						; 4
 	sta	DISTANCE_I						; 2
 	lda	RESULT+1						; 4
 	sta	DISTANCE_F						; 2
 								;==========
-								;	 44
+								;	 46
 	;; brk ASM, distance = 08:fc
 
 	; calculate the dx and dy of points in space when we step
@@ -674,6 +676,7 @@ screeny_loop:
 	sta	NUM2H							; 4
 	lda	DX_F							; 3
 	sta	NUM2L							; 4
+	sec								; 2
 	jsr	multiply						; 6
 	lda	RESULT+2						; 4
 	sta	DX_I							; 3
@@ -706,6 +709,7 @@ screeny_loop:
 	sta	NUM2H							; 4
 	lda	DY_F							; 3
 	sta	NUM2L							; 4
+	sec								; 2
 	jsr	multiply						; 6
 	lda	RESULT+2						; 4
 	sta	DY_I							; 3
@@ -754,6 +758,7 @@ screeny_loop:
 	sta	NUM2H							; 4
 	lda	TEMP_F							; 3
 	sta	NUM2L							; 4
+	sec								; 2
 	jsr	multiply						; 6
 	lda	RESULT+2						; 4
 	sta	SPACEX_I						; 3
@@ -785,6 +790,7 @@ screeny_loop:
 	sta	NUM2H							; 4
 	lda	DX_F							; 3
 	sta	NUM2L							; 4
+	sec								; 2
 	jsr	multiply						; 6
 	lda	RESULT+2						; 4
 	sta	TEMP_I							; 3
@@ -827,6 +833,7 @@ screeny_loop:
 	sta	NUM2H							; 4
 	lda	TEMP_F							; 3
 	sta	NUM2L							; 4
+	sec								; 2
 	jsr	multiply						; 6
 	lda	RESULT+2						; 4
 	sta	SPACEY_I						; 3
@@ -858,6 +865,7 @@ screeny_loop:
 	sta	NUM2H							; 4
 	lda	DY_F							; 3
 	sta	NUM2L							; 4
+	sec								; 2
 	jsr	multiply						; 6
 	lda	RESULT+2						; 4
 	sta	TEMP_I							; 3

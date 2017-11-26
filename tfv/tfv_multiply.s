@@ -109,8 +109,6 @@ second_table:
 
 fixed_16x16_mul_unsigned:
 
-	sec	; FIXME-remove when we implement this
-
 	bcc	num1_same_as_last_time					; 2nt/3
 
 	;============================
