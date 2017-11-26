@@ -29,8 +29,10 @@ void game_over(void) {
 }
 
 void print_help(void) {
-	text();
-	home();
+	a=0xa0;
+	clear_top_a();
+
+	soft_switch(TXTSET);
 
 //	htab(1);
 //	vtab(1);
@@ -69,7 +71,7 @@ void print_help(void) {
 
 	repeat_until_keypressed();
 
-	gr();
+	soft_switch(TXTCLR);
 }
 
 void show_map(void) {

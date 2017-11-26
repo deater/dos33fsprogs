@@ -32,6 +32,7 @@ void soft_switch(unsigned short address);
 int soft_switch_read(unsigned short address);
 int vlin(int y1, int y2, int at);
 int collision(int xx, int yy, int ground_color);
+void clear_top_a(void);
 void clear_top(int page);
 void clear_bottom(int page);
 void vtab(int ypos);

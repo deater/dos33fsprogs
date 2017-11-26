@@ -268,6 +268,9 @@ check_help:
 
 	jsr	print_help
 
+	lda	#2
+	sta	DRAW_SKY
+
 check_done:
 
 	;================

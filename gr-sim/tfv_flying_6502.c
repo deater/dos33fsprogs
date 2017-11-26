@@ -972,6 +972,7 @@ int flying(void) {
 						cycles.flying+=5;
 		if (ch=='h') {
 			print_help();
+			ram[DRAW_SKY]=2;
 		}
 						cycles.flying+=5;
 		/* Ending */

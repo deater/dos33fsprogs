@@ -1419,6 +1419,16 @@ int collision(int xx, int yy, int ground_color) {
 	return collide;
 }
 
+void clear_top_a(void) {
+
+	int i;
+
+	ram[COLOR]=a;
+	for(i=0;i<40;i+=2) {
+		hlin_double(ram[DRAW_PAGE],0,40,i);
+	}
+}
+
 void clear_top(int page) {
 	int i;
 
