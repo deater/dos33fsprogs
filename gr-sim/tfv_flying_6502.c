@@ -43,8 +43,6 @@
 #define SPEED		0x7b
 #define SPLASH_COUNT	0x7c
 #define OVER_WATER	0x7d
-#define TEMP2_I		0x7e
-#define TEMP2_F		0x7f
 
 #define SHIPY		0xE4
 
@@ -56,6 +54,10 @@
 #define CONST_BETA_F	0x80
 
 #define CONST_SHIPX	15
+
+#define CONST_LOWRES_HALF_I	0xec	// -20 (LOWRES_W/2)
+#define CONST_LOWRES_HALF_F	0x0
+
 
 /* Mode7 code based on code from: */
 /* http://www.helixsoft.nl/articles/circle/sincos.htm */
@@ -562,7 +564,7 @@ y_positive:
 
 //	return (product[3]<<24)|(product[2]<<16)|(product[1]<<8)|product[0];
 						// rts			; 6
-					cycles.multiply+=6;
+					cycles.multiply+=12;
 }
 
 
@@ -786,9 +788,9 @@ void draw_background_mode7(void) {
 	hlin_double(ram[DRAW_PAGE], 0, 40, 6);
 						cycles.mode7+=14+63+(16*40);
 
-						cycles.mode7+=28;
+						cycles.mode7+=30;
 	/* FIXME: only do this if SPACEZ changes? */
-// mul
+// mul1
 	fixed_mul(ram[SPACEZ_I],ram[SPACEZ_F],
 		CONST_BETA_I,CONST_BETA_F,
 		&ram[FACTOR_I],&ram[FACTOR_F],0);
@@ -804,7 +806,7 @@ void draw_background_mode7(void) {
 //		fixed_to_double(ram[SPACEZ_I],ram[SPACEZ_F],),
 //		fixed_to_double(&BETA),
 //		fixed_to_double(ram[FACTOR_I],ram[FACTOR_F]));
-							cycles.mode7+=22;
+							cycles.mode7+=12;
 
 	for (ram[SCREEN_Y] = 8; ram[SCREEN_Y] < LOWRES_H; ram[SCREEN_Y]+=2) {
 
@@ -825,11 +827,11 @@ void draw_background_mode7(void) {
 			ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F]);
 		}
 
-//mul		// calculate the distance of the line we are drawing
+//mul2		// calculate the distance of the line we are drawing
 		fixed_mul(ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
 			CONST_SCALE_I,CONST_SCALE_F,
 			&ram[DISTANCE_I],&ram[DISTANCE_F],0);
-							cycles.mode7+=44;
+							cycles.mode7+=34;
 		if (!displayed) {
 			printf("DISTANCE %x:%x\n",ram[DISTANCE_I],ram[DISTANCE_F]);
 		}
@@ -840,11 +842,11 @@ void draw_background_mode7(void) {
 		ram[DX_F]=fixed_sin[(ram[ANGLE]+8)&0xf].f;	// -sin()
 							cycles.mode7+=29;
 
-// mul
+// mul3
 		fixed_mul(ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
 			ram[DX_I],ram[DX_F],
 			&ram[DX_I],&ram[DX_F],1);
-							cycles.mode7+=48;
+							cycles.mode7+=26;
 		if (!displayed) {
 			printf("DX %x:%x\n",ram[DX_I],ram[DX_F]);
 		}
@@ -853,11 +855,11 @@ void draw_background_mode7(void) {
 		ram[DY_I]=fixed_sin[(ram[ANGLE]+4)&0xf].i;	// cos()
 		ram[DY_F]=fixed_sin[(ram[ANGLE]+4)&0xf].f;	// cos()
 							cycles.mode7+=29;
-// mul
+// mul4
 		fixed_mul(ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
 			ram[DY_I],ram[DY_F],
 			&ram[DY_I],&ram[DY_F],1);
-							cycles.mode7+=48;
+							cycles.mode7+=28;
 		if (!displayed) {
 			printf("DY %x:%x\n",ram[DY_I],ram[DY_F]);
 		}
@@ -874,11 +876,11 @@ void draw_background_mode7(void) {
 		ram[TEMP_I]=fixed_sin[(ram[ANGLE]+4)&0xf].i; // cos
 		ram[TEMP_F]=fixed_sin[(ram[ANGLE]+4)&0xf].f; // cos
 							cycles.mode7+=29;
-// mul
+// mul5
 		fixed_mul(ram[SPACEX_I],ram[SPACEX_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEX_I],&ram[SPACEX_F],0);
-							cycles.mode7+=48;
+							cycles.mode7+=38;
 
 		fixed_add(ram[SPACEX_I],ram[SPACEX_F],
 			ram[CX_I],ram[CX_F],
@@ -888,25 +890,22 @@ void draw_background_mode7(void) {
 		ram[TEMP_I]=fixed_sin[ram[ANGLE]&0xf].i;
 		ram[TEMP_F]=fixed_sin[ram[ANGLE]&0xf].f;
 							cycles.mode7+=25;
-// mul
+// mul6
 		fixed_mul(ram[SPACEY_I],ram[SPACEY_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEY_I],&ram[SPACEY_F],0);
-							cycles.mode7+=48;
+							cycles.mode7+=38;
+
 		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 			ram[CY_I],ram[CY_F],
 			&ram[SPACEY_I],&ram[SPACEY_F]);
 
 
-		ram[TEMP2_I]=0xec;	// -20 (LOWRES_W/2)
-		ram[TEMP2_F]=0;
-							cycles.mode7+=30;
-
-// mul
-		fixed_mul(ram[TEMP2_I],ram[TEMP2_F],
+// mul7
+		fixed_mul(CONST_LOWRES_HALF_I,CONST_LOWRES_HALF_F,
 			ram[DX_I],ram[DX_F],
 			&ram[TEMP_I],&ram[TEMP_F],0);
-							cycles.mode7+=48;
+							cycles.mode7+=38;
 
 		fixed_add(ram[SPACEX_I],ram[SPACEX_F],
 			ram[TEMP_I],ram[TEMP_F],
@@ -917,15 +916,11 @@ void draw_background_mode7(void) {
 			ram[SPACEX_I],ram[SPACEX_F]);
 		}
 
-
-//		ram[TEMP_I]=0xec;	// -20 (LOWRES_W/2)
-//		ram[TEMP_F]=0;
-							cycles.mode7+=30;
-// mul
-		fixed_mul(ram[TEMP2_I],ram[TEMP2_F],
+// mul8
+		fixed_mul(CONST_LOWRES_HALF_I,CONST_LOWRES_HALF_F,
 			ram[DY_I],ram[DY_F],
 			&ram[TEMP_I],&ram[TEMP_F],1);
-							cycles.mode7+=48;
+							cycles.mode7+=26;
 		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEY_I],&ram[SPACEY_F]);
@@ -983,16 +978,16 @@ int flying(void) {
 	memset(&cycles,0,sizeof(cycles));
 	fixed_mul(0x1,0x0,
 		0x2,0x0,
-		&ram[FACTOR_I],&ram[FACTOR_F],0);
+		&ram[TEMP_I],&ram[TEMP_F],0);
 	printf("Multiplying 1.0 * 2.0 = %d.%d, took %d cycles\n",
-		ram[FACTOR_I],ram[FACTOR_F],cycles.multiply);
+		ram[TEMP_I],ram[TEMP_F],cycles.multiply);
 
 	memset(&cycles,0,sizeof(cycles));
 	fixed_mul(0xff,0xff,
 		0xff,0xff,
-		&ram[FACTOR_I],&ram[FACTOR_F],0);
+		&ram[TEMP_I],&ram[TEMP_F],0);
 	printf("Multiplying ff.ff * ff.ff = %d.%d, took %d cycles\n",
-		ram[FACTOR_I],ram[FACTOR_F],cycles.multiply);
+		ram[TEMP_I],ram[TEMP_F],cycles.multiply);
 
 	gr();
 	clear_bottom(PAGE0);

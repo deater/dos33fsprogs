@@ -42,3 +42,19 @@ Update to use "fast multiply" w 2kB squares table lookup:
 	=================================
 	Total =                  139,833
 	Frame Rate = 7.15 fps
+
+Update to optimize fast multiply (reusing NUM1H, return results in register)
+	Multiplying 1.0 * 2.0 = 2.0, took 234 cycles
+	Multiplying ff.ff * ff.ff = 0.0, took 278 cycles
+
+	Cycles: flying=              162
+	Cycles: getkey=               46
+        Cycles: page_flip=            26
+        Cycles: multiply=         24,935
+        Cycles: mode7=            73,925
+        Cycles: lookup_map=       33,920
+        Cycles: put_sprite=        2,561
+	=================================
+        Total =                  135,575
+	Frame Rate = 7.38 fps
+

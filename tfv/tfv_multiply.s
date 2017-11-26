@@ -329,8 +329,10 @@ x_positive:
 								;	 19
 
 y_positive:
-;	*z_i=product[2];
-;	*z_f=product[1];
+	lda	RESULT+2	;	*z_i=product[2];		; 3
+	ldx	RESULT+1	;	*z_f=product[1];		; 3
 
-	rts								; 6
+
+
+	rts								; 12
 

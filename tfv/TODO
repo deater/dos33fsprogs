@@ -4,6 +4,8 @@ mode7 speed fixes:
 	+ faster multiply routine
 	+ If result is AABBCCDD we only need BBCC for fixed point
 		result
+	+ Pass NUM1H in A? no because used multiple places
+	+ inline hlin_setup? (save 12 cycles)
 
 	+ re-arrange variables to better take advantage of self-modifying code
 	+ only doing the spacez calculation if it has changed

@@ -11,7 +11,8 @@ CONST_BETA_I	EQU	$ff
 CONST_BETA_F	EQU	$80
 CONST_SCALE_I	EQU	$14
 CONST_SCALE_F	EQU	$00
-
+CONST_LOWRES_HALF_I	EQU	$ec	; -(LOWRES_W/2)
+CONST_LOWRES_HALF_F	EQU	$00	
 
 flying_start:
 
@@ -553,7 +554,7 @@ sky_loop:				; draw line across screen
 	bne	sky_loop						; 3/2nt
 								;=============
 								; (23+63+(X*16))*5
-	; Draw Horizon
+	; Draw Hazy Horizon
 
 	lda	#COLOR_BOTH_GREY	; Horizon is Grey		; 2
 	sta	COLOR							; 3
@@ -564,8 +565,9 @@ sky_loop:				; draw line across screen
 	jsr	hlin_double		; hlin	0,40 at 6	; 63+(X*16)
 								;===========
 								; 63+(X*16)+14
+	; FIXME: only do this if Z changes?
 	; fixed_mul(&space_z,&BETA,&factor);
-
+;mul1
 	lda	SPACEZ_I						; 3
 	sta	NUM1H							; 3
 	lda	SPACEZ_F						; 3
@@ -581,10 +583,8 @@ sky_loop:				; draw line across screen
 								;===========
 								;        30
 
-	lda	RESULT+2						; 4
-	sta	FACTOR_I						; 4
-	lda	RESULT+1						; 4
-	sta	FACTOR_F						; 4
+	sta	FACTOR_I						; 3
+	stx	FACTOR_F						; 3
 
 	;; SPACEZ=78  * ff80 = FACTOR=66
 
@@ -595,7 +595,7 @@ sky_loop:				; draw line across screen
 	lda	#8							; 2
 	sta	SCREEN_Y						; 4
 								;=============
-								;	 22
+								;	 12
 screeny_loop:
 	ldy	#0							; 2
 	jsr	hlin_setup		; y-coord in a, x-coord in y	; 41
@@ -629,25 +629,23 @@ screeny_loop:
 								;============
 								;	 44
 	;; brk ASM, horiz_scale = 00:73
-
+; mul2
 	; calculate the distance of the line we are drawing
 	; fixed_mul(&horizontal_scale,&scale,&distance);
 	lda	HORIZ_SCALE_I						; 3
-	sta	NUM1H							; 4
+	sta	NUM1H							; 3
 	lda	HORIZ_SCALE_F						; 3
-	sta	NUM1L							; 4
+	sta	NUM1L							; 3
 	lda	#CONST_SCALE_I	; SCALE_I				; 2
-	sta	NUM2H							; 4
+	sta	NUM2H							; 3
 	lda	#CONST_SCALE_F	; SCALE_F				; 2
-	sta	NUM2L							; 4
+	sta	NUM2L							; 3
 	sec								; 2
 	jsr	multiply						; 6
-	lda	RESULT+2						; 4
 	sta	DISTANCE_I						; 2
-	lda	RESULT+1						; 4
-	sta	DISTANCE_F						; 2
+	stx	DISTANCE_F						; 2
 								;==========
-								;	 46
+								;	 34
 	;; brk ASM, distance = 08:fc
 
 	; calculate the dx and dy of points in space when we step
@@ -666,24 +664,22 @@ screeny_loop:
 	sta	DX_F							; 3
 								;==========
 								;	 29
-
+;mul3
 	; fixed_mul(&dx,&horizontal_scale,&dx);
-	lda	HORIZ_SCALE_I						; 3
-	sta	NUM1H							; 4
-	lda	HORIZ_SCALE_F						; 3
-	sta	NUM1L							; 4
+;	lda	HORIZ_SCALE_I
+;	sta	NUM1H
+;	lda	HORIZ_SCALE_F
+;	sta	NUM1L
 	lda	DX_I							; 3
-	sta	NUM2H							; 4
+	sta	NUM2H							; 3
 	lda	DX_F							; 3
-	sta	NUM2L							; 4
-	sec								; 2
+	sta	NUM2L							; 3
+	clc			; reuse HORIZ_SCALE in NUM1		; 2
 	jsr	multiply						; 6
-	lda	RESULT+2						; 4
 	sta	DX_I							; 3
-	lda	RESULT+1						; 4
-	sta	DX_F							; 3
+	stx	DX_F							; 3
 								;==========
-								;	 48
+								;	 26
 	;; ANGLE
 	;; brk ASM, dx = 00:00
 
@@ -700,23 +696,22 @@ screeny_loop:
 	sta	DY_F							; 3
 								;==========
 								;	 29
+;mul4
 	; fixed_mul(&dy,&horizontal_scale,&dy);
-	lda	HORIZ_SCALE_I						; 3
-	sta	NUM1H							; 4
-	lda	HORIZ_SCALE_F						; 3
-	sta	NUM1L							; 4
+;	lda	HORIZ_SCALE_I
+;	sta	NUM1H
+;	lda	HORIZ_SCALE_F
+;	sta	NUM1L
 	lda	DY_I							; 3
 	sta	NUM2H							; 4
 	lda	DY_F							; 3
 	sta	NUM2L							; 4
-	sec								; 2
+	clc			; reuse horiz_scale in num1		; 2
 	jsr	multiply						; 6
-	lda	RESULT+2						; 4
 	sta	DY_I							; 3
-	lda	RESULT+1						; 4
-	sta	DY_F							; 3
+	stx	DY_F							; 3
 								;==========
-								;	 48
+								;	 28
 	;; brk ASM, dy = 00:73
 
 	; calculate the starting position
@@ -749,23 +744,22 @@ screeny_loop:
 								;==========
 								;	 29
 
+; mul5
 	; fixed_mul(&space_x,&temp,&space_x);
 	lda	SPACEX_I						; 3
-	sta	NUM1H							; 4
+	sta	NUM1H							; 3
 	lda	SPACEX_F						; 3
-	sta	NUM1L							; 4
+	sta	NUM1L							; 3
 	lda	TEMP_I							; 3
-	sta	NUM2H							; 4
+	sta	NUM2H							; 3
 	lda	TEMP_F							; 3
-	sta	NUM2L							; 4
+	sta	NUM2L							; 3
 	sec								; 2
 	jsr	multiply						; 6
-	lda	RESULT+2						; 4
 	sta	SPACEX_I						; 3
-	lda	RESULT+1						; 4
-	sta	SPACEX_F						; 3
+	stx	SPACEX_F						; 3
 								;==========
-								;	 48
+								;	 38
 
 	clc			; fixed_add(&space_x,&cx,&space_x);	; 2
 	lda	SPACEX_F						; 3
@@ -775,41 +769,7 @@ screeny_loop:
 	adc	CX_I							; 3
 	sta	SPACEX_I						; 3
 
-	lda	#$ec		; temp.i=0xec;	// -20 (LOWRES_W/2)	; 2
-	sta	TEMP_I							; 3
-	lda	#0		; temp.f=0;				; 2
-	sta	TEMP_F							; 3
-								;==========
-								;	 30
-	; fixed_mul(&temp,&dx,&temp);
-	lda	TEMP_I							; 3
-	sta	NUM1H							; 4
-	lda	TEMP_F							; 3
-	sta	NUM1L							; 4
-	lda	DX_I							; 3
-	sta	NUM2H							; 4
-	lda	DX_F							; 3
-	sta	NUM2L							; 4
-	sec								; 2
-	jsr	multiply						; 6
-	lda	RESULT+2						; 4
-	sta	TEMP_I							; 3
-	lda	RESULT+1						; 4
-	sta	TEMP_F							; 3
-								;==========
-								;	 48
 
-
-
-	clc		; fixed_add(&space_x,&temp,&space_x);		; 2
-	lda	SPACEX_F						; 3
-	adc	TEMP_F							; 3
-	sta	SPACEX_F						; 3
-	lda	SPACEX_I						; 3
-	adc	TEMP_I							; 3
-	sta	SPACEX_I						; 3
-								;==========
-								;	 20
 	; brk	; space_x = 06:bc
 
 	lda	ANGLE	; temp.i=fixed_sin[angle&0xf].i;		; 3
@@ -824,23 +784,22 @@ screeny_loop:
 								;==========
 								;	 25
 
+;mul6
 	; fixed_mul(&space_y,&fixed_temp,&space_y);
 	lda	SPACEY_I						; 3
-	sta	NUM1H							; 4
+	sta	NUM1H							; 3
 	lda	SPACEY_F						; 3
-	sta	NUM1L							; 4
+	sta	NUM1L							; 3
 	lda	TEMP_I							; 3
-	sta	NUM2H							; 4
+	sta	NUM2H							; 3
 	lda	TEMP_F							; 3
-	sta	NUM2L							; 4
+	sta	NUM2L							; 3
 	sec								; 2
 	jsr	multiply						; 6
-	lda	RESULT+2						; 4
 	sta	SPACEY_I						; 3
-	lda	RESULT+1						; 4
-	sta	SPACEY_F						; 3
+	stx	SPACEY_F						; 3
 								;==========
-								;	 48
+								;	 38
 
 	clc			; fixed_add(&space_y,&cy,&space_y);	; 2
 	lda	SPACEY_F						; 3
@@ -850,29 +809,68 @@ screeny_loop:
 	adc	CY_I							; 3
 	sta	SPACEY_I						; 3
 
-	lda	#$ec		; temp.i=0xec;	// -20 (LOWRES_W/2)	; 2
-	sta	TEMP_I							; 3
-	lda	#0		; temp.f=0;				; 2
-	sta	TEMP_F							; 3
-								;==========
-								;	 30
-	; fixed_mul(&fixed_temp,&dy,&fixed_temp);
-	lda	TEMP_I							; 3
-	sta	NUM1H							; 4
-	lda	TEMP_F							; 3
-	sta	NUM1L							; 4
-	lda	DY_I							; 3
-	sta	NUM2H							; 4
-	lda	DY_F							; 3
-	sta	NUM2L							; 4
+
+;	lda	#$ec		; temp.i=0xec;	// -20 (LOWRES_W/2)	; 2
+;	sta	TEMP_I							; 3
+;	lda	#0		; temp.f=0;				; 2
+;	sta	TEMP_F							; 3
+;								;==========
+;
+								;	  0
+; mul7
+	; fixed_mul(&temp,&dx,&temp);
+	lda	#CONST_LOWRES_HALF_I					; 3
+	sta	NUM1H							; 3
+	lda	#CONST_LOWRES_HALF_F					; 3
+	sta	NUM1L							; 3
+	lda	DX_I							; 3
+	sta	NUM2H							; 3
+	lda	DX_F							; 3
+	sta	NUM2L							; 3
 	sec								; 2
 	jsr	multiply						; 6
-	lda	RESULT+2						; 4
 	sta	TEMP_I							; 3
-	lda	RESULT+1						; 4
-	sta	TEMP_F							; 3
+	stx	TEMP_F							; 3
 								;==========
-								;	 48
+								;	 38
+
+
+
+	clc		; fixed_add(&space_x,&temp,&space_x);		; 2
+	lda	SPACEX_F						; 3
+	adc	TEMP_F							; 3
+	sta	SPACEX_F						; 3
+	lda	SPACEX_I						; 3
+	adc	TEMP_I							; 3
+	sta	SPACEX_I						; 3
+								;==========
+								;	 20
+
+
+
+
+;	lda	#$ec		; temp.i=0xec;	// -20 (LOWRES_W/2)	; 2
+;	sta	TEMP_I							; 3
+;	lda	#0		; temp.f=0;				; 2
+;	sta	TEMP_F							; 3
+								;==========
+								;	 30
+;mul8
+	; fixed_mul(&fixed_temp,&dy,&fixed_temp);
+;	lda	#CONST_LOWRES_HALF_I
+;	sta	NUM1H
+;	lda	#CONST_LOWRES_HALF_F
+;	sta	NUM1L
+	lda	DY_I							; 3
+	sta	NUM2H							; 3
+	lda	DY_F							; 3
+	sta	NUM2L							; 3
+	clc	; reuse LOWRES_HALF_I from last time			; 2
+	jsr	multiply						; 6
+	sta	TEMP_I							; 3
+	stx	TEMP_F							; 3
+								;==========
+								;	 26
 
 	clc		; fixed_add(&space_y,&fixed_temp,&space_y);	; 2
 	lda	SPACEY_F						; 3
