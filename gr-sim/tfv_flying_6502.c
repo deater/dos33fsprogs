@@ -99,14 +99,28 @@ struct cycle_counts {
 	int put_sprite;
 } cycles;
 
+static int last_color=0,last_xx=0,last_yy=0;
+
 static int lookup_map(int xx, int yy) {
 
 	int color,offset;
 
-	color=2;
+	/* cache last value */
+				cycles.lookup_map+=9;
+	if (yy==last_yy) {
+				cycles.lookup_map+=8;
+		if (xx==last_xx) {
+				cycles.lookup_map+=8;
+			return last_color;
+		}
+	}
 
+	last_xx=xx;
 	xx=xx&MASK_X;
+
+	last_yy=yy;
 	yy=yy&MASK_Y;
+
 
 	if (!displayed) {
 		printf("XX,YY! %x,%x\n",xx,yy);
@@ -119,24 +133,32 @@ static int lookup_map(int xx, int yy) {
 	offset=yy<<3;
 	offset+=xx;
 
-//	color=water_map[((yy*8)+xx)&0x1f];
-	color=water_map[offset&0x1f];
+				cycles.lookup_map+=37;
+
+	if ((yy>7) || (xx>7)) {
+			cycles.lookup_map+=14;
+		color=water_map[offset&0x1f];
+			cycles.lookup_map+=11;
+		goto update_cache;
+
+	}
 
 	/* 2 2 2 2  2 2 2 2 */
 	/* e 2 2 2  2 2 2 2 */
 	/* 2 2 2 2  2 2 2 2 */
 	/* 2 2 2 2  e 2 2 2 */
 
-	if ((yy<8) && (xx<8)) {
-		color=flying_map[offset];
-	}
+	color=flying_map[offset];
+				cycles.lookup_map+=8;
 
 	if (!displayed) {
 		printf("COLOR! %x\n",color);
 	}
 
 
-			cycles.lookup_map+=53;
+update_cache:
+				cycles.lookup_map+=9;
+	last_color=color;
 	return color;
 }
 

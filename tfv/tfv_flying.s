@@ -12,7 +12,7 @@ CONST_BETA_F	EQU	$80
 CONST_SCALE_I	EQU	$14
 CONST_SCALE_F	EQU	$00
 CONST_LOWRES_HALF_I	EQU	$ec	; -(LOWRES_W/2)
-CONST_LOWRES_HALF_F	EQU	$00	
+CONST_LOWRES_HALF_F	EQU	$00
 
 flying_start:
 
@@ -955,11 +955,27 @@ done_screeny:
 	; finds value in space_x.i,space_y.i
 	; returns color in A
 lookup_map:
+
+	; cache color and return if same as last time
+	lda	SPACEY_I			; 3
+	cmp	LAST_SPACEY_I			; 3
+	bne	nomatch				; 2nt/3
+	lda	SPACEX_I			; 3
+	cmp	LAST_SPACEX_I			; 3
+	bne	nomatch2			; 2nt/3
+	lda	LAST_MAP_COLOR			; 3
+	rts					; 6
+
+nomatch:
 	lda	SPACEX_I						; 3
+nomatch2:								; 3
+	sta	LAST_SPACEX_I						; 3
 	and	#CONST_MAP_MASK						; 2
 	sta	TEMPY							; 3
+	tay								; 2
 
 	lda	SPACEY_I						; 3
+	sta	LAST_SPACEY_I						; 3
 	and	#CONST_MAP_MASK		; wrap to 64x64 grid		; 2
 
 
@@ -967,28 +983,31 @@ lookup_map:
 	asl								; 2
 	asl				; multiply by 8			; 2
 	clc								; 2
-	adc	TEMPY			; add in X value		; 2
-					; (use OR instead?)
+	adc	TEMPY			; add in X value		; 3
+					; only valid if x<8 and y<8
 
-	ldy	SPACEX_I						; 3
-	cpy	#$8							; 2
-	beq	ocean_color		; bgt				; 2nt/3
-	bcs	ocean_color						; 2nt/3
+	; SPACEX_I is in y
+	cpy	#$9							; 2
+								;============
+								;	 37
+
+	bcs	ocean_color		; bgt 8				; 2nt/3
 	ldy	SPACEY_I						; 3
-	cpy	#$8							; 2
-	beq	ocean_color		; bgt				; 2nt/3
-	bcs	ocean_color						; 2nt/3
+	cpy	#$9							; 2
+	bcs	ocean_color		; bgt 8				; 2nt/3
 
 	tay								; 2
 	lda	flying_map,Y		; load from array		; 4
 
-	rts								; 6
+	bcc	update_cache						; 3
 
 ocean_color:
 	and	#$1f							; 2
 	tay								; 2
 	lda	water_map,Y		; the color of the sea		; 4
 
+update_cache:
+	sta	LAST_MAP_COLOR						; 3
 	rts								; 6
 
 flying_map:

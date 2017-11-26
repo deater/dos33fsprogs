@@ -58,3 +58,16 @@ Update to optimize fast multiply (reusing NUM1H, return results in register)
         Total =                  135,575
 	Frame Rate = 7.38 fps
 
+Add a cache to lookup_map
+
+	Cycles: flying=              162
+	Cycles: getkey=               46
+	Cycles: page_flip=            26
+	Cycles: multiply=         24,935
+	Cycles: mode7=            73,445
+	Cycles: lookup_map=       24,649
+	Cycles: put_sprite=        2,561
+	=================================
+	Total =                  125,824
+	Frame Rate = 7.95 fps
+
