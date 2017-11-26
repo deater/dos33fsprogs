@@ -84,3 +84,16 @@ Don't draw sky every frame
 	Total =                  121,478
 	Frame Rate = 8.23 fps
 
+Move checking if over water out of critical section
+
+	Cycles: flying=              187
+	Cycles: getkey=               46
+	Cycles: page_flip=            26
+	Cycles: multiply=         24,935
+	Cycles: mode7=            54,374
+	Cycles: lookup_map=       24,712
+	Cycles: put_sprite=        2,561
+	=================================
+	Total =                  106,841
+	Frame Rate = 9.36 fps
+

@@ -42,7 +42,7 @@
 #define DRAW_SPLASH	0x7a
 #define SPEED		0x7b
 #define SPLASH_COUNT	0x7c
-#define OVER_WATER	0x7d
+#define OVER_LAND	0x7d
 #define NUM1L		0x7E
 #define NUM1H		0x7F
 #define NUM2L		0x80
@@ -799,13 +799,14 @@ shift_output:
 
 #endif
 
-void draw_background_mode7(void) {
+
+
+static void draw_background_mode7(void) {
 
 
 	int map_color;
 
-	ram[OVER_WATER]=0;
-						cycles.mode7+=11;
+						cycles.mode7+=6;
 	if (ram[DRAW_SKY]) {
 
 		ram[DRAW_SKY]--;
@@ -828,6 +829,7 @@ void draw_background_mode7(void) {
 
 
 						cycles.mode7+=30;
+
 	/* FIXME: only do this if SPACEZ changes? */
 // mul1
 	fixed_mul(ram[SPACEZ_I],ram[SPACEZ_F],
@@ -841,10 +843,6 @@ void draw_background_mode7(void) {
 			ram[FACTOR_I],ram[FACTOR_F]);
 	}
 
-//	printf("spacez=%lf beta=%lf factor=%lf\n",
-//		fixed_to_double(ram[SPACEZ_I],ram[SPACEZ_F],),
-//		fixed_to_double(&BETA),
-//		fixed_to_double(ram[FACTOR_I],ram[FACTOR_F]));
 							cycles.mode7+=12;
 
 	for (ram[SCREEN_Y] = 8; ram[SCREEN_Y] < LOWRES_H; ram[SCREEN_Y]+=2) {
@@ -977,12 +975,12 @@ void draw_background_mode7(void) {
 			ram[COLOR]=map_color;
 			ram[COLOR]|=map_color<<4;
 
-			if ((ram[SCREEN_X]==20) && (ram[SCREEN_Y]==38)) {
-				if (map_color==COLOR_DARKBLUE) ram[OVER_WATER]=1;
-			}
+//			if ((ram[SCREEN_X]==20) && (ram[SCREEN_Y]==38)) {
+//				if (map_color==COLOR_DARKBLUE) ram[OVER_WATER]=1;
+//			}
 
 			hlin_double_continue(1);
-							cycles.mode7+=42;
+							cycles.mode7+=19;
 
 			// advance to the next position in space
 			fixed_add(ram[SPACEX_I],ram[SPACEX_F],
@@ -1043,7 +1041,6 @@ int flying(void) {
 	ram[DRAW_SPLASH]=0;
 	ram[SPEED]=0;
 	ram[SPLASH_COUNT]=0;
-	ram[OVER_WATER]=0;
 
 	ram[ANGLE]=1;		/* 1 so you can see island */
 
@@ -1140,7 +1137,6 @@ int flying(void) {
 
 				/* Land the ship */
 				for(loop=ram[SPACEZ_I];loop>0;loop--) {
-
 					draw_background_mode7();
 					cycles.put_sprite+=grsim_put_sprite(shadow_forward,CONST_SHIPX+3,31+ram[SPACEZ_I]);
 					cycles.put_sprite+=grsim_put_sprite(ship_forward,CONST_SHIPX,ram[SHIPY]);
@@ -1189,7 +1185,16 @@ int flying(void) {
 		}
 
 		draw_background_mode7();
-						cycles.flying+=6;
+
+		{	int landing_color,tx,ty;
+			tx=ram[CX_I];	ty=ram[CY_I];
+
+			landing_color=lookup_map(tx,ty);
+			if (landing_color==2) ram[OVER_LAND]=0;
+			else ram[OVER_LAND]=1;
+		}
+						cycles.flying+=31;
+
 		ram[DRAW_SPLASH]=0;
 						cycles.flying+=11;
 		if (ram[SPEED]>0) {
@@ -1198,7 +1203,7 @@ int flying(void) {
 				ram[SPLASH_COUNT]=1;
 			}
 
-			if ((ram[OVER_WATER]) && (ram[SPLASH_COUNT])) {
+			if ((!ram[OVER_LAND]) && (ram[SPLASH_COUNT])) {
 				ram[DRAW_SPLASH]=1;
 			}
 		}

@@ -42,7 +42,6 @@ flying_start:
 	sta	DRAW_SPLASH
 	sta	SPEED
 	sta	SPLASH_COUNT
-	sta	OVER_WATER
 
 	lda	#1
 	sta	ANGLE
@@ -339,6 +338,21 @@ speed_loop:
 draw_background:
 	jsr	draw_background_mode7					; 6
 
+check_over_water:
+	;	See if we are over water
+	lda	CX_I							; 3
+	sta	SPACEX_I						; 3
+	lda	CY_I							; 3
+	sta	SPACEY_I						; 3
+
+	jsr	lookup_map						; 6
+
+	sec								; 2
+	sbc	#COLOR_BOTH_DARKBLUE					; 2
+	sta	OVER_LAND						; 3
+								;===========
+								;	31
+
 	; Calculate whether to draw the splash
 
 	lda	#0			; set splash drawing to 0	; 2
@@ -358,8 +372,8 @@ draw_background:
 	sta	SPLASH_COUNT						; 3
 
 no_turning_splash:
-	lda	OVER_WATER	; no splash if over land		; 3
-	beq	no_splash						; 2nt/3
+	lda	OVER_LAND	; no splash if over land		; 3
+	bne	no_splash						; 2nt/3
 
 	lda	SPLASH_COUNT	; no splash if splash_count expired	; 3
 	beq	no_splash						; 2nt/3
@@ -533,9 +547,6 @@ draw_ship:
 
 draw_background_mode7:
 
-	lda	#0							; 2
-	sta	OVER_WATER						; 3
-
 	lda	DRAW_SKY						; 3
 	beq	no_draw_sky						; 2nt/3
 
@@ -580,6 +591,9 @@ sky_loop:				; draw line across screen
 no_draw_sky:
 
 	; FIXME: only do this if Z changes?
+	; 	only saves 200 cycles to do that with a lot of
+	; 	added complexity elsewhere
+
 	; fixed_mul(&space_z,&BETA,&factor);
 ;mul1
 	lda	SPACEZ_I						; 3
@@ -909,22 +923,22 @@ screenx_loop:
 	inc	GBASL			; point to next pixel		; 5
 
 	; Check if over water
-	cmp	#$22			; see if dark blue		; 2
-	bne	not_watery						; 2nt/3
+;	cmp	#$22			; see if dark blue		; 2
+;	bne	not_watery						; 2nt/3
 
-	lda	SCREEN_Y	; only check pixel in middle of screen	; 3
-	cmp	#38							; 2
-	bne	not_watery						; 2nt/3
+;	lda	SCREEN_Y	; only check pixel in middle of screen	; 3
+;	cmp	#38							; 2
+;	bne	not_watery						; 2nt/3
 
-	lda	SCREEN_X	; only check pixel in middle of screen	; 3
-	cmp	#20							; 2
-	bne	not_watery						; 2nt/3
+;	lda	SCREEN_X	; only check pixel in middle of screen	; 3
+;	cmp	#20							; 2
+;	bne	not_watery						; 2nt/3
 
-	lda	#$1		; set over water			; 2
-	sta	OVER_WATER						; 3
+;	lda	#$1		; set over water			; 2
+;	sta	OVER_WATER						; 3
 								;============
-								;	 42
-not_watery:
+								;	 19
+;not_watery:
 	; advance to the next position in space
 
 	clc			; fixed_add(&space_x,&dx,&space_x);	; 2
