@@ -956,6 +956,7 @@ done_screeny:
 	; returns color in A
 lookup_map:
 
+
 	; cache color and return if same as last time
 	lda	SPACEY_I			; 3
 	cmp	LAST_SPACEY_I			; 3
@@ -968,7 +969,7 @@ lookup_map:
 
 nomatch:
 	lda	SPACEX_I						; 3
-nomatch2:								; 3
+nomatch2:
 	sta	LAST_SPACEX_I						; 3
 	and	#CONST_MAP_MASK						; 2
 	sta	TEMPY							; 3
@@ -987,13 +988,13 @@ nomatch2:								; 3
 					; only valid if x<8 and y<8
 
 	; SPACEX_I is in y
-	cpy	#$9							; 2
+	cpy	#$8							; 2
 								;============
 								;	 37
 
-	bcs	ocean_color		; bgt 8				; 2nt/3
+	bcs	ocean_color		; bgt 8				;^2nt/3
 	ldy	SPACEY_I						; 3
-	cpy	#$9							; 2
+	cpy	#$8							; 2
 	bcs	ocean_color		; bgt 8				; 2nt/3
 
 	tay								; 2
