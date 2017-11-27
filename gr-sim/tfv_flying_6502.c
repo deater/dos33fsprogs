@@ -109,16 +109,14 @@ struct cycle_counts {
 	int put_sprite;
 } cycles;
 
-static int last_color=0,last_xx=0,last_yy=0;
-
 static int lookup_map(int xx, int yy) {
 
 	int color,offset;
 
-	last_xx=xx;
+	ram[LAST_SPACEX_I]=xx;
 	xx=xx&MASK_X;
 
-	last_yy=yy;
+	ram[LAST_SPACEY_I]=yy;
 	yy=yy&MASK_Y;
 
 
@@ -132,7 +130,7 @@ static int lookup_map(int xx, int yy) {
 
 	offset=yy<<3;
 	offset+=xx;
-				cycles.lookup_map+=37;
+				cycles.lookup_map+=39;
 
 	if ((yy>7) || (xx>7)) {
 			cycles.lookup_map+=14;
@@ -156,8 +154,8 @@ static int lookup_map(int xx, int yy) {
 
 
 update_cache:
-				cycles.lookup_map+=9;
-	last_color=color;
+				cycles.lookup_map+=10;
+	ram[LAST_MAP_COLOR]=color;
 	return color;
 }
 
@@ -789,29 +787,18 @@ static void draw_background_mode7(void) {
 		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEY_I],&ram[SPACEY_F]);
-							cycles.mode7+=25;
+							cycles.mode7+=22;
 		if (!displayed) {
 			printf("SPACEY! %x:%x\n",ram[SPACEY_I],ram[SPACEY_F]);
 		}
 
 		// go through all points in this screen line
-		for (ram[SCREEN_X] = 0;
-			ram[SCREEN_X] < LOWRES_W;
-			ram[SCREEN_X]++) {
+		ram[SCREEN_X] = 0;
 
+		while(1) {
 			// get a pixel from the tile and put it on the screen
 
-			/* cache last value */
-						cycles.mode7+=9;
-			if (ram[SPACEY_I]==last_yy) {
-						cycles.mode7+=8;
-				if (ram[SPACEX_I]==last_xx) {
-						cycles.mode7+=6;
-					map_color=last_color;
-					goto match;
-				}
-			}
-
+nomatch:
 			map_color=lookup_map(ram[SPACEX_I],ram[SPACEY_I]);
 						cycles.mode7+=6;
 match:
@@ -839,7 +826,24 @@ match:
 			fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 				ram[DY_I],ram[DY_F],
 				&ram[SPACEY_I],&ram[SPACEY_F]);
-							cycles.mode7+=49;
+
+			ram[SCREEN_X]++;
+			if (ram[SCREEN_X] >= LOWRES_W) break;
+							cycles.mode7+=43;
+
+
+			/* cache last value */
+						cycles.mode7+=8;
+			if (ram[SPACEY_I]==ram[LAST_SPACEY_I]) {
+						cycles.mode7+=7;
+				if (ram[SPACEX_I]==ram[LAST_SPACEX_I]) {
+						cycles.mode7+=4;
+					map_color=ram[LAST_MAP_COLOR];
+					goto match;
+				}
+			}
+			goto nomatch;
+
 		}
 
 		ram[SCREEN_Y]+=1;

@@ -919,7 +919,7 @@ odd_branch:
 								;==========
 								;	 28
 
-	clc		; fixed_add(&space_y,&temp,&space_y);	; 2
+	clc		; fixed_add(&space_y,&temp,&space_y);		; 2
 	lda	SPACEY_F						; 3
 ;	adc	TEMP_F							;
 	adc	RESULT+1						; 3
@@ -931,23 +931,12 @@ odd_branch:
 
 	; brk	; space_y = f7:04
 
-	lda	#0							; 2
-	sta	SCREEN_X						; 3
+	ldx	#0	; was SCREEN_X					; 2
 								;==========
-								;	 25
+								;	 22
 screenx_loop:
 
-	; cache color and return if same as last time
-	lda	SPACEY_I						; 3
-	cmp	LAST_SPACEY_I						; 3
-	bne	nomatch							; 2nt/3
-	lda	SPACEX_I						; 3
-	cmp	LAST_SPACEX_I						; 3
-	bne	nomatch							; 2nt/3
-	lda	LAST_MAP_COLOR						; 3
-	jmp	match							; 3
-								;===========
-								;	22
+
 nomatch:
 	; do a full lookup, takes much longer
 	jsr	lookup_map		; get color in A		; 6
@@ -1000,13 +989,29 @@ dyi_label:
 	adc	#0							; 2
 	sta	SPACEY_I						; 3
 
-	inc	SCREEN_X						; 5
-	lda	SCREEN_X						; 3
-	cmp	#40			; LOWRES width			; 2
-	bne	screenx_loop						; 2nt/3
+	inx	;inc	SCREEN_X					; 2
+	cpx	#40			; LOWRES width			; 2
+	beq	done_screenx_loop					; 2nt/3
 								;=============
-								;	49
+								;	43
 
+
+	; cache color and return if same as last time
+	lda	SPACEY_I						; 3
+spacey_label:
+	cmp	#0	; LAST_SPACEY_I				; 2
+	bne	nomatch							; 2nt/3
+	lda	SPACEX_I						; 3
+spacex_label:
+	cmp	#0	; LAST_SPACEX_I				; 2
+	bne	nomatch							; 2nt/3
+map_color_label:
+	lda	#0	; LAST_MAP_COLOR			; 2
+	jmp	match							; 3
+								;===========
+								; max 19
+
+done_screenx_loop:
 	inc	SCREEN_Y						; 5
 	lda	SCREEN_Y						; 3
 	cmp	#40			; LOWRES height			; 2
@@ -1041,13 +1046,13 @@ lookup_map:
 ;nomatch:
 	lda	SPACEX_I						; 3
 ;nomatch2:
-	sta	LAST_SPACEX_I						; 3
+	sta	spacex_label+1	; LAST_SPACEX_I			; 4
 	and	#CONST_MAP_MASK_X					; 2
 	sta	SPACEX_I						; 3
 	tay								; 2
 
 	lda	SPACEY_I						; 3
-	sta	LAST_SPACEY_I						; 3
+	sta	spacey_label+1	; LAST_SPACEY_I			; 4
 	and	#CONST_MAP_MASK_Y	; wrap to 64x64 grid		; 2
 	sta	SPACEY_I						; 3
 
@@ -1062,7 +1067,7 @@ lookup_map:
 	; SPACEX_I is in y
 	cpy	#$8							; 2
 								;============
-								;	 37
+								;	 39
 
 	bcs	ocean_color		; bgt 8				;^2nt/3
 	ldy	SPACEY_I						; 3
@@ -1080,7 +1085,7 @@ ocean_color:
 	lda	water_map,Y		; the color of the sea		; 4
 
 update_cache:
-	sta	LAST_MAP_COLOR						; 3
+	sta	map_color_label+1	; self-modifying		; 4
 	rts								; 6
 
 flying_map:
