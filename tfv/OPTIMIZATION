@@ -134,5 +134,17 @@ A few more minor cleanups in the Y loop
 	Total =                 215,009
 	Frame Rate = 4.65 fps
 
+Add some self-modifying code to inner loop:
+	Cycles: flying=             187
+	Cycles: getkey=              46
+	Cycles: page_flip=           26
+	Cycles: multiply=        49,613
+	Cycles: mode7=          131,610
+	Cycles: lookup_map=      21,718
+	Cycles: put_sprite=       2,561
+	================================
+	Total =                 205,761
+	Frame Rate = 4.86 fps
+
 
 32*40=12800

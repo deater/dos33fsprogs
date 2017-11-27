@@ -670,7 +670,7 @@ static void draw_background_mode7(void) {
 
 		y=0;
 		hlin_setup(ram[DRAW_PAGE],y,0,ram[SCREEN_Y]);
-							cycles.mode7+=33;
+							cycles.mode7+=48;
 
 		// then calculate the horizontal scale, or the distance between
 		// space points on this horizontal line
@@ -770,7 +770,7 @@ static void draw_background_mode7(void) {
 		fixed_mul(CONST_LOWRES_HALF_I,CONST_LOWRES_HALF_F,
 			ram[DX_I],ram[DX_F],
 			&ram[TEMP_I],&ram[TEMP_F],0);
-							cycles.mode7+=32;
+							cycles.mode7+=40;
 
 		fixed_add(ram[SPACEX_I],ram[SPACEX_F],
 			ram[TEMP_I],ram[TEMP_F],
@@ -785,7 +785,7 @@ static void draw_background_mode7(void) {
 		fixed_mul(CONST_LOWRES_HALF_I,CONST_LOWRES_HALF_F,
 			ram[DY_I],ram[DY_F],
 			&ram[TEMP_I],&ram[TEMP_F],1);
-							cycles.mode7+=20;
+							cycles.mode7+=28;
 		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEY_I],&ram[SPACEY_F]);
@@ -830,7 +830,7 @@ match:
 			}
 
 			ram[GBASL]++;
-							cycles.mode7+=25;
+							cycles.mode7+=21;
 
 			// advance to the next position in space
 			fixed_add(ram[SPACEX_I],ram[SPACEX_F],
@@ -839,7 +839,7 @@ match:
 			fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 				ram[DY_I],ram[DY_F],
 				&ram[SPACEY_I],&ram[SPACEY_F]);
-							cycles.mode7+=53;
+							cycles.mode7+=49;
 		}
 
 		ram[SCREEN_Y]+=1;

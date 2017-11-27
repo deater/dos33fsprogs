@@ -639,6 +639,15 @@ screeny_loop:
 	lda	COLOR_MASK						; 3
 	eor	#$ff							; 2
 	sta	COLOR_MASK						; 3
+	; setup self modifying code
+	sta	mask_label+1						; 4
+
+	eor	#$ff						; 2
+	bmi	odd_branch					; 2nt/3
+	lda	#$d0						; 2
+odd_branch:
+	sta	mask_branch_label	; beq/bne	f0/d0	; 4
+
 
 	lda	gr_offsets,Y    ; lookup low-res memory address         ; 4
 	sta	GBASL                                                   ; 3
@@ -650,7 +659,7 @@ screeny_loop:
 	sta	GBASH                                                   ; 3
 
 								;=============
-								;	 33
+								;	 48
 
 	; horizontal_scale.i *ALWAYS* = 0
 
@@ -870,14 +879,16 @@ screeny_loop:
 	sta	NUM1L							; 3
 	lda	DX_I							; 3
 	sta	NUM2H							; 3
+	sta	dxi_label+1	; for self modify			; 4
 	lda	DX_F							; 3
+	sta	dxf_label+1	; for self modify			; 4
 	sta	NUM2L							; 3
 	sec								; 2
 	jsr	multiply						; 6
 ;	sta	TEMP_I							;
 ;	stx	TEMP_F							;
 								;==========
-								;	 32
+								;	 40
 
 
 
@@ -897,14 +908,16 @@ screeny_loop:
 	; fixed_mul(&fixed_temp,&dy,&fixed_temp);
 	lda	DY_I							; 3
 	sta	NUM2H							; 3
+	sta	dyi_label+1	; for self modify			; 4
 	lda	DY_F							; 3
 	sta	NUM2L							; 3
+	sta	dyf_label+1	; for self modify			; 4
 	clc	; reuse LOWRES_HALF_I from last time			; 2
 	jsr	multiply						; 6
 ;	sta	TEMP_I							;
 ;	stx	TEMP_F							;
 								;==========
-								;	 20
+								;	 28
 
 	clc		; fixed_add(&space_y,&temp,&space_y);	; 2
 	lda	SPACEY_F						; 3
@@ -941,11 +954,15 @@ nomatch:
 								;============
 								;	  6
 match:
-	ldy	#0							; 2
 
-	and	COLOR_MASK						; 3
-	ldx	COLOR_MASK						; 3
-	bpl	big_bottom						; 2nt/3
+mask_label:
+	and	#0	; COLOR_MASK (self modifying)			; 2
+
+	ldy	#0							; 2
+mask_branch_label:
+;	ldx	COLOR_MASK						;
+;	bpl	big_bottom						;
+	beq	big_bottom	; F0=beq, D0=bne			; 2nt/3
 
 	ora	(GBASL),Y	; we're odd, or the bottom in		; 4
 big_bottom:
@@ -953,7 +970,7 @@ big_bottom:
 	sta	(GBASL),Y		; plot double height		; 6
 	inc	GBASL			; point to next pixel		; 5
 								;============
-								;	 25
+								;	 21
 
 
 
@@ -961,18 +978,26 @@ big_bottom:
 
 	clc			; fixed_add(&space_x,&dx,&space_x);	; 2
 	lda	SPACEX_F						; 3
-	adc	DX_F							; 3
+;	adc	DX_F							;
+dxf_label:
+	adc	#0							; 2
 	sta	SPACEX_F						; 3
 	lda	SPACEX_I						; 3
-	adc	DX_I							; 3
+;	adc	DX_I							;
+dxi_label:
+	adc	#0							; 2
 	sta	SPACEX_I						; 3
 
 	clc			; fixed_add(&space_y,&dy,&space_y);	; 2
 	lda	SPACEY_F						; 3
-	adc	DY_F							; 3
+;	adc	DY_F							;
+dyf_label:
+	adc	#0							; 2
 	sta	SPACEY_F						; 3
 	lda	SPACEY_I						; 3
-	adc	DY_I							; 3
+;	adc	DY_I							;
+dyi_label:
+	adc	#0							; 2
 	sta	SPACEY_I						; 3
 
 	inc	SCREEN_X						; 5
@@ -980,7 +1005,7 @@ big_bottom:
 	cmp	#40			; LOWRES width			; 2
 	bne	screenx_loop						; 2nt/3
 								;=============
-								;	53
+								;	49
 
 	inc	SCREEN_Y						; 5
 	lda	SCREEN_Y						; 3

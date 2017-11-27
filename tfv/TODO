@@ -6,6 +6,11 @@ mode7 speed fixes:
 
 	+ Self modifying code on the adds in inner loop
 
+	+ inline lookup_map (or at least a copy of it)
+		maybe code that detects if spacex/spacey add
+		incremented and just skip the lookup (avoid the need
+		for the cache code)
+
 short term:
 
 longer term:
