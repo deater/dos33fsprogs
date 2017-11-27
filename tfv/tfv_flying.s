@@ -245,19 +245,18 @@ landing_loop:
 	rts			; finish flying
 
 must_land_on_grass:
-
 	lda     #10
-        sta     CH              ; HTAB 11
+	sta	CH		; HTAB 11
 
-        lda     #21
-        sta     CV              ; VTAB 22
+	lda	#21
+	sta	CV		; VTAB 22
 
-        lda     #>(grass_string)
-        sta     OUTH
-        lda     #<(grass_string)
-        sta     OUTL
+	lda	#>(grass_string)
+	sta	OUTH
+	lda	#<(grass_string)
+	sta	OUTL
 
-        jsr     print_both_pages	; "NEED TO LAND ON GRASS!"
+	jsr	print_both_pages	; "NEED TO LAND ON GRASS!"
 
 check_help:
 	cmp	#('H')

@@ -522,6 +522,8 @@ print_both_pages:
 	pla
 	sta	DRAW_PAGE
 
+	rts	; oops forgot this initially
+		; explains the weird vertical stripes on the screen
 
 	;=========================================
 	; vlin
