@@ -4,6 +4,7 @@ mode7 speed fixes:
 			result
 	+  Skip key parsing if no key read
 
+	+ Self modifying code on the adds in inner loop
 
 short term:
 

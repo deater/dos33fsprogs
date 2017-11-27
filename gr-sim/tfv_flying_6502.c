@@ -661,15 +661,16 @@ static void draw_background_mode7(void) {
 			ram[FACTOR_I],ram[FACTOR_F]);
 	}
 
-							cycles.mode7+=11;
-
 	ram[SCREEN_Y]=8;
+							cycles.mode7+=16;
+
+
 
 	do {
 
 		y=0;
 		hlin_setup(ram[DRAW_PAGE],y,0,ram[SCREEN_Y]);
-							cycles.mode7+=39;
+							cycles.mode7+=33;
 
 		// then calculate the horizontal scale, or the distance between
 		// space points on this horizontal line
@@ -688,14 +689,16 @@ static void draw_background_mode7(void) {
 			ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F]);
 		}
 
+
 //mul2		// calculate the distance of the line we are drawing
 		fixed_mul(ram[HORIZ_SCALE_I],ram[HORIZ_SCALE_F],
 			CONST_SCALE_I,CONST_SCALE_F,
 			&ram[DISTANCE_I],&ram[DISTANCE_F],0);
-							cycles.mode7+=34;
+							cycles.mode7+=27;
 		if (!displayed) {
 			printf("DISTANCE %x:%x\n",ram[DISTANCE_I],ram[DISTANCE_F]);
 		}
+
 
 		// calculate the dx and dy of points in space when we step
 		// through all points on this line
@@ -724,6 +727,7 @@ static void draw_background_mode7(void) {
 		if (!displayed) {
 			printf("DY %x:%x\n",ram[DY_I],ram[DY_F]);
 		}
+
 
 		// calculate the starting position
 		fixed_add(ram[DISTANCE_I],ram[DISTANCE_F],

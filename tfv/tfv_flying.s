@@ -497,7 +497,7 @@ draw_ship_left:
 	sta	YPOS							; 3
 	jsr	put_sprite						; 6
 								;===========
-								;	28 
+								;	 28
 no_left_splash:
 
 	; Draw Shadow
@@ -624,23 +624,20 @@ no_draw_sky:
 	;; GOOD 4 80 * ffffffff 80 = fffffffd c0
 	;; BAD  4 80 * ffffffff 80 = 42 40
 
+	lda	#$f0							; 2
+	sta	COLOR_MASK						; 3
+
 	lda	#8							; 2
 	sta	SCREEN_Y						; 3
 								;=============
-								;	 11
+								;	 16
+
 screeny_loop:
-	tay			; y=A					; 2
-	and	#$1							; 2
-	bne	screeny_odd						; 2nt/3
-screeny_even:
-	lda	#$0f							; 2
-	bne	screeny_continue					; 3
-screeny_odd:
-	tya								; 2
 	and	#$fe							; 2
-	tay								; 2
-	lda	#$f0							; 2
-screeny_continue:
+	tay			; y=A					; 2
+
+	lda	COLOR_MASK						; 3
+	eor	#$ff							; 2
 	sta	COLOR_MASK						; 3
 
 	lda	gr_offsets,Y    ; lookup low-res memory address         ; 4
@@ -653,17 +650,16 @@ screeny_continue:
 	sta	GBASH                                                   ; 3
 
 								;=============
-								;	39/35
+								;	 33
 
-	lda	#0			; horizontal_scale.i = 0	; 2
-	sta	HORIZ_SCALE_I						; 3
+	; horizontal_scale.i *ALWAYS* = 0
+
 	;	unsigned char horizontal_lookup[7][32];
 	;horizontal_scale.f=
 	;	horizontal_lookup[space_z.i&0xf][(screen_y-8)/2];
 	;		horizontal_lookup[(space_z<<5)+(screen_y-8)]
 
 	lda	SPACEZ_I						; 3
-;	and	#$f							;
 	; FIXME: would it be faster to ROR 4 times?
 	asl								; 2
 	asl								; 2
@@ -679,17 +675,18 @@ screeny_continue:
 	adc	TEMP_I							; 3
 	tay								; 2
 	lda	horizontal_lookup,Y					; 4
-	sta	HORIZ_SCALE_F						; 3
+	; sta	HORIZ_SCALE_F						;
+	sta	NUM1L							; 3
 								;============
 								;	 37
 	;; brk ASM, horiz_scale = 00:73
 ; mul2
 	; calculate the distance of the line we are drawing
 	; fixed_mul(&horizontal_scale,&scale,&distance);
-	lda	HORIZ_SCALE_I						; 3
+	lda	#0 ;HORIZ_SCALE_I					; 2
 	sta	NUM1H							; 3
-	lda	HORIZ_SCALE_F						; 3
-	sta	NUM1L							; 3
+	;lda	HORIZ_SCALE_F						;
+	;sta	NUM1L							;
 	lda	#CONST_SCALE_I	; SCALE_I				; 2
 	sta	NUM2H							; 3
 	lda	#CONST_SCALE_F	; SCALE_F				; 2
@@ -699,7 +696,7 @@ screeny_continue:
 	sta	DISTANCE_I						; 2
 	stx	DISTANCE_F						; 2
 								;==========
-								;	 34
+								;	 27
 	;; brk ASM, distance = 08:fc
 
 	; calculate the dx and dy of points in space when we step
