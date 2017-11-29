@@ -719,9 +719,14 @@ static void init_table(void) {
 
 static unsigned int product[4];
 
-int fixed_mul_unsigned(int x_i,int x_f,
+int fixed_mul(int x_i,int x_f,
 		int y_i, int y_f,
+		int *z_i, int *z_f,
 			int debug) {
+
+//int fixed_mul_unsigned(int x_i,int x_f,
+//		int y_i, int y_f,
+//			int debug) {
 
 //	<T1 * <T2 = AAaa
 //	<T1 * >T2 = BBbb
@@ -935,20 +940,20 @@ int fixed_mul_unsigned(int x_i,int x_f,
 //		printf("DDdd      %02x:%02x\n",_DD,_dd);
 //	}
 
-	return 0;
+//	return 0;
 //(product[3]<<24)|(product[2]<<16)|(product[1]<<8)|product[0];
 						// rts			; 6
-}
+//}
 
 /* signed */
-int fixed_mul(int x_i,int x_f,
-		int y_i, int y_f,
-		int *z_i, int *z_f,
-			int debug) {
+//int fixed_mul(int x_i,int x_f,
+//		int y_i, int y_f,
+//		int *z_i, int *z_f,
+//			int debug) {
 
-	int a,c;
+//	int a,c;
 
-	fixed_mul_unsigned(x_i,x_f,y_i,y_f,debug);
+//	fixed_mul_unsigned(x_i,x_f,y_i,y_f,debug);
 					// jsr multiply_16bit_unsigned	; 6
 
 	a=(x_i&0xff);			// lda T1+1			; 3

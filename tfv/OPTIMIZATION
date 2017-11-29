@@ -170,5 +170,21 @@ Remove unneeded precision in the 8.8 x 8.8 fixed point multiply
 	Total =                 187,189
 	Frame Rate = 5.34 fps
 
+In-line unsigned multiply inside of signed multiply (save 12 cycles)
+	Multiplying 1.0 * 2.0 = 2.0, took 198 cycles
+	Multiplying ff.ff * ff.ff = 0.0, took 218 cycles
+
+	Cycles: flying=             187
+	Cycles: getkey=              46
+	Cycles: page_flip=           26
+	Cycles: multiply=        40,888
+	Cycles: mode7=          118,034
+	Cycles: lookup_map=      22,747
+	Cycles: put_sprite=       2,561
+	================================
+	Total =                 184,489
+	Frame Rate = 5.42 fps
+
+
 Each cycle removed from inner X loop saves
 	32*40=1280 cycles

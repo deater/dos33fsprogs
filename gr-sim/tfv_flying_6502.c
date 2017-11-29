@@ -333,11 +333,18 @@ static void init_table(void) {
 
 static unsigned int product[4];
 
-static int fixed_mul_unsigned(
-		unsigned char x_i, unsigned char x_f,
-	 	unsigned char y_i, unsigned char y_f,
+static void fixed_mul(unsigned char x_i, unsigned char x_f,
+		unsigned char y_i, unsigned char y_f,
 		unsigned char *z_i, unsigned char *z_f,
-			int debug, int reuse) {
+		int reuse) {
+
+	int debug=0;
+
+//static int fixed_mul_unsigned(
+//		unsigned char x_i, unsigned char x_f,
+//	 	unsigned char y_i, unsigned char y_f,
+//		unsigned char *z_i, unsigned char *z_f,
+//			int debug, int reuse) {
 
 //	<T1 * <T2 = AAaa
 //	<T1 * >T2 = BBbb
@@ -551,24 +558,24 @@ static int fixed_mul_unsigned(
 //		printf("DDdd      %02x:%02x\n",_DD,_dd);
 //	}
 
-					cycles.multiply+=6;
+//					cycles.multiply+=6;
 
-	return (product[3]<<24)|(product[2]<<16)|(product[1]<<8)|product[0];
+//	return (product[3]<<24)|(product[2]<<16)|(product[1]<<8)|product[0];
 						// rts			; 6
-}
+//}
 
 /* signed */
-static void fixed_mul(unsigned char x_i, unsigned char x_f,
-		unsigned char y_i, unsigned char y_f,
-		unsigned char *z_i, unsigned char *z_f, int reuse) {
+//static void fixed_mul(unsigned char x_i, unsigned char x_f,
+//		unsigned char y_i, unsigned char y_f,
+//		unsigned char *z_i, unsigned char *z_f, int reuse) {
 
-	int a,c;
 
-	fixed_mul_unsigned(x_i,x_f,y_i,y_f,z_i,z_f,0,reuse);
-					// jsr multiply_16bit_unsigned	; 6
+
+//	fixed_mul_unsigned(x_i,x_f,y_i,y_f,z_i,z_f,0,reuse);
+					// jsr multiply_16bit_unsigned	;
 
 	a=(x_i&0xff);			// lda T1+1			; 3
-					cycles.multiply+=12;
+					cycles.multiply+=6;
 	if ((a&0x80)==0) goto x_positive;	// bpl :+		;^3/2nt
 
 	c=1;				// sec				; 2

@@ -114,7 +114,9 @@ second_table:
 ;	 ----------
 ;	   RESULT
 
-fixed_16x16_mul_unsigned:
+;fixed_16x16_mul_unsigned:
+
+multiply:
 
 	bcc	num1_same_as_last_time					; 2nt/3
 
@@ -290,16 +292,16 @@ dd_no_carry2:
 ;	*z_i=product[1];
 ;	*z_f=product[0];
 
-	rts								; 6
+;	rts								; 6
 
 
 	;=================
 	; Signed multiply
 	;=================
 
-multiply:
+;multiply:
 
-	jsr fixed_16x16_mul_unsigned					; 6
+;	jsr fixed_16x16_mul_unsigned					; 6
 
 	lda	NUM1H		; x_i					; 3
 								;===========
