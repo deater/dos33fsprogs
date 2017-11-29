@@ -11,6 +11,11 @@ mode7 speed fixes:
 		incremented and just skip the lookup (avoid the need
 		for the cache code)
 
+	+ Unroll inner loop?  Might not help much since we are 
+		self-modifying and would have to duplicate
+		that.
+
+
 short term:
 
 longer term:
