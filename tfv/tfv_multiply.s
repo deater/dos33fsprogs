@@ -1,4 +1,11 @@
 ; Fast mutiply
+
+
+; Note for our purposes we only care about 8.8 x 8.8 fixed point
+; with 8.8 result, which means we only care about the middle two bytes
+; of the 32 bit result.  So we disable generation of the high and low byte
+; to save some cycles.
+
 ;
 ; The old routine took around 700 cycles for a 16bitx16bit=32bit mutiply
 ; This routine, at an expense of 2kB of looku tables, takes around 250
@@ -130,14 +137,14 @@ fixed_16x16_mul_unsigned:
 	sta	sm1b+1							; 3
 	sta	sm3b+1							; 3
 	sta	sm5b+1							; 3
-	sta	sm7b+1							; 3
+;	sta	sm7b+1							;
 	eor	#$ff	; invert the bits for subtractin		; 2
 	sta	sm2b+1							; 3
 	sta	sm4b+1							; 3
 	sta	sm6b+1							; 3
-	sta	sm8b+1							; 3
+;	sta	sm8b+1							;
 								;===========
-								;	 58
+								;	 52
 
 num1_same_as_last_time:
 
@@ -154,7 +161,7 @@ sm2a:
 
 	; a is _aa
 
-	sta	RESULT+0						; 3
+;	sta	RESULT+0						;
 
 sm3a:
 	lda	square1_hi,x						; 4
@@ -163,7 +170,7 @@ sm4a:
 	; a is _AA
 	sta	_AA+1							; 3
 								;===========
-								;	27
+								;	24
 
 	; Perform NUM1H * NUM2L = CCcc
 	sec								; 2
@@ -213,14 +220,14 @@ sm6b:
 	sbc	square2_lo,x						; 4
 	; a is _dd
 	sta	_dd+1							; 3
-sm7b:
-	lda	square1_hi,x						; 4
-sm8b:
-	sbc	square2_hi,x						; 4
+;sm7b:
+;	lda	square1_hi,x						;
+;sm8b:
+;	sbc	square2_hi,x						;
 	; a = _DD
-	sta	RESULT+3						; 3
+;	sta	RESULT+3						;
 								;===========
-								; 	 24
+								; 	 13
 
 	;===========================================
 	; Add the separate multiplications together
@@ -232,7 +239,8 @@ _AA:
 _bb:
 	adc	#0		; adding in _bb				; 2
 	sta	RESULT+1						; 3
-
+								;==========
+								;	  9
 	; product[2]=_BB+_CC+c
 
 _BB:
@@ -241,15 +249,15 @@ _CC:
 	adc	#0		; adding in _CC				; 2
 	sta RESULT+2							; 3
 								;===========
-								;	 19
+								;	  7
 
 	;  product[3]=_DD+c
 
-	bcc	dd_no_carry1						; ^2nt/3
-	inc	RESULT+3						; 5
+;	bcc	dd_no_carry1						;
+;	inc	RESULT+3						;
 	clc								; 2
 								;=============
-								;	  6
+								;	  2
 dd_no_carry1:
 
 	; product[1]=_AA+_bb+_cc
@@ -267,15 +275,15 @@ _dd:
 	sta	RESULT+2						; 3
 
 								;===========
-								;	 19
+								;	 16
 	; product[3]=_DD+c
 
 
-	bcc	dd_no_carry2						; ^2nt/3
-	inc	RESULT+3						; 5
+;	bcc	dd_no_carry2						;
+;	inc	RESULT+3						;
 
 								;=============
-								;	 4
+								;	 0
 
 dd_no_carry2:
 

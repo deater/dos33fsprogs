@@ -291,8 +291,8 @@ static unsigned char square2_lo[512];
 static unsigned char square2_hi[512];
 static int sm1a,sm3a,sm5a,sm7a;
 static int sm2a,sm4a,sm6a,sm8a;
-static int sm1b,sm3b,sm5b,sm7b;
-static int sm2b,sm4b,sm6b,sm8b;
+static int sm1b,sm3b,sm5b; //,sm7b;
+static int sm2b,sm4b,sm6b; //,sm8b;
 
 
 static int table_ready=0;
@@ -355,7 +355,8 @@ static int fixed_mul_unsigned(
 	int c=0;
 	int a,x;
 
-	int _AA,_BB,_CC,_DD,_aa,_bb,_cc,_dd;
+	int _AA,_BB,_CC; //,_DD;
+	int _aa,_bb,_cc,_dd;
 
 	if (!table_ready) init_table();
 
@@ -377,57 +378,53 @@ static int fixed_mul_unsigned(
 		sm1b=a;			// sta sm1b+1		; 3
 		sm3b=a;			// sta sm3b+1		; 3
 		sm5b=a;			// sta sm5b+1		; 3
-		sm7b=a;			// sta sm7b+1		; 3
+	//	sm7b=a;			// sta sm7b+1		;
 		a=(~a)&0xff;		// eor #$ff		; 2
 		sm2b=a;			// sta sm2b+1		; 3
 		sm4b=a;			// sta sm4b+1		; 3
 		sm6b=a;			// sta sm6b+1		; 3
-		sm8b=a;			// sta sm8b+1		; 3
-					cycles.multiply+=58;
+	//	sm8b=a;			// sta sm8b+1		;
+					cycles.multiply+=52;
 	}
 
 	/* Perform <T1 * <T2 = AAaa */
 	x=(y_f)&0xff;			// ldx T2+0 (low le)		; 3
 	c=1;					// sec			; 2
-//sm1a:
+	//sm1a:
 	a=square1_lo[sm1a+x];			// lda square1_lo,x	; 4
-//sm2a:
+	//sm2a:
 	a+=~(square2_lo[sm2a+x])+c;		// sbc square2_lo,x	; 4
 	c=!(a&0x100);
 	a&=0xff;
 
-//	printf("\t\t\t\ta=(%d+%d)^2/4=%d "
-//		"b=(%d+%d)^2/4=%d\n",
-//		sm1a,x,square1_lo[sm1a+x],
-//		sm2a,x,square2_lo[sm2a+x]);
-	product[0]=a;				// sta PRODUCT+0	; 3
+//	product[0]=a;				// sta PRODUCT+0	;
 	_aa=a;
-//	printf("\t\t\t\ta-b aa=%2x\n",a);
-//sm3a:
+
+	//sm3a:
 	a=square1_hi[sm3a+x];			// lda square1_hi,x	; 4
-//sm4a:
+	//sm4a:
 	a+=(~(square2_hi[sm4a+x]))+c;		// sbc square2_hi,x	; 4
 	c=!(a&0x100);
 	a&=0xff;
 	_AA=a;					// sta _AA+1		; 3
 						//		;===========
-						//		;	27
+						//		;	24
 
-					cycles.multiply+=27;
+					cycles.multiply+=24;
 
 	/* Perform >T1_hi * <T2 = CCcc */
 	c=1;					// sec			; 2
-//sm1b:
+	//sm1b:
 	a=square1_lo[sm1b+x];			// lda square1_lo,x	; 4
-//sm2b:
+	//sm2b:
 	a+=(~(square2_lo[sm2b+x]))+c;		// sbc square2_lo,x	; 4
 	c=!(a&0x100);
 	a&=0xff;
 
 	_cc=a;					// sta _cc+1		; 3
-//sm3b:
+	//sm3b:
 	a=square1_hi[sm3b+x];			// lda square1_hi,x	; 4
-//sm4b:
+	//sm4b:
 	a+=(~(square2_hi[sm4b+x]))+c;		// sbc square2_hi,x	; 4
 	c=!!(a&0x100);
 	a&=0xff;
@@ -438,17 +435,16 @@ static int fixed_mul_unsigned(
 	/* Perform <T1 * >T2 = BBbb */
 	x=(y_i)&0xff;				// ldx T2+1		; 3
 	c=1;					// sec			; 2
-//sm5a:
+	//sm5a:
 	a=square1_lo[sm5a+x];			// lda square1_lo,x	; 4
-//sm6a:
+	//sm6a:
 	a+=(~(square2_lo[sm6a+x]))+c;		// sbc square2_lo,x	; 4
 	c=!(a&0x100);
 	a&=0xff;
 	_bb=a;					// sta _bb+1		; 3
-//	printf("\t\t\t\tbb=%x c=%d\n",_bb,c);
-//sm7a:
+	//sm7a:
 	a=square1_hi[sm7a+x];			// lda square1_hi,x	; 4
-//sm8a:
+	//sm8a:
 	a+=(~(square2_hi[sm8a+x]))+c;		// sbc square2_hi,x	; 4
 	c=!(a&0x100);
 	a&=0xff;
@@ -457,23 +453,23 @@ static int fixed_mul_unsigned(
 
 	/* Perform >T1 * >T2 = DDdd */
 	c=1;					// sec			; 2
-//sm5b:
+	//sm5b:
 	a=square1_lo[sm5b+x];			// lda square1_lo,x	; 4
-//sm6b:
+	//sm6b:
 	a+=(~(square2_lo[sm6b+x]))+c;		// sbc square2_lo,x	; 4
 	c=!(a&0x100);
 	a&=0xff;
 	_dd=a;					// sta _dd+1		; 3
-//sm7b:
-	a=square1_hi[sm7b+x];			// lda square1_hi,x	; 4
-//sm8b:
-	a+=(~(square2_hi[sm8b+x]))+c;		// sbc square2_hi,x	; 4
-	c=!(a&0x100);
-	a&=0xff;
+	//sm7b:
+	//a=square1_hi[sm7b+x];			// lda square1_hi,x	;
+	//sm8b:
+	//a+=(~(square2_hi[sm8b+x]))+c;		// sbc square2_hi,x	;
+	//c=!(a&0x100);
+	//a&=0xff;
 
-	product[3]=a;				// sta PRODUCT+3	; 3
-	_DD=a;
-					cycles.multiply+=24;
+	//product[3]=a;				// sta PRODUCT+3	;
+	//_DD=a;
+					cycles.multiply+=13;
 	/*********************************************/
 	/* Add the separate multiplications together */
 	/*********************************************/
@@ -485,9 +481,9 @@ static int fixed_mul_unsigned(
 	if (debug) printf("product[1]=%02x+%02x+0=",_AA,_bb);
 
 	c=0;					// clc			; 2
-//_AA:
+	//_AA:
 	a=_AA;					// lda #0		; 2
-//_bb:
+	//_bb:
 	a+=(c+_bb);				// adc #0		; 2
 	c=!!(a&0x100);
 	a&=0xff;
@@ -496,27 +492,27 @@ static int fixed_mul_unsigned(
 					cycles.multiply+=9;
 	// product[2]=_BB+_CC+c
 	if (debug) printf("product[2]=%02x+%02x+%d=",_BB,_CC,c);
-//_BB:
+	//_BB:
 	a=_BB;					// lda #0		; 2
-//_CC:
+	//_CC:
 	a+=(c+_CC);				// adc #0		; 2
 	c=!!(a&0x100);
 	a&=0xff;
 	product[2]=a;				// sta PRODUCT+2	; 3
 	if (debug) printf("%x.%02x\n",c,a);
-					cycles.multiply+=10;
+					cycles.multiply+=7;
 	// product[3]=_DD+c
-	if (debug) printf("product[3]=%02x+%d=",_DD,c);
-	if (c==0) goto urgh2;			// bcc :+		; 2nt/3
-	product[3]++;				// inc PRODUCT+3	; 5
-	product[3]&=0xff;
+//	if (debug) printf("product[3]=%02x+%d=",_DD,c);
+//	if (c==0) goto urgh2;			// bcc :+		; 2nt/3
+//	product[3]++;				// inc PRODUCT+3	; 5
+//	product[3]&=0xff;
 	c=0;					// clc			; 2
-					cycles.multiply+=6;
-urgh2:
+					cycles.multiply+=2;
+//urgh2:
 	if (debug) printf("%x.%02x\n",c,product[3]);
 	// product[1]=_AA+_bb+_cc
 	if (debug) printf("product[1]=%02x+%02x+%d=",product[1],_cc,c);
-//_cc:
+	//_cc:
 	a=_cc;					// lda #0		; 2
 	a+=c+product[1];			// adc PRODUCT+1	; 3
 	c=!!(a&0x100);
@@ -526,7 +522,7 @@ urgh2:
 
 	// product[2]=_BB+_CC+_dd+c
 	if (debug) printf("product[2]=%02x+%02x+%d=",product[2],_dd,c);
-//_dd:
+	//_dd:
 	a=_dd;					// lda #0		; 2
 	a+=c+product[2];			// adc PRODUCT+2	; 3
 	c=!!(a&0x100);
@@ -535,25 +531,25 @@ urgh2:
 	if (debug) printf("%x.%02x\n",c,product[2]);
 
 	// product[3]=_DD+c
-	if (debug) printf("product[3]=%02x+%d=",product[3],c);
-					cycles.multiply+=19;
-	if (c==0) goto urgh;			// bcc :+		; 2nt/3
-	product[3]++;				// inc PRODUCT+3	; 5
-	product[3]&=0xff;
-					cycles.multiply+=4;
-urgh:
+	//if (debug) printf("product[3]=%02x+%d=",product[3],c);
+					cycles.multiply+=16;
+	//if (c==0) goto urgh;			// bcc :+		; 2nt/3
+	//product[3]++;				// inc PRODUCT+3	; 5
+	//product[3]&=0xff;
+					cycles.multiply+=0;
+//urgh:
 	if (debug) printf("%x.%02x\n",c,product[3]);
 	*z_i=product[1];
 	*z_f=product[0];
 
 //	printf("Result=%02x:%02x\n",*z_i,*z_f);
 
-	if (debug) {
-		printf("    AAaa        %02x:%02x\n",_AA,_aa);
-		printf("  BBbb       %02x:%02x\n",_BB,_bb);
-		printf("  CCcc       %02x:%02x\n",_CC,_cc);
-		printf("DDdd      %02x:%02x\n",_DD,_dd);
-	}
+//	if (debug) {
+//		printf("    AAaa        %02x:%02x\n",_AA,_aa);
+//		printf("  BBbb       %02x:%02x\n",_BB,_bb);
+//		printf("  CCcc       %02x:%02x\n",_CC,_cc);
+//		printf("DDdd      %02x:%02x\n",_DD,_dd);
+//	}
 
 					cycles.multiply+=6;
 
