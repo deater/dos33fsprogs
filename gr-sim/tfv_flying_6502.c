@@ -398,7 +398,7 @@ static int fixed_mul_unsigned(
 	a&=0xff;
 
 //	product[0]=a;				// sta PRODUCT+0	;
-	_aa=a;
+//	_aa=a;
 
 	//sm3a:
 	a=square1_hi[sm3a+x];			// lda square1_hi,x	; 4
@@ -569,27 +569,27 @@ static void fixed_mul(unsigned char x_i, unsigned char x_f,
 
 	a=(x_i&0xff);			// lda T1+1			; 3
 					cycles.multiply+=12;
-	if ((a&0x80)==0) goto x_positive;	// bpl :+		; 3/2nt
-					cycles.multiply--;
+	if ((a&0x80)==0) goto x_positive;	// bpl :+		;^3/2nt
+
 	c=1;				// sec				; 2
 	a=product[2];			// lda PRODUCT+2		; 3
 	a+=(~y_f)+c;			// sbc T2+0			; 3
 	c=!(a&0x100);
 	a&=0xff;
 	product[2]=a;			// sta PRODUCT+2		; 3
-	a=product[3];			// lda PRODUCT+3		; 3
-	a+=(~y_i)+c;			// sbc T2+1			; 3
-	c=!(a&0x100);
-	a&=0xff;
-	product[3]=a;			// sta PRODUCT+3		; 3
-					cycles.multiply+=20;
+//	a=product[3];			// lda PRODUCT+3		;
+//	a+=(~y_i)+c;			// sbc T2+1			;
+//	c=!(a&0x100);
+//	a&=0xff;
+//	product[3]=a;			// sta PRODUCT+3		;
+					cycles.multiply+=10;
 
 x_positive:
 
 	a=(y_i&0xff);			// lda T2+1			; 3
 					cycles.multiply+=6;
-	if ((a&0x80)==0) goto y_positive;	// bpl :+		; 3/2nt
-					cycles.multiply--;
+	if ((a&0x80)==0) goto y_positive;	// bpl :+		;^3/2nt
+
 
 	c=1;				// sec				; 2
 	a=product[2];			// lda PRODUCT+2		; 3
@@ -597,12 +597,12 @@ x_positive:
 	c=!(a&0x100);
 	a&=0xff;
 	product[2]=a;			// sta PRODUCT+2		; 3
-	a=product[3];			// lda PRODUCT+3		; 3
-	a+=(~x_i)+c;			// sbc T1+1			; 3
-	c=!(a&0x100);
-	a&=0xff;
-	product[3]=a;			// sta PRODUCT+3		; 3
-					cycles.multiply+=20;
+//	a=product[3];			// lda PRODUCT+3		;
+//	a+=(~x_i)+c;			// sbc T1+1			;
+//	c=!(a&0x100);
+//	a&=0xff;
+//	product[3]=a;			// sta PRODUCT+3		;
+					cycles.multiply+=10;
 y_positive:
 	*z_i=product[2];
 	*z_f=product[1];

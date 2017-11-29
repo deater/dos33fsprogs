@@ -162,14 +162,13 @@ Remove unneeded precision in the 8.8 x 8.8 fixed point multiply
 	Cycles: flying=             187
 	Cycles: getkey=              46
 	Cycles: page_flip=           26
-	Cycles: multiply=        44,785
+	Cycles: multiply=        43,588
 	Cycles: mode7=          118,034
 	Cycles: lookup_map=      22,747
 	Cycles: put_sprite=       2,561
 	================================
-	Total =                 188,386
-	Frame Rate = 5.31 fps
-
+	Total =                 187,189
+	Frame Rate = 5.34 fps
 
 Each cycle removed from inner X loop saves
 	32*40=1280 cycles

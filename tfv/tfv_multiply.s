@@ -312,29 +312,30 @@ multiply:
 	lda	RESULT+2						; 3
 	sbc	NUM2L							; 3
 	sta	RESULT+2						; 3
-	lda	RESULT+3						; 3
-	sbc	NUM2H							; 3
-	sta	RESULT+3						; 3
+;	lda	RESULT+3						;
+;	sbc	NUM2H							;
+;	sta	RESULT+3						;
 								;============
-								;	 19
+								;	 10
 
 x_positive:
 
 	lda	NUM2H		; y_i					; 3
 								;============
 								;	; 6
-	bpl	y_positive						; 3/2nt
+
+	bpl	y_positive						;^3/2nt
 
 
 	sec								; 2
 	lda	RESULT+2						; 3
 	sbc	NUM1L							; 3
 	sta	RESULT+2						; 3
-	lda	RESULT+3						; 3
-	sbc	NUM1H							; 3
-	sta	RESULT+3						; 3
+;	lda	RESULT+3						;
+;	sbc	NUM1H							;
+;	sta	RESULT+3						;
 								;===========
-								;	 19
+								;	 10
 
 y_positive:
 	lda	RESULT+2	;	*z_i=product[2];		; 3
