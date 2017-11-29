@@ -550,19 +550,20 @@ draw_ship:
 
 draw_background_mode7:
 
+	; Only draw sky if necessary
+	; (at start, or if we have switched to text, we never overwrite it)
+
 	lda	DRAW_SKY						; 3
-	beq	no_draw_sky						; 2nt/3
-
+	beq	no_draw_sky						;^2nt/3
+								;==============
+								;	  6
 	; Draw Sky
-	; Only draw sky if necessary (we never overwrite it)
+	; not performance critical as this happens rarely
 
-	dec	DRAW_SKY						; 5
-
+	dec	DRAW_SKY	; usually 2 as we redraw both pages	; 5
 	lda	#COLOR_BOTH_MEDIUMBLUE	; MEDIUMBLUE color		; 2
 	sta	COLOR							; 3
-
 	lda	#0							; 2
-
 								;===========
 								;	 11
 
@@ -611,54 +612,56 @@ no_draw_sky:
 
 	sec								; 2
 	jsr	multiply						; 6
-								;===========
-								;        30
 
 	sta	FACTOR_I						; 3
 	stx	FACTOR_F						; 3
+								;===========
+								;        36
 
-	;; SPACEZ=78  * ff80 = FACTOR=66
 
-	;; C
-	;; GOOD 4 80 * ffffffff 80 = fffffffd c0
-	;; BAD  4 80 * ffffffff 80 = 42 40
-
+	; setup initial odd/even color mask
 	lda	#$f0							; 2
 	sta	COLOR_MASK						; 3
 
+	; start Y at 8 (below horizon line)
 	lda	#8							; 2
 	sta	SCREEN_Y						; 3
 								;=============
-								;	 16
+								;	 10
 
 screeny_loop:
-	and	#$fe							; 2
-	tay			; y=A					; 2
+	and	#$fe		; be sure SCREEN_Y used later is even	; 2
+	tay			; put in Y for lookup table later	; 2
 
-	lda	COLOR_MASK						; 3
+	lda	COLOR_MASK	; flip mask for odd/even row plotting	; 3
 	eor	#$ff							; 2
 	sta	COLOR_MASK						; 3
-	; setup self modifying code
-	sta	mask_label+1						; 4
+	sta	mask_label+1	; setup self-modifying code		; 4
 
-	eor	#$ff						; 2
-	bmi	odd_branch					; 2nt/3
-	lda	#$d0						; 2
+	eor	#$ff		; setup self-modifying branch later	; 2
+	bmi	odd_branch	; beq is $f0 (too clever FIXME)		; 2nt/3
+	lda	#$d0		; bne is $d0				; 2
 odd_branch:
-	sta	mask_branch_label	; beq/bne	f0/d0	; 4
+	sta	mask_branch_label	; actually update branch	; 4
+								;============
+								;	 27
 
+setup_gr_addr:
+	lda	gr_offsets,Y	; lookup low-res memory row address	; 4
+	sta	GBASL		; store in GBASL zero-page pointer	; 3
+	iny			; point to high part of address		; 2
 
-	lda	gr_offsets,Y    ; lookup low-res memory address         ; 4
-	sta	GBASL                                                   ; 3
-	iny                                                             ; 2
-
-	lda	gr_offsets,Y                                            ; 4
-	clc								; 2
+	lda	gr_offsets,Y	; load high part of address		; 4
+	clc			; clear carry for add			; 2
 	adc	DRAW_PAGE       ; add in draw page offset               ; 3
-	sta	GBASH                                                   ; 3
+	sta	GBASH		; store in GBASH zero-page pointer	; 3
 
 								;=============
-								;	 48
+								;	 21
+
+calc_horizontal_scale:
+
+	; Calculate the horizontal scale using a lookup table
 
 	; horizontal_scale.i *ALWAYS* = 0
 
@@ -669,6 +672,8 @@ odd_branch:
 
 	lda	SPACEZ_I						; 3
 	; FIXME: would it be faster to ROR 4 times?
+	; FIXME: or calculate this outside the loop?
+	; FIXME: can also subtract the 8 outside the loop?
 	asl								; 2
 	asl								; 2
 	asl								; 2
@@ -930,6 +935,7 @@ odd_branch:
 
 	; brk	; space_y = f7:04
 
+	; FIXME: start at 40 and decrement?
 	ldx	#0	; was SCREEN_X					; 2
 								;==========
 								;	 22
@@ -1030,18 +1036,6 @@ done_screeny:
 	; CLOBBERS: A,Y
 lookup_map:
 
-
-	; cache color and return if same as last time
-;	lda	SPACEY_I			; 3
-;	cmp	LAST_SPACEY_I			; 3
-;	bne	nomatch				; 2nt/3
-;	lda	SPACEX_I			; 3
-;	cmp	LAST_SPACEX_I			; 3
-;	bne	nomatch2			; 2nt/3
-;	lda	LAST_MAP_COLOR			; 3
-;	rts					; 6
-					;==========
-					;	 25
 ;nomatch:
 	lda	SPACEX_I						; 3
 ;nomatch2:

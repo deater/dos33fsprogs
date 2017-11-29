@@ -622,9 +622,7 @@ y_positive:
 
 static void draw_background_mode7(void) {
 
-
 	int map_color;
-
 						cycles.mode7+=6;
 	if (ram[DRAW_SKY]) {
 
@@ -635,7 +633,7 @@ static void draw_background_mode7(void) {
 
 		color_equals(COLOR_MEDIUMBLUE);
 						cycles.mode7+=11;
-
+//sky_loop:
 		for(ram[SCREEN_Y]=0;ram[SCREEN_Y]<6;ram[SCREEN_Y]+=2) {
 			hlin_double(ram[DRAW_PAGE], 0, 40, ram[SCREEN_Y]);
 		}
@@ -646,15 +644,16 @@ static void draw_background_mode7(void) {
 						cycles.mode7+=14+63+(16*40);
 	}
 
+//no_draw_sky:
 
-						cycles.mode7+=30;
+
 
 	/* FIXME: only do this if SPACEZ changes? */
 // mul1
 	fixed_mul(ram[SPACEZ_I],ram[SPACEZ_F],
 		CONST_BETA_I,CONST_BETA_F,
 		&ram[FACTOR_I],&ram[FACTOR_F],0);
-
+						cycles.mode7+=36;
 	if (!displayed) {
 		printf("SPACEZ/BETA/FACTOR %x %x * %x %x = %x %x\n",
 			ram[SPACEZ_I],ram[SPACEZ_F],
@@ -663,16 +662,23 @@ static void draw_background_mode7(void) {
 	}
 
 	ram[SCREEN_Y]=8;
-							cycles.mode7+=16;
+							cycles.mode7+=10;
 
 
 
 	do {
-
+//screeny_loop:
 		y=0;
-		hlin_setup(ram[DRAW_PAGE],y,0,ram[SCREEN_Y]);
-							cycles.mode7+=48;
 
+		/* actual code does even/odd stuff here */
+
+							cycles.mode7+=27;
+//setup_gr_addr:
+
+		hlin_setup(ram[DRAW_PAGE],y,0,ram[SCREEN_Y]);
+							cycles.mode7+=21;
+
+//calc_horizontal_scale:
 		// then calculate the horizontal scale, or the distance between
 		// space points on this horizontal line
 		ram[HORIZ_SCALE_I]=0;
