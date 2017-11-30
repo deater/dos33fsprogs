@@ -619,6 +619,21 @@ y_positive:
 					cycles.multiply+=12;
 }
 
+static void update_z_factor(void) {
+	/* only do this if SPACEZ changes? */
+// mul1
+	fixed_mul(ram[SPACEZ_I],ram[SPACEZ_F],
+		CONST_BETA_I,CONST_BETA_F,
+		&ram[FACTOR_I],&ram[FACTOR_F],0);
+						cycles.flying+=60;
+	if (!displayed) {
+		printf("SPACEZ/BETA/FACTOR %x %x * %x %x = %x %x\n",
+			ram[SPACEZ_I],ram[SPACEZ_F],
+			CONST_BETA_I, CONST_BETA_F,
+			ram[FACTOR_I],ram[FACTOR_F]);
+	}
+}
+
 
 static void draw_background_mode7(void) {
 
@@ -648,18 +663,7 @@ static void draw_background_mode7(void) {
 
 
 
-	/* FIXME: only do this if SPACEZ changes? */
-// mul1
-	fixed_mul(ram[SPACEZ_I],ram[SPACEZ_F],
-		CONST_BETA_I,CONST_BETA_F,
-		&ram[FACTOR_I],&ram[FACTOR_F],0);
-						cycles.mode7+=36;
-	if (!displayed) {
-		printf("SPACEZ/BETA/FACTOR %x %x * %x %x = %x %x\n",
-			ram[SPACEZ_I],ram[SPACEZ_F],
-			CONST_BETA_I, CONST_BETA_F,
-			ram[FACTOR_I],ram[FACTOR_F]);
-	}
+
 
 	ram[SCREEN_Y]=8;
 							cycles.mode7+=10;
@@ -689,7 +693,7 @@ static void draw_background_mode7(void) {
 			horizontal_lookup[((ram[SPACEZ_I]&0xf)<<5)+
 						(ram[SCREEN_Y]-8)];
 
-							cycles.mode7+=37;
+							cycles.mode7+=16;
 
 		if (!displayed) {
 			printf("HORIZ_SCALE %x %x\n",
@@ -915,6 +919,8 @@ int flying(void) {
 	ram[SPACEZ_I]=4;
 	ram[SPACEZ_F]=0x80;	/* Z=4.5 */
 
+	update_z_factor();
+
 	while(1) {
 		memset(&cycles,0,sizeof(cycles));
 						cycles.flying+=6;
@@ -935,6 +941,7 @@ int flying(void) {
 			if (ram[SHIPY]>16) {
 				ram[SHIPY]-=2;
 				ram[SPACEZ_I]++;
+				update_z_factor();
 			}
 			ram[SPLASH_COUNT]=0;
 		}
@@ -943,6 +950,7 @@ int flying(void) {
 			if (ram[SHIPY]<28) {
 				ram[SHIPY]+=2;
 				ram[SPACEZ_I]--;
+				update_z_factor();
 			}
 			else {
 				ram[SPLASH_COUNT]=10;
@@ -1004,6 +1012,7 @@ int flying(void) {
 
 				/* Land the ship */
 				for(loop=ram[SPACEZ_I];loop>0;loop--) {
+					update_z_factor();
 					draw_background_mode7();
 					cycles.put_sprite+=grsim_put_sprite(shadow_forward,CONST_SHIPX+3,31+ram[SPACEZ_I]);
 					cycles.put_sprite+=grsim_put_sprite(ship_forward,CONST_SHIPX,ram[SHIPY]);

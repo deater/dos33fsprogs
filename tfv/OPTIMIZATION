@@ -198,6 +198,17 @@ Have loop counter count down from 40 instead of count up (avoid compare)
 	Total =                 181,993
 	Frame Rate = 5.49 fps
 
+Move spacez updates out of line and also do some self modifying code
+	Cycles: flying=             187
+	Cycles: getkey=              46
+	Cycles: page_flip=           26
+	Cycles: multiply=        40,680
+	Cycles: mode7=          114,830
+	Cycles: lookup_map=      22,747
+	Cycles: put_sprite=       2,561
+	================================
+	Total =                 181,077
+	Frame Rate = 5.52 fps
 
 
 Each cycle removed from inner X loop saves

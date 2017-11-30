@@ -55,6 +55,8 @@ flying_start:
 	lda	#$80
 	sta	SPACEZ_F
 
+	jsr	update_z_factor
+
 flying_loop:
 
 	lda	SPLASH_COUNT						; 3
@@ -86,6 +88,7 @@ flying_keyboard:
 	dec	SHIPY
 	dec	SHIPY		; move ship up
 	inc	SPACEZ_I	; incement height
+	jsr	update_z_factor
 	lda	#0
 	sta	SPLASH_COUNT
 
@@ -103,6 +106,7 @@ check_down:
 	inc	SHIPY
 	inc	SHIPY		; move ship down
 	dec	SPACEZ_I	; decrement height
+	jsr	update_z_factor
 	bcc	check_left
 
 splashy:
@@ -239,6 +243,9 @@ landing_loop:
 	jsr	page_flip
 
 	dec	SPACEZ_I
+	jsr	update_z_factor
+	lda	SPACEZ_I
+
 	bpl	landing_loop
 
 
@@ -544,6 +551,45 @@ draw_ship:
 	jmp	flying_loop						; 3
 
 
+update_z_factor:
+
+	; we only do the following if Z changes
+
+	; fixed_mul(&space_z,&BETA,&factor);
+;mul1
+	lda	SPACEZ_I						; 3
+	sta	NUM1H							; 3
+
+	; interlude, update SPACEZ_SHIFTED
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	sec								; 2
+	sbc	#8							; 2
+	sta	spacez_shifted+1					; 4
+
+
+	lda	SPACEZ_F						; 3
+	sta	NUM1L							; 3
+
+	lda	#CONST_BETA_I	; BETA_I				; 2
+	sta	NUM2H							; 3
+	lda	#CONST_BETA_F	; BETA_F				; 2
+	sta	NUM2L							; 3
+
+	sec			; don't reuse old values		; 2
+	jsr	multiply						; 6
+
+	sta	FACTOR_I						; 3
+	stx	FACTOR_F						; 3
+
+	rts								; 6
+								;===========
+								;        60
+
+
 ;===========================
 ; Draw the Mode7 Background
 ;===========================
@@ -593,31 +639,6 @@ sky_loop:				; draw line across screen
 								; 63+(X*16)+14
 
 no_draw_sky:
-
-	; FIXME: only do the following if Z changes?
-	; 	only saves 200 cycles to do that with a lot of
-	; 	added complexity elsewhere
-
-	; fixed_mul(&space_z,&BETA,&factor);
-;mul1
-	lda	SPACEZ_I						; 3
-	sta	NUM1H							; 3
-	lda	SPACEZ_F						; 3
-	sta	NUM1L							; 3
-
-	lda	#CONST_BETA_I	; BETA_I				; 2
-	sta	NUM2H							; 3
-	lda	#CONST_BETA_F	; BETA_F				; 2
-	sta	NUM2L							; 3
-
-	sec								; 2
-	jsr	multiply						; 6
-
-	sta	FACTOR_I						; 3
-	stx	FACTOR_F						; 3
-								;===========
-								;        36
-
 
 	; setup initial odd/even color mask
 	lda	#$f0							; 2
@@ -670,113 +691,99 @@ calc_horizontal_scale:
 	;	horizontal_lookup[space_z.i&0xf][(screen_y-8)/2];
 	;		horizontal_lookup[(space_z<<5)+(screen_y-8)]
 
-	lda	SPACEZ_I						; 3
-	; FIXME: would it be faster to ROR 4 times?
-	; FIXME: or calculate this outside the loop?
-	; FIXME: can also subtract the 8 outside the loop?
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	sta	TEMP_I							; 3
 
-	sec								; 2
-	lda	SCREEN_Y						; 3
-	sbc	#8							; 2
 	clc								; 2
-	adc	TEMP_I							; 3
+	lda	SCREEN_Y						; 3
+spacez_shifted:
+	adc	#0	; self-modify, loads (spacez<<5)-8		; 2
 	tay								; 2
 	lda	horizontal_lookup,Y					; 4
-	; sta	HORIZ_SCALE_F						;
-	sta	NUM1L							; 3
+	sta	NUM1L	; HORIZ_SCALE_F is input to next mul		; 3
 								;============
-								;	 37
-	;; brk ASM, horiz_scale = 00:73
+								;	 16
+
 ; mul2
 	; calculate the distance of the line we are drawing
 	; fixed_mul(&horizontal_scale,&scale,&distance);
-	lda	#0 ;HORIZ_SCALE_I					; 2
+	lda	#0	; HORIZ_SCALE_I is always zero			; 2
 	sta	NUM1H							; 3
-	;lda	HORIZ_SCALE_F						;
-	;sta	NUM1L							;
+	; NUM1L was set to HORIZ_SCALE_F previously			;
 	lda	#CONST_SCALE_I	; SCALE_I				; 2
 	sta	NUM2H							; 3
 	lda	#CONST_SCALE_F	; SCALE_F				; 2
 	sta	NUM2L							; 3
-	sec								; 2
+	sec			; don't reuse previous settings		; 2
 	jsr	multiply						; 6
 	sta	DISTANCE_I						; 2
 	stx	DISTANCE_F						; 2
 								;==========
 								;	 27
-	;; brk ASM, distance = 08:fc
 
-	; calculate the dx and dy of points in space when we step
-	; through all points on this line
+	; calculate the dx and dy to add to points in space
+	; we add to the starting values on each row to get the next
+	; space values
 
-	lda	ANGLE	; dx.i=fixed_sin[(angle+8)&0xf].i; // -sin()	; 3
+	; dx.i=fixed_sin[(angle+8)&0xf].i	// -sin()
+	lda	ANGLE							; 3
 	clc								; 2
 	adc	#8							; 2
 	and	#$f							; 2
 	asl								; 2
 	tay								; 2
-	lda	fixed_sin,Y						; 4
-;	sta	DX_I							;
-	sta	NUM2H							; 3
-	iny		; dx.f=fixed_sin[(angle+8)&0xf].f; // -sin()	; 2
-	lda	fixed_sin,Y						; 4
-;	sta	DX_F							;
-	sta	NUM2L							; 3
+	lda	fixed_sin,Y	; load integer half			; 4
+	sta	NUM2H		; use as source in upcomnig mul		; 3
+
+
+	; dx.f=fixed_sin[(angle+8)&0xf].f; 	// -sin()
+	iny			; point to float half			; 2
+	lda	fixed_sin,Y	; load it from lookup table		; 4
+	sta	NUM2L		; use as source in upcoming mul		; 3
 								;==========
 								;	 29
+
 ;mul3
 	; fixed_mul(&dx,&horizontal_scale,&dx);
 
-;	lda	DX_I							;
-;	sta	NUM2H							;
-;	lda	DX_F							;
-;	sta	NUM2L							;
+				; DX_I:DX_F already set in NUM2H:NUM2L
 	clc			; reuse HORIZ_SCALE in NUM1		; 2
 	jsr	multiply						; 6
 	sta	DX_I							; 3
 	stx	DX_F							; 3
 								;==========
 								;	 14
-	;; ANGLE
-	;; brk ASM, dx = 00:00
 
-	lda	ANGLE	; dy.i=fixed_sin[(angle+4)&0xf].i; // cos()	; 3
+	; dy.i=fixed_sin[(angle+4)&0xf].i; // cos()
+
+	lda	ANGLE							; 3
 	clc								; 2
 	adc	#4							; 2
 	and	#$f							; 2
 	asl								; 2
 	tay								; 2
-	lda	fixed_sin,Y						; 4
-;	sta	DY_I							; 
-	sta	NUM2H							; 3
-	iny		; dy.f=fixed_sin[(angle+4)&0xf].f; // cos()	; 2
-	lda	fixed_sin,Y						; 4
-;	sta	DY_F							; 
-	sta	NUM2L							; 3
+	lda	fixed_sin,Y	; load integer half			; 4
+	sta	NUM2H		; use as source in upcoming mul		; 3
+
+	; dy.f=fixed_sin[(angle+4)&0xf].f; // cos()
+
+	iny			; point to float half			; 2
+	lda	fixed_sin,Y	; load from lookup table		; 4
+	sta	NUM2L		; use as source in upcoming mul		; 3
 								;==========
 								;	 29
 ;mul4
 	; fixed_mul(&dy,&horizontal_scale,&dy);
 
-;	lda	DY_I							; 
-;	sta	NUM2H							; 
-;	lda	DY_F							; 
-;	sta	NUM2L							; 
+				; DY_I:DY_F already in NUM2H:NUM2L
 	clc			; reuse horiz_scale in num1		; 2
 	jsr	multiply						; 6
 	sta	DY_I							; 3
 	stx	DY_F							; 3
 								;==========
 								;	 14
-	;; brk ASM, dy = 00:73
 
+	;=================================
 	; calculate the starting position
+	;=================================
 
 			; fixed_add(&distance,&factor,&space_x);
 	clc		; fixed_add(&distance,&factor,&space_y);	; 2
@@ -784,27 +791,31 @@ calc_horizontal_scale:
 	adc	FACTOR_F						; 3
 	sta	SPACEY_F						; 3
 	sta	SPACEX_F						; 3
+
 	lda	DISTANCE_I						; 3
 	adc	FACTOR_I						; 3
 	sta	SPACEY_I						; 3
 	sta	SPACEX_I						; 3
 								;==========
 								;	 26
-	;; brk	space_x = 06:bc
 
-	lda	ANGLE	; temp.i=fixed_sin[(angle+4)&0xf].i; // cos	; 3
+
+	; temp.i=fixed_sin[(angle+4)&0xf].i; // cos()
+
+	lda	ANGLE							; 3
 	clc								; 2
 	adc	#4							; 2
 	and	#$f							; 2
 	asl								; 2
 	tay								; 2
 	lda	fixed_sin,Y						; 4
-;	sta	TEMP_I							;
-	sta	NUM2H							; 3
-	iny		; temp.f=fixed_sin[(angle+4)&0xf].f; // cos	; 2
+	sta	NUM2H	; store as source for next mul			; 3
+
+
+	; temp.f=fixed_sin[(angle+4)&0xf].f; // cos()
+	iny								; 2
 	lda	fixed_sin,Y						; 4
-;	sta	TEMP_F							;
-	sta	NUM2L							; 3
+	sta	NUM2L	; store as source for next mul			; 3
 								;==========
 								;	 29
 
@@ -814,18 +825,16 @@ calc_horizontal_scale:
 	sta	NUM1H							; 3
 	lda	SPACEX_F						; 3
 	sta	NUM1L							; 3
-;	lda	TEMP_I							; 
-;	sta	NUM2H							; 
-;	lda	TEMP_F							; 
-;	sta	NUM2L							; 
-	sec								; 2
+			; NUM2H:NUM2L already set above
+	sec		; don't reuse previous NUM1			; 2
 	jsr	multiply						; 6
 	sta	SPACEX_I						; 3
 	stx	SPACEX_F						; 3
 								;==========
 								;	 26
 
-	clc			; fixed_add(&space_x,&cx,&space_x);	; 2
+	; fixed_add(&space_x,&cx,&space_x);
+	clc								; 2
 	lda	SPACEX_F						; 3
 	adc	CX_F							; 3
 	sta	SPACEX_F						; 3
