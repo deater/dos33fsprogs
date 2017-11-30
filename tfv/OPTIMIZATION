@@ -218,12 +218,13 @@ This looks like a pessimization, but it's because the cycle counting code
 	Cycles: getkey=              46
 	Cycles: page_flip=           26
 	Cycles: multiply=        40,680
-	Cycles: mode7=          115,470
+	Cycles: mode7=          115,150
 	Cycles: lookup_map=      22,747
 	Cycles: put_sprite=       2,561
 	================================
-	Total =                 181,717
-	Frame Rate = 5.50 fps
+	Total =                 181,397
+	Frame Rate = 5.51 fps
+
 
 
 Each cycle removed from inner X loop saves

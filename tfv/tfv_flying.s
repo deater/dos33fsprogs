@@ -885,10 +885,10 @@ spacez_shifted:
 								;==========
 								;	 16
 ; mul7
-	; fixed_mul(&temp,&dx,&temp);
-	lda	#CONST_LOWRES_HALF_I					; 3
+	; fixed_mul(&lowres_half,&dx,&temp);
+	lda	#CONST_LOWRES_HALF_I					; 2
 	sta	NUM1H							; 3
-	lda	#CONST_LOWRES_HALF_F					; 3
+	lda	#CONST_LOWRES_HALF_F					; 2
 	sta	NUM1L							; 3
 	lda	DX_I							; 3
 	sta	NUM2H							; 3
@@ -896,26 +896,24 @@ spacez_shifted:
 	lda	DX_F							; 3
 	sta	dxf_label+1	; for self modify			; 4
 	sta	NUM2L							; 3
-	sec								; 2
+	sec			; don't reuse previous num1		; 2
 	jsr	multiply						; 6
-;	stx	TEMP_I							;
-;	sta	TEMP_F							;
+				; TEMP_I in X				;
+				; TEMP_F in A				;
 								;==========
-								;	 40
+								;	 38
 
 
-
-	clc		; fixed_add(&space_x,&temp,&space_x);		; 2
-	lda	SPACEX_F						; 3
-;	adc	TEMP_F							;
-	adc	RESULT+1						; 3
+	; fixed_add(&space_x,&temp,&space_x);
+	clc								; 2
+				; TEMP_F in A
+	adc	SPACEX_F						; 3
 	sta	SPACEX_F						; 3
-	lda	SPACEX_I						; 3
-;	adc	TEMP_I							; 
-	adc	RESULT+2						; 3
+	txa			; TEMP_I in X				; 2
+	adc	SPACEX_I						; 3
 	sta	SPACEX_I						; 3
 								;==========
-								;	 20
+								;	 16
 
 ;mul8
 	; fixed_mul(&fixed_temp,&dy,&fixed_temp);
@@ -925,28 +923,30 @@ spacez_shifted:
 	lda	DY_F							; 3
 	sta	NUM2L							; 3
 	sta	dyf_label+1	; for self modify			; 4
-	clc	; reuse LOWRES_HALF_I from last time			; 2
+	clc	; reuse CONST_LOWRES_HALF from last time		; 2
 	jsr	multiply						; 6
-;	stx	TEMP_I							;
-;	sta	TEMP_F							;
+			; TEMP_I in X
+			; TEMP_F in A
 								;==========
 								;	 28
 
-	clc		; fixed_add(&space_y,&temp,&space_y);		; 2
-	lda	SPACEY_F						; 3
-;	adc	TEMP_F							;
-	adc	RESULT+1						; 3
+	; fixed_add(&space_y,&temp,&space_y);
+	clc								; 2
+			; TEMP_F in A
+	adc	SPACEY_F						; 3
 	sta	SPACEY_F						; 3
-	lda	SPACEY_I						; 3
-;	adc	TEMP_I							;
-	adc	RESULT+2						; 3
+
+	txa		; TEMP_I in X					; 2
+	adc	SPACEY_I						; 3
 	sta	SPACEY_I						; 3
 
-	; brk	; space_y = f7:04
+								;==========
+								;	 16
+
 
 	ldx	#40	; was SCREEN_X					; 2
 								;==========
-								;	 22
+								;	  2
 screenx_loop:
 
 

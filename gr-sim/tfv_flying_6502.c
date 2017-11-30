@@ -783,12 +783,12 @@ static void draw_background_mode7(void) {
 		fixed_mul(CONST_LOWRES_HALF_I,CONST_LOWRES_HALF_F,
 			ram[DX_I],ram[DX_F],
 			&ram[TEMP_I],&ram[TEMP_F],0);
-							cycles.mode7+=40;
+							cycles.mode7+=38;
 
 		fixed_add(ram[SPACEX_I],ram[SPACEX_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEX_I],&ram[SPACEX_F]);
-							cycles.mode7+=20;
+							cycles.mode7+=16;
 		if (!displayed) {
 			printf("SPACEX! %x:%x\n",
 			ram[SPACEX_I],ram[SPACEX_F]);
@@ -802,13 +802,14 @@ static void draw_background_mode7(void) {
 		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEY_I],&ram[SPACEY_F]);
-							cycles.mode7+=22;
+							cycles.mode7+=16;
 		if (!displayed) {
 			printf("SPACEY! %x:%x\n",ram[SPACEY_I],ram[SPACEY_F]);
 		}
 
 		// go through all points in this screen line
-		ram[SCREEN_X] = 0;
+		ram[SCREEN_X] = LOWRES_W;
+							cycles.mode7+=2;
 
 		while(1) {
 			// get a pixel from the tile and put it on the screen
@@ -842,8 +843,8 @@ match:
 				ram[DY_I],ram[DY_F],
 				&ram[SPACEY_I],&ram[SPACEY_F]);
 
-			ram[SCREEN_X]++;
-			if (ram[SCREEN_X] >= LOWRES_W) break;
+			ram[SCREEN_X]--;
+			if (ram[SCREEN_X]== 0) break;
 							cycles.mode7+=41;
 
 
