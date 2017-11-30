@@ -828,34 +828,35 @@ spacez_shifted:
 			; NUM2H:NUM2L already set above
 	sec		; don't reuse previous NUM1			; 2
 	jsr	multiply						; 6
-	stx	SPACEX_I						; 3
-	sta	SPACEX_F						; 3
+			; SPACEX_I in X					;
+			; SPACEX_F in A					;
 								;==========
-								;	 26
+								;	 20
 
 	; fixed_add(&space_x,&cx,&space_x);
 	clc								; 2
-	lda	SPACEX_F						; 3
+			; SPACEX_F still in A				;
 	adc	CX_F							; 3
 	sta	SPACEX_F						; 3
-	lda	SPACEX_I						; 3
+	txa		; SPACEX_I was in X				; 2
 	adc	CX_I							; 3
 	sta	SPACEX_I						; 3
+								;===========
+								;	 16
 
 
-	; brk	; space_x = 06:bc
-
-	lda	ANGLE	; temp.i=fixed_sin[angle&0xf].i;		; 3
+	; temp.i=fixed_sin[angle&0xf].i; // sin()
+	lda	ANGLE							; 3
 	and	#$f							; 2
 	asl								; 2
 	tay								; 2
 	lda	fixed_sin,Y						; 4
-;	sta	TEMP_I							; 
-	sta	NUM2H							; 3
-	iny		; fixed_temp.f=fixed_sin[angle&0xf].f;		; 2
+	sta	NUM2H		; store for next mul			; 3
+
+	; fixed_temp.f=fixed_sin[angle&0xf].f; // sin()
+	iny								; 2
 	lda	fixed_sin,Y						; 4
-	sta	TEMP_F							;
-	sta	NUM2L							; 3
+	sta	NUM2L		; store for next mul			; 3
 								;==========
 								;	 25
 
@@ -865,25 +866,24 @@ spacez_shifted:
 	sta	NUM1H							; 3
 	lda	SPACEY_F						; 3
 	sta	NUM1L							; 3
-;	lda	TEMP_I							;
-;	sta	NUM2H							;
-;	lda	TEMP_F							;
-;	sta	NUM2L							;
-	sec								; 2
+				; NUM2H:NUM2L already set
+	sec			; don't reuse previous num1		; 2
 	jsr	multiply						; 6
-	stx	SPACEY_I						; 3
-	sta	SPACEY_F						; 3
+				; SPACEY_I in X				;
+				; SPACEY_F in A				;
 								;==========
-								;	 26
+								;	 20
 
-	clc			; fixed_add(&space_y,&cy,&space_y);	; 2
-	lda	SPACEY_F						; 3
+	; fixed_add(&space_y,&cy,&space_y);
+	clc								; 2
+				; SPACEY_F in A
 	adc	CY_F							; 3
 	sta	SPACEY_F						; 3
-	lda	SPACEY_I						; 3
+	txa			; SPACEY_I in X				; 2
 	adc	CY_I							; 3
 	sta	SPACEY_I						; 3
-
+								;==========
+								;	 16
 ; mul7
 	; fixed_mul(&temp,&dx,&temp);
 	lda	#CONST_LOWRES_HALF_I					; 3

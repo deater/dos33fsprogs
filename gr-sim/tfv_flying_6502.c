@@ -756,11 +756,12 @@ static void draw_background_mode7(void) {
 		fixed_mul(ram[SPACEX_I],ram[SPACEX_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEX_I],&ram[SPACEX_F],0);
-							cycles.mode7+=26;
+							cycles.mode7+=20;
 
 		fixed_add(ram[SPACEX_I],ram[SPACEX_F],
 			ram[CX_I],ram[CX_F],
 			&ram[SPACEX_I],&ram[SPACEX_F]);
+							cycles.mode7+=16;
 
 
 		ram[TEMP_I]=fixed_sin[ram[ANGLE]&0xf].i;
@@ -770,11 +771,12 @@ static void draw_background_mode7(void) {
 		fixed_mul(ram[SPACEY_I],ram[SPACEY_F],
 			ram[TEMP_I],ram[TEMP_F],
 			&ram[SPACEY_I],&ram[SPACEY_F],0);
-							cycles.mode7+=26;
+							cycles.mode7+=20;
 
 		fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 			ram[CY_I],ram[CY_F],
 			&ram[SPACEY_I],&ram[SPACEY_F]);
+							cycles.mode7+=16;
 
 
 // mul7

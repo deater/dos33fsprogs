@@ -210,6 +210,21 @@ Move spacez updates out of line and also do some self modifying code
 	Total =                 181,077
 	Frame Rate = 5.52 fps
 
+Re-arranged multiply result register to allow more optimization.
+This looks like a pessimization, but it's because the cycle counting code
+	had been undercounting and missed a few add routines :(
+
+	Cycles: flying=             187
+	Cycles: getkey=              46
+	Cycles: page_flip=           26
+	Cycles: multiply=        40,680
+	Cycles: mode7=          115,470
+	Cycles: lookup_map=      22,747
+	Cycles: put_sprite=       2,561
+	================================
+	Total =                 181,717
+	Frame Rate = 5.50 fps
+
 
 Each cycle removed from inner X loop saves
 	32*40=1280 cycles
