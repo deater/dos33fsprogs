@@ -582,8 +582,8 @@ update_z_factor:
 	sec			; don't reuse old values		; 2
 	jsr	multiply						; 6
 
-	sta	FACTOR_I						; 3
-	stx	FACTOR_F						; 3
+	stx	FACTOR_I						; 3
+	sta	FACTOR_F						; 3
 
 	rts								; 6
 								;===========
@@ -714,8 +714,8 @@ spacez_shifted:
 	sta	NUM2L							; 3
 	sec			; don't reuse previous settings		; 2
 	jsr	multiply						; 6
-	sta	DISTANCE_I						; 2
-	stx	DISTANCE_F						; 2
+	stx	DISTANCE_I						; 2
+	sta	DISTANCE_F						; 2
 								;==========
 								;	 27
 
@@ -747,8 +747,8 @@ spacez_shifted:
 				; DX_I:DX_F already set in NUM2H:NUM2L
 	clc			; reuse HORIZ_SCALE in NUM1		; 2
 	jsr	multiply						; 6
-	sta	DX_I							; 3
-	stx	DX_F							; 3
+	stx	DX_I							; 3
+	sta	DX_F							; 3
 								;==========
 								;	 14
 
@@ -776,8 +776,8 @@ spacez_shifted:
 				; DY_I:DY_F already in NUM2H:NUM2L
 	clc			; reuse horiz_scale in num1		; 2
 	jsr	multiply						; 6
-	sta	DY_I							; 3
-	stx	DY_F							; 3
+	stx	DY_I							; 3
+	sta	DY_F							; 3
 								;==========
 								;	 14
 
@@ -828,8 +828,8 @@ spacez_shifted:
 			; NUM2H:NUM2L already set above
 	sec		; don't reuse previous NUM1			; 2
 	jsr	multiply						; 6
-	sta	SPACEX_I						; 3
-	stx	SPACEX_F						; 3
+	stx	SPACEX_I						; 3
+	sta	SPACEX_F						; 3
 								;==========
 								;	 26
 
@@ -871,8 +871,8 @@ spacez_shifted:
 ;	sta	NUM2L							;
 	sec								; 2
 	jsr	multiply						; 6
-	sta	SPACEY_I						; 3
-	stx	SPACEY_F						; 3
+	stx	SPACEY_I						; 3
+	sta	SPACEY_F						; 3
 								;==========
 								;	 26
 
@@ -898,8 +898,8 @@ spacez_shifted:
 	sta	NUM2L							; 3
 	sec								; 2
 	jsr	multiply						; 6
-;	sta	TEMP_I							;
-;	stx	TEMP_F							;
+;	stx	TEMP_I							;
+;	sta	TEMP_F							;
 								;==========
 								;	 40
 
@@ -927,8 +927,8 @@ spacez_shifted:
 	sta	dyf_label+1	; for self modify			; 4
 	clc	; reuse LOWRES_HALF_I from last time			; 2
 	jsr	multiply						; 6
-;	sta	TEMP_I							;
-;	stx	TEMP_F							;
+;	stx	TEMP_I							;
+;	sta	TEMP_F							;
 								;==========
 								;	 28
 
