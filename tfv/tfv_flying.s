@@ -947,6 +947,10 @@ spacez_shifted:
 	ldx	#40	; was SCREEN_X					; 2
 								;==========
 								;	  2
+	;===================================================
+	; SCREEN_X LOOP!!!!
+	;   every cycle in here counts for 32*40=1280 cycles
+	;===================================================
 screenx_loop:
 
 
@@ -1028,7 +1032,7 @@ done_screenx_loop:
 	lda	SCREEN_Y						; 3
 	cmp	#40			; LOWRES height			; 2
 	beq	done_screeny						; 2nt/3
-	jmp	screeny_loop						; 3
+	jmp	screeny_loop		; too far to branch		; 3
 								;=============
 								;	 15
 done_screeny:
