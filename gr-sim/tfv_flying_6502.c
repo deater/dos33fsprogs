@@ -838,7 +838,7 @@ match:
 
 			ram[SCREEN_X]++;
 			if (ram[SCREEN_X] >= LOWRES_W) break;
-							cycles.mode7+=43;
+							cycles.mode7+=41;
 
 
 			/* cache last value */

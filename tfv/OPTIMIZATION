@@ -186,5 +186,19 @@ In-line unsigned multiply inside of signed multiply (save 12 cycles)
 	Frame Rate = 5.42 fps
 
 
+Have loop counter count down from 40 instead of count up (avoid compare)
+	Cycles: flying=             187
+	Cycles: getkey=              46
+	Cycles: page_flip=           26
+	Cycles: multiply=        40,888
+	Cycles: mode7=          115,538
+	Cycles: lookup_map=      22,747
+	Cycles: put_sprite=       2,561
+	================================
+	Total =                 181,993
+	Frame Rate = 5.49 fps
+
+
+
 Each cycle removed from inner X loop saves
 	32*40=1280 cycles

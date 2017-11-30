@@ -935,8 +935,7 @@ calc_horizontal_scale:
 
 	; brk	; space_y = f7:04
 
-	; FIXME: start at 40 and decrement?
-	ldx	#0	; was SCREEN_X					; 2
+	ldx	#40	; was SCREEN_X					; 2
 								;==========
 								;	 22
 screenx_loop:
@@ -994,11 +993,10 @@ dyi_label:
 	adc	#0							; 2
 	sta	SPACEY_I						; 3
 
-	inx	;inc	SCREEN_X					; 2
-	cpx	#40			; LOWRES width			; 2
-	beq	done_screenx_loop					; 2nt/3
+	dex	; decrement	SCREEN_X				; 2
+	beq	done_screenx_loop	; branch until we've done 40	; 2nt/3
 								;=============
-								;	43
+								;	41
 
 
 	; cache color and return if same as last time
