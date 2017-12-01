@@ -749,7 +749,7 @@ int fixed_mul(int x_i,int x_f,
 	int sm2b,sm4b,sm6b;//,sm8b;
 
 	int _AA,_BB,_CC;//,_DD;
-	int _aa,_bb,_cc,_dd;
+	int /* _aa,*/ _bb,_cc,_dd;
 
 	if (!table_ready) init_table();
 
@@ -1009,7 +1009,7 @@ int main(int argc, char **argv) {
 
 	int a_i,b_i,c_i;
 	int a_f,b_f,c_f;
-	short x,y;
+//	short x,y;
 	int l,k,i,j;
 
 	printf("Some tests\n");
