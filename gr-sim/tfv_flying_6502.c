@@ -132,28 +132,40 @@ static int lookup_map(int xx, int yy) {
 	offset+=xx;
 				cycles.lookup_map+=39;
 
-	if ((yy>7) || (xx>7)) {
-			cycles.lookup_map+=14;
-		color=water_map[offset&0x1f];
-			cycles.lookup_map+=11;
-		goto update_cache;
-
+	if (yy>7) {
+				cycles.lookup_map+=3;
+		goto ocean_color;
 	}
+				cycles.lookup_map+=7;
+
+	if (xx>7) {
+				cycles.lookup_map+=3;
+		goto ocean_color;
+	}
+
+	color=flying_map[offset];
+				cycles.lookup_map+=11;
+
+	goto update_cache;
+
+ocean_color:
+	color=water_map[offset&0x1f];
+			cycles.lookup_map+=8;
+	goto update_cache;
 
 	/* 2 2 2 2  2 2 2 2 */
 	/* e 2 2 2  2 2 2 2 */
 	/* 2 2 2 2  2 2 2 2 */
 	/* 2 2 2 2  e 2 2 2 */
 
-	color=flying_map[offset];
-				cycles.lookup_map+=8;
 
-	if (!displayed) {
-		printf("COLOR! %x\n",color);
-	}
+
 
 
 update_cache:
+	if (!displayed) {
+		printf("COLOR! %x\n",color);
+	}
 				cycles.lookup_map+=10;
 	ram[LAST_MAP_COLOR]=color;
 	return color;
@@ -816,7 +828,7 @@ static void draw_background_mode7(void) {
 
 nomatch:
 			map_color=lookup_map(ram[SPACEX_I],ram[SPACEY_I]);
-						cycles.mode7+=6;
+						cycles.lookup_map-=6;
 match:
 
 			ram[COLOR]=(map_color&0xf);
@@ -825,40 +837,51 @@ match:
 			y=0;
 			if ((ram[SCREEN_Y]&1)==0) {
 				ram[y_indirect(GBASL,y)]=ram[COLOR];
+							cycles.mode7+=18;
 			}
 			else {
 				a=ram[COLOR];
 				ram[y_indirect(GBASL,y)]|=(a<<4);
+							cycles.mode7+=22;
 
 			}
 
 			ram[GBASL]++;
-							cycles.mode7+=21;
+
 
 			// advance to the next position in space
 			fixed_add(ram[SPACEX_I],ram[SPACEX_F],
 				ram[DX_I],ram[DX_F],
 				&ram[SPACEX_I],&ram[SPACEX_F]);
+							cycles.mode7+=18;
+
 			fixed_add(ram[SPACEY_I],ram[SPACEY_F],
 				ram[DY_I],ram[DY_F],
 				&ram[SPACEY_I],&ram[SPACEY_F]);
+							cycles.mode7+=18;
 
 			ram[SCREEN_X]--;
-			if (ram[SCREEN_X]== 0) break;
-							cycles.mode7+=41;
-
-
-			/* cache last value */
-						cycles.mode7+=8;
-			if (ram[SPACEY_I]==ram[LAST_SPACEY_I]) {
-						cycles.mode7+=7;
-				if (ram[SPACEX_I]==ram[LAST_SPACEX_I]) {
-						cycles.mode7+=4;
-					map_color=ram[LAST_MAP_COLOR];
-					goto match;
-				}
+			if (ram[SCREEN_X]== 0) {
+							cycles.mode7+=5;
+				break;
 			}
-			goto nomatch;
+							cycles.mode7+=4;
+			/* cache last value */
+							cycles.mode7+=5;
+			if (ram[SPACEY_I]!=ram[LAST_SPACEY_I]) {
+							cycles.mode7+=3;
+				goto nomatch;
+			}
+							cycles.mode7+=7;
+
+			if (ram[SPACEX_I]!=ram[LAST_SPACEX_I]) {
+							cycles.mode7+=3;
+				goto nomatch;
+			}
+							cycles.mode7+=7;
+			map_color=ram[LAST_MAP_COLOR];
+			goto match;
+
 
 		}
 

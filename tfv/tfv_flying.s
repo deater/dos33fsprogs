@@ -50,7 +50,7 @@ flying_start:
 	lda	#2		; initialize sky both pages
 	sta	DRAW_SKY
 
-	lda	#4
+	lda	#4		; starts out at 4.5
 	sta	SPACEZ_I
 	lda	#$80
 	sta	SPACEZ_F
@@ -955,9 +955,73 @@ screenx_loop:
 
 
 nomatch:
+	;====================================
 	; do a full lookup, takes much longer
-	jsr	lookup_map		; get color in A		; 6
+	; used to be a separate function but we inlined it here
+
+	;====================
+	; lookup_map
+	;====================
+	; finds value in space_x.i,space_y.i
+	; returns color in A
+	; CLOBBERS: A,Y
+
+	lda	SPACEX_I						; 3
+	sta	spacex_label+1	; self modifying code, LAST_SPACEX_I	; 4
+	and	#CONST_MAP_MASK_X	; wrap at 64			; 2
+	sta	SPACEX_I		; store i patch out		; 3
+	tay				; copy to Y for later		; 2
+
+	lda	SPACEY_I						; 3
+	sta	spacey_label+1	; self modifying code, LAST_SPACEY_I	; 4
+	and	#CONST_MAP_MASK_Y	; wrap to 64x64 grid		; 2
+	sta	SPACEY_I						; 3
+
+	asl								; 2
+	asl								; 2
+	asl				; multiply by 8			; 2
+	clc								; 2
+	adc	SPACEX_I		; add in X value		; 3
+					; only valid if x<8 and y<8
+
+	; SPACEX_I is also in y
+	cpy	#$8							; 2
 								;============
+								;	 39
+
+	bcs	ocean_color		; bgt 8				; 2nt/3
+	ldy	SPACEY_I						; 3
+	cpy	#$8							; 2
+								;=============
+								;	  7
+
+	bcs	ocean_color		; bgt 8				; 2nt/3
+
+	tay								; 2
+	lda	flying_map,Y		; load from array		; 4
+
+	bcc	update_cache						; 3
+								;============
+								;	11
+ocean_color:
+	and	#$1f							; 2
+	tay								; 2
+	lda	water_map,Y		; the color of the sea		; 4
+								;===========
+								;	  8
+
+update_cache:
+	sta	map_color_label+1	; self-modifying		; 4
+
+								;===========
+								;	  4
+
+;	rts								; 6
+
+
+
+;	jsr	lookup_map		; get color in A		; 6
+;								;============
 								;	  6
 match:
 
@@ -966,66 +1030,67 @@ mask_label:
 
 	ldy	#0							; 2
 mask_branch_label:
-;	ldx	COLOR_MASK						;
-;	bpl	big_bottom						;
-	beq	big_bottom	; F0=beq, D0=bne			; 2nt/3
+	beq	big_bottom	; this branch is modified based on odd/even
+				; F0=beq, D0=bne			; 2nt/3
 
-	ora	(GBASL),Y	; we're odd, or the bottom in		; 4
+	ora	(GBASL),Y	; we're odd, or the bottom in		; 5
 big_bottom:
 
-	sta	(GBASL),Y		; plot double height		; 6
-	inc	GBASL			; point to next pixel		; 5
+	sta	(GBASL),Y	; plot double height pixel		; 6
+	inc	GBASL		; point to next pixel			; 5
 								;============
-								;	 21
+								;	22/18
 
 
 
 	; advance to the next position in space
 
-	clc			; fixed_add(&space_x,&dx,&space_x);	; 2
+	; fixed_add(&space_x,&dx,&space_x);
+
+	clc								; 2
 	lda	SPACEX_F						; 3
-;	adc	DX_F							;
 dxf_label:
-	adc	#0							; 2
+	adc	#0	; self modifying, is DX_F			; 2
 	sta	SPACEX_F						; 3
 	lda	SPACEX_I						; 3
-;	adc	DX_I							;
 dxi_label:
-	adc	#0							; 2
+	adc	#0	; self modifying, is DX_I			; 2
 	sta	SPACEX_I						; 3
+								;==========
+								;	 18
 
-	clc			; fixed_add(&space_y,&dy,&space_y);	; 2
+	; fixed_add(&space_y,&dy,&space_y);
+
+	clc								; 2
 	lda	SPACEY_F						; 3
-;	adc	DY_F							;
 dyf_label:
-	adc	#0							; 2
+	adc	#0	; self modifyig, is DY_F			; 2
 	sta	SPACEY_F						; 3
 	lda	SPACEY_I						; 3
-;	adc	DY_I							;
 dyi_label:
-	adc	#0							; 2
+	adc	#0	; self mofidying is DY_I			; 2
 	sta	SPACEY_I						; 3
+								;============
+								;	 18
 
 	dex	; decrement	SCREEN_X				; 2
 	beq	done_screenx_loop	; branch until we've done 40	; 2nt/3
 								;=============
-								;	41
+								;	4/5
 
 
 	; cache color and return if same as last time
 	lda	SPACEY_I						; 3
 spacey_label:
-	cmp	#0	; LAST_SPACEY_I				; 2
+	cmp	#0	; self modify, LAST_SPACEY_I			; 2
 	bne	nomatch							; 2nt/3
 	lda	SPACEX_I						; 3
 spacex_label:
-	cmp	#0	; LAST_SPACEX_I				; 2
+	cmp	#0	; self modify, LAST_SPACEX_I			; 2
 	bne	nomatch							; 2nt/3
 map_color_label:
-	lda	#0	; LAST_MAP_COLOR			; 2
+	lda	#0	; self modify, LAST_MAP_COLOR			; 2
 	jmp	match							; 3
-								;===========
-								; max 19
 
 done_screenx_loop:
 	inc	SCREEN_Y						; 5
@@ -1045,21 +1110,17 @@ done_screeny:
 	; finds value in space_x.i,space_y.i
 	; returns color in A
 	; CLOBBERS: A,Y
+	; this is used to check if above water or grass
+	; the high-performance per-pixel version has been inlined
 lookup_map:
-
-;nomatch:
 	lda	SPACEX_I						; 3
-;nomatch2:
-	sta	spacex_label+1	; LAST_SPACEX_I			; 4
 	and	#CONST_MAP_MASK_X					; 2
 	sta	SPACEX_I						; 3
 	tay								; 2
 
 	lda	SPACEY_I						; 3
-	sta	spacey_label+1	; LAST_SPACEY_I			; 4
 	and	#CONST_MAP_MASK_Y	; wrap to 64x64 grid		; 2
 	sta	SPACEY_I						; 3
-
 
 	asl								; 2
 	asl								; 2
@@ -1071,26 +1132,26 @@ lookup_map:
 	; SPACEX_I is in y
 	cpy	#$8							; 2
 								;============
-								;	 39
+								;	 31
 
-	bcs	ocean_color		; bgt 8				;^2nt/3
+	bcs	ocean_color_outline	; bgt 8				;^2nt/3
 	ldy	SPACEY_I						; 3
 	cpy	#$8							; 2
-	bcs	ocean_color		; bgt 8				; 2nt/3
+	bcs	ocean_color_outline	; bgt 8				; 2nt/3
 
 	tay								; 2
 	lda	flying_map,Y		; load from array		; 4
 
-	bcc	update_cache						; 3
+	bcc	update_cache_outline					; 3
 
-ocean_color:
+ocean_color_outline:
 	and	#$1f							; 2
 	tay								; 2
 	lda	water_map,Y		; the color of the sea		; 4
 
-update_cache:
-	sta	map_color_label+1	; self-modifying		; 4
+update_cache_outline:
 	rts								; 6
+
 
 flying_map:
 	.byte $22,$ff,$ff,$ff, $ff,$ff,$ff,$22

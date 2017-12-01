@@ -225,6 +225,20 @@ This looks like a pessimization, but it's because the cycle counting code
 	Total =                 181,397
 	Frame Rate = 5.51 fps
 
+Make lookup_map inline.  Again it looks like an impressive speedup
+but some of this was fixing the cycle count estimates.
+
+	Cycles: flying=             187
+	Cycles: getkey=              46
+	Cycles: page_flip=           26
+	Cycles: multiply=        40,680
+	Cycles: mode7=          111,882
+	Cycles: lookup_map=      19,872
+	Cycles: put_sprite=       2,561
+	================================
+	Total =                 175,254
+	Frame Rate = 5.71 fps
+
 
 
 Each cycle removed from inner X loop saves
