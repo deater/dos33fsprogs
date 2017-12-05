@@ -7,20 +7,6 @@
 	jsr	HOME
 	jsr	set_gr_page0
 
-	;================================
-	; Set up Double Low-res
-	;================================
-;	lda	SET_GR		; graphics C050
-;	lda	LORES		; lores	   C056
-;	lda	TEXTGR		; mixset   C053
-;	sta	EIGHTYSTORE_OFF	; 80store  C001
-;	sta	EIGHTYCOL	; 80col	   C00d
-;	lda	AN3		; AN3	   C05E
-
-	lda	#0
-	sta	DISP_PAGE	; Forgot to set initially
-				; real hardware and AppleWin default
-				; to different values
 
 	;===================================
 	; zero out the zero page that we use

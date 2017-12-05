@@ -35,6 +35,7 @@ flying_start:
 	sta	EIGHTYCOL	; 80col    C00d
 	lda	AN3		; AN3      C05E
 
+	jsr	page_flip
 
 	jsr	init_multiply_tables
 

@@ -23,5 +23,5 @@ dlowres_mode7.o:	dlowres_mode7.s \
 	ca65 -o dlowres_mode7.o dlowres_mode7.s -l dlowres_mode7.lst
 
 clean:	
-	rm -f *~ *.o *.lst
+	rm -f *~ *.o DLOWRES_MODE7 *.lst
 
