@@ -376,7 +376,8 @@ put_sprite_loop:
 	adc	XPOS		; add in xpos				; 3
 	sta	OUTL		; store out low byte of addy		; 3
 	lda	gr_offsets+1,Y	; look up high byte			; 5
-	adc	DRAW_PAGE	;					; 3
+	adc	#0
+;	adc	DRAW_PAGE	;					; 3
 	sta	OUTH		; and store it out			; 3
 	ldy	TEMP		; restore sprite pointer		; 3
 

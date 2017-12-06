@@ -355,12 +355,16 @@ speed_loop:
 								;============
 								;	45
 
-	;====================
-	; Draw the background
-	;====================
+	;=============================
+	; Draw the background_standard
+	;=============================
 draw_background:
 	jsr	draw_background_mode7_standard				; 6
-	jsr	draw_background_mode7_aux				; 6
+
+	;=============================
+	; Draw the ship, standard
+	;=============================
+
 
 check_over_water:
 	;	See if we are over water
@@ -544,6 +548,160 @@ no_left_splash:
 								;	 48
 
 draw_ship:
+	lda	#CONST_SHIPX						; 2
+	sta	XPOS							; 3
+	lda	SHIPY							; 3
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
+
+
+	;===========================
+	; Draw the background, AUX
+	;===========================
+
+	jsr	draw_background_mode7_aux				; 6
+
+check_over_water_aux:
+
+no_splash_aux:
+
+	;==============
+	; Draw the ship
+	;==============
+
+	clv								; 2
+	lda	TURNING							; 3
+	beq	draw_ship_forward_aux					; 2nt/3
+	bpl	draw_ship_right_aux					; 2nt/3
+	bmi	draw_ship_left_aux	;; FIXME: optimize order	; 2nt/3
+
+draw_ship_forward_aux:
+	lda	DRAW_SPLASH						; 2
+	beq	no_forward_splash_aux					; 2nt/3
+
+	; Draw Splash
+	lda     #>splash_forward_aux					; 2
+        sta     INH							; 3
+        lda     #<splash_forward_aux					; 2
+        sta     INL							; 3
+	lda	#(CONST_SHIPX+1)					; 2
+	sta	XPOS							; 3
+	clc								; 2
+	lda	SHIPY							; 3
+	adc	#9							; 2
+	and	#$fe			; make sure it's even		; 2
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
+								;==========
+								;	33
+no_forward_splash_aux:
+	; Draw Shadow
+	lda     #>shadow_forward_aux					; 2
+        sta     INH							; 3
+        lda     #<shadow_forward_aux					; 2
+        sta     INL							; 3
+	lda	#(CONST_SHIPX+3)					; 2
+	sta	XPOS							; 3
+	clc								; 2
+	lda	SPACEZ_I						; 3
+	adc	#31							; 2
+	and	#$fe			; make sure it's even		; 2
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
+
+	lda     #>ship_forward_aux					; 2
+        sta     INH							; 3
+        lda     #<ship_forward_aux					; 2
+        sta     INL							; 3
+	bvc	draw_ship_aux						; 3
+								;===========
+								;	46
+draw_ship_right_aux:
+	lda	DRAW_SPLASH						; 3
+	beq	no_right_splash_aux					; 2nt/3
+
+	; Draw Splash
+	lda     #>splash_right_aux					; 2
+        sta     INH							; 3
+        lda     #<splash_right_aux					; 2
+        sta     INL							; 3
+	lda	#(CONST_SHIPX+1)					; 2
+	sta	XPOS							; 3
+	clc								; 2
+	lda	#36							; 2
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
+								;===========
+								;	28
+no_right_splash_aux:
+
+	; Draw Shadow
+	lda     #>shadow_right_aux					; 2
+        sta     INH							; 3
+        lda     #<shadow_right_aux					; 2
+        sta     INL							; 3
+	lda	#(CONST_SHIPX+3)					; 2
+	sta	XPOS							; 3
+	clc								; 2
+	lda	SPACEZ_I						; 3
+	adc	#31							; 2
+	and	#$fe			; make sure it's even		; 2
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
+
+	lda     #>ship_right_aux					; 2
+        sta     INH							; 3
+        lda     #<ship_right_aux					; 2
+        sta     INL							; 3
+
+	dec	TURNING							; 5
+
+	bvc	draw_ship_aux						; 3
+								;==========
+								;	51
+draw_ship_left_aux:
+	lda	DRAW_SPLASH						; 3
+	beq	no_left_splash_aux					; 2nt/3
+
+	; Draw Splash
+	lda     #>splash_left_aux					; 2
+        sta     INH							; 3
+        lda     #<splash_left_aux					; 2
+        sta     INL							; 3
+	lda	#(CONST_SHIPX+1)					; 2
+	sta	XPOS							; 3
+	clc								; 2
+	lda	#36							; 2
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
+								;===========
+								;	 28
+no_left_splash_aux:
+
+	; Draw Shadow
+	lda     #>shadow_left_aux					; 2
+        sta     INH							; 3
+        lda     #<shadow_left_aux					; 2
+        sta     INL							; 3
+	lda	#(CONST_SHIPX+3)					; 2
+	sta	XPOS							; 3
+	clc								; 2
+	lda	SPACEZ_I						; 3
+	adc	#31							; 2
+	and	#$fe			; make sure it's even		; 2
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
+
+	lda     #>ship_left_aux						; 2
+        sta     INH							; 3
+        lda     #<ship_left_aux						; 2
+        sta     INL							; 3
+
+	inc	TURNING							; 5
+								;==========
+								;	 48
+
+draw_ship_aux:
 	lda	#CONST_SHIPX						; 2
 	sta	XPOS							; 3
 	lda	SHIPY							; 3
