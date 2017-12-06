@@ -938,6 +938,24 @@ spacez_shifted:
 	sta	SPACEX_I						; 3
 								;==========
 								;	 16
+; FOR AUX, shift start left by 1/2 of a DX
+	clc
+	lda	DX_I
+	ror
+	sta	TEMP_I
+	lda	DX_F
+	ror
+	sta	TEMP_F
+
+	clc
+	lda	SPACEX_F
+	adc	TEMP_F
+	sta	SPACEX_F
+
+	lda	SPACEX_I
+	adc	TEMP_I
+	sta	SPACEX_I
+
 
 ;mul8
 	; fixed_mul(&fixed_temp,&dy,&fixed_temp);
