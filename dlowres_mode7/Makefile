@@ -19,7 +19,7 @@ DLOWRES_MODE7:	dlowres_mode7.o
 
 dlowres_mode7.o:	dlowres_mode7.s \
 	dlowres_flying.s fast_multiply.s \
-	dlowres_utils.s dlowres_zp.inc
+	dlowres_utils.s dlowres_zp.inc dlowres_sprites.inc
 	ca65 -o dlowres_mode7.o dlowres_mode7.s -l dlowres_mode7.lst
 
 clean:	

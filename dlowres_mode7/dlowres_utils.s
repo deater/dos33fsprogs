@@ -376,8 +376,7 @@ put_sprite_loop:
 	adc	XPOS		; add in xpos				; 3
 	sta	OUTL		; store out low byte of addy		; 3
 	lda	gr_offsets+1,Y	; look up high byte			; 5
-	adc	#0
-;	adc	DRAW_PAGE	;					; 3
+	adc	DRAW_PAGE	;					; 3
 	sta	OUTH		; and store it out			; 3
 	ldy	TEMP		; restore sprite pointer		; 3
 
@@ -511,19 +510,19 @@ point_to_end_string:
 	; print_both_pages
 	;================================
 print_both_pages:
-;	lda	DRAW_PAGE
-;	pha
+	lda	DRAW_PAGE
+	pha
 
-	lda	#0
+	lda	#4
 	sta	DRAW_PAGE
 	jsr	move_and_print
 
-;	lda	#4
+;	lda	#8
 ;	sta	DRAW_PAGE
 ;	jsr	move_and_print
 
-;	pla
-;	sta	DRAW_PAGE
+	pla
+	sta	DRAW_PAGE
 
 	rts	; oops forgot this initially
 		; explains the weird vertical stripes on the screen
@@ -596,8 +595,7 @@ hlin_setup:
 	iny								; 2
 
 	lda	gr_offsets,Y						; 4
-	adc	#0		; needed?
-;	adc	DRAW_PAGE	; add in draw page offset		; 3
+	adc	DRAW_PAGE	; add in draw page offset		; 3
 	sta	GBASH							; 3
 	rts								; 6
 								;===========
@@ -735,6 +733,9 @@ clear_top_loop:
 
 	rts
 
+	;=====================
+	; clear bottom
+	;=====================
 clear_bottom:
 	lda	#$a0	; NORMAL space
 	sta	COLOR
@@ -755,3 +756,66 @@ clear_bottom_loop:
 	bne	clear_bottom_loop
 
 	rts
+
+	;==========================
+	; copy_page1_to_page0
+	;==========================
+	; x trashed
+
+copy_page1_to_page0:
+	bit	PAGE0
+	ldx	#120					; 2
+copy_p1p0_loop:
+	lda	$800,X					; 4
+	sta	$400,X					; 4
+	lda	$880,X					; 4
+	sta	$480,X					; 4
+	lda	$900,X					; 4
+	sta	$500,X					; 4
+	lda	$980,X					; 4
+	sta	$580,X					; 4
+	lda	$a00,X					; 4
+	sta	$600,X					; 4
+	lda	$A80,X					; 4
+	sta	$680,X					; 4
+	lda	$B00,X					; 4
+	sta	$700,X					; 4
+	lda	$B80,X					; 4
+	sta	$780,X					; 4
+	dex						; 2
+	bpl	copy_p1p0_loop				; 2nt/3
+	rts						; 6
+						; 2+ [((16*4)+2+3)*120] +5
+						; 8287
+
+
+	;==========================
+	; copy_page2_to_aux
+	;==========================
+	; x trashed
+
+copy_page2_to_aux:
+	bit	PAGE1
+	ldx	#120					; 2
+copy_p2aux_loop:
+	lda	$C00,X					; 4
+	sta	$400,X					; 4
+	lda	$C80,X					; 4
+	sta	$480,X					; 4
+	lda	$D00,X					; 4
+	sta	$500,X					; 4
+	lda	$D80,X					; 4
+	sta	$580,X					; 4
+	lda	$E00,X					; 4
+	sta	$600,X					; 4
+	lda	$E80,X					; 4
+	sta	$680,X					; 4
+	lda	$F00,X					; 4
+	sta	$700,X					; 4
+	lda	$F80,X					; 4
+	sta	$780,X					; 4
+	dex						; 2
+	bpl	copy_p2aux_loop				; 2nt/3
+	rts						; 6
+						; 4+2+ [((16*4)+2+3)*120] +5
+						; 8287

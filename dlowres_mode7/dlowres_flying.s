@@ -24,6 +24,16 @@ flying_start:
 	jsr	clear_screens
 ;	jsr     set_gr_page0
 
+	lda	#$4
+	sta	DRAW_PAGE
+	jsr	clear_bottom
+
+	lda	#$8
+	sta	DRAW_PAGE
+	jsr	clear_bottom
+
+
+
 	;=====================
 	; Set Up Double Lowres
 	;=====================
@@ -500,7 +510,8 @@ no_right_splash:
         lda     #<ship_right						; 2
         sta     INL							; 3
 
-	dec	TURNING							; 5
+;	dec	TURNING							; 5
+	lda	TURNING							; 5
 
 	bvc	draw_ship						; 3
 								;==========
@@ -543,8 +554,9 @@ no_left_splash:
         lda     #<ship_left						; 2
         sta     INL							; 3
 
-	inc	TURNING							; 5
-								;==========
+;	inc	TURNING							; 5
+	lda	TURNING
+							;==========
 								;	 48
 
 draw_ship:
@@ -720,6 +732,9 @@ draw_ship_aux:
 	; loop forever
 	;==================
 
+	jsr	copy_page1_to_page0
+	jsr	copy_page2_to_aux
+
 	jmp	flying_loop						; 3
 
 
@@ -774,7 +789,9 @@ draw_background_mode7_standard:
 
 	; Set Normal Page
 
-	bit	PAGE0
+;	bit	PAGE0
+	lda	#4
+	sta	DRAW_PAGE
 
 	; Only draw sky if necessary
 	; (at start, or if we have switched to text, we never overwrite it)
@@ -855,8 +872,8 @@ setup_gr_addr:
 	iny			; point to high part of address		; 2
 
 	lda	gr_offsets,Y	; load high part of address		; 4
-;	clc			; clear carry for add			; 2
-;	adc	DRAW_PAGE       ; add in draw page offset               ; 3
+	clc			; clear carry for add			; 2
+	adc	DRAW_PAGE       ; add in draw page offset               ; 3
 	sta	GBASH		; store in GBASH zero-page pointer	; 3
 
 								;=============
@@ -1318,7 +1335,10 @@ draw_background_mode7_aux:
 
 	; Draw to AUX page
 
-	bit	PAGE1
+;	bit	PAGE1
+
+	lda	#8
+	sta	DRAW_PAGE
 
 	; Only draw sky if necessary
 	; (at start, or if we have switched to text, we never overwrite it)
@@ -1400,8 +1420,8 @@ setup_gr_addr_aux:
 	iny			; point to high part of address		; 2
 
 	lda	gr_offsets,Y	; load high part of address		; 4
-;	clc			; clear carry for add			; 2
-;	adc	DRAW_PAGE       ; add in draw page offset               ; 3
+	clc			; clear carry for add			; 2
+	adc	DRAW_PAGE       ; add in draw page offset               ; 3
 	sta	GBASH		; store in GBASH zero-page pointer	; 3
 
 								;=============
