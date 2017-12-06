@@ -32,7 +32,7 @@ page_flip:
 	lda	DISP_PAGE						; 3
 	beq	page_flip_show_1					; 2nt/3
 page_flip_show_0:
-        bit	PAGE0							; 4
+;        bit	PAGE0							; 4
 ;	lda	#4							; 2
 	lda	#0
 	sta	DRAW_PAGE	; DRAW_PAGE=1				; 3
@@ -40,7 +40,7 @@ page_flip_show_0:
 	sta	DISP_PAGE	; DISP_PAGE=0				; 3
 	rts								; 6
 page_flip_show_1:
-	bit	PAGE1							; 4
+;	bit	PAGE1							; 4
 	lda	#0
 	sta	DRAW_PAGE	; DRAW_PAGE=0				; 3
 	lda	#1							; 2
@@ -510,19 +510,19 @@ point_to_end_string:
 	; print_both_pages
 	;================================
 print_both_pages:
-	lda	DRAW_PAGE
-	pha
+;	lda	DRAW_PAGE
+;	pha
 
 	lda	#0
 	sta	DRAW_PAGE
 	jsr	move_and_print
 
-	lda	#4
-	sta	DRAW_PAGE
-	jsr	move_and_print
+;	lda	#4
+;	sta	DRAW_PAGE
+;	jsr	move_and_print
 
-	pla
-	sta	DRAW_PAGE
+;	pla
+;	sta	DRAW_PAGE
 
 	rts	; oops forgot this initially
 		; explains the weird vertical stripes on the screen
@@ -595,7 +595,8 @@ hlin_setup:
 	iny								; 2
 
 	lda	gr_offsets,Y						; 4
-	adc	DRAW_PAGE	; add in draw page offset		; 3
+	adc	#0		; needed?
+;	adc	DRAW_PAGE	; add in draw page offset		; 3
 	sta	GBASH							; 3
 	rts								; 6
 								;===========

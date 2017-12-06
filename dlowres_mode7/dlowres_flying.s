@@ -35,7 +35,7 @@ flying_start:
 	sta	EIGHTYCOL	; 80col    C00d
 	lda	AN3		; AN3      C05E
 
-	jsr	page_flip
+;	jsr	page_flip
 
 	jsr	init_multiply_tables
 
@@ -226,7 +226,7 @@ check_land:
 
 landing_loop:
 
-	jsr	draw_background_mode7
+	jsr	draw_background_mode7_standard
 
 	; Draw Shadow
 	lda     #>shadow_forward
@@ -253,7 +253,7 @@ landing_loop:
 	sta	YPOS
 	jsr	put_sprite
 
-	jsr	page_flip
+;	jsr	page_flip
 
 	dec	SPACEZ_I
 	jsr	update_z_factor
@@ -359,8 +359,8 @@ speed_loop:
 	; Draw the background
 	;====================
 draw_background:
-	jsr	draw_background_mode7					; 6
-;	jsr	draw_background_mode7					; 6
+	jsr	draw_background_mode7_standard				; 6
+	jsr	draw_background_mode7_aux				; 6
 
 check_over_water:
 	;	See if we are over water
@@ -556,7 +556,7 @@ draw_ship:
 	; flip pages
 	;==================
 
-	jsr	page_flip						; 6
+;	jsr	page_flip						; 6
 
 	;==================
 	; loop forever
@@ -583,6 +583,7 @@ update_z_factor:
 	sec								; 2
 	sbc	#8							; 2
 	sta	spacez_shifted+1					; 4
+	sta	spacez_shifted_aux+1					; 4
 
 
 	lda	SPACEZ_F						; 3
@@ -604,11 +605,18 @@ update_z_factor:
 								;        60
 
 
-;===========================
-; Draw the Mode7 Background
-;===========================
 
-draw_background_mode7:
+
+
+;=======================================
+; Draw the Mode7 Background -- Standard
+;=======================================
+
+draw_background_mode7_standard:
+
+	; Set Normal Page
+
+	bit	PAGE0
 
 	; Only draw sky if necessary
 	; (at start, or if we have switched to text, we never overwrite it)
@@ -622,7 +630,7 @@ draw_background_mode7:
 
 	dec	DRAW_SKY	; usually 2 as we redraw both pages	; 5
 
-	bit	PAGE0
+
 	lda	#COLOR_BOTH_MEDIUMBLUE	; MEDIUMBLUE color		; 2
 	sta	COLOR							; 3
 	lda	#0							; 2
@@ -643,29 +651,8 @@ sky_loop:				; draw line across screen
 								;=============
 								; (23+63+(X*16))*5
 
-	bit	PAGE1
-	lda	#AUX_BOTH_MEDIUMBLUE	; MEDIUMBLUE color		; 2
-	sta	COLOR							; 3
-	lda	#0							; 2
-								;===========
-								;	 11
-
-sky_loop2:				; draw line across screen
-	ldy	#39			; from y=0 to y=6		; 2
-	sty	V2							; 3
-	ldy	#0							; 2
-	pha								; 3
-	jsr	hlin_double		; hlin y,V2 at A	; 63+(X*16)
-	pla								; 4
-	clc								; 2
-	adc	#2							; 2
-	cmp	#6							; 2
-	bne	sky_loop2						; 3/2nt
-								;=============
-								; (23+63+(X*16))*5
 
 	; Draw Hazy Horizon
-	bit	PAGE0
 	lda	#COLOR_BOTH_GREY	; Horizon is Grey		; 2
 	sta	COLOR							; 3
 	lda	#6			; draw single line at 6/7	; 2
@@ -675,19 +662,6 @@ sky_loop2:				; draw line across screen
 	jsr	hlin_double		; hlin	0,40 at 6	; 63+(X*16)
 								;===========
 								; 63+(X*16)+14
-	; Draw Hazy Horizon
-	bit	PAGE1
-	lda	#AUX_BOTH_GREY		; Horizon is Grey		; 2
-	sta	COLOR							; 3
-	lda	#6			; draw single line at 6/7	; 2
-	ldy	#39							; 2
-	sty	V2			; hlin	Y,V2 at A		; 3
-	ldy	#0							; 2
-	jsr	hlin_double		; hlin	0,40 at 6	; 63+(X*16)
-								;===========
-								; 63+(X*16)+14
-
-
 no_draw_sky:
 
 	; setup initial odd/even color mask
@@ -723,8 +697,8 @@ setup_gr_addr:
 	iny			; point to high part of address		; 2
 
 	lda	gr_offsets,Y	; load high part of address		; 4
-	clc			; clear carry for add			; 2
-	adc	DRAW_PAGE       ; add in draw page offset               ; 3
+;	clc			; clear carry for add			; 2
+;	adc	DRAW_PAGE       ; add in draw page offset               ; 3
 	sta	GBASH		; store in GBASH zero-page pointer	; 3
 
 								;=============
@@ -1066,22 +1040,16 @@ update_cache:
 								;===========
 								;	  4
 
-;	rts								; 6
 
-
-
-;	jsr	lookup_map		; get color in A		; 6
-;								;============
-								;	  6
 match:
 
-	ldy	DISP_PAGE
-	beq	mask_label
-	tay
-	and	#$01
-	cmp	#$01
-	tya
-	ror			; adjust for 80-column color
+;	ldy	DISP_PAGE
+;	beq	mask_label
+;	tay
+;	and	#$01
+;	cmp	#$01
+;	tya
+;	ror			; adjust for 80-column color
 
 
 mask_label:
@@ -1163,8 +1131,537 @@ done_screeny:
 	rts								; 6
 
 
+
+;=======================================
+;=======================================
+; Draw the Mode7 Background -- AUX
+;=======================================
+;=======================================
+
+draw_background_mode7_aux:
+
+	; Draw to AUX page
+
+	bit	PAGE1
+
+	; Only draw sky if necessary
+	; (at start, or if we have switched to text, we never overwrite it)
+
+	lda	DRAW_SKY						; 3
+	beq	no_draw_sky_aux						;^2nt/3
+								;==============
+								;	  6
+	; Draw Sky
+	; not performance critical as this happens rarely
+
+	dec	DRAW_SKY	; usually 2 as we redraw both pages	; 5
+
+
+	lda	#AUX_BOTH_MEDIUMBLUE	; MEDIUMBLUE color		; 2
+	sta	COLOR							; 3
+	lda	#0							; 2
+								;===========
+								;	 11
+
+sky_loop_aux:				; draw line across screen
+	ldy	#39			; from y=0 to y=6		; 2
+	sty	V2							; 3
+	ldy	#0							; 2
+	pha								; 3
+	jsr	hlin_double		; hlin y,V2 at A	; 63+(X*16)
+	pla								; 4
+	clc								; 2
+	adc	#2							; 2
+	cmp	#6							; 2
+	bne	sky_loop_aux						; 3/2nt
+								;=============
+								; (23+63+(X*16))*5
+
+	; Draw Hazy Horizon
+	lda	#AUX_BOTH_GREY		; Horizon is Grey		; 2
+	sta	COLOR							; 3
+	lda	#6			; draw single line at 6/7	; 2
+	ldy	#39							; 2
+	sty	V2			; hlin	Y,V2 at A		; 3
+	ldy	#0							; 2
+	jsr	hlin_double		; hlin	0,40 at 6	; 63+(X*16)
+								;===========
+								; 63+(X*16)+14
+
+
+no_draw_sky_aux:
+
+	; setup initial odd/even color mask
+	lda	#$f0							; 2
+	sta	COLOR_MASK						; 3
+
+	; start Y at 8 (below horizon line)
+	lda	#8							; 2
+	sta	SCREEN_Y						; 3
+								;=============
+								;	 10
+
+screeny_loop_aux:
+	and	#$fe		; be sure SCREEN_Y used later is even	; 2
+	tay			; put in Y for lookup table later	; 2
+
+	lda	COLOR_MASK	; flip mask for odd/even row plotting	; 3
+	eor	#$ff							; 2
+	sta	COLOR_MASK						; 3
+	sta	mask_label_aux+1	; setup self-modifying code		; 4
+
+	eor	#$ff		; setup self-modifying branch later	; 2
+	bmi	odd_branch_aux	; beq is $f0 (too clever FIXME)		; 2nt/3
+	lda	#$d0		; bne is $d0				; 2
+odd_branch_aux:
+	sta	mask_branch_label_aux	; actually update branch	; 4
+								;============
+								;	 27
+
+setup_gr_addr_aux:
+	lda	gr_offsets,Y	; lookup low-res memory row address	; 4
+	sta	GBASL		; store in GBASL zero-page pointer	; 3
+	iny			; point to high part of address		; 2
+
+	lda	gr_offsets,Y	; load high part of address		; 4
+;	clc			; clear carry for add			; 2
+;	adc	DRAW_PAGE       ; add in draw page offset               ; 3
+	sta	GBASH		; store in GBASH zero-page pointer	; 3
+
+								;=============
+								;	 21
+
+calc_horizontal_scale_aux:
+
+	; Calculate the horizontal scale using a lookup table
+
+	; horizontal_scale.i *ALWAYS* = 0
+
+	;	unsigned char horizontal_lookup[7][32];
+	;horizontal_scale.f=
+	;	horizontal_lookup[space_z.i&0xf][(screen_y-8)/2];
+	;		horizontal_lookup[(space_z<<5)+(screen_y-8)]
+
+
+	clc								; 2
+	lda	SCREEN_Y						; 3
+spacez_shifted_aux:
+	adc	#0	; self-modify, loads (spacez<<5)-8		; 2
+	tay								; 2
+	lda	horizontal_lookup,Y					; 4
+	sta	NUM1L	; HORIZ_SCALE_F is input to next mul		; 3
+								;============
+								;	 16
+
+; mul2
+	; calculate the distance of the line we are drawing
+	; fixed_mul(&horizontal_scale,&scale,&distance);
+	lda	#0	; HORIZ_SCALE_I is always zero			; 2
+	sta	NUM1H							; 3
+	; NUM1L was set to HORIZ_SCALE_F previously			;
+	lda	#CONST_SCALE_I	; SCALE_I				; 2
+	sta	NUM2H							; 3
+	lda	#CONST_SCALE_F	; SCALE_F				; 2
+	sta	NUM2L							; 3
+	sec			; don't reuse previous settings		; 2
+	jsr	multiply						; 6
+	stx	DISTANCE_I						; 2
+	sta	DISTANCE_F						; 2
+								;==========
+								;	 27
+
+	; calculate the dx and dy to add to points in space
+	; we add to the starting values on each row to get the next
+	; space values
+
+	; dx.i=fixed_sin[(angle+8)&0xf].i	// -sin()
+	lda	ANGLE							; 3
+	clc								; 2
+	adc	#8							; 2
+	and	#$f							; 2
+	asl								; 2
+	tay								; 2
+	lda	fixed_sin,Y	; load integer half			; 4
+	sta	NUM2H		; use as source in upcomnig mul		; 3
+
+
+	; dx.f=fixed_sin[(angle+8)&0xf].f; 	// -sin()
+	iny			; point to float half			; 2
+	lda	fixed_sin,Y	; load it from lookup table		; 4
+	sta	NUM2L		; use as source in upcoming mul		; 3
+								;==========
+								;	 29
+
+;mul3
+	; fixed_mul(&dx,&horizontal_scale,&dx);
+
+				; DX_I:DX_F already set in NUM2H:NUM2L
+	clc			; reuse HORIZ_SCALE in NUM1		; 2
+	jsr	multiply						; 6
+	stx	DX_I							; 3
+	sta	DX_F							; 3
+								;==========
+								;	 14
+
+	; dy.i=fixed_sin[(angle+4)&0xf].i; // cos()
+
+	lda	ANGLE							; 3
+	clc								; 2
+	adc	#4							; 2
+	and	#$f							; 2
+	asl								; 2
+	tay								; 2
+	lda	fixed_sin,Y	; load integer half			; 4
+	sta	NUM2H		; use as source in upcoming mul		; 3
+
+	; dy.f=fixed_sin[(angle+4)&0xf].f; // cos()
+
+	iny			; point to float half			; 2
+	lda	fixed_sin,Y	; load from lookup table		; 4
+	sta	NUM2L		; use as source in upcoming mul		; 3
+								;==========
+								;	 29
+;mul4
+	; fixed_mul(&dy,&horizontal_scale,&dy);
+
+				; DY_I:DY_F already in NUM2H:NUM2L
+	clc			; reuse horiz_scale in num1		; 2
+	jsr	multiply						; 6
+	stx	DY_I							; 3
+	sta	DY_F							; 3
+								;==========
+								;	 14
+
+	;=================================
+	; calculate the starting position
+	;=================================
+
+			; fixed_add(&distance,&factor,&space_x);
+	clc		; fixed_add(&distance,&factor,&space_y);	; 2
+	lda	DISTANCE_F						; 3
+	adc	FACTOR_F						; 3
+	sta	SPACEY_F						; 3
+	sta	SPACEX_F						; 3
+
+	lda	DISTANCE_I						; 3
+	adc	FACTOR_I						; 3
+	sta	SPACEY_I						; 3
+	sta	SPACEX_I						; 3
+								;==========
+								;	 26
+
+
+	; temp.i=fixed_sin[(angle+4)&0xf].i; // cos()
+
+	lda	ANGLE							; 3
+	clc								; 2
+	adc	#4							; 2
+	and	#$f							; 2
+	asl								; 2
+	tay								; 2
+	lda	fixed_sin,Y						; 4
+	sta	NUM2H	; store as source for next mul			; 3
+
+
+	; temp.f=fixed_sin[(angle+4)&0xf].f; // cos()
+	iny								; 2
+	lda	fixed_sin,Y						; 4
+	sta	NUM2L	; store as source for next mul			; 3
+								;==========
+								;	 29
+
+; mul5
+	; fixed_mul(&space_x,&temp,&space_x);
+	lda	SPACEX_I						; 3
+	sta	NUM1H							; 3
+	lda	SPACEX_F						; 3
+	sta	NUM1L							; 3
+			; NUM2H:NUM2L already set above
+	sec		; don't reuse previous NUM1			; 2
+	jsr	multiply						; 6
+			; SPACEX_I in X					;
+			; SPACEX_F in A					;
+								;==========
+								;	 20
+
+	; fixed_add(&space_x,&cx,&space_x);
+	clc								; 2
+			; SPACEX_F still in A				;
+	adc	CX_F							; 3
+	sta	SPACEX_F						; 3
+	txa		; SPACEX_I was in X				; 2
+	adc	CX_I							; 3
+	sta	SPACEX_I						; 3
+								;===========
+								;	 16
+
+
+	; temp.i=fixed_sin[angle&0xf].i; // sin()
+	lda	ANGLE							; 3
+	and	#$f							; 2
+	asl								; 2
+	tay								; 2
+	lda	fixed_sin,Y						; 4
+	sta	NUM2H		; store for next mul			; 3
+
+	; fixed_temp.f=fixed_sin[angle&0xf].f; // sin()
+	iny								; 2
+	lda	fixed_sin,Y						; 4
+	sta	NUM2L		; store for next mul			; 3
+								;==========
+								;	 25
+
+;mul6
+	; fixed_mul(&space_y,&fixed_temp,&space_y);
+	lda	SPACEY_I						; 3
+	sta	NUM1H							; 3
+	lda	SPACEY_F						; 3
+	sta	NUM1L							; 3
+				; NUM2H:NUM2L already set
+	sec			; don't reuse previous num1		; 2
+	jsr	multiply						; 6
+				; SPACEY_I in X				;
+				; SPACEY_F in A				;
+								;==========
+								;	 20
+
+	; fixed_add(&space_y,&cy,&space_y);
+	clc								; 2
+				; SPACEY_F in A
+	adc	CY_F							; 3
+	sta	SPACEY_F						; 3
+	txa			; SPACEY_I in X				; 2
+	adc	CY_I							; 3
+	sta	SPACEY_I						; 3
+								;==========
+								;	 16
+; mul7
+	; fixed_mul(&lowres_half,&dx,&temp);
+	lda	#CONST_LOWRES_HALF_I					; 2
+	sta	NUM1H							; 3
+	lda	#CONST_LOWRES_HALF_F					; 2
+	sta	NUM1L							; 3
+	lda	DX_I							; 3
+	sta	NUM2H							; 3
+	sta	dxi_label_aux+1	; for self modify			; 4
+	lda	DX_F							; 3
+	sta	dxf_label_aux+1	; for self modify			; 4
+	sta	NUM2L							; 3
+	sec			; don't reuse previous num1		; 2
+	jsr	multiply						; 6
+				; TEMP_I in X				;
+				; TEMP_F in A				;
+								;==========
+								;	 38
+
+
+	; fixed_add(&space_x,&temp,&space_x);
+	clc								; 2
+				; TEMP_F in A
+	adc	SPACEX_F						; 3
+	sta	SPACEX_F						; 3
+	txa			; TEMP_I in X				; 2
+	adc	SPACEX_I						; 3
+	sta	SPACEX_I						; 3
+								;==========
+								;	 16
+
+;mul8
+	; fixed_mul(&fixed_temp,&dy,&fixed_temp);
+	lda	DY_I							; 3
+	sta	NUM2H							; 3
+	sta	dyi_label_aux+1	; for self modify			; 4
+	lda	DY_F							; 3
+	sta	NUM2L							; 3
+	sta	dyf_label_aux+1	; for self modify			; 4
+	clc	; reuse CONST_LOWRES_HALF from last time		; 2
+	jsr	multiply						; 6
+			; TEMP_I in X
+			; TEMP_F in A
+								;==========
+								;	 28
+
+	; fixed_add(&space_y,&temp,&space_y);
+	clc								; 2
+			; TEMP_F in A
+	adc	SPACEY_F						; 3
+	sta	SPACEY_F						; 3
+
+	txa		; TEMP_I in X					; 2
+	adc	SPACEY_I						; 3
+	sta	SPACEY_I						; 3
+
+								;==========
+								;	 16
+
+
+	ldx	#40	; was SCREEN_X					; 2
+								;==========
+								;	  2
+	;===================================================
+	; SCREEN_X LOOP!!!!
+	;   every cycle in here counts for 32*40=1280 cycles
+	;===================================================
+screenx_loop_aux:
+
+
+nomatch_aux:
+	;====================================
+	; do a full lookup, takes much longer
+	; used to be a separate function but we inlined it here
+
 	;====================
 	; lookup_map
+	;====================
+	; finds value in space_x.i,space_y.i
+	; returns color in A
+	; CLOBBERS: A,Y
+
+	lda	SPACEX_I						; 3
+	sta	spacex_label_aux+1	; self modifying code, LAST_SPACEX_I	; 4
+	and	#CONST_MAP_MASK_X	; wrap at 64			; 2
+	sta	SPACEX_I		; store i patch out		; 3
+	tay				; copy to Y for later		; 2
+
+	lda	SPACEY_I						; 3
+	sta	spacey_label_aux+1	; self modifying code, LAST_SPACEY_I	; 4
+	and	#CONST_MAP_MASK_Y	; wrap to 64x64 grid		; 2
+	sta	SPACEY_I						; 3
+
+	asl								; 2
+	asl								; 2
+	asl				; multiply by 8			; 2
+	clc								; 2
+	adc	SPACEX_I		; add in X value		; 3
+					; only valid if x<8 and y<8
+
+	; SPACEX_I is also in y
+	cpy	#$8							; 2
+								;============
+								;	 39
+
+	bcs	ocean_color_aux		; bgt 8				; 2nt/3
+	ldy	SPACEY_I						; 3
+	cpy	#$8							; 2
+								;=============
+								;	  7
+
+	bcs	ocean_color_aux		; bgt 8				; 2nt/3
+
+	tay								; 2
+	lda	flying_map_aux,Y		; load from array		; 4
+
+	bcc	update_cache_aux						; 3
+								;============
+								;	11
+ocean_color_aux:
+	and	#$1f							; 2
+	tay								; 2
+	lda	water_map_aux,Y		; the color of the sea		; 4
+								;===========
+								;	  8
+
+update_cache_aux:
+	sta	map_color_label_aux+1	; self-modifying		; 4
+
+								;===========
+								;	  4
+
+
+match_aux:
+
+;	ldy	DISP_PAGE
+;	beq	mask_label_aux
+;	tay
+;	and	#$01
+;	cmp	#$01
+;	tya
+;	ror			; adjust for 80-column color
+
+
+mask_label_aux:
+	and	#0	; COLOR_MASK (self modifying)			; 2
+
+	ldy	#0							; 2
+mask_branch_label_aux:
+	beq	big_bottom_aux	; this branch is modified based on odd/even
+				; F0=beq, D0=bne			; 2nt/3
+
+	ora	(GBASL),Y	; we're odd, or the bottom in		; 5
+big_bottom_aux:
+
+	sta	(GBASL),Y	; plot double height pixel		; 6
+	inc	GBASL		; point to next pixel			; 5
+								;============
+								;	22/18
+
+
+
+	; advance to the next position in space
+
+	; fixed_add(&space_x,&dx,&space_x);
+
+	clc								; 2
+	lda	SPACEX_F						; 3
+dxf_label_aux:
+	adc	#0	; self modifying, is DX_F			; 2
+	sta	SPACEX_F						; 3
+	lda	SPACEX_I						; 3
+dxi_label_aux:
+	adc	#0	; self modifying, is DX_I			; 2
+	sta	SPACEX_I						; 3
+								;==========
+								;	 18
+
+	; fixed_add(&space_y,&dy,&space_y);
+
+	clc								; 2
+	lda	SPACEY_F						; 3
+dyf_label_aux:
+	adc	#0	; self modifyig, is DY_F			; 2
+	sta	SPACEY_F						; 3
+	lda	SPACEY_I						; 3
+dyi_label_aux:
+	adc	#0	; self mofidying is DY_I			; 2
+	sta	SPACEY_I						; 3
+								;============
+								;	 18
+
+	dex	; decrement	SCREEN_X				; 2
+	beq	done_screenx_loop_aux	; branch until we've done 40	; 2nt/3
+								;=============
+								;	4/5
+
+
+	; cache color and return if same as last time
+	lda	SPACEY_I						; 3
+spacey_label_aux:
+	cmp	#0	; self modify, LAST_SPACEY_I			; 2
+	bne	nomatch_aux							; 2nt/3
+	lda	SPACEX_I						; 3
+spacex_label_aux:
+	cmp	#0	; self modify, LAST_SPACEX_I			; 2
+	bne	nomatch_aux							; 2nt/3
+map_color_label_aux:
+	lda	#0	; self modify, LAST_MAP_COLOR			; 2
+	jmp	match_aux							; 3
+
+done_screenx_loop_aux:
+	inc	SCREEN_Y						; 5
+	lda	SCREEN_Y						; 3
+	cmp	#40			; LOWRES height			; 2
+	beq	done_screeny_aux						; 2nt/3
+	jmp	screeny_loop_aux	; too far to branch		; 3
+								;=============
+								;	 15
+done_screeny_aux:
+	rts								; 6
+
+
+	;====================
+	;====================
+	; lookup_map
+	;====================
 	;====================
 	; finds value in space_x.i,space_y.i
 	; returns color in A
@@ -1222,12 +1719,32 @@ flying_map:
 	.byte $dd,$cc,$99,$99, $11,$44,$44,$dd
 	.byte $22,$dd,$dd,$dd, $dd,$dd,$dd,$22
 
+;dd = 1101 1101 > 1110 1110 ee
+;cc = 1100 1100 > 0110 0110 66
+;88 > 44
+;99 1001 1001 > 1100 1100 = cc
+flying_map_aux:
+	.byte $11,$ff,$ff,$ff, $ff,$ff,$ff,$11
+	.byte $ee,$66,$66,$44, $22,$22,$00,$ee
+	.byte $ee,$66,$66,$66, $44,$22,$22,$ee
+	.byte $ee,$66,$66,$44, $22,$22,$22,$ee
+	.byte $ee,$66,$cc,$cc, $44,$22,$22,$ee
+	.byte $ee,$66,$cc,$44, $22,$22,$22,$ee
+	.byte $ee,$66,$cc,$cc, $88,$22,$22,$ee
+	.byte $11,$ee,$ee,$ee, $ee,$ee,$ee,$11
+
 
 water_map:
 	.byte $22,$22,$22,$22,  $22,$22,$22,$22
 	.byte $ee,$22,$22,$22,  $22,$22,$22,$22
 	.byte $22,$22,$22,$22,  $22,$22,$22,$22
 	.byte $22,$22,$22,$22,  $ee,$22,$22,$22
+
+water_map_aux:
+	.byte $11,$11,$11,$11,  $11,$11,$11,$11
+	.byte $77,$11,$11,$11,  $11,$11,$11,$11
+	.byte $11,$11,$11,$11,  $11,$11,$11,$11
+	.byte $11,$11,$11,$11,  $77,$11,$11,$11
 
 .include "fast_multiply.s"
 
