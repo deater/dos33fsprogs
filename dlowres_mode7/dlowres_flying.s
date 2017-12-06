@@ -31,7 +31,7 @@ flying_start:
 	lda	SET_GR		; graphics C050
 	lda	LORES		; lores    C056
 	lda	TEXTGR		; mixset   C053
-	sta	EIGHTYSTORE_OFF	; 80store  C001
+	sta	SET80COL	; 80store  C001
 	sta	EIGHTYCOL	; 80col    C00d
 	lda	AN3		; AN3      C05E
 
@@ -360,6 +360,7 @@ speed_loop:
 	;====================
 draw_background:
 	jsr	draw_background_mode7					; 6
+;	jsr	draw_background_mode7					; 6
 
 check_over_water:
 	;	See if we are over water
@@ -620,6 +621,8 @@ draw_background_mode7:
 	; not performance critical as this happens rarely
 
 	dec	DRAW_SKY	; usually 2 as we redraw both pages	; 5
+
+	bit	PAGE0
 	lda	#COLOR_BOTH_MEDIUMBLUE	; MEDIUMBLUE color		; 2
 	sta	COLOR							; 3
 	lda	#0							; 2
@@ -639,8 +642,30 @@ sky_loop:				; draw line across screen
 	bne	sky_loop						; 3/2nt
 								;=============
 								; (23+63+(X*16))*5
-	; Draw Hazy Horizon
 
+	bit	PAGE1
+	lda	#AUX_BOTH_MEDIUMBLUE	; MEDIUMBLUE color		; 2
+	sta	COLOR							; 3
+	lda	#0							; 2
+								;===========
+								;	 11
+
+sky_loop2:				; draw line across screen
+	ldy	#39			; from y=0 to y=6		; 2
+	sty	V2							; 3
+	ldy	#0							; 2
+	pha								; 3
+	jsr	hlin_double		; hlin y,V2 at A	; 63+(X*16)
+	pla								; 4
+	clc								; 2
+	adc	#2							; 2
+	cmp	#6							; 2
+	bne	sky_loop2						; 3/2nt
+								;=============
+								; (23+63+(X*16))*5
+
+	; Draw Hazy Horizon
+	bit	PAGE0
 	lda	#COLOR_BOTH_GREY	; Horizon is Grey		; 2
 	sta	COLOR							; 3
 	lda	#6			; draw single line at 6/7	; 2
@@ -650,6 +675,18 @@ sky_loop:				; draw line across screen
 	jsr	hlin_double		; hlin	0,40 at 6	; 63+(X*16)
 								;===========
 								; 63+(X*16)+14
+	; Draw Hazy Horizon
+	bit	PAGE1
+	lda	#AUX_BOTH_GREY		; Horizon is Grey		; 2
+	sta	COLOR							; 3
+	lda	#6			; draw single line at 6/7	; 2
+	ldy	#39							; 2
+	sty	V2			; hlin	Y,V2 at A		; 3
+	ldy	#0							; 2
+	jsr	hlin_double		; hlin	0,40 at 6	; 63+(X*16)
+								;===========
+								; 63+(X*16)+14
+
 
 no_draw_sky:
 
@@ -1037,6 +1074,15 @@ update_cache:
 ;								;============
 								;	  6
 match:
+
+	ldy	DISP_PAGE
+	beq	mask_label
+	tay
+	and	#$01
+	cmp	#$01
+	tya
+	ror			; adjust for 80-column color
+
 
 mask_label:
 	and	#0	; COLOR_MASK (self modifying)			; 2
