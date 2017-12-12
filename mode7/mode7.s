@@ -29,6 +29,7 @@ CONST_LOWRES_HALF_F	EQU	$00
 	jsr	clear_screens		 ; clear top/bottom of page 0/1
 	jsr     set_gr_page0
 
+	; Initialize the 2kB of multiply lookup tables
 	jsr	init_multiply_tables
 
 	;===============
@@ -50,13 +51,13 @@ CONST_LOWRES_HALF_F	EQU	$00
 	sta	SPLASH_COUNT
 	sta	DISP_PAGE
 
-	lda	#1
+	lda	#1		; slightly off North for better view of island
 	sta	ANGLE
 
 	lda	#2		; initialize sky both pages
 	sta	DRAW_SKY
 
-	lda	#4		; starts out at 4.5
+	lda	#4		; starts out at 4.5 altitude
 	sta	SPACEZ_I
 	lda	#$80
 	sta	SPACEZ_F
@@ -961,74 +962,9 @@ screenx_loop:
 
 
 nomatch:
-	;====================================
-	; do a full lookup, takes much longer
-	; used to be a separate function but we inlined it here
+	; Get color to draw in A
+	.include "island_lookup.s"
 
-	;====================
-	; lookup_map
-	;====================
-	; finds value in space_x.i,space_y.i
-	; returns color in A
-	; CLOBBERS: A,Y
-
-	lda	SPACEX_I						; 3
-	sta	spacex_label+1	; self modifying code, LAST_SPACEX_I	; 4
-	and	#CONST_MAP_MASK_X	; wrap at 64			; 2
-	sta	SPACEX_I		; store i patch out		; 3
-	tay				; copy to Y for later		; 2
-
-	lda	SPACEY_I						; 3
-	sta	spacey_label+1	; self modifying code, LAST_SPACEY_I	; 4
-	and	#CONST_MAP_MASK_Y	; wrap to 64x64 grid		; 2
-	sta	SPACEY_I						; 3
-
-	asl								; 2
-	asl								; 2
-	asl				; multiply by 8			; 2
-	clc								; 2
-	adc	SPACEX_I		; add in X value		; 3
-					; only valid if x<8 and y<8
-
-	; SPACEX_I is also in y
-	cpy	#$8							; 2
-								;============
-								;	 39
-
-	bcs	ocean_color		; bgt 8				; 2nt/3
-	ldy	SPACEY_I						; 3
-	cpy	#$8							; 2
-								;=============
-								;	  7
-
-	bcs	ocean_color		; bgt 8				; 2nt/3
-
-	tay								; 2
-	lda	flying_map,Y		; load from array		; 4
-
-	bcc	update_cache						; 3
-								;============
-								;	11
-ocean_color:
-	and	#$1f							; 2
-	tay								; 2
-	lda	water_map,Y		; the color of the sea		; 4
-								;===========
-								;	  8
-
-update_cache:
-	sta	map_color_label+1	; self-modifying		; 4
-
-								;===========
-								;	  4
-
-;	rts								; 6
-
-
-
-;	jsr	lookup_map		; get color in A		; 6
-;								;============
-								;	  6
 match:
 
 mask_label:
@@ -1119,48 +1055,8 @@ done_screeny:
 	; this is used to check if above water or grass
 	; the high-performance per-pixel version has been inlined
 lookup_map:
-	lda	SPACEX_I						; 3
-	and	#CONST_MAP_MASK_X					; 2
-	sta	SPACEX_I						; 3
-	tay								; 2
-
-	lda	SPACEY_I						; 3
-	and	#CONST_MAP_MASK_Y	; wrap to 64x64 grid		; 2
-	sta	SPACEY_I						; 3
-
-	asl								; 2
-	asl								; 2
-	asl				; multiply by 8			; 2
-	clc								; 2
-	adc	SPACEX_I		; add in X value		; 3
-					; only valid if x<8 and y<8
-
-	; SPACEX_I is in y
-	cpy	#$8							; 2
-								;============
-								;	 31
-
-	bcs	ocean_color_outline	; bgt 8				;^2nt/3
-	ldy	SPACEY_I						; 3
-	cpy	#$8							; 2
-	bcs	ocean_color_outline	; bgt 8				; 2nt/3
-
-	tay								; 2
-	lda	flying_map,Y		; load from array		; 4
-
-	bcc	update_cache_outline					; 3
-
-ocean_color_outline:
-	and	#$1f							; 2
-	tay								; 2
-	lda	water_map,Y		; the color of the sea		; 4
-
-update_cache_outline:
+	.include "island_lookup.s"
 	rts								; 6
-
-
-
-
 
 	;=====================
 	; All finished
@@ -1178,6 +1074,7 @@ exit:
 
 
 	; Return to BASIC?
+	; This most likely won't work, should probably reboot
 	rts
 
 
@@ -1201,22 +1098,7 @@ gr_offsets:
 	.word 	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
 	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
 
-flying_map:
-	.byte $22,$ff,$ff,$ff, $ff,$ff,$ff,$22
-	.byte $dd,$cc,$cc,$88, $44,$44,$00,$dd
-	.byte $dd,$cc,$cc,$cc, $88,$44,$44,$dd
-	.byte $dd,$cc,$cc,$88, $44,$44,$44,$dd
-	.byte $dd,$cc,$99,$99, $88,$44,$44,$dd
-	.byte $dd,$cc,$99,$88, $44,$44,$44,$dd
-	.byte $dd,$cc,$99,$99, $11,$44,$44,$dd
-	.byte $22,$dd,$dd,$dd, $dd,$dd,$dd,$22
-
-
-water_map:
-	.byte $22,$22,$22,$22,  $22,$22,$22,$22
-	.byte $ee,$22,$22,$22,  $22,$22,$22,$22
-	.byte $22,$22,$22,$22,  $22,$22,$22,$22
-	.byte $22,$22,$22,$22,  $ee,$22,$22,$22
+.include "island_map.inc"
 
 .include "fast_multiply.s"
 

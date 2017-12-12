@@ -18,8 +18,7 @@ MODE7:	mode7.o
 	ld65 -o MODE7 mode7.o -C ./apple2_1000.inc
 
 mode7.o:	mode7.s \
-	flying.s fast_multiply.s \
-	utils.s zp.inc sprites.inc
+	fast_multiply.s utils.s zp.inc sprites.inc
 	ca65 -o mode7.o mode7.s -l mode7.lst
 
 clean:	
