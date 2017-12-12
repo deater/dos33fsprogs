@@ -1,3 +1,6 @@
+ISLAND_MAP = 0
+CHECKERBOARD_MAP = 1
+
 .include "zp.inc"
 
 ;===========
@@ -963,7 +966,11 @@ screenx_loop:
 
 nomatch:
 	; Get color to draw in A
+.if ISLAND_MAP=1
 	.include "island_lookup.s"
+.elseif CHECKERBOARD_MAP=1
+	.include "checkerboard_lookup.s"
+.endif
 
 match:
 
@@ -1055,7 +1062,13 @@ done_screeny:
 	; this is used to check if above water or grass
 	; the high-performance per-pixel version has been inlined
 lookup_map:
+
+.if ISLAND_MAP=1
 	.include "island_lookup.s"
+.elseif CHECKERBOARD_MAP=1
+	.include "checkerboard_lookup.s"
+.endif
+
 	rts								; 6
 
 	;=====================
@@ -1091,14 +1104,16 @@ exit:
 ;===============================================
 
 	; waste memory with a lookup table
-	; maybe faster than using GBASCALC?
+	; move this to the zeropage?
 
 gr_offsets:
 	.word	$400,$480,$500,$580,$600,$680,$700,$780
 	.word 	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
 	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
 
+.if ISLAND_MAP=1
 .include "island_map.inc"
+.endif
 
 .include "fast_multiply.s"
 
