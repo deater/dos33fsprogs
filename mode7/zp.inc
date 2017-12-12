@@ -98,24 +98,6 @@ COLOR_MASK	EQU	$8B
 
 SHIPY           EQU     $E4
 
-;; World Map Only
-
-ODD             EQU     $7B
-DIRECTION       EQU     $7C
-REFRESH         EQU     $7D
-ON_BIRD         EQU     $7E
-MOVED           EQU     $7F
-STEPS           EQU     $80
-TFV_X           EQU     $81
-TFV_Y           EQU     $82
-NEWX            EQU     $83
-NEWY            EQU     $84
-MAP_X           EQU     $85
-GROUND_COLOR    EQU     $86
-
-
-
-
 KEYPRESS	EQU	$C000
 KEYRESET	EQU	$C010
 
