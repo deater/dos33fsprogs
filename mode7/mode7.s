@@ -1,6 +1,3 @@
-ISLAND_MAP = 0
-CHECKERBOARD_MAP = 1
-
 .include "zp.inc"
 
 ;===========
@@ -966,9 +963,9 @@ screenx_loop:
 
 nomatch:
 	; Get color to draw in A
-.if ISLAND_MAP=1
+.if .def(ISLAND_MAP)
 	.include "island_lookup.s"
-.elseif CHECKERBOARD_MAP=1
+.elseif .def(CHECKERBOARD_MAP)
 	.include "checkerboard_lookup.s"
 .endif
 
@@ -1063,9 +1060,9 @@ done_screeny:
 	; the high-performance per-pixel version has been inlined
 lookup_map:
 
-.if ISLAND_MAP=1
+.if .def(ISLAND_MAP)
 	.include "island_lookup.s"
-.elseif CHECKERBOARD_MAP=1
+.elseif .def(CHECKERBOARD_MAP)
 	.include "checkerboard_lookup.s"
 .endif
 
@@ -1111,7 +1108,7 @@ gr_offsets:
 	.word 	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
 	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
 
-.if ISLAND_MAP=1
+.if .def(ISLAND_MAP)
 .include "island_map.inc"
 .endif
 
@@ -1166,7 +1163,7 @@ fixed_sin_scale:
 ;	.byte $A6,$8A,$76,$68,$5C,$53,$4B,$45,$40,$3B,$37,$34,$30,$2E,$2B,$29
 
 	; we can guarantee 4 cycle indexed reads if we page-aligned this
-.align 256
+;.align 256
 horizontal_lookup:
 	.byte $0C,$0B,$0A,$09,$09,$08,$08,$07,$07,$06,$06,$06,$05,$05,$05,$05
 	.byte $04,$04,$04,$04,$04,$04,$04,$03,$03,$03,$03,$03,$03,$03,$03,$03

@@ -9,18 +9,26 @@ all:	mode7.dsk
 $(DOS33):	
 	cd ../dos33fs-utils && make
 
-mode7.dsk:	$(DOS33) MODE7
-	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7
+mode7.dsk:	$(DOS33) MODE7_ISLAND MODE7_CHECKERBOARD
+	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_ISLAND
+	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_CHECKERBOARD
 
 ###
 
-MODE7:	mode7.o
-	ld65 -o MODE7 mode7.o -C ./apple2_1000.inc
+MODE7_ISLAND:	mode7_island.o
+	ld65 -o MODE7_ISLAND mode7_island.o -C ./apple2_1000.inc
 
-mode7.o:	mode7.s \
+mode7_island.o:	mode7.s island_lookup.s island_map.inc \
 	fast_multiply.s utils.s zp.inc sprites.inc
-	ca65 -o mode7.o mode7.s -l mode7.lst
+	ca65 -o mode7_island.o mode7.s -D ISLAND_MAP=1 -l mode7.lst
+
+MODE7_CHECKERBOARD:	mode7_checkerboard.o
+	ld65 -o MODE7_CHECKERBOARD mode7_checkerboard.o -C ./apple2_1000.inc
+
+mode7_checkerboard.o:	mode7.s checkerboard_lookup.s \
+	fast_multiply.s utils.s zp.inc sprites.inc
+	ca65 -o mode7_checkerboard.o mode7.s -D CHECKERBOARD_MAP=1 -l mode7.lst
 
 clean:	
-	rm -f *~ *.o MODE7 *.lst
+	rm -f *~ *.o MODE7 MODE7_ISLAND MODE7_CHECKERBOARD *.lst
 
