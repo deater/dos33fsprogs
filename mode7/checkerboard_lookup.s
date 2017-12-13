@@ -11,7 +11,11 @@
 	lda	SPACEY_I                                                ; 3
 	sta	spacey_label+1  ; self modifying code, LAST_SPACEY_I    ; 4
 
-
-	lda	#$11			; always red
-
+	lda	SPACEY_I
+	eor	SPACEX_I
+	and	#$1
+	beq	@black
+@white:
+	lda	#$ff
+@black:
 	sta	map_color_label+1	; self-modifying
