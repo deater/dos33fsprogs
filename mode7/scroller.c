@@ -289,7 +289,7 @@ static int color_map[4][8]={
 int main(int argc, char **argv) {
 
 	//char string[]="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	char string[]="        \001DEATER \002WAS \003HERE!!!";
+	char string[]="        \001DEATER \002WAS \003HERE!!!        ";
 	int length=0,width=0,x,y,i;
 	int color,color1,color2;
 	int which_color=0;
