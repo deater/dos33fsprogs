@@ -967,6 +967,8 @@ nomatch:
 	.include "island_lookup.s"
 .elseif .def(CHECKERBOARD_MAP)
 	.include "checkerboard_lookup.s"
+.elseif .def(RAINBOW_MAP)
+	.include "rainbow_lookup.s"
 .endif
 
 match:
@@ -1064,6 +1066,8 @@ lookup_map:
 	.include "island_lookup.s"
 .elseif .def(CHECKERBOARD_MAP)
 	.include "checkerboard_lookup.s"
+.elseif .def(RAINBOW_MAP)
+	.include "rainbow_lookup.s"
 .endif
 
 	rts								; 6
