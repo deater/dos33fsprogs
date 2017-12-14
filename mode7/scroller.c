@@ -1,6 +1,5 @@
-/* Use grey2 to make RLE more efficient? */
-
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 static unsigned char font[256][9]={
@@ -286,51 +285,90 @@ static int color_map[4][8]={
 };
 
 
+static int runlen[4]={0,0,0,0},last_color[4]={0,0,0,0};
+static int new_size=0;
+
+static unsigned char row[4][256];
+
+static int rle_compress(int color, int j) {
+
+	int need_comma=0;
+
+	if (color==last_color[j]) {
+		runlen[j]++;
+	}
+	else {
+//		printf("Run of color %d length %d\n",
+//			last_color[j],runlen[j]);
+		if (runlen[j]==0) ; // first color, skip
+		if (runlen[j]==1) {
+			printf("$%02X",last_color[j]);
+			new_size++;
+		}
+		if (runlen[j]==2) {
+			printf("$%02X,$%02X",last_color[j],last_color[j]);
+			new_size+=2;
+		}
+
+		if ((runlen[j]>2) && (runlen[j]<16)) {
+			printf("$%02X,$%02X",0xa0 | (runlen[j]),
+				last_color[j]);
+			new_size+=2;
+		}
+		/* We could in theory compress up to 272 */
+		/* but we leave it at 256 to make the decode easier */
+		if ((runlen[j]>15) && (runlen[j]<256)) {
+			new_size+=3;
+			printf("$%02X,$%02X,$%02X",0xa0,
+				runlen[j],last_color[j]);
+		}
+		if (runlen[j]>256) {
+			printf("Too big!\n");
+			exit(1);
+		}
+
+		runlen[j]=1;
+		need_comma=1;
+	}
+	return need_comma;
+}
+
 int main(int argc, char **argv) {
 
 	//char string[]="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	char string[]="        \001DEATER \002WAS \003HERE!!!        ";
-	int length=0,width=0,x,y,i;
+	int length=0,width=0,x,y,i,j;
 	int color,color1,color2;
 	int which_color=0;
-
-	unsigned char row[4][256];
+	int need_comma;
 
 	for(i=0;i<strlen(string);i++) {
 		if (string[i]<5) { which_color=string[i]-1; continue;}
 
 		width=font[(int)string[i]][0];
 		for(x=0;x<width;x++) {
-			color=!!(font[(int)string[i]][1]&(0x80>>x));
-			color1=color?color_map[which_color][0]:0;
-			color=!!(font[(int)string[i]][2]&(0x80>>x));
-			color2=color?(color_map[which_color][1])<<4:0;
-			row[0][length]=color1|color2;
+			for(j=0;j<4;j++) {
+				color=!!(font[(int)string[i]][1+j*2]&(0x80>>x));
+				color1=color?color_map[which_color][0+j*2]:0;
+				color=!!(font[(int)string[i]][2+j*2]&(0x80>>x));
+				color2=color?(color_map[which_color][1+j*2])<<4:0;
+				color=color1|color2;
+				row[j][length]=color;
 
-			color=!!(font[(int)string[i]][3]&(0x80>>x));
-			color1=color?color_map[which_color][2]:0;
-			color=!!(font[(int)string[i]][4]&(0x80>>x));
-			color2=color?(color_map[which_color][3])<<4:0;
-			row[1][length]=color1|color2;
+				if (color1==0xa) {
+					printf("Error!  Can't use grey2!\n");
+					exit(0);
+				}
 
-			color=!!(font[(int)string[i]][5]&(0x80>>x));
-			color1=color?color_map[which_color][4]:0;
-			color=!!(font[(int)string[i]][6]&(0x80>>x));
-			color2=color?(color_map[which_color][5])<<4:0;
-			row[2][length]=color1|color2;
-
-			color=!!(font[(int)string[i]][7]&(0x80>>x));
-			color1=color?color_map[which_color][6]:0;
-			color=!!(font[(int)string[i]][8]&(0x80>>x));
-			color2=color?(color_map[which_color][7])<<4:0;
-			row[3][length]=color1|color2;
-
+			}
 
 			length++;
 		}
 	}
 
+	printf("; Original size = %d bytes\n",length*4);
 
+#if 0
 	printf("scroll_length: .byte %d\n",length);
 	for(y=0;y<4;y++) {
 		printf("scroll_row%d:\n",y+1);
@@ -341,6 +379,24 @@ int main(int argc, char **argv) {
 		}
 		printf("\n");
 	}
+#endif
+	printf("deater_scroll:\n");
+	printf("; scroll_length:\n.byte %d\n",length);
+	for(y=0;y<4;y++) {
+		//printf("scroll_row%d:\n",y+1);
+		printf("\t.byte ");
+		for(x=0;x<256;x++) {
+			need_comma=rle_compress(row[y][x],y);
+			if ((need_comma) && (x!=length-1)) printf(",");
+			last_color[y]=row[y][x];
+		}
+		rle_compress(-1,y);
+		printf("\n");
+	}
+	printf("\t.byte $A1\n");
+	new_size++;
+	printf("; Compressed size = %d bytes\n",new_size);
+
 
 	return 0;
 }
