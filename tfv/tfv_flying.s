@@ -24,6 +24,7 @@ flying_start:
 	jsr	clear_screens
 	jsr     set_gr_page0
 
+	; Initialize the 2kB of multiply lookup tables
 	jsr	init_multiply_tables
 
 	;===============
@@ -44,13 +45,13 @@ flying_start:
 	sta	SPEED
 	sta	SPLASH_COUNT
 
-	lda	#1
+	lda	#1		; slightly off North for better view of island
 	sta	ANGLE
 
 	lda	#2		; initialize sky both pages
 	sta	DRAW_SKY
 
-	lda	#4		; starts out at 4.5
+	lda	#4		; starts out at 4.5 altitude
 	sta	SPACEZ_I
 	lda	#$80
 	sta	SPACEZ_F

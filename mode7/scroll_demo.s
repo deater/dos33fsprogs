@@ -13,12 +13,12 @@
 	;===============
 	lda	#0
 	sta	DISP_PAGE
-	sta	TEMP
+	sta	ANGLE
 
 scroll_loop:
 
 	ldx	#0
-	ldy	TEMP
+	ldy	ANGLE
 
 	lda	DISP_PAGE
 	beq	draw_page2
@@ -81,16 +81,16 @@ sm4:
 	; loop forever
 	;==================
 	clc
-	lda	TEMP
+	lda	ANGLE
 	adc	#40
 	cmp	scroll_length
 	bne	blah
 	lda	#0
-	sta	TEMP
+	sta	ANGLE
 	jmp	scroll_loop
 
 blah:
-	inc	TEMP
+	inc	ANGLE
 	jmp	scroll_loop						; 3
 
 ;===============================================
