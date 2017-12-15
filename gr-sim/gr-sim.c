@@ -700,28 +700,24 @@ int home(void) {
 
 int grsim_unrle(unsigned char *rle_data, int address) {
 
-//	int xoffset=0;
-//	int yoffset=0;
-
 	unsigned char s;
-//	int out_pointer;
 
-	ram[GBASL]=0;	// input address
-	ram[GBASH]=0;
+	ram[GBASL]=0;			/* input address */
+	ram[GBASH]=0;			/* we fake this in this environment */
 
-	x=0;
+	x=0;				/* Set X and Y registers to 0 */
 	y=0;
 
-	ram[BASL]=address&0xff;
+	ram[BASL]=address&0xff;		/* output address? */
 	ram[BASH]=(address>>8)&0xff;
 
 	ram[CV]=0;
 
-	/* CH = xsize */
+	/* Read xsize, put in CH */
 	ram[CH]=rle_data[y_indirect(GBASL,y)];
 	y++;
 
-	/* Skip ysize */
+	/* Skip ysize, we won't need it */
 	y++;
 
 	while(1) {
@@ -730,23 +726,38 @@ int grsim_unrle(unsigned char *rle_data, int address) {
 
 		/* 0xff is a special value meaning end */
 		if (a==0xff) break;
+
+		/* Store run length into TEMP */
 		ram[TEMP]=a;
 
+		/* 16-bit increment of GBASL:GBASH */
 		y++;
 		if (y==0) ram[GBASH]++;
+
+		/* Get the color into A */
 
 		a=rle_data[y_indirect(GBASL,y)];
+
+		/* 16-bit increment of GBASL:GBASH */
 		y++;
 		if (y==0) ram[GBASH]++;
 
+		/* Push y on stack */
 		s=y;
 		y=0;
 
 		while(1) {
+			/* store out color */
 			ram[y_indirect(BASL,y)]=a;
+
+			/* 16-bit increment of output pointer */
 			ram[BASL]++;
 			if (ram[BASL]==0) ram[BASH]++;
+
+			/* increment size */
 			x++;
+
+			/* if size longer than width, adjust */
 			if (x>=ram[CH]) {
 				if (ram[BASL]>0xa7) ram[BASH]++;
 				ram[BASL]+=0x58;
@@ -764,9 +775,12 @@ int grsim_unrle(unsigned char *rle_data, int address) {
 				}
 				x=0;
 			}
+
+			/* repeat until use up all of run length */
 			ram[TEMP]--;
 			if (ram[TEMP]==0) break;
 		}
+		/* restore y from stack */
 		y=s;
 	}
 
