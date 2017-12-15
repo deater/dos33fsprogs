@@ -11,10 +11,10 @@ all:	fade fixed_point rainbow sparkle starfield kaleido \
 
 ####
 
-fade:	fade.o gr-sim.o tfv_backgrounds.o tfv_utils.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o fade fade.o gr-sim.o tfv_backgrounds.o tfv_utils.o
+fade:	fade.o gr-sim.o tfv_utils.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o fade fade.o gr-sim.o tfv_utils.o
 
-fade.o:	fade.c
+fade.o:	fade.c demo_title.c
 	$(CC) $(CFLAGS) -c fade.c
 
 ####
