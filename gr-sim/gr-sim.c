@@ -698,7 +698,7 @@ int home(void) {
 	return 0;
 }
 
-int grsim_unrle(unsigned char *rle_data, int address) {
+int grsim_unrle_original(unsigned char *rle_data, int address) {
 
 	unsigned char s;
 
@@ -782,6 +782,129 @@ int grsim_unrle(unsigned char *rle_data, int address) {
 		}
 		/* restore y from stack */
 		y=s;
+	}
+
+	return 0;
+}
+
+int grsim_unrle(unsigned char *rle_data, int address) {
+
+	unsigned char s;
+
+	ram[GBASL]=0;			/* input address */
+	ram[GBASH]=0;			/* we fake this in this environment */
+
+	x=0;				/* Set X and Y registers to 0 */
+	y=0;
+
+	ram[BASL]=address&0xff;		/* output address? */
+	ram[BASH]=(address>>8)&0xff;
+
+	ram[CV]=0;
+
+	/* Read xsize, put in CH */
+	ram[CH]=rle_data[y_indirect(GBASL,y)];
+	y++;
+
+	/* Skip ysize, we won't need it */
+//	y++;
+
+	while(1) {
+
+		/* Get byte into A */
+		a=rle_data[y_indirect(GBASL,y)];
+
+		/* 0xa1 is a special value meaning end */
+		if (a==0xa1) break;
+
+		/* Store run length into TEMP */
+		if ((a&0xf0)==0xa0) {
+			if ((a&0xf)==0) {
+				/* 16-bit increment of GBASL:GBASH */
+				y++;
+				if (y==0) ram[GBASH]++;
+
+				a=rle_data[y_indirect(GBASL,y)];
+				ram[TEMP]=a;
+
+			}
+			else {
+				ram[TEMP]=a&0xf;
+			}
+
+			/* 16-bit increment of GBASL:GBASH */
+			y++;
+			if (y==0) ram[GBASH]++;
+
+			/* Get the color into A */
+			a=rle_data[y_indirect(GBASL,y)];
+
+		}
+		else {
+			ram[TEMP]=1;
+		}
+
+		/* 16-bit increment of GBASL:GBASH */
+		y++;
+		if (y==0) ram[GBASH]++;
+
+		/* Push y on stack */
+		s=y;
+		y=0;
+
+#if 0
+	{
+		printf("Run=%d Color=%x\n",ram[TEMP],a);
+	}
+#endif
+		while(1) {
+			/* store out color */
+			ram[y_indirect(BASL,y)]=a;
+
+			/* 16-bit increment of output pointer */
+			ram[BASL]++;
+			if (ram[BASL]==0) ram[BASH]++;
+
+			/* increment size */
+			x++;
+
+			/* if size longer than width, adjust */
+			if (x>=ram[CH]) {
+				if (ram[BASL]>0xa7) ram[BASH]++;
+				ram[BASL]+=0x58;
+				ram[CV]+=2;
+				if (ram[CV]>14) {
+					ram[CV]=0;
+					if (ram[BASL]<0xd8) {
+						ram[BASL]=ram[BASL]-0xd8;
+						ram[BASH]=ram[BASH]-0x4;
+					}
+					else {
+						ram[BASL]=ram[BASL]-0xd8;
+						ram[BASH]=ram[BASH]-0x3;
+					}
+				}
+				x=0;
+			}
+
+			/* repeat until use up all of run length */
+			ram[TEMP]--;
+			if (ram[TEMP]==0) break;
+		}
+		/* restore y from stack */
+		y=s;
+
+#if 0
+	{
+		grsim_update();
+		int ch;
+		ch=repeat_until_keypressed();
+		grsim_update();
+		if (ch=='q') break;
+	}
+#endif
+
+
 	}
 
 	return 0;

@@ -9,6 +9,11 @@ all:	fade fixed_point rainbow sparkle starfield kaleido \
 	tfv mode7_demo text tfv_multiply
 
 
+
+####
+demo_title.c:	../gr-utils/png2rle ../tfv/demo.png
+	../gr-utils/png2rle c ../tfv/demo.png demo_rle > demo_title.c
+
 ####
 
 fade:	fade.o gr-sim.o tfv_utils.o

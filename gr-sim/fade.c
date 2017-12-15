@@ -36,6 +36,7 @@ int main(int argc, char **argv) {
 	clear_bottom(PAGE1);
 	clear_bottom(PAGE2);
 
+//	grsim_unrle(demo_rle,0x400);
 	grsim_unrle(demo_rle,0xc00);
 
 	gr_copy_to_current(0xc00);
