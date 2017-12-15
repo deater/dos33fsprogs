@@ -35,8 +35,11 @@ int main(int argc, char **argv) {
 
 	while(1) {
 		gr();
-		color_equals(15);
+
 		for(i=0;i<NUMSTARS;i++) {
+			if (stars[i].z<2) color_equals(15);
+			else if (stars[i].z<3) color_equals(7);
+			else color_equals(5);
 			basic_plot(stars[i].x/stars[i].z+20,
 					stars[i].y/stars[i].z+20);
 		}
