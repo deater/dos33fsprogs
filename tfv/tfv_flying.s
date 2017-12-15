@@ -1222,7 +1222,7 @@ fixed_sin_scale:
 ;	.byte $A6,$8A,$76,$68,$5C,$53,$4B,$45,$40,$3B,$37,$34,$30,$2E,$2B,$29
 
 	; we can guarantee 4 cycle indexed reads if we page-aligned this
-.align 256
+;.align 256
 horizontal_lookup:
 	.byte $0C,$0B,$0A,$09,$09,$08,$08,$07,$07,$06,$06,$06,$05,$05,$05,$05
 	.byte $04,$04,$04,$04,$04,$04,$04,$03,$03,$03,$03,$03,$03,$03,$03,$03

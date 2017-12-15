@@ -268,7 +268,7 @@ int rle_smaller(int out_type, char *varname,
 		fprintf(stdout,"0xA1,");
 		fprintf(stdout,"\t};\n");
 	} else {
-		fprintf(stdout,"\t.byte $A1\n");
+		fprintf(stdout,"\n\t.byte $A1\n");
 	}
 
 	size+=1;
