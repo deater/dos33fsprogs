@@ -14,46 +14,26 @@
 
 /* Converts a PNG to RLE compressed data */
 
-int main(int argc, char **argv) {
+int rle_original(int out_type, char *varname,
+		int xsize,int ysize, unsigned char *image) {
 
 	int run=0;
 	int x;
 
-	unsigned char *image;
-	int xsize,ysize,last=-1,next;
+	int last=-1,next;
 	int size=0;
-	int out_type=OUTPUT_C;
 	int count=0;
-
-	if (argc<4) {
-		fprintf(stderr,"Usage:\t%s type INFILE varname\n\n",argv[0]);
-		exit(-1);
-	}
-
-	if (!strcmp(argv[1],"c")) {
-		out_type=OUTPUT_C;
-	}
-	else if (!strcmp(argv[1],"asm")) {
-		out_type=OUTPUT_ASM;
-	}
-
-	if (loadpng(argv[2],&image,&xsize,&ysize)<0) {
-		fprintf(stderr,"Error loading png!\n");
-		exit(-1);
-	}
-
-	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
 
 	x=0;
 
 	/* Write out xsize and ysize */
 
 	if (out_type==OUTPUT_C) {
-		fprintf(stdout,"unsigned char %s[]={\n",argv[3]);
+		fprintf(stdout,"unsigned char %s[]={\n",varname);
 		fprintf(stdout,"\t0x%X,0x%X,",xsize,ysize);
 	}
 	else {
-		fprintf(stdout,"%s:",argv[3]);
+		fprintf(stdout,"%s:",varname);
 		fprintf(stdout,"\t.byte $%X,$%X",xsize,ysize);
 	}
 
@@ -146,7 +126,47 @@ int main(int argc, char **argv) {
 
 	size+=2;
 
+	return size;
+}
+
+
+
+/* Converts a PNG to RLE compressed data */
+
+int main(int argc, char **argv) {
+
+	unsigned char *image;
+	int xsize,ysize;
+	int size=0;
+	int out_type=OUTPUT_C;
+
+	if (argc<4) {
+		fprintf(stderr,"Usage:\t%s type INFILE varname\n\n",argv[0]);
+		exit(-1);
+	}
+
+	if (!strcmp(argv[1],"c")) {
+		out_type=OUTPUT_C;
+	}
+	else if (!strcmp(argv[1],"asm")) {
+		out_type=OUTPUT_ASM;
+	}
+
+	if (loadpng(argv[2],&image,&xsize,&ysize)<0) {
+		fprintf(stderr,"Error loading png!\n");
+		exit(-1);
+	}
+
+	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
+
+	size=rle_original(out_type,argv[3],
+		xsize,ysize,image);
+
 	fprintf(stderr,"Size %d bytes\n",size);
 
 	return 0;
 }
+
+
+
+
