@@ -1096,7 +1096,12 @@ exit:
 ; External modules
 ;===============================================
 
-.include "utils.s"
+.include "../asm_routines/hlin_clearscreen.s"
+.include "../asm_routines/pageflip.s"
+.include "../asm_routines/gr_setpage.s"
+.include "../asm_routines/keypress.s"
+.include "../asm_routines/gr_putsprite.s"
+.include "../asm_routines/text_print.s"
 
 .include "sprites.inc"
 
