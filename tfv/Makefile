@@ -55,9 +55,10 @@ TFV:	tfv.o
 	ld65 -o TFV tfv.o -C ./apple2_1000.inc
 
 tfv.o:	tfv.s \
-	tfv_flying.s tfv_info.s tfv_multiply.s tfv_opener.s tfv_title.s \
+	tfv_flying.s tfv_info.s tfv_opener.s tfv_title.s \
 	tfv_textentry.s tfv_worldmap.s \
 	tfv_backgrounds.inc tfv_sprites.inc tfv_zp.inc \
+	../asm_routines/multiply_fast.s \
 	../asm_routines/hlin_clearscreen.s \
 	../asm_routines/pageflip.s \
 	../asm_routines/gr_setpage.s \

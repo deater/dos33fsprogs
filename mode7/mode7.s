@@ -1113,7 +1113,7 @@ exit:
 .include "island_map.inc"
 .endif
 
-.include "fast_multiply.s"
+.include "../asm_routines/multiply_fast.s"
 
 
 ; 8.8 fixed point

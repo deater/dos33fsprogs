@@ -1171,7 +1171,7 @@ water_map:
 	.byte $22,$22,$22,$22,  $22,$22,$22,$22
 	.byte $22,$22,$22,$22,  $ee,$22,$22,$22
 
-.include "tfv_multiply.s"
+.include "../asm_routines/multiply_fast.s"
 
 
 ; 8.8 fixed point

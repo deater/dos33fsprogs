@@ -23,7 +23,8 @@ MODE7_ISLAND:	mode7_island.o
 	ld65 -o MODE7_ISLAND mode7_island.o -C ./apple2_1000.inc
 
 mode7_island.o:	mode7.s island_lookup.s island_map.inc \
-	fast_multiply.s zp.inc sprites.inc \
+	zp.inc sprites.inc \
+	../asm_routines/multiply_fast.s \
 	../asm_routines/hlin_clearscreen.s \
 	../asm_routines/pageflip.s \
 	../asm_routines/gr_setpage.s \
@@ -36,8 +37,8 @@ MODE7_CHECKERBOARD:	mode7_checkerboard.o
 	ld65 -o MODE7_CHECKERBOARD mode7_checkerboard.o -C ./apple2_1000.inc
 
 mode7_checkerboard.o:	mode7.s checkerboard_lookup.s \
-	fast_multiply.s zp.inc sprites.inc \
-	fast_multiply.s zp.inc sprites.inc \
+	zp.inc sprites.inc \
+	../asm_routines/multiply_fast.s \
 	../asm_routines/hlin_clearscreen.s \
 	../asm_routines/pageflip.s \
 	../asm_routines/gr_setpage.s \
@@ -50,8 +51,8 @@ MODE7_RAINBOW:	mode7_rainbow.o
 	ld65 -o MODE7_RAINBOW mode7_rainbow.o -C ./apple2_1000.inc
 
 mode7_rainbow.o:	mode7.s rainbow_lookup.s \
-	fast_multiply.s zp.inc sprites.inc \
-	fast_multiply.s zp.inc sprites.inc \
+	zp.inc sprites.inc \
+	../asm_routines/multiply_fast.s \
 	../asm_routines/hlin_clearscreen.s \
 	../asm_routines/pageflip.s \
 	../asm_routines/gr_setpage.s \
