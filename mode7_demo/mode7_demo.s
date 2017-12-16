@@ -27,6 +27,8 @@ loop_forever:
 ; External modules
 ;===============================================
 
-.include "utils.s"
+.include "../asm_routines/unrle_gr.s"
+.include "../asm_routines/hlin_clearscreen.s"
+.include "../asm_routines/gr_setpage.s"
 
 .include "mode7_demo_backgrounds.inc"
