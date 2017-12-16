@@ -56,8 +56,18 @@ TFV:	tfv.o
 
 tfv.o:	tfv.s \
 	tfv_flying.s tfv_info.s tfv_multiply.s tfv_opener.s tfv_title.s \
-	tfv_textentry.s tfv_utils.s tfv_worldmap.s \
-	tfv_backgrounds.inc tfv_sprites.inc tfv_zp.inc
+	tfv_textentry.s tfv_worldmap.s \
+	tfv_backgrounds.inc tfv_sprites.inc tfv_zp.inc \
+	../asm_routines/hlin_clearscreen.s \
+	../asm_routines/pageflip.s \
+	../asm_routines/gr_setpage.s \
+	../asm_routines/keypress.s \
+	../asm_routines/gr_putsprite.s \
+	../asm_routines/text_print.s \
+	../asm_routines/memset.s \
+	../asm_routines/gr_vlin.s \
+	../asm_routines/gr_copy.s \
+	../asm_routines/gr_unrle.s
 	ca65 -o tfv.o tfv.s -l tfv.lst
 
 

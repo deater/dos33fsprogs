@@ -84,12 +84,22 @@ exit:
 ;===============================================
 
 .include "tfv_opener.s"
-.include "tfv_utils.s"
 .include "tfv_title.s"
 .include "tfv_textentry.s"
 .include "tfv_flying.s"
 .include "tfv_worldmap.s"
 .include "tfv_info.s"
+
+.include "../asm_routines/hlin_clearscreen.s"
+.include "../asm_routines/pageflip.s"
+.include "../asm_routines/gr_setpage.s"
+.include "../asm_routines/keypress.s"
+.include "../asm_routines/gr_putsprite.s"
+.include "../asm_routines/text_print.s"
+.include "../asm_routines/memset.s"
+.include "../asm_routines/gr_vlin.s"
+.include "../asm_routines/gr_copy.s"
+.include "../asm_routines/gr_unrle.s"
 
 ;===============================================
 ; Variables
