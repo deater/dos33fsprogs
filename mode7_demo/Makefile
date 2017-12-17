@@ -20,7 +20,7 @@ MODE7_DEMO:	mode7_demo.o
 	ld65 -o MODE7_DEMO mode7_demo.o -C ./apple2_1000.inc
 
 mode7_demo.o:	mode7_demo.s mode7_demo_backgrounds.inc \
-		../asm_routines/unrle_gr.s \
+		../asm_routines/gr_unrle.s \
 		../asm_routines/hlin_clearscreen.s \
 		../asm_routines/gr_setpage.s
 	ca65 -o mode7_demo.o mode7_demo.s -l mode7_demo.lst
