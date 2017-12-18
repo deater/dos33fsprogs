@@ -35,7 +35,7 @@ static unsigned char font[256][9]={
 	{0,0,0,0,0,0,0,0,0},
 	{0,0,0,0,0,0,0,0,0},
 	{0,0,0,0,0,0,0,0,0},
-	{5,0,0,0,0,0,0,0,0},	// 32 ' '
+	{4,0,0,0,0,0,0,0,0},	// 32 ' '
 	{4,
 		0x00,
 		0xe0,		// ******
@@ -147,17 +147,19 @@ static unsigned char font[256][9]={
 		0x80,	// **
 		0xf0,	// ********
 	},
-	{0,0,0,0,0,0,0,0,0},
+	{5,
+		0x00,
+		0xf0,	// ********
+		0x80,	// **
+		0x80,	// **
+		0xe0,	// ******
+		0x80,	// **
+		0x80,	// **
+		0x80,	// **
+	},
+
 	{0,0,0,0,0,0,0,0,0},
 /*
-********  
-**        
-**        
-******    
-**        
-**        
-**         
-
   ****    
 **        
 **        
@@ -201,7 +203,7 @@ static unsigned char font[256][9]={
     ****    **    **  
 */
 
-	{5,
+	{4,
 		0x00,
 		0x80,	// **
 		0x80,	// **
@@ -209,7 +211,7 @@ static unsigned char font[256][9]={
 		0x80,	// **
 		0x80,	// **
 		0x80,	// **
-		0xf0,	// ********
+		0xe0,	// ******
 	},
 
 
@@ -360,6 +362,30 @@ static unsigned char font[256][9]={
   **
   **********
 */
+	{3,
+		0x00,
+		0xc0,	// ****
+		0x80,	// **
+		0x80,	// **
+		0x80,	// **
+		0x80,	// **
+		0x80,	// **
+		0xc0,	// ****
+	},
+
+	{0,0,0,0,0,0,0,0,0},
+
+	{3,
+		0x00,
+		0xc0,	// ****
+		0x40,	//   **
+		0x40,	//   **
+		0x40,	//   **
+		0x40,	//   **
+		0x40,	//   **
+		0xc0,	// ****
+	},
+
 
 };
 
@@ -427,13 +453,20 @@ static int vmw_logo[4][18]={
 	{0x00,0x00,0x11,0x44,0x44,0x44, 0x44,0x44,0x22,0x44,0x44,0x44, 0x44,0x44,0x22,0x00,0x00,0x00},
 };
 
+static int rainbow_logo[4][6]={
+	{0x00,0x00,0x00,0xc0,0x0c,0x00 },
+	{0xd0,0xdc,0xdc,0xdc,0x0c,0x00 },
+	{0x19,0x19,0x19,0x19,0x10,0x00 },
+	{0x02,0x62,0x62,0x62,0x02,0x00 },
+};
+
 
 int main(int argc, char **argv) {
 
 	//char string[]="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-//	char string[]="        \001DEATER \002WAS \003HERE!!!        ";
-	char string[]="        \001BY DEATER... \002A \010 PRODUCTION        ";
-//	char string[]="\003* APPLE ][ FOREVER *        ";
+//	char string[]="         \001DEATER \002WAS \003HERE!!!         ";
+//	char string[]="         \001BY DEATER... \002A \010 PRODUCTION         ";
+	char string[]="           \003\011APPLE ][ FOREVER\011           ";
 	int length=0,width=0,x,y,i,j;
 	int color,color1,color2;
 	int which_color=0;
@@ -455,6 +488,19 @@ int main(int argc, char **argv) {
 			for(x=0;x<width;x++) {
 				for(j=0;j<4;j++) {
 					row[j][length]=vmw_logo[j][x];
+				}
+				length++;
+			}
+
+			continue;
+		}
+
+		/* rainbow apple logo */
+		if (string[i]==9) {
+			width=6;
+			for(x=0;x<width;x++) {
+				for(j=0;j<4;j++) {
+					row[j][length]=rainbow_logo[j][x];
 				}
 				length++;
 			}
@@ -497,7 +543,7 @@ int main(int argc, char **argv) {
 		printf("\n");
 	}
 #endif
-	printf("deater_scroll:\n");
+	printf("a2_scroll:\n");
 	printf("; scroll_length:\n.byte %d\n",length);
 	for(y=0;y<4;y++) {
 		//printf("scroll_row%d:\n",y+1);

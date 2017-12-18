@@ -42,19 +42,24 @@ demo_loop:
 	; Scroll the message
 	;===================
 
-;	lda	#255
-;	jsr	WAIT
-
+	; Scroll "BY DEATER... A VMW PRODUCTION"
 
 	lda	#>deater_scroll
 	sta	INH
 	lda	#<deater_scroll
 	sta	INL
 
-;	lda	#10
-	lda	#40
+	lda	#40		; scroll at bottom of screen
 	sta	CV
 
+	jsr	gr_scroll
+
+	; Scroll "* APPLE ][ FOREVER *"
+
+	lda	#>a2_scroll
+	sta	INH
+	lda	#<a2_scroll
+	sta	INL
 
 	jsr	gr_scroll
 
@@ -86,6 +91,7 @@ demo_loop:
 ; Variables
 ;===============================================
 
-.include "scrolltext.inc"
+.include "deater.scrolltext"
+.include "a2.scrolltext"
 
 
