@@ -65,7 +65,11 @@ SCROLL_DEMO:	scroll_demo.o
 	ld65 -o SCROLL_DEMO scroll_demo.o -C ./apple2_1000.inc
 
 scroll_demo.o:	scroll_demo.s \
-	deater_scroll.inc
+	deater_scroll.inc \
+	../asm_routines/hlin_clearscreen.s \
+	../asm_routines/gr_scroll.s \
+	../asm_routines/pageflip.s \
+	../asm_routines/gr_setpage.s
 	ca65 -o scroll_demo.o scroll_demo.s -l scroll_demo.lst
 
 scroller:	scroller.o
