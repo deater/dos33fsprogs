@@ -88,7 +88,28 @@ int main(int argc, char **argv) {
 	plot(19,1,5);	plot(20,0,5);	plot(20,2,5);	plot(21,1,5);
 	plot(20,1,15);
 
+	/* 20-40 */
+	plot(24,4,7);	plot(29,5,7);	plot(30,2,15);	plot(33,0,15);
+	plot(35,2,5);
 
+	/* 41-60 */
+	plot(41,0,13);	plot(42,0,13);
+			plot(42,1,13);	plot(43,1,13);
+					plot(43,2,13);
+					plot(43,3,13);
+			plot(42,4,13);	plot(43,4,13);
+	plot(41,5,13);	plot(42,5,13);
+
+	plot(49,5,13);	plot(51,1,15); 	plot(51,2,15);
+	plot(53,3,15);	plot(55,3,15);	plot(55,4,15);
+	plot(57,0,1);	plot(57,1,1);
+
+	/* Copy edges to make it wrap around */
+	for(y=0;y<4;y++) {
+		for(x=0;x<40;x++) {
+			row[y][x+182]=row[y][x];
+		}
+	}
 
 	printf("; Original size = %d bytes\n",length*4);
 
