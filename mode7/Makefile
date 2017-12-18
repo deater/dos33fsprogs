@@ -4,17 +4,18 @@ DOS33 = ../dos33fs-utils/dos33
 PNG2GR = ../gr-utils/png2gr
 PNG2RLE = ../gr-utils/png2rle
 
-all:	mode7.dsk scroller
+all:	mode7.dsk scroller background
 
 $(DOS33):	
 	cd ../dos33fs-utils && make
 
 mode7.dsk:	$(DOS33) MODE7_ISLAND MODE7_CHECKERBOARD MODE7_RAINBOW \
-			SCROLL_DEMO
+			SCROLL_DEMO SKY_DEMO
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_ISLAND
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_CHECKERBOARD
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_RAINBOW
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 SCROLL_DEMO
+	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 SKY_DEMO
 
 
 ###
@@ -72,14 +73,31 @@ scroll_demo.o:	scroll_demo.s \
 	../asm_routines/gr_setpage.s
 	ca65 -o scroll_demo.o scroll_demo.s -l scroll_demo.lst
 
+SKY_DEMO:	sky_demo.o
+	ld65 -o SKY_DEMO sky_demo.o -C ./apple2_1000.inc
+
+sky_demo.o:	sky_demo.s \
+	starry_sky.scroll \
+	../asm_routines/hlin_clearscreen.s \
+	../asm_routines/gr_scroll.s \
+	../asm_routines/pageflip.s \
+	../asm_routines/gr_setpage.s
+	ca65 -o sky_demo.o sky_demo.s -l sky_demo.lst
+
 scroller:	scroller.o
 	$(CC) $(LFLAGS) -o scroller scroller.o
 
 scroller.o:	scroller.c
 	$(CC) $(CFLAGS) -c scroller.c
 
+background:	background.o
+	$(CC) $(LFLAGS) -o background background.o
+
+background.o:	background.c
+	$(CC) $(CFLAGS) -c background.c
+
 clean:	
-	rm -f *~ *.o scroller \
+	rm -f *~ *.o scroller background \
 	MODE7 MODE7_ISLAND MODE7_CHECKERBOARD MODE7_RAINBOW \
 	SCROLL_DEMO *.lst
 

@@ -1,0 +1,10 @@
+; Original size = 1020 bytes
+sky_background:
+; scroll_length:
+.byte 255
+	.byte $A9,$00,$D0,$A9,$00,$50,$F5,$50,$A0,$EA,$00
+	.byte $A5,$00,$0F,$A6,$00,$F0,$A4,$00,$0F,$00,$00,$05,$A0,$EB,$00
+	.byte $00,$00,$F0,$AA,$00,$F0,$00,$00,$F0,$A0,$EF,$00
+	.byte $A0,$FF,$00,$00
+	.byte $A1
+; Compressed size = 43 bytes

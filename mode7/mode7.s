@@ -603,6 +603,11 @@ update_z_factor:
 
 draw_background_mode7:
 
+
+.if .def(CHECKERBOARD_MAP)
+
+.else
+
 	; Only draw sky if necessary
 	; (at start, or if we have switched to text, we never overwrite it)
 
@@ -644,6 +649,8 @@ sky_loop:				; draw line across screen
 	jsr	hlin_double		; hlin	0,40 at 6	; 63+(X*16)
 								;===========
 								; 63+(X*16)+14
+
+.endif
 
 no_draw_sky:
 
