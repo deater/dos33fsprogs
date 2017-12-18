@@ -4,8 +4,9 @@
 	; Clear screen and setup graphics
 	;================================
 
-	jsr	clear_screens		 ; clear top/bottom of page 0/1
 	jsr     set_gr_page0
+	bit	FULLGR
+	jsr	clear_screens_notext	 ; clear top/bottom of page 0/1
 
 	lda	#$4
 	sta	DRAW_PAGE
@@ -44,7 +45,18 @@ demo_loop:
 ;	lda	#255
 ;	jsr	WAIT
 
-	jsr	scroll
+
+	lda	#>deater_scroll
+	sta	INH
+	lda	#<deater_scroll
+	sta	INL
+
+;	lda	#10
+	lda	#40
+	sta	CV
+
+
+	jsr	gr_scroll
 
 	;=============
 	; Fade out
@@ -74,48 +86,62 @@ scroll_row2	EQU	$8B00
 scroll_row3	EQU	$8C00
 scroll_row4	EQU	$8D00
 
-SCROLL_LENGTH	EQU	$E6
+SCROLL_LENGTH	EQU	$61
+OFFSET		EQU	$62
 
 
+	;========================
+	; scroll some text
+	;========================
+	; RLE compressed data in INL/INH
+	; CV is Y position to display at
 
-scroll:
+gr_scroll:
 	lda	#0
-	sta	ANGLE
+	sta	OFFSET
 
 	;=======================
 	; decompress scroll text
 	;=======================
-	lda	#>deater_scroll
-	sta	INH
-	lda	#<deater_scroll
-	sta	INL
+
 	jsr	decompress_scroll
 
 
 scroll_loop:
 
 	ldx	#0
-	ldy	ANGLE
 
-	lda	DISP_PAGE
-	beq	draw_page2
+	ldy	CV
+	lsr
 
-	lda	#4
+	lda	gr_offsets,Y		; get position
+	sta	sm1+1
+	lda	gr_offsets+2,Y		; get position
+	sta	sm2+1
+	lda	gr_offsets+4,Y		; get position
+	sta	sm3+1
+	lda	gr_offsets+6,Y		; get position
+	sta	sm4+1
+
+
+	iny
+
+	clc
+
+	lda	gr_offsets,Y		; get position
+	adc	DRAW_PAGE
 	sta	sm1+2
+	lda	gr_offsets+2,Y		; get position
+	adc	DRAW_PAGE
 	sta	sm2+2
-	lda	#5
+	lda	gr_offsets+4,Y		; get position
+	adc	DRAW_PAGE
 	sta	sm3+2
+	lda	gr_offsets+6,Y		; get position
+	adc	DRAW_PAGE
 	sta	sm4+2
-	jmp	draw_done
 
-draw_page2:
-	lda	#8
-	sta	sm1+2
-	sta	sm2+2
-	lda	#9
-	sta	sm3+2
-	sta	sm4+2
-draw_done:
+	ldy	OFFSET
 
 draw_loop:
 
@@ -158,16 +184,16 @@ sm4:
 	; loop forever
 	;==================
 	clc
-	lda	ANGLE
+	lda	OFFSET
 	adc	#40
 	cmp	SCROLL_LENGTH
 	bne	blah
 	lda	#0
-	sta	ANGLE
+	sta	OFFSET
 	jmp	scroll_loop
 
 blah:
-	inc	ANGLE
+	inc	OFFSET
 	jmp	scroll_loop						; 3
 
 

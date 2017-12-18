@@ -24,6 +24,31 @@ clear_screens:
 
 	rts
 
+
+clear_screens_notext:
+	;===================================
+	; Clear top/bottom of page 0
+	;===================================
+
+	lda     #$0
+	sta     DRAW_PAGE
+	jsr     clear_top
+	lda	#$0
+	jsr     clear_bottom_a
+
+	;===================================
+	; Clear top/bottom of page 1
+	;===================================
+
+	lda     #$4
+	sta     DRAW_PAGE
+	jsr     clear_top
+	lda	#$0
+	jsr     clear_bottom_a
+
+	rts
+
+
 	;================================
 	; hlin_setup
 	;================================
@@ -156,7 +181,7 @@ clear_top_a:
 
 	sta	COLOR
 
-	; VLIN Y, V2 AT A
+	; HLIN Y, V2 AT A
 
 	lda	#40
 	sta	V2
@@ -177,8 +202,14 @@ clear_top_loop:
 
 	rts
 
+	;=============================
+	; clear_bottom
+	;=============================
 clear_bottom:
 	lda	#$a0	; NORMAL space
+
+clear_bottom_a:
+
 	sta	COLOR
 
 	lda	#40
