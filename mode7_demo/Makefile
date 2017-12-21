@@ -10,14 +10,14 @@ $(DOS33):
 	cd ../dos33fs-utils && make
 
 mode7_demo.dsk:	$(DOS33) MODE7_DEMO
-	$(DOS33) -y mode7_demo.dsk BSAVE -a 0x1000 MODE7_DEMO
+	$(DOS33) -y mode7_demo.dsk BSAVE -a 0x2000 MODE7_DEMO
 
 
 
 ###
 
 MODE7_DEMO:	mode7_demo.o
-	ld65 -o MODE7_DEMO mode7_demo.o -C ./apple2_1000.inc
+	ld65 -o MODE7_DEMO mode7_demo.o -C ./apple2_2000.inc
 
 mode7_demo.o:	mode7_demo.s mode7_demo_backgrounds.inc \
 		a2.scrolltext deater.scrolltext \
@@ -26,7 +26,8 @@ mode7_demo.o:	mode7_demo.s mode7_demo_backgrounds.inc \
 		../asm_routines/gr_setpage.s \
 		../asm_routines/gr_fade.s \
 		../asm_routines/gr_copy.s \
-		../asm_routines/gr_scroll.s
+		../asm_routines/gr_scroll.s \
+		mode7.s
 	ca65 -o mode7_demo.o mode7_demo.s -l mode7_demo.lst
 
 
