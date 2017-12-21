@@ -45,7 +45,9 @@ mode7_checkerboard.o:	mode7.s checkerboard_lookup.s \
 	../asm_routines/gr_setpage.s \
 	../asm_routines/keypress.s \
 	../asm_routines/gr_putsprite.s \
-	../asm_routines/text_print.s
+	../asm_routines/text_print.s \
+	../asm_routines/gr_scroll.s \
+	../asm_routines/bg_scroll.s
 	ca65 -o mode7_checkerboard.o mode7.s -D CHECKERBOARD_MAP=1 -l mode7.lst
 
 MODE7_RAINBOW:	mode7_rainbow.o

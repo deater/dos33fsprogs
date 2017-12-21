@@ -32,6 +32,14 @@ CONST_LOWRES_HALF_F	EQU	$00
 	; Initialize the 2kB of multiply lookup tables
 	jsr	init_multiply_tables
 
+.if .def(CHECKERBOARD_MAP)
+	lda	#>sky_background
+	sta	INH
+	lda	#<sky_background
+	sta	INL
+	jsr	decompress_scroll
+.endif
+
 	;===============
 	; Init Variables
 	;===============
@@ -603,11 +611,6 @@ update_z_factor:
 
 draw_background_mode7:
 
-
-.if .def(CHECKERBOARD_MAP)
-
-.else
-
 	; Only draw sky if necessary
 	; (at start, or if we have switched to text, we never overwrite it)
 
@@ -615,6 +618,14 @@ draw_background_mode7:
 	beq	no_draw_sky						;^2nt/3
 								;==============
 								;	  6
+
+.if .def(CHECKERBOARD_MAP)
+	lda	#0
+	sta	CV
+
+	jsr	scroll_background
+
+.else
 	; Draw Sky
 	; not performance critical as this happens rarely
 
@@ -1110,6 +1121,12 @@ exit:
 .include "../asm_routines/gr_putsprite.s"
 .include "../asm_routines/text_print.s"
 
+.if .def(CHECKERBOARD_MAP)
+.include "../asm_routines/gr_scroll.s"
+.include "../asm_routines/bg_scroll.s"
+.endif
+
+
 .include "sprites.inc"
 
 ;===============================================
@@ -1118,6 +1135,10 @@ exit:
 
 .if .def(ISLAND_MAP)
 .include "island_map.inc"
+.endif
+
+.if .def(CHECKERBOARD_MAP)
+.include "starry_sky.scroll"
 .endif
 
 .include "../asm_routines/multiply_fast.s"
