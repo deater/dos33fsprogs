@@ -303,7 +303,7 @@ check_over_water:
 	lda	CY_I							; 3
 	sta	SPACEY_I						; 3
 
-	jsr	lookup_map						; 6
+	jsr	lookup_island_map					; 6
 
 	sec								; 2
 	sbc	#COLOR_BOTH_DARKBLUE					; 2
@@ -914,11 +914,8 @@ screenx_loop:
 
 nomatch:
 	; Get color to draw in A
-.if .def(ISLAND_MAP)
 	.include "island_lookup.s"
-.elseif .def(CHECKERBOARD_MAP)
-	.include "checkerboard_lookup.s"
-.endif
+;	.include "checkerboard_lookup.s"
 
 match:
 
@@ -1009,15 +1006,13 @@ done_screeny:
 	; CLOBBERS: A,Y
 	; this is used to check if above water or grass
 	; the high-performance per-pixel version has been inlined
-lookup_map:
-
-.if .def(ISLAND_MAP)
+lookup_island_map:
 	.include "island_lookup.s"
-.elseif .def(CHECKERBOARD_MAP)
+
+	rts								; 6
+
+lookup_checkerboard_map:
 	.include "checkerboard_lookup.s"
-.elseif .def(RAINBOW_MAP)
-	.include "rainbow_lookup.s"
-.endif
 
 	rts								; 6
 
