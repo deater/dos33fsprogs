@@ -37,6 +37,23 @@ checkerboard_demo:
 	sta	INL
 	jsr	decompress_scroll
 
+	lda	#0
+	sta	DRAW_BLUE_SKY
+
+
+	lda	#$20
+	sta	nomatch
+	lda	#<lookup_checkerboard_map
+	sta	nomatch+1
+	lda	#>lookup_checkerboard_map
+	sta	nomatch+2
+	lda	#$4c
+	sta	nomatch+3
+	lda	#<match
+	sta	nomatch+4
+	lda	#>match
+	sta	nomatch+5
+
 	jsr	mode7_flying
 
 	rts
@@ -47,6 +64,22 @@ checkerboard_demo:
 	;===========================
 island_demo:
 	; initialize
+
+	lda	#1
+	sta	DRAW_BLUE_SKY
+
+	lda	#$A5			; fix the code that was self-modified
+	sta	nomatch			; away in checkerboard code
+	lda	#$6A
+	sta	nomatch+1
+	lda	#$8D
+	sta	nomatch+2
+	lda	#<(spacex_label+1)
+	sta	nomatch+3
+	lda	#>(spacex_label+1)
+	sta	nomatch+4
+	lda	#$29
+	sta	nomatch+5
 
 	jsr	mode7_flying
 

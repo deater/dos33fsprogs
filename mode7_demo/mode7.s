@@ -56,9 +56,6 @@ mode7_flying:
 	sta	KEY_COUNT
 	sta	KEY_OFFSET
 
-	lda	#1		; slightly off North for better view of island
-	sta	ANGLE
-
 	lda	#2		; initialize sky both pages
 	sta	DRAW_SKY
 
@@ -163,6 +160,9 @@ turn_left:
 
 	dec	ANGLE
 
+	inc	DRAW_SKY
+	inc	DRAW_SKY
+
 check_right:
 	cmp	#('D')
 	bne	check_speedup
@@ -183,6 +183,8 @@ turn_right:
 	sta	TURNING
 
 	inc	ANGLE
+	inc	DRAW_SKY
+	inc	DRAW_SKY
 
 check_speedup:
 	cmp	#('Z')
@@ -552,17 +554,23 @@ draw_background_mode7:
 								;==============
 								;	  6
 
-.if .def(CHECKERBOARD_MAP)
-	lda	#0
+	dec	DRAW_SKY	; usually 2 as we redraw both pages	; 5
+
+
+	lda	DRAW_BLUE_SKY
+	bne	draw_blue_sky
+
+draw_black_sky:
 	sta	CV
 
 	jsr	scroll_background
+	jmp	no_draw_sky
 
-.else
+draw_blue_sky:
 	; Draw Sky
 	; not performance critical as this happens rarely
 
-	dec	DRAW_SKY	; usually 2 as we redraw both pages	; 5
+
 	lda	#COLOR_BOTH_MEDIUMBLUE	; MEDIUMBLUE color		; 2
 	sta	COLOR							; 3
 	lda	#0							; 2
@@ -594,7 +602,7 @@ sky_loop:				; draw line across screen
 								;===========
 								; 63+(X*16)+14
 
-.endif
+
 
 no_draw_sky:
 
@@ -913,9 +921,11 @@ screenx_loop:
 
 
 nomatch:
+; This is self modified a few times
+;	jsr	lookup_checkerboard_map
+;	jmp	match
 	; Get color to draw in A
 	.include "island_lookup.s"
-;	.include "checkerboard_lookup.s"
 
 match:
 
