@@ -16,7 +16,6 @@ struct star_type {
 	struct fixed_type x;
 	struct fixed_type y;
 	int z;
-	int color;
 };
 
 static void double_to_fixed(double d, struct fixed_type *f) {
@@ -74,7 +73,7 @@ static struct star_type stars[NUMSTARS];
 static int random_table[256];
 static int random_pointer=0;
 
-static int z_table[256];
+static int z_table[64];
 
 static void random_star(int i) {
 
@@ -149,6 +148,7 @@ int main(int argc, char **argv) {
 
 	double g;
 	struct fixed_type gf;
+	int color;
 	i=0;
 
 	for(g=16.0;g>0;g-=0.25) {
@@ -177,15 +177,13 @@ int main(int argc, char **argv) {
 
 		/* Set color */
 		for(i=0;i<NUMSTARS;i++) {
-			if (stars[i].z<16) stars[i].color=5;
-			else if (stars[i].z<32) stars[i].color=13;
-			else stars[i].color=15;
+
 
 		}
 
 		/* draw stars */
 		for(i=0;i<NUMSTARS;i++) {
-//			int tempx,tempy;
+
 			struct fixed_type dx,dy,temp;
 
 			temp.i=0;//z_table[stars[i].z];
@@ -219,6 +217,11 @@ int main(int argc, char **argv) {
 
 			dy.i+=20;
 
+
+			if (stars[i].z<16) color=5;
+			else if (stars[i].z<32) color=13;
+			else color=15;
+
 			if ((dx.i<0) || (dy.i<0) || (dx.i>=40) ||
 				(dy.i>=40)) {
 
@@ -229,7 +232,7 @@ int main(int argc, char **argv) {
 //					printf("EEK! %2X.%2X\n",
 //						stars[i].z,stars[i].z);
 //				}
-				color_equals(stars[i].color);
+				color_equals(color);
 				basic_plot(dx.i,dy.i);
 			}
 
