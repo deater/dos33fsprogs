@@ -32,10 +32,12 @@ static void double_to_fixed(double d, struct fixed_type *f) {
 
 }
 
+#if 0
 static void print_fixed(struct fixed_type *f) {
 
         printf("%02X.%02X",f->i,f->f);
 }
+#endif
 
 static void fixed_add(struct fixed_type *x, struct fixed_type *y, struct fixed_type *z) {
         int carry;
@@ -66,29 +68,73 @@ static double fixed_to_double(struct fixed_type *f) {
 
 static struct star_type stars[NUMSTARS];
 
+static	int random_table[256];
+static	int random_pointer=0;
+
+static void random_star(int i) {
+
+		/* -128 to 128 */
+
+		/* Should we xor? */
+		stars[i].x.i=random_table[random_pointer++];
+		if (random_pointer>255) random_pointer=0;
+
+		stars[i].x.f=random_table[random_pointer++];
+		if (random_pointer>255) random_pointer=0;
+
+		stars[i].y.i=random_table[random_pointer++];
+		if (random_pointer>255) random_pointer=0;
+		stars[i].y.f=random_table[random_pointer++];
+		if (random_pointer>255) random_pointer=0;
+
+//		double_to_fixed( (drand48()-0.5)*spreadx,&stars[i].x);
+//		double_to_fixed( (drand48()-0.5)*spready,&stars[i].y);
+
+		/* 0.1 to 16 */
+		stars[i].z.i=random_table[random_pointer++]/16;
+		if (random_pointer>255) random_pointer=0;
+		stars[i].z.f=0x1;
+
+//		double_to_fixed( ((drand48())*spreadz)+0.1,&stars[i].z);
+//		print_fixed(&stars[i].x);
+//		printf(",");
+//		print_fixed(&stars[i].y);
+//		printf(",");
+//		print_fixed(&stars[i].z);
+//		printf("\n");
+
+
+//	double_to_fixed((drand48()-0.5)*spreadx,&stars[i].x);
+//	double_to_fixed((drand48()-0.5)*spready,&stars[i].y);
+//	stars[i].z.i=spreadz;
+
+}
+
 int main(int argc, char **argv) {
 
 	int ch,i;
 
-	int spreadx=256;
-	int spready=256;
+//	int spreadx=256;
+//	int spready=256;
 	int spreadz=16;
 	struct fixed_type speedz;
+	
+
+
+	for(i=0;i<256;i++) {
+		random_table[i]=rand()%256;
+		printf("%d\n",random_table[i]);
+	}
 
 	double_to_fixed(-0.25,&speedz);
 
 	grsim_init();
 
+	/* Should NUMSTARS be prime to help with randomness */
+
 	for(i=0;i<NUMSTARS;i++) {
-		double_to_fixed( (drand48()-0.5)*spreadx,&stars[i].x);
-		double_to_fixed( (drand48()-0.5)*spready,&stars[i].y);
-		double_to_fixed( ((drand48())*spreadz)+0.1,&stars[i].z);
-		print_fixed(&stars[i].x);
-		printf(",");
-		print_fixed(&stars[i].y);
-		printf(",");
-		print_fixed(&stars[i].z);
-		printf("\n");
+		random_star(i);
+
 	}
 	gr();
 
@@ -121,12 +167,7 @@ int main(int argc, char **argv) {
 			if ((tempx<0) || (tempy<0) || (tempx>=40) ||
 				(tempy>=40)) {
 
-				double_to_fixed((drand48()-0.5)*spreadx,
-					&stars[i].x);
-				double_to_fixed((drand48()-0.5)*spready,
-					&stars[i].y);
-				stars[i].z.i=spreadz;
-
+				random_star(i);
 			}
 			else {
 				color_equals(stars[i].color);
