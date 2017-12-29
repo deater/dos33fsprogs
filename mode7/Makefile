@@ -10,12 +10,14 @@ $(DOS33):
 	cd ../dos33fs-utils && make
 
 mode7.dsk:	$(DOS33) MODE7_ISLAND MODE7_CHECKERBOARD MODE7_RAINBOW \
-			SCROLL_DEMO SKY_DEMO
+			SCROLL_DEMO SKY_DEMO STARFIELD_DEMO
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_ISLAND
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_CHECKERBOARD
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_RAINBOW
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 SCROLL_DEMO
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 SKY_DEMO
+	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 STARFIELD_DEMO
+
 
 
 ###
@@ -85,6 +87,16 @@ sky_demo.o:	sky_demo.s \
 	../asm_routines/pageflip.s \
 	../asm_routines/gr_setpage.s
 	ca65 -o sky_demo.o sky_demo.s -l sky_demo.lst
+
+STARFIELD_DEMO:	starfield_demo.o
+	ld65 -o STARFIELD_DEMO starfield_demo.o -C ./apple2_1000.inc
+
+starfield_demo.o:	starfield_demo.s \
+	../asm_routines/hlin_clearscreen.s \
+	../asm_routines/gr_scroll.s \
+	../asm_routines/pageflip.s \
+	../asm_routines/gr_setpage.s
+	ca65 -o starfield_demo.o starfield_demo.s -l starfield_demo.lst
 
 scroller:	scroller.o
 	$(CC) $(LFLAGS) -o scroller scroller.o
