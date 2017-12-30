@@ -55,6 +55,7 @@ starfield_loop:
 	ldx	#NUMSTARS
 
 draw_stars:
+	stx	XX
 	txa
 	tay
 
@@ -63,19 +64,28 @@ draw_stars:
 	lda	#$ff
 	sta	COLOR
 
+	sty	YPOS
+
 	; calculate x value, stars[i].x/stars[i].z
+	; put 1/stars[i].z in NUM1H:NUM1L and multiply
 
-	lda	#20
-	ldy	#20
+	ldy	YPOS
+	sty	XPOS
 
-	lda	#0		; I
-	sta	NUM1H
+	lda	star_z,Y
+	sta	NUM1H		; I
+
 	lda	#0		; F
 	sta	NUM1L
 
-	lda	#1
+	; load stars[i].x into NUM2H:NUM2L
+	; NUM2L is always zero
+
+
+	lda	star_x,Y
 	sta	NUM2H
-	lda	#2
+
+	lda	#0
 	sta	NUM2L
 	sec			; don't reuse old values
 	jsr	multiply
@@ -84,7 +94,8 @@ draw_stars:
 	txa
 	clc
 	adc	#20
-	sta	XX
+;	sta	XPOS
+
 
 	; calculate y value, stars[i].y/stars[i].z
 
@@ -106,7 +117,7 @@ draw_stars:
 	adc	#20
 
 	tay			; put Y value in Y to plot
-	lda	XX		; reload X value to plot
+	lda	XPOS		; reload X value to plot
 
 	;================================
 	; plot routine
@@ -151,6 +162,7 @@ plot_write:
 
 
 	;==============================
+	ldx	XX
 
 	dex
 	bpl	draw_stars
