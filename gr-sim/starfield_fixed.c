@@ -83,13 +83,13 @@ static void random_star(int i) {
 	stars[i].x.i=random_table[random_pointer++];
 	if (random_pointer>255) random_pointer=0;
 
-	stars[i].x.f=random_table[random_pointer++];
-	if (random_pointer>255) random_pointer=0;
+//	stars[i].x.f=random_table[random_pointer++];
+//	if (random_pointer>255) random_pointer=0;
 
 	stars[i].y.i=random_table[random_pointer++];
 	if (random_pointer>255) random_pointer=0;
-	stars[i].y.f=random_table[random_pointer++];
-	if (random_pointer>255) random_pointer=0;
+//	stars[i].y.f=random_table[random_pointer++];
+//	if (random_pointer>255) random_pointer=0;
 
 //	double_to_fixed( (drand48()-0.5)*spreadx,&stars[i].x);
 //	double_to_fixed( (drand48()-0.5)*spready,&stars[i].y);
@@ -97,7 +97,7 @@ static void random_star(int i) {
 	/* 0 to 63 corresponding to  */
 	stars[i].z=random_table[random_pointer++]&0x3f;
 	if (random_pointer>255) random_pointer=0;
-	if (stars[i].z>58) stars[i].z=0;
+//	if (stars[i].z>58) stars[i].z=0;
 
 //	double_to_fixed( ((drand48())*spreadz)+0.1,&stars[i].z);
 //	print_fixed(&stars[i].x);

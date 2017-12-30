@@ -27,19 +27,49 @@ NUMSTARS	EQU	16
 	;===============
 	lda	#0
 	sta	DRAW_PAGE
+	sta	RANDOM_POINTER
+
+	ldy	#NUMSTARS
+init_stars:
+	jsr	random_star
+	dey
+	bpl	init_stars
+
+	;===========================
+	;===========================
+	; Main Loop
+	;===========================
+	;===========================
 
 starfield_loop:
+
+	;===============
+	; clear screen
+	;===============
+	jsr	clear_top
 
 	;===============
 	; draw stars
 	;===============
 
-draw_stars:
 	ldx	#NUMSTARS
+
+draw_stars:
+	txa
+	tay
+
+	; calculate color
+
+	lda	#$ff
+	sta	COLOR
+
+	; calculate x and y
 
 	lda	#20
 	ldy	#20
 
+	;================================
+	; plot routine
 	;================================
 	; put address in GBASL/GBASH
 	; Xcoord in A, Ycoord in Y
@@ -57,12 +87,33 @@ draw_stars:
 								;===========
 								;
 
+	lda	TEMPY
+	and	#$1
+	bne	plot_odd
+plot_even:
+	lda	COLOR
+	and	#$f0
+	sta	COLOR
+	lda	(GBASL),Y
+	and	#$0f
+	jmp	plot_write
+plot_odd:
+	lda	COLOR
+	and	#$0f
+	sta	COLOR
+	lda	(GBASL),Y
+	and	#$f0
+
+plot_write:
 	ldy	#0
-	lda	#$ff
+	ora	COLOR
 	sta	(GBASL),Y
 
+
+	;==============================
+
 	dex
-	bne	draw_stars
+	bpl	draw_stars
 
 
 starfield_keyboard:
@@ -89,6 +140,37 @@ skipskip:
 
 	jmp	starfield_loop						; 3
 
+
+; matches scroll_row1 - row3
+star_x	EQU	$8A00
+star_y	EQU	$8B00
+star_z	EQU	$8C00
+
+	;===================
+	; star number in Y
+	; FIXME: increment at end?
+	; X trashed
+random_star:
+	; random x location
+	ldx	RANDOM_POINTER
+	lda	random_table,X
+	inc	RANDOM_POINTER
+	sta	star_x,Y
+
+	; random y location
+	ldx	RANDOM_POINTER
+	lda	random_table,X
+	inc	RANDOM_POINTER
+	sta	star_y,Y
+
+	; random z location
+	ldx	RANDOM_POINTER
+	lda	random_table,X
+	inc	RANDOM_POINTER
+	and	#$3f
+	sta	star_z,Y
+
+	rts
 
 ;===============================================
 ; External modules

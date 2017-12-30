@@ -183,7 +183,7 @@ clear_top_a:
 
 	; HLIN Y, V2 AT A
 
-	lda	#40
+	lda	#39
 	sta	V2
 
 	lda	#0
