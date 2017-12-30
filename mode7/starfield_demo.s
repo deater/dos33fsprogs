@@ -63,10 +63,50 @@ draw_stars:
 	lda	#$ff
 	sta	COLOR
 
-	; calculate x and y
+	; calculate x value, stars[i].x/stars[i].z
 
 	lda	#20
 	ldy	#20
+
+	lda	#0		; I
+	sta	NUM1H
+	lda	#0		; F
+	sta	NUM1L
+
+	lda	#1
+	sta	NUM2H
+	lda	#2
+	sta	NUM2L
+	sec			; don't reuse old values
+	jsr	multiply
+
+	; integer result in X
+	txa
+	clc
+	adc	#20
+	sta	XX
+
+	; calculate y value, stars[i].y/stars[i].z
+
+	lda	#0		; I
+	sta	NUM1H
+	lda	#0		; F
+	sta	NUM1L
+
+	lda	#1
+	sta	NUM2H
+	lda	#2
+	sta	NUM2L
+	sec			; don't reuse old values
+	jsr	multiply
+
+	; integer result in X
+	txa
+	clc
+	adc	#20
+
+	tay			; put Y value in Y to plot
+	lda	XX		; reload X value to plot
 
 	;================================
 	; plot routine
