@@ -64,13 +64,11 @@ draw_stars:
 	lda	#$ff
 	sta	COLOR
 
-	sty	YPOS
 
 	; calculate x value, stars[i].x/stars[i].z
 	; put 1/stars[i].z in NUM1H:NUM1L and multiply
 
-	ldy	YPOS
-	sty	XPOS
+	ldy	XX
 
 	lda	star_z,Y
 	sta	NUM1H		; I
@@ -80,7 +78,6 @@ draw_stars:
 
 	; load stars[i].x into NUM2H:NUM2L
 	; NUM2L is always zero
-
 
 	lda	star_x,Y
 	sta	NUM2H
@@ -94,41 +91,47 @@ draw_stars:
 	txa
 	clc
 	adc	#20
-;	sta	XPOS
-
+	lda	XX
+	sta	XPOS
+	tay
 
 	; calculate y value, stars[i].y/stars[i].z
 
-	lda	#0		; I
-	sta	NUM1H
-	lda	#0		; F
-	sta	NUM1L
+;	lda	#0		; I
+;	sta	NUM1H
+;	lda	#0		; F
+;	sta	NUM1L
 
-	lda	#1
-	sta	NUM2H
-	lda	#2
-	sta	NUM2L
-	sec			; don't reuse old values
-	jsr	multiply
+;	lda	#1
+;	sta	NUM2H
+;	lda	#2
+;	sta	NUM2L
+;	sec			; don't reuse old values
+;	jsr	multiply
 
 	; integer result in X
-	txa
-	clc
-	adc	#20
+;	txa
+;	clc
+;	adc	#20
 
-	tay			; put Y value in Y to plot
-	lda	XPOS		; reload X value to plot
+;	lda	#10
+;	tay		; Y is YPOS
 
 	;================================
 	; plot routine
 	;================================
 	; put address in GBASL/GBASH
-	; Xcoord in A, Ycoord in Y
+	; Xcoord in XPOS
+	; Ycoord in Y
 
-	sta	TEMPY
+	sty	YPOS		; put Y value in Y to plot
+	tya
+	and	#$fe
+	tay
+
 	lda	gr_offsets,Y	; lookup low-res memory address		; 4
         clc								; 2
-        adc	TEMPY							; 3
+        adc	XPOS							; 3
         sta	GBASL							; 3
         iny								; 2
 
@@ -137,26 +140,24 @@ draw_stars:
         sta	GBASH							; 3
 								;===========
 								;
-
-	lda	TEMPY
+	ldy	#0
+	lda	YPOS
 	and	#$1
 	bne	plot_odd
 plot_even:
 	lda	COLOR
-	and	#$f0
+	and	#$0f
 	sta	COLOR
 	lda	(GBASL),Y
-	and	#$0f
+	and	#$f0
 	jmp	plot_write
 plot_odd:
 	lda	COLOR
-	and	#$0f
+	and	#$f0
 	sta	COLOR
 	lda	(GBASL),Y
-	and	#$f0
-
+	and	#$0f
 plot_write:
-	ldy	#0
 	ora	COLOR
 	sta	(GBASL),Y
 
