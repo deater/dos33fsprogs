@@ -22,7 +22,7 @@ MODE7_DEMO:	mode7_demo.o
 mode7_demo.o:	mode7_demo.s mode7_demo_backgrounds.inc \
 		a2.scrolltext deater.scrolltext \
 		../asm_routines/gr_unrle.s \
-		../asm_routines/hlin_clearscreen.s \
+		../asm_routines/gr_fast_clear.s \
 		../asm_routines/gr_setpage.s \
 		../asm_routines/gr_fade.s \
 		../asm_routines/gr_copy.s \

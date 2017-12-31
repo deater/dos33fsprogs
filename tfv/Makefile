@@ -59,7 +59,7 @@ tfv.o:	tfv.s \
 	tfv_textentry.s tfv_worldmap.s \
 	tfv_backgrounds.inc tfv_sprites.inc tfv_zp.inc \
 	../asm_routines/multiply_fast.s \
-	../asm_routines/hlin_clearscreen.s \
+	../asm_routines/gr_fast_clear.s \
 	../asm_routines/pageflip.s \
 	../asm_routines/gr_setpage.s \
 	../asm_routines/keypress.s \

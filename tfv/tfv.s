@@ -90,7 +90,8 @@ exit:
 .include "tfv_worldmap.s"
 .include "tfv_info.s"
 
-.include "../asm_routines/hlin_clearscreen.s"
+.include "../asm_routines/gr_fast_clear.s"
+.include "../asm_routines/gr_hlin.s"
 .include "../asm_routines/pageflip.s"
 .include "../asm_routines/gr_setpage.s"
 .include "../asm_routines/keypress.s"
@@ -100,6 +101,7 @@ exit:
 .include "../asm_routines/gr_vlin.s"
 .include "../asm_routines/gr_copy.s"
 .include "../asm_routines/gr_unrle.s"
+.include "../asm_routines/gr_offsets.s"
 
 ;===============================================
 ; Variables
