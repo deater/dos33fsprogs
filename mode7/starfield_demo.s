@@ -66,8 +66,8 @@ draw_stars:
 	lda	#$ff		; want if z<16, color = 5		; 2
 	sta	COLOR		; 	if 16<z<32 color = 13		; 3
 				;	if 32<z<64 color = 15
-	ldy	XX							; 3
-	lda	star_z,Y						; 5
+
+	lda	star_z,X						; 4
 	tay			; put star_z[i] in X for later		; 2
 
 	cmp	#32							; 2
@@ -94,31 +94,32 @@ done_color:
 	lda	z_table,Y						; 4
 	sta	NUM1L		; F					; 3
 
-	; adjust for 58+
+	; adjust spacez for 58+
 	; all this logic to avoid having a 128 byte table of mostly zero
-	lda	#0		; I
-	clc
-	cpy	#60		; 59 -1 60 0 61 1
-	bmi	no_adjust
-	adc	#1		; 60, 61 = 1
-	cpy	#62		; 61 -1 62 0 63 1
-	bmi	no_adjust
-	adc	#1		; 62 = 2
-	cpy	#63		; 62 = -1 63 = 0 64 = not possible
-	bne	no_adjust
-	adc	#2		; 63 = 4
+
+	lda	#0		; I					; 2
+	clc								; 2
+	cpy	#60		; 59 -1 60 0 61 1			; 2
+	bmi	no_adjust						; 2nt/3
+	adc	#1		; 60, 61 = 1				; 2
+	cpy	#62		; 61 -1 62 0 63 1			; 2
+	bmi	no_adjust						; 2nt/3
+	adc	#1		; 62 = 2				; 2
+	cpy	#63		; 62 = -1 63 = 0 64 = not possible	; 2
+	bne	no_adjust						; 2nt/3
+	adc	#2		; 63 = 4				; 2
 no_adjust:
-	sta	NUM1H
+	sta	NUM1H		; store int part of spacez		; 3
 
 	; load stars[i].x into NUM2H:NUM2L
 	; NUM2L is always zero
-	ldy	XX
+	ldy	XX							; 3
 
-	lda	star_x,Y
-	sta	NUM2H
+	lda	star_x,Y						; 4
+	sta	NUM2H							; 3
 
-	lda	#0
-	sta	NUM2L
+	lda	#0							; 2
+	sta	NUM2L							; 3
 	sec			; don't reuse old values
 	jsr	multiply
 
