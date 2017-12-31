@@ -118,8 +118,6 @@ int main(int argc, char **argv) {
 //	int spready=256;
 	int spreadz=16;
 	struct fixed_type speedz;
-	
-
 
 	for(i=0;i<256;i++) {
 		random_table[i]=rand()%256;

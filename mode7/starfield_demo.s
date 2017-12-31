@@ -29,7 +29,7 @@ NUMSTARS	EQU	16
 	sta	DRAW_PAGE
 	sta	RANDOM_POINTER
 
-	ldy	#NUMSTARS
+	ldy	#(NUMSTARS-1)
 init_stars:
 	jsr	random_star
 	dey
@@ -52,32 +52,67 @@ starfield_loop:
 	; draw stars
 	;===============
 
-	ldx	#NUMSTARS
+
+	; start at 15 and count down (rather than 0 and count up)
+	ldx	#(NUMSTARS-1)
 
 draw_stars:
 	stx	XX
-	txa
-	tay
 
+	;================
 	; calculate color
+	;================
 
-	lda	#$ff
+	lda	#$ff		; want if z<16, color = 5
+	sta	COLOR		; 	if 16<z<32 color = 13
+				;	if 32<z<64 color = 15
+	ldy	XX
+	lda	star_z,Y
+	tay			; put star_z[i] in Y for later
+
+	cmp	#32
+	bpl	done_color
+
+	cmp	#16		; 15 -1 16 0 17 1
+	bpl	second_color
+
+	lda	#$55
 	sta	COLOR
+
+	jmp	done_color
+second_color:
+	lda	#$dd
+	sta	COLOR
+
+done_color:
 
 
 	; calculate x value, stars[i].x/stars[i].z
+
 	; put 1/stars[i].z in NUM1H:NUM1L and multiply
 
-	ldy	XX
+	lda	z_table,Y
+	sta	NUM1L		; F
 
-	lda	star_z,Y
-	sta	NUM1H		; I
-
-	lda	#0		; F
-	sta	NUM1L
+	; adjust for 58+
+	; all this logic to avoid having a 128 byte table of mostly zero
+	lda	#0		; I
+	clc
+	cpy	#60		; 59 -1 60 0 61 1
+	bmi	no_adjust
+	adc	#1		; 60, 61 = 1
+	cpy	#62		; 61 -1 62 0 63 1
+	bmi	no_adjust
+	adc	#1		; 62 = 2
+	cpy	#63		; 62 = -1 63 = 0 64 = not possible
+	bne	no_adjust
+	adc	#2		; 63 = 4
+no_adjust:
+	sta	NUM1H
 
 	; load stars[i].x into NUM2H:NUM2L
 	; NUM2L is always zero
+	ldy	XX
 
 	lda	star_x,Y
 	sta	NUM2H
@@ -91,32 +126,55 @@ draw_stars:
 	txa
 	clc
 	adc	#20
-	lda	XX
+
 	sta	XPOS
-	tay
 
 	; calculate y value, stars[i].y/stars[i].z
 
-;	lda	#0		; I
-;	sta	NUM1H
-;	lda	#0		; F
-;	sta	NUM1L
+	; 1/stars[i].z is still in NUM1H:NUM1L
 
-;	lda	#1
-;	sta	NUM2H
-;	lda	#2
-;	sta	NUM2L
-;	sec			; don't reuse old values
-;	jsr	multiply
+	ldy	XX
+
+	lda	star_y,Y
+	sta	NUM2H
+	lda	#0
+	sta	NUM2L
+	clc			; reuse old values
+	jsr	multiply
 
 	; integer result in X
-;	txa
-;	clc
-;	adc	#20
+	txa
+	clc
+	adc	#20
 
-;	lda	#10
-;	tay		; Y is YPOS
+	tay			; Y is YPOS
+	sty	YPOS		; put Y value in Y to plot
 
+
+	;============================
+	; Check Limits
+	;============================
+
+	lda	XPOS
+	bmi	new_star
+	cmp	#40
+	bpl	new_star
+
+	ldy	YPOS
+	bmi	new_star
+	cpy	#40
+	bpl	new_star
+
+	; FIXME: sort out all of these jumps to be more efficient
+	jmp	plot_star
+
+new_star:
+	ldy	XX
+	jsr	random_star
+
+	jmp	plot_star_continue
+
+plot_star:
 	;================================
 	; plot routine
 	;================================
@@ -124,7 +182,7 @@ draw_stars:
 	; Xcoord in XPOS
 	; Ycoord in Y
 
-	sty	YPOS		; put Y value in Y to plot
+
 	tya
 	and	#$fe
 	tay
@@ -161,13 +219,15 @@ plot_write:
 	ora	COLOR
 	sta	(GBASL),Y
 
+plot_star_continue:
 
 	;==============================
 	ldx	XX
 
 	dex
-	bpl	draw_stars
-
+	bmi	starfield_keyboard
+;	bpl	draw_stars
+	jmp	draw_stars
 
 starfield_keyboard:
 
@@ -190,8 +250,10 @@ skipskip:
 	;==================
 	; loop forever
 	;==================
+blah:
+	jmp blah
 
-	jmp	starfield_loop						; 3
+;	jmp	starfield_loop						; 3
 
 
 ; matches scroll_row1 - row3

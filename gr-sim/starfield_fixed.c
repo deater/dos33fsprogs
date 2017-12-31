@@ -82,6 +82,7 @@ static void random_star(int i) {
 	/* Should we xor? */
 	stars[i].x.i=random_table[random_pointer++];
 	if (random_pointer>255) random_pointer=0;
+	stars[i].x.f=0;
 
 //	stars[i].x.f=random_table[random_pointer++];
 //	if (random_pointer>255) random_pointer=0;
@@ -90,6 +91,7 @@ static void random_star(int i) {
 	if (random_pointer>255) random_pointer=0;
 //	stars[i].y.f=random_table[random_pointer++];
 //	if (random_pointer>255) random_pointer=0;
+	stars[i].y.f=0;
 
 //	double_to_fixed( (drand48()-0.5)*spreadx,&stars[i].x);
 //	double_to_fixed( (drand48()-0.5)*spready,&stars[i].y);
@@ -167,7 +169,7 @@ int main(int argc, char **argv) {
 
 	/* Should NUMSTARS be prime to help with randomness */
 
-	for(i=0;i<NUMSTARS;i++) {
+	for(i=NUMSTARS-1;i>=0;i--) {
 		random_star(i);
 	}
 	gr();
@@ -175,14 +177,8 @@ int main(int argc, char **argv) {
 	while(1) {
 		gr();
 
-		/* Set color */
-		for(i=0;i<NUMSTARS;i++) {
-
-
-		}
-
 		/* draw stars */
-		for(i=0;i<NUMSTARS;i++) {
+		for(i=NUMSTARS-1;i>=0;i--) {
 
 			struct fixed_type dx,dy,temp;
 
@@ -225,6 +221,8 @@ int main(int argc, char **argv) {
 			if ((dx.i<0) || (dy.i<0) || (dx.i>=40) ||
 				(dy.i>=40)) {
 
+				printf("%i: out of range %d,%d\n",
+					i,dx.i,dy.i);
 				random_star(i);
 			}
 			else {
@@ -233,6 +231,13 @@ int main(int argc, char **argv) {
 //						stars[i].z,stars[i].z);
 //				}
 				color_equals(color);
+
+				printf("plot %i: (%d,%d,%d) %d,%d = %d\n",
+					i,
+					stars[i].x.i,stars[i].y.i,
+					stars[i].z,
+					dx.i,dy.i,color);
+
 				basic_plot(dx.i,dy.i);
 			}
 
@@ -249,7 +254,18 @@ int main(int argc, char **argv) {
 		ch=grsim_input();
 		if (ch=='q') exit(0);
 		usleep(10000);
+
+		sleep(25);
+		exit(1);
+
 	}
 
 	return 0;
 }
+
+/* TODO
+	press button to bring in ship sprite
+	another button make lines to origin, plus noise for few frames
+	then crosshair and flash
+*/
+
