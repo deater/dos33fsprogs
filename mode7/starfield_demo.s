@@ -54,35 +54,35 @@ starfield_loop:
 
 
 	; start at 15 and count down (rather than 0 and count up)
-	ldx	#(NUMSTARS-1)
+	ldx	#(NUMSTARS-1)						; 2
 
 draw_stars:
-	stx	XX
+	stx	XX							; 3
 
 	;================
 	; calculate color
 	;================
 
-	lda	#$ff		; want if z<16, color = 5
-	sta	COLOR		; 	if 16<z<32 color = 13
+	lda	#$ff		; want if z<16, color = 5		; 2
+	sta	COLOR		; 	if 16<z<32 color = 13		; 3
 				;	if 32<z<64 color = 15
-	ldy	XX
-	lda	star_z,Y
-	tay			; put star_z[i] in Y for later
+	ldy	XX							; 3
+	lda	star_z,Y						; 5
+	tay			; put star_z[i] in X for later		; 2
 
-	cmp	#32
-	bpl	done_color
+	cmp	#32							; 2
+	bpl	done_color						; 2nt/3
 
-	cmp	#16		; 15 -1 16 0 17 1
-	bpl	second_color
+	cmp	#16		; 15 -1 16 0 17 1			; 2
+	bpl	second_color						; 2nt/3
 
-	lda	#$55
-	sta	COLOR
+	lda	#$55							; 2
+	sta	COLOR							; 3
 
-	jmp	done_color
+	jmp	done_color						; 3
 second_color:
-	lda	#$dd
-	sta	COLOR
+	lda	#$dd							; 2
+	sta	COLOR							; 3
 
 done_color:
 
@@ -91,8 +91,8 @@ done_color:
 
 	; put 1/stars[i].z in NUM1H:NUM1L and multiply
 
-	lda	z_table,Y
-	sta	NUM1L		; F
+	lda	z_table,Y						; 4
+	sta	NUM1L		; F					; 3
 
 	; adjust for 58+
 	; all this logic to avoid having a 128 byte table of mostly zero
