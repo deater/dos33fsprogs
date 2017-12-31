@@ -28,6 +28,9 @@ NUMSTARS	EQU	16
 	lda	#0							; 2
 	sta	DRAW_PAGE						; 3
 	sta	RANDOM_POINTER						; 3
+	; always multiply with low byte as zero
+	sta	NUM2L							; 3
+
 
 	ldy	#(NUMSTARS-1)						; 2
 init_stars:
@@ -118,62 +121,59 @@ no_adjust:
 	lda	star_x,Y						; 4
 	sta	NUM2H							; 3
 
-	lda	#0							; 2
-	sta	NUM2L							; 3
-	sec			; don't reuse old values
-	jsr	multiply
+
+	sec			; don't reuse old values		; 2
+	jsr	multiply						; 6+?
 
 	; integer result in X
-	txa
-	clc
-	adc	#20
+	txa								; 2
+	clc								; 2
+	adc	#20		; center on screen			; 2
 
-	sta	XPOS
+	sta	XPOS		; save for later			; 3
 
 	; calculate y value, stars[i].y/stars[i].z
 
 	; 1/stars[i].z is still in NUM1H:NUM1L
 
-	ldy	XX
+	ldy	XX		; reload index				; 3
 
-	lda	star_y,Y
-	sta	NUM2H
-	lda	#0
-	sta	NUM2L
-	clc			; reuse old values
-	jsr	multiply
+	lda	star_y,Y	; load integer part of star_		; 4
+	sta	NUM2H							; 3
+	clc			; reuse old values			; 2
+	jsr	multiply						; 6+
 
 	; integer result in X
-	txa
-	clc
-	adc	#20
+	txa								; 2
+	clc								; 2
+	adc	#20		; center the value			; 2
 
-	tay			; Y is YPOS
-	sty	YPOS		; put Y value in Y to plot
+	tay			; Y is YPOS				; 2
+	sty	YPOS		; put Y value in Y to plot		; 3
 
 
 	;============================
 	; Check Limits
 	;============================
 
-	lda	XPOS
-	bmi	new_star
-	cmp	#40
-	bpl	new_star
+;	ldy	YPOS
+	bmi	new_star						; 2nt/3
+	cpy	#40							; 2
+	bpl	new_star		; if < 0 or > 40 then done	; 2nt/3
 
-	ldy	YPOS
-	bmi	new_star
-	cpy	#40
-	bpl	new_star
+	lda	XPOS							; 3
+	bmi	new_star						; 2nt/3
+	cmp	#40							; 2
+	bpl	new_star		; if < 0 or > 40 then done	; 2nt/3
 
 	; FIXME: sort out all of these jumps to be more efficient
-	jmp	plot_star
+	bmi	plot_star						; 2
 
 new_star:
-	ldy	XX
-	jsr	random_star
+	ldy	XX							; 3
+	jsr	random_star						; 6
 
-	jmp	plot_star_continue
+	jmp	plot_star_continue					; 3
 
 plot_star:
 	;================================
