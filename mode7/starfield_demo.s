@@ -183,10 +183,9 @@ plot_star:
 	; Xcoord in XPOS
 	; Ycoord in Y
 
-
-	tya
-	and	#$fe
-	tay
+	tya								; 2
+	and	#$fe		; mask to make it even			; 2
+	tay								; 2
 
 	lda	gr_offsets,Y	; lookup low-res memory address		; 4
         clc								; 2
@@ -255,13 +254,13 @@ move_loop_skip:
 
 starfield_keyboard:
 
-	jsr	get_key		; get keypress				; 6
+;	jsr	get_key		; get keypress				; 6
 
-	lda	LASTKEY							; 3
+;	lda	LASTKEY							; 3
 
-	cmp	#('Q')		; if quit, then return
-	bne	skipskip
-	rts
+;	cmp	#('Q')		; if quit, then return
+;	bne	skipskip
+;	rts
 
 skipskip:
 
@@ -313,12 +312,10 @@ random_star:
 ; External modules
 ;===============================================
 
-;.include "../asm_routines/hlin_clearscreen.s"
 .include "../asm_routines/pageflip.s"
 .include "../asm_routines/gr_setpage.s"
-.include "../asm_routines/keypress.s"
-.include "../asm_routines/gr_putsprite.s"
-.include "../asm_routines/text_print.s"
+;.include "../asm_routines/keypress.s"
+;.include "../asm_routines/gr_putsprite.s"
 .include "../asm_routines/gr_offsets.s"
 .include "../asm_routines/gr_fast_clear.s"
 
