@@ -221,13 +221,36 @@ plot_write:
 
 plot_star_continue:
 
+
 	;==============================
 	ldx	XX
 
 	dex
-	bmi	starfield_keyboard
+	bmi	move_stars
 ;	bpl	draw_stars
 	jmp	draw_stars
+
+
+	;=============================
+	; Move stars
+move_stars:
+	ldy	#(NUMSTARS-1)
+move_stars_loop:
+
+	clc
+	lda	star_z,Y
+	adc	#1
+	sta	star_z,Y
+	and	#64
+	beq	move_loop_skip
+
+	jsr	random_star
+
+move_loop_skip:
+	dey
+	bpl	move_stars_loop
+
+
 
 starfield_keyboard:
 
@@ -250,10 +273,8 @@ skipskip:
 	;==================
 	; loop forever
 	;==================
-blah:
-	jmp blah
 
-;	jmp	starfield_loop						; 3
+	jmp	starfield_loop						; 3
 
 
 ; matches scroll_row1 - row3

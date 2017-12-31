@@ -221,8 +221,8 @@ int main(int argc, char **argv) {
 			if ((dx.i<0) || (dy.i<0) || (dx.i>=40) ||
 				(dy.i>=40)) {
 
-				printf("%i: out of range %d,%d\n",
-					i,dx.i,dy.i);
+//				printf("%i: out of range %d,%d\n",
+//					i,dx.i,dy.i);
 				random_star(i);
 			}
 			else {
@@ -232,11 +232,11 @@ int main(int argc, char **argv) {
 //				}
 				color_equals(color);
 
-				printf("plot %i: (%d,%d,%d) %d,%d = %d\n",
-					i,
-					stars[i].x.i,stars[i].y.i,
-					stars[i].z,
-					dx.i,dy.i,color);
+//				printf("plot %i: (%d,%d,%d) %d,%d = %d\n",
+//					i,
+//					stars[i].x.i,stars[i].y.i,
+//					stars[i].z,
+//					dx.i,dy.i,color);
 
 				basic_plot(dx.i,dy.i);
 			}
@@ -255,8 +255,17 @@ int main(int argc, char **argv) {
 		if (ch=='q') exit(0);
 		usleep(10000);
 
-		sleep(25);
-		exit(1);
+		while(1) {
+                	ch=grsim_input();
+                	if (ch!=0) break;
+	                usleep(10000);
+        	}
+
+		if (ch=='q') exit(0);
+//		repeat_until_keypressed();
+
+//		sleep(25);
+//		exit(1);
 
 	}
 
