@@ -36,10 +36,11 @@ scroll_forever:
 ;===============================================
 ; Routines
 ;===============================================
-.include "../asm_routines/hlin_clearscreen.s"
+.include "../asm_routines/gr_fast_clear.s"
 .include "../asm_routines/gr_scroll.s"
 .include "../asm_routines/pageflip.s"
 .include "../asm_routines/gr_setpage.s"
+.include "../asm_routines/gr_offsets.s"
 
 ;===============================================
 ; Variables

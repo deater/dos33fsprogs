@@ -27,8 +27,9 @@ MODE7_ISLAND:	mode7_island.o
 
 mode7_island.o:	mode7.s island_lookup.s island_map.inc \
 	zp.inc sprites.inc \
+	../asm_routines/gr_hlin.s \
 	../asm_routines/multiply_fast.s \
-	../asm_routines/hlin_clearscreen.s \
+	../asm_routines/gr_fast_clear.s \
 	../asm_routines/pageflip.s \
 	../asm_routines/gr_setpage.s \
 	../asm_routines/keypress.s \
@@ -41,8 +42,9 @@ MODE7_CHECKERBOARD:	mode7_checkerboard.o
 
 mode7_checkerboard.o:	mode7.s checkerboard_lookup.s \
 	zp.inc sprites.inc \
+	../asm_routines/gr_hlin.s \
 	../asm_routines/multiply_fast.s \
-	../asm_routines/hlin_clearscreen.s \
+	../asm_routines/gr_fast_clear.s \
 	../asm_routines/pageflip.s \
 	../asm_routines/gr_setpage.s \
 	../asm_routines/keypress.s \
@@ -58,7 +60,8 @@ MODE7_RAINBOW:	mode7_rainbow.o
 mode7_rainbow.o:	mode7.s rainbow_lookup.s \
 	zp.inc sprites.inc \
 	../asm_routines/multiply_fast.s \
-	../asm_routines/hlin_clearscreen.s \
+	../asm_routines/gr_fast_clear.s \
+	../asm_routines/gr_hlin.s \
 	../asm_routines/pageflip.s \
 	../asm_routines/gr_setpage.s \
 	../asm_routines/keypress.s \
@@ -71,7 +74,8 @@ SCROLL_DEMO:	scroll_demo.o
 
 scroll_demo.o:	scroll_demo.s \
 	deater_scroll.inc \
-	../asm_routines/hlin_clearscreen.s \
+	../asm_routines/gr_hlin.s \
+	../asm_routines/gr_fast_clear.s \
 	../asm_routines/gr_scroll.s \
 	../asm_routines/pageflip.s \
 	../asm_routines/gr_setpage.s
@@ -82,7 +86,8 @@ SKY_DEMO:	sky_demo.o
 
 sky_demo.o:	sky_demo.s \
 	starry_sky.scroll \
-	../asm_routines/hlin_clearscreen.s \
+	../asm_routines/gr_hlin.s \
+	../asm_routines/gr_fast_clear.s \
 	../asm_routines/gr_scroll.s \
 	../asm_routines/pageflip.s \
 	../asm_routines/gr_setpage.s
@@ -92,10 +97,10 @@ STARFIELD_DEMO:	starfield_demo.o
 	ld65 -o STARFIELD_DEMO starfield_demo.o -C ./apple2_1000.inc
 
 starfield_demo.o:	starfield_demo.s \
-	../asm_routines/hlin_clearscreen.s \
 	../asm_routines/gr_scroll.s \
 	../asm_routines/pageflip.s \
-	../asm_routines/gr_setpage.s
+	../asm_routines/gr_setpage.s \
+	../asm_routines/gr_fast_clear.s
 	ca65 -o starfield_demo.o starfield_demo.s -l starfield_demo.lst
 
 scroller:	scroller.o

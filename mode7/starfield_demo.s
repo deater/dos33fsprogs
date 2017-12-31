@@ -25,15 +25,15 @@ NUMSTARS	EQU	16
 	;===============
 	; Init Variables
 	;===============
-	lda	#0
-	sta	DRAW_PAGE
-	sta	RANDOM_POINTER
+	lda	#0							; 2
+	sta	DRAW_PAGE						; 3
+	sta	RANDOM_POINTER						; 3
 
-	ldy	#(NUMSTARS-1)
+	ldy	#(NUMSTARS-1)						; 2
 init_stars:
-	jsr	random_star
-	dey
-	bpl	init_stars
+	jsr	random_star						; 6
+	dey								; 2
+	bpl	init_stars						; 2nt/3
 
 	;===========================
 	;===========================
@@ -46,8 +46,8 @@ starfield_loop:
 	;===============
 	; clear screen
 	;===============
-	jsr	clear_top
-
+	jsr	clear_top						; 6+
+									; 6047
 	;===============
 	; draw stars
 	;===============
@@ -312,12 +312,14 @@ random_star:
 ; External modules
 ;===============================================
 
-.include "../asm_routines/hlin_clearscreen.s"
+;.include "../asm_routines/hlin_clearscreen.s"
 .include "../asm_routines/pageflip.s"
 .include "../asm_routines/gr_setpage.s"
 .include "../asm_routines/keypress.s"
 .include "../asm_routines/gr_putsprite.s"
 .include "../asm_routines/text_print.s"
+.include "../asm_routines/gr_offsets.s"
+.include "../asm_routines/gr_fast_clear.s"
 
 ;===============================================
 ; Variables
