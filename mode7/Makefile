@@ -10,10 +10,11 @@ $(DOS33):
 	cd ../dos33fs-utils && make
 
 mode7.dsk:	$(DOS33) MODE7_ISLAND MODE7_CHECKERBOARD MODE7_RAINBOW \
-			SCROLL_DEMO SKY_DEMO STARFIELD_DEMO
+			PLOT_TEST SCROLL_DEMO SKY_DEMO STARFIELD_DEMO
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_ISLAND
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_CHECKERBOARD
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_RAINBOW
+	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 PLOT_TEST
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 SCROLL_DEMO
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 SKY_DEMO
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 STARFIELD_DEMO
@@ -69,6 +70,13 @@ mode7_rainbow.o:	mode7.s rainbow_lookup.s \
 	../asm_routines/text_print.s
 	ca65 -o mode7_rainbow.o mode7.s -D RAINBOW_MAP=1 -l mode7.lst
 
+PLOT_TEST:	plot_test.o
+	ld65 -o PLOT_TEST plot_test.o -C ./apple2_1000.inc
+
+plot_test.o:	plot_test.s \
+	../asm_routines/gr_setpage.s
+	ca65 -o plot_test.o plot_test.s -l plot_test.lst
+
 SCROLL_DEMO:	scroll_demo.o
 	ld65 -o SCROLL_DEMO scroll_demo.o -C ./apple2_1000.inc
 
@@ -118,5 +126,5 @@ background.o:	background.c
 clean:	
 	rm -f *~ *.o scroller background \
 	MODE7 MODE7_ISLAND MODE7_CHECKERBOARD MODE7_RAINBOW \
-	SCROLL_DEMO *.lst
+	PLOT_TEST SCROLL_DEMO *.lst
 
