@@ -176,48 +176,7 @@ new_star:
 	jmp	plot_star_continue					; 3
 
 plot_star:
-	;================================
-	; plot routine
-	;================================
-	; put address in GBASL/GBASH
-	; Xcoord in XPOS
-	; Ycoord in Y
-
-	tya								; 2
-	and	#$fe		; mask to make it even			; 2
-	tay								; 2
-
-	lda	gr_offsets,Y	; lookup low-res memory address		; 4
-        clc								; 2
-        adc	XPOS							; 3
-        sta	GBASL							; 3
-        iny								; 2
-
-        lda	gr_offsets,Y                                            ; 4
-        adc	DRAW_PAGE	; add in draw page offset		; 3
-        sta	GBASH							; 3
-								;===========
-								;
-	ldy	#0
-	lda	YPOS
-	and	#$1
-	bne	plot_odd
-plot_even:
-	lda	COLOR
-	and	#$0f
-	sta	COLOR
-	lda	(GBASL),Y
-	and	#$f0
-	jmp	plot_write
-plot_odd:
-	lda	COLOR
-	and	#$f0
-	sta	COLOR
-	lda	(GBASL),Y
-	and	#$0f
-plot_write:
-	ora	COLOR
-	sta	(GBASL),Y
+	jsr	plot							; 6
 
 plot_star_continue:
 
@@ -318,6 +277,7 @@ random_star:
 ;.include "../asm_routines/gr_putsprite.s"
 .include "../asm_routines/gr_offsets.s"
 .include "../asm_routines/gr_fast_clear.s"
+.include "../asm_routines/gr_plot.s"
 
 ;===============================================
 ; Variables
