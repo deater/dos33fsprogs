@@ -10,7 +10,8 @@ $(DOS33):
 	cd ../dos33fs-utils && make
 
 mode7.dsk:	$(DOS33) MODE7_ISLAND MODE7_CHECKERBOARD MODE7_RAINBOW \
-			PLOT_TEST SCROLL_DEMO SKY_DEMO STARFIELD_DEMO
+			PLOT_TEST SCROLL_DEMO SKY_DEMO STARFIELD_DEMO \
+			STARFIELD_1K
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_ISLAND
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_CHECKERBOARD
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_RAINBOW
@@ -18,6 +19,7 @@ mode7.dsk:	$(DOS33) MODE7_ISLAND MODE7_CHECKERBOARD MODE7_RAINBOW \
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 SCROLL_DEMO
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 SKY_DEMO
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 STARFIELD_DEMO
+	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 STARFIELD_1K
 
 
 
@@ -111,6 +113,16 @@ starfield_demo.o:	starfield_demo.s \
 	../asm_routines/gr_fast_clear.s
 	ca65 -o starfield_demo.o starfield_demo.s -l starfield_demo.lst
 
+STARFIELD_1K:	starfield_1k.o
+	ld65 -o STARFIELD_1K starfield_demo.o -C ./apple2_1000.inc
+
+starfield_1k.o:	starfield_1k.s \
+	../asm_routines/gr_scroll.s \
+	../asm_routines/pageflip.s \
+	../asm_routines/gr_setpage.s \
+	../asm_routines/gr_fast_clear.s
+	ca65 -o starfield_1k.o starfield_1k.s -l starfield_1k.lst
+
 scroller:	scroller.o
 	$(CC) $(LFLAGS) -o scroller scroller.o
 
@@ -126,5 +138,5 @@ background.o:	background.c
 clean:	
 	rm -f *~ *.o scroller background \
 	MODE7 MODE7_ISLAND MODE7_CHECKERBOARD MODE7_RAINBOW \
-	PLOT_TEST SCROLL_DEMO *.lst
+	PLOT_TEST SCROLL_DEMO STARFIELD_DEMO STARFIELD_1K *.lst
 
