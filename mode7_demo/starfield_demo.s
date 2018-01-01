@@ -15,9 +15,8 @@ NUMSTARS	EQU	16
 	; Clear screen and setup graphics
 	;================================
 
-	jsr	clear_screens_notext	 ; clear top/bottom of page 0/1
+	jsr	clear_screens		 ; clear top/bottom of page 0/1
 	jsr     set_gr_page0
-	bit	FULLGR
 
 	; Initialize the 2kB of multiply lookup tables
 	jsr	init_multiply_tables
@@ -50,7 +49,7 @@ starfield_loop:
 	;===============
 	; clear screen
 	;===============
-	jsr	clear_all						; 6+
+	jsr	clear_top						; 6+
 									; 6047
 	;===============
 	; draw stars
@@ -159,7 +158,7 @@ no_adjust:
 
 ;	ldy	YPOS
 	bmi	new_star						; 2nt/3
-	cpy	#48							; 2
+	cpy	#40							; 2
 	bpl	new_star		; if < 0 or > 40 then done	; 2nt/3
 
 	lda	XPOS							; 3
@@ -233,7 +232,7 @@ skipskip:
 
 	lda	#15
 	sta	XPOS
-	lda	#34
+	lda	#30
 	sta	YPOS
 	jsr	put_sprite
 
