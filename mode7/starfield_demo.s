@@ -29,6 +29,11 @@ NUMSTARS	EQU	16
 	lda	#0							; 2
 	sta	DRAW_PAGE						; 3
 	sta	RANDOM_POINTER						; 3
+	sta	STATE
+
+	lda	#5
+	sta	SPEED
+
 	; always multiply with low byte as zero
 	sta	NUM2L							; 3
 
@@ -50,12 +55,46 @@ starfield_loop:
 	;===============
 	; clear screen
 	;===============
+
+	lda	STATE
+
+	cmp	#5
+	bne	quick_skip
+
+	lda	#0
+	sta	STATE
+
+	lda	#5
+	sta	SPEED
+
+quick_skip:
+
+	cmp	#3
+	beq	no_clear
+
+	cmp	#1
+	bne	black_back
+
+	dec	SPEED
+	lda	SPEED
+	bne	not_done
+
+	inc	STATE
+not_done:
+	lda	#COLOR_BOTH_LIGHTBLUE
+	jmp	back_color
+
+black_back:
+	lda	#0
+back_color:
+	sta	clear_all_color+1
+
 	jsr	clear_all						; 6+
 									; 6047
 	;===============
 	; draw stars
 	;===============
-
+no_clear:
 
 	; start at 15 and count down (rather than 0 and count up)
 	ldx	#(NUMSTARS-1)						; 2
@@ -211,17 +250,6 @@ move_loop_skip:
 
 
 
-starfield_keyboard:
-
-;	jsr	get_key		; get keypress				; 6
-
-;	lda	LASTKEY							; 3
-
-;	beq	starfield_keyboard
-
-;	cmp	#('Q')		; if quit, then return
-;	bne	skipskip
-;	rts
 
 skipskip:
 
@@ -243,6 +271,34 @@ skipskip:
 	;==================
 
 	jsr	page_flip						; 6
+
+
+
+starfield_keyboard:
+
+	lda	STATE			; if 0, wait
+	bne	check_keyboard
+
+first_press:
+	jsr	get_key		; get keypress				; 6
+	lda	LASTKEY
+
+	beq	first_press
+
+	inc	STATE
+
+	jmp	done_keyboard
+
+check_keyboard:
+
+	jsr	get_key		; get keypress				; 6
+	lda	LASTKEY
+	beq	done_keyboard
+
+	bit	SPEAKER
+	inc	STATE
+
+done_keyboard:
 
 	;==================
 	; loop forever
