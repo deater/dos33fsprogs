@@ -92,6 +92,7 @@ island_demo:
 star_demo:
 	; initialize
 
+	jsr	starfield_demo
 
 	rts
 
@@ -175,6 +176,7 @@ title_routine:
 .include "../asm_routines/gr_copy.s"
 .include "../asm_routines/gr_scroll.s"
 .include "../asm_routines/gr_offsets.s"
+.include "../asm_routines/gr_plot.s"
 
 .include "mode7.s"
 
@@ -182,10 +184,10 @@ title_routine:
 
 
 ;===============================================
-; Variables
+; More routines
 ;===============================================
 
 .include "deater.scrolltext"
 .include "a2.scrolltext"
-
+.include "starfield_demo.s"
 

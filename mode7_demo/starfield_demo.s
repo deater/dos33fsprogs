@@ -1,5 +1,3 @@
-.include "zp.inc"
-
 ;===========
 ; CONSTANTS
 ;===========
@@ -10,6 +8,7 @@ NUMSTARS	EQU	16
 	;=====================
 	; Starfield
 	;=====================
+starfield_demo:
 
 	;================================
 	; Clear screen and setup graphics
@@ -17,10 +16,6 @@ NUMSTARS	EQU	16
 
 	jsr	clear_screens		 ; clear top/bottom of page 0/1
 	jsr     set_gr_page0
-
-	; Initialize the 2kB of multiply lookup tables
-	jsr	init_multiply_tables
-
 
 	;===============
 	; Init Variables
@@ -281,22 +276,6 @@ random_star:
 	stx	RANDOM_POINTER						; 3
 
 	rts								; 6
-
-;===============================================
-; External modules
-;===============================================
-
-.include "../asm_routines/pageflip.s"
-.include "../asm_routines/gr_setpage.s"
-.include "../asm_routines/keypress.s"
-.include "../asm_routines/gr_putsprite.s"
-.include "../asm_routines/gr_offsets.s"
-.include "../asm_routines/gr_fast_clear.s"
-.include "../asm_routines/gr_plot.s"
-.include "../asm_routines/multiply_fast.s"
-
-
-.include "sprites.inc"
 
 ;======================
 ; some "random" numbers
