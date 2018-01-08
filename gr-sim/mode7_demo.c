@@ -101,7 +101,7 @@ void draw_background_mode7(double angle, double cx, double cy) {
 	// current space position
 	double space_x, space_y;
 
-	clear_top(0);
+	clear_screens();
 
 	for (screen_y = 6; screen_y < bmp_h; screen_y++) {
 		// first calculate the distance of the line we are drawing

@@ -32,9 +32,19 @@ int main(int argc, char **argv) {
 	grsim_init();
 	gr();
 
-	clear_bottom(PAGE0);
-	clear_bottom(PAGE1);
-	clear_bottom(PAGE2);
+//	clear_screens();
+
+	ram[DRAW_PAGE]=PAGE0;
+	clear_bottom();
+	ram[DRAW_PAGE]=PAGE1;
+	clear_bottom();
+	ram[DRAW_PAGE]=PAGE2;
+	clear_bottom();
+
+
+//	clear_bottom(PAGE0);
+//	clear_bottom(PAGE1);
+//	clear_bottom(PAGE2);
 
 //	grsim_unrle(demo_rle,0x400);
 	grsim_unrle(demo_rle,0xc00);

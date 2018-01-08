@@ -9,6 +9,11 @@ all:	fade fixed_point rainbow sparkle starfield starfield_fixed kaleido \
 	tfv mode7_demo text tfv_multiply rasterbars
 
 
+#### Library
+
+gr_fast_clear.o:	gr_fast_clear.c gr-sim.h
+	$(CC) $(CFLAGS) -c gr_fast_clear.c
+
 
 ####
 demo_title.c:	../gr-utils/png2rle ../tfv/demo.png
@@ -16,8 +21,8 @@ demo_title.c:	../gr-utils/png2rle ../tfv/demo.png
 
 ####
 
-fade:	fade.o gr-sim.o tfv_utils.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o fade fade.o gr-sim.o tfv_utils.o
+fade:	fade.o gr-sim.o tfv_utils.o gr_fast_clear.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o fade fade.o gr-sim.o gr_fast_clear.o tfv_utils.o
 
 fade.o:	fade.c demo_title.c
 	$(CC) $(CFLAGS) -c fade.c
@@ -48,8 +53,9 @@ text.o:	text.c
 
 ####
 
-mode7_demo:	mode7_demo.o gr-sim.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o mode7_demo mode7_demo.o gr-sim.o
+mode7_demo:	mode7_demo.o gr-sim.o gr_fast_clear.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o mode7_demo mode7_demo.o \
+		gr-sim.o gr_fast_clear.o
 
 mode7_demo.o:	mode7_demo.c
 	$(CC) $(CFLAGS) -c mode7_demo.c
@@ -138,8 +144,15 @@ tfv_multiply:	tfv_multiply.o
 tfv.o:	tfv.c gr-sim.h tfv_backgrounds.h tfv_sprites.h
 	$(CC) $(CFLAGS) -c tfv.c
 
-tfv:	tfv.o tfv_backgrounds.o tfv_battle.o tfv_citymap.o tfv_flying.o tfv_info.o tfv_opener.o tfv_sprites.o tfv_textentry.o tfv_title.o tfv_utils.o tfv_worldmap.o gr-sim.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o tfv tfv.o tfv_backgrounds.o tfv_battle.o tfv_citymap.o tfv_flying.o tfv_info.o tfv_opener.o tfv_sprites.o tfv_textentry.o tfv_title.o tfv_utils.o tfv_worldmap.o gr-sim.o
+tfv:	tfv.o tfv_backgrounds.o tfv_battle.o tfv_citymap.o tfv_flying.o \
+		tfv_info.o tfv_opener.o tfv_sprites.o tfv_textentry.o \
+		tfv_title.o tfv_utils.o tfv_worldmap.o \
+		gr-sim.o gr_fast_clear.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o tfv tfv.o \
+		tfv_backgrounds.o tfv_battle.o tfv_citymap.o tfv_flying.o \
+		tfv_info.o tfv_opener.o tfv_sprites.o tfv_textentry.o \
+		tfv_title.o tfv_utils.o tfv_worldmap.o \
+		gr-sim.o gr_fast_clear.o
 
 ###
 
@@ -150,8 +163,9 @@ kaleido.o:	kaleido.c
 	$(CC) $(CFLAGS) -c kaleido.c
 
 
-rasterbars:	rasterbars.o gr-sim.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o rasterbars rasterbars.o gr-sim.o
+rasterbars:	rasterbars.o gr-sim.o gr_fast_clear.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o rasterbars rasterbars.o \
+		gr-sim.o gr_fast_clear.o
 
 rasterbars.o:	rasterbars.c
 	$(CC) $(CFLAGS) -c rasterbars.c
@@ -182,6 +196,6 @@ gr-sim.o:	gr-sim.c gr-sim.h apple2_font.h
 clean:	
 	rm -f *~ *.o gr-sim rainbow sparkle starfield starfield_fixed kaleido \
 			tfv text mode7_demo fade fixed_point tfv_multiply \
-			rasterbars
+			rasterbars lookup_tables
 
 

@@ -18,9 +18,12 @@ int title(void) {
 
 	int result;
 
-	clear_bottom(PAGE0);
-	clear_bottom(PAGE1);
-	clear_bottom(PAGE2);
+	ram[DRAW_PAGE]=PAGE0;
+	clear_bottom();
+	ram[DRAW_PAGE]=PAGE1;
+	clear_bottom();
+	ram[DRAW_PAGE]=PAGE2;
+	clear_bottom();
 
 	grsim_unrle(title_rle,0xc00);
 

@@ -224,8 +224,10 @@ int flying(void) {
 	/************************************************/
 
 	gr();
-	clear_bottom(PAGE0);
-	clear_bottom(PAGE1);
+	ram[DRAW_PAGE]=PAGE0;
+	clear_bottom();
+	ram[DRAW_PAGE]=PAGE1;
+	clear_bottom();
 
 	shipy=20;
 

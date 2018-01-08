@@ -21,6 +21,7 @@ int main(int argc, char **argv) {
 	grsim_init();
 
 	// 120
+	home();
 	gr();
 	// 125
 

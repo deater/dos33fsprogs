@@ -32,9 +32,11 @@ void soft_switch(unsigned short address);
 int soft_switch_read(unsigned short address);
 int vlin(int y1, int y2, int at);
 int collision(int xx, int yy, int ground_color);
-void clear_top_a(void);
-void clear_top(int page);
-void clear_bottom(int page);
+
+//void clear_top_a(void);
+//void clear_top(int page);
+//void clear_bottom(int page);
+
 void vtab(int ypos);
 void htab(int xpos);
 void move_cursor(void);
@@ -105,3 +107,13 @@ short y_indirect(unsigned char base, unsigned char y);
 #define PAGE0	0x0
 #define PAGE1	0x4
 #define PAGE2	0x8
+
+/* gr_fast_clear.c */
+void clear_screens(void);
+void clear_top(void);
+void clear_top_a(int color);
+void clear_bottom(void);
+void clear_screens_notext(void);
+void clear_all(void);
+
+

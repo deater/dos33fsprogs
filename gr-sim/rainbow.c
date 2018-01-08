@@ -10,6 +10,7 @@ int main(int argc, char **argv) {
 
 	grsim_init();
 
+	home();
 	gr();
 
 	/* Put rainbow on screen */

@@ -29,8 +29,8 @@ void game_over(void) {
 }
 
 void print_help(void) {
-	a=0xa0;
-	clear_top_a();
+
+	clear_top_a(0xa0);
 
 	soft_switch(TXTSET);
 

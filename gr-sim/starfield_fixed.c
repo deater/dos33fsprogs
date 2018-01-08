@@ -172,6 +172,7 @@ int main(int argc, char **argv) {
 	for(i=NUMSTARS-1;i>=0;i--) {
 		random_star(i);
 	}
+	home();
 	gr();
 
 	while(1) {

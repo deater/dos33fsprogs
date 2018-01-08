@@ -923,8 +923,11 @@ int flying(void) {
 		ram[TEMP_I],ram[TEMP_F],cycles.multiply);
 
 	gr();
-	clear_bottom(PAGE0);
-	clear_bottom(PAGE1);
+
+	ram[DRAW_PAGE]=PAGE0;
+	clear_bottom();
+	ram[DRAW_PAGE]=PAGE1;
+	clear_bottom();
 
 	ram[SHIPY]=20;
 	ram[TURNING]=0;

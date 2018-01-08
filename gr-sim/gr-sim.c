@@ -1556,6 +1556,8 @@ int collision(int xx, int yy, int ground_color) {
 	return collide;
 }
 
+#if 0
+
 void clear_top_a(void) {
 
 	int i;
@@ -1585,6 +1587,7 @@ void clear_bottom(int page) {
 	}
 }
 
+#endif
 
 void vtab(int ypos) {
 	ram[CV]=ypos-1;

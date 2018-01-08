@@ -66,9 +66,10 @@ int do_battle(void) {
 //	gr();
 
 
-	clear_bottom(PAGE2);
-
 	saved_drawpage=ram[DRAW_PAGE];
+
+	clear_bottom();
+
 	ram[DRAW_PAGE]=PAGE2;	// 0xc00
 
 	vtab(22);
@@ -154,8 +155,10 @@ int do_battle(void) {
 		usleep(100000);
 	}
 
-	clear_bottom(PAGE0);
-	clear_bottom(PAGE1);
+	ram[DRAW_PAGE]=PAGE0;
+	clear_bottom();
+	ram[DRAW_PAGE]=PAGE1;
+	clear_bottom();
 
 	return 0;
 }

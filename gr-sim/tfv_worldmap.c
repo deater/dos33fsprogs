@@ -280,7 +280,11 @@ int world_map(void) {
 		}
 
 		if (refresh) {
-			clear_bottom(PAGE2);
+			int s;
+			s=ram[DRAW_PAGE];
+			ram[DRAW_PAGE]=PAGE2;
+			clear_bottom();
+			ram[DRAW_PAGE]=s;
 			load_map_bg();
 			refresh=0;
 		}

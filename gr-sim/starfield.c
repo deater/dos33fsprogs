@@ -134,6 +134,8 @@ int main(int argc, char **argv) {
 		random_star(i);
 
 	}
+
+	home();
 	gr();
 
 	while(1) {
