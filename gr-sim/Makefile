@@ -6,7 +6,7 @@ SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 
 all:	fade fixed_point rainbow sparkle starfield starfield_fixed kaleido \
-	tfv mode7_demo text tfv_multiply rasterbars
+	tfv mode7_demo text text_demo tfv_multiply rasterbars
 
 
 #### Library
@@ -50,6 +50,14 @@ text:	text.o gr-sim.o
 
 text.o:	text.c
 	$(CC) $(CFLAGS) -c text.c
+
+####
+
+text_demo:	text_demo.o gr-sim.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o text_demo text_demo.o gr-sim.o
+
+text_demo.o:	text_demo.c
+	$(CC) $(CFLAGS) -c text_demo.c
 
 ####
 
@@ -196,6 +204,6 @@ gr-sim.o:	gr-sim.c gr-sim.h apple2_font.h
 clean:	
 	rm -f *~ *.o gr-sim rainbow sparkle starfield starfield_fixed kaleido \
 			tfv text mode7_demo fade fixed_point tfv_multiply \
-			rasterbars lookup_tables
+			rasterbars lookup_tables text_demo
 
 
