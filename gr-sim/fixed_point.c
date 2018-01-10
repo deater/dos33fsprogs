@@ -23,7 +23,7 @@ static void double_to_fixed(double d, struct fixed_type *f) {
 
 static void print_fixed(struct fixed_type *f) {
 
-	printf("%02X.%02X",f->i,f->f);
+	printf("0x%02X,0x%02X",f->i,f->f);
 }
 
 static void fixed_to_double(struct fixed_type *f, double *d) {
@@ -184,9 +184,14 @@ int main(int argc, char **argv) {
 	print_fixed(&fc);
 	printf(" %lf\n",c);
 
-	for(i=0;i<16;i++) {
-		d=sin((double)i/16.0*3.1415926535897932384*2.0);
-		double_to_fixed(d/8.0,&fa);
+	int sin_steps=64;
+
+	printf("Sine table %d steps\n",sin_steps);
+	for(i=0;i<sin_steps;i++) {
+		d=sin((double)i/sin_steps*3.1415926535897932384*2.0);
+		double_to_fixed(d,&fa);
+		print_fixed(&fa);
+		printf("// %lf\n",d);
 	}
 
 	double space_z=0.5;
