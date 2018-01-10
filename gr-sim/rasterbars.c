@@ -7,6 +7,8 @@
 
 static int row_color[40];
 
+#define ELEMENTS	16
+
 int set_row_color(double offset, int color) {
 
 	int y,s;
@@ -36,8 +38,6 @@ int main(int argc, char **argv) {
 
 		gr();
 
-		i++;
-
 		set_row_color(i+1.75,14);	// aqua
 		set_row_color(i+1.5,6);		// med-blue
 		set_row_color(i+1.25,12);	// light-green
@@ -59,7 +59,9 @@ int main(int argc, char **argv) {
 		if (ch=='q') exit(0);
 		usleep(100000);
 
-		if (i>15) i=0;
+
+		i++;
+		if (i>ELEMENTS-1) i=0;
 	}
 
 	return 0;
