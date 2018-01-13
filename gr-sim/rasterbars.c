@@ -24,7 +24,7 @@ int set_row_color(double offset, int color) {
 
 int main(int argc, char **argv) {
 
-	int ch,i=0,j;
+	int ch,i=0,j,end=3;
 
 	grsim_init();
 
@@ -61,7 +61,11 @@ int main(int argc, char **argv) {
 
 
 		i++;
-		if (i>ELEMENTS-1) i=0;
+		if (i>ELEMENTS-1) {
+			i=0;
+			end--;
+			if (end==0) break;
+		}
 	}
 
 	return 0;

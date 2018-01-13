@@ -9,7 +9,7 @@ static int row_color[40];
 
 #define ELEMENTS	64
 
-int fixed_sin[ELEMENTS][2]={
+static int fixed_sin[ELEMENTS][2]={
 {0x00,0x00}, // 0.000000
 {0x00,0x19}, // 0.098017
 {0x00,0x31}, // 0.195090
@@ -26,7 +26,7 @@ int fixed_sin[ELEMENTS][2]={
 {0x00,0xF4}, // 0.956940
 {0x00,0xFB}, // 0.980785
 {0x00,0xFE}, // 0.995185
-{0x01,0x00}, // 1.000000
+{0x00,0xFF}, // 1.000000
 {0x00,0xFE}, // 0.995185
 {0x00,0xFB}, // 0.980785
 {0x00,0xF4}, // 0.956940
@@ -76,9 +76,9 @@ int fixed_sin[ELEMENTS][2]={
 {0xFF,0xE7}, // -0.098017
 };
 
-int set_row_color(int offset, int color) {
+static int set_row_color(int offset, int color) {
 
-	int y,s=0;
+	int y=0,s=0;
 
 	short x;
 
@@ -100,7 +100,7 @@ int set_row_color(int offset, int color) {
 
 int main(int argc, char **argv) {
 
-	int ch,i=0,j;
+	int ch,i=0,j,end=3;
 
 	grsim_init();
 
@@ -114,14 +114,14 @@ int main(int argc, char **argv) {
 
 		gr();
 
-		set_row_color(i+7,14);	// aqua
-		set_row_color(i+6,6);		// med-blue
-		set_row_color(i+5,12);	// light-green
-		set_row_color(i+4,4);		// green
-		set_row_color(i+3,13);	// yellow
-		set_row_color(i+2,9);		// orange
-		set_row_color(i+1,11);	// pink
-		set_row_color(i+0.0,1);		// red
+		set_row_color(i+0,14);	// aqua
+		set_row_color(i+1,6);		// med-blue
+		set_row_color(i+2,12);	// light-green
+		set_row_color(i+3,4);		// green
+		set_row_color(i+4,13);	// yellow
+		set_row_color(i+5,9);		// orange
+		set_row_color(i+6,11);	// pink
+		set_row_color(i+7,1);		// red
 
 		for(j=0;j<40;j++) {
 			if (row_color[j]) {
@@ -131,12 +131,17 @@ int main(int argc, char **argv) {
 		}
 
 		grsim_update();
+
 		ch=grsim_input();
 		if (ch=='q') exit(0);
 		usleep(100000);
 
 		i++;
-		if (i>ELEMENTS-1) i=0;
+		if (i>(ELEMENTS-1)) {
+			i=0;
+			end--;
+			if (end==0) break;
+		}
 
 //		printf("\n");
 	}
