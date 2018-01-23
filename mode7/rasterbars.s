@@ -50,13 +50,43 @@ init_rows:
 
 	lda	#COLOR_BOTH_AQUA	; aqua
 	sta	COLOR
-
 	ldy	SCREEN_Y
 	jsr	set_row_color
 
-;	lda	#6		; medium blue
-;	iny
-;	jsr	set_row_color
+	lda	#COLOR_BOTH_MEDIUMBLUE	; medium blue
+	sta	COLOR
+	iny
+	jsr	set_row_color
+
+	lda	#COLOR_BOTH_LIGHTGREEN	; light green
+	sta	COLOR
+	iny
+	jsr	set_row_color
+
+	lda	#COLOR_BOTH_DARKGREEN	; green
+	sta	COLOR
+	iny
+	jsr	set_row_color
+
+	lda	#COLOR_BOTH_YELLOW	; yellow
+	sta	COLOR
+	iny
+	jsr	set_row_color
+
+	lda	#COLOR_BOTH_ORANGE	; orange
+	sta	COLOR
+	iny
+	jsr	set_row_color
+
+	lda	#COLOR_BOTH_PINK	; pink
+	sta	COLOR
+	iny
+	jsr	set_row_color
+
+	lda	#COLOR_BOTH_RED		; red
+	sta	COLOR
+	iny
+	jsr	set_row_color
 
 	;=================
 	; draw rows
@@ -119,16 +149,16 @@ not_there:
 	; Y preserved?
 set_row_color:
 
-	tya
+	tya				; wrap y offset
 	and	#(ELEMENTS-1)
 	tax
 
-	lda	fine_sine,X
-	cpx	#33
-	bpl	sin_negative
+	lda	fine_sine,X		; lookup sign value
+	cpx	#33			; check if > pi and
+	bpl	sin_negative		; need to make negative
 
 sin_positive:
-	clc
+	clc			; shift right by 4, zero-extend
 	ror
 	clc
 	ror
@@ -137,12 +167,8 @@ sin_positive:
 	clc
 	ror
 	clc
-	adc	#18
-	lsr
-
-	tax
-	lda	COLOR
-	sta	row_color,X
+	adc	#18		; add in 18 to center on screen
+	lsr			; shift once more
 
 	jmp	sin_no_more
 
@@ -162,11 +188,32 @@ sin_negative:
 	adc	#18
 	lsr
 
-	tax
-	lda	COLOR
-	sta	row_color,X
-
 sin_no_more:
+
+	tax
+
+	and	#$1		; see if even or odd
+	beq	even_line
+
+	lda	COLOR
+	and	#$f0
+	sta	COLOR
+
+	lda	row_color,X
+	and	#$0f
+
+	jmp	done_line
+even_line:
+	lda	COLOR
+	and	#$0f
+	sta	COLOR
+
+	lda	row_color,X
+	and	#$f0
+
+done_line:
+	ora	COLOR
+	sta	row_color,X
 
 	rts
 
