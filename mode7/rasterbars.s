@@ -168,7 +168,7 @@ sin_positive:
 	ror
 	clc
 	adc	#18		; add in 18 to center on screen
-	lsr			; shift once more
+;	lsr			; shift once more
 
 	jmp	sin_no_more
 
@@ -186,18 +186,45 @@ sin_negative:
 	clc
 
 	adc	#18
-	lsr
+;	lsr
 
 sin_no_more:
+	pha
+	lsr
+	tax
+	pla
+	pha
 
+	jsr	put_color
+
+	pla
 	tax
 
+	cpy	32
+	beq	no_inc
+	bmi	yes_inc
+
+	dex
+	dex
+yes_inc:
+	inx
+no_inc:
+	txa		; horrific
+	pha
+	lsr
+	tax
+	pla
+	jsr	put_color
+
+	rts
+
+put_color:
 	and	#$1		; see if even or odd
 	beq	even_line
 
 	lda	COLOR
 	and	#$f0
-	sta	COLOR
+	sta	COLOR2
 
 	lda	row_color,X
 	and	#$0f
@@ -206,13 +233,13 @@ sin_no_more:
 even_line:
 	lda	COLOR
 	and	#$0f
-	sta	COLOR
+	sta	COLOR2
 
 	lda	row_color,X
 	and	#$f0
 
 done_line:
-	ora	COLOR
+	ora	COLOR2
 	sta	row_color,X
 
 	rts
