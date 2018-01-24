@@ -6,6 +6,8 @@
 
 #include "gr-sim.h"
 
+#include "tfv_zp.h"
+
 #define STEPS	10
 
 #define NUM_CREDITS	10
@@ -19,6 +21,12 @@
 ****************  A L L   M S T I E S   E V E R Y W H E R E   *****************
               **************************************************
 #endif
+
+/* Ended up almost like the Electric Company Logo */
+/* Should I use orange and yellow as the colors? */
+
+#define LINE_COLORS	0x75
+//#define LINE_COLORS	0x9d
 
 char credits[NUM_CREDITS][22]={
 	"FROGGYSUE",
@@ -45,22 +53,53 @@ int main(int argc, char **argv) {
 	color_equals(15);
 	hlin_double(PAGE0,7,32,38);
 
+	ram[COLOR]=LINE_COLORS;
+	hlin_double(PAGE0,0,6,38);
+	hlin_double(PAGE0,33,40,38);
+
+	hlin_double(PAGE0,8,31,36);
+
+	ram[COLOR]=LINE_COLORS&0xf0;
+
+	hlin_double(PAGE0,7,7,36);
+	hlin_double(PAGE0,32,32,36);
+
 	basic_inverse();
+
+#define WING_LOCATION 21
+#define WING_LOCATION2 23
+
+	/* Side wings */
 	for(i=0;i<8;i++) {
 		basic_htab(i+1);
-		basic_vtab(23);
+		basic_vtab(WING_LOCATION);
 		basic_print(" ");
 
 		basic_htab(i+33);
-		basic_vtab(23);
+		basic_vtab(WING_LOCATION);
 		basic_print(" ");
 	}
 
+
+	/* Side wings */
+	for(i=0;i<8;i++) {
+		basic_htab(i+1);
+		basic_vtab(WING_LOCATION2);
+		basic_print(" ");
+
+		basic_htab(i+33);
+		basic_vtab(WING_LOCATION2);
+		basic_print(" ");
+	}
+
+
+	/* box middle/bottom */
 	for(i=7;i<33;i++) {
+#if 0
 		basic_htab(i+1);
 		basic_vtab(22);
 		basic_print(" ");
-
+#endif
 		basic_htab(i+1);
 		basic_vtab(24);
 		basic_print(" ");
@@ -73,6 +112,25 @@ int main(int argc, char **argv) {
 	basic_htab(33);
 	basic_vtab(21);
 	basic_print(" ");
+
+#if 0
+	basic_htab(8);
+	basic_vtab(22);
+	basic_print(" ");
+
+	basic_htab(33);
+	basic_vtab(22);
+	basic_print(" ");
+#endif
+
+	basic_htab(8);
+	basic_vtab(23);
+	basic_print(" ");
+
+	basic_htab(33);
+	basic_vtab(23);
+	basic_print(" ");
+
 
 	basic_normal();
 
