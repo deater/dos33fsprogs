@@ -37,19 +37,24 @@
 	;===========================
 
 forever_loop:
-	ldx	#NUM_CREDITS
+	ldx	#0
+	stx	YY
 
-credit_loop:
 	lda	#>credits
 	sta	OUTH
 	lda	#<credits
 	sta	OUTL
 
+outer_loop:
+
+
+credit_loop:
+
 	ldy	#0
 	lda	(OUTL),Y
 
 	clc
-	adc	#8
+	adc	#7
 
 	sta	CH
 
@@ -112,11 +117,56 @@ done_print:
 	lda	#$F0
 	jsr	WAIT
 
+	;==================
+	; Next credit
+	;==================
+
+	lda	#8
+	sta	CH
+	lda	#22
+	sta	CV
+
+	lda	OUTH
+	pha
+	lda	OUTL
+	pha
+
+	lda	#>empty
+	sta	OUTH
+	lda	#<empty
+	sta	OUTL
+
+	jsr	print_both_pages
+
+	pla
+	sta	OUTL
+	pla
+	sta	OUTH
+
+	ldy	#0
+skip_credit:
+	lda	(OUTL),Y
+
+	inc	OUTL
+	bne	overflow
+	inc	OUTH
+overflow:
+	cmp	#0
+	beq	done_skip
+	jmp	skip_credit
+done_skip:
+
+	ldx	YY
+	inx
+	stx	YY
+	cpx	#10
+	beq	forever
+	jmp	outer_loop
 
 	;==================
 	; loop forever
 	;==================
-
+forever:
 	jmp	forever_loop						; 3
 
 
@@ -234,26 +284,30 @@ init_screen:
 
 	rts
 
+empty:
+.asciiz	"                      "
+
+; offset can't be 0 or it confuses the next-credit code
 credits:
-.byte 6
+.byte 7
 .asciiz	"FROGGYSUE"
-.byte 6
+.byte 7
 .asciiz	"PIANOMAN08"
-.byte 6
+.byte 7
 .asciiz	"UTOPIA BBS"
-.byte 4
+.byte 5
 .asciiz	"THE 7HORSEMEN"
-.byte 1
-.asciiz	"WEAVE'S WORLD TALKER"
-.byte 5
-.asciiz	"STEALTHSUSIE"
 .byte 2
+.asciiz	"WEAVE'S WORLD TALKER"
+.byte 6
+.asciiz	"STEALTHSUSIE"
+.byte 3
 .asciiz	"ECE GRAD BOWLING"
-.byte 5
+.byte 6
 .asciiz	"CORNELL GCF"
-.byte 0
+.byte 1
 .asciiz	"ALL MSTIES EVERYWHERE"
-.byte 9
+.byte 10
 .asciiz	"..."
 
 thankz:
