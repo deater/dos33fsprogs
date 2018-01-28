@@ -19,8 +19,23 @@ CONST_LOWRES_HALF_F	EQU	$00
 
 	; pre-programmed directions
 
-flying_directions:
-	.byte	$20,$00, $1,'Z', $10,'D', $1,' ', $40,$00, $1,'Q'
+checkerboard_flying_directions:
+	.byte	$18,$00		; 24 frames, do nothing
+	.byte	$10,'D'		; 16 frames, turn right
+	.byte	$10,$00		; 16 frames, do nothing
+	.byte	$f,'A'		; 15 frames, turn left
+	.byte	$10,$00		; 16 frames, do nothing
+	.byte	$1,'Z'		; start moving forward
+	.byte	$20,$00		; 32 frames, do nothing
+	.byte	$1,'Q'		; quit
+
+island_flying_directions:
+	.byte	$20,$00		; 32 frames, do nothing
+	.byte	$1,'Z'		; start moving forward
+	.byte	$10,'D'		; 16 frames, turn right
+	.byte	$1,' '		; stop
+	.byte	$40,$00		; 64 frames, do nothing
+	.byte	$1,'Q'		; quit
 
 	;=====================
 	; Flying
@@ -55,6 +70,7 @@ mode7_flying:
 	sta	DISP_PAGE
 	sta	KEY_COUNT
 	sta	KEY_OFFSET
+	sta	FRAME_COUNT
 
 	lda	#2		; initialize sky both pages
 	sta	DRAW_SKY
@@ -80,10 +96,12 @@ flying_keyboard:
 	bne	done_key
 
 	ldy	KEY_OFFSET
-	lda	flying_directions,Y
+direction_smc_1:
+	lda	island_flying_directions,Y
 	sta	KEY_COUNT
 	iny
-	lda	flying_directions,Y
+direction_smc_2:
+	lda	island_flying_directions,Y
 	sta	LASTKEY
 	inc	KEY_OFFSET
 	inc	KEY_OFFSET
@@ -313,9 +331,30 @@ draw_sphere:
         lda     #<sphere0						; 2
         sta     INL							; 3
 
+	lda	ANGLE
+	lsr
+	tax
+	lda	sphere_offset,X
+
+	clc
+	adc	INL
+	sta	INL
+	lda	#0
+	adc	INH
+	sta	INH
+
 	lda	#17							; 2
 	sta	XPOS							; 3
-	lda	#20							; 3
+
+	lda	FRAME_COUNT
+	and	#$0f
+	tax
+	lda	gravity,X
+	bne	no_click
+	bit	SPEAKER
+no_click:
+	clc
+	adc	#10							; 3
 	sta	YPOS							; 3
 	jsr	put_sprite						; 6
 
@@ -528,6 +567,8 @@ done_draw_spaceship:
 	;==================
 
 	jsr	page_flip						; 6
+
+	inc	FRAME_COUNT
 
 	;==================
 	; loop forever
@@ -1137,5 +1178,11 @@ horizontal_lookup:
 	.byte $A6,$97,$8A,$80,$76,$6E,$68,$61,$5C,$57,$53,$4F,$4B,$48,$45,$42
 	.byte $40,$3D,$3B,$39,$37,$35,$34,$32,$30,$2F,$2E,$2C,$2B,$2A,$29,$28
 
+gravity:
+; 10fps
+;	.byte 10,10,10,10,10, 8, 8, 8, 8, 6, 6, 4, 4, 2, 2, 0
+;	.byte  0, 2, 2, 4, 4, 6, 6, 8, 8, 8, 8,10,10,10,10,10
 
-
+; 5ps
+	.byte 10,10, 8, 8, 6, 4, 2, 0
+	.byte  0, 2, 4, 6, 8, 8, 10,10

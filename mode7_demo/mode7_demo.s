@@ -54,6 +54,14 @@ checkerboard_demo:
 	lda	#>match
 	sta	nomatch+5
 
+	lda	#<checkerboard_flying_directions
+	sta	direction_smc_1+1
+	sta	direction_smc_2+1
+	lda	#>checkerboard_flying_directions
+	sta	direction_smc_1+2
+	sta	direction_smc_2+2
+
+
 	jsr	mode7_flying		; call generic mode7 code
 
 	rts
@@ -80,6 +88,13 @@ island_demo:
 	sta	nomatch+4
 	lda	#$29
 	sta	nomatch+5
+
+	lda	#<island_flying_directions
+	sta	direction_smc_1+1
+	sta	direction_smc_2+1
+	lda	#>island_flying_directions
+	sta	direction_smc_1+2
+	sta	direction_smc_2+2
 
 	jsr	mode7_flying
 
