@@ -57,3 +57,71 @@ ship_left:
 	.byte $00,$00,$77,$f2,$d9,$dd,$00,$00,$00
 	.byte $00,$70,$ff,$0f,$00,$00,$00,$00,$00
 
+sphere_offset:
+	.byte	0,27,54,81, 108,135,162,189
+
+sphere0:
+	.byte $5,$5
+	.byte $00,$b0,$b3,$b3,$00
+	.byte $b0,$bb,$bb,$bb,$30
+	.byte $bb,$bb,$bb,$bb,$33
+	.byte $0b,$bb,$bb,$bb,$33
+	.byte $00,$0b,$3b,$3b,$03
+
+sphere1:
+	.byte $5,$5
+	.byte $00,$30,$bb,$bb,$00
+	.byte $30,$bb,$bb,$bb,$b0
+	.byte $bb,$bb,$bb,$bb,$bb
+	.byte $0b,$bb,$bb,$bb,$0b
+	.byte $00,$0b,$bb,$0b,$00
+
+sphere2:
+	.byte $5,$5
+	.byte $00,$30,$b3,$bb,$00
+	.byte $30,$b3,$bb,$bb,$bb
+	.byte $33,$bb,$bb,$bb,$bb
+	.byte $03,$bb,$bb,$bb,$0b
+	.byte $00,$33,$3b,$3b,$00
+
+sphere3:
+	.byte $5,$5
+	.byte $00,$30,$b3,$bb,$00
+	.byte $30,$b3,$bb,$bb,$bb
+	.byte $33,$bb,$bb,$bb,$bb
+	.byte $03,$bb,$bb,$bb,$0b
+	.byte $00,$33,$3b,$3b,$00
+
+sphere4:
+	.byte $5,$5
+	.byte $00,$b0,$bb,$bb,$00
+	.byte $30,$bb,$bb,$bb,$b0
+	.byte $33,$33,$3b,$bb,$bb
+	.byte $03,$33,$33,$33,$0b
+	.byte $00,$33,$33,$33,$00
+
+sphere5:
+	.byte $5,$5
+	.byte $00,$b0,$bb,$b0,$00
+	.byte $30,$bb,$bb,$bb,$30
+	.byte $33,$3b,$3b,$3b,$33
+	.byte $03,$33,$33,$33,$03
+	.byte $00,$33,$33,$33,$00
+
+sphere6:
+	.byte $5,$5
+	.byte $00,$30,$bb,$bb,$00
+	.byte $30,$bb,$bb,$bb,$30
+	.byte $bb,$bb,$bb,$3b,$33
+	.byte $03,$3b,$33,$33,$33
+	.byte $00,$33,$33,$33,$00
+
+sphere7:
+	.byte $5,$5
+	.byte $00,$30,$bb,$b3,$30
+	.byte $b0,$bb,$bb,$bb,$33
+	.byte $bb,$bb,$bb,$bb,$33
+	.byte $0b,$bb,$bb,$3b,$33
+	.byte $00,$33,$33,$33,$00
+
+

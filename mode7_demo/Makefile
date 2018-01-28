@@ -19,7 +19,7 @@ mode7_demo.dsk:	$(DOS33) MODE7_DEMO
 MODE7_DEMO:	mode7_demo.o
 	ld65 -o MODE7_DEMO mode7_demo.o -C ./apple2_2000.inc
 
-mode7_demo.o:	mode7_demo.s mode7_demo_backgrounds.inc \
+mode7_demo.o:	mode7_demo.s mode7_demo_backgrounds.inc sprites.inc \
 		a2.scrolltext deater.scrolltext \
 		../asm_routines/gr_unrle.s \
 		../asm_routines/gr_fast_clear.s \

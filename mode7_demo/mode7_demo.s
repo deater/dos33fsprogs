@@ -35,14 +35,14 @@ checkerboard_demo:
 	sta	INH
 	lda	#<sky_background
 	sta	INL
-	jsr	decompress_scroll
+	jsr	decompress_scroll	; load sky background
 
-	lda	#0
+	lda	#0			; no draw blue sky
 	sta	DRAW_BLUE_SKY
 
 
-	lda	#$20
-	sta	nomatch
+	lda	#$20				; setup self-modifying code
+	sta	nomatch				; to use checkerboard map
 	lda	#<lookup_checkerboard_map
 	sta	nomatch+1
 	lda	#>lookup_checkerboard_map
@@ -54,7 +54,7 @@ checkerboard_demo:
 	lda	#>match
 	sta	nomatch+5
 
-	jsr	mode7_flying
+	jsr	mode7_flying		; call generic mode7 code
 
 	rts
 

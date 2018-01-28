@@ -298,6 +298,38 @@ speed_loop:
 draw_background:
 	jsr	draw_background_mode7					; 6
 
+	lda	DRAW_BLUE_SKY
+	bne	draw_spaceship
+
+	;========================================
+	;========================================
+	; DRAW SPHERE CODE
+	;========================================
+	;========================================
+draw_sphere:
+
+	lda     #>sphere0						; 2
+        sta     INH							; 3
+        lda     #<sphere0						; 2
+        sta     INL							; 3
+
+	lda	#17							; 2
+	sta	XPOS							; 3
+	lda	#20							; 3
+	sta	YPOS							; 3
+	jsr	put_sprite						; 6
+
+	jmp	done_draw_spaceship
+
+done_draw_sphere:
+
+	;========================================
+	;========================================
+	; DRAW SPACESHIP CODE
+	;========================================
+	;========================================
+draw_spaceship:
+
 check_over_water:
 	;	See if we are over water
 	lda	CX_I							; 3
@@ -487,6 +519,9 @@ draw_ship:
 	jsr	put_sprite						; 6
 								;===========
 								;	17
+
+done_draw_spaceship:
+
 
 	;==================
 	; flip pages
