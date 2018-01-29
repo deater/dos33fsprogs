@@ -326,6 +326,38 @@ draw_background:
 	;========================================
 draw_sphere:
 
+	; draw shadow first
+	lda	FRAME_COUNT
+	and	#$0f
+	tax
+	lda	gravity,X
+
+	cmp	#$5
+	bmi	high_shadow
+low_shadow:
+	lda     #>sphere_shadow1
+        sta     INH
+        lda     #<sphere_shadow1
+        sta     INL
+	jmp	done_shadow
+high_shadow:
+	lda     #>sphere_shadow2
+        sta     INH
+        lda     #<sphere_shadow2
+        sta     INL
+done_shadow:
+
+	lda	#17							; 2
+	sta	XPOS							; 3
+
+	lda	#28							; 2
+	sta	YPOS							; 3
+	jsr	put_sprite
+
+
+	; draw sphere
+
+
 	lda     #>sphere0						; 2
         sta     INH							; 3
         lda     #<sphere0						; 2
@@ -1183,6 +1215,9 @@ gravity:
 ;	.byte 10,10,10,10,10, 8, 8, 8, 8, 6, 6, 4, 4, 2, 2, 0
 ;	.byte  0, 2, 2, 4, 4, 6, 6, 8, 8, 8, 8,10,10,10,10,10
 
-; 5ps
-	.byte 10,10, 8, 8, 6, 4, 2, 0
-	.byte  0, 2, 4, 6, 8, 8, 10,10
+; 5fps
+;	.byte 10,10, 8, 8, 6, 4, 2, 0
+;	.byte  0, 2, 4, 6, 8, 8, 10,10
+
+	.byte 10, 8, 8, 6, 6, 4, 2, 0
+	.byte  0, 2, 4, 6, 6, 8, 8,10
