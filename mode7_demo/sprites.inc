@@ -60,6 +60,8 @@ ship_left:
 sphere_offset:
 	.byte	0,27,54,81, 108,135,162,189
 
+.if 0
+
 sphere0:
 	.byte $5,$5
 	.byte $00,$b0,$b3,$b0,$00
@@ -123,6 +125,73 @@ sphere7:
 	.byte $bb,$bb,$bb,$bb,$33
 	.byte $bb,$bb,$bb,$3b,$33
 	.byte $00,$33,$33,$33,$00
+.endif
+
+sphere0:
+	.byte $5,$5
+	.byte $00,$30,$bb,$b0,$00
+	.byte $b0,$bb,$bb,$bb,$30
+	.byte $bb,$bb,$bb,$bb,$33
+	.byte $bb,$bb,$bb,$3b,$33
+	.byte $00,$33,$33,$33,$00
+
+sphere1:
+	.byte $5,$5
+	.byte $00,$30,$bb,$b0,$00
+	.byte $30,$bb,$bb,$bb,$30
+	.byte $bb,$bb,$bb,$3b,$33
+	.byte $33,$3b,$33,$33,$33
+	.byte $00,$33,$33,$33,$00
+
+sphere2:
+	.byte $5,$5
+	.byte $00,$b0,$bb,$b0,$00
+	.byte $30,$bb,$bb,$bb,$30
+	.byte $33,$3b,$3b,$3b,$33
+	.byte $33,$33,$33,$33,$33
+	.byte $00,$33,$33,$33,$00
+
+sphere3:
+	.byte $5,$5
+	.byte $00,$b0,$bb,$b0,$00
+	.byte $30,$bb,$bb,$bb,$b0
+	.byte $33,$33,$3b,$bb,$bb
+	.byte $33,$33,$33,$33,$3b
+	.byte $00,$33,$33,$33,$00
+
+sphere4:
+	.byte $5,$5
+	.byte $00,$30,$bb,$b0,$00
+	.byte $30,$bb,$bb,$bb,$b0
+	.byte $33,$3b,$bb,$bb,$bb
+	.byte $33,$33,$3b,$bb,$bb
+	.byte $00,$33,$33,$3b,$00
+
+sphere5:
+	.byte $5,$5
+	.byte $00,$30,$b3,$b0,$00
+	.byte $30,$b3,$bb,$bb,$b0
+	.byte $33,$bb,$bb,$bb,$bb
+	.byte $33,$bb,$bb,$bb,$bb
+	.byte $00,$33,$3b,$3b,$00
+
+sphere6:
+	.byte $5,$5
+	.byte $00,$30,$bb,$b0,$00
+	.byte $30,$bb,$bb,$bb,$b0
+	.byte $bb,$bb,$bb,$bb,$bb
+	.byte $bb,$bb,$bb,$bb,$bb
+	.byte $00,$bb,$bb,$bb,$00
+
+sphere7:
+	.byte $5,$5
+	.byte $00,$b0,$b3,$b0,$00
+	.byte $b0,$bb,$bb,$bb,$30
+	.byte $bb,$bb,$bb,$bb,$33
+	.byte $bb,$bb,$bb,$bb,$33
+	.byte $00,$3b,$3b,$3b,$00
+
+
 
 
 sphere_shadow1:
