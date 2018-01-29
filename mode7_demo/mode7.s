@@ -326,6 +326,8 @@ draw_background:
 	;========================================
 draw_sphere:
 
+	; FIXME: optimize this mess
+
 	; draw shadow first
 	lda	FRAME_COUNT
 	and	#$0f
@@ -347,10 +349,10 @@ high_shadow:
         sta     INL
 done_shadow:
 
-	lda	#17							; 2
+	lda	#18							; 2
 	sta	XPOS							; 3
 
-	lda	#28							; 2
+	lda	#36							; 2
 	sta	YPOS							; 3
 	jsr	put_sprite
 
@@ -375,18 +377,19 @@ done_shadow:
 	adc	INH
 	sta	INH
 
-	lda	#17							; 2
+	lda	#18							; 2
 	sta	XPOS							; 3
 
 	lda	FRAME_COUNT
 	and	#$0f
 	tax
 	lda	gravity,X
+	cmp	#10
 	bne	no_click
 	bit	SPEAKER
 no_click:
 	clc
-	adc	#10							; 3
+	adc	#18							; 3
 	sta	YPOS							; 3
 	jsr	put_sprite						; 6
 
