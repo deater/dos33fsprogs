@@ -31,12 +31,11 @@ NUMSTARS	EQU	16
 	sta	RANDOM_POINTER						; 3
 	sta	STATE
 
-	lda	#5
-	sta	SPEED
-
 	; always multiply with low byte as zero
 	sta	NUM2L							; 3
 
+	lda	#5
+	sta	SPEED
 
 	ldy	#(NUMSTARS-1)						; 2
 init_stars:

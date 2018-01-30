@@ -5,8 +5,21 @@
 NUMSTARS	EQU	16
 
 
+
+;	Plan:
+;		Ship at rest		0 - 4
+;		Flash			5
+;		Ship at warp		25
+;		Crazy background
+;		Ship moves off
+;		Back to stars
+;		Rasterbars+credits
+;		Done
+
+
+
 	;=====================
-	; Starfield
+	; Starfield Demo
 	;=====================
 starfield_demo:
 
@@ -14,8 +27,9 @@ starfield_demo:
 	; Clear screen and setup graphics
 	;================================
 
-	jsr	clear_screens		 ; clear top/bottom of page 0/1
+	jsr	clear_screens_notext	 ; clear top/bottom of page 0/1
 	jsr     set_gr_page0
+	bit	FULLGR
 
 	;===============
 	; Init Variables
@@ -25,7 +39,7 @@ starfield_demo:
 	sta	RANDOM_POINTER						; 3
 	; always multiply with low byte as zero
 	sta	NUM2L							; 3
-
+	sta	FRAME_COUNT
 
 	ldy	#(NUMSTARS-1)						; 2
 init_stars:
@@ -44,17 +58,142 @@ starfield_loop:
 	;===============
 	; clear screen
 	;===============
-	jsr	clear_top						; 6+
+	jsr	clear_all						; 6+
 									; 6047
+
 	;===============
+	; draw the stars
+	;===============
+	jsr	draw_stars
+
+	;================
+	; draw the ship
+	;================
+
+	lda	#>ship_forward
+	sta	INH
+	lda	#<ship_forward
+	sta	INL
+
+	lda	#15
+	sta	XPOS
+	lda	#30
+	sta	YPOS
+	jsr	put_sprite
+
+
+	;==================
+	; flip pages
+	;==================
+
+	jsr	page_flip						; 6
+
+	inc	FRAME_COUNT
+	lda	FRAME_COUNT
+	cmp	#$ff
+	beq	done_stars
+
+	;==================
+	; loop
+	;==================
+
+	jmp	starfield_loop						; 3
+done_stars:
+	rts
+
+
+
+	;=====================
+	; Starfield Credits
+	;=====================
+starfield_credits:
+
+	;================================
+	; Clear screen and setup graphics
+	;================================
+
+	jsr	clear_screens		; clear top/bottom of page 0/1
+	jsr     set_gr_page0
+
+	;===============
+	; Init Variables
+	;===============
+	lda	#0							; 2
+	sta	DRAW_PAGE						; 3
+	sta	RANDOM_POINTER						; 3
+	; always multiply with low byte as zero
+	sta	NUM2L							; 3
+	sta	FRAME_COUNT
+
+	ldy	#(NUMSTARS-1)						; 2
+init_stars2:
+	jsr	random_star						; 6
+	dey								; 2
+	bpl	init_stars2						; 2nt/3
+
+	;===========================
+	;===========================
+	; StarCredits Loop
+	;===========================
+	;===========================
+
+starcredits_loop:
+
+	;===============
+	; clear screen
+	;===============
+	jsr	clear_all						; 6+
+									; 6047
+
+	;===============
+	; draw the stars
+	;===============
+	jsr	draw_stars
+
+	;====================
+	; draw the rasterbars
+	;====================
+
+	;====================
+	; draw the credits
+	;====================
+
+
+
+	;==================
+	; flip pages
+	;==================
+
+	jsr	page_flip						; 6
+
+	inc	FRAME_COUNT
+	lda	FRAME_COUNT
+	cmp	#$ff
+	beq	done_star_credits
+
+	;==================
+	; loop
+	;==================
+
+	jmp	starcredits_loop						; 3
+done_star_credits:
+	rts
+
+
+
+
+	;======================================================
+	;======================================================
 	; draw stars
-	;===============
+	;======================================================
+	;======================================================
+	; draws stars
 
-
+draw_stars:
 	; start at 15 and count down (rather than 0 and count up)
 	ldx	#(NUMSTARS-1)						; 2
 
-draw_stars:
+draw_stars_loop:
 	stx	XX							; 3
 
 	;================
@@ -151,8 +290,8 @@ no_adjust:
 	; Check Limits
 	;============================
 
-;	ldy	YPOS
 	bmi	new_star						; 2nt/3
+y_limit_smc:
 	cpy	#40							; 2
 	bpl	new_star		; if < 0 or > 40 then done	; 2nt/3
 
@@ -180,9 +319,7 @@ plot_star_continue:
 
 	dex								; 2
 	bmi	move_stars						; 2nt/3
-	bpl	draw_stars						; 2nt/3
-;	jmp	draw_stars
-
+	bpl	draw_stars_loop						; 2nt/3
 
 	;=============================
 	; Move stars
@@ -203,46 +340,15 @@ move_loop_skip:
 	dey								; 2
 	bpl	move_stars_loop						; 2nt/3
 
+	rts
 
 
-starfield_keyboard:
-
-;	jsr	get_key		; get keypress				; 6
-
-;	lda	LASTKEY							; 3
-
-;	beq	starfield_keyboard
-
-;	cmp	#('Q')		; if quit, then return
-;	bne	skipskip
-;	rts
-
-skipskip:
 
 
-	lda	#>ship_forward
-	sta	INH
-	lda	#<ship_forward
-	sta	INL
-
-	lda	#15
-	sta	XPOS
-	lda	#30
-	sta	YPOS
-	jsr	put_sprite
 
 
-	;==================
-	; flip pages
-	;==================
 
-	jsr	page_flip						; 6
 
-	;==================
-	; loop forever
-	;==================
-
-	jmp	starfield_loop						; 3
 
 
 ; matches scroll_row1 - row3
@@ -250,7 +356,11 @@ star_x	EQU	$8A00
 star_y	EQU	$8B00
 star_z	EQU	$8C00
 
-	;===================
+	;==================================================
+	;==================================================
+	; Random Star
+	;==================================================
+	;==================================================
 	; star number in Y
 	; FIXME: increment at end?
 	; X trashed

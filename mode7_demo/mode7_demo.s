@@ -22,6 +22,7 @@ main_loop:
 	jsr	checkerboard_demo
 	jsr	island_demo
 	jsr	star_demo
+	jsr	star_credits
 
 	jmp	main_loop
 
@@ -107,7 +108,24 @@ island_demo:
 star_demo:
 	; initialize
 
+	lda	#48
+	sta	y_limit_smc+1
+
 	jsr	starfield_demo
+
+	rts
+
+
+	;===========================
+	; Star Credits
+	;===========================
+star_credits:
+	; initialize
+
+	lda	#40
+	sta	y_limit_smc+1
+
+	jsr	starfield_credits
 
 	rts
 
