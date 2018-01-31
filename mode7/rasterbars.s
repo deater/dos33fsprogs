@@ -7,7 +7,7 @@
 ;===========
 
 ELEMENTS	EQU	64
-
+NUM_ROWS	EQU	20
 
 	;=====================
 	; Rasterbars
@@ -26,7 +26,7 @@ ELEMENTS	EQU	64
 	;===============
 	lda	#0							; 2
 	sta	DRAW_PAGE						; 3
-	sta	SCREEN_Y
+	sta	SCREEN_Y						; 3
 
 	;===========================
 	;===========================
@@ -34,64 +34,51 @@ ELEMENTS	EQU	64
 	;===========================
 	;===========================
 raster_loop:
+
+	jsr	clear_top	; clear screen
+
 	; clear rows
 
-	ldy	#19						; 2
-	lda	#0
-init_rows:
-	sta	row_color,Y
-	dey
-	bpl	init_rows
+	ldy	#(NUM_ROWS-1)					; 2
+	lda	#0						; 2
 
-	jsr	clear_top
+init_rows:
+	sta	row_color,Y					; 5
+	dey							; 2
+	bpl	init_rows					; 2nt/3
 
 	;================
 	; set colors
 
 	lda	#COLOR_BOTH_AQUA	; aqua
-	sta	COLOR
 	ldy	SCREEN_Y
 	jsr	set_row_color
 
 	lda	#COLOR_BOTH_MEDIUMBLUE	; medium blue
-	sta	COLOR
-	iny
 	jsr	set_row_color
 
 	lda	#COLOR_BOTH_LIGHTGREEN	; light green
-	sta	COLOR
-	iny
 	jsr	set_row_color
 
 	lda	#COLOR_BOTH_DARKGREEN	; green
-	sta	COLOR
-	iny
 	jsr	set_row_color
 
 	lda	#COLOR_BOTH_YELLOW	; yellow
-	sta	COLOR
-	iny
 	jsr	set_row_color
 
 	lda	#COLOR_BOTH_ORANGE	; orange
-	sta	COLOR
-	iny
 	jsr	set_row_color
 
 	lda	#COLOR_BOTH_PINK	; pink
-	sta	COLOR
-	iny
 	jsr	set_row_color
 
 	lda	#COLOR_BOTH_RED		; red
-	sta	COLOR
-	iny
 	jsr	set_row_color
 
 	;=================
 	; draw rows
 
-	ldy	#19
+	ldy	#(NUM_ROWS-1)						; 2
 draw_rows_loop:
 	lda	row_color,Y
 	sta	COLOR
@@ -144,11 +131,13 @@ not_there:
 	;===================
 	; set_row_color
 	;===================
-	; color in COLOR
+	; color in A
 	; Y=offset
-	; Y preserved?
-set_row_color:
+	; Y preserved
+	; A, X trashed
 
+set_row_color:
+	sta	COLOR
 	tya				; wrap y offset
 	and	#(ELEMENTS-1)
 	tax
@@ -215,6 +204,8 @@ no_inc:
 	tax
 	pla
 	jsr	put_color
+
+	iny			; increment for next time
 
 	rts
 
