@@ -17,10 +17,10 @@
 	;================================
 
 main_loop:
-	jsr	title_routine
+;	jsr	title_routine
 
-	jsr	checkerboard_demo
-	jsr	island_demo
+;	jsr	checkerboard_demo
+;	jsr	island_demo
 	jsr	star_demo
 	jsr	star_credits
 
@@ -210,6 +210,7 @@ title_routine:
 .include "../asm_routines/gr_scroll.s"
 .include "../asm_routines/gr_offsets.s"
 .include "../asm_routines/gr_plot.s"
+.include "../asm_routines/text_print.s"
 
 .include "mode7.s"
 
@@ -224,3 +225,4 @@ title_routine:
 .include "a2.scrolltext"
 .include "starfield_demo.s"
 .include "rasterbars.s"
+.include "credits.s"

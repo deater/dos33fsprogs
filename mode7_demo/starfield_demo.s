@@ -16,11 +16,14 @@ NUMSTARS	EQU	16
 ;		Rasterbars+credits
 ;		Done
 
-
-
+	;=====================
+	;=====================
 	;=====================
 	; Starfield Demo
 	;=====================
+	;=====================
+	;=====================
+
 starfield_demo:
 
 	;================================
@@ -104,7 +107,11 @@ done_stars:
 
 
 	;=====================
+	;=====================
+	;=====================
 	; Starfield Credits
+	;=====================
+	;=====================
 	;=====================
 starfield_credits:
 
@@ -114,6 +121,13 @@ starfield_credits:
 
 	jsr	clear_screens		; clear top/bottom of page 0/1
 	jsr     set_gr_page0
+
+	lda	#0							; 2
+	sta	DRAW_PAGE
+	jsr	credits_draw_text_background
+	lda	#4							; 2
+	sta	DRAW_PAGE
+	jsr	credits_draw_text_background
 
 	;===============
 	; Init Variables
@@ -143,8 +157,8 @@ starcredits_loop:
 	;===============
 	; clear screen
 	;===============
-	jsr	clear_all						; 6+
-									; 6047
+	jsr	clear_top						; 6+
+
 
 	;===============
 	; draw the stars
@@ -162,6 +176,7 @@ starcredits_loop:
 	;====================
 
 
+	jsr	credits_draw_bottom
 
 	;==================
 	; flip pages
