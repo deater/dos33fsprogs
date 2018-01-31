@@ -222,6 +222,9 @@ row_color:
 .byte $00,$00,$00,$00,$00, $00,$00,$00,$00,$00
 
 ; arithmatically shifted right by 4
+
+; FIXME: exploit symmetry and get rid of 3/4 of this table
+;	 possibly not worth the extra code
 fine_sine:
 .byte $00 ; 0.000000
 .byte $01 ; 0.098017
@@ -256,6 +259,7 @@ fine_sine:
 .byte $03 ; 0.195090
 .byte $01 ; 0.098017
 .byte $00 ; 0.000000
+
 .byte $FE ; -0.098017
 .byte $FC ; -0.195090
 .byte $FB ; -0.290285
