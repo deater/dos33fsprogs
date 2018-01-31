@@ -3,85 +3,91 @@
 ;===========
 ; CONSTANTS
 ;===========
+
 	NUM_CREDITS	EQU 10
 
-	;===============
-	; Init screen
-	;===============
+
+init_credits:
+	ldy	#0
+	lda	(OUTL),Y	; get the first byte of credit
+				; which is the X-coord
+
+	sta	CH		; store HTAB value
+
+	lda	#22		; text Y=22
+	sta	CV		; store VTAB value
+
+	lda	#$f0		; -16
+	sta	NAMEX		; we're clicking 10 times to get to our char
+
+	rts
+
 
 	;===========================
 	;===========================
-	; Main Loop
+	; draw_credits
 	;===========================
 	;===========================
 
-forever_loop:
-	ldx	#0
-	stx	YY
-
-	lda	#>credits
-	sta	OUTH
-	lda	#<credits
-	sta	OUTL
-
-outer_loop:
-
+draw_credits:
 
 credit_loop:
 
-	ldy	#0
-	lda	(OUTL),Y
-
-	clc
-	adc	#7
-
-	sta	CH
-
-	lda	#22
-	sta	CV
-
-	lda	#$f6	; - 10
-	sta	XX
 inner_loop:
 
-	jsr	htab_vtab
+	jsr	htab_vtab	; put the cursor (BASL/BASH) at CH,CV
 
-	ldy	#1
+	ldy	#1		; skip the x-coord to get to string
 print_loop:
-	lda	(OUTL),Y
-	beq	done_print
+	lda	(OUTL),Y	; get the character
+	beq	done_print	; if 0 then end of string
 
 	clc
-	adc	XX
+	adc	NAMEX		; subtract the char back
 
-	ora	#$80
-	sta	(BASL),Y
-	iny
-	jmp	print_loop
+	ora	#$80		; convert ASCII to apple normal text
+	sta	(BASL),Y	; store it directly to screen
+	iny			; point to next character
+	jmp	print_loop	; loop
+
 done_print:
 
-
-
 	;==================
-	; flip pages
+	; click
 	;==================
 
-	jsr	page_flip						; 6
+	lda	LOOP
+	beq	not_waiting
 
+	clc
+	adc	#$ff
 
-	;==================
-	; delay?
-	;==================
+	sta	LOOP
 
-	lda	#$C0
-	bit	SPEAKER
-	jsr	WAIT
+	bne	done_click
 
-	ldx	XX
-	inx
-	stx	XX
-	cpx	#1
-	bne	inner_loop
+	jsr	init_credits
+
+	jmp	done_click
+
+not_waiting:
+	lda	FRAME_COUNT	; slow down by x32
+	and	#$3f
+	beq	done_click
+
+	bit	SPEAKER		; click the speaker
+
+	ldx	NAMEX		; get the mutate counter
+	inx			; increment
+	stx	NAMEX
+	cpx	#0		; if not 1, then continue
+	bne	done_click
+
+	lda	#$30		; set delay to show the credit before
+	sta	LOOP		; continuing
+
+done_click:
+	rts
 
 	;==================
 	; Delay since done
@@ -139,15 +145,9 @@ done_skip:
 	inx
 	stx	YY
 	cpx	#10
-	beq	forever
-	jmp	outer_loop
+;	beq	forever
 
-	;==================
-	; loop forever
-	;==================
-forever:
-	jmp	forever_loop						; 3
-
+	rts
 
 	;===============================
 	; draw the above-credits chrome
@@ -208,9 +208,9 @@ credits_draw_bottom:
 	lda	#32
 	sta	V2
 	lda	#36
-	jsr	hlin_double		; make this a jump and tail-call?
+	jmp	hlin_double		; tail call, will return for us
 
-	rts
+;	rts
 
 	;============================
 	; Draw text mode boilerplate
@@ -275,25 +275,25 @@ empty:
 
 ; offset can't be 0 or it confuses the next-credit code
 credits:
-.byte 7
+.byte 7+7
 .asciiz	"FROGGYSUE"
-.byte 7
+.byte 7+7
 .asciiz	"PIANOMAN08"
-.byte 7
+.byte 7+7
 .asciiz	"UTOPIA BBS"
-.byte 5
+.byte 5+7
 .asciiz	"THE 7HORSEMEN"
-.byte 2
+.byte 2+7
 .asciiz	"WEAVE'S WORLD TALKER"
-.byte 6
+.byte 6+7
 .asciiz	"STEALTHSUSIE"
-.byte 3
+.byte 3+7
 .asciiz	"ECE GRAD BOWLING"
-.byte 6
+.byte 6+7
 .asciiz	"CORNELL GCF"
-.byte 1
+.byte 1+7
 .asciiz	"ALL MSTIES EVERYWHERE"
-.byte 10
+.byte 10+7
 .asciiz	"..."
 
 thankz:

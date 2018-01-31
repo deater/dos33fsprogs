@@ -139,12 +139,25 @@ starfield_credits:
 	; always multiply with low byte as zero
 	sta	NUM2L							; 3
 	sta	FRAME_COUNT
+	sta	YY		; which credit
+	sta	LOOP		; delay loop
+
+	lda	#>credits	; load credits pointer
+	sta	OUTH
+	lda	#<credits
+	sta	OUTL
+
+	; Initialize stars
 
 	ldy	#(NUMSTARS-1)						; 2
 init_stars2:
 	jsr	random_star						; 6
 	dey								; 2
 	bpl	init_stars2						; 2nt/3
+
+	; Initialize the credits
+
+	jsr	init_credits
 
 	;===========================
 	;===========================
@@ -175,7 +188,7 @@ starcredits_loop:
 	; draw the credits
 	;====================
 
-
+	jsr	draw_credits
 	jsr	credits_draw_bottom
 
 	;==================
