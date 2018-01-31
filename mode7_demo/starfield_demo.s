@@ -198,8 +198,9 @@ starcredits_loop:
 	jsr	page_flip						; 6
 
 	inc	FRAME_COUNT
-	lda	FRAME_COUNT
-	cmp	#$ff
+
+	lda	YY
+	cmp	#10
 	beq	done_star_credits
 
 	;==================

@@ -1,11 +1,8 @@
 ; Closing Credits
 
-;===========
-; CONSTANTS
-;===========
-
-	NUM_CREDITS	EQU 10
-
+	;===================
+	; init credits
+	;===================
 
 init_credits:
 	ldy	#0
@@ -56,16 +53,16 @@ done_print:
 	; click
 	;==================
 
-	lda	LOOP
-	beq	not_waiting
+	lda	LOOP		; get wait-at-end loop counter
+	beq	not_waiting	; if not waiting, skip ahead
 
-	clc
+	clc			; decrement counter
 	adc	#$ff
-
 	sta	LOOP
 
-	bne	done_click
+	bne	done_click	; if not zero, skip ahead
 
+	jsr	next_credit	; was zero, skip to next credit
 	jsr	init_credits
 
 	jmp	done_click
@@ -83,53 +80,49 @@ not_waiting:
 	cpx	#0		; if not 1, then continue
 	bne	done_click
 
+	lda	YY
+	cmp	#9
+	bne	short_loop
+long_loop:
+	lda	#$ff
+	bne	store_loop
+short_loop:
 	lda	#$30		; set delay to show the credit before
+store_loop:
 	sta	LOOP		; continuing
 
 done_click:
 	rts
 
 	;==================
-	; Delay since done
-	;==================
-
-	lda	#$F0
-	jsr	WAIT
-	lda	#$F0
-	jsr	WAIT
-	lda	#$F0
-	jsr	WAIT
-	lda	#$F0
-	jsr	WAIT
-
-	;==================
 	; Next credit
 	;==================
+next_credit:
 
-	lda	#8
+	lda	#8			; point to text line
 	sta	CH
 	lda	#22
 	sta	CV
 
-	lda	OUTH
+	lda	OUTH			; save credits pointer
 	pha
 	lda	OUTL
 	pha
 
-	lda	#>empty
+	lda	#>empty			; point to empty string
 	sta	OUTH
 	lda	#<empty
 	sta	OUTL
 
-	jsr	print_both_pages
+	jsr	print_both_pages	; clear line on both pages
 
-	pla
+	pla				; restore credits pointer
 	sta	OUTL
 	pla
 	sta	OUTH
 
 	ldy	#0
-skip_credit:
+skip_credit:				; skip ahead to next credit
 	lda	(OUTL),Y
 
 	inc	OUTL
@@ -138,16 +131,15 @@ skip_credit:
 overflow:
 	cmp	#0
 	beq	done_skip
-	jmp	skip_credit
+	bne	skip_credit
 done_skip:
 
-	ldx	YY
+	ldx	YY			; increment credit pointer
 	inx
 	stx	YY
-	cpx	#10
-;	beq	forever
 
 	rts
+
 
 	;===============================
 	; draw the above-credits chrome
@@ -209,8 +201,6 @@ credits_draw_bottom:
 	sta	V2
 	lda	#36
 	jmp	hlin_double		; tail call, will return for us
-
-;	rts
 
 	;============================
 	; Draw text mode boilerplate
@@ -286,7 +276,7 @@ credits:
 .byte 2+7
 .asciiz	"WEAVE'S WORLD TALKER"
 .byte 6+7
-.asciiz	"STEALTHSUSIE"
+.asciiz	"STEALTH SUSIE"
 .byte 3+7
 .asciiz	"ECE GRAD BOWLING"
 .byte 6+7
