@@ -158,60 +158,48 @@ set_row_color:
 	adc	#18		; add in 18 to center on screen
 
 sin_no_more:
-	pha
-	lsr
-	tax
-	pla
-	pha
 
-	jsr	put_color
+	pha			; save row value
+	jsr	put_color	; put color at row
+	pla			; restore row value
 
-	pla
-	tax
+	clc			; increment row value
+	adc	#1
 
-	cpy	32
-	beq	no_inc
-	bmi	yes_inc
-
-	dex
-	dex
-yes_inc:
-	inx
-no_inc:
-	txa		; horrific
-	pha
-	lsr
-	tax
-	pla
-	jsr	put_color
+	jsr	put_color	; put color at row
 
 	iny			; increment for next time
 
 	rts
 
+	;==================
+	; put_color
+	;==================
+	; A = row to set color of
+	; A trashed
 put_color:
-	and	#$1		; see if even or odd
-	beq	even_line
+	clc
+	ror			; row/2, with even/odd in carry
+	tax			; put row/2 in X
 
-	lda	COLOR
-	and	#$f0
-	sta	COLOR2
-
-	lda	row_color,X
-	and	#$0f
-
-	jmp	done_line
+	bcc	even_line	; if even, skip to even
+odd_line:
+	lda	#$f0		; load mask for odd
+	bcs	finish_line
 even_line:
-	lda	COLOR
-	and	#$0f
-	sta	COLOR2
+	lda	#$0f		; load mask for even
+finish_line:
+	sta	MASK
 
-	lda	row_color,X
-	and	#$f0
+	and	COLOR		; mask off color
+	sta	COLOR2		; store for later
 
-done_line:
-	ora	COLOR2
-	sta	row_color,X
+	lda	MASK
+	eor	#$ff		; invert mask
+	and	row_color,X	; load existing color
+
+	ora	COLOR2		; combine
+	sta	row_color,X	; store back
 
 	rts
 
@@ -221,7 +209,6 @@ done_line:
 
 .include "../asm_routines/pageflip.s"
 .include "../asm_routines/gr_setpage.s"
-;.include "../asm_routines/keypress.s"
 .include "../asm_routines/gr_offsets.s"
 .include "../asm_routines/gr_fast_clear.s"
 .include "../asm_routines/gr_hlin.s"
