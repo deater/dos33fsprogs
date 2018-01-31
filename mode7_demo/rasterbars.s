@@ -1,126 +1,85 @@
 ; Not quite a raster-bar, but why not
 
-.include "zp.inc"
-
 ;===========
 ; CONSTANTS
 ;===========
 
 ELEMENTS	EQU	64
-
+NUM_ROWS	EQU	20
 
 	;=====================
 	; Rasterbars
 	;=====================
-
-	;================================
-	; Clear screen and setup graphics
-	;================================
-
-	jsr	clear_screens		 ; clear top/bottom of page 0/1
-	jsr     set_gr_page0
-
-
-	;===============
-	; Init Variables
-	;===============
-	lda	#0							; 2
-	sta	DRAW_PAGE						; 3
-	sta	SCREEN_Y
 
 	;===========================
 	;===========================
 	; Main Loop
 	;===========================
 	;===========================
-raster_loop:
+draw_rasters:
+
 	; clear rows
 
-	ldy	#19						; 2
-	lda	#0
-init_rows:
-	sta	row_color,Y
-	dey
-	bpl	init_rows
+	ldy	#(NUM_ROWS-1)					; 2
+	lda	#0						; 2
 
-	jsr	clear_top
+init_rows:
+	sta	row_color,Y					; 5
+	dey							; 2
+	bpl	init_rows					; 2nt/3
 
 	;================
 	; set colors
 
 	lda	#COLOR_BOTH_AQUA	; aqua
-	sta	COLOR
 	ldy	SCREEN_Y
 	jsr	set_row_color
 
 	lda	#COLOR_BOTH_MEDIUMBLUE	; medium blue
-	sta	COLOR
-	iny
 	jsr	set_row_color
 
 	lda	#COLOR_BOTH_LIGHTGREEN	; light green
-	sta	COLOR
-	iny
 	jsr	set_row_color
 
 	lda	#COLOR_BOTH_DARKGREEN	; green
-	sta	COLOR
-	iny
 	jsr	set_row_color
 
 	lda	#COLOR_BOTH_YELLOW	; yellow
-	sta	COLOR
-	iny
 	jsr	set_row_color
 
 	lda	#COLOR_BOTH_ORANGE	; orange
-	sta	COLOR
-	iny
 	jsr	set_row_color
 
 	lda	#COLOR_BOTH_PINK	; pink
-	sta	COLOR
-	iny
 	jsr	set_row_color
 
 	lda	#COLOR_BOTH_RED		; red
-	sta	COLOR
-	iny
 	jsr	set_row_color
 
 	;=================
 	; draw rows
 
-	ldy	#19
+	ldy	#(NUM_ROWS-1)						; 2
 draw_rows_loop:
-	lda	row_color,Y
-	sta	COLOR
+	lda	row_color,Y						; 5
+	beq	draw_rows_skip		; skip if black			; 2nt/3
 
-	tya
-	pha
-	asl
+	sta	COLOR							; 3
+
+
+	tya								; 2
+	pha								; 3
+	asl								; 2
 
 	ldy	#39							; 2
         sty	V2							; 3
         ldy	#0							; 2
         jsr	hlin_double		; hlin y,V2 at A	; 63+(X*16)
         pla								; 4
-	tay
-	dey
-	bpl	draw_rows_loop
-
-
-	;==================
-	; flip pages
-	;==================
-
-	jsr	page_flip						; 6
-
-
-	;==================
-	; delay?
-	;==================
-
+	tay								; 2
+draw_rows_skip:
+	dey								; 2
+	bpl	draw_rows_loop						; 2
 
 	;==================
 	; update y pointer
@@ -134,126 +93,75 @@ not_there:
 	sty	SCREEN_Y
 
 
-	;==================
-	; loop forever
-	;==================
+	rts
 
-	jmp	raster_loop						; 3
-
-
+	;===================
 	;===================
 	; set_row_color
 	;===================
-	; color in COLOR
+	;===================
+	; color in A
 	; Y=offset
-	; Y preserved?
-set_row_color:
+	; Y incremented
+	; A, X trashed
 
-	tya				; wrap y offset
+set_row_color:
+	sta	COLOR
+	tya			; wrap y offset
 	and	#(ELEMENTS-1)
 	tax
 
-	lda	fine_sine,X		; lookup sign value
-	cpx	#33			; check if > pi and
-	bpl	sin_negative		; need to make negative
+	lda	fine_sine,X	; lookup sine value
+				; pre-shifted right by 4, sign-extended
 
-sin_positive:
-	clc			; shift right by 4, zero-extend
-	ror
-	clc
-	ror
-	clc
-	ror
-	clc
-	ror
 	clc
 	adc	#18		; add in 18 to center on screen
-;	lsr			; shift once more
-
-	jmp	sin_no_more
-
-	; FIXME: precalculate as we shift same each time
-sin_negative:
-
-	sec
-	ror
-	sec
-	ror
-	sec
-	ror
-	sec
-	ror
-	clc
-
-	adc	#18
-;	lsr
 
 sin_no_more:
-	pha
-	lsr
-	tax
-	pla
-	pha
 
-	jsr	put_color
+	pha			; save row value
+	jsr	put_color	; put color at row
+	pla			; restore row value
 
-	pla
-	tax
+	clc			; increment row value
+	adc	#1
 
-	cpy	32
-	beq	no_inc
-	bmi	yes_inc
+	jsr	put_color	; put color at row
 
-	dex
-	dex
-yes_inc:
-	inx
-no_inc:
-	txa		; horrific
-	pha
-	lsr
-	tax
-	pla
-	jsr	put_color
+	iny			; increment for next time
 
 	rts
 
+	;==================
+	; put_color
+	;==================
+	; A = row to set color of
+	; A trashed
 put_color:
-	and	#$1		; see if even or odd
-	beq	even_line
+	clc
+	ror			; row/2, with even/odd in carry
+	tax			; put row/2 in X
 
-	lda	COLOR
-	and	#$f0
-	sta	COLOR2
-
-	lda	row_color,X
-	and	#$0f
-
-	jmp	done_line
+	bcc	even_line	; if even, skip to even
+odd_line:
+	lda	#$f0		; load mask for odd
+	bcs	finish_line
 even_line:
-	lda	COLOR
-	and	#$0f
-	sta	COLOR2
+	lda	#$0f		; load mask for even
+finish_line:
+	sta	MASK
 
-	lda	row_color,X
-	and	#$f0
+	and	COLOR		; mask off color
+	sta	COLOR2		; store for later
 
-done_line:
-	ora	COLOR2
-	sta	row_color,X
+	lda	MASK
+	eor	#$ff		; invert mask
+	and	row_color,X	; load existing color
+
+	ora	COLOR2		; combine
+	sta	row_color,X	; store back
 
 	rts
-
-;===============================================
-; External modules
-;===============================================
-
-.include "../asm_routines/pageflip.s"
-.include "../asm_routines/gr_setpage.s"
-;.include "../asm_routines/keypress.s"
-.include "../asm_routines/gr_offsets.s"
-.include "../asm_routines/gr_fast_clear.s"
-.include "../asm_routines/gr_hlin.s"
 
 ;======================
 ; some arrays
@@ -263,69 +171,74 @@ row_color:
 .byte $00,$00,$00,$00,$00, $00,$00,$00,$00,$00
 .byte $00,$00,$00,$00,$00, $00,$00,$00,$00,$00
 
+; arithmatically shifted right by 4
+
+; FIXME: exploit symmetry and get rid of 3/4 of this table
+;	 possibly not worth the extra code
 fine_sine:
 .byte $00 ; 0.000000
-.byte $19 ; 0.098017
-.byte $31 ; 0.195090
-.byte $4A ; 0.290285
-.byte $61 ; 0.382683
-.byte $78 ; 0.471397
-.byte $8E ; 0.555570
-.byte $A2 ; 0.634393
-.byte $B5 ; 0.707107
-.byte $C5 ; 0.773010
-.byte $D4 ; 0.831470
-.byte $E1 ; 0.881921
-.byte $EC ; 0.923880
-.byte $F4 ; 0.956940
-.byte $FB ; 0.980785
-.byte $FE ; 0.995185
-.byte $FF ; 1.000000
-.byte $FE ; 0.995185
-.byte $FB ; 0.980785
-.byte $F4 ; 0.956940
-.byte $EC ; 0.923880
-.byte $E1 ; 0.881921
-.byte $D4 ; 0.831470
-.byte $C5 ; 0.773010
-.byte $B5 ; 0.707107
-.byte $A2 ; 0.634393
-.byte $8E ; 0.555570
-.byte $78 ; 0.471397
-.byte $61 ; 0.382683
-.byte $4A ; 0.290285
-.byte $31 ; 0.195090
-.byte $19 ; 0.098017
+.byte $01 ; 0.098017
+.byte $03 ; 0.195090
+.byte $04 ; 0.290285
+.byte $06 ; 0.382683
+.byte $07 ; 0.471397
+.byte $08 ; 0.555570
+.byte $0A ; 0.634393
+.byte $0B ; 0.707107
+.byte $0C ; 0.773010
+.byte $0D ; 0.831470
+.byte $0E ; 0.881921
+.byte $0E ; 0.923880
+.byte $0F ; 0.956940
+.byte $0F ; 0.980785
+.byte $0F ; 0.995185
+.byte $0F ; 1.000000
+.byte $0F ; 0.995185
+.byte $0F ; 0.980785
+.byte $0F ; 0.956940
+.byte $0E ; 0.923880
+.byte $0E ; 0.881921
+.byte $0D ; 0.831470
+.byte $0C ; 0.773010
+.byte $0B ; 0.707107
+.byte $0A ; 0.634393
+.byte $08 ; 0.555570
+.byte $07 ; 0.471397
+.byte $06 ; 0.382683
+.byte $04 ; 0.290285
+.byte $03 ; 0.195090
+.byte $01 ; 0.098017
 .byte $00 ; 0.000000
-.byte $E7 ; -0.098017
-.byte $CF ; -0.195090
-.byte $B6 ; -0.290285
-.byte $9F ; -0.382683
-.byte $88 ; -0.471397
-.byte $72 ; -0.555570
-.byte $5E ; -0.634393
-.byte $4B ; -0.707107
-.byte $3B ; -0.773010
-.byte $2C ; -0.831470
-.byte $1F ; -0.881921
-.byte $14 ; -0.923880
-.byte $0C ; -0.956940
-.byte $05 ; -0.980785
-.byte $02 ; -0.995185
-.byte $00 ; -1.000000
-.byte $02 ; -0.995185
-.byte $05 ; -0.980785
-.byte $0C ; -0.956940
-.byte $14 ; -0.923880
-.byte $1F ; -0.881921
-.byte $2C ; -0.831470
-.byte $3B ; -0.773010
-.byte $4B ; -0.707107
-.byte $5E ; -0.634393
-.byte $72 ; -0.555570
-.byte $88 ; -0.471397
-.byte $9F ; -0.382683
-.byte $B6 ; -0.290285
-.byte $CF ; -0.195090
-.byte $E7 ; -0.098017
+
+.byte $FE ; -0.098017
+.byte $FC ; -0.195090
+.byte $FB ; -0.290285
+.byte $F9 ; -0.382683
+.byte $F8 ; -0.471397
+.byte $F7 ; -0.555570
+.byte $F5 ; -0.634393
+.byte $F4 ; -0.707107
+.byte $F3 ; -0.773010
+.byte $F2 ; -0.831470
+.byte $F1 ; -0.881921
+.byte $F1 ; -0.923880
+.byte $F0 ; -0.956940
+.byte $F0 ; -0.980785
+.byte $F0 ; -0.995185
+.byte $F0 ; -1.000000
+.byte $F0 ; -0.995185
+.byte $F0 ; -0.980785
+.byte $F0 ; -0.956940
+.byte $F1 ; -0.923880
+.byte $F1 ; -0.881921
+.byte $F2 ; -0.831470
+.byte $F3 ; -0.773010
+.byte $F4 ; -0.707107
+.byte $F5 ; -0.634393
+.byte $F7 ; -0.555570
+.byte $F8 ; -0.471397
+.byte $F9 ; -0.382683
+.byte $FB ; -0.290285
+.byte $FC ; -0.195090
+.byte $FE ; -0.098017
 

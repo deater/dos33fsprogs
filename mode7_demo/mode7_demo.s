@@ -223,4 +223,4 @@ title_routine:
 .include "deater.scrolltext"
 .include "a2.scrolltext"
 .include "starfield_demo.s"
-
+.include "rasterbars.s"

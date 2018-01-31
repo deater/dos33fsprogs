@@ -121,6 +121,7 @@ starfield_credits:
 	lda	#0							; 2
 	sta	DRAW_PAGE						; 3
 	sta	RANDOM_POINTER						; 3
+	sta	SCREEN_Y
 	; always multiply with low byte as zero
 	sta	NUM2L							; 3
 	sta	FRAME_COUNT
@@ -153,6 +154,8 @@ starcredits_loop:
 	;====================
 	; draw the rasterbars
 	;====================
+
+	jsr	draw_rasters
 
 	;====================
 	; draw the credits
