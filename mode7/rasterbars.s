@@ -136,7 +136,9 @@ not_there:
 
 
 	;===================
+	;===================
 	; set_row_color
+	;===================
 	;===================
 	; color in A
 	; Y=offset
@@ -145,44 +147,15 @@ not_there:
 
 set_row_color:
 	sta	COLOR
-	tya				; wrap y offset
+	tya			; wrap y offset
 	and	#(ELEMENTS-1)
 	tax
 
-	lda	fine_sine,X		; lookup sign value
-	cpx	#33			; check if > pi and
-	bpl	sin_negative		; need to make negative
+	lda	fine_sine,X	; lookup sine value
+				; pre-shifted right by 4, sign-extended
 
-sin_positive:
-	clc			; shift right by 4, zero-extend
-	ror
-	clc
-	ror
-	clc
-	ror
-	clc
-	ror
 	clc
 	adc	#18		; add in 18 to center on screen
-;	lsr			; shift once more
-
-	jmp	sin_no_more
-
-	; FIXME: precalculate as we shift same each time
-sin_negative:
-
-	sec
-	ror
-	sec
-	ror
-	sec
-	ror
-	sec
-	ror
-	clc
-
-	adc	#18
-;	lsr
 
 sin_no_more:
 	pha
@@ -261,69 +234,70 @@ row_color:
 .byte $00,$00,$00,$00,$00, $00,$00,$00,$00,$00
 .byte $00,$00,$00,$00,$00, $00,$00,$00,$00,$00
 
+; arithmatically shifted right by 4
 fine_sine:
 .byte $00 ; 0.000000
-.byte $19 ; 0.098017
-.byte $31 ; 0.195090
-.byte $4A ; 0.290285
-.byte $61 ; 0.382683
-.byte $78 ; 0.471397
-.byte $8E ; 0.555570
-.byte $A2 ; 0.634393
-.byte $B5 ; 0.707107
-.byte $C5 ; 0.773010
-.byte $D4 ; 0.831470
-.byte $E1 ; 0.881921
-.byte $EC ; 0.923880
-.byte $F4 ; 0.956940
-.byte $FB ; 0.980785
-.byte $FE ; 0.995185
-.byte $FF ; 1.000000
-.byte $FE ; 0.995185
-.byte $FB ; 0.980785
-.byte $F4 ; 0.956940
-.byte $EC ; 0.923880
-.byte $E1 ; 0.881921
-.byte $D4 ; 0.831470
-.byte $C5 ; 0.773010
-.byte $B5 ; 0.707107
-.byte $A2 ; 0.634393
-.byte $8E ; 0.555570
-.byte $78 ; 0.471397
-.byte $61 ; 0.382683
-.byte $4A ; 0.290285
-.byte $31 ; 0.195090
-.byte $19 ; 0.098017
+.byte $01 ; 0.098017
+.byte $03 ; 0.195090
+.byte $04 ; 0.290285
+.byte $06 ; 0.382683
+.byte $07 ; 0.471397
+.byte $08 ; 0.555570
+.byte $0A ; 0.634393
+.byte $0B ; 0.707107
+.byte $0C ; 0.773010
+.byte $0D ; 0.831470
+.byte $0E ; 0.881921
+.byte $0E ; 0.923880
+.byte $0F ; 0.956940
+.byte $0F ; 0.980785
+.byte $0F ; 0.995185
+.byte $0F ; 1.000000
+.byte $0F ; 0.995185
+.byte $0F ; 0.980785
+.byte $0F ; 0.956940
+.byte $0E ; 0.923880
+.byte $0E ; 0.881921
+.byte $0D ; 0.831470
+.byte $0C ; 0.773010
+.byte $0B ; 0.707107
+.byte $0A ; 0.634393
+.byte $08 ; 0.555570
+.byte $07 ; 0.471397
+.byte $06 ; 0.382683
+.byte $04 ; 0.290285
+.byte $03 ; 0.195090
+.byte $01 ; 0.098017
 .byte $00 ; 0.000000
-.byte $E7 ; -0.098017
-.byte $CF ; -0.195090
-.byte $B6 ; -0.290285
-.byte $9F ; -0.382683
-.byte $88 ; -0.471397
-.byte $72 ; -0.555570
-.byte $5E ; -0.634393
-.byte $4B ; -0.707107
-.byte $3B ; -0.773010
-.byte $2C ; -0.831470
-.byte $1F ; -0.881921
-.byte $14 ; -0.923880
-.byte $0C ; -0.956940
-.byte $05 ; -0.980785
-.byte $02 ; -0.995185
-.byte $00 ; -1.000000
-.byte $02 ; -0.995185
-.byte $05 ; -0.980785
-.byte $0C ; -0.956940
-.byte $14 ; -0.923880
-.byte $1F ; -0.881921
-.byte $2C ; -0.831470
-.byte $3B ; -0.773010
-.byte $4B ; -0.707107
-.byte $5E ; -0.634393
-.byte $72 ; -0.555570
-.byte $88 ; -0.471397
-.byte $9F ; -0.382683
-.byte $B6 ; -0.290285
-.byte $CF ; -0.195090
-.byte $E7 ; -0.098017
+.byte $FE ; -0.098017
+.byte $FC ; -0.195090
+.byte $FB ; -0.290285
+.byte $F9 ; -0.382683
+.byte $F8 ; -0.471397
+.byte $F7 ; -0.555570
+.byte $F5 ; -0.634393
+.byte $F4 ; -0.707107
+.byte $F3 ; -0.773010
+.byte $F2 ; -0.831470
+.byte $F1 ; -0.881921
+.byte $F1 ; -0.923880
+.byte $F0 ; -0.956940
+.byte $F0 ; -0.980785
+.byte $F0 ; -0.995185
+.byte $F0 ; -1.000000
+.byte $F0 ; -0.995185
+.byte $F0 ; -0.980785
+.byte $F0 ; -0.956940
+.byte $F1 ; -0.923880
+.byte $F1 ; -0.881921
+.byte $F2 ; -0.831470
+.byte $F3 ; -0.773010
+.byte $F4 ; -0.707107
+.byte $F5 ; -0.634393
+.byte $F7 ; -0.555570
+.byte $F8 ; -0.471397
+.byte $F9 ; -0.382683
+.byte $FB ; -0.290285
+.byte $FC ; -0.195090
+.byte $FE ; -0.098017
 
