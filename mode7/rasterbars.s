@@ -80,21 +80,25 @@ init_rows:
 
 	ldy	#(NUM_ROWS-1)						; 2
 draw_rows_loop:
-	lda	row_color,Y
-	sta	COLOR
+	lda	row_color,Y						; 5
+	beq	draw_rows_skip		; skip if black			; 2nt/3
 
-	tya
-	pha
-	asl
+	sta	COLOR							; 3
+
+
+	tya								; 2
+	pha								; 3
+	asl								; 2
 
 	ldy	#39							; 2
         sty	V2							; 3
         ldy	#0							; 2
         jsr	hlin_double		; hlin y,V2 at A	; 63+(X*16)
         pla								; 4
-	tay
-	dey
-	bpl	draw_rows_loop
+	tay								; 2
+draw_rows_skip:
+	dey								; 2
+	bpl	draw_rows_loop						; 2
 
 
 	;==================
@@ -107,6 +111,9 @@ draw_rows_loop:
 	;==================
 	; delay?
 	;==================
+
+	lda	#100
+	jsr	WAIT
 
 
 	;==================
@@ -133,7 +140,7 @@ not_there:
 	;===================
 	; color in A
 	; Y=offset
-	; Y preserved
+	; Y incremented
 	; A, X trashed
 
 set_row_color:
