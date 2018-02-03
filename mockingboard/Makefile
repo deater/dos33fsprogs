@@ -3,27 +3,22 @@ include ../Makefile.inc
 DOS33 = ../dos33fs-utils/dos33
 PNG2GR = ../gr-utils/png2gr
 
-all:	dump_ed
+all:	dump_ed mock.dsk
 
-mock.dsk:	
-	$(DOS33) -y tfv.dsk BSAVE -a 0x1000 TFV
-	$(DOS33) -y tfv.dsk BSAVE -a 0x400 TITLE.GR
-	$(DOS33) -y tfv.dsk BSAVE -a 0x900 ED
+mock.dsk:	MOCK_TEST
+	$(DOS33) -y mock_test.dsk BSAVE -a 0x1000 MOCK_TEST
 
-TFV:	tfv.o
-	ld65 -o TFV tfv.o -C ./apple2_1000.inc
+MOCK_TEST:	mock_test.o
+	ld65 -o MOCK_TEST mock_test.o -C ./apple2_1000.inc
 
-tfv.o:	tfv.s title.inc
-	ca65 -o tfv.o tfv.s -l tfv.lst
+mock_test.o:	mock_test.s
+	ca65 -o mock_test.o mock_test.s -l mock_test.lst
 
 ED:	duet.o
 	ld65 -o ED duet.o -C ./apple2_900.inc
 
 duet.o:	duet.s
 	ca65 -o duet.o duet.s -l duet.lst
-
-TITLE.GR:	title.png
-	$(PNG2GR) title.png TITLE.GR
 
 notes.o:	notes.c
 	$(CC) $(CFLAGS) -c notes.c
@@ -36,5 +31,5 @@ dump_ed:	dump_ed.o notes.o
 
 
 clean:	
-	rm -f *~ TITLE.GR *.o *.lst ED
+	rm -f *~ TITLE.GR *.o *.lst ED MOCK_TEST dump_ed
 
