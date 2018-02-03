@@ -1,12 +1,12 @@
+;Dumping song ../songs/kerbal.ym5
+;	YM5	Song attributes (1) : Interleaved=yes
+;	Frames: 1824, Chip clock: 1000000 Hz, Frame rate: 50 Hz, Length=0:36
+;	Loop frame: 0, Extra data size: 0
+;	Song name: Kerbal Space Program Theme
+;	Author name: Felipe Falanghe
+;	Comment: Tracked  by Vince Weaver
 
-Dumping song ../songs/kerbal.ym5
-	YM5	Song attributes (1) : Interleaved=yes
-	Frames: 1824, Chip clock: 1000000 Hz, Frame rate: 50 Hz, Length=0:36
-	Loop frame: 0, Extra data size: 0
-	Song name: Kerbal Space Program Theme
-	Author name: Felipe Falanghe
-	Comment: Tracked  by Vince Weaver
-
+ksptheme:
 ; 00:00 AL  AH  BL  BH  CL  CH   N  NT  VA  VB  VC  EL  EH  ET
 .byte	$00,$00,$00,$00,$00,$00,$00,$38,$00,$00,$00,$00,$00,$FF	; 00000
 .byte	$00,$00,$00,$00,$00,$00,$00,$38,$00,$00,$00,$00,$00,$FF	; 00001

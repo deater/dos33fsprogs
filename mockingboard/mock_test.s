@@ -57,3 +57,5 @@
 
 forever_loop:
 	jmp	forever_loop
+
+.include	"ksptheme_uncompressed.inc"
