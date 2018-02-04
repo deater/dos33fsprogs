@@ -9,7 +9,7 @@
 .include	"zp.inc"
 
 	;=============================
-	; set low-res graphics, page 0
+	; Print message
 	;=============================
 	jsr     HOME
 	jsr     TEXT
@@ -31,6 +31,9 @@
 	jsr	mockingboard_init
 	jsr	reset_ay_left
 	jsr	reset_ay_right
+	jsr	clear_ay_left
+	jsr	clear_ay_right
+
 
 	;===========================
 	; load pointer to the music
@@ -39,9 +42,48 @@
 	lda	#<ksptheme
 	sta	INL
 	lda	#>ksptheme
-	sta	OUTL
+	sta	INH
 
+	ldx	#0
+frame_loop:
+	ldy	#0
 play_loop:
+	lda	(INL),Y
+	tax
+	jsr	write_ay_left	; assume 3 channel (not six)
+	jsr	write_ay_right	; so write same to both left/write
+
+	iny
+	cpy	#13
+	bne	play_loop
+
+	; special case, if reg 13 = ff don't write it
+
+	lda	(INL),Y
+	cmp	#$ff
+	beq	was_ff
+
+	jsr	write_ay_left	; assume 3 channel (not six)
+	jsr	write_ay_right	; so write same to both left/write
+
+was_ff:
+	; see if at end
+	iny
+	iny
+	lda	(INL),Y
+	cmp	#$ff
+	beq	done_play
+
+	; increment INL:INH by 13
+
+	clc
+	lda	INL
+	adc	#14
+	sta	INL
+
+	lda	INH
+	adc	#0
+	sta	INH
 
 
 delay_a_bit:
@@ -52,7 +94,14 @@ delay_a_bit:
 					; 40000 = 26+27A+5A^2
 					; 5a^2+27a-39974 = 0
 					; A = 86.75
+
+	jmp	frame_loop
 done_play:
+
+	jsr	clear_ay_left
+	jsr	clear_ay_right
+
+
 	lda	#0
 	sta	CH
 	lda	#2
@@ -139,19 +188,19 @@ reset_ay_right:
 	;=======================
 	; Write Right AY-3-8910
 	;=======================
-	; register in X
-	; value in Y
+	; register in Y
+	; value in X
 
-write_right_ay:
+write_ay_right:
 	; address
-	stx	MOCK_6522_ORA1		; put address on PA
+	sty	MOCK_6522_ORA1		; put address on PA
 	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB
 	sta	MOCK_6522_ORB1
 	lda	#MOCK_AY_INACTIVE	; go inactive
 	sta	MOCK_6522_ORB1
 
 	; value
-	sty	MOCK_6522_ORA1		; put value on PA
+	stx	MOCK_6522_ORA1		; put value on PA
 	lda	#MOCK_AY_WRITE		; write on PB
 	sta	MOCK_6522_ORB1
 	lda	#MOCK_AY_INACTIVE	; go inactive
@@ -165,16 +214,16 @@ write_right_ay:
 	; register in X
 	; value in Y
 
-write_left_ay:
+write_ay_left:
 	; address
-	stx	MOCK_6522_ORA2		; put address on PA
+	sty	MOCK_6522_ORA2		; put address on PA
 	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB
 	sta	MOCK_6522_ORB2
 	lda	#MOCK_AY_INACTIVE	; go inactive
 	sta	MOCK_6522_ORB2
 
 	; value
-	sty	MOCK_6522_ORA2		; put value on PA
+	stx	MOCK_6522_ORA2		; put value on PA
 	lda	#MOCK_AY_WRITE		; write on PB
 	sta	MOCK_6522_ORB2
 	lda	#MOCK_AY_INACTIVE	; go inactive
@@ -182,6 +231,32 @@ write_left_ay:
 
 	rts
 
+	;=======================================
+	; clear ay -- clear all 14 AY registers
+	; should silence the card
+	;=======================================
+clear_ay_left:
+	ldy	#14
+	ldx	#0
+clear_ay_left_loop:
+	jsr	write_ay_left
+	dey
+	bpl	clear_ay_left_loop
+	rts
+
+	;=======================================
+	; clear ay -- clear all 14 AY registers
+	; should silence the card
+	;=======================================
+clear_ay_right:
+
+	ldy	#14
+	ldx	#0
+clear_ay_right_loop:
+	jsr	write_ay_right
+	dey
+	bpl	clear_ay_right_loop
+	rts
 
 ;routines
 .include	"../asm_routines/gr_offsets.s"
