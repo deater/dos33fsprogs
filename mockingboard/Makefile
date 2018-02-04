@@ -11,7 +11,8 @@ mock.dsk:	KSP_THEME_UNCOMPRESSED
 KSP_THEME_UNCOMPRESSED:	ksp_theme_uncompressed.o
 	ld65 -o KSP_THEME_UNCOMPRESSED ksp_theme_uncompressed.o -C ./apple2_1000.inc
 
-ksp_theme_uncompressed.o:	ksp_theme_uncompressed.s
+ksp_theme_uncompressed.o:	ksp_theme_uncompressed.s \
+	../asm_routines/mockingboard.s
 	ca65 -o ksp_theme_uncompressed.o ksp_theme_uncompressed.s -l ksp_theme_uncompressed.lst
 
 ED:	duet.o
