@@ -151,3 +151,52 @@ clear_ay_right_loop:
 	rts
 
 
+	;=======================================
+	; Detect a Mockingboard card
+	;=======================================
+	; Based on code from the French Touch "Pure Noise" Demo
+	; Attempts to time an instruction sequence with a 6522
+	;
+	; If found, puts in  bMB
+	; OUT2: has address of Mockingboard
+
+bMB	EQU	$03
+OUT2	EQU	$22	; +$21
+bGood	EQU	$FE	; 0 : ok / 1 : bad
+Temp	EQU	$FF	;
+
+
+mockingboard_detect:
+	lda	#0
+	sta	OUT2
+
+mb_detect_loop:	; self-modifying
+	lda	#$07	; we start in slot 7 ($C7) and go down to 0 ($C0)
+	ora	#$C0	; make it start with C
+	sta	OUT2+1
+	ldy	#04	; $CX04
+	ldx	#02	; 2 tries?
+mb_check_cycle_loop:
+	lda	(OUT2),Y		; timer 6522 (Low Order Counter)
+					; count down
+	sta	Temp			; 3 cycles
+	lda	(OUT2),Y		; + 5 cycles = 8 cycles
+					; between the two accesses to the timer
+	sec
+	sbc	Temp			; subtract to see if we had 8 cycles
+	cmp	#$f8			; -8
+	bne	mb_not_in_this_slot
+	dex				; decrement, try one more time
+	bne	mb_check_cycle_loop	; loop detection
+	inx				; Mockingboard found (X=1)
+done_mb_detect:
+	stx	bMB			; store result to bMB
+	rts				; return
+
+mb_not_in_this_slot:
+	dec	mb_detect_loop+1	; decrement the "slot" (self_modify)
+	bne	mb_detect_loop		; loop down to one
+	inc	bGood			; didn't find?
+	ldx	#00
+	beq	done_mb_detect
+

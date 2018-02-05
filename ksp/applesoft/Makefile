@@ -5,7 +5,17 @@ SHAPETABLE = ../../hgr-utils/shape_table
 
 all:	ksp.dsk
 
-ACMPLX.BAS:	acmplx.bas
+
+$(TXT2BAS):
+	cd ../../asoft_basic-utils && make
+
+$(SHAPETABLE):
+	cd ../../hgr-utils && make
+
+$(PCX2HGR):
+	cd ../../hgr-utils && make
+
+ACMPLX.BAS:	acmplx.bas $(TXT2BAS)
 	$(TXT2BAS) < acmplx.bas > ACMPLX.BAS
 
 CONTRACT.BAS:	contract.bas
@@ -32,10 +42,10 @@ VAB.BAS:	vab.bas
 LOAD_KSP.BAS:	load_ksp.bas
 	$(TXT2BAS) < load_ksp.bas > LOAD_KSP.BAS
 
-ROCKET.SHAPE:	../ship2.table
+ROCKET.SHAPE:	../ship2.table $(SHAPETABLE)
 	$(SHAPETABLE) -b < ../ship2.table > ROCKET.SHAPE
 
-VAB.SHAPE:	../ship.table
+VAB.SHAPE:	../ship.table $(SHAPETABLE)
 	$(SHAPETABLE) -b < ../ship.table > VAB.SHAPE
 
 
