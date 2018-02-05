@@ -20,6 +20,27 @@
 	sta	OUTH
 	jsr	move_and_print
 
+	jsr	mockingboard_detect_slot4
+	cpx	#$1
+	beq	mockingboard_found
+
+	lda	#<not_message
+	sta	OUTL
+	lda	#>not_message
+	sta	OUTH
+	inc	CV
+	jsr	move_and_print
+
+	jmp	forever_loop
+
+mockingboard_found:
+	lda     #<found_message
+	sta     OUTL
+	lda     #>found_message
+	sta     OUTH
+	inc     CV
+	jsr     move_and_print
+
 	;============================
 	; Init the Mockingboard
 	;============================
@@ -40,8 +61,8 @@
 	lda	#>ksptheme
 	sta	INH
 
-	ldy	#0
 new_frame:
+	ldy	#0
 	lda	(INL),Y		; read in frame delay
 	cmp	#$ff		; see if end
 	beq	done_play	; if so, done
@@ -49,90 +70,96 @@ new_frame:
 	tax
 old_frame:
 	dex			; decrement the frame diff
-	bpl	delay_a_bit	; if not there yet, delay
+	beq	bottom_regs	; if not there yet, delay
+	jsr	delay_50Hz
+	jmp	old_frame
 
-top_regs:
+bottom_regs:
 	iny
-	lda	(INL),Y		; load low reg bitmask
-	ldx	#$ff
-top_regs_loop:
-	inx
-	cmp	#$8
-	beq	bottom_regs
-	ror
-	bcc	top_regs_loop
+	lda	(INL),Y			; load low reg bitmask
+	sta	MASK
+	ldx	#$ff			; init to -1
+bottom_regs_loop:
+	inx				; increment X
+	cpx	#$8			; if we reach 8, done
+	beq	top_regs		; move on to top
 
-	stx	XX
-	sty	YY
+	ror	MASK
+	bcc	bottom_regs_loop	; if bit not set in mask, skip reg
 
-	iny
-	lda	(INL),Y		; read in value
-	tax
+	stx	XX			; save X
 
-	ldy	XX
+	iny				; get next output value
+	lda	(INL),Y			; read in value
+
+	sty	YY			; save Y
+
+	tax				; value in X
+	ldy	XX			; register# in Y
 
 	; reg in Y, value in X
-	jsr	write_ay_left	; assume 3 channel (not six)
-	jsr	write_ay_right	; so write same to both left/write
+	jsr	write_ay_left		; assume 3 channel (not six)
+	jsr	write_ay_right		; so write same to both left/write
+
+	ldx	XX			; restore X
+	ldy	YY			; restore Y
+
+	jmp	bottom_regs_loop	; loop
+
+top_regs:
+	iny				; point to next value
+	lda	(INL),Y			; load top reg bitmask
+	sta	MASK
+	ldx	#$7			; load X as 7 (we increment first)
+top_regs_loop:
+	inx				; increment
+	cpx	#$16
+	beq	done_with_masks		; exit if done
+
+	ror	MASK
+	bcc	top_regs_loop		; loop if not set
+
+	stx	XX			; save X value
+
+	iny				; point to value
+	lda	(INL),Y			; read in output value
+
+	sty	YY			; save Y value
+
+	tax				; value in X
+	ldy	XX			; register in Y
+
+	; reg in Y, value in X
+	jsr	write_ay_left		; assume 3 channel (not six)
+	jsr	write_ay_right		; so write same to both left/write
 
 	ldx	XX
 	ldy	YY
 
 	jmp	top_regs_loop
 
-bottom_regs:
+done_with_masks:
 	iny
-	lda	(INL),Y		; load low reg bitmask
-	ldx	#$ff
-bottom_regs_loop:
-	inx
-	cmp	#$8
-	beq	delay_a_bit
-	ror
-	bcc	bottom_regs_loop
+	clc
+	tya
+	adc	INL
+	sta	INL
+	lda	#0
+	adc	INH
+	sta	INH
 
+	jsr	delay_50Hz
 
-	stx	XX
-	sty	YY
+	jmp	new_frame
 
-	iny
-	lda	(INL),Y		; read in value
-	tax
-
-	ldy	XX
-
-	; reg in Y, value in X
-	jsr	write_ay_left	; assume 3 channel (not six)
-	jsr	write_ay_right	; so write same to both left/write
-
-	ldx	XX
-	ldy	YY
-
-	jmp	bottom_regs_loop
-
-	; reg in Y, value in X
-	jsr	write_ay_left	; assume 3 channel (not six)
-	jsr	write_ay_right	; so write same to both left/write
-
-delay_a_bit:
-
-	lda	#86
-	jsr	WAIT			; delay 1/2(26+27A+5A^2) us
-					; 50Hz = 20ms = 20000us
-					; 40000 = 26+27A+5A^2
-					; 5a^2+27a-39974 = 0
-					; A = 86.75
-
-	jmp	old_frame
 done_play:
 
 	jsr	clear_ay_left
 	jsr	clear_ay_right
 
-
 	lda	#0
 	sta	CH
-	lda	#2
+	lda	#3
 	sta	CV
 	lda	#<done_message
 	sta	OUTL
@@ -143,6 +170,19 @@ done_play:
 
 forever_loop:
 	jmp	forever_loop
+
+
+
+delay_50Hz:
+
+	lda	#86
+	jsr	WAIT			; delay 1/2(26+27A+5A^2) us
+					; 50Hz = 20ms = 20000us
+					; 40000 = 26+27A+5A^2
+					; 5a^2+27a-39974 = 0
+					; A = 86.75
+	rts
+
 
 ;=========
 ;routines
@@ -160,4 +200,6 @@ forever_loop:
 ; strings
 ;=========
 mocking_message:	.asciiz "ASSUMING MOCKINGBOARD IN SLOT #4"
+not_message:		.byte   "NOT "
+found_message:		.asciiz "FOUND"
 done_message:		.asciiz "DONE PLAYING"

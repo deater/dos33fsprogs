@@ -7,7 +7,7 @@ ksptheme:
 ;	Author name: Felipe Falanghe
 ;	Comment: Tracked  by Vince Weaver
 
-.byte	$00,$80,$38,$00					; 00000
+.byte	$01,$80,$38,$00					; 00000
 .byte	$60,$35,$BD,$EE,$DD,$01,$07,$0D,$0D,$0D		; 00096
 .byte	$01,$00,$07,$0E,$0E,$0E				; 00097
 .byte	$01,$00,$07,$0F,$0F,$0F				; 00098
@@ -939,5 +939,6 @@ ksptheme:
 .byte	$01,$00,$01,$09					; 04035
 .byte	$08,$00,$01,$08					; 04043
 .byte	$01,$01,$00,$01,$00				; 04044
+.byte	$ff
 ; Raw size = 57792 bytes
 ; Updated size = 4800 bytes
