@@ -5,8 +5,17 @@ PNG2GR = ../gr-utils/png2gr
 
 all:	dump_ed mock.dsk
 
-mock.dsk:	KSP_THEME_UNCOMPRESSED
+mock.dsk:	KSP_THEME_UNCOMPRESSED KSP_THEME_COMPRESSED
 	$(DOS33) -y mock_test.dsk BSAVE -a 0x1000 KSP_THEME_UNCOMPRESSED
+	$(DOS33) -y mock_test.dsk BSAVE -a 0x1000 KSP_THEME_COMPRESSED
+
+KSP_THEME_COMPRESSED:	ksp_theme_compressed.o
+	ld65 -o KSP_THEME_COMPRESSED ksp_theme_compressed.o -C ./apple2_1000.inc
+
+ksp_theme_compressed.o:	ksp_theme_compressed.s \
+	../asm_routines/mockingboard.s \
+	ksp_theme_compressed.inc
+	ca65 -o ksp_theme_compressed.o ksp_theme_compressed.s -l ksp_theme_compressed.lst
 
 KSP_THEME_UNCOMPRESSED:	ksp_theme_uncompressed.o
 	ld65 -o KSP_THEME_UNCOMPRESSED ksp_theme_uncompressed.o -C ./apple2_1000.inc

@@ -1,3 +1,4 @@
+;Created with ym5_to_mockingboard
 ;Dumping song ../songs/kerbal.ym5
 ;	YM5	Song attributes (1) : Interleaved=yes
 ;	Frames: 1824, Chip clock: 1000000 Hz, Frame rate: 50 Hz, Length=0:36
