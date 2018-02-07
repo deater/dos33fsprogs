@@ -202,16 +202,16 @@ static int lzss_encode_better(
 	r = ring_buffer_size - match_length_limit;
 
 	if (frequent_char<32) {
-		printf(".equ FREQUENT_CHAR,%d\n",frequent_char);
+		printf(";FREQUENT_CHAR EQU %d\n",frequent_char);
 	}
 	else {
-		printf(".equ FREQUENT_CHAR,'%c'\n",frequent_char);
+		printf(";FREQUENT_CHAR EQU '%c'\n",frequent_char);
 	}
-	printf(".equ N,%i\n",ring_buffer_size);
-	printf(".equ F,%i\n",match_length_limit);
-	printf(".equ THRESHOLD,%i\n",position_length_threshold);
-	printf(".equ P_BITS,%i\n",position_bits);
-	printf(".equ POSITION_MASK,%i\n",(0xff>>(8-(position_bits-8))));
+	printf(";N EQU %i\n",ring_buffer_size);
+	printf(";F EQU %i\n",match_length_limit);
+	printf(";THRESHOLD EQU %i\n",position_length_threshold);
+	printf(";P_BITS EQU %i\n",position_bits);
+	printf(";POSITION_MASK EQU %i\n",(0xff>>(8-(position_bits-8))));
 
 	printf("logo:\n");
 

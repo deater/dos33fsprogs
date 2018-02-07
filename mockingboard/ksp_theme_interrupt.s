@@ -110,6 +110,35 @@ mockingboard_found:
 	cli		; clear interrupt mask
 
 
+	bit	SET_GR			; graphics mode
+	bit	HIRES			; hires mode
+	bit	TEXTGR			; mixed text/graphics
+	bit	PAGE0			; first graphics page
+
+	;==========================
+	; Graphics
+	;==========================
+uncompress_graphics:
+	jsr	lzss_init		; init R to zero
+
+	lda	#>ksp_title		; load logo pointer
+        sta	BASH
+        lda	#<ksp_title
+        sta	BASL
+
+	lda	#>ksp_title_end		; load logo end pointer
+        sta	LZSS_ENDH
+        lda	#<ksp_title_end
+        sta	LZSS_ENDL
+
+	; HGR page 1
+	lda	#>$2000
+	sta	OUTH
+	lda	#<$2000
+	sta	OUTL
+
+	jsr	lzss_decompress
+
 	;============================
 	; Loop forever
 	;============================
@@ -129,7 +158,7 @@ done_play:
 
 	lda	#0
 	sta	CH
-	lda	#3
+	lda	#21
 	sta	CV
 	lda	#<done_message
 	sta	OUTL
@@ -264,11 +293,13 @@ done_interrupt:
 .include	"../asm_routines/gr_offsets.s"
 .include	"../asm_routines/text_print.s"
 .include	"../asm_routines/mockingboard.s"
+.include	"../asm_routines/lzss_decompress.s"
 
 ;=======
 ; music
 ;=======
 .include	"ksp_theme_compressed.inc"
+
 
 ;=========
 ; strings
@@ -277,3 +308,10 @@ mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
 not_message:		.byte   "NOT "
 found_message:		.asciiz "FOUND"
 done_message:		.asciiz "DONE PLAYING"
+
+;=============
+; Grahpics
+; Must be at end as get over-written
+;=============
+
+.include	"ksp_title.inc"

@@ -8,7 +8,7 @@ ksptheme:
 ;	Comment: Tracked  by Vince Weaver
 
 .byte	$01,$80,$38,$00					; 00000
-.byte	$60,$35,$BD,$EE,$DD,$01,$07,$0D,$0D,$0D		; 00096
+.byte	$01,$35,$BD,$EE,$DD,$01,$07,$0D,$0D,$0D		; 00096
 .byte	$01,$00,$07,$0E,$0E,$0E				; 00097
 .byte	$01,$00,$07,$0F,$0F,$0F				; 00098
 .byte	$01,$00,$07,$0E,$0E,$0E				; 00099
