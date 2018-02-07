@@ -17,7 +17,7 @@ mode7_demo.dsk:	$(DOS33) MODE7_DEMO
 ###
 
 MODE7_DEMO:	mode7_demo.o
-	ld65 -o MODE7_DEMO mode7_demo.o -C ./apple2_2000.inc
+	ld65 -o MODE7_DEMO mode7_demo.o -C ../linker_scripts/apple2_2000.inc
 
 mode7_demo.o:	mode7_demo.s mode7_demo_backgrounds.inc sprites.inc \
 		a2.scrolltext deater.scrolltext \

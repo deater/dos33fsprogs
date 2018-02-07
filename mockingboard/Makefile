@@ -13,7 +13,7 @@ mock.dsk:	KSP_THEME_UNCOMPRESSED KSP_THEME_COMPRESSED \
 	$(DOS33) -y mock_test.dsk BSAVE -a 0x1000 INTERRUPT_TEST
 
 KSP_THEME_COMPRESSED:	ksp_theme_compressed.o
-	ld65 -o KSP_THEME_COMPRESSED ksp_theme_compressed.o -C ./apple2_1000.inc
+	ld65 -o KSP_THEME_COMPRESSED ksp_theme_compressed.o -C ../linker_scripts/apple2_1000.inc
 
 ksp_theme_compressed.o:	ksp_theme_compressed.s \
 	../asm_routines/mockingboard.s \
@@ -21,7 +21,7 @@ ksp_theme_compressed.o:	ksp_theme_compressed.s \
 	ca65 -o ksp_theme_compressed.o ksp_theme_compressed.s -l ksp_theme_compressed.lst
 
 KSP_THEME_INTERRUPT:	ksp_theme_interrupt.o
-	ld65 -o KSP_THEME_INTERRUPT ksp_theme_interrupt.o -C ./apple2_c00.inc
+	ld65 -o KSP_THEME_INTERRUPT ksp_theme_interrupt.o -C ../linker_scripts/apple2_c00.inc
 
 ksp_theme_interrupt.o:	ksp_theme_interrupt.s \
 	../asm_routines/mockingboard.s \
@@ -30,7 +30,7 @@ ksp_theme_interrupt.o:	ksp_theme_interrupt.s \
 
 
 KSP_THEME_UNCOMPRESSED:	ksp_theme_uncompressed.o
-	ld65 -o KSP_THEME_UNCOMPRESSED ksp_theme_uncompressed.o -C ./apple2_1000.inc
+	ld65 -o KSP_THEME_UNCOMPRESSED ksp_theme_uncompressed.o -C ../linker_scripts/apple2_1000.inc
 
 ksp_theme_uncompressed.o:	ksp_theme_uncompressed.s \
 	../asm_routines/mockingboard.s
@@ -38,7 +38,7 @@ ksp_theme_uncompressed.o:	ksp_theme_uncompressed.s \
 
 
 INTERRUPT_TEST:	interrupt_test.o
-	ld65 -o INTERRUPT_TEST interrupt_test.o -C ./apple2_1000.inc
+	ld65 -o INTERRUPT_TEST interrupt_test.o -C ../linker_scripts/apple2_1000.inc
 
 interrupt_test.o:	interrupt_test.s \
 	../asm_routines/mockingboard.s
