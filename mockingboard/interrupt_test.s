@@ -95,13 +95,15 @@ forever_loop:
 	;=============================
 	; simple interrupt handler
 	;=============================
-interrupt_handler:
-	lda	$45	; the Apple II firmware messes with A when
-			; detecting BRK, so the value in $45 is the real one?
-			; also DISK II support uses this so you should disable
-			; interrupts if messing with the disk?
+	; On Apple II/6502 the interrupt handler jumps to address in 0xfffe
+	; This is in the ROM, which saves the registers
+	;   on older IIe it saved A to $45 (which could mess with DISK II)
+	;   newer IIe doesn't do that.
+	; It then calculates if it is a BRK or not (which trashes A)
+	; Then it sets up the stack like an interrupt and calls 0x3fe
 
-	pha		; save A (hardware saved Pflags for us)
+interrupt_handler:
+	pha		; save A
 
 	bit		$C404	; can clear interrupt by reading T1C-L
 
