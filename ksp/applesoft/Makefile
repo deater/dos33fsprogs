@@ -60,9 +60,9 @@ ksp.dsk:	ACMPLX.BAS \
 		LOADING.BAS LOADING.HGR SQUAD.HGR TITLE.HGR \
 		PHYSICS.BAS \
 		VAB.BAS VAB.HGR
-	$(DOS33) -y ksp.dsk SAVE B LOADING.HGR
-	$(DOS33) -y ksp.dsk SAVE B SQUAD.HGR
-	$(DOS33) -y ksp.dsk SAVE B TITLE.HGR
+	$(DOS33) -y ksp.dsk BSAVE -a 0x2000 LOADING.HGR
+	$(DOS33) -y ksp.dsk BSAVE -a 0x2000 SQUAD.HGR
+	$(DOS33) -y ksp.dsk BSAVE -a 0x2000 TITLE.HGR
 	$(DOS33) -y ksp.dsk SAVE A VAB.BAS
 	$(DOS33) -y ksp.dsk SAVE B VAB.HGR
 	$(DOS33) -y ksp.dsk SAVE A LOADING.BAS
@@ -94,13 +94,13 @@ GLOBE.HGR:	../globe.pcx
 	$(PCX2HGR) ../globe.pcx > GLOBE.HGR
 
 LOADING.HGR:	../loading.pcx
-	$(PCX2HGR) ../loading.pcx > LOADING.HGR
+	$(PCX2HGR) ../loading.pcx -r > LOADING.HGR
 
 SQUAD.HGR:	../squad.pcx
-	$(PCX2HGR) ../squad.pcx > SQUAD.HGR
+	$(PCX2HGR) ../squad.pcx -r > SQUAD.HGR
 
 TITLE.HGR:	../title.pcx
-	$(PCX2HGR) ../title.pcx > TITLE.HGR
+	$(PCX2HGR) ../title.pcx -r > TITLE.HGR
 
 VAB.HGR:	../vab.pcx
 	$(PCX2HGR) ../vab.pcx > VAB.HGR

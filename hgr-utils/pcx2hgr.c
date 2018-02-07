@@ -1,5 +1,7 @@
 /* Converts 140x192 8-bit PCX file with correct palette to Apple II HGR */
 
+#define VERSION "0.0.1"
+
 #include <stdio.h>	/* For FILE I/O */
 #include <string.h>	/* For strncmp */
 #include <fcntl.h>	/* for open()  */
@@ -333,6 +335,19 @@ static int make_color_image(unsigned char *in_framebuffer,
   	return 0;
 }
 
+static void print_help(char *name,int version) {
+
+	printf("\npcx2hgr version %s\n",VERSION);
+
+	if (version) exit(1);
+
+	printf("\nUsage: %s [-r] [-s] PCXFILE\n\n",name);
+	printf("\t[-r] raw, don't prepend with BLOAD addr/size\n");
+	printf("\t[-s] short, leave off bottom text area\n");
+	printf("\n");
+
+	exit(1);
+}
 
 
 int main(int argc, char **argv) {
@@ -340,15 +355,38 @@ int main(int argc, char **argv) {
 	int xsize=0,ysize=0,type;
 	unsigned char *in_framebuffer;
 	unsigned char *out_framebuffer;
+	int raw=0;
+	int c;
 
 	char *filename;
 
-	if (argc<2) {
-		fprintf(stderr,"\nUsage: %s PCXFILE\n\n",argv[0]);
+	/* Parse command line arguments */
+
+	while ( (c=getopt(argc, argv, "hvr") ) != -1) {
+
+		switch(c) {
+
+                        case 'h':
+                                print_help(argv[0],0);
+				break;
+                        case 'v':
+                                print_help(argv[0],1);
+				break;
+                        case 'r':
+				raw=1;
+                                break;
+			default:
+				print_help(argv[0],0);
+				break;
+		}
+	}
+
+	if (optind>=argc) {
+		printf("ERROR: Was expecting filename!\n");
 		exit(1);
 	}
 
-	filename=strdup(argv[1]);
+	filename=strdup(argv[optind]);
 
 	vmwGetPCXInfo(filename,&xsize,&ysize,&type);
 
@@ -383,24 +421,27 @@ int main(int argc, char **argv) {
 		fprintf(stderr,"Error!  PCX file wrong xsize %d\n",xsize);
 	}
 
-	unsigned char header[4];
-
-	/* assume HGR page 1 */
-	int offset=8192;
 
 	/* Last 8 bytes are ignored anyway; by not saving them we can fit */
 	/* in 33 disk sectors rather than 34				  */
 	int file_size=8184;
 
-	header[0]=offset&0xff;
-	header[1]=(offset>>8)&0xff;
-	header[2]=file_size&0xff;
-	header[3]=(file_size>>8)&0xff;
+	if (!raw) {
+		unsigned char header[4];
 
-	fwrite(header,sizeof(unsigned char),4,stdout);
+		/* assume HGR page 1 */
+		int offset=8192;
+
+		header[0]=offset&0xff;
+		header[1]=(offset>>8)&0xff;
+		header[2]=file_size&0xff;
+		header[3]=(file_size>>8)&0xff;
+
+		fwrite(header,sizeof(unsigned char),4,stdout);
+	}
 
 	/* Don't need the last 8 bytes; makes it fit in one fewer disk sectors */
-	fwrite(out_framebuffer,sizeof(unsigned char),8184,stdout);
+	fwrite(out_framebuffer,sizeof(unsigned char),file_size,stdout);
 
 	free(out_framebuffer);
 	free(in_framebuffer);
