@@ -29,7 +29,7 @@ FREQUENT_CHAR EQU 0
 
 ;R:  		  .res (1024-64)	; N-F
 
-R		EQU	$4000
+R		EQU	$9000
 
 	; Init
 lzss_init:
@@ -142,9 +142,7 @@ output_loop:
 load_carry1:
 
 store_byte:
-
 	sta     (OUTPUTL),Y		 ; store byte to output
-
 	inc     OUTPUTL			 ; increment address
         bne	sb_carry
         inc	OUTPUTH	 		 ; handle overflow
@@ -188,23 +186,16 @@ done_logo:
 	rts
 
 
-;============================================
-; inc_pointer - increments the output pointer
-;============================================
-
-inc_pointer:
-	ldx	#OUTPUTL
-
 ;==================================================
 ; inc16 - increments a 16-bit pointer in zero page
 ;==================================================
 
 inc16:
         inc     0,X                	 ; increment address
-	bne     no_carry
+	bne     not_zero
 	inx
 	inc     0,X			 ; handle overflow
-no_carry:
+not_zero:
 	rts
 
 

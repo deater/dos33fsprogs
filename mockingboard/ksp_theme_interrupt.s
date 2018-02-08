@@ -107,7 +107,7 @@ mockingboard_found:
 	; Enable 6502 interrupts
 	;============================
 	;
-	cli		; clear interrupt mask
+;	cli		; clear interrupt mask
 
 
 	bit	SET_GR			; graphics mode
@@ -119,7 +119,7 @@ mockingboard_found:
 	; Graphics
 	;==========================
 uncompress_graphics:
-	jsr	lzss_init		; init R to zero
+	;jsr	lzss_init		; init R to zero
 
 	lda	#>ksp_title		; load logo pointer
         sta	BASH
@@ -131,7 +131,7 @@ uncompress_graphics:
         lda	#<ksp_title_end
         sta	LZSS_ENDL
 
-	; HGR page 1
+	; HGR page 2
 	lda	#>$2000
 	sta	OUTH
 	lda	#<$2000
@@ -315,3 +315,6 @@ done_message:		.asciiz "DONE PLAYING"
 ;=============
 
 .include	"ksp_title.inc"
+.include	"ksp_squad.inc"
+.include	"ksp_loading.inc"
+
