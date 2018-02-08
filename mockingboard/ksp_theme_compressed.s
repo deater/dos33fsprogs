@@ -56,9 +56,9 @@ mockingboard_found:
 	; load pointer to the music
 	;===========================
 
-	lda	#<ksptheme
+	lda	#<ksp_theme
 	sta	INL
-	lda	#>ksptheme
+	lda	#>ksp_theme
 	sta	INH
 
 new_frame:

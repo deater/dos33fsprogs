@@ -7,7 +7,7 @@
 ;	Author name: Felipe Falanghe
 ;	Comment: Tracked  by Vince Weaver
 
-ksptheme:
+ksp_theme:
 
 .byte	$01,$80,$38,$00					; 00000
 .byte	$01,$35,$BD,$EE,$DD,$01,$07,$0D,$0D,$0D		; 00096
