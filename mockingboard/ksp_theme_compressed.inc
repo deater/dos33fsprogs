@@ -942,5 +942,6 @@ ksptheme:
 .byte	$01,$00,$01,$09					; 04035
 .byte	$08,$00,$01,$08					; 04043
 .byte	$01,$01,$00,$01,$00				; 04044
+.byte   $54,$00,$00,$ff                                 ; 04128
 ; Raw size = 57792 bytes
 ; Updated size = 4805 bytes

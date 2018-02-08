@@ -361,16 +361,9 @@ interrupt_handler:
 
 	inc	$0401		; DEBUG: increment text char
 
-	jsr	interrupt_handle_right
-	jsr	interrupt_handle_left
+;	jsr	interrupt_handle_right
+;	jsr	interrupt_handle_left
 
-done_interrupt:
-	pla
-	tay
-	pla
-	tax
-	pla
-	rti
 
 
 
@@ -460,7 +453,7 @@ not_done_right:
 	sta	INH
 
 done_right_interrupt:
-	rts
+;	rts
 
 
 
@@ -554,8 +547,15 @@ not_done_left:
 	sta	NUM1H
 
 done_left_interrupt:
-	rts
+;	rts
 
+done_interrupt:
+	pla
+	tay
+	pla
+	tax
+	pla
+	rti
 
 
 
