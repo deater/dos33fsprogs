@@ -1,4 +1,4 @@
-ksptheme:
+
 ; Using ym5_to_mockingboard to convert song ../songs/kerbal.ym5
 ;	YM5	Song attributes (1) : Interleaved=yes
 ;	Frames: 4128, Chip clock: 1000000 Hz, Frame rate: 50 Hz, Length=1:22
@@ -6,6 +6,8 @@ ksptheme:
 ;	Song name: Kerbal Space Program Theme
 ;	Author name: Felipe Falanghe
 ;	Comment: Tracked  by Vince Weaver
+
+ksptheme:
 
 .byte	$01,$80,$38,$00					; 00000
 .byte	$01,$35,$BD,$EE,$DD,$01,$07,$0D,$0D,$0D		; 00096
@@ -124,12 +126,13 @@ ksptheme:
 .byte	$01,$00,$04,$0E					; 00554
 .byte	$01,$00,$04,$0D					; 00555
 .byte	$14,$00,$07,$0C,$0C,$0B				; 00575
-.byte	$01,$35,$9F,$BD,$BB,$03,$07,$0D,$0D,$0D		; 00576
+.byte	$01,$35,$9F,$BD,$DD,$01,$07,$0D,$0D,$0D		; 00576
 .byte	$01,$00,$07,$0E,$0E,$0E				; 00577
 .byte	$01,$00,$07,$0F,$0F,$0F				; 00578
 .byte	$01,$00,$07,$0E,$0E,$0E				; 00579
 .byte	$14,$00,$04,$0C					; 00599
-.byte	$02,$00,$04,$0D					; 00601
+.byte	$01,$30,$BB,$03,$00				; 00600
+.byte	$01,$00,$04,$0D					; 00601
 .byte	$01,$00,$04,$0E					; 00602
 .byte	$01,$00,$04,$0D					; 00603
 .byte	$14,$00,$07,$0C,$0C,$0B				; 00623
@@ -604,7 +607,7 @@ ksptheme:
 .byte	$01,$00,$04,$0E					; 02714
 .byte	$01,$00,$04,$0D					; 02715
 .byte	$14,$00,$07,$0B,$0B,$0B				; 02735
-.byte	$01,$35,$77,$00,$7D,$02,$07,$0C,$00,$0C		; 02736
+.byte	$01,$35,$77,$00,$DD,$01,$07,$0C,$00,$0C		; 02736
 .byte	$01,$00,$05,$0D,$0D				; 02737
 .byte	$01,$00,$05,$0E,$0E				; 02738
 .byte	$01,$00,$05,$0D,$0D				; 02739
@@ -939,6 +942,5 @@ ksptheme:
 .byte	$01,$00,$01,$09					; 04035
 .byte	$08,$00,$01,$08					; 04043
 .byte	$01,$01,$00,$01,$00				; 04044
-.byte	$ff
 ; Raw size = 57792 bytes
-; Updated size = 4800 bytes
+; Updated size = 4805 bytes

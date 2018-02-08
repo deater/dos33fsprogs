@@ -6,10 +6,11 @@ PNG2GR = ../gr-utils/png2gr
 all:	dump_ed mock.dsk lzss_compress
 
 mock.dsk:	KSP_THEME_UNCOMPRESSED KSP_THEME_COMPRESSED \
-		KSP_THEME_INTERRUPT INTERRUPT_TEST
+		KSP_THEME_INTERRUPT INTERRUPT_TEST KSP_THEME_6CH
 	$(DOS33) -y mock_test.dsk BSAVE -a 0x1000 KSP_THEME_UNCOMPRESSED
 	$(DOS33) -y mock_test.dsk BSAVE -a 0x1000 KSP_THEME_COMPRESSED
 	$(DOS33) -y mock_test.dsk BSAVE -a 0x4000 KSP_THEME_INTERRUPT
+	$(DOS33) -y mock_test.dsk BSAVE -a 0x4000 KSP_THEME_6CH
 	$(DOS33) -y mock_test.dsk BSAVE -a 0x1000 INTERRUPT_TEST
 
 KSP_THEME_COMPRESSED:	ksp_theme_compressed.o
@@ -19,6 +20,19 @@ ksp_theme_compressed.o:	ksp_theme_compressed.s \
 	../asm_routines/mockingboard.s \
 	ksp_theme_compressed.inc
 	ca65 -o ksp_theme_compressed.o ksp_theme_compressed.s -l ksp_theme_compressed.lst
+
+KSP_THEME_6CH:	ksp_theme_6ch.o
+	ld65 -o KSP_THEME_6CH ksp_theme_6ch.o -C ../linker_scripts/apple2_4000.inc
+
+ksp_theme_6ch.o:	ksp_theme_6ch.s \
+	../asm_routines/mockingboard.s \
+	../asm_routines/lzss_decompress.s \
+	ksp_theme_compressed.inc ksp_theme2_compressed.inc \
+	ksp_title.inc
+	ca65 -o ksp_theme_6ch.o ksp_theme_6ch.s -l ksp_theme_6ch.lst
+
+
+
 
 KSP_THEME_INTERRUPT:	ksp_theme_interrupt.o
 	ld65 -o KSP_THEME_INTERRUPT ksp_theme_interrupt.o -C ../linker_scripts/apple2_4000.inc
@@ -71,5 +85,6 @@ lzss_compress:	lzss_compress.o
 
 clean:	
 	rm -f *~ TITLE.GR *.o *.lst ED KSP_THEME_UNCOMPRESSED \
-		KSP_THEME_COMPRESSED KSP_THEME_INTERRUPT INTERRUPT_TEST dump_ed
+		KSP_THEME_COMPRESSED KSP_THEME_INTERRUPT \
+		KSP_THEME_6CH INTERRUPT_TEST dump_ed
 
