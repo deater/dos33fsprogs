@@ -15,6 +15,7 @@
 	sta	CH
 	sta	CV
 	sta	DONE_PLAYING
+	sta	XPOS
 
 	lda	#1
 	sta	MB_FRAME_DIFF
@@ -107,7 +108,7 @@ mockingboard_found:
 	; Enable 6502 interrupts
 	;============================
 	;
-;	cli		; clear interrupt mask
+	cli		; clear interrupt mask
 
 
 	bit	SET_GR			; graphics mode
@@ -119,7 +120,162 @@ mockingboard_found:
 	; Graphics
 	;==========================
 uncompress_graphics:
-	;jsr	lzss_init		; init R to zero
+	jsr	lzss_init		; init R to zero
+
+
+
+	;==========================
+	;==========================
+	; Loading Sequence
+	;==========================
+	;==========================
+	jsr	clear_bottom
+
+	;==========================
+	; Squad Logo
+	;==========================
+
+	lda	#>squad_logo		; load logo pointer
+        sta	BASH
+        lda	#<squad_logo
+        sta	BASL
+
+	lda	#>squad_logo_end	; load logo end pointer
+        sta	LZSS_ENDH
+        lda	#<squad_logo_end
+        sta	LZSS_ENDL
+
+	; HGR page 2
+	lda	#>$2000
+	sta	OUTH
+	lda	#<$2000
+	sta	OUTL
+
+	jsr	lzss_decompress
+
+	lda	#<load_quotes
+	sta	NAMEL
+	lda	#>load_quotes
+	sta	NAMEH
+
+	lda	#$54		; HTAB 4 : VTAB 21
+	sta	OUTL
+	lda	#$6
+	sta	OUTH
+
+	ldy	#31
+	lda	#('.'+$80)		; '.'
+dot_loop:
+	sta	(OUTL),Y
+	dey
+	bpl	dot_loop
+
+	ldx	#$0
+progress_bar_loop:
+	ldy	#$0
+	lda	#$6
+	sta	OUTH
+	clc
+	txa
+	adc	#$54			; HTAB 4 : VTAB 21
+	sta	OUTL
+	lda	#' '			; inverse space
+	sta	(OUTL),Y
+
+	; Halfway, change logo
+
+	cpx	#16
+	bne	no_change_logo
+
+	txa
+	pha
+
+	jsr	lzss_init		; init R to zero
+
+	lda	#>loading_logo			; load logo pointer
+        sta	BASH
+        lda	#<loading_logo
+        sta	BASL
+
+	lda	#>loading_logo_end		; load logo end pointer
+        sta	LZSS_ENDH
+        lda	#<loading_logo_end
+        sta	LZSS_ENDL
+
+	; HGR page 2
+	lda	#>$2000
+	sta	OUTH
+	lda	#<$2000
+	sta	OUTL
+
+	jsr	lzss_decompress
+
+	pla
+	tax
+
+no_change_logo:
+
+	; Update message
+
+	txa
+	and	#$3
+	bne	no_quotes
+
+	; clear line
+
+	lda	#$D0		; VTAB 22
+	sta	OUTL
+	lda	#$6
+	sta	OUTH
+
+	ldy	#40
+	lda	#(' '+$80)		; ' '
+clear_line:
+	sta	(OUTL),Y
+	dey
+	bpl	clear_line
+
+
+	ldy	#0
+	lda	(NAMEL),Y
+	adc	#$CE			; -1 because we inc Y once
+					; and another because HTAB starts at 1
+	sta	OUTL
+	iny
+print_quote_loop:
+	lda	(NAMEL),Y
+	beq	done_quote
+	ora	#$80			; make non-inverse
+	sta	(OUTL),Y
+	iny
+	jmp	print_quote_loop
+done_quote:
+	iny
+	clc
+	tya
+	adc	NAMEL
+	sta	NAMEL
+	lda	#0
+	adc	NAMEH
+	sta	NAMEH
+
+no_quotes:
+	lda	#$f0
+	jsr	WAIT
+	lda	#$f0
+	jsr	WAIT
+	lda	#$f0
+	jsr	WAIT
+	lda	#$f0
+	jsr	WAIT
+
+	inx
+	cpx	#32
+	bpl	done_progress_bar
+	jmp	progress_bar_loop
+done_progress_bar:
+	jsr	clear_bottom
+
 
 	lda	#>ksp_title		; load logo pointer
         sta	BASH
@@ -294,6 +450,7 @@ done_interrupt:
 .include	"../asm_routines/text_print.s"
 .include	"../asm_routines/mockingboard.s"
 .include	"../asm_routines/lzss_decompress.s"
+.include	"../asm_routines/gr_fast_clear.s"
 
 ;=======
 ; music
@@ -308,6 +465,25 @@ mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
 not_message:		.byte   "NOT "
 found_message:		.asciiz "FOUND"
 done_message:		.asciiz "DONE PLAYING"
+
+load_quotes:
+.byte	10
+.asciiz	"Adding Extraneous Ks"
+.byte 14
+.asciiz "Locating Jeb"
+.byte 11
+.asciiz "Breaking Quicksaves"
+.byte 12
+.asciiz "Patching Conics"
+.byte 12
+.asciiz "Spinning up Duna"
+.byte 11
+.asciiz "Warming up the 6502"
+.byte 10
+.asciiz "Preparing Explosions"
+.byte 10
+.asciiz "Unleashing the Kraken"
+
 
 ;=============
 ; Grahpics
