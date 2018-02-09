@@ -63,9 +63,9 @@ mockingboard_found:
 	; load pointer to the music
 	;===========================
 
-	lda	#<ksp_theme
+	lda	#<ksp_theme2
 	sta	INL
-	lda	#>ksp_theme
+	lda	#>ksp_theme2
 	sta	INH
 
 	lda	(INL),Y		; read in frame delay
@@ -359,7 +359,7 @@ interrupt_handler:
 
 	bit	$C404		; can clear 6522 interrupt by reading T1C-L
 
-	inc	$0401		; DEBUG: increment text char
+;	inc	$0401		; DEBUG: increment text char
 
 ;	jsr	interrupt_handle_right
 ;	jsr	interrupt_handle_left
@@ -380,7 +380,6 @@ bottom_regs_right_loop:
 	inx				; increment X
 	cpx	#$8			; if we reach 8, done
 	beq	top_regs_right		; move on to top
-
 	ror	MASK
 	bcc	bottom_regs_right_loop	; if bit not set in mask, skip reg
 
@@ -409,9 +408,8 @@ top_regs_right:
 	ldx	#$7			; load X as 7 (we increment first)
 top_regs_right_loop:
 	inx				; increment
-	cpx	#$16
+	cpx	#16
 	beq	done_with_masks_right	; exit if done
-
 	ror	MASK
 	bcc	top_regs_right_loop	; loop if not set
 
@@ -474,7 +472,6 @@ bottom_regs_left_loop:
 	inx				; increment X
 	cpx	#$8			; if we reach 8, done
 	beq	top_regs_left		; move on to top
-
 	ror	MASK
 	bcc	bottom_regs_left_loop	; if bit not set in mask, skip reg
 
@@ -503,11 +500,10 @@ top_regs_left:
 	ldx	#$7			; load X as 7 (we increment first)
 top_regs_left_loop:
 	inx				; increment
-	cpx	#$16
+	cpx	#16
 	beq	done_with_masks_left	; exit if done
-
 	ror	MASK
-	bcc	top_regs_left_loop		; loop if not set
+	bcc	top_regs_left_loop	; loop if not set
 
 	stx	XX			; save X value
 
@@ -576,6 +572,7 @@ done_interrupt:
 ;=======
 .include	"ksp_theme_compressed.inc"
 .include	"ksp_theme2_compressed.inc"
+
 
 
 ;=========
