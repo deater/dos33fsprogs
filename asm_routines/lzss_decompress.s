@@ -29,7 +29,7 @@ FREQUENT_CHAR EQU 0
 
 ;R:  		  .res (1024-64)	; N-F
 
-R		EQU	$9000
+R		EQU	$9800
 
 	; Init
 lzss_init:

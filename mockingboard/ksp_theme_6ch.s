@@ -573,7 +573,7 @@ done_interrupt:
 ; music
 ;=======
 .include	"ksp_theme_compressed.inc"
-.include	"ksp_theme2_compressed.inc"
+.include	"ksp_theme3_compressed.inc"
 
 
 
