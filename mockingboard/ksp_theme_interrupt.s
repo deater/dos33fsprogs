@@ -390,7 +390,7 @@ top_regs:
 	ldx	#$7			; load X as 7 (we increment first)
 top_regs_loop:
 	inx				; increment
-	cpx	#$16
+	cpx	#16
 	beq	done_with_masks		; exit if done
 
 	ror	MASK

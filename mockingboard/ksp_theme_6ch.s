@@ -63,11 +63,12 @@ mockingboard_found:
 	; load pointer to the music
 	;===========================
 
-	lda	#<ksp_theme2
+	lda	#<ksp_theme
 	sta	INL
-	lda	#>ksp_theme2
+	lda	#>ksp_theme
 	sta	INH
 
+	ldy	#0
 	lda	(INL),Y		; read in frame delay
 	sta	MB_FRAME_DIFF
 	inc	INL		; FIXME: should check if we oflowed
@@ -78,6 +79,7 @@ mockingboard_found:
 	lda	#>ksp_theme2
 	sta	NUM1H
 
+	ldy	#0
 	lda	(NUM1L),Y	; read in frame delay
 	sta	MB_FRAME_DIFF2
 	inc	NUM1L		; FIXME: should check if we oflowed
