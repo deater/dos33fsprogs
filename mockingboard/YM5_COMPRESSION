@@ -1,16 +1,24 @@
 For example, intro2.ym5
 
 raw:			125440 bytes
-simple diff:		 69220 bytes
 lzss:			 44154 bytes
+lz4:			 21377 bytes (14685 -9)
 gzip:			 17119 bytes
 bzip2:			 12685 bytes
 lzma (xz)		  5312 bytes
 
 Interleaved (all of r0 in a row, then all of r1, etc).
 
+lz4/interleaved:	  8914 bytes (3209 -9) (3190 -16)
 lzss/interleaved:	  7981 bytes
 lha/interleaved:	  3217 bytes   <=== default used by ym5 format
 bzip2/interleaved	  3017 bytes
 gzip/interleaved:	  2759 bytes
 lzma/interleaved:	  2129 bytes
+
+simple diff:		 69224 bytes
+lzss/diff:		 31919 bytes
+lz4/diff:		 13669 bytes (11431 -9)
+gzip/diff:		 10821 bytes
+bzip2/diff:		 10477 bytes
+lzma/diff:		  7257 bytes
