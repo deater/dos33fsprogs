@@ -38,6 +38,7 @@ void buildcount(void) {
 	if (z==0) goto done_buildcount;		// bne	++
 minus_buildcount:
 	ram[count]=a;				//-	sta	count
+	printf("MBC ");
 	getsrc();				//jsr	getsrc
 	x=a;					//tax
 	c=0;					//clc
@@ -46,14 +47,13 @@ minus_buildcount:
 	ram[count+1]++;				//inc	count+1
 skip_buildcount:
 	x++;					//+	inx
-	x&=0xff;
 	if (x==0) goto minus_buildcount;	//beq	-
 done_buildcount: ;				//++	rts
 }
 
 
 static void putdst(void) {
-	printf("PUTADDR=%04X\n",y_indirect(dst,y));
+//	printf("PUTADDR=%04X\n",y_indirect(dst,y));
 						// putdst:
 	ram[y_indirect(dst,y)]=a;		//	sta 	(dst), y
 	ram[dst]++;				//	inc	dst
@@ -61,12 +61,12 @@ static void putdst(void) {
 	ram[dst+1]++;				//	inc	dst+1
 putdst_end:;
 						//+	rts
-	printf("PUT: %02X%02X-1,%02X = %02X\n",ram[dst+1],ram[dst],y,a);
-	printf("0x8000 = %02X\n",ram[0x8000]);
+	printf("\tPUT: %02X%02X-1,%02X = %02X\n",ram[dst+1],ram[dst],y,a);
 }
 
 static void getput(void) {
 						// getput:
+	printf("GP ");
 	getsrc();				// jsr	getsrc
 	putdst();				// ; fallthrough
 }
@@ -117,8 +117,8 @@ int main(int argc, char **argv) {
 
 	//oep = 0; //first unpacked byte to run, you must set this by yourself
 	orgoff = 0x8000; //offset of first unpacked byte, you must set this by yourself
-	paksize	= size; //size of packed data, you must set this by yourself if hiunp=0
-	pakoff = 0x2008; // 8 byte offset to data?
+	paksize	= size-0xb-8; //size of packed data, you must set this by yourself if hiunp=0
+	pakoff = 0x200b; // 11 byte offset to data?
 
 
 //LCBANK2	=	$c083
@@ -137,9 +137,19 @@ int main(int argc, char **argv) {
 	a=(orgoff&0xff);	//lda	#<orgoff
 	ram[dst]=a;		// sta	dst
 
+	printf("packed size: raw=%x, adj=%x\n",size,paksize);
 	printf("packed addr: %02X%02X\n",ram[src+1],ram[src]);
 	printf("packed end : %02X%02X\n",ram[end+1],ram[end]);
 	printf("dest addr  : %02X%02X\n",ram[dst+1],ram[dst]);
+
+// https://github.com/lz4/lz4/wiki/lz4_Frame_format.md
+
+// Should: check for magic number 04 22 4d 18
+//	FLG: 64 in our case (01=version, block.index=1, block.checksum=0
+//		size=0, checksum=1, reserved
+//	MAX Blocksize: 40 (64kB)
+//	HEADER CHECKSUM: a7
+//	BLOCK HEADER: 4 bytes (le)  If highest bit set, uncompressed!
 
 
 //unpack:				//;unpacker entrypoint
@@ -149,13 +159,13 @@ unpmain:
 	y=0;				//ldy	#0
 
 parsetoken:
+	printf("PT ");
 	getsrc();			// jsr	getsrc
 	pha();				// pha
-	a>>=1;				// lsr
-	a>>=1;				// lsr
-	a>>=1;				// lsr
-	a>>=1;				// lsr
-	a&=0xff;
+	lsr();				// lsr
+	lsr();				// lsr
+	lsr();				// lsr
+	lsr();				// lsr
 	if (a==0) goto copymatches; 	// beq	copymatches
 
 	buildcount();			// jsr	buildcount
@@ -173,10 +183,13 @@ parsetoken:
 	}
 
 copymatches:
+	printf("CM1 ");
 	getsrc();			// jsr	getsrc
 	ram[delta]=a;			// sta	delta
+	printf("CM1 ");
 	getsrc();			// jsr	getsrc
 	ram[delta+1]=a;			// sta	delta+1
+	printf("DELTA is %02X%02X\n",ram[delta+1],ram[delta]);
 	pla();				// pla
 	a=a&0xf;			// and	#$0f
 	buildcount();			// jsr	buildcount
@@ -190,31 +203,64 @@ copy_skip:
 	pha();				// pha
 	a=ram[src];			// lda	src
 	pha();				// pha
+	printf("SAVED SRC: %02X%02X\n",ram[src+1],ram[src]);
+	printf("CALCULATING: DST %02X%02X - DELTA %02X%02X\n",ram[dst+1],ram[dst],ram[delta+1],ram[delta]);
 	c=1;				// sec
 	a=ram[dst];			// lda	dst
 	sbc(ram[delta]);		// sbc	delta
 	ram[src]=a;			// sta	src
 	a=ram[dst+1];			// lda	dst+1
 	sbc(ram[delta+1]);		// sbc	delta+1
-	ram[src+a]=a;			// sta	src+1
+	ram[src+1]=a;			// sta	src+1
+	printf("NEW SRC: %02X:%02X\n",ram[src+1],ram[src]);
 	docopy();			// jsr	docopy
 	pla();				// pla
 	ram[src]=a;			// sta	src
 	pla();				// pla
 	ram[src+1]=a;			// sta	src+1
+	printf("RESTORED SRC: %02X%02X\n",ram[src+1],ram[src]);
 	goto parsetoken;		// jmp	parsetoken
 
 done:
 	pla();				// pla
 
 
-	int i;
+	int out_size=(ram[dst+1]<<8)+ram[dst];
+	out_size-=0x8000;
+
+	printf("dest addr  : %02X%02X\n",ram[dst+1],ram[dst]);
+
+	int i,j,addr,temp;
+	addr=0x8000;
+
+	printf("\n");
 	for(i=0;i<256;i++) {
-		if (i%16==0) printf("\n%04X: ",0x8000+i);
-		printf("%02X ",ram[0x8000+i]);
+		if (i%16==0) printf("%04X: ",addr+i);
+		printf("%02X ",ram[addr+i]);
+		if (i%16==15) {
+			for(j=0;j<16;j++) {
+				temp=ram[((addr+i)&0xfff0)+j];
+				if ((temp<' ') || (temp>127)) printf(".");
+				else printf("%c",temp);
+			}
+			printf("\n");
+		}
 	}
 
 	printf("\n");
 					// rts
+
+	fff=fopen("out.out","w");
+	if (fff==NULL) {
+		fprintf(stderr,"Error opening!\n");
+		return -1;
+	}
+
+	printf("Out size=%d\n",out_size);
+
+	fwrite(&ram[0x8000],1,out_size,fff);
+
+	fclose(fff);
+
 	return 0;
 }

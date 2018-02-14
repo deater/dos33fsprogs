@@ -89,13 +89,19 @@ void cmp(int value) {
 
 	int temp_a;
 	int temp_value;
+	int result;
 
 	temp_a=a&0xff;
-	temp_value=value&0xff;
-	temp_a=temp_a-temp_value;
-	c=(temp_a&0x100)>>8;
-	n=(temp_a&0x80)>>7;
-	z=(a==0);
+	temp_value=(~value)&0xff;
+
+	result=temp_a+temp_value+1;
+
+	c=(result&0x100)>>8;
+
+	result&=0xff;
+
+	n=(result&0x80)>>7;
+	z=(result==0);
 }
 
 void pha(void) {
@@ -108,4 +114,15 @@ void pla(void) {
 
 	a=ram[sp];
 	sp++;
+}
+
+void lsr(void) {
+	int temp_a;
+
+	temp_a=a;
+	temp_a&=0xff;
+	temp_a=temp_a>>1;
+
+	a=(temp_a&0xff);
+//	printf("LSR A=%x\n",a);
 }
