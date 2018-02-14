@@ -6,6 +6,7 @@
 #include <math.h>
 
 #include "gr-sim.h"
+#include "6502_emulate.h"
 #include "tfv_utils.h"
 #include "tfv_zp.h"
 

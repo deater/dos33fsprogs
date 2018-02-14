@@ -22,16 +22,16 @@ demo_title.c:	../gr-utils/png2rle ../tfv/demo.png
 
 ####
 
-fade:	fade.o gr-sim.o tfv_utils.o gr_fast_clear.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o fade fade.o gr-sim.o gr_fast_clear.o tfv_utils.o
+fade:	fade.o 6502_emulate.o gr-sim.o tfv_utils.o gr_fast_clear.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o fade fade.o 6502_emulate.o gr-sim.o gr_fast_clear.o tfv_utils.o
 
 fade.o:	fade.c demo_title.c
 	$(CC) $(CFLAGS) -c fade.c
 
 ####
 
-l4d:	l4d.o gr-sim.o tfv_utils.o gr_fast_clear.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o l4d l4d.o gr-sim.o gr_fast_clear.o tfv_utils.o
+l4d:	l4d.o 6502_emulate.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o l4d l4d.o 6502_emulate.o
 
 l4d.o:	l4d.c demo_title.c
 	$(CC) $(CFLAGS) -c l4d.c
@@ -46,33 +46,33 @@ fixed_point.o:	fixed_point.c
 
 ####
 
-rainbow:	rainbow.o gr-sim.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o rainbow rainbow.o gr-sim.o
+rainbow:	rainbow.o 6502_emulate.o gr-sim.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o rainbow rainbow.o 6502_emulate.o gr-sim.o
 
 rainbow.o:	rainbow.c
 	$(CC) $(CFLAGS) -c rainbow.c
 
 ####
 
-text:	text.o gr-sim.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o text text.o gr-sim.o
+text:	text.o 6502_emulate.o gr-sim.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o text text.o 6502_emulate.o gr-sim.o
 
 text.o:	text.c
 	$(CC) $(CFLAGS) -c text.c
 
 ####
 
-text_demo:	text_demo.o gr-sim.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o text_demo text_demo.o gr-sim.o
+text_demo:	text_demo.o 6502_emulate.o gr-sim.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o text_demo text_demo.o 6502_emulate.o gr-sim.o
 
 text_demo.o:	text_demo.c
 	$(CC) $(CFLAGS) -c text_demo.c
 
 ####
 
-mode7_demo:	mode7_demo.o gr-sim.o gr_fast_clear.o
+mode7_demo:	mode7_demo.o 6502_emulate.o gr-sim.o gr_fast_clear.o
 	$(CC) $(LFLAGS) $(SDL_LIBS) -o mode7_demo mode7_demo.o \
-		gr-sim.o gr_fast_clear.o
+		6502_emulate.o gr-sim.o gr_fast_clear.o
 
 mode7_demo.o:	mode7_demo.c
 	$(CC) $(CFLAGS) -c mode7_demo.c
@@ -164,51 +164,51 @@ tfv.o:	tfv.c gr-sim.h tfv_backgrounds.h tfv_sprites.h
 tfv:	tfv.o tfv_backgrounds.o tfv_battle.o tfv_citymap.o tfv_flying.o \
 		tfv_info.o tfv_opener.o tfv_sprites.o tfv_textentry.o \
 		tfv_title.o tfv_utils.o tfv_worldmap.o \
-		gr-sim.o gr_fast_clear.o
+		6502_emulate.o gr-sim.o gr_fast_clear.o
 	$(CC) $(LFLAGS) $(SDL_LIBS) -o tfv tfv.o \
 		tfv_backgrounds.o tfv_battle.o tfv_citymap.o tfv_flying.o \
 		tfv_info.o tfv_opener.o tfv_sprites.o tfv_textentry.o \
 		tfv_title.o tfv_utils.o tfv_worldmap.o \
-		gr-sim.o gr_fast_clear.o
+		6502_emulate.o gr-sim.o gr_fast_clear.o
 
 ###
 
-kaleido:	kaleido.o gr-sim.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o kaleido kaleido.o gr-sim.o
+kaleido:	kaleido.o 6502_emulate.o gr-sim.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o kaleido kaleido.o 6502_emulate.o gr-sim.o
 
 kaleido.o:	kaleido.c
 	$(CC) $(CFLAGS) -c kaleido.c
 
 
-rasterbars:	rasterbars.o gr-sim.o gr_fast_clear.o
+rasterbars:	rasterbars.o 6502_emulate.o gr-sim.o gr_fast_clear.o
 	$(CC) $(LFLAGS) $(SDL_LIBS) -o rasterbars rasterbars.o \
-		gr-sim.o gr_fast_clear.o
+		6502_emulate.o gr-sim.o gr_fast_clear.o
 
 rasterbars.o:	rasterbars.c
 	$(CC) $(CFLAGS) -c rasterbars.c
 
-rasterbars_fixed:	rasterbars_fixed.o gr-sim.o gr_fast_clear.o
+rasterbars_fixed:	rasterbars_fixed.o 6502_emulate.o gr-sim.o gr_fast_clear.o
 	$(CC) $(LFLAGS) $(SDL_LIBS) -o rasterbars_fixed rasterbars_fixed.o \
-		gr-sim.o gr_fast_clear.o
+		6502_emulate.o gr-sim.o gr_fast_clear.o
 
 rasterbars_fixed.o:	rasterbars_fixed.c
 	$(CC) $(CFLAGS) -c rasterbars_fixed.c
 
-sparkle:	sparkle.o gr-sim.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o sparkle sparkle.o gr-sim.o
+sparkle:	sparkle.o 6502_emulate.o gr-sim.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o sparkle sparkle.o 6502_emulate.o gr-sim.o
 
 sparkle.o:	sparkle.c
 	$(CC) $(CFLAGS) -c sparkle.c
 
 
-starfield:	starfield.o gr-sim.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o starfield starfield.o gr-sim.o
+starfield:	starfield.o 6502_emulate.o gr-sim.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o starfield starfield.o 6502_emulate.o gr-sim.o
 
 starfield.o:	starfield.c
 	$(CC) $(CFLAGS) -c starfield.c
 
-starfield_fixed:	starfield_fixed.o gr-sim.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o starfield_fixed starfield_fixed.o gr-sim.o
+starfield_fixed:	starfield_fixed.o 6502_emulate.o gr-sim.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o starfield_fixed starfield_fixed.o 6502_emulate.o gr-sim.o
 
 starfield_fixed.o:	starfield_fixed.c
 	$(CC) $(CFLAGS) -c starfield_fixed.c
@@ -216,6 +216,9 @@ starfield_fixed.o:	starfield_fixed.c
 
 gr-sim.o:	gr-sim.c gr-sim.h apple2_font.h
 	$(CC) $(CFLAGS) $(SDL_INCLUDE) -c gr-sim.c
+
+6502_emulate.o:	6502_emulate.c 6502_emulate.h
+	$(CC) $(CFLAGS) $(SDL_INCLUDE) -c 6502_emulate.c
 
 clean:	
 	rm -f *~ *.o gr-sim rainbow sparkle starfield starfield_fixed kaleido \

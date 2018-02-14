@@ -1,5 +1,6 @@
 #include "gr-sim.h"
 #include "tfv_zp.h"
+#include "6502_emulate.h"
 
 void clear_screens(void) {
 	ram[DRAW_PAGE]=0;

@@ -6,6 +6,7 @@
 
 #include "gr-sim.h"
 #include "tfv_zp.h"
+#include "6502_emulate.h"
 
 #include "apple2_font.h"
 
@@ -25,14 +26,6 @@ static int xsize=GR_XSIZE*PIXEL_X_SCALE;
 static int ysize=GR_YSIZE*PIXEL_Y_SCALE;
 
 static int debug=0;
-
-
-/* 128kB of RAM */
-#define RAMSIZE 128*1024
-unsigned char ram[RAMSIZE];
-
-/* Registers */
-unsigned char a,y,x;
 
 /* Zero page addresses */
 #define WNDLFT	0x20
@@ -219,18 +212,6 @@ static int gbascalc(unsigned char a) {
 	if (debug) printf("GBAS=%02X%02X\n",ram[GBASH],ram[GBASL]);
 
 	return 0;
-}
-
-short y_indirect(unsigned char base, unsigned char y) {
-
-	unsigned short addr;
-
-	addr=(((short)(ram[base+1]))<<8) | (short)ram[base];
-
-	if (debug) printf("Address=%x\n",addr+y);
-
-	return addr+y;
-
 }
 
 int scrn(unsigned char xcoord, unsigned char ycoord) {

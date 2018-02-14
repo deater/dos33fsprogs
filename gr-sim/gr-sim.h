@@ -45,7 +45,6 @@ void print(char *string);
 void print_both_pages(char *string);
 void print_inverse(char *string);
 int plot(unsigned char xcoord, unsigned char ycoord);
-short y_indirect(unsigned char base, unsigned char y);
 
 #define APPLE_UP        11
 #define APPLE_DOWN      10
