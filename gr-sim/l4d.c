@@ -18,62 +18,6 @@ static unsigned char input[MAX_INPUT];
 #define A4L	0x42
 #define A4H	0x43
 
-static short s;
-static int n,z,c,v;
-
-void adc(int value) {
-
-	int temp_a;
-	int temp_value;
-	int result;
-
-	temp_a=a&0xff;
-	temp_value=value&0xff;
-
-	result=(temp_a+temp_value+c);
-
-	c=(result&0x100)>>8;
-	n=(result&0x80)>>7;
-
-	v=!!((a^result)&(value^result)&0x80);
-
-	a=result&0xff;
-	z=(a==0);
-
-}
-
-void sbc(int value) {
-	int temp_a;
-	int result;
-	int temp_value;
-
-	temp_a=a&0xff;
-	temp_value=value&0xff;
-
-	result=temp_a-temp_value-(!c);
-
-	c=(result&0x100)>>8;
-	n=(result&0x80)>>7;
-
-	v=!!((a^result)&((255-value)^result)&0x80);
-
-	a=result&0xff;
-	z=(a==0);
-}
-
-void cmp(int value) {
-
-	int temp_a;
-	int temp_value;
-
-	temp_a=a&0xff;
-	temp_value=value&0xff;
-	temp_a=temp_a-temp_value;
-	c=(temp_a&0x100)>>8;
-	n=(temp_a&0x80)>>7;
-	z=(a==0);
-}
-
 static void getsrc(void) {
 //getsrc:
 	a=ram[y_indirect(src,y)];		// lda 	(src), y
@@ -83,18 +27,6 @@ static void getsrc(void) {
 done_getsrc: ;
 	printf("LOADED %02X%02X-1: %02X\n",ram[src+1],ram[src],a);
 	//+	rts
-}
-
-static void pha(void) {
-
-	s--;
-	ram[s]=a;
-}
-
-static void pla(void) {
-
-	a=ram[s];
-	s++;
 }
 
 void buildcount(void) {
@@ -161,6 +93,8 @@ int main(int argc, char **argv) {
 	int size;
 	short orgoff,paksize,pakoff;
 
+	init_6502();
+
 	fff=fopen("../mockingboard/outi.raw.lz4","r");
 	if (fff==NULL) {
 		fprintf(stderr,"Error opening!\n");
@@ -173,8 +107,6 @@ int main(int argc, char **argv) {
 	fclose(fff);
 
 	memcpy(&ram[0x2000],input,size);
-
-	s=0x1ff;
 
 	//LZ4 data decompressor for Apple II
 	//Peter Ferrie (peter.ferrie@gmail.com)
