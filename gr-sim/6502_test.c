@@ -54,7 +54,7 @@ static void test_sbc(void) {
 			if (a!=((i-j-0)&0xff)) {
 				printf("SBC: Error!  %d-%d should be %d, not %d\n",i,j,i-j-0,a);
 			}
-			if (c!=(((i-j-0)>>8)&0x1)) {
+			if (c==(((i-j-0)>>8)&0x1)) {
 				printf("SBC: Error!  Carry should be %d, not %d\n",((i-j-0)>>8)&0x1,c);
 			}
 			if ((a==0) && (z!=1)) printf("SBC error, zflag wrong\n");
@@ -71,7 +71,7 @@ static void test_sbc(void) {
 			if (a!=((i-j-1)&0xff)) {
 				printf("SBC: Error!  %d-%d should be %d, not %d\n",i,j,i-j-1,a);
 			}
-			if (c!=(((i-j-1)>>8)&0x1)) {
+			if (c==(((i-j-1)>>8)&0x1)) {
 				printf("SBC: Error!  Carry should be %d, not %d\n",((i-j-1)>>8)&0x1,c);
 			}
 			if ((a==0) && (z!=1)) printf("SBC error, zflag wrong\n");

@@ -68,9 +68,11 @@ void sbc(int value) {
 	int temp_value;
 
 	temp_a=a&0xff;
-	temp_value=value&0xff;
+	temp_value=(~value)&0xff;
 
-	result=temp_a-temp_value-(!c);
+	result=temp_a+temp_value+c;
+
+//	printf("SBC: %x - %x (%x) = %x\n",a,value,c,result);
 
 	c=(result&0x100)>>8;
 	n=(result&0x80)>>7;
@@ -79,6 +81,8 @@ void sbc(int value) {
 
 	a=result&0xff;
 	z=(a==0);
+
+
 }
 
 void cmp(int value) {
