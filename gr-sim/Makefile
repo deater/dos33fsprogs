@@ -7,7 +7,7 @@ SDL_INCLUDE= `sdl-config --cflags`
 
 all:	fade fixed_point rainbow sparkle starfield starfield_fixed kaleido \
 	tfv mode7_demo text text_demo tfv_multiply rasterbars rasterbars_fixed \
-	l4d 6502_test
+	lz4d_verbose 6502_test
 
 
 #### Library
@@ -30,11 +30,11 @@ fade.o:	fade.c demo_title.c
 
 ####
 
-l4d:	l4d.o 6502_emulate.o
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o l4d l4d.o 6502_emulate.o
+lz4d_verbose:	lz4d_verbose.o 6502_emulate.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o lz4d_verbose lz4d_verbose.o 6502_emulate.o
 
-l4d.o:	l4d.c demo_title.c
-	$(CC) $(CFLAGS) -c l4d.c
+lz4d_verbose.o:	lz4d_verbose.c demo_title.c
+	$(CC) $(CFLAGS) -c lz4d_verbose.c
 
 ####
 
@@ -231,6 +231,6 @@ clean:
 	rm -f *~ *.o gr-sim rainbow sparkle starfield starfield_fixed kaleido \
 			tfv text mode7_demo fade fixed_point tfv_multiply \
 			rasterbars rasterbars_fixed lookup_tables text_demo \
-			l4d 6502_test
+			lz4d_verbose 6502_test
 
 

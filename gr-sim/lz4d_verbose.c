@@ -117,7 +117,12 @@ int main(int argc, char **argv) {
 
 	//oep = 0; //first unpacked byte to run, you must set this by yourself
 	orgoff = 0x8000; //offset of first unpacked byte, you must set this by yourself
-	paksize	= size-0xb-8; //size of packed data, you must set this by yourself if hiunp=0
+	paksize	= size-0xb-8; 
+			// minus 4 for checksum at end
+			// not sure what other 4 is from?
+			// block checksum? though had that disabled?
+
+		//size of packed data, you must set this by yourself if hiunp=0
 	pakoff = 0x200b; // 11 byte offset to data?
 
 
