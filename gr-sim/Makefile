@@ -7,7 +7,7 @@ SDL_INCLUDE= `sdl-config --cflags`
 
 all:	fade fixed_point rainbow sparkle starfield starfield_fixed kaleido \
 	tfv mode7_demo text text_demo tfv_multiply rasterbars rasterbars_fixed \
-	l4d
+	l4d 6502_test
 
 
 #### Library
@@ -220,10 +220,17 @@ gr-sim.o:	gr-sim.c gr-sim.h apple2_font.h
 6502_emulate.o:	6502_emulate.c 6502_emulate.h
 	$(CC) $(CFLAGS) $(SDL_INCLUDE) -c 6502_emulate.c
 
+6502_test:	6502_test.o 6502_emulate.o
+	$(CC) $(LFLAGS) -o 6502_test 6502_test.o 6502_emulate.o
+
+6502_test.o:	6502_test.c 6502_emulate.h
+	$(CC) $(CFLAGS) -c 6502_test.c
+
+
 clean:	
 	rm -f *~ *.o gr-sim rainbow sparkle starfield starfield_fixed kaleido \
 			tfv text mode7_demo fade fixed_point tfv_multiply \
 			rasterbars rasterbars_fixed lookup_tables text_demo \
-			l4d
+			l4d 6502_test
 
 
