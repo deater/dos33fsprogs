@@ -95,9 +95,14 @@ int main(int argc, char **argv) {
 
 	init_6502();
 
-	fff=fopen("../mockingboard/outi.raw.lz4","r");
+	if (argc<2) {
+		fprintf(stderr,"\nUsage: %s filename\n\n",argv[0]);
+	}
+
+//	fff=fopen("../mockingboard/outi.raw.lz4","r");
+	fff=fopen(argv[1],"r");
 	if (fff==NULL) {
-		fprintf(stderr,"Error opening!\n");
+		fprintf(stderr,"Error opening %s!\n",argv[1]);
 		return -1;
 	}
 
@@ -208,8 +213,8 @@ copy_skip:
 	pha();				// pha
 	a=ram[src];			// lda	src
 	pha();				// pha
-	printf("SAVED SRC: %02X%02X\n",ram[src+1],ram[src]);
-	printf("CALCULATING: DST %02X%02X - DELTA %02X%02X\n",ram[dst+1],ram[dst],ram[delta+1],ram[delta]);
+//	printf("SAVED SRC: %02X%02X\n",ram[src+1],ram[src]);
+//	printf("CALCULATING: DST %02X%02X - DELTA %02X%02X\n",ram[dst+1],ram[dst],ram[delta+1],ram[delta]);
 	c=1;				// sec
 	a=ram[dst];			// lda	dst
 	sbc(ram[delta]);		// sbc	delta
@@ -217,7 +222,7 @@ copy_skip:
 	a=ram[dst+1];			// lda	dst+1
 	sbc(ram[delta+1]);		// sbc	delta+1
 	ram[src+1]=a;			// sta	src+1
-	printf("NEW SRC: %02X:%02X\n",ram[src+1],ram[src]);
+//	printf("NEW SRC: %02X:%02X\n",ram[src+1],ram[src]);
 	docopy();			// jsr	docopy
 	pla();				// pla
 	ram[src]=a;			// sta	src
