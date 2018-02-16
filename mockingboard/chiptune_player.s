@@ -18,27 +18,27 @@
 	lda	#1
 	sta	MB_FRAME_DIFF
 
-	lda	#<mocking_message
+	lda	#<mocking_message		; load loading message
 	sta	OUTL
 	lda	#>mocking_message
 	sta	OUTH
-	jsr	move_and_print
+	jsr	move_and_print			; print it
 
-	jsr	mockingboard_detect_slot4
+	jsr	mockingboard_detect_slot4	; call detection routine
 	cpx	#$1
 	beq	mockingboard_found
 
-	lda	#<not_message
+	lda	#<not_message			; if not found, print that
 	sta	OUTL
 	lda	#>not_message
 	sta	OUTH
 	inc	CV
 	jsr	move_and_print
 
-	jmp	forever_loop
+	jmp	forever_loop			; and wait forever
 
 mockingboard_found:
-	lda     #<found_message
+	lda     #<found_message			; print found message
 	sta     OUTL
 	lda     #>found_message
 	sta     OUTH
@@ -105,13 +105,32 @@ mockingboard_found:
 	; Enable 6502 interrupts
 	;============================
 	;
-	cli		; clear interrupt mask
+;	cli		; clear interrupt mask
 
 
-	bit	SET_GR			; graphics mode
-	bit	HIRES			; hires mode
-	bit	TEXTGR			; mixed text/graphics
-	bit	PAGE0			; first graphics page
+	;============================
+	; Setup Graphics
+	;============================
+
+	jsr	set_gr_page0
+
+	lda	#$4
+	sta	DRAW_PAGE
+
+	jsr	clear_screens
+
+	lda	#<chip_title
+	sta	GBASL
+	lda	#>chip_title
+	sta	GBASH
+
+	; Load offscreen
+	lda	#<$400
+	sta	BASL
+	lda	#>$400
+	sta	BASH
+
+	jsr	load_rle_gr
 
 
 	;============================
@@ -270,11 +289,14 @@ done_interrupt:
 .include	"../asm_routines/mockingboard.s"
 .include	"../asm_routines/lzss_decompress.s"
 .include	"../asm_routines/gr_fast_clear.s"
+.include	"../asm_routines/pageflip.s"
+.include	"../asm_routines/gr_unrle.s"
+.include	"../asm_routines/gr_setpage.s"
 
 ;=======
 ; music
 ;=======
-.include	"ksp_theme_compressed.inc"
+;.include	"ksp_theme_compressed.inc"
 
 
 ;=========
@@ -285,3 +307,7 @@ not_message:		.byte   "NOT "
 found_message:		.asciiz "FOUND"
 done_message:		.asciiz "DONE PLAYING"
 
+;============
+; graphics
+;============
+.include "chip_title.inc"
