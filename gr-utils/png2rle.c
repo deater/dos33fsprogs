@@ -289,6 +289,10 @@ int main(int argc, char **argv) {
 
 	if (argc<4) {
 		fprintf(stderr,"Usage:\t%s type INFILE varname\n\n",argv[0]);
+		fprintf(stderr,"\ttype: c or asm\n");
+		fprintf(stderr,"\tvarname: label for graphic\n");
+		fprintf(stderr,"\n");
+
 		exit(-1);
 	}
 
