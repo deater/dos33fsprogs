@@ -15,7 +15,7 @@
 	sta	DONE_PLAYING
 	sta	XPOS
 
-	lda	#1
+	lda	#0
 	sta	MB_FRAME_DIFF
 
 	lda	#<mocking_message		; load loading message
@@ -50,23 +50,19 @@ mockingboard_found:
 	;============================
 
 	jsr	mockingboard_init
-	jsr	reset_ay_left
-	jsr	reset_ay_right
-	jsr	clear_ay_left
-	jsr	clear_ay_right
+	jsr	reset_ay_both
+	jsr	clear_ay_both
 
 	;===========================
-	; load pointer to the music
+	; init pointer to the music
 	;===========================
 
-;	lda	#<ksp_theme
-;	sta	INL
-;	lda	#>ksp_theme
-;	sta	INH
-
-;	lda	(INL),Y		; read in frame delay
-;	sta	MB_FRAME_DIFF
-;	inc	INL		; FIXME: should check if we oflowed
+	lda	#$40
+	sta	INH
+	lda	#$00
+	sta	INL
+	lda	#$0
+	sta	MB_CHUNK
 
 	;=========================
 	; Setup Interrupt Handler
@@ -105,7 +101,7 @@ mockingboard_found:
 	; Enable 6502 interrupts
 	;============================
 	;
-;	cli		; clear interrupt mask
+	cli		; clear interrupt mask
 
 
 	;============================
@@ -147,8 +143,7 @@ done_play:
 
 	sei			; disable interrupts
 
-	jsr	clear_ay_left
-	jsr	clear_ay_right
+	jsr	clear_ay_both
 
 	lda	#0
 	sta	CH
@@ -179,99 +174,52 @@ interrupt_handler:
 	pha			; save A
 				; Should we save X and Y too?
 
+	inc	$0404		; debug
+
 	bit	$C404		; can clear 6522 interrupt by reading T1C-L
 
-	inc	$0401		; DEBUG: increment text char
+	ldy	MB_FRAME_DIFF
 
-	dec	MB_FRAME_DIFF
-	bne	done_interrupt
+	ldx	#0
 
+mb_write_loop:
+	lda	(INL),y
+	cpx	#13
+	bne	mb_not_13
+	cmp	#$ff
+	beq	skip_r13
 
-
-
-	ldy	#0
-bottom_regs:
-	lda	(INL),Y			; load low reg bitmask
-	sta	MASK
-	ldx	#$ff			; init to -1
-bottom_regs_loop:
-	inx				; increment X
-	cpx	#$8			; if we reach 8, done
-	beq	top_regs		; move on to top
-
-	ror	MASK
-	bcc	bottom_regs_loop	; if bit not set in mask, skip reg
-
-	stx	XX			; save X
-
-	iny				; get next output value
-	lda	(INL),Y			; read in value
-
-	sty	YY			; save Y
-
-	tax				; value in X
-	ldy	XX			; register# in Y
-
-	; reg in Y, value in X
-	jsr	write_ay_left		; assume 3 channel (not six)
-	jsr	write_ay_right		; so write same to both left/write
-
-	ldx	XX			; restore X
-	ldy	YY			; restore Y
-
-	jmp	bottom_regs_loop	; loop
-
-top_regs:
-	iny				; point to next value
-	lda	(INL),Y			; load top reg bitmask
-	sta	MASK
-	ldx	#$7			; load X as 7 (we increment first)
-top_regs_loop:
-	inx				; increment
-	cpx	#16
-	beq	done_with_masks		; exit if done
-
-	ror	MASK
-	bcc	top_regs_loop		; loop if not set
-
-	stx	XX			; save X value
-
-	iny				; point to value
-	lda	(INL),Y			; read in output value
-
-	sty	YY			; save Y value
-
-	tax				; value in X
-	ldy	XX			; register in Y
-
-	; reg in Y, value in X
-	jsr	write_ay_left		; assume 3 channel (not six)
-	jsr	write_ay_right		; so write same to both left/write
-
-	ldx	XX
-	ldy	YY
-
-	jmp	top_regs_loop
-
-done_with_masks:
-new_frame_diff:
-	iny
-	lda	(INL),Y		; read in frame delay
-	cmp	#$ff		; see if end
-	bne	not_done	; if so, done
-	inc	DONE_PLAYING	; set done playing flag
-	jmp	done_interrupt
-not_done:
-	sta	MB_FRAME_DIFF
-
-	iny
+mb_not_13:
+	sta	MB_VALUE
+					; INLINE?
+	jsr	write_ay_both		; assume 3 channel (not six)
+					; so write same to both left/write
 	clc
-	tya
-	adc	INL
-	sta	INL
-	lda	#0
-	adc	INH
+	lda	INH
+	adc	#$4
 	sta	INH
+
+	inx
+	cpx	#14
+	bmi	mb_write_loop
+
+skip_r13:
+	lda	MB_CHUNK
+	clc
+	adc	#$40
+	sta	INH
+
+	inc	MB_FRAME_DIFF
+	bne	done_interrupt
+wraparound:
+
+	inc	MB_CHUNK
+	lda	MB_CHUNK
+	cmp	#$4
+	bne	chunk_good
+	lda	#0
+	sta	MB_CHUNK
+chunk_good:
 
 done_interrupt:
 	pla
@@ -286,7 +234,7 @@ done_interrupt:
 ;=========
 .include	"../asm_routines/gr_offsets.s"
 .include	"../asm_routines/text_print.s"
-.include	"../asm_routines/mockingboard.s"
+.include	"../asm_routines/mockingboard_a.s"
 .include	"../asm_routines/lzss_decompress.s"
 .include	"../asm_routines/gr_fast_clear.s"
 .include	"../asm_routines/pageflip.s"
