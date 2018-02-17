@@ -3,7 +3,7 @@ include ../Makefile.inc
 DOS33 = ../dos33fs-utils/dos33
 PNG2GR = ../gr-utils/png2gr
 
-all:	dump_ed mock_test.dsk mock_player.dsk lzss_compress
+all:	dump_ed mock_test.dsk lzss_compress
 
 mock_test.dsk:	KSP_THEME_UNCOMPRESSED KSP_THEME_COMPRESSED \
 		KSP_THEME_INTERRUPT INTERRUPT_TEST KSP_THEME_6CH
@@ -12,10 +12,6 @@ mock_test.dsk:	KSP_THEME_UNCOMPRESSED KSP_THEME_COMPRESSED \
 	$(DOS33) -y mock_test.dsk BSAVE -a 0x4000 KSP_THEME_INTERRUPT
 	$(DOS33) -y mock_test.dsk BSAVE -a 0x4000 KSP_THEME_6CH
 	$(DOS33) -y mock_test.dsk BSAVE -a 0x1000 INTERRUPT_TEST
-
-
-mock_player.dsk:	CHIPTUNE_PLAYER
-	$(DOS33) -y mock_player.dsk BSAVE -a 0x1000 CHIPTUNE_PLAYER
 
 
 KSP_THEME_COMPRESSED:	ksp_theme_compressed.o
@@ -35,18 +31,6 @@ ksp_theme_6ch.o:	ksp_theme_6ch.s \
 	ksp_theme_compressed.inc ksp_theme2_compressed.inc \
 	ksp_title.inc
 	ca65 -o ksp_theme_6ch.o ksp_theme_6ch.s -l ksp_theme_6ch.lst
-
-
-CHIPTUNE_PLAYER:	chiptune_player.o
-	ld65 -o CHIPTUNE_PLAYER chiptune_player.o -C ../linker_scripts/apple2_1000.inc
-
-chiptune_player.o:	chiptune_player.s \
-	../asm_routines/mockingboard.s \
-	../asm_routines/lzss_decompress.s \
-	ksp_title.inc
-	ca65 -o chiptune_player.o chiptune_player.s -l chiptune_player.lst
-
-
 
 KSP_THEME_INTERRUPT:	ksp_theme_interrupt.o
 	ld65 -o KSP_THEME_INTERRUPT ksp_theme_interrupt.o -C ../linker_scripts/apple2_4000.inc
