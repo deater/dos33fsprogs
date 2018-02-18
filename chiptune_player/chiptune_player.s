@@ -280,9 +280,32 @@ volume_bars:
 	jsr	hlin_double
 
 	; middle
+
 	lda	#8
 middle_loop:
 	pha
+
+	cmp	#8
+	beq	middle_black
+	cmp	#26
+	beq	middle_black
+
+	ldx	#COLOR_BOTH_RED
+	stx	A_COLOR
+	ldx	#COLOR_BOTH_DARKBLUE
+	stx	B_COLOR
+	ldx	#COLOR_BOTH_DARKGREEN
+	stx	C_COLOR
+	jmp	middle_color_done
+
+middle_black:
+	ldx	#COLOR_BOTH_BLACK
+	stx	A_COLOR
+	stx	B_COLOR
+	stx	C_COLOR
+
+middle_color_done:
+	; left border
 	ldy	#COLOR_BOTH_GREY
 	sty	COLOR
 
@@ -292,11 +315,56 @@ middle_loop:
 
 	jsr	hlin_double
 
+	; border space
 	lda	#COLOR_BOTH_BLACK
 	sta	COLOR
 
-	ldx	#13
+	ldx	#1
 	jsr	hlin_double_continue
+
+	; A volume
+	lda	A_COLOR
+	sta	COLOR
+
+	ldx	#3
+	jsr	hlin_double_continue
+
+	; A space
+	lda	#COLOR_BOTH_BLACK
+	sta	COLOR
+
+	ldx	#1
+	jsr	hlin_double_continue
+
+	; B volume
+	lda	B_COLOR
+	sta	COLOR
+
+	ldx	#3
+	jsr	hlin_double_continue
+
+	; B space
+	lda	#COLOR_BOTH_BLACK
+	sta	COLOR
+
+	ldx	#1
+	jsr	hlin_double_continue
+
+	; C volume
+	lda	C_COLOR
+	sta	COLOR
+
+	ldx	#3
+	jsr	hlin_double_continue
+
+	; C space
+	lda	#COLOR_BOTH_BLACK
+	sta	COLOR
+
+	ldx	#1
+	jsr	hlin_double_continue
+
+	; Right border
 
 	lda	#COLOR_BOTH_GREY
 	sta	COLOR
