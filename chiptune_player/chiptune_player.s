@@ -5,10 +5,12 @@
 CHUNK_BUFFER	EQU	$6000
 
 	;=============================
-	; Print message
+	; Setup
 	;=============================
 	jsr     HOME
 	jsr     TEXT
+
+	; init variables
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -16,9 +18,9 @@ CHUNK_BUFFER	EQU	$6000
 	sta	CV
 	sta	DONE_PLAYING
 	sta	XPOS
-
-	lda	#0
 	sta	MB_FRAME_DIFF
+
+	; print detection message
 
 	lda	#<mocking_message		; load loading message
 	sta	OUTL
@@ -40,12 +42,12 @@ CHUNK_BUFFER	EQU	$6000
 	jmp	forever_loop			; and wait forever
 
 mockingboard_found:
-	lda     #<found_message			; print found message
-	sta     OUTL
-	lda     #>found_message
-	sta     OUTH
-	inc     CV
-	jsr     move_and_print
+;	lda     #<found_message			; print found message
+;	sta     OUTL
+;	lda     #>found_message
+;	sta     OUTH
+;	inc     CV
+;	jsr     move_and_print
 
 	;============================
 	; Init the Mockingboard
@@ -54,7 +56,6 @@ mockingboard_found:
 	jsr	mockingboard_init
 	jsr	reset_ay_both
 	jsr	clear_ay_both
-
 
 	;=========================
 	; Setup Interrupt Handler
@@ -71,7 +72,7 @@ mockingboard_found:
 	; Enable 50Hz clock on 6522
 	;============================
 
-	lda	#$40		; Generate continuous interrupts, don't touch PB7
+	lda	#$40		; Continuous interrupts, don't touch PB7
 	sta	$C40B		; ACR register
 	lda	#$7F		; clear all interrupt flags
 	sta	$C40E		; IER register (interrupt enable)
@@ -91,7 +92,7 @@ mockingboard_found:
 
 
 	;============================
-	; Setup Graphics
+	; Draw title screen
 	;============================
 
 	jsr	set_gr_page0
@@ -124,6 +125,7 @@ mockingboard_found:
 	sta	INH
 	lda	#<CHUNK_BUFFER
 	sta	INL
+
 	lda	#$0
 	sta	MB_CHUNK
 
@@ -131,16 +133,35 @@ mockingboard_found:
 	;============================
 	; Enable 6502 interrupts
 	;============================
-	;
+
 	cli		; clear interrupt mask
 
 
+	;============================
+	; Init Background
+	;============================
+;	jsr	clear_screens		; clear top/bottom of page 0/1
+;	jsr	set_gr_page0
 
+;	lda	#0
+;	sta	DRAW_PAGE
+;	sta	RANDOM_POINTER
+;	sta	SCREEN_Y
+	; always multiply with low byte as zero
+;	sta	NUM2L
 
 	;============================
 	; Loop forever
 	;============================
 playing_loop:
+
+
+	;============================
+	; starfield
+	;============================
+
+;	jsr	starfield
+
 	lda	DONE_PLAYING
 	beq	playing_loop
 
@@ -204,7 +225,7 @@ mb_not_13:
 					; so write same to both left/write
 	clc
 	lda	INH
-	adc	#$4
+	adc	#$3
 	sta	INH
 
 	inx
@@ -223,7 +244,7 @@ wraparound:
 
 	inc	MB_CHUNK
 	lda	MB_CHUNK
-	cmp	#$4
+	cmp	#$3
 	bne	chunk_good
 	lda	#0
 	sta	MB_CHUNK
@@ -243,7 +264,6 @@ done_interrupt:
 .include	"../asm_routines/gr_offsets.s"
 .include	"../asm_routines/text_print.s"
 .include	"../asm_routines/mockingboard_a.s"
-;.include	"../asm_routines/lzss_decompress.s"
 .include	"../asm_routines/gr_fast_clear.s"
 .include	"../asm_routines/pageflip.s"
 .include	"../asm_routines/gr_unrle.s"

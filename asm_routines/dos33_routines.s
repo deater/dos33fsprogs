@@ -2,16 +2,18 @@
 ;       "Beneath Apple DOS" by Don Worth and Pieter Lechner
 
 ; FIXME: make these a parameter
+; filename
 disk_buff	EQU	$6000
 read_size	EQU	$2A00	; (3*256*14)
 
 ;; For the disk-read code
-;RWTSH	  EQU $F1
-;RWTSL	  EQU $F0
-;DOSBUFH	  EQU $EF
-;DOSBUFL   EQU $EE
-;FILEMH    EQU $ED
-;FILEML	  EQU $EC
+;RWTSL		EQU $F0
+;RWTSH		EQU $F1
+;DOSBUFL	EQU $EE
+;DOSBUFH	EQU $EF
+;FILEML		EQU $EC
+;FILEMH		EQU $ED
+
 
 ;; DOS Constants
 OPEN     EQU $01
@@ -221,10 +223,10 @@ dos33_read:
 	sta   (FILEML),y
 
 	ldy   #6			; point to number of bytes to read
-	lda   #>read_size
+	lda   #<read_size
 	sta   (FILEML),y		; we want to read 255 bytes
 	iny
-	lda   #<read_size
+	lda   #>read_size
 	sta   (FILEML),y
 
 	ldy   #8			; buffer address

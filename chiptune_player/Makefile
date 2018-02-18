@@ -7,7 +7,8 @@ all:	chiptune_player.dsk
 
 chiptune_player.dsk:	CHIPTUNE_PLAYER OUT.0
 	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1000 CHIPTUNE_PLAYER
-	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x6000 OUT.0
+	$(DOS33) -y chiptune_player.dsk SAVE B OUT.0
+#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x6000 OUT.0
 
 
 CHIPTUNE_PLAYER:	chiptune_player.o
