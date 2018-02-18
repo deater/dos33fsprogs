@@ -161,6 +161,9 @@ playing_loop:
 	jsr	clear_top
 
 	jsr	draw_rasters
+
+	jsr	volume_bars
+
 	jsr	page_flip
 
 	lda	DONE_PLAYING
@@ -256,6 +259,69 @@ done_interrupt:
 	rti
 
 
+
+;==============================
+;==============================
+; Draw volume bars
+;==============================
+;==============================
+
+volume_bars:
+			; hline Y,V2 at A
+
+	; top line
+
+	lda	#COLOR_BOTH_GREY
+	sta	COLOR			; remove for crazy effect
+	ldy	#12
+	lda	#26
+	sta	V2
+	lda	#6
+	jsr	hlin_double
+
+	; middle
+	lda	#8
+middle_loop:
+	pha
+	ldy	#COLOR_BOTH_GREY
+	sty	COLOR
+
+	ldy	#12
+	sty	V2
+	ldy	#12
+
+	jsr	hlin_double
+
+	lda	#COLOR_BOTH_BLACK
+	sta	COLOR
+
+	ldx	#13
+	jsr	hlin_double_continue
+
+	lda	#COLOR_BOTH_GREY
+	sta	COLOR
+
+	ldx	#1
+	jsr	hlin_double_continue
+
+	pla
+	clc
+	adc	#2
+	cmp	#28
+	bne	middle_loop
+
+
+	; bottom line
+
+	lda	#COLOR_BOTH_GREY
+	sta	COLOR
+	ldy	#12
+	lda	#26
+	sta	V2
+	lda	#28
+	jsr	hlin_double
+
+	rts
 
 
 
