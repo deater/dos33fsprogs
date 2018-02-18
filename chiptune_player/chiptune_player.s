@@ -55,16 +55,6 @@ mockingboard_found:
 	jsr	reset_ay_both
 	jsr	clear_ay_both
 
-	;===========================
-	; init pointer to the music
-	;===========================
-
-	lda	#>CHUNK_BUFFER
-	sta	INH
-	lda	#<CHUNK_BUFFER
-	sta	INL
-	lda	#$0
-	sta	MB_CHUNK
 
 	;=========================
 	; Setup Interrupt Handler
@@ -99,12 +89,6 @@ mockingboard_found:
 
 	; 4fe7 / 1e6 = .020s, 50Hz
 
-	;============================
-	; Enable 6502 interrupts
-	;============================
-	;
-	cli		; clear interrupt mask
-
 
 	;============================
 	; Setup Graphics
@@ -122,13 +106,35 @@ mockingboard_found:
 	lda	#>chip_title
 	sta	GBASH
 
-	; Load offscreen
+	; Load image
 	lda	#<$400
 	sta	BASL
 	lda	#>$400
 	sta	BASH
 
 	jsr	load_rle_gr
+
+	;===========================
+	; init pointer to the music
+	;===========================
+
+	jsr	read_file
+
+	lda	#>CHUNK_BUFFER
+	sta	INH
+	lda	#<CHUNK_BUFFER
+	sta	INL
+	lda	#$0
+	sta	MB_CHUNK
+
+
+	;============================
+	; Enable 6502 interrupts
+	;============================
+	;
+	cli		; clear interrupt mask
+
+
 
 
 	;============================
@@ -237,7 +243,7 @@ done_interrupt:
 .include	"../asm_routines/gr_offsets.s"
 .include	"../asm_routines/text_print.s"
 .include	"../asm_routines/mockingboard_a.s"
-.include	"../asm_routines/lzss_decompress.s"
+;.include	"../asm_routines/lzss_decompress.s"
 .include	"../asm_routines/gr_fast_clear.s"
 .include	"../asm_routines/pageflip.s"
 .include	"../asm_routines/gr_unrle.s"

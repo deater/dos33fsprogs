@@ -15,8 +15,8 @@ CHIPTUNE_PLAYER:	chiptune_player.o
 
 chiptune_player.o:	chiptune_player.s \
 	../asm_routines/mockingboard.s \
-	../asm_routines/lzss_decompress.s \
-	chip_title.inc
+	../asm_routines/dos33_routines.s \
+	chip_title.inc zp.inc
 	ca65 -o chiptune_player.o chiptune_player.s -l chiptune_player.lst
 
 clean:	
