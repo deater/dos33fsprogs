@@ -2,6 +2,8 @@
 
 .include	"zp.inc"
 
+CHUNK_BUFFER	EQU	$6000
+
 	;=============================
 	; Print message
 	;=============================
@@ -57,9 +59,9 @@ mockingboard_found:
 	; init pointer to the music
 	;===========================
 
-	lda	#$40
+	lda	#>CHUNK_BUFFER
 	sta	INH
-	lda	#$00
+	lda	#<CHUNK_BUFFER
 	sta	INL
 	lda	#$0
 	sta	MB_CHUNK
@@ -206,7 +208,7 @@ mb_not_13:
 skip_r13:
 	lda	MB_CHUNK
 	clc
-	adc	#$40
+	adc	#>CHUNK_BUFFER
 	sta	INH
 
 	inc	MB_FRAME_DIFF
@@ -240,6 +242,7 @@ done_interrupt:
 .include	"../asm_routines/pageflip.s"
 .include	"../asm_routines/gr_unrle.s"
 .include	"../asm_routines/gr_setpage.s"
+.include	"../asm_routines/dos33_routines.s"
 
 ;=======
 ; music
