@@ -3,6 +3,7 @@
 .include	"zp.inc"
 
 CHUNK_BUFFER	EQU	$6000
+CHUNKSIZE	EQU	$3
 
 	;=============================
 	; Setup
@@ -225,7 +226,7 @@ mb_not_13:
 					; so write same to both left/write
 	clc
 	lda	INH
-	adc	#$3
+	adc	#CHUNKSIZE
 	sta	INH
 
 	inx
@@ -244,7 +245,7 @@ wraparound:
 
 	inc	MB_CHUNK
 	lda	MB_CHUNK
-	cmp	#$3
+	cmp	#CHUNKSIZE
 	bne	chunk_good
 	lda	#0
 	sta	MB_CHUNK
