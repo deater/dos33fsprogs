@@ -1,6 +1,9 @@
 ;     File I/O routines based on sample code in
 ;       "Beneath Apple DOS" by Don Worth and Pieter Lechner
 
+; FIXME: make this a parameter
+disk_buff	EQU	$6000
+
 ;; For the disk-read code
 RWTSH	  EQU $F1
 RWTSL	  EQU $F0
@@ -31,32 +34,38 @@ FILEMANAGER        EQU $3D6
 	;================================
 	; read from disk
 	;================================
-
-	jsr     LOCATE_FILEM_PARAM  	; load file manager param list
-					; Y=low A=high
+	;
+	;
+read_file:
+	jsr     LOCATE_FILEM_PARAM  	; $3DC entry point
+					; load file manager param list
+					; returns Y=low A=high
 
 	sta	FILEMH
 	sty	FILEML
 
-	ldy    #7	 		; file type offset = 7
-	lda    #0			; 0 = text
-	sta    (FILEML),y
+;	ldy	#7	 		; file type offset = 7
+;	lda	#0			; 0 = text
+;	sta	(FILEML),y
 
-	iny    				; filename ptr offset = 8
-	lda    #<filename
-	sta    (FILEML),y
+	ldy	#8			; filename ptr offset = 8
+	lda	#<filename
+	sta	(FILEML),y
 	iny
-	lda    #>filename
-	sta    (FILEML),y
+	lda	#>filename
+	sta	(FILEML),y
 
-	ldx    #1	 		; open existing file
+	ldx	#1	 		; open existing file
 
-	jsr    open			; open file
+	jsr	dos33_open		; open file
 
-	jsr    read			; read buffer
+	jsr	dos33_read		; read buffer
 
-	jsr    close			; close file
+	jsr	dos33_close		; close file
 
+	clc
+
+	rts
 
 ;=================================
 ; get_dos_buffer
@@ -77,7 +86,7 @@ FILEMANAGER        EQU $3D6
 ;    add 0x24 to get chain pointer
 
 
-open:
+dos33_open:
 	; allocate one of the DOS buffers so we don't have to set them up
 
 allocate_dos_buffer:
@@ -103,7 +112,11 @@ buf_loop:
 	bne	found_buffer		; if not zero, found a buffer
 
 	lda	DOSBUFH			; also if not zero, found a buffer
-	beq     error			; no buffer found, exit
+	bne     found_buffer		; no buffer found, exit
+
+	sec				; failed
+
+	rts
 
 found_buffer:
 	ldy  	#0			; get filename
@@ -172,14 +185,15 @@ fmgr_loop:
 	cpy	#$c			; see if we are done
 	bcs	fmgr_loop		; loop
 
-	jmp	FILEMANAGER		; run filemanager
-
+	jmp	FILEMANAGER		; #3D6
+					; run filemanager
+					; will return for us
 
 ;====================
 ; close DOS file
 ;====================
 
-close:
+dos33_close:
         ldy    #0    			; command offset
 	lda    #CLOSE			; load close
 	sta    (FILEML),y
@@ -196,7 +210,7 @@ close:
 ; read from dos file
 ;=========================
 
-read:
+dos33_read:
         ldy   #0			; command offset
 	lda   #READ
 	sta   (FILEML),y
@@ -206,10 +220,10 @@ read:
 	sta   (FILEML),y
 
 	ldy   #6			; point to number of bytes to read
-	lda   #$ff
+	lda   #$00
 	sta   (FILEML),y		; we want to read 255 bytes
 	iny
-	lda   #$00
+	lda   #$2a
 	sta   (FILEML),y
 
 	ldy   #8			; buffer address
@@ -222,9 +236,10 @@ read:
 	bne   filemanager_interface     ; same as JMP
 
 filename:
-; CPUINFO__6502 (padded to be 30 chars long)
-.byte $C3,$D0,$D5,$C9,$CE,$C6,$CF,$DF
-.byte $DF,$B6,$B5,$B0,$B2,$A0,$A0,$A0
-.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-.byte $A0,$A0,$A0,$A0,$A0,$A0
-
+; OUT.0
+.byte 'O'+$80,'U'+$80,'T'+$80,'.'+$80,'0'+$80
+.byte $A0,$A0,$A0,$A0,$A0
+.byte $A0,$A0,$A0,$A0,$A0
+.byte $A0,$A0,$A0,$A0,$A0
+.byte $A0,$A0,$A0,$A0,$A0
+.byte $A0,$A0,$A0,$A0,$A0
