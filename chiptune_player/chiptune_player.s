@@ -141,15 +141,12 @@ mockingboard_found:
 	;============================
 	; Init Background
 	;============================
-;	jsr	clear_screens		; clear top/bottom of page 0/1
-;	jsr	set_gr_page0
+	jsr	clear_screens		; clear top/bottom of page 0/1
+	jsr	set_gr_page0
 
-;	lda	#0
-;	sta	DRAW_PAGE
-;	sta	RANDOM_POINTER
-;	sta	SCREEN_Y
-	; always multiply with low byte as zero
-;	sta	NUM2L
+	lda	#0
+	sta	DRAW_PAGE
+	sta	SCREEN_Y
 
 	;============================
 	; Loop forever
@@ -158,10 +155,13 @@ playing_loop:
 
 
 	;============================
-	; starfield
+	; rasters
 	;============================
 
-;	jsr	starfield
+	jsr	clear_top
+
+	jsr	draw_rasters
+	jsr	page_flip
 
 	lda	DONE_PLAYING
 	beq	playing_loop
@@ -270,6 +270,9 @@ done_interrupt:
 .include	"../asm_routines/gr_unrle.s"
 .include	"../asm_routines/gr_setpage.s"
 .include	"../asm_routines/dos33_routines.s"
+.include	"../asm_routines/gr_hlin.s"
+.include	"rasterbars.s"
+
 
 ;=======
 ; music
