@@ -132,7 +132,7 @@ mockingboard_found:
 	;============================
 	; Init Background
 	;============================
-	jsr	clear_screens		; clear top/bottom of page 0/1
+;	jsr	clear_screens		; clear top/bottom of page 0/1
 	jsr	set_gr_page0
 
 	lda	#0
@@ -516,7 +516,75 @@ new_song:
 	sta	MB_CHUNK
 
 
+	;=========================
+	; Print Title/Author info
+	;=========================
 
+	jsr	clear_screens		; clear top/bottom of page 0/1
+
+	lda     #<file_info
+        sta     OUTL
+        lda     #>file_info
+        sta     OUTH
+	ldy	#0
+
+; FIXME: optimize
+
+	lda	#20
+	sta	CV
+	lda	(OUTL),Y
+	sta	CH
+
+	inc	OUTL
+	bne	bloop1
+	inc	OUTH
+bloop1:
+
+        jsr     print_both_pages
+
+	iny
+	tya
+	ldy	#0
+	clc
+	adc	OUTL
+	sta	OUTL
+	lda	OUTH
+	adc	#$0
+	sta	OUTH
+
+	lda	#21
+	sta	CV
+	lda	(OUTL),Y
+	sta	CH
+
+	inc	OUTL
+	bne	bloop2
+	inc	OUTH
+bloop2:
+
+        jsr     print_both_pages
+
+	iny
+	tya
+	ldy	#0
+	clc
+	adc	OUTL
+	sta	OUTL
+	lda	OUTH
+	adc	#$0
+	sta	OUTH
+
+	lda	#23
+	sta	CV
+	lda	(OUTL),Y
+	sta	CH
+
+	inc	OUTL
+	bne	bloop3
+	inc	OUTH
+bloop3:
+
+        jsr     print_both_pages
 
 	rts
 ;=========
@@ -534,11 +602,16 @@ new_song:
 .include	"rasterbars.s"
 
 
-;=======
-; music
-;=======
-;.include	"ksp_theme_compressed.inc"
-
+;===========
+; File info
+;===========
+file_info:
+.byte	1
+.asciiz	"INTRO2: JUNGAR OF BIT WORLD FROM KIEV"
+.byte	5
+.asciiz	"BY: SURGEON (ALEKSEY LUTSENKO)"
+.byte	15
+.asciiz "0:00 / 0:00"
 
 ;=========
 ; strings
