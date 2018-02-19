@@ -633,6 +633,7 @@ bloop3:
 .include	"../asm_routines/gr_setpage.s"
 .include	"../asm_routines/dos33_routines.s"
 .include	"../asm_routines/gr_hlin.s"
+.include	"../asm_routines/lz4_decode.s"
 .include	"rasterbars.s"
 
 
