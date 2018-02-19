@@ -202,6 +202,40 @@ interrupt_handler:
 
 	bit	$C404		; can clear 6522 interrupt by reading T1C-L
 
+
+	inc	FRAME_COUNT
+	lda	FRAME_COUNT
+	cmp	#50
+	bne	frame_good
+
+	lda	#$0
+	sta	FRAME_COUNT
+
+update_second_ones:
+	inc	$7d0+18
+	inc	$bd0+18
+	lda	$bd0+18
+	cmp	#$ba			; one past '9'
+	bne	frame_good
+	lda	#'0'+$80
+	sta	$7d0+18
+	sta	$bd0+18
+update_second_tens:
+	inc	$7d0+17
+	inc	$bd0+17
+	lda	$bd0+17
+	cmp	#$b6			; 6
+	bne	frame_good
+	lda	#'0'+$80
+	sta	$7d0+17
+	sta	$bd0+17
+update_minutes:
+	inc	$7d0+15
+	inc	$bd0+15
+					; we don't handle > 9:59 songs yet
+
+frame_good:
+
 	ldy	MB_FRAME_DIFF
 
 	ldx	#0
@@ -514,7 +548,7 @@ new_song:
 
 	lda	#$0
 	sta	MB_CHUNK
-
+	sta	FRAME_COUNT
 
 	;=========================
 	; Print Title/Author info
