@@ -117,19 +117,10 @@ mockingboard_found:
 	jsr	load_rle_gr
 
 	;===========================
-	; init pointer to the music
+	; load first song
 	;===========================
 
-	jsr	read_file
-
-	lda	#>CHUNK_BUFFER
-	sta	INH
-	lda	#<CHUNK_BUFFER
-	sta	INL
-
-	lda	#$0
-	sta	MB_CHUNK
-
+	jsr	new_song
 
 	;============================
 	; Enable 6502 interrupts
@@ -224,6 +215,22 @@ mb_write_loop:
 
 mb_not_13:
 	sta	MB_VALUE
+
+	cpx	#8
+	bne	mb_not_8
+	and	#$f
+	sta	A_VOLUME
+mb_not_8:
+	cpx	#9
+	bne	mb_not_9
+	and	#$f
+	sta	B_VOLUME
+mb_not_9:
+	cpx	#10
+	bne	mb_not_10
+	and	#$f
+	sta	C_VOLUME
+mb_not_10:
 					; INLINE?
 	jsr	write_ay_both		; assume 3 channel (not six)
 					; so write same to both left/write
@@ -268,12 +275,6 @@ done_interrupt:
 
 volume_bars:
 
-	lda	#15
-	sta	A_VOLUME
-	lda	#7
-	sta	B_VOLUME
-	lda	#3
-	sta	C_VOLUME
 
 			; hline Y,V2 at A
 
@@ -487,7 +488,37 @@ bottom_line:
 	rts
 
 
+	;=================
+	; load a new song
+	;=================
 
+new_song:
+	lda	#0
+	sta	A_VOLUME
+	lda	#0
+	sta	B_VOLUME
+	lda	#0
+	sta	C_VOLUME
+
+	;===========================
+	; init pointer to the music
+	;===========================
+
+
+	jsr	read_file
+
+	lda	#>CHUNK_BUFFER
+	sta	INH
+	lda	#<CHUNK_BUFFER
+	sta	INL
+
+	lda	#$0
+	sta	MB_CHUNK
+
+
+
+
+	rts
 ;=========
 ;routines
 ;=========
