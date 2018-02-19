@@ -1,6 +1,6 @@
 ; Closing Credits
 
-NUM_CREDITS	EQU 14
+NUM_CREDITS	EQU 15
 
 	;===================
 	; init credits
@@ -281,6 +281,8 @@ credits:
 .asciiz	"THE 7HORSEMEN"
 .byte 2+7
 .asciiz "MITHLUIN AND ROOSTER"
+.byte 5+7
+.asciiz "TALON KARRDE"
 .byte 2+7
 .asciiz	"WEAVE'S WORLD TALKER"
 .byte 5+7

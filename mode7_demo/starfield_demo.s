@@ -200,7 +200,7 @@ starcredits_loop:
 	inc	FRAME_COUNT
 
 	lda	YY
-	cmp	#14				; NUMBER OF CREDITS
+	cmp	#15				; NUMBER OF CREDITS
 	beq	done_star_credits
 
 	;==================
