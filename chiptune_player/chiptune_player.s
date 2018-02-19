@@ -267,6 +267,14 @@ done_interrupt:
 ;==============================
 
 volume_bars:
+
+	lda	#15
+	sta	A_VOLUME
+	lda	#7
+	sta	B_VOLUME
+	lda	#3
+	sta	C_VOLUME
+
 			; hline Y,V2 at A
 
 	; top line
@@ -290,12 +298,97 @@ middle_loop:
 	cmp	#26
 	beq	middle_black
 
+	cmp	#10
+	bne	not_top
+
+	ldx	#$3B			; pink/purple
+	stx	A_COLOR
+	ldx	#$7E			; light-blue/aqua
+	stx	B_COLOR
+	ldx	#$CD			; light-green/yellow
+	stx	C_COLOR
+	jmp	calc_volume
+
+not_top:
 	ldx	#COLOR_BOTH_RED
 	stx	A_COLOR
 	ldx	#COLOR_BOTH_DARKBLUE
 	stx	B_COLOR
 	ldx	#COLOR_BOTH_DARKGREEN
 	stx	C_COLOR
+
+calc_volume:
+
+	; 10 14/15	24-x = 14  PLUS=none, zero=bottom, neg=all
+	; 12 12/13	12
+	; 14 10/11	10
+	; 16  8/9	8
+	; 18  6/7	6
+	; 20  4/5	4
+	; 22  2/3	2
+	; 24  0/1	0
+
+	; FIXME: there must be a way to make this faster
+
+mod_a:
+	pha
+	sec
+	eor	#$ff		; negate
+	adc	#24		; 24-A
+	sec
+	sbc	A_VOLUME
+	bmi	mod_b
+	beq	mod_a_bottom
+mod_a_zero:
+	lda	#0
+	beq	done_a
+mod_a_bottom:
+	lda	A_COLOR
+	and	#$f0
+done_a:
+	sta	A_COLOR
+
+mod_b:
+	pla
+	pha
+	sec
+	eor	#$ff		; negate
+	adc	#24		; 24-A
+	sec
+	sbc	B_VOLUME
+	bmi	mod_c
+	beq	mod_b_bottom
+mod_b_zero:
+	lda	#0
+	beq	done_b
+mod_b_bottom:
+	lda	B_COLOR
+	and	#$f0
+done_b:
+	sta	B_COLOR
+
+mod_c:
+	pla
+	pha
+	sec
+	eor	#$ff		; negate
+	adc	#24		; 24-A
+	sec
+	sbc	C_VOLUME
+	bmi	mod_d
+	beq	mod_c_bottom
+mod_c_zero:
+	lda	#0
+	beq	done_c
+mod_c_bottom:
+	lda	C_COLOR
+	and	#$f0
+done_c:
+	sta	C_COLOR
+
+mod_d:
+	pla
+
 	jmp	middle_color_done
 
 middle_black:
@@ -305,6 +398,7 @@ middle_black:
 	stx	C_COLOR
 
 middle_color_done:
+
 	; left border
 	ldy	#COLOR_BOTH_GREY
 	sty	COLOR
@@ -376,9 +470,10 @@ middle_color_done:
 	clc
 	adc	#2
 	cmp	#28
-	bne	middle_loop
+	beq	bottom_line
+	jmp	middle_loop
 
-
+bottom_line:
 	; bottom line
 
 	lda	#COLOR_BOTH_GREY
