@@ -1,5 +1,7 @@
 ; Closing Credits
 
+NUM_CREDITS	EQU 14
+
 	;===================
 	; init credits
 	;===================
@@ -81,7 +83,7 @@ not_waiting:
 	bne	done_click
 
 	lda	YY
-	cmp	#9
+	cmp	#NUM_CREDITS-1	; wait after NUM_CREDITS-1
 	bne	short_loop
 long_loop:
 	lda	#$ff
@@ -268,13 +270,21 @@ credits:
 .byte 7+7
 .asciiz	"FROGGYSUE"
 .byte 7+7
+.asciiz "MUSIC: ???"
+.byte 7+7
 .asciiz	"PIANOMAN08"
 .byte 7+7
 .asciiz	"UTOPIA BBS"
+.byte 3+7
+.asciiz "FORD PERFECT (SIC)"
 .byte 5+7
 .asciiz	"THE 7HORSEMEN"
 .byte 2+7
+.asciiz "MITHLUIN AND ROOSTER"
+.byte 2+7
 .asciiz	"WEAVE'S WORLD TALKER"
+.byte 5+7
+.asciiz "DAISY AND JUNE"
 .byte 6+7
 .asciiz	"STEALTH SUSIE"
 .byte 3+7
