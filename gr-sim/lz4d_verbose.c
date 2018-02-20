@@ -21,24 +21,28 @@ static unsigned char input[MAX_INPUT];
 static void getsrc(void) {
 //getsrc:
 	a=ram[y_indirect(src,y)];		// lda 	(src), y
+
+	printf("LOAD %02X%02X: %02X\n",ram[src+1],ram[src],a);
+
 	ram[src]++;				//inc	src
 	if (ram[src]!=0) goto done_getsrc;	//bne	+
 	ram[src+1]++;				//inc	src+1
 done_getsrc: ;
-	printf("LOADED %02X%02X-1: %02X\n",ram[src+1],ram[src],a);
+
 	//+	rts
 }
 
 void buildcount(void) {
-
+	printf("\tBUILDCOUNT: A=0x%x\n",a);
 //buildcount:
-	x=1;					// ldx	#1
-	ram[count+1]=x; 			// stx	count+1
-	cmp(0xf);				// cmp	#$0f
-	if (z==0) goto done_buildcount;		// bne	++
+	x=1;					// ??		// ldx	#1
+	ram[count+1]=x; 			// ??		// stx	count+1
+	cmp(0xf);				// if 15, more complicated // cmp	#$0f
+	if (z==0) goto done_buildcount;		// otherwise A is count // bne	++
 minus_buildcount:
 	ram[count]=a;				//-	sta	count
-	printf("MBC ");
+//	printf("MBC ");
+	printf("\tADDITIONAL BUILDCOUNT ");
 	getsrc();				//jsr	getsrc
 	x=a;					//tax
 	c=0;					//clc
@@ -49,6 +53,8 @@ skip_buildcount:
 	x++;					//+	inx
 	if (x==0) goto minus_buildcount;	//beq	-
 done_buildcount: ;				//++	rts
+	printf("\tBUILDCOUNT= r[c+1]=%02X r[c]=%02X a=%02X x=%02X\n",
+		ram[count+1],ram[count],a,x);
 }
 
 
@@ -56,12 +62,14 @@ static void putdst(void) {
 //	printf("PUTADDR=%04X\n",y_indirect(dst,y));
 						// putdst:
 	ram[y_indirect(dst,y)]=a;		//	sta 	(dst), y
+	if (y!=0) printf("ERROR ERROR ERROR ERROR ERROR\n");
+	printf("\t\tPUT: %02X%02X = %02X\n",ram[dst+1],ram[dst],a);
 	ram[dst]++;				//	inc	dst
 	if (ram[dst]!=0) goto putdst_end;	//	bne	+
 	ram[dst+1]++;				//	inc	dst+1
 putdst_end:;
 						//+	rts
-	printf("\tPUT: %02X%02X-1,%02X = %02X\n",ram[dst+1],ram[dst],y,a);
+
 }
 
 static void getput(void) {
@@ -73,7 +81,9 @@ static void getput(void) {
 
 static void docopy(void) {
 						// docopy:
+
 docopy_label:
+	printf("\tDOCOPY %02X%02X: ",ram[count+1]-1,x);
 	getput();				// jsr	getput
 	x--;					// dex
 	if (x!=0) goto docopy_label;		// bne	docopy
@@ -163,27 +173,30 @@ int main(int argc, char **argv) {
 
 
 //unpack:				//;unpacker entrypoint
-	goto unpmain;			// jmp	unpmain
+//	goto unpmain;			// jmp	unpmain
 
-unpmain:
-	y=0;				//ldy	#0
+//unpack:
+	y=0;				// used for offset	//ldy	#0
 
 parsetoken:
-	printf("PT ");
-	getsrc();			// jsr	getsrc
-	pha();				// pha
-	lsr();				// lsr
-	lsr();				// lsr
-	lsr();				// lsr
-	lsr();				// lsr
-	if (a==0) goto copymatches; 	// beq	copymatches
+	printf("LOAD TOKEN: ");
+	getsrc();						// jsr	getsrc
+					// get token
+	pha();				// save for later	// pha
+	lsr();				// num literals in top 4	// lsr
+	lsr();							// lsr
+	lsr();							// lsr
+	lsr();							// lsr
+	if (a==0) goto copymatches; 	// if zero, no literals // beq	copymatches
 
-	buildcount();			// jsr	buildcount
+	buildcount();			// otherwise, build the count // jsr	buildcount
+
 	x=a;				// tax
 	docopy();			// jsr	docopy
 	a=ram[src];			// lda	src
 	cmp(ram[end]);			// cmp	end
 	a=ram[src+1];			// lda	src+1
+
 	sbc(ram[end+1]);		// sbc	end+1
 	if (c) {
 		printf("Done!\n");
@@ -193,16 +206,17 @@ parsetoken:
 	}
 
 copymatches:
-	printf("CM1 ");
-	getsrc();			// jsr	getsrc
-	ram[delta]=a;			// sta	delta
-	printf("CM1 ");
-	getsrc();			// jsr	getsrc
-	ram[delta+1]=a;			// sta	delta+1
-	printf("DELTA is %02X%02X\n",ram[delta+1],ram[delta]);
-	pla();				// pla
-	a=a&0xf;			// and	#$0f
+	printf("\tDELTAL ");
+	getsrc();					// jsr	getsrc
+	ram[delta]=a;					// sta	delta
+	printf("\tDELTAH ");
+	getsrc();					// jsr	getsrc
+	ram[delta+1]=a;					// sta	delta+1
+	printf("\tDELTA is %02X%02X\n",ram[delta+1],ram[delta]);
+	pla();				// restore token	// pla
+	a=a&0xf;			// get bottom 4 bits	// and	#$0f
 	buildcount();			// jsr	buildcount
+
 	c=0;				// clc
 	adc(4);				// adc	#4
 	x=a;				// tax
@@ -213,7 +227,7 @@ copy_skip:
 	pha();				// pha
 	a=ram[src];			// lda	src
 	pha();				// pha
-//	printf("SAVED SRC: %02X%02X\n",ram[src+1],ram[src]);
+	printf("\tSAVED SRC: %02X%02X\n",ram[src+1],ram[src]);
 //	printf("CALCULATING: DST %02X%02X - DELTA %02X%02X\n",ram[dst+1],ram[dst],ram[delta+1],ram[delta]);
 	c=1;				// sec
 	a=ram[dst];			// lda	dst
@@ -222,13 +236,13 @@ copy_skip:
 	a=ram[dst+1];			// lda	dst+1
 	sbc(ram[delta+1]);		// sbc	delta+1
 	ram[src+1]=a;			// sta	src+1
-//	printf("NEW SRC: %02X:%02X\n",ram[src+1],ram[src]);
+	printf("\tNEW SRC: %02X%02X\n",ram[src+1],ram[src]);
 	docopy();			// jsr	docopy
 	pla();				// pla
 	ram[src]=a;			// sta	src
 	pla();				// pla
 	ram[src+1]=a;			// sta	src+1
-	printf("RESTORED SRC: %02X%02X\n",ram[src+1],ram[src]);
+	printf("\tRESTORED SRC: %02X%02X\n",ram[src+1],ram[src]);
 	goto parsetoken;		// jmp	parsetoken
 
 done:

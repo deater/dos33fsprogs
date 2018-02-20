@@ -51,16 +51,17 @@ lz4_decode:
 
 
 unpmain:
-	ldy	#0
+	ldy	#0			; used to index
 
 parsetoken:
-	jsr	getsrc
-	pha
+	jsr	getsrc			; get next token
+	pha				; save for later (need bottom 4 bits)
+
+	lsr				; number of literals in top 4 bits
+	lsr				; so shift into place
 	lsr
 	lsr
-	lsr
-	lsr
-	beq	copymatches
+	beq	copymatches		; if zero, then no literals
 
 	jsr	buildcount
 	tax
@@ -72,15 +73,20 @@ parsetoken:
 	bcs	done
 
 copymatches:
-	jsr	getsrc
+	jsr	getsrc			; get 16-bit delta value
 	sta	delta
 	jsr	getsrc
 	sta	delta+1
-	pla
-	and	#$0f
+
+	pla				; restore token
+	and	#$0f			; get bottom 4 bits
+					; match count.  0 means 4
+					; 15 means 19+, must be calculated
 	jsr	buildcount
+
 	clc
-	adc	#4
+	adc	#4			; adjust count by 4 (minmatch)
+
 	tax
 	bcc	copy_skip
 	inc	count+1
