@@ -203,6 +203,9 @@ interrupt_handler:
 
 	bit	$C404		; can clear 6522 interrupt by reading T1C-L
 
+	;=====================
+	; Update time counter
+	;=====================
 
 	inc	FRAME_COUNT
 	lda	FRAME_COUNT
@@ -320,6 +323,8 @@ new_song:
 
 	jsr	read_file
 
+	jsr	lz4_decode
+
 	lda	#>CHUNK_BUFFER
 	sta	INH
 	lda	#<CHUNK_BUFFER
@@ -400,6 +405,7 @@ bloop3:
         jsr     print_both_pages
 
 	rts
+
 ;=========
 ;routines
 ;=========

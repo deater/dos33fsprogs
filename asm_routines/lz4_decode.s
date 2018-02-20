@@ -17,16 +17,17 @@ A4L	EQU $42
 A4H	EQU $43
 
 size	EQU 794
-orgoff EQU $8000	; offset of first unpacked byte
-paksize	EQU size-$b-8   ; minus 4 for checksum at end
+orgoff	EQU $6000	; offset of first unpacked byte
+paksize	EQU size-$b-8
+			; size of packed data
+			; minus 4 for checksum at end
 			; not sure what other 4 is from?
 			; block checksum? though had that disabled?
 
-			; size of packed data
-pakoff EQU $200b	; 11 byte offset to data?
+pakoff EQU $400b	; 11 byte offset to data?
 
 
-lz4_unpack:
+lz4_decode:
 	lda	#<pakoff 		; packed data offset
 	sta	src
 	lda	#<(pakoff+paksize)	; packed data size

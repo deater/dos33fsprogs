@@ -3,8 +3,11 @@
 
 ; FIXME: make these a parameter
 ; filename
-disk_buff	EQU	$6000
-read_size	EQU	$2A00	; (3*256*14)
+;disk_buff	EQU	$6000
+;read_size	EQU	$2A00	; (3*256*14)
+
+disk_buff	EQU	$4000
+read_size	EQU	$1000	; 4kB
 
 ;; For the disk-read code
 ;RWTSL		EQU $F0
@@ -240,8 +243,8 @@ dos33_read:
 
 filename:
 ; OUT.0
-.byte 'O'+$80,'U'+$80,'T'+$80,'.'+$80,'0'+$80
-.byte $A0,$A0,$A0,$A0,$A0
+.byte 'O'+$80,'U'+$80,'T'+$80,'.'+$80,'L'+$80
+.byte 'Z'+$80,'4'+$80,$A0,$A0,$A0
 .byte $A0,$A0,$A0,$A0,$A0
 .byte $A0,$A0,$A0,$A0,$A0
 .byte $A0,$A0,$A0,$A0,$A0

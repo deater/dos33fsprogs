@@ -83,8 +83,8 @@ docopy_label:
 }
 
 
-
-
+#define ORGOFFSET	0x6000
+#define PAKOFFSET	0x4000
 
 
 int main(int argc, char **argv) {
@@ -111,7 +111,7 @@ int main(int argc, char **argv) {
 
 	fclose(fff);
 
-	memcpy(&ram[0x2000],input,size);
+	memcpy(&ram[PAKOFFSET],input,size);
 
 	//LZ4 data decompressor for Apple II
 	//Peter Ferrie (peter.ferrie@gmail.com)
@@ -121,14 +121,14 @@ int main(int argc, char **argv) {
 	//hipak	=	0 ;packed data entirely in high memory (requires hiunp)
 
 	//oep = 0; //first unpacked byte to run, you must set this by yourself
-	orgoff = 0x8000; //offset of first unpacked byte, you must set this by yourself
-	paksize	= size-0xb-8; 
+	orgoff = ORGOFFSET; //offset of first unpacked byte, you must set this by yourself
+	paksize	= size-0xb-8;
 			// minus 4 for checksum at end
 			// not sure what other 4 is from?
 			// block checksum? though had that disabled?
 
 		//size of packed data, you must set this by yourself if hiunp=0
-	pakoff = 0x200b; // 11 byte offset to data?
+	pakoff = PAKOFFSET+11; // 11 byte offset to data?
 
 
 //LCBANK2	=	$c083
@@ -236,12 +236,12 @@ done:
 
 
 	int out_size=(ram[dst+1]<<8)+ram[dst];
-	out_size-=0x8000;
+	out_size-=ORGOFFSET;
 
 	printf("dest addr  : %02X%02X\n",ram[dst+1],ram[dst]);
 
 	int i,j,addr,temp;
-	addr=0x8000;
+	addr=ORGOFFSET;
 
 	printf("\n");
 	for(i=0;i<256;i++) {
@@ -268,7 +268,7 @@ done:
 
 	printf("Out size=%d\n",out_size);
 
-	fwrite(&ram[0x8000],1,out_size,fff);
+	fwrite(&ram[ORGOFFSET],1,out_size,fff);
 
 	fclose(fff);
 
