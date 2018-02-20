@@ -8,6 +8,7 @@ all:	chiptune_player.dsk
 chiptune_player.dsk:	CHIPTUNE_PLAYER OUT.0
 	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1000 CHIPTUNE_PLAYER
 	$(DOS33) -y chiptune_player.dsk SAVE B OUT.0
+	$(DOS33) -y chiptune_player.dsk SAVE B OUT.LZ4
 #	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x6000 OUT.0
 
 
@@ -18,7 +19,7 @@ chiptune_player.o:	chiptune_player.s \
 	../asm_routines/mockingboard.s \
 	../asm_routines/dos33_routines.s \
 	../asm_routines/lz4_decode.s \
-	rasterbars.s \
+	rasterbars.s volume_bars.s \
 	chip_title.inc zp.inc
 	ca65 -o chiptune_player.o chiptune_player.s -l chiptune_player.lst
 
