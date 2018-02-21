@@ -39,22 +39,24 @@ void buildcount(void) {
 	ram[count+1]=x; 			// ??		// stx	count+1
 	cmp(0xf);				// if 15, more complicated // cmp	#$0f
 	if (z==0) goto done_buildcount;		// otherwise A is count // bne	++
-minus_buildcount:
+buildcount_loop:
 	ram[count]=a;				//-	sta	count
 //	printf("MBC ");
-	printf("\tADDITIONAL BUILDCOUNT ");
 	getsrc();				//jsr	getsrc
+	printf("\tADDITIONAL BUILDCOUNT 0x%x, adding 0x%x\n",a,ram[count]);
 	x=a;					//tax
 	c=0;					//clc
 	adc(ram[count]);			//adc	count
+	printf("\tGOT 0x%x c=%d\n",a,c);
 	if (c==0) goto skip_buildcount;		// bcc	+
 	ram[count+1]++;				//inc	count+1
 skip_buildcount:
-	x++;					//+	inx
-	if (x==0) goto minus_buildcount;	//beq	-
+	printf("\tUPDATED COUNT %02X%02X\n",ram[count+1],a);
+	x++;					// check if x is 255	//+	inx
+	if (x==0) goto buildcount_loop;		// if so, add in next byte //beq	-
 done_buildcount: ;				//++	rts
-	printf("\tBUILDCOUNT= r[c+1]=%02X r[c]=%02X a=%02X x=%02X\n",
-		ram[count+1],ram[count],a,x);
+	printf("\tBUILDCOUNT= %02X%02X r[c+1]=%02X r[c]=%02X a=%02X x=%02X\n",
+		ram[count+1],a,ram[count+1],ram[count],a,x);
 }
 
 
@@ -79,14 +81,26 @@ static void getput(void) {
 	putdst();				// ; fallthrough
 }
 
+// 202 -> 201 -> 100 -> 1FF
+// 201 -> 100 -> 1FF
+// 200 -> 2ff -> 2fe
+// 1ff -> 1fe
+
 static void docopy(void) {
+	printf("\tDOCOPY ENTRY: %02X%02X\n",ram[count+1],x);
 						// docopy:
+	if (x==0) {
+		getput();
+		x--;
+		goto dc_hack;
+	}
 
 docopy_label:
-	printf("\tDOCOPY %02X%02X: ",ram[count+1]-1,x);
+	printf("\tDOCOPY %02X%02X: ",ram[count+1],x);
 	getput();				// jsr	getput
 	x--;					// dex
 	if (x!=0) goto docopy_label;		// bne	docopy
+dc_hack:
 	ram[count+1]--;				// dec	count+1
 	if (ram[count+1]!=0) goto docopy_label;	//bne	docopy
 						//rts

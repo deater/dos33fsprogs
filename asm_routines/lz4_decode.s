@@ -131,21 +131,21 @@ done_getsrc:
 	; buildcount
 	;============
 buildcount:
-	ldx	#1
-	stx	count+1
-	cmp	#$0f
+	ldx	#1			; high count starts at 1
+	stx	count+1			; (loops at zero?)
+	cmp	#$0f			; if LITERAL_COUNT < 15, we are done
 	bne	done_buildcount
-minus_buildcount:
-	sta	count
-	jsr	getsrc
-	tax
+buildcount_loop:
+	sta	count			; save LITERAL_COUNT (15)
+	jsr	getsrc			; get the next byte
+	tax				; put in X
 	clc
-	adc	count
-	bcc	skip_buildcount
+	adc	count			; add new byte to old value
+	bcc	bc_8bit_oflow		; if overflow, increment high byte
 	inc	count+1
-skip_buildcount:
-	inx
-	beq	minus_buildcount
+bc_8bit_oflow:
+	inx				; check if read value was 255
+	beq	buildcount_loop		; if it was, keep looping and adding
 done_buildcount:
 	rts
 
@@ -168,14 +168,27 @@ putdst:
 putdst_end:
 	rts
 
-	;================
+	;=============================
 	; docopy
-	;================
+	;=============================
+	; copies ram[count+1]-1:X bytes
+	; from src to dst
 docopy:
+	; working around bug in original code that would loop 256 too
+	; many times if incoming X was equal to 0
+	cpx	#$0
+	bne	docopy_loop
 	jsr	getput
 	dex
-	bne	docopy
-	dec	count+1
-	bne	docopy
+	bne	docopy_hack
+
+docopy_loop:
+	jsr	getput			; get/put byte
+	dex				; decrement count
+	bne	docopy_loop		; if not zero, loop
+docopy_hack:
+	dec	count+1			; if zero, decrement high byte
+	bne	docopy_loop		; if not zero, loop
+
 	rts
 
