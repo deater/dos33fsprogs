@@ -1,8 +1,32 @@
 ; LZ4 data decompressor for Apple II
-; Based heavily on code by Peter Ferrie (peter.ferrie@gmail.com)
+
+; Code by Peter Ferrie (qkumba) (peter.ferrie@gmail.com)
+; "LZ4 unpacker in 143 bytes (6502 version) (2013)"
+;    http://pferrie.host22.com/misc/appleii.htm
+; I found a bug, and also added comments to clarify a bit what's going on
 
 ; For LZ4 reference see
 ; https://github.com/lz4/lz4/wiki/lz4_Frame_format.md
+
+; LZ4 summary:
+;
+; HEADER:
+;       Should: check for magic number 04 22 4d 18
+;	FLG: 64 in our case (01=version, block.index=1, block.checksum=0
+;		size=0, checksum=1, reserved
+;	MAX Blocksize: 40 (64kB)
+;	HEADER CHECKSUM: a7
+;	BLOCK HEADER: 4 bytes (le)  If highest bit set, uncompressed!
+; BLOCKS:
+;	Token byte.  High 4-bits literal length, low 4-bits copy length
+;	+ If literal length==15, then following byte gets added to length
+;	  If that byte was 255, then keep adding bytes until not 255
+;       + The literal bytes follow.  There may be zero of them
+;	+ Next is block copy info.  little-endian 2-byte offset to
+;	  be subtracted from current read position indicating source
+;	+ The low 4-bits of the token are the copy length, which needs
+;         4 added to it.  As with the literal length, if it is 15 then
+;	  you read a byte and add (and if that byte is 255, keep adding)
 
 src	EQU $00
 dst	EQU $02
@@ -42,12 +66,7 @@ lz4_decode:
 	sta	dst
 
 
-; Should: check for magic number 04 22 4d 18
-;	FLG: 64 in our case (01=version, block.index=1, block.checksum=0
-;		size=0, checksum=1, reserved
-;	MAX Blocksize: 40 (64kB)
-;	HEADER CHECKSUM: a7
-;	BLOCK HEADER: 4 bytes (le)  If highest bit set, uncompressed!
+
 
 
 unpmain:
@@ -191,4 +210,3 @@ docopy_hack:
 	bne	docopy_loop		; if not zero, loop
 
 	rts
-
