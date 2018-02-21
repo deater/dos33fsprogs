@@ -317,6 +317,24 @@ new_song:
 	sta	C_VOLUME
 
 	;===========================
+	; Print loading message
+	;===========================
+
+	jsr	clear_bottoms		; clear bottom of page 0/1
+
+	lda	#0
+	sta	CH
+	lda	#21
+	sta	CV
+
+	lda	#<loading_message
+	sta	OUTL
+	lda	#>loading_message
+	sta	OUTH
+        jsr     print_both_pages
+
+
+	;===========================
 	; init pointer to the music
 	;===========================
 
@@ -338,7 +356,7 @@ new_song:
 	; Print Title/Author info
 	;=========================
 
-	jsr	clear_screens		; clear top/bottom of page 0/1
+	jsr	clear_bottoms		; clear bottom of page 0/1
 
 	lda     #<file_info
         sta     OUTL
@@ -440,6 +458,7 @@ mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
 not_message:		.byte   "NOT "
 found_message:		.asciiz "FOUND"
 done_message:		.asciiz "DONE PLAYING"
+loading_message:	.asciiz "LOADING..."
 
 ;============
 ; graphics
