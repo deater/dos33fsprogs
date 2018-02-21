@@ -89,18 +89,11 @@ static void getput(void) {
 static void docopy(void) {
 	printf("\tDOCOPY ENTRY: %02X%02X\n",ram[count+1],x);
 						// docopy:
-	if (x==0) {
-		getput();
-		x--;
-		goto dc_hack;
-	}
-
 docopy_label:
 	printf("\tDOCOPY %02X%02X: ",ram[count+1],x);
 	getput();				// jsr	getput
 	x--;					// dex
 	if (x!=0) goto docopy_label;		// bne	docopy
-dc_hack:
 	ram[count+1]--;				// dec	count+1
 	if (ram[count+1]!=0) goto docopy_label;	//bne	docopy
 						//rts
@@ -234,6 +227,7 @@ copymatches:
 	c=0;				// clc
 	adc(4);				// adc	#4
 	x=a;				// tax
+	if (x==0) goto copy_skip;	//BUGFIX // beq  +
 	if (c==0) goto copy_skip;	// bcc	+
 	ram[count+1]++;			// inc	count+1
 copy_skip:

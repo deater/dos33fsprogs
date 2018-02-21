@@ -3,7 +3,9 @@
 ; Code by Peter Ferrie (qkumba) (peter.ferrie@gmail.com)
 ; "LZ4 unpacker in 143 bytes (6502 version) (2013)"
 ;    http://pferrie.host22.com/misc/appleii.htm
-; I found a bug, and also added comments to clarify a bit what's going on
+; This is that code, but with comments and labels added for clarity.
+; I also found a bug when decoding with runs of multiples of 256
+;   which has since been fixed upstream.
 
 ; For LZ4 reference see
 ; https://github.com/lz4/lz4/wiki/lz4_Frame_format.md
@@ -107,7 +109,9 @@ copymatches:
 	adc	#4			; adjust count by 4 (minmatch)
 
 	tax
+	beq	copy_skip		; BUGFIX
 	bcc	copy_skip
+
 	inc	count+1
 copy_skip:
 	lda	src+1
@@ -193,19 +197,11 @@ putdst_end:
 	; copies ram[count+1]-1:X bytes
 	; from src to dst
 docopy:
-	; working around bug in original code that would loop 256 too
-	; many times if incoming X was equal to 0
-	cpx	#$0
-	bne	docopy_loop
-	jsr	getput
-	dex
-	bne	docopy_hack
 
 docopy_loop:
 	jsr	getput			; get/put byte
 	dex				; decrement count
 	bne	docopy_loop		; if not zero, loop
-docopy_hack:
 	dec	count+1			; if zero, decrement high byte
 	bne	docopy_loop		; if not zero, loop
 

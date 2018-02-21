@@ -1,6 +1,5 @@
-+ Starfield -- takes too much ram (3k+)
-+ Volume Bars
-+ Print Descriptive Text
 + Print time
 + LZ4 decompression
 + Loop support
++ Right/Left arrows on screen
++ "LOADING..." message while loading from disk
