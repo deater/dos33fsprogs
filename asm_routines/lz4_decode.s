@@ -72,7 +72,7 @@ lz4_decode:
 
 
 unpmain:
-	ldy	#0			; used to index
+	ldy	#0			; used to index, always zero
 
 parsetoken:
 	jsr	getsrc			; get next token
@@ -83,12 +83,15 @@ parsetoken:
 	lsr
 	lsr
 	beq	copymatches		; if zero, then no literals
+					; jump ahead and copy
 
-	jsr	buildcount
-	tax
-	jsr	docopy
-	lda	src
-	cmp	end
+	jsr	buildcount		; add up all the literal sizes
+					; result is in ram[count+1]-1:A
+	tax				; now in ram[count+1]-1:X
+	jsr	docopy			; copy the literals
+
+	lda	src			; 16-bit compare
+	cmp	end			; to see if we have reached the end
 	lda	src+1
 	sbc	end+1
 	bcs	done
@@ -103,45 +106,51 @@ copymatches:
 	and	#$0f			; get bottom 4 bits
 					; match count.  0 means 4
 					; 15 means 19+, must be calculated
-	jsr	buildcount
+
+	jsr	buildcount		; add up count bits, in ram[count+1]-:A
 
 	clc
 	adc	#4			; adjust count by 4 (minmatch)
 
-	tax
-	beq	copy_skip		; BUGFIX
-	bcc	copy_skip
+	tax				; now in ramp[count+1]-1:X
 
-	inc	count+1
-copy_skip:
-	lda	src+1
+	beq	copy_no_adjust		; BUGFIX, don't increment if
+					;	exactly a multiple of 0x100
+	bcc	copy_no_adjust
+
+	inc	count+1			; increment if we overflowed
+copy_no_adjust:
+
+	lda	src+1			; save src on stack
 	pha
 	lda	src
 	pha
-	sec
-	lda	dst
+
+	sec				; subtract delta
+	lda	dst			; from destination, make new src
 	sbc	delta
 	sta	src
 	lda	dst+1
 	sbc	delta+1
 	sta	src+1
-	jsr	docopy
-	pla
+
+	jsr	docopy			; do the copy
+
+	pla				; restore the src
 	sta	src
 	pla
 	sta	src+1
-	jmp	parsetoken
+
+	jmp	parsetoken		; back to parsing tokens
 
 done:
 	pla
 	rts
 
-
-
-
 	;=========
 	; getsrc
 	;=========
+	; gets byte from src into A, increments pointer
 getsrc:
 	lda	(src), Y		; get a byte from src
 	inc	src			; increment pointer
@@ -183,10 +192,11 @@ getput:
 	;=============
 	; putdst
 	;=============
+	; store A into destination
 putdst:
-	sta 	(dst), Y
-	inc	dst
-	bne	putdst_end
+	sta 	(dst), Y		; store A into destination
+	inc	dst			; increment 16-bit pointer
+	bne	putdst_end		; if overflow, increment top byte
 	inc	dst+1
 putdst_end:
 	rts
