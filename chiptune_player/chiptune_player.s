@@ -123,6 +123,13 @@ mockingboard_found:
 
 	jsr	new_song
 
+
+	lda	#<CHUNK_BUFFER		; set input pointer
+	sta	INL
+	lda	#>CHUNK_BUFFER
+	sta	INH
+
+
 	;============================
 	; Enable 6502 interrupts
 	;============================
@@ -447,13 +454,27 @@ bloop3:
 	adc	#0
 	sta	LZ4_SRC+1
 
-	lda	(LZ4_SRC),Y
+	jsr	next_subsong
+
+	; should tail call
+
+	rts
+
+
+	;=================
+	; next sub-song
+	;=================
+next_subsong:
+
+	ldy	#0
+
+	lda	(LZ4_SRC),Y		; get next size value
 	sta	LZ4_END
 	iny
 	lda	(LZ4_SRC),Y
 	sta	LZ4_END+1
 
-	lda	#2
+	lda	#2			; increment pointer
 	clc
 	adc	LZ4_SRC
 	sta	LZ4_SRC
@@ -461,12 +482,7 @@ bloop3:
 	adc	#0
 	sta	LZ4_SRC+1
 
-	jsr	lz4_decode
-
-	lda	#<CHUNK_BUFFER
-	sta	INL
-	lda	#>CHUNK_BUFFER
-	sta	INH
+	jsr	lz4_decode		; decode
 
 	rts
 
