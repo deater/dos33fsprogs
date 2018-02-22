@@ -2,8 +2,8 @@
 
 .include	"zp.inc"
 
-LZ4_BUFFER	EQU	$4000
-CHUNK_BUFFER	EQU	$6000
+LZ4_BUFFER	EQU	$2000		; 16k for now, FIXME: expand
+CHUNK_BUFFER	EQU	$6000		; 10.5k, $2A00
 CHUNKSIZE	EQU	$3
 
 	;=============================
@@ -322,7 +322,7 @@ new_song:
 
 	jsr	clear_bottoms		; clear bottom of page 0/1
 
-	lda	#0
+	lda	#0			; print LOADING message
 	sta	CH
 	lda	#21
 	sta	CV
@@ -338,6 +338,10 @@ new_song:
 	; init pointer to the music
 	;===========================
 
+	lda	#<krw_file
+	sta	INL
+	lda	#>krw_file
+	sta	INH
 
 	jsr	read_file
 
@@ -358,11 +362,11 @@ new_song:
 
 	jsr	clear_bottoms		; clear bottom of page 0/1
 
-	lda     #<file_info
-        sta     OUTL
-        lda     #>file_info
-        sta     OUTH
-	ldy	#0
+;	lda	#<file_info
+;	sta	OUTL
+;	lda	#>file_info
+;	sta	OUTH
+;	ldy	#0
 
 ; FIXME: optimize
 
@@ -424,6 +428,12 @@ bloop3:
 
 	rts
 
+;==========
+; filenames
+;==========
+krw_file:
+	.asciiz "INTRO2.KRW"
+
 ;=========
 ;routines
 ;=========
@@ -439,17 +449,6 @@ bloop3:
 .include	"../asm_routines/lz4_decode.s"
 .include	"rasterbars.s"
 .include	"volume_bars.s"
-
-;===========
-; File info
-;===========
-file_info:
-.byte	1
-.asciiz	"INTRO2: JUNGAR OF BIT WORLD FROM KIEV"
-.byte	5
-.asciiz	"BY: SURGEON (ALEKSEY LUTSENKO)"
-.byte	15
-.asciiz "0:00 / 0:00"
 
 ;=========
 ; strings

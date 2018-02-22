@@ -3,11 +3,9 @@
 
 ; FIXME: make these a parameter
 ; filename
-;disk_buff	EQU	$6000
-;read_size	EQU	$2A00	; (3*256*14)
 
-disk_buff	EQU	$4000
-read_size	EQU	$1000	; 4kB
+disk_buff	EQU	$2000
+read_size	EQU	$4000	; 16kB
 
 ;; For the disk-read code
 ;RWTSL		EQU $F0
@@ -40,7 +38,8 @@ FILEMANAGER        EQU $3D6
 	;================================
 	; read from disk
 	;================================
-	;
+	; FILENAME pointed to by INH:INL
+	;	OUTH:OUTL trashed
 	;
 read_file:
 	jsr     LOCATE_FILEM_PARAM  	; $3DC entry point
@@ -53,6 +52,30 @@ read_file:
 ;	ldy	#7	 		; file type offset = 7
 ;	lda	#0			; 0 = text
 ;	sta	(FILEML),y
+
+
+	; copy filename into place
+	ldy	#0
+	lda	#<filename		; combine with below? (filename-8?)
+	sta	OUTL
+	lda	#>filename
+	sta	OUTH
+
+filename_copy_loop:
+	lda	(INL),y			; load byte
+	beq	filename_pad_spaces	; if zero, done
+	ora	#$80			; convert to apple ascii
+	sta	(OUTL),y		; store out
+	iny
+	bne	filename_copy_loop
+
+filename_pad_spaces:
+	lda	#$A0			; filename needs ' ' padded
+	sta	(OUTL),y
+	iny
+	cpy	#31			; fill 30 bytes
+	bne	filename_pad_spaces
+
 
 	ldy	#8			; filename ptr offset = 8
 	lda	#<filename
@@ -243,8 +266,8 @@ dos33_read:
 
 filename:
 ; OUT.0
-.byte 'O'+$80,'U'+$80,'T'+$80,'.'+$80,'L'+$80
-.byte 'Z'+$80,'4'+$80,$A0,$A0,$A0
+.byte 'I'+$80,'N'+$80,'T'+$80,'R'+$80,'O'+$80
+.byte '2'+$80,'.'+$80,'K'+$80,'R'+$80,'W'+$80
 .byte $A0,$A0,$A0,$A0,$A0
 .byte $A0,$A0,$A0,$A0,$A0
 .byte $A0,$A0,$A0,$A0,$A0
