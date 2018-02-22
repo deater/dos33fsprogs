@@ -509,6 +509,7 @@ next_subsong:
 ;==========
 krw_file:
 	.asciiz "INTRO2.KRW"
+	.asciiz "TECHNO.KRW"
 
 ;=========
 ;routines

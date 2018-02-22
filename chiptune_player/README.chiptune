@@ -25,6 +25,30 @@ it doesn't compress as well so it takes up more disk/memory space
 for the raw file.
 
 
+As can be seen from the memory map, if we assume our player can fit in 4k
+we have roughly from $2000 to $9600 for memory.  That's $7600 (29.5k).
+
+If we could have single buffered, we could have had 256*3*14 (10.5k) for
+decompress and 19k for file size which would let us play most of the 
+reasonable sized songs on our play list (KRW(3) in table at end).
+
+If we need to double buffer, then we need 256*2*14*2 (14k) for decompress
+and 15.5k for file size which still works, at least if the move to KRW(2)
+sized files doesn't bloat things too much.
+
+
+Proposed plan
+
+	Decompress 3, but in the room of 4?
+
+	1234	in memory
+	ABCC	decode as ABC, then copy C to 4
+		when playing C, play from 4, bring in next 3
+	DEFF
+
+	This lets us have 14k of buffer, allowing 15.5k of compressed file.
+	Do we have the spare cycles for this?
+
 
 Memory Map
 (not to scale)
@@ -54,28 +78,39 @@ Memory Map
 
 
 Sizes
+						Disk
+		time	ym5	KRW(3)	KRW(2)	Blocks(3)
+		~~~~	~~~	~~~~~~	~~~~~~	~~~~~~
+KORO.KRW	0:54	?	 2740	 3039	 12	12
+FIGHTING.KRW	1:40	?	 3086	 3316	 14	14
+CAMOUFLAGE.KRW	1:32	1162	 4054	 4972	 17	17 
+DEMO4.KRW	2:05	1393	 4061	 6336	 17	17
+SDEMO.KRW	2:12	1635	 5266	 7598	 22	22
+CHRISTMAS.KRW	1:32	1751	 4975	 5811	 21	21
+SPUTNIK.KRW	2:05	2164	 8422	10779	 34	34
+DEATH2.KRW	2:27	2560	 8064	10295	 33	33
+CRMOROS.KRW	1:29	2566	 8045	 9565	 33	33
+TECHNO.KRW	2:23	2630	 8934	11126	 36	36
+WAVE.KRW	2:52	2655	 8368	11318	 34	34
+LYRA2.KRW	3:04	2870	 9826	14418	 40	40
+INTRO2.KRW	2:59	3217	 9214	 9294	 37	37
+ROBOT.KRW	1:26	3448	 7724	 8337	 32	32
+UNIVERSE.KRW	1:49	4320	 9990	11225	 41	41
+NEURO.KRW	3:47	8681	22376	25168	 89
+AXELF.KRW	10:55	9692	47989	54420	189
+							----- -----
+							423	30:29
 
-		time	ym5	KRW(3)	KRW(2)
-		~~~~	~~~	~~~~~~	~~~~~~
-KORO.KRW	0:54	?	2740
-FIGHTING.KRW	1:40	?	3086
-CAMOUFLAGE.KRW	1:32	1162	4054
-DEMO4.KRW	2:05	1393	4061
-SDEMO.KRW	2:12	1635	5266
-CHRISTMAS.KRW	1:32	1751	4975
-SPUTNIK.KRW	2:05	2164	8422
-DEATH2.KRW	2:27	2560	8064
-CRMOROS.KRW	1:29	2566	8045
-TECHNO.KRW	2:23	2630	8934
-WAVE.KRW	2:52	2655	8368
-LYRA2.KRW	3:04	2870	9826
-INTRO2.KRW	2:59	3217	9214
-ROBOT.KRW	1:26	3448	7724
-UNIVERSE.KRW	1:49	4320	9990
-NEURO.KRW	3:47	8681	22376
-AXELF.KRW	10:55	9692	47989
+Notes: my home-made songs don't have ym5 sizes as I don't have a
+working LHA encoder to make a real size.
 
+Apple II disk file sizes: uses 256 byte blocks.  Needs an extra
+for the catalog entry (and an additional for every X blocks used)
 
+The Disk II / DOS3.3 can in theory hold 140k, but first 3 tracks
+are reserved for DOS (12k) and the Catalog track (4k) and the
+Hello program (512 bytes) and our chiptune player (4k), totalling
+24.5k of overhead, with 115.5k free (462 blocks)
 
 
 
