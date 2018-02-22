@@ -179,13 +179,17 @@ done_play:
 
 	lda	#0
 	sta	CH
+
+	jsr	clear_bottoms
+
 	lda	#21
 	sta	CV
 	lda	#<done_message
 	sta	OUTL
 	lda	#>done_message
 	sta	OUTH
-	jsr	move_and_print
+
+	jsr	print_both_pages
 
 forever_loop:
 	jmp	forever_loop
@@ -262,6 +266,7 @@ mb_write_loop:
 	bne	mb_not_one
 	cmp	#$ff			; if ff, done song
 	bne	mb_not_one
+
 	lda	#1
 	sta	DONE_PLAYING
 	jmp	done_interrupt
