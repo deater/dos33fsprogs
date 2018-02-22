@@ -257,6 +257,16 @@ frame_good:
 
 mb_write_loop:
 	lda	(INL),y
+
+	cpx	#1
+	bne	mb_not_one
+	cmp	#$ff			; if ff, done song
+	bne	mb_not_one
+	lda	#1
+	sta	DONE_PLAYING
+	jmp	done_interrupt
+
+mb_not_one:
 	cpx	#13
 	bne	mb_not_13
 	cmp	#$ff
@@ -308,6 +318,9 @@ wraparound:
 	bne	chunk_good
 	lda	#0
 	sta	MB_CHUNK
+
+	jsr	next_subsong
+
 chunk_good:
 
 done_interrupt:
