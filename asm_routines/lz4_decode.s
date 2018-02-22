@@ -30,36 +30,34 @@
 ;         4 added to it.  As with the literal length, if it is 15 then
 ;	  you read a byte and add (and if that byte is 255, keep adding)
 
-src	EQU $FC
-dst	EQU $02
-end	EQU $04
-count	EQU $06
-delta	EQU $08
+;LZ4_SRC	EQU $00
+;LZ4_DST	EQU $02
+;LZ4_END	EQU $04
+;COUNT		EQU $06
+;DELTA		EQU $08
 
 orgoff	EQU $6000	; offset of first unpacked byte
 
 	;======================
 	; LZ4 decode
 	;======================
-	; input buffer in INH:INL
+	; input buffer in LZ4_SRC
         ; output buffer hardcoded still
 	; size in ENDH:ENDL
 
 lz4_decode:
-	lda	INL	 		; packed data offset
-;	sta	src
+	lda	LZ4_SRC	 		; packed data offset
 	clc
-	adc	end
-	sta	end
-	lda	INH
-;	sta	src+1
-	adc	end+1
-	sta	end+1
+	adc	LZ4_END
+	sta	LZ4_END
+	lda	LZ4_SRC+1
+	adc	LZ4_END+1
+	sta	LZ4_END+1
 
 	lda	#>orgoff		; original unpacked data offset
-	sta	dst+1
+	sta	LZ4_DST+1
 	lda	#<orgoff
-	sta	dst
+	sta	LZ4_DST
 
 unpmain:
 	ldy	#0			; used to index, always zero
@@ -80,17 +78,17 @@ parsetoken:
 	tax				; now in ram[count+1]-1:X
 	jsr	docopy			; copy the literals
 
-	lda	src			; 16-bit compare
-	cmp	end			; to see if we have reached the end
-	lda	src+1
-	sbc	end+1
+	lda	LZ4_SRC			; 16-bit compare
+	cmp	LZ4_END			; to see if we have reached the end
+	lda	LZ4_SRC+1
+	sbc	LZ4_END+1
 	bcs	done
 
 copymatches:
 	jsr	getsrc			; get 16-bit delta value
-	sta	delta
+	sta	DELTA
 	jsr	getsrc
-	sta	delta+1
+	sta	DELTA+1
 
 	pla				; restore token
 	and	#$0f			; get bottom 4 bits
@@ -108,28 +106,28 @@ copymatches:
 					;	exactly a multiple of 0x100
 	bcc	copy_no_adjust
 
-	inc	count+1			; increment if we overflowed
+	inc	COUNT+1			; increment if we overflowed
 copy_no_adjust:
 
-	lda	src+1			; save src on stack
+	lda	LZ4_SRC+1			; save src on stack
 	pha
-	lda	src
+	lda	LZ4_SRC
 	pha
 
 	sec				; subtract delta
-	lda	dst			; from destination, make new src
-	sbc	delta
-	sta	src
-	lda	dst+1
-	sbc	delta+1
-	sta	src+1
+	lda	LZ4_DST			; from destination, make new src
+	sbc	DELTA
+	sta	LZ4_SRC
+	lda	LZ4_DST+1
+	sbc	DELTA+1
+	sta	LZ4_SRC+1
 
 	jsr	docopy			; do the copy
 
 	pla				; restore the src
-	sta	src
+	sta	LZ4_SRC
 	pla
-	sta	src+1
+	sta	LZ4_SRC+1
 
 	jmp	parsetoken		; back to parsing tokens
 
@@ -142,10 +140,10 @@ done:
 	;=========
 	; gets byte from src into A, increments pointer
 getsrc:
-	lda	(src), Y		; get a byte from src
-	inc	src			; increment pointer
+	lda	(LZ4_SRC), Y		; get a byte from src
+	inc	LZ4_SRC			; increment pointer
 	bne	done_getsrc		; update 16-bit pointer
-	inc	src+1			; on 8-bit overflow
+	inc	LZ4_SRC+1			; on 8-bit overflow
 done_getsrc:
 	rts
 
@@ -154,17 +152,17 @@ done_getsrc:
 	;============
 buildcount:
 	ldx	#1			; high count starts at 1
-	stx	count+1			; (loops at zero?)
+	stx	COUNT+1			; (loops at zero?)
 	cmp	#$0f			; if LITERAL_COUNT < 15, we are done
 	bne	done_buildcount
 buildcount_loop:
-	sta	count			; save LITERAL_COUNT (15)
+	sta	COUNT			; save LITERAL_COUNT (15)
 	jsr	getsrc			; get the next byte
 	tax				; put in X
 	clc
-	adc	count			; add new byte to old value
+	adc	COUNT			; add new byte to old value
 	bcc	bc_8bit_oflow		; if overflow, increment high byte
-	inc	count+1
+	inc	COUNT+1
 bc_8bit_oflow:
 	inx				; check if read value was 255
 	beq	buildcount_loop		; if it was, keep looping and adding
@@ -184,10 +182,10 @@ getput:
 	;=============
 	; store A into destination
 putdst:
-	sta 	(dst), Y		; store A into destination
-	inc	dst			; increment 16-bit pointer
+	sta 	(LZ4_DST), Y		; store A into destination
+	inc	LZ4_DST			; increment 16-bit pointer
 	bne	putdst_end		; if overflow, increment top byte
-	inc	dst+1
+	inc	LZ4_DST+1
 putdst_end:
 	rts
 
@@ -202,7 +200,7 @@ docopy_loop:
 	jsr	getput			; get/put byte
 	dex				; decrement count
 	bne	docopy_loop		; if not zero, loop
-	dec	count+1			; if zero, decrement high byte
+	dec	COUNT+1			; if zero, decrement high byte
 	bne	docopy_loop		; if not zero, loop
 
 	rts

@@ -433,37 +433,33 @@ bloop2:
 bloop3:
 	jsr	print_both_pages
 
-
-SIZEL	EQU $04
-SIZEH	EQU $05
-
 	ldy	#0
 	lda	#>(LZ4_BUFFER+3)
-	sta	INH
+	sta	LZ4_SRC+1
 	lda	#<(LZ4_BUFFER+3)
-	sta	INL
+	sta	LZ4_SRC
 
-	lda	(INL),Y			; get header skip
+	lda	(LZ4_SRC),Y		; get header skip
 	clc
-	adc	INL
-	sta	INL
-	lda	INH
+	adc	LZ4_SRC
+	sta	LZ4_SRC
+	lda	LZ4_SRC+1
 	adc	#0
-	sta	INH
+	sta	LZ4_SRC+1
 
-	lda	(INL),Y
-	sta	SIZEL
+	lda	(LZ4_SRC),Y
+	sta	LZ4_END
 	iny
-	lda	(INL),Y
-	sta	SIZEH
+	lda	(LZ4_SRC),Y
+	sta	LZ4_END+1
 
 	lda	#2
 	clc
-	adc	INL
-	sta	INL
-	lda	INH
+	adc	LZ4_SRC
+	sta	LZ4_SRC
+	lda	LZ4_SRC+1
 	adc	#0
-	sta	INH
+	sta	LZ4_SRC+1
 
 	jsr	lz4_decode
 
