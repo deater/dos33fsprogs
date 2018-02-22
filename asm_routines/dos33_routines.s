@@ -73,7 +73,7 @@ filename_pad_spaces:
 	lda	#$A0			; filename needs ' ' padded
 	sta	(OUTL),y
 	iny
-	cpy	#31			; fill 30 bytes
+	cpy	#30			; fill 30 bytes
 	bne	filename_pad_spaces
 
 
