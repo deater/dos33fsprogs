@@ -30,46 +30,36 @@
 ;         4 added to it.  As with the literal length, if it is 15 then
 ;	  you read a byte and add (and if that byte is 255, keep adding)
 
-src	EQU $00
+src	EQU $FC
 dst	EQU $02
 end	EQU $04
 count	EQU $06
 delta	EQU $08
-A1L	EQU $3c
-A1H	EQU $3d
-A2L	EQU $3e
-A2H	EQU $3f
-A4L	EQU $42
-A4H	EQU $43
 
-size	EQU 794
 orgoff	EQU $6000	; offset of first unpacked byte
-paksize	EQU size-$b-8
-			; size of packed data
-			; minus 4 for checksum at end
-			; not sure what other 4 is from?
-			; block checksum? though had that disabled?
 
-pakoff EQU $400b	; 11 byte offset to data?
-
+	;======================
+	; LZ4 decode
+	;======================
+	; input buffer in INH:INL
+        ; output buffer hardcoded still
+	; size in ENDH:ENDL
 
 lz4_decode:
-	lda	#<pakoff 		; packed data offset
-	sta	src
-	lda	#<(pakoff+paksize)	; packed data size
+	lda	INL	 		; packed data offset
+;	sta	src
+	clc
+	adc	end
 	sta	end
-	lda	#>pakoff
-	sta	src+1
-	lda	#>(pakoff+paksize)
+	lda	INH
+;	sta	src+1
+	adc	end+1
 	sta	end+1
+
 	lda	#>orgoff		; original unpacked data offset
 	sta	dst+1
 	lda	#<orgoff
 	sta	dst
-
-
-
-
 
 unpmain:
 	ldy	#0			; used to index, always zero

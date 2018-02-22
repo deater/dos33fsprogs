@@ -197,9 +197,13 @@ forever_loop:
 
 interrupt_handler:
 	pha			; save A
+;	tya
+;	pha
+;	txa
+;	pha
 				; Should we save X and Y too?
 
-	inc	$0404		; debug
+;	inc	$0404		; debug
 
 	bit	$C404		; can clear 6522 interrupt by reading T1C-L
 
@@ -216,26 +220,26 @@ interrupt_handler:
 	sta	FRAME_COUNT
 
 update_second_ones:
-	inc	$7d0+18
-	inc	$bd0+18
-	lda	$bd0+18
-	cmp	#$ba			; one past '9'
-	bne	frame_good
-	lda	#'0'+$80
-	sta	$7d0+18
-	sta	$bd0+18
-update_second_tens:
 	inc	$7d0+17
 	inc	$bd0+17
 	lda	$bd0+17
-	cmp	#$b6			; 6
+	cmp	#$ba			; one past '9'
 	bne	frame_good
 	lda	#'0'+$80
 	sta	$7d0+17
 	sta	$bd0+17
+update_second_tens:
+	inc	$7d0+16
+	inc	$bd0+16
+	lda	$bd0+16
+	cmp	#$b6			; 6
+	bne	frame_good
+	lda	#'0'+$80
+	sta	$7d0+16
+	sta	$bd0+16
 update_minutes:
-	inc	$7d0+15
-	inc	$bd0+15
+	inc	$7d0+14
+	inc	$bd0+14
 					; we don't handle > 9:59 songs yet
 
 frame_good:
@@ -301,6 +305,10 @@ chunk_good:
 
 done_interrupt:
 	pla
+;	tax
+;	pla
+;	tay
+;	pla
 	rti
 
 
@@ -309,11 +317,16 @@ done_interrupt:
 	;=================
 
 new_song:
-	lda	#0
+
+	;=========================
+	; Init Variables
+	;=========================
+
+	lda	#$0
+	sta	MB_CHUNK
+	sta	FRAME_COUNT
 	sta	A_VOLUME
-	lda	#0
 	sta	B_VOLUME
-	lda	#0
 	sta	C_VOLUME
 
 	;===========================
@@ -335,38 +348,30 @@ new_song:
 
 
 	;===========================
-	; init pointer to the music
+	; Load in KRW file
 	;===========================
 
-	lda	#<krw_file
+	lda	#<krw_file			; point to filename
 	sta	INL
 	lda	#>krw_file
 	sta	INH
 
-	jsr	read_file
+	jsr	read_file		; read KRW file from disk
 
-	jsr	lz4_decode
-
-	lda	#>CHUNK_BUFFER
-	sta	INH
-	lda	#<CHUNK_BUFFER
-	sta	INL
-
-	lda	#$0
-	sta	MB_CHUNK
-	sta	FRAME_COUNT
 
 	;=========================
-	; Print Title/Author info
+	; Print Info
 	;=========================
 
 	jsr	clear_bottoms		; clear bottom of page 0/1
 
-;	lda	#<file_info
-;	sta	OUTL
-;	lda	#>file_info
-;	sta	OUTH
-;	ldy	#0
+	lda	#>LZ4_BUFFER
+	sta	OUTH
+	lda	#<LZ4_BUFFER
+	sta	OUTL
+
+	ldy	#4			; skip KRW at front
+
 
 ; FIXME: optimize
 
@@ -375,10 +380,13 @@ new_song:
 	lda	(OUTL),Y
 	sta	CH
 
-	inc	OUTL
-	bne	bloop1
-	inc	OUTH
-bloop1:
+	lda	OUTL
+	clc
+	adc	#5				; point past header stuff
+	sta	OUTL
+	lda	OUTH
+	adc	#0
+	sta	OUTH
 
         jsr     print_both_pages
 
@@ -402,7 +410,7 @@ bloop1:
 	inc	OUTH
 bloop2:
 
-        jsr     print_both_pages
+	jsr	print_both_pages
 
 	iny
 	tya
@@ -423,8 +431,46 @@ bloop2:
 	bne	bloop3
 	inc	OUTH
 bloop3:
+	jsr	print_both_pages
 
-        jsr     print_both_pages
+
+SIZEL	EQU $04
+SIZEH	EQU $05
+
+	ldy	#0
+	lda	#>(LZ4_BUFFER+3)
+	sta	INH
+	lda	#<(LZ4_BUFFER+3)
+	sta	INL
+
+	lda	(INL),Y			; get header skip
+	clc
+	adc	INL
+	sta	INL
+	lda	INH
+	adc	#0
+	sta	INH
+
+	lda	(INL),Y
+	sta	SIZEL
+	iny
+	lda	(INL),Y
+	sta	SIZEH
+
+	lda	#2
+	clc
+	adc	INL
+	sta	INL
+	lda	INH
+	adc	#0
+	sta	INH
+
+	jsr	lz4_decode
+
+	lda	#<CHUNK_BUFFER
+	sta	INL
+	lda	#>CHUNK_BUFFER
+	sta	INH
 
 	rts
 
