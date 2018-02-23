@@ -390,73 +390,26 @@ new_song:
 
 	jsr	clear_bottoms		; clear bottom of page 0/1
 
-	lda	#>LZ4_BUFFER
+	lda	#>LZ4_BUFFER		; point to LZ4 data
 	sta	OUTH
 	lda	#<LZ4_BUFFER
 	sta	OUTL
 
-	ldy	#4			; skip KRW at front
+	ldy	#3			; skip KRW magic at front
 
+	; print title
+	lda	#20			; VTAB 20: HTAB from file
+	jsr	print_header_info
 
-; FIXME: optimize
+	; Print Author
+	lda	#21			; VTAB 21: HTAB from file
+	jsr	print_header_info
 
-	lda	#20
-	sta	CV
-	lda	(OUTL),Y
-	sta	CH
+	; Print clock
+	lda	#23			; VTAB 23: HTAB from file
+	jsr	print_header_info
 
-	lda	OUTL
-	clc
-	adc	#5				; point past header stuff
-	sta	OUTL
-	lda	OUTH
-	adc	#0
-	sta	OUTH
-
-        jsr     print_both_pages
-
-	iny
-	tya
-	ldy	#0
-	clc
-	adc	OUTL
-	sta	OUTL
-	lda	OUTH
-	adc	#$0
-	sta	OUTH
-
-	lda	#21
-	sta	CV
-	lda	(OUTL),Y
-	sta	CH
-
-	inc	OUTL
-	bne	bloop2
-	inc	OUTH
-bloop2:
-
-	jsr	print_both_pages
-
-	iny
-	tya
-	ldy	#0
-	clc
-	adc	OUTL
-	sta	OUTL
-	lda	OUTH
-	adc	#$0
-	sta	OUTH
-
-	lda	#23
-	sta	CV
-	lda	(OUTL),Y
-	sta	CH
-
-	inc	OUTL
-	bne	bloop3
-	inc	OUTH
-bloop3:
-	jsr	print_both_pages
+	; Point LZ4 src at proper place
 
 	ldy	#0
 	lda	#>(LZ4_BUFFER+3)
@@ -472,12 +425,7 @@ bloop3:
 	adc	#0
 	sta	LZ4_SRC+1
 
-	jsr	next_subsong
-
-	; should tail call
-
-	rts
-
+	; Fall through to next_subsong
 
 	;=================
 	; next sub-song
@@ -502,12 +450,53 @@ next_subsong:
 
 	jsr	lz4_decode		; decode
 
+					; tail-call?
+
 	rts
+
+
+
+	;===================
+	; print header info
+	;===================
+	; shortcut to print header info
+	; a = VTAB
+
+print_header_info:
+
+	sta	CV
+
+	iny				; adjust pointer
+	tya
+	ldy	#0
+	clc
+	adc	OUTL
+	sta	OUTL
+	lda	OUTH
+	adc	#$0
+	sta	OUTH
+
+	lda	(OUTL),Y		; get HTAB value
+	sta	CH
+
+	inc	OUTL			; increment 16-bits
+	bne	bloop22
+	inc	OUTH
+bloop22:
+
+	jmp     print_both_pages	; print, tail call
+
+
+
 
 ;==========
 ; filenames
 ;==========
 krw_file:
+	.asciiz "CHRISTMAS.KRW"
+	.asciiz "CAMOUFLAGE.KRW"
+	.asciiz "FIGHTING.KRW"
+	.asciiz "UNIVERSE.KRW"
 	.asciiz "INTRO2.KRW"
 	.asciiz "TECHNO.KRW"
 

@@ -12,3 +12,7 @@ void cmp(int value);
 void pha(void);
 void pla(void);
 void lsr(void);
+
+unsigned char high(int value);
+unsigned char low(int value);
+

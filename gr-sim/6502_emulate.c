@@ -126,3 +126,12 @@ void lsr(void) {
 	a=(temp_a&0xff);
 //	printf("LSR A=%x\n",a);
 }
+
+unsigned char high(int value) {
+	return (value>>8)&0xff;
+}
+
+unsigned char low(int value) {
+	return (value&0xff);
+}
+

@@ -7,7 +7,7 @@ SDL_INCLUDE= `sdl-config --cflags`
 
 all:	fade fixed_point rainbow sparkle starfield starfield_fixed kaleido \
 	tfv mode7_demo text text_demo tfv_multiply rasterbars rasterbars_fixed \
-	lz4d_verbose 6502_test
+	lz4d_verbose 6502_test krw_decode
 
 
 #### Library
@@ -35,6 +35,14 @@ lz4d_verbose:	lz4d_verbose.o 6502_emulate.o
 
 lz4d_verbose.o:	lz4d_verbose.c demo_title.c
 	$(CC) $(CFLAGS) -c lz4d_verbose.c
+
+####
+
+krw_decode:	krw_decode.o 6502_emulate.o
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o krw_decode krw_decode.o 6502_emulate.o
+
+krw_decode.o:	krw_decode.c demo_title.c
+	$(CC) $(CFLAGS) -c krw_decode.c
 
 ####
 
@@ -231,6 +239,6 @@ clean:
 	rm -f *~ *.o gr-sim rainbow sparkle starfield starfield_fixed kaleido \
 			tfv text mode7_demo fade fixed_point tfv_multiply \
 			rasterbars rasterbars_fixed lookup_tables text_demo \
-			lz4d_verbose 6502_test
+			lz4d_verbose 6502_test krw_decode
 
 
