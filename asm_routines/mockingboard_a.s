@@ -76,51 +76,37 @@ reset_ay_both:
 ;	Write sequence
 ;	Inactive -> Latch Address -> Inactive -> Write Data -> Inactive
 
-	;=======================
-	; Write Right AY-3-8910
-	;=======================
+	;=========================================
+	; Write Right/Left to save value AY-3-8910
+	;=========================================
 	; register in X
 	; value in MB_VALUE
 
 write_ay_both:
 	; address
-	stx	MOCK_6522_ORA1		; put address on PA		; 3
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB		; 2
-	sta	MOCK_6522_ORB1						; 3
+	stx	MOCK_6522_ORA1		; put address on PA1		; 3
+	stx	MOCK_6522_ORA2		; put address on PA2		; 3
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
+	sta	MOCK_6522_ORB1		; latch_address on PB1		; 3
+	sta	MOCK_6522_ORB2		; latch_address on PB2		; 3
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_ORB1						; 3
-
-	; value
-	lda	MB_VALUE						; 3
-	sta	MOCK_6522_ORA1		; put value on PA		; 3
-	lda	#MOCK_AY_WRITE		; write on PB			; 2
-	sta	MOCK_6522_ORB1						; 3
-	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sta	MOCK_6522_ORB1						; 3
-
-	;=======================
-	; Write Left AY-3-8910
-	;=======================
-
-;write_ay_left:
-	; address
-	stx	MOCK_6522_ORA2		; put address on PA		; 3
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB		; 2
-	sta	MOCK_6522_ORB2						; 3
-	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_ORB2						; 3
 
 	; value
 	lda	MB_VALUE						; 3
-	sta	MOCK_6522_ORA2		; put value on PA		; 3
-	lda	#MOCK_AY_WRITE		; write on PB			; 2
-	sta	MOCK_6522_ORB2						; 3
+	sta	MOCK_6522_ORA1		; put value on PA1		; 3
+	sta	MOCK_6522_ORA2		; put value on PA2		; 3
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB1		; write on PB1			; 3
+	sta	MOCK_6522_ORB2		; write on PB2			; 3
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB1						; 3
 	sta	MOCK_6522_ORB2						; 3
 
 	rts								; 6
 								;===========
-								;       61
+								;       53
 	;=======================================
 	; clear ay -- clear all 14 AY registers
 	; should silence the card

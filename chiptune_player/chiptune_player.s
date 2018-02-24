@@ -306,7 +306,7 @@ mb_not_13:
 	jsr	write_ay_both		; assume 3 channel (not six)	; 6
 					; so write same to both
 					; left/right
-									; 61
+									; 53
 
 	clc				; point to next interleaved	; 2
 	lda	INH			; page by adding $300		; 3
