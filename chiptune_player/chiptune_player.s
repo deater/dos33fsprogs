@@ -8,6 +8,7 @@ UNPACK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
 					; Reserve 3 chunks plus spare (14k)
 CHUNKSIZE	EQU	$3
 
+
 	;=============================
 	; Setup
 	;=============================
@@ -244,6 +245,9 @@ new_song:
 	sta	INL
 	lda	#>krw_file
 	sta	INH
+
+disk_buff	EQU	LZ4_BUFFER
+read_size	EQU	$4000
 
 	jsr	read_file		; read KRW file from disk
 

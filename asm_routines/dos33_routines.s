@@ -1,12 +1,6 @@
 ;     File I/O routines based on sample code in
 ;       "Beneath Apple DOS" by Don Worth and Pieter Lechner
 
-; FIXME: make these a parameter
-; filename
-
-disk_buff	EQU	$1C00
-read_size	EQU	$4000	; 16kB
-
 ;; For the disk-read code
 ;RWTSL		EQU $F0
 ;RWTSH		EQU $F1
@@ -40,7 +34,9 @@ FILEMANAGER        EQU $3D6
 	;================================
 	; FILENAME pointed to by INH:INL
 	;	OUTH:OUTL trashed
-	;
+	; output buffer:	disk_buff
+	; size to read:		read_size
+
 read_file:
 	jsr     LOCATE_FILEM_PARAM  	; $3DC entry point
 					; load file manager param list
