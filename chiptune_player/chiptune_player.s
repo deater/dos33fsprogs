@@ -316,34 +316,45 @@ mb_not_13:
 	inx				; point to next register	; 2
 	cpx	#14			; if 14 we're done		; 2
 	bmi	mb_write_loop		; otherwise, loop		; 3/2nt
-
+								;============
+								; roughly 95?
+								;  *13= 1235?
 skip_r13:
-	lda	MB_CHUNK		; reset input pointer		; 3
-	clc				; to the beginning		; 2
-	adc	#>CHUNK_BUFFER		; in proper chunk (1 of 3)	; 2
-	sta	INH							; 3
 
 	inc	MB_FRAME_DIFF		; increment offset		; 5
-	bne	done_interrupt		; if not zero,	done		; 3/2nt
+	bne	reset_chunk		; if not zero,	done		; 3/2nt
+
 wraparound:
 
 	inc	MB_CHUNK		; go to next chunk		; 5
 	lda	MB_CHUNK						; 3
 	cmp	#CHUNKSIZE		; have we reached end?		; 2
-	bne	chunk_good						; 3/2nt
+	bne	reset_chunk						; 3/2nt
 	lda	#0			; if so reset			; 2
 	sta	MB_CHUNK						; 3
 
 	; can't tail call as need to restore stack and rti
 	jsr	next_subsong		; and decompress next		; 6
 
-chunk_good:
 
+reset_chunk:
+	lda	MB_CHUNK		; reset input pointer		; 3
+	clc				; to the beginning		; 2
+
+	adc	#>CHUNK_BUFFER		; in proper chunk (1 of 3)	; 2
+	sta	INH							; 3
+
+
+								;============
+								;        18
 done_interrupt:
 	pla			; restore a				; 4
 
 	rti			; return from interrupt			; 6
 
+								;============
+								; typical
+								; 1358 cycles
 
 	;=================
 	; load a new song
