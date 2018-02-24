@@ -302,10 +302,11 @@ mb_not_13:
 	and	#$f							; 2
 	sta	REGISTER_DUMP,X						; 4
 
-					; INLINE this?
+					; INLINE this (could save 72 cycles)
 	jsr	write_ay_both		; assume 3 channel (not six)	; 6
 					; so write same to both
 					; left/right
+									; 61
 
 	clc				; point to next interleaved	; 2
 	lda	INH			; page by adding $300		; 3
@@ -341,7 +342,7 @@ chunk_good:
 done_interrupt:
 	pla			; restore a				; 4
 
-	rti								; 6
+	rti			; return from interrupt			; 6
 
 
 	;=================

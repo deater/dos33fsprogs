@@ -84,19 +84,19 @@ reset_ay_both:
 
 write_ay_both:
 	; address
-	stx	MOCK_6522_ORA1		; put address on PA
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB
-	sta	MOCK_6522_ORB1
-	lda	#MOCK_AY_INACTIVE	; go inactive
-	sta	MOCK_6522_ORB1
+	stx	MOCK_6522_ORA1		; put address on PA		; 3
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB		; 2
+	sta	MOCK_6522_ORB1						; 3
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB1						; 3
 
 	; value
-	lda	MB_VALUE
-	sta	MOCK_6522_ORA1		; put value on PA
-	lda	#MOCK_AY_WRITE		; write on PB
-	sta	MOCK_6522_ORB1
-	lda	#MOCK_AY_INACTIVE	; go inactive
-	sta	MOCK_6522_ORB1
+	lda	MB_VALUE						; 3
+	sta	MOCK_6522_ORA1		; put value on PA		; 3
+	lda	#MOCK_AY_WRITE		; write on PB			; 2
+	sta	MOCK_6522_ORB1						; 3
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB1						; 3
 
 	;=======================
 	; Write Left AY-3-8910
@@ -104,22 +104,23 @@ write_ay_both:
 
 ;write_ay_left:
 	; address
-	stx	MOCK_6522_ORA2		; put address on PA
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB
-	sta	MOCK_6522_ORB2
-	lda	#MOCK_AY_INACTIVE	; go inactive
-	sta	MOCK_6522_ORB2
+	stx	MOCK_6522_ORA2		; put address on PA		; 3
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB		; 2
+	sta	MOCK_6522_ORB2						; 3
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 3
 
 	; value
-	lda	MB_VALUE
-	sta	MOCK_6522_ORA2		; put value on PA
-	lda	#MOCK_AY_WRITE		; write on PB
-	sta	MOCK_6522_ORB2
-	lda	#MOCK_AY_INACTIVE	; go inactive
-	sta	MOCK_6522_ORB2
+	lda	MB_VALUE						; 3
+	sta	MOCK_6522_ORA2		; put value on PA		; 3
+	lda	#MOCK_AY_WRITE		; write on PB			; 2
+	sta	MOCK_6522_ORB2						; 3
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 3
 
-	rts
-
+	rts								; 6
+								;===========
+								;       61
 	;=======================================
 	; clear ay -- clear all 14 AY registers
 	; should silence the card
