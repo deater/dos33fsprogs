@@ -1,9 +1,12 @@
 ; VMW Chiptune Player
 
 .include	"zp.inc"
+				; program is 4k, so from 0xc00 to 0x1C00
 
-LZ4_BUFFER	EQU	$2000		; 16k for now, FIXME: expand
-CHUNK_BUFFER	EQU	$6000		; 10.5k, $2A00
+LZ4_BUFFER	EQU	$1C00		; 16k for now, FIXME: expand
+CHUNK_BUFFER	EQU	$5C00		; $5C00 - $9600, 14k, $3A00
+					; trying not to hit DOS at 9600
+					; Reserve 3 chunks plus spare (14k)
 CHUNKSIZE	EQU	$3
 
 	;=============================
@@ -506,19 +509,46 @@ bloop22:
 	jmp     print_both_pages	; print, tail call
 
 
+	;==============================================
+	; plan: takes 256  50Hz to play a chunk
+	; need to copy 14 256-byte blocks
+	; PLAY A (copying C)
+	; PLAY B (copying C)
+	; PLAY D (decompressing A/B/C)
 
+	;========================
+	; page copy
+	;========================
+page_copy:
+
+	ldx	#$00							; 2
+page_copy_loop:
+	lda	$1000,x							; 4
+	sta	$1000,X							; 5
+	inx								; 2
+	bne	page_copy_loop						; 2nt/3
+	rts								; 6
+							;======================
+							; 2+14*256+6= 3592
 
 ;==========
 ; filenames
 ;==========
 krw_file:
+	.asciiz "DEATH2.KRW"
+	.asciiz "DEMO4.KRW"
+	.asciiz "WAVE.KRW"
+	.asciiz "SDEMO.KRW"
+	.asciiz "SPUTNIK.KRW"
+	.asciiz "ROBOT.KRW"
+	.asciiz "LYRA2.KRW"
+	.asciiz "KORO.KRW"
 	.asciiz "INTRO2.KRW"
 	.asciiz	"CRMOROS.KRW"
 	.asciiz "CHRISTMAS.KRW"
 	.asciiz "CAMOUFLAGE.KRW"
 	.asciiz "FIGHTING.KRW"
 	.asciiz "UNIVERSE.KRW"
-
 	.asciiz "TECHNO.KRW"
 
 ;=========

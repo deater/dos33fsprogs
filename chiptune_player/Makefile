@@ -6,7 +6,7 @@ PNG2GR = ../gr-utils/png2gr
 all:	chiptune_player.dsk
 
 chiptune_player.dsk:	CHIPTUNE_PLAYER OUT.0
-	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1000 CHIPTUNE_PLAYER
+	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x0C00 CHIPTUNE_PLAYER
 	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/INTRO2.KRW
 	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/CRMOROS.KRW
 	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/FIGHTING.KRW
@@ -27,7 +27,7 @@ chiptune_player.dsk:	CHIPTUNE_PLAYER OUT.0
 
 
 CHIPTUNE_PLAYER:	chiptune_player.o
-	ld65 -o CHIPTUNE_PLAYER chiptune_player.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o CHIPTUNE_PLAYER chiptune_player.o -C ../linker_scripts/apple2_c00.inc
 
 chiptune_player.o:	chiptune_player.s \
 	../asm_routines/mockingboard.s \

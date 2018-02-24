@@ -4,7 +4,7 @@
 ; FIXME: make these a parameter
 ; filename
 
-disk_buff	EQU	$2000
+disk_buff	EQU	$1C00
 read_size	EQU	$4000	; 16kB
 
 ;; For the disk-read code
