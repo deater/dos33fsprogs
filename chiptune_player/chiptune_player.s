@@ -207,7 +207,7 @@ forever_loop:
 	; Then it sets up the stack like an interrupt and calls 0x3fe
 
 interrupt_handler:
-	pha			; save A
+	pha			; save A				; 3
 ;	tya
 ;	pha
 ;	txa
@@ -216,125 +216,132 @@ interrupt_handler:
 
 ;	inc	$0404		; debug
 
-	bit	$C404		; can clear 6522 interrupt by reading T1C-L
+	bit	$C404		; clear 6522 interrupt by reading T1C-L	; 4
 
+
+								;============
+								;	  7
 	;=====================
 	; Update time counter
 	;=====================
 
-	inc	FRAME_COUNT
-	lda	FRAME_COUNT
-	cmp	#50
-	bne	frame_good
+	inc	FRAME_COUNT						; 5
+	lda	FRAME_COUNT						; 3
+	cmp	#50							; 3
+	bne	frame_good						; 3/2nt
 
-	lda	#$0
-	sta	FRAME_COUNT
+	lda	#$0							; 2
+	sta	FRAME_COUNT						; 3
 
 update_second_ones:
-	inc	$7d0+17
-	inc	$bd0+17
-	lda	$bd0+17
-	cmp	#$ba			; one past '9'
-	bne	frame_good
-	lda	#'0'+$80
-	sta	$7d0+17
-	sta	$bd0+17
+	inc	$7d0+17							; 6
+	inc	$bd0+17							; 6
+	lda	$bd0+17							; 4
+	cmp	#$ba			; one past '9'			; 2
+	bne	frame_good						; 3/2nt
+	lda	#'0'+$80						; 2
+	sta	$7d0+17							; 4
+	sta	$bd0+17							; 4
 update_second_tens:
-	inc	$7d0+16
-	inc	$bd0+16
-	lda	$bd0+16
-	cmp	#$b6			; 6
-	bne	frame_good
-	lda	#'0'+$80
-	sta	$7d0+16
-	sta	$bd0+16
+	inc	$7d0+16							; 6
+	inc	$bd0+16							; 6
+	lda	$bd0+16							; 4
+	cmp	#$b6		; 6 (for 60 seconds)			; 2
+	bne	frame_good						; 3/2nt
+	lda	#'0'+$80						; 2
+	sta	$7d0+16							; 4
+	sta	$bd0+16							; 4
 update_minutes:
-	inc	$7d0+14
-	inc	$bd0+14
-					; we don't handle > 9:59 songs yet
+	inc	$7d0+14							; 6
+	inc	$bd0+14							; 6
+				; we don't handle > 9:59 songs yet
+
+								;=============
+								;     90 worst
 
 frame_good:
 
-	ldy	MB_FRAME_DIFF
+	ldy	MB_FRAME_DIFF	; get chunk offset			; 3
 
-	ldx	#0
+	ldx	#0		; set up reg count			; 2
+
+								;=============
+								;	5
 
 mb_write_loop:
-	lda	(INL),y
+	lda	(INL),y		; load register value			; 5
 
-	cpx	#1
-	bne	mb_not_one
-	cmp	#$ff			; if ff, done song
-	bne	mb_not_one
+				; if REG==1 and high bit set
+				; then end of song
 
-	lda	#1
-	sta	DONE_PLAYING
-	jmp	done_interrupt
+	bpl	mb_not_done						; 3/2nt
+	cpx	#1							; 2
+	bne	mb_not_done						; 3/2nt
 
-mb_not_one:
-	cpx	#13
-	bne	mb_not_13
-	cmp	#$ff
-	beq	skip_r13
+	lda	#1		; set done playing			; 2
+	sta	DONE_PLAYING						; 3
+	jmp	done_interrupt						; 3
+
+mb_not_done:
+
+	; special case R13.  If it is 0xff, then don't update
+	; otherwise might spuriously reset the envelope settings
+
+	cpx	#13							; 2
+	bne	mb_not_13						; 3/2nt
+	cmp	#$ff							; 2
+	beq	skip_r13						; 3/2nt
 
 mb_not_13:
-	sta	MB_VALUE
+	sta	MB_VALUE						; 3
 
-	cpx	#8
-	bne	mb_not_8
-	and	#$f
-	sta	A_VOLUME
-mb_not_8:
-	cpx	#9
-	bne	mb_not_9
-	and	#$f
-	sta	B_VOLUME
-mb_not_9:
-	cpx	#10
-	bne	mb_not_10
-	and	#$f
-	sta	C_VOLUME
-mb_not_10:
-					; INLINE?
-	jsr	write_ay_both		; assume 3 channel (not six)
-					; so write same to both left/write
-	clc
-	lda	INH
-	adc	#CHUNKSIZE
-	sta	INH
+	; always write out all to zero page
+	; we mostly care about vola/volb/volc so this wastes 11 bytes of RAM
+	; code is simpler, and save on three cmp/branches per loop
 
-	inx
-	cpx	#14
-	bmi	mb_write_loop
+	and	#$f							; 2
+	sta	REGISTER_DUMP,X						; 4
+
+					; INLINE this?
+	jsr	write_ay_both		; assume 3 channel (not six)	; 6
+					; so write same to both
+					; left/right
+
+	clc				; point to next interleaved	; 2
+	lda	INH			; page by adding $300		; 3
+	adc	#CHUNKSIZE						; 2
+	sta	INH							; 3
+
+	inx				; point to next register	; 2
+	cpx	#14			; if 14 we're done		; 2
+	bmi	mb_write_loop		; otherwise, loop		; 3/2nt
 
 skip_r13:
-	lda	MB_CHUNK
-	clc
-	adc	#>CHUNK_BUFFER
-	sta	INH
+	lda	MB_CHUNK		; reset input pointer		; 3
+	clc				; to the beginning		; 2
+	adc	#>CHUNK_BUFFER		; in proper chunk (1 of 3)	; 2
+	sta	INH							; 3
 
-	inc	MB_FRAME_DIFF
-	bne	done_interrupt
+	inc	MB_FRAME_DIFF		; increment offset		; 5
+	bne	done_interrupt		; if not zero,	done		; 3/2nt
 wraparound:
 
-	inc	MB_CHUNK
-	lda	MB_CHUNK
-	cmp	#CHUNKSIZE
-	bne	chunk_good
-	lda	#0
-	sta	MB_CHUNK
+	inc	MB_CHUNK		; go to next chunk		; 5
+	lda	MB_CHUNK						; 3
+	cmp	#CHUNKSIZE		; have we reached end?		; 2
+	bne	chunk_good						; 3/2nt
+	lda	#0			; if so reset			; 2
+	sta	MB_CHUNK						; 3
 
-	jsr	next_subsong
+	; can't tail call as need to restore stack and rti
+	jsr	next_subsong		; and decompress next		; 6
 
 chunk_good:
 
 done_interrupt:
-	pla
-;	tax
-;	pla
-;	tay
-;	pla
-	rti
+	pla			; restore a				; 4
+
+	rti								; 6
 
 
 	;=================
@@ -493,11 +500,13 @@ bloop22:
 ; filenames
 ;==========
 krw_file:
+	.asciiz "INTRO2.KRW"
+	.asciiz	"CRMOROS.KRW"
 	.asciiz "CHRISTMAS.KRW"
 	.asciiz "CAMOUFLAGE.KRW"
 	.asciiz "FIGHTING.KRW"
 	.asciiz "UNIVERSE.KRW"
-	.asciiz "INTRO2.KRW"
+
 	.asciiz "TECHNO.KRW"
 
 ;=========
