@@ -36,7 +36,7 @@
 ;COUNT		EQU $06
 ;DELTA		EQU $08
 
-orgoff	EQU $5C00	; offset of first unpacked byte
+orgoff	EQU $5E00	; offset of first unpacked byte
 
 	;======================
 	; LZ4 decode

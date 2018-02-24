@@ -1,5 +1,4 @@
-+ Print time
-+ LZ4 decompression
 + Loop support
 + Right/Left arrows on screen
-
++ Keyboard, Right/Left/Pause
++ Calculate maximum decode time for songs

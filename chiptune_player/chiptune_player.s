@@ -1,11 +1,10 @@
 ; VMW Chiptune Player
 
 .include	"zp.inc"
-				; program is 4k, so from 0xc00 to 0x1C00
-
-LZ4_BUFFER	EQU	$1C00		; 16k for now, FIXME: expand
-CHUNK_BUFFER	EQU	$5C00		; $5C00 - $9600, 14k, $3A00
-					; trying not to hit DOS at 9600
+				; program is ~4k, so from 0xc00 to 0x1C00
+LZ4_BUFFER	EQU	$1C00		; $1C00 - $5C00, 16k for now
+CHUNK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
+					; trying not to hit DOS at $9600
 					; Reserve 3 chunks plus spare (14k)
 CHUNKSIZE	EQU	$3
 
@@ -375,6 +374,8 @@ new_song:
 	sta	A_VOLUME
 	sta	B_VOLUME
 	sta	C_VOLUME
+	sta	COPY_OFFSET
+	sta	DECODER_STATE
 
 	;===========================
 	; Print loading message
@@ -516,10 +517,24 @@ bloop22:
 	; PLAY B (copying C)
 	; PLAY D (decompressing A/B/C)
 
+
 	;========================
 	; page copy
 	;========================
+	; want to copy:
+	;	SRC: chunk_buffer+(2*256)+(COPY_OFFSET*3*256)
+	;	DST: chunk_buffer+$2A00+(COPY_OFFSET*256)
 page_copy:
+	clc								; 2
+	lda	#>(CHUNK_BUFFER+512)					; 3
+	adc	COPY_OFFSET						; 3
+	adc	COPY_OFFSET						; 3
+	adc	COPY_OFFSET						; 3
+	sta	page_copy_loop+2			; self modify	; 5
+
+	lda	#>(CHUNK_BUFFER+$2A00)					; 2
+	adc	COPY_OFFSET						; 3
+	sta	page_copy_loop+5			; self modify	; 5
 
 	ldx	#$00							; 2
 page_copy_loop:
@@ -529,7 +544,7 @@ page_copy_loop:
 	bne	page_copy_loop						; 2nt/3
 	rts								; 6
 							;======================
-							; 2+14*256+6= 3592
+							; 2+14*256+6+29= 3621
 
 ;==========
 ; filenames
