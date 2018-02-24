@@ -36,7 +36,8 @@
 ;COUNT		EQU $06
 ;DELTA		EQU $08
 
-orgoff	EQU $5E00	; offset of first unpacked byte
+;UNPACK_BUFFER	EQU $5E00	; offset of first unpacked byte
+
 
 	;======================
 	; LZ4 decode
@@ -54,9 +55,9 @@ lz4_decode:
 	adc	LZ4_END+1
 	sta	LZ4_END+1
 
-	lda	#>orgoff		; original unpacked data offset
+	lda	#>UNPACK_BUFFER		; original unpacked data offset
 	sta	LZ4_DST+1
-	lda	#<orgoff
+	lda	#<UNPACK_BUFFER
 	sta	LZ4_DST
 
 unpmain:
