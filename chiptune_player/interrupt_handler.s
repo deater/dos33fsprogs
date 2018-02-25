@@ -14,7 +14,7 @@ interrupt_handler:
 	pha			; save A				; 3
 				; Should we save X and Y too?
 
-;	inc	$0404		; debug
+;	inc	$0404		; debug (flashes char onscreen)
 
 	bit	$C404		; clear 6522 interrupt by reading T1C-L	; 4
 
@@ -100,7 +100,7 @@ mb_not_done:
 	cpx	#13							; 2
 	bne	mb_not_13						; 3/2nt
 	cmp	#$ff							; 2
-	beq	increment_offset					; 3/2nt
+	beq	phase_specific					; 3/2nt
 
 mb_not_13:
 	sta	MB_VALUE						; 3
@@ -129,6 +129,38 @@ mb_not_13:
 								;============
 								; roughly 95?
 								;  *13= 1235?
+
+
+	;==============================================
+	; phase_specific action
+	;==============================================
+
+	; if phase is A and OFFSET&0x0f==0 then do a copy
+	; if phase is B, do nothing
+	; if phase is C, do a decompress step
+
+phase_specific:
+
+	lda	#0							; 2
+	bit	DECODER_STATE	; Z=A, V=B, N=C				; 3
+	bvs	increment_offset
+	beq	handle_copy
+
+decompress_step:
+	jmp	increment_offset
+
+handle_copy:
+	lda	MB_CHUNK_OFFSET
+	and	#$0f
+	bne	increment_offset
+
+	lda	COPY_OFFSET
+	cmp	#$14
+	beq	increment_offset
+
+	jsr	page_copy
+
+	inc	COPY_OFFSET	; (opt: make subtract?)
 
 
 	;==============================================
