@@ -98,19 +98,19 @@ mockingboard_found:
 	; Draw title screen
 	;============================
 
-	jsr	set_gr_page0
+	jsr	set_gr_page0			; set page 0
 
-	lda	#$4
+	lda	#$4				; draw page 1
 	sta	DRAW_PAGE
 
-	jsr	clear_screens
+	jsr	clear_screens			; clear both screens
 
-	lda	#<chip_title
+	lda	#<chip_title			; point to title data
 	sta	GBASL
 	lda	#>chip_title
 	sta	GBASH
 
-	; Load image
+	; Load image				; load the image
 	lda	#<$400
 	sta	BASL
 	lda	#>$400
@@ -118,9 +118,9 @@ mockingboard_found:
 
 	jsr	load_rle_gr
 
-	;===========================
+	;==================
 	; load first song
-	;===========================
+	;==================
 
 	jsr	new_song
 
@@ -141,7 +141,6 @@ mockingboard_found:
 	;============================
 	; Init Background
 	;============================
-;	jsr	clear_screens		; clear top/bottom of page 0/1
 	jsr	set_gr_page0
 
 	lda	#0
@@ -151,23 +150,24 @@ mockingboard_found:
 	;============================
 	; Loop forever
 	;============================
-playing_loop:
+main_loop:
 
 
 	;============================
 	; rasters
 	;============================
 
-	jsr	clear_top
+;	jsr	clear_top
 
-	jsr	draw_rasters
+;	jsr	draw_rasters
 
-	jsr	volume_bars
+;	jsr	volume_bars
 
-	jsr	page_flip
+;	jsr	page_flip
+
 
 	lda	DONE_PLAYING
-	beq	playing_loop
+	beq	main_loop
 
 done_play:
 

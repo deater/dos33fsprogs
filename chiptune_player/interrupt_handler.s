@@ -250,6 +250,23 @@ update_r0_pointer:
 	;=================================
 
 done_interrupt:
+
+	;=================================
+	; Moved visualization here as a hack
+	;=================================
+
+	;============================
+	; Visualization
+	;============================
+
+	jsr	clear_top
+	jsr	draw_rasters
+	jsr	volume_bars
+	jsr	page_flip
+
+
+
+
 	pla			; restore a				; 4
 
 	rti			; return from interrupt			; 6
