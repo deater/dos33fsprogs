@@ -6,8 +6,6 @@ LZ4_BUFFER	EQU	$1C00		; $1C00 - $5C00, 16k for now
 UNPACK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
 					; trying not to hit DOS at $9600
 					; Reserve 3 chunks plus spare (14k)
-CHUNKSIZE	EQU	$3
-
 
 	;=============================
 	; Setup
@@ -211,13 +209,15 @@ new_song:
 	;=========================
 
 	lda	#$0
-	sta	MB_CHUNK
 	sta	FRAME_COUNT
 	sta	A_VOLUME
 	sta	B_VOLUME
 	sta	C_VOLUME
 	sta	COPY_OFFSET
+	lda	#$20
 	sta	DECODER_STATE
+	lda	#3
+	sta	CHUNKSIZE
 
 	;===========================
 	; Print loading message
@@ -299,6 +299,12 @@ read_size	EQU	$4000
 	; next sub-song
 	;=================
 next_subsong:
+	lda	#$0
+	sta	COPY_OFFSET
+	lda	#$3
+	sta	CHUNKSIZE
+	lda	#$20
+	sta	DECODER_STATE
 
 	ldy	#0
 

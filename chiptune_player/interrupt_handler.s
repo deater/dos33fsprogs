@@ -118,9 +118,13 @@ mb_not_13:
 					; left/right
 									; 53
 
+	;====================
+	; point to next page
+	;====================
+
 	clc				; point to next interleaved	; 2
-	lda	INH			; page by adding $300		; 3
-	adc	#CHUNKSIZE						; 2
+	lda	INH			; page by adding CHUNKSIZE (3/1); 3
+	adc	CHUNKSIZE						; 3
 	sta	INH							; 3
 
 	inx				; point to next register	; 2
@@ -141,27 +145,28 @@ mb_not_13:
 
 phase_specific:
 
-	lda	#0							; 2
-	bit	DECODER_STATE	; Z=A, V=B, N=C				; 3
-	bvs	increment_offset
-	beq	handle_copy
-
-decompress_step:
-	jmp	increment_offset
+	lda	#$20							; 2
+	bit	DECODER_STATE	; V=B, N=C else A			; 3
+	bvs	increment_offset					; 2nt/3
+	bmi	decompress_step						; 2nt/3
 
 handle_copy:
-	lda	MB_CHUNK_OFFSET
-	and	#$0f
-	bne	increment_offset
+	lda	MB_CHUNK_OFFSET						; 3
+	and	#$0f							; 2
+	bne	increment_offset					; 2nt/3
 
-	lda	COPY_OFFSET
-	cmp	#$14
-	beq	increment_offset
+	lda	COPY_OFFSET						; 3
+	cmp	#$14							; 2
+	beq	increment_offset					; 2nt/3
 
-	jsr	page_copy
+	jsr	page_copy						;6+3621
 
-	inc	COPY_OFFSET	; (opt: make subtract?)
+	inc	COPY_OFFSET	; (opt: make subtract?)			; 5
 
+	jmp	increment_offset					; 3
+
+decompress_step:
+	; TODO
 
 	;==============================================
 	; incremement offset.  If 0 move to next chunk
@@ -170,34 +175,61 @@ handle_copy:
 increment_offset:
 
 	inc	MB_CHUNK_OFFSET		; increment offset		; 5
-	bne	reset_chunk		; if not zero,	done		; 3/2nt
+	bne	back_to_first_reg	; if not zero,	done		; 3/2nt
 
 
+	;=====================
+	; move to next state
+	;=====================
 
-wraparound:
+	clc
+	rol	DECODER_STATE		; next state			; 5
+					; 20 -> 40 -> 80 -> c+00
+	bcs	wraparound_to_a						; 3/2nt
 
-	inc	MB_CHUNK		; go to next chunk		; 5
-	lda	MB_CHUNK						; 3
-	cmp	#CHUNKSIZE		; have we reached end?		; 2
-	bne	reset_chunk						; 3/2nt
-	lda	#0			; if so reset			; 2
-	sta	MB_CHUNK						; 3
+	bit	DECODER_STATE
+	bvs	back_to_first_reg	; do nothing on B		; 3/2nt
 
-	; can't tail call as need to restore stack and rti
+start_c:
+	lda	#1
+	sta	CHUNKSIZE
+	jmp	back_to_first_reg
+
+wraparound_to_a:
+	; setup next three chunks of song
+
 	jsr	next_subsong		; and decompress next		; 6
 
 
-reset_chunk:
-	lda	MB_CHUNK		; reset input pointer		; 3
-	clc				; to the beginning		; 2
+	;==============================
+	; After 14th reg, reset back to
+	; read R0 data
+	;==============================
 
-	adc	#>UNPACK_BUFFER		; in proper chunk (1 of 3)	; 2
-	sta	INH							; 3
+back_to_first_reg:
+	lda	#0							; 2
+	bit	DECODER_STATE						; 3
+	bmi	back_to_first_reg_c					; 2nt/3
+	bvc	back_to_first_reg_a
+
+back_to_first_reg_b:
+	lda	#$1			; offset by 1
+
+back_to_first_reg_a:
+	clc								; 2
+	adc	#>UNPACK_BUFFER		; in proper chunk 1 or 2	; 2
+
+	jmp	done_interrupt						; 3
+
+back_to_first_reg_c:
+	lda	#>(UNPACK_BUFFER+$2A00)	; in proper chunk (1 of 3)	; 2
 
 
 								;============
 								;        18
 done_interrupt:
+	sta	INH		; update r0 pointer			; 3
+
 	pla			; restore a				; 4
 
 	rti			; return from interrupt			; 6
