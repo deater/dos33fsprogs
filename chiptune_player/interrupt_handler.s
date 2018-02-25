@@ -145,33 +145,33 @@ mb_not_13:
 
 phase_specific:
 
-	lda	#$20							; 2
-	bit	DECODER_STATE	; V=B, N=C else A			; 3
-	bvs	increment_offset					; 2nt/3
-	bmi	decompress_step						; 2nt/3
+;	lda	#$20							; 2
+;	bit	DECODER_STATE	; V=B, N=C else A			; 3
+;	bvs	increment_offset					; 2nt/3
+;	bmi	decompress_step						; 2nt/3
 
-handle_copy:
-	lda	MB_CHUNK_OFFSET						; 3
-	and	#$0f							; 2
-	bne	increment_offset					; 2nt/3
+;handle_copy:
+;	lda	MB_CHUNK_OFFSET						; 3
+;	and	#$0f							; 2
+;	bne	increment_offset					; 2nt/3
 
-	lda	COPY_OFFSET						; 3
-	cmp	#$14							; 2
-	beq	increment_offset					; 2nt/3
+;	lda	COPY_OFFSET						; 3
+;	cmp	#$14							; 2
+;	beq	increment_offset					; 2nt/3
 
-	jsr	page_copy						;6+3621
+;	jsr	page_copy						;6+3621
 
-	inc	COPY_OFFSET	; (opt: make subtract?)			; 5
+;	inc	COPY_OFFSET	; (opt: make subtract?)			; 5
 
-	jmp	increment_offset					; 3
+;	jmp	increment_offset					; 3
 
-decompress_step:
-	lda	LZ4_DONE
-	bne	increment_offset
+;decompress_step:
+;	lda	LZ4_DONE
+;	bne	increment_offset
 
-	jsr	lz4_decode_step
-	bcc	increment_offset
-	inc	LZ4_DONE
+;	jsr	lz4_decode_step
+;	bcc	increment_offset
+;	inc	LZ4_DONE
 
 	;==============================================
 	; incremement offset.  If 0 move to next chunk
@@ -192,7 +192,7 @@ increment_offset:
 					; 20 -> 40 -> 80 -> c+00
 	bcs	wraparound_to_a						; 3/2nt
 
-	bit	DECODER_STATE
+	bit	DECODER_STATE		;bit7->N bit6->V
 	bvs	back_to_first_reg	; do nothing on B		; 3/2nt
 
 start_c:
@@ -200,21 +200,24 @@ start_c:
 	sta	CHUNKSIZE
 
 	; setup next three chunks of song
-	jsr	setup_next_subsong		; and decompress next	; 6
-	jsr	lz4_decode_setup
-	lda	#0
-	sta	LZ4_DONE
+
+	lda	#1				; start decompressing
+	sta	DECOMPRESS_TIME			; outside of handler
 
 	jmp	back_to_first_reg
 
 wraparound_to_a:
-	lda	#$0
-	sta	COPY_OFFSET
 	lda	#$3
 	sta	CHUNKSIZE
 	lda	#$20
 	sta	DECODER_STATE
+	sta	COPY_TIME			; start copying
 
+	lda	DECOMPRESS_TIME
+	beq	blah
+	lda	#1
+	sta	DECODE_ERROR
+blah:
 	;==============================
 	; After 14th reg, reset back to
 	; read R0 data
@@ -236,7 +239,7 @@ back_to_first_reg_a:
 	jmp	update_r0_pointer					; 3
 
 back_to_first_reg_c:
-	lda	#>(UNPACK_BUFFER+$2A00)	; in proper chunk (1 of 3)	; 2
+	lda	#>(UNPACK_BUFFER+$2A00)	; in linear C area		; 2
 
 update_r0_pointer:
 	sta	INH		; update r0 pointer			; 3
@@ -260,7 +263,7 @@ done_interrupt:
 	;============================
 
 	jsr	clear_top
-	jsr	draw_rasters
+;	jsr	draw_rasters
 	jsr	volume_bars
 	jsr	page_flip
 

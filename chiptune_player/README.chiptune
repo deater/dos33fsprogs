@@ -320,3 +320,24 @@ Interesting bugs that were hard to debug:
 	Turns out I was padding the filename buffer with A0 but going
 	one too far and it was writing A0 to the first byte of the
 	hlin routine, and A0 is a LDY # instruction.
+
+
+
+
+Know the current problem, taking longer than 5s to decode file.
+Thought it only took 1s max?  Not in face of interrupts.
+
+	Every 20,000 an interrupt
+	       1,500 for music
+	       7,500 for volume bars
+	       1,794 for raster bars 
+	       2,000 for misc rest
+	Roughly 13,000 cycles, leaving only 7000 to userspace
+
+	If takes 700,000 cycles to decode a block, will take 100
+		Hz cycles, or 2s to finish?  that should be doable.
+		why does it instead take 15?
+	Can play fine if I turn the raster bars off.
+	
+	TIME_TAKEN ($88) stores how long took to decode
+		INTRO2: 60@19, 60@36, 62@50 61@1:03 61@1:32 60@2:05 61@2:32

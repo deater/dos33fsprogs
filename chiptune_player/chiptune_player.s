@@ -22,6 +22,7 @@ UNPACK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
 	sta	DONE_PLAYING
 	sta	XPOS
 	sta	MB_CHUNK_OFFSET
+	sta	DECODE_ERROR
 
 	; print detection message
 
@@ -151,21 +152,50 @@ mockingboard_found:
 	; Loop forever
 	;============================
 main_loop:
+	lda	DECODE_ERROR
+	beq	check_copy
+	sei
+	brk
 
+check_copy:
+	lda	COPY_TIME
+	beq	check_decompress	; if zero, skip
+
+	lda	#0
+	sta	COPY_OFFSET
+check_copy_loop:
+	jsr     page_copy                                               ;6+3621
+
+	inc     COPY_OFFSET     ; (opt: make subtract?)                 ; 5
+
+	lda	#$14
+	cmp	COPY_OFFSET
+	bne	check_copy_loop
+
+	lda	#0			; we are done
+	sta	COPY_TIME
+
+check_decompress:
+	lda	DECOMPRESS_TIME
+	beq	check_done		; if zero, skip
+
+	jsr	setup_next_subsong	; decompress
+
+	lda	MB_CHUNK_OFFSET
+	sta	TIME_TAKEN
+
+	lda	#0
+	sta	DECOMPRESS_TIME
 
 	;============================
-	; rasters
+	; visualization
 	;============================
-
 ;	jsr	clear_top
-
 ;	jsr	draw_rasters
-
 ;	jsr	volume_bars
-
 ;	jsr	page_flip
 
-
+check_done:
 	lda	DONE_PLAYING
 	beq	main_loop
 
@@ -298,18 +328,16 @@ read_size	EQU	$4000
 
 	lda	#$0
 	sta	COPY_OFFSET
+	sta	DECOMPRESS_TIME
 	lda	#$3
 	sta	CHUNKSIZE
 	lda	#$20
 	sta	DECODER_STATE
+	sta	COPY_TIME
 
 	jsr	setup_next_subsong
 
-	jsr	lz4_decode_setup
 
-our_lz4_loop:
-	jsr	lz4_decode_step
-	bcc	our_lz4_loop
 
 	rts
 
@@ -317,12 +345,6 @@ our_lz4_loop:
 	; next sub-song
 	;=================
 setup_next_subsong:
-;	lda	#$0
-;	sta	COPY_OFFSET
-;	lda	#$3
-;	sta	CHUNKSIZE
-;	lda	#$20
-;	sta	DECODER_STATE
 
 	ldy	#0
 
@@ -340,7 +362,7 @@ setup_next_subsong:
 	adc	#0
 	sta	LZ4_SRC+1
 
-;	jsr	lz4_decode		; decode
+	jsr	lz4_decode		; decode
 
 					; tail-call?
 
@@ -448,7 +470,7 @@ krw_file:
 .include	"../asm_routines/gr_setpage.s"
 .include	"../asm_routines/dos33_routines.s"
 .include	"../asm_routines/gr_hlin.s"
-.include	"../asm_routines/lz4_decode_step.s"
+.include	"../asm_routines/lz4_decode.s"
 .include	"rasterbars.s"
 .include	"volume_bars.s"
 .include	"interrupt_handler.s"

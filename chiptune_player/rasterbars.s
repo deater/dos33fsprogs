@@ -20,41 +20,41 @@ draw_rasters:
 
 	; clear rows
 
-	ldy	#(NUM_ROWS-1)					; 2
-	lda	#0						; 2
+	ldy	#(NUM_ROWS-1)						; 2
+	lda	#0							; 2
 
 init_rows:
-	sta	row_color,Y					; 5
-	dey							; 2
-	bpl	init_rows					; 2nt/3
+	sta	row_color,Y						; 5
+	dey								; 2
+	bpl	init_rows						; 2nt/3
 
 	;================
 	; set colors
 
-	lda	#COLOR_BOTH_AQUA	; aqua
-	ldy	SCREEN_Y
-	jsr	set_row_color
+	lda	#COLOR_BOTH_AQUA	; aqua				; 2
+	ldy	SCREEN_Y						; 3
+	jsr	set_row_color						; 6+136
 
-	lda	#COLOR_BOTH_MEDIUMBLUE	; medium blue
-	jsr	set_row_color
+	lda	#COLOR_BOTH_MEDIUMBLUE	; medium blue			; 2
+	jsr	set_row_color						; 6+136
 
-	lda	#COLOR_BOTH_LIGHTGREEN	; light green
-	jsr	set_row_color
+	lda	#COLOR_BOTH_LIGHTGREEN	; light green			; 2
+	jsr	set_row_color						; 6+136
 
-	lda	#COLOR_BOTH_DARKGREEN	; green
-	jsr	set_row_color
+	lda	#COLOR_BOTH_DARKGREEN	; green				; 2
+	jsr	set_row_color						; 6+136
 
-	lda	#COLOR_BOTH_YELLOW	; yellow
-	jsr	set_row_color
+	lda	#COLOR_BOTH_YELLOW	; yellow			; 2
+	jsr	set_row_color						; 6+136
 
-	lda	#COLOR_BOTH_ORANGE	; orange
-	jsr	set_row_color
+	lda	#COLOR_BOTH_ORANGE	; orange			; 2
+	jsr	set_row_color						; 6+136
 
-	lda	#COLOR_BOTH_PINK	; pink
-	jsr	set_row_color
+	lda	#COLOR_BOTH_PINK	; pink				; 2
+	jsr	set_row_color						; 6+136
 
-	lda	#COLOR_BOTH_RED		; red
-	jsr	set_row_color
+	lda	#COLOR_BOTH_RED		; red				; 2
+	jsr	set_row_color						; 6+136
 
 	;=================
 	; draw rows
@@ -74,27 +74,27 @@ draw_rows_loop:
 	ldy	#39							; 2
         sty	V2							; 3
         ldy	#0							; 2
-        jsr	hlin_double		; hlin y,V2 at A	; 63+(X*16)
+        jsr	hlin_double		; hlin y,V2 at A	; 63+(40*16)
         pla								; 4
 	tay								; 2
 draw_rows_skip:
 	dey								; 2
-	bpl	draw_rows_loop						; 2
+	bpl	draw_rows_loop						; 3/2nt
 
 	;==================
 	; update y pointer
 	;==================
-	ldy	SCREEN_Y
-	iny
-	cpy	#ELEMENTS
-	bne	not_there
-	ldy	#0
+	ldy	SCREEN_Y						; 3
+	iny								; 2
+	cpy	#ELEMENTS						; 2
+	bne	not_there						; 3/2nt
+	ldy	#0							; 2
 not_there:
-	sty	SCREEN_Y
+	sty	SCREEN_Y						; 3
 
-
-	rts
-
+	rts								; 6
+								;===========
+								;      1794
 	;===================
 	;===================
 	; set_row_color
@@ -106,31 +106,33 @@ not_there:
 	; A, X trashed
 
 set_row_color:
-	sta	COLOR
-	tya			; wrap y offset
-	and	#(ELEMENTS-1)
-	tax
+	sta	COLOR							; 3
+	tya			; wrap y offset				; 2
+	and	#(ELEMENTS-1)						; 2
+	tax								; 2
 
-	lda	fine_sine,X	; lookup sine value
+	lda	fine_sine,X	; lookup sine value			; 4
 				; pre-shifted right by 4, sign-extended
 
-	clc
-	adc	#18		; add in 18 to center on screen
+	clc								; 2
+	adc	#18		; add in 18 to center on screen		; 2
 
 sin_no_more:
 
-	pha			; save row value
-	jsr	put_color	; put color at row
-	pla			; restore row value
+	pha			; save row value			; 3
+	jsr	put_color	; put color at row			; 6+44
+	pla			; restore row value			; 4
 
-	clc			; increment row value
-	adc	#1
+	clc			; increment row value			; 2
+	adc	#1							; 2
 
-	jsr	put_color	; put color at row
+	jsr	put_color	; put color at row			; 6+44
 
-	iny			; increment for next time
+	iny			; increment for next time		; 2
 
-	rts
+	rts								; 6
+								;=============
+								;	136
 
 	;==================
 	; put_color
@@ -138,31 +140,33 @@ sin_no_more:
 	; A = row to set color of
 	; A trashed
 put_color:
-	clc
-	ror			; row/2, with even/odd in carry
-	tax			; put row/2 in X
+	clc								; 2
+	ror			; row/2, with even/odd in carry		; 2
+	tax			; put row/2 in X			; 2
 
-	bcc	even_line	; if even, skip to even
+	bcc	even_line	; if even, skip to even			; 2nt/3
 odd_line:
-	lda	#$f0		; load mask for odd
-	bcs	finish_line
+	lda	#$f0		; load mask for odd			; 2
+	bcs	finish_line						; 2nt/3
 even_line:
-	lda	#$0f		; load mask for even
+	lda	#$0f		; load mask for even			; 2
 finish_line:
-	sta	MASK
+	sta	MASK							; 3
 
-	and	COLOR		; mask off color
-	sta	COLOR2		; store for later
+	and	COLOR		; mask off color			; 3
+	sta	COLOR2		; store for later			; 3
 
-	lda	MASK
-	eor	#$ff		; invert mask
-	and	row_color,X	; load existing color
+	lda	MASK							; 3
+	eor	#$ff		; invert mask				; 2
+	and	row_color,X	; load existing color			; 4
 
-	ora	COLOR2		; combine
-	sta	row_color,X	; store back
+	ora	COLOR2		; combine				; 3
+	sta	row_color,X	; store back				; 5
 
-	rts
+	rts								; 6
 
+								;===========
+								;	44
 ;======================
 ; some arrays
 ;======================

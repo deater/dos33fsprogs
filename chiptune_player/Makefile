@@ -32,7 +32,7 @@ CHIPTUNE_PLAYER:	chiptune_player.o
 chiptune_player.o:	chiptune_player.s \
 	../asm_routines/mockingboard.s \
 	../asm_routines/dos33_routines.s \
-	../asm_routines/lz4_decode_step.s \
+	../asm_routines/lz4_decode.s \
 	rasterbars.s volume_bars.s interrupt_handler.s \
 	chip_title.inc zp.inc
 	ca65 -o chiptune_player.o chiptune_player.s -l chiptune_player.lst
