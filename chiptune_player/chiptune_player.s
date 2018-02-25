@@ -23,7 +23,7 @@ CHUNKSIZE	EQU	$3
 	sta	CV
 	sta	DONE_PLAYING
 	sta	XPOS
-	sta	MB_FRAME_DIFF
+	sta	MB_CHUNK_OFFSET
 
 	; print detection message
 
@@ -395,6 +395,7 @@ page_copy_loop:
 ; filenames
 ;==========
 krw_file:
+.asciiz "INTRO2.KRW"
 	.asciiz "DEATH2.KRW"
 	.asciiz "DEMO4.KRW"
 	.asciiz "WAVE.KRW"

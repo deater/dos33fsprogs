@@ -20,6 +20,7 @@ interrupt_handler:
 
 
 								;============
+
 								;	  7
 	;=====================
 	; Update time counter
@@ -28,7 +29,7 @@ interrupt_handler:
 	inc	FRAME_COUNT						; 5
 	lda	FRAME_COUNT						; 3
 	cmp	#50							; 3
-	bne	frame_good						; 3/2nt
+	bne	mb_write_frame						; 3/2nt
 
 	lda	#$0							; 2
 	sta	FRAME_COUNT						; 3
@@ -38,7 +39,7 @@ update_second_ones:
 	inc	$bd0+17							; 6
 	lda	$bd0+17							; 4
 	cmp	#$ba			; one past '9'			; 2
-	bne	frame_good						; 3/2nt
+	bne	mb_write_frame						; 3/2nt
 	lda	#'0'+$80						; 2
 	sta	$7d0+17							; 4
 	sta	$bd0+17							; 4
@@ -47,7 +48,7 @@ update_second_tens:
 	inc	$bd0+16							; 6
 	lda	$bd0+16							; 4
 	cmp	#$b6		; 6 (for 60 seconds)			; 2
-	bne	frame_good						; 3/2nt
+	bne	mb_write_frame						; 3/2nt
 	lda	#'0'+$80						; 2
 	sta	$7d0+16							; 4
 	sta	$bd0+16							; 4
@@ -59,15 +60,24 @@ update_minutes:
 								;=============
 								;     90 worst
 
-frame_good:
 
-	ldy	MB_FRAME_DIFF	; get chunk offset			; 3
+	;=============================
+	; Write frames to Mockingboard
+	;=============================
+
+mb_write_frame:
+
+	ldy	MB_CHUNK_OFFSET	; get chunk offset			; 3
 
 	ldx	#0		; set up reg count			; 2
 
 								;=============
 								;	5
 
+	;==================================
+	; loop through the 14 registers
+	; reading the value, then write out
+	;==================================
 mb_write_loop:
 	lda	(INL),y		; load register value			; 5
 
@@ -90,7 +100,7 @@ mb_not_done:
 	cpx	#13							; 2
 	bne	mb_not_13						; 3/2nt
 	cmp	#$ff							; 2
-	beq	skip_r13						; 3/2nt
+	beq	increment_offset					; 3/2nt
 
 mb_not_13:
 	sta	MB_VALUE						; 3
@@ -119,10 +129,18 @@ mb_not_13:
 								;============
 								; roughly 95?
 								;  *13= 1235?
-skip_r13:
 
-	inc	MB_FRAME_DIFF		; increment offset		; 5
+
+	;==============================================
+	; incremement offset.  If 0 move to next chunk
+	;==============================================
+
+increment_offset:
+
+	inc	MB_CHUNK_OFFSET		; increment offset		; 5
 	bne	reset_chunk		; if not zero,	done		; 3/2nt
+
+
 
 wraparound:
 
