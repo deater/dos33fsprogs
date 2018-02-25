@@ -166,7 +166,12 @@ handle_copy:
 	jmp	increment_offset					; 3
 
 decompress_step:
-	; TODO
+	lda	LZ4_DONE
+	bne	increment_offset
+
+	jsr	lz4_decode_step
+	bcc	increment_offset
+	inc	LZ4_DONE
 
 	;==============================================
 	; incremement offset.  If 0 move to next chunk
@@ -193,13 +198,22 @@ increment_offset:
 start_c:
 	lda	#1
 	sta	CHUNKSIZE
+
+	; setup next three chunks of song
+	jsr	setup_next_subsong		; and decompress next	; 6
+	jsr	lz4_decode_setup
+	lda	#0
+	sta	LZ4_DONE
+
 	jmp	back_to_first_reg
 
 wraparound_to_a:
-	; setup next three chunks of song
-
-	jsr	next_subsong		; and decompress next		; 6
-
+	lda	#$0
+	sta	COPY_OFFSET
+	lda	#$3
+	sta	CHUNKSIZE
+	lda	#$20
+	sta	DECODER_STATE
 
 	;==============================
 	; After 14th reg, reset back to
@@ -224,12 +238,12 @@ back_to_first_reg_a:
 back_to_first_reg_c:
 	lda	#>(UNPACK_BUFFER+$2A00)	; in proper chunk (1 of 3)	; 2
 
+update_r0_pointer:
+	sta	INH		; update r0 pointer			; 3
 
 								;============
 								;        18
 
-update_r0_pointer:
-	sta	INH		; update r0 pointer			; 3
 
 	;=================================
 	; Finally done with this interrupt

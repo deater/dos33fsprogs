@@ -293,18 +293,36 @@ read_size	EQU	$4000
 	adc	#0
 	sta	LZ4_SRC+1
 
-	; Fall through to next_subsong
 
-	;=================
-	; next sub-song
-	;=================
-next_subsong:
+	; Decompress first chunks
+
 	lda	#$0
 	sta	COPY_OFFSET
 	lda	#$3
 	sta	CHUNKSIZE
 	lda	#$20
 	sta	DECODER_STATE
+
+	jsr	setup_next_subsong
+
+	jsr	lz4_decode_setup
+
+our_lz4_loop:
+	jsr	lz4_decode_step
+	bcc	our_lz4_loop
+
+	rts
+
+	;=================
+	; next sub-song
+	;=================
+setup_next_subsong:
+;	lda	#$0
+;	sta	COPY_OFFSET
+;	lda	#$3
+;	sta	CHUNKSIZE
+;	lda	#$20
+;	sta	DECODER_STATE
 
 	ldy	#0
 
@@ -322,7 +340,7 @@ next_subsong:
 	adc	#0
 	sta	LZ4_SRC+1
 
-	jsr	lz4_decode		; decode
+;	jsr	lz4_decode		; decode
 
 					; tail-call?
 
@@ -430,7 +448,7 @@ krw_file:
 .include	"../asm_routines/gr_setpage.s"
 .include	"../asm_routines/dos33_routines.s"
 .include	"../asm_routines/gr_hlin.s"
-.include	"../asm_routines/lz4_decode.s"
+.include	"../asm_routines/lz4_decode_step.s"
 .include	"rasterbars.s"
 .include	"volume_bars.s"
 .include	"interrupt_handler.s"

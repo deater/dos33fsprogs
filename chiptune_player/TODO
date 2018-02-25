@@ -2,3 +2,5 @@
 + Right/Left arrows on screen
 + Keyboard, Right/Left/Pause
 + Calculate maximum decode time for songs
+
++ Put graphics update in interrupt routine, put debug in normal space

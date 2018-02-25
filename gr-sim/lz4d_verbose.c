@@ -109,6 +109,7 @@ int main(int argc, char **argv) {
 	FILE *fff;
 	int size;
 	short orgoff,paksize,pakoff;
+	int token_count=0;
 
 	init_6502();
 
@@ -186,7 +187,8 @@ int main(int argc, char **argv) {
 	y=0;				// used for offset	//ldy	#0
 
 parsetoken:
-	printf("LOAD TOKEN: ");
+	token_count++;
+	printf("LOAD TOKEN %d: ",token_count);
 	getsrc();						// jsr	getsrc
 					// get token
 	pha();				// save for later	// pha
@@ -289,6 +291,8 @@ done:
 	}
 
 	printf("Out size=%d\n",out_size);
+
+	printf("Total tokens: %d\n",token_count);
 
 	fwrite(&ram[ORGOFFSET],1,out_size,fff);
 
