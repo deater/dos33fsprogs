@@ -210,7 +210,7 @@ back_to_first_reg:
 	lda	#0							; 2
 	bit	DECODER_STATE						; 3
 	bmi	back_to_first_reg_c					; 2nt/3
-	bvc	back_to_first_reg_a
+	bvc	back_to_first_reg_a					; 2nt/3
 
 back_to_first_reg_b:
 	lda	#$1			; offset by 1
@@ -219,7 +219,7 @@ back_to_first_reg_a:
 	clc								; 2
 	adc	#>UNPACK_BUFFER		; in proper chunk 1 or 2	; 2
 
-	jmp	done_interrupt						; 3
+	jmp	update_r0_pointer					; 3
 
 back_to_first_reg_c:
 	lda	#>(UNPACK_BUFFER+$2A00)	; in proper chunk (1 of 3)	; 2
@@ -227,9 +227,15 @@ back_to_first_reg_c:
 
 								;============
 								;        18
-done_interrupt:
+
+update_r0_pointer:
 	sta	INH		; update r0 pointer			; 3
 
+	;=================================
+	; Finally done with this interrupt
+	;=================================
+
+done_interrupt:
 	pla			; restore a				; 4
 
 	rti			; return from interrupt			; 6
