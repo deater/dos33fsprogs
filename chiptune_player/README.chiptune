@@ -1,53 +1,257 @@
-The Challenges of an Apple II chiptune player.
+Challenges found writing an Apple II chiptune player
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   by DEATER (Vince Weaver, vince@deater.net)
 
-The goal is to design a chiptune player that can play large 
-(150k+ uncompressed) chiptune files on an Apple II with 48k of RAM
-and a Mockingboard sound card.
+  http://www.deater.net/weave/vmwprod/chiptune/
+====================================================
 
-An interrupt routine wakes at 50Hz to write the registers and a few other
-houskeeping things.
+GOAL:
+~~~~~
+  The goal is to design a chiptune player that can play large 
+  (150k+ uncompressed) chiptune files on an Apple II with 48k of RAM
+  and a Mockingboard sound card.
 
-Not enough RAM to hold full raw ym5 sound data (one byte for each of 14
-registers, every 50Hz).  This compresses amazingly.  Using LZ4 by at
-least a factor of 10.  But it won't fit all in RAM so we have to load
-the full file from disk (no way to do disk I/O, disk I/O disables interrupts)
-then decompress in chunks.  So we need room for both the compressed file
-plus uncompressed data.
+  You in theory could have had an Apple II with 48k in 1977 (if you were rich)
+  and Mockingboards came around 1981, so this all predates the Commodore 64.
 
-The problem is decompression also takes a while, longer than the 50Hz.
-So if we just decompress the next chunk when needed the sound will noticibly
-pause for a fraction of a second.
+USING:
+~~~~~~
+   Boot disk on a real system, or emulator with Mockingboard support.
 
-One solution to that is to have two decompress areas and flip between them,
-decompressing in the background to one while the other is playing.  The problem
-is splitting the decompressed data into smaller chunks like this is that
-it doesn't compress as well so it takes up more disk/memory space
-for the raw file.
+   Applewin works fine (even under Wine on Linux).
+   MESS does too, it's harder to setup (ROMs) but the audio sounds clearer.
+
+   Space pauses, Left/Right arrow switches songs.
+
+   You can load up your own YM5 files.  Get the "ym5_to_krw" utility found in
+   the repository https://github.com/deater/vmw-meter/
+   Copy the files to the disk image, and edit the filenames in chiptune.s
+   (sorry, don't have code that CATALOGs automatically.  TODO?)
+
+HARDWARE:
+~~~~~~~~~
+
+  Sound
+  =====
+
+  The Mockingboard card has two AY-3-8910 chips, each interfaced with a
+  VIA 6522 I/O chip.  The 6522 more or less acts as a GPIO expander, plus
+  provides programmable timer interrupts (something the Apple II lacks).
+
+  The AY-3-8910 chip provides three channels of square waves, plus noise.
+  There is also a (global) envelope generator (though it's typically 
+  not used that much).  The Mockingboard has two AY-3-8910s, 
+  so you can have up to six channels of sound (3 on right, 3 on left).
+
+  Processor
+  =========
+
+  The Apple II has a 6502 processor running at 1.023 MHz.
+
+  RAM
+  ===
+
+  You could get Apple IIs with as little as 4k of RAM.  Eventually models
+  with 48k, 64k and 128k were popular, but due to I/O and ROM constraints to
+  access more than 48k you had to do bank switching.
+
+  DISK
+  ====
+
+  The typical 5 1/4" floppy was single sided and by the time of DOS3.3 held
+  140k of data.  Roughly 16k was used by DOS though if you wanted a bootable
+  disk.  There are all kinds of ways you can cheat and extend this, as well
+  as using a "real" O/S like ProDOS.  However growing up all I ever really
+  used was DOS3.3 so I'm using it for the sake of tradition.
+
+  Also if you want to run DOS3.3 then RAM from $9600 up through $C000 is
+  used by the O/S.  For this project I use stock DOS3.3 so we lose that
+  amount of RAM (almost 11k).
+
+SOUND DATA:
+~~~~~~~~~~~
+
+The AY-3-8910 chips are very flexible and can be programmed in a wide
+variety of ways.
+
+I'm attempting to play YM files, which are chiptune files popular in
+the Atari and Spectrum communities.  These are RAW register dumps;
+every 50Hz (they tend to be European) the contents of the 14 AY-3-8910
+registers are written.  A raw data stream is 700 bytes (50*14) a second,
+so 42k per minute.  This means holding a raw, uncompressed, data stream
+in RAM becomes a challenge.
+
+COMPRESSION:
+~~~~~~~~~~~~
+
+The register values tend to be repetitive so they compress well.  Especially
+if you interleave the files (have all of the register 0 data in a row,
+followed by all the data for register 1, etc.  This is a lot harder to play
+but you can get compression ratios of over 10 times, see the chart
+at the end of this document).
+
+In addition, the file data can be compressed even more if you notice unused
+bits in the data.  For example, the register data has many unused bits (the
+period data is only 12 bits for each channel).  Also many songs do not use
+the envelope feature at all, freeing up 3 bytes.  So custom compression that
+can make assumptions about the sound format can free up many bytes even in
+a raw register dump format.
+
+A typical ym5 file is compressed with LHA compression which isn't practical
+for compression.
+
+The LZ4 algorithm is nearly as good and has existing 6502 implementations 
+which can be adapted.  It isn't really a streaming algorithm though, so
+it is hard to decompress only a chunk of the file at a time, usually you
+need to decompress the whole file at once (the format works by referencing
+bit sequences from earlier decompressed data).  
+
+This is especially troublesome with interleaved files, as although they
+compress really well, you end up decompressing all of the register-0
+data before you get to register-1 so with limited RAM you have to 
+change how you deal with things.
+
+KRW File Format
+~~~~~~~~~~~~~~~
+
+I ended up creating yet another sound file format, and wrote a converter
+that can convert YM5 files to this KRW format.
+
+The format assumes you take the raw interleaved data, and then break it
+up into 768 byte * 14 register (10.5k) chunks.  These chunks are compressed
+independently and concatenated together.  The player then decompresses
+these chunks one by one as it pays through the song.  The compression
+ratio is not as good as compressing the entire file, but it allows most
+reasonable-length ym5 files to be played.
+
+The format is as follows:
+	3 bytes		Magic Number	KRW
+	1 byte		Skip Value	Bytes to skip to get to first LZ4 data
+	1 byte		Title Center	Spaces to print to center on 40col
+	X bytes		Title String	0-terminated ASCII Title of song
+	1 byte		Author Center
+	X bytes		Author String
+	1 byte		Time Center	
+	14 bytes	Time String	" 0:00 /  M:SS\0" with length filled in
+Repeated block data
+	2 bytes		Chunk Length	Little Endian size of LZ4 block
+	X bytes		LZ4 data
+
+After last block, a value of 0/0 indicates end
+
+	For proper end-of-song detection, the file data should be interleaved
+	and the data at the end should be padded with all $FF characters.
+
+	End of song is detected by an FF in register[1] which in theory
+	is not possible in a valid register dump.
 
 
-As can be seen from the memory map, if we assume our player can fit in 4k
+PLAYING THE SONG
+~~~~~~~~~~~~~~~~~
+
+  An interrupt routine wakes at 50Hz to write the registers and a few other
+  housekeeping things.
+
+  We load the KRW file totally into RAM before playing.
+
+  The Disk II controller designed by Woz is amazing, but it is timing
+  sensitive so interrupts are disabled when loading from disk.
+
+  We have to have room in RAM for the player (4k) the KRW file (16k)
+  and the current uncompressed data (14k).  See the memory map diagram
+  at the end.
+
+  We also have some visualization going on that plots the amplitude of
+  the three channels, plus has a rasterbar type thing going on in the
+  background.  Originally the graphics was done full speed in a loop outside
+  the interrupt handler, but as we'll see due to glitchy audio we had to
+  do some hackish things.
+
+  The actual player is fairly simple, just reads the interleaved data by
+  striding through memory and writing out to the registers.  A frame only
+  takes maybe 2400 or so cycles.
+
+  I ended up creating a 3-phase state machine to handle co-ordinating the
+  three modes
+	A: playing chunk 1 while copying chunk 3 data to extra buffer
+	B: just playing chunk 2
+	C: playing from extra buffer while decoding next LZ4 block to 1-2-3
+
+  I track these in one variable, with the states in the high bits,
+	$80, $40, $20.  The BIT instruction lets us easily check for these
+	and a ROL instruction easily switches between the states.
+
+
+CHALLENGES:
+~~~~~~~~~~~
+
+  The primary problem is decompression also takes a while, longer than
+  the 50Hz available (20ms).  It turns out the default LZ4 algorithm from
+  qkumba can often take upwards of 700ms, leading to a long pause in
+  the playback.
+
+  First Attempt
+  =============
+
+  My first attempt to work around this was to load the 3 chunks of data
+  as in the naive approach, but in the background copy chunk 3 in RAM,
+  and then play from the copied RAM while decompressing the next LZ4 in
+  the background.
+
+  This first attempt almost worked, but it tried to split up the LZ4
+  decompression into 1/256th chunks to spread across the last chunk being
+  played but the LZ4 is too irregular for that.  Some file-chunks decompress
+  in irregular ways that don't split up well.
+
+  Second Attempt
+  ==============
+
+  One 256-interrupt chunk of data being played takes about 5s and no data
+  chunk seems to take more than 1s to decode.  So we can just cheat and
+  move the graphics code into the interrupt, and have the decoding happen
+  in non-interrupt space.
+
+  This will work for the chiptune player, but it's not going to work well for
+  something like a video game where you are truly trying to have the music
+  playing unattended in the background (unless your music consists only of
+  15s loops).
+
+FITTING ONTO DISK
+~~~~~~~~~~~~~~~~~
+
+Apple II DOS33 filesystem uses 256 byte blocks.  Each file has at least
+one 256 byte Track/Sector list file (and takes an additional one for each
+28k or so of filesize).
+
+DOS itself reserves the first 3 tracks (12k) and in theory the catalog
+reserves an entire track (4k) to hold file info (although you only need
+on 256 byte sector per 7 files).
+
+In addition usually you have a "HELLO" BASIC file that runs at boot
+which is going to take at least 512 bytes.
+
+So even though the Disk II / DOS3.3 can in theory hold 140k, after
+DOS (12k), the Catalog track (4k), HELLO(512 bytes), and our chiptune player
+(4k) we have 24.5k of overhead, with 115.5k free (462 blocks).
+
+The layout of our disk packed to the max with KRW files can be seen
+in the Figure at the end.  We do manage to fit over 30 minutes of music
+on one disk.  It would fit a lot more if we had simple songs that compressed
+better rather than the complex chiptune examples I picked.
+
+MEMORY LAYOUT
+~~~~~~~~~~~~~
+
+As can be seen from the memory map below, if we assume our player can fit in 4k
 we have roughly from $2000 to $9600 for memory.  That's $7600 (29.5k).
 
 If we could have single buffered, we could have had 256*3*14 (10.5k) for
 decompress and 19k for file size which would let us play most of the 
 reasonable sized songs on our play list (KRW(3) in table at end).
 
-If we need to double buffer, then we need 256*2*14*2 (14k) for decompress
-and 15.5k for file size which still works, at least if the move to KRW(2)
-sized files doesn't bloat things too much.
+For double buffer, then we need 256*2*14*2 (14k) for decompress
+and 16k for file size which still works.
 
-
-Proposed plan
-
-	Decompress 3, but in the room of 4?
-
-	1234	in memory
-	ABCC	decode as ABC, then copy C to 4
-		when playing C, play from 4, bring in next 3
-	DEFF
-
-	This lets us have 14k of buffer, allowing 15.5k of compressed file.
-	Do we have the spare cycles for this?
 
 
 Memory Map
@@ -104,21 +308,9 @@ AXELF.KRW	10:55	9692	47989	54420	189
 Notes: my home-made songs don't have ym5 sizes as I don't have a
 working LHA encoder to make a real size.
 
-Apple II disk file sizes: uses 256 byte blocks.  Needs an extra
-for the catalog entry (and an additional for every X blocks used)
-
-The Disk II / DOS3.3 can in theory hold 140k, but first 3 tracks
-are reserved for DOS (12k) and the Catalog track (4k) and the
-Hello program (512 bytes) and our chiptune player (4k), totalling
-24.5k of overhead, with 115.5k free (462 blocks)
-
-
-
-
-
-
 
 Interesting bugs that were hard to debug:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 + Bug in qkumba's LZ4 decoder, only happened when a copy-block size was
 	exactly a multiple of 256, in which case it would copy
