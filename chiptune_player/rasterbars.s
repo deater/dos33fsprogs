@@ -1,5 +1,12 @@
 ; Not quite a raster-bar, but why not
 
+
+; OPTIMIZATION (as originally it was 16,200 instructions, a bit much
+;		for a max 20,000 cycle interrupt handler)
+
+;  -120 : Unroll the zero loop, saved 120 cycles
+; -5000 : Inline the vlin_double code
+
 ;===========
 ; CONSTANTS
 ;===========
@@ -20,46 +27,63 @@ draw_rasters:
 
 	; clear rows
 
-	ldy	#(NUM_ROWS-1)						; 2
+;	ldy	#(NUM_ROWS-1)						; 2
 	lda	#0							; 2
 init_rows:
-	sta	row_color,Y						; 5
-	dey								; 2
-	bpl	init_rows						; 2nt/3
-								;==============
-								; 4+20*10 = 204
+	sta	row_color+0						; 4
+	sta	row_color+1
+	sta	row_color+2
+	sta	row_color+3
+	sta	row_color+4
+	sta	row_color+5
+	sta	row_color+6
+	sta	row_color+7
+	sta	row_color+8
+	sta	row_color+9
+	sta	row_color+10
+	sta	row_color+11
+	sta	row_color+12
+	sta	row_color+13
+	sta	row_color+14
+	sta	row_color+15
+	sta	row_color+16
+	sta	row_color+17
+	sta	row_color+18
+	sta	row_color+19
 
+
+
+
+;	sta	row_color,Y						; 5
+;	dey								; 2
+;	bpl	init_rows						; 2nt/3
+								;==============
+				; Originally 4+20*10 = 204 cyles / 10 bytes
+				; now 2+4*20 = 82 cycles / 62 bytes
 
 	;================
 	; set colors
 
-	lda	#COLOR_BOTH_AQUA	; aqua				; 2
 	ldy	SCREEN_Y						; 3
+
+	lda	#COLOR_BOTH_DARKBLUE		; red				; 2
 	jsr	set_row_color						; 6+136
 
-	lda	#COLOR_BOTH_MEDIUMBLUE	; medium blue			; 2
+	lda	#COLOR_BOTH_MEDIUMBLUE		; red				; 2
 	jsr	set_row_color						; 6+136
 
-	lda	#COLOR_BOTH_LIGHTGREEN	; light green			; 2
+	lda	#COLOR_BOTH_AQUA		; red				; 2
 	jsr	set_row_color						; 6+136
 
-	lda	#COLOR_BOTH_DARKGREEN	; green				; 2
-	jsr	set_row_color						; 6+136
-
-	lda	#COLOR_BOTH_YELLOW	; yellow			; 2
-	jsr	set_row_color						; 6+136
-
-	lda	#COLOR_BOTH_ORANGE	; orange			; 2
-	jsr	set_row_color						; 6+136
-
-	lda	#COLOR_BOTH_PINK	; pink				; 2
+	lda	#COLOR_BOTH_PINK		; red				; 2
 	jsr	set_row_color						; 6+136
 
 	lda	#COLOR_BOTH_RED		; red				; 2
 	jsr	set_row_color						; 6+136
+
 								;==============
-								; 8 * 144
-								; 1152
+							; new = 5 * 142 = 710
+							; original = 1152
 
 	;=================
 	; draw rows
@@ -71,23 +95,38 @@ draw_rows_loop:
 
 	sta	COLOR							; 3
 
-
+	sty	TEMPY							; 3
 	tya								; 2
-	pha								; 3
 	asl								; 2
+	tay								; 2
+
+	; hlin_setup inlined
+
+        lda     gr_offsets,Y    ; lookup low-res memory address         ; 4
+	sta	GBASL							; 3
+        iny								; 2
+	lda	gr_offsets,Y						; 4
+	clc								; 2
+        adc	DRAW_PAGE	; add in draw page offset		; 3
+        sta	GBASH							; 3
 
 	ldy	#39							; 2
-        sty	V2							; 3
-        ldy	#0							; 2
-        jsr	hlin_double		; hlin y,V2 at A	; 63+(40*16)
-        pla								; 4
-	tay								; 2
+	lda	COLOR							; 3
+double_loop:
+	sta	(GBASL),Y						; 6
+	dey								; 2
+	bpl	double_loop						; 2nt/3
+
+	ldy	TEMPY							; 3
+
 draw_rows_skip:
 	dey								; 2
 	bpl	draw_rows_loop						; 3/2nt
-								;=============
-								; 20 * 741
-								; 14,820
+
+						;==============================
+						; Original: 20 * 741 = 14,820
+						; new = 2+ 20*(53+11*40)=9862
+						; 	(note, worst case)
 	;==================
 	; update y pointer
 	;==================
@@ -104,8 +143,10 @@ not_there:
 								;===========
 								;      24
 
-						;=============================
-						; total=		16,200
+					;=====================================
+					; original total=		16,200
+					; new total (worst case)=	10,678
+					; 	    (realistic) =	 5,748
 
 	;===================
 	;===================
@@ -125,9 +166,7 @@ set_row_color:
 
 	lda	fine_sine,X	; lookup sine value			; 4
 				; pre-shifted right by 4, sign-extended
-
-	clc								; 2
-	adc	#18		; add in 18 to center on screen		; 2
+				; 18 added to center
 
 sin_no_more:
 
@@ -144,7 +183,7 @@ sin_no_more:
 
 	rts								; 6
 								;=============
-								;	136
+								;	132
 
 	;==================
 	; put_color
@@ -187,74 +226,74 @@ row_color:
 .byte $00,$00,$00,$00,$00, $00,$00,$00,$00,$00
 .byte $00,$00,$00,$00,$00, $00,$00,$00,$00,$00
 
-; arithmatically shifted right by 4
+; arithmatically shifted right by 4, sign extended, added 18 to center
 
 ; FIXME: exploit symmetry and get rid of 3/4 of this table
 ;	 possibly not worth the extra code
 fine_sine:
-.byte $00 ; 0.000000
-.byte $01 ; 0.098017
-.byte $03 ; 0.195090
-.byte $04 ; 0.290285
-.byte $06 ; 0.382683
-.byte $07 ; 0.471397
-.byte $08 ; 0.555570
-.byte $0A ; 0.634393
-.byte $0B ; 0.707107
-.byte $0C ; 0.773010
-.byte $0D ; 0.831470
-.byte $0E ; 0.881921
-.byte $0E ; 0.923880
-.byte $0F ; 0.956940
-.byte $0F ; 0.980785
-.byte $0F ; 0.995185
-.byte $0F ; 1.000000
-.byte $0F ; 0.995185
-.byte $0F ; 0.980785
-.byte $0F ; 0.956940
-.byte $0E ; 0.923880
-.byte $0E ; 0.881921
-.byte $0D ; 0.831470
-.byte $0C ; 0.773010
-.byte $0B ; 0.707107
-.byte $0A ; 0.634393
-.byte $08 ; 0.555570
-.byte $07 ; 0.471397
-.byte $06 ; 0.382683
-.byte $04 ; 0.290285
-.byte $03 ; 0.195090
-.byte $01 ; 0.098017
-.byte $00 ; 0.000000
+.byte $00+18 ; 0.000000
+.byte $01+18 ; 0.098017
+.byte $03+18 ; 0.195090
+.byte $04+18 ; 0.290285
+.byte $06+18 ; 0.382683
+.byte $07+18 ; 0.471397
+.byte $08+18 ; 0.555570
+.byte $0A+18 ; 0.634393
+.byte $0B+18 ; 0.707107
+.byte $0C+18 ; 0.773010
+.byte $0D+18 ; 0.831470
+.byte $0E+18 ; 0.881921
+.byte $0E+18 ; 0.923880
+.byte $0F+18 ; 0.956940
+.byte $0F+18 ; 0.980785
+.byte $0F+18 ; 0.995185
+.byte $0F+18 ; 1.000000
+.byte $0F+18 ; 0.995185
+.byte $0F+18 ; 0.980785
+.byte $0F+18 ; 0.956940
+.byte $0E+18 ; 0.923880
+.byte $0E+18 ; 0.881921
+.byte $0D+18 ; 0.831470
+.byte $0C+18 ; 0.773010
+.byte $0B+18 ; 0.707107
+.byte $0A+18 ; 0.634393
+.byte $08+18 ; 0.555570
+.byte $07+18 ; 0.471397
+.byte $06+18 ; 0.382683
+.byte $04+18 ; 0.290285
+.byte $03+18 ; 0.195090
+.byte $01+18 ; 0.098017
+.byte $00+18 ; 0.000000
 
-.byte $FE ; -0.098017
-.byte $FC ; -0.195090
-.byte $FB ; -0.290285
-.byte $F9 ; -0.382683
-.byte $F8 ; -0.471397
-.byte $F7 ; -0.555570
-.byte $F5 ; -0.634393
-.byte $F4 ; -0.707107
-.byte $F3 ; -0.773010
-.byte $F2 ; -0.831470
-.byte $F1 ; -0.881921
-.byte $F1 ; -0.923880
-.byte $F0 ; -0.956940
-.byte $F0 ; -0.980785
-.byte $F0 ; -0.995185
-.byte $F0 ; -1.000000
-.byte $F0 ; -0.995185
-.byte $F0 ; -0.980785
-.byte $F0 ; -0.956940
-.byte $F1 ; -0.923880
-.byte $F1 ; -0.881921
-.byte $F2 ; -0.831470
-.byte $F3 ; -0.773010
-.byte $F4 ; -0.707107
-.byte $F5 ; -0.634393
-.byte $F7 ; -0.555570
-.byte $F8 ; -0.471397
-.byte $F9 ; -0.382683
-.byte $FB ; -0.290285
-.byte $FC ; -0.195090
-.byte $FE ; -0.098017
+.byte ($FE+18)&$ff ; -0.098017
+.byte ($FC+18)&$ff ; -0.195090
+.byte ($FB+18)&$ff ; -0.290285
+.byte ($F9+18)&$ff ; -0.382683
+.byte ($F8+18)&$ff ; -0.471397
+.byte ($F7+18)&$ff ; -0.555570
+.byte ($F5+18)&$ff ; -0.634393
+.byte ($F4+18)&$ff ; -0.707107
+.byte ($F3+18)&$ff ; -0.773010
+.byte ($F2+18)&$ff ; -0.831470
+.byte ($F1+18)&$ff ; -0.881921
+.byte ($F1+18)&$ff ; -0.923880
+.byte ($F0+18)&$ff ; -0.956940
+.byte ($F0+18)&$ff ; -0.980785
+.byte ($F0+18)&$ff ; -0.995185
+.byte ($F0+18)&$ff ; -1.000000
+.byte ($F0+18)&$ff ; -0.995185
+.byte ($F0+18)&$ff ; -0.980785
+.byte ($F0+18)&$ff ; -0.956940
+.byte ($F1+18)&$ff ; -0.923880
+.byte ($F1+18)&$ff ; -0.881921
+.byte ($F2+18)&$ff ; -0.831470
+.byte ($F3+18)&$ff ; -0.773010
+.byte ($F4+18)&$ff ; -0.707107
+.byte ($F5+18)&$ff ; -0.634393
+.byte ($F7+18)&$ff ; -0.555570
+.byte ($F8+18)&$ff ; -0.471397
+.byte ($F9+18)&$ff ; -0.382683
+.byte ($FB+18)&$ff ; -0.290285
+.byte ($FC+18)&$ff ; -0.195090
+.byte ($FE+18)&$ff ; -0.098017
 

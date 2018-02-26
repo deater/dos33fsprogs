@@ -46,6 +46,7 @@ hlin_double:
 	;=================================
 	; hlin_double_continue:  width
 	;=================================
+	; GBASL has correct offset for row/col
 	; width in X
 
 hlin_double_continue:

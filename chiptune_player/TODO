@@ -1,6 +1,3 @@
-+ Loop support
-+ Right/Left arrows on screen
-+ Keyboard, Right/Left/Pause
-+ Calculate maximum decode time for songs
++ Song loop support (hard if looping to the middle of a block)
 
-+ Put graphics update in interrupt routine, put debug in normal space
++ Fix the dos33 tool, it has issues when the disk is nearly full

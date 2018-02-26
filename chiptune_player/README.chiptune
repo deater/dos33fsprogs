@@ -252,6 +252,51 @@ reasonable sized songs on our play list (KRW(3) in table at end).
 For double buffer, then we need 256*2*14*2 (14k) for decompress
 and 16k for file size which still works.
 
+VISUALIZATION
+~~~~~~~~~~~~~
+
+  Originally I had the volume bars and rasterbars in userspace running,
+  so it didn't matter how long they took to draw (they'd just get a worse
+  frame rate if the interrupts were taking a while).
+
+  But then I had to move the decompression to userspace, and the visualization
+  into the interrupt handler.
+
+  Then things got interesting.  The visualization was taking so much time that
+  userspace was starved and decompression was not finishing in time, so the
+  sound was corrupted and finished early.
+
+  Thus it was time for some cycle analysis.  Here's what I found.
+
+	Approx max 20,000 cycles in an interrupt
+	       1,500 used by music decode
+	       7,500 used by volume bars
+	      16,200 (!) used by raster bars 
+	       2,000 for misc rest
+
+	So the problem can be seen here!  That 16,200 for raster bars was
+	worst-case, it usually would have been a little less.
+
+  If takes roughly 700,000 cycles to LZ4 decode a block, so even with
+  no interrupt can take 35 frames (0.7s) to finish.
+
+  I added a variable TIME_TAKEN ($88) that you can use to find out how
+  long the last LZ4 decode took.
+
+  With rasterbars turned off:
+	INTRO2: 60@19, 60@36, 62@50 61@1:03 61@1:32 60@2:05 61@2:32
+
+  So roughly $60 (96) frames, or about 2 seconds.
+
+  I went in and optimized the rasterbars code a lot and got it down to
+  about 10k cycles worst case (6k probably average case).
+
+  So now it takes $A0 (160) frames, or about 3 seconds.  This seems to
+  be workable.
+
+
+FIGURES/TABLES
+~~~~~~~~~~~~~~
 
 
 Memory Map
@@ -321,29 +366,9 @@ Interesting bugs that were hard to debug:
 	one too far and it was writing A0 to the first byte of the
 	hlin routine, and A0 is a LDY # instruction.
 
-
-
-
-Know the current problem, taking longer than 5s to decode file.
-Thought it only took 1s max?  Not in face of interrupts.
-
-	Every 20,000 an interrupt
-	       1,500 for music
-	       7,500 for volume bars
-	      16,200 (!)for raster bars 
-	       2,000 for misc rest
-
-	Roughly 13,000 cycles, leaving only 7000 to userspace
-
-	If takes 700,000 cycles to decode a block, will take 100
-		Hz cycles, or 2s to finish?  that should be doable.
-		why does it instead take 15?
-	Can play fine if I turn the raster bars off.
-	
-	TIME_TAKEN ($88) stores how long took to decode
-		INTRO2: 60@19, 60@36, 62@50 61@1:03 61@1:32 60@2:05 61@2:32
-
-+ Our old friend, forget the # so we're comparing against some random
-	zero page value rather than a constsant
++ Our old friend: forgetting the '#' so we're comparing against some random
+	zero page value rather than a constant
 
 + Related, the accidentally put in a $ when I meant for it to be decimal.
+	I was copying to $14 pages instead of 14, overwriting the DOS buffers
+	which I didn't notice until I tried to load the next file.

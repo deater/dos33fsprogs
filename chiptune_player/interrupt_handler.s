@@ -266,7 +266,7 @@ done_interrupt:
 	;============================
 
 	jsr	clear_top
-;	jsr	draw_rasters
+	jsr	draw_rasters
 	jsr	volume_bars
 	jsr	page_flip
 

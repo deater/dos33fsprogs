@@ -224,7 +224,6 @@ done_play:
 
 	jsr	clear_bottoms
 
-
 	jsr	new_song
 
 	cli				; re-enable interrupts
