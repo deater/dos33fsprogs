@@ -10,6 +10,8 @@
 	; It then calculates if it is a BRK or not (which trashes A)
 	; Then it sets up the stack like an interrupt and calls 0x3fe
 
+TIME_OFFSET	EQU	13
+
 interrupt_handler:
 	pha			; save A				; 3
 				; Should we save X and Y too?
@@ -36,26 +38,26 @@ update_time:
 	sta	FRAME_COUNT						; 3
 
 update_second_ones:
-	inc	$7d0+17							; 6
-	inc	$bd0+17							; 6
-	lda	$bd0+17							; 4
+	inc	$7d0+TIME_OFFSET+3					; 6
+	inc	$bd0+TIME_OFFSET+3					; 6
+	lda	$bd0+TIME_OFFSET+3					; 4
 	cmp	#$ba			; one past '9'			; 2
 	bne	mb_write_frame						; 3/2nt
 	lda	#'0'+$80						; 2
-	sta	$7d0+17							; 4
-	sta	$bd0+17							; 4
+	sta	$7d0+TIME_OFFSET+3					; 4
+	sta	$bd0+TIME_OFFSET+3					; 4
 update_second_tens:
-	inc	$7d0+16							; 6
-	inc	$bd0+16							; 6
-	lda	$bd0+16							; 4
+	inc	$7d0+TIME_OFFSET+2					; 6
+	inc	$bd0+TIME_OFFSET+2					; 6
+	lda	$bd0+TIME_OFFSET+2					; 4
 	cmp	#$b6		; 6 (for 60 seconds)			; 2
 	bne	mb_write_frame						; 3/2nt
 	lda	#'0'+$80						; 2
-	sta	$7d0+16							; 4
-	sta	$bd0+16							; 4
+	sta	$7d0+TIME_OFFSET+2					; 4
+	sta	$bd0+TIME_OFFSET+2					; 4
 update_minutes:
-	inc	$7d0+14							; 6
-	inc	$bd0+14							; 6
+	inc	$7d0+TIME_OFFSET					; 6
+	inc	$bd0+TIME_OFFSET					; 6
 				; we don't handle > 9:59 songs yet
 
 								;=============

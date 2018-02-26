@@ -321,6 +321,28 @@ read_size	EQU	$4000
 	lda	#23			; VTAB 23: HTAB from file
 	jsr	print_header_info
 
+	; Print Left Arrow (INVERSE)
+	lda	#'<'
+	sta	$750
+	sta	$B50
+
+	lda	#'-'
+	sta	$751
+	sta	$B51
+
+	; Print Rright Arrow (INVERSE)
+	lda	#'-'
+	sta	$776
+	sta	$B76
+
+	lda	#'>'
+	sta	$777
+	sta	$B77
+
+
+
+
+
 	; Point LZ4 src at proper place
 
 	ldy	#0
