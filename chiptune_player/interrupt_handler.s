@@ -92,9 +92,7 @@ mb_write_loop:
 	lda	#1		; set done playing			; 2
 	sta	DONE_PLAYING						; 3
 
-	jsr     clear_ay_both
-
-	jmp	done_interrupt						; 3
+	jmp	quiet_exit						; 3
 
 mb_not_done:
 
@@ -285,9 +283,7 @@ key_space:
 	eor	DONE_PLAYING
 	sta	DONE_PLAYING
 
-	jsr	clear_ay_both
-
-	bne	done_key
+	bne	quiet_exit
 
 key_left:
 	cmp	#'D'
@@ -298,7 +294,10 @@ key_right:
 	bne	done_key
 
 done_key:
+	jmp	exit_interrupt
 
+quiet_exit:
+	jsr	clear_ay_both
 exit_interrupt:
 
 
