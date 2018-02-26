@@ -7,6 +7,8 @@ UNPACK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
 					; trying not to hit DOS at $9600
 					; Reserve 3 chunks plus spare (14k)
 
+NUM_FILES	EQU	15
+
 	;=============================
 	; Setup
 	;=============================
@@ -23,6 +25,9 @@ UNPACK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
 	sta	XPOS
 	sta	MB_CHUNK_OFFSET
 	sta	DECODE_ERROR
+
+	lda	#1
+	sta	WHICH_FILE
 
 	; print detection message
 
@@ -75,6 +80,8 @@ mockingboard_found:
 	;============================
 	; Enable 50Hz clock on 6522
 	;============================
+
+	sei			; disable interrupts just in case
 
 	lda	#$40		; Continuous interrupts, don't touch PB7
 	sta	$C40B		; ACR register
@@ -136,7 +143,7 @@ mockingboard_found:
 	; Enable 6502 interrupts
 	;============================
 
-	cli		; clear interrupt mask
+	;cli		; clear interrupt mask
 
 
 	;============================
@@ -201,30 +208,34 @@ check_done:
 
 done_play:
 
-				; FIXME: disable timer on 6522
-				; FIXME: unhook interrupt handler
-
+;				; FIXME: disable timer on 6522
+;				; FIXME: unhook interrupt handler
+;
 	sei			; disable interrupts
-
+;
 	jsr	clear_ay_both
 
 	lda	#0
 	sta	CH
 
 	jsr	clear_bottoms
+;
+;	lda	#21
+;	sta	CV
+;	lda	#<done_message
+;	sta	OUTL
+;	lda	#>done_message
+;	sta	OUTH
 
-	lda	#21
-	sta	CV
-	lda	#<done_message
-	sta	OUTL
-	lda	#>done_message
-	sta	OUTH
+;	jsr	print_both_pages
 
-	jsr	print_both_pages
+	jsr	increment_file
+	jsr	new_song
+
+	jmp	main_loop
 
 forever_loop:
 	jmp	forever_loop
-
 
 
 
@@ -271,10 +282,23 @@ new_song:
 	; Load in KRW file
 	;===========================
 
-	lda	#<krw_file			; point to filename
-	sta	INL
-	lda	#>krw_file
-	sta	INH
+	jsr	get_filename
+
+	lda	#8
+	sta	CH
+	lda	#21
+	sta	CV
+
+	lda	INL
+	sta	OUTL
+	lda	INH
+	sta	OUTH
+	jsr	print_both_pages
+
+;	lda	#<krw_file			; point to filename
+;	sta	INL
+;	lda	#>krw_file
+;	sta	INH
 
 disk_buff	EQU	LZ4_BUFFER
 read_size	EQU	$4000
@@ -337,7 +361,7 @@ read_size	EQU	$4000
 
 	jsr	setup_next_subsong
 
-
+	cli	; start playing
 
 	rts
 
@@ -437,11 +461,79 @@ page_copy_loop:
 							;======================
 							; 2+14*256+6+29= 3621
 
+
+	;==================
+	; Get filename
+	;==================
+	; WHICH_FILE holds number
+	; MAX_FILES has max
+	; Scroll through until find
+	; point INH:INL to it
+get_filename:
+
+	ldy	#0
+	ldx	WHICH_FILE
+
+	lda	#<krw_file			; point to filename
+	sta	INL
+	lda	#>krw_file
+	sta	INH
+
+get_filename_loop:
+	cpx	#0
+	beq	filename_found
+
+inner_loop:
+	iny
+	lda	(INL),Y
+	bne	inner_loop
+
+	iny
+
+	dex
+	jmp	get_filename_loop
+
+filename_found:
+	tya
+	clc
+	adc	INL
+	sta	INL
+	lda	INH
+	adc	#0
+	sta	INH
+
+	rts
+
+	;===============================
+	; Increment file we want to load
+	;===============================
+increment_file:
+	inc	WHICH_FILE
+	lda	WHICH_FILE
+	cmp	NUM_FILES
+	bne	done_increment
+	lda	#0
+	sta	WHICH_FILE
+done_increment:
+	rts
+
+	;===============================
+	; Decrement file we want to load
+	;===============================
+decrement_file:
+	dec	WHICH_FILE
+	bpl	done_decrement
+	lda	#(NUM_FILES-1)
+	sta	WHICH_FILE
+done_decrement:
+	rts
+
 ;==========
 ; filenames
 ;==========
 krw_file:
-.asciiz "INTRO2.KRW"
+	.asciiz "INTRO2.KRW"
+	.asciiz "KORO.KRW"
 	.asciiz "DEATH2.KRW"
 	.asciiz "DEMO4.KRW"
 	.asciiz "WAVE.KRW"
@@ -482,7 +574,7 @@ mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
 not_message:		.byte   "NOT "
 found_message:		.asciiz "FOUND"
 done_message:		.asciiz "DONE PLAYING"
-loading_message:	.asciiz "LOADING..."
+loading_message:	.asciiz "LOADING"
 
 ;============
 ; graphics

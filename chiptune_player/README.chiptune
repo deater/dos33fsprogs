@@ -330,8 +330,9 @@ Thought it only took 1s max?  Not in face of interrupts.
 	Every 20,000 an interrupt
 	       1,500 for music
 	       7,500 for volume bars
-	       1,794 for raster bars 
+	      16,200 (!)for raster bars 
 	       2,000 for misc rest
+
 	Roughly 13,000 cycles, leaving only 7000 to userspace
 
 	If takes 700,000 cycles to decode a block, will take 100

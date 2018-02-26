@@ -22,11 +22,13 @@ draw_rasters:
 
 	ldy	#(NUM_ROWS-1)						; 2
 	lda	#0							; 2
-
 init_rows:
 	sta	row_color,Y						; 5
 	dey								; 2
 	bpl	init_rows						; 2nt/3
+								;==============
+								; 4+20*10 = 204
+
 
 	;================
 	; set colors
@@ -55,6 +57,9 @@ init_rows:
 
 	lda	#COLOR_BOTH_RED		; red				; 2
 	jsr	set_row_color						; 6+136
+								;==============
+								; 8 * 144
+								; 1152
 
 	;=================
 	; draw rows
@@ -80,7 +85,9 @@ draw_rows_loop:
 draw_rows_skip:
 	dey								; 2
 	bpl	draw_rows_loop						; 3/2nt
-
+								;=============
+								; 20 * 741
+								; 14,820
 	;==================
 	; update y pointer
 	;==================
@@ -93,8 +100,13 @@ not_there:
 	sty	SCREEN_Y						; 3
 
 	rts								; 6
+
 								;===========
-								;      1794
+								;      24
+
+						;=============================
+						; total=		16,200
+
 	;===================
 	;===================
 	; set_row_color
