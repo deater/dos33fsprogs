@@ -200,26 +200,31 @@ check_done:
 	bit	DONE_PLAYING
 	beq	main_loop	; if was all zeros, loop
 	bmi	main_loop	; if high bit set, paused
+	bvs	minus_song	; if bit 6 set, then left pressed
 
+				; else, either song finished or
+				; right pressed
+
+plus_song:
+	sei			; disable interrupts
+	jsr	increment_file
+	jmp	done_play
+
+minus_song:
+	sei			; disable interrupts
+	jsr	decrement_file
 
 done_play:
 
-;				; FIXME: disable timer on 6522
-;				; FIXME: unhook interrupt handler
-;
-	sei			; disable interrupts
-
 	lda	#0
 	sta	DONE_PLAYING
-
-	jsr	clear_ay_both
 
 	lda	#0
 	sta	CH
 
 	jsr	clear_bottoms
 
-	jsr	increment_file
+
 	jsr	new_song
 
 	cli				; re-enable interrupts
