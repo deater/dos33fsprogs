@@ -19,13 +19,15 @@ interrupt_handler:
 	bit	$C404		; clear 6522 interrupt by reading T1C-L	; 4
 
 
-								;============
+	lda	DONE_PLAYING						; 3
+	beq	update_time
+	jmp	exit_interrupt					;============
 
 								;	  7
 	;=====================
 	; Update time counter
 	;=====================
-
+update_time:
 	inc	FRAME_COUNT						; 5
 	lda	FRAME_COUNT						; 3
 	cmp	#50							; 3
@@ -90,6 +92,9 @@ mb_write_loop:
 
 	lda	#1		; set done playing			; 2
 	sta	DONE_PLAYING						; 3
+
+	jsr     clear_ay_both
+
 	jmp	done_interrupt						; 3
 
 mb_not_done:
@@ -267,7 +272,7 @@ done_interrupt:
 	jsr	volume_bars
 	jsr	page_flip
 
-
+exit_interrupt:
 
 
 	pla			; restore a				; 4

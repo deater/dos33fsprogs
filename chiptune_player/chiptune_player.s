@@ -132,21 +132,6 @@ mockingboard_found:
 
 	jsr	new_song
 
-;	jsr	increment_file		; debug
-;	jsr	new_song
-
-;	cli
-
-
-
-
-	;============================
-	; Enable 6502 interrupts
-	;============================
-
-	cli		; clear interrupt mask
-
-
 	;============================
 	; Init Background
 	;============================
@@ -155,6 +140,13 @@ mockingboard_found:
 	lda	#0
 	sta	DRAW_PAGE
 	sta	SCREEN_Y
+
+	;============================
+	; Enable 6502 interrupts
+	;============================
+
+	cli		; clear interrupt mask
+
 
 	;============================
 	; Loop forever
@@ -213,27 +205,21 @@ done_play:
 ;				; FIXME: unhook interrupt handler
 ;
 	sei			; disable interrupts
-;
+
+	lda	#0
+	sta	DONE_PLAYING
+
 	jsr	clear_ay_both
 
 	lda	#0
 	sta	CH
 
 	jsr	clear_bottoms
-;
-;	lda	#21
-;	sta	CV
-;	lda	#<done_message
-;	sta	OUTL
-;	lda	#>done_message
-;	sta	OUTH
-
-;	jsr	print_both_pages
 
 	jsr	increment_file
 	jsr	new_song
 
-	cli
+	cli				; re-enable interrupts
 
 	jmp	main_loop
 
@@ -258,6 +244,9 @@ new_song:
 	sta	B_VOLUME
 	sta	C_VOLUME
 	sta	COPY_OFFSET
+	sta	DECOMPRESS_TIME
+	sta	COPY_TIME
+	sta	MB_CHUNK_OFFSET
 	lda	#$20
 	sta	DECODER_STATE
 	lda	#3
@@ -297,11 +286,6 @@ new_song:
 	lda	INH
 	sta	OUTH
 	jsr	print_both_pages
-
-;	lda	#<krw_file			; point to filename
-;	sta	INL
-;	lda	#>krw_file
-;	sta	INH
 
 disk_buff	EQU	LZ4_BUFFER
 read_size	EQU	$4000
@@ -578,7 +562,7 @@ krw_file:
 mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
 not_message:		.byte   "NOT "
 found_message:		.asciiz "FOUND"
-done_message:		.asciiz "DONE PLAYING"
+;done_message:		.asciiz "DONE PLAYING"
 loading_message:	.asciiz "LOADING"
 
 ;============
