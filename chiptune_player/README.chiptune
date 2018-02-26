@@ -342,3 +342,8 @@ Thought it only took 1s max?  Not in face of interrupts.
 	
 	TIME_TAKEN ($88) stores how long took to decode
 		INTRO2: 60@19, 60@36, 62@50 61@1:03 61@1:32 60@2:05 61@2:32
+
++ Our old friend, forget the # so we're comparing against some random
+	zero page value rather than a constsant
+
++ Related, the accidentally put in a $ when I meant for it to be decimal.

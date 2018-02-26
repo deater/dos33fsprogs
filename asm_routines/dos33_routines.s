@@ -72,6 +72,7 @@ filename_pad_spaces:
 	cpy	#30			; fill 30 bytes
 	bne	filename_pad_spaces
 
+filename_pad_done:
 
 	ldy	#8			; filename ptr offset = 8
 	lda	#<filename
@@ -83,14 +84,38 @@ filename_pad_spaces:
 	ldx	#1	 		; open existing file
 
 	jsr	dos33_open		; open file
+	bcs	error_open
 
 	jsr	dos33_read		; read buffer
+	bcc	now_close
+					; got an error
+					; error 05 is OK (OUT OF DATA)
+					; because we try to read too much
+	ldy	#$a
+	lda	(FILEML),Y
+	cmp	#5
+	beq	now_close
 
+	jmp	error_read
+
+now_close:
 	jsr	dos33_close		; close file
-
-	clc
+	bcs	error_close
 
 	rts
+
+error_open:
+	lda	#$f5
+	brk
+error_read:
+	ldy	#$a
+	lda	(FILEML),y
+	tay
+	lda	#$f6
+	brk
+error_close:
+	lda	#$f7
+	brk
 
 ;=================================
 ; get_dos_buffer
@@ -224,6 +249,7 @@ dos33_close:
 	sta    (FILEML),y
 
 	jsr    filemanager_interface
+	bcs	error_close
 
 	ldy    #0		    	; mark dos buffer as free again
 	tya
@@ -246,7 +272,7 @@ dos33_read:
 
 	ldy   #6			; point to number of bytes to read
 	lda   #<read_size
-	sta   (FILEML),y		; we want to read 255 bytes
+	sta   (FILEML),y		; we want to read read_size bytes
 	iny
 	lda   #>read_size
 	sta   (FILEML),y
@@ -258,7 +284,7 @@ dos33_read:
 	lda   #>disk_buff
 	sta   (FILEML),y
 
-	bne   filemanager_interface     ; same as JMP
+	jmp	filemanager_interface
 
 filename:
 ; OUT.0

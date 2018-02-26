@@ -132,18 +132,19 @@ mockingboard_found:
 
 	jsr	new_song
 
+;	jsr	increment_file		; debug
+;	jsr	new_song
 
-	lda	#<UNPACK_BUFFER		; set input pointer
-	sta	INL
-	lda	#>UNPACK_BUFFER
-	sta	INH
+;	cli
+
+
 
 
 	;============================
 	; Enable 6502 interrupts
 	;============================
 
-	;cli		; clear interrupt mask
+	cli		; clear interrupt mask
 
 
 	;============================
@@ -175,7 +176,7 @@ check_copy_loop:
 
 	inc     COPY_OFFSET     ; (opt: make subtract?)                 ; 5
 
-	lda	#$14
+	lda	#14		; NOT HEX URGH!
 	cmp	COPY_OFFSET
 	bne	check_copy_loop
 
@@ -231,6 +232,8 @@ done_play:
 
 	jsr	increment_file
 	jsr	new_song
+
+	cli
 
 	jmp	main_loop
 
@@ -347,6 +350,10 @@ read_size	EQU	$4000
 	adc	#0
 	sta	LZ4_SRC+1
 
+	lda	#<UNPACK_BUFFER		; set input pointer
+	sta	INL
+	lda	#>UNPACK_BUFFER
+	sta	INH
 
 	; Decompress first chunks
 
@@ -360,8 +367,6 @@ read_size	EQU	$4000
 	sta	COPY_TIME
 
 	jsr	setup_next_subsong
-
-	cli	; start playing
 
 	rts
 
@@ -510,7 +515,7 @@ filename_found:
 increment_file:
 	inc	WHICH_FILE
 	lda	WHICH_FILE
-	cmp	NUM_FILES
+	cmp	#NUM_FILES
 	bne	done_increment
 	lda	#0
 	sta	WHICH_FILE

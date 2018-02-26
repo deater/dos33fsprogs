@@ -27,6 +27,9 @@ COLOR	EQU $30
 ; dos33 zero page = 26-2f, 35-38, 3e 3f 40-4d 
 ; overlap applesoft  67-6a,6f,70,af,b0,ca-cd,d8 
 
+
+; DOS33: Confirmed kills $68
+
 RWTSL		EQU $60
 RWTSH		EQU $61
 DOSBUFL		EQU $62
@@ -35,8 +38,8 @@ FILEML		EQU $64
 FILEMH		EQU $65
 				;TURNING	EQU $60
 				;SCREEN_X	EQU $61		; not used?
-SCREEN_Y	EQU $67
-WHICH_FILE	EQU $68
+				;SCREEN_Y	EQU $62
+
 
 				;ANGLE		EQU $63
 				;HORIZ_SCALE_I	EQU $64
@@ -95,6 +98,8 @@ C_COLOR		EQU $85
 COPY_TIME	EQU $86
 DECOMPRESS_TIME	EQU $87
 TIME_TAKEN	EQU $88
+SCREEN_Y	EQU $89
+WHICH_FILE	EQU $8A
 				;NUM2L		EQU $80
 				;NUM2H		EQU $81
 				;RESULT		EQU $82 ; 83,84,85
