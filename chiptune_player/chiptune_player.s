@@ -26,7 +26,7 @@ NUM_FILES	EQU	15
 	sta	MB_CHUNK_OFFSET
 	sta	DECODE_ERROR
 
-	lda	#1
+	lda	#14				; start at WAVE
 	sta	WHICH_FILE
 
 	; print detection message
@@ -550,23 +550,24 @@ done_decrement:
 ; filenames
 ;==========
 krw_file:
-	.asciiz "INTRO2.KRW"
-	.asciiz "KORO.KRW"
+	.asciiz "CAMOUFLAGE.KRW"
+	.asciiz "CHRISTMAS.KRW"
+	.asciiz	"CRMOROS.KRW"
 	.asciiz "DEATH2.KRW"
 	.asciiz "DEMO4.KRW"
-	.asciiz "WAVE.KRW"
+	.asciiz "HARKONEN.KRW"
+	.asciiz "INTRO2.KRW"
+	.asciiz "LYRA2.KRW"
+	.asciiz "RANDOM.KRW"
+	.asciiz "ROBOT.KRW"
 	.asciiz "SDEMO.KRW"
 	.asciiz "SPUTNIK.KRW"
-	.asciiz "ROBOT.KRW"
-	.asciiz "LYRA2.KRW"
-	.asciiz "KORO.KRW"
-	.asciiz "INTRO2.KRW"
-	.asciiz	"CRMOROS.KRW"
-	.asciiz "CHRISTMAS.KRW"
-	.asciiz "CAMOUFLAGE.KRW"
-	.asciiz "FIGHTING.KRW"
-	.asciiz "UNIVERSE.KRW"
 	.asciiz "TECHNO.KRW"
+	.asciiz "UNIVERSE.KRW"
+	.asciiz "WAVE.KRW"
+
+
+
 
 ;=========
 ;routines
