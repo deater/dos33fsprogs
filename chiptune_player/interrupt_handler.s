@@ -21,9 +21,8 @@ interrupt_handler:
 
 	lda	DONE_PLAYING						; 3
 	beq	update_time
-	jmp	exit_interrupt					;============
+	jmp	check_keyboard					;============
 
-								;	  7
 	;=====================
 	; Update time counter
 	;=====================
@@ -271,6 +270,34 @@ done_interrupt:
 ;	jsr	draw_rasters
 	jsr	volume_bars
 	jsr	page_flip
+
+
+check_keyboard:
+
+	jsr	get_key
+	lda	LASTKEY
+	beq	exit_interrupt
+
+	cmp	#(' '+$80)
+	bne	key_left
+key_space:
+	lda	#$80
+	eor	DONE_PLAYING
+	sta	DONE_PLAYING
+
+	jsr	clear_ay_both
+
+	bne	done_key
+
+key_left:
+	cmp	#'D'
+	bne	key_right
+
+key_right:
+	cmp	#'A'
+	bne	done_key
+
+done_key:
 
 exit_interrupt:
 

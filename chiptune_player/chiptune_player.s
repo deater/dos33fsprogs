@@ -196,8 +196,11 @@ check_decompress:
 ;	jsr	page_flip
 
 check_done:
-	lda	DONE_PLAYING
-	beq	main_loop
+	lda	#$ff
+	bit	DONE_PLAYING
+	beq	main_loop	; if was all zeros, loop
+	bmi	main_loop	; if high bit set, paused
+
 
 done_play:
 
@@ -552,6 +555,7 @@ krw_file:
 .include	"../asm_routines/dos33_routines.s"
 .include	"../asm_routines/gr_hlin.s"
 .include	"../asm_routines/lz4_decode.s"
+.include	"../asm_routines/keypress_minimal.s"
 .include	"rasterbars.s"
 .include	"volume_bars.s"
 .include	"interrupt_handler.s"
