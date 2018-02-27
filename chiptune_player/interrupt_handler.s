@@ -266,7 +266,10 @@ done_interrupt:
 	;============================
 
 	jsr	clear_top
+	lda	RASTERBARS_ON
+	beq	skip_rasters
 	jsr	draw_rasters
+skip_rasters:
 	jsr	volume_bars
 	jsr	page_flip
 
@@ -278,11 +281,20 @@ check_keyboard:
 	beq	exit_interrupt
 
 	cmp	#(' '+$80)
-	bne	key_left
+	bne	key_R
 key_space:
 	lda	#$80
 	eor	DONE_PLAYING
 	jmp	quiet_exit
+
+key_R:
+	cmp	#'R'
+	bne	key_left
+
+	lda	#$ff
+	eor	RASTERBARS_ON
+	sta	RASTERBARS_ON
+	jmp	done_key
 
 key_left:
 	cmp	#'A'

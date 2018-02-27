@@ -4,6 +4,7 @@ Challenges found writing an Apple II chiptune player
 
   http://www.deater.net/weave/vmwprod/chiptune/
 ====================================================
+		27 February 2018
 
 GOAL:
 ~~~~~
@@ -21,7 +22,10 @@ USING:
    Applewin works fine (even under Wine on Linux).
    MESS does too, it's harder to setup (ROMs) but the audio sounds clearer.
 
-   Space pauses, Left/Right arrow switches songs.
+   Key bindings:
+	Spacebar -- pauses
+	Left/Right arrow -- switches songs
+	R -- enables/disables rasterbars
 
    You can load up your own YM5 files.  Get the "ym5_to_krw" utility found in
    the repository https://github.com/deater/vmw-meter/

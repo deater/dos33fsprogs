@@ -26,6 +26,9 @@ NUM_FILES	EQU	15
 	sta	MB_CHUNK_OFFSET
 	sta	DECODE_ERROR
 
+	lda	#$ff
+	sta	RASTERBARS_ON
+
 	lda	#14				; start at WAVE
 	sta	WHICH_FILE
 
