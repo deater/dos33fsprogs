@@ -299,12 +299,34 @@ VISUALIZATION
   So now it takes $A0 (160) frames, or about 3 seconds.  This seems to
   be workable.
 
+Interesting bugs that were hard to debug:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
++ Bug in qkumba's LZ4 decoder, only happened when a copy-block size was
+	exactly a multiple of 256, in which case it would copy
+	an extra time.
+
++ Bug where the box-drawing was starting at 0 rather than at Y.
+	Turns out I was padding the filename buffer with A0 but going
+	one too far and it was writing A0 to the first byte of the
+	hlin routine, and A0 is a LDY # instruction.
+
++ Our old friend: forgetting the '#' so we're comparing against some random
+	zero page value rather than a constant
+
++ Related, the accidentally put in a $ when I meant for it to be decimal.
+	I was copying to $14 pages instead of 14, overwriting the DOS buffers
+	which I didn't notice until I tried to load the next file.
+
+
 
 FIGURES/TABLES
 ~~~~~~~~~~~~~~
 
 
 Memory Map
+==========
+
 (not to scale)
 
  ------- $ffff
@@ -331,7 +353,8 @@ Memory Map
 
 
 
-Sizes
+File Sizes
+==========
 						Disk(3)
 		time	ym5	KRW(3)	KRW(2)	Blocks  On
 		~~~~	~~~	~~~~~~	~~~~~~	~~~~~~~~~~	
@@ -399,22 +422,40 @@ Key: $=DOS, @=catalog used, #=catalog reserved, .=free
 	f DEATH2.KRW		l ROBOT.KRW
 
 
+YM5 Compression Study
+=====================
 
-Interesting bugs that were hard to debug:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+For example, intro2.ym5
 
-+ Bug in qkumba's LZ4 decoder, only happened when a copy-block size was
-	exactly a multiple of 256, in which case it would copy
-	an extra time.
+raw:			125440 bytes
 
-+ Bug where the box-drawing was starting at 0 rather than at Y.
-	Turns out I was padding the filename buffer with A0 but going
-	one too far and it was writing A0 to the first byte of the
-	hlin routine, and A0 is a LDY # instruction.
+Compressed, frame at a time (r0..r13, repeat)
 
-+ Our old friend: forgetting the '#' so we're comparing against some random
-	zero page value rather than a constant
+lzss:			 44154 bytes
+gzip:			 17119 bytes
+lz4:			 14666 bytes (-16) (14685 -9, 21377 default)
+bzip2:			 12685 bytes
+lzma (xz)		  5312 bytes
 
-+ Related, the accidentally put in a $ when I meant for it to be decimal.
-	I was copying to $14 pages instead of 14, overwriting the DOS buffers
-	which I didn't notice until I tried to load the next file.
+Interleaved then Compressed (all of r0 in a row, then all of r1, etc).
+
+lzss/interleaved:	  7981 bytes
+lha/interleaved:	  3217 bytes   <=== default used by ym5 format
+lz4/interleaved:	  3190 bytes (-16) (8914 default, 3209 -9)
+bzip2/interleaved	  3017 bytes
+gzip/interleaved:	  2759 bytes
+lzma/interleaved:	  2129 bytes
+
+Split up, Interleaved, LZ4
+lz4,1024*14 chunks	7971 bytes (-16) (14k output buffer)
+lz4,768*14 chunks	9214 bytes (-16) (10.5k output buffer)
+lz4,512*14 chunks	9294 bytes (-16) (7k output buffer)
+
+Diff (each frame only update registers that change via bitmask)
+	This is method I used in the KSP demo
+simple diff:		 69224 bytes
+lzss/diff:		 31919 bytes
+lz4/diff:		 13669 bytes (11431 -9)
+gzip/diff:		 10821 bytes
+bzip2/diff:		 10477 bytes
+lzma/diff:		  7257 bytes
