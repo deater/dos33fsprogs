@@ -66,19 +66,19 @@ init_rows:
 
 	ldy	SCREEN_Y						; 3
 
-	lda	#COLOR_BOTH_DARKBLUE		; red				; 2
+	lda	#COLOR_BOTH_DARKBLUE		; d. blue		; 2
 	jsr	set_row_color						; 6+136
 
-	lda	#COLOR_BOTH_MEDIUMBLUE		; red				; 2
+	lda	#COLOR_BOTH_MEDIUMBLUE		; m.blue		; 2
 	jsr	set_row_color						; 6+136
 
-	lda	#COLOR_BOTH_AQUA		; red				; 2
+	lda	#COLOR_BOTH_AQUA		; aqua			; 2
 	jsr	set_row_color						; 6+136
 
-	lda	#COLOR_BOTH_PINK		; red				; 2
+	lda	#COLOR_BOTH_PINK		; pink			; 2
 	jsr	set_row_color						; 6+136
 
-	lda	#COLOR_BOTH_RED		; red				; 2
+	lda	#COLOR_BOTH_RED			; red			; 2
 	jsr	set_row_color						; 6+136
 
 								;==============
@@ -96,7 +96,7 @@ draw_rows_loop:
 	sta	COLOR							; 3
 
 	sty	TEMPY							; 3
-	tya								; 2
+	tya				; y*2				; 2
 	asl								; 2
 	tay								; 2
 
