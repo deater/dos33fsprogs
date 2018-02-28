@@ -103,7 +103,7 @@ mb_not_done:
 	cpx	#13							; 2
 	bne	mb_not_13						; 3/2nt
 	cmp	#$ff							; 2
-	beq	phase_specific					; 3/2nt
+	beq	phase_specific						; 3/2nt
 
 mb_not_13:
 	sta	MB_VALUE						; 3
