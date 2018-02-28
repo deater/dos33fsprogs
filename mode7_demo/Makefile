@@ -30,6 +30,9 @@ mode7_demo.o:	mode7_demo.s mode7_demo_backgrounds.inc sprites.inc \
 		credits.s mode7.s rasterbars.s starfield_demo.s
 	ca65 -o mode7_demo.o mode7_demo.s -l mode7_demo.lst
 
+$(PNG2RLE):	
+	cd ../gr-utils && make
+
 
 mode7_demo_backgrounds.inc:	$(PNG2RLE) \
 	../tfv/demo.png
