@@ -1,6 +1,17 @@
 .include "zp.inc"
 
 	;================================
+	; TODO: LZ4 decompress
+	;================================
+
+	;================================
+	; Mockingboard detect
+	;================================
+
+	jsr	mockingboard_detect_slot4       ; call detection routine
+	stx	MB_DETECTED
+
+	;================================
 	; Clear screen and setup graphics
 	;================================
 
@@ -211,6 +222,7 @@ title_routine:
 .include "../asm_routines/gr_offsets.s"
 .include "../asm_routines/gr_plot.s"
 .include "../asm_routines/text_print.s"
+.include "../asm_routines/mockingboard_a.s"
 
 .include "mode7.s"
 
