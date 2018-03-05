@@ -57,5 +57,5 @@ mode7_demo_backgrounds.inc:	$(PNG2RLE) \
 
 
 clean:	
-	rm -f *~ *.o MODE7_DEMO *.lst
+	rm -f *~ *.o MODE7_DEMO MODE7_DEMO_C MODE7_DEMO.lz4 *.lst
 
