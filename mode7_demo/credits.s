@@ -1,6 +1,6 @@
 ; Closing Credits
 
-NUM_CREDITS	EQU 15
+NUM_CREDITS	EQU 16
 
 	;===================
 	; init credits
@@ -70,8 +70,8 @@ done_print:
 	jmp	done_click
 
 not_waiting:
-	lda	FRAME_COUNT	; slow down by x32
-	and	#$3f
+	lda	FRAME_COUNT	; slow down by x128
+	and	#$7f
 	beq	done_click
 
 	bit	SPEAKER		; click the speaker
@@ -258,44 +258,46 @@ credits_draw_text_background:
 	lda	#<thankz
 	sta	OUTL
 
-	jsr	move_and_print
-
-	rts
+	jmp	move_and_print		; tail call
 
 empty:
 .asciiz	"                      "
 
 ; offset can't be 0 or it confuses the next-credit code
+
+; subtract one from centering(?)
 credits:
-.byte 7+7
+.byte 14		; 9
 .asciiz	"FROGGYSUE"
-.byte 7+7
+.byte 14		; 10
 .asciiz "MUSIC: ???"
-.byte 7+7
+.byte 13		; 12
+.asciiz "QKUMBA (LZ4)"
+.byte 14		; 10
 .asciiz	"PIANOMAN08"
-.byte 7+7
+.byte 14		; 10
 .asciiz	"UTOPIA BBS"
-.byte 3+7
+.byte 10		; 18
 .asciiz "FORD PERFECT (SIC)"
-.byte 5+7
+.byte 12		; 13
 .asciiz	"THE 7HORSEMEN"
-.byte 2+7
+.byte 9		; 20
 .asciiz "MITHLUIN AND ROOSTER"
-.byte 5+7
+.byte 13		; 12
 .asciiz "TALON KARRDE"
-.byte 2+7
+.byte 9		; 20
 .asciiz	"WEAVE'S WORLD TALKER"
-.byte 5+7
+.byte 12		; 14
 .asciiz "DAISY AND JUNE"
-.byte 6+7
+.byte 12		; 13
 .asciiz	"STEALTH SUSIE"
-.byte 3+7
+.byte 11		; 16
 .asciiz	"ECE GRAD BOWLING"
-.byte 6+7
+.byte 13		; 11
 .asciiz	"CORNELL GCF"
-.byte 1+7
+.byte 9		; 21
 .asciiz	"ALL MSTIES EVERYWHERE"
-.byte 10+7
+.byte 17		; 3
 .asciiz	"..."
 
 thankz:
