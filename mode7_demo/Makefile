@@ -9,10 +9,25 @@ all:	mode7_demo.dsk
 $(DOS33):	
 	cd ../dos33fs-utils && make
 
-mode7_demo.dsk:	$(DOS33) MODE7_DEMO
+mode7_demo.dsk:	$(DOS33) MODE7_DEMO MODE7_DEMO_C
 	$(DOS33) -y mode7_demo.dsk BSAVE -a 0x2000 MODE7_DEMO
+	$(DOS33) -y mode7_demo.dsk BSAVE -a 0x1000 MODE7_DEMO_C
 
 
+
+###
+
+MODE7_DEMO_C:	mode7_decompress.o
+	ld65 -o MODE7_DEMO_C mode7_decompress.o -C ../linker_scripts/apple2_1000.inc
+
+mode7_decompress.o:	mode7_decompress.s MODE7_DEMO.lz4 \
+		../asm_routines/lz4_decode.s \
+		zp.inc
+	ca65 -o mode7_decompress.o mode7_decompress.s
+
+
+MODE7_DEMO.lz4:	MODE7_DEMO
+	lz4 -f -16 MODE7_DEMO
 
 ###
 

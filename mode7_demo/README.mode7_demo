@@ -1,3 +1,7 @@
+Plan:
+	Load at $1000
+	Decompress to $2000
+
 Memory Map
 ==========
 
