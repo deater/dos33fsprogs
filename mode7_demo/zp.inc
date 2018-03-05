@@ -1,5 +1,11 @@
 .define EQU =
 
+LZ4_SRC	EQU $00
+LZ4_DST	EQU $02
+LZ4_END	EQU $04
+COUNT	EQU $06
+DELTA	EQU $08
+
 ;; Zero page monitor routines addresses
 
 ;WNDLFT	EQU $20

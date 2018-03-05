@@ -1,8 +1,14 @@
 .include "zp.inc"
 
+start:
 	;================================
-	; TODO: LZ4 decompress
+	; include VMW logo line 0
 	;================================
+
+	;.byte $AA,$AD,$D5,$AC,$95
+	tax		; $aa
+	lda	$ACD5	; $ad,$d5,$ac
+	sta	$0,X	; $95,$00
 
 	;================================
 	; Mockingboard detect
