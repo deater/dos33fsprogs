@@ -103,7 +103,7 @@ mb_not_done:
 	cpx	#13							; 2
 	bne	mb_not_13						; 3/2nt
 	cmp	#$ff							; 2
-	beq	phase_specific						; 3/2nt
+	beq	increment_offset					; 3/2nt
 
 mb_not_13:
 	sta	MB_VALUE						; 3
@@ -137,44 +137,6 @@ mb_not_13:
 								; roughly 95?
 								;  *13= 1235?
 
-
-	;==============================================
-	; phase_specific action
-	;==============================================
-
-	; if phase is A and OFFSET&0x0f==0 then do a copy
-	; if phase is B, do nothing
-	; if phase is C, do a decompress step
-
-phase_specific:
-
-;	lda	#$20							; 2
-;	bit	DECODER_STATE	; V=B, N=C else A			; 3
-;	bvs	increment_offset					; 2nt/3
-;	bmi	decompress_step						; 2nt/3
-
-;handle_copy:
-;	lda	MB_CHUNK_OFFSET						; 3
-;	and	#$0f							; 2
-;	bne	increment_offset					; 2nt/3
-
-;	lda	COPY_OFFSET						; 3
-;	cmp	#$14							; 2
-;	beq	increment_offset					; 2nt/3
-
-;	jsr	page_copy						;6+3621
-
-;	inc	COPY_OFFSET	; (opt: make subtract?)			; 5
-
-;	jmp	increment_offset					; 3
-
-;decompress_step:
-;	lda	LZ4_DONE
-;	bne	increment_offset
-
-;	jsr	lz4_decode_step
-;	bcc	increment_offset
-;	inc	LZ4_DONE
 
 	;==============================================
 	; incremement offset.  If 0 move to next chunk
