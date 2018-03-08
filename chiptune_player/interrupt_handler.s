@@ -22,47 +22,10 @@ interrupt_handler:
 
 
 	lda	DONE_PLAYING						; 3
-	beq	update_time
-	jmp	check_keyboard					;============
-
-	;=====================
-	; Update time counter
-	;=====================
-update_time:
-	inc	FRAME_COUNT						; 5
-	lda	FRAME_COUNT						; 3
-	cmp	#50							; 3
-	bne	mb_write_frame						; 3/2nt
-
-	lda	#$0							; 2
-	sta	FRAME_COUNT						; 3
-
-update_second_ones:
-	inc	$7d0+TIME_OFFSET+3					; 6
-	inc	$bd0+TIME_OFFSET+3					; 6
-	lda	$bd0+TIME_OFFSET+3					; 4
-	cmp	#$ba			; one past '9'			; 2
-	bne	mb_write_frame						; 3/2nt
-	lda	#'0'+$80						; 2
-	sta	$7d0+TIME_OFFSET+3					; 4
-	sta	$bd0+TIME_OFFSET+3					; 4
-update_second_tens:
-	inc	$7d0+TIME_OFFSET+2					; 6
-	inc	$bd0+TIME_OFFSET+2					; 6
-	lda	$bd0+TIME_OFFSET+2					; 4
-	cmp	#$b6		; 6 (for 60 seconds)			; 2
-	bne	mb_write_frame						; 3/2nt
-	lda	#'0'+$80						; 2
-	sta	$7d0+TIME_OFFSET+2					; 4
-	sta	$bd0+TIME_OFFSET+2					; 4
-update_minutes:
-	inc	$7d0+TIME_OFFSET					; 6
-	inc	$bd0+TIME_OFFSET					; 6
-				; we don't handle > 9:59 songs yet
-
-								;=============
-								;     90 worst
-
+	beq	mb_write_frame	; if song done, don't play music	; 3/2nt
+	jmp	check_keyboard						; 3
+								;============
+								;	13
 
 	;=============================
 	; Write frames to Mockingboard
@@ -218,6 +181,46 @@ update_r0_pointer:
 	;=================================
 
 done_interrupt:
+
+
+	;=====================
+	; Update time counter
+	;=====================
+update_time:
+	inc	FRAME_COUNT						; 5
+	lda	FRAME_COUNT						; 3
+	cmp	#50							; 3
+	bne	done_time						; 3/2nt
+
+	lda	#$0							; 2
+	sta	FRAME_COUNT						; 3
+
+update_second_ones:
+	inc	$7d0+TIME_OFFSET+3					; 6
+	inc	$bd0+TIME_OFFSET+3					; 6
+	lda	$bd0+TIME_OFFSET+3					; 4
+	cmp	#$ba			; one past '9'			; 2
+	bne	done_time						; 3/2nt
+	lda	#'0'+$80						; 2
+	sta	$7d0+TIME_OFFSET+3					; 4
+	sta	$bd0+TIME_OFFSET+3					; 4
+update_second_tens:
+	inc	$7d0+TIME_OFFSET+2					; 6
+	inc	$bd0+TIME_OFFSET+2					; 6
+	lda	$bd0+TIME_OFFSET+2					; 4
+	cmp	#$b6		; 6 (for 60 seconds)			; 2
+	bne	done_time						; 3/2nt
+	lda	#'0'+$80						; 2
+	sta	$7d0+TIME_OFFSET+2					; 4
+	sta	$bd0+TIME_OFFSET+2					; 4
+update_minutes:
+	inc	$7d0+TIME_OFFSET					; 6
+	inc	$bd0+TIME_OFFSET					; 6
+				; we don't handle > 9:59 songs yet
+done_time:
+								;=============
+								;     90 worst
+
 
 	;=================================
 	; Moved visualization here as a hack
