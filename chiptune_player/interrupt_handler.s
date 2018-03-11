@@ -55,26 +55,47 @@ mb_write_loop:
 
 	cpx	#13							; 2
 	bne	mb_not_13						; 3/2nt
-	bmi	increment_offset					; 3/2nt
+	cmp	#$ff							; 2
+	beq	mb_skip_13						; 3/2nt
 								;============
 								; typ 9
 mb_not_13:
 	sta	MB_VALUE						; 3
 
-					; INLINE this (could save 72 cycles)
-	jsr	write_ay_both		; assume 3 channel (not six)	; 6
-					; so write same to both
-					; left/right
-									; 53
+
+	; inlined "write_ay_both" to save 12 cycles
+
+	; address
+	stx	MOCK_6522_ORA1		; put address on PA1		; 3
+	stx	MOCK_6522_ORA2		; put address on PA2		; 3
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB1		; latch_address on PB1          ; 3
+	sta	MOCK_6522_ORB2		; latch_address on PB2		; 3
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB1						; 3
+	sta	MOCK_6522_ORB2						; 3
+
+        ; value
+        lda	MB_VALUE						; 3
+        sta	MOCK_6522_ORA1		; put value on PA1		; 3
+        sta	MOCK_6522_ORA2		; put value on PA2		; 3
+        lda	#MOCK_AY_WRITE		;				; 2
+        sta	MOCK_6522_ORB1		; write on PB1			; 3
+        sta	MOCK_6522_ORB2		; write on PB2			; 3
+        lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+        sta	MOCK_6522_ORB1						; 3
+        sta	MOCK_6522_ORB2						; 3
+
+									; 50
 								;===========
-								; 	62
+								; 	50
 
 	inx				; point to next register	; 2
 	cpx	#14			; if 14 we're done		; 2
 	bmi	mb_write_loop		; otherwise, loop		; 3/2nt
 								;============
 								; 	7
-
+mb_skip_13:
 
 
 
@@ -109,7 +130,7 @@ mb_load_loop:
 	sta	INH							; 3
 
 	inx				; point to next register	; 2
-	cpx	#13			; if 14 we're done		; 2
+	cpx	#14			; if 14 we're done		; 2
 	bmi	mb_load_loop		; otherwise, loop		; 3/2nt
 								;============
 								; 	18

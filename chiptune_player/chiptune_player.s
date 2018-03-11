@@ -29,7 +29,8 @@ NUM_FILES	EQU	15
 	lda	#$ff
 	sta	RASTERBARS_ON
 
-	lda	#10				; start at SDEMO
+	lda	#7				; start at LYRA
+;	lda	#10				; start at SDEMO
 	sta	WHICH_FILE
 
 	; print detection message

@@ -474,3 +474,6 @@ Timing:
 
 	Moved to load frame data at end of IRQ instead of begin
 		1029 =	13+2+(78*13)
+
+	Moved to load frame data at end of IRQ instead of begin
+		873 =	13+2+(66*13)
