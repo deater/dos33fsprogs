@@ -57,6 +57,8 @@ mb_write_loop:
 	lda	#1		; set done playing			; 2
 
 	jmp	quiet_exit						; 3
+								;===========
+								; typ 13
 
 mb_not_done:
 
@@ -67,6 +69,8 @@ mb_not_done:
 	bne	mb_not_13						; 3/2nt
 	cmp	#$ff							; 2
 	beq	increment_offset					; 3/2nt
+								;============
+								; typ 5
 
 mb_not_13:
 	sta	MB_VALUE						; 3
@@ -83,7 +87,8 @@ mb_not_13:
 					; so write same to both
 					; left/right
 									; 53
-
+								;===========
+								; 68
 	;====================
 	; point to next page
 	;====================
@@ -97,8 +102,8 @@ mb_not_13:
 	cpx	#14			; if 14 we're done		; 2
 	bmi	mb_write_loop		; otherwise, loop		; 3/2nt
 								;============
-								; roughly 95?
-								;  *13= 1235?
+								; 	19
+
 
 
 	;==============================================

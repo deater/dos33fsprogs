@@ -459,3 +459,14 @@ lz4/diff:		 13669 bytes (11431 -9)
 gzip/diff:		 10821 bytes
 bzip2/diff:		 10477 bytes
 lzma/diff:		  7257 bytes
+
+
+
+
+Timing:
+=======
+	Originally roughly 1500 cycles from start of interrupt
+	to all registers being written.
+
+	Moved clock to after, near the visualization stuff, more like
+		1378 = 13+ (105*13)
