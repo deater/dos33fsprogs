@@ -50,7 +50,7 @@ mb_write_frame:
 mb_write_loop:
 	lda	REGISTER_DUMP,X	; load register value			; 4
 	cmp	REGISTER_OLD,X	; compare with old values		; 4
-	beq	mb_no_write						; 2/3nt
+	beq	mb_no_write						; 3/2nt
 								;=============
 								; typ 11
 
@@ -65,7 +65,6 @@ mb_write_loop:
 								; typ 5
 mb_not_13:
 	sta	MB_VALUE						; 3
-
 
 	; inlined "write_ay_both" to save 12 cycles
 

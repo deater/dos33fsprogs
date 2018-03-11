@@ -463,21 +463,21 @@ lzma/diff:		  7257 bytes
 
 
 
-Timing:
-=======
+Interrupt Timing / AY write latency:
+====================================
 	Originally roughly 1500 cycles from start of interrupt
-	to all registers being written.
+	to all AY registers being written.
 		1500
 
 	Moved clock to after, near the visualization stuff, more like
 		1378 = 13+ (105*13)
 
-	Moved to load frame data at end of IRQ instead of begin
+	Load frame data for next time at end of IRQ, instead of begin
 		1029 =	13+2+(78*13)
 
-	Moved to load frame data at end of IRQ instead of begin
+	Inlined the mockingboard write routine
 		873 =	13+2+(66*13)
 
-	Only write registers than change.  Added 6 per loop
-		951 worst case
-		299 if only one reg changed	= 13+2+(18*13)+50
+	Only write registers that change.  Added 6 cycles per loop
+		951 worst case			= 13+2+(10+5+50+7)*13
+		304 if only one reg changed	= 13+2+(18*13)+55
