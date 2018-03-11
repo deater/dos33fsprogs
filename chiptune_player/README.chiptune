@@ -477,3 +477,7 @@ Timing:
 
 	Moved to load frame data at end of IRQ instead of begin
 		873 =	13+2+(66*13)
+
+	Only write registers than change.  Added 6 per loop
+		951 worst case
+		299 if only one reg changed	= 13+2+(18*13)+50

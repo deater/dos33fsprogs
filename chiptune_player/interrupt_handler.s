@@ -49,6 +49,10 @@ mb_write_frame:
 	;==================================
 mb_write_loop:
 	lda	REGISTER_DUMP,X	; load register value			; 4
+	cmp	REGISTER_OLD,X	; compare with old values		; 4
+	beq	mb_no_write						; 2/3nt
+								;=============
+								; typ 11
 
 	; special case R13.  If it is 0xff, then don't update
 	; otherwise might spuriously reset the envelope settings
@@ -58,7 +62,7 @@ mb_write_loop:
 	cmp	#$ff							; 2
 	beq	mb_skip_13						; 3/2nt
 								;============
-								; typ 9
+								; typ 5
 mb_not_13:
 	sta	MB_VALUE						; 3
 
@@ -89,7 +93,7 @@ mb_not_13:
 									; 50
 								;===========
 								; 	50
-
+mb_no_write:
 	inx				; point to next register	; 2
 	cpx	#14			; if 14 we're done		; 2
 	bmi	mb_write_loop		; otherwise, loop		; 3/2nt
@@ -98,6 +102,17 @@ mb_not_13:
 mb_skip_13:
 
 
+	;=====================================
+	; Copy registers to old
+	;=====================================
+	ldx	#13							; 2
+mb_reg_copy:
+	lda	REGISTER_DUMP,X	; load register value			; 4
+	sta	REGISTER_OLD,X	; compare with old values		; 4
+	dex								; 2
+	bpl	mb_reg_copy						; 2nt/3
+								;=============
+								; 	171
 
 	;===================================
 	; Load all 14 registers in advance
@@ -107,9 +122,11 @@ mb_skip_13:
 
 mb_load_values:
 
+	ldx	#0		; set up reg count			; 2
+
 	ldy	MB_CHUNK_OFFSET	; get chunk offset			; 3
 
-	ldx	#0		; set up reg count			; 2
+
 
 								;=============
 								;	5
@@ -339,3 +356,6 @@ exit_interrupt:
 								; typical
 								; 1358 cycles
 
+
+REGISTER_OLD:
+	.byte	0,0,0,0,0,0,0,0,0,0,0,0,0,0
