@@ -22,45 +22,33 @@ interrupt_handler:
 
 
 	lda	DONE_PLAYING						; 3
-	beq	mb_write_frame	; if song done, don't play music	; 3/2nt
+	beq	mb_play_music	; if song done, don't play music	; 3/2nt
 	jmp	check_keyboard						; 3
 								;============
 								;	13
 
-	;=============================
+mb_play_music:
+
+
+	;======================================
 	; Write frames to Mockingboard
-	;=============================
+	;======================================
+	; actually plays frame loaded at end of
+	; last interrupt, so 20ms behind?
 
 mb_write_frame:
 
-	ldy	MB_CHUNK_OFFSET	; get chunk offset			; 3
 
 	ldx	#0		; set up reg count			; 2
-
-								;=============
-								;	5
+								;============
+								;	  2
 
 	;==================================
 	; loop through the 14 registers
 	; reading the value, then write out
 	;==================================
 mb_write_loop:
-	lda	(INL),y		; load register value			; 5
-
-				; if REG==1 and high bit set
-				; then end of song
-
-	bpl	mb_not_done						; 3/2nt
-	cpx	#1							; 2
-	bne	mb_not_done						; 3/2nt
-
-	lda	#1		; set done playing			; 2
-
-	jmp	quiet_exit						; 3
-								;===========
-								; typ 13
-
-mb_not_done:
+	lda	REGISTER_DUMP,X	; load register value			; 4
 
 	; special case R13.  If it is 0xff, then don't update
 	; otherwise might spuriously reset the envelope settings
@@ -70,17 +58,9 @@ mb_not_done:
 	cmp	#$ff							; 2
 	beq	increment_offset					; 3/2nt
 								;============
-								; typ 5
-
+								; typ 9
 mb_not_13:
 	sta	MB_VALUE						; 3
-
-	; always write out all to zero page
-	; we mostly care about vola/volb/volc so this wastes 11 bytes of RAM
-	; code is simpler, and save on three cmp/branches per loop
-
-	and	#$f							; 2
-	sta	REGISTER_DUMP,X						; 4
 
 					; INLINE this (could save 72 cycles)
 	jsr	write_ay_both		; assume 3 channel (not six)	; 6
@@ -88,7 +68,37 @@ mb_not_13:
 					; left/right
 									; 53
 								;===========
-								; 68
+								; 	62
+
+	inx				; point to next register	; 2
+	cpx	#14			; if 14 we're done		; 2
+	bmi	mb_write_loop		; otherwise, loop		; 3/2nt
+								;============
+								; 	7
+
+
+
+
+	;===================================
+	; Load all 14 registers in advance
+	;===================================
+	; note, assuming not cross page boundary, not any slower
+	; then loading from zero page?
+
+mb_load_values:
+
+	ldy	MB_CHUNK_OFFSET	; get chunk offset			; 3
+
+	ldx	#0		; set up reg count			; 2
+
+								;=============
+								;	5
+
+mb_load_loop:
+	lda	(INL),y		; load register value			; 5
+
+	sta	REGISTER_DUMP,X						; 4
+
 	;====================
 	; point to next page
 	;====================
@@ -99,10 +109,25 @@ mb_not_13:
 	sta	INH							; 3
 
 	inx				; point to next register	; 2
-	cpx	#14			; if 14 we're done		; 2
-	bmi	mb_write_loop		; otherwise, loop		; 3/2nt
+	cpx	#13			; if 14 we're done		; 2
+	bmi	mb_load_loop		; otherwise, loop		; 3/2nt
 								;============
 								; 	19
+
+	;=========================================
+	; if A_COARSE_TONE is $ff then we are done
+
+	lda	A_COARSE_TONE						; 3
+	bpl	mb_not_done						; 3/2nt
+
+	lda	#1		; set done playing			; 2
+
+	jmp	quiet_exit						; 3
+								;===========
+								; typ 13
+mb_not_done:
+
+
 
 
 
