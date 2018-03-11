@@ -55,8 +55,7 @@ mb_write_loop:
 
 	cpx	#13							; 2
 	bne	mb_not_13						; 3/2nt
-	cmp	#$ff							; 2
-	beq	increment_offset					; 3/2nt
+	bmi	increment_offset					; 3/2nt
 								;============
 								; typ 9
 mb_not_13:
@@ -98,7 +97,8 @@ mb_load_loop:
 	lda	(INL),y		; load register value			; 5
 
 	sta	REGISTER_DUMP,X						; 4
-
+								;============
+								;	9
 	;====================
 	; point to next page
 	;====================
@@ -112,7 +112,7 @@ mb_load_loop:
 	cpx	#13			; if 14 we're done		; 2
 	bmi	mb_load_loop		; otherwise, loop		; 3/2nt
 								;============
-								; 	19
+								; 	18
 
 	;=========================================
 	; if A_COARSE_TONE is $ff then we are done
@@ -124,10 +124,8 @@ mb_load_loop:
 
 	jmp	quiet_exit						; 3
 								;===========
-								; typ 13
+								; typ 6
 mb_not_done:
-
-
 
 
 
@@ -202,8 +200,6 @@ back_to_first_reg_c:
 update_r0_pointer:
 	sta	INH		; update r0 pointer			; 3
 
-								;============
-								;        18
 
 
 	;=================================
