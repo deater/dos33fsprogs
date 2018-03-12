@@ -467,17 +467,17 @@ Interrupt Timing / AY write latency:
 ====================================
 	Originally roughly 1500 cycles from start of interrupt
 	to all AY registers being written.
-		1500
+		1600
 
 	Moved clock to after, near the visualization stuff, more like
-		1378 = 13+ (105*13)
+		1534 = 13+ (117*13)
 
 	Load frame data for next time at end of IRQ, instead of begin
-		1029 =	13+2+(78*13)
+		1185 =	13+2+(90*13)
 
 	Inlined the mockingboard write routine
-		873 =	13+2+(66*13)
+		1029 =	13+2+(78*13)
 
 	Only write registers that change.  Added 6 cycles per loop
-		951 worst case			= 13+2+(10+5+50+7)*13
-		304 if only one reg changed	= 13+2+(18*13)+55
+		1107 worst case			= 13+2+(10+5+62+7)*13
+		316 if only one reg changed	= 13+2+(18*13)+67

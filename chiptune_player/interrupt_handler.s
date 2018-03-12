@@ -69,29 +69,28 @@ mb_not_13:
 	; inlined "write_ay_both" to save 12 cycles
 
 	; address
-	stx	MOCK_6522_ORA1		; put address on PA1		; 3
-	stx	MOCK_6522_ORA2		; put address on PA2		; 3
+	stx	MOCK_6522_ORA1		; put address on PA1		; 4
+	stx	MOCK_6522_ORA2		; put address on PA2		; 4
 	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
-	sta	MOCK_6522_ORB1		; latch_address on PB1          ; 3
-	sta	MOCK_6522_ORB2		; latch_address on PB2		; 3
+	sta	MOCK_6522_ORB1		; latch_address on PB1          ; 4
+	sta	MOCK_6522_ORB2		; latch_address on PB2		; 4
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sta	MOCK_6522_ORB1						; 3
-	sta	MOCK_6522_ORB2						; 3
+	sta	MOCK_6522_ORB1						; 4
+	sta	MOCK_6522_ORB2						; 4
 
         ; value
         lda	MB_VALUE						; 3
-        sta	MOCK_6522_ORA1		; put value on PA1		; 3
-        sta	MOCK_6522_ORA2		; put value on PA2		; 3
+        sta	MOCK_6522_ORA1		; put value on PA1		; 4
+        sta	MOCK_6522_ORA2		; put value on PA2		; 4
         lda	#MOCK_AY_WRITE		;				; 2
-        sta	MOCK_6522_ORB1		; write on PB1			; 3
-        sta	MOCK_6522_ORB2		; write on PB2			; 3
+        sta	MOCK_6522_ORB1		; write on PB1			; 4
+        sta	MOCK_6522_ORB2		; write on PB2			; 4
         lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-        sta	MOCK_6522_ORB1						; 3
-        sta	MOCK_6522_ORB2						; 3
+        sta	MOCK_6522_ORB1						; 4
+        sta	MOCK_6522_ORB2						; 4
 
-									; 50
 								;===========
-								; 	50
+								; 	62
 mb_no_write:
 	inx				; point to next register	; 2
 	cpx	#14			; if 14 we're done		; 2
