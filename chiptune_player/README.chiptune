@@ -481,3 +481,7 @@ Interrupt Timing / AY write latency:
 	Only write registers that change.  Added 6 cycles per loop
 		1107 worst case			= 13+2+(10+5+62+7)*13
 		316 if only one reg changed	= 13+2+(18*13)+67
+
+	Was unnecessarily saving/restoring value to mem, save 2 cycles/loop
+		1081 worst case			= 13+2+(10+5+60+7)*13
+		314 if only one reg changed	= 13+2+(18*13)+65

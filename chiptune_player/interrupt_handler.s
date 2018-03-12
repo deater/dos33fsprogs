@@ -47,6 +47,9 @@ mb_write_frame:
 	; loop through the 14 registers
 	; reading the value, then write out
 	;==================================
+	; inlined "write_ay_both" to save up to 156 (12*13) cycles
+	; unrolled
+
 mb_write_loop:
 	lda	REGISTER_DUMP,X	; load register value			; 4
 	cmp	REGISTER_OLD,X	; compare with old values		; 4
@@ -64,9 +67,6 @@ mb_write_loop:
 								;============
 								; typ 5
 mb_not_13:
-	sta	MB_VALUE						; 3
-
-	; inlined "write_ay_both" to save 12 cycles
 
 	; address
 	stx	MOCK_6522_ORA1		; put address on PA1		; 4
@@ -79,15 +79,15 @@ mb_not_13:
 	sta	MOCK_6522_ORB2						; 4
 
         ; value
-        lda	MB_VALUE						; 3
-        sta	MOCK_6522_ORA1		; put value on PA1		; 4
-        sta	MOCK_6522_ORA2		; put value on PA2		; 4
-        lda	#MOCK_AY_WRITE		;				; 2
-        sta	MOCK_6522_ORB1		; write on PB1			; 4
-        sta	MOCK_6522_ORB2		; write on PB2			; 4
-        lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-        sta	MOCK_6522_ORB1						; 4
-        sta	MOCK_6522_ORB2						; 4
+	lda	REGISTER_DUMP,X		; load register value		; 4
+	sta	MOCK_6522_ORA1		; put value on PA1		; 4
+	sta	MOCK_6522_ORA2		; put value on PA2		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB1		; write on PB1			; 4
+	sta	MOCK_6522_ORB2		; write on PB2			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB1						; 4
+	sta	MOCK_6522_ORB2						; 4
 
 								;===========
 								; 	62
@@ -121,17 +121,12 @@ mb_reg_copy:
 mb_load_values:
 
 	ldx	#0		; set up reg count			; 2
-
 	ldy	MB_CHUNK_OFFSET	; get chunk offset			; 3
-
-
-
 								;=============
 								;	5
 
 mb_load_loop:
 	lda	(INL),y		; load register value			; 5
-
 	sta	REGISTER_DUMP,X						; 4
 								;============
 								;	9
@@ -162,8 +157,6 @@ mb_load_loop:
 								;===========
 								; typ 6
 mb_not_done:
-
-
 
 	;==============================================
 	; incremement offset.  If 0 move to next chunk
@@ -363,7 +356,7 @@ exit_interrupt:
 
 								;============
 								; typical
-								; 1358 cycles
+								; ???? cycles
 
 
 REGISTER_OLD:
