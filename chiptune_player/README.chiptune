@@ -465,6 +465,34 @@ lzma/diff:		  7257 bytes
 
 Interrupt Timing / AY write latency:
 ====================================
+
+	Trying to find out why some songs, especially DEMO4 do not sound
+	as good as they should compared to my pi-chiptune player and
+	also emulation.
+
+	On DEMO4 one issue shows up with the envelope is enabled
+	on Channel A in the first 10s.  In some cases the output just
+	doesn't happen.
+
+	I've analyzed the code in memory and as far as I can tell everything
+	is being uncompressed and played properly.
+
+	I thought maybe it was a timing issue (for example, on my Pi player
+	it only takes roughly 100us to program all the registers, wheras
+	on the Apple II it takes at least 3-6x longer).
+
+	So it could just be an issue of programming the Envelope register
+	values mid-output and so you get a few cycles where it's non-atomic?
+	Really though any inconsistency should be < 1ms.
+
+
+
+	For the numbers below, we assume 13 regs being written (as it's
+	unusual in many YM songs to update R13 very often, and we skip
+	it often (0xff) as writing the register (even with the same value)
+	apparently resets the counter.
+
+
 	Originally roughly 1500 cycles from start of interrupt
 	to all AY registers being written.
 		1600
@@ -485,3 +513,12 @@ Interrupt Timing / AY write latency:
 	Was unnecessarily saving/restoring value to mem, save 2 cycles/loop
 		1081 worst case			= 13+2+(10+5+60+7)*13
 		314 if only one reg changed	= 13+2+(18*13)+65
+
+	Tried unrolling.  Just unrolling one channel increased the size
+	of the executable by 454 bytes.  By unrolling you can shave a few
+	cycles off by hard-coding the current reg rather than using X.
+		1235 to write both channels
+		627 worst case one channel	= 13 + (10+37)*13
+		360 one reg both channels
+		180 one reg			= 13 + (10)*13+37
+
