@@ -260,3 +260,7 @@ title_routine:
 .include "starfield_demo.s"
 .include "rasterbars.s"
 .include "credits.s"
+
+.align 256
+
+.incbin "out.krg"
