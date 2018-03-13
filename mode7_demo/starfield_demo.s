@@ -375,19 +375,6 @@ move_loop_skip:
 	rts
 
 
-
-
-
-
-
-
-
-
-; matches scroll_row1 - row3
-star_x	EQU	$8A00
-star_y	EQU	$8B00
-star_z	EQU	$8C00
-
 	;==================================================
 	;==================================================
 	; Random Star

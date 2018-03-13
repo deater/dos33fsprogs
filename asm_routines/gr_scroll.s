@@ -1,7 +1,9 @@
+.ifndef scroll_row1
 scroll_row1	EQU     $8A00
 scroll_row2	EQU	$8B00
 scroll_row3	EQU	$8C00
 scroll_row4	EQU	$8D00
+.endif
 
 SCROLL_LENGTH	EQU	$61
 OFFSET		EQU	$62

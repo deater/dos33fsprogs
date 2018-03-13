@@ -1,5 +1,21 @@
 .include "zp.inc"
 
+square1_lo	EQU	$1000
+square1_hi	EQU	$1200
+square2_lo	EQU	$1400
+square2_hi	EQU	$1600
+
+scroll_row1	EQU	$1800
+scroll_row2	EQU	$1900
+scroll_row3	EQU	$1a00
+scroll_row4	EQU	$1b00
+
+; matches scroll_row1 - row3
+star_x		EQU	$1800
+star_y		EQU	$1900
+star_z		EQU	$1a00
+
+
 start:
 	;================================
 	; include VMW logo line 0

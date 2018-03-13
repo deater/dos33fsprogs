@@ -30,10 +30,12 @@
 
 ; Note: DOS3.3 starts at $9600
 
+.ifndef square1_lo
 square1_lo	EQU	$8E00
 square1_hi	EQU	$9000
 square2_lo	EQU	$9200
 square2_hi	EQU	$9400
+.endif
 
 ;	for(i=0;i<512;i++) {
 ;		square1_lo[i]=((i*i)/4)&0xff;

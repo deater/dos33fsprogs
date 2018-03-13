@@ -10,17 +10,17 @@ Memory Map
  --------  $ffff
 | ROM/IO |
  --------  $c000
-| DOS3.3 |	10.5k
- --------| $9600
-|Multiply|
-| Tables |	2k
- --------  $8E00
+|        |      32k decompress
+ --------  $4000
+|  load  |      8k
+ --------  $2000
+|  free  |
+ --------  $1c00
 | Scroll |
-|  Data  |	1k
- --------  $8A00      
-|        |
-|  Free  |
-|        |	30.5k
+|  Data  |
+ --------  $1800
+|Multiply|
+| Tables |	
  --------  $1000
 |GR pg 2 |	1k
 |--------  $0c00
