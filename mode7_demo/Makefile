@@ -44,6 +44,7 @@ mode7_demo.o:	mode7_demo.s mode7_demo_backgrounds.inc sprites.inc \
 		../asm_routines/gr_scroll.s \
 		../asm_routines/mockingboard_a.s \
 		credits.s mode7.s rasterbars.s starfield_demo.s \
+		interrupt_handler.s \
 		zp.inc
 	ca65 -o mode7_demo.o mode7_demo.s -l mode7_demo.lst
 
