@@ -103,6 +103,7 @@ MB_ADDRH	EQU $94
 MB_CHUNK_OFFSET	EQU $95
 MB_DETECTED	EQU $96
 WHICH_CHUNK	EQU $97
+STATE		EQU $98
 
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related

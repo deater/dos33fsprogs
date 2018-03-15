@@ -6,15 +6,16 @@ NUMSTARS	EQU	16
 
 
 
-;	Plan:
-;		Ship at rest		0 - 4
-;		Flash			5
-;		Ship at warp		25
-;		Crazy background
-;		Ship moves off
-;		Back to stars
-;		Rasterbars+credits
-;		Done
+;		State			Number	Length	Speed	BGColor CLS
+;		===========		======	======	=====	=======	===
+;		Ship at rest		0	64	0	black	1
+;		Flash			1	8	3	blue	1
+;		Moving stars		2	64	5	black	1
+;		Crazy stars		3	64	5	black	0
+;		Ship moves off		4	64	5	black	1
+;		Shrinking line		5	64	5	black	1
+;		Back to stars		6	256	5	black	1
+;		Done			7
 
 	;=====================
 	;=====================
@@ -40,9 +41,11 @@ starfield_demo:
 	lda	#0							; 2
 	sta	DRAW_PAGE						; 3
 	sta	RANDOM_POINTER						; 3
+	sta	STATE
 	; always multiply with low byte as zero
 	sta	NUM2L							; 3
 	sta	FRAME_COUNT
+	sta	SPEED
 
 	ldy	#(NUMSTARS-1)						; 2
 init_stars:
@@ -61,12 +64,30 @@ starfield_loop:
 	;===============
 	; clear screen
 	;===============
+	; check clear screen state machine
+
+	lda	STATE				; get state
+
+	cmp	#3				; state 3 -- don't clear
+	beq	no_clear
+
+	cmp	#1				; state 1 -- blue background
+	bne	black_back
+	lda	#COLOR_BOTH_LIGHTBLUE
+	bne	back_color
+black_back:
+	lda	#0				; otherwise, black background
+back_color:
+	sta	clear_all_color+1
+
 	jsr	clear_all						; 6+
 									; 6047
+no_clear:
 
 	;===============
 	; draw the stars
 	;===============
+
 	jsr	draw_stars
 
 	;================
@@ -94,14 +115,21 @@ starfield_loop:
 	inc	FRAME_COUNT
 	lda	FRAME_COUNT
 	cmp	#$ff
+
 	beq	done_stars
 
 	;==================
 	; loop
 	;==================
-
+near_loop:
 	jmp	starfield_loop						; 3
 done_stars:
+
+	inc	STATE
+	lda	STATE
+	cmp	#$5
+	bne	near_loop
+
 	rts
 
 
@@ -159,9 +187,12 @@ init_stars2:
 
 	jsr	init_credits
 
+
+	;===========================
 	;===========================
 	;===========================
 	; StarCredits Loop
+	;===========================
 	;===========================
 	;===========================
 
