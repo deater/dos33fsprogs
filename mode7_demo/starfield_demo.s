@@ -6,16 +6,18 @@ NUMSTARS	EQU	16
 
 
 
-;		State			Number	Length	Speed	BGColor CLS
-;		===========		======	======	=====	=======	===
-;		Ship at rest		0	64	0	black	1
-;		Flash			1	8	3	blue	1
-;		Moving stars		2	64	5	black	1
-;		Crazy stars		3	64	5	black	0
-;		Ship moves off		4	64	5	black	1
-;		Shrinking line		5	64	5	black	1
-;		Back to stars		6	256	5	black	1
-;		Done			7
+;		State			Number	Speed	BGColor CLS
+;		===========		======	=====	=======	===
+;		Ship at rest		0	64	black	1
+;		Flash			1	8	blue	1
+;		Moving stars		2	128	black	1
+;		Crazy stars		3	64	black	0
+;		Ship moves off	1	4	16	black	1
+;		Ship moves off	2	5	16	black	1
+;		Ship moves off	3	6	16	black	1
+;		Shrinking line		7	20	black	1
+;		Back to stars		8	256	black	1
+;		Done			9
 
 	;=====================
 	;=====================
@@ -45,6 +47,8 @@ starfield_demo:
 	; always multiply with low byte as zero
 	sta	NUM2L							; 3
 	sta	FRAME_COUNT
+
+	lda	#64
 	sta	SPEED
 
 	ldy	#(NUMSTARS-1)						; 2
@@ -112,9 +116,8 @@ no_clear:
 
 	jsr	page_flip						; 6
 
-	inc	FRAME_COUNT
-	lda	FRAME_COUNT
-	cmp	#$ff
+	dec	SPEED
+	lda	SPEED
 
 	beq	done_stars
 
@@ -126,12 +129,17 @@ near_loop:
 done_stars:
 
 	inc	STATE
-	lda	STATE
-	cmp	#$5
+	ldx	STATE
+	lda	speed_table,X
+	sta	SPEED
+
+	cpx	#$7
 	bne	near_loop
 
 	rts
 
+speed_table:
+	.byte	64,8,128,64,64,64,255
 
 
 	;=====================
@@ -387,6 +395,9 @@ plot_star_continue:
 	;=============================
 	; Move stars
 move_stars:
+	lda	STATE
+	beq	done_move_stars
+
 	ldy	#(NUMSTARS-1)						; 2
 move_stars_loop:
 				; increment z
@@ -402,6 +413,8 @@ move_stars_loop:
 move_loop_skip:
 	dey								; 2
 	bpl	move_stars_loop						; 2nt/3
+
+done_move_stars:
 
 	rts
 

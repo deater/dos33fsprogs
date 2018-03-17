@@ -57,6 +57,16 @@ ship_left:
 	.byte $00,$00,$77,$f2,$d9,$dd,$00,$00,$00
 	.byte $00,$70,$ff,$0f,$00,$00,$00,$00,$00
 
+ship_small:
+	.byte $5,$3
+	.byte $00,$00,$ff,$00,$00
+	.byte $00,$76,$2f,$76,$00
+	.byte $0f,$0f,$d9,$0f,$0f
+
+ship_tiny:
+	.byte $3,$1
+	.byte $f0,$9f,$f0
+
 sphere_offset:
 	.byte	0,27,54,81, 108,135,162,189
 
