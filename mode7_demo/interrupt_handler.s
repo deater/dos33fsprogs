@@ -3,14 +3,14 @@
 ;   the fields with don't-care values are packed together
 ;   they are played at 25Hz
 
-; FRAME0 = AFINE
-; FRAME1 = BFINE
-; FRAME2 = CFINE
-; FRAME3 = NOISE PERIOD
-; FRAME4 = ENABLE
-; FRAME5 = ACOARSE/BCOARSE
-; FRAME6 = CCOARSE/AAMP
-; FRAME7 = BAMP/CAMP
+; FRAME0 = AFINE	(r0)
+; FRAME1 = BFINE	(r2)
+; FRAME2 = CFINE	(r4)
+; FRAME3 = NOISE PERIOD	(r6)
+; FRAME4 = ENABLE	(r7)
+; FRAME5 = ACOARSE/BCOARSE	(r1/r3)
+; FRAME6 = CCOARSE/AAMP		(r5/r8)
+; FRAME7 = BAMP/CAMP		(r9/r10)
 
 	;================================
 	;================================
@@ -24,7 +24,7 @@
 	; It then calculates if it is a BRK or not (which trashes A)
 	; Then it sets up the stack like an interrupt and calls 0x3fe
 
-CHUNKSIZE	EQU     8	; hardcoded, based on krg file
+CHUNKSIZE	EQU     11	; hardcoded, based on krg file
 
 interrupt_handler:
 	pha			; save A				; 3
@@ -119,35 +119,100 @@ mb_reg_copy:
 
 mb_load_values:
 
-	ldx	#0		; set up reg count			; 2
 	ldy	MB_CHUNK_OFFSET	; get chunk offset			; 3
-								;=============
-								;	5
 
-mb_load_loop:
+	; afine
 	lda	(MB_ADDRL),y		; load register value		; 5
-	sta	REGISTER_DUMP,X						; 4
-								;============
-								;	9
-	;====================
-	; point to next page
-	;====================
-
+	sta	A_FINE_TONE						; 3
 	clc				; point to next interleaved	; 2
 	lda	MB_ADDRH		; page by adding CHUNKSIZE	; 3
 	adc	#CHUNKSIZE						; 3
 	sta	MB_ADDRH						; 3
 
+	; bfine
+	lda	(MB_ADDRL),y		; load register value		; 5
+	sta	B_FINE_TONE						; 3
+	clc				; point to next interleaved	; 2
+	lda	MB_ADDRH		; page by adding CHUNKSIZE	; 3
+	adc	#CHUNKSIZE						; 3
+	sta	MB_ADDRH						; 3
+
+	; cfine
+	lda	(MB_ADDRL),y		; load register value		; 5
+	sta	C_FINE_TONE						; 3
+	clc				; point to next interleaved	; 2
+	lda	MB_ADDRH		; page by adding CHUNKSIZE	; 3
+	adc	#CHUNKSIZE						; 3
+	sta	MB_ADDRH						; 3
+
+	; noise
+	lda	(MB_ADDRL),y		; load register value		; 5
+	sta	NOISE							; 3
+	clc				; point to next interleaved	; 2
+	lda	MB_ADDRH		; page by adding CHUNKSIZE	; 3
+	adc	#CHUNKSIZE						; 3
+	sta	MB_ADDRH						; 3
+
+	; enable
+	lda	(MB_ADDRL),y		; load register value		; 5
+	sta	ENABLE							; 3
+	clc				; point to next interleaved	; 2
+	lda	MB_ADDRH		; page by adding CHUNKSIZE	; 3
+	adc	#CHUNKSIZE						; 3
+	sta	MB_ADDRH						; 3
+
+	; acoarse/bcoarse
+	lda	(MB_ADDRL),y		; load register value		; 5
+	and	#$f							; 2
+	sta	B_COARSE_TONE						; 3
+	lda	(MB_ADDRL),y		; load register value		; 5
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	sta	A_COARSE_TONE						; 3
+	clc				; point to next interleaved	; 2
+	lda	MB_ADDRH		; page by adding CHUNKSIZE	; 3
+	adc	#CHUNKSIZE						; 3
+	sta	MB_ADDRH						; 3
+
+	; CCOARSE/AAMP
+	lda	(MB_ADDRL),y		; load register value		; 5
+	and	#$f							; 2
+	sta	A_VOLUME						; 3
+	lda	(MB_ADDRL),y		; load register value		; 5
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	sta	C_COARSE_TONE						; 3
+	clc				; point to next interleaved	; 2
+	lda	MB_ADDRH		; page by adding CHUNKSIZE	; 3
+	adc	#CHUNKSIZE						; 3
+	sta	MB_ADDRH						; 3
 	inx				; point to next register	; 2
-	cpx	#11			; if 14 we're done		; 2
-	bmi	mb_load_loop		; otherwise, loop		; 3/2nt
-								;============
-								; 	18
+
+	; BAMP/CAMP
+	lda	(MB_ADDRL),y		; load register value		; 5
+	and	#$f							; 2
+	sta	C_VOLUME						; 3
+	lda	(MB_ADDRL),y		; load register value		; 5
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	sta	B_VOLUME						; 3
+
+
+
+
+
+
 
 	;=========================================
-	; if A_COARSE_TONE is $ff then we are done
+	; if NOISE is $ff then we are done
 
-	lda	A_COARSE_TONE						; 3
+	lda	NOISE						; 3
 	bpl	mb_not_done						; 3/2nt
 
 	lda	#1		; set done playing			; 2
