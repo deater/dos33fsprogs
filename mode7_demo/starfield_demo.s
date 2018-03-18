@@ -8,16 +8,15 @@ NUMSTARS	EQU	16
 
 ;		State			Number	Speed	BGColor CLS
 ;		===========		======	=====	=======	===
-;		Ship at rest		0	64	black	1
+;		Ship at rest		0	32	black	1
 ;		Flash			1	8	blue	1
 ;		Moving stars		2	128	black	1
-;		Crazy stars		3	64	black	0
-;		Ship moves off	1	4	16	black	1
-;		Ship moves off	2	5	16	black	1
-;		Ship moves off	3	6	16	black	1
-;		Shrinking line		7	20	black	1
-;		Back to stars		8	256	black	1
-;		Done			9
+;		Crazy stars		3	100	black	0
+;		Ship moves off	1	4	32	black	1
+;		Ship moves off	2	5	32	black	1
+;		Shrinking line		6	20	black	1
+;		Back to stars		7	255	black	1
+;		Done			8
 
 	;=====================
 	;=====================
@@ -48,7 +47,7 @@ starfield_demo:
 	sta	NUM2L							; 3
 	sta	FRAME_COUNT
 
-	lda	#64
+	lda	#32
 	sta	SPEED
 
 	ldy	#(NUMSTARS-1)						; 2
@@ -98,6 +97,20 @@ no_clear:
 	; draw the ship
 	;================
 
+	lda	STATE
+	cmp	#7			; 7- 8+ 9+
+	bpl	draw_ship_done
+
+	cmp	#6
+	bpl	draw_ship_line
+
+	cmp	#5
+	bpl	draw_ship_tiny
+
+	cmp	#4			; 3- 4+ 5+
+	bpl	draw_ship_small
+
+draw_ship_big:
 	lda	#>ship_forward
 	sta	INH
 	lda	#<ship_forward
@@ -107,8 +120,56 @@ no_clear:
 	sta	XPOS
 	lda	#30
 	sta	YPOS
-	jsr	put_sprite
+	bne	draw_ship_sprite
 
+draw_ship_small:
+	lda	#>ship_small
+	sta	INH
+	lda	#<ship_small
+	sta	INL
+
+	lda	#17
+	sta	XPOS
+	lda	#28
+	sta	YPOS
+	bne	draw_ship_sprite
+
+draw_ship_tiny:
+	lda	#>ship_tiny
+	sta	INH
+	lda	#<ship_tiny
+	sta	INL
+
+	lda	#18
+	sta	XPOS
+	lda	#26
+	sta	YPOS
+
+draw_ship_sprite:
+	jsr	put_sprite
+	jmp	draw_ship_done
+
+draw_ship_line:
+	lda	#COLOR_LIGHTBLUE
+	sta	COLOR
+
+	clc
+	lda	#20
+	adc	SPEED
+	sta	V2
+
+	sec
+	lda	#20
+	sbc	SPEED
+	tay
+
+	; 20 - 0 to 0 - 20, 20 - 40
+
+	lda	#24
+	jsr	hlin_double
+
+
+draw_ship_done:
 
 	;==================
 	; flip pages
@@ -133,13 +194,13 @@ done_stars:
 	lda	speed_table,X
 	sta	SPEED
 
-	cpx	#$7
+	cpx	#$8
 	bne	near_loop
 
 	rts
 
 speed_table:
-	.byte	64,8,128,64,64,64,255
+	.byte	32,8,128,100,32,32,20,255
 
 
 	;=====================
