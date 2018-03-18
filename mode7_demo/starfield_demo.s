@@ -5,7 +5,6 @@
 NUMSTARS	EQU	16
 
 
-
 ;		State			Number	Speed	BGColor CLS
 ;		===========		======	=====	=======	===
 ;		Ship at rest		0	32	black	1
@@ -45,7 +44,7 @@ starfield_demo:
 	sta	STATE
 	; always multiply with low byte as zero
 	sta	NUM2L							; 3
-	sta	FRAME_COUNT
+;	sta	FRAME_COUNT
 
 	lda	#32
 	sta	SPEED
@@ -210,6 +209,7 @@ speed_table:
 	;=====================
 	;=====================
 	;=====================
+
 starfield_credits:
 
 	;================================
@@ -225,6 +225,9 @@ starfield_credits:
 	lda	#4							; 2
 	sta	DRAW_PAGE
 	jsr	credits_draw_text_background
+	lda	#128
+	sta	SPEED
+
 
 	;===============
 	; Init Variables
@@ -235,7 +238,7 @@ starfield_credits:
 	sta	SCREEN_Y
 	; always multiply with low byte as zero
 	sta	NUM2L							; 3
-	sta	FRAME_COUNT
+;	sta	FRAME_COUNT
 	sta	YY		; which credit
 	sta	LOOP		; delay loop
 
@@ -281,8 +284,15 @@ starcredits_loop:
 	;====================
 	; draw the rasterbars
 	;====================
+	lda	SPEED
+	bne	done_rasters
+
+	lda	YY
+	cmp	#16
+	beq	done_rasters
 
 	jsr	draw_rasters
+done_rasters:
 
 	;====================
 	; draw the credits
@@ -297,10 +307,13 @@ starcredits_loop:
 
 	jsr	page_flip						; 6
 
-	inc	FRAME_COUNT
+	lda	SPEED
+	beq	no_speed
+	dec	SPEED
+no_speed:
 
 	lda	YY
-	cmp	#15				; NUMBER OF CREDITS
+	cmp	#17				; NUMBER OF CREDITS
 	beq	done_star_credits
 
 	;==================

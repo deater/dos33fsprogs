@@ -1,6 +1,6 @@
 ; Closing Credits
 
-NUM_CREDITS	EQU 16
+NUM_CREDITS	EQU 17
 
 	;===================
 	; init credits
@@ -89,7 +89,7 @@ long_loop:
 	lda	#$ff
 	bne	store_loop
 short_loop:
-	lda	#$30		; set delay to show the credit before
+	lda	#$40		; set delay to show the credit before
 store_loop:
 	sta	LOOP		; continuing
 
@@ -295,8 +295,10 @@ credits:
 .asciiz	"ECE GRAD BOWLING"
 .byte 13		; 11
 .asciiz	"CORNELL GCF"
-.byte 9		; 21
+.byte 8		; 21
 .asciiz	"ALL MSTIES EVERYWHERE"
+.byte 17		; 3
+.asciiz	"..."
 .byte 17		; 3
 .asciiz	"..."
 
