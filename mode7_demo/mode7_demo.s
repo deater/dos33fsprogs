@@ -128,10 +128,10 @@ mockingboard_setup_done:
 	;================================
 
 main_loop:
-;	jsr	title_routine
+	jsr	title_routine
 
-;	jsr	checkerboard_demo
-;	jsr	island_demo
+	jsr	checkerboard_demo
+	jsr	island_demo
 	jsr	star_demo
 	jsr	star_credits
 
