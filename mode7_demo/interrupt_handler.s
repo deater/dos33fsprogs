@@ -1,3 +1,17 @@
+; This plays KRG files, stripped down ym5 files
+;   this is a limited format: the envelope values are ignored
+;   the fields with don't-care values are packed together
+;   they are played at 25Hz
+
+; FRAME0 = AFINE
+; FRAME1 = BFINE
+; FRAME2 = CFINE
+; FRAME3 = NOISE PERIOD
+; FRAME4 = ENABLE
+; FRAME5 = ACOARSE/BCOARSE
+; FRAME6 = CCOARSE/AAMP
+; FRAME7 = BAMP/CAMP
+
 	;================================
 	;================================
 	; mockingboard interrupt handler
@@ -10,7 +24,7 @@
 	; It then calculates if it is a BRK or not (which trashes A)
 	; Then it sets up the stack like an interrupt and calls 0x3fe
 
-TIME_OFFSET	EQU	13
+CHUNKSIZE	EQU     8	; hardcoded, based on krg file
 
 interrupt_handler:
 	pha			; save A				; 3
@@ -44,11 +58,9 @@ mb_write_frame:
 								;	  2
 
 	;==================================
-	; loop through the 14 registers
+	; loop through the 11 registers
 	; reading the value, then write out
 	;==================================
-	; inlined "write_ay_both" to save up to 156 (12*13) cycles
-	; unrolled
 
 mb_write_loop:
 	lda	REGISTER_DUMP,X	; load register value			; 4
@@ -56,17 +68,6 @@ mb_write_loop:
 	beq	mb_no_write						; 3/2nt
 								;=============
 								; typ 11
-
-	; special case R13.  If it is 0xff, then don't update
-	; otherwise might spuriously reset the envelope settings
-
-	cpx	#13							; 2
-	bne	mb_not_13						; 3/2nt
-	cmp	#$ff							; 2
-	beq	mb_skip_13						; 3/2nt
-								;============
-								; typ 5
-mb_not_13:
 
 	; address
 	stx	MOCK_6522_ORA1		; put address on PA1		; 4
@@ -93,17 +94,15 @@ mb_not_13:
 								; 	62
 mb_no_write:
 	inx				; point to next register	; 2
-	cpx	#14			; if 14 we're done		; 2
+	cpx	#11			; if 11 we're done		; 2
 	bmi	mb_write_loop		; otherwise, loop		; 3/2nt
 								;============
 								; 	7
-mb_skip_13:
-
 
 	;=====================================
 	; Copy registers to old
 	;=====================================
-	ldx	#13							; 2
+	ldx	#10							; 2
 mb_reg_copy:
 	lda	REGISTER_DUMP,X	; load register value			; 4
 	sta	REGISTER_OLD,X	; compare with old values		; 4
@@ -113,7 +112,7 @@ mb_reg_copy:
 								; 	171
 
 	;===================================
-	; Load all 14 registers in advance
+	; Load all 11 registers in advance
 	;===================================
 	; note, assuming not cross page boundary, not any slower
 	; then loading from zero page?
@@ -140,7 +139,7 @@ mb_load_loop:
 	sta	MB_ADDRH						; 3
 
 	inx				; point to next register	; 2
-	cpx	#14			; if 14 we're done		; 2
+	cpx	#11			; if 14 we're done		; 2
 	bmi	mb_load_loop		; otherwise, loop		; 3/2nt
 								;============
 								; 	18

@@ -9,8 +9,8 @@ NUMSTARS	EQU	16
 ;		===========		======	=====	=======	===
 ;		Ship at rest		0	32	black	1
 ;		Flash			1	8	blue	1
-;		Moving stars		2	128	black	1
-;		Crazy stars		3	100	black	0
+;		Moving stars		2	200	black	1
+;		Crazy stars		3	128	black	0
 ;		Ship moves off	1	4	32	black	1
 ;		Ship moves off	2	5	32	black	1
 ;		Shrinking line		6	20	black	1
@@ -199,7 +199,7 @@ done_stars:
 	rts
 
 speed_table:
-	.byte	32,8,128,100,32,32,20,255
+	.byte	32,8,200,128,32,32,20,255
 
 
 	;=====================

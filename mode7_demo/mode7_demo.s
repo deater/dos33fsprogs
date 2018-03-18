@@ -1,7 +1,5 @@
 .include "zp.inc"
 
-CHUNKSIZE	EQU	4		; hardcoded, based on krg file
-
 square1_lo	EQU	$1000
 square1_hi	EQU	$1200
 square2_lo	EQU	$1400
