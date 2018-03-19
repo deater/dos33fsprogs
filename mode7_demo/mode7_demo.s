@@ -74,14 +74,15 @@ mockingboard_setup:
 	sta	$C40D		; IFR: 1100, enable interrupt on timer one oflow
 	sta	$C40E		; IER: 1100, enable timer one interrupt
 
-	lda	#$E7
+	lda	#$40
 	sta	$C404		; write into low-order latch
-	lda	#$4f
+	lda	#$9c
 	sta	$C405		; write into high-order latch,
 				; load both values into counter
 				; clear interrupt and start counting
 
 	; 4fe7 / 1e6 = .020s, 50Hz
+	; 9c40 / 1e6 = .040s, 25Hz
 
 
 	;============================
