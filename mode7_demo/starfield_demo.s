@@ -167,7 +167,7 @@ draw_ship_line:
 
 	; 20 - 0 to 0 - 20, 20 - 40
 
-	lda	#24
+	lda	#26
 	jsr	hlin_double
 
 

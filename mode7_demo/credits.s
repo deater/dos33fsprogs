@@ -89,7 +89,7 @@ long_loop:
 	lda	#$ff
 	bne	store_loop
 short_loop:
-	lda	#$50		; set delay to show the credit before
+	lda	#$48		; set delay to show the credit before
 store_loop:
 	sta	LOOP		; continuing
 
@@ -267,7 +267,7 @@ empty:
 
 ; subtract one from centering(?)
 credits:
-.byte 11		; 17
+.byte 10		; 17
 .asciiz "MUSIC: WAVE BY EA"
 .byte 13		; 11
 .asciiz "LZ4: QKUMBA"
@@ -287,9 +287,9 @@ credits:
 .asciiz	"WEAVE'S WORLD TALKER"
 .byte 11		; 17
 .asciiz "DAISY,JUNE,TALONK"
-.byte 11		; 17
-;.asciiz "TALBOT 0101B CREW"
-.asciiz "AAAAAAAAAAAAAAAAA"
+.byte 13		; 12
+;.asciiz "TALBOT 0101B"
+.asciiz "AAAAAAAAAAAA"
 .byte 12		; 13
 .asciiz	"STEALTH SUSIE"
 .byte 11		; 16
@@ -305,4 +305,3 @@ credits:
 
 thankz:
 .asciiz	"SPECIAL THANKS"
-
