@@ -1,6 +1,6 @@
 ; Closing Credits
 
-NUM_CREDITS	EQU 18
+NUM_CREDITS	EQU 16
 
 	;===================
 	; init credits
@@ -89,7 +89,7 @@ long_loop:
 	lda	#$ff
 	bne	store_loop
 short_loop:
-	lda	#$40		; set delay to show the credit before
+	lda	#$50		; set delay to show the credit before
 store_loop:
 	sta	LOOP		; continuing
 
@@ -248,7 +248,7 @@ credits_draw_text_background:
 	lda	#46
 	jsr	hlin_double
 
-	lda	#11
+	lda	#13
 	sta	CH
 	lda	#20
 	sta	CV
@@ -269,34 +269,24 @@ empty:
 credits:
 .byte 11		; 17
 .asciiz "MUSIC: WAVE BY EA"
-.byte 11		; 16
-.asciiz "LZ4 CODE: QKUMBA"
+.byte 13		; 11
+.asciiz "LZ4: QKUMBA"
 .byte 11		; 16
 .asciiz "FASTMUL: S. JUDD"
 .byte 14		; 9
 .asciiz	"FROGGYSUE"
 .byte 14		; 10
 .asciiz	"UTOPIA BBS"
-.byte 10		; 18
-;.asciiz "FORD PERFECT (SIC)"
-.asciiz "AAAAAAAAAAAAAAAAAA"
-.byte 14		; 10
-;.asciiz "PIANOMAN08"
-.asciiz	 "AAAAAAAAAA"
+.byte 11		; 15
+.asciiz "FORD & PIANOMAN"
 .byte 12		; 13
 .asciiz	"THE 7HORSEMEN"
-.byte 9		; 20
-;.asciiz "MITHLUIN AND ROOSTER"
-.asciiz  "AAAAAAAAAAAAAAAAAAAA"
-.byte 13		; 12
-;.asciiz "TALON KARRDE"
-.asciiz  "AAAAAAAAAAAA"
-.byte 9		; 20
-;.asciiz	"WEAVE'S WORLD TALKER"
-.asciiz	"AAAAAAAAAAAAAAAAAAAA"
-.byte 12		; 14
-;.asciiz "DAISY AND JUNE"
-.asciiz  "AAAAAAAAAAAAAA"
+.byte 10		; 18
+.asciiz "MITHLUIN & ROOSTER"
+.byte 9			; 20
+.asciiz	"WEAVE'S WORLD TALKER"
+.byte 11		; 17
+.asciiz "DAISY,JUNE,TALONK"
 .byte 11		; 17
 ;.asciiz "TALBOT 0101B CREW"
 .asciiz "AAAAAAAAAAAAAAAAA"
@@ -306,12 +296,13 @@ credits:
 ;.asciiz "ECE GRAD BOWLING"
 .asciiz	 "AAAAAAAAAAAAAAAA"
 .byte 13		; 11
-.asciiz	"CORNELL GCF"
-.byte 8		; 21
+;.asciiz	"CORNELL GCF"
+.asciiz	"AAAAAAAAAAA"
+.byte 8			; 21
 .asciiz	"ALL MSTIES EVERYWHERE"
 .byte 17		; 3
 .asciiz	"..."
 
 thankz:
-.asciiz	"SPECIAL THANKS TO:"
+.asciiz	"SPECIAL THANKS"
 

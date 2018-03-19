@@ -299,7 +299,7 @@ starcredits_loop:
 	;====================
 
 	lda	YY
-	cmp	#17
+	cmp	#(NUM_CREDITS-1)
 	beq	done_rasters
 
 	jsr	draw_rasters
@@ -319,7 +319,7 @@ done_rasters:
 	jsr	page_flip						; 6
 
 	lda	YY
-	cmp	#18				; NUMBER OF CREDITS
+	cmp	#NUM_CREDITS				; NUMBER OF CREDITS
 	beq	done_star_credits
 
 	;==================
