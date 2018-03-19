@@ -288,16 +288,13 @@ credits:
 .byte 11		; 17
 .asciiz "DAISY,JUNE,TALONK"
 .byte 13		; 12
-;.asciiz "TALBOT 0101B"
-.asciiz "AAAAAAAAAAAA"
+.asciiz "TALBOT 0101B"
 .byte 12		; 13
 .asciiz	"STEALTH SUSIE"
 .byte 11		; 16
-;.asciiz "ECE GRAD BOWLING"
-.asciiz	 "AAAAAAAAAAAAAAAA"
+.asciiz "ECE GRAD BOWLING"
 .byte 13		; 11
-;.asciiz	"CORNELL GCF"
-.asciiz	"AAAAAAAAAAA"
+.asciiz	"CORNELL GCF"
 .byte 8			; 21
 .asciiz	"ALL MSTIES EVERYWHERE"
 .byte 17		; 3
