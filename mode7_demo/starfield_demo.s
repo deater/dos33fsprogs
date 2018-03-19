@@ -11,11 +11,12 @@ NUMSTARS	EQU	16
 ;		Flash			1	8	blue	1
 ;		Moving stars		2	200	black	1
 ;		Crazy stars		3	128	black	0
-;		Ship moves off	1	4	32	black	1
-;		Ship moves off	2	5	32	black	1
-;		Shrinking line		6	20	black	1
-;		Back to stars		7	255	black	1
-;		Done			8
+;		Moving stars		4	32	black	1
+;		Ship moves off	1	5	32	black	1
+;		Ship moves off	2	6	32	black	1
+;		Shrinking line		7	20	black	1
+;		Back to stars		8	255	black	1
+;		Done			9
 
 	;=====================
 	;=====================
@@ -47,7 +48,6 @@ starfield_demo:
 	sta	STATE
 	; always multiply with low byte as zero
 	sta	NUM2L							; 3
-;	sta	FRAME_COUNT
 
 	lda	#32
 	sta	SPEED
@@ -100,16 +100,16 @@ no_clear:
 	;================
 
 	lda	STATE
-	cmp	#7			; 7- 8+ 9+
+	cmp	#8			; 8- 9+ 10+
 	bpl	draw_ship_done
 
-	cmp	#6
+	cmp	#7
 	bpl	draw_ship_line
 
-	cmp	#5
+	cmp	#6
 	bpl	draw_ship_tiny
 
-	cmp	#4			; 3- 4+ 5+
+	cmp	#5			; 3- 4+ 5+
 	bpl	draw_ship_small
 
 draw_ship_big:
@@ -196,13 +196,13 @@ done_stars:
 	lda	speed_table,X
 	sta	SPEED
 
-	cpx	#$8
+	cpx	#$9
 	bne	near_loop
 
 	rts
 
 speed_table:
-	.byte	32,8,200,128,32,32,20,255
+	.byte	32,8,200,128,32,32,32,20,255
 
 
 	;=====================
@@ -241,7 +241,6 @@ starfield_credits:
 	sta	SCREEN_Y
 	; always multiply with low byte as zero
 	sta	NUM2L							; 3
-;	sta	FRAME_COUNT
 	sta	YY		; which credit
 	sta	LOOP		; delay loop
 
@@ -291,7 +290,7 @@ starcredits_loop:
 	bne	done_rasters
 
 	lda	YY
-	cmp	#16
+	cmp	#18
 	beq	done_rasters
 
 	jsr	draw_rasters
@@ -316,7 +315,7 @@ done_rasters:
 no_speed:
 
 	lda	YY
-	cmp	#17				; NUMBER OF CREDITS
+	cmp	#19				; NUMBER OF CREDITS
 	beq	done_star_credits
 
 	;==================

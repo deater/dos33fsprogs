@@ -1,6 +1,6 @@
 ; Closing Credits
 
-NUM_CREDITS	EQU 17
+NUM_CREDITS	EQU 19
 
 	;===================
 	; init credits
@@ -267,12 +267,14 @@ empty:
 
 ; subtract one from centering(?)
 credits:
+.byte 12		; 14
+.asciiz "MUSIC BASE: EA"
+.byte 11		; 16
+.asciiz "LZ4 CODE: QKUMBA"
+.byte 11		; 16
+.asciiz "FASTMUL: S. JUDD"
 .byte 14		; 9
 .asciiz	"FROGGYSUE"
-.byte 14		; 10
-.asciiz "MUSIC: ???"
-.byte 13		; 12
-.asciiz "QKUMBA (LZ4)"
 .byte 14		; 10
 .asciiz	"PIANOMAN08"
 .byte 14		; 10
@@ -289,8 +291,8 @@ credits:
 .asciiz	"WEAVE'S WORLD TALKER"
 .byte 12		; 14
 .asciiz "DAISY AND JUNE"
-;.byte 11		; 17
-;.asciiz "TALBOT 0101B CREW"
+.byte 11		; 17
+.asciiz "TALBOT 0101B CREW"
 .byte 12		; 13
 .asciiz	"STEALTH SUSIE"
 .byte 11		; 16
