@@ -120,7 +120,7 @@ mockingboard_setup_done:
 	; Clear screen and setup graphics
 	;================================
 
-	jsr     set_gr_page0
+	jsr	set_gr_page0
 
 	lda	#$4
 	sta	DRAW_PAGE
