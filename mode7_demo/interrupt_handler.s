@@ -228,12 +228,6 @@ mb_load_values:
 	lsr								; 2
 	sta	B_VOLUME						; 3
 
-
-
-
-
-
-
 	;=========================================
 	; if NOISE is $ff then we are done
 

@@ -35,7 +35,7 @@ MODE7_DEMO:	mode7_demo.o
 	ld65 -o MODE7_DEMO mode7_demo.o -C ../linker_scripts/apple2_4000.inc
 
 mode7_demo.o:	mode7_demo.s mode7_demo_backgrounds.inc sprites.inc \
-		a2.scrolltext deater.scrolltext \
+		a2.scrolltext deater.scrolltext out.krg \
 		../asm_routines/gr_unrle.s \
 		../asm_routines/gr_fast_clear.s \
 		../asm_routines/gr_setpage.s \
