@@ -53,49 +53,74 @@ mb_play_music:
 mb_write_frame:
 
 
-	ldx	#0		; set up reg count			; 2
-								;============
-								;	  2
+
 
 	;==================================
 	; loop through the 11 registers
 	; reading the value, then write out
 	;==================================
+	ldx	#0		; set up reg count			; 2
 
-mb_write_loop:
+mb_write_loop_left:
 	lda	REGISTER_DUMP,X	; load register value			; 4
 	cmp	REGISTER_OLD,X	; compare with old values		; 4
-	beq	mb_no_write						; 3/2nt
+	beq	mb_no_write_left					; 3/2nt
 								;=============
 								; typ 11
 
 	; address
 	stx	MOCK_6522_ORA1		; put address on PA1		; 4
-	stx	MOCK_6522_ORA2		; put address on PA2		; 4
 	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
 	sta	MOCK_6522_ORB1		; latch_address on PB1          ; 4
-	sta	MOCK_6522_ORB2		; latch_address on PB2		; 4
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_ORB1						; 4
-	sta	MOCK_6522_ORB2						; 4
 
         ; value
 	lda	REGISTER_DUMP,X		; load register value		; 4
 	sta	MOCK_6522_ORA1		; put value on PA1		; 4
-	sta	MOCK_6522_ORA2		; put value on PA2		; 4
 	lda	#MOCK_AY_WRITE		;				; 2
 	sta	MOCK_6522_ORB1		; write on PB1			; 4
-	sta	MOCK_6522_ORB2		; write on PB2			; 4
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_ORB1						; 4
+
+								;===========
+								; 	36
+mb_no_write_left:
+	inx				; point to next register	; 2
+	cpx	#11			; if 11 we're done		; 2
+	bmi	mb_write_loop_left	; otherwise, loop		; 3/2nt
+								;============
+								; 	7
+
+	ldx	#0		; set up reg count			; 2
+mb_write_loop_right:
+	lda	REGISTER_DUMP,X	; load register value			; 4
+	cmp	REGISTER_OLD,X	; compare with old values		; 4
+	beq	mb_no_write_right					; 3/2nt
+								;=============
+								; typ 11
+
+	; address
+	stx	MOCK_6522_ORA2		; put address on PA2		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB2		; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP,X		; load register value		; 4
+	sta	MOCK_6522_ORA2		; put value on PA2		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB2			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_ORB2						; 4
 
 								;===========
-								; 	62
-mb_no_write:
+								; 	36
+mb_no_write_right:
 	inx				; point to next register	; 2
 	cpx	#11			; if 11 we're done		; 2
-	bmi	mb_write_loop		; otherwise, loop		; 3/2nt
+	bmi	mb_write_loop_right	; otherwise, loop		; 3/2nt
 								;============
 								; 	7
 

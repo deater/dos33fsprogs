@@ -29,3 +29,15 @@
 ; Note: each byte, values stored LSB first (legend says woz saved 2 chips)
 
 ; $2000, $2400, $2800, $2C00, $3000, $3400, $3800, $3C00
+
+XXX  X X XX XX X   X  XXX XXX XXX XX  X X XXX XXX XXX XXX XXX
+XXX  X X X X X X X X  XXX X   X X X X X X X    X   X  X X X X
+X X   X  X   X XX XX  X   X   XXX XX  XXX XXX  X  XXX XXX X X
+ 0    ! 2    ! 4    ! 6    ! 7    ! 10    ! 12    ! 14    ! 16    !
+
+* 11 11 11 0 * 0 00 11 00 * 11 00 11 1 * 1 00 11 11 *
+* 11 11 11 0 * 0 00 11 00 * 11 00 11 0 * 0 11 00 11 *
+* 11 00 11 0 * 0 00 00 11 * 00 00 11 0 * 0 00 00 11 *
+.byte $bf,$98,
+.byte $bf,$98
+.byte $b3,$e0
