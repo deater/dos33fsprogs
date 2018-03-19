@@ -20,6 +20,12 @@ start:
 	;================================
 	; include VMW logo line 0
 	;================================
+	; Need to have lines at
+	;	$4000	AA,AD,D5,AC,95
+	;	$4400	A8,D5,95,35,85
+	;	$4800	A0,55,26,55,81
+	;	$4C00	00,00,00,00,00
+
 
 	;.byte $AA,$AD,$D5,$AC,$95
 	tax		; $aa
@@ -304,15 +310,30 @@ title_routine:
 
 	rts
 
+;============================
+; These are placed so the VMW logo can be fit
+;============================
+.include "deater.scrolltext"
+.include "a2.scrolltext"
+.byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+.byte $A8,$55,$95,$35,$85
+
+.include "rasterbars.s"
+.include "starfield_demo.s"
+; next part of logo in end of starfield_demo
+
+.include "../asm_routines/mockingboard_a.s"
+.include "credits.s"
+.include "interrupt_handler.s"
 
 ;===============================================
 ; External modules
 ;===============================================
 
 .include "../asm_routines/gr_unrle.s"
-.include "../asm_routines/gr_fast_clear.s"
 .include "../asm_routines/gr_hlin.s"
 .include "../asm_routines/gr_setpage.s"
+.include "../asm_routines/gr_fast_clear.s"
 .include "../asm_routines/pageflip.s"
 .include "../asm_routines/gr_fade.s"
 .include "../asm_routines/gr_copy.s"
@@ -320,7 +341,7 @@ title_routine:
 .include "../asm_routines/gr_offsets.s"
 .include "../asm_routines/gr_plot.s"
 .include "../asm_routines/text_print.s"
-.include "../asm_routines/mockingboard_a.s"
+
 
 .include "mode7.s"
 
@@ -331,12 +352,9 @@ title_routine:
 ; More routines
 ;===============================================
 
-.include "deater.scrolltext"
-.include "a2.scrolltext"
-.include "starfield_demo.s"
-.include "rasterbars.s"
-.include "credits.s"
-.include "interrupt_handler.s"
+
+
+
 
 .align 256
 

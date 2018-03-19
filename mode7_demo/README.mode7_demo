@@ -35,3 +35,51 @@ Memory Map
 |zero pg |	0.25
  -------   $0000
 
+=============================================
+Getting the VMW logo to appear on page2 HGR
+==============================================
+
+; Need to have lines at
+        ;       $4000   AA,AD,D5,AC,95
+        ;       $4400   A8,D5,95,35,85 1k
+        ;       $4800   A0,55,26,55,81 2k
+        ;       $4C00   00,00,00,00,00 3k
+
+
+MAIN:						0000 - 013A = 0x13A = 314
+.include "deater.scrolltext"			13DF - 1577 = 0x198 = 408
+.include "a2.scrolltext"			1577 - 1695 = 0x11E = 286
+								=============
+									1008
+
+.include "starfield_demo.s"			1695 - 19Ac = 0x317 = 791
+.include "rasterbars.s"				19AC - 1A9E = 0xF2  = 242
+								=============
+									1033
+
+.include "../asm_routines/gr_fast_clear.s"	01B6 - 02A0 = 0xEA = 234
+.include "credits.s"				1A9E - 1CEA = 0x257 = 599
+.include "interrupt_handler.s"			1CEA - 1DE3 = 0xD9  = 217
+							===================
+								1050
+3D (61) too many, want 173
+
+
+.include "../asm_routines/gr_unrle.s"		013A - 01B6
+
+.include "../asm_routines/gr_hlin.s"		02A0 - 02FD
+.include "../asm_routines/gr_setpage.s"		02FD - 0311
+.include "../asm_routines/pageflip.s"		0311 - 032B
+.include "../asm_routines/gr_fade.s"		032B - 0459
+.include "../asm_routines/gr_copy.s"		0459 - 0491
+.include "../asm_routines/gr_scroll.s"		0491 - 0565 = 0xC5 = 197
+.include "../asm_routines/gr_offsets.s"		0565 - 0595
+.include "../asm_routines/gr_plot.s"		0595 - 05C7
+.include "../asm_routines/text_print.s"		05C7 - 060F
+
+.include "../asm_routines/mockingboard_a.s"	060F - 06BC = 0xAD = 173
+
+.include "mode7.s"				06BC - 1201 = 0xB43 = 2883
+
+.include "mode7_demo_backgrounds.inc"		1201 - 13DF = 0x1DE = 478
+
