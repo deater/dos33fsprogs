@@ -31,9 +31,12 @@ starfield_demo:
 	; Clear screen and setup graphics
 	;================================
 
-	jsr	clear_screens_notext	 ; clear top/bottom of page 0/1
-	jsr     set_gr_page0
+	bit	PAGE0			; set page 0
+	bit	LORES			; Lo-res graphics
 	bit	FULLGR
+        bit	SET_GR			; set graphics
+
+	jsr	clear_screens_notext	; clear top/bottom of page 0/1
 
 	;===============
 	; Init Variables
