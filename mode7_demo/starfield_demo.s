@@ -228,6 +228,7 @@ starfield_credits:
 	lda	#4							; 2
 	sta	DRAW_PAGE
 	jsr	credits_draw_text_background
+
 	lda	#128
 	sta	SPEED
 
@@ -261,6 +262,16 @@ init_stars2:
 
 	jsr	init_credits
 
+before_pause:
+	jsr	clear_top						; 6+
+	jsr	draw_stars
+	jsr	credits_draw_bottom
+	jsr	page_flip						; 6
+
+	dec	SPEED
+	lda	SPEED
+	bne	before_pause
+done_before_pause:
 
 	;===========================
 	;===========================
@@ -286,8 +297,8 @@ starcredits_loop:
 	;====================
 	; draw the rasterbars
 	;====================
-	lda	SPEED
-	bne	done_rasters
+;	lda	SPEED
+;	bne	done_rasters
 
 	lda	YY
 	cmp	#18
@@ -309,10 +320,10 @@ done_rasters:
 
 	jsr	page_flip						; 6
 
-	lda	SPEED
-	beq	no_speed
-	dec	SPEED
-no_speed:
+;	lda	SPEED
+;	beq	no_speed
+;	dec	SPEED
+;no_speed:
 
 	lda	YY
 	cmp	#19				; NUMBER OF CREDITS
@@ -322,7 +333,7 @@ no_speed:
 	; loop
 	;==================
 
-	jmp	starcredits_loop						; 3
+	jmp	starcredits_loop					; 3
 done_star_credits:
 	rts
 
