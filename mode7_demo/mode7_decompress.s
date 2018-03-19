@@ -6,7 +6,8 @@
 
 UNPACK_BUFFER	EQU	$4000
 
-LZ4_DATA_BEGIN	EQU	11
+; Adjusted using incbin directive
+LZ4_DATA_BEGIN	EQU	0
 
 start:
 	; set flags for HGR2
@@ -36,6 +37,7 @@ start:
 
 .include "../asm_routines/lz4_decode.s"
 
+; Load, skipping 11 bytes of header
 data:
-.incbin	"MODE7_DEMO.lz4"
+.incbin	"MODE7_DEMO.lz4",11
 data_end:
