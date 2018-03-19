@@ -361,4 +361,4 @@ title_routine:
 .align 256
 
 music_start:
-.incbin "out.krg"
+.incbin "wave.krg"
