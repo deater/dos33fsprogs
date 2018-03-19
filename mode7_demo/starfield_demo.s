@@ -544,7 +544,7 @@ z_table:
 ; some "random" numbers
 ;======================
 
-random_table EQU $2200
+random_table EQU $2400
 
 .if 0
 random_table:

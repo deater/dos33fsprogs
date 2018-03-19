@@ -130,12 +130,9 @@ mockingboard_setup_done:
 	lda	#$4
 	sta	DRAW_PAGE
 
-
-
 	;================================
 	; Main Loop
 	;================================
-
 
 	jsr	title_routine
 
@@ -320,29 +317,41 @@ title_routine:
 ;============================
 .include "deater.scrolltext"
 .include "a2.scrolltext"
-
-.include "rasterbars.s"
-.include "starfield_demo.s"
+.byte 0,0,0,0,0,0,0,0
+.byte 0,0,0,0,0,0
+.byte $A8,$55,$95,$35,$85		; at $4400
 
 .include "mockingboard.s"
 .include "credits.s"
 .include "interrupt_handler.s"
+.byte 0,0,0,0,0,0,0,0
+.byte 0,0,0,0,0,0,0,0
+.byte 0,0,0,0,0,0,0
+.byte $A0,$55,$26,$55,$81		; at $4800
+
+.include "../asm_routines/pageflip.s"
+.include "rasterbars.s"
+.include "starfield_demo.s"
+.include "../asm_routines/gr_unrle.s"
+.include "../asm_routines/gr_offsets.s"
+.include "gr_setpage.s"
+.byte 0,0,0,0,0,0,0,0
+.byte 0,0,0,0,0,0,0,0
+.byte 0,0,0,0,0,0,0,0			; at $4c00
 
 ;===============================================
 ; External modules
 ;===============================================
 
-.include "../asm_routines/gr_unrle.s"
-.include "../asm_routines/gr_hlin_double.s"
-.include "gr_setpage.s"
+.include "../asm_routines/text_print.s"
 .include "../asm_routines/gr_fast_clear.s"
-.include "../asm_routines/pageflip.s"
+.include "../asm_routines/gr_hlin_double.s"
+
 .include "../asm_routines/gr_fade.s"
 .include "../asm_routines/gr_copy.s"
 .include "../asm_routines/gr_scroll.s"
-.include "../asm_routines/gr_offsets.s"
 .include "../asm_routines/gr_plot.s"
-.include "../asm_routines/text_print.s"
+
 
 .include "mode7.s"
 
