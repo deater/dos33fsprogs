@@ -289,6 +289,8 @@ credits:
 .asciiz	"WEAVE'S WORLD TALKER"
 .byte 12		; 14
 .asciiz "DAISY AND JUNE"
+;.byte 11		; 17
+;.asciiz "TALBOT 0101B CREW"
 .byte 12		; 13
 .asciiz	"STEALTH SUSIE"
 .byte 11		; 16
