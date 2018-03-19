@@ -1,6 +1,6 @@
 ; Closing Credits
 
-NUM_CREDITS	EQU 19
+NUM_CREDITS	EQU 18
 
 	;===================
 	; init credits
@@ -267,8 +267,8 @@ empty:
 
 ; subtract one from centering(?)
 credits:
-.byte 12		; 14
-.asciiz "MUSIC BASE: EA"
+.byte 11		; 17
+.asciiz "MUSIC: WAVE BY EA"
 .byte 11		; 16
 .asciiz "LZ4 CODE: QKUMBA"
 .byte 11		; 16
@@ -276,33 +276,37 @@ credits:
 .byte 14		; 9
 .asciiz	"FROGGYSUE"
 .byte 14		; 10
-.asciiz	"PIANOMAN08"
-.byte 14		; 10
 .asciiz	"UTOPIA BBS"
 .byte 10		; 18
 .asciiz "FORD PERFECT (SIC)"
+.byte 14		; 10
+.asciiz	"PIANOMAN08"
 .byte 12		; 13
 .asciiz	"THE 7HORSEMEN"
 .byte 9		; 20
-.asciiz "MITHLUIN AND ROOSTER"
+;.asciiz "MITHLUIN AND ROOSTER"
+.asciiz  "AAAAAAAAAAAAAAAAAAAA"
 .byte 13		; 12
-.asciiz "TALON KARRDE"
+;.asciiz "TALON KARRDE"
+.asciiz  "AAAAAAAAAAAA"
 .byte 9		; 20
-.asciiz	"WEAVE'S WORLD TALKER"
+;.asciiz	"WEAVE'S WORLD TALKER"
+.asciiz	"AAAAAAAAAAAAAAAAAAAA"
 .byte 12		; 14
-.asciiz "DAISY AND JUNE"
+;.asciiz "DAISY AND JUNE"
+.asciiz  "AAAAAAAAAAAAAA"
 .byte 11		; 17
-.asciiz "TALBOT 0101B CREW"
+;.asciiz "TALBOT 0101B CREW"
+.asciiz "AAAAAAAAAAAAAAAAA"
 .byte 12		; 13
 .asciiz	"STEALTH SUSIE"
 .byte 11		; 16
-.asciiz	"ECE GRAD BOWLING"
+;.asciiz "ECE GRAD BOWLING"
+.asciiz	 "AAAAAAAAAAAAAAAA"
 .byte 13		; 11
 .asciiz	"CORNELL GCF"
 .byte 8		; 21
 .asciiz	"ALL MSTIES EVERYWHERE"
-.byte 17		; 3
-.asciiz	"..."
 .byte 17		; 3
 .asciiz	"..."
 

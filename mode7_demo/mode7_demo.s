@@ -40,10 +40,23 @@ start:
 	stx	MB_DETECTED
 	beq	mockingboard_setup_done
 
+
+	;================================
+	; one-time setup
+	;================================
+	; Initialize the 2kB of multiply lookup tables
+	jsr	init_multiply_tables
+
+
 	;================================
 	; Mockingboard start
 	;================================
+
+main_loop:
+
 mockingboard_setup:
+	sei			; disable interrupts just in case
+
 	jsr	mockingboard_init
 	jsr	reset_ay_both
 	jsr	clear_ay_both
@@ -62,8 +75,6 @@ mockingboard_setup:
 	;============================
 	; Enable 50Hz clock on 6522
 	;============================
-
-	sei			; disable interrupts just in case
 
 	lda	#$40		; Continuous interrupts, don't touch PB7
 	sta	$C40B		; ACR register
@@ -84,7 +95,6 @@ mockingboard_setup:
 	; 4fe7 / 1e6 = .020s, 50Hz
 	; 9c40 / 1e6 = .040s, 25Hz
 
-
 	;============================
 	; Start Playing
 	;============================
@@ -101,13 +111,13 @@ mockingboard_setup:
 	;=====================================
 	; clear register area
 	;=====================================
-	ldx     #13                                                     ; 2
-	lda     #0                                                      ; 2
+	ldx	#13							; 2
+	lda	#0							; 2
 mb_setup_clear_reg:
-	sta     REGISTER_DUMP,X ; clear register value                  ; 4
-	sta     REGISTER_OLD,X  ; clear old values                      ; 4
-	dex                                                             ; 2
-	bpl     mb_setup_clear_reg                                            ; 2nt/3
+	sta	REGISTER_DUMP,X	; clear register value			; 4
+	sta	REGISTER_OLD,X	; clear old values			; 4
+	dex								; 2
+	bpl	mb_setup_clear_reg					; 2nt/3
 
 
 
@@ -116,6 +126,7 @@ mb_setup_clear_reg:
 
 
 mockingboard_setup_done:
+
 	;================================
 	; Clear screen and setup graphics
 	;================================
@@ -125,14 +136,13 @@ mockingboard_setup_done:
 	lda	#$4
 	sta	DRAW_PAGE
 
-	; Initialize the 2kB of multiply lookup tables
-	jsr	init_multiply_tables
+
 
 	;================================
 	; Main Loop
 	;================================
 
-main_loop:
+
 	jsr	title_routine
 
 	jsr	checkerboard_demo
@@ -316,12 +326,9 @@ title_routine:
 ;============================
 .include "deater.scrolltext"
 .include "a2.scrolltext"
-.byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-.byte $A8,$55,$95,$35,$85
 
 .include "rasterbars.s"
 .include "starfield_demo.s"
-; next part of logo in end of starfield_demo
 
 .include "../asm_routines/mockingboard_a.s"
 .include "credits.s"
@@ -332,7 +339,7 @@ title_routine:
 ;===============================================
 
 .include "../asm_routines/gr_unrle.s"
-.include "../asm_routines/gr_hlin.s"
+.include "../asm_routines/gr_hlin_double.s"
 .include "../asm_routines/gr_setpage.s"
 .include "../asm_routines/gr_fast_clear.s"
 .include "../asm_routines/pageflip.s"
@@ -343,19 +350,13 @@ title_routine:
 .include "../asm_routines/gr_plot.s"
 .include "../asm_routines/text_print.s"
 
-
 .include "mode7.s"
 
 .include "mode7_demo_backgrounds.inc"
 
-
 ;===============================================
 ; More routines
 ;===============================================
-
-
-
-
 
 .align 256
 

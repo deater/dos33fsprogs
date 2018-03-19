@@ -297,11 +297,9 @@ starcredits_loop:
 	;====================
 	; draw the rasterbars
 	;====================
-;	lda	SPEED
-;	bne	done_rasters
 
 	lda	YY
-	cmp	#18
+	cmp	#17
 	beq	done_rasters
 
 	jsr	draw_rasters
@@ -320,13 +318,8 @@ done_rasters:
 
 	jsr	page_flip						; 6
 
-;	lda	SPEED
-;	beq	no_speed
-;	dec	SPEED
-;no_speed:
-
 	lda	YY
-	cmp	#19				; NUMBER OF CREDITS
+	cmp	#18				; NUMBER OF CREDITS
 	beq	done_star_credits
 
 	;==================
@@ -550,6 +543,10 @@ z_table:
 ;======================
 ; some "random" numbers
 ;======================
+
+random_table EQU $2200
+
+.if 0
 random_table:
 	.byte	103,198,105,115, 81,255, 74,236, 41,205,186,171,242,251,227, 70
 	.byte	124,194, 84,248, 27,232,231,141,118, 90, 46 ,99, 51,159,201,154
@@ -572,6 +569,4 @@ random_table:
 	.byte 179,175,226,240,228,158, 79
 	.byte 50,21
 ;73,253,130, 78,169
-
-
-
+.endif
