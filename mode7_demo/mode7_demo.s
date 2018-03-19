@@ -117,11 +117,7 @@ mb_setup_clear_reg:
 	dex								; 2
 	bpl	mb_setup_clear_reg					; 2nt/3
 
-
-
 	cli			; start interrupts
-
-
 
 mockingboard_setup_done:
 
@@ -338,7 +334,7 @@ title_routine:
 
 .include "../asm_routines/gr_unrle.s"
 .include "../asm_routines/gr_hlin_double.s"
-.include "../asm_routines/gr_setpage.s"
+.include "gr_setpage.s"
 .include "../asm_routines/gr_fast_clear.s"
 .include "../asm_routines/pageflip.s"
 .include "../asm_routines/gr_fade.s"

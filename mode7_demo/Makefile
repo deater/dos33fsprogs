@@ -38,7 +38,7 @@ mode7_demo.o:	mode7_demo.s mode7_demo_backgrounds.inc sprites.inc \
 		a2.scrolltext deater.scrolltext wave.krg \
 		../asm_routines/gr_unrle.s \
 		../asm_routines/gr_fast_clear.s \
-		../asm_routines/gr_setpage.s \
+		gr_setpage.s \
 		../asm_routines/gr_fade.s \
 		../asm_routines/gr_copy.s \
 		../asm_routines/gr_scroll.s \
