@@ -268,22 +268,12 @@ increment_done:
 	;=================================
 
 done_interrupt:
-;	jmp	exit_interrupt
+	jmp	exit_interrupt
 
 quiet_exit:
-;	sta	DONE_PLAYING
-;	jsr	clear_ay_both
-
-	;=====================================
-	; clear register area
-	;=====================================
-;	ldx	#13							; 2
-;	lda	#0							; 2
-;mb_clear_reg:
-;	sta	REGISTER_DUMP,X ; clear register value			; 4
-;	sta	REGISTER_OLD,X	; clear old values			; 4
-;	dex								; 2
-;	bpl	mb_clear_reg						; 2nt/3
+	lda	#1
+	sta	DONE_PLAYING
+	jsr	clear_ay_both
 
 exit_interrupt:
 

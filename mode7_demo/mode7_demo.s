@@ -52,7 +52,7 @@ start:
 	; Mockingboard start
 	;================================
 
-main_loop:
+
 
 mockingboard_setup:
 	sei			; disable interrupts just in case
@@ -98,7 +98,7 @@ mockingboard_setup:
 	;============================
 	; Start Playing
 	;============================
-
+main_loop:
 	lda	#0
 	sta	DONE_PLAYING
 	sta	WHICH_CHUNK

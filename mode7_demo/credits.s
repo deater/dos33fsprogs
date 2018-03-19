@@ -278,9 +278,11 @@ credits:
 .byte 14		; 10
 .asciiz	"UTOPIA BBS"
 .byte 10		; 18
-.asciiz "FORD PERFECT (SIC)"
+;.asciiz "FORD PERFECT (SIC)"
+.asciiz "AAAAAAAAAAAAAAAAAA"
 .byte 14		; 10
-.asciiz	"PIANOMAN08"
+;.asciiz "PIANOMAN08"
+.asciiz	 "AAAAAAAAAA"
 .byte 12		; 13
 .asciiz	"THE 7HORSEMEN"
 .byte 9		; 20
