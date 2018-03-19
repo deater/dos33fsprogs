@@ -42,7 +42,7 @@ mode7_demo.o:	mode7_demo.s mode7_demo_backgrounds.inc sprites.inc \
 		../asm_routines/gr_fade.s \
 		../asm_routines/gr_copy.s \
 		../asm_routines/gr_scroll.s \
-		../asm_routines/mockingboard_a.s \
+		mockingboard.s \
 		credits.s mode7.s rasterbars.s starfield_demo.s \
 		interrupt_handler.s \
 		zp.inc

@@ -33,26 +33,21 @@ start:
 	sta	$0,X	; $95,$00
 
 	;================================
-	; Mockingboard detect
-	;================================
-
-	jsr	mockingboard_detect_slot4       ; call detection routine
-	stx	MB_DETECTED
-	beq	mockingboard_setup_done
-
-
-	;================================
 	; one-time setup
 	;================================
 	; Initialize the 2kB of multiply lookup tables
 	jsr	init_multiply_tables
 
+	;================================
+	; Mockingboard detect
+	;================================
+
+	jsr	mockingboard_detect_slot4       ; call detection routine
+	stx	MB_DETECTED
 
 	;================================
 	; Mockingboard start
 	;================================
-
-
 
 mockingboard_setup:
 	sei			; disable interrupts just in case
@@ -99,6 +94,9 @@ mockingboard_setup:
 	; Start Playing
 	;============================
 main_loop:
+	lda	MB_DETECTED
+	beq	mockingboard_setup_done
+
 	lda	#0
 	sta	DONE_PLAYING
 	sta	WHICH_CHUNK
@@ -330,7 +328,7 @@ title_routine:
 .include "rasterbars.s"
 .include "starfield_demo.s"
 
-.include "../asm_routines/mockingboard_a.s"
+.include "mockingboard.s"
 .include "credits.s"
 .include "interrupt_handler.s"
 
