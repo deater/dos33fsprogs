@@ -180,9 +180,9 @@ checkerboard_demo:
 	sta	direction_smc_2+2
 
 
-	jsr	mode7_flying		; call generic mode7 code
+	jmp	mode7_flying		; call generic mode7 code
 
-	rts
+;	rts				; tail call
 
 
 	;===========================
@@ -214,9 +214,9 @@ island_demo:
 	sta	direction_smc_1+2
 	sta	direction_smc_2+2
 
-	jsr	mode7_flying
+	jmp	mode7_flying
 
-	rts
+;	rts				; tail call
 
 
 	;===========================
@@ -228,7 +228,7 @@ star_demo:
 	lda	#48
 	sta	y_limit_smc+1
 
-	jsr	starfield_demo
+	jsr	starfield_demo		; tail call
 
 	rts
 
@@ -242,7 +242,7 @@ star_credits:
 	lda	#40
 	sta	y_limit_smc+1
 
-	jsr	starfield_credits
+	jsr	starfield_credits	; tail call
 
 	rts
 
@@ -318,7 +318,7 @@ title_routine:
 .include "deater.scrolltext"
 .include "a2.scrolltext"
 .byte 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0
+.byte 0,0,0,0,0,0,0,0
 .byte $A8,$55,$95,$35,$85		; at $4400
 
 .include "mockingboard.s"
@@ -344,10 +344,10 @@ title_routine:
 ; External modules
 ;===============================================
 
-.include "../asm_routines/text_print.s"
+
 .include "../asm_routines/gr_fast_clear.s"
 .include "../asm_routines/gr_hlin_double.s"
-
+.include "../asm_routines/text_print.s"
 .include "../asm_routines/gr_fade.s"
 .include "../asm_routines/gr_plot.s"
 .include "../asm_routines/gr_copy.s"
