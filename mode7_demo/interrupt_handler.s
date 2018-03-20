@@ -127,6 +127,8 @@ mb_no_write_right:
 	;=====================================
 	; Copy registers to old
 	;=====================================
+	; 11 coming in
+
 	ldx	#10							; 2
 mb_reg_copy:
 	lda	REGISTER_DUMP,X	; load register value			; 4
@@ -231,10 +233,14 @@ mb_load_values:
 	;=========================================
 	; if NOISE is $ff then we are done
 
-	lda	NOISE						; 3
+	lda	NOISE							; 3
 	bpl	mb_not_done						; 3/2nt
 
-	jmp	quiet_exit						; 3
+;	lda	#1
+	sta	DONE_PLAYING
+	jsr	clear_ay_both
+
+	jmp	done_interrupt						; 3
 								;===========
 								; typ 6
 mb_not_done:
@@ -246,7 +252,7 @@ mb_not_done:
 increment_offset:
 
 	inc	MB_CHUNK_OFFSET		; increment offset		; 5
-	bne	increment_done	; if not zero,	done		; 3/2nt
+	bne	increment_done	; if not zero,	done			; 3/2nt
 
 	inc	WHICH_CHUNK
 	lda	WHICH_CHUNK
@@ -268,12 +274,7 @@ increment_done:
 	;=================================
 
 done_interrupt:
-	jmp	exit_interrupt
 
-quiet_exit:
-	lda	#1
-	sta	DONE_PLAYING
-	jsr	clear_ay_both
 
 exit_interrupt:
 

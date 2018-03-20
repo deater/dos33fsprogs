@@ -297,6 +297,7 @@ credits:
 .asciiz	"CORNELL GCF"
 .byte 8			; 21
 .asciiz	"ALL MSTIES EVERYWHERE"
+;.asciiz		"AAAAAAAAAAAAAAAAAAAAA"
 .byte 17		; 3
 .asciiz	"..."
 

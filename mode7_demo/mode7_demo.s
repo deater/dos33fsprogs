@@ -22,7 +22,7 @@ start:
 	;================================
 	; Need to have lines at
 	;	$4000	AA,AD,D5,AC,95
-	;	$4400	A8,D5,95,35,85
+	;	$4400	A8,55,95,35,85
 	;	$4800	A0,55,26,55,81
 	;	$4C00	00,00,00,00,00
 
@@ -326,7 +326,8 @@ title_routine:
 .include "interrupt_handler.s"
 .byte 0,0,0,0,0,0,0,0
 .byte 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0
+.byte 0,0,0,0,0,0,0,0
+.byte 0,0,0,0
 .byte $A0,$55,$26,$55,$81		; at $4800
 
 .include "../asm_routines/pageflip.s"
@@ -348,9 +349,9 @@ title_routine:
 .include "../asm_routines/gr_hlin_double.s"
 
 .include "../asm_routines/gr_fade.s"
+.include "../asm_routines/gr_plot.s"
 .include "../asm_routines/gr_copy.s"
 .include "../asm_routines/gr_scroll.s"
-.include "../asm_routines/gr_plot.s"
 
 
 .include "mode7.s"

@@ -60,11 +60,6 @@ start:
 	lda	#>(data)
 	sta	LZ4_SRC+1
 
-;	lda	#<(data_end-data+LZ4_DATA_BEGIN)
-;	sta	LZ4_END
-;	lda	#>(data_end-data+LZ4_DATA_BEGIN)
-;	sta	LZ4_END+1
-
 	lda	#<(data_end)
 	sta	LZ4_END
 	lda	#>(data_end)
@@ -74,11 +69,13 @@ lz4_decode:
 
 	lda	#>UNPACK_BUFFER		; original unpacked data offset
 	sta	LZ4_DST+1
-	lda	#<UNPACK_BUFFER
-	sta	LZ4_DST
+;	lda	#<UNPACK_BUFFER
+;	sta	LZ4_DST
 
 unpmain:
 	ldy	#0			; used to index, always zero
+
+	sty	LZ4_DST			; we know this will be zero ($4000)
 
 parsetoken:
 	jsr	getsrc			; get next token
@@ -158,10 +155,6 @@ done:
 	jmp	$4000
 
 
-
-
-	rts
-
 	;=========
 	; getsrc
 	;=========
@@ -170,7 +163,7 @@ getsrc:
 	lda	(LZ4_SRC), Y		; get a byte from src
 	inc	LZ4_SRC			; increment pointer
 	bne	done_getsrc		; update 16-bit pointer
-	inc	LZ4_SRC+1			; on 8-bit overflow
+	inc	LZ4_SRC+1		; on 8-bit overflow
 done_getsrc:
 	rts
 
