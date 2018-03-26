@@ -1,7 +1,12 @@
-Writing a Graphics Demo for the Apple II
+\documentclass[twocolumn]{article}
+\usepackage{graphicx}
 
-By DEATER
-AKA Vincent M. Weaver
+\begin{document}
+
+\title{Making a Graphics Demo for the Apple II}
+\author{DEATER, AKA Vincent M. Weaver}
+
+\maketitle
 
 I was writing a game for the Apple II and realized I had come up with
 some clever Super-Nintendo (SNES) style graphics routines that were just
@@ -12,7 +17,7 @@ neighborhood where it was all Apples and not a Commodore to be seen.
 My family long ago got rid of our machine, but I rescued an Apple IIe platinum
 from the dumpster one day and have dragged it from state to state ever since.
 
-I find 6502 assembly to be oddly theraputic, and will code in it when other
+I find 6502 assembly to be oddly therapeutic, and will code in it when other
 projects become too stressful.  Especially when Linux up and hangs on me
 because firefox tried to do something stupid in javascript.  I then pine for
 the days when you could do something useful in 64k of RAM, and not have your
@@ -87,14 +92,14 @@ do sme impressive things (link to ED).  1981 Mockingboard
 card, just two AY-3-8910 chips linked to the bus with 6522 chips.
 
 
-Draw memory map.  $ means hexadecimal traditionally.
+Draw memory map.  \$ means hexadecimal traditionally.
 
 
 Title
 	My poor attempt at blocky graphics.  Not the best pixel artist,
 	just as I was a mediocre BBS/ANSI artist back in the day.
 
-	Fading, a bit of a hack, no pallette hardware.  Just have
+	Fading, a bit of a hack, no palette hardware.  Just have
 	a third copy of background in RAM and then memcopy with a lookup
 	table for the three levels of fade.
 
@@ -110,3 +115,4 @@ Starfield
 Rasterbars
 
 Mockingboard Sound
+\end{document}
