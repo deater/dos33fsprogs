@@ -1,0 +1,112 @@
+Writing a Graphics Demo for the Apple II
+
+By DEATER
+AKA Vincent M. Weaver
+
+I was writing a game for the Apple II and realized I had come up with
+some clever Super-Nintendo (SNES) style graphics routines that were just
+crying to be turned into a demo-scene style demo.
+
+The Apple II was the first computer I had access too, and I grew up in an odd
+neighborhood where it was all Apples and not a Commodore to be seen.
+My family long ago got rid of our machine, but I rescued an Apple IIe platinum
+from the dumpster one day and have dragged it from state to state ever since.
+
+I find 6502 assembly to be oddly theraputic, and will code in it when other
+projects become too stressful.  Especially when Linux up and hangs on me
+because firefox tried to do something stupid in javascript.  I then pine for
+the days when you could do something useful in 64k of RAM, and not have your
+machine fall over because somehow 4GB is not enough.
+
+Setup:
+
+I do my development on Linux, using the nano text editor.  I use the
+ca65 assembler from the cc65 project, which I find to be a reasonable
+tool although most "real" Apple II programmers look down on it for some
+reason.
+I cross-compile on x86 Linux, construct Apple DOS33 disk images using
+some tools I've written, and then do most testing in an emulator.
+(These days usually AppleWin under the wine emulator, or else MESS/MAME
+which has cleaner sound output).  Once things work then I'll stick things
+on a USB stick and transfer to the CFFA3000 disk emulator installed in
+the actual Apple II.
+
+Related Work:
+See anything by the group FrenchTouch, whose Apple II demos outclass
+mine by a lot.
+
+
+Background:
+
+The Apple II was the first computer I programmed on, lo many years ago.
+Mostly in Applesoft BASIC (which ended up being the only Microsoft product
+I ever liked) but I was starting to get into assembly language about the
+time my family got a 386 system.
+
+I've revisited over the years, with some 6502 programming to show I could.
+My skills were not that great, I had one of my size-optimization projects
+crowd re-optimized.  For a while I had a side-gig re-optimizing modern games
+in BASIC, before getting sidetracked into going full in on 6502 assembly
+again.
+
+Introduced in 1977.
+The Apple II runs at 1.XX check Megahertz.  6502, which can easily
+address 64 kB of RAM (more with bank switching).  Shipped with as little
+as 4kB of RAM.  Three registers, (A,X,Y) but a large ``zero page'' which
+gives you register-like actions on the first 256 bytes of RAM.
+
+DOS3.3 operating system with 140k floppies.  Amazing programming by Wozniak,
+allowing all kinds of floppy protection shenanigans (cite 4am, previous
+article).
+
+Graphics
+
+The Apple II
+	Low-res: 40x48 NTSC 15-color 
+	Hi-res: X x Y 6-colors
+	Both, optional text on bottom.
+
+Did have HW double buffering, but no graphics chars, no reprogrammable
+font, no sprite hardware, no retrace interrupt.
+
+Could do amazing things by cycle counting, reading the floating bus,
+ and racing the beam and flipping 
+graphics modes on the fly, but that's an entire different demo, some other day.
+
+Later models added double low-res (80x48) and double hi-res (x y in
+NTSC 15 color) but didn't appear until 198x, and only on later IIe, IIc
+models.
+
+Apple also came out with the IIgs which arguably was much more advanced
+and cheaper than the Mac, but Apple cancelled the II line much to the
+sadness of the users (Apple II forever).
+
+Sound:
+	1-bit beeper sa they say, though some people managed to
+do sme impressive things (link to ED).  1981 Mockingboard
+card, just two AY-3-8910 chips linked to the bus with 6522 chips.
+
+
+Draw memory map.  $ means hexadecimal traditionally.
+
+
+Title
+	My poor attempt at blocky graphics.  Not the best pixel artist,
+	just as I was a mediocre BBS/ANSI artist back in the day.
+
+	Fading, a bit of a hack, no pallette hardware.  Just have
+	a third copy of background in RAM and then memcopy with a lookup
+	table for the three levels of fade.
+
+	Scrolling text, tearing, if was more clever would use the
+	refresh interrupt available on newer machines or do cycle counting.
+
+Bouncing sphere
+
+3D
+
+Starfield
+
+Rasterbars
+
+Mockingboard Sound
