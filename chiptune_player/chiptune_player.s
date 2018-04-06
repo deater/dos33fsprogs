@@ -590,8 +590,11 @@ krw_file:
 .include	"../asm_routines/keypress_minimal.s"
 .include	"rasterbars.s"
 .include	"volume_bars.s"
+.if .def(UNROLLED)
+.include	"interrupt_handler_unrolled.s"
+.else
 .include	"interrupt_handler.s"
-
+.endif
 ;=========
 ; strings
 ;=========
