@@ -2,7 +2,7 @@
 \usepackage{graphicx}
 \usepackage{url}
 \usepackage{hyperref}
-
+\usepackage{fancyvrb}
 
 \begin{document}
 
@@ -105,6 +105,7 @@ systems were common.
 While the demo itself fits in 8k, it decompresses to a larger size and uses
 a full 48k of RAM;
 this would have been very expensive in 1977.
+See Figure~\ref{fig:map} for a diagram of the memory map.
 
 Also in 1977 you would probably be loading this from cassette tape.
 It would be another year before Woz's single-sided
@@ -208,6 +209,49 @@ the actual Apple II (an Apple IIe platinum edition).
 %  http://www.deater.net/weave/vmwprod/mode7_demo/
 
 
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=2in]{figures/hidden_vmw.png}
+\end{center}
+\caption{VMW logo hidden in the executable data.\label{fig:vmw}}
+\end{figure}
+
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=\columnwidth]{figures/mode7_demo_title.png}
+\end{center}
+\caption{The title screen.\label{fig:title}}
+\end{figure}
+
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=\columnwidth]{figures/m7_screen1.jpg}
+\caption{Bouncing ball on infinite checkerboard.\label{fig:ball}}
+\end{center}
+\end{figure}
+
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=\columnwidth]{figures/m7_screen4.jpg}
+\caption{Spaceship flying over an island.\label{fig:tb1}}
+\end{center}
+\end{figure}
+
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=\columnwidth]{figures/m7_screen3.jpg}
+\end{center}
+\caption{Spaceship with starfield.\label{fig:stars}}
+\end{figure}
+
+\begin{figure}[tb]
+\begin{center}
+\includegraphics[width=\columnwidth]{figures/m7_screen2.jpg}
+\end{center}
+\caption{Rasterbars, stars, and credits.  Stealth Susie was a particularly
+well-traveled guinea pig.
+\label{fig:credits}}
+\end{figure}
 
 
 \section{The Demo}
@@ -229,13 +273,6 @@ the 4 lines of text on the bottom of the screen.
 Upon loading, execution starts at address \$2000
 
 \subsection{DECOMPRESSER}
-
-\begin{figure}[tb]
-\begin{center}
-\includegraphics[width=2in]{figures/hidden_vmw.png}
-\end{center}
-\caption{VMW logo hidden in the executable data.\label{fig:vmw}}
-\end{figure}
 
 The binary is encoded with the LZ4 algorithm.
 We flip to hi-res Page 2 and decompress there so the user continues to get
@@ -274,12 +311,6 @@ copy in the faded versions on the fly.
 
 \subsection{TITLE SCREEN}
 
-\begin{figure}[tb]
-\begin{center}
-\includegraphics[width=\columnwidth]{figures/mode7_demo_title.png}
-\end{center}
-\caption{The title screen.\label{fig:title}}
-\end{figure}
 
 Once decompression is done, execution continues at address \$4000.
 We switch to low-res mode for the rest of the demo.
@@ -450,13 +481,6 @@ We managed to take this algorithm and speed it up in the following ways:
 
 \subsection{BOUNCING BALL ON CHECKERBOARD}
 
-\begin{figure}
-\begin{center}
-\includegraphics[width=\columnwidth]{figures/m7_screen1.jpg}
-\caption{Bouncing ball on infinite checkerboard.\label{fig:ball}}
-\end{center}
-\end{figure}
-
 The first scence starts out viewing an infinite checkerboard.
 Any demo would be incomplete without some sort of bouncing geometric solid,
 in our case a pink sphere.
@@ -472,90 +496,72 @@ This gives some sound for those viewing the demo without a Mockingboard.
 
 \subsection{TFV SPACESHIP FLYING}
 
-\begin{figure}[tb]
-\begin{center}
-\includegraphics[width=\columnwidth]{figures/m7_screen4.jpg}
-\end{center}
-\caption{Spaceship flying over an island.\label{fig:tb1}}
-\end{figure}
 
+This next scene has a spaceship flying over an island.
 The spaceship, water splash, and shadows are all sprites.
 They are all drawn in software as the Apple II has no sprite hardware.
-
-  This is the TFV game engine flying-spaceship code, with the keyboard
-  routines replaced to read from memory instead (sort of like a script
-  of what to do when). 
+The path the ship takes is pre-recorded; this is adapted from the
+Talbot Fantasy~7 game engine with the keyboard code replaced by a hard-coded
+script of actions to take.
 
 \subsection{STARFIELD}
 
-\begin{figure}[tb]
-\begin{center}
-\includegraphics[width=\columnwidth]{figures/m7_screen3.jpg}
-\end{center}
-\caption{Spaceship with starfield.\label{fig:stars}}
-\end{figure}
+The spaceship takes to the stars.
+This is typical starfield code.
+Only 16 stars are modeled, and the movement code re-uses the 
+same fast-multiply routine described previously.
 
-
-  The starfield is your typical starfield code.  Only 16 stars are modeled.
-  It re-uses the fast-multiply code from the mode7 graphics.
-
-  Random number generation is not fast on the 6502, so we cheat.
-  Originally we had a 256-byte blob of "random" values generated earlier.
-
-  This wasted space, so now instead we just treat the executable code
-  at \$5000 as if it were a block of random numbers.  This was arbitrarily
-  chosen, I tried different areas of memory until I got one where the
-  stars seemed to move in a pleasing pattern.
-
-  A simple state machine controls if the stars move or not, whether the
-  background is cleared or not (the streak effect) and what color the
-  background is (for the blue flash).
-
-  The ship moving to the distance is just done with different sized sprites.
+The star positions require random number generation, but this is not
+fast on the 6502.
+Originally we had a 256-byte blob of pre-generated ``random'' values
+included in the code.
+This wasted space, so now instead we just use our code at address
+at \$5000 as if it were a block of random numbers.
+This was arbitrarily chosen, and it is not as random as it could be
+as seen when the ship enters hyperspace the lower right quadrant has fewer
+starts than one could desire.
+A simple state machine controls star speed, ship movement, hyperspace,
+background color (for the blue flash) and the eventual sequence of sprites
+as the ship vanishes into the distance.
 
 \subsection{RASTERBARS/CREDITS}
 
-\begin{figure}[tb]
-\begin{center}
-\includegraphics[width=\columnwidth]{figures/m7_screen2.jpg}
-\end{center}
-\caption{Rasterbars, stars, and credits.\label{fig:credits}}
-\end{figure}
+Once the ship has departed, it is time for the credits as the stars
+continue to run.
 
+The text is written to the bottom 4 lines of the screen and appears
+to be surrounded by low-res graphics blocks.
+Mixed graphics/text would generally not be possible on the Apple II, although
+with careful cycle counting and mode switching groups such as FrenchTouch
+have achieved this effect.
+I was lazy and instead used inverse-mode space characters which appear the same
+as white graphics blocks.
 
-  The credits happen with the starfield continuing to run.
+The rasterbar effect is not really rasterbars, it's just a colorful assortment
+of horizontal lines drawn at a location determined with a sine lookup table.
+Horizontal lines can take a surprising amount of time to draw, so this
+was optimized using inlining and a few other methods.
 
-  The text is written in the bottom 4 lines of the screen.  Some inverse-mode
-  space characters are used to try to make it look like graphics are surrounding
-  the text.  It's actually possible with careful cycle counting to switch
-  modes fast enough to have actual mixed graphics/text (See the FrenchTouch
-  demos) but I was too lazy to attempt that here.
+The rotating text is done by just rapidly rotating the output string through
+the ASCII table, with the clicking effect again by hitting the speaker
+at address \$C030.
+The list of people to thank ended up being extremely critical to fitting in 8kB,
+as unique text strings do not compress well.  
+I apologize to everyone whose moniker got compressed beyond recognition,
+and I am still not totally happy with the centering of the text.
 
-  The rasterbar effect isn't really rasterbars, it's just a rainbow assortment
-  of lines being drawn with a SINEWAVE lookup table.
-
-  It's the same rasterbar code from my chiptune player demo.  I ended up
-  optimizing it a lot via inlining and a few other ways because it turned
-  out just drawing a horizontal line can take a very long time.
-
-  The rotating text is just taking the output string and rapidly rotating the
-  character values through the ASCII table.
-
-  The annoying clicking noise is the same speaker effect caused by hitting
-  \$C030.
-
-  Choosing who to thank ended up being extremely critical to fitting in 8kB,
-  as unique text strings do not compress well.  I'm also still not satisfied
-  with how the centering looks.
-
+\section{Obtaining the Code}
 
 More details, disk image, and full source can be found at the website:
 \url{http://www.deater.net/weave/vmwprod/mode7_demo/}
 
-\begin{table}
-\begin{center}
-\begin{verbatim}
+%\section{Appendix: Memory Map}
 
+
+\begin{figure}
+\begin{center}
+\begin{scriptsize}
+\begin{BVerbatim}
  -------------  $ffff
 |    ROM/IO   |
  -------------  $c000
@@ -587,10 +593,12 @@ More details, disk image, and full source can be found at the website:
  -------------  $0100
 |   zero pg   |
  -------------  $0000
-
-\end{verbatim}
+\end{BVerbatim}
+\end{scriptsize}
 \end{center}
-\caption{Memory Map (not to scale)}
-\end{table}
+\caption{Memory Map (not to scale)\label{fig:map}}
+\end{figure}
+
+
 
 \end{document}
