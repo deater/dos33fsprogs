@@ -344,6 +344,8 @@ faster hardware) it is sometimes not possible to get exact playback
 due to the delay.
 Further slowdown happens as you want to write both AY chips (the output
 is stereo, with one AY on the left and one on the right).
+To help with latency on playback we keep track of the last frame written
+and only write to the registers that have changed.
 
 %   I have a whole suite of code for manipulating YM sound data, in my
 %   vmw-meter git repository.
@@ -360,35 +362,65 @@ interrupt at 25Hz.
 Why 25Hz and not 50Hz?  At 50Hz with 14 registers you use 700 bytes/s.
 So a 2 minute song would take 84k of RAM, much more than is available.
 To allow the song to fit in memory (without the fancy circular buffer
-decompression utilized in my Chiptune Player Music Disk demo) we have
-to reduce the size significantly.
-First we reduce the music to only need to be updated at 25Hz.
-We reduce the register data from 14 bytes to 11 bytes by stripping off
-the envelope effects and packing together some of the fields that have
-unused bits.
-To help with latency on playback we keep track of the last frame written
-and only write to the registers that have changed.
-
+decompression utilized in my VMW Chiptune Player music-disk demo) we have
+to reduce the size.
+First the music is changed so it only needs to be updated at 25Hz.
+Then the register data is compressed from 14 bytes to 11 bytes by stripping off
+the envelope effects and packing together fields that have unused bits.
 In the end the sound quality suffered a bit, but we were able to fit an
 acceptably catchy chiptune inside of our 8k payload.
 
 \subsection{MODE7 BACKGROUND}
 
-``MODE7'' is a Super Nintendo (SNES) graphics mode that took a tiled
-  background and transformed it to look as if it was squashed out to
-  the horizon, giving a 3d look.  The SNES did this in hardware, but
-  in this demo we do this in software.
+``Mode7'' is a Super Nintendo (SNES) graphics mode that takes a tiled
+background to be transformed by rotation and scaling.
+The most common effect was to squash it out to the horizon, giving
+a three-dimensional look.
+The SNES did these transforms in hardware, but in this demo we implement
+them in software.
 
-  As found on Wikipedia, the transform is of the type
+%  As found on Wikipedia, the transform is of the type
+%
+%  [x'] = [a b]([x]-[x0])+[x0]
+%  [y']   [c d]([y] [y0]) [y0]
 
-  [x'] = [a b]([x]-[x0])+[x0]
-  [y']   [c d]([y] [y0]) [y0]
-  
+Our algorithm is based on code by Martijn van Iersel.
+It iterates through each y line on the screen and calculates based on
+the camera location: height ({\em spacez}), x and y coordinates 
+({\em cx} and {\em cy}) and the {\em angle}.
+
+First calculate the distance
+	d = (z*yscale)/(y+horizon)
+Then calculate the horizontal scale (distance between points on 
+this line)
+	h = d/xscale
+Then calculate delta x and delta y values
+	dx = -sin(angle)*h
+	dy = cos(angle)*h
+It then calculates the starting offset of the left side of the line in
+the tile lookup:
+        tilex = cx + (d*cos(angle) - (width/2) * dx;
+        tiley = cy + (d*sin(angle) - (width/2) * dy;
+Now iterate the inner loop, where we lookup the tile color for each pixel
+on the horizontal line.
+            putpixel (x, y, tilelookup(tilex,tiley)
+            tilex += dx;
+            tiley += dy;
+
+{\bf Optimizations}
+
+We managed to take this algorithm and speed it up in the following ways:
+	\begin{itemize}
+	\item blah 
+	\end{itemize}
+ 
   For our code, we managed to reduce things to a small number of additions
   and subtractions for each pixel on the screen.  Of course the 6502 can't
   do floating point, so we do fixed point math.  We convert as much as we
   can to table lookups that are pre-calculated.  We also make liberal use
   of self-modifying code.
+
+{\bf Fast Multiply:}
 
   Despite all of this there are still some cases where we have to do a 
   16bit x 16bit = 32bit multiply, something that is *really* slow on 6502,
@@ -425,18 +457,18 @@ acceptably catchy chiptune inside of our 8k payload.
 \end{center}
 \end{figure}
 
+The first scence starts out viewing an infinite checkerboard.
+Any demo would be incomplete without some sort of bouncing geometric solid,
+in our case a pink sphere.
+This was accomplished with 16 sprites:
+the sphere was modeled in OpenGL inside of a 20 year old game engine
+and screenshots were taken then reduced in keeping with the size and
+color limitations.
+Similarly the shadow is also just sprites.
 
-  What would a demo be without some sort of bouncing geometric shape.
-
-  This is just done with 16 sprites.  The sphere was modeled in OpenGL
-  from a 2000-era game-engine that I never finished.  I then took screenshots
-  and then reduced the size/color to an appropriate value.
-
-  The shadow is also just sprites.
-
-  The clicking noise on bounce is just touching the speaker at \$C030.
-  It's mostly there to give some sound effects for those playing the demo
-  without a Mockingboard.
+The clicking noise on bounce is generated by accessing the speaker port
+at address \$C030.
+This gives some sound for those viewing the demo without a Mockingboard.
 
 \subsection{TFV SPACESHIP FLYING}
 
@@ -447,8 +479,8 @@ acceptably catchy chiptune inside of our 8k payload.
 \caption{Spaceship flying over an island.\label{fig:tb1}}
 \end{figure}
 
-  The spaceship, water splash, and shadows are all sprites.  This is all
-  done in software, the Apple II has no sprite hardware.
+The spaceship, water splash, and shadows are all sprites.
+They are all drawn in software as the Apple II has no sprite hardware.
 
   This is the TFV game engine flying-spaceship code, with the keyboard
   routines replaced to read from memory instead (sort of like a script
