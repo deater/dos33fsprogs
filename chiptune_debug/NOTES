@@ -1,0 +1,19 @@
+note: pausing writes out zeros, doesn't restore previous values
+	which is noticable
+
+
+doubling length of writes:	still issue
+removing rasterbars:		still issue
+removing volume bars:		still issue
+remove time update:		still issue
+remove dead code:		still issue
+remove title screen:		still issue
+remove all graphics calls:	still issue
+remove memory shuffling in back:still issue
+remove keyboard:		still issue
+remove all non-irq code:	still issue
+remove all text print code	still issue
+remove multi file (down to 973) still issue
+remove dos33 code 		still issue
+remove lz4 code			still issue
+remove interrupt driven		still issue!?
