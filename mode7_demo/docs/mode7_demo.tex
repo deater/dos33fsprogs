@@ -94,10 +94,12 @@ put this one to shame.
 \section{The Hardware}
 
 The Apple II was introduced in 1977.
-This demo should run on an original system, though I do not
-have hardware quite that old to test on.
-I like to troll C64 fans by noting this predates the Commodore 64 by 
+In theory this demo will run on hardware this old, although I do
+not have access to a system of that vintage.
+I like to troll Commodore fans by noting this predates the Commodore 64 by 
 five years.
+
+
 
 \vspace{1ex}
 \noindent
@@ -151,12 +153,12 @@ Hardware page flip   &	Yes \\
 \end{tabular}
 \end{center}
 
-The hi-res graphics mode was a complex mess of NTSC hacks by Woz.
-You got approximately 280x192 resolution, with 6 colors available.
-However the colors were from NTSC artifacts and there were limitations 
-on which colors could be next to each other (in blocks of 3.5 pixels).
-There was plenty of fringing on edges, and colors changed depending on
-whether they were drawn at odd or even pixels.
+The hi-res graphics mode is a complex mess of NTSC hacks by Woz.
+You get approximately 280x192 resolution, with 6 colors available.
+The colors are NTSC artifacts with limitations 
+on which colors can be next to each other (in blocks of 3.5 pixels).
+There is plenty of fringing on edges, and colors change depending on
+whether they are drawn at odd or even locations.
 To add to the madness, the framebuffer is interleaved in a complex way,
 and pixels are drawn least-significant-bit first (all of this to make
 DRAM refresh better and to shave a few 7400 series logic chips from the design).
@@ -168,11 +170,12 @@ Optionally 4 lines of text can be shown at the bottom of the
 screen instead of graphics.
 
 The lo-res mode is a bit easier to use.  
-It provides 40x48 blocks (40x40 if the four
-lines of text are displayed at the bottom).
+It provides 40x48 blocks, reusing the same memory as the 40x24 text mode.
+(As with hi-res you can switch to a 40x40 mode with four lines of
+text displayed at the bottom).
 Fifteen colors are available (there are two greys which are indistinguishable).
-Again the addresses are interleaved.  Lo-res Page 1 is at \$400
-and Page 2 is at \$800.
+Again the addresses are interleaved in a non-linear fashion.
+Lo-res Page 1 is at \$400 and Page 2 is at \$800.
 
 Some amazing effects can be achieved by cycle counting, reading
 the floating bus, and racing the beam while toggling graphics
