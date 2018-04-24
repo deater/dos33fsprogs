@@ -163,9 +163,9 @@ To add to the madness, the framebuffer is interleaved in a complex way,
 and pixels are drawn least-significant-bit first (all of this to make
 DRAM refresh better and to shave a few 7400 series logic chips from the design).
 You do get two pages of graphics, Page 1 is at
-\$2000\footnote{On 6502 systems hexadecimal values are 
+{\tt \$2000}\footnote{On 6502 systems hexadecimal values are 
 indicated by the dollar sign}
-and Page 2 at \$4000.
+and Page 2 at {\tt \$4000}.
 Optionally 4 lines of text can be shown at the bottom of the
 screen instead of graphics.
 
@@ -175,7 +175,7 @@ It provides 40x48 blocks, reusing the same memory as the 40x24 text mode.
 text displayed at the bottom).
 Fifteen colors are available (there are two greys which are indistinguishable).
 Again the addresses are interleaved in a non-linear fashion.
-Lo-res Page 1 is at \$400 and Page 2 is at \$800.
+Lo-res Page 1 is at {\tt \$400} and Page 2 is at {\tt \$800}.
 
 Some amazing effects can be achieved by cycle counting, reading
 the floating bus, and racing the beam while toggling graphics
@@ -198,10 +198,11 @@ I do all of my coding under Linux, using the nano text editor.
 I use the ca65 assembler from the cc65 project, which I find to be a reasonable
 tool although many ``real'' Apple II programmers look down on it for some
 reason.
-I cross-compile the code, construct Apple DOS3.3 disk images using
-custom tools I have written, and then do most testing in an emulator.
+I cross-compile the code, constructing Apple DOS3.3 disk images using
+custom tools I have written.
+I test using emulators:
 AppleWin (run under the wine emulator) is the easiest to use, but
-MESS/MAME has cleaner sound.
+until recently MESS/MAME had cleaner sound.
 
 Once the code appears to work, I put it on a USB stick and transfer
 to actual hardware using a CFFA3000 disk emulator installed in
@@ -267,67 +268,73 @@ well-traveled guinea pig.
 
 An Applesoft BASIC ``HELLO'' program loads the binary automatically at bootup.
 This does not count towards the executable size, as you could manually BRUN 
-the 8k program if you wanted.
+the 8k machine-language program if you wanted.
 
-To make the loading time slightly more interesting the binary is loaded at
-address \$2000 (hi-res page1) and BASIC is nice enough to enable
-graphics mode first so you can watch the display get filled with the random
-pattern of the compressed image.
-This entirely fills the 8k of the display, or would
-if we POKEd the right address to turn off
-the 4 lines of text on the bottom of the screen.
+To make the loading time slightly more interesting the HELLO program enables
+graphics mode and loads the program to address {\tt \$2000} (hi-res page1).
+This causes the display to filled with the colorful pattern corresponding
+to the compressed image.
+This conveniently fills all 8k of the display RAM, or would have
+if we had POKEd the right soft-switch to turn off
+the bottom 4 lines of text.
 
-Upon loading, execution starts at address \$2000
+Upon loading, execution starts at address {\tt \$2000}.
 
-\subsection{DECOMPRESSER}
+\subsection{DECOMPRESSION}
 
 The binary is encoded with the LZ4 algorithm.
-We flip to hi-res Page 2 and decompress there so the user continues to get
-a show of random noise.
+We flip to hi-res Page 2 and decompress to this region so the display
+now shows the executable code.
 
 The 6502 size-optimized LZ4 decompression code was written by qkumba
 (Peter Ferrie).
 %	http://pferrie.host22.com/misc/appleii.htm
-The program and data decompress to around 22k starting at \$4000.
-It over-writes parts of DOS3.3, but since we will not be using the disk 
+The program and data decompress to around 22k starting at {\tt \$4000}.
+This over-writes parts of DOS3.3, but since we will not be using the disk 
 any more this is not an issue.
 
 If you look carefully at the upper left corner of the screen during
 decompress you will see my triangular logo, which is supposed to evoke
 my VMW initials (see Figure~\ref{fig:vmw}).
-To do this I had to put the proper bit pattern at the interleaved
-addresses of \$4000, \$4400, \$4800, and \$4C00.  
-This turned out to be way more trouble than it was worth.
-As an interesting note, the image data at \$4000 is executed as it maps
-to (mostly) harmless code.
+To do this I had to put the proper bit pattern inside the code
+at the interleaved addresses of {\tt \$4000}, {\tt \$4400}, {\tt \$4800},
+and {\tt \$4C00}.
+The image data at {\tt \$4000} maps to (mostly)
+harmless code so it is left in place and executed.
+Making this work turned out to be more trouble than it was worth, especially
+as the logo is not visible in the MP4 capture of the demo (the movie
+compression does not handle screens full of seemingly random noise well).
 
-The demo was optimized to fit in 8k, and this is difficult when your program
-is compressed.
+The demo was optimized to fit in 8k.
+Optimizing code inside of a compressed image is much more complicated than
+regular size optimization.
 Removing instructions sometimes makes the binary {\em larger} as it no longer
 compresses as well.
 Long runs of values (such as 0 padding) are essentially free.
 This mostly turned into an exercise of guess-and-check until everything fit.
 
-\subsection{FADE EFFECT}
 
+\subsection{TITLE SCREEN}
+
+Once decompression is done, execution continues at address {\tt \$4000}.
+We switch to low-res mode for the rest of the demo.
+
+\noindent
+{\bf FADE EFFECT}:
 The title screen fades in from black.
-
 This is a software hack as the Apple II does not have palette support.
 The image is loaded to an off-screen buffer and a lookup table is used to
 copy in the faded versions on the fly.
 
-\subsection{TITLE SCREEN}
-
-
-Once decompression is done, execution continues at address \$4000.
-We switch to low-res mode for the rest of the demo.
-
-A title screen is loaded, as seen in Figure~\ref{fig:title}.
+\noindent
+{\bf TITLE GRAPHICS}:
+The title screen is shown in Figure~\ref{fig:title}.
 The image is run-length encoded (RLE) which is
-probably unnecessary when being further LZ4 encoded.
+probably unnecessary in light of it being further LZ4 encoded.
 (The LZ4 compression was a late addition to this endeavor).
 
-Why not save some space and just load our demo at \$400 and negate the need
+Why not save some space and just load our demo at {\tt \$400} and negate
+the need
 to copy the image in place?
 Remember the graphics are 40x48 (shared with the text display region).
 It might be easier to think of it as 40x24 characters, with the top / bottom
@@ -339,8 +346,10 @@ There are ``holes'' in the address range that are not displayed, and
 various pieces of hardware can use these as scratchpad memory.  
 This means just overwriting the whole 1k with data might not work out well
 unless you know what you are doing.
-To this end the RLE decompression code skips the holes just to be safe.
+To this end our RLE decompression code skips the holes just to be safe.
 
+\noindent
+{\bf SCROLL TEXT}:
 The title screen has scrolling text at the bottom.
 This is nothing fancy, the text is in a buffer off screen and a 40x4 
 chunk of RAM is copied in every so many cycles.
@@ -354,20 +363,23 @@ movie encoding conspire to make this look worse than things look in person.
 \subsection{MOCKINGBOARD MUSIC}
 
 No demo is complete without some exciting background music.
-I like chiptune music, especially the kind you can find that is made
+I like chiptune music, especially the kind written
 for AY-3-8910 based systems.
-I gained some expertise during the long wait for my Mockingboard to arrive
-by building a Raspberry Pi chiptune player that is essentially the same
-hardware.
+During the long time waiting for my Mockingboard hardware to arrive
+I designed and built a Raspberry Pi chiptune player that uses
+essentially the same hardware.
+This allowed me to build up some expertise with the software/hardware
+interface in advance.
 
 The song being played is a stripped down and re-arranged version of
 ``Electric Wave'' from CC'00 by EA (Ilya Abrosimov). 
 
 Most of my sound infrastructure involves YM5 files, a format commonly
-used  by ZX Spectrum and ATARI ST users.
-These are essentially just AY-3-8910 register dumps taken at 50Hz.  
-To play these back just set up the sound card to interrupt 50 times a second
-and then write out the 14 register values from that frame.
+used by ZX Spectrum and ATARI ST users.
+The YM file format is just AY-3-8910 register dumps taken at 50Hz.  
+To play these back one sets up the sound card to interrupt 50 times a second
+and then writes out the 14 register values from each frame in an interrupt
+handler.
 
 %   To program the Mockingboard, each AY-3-8910 chip has 14 sound related
 %   registers that control the 3 channels.  Each AY chip has a dedicated
@@ -388,7 +400,7 @@ and only write to the registers that have changed.
 %   I have a whole suite of code for manipulating YM sound data, in my
 %   vmw-meter git repository.
 
-Our code detects a Mockingboard at startup, we are lazy and only support
+Our code detects the Mockingboard at startup; we are lazy and only support
 finding the card in Slot 4 (which is a fairly typically location).
 %   The first step for getting this to work is detecting if a Mockingboard is
 %%  there.  This can be in any slot 1-7 on the Apple II, though typically
@@ -398,9 +410,9 @@ interrupt at 25Hz.
 % (it has to be an on-board timer as the default
 %   Apple II has no timers).
 Why 25Hz and not 50Hz?  At 50Hz with 14 registers you use 700 bytes/s.
-So a 2 minute song would take 84k of RAM, much more than is available.
-To allow the song to fit in memory (without the fancy circular buffer
-decompression utilized in my VMW Chiptune Player music-disk demo) we have
+So a 2 minute song would take 84k of RAM, which is much more than is available.
+To allow the song to fit in memory (without a fancy circular buffer
+decompression routine utilized in my VMW Chiptune music-disk demo) we have
 to reduce the size.
 First the music is changed so it only needs to be updated at 25Hz.
 Then the register data is compressed from 14 bytes to 11 bytes by stripping off
@@ -411,10 +423,10 @@ acceptably catchy chiptune inside of our 8k payload.
 \subsection{MODE7 BACKGROUND}
 
 ``Mode7'' is a Super Nintendo (SNES) graphics mode that takes a tiled
-background to be transformed by rotation and scaling.
-The most common effect was to squash it out to the horizon, giving
+background and transforms it by rotating and scaling.
+The most common effect squashes the background out to the horizon, giving
 a three-dimensional look.
-The SNES did these transforms in hardware, but in this demo we implement
+The SNES did these transforms in hardware, but our demo must do
 them in software.
 
 %  As found on Wikipedia, the transform is of the type
@@ -422,6 +434,8 @@ them in software.
 %  [x'] = [a b]([x]-[x0])+[x0]
 %  [y']   [c d]([y] [y0]) [y0]
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Our algorithm is based on code by Martijn van Iersel.
 It iterates through each y line on the screen and calculates based on
 the camera location: height ({\em spacez}), x and y coordinates 
@@ -485,24 +499,27 @@ We managed to take this algorithm and speed it up in the following ways:
   The engine can be parameterized with different tilesets to use, which we
   do to provide both a black+white checkerboard background, as well as the
   island background from the TFV game.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{BOUNCING BALL ON CHECKERBOARD}
 
-The first scence starts out viewing an infinite checkerboard.
-Any demo would be incomplete without some sort of bouncing geometric solid,
-in our case a pink sphere.
-This was accomplished with 16 sprites:
-the sphere was modeled in OpenGL inside of a 20 year old game engine
-and screenshots were taken then reduced in keeping with the size and
-color limitations.
-Similarly the shadow is also just sprites.
+The first Mode7 scene transpires on an infinite checkerboard.
+A demo would be incomplete without some sort of bouncing geometric solid,
+in this case we have a pink sphere.
+The sphere is represented by 16 sprites that were captured from
+a 20 year old OpenGL game engine.
+Screenshots were taken then reduced to the proper size and color
+limitations.
+The shadows are also just sprites.
 
 The clicking noise on bounce is generated by accessing the speaker port
-at address \$C030.
-This gives some sound for those viewing the demo without a Mockingboard.
+at address {\tt \$C030}.
+This gives some sound for those viewing the demo without the benefit
+of a Mockingboard.
+
 
 \subsection{TFV SPACESHIP FLYING}
-
 
 This next scene has a spaceship flying over an island.
 The spaceship, water splash, and shadows are all sprites.
