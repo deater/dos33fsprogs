@@ -434,75 +434,81 @@ them in software.
 %  [x'] = [a b]([x]-[x0])+[x0]
 %  [y']   [c d]([y] [y0]) [y0]
 
+% http://www.helixsoft.nl/articles/circle/sincos.htm
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Our algorithm is based on code by Martijn van Iersel.
-It iterates through each y line on the screen and calculates based on
-the camera location: height ({\em spacez}), x and y coordinates 
-({\em cx} and {\em cy}) and the {\em angle}.
+It iterates through each horizontal line on the screen and calculates the color
+to output based on the camera height ({\em spacez}) and {\em angle} as well
+as the current x and y coordinates ({\em cx} and {\em cy}).
 
-First calculate the distance
-	d = (z*yscale)/(y+horizon)
+First the distance {\em d} is calculated based on fixed scale and
+distance-to-horizon factors.  
+Instead of a costly division we use a pre-generated lookup table for this.
+	\[d = \frac{z \times yscale}{y+horizon}\]
+
 Then calculate the horizontal scale (distance between points on 
-this line)
-	h = d/xscale
-Then calculate delta x and delta y values
-	dx = -sin(angle)*h
-	dy = cos(angle)*h
-It then calculates the starting offset of the left side of the line in
-the tile lookup:
-        tilex = cx + (d*cos(angle) - (width/2) * dx;
-        tiley = cy + (d*sin(angle) - (width/2) * dy;
-Now iterate the inner loop, where we lookup the tile color for each pixel
-on the horizontal line.
-            putpixel (x, y, tilelookup(tilex,tiley)
-            tilex += dx;
-            tiley += dy;
+this line):
+	\[h = \frac{d}{xscale}\]
+Then calculate delta x and delta y values between each block on the line.
+We use a pre-computed sine/cosine lookup table.
+	\[dx = -sin(angle) \times h\]
+	\[dy = cos(angle) \times h\]
+The leftmost position in the tile lookup is calculated:
+	\[tilex = cx + (d*cos(angle) - (width/2) * dx\]
+	\[tiley = cy + (d*sin(angle) - (width/2) * dy\]
+Then an inner loop happens that adds dx and dy as we lookup the color
+from the tilemap (just a wrap-around array lookup) for each block
+on the line.
+	\[color = tilelookup(tilex,tiley)\]
+	\[plot (x, y) \]
+	\[tilex += dx, tiley+= dy\]
 
-{\bf Optimizations}
+\noindent
+{\bf Optimizations:}
+The 6502 processor cannot do floating point, so all of our routines used
+8.8 fixed point math.
+We eliminated all of the division, and converted as much as possible
+to use lookup tables (which involved limiting the heights and angles a bit).
+We also saved some cycles here and there by using self-modifying code,
+most notably hard-coding the height (z) value and modifying the code
+if this is changed.
+The code started out only capable of roughly 4.9fps in 40x20 resolution
+and in the end we improved this to 5.7fps in 40x40 resolution.
+Care was taken to optimize the innermost loop, as every cycle saved there
+results in 1280 cycles saved overall.
 
-We managed to take this algorithm and speed it up in the following ways:
-	\begin{itemize}
-	\item blah 
-	\end{itemize}
- 
-  For our code, we managed to reduce things to a small number of additions
-  and subtractions for each pixel on the screen.  Of course the 6502 can't
-  do floating point, so we do fixed point math.  We convert as much as we
-  can to table lookups that are pre-calculated.  We also make liberal use
-  of self-modifying code.
-
+\noindent
 {\bf Fast Multiply:}
+One of the biggest bottlenecks in the mode7 code was the multiply.
+Even our optimized algorithm calls for at least seven
+16bit x 16bit = 32bit multiplies, something that is {\em really} slow on 
+the 6502.
+A typical implementation takes around 700 cycles
+for a 8.8 x 8.8 fixed point multiply.
 
-  Despite all of this there are still some cases where we have to do a 
-  16bit x 16bit = 32bit multiply, something that is *really* slow on 6502,
-  around 700 cycles (for a 8.8 x 8.8 fixed point multiply).
+We improved this by using the fast multiply algorithm
+described by Stephen Judd.
 
-  To make this faster we use a method described by Stephen Judd.
+This works by noting that
+	\[(a+b)^{2} = a^{2}+2ab+b^{2}\]
+and
+	\[(a-b)^{2}=a^{2}-2ab+b^{2}\]
+If you subtract these you can simplify to
+	\[a\times b =\frac{(a+b)^{2}}{4} - \frac{(a-b)^2}{4}\]
 
-  The key to note is that $(a+b)^{2} = a^{2}+2ab+b^{2}$ 
-	and $(a-b)^{2}=a^{2}-2ab+b^{2}$
-  and if you add them you can simplify to:
-	$a\times b =\frac{(a+b)^{2}}{4} - \frac{(a-b)^2}{4}$
+For 8-bit values if you create a table of squares from 0 to 511
+(all 8-bit a+b and a-b fall in this range) then you can convert a multiply
+into two table lookups plus a subtract.
+This does have the downside of requiring 2kB of square lookup tables
+(which can be generated at startup) but it reduces the multiply
+cost to the order of 250 cycles or so.
 
-  This is you have a table of squares from 0..511 (all 8-bit a+b and a-b
-  will fall in this range) then you can convert a multiply into a table
-  lookup plus a subtract.
-
-  The downsize is you will need 2kB of squares lookup tables (which can
-  be generated at startup).  This reduces the multiply cost to the order
-  of 200 to 250 cycles.
-
-  By using the fast multiply and a lot of careful optimization you can
-  generate a Mode7 background in 40x40 graphics mode at about 5 frames/second.
-
-  The engine can be parameterized with different tilesets to use, which we
-  do to provide both a black+white checkerboard background, as well as the
-  island background from the TFV game.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{BOUNCING BALL ON CHECKERBOARD}
+\subsection{BALL ON CHECKERBOARD}
 
 The first Mode7 scene transpires on an infinite checkerboard.
 A demo would be incomplete without some sort of bouncing geometric solid,
@@ -512,65 +518,73 @@ a 20 year old OpenGL game engine.
 Screenshots were taken then reduced to the proper size and color
 limitations.
 The shadows are also just sprites.
+Note that the Apple II has no dedicated sprite hardware, so these
+are drawn completely in software.
 
 The clicking noise on bounce is generated by accessing the speaker port
 at address {\tt \$C030}.
 This gives some sound for those viewing the demo without the benefit
 of a Mockingboard.
 
-
 \subsection{TFV SPACESHIP FLYING}
 
 This next scene has a spaceship flying over an island.
+The Mode7 graphics code is generic enough that only one copy of the code
+is needed to generate both the checkerboard and island scenes.
 The spaceship, water splash, and shadows are all sprites.
-They are all drawn in software as the Apple II has no sprite hardware.
 The path the ship takes is pre-recorded; this is adapted from the
 Talbot Fantasy~7 game engine with the keyboard code replaced by a hard-coded
 script of actions to take.
 
 \subsection{STARFIELD}
 
-The spaceship takes to the stars.
-This is typical starfield code.
-Only 16 stars are modeled, and the movement code re-uses the 
-same fast-multiply routine described previously.
+The spaceship now takes to the stars.
+This is typical starfield code, where on each iteration the x and y
+values are changed by
+	\[dx=\frac{x}{z}, dy=\frac{y}{z}\]
+In order to get a good frame rate and not clutter the lo-res screen
+only 16 stars are modeled.
+To avoid having to divide, the reciprocal of all possible z values
+are stored in a table, and the fast-multiply routine described
+previously is used.
 
-The star positions require random number generation, but this is not
-fast on the 6502.
+The star positions require random number generation, but there is no
+easy way to quickly get random data on the Apple II.
 Originally we had a 256-byte blob of pre-generated ``random'' values
 included in the code.
 This wasted space, so now instead we just use our code at address
 at \$5000 as if it were a block of random numbers.
 This was arbitrarily chosen, and it is not as random as it could be
-as seen when the ship enters hyperspace the lower right quadrant has fewer
-starts than one could desire.
+as seen when the ship enters hyperspace and the lower-right quadrant
+is distressingly star-free.
+
 A simple state machine controls star speed, ship movement, hyperspace,
 background color (for the blue flash) and the eventual sequence of sprites
 as the ship vanishes into the distance.
 
 \subsection{RASTERBARS/CREDITS}
 
-Once the ship has departed, it is time for the credits as the stars
-continue to run.
+Once the ship has departed, it is time to run the credits as the stars
+continue to fly by.
 
-The text is written to the bottom 4 lines of the screen and appears
-to be surrounded by low-res graphics blocks.
-Mixed graphics/text would generally not be possible on the Apple II, although
+The text is written to the bottom four lines of the screen, seemingly
+surrounded by graphics blocks.
+Mixed graphics/text is generally not be possible on the Apple II, although
 with careful cycle counting and mode switching groups such as FrenchTouch
 have achieved this effect.
-I was lazy and instead used inverse-mode space characters which appear the same
-as white graphics blocks.
+What we see in this demo is the use of inverse-mode (inverted color)
+space characters which appear the same as white graphics blocks.
 
-The rasterbar effect is not really rasterbars, it's just a colorful assortment
+The rasterbar effect is not really rasterbars, just a colorful assortment
 of horizontal lines drawn at a location determined with a sine lookup table.
-Horizontal lines can take a surprising amount of time to draw, so this
-was optimized using inlining and a few other methods.
+Horizontal lines can take a surprising amount of time to draw, but these
+were optimized using inlining and a few other tricks.
 
-The rotating text is done by just rapidly rotating the output string through
-the ASCII table, with the clicking effect again by hitting the speaker
-at address \$C030.
-The list of people to thank ended up being extremely critical to fitting in 8kB,
-as unique text strings do not compress well.  
+The spinning text is done by just rapidly rotating the output string through
+the ASCII table, with the clicking effect again generated
+by hitting the speaker at address {\tt \$C030}.
+The list of people to thank ended up being the primary limitation to
+fitting in 8kB, as unique text strings do not compress well.  
 I apologize to everyone whose moniker got compressed beyond recognition,
 and I am still not totally happy with the centering of the text.
 
