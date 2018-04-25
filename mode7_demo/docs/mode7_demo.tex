@@ -23,7 +23,7 @@ the effect in real time.
 
 Once I got the code working I realized it would be great as part of a
 graphical demo, so off on that tangent I went.
-This went well, despite the fact that all I knew about the demoscene I
+This turned out well, despite the fact that all I knew about the demoscene I
 had learned from a few viewings of the Future Crew {\em Second Reality} demo
 combined with dimly remembered Commodore 64 and Amiga usenet flamewars.
 
@@ -94,7 +94,7 @@ put this one to shame.
 \section{The Hardware}
 
 The Apple II was introduced in 1977.
-In theory this demo will run on hardware this old, although I do
+In theory this demo will run on hardware that old, although I do
 not have access to a system of that vintage.
 I like to troll Commodore fans by noting this predates the Commodore 64 by 
 five years.
@@ -164,7 +164,7 @@ and pixels are drawn least-significant-bit first (all of this to make
 DRAM refresh better and to shave a few 7400 series logic chips from the design).
 You do get two pages of graphics, Page 1 is at
 {\tt \$2000}\footnote{On 6502 systems hexadecimal values are 
-indicated by the dollar sign}
+traditionally indicated by a dollar sign}
 and Page 2 at {\tt \$4000}.
 Optionally 4 lines of text can be shown at the bottom of the
 screen instead of graphics.
@@ -290,8 +290,8 @@ The 6502 size-optimized LZ4 decompression code was written by qkumba
 (Peter Ferrie).
 %	http://pferrie.host22.com/misc/appleii.htm
 The program and data decompress to around 22k starting at {\tt \$4000}.
-This over-writes parts of DOS3.3, but since we will not be using the disk 
-any more this is not an issue.
+This over-writes parts of DOS3.3, but since we are done with the disk
+this is not an issue.
 
 If you look carefully at the upper left corner of the screen during
 decompress you will see my triangular logo, which is supposed to evoke
@@ -302,7 +302,7 @@ and {\tt \$4C00}.
 The image data at {\tt \$4000} maps to (mostly)
 harmless code so it is left in place and executed.
 Making this work turned out to be more trouble than it was worth, especially
-as the logo is not visible in the MP4 capture of the demo (the movie
+as the logo is not visible in the youtube capture of the demo (the movie
 compression does not handle screens full of seemingly random noise well).
 
 The demo was optimized to fit in 8k.
@@ -375,7 +375,7 @@ The song being played is a stripped down and re-arranged version of
 ``Electric Wave'' from CC'00 by EA (Ilya Abrosimov). 
 
 Most of my sound infrastructure involves YM5 files, a format commonly
-used by ZX Spectrum and ATARI ST users.
+used by ZX Spectrum and Atari ST users.
 The YM file format is just AY-3-8910 register dumps taken at 50Hz.  
 To play these back one sets up the sound card to interrupt 50 times a second
 and then writes out the 14 register values from each frame in an interrupt
@@ -447,8 +447,7 @@ First the distance {\em d} is calculated based on fixed scale and
 distance-to-horizon factors.  
 Instead of a costly division we use a pre-generated lookup table for this.
 	\[d = \frac{z \times yscale}{y+horizon}\]
-
-Then calculate the horizontal scale (distance between points on 
+Next calculate the horizontal scale (distance between points on 
 this line):
 	\[h = \frac{d}{xscale}\]
 Then calculate delta x and delta y values between each block on the line.
@@ -467,13 +466,13 @@ on the line.
 
 \noindent
 {\bf Optimizations:}
-The 6502 processor cannot do floating point, so all of our routines used
+The 6502 processor cannot do floating point, so all of our routines use
 8.8 fixed point math.
-We eliminated all of the division, and converted as much as possible
-to use lookup tables (which involved limiting the heights and angles a bit).
-We also saved some cycles here and there by using self-modifying code,
+We eliminate all use of division, and convert as much as possible
+to table lookups (which involves limiting the heights and angles a bit).
+We also save some cycles by using self-modifying code,
 most notably hard-coding the height (z) value and modifying the code
-if this is changed.
+whenever this is changed.
 The code started out only capable of roughly 4.9fps in 40x20 resolution
 and in the end we improved this to 5.7fps in 40x40 resolution.
 Care was taken to optimize the innermost loop, as every cycle saved there
@@ -491,16 +490,15 @@ for a 8.8 x 8.8 fixed point multiply.
 We improved this by using the fast multiply algorithm
 described by Stephen Judd.
 
-This works by noting that
+This works by noting these factorizations:
 	\[(a+b)^{2} = a^{2}+2ab+b^{2}\]
-and
 	\[(a-b)^{2}=a^{2}-2ab+b^{2}\]
 If you subtract these you can simplify to
 	\[a\times b =\frac{(a+b)^{2}}{4} - \frac{(a-b)^2}{4}\]
 
 For 8-bit values if you create a table of squares from 0 to 511
 (all 8-bit a+b and a-b fall in this range) then you can convert a multiply
-into two table lookups plus a subtract.
+into two table lookups and a subtraction.
 This does have the downside of requiring 2kB of square lookup tables
 (which can be generated at startup) but it reduces the multiply
 cost to the order of 250 cycles or so.
