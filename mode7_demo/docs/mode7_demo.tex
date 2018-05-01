@@ -490,8 +490,8 @@ for a 8.8 x 8.8 fixed point multiply.
 % Note, this is Quarter-square multiplication, apparently an ancient algorithm
 % https://en.wikipedia.org/wiki/Multiplication_algorithm#Quarter_square_multiplication
 
-We improved this by using the fast multiply algorithm
-described by Stephen Judd.
+We improved this by using the ancient quarter-square 
+multiply algorithm, first described for 6502 use by Stephen Judd.
 
 This works by noting these factorizations:
 	\[(a+b)^{2} = a^{2}+2ab+b^{2}\]
@@ -502,7 +502,7 @@ If you subtract these you can simplify to
 For 8-bit values if you create a table of squares from 0 to 511
 (all 8-bit a+b and a-b fall in this range) then you can convert a multiply
 into two table lookups and a subtraction.
-This does have the downside of requiring 2kB of square lookup tables
+This does have the downside of requiring 2kB of lookup tables
 (which can be generated at startup) but it reduces the multiply
 cost to the order of 250 cycles or so.
 
