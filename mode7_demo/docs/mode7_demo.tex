@@ -16,13 +16,16 @@
 While making an inside-joke filled game for my retro system of choice,
 the Apple II, I needed to create a Final-Fantasy-esque
 flying-over-the-planet sequence.
-I was originally going to fake this, but then I found that it was just barely
-possible to achieve this in real time.
+I was originally going to fake this, but why fake graphics when you
+can laboriously spend weeks implementing the effect for real.
+It turns out the Apple II is just barely capable of generating
+the effect in real time.
+
 Once I got the code working I realized it would be great as part of a
-graphics demo, so off on that tangent I went.
-This went well, despite the fact that all I know about the demoscene I learned
-from a few viewings of the Future Crew {\em Second Reality} demo mixed with
-dimly remembered Commodore 64 and Amiga flamewars.
+graphical demo, so off on that tangent I went.
+This turned out well, despite the fact that all I knew about the demoscene I
+had learned from a few viewings of the Future Crew {\em Second Reality} demo
+combined with dimly remembered Commodore 64 and Amiga usenet flamewars.
 
 % from a few decades ago.
 %  This started out as some SNES style mode7 pseudo-3d graphics code
@@ -33,12 +36,13 @@ dimly remembered Commodore 64 and Amiga flamewars.
 %lot of time was wasted fitting it under that arbitrary size limitation.
 
 While I hope you enjoy the description of the demo and the work that
-went into it, I do suspect the whole enterprise is only of note
-because so few people write demos for the Apple II platform.
+went into it, I suspect this whole enterprise is primarily of note
+due to the dearth of demos for the Apple II platform.
 %So in the end this ends up being impressive mostly because so few people
 %have bothered to write demos for this particular platform.
-I would like to make a shout out to the FrenchTouch group whose Apple II
-demos put this one to shame.
+If you are truly interested in seeing impressive Apple II demos, 
+I would like to make a shout out to FrenchTouch whose works
+put this one to shame.
 
 %  The codesize ended up being roughly around 8kB, so I thought I'd
 %  make it into an 8k demo.  There aren't many out there for the Apple II.
@@ -90,10 +94,12 @@ demos put this one to shame.
 \section{The Hardware}
 
 The Apple II was introduced in 1977.
-This demo should run on an original system, though I do not
-have hardware quite that old to test on.
-I like to troll C64 fans by noting this predates the Commodore 64 by 
+In theory this demo will run on hardware that old, although I do
+not have access to a system of that vintage.
+I like to troll Commodore fans by noting this predates the Commodore 64 by 
 five years.
+
+
 
 \vspace{1ex}
 \noindent
@@ -147,28 +153,29 @@ Hardware page flip   &	Yes \\
 \end{tabular}
 \end{center}
 
-The hi-res graphics mode was a complex mess of NTSC hacks by Woz.
-You got approximately 280x192 resolution, with 6 colors available.
-However the colors were from NTSC artifacts and there were limitations 
-on which colors could be next to each other (in blocks of 3.5 pixels).
-There was plenty of fringing on edges, and colors changed depending on
-whether they were drawn at odd or even pixels.
+The hi-res graphics mode is a complex mess of NTSC hacks by Woz.
+You get approximately 280x192 resolution, with 6 colors available.
+The colors are NTSC artifacts with limitations 
+on which colors can be next to each other (in blocks of 3.5 pixels).
+There is plenty of fringing on edges, and colors change depending on
+whether they are drawn at odd or even locations.
 To add to the madness, the framebuffer is interleaved in a complex way,
 and pixels are drawn least-significant-bit first (all of this to make
 DRAM refresh better and to shave a few 7400 series logic chips from the design).
 You do get two pages of graphics, Page 1 is at
-\$2000\footnote{On 6502 systems hexadecimal values are 
-indicated by the dollar sign}
-and Page 2 at \$4000.
+{\tt \$2000}\footnote{On 6502 systems hexadecimal values are 
+traditionally indicated by a dollar sign}
+and Page 2 at {\tt \$4000}.
 Optionally 4 lines of text can be shown at the bottom of the
 screen instead of graphics.
 
 The lo-res mode is a bit easier to use.  
-It provides 40x48 blocks (40x40 if the four
-lines of text are displayed at the bottom).
+It provides 40x48 blocks, reusing the same memory as the 40x24 text mode.
+(As with hi-res you can switch to a 40x40 mode with four lines of
+text displayed at the bottom).
 Fifteen colors are available (there are two greys which are indistinguishable).
-Again the addresses are interleaved.  Lo-res Page 1 is at \$400
-and Page 2 is at \$800.
+Again the addresses are interleaved in a non-linear fashion.
+Lo-res Page 1 is at {\tt \$400} and Page 2 is at {\tt \$800}.
 
 Some amazing effects can be achieved by cycle counting, reading
 the floating bus, and racing the beam while toggling graphics
@@ -191,10 +198,11 @@ I do all of my coding under Linux, using the nano text editor.
 I use the ca65 assembler from the cc65 project, which I find to be a reasonable
 tool although many ``real'' Apple II programmers look down on it for some
 reason.
-I cross-compile the code, construct Apple DOS3.3 disk images using
-custom tools I have written, and then do most testing in an emulator.
+I cross-compile the code, constructing Apple DOS3.3 disk images using
+custom tools I have written.
+I test using emulators:
 AppleWin (run under the wine emulator) is the easiest to use, but
-MESS/MAME has cleaner sound.
+until recently MESS/MAME had cleaner sound.
 
 Once the code appears to work, I put it on a USB stick and transfer
 to actual hardware using a CFFA3000 disk emulator installed in
@@ -260,67 +268,73 @@ well-traveled guinea pig.
 
 An Applesoft BASIC ``HELLO'' program loads the binary automatically at bootup.
 This does not count towards the executable size, as you could manually BRUN 
-the 8k program if you wanted.
+the 8k machine-language program if you wanted.
 
-To make the loading time slightly more interesting the binary is loaded at
-address \$2000 (hi-res page1) and BASIC is nice enough to enable
-graphics mode first so you can watch the display get filled with the random
-pattern of the compressed image.
-This entirely fills the 8k of the display, or would
-if we POKEd the right address to turn off
-the 4 lines of text on the bottom of the screen.
+To make the loading time slightly more interesting the HELLO program enables
+graphics mode and loads the program to address {\tt \$2000} (hi-res page1).
+This causes the display to filled with the colorful pattern corresponding
+to the compressed image.
+This conveniently fills all 8k of the display RAM, or would have
+if we had POKEd the right soft-switch to turn off
+the bottom 4 lines of text.
 
-Upon loading, execution starts at address \$2000
+Upon loading, execution starts at address {\tt \$2000}.
 
-\subsection{DECOMPRESSER}
+\subsection{DECOMPRESSION}
 
 The binary is encoded with the LZ4 algorithm.
-We flip to hi-res Page 2 and decompress there so the user continues to get
-a show of random noise.
+We flip to hi-res Page 2 and decompress to this region so the display
+now shows the executable code.
 
 The 6502 size-optimized LZ4 decompression code was written by qkumba
 (Peter Ferrie).
 %	http://pferrie.host22.com/misc/appleii.htm
-The program and data decompress to around 22k starting at \$4000.
-It over-writes parts of DOS3.3, but since we will not be using the disk 
-any more this is not an issue.
+The program and data decompress to around 22k starting at {\tt \$4000}.
+This over-writes parts of DOS3.3, but since we are done with the disk
+this is not an issue.
 
 If you look carefully at the upper left corner of the screen during
 decompress you will see my triangular logo, which is supposed to evoke
 my VMW initials (see Figure~\ref{fig:vmw}).
-To do this I had to put the proper bit pattern at the interleaved
-addresses of \$4000, \$4400, \$4800, and \$4C00.  
-This turned out to be way more trouble than it was worth.
-As an interesting note, the image data at \$4000 is executed as it maps
-to (mostly) harmless code.
+To do this I had to put the proper bit pattern inside the code
+at the interleaved addresses of {\tt \$4000}, {\tt \$4400}, {\tt \$4800},
+and {\tt \$4C00}.
+The image data at {\tt \$4000} maps to (mostly)
+harmless code so it is left in place and executed.
+Making this work turned out to be more trouble than it was worth, especially
+as the logo is not visible in the youtube capture of the demo (the movie
+compression does not handle screens full of seemingly random noise well).
 
-The demo was optimized to fit in 8k, and this is difficult when your program
-is compressed.
+The demo was optimized to fit in 8k.
+Optimizing code inside of a compressed image is much more complicated than
+regular size optimization.
 Removing instructions sometimes makes the binary {\em larger} as it no longer
 compresses as well.
 Long runs of values (such as 0 padding) are essentially free.
 This mostly turned into an exercise of guess-and-check until everything fit.
 
-\subsection{FADE EFFECT}
 
+\subsection{TITLE SCREEN}
+
+Once decompression is done, execution continues at address {\tt \$4000}.
+We switch to low-res mode for the rest of the demo.
+
+\noindent
+{\bf FADE EFFECT}:
 The title screen fades in from black.
-
 This is a software hack as the Apple II does not have palette support.
 The image is loaded to an off-screen buffer and a lookup table is used to
 copy in the faded versions on the fly.
 
-\subsection{TITLE SCREEN}
-
-
-Once decompression is done, execution continues at address \$4000.
-We switch to low-res mode for the rest of the demo.
-
-A title screen is loaded, as seen in Figure~\ref{fig:title}.
+\noindent
+{\bf TITLE GRAPHICS}:
+The title screen is shown in Figure~\ref{fig:title}.
 The image is run-length encoded (RLE) which is
-probably unnecessary when being further LZ4 encoded.
+probably unnecessary in light of it being further LZ4 encoded.
 (The LZ4 compression was a late addition to this endeavor).
 
-Why not save some space and just load our demo at \$400 and negate the need
+Why not save some space and just load our demo at {\tt \$400} and negate
+the need
 to copy the image in place?
 Remember the graphics are 40x48 (shared with the text display region).
 It might be easier to think of it as 40x24 characters, with the top / bottom
@@ -332,8 +346,10 @@ There are ``holes'' in the address range that are not displayed, and
 various pieces of hardware can use these as scratchpad memory.  
 This means just overwriting the whole 1k with data might not work out well
 unless you know what you are doing.
-To this end the RLE decompression code skips the holes just to be safe.
+To this end our RLE decompression code skips the holes just to be safe.
 
+\noindent
+{\bf SCROLL TEXT}:
 The title screen has scrolling text at the bottom.
 This is nothing fancy, the text is in a buffer off screen and a 40x4 
 chunk of RAM is copied in every so many cycles.
@@ -347,20 +363,23 @@ movie encoding conspire to make this look worse than things look in person.
 \subsection{MOCKINGBOARD MUSIC}
 
 No demo is complete without some exciting background music.
-I like chiptune music, especially the kind you can find that is made
+I like chiptune music, especially the kind written
 for AY-3-8910 based systems.
-I gained some expertise during the long wait for my Mockingboard to arrive
-by building a Raspberry Pi chiptune player that is essentially the same
-hardware.
+During the long time waiting for my Mockingboard hardware to arrive
+I designed and built a Raspberry Pi chiptune player that uses
+essentially the same hardware.
+This allowed me to build up some expertise with the software/hardware
+interface in advance.
 
 The song being played is a stripped down and re-arranged version of
 ``Electric Wave'' from CC'00 by EA (Ilya Abrosimov). 
 
 Most of my sound infrastructure involves YM5 files, a format commonly
-used  by ZX Spectrum and ATARI ST users.
-These are essentially just AY-3-8910 register dumps taken at 50Hz.  
-To play these back just set up the sound card to interrupt 50 times a second
-and then write out the 14 register values from that frame.
+used by ZX Spectrum and Atari ST users.
+The YM file format is just AY-3-8910 register dumps taken at 50Hz.  
+To play these back one sets up the sound card to interrupt 50 times a second
+and then writes out the 14 register values from each frame in an interrupt
+handler.
 
 %   To program the Mockingboard, each AY-3-8910 chip has 14 sound related
 %   registers that control the 3 channels.  Each AY chip has a dedicated
@@ -381,7 +400,7 @@ and only write to the registers that have changed.
 %   I have a whole suite of code for manipulating YM sound data, in my
 %   vmw-meter git repository.
 
-Our code detects a Mockingboard at startup, we are lazy and only support
+Our code detects the Mockingboard at startup; we are lazy and only support
 finding the card in Slot 4 (which is a fairly typically location).
 %   The first step for getting this to work is detecting if a Mockingboard is
 %%  there.  This can be in any slot 1-7 on the Apple II, though typically
@@ -391,9 +410,9 @@ interrupt at 25Hz.
 % (it has to be an on-board timer as the default
 %   Apple II has no timers).
 Why 25Hz and not 50Hz?  At 50Hz with 14 registers you use 700 bytes/s.
-So a 2 minute song would take 84k of RAM, much more than is available.
-To allow the song to fit in memory (without the fancy circular buffer
-decompression utilized in my VMW Chiptune Player music-disk demo) we have
+So a 2 minute song would take 84k of RAM, which is much more than is available.
+To allow the song to fit in memory (without a fancy circular buffer
+decompression routine utilized in my VMW Chiptune music-disk demo) we have
 to reduce the size.
 First the music is changed so it only needs to be updated at 25Hz.
 Then the register data is compressed from 14 bytes to 11 bytes by stripping off
@@ -404,10 +423,10 @@ acceptably catchy chiptune inside of our 8k payload.
 \subsection{MODE7 BACKGROUND}
 
 ``Mode7'' is a Super Nintendo (SNES) graphics mode that takes a tiled
-background to be transformed by rotation and scaling.
-The most common effect was to squash it out to the horizon, giving
+background and transforms it by rotating and scaling.
+The most common effect squashes the background out to the horizon, giving
 a three-dimensional look.
-The SNES did these transforms in hardware, but in this demo we implement
+The SNES did these transforms in hardware, but our demo must do
 them in software.
 
 %  As found on Wikipedia, the transform is of the type
@@ -415,138 +434,158 @@ them in software.
 %  [x'] = [a b]([x]-[x0])+[x0]
 %  [y']   [c d]([y] [y0]) [y0]
 
+% http://www.helixsoft.nl/articles/circle/sincos.htm
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Our algorithm is based on code by Martijn van Iersel.
-It iterates through each y line on the screen and calculates based on
-the camera location: height ({\em spacez}), x and y coordinates 
-({\em cx} and {\em cy}) and the {\em angle}.
+It iterates through each horizontal line on the screen and calculates the color
+to output based on the camera height ({\em spacez}) and {\em angle} as well
+as the current x and y coordinates ({\em cx} and {\em cy}).
 
-First calculate the distance
-	d = (z*yscale)/(y+horizon)
-Then calculate the horizontal scale (distance between points on 
-this line)
-	h = d/xscale
-Then calculate delta x and delta y values
-	dx = -sin(angle)*h
-	dy = cos(angle)*h
-It then calculates the starting offset of the left side of the line in
-the tile lookup:
-        tilex = cx + (d*cos(angle) - (width/2) * dx;
-        tiley = cy + (d*sin(angle) - (width/2) * dy;
-Now iterate the inner loop, where we lookup the tile color for each pixel
-on the horizontal line.
-            putpixel (x, y, tilelookup(tilex,tiley)
-            tilex += dx;
-            tiley += dy;
+First the distance {\em d} is calculated based on fixed scale and
+distance-to-horizon factors.  
+Instead of a costly division we use a pre-generated lookup table for this.
+	\[d = \frac{z \times yscale}{y+horizon}\]
+Next calculate the horizontal scale (distance between points on 
+this line):
+	\[h = \frac{d}{xscale}\]
+Then calculate delta x and delta y values between each block on the line.
+We use a pre-computed sine/cosine lookup table.
+	\[dx = -sin(angle) \times h\]
+	\[dy = cos(angle) \times h\]
+The leftmost position in the tile lookup is calculated:
+	\[tilex = cx + (d*cos(angle) - (width/2) * dx\]
+	\[tiley = cy + (d*sin(angle) - (width/2) * dy\]
+Then an inner loop happens that adds dx and dy as we lookup the color
+from the tilemap (just a wrap-around array lookup) for each block
+on the line.
+	\[color = tilelookup(tilex,tiley)\]
+	\[plot (x, y) \]
+	\[tilex += dx, tiley+= dy\]
 
-{\bf Optimizations}
+\noindent
+{\bf Optimizations:}
+The 6502 processor cannot do floating point, so all of our routines use
+8.8 fixed point math.
+We eliminate all use of division, and convert as much as possible
+to table lookups (which involves limiting the heights and angles a bit).
+We also save some cycles by using self-modifying code,
+most notably hard-coding the height (z) value and modifying the code
+whenever this is changed.
+The code started out only capable of roughly 4.9fps in 40x20 resolution
+and in the end we improved this to 5.7fps in 40x40 resolution.
+Care was taken to optimize the innermost loop, as every cycle saved there
+results in 1280 cycles saved overall.
 
-We managed to take this algorithm and speed it up in the following ways:
-	\begin{itemize}
-	\item blah 
-	\end{itemize}
- 
-  For our code, we managed to reduce things to a small number of additions
-  and subtractions for each pixel on the screen.  Of course the 6502 can't
-  do floating point, so we do fixed point math.  We convert as much as we
-  can to table lookups that are pre-calculated.  We also make liberal use
-  of self-modifying code.
-
+\noindent
 {\bf Fast Multiply:}
+One of the biggest bottlenecks in the mode7 code was the multiply.
+Even our optimized algorithm calls for at least seven
+16bit x 16bit = 32bit multiplies, something that is {\em really} slow on 
+the 6502.
+A typical implementation takes around 700 cycles
+for a 8.8 x 8.8 fixed point multiply.
 
-  Despite all of this there are still some cases where we have to do a 
-  16bit x 16bit = 32bit multiply, something that is *really* slow on 6502,
-  around 700 cycles (for a 8.8 x 8.8 fixed point multiply).
+% Note, this is Quarter-square multiplication, apparently an ancient algorithm
+% https://en.wikipedia.org/wiki/Multiplication_algorithm#Quarter_square_multiplication
 
-  To make this faster we use a method described by Stephen Judd.
+We improved this by using the ancient quarter-square 
+multiply algorithm, first described for 6502 use by Stephen Judd.
 
-  The key to note is that $(a+b)^{2} = a^{2}+2ab+b^{2}$ 
-	and $(a-b)^{2}=a^{2}-2ab+b^{2}$
-  and if you add them you can simplify to:
-	$a\times b =\frac{(a+b)^{2}}{4} - \frac{(a-b)^2}{4}$
+This works by noting these factorizations:
+	\[(a+b)^{2} = a^{2}+2ab+b^{2}\]
+	\[(a-b)^{2}=a^{2}-2ab+b^{2}\]
+If you subtract these you can simplify to
+	\[a\times b =\frac{(a+b)^{2}}{4} - \frac{(a-b)^2}{4}\]
 
-  This is you have a table of squares from 0..511 (all 8-bit a+b and a-b
-  will fall in this range) then you can convert a multiply into a table
-  lookup plus a subtract.
+For 8-bit values if you create a table of squares from 0 to 511
+(all 8-bit a+b and a-b fall in this range) then you can convert a multiply
+into two table lookups and a subtraction.
+This does have the downside of requiring 2kB of lookup tables
+(which can be generated at startup) but it reduces the multiply
+cost to the order of 250 cycles or so.
 
-  The downsize is you will need 2kB of squares lookup tables (which can
-  be generated at startup).  This reduces the multiply cost to the order
-  of 200 to 250 cycles.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  By using the fast multiply and a lot of careful optimization you can
-  generate a Mode7 background in 40x40 graphics mode at about 5 frames/second.
+\subsection{BALL ON CHECKERBOARD}
 
-  The engine can be parameterized with different tilesets to use, which we
-  do to provide both a black+white checkerboard background, as well as the
-  island background from the TFV game.
-
-\subsection{BOUNCING BALL ON CHECKERBOARD}
-
-The first scence starts out viewing an infinite checkerboard.
-Any demo would be incomplete without some sort of bouncing geometric solid,
-in our case a pink sphere.
-This was accomplished with 16 sprites:
-the sphere was modeled in OpenGL inside of a 20 year old game engine
-and screenshots were taken then reduced in keeping with the size and
-color limitations.
-Similarly the shadow is also just sprites.
+The first Mode7 scene transpires on an infinite checkerboard.
+A demo would be incomplete without some sort of bouncing geometric solid,
+in this case we have a pink sphere.
+The sphere is represented by 16 sprites that were captured from
+a 20 year old OpenGL game engine.
+Screenshots were taken then reduced to the proper size and color
+limitations.
+The shadows are also just sprites.
+Note that the Apple II has no dedicated sprite hardware, so these
+are drawn completely in software.
 
 The clicking noise on bounce is generated by accessing the speaker port
-at address \$C030.
-This gives some sound for those viewing the demo without a Mockingboard.
+at address {\tt \$C030}.
+This gives some sound for those viewing the demo without the benefit
+of a Mockingboard.
 
 \subsection{TFV SPACESHIP FLYING}
 
-
 This next scene has a spaceship flying over an island.
+The Mode7 graphics code is generic enough that only one copy of the code
+is needed to generate both the checkerboard and island scenes.
 The spaceship, water splash, and shadows are all sprites.
-They are all drawn in software as the Apple II has no sprite hardware.
 The path the ship takes is pre-recorded; this is adapted from the
 Talbot Fantasy~7 game engine with the keyboard code replaced by a hard-coded
 script of actions to take.
 
 \subsection{STARFIELD}
 
-The spaceship takes to the stars.
-This is typical starfield code.
-Only 16 stars are modeled, and the movement code re-uses the 
-same fast-multiply routine described previously.
+The spaceship now takes to the stars.
+This is typical starfield code, where on each iteration the x and y
+values are changed by
+	\[dx=\frac{x}{z}, dy=\frac{y}{z}\]
+In order to get a good frame rate and not clutter the lo-res screen
+only 16 stars are modeled.
+To avoid having to divide, the reciprocal of all possible z values
+are stored in a table, and the fast-multiply routine described
+previously is used.
 
-The star positions require random number generation, but this is not
-fast on the 6502.
+The star positions require random number generation, but there is no
+easy way to quickly get random data on the Apple II.
 Originally we had a 256-byte blob of pre-generated ``random'' values
 included in the code.
 This wasted space, so now instead we just use our code at address
 at \$5000 as if it were a block of random numbers.
 This was arbitrarily chosen, and it is not as random as it could be
-as seen when the ship enters hyperspace the lower right quadrant has fewer
-starts than one could desire.
+as seen when the ship enters hyperspace and the lower-right quadrant
+is distressingly star-free.
+
 A simple state machine controls star speed, ship movement, hyperspace,
 background color (for the blue flash) and the eventual sequence of sprites
 as the ship vanishes into the distance.
 
 \subsection{RASTERBARS/CREDITS}
 
-Once the ship has departed, it is time for the credits as the stars
-continue to run.
+Once the ship has departed, it is time to run the credits as the stars
+continue to fly by.
 
-The text is written to the bottom 4 lines of the screen and appears
-to be surrounded by low-res graphics blocks.
-Mixed graphics/text would generally not be possible on the Apple II, although
+The text is written to the bottom four lines of the screen, seemingly
+surrounded by graphics blocks.
+Mixed graphics/text is generally not be possible on the Apple II, although
 with careful cycle counting and mode switching groups such as FrenchTouch
 have achieved this effect.
-I was lazy and instead used inverse-mode space characters which appear the same
-as white graphics blocks.
+What we see in this demo is the use of inverse-mode (inverted color)
+space characters which appear the same as white graphics blocks.
 
-The rasterbar effect is not really rasterbars, it's just a colorful assortment
+The rasterbar effect is not really rasterbars, just a colorful assortment
 of horizontal lines drawn at a location determined with a sine lookup table.
-Horizontal lines can take a surprising amount of time to draw, so this
-was optimized using inlining and a few other methods.
+Horizontal lines can take a surprising amount of time to draw, but these
+were optimized using inlining and a few other tricks.
 
-The rotating text is done by just rapidly rotating the output string through
-the ASCII table, with the clicking effect again by hitting the speaker
-at address \$C030.
-The list of people to thank ended up being extremely critical to fitting in 8kB,
-as unique text strings do not compress well.  
+The spinning text is done by just rapidly rotating the output string through
+the ASCII table, with the clicking effect again generated
+by hitting the speaker at address {\tt \$C030}.
+The list of people to thank ended up being the primary limitation to
+fitting in 8kB, as unique text strings do not compress well.  
 I apologize to everyone whose moniker got compressed beyond recognition,
 and I am still not totally happy with the centering of the text.
 
