@@ -25,11 +25,32 @@ int main(int argc, char **argv) {
 
 	printf("\\begin{table*}\n");
 
-	printf("\\caption{Sample lores map \\label{table:loresmap}}\n");
+	printf("\\caption{Apple II lores memory, showing the interleaving"
+		" of the 40x48 display.\\label{table:loresmap}}\n");
 	printf("\\centering\n");
 	printf("\\begin{tabular}{|l|l|");
 	for(i=0;i<COLUMNS;i++) printf("c|");
 	printf("}\n");
+
+	printf("\\hline\n");
+
+	printf("& &");
+	for(i=0;i<COLUMNS;i++) {
+		printf("\\rot{\\tt \\$%02X} ",i);
+		if (i<COLUMNS-1) printf("&");
+	}
+	printf("\\\\\n");
+	printf("\\hline\n");
+
+	printf("& &");
+	for(i=0;i<COLUMNS;i++) {
+		printf("\\rot{%d} ",i);
+		if (i<COLUMNS-1) printf("&");
+	}
+	printf("\\\\\n");
+
+
+
 
 	for(j=0;j<ROWS;j++) {
 		if (j%2==0) {

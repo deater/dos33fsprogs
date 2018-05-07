@@ -4,7 +4,159 @@
 \usepackage{colortbl}
 \usepackage{multirow}
 
+\newcommand*\rot{\rotatebox{90}}
+
 \begin{document}
+
+Sort of similar to how the Raspberry Pi started out as a GPU with a small
+RAM processor tacked to the side, the Apple II design is very much
+a TV-typewriter style video display that just happens to have a 6502
+processor attached to give the display something to do.
+
+Wozniak has said in an interview in retrospect he could have
+gotten a lineary video memory map at the expense of two more chips.
+Apparently at design time he had thought most people would use BASIC
+on the machine, and since BASIC already supported things did not realize
+what a hassle the map would be to assembly coders.
+
+Note any time use text or plot/line need a lookup table.
+My sprite code cheats and only supports drawing at an even rows because
+it makes the code smaller, fater, and simpler
+
+
+
+
+
+Page 1 of The Apple II low-resolution graphics and text display share
+the same 1k region of memory, from addresses {\tt \$400} to  {\tt \$800}.
+In an easy-to-use setup you would have a linear memory map where
+location (0,0) would map to address {\tt \$400}, location (39,0) would map
+to {\tt \$427}, and location (1,0) would be at {\tt \$428}.
+This is not how it works though.
+
+First, each memory location holds an 8-bit value. 
+In text mode this is just the ASCII value you want to print 
+(confusingly with the high bit set for plain text, the low-bit clear
+does weird things like enable inverse (black-on-white) or flashing
+modes).
+So setting address {\tt \$400} to {\tt \$C1}
+would put an 'A' (ASCII {\tt \$41})
+in the upper left corner of the screen.
+In low-res graphics mode the nibbles are used, so the {\tt \$C1} would
+be intepreted as putting two blocks, one above each other, in the upper
+left.
+The top one would be color 1 (red) and the bottom color 12 (light green).
+The colors are NTSC artifact colors, caused by outputting the raw bit
+pattern out to the screen with the color burst enabled.
+You can try this out yourself from BASIC by running 
+{\tt TEXT:HOME:POKE 1024,193} to see the text result, and
+{\tt GR:POKE 1024,193} to see the graphcis result.
+
+The next part that complicates things is the weird interleavings of
+the addresses.
+Note that Line 2 starts at {\tt \$480}, not {\tt \$428} as expected.
+{\tt \$428} actually corresponds to line 16.
+
+The reason for this craziness turns out to Steve Wozniak being especially 
+clever, and finding a way to get DRAM refresh essentially for free.
+
+Early home computers often used static RAM (SRAM).
+SRAM is easy to use, you just hook up the address and read/write lines,
+then just read and write to memory.
+It was very fast too.
+So why use dynamic RAM (DRAM)?
+Well SRAM uses 6 transistors per bit.
+DRAM only uses 1 transistor (plus a capacitor to store the value).
+So you can in theory fit 6 times the RAM in the same space, leading
+to much cheaper costs and much better density.
+What are the downsides of DRAM?
+Typically it was slower.
+Also that capacitor leaks away your memory.
+Given enough time (on the order of seconds or so) and all of your RAM
+will leak down to zero.
+To combat that, you have to refresh your memory.
+This essentially involves reading each memory value out faster
+than it leaks away (due to the design of DRAM, reads are destructive,
+so a read operation always reads out, recharges, then writes back
+the value).
+
+The act of refresh can be slow.
+On many systems there was separate hardware to do the refresh, and
+it often took over the memory bus to do this and your CPU would have
+to pause while it was happening.
+This is true of the original IBM PC.
+If you ever look at cycle-level optimization on this platform you will
+notice the coders have to take into account pauses caused by
+memory refresh (the refresh tended to be conservative so some coders
+would live dangerously and make refresh happen less often to increase
+performance).
+
+% Wozniak's article in Byte magazine, May 1977 (Volume 2, Number 5) 
+% Gayler: The Apple II Circuit discription
+%  15-bit video address, 6 horiz 9 vert, increments, repeating 60Hz
+%  vert has 262 values, horiz has 65 (40 chars+25 horiz blank)
+% value is loaded from proper place, and latched, 7 bits written out?
+%  Crazy, normally the 6502 runs at 978ns, but every 65th cycle
+%   it is extended to 1117ns to keep the video output in sync
+%  Which is why the average CPU freq of apple II is 1.020484MHz
+% 192 dots vertical.  70 blanking
+% Undstanding the Apple II by Sather
+%   interleaving, but also to not leave execessive holes in map
+% In interview in Sather book Woz says could have had contiguous
+%   memory with 2 more chips.
+
+Could have had contiguous memory with two more chips?
+
+1MHz 6502 cpu clock two phases.  During first phase processor is busy
+with internal work and the memory bus is idle.  So during this
+time the video circuitry reads the memory and updates the display.
+
+4116, refresh every two milliseconds. 2ms=500Hz
+
+each column has 128 bytes
+
+RA0-RA2 are the only ones that matter for correctness
+
+RA0 = V0
+RA1 = H2
+RA2 = H0
+
+           654 3210
+0x400	00 000 1000 000 0000
+0x480	00 000 1001 000 0000
+0x500	00 000 1010 000 0000
+0x580	00 000 1011 000 0000
+0x600	00 000 1100 000 0000
+0x680	00 000 1101 000 0000
+0x700	00 000 1110 000 0000
+0x780	00 000 1111 000 0000
+0x428	00 000 1000 010 1000
+0x4a8	00 000 1001 010 1000
+0x528	00 000 1010 010 1000
+0x5a8	00 000 1011 010 1000
+0x628	00 000 1100 010 1000
+0x6a8	00 000 1101 010 1000
+0x728	00 000 1110 010 1000
+0x7a8	00 000 1111 010 1000
+0x450,0x4d0,0x550,0x5d0,0x650,0x6d0,0x750,0x7d0,
+
+127 values needed
+
+0000 0000 0000 0000 = $0000	
+...
+0011 1111 1000 0000 = $3f80
+
+
+
+
+
+
+
+
+
+
+
+
 
 \input{table.tex}
 
