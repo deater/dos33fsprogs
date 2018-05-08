@@ -35,21 +35,21 @@
 The SoC in a Raspberry Pi is actually a large GPU with a small
 helper ARM processor tacked onto the side.
 In a similar fashion, the Apple II is very much
-a TV-typewriter video terminal that happens to have a 6502
+a TV-typewriter video-terminal that happens to have a 6502
 processor attached to give the display something to do.
 The video display is key to many things, in fact the CPU clock
 usually runs at 978ns, but every 65th cycle
 it is extended to 1117ns to keep the video output in sync with the colorburst.
 This is why the 6502 runs at the odd average speed of 1.020484MHz.
 
-Page 1 of The Apple II low-resolution graphics and text display share
-the same 1k region of memory, from addresses {\tt \$400} to  {\tt \$800}.
-In an easy-to-use setup you would have a linear memory map where
+Text mode and low-resolution graphics share the same 1k region of memory
+from addresses {\tt \$400} to  {\tt \$800} for Page1.
+A straightforward setup would have a linear memory map where
 location (0,0) would map to address {\tt \$400}, location (39,0) would map
 to {\tt \$427}, and location (1,0) would be at {\tt \$428}.
 That would make too much sense.
 
-First, each memory location holds an 8-bit value. 
+The first complication is what is represented by each byte.
 In text mode this is just the ASCII value you want to print,
 although confusingly with the high bit set for plain text.
 Leaving the high bit clear does weird things like enable inverse 
@@ -72,24 +72,25 @@ the addresses.
 Note that Line 2 starts at {\tt \$480}, not {\tt \$428} as you might expect.
 {\tt \$428} actually corresponds to line 16.
 
-The reason for this craziness turns out to Steve Wozniak being especially 
-clever, and finding a way to get DRAM refresh essentially for free.
+The reason for this craziness, as with most oddities on the Apple II,
+turns out to be Steve Wozniak being especially clever.
 Early home computers often used static RAM (SRAM).
 SRAM is easy to use, you just hook up the CPU address and read/write lines
 to the memory chips and read and write bytes as needed.
 
-The Apple II uses dynamic RAM (DRAM) where each bit is stored in a capacitor
-whose value will leak away to zero unless you refresh it periodically.
+The Apple II instead uses dynamic RAM (DRAM), where each bit is stored in
+a capacitor whose value will leak away to zero unless you
+refresh it periodically.
 Why would you use memory that did that?
-Well SRAM uses 6 transistors to store a bit, a DRAM only 1.
+Well SRAM uses 6 transistors to store a bit, DRAM uses only 1.
 So in theory you can fit 6 times the RAM in the same space, leading
 to much cheaper costs and much better density.
 
 Refreshing the DRAM involves regularly reading each memory value out faster
 than it leaks away.
 Due to the design of DRAM, reads are destructive,
-so a read operation always reads out, recharges, then writes back
-the value.
+so a read operation must always reads out, recharge, then write back
+the original value.
 
 Refreshing can be slow.
 On many systems there was separate hardware to conduct the refresh, and
@@ -117,17 +118,18 @@ performance).
 %   memory with 2 more chips.
 
 Steve Wozniak realized that he could avoid stopping the CPU for refresh.
-The 6502 clock has two phases.
-During first phase processor is busy
+The 6502 clock has two phases:
+during first phase processor is busy
 with internal work and the memory bus is idle.  
 On the Apple II during the idle time it steps through the video memory
 and updates the display.
-To refresh the 16k (4116) DRAM chips you need to read each 128-wide
+To refresh the 16k (model 4116) DRAM chips you need to read each 128-wide
 row at least once every 2ms.
 By carefully selecting the way that the CPU address lines map to
 the RAS/CAS lines into the DRAM you can have the video scanning
 circuitry walk through each row of the DRAMs fast enough to
-conduct the refresh for free, at the expense of having weird
+conduct the refresh for free. 
+The main expense is you end up having weird
 interleaved video memory mappings.
 
 %
@@ -164,12 +166,13 @@ which hid the memory map, and did not realize the interleaving would
 be such a pain for assembly coders.
 
 So this is the reason for the ugly memory map.
-It is also why Apple II graphics code often uses lookup tables and
+It is also why Apple II graphics code must use lookup tables and
 read/shift/mask operations just to do a simple plot operation.
 It is also why my demo code cheats and the sprite code only works
-at even row offsets.
-And it may seem hard to believe, but the hi-res code drawing routines
-are even more complicated.
+at even row offsets, as otherwise there are a lot more corner cases
+to handle.
+It may seem hard to believe, but the hi-res code drawing routines
+are even more complicated then the mess described above.
 
 \input{table.tex}
 
