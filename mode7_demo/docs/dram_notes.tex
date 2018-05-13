@@ -32,45 +32,58 @@
 
 {\bf Or: Why is the memory map so weird}
 \end{center}
-The SoC in a Raspberry Pi is actually a large GPU with a small
-helper ARM processor tacked onto the side.
-In a similar fashion, the Apple II is very much
+The Apple II is very much
 a TV-typewriter video-terminal that happens to have a 6502
 processor attached to give the display something to do.
-The video display is key to many things, in fact the CPU clock
-usually runs at 978ns, but every 65th cycle
+(This makes it similar to the SoC in a Raspberry Pi, which is
+a large GPU with a small helper ARM processor tacked onto the side.)
+
+The Apple II video display is so central, that it even affects the
+CPU timings.
+The CPU clock usually runs at 978ns, but every 65th cycle
 it is extended to 1117ns to keep the video output in sync with the colorburst.
-This is why the 6502 runs at the odd average speed of 1.020484MHz.
+This is why the 6502 runs at the somewhat unusual average speed of 1.020484MHz.
 
 Text mode and low-resolution graphics share the same 1k region of memory
-from addresses {\tt \$400} to  {\tt \$800} for Page1.
+from addresses {\tt \$400} to {\tt \$800} for Page1.
 A straightforward setup would have a linear memory map where
 location (0,0) would map to address {\tt \$400}, location (39,0) would map
-to {\tt \$427}, and location (1,0) would be at {\tt \$428}.
+to {\tt \$427}, and location (0,1) would be at {\tt \$428}.
 That would make too much sense.
 
-The first complication is what is represented by each byte.
-In text mode this is just the ASCII value you want to print,
-although confusingly with the high bit set for plain text.
+For low-res, the first complication is what is represented by each 
+memory byte.
+In text mode this is the ASCII value you wish to display, or-ed with
+\$80 so the high bit is set.
 Leaving the high bit clear does weird things like enable inverse 
 (black-on-white) or flashing characters.
 Setting address {\tt \$400} to {\tt \$C1}
 would put an 'A' (ASCII {\tt \$41})
 in the upper left corner of the screen.
-In low-res graphics mode the nibbles are used, so the {\tt \$C1} would
-be interpreted as putting two blocks, one above each other, in the upper
-left.
-The top block would be color 1 (red) and the bottom color 12 (light green).
-The colors are NTSC artifact colors, caused by outputting the raw bit
+In low-res graphics mode the two 4-bit nibbles are split and
+interpreted as two blocks, one above each other.
+In this case the the {\tt \$C1} would be a color 1 (red) block on top
+and a color 12 (light green) block on the bottom.
+The colors are NTSC artifact colors, formed by outputting the raw bit
 pattern out to the screen with the color burst enabled.
 You can try this out yourself from BASIC by running 
 {\tt TEXT:HOME:POKE 1024,193} to see the text result, and
 {\tt GR:POKE 1024,193} to see the graphics result.
 
-The next part that complicates things is the weird interleavings of
-the addresses.
-Note that Line 2 starts at {\tt \$480}, not {\tt \$428} as you might expect.
-{\tt \$428} actually corresponds to line 16.
+That is not too bad so far.
+The next complication is packing the 40-columns of characters into
+video memory.
+Sadly 40 is not a nice power of two, so any packing is going to 
+be inefficient somehow with respect to addressing bits.
+The compromise is to pack three 40-byte columns into 128 bytes,
+wasting 8 bytes (the ``screen holes'').
+
+This still might not be that weird, but then the address interleaving
+comes into play.
+Note that row 0 starts at {\tt \$480}, but row 1 starts at
+{\tt \$480} (a diff of 128), not {\tt \$428} (a diff of 40)
+as you might expect.
+Address {\tt \$428} actually corresponds to row 16.
 
 The reason for this craziness, as with most oddities on the Apple II,
 turns out to be Steve Wozniak being especially clever.
@@ -86,16 +99,20 @@ Well SRAM uses 6 transistors to store a bit, DRAM uses only 1.
 So in theory you can fit 6 times the RAM in the same space, leading
 to much cheaper costs and much better density.
 
-Refreshing the DRAM involves regularly reading each memory value out faster
+To avoid losing the contents though, you must regularly refresh.
+This involves reading each memory value out faster
 than it leaks away.
-Due to the design of DRAM, reads are destructive,
-so a read operation must always reads out, recharge, then write back
+DRAM reads are destructive,
+so a read operation always reads out, recharges, then writes back
 the original value.
+Because of this you can avoid explicitly refreshing DRAM with a dedicated
+circuit if you can guarantee you perform a read of each memory row
+in the required timeframe.
 
-Refreshing can be slow.
-On many systems there was separate hardware to conduct the refresh, and
-often this hardware would take over the memory bus and halt the CPU
-while it was happening.
+Many systems could not do this, so there was separate
+hardware to conduct the refresh.
+Often this hardware would take over the memory bus and halt the CPU
+while it was happening, slowing down the whole system.
 This is true of the original IBM PC;
 if you ever look at cycle-level optimization on the PC
 you will notice the coders have to take into account pauses caused by
@@ -120,17 +137,18 @@ performance).
 Steve Wozniak realized that he could avoid stopping the CPU for refresh.
 The 6502 clock has two phases:
 during first phase processor is busy
-with internal work and the memory bus is idle.  
-On the Apple II during the idle time it steps through the video memory
-and updates the display.
+with internal work and the memory bus is idle.
+The CPU only accesses memory in the second phase.
+The Apple II uses the idle phase to step through the video memory
+range and updates the display.
 To refresh the 16k (model 4116) DRAM chips you need to read each 128-wide
 row at least once every 2ms.
 By carefully selecting the way that the CPU address lines map to
 the RAS/CAS lines into the DRAM you can have the video scanning
 circuitry walk through each row of the DRAMs fast enough to
 conduct the refresh for free. 
-The main expense is you end up having weird
-interleaved video memory mappings.
+This works beautifully, but as a side effect you end up with the Apple II's
+weird interleaved memory maps.
 
 %
  %          654 3210
@@ -165,14 +183,18 @@ Apparently when designing the Apple II he thought most people would use BASIC
 which hid the memory map, and did not realize the interleaving would
 be such a pain for assembly coders.
 
-So this is the reason for the ugly memory map.
-It is also why Apple II graphics code must use lookup tables and
-read/shift/mask operations just to do a simple plot operation.
-It is also why my demo code cheats and the sprite code only works
-at even row offsets, as otherwise there are a lot more corner cases
-to handle.
-It may seem hard to believe, but the hi-res code drawing routines
-are even more complicated then the mess described above.
+%So this is the reason for the ugly memory map.
+This is why low-level text and lowres graphics routines
+%and text code often
+%It is also why Apple II graphics code must 
+can be complex, using lookup tables and
+read/shift/mask operations just to do simple plot operations.
+Fully generic routines have to handle all the corner cases, which is why
+the Mode7 demo cheats and the sprite drawing code only works
+at even row offsets (as this makes the code smaller and simpler).
+
+While this seems needlessly complicated, the hi-res graphics mode
+is even worse that the mess described above.
 
 \input{table.tex}
 
