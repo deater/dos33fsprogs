@@ -1,13 +1,10 @@
 ; And Believe Me, I'm Still Alive
 
 .include	"zp.inc"
-				; program is ~4k, so from 0xc00 to 0x1C00
-LZ4_BUFFER	EQU	$1C00		; $1C00 - $5C00, 16k for now
+				; program is ~16k, so from 0xc00 to 0x4C00
 UNPACK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
 					; trying not to hit DOS at $9600
 					; Reserve 3 chunks plus spare (14k)
-
-NUM_FILES	EQU	15
 
 	;=============================
 	; Setup
@@ -93,9 +90,6 @@ mockingboard_found:
 	; 4fe7 / 1e6 = .020s, 50Hz
 
 
-	;============================
-	; Draw title screen
-	;============================
 
 
 	;===========================
@@ -110,6 +104,57 @@ mockingboard_found:
 	sta	clear_all_color+1
 	jsr	clear_all
 
+
+	;============================
+	; Draw title screen
+	;============================
+
+	; Draw top line
+
+	lda	#' '+$80
+	sta	dal_first+1
+	lda	#'-'+$80
+	sta	dal_second+1
+	jsr	draw_ascii_line
+
+	; Draw columns
+
+	ldy	#20
+
+	lda	#'|'+$80
+	sta	dal_first+1
+	lda	#' '+$80
+	sta	dal_second+1
+line_loop:
+	jsr	draw_ascii_line
+	dey
+	bne	line_loop
+
+	; Draw bottom line
+
+	lda	#' '+$80
+	sta	dal_first+1
+	lda	#'-'+$80
+	sta	dal_second+1
+	jsr	draw_ascii_line
+
+
+	;============================
+	; Setup bounds
+	;============================
+
+	lda	#2
+	sta	WNDLFT
+	lda	#35
+	sta	WNDWDTH
+	lda	#1
+	sta	WNDTOP
+	lda	#21
+	sta	WNDBTM
+
+
+
+
 	;==================
 	; load song
 	;==================
@@ -119,6 +164,9 @@ mockingboard_found:
 	;============================
 	; Init Background
 	;============================
+
+
+
 
 	;============================
 	; Enable 6502 interrupts
@@ -210,19 +258,8 @@ load_song:
 	sta	CHUNKSIZE
 
 	;===========================
-	; Load in KRW file
+	; Setup KRW file
 	;===========================
-
-
-	lda	#<krw_file			; point to filename
-	sta	INL
-	lda	#>krw_file
-	sta	INH
-
-disk_buff	EQU	LZ4_BUFFER
-read_size	EQU	$4000
-
-	jsr	read_file		; read KRW file from disk
 
 	; Point LZ4 src at proper place
 
@@ -325,17 +362,29 @@ page_copy_loop:
 
 
 
+	;=====================
+	; Draw ascii line art
+	;
+	; trashes A,X
 
+draw_ascii_line:
 
+dal_first:
+	lda	#'|'+$80
+	jsr	COUT1
 
-;==========
-; filenames
-;==========
-krw_file:
-	.asciiz "SA.KRW"
+	ldx	#38
+dal_second:
+	lda	#' '+$80
+dal_loop:
+	jsr	COUT1
+	dex
+	bne	dal_loop
 
+	lda	dal_first+1
+	jsr	COUT1
 
-
+	rts
 
 ;=========
 ;routines
@@ -344,9 +393,6 @@ krw_file:
 .include	"../asm_routines/text_print.s"
 .include	"../asm_routines/mockingboard_a.s"
 .include	"../asm_routines/gr_fast_clear.s"
-.include	"../asm_routines/pageflip.s"
-.include	"../asm_routines/gr_setpage.s"
-.include	"../asm_routines/dos33_routines.s"
 .include	"../asm_routines/lz4_decode.s"
 .include	"../asm_routines/keypress_minimal.s"
 
@@ -359,4 +405,9 @@ mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
 not_message:		.byte   "NOT "
 loading_message:	.asciiz "LOADING"
 
+
 .include	"ascii_art.inc"
+
+LZ4_BUFFER:
+.incbin		"SA.KRW"
+

@@ -13,7 +13,6 @@ STILL_ALIVE:	still_alive.o
 
 still_alive.o:	still_alive.s \
 	../asm_routines/mockingboard.s \
-	../asm_routines/dos33_routines.s \
 	../asm_routines/lz4_decode.s \
 	../asm_routines/keypress_minimal.s \
 	interrupt_handler.s \
