@@ -48,12 +48,6 @@ NUM_FILES	EQU	15
 	jmp	forever_loop			; and wait forever
 
 mockingboard_found:
-;	lda     #<found_message			; print found message
-;	sta     OUTL
-;	lda     #>found_message
-;	sta     OUTH
-;	inc     CV
-;	jsr     move_and_print
 
 	;============================
 	; Init the Mockingboard
@@ -103,17 +97,24 @@ mockingboard_found:
 	; Draw title screen
 	;============================
 
-	lda	#$4				; draw page 1
+
+	;===========================
+	; clear both screens
+	;===========================
+
+	; Clear text page0
+
+	lda	#0
 	sta	DRAW_PAGE
-
-	jsr	clear_screens			; clear both screens
-
+	lda	#(' '+$80)
+	sta	clear_all_color+1
+	jsr	clear_all
 
 	;==================
-	; load first song
+	; load song
 	;==================
 
-	jsr	new_song
+	jsr	load_song
 
 	;============================
 	; Init Background
@@ -188,10 +189,10 @@ forever_loop:
 
 
 	;=================
-	; load a new song
+	; load our song
 	;=================
 
-new_song:
+load_song:
 
 	;=========================
 	; Init Variables
@@ -209,24 +210,6 @@ new_song:
 	sta	CHUNKSIZE
 
 	;===========================
-	; Print loading message
-	;===========================
-
-	jsr	clear_bottoms		; clear bottom of page 0/1
-
-	lda	#0			; print LOADING message
-	sta	CH
-	lda	#21
-	sta	CV
-
-	lda	#<loading_message
-	sta	OUTL
-	lda	#>loading_message
-	sta	OUTH
-        jsr     print_both_pages
-
-
-	;===========================
 	; Load in KRW file
 	;===========================
 
@@ -235,17 +218,6 @@ new_song:
 	sta	INL
 	lda	#>krw_file
 	sta	INH
-
-	lda	#8
-	sta	CH
-	lda	#21
-	sta	CV
-
-	lda	INL
-	sta	OUTL
-	lda	INH
-	sta	OUTH
-	jsr	print_both_pages
 
 disk_buff	EQU	LZ4_BUFFER
 read_size	EQU	$4000
@@ -385,8 +357,6 @@ krw_file:
 ;=========
 mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
 not_message:		.byte   "NOT "
-found_message:		.asciiz "FOUND"
-;done_message:		.asciiz "DONE PLAYING"
 loading_message:	.asciiz "LOADING"
 
 .include	"ascii_art.inc"

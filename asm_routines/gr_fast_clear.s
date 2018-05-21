@@ -152,6 +152,7 @@ clear_screens_notext:
 	; clear_all
 	;=========================================================
 	; clear 48 rows
+	; clear color: clear_all_color+1
 
 clear_all:
 	clc								; 2
