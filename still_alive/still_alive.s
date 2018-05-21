@@ -138,7 +138,6 @@ line_loop:
 	sta	dal_second+1
 	jsr	draw_ascii_line
 
-
 	;============================
 	; Setup bounds
 	;============================
@@ -152,7 +151,16 @@ line_loop:
 	lda	#21
 	sta	WNDBTM
 
+	jsr	HOME
 
+	;==============================
+	; Setup lyrics
+	;==============================
+
+	lda	#<(lyrics)
+	sta	LYRICSL
+	lda	#>(lyrics)
+	sta	LYRICSH
 
 
 	;==================
@@ -405,6 +413,9 @@ mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
 not_message:		.byte   "NOT "
 loading_message:	.asciiz "LOADING"
 
+
+lyrics:
+.include	"lyrics.inc"
 
 .include	"ascii_art.inc"
 

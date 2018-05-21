@@ -16,7 +16,7 @@ still_alive.o:	still_alive.s \
 	../asm_routines/lz4_decode.s \
 	../asm_routines/keypress_minimal.s \
 	interrupt_handler.s \
-	ascii_art.inc zp.inc
+	ascii_art.inc lyrics.inc zp.inc
 	ca65 -o still_alive.o still_alive.s -l still_alive.lst
 
 lyrics_to_asm:	lyrics_to_asm.c

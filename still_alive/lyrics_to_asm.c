@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 					printf(",$%02X",11);
 				}
 				else if (string[i]=='n') {
-					printf(",$%02X",13);
+					printf(",$%02X",13|0x80);
 				}
 				else if ((string[i]>='0') &&
 					(string[i]<=':')) {

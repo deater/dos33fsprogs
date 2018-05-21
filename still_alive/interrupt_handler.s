@@ -239,13 +239,34 @@ done_interrupt:
 
 
 	;=====================
-	; Update frame count
+	; Handle Lyrics
 	;=====================
-update_time:
-	inc	FRAME_COUNT						; 5
 	lda	FRAME_COUNT						; 3
-	cmp	#50							; 3
+	inc	FRAME_COUNT						; 5
 
+	ldy	#$0
+	cmp	(LYRICSL),Y
+	bne	check_keyboard
+
+	;================================
+	; Frame matches, print the string
+	;================================
+	iny
+lyric_loop:
+	lda	(LYRICSL),Y
+	beq	done_lyric
+	jsr	COUT1
+	iny
+	jmp	lyric_loop
+done_lyric:
+	; adjust pointer
+	sec
+	tya
+	adc	LYRICSL
+	sta	LYRICSL
+	lda	#0
+	adc	LYRICSH
+	sta	LYRICSH
 
 check_keyboard:
 
