@@ -172,35 +172,15 @@ check_done:
 	bit	DONE_PLAYING
 	beq	main_loop	; if was all zeros, loop
 	bmi	main_loop	; if high bit set, paused
-	bvs	minus_song	; if bit 6 set, then left pressed
+;	bvs	minus_song	; if bit 6 set, then left pressed
 
 				; else, either song finished or
 				; right pressed
-
-plus_song:
-	sei			; disable interrupts
-	jsr	increment_file
-	jmp	done_play
-
-minus_song:
-	sei			; disable interrupts
-	jsr	decrement_file
 
 done_play:
 
 	lda	#0
 	sta	DONE_PLAYING
-
-	lda	#0
-	sta	CH
-
-	jsr	clear_bottoms
-
-	jsr	new_song
-
-	cli				; re-enable interrupts
-
-	jmp	main_loop
 
 forever_loop:
 	jmp	forever_loop
@@ -272,54 +252,6 @@ read_size	EQU	$4000
 
 	jsr	read_file		; read KRW file from disk
 
-
-	;=========================
-	; Print Info
-	;=========================
-
-	jsr	clear_bottoms		; clear bottom of page 0/1
-
-	lda	#>LZ4_BUFFER		; point to LZ4 data
-	sta	OUTH
-	lda	#<LZ4_BUFFER
-	sta	OUTL
-
-	ldy	#3			; skip KRW magic at front
-
-	; print title
-	lda	#20			; VTAB 20: HTAB from file
-	jsr	print_header_info
-
-	; Print Author
-	lda	#21			; VTAB 21: HTAB from file
-	jsr	print_header_info
-
-	; Print clock
-	lda	#23			; VTAB 23: HTAB from file
-	jsr	print_header_info
-
-	; Print Left Arrow (INVERSE)
-	lda	#'<'
-	sta	$750
-	sta	$B50
-
-	lda	#'-'
-	sta	$751
-	sta	$B51
-
-	; Print Rright Arrow (INVERSE)
-	lda	#'-'
-	sta	$776
-	sta	$B76
-
-	lda	#'>'
-	sta	$777
-	sta	$B77
-
-
-
-
-
 	; Point LZ4 src at proper place
 
 	ldy	#0
@@ -383,39 +315,6 @@ setup_next_subsong:
 
 	rts
 
-
-
-	;===================
-	; print header info
-	;===================
-	; shortcut to print header info
-	; a = VTAB
-
-print_header_info:
-
-	sta	CV
-
-	iny				; adjust pointer
-	tya
-	ldy	#0
-	clc
-	adc	OUTL
-	sta	OUTL
-	lda	OUTH
-	adc	#$0
-	sta	OUTH
-
-	lda	(OUTL),Y		; get HTAB value
-	sta	CH
-
-	inc	OUTL			; increment 16-bits
-	bne	bloop22
-	inc	OUTH
-bloop22:
-
-	jmp     print_both_pages	; print, tail call
-
-
 	;==============================================
 	; plan: takes 256  50Hz to play a chunk
 	; need to copy 14 256-byte blocks
@@ -455,29 +354,7 @@ page_copy_loop:
 
 
 
-	;===============================
-	; Increment file we want to load
-	;===============================
-increment_file:
-	inc	WHICH_FILE
-	lda	WHICH_FILE
-	cmp	#NUM_FILES
-	bne	done_increment
-	lda	#0
-	sta	WHICH_FILE
-done_increment:
-	rts
 
-	;===============================
-	; Decrement file we want to load
-	;===============================
-decrement_file:
-	dec	WHICH_FILE
-	bpl	done_decrement
-	lda	#(NUM_FILES-1)
-	sta	WHICH_FILE
-done_decrement:
-	rts
 
 ;==========
 ; filenames
