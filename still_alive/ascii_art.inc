@@ -1,223 +1,479 @@
+ascii_art:
+	.byte <aperture,>aperture
+	.byte <radioactive,>radioactive
+	.byte <atom,>atom
+	.byte <broken_heart,>broken_heart
+	.byte <explosion,>explosion
+	.byte <fire,>fire
+	.byte <check,>check
+	.byte <black_mesa,>black_mesa
+	.byte <cake,>cake
+	.byte <glados,>glados
+
 aperture:
-	.asciiz "              .,-:;//;:=,"
-	.asciiz "          . :H@@@MM@M#H/.,+%;,"
-	.asciiz "       ,/X+ +M@@M@MM%=,-%HMMM@X/,"
-	.asciiz "     -+@MM; $M@@MH+-,;XMMMM@MMMM@+-"
-	.asciiz "    ;@M@@M- XM@X;. -+XXXXXHHH@M@M#@/."
-	.asciiz "  ,%MM@@MH ,@%=            .---=-=:=,."
-	.asciiz "  =@#@@@MX .,              -%HX$$%%%+;"
-	.asciiz " =-./@M@M$                  .;@MMMM@MM:"
-	.asciiz " X@/ -$MM/                    .+MM@@@M$"
-	.asciiz ",@M@H: :@:                    . =X#@@@@-";
-	.asciiz ",@@@MMX, .                    /H- ;@M@M=";
-	.asciiz ".H@@@@M@+,                    %MM+..%#$.";
-	.asciiz " /MMMM@MMH/.                  XM@MH; =;"
-	.asciiz "  /%+%$XHH@$=              , .H@@@@MX,"
-	.asciiz "   .=--------.           -%H.,@@@@@MX,"
-	.asciiz "   .%MM@@@HHHXX$$$%+- .:$MMX =M@@MM%."
-	.asciiz "     =XMMM@MM@MM#H;,-+HMM@M+ /MMMX="
-	.asciiz "       =%@M@M#@$-.=$@MM@@@M; %M%="
-	.asciiz "         ,:+$+-,/H#MMMMMMM@= =,"
-	.asciiz "               =++%%%%+/:-."
 
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$AC
+	.byte $AD,$BA,$BB,$AF,$AF,$BB,$BA,$BD,$AC,$8D,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$AE,$A0,$BA,$C8,$C0,$C0,$C0,$CD,$CD,$C0,$CD,$A3
+	.byte $C8,$AF,$AE,$AC,$AB,$A5,$BB,$AC,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $AC,$AF,$D8,$AB,$A0,$AB,$CD,$C0,$C0,$CD,$C0,$CD,$CD,$A5,$BD,$AC
+	.byte $AD,$A5,$C8,$CD,$CD,$CD,$C0,$D8,$AF,$AC,$8D,$A0,$A0,$A0,$A0,$A0
+	.byte $AD,$AB,$C0,$CD,$CD,$BB,$A0,$A4,$CD,$C0,$C0,$CD,$C8,$AB,$AD,$AC
+	.byte $BB,$D8,$CD,$CD,$CD,$CD,$C0,$CD,$CD,$CD,$CD,$C0,$AB,$AD,$8D,$A0
+	.byte $A0,$A0,$A0,$BB,$C0,$CD,$C0,$C0,$CD,$AD,$A0,$D8,$CD,$C0,$D8,$BB
+	.byte $AE,$A0,$AD,$AB,$D8,$D8,$D8,$D8,$D8,$C8,$C8,$C8,$C0,$CD,$C0,$CD
+	.byte $A3,$C0,$AF,$AE,$8D,$A0,$A0,$AC,$A5,$CD,$CD,$C0,$C0,$CD,$C8,$A0
+	.byte $AC,$C0,$A5,$BD,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $AE,$AD,$AD,$AD,$BD,$AD,$BD,$BA,$BD,$AC,$AE,$8D,$A0,$A0,$BD,$C0
+	.byte $A3,$C0,$C0,$C0,$CD,$D8,$A0,$AE,$AC,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$AD,$A5,$C8,$D8,$A4,$A4,$A5,$A5,$A5
+	.byte $AB,$BB,$8D,$A0,$BD,$AD,$AE,$AF,$C0,$CD,$C0,$CD,$A4,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE
+	.byte $BB,$C0,$CD,$CD,$CD,$CD,$C0,$CD,$CD,$BA,$8D,$A0,$D8,$C0,$AF,$A0
+	.byte $AD,$A4,$CD,$CD,$AF,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$AB,$CD,$CD,$C0,$C0,$C0
+	.byte $CD,$A4,$8D,$AC,$C0,$CD,$C0,$C8,$BA,$A0,$BA,$C0,$BA,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$AE,$A0,$BD,$D8,$A3,$C0,$C0,$C0,$C0,$AD,$8D,$AC,$C0,$C0,$C0
+	.byte $CD,$CD,$D8,$AC,$A0,$AE,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AF,$C8,$AD,$A0,$BB,$C0
+	.byte $CD,$C0,$CD,$BD,$8D,$AE,$C8,$C0,$C0,$C0,$C0,$CD,$C0,$AB,$AC,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A5,$CD,$CD,$AB,$AE,$AE,$A5,$A3,$A4,$AE,$8D,$A0,$AF
+	.byte $CD,$CD,$CD,$CD,$C0,$CD,$CD,$C8,$AF,$AE,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$D8,$CD,$C0,$CD
+	.byte $C8,$BB,$A0,$BD,$BB,$8D,$A0,$A0,$AF,$A5,$AB,$A5,$A4,$D8,$C8,$C8
+	.byte $C0,$A4,$BD,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$AC,$A0,$AE,$C8,$C0,$C0,$C0,$C0,$CD,$D8,$AC,$8D,$A0,$A0,$A0
+	.byte $AE,$BD,$AD,$AD,$AD,$AD,$AD,$AD,$AD,$AD,$AE,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$AD,$A5,$C8,$AE,$AC,$C0,$C0,$C0,$C0,$C0
+	.byte $CD,$D8,$AC,$8D,$A0,$A0,$A0,$AE,$A5,$CD,$CD,$C0,$C0,$C0,$C8,$C8
+	.byte $C8,$D8,$D8,$A4,$A4,$A4,$A5,$AB,$AD,$A0,$AE,$BA,$A4,$CD,$CD,$D8
+	.byte $A0,$BD,$CD,$C0,$C0,$CD,$CD,$A5,$AE,$8D,$A0,$A0,$A0,$A0,$A0,$BD
+	.byte $D8,$CD,$CD,$CD,$C0,$CD,$CD,$C0,$CD,$CD,$A3,$C8,$BB,$AC,$AD,$AB
+	.byte $C8,$CD,$CD,$C0,$CD,$AB,$A0,$AF,$CD,$CD,$CD,$D8,$BD,$8D,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$BD,$A5,$C0,$CD,$C0,$CD,$A3,$C0,$A4,$AD,$AE
+	.byte $BD,$A4,$C0,$CD,$CD,$C0,$C0,$C0,$CD,$BB,$A0,$A5,$CD,$A5,$BD,$8D
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$BA,$AB,$A4,$AB,$AD,$AC
+	.byte $AF,$C8,$A3,$CD,$CD,$CD,$CD,$CD,$CD,$CD,$C0,$BD,$A0,$BD,$AC,$8D
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BD
+	.byte $AB,$AB,$A5,$A5,$A5,$A5,$AB,$AF,$BA,$AD,$AE,$8D,$00
 radioactive:
-	.asciiz "             =+$HM####@H%;,"
-	.asciiz "          /H###############M$,"
-	.asciiz "          ,@################+"
-	.asciiz "           .H##############+"
-	.asciiz "             X############/"
-	.asciiz "              $##########/"
-	.asciiz "               %########/"
-	.asciiz "                /X/;;+X/"
-	.asciiz " "
-	.asciiz "                 -XHHX-"
-	.asciiz "                ,######,"
-	.asciiz "#############X  .M####M.  X#############";
-	.asciiz "##############-   -//-   -##############";
-	.asciiz "X##############%,      ,+##############X";
-	.asciiz "-##############X        X##############-";
-	.asciiz " %############%          %############%"
-	.asciiz "  %##########;            ;##########%"
-	.asciiz "   ;#######M=              =M#######;"
-	.asciiz "    .+M###@,                ,@###M+."
-	.asciiz "       :XH.                  .HX:"
 
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BD,$AB,$A4
+	.byte $C8,$CD,$A3,$A3,$A3,$A3,$C0,$C8,$A5,$BB,$AC,$8D,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$AF,$C8,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$CD,$A4,$AC,$8D,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$AC,$C0,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$AB,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$AE,$C8,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$AB,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$D8,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $AF,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A4,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$AF,$8D,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A5,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$AF,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$AF,$D8,$AF,$BB,$BB,$AB,$D8,$AF,$8D
+	.byte $8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$AD,$D8,$C8,$C8,$D8,$AD,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $AC,$8D,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$D8
+	.byte $A0,$A0,$AE,$CD,$A3,$A3,$A3,$A3,$CD,$AE,$A0,$A0,$D8,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$8D,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$AD,$A0,$A0,$A0,$AD,$AF,$AF
+	.byte $AD,$A0,$A0,$A0,$AD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$8D,$D8,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A5,$AC,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$AB,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$D8,$8D,$AD,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$D8,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$D8,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$AD,$8D,$A0,$A5,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A5,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A5
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A5,$8D,$A0,$A0
+	.byte $A5,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$BB,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BB,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A5,$8D,$A0,$A0,$A0,$BB,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $CD,$BD,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $BD,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$BB,$8D,$A0,$A0,$A0,$A0,$AE
+	.byte $AB,$CD,$A3,$A3,$A3,$C0,$AC,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$C0,$A3,$A3,$A3,$CD,$AB,$AE,$8D
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$BA,$D8,$C8,$AE,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$C8,$D8
+	.byte $BA,$8D,$00
 atom:
-	.asciiz "                 =/;;/-"
-	.asciiz "                +:    //"
-	.asciiz "               /;      /;"
-	.asciiz "              -X        H."
-	.asciiz ".//;;;:;;-,   X=        :+   .-;:=;:;%;.";
-	.asciiz "M-       ,=;;;#:,      ,:#;;:=,       ,@";
-	.asciiz ":%           :%.=/++++/=.$=           %=";
-	.asciiz " ,%;         %/:+/;,,/++:+/         ;+."
-	.asciiz "   ,+/.    ,;@+,        ,%H;,    ,/+,"
-	.asciiz "      ;+;;/= @.  .H##X   -X :///+;"
-	.asciiz "      ;+=;;;.@,  .XM@$.  =X.//;=%/."
-	.asciiz "   ,;:      :@%=        =$H:     .+%-"
-	.asciiz " ,%=         %;-///==///-//         =%,"
-	.asciiz ";+           :%-;;;:;;;;-X-           +:";
-	.asciiz "@-      .-;;;;M-        =M/;;;-.      -X";
-	.asciiz " :;;::;;-.    %-        :+    ,-;;-;:=="
-	.asciiz "              ,X        H."
-	.asciiz "               ;/      %="
-	.asciiz "                //    +;"
-	.asciiz "                 ,////,"
 
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$BD,$AF,$BB,$BB,$AF,$AD,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AB,$BA,$A0,$A0,$A0,$A0,$AF,$AF
+	.byte $8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $AF,$BB,$A0,$A0,$A0,$A0,$A0,$A0,$AF,$BB,$8D,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AD,$D8,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$C8,$AE,$8D,$AE,$AF,$AF,$BB,$BB,$BB,$BA,$BB,$BB,$AD
+	.byte $AC,$A0,$A0,$A0,$D8,$BD,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BA,$AB
+	.byte $A0,$A0,$A0,$AE,$AD,$BB,$BA,$BD,$BB,$BA,$BB,$A5,$BB,$AE,$8D,$CD
+	.byte $AD,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$BD,$BB,$BB,$BB,$A3,$BA,$AC
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$AC,$BA,$A3,$BB,$BB,$BA,$BD,$AC,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$AC,$C0,$8D,$BA,$A5,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$BA,$A5,$AE,$BD,$AF,$AB,$AB,$AB,$AB,$AF,$BD
+	.byte $AE,$A4,$BD,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A5,$BD
+	.byte $8D,$A0,$AC,$A5,$BB,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A5,$AF
+	.byte $BA,$AB,$AF,$BB,$AC,$AC,$AF,$AB,$AB,$BA,$AB,$AF,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$BB,$AB,$AE,$8D,$A0,$A0,$A0,$AC,$AB,$AF,$AE
+	.byte $A0,$A0,$A0,$A0,$AC,$BB,$C0,$AB,$AC,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$AC,$A5,$C8,$BB,$AC,$A0,$A0,$A0,$A0,$AC,$AF,$AB,$AC,$8D,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$BB,$AB,$BB,$BB,$AF,$BD,$A0,$C0,$AE,$A0,$A0
+	.byte $AE,$C8,$A3,$A3,$D8,$A0,$A0,$A0,$AD,$D8,$A0,$BA,$AF,$AF,$AF,$AB
+	.byte $BB,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$BB,$AB,$BD,$BB,$BB,$BB,$AE,$C0
+	.byte $AC,$A0,$A0,$AE,$D8,$CD,$C0,$A4,$AE,$A0,$A0,$BD,$D8,$AE,$AF,$AF
+	.byte $BB,$BD,$A5,$AF,$AE,$8D,$A0,$A0,$A0,$AC,$BB,$BA,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$BA,$C0,$A5,$BD,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BD,$A4
+	.byte $C8,$BA,$A0,$A0,$A0,$A0,$A0,$AE,$AB,$A5,$AD,$8D,$A0,$AC,$A5,$BD
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A5,$BB,$AD,$AF,$AF,$AF,$BD
+	.byte $BD,$AF,$AF,$AF,$AD,$AF,$AF,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $BD,$A5,$AC,$8D,$BB,$AB,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$BA,$A5,$AD,$BB,$BB,$BB,$BA,$BB,$BB,$BB,$BB,$AD,$D8,$AD,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AB,$BA,$8D,$C0,$AD,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$AE,$AD,$BB,$BB,$BB,$BB,$CD,$AD,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$BD,$CD,$AF,$BB,$BB,$BB,$AD,$AE,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$AD,$D8,$8D,$A0,$BA,$BB,$BB,$BA,$BA,$BB,$BB,$AD,$AE
+	.byte $A0,$A0,$A0,$A0,$A5,$AD,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BA,$AB
+	.byte $A0,$A0,$A0,$A0,$AC,$AD,$BB,$BB,$AD,$BB,$BA,$BD,$BD,$8D,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$D8,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$C8,$AE,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BB,$AF,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A5,$BD,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$AF,$AF,$A0,$A0,$A0,$A0,$AB,$BB,$8D,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$AF,$AF
+	.byte $AF,$AF,$AC,$8D,$00
 broken_heart:
-	.asciiz "                          .,---."
-	.asciiz "                        ,/XM#MMMX;,"
-	.asciiz "                      -%##########M%,"
-	.asciiz "                     -@######%  $###@="
-	.asciiz "      .,--,         -H#######$   $###M:"
-	.asciiz "   ,;$M###MMX;     .;##########$;HM###X=";
-	.asciiz " ,/@##########H=      ;################+";
-	.asciiz "-+#############M/,      %##############+";
-	.asciiz "%M###############=      /##############:";
-	.asciiz "H################      .M#############;.";
-	.asciiz "@###############M      ,@###########M:."
-	.asciiz "X################,      -$=X#######@:"
-	.asciiz "/@##################%-     +######$-"
-	.asciiz ".;##################X     .X#####+,"
-	.asciiz " .;H################/     -X####+."
-	.asciiz "   ,;X##############,       .MM/"
-	.asciiz "      ,:+$H@M#######M#$-    .$$="
-	.asciiz "           .,-=;+$@###X:    ;/=."
-	.asciiz "                  .,/X$;   .::,"
-	.asciiz "                      .,    .."
 
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$AC,$AD,$AD,$AD,$AE
+	.byte $8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$AF,$D8,$CD,$A3,$CD,$CD
+	.byte $CD,$D8,$BB,$AC,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AD,$A5,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$CD,$A5,$AC,$8D,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $AD,$C0,$A3,$A3,$A3,$A3,$A3,$A3,$A5,$A0,$A0,$A4,$A3,$A3,$A3,$C0
+	.byte $BD,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$AC,$AD,$AD,$AC,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$AD,$C8,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A4
+	.byte $A0,$A0,$A0,$A4,$A3,$A3,$A3,$CD,$BA,$8D,$A0,$A0,$A0,$AC,$BB,$A4
+	.byte $CD,$A3,$A3,$A3,$CD,$CD,$D8,$BB,$A0,$A0,$A0,$A0,$A0,$AE,$BB,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A4,$BB,$C8,$CD,$A3,$A3,$A3
+	.byte $D8,$BD,$8D,$A0,$AC,$AF,$C0,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$C8,$BD,$A0,$A0,$A0,$A0,$A0,$A0,$BB,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$AB,$8D,$AD,$AB,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$CD,$AF,$AC,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A5,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$AB,$8D,$A5,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$BD,$A0,$A0,$A0,$A0,$A0,$A0,$AF,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$BA,$8D,$C8,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$AE,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$BB,$AE,$8D,$C0,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$CD,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$C0
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$CD,$BA,$AE,$8D,$D8
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $AC,$A0,$A0,$A0,$A0,$A0,$A0,$AD,$A4,$BD,$D8,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$C0,$BA,$8D,$AF,$C0,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A5,$AD,$A0,$A0,$A0,$A0,$A0
+	.byte $AB,$A3,$A3,$A3,$A3,$A3,$A3,$A4,$AD,$8D,$AE,$BB,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$D8,$A0
+	.byte $A0,$A0,$A0,$A0,$AE,$D8,$A3,$A3,$A3,$A3,$A3,$AB,$AC,$8D,$A0,$AE
+	.byte $BB,$C8,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$AF,$A0,$A0,$A0,$A0,$A0,$AD,$D8,$A3,$A3,$A3,$A3,$AB,$AE
+	.byte $8D,$A0,$A0,$A0,$AC,$BB,$D8,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$AC,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$CD,$CD
+	.byte $AF,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$BA,$AB,$A4,$C8,$C0,$CD,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$CD,$A3,$A4,$AD,$A0,$A0,$A0,$A0,$AE,$A4
+	.byte $A4,$BD,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$AC
+	.byte $AD,$BD,$BB,$AB,$A4,$C0,$A3,$A3,$A3,$D8,$BA,$A0,$A0,$A0,$A0,$BB
+	.byte $AF,$BD,$AE,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$AE,$AC,$AF,$D8,$A4,$BB,$A0,$A0,$A0,$AE
+	.byte $BA,$BA,$AC,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$AC,$A0,$A0,$A0,$A0
+	.byte $AE,$AE,$8D,$00
 explosion:
-	.asciiz "            .+"
-	.asciiz "             /M;"
-	.asciiz "              H#@:              ;,"
-	.asciiz "              -###H-          -@/"
-	.asciiz "               %####$.  -;  .%#X"
-	.asciiz "                M#####+;#H :M#M."
-	.asciiz "..          .+/;%#########X###-"
-	.asciiz " -/%H%+;-,    +##############/"
-	.asciiz "    .:$M###MH$%+############X  ,--=;-"
-	.asciiz "        -/H#####################H+=."
-	.asciiz "           .+#################X."
-	.asciiz "         =%M####################H;."
-	.asciiz "            /@###############+;;/%%;,"
-	.asciiz "         -%###################$."
-	.asciiz "       ;H######################M="
-	.asciiz "    ,%#####MH$%;+#####M###-/@####%"
-	.asciiz "  :$H%+;=-      -####X.,H#   -+M##@-"
-	.asciiz " .              ,###;    ;      =$##+"
-	.asciiz "                .#H,               :XH,"
-	.asciiz "                 +                   .;-";
 
-file:
-	.asciiz "                     -$-"
-	.asciiz "                    .H##H,"
-	.asciiz "                   +######+"
-	.asciiz "                .+#########H."
-	.asciiz "              -$############@."
-	.asciiz "            =H###############@  -X:"
-	.asciiz "          .$##################:  @#@-"
-	.asciiz "     ,;  .M###################;  H###;"
-	.asciiz "   ;@#:  @###################@  ,#####:"
-	.asciiz " -M###.  M#################@.  ;######H"
-	.asciiz " M####-  +###############$   =@#######X"
-	.asciiz " H####$   -M###########+   :#########M,"
-	.asciiz "  /####X-   =########%   :M########@/."
-	.asciiz "    ,;%H@X;   .$###X   :##MM@%+;:-"
-	.asciiz "                 .."
-	.asciiz "  -/;:-,.              ,,-==+M########H"
-	.asciiz " -##################@HX%%+%%$%%%+:,,"
-	.asciiz "    .-/H%%%+%%$H@###############M@+=:/+:";
-	.asciiz "/XHX%:#####MH%=    ,---:;;;;/%%XHM,:###$";
-	.asciiz "$@#MX %+;-                           ."
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$AB,$8D,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AF,$CD,$BB,$8D
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$C8,$A3
+	.byte $C0,$BA,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $BB,$AC,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$AD,$A3,$A3,$A3,$C8,$AD,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$AD,$C0,$AF,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A5,$A3,$A3,$A3,$A3,$A4,$AE,$A0,$A0,$AD,$BB,$A0
+	.byte $A0,$AE,$A5,$A3,$D8,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$CD,$A3,$A3,$A3,$A3,$A3,$AB,$BB,$A3,$C8
+	.byte $A0,$BA,$CD,$A3,$CD,$AE,$8D,$AE,$AE,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$AE,$AB,$AF,$BB,$A5,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$D8,$A3,$A3,$A3,$AD,$8D,$A0,$AD,$AF,$A5,$C8,$A5,$AB,$BB,$AD
+	.byte $AC,$A0,$A0,$A0,$A0,$AB,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$AF,$8D,$A0,$A0,$A0,$A0,$AE,$BA,$A4,$CD,$A3,$A3
+	.byte $A3,$CD,$C8,$A4,$A5,$AB,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$D8,$A0,$A0,$AC,$AD,$AD,$BD,$BB,$AD,$8D,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$AD,$AF,$C8,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$C8,$AB,$BD,$AE
+	.byte $8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$AB,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$D8
+	.byte $AE,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BD,$A5,$CD,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$C8,$BB,$AE,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$AF,$C0,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$AB,$BB,$BB,$AF,$A5,$A5,$BB,$AC,$8D,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$AD,$A5,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A4,$AE,$8D,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$BB,$C8,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$CD,$BD,$8D,$A0
+	.byte $A0,$A0,$A0,$AC,$A5,$A3,$A3,$A3,$A3,$A3,$CD,$C8,$A4,$A5,$BB,$AB
+	.byte $A3,$A3,$A3,$A3,$A3,$CD,$A3,$A3,$A3,$AD,$AF,$C0,$A3,$A3,$A3,$A3
+	.byte $A5,$8D,$A0,$A0,$BA,$A4,$C8,$A5,$AB,$BB,$BD,$AD,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$AD,$A3,$A3,$A3,$A3,$D8,$AE,$AC,$C8,$A3,$A0,$A0,$A0,$AD
+	.byte $AB,$CD,$A3,$A3,$C0,$AD,$8D,$A0,$AE,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$A3,$A3,$A3,$BB,$A0,$A0,$A0,$A0
+	.byte $BB,$A0,$A0,$A0,$A0,$A0,$A0,$BD,$A4,$A3,$A3,$AB,$8D,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$A3,$C8
+	.byte $AC,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $BA,$D8,$C8,$AC,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$AB,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$BB,$AD,$8D,$00
+fire:
 
-
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$AD,$A4,$AD,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$C8,$A3
+	.byte $A3,$C8,$AC,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$AB,$A3,$A3,$A3,$A3,$A3,$A3,$AB,$8D
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $AE,$AB,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$C8,$AE,$8D,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AD,$A4,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$C0,$AE,$8D,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BD,$C8,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$C0,$A0,$A0,$AD,$D8,$BA
+	.byte $8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$A4,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$BA
+	.byte $A0,$A0,$C0,$A3,$C0,$AD,$8D,$A0,$A0,$A0,$A0,$A0,$AC,$BB,$A0,$A0
+	.byte $AE,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$BB,$A0,$A0,$C8,$A3,$A3,$A3,$BB,$8D,$A0,$A0
+	.byte $A0,$BB,$C0,$A3,$BA,$A0,$A0,$C0,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$C0,$A0,$A0,$AC,$A3
+	.byte $A3,$A3,$A3,$A3,$BA,$8D,$A0,$AD,$CD,$A3,$A3,$A3,$AE,$A0,$A0,$CD
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$C0,$AE,$A0,$A0,$BB,$A3,$A3,$A3,$A3,$A3,$A3,$C8,$8D,$A0,$CD
+	.byte $A3,$A3,$A3,$A3,$AD,$A0,$A0,$AB,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A4,$A0,$A0,$A0,$BD,$C0,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$D8,$8D,$A0,$C8,$A3,$A3,$A3,$A3,$A4,$A0,$A0,$A0
+	.byte $AD,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$AB,$A0,$A0
+	.byte $A0,$BA,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$CD,$AC,$8D,$A0,$A0
+	.byte $AF,$A3,$A3,$A3,$A3,$D8,$AD,$A0,$A0,$A0,$BD,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A5,$A0,$A0,$A0,$BA,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$C0,$AF,$AE,$8D,$A0,$A0,$A0,$A0,$AC,$BB,$A5,$C8,$C0,$D8,$BB
+	.byte $A0,$A0,$A0,$AE,$A4,$A3,$A3,$A3,$D8,$A0,$A0,$A0,$BA,$A3,$A3,$CD
+	.byte $CD,$C0,$A5,$AB,$BB,$BA,$AD,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$AE,$8D,$A0,$A0,$AD,$AF
+	.byte $BB,$BA,$AD,$AC,$AE,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$AC,$AC,$AD,$BD,$BD,$AB,$CD,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$C8,$8D,$A0,$AD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$C0,$C8,$D8,$A5,$A5,$AB,$A5,$A5
+	.byte $A4,$A5,$A5,$A5,$AB,$BA,$AC,$AC,$8D,$A0,$A0,$A0,$A0,$AE,$AD,$AF
+	.byte $C8,$A5,$A5,$A5,$AB,$A5,$A5,$A4,$C8,$C0,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$CD,$C0,$AB,$BD,$BA,$AF,$AB
+	.byte $BA,$8D,$AF,$D8,$C8,$D8,$A5,$BA,$A3,$A3,$A3,$A3,$A3,$CD,$C8,$A5
+	.byte $BD,$A0,$A0,$A0,$A0,$AC,$AD,$AD,$AD,$BA,$BB,$BB,$BB,$BB,$AF,$A5
+	.byte $A5,$D8,$C8,$CD,$AC,$BA,$A3,$A3,$A3,$A4,$8D,$A4,$C0,$A3,$CD,$D8
+	.byte $A0,$A5,$AB,$BB,$AD,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $AE,$8D,$00
 check:
-	.asciiz "                                     :X-";
-	.asciiz "                                  :X###"
-	.asciiz "                                ;@####@"
-	.asciiz "                              ;M######X"
-	.asciiz "                            -@########$"
-	.asciiz "                          .$##########@"
-	.asciiz "                         =M############-";
-	.asciiz "                        +##############$";
-	.asciiz "                      .H############$=."
-	.asciiz "         ,/:         ,M##########M;."
-	.asciiz "      -+@###;       =##########M;"
-	.asciiz "   =%M#######;     :#########M/"
-	.asciiz "-$M###########;   :#########/"
-	.asciiz " ,;X###########; =########$."
-	.asciiz "     ;H#########+#######M="
-	.asciiz "       ,+##############+"
-	.asciiz "          /M#########@-"
-	.asciiz "            ;M######%"
-	.asciiz "              +####:"
-	.asciiz "               ,$M-"
 
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$BA,$D8,$AD,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BA,$D8,$A3,$A3,$A3
+	.byte $8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$BB,$C0,$A3,$A3,$A3,$A3,$C0,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$BB,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$D8
+	.byte $8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AD,$C0,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A4,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$AE,$A4,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$C0
+	.byte $8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BD,$CD,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$AD,$8D,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$AB,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A4,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$C8,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A4,$BD,$AE,$8D,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$AC,$AF,$BA,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $AC,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$CD,$BB,$AE,$8D
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$AD,$AB,$C0,$A3,$A3,$A3,$BB,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$BD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$CD
+	.byte $BB,$8D,$A0,$A0,$A0,$BD,$A5,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$BB
+	.byte $A0,$A0,$A0,$A0,$A0,$BA,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$CD
+	.byte $AF,$8D,$AD,$A4,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $BB,$A0,$A0,$A0,$BA,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$AF,$8D
+	.byte $A0,$AC,$BB,$D8,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$BB
+	.byte $A0,$BD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A4,$AE,$8D,$A0,$A0,$A0
+	.byte $A0,$A0,$BB,$C8,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$AB,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$CD,$BD,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AC
+	.byte $AB,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$AB
+	.byte $8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AF,$CD,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$C0,$AD,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$BB,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A5,$8D,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AB,$A3,$A3
+	.byte $A3,$A3,$BA,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$AC,$A4,$CD,$AD,$8D,$00
 black_mesa:
-	.asciiz "           .-;+$XHHHHHHX$+;-."
-	.asciiz "        ,;X@@X%/;=----=:/%X@@X/,"
-	.asciiz "      =$@@%=.              .=+H@X:"
-	.asciiz "    -XMX:                      =XMX="
-	.asciiz "   /@@:                          =H@+"
-	.asciiz "  %@X,                            .$@$"
-	.asciiz " +@X.                               $@%"
-	.asciiz "-@@,                                .@@=";
-	.asciiz "%@%                                  +@$";
-	.asciiz "H@:                                  :@H";
-	.asciiz "H@:         :HHHHHHHHHHHHHHHHHHX,    =@H";
-	.asciiz "%@%         ;@M@@@@@@@@@@@@@@@@@H-   +@$";
-	.asciiz "=@@,        :@@@@@@@@@@@@@@@@@@@@@= .@@:";
-	.asciiz " +@X        :@@@@@@@@@@@@@@@M@@@@@@:%@%"
-	.asciiz "  $@$,      ;@@@@@@@@@@@@@@@@@M@@@@@@$."
-	.asciiz "   +@@HHHHHHH@@@@@@@@@@@@@@@@@@@@@@@+"
-	.asciiz "    =X@@@@@@@@@@@@@@@@@@@@@@@@@@@@X="
-	.asciiz "      :$@@@@@@@@@@@@@@@@@@@M@@@@$:"
-	.asciiz "        ,;$@@@@@@@@@@@@@@@@@@X/-"
-	.asciiz "           .-;+$XXHHHHHX$+;-."
 
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$AD,$BB,$AB,$A4
+	.byte $D8,$C8,$C8,$C8,$C8,$C8,$C8,$D8,$A4,$AB,$BB,$AD,$AE,$8D,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$AC,$BB,$D8,$C0,$C0,$D8,$A5,$AF,$BB,$BD
+	.byte $AD,$AD,$AD,$AD,$BD,$BA,$AF,$A5,$D8,$C0,$C0,$D8,$AF,$AC,$8D,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$BD,$A4,$C0,$C0,$A5,$BD,$AE,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$BD,$AB,$C8,$C0,$D8
+	.byte $BA,$8D,$A0,$A0,$A0,$A0,$AD,$D8,$CD,$D8,$BA,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$BD,$D8,$CD,$D8,$BD,$8D,$A0,$A0,$A0,$AF,$C0,$C0,$BA,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BD,$C8,$C0,$AB,$8D,$A0,$A0,$A5
+	.byte $C0,$D8,$AC,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE
+	.byte $A4,$C0,$A4,$8D,$A0,$AB,$C0,$D8,$AE,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A4,$C0,$A5,$8D,$AD,$C0,$C0,$AC
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $AE,$C0,$C0,$BD,$8D,$A5,$C0,$A5,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AB,$C0,$A4,$8D,$C8,$C0
+	.byte $BA,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$BA,$C0,$C8,$8D,$C8,$C0,$BA,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$BA,$C8,$C8,$C8,$C8,$C8,$C8,$C8,$C8,$C8,$C8,$C8,$C8
+	.byte $C8,$C8,$C8,$C8,$C8,$C8,$D8,$AC,$A0,$A0,$A0,$A0,$BD,$C0,$C8,$8D
+	.byte $A5,$C0,$A5,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BB,$C0,$CD,$C0
+	.byte $C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0
+	.byte $C8,$AD,$A0,$A0,$A0,$AB,$C0,$A4,$8D,$BD,$C0,$C0,$AC,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$BA,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0
+	.byte $C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$BD,$A0,$AE,$C0,$C0
+	.byte $BA,$8D,$A0,$AB,$C0,$D8,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BA,$C0
+	.byte $C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$CD,$C0
+	.byte $C0,$C0,$C0,$C0,$C0,$BA,$A5,$C0,$A5,$8D,$A0,$A0,$A4,$C0,$A4,$AC
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$BB,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0
+	.byte $C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$CD,$C0,$C0,$C0,$C0,$C0,$C0,$A4
+	.byte $AE,$8D,$A0,$A0,$A0,$AB,$C0,$C0,$C8,$C8,$C8,$C8,$C8,$C8,$C8,$C0
+	.byte $C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0
+	.byte $C0,$C0,$C0,$C0,$C0,$C0,$AB,$8D,$A0,$A0,$A0,$A0,$BD,$D8,$C0,$C0
+	.byte $C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0
+	.byte $C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$D8,$BD,$8D,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$BA,$A4,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0
+	.byte $C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$CD,$C0,$C0,$C0,$C0,$A4,$BA,$8D
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$BB,$A4,$C0,$C0,$C0,$C0,$C0
+	.byte $C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$D8,$AF,$AD
+	.byte $8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$AD,$BB,$AB
+	.byte $A4,$D8,$D8,$C8,$C8,$C8,$C8,$C8,$D8,$A4,$AB,$BB,$AD,$AE,$8D,$00
 cake:
-	.asciiz "            ,:/+/-"
-	.asciiz "            /M/              .,-=;//;-"
-	.asciiz "       .:/= ;MH/,    ,=/+%$XH@MM#@:"
-	.asciiz "      -$##@+$###@H@MMM#######H:.    -/H#";
-	.asciiz " .,H@H@ X######@ -H#####@+-     -+H###@X";
-	.asciiz "  .,@##H;      +XM##M/,     =%@###@X;-"
-	.asciiz "X%-  :M##########$.    .:%M###@%:"
-	.asciiz "M##H,   +H@@@$/-.  ,;$M###@%,          -";
-	.asciiz "M####M=,,---,.-%%H####M$:          ,+@##";
-	.asciiz "@##################@/.         :%H##@$-"
-	.asciiz "M###############H,         ;HM##M$="
-	.asciiz "#################.    .=$M##M$="
-	.asciiz "################H..;XM##M$=          .:+";
-	.asciiz "M###################@%=           =+@MH%";
-	.asciiz "@################M/.          =+H#X%="
-	.asciiz "=+M##############M,       -/X#X+;."
-	.asciiz "  .;XM##########H=    ,/X#H+:,"
-	.asciiz "     .=+HM######M+/+HM@+=."
-	.asciiz "         ,:/%XM####H/."
-	.asciiz "              ,.:=-."
 
-
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$BA,$AF,$AB
+	.byte $AF,$AD,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AF
+	.byte $CD,$AF,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $AE,$AC,$AD,$BD,$BB,$AF,$AF,$BB,$AD,$8D,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$AE,$BA,$AF,$BD,$A0,$BB,$CD,$C8,$AF,$AC,$A0,$A0,$A0,$A0,$AC
+	.byte $BD,$AF,$AB,$A5,$A4,$D8,$C8,$C0,$CD,$CD,$A3,$C0,$BA,$8D,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$AD,$A4,$A3,$A3,$C0,$AB,$A4,$A3,$A3,$A3,$C0,$C8
+	.byte $C0,$CD,$CD,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$C8,$BA,$AE,$A0,$A0
+	.byte $A0,$A0,$AD,$AF,$C8,$A3,$8D,$A0,$AE,$AC,$C8,$C0,$C8,$C0,$A0,$D8
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$C0,$A0,$AD,$C8,$A3,$A3,$A3,$A3,$A3,$C0
+	.byte $AB,$AD,$A0,$A0,$A0,$A0,$A0,$AD,$AB,$C8,$A3,$A3,$A3,$C0,$D8,$8D
+	.byte $A0,$A0,$AE,$AC,$C0,$A3,$A3,$C8,$BB,$A0,$A0,$A0,$A0,$A0,$A0,$AB
+	.byte $D8,$CD,$A3,$A3,$CD,$AF,$AC,$A0,$A0,$A0,$A0,$A0,$BD,$A5,$C0,$A3
+	.byte $A3,$A3,$C0,$D8,$BB,$AD,$8D,$D8,$A5,$AD,$A0,$A0,$BA,$CD,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A4,$AE,$A0,$A0,$A0,$A0,$AE,$BA
+	.byte $A5,$CD,$A3,$A3,$A3,$C0,$A5,$BA,$8D,$CD,$A3,$A3,$C8,$AC,$A0,$A0
+	.byte $A0,$AB,$C8,$C0,$C0,$C0,$A4,$AF,$AD,$AE,$A0,$A0,$AC,$BB,$A4,$CD
+	.byte $A3,$A3,$A3,$C0,$A5,$AC,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $AD,$8D,$CD,$A3,$A3,$A3,$A3,$CD,$BD,$AC,$AC,$AD,$AD,$AD,$AC,$AE
+	.byte $AD,$A5,$A5,$C8,$A3,$A3,$A3,$A3,$CD,$A4,$BA,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$AC,$AB,$C0,$A3,$A3,$8D,$C0,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$C0,$AF
+	.byte $AE,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BA,$A5,$C8,$A3,$A3,$C0
+	.byte $A4,$AD,$8D,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$C8,$AC,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$BB,$C8
+	.byte $CD,$A3,$A3,$CD,$A4,$BD,$8D,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$AE,$A0,$A0,$A0,$A0,$AE,$BD,$A4
+	.byte $CD,$A3,$A3,$CD,$A4,$BD,$8D,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$C8,$AE,$AE,$BB,$D8,$CD,$A3,$A3,$CD
+	.byte $A4,$BD,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AE,$BA,$AB,$8D
+	.byte $CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$C0,$A5,$BD,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$BD,$AB,$C0,$CD,$C8,$A5,$8D,$C0,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$CD,$AF,$AE,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$BD,$AB,$C8,$A3,$D8,$A5,$BD,$8D,$BD
+	.byte $AB,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $CD,$AC,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AD,$AF,$D8,$A3,$D8,$AB,$BB
+	.byte $AE,$8D,$A0,$A0,$AE,$BB,$D8,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$C8,$BD,$A0,$A0,$A0,$A0,$AC,$AF,$D8,$A3,$C8,$AB,$BA,$AC
+	.byte $8D,$A0,$A0,$A0,$A0,$A0,$AE,$BD,$AB,$C8,$CD,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$CD,$AB,$AF,$AB,$C8,$CD,$C0,$AB,$BD,$AE,$8D,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$AC,$BA,$AF,$A5,$D8,$CD,$A3,$A3,$A3,$A3,$C8
+	.byte $AF,$AE,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$AC,$AE,$BA,$BD,$AD,$AE,$8D,$00
 glados:
-	.asciiz "       #+ @      # #              M#@"
-	.asciiz " .    .X  X.%##@;# #   +@#######X. @#%"
-	.asciiz "   ,==.   ,######M+  -#####%M####M-    #";
-	.asciiz "  :H##M%:=##+ .M##M,;#####/+#######% ,M#";
-	.asciiz " .M########=  =@#@.=#####M=M#######=  X#";
-	.asciiz " :@@MMM##M.  -##M.,#######M#######. =  M";
-	.asciiz "             @##..###:.    .H####. @@ X,";
-	.asciiz "   ############: ###,/####;  /##= @#. M"
-	.asciiz "           ,M## ;##,@#M;/M#M  @# X#% X#"
-	.asciiz ".%=   ######M## ##.M#:   ./#M ,M #M ,#$"
-	.asciiz "##/         $## #+;#: #### ;#/ M M- @# :";
-	.asciiz "#+ #M@MM###M-;M #:$#-##$H# .#X @ + $#. #";
-	.asciiz "      ######/.: #%=# M#:MM./#.-#  @#: H#";
-	.asciiz "+,.=   @###: /@ %#,@  ##@X #,-#@.##% .@#";
-	.asciiz "#####+;/##/ @##  @#,+       /#M    . X,"
-	.asciiz "   ;###M#@ M###H .#M-     ,##M  ;@@; ###";
-	.asciiz "   .M#M##H ;####X ,@#######M/ -M###$  -H";
-	.asciiz "    .M###%  X####H  .@@MM@;  ;@#M@"
-	.asciiz "      H#M    /@####/      ,++.  / ==-,"
-	.asciiz "               ,=/:, .+X@MMH@#H  #####$=";
 
-
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A3,$AB,$A0,$C0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A3,$A0,$A3,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$CD,$A3,$C0,$8D,$A0,$AE,$A0,$A0,$A0,$A0,$AE,$D8,$A0,$A0
+	.byte $D8,$AE,$A5,$A3,$A3,$C0,$BB,$A3,$A0,$A3,$A0,$A0,$A0,$AB,$C0,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$D8,$AE,$A0,$C0,$A3,$A5,$8D,$A0,$A0,$A0
+	.byte $AC,$BD,$BD,$AE,$A0,$A0,$A0,$AC,$A3,$A3,$A3,$A3,$A3,$A3,$CD,$AB
+	.byte $A0,$A0,$AD,$A3,$A3,$A3,$A3,$A3,$A5,$CD,$A3,$A3,$A3,$A3,$CD,$AD
+	.byte $A0,$A0,$A0,$A0,$A3,$8D,$A0,$A0,$BA,$C8,$A3,$A3,$CD,$A5,$BA,$BD
+	.byte $A3,$A3,$AB,$A0,$AE,$CD,$A3,$A3,$CD,$AC,$BB,$A3,$A3,$A3,$A3,$A3
+	.byte $AF,$AB,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A5,$A0,$AC,$CD,$A3,$8D,$A0
+	.byte $AE,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$BD,$A0,$A0,$BD,$C0,$A3
+	.byte $C0,$AE,$BD,$A3,$A3,$A3,$A3,$A3,$CD,$BD,$CD,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$BD,$A0,$A0,$D8,$A3,$8D,$A0,$BA,$C0,$C0,$CD,$CD,$CD,$A3
+	.byte $A3,$CD,$AE,$A0,$A0,$AD,$A3,$A3,$CD,$AE,$AC,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$CD,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$AE,$A0,$BD,$A0,$A0,$CD
+	.byte $8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$C0,$A3
+	.byte $A3,$AE,$AE,$A3,$A3,$A3,$BA,$AE,$A0,$A0,$A0,$A0,$AE,$C8,$A3,$A3
+	.byte $A3,$A3,$AE,$A0,$C0,$C0,$A0,$D8,$AC,$8D,$A0,$A0,$A0,$A3,$A3,$A3
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$A3,$BA,$A0,$A3,$A3,$A3,$AC,$AF
+	.byte $A3,$A3,$A3,$A3,$BB,$A0,$A0,$AF,$A3,$A3,$BD,$A0,$C0,$A3,$AE,$A0
+	.byte $CD,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$CD,$A3
+	.byte $A3,$A0,$BB,$A3,$A3,$AC,$C0,$A3,$CD,$BB,$AF,$CD,$A3,$CD,$A0,$A0
+	.byte $C0,$A3,$A0,$D8,$A3,$A5,$A0,$D8,$A3,$8D,$AE,$A5,$BD,$A0,$A0,$A0
+	.byte $A3,$A3,$A3,$A3,$A3,$A3,$CD,$A3,$A3,$A0,$A3,$A3,$AE,$CD,$A3,$BA
+	.byte $A0,$A0,$A0,$AE,$AF,$A3,$CD,$A0,$AC,$CD,$A0,$A3,$CD,$A0,$AC,$A3
+	.byte $A4,$8D,$A3,$A3,$AF,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A4,$A3
+	.byte $A3,$A0,$A3,$AB,$BB,$A3,$BA,$A0,$A3,$A3,$A3,$A3,$A0,$BB,$A3,$AF
+	.byte $A0,$CD,$A0,$CD,$AD,$A0,$C0,$A3,$A0,$BA,$8D,$A3,$AB,$A0,$A3,$CD
+	.byte $C0,$CD,$CD,$A3,$A3,$A3,$CD,$AD,$BB,$CD,$A0,$A3,$BA,$A4,$A3,$AD
+	.byte $A3,$A3,$A4,$C8,$A3,$A0,$AE,$A3,$D8,$A0,$C0,$A0,$AB,$A0,$A4,$A3
+	.byte $AE,$A0,$A3,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$A3,$A3,$A3,$A3,$A3,$A3
+	.byte $AF,$AE,$BA,$A0,$A3,$A5,$BD,$A3,$A0,$CD,$A3,$BA,$CD,$CD,$AE,$AF
+	.byte $A3,$AE,$AD,$A3,$A0,$A0,$C0,$A3,$BA,$A0,$C8,$A3,$8D,$AB,$AC,$AE
+	.byte $BD,$A0,$A0,$A0,$C0,$A3,$A3,$A3,$BA,$A0,$AF,$C0,$A0,$A5,$A3,$AC
+	.byte $C0,$A0,$A0,$A3,$A3,$C0,$D8,$A0,$A3,$AC,$AD,$A3,$C0,$AE,$A3,$A3
+	.byte $A5,$A0,$AE,$C0,$A3,$8D,$A3,$A3,$A3,$A3,$A3,$AB,$BB,$AF,$A3,$A3
+	.byte $AF,$A0,$C0,$A3,$A3,$A0,$A0,$C0,$A3,$AC,$AB,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$AF,$A3,$CD,$A0,$A0,$A0,$A0,$AE,$A0,$D8,$AC,$8D,$A0,$A0
+	.byte $A0,$BB,$A3,$A3,$A3,$CD,$A3,$C0,$A0,$CD,$A3,$A3,$A3,$C8,$A0,$AE
+	.byte $A3,$CD,$AD,$A0,$A0,$A0,$A0,$A0,$AC,$A3,$A3,$CD,$A0,$A0,$BB,$C0
+	.byte $C0,$BB,$A0,$A3,$A3,$A3,$8D,$A0,$A0,$A0,$AE,$CD,$A3,$CD,$A3,$A3
+	.byte $C8,$A0,$BB,$A3,$A3,$A3,$A3,$D8,$A0,$AC,$C0,$A3,$A3,$A3,$A3,$A3
+	.byte $A3,$A3,$CD,$AF,$A0,$AD,$CD,$A3,$A3,$A3,$A4,$A0,$A0,$AD,$C8,$8D
+	.byte $A0,$A0,$A0,$A0,$AE,$CD,$A3,$A3,$A3,$A5,$A0,$A0,$D8,$A3,$A3,$A3
+	.byte $A3,$C8,$A0,$A0,$AE,$C0,$C0,$CD,$CD,$C0,$BB,$A0,$A0,$BB,$C0,$A3
+	.byte $CD,$C0,$8D,$A0,$A0,$A0,$A0,$A0,$A0,$C8,$A3,$CD,$A0,$A0,$A0,$A0
+	.byte $AF,$C0,$A3,$A3,$A3,$A3,$AF,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$AB,$AB
+	.byte $AE,$A0,$A0,$AF,$A0,$BD,$BD,$AD,$AC,$8D,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$AC,$BD,$AF,$BA,$AC,$A0,$AE
+	.byte $AB,$D8,$C0,$CD,$CD,$C8,$C0,$A3,$C8,$A0,$A0,$A3,$A3,$A3,$A3,$A3
+	.byte $A4,$BD,$8D,$00

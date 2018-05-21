@@ -398,6 +398,42 @@ dal_loop:
 
 	rts
 
+
+	;=============================
+	; Draw ASCII art
+	;=============================
+	;	Eventually will be LZ4 encoded to save room
+	;	It's 7063 bytes of data unencoded
+	; A is which one to draw
+	; Decode it to 0x800 (text page 2) which we aren't using
+	;  and we shouldn't have to worry about screen holes
+draw_ascii_art:
+	sty	TEMPY
+
+	lda	#<aperture
+	sta	OUTL
+	lda	#>aperture
+	sta	OUTH
+
+	ldy	#0
+ascii_loop:
+	lda	(OUTL),Y
+	beq	done_ascii
+
+	jsr	COUT
+
+	; 16-bit increment
+	inc	OUTL
+	bne	alsb
+	inc	OUTH
+alsb:
+
+	jmp	ascii_loop
+
+done_ascii:
+	ldy	TEMPY
+	rts
+
 ;=========
 ;routines
 ;=========

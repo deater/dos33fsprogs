@@ -256,11 +256,11 @@ lyric_loop:
 	lda	(LYRICSL),Y
 	beq	done_lyric
 
-	cmp	#10
+	cmp	#11
 	bcs	lyric_home
-draw_ascii_art:
-	;
-	;
+go_draw_ascii:
+	jsr	draw_ascii_art
+
 	jmp	lyric_continue
 lyric_home:
 	cmp	#12
