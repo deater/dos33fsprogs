@@ -26,10 +26,6 @@ NUM_FILES	EQU	15
 	sta	MB_CHUNK_OFFSET
 	sta	DECODE_ERROR
 
-
-	lda	#0
-	sta	WHICH_FILE
-
 	; print detection message
 
 	lda	#<mocking_message		; load loading message
@@ -137,7 +133,8 @@ main_loop:
 	lda	DECODE_ERROR
 	beq	check_copy
 	sei
-	brk
+	brk				; panic if we had an error
+
 
 check_copy:
 	lda	COPY_TIME
@@ -222,9 +219,6 @@ new_song:
 
 	lda	#$0
 	sta	FRAME_COUNT
-	sta	A_VOLUME
-	sta	B_VOLUME
-	sta	C_VOLUME
 	sta	COPY_OFFSET
 	sta	DECOMPRESS_TIME
 	sta	COPY_TIME
@@ -256,7 +250,11 @@ new_song:
 	; Load in KRW file
 	;===========================
 
-	jsr	get_filename
+
+	lda	#<krw_file			; point to filename
+	sta	INL
+	lda	#>krw_file
+	sta	INH
 
 	lda	#8
 	sta	CH
@@ -455,47 +453,7 @@ page_copy_loop:
 							; 2+14*256+6+29= 3621
 
 
-	;==================
-	; Get filename
-	;==================
-	; WHICH_FILE holds number
-	; MAX_FILES has max
-	; Scroll through until find
-	; point INH:INL to it
-get_filename:
 
-	ldy	#0
-	ldx	WHICH_FILE
-
-	lda	#<krw_file			; point to filename
-	sta	INL
-	lda	#>krw_file
-	sta	INH
-
-get_filename_loop:
-	cpx	#0
-	beq	filename_found
-
-inner_loop:
-	iny
-	lda	(INL),Y
-	bne	inner_loop
-
-	iny
-
-	dex
-	jmp	get_filename_loop
-
-filename_found:
-	tya
-	clc
-	adc	INL
-	sta	INL
-	lda	INH
-	adc	#0
-	sta	INH
-
-	rts
 
 	;===============================
 	; Increment file we want to load
@@ -540,7 +498,6 @@ krw_file:
 .include	"../asm_routines/pageflip.s"
 .include	"../asm_routines/gr_setpage.s"
 .include	"../asm_routines/dos33_routines.s"
-.include	"../asm_routines/gr_hlin.s"
 .include	"../asm_routines/lz4_decode.s"
 .include	"../asm_routines/keypress_minimal.s"
 
