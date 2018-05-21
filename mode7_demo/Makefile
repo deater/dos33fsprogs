@@ -21,7 +21,6 @@ MODE7_DEMO_C:	mode7_decompress.o
 	ld65 -o MODE7_DEMO_C mode7_decompress.o -C ../linker_scripts/apple2_2000.inc
 
 mode7_decompress.o:	mode7_decompress.s MODE7_DEMO.lz4 \
-		../asm_routines/lz4_decode.s \
 		zp.inc
 	ca65 -o mode7_decompress.o mode7_decompress.s
 
