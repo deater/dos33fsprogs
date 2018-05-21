@@ -330,11 +330,11 @@ title_routine:
 .byte 0,0,0,0
 .byte $A0,$55,$26,$55,$81		; at $4800
 
-.include "../asm_routines/pageflip.s"
+.include "pageflip.s"
 .include "rasterbars.s"
 .include "starfield_demo.s"
-.include "../asm_routines/gr_unrle.s"
-.include "../asm_routines/gr_offsets.s"
+.include "gr_unrle.s"
+.include "gr_offsets.s"
 .include "gr_setpage.s"
 .byte 0,0,0,0,0,0,0,0
 .byte 0,0,0,0,0,0,0,0
@@ -345,13 +345,13 @@ title_routine:
 ;===============================================
 
 
-.include "../asm_routines/gr_fast_clear.s"
-.include "../asm_routines/gr_hlin_double.s"
-.include "../asm_routines/text_print.s"
-.include "../asm_routines/gr_fade.s"
-.include "../asm_routines/gr_plot.s"
-.include "../asm_routines/gr_copy.s"
-.include "../asm_routines/gr_scroll.s"
+.include "gr_fast_clear.s"
+.include "gr_hlin_double.s"
+.include "text_print.s"
+.include "gr_fade.s"
+.include "gr_plot.s"
+.include "gr_copy.s"
+.include "gr_scroll.s"
 
 
 .include "mode7.s"

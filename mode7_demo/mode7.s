@@ -1160,8 +1160,8 @@ lookup_checkerboard_map:
 ; External modules
 ;===============================================
 
-.include "../asm_routines/gr_putsprite.s"
-.include "../asm_routines/bg_scroll.s"
+.include "gr_putsprite.s"
+.include "bg_scroll.s"
 
 .include "sprites.inc"
 
@@ -1172,7 +1172,7 @@ lookup_checkerboard_map:
 .include "island_map.inc"
 .include "starry_sky.scroll"
 
-.include "../asm_routines/multiply_fast.s"
+.include "multiply_fast.s"
 
 
 ; 8.8 fixed point
