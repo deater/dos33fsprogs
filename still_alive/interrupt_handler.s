@@ -255,9 +255,30 @@ done_interrupt:
 lyric_loop:
 	lda	(LYRICSL),Y
 	beq	done_lyric
+
+	cmp	#10
+	bcs	lyric_home
+draw_ascii_art:
+	;
+	;
+	jmp	lyric_continue
+lyric_home:
+	cmp	#12
+	bne	lyric_char
+	tya
+	pha
+	jsr	HOME
+	pla
+	tay
+	jmp	lyric_continue
+
+lyric_char:
 	jsr	COUT1
+
+lyric_continue:
 	iny
 	jmp	lyric_loop
+
 done_lyric:
 	; adjust pointer
 	sec

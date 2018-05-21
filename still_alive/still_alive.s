@@ -255,7 +255,6 @@ load_song:
 	;=========================
 
 	lda	#$0
-	sta	FRAME_COUNT
 	sta	COPY_OFFSET
 	sta	DECOMPRESS_TIME
 	sta	COPY_TIME
@@ -264,6 +263,11 @@ load_song:
 	sta	DECODER_STATE
 	lda	#3
 	sta	CHUNKSIZE
+
+	; We buffer one frame so start out one frame behind
+	lda	#$ff
+	sta	FRAME_COUNT
+
 
 	;===========================
 	; Setup KRW file
