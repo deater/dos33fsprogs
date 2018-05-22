@@ -399,10 +399,20 @@ dal_loop:
 draw_ascii_art:
 	sty	TEMPY
 
-	lda	#<aperture
+	asl
+	tay
+	dey
+	dey
+
+	lda	ascii_art,Y
 	sta	OUTL
-	lda	#>aperture
+	lda	ascii_art+1,Y
 	sta	OUTH
+
+;	lda	#<aperture
+;	sta	OUTL
+;	lda	#>aperture
+;	sta	OUTH
 
 	ldy	#0
 ascii_loop:
