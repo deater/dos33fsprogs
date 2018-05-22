@@ -225,19 +225,8 @@ check_decompress:
 
 
 check_done:
-	lda	#$ff
-	bit	DONE_PLAYING
-	beq	main_loop	; if was all zeros, loop
-	bmi	main_loop	; if high bit set, paused
-;	bvs	minus_song	; if bit 6 set, then left pressed
-
-				; else, either song finished or
-				; right pressed
-
-done_play:
-
-	lda	#0
-	sta	DONE_PLAYING
+	lda	DONE_PLAYING
+	beq	main_loop
 
 forever_loop:
 	jmp	forever_loop
@@ -442,7 +431,6 @@ done_ascii:
 .include	"../asm_routines/mockingboard_a.s"
 .include	"../asm_routines/gr_fast_clear.s"
 .include	"../asm_routines/lz4_decode.s"
-.include	"../asm_routines/keypress_minimal.s"
 
 .include	"interrupt_handler.s"
 

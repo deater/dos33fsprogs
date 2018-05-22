@@ -1,2 +1,12 @@
 initial:	2078
 add ascii art:	9142
+
+
+
+Memory Map
+
+
+Lowmem:		4k
+Code:		16k (8k=audio, 5k=lyrics, 3k=art)
+Sound buffers:	14k
+Sound buffer2:	14k?

@@ -10,8 +10,6 @@
 	; It then calculates if it is a BRK or not (which trashes A)
 	; Then it sets up the stack like an interrupt and calls 0x3fe
 
-TIME_OFFSET	EQU	13
-
 interrupt_handler:
 	pha			; save A				; 3
 				; Should we save X and Y too?
@@ -23,7 +21,7 @@ interrupt_handler:
 
 	lda	DONE_PLAYING						; 3
 	beq	mb_play_music	; if song done, don't play music	; 3/2nt
-	jmp	check_keyboard						; 3
+	jmp	exit_interrupt						; 3
 								;============
 								;	13
 
@@ -246,7 +244,7 @@ done_interrupt:
 
 	ldy	#$0
 	cmp	(LYRICSL),Y
-	bne	check_keyboard
+	bne	exit_interrupt
 
 	;================================
 	; Frame matches, print the string
@@ -288,21 +286,6 @@ done_lyric:
 	lda	#0
 	adc	LYRICSH
 	sta	LYRICSH
-
-check_keyboard:
-
-	jsr	get_key
-	lda	LASTKEY
-	beq	exit_interrupt
-
-	cmp	#(' '+$80)
-	bne	done_key
-key_space:
-	lda	#$80
-	eor	DONE_PLAYING
-	jmp	quiet_exit
-
-done_key:
 	jmp	exit_interrupt
 
 quiet_exit:
