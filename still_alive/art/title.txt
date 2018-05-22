@@ -1,0 +1,22 @@
+ __ ___ ___          _     ___       __
+/    |   |  |  |    / \ |   |  |  | |
+\_   |   |  |  |    |_| |   |  |  | |_
+  \  |   |  |  |    | | |   |  |  | |
+__/  |  _|_ |_ |_   | | |_ _|_  \/  |__
+       ______
+     A \/\/\/ SOFTWARE PRODUCTION
+
+         FROM PORTAL BY VALVE
+       MUSIC BY: JONATHAN COLTON
+         XMP VERSION: DJ ODIN
+      XMP->YM5 CONVERSION: DEATER
+           LZ4 CODE: QKUMBA
+        ELECTRIC DUET: P. LUTUS
+
+   PLEASE SELECT:
+       1. 80 COLUMN + MOCKINGBOARD
+       2. 40 COLUMN + MOCKINGBOARD
+       3. 40 COLUMN + SPEAKER
+   ---->
+
+

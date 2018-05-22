@@ -22,6 +22,7 @@ UNPACK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
 	sta	XPOS
 	sta	MB_CHUNK_OFFSET
 	sta	DECODE_ERROR
+	sta	LYRICS_ACTIVE
 
 	; print detection message
 

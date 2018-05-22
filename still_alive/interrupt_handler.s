@@ -234,59 +234,83 @@ update_r0_pointer:
 	;=================================
 
 done_interrupt:
-
-
-	;=====================
+	;===============================================================
 	; Handle Lyrics
+	;===============================================================
+
+
+
 	;=====================
-	lda	FRAME_COUNT						; 3
+	; Increment Frame Count
+	; OK if this wraps
+	;=====================
 	inc	FRAME_COUNT						; 5
-
 	ldy	#$0
-	cmp	(LYRICSL),Y
-	bne	exit_interrupt
 
-	;================================
-	; Frame matches, print the string
-	;================================
-	iny
-lyric_loop:
-	lda	(LYRICSL),Y
-	beq	done_lyric
+	;=====================
+	; See if lyrics already printing
+	;=====================
 
-	cmp	#11
-	bcs	lyric_home
+	lda	LYRICS_ACTIVE			; see if lyric is ready
+	bne	handle_lyrics			; if so handle it
+
+	;========================
+	; Check if new lyric ready
+	;========================
+	lda	FRAME_COUNT			; get current frame count
+	cmp	(LYRICSL),Y			; compare to next-trigger
+	bne	exit_interrupt			; not same, so skip
+
+	lda	#1				; matches, set lyrics active
+	sta	LYRICS_ACTIVE
+
+	; adjust pointer 16-bit
+	inc	LYRICSL
+	bne	lc_sb2
+	inc	LYRICSH
+lc_sb2:
+
+	;==================================
+	; Lyric active, print current char
+	;==================================
+handle_lyrics:
+
+	lda	(LYRICSL),Y		; load value
+	beq	done_lyric		; if 0, done lyric
+
+	cmp	#11			; check if in range 1-10
+	bcs	lyric_home		; if not, skip ahead
+
 go_draw_ascii:
-	jsr	draw_ascii_art
+	jsr	draw_ascii_art		; draw proper ascii art
 
-	jmp	lyric_continue
+	jmp	lyric_continue		; and continue
+
 lyric_home:
-	cmp	#12
-	bne	lyric_char
-	tya
-	pha
-	jsr	HOME
-	pla
-	tay
-	jmp	lyric_continue
+	cmp	#12			; check if form feed char
+	bne	lyric_char		; if not skip ahead
+
+	jsr	HOME			; call HOME
+
+	jmp	lyric_continue		; continue
 
 lyric_char:
-	jsr	COUT1
+	jsr	COUT1			; output the character
 
 lyric_continue:
-	iny
-	jmp	lyric_loop
+
+	; adjust pointer 16-bit
+	inc	LYRICSL
+	bne	lc_sb
+	inc	LYRICSH
+lc_sb:
+	jmp	exit_interrupt
+
 
 done_lyric:
-	; adjust pointer
-	sec
-	tya
-	adc	LYRICSL
-	sta	LYRICSL
 	lda	#0
-	adc	LYRICSH
-	sta	LYRICSH
-	jmp	exit_interrupt
+	sta	LYRICS_ACTIVE
+	jmp	lyric_continue
 
 quiet_exit:
 	sta	DONE_PLAYING
