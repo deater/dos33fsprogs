@@ -1,6 +1,7 @@
 + Opening graphics (BASIC)
 + 80-column support
 + compressed ascii art
++ No lowercase for 40-column option?
 + six-channel support
 	generic?  or combine it?
 + 40 column support

@@ -4,12 +4,16 @@ Challenges:
 	+ Printing the ASCII art simple code (takes longer than 50Hz)
 
 
-Goal: Everything inside of 16k
+Goal: Binary fits in 16k (16384 bytes)
 
+note						size (bytes)
+---------------------				------
 initial music player:				 2078
 add raw ascii art:				 9142
 add 3-channel music+lyrics,then slim a bit:	18787
 initial 40 col support:				18864
+have art loading properly 40col:		18910
+
 
 
 Memory Map

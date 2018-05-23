@@ -109,7 +109,7 @@ FORTYCOL	EQU $9C
 			;COLOR2		EQU	$E1
 			;MATCH		EQU	$E2
 			;XX		EQU	$E3
-			;YY		EQU	$E4
+YY	EQU	$E4
 			;SHIPY		EQU	$E4
 			;YADD		EQU	$E5
 			;LOOP		EQU	$E6
