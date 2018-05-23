@@ -1,3 +1,12 @@
+Challenges:
+	+ 6-channel audio
+	+ Fitting it all in 48k (want to avoid disk routines if can)
+	+ Printing the ASCII art simple code (takes longer than 50Hz)
+
+
+
+
+
 initial:	2078
 add ascii art:	9142
 
