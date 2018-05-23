@@ -19,10 +19,13 @@ UNPACK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
 	sta	CH
 	sta	CV
 	sta	DONE_PLAYING
-	sta	XPOS
 	sta	MB_CHUNK_OFFSET
 	sta	DECODE_ERROR
 	sta	LYRICS_ACTIVE
+
+	; Testing, let's get 40col working first
+	lda	#1
+	sta	FORTYCOL
 
 	; print detection message
 
@@ -107,8 +110,13 @@ mockingboard_found:
 
 
 	;============================
-	; Draw title screen
+	; Draw Lineart around edges
 	;============================
+
+	lda	FORTYCOL
+	bne	fortycol_lineart
+
+eightycol_lineart:
 
 	; Draw top line
 
@@ -139,18 +147,16 @@ line_loop:
 	sta	dal_second+1
 	jsr	draw_ascii_line
 
-	;============================
-	; Setup bounds
-	;============================
+	jsr	word_bounds
 
-	lda	#2
-	sta	WNDLFT
-	lda	#35
-	sta	WNDWDTH
-	lda	#1
-	sta	WNDTOP
-	lda	#21
-	sta	WNDBTM
+	jmp	done_lineart
+
+fortycol_lineart:
+
+	jsr	word_bounds
+
+done_lineart:
+
 
 	jsr	HOME
 
@@ -433,6 +439,81 @@ alsb:
 done_ascii:
 	ldy	TEMPY
 	rts
+
+
+	;============================
+	; Setup Word Bounds
+	;============================
+word_bounds:
+
+	lda	FORTYCOL
+	bne	fortycol_word_bounds
+
+eightycol_word_bounds:
+
+	; on 80 column, words go from 2,1 to 35,21
+
+	lda	#2
+	sta	WNDLFT
+	lda	#35
+	sta	WNDWDTH
+	lda	#1
+	sta	WNDTOP
+	lda	#21
+	sta	WNDBTM
+
+	rts
+
+fortycol_word_bounds:
+	; on 40 column, words go from 1,0 to 35,4
+
+	lda	#1
+	sta	WNDLFT
+	lda	#35
+	sta	WNDWDTH
+	lda	#0
+	sta	WNDTOP
+	lda	#4
+	sta	WNDBTM
+
+	rts
+
+	;============================
+	; Setup Art Bounds
+	;============================
+art_bounds:
+
+	lda	FORTYCOL
+	bne	fortycol_art_bounds
+
+eightycol_art_bounds:
+	; on 80 column, art goes from 39,1 to 40,23 (????)
+
+	lda	#2
+	sta	WNDLFT
+	lda	#35
+	sta	WNDWDTH
+	lda	#1
+	sta	WNDTOP
+	lda	#21
+	sta	WNDBTM
+
+	rts
+
+fortycol_art_bounds:
+	; on 40 column, art goes from 0,4 to 39,24
+
+	lda	#2
+	sta	WNDLFT
+	lda	#35
+	sta	WNDWDTH
+	lda	#1
+	sta	WNDTOP
+	lda	#21
+	sta	WNDBTM
+
+	rts
+
 
 ;=========
 ;routines

@@ -4,12 +4,12 @@ Challenges:
 	+ Printing the ASCII art simple code (takes longer than 50Hz)
 
 
+Goal: Everything inside of 16k
 
-
-
-initial:	2078
-add ascii art:	9142
-
+initial music player:				 2078
+add raw ascii art:				 9142
+add 3-channel music+lyrics,then slim a bit:	18787
+initial 40 col support:				18864
 
 
 Memory Map
