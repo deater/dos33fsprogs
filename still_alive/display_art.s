@@ -70,7 +70,7 @@ dal_loop:
 
 	rts
 
-.if 0
+
 	;=============================
 	; Draw ASCII art
 	;=============================
@@ -142,7 +142,9 @@ done_ascii_total:
 	ldy	TEMPY
 	rts
 
-.endif
+
+
+.if 0
 
 	;=======================
 	; art update y
@@ -349,3 +351,4 @@ docopy_loop_art:
 	bne	docopy_loop_art		; if not zero, loop
 
 	rts
+.endif

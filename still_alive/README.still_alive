@@ -3,6 +3,15 @@ Challenges:
 	+ Fitting it all in 48k (want to avoid disk routines if can)
 	+ Printing the ASCII art simple code (takes longer than 50Hz)
 
+ASCII Art Size
+	The ASCII art is roughly 7k.
+	You can LZ4 compress it and decompress on the fly, saving 3k or
+	so even when factoring in the decompression code.
+	The problem is decompression is slower (pauses the music) and
+	can't be run at the same time as the music decompression is
+	happening unless we duplicate a lot of code.
+	May revisit if we need the room.
+
 
 Goal: Binary fits in 16k (16384 bytes)
 
