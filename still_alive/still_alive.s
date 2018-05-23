@@ -351,7 +351,7 @@ loading_message:	.asciiz "LOADING"
 lyrics:
 .include	"lyrics.inc"
 
-.include	"ascii_art.inc"
+.include	"ascii_art_lz4.inc"
 
 LZ4_BUFFER:
 .incbin		"SA.KRW"

@@ -13,6 +13,8 @@ add raw ascii art:				 9142
 add 3-channel music+lyrics,then slim a bit:	18787
 initial 40 col support:				18864
 have art loading properly 40col:		18910
+lz4 encode the ascii art:			15529
+revert because lz4 code not re-entrant:		18910
 
 
 

@@ -18,7 +18,7 @@ still_alive.o:	still_alive.s \
 	../asm_routines/lz4_decode.s \
 	display_art.s display_lyrics.s \
 	interrupt_handler.s \
-	ascii_art.inc lyrics.inc zp.inc
+	ascii_art.inc ascii_art_lz4.inc lyrics.inc zp.inc
 	ca65 -o still_alive.o still_alive.s -l still_alive.lst
 
 TITLE.BAS:	title.bas
