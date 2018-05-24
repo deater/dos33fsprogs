@@ -52,10 +52,16 @@ lyric_home:
 	jmp	lyric_continue		; continue
 
 lyric_char:
+	; clear cursor: FIXME
 	pha
 	lda	#' '+$80
-	ldy	CH
-	sta	(BASL),Y
+	jsr	COUT
+	lda	#$8
+	jsr	COUT
+
+
+;	ldy	CH
+;	sta	(BASL),Y
 	pla
 
 	ldy	FORTYCOL		; if 40col, convert to UPPERCASE
@@ -87,8 +93,11 @@ done_lyric:
 
 all_done_lyrics:
 
-	; Blink Cursor
+	lda	FORTYCOL
+	beq	blink_cursor80
 
+	; Blink Cursor
+blink_cursor40:
 	inc	CURSOR
 	lda	CURSOR
 	and	#$10
@@ -103,6 +112,31 @@ cursor_space:
 cursor_done:
 	ldy	CH
 	sta	(BASL),Y
+
+	rts
+
+
+blink_cursor80:
+	inc	CURSOR
+	lda	CURSOR
+	and	#$10
+
+	beq	cursor_space80
+cursor_underscore80:
+	lda	#'_'+$80
+	jsr	COUT
+	lda	#$8		; BS (backspace)
+	jsr	COUT
+
+	rts
+
+cursor_space80:
+	lda	#' '+$80
+	jsr	COUT
+	lda	#$8		; BS (backspace)
+	jsr	COUT
+
+cursor_done80:
 
 	rts
 
