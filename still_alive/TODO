@@ -1,9 +1,12 @@
 + Opening graphics (BASIC)
 + 80-column support
-+ compressed ascii art
 + No lowercase for 40-column option?
-+ six-channel support
-	generic?  or combine it?
 + 40 column support
 + Electric Duet support?
 
+Abandoned
++ compressed ascii art
+	-- had issues with re-entrancy, decided to abandon
+		fitting in 16k
++ six-channel support
+	-- went for 4-channel support instead

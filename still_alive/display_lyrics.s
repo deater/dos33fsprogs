@@ -57,6 +57,17 @@ lyric_char:
 	ldy	CH
 	sta	(BASL),Y
 	pla
+
+	ldy	FORTYCOL		; if 40col, convert to UPPERCASE
+	beq	just_output_already
+	cmp	#'a'+$80
+	bcc	just_output_already
+	cmp	#'z'+$80
+	bcs	just_output_already
+
+	and	#$DF
+
+just_output_already:
 	jsr	COUT1			; output the character
 
 lyric_continue:
