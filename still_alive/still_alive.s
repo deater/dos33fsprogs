@@ -354,5 +354,5 @@ lyrics:
 .include	"ascii_art.inc"
 
 LZ4_BUFFER:
-.incbin		"SA.KRW"
+.incbin		"SA.KR4"
 

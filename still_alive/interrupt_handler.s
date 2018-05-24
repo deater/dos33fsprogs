@@ -1,6 +1,6 @@
 	;================================
 	;================================
-	; mockingboard interrupt handler
+	; mockingboard KR4 interrupt handler
 	;================================
 	;================================
 	; On Apple II/6502 the interrupt handler jumps to address in 0xfffe
@@ -45,57 +45,57 @@ mb_write_frame:
 	; loop through the 14 registers
 	; reading the value, then write out
 	;==================================
-	; inlined "write_ay_both" to save up to 156 (12*13) cycles
-	; unrolled
+
+	; This is actually a KRW4 player
+	; plays 4 channels, right is 123, left is 143
+	; used for converted MOD files
+	; To save space also no envelope support
 
 mb_write_loop:
 	lda	REGISTER_DUMP,X	; load register value			; 4
 	cmp	REGISTER_OLD,X	; compare with old values		; 4
-	beq	mb_no_write						; 3/2nt
-								;=============
-								; typ 11
-
-	; special case R13.  If it is 0xff, then don't update
-	; otherwise might spuriously reset the envelope settings
-
-	cpx	#13							; 2
-	bne	mb_not_13						; 3/2nt
-	cmp	#$ff							; 2
-	beq	mb_skip_13						; 3/2nt
-								;============
-								; typ 5
-mb_not_13:
+	beq	mb_no_write_left						; 3/2nt
 
 	; address
 	stx	MOCK_6522_ORA1		; put address on PA1		; 4
-	stx	MOCK_6522_ORA2		; put address on PA2		; 4
 	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
 	sta	MOCK_6522_ORB1		; latch_address on PB1          ; 4
-	sta	MOCK_6522_ORB2		; latch_address on PB2		; 4
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_ORB1						; 4
-	sta	MOCK_6522_ORB2						; 4
 
         ; value
 	lda	REGISTER_DUMP,X		; load register value		; 4
 	sta	MOCK_6522_ORA1		; put value on PA1		; 4
-	sta	MOCK_6522_ORA2		; put value on PA2		; 4
 	lda	#MOCK_AY_WRITE		;				; 2
 	sta	MOCK_6522_ORB1		; write on PB1			; 4
-	sta	MOCK_6522_ORB2		; write on PB2			; 4
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_ORB1						; 4
+
+mb_no_write_left:
+
+	lda	REGISTER_DUMP2,X; load register value			; 4
+	cmp	REGISTER_OLD2,X	; compare with old values		; 4
+	beq	mb_no_write_right					; 3/2nt
+
+	; address
+	stx	MOCK_6522_ORA2		; put address on PA2		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB2		; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_ORB2						; 4
 
-								;===========
-								; 	62
-mb_no_write:
+        ; value
+	lda	REGISTER_DUMP2,X	; load register value		; 4
+	sta	MOCK_6522_ORA2		; put value on PA2		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB2			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+mb_no_write_right:
 	inx				; point to next register	; 2
-	cpx	#14			; if 14 we're done		; 2
+	cpx	#12			; if 14 we're done		; 2
 	bmi	mb_write_loop		; otherwise, loop		; 3/2nt
-								;============
-								; 	7
-mb_skip_13:
 
 
 	;=====================================
@@ -105,10 +105,10 @@ mb_skip_13:
 mb_reg_copy:
 	lda	REGISTER_DUMP,X	; load register value			; 4
 	sta	REGISTER_OLD,X	; compare with old values		; 4
+	lda	REGISTER_DUMP2,X; load register value			; 4
+	sta	REGISTER_OLD2,X	; compare with old values		; 4
 	dex								; 2
 	bpl	mb_reg_copy						; 2nt/3
-								;=============
-								; 	171
 
 	;===================================
 	; Load all 14 registers in advance
@@ -125,9 +125,29 @@ mb_load_values:
 
 mb_load_loop:
 	lda	(INL),y		; load register value			; 5
+
+	cpx	#11
+	bne	mb_load12
+mb_load11:
+	sta	REGISTER_DUMP2+2
+	jmp	mb_done_load
+mb_load12:
+	cpx	#12
+	bne	mb_load13
+	sta	REGISTER_DUMP2+3
+	jmp	mb_done_load
+mb_load13:
+	cpx	#12
+	bne	mb_regular_load
+	sta	REGISTER_DUMP2+9
+	jmp	mb_done_load
+mb_regular_load:
 	sta	REGISTER_DUMP,X						; 4
-								;============
-								;	9
+	sta	REGISTER_DUMP2,X
+
+mb_done_load:
+
+
 	;====================
 	; point to next page
 	;====================
@@ -339,4 +359,7 @@ exit_interrupt:
 
 
 REGISTER_OLD:
+	.byte	0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
+REGISTER_OLD2:
 	.byte	0,0,0,0,0,0,0,0,0,0,0,0,0,0
