@@ -107,7 +107,7 @@ eightycol_ascii_art:
 
 art_line_loop80:
 
-	lda	#0
+	lda	#$00
 	sta	DRAW_PAGE
 
 	clc
@@ -161,24 +161,21 @@ done_ascii_total80:
 
 	;======================
 store80:
-	pha
 	sty	DISP_PAGE
 	ldy	#0
-	lda	DRAW_PAGE
-	and	#$1
-	bne	store80_odd
+	bit	DRAW_PAGE
+	bmi	store80_odd
 store80_even:
-	pla
 	bit	PAGE1
 	sta	(GBASL),Y
+	dec	DRAW_PAGE
 	jmp	store80_done
 store80_odd:
-	pla
 	bit	PAGE0
 	sta	(GBASL),Y
 	inc	GBASL
-store80_done:
 	inc	DRAW_PAGE
+store80_done:
 	ldy	DISP_PAGE
 	rts
 
