@@ -1,42 +1,3 @@
-
-	;============================
-	; Setup Word Bounds
-	;============================
-word_bounds:
-
-	lda	FORTYCOL
-	bne	fortycol_word_bounds
-
-eightycol_word_bounds:
-
-	; on 80 column, words go from 2,1 to 35,21
-
-	lda	#2
-	sta	WNDLFT
-	lda	#35
-	sta	WNDWDTH
-	lda	#1
-	sta	WNDTOP
-	lda	#21
-	sta	WNDBTM
-
-	rts
-
-fortycol_word_bounds:
-	; on 40 column, words go from 1,0 to 35,4
-
-	lda	#1
-	sta	WNDLFT
-	lda	#35
-	sta	WNDWDTH
-	lda	#0
-	sta	WNDTOP
-	lda	#4
-	sta	WNDBTM
-
-	rts
-
-
 	;========================================================
 	; display lyrics
 	;========================================================
@@ -91,6 +52,11 @@ lyric_home:
 	jmp	lyric_continue		; continue
 
 lyric_char:
+	pha
+	lda	#' '+$80
+	ldy	CH
+	sta	(BASL),Y
+	pla
 	jsr	COUT1			; output the character
 
 lyric_continue:
@@ -109,4 +75,64 @@ done_lyric:
 	jmp	lyric_continue
 
 all_done_lyrics:
+
+	; Blink Cursor
+
+	inc	CURSOR
+	lda	CURSOR
+	and	#$10
+
+	beq	cursor_space
+cursor_underscore:
+	lda	#'_'+$80
+
+	jmp	cursor_done
+cursor_space:
+	lda	#' '+$80
+cursor_done:
+	ldy	CH
+	sta	(BASL),Y
+
 	rts
+
+
+
+
+	;============================
+	; Setup Word Bounds
+	;============================
+word_bounds:
+
+	lda	FORTYCOL
+	bne	fortycol_word_bounds
+
+eightycol_word_bounds:
+
+	; on 80 column, words go from 2,1 to 35,21
+
+	lda	#2
+	sta	WNDLFT
+	lda	#35
+	sta	WNDWDTH
+	lda	#1
+	sta	WNDTOP
+	lda	#21
+	sta	WNDBTM
+
+	rts
+
+fortycol_word_bounds:
+	; on 40 column, words go from 1,0 to 35,4
+
+	lda	#1
+	sta	WNDLFT
+	lda	#35
+	sta	WNDWDTH
+	lda	#0
+	sta	WNDTOP
+	lda	#4
+	sta	WNDBTM
+
+	rts
+
+

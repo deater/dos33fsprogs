@@ -101,6 +101,7 @@ DECOMPRESS_TIME	EQU $99
 TIME_TAKEN	EQU $9A
 LYRICS_ACTIVE	EQU $9B
 FORTYCOL	EQU $9C
+CURSOR		EQU $9D
 
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
