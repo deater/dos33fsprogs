@@ -15,8 +15,6 @@ UNPACK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
 	; init variables
 
 	lda	#0
-	sta	CH
-	sta	CV
 	sta	DONE_PLAYING
 	sta	MB_CHUNK_OFFSET
 	sta	DECODE_ERROR
@@ -26,25 +24,12 @@ UNPACK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
 	lda	#0
 	sta	FORTYCOL
 
-	; print detection message
-
-	lda	#<mocking_message		; load loading message
-	sta	OUTL
-	lda	#>mocking_message
-	sta	OUTH
-	jsr	move_and_print			; print it
-
 	jsr	mockingboard_detect_slot4	; call detection routine
 	cpx	#$1
 	beq	mockingboard_found
 
-	lda	#<not_message			; if not found, print that
-	sta	OUTL
-	lda	#>not_message
-	sta	OUTH
-	inc	CV
-	jsr	move_and_print
-
+	; Not found.
+	; Print a message for debugging?
 	jmp	forever_loop			; and wait forever
 
 mockingboard_found:
@@ -331,9 +316,7 @@ page_copy_loop:
 ;routines
 ;=========
 .include	"../asm_routines/gr_offsets.s"
-.include	"../asm_routines/text_print.s"
 .include	"../asm_routines/mockingboard_a.s"
-.include	"../asm_routines/gr_fast_clear.s"
 .include	"../asm_routines/lz4_decode.s"
 
 .include	"display_art.s"
@@ -344,9 +327,6 @@ page_copy_loop:
 ;=========
 ; strings
 ;=========
-mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
-not_message:		.byte   "NOT "
-loading_message:	.asciiz "LOADING"
 
 
 lyrics:
