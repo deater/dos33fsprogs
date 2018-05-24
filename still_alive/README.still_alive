@@ -39,7 +39,25 @@ strip out some unneeded text printing:		19962
 Memory Map
 
 
-Lowmem:		4k
-Code:		20k (8k=audio, 5k=lyrics, 3k=art)
-Sound buffers:	14k
+
+0000:		Zero Page
+0100:		Stack
+0400:		Text Page 0 (AUX 0400: 80 column text)
+
+2000:		HGR Page0
+4000:		HGP Page1
+9600:		DOS		37.5k
+C000:		I/O Space
+D000:		ROM
+FFFF:		END
+
+
+Code:		c00 - 8c00 32k 
+		(8k=audio, 5k=lyrics, 3k=art)
+Sound buffers:	5e00-9600 = 14k
+
+Plan:
+	16k compressed		Load at 32k? 8000
+	20k decompressed	Decompress from 0c00 - 6000 or so
+
 
