@@ -31,7 +31,8 @@ lz4 encode the ascii art:			15529
 revert because lz4 code not re-entrant:		18910
 add 4-channel music (KR4):			20128
 add cursor (a bit distracting)			20162
-
+feature complete 40 col:			20180
+intial 80 col support:				20191
 
 Memory Map
 

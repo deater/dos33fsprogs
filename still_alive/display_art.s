@@ -68,6 +68,9 @@ dal_loop:
 	lda	dal_first+1
 	jsr	COUT1
 
+	lda	#13+$80
+	jsr	COUT1
+
 	rts
 
 
@@ -78,6 +81,16 @@ dal_loop:
 	;	It's 7063 bytes of data unencoded
 	; A is which one to draw
 draw_ascii_art:
+
+	lda	FORTYCOL
+	bne	fortycol_ascii_art
+eightycol_ascii_art:
+
+
+	rts
+
+fortycol_ascii_art:
+
 	sty	TEMPY
 
 	asl			; point to ascii art we want

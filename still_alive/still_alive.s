@@ -24,7 +24,7 @@ UNPACK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
 	sta	LYRICS_ACTIVE
 
 	; Testing, let's get 40col working first
-	lda	#1
+	lda	#0
 	sta	FORTYCOL
 
 	; print detection message
@@ -100,13 +100,19 @@ mockingboard_found:
 	; clear both screens
 	;===========================
 
+	lda	FORTYCOL
+	bne	only_forty
+
+switch_to_80:
+
+	; Initialize 80 column firmware
+	jsr	$C300			; same as PR#3
+
+only_forty:
+
 	; Clear text page0
 
-	lda	#0
-	sta	DRAW_PAGE
-	lda	#(' '+$80)
-	sta	clear_all_color+1
-	jsr	clear_all
+	jsr	HOME
 
 
 	;============================
