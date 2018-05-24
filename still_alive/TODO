@@ -1,6 +1,5 @@
 + Opening graphics (BASIC)
 + 80-column support
-+ No lowercase for 40-column option?
 + 40 column support
 + Electric Duet support?
 
@@ -10,3 +9,6 @@ Abandoned
 		fitting in 16k
 + six-channel support
 	-- went for 4-channel support instead
++ lowecase for 40-column/speaker option?
+	-- seems like too much complexity, people without 80-col
+		cards will just have to with uppercase

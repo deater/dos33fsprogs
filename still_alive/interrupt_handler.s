@@ -169,11 +169,25 @@ mb_done_load:
 	lda	A_COARSE_TONE						; 3
 	bpl	mb_not_done						; 3/2nt
 
-	lda	#1		; set done playing			; 2
 
-	jmp	quiet_exit						; 3
-								;===========
-								; typ 6
+quiet_exit:
+	lda	#1		; set done playing			; 2
+	sta	DONE_PLAYING
+	jsr	clear_ay_both
+
+	;=====================================
+	; clear register area
+	;=====================================
+	ldx	#13							; 2
+	lda	#0							; 2
+mb_clear_reg:
+	sta	REGISTER_DUMP,X ; clear register value			; 4
+	sta	REGISTER_OLD,X	; clear old values			; 4
+	dex								; 2
+	bpl	mb_clear_reg						; 2nt/3
+
+	jmp	exit_interrupt
+
 mb_not_done:
 
 	;==============================================
@@ -268,23 +282,6 @@ done_interrupt:
 	;=====================
 
 	jsr	display_lyrics
-
-	jmp	exit_interrupt
-
-quiet_exit:
-	sta	DONE_PLAYING
-	jsr	clear_ay_both
-
-	;=====================================
-	; clear register area
-	;=====================================
-	ldx	#13							; 2
-	lda	#0							; 2
-mb_clear_reg:
-	sta	REGISTER_DUMP,X ; clear register value			; 4
-	sta	REGISTER_OLD,X	; clear old values			; 4
-	dex								; 2
-	bpl	mb_clear_reg						; 2nt/3
 
 exit_interrupt:
 

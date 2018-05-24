@@ -1,3 +1,8 @@
+Fun fact:
+	The letter 'Z' does not appear at all in the lyrics to the song.
+	(Noticed when I had to edge comparison for uppercase off by one)
+
+
 Challenges:
 	+ 6-channel audio
 	+ Fitting it all in 48k (want to avoid disk routines if can)
