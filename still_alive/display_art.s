@@ -82,14 +82,6 @@ dal_loop:
 	; A is which one to draw
 draw_ascii_art:
 
-	lda	FORTYCOL
-	bne	fortycol_ascii_art
-eightycol_ascii_art:
-
-
-	rts
-
-fortycol_ascii_art:
 
 	sty	TEMPY
 
@@ -102,6 +94,97 @@ fortycol_ascii_art:
 	sta	OUTL
 	lda	ascii_art+1,Y
 	sta	OUTH
+
+	lda	FORTYCOL
+	bne	fortycol_ascii_art
+
+;======================================================================
+;======================================================================
+eightycol_ascii_art:
+
+	ldy	#2		; put it at line 1 (2-byte addresses)
+
+
+art_line_loop80:
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	clc
+	lda	gr_offsets,Y	; load offset of line
+	adc	#20		; start second half of screen
+	sta	GBASL
+	lda	gr_offsets+1,Y
+	sta	GBASH
+
+	iny
+	iny
+	sty	YY
+
+	ldy	#0
+ascii_loop80:
+	lda	(OUTL),Y		; see if done
+	beq	done_ascii_total80
+
+	cmp	#13+$80			; see if line feed
+	beq	done_ascii_line80
+
+	jsr	store80
+	iny
+	jmp	ascii_loop80
+done_ascii_line80:
+	iny
+	tya				; bump art pointer by Y
+	clc
+	adc	OUTL
+	sta	OUTL
+	lda	#0
+	adc	OUTH
+	sta	OUTH
+
+	lda	#' '+$80
+ascii_pad80:				; pad out with spaces for 40 columns
+	cpy	#41
+	bcs	done_pad80
+	jsr	store80
+	iny
+	jmp	ascii_pad80
+
+done_pad80:
+	ldy	YY			; load Y value
+	jmp	art_line_loop80
+
+done_ascii_total80:
+
+	ldy	TEMPY
+	rts
+
+	;======================
+store80:
+	pha
+	sty	DISP_PAGE
+	ldy	#0
+	lda	DRAW_PAGE
+	and	#$1
+	bne	store80_odd
+store80_even:
+	pla
+	bit	PAGE1
+	sta	(GBASL),Y
+	jmp	store80_done
+store80_odd:
+	pla
+	bit	PAGE0
+	sta	(GBASL),Y
+	inc	GBASL
+store80_done:
+	inc	DRAW_PAGE
+	ldy	DISP_PAGE
+	rts
+
+;======================================================================
+;======================================================================
+fortycol_ascii_art:
 
 	ldy	#8		; put it at line 4 (2-byte addresses)
 
@@ -154,6 +237,25 @@ done_ascii_total:
 
 	ldy	TEMPY
 	rts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

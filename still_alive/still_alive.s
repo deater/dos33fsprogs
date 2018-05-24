@@ -15,7 +15,6 @@ UNPACK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
 	; init variables
 
 	lda	#0
-	sta	DRAW_PAGE
 	sta	CH
 	sta	CV
 	sta	DONE_PLAYING
@@ -107,6 +106,9 @@ switch_to_80:
 
 	; Initialize 80 column firmware
 	jsr	$C300			; same as PR#3
+	sta	SET80COL		; 80store  C001
+					; makes pageflip switch between
+					; regular/aux memory
 
 only_forty:
 
