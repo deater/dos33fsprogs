@@ -254,11 +254,6 @@ update_r0_pointer:
 	;=================================
 
 done_interrupt:
-	;===============================================================
-	; Handle Lyrics
-	;===============================================================
-
-
 
 	;=====================
 	; Increment Frame Count
@@ -267,70 +262,14 @@ done_interrupt:
 	inc	FRAME_COUNT						; 5
 	ldy	#$0
 
+
 	;=====================
-	; See if lyrics already printing
+	; print lyrics
 	;=====================
 
-	lda	LYRICS_ACTIVE			; see if lyric is ready
-	bne	handle_lyrics			; if so handle it
+	jsr	display_lyrics
 
-	;========================
-	; Check if new lyric ready
-	;========================
-	lda	FRAME_COUNT			; get current frame count
-	cmp	(LYRICSL),Y			; compare to next-trigger
-	bne	exit_interrupt			; not same, so skip
-
-	lda	#1				; matches, set lyrics active
-	sta	LYRICS_ACTIVE
-
-	; adjust pointer 16-bit
-	inc	LYRICSL
-	bne	lc_sb2
-	inc	LYRICSH
-lc_sb2:
-
-	;==================================
-	; Lyric active, print current char
-	;==================================
-handle_lyrics:
-
-	lda	(LYRICSL),Y		; load value
-	beq	done_lyric		; if 0, done lyric
-
-	cmp	#11			; check if in range 1-10
-	bcs	lyric_home		; if not, skip ahead
-
-go_draw_ascii:
-	jsr	draw_ascii_art		; draw proper ascii art
-
-	jmp	lyric_continue		; and continue
-
-lyric_home:
-	cmp	#12			; check if form feed char
-	bne	lyric_char		; if not skip ahead
-
-	jsr	HOME			; call HOME
-
-	jmp	lyric_continue		; continue
-
-lyric_char:
-	jsr	COUT1			; output the character
-
-lyric_continue:
-
-	; adjust pointer 16-bit
-	inc	LYRICSL
-	bne	lc_sb
-	inc	LYRICSH
-lc_sb:
 	jmp	exit_interrupt
-
-
-done_lyric:
-	lda	#0
-	sta	LYRICS_ACTIVE
-	jmp	lyric_continue
 
 quiet_exit:
 	sta	DONE_PLAYING
