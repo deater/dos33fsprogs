@@ -52,16 +52,22 @@ lyric_home:
 	jmp	lyric_continue		; continue
 
 lyric_char:
-	; clear cursor: FIXME
+
+	; clear cursor
+cursor_clear:
 	pha
 	lda	#' '+$80
+	ldy	FORTYCOL
+	beq	eightyclear
+fortyclear:
+	ldy	CH
+	sta	(BASL),Y
+	jmp	cursor_clear_done
+eightyclear:
 	jsr	COUT
 	lda	#$8
 	jsr	COUT
-
-
-;	ldy	CH
-;	sta	(BASL),Y
+cursor_clear_done:
 	pla
 
 	ldy	FORTYCOL		; if 40col, convert to UPPERCASE
