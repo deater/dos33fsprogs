@@ -12,20 +12,26 @@
 
 	jsr	hgr_clear
 
-	lda	#0
-	sta	DRAW_PAGE
+	ldx	#0
+	jsr	$F730		;	(DRWPNT+3)
+	
+	; FIXME: call proper XDRAW0 entry point
 
-	lda	#<sprite
-	sta	INL
-	lda	#>sprite
-	sta	INH
 
-	lda	#10
-	sta	XPOS
-	lda	#10
-	sta	YPOS
+;	lda	#0
+;	sta	DRAW_PAGE
 
-	jsr	hgr_put_sprite
+;	lda	#<sprite
+;	sta	INL
+;	lda	#>sprite
+;	sta	INH
+
+;	lda	#10
+;	sta	XPOS
+;	lda	#10
+;	sta	YPOS
+
+;	jsr	hgr_put_sprite
 
 infinite_loop:
 	jmp	infinite_loop
