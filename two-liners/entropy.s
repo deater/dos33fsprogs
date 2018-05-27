@@ -29,12 +29,6 @@ XDRAW0		=	$F65D
 
 entropy:
 
-	lda	#<shape_table
-	sta	HGR_SHAPE
-	lda	#>shape_table
-	sta	HGR_SHAPE+1
-
-
 loop:
 	jsr	HGR2			; HGR2
 
@@ -53,6 +47,12 @@ xloop:					; FOR X=4 to 278 STEP 6
 	sta	HGR_SCALE
 
 	; SCALE=(RND(1)<E)*RND(1)*E*20+1
+	; E=.08 80% of time less, so 0 + (0 to .08)*20 = 0 to 1.6
+	; 80% of time 1 to 2.6, 20% of time 2 to 3.6
+	; E=.15 65% 0+(0 to .15)*20 = 0 to 3
+	; 65% 1 to 4, 45% 2 to 5
+ 
+
 
 	ldy	XPOSH
 	ldx	XPOS
@@ -90,8 +90,6 @@ nexty:
 	cmp	#189
 	bcc	yloop
 ; NEXT E
-
-
 
 	jmp	loop
 
