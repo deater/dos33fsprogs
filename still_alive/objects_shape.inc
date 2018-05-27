@@ -1,15 +1,15 @@
 ; Applesoft Shape Table
 
 ; Size
-.byte	$07,00
+;.byte	$07,00
 ; Offsets 
-.byte	$10,$00	; 0
-.byte	$1b,$00	; 1
-.byte	$2e,$00	; 2
-.byte	$42,$00	; 3
-.byte	$61,$00	; 4
-.byte	$80,$00 ; 5
-.byte	$8a,$00	; 6
+;.byte	$10,$00	; 0
+;.byte	$1b,$00	; 1
+;.byte	$2e,$00	; 2
+;.byte	$42,$00	; 3
+;.byte	$61,$00	; 4
+;.byte	$80,$00 ; 5
+;.byte	$8a,$00	; 6
 
 ; Shape 0
 ; "Cross Hair"  (why is this in quotes?)
@@ -103,6 +103,7 @@
 ; RT UP RT RT RT RT RT DN NLT LT LT NLT NLT NDN RT RT RT RT RT RT
 ; STOP
 
+chell_right:
 .byte	$1b,$36,$36,$36,$0d,$df,$1b,$24, $0c,$24,$24,$1c,$24,$64,$69,$1e
 .byte	$37,$2d,$1e,$77,$6e,$25,$2d,$2d, $f5,$ff,$13,$2d,$2d,$2d,$00
 
