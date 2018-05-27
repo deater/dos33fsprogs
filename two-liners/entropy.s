@@ -79,7 +79,7 @@ xloop:					; FOR X=4 to 278 STEP 6
 	beq	xloop
 	lda	XPOS
 	cmp	#22
-	bcs	xloop
+	bcc	xloop
 nexty:
 
 ; NEXT Y
@@ -88,7 +88,7 @@ nexty:
 	adc	#6
 	sta	YPOS
 	cmp	#189
-	bcs	yloop
+	bcc	yloop
 ; NEXT E
 
 
