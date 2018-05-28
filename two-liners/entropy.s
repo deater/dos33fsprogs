@@ -20,6 +20,8 @@
 ;	139 bytes:	change jmp to bcs
 ;	138 bytes:	jmp at end now fits into a bcs
 ;	136 bytes:	store YPOS on stack
+;	135 bytes:	store X to HGR_SCALE rather than TXA+STA
+;	131 bytes:	some fancy branch elimination by noticing X=1
 
 ;BLT=BCC, BGE=BCS
 
@@ -112,24 +114,20 @@ xloop:
 
  	; Compare to E
 
+	jsr	MUL10		; EPOS is *100, so multiply*100 first
 	jsr	MUL10
-	jsr	MUL10
-
-	jsr	CONINT
-
-	; X is now RND(1)*100
+	jsr	CONINT		; convert to int
+				; X is now RND(1)*100
 
 	cpx	EPOS
-	bcc	less		; branch if less than EPOS
-more:
-	lda	#1		; the boring case
-	bne	done		; branch always
-less:
+	ldx	#1		; the boring case
+	bcs	done		; branch if less than EPOS
+
 	; SCALE=RND(1)*E*20+1
 	; EPOS is E*100, so RND(1)*(EPOS/10)*2+1
 	; is EPOS/4 close enough?
 					; put random value in FAC
-	ldx	#1			; RND(1), Force 1
+;	ldx	#1			; RND(1), Force 1
 	jsr	RND+6			; we skip passing the argument
 					; in FAC as that would be a pain
 
@@ -147,10 +145,9 @@ less:
 	jsr	CONINT			; convert to int (in X)
 
 	inx			; add 1
-	txa			; move to A
 
 done:
-	sta	HGR_SCALE	; set scale value
+	stx	HGR_SCALE	; set scale value
 
 	ldy	XPOSH		; setup X and Y co-ords
 	ldx	XPOS
