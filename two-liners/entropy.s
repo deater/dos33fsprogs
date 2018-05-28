@@ -15,7 +15,8 @@
 
 ; Optimization
 ;	144 bytes:	first working version (including DOS33 4-byte size/addr)
-;	141 bytes:	optimize "nextx" routine
+;	141 bytes:	nextx: cache XPOS in X register
+;	140 bytes:	nexty: we know state of carry flag
 
 ;BLT=BCC, BGE=BCS
 
@@ -184,12 +185,12 @@ nextx:				; NEXT X
 								;============
 								;	 20
 nexty:				; NEXT Y
-	lda	YPOS
-	clc
-	adc	#6
+	lda	YPOS		; y+=6
+;	clc			; carry always set coming in, so only add 5
+	adc	#5
 	sta	YPOS
-	cmp	#189
-	bcc	yloop
+	cmp	#189		; see if less than 189
+	bcc	yloop		; if so, loop
 nexte:				; NEXT E
 	inc	EPOS
 	lda	EPOS
