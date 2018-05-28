@@ -17,6 +17,9 @@
 ;	144 bytes:	first working version (including DOS33 4-byte size/addr)
 ;	141 bytes:	nextx: cache XPOS in X register
 ;	140 bytes:	nexty: we know state of carry flag
+;	139 bytes:	change jmp to bcs
+;	138 bytes:	jmp at end now fits into a bcs
+;	136 bytes:	store YPOS on stack
 
 ;BLT=BCC, BGE=BCS
 
@@ -73,7 +76,8 @@ entropy:
 
 eloop:
 	lda	#4			; FOR Y=4 to 189 STEP 6
-	sta	YPOS
+;	sta	YPOS
+	pha
 yloop:
 	lda	#4			; FOR X=4 to 278 STEP 6
 	sta	XPOS
@@ -108,20 +112,18 @@ xloop:
 
  	; Compare to E
 
-;	ldy	#>TEN
-;	lda	#<TEN
 	jsr	MUL10
 	jsr	MUL10
 
 	jsr	CONINT
-debug:
+
 	; X is now RND(1)*100
 
 	cpx	EPOS
 	bcc	less		; branch if less than EPOS
 more:
 	lda	#1		; the boring case
-	jmp	done
+	bne	done		; branch always
 less:
 	; SCALE=RND(1)*E*20+1
 	; EPOS is E*100, so RND(1)*(EPOS/10)*2+1
@@ -133,7 +135,6 @@ less:
 
 	lda	EPOS
 	jsr	FLOAT			; convert value in A to float in FAC
-;	jsr	MOVAF			; mov FAC into ARG
 	jsr	DIV10			; FAC=FAC/10
 
 	ldy	#>RND_EXP
@@ -145,15 +146,17 @@ less:
 
 	jsr	CONINT			; convert to int (in X)
 
-	inx
-	txa				; move to A
+	inx			; add 1
+	txa			; move to A
 
 done:
 	sta	HGR_SCALE	; set scale value
 
 	ldy	XPOSH		; setup X and Y co-ords
 	ldx	XPOS
-	lda	YPOS
+	pla
+	pha
+;	lda	YPOS
 	jsr	HPOSN		; X= (y,x) Y=(a)
 
 
@@ -181,19 +184,22 @@ nextx:				; NEXT X
 								;============
 								;	 20
 nexty:				; NEXT Y
-	lda	YPOS		; y+=6
+	pla
+;	lda	YPOS		; y+=6
 	adc	#5		; carry always set coming in, so only add 5
-	sta	YPOS
+;	sta	YPOS
+	pha
 	cmp	#189		; see if less than 189
 	bcc	yloop		; if so, loop
 
 nexte:				; NEXT E
+	pla
 	inc	EPOS
 	lda	EPOS
 	cmp	#15
 	bcc	eloop		; branch if <15
 
-	jmp	entropy
+	bcs	entropy
 
 shape_table:
 ;	.byte 1,0				; 1 shape
