@@ -16,14 +16,6 @@
 ; Optimization
 ;	144 bytes:	first working version (including DOS33 4-byte size/addr)
 
-
-
-
-
-
-
-
-
 ;BLT=BCC, BGE=BCS
 
 ; zero page locations
@@ -70,38 +62,22 @@ TEN		=	$EA50
 
 entropy:
 
-loop:
 	jsr	HGR2			; HGR2
+					; Hires, no text at bottom
 
 	lda	#8
-	sta	EPOS
+	sta	EPOS			; Unlike BASIC, our loop is *10
+					; 8 to 15 rather than .08 to .15
 
-eloop:	; FOR E=.08 TO .15 STEP .01:
-	; .08 .09 .10 .11 .12 .13 .14
-	; 0   1   2    3   4   5   6
-	; EINT 8   9  10   11  12   13  14
-	; E*20 160 180 200 220 240 260 280
-	;      1.6 1.8 2.0 2.2 2.4 2.6 2.8
-	;	1  1    2   2   2   2  2
-	; E*25 200 225 250 275 300 325 350
-	;      2   2    2   2  3   3   3
-	; E*16 128 144 160 176 192 218 234
-
-	; 8 is E*100
-	; E*100/5 = 20
-	; E*80/4 = 20
-	; 6.4 7.2 8.0 8.8 9.6 10.4 11.2
-	; E*160/8 = 20
-	; 12.8 14.4 16.0 17.6 19.2 
-
-	lda	#4
+eloop:
+	lda	#4			; FOR Y=4 to 189 STEP 6
 	sta	YPOS
-yloop:					; FOR Y=4 to 189 STEP 6
-	lda	#4
+yloop:
+	lda	#4			; FOR X=4 to 278 STEP 6
 	sta	XPOS
-	lda	#0
+	lda	#0			; can't fit 278 in one byte, need oflo
 	sta	XPOSH
-xloop:					; FOR X=4 to 278 STEP 6
+xloop:
 
 
 	; SCALE=(RND(1)<E)*RND(1)*E*20+1
@@ -190,41 +166,36 @@ done:
 
 	jsr	XDRAW0			; XDRAW 1 AT X,Y
 
-; NEXT X
-	lda	XPOS
-	clc
-	adc	#6
-	sta	XPOS
-	lda	#0
-	adc	XPOSH
-	sta	XPOSH
-	beq	xloop
-	lda	XPOS
-	cmp	#22
-	bcc	xloop
-nexty:
+nextx:				; NEXT X
+	lda	XPOS							; 2
+	clc								; 1
+	adc	#6		; x+=6					; 2
+	sta	XPOS							; 2
 
-; NEXT Y
+	lda	#0		; inc high bit if we wrap past 256	; 2
+	adc	XPOSH							; 2
+	sta	XPOSH							; 2
+
+	beq	xloop		; if high byte zero, not at end		; 2
+	lda	XPOS							; 2
+	cmp	#22		; see if less than 278			; 2
+	bcc	xloop		; if so, loop				; 2
+								;============
+								;	 21
+nexty:				; NEXT Y
 	lda	YPOS
 	clc
 	adc	#6
 	sta	YPOS
 	cmp	#189
 	bcc	yloop
-; NEXT E
-;	clc
-;	lda	EPOS
-;	adc	#16
-;	sta	EPOS
-;	cmp	#240
-
-
+nexte:				; NEXT E
 	inc	EPOS
 	lda	EPOS
 	cmp	#15
 	bcc	eloop
 
-	jmp	loop
+	jmp	entropy
 
 shape_table:
 ;	.byte 1,0				; 1 shape
