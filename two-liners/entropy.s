@@ -13,6 +13,17 @@
 ;	SCALE=(RND(1)<E)*RND(1)*E*20+1: XDRAW 1 AT X,Y:
 ;	NEXT: NEXT: NEXT
 
+; Optimization
+;	144 bytes:	first working version (including DOS33 4-byte size/addr)
+
+
+
+
+
+
+
+
+
 ;BLT=BCC, BGE=BCS
 
 ; zero page locations
@@ -46,6 +57,10 @@ YPOS		=	$FF
 SNGFLT		=	$E301
 CONINT		=	$E6FB
 FMULT		=	$E97F
+MUL10		=	$EA39
+DIV10		=	$EA55
+MOVAF		=	$EB63
+FLOAT		=	$EB93
 RND		=	$EFAE
 HGR2		=	$F3D8
 HPOSN		=	$F411
@@ -66,9 +81,18 @@ eloop:	; FOR E=.08 TO .15 STEP .01:
 	; 0   1   2    3   4   5   6
 	; EINT 8   9  10   11  12   13  14
 	; E*20 160 180 200 220 240 260 280
-	; E*16 $80 $90 $A0 $B0 $C0 $D0 $E0
-	;      128 144 160 176 192 208 224
 	;      1.6 1.8 2.0 2.2 2.4 2.6 2.8
+	;	1  1    2   2   2   2  2
+	; E*25 200 225 250 275 300 325 350
+	;      2   2    2   2  3   3   3
+	; E*16 128 144 160 176 192 218 234
+
+	; 8 is E*100
+	; E*100/5 = 20
+	; E*80/4 = 20
+	; 6.4 7.2 8.0 8.8 9.6 10.4 11.2
+	; E*160/8 = 20
+	; 12.8 14.4 16.0 17.6 19.2 
 
 	lda	#4
 	sta	YPOS
@@ -99,33 +123,58 @@ xloop:					; FOR X=4 to 278 STEP 6
 	;	on the Apple II", Behavior Research Methods, Instruments,
 	;	& Computers, 1987, 19 (4), 397-399.
 
+					; put random value in FAC
+	ldx	#1			; RND(1), Force 1
+	jsr	RND+6			; we skip passing the argument
+					; in FAC as that would be a pain
 
-	jsr	RND			; put random value in FAC
  	; Compare to E
 
-	ldy	#>TEN
-	lda	#<TEN
-	jsr	FMULT
-
-	ldy	#>TEN
-	lda	#<TEN
-	jsr	FMULT
+;	ldy	#>TEN
+;	lda	#<TEN
+	jsr	MUL10
+	jsr	MUL10
 
 	jsr	CONINT
-
+debug:
 	; X is now RND(1)*100
 
 	cpx	EPOS
-	bcs	more
-less:
-	lda	#1
-	jmp	done
+	bcc	less		; branch if less than EPOS
 more:
-	lda	#2
+	lda	#1		; the boring case
+	jmp	done
+less:
+	; SCALE=RND(1)*E*20+1
+	; EPOS is E*100, so RND(1)*(EPOS/10)*2+1
+	; is EPOS/4 close enough?
+					; put random value in FAC
+	ldx	#1			; RND(1), Force 1
+	jsr	RND+6			; we skip passing the argument
+					; in FAC as that would be a pain
+
+	lda	EPOS
+	jsr	FLOAT			; convert value in A to float in FAC
+;	jsr	MOVAF			; mov FAC into ARG
+	jsr	DIV10			; FAC=FAC/10
+
+	ldy	#>RND_EXP
+	lda	#<RND_EXP
+
+	jsr	FMULT			; multiply FAC by (Y,A)
+
+	inc	FAC_EXP			; multiply by 2
+
+	jsr	CONINT			; convert to int (in X)
+
+	inx
+	txa				; move to A
+;	lsr
+;	clc
+;	adc	#1
+
 done:
 	sta	HGR_SCALE
-
-
 
 	ldy	XPOSH
 	ldx	XPOS
