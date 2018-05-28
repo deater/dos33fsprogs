@@ -115,6 +115,11 @@ xloop:
 	; SCALE=RND(1)*E*20+1
 	; EPOS is E*100, so RND(1)*(EPOS/10)*2+1
 
+	; What this does:
+	;	if EPOS is 8,9 then value is either 1 or 2
+	;	if EPOS is 10,11,12,13,14 then value is either 1, 2, or 3
+
+
 				; put random value in FAC
 ;	ldx	#1		; RND(1), Force 1, this set from earlier
 	jsr	RND+6		; skip arg parsing in RND
@@ -138,9 +143,8 @@ done:
 
 	ldy	XPOSH		; setup X and Y co-ords
 	ldx	XPOS
-	pla
+	pla			; YPOS is on stack
 	pha
-;	lda	YPOS
 	jsr	HPOSN		; X= (y,x) Y=(a)
 
 
