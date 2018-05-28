@@ -147,26 +147,22 @@ less:
 
 	inx
 	txa				; move to A
-;	lsr
-;	clc
-;	adc	#1
 
 done:
-	sta	HGR_SCALE
+	sta	HGR_SCALE	; set scale value
 
-	ldy	XPOSH
+	ldy	XPOSH		; setup X and Y co-ords
 	ldx	XPOS
 	lda	YPOS
+	jsr	HPOSN		; X= (y,x) Y=(a)
 
-	jsr	HPOSN			; X= (y,x) Y=(a)
 
-
-	ldx	#<shape_table
+	ldx	#<shape_table	; point to our shape
 	ldy	#>shape_table
-	lda	#0			; ROT=0
+	lda	#0		; ROT=0
 
 
-	jsr	XDRAW0			; XDRAW 1 AT X,Y
+	jsr	XDRAW0		; XDRAW 1 AT X,Y
 
 nextx:				; NEXT X
 	lda	XPOS							; 2
@@ -186,16 +182,16 @@ nextx:				; NEXT X
 								;	 20
 nexty:				; NEXT Y
 	lda	YPOS		; y+=6
-;	clc			; carry always set coming in, so only add 5
-	adc	#5
+	adc	#5		; carry always set coming in, so only add 5
 	sta	YPOS
 	cmp	#189		; see if less than 189
 	bcc	yloop		; if so, loop
+
 nexte:				; NEXT E
 	inc	EPOS
 	lda	EPOS
 	cmp	#15
-	bcc	eloop
+	bcc	eloop		; branch if <15
 
 	jmp	entropy
 
