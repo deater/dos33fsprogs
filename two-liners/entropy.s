@@ -15,6 +15,7 @@
 
 ; Optimization
 ;	144 bytes:	first working version (including DOS33 4-byte size/addr)
+;	141 bytes:	optimize "nextx" routine
 
 ;BLT=BCC, BGE=BCS
 
@@ -171,17 +172,17 @@ nextx:				; NEXT X
 	clc								; 1
 	adc	#6		; x+=6					; 2
 	sta	XPOS							; 2
+	tax			; save in X for later			; 1
 
 	lda	#0		; inc high bit if we wrap past 256	; 2
 	adc	XPOSH							; 2
 	sta	XPOSH							; 2
 
 	beq	xloop		; if high byte zero, not at end		; 2
-	lda	XPOS							; 2
-	cmp	#22		; see if less than 278			; 2
+	cpx	#22		; see if less than 278			; 2
 	bcc	xloop		; if so, loop				; 2
 								;============
-								;	 21
+								;	 20
 nexty:				; NEXT Y
 	lda	YPOS
 	clc
