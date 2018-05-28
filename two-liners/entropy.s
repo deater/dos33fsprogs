@@ -115,21 +115,21 @@ xloop:
 	; SCALE=RND(1)*E*20+1
 	; EPOS is E*100, so RND(1)*(EPOS/10)*2+1
 
-					; put random value in FAC
-;	ldx	#1			; RND(1), Force 1, this set from earlier
-	jsr	RND+6			; skip arg parsing in RND
+				; put random value in FAC
+;	ldx	#1		; RND(1), Force 1, this set from earlier
+	jsr	RND+6		; skip arg parsing in RND
 
 	lda	EPOS
-	jsr	FLOAT			; convert value in A to float in FAC
-	jsr	DIV10			; FAC=FAC/10
+	jsr	FLOAT		; convert value in A to float in FAC
+	jsr	DIV10		; FAC=FAC/10
 
-	ldy	#>RND_EXP		; point (Y,A) to RND value
+	ldy	#>RND_EXP	; point (Y,A) to RND value
 	lda	#<RND_EXP
-	jsr	FMULT			; multiply FAC by (Y,A)
+	jsr	FMULT		; multiply FAC by (Y,A)
 
-	inc	FAC_EXP			; multiply by 2
+	inc	FAC_EXP		; multiply by 2
 
-	jsr	CONINT			; convert to int (in X)
+	jsr	CONINT		; convert to int (in X)
 
 	inx			; add 1
 
@@ -168,11 +168,10 @@ nextx:				; NEXT X
 								;============
 								;	 20
 nexty:				; NEXT Y
-	pla
-;	lda	YPOS		; y+=6
-	adc	#5		; carry always set coming in, so only add 5
-;	sta	YPOS
-	pha
+	pla			; YPOS on stack
+	adc	#5		; y+=6
+				; carry always set coming in, so only add 5
+	pha			; YPOS back on stack
 	cmp	#189		; see if less than 189
 	bcc	yloop		; if so, loop
 
