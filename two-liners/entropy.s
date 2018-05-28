@@ -27,11 +27,6 @@
 
 ; zero page locations
 HGR_SHAPE	=	$1A
-TEMP1_EXP	=	$93
-TEMP1_HO	=	$94
-TEMP1_MOH	=	$95
-TEMP1_MO	=	$96
-TEMP1_LO	=	$97
 FAC_EXP		=	$9D
 FAC_HO		=	$9E
 FAC_MOH		=	$9F
@@ -44,7 +39,6 @@ RND_MOH		=	$CB
 RND_MO		=	$CC
 RND_LO		=	$CD
 RND_SGN		=	$CE
-
 HGR_SCALE	=	$E7
 HGR_ROTATION	=	$F9
 EPOS		=	$FC
@@ -53,7 +47,6 @@ XPOSH		=	$FE
 YPOS		=	$FF
 
 ; ROM calls
-SNGFLT		=	$E301
 CONINT		=	$E6FB
 FMULT		=	$E97F
 MUL10		=	$EA39
@@ -64,8 +57,7 @@ RND		=	$EFAE
 HGR2		=	$F3D8
 HPOSN		=	$F411
 XDRAW0		=	$F65D
-; ROM constants
-TEN		=	$EA50
+
 
 entropy:
 
@@ -78,8 +70,7 @@ entropy:
 
 eloop:
 	lda	#4			; FOR Y=4 to 189 STEP 6
-;	sta	YPOS
-	pha
+	pha				; YPOS stored on stack
 yloop:
 	lda	#4			; FOR X=4 to 278 STEP 6
 	sta	XPOS
@@ -93,11 +84,6 @@ xloop:
 	; Equivalent to IF RND(1)<E THEN SCALE=RND(1)*E*20+1
 	;		ELSE SCALE=1
 
-	; E=.08 80% of time less, so 0 + (0 to .08)*20 = 0 to 1.6
-	; 80% of time 1 to 2.6, 20% of time 2 to 3.6
-	; E=.15 65% 0+(0 to .15)*20 = 0 to 3
-	; 65% 1 to 4, 45% 2 to 5
-
 	; Note the Apple II generates a seed based on keypresses
 	; but by default RND is never seeded from there.
 	; Someone actually wrote an entire academic paper complaining about
@@ -107,37 +93,38 @@ xloop:
 	;	on the Apple II", Behavior Research Methods, Instruments,
 	;	& Computers, 1987, 19 (4), 397-399.
 
-					; put random value in FAC
-	ldx	#1			; RND(1), Force 1
-	jsr	RND+6			; we skip passing the argument
-					; in FAC as that would be a pain
+				; get random value in FAC
+	ldx	#1		; RND(1), Force 1
+	jsr	RND+6		; we skip passing the argument
+				; as a floating point value
+				;  as that would be a pain
 
  	; Compare to E
 
-	jsr	MUL10		; EPOS is *100, so multiply*100 first
-	jsr	MUL10
+	jsr	MUL10		; EPOS is E*100
+	jsr	MUL10		; so multiply rand*100 before compare
 	jsr	CONINT		; convert to int
 				; X is now RND(1)*100
 
-	cpx	EPOS
-	ldx	#1		; the boring case
-	bcs	done		; branch if less than EPOS
+	cpx	EPOS		; compare E*100 to RND*100
+
+	ldx	#1		; load 1 into X (this is clever)
+
+	bcs	done		; if EPOS>=RND then SCALE=1, skip ahead
 
 	; SCALE=RND(1)*E*20+1
 	; EPOS is E*100, so RND(1)*(EPOS/10)*2+1
-	; is EPOS/4 close enough?
+
 					; put random value in FAC
-;	ldx	#1			; RND(1), Force 1
-	jsr	RND+6			; we skip passing the argument
-					; in FAC as that would be a pain
+;	ldx	#1			; RND(1), Force 1, this set from earlier
+	jsr	RND+6			; skip arg parsing in RND
 
 	lda	EPOS
 	jsr	FLOAT			; convert value in A to float in FAC
 	jsr	DIV10			; FAC=FAC/10
 
-	ldy	#>RND_EXP
+	ldy	#>RND_EXP		; point (Y,A) to RND value
 	lda	#<RND_EXP
-
 	jsr	FMULT			; multiply FAC by (Y,A)
 
 	inc	FAC_EXP			; multiply by 2
