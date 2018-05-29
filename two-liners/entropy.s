@@ -24,6 +24,8 @@
 ;	135 bytes:	store X to HGR_SCALE rather than TXA+STA
 ;	131 bytes:	some fancy branch elimination by noticing X=1
 ;	126 bytes:	nextx: simplify by using knowledge of possible x/y vals
+;	124 bytes:	qkumba noticed we can bump yloop up to include the
+;			pha, letting us remove two now unneeded stack ops
 
 ;BLT=BCC, BGE=BCS
 
@@ -70,9 +72,8 @@ entropy:
 
 eloop:
 	lda	#4		; FOR Y=4 to 189 STEP 6
-	pha			; YPOS stored on stack
-
 yloop:
+	pha			; YPOS stored on stack
 	lda	#4		; FOR X=4 to 278 STEP 6
 	sta	XPOS
 	lda	#0		; can't fit 278 in one byte, need overflow byte
@@ -185,12 +186,10 @@ nexty:				; NEXT Y
 	pla			; YPOS on stack
 	adc	#5		; y+=6
 				; carry always set coming in, so only add 5
-	pha			; YPOS back on stack
 	cmp	#189		; see if less than 189
 	bcc	yloop		; if so, loop
 
 nexte:				; NEXT E
-	pla
 	inc	EPOS
 	lda	EPOS
 	cmp	#15
