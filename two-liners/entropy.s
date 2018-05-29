@@ -11,7 +11,8 @@
 ; 24002 FOR I=1 TO 99: HGR2: FOR E=.08 TO .15 STEP .01:
 ;	FOR Y=4 to 189 STEP 6: FOR X=4 to 278 STEP 6:
 ;	SCALE=(RND(1)<E)*RND(1)*E*20+1: XDRAW 1 AT X,Y:
-;	NEXT: NEXT: NEXT
+;	NEXT: NEXT: NEXT: NEXT
+
 
 ; Optimization
 ;	144 bytes:	first working version (including DOS33 4-byte size/addr)
@@ -22,6 +23,7 @@
 ;	136 bytes:	store YPOS on stack
 ;	135 bytes:	store X to HGR_SCALE rather than TXA+STA
 ;	131 bytes:	some fancy branch elimination by noticing X=1
+;	126 bytes:	nextx: simplify by using knowledge of possible x/y vals
 
 ;BLT=BCC, BGE=BCS
 
@@ -61,20 +63,19 @@ XDRAW0		=	$F65D
 
 entropy:
 
-	jsr	HGR2			; HGR2
-					; Hires, no text at bottom
+	jsr	HGR2		; Hi-res graphics, no text at bottom
 
-	lda	#8
-	sta	EPOS			; Unlike BASIC, our loop is *10
-					; 8 to 15 rather than .08 to .15
+	lda	#8		; Unlike the BASIC, our loop is *100
+	sta	EPOS		; 8 to 15 rather than .08 to .15
 
 eloop:
-	lda	#4			; FOR Y=4 to 189 STEP 6
-	pha				; YPOS stored on stack
+	lda	#4		; FOR Y=4 to 189 STEP 6
+	pha			; YPOS stored on stack
+
 yloop:
-	lda	#4			; FOR X=4 to 278 STEP 6
+	lda	#4		; FOR X=4 to 278 STEP 6
 	sta	XPOS
-	lda	#0			; can't fit 278 in one byte, need oflo
+	lda	#0		; can't fit 278 in one byte, need overflow byte
 	sta	XPOSH
 xloop:
 
@@ -93,17 +94,21 @@ xloop:
 	;	on the Apple II", Behavior Research Methods, Instruments,
 	;	& Computers, 1987, 19 (4), 397-399.
 
+	; Many of these values are in Applesoft 5-byte floating point
+
 				; get random value in FAC
+				;    (floating point accumlator)
 	ldx	#1		; RND(1), Force 1
+				; returns "random" value between 0 and 1
 	jsr	RND+6		; we skip passing the argument
 				; as a floating point value
-				;  as that would be a pain
+				; as that would be a pain
 
  	; Compare to E
 
 	jsr	MUL10		; EPOS is E*100
 	jsr	MUL10		; so multiply rand*100 before compare
-	jsr	CONINT		; convert to int
+	jsr	CONINT		; now convert to int, result in X
 				; X is now RND(1)*100
 
 	cpx	EPOS		; compare E*100 to RND*100
@@ -130,7 +135,7 @@ xloop:
 
 	ldy	#>RND_EXP	; point (Y,A) to RND value
 	lda	#<RND_EXP
-	jsr	FMULT		; multiply FAC by (Y,A)
+	jsr	FMULT		; multiply FAC by RND in (Y,A)
 
 	inc	FAC_EXP		; multiply by 2
 
@@ -154,23 +159,28 @@ done:
 
 
 	jsr	XDRAW0		; XDRAW 1 AT X,Y
+				; A is 0 at end.  Does that help us?
 
 nextx:				; NEXT X
 	lda	XPOS							; 2
 	clc								; 1
 	adc	#6		; x+=6					; 2
 	sta	XPOS							; 2
-	tax			; save in X for later			; 1
 
-	lda	#0		; inc high bit if we wrap past 256	; 2
-	adc	XPOSH							; 2
-	sta	XPOSH							; 2
+	; we know that the X=4 to 278 STEP 6 loop passes through exactly 256
+	; so we can check for that by looking for overflow to zero
 
-	beq	xloop		; if high byte zero, not at end		; 2
-	cpx	#22		; see if less than 278			; 2
-	bcc	xloop		; if so, loop				; 2
+	bne	skip							; 2
+	inc	XPOSH							; 2
+skip:
+	; the X=4 to 278 STEP 6 loop actually ends when X is at 280, which
+	; is 256+24.  The lower part of the loop does not hit 24, so we
+	; can check for the end by looking for the low byte at 24.
+
+	cmp	#24		; see if less than 278			; 2
+	bne	xloop		; if so, loop				; 2
 								;============
-								;	 20
+								;	 15
 nexty:				; NEXT Y
 	pla			; YPOS on stack
 	adc	#5		; y+=6

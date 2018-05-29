@@ -1,0 +1,70 @@
+                         Apple II Entropy Demo (128B)
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                       BASIC version -- Dave McKellar
+                6502 Assembly Version -- Deater (Vince Weaver)
+
+Webpage
+=======
+http://www.deater.net/weave/vmwprod/entropy_demo/
+
+Background
+==========
+
+Back in the day people would challenge themselves to write one or two line
+BASIC programs that did impressive things.
+
+One of my favorite is "Entropy" by Dave McKellar from Toronto.
+
+This two-line BASIC program can be found on the Beagle Brother's
+Apple Mechanic Disk.
+
+I thought it would be interesting to see if I could convert it to 6502
+assembly language.
+
+
+The original code looks like this:
+
+1 ROT=0:FOR I=1 TO 15: READ A,B: POKE A,B: NEXT: DATA
+	232,252,233,29,7676,1,7678,4,7679,0,7680,18,7681,63,
+	7682,36,7683,36,7684,45,7685,45,7686,54,7687,54,7688,63,
+	7689,0
+2 FOR I=1 TO 99: HGR2: FOR E=.08 TO .15 STEP .01:
+	FOR Y=4 to 189 STEP 6: FOR X=4 to 278 STEP 6:
+	SCALE=(RND(1)<E)*RND(1)*E*20+1: XDRAW 1 AT X,Y:
+	NEXT: NEXT: NEXT: NEXT
+
+Line 1 sets up an Applesoft BASIC shape table. The Apple II lacks any sort
+of sprite or graphics acceleration, but BASIC provides a software vector
+drawing engine. The data statements setup vector art for a simple box shape.
+
+Line 2 loops across the screen, drawing a box scaled to size 1, but randomly
+scaling it up to size 2 leading to some interesting patterns. It is drawn
+with XDRAW which draws the XOR (inverse) of what's already there. When it
+hits the end of the screen, it starts again, this time erasing things.
+But again randomly boxes of different sizes are drawn leading to interesting
+patterns. After iteration 3, boxes of size 3 are also drawn. And after
+iteration 8 it clears the screen and starts again.
+
+This sound simple, but it leads to some neat patterns.
+
+
+128B 6502 Assembly Demo
+=======================
+
+I thought it would be neat to see how small I could make this in assembly
+language. Currently I have it down to 122 bytes (the executable is 126
+bytes because DOS33 includes size/address filesystem metadata in the file
+itself).
+
+It started as a direct port of the BASIC version, it probably can be made
+smaller. The assembly code calls directly into the BASIC firmware in various
+places.
+
+There were some challenges. One is that Applesoft BASIC has no integers:
+all numbers are stored in 5-byte floating point. This made it hard to do
+compact math, though the main issue was dealing with the random numbers.
+
+As an aside, the Applesoft random number generator is pretty awful and you
+can actually find multiple academic articles written at the time complaining
+about it. 
+
