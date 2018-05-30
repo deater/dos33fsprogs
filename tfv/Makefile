@@ -19,7 +19,7 @@ tfv.dsk:	$(DOS33) TFV ED HIGHWIND.ED FIGHTING.ED
 	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 FIGHTING.ED
 
 ED:	duet.o
-	ld65 -o ED duet.o -C ./apple2_900.inc
+	ld65 -o ED duet.o -C ../linker_scripts/apple2_900.inc
 
 duet.o:	duet.s
 	ca65 -o duet.o duet.s -l duet.lst
