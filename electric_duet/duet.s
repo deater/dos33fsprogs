@@ -23,8 +23,8 @@
 .define EQU =
 
 ; These are all "Free" zero page locations
-LOC6	EQU	$06
-LOC7	EQU	$07
+FREQ1	EQU	$06
+FREQ2	EQU	$07
 DURATION	EQU	$08
 LOC9	EQU	$09
 LOC1D	EQU	$1D
@@ -39,10 +39,11 @@ play_ed:
 	LDA	#$01		; 900: A9 01	; 2 *!*
 	STA	LOC9		; 902: 85 09	; 3
 	STA	LOC1D		; 904: 85 1D	; 3
-	PHA			; 906: 48	; 3
-	PHA			; 907: 48	; 3
-	PHA			; 908: 48	; 3
-	BNE	label1		; 909: D0 15	; 4 *!*
+	PHA			; 906: 48	; 3	1 on stack
+	PHA			; 907: 48	; 3	1 on stack
+	PHA			; 908: 48	; 3	1 on stack
+	BNE	load_triplet	; 909: D0 15	; 4 *!*
+
 label2:
 	INY			; 90B: C8	; 2
 	LDA	(MADDRL),Y	; 90C: B1 1E	; 5 *!*
@@ -55,41 +56,53 @@ loop:
 	CLC			; 917: 18	; 2
 	ADC	#$03		; 918: 69 03	; 2 *!*
 	STA	MADDRL		; 91A: 85 1E	; 3
-	BCC	label1		; 91C: 90 02	; 4 *!*
+	BCC	load_triplet	; 91C: 90 02	; 4 *!*
 	INC	MADDRH		; 91E: E6 1F	; 5
-label1:
+
+load_triplet:
 	LDY	#$00		; 920: A0 00	; 2 *!*	Set Y to zero
 	LDA	(MADDRL),Y	; 922: B1 1E	; 5 *!*	Load first byte
 	CMP	#$01		; 924: C9 01	; 2	Compare to 1
 	BEQ	label2		; 926: F0 E3	; 4 *!* If one ?
 	BCS	play_note	; 928: B0 0D	; 4 *!* If >1, then duration
-	PLA			; 92A: 68	; 4	POP
-	PLA			; 92B: 68	; 4	POP
-	PLA			; 92C: 68	; 4	POP
+	PLA			; 92A: 68	; 4	pop off stack
+	PLA			; 92B: 68	; 4	pop off stack
+	PLA			; 92C: 68	; 4	pop off stack
+
+	; fallthrough if first byte was zero
+
+	; Load byte from music stream
+	; Set X=EOR if note zero, set X=CMP if it is
 
 sub1:
 	LDX	#$49		; 92D: A2 49	; 2 *!*	X=0x49 (EOR opcode)
 	INY			; 92F: C8	; 2	increment to next byte
 	LDA	(MADDRL),Y	; 930: B1 1E	; 5 *!*	load next byte
-	BNE	label4		; 932: D0 02	; 4 *!* if not zero
+	BNE	exit_player	; 932: D0 02	; 4 *!* if not zero
 	LDX	#$C9		; 934: A2 C9	; 2 *!* X=0xC9 (CMP opcode)
-label4:
+
+exit_player:
+	; if byte0==0 and byte1==0 then done playing
 	RTS			; 936: 60	; 6	return
 
+
+	; We've got a duration/note/note triplet here
+
 play_note:
-	STA	DURATION	; 937: 85 08	; 3
-	JSR	sub1		; 939: 20 2D09	; 6
-	STX	STARTADDR+$83	; 93C: 8E 8309	; 4	self-modify EOR/CMP
-	STA	LOC6		; 93F: 85 06	; 3
-	LDX	LOC9		; 941: A6 09	; 3 *!*
+	STA	DURATION	; 937: 85 08	; 3	store out duration
+	JSR	sub1		; 939: 20 2D09	; 6	get freq#1
+	STX	STARTADDR+$83	; 93C: 8E 8309	; 4	if 0 self-modify EOR/CMP
+	STA	FREQ1		; 93F: 85 06	; 3	??
+	LDX	LOC9		; 941: A6 09	; 3 *!*	??
 label5:
 	LSR	A		; 943: 4A	; 2
 	DEX			; 944: CA	; 2
 	BNE	label5		; 945: D0 FC	; 4 *!*
 	STA	STARTADDR+$7C	; 947: 8D 7C09	; 4		; self-modify
-	JSR	sub1		; 94A: 20 2D09	; 6
-	STX	STARTADDR+$BB	; 94D: 8E BB09	; 4		; self-modify
-	STA	LOC7		; 950: 85 07	; 3
+
+	JSR	sub1		; 94A: 20 2D09	; 6	get freq#2
+	STX	STARTADDR+$BB	; 94D: 8E BB09	; 4	if 0 self-modify EOR/CMP
+	STA	FREQ2		; 950: 85 07	; 3
 	LDX	LOC1D		; 952: A6 1D	; 3 *!*
 label6:
 	LSR	A		; 954: 4A	; 2
@@ -113,8 +126,8 @@ label7:
 	BIT	$C030		; 96C: 2C 30C0	; 4		SPEAKER
 label9:
 	STA	LOC4E		; 96F: 85 4E	; 3
-	BIT	$C000		; 971: 2C 00C0	; 4		KEYBOARD DATA
-	BMI	label4		; 974: 30 C0	; 4 *!*
+	BIT	$C000		; 971: 2C 00C0	; 4	KEYBOARD DATA
+	BMI	exit_player	; 974: 30 C0	; 4 *!*	if keypress, exit
 	DEY			; 976: 88	; 2
 	BNE	label10		; 977: D0 02	; 4 *!*
 	BEQ	label11		; 979: F0 06	; 4 *!*
@@ -123,7 +136,7 @@ label10:
 	BEQ	label12		; 97D: F0 04	; 4 *!*		!!!
 	BNE	label13		; 97F: D0 04	; 4 *!*
 label11:
-	LDY	LOC6		; 981: A4 06	; 3 *!*
+	LDY	FREQ1		; 981: A4 06	; 3 *!*
 label12:
 	EOR	#$40		; 983: 49 40	; 2 *!*		!!!
 label13:
@@ -164,7 +177,7 @@ label20:
 	BEQ	label22		; 9B5: F0 04	; 4 *!*		!!!
 	BNE	label23		; 9B7: D0 04	; 4 *!*
 label21:
-	LDX	LOC7		; 9B9: A6 07	; 3 *!*
+	LDX	FREQ2		; 9B9: A6 07	; 3 *!*
 label22:
 	EOR	#$80		; 9BB: 49 80	; 2 *!*		!!!
 label23:
