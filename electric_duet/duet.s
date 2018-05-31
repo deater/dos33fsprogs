@@ -33,6 +33,8 @@ MADDRH	EQU	$1F
 LOC4E	EQU	$4E
 LOC4F	EQU	$4F
 
+STARTADDR	EQU	$0900
+
 play_ed:
 	LDA	#$01		; 900: A9 01	; 2 *!*
 	STA	LOC9		; 902: 85 09	; 3
@@ -77,23 +79,23 @@ label4:
 play_note:
 	STA	DURATION	; 937: 85 08	; 3
 	JSR	sub1		; 939: 20 2D09	; 6
-	STX	$0983		; 93C: 8E 8309	; 4	self-modify EOR/CMP
+	STX	STARTADDR+$83	; 93C: 8E 8309	; 4	self-modify EOR/CMP
 	STA	LOC6		; 93F: 85 06	; 3
 	LDX	LOC9		; 941: A6 09	; 3 *!*
 label5:
 	LSR	A		; 943: 4A	; 2
 	DEX			; 944: CA	; 2
 	BNE	label5		; 945: D0 FC	; 4 *!*
-	STA	$097C		; 947: 8D 7C09	; 4		; self-modify
+	STA	STARTADDR+$7C	; 947: 8D 7C09	; 4		; self-modify
 	JSR	sub1		; 94A: 20 2D09	; 6
-	STX	$09BB		; 94D: 8E BB09	; 4		; self-modify
+	STX	STARTADDR+$BB	; 94D: 8E BB09	; 4		; self-modify
 	STA	LOC7		; 950: 85 07	; 3
 	LDX	LOC1D		; 952: A6 1D	; 3 *!*
 label6:
 	LSR	A		; 954: 4A	; 2
 	DEX			; 955: CA	; 2
 	BNE	label6		; 956: D0 FC	; 4 *!*
-	STA	$09B4		; 958: 8D B409	; 4		; self-modify
+	STA	STARTADDR+$B4	; 958: 8D B409	; 4		; self-modify
 	PLA			; 95B: 68	; 4
 	TAY			; 95C: A8	; 2
 	PLA			; 95D: 68	; 4
@@ -111,7 +113,7 @@ label7:
 	BIT	$C030		; 96C: 2C 30C0	; 4		SPEAKER
 label9:
 	STA	LOC4E		; 96F: 85 4E	; 3
-	BIT	$C000		; 971: 2C 00C0	; 4
+	BIT	$C000		; 971: 2C 00C0	; 4		KEYBOARD DATA
 	BMI	label4		; 974: 30 C0	; 4 *!*
 	DEY			; 976: 88	; 2
 	BNE	label10		; 977: D0 02	; 4 *!*
