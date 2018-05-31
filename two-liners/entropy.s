@@ -26,6 +26,9 @@
 ;	126 bytes:	nextx: simplify by using knowledge of possible x/y vals
 ;	124 bytes:	qkumba noticed we can bump yloop up to include the
 ;			pha, letting us remove two now unneeded stack ops
+;	123 byts:	qkumba noticed XDRAW0 always exits with X==0 so
+;			we can move some things to use X instead and
+;			can get a "1" value simply by using INX
 
 ;BLT=BCC, BGE=BCS
 
@@ -76,8 +79,8 @@ yloop:
 	pha			; YPOS stored on stack
 	lda	#4		; FOR X=4 to 278 STEP 6
 	sta	XPOS
-	lda	#0		; can't fit 278 in one byte, need overflow byte
-	sta	XPOSH
+	ldx	#0		; can't fit 278 in one byte, need overflow byte
+	stx	XPOSH
 xloop:
 
 
@@ -99,7 +102,10 @@ xloop:
 
 				; get random value in FAC
 				;    (floating point accumlator)
-	ldx	#1		; RND(1), Force 1
+
+	inx			; X is always 0 coming in, increment to 1
+
+				; RND(1), Force 1
 				; returns "random" value between 0 and 1
 	jsr	RND+6		; we skip passing the argument
 				; as a floating point value
@@ -160,7 +166,7 @@ done:
 
 
 	jsr	XDRAW0		; XDRAW 1 AT X,Y
-				; A is 0 at end.  Does that help us?
+				; Both A and X are 0 at exit
 
 nextx:				; NEXT X
 	lda	XPOS							; 2
