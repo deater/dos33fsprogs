@@ -52,7 +52,7 @@ This sound simple, but it leads to some neat patterns.
 =======================
 
 I thought it would be neat to see how small I could make this in assembly
-language. Currently I have it down to 119 bytes (the executable is 123
+language. Currently I have it down to 118 bytes (the executable is 122
 bytes because DOS33 includes size/address filesystem metadata in the file
 itself).
 

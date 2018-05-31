@@ -2,7 +2,7 @@
 ; by Dave McKellar of Toronto
 ; Two-line BASIC program
 ; Found on Beagle Brother's Apple Mechanic Disk
-; Converted to 6502 Assembly by Vince Weaver
+; Converted to 6502 Assembly by Deater (Vince Weaver) vince@deater.net
 
 ; 24001	ROT=0:FOR I=1 TO 15: READ A,B: POKE A,B: NEXT: DATA
 ;	232,252,233,29,7676,1,7678,4,7679,0,7680,18,7681,63,
@@ -26,9 +26,12 @@
 ;	126 bytes:	nextx: simplify by using knowledge of possible x/y vals
 ;	124 bytes:	qkumba noticed we can bump yloop up to include the
 ;			pha, letting us remove two now unneeded stack ops
-;	123 byts:	qkumba noticed XDRAW0 always exits with X==0 so
+;	123 bytes:	qkumba noticed XDRAW0 always exits with X==0 so
 ;			we can move some things to use X instead and
 ;			can get a "1" value simply by using INX
+;	122 bytes:	Nick Westgate noticed that we could save a byte
+;			in eloop by pushing the stx ELOOP to the beginning
+;			rather than the end.
 
 ;BLT=BCC, BGE=BCS
 
@@ -69,11 +72,14 @@ XDRAW0		=	$F65D
 entropy:
 
 	jsr	HGR2		; Hi-res graphics, no text at bottom
+				; Y=0, A=$60 after this call
 
-	lda	#8		; Unlike the BASIC, our loop is *100
-	sta	EPOS		; 8 to 15 rather than .08 to .15
-
+	ldx	#8		; Unlike the BASIC, our loop is *100
+				; 8 to 15 rather than .08 to .15
 eloop:
+	stx	EPOS		; EPOS was temporarily in X
+
+
 	lda	#4		; FOR Y=4 to 189 STEP 6
 yloop:
 	pha			; YPOS stored on stack
@@ -196,9 +202,9 @@ nexty:				; NEXT Y
 	bcc	yloop		; if so, loop
 
 nexte:				; NEXT E
-	inc	EPOS
-	lda	EPOS
-	cmp	#15
+	ldx	EPOS
+	inx			; EPOS saved at beginning og eloop
+	cpx	#15
 	bcc	eloop		; branch if <15
 
 	bcs	entropy
