@@ -35,7 +35,7 @@ MADDRH		EQU	$1F
 LOC4E		EQU	$4E
 COUNT256	EQU	$4F
 
-STARTADDR	EQU	$0900
+STARTADDR	EQU	$0c00
 
 play_ed:
 	LDA	#$01		; 900: A9 01	; 2 *!*
@@ -176,6 +176,7 @@ label19:
 	TYA			; 9A9: 98	; 2
 	PHA			; 9AA: 48	; 3
 	JMP	triplet_loop	; 9AB: 4C 1509	; 3
+
 label18:
 	DEX			; 9AE: CA	; 2
 	BNE	label20		; 9AF: D0 02	; 4 *!*
