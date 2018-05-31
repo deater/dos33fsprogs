@@ -20,50 +20,54 @@
 
 ; Electric Duet Player Routine circa 1980
 
+; Most comments added by Vince Weaver
+
 .define EQU =
 
 ; These are all "Free" zero page locations
-FREQ1	EQU	$06
-FREQ2	EQU	$07
+FREQ1		EQU	$06
+FREQ2		EQU	$07
 DURATION	EQU	$08
-LOC9	EQU	$09
-LOC1D	EQU	$1D
-MADDRL	EQU	$1E
-MADDRH	EQU	$1F
-LOC4E	EQU	$4E
-LOC4F	EQU	$4F
+INSTRUMENT1	EQU	$09
+INSTRUMENT2	EQU	$1D
+MADDRL		EQU	$1E
+MADDRH		EQU	$1F
+LOC4E		EQU	$4E
+COUNT256	EQU	$4F
 
 STARTADDR	EQU	$0900
 
 play_ed:
 	LDA	#$01		; 900: A9 01	; 2 *!*
-	STA	LOC9		; 902: 85 09	; 3
-	STA	LOC1D		; 904: 85 1D	; 3
+	STA	INSTRUMENT1	; 902: 85 09	; 3	set default
+	STA	INSTRUMENT2	; 904: 85 1D	; 3	 instruments
 	PHA			; 906: 48	; 3	1 on stack
 	PHA			; 907: 48	; 3	1 on stack
 	PHA			; 908: 48	; 3	1 on stack
-	BNE	load_triplet	; 909: D0 15	; 4 *!*
+	BNE	load_triplet	; 909: D0 15	; 4 *!* start decoding
 
-label2:
+change_instrmnt:
 	INY			; 90B: C8	; 2
-	LDA	(MADDRL),Y	; 90C: B1 1E	; 5 *!*
-	STA	LOC9		; 90E: 85 09	; 3
+	LDA	(MADDRL),Y	; 90C: B1 1E	; 5 *!*	load next byte
+	STA	INSTRUMENT1	; 90E: 85 09	; 3	save instrument
 	INY			; 910: C8	; 2
-	LDA	(MADDRL),Y	; 911: B1 1E	; 5 *!*
-	STA	LOC1D		; 913: 85 1D	; 3
-loop:
-	LDA	MADDRL		; 915: A5 1E	; 3 *!*
-	CLC			; 917: 18	; 2
+	LDA	(MADDRL),Y	; 911: B1 1E	; 5 *!*	load next byte
+	STA	INSTRUMENT2	; 913: 85 1D	; 3	save instrument
+
+triplet_loop:
+	LDA	MADDRL		; 915: A5 1E	; 3 *!*	increment pointer
+	CLC			; 917: 18	; 2	by three
 	ADC	#$03		; 918: 69 03	; 2 *!*
 	STA	MADDRL		; 91A: 85 1E	; 3
-	BCC	load_triplet	; 91C: 90 02	; 4 *!*
-	INC	MADDRH		; 91E: E6 1F	; 5
+
+	BCC	load_triplet	; 91C: 90 02	; 4 *!* if overflow
+	INC	MADDRH		; 91E: E6 1F	; 5	update high byte
 
 load_triplet:
 	LDY	#$00		; 920: A0 00	; 2 *!*	Set Y to zero
 	LDA	(MADDRL),Y	; 922: B1 1E	; 5 *!*	Load first byte
 	CMP	#$01		; 924: C9 01	; 2	Compare to 1
-	BEQ	label2		; 926: F0 E3	; 4 *!* If one ?
+	BEQ	change_instrmnt	; 926: F0 E3	; 4 *!* If one change inst
 	BCS	play_note	; 928: B0 0D	; 4 *!* If >1, then duration
 	PLA			; 92A: 68	; 4	pop off stack
 	PLA			; 92B: 68	; 4	pop off stack
@@ -74,7 +78,7 @@ load_triplet:
 	; Load byte from music stream
 	; Set X=EOR if note zero, set X=CMP if it is
 
-sub1:
+load_freq:
 	LDX	#$49		; 92D: A2 49	; 2 *!*	X=0x49 (EOR opcode)
 	INY			; 92F: C8	; 2	increment to next byte
 	LDA	(MADDRL),Y	; 930: B1 1E	; 5 *!*	load next byte
@@ -90,31 +94,34 @@ exit_player:
 
 play_note:
 	STA	DURATION	; 937: 85 08	; 3	store out duration
-	JSR	sub1		; 939: 20 2D09	; 6	get freq#1
+	JSR	load_freq	; 939: 20 2D09	; 6	get freq#1
 	STX	STARTADDR+$83	; 93C: 8E 8309	; 4	if 0 self-modify EOR/CMP
-	STA	FREQ1		; 93F: 85 06	; 3	??
-	LDX	LOC9		; 941: A6 09	; 3 *!*	??
-label5:
-	LSR	A		; 943: 4A	; 2
-	DEX			; 944: CA	; 2
-	BNE	label5		; 945: D0 FC	; 4 *!*
-	STA	STARTADDR+$7C	; 947: 8D 7C09	; 4		; self-modify
+	STA	FREQ1		; 93F: 85 06	; 3
+	LDX	INSTRUMENT1	; 941: A6 09	; 3 *!*
 
-	JSR	sub1		; 94A: 20 2D09	; 6	get freq#2
+instr1_adjust:
+	LSR	A		; 943: 4A	; 2	rshift freq by inst#
+	DEX			; 944: CA	; 2
+	BNE	instr1_adjust	; 945: D0 FC	; 4 *!*
+	STA	STARTADDR+$7C	; 947: 8D 7C09	; 4	self-modify a CPY
+
+	JSR	load_freq	; 94A: 20 2D09	; 6	get freq#2
 	STX	STARTADDR+$BB	; 94D: 8E BB09	; 4	if 0 self-modify EOR/CMP
 	STA	FREQ2		; 950: 85 07	; 3
-	LDX	LOC1D		; 952: A6 1D	; 3 *!*
-label6:
-	LSR	A		; 954: 4A	; 2
+	LDX	INSTRUMENT2	; 952: A6 1D	; 3 *!*
+instr2_adjust:
+	LSR	A		; 954: 4A	; 2	rshift freq by inst#
 	DEX			; 955: CA	; 2
-	BNE	label6		; 956: D0 FC	; 4 *!*
-	STA	STARTADDR+$B4	; 958: 8D B409	; 4		; self-modify
+	BNE	instr2_adjust	; 956: D0 FC	; 4 *!*
+	STA	STARTADDR+$B4	; 958: 8D B409	; 4	self modify a CPX
+
 	PLA			; 95B: 68	; 4
 	TAY			; 95C: A8	; 2
 	PLA			; 95D: 68	; 4
 	TAX			; 95E: AA	; 2
 	PLA			; 95F: 68	; 4
 	BNE	label8		; 960: D0 03	; 4 *!*
+
 label99:
 	BIT	$C030		; 962: 2C 30C0	; 4		SPEAKER
 label8:
@@ -155,8 +162,9 @@ label14:
 label16:
 	CMP	$C030		; 996: CD 30C0	; 4		SPEAKER
 label17:
-	DEC	LOC4F		; 999: C6 4F	; 5
+	DEC	COUNT256	; 999: C6 4F	; 5	div by 256 counter
 	BNE	label18		; 99B: D0 11	; 4 *!*
+
 	DEC	DURATION	; 99D: C6 08	; 5
 	BNE	label18		; 99F: D0 0D	; 4 *!*
 	BVC	label19		; 9A1: 50 03	; 4 *!*
@@ -167,7 +175,7 @@ label19:
 	PHA			; 9A8: 48	; 3
 	TYA			; 9A9: 98	; 2
 	PHA			; 9AA: 48	; 3
-	JMP	loop		; 9AB: 4C 1509	; 3
+	JMP	triplet_loop	; 9AB: 4C 1509	; 3
 label18:
 	DEX			; 9AE: CA	; 2
 	BNE	label20		; 9AF: D0 02	; 4 *!*
