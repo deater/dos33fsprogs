@@ -45,7 +45,7 @@ Memory Map
 0400:		Text Page 0 (AUX 0400: 80 column text)
 
 2000:		HGR Page0
-4000:		HGP Page1
+4000:		HGR Page1
 9600:		DOS		37.5k
 C000:		I/O Space
 D000:		ROM

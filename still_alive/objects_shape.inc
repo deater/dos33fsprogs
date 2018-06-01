@@ -158,5 +158,6 @@ chell_right:
 ; RT DN RT DN LT DN RT DN NLT LT DN LT LT LT 
 ; STOP
 
+blue_core:
 .byte $fa,$24,$0d,$0d,$36,$9f,$3a,$3f, $3c,$3c,$2c,$3c,$0c,$25,$2d,$2d
 .byte $2d,$2e,$2e,$3e,$2e,$1e,$37,$3f, $07,$00

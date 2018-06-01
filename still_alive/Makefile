@@ -7,9 +7,9 @@ all:	still_alive.dsk
 
 still_alive.dsk:	STILL_ALIVE TITLE.BAS ENDING
 	$(DOS33) -y still_alive.dsk BSAVE -a 0x0C00 STILL_ALIVE
-	$(DOS33) -y still_alive.dsk BSAVE -a 0x4000 ENDING
+	$(DOS33) -y still_alive.dsk BSAVE -a 0x2000 ENDING
 	$(DOS33) -y still_alive.dsk SAVE A TITLE.BAS
-
+#	$(DOS33) -y still_alive.dsk SAVE B GLADOS.HGR
 
 STILL_ALIVE:	still_alive.o
 	ld65 -o STILL_ALIVE still_alive.o -C ../linker_scripts/apple2_c00.inc
@@ -23,7 +23,7 @@ still_alive.o:	still_alive.s \
 	ca65 -o still_alive.o still_alive.s -l still_alive.lst
 
 ENDING:	ending.o
-	ld65 -o ENDING ending.o -C ../linker_scripts/apple2_4000.inc
+	ld65 -o ENDING ending.o -C ../linker_scripts/apple2_2000.inc
 
 ending.o:	ending.s \
 	GLADOS.HGR
