@@ -35,8 +35,6 @@ MADDRH		EQU	$1F
 LOC4E		EQU	$4E
 COUNT256	EQU	$4F
 
-STARTADDR	EQU	$0c00
-
 play_ed:
 	LDA	#$01		; 900: A9 01	; 2 *!*
 	STA	INSTRUMENT1	; 902: 85 09	; 3	set default
@@ -95,7 +93,7 @@ exit_player:
 play_note:
 	STA	DURATION	; 937: 85 08	; 3	store out duration
 	JSR	load_freq	; 939: 20 2D09	; 6	get freq#1
-	STX	STARTADDR+$83	; 93C: 8E 8309	; 4	if 0 self-modify EOR/CMP
+	STX	selfmodify1	; 93C: 8E 8309	; 4	if 0 self-modify EOR/CMP
 	STA	FREQ1		; 93F: 85 06	; 3
 	LDX	INSTRUMENT1	; 941: A6 09	; 3 *!*
 
@@ -103,17 +101,17 @@ instr1_adjust:
 	LSR	A		; 943: 4A	; 2	rshift freq by inst#
 	DEX			; 944: CA	; 2
 	BNE	instr1_adjust	; 945: D0 FC	; 4 *!*
-	STA	STARTADDR+$7C	; 947: 8D 7C09	; 4	self-modify a CPY
+	STA	selfmodify2+1	; 947: 8D 7C09	; 4	self-modify a CPY
 
 	JSR	load_freq	; 94A: 20 2D09	; 6	get freq#2
-	STX	STARTADDR+$BB	; 94D: 8E BB09	; 4	if 0 self-modify EOR/CMP
+	STX	selfmodify3	; 94D: 8E BB09	; 4	if 0 self-modify EOR/CMP
 	STA	FREQ2		; 950: 85 07	; 3
 	LDX	INSTRUMENT2	; 952: A6 1D	; 3 *!*
 instr2_adjust:
 	LSR	A		; 954: 4A	; 2	rshift freq by inst#
 	DEX			; 955: CA	; 2
 	BNE	instr2_adjust	; 956: D0 FC	; 4 *!*
-	STA	STARTADDR+$B4	; 958: 8D B409	; 4	self modify a CPX
+	STA	selfmodify4+1	; 958: 8D B409	; 4	self modify a CPX
 
 	PLA			; 95B: 68	; 4
 	TAY			; 95C: A8	; 2
@@ -136,15 +134,15 @@ label9:
 	BIT	$C000		; 971: 2C 00C0	; 4	KEYBOARD DATA
 	BMI	exit_player	; 974: 30 C0	; 4 *!*	if keypress, exit
 	DEY			; 976: 88	; 2
-	BNE	label10		; 977: D0 02	; 4 *!*
+	BNE	selfmodify2	; 977: D0 02	; 4 *!*
 	BEQ	label11		; 979: F0 06	; 4 *!*
-label10:
+selfmodify2:
 	CPY	#$00		; 97B: C0 00	; 2
-	BEQ	label12		; 97D: F0 04	; 4 *!*		!!!
+	BEQ	selfmodify1	; 97D: F0 04	; 4 *!*		!!!
 	BNE	label13		; 97F: D0 04	; 4 *!*
 label11:
 	LDY	FREQ1		; 981: A4 06	; 3 *!*
-label12:
+selfmodify1:
 	EOR	#$40		; 983: 49 40	; 2 *!*		!!!
 label13:
 	BIT	LOC4E		; 985: 24 4E	; 3
@@ -179,15 +177,15 @@ label19:
 
 label18:
 	DEX			; 9AE: CA	; 2
-	BNE	label20		; 9AF: D0 02	; 4 *!*
+	BNE	selfmodify4	; 9AF: D0 02	; 4 *!*
 	BEQ	label21		; 9B1: F0 06	; 4 *!*
-label20:
+selfmodify4:
 	CPX	#$00		; 9B3: E0 00	; 2
-	BEQ	label22		; 9B5: F0 04	; 4 *!*		!!!
+	BEQ	selfmodify3	; 9B5: F0 04	; 4 *!*		!!!
 	BNE	label23		; 9B7: D0 04	; 4 *!*
 label21:
 	LDX	FREQ2		; 9B9: A6 07	; 3 *!*
-label22:
+selfmodify3:
 	EOR	#$80		; 9BB: 49 80	; 2 *!*		!!!
 label23:
 	BVS	label99		; 9BD: 70 A3	; 4 *!*
