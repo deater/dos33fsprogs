@@ -10,6 +10,9 @@
 
 	; init variables
 
+	lda	#0
+	sta	FRAME_COUNT
+
 	lda	#1
 	sta	FORTYCOL
 
@@ -21,7 +24,7 @@ only_forty:
 
 	; Clear text page0
 
-	jsr	HOME
+;	jsr	HOME
 
 
 	;============================
@@ -36,14 +39,11 @@ only_forty:
 	; Setup lyrics
 	;==============================
 
-;	lda	#<(lyrics)
-;	sta	LYRICSL
-;	lda	#>(lyrics)
-;	sta	LYRICSH
+	lda	#<(lyrics)
+	sta	LYRICSL
+	lda	#>(lyrics)
+	sta	LYRICSH
 
-
-;MADDRL EQU 30
-;MADDRH EQU 31
 
 	;==================
 	; load song
@@ -82,12 +82,9 @@ forever_loop:
 
 
 lyrics:
-;.include	"lyrics.inc"
+.include	"sa.edlyrics"
 
 .include	"ascii_art.inc"
-
-;LZ4_BUFFER:
-;.incbin		"SA.KR4"
 
 
 music_address:

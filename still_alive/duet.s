@@ -53,6 +53,10 @@ change_instrmnt:
 	STA	INSTRUMENT2	; 913: 85 1D	; 3	save instrument
 
 triplet_loop:
+	ldy	#0
+	jsr	display_lyrics_ed
+	inc     FRAME_COUNT
+
 	LDA	MADDRL		; 915: A5 1E	; 3 *!*	increment pointer
 	CLC			; 917: 18	; 2	by three
 	ADC	#$03		; 918: 69 03	; 2 *!*

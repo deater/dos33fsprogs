@@ -1,4 +1,92 @@
 	;========================================================
+	; display lyrics electric duet
+	;========================================================
+
+display_lyrics_ed:
+
+	;========================
+	; Check if new lyric ready
+	;========================
+	lda	FRAME_COUNT			; get current frame count
+	cmp	(LYRICSL),Y			; compare to next-trigger
+	bne	all_done_lyrics_ed			; not same, so skip
+
+	; adjust pointer 16-bit
+	inc	LYRICSL
+	bne	lc_sb2_ed
+	inc	LYRICSH
+lc_sb2_ed:
+
+	;==================================
+	; Print lyric
+	;==================================
+handle_lyrics_ed:
+
+	lda	(LYRICSL),Y		; load value
+
+handle_lyrics_loop_ed:
+
+;	beq	done_lyric_ed		; if 0, done lyric
+
+	cmp	#11			; check if in range 1-10
+	bcs	lyric_home_ed		; if not, skip ahead
+
+go_draw_ascii_ed:
+	jsr	draw_ascii_art		; draw proper ascii art
+
+	jmp	lyric_continue_ed		; and continue
+
+lyric_home_ed:
+	cmp	#12			; check if form feed char
+	bne	lyric_char_ed		; if not skip ahead
+
+	jsr	HOME			; call HOME
+
+	jmp	lyric_continue_ed	; continue
+
+lyric_char_ed:
+
+	; Uppercase it
+
+	cmp	#'a'+$80
+	bcc	just_output_already_ed
+	cmp	#'z'+$80
+	bcs	just_output_already_ed
+
+	and	#$DF
+
+just_output_already_ed:
+	jsr	COUT1			; output the character
+
+lyric_continue_ed:
+
+	; adjust pointer 16-bit
+	inc	LYRICSL
+	bne	lc_sb_ed
+	inc	LYRICSH
+lc_sb_ed:
+
+	lda	(LYRICSL),Y		; load value
+	bne	handle_lyrics_loop_ed
+
+	; adjust pointer 16-bit
+	inc	LYRICSL
+	bne	lc_sb_ed2
+	inc	LYRICSH
+lc_sb_ed2:
+
+
+;	beq	all_done_lyrics_ed	; if 0, done lyric
+
+
+all_done_lyrics_ed:
+	rts
+
+
+
+
+
+	;========================================================
 	; display lyrics
 	;========================================================
 
