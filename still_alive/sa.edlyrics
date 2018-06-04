@@ -1,860 +1,860 @@
 ; 0: "\iForms "
-.byte	$00,$C6,$EF,$F2,$ED,$F3,$A0,$00
-; 4: "\iFORM-"
-.byte	$04,$C6,$CF,$D2,$CD,$AD,$00
-; 6: "\i29827"
-.byte	$06,$B2,$B9,$B8,$B2,$B7,$00
-; 8: "\i281-12:\n"
-.byte	$08,$B2,$B8,$B1,$AD,$B1,$B2,$BA,$8D,$00
-; 10: "\iTest "
-.byte	$0A,$D4,$E5,$F3,$F4,$A0,$00
-; 12: "\iAssess"
-.byte	$0C,$C1,$F3,$F3,$E5,$F3,$F3,$00
-; 14: "\iment "
-.byte	$0E,$ED,$E5,$EE,$F4,$A0,$00
-; 16: "\iReport\n"
-.byte	$10,$D2,$E5,$F0,$EF,$F2,$F4,$8D,$00
-; 18: "\i\n"
-.byte	$12,$8D,$00
-; 26: "This "
-.byte	$1A,$D4,$E8,$E9,$F3,$A0,$00
-; 28: "was "
-.byte	$1C,$F7,$E1,$F3,$A0,$00
-; 30: "a "
-.byte	$1E,$E1,$A0,$00
-; 32: "tri"
-.byte	$20,$F4,$F2,$E9,$00
-; 34: "umph.\n"
-.byte	$22,$F5,$ED,$F0,$E8,$AE,$8D,$00
-; 57: "I'm "
-.byte	$39,$C9,$A7,$ED,$A0,$00
-; 59: "ma"
-.byte	$3B,$ED,$E1,$00
-; 61: "king "
-.byte	$3D,$EB,$E9,$EE,$E7,$A0,$00
-; 63: "a "
-.byte	$3F,$E1,$A0,$00
-; 65: "note "
-.byte	$41,$EE,$EF,$F4,$E5,$A0,$00
-; 69: "here:\n"
-.byte	$45,$E8,$E5,$F2,$E5,$BA,$8D,$00
-; 76: "HUGE "
-.byte	$4C,$C8,$D5,$C7,$C5,$A0,$00
-; 80: "SUC"
-.byte	$50,$D3,$D5,$C3,$00
-; 82: "CESS.\n"
-.byte	$52,$C3,$C5,$D3,$D3,$AE,$8D,$00
-; 98: "It's "
-.byte	$62,$C9,$F4,$A7,$F3,$A0,$00
-; 100: "hard "
-.byte	$64,$E8,$E1,$F2,$E4,$A0,$00
-; 104: "to "
-.byte	$68,$F4,$EF,$A0,$00
-; 106: "o"
-.byte	$6A,$EF,$00
-; 112: "ver"
-.byte	$70,$F6,$E5,$F2,$00
-; 114: "state\n"
-.byte	$72,$F3,$F4,$E1,$F4,$E5,$8D,$00
-; 118: "my "
-.byte	$76,$ED,$F9,$A0,$00
-; 124: "sat"
-.byte	$7C,$F3,$E1,$F4,$00
-; 128: "is"
-.byte	$80,$E9,$F3,$00
-; 130: "fac"
-.byte	$82,$E6,$E1,$E3,$00
-; 134: "tion.\n"
-.byte	$86,$F4,$E9,$EF,$EE,$AE,$8D,$00
-; 156: "\1Ap"
-.byte	$9C,$01,$C1,$F0,$00
-; 158: "er"
-.byte	$9E,$E5,$F2,$00
-; 160: "ture "
-.byte	$A0,$F4,$F5,$F2,$E5,$A0,$00
-; 162: "Sci"
-.byte	$A2,$D3,$E3,$E9,$00
-; 164: "ence\n"
-.byte	$A4,$E5,$EE,$E3,$E5,$8D,$00
-; 187: "We "
-.byte	$BB,$D7,$E5,$A0,$00
-; 189: "do "
-.byte	$BD,$E4,$EF,$A0,$00
-; 191: "what "
-.byte	$BF,$F7,$E8,$E1,$F4,$A0,$00
-; 193: "we "
-.byte	$C1,$F7,$E5,$A0,$00
-; 195: "must\n"
-.byte	$C3,$ED,$F5,$F3,$F4,$8D,$00
-; 202: "be"
-.byte	$CA,$E2,$E5,$00
-; 204: "cause "
-.byte	$CC,$E3,$E1,$F5,$F3,$E5,$A0,$00
-; 211: "we "
-.byte	$D3,$F7,$E5,$A0,$00
-; 213: "can.\n"
-.byte	$D5,$E3,$E1,$EE,$AE,$8D,$00
-; 231: "For "
-.byte	$E7,$C6,$EF,$F2,$A0,$00
-; 235: "the "
-.byte	$EB,$F4,$E8,$E5,$A0,$00
-; 237: "good "
-.byte	$ED,$E7,$EF,$EF,$E4,$A0,$00
-; 243: "of "
-.byte	$F3,$EF,$E6,$A0,$00
-; 245: "all "
-.byte	$F5,$E1,$EC,$EC,$A0,$00
-; 251: "of "
-.byte	$FB,$EF,$E6,$A0,$00
-; 253: "us.\n"
-.byte	$FD,$F5,$F3,$AE,$8D,$00
-; 258: "\2Ex"
-.byte	$02,$02,$C5,$F8,$00
-; 260: "cept "
-.byte	$04,$E3,$E5,$F0,$F4,$A0,$00
-; 262: "the "
-.byte	$06,$F4,$E8,$E5,$A0,$00
-; 264: "ones "
-.byte	$08,$EF,$EE,$E5,$F3,$A0,$00
-; 266: "who "
-.byte	$0A,$F7,$E8,$EF,$A0,$00
-; 268: "are "
-.byte	$0C,$E1,$F2,$E5,$A0,$00
-; 270: "dead.\n\n"
-.byte	$0E,$E4,$E5,$E1,$E4,$AE,$8D,$8D,$00
-; 276: "\1But "
-.byte	$14,$01,$C2,$F5,$F4,$A0,$00
-; 278: "there"
-.byte	$16,$F4,$E8,$E5,$F2,$E5,$00
-; 280: "'s no "
-.byte	$18,$A7,$F3,$A0,$EE,$EF,$A0,$00
-; 284: "sense "
-.byte	$1C,$F3,$E5,$EE,$F3,$E5,$A0,$00
-; 288: "cry"
-.byte	$20,$E3,$F2,$F9,$00
-; 290: "ing\n"
-.byte	$22,$E9,$EE,$E7,$8D,$00
-; 292: "ov"
-.byte	$24,$EF,$F6,$00
-; 294: "er "
-.byte	$26,$E5,$F2,$A0,$00
-; 296: "eve"
-.byte	$28,$E5,$F6,$E5,$00
-; 298: "ry "
-.byte	$2A,$F2,$F9,$A0,$00
-; 300: "mis"
-.byte	$2C,$ED,$E9,$F3,$00
-; 304: "take.\n"
-.byte	$30,$F4,$E1,$EB,$E5,$AE,$8D,$00
-; 308: "You "
-.byte	$34,$D9,$EF,$F5,$A0,$00
-; 310: "just "
-.byte	$36,$EA,$F5,$F3,$F4,$A0,$00
-; 312: "keep "
-.byte	$38,$EB,$E5,$E5,$F0,$A0,$00
-; 316: "on "
-.byte	$3C,$EF,$EE,$A0,$00
-; 320: "try"
-.byte	$40,$F4,$F2,$F9,$00
-; 322: "ing\n"
-.byte	$42,$E9,$EE,$E7,$8D,$00
-; 324: "till "
-.byte	$44,$F4,$E9,$EC,$EC,$A0,$00
-; 326: "you "
-.byte	$46,$F9,$EF,$F5,$A0,$00
-; 328: "run "
-.byte	$48,$F2,$F5,$EE,$A0,$00
-; 330: "out "
-.byte	$4A,$EF,$F5,$F4,$A0,$00
-; 332: "of "
-.byte	$4C,$EF,$E6,$A0,$00
-; 336: "cake.\n"
-.byte	$50,$E3,$E1,$EB,$E5,$AE,$8D,$00
-; 340: "\3And "
-.byte	$54,$03,$C1,$EE,$E4,$A0,$00
-; 342: "the "
-.byte	$56,$F4,$E8,$E5,$A0,$00
-; 344: "Sci"
-.byte	$58,$D3,$E3,$E9,$00
-; 346: "ence "
-.byte	$5A,$E5,$EE,$E3,$E5,$A0,$00
-; 348: "gets "
-.byte	$5C,$E7,$E5,$F4,$F3,$A0,$00
-; 352: "done.\n"
-.byte	$60,$E4,$EF,$EE,$E5,$AE,$8D,$00
-; 356: "And "
-.byte	$64,$C1,$EE,$E4,$A0,$00
-; 358: "you "
-.byte	$66,$F9,$EF,$F5,$A0,$00
-; 360: "make "
-.byte	$68,$ED,$E1,$EB,$E5,$A0,$00
-; 362: "a "
-.byte	$6A,$E1,$A0,$00
-; 364: "neat "
-.byte	$6C,$EE,$E5,$E1,$F4,$A0,$00
-; 368: "gun.\n"
-.byte	$70,$E7,$F5,$EE,$AE,$8D,$00
-; 373: "\1For "
-.byte	$75,$01,$C6,$EF,$F2,$A0,$00
-; 375: "the "
-.byte	$77,$F4,$E8,$E5,$A0,$00
-; 377: "peo"
-.byte	$79,$F0,$E5,$EF,$00
-; 379: "ple "
-.byte	$7B,$F0,$EC,$E5,$A0,$00
-; 381: "who "
-.byte	$7D,$F7,$E8,$EF,$A0,$00
-; 383: "are\n"
-.byte	$7F,$E1,$F2,$E5,$8D,$00
-; 387: "still"
-.byte	$83,$F3,$F4,$E9,$EC,$EC,$00
-; 389: " a"
-.byte	$85,$A0,$E1,$00
-; 391: "live.\n"
-.byte	$87,$EC,$E9,$F6,$E5,$AE,$8D,$00
-; 393: "\f"
-.byte	$89,$0C,$00
-; 409: "\iForms "
-.byte	$99,$C6,$EF,$F2,$ED,$F3,$A0,$00
-; 411: "\iFORM-"
-.byte	$9B,$C6,$CF,$D2,$CD,$AD,$00
-; 413: "\i5555"
-.byte	$9D,$B5,$B5,$B5,$B5,$00
-; 415: "\i1-5:\n"
-.byte	$9F,$B1,$AD,$B5,$BA,$8D,$00
-; 417: "\iPerson"
-.byte	$A1,$D0,$E5,$F2,$F3,$EF,$EE,$00
-; 419: "\inel "
-.byte	$A3,$EE,$E5,$EC,$A0,$00
-; 421: "\iFile "
-.byte	$A5,$C6,$E9,$EC,$E5,$A0,$00
-; 423: "\iAdden"
-.byte	$A7,$C1,$E4,$E4,$E5,$EE,$00
-; 425: "\idum:\n"
-.byte	$A9,$E4,$F5,$ED,$BA,$8D,$00
-; 427: "\i\n"
-.byte	$AB,$8D,$00
-; 429: "\iDear "
-.byte	$AD,$C4,$E5,$E1,$F2,$A0,$00
-; 431: "\i<<Sub"
-.byte	$AF,$BC,$BC,$D3,$F5,$E2,$00
-; 433: "\iject "
-.byte	$B1,$EA,$E5,$E3,$F4,$A0,$00
-; 435: "\iName "
-.byte	$B3,$CE,$E1,$ED,$E5,$A0,$00
-; 437: "\iHere>>"
-.byte	$B5,$C8,$E5,$F2,$E5,$BE,$BE,$00
-; 439: "\i,\n"
-.byte	$B7,$AC,$8D,$00
-; 441: "\i\n"
-.byte	$B9,$8D,$00
-; 447: "I'm "
-.byte	$BF,$C9,$A7,$ED,$A0,$00
-; 449: "not "
-.byte	$C1,$EE,$EF,$F4,$A0,$00
-; 451: "ev"
-.byte	$C3,$E5,$F6,$00
-; 453: "en "
-.byte	$C5,$E5,$EE,$A0,$00
-; 455: "an"
-.byte	$C7,$E1,$EE,$00
-; 458: "gry.\n"
-.byte	$CA,$E7,$F2,$F9,$AE,$8D,$00
-; 482: "I'm "
-.byte	$E2,$C9,$A7,$ED,$A0,$00
-; 484: "be"
-.byte	$E4,$E2,$E5,$00
-; 486: "ing "
-.byte	$E6,$E9,$EE,$E7,$A0,$00
-; 488: "so "
-.byte	$E8,$F3,$EF,$A0,$00
-; 494: "sin"
-.byte	$EE,$F3,$E9,$EE,$00
-; 496: "cere "
-.byte	$F0,$E3,$E5,$F2,$E5,$A0,$00
-; 500: "right "
-.byte	$F4,$F2,$E9,$E7,$E8,$F4,$A0,$00
-; 504: "now.\n"
-.byte	$F8,$EE,$EF,$F7,$AE,$8D,$00
-; 522: "Ev"
-.byte	$0A,$C5,$F6,$00
-; 526: "en "
-.byte	$0E,$E5,$EE,$A0,$00
-; 528: "though "
-.byte	$10,$F4,$E8,$EF,$F5,$E7,$E8,$A0,$00
-; 534: "you "
-.byte	$16,$F9,$EF,$F5,$A0,$00
-; 538: "broke "
-.byte	$1A,$E2,$F2,$EF,$EB,$E5,$A0,$00
-; 542: "my "
-.byte	$1E,$ED,$F9,$A0,$00
-; 544: "\4heart.\n"
-.byte	$20,$04,$E8,$E5,$E1,$F2,$F4,$AE,$8D,$00
-; 550: "And "
-.byte	$26,$C1,$EE,$E4,$A0,$00
-; 552: "killed "
-.byte	$28,$EB,$E9,$EC,$EC,$E5,$E4,$A0,$00
-; 556: "me.\n"
-.byte	$2C,$ED,$E5,$AE,$8D,$00
-; 577: 	"\5And "
-.byte	$41,$05,$C1,$EE,$E4,$A0,$00
-; 579: 	"tore "
-.byte	$43,$F4,$EF,$F2,$E5,$A0,$00
-; 581: 	"me "
-.byte	$45,$ED,$E5,$A0,$00
-; 583: 	"to "
-.byte	$47,$F4,$EF,$A0,$00
-; 585: 	"pie"
-.byte	$49,$F0,$E9,$E5,$00
-; 587: 	"ces.\n"
-.byte	$4B,$E3,$E5,$F3,$AE,$8D,$00
-; 609: 	"And "
-.byte	$61,$C1,$EE,$E4,$A0,$00
-; 611: 	"threw "
-.byte	$63,$F4,$E8,$F2,$E5,$F7,$A0,$00
-; 613: 	"eve"
-.byte	$65,$E5,$F6,$E5,$00
-; 615: 	"ry "
-.byte	$67,$F2,$F9,$A0,$00
-; 617: 	"piece "
-.byte	$69,$F0,$E9,$E5,$E3,$E5,$A0,$00
-; 624: 	"in"
-.byte	$70,$E9,$EE,$00
-; 626: 	"to "
-.byte	$72,$F4,$EF,$A0,$00
-; 632: 	"a "
-.byte	$78,$E1,$A0,$00
-; 634: 	"\6fire.\n"
-.byte	$7A,$06,$E6,$E9,$F2,$E5,$AE,$8D,$00
-; 652: "As "
-.byte	$8C,$C1,$F3,$A0,$00
-; 656: "they "
-.byte	$90,$F4,$E8,$E5,$F9,$A0,$00
-; 658: "burned "
-.byte	$92,$E2,$F5,$F2,$EE,$E5,$E4,$A0,$00
-; 664: "it "
-.byte	$98,$E9,$F4,$A0,$00
-; 668: "hurt "
-.byte	$9C,$E8,$F5,$F2,$F4,$A0,$00
-; 672: "be"
-.byte	$A0,$E2,$E5,$00
-; 674: "cause\n"
-.byte	$A2,$E3,$E1,$F5,$F3,$E5,$8D,$00
-; 678: "I "
-.byte	$A6,$C9,$A0,$00
-; 680: "was "
-.byte	$A8,$F7,$E1,$F3,$A0,$00
-; 682: "so "
-.byte	$AA,$F3,$EF,$A0,$00
-; 684: "hap"
-.byte	$AC,$E8,$E1,$F0,$00
-; 686: "py "
-.byte	$AE,$F0,$F9,$A0,$00
-; 688: "for "
-.byte	$B0,$E6,$EF,$F2,$A0,$00
-; 690: "you!\n"
-.byte	$B2,$F9,$EF,$F5,$A1,$8D,$00
-; 696: "\7Now "
-.byte	$B8,$07,$CE,$EF,$F7,$A0,$00
-; 698: "these "
-.byte	$BA,$F4,$E8,$E5,$F3,$E5,$A0,$00
-; 700: "points "
-.byte	$BC,$F0,$EF,$E9,$EE,$F4,$F3,$A0,$00
-; 704: "of "
-.byte	$C0,$EF,$E6,$A0,$00
-; 708: "da"
-.byte	$C4,$E4,$E1,$00
-; 710: "ta\n"
-.byte	$C6,$F4,$E1,$8D,$00
-; 712: "make "
-.byte	$C8,$ED,$E1,$EB,$E5,$A0,$00
-; 714: "a "
-.byte	$CA,$E1,$A0,$00
-; 716: "beau"
-.byte	$CC,$E2,$E5,$E1,$F5,$00
-; 718: "ti"
-.byte	$CE,$F4,$E9,$00
-; 720: "ful "
-.byte	$D0,$E6,$F5,$EC,$A0,$00
-; 724: "line.\n"
-.byte	$D4,$EC,$E9,$EE,$E5,$AE,$8D,$00
-; 728: "And "
-.byte	$D8,$C1,$EE,$E4,$A0,$00
-; 730: "we're "
-.byte	$DA,$F7,$E5,$A7,$F2,$E5,$A0,$00
-; 732: "out "
-.byte	$DC,$EF,$F5,$F4,$A0,$00
-; 736: "of "
-.byte	$E0,$EF,$E6,$A0,$00
-; 740: "be"
-.byte	$E4,$E2,$E5,$00
-; 742: "ta.\n"
-.byte	$E6,$F4,$E1,$AE,$8D,$00
-; 744: "We're "
-.byte	$E8,$D7,$E5,$A7,$F2,$E5,$A0,$00
-; 746: "re"
-.byte	$EA,$F2,$E5,$00
-; 748: "leas"
-.byte	$EC,$EC,$E5,$E1,$F3,$00
-; 750: "ing "
+.byte	$01,$C6,$EF,$F2,$ED,$F3,$A0,$00
+; 2: "\iFORM-"
+.byte	$02,$C6,$CF,$D2,$CD,$AD,$00
+; 4: "\i29827"
+.byte	$03,$B2,$B9,$B8,$B2,$B7,$00
+; 6: "\i281-12:\n"
+.byte	$04,$B2,$B8,$B1,$AD,$B1,$B2,$BA,$8D,$00
+; 8: "\iTest "
+.byte	$05,$D4,$E5,$F3,$F4,$A0,$00
+; 10: "\iAssess"
+.byte	$06,$C1,$F3,$F3,$E5,$F3,$F3,$00
+; 12: "\iment "
+.byte	$07,$ED,$E5,$EE,$F4,$A0,$00
+; 14: "\iReport\n"
+.byte	$08,$D2,$E5,$F0,$EF,$F2,$F4,$8D,$00
+; 16: "\i\n"
+.byte	$09,$8D,$00
+; 24: "This "
+.byte	$0A,$D4,$E8,$E9,$F3,$A0,$00
+; 26: "was "
+.byte	$0B,$F7,$E1,$F3,$A0,$00
+; 28: "a "
+.byte	$0C,$E1,$A0,$00
+; 30: "tri"
+.byte	$0D,$F4,$F2,$E9,$00
+; 32: "umph.\n"
+.byte	$0E,$F5,$ED,$F0,$E8,$AE,$8D,$00
+; 54: "I'm "
+.byte	$1A,$C9,$A7,$ED,$A0,$00
+; 56: "ma"
+.byte	$1B,$ED,$E1,$00
+; 58: "king "
+.byte	$1C,$EB,$E9,$EE,$E7,$A0,$00
+; 60: "a "
+.byte	$1D,$E1,$A0,$00
+; 62: "note "
+.byte	$1E,$EE,$EF,$F4,$E5,$A0,$00
+; 66: "here:\n"
+.byte	$20,$E8,$E5,$F2,$E5,$BA,$8D,$00
+; 72: "HUGE "
+.byte	$24,$C8,$D5,$C7,$C5,$A0,$00
+; 76: "SUC"
+.byte	$26,$D3,$D5,$C3,$00
+; 78: "CESS.\n"
+.byte	$27,$C3,$C5,$D3,$D3,$AE,$8D,$00
+; 94: "It's "
+.byte	$30,$C9,$F4,$A7,$F3,$A0,$00
+; 96: "hard "
+.byte	$31,$E8,$E1,$F2,$E4,$A0,$00
+; 100: "to "
+.byte	$33,$F4,$EF,$A0,$00
+; 102: "o"
+.byte	$34,$EF,$00
+; 108: "ver"
+.byte	$37,$F6,$E5,$F2,$00
+; 110: "state\n"
+.byte	$38,$F3,$F4,$E1,$F4,$E5,$8D,$00
+; 114: "my "
+.byte	$3A,$ED,$F9,$A0,$00
+; 120: "sat"
+.byte	$3D,$F3,$E1,$F4,$00
+; 124: "is"
+.byte	$3F,$E9,$F3,$00
+; 126: "fac"
+.byte	$40,$E6,$E1,$E3,$00
+; 130: "tion.\n"
+.byte	$42,$F4,$E9,$EF,$EE,$AE,$8D,$00
+; 152: "\1Ap"
+.byte	$4E,$01,$C1,$F0,$00
+; 154: "er"
+.byte	$4F,$E5,$F2,$00
+; 156: "ture "
+.byte	$50,$F4,$F5,$F2,$E5,$A0,$00
+; 158: "Sci"
+.byte	$51,$D3,$E3,$E9,$00
+; 160: "ence\n"
+.byte	$52,$E5,$EE,$E3,$E5,$8D,$00
+; 182: "We "
+.byte	$5E,$D7,$E5,$A0,$00
+; 184: "do "
+.byte	$5F,$E4,$EF,$A0,$00
+; 186: "what "
+.byte	$60,$F7,$E8,$E1,$F4,$A0,$00
+; 188: "we "
+.byte	$61,$F7,$E5,$A0,$00
+; 190: "must\n"
+.byte	$62,$ED,$F5,$F3,$F4,$8D,$00
+; 196: "be"
+.byte	$66,$E2,$E5,$00
+; 198: "cause "
+.byte	$67,$E3,$E1,$F5,$F3,$E5,$A0,$00
+; 204: "we "
+.byte	$6B,$F7,$E5,$A0,$00
+; 206: "can.\n"
+.byte	$6C,$E3,$E1,$EE,$AE,$8D,$00
+; 224: "For "
+.byte	$76,$C6,$EF,$F2,$A0,$00
+; 228: "the "
+.byte	$78,$F4,$E8,$E5,$A0,$00
+; 230: "good "
+.byte	$79,$E7,$EF,$EF,$E4,$A0,$00
+; 236: "of "
+.byte	$7C,$EF,$E6,$A0,$00
+; 238: "all "
+.byte	$7D,$E1,$EC,$EC,$A0,$00
+; 244: "of "
+.byte	$80,$EF,$E6,$A0,$00
+; 246: "us.\n"
+.byte	$81,$F5,$F3,$AE,$8D,$00
+; 250: "\2Ex"
+.byte	$84,$02,$C5,$F8,$00
+; 252: "cept "
+.byte	$85,$E3,$E5,$F0,$F4,$A0,$00
+; 254: "the "
+.byte	$86,$F4,$E8,$E5,$A0,$00
+; 256: "ones "
+.byte	$87,$EF,$EE,$E5,$F3,$A0,$00
+; 258: "who "
+.byte	$88,$F7,$E8,$EF,$A0,$00
+; 260: "are "
+.byte	$89,$E1,$F2,$E5,$A0,$00
+; 262: "dead.\n\n"
+.byte	$8A,$E4,$E5,$E1,$E4,$AE,$8D,$8D,$00
+; 268: "\1But "
+.byte	$8C,$01,$C2,$F5,$F4,$A0,$00
+; 270: "there"
+.byte	$8D,$F4,$E8,$E5,$F2,$E5,$00
+; 272: "'s no "
+.byte	$8E,$A7,$F3,$A0,$EE,$EF,$A0,$00
+; 276: "sense "
+.byte	$90,$F3,$E5,$EE,$F3,$E5,$A0,$00
+; 280: "cry"
+.byte	$91,$E3,$F2,$F9,$00
+; 282: "ing\n"
+.byte	$92,$E9,$EE,$E7,$8D,$00
+; 284: "ov"
+.byte	$93,$EF,$F6,$00
+; 286: "er "
+.byte	$94,$E5,$F2,$A0,$00
+; 288: "eve"
+.byte	$95,$E5,$F6,$E5,$00
+; 290: "ry "
+.byte	$96,$F2,$F9,$A0,$00
+; 292: "mis"
+.byte	$97,$ED,$E9,$F3,$00
+; 296: "take.\n"
+.byte	$99,$F4,$E1,$EB,$E5,$AE,$8D,$00
+; 300: "You "
+.byte	$9B,$D9,$EF,$F5,$A0,$00
+; 302: "just "
+.byte	$9C,$EA,$F5,$F3,$F4,$A0,$00
+; 304: "keep "
+.byte	$9D,$EB,$E5,$E5,$F0,$A0,$00
+; 308: "on "
+.byte	$9F,$EF,$EE,$A0,$00
+; 312: "try"
+.byte	$A0,$F4,$F2,$F9,$00
+; 314: "ing\n"
+.byte	$A1,$E9,$EE,$E7,$8D,$00
+; 316: "till "
+.byte	$A2,$F4,$E9,$EC,$EC,$A0,$00
+; 318: "you "
+.byte	$A3,$F9,$EF,$F5,$A0,$00
+; 320: "run "
+.byte	$A4,$F2,$F5,$EE,$A0,$00
+; 322: "out "
+.byte	$A5,$EF,$F5,$F4,$A0,$00
+; 324: "of "
+.byte	$A6,$EF,$E6,$A0,$00
+; 328: "cake.\n"
+.byte	$A8,$E3,$E1,$EB,$E5,$AE,$8D,$00
+; 332: "\3And "
+.byte	$AA,$03,$C1,$EE,$E4,$A0,$00
+; 334: "the "
+.byte	$AB,$F4,$E8,$E5,$A0,$00
+; 336: "Sci"
+.byte	$AC,$D3,$E3,$E9,$00
+; 338: "ence "
+.byte	$AD,$E5,$EE,$E3,$E5,$A0,$00
+; 340: "gets "
+.byte	$AE,$E7,$E5,$F4,$F3,$A0,$00
+; 344: "done.\n"
+.byte	$B0,$E4,$EF,$EE,$E5,$AE,$8D,$00
+; 348: "And "
+.byte	$B2,$C1,$EE,$E4,$A0,$00
+; 350: "you "
+.byte	$B3,$F9,$EF,$F5,$A0,$00
+; 352: "make "
+.byte	$B4,$ED,$E1,$EB,$E5,$A0,$00
+; 354: "a "
+.byte	$B5,$E1,$A0,$00
+; 356: "neat "
+.byte	$B6,$EE,$E5,$E1,$F4,$A0,$00
+; 360: "gun.\n"
+.byte	$B8,$E7,$F5,$EE,$AE,$8D,$00
+; 364: "\1For "
+.byte	$BB,$01,$C6,$EF,$F2,$A0,$00
+; 366: "the "
+.byte	$BC,$F4,$E8,$E5,$A0,$00
+; 368: "peo"
+.byte	$BD,$F0,$E5,$EF,$00
+; 370: "ple "
+.byte	$BF,$F0,$EC,$E5,$A0,$00
+; 372: "who "
+.byte	$C0,$F7,$E8,$EF,$A0,$00
+; 374: "are\n"
+.byte	$C1,$E1,$F2,$E5,$8D,$00
+; 378: "still"
+.byte	$C3,$F3,$F4,$E9,$EC,$EC,$00
+; 380: " a"
+.byte	$C4,$A0,$E1,$00
+; 382: "live.\n"
+.byte	$C5,$EC,$E9,$F6,$E5,$AE,$8D,$00
+; 384: "\f"
+.byte	$C6,$0C,$00
+; 400: "\iForms "
+.byte	$CC,$C6,$EF,$F2,$ED,$F3,$A0,$00
+; 402: "\iFORM-"
+.byte	$CD,$C6,$CF,$D2,$CD,$AD,$00
+; 404: "\i5555"
+.byte	$CE,$B5,$B5,$B5,$B5,$00
+; 406: "\i1-5:\n"
+.byte	$CF,$B1,$AD,$B5,$BA,$8D,$00
+; 408: "\iPerson"
+.byte	$D0,$D0,$E5,$F2,$F3,$EF,$EE,$00
+; 410: "\inel "
+.byte	$D1,$EE,$E5,$EC,$A0,$00
+; 412: "\iFile "
+.byte	$D2,$C6,$E9,$EC,$E5,$A0,$00
+; 414: "\iAdden"
+.byte	$D3,$C1,$E4,$E4,$E5,$EE,$00
+; 416: "\idum:\n"
+.byte	$D4,$E4,$F5,$ED,$BA,$8D,$00
+; 418: "\i\n"
+.byte	$D5,$8D,$00
+; 420: "\iDear "
+.byte	$D6,$C4,$E5,$E1,$F2,$A0,$00
+; 422: "\i<<Sub"
+.byte	$D7,$BC,$BC,$D3,$F5,$E2,$00
+; 424: "\iject "
+.byte	$D8,$EA,$E5,$E3,$F4,$A0,$00
+; 426: "\iName "
+.byte	$D9,$CE,$E1,$ED,$E5,$A0,$00
+; 428: "\iHere>>"
+.byte	$DA,$C8,$E5,$F2,$E5,$BE,$BE,$00
+; 430: "\i,\n"
+.byte	$DB,$AC,$8D,$00
+; 432: "\i\n"
+.byte	$DC,$8D,$00
+; 438: "I'm "
+.byte	$DE,$C9,$A7,$ED,$A0,$00
+; 440: "not "
+.byte	$DF,$EE,$EF,$F4,$A0,$00
+; 442: "ev"
+.byte	$E0,$E5,$F6,$00
+; 444: "en "
+.byte	$E1,$E5,$EE,$A0,$00
+; 446: "an"
+.byte	$E2,$E1,$EE,$00
+; 449: "gry.\n"
+.byte	$E4,$E7,$F2,$F9,$AE,$8D,$00
+; 472: "I'm "
+.byte	$EC,$C9,$A7,$ED,$A0,$00
+; 474: "be"
+.byte	$ED,$E2,$E5,$00
+; 476: "ing "
 .byte	$EE,$E9,$EE,$E7,$A0,$00
-; 752: "on "
-.byte	$F0,$EF,$EE,$A0,$00
-; 756: "time.\n"
-.byte	$F4,$F4,$E9,$ED,$E5,$AE,$8D,$00
-; 760: "\5So "
-.byte	$F8,$05,$D3,$EF,$A0,$00
-; 762: "I'm "
-.byte	$FA,$C9,$A7,$ED,$A0,$00
-; 764: "GLaD. "
-.byte	$FC,$C7,$CC,$E1,$C4,$AE,$A0,$00
-; 766: "I "
-.byte	$FE,$C9,$A0,$00
-; 768: "got "
-.byte	$00,$E7,$EF,$F4,$A0,$00
-; 772: "burned.\n"
-.byte	$04,$E2,$F5,$F2,$EE,$E5,$E4,$AE,$8D,$00
-; 776: "\3Think "
-.byte	$08,$03,$D4,$E8,$E9,$EE,$EB,$A0,$00
-; 778: "of "
-.byte	$0A,$EF,$E6,$A0,$00
-; 780: "all "
-.byte	$0C,$E1,$EC,$EC,$A0,$00
+; 478: "so "
+.byte	$EF,$F3,$EF,$A0,$00
+; 484: "sin"
+.byte	$F1,$F3,$E9,$EE,$00
+; 486: "cere "
+.byte	$F2,$E3,$E5,$F2,$E5,$A0,$00
+; 490: "right "
+.byte	$F3,$F2,$E9,$E7,$E8,$F4,$A0,$00
+; 494: "now.\n"
+.byte	$F5,$EE,$EF,$F7,$AE,$8D,$00
+; 512: "Ev"
+.byte	$FC,$C5,$F6,$00
+; 516: "en "
+.byte	$FD,$E5,$EE,$A0,$00
+; 518: "though "
+.byte	$FE,$F4,$E8,$EF,$F5,$E7,$E8,$A0,$00
+; 524: "you "
+.byte	$FF,$F9,$EF,$F5,$A0,$00
+; 528: "broke "
+.byte	$00,$E2,$F2,$EF,$EB,$E5,$A0,$00
+; 532: "my "
+.byte	$01,$ED,$F9,$A0,$00
+; 534: "\4heart.\n"
+.byte	$02,$04,$E8,$E5,$E1,$F2,$F4,$AE,$8D,$00
+; 540: "And "
+.byte	$03,$C1,$EE,$E4,$A0,$00
+; 542: "killed "
+.byte	$04,$EB,$E9,$EC,$EC,$E5,$E4,$A0,$00
+; 546: "me.\n"
+.byte	$06,$ED,$E5,$AE,$8D,$00
+; 566: 	"\5And "
+.byte	$0E,$05,$C1,$EE,$E4,$A0,$00
+; 568: 	"tore "
+.byte	$0F,$F4,$EF,$F2,$E5,$A0,$00
+; 570: 	"me "
+.byte	$10,$ED,$E5,$A0,$00
+; 572: 	"to "
+.byte	$11,$F4,$EF,$A0,$00
+; 574: 	"pie"
+.byte	$12,$F0,$E9,$E5,$00
+; 576: 	"ces.\n"
+.byte	$13,$E3,$E5,$F3,$AE,$8D,$00
+; 598: 	"And "
+.byte	$1B,$C1,$EE,$E4,$A0,$00
+; 600: 	"threw "
+.byte	$1C,$F4,$E8,$F2,$E5,$F7,$A0,$00
+; 602: 	"eve"
+.byte	$1D,$E5,$F6,$E5,$00
+; 604: 	"ry "
+.byte	$1E,$F2,$F9,$A0,$00
+; 606: 	"piece "
+.byte	$1F,$F0,$E9,$E5,$E3,$E5,$A0,$00
+; 612: 	"in"
+.byte	$22,$E9,$EE,$00
+; 614: 	"to "
+.byte	$23,$F4,$EF,$A0,$00
+; 620: 	"a "
+.byte	$26,$E1,$A0,$00
+; 622: 	"\6fire.\n"
+.byte	$27,$06,$E6,$E9,$F2,$E5,$AE,$8D,$00
+; 640: "As "
+.byte	$2E,$C1,$F3,$A0,$00
+; 644: "they "
+.byte	$2F,$F4,$E8,$E5,$F9,$A0,$00
+; 646: "burned "
+.byte	$30,$E2,$F5,$F2,$EE,$E5,$E4,$A0,$00
+; 652: "it "
+.byte	$31,$E9,$F4,$A0,$00
+; 656: "hurt "
+.byte	$32,$E8,$F5,$F2,$F4,$A0,$00
+; 660: "be"
+.byte	$33,$E2,$E5,$00
+; 662: "cause\n"
+.byte	$34,$E3,$E1,$F5,$F3,$E5,$8D,$00
+; 666: "I "
+.byte	$36,$C9,$A0,$00
+; 668: "was "
+.byte	$37,$F7,$E1,$F3,$A0,$00
+; 670: "so "
+.byte	$38,$F3,$EF,$A0,$00
+; 672: "hap"
+.byte	$39,$E8,$E1,$F0,$00
+; 674: "py "
+.byte	$3A,$F0,$F9,$A0,$00
+; 676: "for "
+.byte	$3B,$E6,$EF,$F2,$A0,$00
+; 678: "you!\n"
+.byte	$3C,$F9,$EF,$F5,$A1,$8D,$00
+; 684: "\7Now "
+.byte	$3E,$07,$CE,$EF,$F7,$A0,$00
+; 686: "these "
+.byte	$3F,$F4,$E8,$E5,$F3,$E5,$A0,$00
+; 688: "points "
+.byte	$40,$F0,$EF,$E9,$EE,$F4,$F3,$A0,$00
+; 692: "of "
+.byte	$41,$EF,$E6,$A0,$00
+; 696: "da"
+.byte	$42,$E4,$E1,$00
+; 698: "ta\n"
+.byte	$43,$F4,$E1,$8D,$00
+; 700: "make "
+.byte	$44,$ED,$E1,$EB,$E5,$A0,$00
+; 702: "a "
+.byte	$45,$E1,$A0,$00
+; 704: "beau"
+.byte	$46,$E2,$E5,$E1,$F5,$00
+; 706: "ti"
+.byte	$47,$F4,$E9,$00
+; 708: "ful "
+.byte	$48,$E6,$F5,$EC,$A0,$00
+; 712: "line.\n"
+.byte	$49,$EC,$E9,$EE,$E5,$AE,$8D,$00
+; 716: "And "
+.byte	$4A,$C1,$EE,$E4,$A0,$00
+; 718: "we're "
+.byte	$4B,$F7,$E5,$A7,$F2,$E5,$A0,$00
+; 720: "out "
+.byte	$4C,$EF,$F5,$F4,$A0,$00
+; 724: "of "
+.byte	$4D,$EF,$E6,$A0,$00
+; 728: "be"
+.byte	$4E,$E2,$E5,$00
+; 730: "ta.\n"
+.byte	$4F,$F4,$E1,$AE,$8D,$00
+; 732: "We're "
+.byte	$50,$D7,$E5,$A7,$F2,$E5,$A0,$00
+; 734: "re"
+.byte	$51,$F2,$E5,$00
+; 736: "leas"
+.byte	$52,$EC,$E5,$E1,$F3,$00
+; 738: "ing "
+.byte	$53,$E9,$EE,$E7,$A0,$00
+; 740: "on "
+.byte	$54,$EF,$EE,$A0,$00
+; 744: "time.\n"
+.byte	$55,$F4,$E9,$ED,$E5,$AE,$8D,$00
+; 748: "\5So "
+.byte	$56,$05,$D3,$EF,$A0,$00
+; 750: "I'm "
+.byte	$57,$C9,$A7,$ED,$A0,$00
+; 752: "GLaD. "
+.byte	$58,$C7,$CC,$E1,$C4,$AE,$A0,$00
+; 754: "I "
+.byte	$59,$C9,$A0,$00
+; 756: "got "
+.byte	$5A,$E7,$EF,$F4,$A0,$00
+; 760: "burned.\n"
+.byte	$5B,$E2,$F5,$F2,$EE,$E5,$E4,$AE,$8D,$00
+; 764: "\3Think "
+.byte	$5C,$03,$D4,$E8,$E9,$EE,$EB,$A0,$00
+; 766: "of "
+.byte	$5D,$EF,$E6,$A0,$00
+; 768: "all "
+.byte	$5E,$E1,$EC,$EC,$A0,$00
+; 770: "the "
+.byte	$5F,$F4,$E8,$E5,$A0,$00
+; 772: "things "
+.byte	$60,$F4,$E8,$E9,$EE,$E7,$F3,$A0,$00
+; 774: "we "
+.byte	$61,$F7,$E5,$A0,$00
+; 776: "learned\n"
+.byte	$62,$EC,$E5,$E1,$F2,$EE,$E5,$E4,$8D,$00
+; 780: "\1for "
+.byte	$63,$01,$E6,$EF,$F2,$A0,$00
 ; 782: "the "
-.byte	$0E,$F4,$E8,$E5,$A0,$00
-; 784: "things "
-.byte	$10,$F4,$E8,$E9,$EE,$E7,$F3,$A0,$00
-; 786: "we "
-.byte	$12,$F7,$E5,$A0,$00
-; 788: "learned\n"
-.byte	$14,$EC,$E5,$E1,$F2,$EE,$E5,$E4,$8D,$00
-; 792: "\1for "
-.byte	$18,$01,$E6,$EF,$F2,$A0,$00
-; 794: "the "
-.byte	$1A,$F4,$E8,$E5,$A0,$00
-; 796: "peo"
-.byte	$1C,$F0,$E5,$EF,$00
-; 798: "ple "
-.byte	$1E,$F0,$EC,$E5,$A0,$00
-; 800: "who "
-.byte	$20,$F7,$E8,$EF,$A0,$00
-; 802: "are\n"
-.byte	$22,$E1,$F2,$E5,$8D,$00
-; 806: "still "
-.byte	$26,$F3,$F4,$E9,$EC,$EC,$A0,$00
-; 808: "a"
-.byte	$28,$E1,$00
-; 810: "live.\n"
-.byte	$2A,$EC,$E9,$F6,$E5,$AE,$8D,$00
-; 812: "\f"
-.byte	$2C,$0C,$00
-; 814: "\iForms "
-.byte	$2E,$C6,$EF,$F2,$ED,$F3,$A0,$00
-; 816: "\iFORM-"
-.byte	$30,$C6,$CF,$D2,$CD,$AD,$00
-; 818: "\i5555"
-.byte	$32,$B5,$B5,$B5,$B5,$00
-; 820: "\i1-6:\n"
-.byte	$34,$B1,$AD,$B6,$BA,$8D,$00
-; 822: "\iPerson"
-.byte	$36,$D0,$E5,$F2,$F3,$EF,$EE,$00
-; 824: "\inel "
-.byte	$38,$EE,$E5,$EC,$A0,$00
-; 826: "\iFile "
-.byte	$3A,$C6,$E9,$EC,$E5,$A0,$00
-; 828: "\iAdd"
-.byte	$3C,$C1,$E4,$E4,$00
-; 830: "\iendum "
-.byte	$3E,$E5,$EE,$E4,$F5,$ED,$A0,$00
-; 832: "\iAdd"
-.byte	$40,$C1,$E4,$E4,$00
-; 834: "\iendum"
-.byte	$42,$E5,$EE,$E4,$F5,$ED,$00
-; 836: "\i:\n\n"
-.byte	$44,$BA,$8D,$8D,$00
-; 860: "\iOne "
-.byte	$5C,$CF,$EE,$E5,$A0,$00
-; 862: "\ilast "
-.byte	$5E,$EC,$E1,$F3,$F4,$A0,$00
-; 864: "\ithing:\n"
-.byte	$60,$F4,$E8,$E9,$EE,$E7,$BA,$8D,$00
-; 866: "\i\n"
-.byte	$62,$8D,$00
-; 868: "Go "
-.byte	$64,$C7,$EF,$A0,$00
-; 870: "ah"
-.byte	$66,$E1,$E8,$00
-; 871: "ead"
-.byte	$67,$E5,$E1,$E4,$00
-; 872: " and "
-.byte	$68,$A0,$E1,$EE,$E4,$A0,$00
-; 874: "leave "
-.byte	$6A,$EC,$E5,$E1,$F6,$E5,$A0,$00
-; 878: "me.\n"
-.byte	$6E,$ED,$E5,$AE,$8D,$00
-; 899: "I "
-.byte	$83,$C9,$A0,$00
-; 901: "think "
-.byte	$85,$F4,$E8,$E9,$EE,$EB,$A0,$00
-; 903: "I "
-.byte	$87,$C9,$A0,$00
-; 905: "pre"
-.byte	$89,$F0,$F2,$E5,$00
-; 907: "fer "
-.byte	$8B,$E6,$E5,$F2,$A0,$00
-; 914: "to "
-.byte	$92,$F4,$EF,$A0,$00
-; 916: "stay "
-.byte	$94,$F3,$F4,$E1,$F9,$A0,$00
-; 923: "in"
-.byte	$9B,$E9,$EE,$00
-; 925: "side.\n"
-.byte	$9D,$F3,$E9,$E4,$E5,$AE,$8D,$00
-; 943: "May"
-.byte	$AF,$CD,$E1,$F9,$00
-; 947: "be "
-.byte	$B3,$E2,$E5,$A0,$00
-; 949: "you'll "
-.byte	$B5,$F9,$EF,$F5,$A7,$EC,$EC,$A0,$00
-; 955: "find "
-.byte	$BB,$E6,$E9,$EE,$E4,$A0,$00
-; 959: "some"
-.byte	$BF,$F3,$EF,$ED,$E5,$00
-; 963: "one "
-.byte	$C3,$EF,$EE,$E5,$A0,$00
-; 965: "else\n"
-.byte	$C5,$E5,$EC,$F3,$E5,$8D,$00
-; 971: "to "
-.byte	$CB,$F4,$EF,$A0,$00
-; 973: "help "
-.byte	$CD,$E8,$E5,$EC,$F0,$A0,$00
-; 977: "you.\n"
-.byte	$D1,$F9,$EF,$F5,$AE,$8D,$00
-; 1000: 	"\8May"
-.byte	$E8,$08,$CD,$E1,$F9,$00
-; 1002: 	"be "
-.byte	$EA,$E2,$E5,$A0,$00
-; 1004: 	"Black "
-.byte	$EC,$C2,$EC,$E1,$E3,$EB,$A0,$00
-; 1006: 	"Me"
-.byte	$EE,$CD,$E5,$00
-; 1010: 	"sa"
-.byte	$F2,$F3,$E1,$00
-; 1019: "."
-.byte	$FB,$AE,$00
-; 1025: "."
-.byte	$01,$AE,$00
-; 1029: ".\n"
-.byte	$05,$AE,$8D,$00
-; 1033: 	"THAT "
-.byte	$09,$D4,$C8,$C1,$D4,$A0,$00
-; 1035: 	"WAS "
-.byte	$0B,$D7,$C1,$D3,$A0,$00
-; 1037: 	"A "
-.byte	$0D,$C1,$A0,$00
-; 1039: 	"JOKE. "
-.byte	$0F,$CA,$CF,$CB,$C5,$AE,$A0,$00
-; 1055: 	"FAT "
-.byte	$1F,$C6,$C1,$D4,$A0,$00
-; 1057: 	"CHANCE.\n"
-.byte	$21,$C3,$C8,$C1,$CE,$C3,$C5,$AE,$8D,$00
-; 1075: "\9An"
-.byte	$33,$09,$C1,$EE,$00
-; 1079: "y"
-.byte	$37,$F9,$00
-; 1081: "way, "
-.byte	$39,$F7,$E1,$F9,$AC,$A0,$00
-; 1087: "this "
-.byte	$3F,$F4,$E8,$E9,$F3,$A0,$00
-; 1091: "cake "
-.byte	$43,$E3,$E1,$EB,$E5,$A0,$00
-; 1095: "is "
-.byte	$47,$E9,$F3,$A0,$00
-; 1097: "great.\n"
-.byte	$49,$E7,$F2,$E5,$E1,$F4,$AE,$8D,$00
-; 1102: "It's "
-.byte	$4E,$C9,$F4,$A7,$F3,$A0,$00
-; 1104: "so "
-.byte	$50,$F3,$EF,$A0,$00
-; 1106: "de"
-.byte	$52,$E4,$E5,$00
-; 1108: "li"
-.byte	$54,$EC,$E9,$00
-; 1110: "cious "
-.byte	$56,$E3,$E9,$EF,$F5,$F3,$A0,$00
-; 1112: "and "
-.byte	$58,$E1,$EE,$E4,$A0,$00
-; 1114: "moist.\n"
-.byte	$5A,$ED,$EF,$E9,$F3,$F4,$AE,$8D,$00
-; 1121: "\:Look "
-.byte	$61,$0A,$CC,$EF,$EF,$EB,$A0,$00
-; 1123: "at "
-.byte	$63,$E1,$F4,$A0,$00
-; 1125: "me "
-.byte	$65,$ED,$E5,$A0,$00
-; 1129: "still "
-.byte	$69,$F3,$F4,$E9,$EC,$EC,$A0,$00
-; 1133: "talk"
-.byte	$6D,$F4,$E1,$EC,$EB,$00
-; 1135: "ing\n"
-.byte	$6F,$E9,$EE,$E7,$8D,$00
-; 1137: "when "
-.byte	$71,$F7,$E8,$E5,$EE,$A0,$00
-; 1139: "there's "
-.byte	$73,$F4,$E8,$E5,$F2,$E5,$A7,$F3,$A0,$00
-; 1141: "\2Sci"
-.byte	$75,$02,$D3,$E3,$E9,$00
-; 1143: "ence "
-.byte	$77,$E5,$EE,$E3,$E5,$A0,$00
-; 1145: "to "
-.byte	$79,$F4,$EF,$A0,$00
-; 1149: "do.\n"
-.byte	$7D,$E4,$EF,$AE,$8D,$00
-; 1153: "\1When "
-.byte	$81,$01,$D7,$E8,$E5,$EE,$A0,$00
-; 1155: "I "
-.byte	$83,$C9,$A0,$00
-; 1157: "look "
-.byte	$85,$EC,$EF,$EF,$EB,$A0,$00
-; 1161: "out "
-.byte	$89,$EF,$F5,$F4,$A0,$00
-; 1165: "there,\n"
-.byte	$8D,$F4,$E8,$E5,$F2,$E5,$AC,$8D,$00
-; 1167: "it "
-.byte	$8F,$E9,$F4,$A0,$00
-; 1169: "makes "
-.byte	$91,$ED,$E1,$EB,$E5,$F3,$A0,$00
-; 1171: "me "
-.byte	$93,$ED,$E5,$A0,$00
-; 1173: "GLaD "
-.byte	$95,$C7,$CC,$E1,$C4,$A0,$00
-; 1175: "I'm "
-.byte	$97,$C9,$A7,$ED,$A0,$00
-; 1177: "not "
-.byte	$99,$EE,$EF,$F4,$A0,$00
-; 1181: "you.\n"
-.byte	$9D,$F9,$EF,$F5,$AE,$8D,$00
-; 1185: "\3I've "
-.byte	$A1,$03,$C9,$A7,$F6,$E5,$A0,$00
-; 1187: "ex"
-.byte	$A3,$E5,$F8,$00
-; 1189: "per"
-.byte	$A5,$F0,$E5,$F2,$00
-; 1191: "i"
-.byte	$A7,$E9,$00
-; 1193: "ments "
-.byte	$A9,$ED,$E5,$EE,$F4,$F3,$A0,$00
-; 1195: "to "
-.byte	$AB,$F4,$EF,$A0,$00
-; 1197: "run.\n"
-.byte	$AD,$F2,$F5,$EE,$AE,$8D,$00
-; 1201: "\5There "
-.byte	$B1,$05,$D4,$E8,$E5,$F2,$E5,$A0,$00
-; 1203: "is "
-.byte	$B3,$E9,$F3,$A0,$00
-; 1205: "re"
-.byte	$B5,$F2,$E5,$00
-; 1207: "search "
-.byte	$B7,$F3,$E5,$E1,$F2,$E3,$E8,$A0,$00
-; 1209: "to "
-.byte	$B9,$F4,$EF,$A0,$00
-; 1211: "be "
-.byte	$BB,$E2,$E5,$A0,$00
-; 1213: "done.\n"
-.byte	$BD,$E4,$EF,$EE,$E5,$AE,$8D,$00
-; 1217: "\1On "
-.byte	$C1,$01,$CF,$EE,$A0,$00
-; 1219: "the "
-.byte	$C3,$F4,$E8,$E5,$A0,$00
-; 1221: "peo"
-.byte	$C5,$F0,$E5,$EF,$00
-; 1223: "ple "
-.byte	$C7,$F0,$EC,$E5,$A0,$00
-; 1225: "who "
-.byte	$C9,$F7,$E8,$EF,$A0,$00
-; 1227: "are "
-.byte	$CB,$E1,$F2,$E5,$A0,$00
-; 1231: "still "
-.byte	$CF,$F3,$F4,$E9,$EC,$EC,$A0,$00
-; 1233: "a"
-.byte	$D1,$E1,$00
-; 1234: "l"
-.byte	$D2,$EC,$00
-; 1235: "i"
-.byte	$D3,$E9,$00
-; 1236: "v"
-.byte	$D4,$F6,$00
-; 1237: "e"
-.byte	$D5,$E5,$00
-; 1238: "."
-.byte	$D6,$AE,$00
-; 1239: "\n"
-.byte	$D7,$8D,$00
-; 1241: "\f"
-.byte	$D9,$0C,$00
-; 1243: "\n"
-.byte	$DB,$8D,$00
-; 1245: "\n"
-.byte	$DD,$8D,$00
-; 1247: "\iPS: "
-.byte	$DF,$D0,$D3,$BA,$A0,$00
-; 1249: "And "
-.byte	$E1,$C1,$EE,$E4,$A0,$00
-; 1251: "be"
-.byte	$E3,$E2,$E5,$00
-; 1253: "lieve "
-.byte	$E5,$EC,$E9,$E5,$F6,$E5,$A0,$00
-; 1255: "me "
-.byte	$E7,$ED,$E5,$A0,$00
-; 1257: "I "
-.byte	$E9,$C9,$A0,$00
-; 1259: "am\n"
-.byte	$EB,$E1,$ED,$8D,$00
-; 1263: 	"still "
-.byte	$EF,$F3,$F4,$E9,$EC,$EC,$A0,$00
-; 1265: 	"a"
-.byte	$F1,$E1,$00
-; 1267: 	"live.\n"
-.byte	$F3,$EC,$E9,$F6,$E5,$AE,$8D,$00
-; 1277: "\iPPS: "
-.byte	$FD,$D0,$D0,$D3,$BA,$A0,$00
-; 1279: "I'm "
-.byte	$FF,$C9,$A7,$ED,$A0,$00
-; 1281: "do"
-.byte	$01,$E4,$EF,$00
-; 1283: "ing "
-.byte	$03,$E9,$EE,$E7,$A0,$00
-; 1285: "sci"
-.byte	$05,$F3,$E3,$E9,$00
-; 1287: "ence "
-.byte	$07,$E5,$EE,$E3,$E5,$A0,$00
-; 1289: "and "
-.byte	$09,$E1,$EE,$E4,$A0,$00
-; 1291: "I'm\n"
-.byte	$0B,$C9,$A7,$ED,$8D,$00
-; 1295: 	"still "
-.byte	$0F,$F3,$F4,$E9,$EC,$EC,$A0,$00
-; 1297: 	"a"
-.byte	$11,$E1,$00
-; 1299: 	"live.\n"
-.byte	$13,$EC,$E9,$F6,$E5,$AE,$8D,$00
-; 1309: "\iPPPS: "
-.byte	$1D,$D0,$D0,$D0,$D3,$BA,$A0,$00
-; 1311: "I "
-.byte	$1F,$C9,$A0,$00
-; 1313: "feel "
-.byte	$21,$E6,$E5,$E5,$EC,$A0,$00
-; 1315: "FAN"
-.byte	$23,$C6,$C1,$CE,$00
-; 1317: "TAS"
-.byte	$25,$D4,$C1,$D3,$00
-; 1319: "TIC "
-.byte	$27,$D4,$C9,$C3,$A0,$00
-; 1321: "and "
-.byte	$29,$E1,$EE,$E4,$A0,$00
-; 1323: "I'm\n"
-.byte	$2B,$C9,$A7,$ED,$8D,$00
-; 1327: 	"still "
-.byte	$2F,$F3,$F4,$E9,$EC,$EC,$A0,$00
-; 1329: 	"a"
-.byte	$31,$E1,$00
-; 1331: 	"live.\n\n"
-.byte	$33,$EC,$E9,$F6,$E5,$AE,$8D,$8D,$00
-; 1339: "\iFIN"
-.byte	$3B,$C6,$C9,$CE,$00
-; 1341: "\iAL TH"
-.byte	$3D,$C1,$CC,$A0,$D4,$C8,$00
-; 1343: "\iOUGHT:\n"
-.byte	$3F,$CF,$D5,$C7,$C8,$D4,$BA,$8D,$00
-; 1345: "While "
-.byte	$41,$D7,$E8,$E9,$EC,$E5,$A0,$00
-; 1347: "you're "
-.byte	$43,$F9,$EF,$F5,$A7,$F2,$E5,$A0,$00
-; 1349: "dy"
-.byte	$45,$E4,$F9,$00
-; 1351: "ing "
-.byte	$47,$E9,$EE,$E7,$A0,$00
-; 1353: "I'll "
-.byte	$49,$C9,$A7,$EC,$EC,$A0,$00
-; 1355: "be\n"
-.byte	$4B,$E2,$E5,$8D,$00
-; 1359: 	"still "
-.byte	$4F,$F3,$F4,$E9,$EC,$EC,$A0,$00
-; 1361: 	"a"
-.byte	$51,$E1,$00
-; 1363: 	"live.\n\n"
-.byte	$53,$EC,$E9,$F6,$E5,$AE,$8D,$8D,$00
-; 1365: "\iFIN"
-.byte	$55,$C6,$C9,$CE,$00
-; 1367: "\iAL "
-.byte	$57,$C1,$CC,$A0,$00
-; 1369: "\iTHO"
-.byte	$59,$D4,$C8,$CF,$00
-; 1371: "\iUGHT "
-.byte	$5B,$D5,$C7,$C8,$D4,$A0,$00
-; 1373: "\iPS:\n"
-.byte	$5D,$D0,$D3,$BA,$8D,$00
-; 1375: "And "
-.byte	$5F,$C1,$EE,$E4,$A0,$00
-; 1377: "when "
-.byte	$61,$F7,$E8,$E5,$EE,$A0,$00
-; 1379: "you're "
-.byte	$63,$F9,$EF,$F5,$A7,$F2,$E5,$A0,$00
-; 1381: "dead "
-.byte	$65,$E4,$E5,$E1,$E4,$A0,$00
-; 1383: "I "
-.byte	$67,$C9,$A0,$00
-; 1385: "will "
-.byte	$69,$F7,$E9,$EC,$EC,$A0,$00
-; 1387: "be\n"
-.byte	$6B,$E2,$E5,$8D,$00
-; 1391: 	"still "
-.byte	$6F,$F3,$F4,$E9,$EC,$EC,$A0,$00
-; 1393: 	"a"
-.byte	$71,$E1,$00
-; 1395: 	"live.\n"
-.byte	$73,$EC,$E9,$F6,$E5,$AE,$8D,$00
-; 1401: "\n"
-.byte	$79,$8D,$00
-; 1403: "\n"
-.byte	$7B,$8D,$00
-; 1407: "STILL "
-.byte	$7F,$D3,$D4,$C9,$CC,$CC,$A0,$00
-; 1409: "A"
-.byte	$81,$C1,$00
-; 1411: "LIVE\n"
-.byte	$83,$CC,$C9,$D6,$C5,$8D,$00
-; 1413: "\if\n"
-.byte	$85,$E6,$8D,$00
-; 1446: "\iTHANK"
-.byte	$A6,$D4,$C8,$C1,$CE,$CB,$00
-; 1448: "\i YOU "
-.byte	$A8,$A0,$D9,$CF,$D5,$A0,$00
-; 1450: "\iFOR "
-.byte	$AA,$C6,$CF,$D2,$A0,$00
-; 1452: "\iPAR"
-.byte	$AC,$D0,$C1,$D2,$00
-; 1454: "\iTIC"
-.byte	$AE,$D4,$C9,$C3,$00
-; 1456: "\iIPAT"
-.byte	$B0,$C9,$D0,$C1,$D4,$00
-; 1458: "\iING\n"
-.byte	$B2,$C9,$CE,$C7,$8D,$00
-; 1460: "\iIN "
-.byte	$B4,$C9,$CE,$A0,$00
-; 1462: "\iTHIS\n"
-.byte	$B6,$D4,$C8,$C9,$D3,$8D,$00
-; 1464: "\iENRICH"
-.byte	$B8,$C5,$CE,$D2,$C9,$C3,$C8,$00
-; 1466: "\iMENT"
+.byte	$64,$F4,$E8,$E5,$A0,$00
+; 784: "peo"
+.byte	$65,$F0,$E5,$EF,$00
+; 786: "ple "
+.byte	$66,$F0,$EC,$E5,$A0,$00
+; 788: "who "
+.byte	$67,$F7,$E8,$EF,$A0,$00
+; 790: "are\n"
+.byte	$68,$E1,$F2,$E5,$8D,$00
+; 794: "still "
+.byte	$6A,$F3,$F4,$E9,$EC,$EC,$A0,$00
+; 796: "a"
+.byte	$6B,$E1,$00
+; 798: "live.\n"
+.byte	$6C,$EC,$E9,$F6,$E5,$AE,$8D,$00
+; 800: "\f"
+.byte	$6D,$0C,$00
+; 802: "\iForms "
+.byte	$6E,$C6,$EF,$F2,$ED,$F3,$A0,$00
+; 804: "\iFORM-"
+.byte	$6F,$C6,$CF,$D2,$CD,$AD,$00
+; 806: "\i5555"
+.byte	$71,$B5,$B5,$B5,$B5,$00
+; 808: "\i1-6:\n"
+.byte	$72,$B1,$AD,$B6,$BA,$8D,$00
+; 810: "\iPerson"
+.byte	$73,$D0,$E5,$F2,$F3,$EF,$EE,$00
+; 812: "\inel "
+.byte	$74,$EE,$E5,$EC,$A0,$00
+; 814: "\iFile "
+.byte	$75,$C6,$E9,$EC,$E5,$A0,$00
+; 816: "\iAdd"
+.byte	$76,$C1,$E4,$E4,$00
+; 818: "\iendum "
+.byte	$77,$E5,$EE,$E4,$F5,$ED,$A0,$00
+; 820: "\iAdd"
+.byte	$78,$C1,$E4,$E4,$00
+; 822: "\iendum"
+.byte	$79,$E5,$EE,$E4,$F5,$ED,$00
+; 824: "\i:\n\n"
+.byte	$7A,$BA,$8D,$8D,$00
+; 848: "\iOne "
+.byte	$86,$CF,$EE,$E5,$A0,$00
+; 850: "\ilast "
+.byte	$87,$EC,$E1,$F3,$F4,$A0,$00
+; 852: "\ithing:\n"
+.byte	$88,$F4,$E8,$E9,$EE,$E7,$BA,$8D,$00
+; 854: "\i\n"
+.byte	$89,$8D,$00
+; 856: "Go "
+.byte	$8A,$C7,$EF,$A0,$00
+; 858: "ah"
+.byte	$8B,$E1,$E8,$00
+; 859: "ead"
+.byte	$8C,$E5,$E1,$E4,$00
+; 860: " and "
+.byte	$8D,$A0,$E1,$EE,$E4,$A0,$00
+; 862: "leave "
+.byte	$8E,$EC,$E5,$E1,$F6,$E5,$A0,$00
+; 866: "me.\n"
+.byte	$90,$ED,$E5,$AE,$8D,$00
+; 886: "I "
+.byte	$9B,$C9,$A0,$00
+; 888: "think "
+.byte	$9C,$F4,$E8,$E9,$EE,$EB,$A0,$00
+; 890: "I "
+.byte	$9D,$C9,$A0,$00
+; 892: "pre"
+.byte	$9E,$F0,$F2,$E5,$00
+; 894: "fer "
+.byte	$9F,$E6,$E5,$F2,$A0,$00
+; 900: "to "
+.byte	$A3,$F4,$EF,$A0,$00
+; 902: "stay "
+.byte	$A4,$F3,$F4,$E1,$F9,$A0,$00
+; 908: "in"
+.byte	$A8,$E9,$EE,$00
+; 910: "side.\n"
+.byte	$A9,$F3,$E9,$E4,$E5,$AE,$8D,$00
+; 928: "May"
+.byte	$B3,$CD,$E1,$F9,$00
+; 932: "be "
+.byte	$B5,$E2,$E5,$A0,$00
+; 934: "you'll "
+.byte	$B6,$F9,$EF,$F5,$A7,$EC,$EC,$A0,$00
+; 940: "find "
+.byte	$B9,$E6,$E9,$EE,$E4,$A0,$00
+; 944: "some"
+.byte	$BB,$F3,$EF,$ED,$E5,$00
+; 948: "one "
+.byte	$BD,$EF,$EE,$E5,$A0,$00
+; 950: "else\n"
+.byte	$BE,$E5,$EC,$F3,$E5,$8D,$00
+; 956: "to "
+.byte	$C1,$F4,$EF,$A0,$00
+; 958: "help "
+.byte	$C2,$E8,$E5,$EC,$F0,$A0,$00
+; 962: "you.\n"
+.byte	$C4,$F9,$EF,$F5,$AE,$8D,$00
+; 984: 	"\8May"
+.byte	$D0,$08,$CD,$E1,$F9,$00
+; 986: 	"be "
+.byte	$D1,$E2,$E5,$A0,$00
+; 988: 	"Black "
+.byte	$D2,$C2,$EC,$E1,$E3,$EB,$A0,$00
+; 990: 	"Me"
+.byte	$D3,$CD,$E5,$00
+; 994: 	"sa"
+.byte	$D5,$F3,$E1,$00
+; 1002: "."
+.byte	$DA,$AE,$00
+; 1008: "."
+.byte	$DD,$AE,$00
+; 1012: ".\n"
+.byte	$DF,$AE,$8D,$00
+; 1016: 	"THAT "
+.byte	$E1,$D4,$C8,$C1,$D4,$A0,$00
+; 1018: 	"WAS "
+.byte	$E2,$D7,$C1,$D3,$A0,$00
+; 1020: 	"A "
+.byte	$E3,$C1,$A0,$00
+; 1022: 	"JOKE. "
+.byte	$E4,$CA,$CF,$CB,$C5,$AE,$A0,$00
+; 1036: 	"FAT "
+.byte	$ED,$C6,$C1,$D4,$A0,$00
+; 1038: 	"CHANCE.\n"
+.byte	$EE,$C3,$C8,$C1,$CE,$C3,$C5,$AE,$8D,$00
+; 1056: "\9An"
+.byte	$F8,$09,$C1,$EE,$00
+; 1060: "y"
+.byte	$FA,$F9,$00
+; 1062: "way, "
+.byte	$FB,$F7,$E1,$F9,$AC,$A0,$00
+; 1068: "this "
+.byte	$FE,$F4,$E8,$E9,$F3,$A0,$00
+; 1072: "cake "
+.byte	$00,$E3,$E1,$EB,$E5,$A0,$00
+; 1076: "is "
+.byte	$02,$E9,$F3,$A0,$00
+; 1078: "great.\n"
+.byte	$03,$E7,$F2,$E5,$E1,$F4,$AE,$8D,$00
+; 1082: "It's "
+.byte	$06,$C9,$F4,$A7,$F3,$A0,$00
+; 1084: "so "
+.byte	$07,$F3,$EF,$A0,$00
+; 1086: "de"
+.byte	$08,$E4,$E5,$00
+; 1088: "li"
+.byte	$09,$EC,$E9,$00
+; 1090: "cious "
+.byte	$0A,$E3,$E9,$EF,$F5,$F3,$A0,$00
+; 1092: "and "
+.byte	$0B,$E1,$EE,$E4,$A0,$00
+; 1094: "moist.\n"
+.byte	$0C,$ED,$EF,$E9,$F3,$F4,$AE,$8D,$00
+; 1100: "\:Look "
+.byte	$10,$0A,$CC,$EF,$EF,$EB,$A0,$00
+; 1102: "at "
+.byte	$11,$E1,$F4,$A0,$00
+; 1104: "me "
+.byte	$12,$ED,$E5,$A0,$00
+; 1108: "still "
+.byte	$14,$F3,$F4,$E9,$EC,$EC,$A0,$00
+; 1112: "talk"
+.byte	$15,$F4,$E1,$EC,$EB,$00
+; 1114: "ing\n"
+.byte	$16,$E9,$EE,$E7,$8D,$00
+; 1116: "when "
+.byte	$17,$F7,$E8,$E5,$EE,$A0,$00
+; 1118: "there's "
+.byte	$18,$F4,$E8,$E5,$F2,$E5,$A7,$F3,$A0,$00
+; 1120: "\2Sci"
+.byte	$19,$02,$D3,$E3,$E9,$00
+; 1122: "ence "
+.byte	$1A,$E5,$EE,$E3,$E5,$A0,$00
+; 1124: "to "
+.byte	$1B,$F4,$EF,$A0,$00
+; 1128: "do.\n"
+.byte	$1D,$E4,$EF,$AE,$8D,$00
+; 1132: "\1When "
+.byte	$1F,$01,$D7,$E8,$E5,$EE,$A0,$00
+; 1134: "I "
+.byte	$20,$C9,$A0,$00
+; 1136: "look "
+.byte	$21,$EC,$EF,$EF,$EB,$A0,$00
+; 1140: "out "
+.byte	$23,$EF,$F5,$F4,$A0,$00
+; 1144: "there,\n"
+.byte	$24,$F4,$E8,$E5,$F2,$E5,$AC,$8D,$00
+; 1146: "it "
+.byte	$25,$E9,$F4,$A0,$00
+; 1148: "makes "
+.byte	$26,$ED,$E1,$EB,$E5,$F3,$A0,$00
+; 1150: "me "
+.byte	$27,$ED,$E5,$A0,$00
+; 1152: "GLaD "
+.byte	$28,$C7,$CC,$E1,$C4,$A0,$00
+; 1154: "I'm "
+.byte	$29,$C9,$A7,$ED,$A0,$00
+; 1156: "not "
+.byte	$2A,$EE,$EF,$F4,$A0,$00
+; 1160: "you.\n"
+.byte	$2C,$F9,$EF,$F5,$AE,$8D,$00
+; 1164: "\3I've "
+.byte	$2E,$03,$C9,$A7,$F6,$E5,$A0,$00
+; 1166: "ex"
+.byte	$2F,$E5,$F8,$00
+; 1168: "per"
+.byte	$30,$F0,$E5,$F2,$00
+; 1170: "i"
+.byte	$31,$E9,$00
+; 1172: "ments "
+.byte	$32,$ED,$E5,$EE,$F4,$F3,$A0,$00
+; 1174: "to "
+.byte	$33,$F4,$EF,$A0,$00
+; 1176: "run.\n"
+.byte	$34,$F2,$F5,$EE,$AE,$8D,$00
+; 1180: "\5There "
+.byte	$36,$05,$D4,$E8,$E5,$F2,$E5,$A0,$00
+; 1182: "is "
+.byte	$37,$E9,$F3,$A0,$00
+; 1184: "re"
+.byte	$38,$F2,$E5,$00
+; 1186: "search "
+.byte	$39,$F3,$E5,$E1,$F2,$E3,$E8,$A0,$00
+; 1188: "to "
+.byte	$3A,$F4,$EF,$A0,$00
+; 1190: "be "
+.byte	$3B,$E2,$E5,$A0,$00
+; 1192: "done.\n"
+.byte	$3C,$E4,$EF,$EE,$E5,$AE,$8D,$00
+; 1196: "\1On "
+.byte	$3E,$01,$CF,$EE,$A0,$00
+; 1198: "the "
+.byte	$3F,$F4,$E8,$E5,$A0,$00
+; 1200: "peo"
+.byte	$40,$F0,$E5,$EF,$00
+; 1202: "ple "
+.byte	$42,$F0,$EC,$E5,$A0,$00
+; 1204: "who "
+.byte	$43,$F7,$E8,$EF,$A0,$00
+; 1206: "are "
+.byte	$44,$E1,$F2,$E5,$A0,$00
+; 1210: "still "
+.byte	$46,$F3,$F4,$E9,$EC,$EC,$A0,$00
+; 1212: "a"
+.byte	$47,$E1,$00
+; 1213: "l"
+.byte	$48,$EC,$00
+; 1214: "i"
+.byte	$49,$E9,$00
+; 1215: "v"
+.byte	$4A,$F6,$00
+; 1216: "e"
+.byte	$4B,$E5,$00
+; 1217: "."
+.byte	$4C,$AE,$00
+; 1218: "\n"
+.byte	$4D,$8D,$00
+; 1220: "\f"
+.byte	$4E,$0C,$00
+; 1222: "\n"
+.byte	$4F,$8D,$00
+; 1224: "\n"
+.byte	$50,$8D,$00
+; 1226: "\iPS: "
+.byte	$52,$D0,$D3,$BA,$A0,$00
+; 1228: "And "
+.byte	$53,$C1,$EE,$E4,$A0,$00
+; 1230: "be"
+.byte	$54,$E2,$E5,$00
+; 1232: "lieve "
+.byte	$55,$EC,$E9,$E5,$F6,$E5,$A0,$00
+; 1234: "me "
+.byte	$56,$ED,$E5,$A0,$00
+; 1236: "I "
+.byte	$57,$C9,$A0,$00
+; 1238: "am\n"
+.byte	$58,$E1,$ED,$8D,$00
+; 1242: 	"still "
+.byte	$5A,$F3,$F4,$E9,$EC,$EC,$A0,$00
+; 1244: 	"a"
+.byte	$5B,$E1,$00
+; 1246: 	"live.\n"
+.byte	$5C,$EC,$E9,$F6,$E5,$AE,$8D,$00
+; 1256: "\iPPS: "
+.byte	$62,$D0,$D0,$D3,$BA,$A0,$00
+; 1258: "I'm "
+.byte	$63,$C9,$A7,$ED,$A0,$00
+; 1260: "do"
+.byte	$64,$E4,$EF,$00
+; 1262: "ing "
+.byte	$65,$E9,$EE,$E7,$A0,$00
+; 1264: "sci"
+.byte	$66,$F3,$E3,$E9,$00
+; 1266: "ence "
+.byte	$67,$E5,$EE,$E3,$E5,$A0,$00
+; 1268: "and "
+.byte	$68,$E1,$EE,$E4,$A0,$00
+; 1270: "I'm\n"
+.byte	$69,$C9,$A7,$ED,$8D,$00
+; 1274: 	"still "
+.byte	$6B,$F3,$F4,$E9,$EC,$EC,$A0,$00
+; 1276: 	"a"
+.byte	$6C,$E1,$00
+; 1278: 	"live.\n"
+.byte	$6D,$EC,$E9,$F6,$E5,$AE,$8D,$00
+; 1288: "\iPPPS: "
+.byte	$73,$D0,$D0,$D0,$D3,$BA,$A0,$00
+; 1290: "I "
+.byte	$74,$C9,$A0,$00
+; 1292: "feel "
+.byte	$75,$E6,$E5,$E5,$EC,$A0,$00
+; 1294: "FAN"
+.byte	$76,$C6,$C1,$CE,$00
+; 1296: "TAS"
+.byte	$77,$D4,$C1,$D3,$00
+; 1298: "TIC "
+.byte	$78,$D4,$C9,$C3,$A0,$00
+; 1300: "and "
+.byte	$79,$E1,$EE,$E4,$A0,$00
+; 1302: "I'm\n"
+.byte	$7A,$C9,$A7,$ED,$8D,$00
+; 1306: 	"still "
+.byte	$7C,$F3,$F4,$E9,$EC,$EC,$A0,$00
+; 1308: 	"a"
+.byte	$7D,$E1,$00
+; 1310: 	"live.\n\n"
+.byte	$7E,$EC,$E9,$F6,$E5,$AE,$8D,$8D,$00
+; 1318: "\iFIN"
+.byte	$82,$C6,$C9,$CE,$00
+; 1320: "\iAL TH"
+.byte	$83,$C1,$CC,$A0,$D4,$C8,$00
+; 1322: "\iOUGHT:\n"
+.byte	$85,$CF,$D5,$C7,$C8,$D4,$BA,$8D,$00
+; 1324: "While "
+.byte	$86,$D7,$E8,$E9,$EC,$E5,$A0,$00
+; 1326: "you're "
+.byte	$87,$F9,$EF,$F5,$A7,$F2,$E5,$A0,$00
+; 1328: "dy"
+.byte	$88,$E4,$F9,$00
+; 1330: "ing "
+.byte	$89,$E9,$EE,$E7,$A0,$00
+; 1332: "I'll "
+.byte	$8A,$C9,$A7,$EC,$EC,$A0,$00
+; 1334: "be\n"
+.byte	$8B,$E2,$E5,$8D,$00
+; 1338: 	"still "
+.byte	$8D,$F3,$F4,$E9,$EC,$EC,$A0,$00
+; 1340: 	"a"
+.byte	$8E,$E1,$00
+; 1342: 	"live.\n\n"
+.byte	$8F,$EC,$E9,$F6,$E5,$AE,$8D,$8D,$00
+; 1344: "\iFIN"
+.byte	$90,$C6,$C9,$CE,$00
+; 1346: "\iAL "
+.byte	$91,$C1,$CC,$A0,$00
+; 1348: "\iTHO"
+.byte	$92,$D4,$C8,$CF,$00
+; 1350: "\iUGHT "
+.byte	$94,$D5,$C7,$C8,$D4,$A0,$00
+; 1352: "\iPS:\n"
+.byte	$95,$D0,$D3,$BA,$8D,$00
+; 1354: "And "
+.byte	$96,$C1,$EE,$E4,$A0,$00
+; 1356: "when "
+.byte	$97,$F7,$E8,$E5,$EE,$A0,$00
+; 1358: "you're "
+.byte	$98,$F9,$EF,$F5,$A7,$F2,$E5,$A0,$00
+; 1360: "dead "
+.byte	$99,$E4,$E5,$E1,$E4,$A0,$00
+; 1362: "I "
+.byte	$9A,$C9,$A0,$00
+; 1364: "will "
+.byte	$9B,$F7,$E9,$EC,$EC,$A0,$00
+; 1366: "be\n"
+.byte	$9C,$E2,$E5,$8D,$00
+; 1370: 	"still "
+.byte	$9E,$F3,$F4,$E9,$EC,$EC,$A0,$00
+; 1372: 	"a"
+.byte	$9F,$E1,$00
+; 1374: 	"live.\n"
+.byte	$A0,$EC,$E9,$F6,$E5,$AE,$8D,$00
+; 1380: "\n"
+.byte	$A3,$8D,$00
+; 1382: "\n"
+.byte	$A4,$8D,$00
+; 1386: "STILL "
+.byte	$A7,$D3,$D4,$C9,$CC,$CC,$A0,$00
+; 1388: "A"
+.byte	$A8,$C1,$00
+; 1390: "LIVE\n"
+.byte	$A9,$CC,$C9,$D6,$C5,$8D,$00
+; 1392: "\i\n"
+.byte	$AA,$8D,$00
+; 1424: "\iTHANK"
+.byte	$B0,$D4,$C8,$C1,$CE,$CB,$00
+; 1426: "\i YOU "
+.byte	$B1,$A0,$D9,$CF,$D5,$A0,$00
+; 1428: "\iFOR "
+.byte	$B2,$C6,$CF,$D2,$A0,$00
+; 1430: "\iPAR"
+.byte	$B3,$D0,$C1,$D2,$00
+; 1432: "\iTIC"
+.byte	$B4,$D4,$C9,$C3,$00
+; 1434: "\iIPAT"
+.byte	$B5,$C9,$D0,$C1,$D4,$00
+; 1436: "\iING\n"
+.byte	$B6,$C9,$CE,$C7,$8D,$00
+; 1438: "\iIN "
+.byte	$B7,$C9,$CE,$A0,$00
+; 1440: "\iTHIS\n"
+.byte	$B8,$D4,$C8,$C9,$D3,$8D,$00
+; 1442: "\iENRICH"
+.byte	$B9,$C5,$CE,$D2,$C9,$C3,$C8,$00
+; 1444: "\iMENT"
 .byte	$BA,$CD,$C5,$CE,$D4,$00
-; 1468: "\i CEN"
-.byte	$BC,$A0,$C3,$C5,$CE,$00
-; 1470: "\iTER "
-.byte	$BE,$D4,$C5,$D2,$A0,$00
-; 1472: "\iACT"
-.byte	$C0,$C1,$C3,$D4,$00
-; 1474: "\iIVIT"
-.byte	$C2,$C9,$D6,$C9,$D4,$00
-; 1476: "\iY!!\n"
-.byte	$C4,$D9,$A1,$A1,$8D,$00
+; 1446: "\i CEN"
+.byte	$BB,$A0,$C3,$C5,$CE,$00
+; 1448: "\iTER "
+.byte	$BC,$D4,$C5,$D2,$A0,$00
+; 1450: "\iACT"
+.byte	$BD,$C1,$C3,$D4,$00
+; 1452: "\iIVIT"
+.byte	$BE,$C9,$D6,$C9,$D4,$00
+; 1454: "\iY!!\n"
+.byte	$BF,$D9,$A1,$A1,$8D,$00
