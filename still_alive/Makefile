@@ -5,10 +5,11 @@ TOKENIZE = ../asoft_basic-utils/tokenize_asoft
 
 all:	still_alive.dsk
 
-still_alive.dsk:	STILL_ALIVE TITLE.BAS ENDING
+still_alive.dsk:	STILL_ALIVE TITLE.BAS ENDING SA_ED
 	$(DOS33) -y still_alive.dsk BSAVE -a 0x0C00 STILL_ALIVE
 	$(DOS33) -y still_alive.dsk BSAVE -a 0x2000 ENDING
 	$(DOS33) -y still_alive.dsk SAVE A TITLE.BAS
+	$(DOS33) -y still_alive.dsk BSAVE -a 0x0C00 SA_ED
 #	$(DOS33) -y still_alive.dsk SAVE B GLADOS.HGR
 
 STILL_ALIVE:	still_alive.o
@@ -22,6 +23,17 @@ still_alive.o:	still_alive.s \
 	ascii_art.inc ascii_art_lz4.inc lyrics.inc zp.inc
 	ca65 -o still_alive.o still_alive.s -l still_alive.lst
 
+
+SA_ED:	sa_ed.o
+	ld65 -o SA_ED sa_ed.o -C ../linker_scripts/apple2_c00.inc
+
+sa_ed.o:	sa_ed.s \
+	duet.s SA.ED \
+	display_art.s display_lyrics.s \
+	ascii_art.inc
+	ca65 -o sa_ed.o sa_ed.s -l sa_ed.lst
+
+
 ENDING:	ending.o
 	ld65 -o ENDING ending.o -C ../linker_scripts/apple2_2000.inc
 
@@ -33,4 +45,4 @@ TITLE.BAS:	title.bas
 	$(TOKENIZE) < title.bas> TITLE.BAS
 
 clean:	
-	rm -f *~ *.o *.lst STILL_ALIVE
+	rm -f *~ *.o *.lst STILL_ALIVE SA_ED ENDING
