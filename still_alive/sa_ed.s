@@ -1,12 +1,6 @@
-; And Believe Me, I'm Still Alive
+; Electric Duet Code Path
 
-.include	"zp.inc"
-
-	;=============================
-	; Setup
-	;=============================
-	jsr     HOME
-	jsr     TEXT
+still_alive_ed:
 
 	; init variables
 
@@ -19,8 +13,6 @@
 	;===========================
 	; clear both screens
 	;===========================
-
-only_forty:
 
 	; Clear text page0
 
@@ -59,34 +51,8 @@ only_forty:
 	; loop forever
 	;==================
 
-forever_loop:
-	jmp	forever_loop
+forever_loop_ed:
+	jmp	forever_loop_ed
 
 
-;=========
-;routines
-;=========
-.include	"../asm_routines/gr_offsets.s"
-;.include	"../asm_routines/lz4_decode.s"
-
-.include	"display_art.s"
-.include	"display_lyrics.s"
-
-;.include	"interrupt_handler.s"
-
-.include	"duet.s"
-
-;=========
-; strings
-;=========
-
-
-lyrics:
-.include	"sa.edlyrics"
-
-.include	"ascii_art.inc"
-
-
-music_address:
-.incbin	"SA.ED"
 

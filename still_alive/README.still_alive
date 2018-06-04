@@ -35,6 +35,7 @@ feature complete 40 col:			20180
 intial 80 col support:				20191
 80 col cursor:					20344
 strip out some unneeded text printing:		19962
+merge ED and MB code				24993
 
 Memory Map
 
@@ -57,7 +58,7 @@ Code:		c00 - 8c00 32k
 Sound buffers:	5e00-9600 = 14k
 
 Plan:
-	16k compressed		Load at 32k? 8000
+	16k compressed		Load at 16k? 4000
 	20k decompressed	Decompress from 0c00 - 6000 or so
 
 
