@@ -32,8 +32,18 @@ no_mockingboard:
 	jsr	still_alive_ed
 
 reset:
+	lda	$AA6A			; current disk slot, dos 3.3
+	ora	#$c0
+	sta	$3F3
+	lda	#0
+	sta	$3F2
+
 	jmp	($3F2)			; warm-start?
 					; want reboot, not BASIC
+
+
+
+
 
 ;==========
 ; main code
