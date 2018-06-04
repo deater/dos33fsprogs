@@ -42,9 +42,18 @@ only_forty:
 ;	sta	LYRICSH
 
 
+;MADDRL EQU 30
+;MADDRH EQU 31
+
 	;==================
 	; load song
 	;==================
+	lda	#<music_address
+	sta	MADDRL
+	lda	#>music_address
+	sta	MADDRH
+
+	jsr	play_ed
 
 	;==================
 	; loop forever
@@ -81,5 +90,6 @@ lyrics:
 ;.incbin		"SA.KR4"
 
 
+music_address:
 .incbin	"SA.ED"
 

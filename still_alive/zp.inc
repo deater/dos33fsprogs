@@ -1,5 +1,21 @@
 .define EQU =
 
+;; Electric Duet addresses
+
+; These are all "Free" zero page locations
+FREQ1		EQU	$06
+FREQ2		EQU	$07
+DURATION	EQU	$08
+INSTRUMENT1	EQU	$09
+INSTRUMENT2	EQU	$1D
+MADDRL		EQU	$1E
+MADDRH		EQU	$1F
+LOC4E		EQU	$4E
+COUNT256	EQU	$4F
+
+
+;; LZ4 addresses
+
 LZ4_SRC		EQU $00
 LZ4_DST		EQU $02
 LZ4_END		EQU $04
