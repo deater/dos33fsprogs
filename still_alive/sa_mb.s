@@ -10,8 +10,6 @@ still_alive_mb:
 	;=============================
 	; Setup
 	;=============================
-	jsr     HOME
-	jsr     TEXT
 
 	; init variables
 
@@ -21,9 +19,7 @@ still_alive_mb:
 	sta	DECODE_ERROR
 	sta	LYRICS_ACTIVE
 
-	; Testing, let's get 40col working first
-	lda	#0
-	sta	FORTYCOL
+	; call mockingboard detect?
 
 	jsr	mockingboard_detect_slot4	; call detection routine
 	cpx	#$1
@@ -135,7 +131,7 @@ only_forty:
 
 
 	;============================
-	; Loop forever
+	; Main Loop
 	;============================
 main_loop:
 	lda	DECODE_ERROR
@@ -180,7 +176,7 @@ check_done:
 	beq	main_loop
 
 forever_loop:
-	jmp	forever_loop
+	rts
 
 
 
@@ -311,7 +307,4 @@ page_copy_loop:
 	rts								; 6
 							;======================
 							; 2+14*256+6+29= 3621
-
-
-
 

@@ -7,17 +7,6 @@ still_alive_ed:
 	lda	#0
 	sta	FRAME_COUNT
 
-	lda	#1
-	sta	FORTYCOL
-
-	;===========================
-	; clear both screens
-	;===========================
-
-	; Clear text page0
-
-;	jsr	HOME
-
 
 	;============================
 	; Draw Lineart around edges
@@ -31,9 +20,9 @@ still_alive_ed:
 	; Setup lyrics
 	;==============================
 
-	lda	#<(lyrics)
+	lda	#<(lyrics_ed)
 	sta	LYRICSL
-	lda	#>(lyrics)
+	lda	#>(lyrics_ed)
 	sta	LYRICSH
 
 
@@ -51,8 +40,4 @@ still_alive_ed:
 	; loop forever
 	;==================
 
-forever_loop_ed:
-	jmp	forever_loop_ed
-
-
-
+	rts

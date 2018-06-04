@@ -3,10 +3,28 @@
 .include	"zp.inc"
 
 still_alive:
+
+	;=============================
+	; Clear screen
+	;=============================
+	jsr     HOME
+	jsr     TEXT
+
+	; See if Mockingboard or Electric Duet
+
+	lda	USEMB
+	beq	no_mockingboard
+
 	jsr	still_alive_mb
+
+	jmp	reset
+
+no_mockingboard:
 	jsr	still_alive_ed
 
-
+reset:
+	jmp	($3F2)			; warm-start?
+					; want reboot, not BASIC
 
 ;==========
 ; main code

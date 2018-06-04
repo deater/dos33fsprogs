@@ -36,6 +36,7 @@ intial 80 col support:				20191
 80 col cursor:					20344
 strip out some unneeded text printing:		19962
 merge ED and MB code				24993
+properly select between versions:		25001
 
 Memory Map
 
