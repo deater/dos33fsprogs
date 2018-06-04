@@ -10,6 +10,15 @@ still_alive:
 	jsr     HOME
 	jsr     TEXT
 
+	;=============================
+	; setup Lyrics
+	;=============================
+	lda     #<(lyrics)
+	sta     LYRICSL
+	lda     #>(lyrics)
+	sta     LYRICSH
+
+
 	; See if Mockingboard or Electric Duet
 
 	lda	USEMB
@@ -55,9 +64,7 @@ reset:
 lyrics:
 .include	"lyrics.inc"
 
-lyrics_ed:
-.include	"sa.edlyrics"
-
+art:
 .include	"ascii_art.inc"
 
 LZ4_BUFFER:

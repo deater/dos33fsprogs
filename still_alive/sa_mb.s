@@ -111,10 +111,10 @@ only_forty:
 	; Setup lyrics
 	;==============================
 
-	lda	#<(lyrics)
-	sta	LYRICSL
-	lda	#>(lyrics)
-	sta	LYRICSH
+;	lda	#<(lyrics)
+;	sta	LYRICSL
+;	lda	#>(lyrics)
+;	sta	LYRICSH
 
 
 	;==================

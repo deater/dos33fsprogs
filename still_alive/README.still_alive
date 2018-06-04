@@ -37,6 +37,7 @@ intial 80 col support:				20191
 strip out some unneeded text printing:		19962
 merge ED and MB code				24993
 properly select between versions:		25001
+merge the ED and MB lyrics:			22828
 
 Memory Map
 

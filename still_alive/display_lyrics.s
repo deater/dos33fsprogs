@@ -9,7 +9,7 @@ display_lyrics_ed:
 	;========================
 	lda	FRAME_COUNT			; get current frame count
 	cmp	(LYRICSL),Y			; compare to next-trigger
-	bne	all_done_lyrics_ed			; not same, so skip
+	bne	all_done_lyrics_ed		; not same, so skip
 
 	; adjust pointer 16-bit
 	inc	LYRICSL
@@ -75,8 +75,13 @@ lc_sb_ed:
 	inc	LYRICSH
 lc_sb_ed2:
 
+	; skip MB offset
+	; adjust pointer 16-bit
+	inc	LYRICSL
+	bne	lc_sb_ed8
+	inc	LYRICSH
+lc_sb_ed8:
 
-;	beq	all_done_lyrics_ed	; if 0, done lyric
 
 
 all_done_lyrics_ed:
@@ -87,7 +92,7 @@ all_done_lyrics_ed:
 
 
 	;========================================================
-	; display lyrics
+	; display lyrics mockingboard
 	;========================================================
 
 display_lyrics:
@@ -114,6 +119,13 @@ display_lyrics:
 	bne	lc_sb2
 	inc	LYRICSH
 lc_sb2:
+
+	; skip ED data
+	; adjust pointer 16-bit
+	inc	LYRICSL
+	bne	lc_sb5
+	inc	LYRICSH
+lc_sb5:
 
 	;==================================
 	; Lyric active, print current char

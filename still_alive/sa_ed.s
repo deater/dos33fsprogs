@@ -20,10 +20,17 @@ still_alive_ed:
 	; Setup lyrics
 	;==============================
 
-	lda	#<(lyrics_ed)
-	sta	LYRICSL
-	lda	#>(lyrics_ed)
-	sta	LYRICSH
+	; DANGER!  1 in 256 chance of missing a roll-over
+
+
+	; ED offsets are one after the MB offsets
+
+	inc	LYRICSL
+
+;	lda	#<(lyrics_ed)
+;	sta	LYRICSL
+;	lda	#>(lyrics_ed)
+;	sta	LYRICSH
 
 
 	;==================
