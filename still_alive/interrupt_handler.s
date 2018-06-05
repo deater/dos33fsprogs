@@ -54,7 +54,7 @@ mb_write_frame:
 mb_write_loop:
 	lda	REGISTER_DUMP,X	; load register value			; 4
 	cmp	REGISTER_OLD,X	; compare with old values		; 4
-	beq	mb_no_write_left						; 3/2nt
+	beq	mb_no_write_left					; 3/2nt
 
 	; address
 	stx	MOCK_6522_ORA1		; put address on PA1		; 4
@@ -94,7 +94,7 @@ mb_no_write_left:
 
 mb_no_write_right:
 	inx				; point to next register	; 2
-	cpx	#12			; if 14 we're done		; 2
+	cpx	#12			; if 12 we're done		; 2
 	bmi	mb_write_loop		; otherwise, loop		; 3/2nt
 
 
@@ -137,7 +137,7 @@ mb_load12:
 	sta	REGISTER_DUMP2+3
 	jmp	mb_done_load
 mb_load13:
-	cpx	#12
+	cpx	#13
 	bne	mb_regular_load
 	sta	REGISTER_DUMP2+9
 	jmp	mb_done_load

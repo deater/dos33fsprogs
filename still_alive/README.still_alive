@@ -33,7 +33,13 @@ Challenges:
 		the music is already decompressing on the fly.
 	+ Re-using the Lyrics for both the Mockingboard and Electric Duet
 		versions.
-
+	+ Squeezing the compressed image into memory leaving room for
+		all the code to be decompressed while leaving enough
+		room that DOS still has room to load things.  It's
+		an *extremely* tight fit.
+	+ An odd issue where the 80col display would get corrupted
+		if we set HIRES without explicitly setting LORES
+		before doing PR#3
 
 
 Goal: Binary fits in 16k (16384 bytes)
@@ -57,6 +63,8 @@ merge ED and MB code:				24993
 properly select between versions:		25001
 merge the ED and MB lyrics:			22828
 80 column ED, wait for keypress+reboot at end:	22852
+Crazy compression:
+Remove mockingboard detection:			16343
 
 Memory Map:
 
@@ -75,11 +83,17 @@ FFFF:		END
 
 
 Plan:
-	Load compressed 16k image ($4000) at $5600 - $9600
+	Load compressed 16k image ($4000) at $5900 - $9900
+		We use MAXFILES 1 to give us some extra room
+		just before DOS
+
 	Decompress ENDING sequence at $1800 - $4000
 		(writes background to HGR graphics automatically)
-	When done:
-		+  STILL_ALIVE ($5a00, 22.5k) at $0c00 - $6600
+
+	STILL_ALIVE:
+		+  $0800 - $5900 
+			$2e2d of code
+			$2282 of KR4 music *or*
+			$0842 of ED music 
 		+  Sound buffers ($3800, 14k) at $5e00 - $9600
-		   (the overlap is OK, the ED file is over-written by
-		    the mockingboard buffers, but that is not used by MB)
+
