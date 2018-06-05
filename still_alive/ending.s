@@ -24,6 +24,7 @@ SY		EQU	$14
 UXL		EQU	$15
 UXH		EQU	$16
 UY		EQU	$17
+TIME		EQU	$18
 
 HGR_SHAPE	EQU	$1A
 HGR_SHAPEH	EQU	$1B
@@ -68,6 +69,7 @@ ending:
 	lda	#0
 	sta	JO		; jam out
 	sta	KO		; core out
+	sta	TIME
 
 	lda	#1
 	sta	PR		; portals horizontal
@@ -161,12 +163,44 @@ ending:
 
 
 game_loop:
-	lda	KXL
+	lda	KXL			; update core co-ords
 	sta	UXL
 	lda	KY
 	sta	UY
 	lda	KXH
 	sta	UXH
+
+	lda	TIME
+	beq	no_time
+
+	inc	TIME
+
+	cmp	#30
+	bne	time_60
+time_30:
+	lda	#1
+	sta	SXH
+	lda	#3
+	sta	SXL
+	lda	#50
+	sta	SY
+	jsr	draw_blue
+
+	jmp	no_time
+time_60:
+	cmp	#60
+	bne	no_time
+
+	lda	#0
+	sta	SXH
+	lda	#149
+	sta	SXL
+	lda	#119
+	sta	SY
+	jsr	draw_orange
+
+
+no_time:
 
 	;===================
 	; Physics Engine
@@ -564,6 +598,11 @@ blue_portal_draw:
 	lda	SY
 	sta	BY
 
+	lda	#<portal_horiz
+	sta	HGR_SHAPE
+	lda	#>portal_horiz
+	sta	HGR_SHAPE+1
+
 	lda	#1
 	sta	BO
 
@@ -646,6 +685,11 @@ orange_portal_draw:
 	stx	GXL		; FIXME: overflow
 	lda	SY
 	sta	GY
+
+	lda	#<portal_horiz
+	sta	HGR_SHAPE
+	lda	#>portal_horiz
+	sta	HGR_SHAPE+1
 
 	lda	#1
 	sta	GO
@@ -852,6 +896,10 @@ boom_loop:
 	; Release the orb
 	lda	#1
 	sta	KO		; KO=1
+
+	; start time counting
+	lda	#1
+	sta	TIME
 
 	rts
 
