@@ -137,6 +137,7 @@ chell_right:
 ; NDN NDN UP NRT UP NRT UP NLT UP NLT DN NLT DN NLT DN NRT DN NRT
 ; STOP
 
+fireball:
 .byte	$12,$0c,$0c,$1c,$1c,$1e,$1e,$0e, $0e,$00
 
 ; Shape 6
