@@ -76,37 +76,6 @@ mockingboard_found:
 
 
 
-
-	;===========================
-	; clear both screens
-	;===========================
-
-;	lda	FORTYCOL
-;	bne	only_forty
-
-;switch_to_80:
-
-	; Initialize 80 column firmware
-;	jsr	$C300			; same as PR#3
-;	sta	SET80COL		; 80store  C001
-					; makes pageflip switch between
-					; regular/aux memory
-
-;only_forty:
-
-	; Clear text page0
-
-;	jsr	HOME
-
-
-	;============================
-	; Draw Lineart around edges
-	;============================
-
-;	jsr	setup_edges
-
-;	jsr	HOME
-
 	;==============================
 	; Setup lyrics
 	;==============================
