@@ -21,6 +21,9 @@ PR		EQU	$11
 SXH		EQU	$12
 SXL		EQU	$13
 SY		EQU	$14
+UXL		EQU	$15
+UXH		EQU	$16
+UY		EQU	$17
 
 HGR_SHAPE	EQU	$1A
 HGR_SHAPEH	EQU	$1B
@@ -64,6 +67,7 @@ ending:
 
 	lda	#0
 	sta	JO		; jam out
+	sta	KO		; core out
 
 	lda	#1
 	sta	PR		; portals horizontal
@@ -157,14 +161,24 @@ ending:
 
 
 game_loop:
+	lda	KXL
+	sta	UXL
+	lda	KY
+	sta	UY
+	lda	KXH
+	sta	UXH
+
 	;===================
 	; Physics Engine
 	;===================
 
 	; Draw/Move Fireball
 
-	lda	JO
-	bne	jo_out
+	ldx	JO
+	beq	jo_not_out
+	dex
+	beq	jo_out
+	jmp	done_jo
 
 jo_not_out:
 	lda	#1		; If JO=0 THEN JO=1
@@ -193,15 +207,30 @@ jo_out:
 jo_draw:
 	jsr	draw_j		; draw new jo
 
+done_jo:
 
 	; Move Blue Core
 
+	lda	KO
+	beq	done_move
 	; IF KO=1 THEN KY=KY-KV:KV=KV-4.5
 
+	sec
+	lda	KY
+	sbc	KV
+	sta	KY
 
+	sec
+	lda	KV
+	sbc	#4
+	sta	KV
+
+done_move:
 	;====================================
 	; Portal Collision Detection
 	;====================================
+
+	; Portal/Core
 
 	; 203 IF KO=0 GOTO 206
 	; 204 IF KX>BX-12 AND KX<BX+12 AND KY<BY+6 AND KY>BY-6 THEN SCALE=1:KX=GX:KY=GY+6
@@ -315,7 +344,7 @@ jo_not_up:
 	cmp	#85
 	bcs	jo_no_hit
 
-	jmp	hit_glados
+	jsr	hit_glados
 
 jo_no_hit:
 
@@ -323,15 +352,37 @@ jo_no_hit:
 
 
 collide_object:
+	; Object and floor
+	lda	KO
+	beq	done_collide
 
-;' Object
-;229 IF KO=1 AND KY>115 THEN KY=115:KV=0
-;' Object in Incinerator
-;230 IF KO=1 AND KX>240 AND KY>100 THEN GOSUB 4000
-;231 GOTO 240
+	lda	KY
+	cmp	#115
+	bcc	check_incinerator
+			; IF KY>115 THEN KY=115:KV=0
+	lda	#115
+	sta	KY
+	lda	#0
+	sta	KV
 
-	lda	#128
-	jsr	WAIT
+check_incinerator:
+	; Object in Incinerator
+
+	lda	KY
+	cmp	#100
+	bcc	done_collide
+
+	lda	KXH
+	bne	incinerated
+	lda	KXL
+	cmp	#240
+	bcc	done_collide
+incinerated:
+	jmp	explosion	; IF KX>240 AND KY>100 THEN GOSUB 4000
+
+
+done_collide:
+
 
 
 
@@ -339,8 +390,27 @@ collide_object:
 	; Draw Objects
 	;===============================
 
+	; Core
 
+	lda	UXH
+	cmp	KXH
+	bne	blah
 
+	lda	UXL
+	cmp	KXL
+	bne	blah
+
+	lda	UY
+	cmp	KY
+	beq	done_draw_objects	; IF UX=KX AND UY=KY GOTO 300
+
+blah:
+	jsr	erase_core	; SCALE=1:XDRAW 7 AT UX,UY:XDRAW 7 AT KX,KY
+
+done_draw_objects:
+
+	lda	#128
+	jsr	WAIT
 
 	jmp	game_loop
 
@@ -378,6 +448,30 @@ draw_j:
 	;======================
 	; Draw Blue Core
 	;======================
+erase_core:
+	lda	#<blue_core
+	sta	HGR_SHAPE
+	lda	#>blue_core
+	sta	HGR_SHAPE+1
+
+	; HFNS	puts X-coord in Y,X, Y-coord in A
+	; HPOSN sets up GBASL/GBASH
+
+	lda	#1
+	sta	HGR_SCALE
+
+	; 2005 SCALE=1:KX=150:KY=65:XDRAW 7 AT KX,KY:KO=0
+
+	ldy	UXH
+	ldx	UXL
+	lda	UY
+
+	jsr	HPOSN
+
+	lda	#0		; rotation
+
+	jsr	XDRAW1
+
 draw_core:
 	lda	#<blue_core
 	sta	HGR_SHAPE
@@ -386,6 +480,9 @@ draw_core:
 
 	; HFNS	puts X-coord in Y,X, Y-coord in A
 	; HPOSN sets up GBASL/GBASH
+
+	lda	#1
+	sta	HGR_SCALE
 
 	; 2005 SCALE=1:KX=150:KY=65:XDRAW 7 AT KX,KY:KO=0
 
@@ -398,6 +495,7 @@ draw_core:
 	lda	#0		; rotation
 
 	jsr	XDRAW1
+
 
 	rts
 
