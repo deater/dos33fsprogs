@@ -266,12 +266,49 @@ done_move:
 
 	; Portal/Core
 
-	; 203 IF KO=0 GOTO 206
-	; 204 IF KX>BX-12 AND KX<BX+12 AND KY<BY+6 AND KY>BY-6 THEN SCALE=1:KX=GX:KY=GY+6
-	; 205 IF KX>GX-12 AND KX<GX+12 AND KY<GY+6 AND KY>GY-6 THEN SCALE=1:KX=BX:KY=BY+6
+	lda	KO
+	beq	portal_fb		; IF KO=0 GOTO 206
+
+	; IF KX>BX-12 AND KX<BX+12 AND KY<BY+6 AND KY>BY-6 THEN SCALE=1:KX=GX:KY=GY+6
+
+	lda	GXL
+	sec
+	sbc	#12
+	cmp	KXL
+	bcs	no_g_core	; IF KX>GX-12 AND
+
+	lda	GXL
+	clc
+	adc	#12
+	cmp	KXL
+	bcc	no_g_core	; KX<GX+12 AND
+
+	lda	GY
+	clc
+	adc	#6
+	cmp	KY
+	bcc	no_g_core	; KY<GY+6 AND
+
+	lda	GY
+	sec
+	sbc	#6
+	cmp	KY
+	bcs	no_g_core	; KY>GY-6 THEN SCALE=1:KX=BX:KY=BY+6
+
+	lda	BXH
+	sta	KXH
+
+	lda	BXL
+	sta	KXL
+	lda	BY
+	clc
+	adc	#6
+	sta	KY
+
+no_g_core:
 
 	; Portal/Fireball
-
+portal_fb:
 	lda	JO
 	beq	done_portal_fireball	; IF L=1 OR JO=0 GOTO 210
 
