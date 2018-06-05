@@ -35,7 +35,7 @@ still_alive_ed:
 	jsr	play_ed
 
 	;==================
-	; loop forever
+	; return
 	;==================
 
 	rts

@@ -7,6 +7,7 @@ still_alive:
 	;=============================
 	; Clear screen
 	;=============================
+	bit	LORES		; needed or 80 column card has issues??
 	jsr     HOME
 	jsr     TEXT
 

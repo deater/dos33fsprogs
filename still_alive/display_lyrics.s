@@ -8,6 +8,7 @@ display_lyrics_ed:
 	; Check if new lyric ready
 	;========================
 	lda	FRAME_COUNT			; get current frame count
+	ldy	#0
 	cmp	(LYRICSL),Y			; compare to next-trigger
 	bne	all_done_lyrics_ed		; not same, so skip
 
@@ -21,7 +22,7 @@ lc_sb2_ed:
 	; Print lyric
 	;==================================
 handle_lyrics_ed:
-
+	ldy	#0
 	lda	(LYRICSL),Y		; load value
 
 handle_lyrics_loop_ed:
@@ -38,9 +39,7 @@ lyric_home_ed:
 	cmp	#12			; check if form feed char
 	bne	lyric_char_ed		; if not skip ahead
 
-	sty	TEMPY
 	jsr	HOME			; call HOME
-	ldy	TEMPY
 
 	jmp	lyric_continue_ed	; continue
 
@@ -68,7 +67,7 @@ lyric_continue_ed:
 	bne	lc_sb_ed
 	inc	LYRICSH
 lc_sb_ed:
-
+	ldy	#0
 	lda	(LYRICSL),Y		; load value
 	bne	handle_lyrics_loop_ed
 
@@ -103,7 +102,7 @@ display_lyrics:
 	;=====================
 	; See if lyrics already printing
 	;=====================
-
+	ldy	#0
 	lda	LYRICS_ACTIVE			; see if lyric is ready
 	bne	handle_lyrics			; if so handle it
 
@@ -134,7 +133,6 @@ lc_sb5:
 	; Lyric active, print current char
 	;==================================
 handle_lyrics:
-
 	lda	(LYRICSL),Y		; load value
 	beq	done_lyric		; if 0, done lyric
 

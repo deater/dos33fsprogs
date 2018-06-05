@@ -88,7 +88,8 @@ ending:
 	lda	#$20
 	sta	HGR_PAGE
 	bit	TEXTGR			; mixed text/graphics
-	bit	HIRES			; hires mode
+	bit	HIRES			; hires mode !!!
+					; !!!! trouble when we use 80 col later
 	bit	SET_GR			; graphics mode
 
 

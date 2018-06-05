@@ -61,10 +61,14 @@ unpack_ending:
 	; Unpack the music right after previous
 	;=====================================
 
+	lda	USEMB
+	beq	load_ed_music
+
 	;=====================================
-	; MB SA.KR4 from 367D to 58ff 
+	; MB SA.KR4 from 367D to 58ff
 	;=====================================
 
+load_mb_music:
 	lda	#<music_mb
 	sta	LZ4_SRC
 	lda	#>music_mb
@@ -75,15 +79,28 @@ unpack_ending:
 	lda	#>music_mb_end
 	sta	LZ4_END+1
 
-;	lda	#<UNPACK_ALIVE
-;	sta	LZ4_DST
-;	lda	#>UNPACK_ALIVE		; original unpacked data offset
-;	sta	LZ4_DST+1
+	jmp	decode_music
 
+	;=====================================
+	; ED SA.ED from 367D to ????
+	;=====================================
+
+load_ed_music:
+	lda	#<music_ed
+	sta	LZ4_SRC
+	lda	#>music_ed
+	sta	LZ4_SRC+1
+
+	lda	#<music_ed_end
+	sta	LZ4_END
+	lda	#>music_ed_end
+	sta	LZ4_END+1
+
+decode_music:
+
+	; LZ4_DST should already be set to where STILL_ALIVE finished
 
 	jsr	lz4_decode
-
-
 
 	;==============================
 	; Run still alive
