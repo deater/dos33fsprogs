@@ -48,8 +48,8 @@ X1		EQU	$FD
 X2		EQU	$FE
 Y1		EQU	$FF
 
-SOUND1		EQU	$300
-SOUND2		EQU	$301
+SOUND1		EQU	$302
+SOUND2		EQU	$303
 
 HGR		EQU	$F3E2
 HCLR		EQU	$F3F2
@@ -966,12 +966,12 @@ boom_loop:
 sound:
 				; 300
 				; 301
-	ldy	$0301		; 302
+	ldy	SOUND2		; 302
 sound_l5:
-	lda	$0300		; 305
+	lda	SOUND1		; 305
 	sta	$FA
 sound_l4:
-	ldx	$0300
+	ldx	SOUND1
 sound_l2:
 	cpx	$FA
 	bne	sound_l1
