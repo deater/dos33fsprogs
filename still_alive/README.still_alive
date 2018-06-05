@@ -1,21 +1,39 @@
+                         Still Alive for the Apple II
+                               in roughly 20k
+
+                           By Deater (Vince Weaver)
+
+
+BACKGROUND
+~~~~~~~~~~
+	A few years back I implemented Valve's Portal in Applesoft BASIC.
+
+	At the end it played Still Alive, but in horrible single-channel
+	speaker beeps.  I always wanted to have this sound better.
+
+	So here is the end result.  Still Alive in 6-Channel Mockingboard
+	Sound in 80 column with cursor effects.  Also in 40 column if
+	your display can't handle 80 cols.  And if you don't have a
+	Mockingboard, then a simpler version using P. Lutus'
+	Electric Duet 2-channel audio for the stock speaker.
+
+
+
 Fun fact:
 	The letter 'Z' does not appear at all in the lyrics to the song.
 	(Noticed when I had to edge comparison for uppercase off by one)
 
-
 Challenges:
-	+ 6-channel audio
+	+ 6-channel audio.  Really its 4-channel (from a MOD file)
+		but it actually does load and play audio on all 6 channels.
 	+ Fitting it all in 48k (want to avoid disk routines if can)
-	+ Printing the ASCII art simple code (takes longer than 50Hz)
+	+ Printing the ASCII art (naive implementation takes longer than 50Hz)
+		The ASCII art is roughly 7k.  Thought of decompressing
+		on the fly, but the LZ4 code is not re-entrant and
+		the music is already decompressing on the fly.
+	+ Re-using the Lyrics for both the Mockingboard and Electric Duet
+		versions.
 
-ASCII Art Size
-	The ASCII art is roughly 7k.
-	You can LZ4 compress it and decompress on the fly, saving 3k or
-	so even when factoring in the decompression code.
-	The problem is decompression is slower (pauses the music) and
-	can't be run at the same time as the music decompression is
-	happening unless we duplicate a lot of code.
-	May revisit if we need the room.
 
 
 Goal: Binary fits in 16k (16384 bytes)
@@ -39,7 +57,7 @@ merge ED and MB code				24993
 properly select between versions:		25001
 merge the ED and MB lyrics:			22828
 
-Memory Map
+Memory Map:
 
 
 
@@ -60,7 +78,7 @@ Code:		c00 - 8c00 32k
 Sound buffers:	5e00-9600 = 14k
 
 Plan:
-	16k compressed		Load at 16k? 4000
-	20k decompressed	Decompress from 0c00 - 6000 or so
-
+	Load compressed 18k image at $5000 - $9600
+	Decompress ENDING sequence at $1800 - $4000
+	When done, decompress STILL_ALIVE (22k) at $C00 - $5000
 
