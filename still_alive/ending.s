@@ -23,6 +23,7 @@ X1		EQU	$FD
 X2		EQU	$FE
 Y1		EQU	$FF
 
+HGR		EQU	$F3E2
 HCLR		EQU	$F3F2
 HPOSN		EQU	$F411
 HPLOT0		EQU	$F457
@@ -30,29 +31,32 @@ HGLIN		EQU	$F53A
 XDRAW1		EQU	$F661
 COLORTBL	EQU	$F6F6
 
+
+ending:
+
 	;==========================
 	; Setup Graphics
 	;==========================
 
-	bit	SET_GR			; graphics mode
-	bit	HIRES			; hires mode
-        bit	TEXTGR			; mixed text/graphics
-        bit	PAGE0			; first graphics page
+;	We can't use HGR as it clears the screen
+;	jsr	HGR
+
 	jsr	HOME
-        bit	PAGE1			; first graphics page
 
-	lda	#$40
+	bit	PAGE0			; first graphics page
+	lda	#$20
 	sta	HGR_PAGE
+	bit	TEXTGR			; mixed text/graphics
+	bit	HIRES			; hires mode
+	bit	SET_GR			; graphics mode
 
-;	jsr	HCLR
+
 
 	lda	#0
 	sta	HGR_ROTATION
 	lda	#1
 	sta	HGR_SCALE
 
-
-;	jsr	hgr_clear
 
 	;======================
 	; Draw Chell
@@ -247,8 +251,8 @@ loop4:
 	sbc	#5
 	sta	Y1
 
-	cmp	#5
-	bcs	loop4
+	cmp	#$ff
+	bne	loop4
 
 infinite_loop:
 	jmp	infinite_loop
@@ -262,7 +266,7 @@ infinite_loop:
 ; Shape Table
 .include "objects_shape.inc"
 
-.align 8192
+.align $400
 
 ; Graphics Background
 .incbin	"GLADOS.HGR",4
