@@ -54,6 +54,7 @@
 ; UP NLT UP UP UP NLT UP UP UP
 ; STOP
 
+portal_vert:
 .byte $1b,$24,$0c,$24,$0c,$15,$36,$0e,$36, $36,$1e,$36,$1e,$1c,$24,$1c,$24
 .byte $04,$00
 
@@ -72,6 +73,7 @@
 ; RT NRT RT NRT RT
 ; STOP
 
+portal_horiz:
 .byte	$52,$0d,$0d,$0d,$6c,$24,$1f,$fc, $1f,$1f,$1f,$1f,$1f,$fe,$36,$0d
 .byte	$6e,$0d,$05,$00
 
