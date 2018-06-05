@@ -48,14 +48,15 @@ have art loading properly 40col:		18910
 lz4 encode the ascii art:			15529
 revert because lz4 code not re-entrant:		18910
 add 4-channel music (KR4):			20128
-add cursor (a bit distracting)			20162
+add cursor (a bit distracting):			20162
 feature complete 40 col:			20180
 intial 80 col support:				20191
 80 col cursor:					20344
 strip out some unneeded text printing:		19962
-merge ED and MB code				24993
+merge ED and MB code:				24993
 properly select between versions:		25001
 merge the ED and MB lyrics:			22828
+80 column ED, wait for keypress+reboot at end:	22852
 
 Memory Map:
 
@@ -73,12 +74,12 @@ D000:		ROM
 FFFF:		END
 
 
-Code:		c00 - 8c00 32k 
-		(8k=audio, 5k=lyrics, 3k=art)
-Sound buffers:	5e00-9600 = 14k
-
 Plan:
-	Load compressed 18k image at $5000 - $9600
+	Load compressed 16k image ($4000) at $5600 - $9600
 	Decompress ENDING sequence at $1800 - $4000
-	When done, decompress STILL_ALIVE (22k) at $C00 - $5000
-
+		(writes background to HGR graphics automatically)
+	When done:
+		+  STILL_ALIVE ($5a00, 22.5k) at $0c00 - $6600
+		+  Sound buffers ($3800, 14k) at $5e00 - $9600
+		   (the overlap is OK, the ED file is over-written by
+		    the mockingboard buffers, but that is not used by MB)

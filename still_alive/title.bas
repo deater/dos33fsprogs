@@ -1,4 +1,5 @@
 5 HOME
+7 PRINT CHR$(4)"MAXFILES 1"
 10 PRINT " __ ___ ___          _     ___       __"
 15 PRINT "/    |   |  |  |    / \ |   |  |  | |"
 20 PRINT "\_   |   |  |  |    |_| |   |  |  | |_"
@@ -27,4 +28,4 @@
 130 POKE 768,1:POKE 769,1:GOTO 160
 140 POKE 768,0:POKE 769,0:GOTO 160
 150 POKE 768,1:POKE 769,0
-160 PRINT CHR$(4);"BRUN STILL_ALIVE"
+160 PRINT CHR$(4);"BRUN SA_COMPRESSED"

@@ -91,9 +91,9 @@ reset:
 ;=========
 ;routines
 ;=========
-.include	"../asm_routines/gr_offsets.s"
-.include	"../asm_routines/mockingboard_a.s"
-.include	"../asm_routines/lz4_decode.s"
+.include	"gr_offsets.s"
+.include	"mockingboard_a.s"
+.include	"lz4_decode.s"
 
 .include	"display_art.s"
 .include	"display_lyrics.s"
@@ -114,8 +114,7 @@ art:
 .include	"ascii_art.inc"
 
 LZ4_BUFFER:
-.incbin		"SA.KR4"
-
 music_address:
-.incbin	"SA.ED"
+;.incbin	"SA.KR4"
+;.incbin	"SA.ED"
 
