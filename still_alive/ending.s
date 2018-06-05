@@ -199,8 +199,6 @@ jo_draw:
 	; IF KO=1 THEN KY=KY-KV:KV=KV-4.5
 
 
-
-
 	;====================================
 	; Portal Collision Detection
 	;====================================
@@ -208,11 +206,65 @@ jo_draw:
 	; 203 IF KO=0 GOTO 206
 	; 204 IF KX>BX-12 AND KX<BX+12 AND KY<BY+6 AND KY>BY-6 THEN SCALE=1:KX=GX:KY=GY+6
 	; 205 IF KX>GX-12 AND KX<GX+12 AND KY<GY+6 AND KY>GY-6 THEN SCALE=1:KX=BX:KY=BY+6
-	; ' Portal/Blob
-	; 206 IF L=1 OR JO=0 GOTO 210
-	; 207 IF JX>BX-12 AND JX<BX+12 AND JY<BY+6 AND JY>BY-6 THEN SCALE=2:XDRAW 6 AT JX,JY:JX=GX:JY=GY-6:JA=-JA:XDRAW 6 AT JX,JY
-	; 208 IF JX>GX-12 AND JX<GX+12 AND JY<GY+6 AND JY>GY-6 THEN SCALE=2:XDRAW 6 AT JX,JY:JX=BX:JY=BY-6:JA=-JA:XDRAW 6 AT JX,JY
 
+	; Portal/Fireball
+
+	lda	JO
+	beq	done_portal_fireball	; IF L=1 OR JO=0 GOTO 210
+
+	; Check blue
+
+	lda	BXL
+	sec
+	sbc	#12
+	cmp	JX
+	bcs	no_b_fb		; IF JX>BX-12 AND
+
+	lda	BXL
+	clc
+	adc	#12
+	cmp	JX
+	bcc	no_b_fb		; JX<BX+12 AND
+
+	lda	BY
+	clc
+	adc	#6
+	cmp	JY
+	bcc	no_b_fb		; JY<BY+6 AND
+
+	lda	BY
+	sec
+	sbc	#6
+	cmp	JY
+	bcs	no_b_fb		; JY>BY-6 THEN
+
+	jsr	draw_j		; SCALE=2:XDRAW 6 AT JX,JY
+
+	lda	GXL
+	sta	JX		; JX=GX
+
+	lda	GY
+	sec
+	sbc	#6
+	sta	JY		; JY=GY-6
+
+	lda	JA
+	eor	#$FF
+	clc
+	adc	#$1
+	sta	JA		; JA=-JA
+
+	jsr	draw_j		; XDRAW 6 AT JX,JY
+
+no_b_fb:
+
+	; 207 IF JX>BX-12 AND JX<BX+12 AND JY<BY+6 AND JY>BY-6 THEN SCALE=2:XDRAW 6 AT JX,JY:JX=GX:JY=GY-6:JA=-JA:XDRAW 6 AT JX,JY
+
+no_o_fb:
+
+
+	; 208 IF JX>GX-12 AND JX<GX+12 AND JY<GY+6 AND JY>GY-6 THEN SCALE=2:XDRAW 6 AT JX,JY:JX=BX:JY=BY-6:JA=-JA:XDRAW 6 AT JX,JY
+done_portal_fireball:
 
 	;=====================================
 	; Wall Collision Detection
@@ -263,7 +315,7 @@ jo_not_up:
 	cmp	#85
 	bcs	jo_no_hit
 
-	jmp	explosion
+	jmp	hit_glados
 
 jo_no_hit:
 
@@ -660,6 +712,50 @@ loop4:
 
 	rts
 
+	;===============================
+	; hit glados
+	;===============================
+hit_glados:
+	; 3000 HTAB 3:VTAB 21:PRINT "    Nice job breaking it, hero.    "
+
+	ldy	#10
+boom_loop:
+	sty	TEMPY
+
+	lda	#110
+	sta	JX
+	lda	#60
+	sta	JY
+	jsr	draw_j		; XDRAW 7 AT 110,60
+	bit	$C030		; V=PEEK(-16336)
+	lda	#130
+	sta	JX
+	jsr	draw_j		; XDRAW 7 AT 130,60
+	lda	#85
+	sta	JY
+	jsr	draw_j		; XDRAW 7 AT 130,85
+	bit	$C030		; V=PEEK(-16336)
+	lda	#110
+	sta	JX
+	jsr	draw_j		; XDRAW 7 AT 110,85
+	lda	#120
+	sta	JX
+	jsr	draw_j		; XDRAW 7 AT 120,85
+	bit	$C030		; V=PEEK(-16336)
+
+	ldy	TEMPY
+	dey
+	bne	boom_loop
+
+	lda	#$ff
+	sta	JO		; JO=-1
+
+
+	; Release the orb
+	lda	#1
+	sta	KO		; KO=1
+
+	rts
 
 
 
