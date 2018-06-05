@@ -8,13 +8,35 @@ still_alive_ed:
 	sta	FRAME_COUNT
 
 
+	;===========================
+	; clear both screens
+	;===========================
+
+;	lda	FORTYCOL
+;	bne	only_forty_ed
+
+;switch_to_80_ed:
+
+	; Initialize 80 column firmware
+;	jsr	$C300			; same as PR#3
+;	sta	SET80COL		; 80store  C001
+					; makes pageflip switch between
+					; regular/aux memory
+
+;only_forty_ed:
+
+	; Clear text page0
+
+;	jsr     HOME
+
+
 	;============================
 	; Draw Lineart around edges
 	;============================
 
-	jsr	setup_edges
+;	jsr	setup_edges
 
-	jsr	HOME
+;	jsr	HOME
 
 	;==============================
 	; Setup lyrics
