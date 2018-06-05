@@ -92,17 +92,12 @@ ending:
 	bit	SET_GR			; graphics mode
 
 
-
-	lda	#0
-	sta	HGR_ROTATION
-	lda	#1
-	sta	HGR_SCALE
-
-
 	;======================
 	; Draw Chell
 	;======================
 
+	lda	#1
+	sta	HGR_SCALE
 	lda	#<chell_right
 	sta	HGR_SHAPE
 	lda	#>chell_right
@@ -116,7 +111,7 @@ ending:
 	ldx	#69
 	jsr	HPOSN
 
-	lda	HGR_ROTATION		; rotation
+	lda	#0		; rotation
 
 	jsr	XDRAW1
 
@@ -139,7 +134,6 @@ ending:
 
 	lda	#0
 	sta	BO
-	lda	#0
 	sta	SXH
 	lda	#45
 	sta	SXL
@@ -153,7 +147,6 @@ ending:
 
 	lda	#0
 	sta	GO
-	lda	#0
 	sta	SXH
 	lda	#119
 	sta	SXL
@@ -175,9 +168,9 @@ game_loop:
 
 	inc	TIME
 
-	cmp	#30
-	bne	time_60
-time_30:
+	cmp	#15
+	bne	time_30
+time_15:
 	lda	#1
 	sta	SXH
 	lda	#3
@@ -187,8 +180,8 @@ time_30:
 	jsr	draw_blue
 
 	jmp	no_time
-time_60:
-	cmp	#60
+time_30:
+	cmp	#30
 	bne	no_time
 
 	lda	#0
@@ -480,7 +473,7 @@ blah:
 
 done_draw_objects:
 
-	lda	#128
+	lda	#228
 	jsr	WAIT
 
 	jmp	game_loop
@@ -584,18 +577,18 @@ draw_blue:
 draw_blue_no_sound:
 
 	; Erase old
-	lda	PR		; 0 = vertical
-	bne	blue_horizontal
+;	lda	PR		; 0 = vertical
+;	bne	blue_horizontal
 
-	lda	#2
-	sta	HGR_SCALE
+;	lda	#2
+;	sta	HGR_SCALE
 
-	lda	#<portal_vert
-	sta	HGR_SHAPE
-	lda	#>portal_vert
-	sta	HGR_SHAPE+1
+;	lda	#<portal_vert
+;	sta	HGR_SHAPE
+;	lda	#>portal_vert
+;	sta	HGR_SHAPE+1
 
-	jmp	blue_portal_erase
+;	jmp	blue_portal_erase
 
 blue_horizontal:
 	lda	#1
@@ -651,11 +644,11 @@ blue_portal_draw:
 
 	lda	#0		; rotation
 
-	jsr	XDRAW1
+	jmp	XDRAW1
 
 	; IF BO=1 AND GO=1 AND L=1 THEN GOTO 7000
 
-	rts
+;	rts
 
 	;=============================
 	; Draw Orange Portal
@@ -671,18 +664,18 @@ draw_orange:
 draw_orange_no_sound:
 
 	; Erase old
-	lda	PR		; 0 = vertical
-	bne	orange_horizontal
+;	lda	PR		; 0 = vertical
+;	bne	orange_horizontal
 
-	lda	#2
-	sta	HGR_SCALE
+;	lda	#2
+;	sta	HGR_SCALE
 
-	lda	#<portal_vert
-	sta	HGR_SHAPE
-	lda	#>portal_vert
-	sta	HGR_SHAPE+1
+;	lda	#<portal_vert
+;	sta	HGR_SHAPE
+;	lda	#>portal_vert
+;	sta	HGR_SHAPE+1
 
-	jmp	orange_portal_erase
+;	jmp	orange_portal_erase
 
 orange_horizontal:
 	lda	#1
@@ -739,12 +732,12 @@ orange_portal_draw:
 
 	lda	#0		; rotation
 
-	jsr	XDRAW1
+	jmp	XDRAW1
 
 
 	; IF BO=1 AND GO=1 AND L=1 THEN GOTO 7000
 
-	rts
+;	rts
 
 	;=====================================
 	; Draw Explosion
