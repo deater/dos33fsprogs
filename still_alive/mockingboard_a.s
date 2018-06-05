@@ -121,6 +121,7 @@ clear_ay_left_loop:
 	bpl	clear_ay_left_loop
 	rts
 
+.if 0
 	;=======================================
 	; Detect a Mockingboard card
 	;=======================================
@@ -204,3 +205,4 @@ mb4_not_in_this_slot:
 	ldx	#00
 	beq	done_mb4_detect
 
+.endif

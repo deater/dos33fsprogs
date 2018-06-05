@@ -21,13 +21,15 @@ still_alive_mb:
 
 	; call mockingboard detect?
 
-	jsr	mockingboard_detect_slot4	; call detection routine
-	cpx	#$1
-	beq	mockingboard_found
+	; ASSUME FOUND TO SAVE ROOM
+
+;	jsr	mockingboard_detect_slot4	; call detection routine
+;	cpx	#$1
+;	beq	mockingboard_found
 
 	; Not found.
 	; Print a message for debugging?
-	jmp	forever_loop			; and wait forever
+;	jmp	forever_loop			; and wait forever
 
 mockingboard_found:
 

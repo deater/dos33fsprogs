@@ -6,14 +6,14 @@ TOKENIZE = ../asoft_basic-utils/tokenize_asoft
 all:	still_alive.dsk
 
 still_alive.dsk:	SA_COMPRESSED STILL_ALIVE TITLE.BAS ENDING
-	$(DOS33) -y still_alive.dsk BSAVE -a 0x5a00 SA_COMPRESSED
+	$(DOS33) -y still_alive.dsk BSAVE -a 0x5900 SA_COMPRESSED
 	$(DOS33) -y still_alive.dsk BSAVE -a 0x0800 STILL_ALIVE
 	$(DOS33) -y still_alive.dsk BSAVE -a 0x1800 ENDING
 	$(DOS33) -y still_alive.dsk SAVE A TITLE.BAS
 #	$(DOS33) -y still_alive.dsk SAVE B GLADOS.HGR
 
 SA_COMPRESSED:	sa_compressed.o
-	ld65 -o SA_COMPRESSED sa_compressed.o -C ../linker_scripts/apple2_5a00.inc
+	ld65 -o SA_COMPRESSED sa_compressed.o -C ../linker_scripts/apple2_5900.inc
 
 sa_compressed.o:	sa_compressed.s \
 	STILL_ALIVE.lz4 ENDING.lz4 SA.ED.lz4 SA.KR4.lz4
