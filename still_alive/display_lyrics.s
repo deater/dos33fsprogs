@@ -26,8 +26,6 @@ handle_lyrics_ed:
 
 handle_lyrics_loop_ed:
 
-;	beq	done_lyric_ed		; if 0, done lyric
-
 	cmp	#11			; check if in range 1-10
 	bcs	lyric_home_ed		; if not, skip ahead
 
@@ -40,11 +38,16 @@ lyric_home_ed:
 	cmp	#12			; check if form feed char
 	bne	lyric_char_ed		; if not skip ahead
 
+	sty	TEMPY
 	jsr	HOME			; call HOME
+	ldy	TEMPY
 
 	jmp	lyric_continue_ed	; continue
 
 lyric_char_ed:
+
+	ldy	FORTYCOL		; if 40 column, uppercase it
+	beq	just_output_already_ed
 
 	; Uppercase it
 

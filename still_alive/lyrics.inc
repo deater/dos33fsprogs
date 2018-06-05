@@ -857,7 +857,7 @@
 ; 8856 "\iIVIT"
 .byte	$98,$BE, $C9,$D6,$C9,$D4,$00
 ; 8868 "\iY!!\n"
-.byte	$A4,$BF, $A1,$A1,$8D,$00
+.byte	$A4,$BF, $D9,$A1,$A1,$8D,$00
 ; HACK to make sure we don't run off the end waiting for the song to finish
 .byte $A4,$00, $8D,$00
 .byte $A4,$00, $8D,$00

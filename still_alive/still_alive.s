@@ -57,10 +57,15 @@ only_forty:
 
 	jsr	still_alive_mb
 
-	jmp	reset
+	jmp	wait_for_keypress
 
 no_mockingboard:
 	jsr	still_alive_ed
+
+wait_for_keypress:
+        lda     KEYPRESS			; check if keypressed
+        bpl     wait_for_keypress		; if not, loop
+
 
 reset:
 	lda	$AA6A			; current disk slot, dos 3.3
