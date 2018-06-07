@@ -12,20 +12,10 @@ $(PNG2RLE):
 $(DOS33):	
 	cd ../dos33fs-utils && make
 
-tfv.dsk:	$(DOS33) TFV ED HIGHWIND.ED FIGHTING.ED
+tfv.dsk:	$(DOS33) TFV HIGHWIND.ED FIGHTING.ED
 	$(DOS33) -y tfv.dsk BSAVE -a 0x1000 TFV
-	$(DOS33) -y tfv.dsk BSAVE -a 0x900 ED
-	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 HIGHWIND.ED
-	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 FIGHTING.ED
-
-ED:	duet.o
-	ld65 -o ED duet.o -C ../linker_scripts/apple2_900.inc
-
-duet.o:	duet.s
-	ca65 -o duet.o duet.s -l duet.lst
-
-
-
+#	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 HIGHWIND.ED
+#	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 FIGHTING.ED
 
 
 tfv_backgrounds.inc:	$(PNG2RLE) \
@@ -52,7 +42,7 @@ tfv_backgrounds.inc:	$(PNG2RLE) \
 ###
 
 TFV:	tfv.o
-	ld65 -o TFV tfv.o -C ./apple2_1000.inc
+	ld65 -o TFV tfv.o -C ../linker_scripts/apple2_1000.inc
 
 tfv.o:	tfv.s \
 	tfv_flying.s tfv_info.s tfv_opener.s tfv_title.s \
@@ -74,5 +64,5 @@ tfv.o:	tfv.s \
 
 
 clean:	
-	rm -f *~ TITLE.GR *.o *.lst ED
+	rm -f *~ TITLE.GR *.o *.lst ED TFV
 
