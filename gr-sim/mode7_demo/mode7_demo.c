@@ -9,7 +9,7 @@
 #include "tfv_utils.h"
 #include "tfv_zp.h"
 
-#include "tfv_sprites.h"
+#include "../tfv/tfv_sprites.h"
 
 
 
