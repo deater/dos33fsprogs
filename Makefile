@@ -40,13 +40,17 @@ clean:
 	cd asoft_basic-utils && make clean
 	cd asoft_presenter && make clean
 	cd asoft_sound && make clean
+	cd chiptune_debug && make clean
 	cd chiptune_player && make clean
 	cd dlowres_mode7 && make clean
 	cd dos33fs-utils && make clean
+	cd electric_duet && make clean
+	cd ethernet && make clean
 	cd glados3.3 && make clean
-	cd hgr-utils && make clean
 	cd gr-sim && make clean
 	cd gr-utils && make clean
+	cd hgr-utils && make clean
+	cd ksp && make clean
 	cd mockingboard && make clean
 	cd mode7 && make clean
 	cd mode7_demo && make clean
