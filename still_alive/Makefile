@@ -61,3 +61,4 @@ TITLE.BAS:	title.bas
 
 clean:	
 	rm -f *~ *.o *.lz4 *.lst STILL_ALIVE SA_ED ENDING SA_COMPRESSED
+	cd art && make clean
