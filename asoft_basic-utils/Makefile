@@ -39,6 +39,6 @@ install:
 
 clean:	
 		rm -f *~ *.o asoft_detoken tokenize_asoft bin2data \
-			integer_detoken asoft_compact
+			integer_detoken asoft_compact float_convert
 
 
