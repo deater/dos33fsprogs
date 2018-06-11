@@ -1,7 +1,5 @@
 mode7 speed fixes:
-	+ faster multiply routine
-		- If result is AABBCCDD we only need BBCC for fixed point
-			result
+
 	+  Skip key parsing if no key read
 
 	+ Self modifying code on the adds in inner loop

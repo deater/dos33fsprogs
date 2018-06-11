@@ -1,3 +1,26 @@
+                               Talbot Fantasy 7
+
+                           by Deater (Vince Weaver)
+
+                               vince@deater.net
+                    http://www.deater.net/weave/vmwprod/tfv/
+
+Background
+~~~~~~~~~~
+
+What you've always wanted, a poorly done FF7 clone for the Apple II.
+
+Yes, I'm using the 40x40 15-color Low-resolution graphics mode of
+the Apple II. This means the game could in theory run on the original
+Apple II released in 1977 (if you had been fabulously rich enough to
+populate all 48k of RAM). 
+
+
+
+Mode7 Optimization Notes
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 Original implementation:
 	Multiplying 1.0 * 2.0 = 2.0, took 707 cycles
 	Multiplying ff.ff * ff.ff = 0.0, took 761 cycles
