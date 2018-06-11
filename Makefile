@@ -3,38 +3,38 @@ include Makefile.inc
 all:
 	cd asoft_basic-utils && make
 	cd asoft_presenter && make
-	cd asoft_sound && make
-	cd chiptune_player && make
-	cd dlowres_mode7 && make
+#	cd asoft_sound && make
+#	cd chiptune_player && make
+#	cd dlowres_mode7 && make
 	cd dos33fs-utils && make
-	cd glados3.3 && make
+#	cd glados3.3 && make
+#	cd gr-sim && make
+#	cd gr-utils && make
 	cd hgr-utils && make
-	cd gr-sim && make
-	cd gr-utils && make
-	cd mockingboard && make
-	cd mode7 && make
-	cd mode7_demo && make
-	cd still_alive && make
-	cd tfv && make
-	cd two-liners && make
+#	cd mockingboard && make
+#	cd mode7 && make
+#	cd mode7_demo && make
+#	cd still_alive && make
+#	cd tfv && make
+#	cd two-liners && make
 
 install:
 	cd asoft_basic-utils && make install
 	cd asoft_presenter && make install
-	cd asoft_sound && make install
-	cd chiptune_player && make install
-	cd dlowres_mode7 && make install
+#	cd asoft_sound && make install
+#	cd chiptune_player && make install
+#	cd dlowres_mode7 && make install
 	cd dos33fs-utils && make install
+#	cd glados3.3 && make install
+#	cd gr-sim && make install
+#	cd gr-utils && make install
 	cd hgr-utils && make install
-	cd glados3.3 && make install
-	cd gr-sim && make install
-	cd gr-utils && make install
-	cd mockingboard && make install
-	cd mode7 && make install
-	cd mode7_demo && make install
-	cd still_alive && make install
-	cd tfv && make install
-	cd two-liners && make install
+#	cd mockingboard && make install
+#	cd mode7 && make install
+#	cd mode7_demo && make install
+#	cd still_alive && make install
+#	cd tfv && make install
+#	cd two-liners && make install
 
 clean:
 	cd asoft_basic-utils && make clean
