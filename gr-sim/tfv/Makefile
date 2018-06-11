@@ -7,9 +7,15 @@ SDL_INCLUDE= `sdl-config --cflags`
 GR_SIM = ../gr-sim.a
 
 PNG2RLE = ../../gr-utils/png2rle
-TFVDIR = ../../tfv
+ARTDIR = ../../tfv/art
+
 
 all:	tfv
+
+###
+
+$(GR_SIM):	
+	cd .. && make
 
 ###
 
@@ -19,30 +25,30 @@ $(PNG2RLE):
 ####
 
 tfv_backgrounds.c:	$(PNG2RLE) \
-			$(TFVDIR)/title.png \
-			$(TFVDIR)/map.png \
-			$(TFVDIR)/landing.png \
-			$(TFVDIR)/harfco.png \
-			$(TFVDIR)/belair.png \
-			$(TFVDIR)/math_office.png \
-			$(TFVDIR)/video_hr.png \
-			$(TFVDIR)/collegep.png \
-			$(TFVDIR)/umcp.png \
-			$(TFVDIR)/dining.png \
-			$(TFVDIR)/metro.png \
-			$(TFVDIR)/talbot.png
-	$(PNG2RLE) c $(TFVDIR)/title.png title_rle > tfv_backgrounds.c
-	$(PNG2RLE) c $(TFVDIR)/map.png map_rle >> tfv_backgrounds.c
-	$(PNG2RLE) c $(TFVDIR)/landing.png landing_rle >> tfv_backgrounds.c
-	$(PNG2RLE) c $(TFVDIR)/harfco.png harfco_rle >> tfv_backgrounds.c
-	$(PNG2RLE) c $(TFVDIR)/belair.png belair_rle >> tfv_backgrounds.c
-	$(PNG2RLE) c $(TFVDIR)/math_office.png math_office_rle >> tfv_backgrounds.c
-	$(PNG2RLE) c $(TFVDIR)/video_hr.png video_hr_rle >> tfv_backgrounds.c
-	$(PNG2RLE) c $(TFVDIR)/collegep.png collegep_rle >> tfv_backgrounds.c
-	$(PNG2RLE) c $(TFVDIR)/umcp.png umcp_rle >> tfv_backgrounds.c
-	$(PNG2RLE) c $(TFVDIR)/dining.png dining_rle >> tfv_backgrounds.c
-	$(PNG2RLE) c $(TFVDIR)/metro.png metro_rle >> tfv_backgrounds.c
-	$(PNG2RLE) c $(TFVDIR)/talbot.png talbot_rle >> tfv_backgrounds.c
+			$(ARTDIR)/title.png \
+			$(ARTDIR)/map.png \
+			$(ARTDIR)/landing.png \
+			$(ARTDIR)/harfco.png \
+			$(ARTDIR)/belair.png \
+			$(ARTDIR)/math_office.png \
+			$(ARTDIR)/video_hr.png \
+			$(ARTDIR)/collegep.png \
+			$(ARTDIR)/umcp.png \
+			$(ARTDIR)/dining.png \
+			$(ARTDIR)/metro.png \
+			$(ARTDIR)/talbot.png
+	$(PNG2RLE) c $(ARTDIR)/title.png title_rle > tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/map.png map_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/landing.png landing_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/harfco.png harfco_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/belair.png belair_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/math_office.png math_office_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/video_hr.png video_hr_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/collegep.png collegep_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/umcp.png umcp_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/dining.png dining_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/metro.png metro_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/talbot.png talbot_rle >> tfv_backgrounds.c
 
 
 
