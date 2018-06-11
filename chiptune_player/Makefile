@@ -5,6 +5,9 @@ PNG2GR = ../gr-utils/png2gr
 
 all:	chiptune_player.dsk chiptune_unrolled.dsk
 
+$(DOS33):
+	cd ../dos33fs-utils && make
+
 chiptune_player.dsk:	CHIPTUNE_PLAYER ./krw/INTRO2.KRW
 	cp chiptune_empty.dsk chiptune_player.dsk
 	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x0C00 CHIPTUNE_PLAYER

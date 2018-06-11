@@ -68,6 +68,7 @@ mb_write_loop:
 								; typ 5
 mb_not_13:
 
+
 	; address
 	stx	MOCK_6522_ORA1		; put address on PA1		; 4
 	stx	MOCK_6522_ORA2		; put address on PA2		; 4
@@ -88,7 +89,6 @@ mb_not_13:
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_ORB1						; 4
 	sta	MOCK_6522_ORB2						; 4
-
 								;===========
 								; 	62
 mb_no_write:

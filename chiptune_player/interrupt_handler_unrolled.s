@@ -45,6 +45,8 @@ mb_write_frame:
 	; inlined "write_ay_both" to save up to 156 (12*13) cycles
 	; unrolled
 
+.if 0
+
 mb_write_r0_right:
 
 	lda	REGISTER_DUMP+0	; load register value			; 3
@@ -402,6 +404,366 @@ mb_write_r13_right:
 								;===========
 								; 	37
 mb_write_done_right:
+
+.endif
+
+mb_write_r0_left:
+
+	lda	REGISTER_DUMP+0	; load register value			; 3
+	cmp	REGISTER_OLD+0	; compare with old values		; 4
+	beq	mb_write_r1_left					; 3/2nt
+								;=============
+								; typ 10
+	; address
+	ldx	#0							; 2
+	stx	MOCK_6522_ORA2		; put address on PA1		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB1          ; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP+0		; load register value		; 3
+	sta	MOCK_6522_ORA2		; put value on PA1		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB1			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+								;===========
+								; 	37
+
+mb_write_r1_left:
+
+	lda	REGISTER_DUMP+1	; load register value			; 3
+	cmp	REGISTER_OLD+1	; compare with old values		; 4
+	beq	mb_write_r2_left					; 3/2nt
+								;=============
+								; typ 10
+	; address
+	ldx	#1							; 2
+	stx	MOCK_6522_ORA2		; put address on PA1		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB1          ; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP+1		; load register value		; 3
+	sta	MOCK_6522_ORA2		; put value on PA1		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB1			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+								;===========
+								; 	37
+mb_write_r2_left:
+
+	lda	REGISTER_DUMP+2	; load register value			; 3
+	cmp	REGISTER_OLD+2	; compare with old values		; 4
+	beq	mb_write_r3_left					; 3/2nt
+								;=============
+								; typ 10
+	; address
+	ldx	#2							; 2
+	stx	MOCK_6522_ORA2		; put address on PA1		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB1          ; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP+2		; load register value		; 3
+	sta	MOCK_6522_ORA2		; put value on PA1		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB1			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+								;===========
+								; 	37
+mb_write_r3_left:
+
+	lda	REGISTER_DUMP+3	; load register value			; 3
+	cmp	REGISTER_OLD+3	; compare with old values		; 4
+	beq	mb_write_r4_left					; 3/2nt
+								;=============
+								; typ 10
+	; address
+	ldx	#3							; 2
+	stx	MOCK_6522_ORA2		; put address on PA1		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB1          ; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP+3		; load register value		; 3
+	sta	MOCK_6522_ORA2		; put value on PA1		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB1			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+								;===========
+								; 	37
+mb_write_r4_left:
+
+	lda	REGISTER_DUMP+4	; load register value			; 3
+	cmp	REGISTER_OLD+4	; compare with old values		; 4
+	beq	mb_write_r5_left					; 3/2nt
+								;=============
+								; typ 10
+	; address
+	ldx	#4							; 2
+	stx	MOCK_6522_ORA2		; put address on PA1		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB1          ; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP+4		; load register value		; 3
+	sta	MOCK_6522_ORA2		; put value on PA1		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB1			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+								;===========
+								; 	37
+mb_write_r5_left:
+
+	lda	REGISTER_DUMP+5	; load register value			; 3
+	cmp	REGISTER_OLD+5	; compare with old values		; 4
+	beq	mb_write_r6_left					; 3/2nt
+								;=============
+								; typ 10
+	; address
+	ldx	#5							; 2
+	stx	MOCK_6522_ORA2		; put address on PA1		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB1          ; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP+5		; load register value		; 3
+	sta	MOCK_6522_ORA2		; put value on PA1		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB1			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+								;===========
+								; 	37
+mb_write_r6_left:
+
+	lda	REGISTER_DUMP+6	; load register value			; 3
+	cmp	REGISTER_OLD+6	; compare with old values		; 4
+	beq	mb_write_r7_left					; 3/2nt
+								;=============
+								; typ 10
+	; address
+	ldx	#6							; 2
+	stx	MOCK_6522_ORA2		; put address on PA1		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB1          ; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP+6		; load register value		; 3
+	sta	MOCK_6522_ORA2		; put value on PA1		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB1			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+								;===========
+								; 	37
+mb_write_r7_left:
+
+	lda	REGISTER_DUMP+7	; load register value			; 3
+	cmp	REGISTER_OLD+7	; compare with old values		; 4
+	beq	mb_write_r8_left					; 3/2nt
+								;=============
+								; typ 10
+	; address
+	ldx	#7							; 2
+	stx	MOCK_6522_ORA2		; put address on PA1		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB1          ; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP+7		; load register value		; 3
+	sta	MOCK_6522_ORA2		; put value on PA1		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB1			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+								;===========
+								; 	37
+
+mb_write_r8_left:
+
+	lda	REGISTER_DUMP+8	; load register value			; 3
+	cmp	REGISTER_OLD+8	; compare with old values		; 4
+	beq	mb_write_r9_left					; 3/2nt
+								;=============
+								; typ 10
+	; address
+	ldx	#8						; 2
+	stx	MOCK_6522_ORA2		; put address on PA1		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB1          ; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP+8		; load register value		; 3
+	sta	MOCK_6522_ORA2		; put value on PA1		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB1			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+								;===========
+								; 	37
+mb_write_r9_left:
+
+	lda	REGISTER_DUMP+9	; load register value			; 3
+	cmp	REGISTER_OLD+9	; compare with old values		; 4
+	beq	mb_write_r10_left					; 3/2nt
+								;=============
+								; typ 10
+	; address
+	ldx	#9							; 2
+	stx	MOCK_6522_ORA2		; put address on PA1		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB1          ; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP+9		; load register value		; 3
+	sta	MOCK_6522_ORA2		; put value on PA1		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB1			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+								;===========
+								; 	37
+mb_write_r10_left:
+
+	lda	REGISTER_DUMP+10; load register value			; 3
+	cmp	REGISTER_OLD+10	; compare with old values		; 4
+	beq	mb_write_r11_left					; 3/2nt
+								;=============
+								; typ 10
+	; address
+	ldx	#10							; 2
+	stx	MOCK_6522_ORA2		; put address on PA1		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB1          ; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP+10	; load register value		; 3
+	sta	MOCK_6522_ORA2		; put value on PA1		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB1			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+								;===========
+								; 	37
+mb_write_r11_left:
+
+	lda	REGISTER_DUMP+11; load register value			; 3
+	cmp	REGISTER_OLD+11	; compare with old values		; 4
+	beq	mb_write_r12_left					; 3/2nt
+								;=============
+								; typ 10
+	; address
+	ldx	#11							; 2
+	stx	MOCK_6522_ORA2		; put address on PA1		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB1          ; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP+11	; load register value		; 3
+	sta	MOCK_6522_ORA2		; put value on PA1		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB1			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+								;===========
+								; 	37
+mb_write_r12_left:
+
+	lda	REGISTER_DUMP+12; load register value			; 3
+	cmp	REGISTER_OLD+12	; compare with old values		; 4
+	beq	mb_write_r13_left					; 3/2nt
+								;=============
+								; typ 10
+	; address
+	ldx	#12							; 2
+	stx	MOCK_6522_ORA2		; put address on PA1		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB1          ; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP+12	; load register value		; 3
+	sta	MOCK_6522_ORA2		; put value on PA1		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB1			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+								;===========
+								; 	37
+mb_write_r13_left:
+
+	lda	REGISTER_DUMP+13; load register value			; 3
+	cmp	REGISTER_OLD+13	; compare with old values		; 4
+	beq	mb_write_done_left					; 3/2nt
+	cmp	#$ff			; if FF we skip	r13		; 2
+	beq	mb_write_done_left					; 3/2nt
+
+
+								;=============
+								; typ 10
+	; address
+	ldx	#13							; 2
+	stx	MOCK_6522_ORA2		; put address on PA1		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB1          ; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP+13	; load register value		; 3
+	sta	MOCK_6522_ORA2		; put value on PA1		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB1			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+								;===========
+								; 	37
+mb_write_done_left:
 
 
 	;=====================================
