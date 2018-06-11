@@ -1,0 +1,4 @@
++ Write only the C channel
++ Write the same value to the C channel
++ Run at 25Hz
++ not use ABS addressing
