@@ -4,6 +4,8 @@ DOS33 = ../dos33fs-utils/dos33
 PNG2GR = ../gr-utils/png2gr
 PNG2RLE = ../gr-utils/png2rle
 
+ARTDIR = ./art
+
 all:	tfv.dsk
 
 $(PNG2RLE):	
@@ -12,32 +14,32 @@ $(PNG2RLE):
 $(DOS33):	
 	cd ../dos33fs-utils && make
 
-tfv.dsk:	$(DOS33) TFV HIGHWIND.ED FIGHTING.ED
+tfv.dsk:	$(DOS33) TFV
 	$(DOS33) -y tfv.dsk BSAVE -a 0x1000 TFV
 #	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 HIGHWIND.ED
 #	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 FIGHTING.ED
 
 
 tfv_backgrounds.inc:	$(PNG2RLE) \
-	title.png map.png \
-	landing.png harfco.png \
-	belair.png \
-	math_office.png video_hr.png \
-	collegep.png \
-	umcp.png \
-	dining.png metro.png talbot.png
-	$(PNG2RLE) asm title.png title_rle > tfv_backgrounds.inc
-	$(PNG2RLE) asm map.png map_rle >> tfv_backgrounds.inc
-	$(PNG2RLE) asm landing.png landing_rle >> tfv_backgrounds.inc
-	$(PNG2RLE) asm harfco.png harfco_rle >> tfv_backgrounds.inc
-	$(PNG2RLE) asm belair.png belair_rle >> tfv_backgrounds.inc
-	$(PNG2RLE) asm math_office.png math_office_rle >> tfv_backgrounds.inc
-	$(PNG2RLE) asm video_hr.png video_hr_rle >> tfv_backgrounds.inc
-	$(PNG2RLE) asm collegep.png collegep_rle >> tfv_backgrounds.inc
-	$(PNG2RLE) asm umcp.png umcp_rle >> tfv_backgrounds.inc
-	$(PNG2RLE) asm dining.png dining_rle >> tfv_backgrounds.inc
-	$(PNG2RLE) asm metro.png metro_rle >> tfv_backgrounds.inc
-	$(PNG2RLE) asm talbot.png talbot_rle >> tfv_backgrounds.inc
+	$(ARTDIR)/title.png $(ARTDIR)/map.png \
+	$(ARTDIR)/landing.png $(ARTDIR)/harfco.png \
+	$(ARTDIR)/belair.png \
+	$(ARTDIR)/math_office.png $(ARTDIR)/video_hr.png \
+	$(ARTDIR)/collegep.png \
+	$(ARTDIR)/umcp.png \
+	$(ARTDIR)/dining.png $(ARTDIR)/metro.png $(ARTDIR)/talbot.png
+	$(PNG2RLE) asm $(ARTDIR)/title.png title_rle > tfv_backgrounds.inc
+	$(PNG2RLE) asm $(ARTDIR)/map.png map_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm $(ARTDIR)/landing.png landing_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm $(ARTDIR)/harfco.png harfco_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm $(ARTDIR)/belair.png belair_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm $(ARTDIR)/math_office.png math_office_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm $(ARTDIR)/video_hr.png video_hr_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm $(ARTDIR)/collegep.png collegep_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm $(ARTDIR)/umcp.png umcp_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm $(ARTDIR)/dining.png dining_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm $(ARTDIR)/metro.png metro_rle >> tfv_backgrounds.inc
+	$(PNG2RLE) asm $(ARTDIR)/talbot.png talbot_rle >> tfv_backgrounds.inc
 
 ###
 
