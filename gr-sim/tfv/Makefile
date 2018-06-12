@@ -99,7 +99,7 @@ tfv.o:	tfv.c ../gr-sim.h tfv_backgrounds.h tfv_sprites.h
 
 tfv:	tfv.o tfv_backgrounds.o tfv_battle.o tfv_citymap.o tfv_flying.o \
 		tfv_info.o tfv_opener.o tfv_sprites.o tfv_textentry.o \
-		tfv_title.o tfv_worldmap.o \
+		tfv_title.o tfv_worldmap.o tfv_mapinfo.h \
 		$(GR_SIM)
 	$(CC) $(LFLAGS) $(SDL_LIBS) -o tfv tfv.o \
 		tfv_backgrounds.o tfv_battle.o tfv_citymap.o tfv_flying.o \
