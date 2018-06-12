@@ -5,13 +5,15 @@ PNG2GR = ../gr-utils/png2gr
 
 all:	chiptune_debug.dsk
 
-chiptune_debug.dsk:	CHIPTUNE_IRQ CHIPTUNE_NOIRQ CHIPTUNE_25HZ CHIPTUNE_BARE CHIPTUNE_MIN
+chiptune_debug.dsk:	CHIPTUNE_IRQ CHIPTUNE_NOIRQ CHIPTUNE_25HZ \
+		CHIPTUNE_BARE CHIPTUNE_MIN CHIPTUNE_TINY
 	cp chiptune_empty.dsk chiptune_debug.dsk
 	$(DOS33) -y chiptune_debug.dsk BSAVE -a 0x0C00 CHIPTUNE_IRQ
 	$(DOS33) -y chiptune_debug.dsk BSAVE -a 0x0C00 CHIPTUNE_NOIRQ
 	$(DOS33) -y chiptune_debug.dsk BSAVE -a 0x0C00 CHIPTUNE_25HZ
 	$(DOS33) -y chiptune_debug.dsk BSAVE -a 0x0C00 CHIPTUNE_BARE
 	$(DOS33) -y chiptune_debug.dsk BSAVE -a 0x0C00 CHIPTUNE_MIN
+	$(DOS33) -y chiptune_debug.dsk BSAVE -a 0x0C00 CHIPTUNE_TINY
 
 
 CHIPTUNE_IRQ:	chiptune_irq.o
@@ -53,6 +55,12 @@ CHIPTUNE_MIN:	chiptune_min.o
 
 chiptune_min.o:	chiptune_min.s
 	ca65 -o chiptune_min.o chiptune_min.s -l chiptune_min.lst
+
+CHIPTUNE_TINY:	chiptune_tiny.o
+	ld65 -o CHIPTUNE_TINY chiptune_tiny.o -C ../linker_scripts/apple2_c00.inc
+
+chiptune_tiny.o:	chiptune_tiny.s
+	ca65 -o chiptune_tiny.o chiptune_tiny.s -l chiptune_tiny.lst
 
 
 clean:
