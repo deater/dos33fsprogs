@@ -10,6 +10,8 @@
 #include "tfv_sprites.h"
 #include "tfv_backgrounds.h"
 
+#include "tfv_mapinfo.h"
+
 /* In Town */
 
 
