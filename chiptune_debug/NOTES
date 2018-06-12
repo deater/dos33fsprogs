@@ -18,4 +18,6 @@ remove dos33 code 		still issue
 remove lz4 code			still issue
 remove interrupt driven		still issue!?
 play at 25Hz			still issue
-
+50Hz,inline, no play 11,12,13	still issue
+also turn off A/B freq		still issue
+also turn off noise/Aamp/Bamp	still issue
