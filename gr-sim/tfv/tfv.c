@@ -20,7 +20,7 @@ unsigned char items1=0xff,items2=0xff;
 unsigned char steps=0;
 
 /* location */
-unsigned char map_x=5;
+//unsigned char map_x=5;
 char tfv_x=15,tfv_y=19;
 unsigned char ground_color;
 

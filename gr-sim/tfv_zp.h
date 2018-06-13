@@ -49,12 +49,6 @@ extern unsigned char time_hours,time_minutes;
 extern unsigned char items1,items2;
 extern unsigned char steps;
 
-/* location */
-extern unsigned char map_x;
-extern char tfv_x,tfv_y;
-extern unsigned char ground_color;
-
-extern char nameo[9];
 
 struct fixed_type {
         char i;
