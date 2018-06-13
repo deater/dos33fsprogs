@@ -23,3 +23,7 @@ also turn off A/B freq		still issue
 also turn off noise/Aamp/Bamp	still issue
 move to single output routine	still issue
 always volume 12		still issue
+fix clear accidentally wr r14	still issue
+generate single tone		FINE!!!
+only play first 16 notes	still issue
+
