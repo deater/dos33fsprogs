@@ -26,4 +26,49 @@ always volume 12		still issue
 fix clear accidentally wr r14	still issue
 generate single tone		FINE!!!
 only play first 16 notes	still issue
+only change C-fine value	still issue
+only write val, not address	still issue
+use handshake-free porta/6522	still issue
+
+	Look at interrupt registers on 6522
+
+	Emulator: IFR=$C0 IER=$80,	Actual: IFR=$C0,IER=$C0
+	For 6552-2 it is $00/$80 on both
+
+Tried soldering so pin 18 (PB1) always high
+				still issue
+
+	Tried reading back value from AY-3-8910, always match.
+	Channel A and B now have glitches offset by 320ms?
+	Interrupt happens at 50Hz=20ms? 16 samples??!??
+
+
+NOTE: Applewin Bugs
+	+ Doesn't support reading back AY-3-8910 (Always returns
+		last written value?)
+	+ IER doesn't show Timer1 enabled? (returns 80 rather than C0)
+
+
+Now glitch happens exactly every 640ms (32 50Hz interrupts) when playing
+	pattern of 8 notes repeatedly
+
+
+Remove other cards from machine to see if power issue
+				still issue
+
+
+When down to writing 4 values,
+	$51,$3c,$32,$50, issue seems to often hit on
+	the 51->3C transition
+
+
+Down to two values, still only hit on the 51->3c transition.
+	Sometimes everytime, sometimes every Xth time.
+
+
+$51 by itself = fine
+$3c by itself = fine
+
+50/3c and 50/32 also have issues, but not quite the same
+(Some, audio fading instead of glitch?)
 
