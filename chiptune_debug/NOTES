@@ -14,10 +14,12 @@ remove keyboard:		still issue
 remove all non-irq code:	still issue
 remove all text print code	still issue
 remove multi file (down to 973) still issue
-remove dos33 code 		still issue
+remove dos33 code		still issue
 remove lz4 code			still issue
 remove interrupt driven		still issue!?
 play at 25Hz			still issue
 50Hz,inline, no play 11,12,13	still issue
 also turn off A/B freq		still issue
 also turn off noise/Aamp/Bamp	still issue
+move to single output routine	still issue
+always volume 12		still issue
