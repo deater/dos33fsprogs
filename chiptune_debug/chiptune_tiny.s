@@ -6,7 +6,7 @@ MB_VALUE = $91
 
 
 
-; left speaker
+; left channel
 MOCK_6522_1_ORB	=	$C400	; 6522 #1 port b data
 MOCK_6522_1_ORA	=	$C401	; 6522 #1 port a data
 MOCK_6522_1_DDRB =	$C402	; 6522 #1 data direction port B
@@ -24,7 +24,7 @@ MOCK_6522_1_IFR	=	$C40D	; 6522 #1 Interrupt Flag Register
 MOCK_6522_1_IER	=	$C40E	; 6522 #1 Interrupt Enable Register
 MOCK_6522_1_ORAN =	$C40F	; 6522 #1 port a data, no handshake
 
-; right speaker
+; right channel
 MOCK_6522_2_ORB	=	$C480	; 6522 #2 port b data
 MOCK_6522_2_ORA	=	$C481	; 6522 #2 port a data
 MOCK_6522_2_DDRB =	$C482	; 6522 #2 data direction port B
@@ -207,11 +207,6 @@ reset_ay_right:
 write_ay_both:
 
 write_ay_address:
-
-	; value
-	lda	#$ff
-	sta	MOCK_6522_1_DDRA
-
 	; address
 	stx	MOCK_6522_1_ORA		; put address on PA1		; 3
 	stx	MOCK_6522_2_ORA		; put address on PA2		; 3
@@ -223,10 +218,6 @@ write_ay_address:
 	sta	MOCK_6522_2_ORB						; 3
 
 write_ay_value:
-
-	; value
-	lda	#$ff
-	sta	MOCK_6522_1_DDRA
 
 	lda	MB_VALUE						; 3
 	sta	MOCK_6522_1_ORA		; put value on PA1		; 3
@@ -241,38 +232,6 @@ write_ay_value:
 	rts								; 6
 								;===========
 								;       53
-
-
-read_ay_both:
-
-	; value
-	lda	#$ff
-	sta	MOCK_6522_1_DDRA
-
-	; address
-	stx	MOCK_6522_1_ORA		; put address on PA1		; 3
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
-	sta	MOCK_6522_1_ORB		; latch_address on PB1		; 3
-	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sta	MOCK_6522_1_ORB						; 3
-
-read_ay_value:
-	; value
-
-	lda	#$0
-	sta	MOCK_6522_1_DDRA
-
-	lda	#MOCK_AY_READ		;				; 2
-	sta	MOCK_6522_1_ORB		; read on PB1			; 3
-
-	ldy	MOCK_6522_1_ORA		; read value
-
-	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sta	MOCK_6522_1_ORB						; 3
-
-	tya
-
-	rts								; 6
 
 
 
@@ -304,69 +263,6 @@ interrupt_handler:
 	pha			; save A				; 3
 				; Should we save X and Y too?
 
-.if 0
-	lda	MOCK_6522_1_IFR
-	tay
-	and	#$f
-	clc
-	adc	#'0'+$80
-	sta	$401
-	tya
-	lsr
-	lsr
-	lsr
-	lsr
-	clc
-	adc	#'0'+$80
-	sta	$400
-
-	lda	MOCK_6522_1_IER
-	tay
-	and	#$f
-	clc
-	adc	#'0'+$80
-	sta	$403
-	tya
-	lsr
-	lsr
-	lsr
-	lsr
-	clc
-	adc	#'0'+$80
-	sta	$402
-
-	lda	MOCK_6522_2_IFR
-	tay
-	and	#$f
-	clc
-	adc	#'0'+$80
-	sta	$407
-	tya
-	lsr
-	lsr
-	lsr
-	lsr
-	clc
-	adc	#'0'+$80
-	sta	$406
-
-	lda	MOCK_6522_2_IER
-	tay
-	and	#$f
-	clc
-	adc	#'0'+$80
-	sta	$409
-	tya
-	lsr
-	lsr
-	lsr
-	lsr
-	clc
-	adc	#'0'+$80
-	sta	$408
-.endif
-
-
 
 	bit	MOCK_6522_1_T1C_L	; clear 6522 interrupt by
 					; reading T1C-L	; 4
@@ -388,30 +284,19 @@ mb_write_frame:
 	; 4: C CHANNEL FINE
 	lda	c_fine,Y
 	sta	MB_VALUE
-	sta	expected+4
-
 	ldx	#4
-	jsr	write_ay_both
-;	jsr	write_ay_value
-
-	; read out all of AY registers and see if match expected
-	ldx	#0
-loop:
-	jsr	read_ay_both
-	cmp	expected,X
-	beq	good
-
-	brk
-
-good:
-	inx
-	cpx	#14
-	bne	loop
+	jsr	write_ay_value
 
 increment_offset:
 	inc	MB_CHUNK_OFFSET		; increment offset
 	lda	MB_CHUNK_OFFSET
-	and	#$1
+
+	and	#$1			; reduce number played
+					; $f = 16
+					; $3 = 4
+					; $1 = 2
+					; $0 = 1
+
 	sta	MB_CHUNK_OFFSET
 
 done_interrupt:
@@ -420,18 +305,11 @@ done_interrupt:
 
 
 
-
-expected: ;    0   1   2   3    4    5   6  7   8    9   10  11   12  13
-	.byte $00,$00,$00,$00, $00,$00,$00,$38, $00,$00,$0c,$00, $00,$00
-
-
-
-; 4: C fine
+; 4: C fine frequency
 
 c_fine:
 
-;.byte $51,$3c,$32,$50, $3d,$32,$50,$3c, $33,$50,$3c,$32,$51,$3c,$32,$50
+.byte $51,$3c,$32,$50, $3d,$32,$50,$3c, $33,$50,$3c,$32,$51,$3c,$32,$50
 
-.byte $50,$32,$32,$50, $3d,$32,$50,$3c, $33,$50,$3c,$32,$51,$3c,$32,$50
 
 
