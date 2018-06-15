@@ -24,6 +24,8 @@ struct map_info_type map_info[16] = {
 		.e_exit=ARCTIC_WOODS,
 		.w_exit=NOEXIT,
 		.ground_color=(COLOR_WHITE|(COLOR_WHITE<<4)),
+		.land_type=LAND_LEFT_BEACH|LAND_NORTHSHORE,
+		.background_image=NULL,
 	},
 	{	// ARCTIC_WOODS
 		.name="Arctic Woods",
@@ -32,6 +34,8 @@ struct map_info_type map_info[16] = {
 		.e_exit=ARCTIC_MOUNTAINS,
 		.w_exit=NORTH_BEACH,
 		.ground_color=(COLOR_WHITE|(COLOR_WHITE<<4)),
+		.land_type=LAND_GRASSLAND|LAND_NORTHSHORE,
+		.background_image=NULL,
 	},
 	{	// ARCTIC_MOUNTAINS
 		.name="Arctic Mountains",
@@ -40,6 +44,8 @@ struct map_info_type map_info[16] = {
 		.e_exit=HARFORD_COUNTY,
 		.w_exit=ARCTIC_WOODS,
 		.ground_color=(COLOR_WHITE|(COLOR_WHITE<<4)),
+		.land_type=LAND_MOUNTAIN|LAND_NORTHSHORE,
+		.background_image=NULL,
 	},
 	{	// HARFORD_COUNTY
 		.name="Harford County",
@@ -48,6 +54,7 @@ struct map_info_type map_info[16] = {
 		.e_exit=NOEXIT,
 		.w_exit=ARCTIC_MOUNTAINS,
 		.ground_color=(COLOR_WHITE|(COLOR_WHITE<<4)),
+		.background_image=harfco_rle,
 	},
 	{	// PINE_BEACH
 		.name="Pine Beach",
@@ -56,6 +63,8 @@ struct map_info_type map_info[16] = {
 		.e_exit=LANDING_SITE,
 		.w_exit=NOEXIT,
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
+		.land_type=LAND_LEFT_BEACH,
+		.background_image=NULL,
 	},
 	{	// LANDING_SITE
 		.name="Landing Site",
@@ -67,46 +76,67 @@ struct map_info_type map_info[16] = {
 		.e_exit=NORTH_MOUNTAIN,
 		.w_exit=PINE_BEACH,
 		.miny=0,
+		.land_type=LAND_GRASSLAND,
+		.background_image=landing_rle,
 	},
 	{
 		.name="North Mountain",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
+		.land_type=LAND_MOUNTAIN,
+		.background_image=NULL,
 	},
 	{
 		.name="North Forest",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
+		.land_type=LAND_FOREST|LAND_RIGHT_BEACH,
+		.background_image=NULL,
 	},
 	{
 		.name="Palm Beach",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
+		.land_type=LAND_LEFT_BEACH,
+		.background_image=NULL,
 	},
 	{
 		.name="Grassland",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
+		.land_type=LAND_GRASSLAND,
+		.background_image=NULL,
 	},
 	{
 		.name="Moria",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
+		.land_type=LAND_MOUNTAIN,
+		.background_image=NULL,
 	},
 	{
 		.name="South Forest",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
+		.land_type=LAND_FOREST|LAND_RIGHT_BEACH,
+		.background_image=NULL,
 	},
 	{
 		.name="South Beach",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
+		.land_type=LAND_LEFT_BEACH|LAND_SOUTHSHORE,
+		.background_image=NULL,
 	},
 	{
 		.name="Cactus Ranch",
 		.ground_color=(COLOR_ORANGE|(COLOR_ORANGE<<4)),
+		.land_type=LAND_GRASSLAND|LAND_SOUTHSHORE,
+		.background_image=NULL,
 	},
 	{
 		.name="College Park",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
+		.background_image=collegep_rle,
 	},
 	{
 		.name="Ocean City",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
+		.land_type=LAND_RIGHT_BEACH|LAND_SOUTHSHORE,
+		.background_image=NULL,
 	},
 
 };

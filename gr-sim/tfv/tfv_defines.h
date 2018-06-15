@@ -46,13 +46,24 @@ struct location_type {
 	int type;
 };
 
+#define LAND_MOUNTAIN		0x01
+#define LAND_GRASSLAND		0x02
+#define LAND_FOREST		0x04
+#define LAND_LEFT_BEACH		0x08
+#define LAND_RIGHT_BEACH	0x10
+#define LAND_NORTHSHORE		0x20
+#define LAND_SOUTHSHORE		0x40
+
+
 struct map_info_type {
 	char *name;
+	int land_type;
 	int num_locations;
 	struct location_type locations[6];
 	int ground_color;
 	int n_exit,s_exit,e_exit,w_exit;
 	int miny;
+	unsigned char *background_image;
 };
 
 extern struct map_info_type map_info[];

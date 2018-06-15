@@ -42,21 +42,11 @@ static int load_map_bg(void) {
 
 	ground_color=map_info[map_location].ground_color;
 
-	if (map_location==HARFORD_COUNTY) {
-		grsim_unrle(harfco_rle,0xc00);
+	/* Load background image, if applicable */
+	if (map_info[map_location].background_image) {
+		grsim_unrle(map_info[map_location].background_image,0xc00);
 		return 0;
 	}
-
-	if (map_location==LANDING_SITE) {
-		grsim_unrle(landing_rle,0xc00);
-		return 0;
-	}
-
-	if (map_location==COLLEGE_PARK) {
-		grsim_unrle(collegep_rle,0xc00);
-		return 0;
-	}
-
 
 	/* Sky */
 	color_equals(COLOR_MEDIUMBLUE);
@@ -65,7 +55,7 @@ static int load_map_bg(void) {
 	}
 
 	/* grassland/sloped left beach */
-	if ((map_location&3)==0) {
+	if (map_info[map_location].land_type&LAND_LEFT_BEACH) {
 		for(i=10;i<40;i+=2) {
 			temp=4+(39-i)/8;
 			color_equals(COLOR_DARKBLUE);
@@ -80,7 +70,7 @@ static int load_map_bg(void) {
 	}
 
 	/* Grassland */
-	if ((map_location&3)==1) {
+	if (map_info[map_location].land_type&LAND_GRASSLAND) {
 		for(i=10;i<40;i+=2) {
 			color_equals(ground_color);
 			hlin_double(PAGE2,0,39,i);
@@ -88,7 +78,7 @@ static int load_map_bg(void) {
 	}
 
 	/* Mountain */
-	if ((map_location&3)==2) {
+	if (map_info[map_location].land_type&LAND_MOUNTAIN) {
 		for(i=10;i<40;i+=2) {
 			color_equals(ground_color);
 			hlin_double(PAGE2,0,39,i);
@@ -96,7 +86,7 @@ static int load_map_bg(void) {
 	}
 
 	/* Right Beach */
-	if ((map_location&3)==3) {
+	if (map_info[map_location].land_type&LAND_RIGHT_BEACH) {
 		for(i=10;i<40;i+=2) {
 			temp=24+(i/4);	/* 26 ... 33 */
 			color_equals(ground_color);
@@ -112,13 +102,13 @@ static int load_map_bg(void) {
 	}
 
 	/* Draw north shore */
-	if (map_location<4) {
+	if (map_info[map_location].land_type&LAND_NORTHSHORE) {
 		color_equals(COLOR_DARKBLUE);
 		hlin_double(PAGE2,0,39,10);
 	}
 
 	/* Draw south shore */
-	if (map_location>=12) {
+	if (map_info[map_location].land_type&LAND_SOUTHSHORE) {
 		start=0; end=39;
 		color_equals(COLOR_DARKBLUE);
 		hlin_double(PAGE2,0,39,38);
@@ -133,7 +123,7 @@ static int load_map_bg(void) {
 	}
 
 	/* Mountains */
-	if ((map_location&3)==2) {
+	if (map_info[map_location].land_type&LAND_MOUNTAIN) {
 		for(i=0;i<4;i++) {
 			grsim_put_sprite_page(PAGE2,mountain,10+(i%2)*5,(i*8)+2);
 		}
