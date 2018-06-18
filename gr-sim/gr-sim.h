@@ -11,6 +11,7 @@ int basic_vlin(int y1, int y2, int at);
 int gr(void);
 int bload(char *filename, int address);
 int scrn(unsigned char xcoord, unsigned char ycoord);
+int scrn_page(unsigned char xcoord, unsigned char ycoord, int page);
 int grsim_unrle(unsigned char *rle_data, int address);
 int home(void);
 int grsim_put_sprite_page(int page,unsigned char *sprite_data, int xpos, int ypos);

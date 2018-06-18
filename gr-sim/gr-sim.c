@@ -236,6 +236,30 @@ int scrn(unsigned char xcoord, unsigned char ycoord) {
 	return 0;
 }
 
+int scrn_page(unsigned char xcoord, unsigned char ycoord, int page) {
+
+	unsigned char a,y,c;
+
+	a=ycoord;
+	y=xcoord;
+
+	c=a&1;
+	a=a>>1;
+	gbascalc(a);
+	ram[GBASH]+=page;
+	a=ram[y_indirect(GBASL,y)];
+
+	if (c) {
+		return a>>4;
+	}
+	else {
+		return a&0xf;
+
+	}
+
+	return 0;
+}
+
 static short gr_addr_lookup[24]={
 	0x400,0x480,0x500,0x580,0x600,0x680,0x700,0x780,
 	0x428,0x4a8,0x528,0x5a8,0x628,0x6a8,0x728,0x7a8,

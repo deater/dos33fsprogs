@@ -21,7 +21,7 @@ unsigned char steps=0;
 
 /* location */
 //unsigned char map_x=5;
-char tfv_x=15,tfv_y=19;
+char tfv_x=15,tfv_y=20; // tfv_y should always be even
 unsigned char ground_color;
 
 char nameo[9];

@@ -15,10 +15,6 @@
 
 unsigned char map_location=LANDING_SITE;
 
-
-/* In Town */
-
-
 /* Puzzle Room */
 /* Get through office */
 /* Have to run away?  What happens if die?  No save game?  Code? */
@@ -31,8 +27,6 @@ unsigned char map_location=LANDING_SITE;
 /* Play music, lightning effects? */
 /* TFV only hit for one damage, susie for 100 */
 
-/* Walk through bushes, beach water */
-/* Make landing a sprite?  Stand behind things? */
 
 /* Load background to 0xc00 */
 static int load_map_bg(void) {
@@ -143,14 +137,6 @@ int world_map(void) {
 	/* Landed					*/
 	/************************************************/
 
-	// TODO:
-	//  4x4 grid of island?
-	//  proceduraly generated?
-	//  can only walk if feet on green/yellow
-	//  should features be sprites?
-
-	// rotate when attacked
-
 	gr();
 
 	color_equals(COLOR_BLACK);
@@ -168,6 +154,11 @@ int world_map(void) {
 		ch=grsim_input();
 
 		if ((ch=='q') || (ch==27))  break;
+
+		if ((ch=='t')) {
+			for(i=0;i<12;i++) printf("scrn(%d,%d)=%d\n",
+				tfv_x+1,tfv_y+i,scrn_page(tfv_x+1,tfv_y+i,8));
+		}
 
 		if ((ch=='w') || (ch==APPLE_UP)) {
 			newy=tfv_y-2;
@@ -223,7 +214,7 @@ int world_map(void) {
 			if (newx>36) {
 				if (map_info[map_location].e_exit!=NOEXIT) {
 					map_location=map_info[map_location].e_exit;
-					tfv_x=0;
+					tfv_x=1;
 					refresh=1;
 				}
 			}
@@ -237,7 +228,7 @@ int world_map(void) {
 			else if (newy<map_info[map_location].miny) {
 				if (map_info[map_location].n_exit!=NOEXIT) {
 					map_location=map_info[map_location].n_exit;
-					tfv_y=28;
+					tfv_y=26;
 					refresh=1;
 				}
 			}
@@ -248,9 +239,21 @@ int world_map(void) {
 					refresh=1;
 				}
 			}
-			else {
+			else if ((scrn_page(newx+1,newy+11,8)==
+					(map_info[map_location].ground_color&
+					0xf)) &&
+				(scrn_page(newx+1,newy+11,8)==
+					(map_info[map_location].ground_color&
+					0xf))) {
+
 				tfv_x=newx;
 				tfv_y=newy;
+			}
+			else {
+				printf("scrn(%d,%d)==%d,scrn(%d,%d)==%d\n",
+					newx+1,newy+11,scrn_page(newx+1,newy+11,8),
+					newx+2,newy+11,scrn_page(newx+2,newy+11,8));
+				// make sad noise
 			}
 
 		}

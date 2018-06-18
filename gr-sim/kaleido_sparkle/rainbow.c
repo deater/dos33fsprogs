@@ -20,11 +20,15 @@ int main(int argc, char **argv) {
 	}
 
 	color_equals(15);
-	basic_vlin(0,40,20);
+	basic_vlin(0,39,20);
 
 	color_equals(0);
-	basic_hlin(0,40,20);
+	basic_hlin(0,39,20);
 
+	printf("0: %d, 1: %d, 2: %d, 3: %d\n",
+		scrn(0,0),scrn(1,1),scrn(2,2),scrn(3,3));
+	printf("0: %d, 1: %d, 2: %d, 3: %d\n",
+		scrn_page(0,0,0),scrn_page(1,1,0),scrn_page(2,2,0),scrn_page(3,3,0));
 
 	while(1) {
 		grsim_update();
