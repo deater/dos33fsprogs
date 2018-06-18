@@ -220,34 +220,39 @@ int world_map(void) {
 			odd=!odd;
 			steps++;
 
-//			if (collision(newx,newy+10,ground_color)) {
-//			}
-//			else {
+			if (newx>36) {
+				if (map_info[map_location].e_exit!=NOEXIT) {
+					map_location=map_info[map_location].e_exit;
+					tfv_x=0;
+					refresh=1;
+				}
+			}
+			else if (newx<=0) {
+				if (map_info[map_location].w_exit!=NOEXIT) {
+					map_location=map_info[map_location].w_exit;
+					tfv_x=35;
+					refresh=1;
+				}
+			}
+			else if (newy<4) {
+				if (map_info[map_location].n_exit!=NOEXIT) {
+					map_location=map_info[map_location].n_exit;
+					tfv_y=28;
+					refresh=1;
+				}
+			}
+			else if (newy>=28) {
+				if (map_info[map_location].s_exit!=NOEXIT) {
+					map_location=map_info[map_location].s_exit;
+					tfv_y=4;
+					refresh=1;
+				}
+			}
+			else {
 				tfv_x=newx;
 				tfv_y=newy;
-//			}
-
-			if (tfv_x>36) {
-				map_location++;
-				tfv_x=0;
-				refresh=1;
-			}
-			else if (tfv_x<=0) {
-				map_location--;
-				tfv_x=35;
-				refresh=1;
 			}
 
-			if ((tfv_y<4) && (map_location>=4)) {
-				map_location-=4;
-				tfv_y=28;
-				refresh=1;
-			}
-			else if (tfv_y>=28) {
-				map_location+=4;
-				tfv_y=4;
-				refresh=1;
-			}
 		}
 
 		if (refresh) {
