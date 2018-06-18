@@ -16,7 +16,7 @@
 */
 
 
-struct map_info_type map_info[16] = {
+struct map_info_type map_info[33] = {
 	{	// 0: NORTH_BEACH
 		.name="North Beach",
 		.n_exit=NOEXIT,
@@ -202,6 +202,19 @@ struct map_info_type map_info[16] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.background_image=collegep_rle,
+		.num_locations=2,
+		.location[0] = {
+			.name="University of M",
+			.x0 = 12, .x1 = 18,
+			.y0 = 0,  .y1 = 20,
+			.destination = U_OF_MD,
+		},
+		.location[1] = {
+			.name="Waterfall",
+			.x0 = 27, .x1 = 39,
+			.y0 = 18, .y1 = 33,
+			.destination = WATERFALL,
+		},
 	},
 	{	// 15: OCEAN_CITY
 		.name="Ocean City",
@@ -215,6 +228,95 @@ struct map_info_type map_info[16] = {
 		.land_type=LAND_RIGHT_BEACH|LAND_SOUTHSHORE,
 		.background_image=NULL,
 	},
+	{	// 16: U of MD
+		.name="University of M",
+		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=NOEXIT,
+		.e_exit=COLLEGE_PARK,
+		.w_exit=COLLEGE_PARK,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.land_type=LAND_BORING,
+		.background_image=umcp_rle,
+		.num_locations=4,
+		.location[0] = {
+			.name="Talbot Hall",
+			.x0 = 0,  .x1 = 14,
+			.y0 = 18, .y1 = 33,
+			.destination = TALBOT_HALL,
+		},
+		.location[1] = {
+			.name="Dining Hall",
+			.x0 = 19, .x1 = 30,
+			.y0 = 18, .y1 = 26,
+			.destination = DINING_HALL,
+		},
+		.location[2] = {
+			.name="Metro Station",
+			.x0 = 32, .x1 = 39,
+			.y0 = 18, .y1 = 39,
+			.destination = METRO_STATION,
+		},
+		.location[3] = {
+			.name="Fountain",
+			.x0 = 13, .x1 = 29,
+			.y0 = 28, .y1 = 39,
+			.destination = FOUNTAIN,
+		},
+	},
+	{	// 17: Waterfall
+		.name="Waterfall",
+	},
+	{	// 18: Talbot Hall
+		.name="Talbot Hall",
+		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=NOEXIT,
+		.e_exit=U_OF_MD,
+		.w_exit=U_OF_MD,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.land_type=LAND_BORING,
+		.background_image=talbot_rle,
+	},
+	{	// 19: Dining Hall
+		.name="Dining Hall",
+		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=NOEXIT,
+		.e_exit=U_OF_MD,
+		.w_exit=U_OF_MD,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.land_type=LAND_BORING,
+		.background_image=dining_rle,
+	},
+	{	// 20: METRO_STATION
+		.name="Metro Station",
+		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=NOEXIT,
+		.e_exit=U_OF_MD,
+		.w_exit=U_OF_MD,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.land_type=LAND_BORING,
+		.background_image=metro_rle,
+	},
+	{	// 21: FOUNTAIN
+		.name="Fountain",
+		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=NOEXIT,
+		.e_exit=U_OF_MD,
+		.w_exit=U_OF_MD,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.land_type=LAND_BORING,
+		//.background_image=metro_rle,
+	},
+
 
 };
 

@@ -4,5 +4,6 @@ extern unsigned char landing_rle[];
 extern unsigned char collegep_rle[];
 extern unsigned char harfco_rle[];
 extern unsigned char umcp_rle[];
-
-
+extern unsigned char talbot_rle[];
+extern unsigned char metro_rle[];
+extern unsigned char dining_rle[];

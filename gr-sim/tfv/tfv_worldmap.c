@@ -132,6 +132,7 @@ int world_map(void) {
 	int direction=1;
 	int i,limit;
 	int newx=0,newy=0,moved;
+	int special_destination=NOEXIT;
 
 	/************************************************/
 	/* Landed					*/
@@ -190,7 +191,9 @@ int world_map(void) {
 		}
 
 		if (ch==13) {
-			city_map();
+			if (special_destination) {
+				map_location=special_destination;
+			}
 			refresh=1;
 		}
 
@@ -427,6 +430,26 @@ int world_map(void) {
 			}
 		}
 
+		special_destination=NOEXIT;
+		for(i=0;i<map_info[map_location].num_locations;i++) {
+
+			if ( (tfv_x>map_info[map_location].location[i].x0) &&
+			     (tfv_x<map_info[map_location].location[i].x1) &&
+			     (tfv_y>map_info[map_location].location[i].y0) &&
+			     (tfv_y<map_info[map_location].location[i].y1)) {
+
+				ram[CH]=20;
+				ram[CV]=20;
+				move_and_print(map_info[map_location].name);
+
+				special_destination=map_info[map_location].location[i].destination;
+				break;
+			}
+		}
+
+
+
+
 		page_flip();
 
 		if (steps>=60) {
@@ -445,133 +468,3 @@ int world_map(void) {
 }
 
 
-/* In Town */
-
-int city_map(void) {
-
-	int ch;
-	int direction=1;
-	int newx=0,newy=0,moved;
-
-	gr();
-
-	color_equals(COLOR_BLACK);
-
-	direction=1;
-	int odd=0;
-	int refresh=1;
-
-	while(1) {
-		moved=0;
-		newx=tfv_x;
-		newy=tfv_y;
-
-		ch=grsim_input();
-
-		if ((ch=='q') || (ch==27))  break;
-
-		if ((ch=='w') || (ch==APPLE_UP)) {
-			newy=tfv_y-2;
-			moved=1;
-		}
-		if ((ch=='s') || (ch==APPLE_DOWN)) {
-			newy=tfv_y+2;
-			moved=1;
-		}
-		if ((ch=='a') || (ch==APPLE_LEFT)) {
-			if (direction>0) {
-				direction=-1;
-				odd=0;
-			}
-			else {
-				newx=tfv_x-1;
-				moved=1;
-			}
-		}
-		if ((ch=='d') || (ch==APPLE_RIGHT)) {
-			if (direction<0) {
-				direction=1;
-				odd=0;
-			}
-			else {
-				newx=tfv_x+1;
-				moved=1;
-			}
-		}
-
-		if (ch=='h') print_help();
-		if (ch=='b') do_battle();
-		if (ch=='i') print_info();
-		if (ch=='m') {
-			show_map();
-			refresh=1;
-		}
-
-
-		/* Collision detection + Movement */
-		if (moved) {
-			odd=!odd;
-			steps++;
-
-//			if (collision(newx,newy+10,ground_color)) {
-//			}
-//			else {
-				tfv_x=newx;
-				tfv_y=newy;
-//			}
-
-			if (tfv_x>36) {
-				map_location++;
-				tfv_x=0;
-				refresh=1;
-			}
-			else if (tfv_x<=0) {
-				map_location--;
-				tfv_x=35;
-				refresh=1;
-			}
-
-			if ((tfv_y<4) && (map_location>=4)) {
-				map_location-=4;
-				tfv_y=28;
-				refresh=1;
-			}
-			else if (tfv_y>=28) {
-				map_location+=4;
-				tfv_y=4;
-				refresh=1;
-			}
-		}
-
-		if (refresh) {
-			grsim_unrle(umcp_rle,0xc00);
-			refresh=0;
-		}
-
-		gr_copy_to_current(0xc00);
-
-		if (direction==-1) {
-			if (odd) grsim_put_sprite(tfv_walk_left,tfv_x,tfv_y);
-			else grsim_put_sprite(tfv_stand_left,tfv_x,tfv_y);
-		}
-		if (direction==1) {
-			if (odd) grsim_put_sprite(tfv_walk_right,tfv_x,tfv_y);
-			else grsim_put_sprite(tfv_stand_right,tfv_x,tfv_y);
-		}
-
-		page_flip();
-
-		if (steps>=60) {
-			steps=0;
-			time_minutes++;
-			if (time_minutes>=60) {
-				time_hours++;
-				time_minutes=0;
-			}
-		}
-
-		usleep(10000);
-	}
-
-	return 0;
-}

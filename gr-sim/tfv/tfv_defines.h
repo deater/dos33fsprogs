@@ -44,8 +44,10 @@ struct location_type {
 	char *name;
 	int x0,x1,y0,y1;
 	int type;
+	int destination;
 };
 
+#define LAND_BORING		0x00
 #define LAND_MOUNTAIN		0x01
 #define LAND_GRASSLAND		0x02
 #define LAND_FOREST		0x04
@@ -66,7 +68,7 @@ struct map_info_type {
 	char *name;
 	int land_type;
 	int num_locations;
-	struct location_type locations[6];
+	struct location_type location[6];
 	int ground_color;
 	int n_exit,s_exit,e_exit,w_exit;
 	int miny;
