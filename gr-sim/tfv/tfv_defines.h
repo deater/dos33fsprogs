@@ -53,7 +53,14 @@ struct location_type {
 #define LAND_RIGHT_BEACH	0x10
 #define LAND_NORTHSHORE		0x20
 #define LAND_SOUTHSHORE		0x40
+#define LAND_LIGHTNING		0x80
 
+#define SCATTER_NONE		0x00
+#define SCATTER_SNOWYPINE	0x01
+#define SCATTER_PINE		0x02
+#define SCATTER_PALM		0x04
+#define SCATTER_CACTUS		0x08
+#define SCATTER_SPOOL		0x10
 
 struct map_info_type {
 	char *name;
@@ -63,6 +70,8 @@ struct map_info_type {
 	int ground_color;
 	int n_exit,s_exit,e_exit,w_exit;
 	int miny;
+	int scatter;
+	int scatter_x,scatter_y,scatter_cutoff;
 	unsigned char *background_image;
 };
 

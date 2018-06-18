@@ -268,16 +268,51 @@ int world_map(void) {
 		gr_copy_to_current(0xc00);
 
 		/* Draw Background Ground Scatter */
+		if ((map_info[map_location].scatter) &&
+			(tfv_y>=map_info[map_location].scatter_cutoff)) {
 
-		if (map_location==1) if (tfv_y>=22) grsim_put_sprite(snowy_tree,10,22);
-		if (map_location==4) if (tfv_y>=15) grsim_put_sprite(pine_tree,25,16);
-		if (map_location==8) if (tfv_y>=22) grsim_put_sprite(palm_tree,10,20);
-		if (map_location==12) if (tfv_y>=22) grsim_put_sprite(palm_tree,20,20);
-		if (map_location==13) if (tfv_y>=15) grsim_put_sprite(cactus,25,16);
+			if (map_info[map_location].scatter&SCATTER_SNOWYPINE) {
+				grsim_put_sprite(snowy_tree,
+					map_info[map_location].scatter_x,
+					map_info[map_location].scatter_y);
+			}
 
+			if (map_info[map_location].scatter&SCATTER_PINE) {
+				grsim_put_sprite(pine_tree,
+					map_info[map_location].scatter_x,
+					map_info[map_location].scatter_y);
+			}
+
+
+			if (map_info[map_location].scatter&SCATTER_PALM) {
+				grsim_put_sprite(palm_tree,
+					map_info[map_location].scatter_x,
+					map_info[map_location].scatter_y);
+			}
+
+			if (map_info[map_location].scatter&SCATTER_CACTUS) {
+				grsim_put_sprite(cactus,
+					map_info[map_location].scatter_x,
+					map_info[map_location].scatter_y);
+			}
+
+
+		}
+#if 0
+		if (map_location==1) if (tfv_y>=22)
+			grsim_put_sprite(snowy_tree,10,22);
+		if (map_location==4) if (tfv_y>=15)
+			grsim_put_sprite(pine_tree,25,16);
+		if (map_location==8) if (tfv_y>=22)
+			grsim_put_sprite(palm_tree,10,20);
+		if (map_location==12) if (tfv_y>=22)
+			grsim_put_sprite(palm_tree,20,20);
+		if (map_location==13) if (tfv_y>=15)
+			grsim_put_sprite(cactus,25,16);
+#endif
 
 		/* Draw Background Trees */
-		if ((map_location==7) || (map_location==11)) {
+		if (map_info[map_location].land_type&LAND_FOREST) {
 			for(i=10;i<tfv_y+8;i+=2) {
 				limit=22+(i/4);
 				color_equals(COLOR_DARKGREEN);
@@ -307,13 +342,51 @@ int world_map(void) {
 		}
 
 		/* Draw Below Ground Scatter */
-		if (map_location==1) if (tfv_y<22) grsim_put_sprite(snowy_tree,10,22);
-		if (map_location==4) if (tfv_y<15) grsim_put_sprite(pine_tree,25,16);
-		if (map_location==8) if (tfv_y<22) grsim_put_sprite(palm_tree,10,20);
-		if (map_location==12) if (tfv_y<22) grsim_put_sprite(palm_tree,20,20);
-		if (map_location==13) if (tfv_y<15) grsim_put_sprite(cactus,25,16);
+		if ((map_info[map_location].scatter) &&
+			(tfv_y<map_info[map_location].scatter_cutoff)) {
 
-		if ((map_location==7) || (map_location==11)) {
+			if (map_info[map_location].scatter&SCATTER_SNOWYPINE) {
+				grsim_put_sprite(snowy_tree,
+					map_info[map_location].scatter_x,
+					map_info[map_location].scatter_y);
+			}
+
+			if (map_info[map_location].scatter&SCATTER_PINE) {
+				grsim_put_sprite(pine_tree,
+					map_info[map_location].scatter_x,
+					map_info[map_location].scatter_y);
+			}
+
+
+			if (map_info[map_location].scatter&SCATTER_PALM) {
+				grsim_put_sprite(palm_tree,
+					map_info[map_location].scatter_x,
+					map_info[map_location].scatter_y);
+			}
+
+			if (map_info[map_location].scatter&SCATTER_CACTUS) {
+				grsim_put_sprite(cactus,
+					map_info[map_location].scatter_x,
+					map_info[map_location].scatter_y);
+			}
+
+
+		}
+
+#if 0
+		if (map_location==1) if (tfv_y<22)
+			grsim_put_sprite(snowy_tree,10,22);
+		if (map_location==4) if (tfv_y<15)
+			grsim_put_sprite(pine_tree,25,16);
+		if (map_location==8) if (tfv_y<22)
+			grsim_put_sprite(palm_tree,10,20);
+		if (map_location==12) if (tfv_y<22)
+			grsim_put_sprite(palm_tree,20,20);
+		if (map_location==13) if (tfv_y<15)
+			grsim_put_sprite(cactus,25,16);
+#endif
+
+		if (map_info[map_location].land_type&LAND_FOREST) {
 
 			/* Draw Below Forest */
 			for(i=tfv_y+8;i<36;i+=2) {
@@ -335,12 +408,10 @@ int world_map(void) {
 					color_equals(COLOR_BROWN);
 					hlin_double_continue(1);
 				}
-
 			}
-
 		}
 
-		if (map_location==3) {
+		if (map_info[map_location].land_type&LAND_LIGHTNING) {
 			if ((steps&0xf)==0) {
 				grsim_put_sprite(lightning,25,4);
 				/* Hurt hit points if in range? */
