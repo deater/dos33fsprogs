@@ -234,7 +234,7 @@ int world_map(void) {
 					refresh=1;
 				}
 			}
-			else if (newy<4) {
+			else if (newy<map_info[map_location].miny) {
 				if (map_info[map_location].n_exit!=NOEXIT) {
 					map_location=map_info[map_location].n_exit;
 					tfv_y=28;
