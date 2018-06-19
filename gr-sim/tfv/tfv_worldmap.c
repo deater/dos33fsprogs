@@ -191,7 +191,7 @@ int world_map(void) {
 		}
 
 		if (ch==13) {
-			if (special_destination) {
+			if (special_destination!=NOEXIT) {
 				map_location=special_destination;
 			}
 			refresh=1;
@@ -433,14 +433,14 @@ int world_map(void) {
 		special_destination=NOEXIT;
 		for(i=0;i<map_info[map_location].num_locations;i++) {
 
-			if ( (tfv_x>map_info[map_location].location[i].x0) &&
-			     (tfv_x<map_info[map_location].location[i].x1) &&
-			     (tfv_y>map_info[map_location].location[i].y0) &&
-			     (tfv_y<map_info[map_location].location[i].y1)) {
+			if ( (tfv_x>=map_info[map_location].location[i].x0) &&
+			     (tfv_x<=map_info[map_location].location[i].x1) &&
+			     (tfv_y+11>=map_info[map_location].location[i].y0) &&
+			     (tfv_y+11<=map_info[map_location].location[i].y1)) {
 
-				ram[CH]=20;
+				ram[CH]=(40-strlen(map_info[map_location].location[i].name))/2;
 				ram[CV]=20;
-				move_and_print(map_info[map_location].name);
+				move_and_print(map_info[map_location].location[i].name);
 
 				special_destination=map_info[map_location].location[i].destination;
 				break;
