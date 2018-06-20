@@ -412,7 +412,7 @@ struct map_info_type map_info[33] = {
 	},
 	{	// 21: FOUNTAIN
 		.name="Fountain",
-		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
 		.n_exit=NOEXIT,
 		.s_exit=NOEXIT,
 		.e_exit=U_OF_MD,
@@ -420,7 +420,14 @@ struct map_info_type map_info[33] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_BORING,
-		//.background_image=metro_rle,
+		.background_image=fountain_rle,
+		.num_locations=1,
+		.location[0] = {
+			.name="Mermaid",
+			.x0 = 8,  .x1 = 20,
+			.y0 = 20, .y1 = 38,
+			.type=LOCATION_CONVERSATION,
+		},
 	},
 
 
