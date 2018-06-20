@@ -40,6 +40,9 @@
 
 #define NOEXIT			255
 
+#define LOCATION_PLACE		0
+#define LOCATION_CONVERSATION	1
+
 struct location_type {
 	char *name;
 	int x0,x1,y0,y1;
