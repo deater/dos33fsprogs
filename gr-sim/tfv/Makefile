@@ -36,7 +36,8 @@ tfv_backgrounds.c:	$(PNG2RLE) \
 			$(ARTDIR)/umcp.png \
 			$(ARTDIR)/dining.png \
 			$(ARTDIR)/metro.png \
-			$(ARTDIR)/talbot.png
+			$(ARTDIR)/talbot.png \
+			$(ARTDIR)/waterfall.png
 	$(PNG2RLE) c $(ARTDIR)/title.png title_rle > tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/map.png map_rle >> tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/landing.png landing_rle >> tfv_backgrounds.c
@@ -49,6 +50,7 @@ tfv_backgrounds.c:	$(PNG2RLE) \
 	$(PNG2RLE) c $(ARTDIR)/dining.png dining_rle >> tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/metro.png metro_rle >> tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/talbot.png talbot_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/waterfall.png waterfall_rle >> tfv_backgrounds.c
 
 
 

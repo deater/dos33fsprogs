@@ -7,3 +7,4 @@ extern unsigned char umcp_rle[];
 extern unsigned char talbot_rle[];
 extern unsigned char metro_rle[];
 extern unsigned char dining_rle[];
+extern unsigned char waterfall_rle[];

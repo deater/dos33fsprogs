@@ -271,6 +271,15 @@ struct map_info_type map_info[33] = {
 	},
 	{	// 17: Waterfall
 		.name="Waterfall",
+		.ground_color=(COLOR_GREY|(COLOR_GREY<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=NOEXIT,
+		.e_exit=NOEXIT,
+		.w_exit=COLLEGE_PARK,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.land_type=LAND_BORING,
+		.background_image=waterfall_rle,
 	},
 	{	// 18: Talbot Hall
 		.name="Talbot Hall",
