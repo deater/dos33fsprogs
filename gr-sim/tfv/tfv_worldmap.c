@@ -302,6 +302,12 @@ int world_map(void) {
 					map_info[map_location].scatter_y);
 			}
 
+			if (map_info[map_location].scatter&SCATTER_SPOOL) {
+				grsim_put_sprite(spool,
+					map_info[map_location].scatter_x,
+					map_info[map_location].scatter_y);
+			}
+
 
 		}
 #if 0
@@ -372,6 +378,12 @@ int world_map(void) {
 
 			if (map_info[map_location].scatter&SCATTER_CACTUS) {
 				grsim_put_sprite(cactus,
+					map_info[map_location].scatter_x,
+					map_info[map_location].scatter_y);
+			}
+
+			if (map_info[map_location].scatter&SCATTER_SPOOL) {
+				grsim_put_sprite(spool,
 					map_info[map_location].scatter_x,
 					map_info[map_location].scatter_y);
 			}
