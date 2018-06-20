@@ -205,7 +205,7 @@ struct map_info_type map_info[33] = {
 		.num_locations=2,
 		.location[0] = {
 			.name="University of M",
-			.x0 = 12, .x1 = 18,
+			.x0 = 12, .x1 = 28,
 			.y0 = 0,  .y1 = 20,
 			.destination = U_OF_MD,
 		},
@@ -331,6 +331,37 @@ struct map_info_type map_info[33] = {
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_BORING,
 		.background_image=dining_rle,
+		.num_locations=5,
+		.location[0] = {
+			.name="Lunch Lady",
+			.x0 = 4,   .x1 = 10,
+			.y0 = 22,  .y1 = 35,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[1] = {
+			.name="Elaine",
+			.x0 = 12,  .x1 = 18,
+			.y0 = 21,  .y1 = 30,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[2] = {
+			.name="Oscar",
+			.x0 = 21, .x1 = 26,
+			.y0 = 29, .y1 = 36,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[3] = {
+			.name="Cindy",
+			.x0 = 27,  .x1 = 31,
+			.y0 = 29,  .y1 = 36,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[4] = {
+			.name="Nicole",
+			.x0 = 32,  .x1 = 39,
+			.y0 = 28,  .y1 = 38,
+			.type=LOCATION_CONVERSATION,
+		},
 	},
 	{	// 20: METRO_STATION
 		.name="Metro Station",
@@ -343,6 +374,31 @@ struct map_info_type map_info[33] = {
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_BORING,
 		.background_image=metro_rle,
+		.num_locations=4,
+		.location[0] = {
+			.name="Station Master",
+			.x0 = 12,  .x1 = 18,
+			.y0 = 26,  .y1 = 35,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[1] = {
+			.name="Large Bird",
+			.x0 = 29,  .x1 = 33,
+			.y0 = 16,  .y1 = 20,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[2] = {
+			.name="Giant Guinea Pig",
+			.x0 = 28, .x1 = 33,
+			.y0 = 22, .y1 = 30,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[3] = {
+			.name="Tiny Capabara",
+			.x0 = 33,  .x1 = 38,
+			.y0 = 30,  .y1 = 38,
+			.type=LOCATION_CONVERSATION,
+		},
 	},
 	{	// 21: FOUNTAIN
 		.name="Fountain",
@@ -361,11 +417,6 @@ struct map_info_type map_info[33] = {
 };
 
 #if 0
-
-WORLDMAP_LOCATIONS
-	COLLEGE_PARK
-	HARFORD_COUNTY
-	LANDING_SITE
 
 	umcp_rle
 		"TALBOT HALL",X1,Y1,X2,Y2,TALBOT_HALL,
@@ -387,28 +438,6 @@ WORLDMAP_LOCATIONS
 		"HOMEROOM"
 		"MATH OFFICE"
 		"PATRIOT ROOM"
-
-
-	dining_rle
-		"OSCAR",
-		"NICOLE",
-		"CINDY",
-		"ELAINE",
-		"CAFETERIA LADY",
-
-	metro_rle:
-		"METRO WORKER",
-		"TINY CAPABARA",
-		"GIANT GUINEA PIG",
-		"LARGE BIRD",
-
-	talbot_rle:
-		"LIZ AND WILL",
-		"PETE",
-		"KENJESU",
-		"MATHEMAGICIAN",
-		"DARTH TATER",
-
 
 	math_office_rle:
 		"CAPTAIN STEVE",
