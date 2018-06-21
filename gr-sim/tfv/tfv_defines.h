@@ -30,18 +30,19 @@
 //#define MINIGOLF		25
 #define JOHN_CARROLL		23
 
+#define JC_UPSTAIRS		24
+#define JC_DOWNSTAIRS		25
+#define JC_OFFICE		26
+
 // UPSTAIRS
-#define VIDEO_HOMEROOM		24
-#define DEUTSCH			26
-#define HOMEROOM		27
+#define VIDEO_HOMEROOM		27
+#define DEUTSCH			28
+#define HOMEROOM		29
 
 // DOWNSTAIRS
-#define AP_CALCULUS		25
-#define MATH_OFFICE		28
-#define PATRIOT_ROOM		29
-
-// OFFICE
-#define MAIN_OFFICE		30
+#define AP_CALCULUS		30
+#define MATH_OFFICE		31
+#define PATRIOT_ROOM		32
 
 #define NOEXIT			255
 
@@ -76,7 +77,7 @@ struct map_info_type {
 	char *name;
 	int land_type;
 	int num_locations;
-	struct location_type location[6];
+	struct location_type location[5];
 	int ground_color;
 	int n_exit,s_exit,e_exit,w_exit;
 	int miny;

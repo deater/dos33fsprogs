@@ -467,29 +467,187 @@ struct map_info_type map_info[33] = {
 		},
 		.location[3] = {
 			.name="Minigolf",
-			.x0 = 34, .x1 = 39,
+			.x0 = 32, .x1 = 39,
 			.y0 = 27, .y1 = 35,
 			.type=LOCATION_CONVERSATION,
 		},
 	},
+	[JOHN_CARROLL]={	// 23: John Carroll
+		.name="JC School",
+		.ground_color=(COLOR_DARKGREEN|(COLOR_DARKGREEN<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=BEL_AIR,
+		.e_exit=NOEXIT,
+		.w_exit=NOEXIT,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.background_image=jc_rle,
+		.num_locations=3,
+		.location[0] = {
+			.name="Main Office",
+			.x0 = 12, .x1 = 15,
+			.y0 = 10,  .y1 = 22,
+			.destination=JC_OFFICE,
+			.type=LOCATION_PLACE,
+		},
+		.location[1] = {
+			.name="Upstairs",
+			.x0 = 21, .x1 = 25,
+			.y0 = 10, .y1 = 22,
+			.destination=JC_UPSTAIRS,
+			.type=LOCATION_PLACE,
+		},
+		.location[2] = {
+			.name="Downstairs",
+			.x0 = 26, .x1 = 31,
+			.y0 = 10, .y1 = 24,
+			.destination=JC_DOWNSTAIRS,
+			.type=LOCATION_PLACE,
+		},
+	},
+	[JC_UPSTAIRS]={	// 24: JC_UPSTAIRS
+		.name="JC Upstairs",
+		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=JOHN_CARROLL,
+		.e_exit=NOEXIT,
+		.w_exit=JOHN_CARROLL,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.background_image=jc_hallway_rle,
+		.num_locations=3,
+		.location[0] = {
+			.name="Video Homeroom",
+			.x0 = 2, .x1 = 9,
+			.y0 = 10,  .y1 = 18,
+			.destination=VIDEO_HOMEROOM,
+			.type=LOCATION_PLACE,
+		},
+		.location[1] = {
+			.name="Homeroom 12E",
+			.x0 = 18, .x1 = 24,
+			.y0 = 14, .y1 = 25,
+			.destination=HOMEROOM,
+			.type=LOCATION_PLACE,
+		},
+		.location[2] = {
+			.name="Deutsch Klasse",
+			.x0 = 27, .x1 = 34,
+			.y0 = 23, .y1 = 35,
+			.destination=DEUTSCH,
+			.type=LOCATION_PLACE,
+		},
+	},
+	[JC_DOWNSTAIRS]={	// 25: JC_DOWNSTAIRS
+		.name="JC Downstairs",
+		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=JOHN_CARROLL,
+		.e_exit=NOEXIT,
+		.w_exit=JOHN_CARROLL,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.background_image=jc_hallway_rle,
+		.num_locations=3,
+		.location[0] = {
+			.name="Patriot Room",
+			.x0 = 2, .x1 = 9,
+			.y0 = 10,  .y1 = 18,
+			.destination=PATRIOT_ROOM,
+			.type=LOCATION_PLACE,
+		},
+		.location[1] = {
+			.name="AP Calculus",
+			.x0 = 18, .x1 = 24,
+			.y0 = 14, .y1 = 25,
+			.destination=AP_CALCULUS,
+			.type=LOCATION_PLACE,
+		},
+		.location[2] = {
+			.name="Math Office",
+			.x0 = 27, .x1 = 34,
+			.y0 = 23, .y1 = 35,
+			.destination=MATH_OFFICE,
+			.type=LOCATION_PLACE,
+		},
+	},
+	[VIDEO_HOMEROOM]={	// 27: VIDEO_HOMEROOM
+		.name="Video Homeroom",
+		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=JC_UPSTAIRS,
+		.e_exit=NOEXIT,
+		.w_exit=NOEXIT,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.background_image=video_hr_rle,
+		.num_locations=3,
+		.location[0] = {
+			.name="Gus",
+			.x0 = 10, .x1 = 16,
+			.y0 = 22,  .y1 = 30,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[1] = {
+			.name="Raistlin",
+			.x0 = 17, .x1 = 22,
+			.y0 = 22, .y1 = 30,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[2] = {
+			.name="Ford",
+			.x0 = 23, .x1 = 28,
+			.y0 = 22, .y1 = 30,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[3] = {
+			.name="Sister Scarynun",
+			.x0 = 22, .x1 = 28,
+			.y0 = 21, .y1 = 34,
+			.type=LOCATION_CONVERSATION,
+		},
+	},
+	[MATH_OFFICE]={	// 31: MATH_OFFICE
+		.name="Math Office",
+		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=JC_DOWNSTAIRS,
+		.e_exit=NOEXIT,
+		.w_exit=NOEXIT,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.background_image=math_office_rle,
+		.num_locations=3,
+		.location[0] = {
+			.name="Rachael YRBK",
+			.x0 = 0, .x1 = 8,
+			.y0 = 21,  .y1 = 34,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[1] = {
+			.name="Brighid",
+			.x0 = 10, .x1 = 15,
+			.y0 = 21, .y1 = 34,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[2] = {
+			.name="Captain Steve",
+			.x0 = 15, .x1 = 22,
+			.y0 = 21, .y1 = 34,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[3] = {
+			.name="Mree",
+			.x0 = 22, .x1 = 28,
+			.y0 = 21, .y1 = 34,
+			.type=LOCATION_CONVERSATION,
+		},
+	},
+
 
 };
 
 #if 0
-
-	jc_rle:
-		"VIDEO HOMEROOM"
-		"AP CALCULUS, TEAM I-1"
-		"DEUTSCH"
-		"HOMEROOM"
-		"MATH OFFICE"
-		"PATRIOT ROOM"
-
-	math_office_rle:
-		"CAPTAIN STEVE",
-		"BRIGHID",
-		"RACHAEL YRBK",
-		"MREE",
 
 	video_hr_rle:
 		"GUS",
@@ -498,6 +656,7 @@ struct map_info_type map_info[33] = {
 		"SISTER SCARYNUN",
 
 	calculs_rle:
+		team I-1
 		PADRINO
 		JENNI
 		MR. APPLEBY

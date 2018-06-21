@@ -10,3 +10,7 @@ extern unsigned char dining_rle[];
 extern unsigned char waterfall_rle[];
 extern unsigned char fountain_rle[];
 extern unsigned char belair_rle[];
+extern unsigned char jc_rle[];
+extern unsigned char jc_hallway_rle[];
+extern unsigned char math_office_rle[];
+extern unsigned char video_hr_rle[];
