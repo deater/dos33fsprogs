@@ -25,18 +25,23 @@
 #define FOUNTAIN		21
 
 #define BEL_AIR			22
-#define C_MILTON		23
-#define HARFORD_MALL		24
-#define MINIGOLF		25
-#define JOHN_CARROLL		26
+//#define C_MILTON		23
+//#define HARFORD_MALL		24
+//#define MINIGOLF		25
+#define JOHN_CARROLL		23
 
-#define VIDEO_HOMEROOM		27
-#define AP_CALCULUS		28
-#define DEUTSCH			29
-#define HOMEROOM		30
-#define MATH_OFFICE		31
-#define PATRIOT_ROOM		32
-#define MAIN_OFFICE		33
+// UPSTAIRS
+#define VIDEO_HOMEROOM		24
+#define DEUTSCH			26
+#define HOMEROOM		27
+
+// DOWNSTAIRS
+#define AP_CALCULUS		25
+#define MATH_OFFICE		28
+#define PATRIOT_ROOM		29
+
+// OFFICE
+#define MAIN_OFFICE		30
 
 #define NOEXIT			255
 

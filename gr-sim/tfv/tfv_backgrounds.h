@@ -9,3 +9,4 @@ extern unsigned char metro_rle[];
 extern unsigned char dining_rle[];
 extern unsigned char waterfall_rle[];
 extern unsigned char fountain_rle[];
+extern unsigned char belair_rle[];

@@ -17,7 +17,7 @@
 
 
 struct map_info_type map_info[33] = {
-	{	// 0: NORTH_BEACH
+	[NORTH_BEACH]={		// 0: NORTH_BEACH
 		.name="North Beach",
 		.n_exit=NOEXIT,
 		.s_exit=PINE_BEACH,
@@ -29,7 +29,7 @@ struct map_info_type map_info[33] = {
 		.scatter=SCATTER_NONE,
 		.background_image=NULL,
 	},
-	{	// 1: ARCTIC_WOODS
+	[ARCTIC_WOODS]={	// 1: ARCTIC_WOODS
 		.name="Arctic Woods",
 		.n_exit=NOEXIT,
 		.s_exit=LANDING_SITE,
@@ -42,7 +42,7 @@ struct map_info_type map_info[33] = {
 		.scatter_x=10, .scatter_y=22, .scatter_cutoff=22,
 		.background_image=NULL,
 	},
-	{	// 2: ARCTIC_MOUNTAINS
+	[ARCTIC_MOUNTAINS]={	// 2: ARCTIC_MOUNTAINS
 		.name="Arctic Mountains",
 		.n_exit=NOEXIT,
 		.s_exit=NORTH_MOUNTAIN,
@@ -54,7 +54,7 @@ struct map_info_type map_info[33] = {
 		.scatter=SCATTER_NONE,
 		.background_image=NULL,
 	},
-	{	// 3: HARFORD_COUNTY
+	[HARFORD_COUNTY]={	// 3: HARFORD_COUNTY
 		.name="Harford County",
 		.n_exit=NOEXIT,
 		.s_exit=NORTH_FOREST,
@@ -65,8 +65,15 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_LIGHTNING,
 		.scatter=SCATTER_NONE,
 		.background_image=harfco_rle,
+		.num_locations=1,
+		.location[0] = {
+			.name="Bel Air",
+			.x0 = 11, .x1 = 29,
+			.y0 = 16,  .y1 = 26,
+			.destination = BEL_AIR,
+		},
 	},
-	{	// 4: PINE_BEACH
+	[PINE_BEACH]={	// 4: PINE_BEACH
 		.name="Pine Beach",
 		.n_exit=NORTH_BEACH,
 		.s_exit=PALM_BEACH,
@@ -79,7 +86,7 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_LEFT_BEACH,
 		.background_image=NULL,
 	},
-	{	// 5: LANDING_SITE
+	[LANDING_SITE]={	// 5: LANDING_SITE
 		.name="Landing Site",
 		.num_locations=1,
 		// .locations
@@ -93,7 +100,7 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_GRASSLAND,
 		.background_image=landing_rle,
 	},
-	{	// 6: NORTH_MOUNTAIN
+	[NORTH_MOUNTAIN]={	// 6: NORTH_MOUNTAIN
 		.name="North Mountain",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
 		.n_exit=ARCTIC_MOUNTAINS,
@@ -105,7 +112,7 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_MOUNTAIN,
 		.background_image=NULL,
 	},
-	{	// 7: NORTH_FOREST
+	[NORTH_FOREST]={	// 7: NORTH_FOREST
 		.name="North Forest",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
 		.n_exit=HARFORD_COUNTY,
@@ -117,7 +124,7 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_FOREST|LAND_RIGHT_BEACH,
 		.background_image=NULL,
 	},
-	{	// 8: PALM_BEACH
+	[PALM_BEACH]={	// 8: PALM_BEACH
 		.name="Palm Beach",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
 		.n_exit=PINE_BEACH,
@@ -130,7 +137,7 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_LEFT_BEACH,
 		.background_image=NULL,
 	},
-	{	// 9: GRASSLAND
+	[GRASSLAND]={	// 9: GRASSLAND
 		.name="Grassland",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
 		.n_exit=LANDING_SITE,
@@ -142,7 +149,7 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_GRASSLAND,
 		.background_image=NULL,
 	},
-	{	// 10: MORIA
+	[MORIA]={	// 10: MORIA
 		.name="Khazad-dum",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
 		.n_exit=NORTH_MOUNTAIN,
@@ -154,7 +161,7 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_MOUNTAIN,
 		.background_image=NULL,
 	},
-	{	// 11: SOUTH_FOREST
+	[SOUTH_FOREST]={	// 11: SOUTH_FOREST
 		.name="South Forest",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
 		.n_exit=NORTH_FOREST,
@@ -166,7 +173,7 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_FOREST|LAND_RIGHT_BEACH,
 		.background_image=NULL,
 	},
-	{	// 12: SOUTH_BEACH
+	[SOUTH_BEACH]={	// 12: SOUTH_BEACH
 		.name="South Beach",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
 		.n_exit=PALM_BEACH,
@@ -179,7 +186,7 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_LEFT_BEACH|LAND_SOUTHSHORE,
 		.background_image=NULL,
 	},
-	{	// 13: CACTUS_RANCH
+	[CACTUS_RANCH]={	// 13: CACTUS_RANCH
 		.name="Cactus Ranch",
 		.ground_color=(COLOR_ORANGE|(COLOR_ORANGE<<4)),
 		.n_exit=GRASSLAND,
@@ -192,7 +199,7 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_GRASSLAND|LAND_SOUTHSHORE,
 		.background_image=NULL,
 	},
-	{	// 14: COLLEGE_PARK
+	[COLLEGE_PARK]={	// 14: COLLEGE_PARK
 		.name="College Park",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
 		.n_exit=MORIA,
@@ -216,7 +223,7 @@ struct map_info_type map_info[33] = {
 			.destination = WATERFALL,
 		},
 	},
-	{	// 15: OCEAN_CITY
+	[OCEAN_CITY]={	// 15: OCEAN_CITY
 		.name="Ocean City",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
 		.n_exit=SOUTH_FOREST,
@@ -228,7 +235,7 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_RIGHT_BEACH|LAND_SOUTHSHORE,
 		.background_image=NULL,
 	},
-	{	// 16: U of MD
+	[U_OF_MD]={	// 16: U of MD
 		.name="University of M",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
 		.n_exit=NOEXIT,
@@ -269,7 +276,7 @@ struct map_info_type map_info[33] = {
 			.type=LOCATION_PLACE,
 		},
 	},
-	{	// 17: Waterfall
+	[WATERFALL]={	// 17: Waterfall
 		.name="Waterfall",
 		.ground_color=(COLOR_GREY|(COLOR_GREY<<4)),
 		.n_exit=NOEXIT,
@@ -281,7 +288,7 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_BORING,
 		.background_image=waterfall_rle,
 	},
-	{	// 18: Talbot Hall
+	[TALBOT_HALL]={	// 18: Talbot Hall
 		.name="Talbot Hall",
 		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
 		.n_exit=NOEXIT,
@@ -330,7 +337,7 @@ struct map_info_type map_info[33] = {
 			.type=LOCATION_CONVERSATION,
 		},
 	},
-	{	// 19: Dining Hall
+	[DINING_HALL]={	// 19: Dining Hall
 		.name="Dining Hall",
 		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
 		.n_exit=NOEXIT,
@@ -373,7 +380,7 @@ struct map_info_type map_info[33] = {
 			.type=LOCATION_CONVERSATION,
 		},
 	},
-	{	// 20: METRO_STATION
+	[METRO_STATION]={	// 20: METRO_STATION
 		.name="Metro Station",
 		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
 		.n_exit=NOEXIT,
@@ -410,7 +417,7 @@ struct map_info_type map_info[33] = {
 			.type=LOCATION_CONVERSATION,
 		},
 	},
-	{	// 21: FOUNTAIN
+	[FOUNTAIN]={	// 21: FOUNTAIN
 		.name="Fountain",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
 		.n_exit=NOEXIT,
@@ -429,24 +436,46 @@ struct map_info_type map_info[33] = {
 			.type=LOCATION_CONVERSATION,
 		},
 	},
-
+	[BEL_AIR]={	// 22: BEL_AIR
+		.name="Bel Air",
+		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=HARFORD_COUNTY,
+		.e_exit=NOEXIT,
+		.w_exit=NOEXIT,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.background_image=belair_rle,
+		.num_locations=4,
+		.location[0] = {
+			.name="C. Milton HS",
+			.x0 = 0, .x1 = 9,
+			.y0 = 20,  .y1 = 30,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[1] = {
+			.name="JC Highschool",
+			.x0 = 10, .x1 = 24,
+			.y0 = 16, .y1 = 24,
+			.destination = JOHN_CARROLL,
+		},
+		.location[2] = {
+			.name="Harford Mall",
+			.x0 = 25, .x1 = 32,
+			.y0 = 22, .y1 = 30,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[3] = {
+			.name="Minigolf",
+			.x0 = 34, .x1 = 39,
+			.y0 = 27, .y1 = 35,
+			.type=LOCATION_CONVERSATION,
+		},
+	},
 
 };
 
 #if 0
-
-	umcp_rle
-		"TALBOT HALL",X1,Y1,X2,Y2,TALBOT_HALL,
-		"SOUTH CAMPUS DINING",X1,Y1,X2,Y2,SOUTH_CAMPUS,
-		"METRO STATION",X1,Y1,X2,Y2,METRO_STATION,
-		"FOUNTAIN" -- drink from it restore heatlh?
-			mermaid.  Did ye put bubbles in fountain?
-
-	bel_air_rle
-		"C. MILTON",
-		"JOHN CARROLL",
-		"SHOPPING MALL",
-		"MINIGOLF",
 
 	jc_rle:
 		"VIDEO HOMEROOM"
@@ -467,6 +496,30 @@ struct map_info_type map_info[33] = {
 		"RAISTLIN",
 		"FORD",
 		"SISTER SCARYNUN",
+
+	calculs_rle:
+		PADRINO
+		JENNI
+		MR. APPLEBY
+		KATHY
+		LIZBETH
+		BLUME
+
+	DEUTSCH:
+		Agent G
+		Agent AP
+		Agent S
+		NIRE
+		FRAU:
+
+	homeroom:
+		trapani
+		warwick
+		wargo
+		mean lady
+
+	patriot_room:
+		agent N
 
 #endif
 
