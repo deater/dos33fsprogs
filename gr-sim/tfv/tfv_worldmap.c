@@ -193,10 +193,13 @@ int world_map(void) {
 
 		if (ch==13) {
 			if (special_destination!=NOEXIT) {
+				map_info[map_location].saved_x=tfv_x;
+				map_info[map_location].saved_y=tfv_y;
+
 				map_location=special_destination;
+				entry=1;
+				refresh=1;
 			}
-			entry=1;
-			refresh=1;
 		}
 
 		if (ch=='h') print_help();
@@ -213,6 +216,17 @@ int world_map(void) {
 		/* Handle entry to a new area */
 		if (entry) {
 			printf("Entering!\n");
+
+			/* Y can never be 0 by accident */
+			if (map_info[map_location].saved_y) {
+				newx=map_info[map_location].saved_x;
+				newy=map_info[map_location].saved_y;
+				map_info[map_location].saved_x=0;
+				map_info[map_location].saved_y=0;
+				goto done_entry;
+			}
+
+
 			if (map_info[map_location].entry_type&ENTRY_R_OR_L) {
 				if (tfv_x<20) newx=10;
 				else newx=30;
@@ -226,11 +240,23 @@ int world_map(void) {
 				newx=19;
 				newy=26;
 			}
+			if (map_info[map_location].entry_type&ENTRY_MINX) {
+				if (newx<map_info[map_location].entry_x) {
+					newx=map_info[map_location].entry_x;
+				}
+			}
+			if (map_info[map_location].entry_type&ENTRY_MAXX) {
+				if (newx>map_info[map_location].entry_x) {
+					newx=map_info[map_location].entry_x;
+				}
+			}
 			if (map_info[map_location].entry_type&ENTRY_MAXY) {
 				if (newy>map_info[map_location].entry_y) {
 					newy=map_info[map_location].entry_y;
 				}
 			}
+
+done_entry:
 
 			entry=0;
 			//moved=1;
@@ -489,6 +515,7 @@ int world_map(void) {
 				move_and_print(map_info[map_location].location[i].name);
 
 				special_destination=map_info[map_location].location[i].destination;
+
 				break;
 			}
 		}

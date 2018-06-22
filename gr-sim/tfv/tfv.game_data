@@ -1,5 +1,9 @@
 INCLUDE: 5 tents.  Can use to heal.  Sky goes black while sleeping?
 
+Ride giant bird.  Giant guinea pig?
+Enter on map with animal, gets off, they run away.
+
+
 ITEMS
 CUPCAKE		// cafeteria lady
 CARROT		// capabara
@@ -27,7 +31,6 @@ CLASS RING	//
 COLLEGE PARK
 
 TALBOT HALL
-	Have spool be ground scatter?
 	LIZ+WILL
 		LET'S DISCUSS COOL THINGS IN THE LOUNGE
 		--> YES!
@@ -67,13 +70,17 @@ METRO STATION
 	TINY CAPABARA
 		GRONK
 	GIANT GUINEA PIG
-		SQUEAK
+		SQUEAK?
+		-> YES
+		-> NO
 	LARGE BIRD
-		WARK
+		WARK?
+		-> YES
+		-> NO
 
 FOUNTAIN -- drink from it restore heatlh?
 	MERMAID
-		Did ye put bubbles in fountain?
+		Did ye put bubbles in yon fountain?
 
 
 

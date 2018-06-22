@@ -88,7 +88,7 @@ struct map_info_type map_info[33] = {
 		.scatter=SCATTER_PINE,
 		.scatter_x=25, .scatter_y=16, .scatter_cutoff=15,
 		.land_type=LAND_LEFT_BEACH,
-		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
+		.entry_type=ENTRY_MINX, .entry_x=11, .entry_y=0,
 		.background_image=NULL,
 	},
 	[LANDING_SITE]={	// 5: LANDING_SITE
@@ -129,7 +129,7 @@ struct map_info_type map_info[33] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_FOREST|LAND_RIGHT_BEACH,
-		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
+		.entry_type=ENTRY_MAXX, .entry_x=27, .entry_y=0,
 		.background_image=NULL,
 	},
 	[PALM_BEACH]={	// 8: PALM_BEACH
@@ -143,7 +143,7 @@ struct map_info_type map_info[33] = {
 		.scatter=SCATTER_PALM,
 		.scatter_x=10, .scatter_y=20, .scatter_cutoff=22,
 		.land_type=LAND_LEFT_BEACH,
-		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
+		.entry_type=ENTRY_MINX, .entry_x=11, .entry_y=0,
 		.background_image=NULL,
 	},
 	[GRASSLAND]={	// 9: GRASSLAND
@@ -182,7 +182,7 @@ struct map_info_type map_info[33] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_FOREST|LAND_RIGHT_BEACH,
-		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
+		.entry_type=ENTRY_MAXX, .entry_x=27, .entry_y=0,
 		.background_image=NULL,
 	},
 	[SOUTH_BEACH]={	// 12: SOUTH_BEACH
@@ -196,7 +196,7 @@ struct map_info_type map_info[33] = {
 		.scatter=SCATTER_PALM,
 		.scatter_x=20, .scatter_y=20, .scatter_cutoff=22,
 		.land_type=LAND_LEFT_BEACH|LAND_SOUTHSHORE,
-		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
+		.entry_type=ENTRY_MINX, .entry_x=11, .entry_y=0,
 		.background_image=NULL,
 	},
 	[CACTUS_RANCH]={	// 13: CACTUS_RANCH
@@ -248,16 +248,16 @@ struct map_info_type map_info[33] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_RIGHT_BEACH|LAND_SOUTHSHORE,
-		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
+		.entry_type=ENTRY_MAXX, .entry_x=27, .entry_y=0,
 		.background_image=NULL,
 	},
 	[U_OF_MD]={	// 16: U of MD
 		.name="University of M",
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
 		.n_exit=NOEXIT,
-		.s_exit=NOEXIT,
+		.s_exit=COLLEGE_PARK,
 		.e_exit=COLLEGE_PARK,
-		.w_exit=COLLEGE_PARK,
+		.w_exit=NOEXIT,
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_BORING,
@@ -500,8 +500,8 @@ struct map_info_type map_info[33] = {
 		.ground_color=(COLOR_DARKGREEN|(COLOR_DARKGREEN<<4)),
 		.n_exit=NOEXIT,
 		.s_exit=BEL_AIR,
-		.e_exit=NOEXIT,
-		.w_exit=NOEXIT,
+		.e_exit=BEL_AIR,
+		.w_exit=BEL_AIR,
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
@@ -677,15 +677,8 @@ struct map_info_type map_info[33] = {
 
 #if 0
 
-	video_hr_rle:
-		"GUS",
-		"RAISTLIN",
-		"FORD",
-		"SISTER SCARYNUN",
-
 	calculs_rle:
 		team I-1
-		PADRINO
 		JENNI
 		MR. APPLEBY
 		KATHY
@@ -707,6 +700,8 @@ struct map_info_type map_info[33] = {
 
 	patriot_room:
 		agent N
+		PADRINO
+
 
 #endif
 

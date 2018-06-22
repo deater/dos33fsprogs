@@ -48,6 +48,7 @@
 
 #define LOCATION_PLACE		0
 #define LOCATION_CONVERSATION	1
+#define LOCATION_SPACESHIP	2
 
 struct location_type {
 	char *name;
@@ -83,6 +84,9 @@ struct location_type {
 #define ENTRY_MINY		0x20
 #define ENTRY_MAXY		0x40
 
+#define EXIT_NORMAL		0x00
+#define EXIT_HIGH		0x01
+#define EXIT_R_OR_L		0x02
 
 
 
@@ -97,6 +101,7 @@ struct map_info_type {
 	int scatter;
 	int scatter_x,scatter_y,scatter_cutoff;
 	int entry_type,entry_x,entry_y;
+	int saved_x,saved_y;
 	unsigned char *background_image;
 };
 
