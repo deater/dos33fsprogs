@@ -52,6 +52,7 @@
 struct location_type {
 	char *name;
 	int x0,x1,y0,y1;
+	int enter_x,enter_y;
 	int type;
 	int destination;
 };
@@ -73,6 +74,18 @@ struct location_type {
 #define SCATTER_CACTUS		0x08
 #define SCATTER_SPOOL		0x10
 
+#define ENTRY_NORMAL		0x00
+#define ENTRY_EXPLICIT		0x01
+#define ENTRY_CENTER		0x02
+#define ENTRY_R_OR_L		0x04
+#define ENTRY_MINX		0x08
+#define ENTRY_MAXX		0x10
+#define ENTRY_MINY		0x20
+#define ENTRY_MAXY		0x40
+
+
+
+
 struct map_info_type {
 	char *name;
 	int land_type;
@@ -83,6 +96,7 @@ struct map_info_type {
 	int miny;
 	int scatter;
 	int scatter_x,scatter_y,scatter_cutoff;
+	int entry_type,entry_x,entry_y;
 	unsigned char *background_image;
 };
 

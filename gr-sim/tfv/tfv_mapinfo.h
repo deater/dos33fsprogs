@@ -27,6 +27,7 @@ struct map_info_type map_info[33] = {
 		.ground_color=(COLOR_WHITE|(COLOR_WHITE<<4)),
 		.land_type=LAND_LEFT_BEACH|LAND_NORTHSHORE,
 		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=NULL,
 	},
 	[ARCTIC_WOODS]={	// 1: ARCTIC_WOODS
@@ -40,6 +41,7 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_GRASSLAND|LAND_NORTHSHORE,
 		.scatter=SCATTER_SNOWYPINE,
 		.scatter_x=10, .scatter_y=22, .scatter_cutoff=22,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=NULL,
 	},
 	[ARCTIC_MOUNTAINS]={	// 2: ARCTIC_MOUNTAINS
@@ -52,6 +54,7 @@ struct map_info_type map_info[33] = {
 		.ground_color=(COLOR_WHITE|(COLOR_WHITE<<4)),
 		.land_type=LAND_MOUNTAIN|LAND_NORTHSHORE,
 		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=NULL,
 	},
 	[HARFORD_COUNTY]={	// 3: HARFORD_COUNTY
@@ -64,6 +67,7 @@ struct map_info_type map_info[33] = {
 		.ground_color=(COLOR_LIGHTBLUE|(COLOR_LIGHTBLUE<<4)),
 		.land_type=LAND_LIGHTNING,
 		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=harfco_rle,
 		.num_locations=1,
 		.location[0] = {
@@ -84,6 +88,7 @@ struct map_info_type map_info[33] = {
 		.scatter=SCATTER_PINE,
 		.scatter_x=25, .scatter_y=16, .scatter_cutoff=15,
 		.land_type=LAND_LEFT_BEACH,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=NULL,
 	},
 	[LANDING_SITE]={	// 5: LANDING_SITE
@@ -98,6 +103,7 @@ struct map_info_type map_info[33] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_GRASSLAND,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=landing_rle,
 	},
 	[NORTH_MOUNTAIN]={	// 6: NORTH_MOUNTAIN
@@ -110,6 +116,7 @@ struct map_info_type map_info[33] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_MOUNTAIN,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=NULL,
 	},
 	[NORTH_FOREST]={	// 7: NORTH_FOREST
@@ -122,6 +129,7 @@ struct map_info_type map_info[33] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_FOREST|LAND_RIGHT_BEACH,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=NULL,
 	},
 	[PALM_BEACH]={	// 8: PALM_BEACH
@@ -135,6 +143,7 @@ struct map_info_type map_info[33] = {
 		.scatter=SCATTER_PALM,
 		.scatter_x=10, .scatter_y=20, .scatter_cutoff=22,
 		.land_type=LAND_LEFT_BEACH,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=NULL,
 	},
 	[GRASSLAND]={	// 9: GRASSLAND
@@ -147,6 +156,7 @@ struct map_info_type map_info[33] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_GRASSLAND,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=NULL,
 	},
 	[MORIA]={	// 10: MORIA
@@ -159,6 +169,7 @@ struct map_info_type map_info[33] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_MOUNTAIN,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=NULL,
 	},
 	[SOUTH_FOREST]={	// 11: SOUTH_FOREST
@@ -171,6 +182,7 @@ struct map_info_type map_info[33] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_FOREST|LAND_RIGHT_BEACH,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=NULL,
 	},
 	[SOUTH_BEACH]={	// 12: SOUTH_BEACH
@@ -184,6 +196,7 @@ struct map_info_type map_info[33] = {
 		.scatter=SCATTER_PALM,
 		.scatter_x=20, .scatter_y=20, .scatter_cutoff=22,
 		.land_type=LAND_LEFT_BEACH|LAND_SOUTHSHORE,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=NULL,
 	},
 	[CACTUS_RANCH]={	// 13: CACTUS_RANCH
@@ -197,6 +210,7 @@ struct map_info_type map_info[33] = {
 		.scatter=SCATTER_CACTUS,
 		.scatter_x=25, .scatter_y=16, .scatter_cutoff=15,
 		.land_type=LAND_GRASSLAND|LAND_SOUTHSHORE,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=NULL,
 	},
 	[COLLEGE_PARK]={	// 14: COLLEGE_PARK
@@ -208,6 +222,7 @@ struct map_info_type map_info[33] = {
 		.w_exit=CACTUS_RANCH,
 		.miny=2,
 		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_MAXY, .entry_x=0, .entry_y=6,
 		.background_image=collegep_rle,
 		.num_locations=2,
 		.location[0] = {
@@ -233,6 +248,7 @@ struct map_info_type map_info[33] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_RIGHT_BEACH|LAND_SOUTHSHORE,
+		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=NULL,
 	},
 	[U_OF_MD]={	// 16: U of MD
@@ -245,6 +261,7 @@ struct map_info_type map_info[33] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_BORING,
+		.entry_type=ENTRY_R_OR_L, .entry_x=0, .entry_y=0,
 		.background_image=umcp_rle,
 		.num_locations=4,
 		.location[0] = {
@@ -286,19 +303,21 @@ struct map_info_type map_info[33] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_BORING,
+		.entry_type=ENTRY_EXPLICIT, .entry_x=4, .entry_y=14,
 		.background_image=waterfall_rle,
 	},
 	[TALBOT_HALL]={	// 18: Talbot Hall
 		.name="Talbot Hall",
 		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
 		.n_exit=NOEXIT,
-		.s_exit=NOEXIT,
-		.e_exit=U_OF_MD,
-		.w_exit=U_OF_MD,
+		.s_exit=U_OF_MD,
+		.e_exit=NOEXIT,
+		.w_exit=NOEXIT,
 		.miny=4,
 		.scatter=SCATTER_SPOOL,
 		.scatter_x=16, .scatter_y=22, .scatter_cutoff=22,
 		.land_type=LAND_BORING,
+		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
 		.background_image=talbot_rle,
 		.num_locations=5,
 		.location[0] = {
@@ -325,14 +344,14 @@ struct map_info_type map_info[33] = {
 		.location[3] = {
 			.name="Mathemagician",
 			.x0 = 28,  .x1 = 34,
-			.y0 = 20, .y1 = 26,
+			.y0 = 20, .y1 = 28,
 			//.destination = TALBOT_HALL,
 			.type=LOCATION_CONVERSATION,
 		},
 		.location[4] = {
 			.name="Darth Tater",
 			.x0 = 28,  .x1 = 36,
-			.y0 = 26, .y1 = 38,
+			.y0 = 30, .y1 = 38,
 			//.destination = TALBOT_HALL,
 			.type=LOCATION_CONVERSATION,
 		},
@@ -341,12 +360,13 @@ struct map_info_type map_info[33] = {
 		.name="Dining Hall",
 		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
 		.n_exit=NOEXIT,
-		.s_exit=NOEXIT,
-		.e_exit=U_OF_MD,
-		.w_exit=U_OF_MD,
+		.s_exit=U_OF_MD,
+		.e_exit=NOEXIT,
+		.w_exit=NOEXIT,
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_BORING,
+		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
 		.background_image=dining_rle,
 		.num_locations=5,
 		.location[0] = {
@@ -384,23 +404,24 @@ struct map_info_type map_info[33] = {
 		.name="Metro Station",
 		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
 		.n_exit=NOEXIT,
-		.s_exit=NOEXIT,
-		.e_exit=U_OF_MD,
-		.w_exit=U_OF_MD,
+		.s_exit=U_OF_MD,
+		.e_exit=NOEXIT,
+		.w_exit=NOEXIT,
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_BORING,
+		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
 		.background_image=metro_rle,
 		.num_locations=4,
 		.location[0] = {
 			.name="Station Master",
-			.x0 = 12,  .x1 = 18,
+			.x0 = 10,  .x1 = 16,
 			.y0 = 26,  .y1 = 35,
 			.type=LOCATION_CONVERSATION,
 		},
 		.location[1] = {
 			.name="Large Bird",
-			.x0 = 29,  .x1 = 33,
+			.x0 = 26,  .x1 = 33,
 			.y0 = 16,  .y1 = 20,
 			.type=LOCATION_CONVERSATION,
 		},
@@ -427,6 +448,7 @@ struct map_info_type map_info[33] = {
 		.miny=4,
 		.scatter=SCATTER_NONE,
 		.land_type=LAND_BORING,
+		.entry_type=ENTRY_EXPLICIT, .entry_x=4, .entry_y=14,
 		.background_image=fountain_rle,
 		.num_locations=1,
 		.location[0] = {
@@ -445,6 +467,7 @@ struct map_info_type map_info[33] = {
 		.w_exit=NOEXIT,
 		.miny=4,
 		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
 		.background_image=belair_rle,
 		.num_locations=4,
 		.location[0] = {
@@ -462,7 +485,7 @@ struct map_info_type map_info[33] = {
 		.location[2] = {
 			.name="Harford Mall",
 			.x0 = 25, .x1 = 32,
-			.y0 = 22, .y1 = 30,
+			.y0 = 22, .y1 = 28,
 			.type=LOCATION_CONVERSATION,
 		},
 		.location[3] = {
@@ -481,6 +504,7 @@ struct map_info_type map_info[33] = {
 		.w_exit=NOEXIT,
 		.miny=4,
 		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
 		.background_image=jc_rle,
 		.num_locations=3,
 		.location[0] = {
@@ -514,6 +538,7 @@ struct map_info_type map_info[33] = {
 		.w_exit=JOHN_CARROLL,
 		.miny=4,
 		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
 		.background_image=jc_hallway_rle,
 		.num_locations=3,
 		.location[0] = {
@@ -547,6 +572,7 @@ struct map_info_type map_info[33] = {
 		.w_exit=JOHN_CARROLL,
 		.miny=4,
 		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
 		.background_image=jc_hallway_rle,
 		.num_locations=3,
 		.location[0] = {
@@ -580,8 +606,9 @@ struct map_info_type map_info[33] = {
 		.w_exit=NOEXIT,
 		.miny=4,
 		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
 		.background_image=video_hr_rle,
-		.num_locations=3,
+		.num_locations=4,
 		.location[0] = {
 			.name="Gus",
 			.x0 = 10, .x1 = 16,
@@ -602,8 +629,8 @@ struct map_info_type map_info[33] = {
 		},
 		.location[3] = {
 			.name="Sister Scarynun",
-			.x0 = 22, .x1 = 28,
-			.y0 = 21, .y1 = 34,
+			.x0 = 26, .x1 = 32,
+			.y0 = 30, .y1 = 39,
 			.type=LOCATION_CONVERSATION,
 		},
 	},
@@ -616,8 +643,9 @@ struct map_info_type map_info[33] = {
 		.w_exit=NOEXIT,
 		.miny=4,
 		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
 		.background_image=math_office_rle,
-		.num_locations=3,
+		.num_locations=4,
 		.location[0] = {
 			.name="Rachael YRBK",
 			.x0 = 0, .x1 = 8,

@@ -145,6 +145,7 @@ int world_map(void) {
 	direction=1;
 	int odd=0;
 	int refresh=1;
+	int entry=0;
 	int on_bird=0;
 
 	while(1) {
@@ -194,6 +195,7 @@ int world_map(void) {
 			if (special_destination!=NOEXIT) {
 				map_location=special_destination;
 			}
+			entry=1;
 			refresh=1;
 		}
 
@@ -208,6 +210,34 @@ int world_map(void) {
 			refresh=1;
 		}
 
+		/* Handle entry to a new area */
+		if (entry) {
+			printf("Entering!\n");
+			if (map_info[map_location].entry_type&ENTRY_R_OR_L) {
+				if (tfv_x<20) newx=10;
+				else newx=30;
+				newy=26;
+			}
+			if (map_info[map_location].entry_type&ENTRY_EXPLICIT) {
+				newx=map_info[map_location].entry_x;
+				newy=map_info[map_location].entry_y;
+			}
+			if (map_info[map_location].entry_type&ENTRY_CENTER) {
+				newx=19;
+				newy=26;
+			}
+			if (map_info[map_location].entry_type&ENTRY_MAXY) {
+				if (newy>map_info[map_location].entry_y) {
+					newy=map_info[map_location].entry_y;
+				}
+			}
+
+			entry=0;
+			//moved=1;
+			printf("Newx=%d,Newy=%d\n",newx,newy);
+			tfv_x=newx; tfv_y=newy;
+		}
+
 
 		/* Collision detection + Movement */
 		if (moved) {
@@ -219,6 +249,7 @@ int world_map(void) {
 					map_location=map_info[map_location].e_exit;
 					tfv_x=1;
 					refresh=1;
+					entry=1;
 				}
 			}
 			else if (newx<=0) {
@@ -226,6 +257,7 @@ int world_map(void) {
 					map_location=map_info[map_location].w_exit;
 					tfv_x=35;
 					refresh=1;
+					entry=1;
 				}
 			}
 			else if (newy<map_info[map_location].miny) {
@@ -233,6 +265,7 @@ int world_map(void) {
 					map_location=map_info[map_location].n_exit;
 					tfv_y=26;
 					refresh=1;
+					entry=1;
 				}
 			}
 			else if (newy>=28) {
@@ -240,6 +273,7 @@ int world_map(void) {
 					map_location=map_info[map_location].s_exit;
 					tfv_y=4;
 					refresh=1;
+					entry=1;
 				}
 			}
 			else if ((scrn_page(newx+1,newy+11,8)==
