@@ -52,8 +52,8 @@ $(PNG2RLE):
 
 
 mode7_demo_backgrounds.inc:	$(PNG2RLE) \
-	../tfv/demo.png
-	$(PNG2RLE) asm ../tfv/demo.png demo_rle > mode7_demo_backgrounds.inc
+	demo.png
+	$(PNG2RLE) asm demo.png demo_rle > mode7_demo_backgrounds.inc
 
 
 clean:	
