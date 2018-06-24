@@ -40,7 +40,9 @@ tfv_backgrounds.c:	$(PNG2RLE) \
 			$(ARTDIR)/waterfall.png \
 			$(ARTDIR)/fountain.png \
 			$(ARTDIR)/jc.png \
-			$(ARTDIR)/jc_hallway.png
+			$(ARTDIR)/jc_hallway.png \
+			$(ARTDIR)/mirror_lake.png \
+			$(ARTDIR)/deutsch.png
 	$(PNG2RLE) c $(ARTDIR)/title.png title_rle > tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/map.png map_rle >> tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/landing.png landing_rle >> tfv_backgrounds.c
@@ -57,9 +59,8 @@ tfv_backgrounds.c:	$(PNG2RLE) \
 	$(PNG2RLE) c $(ARTDIR)/fountain.png fountain_rle >> tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/jc.png jc_rle >> tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/jc_hallway.png jc_hallway_rle >> tfv_backgrounds.c
-
-
-
+	$(PNG2RLE) c $(ARTDIR)/mirror_lake.png mirror_lake_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/deutsch.png deutsch_rle >> tfv_backgrounds.c
 
 
 ####
