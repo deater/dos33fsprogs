@@ -93,8 +93,6 @@ struct map_info_type map_info[33] = {
 	},
 	[LANDING_SITE]={	// 5: LANDING_SITE
 		.name="Landing Site",
-		.num_locations=1,
-		// .locations
 		.ground_color=(COLOR_LIGHTGREEN|(COLOR_LIGHTGREEN<<4)),
 		.n_exit=ARCTIC_WOODS,
 		.s_exit=GRASSLAND,
@@ -105,6 +103,13 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_GRASSLAND,
 		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=landing_rle,
+		.num_locations=1,
+		.location[0] = {
+			.name="Spaceship",
+			.x0 = 0, .x1 = 28,
+			.y0 = 0,  .y1 = 29,
+			.type = LOCATION_SPACESHIP,
+		},
 	},
 	[NORTH_MOUNTAIN]={	// 6: NORTH_MOUNTAIN
 		.name="North Mountain",

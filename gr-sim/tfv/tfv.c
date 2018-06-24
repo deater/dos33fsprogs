@@ -69,10 +69,13 @@ title_loop:
 
 	/* Flying */
 	home();
+back_to_flying:
 	flying();
 
 	/* World Map */
-	world_map();
+	result=world_map();
+
+	if (result!=0) goto back_to_flying;
 
 	/* Game Over, Man */
 	game_over();

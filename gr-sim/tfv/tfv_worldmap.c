@@ -132,7 +132,7 @@ int world_map(void) {
 	int direction=1;
 	int i,limit;
 	int newx=0,newy=0,moved;
-	int special_destination=NOEXIT;
+	int special_destination=NOEXIT,destination_type=LOCATION_PLACE;
 
 	/************************************************/
 	/* Landed					*/
@@ -192,7 +192,12 @@ int world_map(void) {
 		}
 
 		if (ch==13) {
-			if (special_destination!=NOEXIT) {
+			if (destination_type==LOCATION_CONVERSATION) {
+			}
+			else if (destination_type==LOCATION_SPACESHIP) {
+				return LOCATION_SPACESHIP;
+			}
+			else if (special_destination!=NOEXIT) {
 				map_info[map_location].saved_x=tfv_x;
 				map_info[map_location].saved_y=tfv_y;
 
@@ -515,6 +520,7 @@ done_entry:
 				move_and_print(map_info[map_location].location[i].name);
 
 				special_destination=map_info[map_location].location[i].destination;
+				destination_type=map_info[map_location].location[i].type;
 
 				break;
 			}
