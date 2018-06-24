@@ -16,7 +16,7 @@
 */
 
 
-struct map_info_type map_info[33] = {
+struct map_info_type map_info[34] = {
 	[NORTH_BEACH]={		// 0: NORTH_BEACH
 		.name="North Beach",
 		.n_exit=NOEXIT,
@@ -176,6 +176,14 @@ struct map_info_type map_info[33] = {
 		.land_type=LAND_MOUNTAIN,
 		.entry_type=ENTRY_NORMAL, .entry_x=0, .entry_y=0,
 		.background_image=NULL,
+		.num_locations=1,
+		.location[0] = {
+			.name="Mirror Lake",
+			.x0 = 14, .x1 = 18,
+			.y0 = 30,  .y1 = 34,
+			.type = LOCATION_PLACE,
+			.destination=MIRROR_LAKE,
+		},
 	},
 	[SOUTH_FOREST]={	// 11: SOUTH_FOREST
 		.name="South Forest",
@@ -676,7 +684,19 @@ struct map_info_type map_info[33] = {
 			.type=LOCATION_CONVERSATION,
 		},
 	},
-
+	[MIRROR_LAKE]={	// 33: MIRROR_LAKE
+		.name="Mirror Lake",
+		.ground_color=(COLOR_GREY|(COLOR_GREY<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=MORIA,
+		.e_exit=NOEXIT,
+		.w_exit=MORIA,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.land_type=LAND_BORING,
+		.entry_type=ENTRY_EXPLICIT, .entry_x=4, .entry_y=24,
+		.background_image=mirror_lake_rle,
+	},
 
 };
 

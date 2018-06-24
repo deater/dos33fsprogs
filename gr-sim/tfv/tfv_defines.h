@@ -25,9 +25,6 @@
 #define FOUNTAIN		21
 
 #define BEL_AIR			22
-//#define C_MILTON		23
-//#define HARFORD_MALL		24
-//#define MINIGOLF		25
 #define JOHN_CARROLL		23
 
 #define JC_UPSTAIRS		24
@@ -43,6 +40,8 @@
 #define AP_CALCULUS		30
 #define MATH_OFFICE		31
 #define PATRIOT_ROOM		32
+
+#define MIRROR_LAKE		33
 
 #define NOEXIT			255
 
