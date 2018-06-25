@@ -11,9 +11,12 @@
 #include "tfv_sprites.h"
 #include "tfv_backgrounds.h"
 
+#include "tfv_items.h"
+#include "tfv_dialog.h"
+
 #include "tfv_mapinfo.h"
 
-#include "tfv_dialog.h"
+
 
 unsigned char map_location=LANDING_SITE;
 

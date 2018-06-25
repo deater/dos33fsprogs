@@ -1,14 +1,21 @@
 #define ACTION_NONE	0
-#define ACTION_ITEM	1
-#define ACTION_TIME	2
+#define ACTION_ITEM1	1
+#define ACTION_ITEM2	2
+#define ACTION_ITEM3	3
+#define ACTION_TIME	4
 
 
-#define DIALOG_LIZ_WILL	0
+#define DIALOG_LIZ_WILL		0
+#define DIALOG_PETE		1
+#define DIALOG_KENJESU		2
+#define DIALOG_MATHEMAGICIAN	3
+#define DIALOG_DARTH_TATER	4
 
 struct dialog_words {
 	char *words;
 	int next;
 	int action;
+	int item;
 };
 
 struct dialog_type {
@@ -28,21 +35,29 @@ struct dialog_type dialog[100]={
 		/* FOUR HOURS PASS */
 		.statement[2].action=ACTION_TIME,
 	},
-
+	[DIALOG_PETE] = {
+		.statement[0].words="Your journey may take you to darkest Bel Air.",
+		.statement[0].next=1,
+		.statement[1].words="PLOT!",
+		.statement[1].next=1,
+	},
+	[DIALOG_KENJESU] = {
+		.statement[0].words="Have you found your lost guinea pig?",
+		.statement[0].next=0,
+	},
+	[DIALOG_MATHEMAGICIAN] = {
+		.statement[0].words="Have you tried finding the eigenvalues?",
+		.statement[0].next=0,
+	},
+	[DIALOG_DARTH_TATER] = {
+		.statement[0].words="In Talbot 0101B",
+		.statement[0].next=1,
+		.statement[1].words="There lived a big giant bee",
+		.statement[1].next=2,
+		.statement[2].action=ACTION_ITEM2,
+		.statement[2].item=ITEM_5K_RESISTOR,
+	},
 #if 0
-
-
-	PETE
-		YOUR JOURNEY MAY TAKE YOU TO DARKEST BEL AIR
-		PLOT!
-	KENJESU
-		HAVE YOU FOUND YOUR LOST GUINEA PIG
-	MATHEMAGICIAN
-		HAVE YOU TRIED FINDING THE EIGENVALUES
-	DARTH TATER
-		IN TALBOT 0101B
-		THERE LIVED A BIG GIANT BEE
-
 DINING HALL
 	OSCAR
 		BEWARE THE KILLER CRABS
