@@ -15,3 +15,8 @@ extern unsigned char jc_hallway_rle[];
 extern unsigned char math_office_rle[];
 extern unsigned char video_hr_rle[];
 extern unsigned char mirror_lake_rle[];
+extern unsigned char deutsch_rle[];
+extern unsigned char homeroom_rle[];
+extern unsigned char ap_calculus_rle[];
+extern unsigned char patriot_room_rle[];
+extern unsigned char jc_office_rle[];

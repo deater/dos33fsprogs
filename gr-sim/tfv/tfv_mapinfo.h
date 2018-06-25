@@ -610,6 +610,18 @@ struct map_info_type map_info[34] = {
 			.type=LOCATION_PLACE,
 		},
 	},
+	[JC_OFFICE]={	// 26: JC_OFFICE
+		.name="JC Downstairs",
+		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=JOHN_CARROLL,
+		.e_exit=NOEXIT,
+		.w_exit=NOEXIT,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
+		.background_image=jc_office_rle,
+	},
 	[VIDEO_HOMEROOM]={	// 27: VIDEO_HOMEROOM
 		.name="Video Homeroom",
 		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
@@ -647,6 +659,42 @@ struct map_info_type map_info[34] = {
 			.type=LOCATION_CONVERSATION,
 		},
 	},
+	[DEUTSCH]={	// 28: DEUTSCH
+		.name="Deutsch Klasse",
+		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=JC_UPSTAIRS,
+		.e_exit=NOEXIT,
+		.w_exit=NOEXIT,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
+		.background_image=deutsch_rle,
+	},
+	[HOMEROOM]={	// 29: HOMEROOM
+		.name="Homeroom 12E",
+		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=JC_UPSTAIRS,
+		.e_exit=NOEXIT,
+		.w_exit=NOEXIT,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
+		.background_image=homeroom_rle,
+	},
+	[AP_CALCULUS]={	// 30: AP_CALCULUS
+		.name="AP Calculus",
+		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=JC_DOWNSTAIRS,
+		.e_exit=NOEXIT,
+		.w_exit=NOEXIT,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
+		.background_image=ap_calculus_rle,
+	},
 	[MATH_OFFICE]={	// 31: MATH_OFFICE
 		.name="Math Office",
 		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
@@ -683,6 +731,18 @@ struct map_info_type map_info[34] = {
 			.y0 = 21, .y1 = 34,
 			.type=LOCATION_CONVERSATION,
 		},
+	},
+	[PATRIOT_ROOM]={	// 32: PATRIOT_ROOM
+		.name="Patriot Room",
+		.ground_color=(COLOR_BLACK|(COLOR_BLACK<<4)),
+		.n_exit=NOEXIT,
+		.s_exit=JC_DOWNSTAIRS,
+		.e_exit=NOEXIT,
+		.w_exit=NOEXIT,
+		.miny=4,
+		.scatter=SCATTER_NONE,
+		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
+		.background_image=patriot_room_rle,
 	},
 	[MIRROR_LAKE]={	// 33: MIRROR_LAKE
 		.name="Mirror Lake",
@@ -729,5 +789,3 @@ struct map_info_type map_info[34] = {
 
 
 #endif
-
-

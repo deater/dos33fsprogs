@@ -42,7 +42,11 @@ tfv_backgrounds.c:	$(PNG2RLE) \
 			$(ARTDIR)/jc.png \
 			$(ARTDIR)/jc_hallway.png \
 			$(ARTDIR)/mirror_lake.png \
-			$(ARTDIR)/deutsch.png
+			$(ARTDIR)/deutsch.png \
+			$(ARTDIR)/homeroom.png \
+			$(ARTDIR)/ap_calculus.png \
+			$(ARTDIR)/patriot_room.png \
+			$(ARTDIR)/jc_office.png
 	$(PNG2RLE) c $(ARTDIR)/title.png title_rle > tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/map.png map_rle >> tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/landing.png landing_rle >> tfv_backgrounds.c
@@ -61,6 +65,10 @@ tfv_backgrounds.c:	$(PNG2RLE) \
 	$(PNG2RLE) c $(ARTDIR)/jc_hallway.png jc_hallway_rle >> tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/mirror_lake.png mirror_lake_rle >> tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/deutsch.png deutsch_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/homeroom.png homeroom_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/ap_calculus.png ap_calculus_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/patriot_room.png patriot_room_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/jc_office.png jc_office_rle >> tfv_backgrounds.c
 
 
 ####
