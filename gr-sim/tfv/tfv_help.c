@@ -1,14 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
 
 #include "gr-sim.h"
 #include "tfv_utils.h"
 #include "tfv_zp.h"
-#include "tfv_defines.h"
-
-#include "tfv_backgrounds.h"
 
 
 void print_help(void) {
@@ -56,6 +51,4 @@ void print_help(void) {
 
 	soft_switch(TXTCLR);
 }
-
-
 

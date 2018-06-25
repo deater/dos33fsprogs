@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
 
 #include "gr-sim.h"
 #include "tfv_utils.h"
@@ -25,8 +23,6 @@ void show_map(void) {
 
 	basic_plot(8+((map_location&0x3)*6)+(tfv_x/6),8+(((map_location&0xc)>>2)*6)+(tfv_y/6));
 
-
-
 //	basic_plot(8+((map_location&0x3)*6)+(tfv_x/6),8+(((map_location&0xc)>>2)*6)+(tfv_y/6));
 
 	ram[CH]=20;
@@ -36,7 +32,3 @@ void show_map(void) {
 
 	repeat_until_keypressed();
 }
-
-
-
-

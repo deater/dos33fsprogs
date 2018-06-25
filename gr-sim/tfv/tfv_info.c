@@ -1,14 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
 
 #include "gr-sim.h"
 #include "tfv_utils.h"
 #include "tfv_zp.h"
 #include "tfv_defines.h"
 
-#include "tfv_backgrounds.h"
+#include "tfv_items.h"
 
 
 /*
@@ -41,13 +39,13 @@
 
 EXPERIENCE = 0...255
 LEVEL = EXPERIENCE /  = 0...63
-NEXT LEVEL = 
+NEXT LEVEL =
 MONEY   = 0...255
 MAX_HP  = 32+EXPERIENCE (maxing at 255)
 */
 
-
-static char item_names1[8][15]={
+char item_names[2][8][15]={
+	{
 	"CUPCAKE",		// cafeteria lady
 	"CARROT",		// capabara
 	"SMARTPASS",		// metro worker
@@ -56,9 +54,8 @@ static char item_names1[8][15]={
 	"KARTE SPIEL",		// Frau
 	"GLAMDRING",		// Gus
 	"VEGEMITE",		// Nicole
-};
-
-static char item_names2[8][15]={
+	},
+	{
 	"BLUE LED",		// bird
 	"RED LED",		//
 	"1K RESISTOR",		// brown black red, Elaine
@@ -67,6 +64,7 @@ static char item_names2[8][15]={
 	"1.5V BATTERY",		// Oscar
 	"LINUX CD",		// john
 	"ARMY KNIFE",		// Steve
+	}
 };
 
 void print_info(void) {
@@ -107,11 +105,11 @@ void print_info(void) {
 	for(i=0;i<8;i++) {
 		basic_htab(4);
 		basic_vtab(6+i);
-		if (items1&(1<<i)) basic_print(item_names1[i]);
+		if (items1&(1<<i)) basic_print(item_names[0][i]);
 
 		basic_htab(4);
 		basic_vtab(14+i);
-		if (items2&(1<<i)) basic_print(item_names2[i]);
+		if (items2&(1<<i)) basic_print(item_names[1][i]);
 	}
 
 	basic_htab(23);
