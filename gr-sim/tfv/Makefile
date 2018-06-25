@@ -106,7 +106,7 @@ tfv_textentry.o:	tfv_textentry.c
 tfv_title.o:	tfv_title.c ../tfv_utils.h tfv_backgrounds.h
 	$(CC) $(CFLAGS) -c tfv_title.c
 
-tfv_worldmap.o:	tfv_worldmap.c tfv_mapinfo.h
+tfv_worldmap.o:	tfv_worldmap.c tfv_mapinfo.h tfv_dialog.h
 	$(CC) $(CFLAGS) -c tfv_worldmap.c
 
 

@@ -13,6 +13,8 @@
 
 #include "tfv_mapinfo.h"
 
+#include "tfv_dialog.h"
+
 unsigned char map_location=LANDING_SITE;
 
 /* Puzzle Room */
