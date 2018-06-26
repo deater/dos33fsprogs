@@ -3,6 +3,31 @@
 \usepackage{url}
 \usepackage{hyperref}
 \usepackage{fancyvrb}
+\usepackage{fancyhdr}
+
+\usepackage{hyperref}
+
+
+
+
+\pagestyle{fancy}
+
+\fancypagestyle{firststyle}
+{
+   \fancyhf{}
+   \fancyhead[C]{A version of this document appeared in PoC~\textbar\textbar~GTFO 0x18}
+   \fancyfoot{}
+}
+
+
+%\fancyhead{}
+%\fancyfoot{}
+%\fancyhead[CO,CE]{A version of this document appeared in PoC || GTFO 0x18}
+%\fancyfoot[C] {\thepage}
+%\renewcommand{\headrulewidth}{0pt}
+%\renewcommand{\footrulewidth}{0pt}
+
+
 
 \begin{document}
 
@@ -11,14 +36,16 @@
 \date{}
 \maketitle
 
+\thispagestyle{firststyle}
+
 \section{Why would anyone do this?}
 
 While making an inside-joke filled game for my retro system of choice,
-the Apple II, I needed to create a Final-Fantasy-esque
+the Apple~II, I needed to create a Final-Fantasy-esque
 flying-over-the-planet sequence.
 I was originally going to fake this, but why fake graphics when you
-can laboriously spend weeks implementing the effect for real.
-It turns out the Apple II is just barely capable of generating
+can laboriously spend weeks implementing the effect for real?
+It turns out the Apple~II is just barely capable of generating
 the effect in real time.
 
 Once I got the code working I realized it would be great as part of a
@@ -37,10 +64,10 @@ combined with dimly remembered Commodore 64 and Amiga usenet flamewars.
 
 While I hope you enjoy the description of the demo and the work that
 went into it, I suspect this whole enterprise is primarily of note
-due to the dearth of demos for the Apple II platform.
+due to the dearth of demos for the Apple~II platform.
 %So in the end this ends up being impressive mostly because so few people
 %have bothered to write demos for this particular platform.
-If you are truly interested in seeing impressive Apple II demos, 
+If you are truly interested in seeing impressive Apple~II demos, 
 I would like to make a shout out to FrenchTouch whose works
 put this one to shame.
 
@@ -93,7 +120,7 @@ put this one to shame.
 
 \section{The Hardware}
 
-The Apple II was introduced in 1977.
+The Apple~II was introduced in 1977.
 In theory this demo will run on hardware that old, although I do
 not have access to a system of that vintage.
 I like to troll Commodore fans by noting this predates the Commodore 64 by 
@@ -160,8 +187,9 @@ on which colors can be next to each other (in blocks of 3.5 pixels).
 There is plenty of fringing on edges, and colors change depending on
 whether they are drawn at odd or even locations.
 To add to the madness, the framebuffer is interleaved in a complex way,
-and pixels are drawn least-significant-bit first (all of this to make
-DRAM refresh better and to shave a few 7400 series logic chips from the design).
+and pixels are drawn least-significant-bit first (all of this to get
+DRAM refresh for free and to shave a few 7400 series logic chips from
+the design).
 You do get two pages of graphics, Page 1 is at
 {\tt \$2000}\footnote{On 6502 systems hexadecimal values are 
 traditionally indicated by a dollar sign}
@@ -302,7 +330,7 @@ and {\tt \$4C00}.
 The image data at {\tt \$4000} maps to (mostly)
 harmless code so it is left in place and executed.
 Making this work turned out to be more trouble than it was worth, especially
-as the logo is not visible in the youtube capture of the demo (the movie
+as the logo is not visible in the youtube capture of the demo (the video
 compression does not handle screens full of seemingly random noise well).
 
 The demo was optimized to fit in 8k.
@@ -358,7 +386,7 @@ though we are double-buffering the graphics.
 Sadly there is not a reliable cross-platform way to get the VBLANK info 
 on Apple II machines, especially the older models.
 This is even more noticeable in the recorded video, as the capture card and
-movie encoding conspire to make this look worse than things look in person.
+video encoding conspire to make this look worse than things look in person.
 
 \subsection{MOCKINGBOARD MUSIC}
 
@@ -411,7 +439,10 @@ interrupt at 25Hz.
 %   Apple II has no timers).
 Why 25Hz and not 50Hz?  At 50Hz with 14 registers you use 700 bytes/s.
 So a 2 minute song would take 84k of RAM, which is much more than is available.
-To allow the song to fit in memory (without a fancy circular buffer
+Also the Disk II requires hard real-time response involving the full 
+CPU to read from disk, so it is not possible to read more data while
+the demo is running.
+To allow the song to fit in memory (without the fancy circular buffer
 decompression routine utilized in my VMW Chiptune music-disk demo) we have
 to reduce the size.
 First the music is changed so it only needs to be updated at 25Hz.
@@ -452,6 +483,9 @@ this line):
 	\[h = \frac{d}{xscale}\]
 Then calculate delta x and delta y values between each block on the line.
 We use a pre-computed sine/cosine lookup table.
+
+\pagebreak
+
 	\[dx = -sin(angle) \times h\]
 	\[dy = cos(angle) \times h\]
 The leftmost position in the tile lookup is calculated:
