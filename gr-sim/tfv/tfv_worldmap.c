@@ -198,6 +198,10 @@ int world_map(void) {
 
 		if (ch==13) {
 			if (destination_type==LOCATION_CONVERSATION) {
+//				ram[CH]=2;
+//				ram[CV]=21;
+//				move_and_print(dialog[special_destination].statement[0].words);
+//				printf("%s\n",dialog[special_destination].statement[0].words);
 			}
 			else if (destination_type==LOCATION_SPACESHIP) {
 				return LOCATION_SPACESHIP;
@@ -513,6 +517,7 @@ done_entry:
 		}
 
 		special_destination=NOEXIT;
+		destination_type=LOCATION_PLACE;
 		for(i=0;i<map_info[map_location].num_locations;i++) {
 
 			if ( (tfv_x>=map_info[map_location].location[i].x0) &&
