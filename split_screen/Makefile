@@ -5,10 +5,11 @@ TOKENIZE = ../asoft_basic-utils/tokenize_asoft
 
 all:	split.dsk
 
-split.dsk:	BISHOP BISHOP.BAS RAINBOW.BAS
+split.dsk:	BISHOP BISHOP.BAS RAINBOW.BAS RAINBOW
 	$(DOS33) -y split.dsk BSAVE -a 0x0300 BISHOP
 	$(DOS33) -y split.dsk SAVE A BISHOP.BAS
 	$(DOS33) -y split.dsk SAVE A RAINBOW.BAS
+	$(DOS33) -y split.dsk BSAVE -a 0x0c00 RAINBOW
 
 BISHOP:	bishop.o
 	ld65 -o BISHOP bishop.o -C ../linker_scripts/apple2_300.inc
@@ -18,6 +19,12 @@ bishop.o:	bishop.s
 
 BISHOP.BAS:	bishop.bas
 	$(TOKENIZE) < bishop.bas > BISHOP.BAS
+
+rainbow.o:	rainbow.s
+	ca65 -o rainbow.o rainbow.s -l rainbow.lst
+
+RAINBOW:	rainbow.o
+	ld65 -o RAINBOW rainbow.o -C ../linker_scripts/apple2_c00.inc
 
 RAINBOW.BAS:	rainbow.bas
 	$(TOKENIZE) < rainbow.bas > RAINBOW.BAS
