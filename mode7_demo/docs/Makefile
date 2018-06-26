@@ -1,6 +1,7 @@
-all:	mode7_demo.pdf dram_notes.pdf
+all:	mode7_demo.pdf
+# dram_notes.pdf
 
-mode7_demo.pdf:	mode7_demo.tex
+mode7_demo.pdf:	mode7_demo.tex dram_notes.tex good_table.tex
 	pdflatex mode7_demo.tex
 	pdflatex mode7_demo.tex
 	pdflatex mode7_demo.tex

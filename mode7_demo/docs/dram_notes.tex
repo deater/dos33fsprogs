@@ -1,8 +1,8 @@
-\documentclass{article}
+%\documentclass{article}
 
-\usepackage{graphicx}
-\usepackage{colortbl}
-\usepackage{multirow}
+%\usepackage{graphicx}
+%\usepackage{colortbl}
+%\usepackage{multirow}
 
 \newcommand*\rot{\rotatebox{90}}
 
@@ -23,15 +23,20 @@
 \definecolor{color14}{rgb}{0.447,1.000,0.816}	% Aqua
 \definecolor{color15}{rgb}{1.000,1.000,1.000}	% White
 
-\begin{document}
+%\begin{document}
 
-\begin{center}
-\begin{large}
-{\bf Notes on the Apple II Lores Memory Map}
-\end{large}
+\newpage
 
-{\bf Or: Why is the memory map so weird}
-\end{center}
+\section{The Lores Memory Map}
+
+\subsection{Why is it so weird?}
+%\begin{center}
+%\begin{large}
+%{\bf Notes on the Apple II Lores Memory Map}
+%\end{large}
+
+%{\bf Or: Why is the memory map so weird}
+%\end{center}
 The Apple II is very much
 a TV-typewriter video-terminal that happens to have a 6502
 processor attached to give the display something to do.
@@ -80,10 +85,18 @@ wasting 8 bytes (the ``screen holes'').
 
 This still might not be that weird, but then the address interleaving
 comes into play.
-Note that row 0 starts at {\tt \$480}, but row 1 starts at
+Note that row~0 starts at {\tt \$480}, but row~1 starts at
 {\tt \$480} (a diff of 128), not {\tt \$428} (a diff of 40)
 as you might expect.
 Address {\tt \$428} actually corresponds to row 16.
+
+For example, see the sample image in Table~\ref{table:loresmap} and how
+the address values are interleaved.
+This same image is shown in Table~\ref{table:linear} as it would
+appear if memory was read linearly.
+To make things even more confusing, the image is scattered even
+more completely across the physical RAM chips for reasons we will
+describe below.
 
 The reason for this craziness, as with most oddities on the Apple II,
 turns out to be Steve Wozniak being especially clever.
@@ -99,7 +112,7 @@ Well SRAM uses 6 transistors to store a bit, DRAM uses only 1.
 So in theory you can fit 6 times the RAM in the same space, leading
 to much cheaper costs and much better density.
 
-To avoid losing the contents though, you must regularly refresh.
+To avoid losing DRAM contents, you must regularly refresh the capacitors.
 This involves reading each memory value out faster
 than it leaks away.
 DRAM reads are destructive,
@@ -196,6 +209,6 @@ at even row offsets (as this makes the code smaller and simpler).
 While this seems needlessly complicated, the hi-res graphics mode
 is even worse that the mess described above.
 
-\input{table.tex}
+\input{good_table.tex}
 
-\end{document}
+%\end{document}
