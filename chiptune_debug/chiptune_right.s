@@ -202,86 +202,15 @@ reset_ay_right:
 	; register in X
 	; value in MB_VALUE
 
-write_ay_both:
-
-write_ay_address_left:
-
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
-	sta	MOCK_6522_1_ORB		; latch_address on PB1		; 3
-	nop
-
-	; address
-	stx	MOCK_6522_1_ORA		; put address on PA1		; 3
-	; on AY-3-8913 hold 300ns
-	nop
-
-
-
-	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sta	MOCK_6522_1_ORB						; 3
-
-	; on AY-3-8913 hold at least 50ns
-
-	nop
-
-
-
-write_ay_value_left:
-
-	lda	MB_VALUE						; 3
-	sta	MOCK_6522_1_ORA		; put value on PA1		; 3
-			; AY-3-8913 must hold 50ns
-	nop
-
-
-	lda	#MOCK_AY_WRITE		;				; 2
-	sta	MOCK_6522_1_ORB		; write on PB1			; 3
-			; AY-3-8913 must hold 1800ns
-	nop
-	nop
-	nop
-	nop
-	nop
-
-
-
-	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sta	MOCK_6522_1_ORB						; 3
-			; AY-3-8913 must hold 100ns
-	nop
-
-
-
-
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
-	sta	MOCK_6522_1_ORB		; latch_address on PB1		; 3
-	nop
-
-	; address
-	stx	MOCK_6522_1_ORA		; put address on PA1		; 3
-
-	; on AY-3-8913 hold 300ns
-	nop
-
-
-	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sta	MOCK_6522_1_ORB						; 3
-
-	; on AY-3-8913 hold at least 50ns
-
-	nop
-
 
 write_ay_address_right:
 
 	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
 	sta	MOCK_6522_2_ORB		; latch_address on PB1		; 3
-	nop
 
 	; address
 	stx	MOCK_6522_2_ORA		; put address on PA1		; 3
 	; on AY-3-8913 hold 300ns
-	nop
 
 
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
@@ -289,32 +218,20 @@ write_ay_address_right:
 
 	; on AY-3-8913 hold at least 50ns
 
-	nop
 
 write_ay_value_right:
 
 	lda	MB_VALUE						; 3
 	sta	MOCK_6522_2_ORA		; put value on PA2		; 3
 			; AY-3-8913 must hold 50ns
-	nop
-
 
 	lda	#MOCK_AY_WRITE		;				; 2
 	sta	MOCK_6522_2_ORB		; write on PB2			; 3
 			; AY-3-8913 must hold 1800ns
-	nop
-	nop
-	nop
-	nop
-	nop
-
-
 
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_2_ORB						; 3
 			; AY-3-8913 must hold 100ns
-	nop
-
 
 
 	rts								; 6
@@ -328,13 +245,13 @@ write_ay_value_right:
 	; should silence the card
 	;=======================================
 clear_ay_both:
-	ldx	#13
-	lda	#0
-	sta	MB_VALUE
-clear_ay_left_loop:
-	jsr	write_ay_both
-	dex
-	bpl	clear_ay_left_loop
+;	ldx	#13
+;	lda	#0
+;	sta	MB_VALUE
+;clear_ay_left_loop:
+;	jsr	write_ay_both
+;	dex
+;	bpl	clear_ay_left_loop
 	rts
 
 
@@ -372,7 +289,7 @@ mb_write_frame:
 	; 4: C CHANNEL FINE
 	lda	c_fine,Y
 	sta	MB_VALUE
-	ldx	#4
+;	ldx	#4
 	jsr	write_ay_value_right
 
 increment_offset:
@@ -397,7 +314,8 @@ done_interrupt:
 
 c_fine:
 
-.byte $51,$3c,$32,$50, $3d,$32,$50,$3c, $33,$50,$3c,$32,$51,$3c,$32,$50
+.byte $51,$3c
+;.byte $32,$50, $3d,$32,$50,$3c, $33,$50,$3c,$32,$51,$3c,$32,$50
 
 
 

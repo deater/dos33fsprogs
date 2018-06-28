@@ -6,7 +6,9 @@ PNG2GR = ../gr-utils/png2gr
 all:	chiptune_debug.dsk
 
 chiptune_debug.dsk:	CHIPTUNE_IRQ CHIPTUNE_NOIRQ CHIPTUNE_25HZ \
-		CHIPTUNE_BARE CHIPTUNE_MIN CHIPTUNE_TINY CHIPTUNE_READBACK
+		CHIPTUNE_BARE CHIPTUNE_MIN CHIPTUNE_TINY CHIPTUNE_READBACK \
+		CHIPTUNE_RIGHT CHIPTUNE_SMALLEST
+
 	cp chiptune_empty.dsk chiptune_debug.dsk
 	$(DOS33) -y chiptune_debug.dsk BSAVE -a 0x0C00 CHIPTUNE_IRQ
 	$(DOS33) -y chiptune_debug.dsk BSAVE -a 0x0C00 CHIPTUNE_NOIRQ
@@ -15,6 +17,8 @@ chiptune_debug.dsk:	CHIPTUNE_IRQ CHIPTUNE_NOIRQ CHIPTUNE_25HZ \
 	$(DOS33) -y chiptune_debug.dsk BSAVE -a 0x0C00 CHIPTUNE_MIN
 	$(DOS33) -y chiptune_debug.dsk BSAVE -a 0x0C00 CHIPTUNE_TINY
 	$(DOS33) -y chiptune_debug.dsk BSAVE -a 0x0C00 CHIPTUNE_READBACK
+	$(DOS33) -y chiptune_debug.dsk BSAVE -a 0x0C00 CHIPTUNE_RIGHT
+	$(DOS33) -y chiptune_debug.dsk BSAVE -a 0x0C00 CHIPTUNE_SMALLEST
 
 
 CHIPTUNE_IRQ:	chiptune_irq.o
@@ -63,6 +67,19 @@ CHIPTUNE_TINY:	chiptune_tiny.o
 chiptune_tiny.o:	chiptune_tiny.s
 	ca65 -o chiptune_tiny.o chiptune_tiny.s -l chiptune_tiny.lst
 
+CHIPTUNE_RIGHT:	chiptune_right.o
+	ld65 -o CHIPTUNE_RIGHT chiptune_right.o -C ../linker_scripts/apple2_c00.inc
+
+chiptune_right.o:	chiptune_right.s
+	ca65 -o chiptune_right.o chiptune_right.s -l chiptune_right.lst
+
+CHIPTUNE_SMALLEST:	chiptune_smallest.o
+	ld65 -o CHIPTUNE_SMALLEST chiptune_smallest.o -C ../linker_scripts/apple2_c00.inc
+
+chiptune_smallest.o:	chiptune_smallest.s
+	ca65 -o chiptune_smallest.o chiptune_smallest.s -l chiptune_smallest.lst
+
+
 
 CHIPTUNE_READBACK:	chiptune_readback.o
 	ld65 -o CHIPTUNE_READBACK chiptune_readback.o -C ../linker_scripts/apple2_c00.inc
@@ -74,5 +91,6 @@ chiptune_readback.o:	chiptune_readback.s
 clean:
 	rm -f *~ TITLE.GR *.o *.lst \
 		CHIPTUNE_PLAYER CHIPTUNE_IRQ CHIPTUNE_NOIRQ CHIPTUNE_25HZ \
-		CHIPTUNE_MIN CHIPTUNE_TINY CHIPTUNE_READBACK
+		CHIPTUNE_MIN CHIPTUNE_TINY CHIPTUNE_READBACK CHIPTUNE_RIGHT \
+		CHIPTUNE_SMALLEST
 
