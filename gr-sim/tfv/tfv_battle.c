@@ -77,6 +77,7 @@ List hits
 #define	MAGIC_ICE	2
 #define MAGIC_MALAISE	4
 #define MAGIC_BOLT	8
+#define MAGIC_HEAL	16
 
 struct enemy_type {
 	char *name;
@@ -120,7 +121,7 @@ static struct enemy_type enemies[8]={
 		.hp_mask=0x1f,
 		.attack_name="Song",
 		.weakness=MAGIC_MALAISE,
-		.resist=MAGIC_BOLT,
+		.resist=MAGIC_BOLT|MAGIC_HEAL,
 		.sprite=killer_crab,
 	},
 	[4]= {
@@ -190,6 +191,42 @@ static int attack(int enemy_x,int enemy_type) {
 	return 10;
 }
 
+static int enemy_attack(int enemy_x,int enemy_type,int tfv_x) {
+
+	int ax=enemy_x;
+
+	while(ax<30) {
+
+		// put attack name on
+		// occasionally attack with that enemy's power?
+		// occasionally heal self?
+
+		gr_copy_to_current(0xc00);
+
+		// draw first so behind enemy
+		grsim_put_sprite(tfv_stand_left,tfv_x,20);
+		grsim_put_sprite(tfv_led_sword,tfv_x-5,20);
+
+		if (ax&1) {
+			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
+		}
+		else {
+			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
+		}
+
+
+
+
+		page_flip();
+
+		ax+=1;
+
+		usleep(20000);
+	}
+
+	return 10;
+}
+
 
 
 static int victory_dance(void) {
@@ -237,26 +274,9 @@ static int victory_dance(void) {
 	return 0;
 }
 
-int do_battle(void) {
+static int draw_battle_bottom(int enemy_type) {
 
-	int i,ch;
-
-	int enemy_x=2;
-	int enemy_type=0;
-	int saved_drawpage;
-	int enemy_hp=0;
-
-	int ax=34;
-
-	/* Setup Enemy */
-	// enemy_type=X
-	// ranom, with weight toward proper terrain
-
-	/* Setup Enemy HP */
-	enemy_hp=enemies[enemy_type].hp_base+
-			(rand()&enemies[enemy_type].hp_mask);
-
-	saved_drawpage=ram[DRAW_PAGE];
+	int i;
 
 	clear_bottom();
 
@@ -301,6 +321,36 @@ int do_battle(void) {
 		hlin_double(ram[DRAW_PAGE],12,12,i);
 	}
 
+	return 0;
+}
+
+
+
+int do_battle(void) {
+
+	int i,ch;
+
+	int enemy_x=2;
+	int enemy_type=0;
+	int saved_drawpage;
+	int enemy_hp=0;
+
+	int ax=34;
+	int battle_count=50;
+	int enemy_count=30;
+
+	/* Setup Enemy */
+	// enemy_type=X
+	// random, with weight toward proper terrain
+
+	/* Setup Enemy HP */
+	enemy_hp=enemies[enemy_type].hp_base+
+			(rand()&enemies[enemy_type].hp_mask);
+
+
+	saved_drawpage=ram[DRAW_PAGE];
+
+	draw_battle_bottom(enemy_type);
 
 	/* Draw background */
 
@@ -330,17 +380,36 @@ int do_battle(void) {
 
 		page_flip();
 
-		ch=grsim_input();
-		if (ch=='q') break;
-
-		if (ch==' ') enemy_hp-=attack(enemy_x,enemy_type);
-
 		usleep(100000);
+
+		ch=grsim_input();
+		if (ch=='q') return 0;
+
+		if (enemy_count==0) {
+			hp-=enemy_attack(enemy_x,enemy_type,ax);
+			// decrement HP
+			// update limit count
+			// redraw bottom
+			enemy_count=50;
+		}
+		else {
+			enemy_count--;
+		}
+
+		if (battle_count==0) {
+			if (ch==' ') {
+				enemy_hp-=attack(enemy_x,enemy_type);
+				battle_count=50;
+			}
+		} else {
+			battle_count--;
+		}
 
 		if (enemy_hp<0) {
 			victory_dance();
 			break;
 		}
+
 	}
 
 	ram[DRAW_PAGE]=PAGE0;
