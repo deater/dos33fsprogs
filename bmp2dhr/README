@@ -1,0 +1,6 @@
+Modified the source a bit, mostly so it compiles and runs
+on 64-bit Linux.
+
+Most of it was assumptions about the size of unsigned long in
+the BMP header.
+

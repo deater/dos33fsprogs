@@ -91,3 +91,4 @@ Still shows the glitch, actually very quickly.
 Changes made to test this:
 + Try increasing the WAIT delay from 85 to 120
 	(still an issue)
+	
