@@ -20,6 +20,7 @@
 		// Other possibilities
 #define ITEM_CHEX_MIX		0x01	// oscar
 #define ITEM_CLASS_RING		0x02	//
+#define ITEM_VORTEXCANNON	0x04	//
 
 extern char item_names[2][8][15];
 
