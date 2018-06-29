@@ -205,12 +205,14 @@ reset_ay_right:
 
 write_ay_address_right:
 
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
-	sta	MOCK_6522_2_ORB		; latch_address on PB1		; 3
-
 	; address
 	stx	MOCK_6522_2_ORA		; put address on PA1		; 3
 	; on AY-3-8913 hold 300ns
+
+
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
+	sta	MOCK_6522_2_ORB		; latch_address on PB1		; 3
+
 
 
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2

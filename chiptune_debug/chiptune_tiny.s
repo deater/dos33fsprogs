@@ -206,16 +206,14 @@ write_ay_both:
 
 write_ay_address_left:
 
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
-	sta	MOCK_6522_1_ORB		; latch_address on PB1		; 3
-	nop
-
 	; address
 	stx	MOCK_6522_1_ORA		; put address on PA1		; 3
 	; on AY-3-8913 hold 300ns
 	nop
 
-
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
+	sta	MOCK_6522_1_ORB		; latch_address on PB1		; 3
+	nop
 
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_1_ORB						; 3
@@ -250,39 +248,16 @@ write_ay_value_left:
 			; AY-3-8913 must hold 100ns
 	nop
 
-
-
-
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
-	sta	MOCK_6522_1_ORB		; latch_address on PB1		; 3
-	nop
-
-	; address
-	stx	MOCK_6522_1_ORA		; put address on PA1		; 3
-
-	; on AY-3-8913 hold 300ns
-	nop
-
-
-	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sta	MOCK_6522_1_ORB						; 3
-
-	; on AY-3-8913 hold at least 50ns
-
-	nop
-
-
 write_ay_address_right:
 
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
-	sta	MOCK_6522_2_ORB		; latch_address on PB1		; 3
-	nop
-
 	; address
-	stx	MOCK_6522_2_ORA		; put address on PA1		; 3
+	stx	MOCK_6522_2_ORA		; put address on PA2		; 3
 	; on AY-3-8913 hold 300ns
 	nop
 
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB2		; 2
+	sta	MOCK_6522_2_ORB		; latch_address on PB2		; 3
+	nop
 
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_2_ORB						; 3

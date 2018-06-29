@@ -4,7 +4,12 @@
 MB_CHUNK_OFFSET = $94
 MB_VALUE = $91
 
-WAIT = $FCA8
+WAIT = $FCA8	; 1/2(26+27A+5A^2) us
+	; 85 = 19.223ms
+	; 86 = 19.6ms
+	; 87 = 20.11ms
+	; 120 = 37.6ms
+	; 240 = 147.25ms
 
 ; left channel
 MOCK_6522_1_ORB	=	$C400	; 6522 #1 port b data
@@ -115,15 +120,6 @@ reset_ay_right:
 	nop
 	nop
 
-
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-
-
 	;=========================
 	; Setup initial conditions
 	;=========================
@@ -156,49 +152,28 @@ reset_ay_right:
 
 main_loop:
 
-
-	;======================================
-	; Write frames to Mockingboard
-	;======================================
-	; actually plays frame loaded at end of
-	; last interrupt, so 20ms behind?
-
-mb_write_frame:
-
-	ldy	MB_CHUNK_OFFSET
-
-
-	; 4: C CHANNEL FINE
-	lda	c_fine,Y
+	lda	#$51
 	sta	MB_VALUE
-;	ldx	#4
 	jsr	write_ay_value_right
 
-increment_offset:
-	inc	MB_CHUNK_OFFSET		; increment offset
-	lda	MB_CHUNK_OFFSET
+	; delay ~20ms
+	lda     #87
+	jsr     WAIT    ; wait 20ms or so
 
-	and	#$1			; reduce number played
-					; $f = 16
-					; $3 = 4
-					; $1 = 2
-					; $0 = 1
-
-	sta	MB_CHUNK_OFFSET
+	lda	#$3C
+	sta	MB_VALUE
+	jsr	write_ay_value_right
 
 
-	;============================
-	; delay 20ms?
-	;============================
-	lda     #85
+	; delay ~20ms
+	lda     #87
 	jsr     WAIT    ; wait 20ms or so
 
 	jmp	main_loop
 
 
 
-;	Write sequence
-;	Inactive -> Latch Address -> Inactive -> Write Data -> Inactive
+
 
 	;=========================================
 	; Write Right/Left to save value AY-3-8910
@@ -206,46 +181,43 @@ increment_offset:
 	; register in X
 	; value in MB_VALUE
 
+;	Write sequence
+;	ADDRESS:	Inactive -> Latch Address -> Addr -> Inactive
+;		Programming manual (as well as timing diagrams)
+;		say you can flip latch / addr order, but the simulators
+;		don't like that.
+;	Value:		Inactive -> Data -> Write Data -> Inactive
+;
+
 
 write_ay_address_right:
 
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
-	sta	MOCK_6522_2_ORB		; latch_address on PB1		; 3
-
 	; address
 	stx	MOCK_6522_2_ORA		; put address on PA1		; 3
-	; on AY-3-8913 hold 300ns
 
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
+	sta	MOCK_6522_2_ORB		; latch_address on PB1		; 3
+	; on AY-3-8913 hold 300ns, on AY-3-8910 hold 400ns
 
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_2_ORB						; 3
-
-	; on AY-3-8913 hold at least 50ns
+	; on AY-3-8913 hold 50ns, on AY-3-8910 hold 100ns
 
 
 write_ay_value_right:
 
 	lda	MB_VALUE						; 3
-	sta	MOCK_6522_2_ORA		; put value on PA2		; 3
-			; AY-3-8913 must hold 50ns
+	sta	MOCK_6522_2_ORA		; put value on PA2		; 4
+	; AY-3-8913 + AY-3-8910: 50ns
+	; presumably the next two instructions take 6*1us so plenty of time
 
 	lda	#MOCK_AY_WRITE		;				; 2
-	sta	MOCK_6522_2_ORB		; write on PB2			; 3
-			; AY-3-8913 must hold 1800ns
+	sta	MOCK_6522_2_ORB		; write on PB2			; 4
+	; AY-3-8913 hold 1800ns, AY-3-8910 500ns
 
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sta	MOCK_6522_2_ORB						; 3
-			; AY-3-8913 must hold 100ns
-
+	sta	MOCK_6522_2_ORB						; 4
+	; AY-3-8913 + AY-3-8910: 100ns
 
 	rts								; 6
-								;===========
-								;       53
-
-c_fine:
-
-.byte $51,$3c
-;.byte $32,$50, $3d,$32,$50,$3c, $33,$50,$3c,$32,$51,$3c,$32,$50
-
-
 

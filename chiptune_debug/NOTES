@@ -72,3 +72,22 @@ $3c by itself = fine
 50/3c and 50/32 also have issues, but not quite the same
 (Some, audio fading instead of glitch?)
 
+
+Got new AY-3-8913 chips
+Tried looking at the timings.
+8913 timings are actually worse in some cases (especially writes)
+than 8910, though still in the low us range so we shouldn't be 
+hitting it?
+
+The programming manual and timing diagrams hint that you can flip
+the address_latch / address ordering when writing.  This does
+work on real hardware but not in any of the emulators.
+
+Have a new test, chiptune_smallest:
++ No IRQ, plain busy wait at 20ms
++ No lookups, hardcode the $51 to $3c transition
+
+Still shows the glitch, actually very quickly.
+Changes made to test this:
++ Try increasing the WAIT delay from 85 to 120
+	(still an issue)
