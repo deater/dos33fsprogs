@@ -23,7 +23,7 @@
      Plain Fish                 BUBBLE          FIRE            ICE
 
      Evil Tree      RND-16	LEAVE		FIRE		ICE
-     Wood Elf                   SING            MALAISE         FIRE
+     Wood Elf                   SING            MALAISE         BOLT
 
      Giant Bee	    RND-64	BUZZSAW		ICE		NONE
      Procrastinon   RND-32	PUTOFF		NONE		MALAISE
@@ -42,6 +42,7 @@ Forest? Grassland? Artic? Ocean?
 		SUMMONS -> METROCAT
 		MAGIC   ->  HEAL    FIRE
                             ICE     MALAISE
+			    BOLT
 		LIMIT	->  SLICE   ZAP
                             DROP    
 
@@ -75,6 +76,7 @@ List hits
 #define MAGIC_FIRE	1
 #define	MAGIC_ICE	2
 #define MAGIC_MALAISE	4
+#define MAGIC_BOLT	8
 
 struct enemy_type {
 	char *name;
@@ -92,6 +94,69 @@ static struct enemy_type enemies[8]={
 		.attack_name="Pinch",
 		.weakness=MAGIC_MALAISE,
 		.resist=MAGIC_FIRE,
+		.sprite=killer_crab,
+	},
+	[1]= {
+		.name="Plain Fish",
+		.hp_base=10,
+		.hp_mask=0x1f,
+		.attack_name="Bubble",
+		.weakness=MAGIC_FIRE,
+		.resist=MAGIC_ICE,
+		.sprite=killer_crab,
+	},
+	[2]= {
+		.name="Evil Tree",
+		.hp_base=10,
+		.hp_mask=0x1f,
+		.attack_name="Leaves",
+		.weakness=MAGIC_FIRE,
+		.resist=MAGIC_ICE,
+		.sprite=killer_crab,
+	},
+	[3]= {
+		.name="Wood Elf",
+		.hp_base=10,
+		.hp_mask=0x1f,
+		.attack_name="Song",
+		.weakness=MAGIC_MALAISE,
+		.resist=MAGIC_BOLT,
+		.sprite=killer_crab,
+	},
+	[4]= {
+		.name="Giant Bee",
+		.hp_base=10,
+		.hp_mask=0x1f,
+		.attack_name="Buzzsaw",
+		.weakness=MAGIC_ICE,
+		.resist=MAGIC_NONE,
+		.sprite=killer_crab,
+	},
+	[5]= {
+		.name="Procrastinon",
+		.hp_base=10,
+		.hp_mask=0x1f,
+		.attack_name="Putoff",
+		.weakness=MAGIC_NONE,
+		.resist=MAGIC_MALAISE,
+		.sprite=killer_crab,
+	},
+	[6]= {
+		.name="Ice Fish",
+		.hp_base=10,
+		.hp_mask=0x1f,
+		.attack_name="Auger",
+		.weakness=MAGIC_FIRE,
+		.resist=MAGIC_ICE,
+		.sprite=killer_crab,
+	},
+	[7]= {
+		.name="Evil Penguin",
+		.hp_base=10,
+		.hp_mask=0x1f,
+		.attack_name="Waddle",
+		.weakness=MAGIC_FIRE,
+		.resist=MAGIC_ICE,
 		.sprite=killer_crab,
 	},
 };
