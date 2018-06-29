@@ -121,7 +121,10 @@ void print_info(void) {
 
 	basic_htab(23);
 	basic_vtab(7);
-	basic_print("MP:       0/0");
+	basic_print("MP:       ");
+	print_u8(mp);
+	basic_print("/");
+	print_u8(max_mp);
 
 	basic_htab(23);
 	basic_vtab(9);
