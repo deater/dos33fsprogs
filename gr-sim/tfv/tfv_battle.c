@@ -68,6 +68,7 @@ List hits
 
 */
 
+static int battle_bar=0;
 
 
 /* Background depend on map location? */
@@ -279,10 +280,13 @@ static int victory_dance(void) {
 static int draw_battle_bottom(int enemy_type) {
 
 	int i;
+	int saved_page;
 
-	clear_bottom();
+	saved_page=ram[DRAW_PAGE];
 
 	ram[DRAW_PAGE]=PAGE2;	// 0xc00
+
+	clear_bottom();
 
 	vtab(22);
 	htab(1);
@@ -290,38 +294,63 @@ static int draw_battle_bottom(int enemy_type) {
 	print(enemies[enemy_type].name);
 
 	vtab(21);
-	htab(27);
+	htab(25);
 	move_cursor();
 	print("HP");
 
 	vtab(21);
-	htab(34);
+	htab(28);
+	move_cursor();
+	print("MP");
+
+	vtab(21);
+	htab(31);
+	move_cursor();
+	print("TIME");
+
+	vtab(21);
+	htab(36);
 	move_cursor();
 	print("LIMIT");
 
 	vtab(22);
 	htab(15);
 	move_cursor();
-	print("DEATER");
+	// should print "NAMEO"
+	print("DEATER--");
 
 	vtab(22);
 	htab(24);
 	move_cursor();
 	print_byte(hp);
-	print("/");
-	print_byte(max_hp);
+
+	vtab(22);
+	htab(27);
+	move_cursor();
+	print_byte(mp);
+
+	/* Draw Time bargraph */
+	printf("Battle_bar=%d Limit=%d\n",battle_bar,limit);
+	ram[COLOR]=0xa0;
+	hlin_double(ram[DRAW_PAGE],30,34,42);
+	ram[COLOR]=0x20;
+	if (battle_bar) hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
+
 
 	/* Draw Limit break bargraph */
-	ram[COLOR]=0x20;
-	hlin_double(ram[DRAW_PAGE],33,33+limit,42);
 	ram[COLOR]=0xa0;
-	hlin_double_continue(5-limit);
+	hlin_double(ram[DRAW_PAGE],35,39,42);
+
+	ram[COLOR]=0x20;
+	if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
 
 	/* Draw inverse separator */
 	ram[COLOR]=0x20;
 	for(i=40;i<50;i+=2) {
 		hlin_double(ram[DRAW_PAGE],12,12,i);
 	}
+
+	ram[DRAW_PAGE]=saved_page;
 
 	return 0;
 }
@@ -367,7 +396,7 @@ static int rotate_intro(void) {
 				plot(xx,yy);
 			}
 		}
-		thetadiff-=(6.28/16.0);
+		thetadiff+=(6.28/16.0);
 		page_flip();
 
 		usleep(100000);
@@ -387,8 +416,9 @@ int do_battle(void) {
 	int enemy_hp=0;
 
 	int ax=34;
-	int battle_count=50;
+	int battle_count=20;
 	int enemy_count=30;
+	int old;
 
 	/* Setup Enemy */
 	// enemy_type=X
@@ -403,8 +433,11 @@ int do_battle(void) {
 
 	saved_drawpage=ram[DRAW_PAGE];
 
+	ram[DRAW_PAGE]=PAGE2;
+
 	draw_battle_bottom(enemy_type);
 
+	/*******************/
 	/* Draw background */
 
 	/* Draw sky */
@@ -439,29 +472,45 @@ int do_battle(void) {
 		if (ch=='q') return 0;
 
 		if (enemy_count==0) {
+			// attack and decrement HP
 			hp-=enemy_attack(enemy_x,enemy_type,ax);
-			// decrement HP
 			// update limit count
+			if (limit<5) limit++;
 			// redraw bottom
+			draw_battle_bottom(enemy_type);
+			// reset enemy time. FIXME: variable?
 			enemy_count=50;
 		}
 		else {
 			enemy_count--;
 		}
 
-		if (battle_count==0) {
+		if (battle_count>=64) {
 			if (ch==' ') {
+				// attack and decrement HP
 				enemy_hp-=attack(enemy_x,enemy_type);
-				battle_count=50;
+				// redraw bottom
+				draw_battle_bottom(enemy_type);
+				// reset battle time
+				battle_count=0;
 			}
 		} else {
-			battle_count--;
+			battle_count++;
 		}
+
+		old=battle_bar;
+		battle_bar=(battle_count/16);
+		if (battle_bar!=old) draw_battle_bottom(enemy_type);
+
 
 		if (enemy_hp<0) {
 			victory_dance();
 			break;
 		}
+
+//		if (hp<0) {
+//			game_over();
+//		}
 
 	}
 

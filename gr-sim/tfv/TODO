@@ -1,11 +1,11 @@
 Soon:
-+ Enable getting back on spaceship
++ Enable getting back on spaceship (with animation)
 + Better collision detection on Spaceship land
 + Better collision detection/walk on+off in College Park
 + Hook up art for all possible locations
 + Working conversation
 + Riding animals
-+ Battle
++ Battle Sequence
 + End sequence
 
 Credits:
@@ -17,27 +17,3 @@ Not soon:
 + Play as either DEATER or FROGGY
 + Allow spaceship to land on arbitrary grass space
 + Toggle lowercase/uppercase text
-
-Trailer:
-	Coming this July
-	At Kansasfest
-
-	+ A new game about 20 year old events for a 40 year old platform
-
-	+ Title Screen
-	+ Riding bird
-	+ Battle against killer crab
-	+ Darkest Bel Air
-
-
-
-
-
-
-
-
-
-
-
-
-
