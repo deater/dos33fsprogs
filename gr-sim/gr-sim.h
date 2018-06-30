@@ -45,6 +45,7 @@ void move_and_print(char *string);
 void print(char *string);
 void print_both_pages(char *string);
 void print_inverse(char *string);
+void print_flash(char *string);
 int plot(unsigned char xcoord, unsigned char ycoord);
 
 #define APPLE_UP        11

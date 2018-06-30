@@ -346,18 +346,12 @@ static int draw_battle_bottom(int enemy_type) {
 	vtab(21);
 	htab(36);
 	move_cursor();
-	if (limit<5) {
+	if (limit<4) {
 		print("LIMIT");
 	}
 	else {
-		/* Make if flash? */
-		char limit_string[6]="LIMIT";
-		limit_string[0]|=0x40;
-		limit_string[1]|=0x40;
-		limit_string[2]|=0x40;
-		limit_string[3]|=0x40;
-		limit_string[4]|=0x40;
-		print(limit_string);
+		/* Make if flash? set bit 0x40 */
+		print_flash("LIMIT");
 	}
 
 	vtab(22);
@@ -522,7 +516,7 @@ int do_battle(void) {
 			// attack and decrement HP
 			hp-=enemy_attack(enemy_x,enemy_type,ax);
 			// update limit count
-			if (limit<5) limit++;
+			if (limit<4) limit++;
 			// redraw bottom
 			draw_battle_bottom(enemy_type);
 			// reset enemy time. FIXME: variable?

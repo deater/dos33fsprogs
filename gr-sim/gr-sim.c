@@ -1667,3 +1667,13 @@ void print_inverse(char *string) {
 	}
 	ram[BASL]+=strlen(string);
 }
+
+void print_flash(char *string) {
+
+	for(y=0;y<strlen(string);y++) {
+		a=string[y];
+		a=(a&0x3f)|0x40;
+		ram[y_indirect(BASL,y)]=a;
+	}
+	ram[BASL]+=strlen(string);
+}
