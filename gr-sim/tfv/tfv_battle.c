@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <string.h>
 
+#include <math.h>
+
 #include "gr-sim.h"
 #include "tfv_utils.h"
 #include "tfv_zp.h"
@@ -325,6 +327,55 @@ static int draw_battle_bottom(int enemy_type) {
 }
 
 
+static int rotate_intro(void) {
+
+	int xx,yy,color,x2,y2;
+	double h,theta,dx,dy,theta2,thetadiff,nx,ny;
+	int i;
+
+	gr_copy(0x400,0xc00);
+
+//	gr_copy_to_current(0xc00);
+//	page_flip();
+//	gr_copy_to_current(0xc00);
+//	page_flip();
+
+	thetadiff=0;
+
+	for(i=0;i<8;i++) {
+
+		grsim_update();
+
+		for(yy=0;yy<40;yy++) {
+			for(xx=0;xx<40;xx++) {
+				dx=(xx-20);
+				dy=(yy-20);
+				h=sqrt((dx*dx)+(dy*dy));
+				theta=atan2(dy,dx);
+
+				theta2=theta+thetadiff;
+				nx=h*cos(theta2);
+				ny=h*sin(theta2);
+
+				x2=nx+20;
+				y2=ny+20;
+				if ((x2<0) || (x2>39)) color=0;
+				else if ((y2<0) || (y2>39)) color=0;
+				else color=scrn_page(x2,y2,PAGE2);
+
+				color_equals(color);
+				plot(xx,yy);
+			}
+		}
+		thetadiff-=(6.28/16.0);
+		page_flip();
+
+		usleep(100000);
+	}
+
+	return 0;
+}
+
 
 int do_battle(void) {
 
@@ -342,6 +393,8 @@ int do_battle(void) {
 	/* Setup Enemy */
 	// enemy_type=X
 	// random, with weight toward proper terrain
+
+	rotate_intro();
 
 	/* Setup Enemy HP */
 	enemy_hp=enemies[enemy_type].hp_base+
@@ -419,5 +472,3 @@ int do_battle(void) {
 
 	return 0;
 }
-
-
