@@ -165,10 +165,37 @@ static struct enemy_type enemies[8]={
 	},
 };
 
+static int gr_put_num(int xx,int yy,int number) {
+
+	int xt=xx,digit,left,hundreds;
+
+	digit=number/100;
+	if ((digit) && (digit<10)) {
+		grsim_put_sprite(numbers[digit],xt,yy);
+	}
+	hundreds=digit;
+	left=number%100;
+	xt+=4;
+
+	digit=left/10;
+	if ((digit) || (hundreds)) {
+		grsim_put_sprite(numbers[digit],xt,yy);
+	}
+	left=number%10;
+
+	xt+=4;
+
+	digit=left;
+	grsim_put_sprite(numbers[digit],xt,yy);
+
+	return 0;
+}
+
 
 static int attack(int enemy_x,int enemy_type) {
 
 	int ax=34;
+	int damage=10;
 
 	while(ax>10) {
 
@@ -191,12 +218,19 @@ static int attack(int enemy_x,int enemy_type) {
 		usleep(20000);
 	}
 
-	return 10;
+	gr_put_num(2,10,damage);
+	page_flip();
+	usleep(250000);
+
+	return damage;
 }
+
+
 
 static int enemy_attack(int enemy_x,int enemy_type,int tfv_x) {
 
 	int ax=enemy_x;
+	int damage=10;
 
 	while(ax<30) {
 
@@ -217,9 +251,6 @@ static int enemy_attack(int enemy_x,int enemy_type,int tfv_x) {
 			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
 		}
 
-
-
-
 		page_flip();
 
 		ax+=1;
@@ -227,7 +258,11 @@ static int enemy_attack(int enemy_x,int enemy_type,int tfv_x) {
 		usleep(20000);
 	}
 
-	return 10;
+	gr_put_num(25,10,damage);
+	page_flip();
+	usleep(250000);
+
+	return damage;
 }
 
 
@@ -311,7 +346,19 @@ static int draw_battle_bottom(int enemy_type) {
 	vtab(21);
 	htab(36);
 	move_cursor();
-	print("LIMIT");
+	if (limit<5) {
+		print("LIMIT");
+	}
+	else {
+		/* Make if flash? */
+		char limit_string[6]="LIMIT";
+		limit_string[0]|=0x40;
+		limit_string[1]|=0x40;
+		limit_string[2]|=0x40;
+		limit_string[3]|=0x40;
+		limit_string[4]|=0x40;
+		print(limit_string);
+	}
 
 	vtab(22);
 	htab(15);
