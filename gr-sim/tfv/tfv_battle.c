@@ -293,20 +293,22 @@ static int victory_dance(void) {
 
 	ram[DRAW_PAGE]=saved_drawpage;
 
-	for(i=0;i<50;i++) {
+	for(i=0;i<25;i++) {
 
 		gr_copy_to_current(0xc00);
 
 		if (i&1) {
 			grsim_put_sprite(tfv_stand_left,ax,20);
+			grsim_put_sprite(tfv_led_sword,ax-5,20);
 		}
 		else {
-			grsim_put_sprite(tfv_walk_left,ax,20);
+			grsim_put_sprite(tfv_victory,ax,20);
+			grsim_put_sprite(tfv_led_sword,ax-2,14);
 		}
 
 		page_flip();
 
-		usleep(100000);
+		usleep(200000);
 	}
 
 	return 0;
