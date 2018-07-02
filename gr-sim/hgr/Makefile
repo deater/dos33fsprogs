@@ -6,8 +6,16 @@ SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 GR_SIM = ../gr-sim.a
 
-all:	lines
+all:	lines image_load
 
+
+###
+
+image_load:	image_load.o $(GR_SIM)
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o image_load image_load.o $(GR_SIM)
+
+image_load.o:	image_load.c
+	$(CC) $(CFLAGS) -c image_load.c
 
 ###
 
@@ -21,4 +29,4 @@ lines.o:	lines.c
 
 
 clean:	
-	rm -f *~ *.o lines
+	rm -f *~ *.o lines image_load
