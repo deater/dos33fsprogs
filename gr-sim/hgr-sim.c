@@ -187,7 +187,142 @@ int hplot(int xx, int yy) {
 	return 0;
 }
 
+static void move_left_or_right(void) {
+	// F465
+	if (n==0) goto move_right;
+
+	a=ram[HMASK];
+	lsr();
+	if (c==1) goto lr_2;
+	a=a^0xc0;
+lr_1:
+	ram[HMASK]=a;
+	return;
+lr_2:
+	dey();
+	if (n==0) goto lr_3;
+	y=39;
+lr_3:
+	a=0xc0;
+lr_4:
+	ram[HMASK]=a;
+	ram[HGR_HORIZ]=y;
+	a=ram[HGR_BITS];
+	color_shift();
+	return;
+
+move_right:
+	a=ram[HMASK];
+	asl();
+	a=a^0x80;
+	if (a&0x80) goto lr_1;
+	a=0x81;
+	iny();
+	cpy(40);
+	if (c==0) goto lr_4;
+	y=0;
+	goto lr_4;
+
+}
+
+static void move_up_or_down(void) {
+
+}
+
+static void hglin(void) {
+
+	// F53A
+	pha();
+	c=1;
+	sbc(ram[HGR_X]);
+	pha();
+	a=x;
+	sbc(ram[HGR_X+1]);
+	ram[HGR_QUADRANT]=a;
+	// F544
+	if (c==1) goto hglin_1;
+	pla();
+	a=a^0xff;
+	adc(1);
+	pha();
+	a=0;
+	sbc(ram[HGR_QUADRANT]);
+	// F550
+hglin_1:
+	ram[HGR_DX+1]=a;
+	ram[HGR_E+1]=a;
+	pla();
+	ram[HGR_DX]=a;
+	ram[HGR_E]=a;
+	pla();
+	ram[HGR_X]=a;
+	ram[HGR_X+1]=x;
+	a=y;
+	c=0;
+	sbc(ram[HGR_Y]);
+	if (c==0) goto hglin_2;
+	a=a^0xff;
+	adc(0xfe);
+hglin_2:
+	// F566
+	ram[HGR_DY]=a;
+	ram[HGR_Y]=y;
+	ror_mem(HGR_QUADRANT);
+	c=1;
+	sbc(ram[HGR_DX]);
+	x=a;
+	a=0xff;
+	sbc(ram[HGR_DX+1]);
+	ram[HGR_COUNT]=a;
+	y=ram[HGR_HORIZ];
+	if (c==1) goto movex2;	// always?
+	// f57c
+movex:
+	asl();
+	move_left_or_right();
+	c=1;
+
+	// f581
+movex2:
+	a=ram[HGR_E];
+	adc(ram[HGR_DY]);
+	ram[HGR_E]=a;
+	a=ram[HGR_E+1];
+	sbc(0);
+movex2_1:
+	ram[HGR_E+1]=a;
+	a=ram[y_indirect(GBASL,y)];
+	a=a^ram[HGR_BITS];
+	a=a&ram[HMASK];
+	a=a^ram[y_indirect(GBASL,y)];
+	ram[y_indirect(GBASL,y)]=a;
+	x++;
+	if (x!=0) goto movex2_2;
+	ram[HGR_COUNT]++;
+	if (ram[HGR_COUNT]==0) return;
+	// F59e
+movex2_2:
+	a=ram[HGR_QUADRANT];
+	if (c==1) goto movex;
+	move_up_or_down();
+	c=0;
+	a=ram[HGR_E];
+	adc(ram[HGR_DX]);
+	ram[HGR_E]=a;
+	a=ram[HGR_E+1];
+	adc(ram[HGR_DX+1]);
+	goto movex2_1;
+}
+
 int hplot_to(int xx, int yy) {
+
+	// F712
+	hfns(xx,yy);
+	ram[DSCTMP]=y;
+	y=a;
+	a=x;
+	x=ram[DSCTMP];
+	hglin();
 
 	return 0;
 }

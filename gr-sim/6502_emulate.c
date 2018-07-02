@@ -104,6 +104,45 @@ void cmp(int value) {
 	z=(result==0);
 }
 
+void cpy(int value) {
+
+	int temp_y;
+	int temp_value;
+	int result;
+
+	temp_y=a&0xff;
+	temp_value=(~value)&0xff;
+
+	result=temp_y+temp_value+1;
+
+	c=(result&0x100)>>8;
+
+	result&=0xff;
+
+	n=(result&0x80)>>7;
+	z=(result==0);
+}
+
+void cpx(int value) {
+
+	int temp_x;
+	int temp_value;
+	int result;
+
+	temp_x=x&0xff;
+	temp_value=(~value)&0xff;
+
+	result=temp_x+temp_value+1;
+
+	c=(result&0x100)>>8;
+
+	result&=0xff;
+
+	n=(result&0x80)>>7;
+	z=(result==0);
+}
+
+
 void pha(void) {
 
 	sp--;
@@ -222,6 +261,34 @@ void rol_mem(int addr) {
 //	printf("ROL %x=%x\n",addr,ram[addr]);
 }
 
+
+void dex(void) {
+	x--;
+
+	z=(x==0);
+	n=!!(x&0x80);
+}
+
+void dey(void) {
+	y--;
+
+	z=(y==0);
+	n=!!(y&0x80);
+}
+
+void inx(void) {
+	x++;
+
+	z=(x==0);
+	n=!!(x&0x80);
+}
+
+void iny(void) {
+	y++;
+
+	z=(y==0);
+	n=!!(y&0x80);
+}
 
 
 unsigned char high(int value) {

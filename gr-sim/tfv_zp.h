@@ -42,7 +42,16 @@
 #define HGR_SHAPE	0x1A
 #define HGR_SHAPE_H	0x1B
 #define HGR_BITS	0x1C
+#define HGR_COUNT	0x1D
 
+#define DSCTMP		0x9D
+
+#define HGR_DX		0xD0
+#define HGR_DX_H	0xD1
+#define HGR_DY		0xD2
+#define HGR_QUADRANT	0xD3
+#define HGR_E		0xD4
+#define HGR_E_H		0xD5
 #define HGR_X		0xE0
 #define HGR_X_H		0xE1
 #define HGR_Y		0xE2
