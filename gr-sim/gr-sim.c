@@ -188,8 +188,10 @@ static unsigned int color[16]={
 
 static unsigned int hcolor[8]={
 	0,		/*  0 black */
-	0x14f53c,	/*  1 bright green */
-	0xff44fd,	/*  2 purple */
+	0x2ad600,
+//	0x14f53c,	/*  1 bright green */
+//	0xff44fd,	/*  2 purple */
+	0xc530ff,
 	0xffffff,	/*  3 white */
 	0,		/*  4 black */
 	0xff6a3c,	/*  5 orange */
@@ -396,11 +398,11 @@ void draw_text(unsigned int *out_pointer,int text_start, int text_end) {
 
 void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
 
-	int i,j,yy,xx;
+	int i,j,k,yy,xx;
 	int gr_addr;
 	int temp_col;
 	unsigned int *t_pointer;
-	int last_pixel,current_byte,current_pixel;
+	int last_pixel,current_byte,current_pixel,odd=0;
 
 	t_pointer=out_pointer+(y_start*280*HGR_X_SCALE*HGR_Y_SCALE);
 
@@ -417,18 +419,32 @@ void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
 				gr_addr+=0x2000;
 			}
 			last_pixel=0;
+			odd=0;
 
 			for(xx=0;xx<HGR_XSIZE/7;xx++) {
 //				printf("HGR ADDR=%x\n",gr_addr);
 				current_byte=ram[gr_addr];
+// BBBBBBBB     OOOOOOOO   OO?WW?BB  BB?KK?OO
+// 10101010     01010101   01011010  10100101
+// 1 1 010101   1 0 101010
+// d5           aa         
 
-				for(i=0;i<HGR_X_SCALE;i++) {
-					current_pixel=!!(current_byte&(1<<(7-i)));
+
+				for(i=0;i<7;i++) {
+					current_pixel=!!(current_byte&(1<<i));
 					temp_col=((!!(current_byte&0x80))<<2)|
 						(last_pixel<<1)|
 						current_pixel;
-					*t_pointer=hcolor[temp_col];
-					t_pointer++;
+//					printf("Temp col=%d\n",temp_col);
+					if (odd)
+					for(k=0;k<HGR_X_SCALE;k++) {
+						*t_pointer=hcolor[temp_col];
+						t_pointer++;
+						*t_pointer=hcolor[temp_col];
+						t_pointer++;
+					}
+					odd=!odd;
+					last_pixel=current_pixel;
 				}
 
 				gr_addr++;
