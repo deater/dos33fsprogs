@@ -5,9 +5,12 @@
 #include "6502_emulate.h"
 
 static void color_shift(void) {
+
 	// F47E
-	a=a<<1;
-	if (a>=0xc0) goto done_color_shift;
+	asl();
+	cmp(0xc0);
+
+	if (!n) goto done_color_shift;
 
 	a=ram[HGR_BITS];
 	a=a^0x7f;
@@ -120,7 +123,10 @@ static void hposn(void) {
 	// F438
 	a=x;
 	if (y==0) {
+		c=0;
 		goto hposn_2;
+	} else {
+		c=1;
 	}
 	y=35;
 	adc(4);
@@ -136,8 +142,7 @@ hposn_2:
 					// MSKTBL=F5B8
 	ram[HMASK]=a;
 	a=y;
-	c=a&1;
-	a=a>>1;
+	lsr();
 	a=ram[HGR_COLOR];
 	ram[HGR_BITS]=a;
 	if (c) color_shift();
