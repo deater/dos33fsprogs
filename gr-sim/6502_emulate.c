@@ -110,7 +110,7 @@ void cpy(int value) {
 	int temp_value;
 	int result;
 
-	temp_y=a&0xff;
+	temp_y=y&0xff;
 	temp_value=(~value)&0xff;
 
 	result=temp_y+temp_value+1;
