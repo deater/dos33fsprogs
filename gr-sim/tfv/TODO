@@ -1,11 +1,19 @@
 Soon:
++ Battle Sequence
+--> Sprites for all enemies
+--> Randomize enemy you fight
+--> Different backgrounds based on location
+--> Print enemy attack name on screen
+--> Menu
+--> Magic
+--> Limit breaks
+--> Run away
 + Enable getting back on spaceship (with animation)
 + Better collision detection on Spaceship land
 + Better collision detection/walk on+off in College Park
 + Hook up art for all possible locations
 + Working conversation
 + Riding animals
-+ Battle Sequence
 + End sequence
 
 Credits:

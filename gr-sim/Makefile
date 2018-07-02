@@ -9,6 +9,7 @@ SDL_INCLUDE= `sdl-config --cflags`
 all:	gr-sim.a
 	make -C 6502_test
 	make -C fade
+	make -C hgr
 	make -C kaleido_sparkle
 	make -C lz4
 	make -C mode7_demo
@@ -24,8 +25,8 @@ gr_fast_clear.o:	gr_fast_clear.c gr-sim.h
 
 ####
 
-gr-sim.a:	6502_emulate.o tfv_utils.o gr-sim.o gr_fast_clear.o
-	$(AR) crs gr-sim.a 6502_emulate.o tfv_utils.o gr-sim.o gr_fast_clear.o
+gr-sim.a:	6502_emulate.o tfv_utils.o gr-sim.o gr_fast_clear.o hgr-sim.o
+	$(AR) crs gr-sim.a 6502_emulate.o tfv_utils.o gr-sim.o gr_fast_clear.o hgr-sim.o
 
 
 ###
@@ -38,6 +39,9 @@ gr-sim.o:	gr-sim.c gr-sim.h apple2_font.h
 
 tfv_utils.o:	tfv_utils.c tfv_utils.h
 	$(CC) $(CFLAGS) -c tfv_utils.c
+
+hgr-sim.o:	hgr-sim.c gr-sim.h
+	$(CC) $(CFLAGS) $(SDL_INCLUDE) -c hgr-sim.c
 
 
 clean:	

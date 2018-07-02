@@ -117,4 +117,8 @@ void clear_bottom(void);
 void clear_screens_notext(void);
 void clear_all(void);
 
+int hgr(void);
+int hplot(int xx, int yy);
+int hplot_to(int xx, int yy);
+int hcolor_equals(int color);
 
