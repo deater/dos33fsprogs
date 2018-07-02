@@ -204,7 +204,3 @@ int hcolor_equals(int color) {
 	return 0;
 }
 
-
-
-
-

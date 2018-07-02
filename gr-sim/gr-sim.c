@@ -267,46 +267,31 @@ static short gr_addr_lookup[24]={
 };
 
 
-int grsim_update(void) {
 
-	int x,y,i,j;
-	int bit_set,ch,inverse,flash;
-	unsigned int *t_pointer;
-	int text_start,text_end,gr_start,gr_end;
 
+static void draw_lowres(unsigned int *out_pointer,int gr_start, int gr_end) {
+
+	int i,j,yy,xx;
 	int gr_addr,gr_addr_hi;
 	int temp_col;
+	unsigned int *t_pointer;
 
-	/* point to SDL output pixels */
-	t_pointer=((Uint32 *)sdl_screen->pixels);
-
-	text_start=0; text_end=0;
-	gr_start=0;gr_end=GR_YSIZE;
-
-	/* get the proper modes */
-	if (text_mode) {
-		text_start=0; text_end=TEXT_YSIZE;
-		gr_start=0; gr_end=0;
-	}
-	else if (mixed_graphics) {
-		text_start=20; text_end=TEXT_YSIZE;
-		gr_start=0; gr_end=40;
-	}
+	t_pointer=out_pointer+(gr_start*PIXEL_X_SCALE*PIXEL_Y_SCALE);
 
 	/* do the top 40/48 if in graphics mode */
-	for(y=gr_start;y<gr_end;y++) {
+	for(yy=gr_start;yy<gr_end;yy++) {
 
 		for(j=0;j<PIXEL_Y_SCALE;j++) {
 
-			gr_addr=gr_addr_lookup[y/2];
-			gr_addr_hi=y%2;
+			gr_addr=gr_addr_lookup[yy/2];
+			gr_addr_hi=yy%2;
 
 			/* adjust for page */
 			if (text_page_1) {
 				gr_addr+=0x400;
 			}
 
-			for(x=0;x<GR_XSIZE;x++) {
+			for(xx=0;xx<GR_XSIZE;xx++) {
 
 				if (gr_addr_hi) {
 					temp_col=(ram[gr_addr]&0xf0)>>4;
@@ -323,20 +308,29 @@ int grsim_update(void) {
 			}
 		}
 	}
+}
 
-	/* Do the remaining text */
-	for(y=text_start;y<text_end;y++) {
+void draw_text(unsigned int *out_pointer,int text_start, int text_end) {
+
+	int bit_set,ch,inverse,flash;
+	int gr_addr;
+	int xx,yy,i,j;
+	unsigned int *t_pointer;
+
+	t_pointer=out_pointer+(text_start*40*TEXT_Y_SCALE*TEXT_X_SCALE);
+
+	for(yy=text_start;yy<text_end;yy++) {
 		for(j=0;j<TEXT_Y_SCALE;j++) {
-			for(x=0;x<TEXT_XSIZE;x++) {
+			for(xx=0;xx<TEXT_XSIZE;xx++) {
 
-				gr_addr=gr_addr_lookup[y];
+				gr_addr=gr_addr_lookup[yy];
 
 				/* adjust for page */
 				if (text_page_1) {
 					gr_addr+=0x400;
 				}
 
-				ch=ram[gr_addr+x];
+				ch=ram[gr_addr+xx];
 
 				if (ch&0x80) {
 					flash=0;
@@ -382,7 +376,37 @@ int grsim_update(void) {
 			}
 		}
 	}
+}
 
+void draw_hires(unsigned int *out_pointer,int y_start, int y_stop) {
+
+}
+
+
+int grsim_update(void) {
+
+	unsigned int *t_pointer;
+
+	/* point to SDL output pixels */
+	t_pointer=((Uint32 *)sdl_screen->pixels);
+
+	/* get the proper modes */
+
+	if (text_mode) {
+		draw_text(t_pointer,0,TEXT_YSIZE);
+	}
+	else {
+		if (hires_on) {
+			draw_hires(t_pointer,0,192);
+		}
+		else {
+			draw_lowres(t_pointer,0,48);
+		}
+
+		if (mixed_graphics) {
+			draw_text(t_pointer,20,TEXT_YSIZE);
+		}
+	}
 
 	SDL_UpdateRect(sdl_screen, 0, 0, xsize, ysize);
 
@@ -1523,7 +1547,7 @@ int hlin_double(int page, int x1, int x2, int at) {
 	return 0;
 }
 
-
+#if 0
 int collision(int xx, int yy, int ground_color) {
 
 	int page=0;
@@ -1560,6 +1584,7 @@ int collision(int xx, int yy, int ground_color) {
 
 	return collide;
 }
+#endif
 
 #if 0
 
