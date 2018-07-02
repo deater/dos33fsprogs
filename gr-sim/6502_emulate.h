@@ -12,6 +12,11 @@ void cmp(int value);
 void pha(void);
 void pla(void);
 void lsr(void);
+void asl(void);
+void ror(void);
+void rol(void);
+void ror_mem(int addr);
+void rol_mem(int addr);
 
 unsigned char high(int value);
 unsigned char low(int value);

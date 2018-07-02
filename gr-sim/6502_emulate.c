@@ -121,11 +121,108 @@ void lsr(void) {
 
 	temp_a=a;
 	temp_a&=0xff;
-	temp_a=temp_a>>1;
 
+	c=temp_a&0x1;
+	temp_a=temp_a>>1;
 	a=(temp_a&0xff);
+	z=(a==0);
+	n=!!(a&0x80);
 //	printf("LSR A=%x\n",a);
 }
+
+void asl(void) {
+	int temp_a;
+
+	temp_a=a;
+	temp_a&=0xff;
+
+	c=!!(temp_a&0x80);
+
+	temp_a=temp_a<<1;
+	a=(temp_a&0xff);
+	z=(a==0);
+	n=!!(a&0x80);
+//	printf("ASL A=%x\n",a);
+}
+
+
+void ror(void) {
+	int temp_a;
+	int old_c;
+
+	old_c=c;
+	temp_a=a;
+	temp_a&=0xff;
+
+	c=temp_a&0x1;
+	temp_a=temp_a>>1;
+	a=(temp_a&0xff);
+	a|=old_c<<7;
+
+	z=(a==0);
+	n=!!(a&0x80);
+//	printf("ROR A=%x\n",a);
+}
+
+void rol(void) {
+	int temp_a;
+	int old_c;
+
+	old_c=c;
+	temp_a=a;
+	temp_a&=0xff;
+
+	c=!!(temp_a&0x80);
+
+	temp_a=temp_a<<1;
+	a=(temp_a&0xff);
+	a|=old_c;
+
+	z=(a==0);
+	n=!!(a&0x80);
+//	printf("ROL A=%x\n",a);
+}
+
+
+
+void ror_mem(int addr) {
+	int temp_a;
+	int old_c;
+
+	old_c=c;
+	temp_a=ram[addr];
+	temp_a&=0xff;
+
+	c=temp_a&0x1;
+	temp_a=temp_a>>1;
+	ram[addr]=(temp_a&0xff);
+	ram[addr]|=old_c<<7;
+
+	z=(ram[addr]==0);
+	n=!!(ram[addr]&0x80);
+//	printf("ROR %x=%x\n",addr,ram[addr]);
+}
+
+void rol_mem(int addr) {
+	int temp_a;
+	int old_c;
+
+	old_c=c;
+	temp_a=ram[addr];
+	temp_a&=0xff;
+
+	c=!!(temp_a&0x80);
+
+	temp_a=temp_a<<1;
+	ram[addr]=(temp_a&0xff);
+	ram[addr]|=old_c;
+
+	z=(ram[addr]==0);
+	n=!!(ram[addr]&0x80);
+//	printf("ROL %x=%x\n",addr,ram[addr]);
+}
+
+
 
 unsigned char high(int value) {
 	return (value>>8)&0xff;
