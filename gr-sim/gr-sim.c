@@ -409,12 +409,12 @@ void draw_text(unsigned int *out_pointer,int text_start, int text_end) {
 
 void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
 
-	int i,j,k,yy,xx;
+	int i,j,yy,xx;
 	int gr_addr;
 	int temp_col;
 	unsigned int *t_pointer;
 	int last_last_pixel,last_pixel,current_byte,current_pixel,odd=0;
-	int old_high=0,current_high;
+	int old_high=0,current_high=0;
 
 	t_pointer=out_pointer+(y_start*280*HGR_X_SCALE*HGR_Y_SCALE);
 
