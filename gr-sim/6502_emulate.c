@@ -184,6 +184,21 @@ void asl(void) {
 //	printf("ASL A=%x\n",a);
 }
 
+void asl_mem(int addr) {
+	int temp_a;
+
+	temp_a=ram[addr];
+	temp_a&=0xff;
+
+	c=!!(temp_a&0x80);
+
+	temp_a=temp_a<<1;
+	ram[addr]=(temp_a&0xff);
+	z=(ram[addr]==0);
+	n=!!(ram[addr]&0x80);
+//	printf("ASL %x=%x\n",addr,ram[addr]);
+}
+
 
 void ror(void) {
 	int temp_a;
@@ -290,6 +305,66 @@ void iny(void) {
 	n=!!(y&0x80);
 }
 
+void bit(int value) {
+	int temp_a;
+
+	temp_a=a&value;
+	temp_a&=0xff;
+
+	z=(temp_a==0);
+
+	n=(value&0x80);
+	v=(value&0x40);
+
+}
+
+void lda(int addr) {
+
+	a=ram[addr];
+
+	z=(a==0);
+	n=!!(a&0x80);
+}
+
+void lda_const(int value) {
+
+	a=value;
+
+	z=(a==0);
+	n=!!(a&0x80);
+}
+
+void ldx(int addr) {
+
+	x=ram[addr];
+
+	z=(x==0);
+	n=!!(x&0x80);
+}
+
+void ldx_const(int value) {
+
+	x=value;
+
+	z=(x==0);
+	n=!!(x&0x80);
+}
+
+void ldy(int addr) {
+
+	y=ram[addr];
+
+	z=(y==0);
+	n=!!(y&0x80);
+}
+
+void ldy_const(int value) {
+
+	y=value;
+
+	z=(y==0);
+	n=!!(y&0x80);
+}
 
 unsigned char high(int value) {
 	return (value>>8)&0xff;
