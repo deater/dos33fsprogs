@@ -313,6 +313,29 @@ static int victory_dance(void) {
 
 	return 0;
 }
+/*
+                       ATTACK    SKIP
+                       MAGIC     LIMIT
+		       SUMMON    ESCAPE
+
+		SUMMONS -> METROCAT
+		MAGIC   ->  HEAL    FIRE
+                            ICE     MALAISE
+			    BOLT
+		LIMIT	->  SLICE   ZAP
+                            DROP    
+
+	State Machine
+
+		time
+	BOTTOM -------> MAIN_MENU ----->ATTACK
+				------->SKIP
+				------->MAGIC_MENU
+				------->LIMIT_MENU
+				------->SUMMON_MENU
+				------->ESCAPE
+
+*/
 
 static int draw_battle_bottom(int enemy_type) {
 
