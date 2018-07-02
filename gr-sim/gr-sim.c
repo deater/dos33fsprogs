@@ -10,11 +10,17 @@
 
 #include "apple2_font.h"
 
+/* 280x192 hi-res mode	*/
+#define HGR_XSIZE	280
+#define HGR_YSIZE	192
+#define HGR_X_SCALE	2
+#define HGR_Y_SCALE	2
+
 /* 40x48 low-res mode	*/
 #define GR_XSIZE	40
 #define GR_YSIZE	48
-#define PIXEL_X_SCALE	14
-#define PIXEL_Y_SCALE	8
+#define GR_X_SCALE	14
+#define GR_Y_SCALE	8
 
 /* 40 column only for now */
 #define TEXT_XSIZE	40
@@ -22,8 +28,8 @@
 #define TEXT_X_SCALE	14
 #define TEXT_Y_SCALE	16
 
-static int xsize=GR_XSIZE*PIXEL_X_SCALE;
-static int ysize=GR_YSIZE*PIXEL_Y_SCALE;
+static int xsize=GR_XSIZE*GR_X_SCALE;
+static int ysize=GR_YSIZE*GR_Y_SCALE;
 
 static int debug=0;
 
@@ -161,9 +167,6 @@ int grsim_input(void) {
 	return 0;
 }
 
-
-
-
 static unsigned int color[16]={
 	0,		/*  0 black */
 	0xe31e60,	/*  1 magenta */
@@ -182,6 +185,18 @@ static unsigned int color[16]={
 	0x72ffd0,	/* 14 aqua */
 	0xffffff,	/* 15 white */
 };
+
+static unsigned int hcolor[8]={
+	0,		/*  0 black */
+	0x14f53c,	/*  1 bright green */
+	0xff44fd,	/*  2 purple */
+	0xffffff,	/*  3 white */
+	0,		/*  4 black */
+	0xff6a3c,	/*  5 orange */
+	0x14cffd,	/*  6 medium blue */
+	0xffffff,	/*  7 white */
+};
+
 
 
 	/* a = ycoord */
@@ -268,7 +283,6 @@ static short gr_addr_lookup[24]={
 
 
 
-
 static void draw_lowres(unsigned int *out_pointer,int gr_start, int gr_end) {
 
 	int i,j,yy,xx;
@@ -276,12 +290,12 @@ static void draw_lowres(unsigned int *out_pointer,int gr_start, int gr_end) {
 	int temp_col;
 	unsigned int *t_pointer;
 
-	t_pointer=out_pointer+(gr_start*PIXEL_X_SCALE*PIXEL_Y_SCALE);
+	t_pointer=out_pointer+(gr_start*40*GR_X_SCALE*GR_Y_SCALE);
 
 	/* do the top 40/48 if in graphics mode */
 	for(yy=gr_start;yy<gr_end;yy++) {
 
-		for(j=0;j<PIXEL_Y_SCALE;j++) {
+		for(j=0;j<GR_Y_SCALE;j++) {
 
 			gr_addr=gr_addr_lookup[yy/2];
 			gr_addr_hi=yy%2;
@@ -300,7 +314,7 @@ static void draw_lowres(unsigned int *out_pointer,int gr_start, int gr_end) {
 					temp_col=ram[gr_addr]&0x0f;
 				}
 
-				for(i=0;i<PIXEL_X_SCALE;i++) {
+				for(i=0;i<GR_X_SCALE;i++) {
 					*t_pointer=color[temp_col];
 					t_pointer++;
 				}
@@ -378,7 +392,49 @@ void draw_text(unsigned int *out_pointer,int text_start, int text_end) {
 	}
 }
 
-void draw_hires(unsigned int *out_pointer,int y_start, int y_stop) {
+
+
+void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
+
+	int i,j,yy,xx;
+	int gr_addr;
+	int temp_col;
+	unsigned int *t_pointer;
+	int last_pixel,current_byte,current_pixel;
+
+	t_pointer=out_pointer+(y_start*280*HGR_X_SCALE*HGR_Y_SCALE);
+
+	/* do the hires graphics */
+	for(yy=y_start;yy<y_end;yy++) {
+
+		for(j=0;j<HGR_Y_SCALE;j++) {
+
+			gr_addr=gr_addr_lookup[yy/8]+0x1c00;
+			gr_addr+=0x400*(yy&0x7);
+
+			/* adjust for page */
+			if (text_page_1) {
+				gr_addr+=0x2000;
+			}
+			last_pixel=0;
+
+			for(xx=0;xx<HGR_XSIZE/7;xx++) {
+//				printf("HGR ADDR=%x\n",gr_addr);
+				current_byte=ram[gr_addr];
+
+				for(i=0;i<HGR_X_SCALE;i++) {
+					current_pixel=!!(current_byte&(1<<(7-i)));
+					temp_col=((!!(current_byte&0x80))<<2)|
+						(last_pixel<<1)|
+						current_pixel;
+					*t_pointer=hcolor[temp_col];
+					t_pointer++;
+				}
+
+				gr_addr++;
+			}
+		}
+	}
 
 }
 
