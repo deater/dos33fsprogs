@@ -36,3 +36,6 @@ extern unsigned char spool[];
 
 extern unsigned char numbers[10][11];
 
+extern unsigned char small_tree[];
+extern unsigned char medium_tree[];
+extern unsigned char big_tree[];
