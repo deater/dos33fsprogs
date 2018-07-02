@@ -29,6 +29,24 @@ int main(int argc, char **argv) {
 		hplot_to(xx,100);
 	}
 
+	/* Put vertical lines on screen */
+	for(xx=0;xx<100;xx+=2) {
+		hcolor_equals((xx%16)/2);
+		hplot(xx,0);
+		hplot_to(xx,30);
+	}
+
+
+	/* Put diagonal lines on screen */
+	for(xx=100;xx<200;xx+=5) {
+		hcolor_equals(3);
+		hplot(150,100);
+		hplot_to(xx,50);
+		hplot(150,100);
+		hplot_to(xx,150);
+	}
+
+
 	while(1) {
 		grsim_update();
 
@@ -39,10 +57,11 @@ int main(int argc, char **argv) {
 		usleep(100000);
 
 	}
+#if 0
 	int i;
 	printf("20D0: ");
 	for(i=0;i<16;i++) printf("%x ",ram[0x20d0+i]);
 	printf("\n");
-
+#endif
 	return 0;
 }

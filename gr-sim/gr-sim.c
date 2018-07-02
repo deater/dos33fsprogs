@@ -414,6 +414,7 @@ void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
 	int temp_col;
 	unsigned int *t_pointer;
 	int last_last_pixel,last_pixel,current_byte,current_pixel,odd=0;
+	int old_high=0,current_high;
 
 	t_pointer=out_pointer+(y_start*280*HGR_X_SCALE*HGR_Y_SCALE);
 
@@ -436,6 +437,8 @@ void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
 			for(xx=0;xx<HGR_XSIZE/7;xx++) {
 //				printf("HGR ADDR=%x\n",gr_addr);
 				current_byte=ram[gr_addr];
+
+
 // BBBBBBBB     OOOOOOOO   OO?WW?BB  BB?KK?OO
 // 10101010     01010101   01011010  10100101
 // 1 1 010101   1 0 101010
@@ -443,6 +446,8 @@ void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
 
 
 				for(i=0;i<7;i++) {
+					old_high=current_high;
+					current_high=!!(current_byte&0x80);
 					current_pixel=!!(current_byte&(1<<i));
 
 					if (!odd) {
@@ -451,7 +456,7 @@ void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
 						last_pixel<<1|
 						current_pixel;
 
-					temp_col=((!!(current_byte&0x80))<<2)|
+					temp_col=(old_high<<2)|
 						hcolor_hack[pattern][0];
 
 //					printf("Temp col=%d\n",temp_col);
@@ -462,7 +467,7 @@ void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
 					*t_pointer=hcolor[temp_col];
 					t_pointer++;
 
-					temp_col=((!!(current_byte&0x80))<<2)|
+					temp_col=(current_high<<2)|
 						hcolor_hack[pattern][1];
 
 					*t_pointer=hcolor[temp_col];
