@@ -32,11 +32,23 @@
 #define V2      0x2D
 #define MASK    0x2E
 #define COLOR   0x30
+#define HMASK	0x30
 #define INVFLG  0x32
 #define YSAV    0x34
 #define YSAV1   0x35
 #define CSWL    0x36
 #define CSWH    0x37
+
+#define HGR_SHAPE	0x1A
+#define HGR_SHAPE_H	0x1B
+#define HGR_BITS	0x1C
+
+#define HGR_X		0xE0
+#define HGR_X_H		0xE1
+#define HGR_Y		0xE2
+#define HGR_COLOR	0xE4
+#define HGR_HORIZ	0xE5
+#define HGR_PAGE	0xE6
 
 
 
