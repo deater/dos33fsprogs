@@ -65,6 +65,12 @@ static int text_page_1=0x00;
 static int hires_on=0x00;
 static int mixed_graphics=0xff;
 
+static int plaid_mode=0;
+
+void set_plaid(void) {
+	plaid_mode=1;
+}
+
 void soft_switch(unsigned short address) {
 
 	switch(address) {
@@ -497,7 +503,11 @@ int grsim_update(void) {
 
 	/* get the proper modes */
 
-	if (text_mode) {
+	if (plaid_mode) {
+		draw_text(t_pointer,0,6);
+		draw_hires(t_pointer,48,112);
+		draw_lowres(t_pointer,28,48);
+	} else if (text_mode) {
 		draw_text(t_pointer,0,TEXT_YSIZE);
 	}
 	else {
@@ -615,7 +625,7 @@ static void monitor_plot(void) {
 
 int basic_plot(unsigned char xcoord, unsigned char ycoord) {
 
-	if (ycoord>40) {
+	if (ycoord>47) {
 		printf("Y too big %d\n",ycoord);
 		return -1;
 	}

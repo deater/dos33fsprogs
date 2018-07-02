@@ -14,6 +14,7 @@ all:	gr-sim.a
 	make -C lz4
 	make -C mode7_demo
 	make -C rasterbars
+	make -C split_screen
 	make -C starfield
 	make -C text
 	make -C tfv
@@ -48,10 +49,12 @@ clean:
 	rm -f *~ *.o *.a
 	make -C 6502_test clean
 	make -C fade clean
+	make -C hgr clean
 	make -C kaleido_sparkle clean
 	make -C lz4 clean
 	make -C mode7_demo clean
 	make -C rasterbars clean
+	make -C split_screen
 	make -C starfield clean
 	make -C text clean
 	make -C tfv clean
