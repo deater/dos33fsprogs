@@ -199,6 +199,17 @@ static unsigned int hcolor[8]={
 	0xffffff,	/*  7 white */
 };
 
+static unsigned int hcolor_hack[8][2]={
+	{0,0},		// 0000 KK
+	{0,0},		// 0010 KK
+	{1,1},		// 0100 OO
+	{1,3},		// 0110 OW
+	{2,0},		// 1000 BK
+	{2,2},		// 1010 BB
+	{3,3},		// 1100 WW
+	{3,3},		// 1110 WW
+};
+
 
 
 	/* a = ycoord */
@@ -402,7 +413,7 @@ void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
 	int gr_addr;
 	int temp_col;
 	unsigned int *t_pointer;
-	int last_pixel,current_byte,current_pixel,odd=0;
+	int last_last_pixel,last_pixel,current_byte,current_pixel,odd=0;
 
 	t_pointer=out_pointer+(y_start*280*HGR_X_SCALE*HGR_Y_SCALE);
 
@@ -419,6 +430,7 @@ void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
 				gr_addr+=0x2000;
 			}
 			last_pixel=0;
+			last_last_pixel=0;
 			odd=0;
 
 			for(xx=0;xx<HGR_XSIZE/7;xx++) {
@@ -432,18 +444,34 @@ void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
 
 				for(i=0;i<7;i++) {
 					current_pixel=!!(current_byte&(1<<i));
-					temp_col=((!!(current_byte&0x80))<<2)|
-						(last_pixel<<1)|
+
+					if (!odd) {
+					int pattern;
+					pattern=last_last_pixel<<2 |
+						last_pixel<<1|
 						current_pixel;
+
+					temp_col=((!!(current_byte&0x80))<<2)|
+						hcolor_hack[pattern][0];
+
 //					printf("Temp col=%d\n",temp_col);
-					if (odd)
-					for(k=0;k<HGR_X_SCALE;k++) {
-						*t_pointer=hcolor[temp_col];
-						t_pointer++;
-						*t_pointer=hcolor[temp_col];
-						t_pointer++;
+//					for(k=0;k<HGR_X_SCALE;k++) {
+
+					*t_pointer=hcolor[temp_col];
+					t_pointer++;
+					*t_pointer=hcolor[temp_col];
+					t_pointer++;
+
+					temp_col=((!!(current_byte&0x80))<<2)|
+						hcolor_hack[pattern][1];
+
+					*t_pointer=hcolor[temp_col];
+					t_pointer++;
+					*t_pointer=hcolor[temp_col];
+					t_pointer++;
 					}
 					odd=!odd;
+					last_last_pixel=last_pixel;
 					last_pixel=current_pixel;
 				}
 
