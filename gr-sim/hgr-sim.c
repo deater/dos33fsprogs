@@ -90,21 +90,20 @@ int hgr2(void) {
 
 static void hposn(void) {
 
-	unsigned char s;
 	unsigned char msktbl[]={0x81,0x82,0x84,0x88,0x90,0xA0,0xC0};
 
 	// F411
 	ram[HGR_Y]=a;
 	ram[HGR_X]=x;
 	ram[HGR_X+1]=y;
-	s=a;			// pha
+	pha();
 	a=a&0xC0;
 	ram[GBASL]=a;
 	lsr();
 	lsr();
 	a=a|ram[GBASL];
 	ram[GBASL]=a;
-	a=s;
+	pla();
 	// F423
 	ram[GBASH]=a;
 	asl();
@@ -115,23 +114,20 @@ static void hposn(void) {
 	rol_mem(GBASH);
 	asl();
 	ror_mem(GBASL);
-	a=ram[GBASH];
+	lda(GBASH);
 	a=a&0x1f;
 	a=a|ram[HGR_PAGE];
 	ram[GBASH]=a;
 
 	// F438
 	a=x;
-	if (y==0) {
-		c=0;
-		goto hposn_2;
-	} else {
-		c=1;
-	}
+	cpy(0);
+	if (z==1) goto hposn_2;
+
 	y=35;
 	adc(4);
 hposn_1:
-	y++;
+	iny();
 	// f442
 hposn_2:
 	sbc(7);
@@ -406,4 +402,3 @@ int hcolor_equals(int color) {
 
 	return 0;
 }
-
