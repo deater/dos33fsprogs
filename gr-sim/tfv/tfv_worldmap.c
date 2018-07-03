@@ -152,6 +152,8 @@ int world_map(void) {
 	int refresh=1;
 	int entry=0;
 	int on_bird=0;
+	int conversation_started=0;
+	int conversation_person=0;
 
 	while(1) {
 		moved=0;
@@ -198,10 +200,8 @@ int world_map(void) {
 
 		if (ch==13) {
 			if (destination_type==LOCATION_CONVERSATION) {
-//				ram[CH]=2;
-//				ram[CV]=21;
-//				move_and_print(dialog[special_destination].statement[0].words);
-//				printf("%s\n",dialog[special_destination].statement[0].words);
+				conversation_started=1;
+				conversation_person=special_destination;
 			}
 			else if (destination_type==LOCATION_SPACESHIP) {
 				return LOCATION_SPACESHIP;
@@ -536,8 +536,12 @@ done_entry:
 			}
 		}
 
-
-
+		if (conversation_started) {
+			ram[CH]=1;
+			ram[CV]=21;
+			move_and_print(dialog[conversation_person].statement[0].words);
+//			printf("%s\n",dialog[conversation_person].statement[0].words);
+		}
 
 		page_flip();
 
