@@ -16,7 +16,7 @@
 /* Do Battle */
 
 
-/* Metrocat Easter Egg (summon?) */
+/* Metrocat (summon?) */
 
 /* Environment: grass, beach, forest, ice */
 
@@ -191,128 +191,6 @@ static int gr_put_num(int xx,int yy,int number) {
 	return 0;
 }
 
-
-static int attack(int enemy_x,int enemy_type) {
-
-	int ax=34;
-	int damage=10;
-
-	while(ax>10) {
-
-		gr_copy_to_current(0xc00);
-
-		if (ax&1) {
-			grsim_put_sprite(tfv_stand_left,ax,20);
-		}
-		else {
-			grsim_put_sprite(tfv_walk_left,ax,20);
-		}
-		grsim_put_sprite(tfv_led_sword,ax-5,20);
-
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
-
-		page_flip();
-
-		ax-=1;
-
-		usleep(20000);
-	}
-
-	gr_put_num(2,10,damage);
-	page_flip();
-	usleep(250000);
-
-	return damage;
-}
-
-
-
-static int enemy_attack(int enemy_x,int enemy_type,int tfv_x) {
-
-	int ax=enemy_x;
-	int damage=10;
-
-	while(ax<30) {
-
-		// put attack name on
-		// occasionally attack with that enemy's power?
-		// occasionally heal self?
-
-		gr_copy_to_current(0xc00);
-
-		// draw first so behind enemy
-		grsim_put_sprite(tfv_stand_left,tfv_x,20);
-		grsim_put_sprite(tfv_led_sword,tfv_x-5,20);
-
-		if (ax&1) {
-			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
-		}
-		else {
-			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
-		}
-
-		page_flip();
-
-		ax+=1;
-
-		usleep(20000);
-	}
-
-	gr_put_num(25,10,damage);
-	page_flip();
-	usleep(250000);
-
-	return damage;
-}
-
-
-
-static int victory_dance(void) {
-
-	int ax=34;
-	int i;
-	int saved_drawpage;
-
-	saved_drawpage=ram[DRAW_PAGE];
-
-	ram[DRAW_PAGE]=PAGE2;	// 0xc00
-
-	clear_bottom();
-
-	vtab(21);
-	htab(10);
-	move_cursor();
-	print("EXPERIENCE +2");
-	experience+=2;
-
-	vtab(22);
-	htab(10);
-	move_cursor();
-	print("MONEY +1");
-	money+=1;
-
-	ram[DRAW_PAGE]=saved_drawpage;
-
-	for(i=0;i<25;i++) {
-
-		gr_copy_to_current(0xc00);
-
-		if (i&1) {
-			grsim_put_sprite(tfv_stand_left,ax,20);
-			grsim_put_sprite(tfv_led_sword,ax-5,20);
-		}
-		else {
-			grsim_put_sprite(tfv_victory,ax,20);
-			grsim_put_sprite(tfv_led_sword,ax-2,14);
-		}
-
-		page_flip();
-
-		usleep(200000);
-	}
-
-	return 0;
-}
 /*
                        ATTACK    SKIP
                        MAGIC     LIMIT
@@ -337,14 +215,17 @@ static int victory_dance(void) {
 
 */
 
+#define MENU_NONE	0
+#define MENU_MAIN	1
+
 static int draw_battle_bottom(int enemy_type) {
 
 	int i;
-	int saved_page;
+//	int saved_page;
 
-	saved_page=ram[DRAW_PAGE];
+//	saved_page=ram[DRAW_PAGE];
 
-	ram[DRAW_PAGE]=PAGE2;	// 0xc00
+//	ram[DRAW_PAGE]=PAGE2;	// 0xc00
 
 	clear_bottom();
 
@@ -416,10 +297,137 @@ static int draw_battle_bottom(int enemy_type) {
 		hlin_double(ram[DRAW_PAGE],12,12,i);
 	}
 
-	ram[DRAW_PAGE]=saved_page;
+//	ram[DRAW_PAGE]=saved_page;
 
 	return 0;
 }
+
+static int attack(int enemy_x,int enemy_type) {
+
+	int ax=34;
+	int damage=10;
+
+	while(ax>10) {
+
+		gr_copy_to_current(0xc00);
+
+		if (ax&1) {
+			grsim_put_sprite(tfv_stand_left,ax,20);
+		}
+		else {
+			grsim_put_sprite(tfv_walk_left,ax,20);
+		}
+		grsim_put_sprite(tfv_led_sword,ax-5,20);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		draw_battle_bottom(enemy_type);
+
+		page_flip();
+
+		ax-=1;
+
+		usleep(20000);
+	}
+
+	gr_put_num(2,10,damage);
+	page_flip();
+	usleep(250000);
+
+	return damage;
+}
+
+
+
+static int enemy_attack(int enemy_x,int enemy_type,int tfv_x) {
+
+	int ax=enemy_x;
+	int damage=10;
+
+	while(ax<30) {
+
+		// put attack name on
+		// occasionally attack with that enemy's power?
+		// occasionally heal self?
+
+		gr_copy_to_current(0xc00);
+
+		// draw first so behind enemy
+		grsim_put_sprite(tfv_stand_left,tfv_x,20);
+		grsim_put_sprite(tfv_led_sword,tfv_x-5,20);
+
+		if (ax&1) {
+			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
+		}
+		else {
+			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
+		}
+
+		draw_battle_bottom(enemy_type);
+
+		page_flip();
+
+		ax+=1;
+
+		usleep(20000);
+	}
+
+	gr_put_num(25,10,damage);
+	page_flip();
+	usleep(250000);
+
+	return damage;
+}
+
+
+
+static int victory_dance(void) {
+
+	int ax=34;
+	int i;
+	int saved_drawpage;
+
+	saved_drawpage=ram[DRAW_PAGE];
+
+	ram[DRAW_PAGE]=PAGE2;	// 0xc00
+
+	clear_bottom();
+
+	vtab(21);
+	htab(10);
+	move_cursor();
+	print("EXPERIENCE +2");
+	experience+=2;
+
+	vtab(22);
+	htab(10);
+	move_cursor();
+	print("MONEY +1");
+	money+=1;
+
+	ram[DRAW_PAGE]=saved_drawpage;
+
+	for(i=0;i<25;i++) {
+
+		gr_copy_to_current(0xc00);
+
+		if (i&1) {
+			grsim_put_sprite(tfv_stand_left,ax,20);
+			grsim_put_sprite(tfv_led_sword,ax-5,20);
+		}
+		else {
+			grsim_put_sprite(tfv_victory,ax,20);
+			grsim_put_sprite(tfv_led_sword,ax-2,14);
+		}
+
+		page_flip();
+
+		usleep(200000);
+	}
+
+	return 0;
+}
+
 
 
 static int rotate_intro(void) {
@@ -501,7 +509,7 @@ int do_battle(void) {
 
 	ram[DRAW_PAGE]=PAGE2;
 
-	draw_battle_bottom(enemy_type);
+
 
 	/*******************/
 	/* Draw background */
@@ -521,6 +529,8 @@ int do_battle(void) {
 
 	ram[DRAW_PAGE]=saved_drawpage;
 
+	draw_battle_bottom(enemy_type);
+
 	while(1) {
 
 		gr_copy_to_current(0xc00);
@@ -529,6 +539,8 @@ int do_battle(void) {
 		grsim_put_sprite(tfv_led_sword,ax-5,20);
 
 		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		draw_battle_bottom(enemy_type);
 
 		page_flip();
 
@@ -542,8 +554,7 @@ int do_battle(void) {
 			hp-=enemy_attack(enemy_x,enemy_type,ax);
 			// update limit count
 			if (limit<4) limit++;
-			// redraw bottom
-			draw_battle_bottom(enemy_type);
+
 			// reset enemy time. FIXME: variable?
 			enemy_count=50;
 		}
@@ -555,8 +566,7 @@ int do_battle(void) {
 			if (ch==' ') {
 				// attack and decrement HP
 				enemy_hp-=attack(enemy_x,enemy_type);
-				// redraw bottom
-				draw_battle_bottom(enemy_type);
+
 				// reset battle time
 				battle_count=0;
 			}
