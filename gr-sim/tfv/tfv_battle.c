@@ -217,15 +217,18 @@ static int gr_put_num(int xx,int yy,int number) {
 
 #define MENU_NONE	0
 #define MENU_MAIN	1
+#define MENU_MAGIC	2
+#define MENU_LIMIT	3
+#define MENU_SUMMON	4
+
+static int enemy_attacking=0;
+static int menu_state=MENU_NONE;
+static int menu_position=0;
+static int battle_count=0;
 
 static int draw_battle_bottom(int enemy_type) {
 
 	int i;
-//	int saved_page;
-
-//	saved_page=ram[DRAW_PAGE];
-
-//	ram[DRAW_PAGE]=PAGE2;	// 0xc00
 
 	clear_bottom();
 
@@ -234,62 +237,189 @@ static int draw_battle_bottom(int enemy_type) {
 	move_cursor();
 	print(enemies[enemy_type].name);
 
-	vtab(21);
-	htab(25);
-	move_cursor();
-	print("HP");
-
-	vtab(21);
-	htab(28);
-	move_cursor();
-	print("MP");
-
-	vtab(21);
-	htab(31);
-	move_cursor();
-	print("TIME");
-
-	vtab(21);
-	htab(36);
-	move_cursor();
-	if (limit<4) {
-		print("LIMIT");
-	}
-	else {
-		/* Make if flash? set bit 0x40 */
-		print_flash("LIMIT");
+	if (enemy_attacking) {
+		vtab(24);
+		htab(2);
+		move_cursor();
+		print_inverse(enemies[enemy_type].attack_name);
 	}
 
 	vtab(22);
 	htab(15);
 	move_cursor();
 	// should print "NAMEO"
-	print("DEATER--");
+	print("DEATER");
 
-	vtab(22);
-	htab(24);
-	move_cursor();
-	print_byte(hp);
+	if (menu_state==MENU_NONE) {
 
-	vtab(22);
-	htab(27);
-	move_cursor();
-	print_byte(mp);
+		vtab(21);
+		htab(25);
+		move_cursor();
+		print("HP");
 
-	/* Draw Time bargraph */
-	printf("Battle_bar=%d Limit=%d\n",battle_bar,limit);
-	ram[COLOR]=0xa0;
-	hlin_double(ram[DRAW_PAGE],30,34,42);
-	ram[COLOR]=0x20;
-	if (battle_bar) hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
+		vtab(21);
+		htab(28);
+		move_cursor();
+		print("MP");
+
+		vtab(21);
+		htab(31);
+		move_cursor();
+		print("TIME");
+
+		vtab(21);
+		htab(36);
+		move_cursor();
+		if (limit<4) {
+			print("LIMIT");
+		}
+		else {
+			/* Make if flash? set bit 0x40 */
+			print_flash("LIMIT");
+		}
 
 
-	/* Draw Limit break bargraph */
-	ram[COLOR]=0xa0;
-	hlin_double(ram[DRAW_PAGE],35,39,42);
 
-	ram[COLOR]=0x20;
-	if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
+		vtab(22);
+		htab(24);
+		move_cursor();
+		print_byte(hp);
+
+		vtab(22);
+		htab(27);
+		move_cursor();
+		print_byte(mp);
+
+		/* Draw Time bargraph */
+//		printf("Battle_bar=%d Limit=%d\n",battle_bar,limit);
+		ram[COLOR]=0xa0;
+		hlin_double(ram[DRAW_PAGE],30,34,42);
+		ram[COLOR]=0x20;
+		if (battle_bar) {
+			hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
+		}
+
+		/* Draw Limit break bargraph */
+		ram[COLOR]=0xa0;
+		hlin_double(ram[DRAW_PAGE],35,39,42);
+
+		ram[COLOR]=0x20;
+		if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
+	}
+
+	if (menu_state==MENU_MAIN) {
+
+		vtab(21);
+		htab(24);
+		move_cursor();
+		if (menu_position==0) print_inverse("ATTACK");
+		else print("ATTACK");
+
+		vtab(22);
+		htab(24);
+		move_cursor();
+		if (menu_position==2) print_inverse("MAGIC");
+		else print("MAGIC");
+
+		vtab(23);
+		htab(24);
+		move_cursor();
+		if (menu_position==4) print_inverse("SUMMON");
+		else print("SUMMON");
+
+		vtab(21);
+		htab(32);
+		move_cursor();
+		if (menu_position==1) print_inverse("SKIP");
+		else print("SKIP");
+
+		vtab(22);
+		htab(32);
+		move_cursor();
+		if (menu_position==3) print_inverse("LIMIT");
+		else print("LIMIT");
+
+		vtab(23);
+		htab(32);
+		move_cursor();
+		if (menu_position==5) print_inverse("ESCAPE");
+		else print("ESCAPE");
+
+	}
+	if (menu_state==MENU_SUMMON) {
+		vtab(21);
+		htab(25);
+		move_cursor();
+		print("SUMMONS:");
+
+		vtab(22);
+		htab(25);
+		move_cursor();
+		if (menu_position==0) print_inverse("METROCAT");
+		else print("METROCAT");
+	}
+	if (menu_state==MENU_MAGIC) {
+		vtab(21);
+		htab(24);
+		move_cursor();
+		print("MAGIC:");
+
+		vtab(22);
+		htab(25);
+		move_cursor();
+		if (menu_position==0) print_inverse("HEAL");
+		else print("HEAL");
+
+		vtab(23);
+		htab(25);
+		move_cursor();
+		if (menu_position==2) print_inverse("ICE");
+		else print("ICE");
+
+		vtab(24);
+		htab(25);
+		move_cursor();
+		if (menu_position==4) print_inverse("BOLT");
+		else print("BOLT");
+
+		vtab(22);
+		htab(32);
+		move_cursor();
+		if (menu_position==1) print_inverse("FIRE");
+		else print("FIRE");
+
+		vtab(23);
+		htab(32);
+		move_cursor();
+		if (menu_position==3) print_inverse("MALAISE");
+		else print("MALAISE");
+
+	}
+
+	if (menu_state==MENU_LIMIT) {
+		vtab(21);
+		htab(24);
+		move_cursor();
+		print("LIMIT BREAKS:");
+
+		vtab(22);
+		htab(25);
+		move_cursor();
+		if (menu_position==0) print_inverse("SLICE");
+		else print("SLICE");
+
+		vtab(23);
+		htab(25);
+		move_cursor();
+		if (menu_position==2) print_inverse("DROP");
+		else print("DROP");
+
+		vtab(22);
+		htab(32);
+		move_cursor();
+		if (menu_position==1) print_inverse("ZAP");
+		else print("ZAP");
+	}
 
 	/* Draw inverse separator */
 	ram[COLOR]=0x20;
@@ -302,7 +432,27 @@ static int draw_battle_bottom(int enemy_type) {
 	return 0;
 }
 
-static int attack(int enemy_x,int enemy_type) {
+static int enemy_hp=0,enemy_type=0,enemy_x=0;
+
+static int damage_enemy(int value) {
+
+	if (enemy_hp>value) enemy_hp-=value;
+	else enemy_hp=0;
+
+	return 0;
+
+}
+
+static int damage_tfv(int value) {
+
+	if (hp>value) hp-=value;
+	else hp=0;
+
+	return 0;
+
+}
+
+static int attack(void) {
 
 	int ax=34;
 	int damage=10;
@@ -330,19 +480,22 @@ static int attack(int enemy_x,int enemy_type) {
 		usleep(20000);
 	}
 
+	damage_enemy(damage);
 	gr_put_num(2,10,damage);
 	page_flip();
 	usleep(250000);
 
-	return damage;
+	return 0;
 }
 
 
 
-static int enemy_attack(int enemy_x,int enemy_type,int tfv_x) {
+static int enemy_attack(int tfv_x) {
 
 	int ax=enemy_x;
 	int damage=10;
+
+	enemy_attacking=1;
 
 	while(ax<30) {
 
@@ -371,8 +524,12 @@ static int enemy_attack(int enemy_x,int enemy_type,int tfv_x) {
 
 		usleep(20000);
 	}
+	enemy_attacking=0;
 
+	damage_tfv(damage);
 	gr_put_num(25,10,damage);
+	draw_battle_bottom(enemy_type);
+
 	page_flip();
 	usleep(250000);
 
@@ -479,20 +636,111 @@ static int rotate_intro(void) {
 	return 0;
 }
 
+static void magic_attack(int which) {
+
+}
+
+static void limit_break(int which) {
+
+}
+
+static void summon(int which) {
+
+}
+
+
+
+static void done_attack(void) {
+	// reset battle time
+	battle_count=0;
+	menu_state=MENU_NONE;
+}
+
+#define MENU_MAIN_ATTACK	0
+#define MENU_MAIN_SKIP		1
+#define MENU_MAIN_MAGIC		2
+#define MENU_MAIN_LIMIT		3
+#define MENU_MAIN_SUMMON	4
+#define MENU_MAIN_ESCAPE	5
+
+void menu_keypress(int ch) {
+
+	if ((ch==' ') || (ch==13)) {
+
+		if (menu_state==MENU_MAIN) {
+
+			switch(menu_position) {
+				case MENU_MAIN_ATTACK:
+					// attack and decrement HP
+					attack();
+					done_attack();
+					break;
+				case MENU_MAIN_SKIP:
+					done_attack();
+					break;
+				case MENU_MAIN_MAGIC:
+					menu_state=MENU_MAGIC;
+					menu_position=0;
+					break;
+				case MENU_MAIN_LIMIT:
+					menu_state=MENU_LIMIT;
+					menu_position=0;
+					break;
+				case MENU_MAIN_SUMMON:
+					menu_state=MENU_SUMMON;
+					menu_position=0;
+					break;
+				case MENU_MAIN_ESCAPE:
+					/* TODO -- RUN to left */
+					done_attack();
+					break;
+			}
+		}
+		else if (menu_state==MENU_MAGIC) {
+			magic_attack(menu_position);
+			done_attack();
+		}
+		else if (menu_state==MENU_LIMIT) {
+			limit_break(menu_position);
+			done_attack();
+		}
+		else if (menu_state==MENU_SUMMON) {
+			summon(menu_position);
+			done_attack();
+		}
+	}
+
+	if (ch==27) {
+		menu_state=MENU_MAIN;
+		menu_position=0;
+	}
+
+	if (ch==APPLE_UP) {
+		if (menu_position>=2) menu_position-=2;
+	}
+	if (ch==APPLE_DOWN) {
+		menu_position+=2;
+	}
+	if (ch==APPLE_RIGHT) {
+		menu_position++;
+	}
+	if (ch==APPLE_LEFT) {
+		if (menu_position>0) menu_position--;
+	}
+}
+
 
 int do_battle(void) {
 
 	int i,ch;
 
-	int enemy_x=2;
-	int enemy_type=0;
 	int saved_drawpage;
-	int enemy_hp=0;
 
 	int ax=34;
-	int battle_count=20;
 	int enemy_count=30;
 	int old;
+
+	battle_count=20;
 
 	/* Setup Enemy */
 	// enemy_type=X
@@ -551,7 +799,7 @@ int do_battle(void) {
 
 		if (enemy_count==0) {
 			// attack and decrement HP
-			hp-=enemy_attack(enemy_x,enemy_type,ax);
+			enemy_attack(ax);
 			// update limit count
 			if (limit<4) limit++;
 
@@ -563,13 +811,9 @@ int do_battle(void) {
 		}
 
 		if (battle_count>=64) {
-			if (ch==' ') {
-				// attack and decrement HP
-				enemy_hp-=attack(enemy_x,enemy_type);
+			if (menu_state==MENU_NONE) menu_state=MENU_MAIN;
+			menu_keypress(ch);
 
-				// reset battle time
-				battle_count=0;
-			}
 		} else {
 			battle_count++;
 		}
@@ -579,12 +823,12 @@ int do_battle(void) {
 		if (battle_bar!=old) draw_battle_bottom(enemy_type);
 
 
-		if (enemy_hp<0) {
+		if (enemy_hp==0) {
 			victory_dance();
 			break;
 		}
 
-//		if (hp<0) {
+//		if (hp==0) {
 //			game_over();
 //		}
 

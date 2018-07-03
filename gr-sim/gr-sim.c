@@ -1802,7 +1802,8 @@ void print_inverse(char *string) {
 
 	for(y=0;y<strlen(string);y++) {
 		a=string[y];
-		a=a&0x3f;
+		a=(a&0x3f);
+		a&=~0x20;	// convert to uppercase
 		ram[y_indirect(BASL,y)]=a;
 	}
 	ram[BASL]+=strlen(string);
