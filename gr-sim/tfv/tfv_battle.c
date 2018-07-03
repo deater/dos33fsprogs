@@ -218,8 +218,8 @@ static int gr_put_num(int xx,int yy,int number) {
 #define MENU_NONE	0
 #define MENU_MAIN	1
 #define MENU_MAGIC	2
-#define MENU_LIMIT	3
-#define MENU_SUMMON	4
+#define MENU_SUMMON	3
+#define MENU_LIMIT	4
 
 static int enemy_attacking=0;
 static int menu_state=MENU_NONE;
@@ -336,14 +336,17 @@ static int draw_battle_bottom(int enemy_type) {
 		vtab(22);
 		htab(32);
 		move_cursor();
-		if (menu_position==3) print_inverse("LIMIT");
-		else print("LIMIT");
-
-		vtab(23);
-		htab(32);
-		move_cursor();
-		if (menu_position==5) print_inverse("ESCAPE");
+		if (menu_position==3) print_inverse("ESCAPE");
 		else print("ESCAPE");
+
+		if (limit>3) {
+			vtab(23);
+			htab(32);
+			move_cursor();
+			if (menu_position==5) print_inverse("LIMIT");
+			else print("LIMIT");
+		}
+
 
 	}
 	if (menu_state==MENU_SUMMON) {
@@ -664,7 +667,7 @@ static void magic_attack(int which) {
 
 	if (which==MENU_MAGIC_HEAL) {
 		sprite=magic_health;
-		mx=34;
+		mx=33;
 		my=20;
 	}
 	if (which==MENU_MAGIC_FIRE) {
@@ -846,7 +849,7 @@ static void limit_break(int which) {
 	for(i=0;i<20;i++) {
 		usleep(100000);
 	}
-
+	limit=0;
 }
 
 static void summon(int which) {
@@ -864,9 +867,9 @@ static void done_attack(void) {
 #define MENU_MAIN_ATTACK	0
 #define MENU_MAIN_SKIP		1
 #define MENU_MAIN_MAGIC		2
-#define MENU_MAIN_LIMIT		3
+#define MENU_MAIN_ESCAPE	3
 #define MENU_MAIN_SUMMON	4
-#define MENU_MAIN_ESCAPE	5
+#define MENU_MAIN_LIMIT		5
 
 void menu_keypress(int ch) {
 
