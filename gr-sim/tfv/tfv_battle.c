@@ -642,6 +642,98 @@ static void magic_attack(int which) {
 
 static void limit_break(int which) {
 
+	int ax=34,ay=20;
+	int damage=100;
+	int i;
+
+	while(ay>0) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(tfv_stand_left,ax,ay);
+		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		draw_battle_bottom(enemy_type);
+
+		page_flip();
+
+		ay-=1;
+
+		usleep(20000);
+	}
+
+	ax=10;
+	ay=0;
+
+	/* Falling */
+
+	while(ay<=20) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		grsim_put_sprite(tfv_stand_left,ax,ay);
+		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+
+		draw_battle_bottom(enemy_type);
+
+		color_equals(13);
+		vlin(0,ay,ax-5);
+
+		page_flip();
+
+		ay+=1;
+
+		usleep(100000);
+	}
+
+	i=0;
+	while(i<13) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		grsim_put_sprite(tfv_stand_left,ax,ay);
+		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+
+		draw_battle_bottom(enemy_type);
+
+		color_equals(COLOR_LIGHTGREEN);
+		vlin(ay,ay+i,ax-5);
+
+		page_flip();
+		i++;
+
+		usleep(100000);
+	}
+
+	ax=34;
+	ay=20;
+
+	gr_copy_to_current(0xc00);
+
+	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+	grsim_put_sprite(tfv_stand_left,ax,ay);
+	grsim_put_sprite(tfv_led_sword,ax-5,ay);
+
+	draw_battle_bottom(enemy_type);
+
+	color_equals(COLOR_LIGHTGREEN);
+	vlin(20,33,5);
+
+	damage_enemy(damage);
+	gr_put_num(2,10,damage);
+	page_flip();
+
+	for(i=0;i<20;i++) {
+		usleep(100000);
+	}
+
 }
 
 static void summon(int which) {
