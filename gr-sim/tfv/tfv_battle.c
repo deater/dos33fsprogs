@@ -93,7 +93,7 @@ struct enemy_type {
 static struct enemy_type enemies[8]={
 	[0]= {
 		.name="Killer Crab",
-		.hp_base=10,
+		.hp_base=50,
 		.hp_mask=0x1f,
 		.attack_name="Pinch",
 		.weakness=MAGIC_MALAISE,
@@ -443,6 +443,16 @@ static int damage_enemy(int value) {
 
 }
 
+static int heal_self(int value) {
+
+	hp+=value;
+	if (hp>max_hp) hp=max_hp;
+
+	return 0;
+
+}
+
+
 static int damage_tfv(int value) {
 
 	if (hp>value) hp-=value;
@@ -636,8 +646,111 @@ static int rotate_intro(void) {
 	return 0;
 }
 
+#define MENU_MAGIC_HEAL		0
+#define MENU_MAGIC_ICE		1
+#define MENU_MAGIC_FIRE		2
+#define MENU_MAGIC_MALAISE	3
+#define MENU_MAGIC_BOLT		4
+
+
 static void magic_attack(int which) {
 
+	int ax=34,ay=20;
+	int mx,my;
+	int damage=20;
+	int i;
+
+	unsigned char *sprite;
+
+	if (which==MENU_MAGIC_HEAL) {
+		sprite=magic_health;
+		mx=34;
+		my=20;
+	}
+	if (which==MENU_MAGIC_FIRE) {
+		sprite=magic_fire;
+		mx=2;
+		my=20;
+	}
+	if (which==MENU_MAGIC_ICE) {
+		sprite=magic_ice;
+		mx=2;
+		my=20;
+	}
+
+
+	// FIXME: damage based on weakness of enemy
+	// FIXME: disallow if not enough MP
+
+	/* cast the magic */
+	i=0;
+	while(i<10) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(tfv_victory,34,20);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		draw_battle_bottom(enemy_type);
+
+		page_flip();
+
+		i++;
+
+		usleep(20000);
+	}
+
+	ax=34;
+	ay=20;
+	i=0;
+
+	/* Actually put the magic */
+
+	while(i<=20) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		grsim_put_sprite(tfv_stand_left,ax,ay);
+		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+
+		grsim_put_sprite(sprite,mx+(i&1),my);
+
+		draw_battle_bottom(enemy_type);
+
+		page_flip();
+
+		i++;
+
+		usleep(100000);
+	}
+
+	mp-=5;
+
+	gr_copy_to_current(0xc00);
+
+	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+	grsim_put_sprite(tfv_stand_left,ax,ay);
+	grsim_put_sprite(tfv_led_sword,ax-5,ay);
+
+	draw_battle_bottom(enemy_type);
+
+	if (which!=MENU_MAGIC_HEAL) {
+		damage_enemy(damage);
+		gr_put_num(2,10,damage);
+	}
+	else {
+		heal_self(damage);
+	}
+	draw_battle_bottom(enemy_type);
+	page_flip();
+
+	for(i=0;i<20;i++) {
+		usleep(100000);
+	}
 }
 
 static void limit_break(int which) {

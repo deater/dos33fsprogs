@@ -135,7 +135,7 @@ int world_map(void) {
 
 	int ch;
 	int direction=1;
-	int i,limit;
+	int i,tree_limit;
 	int newx=0,newy=0,moved;
 	int special_destination=NOEXIT,destination_type=LOCATION_PLACE;
 
@@ -400,9 +400,9 @@ done_entry:
 		/* Draw Background Trees */
 		if (map_info[map_location].land_type&LAND_FOREST) {
 			for(i=10;i<tfv_y+8;i+=2) {
-				limit=22+(i/4);
+				tree_limit=22+(i/4);
 				color_equals(COLOR_DARKGREEN);
-				hlin_double(ram[DRAW_PAGE],0,limit,i);
+				hlin_double(ram[DRAW_PAGE],0,tree_limit,i);
 			}
 		}
 
@@ -482,9 +482,9 @@ done_entry:
 
 			/* Draw Below Forest */
 			for(i=tfv_y+8;i<36;i+=2) {
-				limit=22+(i/4);
+				tree_limit=22+(i/4);
 				color_equals(COLOR_DARKGREEN);
-				hlin_double(ram[DRAW_PAGE],0,limit,i);
+				hlin_double(ram[DRAW_PAGE],0,tree_limit,i);
 			}
 
 			int f;

@@ -39,3 +39,9 @@ extern unsigned char numbers[10][11];
 extern unsigned char small_tree[];
 extern unsigned char medium_tree[];
 extern unsigned char big_tree[];
+
+extern unsigned char magic_health[];
+extern unsigned char magic_fire[];
+extern unsigned char magic_ice[];
+extern unsigned char magic_bolt[];
+extern unsigned char magic_malaise[];
