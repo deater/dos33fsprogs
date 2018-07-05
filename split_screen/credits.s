@@ -116,7 +116,25 @@ line_loop:
 
 	jsr	wait_until_keypressed
 
+	;=====================================================
+	; attempt vapor lock
+	;  by reading the "floating bus" we can see most recently
+	;  written value of the display
+	; we look for $44 (which is the green grass on low-res)
+	;=====================================================
+	; See:
+	; 	Have an Apple Split by Bob Bishop
+	; 	Softalk, October 1982
 
+vapor_lock_loop:
+	
+
+
+	;=====================================================
+	;=====================================================
+	; Loop forever display loop
+	;=====================================================
+	;=====================================================
 display_loop:
 	; each scan line 65 cycles
 	;	1 cycle each byte (40cycles) + 25 for horizontal
@@ -137,12 +155,22 @@ display_loop:
 	; text
 	bit	SET_TEXT						; 4
 
-	ldy	#15							; 2
+	; want 3120-4 = 3116 cycles
+	; inner loop = 2+(x*5)-1 = 5x+1
+	; outer loop = 2+(y*5+y*inner)-1 = 1+5y+y*(5x+1)
+	;			1+5y+5xy+y
+	;			1+6y+5xy
+	;			1+y(6+5x)
+
+	; Try X=11 Y=51 cycles=3112 (R 4)
+
+	lda	#0							; 2
+	lda	#0							; 2
+
+
+	ldy	#51							; 2
 loop2:
-
-	; 5*255+2 = 197
-
-	ldx	#39							; 2
+	ldx	#11							; 2
 loop1:
 	dex								; 2
 	bne	loop1							; 2nt/3
@@ -150,16 +178,24 @@ loop1:
 	dey								; 2
 	bne	loop2							; 2nt/3
 
+;=============================================
+
 	; hgr
 	bit	HIRES							; 4
 	bit	SET_GR							; 4
 
-	ldy	#15							; 2
+
+	; want 4160-8 = 4152 cycles
+	;			1+y(6+5x)
+	; Try X=91 Y=9 cycles=4150, R2
+
+	lda	#0							; 2
+
+
+
+	ldy	#9							; 2
 loop3:
-
-	; 5*255+2 = 197
-
-	ldx	#39							; 2
+	ldx	#91							; 2
 loop4:
 	dex								; 2
 	bne	loop4							; 2nt/3
@@ -167,17 +203,25 @@ loop4:
 	dey								; 2
 	bne	loop3							; 2nt/3
 
+;===========================================================================
 
 
 	; gr
-	bit	LORES
+	bit	LORES							; 4
 
-	ldy	#15							; 2
+	; want 5200 - 4 = 5196 cycles
+	;			1+y(6+5x)
+	; Try X=17 Y=57 cycles=5188, R8
+
+
+	lda	#0							; 2
+	lda	#0							; 2
+	lda	#0							; 2
+	lda	#0							; 2
+
+	ldy	#57							; 2
 loop5:
-
-	; 5*255+2 = 197
-
-	ldx	#39							; 2
+	ldx	#17							; 2
 loop6:
 	dex								; 2
 	bne	loop6							; 2nt/3
@@ -185,6 +229,26 @@ loop6:
 	dey								; 2
 	bne	loop5							; 2nt/3
 
+;========================================================================
+
+	; vertical blank
+
+	; want 4550-3 = 4547 cycles
+	;			1+y(6+5x)
+
+	; Try X=13 Y=64 cycles=4545 R2
+
+	lda	#0							; 2
+
+	ldy	#64							; 2
+loop7:
+	ldx	#13							; 2
+loop8:
+	dex								; 2
+	bne	loop8							; 2nt/3
+
+	dey								; 2
+	bne	loop7							; 2nt/3
 
 
 
