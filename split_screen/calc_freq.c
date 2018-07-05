@@ -7,7 +7,8 @@ int main(int argc, char **argv) {
 //	desired=3116;
 //	desired=4152;
 //	desired=5196;
-	desired=4547;
+//	desired=4547;
+	desired=9685;
 
 
 	printf("You want %d cycles\n",desired);

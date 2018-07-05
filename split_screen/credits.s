@@ -126,9 +126,39 @@ line_loop:
 	; 	Have an Apple Split by Bob Bishop
 	; 	Softalk, October 1982
 
-vapor_lock_loop:
-	
+	; Challenges: each scan line scans 40 bytes.
+	; The blanking happens at the *beginning*
+	; So 65 bytes are scanned, starting at adress of the line - 25
 
+vapor_lock_loop:
+	LDA #$44
+zloop:
+	LDX #$04
+qloop:
+	CMP $C051
+	BNE zloop
+	DEX
+	BNE qloop
+
+	; found first line of low-res green, need to kill time
+	; until we can enter at top of screen
+	; so we want roughly 5200+4550 - 65 (for the scanline we missed)
+
+	; want 9685
+	; Try X=34 Y=55 cycles=9681
+
+	lda	#0							; 2
+	lda	#0							; 2
+
+	ldy	#55							; 2
+loopA:
+	ldx	#34							; 2
+loopB:
+	dex								; 2
+	bne	loopB							; 2nt/3
+
+	dey								; 2
+	bne	loopA							; 2nt/3
 
 	;=====================================================
 	;=====================================================
