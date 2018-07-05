@@ -290,25 +290,25 @@ loop6:
 							;=========
 							; 26
 
-							; + 456
+							; + 762
 							;========
-							; 482
+							; 788
 
-	; blob= 482
-	; 4547 - 482
-	; 4065 is new number
-	; Try X=2 Y=254 cycles=4065
-
-
+	; blob= 788
+	; 4547 - 788
+	; 3759 is new number
+	; Try X=124 Y=6 cycles=3757 R2
 
 
 
+
+
+	lda	#0							; 2
 ;	lda	#0							; 2
-;	lda	#0							; 2
 
-	ldy	#254							; 2
+	ldy	#6							; 2
 loop7:
-	ldx	#2							; 2
+	ldx	#124							; 2
 loop8:
 	dex								; 2
 	bne	loop8							; 2nt/3
@@ -341,20 +341,22 @@ wait_until_keypressed:
 	;	X*innerloop
 	;	innerloop = 30 if $00 17+13(done)
 	;		    54 if if $XX 16+8+8+9(put_all)+13(done)
-	;		    68 if $X0 16+8+7+5+19(put_sprite_mask)+13(done)
-	;		    63 if $0X 16+7+8+19(put_sprite_mask)+13(done)
+	;		    68 if $X0 16+8+7+5+20(put_sprite_mask)+13(done)
+	;		    64 if $0X 16+7+8+20(put_sprite_mask)+13(done)
 	;       -1 for last iteration
 	;    18 (-1 for last)
 	;     6 return
 
 	; so cost = 28 + Y*(34+18)+ (INNER-X) -1 + 6
 	;         = 33 + Y*(52)+(INNER-X)
-	;	  = 33 + Y*(52)+ [30A + 54B + 68C + 63D]-X
+	;	  = 33 + Y*(52)+ [30A + 54B + 68C + 64D]-X
 
 	; solid $XX, x=3, y=3, B=9
 	;	33 + 3*(52)+[54*9]-3 = 672
 	; solid $00, x=3, y=3, A=9
 	;	33 + 3*(52)+[30*9]-3 = 456
+	; solid $0x, x=3, y=3, D=9
+	;	33 + 3*(52)+[64*9]-3 = 762
 
 	; bird_stand_right = X=6, Y=7 A=28 B=9 C=2 D=3
 	;	= 33 + 7*53+(30*28+53*9+68*2+63*3)-6 = 2040 cycles
@@ -429,6 +431,8 @@ put_sprite_bottom:
 
 	lda	#$0f							; 2
 	sta	MASK			; setup mask			; 3
+								;===========
+								;         5
 
 put_sprite_mask:
 	lda	(OUTL),Y		; get color at output		; 5
@@ -437,6 +441,8 @@ put_sprite_mask:
 	sta	(OUTL),Y		; store it back			; 6
 
 	jmp	put_sprite_done_draw	; we are done			; 3
+								;===========
+								;        20
 
 put_sprite_all:
 	lda	COLOR			; load color			; 3
