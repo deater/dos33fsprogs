@@ -32,3 +32,9 @@ big_tree:
 	.byte $c0,$CC,$CC,$CC,$c0
 	.byte $00,$00,$88,$00,$00
 	
+
+blob:
+	.byte $3,$3
+	.byte $CC,$CC,$CC
+	.byte $CC,$CC,$CC
+	.byte $CC,$CC,$CC
