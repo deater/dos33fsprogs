@@ -687,6 +687,43 @@ struct map_info_type map_info[34] = {
 		.scatter=SCATTER_NONE,
 		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
 		.background_image=deutsch_rle,
+		.num_locations=5,
+		.location[0] = {
+			.name="Nire",
+			.x0 = 0, .x1 = 6,
+			.y0 = 25,  .y1 = 33,
+			.destination=DIALOG_NIRE,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[1] = {
+			.name="Agent S",
+			.x0 = 10, .x1 = 18,
+			.y0 = 25, .y1 = 33,
+			.destination=DIALOG_AGENT_S,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[2] = {
+			.name="Agent G",
+			.x0 = 19, .x1 = 25,
+			.y0 = 25, .y1 = 33,
+			.destination=DIALOG_AGENT_G,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[3] = {
+			.name="Agent AP",
+			.x0 = 26, .x1 = 31,
+			.y0 = 25, .y1 = 33,
+			.destination=DIALOG_AGENT_AP,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[4] = {
+			.name="Frau",
+			.x0 = 32, .x1 = 38,
+			.y0 = 25, .y1 = 33,
+			.destination=DIALOG_FRAU,
+			.type=LOCATION_CONVERSATION,
+		},
+
 	},
 	[HOMEROOM]={	// 29: HOMEROOM
 		.name="Homeroom 12E",

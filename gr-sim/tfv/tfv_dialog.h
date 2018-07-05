@@ -38,6 +38,12 @@
 #define DIALOG_RACHAEL		24
 #define DIALOG_MREE		25
 
+#define DIALOG_NIRE		26
+#define DIALOG_AGENT_S		27
+#define DIALOG_AGENT_G		28
+#define DIALOG_AGENT_AP		29
+#define DIALOG_FRAU		30
+
 struct dialog_words {
 	char *words;
 	int next;
@@ -175,7 +181,6 @@ struct dialog_type dialog[100]={
 	[DIALOG_FORD]= {
 		.statement[0].words="557-0868 Utopia BBS is really great!",
 		.statement[0].next=0,
-		// AMIGA?
 	},
 #if 0
 	AP CALCULUS, TEAM I-1
@@ -193,13 +198,32 @@ struct dialog_type dialog[100]={
 		LIZBETH
 		BLUME
 			VINCE CON PATILLAS
-	DEUTSCH
-		AGENT G
-		AGENT AP
-		AGENT S
-		NIRE
-		FRAU: DER DIE DAS
-
+#endif
+	//DEUTSCH
+	[DIALOG_NIRE]= {
+		.statement[0].words="Vince, what are you doing!",
+		.statement[0].next=0,
+		// Sue you?
+	},
+	[DIALOG_AGENT_S]= {
+		.statement[0].words="...",
+		.statement[0].next=0,
+	},
+	[DIALOG_AGENT_G]= {
+		.statement[0].words="Cultural experience on Friday!",
+		.statement[0].next=0,
+	},
+	[DIALOG_AGENT_AP]= {
+		.statement[0].words="...",
+		.statement[0].next=0,
+	},
+	[DIALOG_FRAU]= {
+		.statement[0].words="Immer mit der Ruhe!",
+		.statement[0].next=0,
+		.statement[1].words="Karte Spiel",
+		.statement[1].next=0,
+	},
+#if 0
 	HOMEROOM
 		TRAPANI
 			WEAVE!

@@ -5,11 +5,12 @@ TOKENIZE = ../asoft_basic-utils/tokenize_asoft
 
 all:	split.dsk
 
-split.dsk:	BISHOP BISHOP.BAS RAINBOW.BAS RAINBOW KATC.BIN
+split.dsk:	BISHOP BISHOP.BAS RAINBOW.BAS RAINBOW KATC.BIN CREDITS
 	$(DOS33) -y split.dsk BSAVE -a 0x0300 BISHOP
 	$(DOS33) -y split.dsk SAVE A BISHOP.BAS
 	$(DOS33) -y split.dsk SAVE A RAINBOW.BAS
 	$(DOS33) -y split.dsk BSAVE -a 0x0c00 RAINBOW
+	$(DOS33) -y split.dsk BSAVE -a 0x1000 CREDITS
 #	$(DOS33) -y split.dsk BSAVE -a 0x2000 LENNA.BIN
 	$(DOS33) -y split.dsk BSAVE -a 0x2000 KATC.BIN
 
@@ -31,8 +32,16 @@ RAINBOW:	rainbow.o
 RAINBOW.BAS:	rainbow.bas
 	$(TOKENIZE) < rainbow.bas > RAINBOW.BAS
 
+credits.o:	credits.s
+	ca65 -o credits.o credits.s -l credits.lst
+
+CREDITS:	credits.o
+	ld65 -o CREDITS credits.o -C ../linker_scripts/apple2_1000.inc
+
+
+
 KATC.BIN:	kat.bmp
 	../bmp2dhr/b2d kat.bmp hgr dither
 
 clean:	
-	rm -f *~ *.o *.lst BISHOP RAINBOW
+	rm -f *~ *.o *.lst BISHOP RAINBOW CREDITS

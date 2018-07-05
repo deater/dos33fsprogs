@@ -39,7 +39,7 @@ print_string_loop:
 	iny
 	bne	print_string_loop
 done_print_string:
-	rts
+;	rts
 
 	;====================
 	; point_to_end_string
