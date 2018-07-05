@@ -130,6 +130,10 @@ line_loop:
 	; The blanking happens at the *beginning*
 	; So 65 bytes are scanned, starting at adress of the line - 25
 
+	; the scan takes 8 cycles, look for 4 repeats of the value
+	; to avoid false positive found if the horiz blanking is mirroring
+	; the line (max 3 repeats in that case)
+
 vapor_lock_loop:
 	LDA #$44
 zloop:
@@ -268,11 +272,36 @@ loop6:
 
 	; Try X=13 Y=64 cycles=4545 R2
 
+
+	; DRAW SPRITES
+	; do this during blanking interval
+
+	lda	#>bird_stand_right			; 2
+	sta	INH					; 3
+	lda	#<bird_stand_right			; 2
+	sta	INL					; 3
+
+	lda	#17					; 2
+	sta	XPOS					; 3
+	lda	#30					; 2
+	sta	YPOS					; 3
+
+        jsr     put_sprite				; 6
+							; + 2040
+							;========
+							; 2066
+
+
+	; 2481 is new number
+	; Try X=2 Y=155 cycles=2481
+
+
+
 	lda	#0							; 2
 
-	ldy	#64							; 2
+	ldy	#155							; 2
 loop7:
-	ldx	#13							; 2
+	ldx	#2							; 2
 loop8:
 	dex								; 2
 	bne	loop8							; 2nt/3
@@ -290,6 +319,135 @@ wait_until_keypressed:
 	bit	KEYRESET
 	rts
 
+
+
+
+	;=============================================
+	; put_sprite
+	;=============================================
+	; Sprite to display in INH,INL
+	; Location is XPOS,YPOS
+	; Note, only works if YPOS is multiple of two
+
+
+	; time= 28 setup
+	;    Y*outerloop
+	;    outerloop = 36 setup
+	;	X*innerloop
+	;	innerloop = 30 if $00 17+13(done)
+	;		    53 if if $XX 16+8+8+8(put_all)+13(done)
+	;		    68 if $X0 16+8+7+5+19(put_sprite_mask)+13(done)
+	;		    63 if $0X 16+7+8+19(put_sprite_mask)+13(done)
+	;       -1 for last iteration
+	;    18 (-1 for last)
+	;     6 return
+
+	; so cost = 28 + Y*(36+18)+(INNER-X) -1 + 6
+	;         = 33 + Y*(53)+(INNER-X)
+	;	  = 33 + Y*(53)+ [30A + 53B + 68C + 63D]-X
+
+	; bird_stand_right = X=6, Y=7 A=28 B=9 C=2 D=3
+	;	= 33 + 7*53+(30*28+53*9+68*2+63*3)-6 = 2040 cycles
+put_sprite:
+
+	ldy	#0		; byte 0 is xsize			; 2
+	lda	(INL),Y							; 5
+	sta	CH		; xsize is in CH			; 3
+	iny								; 2
+
+	lda	(INL),Y		; byte 1 is ysize			; 5
+	sta	CV		; ysize is in CV			; 3
+	iny								; 2
+
+	lda	YPOS		; make a copy of ypos			; 3
+	sta	TEMPY		; as we modify it			; 3
+								;===========
+								;	28
+put_sprite_loop:
+	sty	TEMP		; save sprite pointer			; 3
+
+	ldy	TEMPY							; 3
+	lda	gr_offsets,Y	; lookup low-res memory address		; 5
+	clc								; 2
+	adc	XPOS		; add in xpos				; 3
+	sta	OUTL		; store out low byte of addy		; 3
+	lda	gr_offsets+1,Y	; look up high byte			; 5
+	adc	DRAW_PAGE	;					; 3
+	sta	OUTH		; and store it out			; 3
+	ldy	TEMP		; restore sprite pointer		; 3
+
+				; OUTH:OUTL now points at right place
+
+	ldx	CH		; load xsize into x			; 3
+								;===========
+								;	36
+put_sprite_pixel:
+	lda	(INL),Y			; get sprite colors		; 5
+	iny				; increment sprite pointer	; 2
+
+	sty	TEMP			; save sprite pointer		; 3
+	ldy	#$0							; 2
+
+	; check if completely transparent
+	; if so, skip
+
+	cmp	#$0			; if all zero, transparent	; 2
+	beq	put_sprite_done_draw	; don't draw it			; 2nt/3
+								;==============
+								;	 17
+
+	sta	COLOR			; save color for later		; 3
+
+	; check if top pixel transparent
+
+	and	#$f0			; check if top nibble zero	; 2
+	bne	put_sprite_bottom	; if not skip ahead		; 2nt/3
+
+	lda	#$f0			; setup mask			; 2
+	sta	MASK							; 3
+	bmi	put_sprite_mask		; always?			; 3
+
+put_sprite_bottom:
+	lda	COLOR			; re-load color			; 3
+	and	#$0f			; check if bottom nibble zero	; 2
+	bne	put_sprite_all		; if not, skip ahead		; 2nt/3
+
+	lda	#$0f							; 2
+	sta	MASK			; setup mask			; 3
+
+put_sprite_mask:
+	lda	(OUTL),Y		; get color at output		; 5
+	and	MASK			; mask off unneeded part	; 3
+	ora	COLOR			; or the color in		; 3
+	sta	(OUTL),Y		; store it back			; 5
+
+	jmp	put_sprite_done_draw	; we are done			; 3
+
+put_sprite_all:
+	lda	COLOR			; load color			; 3
+	sta	(OUTL),Y		; and write it out		; 5
+
+
+put_sprite_done_draw:
+
+	ldy	TEMP			; restore sprite pointer	; 3
+
+	inc	OUTL			; increment output pointer	; 5
+	dex				; decrement x counter		; 2
+	bne	put_sprite_pixel	; if not done, keep looping	; 2nt/3
+
+	inc	TEMPY			; each line has two y vars	; 5
+	inc	TEMPY							; 5
+	dec	CV			; decemenet total y count	; 5
+	bne	put_sprite_loop		; loop if not done		; 2nt/3
+
+	rts				; return			; 6
+
+
+
+
+
+
 line1:.asciiz	"   *                            .      "
 line2:.asciiz	"  *    .       T A L B O T          .  "
 line3:.asciiz	"  *           F A N T A S Y            "
@@ -300,6 +458,7 @@ line6:.asciiz	"             .                         "
 .include "../asm_routines/gr_offsets.s"
 .include "../asm_routines/text_print.s"
 .include "../asm_routines/gr_hlin_double.s"
+.include "tfv_sprites.inc"
 
 .align	$1000
 
