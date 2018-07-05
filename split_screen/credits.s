@@ -290,14 +290,14 @@ loop6:
 							;=========
 							; 26
 
-							; + 672
+							; + 456
 							;========
-							; 698
+							; 482
 
-	; blob= 698
-	; 4547 - 698
-	; 3849 is new number
-	; Try X=58 Y=13 cycles=3849
+	; blob= 482
+	; 4547 - 482
+	; 4065 is new number
+	; Try X=2 Y=254 cycles=4065
 
 
 
@@ -306,9 +306,9 @@ loop6:
 ;	lda	#0							; 2
 ;	lda	#0							; 2
 
-	ldy	#13							; 2
+	ldy	#254							; 2
 loop7:
-	ldx	#58							; 2
+	ldx	#2							; 2
 loop8:
 	dex								; 2
 	bne	loop8							; 2nt/3
@@ -351,8 +351,10 @@ wait_until_keypressed:
 	;         = 33 + Y*(52)+(INNER-X)
 	;	  = 33 + Y*(52)+ [30A + 54B + 68C + 63D]-X
 
-	; blob, x=3, y=3, B=9
+	; solid $XX, x=3, y=3, B=9
 	;	33 + 3*(52)+[54*9]-3 = 672
+	; solid $00, x=3, y=3, A=9
+	;	33 + 3*(52)+[30*9]-3 = 456
 
 	; bird_stand_right = X=6, Y=7 A=28 B=9 C=2 D=3
 	;	= 33 + 7*53+(30*28+53*9+68*2+63*3)-6 = 2040 cycles
