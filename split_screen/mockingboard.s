@@ -120,29 +120,32 @@ reset_ay_right:
 
 write_ay_both:
 	; address
-	stx	MOCK_6522_1_ORA		; put address on PA1		; 3
-	stx	MOCK_6522_2_ORA		; put address on PA2		; 3
+	stx	MOCK_6522_1_ORA		; put address on PA1		; 4
+	stx	MOCK_6522_2_ORA		; put address on PA2		; 4
 	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
-	sta	MOCK_6522_1_ORB		; latch_address on PB1		; 3
-	sta	MOCK_6522_2_ORB		; latch_address on PB2		; 3
+	sta	MOCK_6522_1_ORB		; latch_address on PB1		; 4
+	sta	MOCK_6522_2_ORB		; latch_address on PB2		; 4
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sta	MOCK_6522_1_ORB						; 3
-	sta	MOCK_6522_2_ORB						; 3
-
+	sta	MOCK_6522_1_ORB						; 4
+	sta	MOCK_6522_2_ORB						; 4
+								;===========
+								;        28
 	; value
 	lda	MB_VALUE						; 3
-	sta	MOCK_6522_1_ORA		; put value on PA1		; 3
-	sta	MOCK_6522_2_ORA		; put value on PA2		; 3
+	sta	MOCK_6522_1_ORA		; put value on PA1		; 4
+	sta	MOCK_6522_2_ORA		; put value on PA2		; 4
 	lda	#MOCK_AY_WRITE		;				; 2
-	sta	MOCK_6522_1_ORB		; write on PB1			; 3
-	sta	MOCK_6522_2_ORB		; write on PB2			; 3
+	sta	MOCK_6522_1_ORB		; write on PB1			; 4
+	sta	MOCK_6522_2_ORB		; write on PB2			; 4
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sta	MOCK_6522_1_ORB						; 3
-	sta	MOCK_6522_2_ORB						; 3
+	sta	MOCK_6522_1_ORB						; 4
+	sta	MOCK_6522_2_ORB						; 4
+								;===========
+								;        31
 
 	rts								; 6
 								;===========
-								;       53
+								;       65
 
 	;=======================================
 	; Detect a Mockingboard card in Slot4

@@ -450,24 +450,29 @@ loop4:
 
 	;=========================
 	; play mockingboard
+	; 11+ 84*5 + 10*4 + 21 = 492
 
+	lda	MBASE				; 3
+	sta	MB_ADDRH			; 3
+	lda	#0				; 2
+	sta	MB_ADDRL			; 3
+					;=============
+					;	11
 
-	lda	MBASE
-	sta	MB_ADDRH
-	lda	#0
-	sta	MB_ADDRL
+	ldx	#0				; 2
+	ldy	MBOFFSET			; 3
+	lda	(MB_ADDRL),Y			; 5
+	sta	MB_VALUE			; 3
+	jsr	write_ay_both			; 6+65
+					;===============
+					;	84
 
-	ldx	#0
-	ldy	MBOFFSET
-	lda	(MB_ADDRL),Y
-	sta	MB_VALUE
-	jsr	write_ay_both
-
-	clc
-	lda	#6
-	adc	MB_ADDRH
-	sta	MB_ADDRH
-
+	clc					; 2
+	lda	#6				; 2
+	adc	MB_ADDRH			; 3
+	sta	MB_ADDRH			; 3
+					;==============
+					;	10
 	ldx	#2
 	ldy	MBOFFSET
 	lda	(MB_ADDRL),Y
@@ -507,30 +512,37 @@ loop4:
 	sta	MB_VALUE
 	jsr	write_ay_both
 
-	lda	FRAME
-	and	#1
-	clc
-	adc	MBOFFSET
-	sta	MBOFFSET
+	;
 
-	lda	MBASE
-	adc	#0
-	sta	MBASE
+	lda	FRAME			; 3
+	and	#1			; 2
+	clc				; 2
+	adc	MBOFFSET		; 3
+	sta	MBOFFSET		; 3
 
+	lda	MBASE			; 3
+	adc	#0			; 2
+	sta	MBASE			; 3
+				;=============
+				;         21
 
-	; want 5200 - 4 = 5196 cycles
-	;			1+y(6+5x)
-	; Try X=17 Y=57 cycles=5188, R8
+	; lores want 	5200
+	; mockingboard	-492
+	; softswitch	  -4
+	;===================
+	;		4704 cycles
+
+	; Try X=133 Y=7 cycles=4698 R6
 
 
 	lda	#0							; 2
 	lda	#0							; 2
 	lda	#0							; 2
-	lda	#0							; 2
+;	lda	#0							; 2
 
-	ldy	#57							; 2
+	ldy	#7							; 2
 loop5:
-	ldx	#17							; 2
+	ldx	#133							; 2
 loop6:
 	dex								; 2
 	bne	loop6							; 2nt/3
@@ -901,9 +913,9 @@ letters:
 
 
 line1:.asciiz	"   *                            .      "
-line2:.asciiz	"  *    .       T A L B O T          .  "
-line3:.asciiz	"  *           F A N T A S Y            "
-line4:.asciiz	"   *            S E V E N              "
+line2:.asciiz	"  *    .                            .  "
+line3:.asciiz	"  *                                    "
+line4:.asciiz	"   *                                   "
 line5:.asciiz	" .                          .    .     "
 line6:.asciiz	"             .                         "
 
