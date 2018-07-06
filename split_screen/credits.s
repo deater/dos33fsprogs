@@ -95,26 +95,7 @@
 	bit	SET_GR
 	bit	FULLGR
 
-	lda	#$44
-	sta	COLOR
-
-	lda	#39
-	sta	V2
-
-	lda	#28
-
-line_loop:
-	pha
-
-	ldy	#0
-
-	jsr	hlin_double
-
-	pla
-	clc
-	adc	#2
-	cmp	#48
-	bne	line_loop
+	jsr	draw_bottom_green				; 6
 
 	; Wait
 
@@ -209,22 +190,21 @@ display_loop:
 	; text
 	bit	SET_TEXT						; 4
 
-	; want 3120-4 = 3116 cycles
-	; inner loop = 2+(x*5)-1 = 5x+1
-	; outer loop = 2+(y*5+y*inner)-1 = 1+5y+y*(5x+1)
-	;			1+5y+5xy+y
-	;			1+6y+5xy
-	;			1+y(6+5x)
+	jsr	draw_bottom_green				; 2209+6
 
-	; Try X=11 Y=51 cycles=3112 (R 4)
+	; want		 3120
+	; green		-2215
+	; set_test	   -4
+	;=============== 901 cycles
 
-	lda	#0							; 2
-	lda	#0							; 2
+	; Try X=6 Y=25 cycles=901
 
+;	lda	#0							; 2
+;	lda	#0							; 2
 
-	ldy	#51							; 2
+	ldy	#25							; 2
 loop2:
-	ldx	#11							; 2
+	ldx	#6							; 2
 loop1:
 	dex								; 2
 	bne	loop1							; 2nt/3
@@ -418,7 +398,7 @@ loop8:
 								;        13
 
 	;===========================
-	; Update tree2 = 21 cycles 
+	; Update tree2 = 21 cycles
 	and	#3			; if (frame%4==0)		; 2
 	beq	dec_tree2
 									; 2
@@ -623,8 +603,34 @@ put_sprite_done_draw:
 
 
 
+	;====================================
+	; Draw bottom green
+	;====================================
+	; using hlin 7127, optimized a bit but still awful
+	; this one is much better
+	; 2209 cycles
+draw_bottom_green:
 
+	lda	#$44							; 2
+	ldx	#39							; 2
+green_loop:
+	sta	$728,X		; 28					; 5
+	sta	$7a8,X		; 30					; 5
+	sta	$450,X		; 32					; 5
+	sta	$4d0,X		; 34					; 5
+	sta	$550,X		; 36					; 5
+	sta	$5d0,X		; 38					; 5
+	sta	$650,X		; 40					; 5
+	sta	$6d0,X		; 42					; 5
+	sta	$750,X		; 44					; 5
+	sta	$7d0,X		; 46					; 5
 
+	dex								; 2
+	bpl	green_loop						; 2nt/3
+
+	rts								; 6
+
+; 4 + (40*55) + 6 - 1
 
 line1:.asciiz	"   *                            .      "
 line2:.asciiz	"  *    .       T A L B O T          .  "
@@ -634,7 +640,6 @@ line5:.asciiz	" .                          .    .     "
 line6:.asciiz	"             .                         "
 
 .include "../asm_routines/text_print.s"
-.include "../asm_routines/gr_hlin_double.s"
 
 .align	$100
 .include "../asm_routines/gr_offsets.s"
