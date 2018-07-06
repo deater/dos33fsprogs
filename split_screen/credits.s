@@ -3,6 +3,9 @@
 	H2	= $2C
 ;	V2	= $2D
 ;	TEMPY	= $FB
+	FRAME	= $60
+	TREE1X	= $61
+	TREE2X	= $62
 
 	HGR	= $F3E2
 	HPLOT0	= $F457
@@ -15,6 +18,14 @@
 
 	jsr	TEXT
 	jsr	HOME
+
+
+	; Init vars
+	lda	#28
+	sta	TREE1X
+	lda	#37
+	sta	TREE2X
+
 
 	lda	#0
 	sta	DISP_PAGE
@@ -276,26 +287,58 @@ loop6:
 
 	; vertical blank
 
-	; want 4550-3 = 4547 cycles
+	; want 4550 cycles
 	; Try X=13 Y=64 cycles=4545 R2
-
-;	lda	#0							; 2
-;	ldy	#64							; 2
-loopE:
-;	ldx	#13							; 2
-loopF:
-;	dex								; 2
-;	bne	loopF							; 2nt/3
-;	dey								; 2
-;	bne	loopE							; 2nt/3
-
-
-
 
 ;=========================================================================
 
 	; DRAW SPRITES
 	; do this during blanking interval
+
+;	color_equals(4);
+ ;                       for(i=28;i<48;i++) {
+  ;                      basic_hlin(0,39,i);
+   ;             }
+
+	;================
+	; Draw Small Tree
+
+	lda	#>small_tree				; 2
+	sta	INH					; 3
+	lda	#<small_tree				; 2
+	sta	INL					; 3
+
+	lda	TREE2X					; 3
+	sta	XPOS					; 3
+	lda	#28					; 2
+	sta	YPOS					; 3
+
+	jsr	put_sprite				; 6
+							;=========
+							; 27
+							; + 576
+							;========
+							; 603
+
+    ;            grsim_put_sprite_page(PAGE0,
+ ;                               small_tree,
+  ;                              tree1_x,tree1_y);
+  ;              grsim_put_sprite_page(PAGE0,
+   ;                             big_tree,
+    ;                            tree2_x,tree2_y);
+
+     ;           if (frame%8>4) {
+      ;                  grsim_put_sprite_page(PAGE0,
+       ;                         bird_rider_stand_right,
+        ;                        17,30);
+         ;       }
+          ;      else {
+           ;             grsim_put_sprite_page(PAGE0,
+            ;                    bird_rider_walk_right,
+             ;                   17,30);
+  ;              }
+
+
 
 	lda	#>bird_rider_stand_right		; 2
 	sta	INH					; 3
@@ -314,24 +357,100 @@ loopF:
 							; + 2190
 							;========
 							; 2216
+	; Blanking time:	 4550
+	; Tree1 Sprite           -603
+	; Sprite		-2216
+	; Frame Update		  -13
+	; Tree1 Update		  -21
+	; Tree2 Update		  -21
+	; JMP at end		   -3
 
-	; 4547 - 2216
-	; 2331 is new number
-	; Try X=92 Y=5 cycles=2331
+	; 1673 is new number
+	; Try X=1 Y=152 cycles=1673
 
 
 ;	lda	#0							; 2
 ;	lda	#0							; 2
-	ldy	#5							; 2
+	ldy	#152							; 2
 loop7:
-	ldx	#92							; 2
+	ldx	#1							; 2
 loop8:
 	dex								; 2
 	bne	loop8							; 2nt/3
 	dey								; 2
 	bne	loop7							; 2nt/3
 
+	;==========================
+	; Update frame = 13 cycles
+
+
+	inc	FRAME			; frame++			; 5
+	lda	FRAME							; 3
+	and	#$1f			; roll over after 31		; 2
+	sta	FRAME							; 3
+
+								;===========
+								;        13
+
+	;===========================
+	; Update tree2 = 21 cycles 
+	and	#3			; if (frame%4==0)		; 2
+	beq	dec_tree2
+									; 2
+	; need to do 19-5 cycles of nonsense
+	inc	TREE2X							; 5
+	dec	TREE2X							; 5
+	lda	#0							; 2
+	lda	#0							; 2
+
+	jmp	done_tree2						; 3
+
+dec_tree2:
+									; 3
+	dec	TREE2X			; tree2_x--			; 5
+	lda	TREE2X							; 3
+	bmi	tree2_neg
+									; 2
+	ldx	TREE2X							; 3
+	jmp	done_tree2						; 3
+tree2_neg:
+							; incoming br     3
+	ldx	#37							; 2
+	stx	TREE2X							; 3
+done_tree2:
+
+	;===========================
+	; Update tree1 = 21 cycles
+	and	#$f			; if (frame%16==0)		; 2
+	beq	dec_tree1
+									; 2
+	; need to do 19-5 cycles of nonsense
+	inc	TREE1X							; 5
+	dec	TREE1X							; 5
+	lda	#0							; 2
+	lda	#0							; 2
+
+	jmp	done_tree1						; 3
+
+dec_tree1:
+									; 3
+	dec	TREE1X			; tree1_x--			; 5
+	lda	TREE1X							; 3
+	bmi	tree1_neg
+									; 2
+	ldx	TREE1X							; 3
+	jmp	done_tree1						; 3
+tree1_neg:
+							; incoming br     3
+	ldx	#37							; 2
+	stx	TREE1X							; 3
+done_tree1:
+
 	jmp	display_loop						; 3
+
+;===========================================================
+;===========================================================
+;===========================================================
 
 wait_until_keypressed:
 	lda	KEYPRESS			; check if keypressed
@@ -364,9 +483,9 @@ wait_until_keypressed:
 	;    18 (-1 for last)
 	;     6 return
 
-	; so cost = 28 + Y*(34+18)+ (INNER-X) -1 + 6
-	;         = 33 + Y*(52)+(INNER-X)
-	;	  = 33 + Y*(52)+ [30A + 64B + 69C + 54D]-X
+	; so cost = 28 + Y*(34+18)+ (INNER-Y) -1 + 6
+	;         = 33 + Y*(52)+(INNER-Y)
+	;	  = 33 + Y*(52)+ [30A + 64B + 69C + 54D]-Y
 
 put_sprite:
 
