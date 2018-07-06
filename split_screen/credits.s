@@ -113,11 +113,11 @@ no_init_mb:
 
 
 	; test letters
-letter_loop:
-	lda	#80
-	jsr	WAIT
-	jsr	move_letters
-	jmp	letter_loop
+;letter_loop:
+;	lda	#80
+;	jsr	WAIT
+;	jsr	move_letters
+;	jmp	letter_loop
 
 	; Wait
 
@@ -471,6 +471,7 @@ loop6:
 
 
 
+	jsr	move_letters
 
 	; Blanking time:	 4550
 	; JMP at end		   -3
@@ -671,74 +672,81 @@ green_loop:
 
 ; 4 + (40*55) + 6 - 1
 
+	;===============================================
+	; Move Letters
+	;===============================================
+	;
 
 
 move_letters:
 	ldy	#0							; 2
 	lda	(LETTERL),Y						; 5
-	sta	LETTER
+	sta	LETTER							; 3
 	bmi	letter_special
-
-	lda	LETTERY
-	asl
-	tay
-	lda	gr_offsets,Y	; lookup low-res memory address		; 4
+									; 2
+	lda	LETTERY							; 3
+	asl								; 2
+	tay								; 2
+	lda	gr_offsets,Y	; lookup low-res memory address		; 5
 	sta	BASL		; store out low byte of addy		; 3
-	lda	gr_offsets+1,Y	; look up high byte			; 4
+	lda	gr_offsets+1,Y	; look up high byte			; 5
 	sta	BASH							; 3
 
-	ldy	#0							; 2
-	lda	#' '|$80						; 5
-	ldy	LETTERX
-	sta	(BASL),Y
+	ldy	#0		; erase old char with space		; 2
+	lda	#' '|$80						; 2
+	ldy	LETTERX							; 3
+	sta	(BASL),Y						; 6
 
-	dey
-	sty	LETTERX
-	lda	LETTER
-	ora	#$80
-	ldy	LETTERX
-	sta	(BASL),Y
+	dey			; draw new char				; 2
+	sty	LETTERX							; 3
+	lda	LETTER							; 3
+	ora	#$80							; 2
+	ldy	LETTERX							; 3
+	sta	(BASL),Y						; 6
 
-	lda	LETTERX
-	cmp	LETTERD
+	lda	LETTERX							; 3
+	cmp	LETTERD							; 3
 	bne	letter_ok
-
+									; 2
 letter_next:
-	clc
-	lda	LETTERL
-	adc	#1
-	sta	LETTERL
-	lda	LETTERH
-	adc	#0
-	sta	LETTERH
-	inc	LETTERD
-	lda	#39
-	sta	LETTERX
+	clc								; 2
+	lda	LETTERL							; 3
+	adc	#1							; 2
+	sta	LETTERL							; 3
+	lda	LETTERH							; 3
+	adc	#0							; 2
+	sta	LETTERH							; 3
+	inc	LETTERD							; 5
+	lda	#39							; 2
+	sta	LETTERX							; 3
 
 letter_ok:
-	rts
+									; 3
+	rts								; 6
 letter_special:
-	cmp	#$ff
+									; 3
+	cmp	#$ff							; 2
 	beq	letter_done
+									; 2
+	ldy	#1							; 2
+	lda	(LETTERL),Y						; 5
+	sta	LETTERY							; 3
 
-	ldy	#1
-	lda	(LETTERL),Y
-	sta	LETTERY
+	iny								; 2
+	lda	(LETTERL),Y						; 5
+	sta	LETTERD							; 3
 
-	iny
-	lda	(LETTERL),Y
-	sta	LETTERD
-
-	clc
-	lda	LETTERL
-	adc	#3
-	sta	LETTERL
-	lda	LETTERH
-	adc	#0
-	sta	LETTERH
+	clc								; 2
+	lda	LETTERL							; 3
+	adc	#3							; 2
+	sta	LETTERL							; 3
+	lda	LETTERH							; 3
+	adc	#0							; 2
+	sta	LETTERH							; 3
 
 letter_done:
-	rts
+									;3/0
+	rts								; 6
 
 letters:
 	;.byte	1,15
