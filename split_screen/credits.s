@@ -114,7 +114,7 @@ no_init_mb:
 
 	; test letters
 letter_loop:
-	lda	#100
+	lda	#80
 	jsr	WAIT
 	jsr	move_letters
 	jmp	letter_loop
@@ -674,6 +674,10 @@ green_loop:
 
 
 move_letters:
+	ldy	#0							; 2
+	lda	(LETTERL),Y						; 5
+	sta	LETTER
+	bmi	letter_special
 
 	lda	LETTERY
 	asl
@@ -690,8 +694,7 @@ move_letters:
 
 	dey
 	sty	LETTERX
-	ldy	#0							; 2
-	lda	(LETTERL),Y						; 5
+	lda	LETTER
 	ora	#$80
 	ldy	LETTERX
 	sta	(BASL),Y
@@ -700,8 +703,7 @@ move_letters:
 	cmp	LETTERD
 	bne	letter_ok
 
-	lda	#39
-	sta	LETTERX
+letter_next:
 	clc
 	lda	LETTERL
 	adc	#1
@@ -710,12 +712,54 @@ move_letters:
 	adc	#0
 	sta	LETTERH
 	inc	LETTERD
-letter_ok:
+	lda	#39
+	sta	LETTERX
 
-	rts								; 6
+letter_ok:
+	rts
+letter_special:
+	cmp	#$ff
+	beq	letter_done
+
+	ldy	#1
+	lda	(LETTERL),Y
+	sta	LETTERY
+
+	iny
+	lda	(LETTERL),Y
+	sta	LETTERD
+
+	clc
+	lda	LETTERL
+	adc	#3
+	sta	LETTERL
+	lda	LETTERH
+	adc	#0
+	sta	LETTERH
+
+letter_done:
+	rts
 
 letters:
-	.asciiz	"T A L B O T"
+	;.byte	1,15
+	.byte	     "T A L B O T",128
+	.byte	2,14,"F A N T A S Y",128
+	.byte	3,16,"S E V E N",128
+	.byte	1,15," ",128
+	.byte	2,14," ",128
+	.byte	3,16," ",128
+	.byte	1,19,"BY",128
+	.byte	3,14,"VINCE WEAVER",128
+	.byte	1,19," ",128
+	.byte	3,14," ",128
+	.byte	1,16,"MUSIC BY",128
+	.byte	3,12,"HIROKAZU TANAKA",128
+	.byte	1,16," ",128
+	.byte	3,12," ",128
+	.byte	2,13,"CYCLE COUNTING",128
+	.byte	3,16,"IS HARD!"
+	.byte	255
+
 
 line1:.asciiz	"   *                            .      "
 line2:.asciiz	"  *    .       T A L B O T          .  "
