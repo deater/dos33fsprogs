@@ -11,6 +11,8 @@
 	LETTERD = $67
 	LETTER	= $68
 	BLARGH	= $69
+	MBASE	= $97
+	MBOFFSET = $98
 
 	;===================
 	; init screen
@@ -25,6 +27,11 @@
 	sta	TREE1X
 	lda	#37
 	sta	TREE2X
+
+	lda	#0
+	sta	MBOFFSET
+	lda	#>music
+	sta	MBASE
 
 	lda	#<letters
 	sta	LETTERL
@@ -440,6 +447,76 @@ loop4:
 
 	; gr
 	bit	LORES							; 4
+
+	;=========================
+	; play mockingboard
+
+
+	lda	MBASE
+	sta	MB_ADDRH
+	lda	#0
+	sta	MB_ADDRL
+
+	ldx	#0
+	ldy	MBOFFSET
+	lda	(MB_ADDRL),Y
+	sta	MB_VALUE
+	jsr	write_ay_both
+
+	clc
+	lda	#6
+	adc	MB_ADDRH
+	sta	MB_ADDRH
+
+	ldx	#2
+	ldy	MBOFFSET
+	lda	(MB_ADDRL),Y
+	sta	MB_VALUE
+	jsr	write_ay_both
+
+	clc
+	lda	#6
+	adc	MB_ADDRH
+	sta	MB_ADDRH
+
+	ldx	#3
+	ldy	MBOFFSET
+	lda	(MB_ADDRL),y
+	sta	MB_VALUE
+	jsr	write_ay_both
+
+	clc
+	lda	#6
+	adc	MB_ADDRH
+	sta	MB_ADDRH
+
+	ldx	#8
+	ldy	MBOFFSET
+	lda	(MB_ADDRL),y
+	sta	MB_VALUE
+	jsr	write_ay_both
+
+	clc
+	lda	#6
+	adc	MB_ADDRH
+	sta	MB_ADDRH
+
+	ldx	#9
+	ldy	MBOFFSET
+	lda	(MB_ADDRL),y
+	sta	MB_VALUE
+	jsr	write_ay_both
+
+	lda	FRAME
+	and	#1
+	clc
+	adc	MBOFFSET
+	sta	MBOFFSET
+
+	lda	MBASE
+	adc	#0
+	sta	MBASE
+
 
 	; want 5200 - 4 = 5196 cycles
 	;			1+y(6+5x)
