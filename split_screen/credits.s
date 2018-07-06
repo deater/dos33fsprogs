@@ -526,23 +526,51 @@ loop4:
 				;=============
 				;         21
 
+	; 2=2 not loop
+	; 2+7+3= 12 = last page
+	; 2+7+15=24  = loop
+
+	cmp	#>music+5		; 2
+	bne	waste_7		;
+					; 2
+	lda	MBOFFSET		; 3
+	cmp	#16			; 2
+	bne	waste_12		;
+					; 2
+	lda	#>music			; 2
+	sta	MBASE			; 3
+	lda	#0			; 2
+	sta	MBOFFSET		; 3
+	jmp	not_ready_to_loop	; 3
+waste_7:
+	lda	#0			; 2
+	inc	BLARGH			; 5
+waste_12:
+					; 3
+	lda	#0			; 2
+	inc	BLARGH			; 5
+	inc	BLARGH			; 5
+
+not_ready_to_loop:
+
 	; lores want 	5200
 	; mockingboard	-492
+	; wrap		 -24
 	; softswitch	  -4
 	;===================
-	;		4704 cycles
+	;		4680 cycles
 
-	; Try X=133 Y=7 cycles=4698 R6
+	; Try X=7 Y=114 cycles=4675 R5
 
-
-	lda	#0							; 2
-	lda	#0							; 2
-	lda	#0							; 2
+	inc 	BLARGH							; 5
+;	lda	#0							; 2
+;	lda	#0							; 2
+;	lda	#0							; 2
 ;	lda	#0							; 2
 
-	ldy	#7							; 2
+	ldy	#114							; 2
 loop5:
-	ldx	#133							; 2
+	ldx	#7							; 2
 loop6:
 	dex								; 2
 	bne	loop6							; 2nt/3
