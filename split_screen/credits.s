@@ -1,26 +1,18 @@
 .include "zp.inc"
 
-	H2	= $2C
-;	V2	= $2D
-;	TEMPY	= $FB
 	FRAME	= $60
 	TREE1X	= $61
 	TREE2X	= $62
 
-	HGR	= $F3E2
-	HPLOT0	= $F457
-	HCOLOR	= $F6EC
-;	HLINE	= $F819
-;	VLINE	= $F828
-;	COLOR	= $F864
-;	TEXT 	= $FB36
-;	HOME	= $FC58
+	;===================
+	; init screen
 
 	jsr	TEXT
 	jsr	HOME
 
-
+	;==================
 	; Init vars
+
 	lda	#28
 	sta	TREE1X
 	lda	#37
@@ -31,6 +23,14 @@
 	sta	DISP_PAGE
 	lda	#0
 	sta	DRAW_PAGE
+
+	;==========================
+	; setup mockingboard
+
+	jsr mockingboard_detect_slot4
+
+	;==========================
+	; setup text screen
 
 	lda	#0
 	sta	CH
@@ -642,6 +642,7 @@ line5:.asciiz	" .                          .    .     "
 line6:.asciiz	"             .                         "
 
 .include "../asm_routines/text_print.s"
+.include "mockingboard.s"
 
 .align	$100
 .include "../asm_routines/gr_offsets.s"
@@ -649,4 +650,8 @@ line6:.asciiz	"             .                         "
 
 .align	$1000
 
+graphics:
 .incbin	"KATC.BIN"
+
+music:
+.incbin "music.tfv"

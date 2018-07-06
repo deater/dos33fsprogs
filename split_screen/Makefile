@@ -32,7 +32,7 @@ RAINBOW:	rainbow.o
 RAINBOW.BAS:	rainbow.bas
 	$(TOKENIZE) < rainbow.bas > RAINBOW.BAS
 
-credits.o:	credits.s tfv_sprites.inc
+credits.o:	credits.s tfv_sprites.inc mockingboard.s
 	ca65 -o credits.o credits.s -l credits.lst
 
 CREDITS:	credits.o
