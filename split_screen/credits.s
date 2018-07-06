@@ -4,6 +4,13 @@
 	TREE1X	= $61
 	TREE2X	= $62
 
+	LETTERL	= $63
+	LETTERH = $64
+	LETTERX = $65
+	LETTERY	= $66
+	LETTERD = $67
+	LETTER	= $68
+
 	;===================
 	; init screen
 
@@ -18,6 +25,16 @@
 	lda	#37
 	sta	TREE2X
 
+	lda	#<letters
+	sta	LETTERL
+	lda	#>letters
+	sta	LETTERH
+	lda	#39
+	sta	LETTERX
+	lda	#1
+	sta	LETTERY
+	lda	#15
+	sta	LETTERD
 
 	lda	#0
 	sta	DISP_PAGE
@@ -93,6 +110,14 @@ no_init_mb:
 	lda	#32
 	ldy	#0
 	sta	(BASL),Y
+
+
+	; test letters
+letter_loop:
+	lda	#100
+	jsr	WAIT
+	jsr	move_letters
+	jmp	letter_loop
 
 	; Wait
 
@@ -645,6 +670,52 @@ green_loop:
 	rts								; 6
 
 ; 4 + (40*55) + 6 - 1
+
+
+
+move_letters:
+
+	lda	LETTERY
+	asl
+	tay
+	lda	gr_offsets,Y	; lookup low-res memory address		; 4
+	sta	BASL		; store out low byte of addy		; 3
+	lda	gr_offsets+1,Y	; look up high byte			; 4
+	sta	BASH							; 3
+
+	ldy	#0							; 2
+	lda	#' '|$80						; 5
+	ldy	LETTERX
+	sta	(BASL),Y
+
+	dey
+	sty	LETTERX
+	ldy	#0							; 2
+	lda	(LETTERL),Y						; 5
+	ora	#$80
+	ldy	LETTERX
+	sta	(BASL),Y
+
+	lda	LETTERX
+	cmp	LETTERD
+	bne	letter_ok
+
+	lda	#39
+	sta	LETTERX
+	clc
+	lda	LETTERL
+	adc	#1
+	sta	LETTERL
+	lda	LETTERH
+	adc	#0
+	sta	LETTERH
+	inc	LETTERD
+letter_ok:
+
+	rts								; 6
+
+letters:
+	.asciiz	"T A L B O T"
 
 line1:.asciiz	"   *                            .      "
 line2:.asciiz	"  *    .       T A L B O T          .  "
