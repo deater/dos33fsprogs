@@ -290,25 +290,24 @@ loop6:
 							;=========
 							; 26
 
-							; + 762
+							; + 807
 							;========
-							; 788
+							; 833
 
-	; blob= 788
-	; 4547 - 788
-	; 3759 is new number
-	; Try X=124 Y=6 cycles=3757 R2
-
-
-
+	; blob= 833
+	; 4547 - 833
+	; 3714 is new number
+	; Try X=147 Y=5 cycles=3706 R 8
 
 
 	lda	#0							; 2
-;	lda	#0							; 2
+	lda	#0							; 2
+	lda	#0							; 2
+	lda	#0							; 2
 
-	ldy	#6							; 2
+	ldy	#5							; 2
 loop7:
-	ldx	#124							; 2
+	ldx	#147							; 2
 loop8:
 	dex								; 2
 	bne	loop8							; 2nt/3
@@ -341,7 +340,7 @@ wait_until_keypressed:
 	;	X*innerloop
 	;	innerloop = 30 if $00 17+13(done)
 	;		    54 if if $XX 16+8+8+9(put_all)+13(done)
-	;		    68 if $X0 16+8+7+5+20(put_sprite_mask)+13(done)
+	;		    69 if $X0 16+8+7+5+20(put_sprite_mask)+13(done)
 	;		    64 if $0X 16+7+8+20(put_sprite_mask)+13(done)
 	;       -1 for last iteration
 	;    18 (-1 for last)
@@ -355,8 +354,10 @@ wait_until_keypressed:
 	;	33 + 3*(52)+[54*9]-3 = 672
 	; solid $00, x=3, y=3, A=9
 	;	33 + 3*(52)+[30*9]-3 = 456
-	; solid $0x, x=3, y=3, D=9
+	; solid $0X, x=3, y=3, D=9
 	;	33 + 3*(52)+[64*9]-3 = 762
+	; solid $X0, x=3, y=3, C=9
+	;	33 + 3*(52)+[69*9]-3 = 807
 
 	; bird_stand_right = X=6, Y=7 A=28 B=9 C=2 D=3
 	;	= 33 + 7*53+(30*28+53*9+68*2+63*3)-6 = 2040 cycles

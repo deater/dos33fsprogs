@@ -35,6 +35,6 @@ big_tree:
 
 blob:
 	.byte $3,$3
-	.byte $01,$02,$03
-	.byte $04,$05,$06
-	.byte $07,$08,$09
+	.byte $70,$80,$90
+	.byte $A0,$B0,$C0
+	.byte $D0,$E0,$F0
