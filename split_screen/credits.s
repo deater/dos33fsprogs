@@ -340,25 +340,36 @@ loop6:
 							;========
 							; 1437
 
+	lda	FRAME							; 3
+	and	#$7							; 2
+	and	#4							; 2
 
-     ;           if (frame%8>4) {
-      ;                  grsim_put_sprite_page(PAGE0,
-       ;                         bird_rider_stand_right,
-        ;                        17,30);
-         ;       }
-          ;      else {
-           ;             grsim_put_sprite_page(PAGE0,
-            ;                    bird_rider_walk_right,
-             ;                   17,30);
-  ;              }
+	beq	bird_walking
+									; 2
+	lda	#>bird_rider_stand_right				; 2
+	sta	INH							; 3
+	lda	#<bird_rider_stand_right				; 2
+	sta	INL							; 3
+
+	jmp	draw_bird						; 3
+
+bird_walking:
+									; 3
+	lda	#>bird_rider_walk_right					; 2
+	sta	INH							; 3
+	lda	#<bird_rider_walk_right					; 2
+	sta	INL							; 3
+	; must be 15
+	lda	#0							; 2
+	; Must add another 15 as sprite is different
+	inc	XPOS							; 5
+	inc	XPOS							; 5
+	inc	XPOS							; 5
 
 
+draw_bird:
 
-	lda	#>bird_rider_stand_right		; 2
-	sta	INH					; 3
-	lda	#<bird_rider_stand_right		; 2
-	sta	INL					; 3
-
+							; 15 + 7
 	lda	#17					; 2
 	sta	XPOS					; 3
 	lda	#30					; 2
@@ -366,28 +377,28 @@ loop6:
 
 	jsr	put_sprite				; 6
 							;=========
-							; 26
+							; 38
 
 							; + 2190
 							;========
-							; 2216
+							; 2228
 	; Blanking time:	 4550
 	; Tree1 Sprite           -603
 	; Tree2 Sprite		-1437
-	; Sprite		-2216
+	; Sprite		-2228
 	; Frame Update		  -13
 	; Tree1 Update		  -21
 	; Tree2 Update		  -21
 	; JMP at end		   -3
 
-	; 236 is new number
-	; Try X=3 Y=11 cycles=232 R4
+	; 224 is new number
+	; Try X=43 Y=1 cycles=222 R2
 
 	lda	#0							; 2
-	lda	#0							; 2
-	ldy	#11							; 2
+;	lda	#0							; 2
+	ldy	#1							; 2
 loop7:
-	ldx	#3							; 2
+	ldx	#43							; 2
 loop8:
 	dex								; 2
 	bne	loop8							; 2nt/3
@@ -500,7 +511,7 @@ done_tree1:
 	; so cost = 28 + Y*(34+18)+ (INNER-Y) -1 + 6
 	;         = 33 + Y*(52)+(INNER-Y)
 	;	  = 33 + Y*(52)+ [30A + 64B + 69C + 54D]-Y
-
+.align $100
 put_sprite:
 
 	ldy	#0		; byte 0 is xsize			; 2
