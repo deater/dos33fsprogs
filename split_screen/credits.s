@@ -28,6 +28,14 @@
 	; setup mockingboard
 
 	jsr mockingboard_detect_slot4
+	stx	MB_DETECTED
+	ldx	MB_DETECTED
+	beq	no_init_mb
+
+	jsr	mockingboard_init
+
+no_init_mb:
+
 
 	;==========================
 	; setup text screen
@@ -126,6 +134,7 @@
 	; to avoid false positive found if the horiz blanking is mirroring
 	; the line (max 3 repeats in that case)
 
+
 vapor_lock_loop:
 	LDA #$A0
 zxloop:
@@ -164,6 +173,9 @@ loopB:
 
 	dey								; 2
 	bne	loopA							; 2nt/3
+
+	jmp	display_loop
+.align	$100
 
 	;=====================================================
 	;=====================================================
