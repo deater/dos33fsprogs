@@ -190,21 +190,44 @@ display_loop:
 	; text
 	bit	SET_TEXT						; 4
 
+	;================
+	; clear bottom green
+
 	jsr	draw_bottom_green				; 2209+6
+
+
+	;================
+	; Draw Small Tree
+
+	lda	#>small_tree				; 2
+	sta	INH					; 3
+	lda	#<small_tree				; 2
+	sta	INL					; 3
+
+	lda	TREE1X					; 3
+	sta	XPOS					; 3
+	lda	#28					; 2
+	sta	YPOS					; 3
+
+	jsr	put_sprite				; 6
+							;=========
+							; 27
+							; + 576
+							;========
+							; 603
+
 
 	; want		 3120
 	; green		-2215
+	; tree1		 -603
 	; set_test	   -4
-	;=============== 901 cycles
+	;=============== 298 cycles
 
-	; Try X=6 Y=25 cycles=901
+	; Try X=1 Y=27 cycles=298
 
-;	lda	#0							; 2
-;	lda	#0							; 2
-
-	ldy	#25							; 2
+	ldy	#27							; 2
 loop2:
-	ldx	#6							; 2
+	ldx	#1							; 2
 loop1:
 	dex								; 2
 	bne	loop1							; 2nt/3
@@ -280,25 +303,7 @@ loop6:
   ;                      basic_hlin(0,39,i);
    ;             }
 
-	;================
-	; Draw Small Tree
 
-	lda	#>small_tree				; 2
-	sta	INH					; 3
-	lda	#<small_tree				; 2
-	sta	INL					; 3
-
-	lda	TREE1X					; 3
-	sta	XPOS					; 3
-	lda	#28					; 2
-	sta	YPOS					; 3
-
-	jsr	put_sprite				; 6
-							;=========
-							; 27
-							; + 576
-							;========
-							; 603
 
 	;================
 	; Draw Big Tree
@@ -363,7 +368,6 @@ draw_bird:
 							;========
 							; 2228
 	; Blanking time:	 4550
-	; Tree1 Sprite           -603
 	; Tree2 Sprite		-1437
 	; Sprite		-2228
 	; Frame Update		  -13
@@ -371,14 +375,15 @@ draw_bird:
 	; Tree2 Update		  -21
 	; JMP at end		   -3
 
-	; 224 is new number
-	; Try X=43 Y=1 cycles=222 R2
+	; 827 is new number
+	; Try X=164 Y=1 cycles=827
 
-	lda	#0							; 2
+
+;	lda	#0							; 2
 ;	lda	#0							; 2
 	ldy	#1							; 2
 loop7:
-	ldx	#43							; 2
+	ldx	#164							; 2
 loop8:
 	dex								; 2
 	bne	loop8							; 2nt/3
