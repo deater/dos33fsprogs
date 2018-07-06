@@ -10,6 +10,73 @@
 
 #include "gr-sim.h"
 
+static int letter_index=0,letter_x=39,letter_y=2,destination=16,which_string=0;
+
+
+static char strings[12][32]= {
+	"T A L B O T",
+	"F A N T A S Y",
+	"S E V E N",
+	"",
+	"BY",
+	"VINCE WEAVER",
+	"",
+	"MUSIC BY",
+	"HIROKAZU TANAKA",
+	"",
+	"CYCLE COUNTING IS HARD",
+	"",
+};
+
+static int destinations[12]={
+	15,14,16,255,
+	19,14,255,
+	16,12,255,
+	9,0,
+};
+
+static int ys[12]={
+	2,3,4,255,
+	2,3,255,
+	2,3,255,
+	2,0,
+};
+
+static void letter_slide(void) {
+
+
+	char out[BUFSIZ];
+	char ch;
+
+	if (destinations[which_string]==0) return;		// at end
+
+	ch=strings[which_string][letter_index];
+	if (ch==0) {
+		which_string++;
+		letter_index=0;
+		destination=destinations[which_string];
+		letter_x=39;
+		letter_y=ys[which_string];
+		return;
+	}
+
+	vtab(letter_y);
+	htab(letter_x);
+	move_cursor();
+	out[0]=ch; out[1]=0;
+	print(out);
+
+	letter_x--;
+	if (letter_x<destination) {
+		letter_index++;
+		destination++;
+		letter_x=39;
+	}
+
+	out[0]=' '; out[1]=0;
+	print(out);
+
+}
 
 int main(int argc, char **argv) {
 
@@ -144,7 +211,7 @@ int main(int argc, char **argv) {
 
 		if (ch) break;
 
-		usleep(100000);
+		usleep(16000);
 		frame++;
 		if (frame>31) frame=0;
 
@@ -157,6 +224,8 @@ int main(int argc, char **argv) {
 			tree1_x--;
 			if (tree1_x<0) tree1_x=37;
 		}
+
+		letter_slide();
 
 	}
 
