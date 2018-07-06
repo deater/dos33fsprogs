@@ -88,7 +88,7 @@
 
 	; Wait
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
 	; GR part
 	bit	LORES
@@ -118,14 +118,14 @@ line_loop:
 
 	; Wait
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
 	bit	HIRES
 
 
 	; Wait
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
 	;=====================================================
 	; attempt vapor lock
@@ -308,7 +308,7 @@ loop6:
 	lda	#<small_tree				; 2
 	sta	INL					; 3
 
-	lda	TREE2X					; 3
+	lda	TREE1X					; 3
 	sta	XPOS					; 3
 	lda	#28					; 2
 	sta	YPOS					; 3
@@ -320,12 +320,26 @@ loop6:
 							;========
 							; 603
 
-    ;            grsim_put_sprite_page(PAGE0,
- ;                               small_tree,
-  ;                              tree1_x,tree1_y);
-  ;              grsim_put_sprite_page(PAGE0,
-   ;                             big_tree,
-    ;                            tree2_x,tree2_y);
+	;================
+	; Draw Big Tree
+
+	lda	#>big_tree				; 2
+	sta	INH					; 3
+	lda	#<big_tree				; 2
+	sta	INL					; 3
+
+	lda	TREE2X					; 3
+	sta	XPOS					; 3
+	lda	#30					; 2
+	sta	YPOS					; 3
+
+	jsr	put_sprite				; 6
+							;=========
+							; 27
+							; + 1410
+							;========
+							; 1437
+
 
      ;           if (frame%8>4) {
       ;                  grsim_put_sprite_page(PAGE0,
@@ -359,21 +373,21 @@ loop6:
 							; 2216
 	; Blanking time:	 4550
 	; Tree1 Sprite           -603
+	; Tree2 Sprite		-1437
 	; Sprite		-2216
 	; Frame Update		  -13
 	; Tree1 Update		  -21
 	; Tree2 Update		  -21
 	; JMP at end		   -3
 
-	; 1673 is new number
-	; Try X=1 Y=152 cycles=1673
+	; 236 is new number
+	; Try X=3 Y=11 cycles=232 R4
 
-
-;	lda	#0							; 2
-;	lda	#0							; 2
-	ldy	#152							; 2
+	lda	#0							; 2
+	lda	#0							; 2
+	ldy	#11							; 2
 loop7:
-	ldx	#1							; 2
+	ldx	#3							; 2
 loop8:
 	dex								; 2
 	bne	loop8							; 2nt/3
@@ -452,11 +466,11 @@ done_tree1:
 ;===========================================================
 ;===========================================================
 
-wait_until_keypressed:
-	lda	KEYPRESS			; check if keypressed
-	bpl	wait_until_keypressed		; if not, loop
-	bit	KEYRESET
-	rts
+;wait_until_keypressed:
+;	lda	KEYPRESS			; check if keypressed
+;	bpl	wait_until_keypressed		; if not, loop
+;	bit	KEYRESET
+;	rts
 
 
 
@@ -608,9 +622,11 @@ line4:.asciiz	"   *            S E V E N              "
 line5:.asciiz	" .                          .    .     "
 line6:.asciiz	"             .                         "
 
-.include "../asm_routines/gr_offsets.s"
 .include "../asm_routines/text_print.s"
 .include "../asm_routines/gr_hlin_double.s"
+
+.align	$100
+.include "../asm_routines/gr_offsets.s"
 .include "tfv_sprites.inc"
 
 .align	$1000
