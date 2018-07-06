@@ -135,6 +135,15 @@ line_loop:
 	; the line (max 3 repeats in that case)
 
 vapor_lock_loop:
+	LDA #$A0
+zxloop:
+	LDX #$04
+wiloop:
+	CMP $C051
+	BNE zxloop
+	DEX
+	BNE wiloop
+
 	LDA #$44
 zloop:
 	LDX #$04
@@ -268,17 +277,29 @@ loop6:
 	; vertical blank
 
 	; want 4550-3 = 4547 cycles
-	;			1+y(6+5x)
-
 	; Try X=13 Y=64 cycles=4545 R2
 
+;	lda	#0							; 2
+;	ldy	#64							; 2
+loopE:
+;	ldx	#13							; 2
+loopF:
+;	dex								; 2
+;	bne	loopF							; 2nt/3
+;	dey								; 2
+;	bne	loopE							; 2nt/3
+
+
+
+
+;=========================================================================
 
 	; DRAW SPRITES
 	; do this during blanking interval
 
-	lda	#>blob					; 2
+	lda	#>bird_rider_stand_right		; 2
 	sta	INH					; 3
-	lda	#<blob					; 2
+	lda	#<bird_rider_stand_right		; 2
 	sta	INL					; 3
 
 	lda	#17					; 2
@@ -286,32 +307,27 @@ loop6:
 	lda	#30					; 2
 	sta	YPOS					; 3
 
-        jsr     put_sprite				; 6
+	jsr	put_sprite				; 6
 							;=========
 							; 26
 
-							; + 807
+							; + 2190
 							;========
-							; 833
+							; 2216
 
-	; blob= 833
-	; 4547 - 833
-	; 3714 is new number
-	; Try X=147 Y=5 cycles=3706 R 8
+	; 4547 - 2216
+	; 2331 is new number
+	; Try X=92 Y=5 cycles=2331
 
 
-	lda	#0							; 2
-	lda	#0							; 2
-	lda	#0							; 2
-	lda	#0							; 2
-
+;	lda	#0							; 2
+;	lda	#0							; 2
 	ldy	#5							; 2
 loop7:
-	ldx	#147							; 2
+	ldx	#92							; 2
 loop8:
 	dex								; 2
 	bne	loop8							; 2nt/3
-
 	dey								; 2
 	bne	loop7							; 2nt/3
 
@@ -339,28 +355,19 @@ wait_until_keypressed:
 	;    outerloop = 34 setup
 	;	X*innerloop
 	;	innerloop = 30 if $00 17+13(done)
-	;		    54 if if $XX 16+8+8+9(put_all)+13(done)
-	;		    69 if $X0 16+8+7+5+20(put_sprite_mask)+13(done)
 	;		    64 if $0X 16+7+8+20(put_sprite_mask)+13(done)
+	;		    69 if $X0 16+8+7+5+20(put_sprite_mask)+13(done)
+	;		    54 if if $XX 16+8+8+9(put_all)+13(done)
+
+
 	;       -1 for last iteration
 	;    18 (-1 for last)
 	;     6 return
 
 	; so cost = 28 + Y*(34+18)+ (INNER-X) -1 + 6
 	;         = 33 + Y*(52)+(INNER-X)
-	;	  = 33 + Y*(52)+ [30A + 54B + 68C + 64D]-X
+	;	  = 33 + Y*(52)+ [30A + 64B + 69C + 54D]-X
 
-	; solid $XX, x=3, y=3, B=9
-	;	33 + 3*(52)+[54*9]-3 = 672
-	; solid $00, x=3, y=3, A=9
-	;	33 + 3*(52)+[30*9]-3 = 456
-	; solid $0X, x=3, y=3, D=9
-	;	33 + 3*(52)+[64*9]-3 = 762
-	; solid $X0, x=3, y=3, C=9
-	;	33 + 3*(52)+[69*9]-3 = 807
-
-	; bird_stand_right = X=6, Y=7 A=28 B=9 C=2 D=3
-	;	= 33 + 7*53+(30*28+53*9+68*2+63*3)-6 = 2040 cycles
 put_sprite:
 
 	ldy	#0		; byte 0 is xsize			; 2
