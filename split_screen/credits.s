@@ -242,17 +242,154 @@ loop1:
 	bit	SET_GR							; 4
 
 
-	; want 4160-8 = 4152 cycles
-	;			1+y(6+5x)
-	; Try X=91 Y=9 cycles=4150, R2
+	;================
+	; Draw Big Tree
+
+	lda	#>big_tree				; 2
+	sta	INH					; 3
+	lda	#<big_tree				; 2
+	sta	INL					; 3
+
+	lda	TREE2X					; 3
+	sta	XPOS					; 3
+	lda	#30					; 2
+	sta	YPOS					; 3
+
+	jsr	put_sprite				; 6
+							;=========
+							; 27
+							; + 1410
+							;========
+							; 1437
+
+	lda	FRAME							; 3
+	and	#$1f							; 2
+	and	#$10							; 2
+
+	beq	bird_walking
+									; 2
+	lda	#>bird_rider_stand_right				; 2
+	sta	INH							; 3
+	lda	#<bird_rider_stand_right				; 2
+	sta	INL							; 3
+
+	jmp	draw_bird						; 3
+
+bird_walking:
+									; 3
+	lda	#>bird_rider_walk_right					; 2
+	sta	INH							; 3
+	lda	#<bird_rider_walk_right					; 2
+	sta	INL							; 3
+	; must be 15
+	lda	#0							; 2
+	; Must add another 15 as sprite is different
+	inc	XPOS							; 5
+	inc	XPOS							; 5
+	inc	XPOS							; 5
+
+
+draw_bird:
+
+							; 15 + 7
+	lda	#17					; 2
+	sta	XPOS					; 3
+	lda	#30					; 2
+	sta	YPOS					; 3
+
+	jsr	put_sprite				; 6
+							;=========
+							; 38
+
+							; + 2190
+							;========
+							; 2228
+
+
+	;==========================
+	; Update frame = 13 cycles
+
+
+	inc	FRAME			; frame++			; 5
+	lda	FRAME							; 3
+	and	#$3f			; roll over after 63		; 2
+	sta	FRAME							; 3
+
+								;===========
+								;        13
+
+	;===========================
+	; Update tree1 = 21 cycles
+	and	#$3f			; if (frame%64==0)		; 2
+	beq	dec_tree1
+									; 2
+	; need to do 19-5 cycles of nonsense
+	inc	TREE1X							; 5
+	dec	TREE1X							; 5
+	lda	#0							; 2
+	lda	#0							; 2
+
+	jmp	done_tree1						; 3
+
+dec_tree1:
+									; 3
+	dec	TREE1X			; tree1_x--			; 5
+	lda	TREE1X							; 3
+	bmi	tree1_neg
+									; 2
+	ldx	TREE1X							; 3
+	jmp	done_tree1						; 3
+tree1_neg:
+							; incoming br     3
+	ldx	#37							; 2
+	stx	TREE1X							; 3
+done_tree1:
+
+	;===========================
+	; Update tree2 = 24 cycles
+	lda	FRAME							; 3
+	and	#$f			; if (frame%16==0)		; 2
+	beq	dec_tree2
+									; 2
+	; need to do 19-5 cycles of nonsense
+	inc	TREE2X							; 5
+	dec	TREE2X							; 5
+	lda	#0							; 2
+	lda	#0							; 2
+
+	jmp	done_tree2						; 3
+
+dec_tree2:
+									; 3
+	dec	TREE2X			; tree2_x--			; 5
+	lda	TREE2X							; 3
+	bmi	tree2_neg
+									; 2
+	ldx	TREE2X							; 3
+	jmp	done_tree2						; 3
+tree2_neg:
+							; incoming br     3
+	ldx	#37							; 2
+	stx	TREE2X							; 3
+done_tree2:
+
+
+	; want                   4160
+	; Tree2 Sprite		-1437
+	; Sprite		-2228
+	; Frame Update		  -13
+	; Tree1 Update		  -21
+	; Tree2 Update		  -24
+	; hgr bits		   -8
+	; ======================  429 cycles
+
+	; Try X=13 Y=6 cycles=427 R2
 
 	lda	#0							; 2
 
-
-
-	ldy	#9							; 2
+	ldy	#6							; 2
 loop3:
-	ldx	#91							; 2
+	ldx	#13							; 2
 loop4:
 	dex								; 2
 	bne	loop4							; 2nt/3
@@ -295,166 +432,26 @@ loop6:
 
 ;=========================================================================
 
-	; DRAW SPRITES
-	; do this during blanking interval
-
-;	color_equals(4);
- ;                       for(i=28;i<48;i++) {
-  ;                      basic_hlin(0,39,i);
-   ;             }
 
 
 
-	;================
-	; Draw Big Tree
-
-	lda	#>big_tree				; 2
-	sta	INH					; 3
-	lda	#<big_tree				; 2
-	sta	INL					; 3
-
-	lda	TREE2X					; 3
-	sta	XPOS					; 3
-	lda	#30					; 2
-	sta	YPOS					; 3
-
-	jsr	put_sprite				; 6
-							;=========
-							; 27
-							; + 1410
-							;========
-							; 1437
-
-	lda	FRAME							; 3
-	and	#$7							; 2
-	and	#4							; 2
-
-	beq	bird_walking
-									; 2
-	lda	#>bird_rider_stand_right				; 2
-	sta	INH							; 3
-	lda	#<bird_rider_stand_right				; 2
-	sta	INL							; 3
-
-	jmp	draw_bird						; 3
-
-bird_walking:
-									; 3
-	lda	#>bird_rider_walk_right					; 2
-	sta	INH							; 3
-	lda	#<bird_rider_walk_right					; 2
-	sta	INL							; 3
-	; must be 15
-	lda	#0							; 2
-	; Must add another 15 as sprite is different
-	inc	XPOS							; 5
-	inc	XPOS							; 5
-	inc	XPOS							; 5
-
-
-draw_bird:
-
-							; 15 + 7
-	lda	#17					; 2
-	sta	XPOS					; 3
-	lda	#30					; 2
-	sta	YPOS					; 3
-
-	jsr	put_sprite				; 6
-							;=========
-							; 38
-
-							; + 2190
-							;========
-							; 2228
 	; Blanking time:	 4550
-	; Tree2 Sprite		-1437
-	; Sprite		-2228
-	; Frame Update		  -13
-	; Tree1 Update		  -21
-	; Tree2 Update		  -21
 	; JMP at end		   -3
+	;========================4547 cycles
 
-	; 827 is new number
-	; Try X=164 Y=1 cycles=827
+	; Try X=13 Y=64 cycles=4545 R2
 
-
+	lda	#0							; 2
 ;	lda	#0							; 2
-;	lda	#0							; 2
-	ldy	#1							; 2
+	ldy	#64							; 2
 loop7:
-	ldx	#164							; 2
+	ldx	#13							; 2
 loop8:
 	dex								; 2
 	bne	loop8							; 2nt/3
 	dey								; 2
 	bne	loop7							; 2nt/3
 
-	;==========================
-	; Update frame = 13 cycles
-
-
-	inc	FRAME			; frame++			; 5
-	lda	FRAME							; 3
-	and	#$1f			; roll over after 31		; 2
-	sta	FRAME							; 3
-
-								;===========
-								;        13
-
-	;===========================
-	; Update tree2 = 21 cycles
-	and	#3			; if (frame%4==0)		; 2
-	beq	dec_tree2
-									; 2
-	; need to do 19-5 cycles of nonsense
-	inc	TREE2X							; 5
-	dec	TREE2X							; 5
-	lda	#0							; 2
-	lda	#0							; 2
-
-	jmp	done_tree2						; 3
-
-dec_tree2:
-									; 3
-	dec	TREE2X			; tree2_x--			; 5
-	lda	TREE2X							; 3
-	bmi	tree2_neg
-									; 2
-	ldx	TREE2X							; 3
-	jmp	done_tree2						; 3
-tree2_neg:
-							; incoming br     3
-	ldx	#37							; 2
-	stx	TREE2X							; 3
-done_tree2:
-
-	;===========================
-	; Update tree1 = 21 cycles
-	and	#$f			; if (frame%16==0)		; 2
-	beq	dec_tree1
-									; 2
-	; need to do 19-5 cycles of nonsense
-	inc	TREE1X							; 5
-	dec	TREE1X							; 5
-	lda	#0							; 2
-	lda	#0							; 2
-
-	jmp	done_tree1						; 3
-
-dec_tree1:
-									; 3
-	dec	TREE1X			; tree1_x--			; 5
-	lda	TREE1X							; 3
-	bmi	tree1_neg
-									; 2
-	ldx	TREE1X							; 3
-	jmp	done_tree1						; 3
-tree1_neg:
-							; incoming br     3
-	ldx	#37							; 2
-	stx	TREE1X							; 3
-done_tree1:
 
 	jmp	display_loop						; 3
 
