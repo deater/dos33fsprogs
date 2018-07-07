@@ -8,6 +8,7 @@
 #include "gr-sim.h"
 #include "tfv_utils.h"
 #include "tfv_zp.h"
+#include "tfv_defines.h"
 #include "tfv_definitions.h"
 
 #include "tfv_sprites.h"
@@ -249,7 +250,8 @@ static int draw_battle_bottom(int enemy_type) {
 	htab(15);
 	move_cursor();
 	// should print "NAMEO"
-	print("DEATER");
+//	print("DEATER");
+	print(nameo);
 
 	if (menu_state==MENU_NONE) {
 
