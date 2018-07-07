@@ -6,6 +6,7 @@
 #include "gr-sim.h"
 #include "tfv_utils.h"
 #include "tfv_zp.h"
+#include "tfv_definitions.h"
 
 #include "tfv_sprites.h"
 #include "tfv_backgrounds.h"
@@ -58,8 +59,12 @@ int main(int argc, char **argv) {
 	/* Title Screen */
 title_loop:
 	result=title();
-	if (result!=0) goto title_loop;
+	if (result==0) goto play_game;
+	if (result==1) credits();
+	goto title_loop;
 
+
+play_game:
 	nameo[0]=0;
 
 	/* Get Name */

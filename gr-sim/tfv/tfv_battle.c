@@ -8,6 +8,7 @@
 #include "gr-sim.h"
 #include "tfv_utils.h"
 #include "tfv_zp.h"
+#include "tfv_definitions.h"
 
 #include "tfv_sprites.h"
 #include "tfv_backgrounds.h"
