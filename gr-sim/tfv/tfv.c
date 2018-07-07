@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
 title_loop:
 	result=title();
 	if (result==0) goto play_game;
-	if (result==1) credits();
+	if (result==2) credits();
 	goto title_loop;
 
 

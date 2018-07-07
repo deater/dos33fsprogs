@@ -35,6 +35,7 @@ int vlin(int y1, int y2, int at);
 int collision(int xx, int yy, int ground_color);
 
 void set_plaid(void);
+void clear_plaid(void);
 
 //void clear_top_a(void);
 //void clear_top(int page);

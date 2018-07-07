@@ -9,71 +9,64 @@
 
 #include "gr-sim.h"
 
-static int letter_index=0,letter_x=39,letter_y=2,destination=16,which_string=0;
+static int letter_index=0,letter_x=39,letter_y=1,destination=15;
 
 
-static char strings[12][32]= {
-	"T A L B O T",
-	"F A N T A S Y",
-	"S E V E N",
-	"",
-	"BY",
-	"VINCE WEAVER",
-	"",
-	"MUSIC BY",
-	"HIROKAZU TANAKA",
-	"",
-	"CYCLE COUNTING IS HARD",
-	"",
-};
-
-static int destinations[12]={
-	15,14,16,255,
-	19,14,255,
-	16,12,255,
-	9,0,
-};
-
-static int ys[12]={
-	2,3,4,255,
-	2,3,255,
-	2,3,255,
-	2,0,
+static unsigned char string[]= {
+			"T A L B O T" 		"\x80"
+	"\x2\xE"	"F A N T A S Y" 	"\x80"
+	"\x3\x10"	"S E V E N"		"\x80"
+	"\x1\xF"	" "			"\x80"
+	"\x2\xE"	" "			"\x80"
+	"\x3\x10"	" "			"\x80"
+	"\x1\x13"	"BY"			"\x80"
+	"\x3\xE"	"VINCE WEAVER"		"\x80"
+	"\x1\x13"	" "			"\x80"
+	"\x3\xE"	" "			"\x80"
+	"\x1\x10"	"MUSIC BY"		"\x80"
+	"\x3\xC"	"HIROKAZU TANAKA"	"\x80"
+	"\x1\x10"	" "			"\x80"
+	"\x3\xC"	" "			"\x80"
+	"\x2\xD"	"CYCLE COUNTING"	"\x80"
+	"\x3\x10"	"IS HARD!"		"\xff"
 };
 
 static void letter_slide(void) {
 
 
 	char out[BUFSIZ];
-	char ch;
+	unsigned char ch;
 
-	if (destinations[which_string]==0) return;		// at end
+	ch=string[letter_index];
+	if (ch==0xff) return;
 
-	ch=strings[which_string][letter_index];
-	if (ch==0) {
-		which_string++;
-		letter_index=0;
-		destination=destinations[which_string];
-		letter_x=39;
-		letter_y=ys[which_string];
+	if (ch==0x80) {
+		letter_index++;
+		letter_y=string[letter_index];
+		letter_index++;
+		destination=string[letter_index];
+		letter_index++;
 		return;
 	}
 
-	vtab(letter_y);
-	htab(letter_x);
+	vtab(letter_y+1);
+	htab(letter_x+1);
+	move_cursor();
+	out[0]=' '; out[1]=0;
+	print(out);
+
+	letter_x--;
+	vtab(letter_y+1);
+	htab(letter_x+1);
 	move_cursor();
 	out[0]=ch; out[1]=0;
 	print(out);
 
-	letter_x--;
-	if (letter_x<destination) {
+	if (letter_x==destination) {
 		letter_index++;
 		destination++;
 		letter_x=39;
 	}
-
-	out[0]=' '; out[1]=0;
-	print(out);
 
 }
 
@@ -93,11 +86,11 @@ int credits(void) {
 	vtab(1); htab(1); move_cursor();
 	print("   *                            .      ");
 	vtab(2); htab(1); move_cursor();
-	print("  *    .       T A L B O T          .  ");
+	print("  *    .                            .  ");
 	vtab(3); htab(1); move_cursor();
-	print("  *           F A N T A S Y            ");
+	print("  *                                    ");
 	vtab(4); htab(1); move_cursor();
-	print("   *            S E V E N              ");
+	print("   *                                   ");
 	vtab(5); htab(1); move_cursor();
 	print(" .                          .    .     ");
 	vtab(6); htab(1); move_cursor();
@@ -110,16 +103,6 @@ int credits(void) {
 	vtab(4); htab(4); move_cursor(); print_inverse(" ");
 
 
-	while(1) {
-		grsim_update();
-
-		ch=grsim_input();
-
-		if (ch!=0) break;
-
-		usleep(100000);
-	}
-
 	/* gr part */
 	soft_switch(LORES);     // LDA SW.LORES
 	soft_switch(TXTCLR);    // LDA  TXTCLR
@@ -130,20 +113,7 @@ int credits(void) {
 		basic_hlin(0,39,i);
 	}
 
-	while(1) {
-		grsim_update();
-
-		ch=grsim_input();
-
-		if (ch!=0) break;
-
-		usleep(100000);
-	}
-
-
-
 	hgr();
-
 
 	/* Put horizontal lines on screen */
 	for(yy=64;yy<128;yy++) {
@@ -159,17 +129,6 @@ int credits(void) {
 	}
 	read(fd,&ram[0x2000],0x2000);
 	close(fd);
-
-	while(1) {
-		grsim_update();
-
-		ch=grsim_input();
-
-		if (ch) break;
-
-		usleep(100000);
-
-	}
 
 	set_plaid();
 
@@ -228,7 +187,7 @@ int credits(void) {
 
 	}
 
-
+	clear_plaid();
 
 	return 0;
 }

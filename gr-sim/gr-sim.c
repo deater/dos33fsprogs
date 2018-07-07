@@ -71,6 +71,10 @@ void set_plaid(void) {
 	plaid_mode=1;
 }
 
+void clear_plaid(void) {
+	plaid_mode=0;
+}
+
 void soft_switch(unsigned short address) {
 
 	switch(address) {
