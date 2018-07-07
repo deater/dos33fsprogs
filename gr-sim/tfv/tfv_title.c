@@ -18,6 +18,10 @@ int title(void) {
 
 	int result;
 
+	soft_switch(LORES);
+        soft_switch(TXTCLR);
+        soft_switch(MIXSET);
+
 	ram[DRAW_PAGE]=PAGE0;
 	clear_bottom();
 	ram[DRAW_PAGE]=PAGE1;
@@ -27,9 +31,11 @@ int title(void) {
 
 	grsim_unrle(title_rle,0xc00);
 
+	ram[DRAW_PAGE]=PAGE0;
+	gr_copy_to_current(0xc00);
+	ram[DRAW_PAGE]=PAGE1;
 	gr_copy_to_current(0xc00);
 	page_flip();
-	gr_copy_to_current(0xc00);
 
 //	page_flip();
 //	page_flip();
