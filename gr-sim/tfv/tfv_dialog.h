@@ -44,6 +44,11 @@
 #define DIALOG_AGENT_AP		29
 #define DIALOG_FRAU		30
 
+#define DIALOG_MAC		31
+#define DIALOG_AGENT_N		32
+#define DIALOG_STEVE2		33
+#define DIALOG_GRABOWSKI	34
+
 struct dialog_words {
 	char *words;
 	int next;
@@ -259,14 +264,31 @@ struct dialog_type dialog[100]={
 		.statement[1].words="No esta aqui",
 		.statement[1].next=0,
 	},
+	// Patriot Room
+	[DIALOG_MAC]= {
+		.statement[0].words="File not found",
+		.statement[0].next=0,
+		.statement[1].words="Abort, Retry, Fail",
+		.statement[1].next=0,
+		.statement[1].words="Do you like my DOS impression?",
+		.statement[1].next=0,
+	},
+	[DIALOG_AGENT_N]= {
+		.statement[0].words="Starfleet Mission",
+		.statement[0].next=0,
+	},
+	[DIALOG_STEVE2]= {
+		.statement[0].words="How bout them O\'s",
+		.statement[0].next=0,
+		.statement[1].words="Fantasy Baseball",
+		.statement[1].next=0,
+	},
+	[DIALOG_GRABOWSKI]= {
+		.statement[0].words="Ahhh, Mr. Bombem.",
+		.statement[0].next=0,
+	},
+
 #if 0
-	PATRIOT ROOM:
-		AGENT N
-		GRABOWSKI
-		FRESHMAN STEVE
-		FRESHMAN JENNY
-
-
 	OFFICE:
 		ACTING PRINCIPAL ROBOKNEE
 			SINCE WE HAVE NO ELECTRICITY WE HAVE NO LIGHTS
