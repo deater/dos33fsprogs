@@ -683,6 +683,16 @@ static void magic_attack(int which) {
 		mx=2;
 		my=20;
 	}
+	if (which==MENU_MAGIC_BOLT) {
+		sprite=magic_bolt;
+		mx=2;
+		my=20;
+	}
+	if (which==MENU_MAGIC_MALAISE) {
+		sprite=magic_malaise;
+		mx=2;
+		my=20;
+	}
 
 
 	// FIXME: damage based on weakness of enemy
