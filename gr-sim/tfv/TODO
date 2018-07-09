@@ -1,15 +1,14 @@
 Soon:
 + Battle Sequence
---> Sprites for all enemies
 --> Randomize enemy you fight
 --> Different backgrounds based on location
 --> Magic
---> Summons
---> Limit break (move to end, only have item appear if breaking)
 --> Die if HP hits 0.  On ground sprite
 --> Run away
 --> Fix weird glitch on damage printing
 --> Sound effects
+--> enemy uses magic
+--> green background on anti-damage printing
 
 + Enable getting back on spaceship (with better animation)
 + Better collision detection on Spaceship land

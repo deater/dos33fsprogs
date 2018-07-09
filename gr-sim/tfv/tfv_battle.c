@@ -167,6 +167,26 @@ static struct enemy_type enemies[8]={
 	},
 };
 
+
+// http://codebase64.org/doku.php?id=base:small_fast_8-bit_prng
+static int random_8(void) {
+
+	static int seed=0x1f;
+	static int newseed;
+
+	newseed=seed;					// lda seed
+	if (newseed==0) goto doEor;			// beq doEor
+	newseed<<=1;					// asl
+	if (newseed==0) goto noEor;			//beq noEor
+					// if the input was $80, skip the EOR
+	if (!(newseed&0x100)) goto noEor;		// bcc noEor
+doEor:
+	newseed^=0x1d;					// eor #$1d
+noEor:
+	seed=(newseed&0xff);				// sta seed
+	return seed;
+}
+
 static int gr_put_num(int xx,int yy,int number) {
 
 	int xt=xx,digit,left,hundreds;
@@ -769,7 +789,9 @@ static void magic_attack(int which) {
 	}
 }
 
-static void limit_break(int which) {
+
+
+static void limit_break_drop(void) {
 
 	int ax=34,ay=20;
 	int damage=100;
@@ -863,6 +885,212 @@ static void limit_break(int which) {
 		usleep(100000);
 	}
 	limit=0;
+}
+
+static void limit_break_slice(void) {
+
+	int ax=34,ay=20;
+	int damage=100;
+	int i;
+
+	while(ay>0) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(tfv_stand_left,ax,ay);
+		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		draw_battle_bottom(enemy_type);
+
+		page_flip();
+
+		ay-=1;
+
+		usleep(20000);
+	}
+
+	ax=10;
+	ay=0;
+
+	/* Falling */
+
+	while(ay<=20) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		grsim_put_sprite(tfv_stand_left,ax,ay);
+		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+
+		draw_battle_bottom(enemy_type);
+
+		color_equals(13);
+		vlin(0,ay,ax-5);
+
+		page_flip();
+
+		ay+=1;
+
+		usleep(100000);
+	}
+
+	i=0;
+	while(i<13) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		grsim_put_sprite(tfv_stand_left,ax,ay);
+		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+
+		draw_battle_bottom(enemy_type);
+
+		color_equals(COLOR_LIGHTGREEN);
+		vlin(ay,ay+i,ax-5);
+
+		page_flip();
+		i++;
+
+		usleep(100000);
+	}
+
+	ax=34;
+	ay=20;
+
+	gr_copy_to_current(0xc00);
+
+	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+	grsim_put_sprite(tfv_stand_left,ax,ay);
+	grsim_put_sprite(tfv_led_sword,ax-5,ay);
+
+	draw_battle_bottom(enemy_type);
+
+	color_equals(COLOR_LIGHTGREEN);
+	vlin(20,33,5);
+
+	damage_enemy(damage);
+	gr_put_num(2,10,damage);
+	page_flip();
+
+	for(i=0;i<20;i++) {
+		usleep(100000);
+	}
+	limit=0;
+}
+
+static void limit_break_zap(void) {
+
+	int ax=34,ay=20;
+	int damage=100;
+	int i;
+
+	while(ay>0) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(tfv_stand_left,ax,ay);
+		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		draw_battle_bottom(enemy_type);
+
+		page_flip();
+
+		ay-=1;
+
+		usleep(20000);
+	}
+
+	ax=10;
+	ay=0;
+
+	/* Falling */
+
+	while(ay<=20) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		grsim_put_sprite(tfv_stand_left,ax,ay);
+		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+
+		draw_battle_bottom(enemy_type);
+
+		color_equals(13);
+		vlin(0,ay,ax-5);
+
+		page_flip();
+
+		ay+=1;
+
+		usleep(100000);
+	}
+
+	i=0;
+	while(i<13) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		grsim_put_sprite(tfv_stand_left,ax,ay);
+		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+
+		draw_battle_bottom(enemy_type);
+
+		color_equals(COLOR_LIGHTGREEN);
+		vlin(ay,ay+i,ax-5);
+
+		page_flip();
+		i++;
+
+		usleep(100000);
+	}
+
+	ax=34;
+	ay=20;
+
+	gr_copy_to_current(0xc00);
+
+	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+	grsim_put_sprite(tfv_stand_left,ax,ay);
+	grsim_put_sprite(tfv_led_sword,ax-5,ay);
+
+	draw_battle_bottom(enemy_type);
+
+	color_equals(COLOR_LIGHTGREEN);
+	vlin(20,33,5);
+
+	damage_enemy(damage);
+	gr_put_num(2,10,damage);
+	page_flip();
+
+	for(i=0;i<20;i++) {
+		usleep(100000);
+	}
+	limit=0;
+}
+
+
+#define MENU_LIMIT_DROP		0
+#define MENU_LIMIT_SLICE	1
+#define MENU_LIMIT_ZAP		2
+
+static void limit_break(int which) {
+
+
+	if (which==MENU_LIMIT_DROP) limit_break_drop();
+	else if (which==MENU_LIMIT_SLICE) limit_break_slice();
+	else if (which==MENU_LIMIT_ZAP) limit_break_zap();
+
 }
 
 static void summon(int which) {
@@ -1065,13 +1293,16 @@ int do_battle(void) {
 	int enemy_count=30;
 	int old;
 
+	rotate_intro();
+
 	battle_count=20;
 
 	/* Setup Enemy */
 	// enemy_type=X
 	// random, with weight toward proper terrain
+	// 50% completely random, 50% terrain based?
+	enemy_type=random_8()%0x7;
 
-	rotate_intro();
 
 	/* Setup Enemy HP */
 	enemy_hp=enemies[enemy_type].hp_base+
