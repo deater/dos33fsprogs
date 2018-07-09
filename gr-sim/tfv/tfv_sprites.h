@@ -35,6 +35,8 @@ extern unsigned char procrastinon[];
 extern unsigned char ice_fish[];
 extern unsigned char evil_penguin[];
 
+/* summons */
+extern unsigned char metrocat[];
 
 /* ground scatter */
 extern unsigned char palm_tree[];
