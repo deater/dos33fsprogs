@@ -54,7 +54,7 @@ clean:
 	make -C lz4 clean
 	make -C mode7_demo clean
 	make -C rasterbars clean
-	make -C split_screen
+	make -C split_screen clean
 	make -C starfield clean
 	make -C text clean
 	make -C tfv clean
