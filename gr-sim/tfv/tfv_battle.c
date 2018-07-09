@@ -109,7 +109,7 @@ static struct enemy_type enemies[8]={
 		.attack_name="Bubble",
 		.weakness=MAGIC_FIRE,
 		.resist=MAGIC_ICE,
-		.sprite=killer_crab,
+		.sprite=plain_fish,
 	},
 	[2]= {
 		.name="Evil Tree",
@@ -118,7 +118,7 @@ static struct enemy_type enemies[8]={
 		.attack_name="Leaves",
 		.weakness=MAGIC_FIRE,
 		.resist=MAGIC_ICE,
-		.sprite=killer_crab,
+		.sprite=evil_tree,
 	},
 	[3]= {
 		.name="Wood Elf",
@@ -127,7 +127,7 @@ static struct enemy_type enemies[8]={
 		.attack_name="Song",
 		.weakness=MAGIC_MALAISE,
 		.resist=MAGIC_BOLT|MAGIC_HEAL,
-		.sprite=killer_crab,
+		.sprite=wood_elf,
 	},
 	[4]= {
 		.name="Giant Bee",
@@ -136,7 +136,7 @@ static struct enemy_type enemies[8]={
 		.attack_name="Buzzsaw",
 		.weakness=MAGIC_ICE,
 		.resist=MAGIC_NONE,
-		.sprite=killer_crab,
+		.sprite=giant_bee,
 	},
 	[5]= {
 		.name="Procrastinon",
@@ -145,7 +145,7 @@ static struct enemy_type enemies[8]={
 		.attack_name="Putoff",
 		.weakness=MAGIC_NONE,
 		.resist=MAGIC_MALAISE,
-		.sprite=killer_crab,
+		.sprite=procrastinon,
 	},
 	[6]= {
 		.name="Ice Fish",
@@ -154,7 +154,7 @@ static struct enemy_type enemies[8]={
 		.attack_name="Auger",
 		.weakness=MAGIC_FIRE,
 		.resist=MAGIC_ICE,
-		.sprite=killer_crab,
+		.sprite=ice_fish,
 	},
 	[7]= {
 		.name="Evil Penguin",
@@ -163,7 +163,7 @@ static struct enemy_type enemies[8]={
 		.attack_name="Waddle",
 		.weakness=MAGIC_FIRE,
 		.resist=MAGIC_ICE,
-		.sprite=killer_crab,
+		.sprite=evil_penguin,
 	},
 };
 

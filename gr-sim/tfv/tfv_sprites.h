@@ -25,7 +25,18 @@ extern unsigned char splash_forward[];
 extern unsigned char splash_right[];
 extern unsigned char splash_left[];
 
+/* enemies */
 extern unsigned char killer_crab[];
+extern unsigned char plain_fish[];
+extern unsigned char evil_tree[];
+extern unsigned char wood_elf[];
+extern unsigned char giant_bee[];
+extern unsigned char procrastinon[];
+extern unsigned char ice_fish[];
+extern unsigned char evil_penguin[];
+
+
+/* ground scatter */
 extern unsigned char palm_tree[];
 extern unsigned char pine_tree[];
 extern unsigned char snowy_tree[];
