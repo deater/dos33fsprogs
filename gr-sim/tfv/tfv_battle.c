@@ -1283,7 +1283,7 @@ void menu_keypress(int ch) {
 }
 
 
-int do_battle(void) {
+int do_battle(int ground_color) {
 
 	int i,ch;
 
@@ -1302,9 +1302,6 @@ int do_battle(void) {
 	// random, with weight toward proper terrain
 	// 50% completely random, 50% terrain based?
 	enemy_type=random_8()%0x7;
-
-
-	/* Setup Enemy HP */
 	enemy_hp=enemies[enemy_type].hp_base+
 			(rand()&enemies[enemy_type].hp_mask);
 
@@ -1325,11 +1322,12 @@ int do_battle(void) {
 	}
 
 	/* Draw ground */
-	/* FIXME: base on map location */
-	color_equals(COLOR_LIGHTGREEN);
+	color_equals(ground_color);
 	for(i=10;i<40;i++) {
 		hlin_double(ram[DRAW_PAGE],0,39,i);
 	}
+
+	/* Draw some background images for variety? */
 
 	ram[DRAW_PAGE]=saved_drawpage;
 

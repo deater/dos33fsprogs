@@ -219,7 +219,7 @@ int world_map(void) {
 
 		if (ch=='h') print_help();
 		if (ch=='b') {
-			do_battle();
+			do_battle(map_info[map_location].ground_color);
 			refresh=1;
 		}
 		if (ch=='i') print_info();

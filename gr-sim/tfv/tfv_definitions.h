@@ -25,7 +25,7 @@ void print_help(void);
 
 int name_screen(void);
 
-int do_battle(void);
+int do_battle(int background);
 
 int world_map(void);
 
