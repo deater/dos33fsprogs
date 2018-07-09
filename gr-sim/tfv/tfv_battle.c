@@ -867,6 +867,110 @@ static void limit_break(int which) {
 
 static void summon(int which) {
 
+	int tx=34,ty=20;
+	int damage=100;
+	int i;
+	int ax=28,ay=2;
+
+	i=0;
+	while(i<30) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(tfv_stand_left,tx,ty);
+		grsim_put_sprite(tfv_led_sword,tx-5,ty);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		grsim_put_sprite(metrocat,ax,ay);
+
+		draw_battle_bottom(enemy_type);
+
+		page_flip();
+
+		i++;
+
+		usleep(20000);
+	}
+
+	while(ax>15) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(tfv_stand_left,tx,ty);
+		grsim_put_sprite(tfv_led_sword,tx-5,ty);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		grsim_put_sprite(metrocat,ax,ay);
+
+		draw_battle_bottom(enemy_type);
+
+		page_flip();
+
+		ax-=1;
+
+		usleep(20000);
+	}
+
+	while(ax>5) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(tfv_stand_left,tx,ty);
+		grsim_put_sprite(tfv_led_sword,tx-5,ty);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		grsim_put_sprite(metrocat,ax,ay);
+
+		draw_battle_bottom(enemy_type);
+
+		page_flip();
+
+		ay+=1;
+		ax-=1;
+
+		usleep(20000);
+	}
+
+	i=0;
+	while(i<30) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(tfv_stand_left,tx,ty);
+		grsim_put_sprite(tfv_led_sword,tx-5,ty);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		grsim_put_sprite(metrocat,ax,ay);
+
+		draw_battle_bottom(enemy_type);
+
+		page_flip();
+
+		i++;
+
+		usleep(20000);
+	}
+
+	gr_copy_to_current(0xc00);
+
+	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+	grsim_put_sprite(tfv_stand_left,tx,ty);
+	grsim_put_sprite(tfv_led_sword,tx-5,ty);
+	draw_battle_bottom(enemy_type);
+
+	damage_enemy(damage);
+	gr_put_num(2,10,damage);
+	page_flip();
+
+	for(i=0;i<20;i++) {
+		usleep(100000);
+	}
+	limit=0;
 }
 
 
