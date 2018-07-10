@@ -49,6 +49,14 @@
 #define DIALOG_STEVE2		33
 #define DIALOG_GRABOWSKI	34
 
+#define DIALOG_LIZBETH		35
+#define DIALOG_BLUME		36
+
+#define DIALOG_APPLEBY		37
+#define DIALOG_PADRINO		38
+#define DIALOG_JENNI		39
+#define DIALOG_KATHY		40
+
 struct dialog_words {
 	char *words;
 	int next;
@@ -187,26 +195,44 @@ struct dialog_type dialog[100]={
 		.statement[0].words="557-0868 Utopia BBS is really great!",
 		.statement[0].next=0,
 	},
-#if 0
-	AP CALCULUS, TEAM I-1
-		PADRINO
-			I MET SOMEONE AT THE DOG SHOW
-			SHE WAS HOLDING MY LEFT ARM
-		JENNI
-			NEED TO GO TO ART ROOM
-			JEN JENNY JENNO AND JENN WAITING
-		MR. APPLEBY	ROAR
-		KATHY
-			LOW D-HIGH LESS HIGH D-LOW
-			DRAW A LINE AND DOWN BELOW
-			DENOMINATOR SQUARED MUST GO
-		LIZBETH
-		BLUME
-			VINCE CON PATILLAS
-#endif
+	// AP-CALCULUS
+	[DIALOG_APPLEBY]= {
+		.statement[0].words="ROAR!",
+		.statement[0].next=0,
+	},
+	[DIALOG_PADRINO]= {
+		.statement[0].words="I MET SOMEONE AT THE DOG SHOW",
+		.statement[0].next=0,
+		.statement[1].words="SHE WAS HOLDING MY LEFT ARM",
+		.statement[1].next=0,
+	},
+	[DIALOG_JENNI]= {
+		.statement[0].words="Need to go to art room",
+		.statement[0].next=0,
+		.statement[1].words="Jen, Jenny, Jenno and Jenn waiting",
+		.statement[1].next=0,
+
+	},
+	[DIALOG_KATHY]= {
+		.statement[0].words="LOW D-HIGH LESS HIGH D-LOW",
+		.statement[0].next=0,
+		.statement[1].words="DRAW A LINE AND DOWN BELOW",
+		.statement[1].next=0,
+		.statement[2].words="DENOMINATOR SQUARED MUST GO",
+		.statement[2].next=0,
+	},
+	// HALLWAY
+	[DIALOG_LIZBETH]={
+		.statement[0].words="...",
+		.statement[0].next=0,
+	},
+	[DIALOG_BLUME]={
+		.statement[0].words="Deater con patillas",
+		.statement[0].next=0,
+	},
 	//DEUTSCH
 	[DIALOG_NIRE]= {
-		.statement[0].words="Vince, what are you doing!",
+		.statement[0].words="What are you doing?",
 		.statement[0].next=0,
 		// Sue you?
 	},

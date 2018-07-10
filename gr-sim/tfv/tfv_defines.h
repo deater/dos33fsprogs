@@ -73,6 +73,7 @@ struct location_type {
 #define SCATTER_PALM		0x04
 #define SCATTER_CACTUS		0x08
 #define SCATTER_SPOOL		0x10
+#define SCATTER_JEN_LIZ		0x20
 
 #define ENTRY_NORMAL		0x00
 #define ENTRY_EXPLICIT		0x01

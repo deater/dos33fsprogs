@@ -383,6 +383,12 @@ done_entry:
 					map_info[map_location].scatter_y);
 			}
 
+			if (map_info[map_location].scatter&SCATTER_JEN_LIZ) {
+				grsim_put_sprite(jen_liz,
+					map_info[map_location].scatter_x,
+					map_info[map_location].scatter_y);
+			}
+
 
 		}
 #if 0
@@ -459,6 +465,12 @@ done_entry:
 
 			if (map_info[map_location].scatter&SCATTER_SPOOL) {
 				grsim_put_sprite(spool,
+					map_info[map_location].scatter_x,
+					map_info[map_location].scatter_y);
+			}
+
+			if (map_info[map_location].scatter&SCATTER_JEN_LIZ) {
+				grsim_put_sprite(jen_liz,
 					map_info[map_location].scatter_x,
 					map_info[map_location].scatter_y);
 			}

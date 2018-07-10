@@ -46,6 +46,7 @@ extern unsigned char cactus[];
 extern unsigned char mountain[];
 extern unsigned char lightning[];
 extern unsigned char spool[];
+extern unsigned char jen_liz[];
 
 extern unsigned char numbers[10][11];
 
