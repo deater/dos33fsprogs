@@ -57,6 +57,11 @@
 #define DIALOG_JENNI		39
 #define DIALOG_KATHY		40
 
+#define DIALOG_MEAN_LADY	41
+#define DIALOG_TRAPANI		42
+#define DIALOG_WARWICK		43
+#define DIALOG_WARGO		44
+
 struct dialog_words {
 	char *words;
 	int next;
@@ -254,19 +259,28 @@ struct dialog_type dialog[100]={
 		.statement[1].words="Karte Spiel",
 		.statement[1].next=0,
 	},
-#if 0
-	HOMEROOM
-		TRAPANI
-			WEAVE!
-			MAN THAT PARTY WAS SOMETHING ELSE
-		WARWICK
-			MARIOKART PARTY AT MY HOUSE
-		WARGO
-			WARWICK! AMAZING SWIMMER MUSCLES
-			*SWOON*
-
-		MEAN LADY
-#endif
+	// HOMEROOM
+	[DIALOG_MEAN_LADY]= {
+		.statement[0].words="Time for homeroom cleanup!",
+		.statement[0].next=0,
+		// PUFFS PLUS
+	},
+	[DIALOG_TRAPANI]= {
+		.statement[0].words="WEAVE!",
+		.statement[0].next=0,
+		.statement[1].words="MAN THAT PARTY WAS SOMETHING ELSE",
+		.statement[1].next=0,
+	},
+	[DIALOG_WARWICK]={
+		.statement[0].words="MARIOKART PARTY AT MY HOUSE",
+		.statement[0].next=0,
+	},
+	[DIALOG_WARGO]={
+		.statement[0].words="WARWICK! AMAZING SWIMMER MUSCLES",
+		.statement[0].next=0,
+		.statement[1].words="*SWOON*",
+		.statement[1].next=0,
+	},
 	// MATH OFFICE (ACADEMIC TEAM)
 	[DIALOG_CAPTAIN_STEVE]= {
 		.statement[0].words="Remember Reyerson\'s Rule",
@@ -296,8 +310,10 @@ struct dialog_type dialog[100]={
 		.statement[0].next=0,
 		.statement[1].words="Abort, Retry, Fail",
 		.statement[1].next=0,
-		.statement[1].words="Do you like my DOS impression?",
-		.statement[1].next=0,
+		.statement[2].words="Do you like my DOS impression?",
+		.statement[2].next=0,
+		.statement[3].words="Shall we play a game?",
+		.statement[3].next=0,
 	},
 	[DIALOG_AGENT_N]= {
 		.statement[0].words="Starfleet Mission",

@@ -751,6 +751,35 @@ struct map_info_type map_info[34] = {
 		.scatter=SCATTER_NONE,
 		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
 		.background_image=homeroom_rle,
+		.num_locations=4,
+		.location[0] = {
+			.name="Mean Lady",
+			.x0 = 2, .x1 = 8,
+			.y0 = 30,  .y1 = 38,
+			.destination=DIALOG_MEAN_LADY,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[1] = {
+			.name="Trapani",
+			.x0 = 11, .x1 = 20,
+			.y0 = 25, .y1 = 33,
+			.destination=DIALOG_TRAPANI,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[2] = {
+			.name="Warwick",
+			.x0 = 22, .x1 = 29,
+			.y0 = 25, .y1 = 33,
+			.destination=DIALOG_WARWICK,
+			.type=LOCATION_CONVERSATION,
+		},
+		.location[3] = {
+			.name="Wargo",
+			.x0 = 30, .x1 = 35,
+			.y0 = 25, .y1 = 33,
+			.destination=DIALOG_WARGO,
+			.type=LOCATION_CONVERSATION,
+		},
 	},
 	[AP_CALCULUS]={	// 30: AP_CALCULUS
 		.name="AP Calculus",
@@ -891,32 +920,3 @@ struct map_info_type map_info[34] = {
 
 };
 
-#if 0
-
-	calculs_rle:
-		team I-1
-		JENNI
-		MR. APPLEBY
-		KATHY
-		LIZBETH
-		BLUME
-
-	DEUTSCH:
-		Agent G
-		Agent AP
-		Agent S
-		NIRE
-		FRAU:
-
-	homeroom:
-		trapani
-		warwick
-		wargo
-		mean lady
-
-	patriot_room:
-		agent N
-		PADRINO
-
-
-#endif
