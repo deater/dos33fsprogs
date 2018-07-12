@@ -1,20 +1,22 @@
 Soon:
+
 + Battle Sequence
---> Randomize enemy you fight
---> Different backgrounds based on location
---> Magic
 --> Die if HP hits 0.  On ground sprite
---> Run away
 --> Fix weird glitch on damage printing
 --> Sound effects
 --> enemy uses magic
 --> green background on anti-damage printing
 --> pick up vortex cannon from someone
+--> Balance the battles
+--> Keep menu cursor from going out of bounds
+
++ Game over screen
+--> Pause 2 seconds
+--> Ask "Continue: Y/N?"
 
 + Enable getting back on spaceship (with better animation)
 + Better collision detection on Spaceship land
 + Better collision detection/walk on+off in College Park
-+ Hook up art for all possible locations
 + Working conversation
 + Riding animals
 + End sequence
