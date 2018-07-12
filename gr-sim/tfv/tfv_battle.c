@@ -1179,6 +1179,9 @@ static void done_attack(void) {
 #define MENU_MAIN_SUMMON	4
 #define MENU_MAIN_LIMIT		5
 
+
+static int running=0;
+
 void menu_keypress(int ch) {
 
 	if ((ch==' ') || (ch==13)) {
@@ -1207,7 +1210,7 @@ void menu_keypress(int ch) {
 					menu_position=0;
 					break;
 				case MENU_MAIN_ESCAPE:
-					/* TODO -- RUN to left */
+					running=1;
 					done_attack();
 					break;
 			}
@@ -1300,8 +1303,18 @@ int do_battle(int ground_color) {
 
 		gr_copy_to_current(0xc00);
 
-		grsim_put_sprite(tfv_stand_left,ax,20);
-		grsim_put_sprite(tfv_led_sword,ax-5,20);
+		if (running) {
+			if (battle_count%2) {
+				grsim_put_sprite(tfv_stand_right,ax,20);
+			}
+			else {
+				grsim_put_sprite(tfv_walk_right,ax,20);
+			}
+		}
+		else {
+			grsim_put_sprite(tfv_stand_left,ax,20);
+			grsim_put_sprite(tfv_led_sword,ax-5,20);
+		}
 
 		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
@@ -1328,6 +1341,12 @@ int do_battle(int ground_color) {
 		}
 
 		if (battle_count>=64) {
+
+			/* TODO: randomly fail at running? */
+			if (running) {
+				break;
+			}
+
 			if (menu_state==MENU_NONE) menu_state=MENU_MAIN;
 			menu_keypress(ch);
 
@@ -1355,6 +1374,8 @@ int do_battle(int ground_color) {
 	clear_bottom();
 	ram[DRAW_PAGE]=PAGE1;
 	clear_bottom();
+
+	running=0;
 
 	return 0;
 }
