@@ -43,12 +43,12 @@ Forest? Grassland? Artic? Ocean?
                        MAGIC     LIMIT
 		       SUMMON    RUN
 
-		SUMMONS -> METROCAT
+		SUMMONS -> METROCAT VORTEXCN
 		MAGIC   ->  HEAL    FIRE
                             ICE     MALAISE
 			    BOLT
 		LIMIT	->  SLICE   ZAP
-                            DROP    
+                            DROP
 
           1         2         3
 0123456789012345678901234567890123456789|
@@ -194,18 +194,17 @@ static int gr_put_num(int xx,int yy,int number) {
 	digit=number/100;
 	if ((digit) && (digit<10)) {
 		grsim_put_sprite(numbers[digit],xt,yy);
+		xt+=4;
 	}
 	hundreds=digit;
 	left=number%100;
-	xt+=4;
 
 	digit=left/10;
 	if ((digit) || (hundreds)) {
 		grsim_put_sprite(numbers[digit],xt,yy);
+		xt+=4;
 	}
 	left=number%10;
-
-	xt+=4;
 
 	digit=left;
 	grsim_put_sprite(numbers[digit],xt,yy);
@@ -218,12 +217,12 @@ static int gr_put_num(int xx,int yy,int number) {
                        MAGIC     LIMIT
 		       SUMMON    ESCAPE
 
-		SUMMONS -> METROCAT
+		SUMMONS -> METROCAT VORTEXCN
 		MAGIC   ->  HEAL    FIRE
                             ICE     MALAISE
 			    BOLT
 		LIMIT	->  SLICE   ZAP
-                            DROP    
+                            DROP
 
 	State Machine
 
@@ -383,6 +382,12 @@ static int draw_battle_bottom(int enemy_type) {
 		move_cursor();
 		if (menu_position==0) print_inverse("METROCAT");
 		else print("METROCAT");
+
+		vtab(22);
+		htab(32);
+		move_cursor();
+		if (menu_position==1) print_inverse("VORTEXCN");
+		else print("VORTEXCN");
 	}
 	if (menu_state==MENU_MAGIC) {
 		vtab(21);
@@ -790,6 +795,8 @@ static void magic_attack(int which) {
 }
 
 
+/* Limit Break "Drop" */
+/* Jump into sky, drop down and slice enemy in half */
 
 static void limit_break_drop(void) {
 
@@ -884,21 +891,25 @@ static void limit_break_drop(void) {
 	for(i=0;i<20;i++) {
 		usleep(100000);
 	}
-	limit=0;
 }
+
+
+/* Limit Break "Slice" */
+/* Run up and slap a bunch with sword */
+/* TODO: cause damage value to bounce around more? */
 
 static void limit_break_slice(void) {
 
-	int ax=34,ay=20;
-	int damage=100;
+	int tx=34,ty=20;
+	int damage=5;
 	int i;
 
-	while(ay>0) {
+	while(tx>10) {
 
 		gr_copy_to_current(0xc00);
 
-		grsim_put_sprite(tfv_stand_left,ax,ay);
-		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+		grsim_put_sprite(tfv_stand_left,tx,ty);
+		grsim_put_sprite(tfv_led_sword,tx-5,ty);
 
 		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
@@ -906,168 +917,117 @@ static void limit_break_slice(void) {
 
 		page_flip();
 
-		ay-=1;
+		tx-=1;
 
 		usleep(20000);
 	}
 
-	ax=10;
-	ay=0;
-
-	/* Falling */
-
-	while(ay<=20) {
+	/* Slicing */
+	for(i=0;i<20;i++) {
 
 		gr_copy_to_current(0xc00);
 
 		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
-		grsim_put_sprite(tfv_stand_left,ax,ay);
-		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+		if (i&1) {
+			grsim_put_sprite(tfv_stand_left,tx,20);
+			grsim_put_sprite(tfv_led_sword,tx-5,20);
+		}
+		else {
+			grsim_put_sprite(tfv_victory,tx,20);
+			grsim_put_sprite(tfv_led_sword,tx-2,14);
+		}
+
+		damage_enemy(damage);
+		gr_put_num(2+(i%2),10+((i%2)*2),damage);
 
 		draw_battle_bottom(enemy_type);
 
-		color_equals(13);
-		vlin(0,ay,ax-5);
-
 		page_flip();
-
-		ay+=1;
 
 		usleep(100000);
 	}
 
-	i=0;
-	while(i<13) {
-
-		gr_copy_to_current(0xc00);
-
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
-
-		grsim_put_sprite(tfv_stand_left,ax,ay);
-		grsim_put_sprite(tfv_led_sword,ax-5,ay);
-
-		draw_battle_bottom(enemy_type);
-
-		color_equals(COLOR_LIGHTGREEN);
-		vlin(ay,ay+i,ax-5);
-
-		page_flip();
-		i++;
-
-		usleep(100000);
-	}
-
-	ax=34;
-	ay=20;
+	tx=34;
+	ty=20;
 
 	gr_copy_to_current(0xc00);
 
 	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
-	grsim_put_sprite(tfv_stand_left,ax,ay);
-	grsim_put_sprite(tfv_led_sword,ax-5,ay);
+	grsim_put_sprite(tfv_stand_left,tx,ty);
+	grsim_put_sprite(tfv_led_sword,tx-5,ty);
 
 	draw_battle_bottom(enemy_type);
 
-	color_equals(COLOR_LIGHTGREEN);
-	vlin(20,33,5);
-
-	damage_enemy(damage);
-	gr_put_num(2,10,damage);
 	page_flip();
 
 	for(i=0;i<20;i++) {
 		usleep(100000);
 	}
-	limit=0;
 }
+
+/* Limit Break "Zap" */
+/* Zap with a laser out of the LED sword */
 
 static void limit_break_zap(void) {
 
-	int ax=34,ay=20;
+	int tx=34,ty=20;
 	int damage=100;
 	int i;
 
-	while(ay>0) {
 
-		gr_copy_to_current(0xc00);
+	gr_copy_to_current(0xc00);
 
-		grsim_put_sprite(tfv_stand_left,ax,ay);
-		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+	/* Draw background */
+	color_equals(COLOR_AQUA);
+	vlin(12,24,34);
+	hlin_double(ram[DRAW_PAGE],28,38,18);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+	/* Sword in air */
+	grsim_put_sprite(tfv_victory,tx,20);
+	grsim_put_sprite(tfv_led_sword,tx-2,14);
 
-		draw_battle_bottom(enemy_type);
+	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
-		page_flip();
+	draw_battle_bottom(enemy_type);
 
-		ay-=1;
+	page_flip();
 
-		usleep(20000);
-	}
+	usleep(500000);
 
-	ax=10;
-	ay=0;
-
-	/* Falling */
-
-	while(ay<=20) {
-
-		gr_copy_to_current(0xc00);
-
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
-
-		grsim_put_sprite(tfv_stand_left,ax,ay);
-		grsim_put_sprite(tfv_led_sword,ax-5,ay);
-
-		draw_battle_bottom(enemy_type);
-
-		color_equals(13);
-		vlin(0,ay,ax-5);
-
-		page_flip();
-
-		ay+=1;
-
-		usleep(100000);
-	}
-
-	i=0;
-	while(i<13) {
+	for(i=0;i<20;i++) {
 
 		gr_copy_to_current(0xc00);
 
 		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
-		grsim_put_sprite(tfv_stand_left,ax,ay);
-		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+		if (i%2==0) {
+			color_equals(COLOR_YELLOW);
+		}
+		else {
+			color_equals(COLOR_RED);
+		}
+		hlin_double(ram[DRAW_PAGE],5,30,22);
+
+		grsim_put_sprite(tfv_stand_left,tx,ty);
+		grsim_put_sprite(tfv_led_sword,tx-5,ty);
 
 		draw_battle_bottom(enemy_type);
 
-		color_equals(COLOR_LIGHTGREEN);
-		vlin(ay,ay+i,ax-5);
-
 		page_flip();
-		i++;
 
-		usleep(100000);
+		usleep(200000);
 	}
-
-	ax=34;
-	ay=20;
 
 	gr_copy_to_current(0xc00);
 
 	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
-	grsim_put_sprite(tfv_stand_left,ax,ay);
-	grsim_put_sprite(tfv_led_sword,ax-5,ay);
+	grsim_put_sprite(tfv_stand_left,tx,ty);
+	grsim_put_sprite(tfv_led_sword,tx-5,ty);
 
 	draw_battle_bottom(enemy_type);
-
-	color_equals(COLOR_LIGHTGREEN);
-	vlin(20,33,5);
 
 	damage_enemy(damage);
 	gr_put_num(2,10,damage);
@@ -1076,20 +1036,23 @@ static void limit_break_zap(void) {
 	for(i=0;i<20;i++) {
 		usleep(100000);
 	}
-	limit=0;
+
 }
 
 
-#define MENU_LIMIT_DROP		0
-#define MENU_LIMIT_SLICE	1
-#define MENU_LIMIT_ZAP		2
+#define MENU_LIMIT_SLICE	0
+#define MENU_LIMIT_ZAP		1
+#define MENU_LIMIT_DROP		2
+
 
 static void limit_break(int which) {
-
 
 	if (which==MENU_LIMIT_DROP) limit_break_drop();
 	else if (which==MENU_LIMIT_SLICE) limit_break_slice();
 	else if (which==MENU_LIMIT_ZAP) limit_break_zap();
+
+	/* reset limit counter */
+	limit=0;
 
 }
 
