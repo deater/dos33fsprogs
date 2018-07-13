@@ -22,12 +22,12 @@ void print_help(void) {
 *                                     *
 *   ARROWS  - MOVE                    *
 *   W/A/S/D - MOVE                    *
-*   Z/X     - SPEED UP / SLOW DOWN    *
+*   Z/X     - FORWARD/BACK (FLYING)   *
 *   SPACE   - STOP                    *
 *   RETURN  - LAND / ENTER / ACTION   *
 *   I       - INVENTORY               *
 *   M       - MAP                     *
-*   ESC     - QUIT                    *
+*   ESC     - CANCEL                  *
 *                                     *
 ***************************************
 */
@@ -38,12 +38,12 @@ void print_help(void) {
 	ram[CV]=3;
 	ram[CH]=4;	move_and_print("ARROWS  - MOVE");
 	ram[CV]++;	move_and_print("W/A/S/D - MOVE");
-	ram[CV]++;	move_and_print("Z/X     - SPEED UP / SLOW DOWN");
+	ram[CV]++;	move_and_print("Z/X     - FORWARD / BACK (FLYING)");
 	ram[CV]++;	move_and_print("SPACE   - STOP");
 	ram[CV]++;	move_and_print("RETURN  - LAND / ENTER / ACTION");
 	ram[CV]++;	move_and_print("I       - INVENTORY");
 	ram[CV]++;	move_and_print("M       - MAP");
-	ram[CV]++;	move_and_print("ESC     - QUIT");
+	ram[CV]++;	move_and_print("ESC     - CANCEL");
 
 	page_flip();
 
