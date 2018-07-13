@@ -383,8 +383,8 @@ static int draw_battle_bottom(int enemy_type) {
 		if (menu_position==0) print_inverse("METROCAT");
 		else print("METROCAT");
 
-		vtab(22);
-		htab(32);
+		vtab(23);
+		htab(25);
 		move_cursor();
 		if (menu_position==1) print_inverse("VORTEXCN");
 		else print("VORTEXCN");
@@ -996,18 +996,13 @@ static void limit_break_zap(void) {
 
 	usleep(500000);
 
-	for(i=0;i<20;i++) {
+	for(i=0;i<32;i++) {
 
 		gr_copy_to_current(0xc00);
 
 		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
-		if (i%2==0) {
-			color_equals(COLOR_YELLOW);
-		}
-		else {
-			color_equals(COLOR_RED);
-		}
+		color_equals(i%16);
 		hlin_double(ram[DRAW_PAGE],5,30,22);
 
 		grsim_put_sprite(tfv_stand_left,tx,ty);
@@ -1017,7 +1012,7 @@ static void limit_break_zap(void) {
 
 		page_flip();
 
-		usleep(200000);
+		usleep(100000);
 	}
 
 	gr_copy_to_current(0xc00);
