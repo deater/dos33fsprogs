@@ -229,16 +229,31 @@ int world_map(void) {
 			}
 		}
 
-		if (ch=='h') print_help();
-		if (ch=='b') {
-			do_battle(map_info[map_location].ground_color);
-			refresh=1;
+		if (ch=='h') {
+			print_help();
 		}
-		if (ch=='i') print_info();
+		if (ch=='i') {
+			print_info();
+		}
+
 		if (ch=='m') {
 			show_map();
 			refresh=1;
 		}
+
+
+		/* debugging routines */
+		if (ch=='b') {
+			do_battle(map_info[map_location].ground_color);
+			refresh=1;
+		}
+
+		if (ch=='e') {
+			do_ending();
+			refresh=1;
+		}
+
+
 
 		/* Handle entry to a new area */
 		if (entry) {

@@ -27,6 +27,8 @@ int name_screen(void);
 
 int do_battle(int background);
 
+int do_ending(void);
+
 int world_map(void);
 
 int city_map(void);
