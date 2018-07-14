@@ -7,9 +7,7 @@
 #include "tfv_utils.h"
 #include "tfv_zp.h"
 #include "tfv_definitions.h"
-
-#include "tfv_sprites.h"
-#include "tfv_backgrounds.h"
+#include "tfv_dialog.h"
 
 /* stats */
 unsigned char level=0;
@@ -32,6 +30,8 @@ char nameo[9];
 int main(int argc, char **argv) {
 
 	int result;
+
+	init_dialog();
 
 	grsim_init();
 
