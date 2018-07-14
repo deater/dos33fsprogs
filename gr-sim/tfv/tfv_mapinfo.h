@@ -342,7 +342,7 @@ struct map_info_type map_info[34] = {
 		},
 		.location[1] = {
 			.name="Pete",
-			.x0 = 13,  .x1 = 19,
+			.x0 = 11,  .x1 = 17,
 			.y0 = 15, .y1 = 21,
 			.destination = DIALOG_PETE,
 			.type=LOCATION_CONVERSATION,

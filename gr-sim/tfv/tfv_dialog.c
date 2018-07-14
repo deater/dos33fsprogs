@@ -20,7 +20,7 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[0].words="Your journey takes you toward Bel Air.",
 		.statement[0].next=1,
 		.statement[1].words="Hari Seldon predicted this!",
-		.statement[1].next=1,
+		.statement[1].next=2,
 		.statement[2].words="PLOT!",
 		.statement[2].next=2,
 
@@ -34,10 +34,10 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[0].next=0,
 	},
 	[DIALOG_DARTH_TATER] = {
-		.statement[0].words="In Talbot 0101B",
+		.statement[0].words="In Talbot 0101C",
 		.statement[0].next=1,
 		.statement[1].words="There lived a big giant bee",
-		.statement[1].next=2,
+		.statement[1].next=1,
 		.statement[2].action=ACTION_ITEM2,
 		.statement[2].item=ITEM_5K_RESISTOR,
 	},

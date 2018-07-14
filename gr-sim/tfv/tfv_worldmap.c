@@ -201,10 +201,20 @@ int world_map(void) {
 			}
 		}
 
+		if (moved) conversation_started=0;
+
 		if (ch==13) {
 			if (destination_type==LOCATION_CONVERSATION) {
 				conversation_started=1;
 				conversation_person=special_destination;
+				if (dialog[conversation_person].count==-1) {
+					dialog[conversation_person].count=0;
+				}
+				else {
+					dialog[conversation_person].count=
+					dialog[conversation_person].statement[dialog[conversation_person].count].next;
+				}
+
 			}
 			else if (destination_type==LOCATION_SPACESHIP) {
 				return LOCATION_SPACESHIP;
@@ -554,7 +564,8 @@ done_entry:
 		if (conversation_started) {
 			ram[CH]=1;
 			ram[CV]=21;
-			move_and_print(dialog[conversation_person].statement[0].words);
+			move_and_print(
+				dialog[conversation_person].statement[dialog[conversation_person].count].words);
 //			printf("%s\n",dialog[conversation_person].statement[0].words);
 		}
 
