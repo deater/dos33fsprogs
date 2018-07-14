@@ -331,6 +331,13 @@ static int draw_battle_bottom(int enemy_type) {
 
 	if (menu_state==MENU_MAIN) {
 
+		if (limit>3) {
+			if (menu_position>5) menu_position=5;
+		}
+		else {
+			if (menu_position>4) menu_position=4;
+		}
+
 		vtab(21);
 		htab(24);
 		move_cursor();
@@ -372,6 +379,9 @@ static int draw_battle_bottom(int enemy_type) {
 
 	}
 	if (menu_state==MENU_SUMMON) {
+
+		if (menu_position>1) menu_position=1;
+
 		vtab(21);
 		htab(25);
 		move_cursor();
@@ -390,6 +400,9 @@ static int draw_battle_bottom(int enemy_type) {
 		else print("VORTEXCN");
 	}
 	if (menu_state==MENU_MAGIC) {
+
+		if (menu_position>4) menu_position=4;
+
 		vtab(21);
 		htab(24);
 		move_cursor();
@@ -428,6 +441,9 @@ static int draw_battle_bottom(int enemy_type) {
 	}
 
 	if (menu_state==MENU_LIMIT) {
+
+		if (menu_position>2) menu_position=2;
+
 		vtab(21);
 		htab(24);
 		move_cursor();
@@ -1051,7 +1067,7 @@ static void limit_break(int which) {
 
 }
 
-static void summon(int which) {
+static void summon_metrocat(void) {
 
 	int tx=34,ty=20;
 	int damage=100;
@@ -1156,7 +1172,92 @@ static void summon(int which) {
 	for(i=0;i<20;i++) {
 		usleep(100000);
 	}
-	limit=0;
+}
+
+static void summon_vortex_cannon(void) {
+
+	int tx=34,ty=20;
+	int damage=5;
+	int i;
+	int ax=20,ay=20;
+
+	/* draw the cannon */
+
+	i=0;
+	while(i<30) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(tfv_stand_left,tx,ty);
+		grsim_put_sprite(tfv_led_sword,tx-5,ty);
+
+		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		grsim_put_sprite(vortex_cannon,ax,ay);
+
+		draw_battle_bottom(enemy_type);
+
+		page_flip();
+
+		i++;
+
+		usleep(20000);
+	}
+
+	/* Fire vortices */
+
+	ax=20;
+	for(i=0;i<5;i++) {
+		while(ax>5) {
+
+			gr_copy_to_current(0xc00);
+
+			grsim_put_sprite(tfv_stand_left,tx,ty);
+			grsim_put_sprite(tfv_led_sword,tx-5,ty);
+
+			grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+			grsim_put_sprite(vortex_cannon,20,20);
+
+			grsim_put_sprite(vortex,ax,24);
+
+			draw_battle_bottom(enemy_type);
+
+			if (ax<10) {
+				gr_put_num(2,10,damage);
+			}
+
+			page_flip();
+
+			ax-=1;
+
+			usleep(50000);
+		}
+		damage_enemy(damage);
+		ax=20;
+	}
+
+
+	gr_copy_to_current(0xc00);
+
+	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+	grsim_put_sprite(tfv_stand_left,tx,ty);
+	grsim_put_sprite(tfv_led_sword,tx-5,ty);
+	draw_battle_bottom(enemy_type);
+
+	page_flip();
+
+	for(i=0;i<20;i++) {
+		usleep(100000);
+	}
+
+}
+
+static void summon(int which) {
+
+	if (which==0) summon_metrocat();
+	else summon_vortex_cannon();
 }
 
 

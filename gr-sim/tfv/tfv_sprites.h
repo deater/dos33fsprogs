@@ -4,6 +4,13 @@ extern unsigned char tfv_stand_left[];
 extern unsigned char tfv_walk_left[];
 extern unsigned char tfv_victory[];
 extern unsigned char tfv_led_sword[];
+
+extern unsigned char tfg_stand_right[];
+extern unsigned char tfg_walk_right[];
+extern unsigned char tfg_stand_left[];
+extern unsigned char tfg_walk_left[];
+extern unsigned char tfg_victory[];
+
 extern unsigned char bird_rider_stand_right[];
 extern unsigned char bird_rider_walk_right[];
 extern unsigned char bird_rider_stand_left[];
@@ -37,7 +44,7 @@ extern unsigned char evil_penguin[];
 /* summons */
 extern unsigned char metrocat[];
 extern unsigned char vortex_cannon[];
-extern unsigned char vortexes[];
+extern unsigned char vortex[];
 
 /* ground scatter */
 extern unsigned char palm_tree[];
