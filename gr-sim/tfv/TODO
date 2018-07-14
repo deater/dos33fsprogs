@@ -5,10 +5,10 @@ Soon:
 --> Fix weird glitch on damage printing
 --> Sound effects
 --> enemy uses magic
+--> Enemy more likely to spawn on appropriate territory
 --> green background on anti-damage printing
 --> pick up vortex cannon from someone
 --> Balance the battles
---> Keep menu cursor from going out of bounds
 
 + Game over screen
 --> Pause 2 seconds

@@ -1399,7 +1399,10 @@ int do_battle(int ground_color) {
 
 		gr_copy_to_current(0xc00);
 
-		if (running) {
+		if (hp==0) {
+			grsim_put_sprite(tfv_defeat,ax-2,24);
+		}
+		else if (running) {
 			if (battle_count%2) {
 				grsim_put_sprite(tfv_stand_right,ax,20);
 			}
@@ -1417,6 +1420,11 @@ int do_battle(int ground_color) {
 		draw_battle_bottom(enemy_type);
 
 		page_flip();
+
+		if (hp==0) {
+			for(i=0;i<15;i++) usleep(100000);
+			break;
+		}
 
 		usleep(100000);
 
@@ -1460,9 +1468,6 @@ int do_battle(int ground_color) {
 			break;
 		}
 
-//		if (hp==0) {
-//			game_over();
-//		}
 
 	}
 

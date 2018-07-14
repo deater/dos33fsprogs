@@ -163,6 +163,8 @@ int world_map(void) {
 
 		ch=grsim_input();
 
+		if (hp==0) break;
+
 		if ((ch=='q') || (ch==27))  break;
 
 		if ((ch=='t')) {

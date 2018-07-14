@@ -90,8 +90,11 @@ struct dialog_type dialog[100]={
 	[DIALOG_PETE] = {
 		.statement[0].words="Your journey takes you toward Bel Air.",
 		.statement[0].next=1,
-		.statement[1].words="PLOT!",
+		.statement[1].words="Hari Seldon predicted this!",
 		.statement[1].next=1,
+		.statement[2].words="PLOT!",
+		.statement[2].next=1,
+
 	},
 	[DIALOG_KENJESU] = {
 		.statement[0].words="Have you found your lost guinea pig?",
