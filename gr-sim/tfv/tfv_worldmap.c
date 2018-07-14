@@ -403,18 +403,6 @@ done_entry:
 
 
 		}
-#if 0
-		if (map_location==1) if (tfv_y>=22)
-			grsim_put_sprite(snowy_tree,10,22);
-		if (map_location==4) if (tfv_y>=15)
-			grsim_put_sprite(pine_tree,25,16);
-		if (map_location==8) if (tfv_y>=22)
-			grsim_put_sprite(palm_tree,10,20);
-		if (map_location==12) if (tfv_y>=22)
-			grsim_put_sprite(palm_tree,20,20);
-		if (map_location==13) if (tfv_y>=15)
-			grsim_put_sprite(cactus,25,16);
-#endif
 
 		/* Draw Background Trees */
 		if (map_info[map_location].land_type&LAND_FOREST) {
@@ -489,19 +477,6 @@ done_entry:
 
 
 		}
-
-#if 0
-		if (map_location==1) if (tfv_y<22)
-			grsim_put_sprite(snowy_tree,10,22);
-		if (map_location==4) if (tfv_y<15)
-			grsim_put_sprite(pine_tree,25,16);
-		if (map_location==8) if (tfv_y<22)
-			grsim_put_sprite(palm_tree,10,20);
-		if (map_location==12) if (tfv_y<22)
-			grsim_put_sprite(palm_tree,20,20);
-		if (map_location==13) if (tfv_y<15)
-			grsim_put_sprite(cactus,25,16);
-#endif
 
 		if (map_info[map_location].land_type&LAND_FOREST) {
 
