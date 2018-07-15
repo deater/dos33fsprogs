@@ -436,6 +436,11 @@ static void generate_slide(int num, int max, char*filename) {
 			printf("%d TEXT:VTAB 1\n",line_num);	line_num++;
 			print_til_eof(fff,&line_num);
 		}
+		else if (strstr(type,"NOCHANGE")) {
+
+			printf("%d HOME:VTAB 21\n",line_num);	line_num++;
+			print_til_eof(fff,&line_num);
+		}
 
 		fclose(fff);
 	}
