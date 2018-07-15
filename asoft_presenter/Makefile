@@ -7,7 +7,7 @@ asoft_presenter:	asoft_presenter.o
 			$(CC) $(LFLAGS) -o asoft_presenter asoft_presenter.o
 
 asoft_presenter.o:	asoft_presenter.c
-			$(CC) $(CLFAGS) -c asoft_presenter.c
+			$(CC) $(CFLAGS) -c asoft_presenter.c
 
 
 install:	
