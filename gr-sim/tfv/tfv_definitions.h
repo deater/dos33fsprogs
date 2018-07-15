@@ -26,6 +26,7 @@ void print_help(void);
 int name_screen(void);
 
 int do_battle(int background);
+int boss_battle(void);
 
 int do_ending(void);
 

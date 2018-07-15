@@ -20,7 +20,7 @@ int do_ending(void) {
 	int i;
 	int saved_drawpage;
 
-//	boss_battle();
+	boss_battle();
 
 	saved_drawpage=ram[DRAW_PAGE];
 
