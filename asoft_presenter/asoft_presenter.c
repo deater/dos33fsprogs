@@ -133,11 +133,12 @@ struct footer_info {
   char *center;
 };
 
-#define SLIDE_40COL    0
-#define SLIDE_80COL    1
-#define SLIDE_HGR      2
-#define SLIDE_HGR2     3
-#define SLIDE_HGR_PLOT 4
+#define SLIDE_40COL	0
+#define SLIDE_80COL	1
+#define SLIDE_HGR	2
+#define SLIDE_HGR2	3
+#define SLIDE_HGR_PLOT	4
+#define SLIDE_NOCHANGE	5
 
 #define MAX_SLIDES 89
 
