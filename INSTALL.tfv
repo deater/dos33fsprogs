@@ -1,0 +1,16 @@
+Sorry for how convoluted these are.
+
+To install TFV on Linux on Debian (including Raspberry Pi w Raspbian)
+
+First install some pre-requisites:
+	sudo apt-get install libsdl1.2-dev gcc make git
+
+Then run the following commands:
+	git clone https://github.com/deater/dos33fsprogs.git
+	cd dos33fsprogs
+	make
+	cd gr-sim
+	make
+	cd tfv
+	./tfv
+
