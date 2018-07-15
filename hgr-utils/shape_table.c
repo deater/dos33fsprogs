@@ -59,9 +59,11 @@ static int get_token(char *token, FILE *fff) {
 		ch=fgetc(fff);
 		if (ch<0) return -1;
 
+		/* Skip comment to end of line */
 		if (ch=='#') {
 			while(ch!='\n') ch=fgetc(fff);
 		}
+
 		if ((ch==' ') || (ch=='\t') || (ch=='\n')) {
 			if (ch=='\n') line++;
 			continue;
@@ -119,6 +121,9 @@ int main(int argc, char **argv) {
 				case 'a':
 					output_binary=0;
 					break;
+				case 'd':
+					debug=1;
+					break;
 				default:
 					printf("Unknown options %s\n",argv[1]);
 					print_usage(argv[0]);
@@ -154,13 +159,17 @@ int main(int argc, char **argv) {
 		while(1) {
 			result=get_token(string,stdin);
 			if (result<0) {
-				fprintf(stderr,"Unexpected EOF!\n");
+				fprintf(stderr,"Unexpected EOF, no START!\n");
 				return -1;
 			}
 
 			if (!strcmp(string,"START")) {
-				if (debug) fprintf(stderr,"START\n");
+				if (debug) {
+					fprintf(stderr,"STARTING SHAPE %d\n",
+						current_shape);
+				}
 				break;
+
 			}
 		}
 
@@ -170,7 +179,7 @@ int main(int argc, char **argv) {
 		while(1) {
 			result=get_token(string,stdin);
 			if (result<0) {
-				fprintf(stderr,"Unexpected end of file!\n");
+				fprintf(stderr,"Unexpected end of file! No STOP\n");
 				return -2;
 			}
 
@@ -181,18 +190,41 @@ int main(int argc, char **argv) {
 
 			/* yes, this is inefficient... */
 
-			if (!strcmp(string,"NUP")) command=0;
-			else if (!strcmp(string,"NRT")) command=1;
-			else if (!strcmp(string,"NDN")) command=2;
-			else if (!strcmp(string,"NLT")) command=3;
-			else if (!strcmp(string,"UP")) command=4;
+			if (!strcmp(string,"NUP")) {
+				if (debug) fprintf(stderr,"NUP\n");
+				command=0;
+			}
+			else if (!strcmp(string,"NRT")) {
+				if (debug) fprintf(stderr,"NRT\n");
+				command=1;
+			}
+			else if (!strcmp(string,"NDN")) {
+				if (debug) fprintf(stderr,"NDN\n");
+				command=2;
+			}
+			else if (!strcmp(string,"NLT")) {
+				if (debug) fprintf(stderr,"NLT\n");
+				command=3;
+			}
+			else if (!strcmp(string,"UP")) {
+				if (debug) fprintf(stderr,"UP\n");
+				command=4;
+			}
 			else if (!strcmp(string,"RT")) {
 				if (debug) fprintf(stderr,"RT\n");
 				command=5;
 			}
-			else if (!strcmp(string,"DN")) command=6;
-			else if (!strcmp(string,"LT")) command=7;
-			else fprintf(stderr,"Unknown command '%s'",string);
+			else if (!strcmp(string,"DN")) {
+				if (debug) fprintf(stderr,"DN\n");
+				command=6;
+			}
+			else if (!strcmp(string,"LT")) {
+				if (debug) fprintf(stderr,"LT\n");
+				command=7;
+			}
+			else {
+				fprintf(stderr,"Unknown command '%s'",string);
+			}
 
 			if (sub_pointer==LOC_A) {
 				table[current_offset]=(command&0x7);
