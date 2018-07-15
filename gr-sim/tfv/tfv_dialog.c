@@ -51,8 +51,10 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[2].next=0,
 	},
 	[DIALOG_NICOLE]= {
-		.statement[0].words="...",
-		.statement[0].next=0,
+		.statement[0].words="Have something from my homeland.",
+		.statement[0].next=1,
+		.statement[1].words="Not New Jersey, the other one.",
+		.statement[1].next=0,
 	},
 	[DIALOG_CINDY]= {
 		.statement[0].words="...",
@@ -60,15 +62,15 @@ struct dialog_type dialog[MAX_DIALOG]={
 	},
 	[DIALOG_ELAINE]= {
 		.statement[0].words="Remember Ohm\'s Law",
-		.statement[0].next=0,
+		.statement[0].next=1,
 		.statement[1].words="Twinkle Twinkle Little Star",
-		.statement[1].next=0,
+		.statement[1].next=2,
 		.statement[2].words="V is equal to IR",
 		.statement[2].next=0,
 	},
 	[DIALOG_CAFETERIA_LADY]= {
 		.statement[0].words="Happpy Birthday!",
-		.statement[0].next=2,
+		.statement[0].next=1,
 		.statement[1].words="Have a cupcake",
 		.statement[1].next=0,
 	},
@@ -77,7 +79,7 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[0].words="Would you like to buy at SmartPass?",
 		.statement[0].next=1,
 		.statement[1].words="Sorry, all trains cancelled.  SmartTrip.",
-		.statement[0].next=0,
+		.statement[1].next=0,
 	},
 	[DIALOG_TINY_CAPABARA]= {
 		.statement[0].words="GRONK",
@@ -107,7 +109,7 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[0].next=0,
 	},
 	[DIALOG_MALL]= {
-		.statement[0].words="...",
+		.statement[0].words="Closed for rennovation",
 		.statement[0].next=0,
 	},
 	[DIALOG_MINIGOLF]= {
@@ -116,7 +118,7 @@ struct dialog_type dialog[MAX_DIALOG]={
 	},
 	// VIDEO HOMEROOM
 	[DIALOG_SCARYNUN]= {
-		.statement[0].words="...",
+		.statement[0].words="No talking in the library.",
 		.statement[0].next=0,
 	},
 	[DIALOG_GUS]= {
@@ -139,28 +141,28 @@ struct dialog_type dialog[MAX_DIALOG]={
 	},
 	[DIALOG_PADRINO]= {
 		.statement[0].words="I MET SOMEONE AT THE DOG SHOW",
-		.statement[0].next=0,
+		.statement[0].next=1,
 		.statement[1].words="SHE WAS HOLDING MY LEFT ARM",
 		.statement[1].next=0,
 	},
 	[DIALOG_JENNI]= {
-		.statement[0].words="Need to go to art room",
-		.statement[0].next=0,
+		.statement[0].words="I need to get to the art room.",
+		.statement[0].next=1,
 		.statement[1].words="Jen, Jenny, Jenno and Jenn waiting",
 		.statement[1].next=0,
 
 	},
 	[DIALOG_KATHY]= {
 		.statement[0].words="LOW D-HIGH LESS HIGH D-LOW",
-		.statement[0].next=0,
+		.statement[0].next=1,
 		.statement[1].words="DRAW A LINE AND DOWN BELOW",
-		.statement[1].next=0,
+		.statement[1].next=2,
 		.statement[2].words="DENOMINATOR SQUARED MUST GO",
 		.statement[2].next=0,
 	},
 	// HALLWAY
 	[DIALOG_LIZBETH]={
-		.statement[0].words="...",
+		.statement[0].words="Let's start a guinea pig and goat farm.",
 		.statement[0].next=0,
 	},
 	[DIALOG_BLUME]={
@@ -169,8 +171,10 @@ struct dialog_type dialog[MAX_DIALOG]={
 	},
 	//DEUTSCH
 	[DIALOG_NIRE]= {
-		.statement[0].words="What are you doing?",
-		.statement[0].next=0,
+		.statement[0].words="What are you doing now?",
+		.statement[0].next=1,
+		.statement[1].words="No more lawsuits.",
+		.statement[1].next=0,
 		// Sue you?
 	},
 	[DIALOG_AGENT_S]= {
@@ -182,13 +186,13 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[0].next=0,
 	},
 	[DIALOG_AGENT_AP]= {
-		.statement[0].words="...",
+		.statement[0].words="Gehen wir zum Schinken und Bonbon Cafe",
 		.statement[0].next=0,
 	},
 	[DIALOG_FRAU]= {
 		.statement[0].words="Immer mit der Ruhe!",
-		.statement[0].next=0,
-		.statement[1].words="Karte Spiel",
+		.statement[0].next=1,
+		.statement[1].words="Karte Spiel!",
 		.statement[1].next=0,
 	},
 	// HOMEROOM
@@ -199,7 +203,7 @@ struct dialog_type dialog[MAX_DIALOG]={
 	},
 	[DIALOG_TRAPANI]= {
 		.statement[0].words="WEAVE!",
-		.statement[0].next=0,
+		.statement[0].next=1,
 		.statement[1].words="MAN THAT PARTY WAS SOMETHING ELSE",
 		.statement[1].next=0,
 	},
@@ -209,14 +213,14 @@ struct dialog_type dialog[MAX_DIALOG]={
 	},
 	[DIALOG_WARGO]={
 		.statement[0].words="WARWICK! AMAZING SWIMMER MUSCLES",
-		.statement[0].next=0,
+		.statement[0].next=1,
 		.statement[1].words="*SWOON*",
-		.statement[1].next=0,
+		.statement[1].next=1,
 	},
 	// MATH OFFICE (ACADEMIC TEAM)
 	[DIALOG_CAPTAIN_STEVE]= {
 		.statement[0].words="Remember Reyerson\'s Rule",
-		.statement[0].next=0,
+		.statement[0].next=1,
 		.statement[1].words="Any given team can be beaten",
 		.statement[1].next=0,
 		.statement[2].words="on any given day.",
@@ -232,29 +236,29 @@ struct dialog_type dialog[MAX_DIALOG]={
 	},
 	[DIALOG_MREE]= {
 		.statement[0].words="I\'m not evil",
-		.statement[0].next=0,
+		.statement[0].next=1,
 		.statement[1].words="No esta aqui",
 		.statement[1].next=0,
 	},
 	// Patriot Room
 	[DIALOG_MAC]= {
 		.statement[0].words="File not found",
-		.statement[0].next=0,
+		.statement[0].next=1,
 		.statement[1].words="Abort, Retry, Fail",
-		.statement[1].next=0,
+		.statement[1].next=2,
 		.statement[2].words="Do you like my DOS impression?",
-		.statement[2].next=0,
+		.statement[2].next=3,
 		.statement[3].words="Shall we play a game?",
-		.statement[3].next=0,
+		.statement[3].next=3,
 	},
 	[DIALOG_AGENT_N]= {
-		.statement[0].words="Starfleet Mission",
+		.statement[0].words="Not another Starfleet Mission.",
 		.statement[0].next=0,
 	},
 	[DIALOG_STEVE2]= {
 		.statement[0].words="How bout them O\'s",
-		.statement[0].next=0,
-		.statement[1].words="Fantasy Baseball",
+		.statement[0].next=1,
+		.statement[1].words="Want to hear about Fantasy Baseball?",
 		.statement[1].next=0,
 	},
 	[DIALOG_GRABOWSKI]= {
