@@ -4,6 +4,7 @@ all:
 	cd asoft_basic-utils && make
 	cd asoft_presenter && make
 #	cd asoft_sound && make
+	cd bmp2dhr && make
 #	cd chiptune_player && make
 #	cd dlowres_mode7 && make
 	cd dos33fs-utils && make
@@ -40,6 +41,7 @@ clean:
 	cd asoft_basic-utils && make clean
 	cd asoft_presenter && make clean
 	cd asoft_sound && make clean
+	cd bmp2dhr && make clean
 	cd chiptune_debug && make clean
 	cd chiptune_player && make clean
 	cd dlowres_mode7 && make clean
