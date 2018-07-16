@@ -1,8 +1,6 @@
 #define ACTION_NONE	0
-#define ACTION_ITEM1	1
-#define ACTION_ITEM2	2
-#define ACTION_ITEM3	3
-#define ACTION_TIME	4
+#define ACTION_ITEM	1
+#define ACTION_TIME	2
 
 
 #define DIALOG_LIZ_WILL		0

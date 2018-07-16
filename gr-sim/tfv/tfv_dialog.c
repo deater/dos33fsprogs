@@ -28,6 +28,8 @@ struct dialog_type dialog[MAX_DIALOG]={
 	[DIALOG_KENJESU] = {
 		.statement[0].words="Have you found your lost guinea pig?",
 		.statement[0].next=0,
+		.statement[0].action=ACTION_ITEM,
+		.statement[0].item=ITEM_VORTEXCANNON,
 	},
 	[DIALOG_MATHEMAGICIAN] = {
 		.statement[0].words="Have you tried finding the eigenvalues?",
@@ -38,8 +40,8 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[0].next=1,
 		.statement[1].words="There lived a big giant bee",
 		.statement[1].next=1,
-		.statement[2].action=ACTION_ITEM2,
-		.statement[2].item=ITEM_5K_RESISTOR,
+		.statement[1].action=ACTION_ITEM,
+		.statement[1].item=ITEM_5K_RESISTOR,
 	},
 	// Dining Hall
 	[DIALOG_OSCAR]= {
@@ -49,10 +51,14 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[1].next=2,
 		.statement[2].words="They want to eat you",
 		.statement[2].next=0,
+		.statement[2].action=ACTION_ITEM,
+		.statement[2].item=ITEM_CHEX_MIX,
 	},
 	[DIALOG_NICOLE]= {
 		.statement[0].words="Have something from my homeland.",
 		.statement[0].next=1,
+		.statement[0].action=ACTION_ITEM,
+		.statement[0].item=ITEM_VEGEMITE,
 		.statement[1].words="Not New Jersey, the other one.",
 		.statement[1].next=0,
 	},
@@ -67,12 +73,16 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[1].next=2,
 		.statement[2].words="V is equal to IR",
 		.statement[2].next=0,
+		.statement[2].action=ACTION_ITEM,
+		.statement[2].item=ITEM_1K_RESISTOR,
 	},
 	[DIALOG_CAFETERIA_LADY]= {
 		.statement[0].words="Happpy Birthday!",
 		.statement[0].next=1,
 		.statement[1].words="Have a cupcake",
 		.statement[1].next=0,
+		.statement[1].action=ACTION_ITEM,
+		.statement[1].item=ITEM_CUPCAKE,
 	},
 	// Metro Station
 	[DIALOG_METRO_WORKER]= {
@@ -84,6 +94,8 @@ struct dialog_type dialog[MAX_DIALOG]={
 	[DIALOG_TINY_CAPABARA]= {
 		.statement[0].words="GRONK",
 		.statement[0].next=0,
+		.statement[0].action=ACTION_ITEM,
+		.statement[0].item=ITEM_CARROT,
 	},
 	[DIALOG_GIANT_GUINEA_PIG]= {
 		.statement[0].words="SQUEAK?",
@@ -124,11 +136,16 @@ struct dialog_type dialog[MAX_DIALOG]={
 	[DIALOG_GUS]= {
 		.statement[0].words="I found this...",
 		.statement[0].next=0,
+		.statement[0].action=ACTION_ITEM,
+		.statement[0].item=ITEM_GLAMDRING,
 	},
 	[DIALOG_RAISTLIN]= {
 		.statement[0].words="This may aid you on your journey",
 		.statement[0].next=0,
-		// AMIGA?
+		.statement[0].action=ACTION_ITEM,
+		.statement[0].item=ITEM_LINUX_CD,
+		.statement[1].words="Should I sell my Amiga for an SGI Indigo2",
+		.statement[1].next=0,
 	},
 	[DIALOG_FORD]= {
 		.statement[0].words="557-0868 Utopia BBS is really great!",
@@ -159,11 +176,15 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[1].next=2,
 		.statement[2].words="DENOMINATOR SQUARED MUST GO",
 		.statement[2].next=0,
+		.statement[2].action=ACTION_ITEM,
+		.statement[2].item=ITEM_9V_BATTERY,
 	},
 	// HALLWAY
 	[DIALOG_LIZBETH]={
 		.statement[0].words="Let's start a guinea pig and goat farm.",
 		.statement[0].next=0,
+		.statement[0].action=ACTION_ITEM,
+		.statement[0].item=ITEM_LIZBETH_STAR,
 	},
 	[DIALOG_BLUME]={
 		.statement[0].words="Deater con patillas",
@@ -175,6 +196,8 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[0].next=1,
 		.statement[1].words="No more lawsuits.",
 		.statement[1].next=0,
+		.statement[1].action=ACTION_ITEM,
+		.statement[1].item=ITEM_AA_BATTERY,
 		// Sue you?
 	},
 	[DIALOG_AGENT_S]= {
@@ -194,6 +217,8 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[0].next=1,
 		.statement[1].words="Karte Spiel!",
 		.statement[1].next=0,
+		.statement[1].action=ACTION_ITEM,
+		.statement[1].item=ITEM_KARTE_SPIEL,
 	},
 	// HOMEROOM
 	[DIALOG_MEAN_LADY]= {
@@ -210,6 +235,8 @@ struct dialog_type dialog[MAX_DIALOG]={
 	[DIALOG_WARWICK]={
 		.statement[0].words="MARIOKART PARTY AT MY HOUSE",
 		.statement[0].next=0,
+		.statement[0].action=ACTION_ITEM,
+		.statement[0].item=ITEM_BLUE_LED,
 	},
 	[DIALOG_WARGO]={
 		.statement[0].words="WARWICK! AMAZING SWIMMER MUSCLES",
@@ -225,6 +252,8 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[1].next=0,
 		.statement[2].words="on any given day.",
 		.statement[2].next=0,
+		.statement[2].action=ACTION_ITEM,
+		.statement[2].action=ITEM_ARMY_KNIFE,
 	},
 	[DIALOG_BRIGHID]= {
 		.statement[0].words="...",
@@ -239,6 +268,8 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[0].next=1,
 		.statement[1].words="No esta aqui",
 		.statement[1].next=0,
+		.statement[1].action=ACTION_ITEM,
+		.statement[1].item=ITEM_ELF_RUNES,
 	},
 	// Patriot Room
 	[DIALOG_MAC]= {
@@ -254,6 +285,8 @@ struct dialog_type dialog[MAX_DIALOG]={
 	[DIALOG_AGENT_N]= {
 		.statement[0].words="Not another Starfleet Mission.",
 		.statement[0].next=0,
+		.statement[0].action=ACTION_ITEM,
+		.statement[0].item=ITEM_RED_LED,
 	},
 	[DIALOG_STEVE2]= {
 		.statement[0].words="How bout them O\'s",
