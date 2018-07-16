@@ -147,6 +147,8 @@ int world_map(void) {
 	int on_bird=0;
 	int conversation_started=0;
 	int conversation_person=0;
+	int conversation_count=0;
+	int item_received=-1;
 
 	/************************************************/
 	/* Landed					*/
@@ -213,12 +215,30 @@ int world_map(void) {
 			if (destination_type==LOCATION_CONVERSATION) {
 				conversation_started=1;
 				conversation_person=special_destination;
+
 				if (dialog[conversation_person].count==-1) {
 					dialog[conversation_person].count=0;
 				}
 				else {
 					dialog[conversation_person].count=
 					dialog[conversation_person].statement[dialog[conversation_person].count].next;
+				}
+				conversation_count=dialog[conversation_person].count;
+				if (dialog[conversation_person].statement[conversation_count].action==ACTION_ITEM) {
+					item_received=dialog[conversation_person].statement[conversation_count].item;
+					if (item_received<8) {
+						items1|=(1<<item_received);
+					}
+					else if (item_received<16) {
+						items2|=(1<<(item_received&0x7));
+					}
+					else if (item_received<24) {
+						items3|=(1<<(item_received&0x7));
+					}
+					dialog[conversation_person].statement[conversation_count].action=ACTION_NONE;
+				}
+				else {
+					item_received=-1;
 				}
 
 			}
@@ -566,11 +586,21 @@ done_entry:
 		}
 
 		if (conversation_started) {
+			char *item_name;
 			ram[CH]=1;
 			ram[CV]=21;
 			move_and_print(
 				dialog[conversation_person].statement[dialog[conversation_person].count].words);
 //			printf("%s\n",dialog[conversation_person].statement[0].words);
+			if (item_received!=-1) {
+				item_name=item_names[item_received>>3][item_received%8];
+				ram[CH]=(40-(15+strlen(item_name)))/2;
+				ram[CV]=23;
+				move_and_print("RECEIVED ITEM: ");
+				ram[CH]+=15;
+				move_and_print(item_name);
+			}
+
 		}
 
 		page_flip();
