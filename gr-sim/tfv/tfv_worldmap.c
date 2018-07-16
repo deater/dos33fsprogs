@@ -267,7 +267,8 @@ int world_map(void) {
 			refresh=1;
 		}
 
-		if (moved) {
+		/* Only have encounters on world map */
+		if ((moved) && (map_location<16)) {
 			if (random_encounters) next_encounter--;
 			if (next_encounter==0) {
 				do_battle(map_info[map_location].ground_color);
