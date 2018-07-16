@@ -50,6 +50,6 @@
 #define ITEM_CLASS_RING		0x11	//
 #define ITEM_VORTEXCANNON	0x12	// Ken
 
-extern char item_names[2][8][15];
+extern char item_names[3][8][15];
 
 

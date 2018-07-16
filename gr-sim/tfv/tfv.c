@@ -16,7 +16,8 @@ unsigned char mp=50,max_mp=50;
 unsigned char limit=1;
 unsigned char money=0,experience=0;
 unsigned char time_hours=0,time_minutes=0;
-unsigned char items1=0xff,items2=0xff;
+//unsigned char items1=0xff,items2=0xff,items3=0x07;
+unsigned char items1=0,items2=0,items3=0;
 unsigned char steps=0;
 
 /* location */

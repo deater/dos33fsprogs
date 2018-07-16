@@ -5,7 +5,7 @@ extern unsigned char mp,max_mp;
 extern unsigned char limit;
 extern unsigned char money,experience;
 extern unsigned char time_hours,time_minutes;
-extern unsigned char items1,items2;
+extern unsigned char items1,items2,items3;
 extern unsigned char steps;
 
 

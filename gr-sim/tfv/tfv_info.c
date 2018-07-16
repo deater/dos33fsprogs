@@ -45,31 +45,37 @@ MONEY   = 0...255
 MAX_HP  = 32+EXPERIENCE (maxing at 255)
 */
 
-char item_names[2][8][15]={
+char item_names[3][8][15]={
 	{
-	"CUPCAKE",		// cafeteria lady
-	"CARROT",		// capabara
-	"SMARTPASS",		// metro worker
-	"ELF RUNES",		// mree
-	"LIZBETH STAR",		// Lizbeth
-	"KARTE SPIEL",		// Frau
-	"GLAMDRING",		// Gus
-	"VEGEMITE",		// Nicole
+	"CUPCAKE",
+	"CARROT",
+	"SMARTPASS",
+	"ELF RUNES",
+	"LIZBETH STAR",
+	"KARTE SPIEL",
+	"GLAMDRING",
+	"VEGEMITE",
 	},
 	{
-	"BLUE LED",		// bird
-	"RED LED",		//
-	"1K RESISTOR",		// brown black red, Elaine
-	"4.7K RESISTOR",	// yellow purple red, Tater
-	"9V BATTERY",		// Cindy
-	"1.5V BATTERY",		// Oscar
-	"LINUX CD",		// john
-	"ARMY KNIFE",		// Steve
+	"BLUE LED",
+	"RED LED",
+	"1K RESISTOR",
+	"4.7K RESISTOR",
+	"9V BATTERY",
+	"1.5V BATTERY",
+	"LINUX CD",
+	"ARMY KNIFE",
+	},
+	{
+	"CHEX MIX",
+	"CLASS RING",
+	"VORTEX CANNON",
 	}
 };
 
 void print_info(void) {
 	int i;
+	int current_y;
 
 	text();
 	home();
@@ -103,14 +109,31 @@ void print_info(void) {
 	basic_print("STATS");
 
 
+	current_y=6;
+
 	for(i=0;i<8;i++) {
 		basic_htab(4);
-		basic_vtab(6+i);
-		if (items1&(1<<i)) basic_print(item_names[0][i]);
-
+		basic_vtab(current_y);
+		if (items1&(1<<i)) {
+			basic_print(item_names[0][i]);
+			current_y++;
+		}
+	}
+	for(i=0;i<8;i++) {
 		basic_htab(4);
-		basic_vtab(14+i);
-		if (items2&(1<<i)) basic_print(item_names[1][i]);
+		basic_vtab(current_y);
+		if (items2&(1<<i)) {
+			basic_print(item_names[1][i]);
+			current_y++;
+		}
+	}
+	for(i=0;i<8;i++) {
+		basic_htab(4);
+		basic_vtab(current_y);
+		if (items3&(1<<i)) {
+			basic_print(item_names[2][i]);
+			current_y++;
+		}
 	}
 
 	basic_htab(23);
@@ -156,4 +179,3 @@ void print_info(void) {
 	home();
 	gr();
 }
-
