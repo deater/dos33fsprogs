@@ -5,6 +5,7 @@
 #define ACTION_BIRD	4
 #define ACTION_SMARTPASS	5
 #define ACTION_RESTORE	6
+#define ACTION_DONE	7
 
 #define DIALOG_LIZ_WILL		0
 #define DIALOG_PETE		1

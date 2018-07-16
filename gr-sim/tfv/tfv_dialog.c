@@ -18,6 +18,7 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[3].action=ACTION_TIME,
 		.statement[3].next=0,
 		.statement[4].words="Maybe next time.",
+		.statement[4].action=ACTION_DONE,
 		.statement[4].next=0,
 	},
 	[DIALOG_PETE] = {
@@ -43,9 +44,15 @@ struct dialog_type dialog[MAX_DIALOG]={
 		.statement[0].words="In Talbot 0101C",
 		.statement[0].next=1,
 		.statement[1].words="There lived a big giant bee",
-		.statement[1].next=1,
-		.statement[1].action=ACTION_ITEM,
-		.statement[1].item=ITEM_5K_RESISTOR,
+		.statement[1].next=2,
+		.statement[2].words="Don't open the door,",
+		.statement[2].next=3,
+		.statement[3].words="Because there before",
+		.statement[3].next=4,
+		.statement[4].words="Will be a big giant bee",
+		.statement[4].next=0,
+		.statement[4].action=ACTION_ITEM,
+		.statement[4].item=ITEM_5K_RESISTOR,
 	},
 	// Dining Hall
 	[DIALOG_OSCAR]= {

@@ -217,6 +217,22 @@ int world_map(void) {
 				conversation_started=1;
 				conversation_person=special_destination;
 
+				/* HACK */
+				conversation_count=dialog[conversation_person].count;
+				if (dialog[conversation_person].statement[conversation_count].action==ACTION_DONE) {
+					conversation_started=0;
+					dialog[conversation_person].count=-1;
+					goto skip_all_this;
+				}
+
+				if (dialog[conversation_person].statement[conversation_count].action==ACTION_TIME) {
+					conversation_started=0;
+					dialog[conversation_person].count=-1;
+					if (time_hours<95) time_hours+=4;
+					goto skip_all_this;
+				}
+
+
 				if (dialog[conversation_person].count==-1) {
 					dialog[conversation_person].count=0;
 				}
@@ -225,6 +241,12 @@ int world_map(void) {
 					dialog[conversation_person].statement[dialog[conversation_person].count].next;
 				}
 				conversation_count=dialog[conversation_person].count;
+
+
+
+
+
+
 				if (dialog[conversation_person].statement[conversation_count].action==ACTION_ITEM) {
 					item_received=dialog[conversation_person].statement[conversation_count].item;
 					if (item_received<8) {
@@ -256,6 +278,7 @@ int world_map(void) {
 				entry=1;
 				refresh=1;
 			}
+skip_all_this: ;
 		}
 
 		if (ch=='h') {
