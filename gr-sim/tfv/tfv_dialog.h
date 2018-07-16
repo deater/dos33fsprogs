@@ -1,7 +1,10 @@
 #define ACTION_NONE	0
 #define ACTION_ITEM	1
 #define ACTION_TIME	2
-
+#define ACTION_QUERY	3
+#define ACTION_BIRD	4
+#define ACTION_SMARTPASS	5
+#define ACTION_RESTORE	6
 
 #define DIALOG_LIZ_WILL		0
 #define DIALOG_PETE		1

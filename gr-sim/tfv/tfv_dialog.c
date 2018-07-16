@@ -8,13 +8,17 @@ struct dialog_type dialog[MAX_DIALOG]={
 	// Talbot Hall
 	[DIALOG_LIZ_WILL] = {
 		.statement[0].words="Let\'s discuss cool things in the lounge.",
-		.statement[0].next=0,
+		.statement[0].next=1,
+		.statement[0].action=ACTION_QUERY,
 		.statement[1].words="YES!",
-		.statement[1].next=0,
+		.statement[1].next=3,
 		.statement[2].words="Sorry, need to do engineering homework.",
-		.statement[2].next=0,
-		/* FOUR HOURS PASS */
-		.statement[2].action=ACTION_TIME,
+		.statement[2].next=4,
+		.statement[3].words="Four hours pass...",
+		.statement[3].action=ACTION_TIME,
+		.statement[3].next=0,
+		.statement[4].words="Maybe next time.",
+		.statement[4].next=0,
 	},
 	[DIALOG_PETE] = {
 		.statement[0].words="Your journey takes you toward Bel Air.",
@@ -88,8 +92,16 @@ struct dialog_type dialog[MAX_DIALOG]={
 	[DIALOG_METRO_WORKER]= {
 		.statement[0].words="Would you like to buy at SmartPass?",
 		.statement[0].next=1,
-		.statement[1].words="Sorry, all trains cancelled.  SmartTrip.",
-		.statement[1].next=0,
+		.statement[0].action=ACTION_QUERY,
+		.statement[1].words="YES",
+		.statement[1].next=3,
+		.statement[2].words="NO",
+		.statement[2].next=4,
+		.statement[3].words="That will be $5",
+		.statement[3].action=ACTION_SMARTPASS,
+		.statement[3].next=4,
+		.statement[4].words="Sorry, all trains cancelled. SmartTrip",
+		.statement[4].next=4,
 	},
 	[DIALOG_TINY_CAPABARA]= {
 		.statement[0].words="GRONK",
@@ -100,20 +112,35 @@ struct dialog_type dialog[MAX_DIALOG]={
 	[DIALOG_GIANT_GUINEA_PIG]= {
 		.statement[0].words="SQUEAK?",
 		.statement[0].next=0,
-//		-> YES
-//		-> NO
 	},
 	[DIALOG_LARGE_BIRD]= {
 		.statement[0].words="WARK?",
 		.statement[0].next=0,
-//		-> YES
-//		-> NO
+		.statement[0].action=ACTION_QUERY,
+		.statement[1].words="YES",
+		.statement[1].next=3,
+		.statement[2].words="NO",
+		.statement[2].next=4,
+		.statement[3].words="WARK!",
+		.statement[3].action=ACTION_BIRD,
+		.statement[3].next=0,
+		.statement[4].words="Poot-tee-tweet",
+		.statement[4].next=0,
 	},
 	// FOUNTAIN
 	[DIALOG_MERMAID]= {
 		.statement[0].words="Did ye put bubbles in yon fountain?",
 		.statement[0].next=0,
-		// restore heatlh?
+		.statement[0].action=ACTION_QUERY,
+		.statement[1].words="YES",
+		.statement[1].next=3,
+		.statement[2].words="NO",
+		.statement[2].next=4,
+		.statement[3].words="Begone, wastrel!",
+		.statement[3].next=0,
+		.statement[4].words="Must have been those band knaves.",
+		.statement[4].next=0,
+		.statement[4].action=ACTION_RESTORE,
 	},
 	// BEL AIR
 	[DIALOG_CMW]= {
