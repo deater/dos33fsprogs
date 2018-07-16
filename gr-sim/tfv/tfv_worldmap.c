@@ -148,7 +148,7 @@ int world_map(void) {
 	int conversation_started=0;
 	int conversation_person=0;
 	int conversation_count=0;
-	int item_received=-1,health_restored=0;
+	int item_received=-1,health_restored=0,buy_smartpass=0;
 	int in_query=0;
 
 	/************************************************/
@@ -237,7 +237,7 @@ int world_map(void) {
 					conversation_started=0;
 					dialog[conversation_person].count=-1;
 					map_location=COLLEGE_PARK;
-					tfv_x=35;
+					tfv_x=32;
 					tfv_y=5;
 					refresh=1;
 					goto skip_all_this;
@@ -253,6 +253,7 @@ int world_map(void) {
 					goto skip_all_this;
 				}
 
+				/* Move to next conversation */
 				if (dialog[conversation_person].count==-1) {
 					dialog[conversation_person].count=0;
 				}
@@ -263,7 +264,7 @@ int world_map(void) {
 				conversation_count=dialog[conversation_person].count;
 
 
-
+				/* Check for items */
 				if (dialog[conversation_person].statement[conversation_count].action==ACTION_ITEM) {
 
 					item_received=dialog[conversation_person].statement[conversation_count].item;
@@ -272,12 +273,20 @@ int world_map(void) {
 					/* Action Smartpass */
 					/* FIXME: make generic item buy? */
 					if (item_received==ITEM_SMARTPASS) {
-						printf("Trying to get smartpass!\n");
-						if (money<5) {
-							goto no_smartpass;
+						if (buy_smartpass) {
+
+							printf("Trying to get smartpass!\n");
+							if (money<5) {
+								item_received=-1;
+								goto no_smartpass;
+							}
+							else {
+								money-=5;
+							}
 						}
 						else {
-							money-=5;
+							item_received=-1;
+							goto no_smartpass;
 						}
 					}
 
@@ -728,12 +737,18 @@ done_entry:
 			ram[DRAW_PAGE]=saved_draw;
 			in_query=0;
 
+			/* Handle health restore */
 			conversation_count=dialog[conversation_person].count;
 			if (dialog[conversation_person].statement[conversation_count].action==ACTION_RESTORE) {
 				printf("RESTORE RESTORE RESTORE!\n");
 				hp=max_hp;
 				mp=max_mp;
 				health_restored=1;
+			}
+
+			if (dialog[conversation_person].statement[conversation_count].action==ACTION_SMARTPASS) {
+				printf("Attempt to buy!\n");
+				buy_smartpass=1;
 			}
 
 			dialog[conversation_person].count=
