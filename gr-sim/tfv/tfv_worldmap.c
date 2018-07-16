@@ -149,6 +149,7 @@ int world_map(void) {
 	int conversation_person=0;
 	int conversation_count=0;
 	int item_received=-1;
+	int in_query=0;
 
 	/************************************************/
 	/* Landed					*/
@@ -240,7 +241,9 @@ int world_map(void) {
 				else {
 					item_received=-1;
 				}
-
+				if (dialog[conversation_person].statement[conversation_count].action==ACTION_QUERY) {
+					in_query=1;
+				}
 			}
 			else if (destination_type==LOCATION_SPACESHIP) {
 				return LOCATION_SPACESHIP;
@@ -605,6 +608,58 @@ done_entry:
 		}
 
 		page_flip();
+
+		/* Take over keyboard if in query */
+		if (in_query) {
+			int saved_draw;
+			int which_line=0;
+
+			saved_draw=ram[DRAW_PAGE];
+
+			ram[DRAW_PAGE]=ram[DISP_PAGE];
+
+			ram[CH]=5;
+			ram[CV]=22;
+			move_and_print(
+				dialog[conversation_person].statement[dialog[conversation_person].count+1].words);
+			ram[CH]=5;
+			ram[CV]=23;
+			move_and_print(
+				dialog[conversation_person].statement[dialog[conversation_person].count+2].words);
+
+			while(1) {
+				if (which_line==0) {
+					ram[CH]=0;
+					ram[CV]=22;
+					move_and_print("--> ");
+					ram[CH]=0;
+					ram[CV]=23;
+					move_and_print("    ");
+				}
+				else {
+					ram[CH]=0;
+					ram[CV]=22;
+					move_and_print("    ");
+					ram[CH]=0;
+					ram[CV]=23;
+					move_and_print("--> ");
+				}
+				grsim_update();
+//				printf("Waiting\n");
+				ch=grsim_input();
+//				printf("OOGAH %d\n",ch);
+				if ((ch==APPLE_UP) || (ch==APPLE_DOWN)) {
+					which_line=!which_line;
+				}
+				if (ch==13) break;
+				usleep(100000);
+			}
+			dialog[conversation_person].count=
+				dialog[conversation_person].statement[dialog[conversation_person].count+1+which_line].next;
+			ram[DRAW_PAGE]=saved_draw;
+			in_query=0;
+		}
+
 
 		if (steps>=60) {
 			steps=0;
