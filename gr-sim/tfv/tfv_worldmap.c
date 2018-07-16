@@ -17,6 +17,7 @@
 
 #include "tfv_mapinfo.h"
 
+// debug
 static int random_encounters=1;
 
 unsigned char map_location=LANDING_SITE;
@@ -139,7 +140,7 @@ int world_map(void) {
 	int i,tree_limit;
 	int newx=0,newy=0,moved;
 	int special_destination=NOEXIT,destination_type=LOCATION_PLACE;
-	int next_encounter=20;
+	int next_encounter=32;
 	int odd=0;
 	int refresh=1;
 	int entry=0;
@@ -251,7 +252,7 @@ int world_map(void) {
 			if (next_encounter==0) {
 				do_battle(map_info[map_location].ground_color);
 				refresh=1;
-				next_encounter=20+(random_8()%32);
+				next_encounter=32+(random_8()%32);
 			}
 		}
 
