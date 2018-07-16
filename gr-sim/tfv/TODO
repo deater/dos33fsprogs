@@ -2,7 +2,6 @@ Known bugs:
 + When moving to new screen can get stuck or else wrap at weird offset
 + Weird glitch at top of screen when printing damage during battle
 + No sound/music on Linux version
-+ Game starts with all items
 + It is not possible to trigger the final battle
 + Cannot save game
 
@@ -16,6 +15,12 @@ Soon:
 --> green background on anti-damage printing
 --> pick up vortex cannon from someone
 --> Balance the battles
+--> Do something with experience/leveling up
+
++ Worldmap
+--> Make location inverse text to offset it from dialog?
+--> Make actions inverse to highlight
+--> Start with 0 money
 
 + Game over screen
 --> Pause 2 seconds

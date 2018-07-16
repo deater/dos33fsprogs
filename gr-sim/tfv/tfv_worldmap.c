@@ -148,7 +148,7 @@ int world_map(void) {
 	int conversation_started=0;
 	int conversation_person=0;
 	int conversation_count=0;
-	int item_received=-1;
+	int item_received=-1,health_restored=0;
 	int in_query=0;
 
 	/************************************************/
@@ -213,11 +213,16 @@ int world_map(void) {
 		if (moved) conversation_started=0;
 
 		if (ch==13) {
+
+			health_restored=0;
+
 			if (destination_type==LOCATION_CONVERSATION) {
 				conversation_started=1;
 				conversation_person=special_destination;
 
 				/* HACK */
+
+				/* Action Done */
 				conversation_count=dialog[conversation_person].count;
 				if (dialog[conversation_person].statement[conversation_count].action==ACTION_DONE) {
 					conversation_started=0;
@@ -225,13 +230,28 @@ int world_map(void) {
 					goto skip_all_this;
 				}
 
+				/* Get on Large Bird */
+				if (dialog[conversation_person].statement[conversation_count].action==ACTION_BIRD) {
+					printf("BIRD BIRD BIRD BIRD!\n");
+					on_bird=1;
+					conversation_started=0;
+					dialog[conversation_person].count=-1;
+					map_location=COLLEGE_PARK;
+					tfv_x=35;
+					tfv_y=5;
+					refresh=1;
+					goto skip_all_this;
+				}
+
+
+
+				/* Action Time */
 				if (dialog[conversation_person].statement[conversation_count].action==ACTION_TIME) {
 					conversation_started=0;
 					dialog[conversation_person].count=-1;
 					if (time_hours<95) time_hours+=4;
 					goto skip_all_this;
 				}
-
 
 				if (dialog[conversation_person].count==-1) {
 					dialog[conversation_person].count=0;
@@ -244,11 +264,24 @@ int world_map(void) {
 
 
 
-
-
-
 				if (dialog[conversation_person].statement[conversation_count].action==ACTION_ITEM) {
+
 					item_received=dialog[conversation_person].statement[conversation_count].item;
+					printf("ACTION ITEM %d\n",item_received);
+
+					/* Action Smartpass */
+					/* FIXME: make generic item buy? */
+					if (item_received==ITEM_SMARTPASS) {
+						printf("Trying to get smartpass!\n");
+						if (money<5) {
+							goto no_smartpass;
+						}
+						else {
+							money-=5;
+						}
+					}
+
+
 					if (item_received<8) {
 						items1|=(1<<item_received);
 					}
@@ -259,6 +292,7 @@ int world_map(void) {
 						items3|=(1<<(item_received&0x7));
 					}
 					dialog[conversation_person].statement[conversation_count].action=ACTION_NONE;
+no_smartpass:;
 				}
 				else {
 					item_received=-1;
@@ -628,6 +662,12 @@ done_entry:
 				move_and_print(item_name);
 			}
 
+			if (health_restored) {
+				ram[CH]=10;
+				ram[CV]=23;
+				move_and_print("HEALTH/MP RESTORED");
+			}
+
 		}
 
 		page_flip();
@@ -639,12 +679,17 @@ done_entry:
 
 			saved_draw=ram[DRAW_PAGE];
 
-			ram[DRAW_PAGE]=ram[DISP_PAGE];
+			ram[DRAW_PAGE]=ram[DISP_PAGE]*4;
 
 			ram[CH]=5;
 			ram[CV]=22;
 			move_and_print(
 				dialog[conversation_person].statement[dialog[conversation_person].count+1].words);
+
+			printf("Printing %s at %d,%d page %d\n",
+				dialog[conversation_person].statement[dialog[conversation_person].count+1].words,
+				ram[CH],ram[CV],ram[DRAW_PAGE]);
+
 			ram[CH]=5;
 			ram[CV]=23;
 			move_and_print(
@@ -678,9 +723,23 @@ done_entry:
 				usleep(100000);
 			}
 			dialog[conversation_person].count=
-				dialog[conversation_person].statement[dialog[conversation_person].count+1+which_line].next;
+				dialog[conversation_person].count+1+which_line;
+//				dialog[conversation_person].statement[dialog[conversation_person].count]+1+which_line;
 			ram[DRAW_PAGE]=saved_draw;
 			in_query=0;
+
+			conversation_count=dialog[conversation_person].count;
+			if (dialog[conversation_person].statement[conversation_count].action==ACTION_RESTORE) {
+				printf("RESTORE RESTORE RESTORE!\n");
+				hp=max_hp;
+				mp=max_mp;
+				health_restored=1;
+			}
+
+			dialog[conversation_person].count=
+				dialog[conversation_person].statement[dialog[conversation_person].count].next;
+
+
 		}
 
 

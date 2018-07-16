@@ -441,14 +441,14 @@ struct map_info_type map_info[34] = {
 		.location[1] = {
 			.name="Large Bird",
 			.x0 = 26,  .x1 = 33,
-			.y0 = 16,  .y1 = 20,
+			.y0 = 16,  .y1 = 22,
 			.destination=DIALOG_LARGE_BIRD,
 			.type=LOCATION_CONVERSATION,
 		},
 		.location[2] = {
 			.name="Giant Guinea Pig",
 			.x0 = 28, .x1 = 33,
-			.y0 = 22, .y1 = 30,
+			.y0 = 24, .y1 = 30,
 			.destination=DIALOG_GIANT_GUINEA_PIG,
 			.type=LOCATION_CONVERSATION,
 		},

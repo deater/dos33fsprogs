@@ -11,10 +11,10 @@
 
 /* stats */
 unsigned char level=0;
-unsigned char hp=100,max_hp=100;
-unsigned char mp=50,max_mp=50;
+unsigned char hp=95,max_hp=100;
+unsigned char mp=45,max_mp=50;
 unsigned char limit=1;
-unsigned char money=0,experience=0;
+unsigned char money=10,experience=0;
 unsigned char time_hours=0,time_minutes=0;
 //unsigned char items1=0xff,items2=0xff,items3=0x07;
 unsigned char items1=0,items2=0,items3=0;
