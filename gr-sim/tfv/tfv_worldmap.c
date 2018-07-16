@@ -17,7 +17,7 @@
 
 #include "tfv_mapinfo.h"
 
-
+static int random_encounters=1;
 
 unsigned char map_location=LANDING_SITE;
 
@@ -139,6 +139,13 @@ int world_map(void) {
 	int i,tree_limit;
 	int newx=0,newy=0,moved;
 	int special_destination=NOEXIT,destination_type=LOCATION_PLACE;
+	int next_encounter=20;
+	int odd=0;
+	int refresh=1;
+	int entry=0;
+	int on_bird=0;
+	int conversation_started=0;
+	int conversation_person=0;
 
 	/************************************************/
 	/* Landed					*/
@@ -149,12 +156,7 @@ int world_map(void) {
 	color_equals(COLOR_BLACK);
 
 	direction=1;
-	int odd=0;
-	int refresh=1;
-	int entry=0;
-	int on_bird=0;
-	int conversation_started=0;
-	int conversation_person=0;
+
 
 	while(1) {
 		moved=0;
@@ -191,6 +193,9 @@ int world_map(void) {
 			}
 		}
 		if ((ch=='d') || (ch==APPLE_RIGHT)) {
+			/* Update random seed */
+			random_8();
+
 			if (direction<0) {
 				direction=1;
 				odd=0;
@@ -241,6 +246,14 @@ int world_map(void) {
 			refresh=1;
 		}
 
+		if (moved) {
+			if (random_encounters) next_encounter--;
+			if (next_encounter==0) {
+				do_battle(map_info[map_location].ground_color);
+				refresh=1;
+				next_encounter=20+(random_8()%32);
+			}
+		}
 
 		/* debugging routines */
 		if (ch=='b') {

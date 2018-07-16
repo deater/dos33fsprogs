@@ -1,8 +1,15 @@
+Known bugs:
++ When moving to new screen can get stuck or else wrap at weird offset
++ Weird glitch at top of screen when printing damage during battle
++ No sound/music on Linux version
++ Game starts with all items
++ It is not possible to trigger the final battle
++ Cannot save game
+
 Soon:
 
 + Battle Sequence
 --> Die if HP hits 0.  On ground sprite
---> Fix weird glitch on damage printing
 --> Sound effects
 --> enemy uses magic
 --> Enemy more likely to spawn on appropriate territory
