@@ -35,3 +35,5 @@ int world_map(void);
 int city_map(void);
 
 int credits(void);
+
+int random_8(void);

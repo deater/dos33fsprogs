@@ -106,6 +106,9 @@ tfv_map.o:	tfv_map.c
 tfv_opener.o:	tfv_opener.c ../tfv_utils.h
 	$(CC) $(CFLAGS) -c tfv_opener.c
 
+tfv_random.o:	tfv_random.c
+	$(CC) $(CFLAGS) -c tfv_random.c
+
 tfv_sprites.o:	tfv_sprites.c tfv_sprites.c
 	$(CC) $(CFLAGS) -c tfv_sprites.c
 
@@ -132,14 +135,14 @@ tfv.o:	tfv.c ../gr-sim.h tfv_backgrounds.h tfv_sprites.h
 tfv:	tfv.o tfv_backgrounds.o tfv_battle.o tfv_credits.o tfv_dialog.o \
 		tfv_ending.o tfv_flying.o \
 		tfv_game_over.o tfv_help.o tfv_info.o tfv_map.o \
-		tfv_opener.o tfv_sprites.o tfv_textentry.o \
+		tfv_opener.o tfv_random.o tfv_sprites.o tfv_textentry.o \
 		tfv_title.o tfv_worldmap.o tfv_mapinfo.h \
 		$(GR_SIM)
 	$(CC) $(LFLAGS) $(SDL_LIBS) -o tfv tfv.o \
 		tfv_backgrounds.o tfv_battle.o tfv_credits.o tfv_dialog.o \
 		tfv_ending.o tfv_flying.o \
 		tfv_game_over.o tfv_help.o tfv_info.o tfv_map.o \
-		tfv_opener.o tfv_sprites.o tfv_textentry.o \
+		tfv_opener.o tfv_random.o  tfv_sprites.o tfv_textentry.o \
 		tfv_title.o tfv_worldmap.o \
 		$(GR_SIM)
 

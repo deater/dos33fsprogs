@@ -10,7 +10,7 @@
 
 static char *title_menu[]={
 	"NEW GAME",
-	"LOAD GAME",
+	"LOAD GAME (DOES NOT WORK)",
 	"CREDITS",
 };
 
