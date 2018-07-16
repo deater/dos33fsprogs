@@ -1,0 +1,19 @@
+40COL
+%c%Applesoft Games
+
+* Got inspired by playing some games.
+  Can I do this on the Apple II?
+
+* Kerbal Space Program
+  Surprisingly easy (for 2D)
+  ATAN bug in tokenizer
+
+* Portal (the Valve one)
+  15-minutes of internet fame
+  Also surprisingly easy physics.
+  Was disappointed in music quality
+  of credits.  Started AY-3-8910
+
+* Also did a Uthernet webserver in
+  BASIC.  Worked well, but memory
+  copy slow if not done in 6502

@@ -1,0 +1,15 @@
+40COL
+%c%Tom Bombem
+
+* Around 2002 or so, ported my DOS
+  Tom Bombem game to 6502 assembly
+  (tb_6502)
+
+* Part of a 1k game challenge.
+  Did not get full version in 1k.
+  Atari 2600 said graphcis "blocky"
+
+* Started my dos33fsutils.
+  Linux dos33 filesystem driver
+  Command line tool for dos33 images
+  BASIC tokenizer

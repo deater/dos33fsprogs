@@ -36,5 +36,6 @@ demo.bas:		$(ASOFT_PRESENTER) info
 	$(ASOFT_PRESENTER) . > demo.bas
 
 clean:	
-	rm -f *~ *.IMG *.HGR demo.bas KANSASFEST_2018 LOAD_DEMO KATAHDINC.BIN
+	rm -f *~ *.IMG *.HGR demo.bas KANSASFEST_2018 LOAD_DEMO \
+		VINCEC.BIN KATAHDINC.BIN
 
