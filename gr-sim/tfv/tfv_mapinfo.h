@@ -653,7 +653,7 @@ struct map_info_type map_info[34] = {
 		.location[0] = {
 			.name="Door Lock",
 			.x0 = 15, .x1 = 30,
-			.y0 = 28,  .y1 = 36,
+			.y0 = 28,  .y1 = 38,
 			.type = LOCATION_PUZZLE,
 		},
 

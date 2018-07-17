@@ -8,20 +8,26 @@ Known bugs:
 Soon:
 
 + Battle Sequence
---> Die if HP hits 0.  On ground sprite
 --> Sound effects
 --> enemy uses magic
 --> Enemy more likely to spawn on appropriate territory
 --> green background on anti-damage printing
---> pick up vortex cannon from someone
+--> Disable vortex cannon until you get it from Ken
 --> Balance the battles
 --> Do something with experience/leveling up
+
++ Ending:
+--> Boss battle w susie
+--> Puzzle.  Warn if not have all parts
+--> Erase door once solve puzzle
+--> Light goes on when solve puzzle?  Draw LED light going to sensor
 
 + Worldmap
 --> Make location inverse text to offset it from dialog?
 --> Make actions inverse to highlight
 --> Start with 0 money
 --> Face proper way when entering/leaving certain places (fountain?)
+--> Play with female hero
 
 + Game over screen
 --> Pause 2 seconds
@@ -30,9 +36,8 @@ Soon:
 + Enable getting back on spaceship (with better animation)
 + Better collision detection on Spaceship land
 + Better collision detection/walk on+off in College Park
-+ Working conversation
 + Riding animals
-+ End sequence
+
 
 + Make transparent color grey2 rather than black
 

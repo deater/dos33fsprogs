@@ -17,23 +17,110 @@
 
 int do_ending(void) {
 
-	int i;
+	int i,ch;
 	int saved_drawpage;
 
-	boss_battle();
+
+	/*********************************/
+	/* Do the puzzle		 */
+	/*********************************/
+	grsim_unrle(puzzle_rle,0xc00);
+	gr_copy_to_current(0xc00);
 
 	saved_drawpage=ram[DRAW_PAGE];
-
-	grsim_unrle(harfco_rle,0xc00);
-
 	ram[DRAW_PAGE]=PAGE0;
 	clear_bottom();
 	ram[DRAW_PAGE]=PAGE1;
 	clear_bottom();
-
 	ram[DRAW_PAGE]=saved_drawpage;
 
+	ram[CH]=0;
+	ram[CV]=20;
+	move_and_print("TO UNLOCK THE DOOR THE LED MUST HAVE:");
+	ram[CH]=0;
+	ram[CV]=21;
+	move_and_print("* 660 NANOMETER LIGHT");
+	ram[CH]=0;
+	ram[CV]=22;
+	move_and_print("* 9 MILIAMPS OF CURRENT");
+
+	page_flip();
+
+	while(1) {
+		ch=grsim_input();
+		if (ch!=0) break;
+	}
+
+	/*********************************/
+	/* Animate the boss arrival	 */
+	/*********************************/
+
+
+	saved_drawpage=ram[DRAW_PAGE];
+	ram[DRAW_PAGE]=PAGE0;
+	clear_bottom();
+	ram[DRAW_PAGE]=PAGE1;
+	clear_bottom();
+	ram[DRAW_PAGE]=saved_drawpage;
+
+	grsim_unrle(jc_office_rle,0xc00);
+
+	for(i=0;i<20;i++) {
+
+		gr_copy_to_current(0xc00);
+
+		grsim_put_sprite(roboknee1,2,i);
+
+		grsim_put_sprite(tfv_stand_left,12,24);
+
+		ram[CH]=0;
+		ram[CV]=20;
+		move_and_print("NOT SO FAST");
+
+		page_flip();
+		usleep(100000);
+	}
+
+
+	ram[CH]=0;
+	ram[CV]=21;
+	move_and_print(" SINCE WE HAVE NO ELECTRICITY");
+	ram[CH]=0;
+	ram[CV]=22;
+	move_and_print(" WE HAVE NO LIGHTS");
+
+	page_flip();
+
+	while(1) {
+		ch=grsim_input();
+		if (ch!=0) break;
+	}
+
+
+	/*********************************/
+	/* Do the boss battle		 */
+	/*********************************/
+
+	boss_battle();
+
+
+	/*********************************/
+	/* Draw the sky beam		 */
+	/*********************************/
+
+
+
+	grsim_unrle(harfco_rle,0xc00);
 	gr_copy_to_current(0xc00);
+
+	saved_drawpage=ram[DRAW_PAGE];
+	ram[DRAW_PAGE]=PAGE0;
+	clear_bottom();
+	ram[DRAW_PAGE]=PAGE1;
+	clear_bottom();
+	ram[DRAW_PAGE]=saved_drawpage;
+
+
 	page_flip();
 
 	for(i=0;i<10;i++) {
@@ -68,6 +155,13 @@ int do_ending(void) {
 	page_flip();
 
 	usleep(3400000);
+
+	/* clear keyboard buffer */
+	while(grsim_input()!=0) ;
+
+	/*********************************/
+	/* Run the credits		 */
+	/*********************************/
 
 	credits();
 

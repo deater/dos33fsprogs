@@ -43,6 +43,10 @@ extern unsigned char procrastinon[];
 extern unsigned char ice_fish[];
 extern unsigned char evil_penguin[];
 
+/* boss */
+extern unsigned char roboknee1[];
+extern unsigned char roboknee2[];
+
 /* summons */
 extern unsigned char metrocat[];
 extern unsigned char vortex_cannon[];
