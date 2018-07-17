@@ -313,6 +313,9 @@ no_smartpass:;
 			else if (destination_type==LOCATION_SPACESHIP) {
 				return LOCATION_SPACESHIP;
 			}
+			else if (destination_type==LOCATION_PUZZLE) {
+				do_ending();
+			}
 			else if (special_destination!=NOEXIT) {
 				map_info[map_location].saved_x=tfv_x;
 				map_info[map_location].saved_y=tfv_y;

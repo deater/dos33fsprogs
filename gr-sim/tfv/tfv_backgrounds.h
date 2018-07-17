@@ -20,3 +20,4 @@ extern unsigned char homeroom_rle[];
 extern unsigned char ap_calculus_rle[];
 extern unsigned char patriot_room_rle[];
 extern unsigned char jc_office_rle[];
+extern unsigned char puzzle_rle[];

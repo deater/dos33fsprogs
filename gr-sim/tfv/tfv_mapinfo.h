@@ -649,6 +649,14 @@ struct map_info_type map_info[34] = {
 		.scatter=SCATTER_NONE,
 		.entry_type=ENTRY_CENTER, .entry_x=0, .entry_y=0,
 		.background_image=jc_office_rle,
+		.num_locations=1,
+		.location[0] = {
+			.name="Door Lock",
+			.x0 = 15, .x1 = 30,
+			.y0 = 28,  .y1 = 36,
+			.type = LOCATION_PUZZLE,
+		},
+
 	},
 	[VIDEO_HOMEROOM]={	// 27: VIDEO_HOMEROOM
 		.name="Video Homeroom",

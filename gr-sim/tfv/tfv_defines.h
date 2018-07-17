@@ -48,6 +48,7 @@
 #define LOCATION_PLACE		0
 #define LOCATION_CONVERSATION	1
 #define LOCATION_SPACESHIP	2
+#define LOCATION_PUZZLE		3
 
 struct location_type {
 	char *name;

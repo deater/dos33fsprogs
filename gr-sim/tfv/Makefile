@@ -46,7 +46,8 @@ tfv_backgrounds.c:	$(PNG2RLE) \
 			$(ARTDIR)/homeroom.png \
 			$(ARTDIR)/ap_calculus.png \
 			$(ARTDIR)/patriot_room.png \
-			$(ARTDIR)/jc_office.png
+			$(ARTDIR)/jc_office.png \
+			$(ARTDIR)/puzzle.png
 	$(PNG2RLE) c $(ARTDIR)/title.png title_rle > tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/map.png map_rle >> tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/landing.png landing_rle >> tfv_backgrounds.c
@@ -69,6 +70,7 @@ tfv_backgrounds.c:	$(PNG2RLE) \
 	$(PNG2RLE) c $(ARTDIR)/ap_calculus.png ap_calculus_rle >> tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/patriot_room.png patriot_room_rle >> tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/jc_office.png jc_office_rle >> tfv_backgrounds.c
+	$(PNG2RLE) c $(ARTDIR)/puzzle.png puzzle_rle >> tfv_backgrounds.c
 
 
 ####
