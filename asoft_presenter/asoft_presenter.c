@@ -439,13 +439,16 @@ static void generate_slide(int num, int max, char*filename) {
 				}
 				break;
 			}
+
 			string[strlen(string)-1]='\0';
 			printf("%d PRINT CHR$(4);\"BLOAD %s,A$800\"\n",
 				line_num,string);
 								line_num++;
+
 			// C055, switch to page2
 			printf("%d POKE 49237,1\n",
 				line_num);			line_num++;
+
 
 			/* print rest of stuff */
 			printf("%d VTAB 21\n",line_num);	line_num++;
@@ -458,13 +461,12 @@ static void generate_slide(int num, int max, char*filename) {
 		}
 		else if (strstr(type,"40COL")) {
 
-			printf("%d TEXT:HOME:VTAB 1\n",line_num);
+			printf("%d TEXT:VTAB 1\n",line_num);
 								line_num++;
 			print_til_eof(fff,&line_num);
 		}
 		else if (strstr(type,"NOCHANGE")) {
-
-			printf("%d HOME:VTAB 21\n",line_num);	line_num++;
+			printf("%d VTAB 21\n",line_num);	line_num++;
 			print_til_eof(fff,&line_num);
 		}
 
@@ -473,6 +475,10 @@ static void generate_slide(int num, int max, char*filename) {
 
 	/* wait for keypress and move to next slide */
 	printf("%d GOSUB 9000\n",line_num);			line_num++;
+
+	if (!strcmp(type,"GR")) printf("%d TEXT\n",line_num);
+								line_num++;
+
 	printf("%d ON N%% GOTO %d,%d,%d\n",
 		line_num,
 		/* previous */
