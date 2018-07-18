@@ -945,7 +945,7 @@ int flying(void) {
 
 	ram[ANGLE]=1;		/* 1 so you can see island */
 
-	ram[DRAW_SKY]=2;
+	ram[DRAW_SKY]=3;
 
 	ram[SPACEZ_I]=4;
 	ram[SPACEZ_F]=0x80;	/* Z=4.5 */
