@@ -68,6 +68,9 @@ title_loop:
 play_game:
 	nameo[0]=0;
 
+	/* Get player */
+	player_select();
+
 	/* Get Name */
 	name_screen();
 	if (nameo[0]==0) {
