@@ -9,12 +9,14 @@ all:	kfest2018_slides.dsk
 
 kfest2018_slides.dsk:	KANSASFEST_2018 \
 	TITLE.HGR KATAHDINC.BIN VINCEC.BIN PI_PLAYERC.BIN \
+	CHIPTUNE.GR \
 	LOAD_DEMO
 	$(DOS33) -y kfest2018_slides.dsk SAVE A KANSASFEST_2018
 	$(DOS33) -y kfest2018_slides.dsk SAVE B TITLE.HGR
 	$(DOS33) -y kfest2018_slides.dsk BSAVE -a 0x2000 KATAHDINC.BIN
 	$(DOS33) -y kfest2018_slides.dsk BSAVE -a 0x2000 VINCEC.BIN
 	$(DOS33) -y kfest2018_slides.dsk BSAVE -a 0x2000 PI_PLAYERC.BIN
+	$(DOS33) -y kfest2018_slides.dsk BSAVE -a 0x800 CHIPTUNE.GR
 	$(DOS33) -y kfest2018_slides.dsk SAVE A LOAD_DEMO
 
 LOAD_DEMO:		load_demo.bas

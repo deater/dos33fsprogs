@@ -1,19 +1,6 @@
-40COL
+GR
+CHIPTUNE.GR
 %c%VMW Chiptune Player
-
 * Finally got a Mockingboard card
-
 * Fit 30+ mins of chiptune YM5 music
   on a 140k floppy, 48k RAM
-
-* Secret is LZ4 (thanks qkumba)
-
-* Still bothersome sound quality
-  issues I have not resolved.
-
-* Might be race condition, if so
-  the emulators aren't being faithful.
-
-* Drives me nuts
-
-* Demo it?
