@@ -9,10 +9,13 @@ all:	kfest2018_slides.dsk
 
 kfest2018_slides.dsk:	KANSASFEST_2018 \
 	TITLE.HGR KATAHDINC.BIN VINCEC.BIN PI_PLAYERC.BIN \
+	KSP_TITLE.HGR PORTAL.HGR \
 	CHIPTUNE.GR TB1.GR \
 	LOAD_DEMO
 	$(DOS33) -y kfest2018_slides.dsk SAVE A KANSASFEST_2018
 	$(DOS33) -y kfest2018_slides.dsk SAVE B TITLE.HGR
+	$(DOS33) -y kfest2018_slides.dsk SAVE B KSP_TITLE.HGR
+	$(DOS33) -y kfest2018_slides.dsk SAVE B PORTAL.HGR
 	$(DOS33) -y kfest2018_slides.dsk BSAVE -a 0x2000 KATAHDINC.BIN
 	$(DOS33) -y kfest2018_slides.dsk BSAVE -a 0x2000 VINCEC.BIN
 	$(DOS33) -y kfest2018_slides.dsk BSAVE -a 0x2000 PI_PLAYERC.BIN
@@ -43,6 +46,6 @@ demo.bas:		$(ASOFT_PRESENTER) info
 	$(ASOFT_PRESENTER) . > demo.bas
 
 clean:	
-	rm -f *~ *.IMG *.HGR demo.bas KANSASFEST_2018 LOAD_DEMO \
+	rm -f *~ *.IMG demo.bas KANSASFEST_2018 LOAD_DEMO \
 		VINCEC.BIN KATAHDINC.BIN
 
