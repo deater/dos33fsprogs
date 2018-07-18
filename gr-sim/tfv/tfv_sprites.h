@@ -23,6 +23,9 @@ extern unsigned char bird_walk_right[];
 extern unsigned char bird_stand_left[];
 extern unsigned char bird_walk_left[];
 
+extern unsigned char susie_left[];
+extern unsigned char susie_right[];
+
 extern unsigned char ship_forward[];
 extern unsigned char ship_right[];
 extern unsigned char ship_left[];

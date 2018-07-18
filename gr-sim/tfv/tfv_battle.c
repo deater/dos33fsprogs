@@ -261,10 +261,12 @@ static int draw_battle_bottom(int enemy_type) {
 //	print("DEATER");
 	print(nameo);
 
-	vtab(23);
-	htab(15);
-	move_cursor();
-	print("SUSIE");
+	if (susie_out) {
+		vtab(23);
+		htab(15);
+		move_cursor();
+		print("SUSIE");
+	}
 
 	if (menu_state==MENU_NONE) {
 
@@ -1540,7 +1542,12 @@ int boss_battle(void) {
 
 	/* Draw sky */
 	color_equals(COLOR_BLACK);
-	for(i=0;i<40;i++) {
+	for(i=0;i<20;i++) {
+		hlin_double(ram[DRAW_PAGE],0,39,i);
+	}
+
+	color_equals(COLOR_ORANGE);
+	for(i=20;i<39;i++) {
 		hlin_double(ram[DRAW_PAGE],0,39,i);
 	}
 
@@ -1571,6 +1578,8 @@ int boss_battle(void) {
 			grsim_put_sprite(tfv_stand_left,ax,20);
 			grsim_put_sprite(tfv_led_sword,ax-5,20);
 		}
+
+		grsim_put_sprite(susie_left,28,30);
 
 		if ((enemy_count&0xf)<4) {
 			grsim_put_sprite(roboknee1,enemy_x,16);

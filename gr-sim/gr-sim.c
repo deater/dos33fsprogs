@@ -1125,18 +1125,21 @@ int grsim_put_sprite_page(int page, unsigned char *sprite_data, int xpos, int yp
 		for(i=0;i<x;i++) {
 			a=*ptr;
 							cycles+=17;
-			if (a==0) {
+			// all transparent, skip
+			if (a==0xaa) {
 			}
-			else if ((a&0xf0)==0) {
+			// bottom transparent
+			else if ((a&0xf0)==0xa0) {
 							cycles+=8;
 				ram[address]&=0xf0;
-				ram[address]|=a;
+				ram[address]|=(a&0xf);
 							cycles+=19;
 			}
-			else if ((a&0x0f)==0) {
+			// top transparent
+			else if ((a&0x0f)==0xa) {
 							cycles+=8;
 				ram[address]&=0x0f;
-				ram[address]|=a;
+				ram[address]|=(a&0xf0);
 							cycles+=19;
 			}
 			else {
