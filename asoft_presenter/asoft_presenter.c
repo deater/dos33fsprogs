@@ -139,6 +139,7 @@ struct footer_info {
 #define SLIDE_HGR2	3
 #define SLIDE_HGR_PLOT	4
 #define SLIDE_NOCHANGE	5
+#define GR_PLOT		6
 
 #define MAX_SLIDES 89
 
@@ -428,12 +429,37 @@ static void generate_slide(int num, int max, char*filename) {
 			print_til_eof(fff,&line_num);
 
 		}
+		else if (strstr(type,"GR")) {
+			printf("%d GR\n",line_num);		line_num++;
+			while(1) {
+				result=fgets(string,BUFSIZ,fff);
+				if (result==NULL) break;
+				if ((string[0]=='#') || (string[0]=='\n')) {
+					continue;
+				}
+				break;
+			}
+			string[strlen(string)-1]='\0';
+			printf("%d PRINT CHR$(4);\"BLOAD %s,A$800\"\n",
+				line_num,string);
+								line_num++;
+			// C055, switch to page2
+			printf("%d POKE 49237,1\n",
+				line_num);			line_num++;
+
+			/* print rest of stuff */
+			printf("%d VTAB 21\n",line_num);	line_num++;
+
+			print_til_eof(fff,&line_num);
+
+		}
 		else if (strstr(type,"80COL")) {
 
 		}
 		else if (strstr(type,"40COL")) {
 
-			printf("%d TEXT:VTAB 1\n",line_num);	line_num++;
+			printf("%d TEXT:HOME:VTAB 1\n",line_num);
+								line_num++;
 			print_til_eof(fff,&line_num);
 		}
 		else if (strstr(type,"NOCHANGE")) {
