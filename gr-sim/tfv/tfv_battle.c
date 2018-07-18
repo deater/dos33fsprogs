@@ -71,7 +71,7 @@ List hits
 */
 
 static int battle_bar=0;
-
+static int susie_out=0;
 
 /* Background depend on map location? */
 /* Room for guinea pig in party? */
@@ -92,7 +92,7 @@ struct enemy_type {
 	unsigned char *sprite;
 };
 
-static struct enemy_type enemies[8]={
+static struct enemy_type enemies[9]={
 	[0]= {
 		.name="Killer Crab",
 		.hp_base=50,
@@ -164,6 +164,15 @@ static struct enemy_type enemies[8]={
 		.weakness=MAGIC_FIRE,
 		.resist=MAGIC_ICE,
 		.sprite=evil_penguin,
+	},
+	[8]= {
+		.name="Act.Principl",
+		.hp_base=10,
+		.hp_mask=0x1f,
+		.attack_name="BIRDIE",
+		.weakness=MAGIC_NONE,
+		.resist=MAGIC_ICE|MAGIC_FIRE,
+		.sprite=roboknee1,
 	},
 };
 
@@ -252,7 +261,14 @@ static int draw_battle_bottom(int enemy_type) {
 //	print("DEATER");
 	print(nameo);
 
+	vtab(23);
+	htab(15);
+	move_cursor();
+	print("SUSIE");
+
 	if (menu_state==MENU_NONE) {
+
+		/* TFV Stats */
 
 		vtab(21);
 		htab(25);
@@ -307,6 +323,37 @@ static int draw_battle_bottom(int enemy_type) {
 
 		ram[COLOR]=0x20;
 		if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
+
+
+		/* Susie Stats */
+		if (susie_out) {
+
+			vtab(23);
+			htab(24);
+			move_cursor();
+			print_byte(255);
+
+			vtab(23);
+			htab(27);
+			move_cursor();
+			print_byte(0);
+#if 0
+			/* Draw Time bargraph */
+			ram[COLOR]=0xa0;
+			hlin_double(ram[DRAW_PAGE],30,34,42);
+			ram[COLOR]=0x20;
+			if (battle_bar) {
+				hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
+			}
+
+			/* Draw Limit break bargraph */
+			ram[COLOR]=0xa0;
+			hlin_double(ram[DRAW_PAGE],35,39,42);
+
+			ram[COLOR]=0x20;
+			if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
+#endif
+		}
 	}
 
 	if (menu_state==MENU_MAIN) {
@@ -1473,10 +1520,16 @@ int boss_battle(void) {
 	int enemy_count=30;
 	int old;
 
+
+	susie_out=1;
+
 	rotate_intro();
 
 	battle_count=20;
 
+	enemy_type=8;
+
+	enemy_hp=255;
 
 	saved_drawpage=ram[DRAW_PAGE];
 
@@ -1492,8 +1545,8 @@ int boss_battle(void) {
 	}
 
 	/* Draw horizon */
-	color_equals(COLOR_GREY);
-	hlin_double(ram[DRAW_PAGE],0,39,10);
+//	color_equals(COLOR_GREY);
+//	hlin_double(ram[DRAW_PAGE],0,39,10);
 
 	ram[DRAW_PAGE]=saved_drawpage;
 
@@ -1519,7 +1572,12 @@ int boss_battle(void) {
 			grsim_put_sprite(tfv_led_sword,ax-5,20);
 		}
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+		if ((enemy_count&0xf)<4) {
+			grsim_put_sprite(roboknee1,enemy_x,16);
+		}
+		else {
+			grsim_put_sprite(roboknee2,enemy_x,16);
+		}
 
 		draw_battle_bottom(enemy_type);
 
@@ -1568,6 +1626,7 @@ int boss_battle(void) {
 
 
 		if (enemy_hp==0) {
+			// FIXME?
 			victory_dance();
 			break;
 		}
