@@ -9,18 +9,20 @@ all:	kfest2018_slides.dsk
 
 kfest2018_slides.dsk:	KANSASFEST_2018 \
 	TITLE.HGR KATAHDINC.BIN VINCEC.BIN PI_PLAYERC.BIN \
-	KSP_TITLE.HGR PORTAL.HGR \
-	CHIPTUNE.GR TB1.GR \
+	KSP_TITLE.HGR PORTAL.HGR ENTROPY.HGR \
+	CHIPTUNE.GR TB1.GR MODE7DEMO.GR \
 	LOAD_DEMO
 	$(DOS33) -y kfest2018_slides.dsk SAVE A KANSASFEST_2018
 	$(DOS33) -y kfest2018_slides.dsk SAVE B TITLE.HGR
 	$(DOS33) -y kfest2018_slides.dsk SAVE B KSP_TITLE.HGR
 	$(DOS33) -y kfest2018_slides.dsk SAVE B PORTAL.HGR
+	$(DOS33) -y kfest2018_slides.dsk BSAVE -a 0x2000 ENTROPY.HGR
 	$(DOS33) -y kfest2018_slides.dsk BSAVE -a 0x2000 KATAHDINC.BIN
 	$(DOS33) -y kfest2018_slides.dsk BSAVE -a 0x2000 VINCEC.BIN
 	$(DOS33) -y kfest2018_slides.dsk BSAVE -a 0x2000 PI_PLAYERC.BIN
 	$(DOS33) -y kfest2018_slides.dsk BSAVE -a 0x800 CHIPTUNE.GR
 	$(DOS33) -y kfest2018_slides.dsk BSAVE -a 0x800 TB1.GR
+	$(DOS33) -y kfest2018_slides.dsk BSAVE -a 0x800 MODE7DEMO.GR
 	$(DOS33) -y kfest2018_slides.dsk SAVE A LOAD_DEMO
 
 LOAD_DEMO:		load_demo.bas

@@ -1,0 +1,13 @@
+40COL
+%c%Anachronistic Applesoft
+
+* Started porting modern things
+  to Applesoft BASIC
+
+* Wrote a Uthernet webserver in
+  BASIC
+
+* Worked well, but memory
+  copy slow if not done in 6502 asm
+
+* Doesn't make for an exciting demo

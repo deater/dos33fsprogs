@@ -7,6 +7,8 @@
   on a 140k floppy, 48k RAM
 
 * Secret is LZ4 (thanks qkumba)
+  Load compressed from disk
+  Uncompress in chunks while playing  
 
 * Still bothersome sound quality
   issues I have not resolved.
@@ -15,5 +17,3 @@
   the emulators aren't being faithful.
 
 * Drives me nuts
-
-* Demo it?
