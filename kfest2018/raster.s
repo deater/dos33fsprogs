@@ -2,6 +2,7 @@
 
 ; Zero Page
 DRAW_PAGE	= $EE
+CURRENT_OFFSET	= $EF
 
 ; Soft Switches
 
@@ -14,7 +15,7 @@ LORES	= $C056	; Enable LORES graphics
 
 TEXT	= $FB36				;; Set text mode
 HOME	= $FC58				;; Clear the text screen
-
+WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 
 
 	;===================
@@ -25,6 +26,7 @@ HOME	= $FC58				;; Clear the text screen
 
 	lda	#0
 	sta	DRAW_PAGE
+	sta	CURRENT_OFFSET
 
 	; Clear Page0
 	lda	#$00
@@ -118,8 +120,33 @@ loopB:
 
 
 display_loop:
-loop_forever:
-	jmp	loop_forever
+
+	ldy	CURRENT_OFFSET
+	ldx	#0
+data_loop:
+	lda	words,Y
+	sta	$6d0,X
+
+	lda	words2,Y
+	sta	$750,X
+
+	lda	words3,Y
+	sta	$ad0,X
+
+	lda	words4,Y
+	sta	$b50,X
+
+	iny
+	inx
+	cpx	#40
+	bne	data_loop
+
+	inc	CURRENT_OFFSET
+
+	lda	#128
+	jsr	WAIT
+
+	jmp	display_loop
 
 
 	;==================================
@@ -127,7 +154,7 @@ loop_forever:
 	;==================================
 
 	; Color in A
-	; X has which line
+	; Y has which line
 hline:
 	pha							; 3
 	ldx	gr_offsets,y					; 4+
@@ -157,13 +184,29 @@ clear_page_loop:
 	bpl	clear_page_loop
 	rts
 
-
+.align  $100
+words:
 ;	H		E		L		L	O
 .byte	$D1,$00,$D1,$00, $D1,$01,$00, $D1,$00,$00, $D1,$00,$00, $D0,$01,$D0,$00
+.repeat 239
+.byte $0
+.endrep
+words2:
 .byte	$24,$04,$24,$00, $24,$20,$00, $24,$20,$00, $24,$20,$00, $04,$20,$04,$00
+.repeat 239
+.byte $0
+.endrep
+words3:
 .byte	$C9,$C0,$C9,$00, $C9,$C0,$00, $C9,$00,$00, $C9,$00,$00, $C9,$00,$C0,$00
+.repeat 239
+.byte $0
+.endrep
+words4:
 .byte	$06,$00,$06,$00, $06,$00,$00, $06,$00,$00, $06,$00,$00, $06,$00,$06,$00
-	; move these to zero page for slight speed increase?
+.repeat 239
+.byte $0
+.endrep
+
 
 gr_offsets:
 	.word	$400,$480,$500,$580,$600,$680,$700,$780
