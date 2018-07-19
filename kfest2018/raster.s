@@ -26,11 +26,6 @@ HOME	= $FC58				;; Clear the text screen
 	lda	#0
 	sta	DRAW_PAGE
 
-	; GR part
-	bit	LORES
-	bit	SET_GR
-	bit	FULLGR
-
 	; Clear Page0
 	lda	#$00
 	sta	DRAW_PAGE
@@ -53,6 +48,76 @@ HOME	= $FC58				;; Clear the text screen
 	ldy	#38
 	jsr	hline
 
+	;=====================================================
+	; attempt vapor lock
+	;  by reading the "floating bus" we can see most recently
+	;  written value of the display
+	; we look for $55 (which is the grey line)
+	;=====================================================
+	; See:
+	;	Have an Apple Split by Bob Bishop
+        ;	Softalk, October 1982
+
+	; Challenges: each scan line scans 40 bytes.
+	; The blanking happens at the *beginning*
+	; So 65 bytes are scanned, starting at adress of the line - 25
+
+	; the scan takes 8 cycles, look for 4 repeats of the value
+	; to avoid false positive found if the horiz blanking is mirroring
+	; the line (max 3 repeats in that case)
+
+vapor_lock_loop:		; first make sure we have all zeroes
+	LDA #$00
+zxloop:
+	LDX #$04
+wiloop:
+	CMP $C051
+	BNE zxloop
+	DEX
+	BNE wiloop
+
+	LDA #$55		; now look for four all grey
+zloop:
+	LDX #$04
+qloop:
+	CMP $C051
+	BNE zloop
+	DEX
+	BNE qloop
+
+	; found first line of low-res grey, need to kill time
+        ; until we can enter at top of screen
+        ; so we want roughly 5200+4550 - 65 (for the scanline we missed)
+
+
+	; GR part
+	bit	LORES
+	bit	SET_GR
+	bit	FULLGR
+
+
+        ; want 9685
+        ; Try X=34 Y=55 cycles=9681
+
+        lda     #0                                                      ; 2
+        lda     #0                                                      ; 2
+
+        ldy     #55                                                     ; 2
+loopA:
+        ldx     #34                                                     ; 2
+loopB:
+        dex                                                             ; 2
+        bne     loopB                                                   ; 2nt/3
+
+        dey                                                             ; 2
+        bne     loopA                                                   ; 2nt/3
+
+        jmp     display_loop
+.align  $100
+
+
+
+display_loop:
 loop_forever:
 	jmp	loop_forever
 
