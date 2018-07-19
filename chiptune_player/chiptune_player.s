@@ -53,7 +53,7 @@ NUM_FILES	EQU	15
 	inc	CV
 	jsr	move_and_print
 
-	jmp	forever_loop			; and wait forever
+;	jmp	forever_loop			; and wait forever
 
 mockingboard_found:
 ;	lda     #<found_message			; print found message
@@ -578,7 +578,7 @@ krw_file:
 ;routines
 ;=========
 .include	"../asm_routines/gr_offsets.s"
-.include	"../asm_routines/text_print.s"
+.include	"text_print.s"
 .include	"../asm_routines/mockingboard_a.s"
 .include	"../asm_routines/gr_fast_clear.s"
 .include	"../asm_routines/pageflip.s"
