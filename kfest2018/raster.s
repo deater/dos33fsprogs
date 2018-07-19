@@ -32,26 +32,26 @@ HOME	= $FC58				;; Clear the text screen
 	bit	FULLGR
 
 	; Clear Page0
-
 	lda	#$00
-	ldy	#46
-clear_page0_loop:
-	jsr	hline
-	dey
-	dey
-	bpl	clear_page0_loop
+	sta	DRAW_PAGE
+	jsr	clear_gr
 
-	; Clear Page1
-
-
-
+	; draw border line
 
 	lda	#$55
 	ldy	#38
 	jsr	hline
 
+	; Clear Page1
+	lda	#$4
+	sta	DRAW_PAGE
+	jsr	clear_gr
 
+	; draw border line
 
+	lda	#$55
+	ldy	#38
+	jsr	hline
 
 loop_forever:
 	jmp	loop_forever
@@ -64,10 +64,14 @@ loop_forever:
 	; Color in A
 	; X has which line
 hline:
+	pha							; 3
 	ldx	gr_offsets,y					; 4+
 	stx	hline_loop+1					; 4
-	ldx	gr_offsets+1,y					; 4+
-	stx	hline_loop+2					; 4
+	lda	gr_offsets+1,y					; 4+
+	clc							; 2
+	adc	DRAW_PAGE					; 3
+	sta	hline_loop+2					; 4
+	pla							; 4
 	ldx	#39						; 2
 hline_loop:
 	sta	$5d0,X		; 38				; 5
@@ -75,7 +79,18 @@ hline_loop:
 	bpl	hline_loop					; 2nt/3
 	rts							; 6
 
-
+	;==========================
+	; Clear gr screen
+	;==========================
+	; Color in A
+clear_gr:
+	ldy	#46
+clear_page_loop:
+	jsr	hline
+	dey
+	dey
+	bpl	clear_page_loop
+	rts
 
 
 ;	H		E		L		L	O
