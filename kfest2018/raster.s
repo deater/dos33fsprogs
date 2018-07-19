@@ -8,6 +8,8 @@ CURRENT_OFFSET	= $EF
 
 SET_GR	= $C050 ; Enable graphics
 FULLGR	= $C052	; Full screen, no text
+PAGE0	= $C054 ; Page0
+PAGE1	= $C055 ; Page1
 LORES	= $C056	; Enable LORES graphics
 
 
@@ -42,6 +44,7 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	; Clear Page1
 	lda	#$4
 	sta	DRAW_PAGE
+	lda	#$00
 	jsr	clear_gr
 
 	; draw border line
@@ -118,8 +121,43 @@ loopB:
 .align  $100
 
 
+	;================================================
+	; Display Loop
+	;================================================
+	; each scan line 65 cycles
+	;       1 cycle each byte (40cycles) + 25 for horizontal
+	;       Total of 12480 cycles to draw screen
+	; Vertical blank = 4550 cycles (70 scan lines)
+	; Total of 17030 cycles to get back to where was
+
+	; We want to alternate between page1 and page2 every 65 cycles
+        ;       vblank = 4550 cycles to do scrolling
 
 display_loop:
+
+	ldy	#96						; 2
+
+outer_loop:
+
+	ldx	#25		; 130 cycles with PAGE0		; 2
+page0_loop:
+	dex							; 2
+	bne	page0_loop					; 2/3
+	bit	PAGE0						; 4
+
+	ldx	#25		; 130 cycles with PAGE1		; 2
+page1_loop:
+	dex							; 2
+	bne	page1_loop					; 2/3
+	bit	PAGE1						; 4
+
+	dey							; 2
+	bne	outer_loop					; 2/3
+
+	jmp	display_loop					; 3
+
+	; We have 4550 cycles in the vblank, use them wisely
+
 
 	ldy	CURRENT_OFFSET
 	ldx	#0
