@@ -117,24 +117,25 @@ qloop:
 
 	; found first line of low-res grey, need to kill time
         ; until we can enter at top of screen
-        ; so we want roughly 5200+4550 - 65 (for the scanline we missed)
+        ; so we want roughly 10 lines * 4 = 40*65 = 2600+4550-65
+	; +4550 - 65 (for the scanline we missed) = 7085 - 12 = 7073
 
 
 	; GR part
-	bit	LORES
-	bit	SET_GR
-	bit	FULLGR
+	bit	LORES							; 4
+	bit	SET_GR							; 4
+	bit	FULLGR							; 4
 
 
-        ; want 9685
-        ; Try X=34 Y=55 cycles=9681
+        ; want 7073
+	; Try X=26 Y=52 cycles=7073
 
         lda     #0                                                      ; 2
         lda     #0                                                      ; 2
 
-        ldy     #55                                                     ; 2
+        ldy     #52                                                     ; 2
 loopA:
-        ldx     #34                                                     ; 2
+        ldx     #26                                                     ; 2
 loopB:
         dex                                                             ; 2
         bne     loopB                                                   ; 2nt/3
