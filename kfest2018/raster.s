@@ -44,7 +44,7 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	; Clear Page1
 	lda	#$4
 	sta	DRAW_PAGE
-	lda	#$00
+	lda	#$44
 	jsr	clear_gr
 
 	; draw border line
@@ -52,6 +52,31 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	lda	#$55
 	ldy	#38
 	jsr	hline
+
+	; temporarily draw HELLO
+
+	ldy	CURRENT_OFFSET
+	ldx	#0
+data_loop2:
+	lda	words,Y
+	sta	$6d0,X
+
+	lda	words2,Y
+	sta	$750,X
+
+	lda	words3,Y
+	sta	$ad0,X
+
+	lda	words4,Y
+	sta	$b50,X
+
+	iny
+	inx
+	cpx	#40
+	bne	data_loop2
+
+
+
 
 	;=====================================================
 	; attempt vapor lock
@@ -133,30 +158,60 @@ loopB:
 	; We want to alternate between page1 and page2 every 65 cycles
         ;       vblank = 4550 cycles to do scrolling
 
+
+	; 2 + 48*(  (4+2+25*(2+3)) + (4+2+23*(2+3)+4+5)) + 9)
+	;     48*[(6+125)-1] + [(6+115+10)-1]
+
 display_loop:
 
-	ldy	#96						; 2
+	ldy	#48						; 2
 
 outer_loop:
 
+	bit	PAGE0						; 4
 	ldx	#25		; 130 cycles with PAGE0		; 2
-page0_loop:
+page0_loop:			; delay 126+bit
 	dex							; 2
 	bne	page0_loop					; 2/3
-	bit	PAGE0						; 4
 
-	ldx	#25		; 130 cycles with PAGE1		; 2
-page1_loop:
+
+	bit	PAGE1						; 4
+	ldx	#23		; 130 cycles with PAGE1		; 2
+page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	dex							; 2
 	bne	page1_loop					; 2/3
-	bit	PAGE1						; 4
+
+	nop							; 2
+	lda	DRAW_PAGE					; 3
 
 	dey							; 2
 	bne	outer_loop					; 2/3
 
-	jmp	display_loop					; 3
+
 
 	; We have 4550 cycles in the vblank, use them wisely
+
+	; delay 4546 (+1 from loop falltrough, -2 for loadup, -3 for jmp)
+
+	; 4540 = x=9,y=89
+
+	; kill 3 cycles
+	lda	DRAW_PAGE						; 3
+	lda	DRAW_PAGE						; 3
+
+	ldy	#89							; 2
+loop5:
+	ldx	#9							; 2
+loop6:
+	dex								; 2
+	bne	loop6							; 2nt/3
+
+	dey								; 2
+	bne	loop5							; 2nt/3
+
+
+
+	jmp	display_loop					; 3
 
 
 	ldy	CURRENT_OFFSET
@@ -235,7 +290,7 @@ words2:
 .byte $0
 .endrep
 words3:
-.byte	$C9,$C0,$C9,$00, $C9,$C0,$00, $C9,$00,$00, $C9,$00,$00, $C9,$00,$C0,$00
+.byte	$C9,$C0,$C9,$00, $C9,$C0,$00, $C9,$00,$00, $C9,$00,$00, $C9,$00,$C9,$00
 .repeat 239
 .byte $0
 .endrep
