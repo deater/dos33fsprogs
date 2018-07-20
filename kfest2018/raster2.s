@@ -33,6 +33,7 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	sta	DRAW_PAGE
 	sta	CURRENT_OFFSET
 	sta	OFFSET_GOVERNOR
+	lda	#3
 	sta	YPOS
 
 	; Clear Page0
@@ -250,21 +251,22 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 
-	; delay 1711 (4550 +1 from falltrough, -2 for loadup, -2661 scroll -3)
-	;		- 147 - 27
+	; delay 1652 (4550 +1 from falltrough, -2 for loadup, -2661 scroll -3)
+	;		- 147 - 83 -3
 
-	; Try X=33 Y=10 cycles=1711
+	; Try X=2 Y=103 cycles=1649 R2
 
 	; waste 2 cycles
+	lda	DRAW_PAGE						; 3
 ;	lda	DRAW_PAGE						; 3
-	;lda	DRAW_PAGE						; 3
 ;	nop								; 2
+;	nop
 
 
 
-	ldy	#10							; 2
+	ldy	#103							; 2
 loop5:
-	ldx	#33							; 2
+	ldx	#2							; 2
 loop6:
 	dex								; 2
 	bne	loop6							; 2nt/3
@@ -289,8 +291,36 @@ clear_fb_loop:
 	;==================
 	; Set Rasterbar
 	;==================
-	; 27 cycles
-	ldx	YPOS							; 3
+	; 16 + 52 + 15 = 83
+
+	lda	YPOS							; 3
+	and	#$fc
+	lsr								; 2
+;	lsr								; 2
+	tax								; 2
+
+	lda	YPOS							; 3
+	and	#$3							; 2
+
+	cmp	#$0							; 2
+
+; zero_rasterbar = 42 (add 10)
+; one_rasterbar = 46 (add 6)
+; two_rasterbar = 50 (add 2)
+; three_rasterbar = 52
+
+	beq	zero_rasterbar
+									; 2
+	cmp	#$1							; 2
+	beq	one_rasterbar
+									; 2
+	cmp	#$2							; 2
+	beq	two_rasterbar
+									; 2
+	bne	three_rasterbar
+
+zero_rasterbar:
+									; 3
 	lda	#$b1							; 2
 	sta	FRAMEBUFFER,X						; 4
 	lda	#$f3							; 2
@@ -299,13 +329,110 @@ clear_fb_loop:
 	sta	FRAMEBUFFER+2,X						; 4
 	lda	#$03							; 2
 	sta	FRAMEBUFFER+3,X						; 4
+	lda	#$00							; 2
+	sta	FRAMEBUFFER+4,X						; 4
+	lda	#$00							; 2
+	sta	FRAMEBUFFER+5,X						; 4
+	nop
+	nop
+	nop
+	nop
+	nop
 
+	jmp	done_draw_rasterbar					; 3
+								;===========
+								;        42
+
+one_rasterbar:
+									; 4+3
+
+	lda	#$30							; 2
+	sta	FRAMEBUFFER,X						; 4
+	lda	#$b1							; 2
+	sta	FRAMEBUFFER+1,X						; 4
+	lda	#$3f							; 2
+	sta	FRAMEBUFFER+2,X						; 4
+	lda	#$1b							; 2
+	sta	FRAMEBUFFER+3,X						; 4
+	lda	#$00							; 2
+	sta	FRAMEBUFFER+4,X						; 4
+	lda	#$00							; 2
+	sta	FRAMEBUFFER+5,X						; 4
+	nop
+	nop
+	nop
+	jmp	done_draw_rasterbar					; 3
+								;==========
+								;         46
+
+two_rasterbar:
+									; 8+3
+
+	lda	#$10							; 2
+	sta	FRAMEBUFFER,X						; 4
+	lda	#$30							; 2
+	sta	FRAMEBUFFER+1,X						; 4
+	lda	#$bb							; 2
+	sta	FRAMEBUFFER+2,X						; 4
+	lda	#$3f							; 2
+	sta	FRAMEBUFFER+3,X						; 4
+	lda	#$01							; 2
+	sta	FRAMEBUFFER+4,X						; 4
+	lda	#$00							; 2
+	sta	FRAMEBUFFER+5,X						; 4
+	nop
+	jmp	done_draw_rasterbar					; 3
+								;==========
+								;         50
+
+three_rasterbar:
+									; 10+3
+
+	lda	#$00							; 2
+	sta	FRAMEBUFFER,X						; 4
+	lda	#$10							; 2
+	sta	FRAMEBUFFER+1,X						; 4
+	lda	#$f3							; 2
+	sta	FRAMEBUFFER+2,X						; 4
+	lda	#$bb							; 2
+	sta	FRAMEBUFFER+3,X						; 4
+	lda	#$03							; 2
+	sta	FRAMEBUFFER+4,X						; 4
+	lda	#$01							; 2
+	sta	FRAMEBUFFER+5,X						; 4
+	jmp	done_draw_rasterbar					; 3
+								;==========
+								;         52
+
+
+done_draw_rasterbar:
+
+	; movement = 7 + 5 + 3 = 15
+	ldx	YPOS							; 3
+
+	nop
+;	inx								; 2
+	cpx	#24							; 2
+	beq	raster_bottom						;
+
+									; 2
+	jmp	raster_move_done					; 3
+raster_bottom:
+									; 3
+	ldx	#0							; 2
+
+raster_move_done:
+	stx	YPOS							; 3
+
+
+	jmp	draw_rasterbars						; 3
+.align $100
 
 
 	;==================
 	; Draw Rasterbars
 	;==================
-
+draw_rasterbars:
 	; 2 + YSIZE*[(8*16) + 5] - 1
 	; 2 + (20*133) -1
 	; 2661 cycles
@@ -318,7 +445,7 @@ raster_loop2:
 	sta	$680,X						; 5
 	lda	FRAMEBUFFER+4					; 3
 	sta	$700,X						; 5
-	lda	FRAMEBUFFER+5					; 3
+	lda	FRAMEBUFFER+6					; 3
 	sta	$780,X						; 5
 	lda	FRAMEBUFFER+8					; 3
 	sta	$428,X						; 5
