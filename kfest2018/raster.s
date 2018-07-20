@@ -55,6 +55,31 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	ldy	#38
 	jsr	hline
 
+
+	;==================
+	; Draw Temp Rasters
+	;==================
+	lda	#$0
+	sta	DRAW_PAGE
+	lda	#$b1
+	ldy	#10
+	jsr	hline
+	lda	#$3f
+	ldy	#12
+	jsr	hline
+
+	lda	#$4
+	sta	DRAW_PAGE
+	lda	#$f3
+	ldy	#10
+	jsr	hline
+	lda	#$1b
+	ldy	#12
+	jsr	hline
+
+
+
+
 	; temporarily draw HELLO
 
 	ldy	CURRENT_OFFSET
