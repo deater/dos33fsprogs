@@ -1,7 +1,8 @@
 ; Kansasfest HackFest Entry
 
 ; Zero Page
-FRAMEBUFFER	= $00 ; $00 - $10
+FRAMEBUFFER	= $00 ; $00 - $0F
+YPOS		= $10
 DRAW_PAGE	= $EE
 CURRENT_OFFSET	= $EF
 OFFSET_GOVERNOR = $F0
@@ -32,6 +33,7 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	sta	DRAW_PAGE
 	sta	CURRENT_OFFSET
 	sta	OFFSET_GOVERNOR
+	sta	YPOS
 
 	; Clear Page0
 	lda	#$00
@@ -248,21 +250,21 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 
-	; delay 1738 (4550 +1 from falltrough, -2 for loadup, -2661 scroll -3)
-	;		- 147
+	; delay 1711 (4550 +1 from falltrough, -2 for loadup, -2661 scroll -3)
+	;		- 147 - 27
 
-	; Try X=9 Y=34 cycles=1735 R3
+	; Try X=33 Y=10 cycles=1711
 
 	; waste 2 cycles
-	lda	DRAW_PAGE						; 3
+;	lda	DRAW_PAGE						; 3
 	;lda	DRAW_PAGE						; 3
 ;	nop								; 2
 
 
 
-	ldy	#34							; 2
+	ldy	#10							; 2
 loop5:
-	ldx	#9							; 2
+	ldx	#33							; 2
 loop6:
 	dex								; 2
 	bne	loop6							; 2nt/3
@@ -287,6 +289,17 @@ clear_fb_loop:
 	;==================
 	; Set Rasterbar
 	;==================
+	; 27 cycles
+	ldx	YPOS							; 3
+	lda	#$b1							; 2
+	sta	FRAMEBUFFER,X						; 4
+	lda	#$f3							; 2
+	sta	FRAMEBUFFER+1,X						; 4
+	lda	#$1b							; 2
+	sta	FRAMEBUFFER+2,X						; 4
+	lda	#$03							; 2
+	sta	FRAMEBUFFER+3,X						; 4
+
 
 
 	;==================
@@ -301,34 +314,34 @@ clear_fb_loop:
 raster_loop2:
 	lda	FRAMEBUFFER					; 3
 	sta	$600,X						; 5
-	lda	FRAMEBUFFER+1					; 3
-	sta	$680,X						; 5
 	lda	FRAMEBUFFER+2					; 3
-	sta	$700,X						; 5
-	lda	FRAMEBUFFER+3					; 3
-	sta	$780,X						; 5
+	sta	$680,X						; 5
 	lda	FRAMEBUFFER+4					; 3
-	sta	$428,X						; 5
+	sta	$700,X						; 5
 	lda	FRAMEBUFFER+5					; 3
+	sta	$780,X						; 5
+	lda	FRAMEBUFFER+8					; 3
+	sta	$428,X						; 5
+	lda	FRAMEBUFFER+10					; 3
 	sta	$4a8,X						; 5
-	lda	FRAMEBUFFER+6					; 3
+	lda	FRAMEBUFFER+12					; 3
 	sta	$528,X						; 5
-	lda	FRAMEBUFFER+7					; 3
+	lda	FRAMEBUFFER+14					; 3
 	sta	$5a8,X						; 5
 
-	lda	FRAMEBUFFER+8
+	lda	FRAMEBUFFER+1
 	sta	$A00,X
-	lda	FRAMEBUFFER+9
+	lda	FRAMEBUFFER+3
 	sta	$A80,X
-	lda	FRAMEBUFFER+10
+	lda	FRAMEBUFFER+5
 	sta	$B00,X
-	lda	FRAMEBUFFER+11
+	lda	FRAMEBUFFER+7
 	sta	$B80,X
-	lda	FRAMEBUFFER+12
+	lda	FRAMEBUFFER+9
 	sta	$828,X
-	lda	FRAMEBUFFER+13
+	lda	FRAMEBUFFER+11
 	sta	$8a8,X
-	lda	FRAMEBUFFER+14
+	lda	FRAMEBUFFER+13
 	sta	$928,X
 	lda	FRAMEBUFFER+15
 	sta	$9a8,X
