@@ -410,8 +410,8 @@ done_draw_rasterbar:
 	; movement = 7 + 5 + 3 = 15
 	ldx	YPOS							; 3
 
-	nop
-;	inx								; 2
+;	nop
+	inx								; 2
 	cpx	#24							; 2
 	beq	raster_bottom						;
 
