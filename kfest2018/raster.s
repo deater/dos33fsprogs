@@ -190,19 +190,22 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 
 
 
+	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
+	;======================================================
 
-	; delay 4546 (+1 from loop falltrough, -2 for loadup, -3 for jmp)
+	; delay 2737 (4550 +1 from falltrough, -2 for loadup, -1812 for scroll)
 
-	; 4540 = x=9,y=89
+	; Try X=90 Y=6 cycles=2737
 
-	; kill 3 cycles
-	lda	DRAW_PAGE						; 3
-	lda	DRAW_PAGE						; 3
+	; waste 2 cycles
+	;lda	DRAW_PAGE						; 3
+	;lda	DRAW_PAGE						; 3
+;	nop								; 2
 
-	ldy	#89							; 2
+	ldy	#6							; 2
 loop5:
-	ldx	#9							; 2
+	ldx	#90							; 2
 loop6:
 	dex								; 2
 	bne	loop6							; 2nt/3
@@ -212,35 +215,41 @@ loop6:
 
 
 
-	jmp	display_loop					; 3
+;	jmp	display_loop					; 3
 
 
-	ldy	CURRENT_OFFSET
-	ldx	#0
+	;================================
+	; SCROLL THE TEXT
+	;================================
+	; 5+ 40*(36 + 9)+5+3 -1
+	; 12+40*(45) = 1812
+
+	ldy	CURRENT_OFFSET				; 3
+	ldx	#0					; 2
 data_loop:
-	lda	words,Y
-	sta	$6d0,X
+	lda	words,Y					; 4+
+	sta	$6d0,X					; 5
 
-	lda	words2,Y
-	sta	$750,X
+	lda	words2,Y				; 4+
+	sta	$750,X					; 5
 
-	lda	words3,Y
-	sta	$ad0,X
+	lda	words3,Y				; 4+
+	sta	$ad0,X					; 5
 
-	lda	words4,Y
-	sta	$b50,X
+	lda	words4,Y				; 4+
+	sta	$b50,X					; 5
 
-	iny
-	inx
-	cpx	#40
-	bne	data_loop
+	iny						; 2
+	inx						; 2
+	cpx	#40					; 2
+	bne	data_loop				; 2nt/3
 
-	inc	CURRENT_OFFSET
+	inc	CURRENT_OFFSET				; 5
 
-	lda	#128
-	jsr	WAIT
+;	lda	#128
+;	jsr	WAIT
 
-	jmp	display_loop
+	jmp	display_loop				; 3
 
 
 	;==================================
