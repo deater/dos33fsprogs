@@ -1,6 +1,7 @@
 ; Kansasfest HackFest Entry
 
 ; Zero Page
+FRAMEBUFFER	= $00 ; $00 - $10
 DRAW_PAGE	= $EE
 CURRENT_OFFSET	= $EF
 OFFSET_GOVERNOR = $F0
@@ -56,31 +57,57 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	jsr	hline
 
 
+
 	;==================
 	; Draw Temp Rasters
 	;==================
-	lda	#$0
-	sta	DRAW_PAGE
-	lda	#$b1
-	ldy	#10
-	jsr	hline
-	lda	#$3f
-	ldy	#12
-	jsr	hline
 
-	lda	#$4
-	sta	DRAW_PAGE
-	lda	#$f3
-	ldy	#10
-	jsr	hline
-	lda	#$1b
-	ldy	#12
-	jsr	hline
+	ldx	#19						; 2
+raster_loop:
+	lda	#00						; 2
+	sta	$600,X						; 5
+	lda	#01						; 2
+	sta	$680,X						; 5
+	lda	#02						; 2
+	sta	$700,X						; 5
+	lda	#03						; 2
+	sta	$780,X						; 5
+	lda	#04						; 2
+	sta	$428,X						; 5
+	lda	#05						; 2
+	sta	$4a8,X						; 5
+	lda	#06						; 2
+	sta	$528,X						; 5
+	lda	#07						; 2
+	sta	$5a8,X						; 5
+
+	lda	#08
+	sta	$A00,X
+	lda	#09
+	sta	$A80,X
+	lda	#10
+	sta	$B00,X
+	lda	#11
+	sta	$B80,X
+	lda	#12
+	sta	$828,X
+	lda	#13
+	sta	$8a8,X
+	lda	#14
+	sta	$928,X
+	lda	#15
+	sta	$9a8,X
+
+	dex							; 2
+	bpl	raster_loop					; 2nt/3
 
 
 
 
+
+	;=====================================
 	; temporarily draw HELLO
+	;=====================================
 
 	ldy	CURRENT_OFFSET
 	ldx	#0
@@ -221,18 +248,21 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 
-	; delay 2717 (4550 +1 from falltrough, -2 for loadup, -1832 for scroll)
+	; delay 1738 (4550 +1 from falltrough, -2 for loadup, -2661 scroll -3)
+	;		- 147
 
-	; Try X=8 Y=59 cycles=2715
+	; Try X=9 Y=34 cycles=1735 R3
 
 	; waste 2 cycles
+	lda	DRAW_PAGE						; 3
 	;lda	DRAW_PAGE						; 3
-	;lda	DRAW_PAGE						; 3
-	nop								; 2
+;	nop								; 2
 
-	ldy	#59							; 2
+
+
+	ldy	#34							; 2
 loop5:
-	ldx	#8							; 2
+	ldx	#9							; 2
 loop6:
 	dex								; 2
 	bne	loop6							; 2nt/3
@@ -241,57 +271,73 @@ loop6:
 	bne	loop5							; 2nt/3
 
 
+	;==================
+	; Clear Framebuffer
+	;==================
+	; 4 + 16*9 - 1 = 147
 
-;	jmp	display_loop					; 3
+	lda	#0							; 2
+	ldx	#15							; 2
+clear_fb_loop:
+	sta	FRAMEBUFFER,X						; 4
+	dex								; 2
+	bpl	clear_fb_loop						; 2nt/3
 
 
-	;================================
-	; SCROLL THE TEXT
-	;================================
-	; 5+ 40*(36 + 9)+5+3 -1 + 20
-	; 12+40*(45) + 19 = 1832
+	;==================
+	; Set Rasterbar
+	;==================
 
-	ldy	CURRENT_OFFSET				; 3
-	ldx	#0					; 2
-data_loop:
-	lda	words,Y					; 4+
-	sta	$6d0,X					; 5
 
-	lda	words2,Y				; 4+
-	sta	$750,X					; 5
+	;==================
+	; Draw Rasterbars
+	;==================
 
-	lda	words3,Y				; 4+
-	sta	$ad0,X					; 5
+	; 2 + YSIZE*[(8*16) + 5] - 1
+	; 2 + (20*133) -1
+	; 2661 cycles
 
-	lda	words4,Y				; 4+
-	sta	$b50,X					; 5
+	ldx	#19						; 2
+raster_loop2:
+	lda	FRAMEBUFFER					; 3
+	sta	$600,X						; 5
+	lda	FRAMEBUFFER+1					; 3
+	sta	$680,X						; 5
+	lda	FRAMEBUFFER+2					; 3
+	sta	$700,X						; 5
+	lda	FRAMEBUFFER+3					; 3
+	sta	$780,X						; 5
+	lda	FRAMEBUFFER+4					; 3
+	sta	$428,X						; 5
+	lda	FRAMEBUFFER+5					; 3
+	sta	$4a8,X						; 5
+	lda	FRAMEBUFFER+6					; 3
+	sta	$528,X						; 5
+	lda	FRAMEBUFFER+7					; 3
+	sta	$5a8,X						; 5
 
-	iny						; 2
-	inx						; 2
-	cpx	#40					; 2
-	bne	data_loop				; 2nt/3
+	lda	FRAMEBUFFER+8
+	sta	$A00,X
+	lda	FRAMEBUFFER+9
+	sta	$A80,X
+	lda	FRAMEBUFFER+10
+	sta	$B00,X
+	lda	FRAMEBUFFER+11
+	sta	$B80,X
+	lda	FRAMEBUFFER+12
+	sta	$828,X
+	lda	FRAMEBUFFER+13
+	sta	$8a8,X
+	lda	FRAMEBUFFER+14
+	sta	$928,X
+	lda	FRAMEBUFFER+15
+	sta	$9a8,X
 
-	inc	OFFSET_GOVERNOR				; 5
+	dex							; 2
+	bpl	raster_loop2					; 2nt/3
 
-	lda	OFFSET_GOVERNOR				; 3
-	cmp	#6					; 2
-	bne	not_yet					; 2
-
-	inc	CURRENT_OFFSET				; 5
-	lda	#0					; 2
-	sta	OFFSET_GOVERNOR				; 3
-	jmp	all_done				; 3
-not_yet:
-							; 1
-	lda	OFFSET_GOVERNOR				; 3
-	lda	OFFSET_GOVERNOR				; 3
-	lda	OFFSET_GOVERNOR				; 3
-	lda	OFFSET_GOVERNOR				; 3
 
 all_done:
-
-
-
 	jmp	display_loop				; 3
 
 
