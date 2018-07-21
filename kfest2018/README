@@ -1,7 +1,8 @@
 KFEST18 SUPER RASTERBAR 2K DEMO
 	by deater (Vince Weaver) vince@deater.net
+	http://www.deater.net/weave/vmwprod/kfest18/
 
-Written for the Kansasfest Hackfest.
+Written for the Kansasfest Hackfest.  Won 2nd place.
 
 I started work on this on the morning of Wed Jul 18th and finished
 early in the AM on Saturday July 21st.
@@ -21,6 +22,10 @@ How it works:
 	(every 2 scan lines) you can create a pseudo 40x96 graphics
 	mode, using all 15 lo-res colors.
 
+	This is *not* double lo-res (that requires 128k of RAM + IIe
+	and is an 80x48 graphics mode).  This mode in theory will
+	work on an original II.
+
 	Of course there's no VBLANK notification or HSCAN interrupts
 	on Apple II.  So you have to read the "floating bus" to find
 	out when a scan line begins, and then count cycles to find
@@ -31,9 +36,33 @@ How it works:
 
 	To save space, only two channels of audio are played.
 
+More technical info:
 
-Code by: deater (Vince Weaver)
-LZ4 code: qkumba
-Music: Muda Kingdom from Super Mario Land (gameboy) by Hirokazu Tanaka
-	transcribed from sheet music by G-Han
+	I made the music from the sheet music using a weird text-editor
+	based tracker I've written.  There's a one off conversion tool
+	in my separate vmw-meter.git repository called "ym5_to_kf"
+	that takes the generated ym5 and strips it down for the demo.
+
+	I did not do any size optimization at all, in fact the opposite
+	as I am cycle counting here, so lots of time spent wasting cycles
+	so both sides of branches match up.  Also on 6502 if a branch
+	crosses a page boundary it takes a cycle penalty, so to simplify
+	things I have .align codes all over.
+	This doesn't matter though because I compress with qkumba's lz4
+	and that forgives many sins.
+
+	For the timing loops, I have a simple nested timing loop with X and Y.
+	I have a C program I use that I input how many cycles I want and it
+	prints all possible options with 10 cycles or so.  If no exact match
+	is possible I pad with NOPs or similar to get the right amount.
+
+	This was all written in 6502 assembly, using ca65 asm on Linux
+	and tested in AppleWin running under wine.
+
+Greets:
+
+	Code by: deater (Vince Weaver)
+	LZ4 code: qkumba
+	Music: Muda Kingdom from Super Mario Land (gameboy) by Hirokazu Tanaka
+		transcribed from sheet music by G-Han
 
