@@ -1,0 +1,39 @@
+KFEST18 SUPER RASTEBAR DEMO
+	by deater (Vince Weaver) vince@deater.net
+
+Written for the Kansasfest Hackfest.
+
+I started work on this on the morning of Wed Jul 18th and finished
+early in the AM on Saturday July 21st.
+
+NOTE: If you run the demo and the sound is scratchy and/or the graphics
+corrupted, reboot until it works.  Sometimes the vapor-lock doesn't
+happen like it should and I'm not sure why.
+
+
+How it works:
+	The Apple II lo-res mode is usually limited to 40x48 mode.
+
+	However, there are two graphics pages that can be flipped
+	between with a soft-switch.
+
+	If you switch between page0 and page1 at just the right time
+	(every 2 scan lines) you can create a pseudo 40x96 graphics
+	mode, using all 15 lo-res colors.
+
+	Of course there's no VBLANK notification or HSCAN interrupts
+	on Apple II.  So you have to read the "floating bus" to find
+	out when a scan line begins, and then count cycles to find
+	out where to switch things.
+
+	All the calculations for the raster bar, mockingboard sound,
+	and scrolling text are done during the 4550 cycles of VBLANK.
+
+	To save space, only two channels of audio are played.
+
+
+Code by: deater (Vince Weaver)
+LZ4 code: qkumba
+Music: Muda Kingdom from Super Mario Land (gameboy) by Hirokazu Tanaka
+	transcribed from sheet music by G-Han
+
