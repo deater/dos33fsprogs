@@ -60,9 +60,9 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 
 	; draw border line
 
-	lda	#$55
-	ldy	#38
-	jsr	hline
+;	lda	#$55
+;	ldy	#38
+;	jsr	hline
 
 
 	;==================
@@ -75,11 +75,18 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	lda	#$6f
 	ldy	#0
 	jsr	hline
+	lda	#$72
+	ldy	#38
+	jsr	hline
+
 
 	lda	#$4
 	sta	DRAW_PAGE
 	lda	#$27
 	ldy	#0
+	jsr	hline
+	lda	#$f6
+	ldy	#38
 	jsr	hline
 
 	;=====================================
@@ -137,7 +144,7 @@ wiloop:
 	DEX
 	BNE wiloop
 
-	LDA #$55		; now look for four all grey
+	LDA #$72		; now look for our border color (4 times)
 zloop:
 	LDX #$04
 qloop:
