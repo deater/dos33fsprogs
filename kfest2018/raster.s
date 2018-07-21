@@ -1,6 +1,9 @@
-; Kansasfest HackFest Entry
+; Kansasfest18 HackFest Entry
+; by deater (Vince Weaver) <vince@deater.net>
 
 ; Zero Page
+FRAMEBUFFER	= $00	; $00 - $0F
+YPOS		= $10
 DRAW_PAGE	= $EE
 CURRENT_OFFSET	= $EF
 OFFSET_GOVERNOR = $F0
@@ -372,20 +375,23 @@ loop2:
 	rts						; 6
 
 
+.align	$100
+
 	;============================
 	; Rasterbars
 	;============================
 	; we have 4518-6 = 4512 to work with
 rasterbars:
 
-	; Try X=99 Y=9 cycles=4510 R2
+	; delay 1618 (4512, -2661 draw_rasterbars
+	;		- 147 clear - 86 set_rasterbar
 
-	; waste 2 cycles
-	nop
 
-	ldy	#9							; 2
+	; Try X=3 Y=77 cycles=1618
+
+	ldy	#77							; 2
 loop3:
-	ldx	#99							; 2
+	ldx	#3							; 2
 loop4:
 	dex								; 2
 	bne	loop4							; 2nt/3
@@ -393,7 +399,217 @@ loop4:
 	dey								; 2
 	bne	loop3							; 2nt/3
 
-	rts						; 6
+	;==================
+	; Clear Framebuffer
+	;==================
+	; 4 + 16*9 - 1 = 147
+
+	lda	#0							; 2
+	ldx	#15							; 2
+clear_fb_loop:
+	sta	FRAMEBUFFER,X						; 4
+	dex								; 2
+	bpl	clear_fb_loop						; 2nt/3
+
+
+	;==================
+	; Set Rasterbar
+	;==================
+	; 16 + 52 + 18 = 86
+
+	lda	YPOS							; 3
+	and	#$fc							; 2
+	lsr								; 2
+	tax								; 2
+
+	lda	YPOS							; 3
+	and	#$3							; 2
+
+	cmp	#$0							; 2
+
+; zero_rasterbar = 42 (add 10)
+; one_rasterbar = 46 (add 6)
+; two_rasterbar = 50 (add 2)
+; three_rasterbar = 52
+
+	beq	zero_rasterbar
+									; 2
+	cmp	#$1							; 2
+	beq	one_rasterbar
+									; 2
+	cmp	#$2							; 2
+	beq	two_rasterbar
+									; 2
+	bne	three_rasterbar
+
+zero_rasterbar:
+									; 3
+	lda	#$b1							; 2
+	sta	FRAMEBUFFER,X						; 4
+	lda	#$f3							; 2
+	sta	FRAMEBUFFER+1,X						; 4
+	lda	#$1b							; 2
+	sta	FRAMEBUFFER+2,X						; 4
+	lda	#$03							; 2
+	sta	FRAMEBUFFER+3,X						; 4
+	lda	#$00							; 2
+	sta	FRAMEBUFFER+4,X						; 4
+	lda	#$00							; 2
+	sta	FRAMEBUFFER+5,X						; 4
+	nop
+	nop
+	nop
+	nop
+	nop
+
+	jmp	done_draw_rasterbar					; 3
+								;===========
+								;        42
+
+one_rasterbar:
+									; 4+3
+
+	lda	#$30							; 2
+	sta	FRAMEBUFFER,X						; 4
+	lda	#$b1							; 2
+	sta	FRAMEBUFFER+1,X						; 4
+	lda	#$3f							; 2
+	sta	FRAMEBUFFER+2,X						; 4
+	lda	#$1b							; 2
+	sta	FRAMEBUFFER+3,X						; 4
+	lda	#$00							; 2
+	sta	FRAMEBUFFER+4,X						; 4
+	lda	#$00							; 2
+	sta	FRAMEBUFFER+5,X						; 4
+	nop
+	nop
+	nop
+	jmp	done_draw_rasterbar					; 3
+								;==========
+								;         46
+
+two_rasterbar:
+									; 8+3
+
+	lda	#$10							; 2
+	sta	FRAMEBUFFER,X						; 4
+	lda	#$30							; 2
+	sta	FRAMEBUFFER+1,X						; 4
+	lda	#$bb							; 2
+	sta	FRAMEBUFFER+2,X						; 4
+	lda	#$3f							; 2
+	sta	FRAMEBUFFER+3,X						; 4
+	lda	#$01							; 2
+	sta	FRAMEBUFFER+4,X						; 4
+	lda	#$00							; 2
+	sta	FRAMEBUFFER+5,X						; 4
+	nop
+	jmp	done_draw_rasterbar					; 3
+								;==========
+								;         50
+
+three_rasterbar:
+									; 10+3
+
+	lda	#$00							; 2
+	sta	FRAMEBUFFER,X						; 4
+	lda	#$10							; 2
+	sta	FRAMEBUFFER+1,X						; 4
+	lda	#$f3							; 2
+	sta	FRAMEBUFFER+2,X						; 4
+	lda	#$bb							; 2
+	sta	FRAMEBUFFER+3,X						; 4
+	lda	#$03							; 2
+	sta	FRAMEBUFFER+4,X						; 4
+	lda	#$01							; 2
+	sta	FRAMEBUFFER+5,X						; 4
+	jmp	done_draw_rasterbar					; 3
+								;==========
+								;         52
+
+
+done_draw_rasterbar:
+
+	; movement = 7 + 5 + 3 +3 = 18
+	ldx	YPOS							; 3
+
+	inx								; 2
+	cpx	#24							; 2
+								;===========
+								;         7
+	beq	raster_bottom
+
+									; 2
+	jmp	raster_move_done					; 3
+								;==========
+								;         5
+raster_bottom:
+									; 3
+	ldx	#0							; 2
+								;===========
+								;         5
+
+raster_move_done:
+	stx	YPOS							; 3
+
+
+	jmp	draw_rasterbars						; 3
+.align $100
+
+
+	;==================
+	; Draw Rasterbars
+	;==================
+draw_rasterbars:
+	; don't count the rts at end
+
+	; 2 + YSIZE*[(8*16) + 5] - 1
+	; 2 + (20*133) - 1
+	; 2661 cycles
+
+	ldx	#19						; 2
+raster_loop2:
+	lda	FRAMEBUFFER					; 3
+	sta	$600,X						; 5
+	lda	FRAMEBUFFER+2					; 3
+	sta	$680,X						; 5
+	lda	FRAMEBUFFER+4					; 3
+	sta	$700,X						; 5
+	lda	FRAMEBUFFER+6					; 3
+	sta	$780,X						; 5
+	lda	FRAMEBUFFER+8					; 3
+	sta	$428,X						; 5
+	lda	FRAMEBUFFER+10					; 3
+	sta	$4a8,X						; 5
+	lda	FRAMEBUFFER+12					; 3
+	sta	$528,X						; 5
+	lda	FRAMEBUFFER+14					; 3
+	sta	$5a8,X						; 5
+
+	lda	FRAMEBUFFER+1
+	sta	$A00,X
+	lda	FRAMEBUFFER+3
+	sta	$A80,X
+	lda	FRAMEBUFFER+5
+	sta	$B00,X
+	lda	FRAMEBUFFER+7
+	sta	$B80,X
+	lda	FRAMEBUFFER+9
+	sta	$828,X
+	lda	FRAMEBUFFER+11
+	sta	$8a8,X
+	lda	FRAMEBUFFER+13
+	sta	$928,X
+	lda	FRAMEBUFFER+15
+	sta	$9a8,X
+
+	dex							; 2
+	bpl	raster_loop2					; 2nt/3
+
+
+all_done:
+	rts							; 6
+
 
 
 
@@ -529,3 +745,5 @@ gr_offsets:
 	.word	$400,$480,$500,$580,$600,$680,$700,$780
 	.word	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
 	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
+
+
