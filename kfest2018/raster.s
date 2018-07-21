@@ -63,7 +63,7 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	;==================
 	; Draw Top Border
 	;==================
-	; F -> 7 -> 6 -> 2, so 
+	; F -> 7 -> 6 -> 2
 
 	lda	#$0
 	sta	DRAW_PAGE
@@ -384,15 +384,17 @@ loop2:
 	; we have 4518-6 = 4512 to work with
 rasterbars:
 
-	; delay 1611 (4512, -2661 draw_rasterbars
+	; delay 547 (4512, -3725 draw_rasterbars
 	;		- 147 clear - 93 set_rasterbar
 
+
 	; Try X=8 Y=35 cycles=1611
+	; Try X=3 Y=26 cycles=547
 
 
-	ldy	#35							; 2
+	ldy	#26							; 2
 loop3:
-	ldx	#8							; 2
+	ldx	#3							; 2
 loop4:
 	dex								; 2
 	bne	loop4							; 2nt/3
@@ -568,44 +570,44 @@ draw_rasterbars:
 	; don't count the rts at end
 
 	; 2 + YSIZE*[(8*16) + 5] - 1
-	; 2 + (20*133) - 1
-	; 2661 cycles
+	; 2 + (28*133) - 1
+	; 3725 cycles
 
-	ldx	#19						; 2
+	ldx	#27						; 2
 raster_loop2:
 	lda	FRAMEBUFFER					; 3
-	sta	$600,X						; 5
+	sta	$606,X						; 5
 	lda	FRAMEBUFFER+2					; 3
-	sta	$680,X						; 5
+	sta	$686,X						; 5
 	lda	FRAMEBUFFER+4					; 3
-	sta	$700,X						; 5
+	sta	$706,X						; 5
 	lda	FRAMEBUFFER+6					; 3
-	sta	$780,X						; 5
+	sta	$786,X						; 5
 	lda	FRAMEBUFFER+8					; 3
-	sta	$428,X						; 5
+	sta	$42E,X						; 5
 	lda	FRAMEBUFFER+10					; 3
-	sta	$4a8,X						; 5
+	sta	$4aE,X						; 5
 	lda	FRAMEBUFFER+12					; 3
-	sta	$528,X						; 5
+	sta	$52E,X						; 5
 	lda	FRAMEBUFFER+14					; 3
-	sta	$5a8,X						; 5
+	sta	$5aE,X						; 5
 
 	lda	FRAMEBUFFER+1
-	sta	$A00,X
+	sta	$A06,X
 	lda	FRAMEBUFFER+3
-	sta	$A80,X
+	sta	$A86,X
 	lda	FRAMEBUFFER+5
-	sta	$B00,X
+	sta	$B06,X
 	lda	FRAMEBUFFER+7
-	sta	$B80,X
+	sta	$B86,X
 	lda	FRAMEBUFFER+9
-	sta	$828,X
+	sta	$82e,X
 	lda	FRAMEBUFFER+11
-	sta	$8a8,X
+	sta	$8ae,X
 	lda	FRAMEBUFFER+13
-	sta	$928,X
+	sta	$92e,X
 	lda	FRAMEBUFFER+15
-	sta	$9a8,X
+	sta	$9ae,X
 
 	dex							; 2
 	bpl	raster_loop2					; 2nt/3
