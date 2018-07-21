@@ -224,75 +224,37 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
-
-	; delay 2717 (4550 +1 from falltrough, -2 for loadup, -1832 for scroll)
-
-	; Try X=8 Y=59 cycles=2715
-
-	; waste 2 cycles
-	;lda	DRAW_PAGE						; 3
-	;lda	DRAW_PAGE						; 3
-	nop								; 2
-
-	ldy	#59							; 2
-loop5:
-	ldx	#8							; 2
-loop6:
-	dex								; 2
-	bne	loop6							; 2nt/3
-
-	dey								; 2
-	bne	loop5							; 2nt/3
-
-
-
-	;================================
-	; SCROLL THE TEXT
-	;================================
-	; 5+ 40*(36 + 9)+5+3 -1 + 20
-	; 12+40*(45) + 19 = 1832
-
-	ldy	CURRENT_OFFSET				; 3
-	ldx	#0					; 2
-data_loop:
-	lda	words,Y					; 4+
-	sta	$6d0,X					; 5
-
-	lda	words2,Y				; 4+
-	sta	$750,X					; 5
-
-	lda	words3,Y				; 4+
-	sta	$ad0,X					; 5
-
-	lda	words4,Y				; 4+
-	sta	$b50,X					; 5
-
-	iny						; 2
-	inx						; 2
-	cpx	#40					; 2
-	bne	data_loop				; 2nt/3
+	; scroll_the_text should be 4550+1 -2 - 13 -13 = 4523
+	; rasterbars should be      4550+1 -2 - 13 -18 = 4518
+	; do_nothing should be      4550+1 -2 - 13 -19 = 4517
 
 	inc	OFFSET_GOVERNOR				; 5
 
 	lda	OFFSET_GOVERNOR				; 3
-	cmp	#6					; 2
-	bne	not_yet					; 2
-
-	inc	CURRENT_OFFSET				; 5
-	lda	#0					; 2
+	and	#$7					; 2
 	sta	OFFSET_GOVERNOR				; 3
-	jmp	all_done				; 3
-not_yet:
-							; 1
-	lda	OFFSET_GOVERNOR				; 3
-	lda	OFFSET_GOVERNOR				; 3
-	lda	OFFSET_GOVERNOR				; 3
-	lda	OFFSET_GOVERNOR				; 3
+						;===========
+						;        13
 
-all_done:
+	cmp	#$5					; 2
+	bne	not_scroll
+							; 2
+	jsr	scroll_the_text				; 6
 
+	jmp	display_loop				; 3
 
+not_scroll:
+							; 5
+	and	#$1					; 2
+	bne	we_should_do_nothing
+							; 2
+	jsr	rasterbars				; 6
 
+	jmp	display_loop				; 3
+
+we_should_do_nothing:
+							; 10
+	jsr	do_nothing				; 6
 	jmp	display_loop				; 3
 
 
@@ -330,6 +292,110 @@ clear_page_loop:
 	dey
 	bpl	clear_page_loop
 	rts
+
+
+	;============================
+	; Scroll the text
+	;============================
+	; we have 4523 to work with
+
+scroll_the_text:
+
+	; delay 2708 (4525 -1817 for scroll)
+
+	; Try X=107 Y=5 cycles=2706 R2
+
+	; waste 2 cycles
+	nop								; 2
+
+	ldy	#5							; 2
+loop5:
+	ldx	#107							; 2
+loop6:
+	dex								; 2
+	bne	loop6							; 2nt/3
+
+	dey								; 2
+	bne	loop5							; 2nt/3
+
+
+
+	;================================
+	; SCROLL THE TEXT
+	;================================
+	; 5+ 40*(36 + 9) + 6 + 6
+	; 17+40*(45) = 1817
+
+	ldy	CURRENT_OFFSET				; 3
+	ldx	#0					; 2
+data_loop:
+	lda	words,Y					; 4+
+	sta	$6d0,X					; 5
+
+	lda	words2,Y				; 4+
+	sta	$750,X					; 5
+
+	lda	words3,Y				; 4+
+	sta	$ad0,X					; 5
+
+	lda	words4,Y				; 4+
+	sta	$b50,X					; 5
+
+	iny						; 2
+	inx						; 2
+	cpx	#40					; 2
+	bne	data_loop				; 2nt/3
+
+	inc	CURRENT_OFFSET				; 6
+
+	rts						; 6
+
+
+	;=================================
+	; do nothing
+	;=================================
+	; and take 4517-6 = 4511 cycles to do it
+do_nothing:
+	; Try X=7 Y=110 cycles=4511
+
+	ldy	#110							; 2
+loop1:
+	ldx	#7							; 2
+loop2:
+	dex								; 2
+	bne	loop2							; 2nt/3
+
+	dey								; 2
+	bne	loop1							; 2nt/3
+
+
+	rts						; 6
+
+
+	;============================
+	; Rasterbars
+	;============================
+	; we have 4518-6 = 4512 to work with
+rasterbars:
+
+	; Try X=99 Y=9 cycles=4510 R2
+
+	; waste 2 cycles
+	nop
+
+	ldy	#9							; 2
+loop3:
+	ldx	#99							; 2
+loop4:
+	dex								; 2
+	bne	loop4							; 2nt/3
+
+	dey								; 2
+	bne	loop3							; 2nt/3
+
+	rts						; 6
+
+
 
 .align  $100
 words:
