@@ -4,6 +4,7 @@
 ; Zero Page
 FRAMEBUFFER	= $00	; $00 - $0F
 YPOS		= $10
+YPOS_SIN	= $11
 DRAW_PAGE	= $EE
 CURRENT_OFFSET	= $EF
 OFFSET_GOVERNOR = $F0
@@ -383,15 +384,15 @@ loop2:
 	; we have 4518-6 = 4512 to work with
 rasterbars:
 
-	; delay 1618 (4512, -2661 draw_rasterbars
-	;		- 147 clear - 86 set_rasterbar
+	; delay 1611 (4512, -2661 draw_rasterbars
+	;		- 147 clear - 93 set_rasterbar
+
+	; Try X=8 Y=35 cycles=1611
 
 
-	; Try X=3 Y=77 cycles=1618
-
-	ldy	#77							; 2
+	ldy	#35							; 2
 loop3:
-	ldx	#3							; 2
+	ldx	#8							; 2
 loop4:
 	dex								; 2
 	bne	loop4							; 2nt/3
@@ -415,15 +416,18 @@ clear_fb_loop:
 	;==================
 	; Set Rasterbar
 	;==================
-	; 16 + 52 + 18 = 86
+	; 16 + 52 + 18 = 86 +7 = 93
 
-	lda	YPOS							; 3
-	and	#$fc							; 2
-	lsr								; 2
+	ldx	YPOS	; get YPOS					; 3
+	lda	sine_table,X						; 4+
+	sta	YPOS_SIN						; 3
+
+	and	#$fc	; mask off bottom 2 bits			; 2
+	lsr		; X = (YPOS / 4)*2	skip odd		; 2
 	tax								; 2
 
-	lda	YPOS							; 3
-	and	#$3							; 2
+	lda	YPOS_SIN; get bottom 2 bits 0..3			; 3
+	and	#$3	; use to decide which pattern to use		; 2
 
 	cmp	#$0							; 2
 
@@ -534,7 +538,7 @@ done_draw_rasterbar:
 	ldx	YPOS							; 3
 
 	inx								; 2
-	cpx	#24							; 2
+	cpx	#32							; 2
 								;===========
 								;         7
 	beq	raster_bottom
@@ -745,5 +749,40 @@ gr_offsets:
 	.word	$400,$480,$500,$580,$600,$680,$700,$780
 	.word	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
 	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
+
+
+sine_table:
+.byte 12 ; 12.000000 0
+.byte 14 ; 14.145992 1
+.byte 16 ; 16.209514 2
+.byte 18 ; 18.111268 3
+.byte 20 ; 19.778169 4
+.byte 21 ; 21.146161 5
+.byte 22 ; 22.162671 6
+.byte 23 ; 22.788636 7
+.byte 23 ; 23.000000 8
+.byte 23 ; 22.788641 9
+.byte 22 ; 22.162682 10
+.byte 21 ; 21.146177 11
+.byte 20 ; 19.778190 12
+.byte 18 ; 18.111292 13
+.byte 16 ; 16.209541 14
+.byte 14 ; 14.146020 15
+.byte 12 ; 12.000029 16
+.byte 10 ; 9.854037 17
+.byte 8 ; 7.790513 18
+.byte 6 ; 5.888756 19
+.byte 4 ; 4.221851 20
+.byte 3 ; 2.853856 21
+.byte 2 ; 1.837341 22
+.byte 1 ; 1.211370 23
+.byte 1 ; 1.000000 24
+.byte 1 ; 1.211353 25
+.byte 2 ; 1.837307 26
+.byte 3 ; 2.853807 27
+.byte 4 ; 4.221789 28
+.byte 6 ; 5.888683 29
+.byte 8 ; 7.790432 30
+.byte 10 ; 9.853951 31
 
 
