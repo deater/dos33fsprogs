@@ -50,8 +50,13 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	; Clear Page1
 	lda	#$4
 	sta	DRAW_PAGE
-	lda	#$44
+	lda	#$0
 	jsr	clear_gr
+
+	; draw some green lines for character
+	lda	#$44
+	ldy	#28
+	jsr	clear_page_loop
 
 	; draw border line
 
@@ -61,7 +66,7 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 
 
 	;==================
-	; Draw Top Border
+	; Draw Blue Border on screen
 	;==================
 	; F -> 7 -> 6 -> 2
 
@@ -71,20 +76,11 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	ldy	#0
 	jsr	hline
 
-;	lda	#$3f
-;	ldy	#12
-;	jsr	hline
-
 	lda	#$4
 	sta	DRAW_PAGE
 	lda	#$27
 	ldy	#0
 	jsr	hline
-;	lda	#$1b
-;	ldy	#12
-;	jsr	hline
-
-
 
 	;=====================================
 	; Print the apple logos plus vmw logos
@@ -94,16 +90,16 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	ldx	#0
 data_loop2:
 	lda	words,Y
-	sta	$7a8,X
-
-	lda	words2,Y
 	sta	$450,X
 
+	lda	words2,Y
+	sta	$4d0,X
+
 	lda	words3,Y
-	sta	$ba8,X
+	sta	$850,X
 
 	lda	words4,Y
-	sta	$850,X
+	sta	$8d0,X
 
 	iny
 	inx
