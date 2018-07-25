@@ -12,14 +12,14 @@ DISP4096:	disp4096.o
 
 
 disp4096.o:	disp4096.s gr_copy.s \
-	katahdin_40_96.inc
+	apple_40_96.inc katahdin_40_96.inc
 	ca65 -o disp4096.o disp4096.s -l disp4096.lst
 
 katahdin_40_96.inc:	png_to_40x96 katahdin_40_96.png
 	./png_to_40x96 asm katahdin_40_96.png katahdin > katahdin_40_96.inc
 
-loadpng.o:	loadpng.c
-	$(CC) $(CFLAGS) -c loadpng.c
+apple_40_96.inc:	png_to_40x96 apple_40_96.png
+	./png_to_40x96 asm apple_40_96.png apple > apple_40_96.inc
 
 png_to_40x96:		png_to_40x96.o
 	$(CC) $(LFLAGS) -lpng -o png_to_40x96 png_to_40x96.o

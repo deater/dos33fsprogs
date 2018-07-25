@@ -52,8 +52,7 @@ gr_copy_line:
 	sta	$780,Y		; store a byte (self modified)		; 5
 
 	dey			; decrement pointer			; 2
-
-
 	bpl	gr_copy_line	;					; 2nt/3
+
 	rts								; 6
 

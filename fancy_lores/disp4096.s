@@ -21,6 +21,7 @@ DRAW_PAGE	= $EE
 LASTKEY		= $F1
 PADDLE_STATUS	= $F2
 TEMP		= $FA
+WHICH		= $FB
 
 ; Soft Switches
 KEYPRESS= $C000
@@ -40,10 +41,23 @@ TEXT	= $FB36				;; Set text mode
 HOME	= $FC58				;; Clear the text screen
 WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 
+MAX	= 2
+
+	lda	#$ff
+	sta	WHICH
+
+start_over:
+	inc	WHICH
+	lda	WHICH
+	cmp	#MAX
+	bne	in_range
+	lda	#0
+	sta	WHICH
+
+in_range:
 
 	;===================
 	; init screen
-start_over:
 	jsr	TEXT
 	jsr	HOME
 	bit	KEYRESET
@@ -54,20 +68,6 @@ start_over:
 	lda	#0
 	sta	DRAW_PAGE
 
-	; Clear Page0
-;	lda	#$00
-;	sta	DRAW_PAGE
-;	jsr	clear_gr
-
-	; Clear Page1
-;	lda	#$4
-;	sta	DRAW_PAGE
-;	lda	#$0
-;	jsr	clear_gr
-
-
-
-
 	;=============================
 	; Load graphic page0
 
@@ -76,10 +76,15 @@ start_over:
 	lda	#$00
 	sta	BASL                    ; load image to $c00
 
-	lda	#>(katahdin_low)
-	sta	GBASH
-	lda	#<(katahdin_low)
+	lda	WHICH
+	asl
+	asl				; which*4
+	tay
+
+	lda	pictures,Y
 	sta	GBASL
+	lda	pictures+1,Y
+	sta	GBASH
 	jsr	load_rle_gr
 
 	lda	#4
@@ -104,10 +109,15 @@ start_over:
 	lda	#$00
 	sta	BASL                    ; load image to $c00
 
-	lda	#>(katahdin_high)
-	sta	GBASH
-	lda	#<(katahdin_high)
+	lda	WHICH
+	asl
+	asl				; which*4
+	tay
+
+	lda	pictures+2,Y
 	sta	GBASL
+	lda	pictures+3,Y
+	sta	GBASH
 	jsr	load_rle_gr
 
 	lda	#0
@@ -333,5 +343,10 @@ gr_offsets:
 .include "../asm_routines/keypress.s"
 .include "gr_copy.s"
 
+pictures:
+	.word apple_low,apple_high
+	.word katahdin_low,katahdin_high
+
+.include "apple_40_96.inc"
 .include "katahdin_40_96.inc"
 
