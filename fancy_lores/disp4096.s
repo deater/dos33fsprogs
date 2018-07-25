@@ -54,46 +54,18 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	sta	DRAW_PAGE
 
 	; Clear Page0
-	lda	#$00
-	sta	DRAW_PAGE
-	jsr	clear_gr
-
-	; draw border line
-
-;	lda	#$55
-;	ldy	#38
-;	jsr	hline
+;	lda	#$00
+;	sta	DRAW_PAGE
+;	jsr	clear_gr
 
 	; Clear Page1
-	lda	#$4
-	sta	DRAW_PAGE
-	lda	#$0
-	jsr	clear_gr
-
-
-	;==================
-	; Draw Blue Border on screen
-	;==================
-	; F -> 7 -> 6 -> 2
-
-;	lda	#$0
-;	sta	DRAW_PAGE
-;	lda	#$6f
-;	ldy	#0
-;	jsr	hline
-;	lda	#$72
-;	ldy	#38
-;	jsr	hline
-
-
 ;	lda	#$4
 ;	sta	DRAW_PAGE
-;	lda	#$27
-;	ldy	#0
-;	jsr	hline
-;	lda	#$f6
-;	ldy	#38
-;	jsr	hline
+;	lda	#$0
+;	jsr	clear_gr
+
+
+
 
 	;=============================
 	; Load graphic page0
@@ -101,7 +73,7 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	lda	#$0c
 	sta	BASH
 	lda	#$00
-	sta	BASL                    ; load image to page0 $400
+	sta	BASL                    ; load image to $c00
 
 	lda	#>(katahdin_low)
 	sta	GBASH
@@ -109,13 +81,13 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	sta	GBASL
 	jsr	load_rle_gr
 
-	lda	#0
+	lda	#4
 	sta	DRAW_PAGE
 
-	jsr	gr_copy_to_current
+	jsr	gr_copy_to_current	; copy to page1
 
 	; GR part
-	bit	PAGE0
+	bit	PAGE1
 	bit	LORES							; 4
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
@@ -129,7 +101,7 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	lda	#$0c
 	sta	BASH
 	lda	#$00
-	sta	BASL                    ; load image to page0 $400
+	sta	BASL                    ; load image to $c00
 
 	lda	#>(katahdin_high)
 	sta	GBASH
@@ -137,16 +109,31 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	sta	GBASL
 	jsr	load_rle_gr
 
-	lda	#4
+	lda	#0
 	sta	DRAW_PAGE
 
 	jsr	gr_copy_to_current
 
 	; GR part
-	bit	PAGE1
+	bit	PAGE0
 
 	jsr	wait_until_keypressed
 
+
+	;==============================
+	; setup graphics for vapor lock
+	;==============================
+
+	; Clear Page0
+	lda	#$0
+	sta	DRAW_PAGE
+	lda	#$44
+	jsr	clear_gr
+
+	; Make screen half green
+	lda	#$11
+	ldy	#24
+	jsr	clear_page_loop
 
 
 	;=====================================================
@@ -168,7 +155,7 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	; the line (max 3 repeats in that case)
 
 vapor_lock_loop:		; first make sure we have all zeroes
-	LDA #$00
+	LDA #$11
 zxloop:
 	LDX #$04
 wiloop:
@@ -177,7 +164,7 @@ wiloop:
 	DEX
 	BNE wiloop
 
-	LDA #$72		; now look for our border color (4 times)
+	LDA #$44		; now look for our border color (4 times)
 zloop:
 	LDX #$04
 qloop:
@@ -186,10 +173,9 @@ qloop:
 	DEX
 	BNE qloop
 
-	; found first line of low-res grey, need to kill time
-        ; until we can enter at top of screen
-        ; so we want roughly 10 lines * 4 = 40*65 = 2600+4550-65
-	; +4550 - 65 (for the scanline we missed) = 7085 - 12 = 7073
+	; found first line of black after green, at up to line 26 on screen
+        ; so we want roughly 22 lines * 4 = 88*65 = 5720 + 4550 = 10270
+	; - 65 (for the scanline we missed) = 10205 - 12 = 10193
 
 
 	; GR part
@@ -197,16 +183,11 @@ qloop:
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
 
+	; Try X=38 Y=52 cycles=10193
 
-        ; want 7073
-	; Try X=26 Y=52 cycles=7073
-
-        lda     #0                                                      ; 2
-        lda     #0                                                      ; 2
-
-        ldy     #52                                                     ; 2
+        ldy     #52							; 2
 loopA:
-        ldx     #26                                                     ; 2
+        ldx     #38							; 2
 loopB:
         dex                                                             ; 2
         bne     loopB                                                   ; 2nt/3
@@ -264,9 +245,7 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
-	; scroll_the_text should be 4550+1 -2 - 13 -13 = 4523
-	; rasterbars should be      4550+1 -2 - 13 -18 = 4518
-	; do_nothing should be      4550+1 -2 - 13 -19 = 4517
+	; do_nothing should be      4550+1 -2-9= 4540
 
 	jsr	do_nothing				; 6
 	jmp	display_loop				; 3
@@ -276,13 +255,15 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;=================================
 	; do nothing
 	;=================================
-	; and take 4517-6 = 4511 cycles to do it
+	; and take 4540-6 = 4534 cycles to do it
 do_nothing:
-	; Try X=7 Y=110 cycles=4511
+	; Try X=29 Y=30 cycles=4531 R3
 
-	ldy	#110							; 2
+	lda	TEMP	; 3
+
+	ldy	#30							; 2
 loop1:
-	ldx	#7							; 2
+	ldx	#29							; 2
 loop2:
 	dex								; 2
 	bne	loop2							; 2nt/3
@@ -329,13 +310,6 @@ clear_page_loop:
 	dey
 	bpl	clear_page_loop
 	rts
-
-
-
-
-
-
-
 
 gr_offsets:
 	.word	$400,$480,$500,$580,$600,$680,$700,$780
