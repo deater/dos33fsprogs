@@ -48,11 +48,22 @@ void gen_color(int col1, int col2) {
 	return;
 }
 
+void hex_color(int col1, int col2) {
+
+	if (col1>=col2) 
+	printf("\t\tcase 0x%02x%02x%02x: hi=%d; low=%d; break;\n",
+		average(gr_colors[col1][0],gr_colors[col2][0]),
+		average(gr_colors[col1][1],gr_colors[col2][1]),
+		average(gr_colors[col1][2],gr_colors[col2][2]),col1,col2);
+
+	return;
+}
+
 
 int main(int argc, char **argv) {
 
 	int x,y;
-
+#if 1
 	printf("GIMP Palette\n");
 	printf("Name: Apple II Lores Dither.gpl\n");
 	printf("Columns: 16\n");
@@ -62,5 +73,12 @@ int main(int argc, char **argv) {
 			gen_color(x,y);
 		}
 	}
+#else
+	for(x=0;x<16;x++) {
+		for(y=0;y<16;y++) {
+			hex_color(x,y);
+		}
+	}
+#endif
 	return 0;
 }
