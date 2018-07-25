@@ -9,10 +9,10 @@ katahdin_40_96.inc:	png_to_40x96 katahdin_40_96.png
 loadpng.o:	loadpng.c
 	$(CC) $(CFLAGS) -c loadpng.c
 
-png_to_40x96:		png_to_40x96.o loadpng.o
-	$(CC) $(LFLAGS) -lpng -o png_to_40x96 png_to_40x96.o loadpng.o
+png_to_40x96:		png_to_40x96.o
+	$(CC) $(LFLAGS) -lpng -o png_to_40x96 png_to_40x96.o
 
-png_to_40x96.o:		png_to_40x96.c loadpng.h
+png_to_40x96.o:		png_to_40x96.c
 	$(CC) $(CFLAGS) -c png_to_40x96.c
 
 
