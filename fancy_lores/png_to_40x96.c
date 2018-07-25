@@ -103,7 +103,7 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 	width = png_get_image_width(png_ptr, info_ptr);
 	height = png_get_image_height(png_ptr, info_ptr);
 	*xsize=width;
-	*ysize=height;
+	*ysize=height/2;
 
 	color_type = png_get_color_type(png_ptr, info_ptr);
 	bit_depth = png_get_bit_depth(png_ptr, info_ptr);
@@ -137,7 +137,7 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 	out_ptr=image;
 
 	if (color_type==PNG_COLOR_TYPE_RGB_ALPHA) {
-		for(y=0;y<height;y+=2) {
+		for(y=high;y<height;y+=4) {
 			for(x=0;x<width;x++) {
 
 				/* top color */
@@ -151,9 +151,9 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 				a2_color=convert_color(color);
 
 				/* bottom color */
-				color=	(row_pointers[y+1][x*4]<<16)+
-					(row_pointers[y+1][x*4+1]<<8)+
-					(row_pointers[y+1][x*4+2]);
+				color=	(row_pointers[y+2][x*4]<<16)+
+					(row_pointers[y+2][x*4+1]<<8)+
+					(row_pointers[y+2][x*4+2]);
 				if (debug) {
 					printf("%x ",color);
 				}
@@ -167,14 +167,14 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 		}
 	}
 	else if (color_type==PNG_COLOR_TYPE_PALETTE) {
-		for(y=0;y<height;y+=2) {
+		for(y=high;y<height;y+=4) {
 			for(x=0;x<width;x++) {
 
 				/* top color */
 				a2_color=row_pointers[y][x];
 
 				/* bottom color */
-				color=row_pointers[y+1][x];
+				color=row_pointers[y+2][x];
 
 				a2_color|=(color<<4);
 
