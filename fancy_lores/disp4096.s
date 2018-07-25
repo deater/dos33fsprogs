@@ -43,9 +43,10 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 
 	;===================
 	; init screen
-
+start_over:
 	jsr	TEXT
 	jsr	HOME
+	bit	KEYRESET
 
 	;===================
 	; init vars
@@ -177,17 +178,21 @@ qloop:
         ; so we want roughly 22 lines * 4 = 88*65 = 5720 + 4550 = 10270
 	; - 65 (for the scanline we missed) = 10205 - 12 = 10193
 
+	jsr	gr_copy_to_current		; 6+ 9292
+	; 10193 - 9298 = 895
+	; Fudge factor (unknown) -30 = 865
 
 	; GR part
 	bit	LORES							; 4
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
 
-	; Try X=38 Y=52 cycles=10193
+	; Try X=88 Y=2 cycles=893 R2
 
-        ldy     #52							; 2
+	nop
+        ldy     #2							; 2
 loopA:
-        ldx     #38							; 2
+        ldx	#88							; 2
 loopB:
         dex                                                             ; 2
         bne     loopB                                                   ; 2nt/3
@@ -245,9 +250,15 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
-	; do_nothing should be      4550+1 -2-9= 4540
+	; do_nothing should be      4550+1 -2-9 -7= 4533
 
 	jsr	do_nothing				; 6
+
+	lda	KEYPRESS				; 4
+	bpl	no_keypress				; 3
+	jmp	start_over
+no_keypress:
+
 	jmp	display_loop				; 3
 
 
@@ -255,15 +266,16 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;=================================
 	; do nothing
 	;=================================
-	; and take 4540-6 = 4534 cycles to do it
+	; and take 4533-6 = 4527 cycles to do it
 do_nothing:
-	; Try X=29 Y=30 cycles=4531 R3
 
-	lda	TEMP	; 3
+	; Try X=4 Y=174 cycles=4525 R2
 
-	ldy	#30							; 2
+	nop	; 2
+
+	ldy	#174							; 2
 loop1:
-	ldx	#29							; 2
+	ldx	#4							; 2
 loop2:
 	dex								; 2
 	bne	loop2							; 2nt/3
