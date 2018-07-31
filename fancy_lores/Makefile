@@ -25,7 +25,7 @@ DISP4048D:	disp4048d.o
 	ld65 -o DISP4048D disp4048d.o -C ../linker_scripts/apple2_1000.inc
 
 disp4048d.o:	disp4048d.s gr_copy.s \
-	apple_40_48d.inc katahdin_40_48d.inc
+	apple_40_48d.inc katahdin_40_48d.inc spacebars_40_48d.inc
 	ca65 -o disp4048d.o disp4048d.s -l disp4048d.lst
 
 
@@ -54,6 +54,9 @@ apple_40_96.inc:	png_to_40x96 apple_40_96.png
 	./png_to_40x96 asm apple_40_96.png apple > apple_40_96.inc
 
 ###
+
+spacebars_40_48d.inc:	png_to_40x48d spacebars_40_48d.png
+	./png_to_40x48d asm spacebars_40_48d.png spacebars > spacebars_40_48d.inc
 
 katahdin_40_48d.inc:	png_to_40x48d katahdin_40_48d.png
 	./png_to_40x48d asm katahdin_40_48d.png katahdin > katahdin_40_48d.inc

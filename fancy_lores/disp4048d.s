@@ -40,7 +40,7 @@ TEXT	= $FB36				;; Set text mode
 HOME	= $FC58				;; Clear the text screen
 WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 
-MAX	= 2
+MAX	= 3
 
 	lda	#$ff
 	sta	WHICH
@@ -346,7 +346,9 @@ gr_offsets:
 pictures:
 	.word apple_low,apple_high
 	.word katahdin_low,katahdin_high
+	.word spacebars_low,spacebars_high
 
 .include "apple_40_48d.inc"
 .include "katahdin_40_48d.inc"
+.include "spacebars_40_48d.inc"
 
