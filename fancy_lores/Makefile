@@ -1,8 +1,11 @@
 include ../Makefile.inc
 
 DOS33 = ../dos33fs-utils/dos33
+PNG_TO_40x96 = ../gr-utils/png_to_40x96
+PNG_TO_40x48D = ../gr-utils/png_to_40x48d
 
-all:	fancy_lores_viewer.dsk png_to_40x96 png_to_40x48d
+
+all:	fancy_lores_viewer.dsk
 
 fancy_lores_viewer.dsk:	DISP4096 DISP4048D
 	$(DOS33) -y fancy_lores_viewer.dsk BSAVE -a 0x1000 DISP4096
@@ -29,40 +32,24 @@ disp4048d.o:	disp4048d.s gr_copy.s \
 	ca65 -o disp4048d.o disp4048d.s -l disp4048d.lst
 
 
-####
+###
 
-png_to_40x96:		png_to_40x96.o
-	$(CC) $(LFLAGS) -lpng -o png_to_40x96 png_to_40x96.o
+katahdin_40_96.inc:	katahdin_40_96.png
+	$(PNG_TO_40x96) asm katahdin_40_96.png katahdin > katahdin_40_96.inc
 
-png_to_40x96.o:		png_to_40x96.c
-	$(CC) $(CFLAGS) -c png_to_40x96.c
-
-####
-
-png_to_40x48d:		png_to_40x48d.o
-	$(CC) $(LFLAGS) -lpng -o png_to_40x48d png_to_40x48d.o
-
-png_to_40x48d.o:		png_to_40x48d.c
-	$(CC) $(CFLAGS) -g -c png_to_40x48d.c
+apple_40_96.inc:	apple_40_96.png
+	$(PNG_TO_40x96) asm apple_40_96.png apple > apple_40_96.inc
 
 ###
 
-katahdin_40_96.inc:	png_to_40x96 katahdin_40_96.png
-	./png_to_40x96 asm katahdin_40_96.png katahdin > katahdin_40_96.inc
+spacebars_40_48d.inc:	spacebars_40_48d.png
+	$(PNG_TO_40x48D) asm spacebars_40_48d.png spacebars > spacebars_40_48d.inc
 
-apple_40_96.inc:	png_to_40x96 apple_40_96.png
-	./png_to_40x96 asm apple_40_96.png apple > apple_40_96.inc
+katahdin_40_48d.inc:	katahdin_40_48d.png
+	$(PNG_TO_40x48D) asm katahdin_40_48d.png katahdin > katahdin_40_48d.inc
 
-###
-
-spacebars_40_48d.inc:	png_to_40x48d spacebars_40_48d.png
-	./png_to_40x48d asm spacebars_40_48d.png spacebars > spacebars_40_48d.inc
-
-katahdin_40_48d.inc:	png_to_40x48d katahdin_40_48d.png
-	./png_to_40x48d asm katahdin_40_48d.png katahdin > katahdin_40_48d.inc
-
-apple_40_48d.inc:	png_to_40x48d apple_40_48d.png
-	./png_to_40x48d asm apple_40_48d.png apple > apple_40_48d.inc
+apple_40_48d.inc:	apple_40_48d.png
+	$(PNG_TO_40x48D) asm apple_40_48d.png apple > apple_40_48d.inc
 
 
 
