@@ -12,13 +12,20 @@ GBASL		= $26
 GBASH		= $27
 BASL		= $28
 BASH		= $29
+MASK		= $2E
+COLOR		= $30
 FRAME		= $60
 BLARGH		= $69
 DRAW_PAGE	= $EE
 LASTKEY		= $F1
 PADDLE_STATUS	= $F2
+XPOS		= $F3
 TEMP		= $FA
-
+TEMPY		= $FB
+INL		= $FC
+INH		= $FD
+OUTL		= $FE
+OUTH		= $FF
 
 ; Soft Switches
 KEYPRESS= $C000
@@ -70,12 +77,6 @@ waterfall_demo:
 
 	jsr	gr_copy_to_current	; copy to page1
 
-	; GR part
-;	bit	PAGE1
-;	bit	LORES							; 4
-;	bit	SET_GR							; 4
-;	bit	FULLGR							; 4
-
 	;=============================
 	; Load bg to memory
 
@@ -89,14 +90,6 @@ waterfall_demo:
 	lda	#>waterfall_page2
 	sta	GBASH
 	jsr	load_rle_gr
-
-;	lda	#0
-;	sta	DRAW_PAGE
-
-;	jsr	gr_copy_to_current
-
-	; GR part
-;	bit	PAGE0
 
 
 	;==============================
@@ -234,17 +227,63 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;				-2 display loop setup
 	;                               -6 jsr to do_nothing
 	;				-10 check for keypress
-	;			      -2257 copy screen
+	;			      -2252 copy screen
 	;			=============
 	;			      2276
 
 	jsr	do_nothing					; 6
 
-	lda	#4						; 2
-	sta	DRAW_PAGE					; 3
+	;=========================
+	; Clear background
+	;=========================
+
 	jsr	gr_copy_row22					; 6+ 2246
 							;=========
-							;	2257
+							;	2252
+
+
+
+;        beq     bird_walking
+									; 2
+	lda	#>bird_rider_stand_right				; 2
+	sta	INH							; 3
+	lda	#<bird_rider_stand_right				; 2
+	sta	INL							; 3
+
+        jmp     draw_bird						; 3
+
+;bird_walking:
+									; 3
+	lda     #>bird_rider_walk_right                                 ; 2
+	sta     INH                                                     ; 3
+	lda     #<bird_rider_walk_right                                 ; 2
+	sta     INL                                                     ; 3
+	; must be 15
+	lda     #0                                                      ; 2
+	; Must add another 15 as sprite is different
+	inc	YPOS                                                    ; 5
+	inc	YPOS                                                    ; 5
+	inc	YPOS                                                    ; 5
+
+draw_bird:
+
+							; 15 + 7
+	lda	#17					; 2
+	sta	XPOS					; 3
+	lda	#22					; 2
+	sta	YPOS					; 3
+
+	jsr	put_sprite				; 6
+							;=========
+							; 38
+
+							; + 2190
+							;========
+							; 2228
+
+
+	;====================
+	; Handle keypresses
 
 
 	lda	KEYPRESS				; 4
@@ -330,8 +369,9 @@ gr_offsets:
 .include "../asm_routines/keypress.s"
 .include "gr_copy.s"
 .include "gr_unrolled_copy.s"
-
+.include "put_sprite.s"
 
 .include "waterfall_page1.inc"
 .include "waterfall_page2.inc"
 .include "tfv_sprites.inc"
+
