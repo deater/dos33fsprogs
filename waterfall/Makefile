@@ -31,6 +31,6 @@ waterfall_page2.inc:	waterfall_page2.png
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.inc WATERFALL
+		rm -f *~ *.o *.lst waterfall_page*.inc WATERFALL
 
 

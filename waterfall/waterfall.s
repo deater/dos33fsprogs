@@ -236,16 +236,17 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;				-2 display loop setup
 	;                               -6 jsr to do_nothing
 	;				-10 check for keypress
+	;			      -2257 copy screen
 	;			=============
-	;			      4533
+	;			      2276
 
 	jsr	do_nothing					; 6
 
-;	lda	#4						; 4
-;	sta	DRAW_PAGE					; 3
-;	jsr	gr_copy_to_current				; 6+ 9292
+	lda	#4						; 2
+	sta	DRAW_PAGE					; 3
+	jsr	gr_copy_row22					; 6+ 2246
 							;=========
-							;
+							;	2257
 
 
 	lda	KEYPRESS				; 4
@@ -263,16 +264,17 @@ all_done:
 	;=================================
 	; do nothing
 	;=================================
-	; and take 4533-6 = 4527 cycles to do it
+	; and take 2276-6 = 2260 cycles to do it
 do_nothing:
 
-	; Try X=4 Y=174 cycles=4525 R2
+	; Try X=29 Y=15 cycles=2266 R4
 
 	nop	; 2
+	nop	; 2
 
-	ldy	#174							; 2
+	ldy	#15							; 2
 loop1:
-	ldx	#4							; 2
+	ldx	#29							; 2
 loop2:
 	dex								; 2
 	bne	loop2							; 2nt/3
