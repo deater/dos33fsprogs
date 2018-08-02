@@ -14,7 +14,8 @@ space_bars.dsk:	SPACE_BARS
 SPACE_BARS:	space_bars.o
 	ld65 -o SPACE_BARS space_bars.o -C ../linker_scripts/apple2_1000.inc
 
-space_bars.o:	space_bars.s instructions.s gr_copy.s text_print.s title.s \
+space_bars.o:	space_bars.s instructions.s game.s \
+	game_over.s gr_copy.s text_print.s title.s \
 	spacebars_title.inc
 	ca65 -o space_bars.o space_bars.s -l space_bars.lst
 

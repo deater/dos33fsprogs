@@ -65,12 +65,16 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	; Rasterbars
 	;==================
 
+	jsr	game
+
 	;==================
 	; Game Over
 	;==================
 
-game_over:
-	jmp	game_over
+	jsr	game_over
+
+loop_forever:
+	jmp	loop_forever
 
 
 
@@ -122,7 +126,9 @@ gr_offsets:
 .include "gr_copy.s"
 .include "title.s"
 .include "instructions.s"
+.include "game.s"
 .include "text_print.s"
+.include "game_over.s"
 
 .include "spacebars_title.inc"
 
