@@ -78,9 +78,6 @@ waterfall_demo:
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
 
-	jsr	wait_until_keypressed
-
-
 	;=============================
 	; Load graphic page1
 
@@ -102,8 +99,6 @@ waterfall_demo:
 
 	; GR part
 	bit	PAGE0
-
-	jsr	wait_until_keypressed
 
 
 	;==============================
@@ -236,20 +231,33 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
-	; do_nothing should be      4550+1 -2-9 -7= 4533
+	; do_nothing should be        4550
+	;				+1 fallthrough from above
+	;				-2 display loop setup
+	;                               -6 jsr to do_nothing
+	;				-10 check for keypress
+	;			=============
+	;			      4533
 
-	jsr	do_nothing				; 6
+	jsr	do_nothing					; 6
+
+;	lda	#4						; 4
+;	sta	DRAW_PAGE					; 3
+;	jsr	gr_copy_to_current				; 6+ 9292
+							;=========
+							;
+
 
 	lda	KEYPRESS				; 4
 	bpl	no_keypress				; 3
-	jmp	run_forever
+	jmp	all_done
 no_keypress:
 
 	jmp	display_loop				; 3
 
 
-run_forever:
-	jmp	run_forever
+all_done:
+	jmp	all_done
 
 
 	;=================================
@@ -325,4 +333,4 @@ gr_offsets:
 
 .include "waterfall_page1.inc"
 .include "waterfall_page2.inc"
-
+.include "tfv_sprites.inc"
