@@ -16,6 +16,8 @@ MASK		= $2E
 COLOR		= $30
 FRAME		= $60
 BLARGH		= $69
+BIRD_STATE	= $E0
+BIRD_DIR	= $E1
 DRAW_PAGE	= $EE
 LASTKEY		= $F1
 PADDLE_STATUS	= $F2
@@ -52,11 +54,13 @@ waterfall_demo:
 	; init screen
 	jsr	TEXT
 	jsr	HOME
-	bit	KEYRESET
 	bit	PAGE0
 
 	;===================
 	; init vars
+	lda	#0
+	sta	BIRD_DIR
+	sta	BIRD_STATE
 
 	lda	#4
 	sta	DRAW_PAGE
@@ -223,15 +227,15 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
-	; do_nothing should be        4550
-	;				+1 fallthrough from above
-	;				-2 display loop setup
-	;                               -6 jsr to do_nothing
-	;				-10 check for keypress
+	; do_nothing should be         4550
+	;				 +1 fallthrough from above
+	;				 -2 display loop setup
+	;                                -6 jsr to do_nothing
+	;				-49 check for keypress
 	;			      -2252 copy screen
 	;			      -2214 draw sprite
 	;			=============
-	;			      67
+	;			      28
 
 	jsr	do_nothing					; 6
 
@@ -287,34 +291,85 @@ draw_bird:
 
 	;====================
 	; Handle keypresses
-
+	; if no keypress, 9
+	; if keypress, 6+43 = 49
 
 	lda	KEYPRESS				; 4
-	bpl	no_keypress				; 3
-	jmp	all_done
+	bmi	keypress
+							; 2
 no_keypress:
+	; kill 40 cycles
+	ldx	#0					; 2
+	inc	YPOS,X					; 6
+	inc	YPOS,X					; 6
+	inc	YPOS,X					; 6
+	inc	YPOS,X					; 6
+	inc	YPOS,X					; 6
+	inc	YPOS,X					; 6
+	nop						; 2
 
 	jmp	display_loop				; 3
 
 
-all_done:
-	jmp	all_done
+	;===================================================
+	; key was pressed handling takes 12 + 20 + 11 = 43
+
+keypress:
+							; 1
+	bit	KEYRESET				; 4
+	inc	BIRD_STATE				; 5
+	and	#$5f		; mask keypress		; 2
+
+is_it_right:
+	cmp	#$15		; right arrow		; 2
+	bne	is_it_left
+							; 2
+	inc	XPOS					; 5
+	lda	#0					; 2
+	sta	BIRD_DIR				; 3
+	lda	YPOS		; 3-cycle nop		; 3
+convoluted:
+	jmp	adjust_xpos				; 3	; 20 if right
+
+is_it_left:
+							; 5
+	cmp	#$8		; left arrow		; 2
+	beq	is_left
+							; 2
+	nop						; 2
+	lda	YPOS		; 3-cycle nop
+	jmp	convoluted				; 3
+							; ------ 20 if neither
+
+is_left:
+							; 3
+	dec	XPOS					; 5	; 20 if left
+	lda	#1					; 2
+	sta	BIRD_DIR				; 3
+
+
+adjust_xpos:
+	lda	XPOS					; 3
+	and	#$1f		; keep in 0-31 range	; 2
+	sta	XPOS					; 3
+
+	jmp	display_loop				; 3
 
 
 	;=================================
 	; do nothing
 	;=================================
-	; and take 67-6 = 61 cycles to do it
+	; and take 28-6 = 22 cycles to do it
 do_nothing:
 
-	; Try X=10 Y=1 cycles=57 R4
+	; Try X=3 Y=1 cycles=22
 
-	nop	; 2
-	nop	; 2
+;	nop	; 2
+;	nop	; 2
 
 	ldy	#1							; 2
 loop1:
-	ldx	#10							; 2
+	ldx	#3							; 2
 loop2:
 	dex								; 2
 	bne	loop2							; 2nt/3
