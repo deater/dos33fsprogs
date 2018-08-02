@@ -46,15 +46,16 @@ waterfall_demo:
 	jsr	TEXT
 	jsr	HOME
 	bit	KEYRESET
+	bit	PAGE0
 
 	;===================
 	; init vars
 
-	lda	#0
+	lda	#4
 	sta	DRAW_PAGE
 
 	;=============================
-	; Load graphic page0
+	; Load foreground to graphic page1 (apple page2)
 
 	lda	#$0c
 	sta	BASH
@@ -67,19 +68,16 @@ waterfall_demo:
 	sta	GBASH
 	jsr	load_rle_gr
 
-	lda	#4
-	sta	DRAW_PAGE
-
 	jsr	gr_copy_to_current	; copy to page1
 
 	; GR part
-	bit	PAGE1
-	bit	LORES							; 4
-	bit	SET_GR							; 4
-	bit	FULLGR							; 4
+;	bit	PAGE1
+;	bit	LORES							; 4
+;	bit	SET_GR							; 4
+;	bit	FULLGR							; 4
 
 	;=============================
-	; Load graphic page1
+	; Load bg to memory
 
 	lda	#$0c
 	sta	BASH
@@ -92,13 +90,13 @@ waterfall_demo:
 	sta	GBASH
 	jsr	load_rle_gr
 
-	lda	#0
-	sta	DRAW_PAGE
+;	lda	#0
+;	sta	DRAW_PAGE
 
-	jsr	gr_copy_to_current
+;	jsr	gr_copy_to_current
 
 	; GR part
-	bit	PAGE0
+;	bit	PAGE0
 
 
 	;==============================
@@ -331,6 +329,7 @@ gr_offsets:
 .include "../asm_routines/gr_unrle.s"
 .include "../asm_routines/keypress.s"
 .include "gr_copy.s"
+.include "gr_unrolled_copy.s"
 
 
 .include "waterfall_page1.inc"
