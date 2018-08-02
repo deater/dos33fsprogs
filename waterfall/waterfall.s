@@ -60,6 +60,7 @@ waterfall_demo:
 
 	lda	#4
 	sta	DRAW_PAGE
+	sta	XPOS
 
 	;=============================
 	; Load foreground to graphic page1 (apple page2)
@@ -228,8 +229,9 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;                               -6 jsr to do_nothing
 	;				-10 check for keypress
 	;			      -2252 copy screen
+	;			      -2214 draw sprite
 	;			=============
-	;			      2276
+	;			      67
 
 	jsr	do_nothing					; 6
 
@@ -242,9 +244,15 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 							;	2252
 
 
+	;==========================
+	; draw sprite
+	;==========================
+	; 13 + 11 + 2190 = 2214
+
 
 ;        beq     bird_walking
-									; 2
+;									; 2
+
 	lda	#>bird_rider_stand_right				; 2
 	sta	INH							; 3
 	lda	#<bird_rider_stand_right				; 2
@@ -254,32 +262,27 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 
 ;bird_walking:
 									; 3
-	lda     #>bird_rider_walk_right                                 ; 2
-	sta     INH                                                     ; 3
-	lda     #<bird_rider_walk_right                                 ; 2
-	sta     INL                                                     ; 3
-	; must be 15
-	lda     #0                                                      ; 2
-	; Must add another 15 as sprite is different
-	inc	YPOS                                                    ; 5
-	inc	YPOS                                                    ; 5
-	inc	YPOS                                                    ; 5
+;	lda     #>bird_rider_walk_right                                 ; 2
+;	sta     INH                                                     ; 3
+;	lda     #<bird_rider_walk_right                                 ; 2
+;	sta     INL                                                     ; 3
+;	; must be 15
+;	lda     #0                                                      ; 2
+;	; Must add another 15 as sprite is different
+;	inc	YPOS                                                    ; 5
+;	inc	YPOS                                                    ; 5
+;	inc	YPOS                                                    ; 5
 
 draw_bird:
 
-							; 15 + 7
-	lda	#17					; 2
-	sta	XPOS					; 3
+
 	lda	#22					; 2
 	sta	YPOS					; 3
 
 	jsr	put_sprite				; 6
 							;=========
-							; 38
+							; 11 + 2190
 
-							; + 2190
-							;========
-							; 2228
 
 
 	;====================
@@ -301,17 +304,17 @@ all_done:
 	;=================================
 	; do nothing
 	;=================================
-	; and take 2276-6 = 2260 cycles to do it
+	; and take 67-6 = 61 cycles to do it
 do_nothing:
 
-	; Try X=29 Y=15 cycles=2266 R4
+	; Try X=10 Y=1 cycles=57 R4
 
 	nop	; 2
 	nop	; 2
 
-	ldy	#15							; 2
+	ldy	#1							; 2
 loop1:
-	ldx	#29							; 2
+	ldx	#10							; 2
 loop2:
 	dex								; 2
 	bne	loop2							; 2nt/3
