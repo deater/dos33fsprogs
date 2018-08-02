@@ -22,6 +22,8 @@ DRAW_PAGE	= $EE
 LASTKEY		= $F1
 PADDLE_STATUS	= $F2
 TEMP		= $FA
+OUTL		= $FE
+OUTH		= $FF
 
 ; Soft Switches
 KEYPRESS= $C000
@@ -52,6 +54,8 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	;==================
 	; Display Text
 	;==================
+
+	jsr	instructions
 
 	;==================
 	; Mode7
@@ -117,6 +121,8 @@ gr_offsets:
 .include "../asm_routines/keypress.s"
 .include "gr_copy.s"
 .include "title.s"
+.include "instructions.s"
+.include "text_print.s"
 
 .include "spacebars_title.inc"
 
