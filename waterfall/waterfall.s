@@ -224,8 +224,8 @@ loopB:
 jump_table:
 	.word	(display_odd-1)
 	.word	(display_even-1)
-	.word	(display_odd-1)
-	.word	(display_even-1)
+	.word	(display_three-1)
+	.word	(display_four-1)
 jump_addr:
 	.word	$00
 
@@ -254,7 +254,7 @@ jump_addr:
 display_loop:
 	inc	FRAME						; 5
 	lda	FRAME						; 3
-	and	#$10						; 2
+	and	#$30						; 2
 
 	;========== new code
 
@@ -1269,16 +1269,15 @@ display_three:
 three_first_four_lines:
 
 	; line 0
-								; 21
+								; 38
 	ldy	#4						; 2
 
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	nop							; 2
 
 	; line 1, 65 cycles
 
@@ -1595,7 +1594,8 @@ ground_loop_three_done:
 								; 3
 	nop							; 2
 
-	rts							; 6
+	jmp	display_loop_return				; 3
+
 
 .align	$100
 
@@ -1616,16 +1616,16 @@ four_first_four_lines:
 
 
 	; line 0
-								; 21
+								; 38
 	ldy	#4						; 2
 
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	nop							; 2
+
 
 	; line 1, 65 cycles
 
@@ -1942,6 +1942,6 @@ ground_loop_four_done:
 								; 3
 	nop							; 2
 
-	rts							; 6
+	jmp	display_loop_return				; 3
 
 
