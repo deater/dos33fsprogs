@@ -507,26 +507,53 @@ even_first_line:
 	lda	YPOS	; 3
 	nop		; 2
 
-
-
 outer_loop_even:
 
+	bit	PAGE0						; 4
+
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+
 	bit	PAGE1						; 4
-	ldx	#12		; 65 cycles with PAGE0		; 2
-page1_loop_even:			; delay 61+bit
-	dex							; 2
-	bne	page1_loop_even					; 2/3
 
-
-	; bit(4) -1(fallthrough) + loop*5 -1(fallthrouh)+4 extra = 61
-	; 5L = 55
+	lda	YPOS						; 3
 
 	bit	PAGE0						; 4
-	ldx	#11		; 65 cycles with PAGE1		; 2
-				;
-page0_loop_even:			; delay 115+(7 loop)+4 (bit)+4(extra)
-	dex							; 2
-	bne	page0_loop_even					; 2/3
+
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 2
+
+	bit	PAGE0						; 4
+
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+
+	bit	PAGE0						; 4
+
+	lda	YPOS						; 3
+
+	bit	PAGE0						; 4
+
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	nop							; 2
+	nop							; 2
 
 	dey							; 2
 	bne	outer_loop_even					; 2/3
@@ -549,7 +576,7 @@ page0_loop_even:			; delay 115+(7 loop)+4 (bit)+4(extra)
 display_odd:
 
 
-odd_first_line:
+odd_first_two_lines:
 	ldy	#95						; 2
 
 	asl	DUMMY						; 6
@@ -577,22 +604,51 @@ odd_first_line:
 
 outer_loop_odd:
 
+	bit	PAGE0						; 4
+
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+
 	bit	PAGE1						; 4
-	ldx	#12		; 65 cycles with PAGE0		; 2
-page1_loop_odd:			; delay 61+bit
-	dex							; 2
-	bne	page1_loop_odd					; 2/3
 
-
-	; bit(4) -1(fallthrough) + loop*5 -1(fallthrouh)+4 extra = 61
-	; 5L = 55
+	lda	YPOS						; 3
 
 	bit	PAGE0						; 4
-	ldx	#11		; 65 cycles with PAGE1		; 2
-				;
-page0_loop_odd:			; delay 115+(7 loop)+4 (bit)+4(extra)
-	dex							; 2
-	bne	page0_loop_odd					; 2/3
+
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 2
+
+	bit	PAGE0						; 4
+
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+
+	bit	PAGE0						; 4
+
+	lda	YPOS						; 3
+
+	bit	PAGE0						; 4
+
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	nop							; 2
+	nop							; 2
 
 	dey							; 2
 	bne	outer_loop_odd					; 2/3
