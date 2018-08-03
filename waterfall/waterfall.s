@@ -15,7 +15,6 @@ BASH		= $29
 MASK		= $2E
 COLOR		= $30
 FRAME		= $60
-BLARGH		= $69
 BIRD_STATE	= $E0
 BIRD_DIR	= $E1
 DRAW_PAGE	= $EE
@@ -249,36 +248,47 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 
 
 	;==========================
-	; draw sprite
+	; draw bird sprite
 	;==========================
 	; 13 + 11 + 2190 = 2214
 
+	lda	BIRD_STATE						; 3
+	and	#1							; 2
 
-;        beq     bird_walking
-;									; 2
+	ldx	BIRD_DIR						; 3
+	bne	bird_left
 
-	lda	#>bird_rider_stand_right				; 2
-	sta	INH							; 3
-	lda	#<bird_rider_stand_right				; 2
-	sta	INL							; 3
+bird_right:
+	cmp	#1
+	beq	bird_walk_right
 
-        jmp     draw_bird						; 3
+bird_stand_right:
+	ldx	#>bird_rider_stand_right				; 2
+	ldy	#<bird_rider_stand_right				; 2
+	jmp	draw_bird
+bird_walk_right:
+	ldx	#>bird_rider_walk_right					; 2
+	ldy	#<bird_rider_walk_right					; 2
+	jmp	draw_bird
 
-;bird_walking:
-									; 3
-;	lda     #>bird_rider_walk_right                                 ; 2
-;	sta     INH                                                     ; 3
-;	lda     #<bird_rider_walk_right                                 ; 2
-;	sta     INL                                                     ; 3
-;	; must be 15
-;	lda     #0                                                      ; 2
-;	; Must add another 15 as sprite is different
-;	inc	YPOS                                                    ; 5
-;	inc	YPOS                                                    ; 5
-;	inc	YPOS                                                    ; 5
+bird_left:
+	cmp	#1
+	beq	bird_walk_left
+
+bird_stand_left:
+	ldx	#>bird_rider_stand_left					; 2
+	ldy	#<bird_rider_stand_left					; 2
+	jmp	draw_bird
+bird_walk_left:
+	ldx	#>bird_rider_walk_left					; 2
+	ldy	#<bird_rider_walk_left					; 2
+	jmp	draw_bird
+
+
 
 draw_bird:
-
+	stx	INH					; 3
+	sty	INL					; 3
 
 	lda	#22					; 2
 	sta	YPOS					; 3
