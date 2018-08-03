@@ -222,10 +222,10 @@ loopB:
         jmp     display_loop
 
 jump_table:
-	.word	display_odd
-	.word	display_odd
-	.word	display_odd
-	.word	display_odd
+	.word	(display_odd-1)
+	.word	(display_even-1)
+	.word	(display_odd-1)
+	.word	(display_even-1)
 jump_addr:
 	.word	$00
 
@@ -245,35 +245,33 @@ jump_addr:
 	; if odd   10 + 8 + display_odd  + 3 (balance) = 21+display_odd
 	; 3+6
 
-	; between  10 + 8 + display_even = 18+display_even
-
 	; jump_table
-	; 		39 + display_odd
+	; 		38 + display_odd
 
 	; we have 3 (the jmp back)
 	;		 = 3 cycles that need to be eaten by the vblank
 
 display_loop:
-;	inc	FRAME						; 5
-;	lda	FRAME						; 3
-;	and	#$10						; 2
-
-;	lsr							; 2
-;	lsr							; 2
-;	lsr							; 2
-;	tay							; 2 ; 18
-
-;	lda	jump_table,y					; 4
-;	sta	jump_addr					; 4
-;	lda	jump_table+1,y					; 4
-;	sta	jump_addr+1					; 4
-;	jmp	(jump_addr)					; 5 ; 39
-
-
-
 	inc	FRAME						; 5
 	lda	FRAME						; 3
 	and	#$10						; 2
+
+	;========== new code
+
+	lsr							; 2
+	lsr							; 2
+	lsr							; 2
+	tay							; 2 ; 18
+
+	lda	jump_table+1,y					; 4
+	pha							; 3
+	lda	jump_table,y					; 4
+	pha							; 3
+	rts							; 6 ; 38
+
+	;========== old code
+
+
 	beq	even
 								; 2
 	lda	FRAME		; (nop)				; 3
@@ -281,7 +279,7 @@ display_loop:
 even:
 								; 3
 	nop			; (nop)				; 2
-	jmp	display_even					; 3
+	jmp	display_odd					; 3
 
 display_loop_return:
 
@@ -554,27 +552,23 @@ gr_offsets:
 	; we come in already 21 cycles into things
 	; so the first scanline is a loss (but that's OK)
 
-	; first scanline: 39+ 2 (from ldy) so need to kill 65-41 = 24
-	; second scanline, again kill so 65 killed
+	; first scanline: comes in with 38
+	; second+ scanline need to kill 65
 
 display_odd:
 
 odd_first_four_lines:
 
 	; line 0
-								; 18/ 21 / 39
+								; 38
 	ldy	#4						; 2
 
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-
-	asl	DUMMY						; 6*
-	asl	DUMMY						; 6*
-	asl	DUMMY						; 6*
-	lda	YPOS						; 3**
-
+	lda	YPOS						; 3
+	nop
+	nop
 
 	; line 1, 65 cycles
 
@@ -913,27 +907,30 @@ display_even:
 even_first_four_lines:
 
 	; we do mockingboard here
-	; we have 239 cycles (65*4 = 260 - 21 = 239)
+	; we have 222 cycles (65*4 = 260 - 38 = 222)
 
-	; 78+78+2+20 = 178 
-	; 239 - 178 = 61 to kill
 
-	; come in with 18
-								; 18
 
-	; kill 142
+								; 38
+	; come in with 38
+	; 222 - 100 = 122 to kill
 
-	ldx	#12						; 2
+	; kill 122
+
+	ldx	#10						; 2
 dummy_loop:
 	asl	DUMMY						; 6
 	dex							; 2
 	bne	dummy_loop					; 3
 
-	; 9 left over
+	; -1 exit loop
+
+	; 11 left over
 	nop	;2
-	nop	;2
-	nop	; 2
 	lda	XPOS	; 3
+	lda	XPOS	; 3
+	lda	XPOS	; 3
+
 
 	; high =   5 + 12+ 3 = 20
 	; medium = 5 + 9 + 6 = 20
@@ -944,7 +941,6 @@ dummy_loop:
 ;	cmp	OLD_XPOS	; 3
 ;	beq	skip_mb		;
 				; 2
-
 ;	sta	OLD_XPOS	; 3
 
 	cmp	#23		; 2
@@ -1253,7 +1249,7 @@ ground_loop_even_done:
 	nop							; 2
 
 	jmp	display_loop_return				; 3
-;	rts							; 6
+
 
 .align	$100
 
