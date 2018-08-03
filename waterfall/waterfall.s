@@ -104,13 +104,13 @@ waterfall_demo:
 	; setup graphics for vapor lock
 	;==============================
 
-	; Clear Page0
+	; Clear Page0 to all green
 	lda	#$0
 	sta	DRAW_PAGE
 	lda	#$44
 	jsr	clear_gr
 
-	; Make screen half green
+	; Make top half of screen blue, down to line 26
 	lda	#$11
 	ldy	#24
 	jsr	clear_page_loop
@@ -134,27 +134,43 @@ waterfall_demo:
 	; to avoid false positive found if the horiz blanking is mirroring
 	; the line (max 3 repeats in that case)
 
-vapor_lock_loop:		; first make sure we have all zeroes
-	LDA #$11
+vapor_lock_loop:		; first make sure we have all blue
+	lda	#$11							; 2
 zxloop:
-	LDX #$04
+	ldx	#$04							; 2
 wiloop:
-	CMP $C051
-	BNE zxloop
-	DEX
-	BNE wiloop
+	cmp	$C051							; 4
+	bne	zxloop							; 2/3
+	dex								; 2
+	bne	wiloop							; 2/3
 
-	LDA #$44		; now look for our border color (4 times)
+	lda	#$44		; now look for our color (4 times)	; 2
 zloop:
-	LDX #$04
+	ldx	#$04							; 2
+
+	; what cycle does CMP happen at?
+	; while matching match = 4+2+2+3 = 11???
+	; if start at x=0,  0, 11, 22, 33 exit at 43
+	; if start at x=1,  1, 12, 23, 34 exit at 44
+	; if start at x=2,  2, 13, 24, 35 exit at 45
+	; if start at x=3,  3, 14, 25, 36 exit at 46
+	; if start at x=4,  4, 15, 26, 37 exit at 47
+	; if start at x=5,  5, 16, 27, 38 exit at 48
+	; if start at x=6,  6, 17, 28, 39 exit at 49
+	; if start at x=7,  7, 18, 29, *40 exit at **
+	; if start at x=8,  8, 19, 30, *41 exit at **
+
+	; if not match, 2+4+3 = 9, first match = 8
+
 qloop:
-	CMP $C051
-	BNE zloop
-	DEX
-	BNE qloop
+	cmp	$C051							; 4
+	bne	zloop							; 2/3
+	dex								; 2
+	bne	qloop							; 2/3
+
 
 	; found first line of black after green, at up to line 26 on screen
-        ; so we want roughly 22 lines * 4 = 88*65 = 5720 + 4550 = 10270
+        ; so we want roughly 22 lines * 4 = 88*65  = 5720 + 4550 = 10270
 	; - 65 (for the scanline we missed) = 10205 - 12 = 10193
 
 	jsr	gr_copy_to_current		; 6+ 9292
@@ -575,9 +591,11 @@ outer_loop_even:
 
 display_odd:
 
+odd_first_four_lines:
 
-odd_first_two_lines:
-	ldy	#95						; 2
+	; line 0
+								; 23
+	ldy	#94						; 2
 
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -586,6 +604,8 @@ odd_first_two_lines:
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
+
+	; line 1, 65 cycles
 
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -600,7 +620,37 @@ odd_first_two_lines:
 	lda	YPOS	; 3
 	nop		; 2
 
+	; line 2, 65 cycles
 
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS	; 3
+	nop		; 2
+
+	; line 3, 65 cycles
+
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS	; 3
+	nop		; 2
+
+odd_twinkle_stars:
 
 outer_loop_odd:
 
