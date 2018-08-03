@@ -232,11 +232,18 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;                                -6 jsr to do_nothing
 	;				-49 check for keypress
 	;			      -2252 copy screen
-	;			      -2214 draw sprite
+	;			      -2231 draw sprite
 	;			=============
-	;			      28
+	;			      11 cycles
 
-	jsr	do_nothing					; 6
+;	jsr	do_nothing					; 6
+
+	; 17 cycles
+	inc	YPOS		; 5
+	inc	YPOS		; 5
+	inc	YPOS		; 5
+	nop			; 2
+
 
 	;=========================
 	; Clear background
@@ -250,39 +257,52 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;==========================
 	; draw bird sprite
 	;==========================
-	; 13 + 11 + 2190 = 2214
+	; 					8 prefix
+	; bird_walk_right=	14 + 2175	2206 (need 17)
+	; bird_stand_right=	13 + 2190	2206 (need 3)
+	; bird_walk_left=	15 + 2175	2206 (need 16)
+	; bird_stand_left=	14 + 2190	2206 (need 2)
+	; call to sprite			17 postfix
+	;====================================================
+	;					2231
 
 	lda	BIRD_STATE						; 3
 	and	#1							; 2
-
 	ldx	BIRD_DIR						; 3
 	bne	bird_left
 
 bird_right:
-	cmp	#1
+									; 2
+	cmp	#1							; 2
 	beq	bird_walk_right
-
+									; 2
 bird_stand_right:
 	ldx	#>bird_rider_stand_right				; 2
 	ldy	#<bird_rider_stand_right				; 2
-	jmp	draw_bird
+	lda	YPOS ; nop=3
+	jmp	draw_bird						; 3
 bird_walk_right:
+									; 3
 	ldx	#>bird_rider_walk_right					; 2
 	ldy	#<bird_rider_walk_right					; 2
-	jmp	draw_bird
+	jmp	draw_bird						; 3
 
 bird_left:
-	cmp	#1
+									; 3
+	cmp	#1							; 2
 	beq	bird_walk_left
 
 bird_stand_left:
+									; 2
 	ldx	#>bird_rider_stand_left					; 2
 	ldy	#<bird_rider_stand_left					; 2
-	jmp	draw_bird
+	nop	; nop=2
+	jmp	draw_bird						; 3
 bird_walk_left:
+									; 3
 	ldx	#>bird_rider_walk_left					; 2
 	ldy	#<bird_rider_walk_left					; 2
-	jmp	draw_bird
+	jmp	draw_bird						; 3
 
 
 
@@ -295,7 +315,7 @@ draw_bird:
 
 	jsr	put_sprite				; 6
 							;=========
-							; 11 + 2190
+							; 17 + 2190
 
 
 
@@ -369,26 +389,26 @@ adjust_xpos:
 	;=================================
 	; do nothing
 	;=================================
-	; and take 28-6 = 22 cycles to do it
-do_nothing:
+	; and take 11-6 = 5 cycles to do it
+;do_nothing:
 
 	; Try X=3 Y=1 cycles=22
 
 ;	nop	; 2
 ;	nop	; 2
 
-	ldy	#1							; 2
-loop1:
-	ldx	#3							; 2
-loop2:
-	dex								; 2
-	bne	loop2							; 2nt/3
+;	ldy	#1							; 2
+;loop1:
+;	ldx	#3							; 2
+;loop2:
+;	dex								; 2
+;	bne	loop2							; 2nt/3
 
-	dey								; 2
-	bne	loop1							; 2nt/3
+;	dey								; 2
+;	bne	loop1							; 2nt/3
 
 
-	rts							; 6
+;	rts							; 6
 
 
 
@@ -441,5 +461,6 @@ gr_offsets:
 
 .include "waterfall_page1.inc"
 .include "waterfall_page2.inc"
+.align	$100
 .include "tfv_sprites.inc"
 
