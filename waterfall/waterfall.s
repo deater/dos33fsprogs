@@ -15,6 +15,7 @@ BASH		= $29
 MASK		= $2E
 COLOR		= $30
 FRAME		= $60
+MB_VALUE	= $91
 BIRD_STATE	= $E0
 BIRD_DIR	= $E1
 DRAW_PAGE	= $EE
@@ -479,6 +480,7 @@ gr_offsets:
 .include "gr_copy.s"
 .include "gr_unrolled_copy.s"
 .include "put_sprite.s"
+.include "mockingboard.s"
 
 .include "waterfall_page1.inc"
 .include "waterfall_page2.inc"
