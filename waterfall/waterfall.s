@@ -597,7 +597,7 @@ odd_first_four_lines:
 
 	; line 0
 								; 21
-	ldy	#47						; 2
+	ldy	#4						; 2
 
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -654,6 +654,94 @@ odd_first_four_lines:
 
 odd_twinkle_stars:
 
+twinkle_loop_odd:
+
+	; line 0
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE0						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4
+	; endfalls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 2
+	bit	PAGE1						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE1						; 4
+	lda	YPOS						; 3
+	bit	PAGE1						; 4
+	; end falls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 3
+	bit	PAGE1						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE1						; 4
+	lda	YPOS						; 3
+	bit	PAGE1						; 4
+	; end falls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 4
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE0						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4 ; 44
+	; end falls
+	; delay 21 - 7 from loop
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	nop							; 2 ; 58
+
+	dey							; 2
+	beq	twinkle_loop_odd_done				;
+								; 2
+	jmp	twinkle_loop_odd				; 3
+twinkle_loop_odd_done:
+
+	ldy	#31						; 2
 falls_loop_odd:
 
 	; line 0
@@ -740,6 +828,97 @@ falls_loop_odd:
 								; 2
 	jmp	falls_loop_odd					; 3
 falls_loop_odd_done:
+								; 3
+	ldy	#12						; 2
+
+ground_loop_odd:
+
+	; line 0
+	bit	PAGE1						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE1						; 4
+	lda	YPOS						; 3
+	bit	PAGE1						; 4
+	; endfalls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 2
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE0						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4
+	; end falls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 3
+	bit	PAGE1						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE1						; 4
+	lda	YPOS						; 3
+	bit	PAGE1						; 4
+	; end falls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 4
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE0						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4 ; 44
+	; end falls
+	; delay 21 - 7 from loop
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	nop							; 2 ; 58
+
+	dey							; 2
+	beq	ground_loop_odd_done				;
+								; 2
+	jmp	ground_loop_odd					; 3
+ground_loop_odd_done:
+
+
 								; 3
 	nop							; 2
 
