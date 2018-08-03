@@ -201,7 +201,7 @@ loopB:
 display_loop:
 	inc	FRAME						; 5
 	lda	FRAME						; 3
-	lda	#$0						; 2
+	and	#$10						; 2
 	beq	even
 								; 2
 	lda	FRAME		; (nop)				; 3
@@ -469,38 +469,6 @@ gr_offsets:
 
 .align	$100
 
-	;==========================================
-	; DISPLAY ODD
-
-display_odd:
-
-	ldy	#96						; 2
-
-outer_loop_odd:
-
-	bit	PAGE0						; 4
-	ldx	#12		; 65 cycles with PAGE0		; 2
-page0_loop_odd:			; delay 61+bit
-	dex							; 2
-	bne	page0_loop_odd					; 2/3
-
-
-	; bit(4) -1(fallthrough) + loop*5 -1(fallthrouh)+4 extra = 61
-	; 5L = 55
-
-	bit	PAGE1						; 4
-	ldx	#11		; 65 cycles with PAGE1		; 2
-				;
-page1_loop_odd:			; delay 115+(7 loop)+4 (bit)+4(extra)
-	dex							; 2
-	bne	page1_loop_odd					; 2/3
-
-	dey							; 2
-	bne	outer_loop_odd					; 2/3
-
-	rts
-
-
 	;=================================
 	; Display Even
 	;=================================
@@ -562,5 +530,71 @@ page0_loop_even:			; delay 115+(7 loop)+4 (bit)+4(extra)
 
 	dey							; 2
 	bne	outer_loop_even					; 2/3
+
+	rts							; 6
+
+.align	$100
+
+	;=================================
+	; Display Odd
+	;=================================
+	; we have 65 cycles per line
+	; the first 25 are in hblank
+	; we come in already 21 cycles into things
+	; so the first scanline is a loss (but that's OK)
+
+	; first scanline: 21+ 2 (from ldy) so need to kill 65-23 = 42
+	; second scanline, again kill so 65 killed
+
+display_odd:
+
+
+odd_first_line:
+	ldy	#95						; 2
+
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS	; 3
+	nop		; 2
+
+
+
+outer_loop_odd:
+
+	bit	PAGE1						; 4
+	ldx	#12		; 65 cycles with PAGE0		; 2
+page1_loop_odd:			; delay 61+bit
+	dex							; 2
+	bne	page1_loop_odd					; 2/3
+
+
+	; bit(4) -1(fallthrough) + loop*5 -1(fallthrouh)+4 extra = 61
+	; 5L = 55
+
+	bit	PAGE0						; 4
+	ldx	#11		; 65 cycles with PAGE1		; 2
+				;
+page0_loop_odd:			; delay 115+(7 loop)+4 (bit)+4(extra)
+	dex							; 2
+	bne	page0_loop_odd					; 2/3
+
+	dey							; 2
+	bne	outer_loop_odd					; 2/3
 
 	rts							; 6
