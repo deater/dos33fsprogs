@@ -222,8 +222,8 @@ loopB:
         jmp     display_loop
 
 jump_table:
-	.word	(display_odd-1)
 	.word	(display_even-1)
+	.word	(display_odd-1)
 	.word	(display_three-1)
 	.word	(display_four-1)
 jump_addr:
@@ -1269,61 +1269,77 @@ display_three:
 
 three_first_four_lines:
 
-	; line 0
+	; we do mockingboard here
+	; we have 222 cycles (65*4 = 260 - 38 = 222)
+
+
+
 								; 38
+	; come in with 38
+	; 222 - 100 = 122 to kill
+
+	; kill 122
+
+	ldx	#10						; 2
+dummy_loop2:
+	asl	DUMMY						; 6
+	dex							; 2
+	bne	dummy_loop2					; 3
+
+	; -1 exit loop
+
+	; 11 left over
+	nop	;2
+	lda	XPOS	; 3
+	lda	XPOS	; 3
+	lda	XPOS	; 3
+
+
+	; high =   5 + 12+ 3 = 20
+	; medium = 5 + 9 + 6 = 20
+	; low =    5 + 9 + 6 = 20
+
+	lda	XPOS		; 3
+
+;	cmp	OLD_XPOS	; 3
+;	beq	skip_mb2		;
+				; 2
+;	sta	OLD_XPOS	; 3
+
+	cmp	#23		; 2
+	bmi	check_medium2
+				; 2
+	lda	#35		; 2
+	sec			; 2
+	sbc	XPOS		; 3
+	sta	YPOS ; (nop)	; 3
+was_low2:
+	jmp	write_volume2	; 3
+check_medium2:
+				; 3
+	nop			; 2
+	nop			; 2
+	cmp	#12		; 2
+	bmi	was_low2
+was_medium2:
+				; 2
+	lda	#12		; 2
+	nop			; 2
+
+write_volume2:
+	; write A/noise volume
+	sta	MB_VALUE			; 3
+	ldx     #8				; 2
+	lda	#$2				; 2
+	jsr     write_ay_both                   ; 6+65
+                                        ;===============
+                                        ;       78
+
+skip_mb2:
+
+
+	; setup loop for next section
 	ldy	#4						; 2
-
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop							; 2
-
-	; line 1, 65 cycles
-
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS	; 3
-	nop		; 2
-
-	; line 2, 65 cycles
-
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS	; 3
-	nop		; 2
-
-	; line 3, 65 cycles
-
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS	; 3
-	nop		; 2
 
 three_twinkle_stars:
 
