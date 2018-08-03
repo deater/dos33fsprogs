@@ -620,7 +620,7 @@ odd_twinkle_stars:
 twinkle_loop_odd:
 
 	; line 0
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; delay 29
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -629,9 +629,9 @@ twinkle_loop_odd:
 	lda	YPOS						; 3
 	nop							; 2
 	; falls
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	lda	YPOS						; 3
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; endfalls
 	; delay 21
 	asl	DUMMY						; 6
@@ -680,7 +680,7 @@ twinkle_loop_odd:
 	lda	YPOS						; 3
 
 	; line 4
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; delay 29
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -689,9 +689,9 @@ twinkle_loop_odd:
 	lda	YPOS						; 3
 	nop							; 2
 	; falls
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	lda	YPOS						; 3
-	bit	PAGE0						; 4 ; 44
+	bit	PAGE1						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
 	asl	DUMMY						; 6
@@ -983,7 +983,7 @@ even_twinkle_stars:
 twinkle_loop_even:
 
 	; line 0
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; delay 29
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -992,9 +992,9 @@ twinkle_loop_even:
 	lda	YPOS						; 3
 	nop							; 2
 	; falls
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	lda	YPOS						; 3
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; endfalls
 	; delay 21
 	asl	DUMMY						; 6
@@ -1003,7 +1003,7 @@ twinkle_loop_even:
 	lda	YPOS						; 3
 
 	; line 2
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; delay 29
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -1012,9 +1012,9 @@ twinkle_loop_even:
 	lda	YPOS						; 3
 	nop							; 2
 	; falls
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	lda	YPOS						; 3
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; end falls
 	; delay 21
 	asl	DUMMY						; 6
@@ -1023,7 +1023,7 @@ twinkle_loop_even:
 	lda	YPOS						; 3
 
 	; line 3
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; delay 29
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -1032,9 +1032,9 @@ twinkle_loop_even:
 	lda	YPOS						; 3
 	nop							; 2
 	; falls
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	lda	YPOS						; 3
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; end falls
 	; delay 21
 	asl	DUMMY						; 6
@@ -1043,7 +1043,7 @@ twinkle_loop_even:
 	lda	YPOS						; 3
 
 	; line 4
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; delay 29
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -1052,9 +1052,9 @@ twinkle_loop_even:
 	lda	YPOS						; 3
 	nop							; 2
 	; falls
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	lda	YPOS						; 3
-	bit	PAGE0						; 4 ; 44
+	bit	PAGE1						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
 	asl	DUMMY						; 6
@@ -1677,7 +1677,7 @@ four_twinkle_stars:
 twinkle_loop_four:
 
 	; line 0
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; delay 29
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -1686,9 +1686,9 @@ twinkle_loop_four:
 	lda	YPOS						; 3
 	nop							; 2
 	; falls
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	lda	YPOS						; 3
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; endfalls
 	; delay 21
 	asl	DUMMY						; 6
@@ -1697,7 +1697,7 @@ twinkle_loop_four:
 	lda	YPOS						; 3
 
 	; line 2
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; delay 29
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -1706,9 +1706,9 @@ twinkle_loop_four:
 	lda	YPOS						; 3
 	nop							; 2
 	; falls
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	lda	YPOS						; 3
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; end falls
 	; delay 21
 	asl	DUMMY						; 6
@@ -1717,7 +1717,7 @@ twinkle_loop_four:
 	lda	YPOS						; 3
 
 	; line 3
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; delay 29
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -1726,9 +1726,9 @@ twinkle_loop_four:
 	lda	YPOS						; 3
 	nop							; 2
 	; falls
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	lda	YPOS						; 3
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; end falls
 	; delay 21
 	asl	DUMMY						; 6
@@ -1737,7 +1737,7 @@ twinkle_loop_four:
 	lda	YPOS						; 3
 
 	; line 4
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	; delay 29
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -1746,9 +1746,9 @@ twinkle_loop_four:
 	lda	YPOS						; 3
 	nop							; 2
 	; falls
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	lda	YPOS						; 3
-	bit	PAGE0						; 4 ; 44
+	bit	PAGE1						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
 	asl	DUMMY						; 6
