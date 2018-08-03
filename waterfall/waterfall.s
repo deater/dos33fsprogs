@@ -46,6 +46,9 @@ TEXT	= $FB36				;; Set text mode
 HOME	= $FC58				;; Clear the text screen
 WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 
+; location we don't care about
+
+DUMMY	= $300
 
 waterfall_demo:
 
@@ -60,6 +63,7 @@ waterfall_demo:
 	lda	#0
 	sta	BIRD_DIR
 	sta	BIRD_STATE
+	sta	FRAME
 
 	lda	#4
 	sta	DRAW_PAGE
@@ -188,61 +192,49 @@ loopB:
 	; Vertical blank = 4550 cycles (70 scan lines)
 	; Total of 17030 cycles to get back to where was
 
-	; We want to alternate between page1 and page2 every 65 cycles
-        ;       vblank = 4550 cycles to do scrolling
+	; if even, 10 + 9 + display_even + 2 (balance) = 21+display_even
+	; if odd   10 + 8 + display_odd  + 3 (balance) = 21+display_odd
 
-
-	; 2 + 48*(  (4+2+25*(2+3)) + (4+2+23*(2+3)+4+5)) + 9)
-	;     48*[(6+125)-1] + [(6+115+10)-1]
+	; we have 3 (the jmp) + 6 (the rts) - 1 (fallthrough)
+	;		 = 8 cycles that need to be eaten by the vblank
 
 display_loop:
-
-	ldy	#96						; 2
-
-outer_loop:
-
-	bit	PAGE0						; 4
-	ldx	#12		; 65 cycles with PAGE0		; 2
-page0_loop:			; delay 61+bit
-	dex							; 2
-	bne	page0_loop					; 2/3
-
-
-	; bit(4) -1(fallthrough) + loop*5 -1(fallthrouh)+4 extra = 61
-	; 5L = 55
-
-	bit	PAGE1						; 4
-	ldx	#11		; 65 cycles with PAGE1		; 2
-				;
-page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
-	dex							; 2
-	bne	page1_loop					; 2/3
-
-	dey							; 2
-	bne	outer_loop					; 2/3
+	inc	FRAME						; 5
+	lda	FRAME						; 3
+	lda	#$0						; 2
+	beq	even
+								; 2
+	lda	FRAME		; (nop)				; 3
+	jsr	display_odd					; 6
+	jmp	vblank						; 3
+even:
+								; 3
+	nop			; (nop)				; 2
+	jsr	display_even					; 6
+	jmp	vblank						; 3
 
 
 
+vblank:
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 	; do_nothing should be         4550
-	;				 +1 fallthrough from above
-	;				 -2 display loop setup
-	;                                -6 jsr to do_nothing
+	;				 -8 letfover from HBLANK code
 	;				-49 check for keypress
 	;			      -2252 copy screen
 	;			      -2231 draw sprite
 	;			=============
-	;			      11 cycles
+	;			      10 cycles
 
 ;	jsr	do_nothing					; 6
 
 	; 17 cycles
 	inc	YPOS		; 5
 	inc	YPOS		; 5
-	inc	YPOS		; 5
-	nop			; 2
+;	inc	YPOS		; 5
+;	nop			; 2
+;	nop			; 2
 
 
 	;=========================
@@ -475,3 +467,100 @@ gr_offsets:
 .align	$100
 .include "tfv_sprites.inc"
 
+.align	$100
+
+	;==========================================
+	; DISPLAY ODD
+
+display_odd:
+
+	ldy	#96						; 2
+
+outer_loop_odd:
+
+	bit	PAGE0						; 4
+	ldx	#12		; 65 cycles with PAGE0		; 2
+page0_loop_odd:			; delay 61+bit
+	dex							; 2
+	bne	page0_loop_odd					; 2/3
+
+
+	; bit(4) -1(fallthrough) + loop*5 -1(fallthrouh)+4 extra = 61
+	; 5L = 55
+
+	bit	PAGE1						; 4
+	ldx	#11		; 65 cycles with PAGE1		; 2
+				;
+page1_loop_odd:			; delay 115+(7 loop)+4 (bit)+4(extra)
+	dex							; 2
+	bne	page1_loop_odd					; 2/3
+
+	dey							; 2
+	bne	outer_loop_odd					; 2/3
+
+	rts
+
+
+	;=================================
+	; Display Even
+	;=================================
+	; we have 65 cycles per line
+	; the first 25 are in hblank
+	; we come in already 21 cycles into things
+	; so the first scanline is a loss (but that's OK)
+
+	; first scanline: 21+ 2 (from ldy) so need to kill 65-23 = 42
+	; second scanline, again kill so 65 killed
+
+display_even:
+
+
+even_first_line:
+	ldy	#95						; 2
+
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS	; 3
+	nop		; 2
+
+
+
+outer_loop_even:
+
+	bit	PAGE1						; 4
+	ldx	#12		; 65 cycles with PAGE0		; 2
+page1_loop_even:			; delay 61+bit
+	dex							; 2
+	bne	page1_loop_even					; 2/3
+
+
+	; bit(4) -1(fallthrough) + loop*5 -1(fallthrouh)+4 extra = 61
+	; 5L = 55
+
+	bit	PAGE0						; 4
+	ldx	#11		; 65 cycles with PAGE1		; 2
+				;
+page0_loop_even:			; delay 115+(7 loop)+4 (bit)+4(extra)
+	dex							; 2
+	bne	page0_loop_even					; 2/3
+
+	dey							; 2
+	bne	outer_loop_even					; 2/3
+
+	rts							; 6
