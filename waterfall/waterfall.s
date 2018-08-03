@@ -226,7 +226,7 @@ display_loop:
 even:
 								; 3
 	nop			; (nop)				; 2
-	jsr	display_even					; 6
+	jsr	display_odd					; 6
 	jmp	vblank						; 3
 
 
@@ -236,18 +236,20 @@ vblank:
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 	; do_nothing should be         4550
-	;				 -8 letfover from HBLANK code
+	;				 -9 letfover from HBLANK code
 	;				-49 check for keypress
 	;			      -2252 copy screen
 	;			      -2231 draw sprite
 	;			=============
-	;			      10 cycles
+	;			      9 cycles
 
 ;	jsr	do_nothing					; 6
 
 	; 17 cycles
 	inc	YPOS		; 5
-	inc	YPOS		; 5
+	nop
+	nop
+;	inc	YPOS		; 5
 ;	inc	YPOS		; 5
 ;	nop			; 2
 ;	nop			; 2
@@ -594,8 +596,8 @@ display_odd:
 odd_first_four_lines:
 
 	; line 0
-								; 23
-	ldy	#94						; 2
+								; 21
+	ldy	#47						; 2
 
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -652,10 +654,10 @@ odd_first_four_lines:
 
 odd_twinkle_stars:
 
-outer_loop_odd:
+falls_loop_odd:
 
+	; line 0
 	bit	PAGE0						; 4
-
 	; delay 29
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -663,13 +665,11 @@ outer_loop_odd:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
-
+	; falls
 	bit	PAGE1						; 4
-
 	lda	YPOS						; 3
-
 	bit	PAGE0						; 4
-
+	; endfalls
 	; delay 21
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -677,9 +677,7 @@ outer_loop_odd:
 	lda	YPOS						; 3
 
 	; line 2
-
 	bit	PAGE0						; 4
-
 	; delay 29
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
@@ -687,20 +685,62 @@ outer_loop_odd:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
-
-	bit	PAGE0						; 4
-
+	; falls
+	bit	PAGE1						; 4
 	lda	YPOS						; 3
-
 	bit	PAGE0						; 4
-
+	; end falls
 	; delay 21
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 3
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
 	nop							; 2
+	; falls
+	bit	PAGE0						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4
+	; end falls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 4
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
 	nop							; 2
+	; falls
+	bit	PAGE0						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4 ; 44
+	; end falls
+	; delay 21 - 7 from loop
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	nop							; 2 ; 58
 
 	dey							; 2
-	bne	outer_loop_odd					; 2/3
+	beq	falls_loop_odd_done				;
+								; 2
+	jmp	falls_loop_odd					; 3
+falls_loop_odd_done:
+								; 3
+	nop							; 2
 
 	rts							; 6
