@@ -925,7 +925,7 @@ write_volume:
 	; write noise
 
 	ldx     #6				; 2
-	lda	#0				; 2
+	lda	#1				; 2
 	sta	MB_VALUE			; 3
 	jsr     write_ay_both                   ; 6+65
                                         ;===============
