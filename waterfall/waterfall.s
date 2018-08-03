@@ -184,7 +184,7 @@ qloop:
 
 	; Try X=88 Y=2 cycles=893 R2
 
-	nop
+	nop	; 2
         ldy     #2							; 2
 loopA:
         ldx	#88							; 2
@@ -226,7 +226,7 @@ display_loop:
 even:
 								; 3
 	nop			; (nop)				; 2
-	jsr	display_odd					; 6
+	jsr	display_even					; 6
 	jmp	vblank						; 3
 
 
@@ -485,98 +485,6 @@ gr_offsets:
 .align	$100
 .include "tfv_sprites.inc"
 
-.align	$100
-
-	;=================================
-	; Display Even
-	;=================================
-	; we have 65 cycles per line
-	; the first 25 are in hblank
-	; we come in already 21 cycles into things
-	; so the first scanline is a loss (but that's OK)
-
-	; first scanline: 21+ 2 (from ldy) so need to kill 65-23 = 42
-	; second scanline, again kill so 65 killed
-
-display_even:
-
-
-even_first_line:
-	ldy	#95						; 2
-
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS	; 3
-	nop		; 2
-
-outer_loop_even:
-
-	bit	PAGE0						; 4
-
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-
-	bit	PAGE1						; 4
-
-	lda	YPOS						; 3
-
-	bit	PAGE0						; 4
-
-	; delay 21
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-
-	; line 2
-
-	bit	PAGE0						; 4
-
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-
-	bit	PAGE0						; 4
-
-	lda	YPOS						; 3
-
-	bit	PAGE0						; 4
-
-	; delay 21
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	nop							; 2
-	nop							; 2
-
-	dey							; 2
-	bne	outer_loop_even					; 2/3
-
-	rts							; 6
 
 .align	$100
 
@@ -923,3 +831,350 @@ ground_loop_odd_done:
 	nop							; 2
 
 	rts							; 6
+
+.align	$100
+
+	;=================================
+	; Display Even
+	;=================================
+	; we have 65 cycles per line
+	; the first 25 are in hblank
+	; we come in already 21 cycles into things
+	; so the first scanline is a loss (but that's OK)
+
+	; first scanline: 21+ 2 (from ldy) so need to kill 65-23 = 42
+	; second scanline, again kill so 65 killed
+
+display_even:
+
+even_first_four_lines:
+
+	; line 0
+								; 21
+	ldy	#4						; 2
+
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+
+	; line 1, 65 cycles
+
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS	; 3
+	nop		; 2
+
+	; line 2, 65 cycles
+
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS	; 3
+	nop		; 2
+
+	; line 3, 65 cycles
+
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS	; 3
+	nop		; 2
+
+even_twinkle_stars:
+
+twinkle_loop_even:
+
+	; line 0
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE0						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4
+	; endfalls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 2
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE0						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4
+	; end falls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 3
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE0						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4
+	; end falls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 4
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE0						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4 ; 44
+	; end falls
+	; delay 21 - 7 from loop
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	nop							; 2 ; 58
+
+	dey							; 2
+	beq	twinkle_loop_even_done				;
+								; 2
+	jmp	twinkle_loop_even				; 3
+twinkle_loop_even_done:
+
+	ldy	#31						; 2
+falls_loop_even:
+
+	; line 0
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE0						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4
+	; endfalls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 2
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE0						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4
+	; end falls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 3
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE1						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4
+	; end falls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 4
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE1						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4 ; 44
+	; end falls
+	; delay 21 - 7 from loop
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	nop							; 2 ; 58
+
+	dey							; 2
+	beq	falls_loop_even_done				;
+								; 2
+	jmp	falls_loop_even					; 3
+falls_loop_even_done:
+								; 3
+	ldy	#12						; 2
+
+ground_loop_even:
+
+	; line 0
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE0						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4
+	; endfalls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 2
+	bit	PAGE1						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE1						; 4
+	lda	YPOS						; 3
+	bit	PAGE1						; 4
+	; end falls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 3
+	bit	PAGE0						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE0						; 4
+	lda	YPOS						; 3
+	bit	PAGE0						; 4
+	; end falls
+	; delay 21
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+
+	; line 4
+	bit	PAGE1						; 4
+	; delay 29
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	YPOS						; 3
+	nop							; 2
+	; falls
+	bit	PAGE1						; 4
+	lda	YPOS						; 3
+	bit	PAGE1						; 4 ; 44
+	; end falls
+	; delay 21 - 7 from loop
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	nop							; 2 ; 58
+
+	dey							; 2
+	beq	ground_loop_even_done				;
+								; 2
+	jmp	ground_loop_even					; 3
+ground_loop_even_done:
+
+
+								; 3
+	nop							; 2
+
+	rts							; 6
+
