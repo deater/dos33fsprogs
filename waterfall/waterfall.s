@@ -70,6 +70,17 @@ waterfall_demo:
 	sta	DRAW_PAGE
 	sta	XPOS
 
+	;===================
+	; Mockingboard
+	jsr	mockingboard_init
+
+	; Enable channel A tone+noise
+
+	ldx     #7				; 2
+	lda	#$36				; 2
+	sta	MB_VALUE			; 3
+	jsr     write_ay_both			; 6+65
+
 	;=============================
 	; Load foreground to graphic page1 (apple page2)
 
@@ -851,62 +862,78 @@ display_even:
 
 even_first_four_lines:
 
-	; line 0
+	; we do mockingboard here
+	; we have 239 cycles (65*4 = 260 - 21 = 239)
+
+	; 78+78+2+20 = 178 
+	; 239 - 178 = 61 to kill
+
+	; come in with 21
 								; 21
+
+	; kill 61
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	asl	DUMMY						; 6
+	lda	XPOS						; 3
+	nop							; 2
+	nop							; 2
+
+	; high =   5 + 12+ 3 = 20
+	; medium = 5 + 9 + 6 = 20
+	; low =    5 + 9 + 6 = 20
+
+	lda	XPOS		; 3
+	cmp	#23		; 2
+	bmi	check_medium
+				; 2
+	lda	#35		; 2
+	sec			; 2
+	sbc	XPOS		; 3
+	sta	YPOS ; (nop)	; 3
+was_low:
+	jmp	write_volume	; 3
+check_medium:
+				; 3
+	nop			; 2
+	nop			; 2
+	cmp	#12		; 2
+	bmi	was_low
+was_medium:
+				; 2
+	lda	#12		; 2
+	nop			; 2
+
+
+
+
+
+write_volume:
+	; write A volume
+	sta	MB_VALUE			; 3
+	ldx     #8				; 2
+	lda	#$2				; 2
+	jsr     write_ay_both                   ; 6+65
+                                        ;===============
+                                        ;       78
+	; write noise
+
+	ldx     #6				; 2
+	lda	#0				; 2
+	sta	MB_VALUE			; 3
+	jsr     write_ay_both                   ; 6+65
+                                        ;===============
+                                        ;       78
+
+
+	; setup loop for next section
 	ldy	#4						; 2
-
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-
-	; line 1, 65 cycles
-
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS	; 3
-	nop		; 2
-
-	; line 2, 65 cycles
-
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS	; 3
-	nop		; 2
-
-	; line 3, 65 cycles
-
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS	; 3
-	nop		; 2
 
 even_twinkle_stars:
 
