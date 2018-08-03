@@ -285,7 +285,7 @@ bird_walk_right:
 									; 3
 	ldx	#>bird_rider_walk_right					; 2
 	ldy	#<bird_rider_walk_right					; 2
-	jmp	draw_bird						; 3
+	jmp	kill_less_time						; 3
 
 bird_left:
 									; 3
@@ -302,6 +302,17 @@ bird_walk_left:
 									; 3
 	ldx	#>bird_rider_walk_left					; 2
 	ldy	#<bird_rider_walk_left					; 2
+
+kill_time:
+	nop		; 2	; need to kill 16
+kill_less_time:
+	lda	YPOS ; nop=3	; need to kill 14
+	lda	YPOS ; nop=3
+	lda	YPOS ; nop=3
+	lda	YPOS ; nop=3
+	nop		; 2
+
+
 	jmp	draw_bird						; 3
 
 
