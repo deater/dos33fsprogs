@@ -22,6 +22,7 @@ DRAW_PAGE	= $EE
 LASTKEY		= $F1
 PADDLE_STATUS	= $F2
 XPOS		= $F3
+OLD_XPOS	= $F4
 TEMP		= $FA
 TEMPY		= $FB
 INL		= $FC
@@ -65,6 +66,7 @@ waterfall_demo:
 	sta	BIRD_DIR
 	sta	BIRD_STATE
 	sta	FRAME
+	sta	OLD_XPOS
 
 	lda	#4
 	sta	DRAW_PAGE
@@ -80,6 +82,16 @@ waterfall_demo:
 	lda	#$36				; 2
 	sta	MB_VALUE			; 3
 	jsr     write_ay_both			; 6+65
+
+	; enable white noise
+
+	ldx     #6				; 2
+	lda	#1				; 2
+	sta	MB_VALUE			; 3
+	jsr     write_ay_both                   ; 6+65
+                                        ;===============
+                                        ;       78
+
 
 	;=============================
 	; Load foreground to graphic page1 (apple page2)
@@ -871,25 +883,31 @@ even_first_four_lines:
 	; come in with 21
 								; 21
 
-	; kill 61
+	; kill 139
+
+	ldx	#12						; 2
+dummy_loop:
 	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	XPOS						; 3
-	nop							; 2
-	nop							; 2
+	dex							; 2
+	bne	dummy_loop					; 3
+
+	; 6 left over
+	nop	;2
+	nop	;2
+	nop	; 2
 
 	; high =   5 + 12+ 3 = 20
 	; medium = 5 + 9 + 6 = 20
 	; low =    5 + 9 + 6 = 20
 
 	lda	XPOS		; 3
+
+;	cmp	OLD_XPOS	; 3
+;	beq	skip_mb		;
+				; 2
+
+;	sta	OLD_XPOS	; 3
+
 	cmp	#23		; 2
 	bmi	check_medium
 				; 2
@@ -910,26 +928,16 @@ was_medium:
 	lda	#12		; 2
 	nop			; 2
 
-
-
-
-
 write_volume:
-	; write A volume
+	; write A/noise volume
 	sta	MB_VALUE			; 3
 	ldx     #8				; 2
 	lda	#$2				; 2
 	jsr     write_ay_both                   ; 6+65
                                         ;===============
                                         ;       78
-	; write noise
 
-	ldx     #6				; 2
-	lda	#1				; 2
-	sta	MB_VALUE			; 3
-	jsr     write_ay_both                   ; 6+65
-                                        ;===============
-                                        ;       78
+skip_mb:
 
 
 	; setup loop for next section
