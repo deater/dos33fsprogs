@@ -1,5 +1,7 @@
 include ../Makefile.inc
 
+CFLAGS = -O2 -Wall -g
+
 all:	pcx2hgr png2hgr shape_table dump_table
 
 dump_table:		dump_table.o

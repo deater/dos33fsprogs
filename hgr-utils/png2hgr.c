@@ -1,4 +1,4 @@
-/* Converts 140x192 8-bit PNG file with correct palette to Apple II HGR */
+/* Converts 280x192 8-bit PNG file with correct palette to Apple II HGR */
 
 #define VERSION "0.0.1"
 
@@ -25,13 +25,14 @@
 #define DEFAULT_BLACK	1
 #endif
 
-static int debug=0;
+static int debug=1;
 
 static int convert_color(int color) {
 
 	int c=0;
 
 	switch(color) {
+#if 0
 		case 0x000000:	c=0; break;	/* black */
 		case 0xe31e60:	c=1; break;	/* magenta */
 		case 0x604ebd:	c=2; break;	/* dark blue */
@@ -48,8 +49,23 @@ static int convert_color(int color) {
 		case 0xd0dd8d:	c=13; break;	/* yellow */
 		case 0x72ffd0:	c=14; break;	/* aqua */
 		case 0xffffff:	c=15; break;	/* white */
+#endif
+
+		/* These use the questionable palette my older code used */
+		/* Also handle the newer one */
+		case 0x000000:	c=0; break;	/* black */
+		case 0x1bcb01:	c=1; break;	/* bright green */
+		case 0x14f53c:	c=1; break;	/* bright green */
+		case 0xe434fe:	c=2; break;	/* magenta */
+		case 0xe31e60:	c=2; break;	/* magenta */
+		case 0xffffff:	c=3; break;	/* white */
+		case 0xcd5b01:	c=5; break;	/* orange */
+		case 0xff6a3c:	c=5; break;	/* orange */
+		case 0x1b9afe:	c=6; break;	/* medium blue */
+		case 0x14cffd:	c=6; break;	/* medium blue */
+
 		default:
-			printf("Unknown color %x\n",color);
+			fprintf(stderr,"Unknown color %x\n",color);
 			break;
 	}
 
@@ -60,14 +76,12 @@ static int convert_color(int color) {
 
 /* expects a PNG where the xsize is *2 */
 int loadpng(char *filename,
-		unsigned char *image, int *xsize, int *ysize,
-		int high) {
+		unsigned char **image_ptr, int *xsize, int *ysize) {
 
 	int x,y;
 	int color;
 	FILE *infile;
-	int debug=0;
-	unsigned char *out_ptr;
+	unsigned char *image,*out_ptr;
 	int width, height;
 	int a2_color;
 
@@ -76,6 +90,7 @@ int loadpng(char *filename,
 	png_infop info_ptr;
 	png_bytep *row_pointers;
 	png_byte color_type;
+	int row_bytes;
 
 	unsigned char header[8];
 
@@ -114,109 +129,89 @@ int loadpng(char *filename,
 	width = png_get_image_width(png_ptr, info_ptr);
 	height = png_get_image_height(png_ptr, info_ptr);
 	*xsize=width;
-	*ysize=height/2;
+	*ysize=height;
 
 	color_type = png_get_color_type(png_ptr, info_ptr);
 	bit_depth = png_get_bit_depth(png_ptr, info_ptr);
 
-
-
-	if (debug) {
-		printf("PNG: width=%d height=%d depth=%d\n",width,height,bit_depth);
-		if (color_type==PNG_COLOR_TYPE_RGB) printf("Type RGB\n");
-		else if (color_type==PNG_COLOR_TYPE_RGB_ALPHA) printf("Type RGBA\n");
-		else if (color_type==PNG_COLOR_TYPE_PALETTE) printf("Type palette\n");
+	if (width!=280) {
+		fprintf(stderr,"Unknown width %d\n",width);
+		return -1;
 	}
 
-//        number_of_passes = png_set_interlace_handling(png_ptr);
+	if (height!=192) {
+		fprintf(stderr,"Unknown height %d\n",height);
+		return -1;
+	}
+
+	image=calloc(width*height,sizeof(unsigned char));
+	if (image==NULL) {
+		fprintf(stderr,"Error allocating image\n");
+		return -1;
+	}
+
+	if (debug) {
+		fprintf(stderr,"PNG: width=%d height=%d depth=%d\n",
+				width,height,bit_depth);
+		if (color_type==PNG_COLOR_TYPE_RGB) {
+			fprintf(stderr,"Type RGB\n");
+		}
+		else if (color_type==PNG_COLOR_TYPE_RGB_ALPHA) {
+			fprintf(stderr,"Type RGBA\n");
+		}
+		else if (color_type==PNG_COLOR_TYPE_PALETTE) {
+			fprintf(stderr,"Type palette\n");
+		}
+	}
+
+	/* If palette, expand to RGB automatically */
+	if (color_type == PNG_COLOR_TYPE_PALETTE) {
+		png_set_expand(png_ptr);
+	}
+
 	png_read_update_info(png_ptr, info_ptr);
+
+
+	row_bytes = png_get_rowbytes(png_ptr, info_ptr);
+	// *pChannels = (int)png_get_channels(png_ptr, info_ptr);
 
 	row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
 	for (y=0; y<height; y++) {
-		row_pointers[y] = (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
+		row_pointers[y] = (png_byte*)malloc(row_bytes);
 	}
 
 	png_read_image(png_ptr, row_pointers);
 
+	png_read_end(png_ptr, NULL);
+
 	fclose(infile);
 
-	image=calloc(width*height,sizeof(unsigned char));
-	if (image==NULL) {
-		fprintf(stderr,"Memory error!\n");
-		return -1;
-	}
 	out_ptr=image;
 
-	if (color_type==PNG_COLOR_TYPE_RGB_ALPHA) {
-		for(y=high;y<height;y+=4) {
-			for(x=0;x<width;x++) {
 
-				/* top color */
-				color=	(row_pointers[y][x*4]<<16)+
-					(row_pointers[y][x*4+1]<<8)+
-					(row_pointers[y][x*4+2]);
-				if (debug) {
-					printf("%x ",color);
-				}
+	for(y=0;y<height;y++) {
+		for(x=0;x<width;x++) {
 
-				a2_color=convert_color(color);
+			color=	(row_pointers[y][x*3]<<16)+
+				(row_pointers[y][x*3+1]<<8)+
+				(row_pointers[y][x*3+2]);
+//			if (debug) {
+//				fprintf(stderr,"%x ",color);
+//			}
 
-				/* bottom color */
-				color=	(row_pointers[y+2][x*4]<<16)+
-					(row_pointers[y+2][x*4+1]<<8)+
-					(row_pointers[y+2][x*4+2]);
-				if (debug) {
-					printf("%x ",color);
-				}
+			a2_color=convert_color(color);
 
-				a2_color|=(convert_color(color)<<4);
-
-				*out_ptr=a2_color;
-				out_ptr++;
+			if (debug) {
+				fprintf(stderr,"%x",a2_color);
 			}
-			if (debug) printf("\n");
+			*out_ptr=a2_color;
+			out_ptr++;
 		}
-	}
-	else if (color_type==PNG_COLOR_TYPE_PALETTE) {
-		for(y=high;y<height;y+=4) {
-			for(x=0;x<width;x++) {
-
-				/* top color */
-				a2_color=row_pointers[y][x];
-
-				/* bottom color */
-				color=row_pointers[y+2][x];
-
-				a2_color|=(color<<4);
-
-				if (debug) {
-					printf("%x ",a2_color);
-				}
-
-				*out_ptr=a2_color;
-				out_ptr++;
-			}
-			if (debug) printf("\n");
-		}
-	}
-	else {
-		printf("Unknown color type\n");
+		if (debug) fprintf(stderr,"\nNR: ");
 	}
 
-	/* Stripe test image */
-//	for(x=0;x<40;x++) for(y=0;y<40;y++) image[(y*width)+x]=y%16;
 
-/*
-	Addr		Row	/80	%40
-	$400	0	0	0	0
-	$428	28	16	0
-	$450	50	32	0
-	$480	80	2	1
-	$4A8	a8	18	1
-	$4D0	d0	34	1
-	$500	100	3	2
-	0,0 0,1 0,2....0,39 16,0 16,1 ....16,39 32,0..32,39, X X X X X X X X
-*/
+	*image_ptr=image;
 
 	return 0;
 }
@@ -247,12 +242,13 @@ static void print_help(char *name,int version) {
 //static unsigned char image[8192];
 
 
-static unsigned char image[8192];
+static unsigned char apple2_image[8192];
 
 int main(int argc, char **argv) {
 
 	int xsize=0,ysize=0;
 	int c,i;
+	unsigned char *image;
 
 	char *filename;
 
@@ -281,9 +277,9 @@ int main(int argc, char **argv) {
 
 	filename=strdup(argv[optind]);
 
-	memset(image,0,8192);
+	memset(apple2_image,0,8192);
 
-	if (loadpng(filename,image,&xsize,&ysize,1)<0) {
+	if (loadpng(filename,&image,&xsize,&ysize)<0) {
 		fprintf(stderr,"Error loading png!\n");
 		exit(-1);
 	}
@@ -291,11 +287,8 @@ int main(int argc, char **argv) {
 	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
 
 	for(i=0;i<8192;i++) {
-		fprintf(stdout,"%c",image[i]);
+		fprintf(stdout,"%c",apple2_image[i]);
 	}
 
 	return 0;
 }
-
-
-
