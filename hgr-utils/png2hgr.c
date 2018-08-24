@@ -239,16 +239,28 @@ static void print_help(char *name,int version) {
 	exit(1);
 }
 
-//static unsigned char image[8192];
+static int hgr_offset_table[48]={
+	0x0000,0x0080,0x0100,0x0180,0x0200,0x0280,0x0300,0x0380,
+	0x0028,0x00A8,0x0128,0x01A8,0x0228,0x02A8,0x0328,0x03A8,
+	0x0050,0x00D0,0x0150,0x01D0,0x0250,0x02D0,0x0350,0x03D0,
+};
 
+static int hgr_offset(int y) {
+
+	int temp;
+	temp=y/8;
+
+	return hgr_offset_table[temp];
+}
 
 static unsigned char apple2_image[8192];
 
 int main(int argc, char **argv) {
 
 	int xsize=0,ysize=0;
-	int c,i;
+	int c,x,y;
 	unsigned char *image;
+	unsigned char byte1,byte2;
 
 	char *filename;
 
@@ -286,9 +298,15 @@ int main(int argc, char **argv) {
 
 	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
 
-	for(i=0;i<8192;i++) {
-		fprintf(stdout,"%c",apple2_image[i]);
+	for(y=0;y<192;y++) {
+		for(x=0;x<20;x++) {
+			byte1=0xff;
+			apple2_image[hgr_offset(y)]=byte1;
+		}
+
 	}
+
+	fwrite(apple2_image,8192,sizeof(unsigned char),stdout);
 
 	return 0;
 }
