@@ -1,6 +1,6 @@
 include ../Makefile.inc
 
-all:	pcx2hgr shape_table dump_table
+all:	pcx2hgr png2hgr shape_table dump_table
 
 dump_table:		dump_table.o
 			$(CC) $(LFLAGS) -o dump_table dump_table.o
@@ -21,11 +21,18 @@ pcx2hgr:		pcx2hgr.o
 pcx2hgr.o:		pcx2hgr.c
 			$(CC) $(CFLAGS) -c pcx2hgr.c
 
+png2hgr:		png2hgr.o
+			$(CC) $(LFLAGS) -lpng -o png2hgr png2hgr.o
+
+png2hgr.o:		png2hgr.c
+			$(CC) $(CFLAGS) -c png2hgr.c
+
+
 
 install:	
-		cp pcx2hgr shape_table $(INSTALL_LOC)
+		cp pcx2hgr shape_table png2hgr $(INSTALL_LOC)
 
 clean:		
-		rm -f *~ *.o pcx2hgr shape_table dump_table
+		rm -f *~ *.o pcx2hgr shape_table dump_table png2hgr
 
 
