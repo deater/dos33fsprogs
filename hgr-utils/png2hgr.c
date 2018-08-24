@@ -258,14 +258,24 @@ static int hgr_offset(int y) {
 	return address;
 }
 
+void colors_to_bytes(unsigned char colors[7],
+			unsigned char *byte1,
+			unsigned char *byte2) {
+
+	*byte1=0xff;
+	*byte2=0x55;
+
+}
+
+
 static unsigned char apple2_image[8192];
 
 int main(int argc, char **argv) {
 
 	int xsize=0,ysize=0;
-	int c,x,y;
+	int c,x,y,z,color1,color2;
 	unsigned char *image;
-	unsigned char byte1,byte2;
+	unsigned char byte1,byte2,colors[7];
 
 	char *filename;
 
@@ -305,8 +315,20 @@ int main(int argc, char **argv) {
 
 	for(y=0;y<192;y++) {
 		for(x=0;x<20;x++) {
-			byte1=0xff;
-			apple2_image[hgr_offset(y)]=byte1;
+			for(z=0;z<7;z++) {
+				color1=image[y*280+x*14+z*2];
+				color2=image[y*280+x*14+z*2+1];
+				if (color1!=color2) {
+					fprintf(stderr,"Error, color at %d x %d doesn't match\n",
+							x*14+z*2,y);
+
+				}
+				colors[z]=color1;
+			}
+			colors_to_bytes(colors,&byte1,&byte2);
+
+			apple2_image[hgr_offset(y)+(x*2)+0]=byte1;
+			apple2_image[hgr_offset(y)+(x*2)+1]=byte2;
 		}
 
 	}
