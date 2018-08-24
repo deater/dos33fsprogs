@@ -25,7 +25,7 @@
 #define DEFAULT_BLACK	1
 #endif
 
-static int debug=1;
+static int debug=0;
 
 static int convert_color(int color) {
 
@@ -53,16 +53,17 @@ static int convert_color(int color) {
 
 		/* These use the questionable palette my older code used */
 		/* Also handle the newer one */
+		/* Bitflipped because HGR is backwards, woz is crazy */
 		case 0x000000:	c=0; break;	/* black */
-		case 0x1bcb01:	c=1; break;	/* bright green */
-		case 0x14f53c:	c=1; break;	/* bright green */
-		case 0xe434fe:	c=2; break;	/* magenta */
-		case 0xe31e60:	c=2; break;	/* magenta */
+		case 0x1bcb01:	c=2; break;	/* bright green */
+		case 0x14f53c:	c=2; break;	/* bright green */
+		case 0xe434fe:	c=1; break;	/* magenta */
+		case 0xe31e60:	c=1; break;	/* magenta */
 		case 0xffffff:	c=3; break;	/* white */
-		case 0xcd5b01:	c=5; break;	/* orange */
-		case 0xff6a3c:	c=5; break;	/* orange */
-		case 0x1b9afe:	c=6; break;	/* medium blue */
-		case 0x14cffd:	c=6; break;	/* medium blue */
+		case 0xcd5b01:	c=6; break;	/* orange */
+		case 0xff6a3c:	c=6; break;	/* orange */
+		case 0x1b9afe:	c=5; break;	/* medium blue */
+		case 0x14cffd:	c=5; break;	/* medium blue */
 
 		default:
 			fprintf(stderr,"Unknown color %x\n",color);
@@ -258,13 +259,78 @@ static int hgr_offset(int y) {
 	return address;
 }
 
-void colors_to_bytes(unsigned char colors[7],
+/* Count both black/white variants */
+static int color_high(int color) {
+	if ((color>2) || (color==0)) return 1;
+	return 0;
+}
+
+static int color_low(int color) {
+	if ((color<4) || (color==7)) return 1;
+	return 0;
+}
+
+static int colors_to_bytes(unsigned char colors[7],
 			unsigned char *byte1,
 			unsigned char *byte2) {
 
-	*byte1=0xff;
-	*byte2=0x55;
+	int highbit1=0,highbit2=0,lowbit1=0,lowbit2=0;
+	int hb1,hb2;
+	int error=0;
 
+	*byte1=0;
+	*byte2=0;
+
+	highbit1+=color_high(colors[0]);
+	highbit1+=color_high(colors[1]);
+	highbit1+=color_high(colors[2]);
+	highbit1+=color_high(colors[3]);
+
+	highbit2+=color_high(colors[3]);
+	highbit2+=color_high(colors[4]);
+	highbit2+=color_high(colors[5]);
+	highbit2+=color_high(colors[6]);
+
+	lowbit1+=color_low(colors[0]);
+	lowbit1+=color_low(colors[1]);
+	lowbit1+=color_low(colors[2]);
+	lowbit1+=color_low(colors[3]);
+
+	lowbit2+=color_low(colors[3]);
+	lowbit2+=color_low(colors[4]);
+	lowbit2+=color_low(colors[5]);
+	lowbit2+=color_low(colors[6]);
+
+	if (highbit1==4) hb1=1;
+	else if (lowbit1==4) hb1=0;
+	else {
+		error=1;
+		if (highbit1>lowbit1) hb1=1;
+		else hb1=0;
+	}
+
+	if (highbit2==4) hb2=1;
+	else if (lowbit2==4) hb2=0;
+	else {
+		error=2;
+		if (highbit2>lowbit2) hb2=1;
+		else hb2=0;
+	}
+
+
+	*byte1|=(colors[0]&3);
+	*byte1|=(colors[1]&3)<<2;
+	*byte1|=(colors[2]&3)<<4;
+	*byte1|=(colors[3]&1)<<6;
+	*byte1|=hb1<<7;
+
+	*byte2|=(colors[6]&3)<<5;
+	*byte2|=(colors[5]&3)<<3;
+	*byte2|=(colors[4]&3)<<1;
+	*byte2|=(colors[3]&2)>>1;
+	*byte2|=hb2<<7;
+
+	return error;
 }
 
 
@@ -272,7 +338,7 @@ static unsigned char apple2_image[8192];
 
 int main(int argc, char **argv) {
 
-	int xsize=0,ysize=0;
+	int xsize=0,ysize=0,error;
 	int c,x,y,z,color1,color2;
 	unsigned char *image;
 	unsigned char byte1,byte2,colors[7];
@@ -325,7 +391,11 @@ int main(int argc, char **argv) {
 				}
 				colors[z]=color1;
 			}
-			colors_to_bytes(colors,&byte1,&byte2);
+			error=colors_to_bytes(colors,&byte1,&byte2);
+			if (error!=0) {
+				fprintf(stderr,"Warning: mixing colors at %d x %d\n",
+					x*14+error*7,y);
+			}
 
 			apple2_image[hgr_offset(y)+(x*2)+0]=byte1;
 			apple2_image[hgr_offset(y)+(x*2)+1]=byte2;
