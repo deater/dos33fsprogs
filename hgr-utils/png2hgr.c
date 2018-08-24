@@ -247,10 +247,15 @@ static int hgr_offset_table[48]={
 
 static int hgr_offset(int y) {
 
-	int temp;
+	int temp,temp2,address;
 	temp=y/8;
+	temp2=y%8;
 
-	return hgr_offset_table[temp];
+	temp2=temp2*0x400;
+
+	address=hgr_offset_table[temp]+temp2;
+
+	return address;
 }
 
 static unsigned char apple2_image[8192];
