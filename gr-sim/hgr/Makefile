@@ -6,8 +6,15 @@ SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 GR_SIM = ../gr-sim.a
 
-all:	lines image_load
+all:	lines image_load hgr_view
 
+###
+
+hgr_view:	hgr_view.o $(GR_SIM)
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o hgr_view hgr_view.o $(GR_SIM)
+
+hgr_view.o:	hgr_view.c
+	$(CC) $(CFLAGS) -c hgr_view.c
 
 ###
 
@@ -29,4 +36,4 @@ lines.o:	lines.c
 
 
 clean:	
-	rm -f *~ *.o lines image_load
+	rm -f *~ *.o lines image_load hgr_view
