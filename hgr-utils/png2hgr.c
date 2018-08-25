@@ -1,5 +1,12 @@
 /* Converts 280x192 8-bit PNG file with correct palette to Apple II HGR */
 
+
+
+
+
+
+
+
 #define VERSION "0.0.1"
 
 #include <stdio.h>	/* For FILE I/O */
@@ -91,7 +98,7 @@ int loadpng(char *filename,
 	png_infop info_ptr;
 	png_bytep *row_pointers;
 	png_byte color_type;
-	int row_bytes;
+	int row_bytes,bytes_per_pixel;
 
 	unsigned char header[8];
 
@@ -175,6 +182,12 @@ int loadpng(char *filename,
 
 	row_bytes = png_get_rowbytes(png_ptr, info_ptr);
 	// *pChannels = (int)png_get_channels(png_ptr, info_ptr);
+	bytes_per_pixel=row_bytes/width;
+
+	if (debug) {
+		fprintf(stderr,"Rowbytes=%d bytes per pixel=%d\n",
+				row_bytes,row_bytes/width);
+	}
 
 	row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
 	for (y=0; y<height; y++) {
@@ -193,9 +206,9 @@ int loadpng(char *filename,
 	for(y=0;y<height;y++) {
 		for(x=0;x<width;x++) {
 
-			color=	(row_pointers[y][x*3]<<16)+
-				(row_pointers[y][x*3+1]<<8)+
-				(row_pointers[y][x*3+2]);
+			color=	(row_pointers[y][x*bytes_per_pixel]<<16)+
+				(row_pointers[y][x*bytes_per_pixel+1]<<8)+
+				(row_pointers[y][x*bytes_per_pixel+2]);
 //			if (debug) {
 //				fprintf(stderr,"%x ",color);
 //			}
@@ -270,7 +283,8 @@ static int color_low(int color) {
 	return 0;
 }
 
-static int colors_to_bytes(unsigned char colors[7],
+
+static int colors_to_bytes(unsigned char colors[14],
 			unsigned char *byte1,
 			unsigned char *byte2) {
 
@@ -285,49 +299,81 @@ static int colors_to_bytes(unsigned char colors[7],
 	highbit1+=color_high(colors[1]);
 	highbit1+=color_high(colors[2]);
 	highbit1+=color_high(colors[3]);
+	highbit1+=color_high(colors[4]);
+	highbit1+=color_high(colors[5]);
+	highbit1+=color_high(colors[6]);
 
-	highbit2+=color_high(colors[3]);
-	highbit2+=color_high(colors[4]);
-	highbit2+=color_high(colors[5]);
-	highbit2+=color_high(colors[6]);
+	highbit2+=color_high(colors[7]);
+	highbit2+=color_high(colors[8]);
+	highbit2+=color_high(colors[9]);
+	highbit2+=color_high(colors[10]);
+	highbit2+=color_high(colors[11]);
+	highbit2+=color_high(colors[12]);
+	highbit2+=color_high(colors[13]);
 
 	lowbit1+=color_low(colors[0]);
 	lowbit1+=color_low(colors[1]);
 	lowbit1+=color_low(colors[2]);
 	lowbit1+=color_low(colors[3]);
+	lowbit1+=color_low(colors[4]);
+	lowbit1+=color_low(colors[5]);
+	lowbit1+=color_low(colors[6]);
 
-	lowbit2+=color_low(colors[3]);
-	lowbit2+=color_low(colors[4]);
-	lowbit2+=color_low(colors[5]);
-	lowbit2+=color_low(colors[6]);
+	lowbit2+=color_low(colors[7]);
+	lowbit2+=color_low(colors[8]);
+	lowbit2+=color_low(colors[9]);
+	lowbit2+=color_low(colors[10]);
+	lowbit2+=color_low(colors[11]);
+	lowbit2+=color_low(colors[12]);
+	lowbit2+=color_low(colors[13]);
 
-	if (highbit1==4) hb1=1;
-	else if (lowbit1==4) hb1=0;
+
+
+	if (highbit1==7) hb1=1;
+	else if (lowbit1==7) hb1=0;
 	else {
 		error=1;
 		if (highbit1>lowbit1) hb1=1;
 		else hb1=0;
 	}
 
-	if (highbit2==4) hb2=1;
-	else if (lowbit2==4) hb2=0;
+	if (highbit2==7) hb2=1;
+	else if (lowbit2==7) hb2=0;
 	else {
 		error=2;
 		if (highbit2>lowbit2) hb2=1;
 		else hb2=0;
 	}
 
+/*
+ 0 0 0 0 -> 00 00
+ 1 1 1 1 -> 01 01
+ 2 2 2 2 -> 10 10
+ 3 3 3 3 -> 11 11
+ 1 3 3 1 -> 01 11
 
-	*byte1|=(colors[0]&3);
-	*byte1|=(colors[1]&3)<<2;
-	*byte1|=(colors[2]&3)<<4;
-	*byte1|=(colors[3]&1)<<6;
+ 1 1 2 2 3 3 0 -> 0 11 10 01
+
+*/
+
+
+
+	*byte1|=(colors[0]&1)<<0;
+	*byte1|=(colors[1]&2)<<0;
+	*byte1|=(colors[2]&1)<<2;
+	*byte1|=(colors[3]&2)<<2;
+	*byte1|=(colors[4]&1)<<4;
+	*byte1|=(colors[5]&2)<<4;
+	*byte1|=(colors[6]&1)<<6;
 	*byte1|=hb1<<7;
 
-	*byte2|=(colors[6]&3)<<5;
-	*byte2|=(colors[5]&3)<<3;
-	*byte2|=(colors[4]&3)<<1;
-	*byte2|=(colors[3]&2)>>1;
+	*byte2|=(colors[7]&2)>>1;
+	*byte2|=(colors[8]&1)<<1;
+	*byte2|=(colors[9]&2)<<1;
+	*byte2|=(colors[10]&1)<<3;
+	*byte2|=(colors[11]&2)<<3;
+	*byte2|=(colors[12]&1)<<5;
+	*byte2|=(colors[13]&2)<<5;
 	*byte2|=hb2<<7;
 
 	return error;
@@ -339,15 +385,15 @@ static unsigned char apple2_image[8192];
 int main(int argc, char **argv) {
 
 	int xsize=0,ysize=0,error;
-	int c,x,y,z,color1,color2;
+	int c,x,y,z,color1;
 	unsigned char *image;
-	unsigned char byte1,byte2,colors[7];
+	unsigned char byte1,byte2,colors[14];
 
 	char *filename;
 
 	/* Parse command line arguments */
 
-	while ( (c=getopt(argc, argv, "hv") ) != -1) {
+	while ( (c=getopt(argc, argv, "hvd") ) != -1) {
 
 		switch(c) {
 
@@ -356,6 +402,9 @@ int main(int argc, char **argv) {
 				break;
                         case 'v':
                                 print_help(argv[0],1);
+				break;
+                        case 'd':
+				debug=1;
 				break;
 			default:
 				print_help(argv[0],0);
@@ -381,14 +430,13 @@ int main(int argc, char **argv) {
 
 	for(y=0;y<192;y++) {
 		for(x=0;x<20;x++) {
-			for(z=0;z<7;z++) {
-				color1=image[y*280+x*14+z*2];
-				color2=image[y*280+x*14+z*2+1];
-				if (color1!=color2) {
-					fprintf(stderr,"Error, color at %d x %d doesn't match\n",
-							x*14+z*2,y);
-
-				}
+			for(z=0;z<14;z++) {
+				color1=image[y*280+x*14+z];
+//				if (color1!=color2) {
+//					fprintf(stderr,"Warning: color at %d x %d doesn't match\n",
+//							x*14+z*2,y);
+//
+//				}
 				colors[z]=color1;
 			}
 			error=colors_to_bytes(colors,&byte1,&byte2);
