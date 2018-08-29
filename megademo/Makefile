@@ -17,9 +17,15 @@ megademo.dsk:	MEGADEMO
 MEGADEMO:	megademo.o
 	ld65 -o MEGADEMO megademo.o -C ../linker_scripts/apple2_1000.inc
 
-megademo.o:	megademo.s
+megademo.o:	megademo.s \
+	c64.img
 	ca65 -o megademo.o megademo.s -l megademo.lst
 
+
+####
+
+c64.img:	c64_updated.png
+	../hgr-utils/png2hgr c64_updated.png > c64.img
 
 ####
 
@@ -27,4 +33,4 @@ C64C.BIN:	c64.bmp
 	$(B2D) c64.bmp HGR
 
 clean:		
-		rm -f *~ *.o *.lst *.inc MEGADEMO
+		rm -f *~ *.o *.lst *.inc MEGADEMO c64.img
