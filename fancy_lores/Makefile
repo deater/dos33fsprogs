@@ -12,6 +12,7 @@ fancy_lores_viewer.dsk:	DISP4096 DISP4048D
 	$(DOS33) -y fancy_lores_viewer.dsk BSAVE -a 0x1000 DISP4048D
 #	$(DOS33) -y fancy_lores_viewer.dsk BSAVE -a 0x2000 APPLE_ORIG.BIN
 #	$(DOS33) -y fancy_lores_viewer.dsk BSAVE -a 0x2000 KATAHDIN_ORIG.BIN
+#	$(DOS33) -y fancy_lores_viewer.dsk BSAVE -a 0x2000 APPLE_HGR.BIN
 
 ####
 
