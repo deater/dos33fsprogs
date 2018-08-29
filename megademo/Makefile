@@ -18,9 +18,15 @@ MEGADEMO:	megademo.o
 	ld65 -o MEGADEMO megademo.o -C ../linker_scripts/apple2_1000.inc
 
 megademo.o:	megademo.s \
-	c64.img
+	zp.inc hardware.inc \
+	c64.img.lz4
 	ca65 -o megademo.o megademo.s -l megademo.lst
 
+
+####
+
+c64.img.lz4:	c64.img
+	lz4 -f -16 c64.img
 
 ####
 
