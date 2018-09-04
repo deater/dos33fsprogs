@@ -338,8 +338,13 @@ forever_loop:
 	; Then it sets up the stack like an interrupt and calls 0x3fe
 
 interrupt_handler:
-	pha			; save A
-				; Should we save X and Y too?
+;	pha			; firmware saves A to $45 for us
+	txa			; save X
+	pha
+	tya
+	pha			; save Y
+
+
 
 	bit	$C404		; can clear 6522 interrupt by reading T1C-L
 
@@ -437,6 +442,12 @@ not_done:
 
 done_interrupt:
 	pla
+	tay			; restore y
+	pla
+	tax			; restore X
+
+	lda	$45		; restore A
+
 	rti
 
 
