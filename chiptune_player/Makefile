@@ -8,8 +8,9 @@ all:	chiptune_player.dsk chiptune_unrolled.dsk
 $(DOS33):
 	cd ../dos33fs-utils && make
 
-chiptune_player.dsk:	CHIPTUNE_PLAYER ./krw/INTRO2.KRW
+chiptune_player.dsk:	CHIPTUNE_PLAYER ./krw/INTRO2.KRW HELLO
 	cp chiptune_empty.dsk chiptune_player.dsk
+	$(DOS33) -y chiptune_player.dsk SAVE A HELLO
 	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x0C00 CHIPTUNE_PLAYER
 	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/CAMOUFLAGE.KRW
 	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/CHRISTMAS.KRW
@@ -53,6 +54,8 @@ chiptune_unrolled.dsk:	CHIPTUNE_UNROLLED ./krw/INTRO2.KRW
 	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/UNIVERSE.KRW
 	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/WAVE.KRW
 
+HELLO:	hello.bas
+	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
 
 CHIPTUNE_PLAYER:	chiptune_player.o
 	ld65 -o CHIPTUNE_PLAYER chiptune_player.o -C ../linker_scripts/apple2_c00.inc

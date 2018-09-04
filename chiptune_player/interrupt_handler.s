@@ -13,8 +13,14 @@
 TIME_OFFSET	EQU	13
 
 interrupt_handler:
-	pha			; save A				; 3
-				; Should we save X and Y too?
+;	pha			; save A				; 3
+				; A is saved in $45 by firmware
+	txa
+	pha			; save X
+	tya
+	pha			; save Y
+
+
 
 ;	inc	$0404		; debug (flashes char onscreen)
 
@@ -350,7 +356,14 @@ mb_clear_reg:
 
 exit_interrupt:
 
-	pla			; restore a				; 4
+;	pla			; restore a				; 4
+
+	pla
+	tay			; restore Y
+	pla
+	tax			; restore X
+	lda	$45		; restore A
+
 
 	rti			; return from interrupt			; 6
 
