@@ -11,7 +11,11 @@
 	; Then it sets up the stack like an interrupt and calls 0x3fe
 
 interrupt_handler:
-	pha			; save A				; 3
+;	pha			; save A				; 3
+	txa
+	pha
+	tya
+	pha
 				; Should we save X and Y too?
 
 ;	inc	$0404		; debug (flashes char onscreen)
@@ -286,6 +290,12 @@ done_interrupt:
 exit_interrupt:
 
 	pla			; restore a				; 4
+	tay
+	pla
+	tax
+
+	lda	$45		; restore A saved by firmware
+				; needed on older (pre-enhanced IIe)
 
 	rti			; return from interrupt			; 6
 
