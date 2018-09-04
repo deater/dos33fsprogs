@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <math.h>
 
 #include "gr-sim.h"
 
@@ -15,9 +16,9 @@
 const int ysize=191,xsize=280,mg=24;
 int cl;
 int ms;
-int x1,x2=0,y1,y2=0,cs,pk;
+double x1,x2=0,ypos1,y2=0,cs,pk;
 double xpos,ypos,x_velocity,y_velocity;
-int i,n;
+double i,n;
 
 void routine_370(void) {
 	hplot(xpos+x2+n,ypos+y2+n);
@@ -63,7 +64,7 @@ label_180:
 	//210 REM Draw rocket
 
 	for(cs=1;cs<=ms;cs++) {
-		y1=y2;
+		ypos1=y2;
 		y2=ypos;
 		x1=x2;
 		x2=xpos;
@@ -107,11 +108,11 @@ label_180:
 
 		}
 		hcolor_equals(cl*4);
-		hplot(x1,y1);
+		hplot(x1,ypos1);
 		hplot_to(x2,y2);
 //
 //		printf("C=%d, %d,%d to %d,%d\n",cl*4,
-//			x1,y1,x2,y2);
+//			x1,ypos1,x2,y2);
 
 		grsim_update();
 		ch=grsim_input();
@@ -123,8 +124,8 @@ label_180:
 
 label_290:
 	//280 REM Draw explosion near X2,Y2
-	//x2=int(x2);
-	//y2=int(y2);
+	x2=floor(x2);
+	y2=floor(y2);
 	xpos=(random()%20)-10;
 	ypos=(random()%20)-10;
 	hcolor_equals(cl*4+3);
@@ -149,18 +150,6 @@ label_290:
 
 	goto label_180;
 
-
-
-	while(1) {
-		grsim_update();
-
-		ch=grsim_input();
-
-		if (ch=='q') break;
-
-		usleep(100000);
-
-	}
 
 	return 0;
 }
