@@ -324,7 +324,9 @@ title_routine:
 .include "mockingboard.s"
 .include "credits.s"
 .include "interrupt_handler.s"
-.byte 0,0,0,0,0,0,0,0
+;.byte 0,0,0,0,0,0,0,0
+;.byte 0,0,0,0,0,0,0,0			; irq handler fix = +8 in size
+
 .byte 0,0,0,0,0,0,0,0
 .byte 0,0,0,0,0,0,0,0
 .byte 0,0,0,0

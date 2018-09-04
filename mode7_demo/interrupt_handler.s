@@ -27,8 +27,16 @@
 CHUNKSIZE	EQU     11	; hardcoded, based on krg file
 
 interrupt_handler:
-	pha			; save A				; 3
+;	pha			; save A				; 3
+	; instead count on the handler saving A to $45
+
 				; Should we save X and Y too?
+
+	txa
+	pha			; Save X
+	tya
+	pha			; Save Y
+
 
 ;	inc	$0404		; debug (flashes char onscreen)
 
@@ -278,7 +286,16 @@ done_interrupt:
 
 exit_interrupt:
 
-	pla			; restore a				; 4
+	pla
+	tay
+	pla
+	tax
+
+
+;	pla			; restore a				; 4
+
+	lda	$45		; restore A
+
 
 	rti			; return from interrupt			; 6
 

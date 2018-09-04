@@ -9,11 +9,16 @@ all:	mode7_demo.dsk
 $(DOS33):	
 	cd ../dos33fs-utils && make
 
-mode7_demo.dsk:	$(DOS33) MODE7_DEMO MODE7_DEMO_C
+mode7_demo.dsk:	$(DOS33) MODE7_DEMO MODE7_DEMO_C HELLO
 #	$(DOS33) -y mode7_demo.dsk BSAVE -a 0x4000 MODE7_DEMO
 	$(DOS33) -y mode7_demo.dsk BSAVE -a 0x2000 MODE7_DEMO_C
+	$(DOS33) -y mode7_demo.dsk SAVE A HELLO
 
 
+
+####
+HELLO:	hello.bas
+	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
 
 ###
 
