@@ -3,7 +3,7 @@
 ;=======================================================================
 ; Constants
 NUMSTARS 	= 16
-YSIZE		= 150
+YSIZE		= 160
 XSIZE		= 280
 MARGIN		= 24
 
@@ -92,24 +92,24 @@ launch_firework:
 	jsr	random16
 	lda	SEEDL
 	and	#$1
-	beq	left_hill
-right_hill:
+	beq	right_hill
+left_hill:
 	lda	XPOS_L
 	clc
 	adc	#24
 	sta	XPOS_L				; 24-88 (64)
 
-	lda	X_VELOCITY
-	eor	#$ff
-	sta	X_VELOCITY
-	inc	X_VELOCITY			; aim toward middle
-
 	jmp	done_hill
-left_hill:
+right_hill:
 	lda	XPOS_L
 	clc
 	adc	#191
 	sta	XPOS_L				; 191-255 (64)
+
+	lda	X_VELOCITY
+	eor	#$ff
+	sta	X_VELOCITY
+	inc	X_VELOCITY			; aim toward middle
 
 done_hill:
 
@@ -206,14 +206,14 @@ no_peak:
 	sec			; if (ypos_h>ysize-(ysize-peak)/2)
 	lda	#YSIZE
 	sbc	PEAK
-	asl
+	lsr
 	eor	#$FF
 	clc
 	adc	#1
 	clc
 	adc	#YSIZE
 	cmp	YPOS_H
-	bcs	done_moving
+	bcc	done_moving
 
 going_up:
 
@@ -248,7 +248,12 @@ draw_rocket:
 	lda	Y_OLD
 	ldy	#0
 	jsr	HPLOT0			; hplot(x_old,y_old);
-;			hplot_to(xpos_l,ypos_h);
+
+	; HPLOT to X,Y X=(x,a), y=Y
+        lda     XPOS_L
+        ldx     #0
+        ldy     YPOS_H
+        jsr     HGLIN			; hplot_to(xpos_l,ypos_h);
 
 
 erase_rocket:
@@ -265,14 +270,21 @@ erase_rocket:
 	ldy	#0
 	jsr	HPLOT0			; hplot(x_old,y_old);
 
-
-	; hplot_to(x_old,y_old);
+	; HPLOT to X,Y X=(x,a), y=Y
+        lda     X_OLD
+        ldx     #0
+        ldy     Y_OLD
+        jsr     HGLIN			; hplot_to(x_old,y_old);
 
 done_with_loop:
 
 	lda	CURRENT_STEP
 	cmp	MAX_STEPS
 	beq	draw_explosion
+
+
+	lda	#$c0
+	jsr	WAIT
 
 	inc	CURRENT_STEP
 	jmp	draw_rocket_loop

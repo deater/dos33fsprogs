@@ -38,10 +38,11 @@ PTRIG	= $C070
 ; ROM routines
 HGR	= $F3E2
 HPLOT0	= $F457
+HGLIN	= $F53A
+COLORTBL= $F6F6
 TEXT	= $FB36				;; Set text mode
 HOME	= $FC58				;; Clear the text screen
 WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
-COLORTBL= $F6F6
 
 MAX	= 3
 
