@@ -1,23 +1,31 @@
 ;=======================================================================
 ; Based on BASIC program posted by FozzTexx, originally written in 1987
 ;=======================================================================
+; Constants
+NUMSTARS 	= 16
+YSIZE		= 150
+XSIZE		= 280
+MARGIN		= 24
 
-NUMSTARS = 16
+; Zero page addresses
+COLOR_GROUP	= $F0
+X_VELOCITY	= $F1
+Y_VELOCITY_H	= $F2
+Y_VELOCITY_L	= $F3
+MAX_STEPS	= $F4
+;XPOS_H		= $F5
+XPOS_L		= $F6
+YPOS_H		= $F7
+YPOS_L		= $F8
+PEAK		= $F9
+CURRENT_STEP	= $FA
+Y_OLD		= $FB
+Y_OLDER		= $FC
+X_OLD		= $FD
+X_OLDER		= $FE
 
-;const int ysize=160,xsize=280,margin=24;
-;
-;int xpos;
-;
+
 ;signed char o,i;
-;signed char color_group,x_velocity,cs,max_steps;
-;unsigned char xpos_l;
-;unsigned char ypos_h,ypos_l;
-;signed char y_velocity_h;
-;unsigned char y_velocity_l;
-;unsigned char y_old=0,y_even_older;
-;unsigned char x_old=0,x_even_older;
-;unsigned char peak;
-
 
 ;void routine_370(void) {
 
@@ -44,53 +52,112 @@ draw_fireworks:
 
 	jsr	draw_stars	; draw the stars
 
-label_180:
-;	random_6502();
-;	color_group=ram[SEED]&1;		// HGR color group (PG or BO)
-;	random_6502();
-;	x_velocity=(ram[SEED]&0x3)+1;		// x velocity = 1..4
-;	random_6502();
-;	y_velocity_h=-((ram[SEED]&0x3)+3);	// y velocity = -3..-6
-;	y_velocity_l=0;
+launch_firework:
 
-;	random_6502();
-;	max_steps=(ram[SEED]&0x1f)+33;		// 33..64
+	jsr	random16
+	lda	SEEDL
+	and	#$4
+	sta	COLOR_GROUP	; HGR color group (0 PG or 4 BO)
 
-;	/* launch from the two hills */
-;	random_6502();
-;	xpos_l=ram[SEED]&0x3f;
-;	random_6502();
-;	if (ram[SEED]&1) {
-;		xpos_l+=24;			// 24-88 (64)
-;	}
-;	else {
-;		xpos_l+=191;			// 191-255 (64)
-;	}
+	jsr	random16
+	lda	SEEDL
+	and	#$3
+	clc
+	adc	#$1
+	sta	X_VELOCITY	; x velocity = 1..4
 
+	jsr	random16
+	lda	SEEDL
+	and	#$3
+	clc
+	adc	#$2
+	eor	#$ff
+	sta	Y_VELOCITY_H	; y velocity = -3..-6
+	lda	#0
+	sta	Y_VELOCITY_L	; it's 8:8 fixed point
 
-;	ypos_h=ysize;				// start at ground
-;	ypos_l=0;
+	jsr	random16
+	lda	SEEDL
+	and	#$1f
+	clc
+	adc	#33
+	sta	MAX_STEPS	; 33..64
 
-;	peak=ypos_h;				// peak starts at ground?
+	; launch from the two hills
+	jsr	random16
+	lda	SEEDL
+	and	#$3f
+	sta	XPOS_L
 
-;	/* Aim towards center of screen */
-;	/* TODO: merge this with hill location? */
-;	if (xpos_l>xsize/2) {
-;		x_velocity=-x_velocity;
-;	}
+	jsr	random16
+	lda	SEEDL
+	and	#$1
+	beq	left_hill
+right_hill:
+	lda	XPOS_L
+	clc
+	adc	#24
+	sta	XPOS_L				; 24-88 (64)
 
-;	/* Draw rocket */
-;	for(cs=1;cs<=max_steps;cs++) {
-;		y_even_older=y_old;
-;		y_old=ypos_h;
-;		x_even_older=x_old;
-;		x_old=xpos_l;
+	lda	X_VELOCITY
+	eor	#$ff
+	sta	X_VELOCITY
+	inc	X_VELOCITY			; aim toward middle
 
-;		/* Move rocket */
-;		xpos_l=xpos_l+x_velocity;
+	jmp	done_hill
+left_hill:
+	lda	XPOS_L
+	clc
+	adc	#191
+	sta	XPOS_L				; 191-255 (64)
 
-;		/* 16 bit add */
-;		add16(&ypos_h,&ypos_l,y_velocity_h,y_velocity_l);
+done_hill:
+
+	lda	#YSIZE
+	sta	YPOS_H
+	lda	#0				; fixed point 8:8
+	sta	YPOS_L				; start at ground
+
+	lda	YPOS_H
+	sta	PEAK				; peak starts at ground
+
+	;===============
+	; Draw rocket
+	;===============
+
+	lda	#1
+	sta	CURRENT_STEP
+
+draw_rocket_loop:
+
+	lda	Y_OLD
+	sta	Y_OLDER
+
+	lda	YPOS_H
+	sta	Y_OLD
+
+	lda	X_OLD
+	sta	X_OLDER
+
+	lda	XPOS_L
+	sta	X_OLD
+
+	; Move rocket
+
+	lda	XPOS_L
+	clc
+	adc	X_VELOCITY
+	sta	XPOS_L			; adjust xpos
+
+	; 16 bit add
+	clc
+	lda	YPOS_L
+	adc	Y_VELOCITY_L
+	sta	YPOS_L
+	lda	YPOS_H
+	adc	Y_VELOCITY_H
+	sta	YPOS_H			; adjust ypos
+
 
 ;		/* adjust Y velocity, slow it down */
 ;//		c=0;
@@ -131,35 +198,74 @@ label_180:
 ;			}
 ;		}
 
-;		// if not done, draw rocket
-;		if (cs<max_steps) {
-;			hcolor_equals(color_group*4+3);
-;			hplot(x_old,y_old);
+
+	;==========================
+	; if not done, draw rocket
+	;==========================
+
+	lda	CURRENT_STEP
+	cmp	MAX_STEPS
+	beq	erase_rocket
+
+draw_rocket:
+	; set hcolor to proper white (3 or 7)
+	clc
+	lda	COLOR_GROUP
+	adc	#3
+	tax
+	lda	COLORTBL,X		; get color from table
+	sta	HGR_COLOR
+
+	; HPLOT X,Y: X= (y,x), Y=a
+
+	ldx	X_OLD
+	lda	Y_OLD
+	ldy	#0
+	jsr	HPLOT0			; hplot(x_old,y_old);
 ;			hplot_to(xpos_l,ypos_h);
-;
-;		}
-;		// erase with proper color black
-;		hcolor_equals(color_group*4);
-;		hplot(x_even_older,y_even_older);
-;		hplot_to(x_old,y_old);
-;
-;		grsim_update();
-;		ch=grsim_input();
-;		if (ch=='q') exit(0);
-;		usleep(50000);
-;
-;	}
-;
-;
-;label_290:
-;	/* Draw explosion near x_old, y_old */
+
+
+erase_rocket:
+	; erase with proper color black (0 or 4)
+
+	ldx	COLOR_GROUP
+	lda	COLORTBL,X		; get color from table
+	sta	HGR_COLOR
+
+	; HPLOT X,Y: X= (y,x), Y=a
+
+	ldx	X_OLDER
+	lda	Y_OLDER
+	ldy	#0
+	jsr	HPLOT0			; hplot(x_old,y_old);
+
+
+	; hplot_to(x_old,y_old);
+
+done_with_loop:
+
+	lda	CURRENT_STEP
+	cmp	MAX_STEPS
+	beq	draw_explosion
+
+	inc	CURRENT_STEP
+	jmp	draw_rocket_loop
+
+
+
+	;==================================
+	; Draw explosion near x_old, y_old
+	;==================================
+draw_explosion:
+
+
 ;	xpos=x_old;
 ;	xpos+=(random()%20)-10;	// x +/- 10
 ;
 ;	ypos_h=y_old;
 ;	ypos_h+=(random()%20)-10;	// y +/- 10
 ;
-;	hcolor_equals(color_group*4+3);	// draw white (with fringes)
+;	hcolor_equals(color_group+3);	// draw white (with fringes)
 ;
 ;	hplot(xpos,ypos_h);	// draw at center of explosion
 ;
@@ -168,12 +274,12 @@ label_180:
 ;		/* Draw spreading dots in white */
 ;		if (i<9) {
 ;			o=i;
-;			hcolor_equals(color_group*4+3);
+;			hcolor_equals(color_group+3);
 ;			routine_370();
 ;		}
 ;		/* erase old */
 ;		o=i-1;
-;		hcolor_equals(color_group*4);
+;		hcolor_equals(color_group);
 ;		routine_370();
 ;
 ;		grsim_update();
@@ -181,20 +287,26 @@ label_180:
 ;		if (ch=='q') break;
 ;		usleep(50000);
 ;	}
-;
-;	/* randomly draw more explosions */
-;	random_6502();
-;	if (ram[SEED]&1) goto label_290;
-;
 
-;
-;	goto label_180;
-;
+	;==================================
+	; randomly draw more explosions
+	;==================================
+	jsr	random16
+	lda	SEEDL
+	and	#$1
+	beq	draw_explosion
 
-	jsr	wait_until_keypressed
-
+	; see if key pressed
+	lda	KEYPRESS		; check if keypressed
+	bmi	done_fireworks		; if so, exit
+	jmp	launch_firework
+done_fireworks:
 	rts
 
+
+	;=============================
+	; Draw the stars
+	;=============================
 
 draw_stars:
 	; HCOLOR = 3, white (though they are drawn purple)
