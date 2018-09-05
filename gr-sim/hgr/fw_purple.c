@@ -19,17 +19,17 @@ double i,n;
 
 void routine_370(void) {
 
-	hplot(xpos+x_old+n,ypos+y_old+n);		// NE
-	hplot(xpos+x_old-n,ypos+y_old-n);		// SW
+	hplot(xpos+n,ypos+n);		// NE
+	hplot(xpos-n,ypos-n);		// SW
 
-	hplot(xpos+x_old+n,ypos+y_old-n);		// SE
-	hplot(xpos+x_old-n,ypos+y_old+n);		// NW
+	hplot(xpos+n,ypos-n);		// SE
+	hplot(xpos-n,ypos+n);		// NW
 
-	hplot(xpos+x_old,ypos+y_old+(n*1.5));		// N
-	hplot(xpos+x_old+(n*1.5),ypos+y_old);		// E
+	hplot(xpos,ypos+(n*1.5));		// N
+	hplot(xpos+(n*1.5),ypos);		// E
 
-	hplot(xpos+x_old,ypos+y_old-(n*1.5));		// S
-	hplot(xpos+x_old-(n*1.5),ypos+y_old);		// W
+	hplot(xpos,ypos-(n*1.5));		// S
+	hplot(xpos-(n*1.5),ypos);		// W
 
 }
 
@@ -111,6 +111,7 @@ label_180:
 		}
 		// erase with proper color black
 		hcolor_equals(color_group*4);
+//		hcolor_equals(6);
 		hplot(x_even_older,y_even_older);
 		hplot_to(x_old,y_old);
 
@@ -130,9 +131,12 @@ label_290:
 	xpos=(random()%20)-10;	// x +/- 10
 	ypos=(random()%20)-10;	// y +/- 10
 
+	xpos+=x_old;
+	ypos+=y_old;
+
 	hcolor_equals(color_group*4+3);	// draw white (with fringes)
 
-	hplot(xpos+x_old,ypos+y_old);	// draw at center of explosion
+	hplot(xpos,ypos);	// draw at center of explosion
 
 	/* Spread the explosion */
 	for(i=1;i<=9;i++) {
