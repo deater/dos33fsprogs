@@ -23,7 +23,7 @@ Y_OLD		= $FB
 Y_OLDER		= $FC
 X_OLD		= $FD
 X_OLDER		= $FE
-
+TEMPY		= $FF
 
 ;signed char o,i;
 
@@ -159,45 +159,71 @@ draw_rocket_loop:
 	sta	YPOS_H			; adjust ypos
 
 
-;		/* adjust Y velocity, slow it down */
-;//		c=0;
-;//		a=y_velocity_l;
-;//		adc(0x20);		// 0x20 = 0.125
-;//		y_velocity_l=a;
-;//		a=y_velocity_h;
-;//		adc(0);
-;//		y_velocity_h=a;
-;		sadd16(&y_velocity_h,&y_velocity_l,0x00,0x20);
+	; adjust Y velocity, slow it down
+	clc
+	lda	Y_VELOCITY_L
+	adc	#$20			; $20 = 0.125
+	sta	Y_VELOCITY_L
+	lda	Y_VELOCITY_H
+	adc	#0
+	sta	Y_VELOCITY_H
 
-;		/* if we went higher, adjust peak */
-;		if (ypos_h<peak) peak=ypos_h;
+	; if we went higher, adjust peak
+	lda	YPOS_H
+	cmp	PEAK
+	bmi	no_peak
+	sta	PEAK
+no_peak:
 
-;		/* check if out of bounds and stop moving */
-;		if (xpos_l<=margin) {
-;			cs=max_steps;		// too far left
-;		}
+	;========================================
+	; Check if out of bounds and stop moving
+	;========================================
 
-;		if (xpos_l>=(xsize-margin)) {
-;			cs=max_steps;		// too far right
-;		}
+	lda	XPOS_L		; if (xpos_l<=margin) too far left
+	cmp	#MARGIN
+	bcc	done_moving
 
-;		if (ypos_h<=margin) {
-;			cs=max_steps;		// too far up
-;		}
+	; Due to 256 wraparound, the above will catch this case???
+;	cmp	#XSIZE-MARGIN	; if (xpos_l>=(xsize-margin)) too far right
+;	bcs	done_moving
 
+	lda	YPOS_H		; if (ypos_h<=margin) too far up
+	cmp	#MARGIN
+	bcc	done_moving
 
-;		// if falling downward
-;		if (y_velocity_h>0) {
-;			// if too close to ground, explode
-;			if (ypos_h>=ysize-margin) {
-;				cs=max_steps;
-;			}
-;			// if fallen a bit past peak, explode
-;			if (ypos_h>ysize-(ysize-peak)/2) {
-;				cs=max_steps;
-;			}
-;		}
+	;======================
+	; if falling downward
+	;======================
+	lda	Y_VELOCITY_H
+	bmi	going_up	; if (y_velocity_h>0)
 
+	; if too close to ground, explode
+	lda	YPOS_H		; if (ypos_h>=ysize-margin)
+	cmp	#(YSIZE-MARGIN)
+	bcs	done_moving
+
+	; if fallen a bit past peak, explode
+	sec			; if (ypos_h>ysize-(ysize-peak)/2)
+	lda	#YSIZE
+	sbc	PEAK
+	asl
+	eor	#$FF
+	clc
+	adc	#1
+	clc
+	adc	#YSIZE
+	cmp	YPOS_H
+	bcs	done_moving
+
+going_up:
+
+	jmp	done_bounds_checking
+
+done_moving:
+	lda	MAX_STEPS
+	sta	CURRENT_STEP
+
+done_bounds_checking:
 
 	;==========================
 	; if not done, draw rocket
