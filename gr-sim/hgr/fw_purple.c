@@ -125,14 +125,11 @@ label_180:
 
 label_290:
 	/* Draw explosion near x_old, y_old */
-	x_old=floor(x_old);
-	y_old=floor(y_old);
+	xpos=floor(x_old);
+	ypos=floor(y_old);
 
-	xpos=(random()%20)-10;	// x +/- 10
-	ypos=(random()%20)-10;	// y +/- 10
-
-	xpos+=x_old;
-	ypos+=y_old;
+	xpos+=(random()%20)-10;	// x +/- 10
+	ypos+=(random()%20)-10;	// y +/- 10
 
 	hcolor_equals(color_group*4+3);	// draw white (with fringes)
 
