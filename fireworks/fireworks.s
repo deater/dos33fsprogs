@@ -16,6 +16,7 @@ BASL		= $28
 BASH		= $29
 FRAME		= $60
 BLARGH		= $69
+HGR_COLOR	= $E4
 DRAW_PAGE	= $EE
 LASTKEY		= $F1
 PADDLE_STATUS	= $F2
@@ -35,12 +36,21 @@ PADDL0	= $C064
 PTRIG	= $C070
 
 ; ROM routines
-
+HGR	= $F3E2
+HPLOT0	= $F457
 TEXT	= $FB36				;; Set text mode
 HOME	= $FC58				;; Clear the text screen
 WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
+COLORTBL= $F6F6
 
 MAX	= 3
+
+
+
+	jsr	draw_fireworks
+
+	;==================================
+	;==================================
 
 	lda	#$ff
 	sta	WHICH
@@ -342,6 +352,8 @@ gr_offsets:
 .include "../asm_routines/gr_unrle.s"
 .include "../asm_routines/keypress.s"
 .include "gr_copy.s"
+.include "random16.s"
+.include "fw.s"
 
 pictures:
 	.word bg_final_low,bg_final_high

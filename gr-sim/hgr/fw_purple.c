@@ -13,16 +13,44 @@
 
 const int ysize=160,xsize=280,margin=24;
 
-double xpos;
-int i,o;
+int xpos;
 
+signed char o,i;
 signed char color_group,x_velocity,cs,max_steps;
+unsigned char xpos_l;
 unsigned char ypos_h,ypos_l;
 signed char y_velocity_h;
 unsigned char y_velocity_l;
 unsigned char y_old=0,y_even_older;
 unsigned char x_old=0,x_even_older;
 unsigned char peak;
+
+#define NUMSTARS 16
+
+struct star_type {
+	unsigned char x;
+	unsigned char y;
+
+} stars[NUMSTARS] = {
+	// even x so they are purple
+	{28,107},
+	{108,88},
+	{126,88},
+	{136,95},
+	{150,105},
+	{148,120},
+	{172,124},
+	{180,109},
+	{216,21},
+	{164,40},
+	{124,18},
+	{60,12},
+	{240,124},
+	{94,125},
+	{12,22},
+	{216,116},
+};
+
 
 #define SEED 0
 #define MAGIC "vW"	// $7657
@@ -130,6 +158,8 @@ int main(int argc, char **argv) {
 	hgr();
 	soft_switch(MIXCLR);	// Full screen
 
+
+
 label_180:
 	random_6502();
 	color_group=ram[SEED]&1;		// HGR color group (PG or BO)
@@ -144,13 +174,13 @@ label_180:
 
 	/* launch from the two hills */
 	random_6502();
-	xpos=ram[SEED]&0x3f;
+	xpos_l=ram[SEED]&0x3f;
 	random_6502();
 	if (ram[SEED]&1) {
-		xpos+=24;			// 24-88 (64)
+		xpos_l+=24;			// 24-88 (64)
 	}
 	else {
-		xpos+=191;			// 191-255 (64)
+		xpos_l+=191;			// 191-255 (64)
 	}
 
 
@@ -161,7 +191,7 @@ label_180:
 
 	/* Aim towards center of screen */
 	/* TODO: merge this with hill location? */
-	if (xpos>xsize/2) {
+	if (xpos_l>xsize/2) {
 		x_velocity=-x_velocity;
 	}
 
@@ -170,10 +200,10 @@ label_180:
 		y_even_older=y_old;
 		y_old=ypos_h;
 		x_even_older=x_old;
-		x_old=xpos;
+		x_old=xpos_l;
 
 		/* Move rocket */
-		xpos=xpos+x_velocity;
+		xpos_l=xpos_l+x_velocity;
 
 		/* 16 bit add */
 		add16(&ypos_h,&ypos_l,y_velocity_h,y_velocity_l);
@@ -192,11 +222,11 @@ label_180:
 		if (ypos_h<peak) peak=ypos_h;
 
 		/* check if out of bounds and stop moving */
-		if (xpos<=margin) {
+		if (xpos_l<=margin) {
 			cs=max_steps;		// too far left
 		}
 
-		if (xpos>=(xsize-margin)) {
+		if (xpos_l>=(xsize-margin)) {
 			cs=max_steps;		// too far right
 		}
 
@@ -221,7 +251,7 @@ label_180:
 		if (cs<max_steps) {
 			hcolor_equals(color_group*4+3);
 			hplot(x_old,y_old);
-			hplot_to(xpos,ypos_h);
+			hplot_to(xpos_l,ypos_h);
 
 		}
 		// erase with proper color black
@@ -239,10 +269,10 @@ label_180:
 
 label_290:
 	/* Draw explosion near x_old, y_old */
-	xpos=floor(x_old);
-	ypos_h=floor(y_old);
-
+	xpos=x_old;
 	xpos+=(random()%20)-10;	// x +/- 10
+
+	ypos_h=y_old;
 	ypos_h+=(random()%20)-10;	// y +/- 10
 
 	hcolor_equals(color_group*4+3);	// draw white (with fringes)
@@ -269,10 +299,15 @@ label_290:
 	}
 
 	/* randomly draw more explosions */
-	if (random()%2) goto label_290;
+	random_6502();
+	if (ram[SEED]&1) goto label_290;
+
+	hcolor_equals(3);
+	for(i=0;i<NUMSTARS;i++) {
+		hplot(stars[i].x,stars[i].y);
+	}
 
 	goto label_180;
-
 
 	return 0;
 }
