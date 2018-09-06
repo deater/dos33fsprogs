@@ -25,23 +25,6 @@ X_OLD		= $FD
 X_OLDER		= $FE
 TEMPY		= $FF
 
-;signed char o,i;
-
-;void routine_370(void) {
-
-;	hplot(xpos+o,ypos_h+o);		// NE
-;	hplot(xpos-o,ypos_h-o);		// SW
-
-;	hplot(xpos+o,ypos_h-o);		// SE
-;	hplot(xpos-o,ypos_h+o);		// NW
-
-;	hplot(xpos,ypos_h+(o*1.5));		// N
-;	hplot(xpos+(o*1.5),ypos_h);		// E
-
-;	hplot(xpos,ypos_h-(o*1.5));		// S
-;	hplot(xpos-(o*1.5),ypos_h);		// W
-
-;}
 
 
 draw_fireworks:
@@ -296,35 +279,85 @@ done_with_loop:
 	;==================================
 draw_explosion:
 
+	jsr	random16
+	lda	SEEDL
+	and	#$f
+	sec
+	sbc	#8
+	adc	X_OLD
+	sta	XPOS_L	;	xpos=x_old+(random()%16)-8;	x +/- 8
+			;	FIXME: XPOS can overlow
 
-;	xpos=x_old;
-;	xpos+=(random()%20)-10;	// x +/- 10
-;
-;	ypos_h=y_old;
-;	ypos_h+=(random()%20)-10;	// y +/- 10
-;
-;	hcolor_equals(color_group+3);	// draw white (with fringes)
-;
+	jsr	random16
+	lda	SEEDL
+	and	#$f
+	sec
+	sbc	#8
+	adc	Y_OLD
+	sta	YPOS_H	;	ypos_h=y_old+(random()%16)-8;	// y +/- 8
+
+	; draw white (with fringes)
+
+	lda	COLOR_GROUP
+	clc
+	adc	#$3
+	tax
+	lda	COLORTBL,X		; get color from table
+	sta	HGR_COLOR
+
 ;	hplot(xpos,ypos_h);	// draw at center of explosion
-;
-;	/* Spread the explosion */
-;	for(i=1;i<=9;i++) {
-;		/* Draw spreading dots in white */
+
+	; HPLOT X,Y: X= (y,x), Y=a
+
+	ldx	XPOS_L
+	lda	YPOS_H
+	ldy	#0
+	jsr	HPLOT0			; hplot(x_old,y_old);
+
+
+
+	; Spread the explosion
+
+	ldy	#1
+	sty	TEMPY		; save Y
+
+explosion_loop:
+	ldy	TEMPY
+
+	;================================
+	; Draw spreading dots in white
+
+	cpy	#9
+	bcc	explosion_erase
+
 ;		if (i<9) {
 ;			o=i;
 ;			hcolor_equals(color_group+3);
 ;			routine_370();
 ;		}
-;		/* erase old */
-;		o=i-1;
-;		hcolor_equals(color_group);
-;		routine_370();
-;
-;		grsim_update();
-;		ch=grsim_input();
-;		if (ch=='q') break;
-;		usleep(50000);
-;	}
+explosion_erase:
+	;======================
+	; erase old
+
+	; erase with proper color black (0 or 4)
+
+	ldx	COLOR_GROUP
+	lda	COLORTBL,X		; get color from table
+	sta	HGR_COLOR
+
+;	o=i-1;
+
+	jsr	explosion
+
+done_with_explosion:
+
+	lda	#$c0
+	jsr	WAIT
+
+	inc	TEMPY
+	lda	TEMPY
+	cmp	#9
+	bne	explosion_loop
 
 	;==================================
 	; randomly draw more explosions
@@ -340,6 +373,24 @@ draw_explosion:
 	jmp	launch_firework
 done_fireworks:
 	rts
+
+
+explosion:
+
+;	hplot(xpos+o,ypos_h+o);		// NE
+;	hplot(xpos-o,ypos_h-o);		// SW
+
+;	hplot(xpos+o,ypos_h-o);		// SE
+;	hplot(xpos-o,ypos_h+o);		// NW
+
+;	hplot(xpos,ypos_h+(o*1.5));		// N
+;	hplot(xpos+(o*1.5),ypos_h);		// E
+
+;	hplot(xpos,ypos_h-(o*1.5));		// S
+;	hplot(xpos-(o*1.5),ypos_h);		// W
+
+	rts
+
 
 
 	;=============================
