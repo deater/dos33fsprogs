@@ -31,6 +31,8 @@ FULLGR	= $C052	; Full screen, no text
 PAGE0	= $C054 ; Page0
 PAGE1	= $C055 ; Page1
 LORES	= $C056	; Enable LORES graphics
+HIRES	= $C057 ; Enable HIRES graphics
+
 PADDLE_BUTTON0 = $C061
 PADDL0	= $C064
 PTRIG	= $C070
@@ -242,15 +244,70 @@ loopB:
 
 display_loop:
 
-	ldy	#96						; 2
+	; 152 * 65 = 9880 - 12 = 9868
 
-outer_loop:
+	bit	HIRES						; 4
+	bit	PAGE0						; 4
+
+	; Try X=81 Y=24 cycles=9865 R3
+
+	lda	DRAW_PAGE					; 3
+
+	ldy	#24							; 2
+sloop1:
+	ldx	#81							; 2
+sloop2:
+	dex								; 2
+	bne	sloop2							; 2nt/3
+
+	dey								; 2
+	bne	sloop1							; 2nt/3
+
+	bit	LORES						; 4
+
+
+;top_loop:
+;
+;
+;	ldy	#76						; 2
+;
+;outer_loop:
+;
+;	bit	PAGE0						; 4
+;	ldx	#12		; 65 cycles with PAGE0		; 2
+;page0_loop:			; delay 61+bit
+;	dex							; 2
+;	bne	page0_loop					; 2/3
+
+
+	; bit(4) -1(fallthrough) + loop*5 -1(fallthrouh)+4 extra = 61
+	; 5L = 55
+;
+;	bit	PAGE1						; 4
+;	ldx	#11		; 65 cycles with PAGE1		; 2
+;				;
+;page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
+;	dex							; 2
+;	bne	page1_loop					; 2/3
+;
+;	dey							; 2
+;	bne	outer_loop					; 2/3
+;
+;
+;
+;bottom_loop:
+
+
+
+	ldy	#20						; 2
+
+bouter_loop:
 
 	bit	PAGE0						; 4
 	ldx	#12		; 65 cycles with PAGE0		; 2
-page0_loop:			; delay 61+bit
+bpage0_loop:			; delay 61+bit
 	dex							; 2
-	bne	page0_loop					; 2/3
+	bne	bpage0_loop					; 2/3
 
 
 	; bit(4) -1(fallthrough) + loop*5 -1(fallthrouh)+4 extra = 61
@@ -259,12 +316,12 @@ page0_loop:			; delay 61+bit
 	bit	PAGE1						; 4
 	ldx	#11		; 65 cycles with PAGE1		; 2
 				;
-page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
+bpage1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	dex							; 2
-	bne	page1_loop					; 2/3
+	bne	bpage1_loop					; 2/3
 
 	dey							; 2
-	bne	outer_loop					; 2/3
+	bne	bouter_loop					; 2/3
 
 
 
@@ -272,6 +329,14 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 	; do_nothing should be      4550+1 -2-9 -7= 4533
+	;			4550
+	;			  +1  fallthrough
+	;			  -2  ldy at entry
+	;			  -7  keyboard
+	;			  -6  jsr
+	;			  -3  jmp
+	;			========
+	;			4533
 
 	jsr	do_nothing				; 6
 
