@@ -8,12 +8,13 @@ XSIZE		= 280
 MARGIN		= 24
 
 ; Zero page addresses
+OFFSET		= $EF
 COLOR_GROUP	= $F0
 X_VELOCITY	= $F1
 Y_VELOCITY_H	= $F2
 Y_VELOCITY_L	= $F3
 MAX_STEPS	= $F4
-;XPOS_H		= $F5
+XPOS_H		= $F5
 XPOS_L		= $F6
 YPOS_H		= $F7
 YPOS_L		= $F8
@@ -328,13 +329,21 @@ explosion_loop:
 	; Draw spreading dots in white
 
 	cpy	#9
-	bcc	explosion_erase
+	beq	explosion_erase
 
-;		if (i<9) {
-;			o=i;
-;			hcolor_equals(color_group+3);
-;			routine_370();
-;		}
+	; hcolor_equals(color_group+3);
+	lda	COLOR_GROUP
+	clc
+	adc	#$3
+	tax
+	lda	COLORTBL,X		; get color from table
+	sta	HGR_COLOR
+
+	ldx	TEMPY
+	stx	OFFSET
+
+	jsr	explosion
+
 explosion_erase:
 	;======================
 	; erase old
@@ -345,7 +354,9 @@ explosion_erase:
 	lda	COLORTBL,X		; get color from table
 	sta	HGR_COLOR
 
-;	o=i-1;
+	ldx	TEMPY
+	dex
+	stx	OFFSET
 
 	jsr	explosion
 
@@ -356,7 +367,7 @@ done_with_explosion:
 
 	inc	TEMPY
 	lda	TEMPY
-	cmp	#9
+	cmp	#10
 	bne	explosion_loop
 
 	;==================================
@@ -377,17 +388,124 @@ done_fireworks:
 
 explosion:
 
-;	hplot(xpos+o,ypos_h+o);		// NE
-;	hplot(xpos-o,ypos_h-o);		// SW
+	; HPLOT X,Y: X= (y,x), Y=a
 
-;	hplot(xpos+o,ypos_h-o);		// SE
-;	hplot(xpos-o,ypos_h+o);		// NW
+	clc
+	lda	XPOS_L
+	adc	OFFSET
+	tax
+	ldy	#0
 
-;	hplot(xpos,ypos_h+(o*1.5));		// N
-;	hplot(xpos+(o*1.5),ypos_h);		// E
+	clc
+	lda	YPOS_H
+	adc	OFFSET
 
-;	hplot(xpos,ypos_h-(o*1.5));		// S
-;	hplot(xpos-(o*1.5),ypos_h);		// W
+	jsr	HPLOT0		; hplot(xpos+o,ypos_h+o);	SE
+
+
+
+	clc
+	lda	XPOS_L
+	adc	OFFSET
+	tax
+	ldy	#0
+
+	sec
+	lda	YPOS_H
+	sbc	OFFSET
+
+	jsr	HPLOT0		; hplot(xpos+o,ypos_h-o);	NE
+
+
+	sec
+	lda	XPOS_L
+	sbc	OFFSET
+	tax
+	ldy	#0
+
+	sec
+	lda	YPOS_H
+	sbc	OFFSET
+
+	jsr	HPLOT0		; hplot(xpos-o,ypos_h-o);	NW
+
+
+	sec
+	lda	XPOS_L
+	sbc	OFFSET
+	tax
+	ldy	#0
+
+	clc
+	lda	YPOS_H
+	adc	OFFSET
+
+	jsr	HPLOT0		; hplot(xpos-o,ypos_h+o);	SW
+
+
+	; HPLOT X,Y: X= (y,x), Y=a
+
+	ldx	XPOS_L
+	ldy	#0
+
+	clc
+	lda	OFFSET
+	adc	OFFSET
+	adc	OFFSET
+	lsr
+	adc	YPOS_H
+
+	jsr	HPLOT0		; hplot(xpos,ypos_h+(o*1.5));	S
+
+	ldx	XPOS_L
+	ldy	#0
+
+	clc			; O   O*1.5  NEG
+	lda	OFFSET		; 0 = 0		0
+	adc	OFFSET		; 1 = 1		-1
+	adc	OFFSET		; 2 = 3		-3
+	lsr			; 3 = 4		-4
+	eor	#$FF		; 4 = 6		-6
+	clc
+	adc	#1
+	adc	YPOS_H
+
+	jsr	HPLOT0		; hplot(xpos,ypos_h-(o*1.5));	N
+
+
+	; HPLOT X,Y: X= (y,x), Y=a
+
+
+	clc
+	lda	OFFSET
+	adc	OFFSET
+	adc	OFFSET
+	lsr
+	adc	XPOS_L
+	tax
+	ldy	#0
+
+	lda	YPOS_H
+
+	jsr	HPLOT0		; hplot(xpos+(o*1.5),ypos_h);	E
+
+
+	clc			; O   O*1.5  NEG
+	lda	OFFSET		; 0 = 0		0
+	adc	OFFSET		; 1 = 1		-1
+	adc	OFFSET		; 2 = 3		-3
+	lsr			; 3 = 4		-4
+	eor	#$FF		; 4 = 6		-6
+	clc
+	adc	#1
+	adc	XPOS_L
+	tax
+
+	ldy	#0
+
+	lda	YPOS_H
+
+	jsr	HPLOT0		; hplot(xpos-(o*1.5),ypos_h);		// W
 
 	rts
 
