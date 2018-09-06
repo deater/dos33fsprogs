@@ -46,27 +46,14 @@ TEXT	= $FB36				;; Set text mode
 HOME	= $FC58				;; Clear the text screen
 WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 
-MAX	= 3
-
-
 
 	jsr	draw_fireworks
 
 	;==================================
 	;==================================
 
-	lda	#$ff
-	sta	WHICH
 
-start_over:
-	inc	WHICH
-	lda	WHICH
-	cmp	#MAX
-	bne	in_range
-	lda	#0
-	sta	WHICH
-
-in_range:
+setup_background:
 
 	;===================
 	; init screen
@@ -88,14 +75,9 @@ in_range:
 	lda	#$00
 	sta	BASL                    ; load image to $c00
 
-	lda	WHICH
-	asl
-	asl				; which*4
-	tay
-
-	lda	pictures,Y
+	lda	#<bg_final_low
 	sta	GBASL
-	lda	pictures+1,Y
+	lda	#>bg_final_low
 	sta	GBASH
 	jsr	load_rle_gr
 
@@ -121,14 +103,9 @@ in_range:
 	lda	#$00
 	sta	BASL                    ; load image to $c00
 
-	lda	WHICH
-	asl
-	asl				; which*4
-	tay
-
-	lda	pictures+2,Y
+	lda	#<bg_final_high
 	sta	GBASL
-	lda	pictures+3,Y
+	lda	#>bg_final_high
 	sta	GBASH
 	jsr	load_rle_gr
 
@@ -342,11 +319,13 @@ bpage1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 
 	lda	KEYPRESS				; 4
 	bpl	no_keypress				; 3
-	jmp	start_over
+	jmp	loop_forever
 no_keypress:
 
 	jmp	display_loop				; 3
 
+loop_forever:
+	jmp	loop_forever
 
 
 	;=================================
@@ -421,8 +400,7 @@ gr_offsets:
 .include "random16.s"
 .include "fw.s"
 
-pictures:
-	.word bg_final_low,bg_final_high
+background:
 
 .include "background_final.inc"
 
