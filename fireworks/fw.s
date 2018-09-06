@@ -36,6 +36,7 @@ draw_fireworks:
 
 	jsr	draw_stars	; draw the stars
 
+
 launch_firework:
 
 	jsr	random16
@@ -517,8 +518,7 @@ explosion:
 
 draw_stars:
 	; HCOLOR = 3, white (though they are drawn purple)
-	ldx	#3
-	lda	COLORTBL,X			; get color from table
+	lda	#$7f
 	sta	HGR_COLOR
 
 	ldy	#0

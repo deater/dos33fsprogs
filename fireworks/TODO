@@ -1,0 +1,9 @@
+
+cycle invariant random16
+cycle invariant HPLOT/HLIN
+dispatcher
+
+
+fix XPOS to not wrap (explosion proper XPOS handling)
+sound effects
+
