@@ -1,6 +1,12 @@
 ;=======================================================================
 ; Based on BASIC program posted by FozzTexx, originally written in 1987
 ;=======================================================================
+
+; State: Launch
+;	 rocketing
+;	 explosion
+
+
 ; Constants
 NUMSTARS 	= 16
 YSIZE		= 160
@@ -39,79 +45,82 @@ draw_fireworks:
 
 launch_firework:
 
-	jsr	random16
-	lda	SEEDL
-	and	#$4
-	sta	COLOR_GROUP	; HGR color group (0 PG or 4 BO)
+	jsr	random16						; 6+?
+	lda	SEEDL							; 3
+	and	#$4							; 2
+	sta	COLOR_GROUP	; HGR color group (0 PG or 4 BO)	; 4
 
-	jsr	random16
-	lda	SEEDL
-	and	#$3
-	clc
-	adc	#$1
-	sta	X_VELOCITY	; x velocity = 1..4
+	jsr	random16						; 6+
+	lda	SEEDL							; 3
+	and	#$3							; 2
+	clc								; 2
+	adc	#$1							; 2
+	sta	X_VELOCITY	; x velocity = 1..4			; 3
 
-	jsr	random16
-	lda	SEEDL
-	and	#$3
-	clc
-	adc	#$2
-	eor	#$ff
-	sta	Y_VELOCITY_H	; y velocity = -3..-6
-	lda	#0
-	sta	Y_VELOCITY_L	; it's 8:8 fixed point
+	jsr	random16						; 6+
+	lda	SEEDL							; 3
+	and	#$3							; 2
+	clc								; 2
+	adc	#$2							; 2
+	eor	#$ff							; 2
+	sta	Y_VELOCITY_H	; y velocity = -3..-6			; 3
+	lda	#0							; 2
+	sta	Y_VELOCITY_L	; it's 8:8 fixed point			; 3
 
-	jsr	random16
-	lda	SEEDL
-	and	#$1f
-	clc
-	adc	#33
-	sta	MAX_STEPS	; 33..64
+	jsr	random16						; 6+
+	lda	SEEDL							; 3
+	and	#$1f							; 2
+	clc								; 2
+	adc	#33							; 2
+	sta	MAX_STEPS	; 33..64				; 3
 
 	; launch from the two hills
-	jsr	random16
-	lda	SEEDL
-	and	#$3f
-	sta	XPOS_L
+	jsr	random16						; 6+
+	lda	SEEDL							; 3
+	and	#$3f							; 2
+	sta	XPOS_L							; 3
 
-	jsr	random16
-	lda	SEEDL
-	and	#$1
-	beq	right_hill
+	jsr	random16						; 6+
+	lda	SEEDL							; 3
+	and	#$1							; 2
+	beq	right_hill						; 2
 left_hill:
-	lda	XPOS_L
-	clc
-	adc	#24
-	sta	XPOS_L				; 24-88 (64)
+	lda	XPOS_L							; 3
+	clc								; 2
+	adc	#24							; 2
+	sta	XPOS_L				; 24-88 (64)		; 3
 
-	jmp	done_hill
+	jmp	done_hill						; 3
 right_hill:
-	lda	XPOS_L
-	clc
-	adc	#191
-	sta	XPOS_L				; 191-255 (64)
+									; 1
+	lda	XPOS_L							; 3
+	clc								; 2
+	adc	#191							; 2
+	sta	XPOS_L				; 191-255 (64)		; 3
 
-	lda	X_VELOCITY
-	eor	#$ff
-	sta	X_VELOCITY
-	inc	X_VELOCITY			; aim toward middle
+	lda	X_VELOCITY						; 3
+	eor	#$ff							; 2
+	sta	X_VELOCITY						; 3
+	inc	X_VELOCITY			; aim toward middle	; 5
 
 done_hill:
 
-	lda	#YSIZE
-	sta	YPOS_H
-	lda	#0				; fixed point 8:8
-	sta	YPOS_L				; start at ground
+	lda	#YSIZE							; 2
+	sta	YPOS_H							; 3
+	lda	#0				; fixed point 8:8	; 2
+	sta	YPOS_L				; start at ground	; 3
 
-	lda	YPOS_H
-	sta	PEAK				; peak starts at ground
+	lda	YPOS_H							; 3
+	sta	PEAK				; peak starts at ground	; 3
+
+	lda	#1							; 2
+	sta	CURRENT_STEP						; 3
+
+
 
 	;===============
 	; Draw rocket
 	;===============
-
-	lda	#1
-	sta	CURRENT_STEP
 
 draw_rocket_loop:
 
