@@ -38,7 +38,7 @@ draw_fireworks:
 
 	jsr	HOME		; clear screen
 
-	jsr	HGR		; set high-res, clear screen, page0
+	jsr	hgr		; set high-res, clear screen, page0
 
 	jsr	draw_stars	; draw the stars
 
@@ -233,7 +233,7 @@ draw_rocket:
 	lda	COLOR_GROUP
 	adc	#3
 	tax
-	lda	COLORTBL,X		; get color from table
+	lda	colortbl,X		; get color from table
 	sta	HGR_COLOR
 
 	; HPLOT X,Y: X= (y,x), Y=a
@@ -241,20 +241,20 @@ draw_rocket:
 	ldx	X_OLD
 	lda	Y_OLD
 	ldy	#0
-	jsr	HPLOT0			; hplot(x_old,y_old);
+	jsr	hplot0			; hplot(x_old,y_old);
 
 	; HPLOT to X,Y X=(x,a), y=Y
         lda     XPOS_L
         ldx     #0
         ldy     YPOS_H
-        jsr     HGLIN			; hplot_to(xpos_l,ypos_h);
+        jsr     hglin			; hplot_to(xpos_l,ypos_h);
 
 
 erase_rocket:
 	; erase with proper color black (0 or 4)
 
 	ldx	COLOR_GROUP
-	lda	COLORTBL,X		; get color from table
+	lda	colortbl,X		; get color from table
 	sta	HGR_COLOR
 
 	; HPLOT X,Y: X= (y,x), Y=a
@@ -262,13 +262,13 @@ erase_rocket:
 	ldx	X_OLDER
 	lda	Y_OLDER
 	ldy	#0
-	jsr	HPLOT0			; hplot(x_old,y_old);
+	jsr	hplot0			; hplot(x_old,y_old);
 
 	; HPLOT to X,Y X=(x,a), y=Y
         lda     X_OLD
         ldx     #0
         ldy     Y_OLD
-        jsr     HGLIN			; hplot_to(x_old,y_old);
+        jsr     hglin			; hplot_to(x_old,y_old);
 
 done_with_loop:
 
@@ -313,7 +313,7 @@ draw_explosion:
 	clc
 	adc	#$3
 	tax
-	lda	COLORTBL,X		; get color from table
+	lda	colortbl,X		; get color from table
 	sta	HGR_COLOR
 
 ;	hplot(xpos,ypos_h);	// draw at center of explosion
@@ -323,7 +323,7 @@ draw_explosion:
 	ldx	XPOS_L
 	lda	YPOS_H
 	ldy	#0
-	jsr	HPLOT0			; hplot(x_old,y_old);
+	jsr	hplot0			; hplot(x_old,y_old);
 
 
 
@@ -346,7 +346,7 @@ explosion_loop:
 	clc
 	adc	#$3
 	tax
-	lda	COLORTBL,X		; get color from table
+	lda	colortbl,X		; get color from table
 	sta	HGR_COLOR
 
 	ldx	TEMPY
@@ -361,7 +361,7 @@ explosion_erase:
 	; erase with proper color black (0 or 4)
 
 	ldx	COLOR_GROUP
-	lda	COLORTBL,X		; get color from table
+	lda	colortbl,X		; get color from table
 	sta	HGR_COLOR
 
 	ldx	TEMPY
@@ -410,7 +410,7 @@ explosion:
 	lda	YPOS_H
 	adc	OFFSET
 
-	jsr	HPLOT0		; hplot(xpos+o,ypos_h+o);	SE
+	jsr	hplot0		; hplot(xpos+o,ypos_h+o);	SE
 
 
 
@@ -424,7 +424,7 @@ explosion:
 	lda	YPOS_H
 	sbc	OFFSET
 
-	jsr	HPLOT0		; hplot(xpos+o,ypos_h-o);	NE
+	jsr	hplot0		; hplot(xpos+o,ypos_h-o);	NE
 
 
 	sec
@@ -437,7 +437,7 @@ explosion:
 	lda	YPOS_H
 	sbc	OFFSET
 
-	jsr	HPLOT0		; hplot(xpos-o,ypos_h-o);	NW
+	jsr	hplot0		; hplot(xpos-o,ypos_h-o);	NW
 
 
 	sec
@@ -450,7 +450,7 @@ explosion:
 	lda	YPOS_H
 	adc	OFFSET
 
-	jsr	HPLOT0		; hplot(xpos-o,ypos_h+o);	SW
+	jsr	hplot0		; hplot(xpos-o,ypos_h+o);	SW
 
 
 	; HPLOT X,Y: X= (y,x), Y=a
@@ -465,7 +465,7 @@ explosion:
 	lsr
 	adc	YPOS_H
 
-	jsr	HPLOT0		; hplot(xpos,ypos_h+(o*1.5));	S
+	jsr	hplot0		; hplot(xpos,ypos_h+(o*1.5));	S
 
 	ldx	XPOS_L
 	ldy	#0
@@ -480,7 +480,7 @@ explosion:
 	adc	#1
 	adc	YPOS_H
 
-	jsr	HPLOT0		; hplot(xpos,ypos_h-(o*1.5));	N
+	jsr	hplot0		; hplot(xpos,ypos_h-(o*1.5));	N
 
 
 	; HPLOT X,Y: X= (y,x), Y=a
@@ -497,7 +497,7 @@ explosion:
 
 	lda	YPOS_H
 
-	jsr	HPLOT0		; hplot(xpos+(o*1.5),ypos_h);	E
+	jsr	hplot0		; hplot(xpos+(o*1.5),ypos_h);	E
 
 
 	clc			; O   O*1.5  NEG
@@ -515,7 +515,7 @@ explosion:
 
 	lda	YPOS_H
 
-	jsr	HPLOT0		; hplot(xpos-(o*1.5),ypos_h);		// W
+	jsr	hplot0		; hplot(xpos-(o*1.5),ypos_h);		// W
 
 	rts
 
@@ -543,7 +543,7 @@ star_loop:
 	lda	stars+1,Y
 	ldy	#0
 
-	jsr	HPLOT0
+	jsr	hplot0
 
 	pla
 	tay
