@@ -82,6 +82,9 @@ bkgnd_loop:
 
 msktbl:	.byte $81,$82,$84,$88,$90,$A0,$C0	; original
 
+	;====================================================
+	; HPOSN
+	;	time = 9 + 61 + 31 + 22 + 42 + 21 + 23 = 209
 
 hposn:
 	; F411
@@ -156,23 +159,41 @@ hposn:
 								;	 22
 
 	cpy	#0							; 2
-	beq	done_mod
+	beq	done_mod						; 3
 theres_high:
+									; -1
+	clc								; 2
+	adc	#4		; make remainder match			; 2
+	pha								; 3
+	lda	HGR_HORIZ						; 3
+	adc	#36							; 2
+	sta	HGR_HORIZ						; 3
+	pla								; 4
+									;====
 
-	clc
-	adc	#4		; make remainder match
-	pha
-	lda	HGR_HORIZ
-	adc	#36
-	sta	HGR_HORIZ
-	pla
+	cmp	#7							; 2
+	bcc	done_mod_nop14	; blt					; 3
+									; -1
+	sec								; 2
+	sbc	#7							; 2
+	inc	HGR_HORIZ						; 5
+	jmp	done_mod						; 3
+						;===========================
+						; Y=HIGH,NOR = 23+5 = 28 (14)
+						; Y=HIGH,R = 23+16 = 42
+						; Y=LOW = 5 (37 = 14+23)
 
-	cmp	#7
-	bcc	done_mod	; blt
+done_mod_nop_23:
+	inc	HGR_HORIZ,X		; (nop)				; 6
+	dec	HGR_HORIZ,X		; (nop)				; 6
+	inc	HGR_HORIZ		; (nop)				; 5
+	lda	HGR_HORIZ		; (nop)				; 3
+	lda	HGR_HORIZ		; (nop)				; 3
 
-	sec
-	sbc	#7
-	inc	HGR_HORIZ
+done_mod_nop14:
+	inc	HGR_HORIZ,X		; (nop)				; 6
+	dec	HGR_HORIZ,X		; (nop)				; 6
+	nop								; 2
 
 done_mod:
 	ldy	HGR_HORIZ						; 2
@@ -184,19 +205,33 @@ done_mod:
 	lsr								; 2
 	lda	HGR_COLOR						; 3
 	sta	HGR_BITS						; 3
-	bcs	color_shift						; 3
-									;-1
-	rts								; 6
+								;===========
+								;	 21
 
+	bcs	color_shift						; 3
+				; cs = 3+20
+									;-1
+
+				; need 23 = 2+6+X = 15
+	inc	HMASK,X		; nop					; 6
+	dec	HMASK,X		; nop					; 6
+	lda	HMASK		; nop					; 3
+
+
+	rts								; 6
+								;===========
+								;	 23
 hplot0:
 	; F457
-	jsr	hposn							; 3+
+	jsr	hposn							; 6+209
 	lda	HGR_BITS						; 3
 	eor	(GBASL),y						; 5
 	and	HMASK							; 3
 	eor	(GBASL),y						; 5
 	sta	(GBASL),y						; 5
 	rts								; 6
+								;============
+								;	 242
 
 move_left_or_right:
 	; F465
