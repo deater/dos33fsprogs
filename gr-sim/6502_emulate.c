@@ -423,6 +423,24 @@ void txa(void) {
 	a=x;
 }
 
+void eor(int value) {
+
+	int temp_a;
+	int temp_value;
+	int result;
+
+	temp_a=a&0xff;
+	temp_value=value&0xff;
+
+	result=(temp_a^temp_value);
+
+	n=(result&0x80)>>7;
+
+	a=result&0xff;
+	z=(a==0);
+
+}
+
 unsigned char high(int value) {
 	return (value>>8)&0xff;
 }

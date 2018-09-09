@@ -8,6 +8,7 @@ unsigned short y_indirect(unsigned char base, unsigned char y);
 int init_6502(void);
 void adc(int value);
 void sbc(int value);
+void eor(int value);
 void cmp(int value);
 void cpy(int value);
 void cpx(int value);
@@ -39,6 +40,7 @@ void ldx_const(int value);
 void ldy(int addr);
 void ldy_const(int value);
 void sta(int addr);
+void inc_mem(int addr);
 
 unsigned char high(int value);
 unsigned char low(int value);

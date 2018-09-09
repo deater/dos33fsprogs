@@ -80,13 +80,19 @@ bkgnd_loop:
 
 
 
-msktbl:	.byte $81,$82,$84,$88,$90,$A0,$C0
+msktbl:	.byte $81,$82,$84,$88,$90,$A0,$C0	; original
+
 
 hposn:
 	; F411
+	; move into expected zp locations
 	sta	HGR_Y							; 3
 	stx	HGR_X							; 3
 	sty	HGR_X+1							; 3
+								;===========
+								;         9
+
+	; calc y-position addr.  no lookup table?
 	pha								; 3
 	and	#$C0							; 2
 	sta	GBASL							; 3
@@ -95,9 +101,6 @@ hposn:
 	ora	GBASL							; 3
 	sta	GBASL							; 3
 	pla								; 4
-								;===========
-								;	 31
-	; F423
 	sta	GBASH							; 3
 	asl								; 2
 	asl								; 2
@@ -112,24 +115,98 @@ hposn:
 	ora	HGR_PAGE						; 3
 	sta	GBASH							; 3
 								;============
-								;	 39
+								;	 61
 	; F438
-	txa								; 2
-	cpy	#0							; 2
-	beq	hposn_2							; 3
+	; divide/mod 16-bit x poisition by 7
+	; incoming, X=(y,x)
+	; outgoing y=q, a=r
+
+	; Divide by 7 (From December '84 Apple Assembly Line)
+
+	txa
+	clc
+	sta	HGR_HORIZ
+	lsr
+	lsr
+	lsr
+	adc	HGR_HORIZ
+	ror
+	lsr
+	lsr
+	adc	HGR_HORIZ
+	ror
+	lsr
+	lsr
+	; x/7 is in A
+
+	; calculate remainder
+	clc
+	sta	HGR_HORIZ
+	asl
+	adc	HGR_HORIZ
+	asl
+	adc	HGR_HORIZ
+	; HGR_HORIZ=x/7, A=HGR_HORIZ*7
+
+	; calculate remainder by X-(Q*7)
+	sec
+	eor	#$ff
+	adc	HGR_X
+	; A = remainder
+
+	cpy	#0
+	beq	only_low
+theres_high:
+
+	clc
+	adc	#4		; make remainder match
+	pha
+	lda	HGR_HORIZ
+	adc	#36
+	sta	HGR_HORIZ
+	pla
+only_low:
+	cmp	#7
+	bcc	done_mod	; blt
+
+	sec
+	sbc	#7
+	inc	HGR_HORIZ
+
+done_mod:
+
+
+;	txa								; 2
+;	cpy	#0							; 2
+;	beq	hposn_2							; 3
 									; -1
-	ldy	#35							; 2
-	adc	#4							; 2
-hposn_1:
-	iny								; 2
+;	ldy	#35							; 2
+;	adc	#4							; 2
+;hposn_1:
+;	iny								; 2
 	; f442
-hposn_2:
-	sbc	#7							; 2
-	bcs	hposn_1							; 3
+;hposn_2:
+;	sbc	#7							; 2
+;	bcs	hposn_1							; 3
 									; -1
-	sty	HGR_HORIZ						; 3
+	ldy	HGR_HORIZ
+;	sty	HGR_HORIZ						; 3
 	tax								; 2
-	lda	msktbl-$100+7,x		; LDA MSKTBL-$100+7,X  BIT MASK	; 4?
+	lda	msktbl,x		; 
+;	lda	msktbl-$100+7,x		; LDA MSKTBL-$100+7,X  BIT MASK	; 4?
+					; weird two's complement?
+
+					; if x=-6 = 249 = fa
+					; F5b2 - 1000 = f4b2
+					; f4b2+7 = f4b9
+					; -1 ff + f4b9 = f5b8 C0 6
+					; -2 fe + f4b9 = f5b7 A0 5
+					; -3 fd + f4b9 = f5b6 90 4
+					; -4 fc + f4b9 = f5b5 88 3
+					; -5 fb + f4b9 = f5b4 84 2
+					; -6 fa + f4b9 = f5b3 82 1
+					; -7 f9 + f4b9 = f5b2 81 0
+
 					; MSKTBL=F5B2
 	sta	HMASK							; 3
 	tya								; 2

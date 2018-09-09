@@ -6,7 +6,7 @@
 #include "6502_emulate.h"
 #include "gr-sim.h"
 
-#define TEMP_Q	0xff
+#define HGR_HORIZ	0xff
 #define TEMP_R	0xfe
 
 static void fancy_div(int d, int *q, int *r) {
@@ -15,7 +15,7 @@ static void fancy_div(int d, int *q, int *r) {
 	//;15 bytes, 27 cycles
 
 	// y=xhigh x=xlow a=??
-	// q in y, r in x
+	// q in y, r in a
 
 	y=(d>>8)&0xff;
 	x=d&0xff;
@@ -25,52 +25,62 @@ static void fancy_div(int d, int *q, int *r) {
 	sta(TEMP_R);
 
 	c=0;
-	sta(TEMP_Q);		// 0
+	sta(HGR_HORIZ);		// 0
 	lsr();			// 0
 	lsr();			// 0
 	lsr();			// 0
-	adc_mem(TEMP_Q);	// 0
+	adc_mem(HGR_HORIZ);	// 0
 	ror();			// 0
 	lsr();			// 0
 	lsr();			// 0
-	adc_mem(TEMP_Q);	// 0
+	adc_mem(HGR_HORIZ);	// 0
 	ror();			// 0
 	lsr();			// 0
 	lsr();			// 0
+
+	// calc remainder
 
 	c=0;
-	sta(TEMP_Q);
+	sta(HGR_HORIZ);
 	asl();
-	adc_mem(TEMP_Q);
+	adc_mem(HGR_HORIZ);
 	asl();
-	adc_mem(TEMP_Q);
+	adc_mem(HGR_HORIZ);
+	// HGR_HORIZ=x/7, A=HGR_HORIZ*7
+
 
 	c=1;
-	sta(TEMP_R);
-	txa();
-	sbc_mem(TEMP_R);
-	tax();
+	eor(0xff);
+//	printf("%d+%d=",d&0xff,a);
+	adc(d&0xff);
+//	printf("%d\n",a);
+
+
+//	sta(TEMP_R);
+//	txa();
+//	sbc_mem(TEMP_R);
+//	tax();
 
 	if (y) {
-		x+=4;
-		lda(TEMP_Q);
 		c=0;
+		adc(4);
+		pha();
+		lda(HGR_HORIZ);
 		adc(36);
-		sta(TEMP_Q);
+		sta(HGR_HORIZ);
+		pla();
 	}
 
-	y=ram[TEMP_Q];
-
-	if (x>6) {
+	if (a>6) {
 		c=1;
-		txa();
 		sbc(7);
-		tax();
-		y++;
+		ram[HGR_HORIZ]++;
 	}
+
+	y=ram[HGR_HORIZ];
 
 	*q=y;
-	*r=x;
+	*r=a;
 }
 
 
