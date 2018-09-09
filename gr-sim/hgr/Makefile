@@ -6,7 +6,7 @@ SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 GR_SIM = ../gr-sim.a
 
-all:	fireworks fw_purple lines image_load hgr_view
+all:	fireworks fw_purple lines image_load hgr_view seven
 
 ###
 
@@ -47,9 +47,16 @@ fw_purple:	fw_purple.o $(GR_SIM)
 
 fw_purple.o:	fw_purple.c
 	$(CC) $(CFLAGS) -c fw_purple.c
+###
+
+seven:	seven.o $(GR_SIM)
+	$(CC) $(LFLAGS) $(SDL_LIBS) -o seven seven.o $(GR_SIM)
+
+seven.o:	seven.c
+	$(CC) $(CFLAGS) -c seven.c
 
 ####
 
 
 clean:	
-	rm -f *~ *.o fireworks lines image_load hgr_view fw_purple
+	rm -f *~ *.o fireworks lines image_load hgr_view fw_purple seven

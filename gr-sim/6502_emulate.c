@@ -62,6 +62,27 @@ void adc(int value) {
 
 }
 
+void adc_mem(int addr) {
+
+	int temp_a;
+	int temp_value;
+	int result;
+
+	temp_a=a&0xff;
+	temp_value=ram[addr]&0xff;
+
+	result=(temp_a+temp_value+c);
+
+	c=(result&0x100)>>8;
+	n=(result&0x80)>>7;
+
+	v=!!((a^result)&(temp_value^result)&0x80);
+
+	a=result&0xff;
+	z=(a==0);
+
+}
+
 void sbc(int value) {
 	int temp_a;
 	int result;
@@ -78,6 +99,29 @@ void sbc(int value) {
 	n=(result&0x80)>>7;
 
 	v=!!((a^result)&((255-value)^result)&0x80);
+
+	a=result&0xff;
+	z=(a==0);
+
+
+}
+
+void sbc_mem(int addr) {
+	int temp_a;
+	int result;
+	int temp_value;
+
+	temp_a=a&0xff;
+	temp_value=(~ram[addr])&0xff;
+
+	result=temp_a+temp_value+c;
+
+//	printf("SBC: %x - %x (%x) = %x\n",a,value,c,result);
+
+	c=(result&0x100)>>8;
+	n=(result&0x80)>>7;
+
+	v=!!((a^result)&((255-ram[addr])^result)&0x80);
 
 	a=result&0xff;
 	z=(a==0);
@@ -364,6 +408,19 @@ void ldy_const(int value) {
 
 	z=(y==0);
 	n=!!(y&0x80);
+}
+
+void sta(int addr) {
+
+	ram[addr]=a;
+}
+
+void tax(void) {
+	x=a;
+}
+
+void txa(void) {
+	a=x;
 }
 
 unsigned char high(int value) {

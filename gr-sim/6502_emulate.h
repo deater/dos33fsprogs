@@ -17,6 +17,8 @@ void lsr(void);
 void asl(void);
 void ror(void);
 void rol(void);
+void adc_mem(int addr);
+void sbc_mem(int addr);
 void asl_mem(int addr);
 void ror_mem(int addr);
 void rol_mem(int addr);
@@ -36,6 +38,7 @@ void ldx(int addr);
 void ldx_const(int value);
 void ldy(int addr);
 void ldy_const(int value);
+void sta(int addr);
 
 unsigned char high(int value);
 unsigned char low(int value);
