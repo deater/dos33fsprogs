@@ -127,6 +127,19 @@ hposn_2:
 	tax
 	lda	msktbl-$100+7,x		; LDA MSKTBL-$100+7,X  BIT MASK
 					; MSKTBL=F5B2
+                                        ; weird two's complement?
+
+                                        ; if x=-6 = 249 = fa
+                                        ; F5b2 - 1000 = f4b2
+                                        ; f4b2+7 = f4b9
+                                        ; -1 ff + f4b9 = f5b8 C0 6
+                                        ; -2 fe + f4b9 = f5b7 A0 5
+                                        ; -3 fd + f4b9 = f5b6 90 4
+                                        ; -4 fc + f4b9 = f5b5 88 3
+                                        ; -5 fb + f4b9 = f5b4 84 2
+                                        ; -6 fa + f4b9 = f5b3 82 1
+                                        ; -7 f9 + f4b9 = f5b2 81 0
+
 	sta	HMASK
 	tya
 	lsr
