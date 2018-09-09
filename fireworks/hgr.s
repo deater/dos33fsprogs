@@ -84,66 +84,71 @@ msktbl:	.byte $81,$82,$84,$88,$90,$A0,$C0
 
 hposn:
 	; F411
-	sta	HGR_Y
-	stx	HGR_X
-	sty	HGR_X+1
-	pha
-	and	#$C0
-	sta	GBASL
-	lsr
-	lsr
-	ora	GBASL
-	sta	GBASL
-	pla
+	sta	HGR_Y							; 3
+	stx	HGR_X							; 3
+	sty	HGR_X+1							; 3
+	pha								; 3
+	and	#$C0							; 2
+	sta	GBASL							; 3
+	lsr								; 2
+	lsr								; 2
+	ora	GBASL							; 3
+	sta	GBASL							; 3
+	pla								; 4
+								;===========
+								;	 31
 	; F423
-	sta	GBASH
-	asl
-	asl
-	asl
-	rol	GBASH
-	asl
-	rol	GBASH
-	asl
-	ror	GBASL
-	lda	GBASH
-	and	#$1f
-	ora	HGR_PAGE
-	sta	GBASH
-
+	sta	GBASH							; 3
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	rol	GBASH							; 5
+	asl								; 2
+	rol	GBASH							; 5
+	asl								; 2
+	ror	GBASL							; 5
+	lda	GBASH							; 3
+	and	#$1f							; 2
+	ora	HGR_PAGE						; 3
+	sta	GBASH							; 3
+								;============
+								;	 39
 	; F438
-	txa
-	cpy	#0
-	beq	hposn_2
-
-	ldy	#35
-	adc	#4
+	txa								; 2
+	cpy	#0							; 2
+	beq	hposn_2							; 3
+									; -1
+	ldy	#35							; 2
+	adc	#4							; 2
 hposn_1:
-	iny
+	iny								; 2
 	; f442
 hposn_2:
-	sbc	#7
-	bcs	hposn_1
-	sty	HGR_HORIZ
-	tax
-	lda	msktbl-$100+7,x		; LDA MSKTBL-$100+7,X  BIT MASK
+	sbc	#7							; 2
+	bcs	hposn_1							; 3
+									; -1
+	sty	HGR_HORIZ						; 3
+	tax								; 2
+	lda	msktbl-$100+7,x		; LDA MSKTBL-$100+7,X  BIT MASK	; 4?
 					; MSKTBL=F5B2
-	sta	HMASK
-	tya
-	lsr
-	lda	HGR_COLOR
-	sta	HGR_BITS
-	bcs	color_shift
-	rts
+	sta	HMASK							; 3
+	tya								; 2
+	lsr								; 2
+	lda	HGR_COLOR						; 3
+	sta	HGR_BITS						; 3
+	bcs	color_shift						; 3
+									;-1
+	rts								; 6
 
 hplot0:
 	; F457
-	jsr	hposn
-	lda	HGR_BITS
-	eor	(GBASL),y
-	and	HMASK
-	eor	(GBASL),y
-	sta	(GBASL),y
-	rts
+	jsr	hposn							; 3+
+	lda	HGR_BITS						; 3
+	eor	(GBASL),y						; 5
+	and	HMASK							; 3
+	eor	(GBASL),y						; 5
+	sta	(GBASL),y						; 5
+	rts								; 6
 
 move_left_or_right:
 	; F465
@@ -169,17 +174,17 @@ lr_4:
 
 color_shift:
 	; F47E
-	asl
-	cmp	#$c0
+	asl								; 2
+	cmp	#$c0							; 2
 
-	bpl	done_color_shift
-
-	lda	HGR_BITS
-	eor	#$7f
-	sta	HGR_BITS
+	bpl	done_color_shift					; 3
+									; -1
+	lda	HGR_BITS						; 3
+	eor	#$7f							; 2
+	sta	HGR_BITS						; 3
 
 done_color_shift:
-	rts
+	rts								; 6
 
 move_right:
 	lda	HMASK
@@ -216,7 +221,7 @@ move_up_or_down:
 	; F4Eb
 mu_1:
 	adc	#$23
-	pha
+	pha								; 3
 	lda	GBASL
 	adc	#$b0
 	bcs	mu_2
@@ -267,10 +272,10 @@ md_3:
 hglin:
 
 	; F53A
-	pha
+	pha								; 3
 	sec
 	sbc	HGR_X
-	pha
+	pha								; 3
 	txa
 	sbc	HGR_X+1
 	sta	HGR_QUADRANT
@@ -279,7 +284,7 @@ hglin:
 	pla
 	eor	#$ff
 	adc	#1
-	pha
+	pha								; 3
 	lda	#0
 	sbc	HGR_QUADRANT
 	; F550
