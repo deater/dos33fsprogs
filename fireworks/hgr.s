@@ -84,11 +84,10 @@ msktbl:	.byte $81,$82,$84,$88,$90,$A0,$C0	; original
 
 	;====================================================
 	; HPOSN
-	;	time = 9 + 61 + 31 + 22 + 42 + 21 + 23 = 209
+	;	time = 9 + 61 + 31 + 22 + 42 + 22 + 23 = 210
 
 hposn:
-	; F411
-	; move into expected zp locations
+	; F411: move values into expected zp locations
 	sta	HGR_Y							; 3
 	stx	HGR_X							; 3
 	sty	HGR_X+1							; 3
@@ -159,7 +158,7 @@ hposn:
 								;	 22
 
 	cpy	#0							; 2
-	beq	done_mod						; 3
+	beq	done_mod_nop_23						; 3
 theres_high:
 									; -1
 	clc								; 2
@@ -181,22 +180,22 @@ theres_high:
 						;===========================
 						; Y=HIGH,NOR = 23+5 = 28 (14)
 						; Y=HIGH,R = 23+16 = 42
-						; Y=LOW = 5 (37 = 14+23)
+						; Y=LOW = 5 + 37(14+23)= 42
 
 done_mod_nop_23:
 	inc	HGR_HORIZ,X		; (nop)				; 6
 	dec	HGR_HORIZ,X		; (nop)				; 6
-	inc	HGR_HORIZ		; (nop)				; 5
-	lda	HGR_HORIZ		; (nop)				; 3
-	lda	HGR_HORIZ		; (nop)				; 3
-
+	ldy	HGR_HORIZ		; (nop)				; 3
+	ldy	HGR_HORIZ		; (nop)				; 3
+	ldy	HGR_HORIZ		; (nop)				; 3
+	nop								; 2
 done_mod_nop14:
 	inc	HGR_HORIZ,X		; (nop)				; 6
 	dec	HGR_HORIZ,X		; (nop)				; 6
 	nop								; 2
 
 done_mod:
-	ldy	HGR_HORIZ						; 2
+	ldy	HGR_HORIZ						; 3
 	tax								; 2
 	lda	msktbl,x						; 4+
 
@@ -206,7 +205,7 @@ done_mod:
 	lda	HGR_COLOR						; 3
 	sta	HGR_BITS						; 3
 								;===========
-								;	 21
+								;	 22
 
 	bcs	color_shift						; 3
 				; cs = 3+20
@@ -221,17 +220,22 @@ done_mod:
 	rts								; 6
 								;===========
 								;	 23
+
+	;=====================================
+	; HPLOT0
+	; point in (YX),A
+	; 244 cycles
 hplot0:
 	; F457
-	jsr	hposn							; 6+209
+	jsr	hposn							; 6+210
 	lda	HGR_BITS						; 3
-	eor	(GBASL),y						; 5
+	eor	(GBASL),y						; 5+
 	and	HMASK							; 3
-	eor	(GBASL),y						; 5
-	sta	(GBASL),y						; 5
+	eor	(GBASL),y						; 5+
+	sta	(GBASL),y						; 6
 	rts								; 6
 								;============
-								;	 242
+								;	 244
 
 move_left_or_right:
 	; F465

@@ -1,6 +1,6 @@
 ; Display fancy Fireworks
 
-; HGR plus 40x48d page1/page2 every-1-scanline pageflip mode
+; Uses the 40x48d page1/page2 every-1-scanline pageflip mode
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -47,7 +47,7 @@ HOME	= $FC58				;; Clear the text screen
 WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 
 
-;	jsr	draw_fireworks
+	jsr	draw_fireworks
 
 	;==================================
 	;==================================
@@ -59,7 +59,6 @@ setup_background:
 	; init screen
 	jsr	TEXT
 	jsr	HOME
-	jsr	hgr
 	bit	KEYRESET
 
 	;===================
@@ -93,7 +92,7 @@ setup_background:
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
 
-;	jsr	wait_until_keypressed
+	jsr	wait_until_keypressed
 
 
 	;=============================
@@ -118,7 +117,7 @@ setup_background:
 	; GR part
 	bit	PAGE0
 
-;	jsr	wait_until_keypressed
+	jsr	wait_until_keypressed
 
 
 	;==============================
@@ -316,7 +315,7 @@ bpage1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;			========
 	;			4533
 
-	jsr	action_stars				; 6
+	jsr	do_nothing				; 6
 
 	lda	KEYPRESS				; 4
 	bpl	no_keypress				; 3
@@ -348,33 +347,6 @@ loop2:
 
 	dey								; 2
 	bne	loop1							; 2nt/3
-
-
-	rts							; 6
-
-
-	;=================================
-	; action_stars
-	;=================================
-	; and take 4533-6 = 4527 cycles to do it
-action_stars:
-
-	jsr	draw_stars			; 6+4492 = 4498
-						; 4527 - 4498 = 29
-
-	; Try X=4 Y=1 cycles=27 R2
-
-	nop
-
-	ldy	#1							; 2
-bloop1:
-	ldx	#4							; 2
-bloop2:
-	dex								; 2
-	bne	bloop2							; 2nt/3
-
-	dey								; 2
-	bne	bloop1							; 2nt/3
 
 
 	rts							; 6

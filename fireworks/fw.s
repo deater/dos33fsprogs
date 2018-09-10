@@ -524,36 +524,43 @@ explosion:
 	;=============================
 	; Draw the stars
 	;=============================
+	; 7+ 280X + 5
+	; 16 stars = 4492
 
 draw_stars:
 	; HCOLOR = 3, white (though they are drawn purple)
-	lda	#$7f
-	sta	HGR_COLOR
-
-	ldy	#0
+	lda	#$7f							; 2
+	sta	HGR_COLOR						; 3
+	ldy	#0							; 2
+								;===========
+								;	  7
 
 star_loop:
-	tya
-	pha
+	tya								; 2
+	pha								; 3
 
 	; HPLOT X,Y
 	; X= (y,x), Y=a
 
-	ldx	stars,Y
-	lda	stars+1,Y
-	ldy	#0
+	ldx	stars,Y							; 4+
+	lda	stars+1,Y						; 4+
+	ldy	#0							; 2
 
-	jsr	hplot0
+	jsr	hplot0							;6+244
 
-	pla
-	tay
+	pla								; 4
+	tay								; 2
 
-	iny
-	iny
-	cpy	#NUMSTARS*2
-	bne	star_loop
+	iny								; 2
+	iny								; 2
+	cpy	#NUMSTARS*2						; 2
 
-	rts
+	bne	star_loop						; 3
+								;============
+								;	279
+
+									; -1
+	rts								; 6
 
 stars:	; even x so they are purple
 	.byte  28,107, 108, 88, 126, 88, 136, 95
