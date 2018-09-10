@@ -79,14 +79,16 @@ done_fireworks:
 	;===========================
 	; LAUNCH_FIREWORK
 	;===========================
-	; cycles=???
+	; cycles= 54+60+67+60+56+56+15+8+21+11 = 408
 
 launch_firework:
 
 	jsr	random16						; 6+42
 	lda	SEEDL							; 3
 	and	#$4							; 2
-	sta	COLOR_GROUP	; HGR color group (0 PG or 4 BO)	; 4
+	sta	COLOR_GROUP	; HGR color group (0 PG or 4 BO)	; 3
+								;============
+								;	54
 
 	jsr	random16						; 6+42
 	lda	SEEDL							; 3
@@ -94,6 +96,9 @@ launch_firework:
 	clc								; 2
 	adc	#$1							; 2
 	sta	X_VELOCITY	; x velocity = 1..4			; 3
+								;===========
+								;	60
+
 
 	jsr	random16						; 6+42
 	lda	SEEDL							; 3
@@ -104,6 +109,8 @@ launch_firework:
 	sta	Y_VELOCITY_H	; y velocity = -3..-6			; 3
 	lda	#0							; 2
 	sta	Y_VELOCITY_L	; it's 8:8 fixed point			; 3
+								;============
+								;	67
 
 	jsr	random16						; 6+42
 	lda	SEEDL							; 3
@@ -111,37 +118,54 @@ launch_firework:
 	clc								; 2
 	adc	#33							; 2
 	sta	MAX_STEPS	; 33..64				; 3
+								;============
+								;	60
 
 	; launch from the two hills
 	jsr	random16						; 6+42
 	lda	SEEDL							; 3
 	and	#$3f							; 2
-	sta	XPOS_L							; 3
+	sta	XPOS_L				; base of 0..63		; 3
+								;============
+								;	56
 
 	jsr	random16						; 6+42
 	lda	SEEDL							; 3
 	and	#$1							; 2
-	beq	right_hill						; 2
-left_hill:
-	lda	XPOS_L							; 3
-	clc								; 2
-	adc	#24							; 2
-	sta	XPOS_L				; 24-88 (64)		; 3
 
+	beq	right_hill						; 3
+								;============
+								;	56
+
+
+
+left_hill:								;-1
+	lda	X_VELOCITY	; nop					; 3
+	lda	X_VELOCITY	; nop					; 3
+	lda	X_VELOCITY	; nop					; 3
+	nop								; 2
+	lda	#24		; make it 24..87			; 2
 	jmp	done_hill						; 3
-right_hill:
-									; 1
-	lda	XPOS_L							; 3
-	clc								; 2
-	adc	#191							; 2
-	sta	XPOS_L				; 191-255 (64)		; 3
+								;===========
+								;	 15
 
+right_hill:
 	lda	X_VELOCITY						; 3
 	eor	#$ff							; 2
 	sta	X_VELOCITY						; 3
-	inc	X_VELOCITY			; aim toward middle	; 5
+	inc	X_VELOCITY	; aim toward middle			; 5
+
+	lda	#191		; make it 191..254			; 2
+								;===========
+								;	 15
 
 done_hill:
+	clc								; 2
+	adc	XPOS_L							; 3
+	sta	XPOS_L							; 3
+
+								;===========
+								; 	  8
 
 	lda	#YSIZE							; 2
 	sta	YPOS_H							; 3
@@ -153,12 +177,15 @@ done_hill:
 
 	lda	#1							; 2
 	sta	CURRENT_STEP						; 3
+								;===========
+								;	 21
 
 	lda	#1							; 2
 	sta	STATE				; move to launch	; 3
 
 	rts								; 6
-
+								;============
+								;	 11
 
 
 	;===============
