@@ -365,63 +365,75 @@ not_done_with_launch:
 	;==================================
 	; Start explosion near x_old, y_old
 	;==================================
+	; cycles =
+
 start_explosion:
 
-	jsr	random16
-	lda	SEEDL
-	and	#$f
-	sec
-	sbc	#8
-	adc	X_OLD
-	sta	XPOS_L	;	xpos=x_old+(random()%16)-8;	x +/- 8
-			;	FIXME: XPOS can overlow
+	; Set X position
 
-	jsr	random16
-	lda	SEEDL
-	and	#$f
-	sec
-	sbc	#8
-	adc	Y_OLD
-	sta	YPOS_H	;	ypos_h=y_old+(random()%16)-8;	// y +/- 8
+	jsr	random16						; 6+42
+	lda	SEEDL							; 3
+	and	#$f			; 0..15				; 2
+	sec								; 2
+	sbc	#8			; -8..7				; 2
+
+	adc	X_OLD							; 3
+	sta	XPOS_L	;	xpos=x_old+(random()%16)-8; x +/- 8	; 3
+
+	lda	#0
+	sta	XPOS_H
+
+	; FIXME: XPOS from 255-280.  A hard problem.  Makes everything
+	;		more complicated, 16-bit math
+
+	; set Y position
+
+	jsr	random16						; 6+42
+	lda	SEEDL							; 3
+	and	#$f			; 0..15				; 2
+	sec								; 2
+	sbc	#8			; -8..7				; 2
+	adc	Y_OLD							; 3
+	sta	YPOS_H	;	ypos_h=y_old+(random()%16)-8; y +/- 8	; 3
 
 	; draw white (with fringes)
 
-	lda	COLOR_GROUP
-	clc
-	adc	#$3
-	tax
-	lda	colortbl,X		; get color from table
-	sta	HGR_COLOR
+	lda	COLOR_GROUP						; 3
+	clc								; 2
+	adc	#$3							; 2
+	tax								; 2
+	lda	colortbl,X		; get color from table		; 4+
+	sta	HGR_COLOR						; 3
 
 ;	hplot(xpos,ypos_h);	// draw at center of explosion
 
 	; HPLOT X,Y: X= (y,x), Y=a
 
-	ldx	XPOS_L
-	lda	YPOS_H
-	ldy	#0
-	jsr	hplot0			; hplot(x_old,y_old);
+	ldx	XPOS_L							; 3
+	lda	YPOS_H							; 3
+	ldy	#0		; never above 255?			; 3
+	jsr	hplot0			; hplot(x_old,y_old);		; 6+244
 
 	; Spread the explosion
 
-	ldy	#1
-	sty	TEMPY		; save Y
+	ldy	#1							; 2
+	sty	TEMPY		; save Y				; 3
 
-	lda	#3		; move to continue explosion
-	sta	STATE
+	lda	#3		; move to continue explosion		; 2
+	sta	STATE							; 3
 
-	rts
+	rts								; 6
 
 	;===============================
 	; Continue Explosion
 	;===============================
 continue_explosion:
-	ldy	TEMPY
+	ldy	TEMPY							; 3
 
 	;================================
 	; Draw spreading dots in white
 
-	cpy	#9
+	cpy	#9							; 2
 	beq	explosion_erase
 
 	; hcolor_equals(color_group+3);
@@ -488,31 +500,33 @@ explosion:
 
 	; HPLOT X,Y: X= (y,x), Y=a
 
+	; Southeast pixel
 	clc
 	lda	XPOS_L
 	adc	OFFSET
 	tax
-	ldy	#0
-
+	lda	XPOS_H
+	adc	#0
+	tay
 	clc
 	lda	YPOS_H
 	adc	OFFSET
-
-	jsr	hplot0		; hplot(xpos+o,ypos_h+o);	SE
-
+	jsr	hplot0		; hplot(xpos+o,ypos_h+o);
 
 
+	; Northeast Pixel
 	clc
 	lda	XPOS_L
 	adc	OFFSET
 	tax
-	ldy	#0
-
+	lda	XPOS_H
+	adc	#0
+	tay
 	sec
 	lda	YPOS_H
 	sbc	OFFSET
 
-	jsr	hplot0		; hplot(xpos+o,ypos_h-o);	NE
+	jsr	hplot0		; hplot(xpos+o,ypos_h-o);
 
 
 	sec
@@ -544,7 +558,7 @@ explosion:
 	; HPLOT X,Y: X= (y,x), Y=a
 
 	ldx	XPOS_L
-	ldy	#0
+	ldy	XPOS_H
 
 	clc
 	lda	OFFSET
@@ -581,7 +595,7 @@ explosion:
 	lsr
 	adc	XPOS_L
 	tax
-	ldy	#0
+	ldy	XPOS_H
 
 	lda	YPOS_H
 
