@@ -2,10 +2,11 @@
 ; Based on BASIC program posted by FozzTexx, originally written in 1987
 ;=======================================================================
 
-; State: Launch
-;	 rocketing
-;	 explosion
-
+; State:
+;	0: Launch Rocket
+;	1: Move Rocket
+;	2: Start Explosion
+;	3: Continue Explosion
 
 ; Constants
 NUMSTARS 	= 16
@@ -14,6 +15,7 @@ XSIZE		= 280
 MARGIN		= 24
 
 ; Zero page addresses
+STATE		= $EE
 OFFSET		= $EF
 COLOR_GROUP	= $F0
 X_VELOCITY	= $F1
@@ -39,25 +41,61 @@ draw_fireworks:
 	jsr	HOME		; clear screen
 
 	jsr	hgr		; set high-res, clear screen, page0
+	lda	#0
+	sta	STATE
 
 	jsr	draw_stars	; draw the stars
 
+fireworks_state_machine:
+
+	; see if key pressed
+	lda	KEYPRESS		; check if keypressed
+	bmi	done_fireworks		; if so, exit
+
+	lda	STATE
+	cmp	#0
+	bne	s1
+	jsr	launch_firework
+	jmp	fireworks_state_machine
+s1:
+	cmp	#1
+	bne	s2
+	jsr	move_rocket
+	jmp	fireworks_state_machine
+s2:
+	cmp	#2
+	bne	s3
+	jsr	start_explosion
+	jmp	fireworks_state_machine
+s3:
+	jsr	continue_explosion
+	jmp	fireworks_state_machine
+
+
+done_fireworks:
+	rts
+
+
+	;===========================
+	; LAUNCH_FIREWORK
+	;===========================
+	; cycles=???
 
 launch_firework:
 
-	jsr	random16						; 6+?
+	jsr	random16						; 6+42
 	lda	SEEDL							; 3
 	and	#$4							; 2
 	sta	COLOR_GROUP	; HGR color group (0 PG or 4 BO)	; 4
 
-	jsr	random16						; 6+
+	jsr	random16						; 6+42
 	lda	SEEDL							; 3
 	and	#$3							; 2
 	clc								; 2
 	adc	#$1							; 2
 	sta	X_VELOCITY	; x velocity = 1..4			; 3
 
-	jsr	random16						; 6+
+	jsr	random16						; 6+42
 	lda	SEEDL							; 3
 	and	#$3							; 2
 	clc								; 2
@@ -67,7 +105,7 @@ launch_firework:
 	lda	#0							; 2
 	sta	Y_VELOCITY_L	; it's 8:8 fixed point			; 3
 
-	jsr	random16						; 6+
+	jsr	random16						; 6+42
 	lda	SEEDL							; 3
 	and	#$1f							; 2
 	clc								; 2
@@ -75,12 +113,12 @@ launch_firework:
 	sta	MAX_STEPS	; 33..64				; 3
 
 	; launch from the two hills
-	jsr	random16						; 6+
+	jsr	random16						; 6+42
 	lda	SEEDL							; 3
 	and	#$3f							; 2
 	sta	XPOS_L							; 3
 
-	jsr	random16						; 6+
+	jsr	random16						; 6+42
 	lda	SEEDL							; 3
 	and	#$1							; 2
 	beq	right_hill						; 2
@@ -116,13 +154,19 @@ done_hill:
 	lda	#1							; 2
 	sta	CURRENT_STEP						; 3
 
+	lda	#1							; 2
+	sta	STATE				; move to launch	; 3
+
+	rts								; 6
+
 
 
 	;===============
-	; Draw rocket
+	; Move rocket
 	;===============
+	; cycles=???
 
-draw_rocket_loop:
+move_rocket:
 
 	lda	Y_OLD
 	sta	Y_OLDER
@@ -274,21 +318,27 @@ done_with_loop:
 
 	lda	CURRENT_STEP
 	cmp	MAX_STEPS
-	beq	draw_explosion
+	bne	not_done_with_launch
 
+	lda	#2
+	sta	STATE
+
+
+not_done_with_launch:
 
 	lda	#$c0
 	jsr	WAIT
 
 	inc	CURRENT_STEP
-	jmp	draw_rocket_loop
+
+	rts
 
 
 
 	;==================================
-	; Draw explosion near x_old, y_old
+	; Start explosion near x_old, y_old
 	;==================================
-draw_explosion:
+start_explosion:
 
 	jsr	random16
 	lda	SEEDL
@@ -325,14 +375,20 @@ draw_explosion:
 	ldy	#0
 	jsr	hplot0			; hplot(x_old,y_old);
 
-
-
 	; Spread the explosion
 
 	ldy	#1
 	sty	TEMPY		; save Y
 
-explosion_loop:
+	lda	#3		; move to continue explosion
+	sta	STATE
+
+	rts
+
+	;===============================
+	; Continue Explosion
+	;===============================
+continue_explosion:
 	ldy	TEMPY
 
 	;================================
@@ -378,24 +434,29 @@ done_with_explosion:
 	inc	TEMPY
 	lda	TEMPY
 	cmp	#10
-	bne	explosion_loop
+	beq	explosion_done
+	rts
 
+explosion_done:
 	;==================================
 	; randomly draw more explosions
 	;==================================
 	jsr	random16
 	lda	SEEDL
-	and	#$1
-	beq	draw_explosion
+	and	#$2
+	sta	STATE
 
-	; see if key pressed
-	lda	KEYPRESS		; check if keypressed
-	bmi	done_fireworks		; if so, exit
-	jmp	launch_firework
-done_fireworks:
+	; if 0, then move to state 0 (start over)
+	; if 2, then move to state 2 (new random explosion)
+
 	rts
 
 
+
+	;===============================
+	; Draw explosion rays
+	;===============================
+	;
 explosion:
 
 	; HPLOT X,Y: X= (y,x), Y=a
