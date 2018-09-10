@@ -47,7 +47,7 @@ HOME	= $FC58				;; Clear the text screen
 WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 
 
-;	jsr	draw_fireworks
+	jsr	draw_fireworks
 
 	;==================================
 	;==================================

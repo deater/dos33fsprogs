@@ -15,14 +15,14 @@ XOR_MAGIC = $7657	; "vW"
 	; random16
 	;=============================
 	; takes:
-	;	not 0, cc = 6(r16)+12(lnz)+4(nop)+ 18(neo) = 40
-	;	not 0, cs = 6(r16)+15(lnz)+19(deo) = 40
+	;	not 0, cs = 6(r16)+12(lnz)+5(nop)+ 19(deo) = 42
+	;	not 0, cc = 6(r16)+14(lnz)+2(nop)+ 20(neo) = 42
 
-	;	$0000	  = 6(r16)+ 6(loz)+ 9nops+ 19(deo) = 40
-	;	$8000     = 6(r16)+ 6(loz)+ 4(ceo) + 6nops+ 18(neo) = 40
+	;	$0000	  = 6(r16)+ 6(loz)+11nops+ 19(deo) = 42
+	;	$8000     = 6(r16)+ 6(loz)+ 4(ceo) + 6nops+ 20(neo) = 42
 
-	;	$XX00 cc  = 6(r16)+ 6(loz)+ 4(ceo) + 2(cep) 4nops+ +18(neo) = 40
-	;	$XX00 cs  = 6(r16)+ 6(loz)+ 4(ceo) + 5(cep) +19(deo) = 40
+	;	$XX00 cc  = 6(r16)+ 6(loz)+4(ceo)+2(cep) +4nops+ 20(neo) = 42
+	;	$XX00 cs  = 6(r16)+ 6(loz)+4(ceo)+4(cep) +3nops+ 19(deo) = 42*
 random16:
 
 	lda	SEEDL							; 3
@@ -34,12 +34,25 @@ lownz:
 	asl	SEEDL		; Do a normal shift			; 5
 	lda	SEEDH							; 3
 	rol								; 2
-	bcc	four_cycle_no_eor					; 3
-								;==========
+	bcs	five_cycle_do_eor					; 3
+								;===========
 								;	 12
-	bcs	do_eor							; 3
+
+	bcc	two_cycle_no_eor					; 3
+								;==========
+								; 12+3-1 = 14
+
 
 ;===================================================================
+
+eleven_cycle_do_eor:
+	nop								; 2
+	nop								; 2
+	nop								; 2
+five_cycle_do_eor:
+	nop								; 2
+three_cycle_do_eor:
+	sta	SEEDH		; nop					; 3
 
 do_eor:
 				; high byte is in A
@@ -60,30 +73,25 @@ six_cycles_no_eor:
 	nop								; 2
 four_cycle_no_eor:
 	nop								; 2
+two_cycle_no_eor:
 	nop								; 2
 no_eor:
+	nop								; 2
 	nop								; 2
 	nop								; 2
 	nop								; 2
 	sta	SEEDH							; 3
 	jmp	eor_rts							; 3+6
 								;===========
-								;	 18
+								;	 20
 
 
 ;======================================================================
 ;======================================================================
-
-nine_cycle_do_eor:
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	jmp	do_eor							; 3
-
 
 low_zero:
 	lda	SEEDH							; 3
-	beq	nine_cycle_do_eor	; High byte is also zero	; 3
+	beq	eleven_cycle_do_eor	; High byte is also zero	; 3
 					; so apply the EOR
 								;============
 								;	 6
@@ -104,7 +112,7 @@ cep:
 								;============
 								;	  2
 
-	bcs	do_eor						; 2+3 = 5
+	bcs	three_cycle_do_eor				; 2+3-1 = 4
 
 
 
