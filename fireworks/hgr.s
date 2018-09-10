@@ -28,21 +28,18 @@ LOWSCR	=	$C054
 MIXCLR	=	$C052
 HISCR	=	$C055
 
-
-
-
-
-
-
-
-
-
+	;==========================
+	; HGR2
+	;==========================
 hgr2:
 	; F3D8
 	bit	HISCR		; BIT SW.HISCR Use PAGE2 ($C055)
 	bit	MIXCLR		; BIT SW.MIXCLR
 	lda	#$40		; HIRES Page 2 at $4000
 	bne	sethpg
+	;==========================
+	; HGR
+	;==========================
 hgr:
 	; F3E2
 	lda	#$20		; HIRES Page 1 at $2000
@@ -77,7 +74,6 @@ bkgnd_loop:
 	and	#$1f			; see if $40 or $60
 	bne	bkgnd_loop
 	rts
-
 
 
 msktbl:	.byte $81,$82,$84,$88,$90,$A0,$C0	; original
@@ -223,6 +219,7 @@ done_mod:
 
 	;=====================================
 	; HPLOT0
+	;=====================================
 	; point in (YX),A
 	; 244 cycles
 hplot0:
@@ -241,13 +238,14 @@ move_left_or_right:
 	; F465
 	bpl	move_right
 
-	lda	HMASK
-	lsr
+	lda	HMASK							; 3
+	lsr								; 2
 	bcs	lr_2
-	eor	#$c0
+	eor	#$c0							; 2
 lr_1:
-	sta	HMASK
-	rts
+	sta	HMASK							; 3
+	rts								; 6
+
 lr_2:
 	dey
 	bpl	lr_3
@@ -261,7 +259,8 @@ lr_4:
 
 
 	;===================================
-	;
+	; COLOR_SHIFT
+	;===================================
 	;	positive = 7+(7)+6 = 20
 	;	negative = 7+ 7 +6 = 20
 
@@ -280,6 +279,9 @@ done_color_shift:
 	nop								; 2
 	nop								; 2
 	rts								; 6
+
+
+	;==============================================================
 
 move_right:
 	lda	HMASK
@@ -363,113 +365,137 @@ md_3:
 	ror	GBASL
 	bcc	ud_1
 
+	;===================================
+	; HGLIN
+	;===================================
+	; cycles = 22+
 
 hglin:
 
-	; F53A
+	; F53A: calc quadrant
 	pha								; 3
-	sec
-	sbc	HGR_X
+	sec								; 2
+	sbc	HGR_X							; 3
 	pha								; 3
-	txa
-	sbc	HGR_X+1
-	sta	HGR_QUADRANT
+	txa								; 2
+	sbc	HGR_X+1							; 3
+	sta	HGR_QUADRANT						; 3
+								;===========
+								;	 22
+
 	; F544
 	bcs	hglin_1
-	pla
-	eor	#$ff
-	adc	#1
+
+	pla								; 4
+	eor	#$ff							; 2
+	adc	#1							; 2
 	pha								; 3
-	lda	#0
-	sbc	HGR_QUADRANT
+	lda	#0							; 2
+	sbc	HGR_QUADRANT						; 3
+
 	; F550
 hglin_1:
-	sta	HGR_DX+1
-	sta	HGR_E+1
-	pla
-	sta	HGR_DX
-	sta	HGR_E
-	pla
-	sta	HGR_X
-	stx	HGR_X+1
-	tya
-	clc
-	sbc	HGR_Y
-	bcc	hglin_2
-	eor	#$ff
-	adc	#$fe
+	sta	HGR_DX+1						; 3
+	sta	HGR_E+1							; 3
+	pla								; 4
+	sta	HGR_DX							; 3
+	sta	HGR_E							; 3
+	pla								; 4
+	sta	HGR_X							; 3
+	stx	HGR_X+1							; 3
+	tya								; 2
+	clc								; 2
+	sbc	HGR_Y							; 3
+	bcc	hglin_2							; 3
+
+	eor	#$ff							; 2
+	adc	#$fe							; 2
 hglin_2:
 	; F568
-	sta	HGR_DY
-	sty	HGR_Y
+	sta	HGR_DY							; 3
+	sty	HGR_Y							; 3
 	ror	HGR_QUADRANT
-	sec
-	sbc	HGR_DX
-	tax
-	lda	#$ff
-	sbc	HGR_DX+1
-	sta	HGR_COUNT
-	ldy	HGR_HORIZ
-	bcs	movex2		; always?
+	sec								; 2
+	sbc	HGR_DX							; 3
+	tax								; 2
+	lda	#$ff							; 3
+	sbc	HGR_DX+1						; 3
+	sta	HGR_COUNT						; 3
+	ldy	HGR_HORIZ						; 3
+	bcs	movex2		; always?				; 3
 	; f57c
 movex:
-	asl
-	jsr	move_left_or_right
-	sec
+	asl								; 2
+	jsr	move_left_or_right					; 6+?
+	sec								; 2
 
 	; f581
 movex2:
-	lda	HGR_E
-	adc	HGR_DY
-	sta	HGR_E
-	lda	HGR_E+1
-	sbc	#0
+	lda	HGR_E							; 3
+	adc	HGR_DY							; 3
+	sta	HGR_E							; 3
+	lda	HGR_E+1							; 3
+	sbc	#0							; 2
 movex2_1:
-	sta	HGR_E+1
+	sta	HGR_E+1							; 3
 	lda	(GBASL),y
-	eor	HGR_BITS
-	and	HMASK
+	eor	HGR_BITS						; 3
+	and	HMASK							; 3
 	eor	(GBASL),y
 	sta	(GBASL),y
-	inx
+	inx								; 2
 	bne	movex2_2
+
 	inc	HGR_COUNT
 	beq	rts22
 	; F59e
 movex2_2:
-	lda	HGR_QUADRANT
+	lda	HGR_QUADRANT						; 3
 	bcs	movex
-	jsr	move_up_or_down
-	clc
-	lda	HGR_E
-	adc	HGR_DX
-	sta	HGR_E
-	lda	HGR_E+1
-	adc	HGR_DX+1
-	bvc	movex2_1
+
+	jsr	move_up_or_down						; 6+
+	clc								; 2
+	lda	HGR_E							; 3
+	adc	HGR_DX							; 3
+	sta	HGR_E							; 3
+	lda	HGR_E+1							; 3
+	adc	HGR_DX+1						; 3
+	bvc	movex2_1						; 3
 
 
+	;===============================
+	; HPLOT_TO
+	;===============================
+	;
+	; cycles = 10 + 6 + X + 6
 hplot_to:
 
-	; F712
-	sty	DSCTMP
-	tay
-	txa
-	ldx	DSCTMP
-	jsr	hglin
+	; F712: put vars in right location
+	sty	DSCTMP							; 3
+	tay								; 2
+	txa								; 2
+	ldx	DSCTMP							; 3
+								;============
+								;	 10
+
+	jsr	hglin							;6+?
 rts22:
-	rts
+	rts								; 6
 
 
+	;=============================
+	; HCOLOR_EQUALS
+	;=============================
 	; Color in X
+	; 13 cycles
 hcolor_equals:
 
 	; F6E9
 	; TODO: mask to be less than 8
 
-	lda	colortbl,x
-	sta	HGR_COLOR
-	rts
+	lda	colortbl,x						; 4+
+	sta	HGR_COLOR						; 3
+	rts								; 6
 
 colortbl:
 	.byte	$00,$2A,$55,$7F,$80,$AA,$D5,$FF
