@@ -3,10 +3,13 @@
 ;=======================================================================
 
 ; State:
-;	0: Launch Rocket
-;	1: Move Rocket
-;	2: Start Explosion
-;	3: Continue Explosion
+;	0: Launch Rocket   -> goes to 1
+;	1: Move Rocket -> repeats 1 until CS done, then 2
+;	2: Start Explosion -> goes to 3
+;	3: Continue Explosion -> repeats 3 until done.
+;				then randomly might go to 2
+;				before going to 0
+
 
 STATE_LAUNCH_ROCKET		=	0
 STATE_MOVE_ROCKET		=	1
@@ -715,7 +718,7 @@ explosion:
 	;=============================
 	; 7+ 280X + 5
 	; 16 stars = 4492
-
+.align $100
 draw_stars:
 	; HCOLOR = 3, white (though they are drawn purple)
 	lda	#$7f							; 2
