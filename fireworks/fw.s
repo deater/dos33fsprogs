@@ -23,7 +23,7 @@ XSIZE		= 280
 MARGIN		= 24
 
 ; Zero page addresses
-STATE		= $EE
+;STATE		= $ED
 OFFSET		= $EF
 COLOR_GROUP	= $F0
 X_VELOCITY	= $F1
@@ -749,6 +749,7 @@ explosion:
 ;=========================================================================
 ; 7+ 280X + 5
 ; 16 stars = 4492
+
 
 .align $100
 draw_stars:

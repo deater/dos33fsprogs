@@ -17,6 +17,7 @@ BASH		= $29
 FRAME		= $60
 BLARGH		= $69
 HGR_COLOR	= $E4
+STATE		= $ED
 DRAW_PAGE	= $EE
 LASTKEY		= $F1
 PADDLE_STATUS	= $F2
@@ -47,7 +48,7 @@ HOME	= $FC58				;; Clear the text screen
 WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 
 
-	jsr	draw_fireworks
+;	jsr	draw_fireworks
 
 	;==================================
 	;==================================
@@ -67,6 +68,7 @@ setup_background:
 
 	lda	#0
 	sta	DRAW_PAGE
+	sta	STATE
 
 	;=============================
 	; Load graphic page0
@@ -230,17 +232,57 @@ bpage1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
-	; do_nothing should be      4550+1 -2-9 -7= 4533
 	;			4550
 	;			  +1  fallthrough
 	;			  -2  ldy at entry
+	;			 -35  call through jumptable
 	;			  -7  keyboard
-	;			  -6  jsr
 	;			  -3  jmp
 	;			========
-	;			4533
+	;			4504
+	;========================
+	; each subunit should take 4504 cycles
 
-	jsr	action_stars				; 6
+firework_state_machine:
+
+	; if killing time, 16+19 = 35
+	; if not, 	   16+19 = 35
+
+	ldy	STATE						; 3
+	inc     FRAME                                           ; 5
+        lda     FRAME                                           ; 3
+	and	#$3						; 2
+	beq	kill_time					; 3
+							;===========
+							;	 16
+
+
+	; Set up jump table that runs same speed on 6502 and 65c02
+								;-1
+	lda	jump_table+1,y                                  ; 4
+	pha                                                     ; 3
+	lda	jump_table,y                                    ; 4
+	pha                                                     ; 3
+	rts                                                     ; 6
+
+							;=============
+							;	 19
+
+kill_time:
+
+	; need 16 cycles nop
+	ldy	STATE	; (nop)					; 3
+	ldy	STATE	; (nop)					; 3
+	ldy	STATE	; (nop)					; 3
+	ldy	STATE	; (nop)					; 3
+	nop							; 2
+	nop							; 2
+	jmp	action_stars					; 3
+
+							;=============
+							;	19
+
+check_keyboard:
 
 	lda	KEYPRESS				; 4
 	bpl	no_keypress				; 3
@@ -251,6 +293,14 @@ no_keypress:
 
 loop_forever:
 	jmp	loop_forever
+
+
+jump_table:
+        .word   (action_stars-1)
+        .word   (action_stars-1)
+        .word   (action_stars-1)
+        .word   (action_stars-1)
+
 
 
 .include "state_machine.s"
