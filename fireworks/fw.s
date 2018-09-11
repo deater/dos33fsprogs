@@ -191,114 +191,167 @@ done_hill:
 	;===============
 	; Move rocket
 	;===============
-	; cycles=???
+	; cycles=24+11+20+18+14+53
 
 move_rocket:
 
-	lda	Y_OLD
-	sta	Y_OLDER
+	; save old values
+	lda	Y_OLD							; 3
+	sta	Y_OLDER							; 3
+	lda	YPOS_H							; 3
+	sta	Y_OLD							; 3
+	lda	X_OLD							; 3
+	sta	X_OLDER							; 3
+	lda	XPOS_L							; 3
+	sta	X_OLD							; 3
+								;===========
+								;	 24
 
-	lda	YPOS_H
-	sta	Y_OLD
-
-	lda	X_OLD
-	sta	X_OLDER
-
-	lda	XPOS_L
-	sta	X_OLD
-
-	; Move rocket
-
-	lda	XPOS_L
-	clc
-	adc	X_VELOCITY
-	sta	XPOS_L			; adjust xpos
-
-	; 16 bit add
-	clc
-	lda	YPOS_L
-	adc	Y_VELOCITY_L
-	sta	YPOS_L
-	lda	YPOS_H
-	adc	Y_VELOCITY_H
-	sta	YPOS_H			; adjust ypos
-
+	; Move xpos
+	lda	XPOS_L							; 3
+	clc								; 2
+	adc	X_VELOCITY						; 3
+	sta	XPOS_L							; 3
+								;============
+								;	 11
+	; Move ypos, 16-bit add
+	clc								; 2
+	lda	YPOS_L							; 3
+	adc	Y_VELOCITY_L						; 3
+	sta	YPOS_L							; 3
+	lda	YPOS_H							; 3
+	adc	Y_VELOCITY_H						; 3
+	sta	YPOS_H							; 3
+								;===========
+								;	 20
 
 	; adjust Y velocity, slow it down
-	clc
-	lda	Y_VELOCITY_L
-	adc	#$20			; $20 = 0.125
-	sta	Y_VELOCITY_L
-	lda	Y_VELOCITY_H
-	adc	#0
-	sta	Y_VELOCITY_H
-
+	clc								; 2
+	lda	Y_VELOCITY_L						; 3
+	adc	#$20			; $20 = 0.125			; 2
+	sta	Y_VELOCITY_L						; 3
+	lda	Y_VELOCITY_H						; 3
+	adc	#0							; 2
+	sta	Y_VELOCITY_H						; 3
+								;===========
+								;	 18
 	; if we went higher, adjust peak
-	lda	YPOS_H
-	cmp	PEAK
-	bmi	no_peak
-	sta	PEAK
+	lda	YPOS_H							; 3
+	cmp	PEAK							; 3
+	bmi	no_peak_nop						; 3
+
+									;-1
+	sta	PEAK							; 3
+	jmp	no_peak							; 3
+no_peak_nop:
+	nop								; 2
+	jmp	no_peak							; 3
 no_peak:
+								;=============
+								;	14
 
 	;========================================
 	; Check if out of bounds and stop moving
 	;========================================
 
-	lda	XPOS_L		; if (xpos_l<=margin) too far left
-	cmp	#MARGIN
-	bcc	done_moving
+	lda	XPOS_L		; if (xpos_l<=margin) too far left	; 3
+	cmp	#MARGIN							; 2
+	bcc	done_moving_first					; 3
 
 	; Due to 256 wraparound, the above will catch this case???
 ;	cmp	#XSIZE-MARGIN	; if (xpos_l>=(xsize-margin)) too far right
 ;	bcs	done_moving
 
-	lda	YPOS_H		; if (ypos_h<=margin) too far up
-	cmp	#MARGIN
-	bcc	done_moving
+									; -1
+	lda	YPOS_H		; if (ypos_h<=margin) too far up	; 3
+	cmp	#MARGIN							; 2
+	bcc	done_moving_second					; 3
 
 	;======================
 	; if falling downward
 	;======================
-	lda	Y_VELOCITY_H
-	bmi	going_up	; if (y_velocity_h>0)
+									; -1
+	lda	Y_VELOCITY_H						; 3
+	bmi	going_up	; if (y_velocity_h>0)			; 3
 
-	; if too close to ground, explode
-	lda	YPOS_H		; if (ypos_h>=ysize-margin)
-	cmp	#(YSIZE-MARGIN)
-	bcs	done_moving
+	; if too close to ground, explode				; -1
+	lda	YPOS_H		; if (ypos_h>=ysize-margin)		; 3
+	cmp	#(YSIZE-MARGIN)						; 2
+	bcs	done_moving_third					; 3
 
-	; if fallen a bit past peak, explode
-	sec			; if (ypos_h>ysize-(ysize-peak)/2)
-	lda	#YSIZE
-	sbc	PEAK
-	lsr
-	eor	#$FF
-	clc
-	adc	#1
-	clc
-	adc	#YSIZE
-	cmp	YPOS_H
-	bcc	done_moving
+	; if fallen a bit past peak, explode				; -1
+	sec			; if (ypos_h>ysize-(ysize-peak)/2)	; 2
+	lda	#YSIZE							; 2
+	sbc	PEAK							; 3
+	lsr								; 2
+	eor	#$FF							; 2
+	sec								; 2
+	adc	#YSIZE							; 2
+	cmp	YPOS_H							; 3
+	bcc	done_moving						; 3
+								;===========
+								;	20
+
+
+									;-1
+done_moving_ft:
+	nop								; 2
+	nop								; 2
+	jmp	done_bounds_checking					; 3
 
 going_up:
+	; 30 cycles
+	lda	MAX_STEPS						; 3
+	lda	MAX_STEPS						; 3
+	lda	MAX_STEPS						; 3
+	lda	MAX_STEPS						; 3
+	lda	MAX_STEPS						; 3
+	lda	MAX_STEPS						; 3
+	nop								; 2
+	jmp	done_moving_ft						; 3+7
 
-	jmp	done_bounds_checking
-
+done_moving_first:
+	; 7 cycles
+	lda	MAX_STEPS						; 3
+	nop								; 2
+	nop								; 2
+done_moving_second:
+	; 12 cycles
+	lda	MAX_STEPS						; 3
+	nop								; 2
+	lda	MAX_STEPS						; 3
+	nop								; 2
+	nop								; 2
+done_moving_third:
+	; 20 cycles
+	lda	MAX_STEPS						; 3
+	lda	MAX_STEPS						; 3
+	lda	MAX_STEPS						; 3
+	lda	MAX_STEPS						; 3
+	lda	MAX_STEPS						; 3
+	lda	MAX_STEPS						; 3
+	nop								; 2
 done_moving:
-	lda	MAX_STEPS
-	sta	CURRENT_STEP
+	lda	MAX_STEPS						; 3
+	sta	CURRENT_STEP						; 3
 
 done_bounds_checking:
+
+
+
+
+
+
 
 	;==========================
 	; if not done, draw rocket
 	;==========================
+draw_rocket:
 
 	lda	CURRENT_STEP
 	cmp	MAX_STEPS
 	beq	erase_rocket
 
-draw_rocket:
 	; set hcolor to proper white (3 or 7)
 	clc
 	lda	COLOR_GROUP
@@ -314,7 +367,7 @@ draw_rocket:
 	ldy	#0
 	jsr	hplot0			; hplot(x_old,y_old);
 
-	; HPLOT to X,Y X=(x,a), y=Y
+	; HPLOT TO X,Y X=(x,a), y=Y
         lda     XPOS_L
         ldx     #0
         ldy     YPOS_H
@@ -335,7 +388,7 @@ erase_rocket:
 	ldy	#0
 	jsr	hplot0			; hplot(x_old,y_old);
 
-	; HPLOT to X,Y X=(x,a), y=Y
+	; HPLOT TO X,Y X=(x,a), y=Y
         lda     X_OLD
         ldx     #0
         ldy     Y_OLD
