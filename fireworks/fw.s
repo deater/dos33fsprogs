@@ -12,9 +12,9 @@
 
 
 STATE_LAUNCH_ROCKET		=	0
-STATE_MOVE_ROCKET		=	1
-STATE_START_EXPLOSION		=	2
-STATE_CONTINUE_EXPLOSION	=	3
+STATE_MOVE_ROCKET		=	2
+STATE_START_EXPLOSION		=	4
+STATE_CONTINUE_EXPLOSION	=	6
 
 ; Constants
 NUMSTARS 	= 16
@@ -87,7 +87,7 @@ done_fireworks:
 	;===========================
 	; LAUNCH_FIREWORK
 	;===========================
-	; cycles= 54+60+67+60+56+56+15+8+21+11 = 408
+	; cycles= 56+60+67+60+56+56+15+8+21+11 = 410
 
 launch_firework:
 
@@ -96,7 +96,7 @@ launch_firework:
 	and	#$4							; 2
 	sta	COLOR_GROUP	; HGR color group (0 PG or 4 BO)	; 3
 								;============
-								;	54
+								;	56
 
 	jsr	random16						; 6+42
 	lda	SEEDL							; 3
@@ -188,7 +188,8 @@ done_hill:
 								;===========
 								;	 21
 
-	lda	#STATE_MOVE_ROCKET					; 2
+;	lda	#STATE_MOVE_ROCKET					; 2
+	lda	#STATE_LAUNCH_ROCKET					; 2
 	sta	STATE				; move to launch	; 3
 
 	rts								; 6
