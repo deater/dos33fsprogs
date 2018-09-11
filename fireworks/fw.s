@@ -353,8 +353,8 @@ done_with_loop:
 
 not_done_with_launch:
 
-	lda	#$c0
-	jsr	WAIT
+;	lda	#$c0
+;	jsr	WAIT
 
 	inc	CURRENT_STEP
 
@@ -369,6 +369,9 @@ not_done_with_launch:
 
 start_explosion:
 
+	lda	#0
+	sta	XPOS_H
+
 	; Set X position
 
 	jsr	random16						; 6+42
@@ -376,13 +379,29 @@ start_explosion:
 	and	#$f			; 0..15				; 2
 	sec								; 2
 	sbc	#8			; -8..7				; 2
+	clc
+vmw:
+	bmi	blahblah
 
 	adc	X_OLD							; 3
 	sta	XPOS_L	;	xpos=x_old+(random()%16)-8; x +/- 8	; 3
 
 	lda	#0
+	adc	XPOS_H
 	sta	XPOS_H
 
+	jmp	blahblah2
+
+blahblah:
+
+	adc	X_OLD							; 3
+	sta	XPOS_L	;	xpos=x_old+(random()%16)-8; x +/- 8	; 3
+
+	lda	#$ff
+	adc	XPOS_H
+	sta	XPOS_H
+
+blahblah2:
 	; FIXME: XPOS from 255-280.  A hard problem.  Makes everything
 	;		more complicated, 16-bit math
 
@@ -434,20 +453,20 @@ continue_explosion:
 	; Draw spreading dots in white
 
 	cpy	#9							; 2
-	beq	explosion_erase
+	beq	explosion_erase						; ?
 
 	; hcolor_equals(color_group+3);
-	lda	COLOR_GROUP
-	clc
-	adc	#$3
-	tax
-	lda	colortbl,X		; get color from table
-	sta	HGR_COLOR
+	lda	COLOR_GROUP						; 3
+	clc								; 2
+	adc	#$3							; 2
+	tax								; 2
+	lda	colortbl,X		; get color from table		; 4+
+	sta	HGR_COLOR						; 3
 
-	ldx	TEMPY
-	stx	OFFSET
+	ldx	TEMPY							; 3
+	stx	OFFSET							; 3
 
-	jsr	explosion
+	jsr	explosion						; 6+
 
 explosion_erase:
 	;======================
@@ -455,40 +474,40 @@ explosion_erase:
 
 	; erase with proper color black (0 or 4)
 
-	ldx	COLOR_GROUP
-	lda	colortbl,X		; get color from table
-	sta	HGR_COLOR
+	ldx	COLOR_GROUP						; 3
+	lda	colortbl,X		; get color from table		; 4+
+	sta	HGR_COLOR						; 3
 
-	ldx	TEMPY
-	dex
-	stx	OFFSET
+	ldx	TEMPY							; 3
+	dex								; 2
+	stx	OFFSET							; 3
 
-	jsr	explosion
+	jsr	explosion						; 6
 
 done_with_explosion:
 
-	lda	#$c0
-	jsr	WAIT
+	lda	#$c0							;
+	jsr	WAIT							;
 
-	inc	TEMPY
-	lda	TEMPY
-	cmp	#10
-	beq	explosion_done
-	rts
+	inc	TEMPY							; 5
+	lda	TEMPY							; 3
+	cmp	#10							; 2
+	beq	explosion_done						; ?
+	rts								; 6
 
 explosion_done:
 	;==================================
 	; randomly draw more explosions
 	;==================================
-	jsr	random16
-	lda	SEEDL
-	and	#$2
-	sta	STATE
+	jsr	random16						; 6+42
+	lda	SEEDL							; 3
+	and	#$2							; 2
+	sta	STATE							; 3
 
 	; if 0, then move to state 0 (start over)
 	; if 2, then move to state 2 (new random explosion)
 
-	rts
+	rts								; 6
 
 
 
@@ -496,130 +515,138 @@ explosion_done:
 	; Draw explosion rays
 	;===============================
 	;
+	; Note: the western pixels don't do the full 16-bit math
+	;	as currently it's not possible for those to overflow 256
+	;
+	; cycles = 275+275+270+270+272+278+278+279+6=2203
+
 explosion:
 
 	; HPLOT X,Y: X= (y,x), Y=a
 
 	; Southeast pixel
-	clc
-	lda	XPOS_L
-	adc	OFFSET
-	tax
-	lda	XPOS_H
-	adc	#0
-	tay
-	clc
-	lda	YPOS_H
-	adc	OFFSET
-	jsr	hplot0		; hplot(xpos+o,ypos_h+o);
-
+	clc								; 2
+	lda	XPOS_L							; 3
+	adc	OFFSET							; 3
+	tax								; 2
+	lda	XPOS_H							; 3
+	adc	#0							; 2
+	tay								; 2
+	clc								; 2
+	lda	YPOS_H							; 3
+	adc	OFFSET							; 3
+	jsr	hplot0		; hplot(xpos+o,ypos_h+o);		; 6+244
+								;==============
+								;	  275
 
 	; Northeast Pixel
-	clc
-	lda	XPOS_L
-	adc	OFFSET
-	tax
-	lda	XPOS_H
-	adc	#0
-	tay
-	sec
-	lda	YPOS_H
-	sbc	OFFSET
+	clc								; 2
+	lda	XPOS_L							; 3
+	adc	OFFSET							; 3
+	tax								; 2
+	lda	XPOS_H							; 3
+	adc	#0							; 2
+	tay								; 2
+	sec								; 2
+	lda	YPOS_H							; 3
+	sbc	OFFSET							; 3
+	jsr	hplot0		; hplot(xpos+o,ypos_h-o);		; 6+244
+								;==============
+								;	  275
 
-	jsr	hplot0		; hplot(xpos+o,ypos_h-o);
+	; Northwest Pixel
+	sec								; 2
+	lda	XPOS_L							; 3
+	sbc	OFFSET							; 3
+	tax								; 2
+	ldy	#0							; 2
+	sec								; 2
+	lda	YPOS_H							; 3
+	sbc	OFFSET							; 3
+	jsr	hplot0		; hplot(xpos-o,ypos_h-o); NW		; 6+244
+								;==============
+								;	270
 
-
-	sec
-	lda	XPOS_L
-	sbc	OFFSET
-	tax
-	ldy	#0
-
-	sec
-	lda	YPOS_H
-	sbc	OFFSET
-
-	jsr	hplot0		; hplot(xpos-o,ypos_h-o);	NW
-
-
-	sec
-	lda	XPOS_L
-	sbc	OFFSET
-	tax
-	ldy	#0
-
-	clc
-	lda	YPOS_H
-	adc	OFFSET
-
-	jsr	hplot0		; hplot(xpos-o,ypos_h+o);	SW
-
-
-	; HPLOT X,Y: X= (y,x), Y=a
-
-	ldx	XPOS_L
-	ldy	XPOS_H
-
-	clc
-	lda	OFFSET
-	adc	OFFSET
-	adc	OFFSET
-	lsr
-	adc	YPOS_H
-
-	jsr	hplot0		; hplot(xpos,ypos_h+(o*1.5));	S
-
-	ldx	XPOS_L
-	ldy	#0
-
-	clc			; O   O*1.5  NEG
-	lda	OFFSET		; 0 = 0		0
-	adc	OFFSET		; 1 = 1		-1
-	adc	OFFSET		; 2 = 3		-3
-	lsr			; 3 = 4		-4
-	eor	#$FF		; 4 = 6		-6
-	clc
-	adc	#1
-	adc	YPOS_H
-
-	jsr	hplot0		; hplot(xpos,ypos_h-(o*1.5));	N
-
+	; Southwest Pixel
+	sec								; 2
+	lda	XPOS_L							; 3
+	sbc	OFFSET							; 3
+	tax								; 2
+	ldy	#0							; 2
+	clc								; 2
+	lda	YPOS_H							; 3
+	adc	OFFSET							; 3
+	jsr	hplot0		; hplot(xpos-o,ypos_h+o);	SW	; 6+244
+								;=============
+								;	 270
 
 	; HPLOT X,Y: X= (y,x), Y=a
 
+	; South Pixel
+	ldx	XPOS_L							; 3
+	ldy	XPOS_H							; 3
+	clc								; 2
+	lda	OFFSET							; 3
+	adc	OFFSET							; 3
+	adc	OFFSET							; 3
+	lsr								; 2
+	adc	YPOS_H							; 3
+	jsr	hplot0		; hplot(xpos,ypos_h+(o*1.5));	S	; 6+244
+								;=============
+								;	272
 
-	clc
-	lda	OFFSET
-	adc	OFFSET
-	adc	OFFSET
-	lsr
-	adc	XPOS_L
-	tax
-	ldy	XPOS_H
+	; North Pixel
+	ldx	XPOS_L							; 3
+	ldy	XPOS_H							; 3
+	clc			; O   O*1.5	NEG			; 2
+	lda	OFFSET		; 0 = 0		 0			; 3
+	adc	OFFSET		; 1 = 1		-1			; 3
+	adc	OFFSET		; 2 = 3		-3			; 3
+	lsr			; 3 = 4		-4			; 2
+	eor	#$FF		; 4 = 6		-6			; 2
+	clc								; 2
+	adc	#1							; 2
+	adc	YPOS_H							; 3
+	jsr	hplot0		; hplot(xpos,ypos_h-(o*1.5)); N		; 6+244
+								;==============
+								;	278
 
-	lda	YPOS_H
+	; HPLOT X,Y: X= (y,x), Y=a
 
-	jsr	hplot0		; hplot(xpos+(o*1.5),ypos_h);	E
+	; East Pixel
+	clc								; 2
+	lda	OFFSET							; 3
+	adc	OFFSET							; 3
+	adc	OFFSET							; 3
+	lsr								; 2
+	adc	XPOS_L							; 3
+	tax								; 2
+	lda	#0							; 2
+	adc	XPOS_H							; 3
+	tay								; 2
+	lda	YPOS_H							; 3
+	jsr	hplot0		; hplot(xpos+(o*1.5),ypos_h);	E	; 6+244
+								;==============
+								;	278
 
+	; West Pixel
+	clc			; O   O*1.5	NEG			; 2
+	lda	OFFSET		; 0 = 0		 0			; 3
+	adc	OFFSET		; 1 = 1		-1			; 3
+	adc	OFFSET		; 2 = 3		-3			; 3
+	lsr			; 3 = 4		-4			; 2
+	eor	#$FF		; 4 = 6		-6			; 2
+	clc								; 2
+	adc	#1							; 2
+	adc	XPOS_L							; 3
+	tax								; 2
+	ldy	#0							; 2
+	lda	YPOS_H							; 3
+	jsr	hplot0		; hplot(xpos-(o*1.5),ypos_h); W		; 6+244
+								;==============
+								;	279
 
-	clc			; O   O*1.5  NEG
-	lda	OFFSET		; 0 = 0		0
-	adc	OFFSET		; 1 = 1		-1
-	adc	OFFSET		; 2 = 3		-3
-	lsr			; 3 = 4		-4
-	eor	#$FF		; 4 = 6		-6
-	clc
-	adc	#1
-	adc	XPOS_L
-	tax
-
-	ldy	#0
-
-	lda	YPOS_H
-
-	jsr	hplot0		; hplot(xpos-(o*1.5),ypos_h);		// W
-
-	rts
+	rts								; 6
 
 
 
