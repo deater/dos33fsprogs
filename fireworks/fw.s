@@ -196,10 +196,10 @@ done_hill:
 								;	 11
 
 
-	;===============
-	; Move rocket
-	;===============
-	; cycles=24+11+20+18+14+53
+;==========================================================================
+; Move rocket
+;==========================================================================
+; cycles=24+11+20+18+14+53 = 140
 
 move_rocket:
 
@@ -351,35 +351,41 @@ done_bounds_checking:
 
 
 
-	;==========================
-	; if not done, draw rocket
-	;==========================
+;=======================================================================
+; draw rocket
+;=======================================================================
+;
 draw_rocket:
 
-	lda	CURRENT_STEP
-	cmp	MAX_STEPS
-	beq	erase_rocket
+	lda	CURRENT_STEP						; 3
+	cmp	MAX_STEPS						; 3
+	beq	erase_rocket						; ?
 
 	; set hcolor to proper white (3 or 7)
-	clc
-	lda	COLOR_GROUP
-	adc	#3
-	tax
-	lda	colortbl,X		; get color from table
-	sta	HGR_COLOR
+	clc								; 2
+	lda	COLOR_GROUP						; 3
+	adc	#3							; 2
+	tax								; 2
+	lda	colortbl,X		; get color from table		; 4+
+	sta	HGR_COLOR						; 3
 
 	; HPLOT X,Y: X= (y,x), Y=a
 
-	ldx	X_OLD
-	lda	Y_OLD
-	ldy	#0
-	jsr	hplot0			; hplot(x_old,y_old);
+	ldx	X_OLD							; 3
+	lda	Y_OLD							; 3
+	ldy	#0							; 2
+	jsr	hplot0			; hplot(x_old,y_old);		;6+244
 
 	; HPLOT TO X,Y X=(x,a), y=Y
-        lda     XPOS_L
-        ldx     #0
-        ldy     YPOS_H
-        jsr     hglin			; hplot_to(xpos_l,ypos_h);
+	ldx	XPOS_L
+	ldy	#0
+	lda	YPOS_H
+	jsr	hplot0
+
+;	lda	XPOS_L							; 3
+;	ldx	#0							; 2
+;	ldy	YPOS_H							; 3
+;	jsr	hglin			; hplot_to(xpos_l,ypos_h);	;?????
 
 
 erase_rocket:
@@ -397,10 +403,16 @@ erase_rocket:
 	jsr	hplot0			; hplot(x_old,y_old);
 
 	; HPLOT TO X,Y X=(x,a), y=Y
-        lda     X_OLD
-        ldx     #0
-        ldy     Y_OLD
-        jsr     hglin			; hplot_to(x_old,y_old);
+
+	ldx	X_OLD
+	ldy	#0
+	lda	Y_OLD
+	jsr	hplot0
+
+;	lda	X_OLD
+;	ldx	#0
+;	ldy	Y_OLD
+;	jsr	hglin			; hplot_to(x_old,y_old);
 
 done_with_loop:
 
@@ -414,8 +426,8 @@ done_with_loop:
 
 not_done_with_launch:
 
-;	lda	#$c0
-;	jsr	WAIT
+	lda	#$c0
+	jsr	WAIT
 
 	inc	CURRENT_STEP
 
@@ -423,15 +435,16 @@ not_done_with_launch:
 
 
 
-	;==================================
-	; Start explosion near x_old, y_old
-	;==================================
-	; cycles =
+;======================================================================
+; Start explosion near x_old, y_old
+;======================================================================
+; cycles =
+;
 
 start_explosion:
 
-	lda	#0
-	sta	XPOS_H
+	lda	#0							; 2
+	sta	XPOS_H							; 3
 
 	; Set X position
 
@@ -441,7 +454,7 @@ start_explosion:
 	sec								; 2
 	sbc	#8			; -8..7				; 2
 	clc
-vmw:
+
 	bmi	blahblah
 
 	adc	X_OLD							; 3
@@ -506,9 +519,14 @@ blahblah2:
 
 	rts								; 6
 
-	;===============================
-	; Continue Explosion
-	;===============================
+
+;==========================================================================
+; Continue Explosion
+;==========================================================================
+;
+; cycles cpy!=9 : 8+2230+2227+13+5  = 4483
+;	 cpy==9 : 8+    +2227+13+62 = 2310
+
 continue_explosion:
 	ldy	TEMPY							; 3
 
@@ -516,8 +534,12 @@ continue_explosion:
 	; Draw spreading dots in white
 
 	cpy	#9							; 2
-	beq	explosion_erase						; ?
+	beq	explosion_erase						; 3
+								;===========
+								;         8
 
+
+									; -1
 	; hcolor_equals(color_group+3);
 	lda	COLOR_GROUP						; 3
 	clc								; 2
@@ -529,7 +551,10 @@ continue_explosion:
 	ldx	TEMPY							; 3
 	stx	OFFSET							; 3
 
-	jsr	explosion						; 6+
+	jsr	explosion						; 6+2203
+								;============
+								;	2230
+
 
 explosion_erase:
 	;======================
@@ -545,8 +570,9 @@ explosion_erase:
 	dex								; 2
 	stx	OFFSET							; 3
 
-	jsr	explosion						; 6
-
+	jsr	explosion						; 6+2203
+								;==============
+								;	2227
 done_with_explosion:
 
 	lda	#$c0							;
@@ -555,7 +581,11 @@ done_with_explosion:
 	inc	TEMPY							; 5
 	lda	TEMPY							; 3
 	cmp	#10							; 2
-	beq	explosion_done						; ?
+	beq	explosion_done						; 3
+								;=============
+								;	 13
+
+									; -1
 	rts								; 6
 
 explosion_done:
@@ -571,7 +601,8 @@ explosion_done:
 	; if 2, then move to state 2 (new random explosion)
 
 	rts								; 6
-
+								;============
+								;	 62
 
 
 	;===============================
@@ -713,11 +744,12 @@ explosion:
 
 
 
-	;=============================
-	; Draw the stars
-	;=============================
-	; 7+ 280X + 5
-	; 16 stars = 4492
+;=========================================================================
+; Draw the stars
+;=========================================================================
+; 7+ 280X + 5
+; 16 stars = 4492
+
 .align $100
 draw_stars:
 	; HCOLOR = 3, white (though they are drawn purple)
