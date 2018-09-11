@@ -8,6 +8,11 @@
 ;	2: Start Explosion
 ;	3: Continue Explosion
 
+STATE_LAUNCH_ROCKET		=	0
+STATE_MOVE_ROCKET		=	1
+STATE_START_EXPLOSION		=	2
+STATE_CONTINUE_EXPLOSION	=	3
+
 ; Constants
 NUMSTARS 	= 16
 YSIZE		= 160
@@ -41,7 +46,7 @@ draw_fireworks:
 	jsr	HOME		; clear screen
 
 	jsr	hgr		; set high-res, clear screen, page0
-	lda	#0
+	lda	#STATE_LAUNCH_ROCKET
 	sta	STATE
 
 	jsr	draw_stars	; draw the stars
@@ -53,17 +58,17 @@ fireworks_state_machine:
 	bmi	done_fireworks		; if so, exit
 
 	lda	STATE
-	cmp	#0
+	cmp	#STATE_LAUNCH_ROCKET
 	bne	s1
 	jsr	launch_firework
 	jmp	fireworks_state_machine
 s1:
-	cmp	#1
+	cmp	#STATE_MOVE_ROCKET
 	bne	s2
 	jsr	move_rocket
 	jmp	fireworks_state_machine
 s2:
-	cmp	#2
+	cmp	#STATE_START_EXPLOSION
 	bne	s3
 	jsr	start_explosion
 	jmp	fireworks_state_machine
@@ -180,7 +185,7 @@ done_hill:
 								;===========
 								;	 21
 
-	lda	#1							; 2
+	lda	#STATE_MOVE_ROCKET					; 2
 	sta	STATE				; move to launch	; 3
 
 	rts								; 6
@@ -400,7 +405,7 @@ done_with_loop:
 	cmp	MAX_STEPS
 	bne	not_done_with_launch
 
-	lda	#2
+	lda	#STATE_START_EXPLOSION
 	sta	STATE
 
 
@@ -491,7 +496,9 @@ blahblah2:
 	ldy	#1							; 2
 	sty	TEMPY		; save Y				; 3
 
-	lda	#3		; move to continue explosion		; 2
+	; move to continue explosion
+	lda	#STATE_CONTINUE_EXPLOSION				; 2
+
 	sta	STATE							; 3
 
 	rts								; 6
