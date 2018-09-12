@@ -11,4 +11,6 @@ remove dead code
 adjust speed
 adjust colors of gradient?
 
+BUGS:
+	sometimes far left firework will wrap?
 

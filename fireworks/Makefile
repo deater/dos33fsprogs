@@ -17,7 +17,7 @@ FIREWORKS:	fireworks.o
 	ld65 -o FIREWORKS fireworks.o -C ../linker_scripts/apple2_1000.inc
 
 fireworks.o:	fireworks.s gr_copy.s random16.s fw.s hgr.s \
-		vapor_lock.s gr_hline.s state_machine.s \
+		vapor_lock.s gr_hline.s state_machine.s move_letters.s \
 		background_final.inc
 	ca65 -o fireworks.o fireworks.s -l fireworks.lst
 

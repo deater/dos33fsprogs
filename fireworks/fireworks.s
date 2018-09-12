@@ -15,6 +15,12 @@ GBASH		= $27
 BASL		= $28
 BASH		= $29
 FRAME		= $60
+LETTERL = $63
+LETTERH = $64
+LETTERX = $65
+LETTERY = $66
+LETTERD = $67
+LETTER  = $68
 BLARGH		= $69
 HGR_COLOR	= $E4
 STATE		= $ED
@@ -72,6 +78,18 @@ setup_background:
 	lda	#0
 	sta	DRAW_PAGE
 	sta	STATE
+init_letters:
+        lda     #<letters
+        sta     LETTERL
+        lda     #>letters
+        sta     LETTERH
+        lda     #39
+        sta     LETTERX
+        lda     #24
+        sta     LETTERY
+        lda     #30
+        sta     LETTERD
+
 
 	;=============================
 	; Load graphic page0
@@ -391,6 +409,7 @@ jump_table:
 .include "fw.s"
 .include "hgr.s"
 .include "vapor_lock.s"
+.include "move_letters.s"
 
 background:
 
