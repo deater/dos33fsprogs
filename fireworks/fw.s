@@ -15,6 +15,7 @@ STATE_LAUNCH_ROCKET		=	0
 STATE_MOVE_ROCKET		=	2
 STATE_START_EXPLOSION		=	4
 STATE_CONTINUE_EXPLOSION	=	6
+STATE_STALL_ROCKET		=	8
 
 ; Constants
 NUMSTARS 	= 16
@@ -425,21 +426,18 @@ done_with_loop:
 								;	  9
 
 									;-1
-	lda	#STATE_START_EXPLOSION
-;	lda	#STATE_LAUNCH_ROCKET					; 2
+	lda	#STATE_START_EXPLOSION					; 2
 	sta	STATE							; 3
 	jmp	not_done_with_launch2					; 3
 								;==========
 								;	  7
 
 not_done_with_launch:
-	lda	STATE	; nop						; 3
-	nop								; 2
+	lda	#STATE_STALL_ROCKET					; 2
+	sta	STATE							; 3
 	nop								; 2
 								;==========
 								;	  7
-;	lda	#$c0
-;	jsr	WAIT
 not_done_with_launch2:
 
 	inc	CURRENT_STEP						; 5

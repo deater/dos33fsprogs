@@ -1,17 +1,17 @@
 sound effects:
 	one more at start explosion?
+adjust speed:
+	slow for launch, fast for fireworks
 
-text scrolling (split?)
-
-cycle invariant HPLOT TO
 
 re-arrange to minimize padding
 remove dead code
 
-adjust speed
-adjust colors of gradient?
+Not sure:
+	adjust colors of gradient?
 
-version number in the BASIC booter
+REACH:
+	cycle invariant HPLOT TO
 
 BUGS:
 	sometimes far left firework will wrap?

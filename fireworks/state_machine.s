@@ -97,3 +97,31 @@ action_continue_explosion:
 	jmp	check_keyboard				; 3
 
 
+
+
+	;=================================
+	; action_stall_rocket
+	;=================================
+	; and take 4504 cycles to do it
+
+	; 4504 - 8 = 4496
+action_stall_rocket:
+
+	lda	#STATE_MOVE_ROCKET					; 2
+	sta	STATE							; 3
+
+
+	; Try X=12 Y=68 cycles=4489 R7
+	nop	;
+	nop	;
+	lda	STATE	;3
+
+        ldy	#68							; 2
+Bloop1:	ldx	#12							; 2
+Bloop2:	dex								; 2
+	bne	Bloop2							; 2nt/3
+	dey								; 2
+	bne	Bloop1							; 2nt/3
+
+	jmp	check_keyboard			; 3
+
