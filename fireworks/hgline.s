@@ -33,12 +33,12 @@ HISCR	=	$C055
 	;==========================
 	; HGR2
 	;==========================
-;hgr2:
+hgr2:
 	; F3D8
-;	bit	HISCR		; BIT SW.HISCR Use PAGE2 ($C055)
-;	bit	MIXCLR		; BIT SW.MIXCLR
-;	lda	#$40		; HIRES Page 2 at $4000
-;	bne	sethpg
+	bit	HISCR		; BIT SW.HISCR Use PAGE2 ($C055)
+	bit	MIXCLR		; BIT SW.MIXCLR
+	lda	#$40		; HIRES Page 2 at $4000
+	bne	sethpg
 	;==========================
 	; HGR
 	;==========================
@@ -245,6 +245,30 @@ hplot0:
 								;============
 								;	 244
 
+move_left_or_right:
+	; F465
+	bpl	move_right
+
+	lda	HMASK							; 3
+	lsr								; 2
+	bcs	lr_2
+	eor	#$c0							; 2
+lr_1:
+	sta	HMASK							; 3
+	rts								; 6
+
+lr_2:
+	dey
+	bpl	lr_3
+	ldy	#39
+lr_3:
+	lda	#$c0
+lr_4:
+	sta	HMASK
+	sty	HGR_HORIZ
+	lda	HGR_BITS
+
+
 	;===================================
 	; COLOR_SHIFT
 	;===================================
@@ -265,6 +289,208 @@ done_color_shift:
 	lda	HGR_BITS	; nop					; 3
 	nop								; 2
 	nop								; 2
+	rts								; 6
+
+
+	;==============================================================
+
+move_right:
+	lda	HMASK
+	asl
+	eor	#$80
+	bmi	lr_1
+	lda	#$81
+	iny
+	cpy	#40
+	bcc	lr_4
+	ldy	#0
+	bcs	lr_4
+
+
+con_1c:	.byte $1c
+con_03:	.byte $03
+con_04:	.byte $04
+
+move_up_or_down:
+	; F4D3
+	bmi	move_down
+
+	clc
+	lda	GBASH
+	bit	con_1c		; CON.1C
+	bne	mu_5
+	asl	GBASL
+	bcs	mu_3
+	bit	con_03		; CON.03
+	beq	mu_1
+	adc	#$1f
+	sec
+	bcs	 mu_4
+	; F4Eb
+mu_1:
+	adc	#$23
+	pha								; 3
+	lda	GBASL
+	adc	#$b0
+	bcs	mu_2
+	adc	#$f0
+	; f4f6
+mu_2:
+	sta	GBASL
+	pla
+	bcs	mu_4
+mu_3:
+	adc	#$1f
+mu_4:
+	ror	GBASL
+mu_5:
+	adc	#$fc
+ud_1:
+	sta	GBASH
+	rts
+
+	; f505
+move_down:
+	lda	GBASH
+	adc	#$4
+	bit	con_1c
+	bne	ud_1
+	asl	GBASL
+	bcc	md_2
+	adc	#$e0
+	clc
+	bit	con_04
+	beq	md_3;
+	lda	GBASL
+	adc	#$50
+	eor	#$f0
+	beq	md_1
+	eor	#$f0
+md_1:
+	sta	GBASL
+	lda	HGR_PAGE
+	bcc	md_3
+md_2:
+	adc	#$e0
+md_3:
+	ror	GBASL
+	bcc	ud_1
+
+	;===================================
+	; HGLIN
+	;===================================
+	; cycles = 22+
+
+hglin:
+
+	; F53A: calc quadrant
+	pha								; 3
+	sec								; 2
+	sbc	HGR_X							; 3
+	pha								; 3
+	txa								; 2
+	sbc	HGR_X+1							; 3
+	sta	HGR_QUADRANT						; 3
+								;===========
+								;	 22
+
+	; F544
+	bcs	hglin_1
+
+	pla								; 4
+	eor	#$ff							; 2
+	adc	#1							; 2
+	pha								; 3
+	lda	#0							; 2
+	sbc	HGR_QUADRANT						; 3
+
+	; F550
+hglin_1:
+	sta	HGR_DX+1						; 3
+	sta	HGR_E+1							; 3
+	pla								; 4
+	sta	HGR_DX							; 3
+	sta	HGR_E							; 3
+	pla								; 4
+	sta	HGR_X							; 3
+	stx	HGR_X+1							; 3
+	tya								; 2
+	clc								; 2
+	sbc	HGR_Y							; 3
+	bcc	hglin_2							; 3
+
+	eor	#$ff							; 2
+	adc	#$fe							; 2
+hglin_2:
+	; F568
+	sta	HGR_DY							; 3
+	sty	HGR_Y							; 3
+	ror	HGR_QUADRANT
+	sec								; 2
+	sbc	HGR_DX							; 3
+	tax								; 2
+	lda	#$ff							; 3
+	sbc	HGR_DX+1						; 3
+	sta	HGR_COUNT						; 3
+	ldy	HGR_HORIZ						; 3
+	bcs	movex2		; always?				; 3
+	; f57c
+movex:
+	asl								; 2
+	jsr	move_left_or_right					; 6+?
+	sec								; 2
+
+	; f581
+movex2:
+	lda	HGR_E							; 3
+	adc	HGR_DY							; 3
+	sta	HGR_E							; 3
+	lda	HGR_E+1							; 3
+	sbc	#0							; 2
+movex2_1:
+	sta	HGR_E+1							; 3
+	lda	(GBASL),y
+	eor	HGR_BITS						; 3
+	and	HMASK							; 3
+	eor	(GBASL),y
+	sta	(GBASL),y
+	inx								; 2
+	bne	movex2_2
+
+	inc	HGR_COUNT
+	beq	rts22
+	; F59e
+movex2_2:
+	lda	HGR_QUADRANT						; 3
+	bcs	movex
+
+	jsr	move_up_or_down						; 6+
+	clc								; 2
+	lda	HGR_E							; 3
+	adc	HGR_DX							; 3
+	sta	HGR_E							; 3
+	lda	HGR_E+1							; 3
+	adc	HGR_DX+1						; 3
+	bvc	movex2_1						; 3
+
+
+	;===============================
+	; HPLOT_TO
+	;===============================
+	;
+	; cycles = 10 + 6 + X + 6
+hplot_to:
+
+	; F712: put vars in right location
+	sty	DSCTMP							; 3
+	tay								; 2
+	txa								; 2
+	ldx	DSCTMP							; 3
+								;============
+								;	 10
+
+	jsr	hglin							;6+?
+rts22:
 	rts								; 6
 
 .align	$100

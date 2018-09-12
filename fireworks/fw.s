@@ -42,48 +42,6 @@ X_OLD		= $FD
 X_OLDER		= $FE
 TEMPY		= $FF
 
-
-
-draw_fireworks:
-
-	jsr	HOME		; clear screen
-
-	jsr	hgr		; set high-res, clear screen, page0
-	lda	#STATE_LAUNCH_ROCKET
-	sta	STATE
-
-	jsr	draw_stars	; draw the stars
-
-fireworks_state_machine:
-
-	; see if key pressed
-	lda	KEYPRESS		; check if keypressed
-	bmi	done_fireworks		; if so, exit
-
-	lda	STATE
-	cmp	#STATE_LAUNCH_ROCKET
-	bne	s1
-	jsr	launch_firework
-	jmp	fireworks_state_machine
-s1:
-	cmp	#STATE_MOVE_ROCKET
-	bne	s2
-	jsr	move_rocket
-	jmp	fireworks_state_machine
-s2:
-	cmp	#STATE_START_EXPLOSION
-	bne	s3
-	jsr	start_explosion
-	jmp	fireworks_state_machine
-s3:
-	jsr	continue_explosion
-	jmp	fireworks_state_machine
-
-
-done_fireworks:
-	rts
-
-
 .align	$100
 
 	;===========================
