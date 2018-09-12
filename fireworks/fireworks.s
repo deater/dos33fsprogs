@@ -178,6 +178,10 @@ loopB:
 
 display_loop:
 
+	;===================================
+	; HIRES PAGE0 for the top 152 lines
+	;===================================
+
 	; 152 * 65 = 9880 - 12 = 9868
 
 	bit	HIRES						; 4
@@ -188,46 +192,51 @@ display_loop:
 	lda	DRAW_PAGE					; 3
 
 	ldy	#24							; 2
-sloop1:
-	ldx	#81							; 2
-sloop2:
-	dex								; 2
-	bne	sloop2							; 2nt/3
-
+hgloop1:ldx	#81							; 2
+hgloop2:dex								; 2
+	bne	hgloop2							; 2nt/3
 	dey								; 2
-	bne	sloop1							; 2nt/3
+	bne	hgloop1							; 2nt/3
+
+
+
+	;====================================================
+	; LORES PAGE0/PAGE1 alternating for the next 24 lines
+	;====================================================
+
+
 
 	bit	LORES						; 4
+	ldy	#20		; *2=40 lines			; 2
+							;============
+							;	  6
 
 
-	; bit(4) -1(fallthrough) + loop*5 -1(fallthrouh)+4 extra = 61
-	; 5L = 55
-
-
-	ldy	#20						; 2
-
+	; we set PAGE0 (4) then want to NOP (61) for a total of 65
 bouter_loop:
-
 	bit	PAGE0						; 4
 	ldx	#12		; 65 cycles with PAGE0		; 2
 bpage0_loop:			; delay 61+bit
 	dex							; 2
 	bne	bpage0_loop					; 2/3
+							;=============
+							; 6+(12*5)-1=65
 
-
-	; bit(4) -1(fallthrough) + loop*5 -1(fallthrouh)+4 extra = 61
-	; 5L = 55
+	; we set PAGE1 (4) as well as dey (2) and bne (3) then nop (55)
+	;
 
 	bit	PAGE1						; 4
 	ldx	#11		; 65 cycles with PAGE1		; 2
-				;
-bpage1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
+bpage1_loop:
 	dex							; 2
 	bne	bpage1_loop					; 2/3
+							;=============
+							; 6+(11*5)-1=60
 
 	dey							; 2
 	bne	bouter_loop					; 2/3
-
+							;==============
+							; 5 to make 65
 
 
 	;======================================================

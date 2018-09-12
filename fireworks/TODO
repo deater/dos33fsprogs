@@ -1,17 +1,14 @@
-sound effects, allow disabling
-	xor the locations of reads?
-	just restart?
+sound effects:
+	one more at start explosion?
 
 text scrolling (split?)
 
 cycle invariant HPLOT TO
 
 re-arrange to minimize padding
-
 remove dead code
 
 adjust speed
-
-adjust colors of gradient
+adjust colors of gradient?
 
 
