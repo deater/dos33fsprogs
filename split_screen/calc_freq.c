@@ -1,16 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char **argv) {
 
 	int x,y,cycles,desired,range=10;
 
-//	desired=3116;
-//	desired=4152;
-//	desired=5196;
-//	desired=4547;
-//	desired=9685;
-	desired=4680;
+	desired=3116;
 
+	if (argc>1) desired=atoi(argv[1]);
 
 	printf("You want %d cycles\n",desired);
 	for(x=0;x<255;x++) {

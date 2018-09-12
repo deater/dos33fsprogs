@@ -84,6 +84,8 @@ done_fireworks:
 	rts
 
 
+.align	$100
+
 	;===========================
 	; LAUNCH_FIREWORK
 	;===========================
@@ -196,10 +198,12 @@ done_hill:
 								;	 11
 
 
+.align	$100
+
 ;==========================================================================
 ; Move rocket
 ;==========================================================================
-; cycles=24+11+20+18+14+53 = 140+11 = 151
+; cycles=24+11+20+18+14+53 = 140+1096 = 1236
 
 move_rocket:
 
@@ -363,45 +367,46 @@ done_moving:
 done_bounds_checking:
 
 
-	lda	#STATE_LAUNCH_ROCKET					; 2
-	sta	STATE							; 3
-	rts								; 6
-
-
-
-
-
-
 ;=======================================================================
 ; draw rocket
 ;=======================================================================
 ;
+;	cs!=mx	9+15+258+258+3+10+258+258+9+7+11 = 1096
+;	cs==mx	9+  +   +   + +10+258+258+9+7+11 = 562 (need 534)
 draw_rocket:
 
 	lda	CURRENT_STEP						; 3
 	cmp	MAX_STEPS						; 3
-	beq	erase_rocket						; ?
+	beq	skip_drawing_rocket					; 3
+								;===========
+								;	  9
 
 	; set hcolor to proper white (3 or 7)
+									;-1
 	clc								; 2
 	lda	COLOR_GROUP						; 3
 	adc	#3							; 2
 	tax								; 2
 	lda	colortbl,X		; get color from table		; 4+
 	sta	HGR_COLOR						; 3
-
+								;============
+								;	 15
 	; HPLOT X,Y: X= (y,x), Y=a
 
 	ldx	X_OLD							; 3
 	lda	Y_OLD							; 3
 	ldy	#0							; 2
 	jsr	hplot0			; hplot(x_old,y_old);		;6+244
+								;=============
+								;	258
 
 	; HPLOT TO X,Y X=(x,a), y=Y
-	ldx	XPOS_L
-	ldy	#0
-	lda	YPOS_H
-	jsr	hplot0
+	ldx	XPOS_L							; 3
+	ldy	#0							; 2
+	lda	YPOS_H							; 3
+	jsr	hplot0							;6+244
+								;=============
+								;	258
 
 ;	lda	XPOS_L							; 3
 ;	ldx	#0							; 2
@@ -409,27 +414,42 @@ draw_rocket:
 ;	jsr	hglin			; hplot_to(xpos_l,ypos_h);	;?????
 
 
+	jmp	erase_rocket						; 3
+
+skip_drawing_rocket:
+	; Try X=7 Y=13 cycles=534
+	ldy	#13							; 2
+sdloop1:ldx	#7							; 2
+sdloop2:dex								; 2
+	bne	sdloop2							; 2nt/3
+	dey								; 2
+	bne	sdloop1							; 2nt/3
+
 erase_rocket:
 	; erase with proper color black (0 or 4)
 
-	ldx	COLOR_GROUP
-	lda	colortbl,X		; get color from table
-	sta	HGR_COLOR
-
+	ldx	COLOR_GROUP						; 3
+	lda	colortbl,X		; get color from table		; 4+
+	sta	HGR_COLOR						; 3
+								;===========
+								;	 10
 	; HPLOT X,Y: X= (y,x), Y=a
 
-	ldx	X_OLDER
-	lda	Y_OLDER
-	ldy	#0
-	jsr	hplot0			; hplot(x_old,y_old);
+	ldx	X_OLDER							; 3
+	lda	Y_OLDER							; 3
+	ldy	#0							; 2
+	jsr	hplot0			; hplot(x_old,y_old);		; 6+244
+								;============
+								;	258
 
 	; HPLOT TO X,Y X=(x,a), y=Y
 
-	ldx	X_OLD
-	ldy	#0
-	lda	Y_OLD
-	jsr	hplot0
-
+	ldx	X_OLD							; 3
+	ldy	#0							; 2
+	lda	Y_OLD							; 3
+	jsr	hplot0							;6+244
+								;=============
+								;	 258
 ;	lda	X_OLD
 ;	ldx	#0
 ;	ldy	Y_OLD
@@ -437,25 +457,36 @@ erase_rocket:
 
 done_with_loop:
 
-	lda	CURRENT_STEP
-	cmp	MAX_STEPS
-	bne	not_done_with_launch
+	lda	CURRENT_STEP						; 3
+	cmp	MAX_STEPS						; 3
+	bne	not_done_with_launch					; 3
+								;=============
+								;	  9
 
+									;-1
 ;	lda	#STATE_START_EXPLOSION
-	lda	#STATE_LAUNCH_ROCKET
-	sta	STATE
-
+	lda	#STATE_LAUNCH_ROCKET					; 2
+	sta	STATE							; 3
+	jmp	not_done_with_launch2					; 3
+								;==========
+								;	  7
 
 not_done_with_launch:
+	lda	STATE	; nop						; 3
+	nop								; 2
+	nop								; 2
+								;==========
+								;	  7
+;	lda	#$c0
+;	jsr	WAIT
+not_done_with_launch2:
 
-	lda	#$c0
-	jsr	WAIT
+	inc	CURRENT_STEP						; 5
+	rts								; 6
+								;===========
+								;	 11
 
-	inc	CURRENT_STEP
-
-	rts
-
-
+.align	$100
 
 ;======================================================================
 ; Start explosion near x_old, y_old
@@ -626,6 +657,8 @@ explosion_done:
 								;============
 								;	 62
 
+
+.align	$100
 
 	;===============================
 	; Draw explosion rays

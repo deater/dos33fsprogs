@@ -484,6 +484,7 @@ hplot_to:
 rts22:
 	rts								; 6
 
+.align	$100
 
 	;=============================
 	; HCOLOR_EQUALS
