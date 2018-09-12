@@ -15,6 +15,7 @@ GBASH		= $27
 BASL		= $28
 BASH		= $29
 FRAME		= $60
+WAITING		= $62
 LETTERL = $63
 LETTERH = $64
 LETTERX = $65
@@ -78,6 +79,7 @@ setup_background:
 	lda	#0
 	sta	DRAW_PAGE
 	sta	STATE
+	sta	WAITING
 init_letters:
         lda     #<letters
         sta     LETTERL
@@ -205,24 +207,23 @@ display_loop:
 	; 152 * 65 = 9880
 	;	      -12 for HIRES/PAGE0 at top
 	;	       -5 for LORES+ldy+br fallthrough at bottom
-	;	     -121 for move_letters
-	;	     9742
+	;	     -132 for move_letters
+	;	     9731
 
 	bit	HIRES						; 4
 	bit	PAGE0						; 4
 	bit	FULLGR						; 4
 							;===========
 							;	 12
-	jsr	move_letters					; 6+110
+	jsr	move_letters					; 6+126
 
-	; Try X=9 Y=191 cycles=9742
+	; Try X=242 Y=8 cycles=9729 R2
 
-;	lda	DRAW_PAGE	; nop				; 3
-;	nop							; 2
+	nop							; 2
 
 
-	ldy	#191							; 2
-hgloop1:ldx	#9							; 2
+	ldy	#8							; 2
+hgloop1:ldx	#242							; 2
 hgloop2:dex								; 2
 	bne	hgloop2							; 2nt/3
 	dey								; 2
@@ -390,9 +391,9 @@ restart:
 	eor	#$C0
 	sta	sound1+2
 
-	lda	sound2+2
-	eor	#$C0
-	sta	sound2+2
+;	lda	sound2+2
+;	eor	#$C0
+;	sta	sound2+2
 
 	lda	sound3+2
 	eor	#$C0

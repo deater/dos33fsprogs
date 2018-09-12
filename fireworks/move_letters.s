@@ -1,19 +1,28 @@
 	;===============================================
 	; Move Letters
 	;===============================================
-	; Normal P0	=13+2+22+41+37 = 115
-	; Normal P1	=13+2+22+41+37 = 115
-	; End of line   =13+2+22+41+9+(28) = 115
-	; done entirely =13+5+(6+37+26+28) = 115
-	; Next line	=13+5+9+34+(26+28) = 115
+	; Normal P0	=6+13+2+22+46+37 = 126
+	; Normal P1	=6+13+2+22+46+37 = 126
+	; End of line   =6+13+2+22+46+9+(28) = 126
+	; Next line	=6+13+5+14+34+(26+28) = 126
+	; done entirely =6+13+5+(6+42+26+28) = 126
+	; Waiting	=6+7+(11+6+42+26+28) = 126
 
-
-
-
-
-	; all forced to be 115
+	; all forced to be 126
 
 move_letters:
+	ldy	WAITING							; 3
+	beq	not_waiting						; 3
+								;============
+								;	  6
+
+									;-1
+	dec	WAITING							; 5
+	jmp	wait_it_out						; 3
+								;===========
+								;	  7
+
+not_waiting:
 	; load letter from pointer, save into LETTER
 
 	ldy	#0							; 2
@@ -59,6 +68,9 @@ letter_page1:
 
 	;============================
 letter_erase:
+	ldy	LETTERX		; nop					; 3
+	nop			; nop					; 5
+
 	ldy	#0		; erase old char with space		; 2
 	lda	#' '|$80						; 2
 	ldy	LETTERX							; 3
@@ -75,7 +87,7 @@ letter_erase:
 	cmp	LETTERD							; 3
 	beq	letter_next						; 3
 								;===========
-								;        41
+								;        46
 
 									;-1
 	lda	#0							; 2
@@ -107,11 +119,14 @@ letter_special:
 
 
 									; -1
+	and	#$7f		; clear top				; 2
+	sta	WAITING		; this is waiting value			; 3
+
 	ldy	#1		; otherwise, Y,X pair			; 2
 	lda	(LETTERL),Y	; get Y, put in LETTERY			; 5
 	sta	LETTERY							; 3
 								;===========
-								;	  9
+								;	 14
 
 	iny			; get dest				; 2
 	lda	(LETTERL),Y						; 5
@@ -129,12 +144,20 @@ letter_special:
 
 								;===========
 								;        34
+
+wait_it_out:
+	; wait 11
+	inc	BLARGH		; 5
+	lda	LETTERH		; 3
+	lda	LETTERH		; 3
+
 letter_done:
 	lda	LETTERH		; 3
 	lda	LETTERH		; 3
 
-waste_37:
+waste_42:
 	ldx	#0		; 2
+	inc	BLARGH		; 5
 	inc	BLARGH		; 5
 	inc	BLARGH		; 5
 	inc	BLARGH		; 5
@@ -171,7 +194,7 @@ letters:
 	.byte	22+128,28,"CODE BY",128
 
 	.byte	23,28,    "DEATER",128
-	.byte	23+128,28,"DEATER",128
+	.byte	23+128,28,"DEATER",198
 
 	.byte   22,28,    " ",128
 	.byte   22+128,28," ",128
@@ -183,7 +206,7 @@ letters:
 	.byte	22+128,28,"FIREWORKS",128
 
 	.byte	23,28,    "FOZZTEXX",128
-	.byte	23+128,28,"FOZZTEXX",128
+	.byte	23+128,28,"FOZZTEXX",198
 
 	.byte   22,28,    " ",128
 	.byte   22+128,28," ",128

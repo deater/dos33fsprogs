@@ -585,7 +585,9 @@ explosion_erase_waste:
 	; waste 2176-4 = 2172
 
 sound2:
-	bit	SPEAKER							; 4
+;	bit	SPEAKER							; 4
+	nop
+	nop
 
 	; Try X=47 Y=9 cycles=2170 R2
 
