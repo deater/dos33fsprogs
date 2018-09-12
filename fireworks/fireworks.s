@@ -29,7 +29,9 @@ KEYPRESS= $C000
 KEYRESET= $C010
 SPEAKER	= $C030
 SET_GR	= $C050 ; Enable graphics
+SET_TEXT= $C051 ; Enable text
 FULLGR	= $C052	; Full screen, no text
+TEXTGR	= $C053 ; Split screen
 PAGE0	= $C054 ; Page0
 PAGE1	= $C055 ; Page1
 LORES	= $C056	; Enable LORES graphics
@@ -183,18 +185,19 @@ display_loop:
 	;===================================
 
 	; 152 * 65 = 9880
-	;	       -8 for HIRES/PAGE0 at top
+	;	      -12 for HIRES/PAGE0 at top
 	;	       -5 for LORES+ldy+br fallthrough at bottom
-	;	     9867
+	;	     9863
 
 	bit	HIRES						; 4
 	bit	PAGE0						; 4
+	bit	FULLGR						; 4
 							;===========
-							;	  8
-	; Try X=22 Y=85 cycles=9861 R6
+							;	 12
+	; Try X=22 Y=85 cycles=9861 R2
 
-	lda	DRAW_PAGE	; nop				; 3
-	lda	DRAW_PAGE	; nop				; 3
+;	lda	DRAW_PAGE	; nop				; 3
+	nop							; 2
 
 
 	ldy	#85							; 2
@@ -251,24 +254,40 @@ bpage1_loop:
 
 	; we set PAGE0 (4) then want to NOP (61) for a total of 65
 couter_loop:
+	bit	FULLGR						; 4
 	bit	PAGE0						; 4
-	ldx	#12		; 65 cycles with PAGE0		; 2
+	ldx	#6						; 2
 cpage0_loop:			; delay 61+bit
 	dex							; 2
 	bne	cpage0_loop					; 2/3
 							;=============
-							; 6+(12*5)-1=65
+							; 10+(6*5)-1=39
+	bit	TEXTGR						; 4
+	bit	$1000						; 4
+	bit	$1000						; 4
+	bit	$1000						; 4
+	bit	$1000						; 4
+	bit	$1000						; 4
+	nop							; 2
 
 	; we set PAGE1 (4) as well as dey (2) and bne (3) then nop (55)
 	;
 
+	bit	FULLGR						; 4
 	bit	PAGE1						; 4
-	ldx	#11		; 65 cycles with PAGE1		; 2
+	ldx	#6						; 2
 cpage1_loop:
 	dex							; 2
 	bne	cpage1_loop					; 2/3
 							;=============
-							; 6+(11*5)-1=60
+							; 10+(6*5)-1=39
+
+	bit	TEXTGR						; 4
+	bit	$1000						; 4
+	bit	$1000						; 4
+	bit	$1000						; 4
+	lda	DRAW_PAGE					; 3
+	nop							; 2
 
 	dey							; 2
 	bne	couter_loop					; 2/3
