@@ -287,13 +287,25 @@ check_keyboard:
 
 	lda	KEYPRESS				; 4
 	bpl	no_keypress				; 3
-	jmp	loop_forever
+	jmp	restart
 no_keypress:
 
 	jmp	display_loop				; 3
 
-loop_forever:
-	jmp	loop_forever
+
+	; Restart and toggle sound
+restart:
+	; self mofifying code, flip from bit C030 to bit 0030
+	lda	sound1+2
+	eor	#$C0
+	sta	sound1+2
+
+
+	lda	sound2+2
+	eor	#$C0
+	sta	sound2+2
+
+	jmp	setup_background
 
 
 jump_table:
