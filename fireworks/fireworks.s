@@ -390,10 +390,13 @@ restart:
 	eor	#$C0
 	sta	sound1+2
 
-
 	lda	sound2+2
 	eor	#$C0
 	sta	sound2+2
+
+	lda	sound3+2
+	eor	#$C0
+	sta	sound3+2
 
 	jmp	setup_background
 

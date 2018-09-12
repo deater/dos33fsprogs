@@ -62,21 +62,22 @@ Yloop2:	dex								; 2
 	;=================================
 	; and take 4504 cycles to do it
 
-	; we take 445 so waste 4059
+	; we take 449 so waste 4055
 action_start_explosion:
 
-	; Try X=30 Y=26 cycles=4057 R2
+	; Try X=15 Y=50 cycles=4051 R4
 
 	nop
+	nop
 
-        ldy	#26							; 2
-Zloop1:	ldx	#30							; 2
+        ldy	#50							; 2
+Zloop1:	ldx	#15							; 2
 Zloop2:	dex								; 2
 	bne	Zloop2							; 2nt/3
 	dey								; 2
 	bne	Zloop1							; 2nt/3
 
-	jsr	start_explosion			; 6+436 = 442
+	jsr	start_explosion			; 6+440 = 446
 
 	jmp	check_keyboard			; 3
 

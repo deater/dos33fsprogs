@@ -450,7 +450,7 @@ not_done_with_launch2:
 ;======================================================================
 ; Start explosion near x_old, y_old
 ;======================================================================
-; cycles = 67+16+63+16+258+16 = 436
+; cycles = 67+16+63+16+258+20 = 440
 ;
 
 start_explosion:
@@ -528,7 +528,10 @@ exp_sub_done:
 	jsr	hplot0		; hplot(x_old,y_old);			; 6+244
 								;==============
 								;	258
-	; Spread the explosion
+	; Make sound and ready explosion
+
+sound3:
+	bit	SPEAKER							; 4
 
 	ldy	#1							; 2
 	sty	TEMPY		; save Y				; 3
@@ -540,7 +543,7 @@ exp_sub_done:
 
 	rts								; 6
 								;=============
-								;	16
+								;	20
 
 ;==========================================================================
 ; Continue Explosion
