@@ -188,8 +188,7 @@ done_hill:
 								;===========
 								;	 21
 
-;	lda	#STATE_MOVE_ROCKET					; 2
-	lda	#STATE_LAUNCH_ROCKET					; 2
+	lda	#STATE_MOVE_ROCKET					; 2
 	sta	STATE				; move to launch	; 3
 
 	rts								; 6
@@ -200,7 +199,7 @@ done_hill:
 ;==========================================================================
 ; Move rocket
 ;==========================================================================
-; cycles=24+11+20+18+14+53 = 140
+; cycles=24+11+20+18+14+53 = 140+11 = 151
 
 move_rocket:
 
@@ -262,10 +261,18 @@ no_peak:
 	;========================================
 	; Check if out of bounds and stop moving
 	;========================================
+	; bcc = 8+7+12+20+6 = 53
+	; bcs/bcc = 8+7+12+20+6 = 53
+	; bcs/bcs/bmi  = 8+7+5+33 = 53
+	; bcs/bcs/bpl/bcs  = 8+7+5+7+20+6 = 53
+	; bcs/bcs/bpl/bcc/bcc  = 8+7+5+7+20+6 = 53
+	; bcs/bcs/bpl/bcc/bcs  = 8+7+5+7+20+6 = 53
 
 	lda	XPOS_L		; if (xpos_l<=margin) too far left	; 3
 	cmp	#MARGIN							; 2
 	bcc	done_moving_first					; 3
+								;===========
+								;	  8
 
 	; Due to 256 wraparound, the above will catch this case???
 ;	cmp	#XSIZE-MARGIN	; if (xpos_l>=(xsize-margin)) too far right
@@ -275,18 +282,23 @@ no_peak:
 	lda	YPOS_H		; if (ypos_h<=margin) too far up	; 3
 	cmp	#MARGIN							; 2
 	bcc	done_moving_second					; 3
-
+								;===========
+								;	  7
 	;======================
 	; if falling downward
 	;======================
 									; -1
 	lda	Y_VELOCITY_H						; 3
 	bmi	going_up	; if (y_velocity_h>0)			; 3
+								;============
+								;	  5
 
 	; if too close to ground, explode				; -1
 	lda	YPOS_H		; if (ypos_h>=ysize-margin)		; 3
 	cmp	#(YSIZE-MARGIN)						; 2
 	bcs	done_moving_third					; 3
+								;============
+								;	  7
 
 	; if fallen a bit past peak, explode				; -1
 	sec			; if (ypos_h>ysize-(ysize-peak)/2)	; 2
@@ -307,9 +319,12 @@ done_moving_ft:
 	nop								; 2
 	nop								; 2
 	jmp	done_bounds_checking					; 3
+								;===========
+								;	  6
 
 going_up:
-	; 30 cycles
+	; 33 cycles
+	lda	MAX_STEPS						; 3
 	lda	MAX_STEPS						; 3
 	lda	MAX_STEPS						; 3
 	lda	MAX_STEPS						; 3
@@ -343,9 +358,14 @@ done_moving_third:
 done_moving:
 	lda	MAX_STEPS						; 3
 	sta	CURRENT_STEP						; 3
-
+								;============
+								;	  6
 done_bounds_checking:
 
+
+	lda	#STATE_LAUNCH_ROCKET					; 2
+	sta	STATE							; 3
+	rts								; 6
 
 
 
@@ -421,7 +441,8 @@ done_with_loop:
 	cmp	MAX_STEPS
 	bne	not_done_with_launch
 
-	lda	#STATE_START_EXPLOSION
+;	lda	#STATE_START_EXPLOSION
+	lda	#STATE_LAUNCH_ROCKET
 	sta	STATE
 
 

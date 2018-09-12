@@ -34,3 +34,25 @@ Xloop2:	dex								; 2
 
 	jmp	check_keyboard			; 3
 
+
+	;=================================
+	; action_move_rocket
+	;=================================
+	; and take 4504 cycles to do it
+
+	; we take 160 so waste 4344
+action_move_rocket:
+
+	; Try X=19 Y=43 cycles=4344
+
+        ldy	#43							; 2
+Yloop1:	ldx	#19							; 2
+Yloop2:	dex								; 2
+	bne	Yloop2							; 2nt/3
+	dey								; 2
+	bne	Yloop1							; 2nt/3
+
+	jsr	move_rocket			; 6+151 = 157
+
+	jmp	check_keyboard			; 3
+
