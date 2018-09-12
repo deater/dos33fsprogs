@@ -154,9 +154,12 @@ hposn:
 	adc	HGR_X							; 3
 	; A = remainder						;===========
 								;	 22
+;============================================================================
 
 	cpy	#0							; 2
 	beq	done_mod_nop_23						; 3
+								;==========
+								;	  5
 theres_high:
 									; -1
 	clc								; 2
@@ -166,19 +169,25 @@ theres_high:
 	adc	#36							; 2
 	sta	HGR_HORIZ						; 3
 	pla								; 4
-									;====
 
 	cmp	#7							; 2
 	bcc	done_mod_nop14	; blt					; 3
+								;============
+								;	 23
+
+
 									; -1
 	sec								; 2
 	sbc	#7							; 2
 	inc	HGR_HORIZ						; 5
+	ldy	HGR_HORIZ	; nop					; 3
 	jmp	done_mod						; 3
-						;===========================
-						; Y=HIGH,NOR = 23+5 = 28 (14)
-						; Y=HIGH,R = 23+16 = 42
-						; Y=LOW = 5 + 37(14+23)= 42
+								;============
+								;	14
+				;===========================
+				; Y=HIGH,bcc = 5+23+ 14 = 42
+				; Y=HIGH,bcs = 5+23+ 14 = 42
+				; Y=LOW = 5 + 14+23 = 42
 
 done_mod_nop_23:
 	inc	HGR_HORIZ,X		; (nop)				; 6

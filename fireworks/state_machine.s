@@ -88,9 +88,9 @@ Zloop2:	dex								; 2
 
 	; we take 4495 so waste 9
 action_continue_explosion:
-	lda	STATE
-	lda	STATE
-	lda	STATE
+	lda	STATE	; nop 3
+	lda	STATE	; nop 3
+	lda	STATE	; nop 3
 
 	jsr	continue_explosion			; 6+4486 = 4492
 

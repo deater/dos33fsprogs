@@ -1,9 +1,15 @@
+sound effects, allow disabling
+	xor the locations of reads?
+	just restart?
 
-cycle invariant random16
-cycle invariant HPLOT/HLIN
-dispatcher
+text scrolling (split?)
 
+cycle invariant HPLOT TO
 
-fix XPOS to not wrap (explosion proper XPOS handling)
-sound effects
+re-arrange to minimize padding
+
+remove dead code
+
+adjust speed
+
 
