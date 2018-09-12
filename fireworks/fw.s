@@ -89,16 +89,19 @@ done_fireworks:
 	;===========================
 	; LAUNCH_FIREWORK
 	;===========================
-	; cycles= 56+60+67+60+56+56+15+8+21+11 = 410
+	; cycles= 60+60+67+60+56+56+15+8+21+11 = 414
 
 launch_firework:
+
+sound1:
+	bit	SPEAKER							; 4
 
 	jsr	random16						; 6+42
 	lda	SEEDL							; 3
 	and	#$4							; 2
 	sta	COLOR_GROUP	; HGR color group (0 PG or 4 BO)	; 3
 								;============
-								;	56
+								;	60
 
 	jsr	random16						; 6+42
 	lda	SEEDL							; 3
@@ -620,13 +623,17 @@ continue_explosion:
 								;============
 								;	2233
 explosion_erase_waste:
+	; waste 2176-4 = 2172
 
-	; Try X=7 Y=53 cycles=2174 R2
+sound2:
+	bit	SPEAKER							; 4
 
-	nop
+	; Try X=47 Y=9 cycles=2170 R2
 
-	ldy	#53							; 2
-eeloop1:ldx	#7							; 2
+	nop			; 2
+
+	ldy	#9							; 2
+eeloop1:ldx	#47							; 2
 eeloop2:dex								; 2
 	bne	eeloop2							; 2nt/3
 	dey								; 2

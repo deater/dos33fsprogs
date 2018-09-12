@@ -18,19 +18,19 @@ action_stars:
 	;=================================
 	; and take 4504 cycles to do it
 
-	; we take 419 so waste 4085
+	; we take 423 so waste 4081
 action_launch_firework:
 
-	; Try X=203 Y=4 cycles=405
+	; Try X=26 Y=30 cycles=4081
 
-        ldy	#4							; 2
-Xloop1:	ldx	#203							; 2
+        ldy	#30							; 2
+Xloop1:	ldx	#26							; 2
 Xloop2:	dex								; 2
 	bne	Xloop2							; 2nt/3
 	dey								; 2
 	bne	Xloop1							; 2nt/3
 
-	jsr	launch_firework			; 6+410 = 416
+	jsr	launch_firework			; 6+414 = 420
 
 	jmp	check_keyboard			; 3
 

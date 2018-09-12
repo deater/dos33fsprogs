@@ -1,0 +1,18 @@
+Apple II Cycle-Counting Fireworks demo
+	by Vince "Deater" Weaver
+	vince@deater.net
+	http://www.deater.net/weave/vmwprod/
+	
+Loosely based on a BASIC program by FozzTexx
+
+Usage:
+	BRUN FIREWORKS
+
+	press any key to toggle sound and restart
+
+This code uses cycle counting extensively.
+This is how HGR and 40x96 LORES are mixed.
+
+HPLOT0 was made cycle-invariant, which was a pain.
+HGLIN (allowing HPLOT TO) was intended to be too, but I ran out of interest.
+

@@ -27,6 +27,7 @@ WHICH		= $FB
 ; Soft Switches
 KEYPRESS= $C000
 KEYRESET= $C010
+SPEAKER	= $C030
 SET_GR	= $C050 ; Enable graphics
 FULLGR	= $C052	; Full screen, no text
 PAGE0	= $C054 ; Page0
