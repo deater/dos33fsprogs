@@ -85,9 +85,9 @@ init_letters:
         sta     LETTERH
         lda     #39
         sta     LETTERX
-        lda     #24
+        lda     #22
         sta     LETTERY
-        lda     #30
+        lda     #28
         sta     LETTERD
 
 
@@ -205,21 +205,24 @@ display_loop:
 	; 152 * 65 = 9880
 	;	      -12 for HIRES/PAGE0 at top
 	;	       -5 for LORES+ldy+br fallthrough at bottom
-	;	     9863
+	;	     -121 for move_letters
+	;	     9742
 
 	bit	HIRES						; 4
 	bit	PAGE0						; 4
 	bit	FULLGR						; 4
 							;===========
 							;	 12
-	; Try X=22 Y=85 cycles=9861 R2
+	jsr	move_letters					; 6+110
+
+	; Try X=9 Y=191 cycles=9742
 
 ;	lda	DRAW_PAGE	; nop				; 3
-	nop							; 2
+;	nop							; 2
 
 
-	ldy	#85							; 2
-hgloop1:ldx	#22							; 2
+	ldy	#191							; 2
+hgloop1:ldx	#9							; 2
 hgloop2:dex								; 2
 	bne	hgloop2							; 2nt/3
 	dey								; 2
