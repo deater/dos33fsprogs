@@ -182,22 +182,29 @@ display_loop:
 	; HIRES PAGE0 for the top 152 lines
 	;===================================
 
-	; 152 * 65 = 9880 - 12 = 9868
+	; 152 * 65 = 9880
+	;	       -8 for HIRES/PAGE0 at top
+	;	       -5 for LORES+ldy+br fallthrough at bottom
+	;	     9867
 
 	bit	HIRES						; 4
 	bit	PAGE0						; 4
+							;===========
+							;	  8
+	; Try X=22 Y=85 cycles=9861 R6
 
-	; Try X=81 Y=24 cycles=9865 R3
+	lda	DRAW_PAGE	; nop				; 3
+	lda	DRAW_PAGE	; nop				; 3
 
-	lda	DRAW_PAGE					; 3
 
-	ldy	#24							; 2
-hgloop1:ldx	#81							; 2
+	ldy	#85							; 2
+hgloop1:ldx	#22							; 2
 hgloop2:dex								; 2
 	bne	hgloop2							; 2nt/3
 	dey								; 2
 	bne	hgloop1							; 2nt/3
 
+	bit	LORES						; 4
 
 
 	;====================================================
@@ -205,12 +212,7 @@ hgloop2:dex								; 2
 	;====================================================
 
 
-
-	bit	LORES						; 4
-	ldy	#20		; *2=40 lines			; 2
-							;============
-							;	  6
-
+	ldy	#12		; *2=24 lines			; 2
 
 	; we set PAGE0 (4) then want to NOP (61) for a total of 65
 bouter_loop:
@@ -239,12 +241,48 @@ bpage1_loop:
 							; 5 to make 65
 
 
+
+	;=========================================================
+	; LORES PAGE0/PAGE1+TEXT alternating for the next 16 lines
+	;=========================================================
+
+
+	ldy	#8		; *2=16 lines			; 2
+
+	; we set PAGE0 (4) then want to NOP (61) for a total of 65
+couter_loop:
+	bit	PAGE0						; 4
+	ldx	#12		; 65 cycles with PAGE0		; 2
+cpage0_loop:			; delay 61+bit
+	dex							; 2
+	bne	cpage0_loop					; 2/3
+							;=============
+							; 6+(12*5)-1=65
+
+	; we set PAGE1 (4) as well as dey (2) and bne (3) then nop (55)
+	;
+
+	bit	PAGE1						; 4
+	ldx	#11		; 65 cycles with PAGE1		; 2
+cpage1_loop:
+	dex							; 2
+	bne	cpage1_loop					; 2/3
+							;=============
+							; 6+(11*5)-1=60
+
+	dey							; 2
+	bne	couter_loop					; 2/3
+							;==============
+							; 5 to make 65
+
+
+
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 	;			4550
 	;			  +1  fallthrough
-	;			  -2  ldy at entry
+	;			  -2  for ldy in previous
 	;			 -35  call through jumptable
 	;			  -7  keyboard
 	;			  -3  jmp
