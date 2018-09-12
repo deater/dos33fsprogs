@@ -56,3 +56,28 @@ Yloop2:	dex								; 2
 
 	jmp	check_keyboard			; 3
 
+
+	;=================================
+	; action_start_explosion
+	;=================================
+	; and take 4504 cycles to do it
+
+	; we take 445 so waste 4059
+action_start_explosion:
+
+	; Try X=30 Y=26 cycles=4057 R2
+
+	nop
+
+        ldy	#26							; 2
+Zloop1:	ldx	#30							; 2
+Zloop2:	dex								; 2
+	bne	Zloop2							; 2nt/3
+	dey								; 2
+	bne	Zloop1							; 2nt/3
+
+	jsr	start_explosion			; 6+436 = 442
+
+	jmp	check_keyboard			; 3
+
+

@@ -250,7 +250,7 @@ move_rocket:
 	; if we went higher, adjust peak
 	lda	YPOS_H							; 3
 	cmp	PEAK							; 3
-	bmi	no_peak_nop						; 3
+	bcc	no_peak_nop	; blt					; 3
 
 									;-1
 	sta	PEAK							; 3
@@ -464,8 +464,8 @@ done_with_loop:
 								;	  9
 
 									;-1
-;	lda	#STATE_START_EXPLOSION
-	lda	#STATE_LAUNCH_ROCKET					; 2
+	lda	#STATE_START_EXPLOSION
+;	lda	#STATE_LAUNCH_ROCKET					; 2
 	sta	STATE							; 3
 	jmp	not_done_with_launch2					; 3
 								;==========
@@ -491,46 +491,50 @@ not_done_with_launch2:
 ;======================================================================
 ; Start explosion near x_old, y_old
 ;======================================================================
-; cycles =
+; cycles = 67+16+63+16+258+16 = 436
 ;
 
 start_explosion:
 
+	; Set X position
+
 	lda	#0							; 2
 	sta	XPOS_H							; 3
-
-	; Set X position
 
 	jsr	random16						; 6+42
 	lda	SEEDL							; 3
 	and	#$f			; 0..15				; 2
 	sec								; 2
 	sbc	#8			; -8..7				; 2
-	clc
+	clc								; 2
+	bmi	signextend_neg						; 3
+								;============
+								;	 67
 
-	bmi	blahblah
+									;-1
+	adc	X_OLD							; 3
+	sta	XPOS_L	;	xpos=x_old+(random()%16)-8; x +/- 8	; 3
+
+	lda	#0							; 2
+	adc	XPOS_H							; 3
+	sta	XPOS_H							; 3
+
+	jmp	exp_sub_done						; 3
+								;===========
+								;	 16
+signextend_neg:
 
 	adc	X_OLD							; 3
 	sta	XPOS_L	;	xpos=x_old+(random()%16)-8; x +/- 8	; 3
 
-	lda	#0
-	adc	XPOS_H
-	sta	XPOS_H
+	lda	#$ff							; 2
+	adc	XPOS_H							; 3
+	sta	XPOS_H							; 3
+	nop								; 2
+								;===========
+								;	 16
 
-	jmp	blahblah2
-
-blahblah:
-
-	adc	X_OLD							; 3
-	sta	XPOS_L	;	xpos=x_old+(random()%16)-8; x +/- 8	; 3
-
-	lda	#$ff
-	adc	XPOS_H
-	sta	XPOS_H
-
-blahblah2:
-	; FIXME: XPOS from 255-280.  A hard problem.  Makes everything
-	;		more complicated, 16-bit math
+exp_sub_done:
 
 	; set Y position
 
@@ -541,6 +545,8 @@ blahblah2:
 	sbc	#8			; -8..7				; 2
 	adc	Y_OLD							; 3
 	sta	YPOS_H	;	ypos_h=y_old+(random()%16)-8; y +/- 8	; 3
+								;============
+								;	 63
 
 	; draw white (with fringes)
 
@@ -550,28 +556,33 @@ blahblah2:
 	tax								; 2
 	lda	colortbl,X		; get color from table		; 4+
 	sta	HGR_COLOR						; 3
+								;===========
+								;	 16
 
-;	hplot(xpos,ypos_h);	// draw at center of explosion
+	; hplot(xpos,ypos_h);	draw at center of explosion
 
 	; HPLOT X,Y: X= (y,x), Y=a
 
 	ldx	XPOS_L							; 3
 	lda	YPOS_H							; 3
-	ldy	#0		; never above 255?			; 3
-	jsr	hplot0			; hplot(x_old,y_old);		; 6+244
-
+	ldy	#0		; never above 255			; 2
+	jsr	hplot0		; hplot(x_old,y_old);			; 6+244
+								;==============
+								;	258
 	; Spread the explosion
 
 	ldy	#1							; 2
 	sty	TEMPY		; save Y				; 3
 
 	; move to continue explosion
-	lda	#STATE_CONTINUE_EXPLOSION				; 2
+;	lda	#STATE_CONTINUE_EXPLOSION			; 2
+	lda	#STATE_LAUNCH_ROCKET					; 2
 
 	sta	STATE							; 3
 
 	rts								; 6
-
+								;=============
+								;	16
 
 ;==========================================================================
 ; Continue Explosion
