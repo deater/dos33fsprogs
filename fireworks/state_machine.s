@@ -81,3 +81,19 @@ Zloop2:	dex								; 2
 	jmp	check_keyboard			; 3
 
 
+	;=================================
+	; action_continue_explosion
+	;=================================
+	; and take 4504 cycles to do it
+
+	; we take 4495 so waste 9
+action_continue_explosion:
+	lda	STATE
+	lda	STATE
+	lda	STATE
+
+	jsr	continue_explosion			; 6+4486 = 4492
+
+	jmp	check_keyboard				; 3
+
+

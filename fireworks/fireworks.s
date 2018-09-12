@@ -299,7 +299,7 @@ jump_table:
         .word   (action_launch_firework-1)
         .word   (action_move_rocket-1)
         .word   (action_start_explosion-1)
-        .word   (action_stars-1)
+        .word   (action_continue_explosion-1)
 
 
 

@@ -575,8 +575,7 @@ exp_sub_done:
 	sty	TEMPY		; save Y				; 3
 
 	; move to continue explosion
-;	lda	#STATE_CONTINUE_EXPLOSION			; 2
-	lda	#STATE_LAUNCH_ROCKET					; 2
+	lda	#STATE_CONTINUE_EXPLOSION				; 2
 
 	sta	STATE							; 3
 
@@ -588,8 +587,8 @@ exp_sub_done:
 ; Continue Explosion
 ;==========================================================================
 ;
-; cycles cpy!=9 : 8+2230+2227+13+5  = 4483
-;	 cpy==9 : 8+    +2227+13+62 = 2310
+; cycles cpy!=9 : 8+2233+2227+13+5  = 4486
+;	 cpy==9 : 8+    +2227+13+62 = 2310	waste 2176
 
 continue_explosion:
 	ldy	TEMPY							; 3
@@ -598,7 +597,7 @@ continue_explosion:
 	; Draw spreading dots in white
 
 	cpy	#9							; 2
-	beq	explosion_erase						; 3
+	beq	explosion_erase_waste					; 3
 								;===========
 								;         8
 
@@ -616,8 +615,23 @@ continue_explosion:
 	stx	OFFSET							; 3
 
 	jsr	explosion						; 6+2203
+
+	jmp	explosion_erase						; 3
 								;============
-								;	2230
+								;	2233
+explosion_erase_waste:
+
+	; Try X=7 Y=53 cycles=2174 R2
+
+	nop
+
+	ldy	#53							; 2
+eeloop1:ldx	#7							; 2
+eeloop2:dex								; 2
+	bne	eeloop2							; 2nt/3
+	dey								; 2
+	bne	eeloop1							; 2nt/3
+
 
 
 explosion_erase:
@@ -639,8 +653,8 @@ explosion_erase:
 								;	2227
 done_with_explosion:
 
-	lda	#$c0							;
-	jsr	WAIT							;
+;	lda	#$c0							;
+;	jsr	WAIT							;
 
 	inc	TEMPY							; 5
 	lda	TEMPY							; 3
@@ -658,11 +672,11 @@ explosion_done:
 	;==================================
 	jsr	random16						; 6+42
 	lda	SEEDL							; 3
-	and	#$2							; 2
+	and	#$4							; 2
 	sta	STATE							; 3
 
 	; if 0, then move to state 0 (start over)
-	; if 2, then move to state 2 (new random explosion)
+	; if 1, then move to state 4 (new random explosion)
 
 	rts								; 6
 								;============
