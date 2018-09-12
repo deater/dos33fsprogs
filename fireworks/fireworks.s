@@ -277,36 +277,39 @@ bpage1_loop:
 couter_loop:
 	bit	FULLGR						; 4
 	bit	PAGE0						; 4
-	ldx	#6						; 2
-cpage0_loop:			; delay 61+bit
+	ldx	#5						; 2
+cpage0_loop:
 	dex							; 2
 	bne	cpage0_loop					; 2/3
 							;=============
-							; 10+(6*5)-1=39
+							; 10+(5*5)-1=34
 	bit	TEXTGR						; 4
 	bit	$1000						; 4
 	bit	$1000						; 4
 	bit	$1000						; 4
 	bit	$1000						; 4
 	bit	$1000						; 4
-	nop							; 2
+	bit	$1000						; 4
+	lda	DRAW_PAGE					; 3
 
 	; we set PAGE1 (4) as well as dey (2) and bne (3) then nop (55)
 	;
 
 	bit	FULLGR						; 4
 	bit	PAGE1						; 4
-	ldx	#6						; 2
+	ldx	#5						; 2
 cpage1_loop:
 	dex							; 2
 	bne	cpage1_loop					; 2/3
 							;=============
-							; 10+(6*5)-1=39
+							; 10+(5*5)-1=34
 
 	bit	TEXTGR						; 4
 	bit	$1000						; 4
 	bit	$1000						; 4
 	bit	$1000						; 4
+	lda	DRAW_PAGE					; 3
+	nop							; 2
 	lda	DRAW_PAGE					; 3
 	nop							; 2
 

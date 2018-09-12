@@ -11,6 +11,8 @@ remove dead code
 adjust speed
 adjust colors of gradient?
 
+version number in the BASIC booter
+
 BUGS:
 	sometimes far left firework will wrap?
 
