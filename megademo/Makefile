@@ -39,4 +39,4 @@ C64C.BIN:	c64.bmp
 	$(B2D) c64.bmp HGR
 
 clean:		
-		rm -f *~ *.o *.lst *.inc MEGADEMO c64.img
+		rm -f *~ *.o *.lst MEGADEMO c64.img
