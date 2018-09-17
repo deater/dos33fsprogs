@@ -35,4 +35,4 @@ loop_forever:
 	.include	"lz4_decode.s"
 	.include	"c64_opener.s"
 	.include	"falling_apple.s"
-
+	.include	"gr_offsets.s"
