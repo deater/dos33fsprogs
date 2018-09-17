@@ -21,7 +21,7 @@ MEGADEMO:	megademo.o
 
 megademo.o:	megademo.s \
 	zp.inc hardware.inc \
-	gr_offsets.s \
+	gr_hline.s gr_offsets.s vapor_lock.s \
 	c64_opener.s c64.img.lz4 \
 	falling_apple.s apple_40_96.inc
 	ca65 -o megademo.o megademo.s -l megademo.lst
