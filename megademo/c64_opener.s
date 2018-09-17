@@ -4,10 +4,11 @@
 ; Apple II has a lot of trouble making clear text with bluish background
 ; would be a lot clearer if I used black and white
 
+c64_opener:
+
 	;===================
 	; set graphics mode
 	;===================
-	jsr	HOME
 
 	bit	PAGE0                   ; first graphics page
 	bit	FULLGR			; full screen graphics

@@ -11,28 +11,18 @@
 	;===================
 	jsr	HOME
 
-	bit	PAGE0                   ; first graphics page
-	bit	FULLGR			; full screen graphics
-	bit	HIRES			; hires mode !!!
-	bit	SET_GR			; graphics mode
 
-	lda	#<c64
-	sta	LZ4_SRC
-	lda	#>c64
-	sta	LZ4_SRC+1
+	; C64 Opening Sequence
 
-	lda	#<c64_end
-	sta	LZ4_END
-	lda	#>c64_end
-	sta	LZ4_END+1
+;	jsr	c64_opener
 
+	; Falling Apple II
 
-	lda	#<$2000
-	sta	LZ4_DST
-	lda	#>$2000
-	sta	LZ4_DST+1
+	jsr	falling_apple
 
-	jsr	lz4_decode
+	; Starring Screens
+
+	; E-mail arriving
 
 
 	;===================
@@ -43,11 +33,5 @@ do_nothing:
 
 
 	.include	"lz4_decode.s"
+	.include	"c64_opener.s"
 
-
-	;===================
-	; graphics
-	;===================
-c64:
-.incbin "c64.img.lz4",11
-c64_end:

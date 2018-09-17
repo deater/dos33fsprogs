@@ -19,7 +19,7 @@ MEGADEMO:	megademo.o
 
 megademo.o:	megademo.s \
 	zp.inc hardware.inc \
-	c64.img.lz4
+	c64_opener.s c64.img.lz4
 	ca65 -o megademo.o megademo.s -l megademo.lst
 
 
