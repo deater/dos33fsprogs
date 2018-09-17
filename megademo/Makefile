@@ -2,6 +2,8 @@ include ../Makefile.inc
 
 DOS33 = ../dos33fs-utils/dos33
 B2D = ../bmp2dhr/b2d
+PNG_TO_40x96 = ../gr-utils/png_to_40x96
+
 
 all:	megademo.dsk
 
@@ -19,9 +21,15 @@ MEGADEMO:	megademo.o
 
 megademo.o:	megademo.s \
 	zp.inc hardware.inc \
-	c64_opener.s c64.img.lz4
+	c64_opener.s c64.img.lz4 \
+	falling_apple.s apple_40_96.inc
 	ca65 -o megademo.o megademo.s -l megademo.lst
 
+
+####
+
+apple_40_96.inc:	./images/apple_40_96.png
+	$(PNG_TO_40x96) asm ./images/apple_40_96.png apple > apple_40_96.inc
 
 ####
 

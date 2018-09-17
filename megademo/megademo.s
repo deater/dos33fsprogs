@@ -26,12 +26,13 @@
 
 
 	;===================
-	; do nothing
+	; Loop Forever
 	;===================
-do_nothing:
-	jmp	do_nothing
+loop_forever:
+	jmp	loop_forever
 
 
 	.include	"lz4_decode.s"
 	.include	"c64_opener.s"
+	.include	"falling_apple.s"
 
