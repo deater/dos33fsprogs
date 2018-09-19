@@ -89,7 +89,7 @@ init_letters:
         sta     LETTERX
         lda     #22
         sta     LETTERY
-        lda     #28
+        lda     #25
         sta     LETTERD
 
 
@@ -150,27 +150,31 @@ init_letters:
 	; setup graphics for vapor lock
 	;==============================
 
-	jsr	vapor_lock				; 6 for rts?
+	jsr	vapor_lock				; 6
 
-	; found first line of black after green, at up to line 26 on screen
-        ; so we want roughly 22 lines * 4 = 88*65 = 5720 + 4550 = 10270
-	; - 65 (for the scanline we missed) = 10205 - 12 = 10193
+	; vapor lock returns with us at beginning of hsync in line
+	; 114 (7410 cycles), so with 5070 lines to go
+
+	; so we have 5070 + 4550 = 9620 to kill
 
 	jsr	gr_copy_to_current		; 6+ 9292
-	; 10193 - 9298 - 6 = 889
-	; Fudge factor (unknown) -24 = 865
+
+	; now we have 322 left
 
 	; GR part
 	bit	LORES							; 4
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
 
-	; Try X=88 Y=2 cycles=893 R2
+	; 322 - 12 = 310
+	; - 3 for jmp
+	; 307
 
-	nop
-        ldy     #2							; 2
+	; Try X=9 Y=6 cycles=307
+
+        ldy	#6							; 2
 loopA:
-        ldx	#88							; 2
+	ldx	#9							; 2
 loopB:
         dex                                                             ; 2
         bne     loopB                                                   ; 2nt/3
@@ -178,7 +182,7 @@ loopB:
         dey                                                             ; 2
         bne     loopA                                                   ; 2nt/3
 
-        jmp     display_loop
+        jmp     display_loop						; 3
 .align  $100
 
 
@@ -284,9 +288,9 @@ cpage0_loop:
 	bne	cpage0_loop					; 2/3
 							;=============
 							; 10+(5*5)-1=34
+	bit	$1000						; 4
+	bit	$1000						; 4
 	bit	TEXTGR						; 4
-	bit	$1000						; 4
-	bit	$1000						; 4
 	bit	$1000						; 4
 	bit	$1000						; 4
 	bit	$1000						; 4
@@ -305,9 +309,10 @@ cpage1_loop:
 							;=============
 							; 10+(5*5)-1=34
 
+	bit	$1000						; 4
+	bit	$1000						; 4
 	bit	TEXTGR						; 4
-	bit	$1000						; 4
-	bit	$1000						; 4
+
 	bit	$1000						; 4
 	lda	DRAW_PAGE					; 3
 	nop							; 2
@@ -421,6 +426,7 @@ jump_table:
 .include "hgr.s"
 .include "vapor_lock.s"
 .include "move_letters.s"
+.include "delay_a.s"
 
 background:
 
