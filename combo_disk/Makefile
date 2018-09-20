@@ -1,5 +1,7 @@
 include ../Makefile.inc
 
+DOS33 = ../dos33fs-utils/dos33
+
 all:	combo_disk.dsk
 
 combo_disk.dsk:	../two-liners/ENTROPY \
@@ -8,7 +10,8 @@ combo_disk.dsk:	../two-liners/ENTROPY \
 	../split_screen/CREDITS \
 	../mode7_demo/MODE7_DEMO \
 	../mockingboard/KSP_THEME_6CH \
-	../fancy_lores/DISP4096
+	../fancy_lores/DISP4096 \
+	../fireworks/FIREWORKS
 	$(DOS33) -y combo_disk.dsk BSAVE -a 0x0c00 ../two-liners/ENTROPY
 	$(DOS33) -y combo_disk.dsk BSAVE -a 0x1000 ../waterfall/WATERFALL
 	$(DOS33) -y combo_disk.dsk BSAVE -a 0x5900 ../still_alive/SA_COMPRESSED
@@ -18,6 +21,7 @@ combo_disk.dsk:	../two-liners/ENTROPY \
 	$(DOS33) -y combo_disk.dsk BSAVE -a 0x4000 ../mockingboard/KSP_THEME_6CH KSP-THEME
 	$(DOS33) -y combo_disk.dsk BSAVE -a 0x1000 ../fancy_lores/DISP4096
 	$(DOS33) -y combo_disk.dsk BSAVE -a 0x1000 ../fancy_lores/DISP4048D
+	$(DOS33) -y combo_disk.dsk BSAVE -a 0x1000 ../fireworks/FIREWORKS
 
 clean:	
 	rm -f *~ *.o *.lst
