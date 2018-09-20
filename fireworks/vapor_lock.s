@@ -6,53 +6,22 @@ vapor_lock:
 	; Clear Page0
 	lda	#$0
 	sta	DRAW_PAGE
-	lda	#$ff				; full screen dark green $44
+	lda	#$ff				; full screen white	$ff
 	jsr	clear_gr
 
 	lda	#$aa
 	ldy	#24
-	jsr	clear_page_loop			; make top half red $11
+	jsr	clear_page_loop			; make top half grey2 $aa
 
-	ldy	#00				; 0
-	sty	$728+20
-	iny					; 1
-	sty	$728+21
-	iny					; 2
-	sty	$728+22
-	iny					; 3
-	sty	$728+23
-	iny					; 4
-	sty	$728+24
-	iny					; 5
-	sty	$728+25
-	iny					; 6
-	sty	$728+26
-	iny					; 7
-	sty	$728+27
-	iny					; 8
-	sty	$728+28
-	iny					; 9
-	sty	$728+29
-	iny					; a
-	sty	$728+30
-	iny					; b
-	sty	$728+31
-	iny					; c
-	sty	$728+32
-	iny					; d
-	sty	$728+33
-	iny					; e
-	sty	$728+34
-	iny					; f
-	sty	$728+35
-	iny                                     ; 10
-	sty	$728+36
+	; set up a rainbow to aid in exact lock
+
+	ldy	#00
+rainbow_loop:
+	tya
+	sta	$728+20,Y
 	iny
-	sty	$728+37
-	iny
-	sty	$728+38
-	iny
-	sty	$728+39
+	cpy	#20
+	bne	rainbow_loop
 
 ;btt:
 ;	jmp	btt
@@ -232,8 +201,8 @@ qloop:
 	inc	$0
 	inc	$0
 	inc	$0
-	inc	$0
-	inc	$0
+;	inc	$0
+;	inc	$0
 
 
 	lda	$C051
