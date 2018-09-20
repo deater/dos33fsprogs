@@ -128,90 +128,29 @@ waterfall_demo:
 	; setup graphics for vapor lock
 	;==============================
 
-	; Clear Page0 to all green
-	lda	#$0
-	sta	DRAW_PAGE
-	lda	#$44
-	jsr	clear_gr
+	jsr	vapor_lock						; 6
 
-	; Make top half of screen blue, down to line 26
-	lda	#$11
-	ldy	#24
-	jsr	clear_page_loop
-
-
-	;=====================================================
-	; attempt vapor lock
-	;  by reading the "floating bus" we can see most recently
-	;  written value of the display
-	; we look for $55 (which is the grey line)
-	;=====================================================
-	; See:
-	;	Have an Apple Split by Bob Bishop
-        ;	Softalk, October 1982
-
-	; Challenges: each scan line scans 40 bytes.
-	; The blanking happens at the *beginning*
-	; So 65 bytes are scanned, starting at adress of the line - 25
-
-	; the scan takes 8 cycles, look for 4 repeats of the value
-	; to avoid false positive found if the horiz blanking is mirroring
-	; the line (max 3 repeats in that case)
-
-vapor_lock_loop:		; first make sure we have all blue
-	lda	#$11							; 2
-zxloop:
-	ldx	#$04							; 2
-wiloop:
-	cmp	$C051							; 4
-	bne	zxloop							; 2/3
-	dex								; 2
-	bne	wiloop							; 2/3
-
-	lda	#$44		; now look for our color (4 times)	; 2
-zloop:
-	ldx	#$04							; 2
-
-	; what cycle does CMP happen at?
-	; while matching match = 4+2+2+3 = 11???
-	; if start at x=0,  0, 11, 22, 33 exit at 43
-	; if start at x=1,  1, 12, 23, 34 exit at 44
-	; if start at x=2,  2, 13, 24, 35 exit at 45
-	; if start at x=3,  3, 14, 25, 36 exit at 46
-	; if start at x=4,  4, 15, 26, 37 exit at 47
-	; if start at x=5,  5, 16, 27, 38 exit at 48
-	; if start at x=6,  6, 17, 28, 39 exit at 49
-	; if start at x=7,  7, 18, 29, *40 exit at **
-	; if start at x=8,  8, 19, 30, *41 exit at **
-
-	; if not match, 2+4+3 = 9, first match = 8
-
-qloop:
-	cmp	$C051							; 4
-	bne	zloop							; 2/3
-	dex								; 2
-	bne	qloop							; 2/3
-
-
-	; found first line of black after green, at up to line 26 on screen
-        ; so we want roughly 22 lines * 4 = 88*65  = 5720 + 4550 = 10270
-	; - 65 (for the scanline we missed) = 10205 - 12 = 10193
+	; vapor lock returns with us at beginning of hsync in line
+	; 114 (7410 cycles), so with 5070 lines to go
 
 	jsr	gr_copy_to_current		; 6+ 9292
-	; 10193 - 9298 = 895
-	; Fudge factor (unknown) -30 = 865
+
+	; now we have 322 left
 
 	; GR part
 	bit	LORES							; 4
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
 
-	; Try X=88 Y=2 cycles=893 R2
+	; 322 - 12 = 310
+	; -3 for jmp
+	; 307
 
-	nop	; 2
-        ldy     #2							; 2
+	; Try X=9 Y=6 cycles=307
+
+        ldy     #6							; 2
 loopA:
-        ldx	#88							; 2
+        ldx	#9							; 2
 loopB:
         dex                                                             ; 2
         bne     loopB                                                   ; 2nt/3
@@ -535,6 +474,9 @@ gr_offsets:
 .include "gr_unrolled_copy.s"
 .include "put_sprite.s"
 .include "mockingboard.s"
+.include "vapor_lock.s"
+.include "delay_a.s"
+
 
 .include "waterfall_page1.inc"
 .include "waterfall_page2.inc"
@@ -645,13 +587,16 @@ twinkle_loop_even:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; endfalls
 	; delay 21
-	asl	DUMMY						; 6
+	nop
+	nop
+;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -665,13 +610,16 @@ twinkle_loop_even:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -685,13 +633,16 @@ twinkle_loop_even:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -705,13 +656,16 @@ twinkle_loop_even:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	nop							; 2 ; 58
 
@@ -733,13 +687,16 @@ falls_loop_even:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; endfalls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -753,13 +710,16 @@ falls_loop_even:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -773,13 +733,16 @@ falls_loop_even:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -793,13 +756,16 @@ falls_loop_even:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	nop							; 2 ; 58
 
@@ -822,13 +788,16 @@ ground_loop_even:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; endfalls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -842,13 +811,16 @@ ground_loop_even:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -862,13 +834,16 @@ ground_loop_even:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -882,13 +857,16 @@ ground_loop_even:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	nop							; 2 ; 58
 
@@ -990,13 +968,16 @@ twinkle_loop_odd:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; endfalls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1010,13 +991,16 @@ twinkle_loop_odd:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1030,13 +1014,16 @@ twinkle_loop_odd:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1050,13 +1037,16 @@ twinkle_loop_odd:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	nop							; 2 ; 58
 
@@ -1078,13 +1068,16 @@ falls_loop_odd:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; endfalls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1098,13 +1091,16 @@ falls_loop_odd:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1118,13 +1114,16 @@ falls_loop_odd:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1138,13 +1137,16 @@ falls_loop_odd:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	nop							; 2 ; 58
 
@@ -1167,13 +1169,16 @@ ground_loop_odd:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; endfalls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1187,13 +1192,16 @@ ground_loop_odd:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1207,13 +1215,16 @@ ground_loop_odd:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1227,13 +1238,16 @@ ground_loop_odd:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	nop							; 2 ; 58
 
@@ -1354,13 +1368,16 @@ twinkle_loop_three:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; endfalls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1374,13 +1391,16 @@ twinkle_loop_three:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1394,13 +1414,16 @@ twinkle_loop_three:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1414,13 +1437,16 @@ twinkle_loop_three:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
-	asl	DUMMY						; 6
+	nop
+	nop
+;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	nop							; 2 ; 58
 
@@ -1442,13 +1468,16 @@ falls_loop_three:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; endfalls
 	; delay 21
-	asl	DUMMY						; 6
+	nop
+	nop
+;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1462,13 +1491,16 @@ falls_loop_three:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+	nop
+	nop
+;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1482,13 +1514,16 @@ falls_loop_three:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+	nop
+	nop
+;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1502,13 +1537,16 @@ falls_loop_three:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
-	asl	DUMMY						; 6
+	nop
+	nop
+;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	nop							; 2 ; 58
 
@@ -1531,13 +1569,16 @@ ground_loop_three:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; endfalls
 	; delay 21
-	asl	DUMMY						; 6
+	nop
+	nop
+;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1551,13 +1592,16 @@ ground_loop_three:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+	nop
+	nop
+;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1571,13 +1615,16 @@ ground_loop_three:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+	nop
+	nop
+;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1591,13 +1638,16 @@ ground_loop_three:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
-	asl	DUMMY						; 6
+	nop
+	nop
+;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	nop							; 2 ; 58
 
@@ -1702,13 +1752,16 @@ twinkle_loop_four:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; endfalls
 	; delay 21
-	asl	DUMMY						; 6
+	nop
+	nop
+	;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1722,13 +1775,16 @@ twinkle_loop_four:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+	nop
+	nop
+;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1742,13 +1798,16 @@ twinkle_loop_four:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1762,13 +1821,16 @@ twinkle_loop_four:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	nop							; 2 ; 58
 
@@ -1790,13 +1852,16 @@ falls_loop_four:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; endfalls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1810,13 +1875,16 @@ falls_loop_four:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+	nop
+	nop
+;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1830,13 +1898,16 @@ falls_loop_four:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1850,13 +1921,16 @@ falls_loop_four:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	nop							; 2 ; 58
 
@@ -1879,13 +1953,16 @@ ground_loop_four:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; endfalls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1899,13 +1976,16 @@ ground_loop_four:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+;	asl	DUMMY						; 6
+	nop
+	nop
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1919,13 +1999,16 @@ ground_loop_four:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
 	; end falls
 	; delay 21
-	asl	DUMMY						; 6
+	nop
+	nop
+;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
@@ -1939,13 +2022,16 @@ ground_loop_four:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 	nop							; 2
+	nop
 	; falls
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE1						; 4 ; 44
 	; end falls
 	; delay 21 - 7 from loop
-	asl	DUMMY						; 6
+	nop
+	nop
+;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	nop							; 2 ; 58
 
