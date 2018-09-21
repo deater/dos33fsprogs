@@ -73,23 +73,29 @@ falling_apple:
 	; setup graphics for vapor lock
 	;==============================
 
-	jsr	vapor_lock			; 6?
+	jsr	vapor_lock						; 6
+
+	; vapor lock returns with us at beginning of hsync in line
+	; 114 (7410 cycles), so with 5070 lines to go
 
 	jsr	gr_copy_to_current		; 6+ 9292
-	; 10193 - 9298 = 889
-	; Fudge factor (unknown) -24 = 865
+
+	; now we have 322 left
 
 	; GR part
 	bit	LORES							; 4
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
 
-	; Try X=88 Y=2 cycles=893 R2
+	; 322 - 12 = 310
+	; - 3 for jmp
+	; 307
 
-	nop
-        ldy     #2							; 2
+	; Try X=9 Y=6 cycles=307
+
+        ldy     #6							; 2
 loopA:
-        ldx	#88							; 2
+        ldx	#9							; 2
 loopB:
         dex                                                             ; 2
         bne     loopB                                                   ; 2nt/3
