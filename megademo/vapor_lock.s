@@ -1,3 +1,40 @@
+; This took a while to track down
+; On Apple II/II+ the horiz blanking addr are $1000 higher than on IIe
+; So on II+ were outside video area, so unlikely to be our set value
+;	(unless I foolishly use $ff which some uninitialized mem is set to)
+; Lots of this color fiddling is to make sure you don't accidentally
+;	get runs of colors on IIe due to the horiz blank
+
+; 0-5 aqua 6-12 = grey, 13 - 20 = yellow, 21-23 = aqua rainbow 14
+;
+;
+;16	0	YA
+;17	1	YA
+;18	2	YA
+;19	3	YA
+;20	4	YA
+;21	5	AA
+;22	6	AG
+;23	7	AG
+;0	8	AG
+;1	9	AG
+;2	10	AG
+;3	11	AG
+;4	12	AG
+;5	13	AY ****
+;6	14	GY RAINBOW
+;7	15	GY
+;8	16	GY
+;9	17	GY
+;10	18	GY
+;11	19	GY
+;12	20	GY
+;13	21	YA
+;14	22	YA
+;15	23	YA
+
+
+
 	;==============================
 	; setup graphics for vapor lock
 	;==============================
@@ -6,20 +43,39 @@ vapor_lock:
 	; Clear Page0
 	lda	#$0
 	sta	DRAW_PAGE
-	lda	#$44
+	lda	#$ee				; full screen white $ff
 	jsr	clear_gr
 
-	; Make screen half green
-	lda	#$11
+	lda	#$dd
+	ldy	#40
+	jsr	clear_page_loop			; make top half grey2 $aa
+
+	lda	#$aa
 	ldy	#24
-	jsr	clear_page_loop
+	jsr	clear_page_loop			; make top half grey2 $aa
+
+	lda	#$ee
+	ldy	#10
+	jsr	clear_page_loop			; make top half grey2 $aa
+
+	; set up a rainbow to aid in exact lock
+
+	ldy	#00
+rainbow_loop:
+	tya
+	sta	$728+20,Y
+	iny
+	cpy	#20
+	bne	rainbow_loop
+
+;btt:
+;	jmp	btt
 
 
 	;=====================================================
 	; attempt vapor lock
 	;  by reading the "floating bus" we can see most recently
 	;  written value of the display
-	; we look for $55 (which is the grey line)
 	;=====================================================
 	; See:
 	;	Have an Apple Split by Bob Bishop
@@ -33,26 +89,128 @@ vapor_lock:
 	; to avoid false positive found if the horiz blanking is mirroring
 	; the line (max 3 repeats in that case)
 
-vapor_lock_loop:		; first make sure we have all zeroes
-	LDA #$11
+vapor_lock_loop:
+
+	; first make sure we have a full line of $aa
+
+	lda	#$aa							; 2
 zxloop:
-	LDX #$04
+	ldx	#$04							; 2
 wiloop:
-	CMP $C051
-	BNE zxloop
-	DEX
-	BNE wiloop
+	cmp	$C051		; read the floating bus			; 4
+	bne	zxloop		; if not, start from scratch		; 2/3
+	dex			; we were, dec				; 2
+	bne	wiloop		; if not 4 of them, restart		; 3/2
 
-	LDA #$44		; now look for our border color (4 times)
+	; if we get here we read 4 proper pixels, 11 apart (2+4+2+2+3)
+	; 0 11 22 33, clock at 34
+	; 1 12 23 34, clock at 35
+	; 2 13 24 35, clock at 36
+	; 3 14 25 36, clock at 37
+	; 4 15 26 37, clock at 38
+	; 5 16 27 38, clock at 39
+	; 6 17 28 39, clock at 40
+
+
+;                                 X          X          X          X
+;                                  X          X          X          X
+;                                   X          X          X          X
+;                                    X          X          X          X
+;                                     X          X          X          X
+;                                      X          X          X          X
+;                                       X          X          X          X
+;	0123456789012345678901234 0123456789012345678901234567890123456789
+;                 1         2               1         2         3
+;	hsync                     pixels
+;       XXXXXXXXXXXXXXXXXXXXXXXXX 4444444444444444444444444444440123456789
+
+	; now look for the color change that
+	; happens at line 13*8 = 104
+
+	lda	#$dd							; 2
 zloop:
-	LDX #$04
+	ldx	#$04							; 2
 qloop:
-	CMP $C051
-	BNE zloop
-	DEX
-	BNE qloop
+	cmp	$C051		; read floating bus			; 4
+	bne	zloop							; 2/3
+	dex								; 2
+	bne	qloop							; 3/2
+								;============
+								;	11
 
-	rts
+	; Found it!
+	; if we get here we read 4 proper pixels, 11 apart (2+4+2+2+3)
+	; 0 11 22 33, clock at 34
+	; 1 12 23 34, clock at 35
+	; 2 13 24 35, clock at 36
+	; 3 14 25 36, clock at 37
+	; 4 15 26 37, clock at 38
+	; 5 16 27 38, clock at 39
+	; 6 17 28 39, clock at 40
+
+
+	; In theory near end of line 104
+
+	; now skip ahead 8 lines and read from the rainbow pattern we set
+	; up to find our exact location
+
+	; delay 65 * 8 = 520
+	; we back off a few to make sure we're not in the horiz blank
+	; try to delay 510
+
+	lda	#230				; 2
+	jsr	delay_a				; delay 25+230 = 255
+
+	lda	#226				; 2
+	jsr	delay_a				; delay 25+226 = 251
+
+
+	; now near end of line 112
+
+
+	lda	$C051				; 4
+;kbb:
+;	jmp	kbb
+
+        ; we are in theory on line $728 = 14*8 = 112
+        ; so 112*65 = 7280 cycles from start
+
+        ; we are actualy 25+20+A pixels in
+        ; 7325+A
+
+        ; Our goal is line 114 at 7410 cycles
+	; 7410 - 7325 = 85
+
+        ; so kill 85-A cycles
+	; -6 to do subtraction
+	; -6 for rts
+	; -25 for delay_a overhead
+
+        eor	#$ff				; 2
+        sec					; 2
+        adc	#48				; 2
+
+	jsr	delay_a				; should total 48 cycles
+
+
+done_vapor_lock:
+	rts                                                     ; 6
 
 
 
+
+	; Some random related work
+	; Docs:
+	;	Lancaster
+	;	Bishop
+	;	Sather
+
+	; Vaguely relevant but no help with the Apple II+ issue
+	;
+	;	Eamon: Screen display and timing synchronization
+	;		on the Apple IIe and Apple IIgs
+	;
+	;	Adams: Visually presented verbal stimuli by assembly
+	;		language on the Apple II computer.
+	;	Cavanagh and Anstis: Visual psychophysics on the
+	;		Apple II: Getting started
