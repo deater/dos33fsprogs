@@ -35,6 +35,7 @@ loop_forever:
 	.include	"lz4_decode.s"
 	.include	"c64_opener.s"
 	.include	"falling_apple.s"
+.align $100
 	.include	"gr_offsets.s"
 	.include	"gr_hline.s"
 	.include	"vapor_lock.s"

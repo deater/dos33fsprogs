@@ -85,19 +85,53 @@ loopcoB:dex								; 2
 
 c64_split:
 
+	; curtain open
+	; 0 = delay 65
+	; 1 = delay 25+18, 4 open, 18
+	; 2 = delay 25+16, 8 open, 16
+	; 3 = delay 25+14, 12 open, 14
+	; 3 = delay 25+12, 16 open, 12
+	; 3 = delay 25+10, 20 open, 10
+	; 3 = delay 25+ 8, 24 open, 8
+	; 3 = delay 25+ 6, 28 open, 6
+	; 3 = delay 25+ 4, 32 open, 4
+	; 3 = delay 25+ 2, 36 open, 2
+	; 3 = delay 25+ 0, 40 open, 0
+
+	ldx	#192							; 2
+xloop:
+	lda	#14		; 18-4					; 2
+	jsr	delay_a							; 39
+								;===========
+								;	 41
+
+	bit	SET_TEXT						; 4
+	nop								; 2
+	nop								; 2
+	bit	SET_GR							; 4
+								;===========
+								;	 12
+
+	nop								; 2
+	nop								; 2
+	lda	$0							; 3
+	dex								; 2
+	bne	xloop							; 3
+								;============
+								;	 12
 	; kill 65*192 = 12480
 
 	; Try X=24 Y=99 cycles=12475 R5
 
-	nop
-	lda	$0
-
-	ldy     #99							; 2
-loopcoC:ldx	#24							; 2
-loopcoD:dex								; 2
-	bne	loopcoD							; 2nt/3
-	dey								; 2
-	bne	loopcoC							; 2nt/3
+;	nop
+;	lda	$0
+;
+;	ldy     #99							; 2
+;loopcoC:ldx	#24							; 2
+;loopcoD:dex								; 2
+;	bne	loopcoD							; 2nt/3
+;	dey								; 2
+;	bne	loopcoC							; 2nt/3
 
 
 
@@ -106,32 +140,50 @@ loopcoD:dex								; 2
 	;======================================================
 	; do_nothing should be      4550
 	;			     -10 keyboard handling
-	;			 =  4540
+	;			      -1 leftover from main screen
+	;			     -15
+	;			     -12
+	;			     -46
+	;			 =  4466
 
+
+	; run the 2Hz counter, overflow at 30 60Hz frames
 	clc								; 2
 	lda	BOTTOM							; 3
 	adc	#1							; 2
 	sta	BOTTOM							; 3
 	cmp	#30							; 2
-	bne	not_thirty						; 3/2
+	bne	not_thirty						; 3
+								;===========
+								;	15
 thirty:
+									; -1
 	lda	#0							; 2
 	sta	BOTTOM							; 3
-	lda	TOP							; 3
-	clc								; 2
-	adc	#1							; 2
-	sta	TOP							; 3
+	inc	TOP							; 5
+	jmp	done_thirty						; 3
+								;===========
+								;	 12
+
 not_thirty:
+	lda	TOP							; 3
+	lda	TOP							; 3
+	lda	TOP							; 3
+	lda	TOP							; 3
+								;===========
+								;	 12
 
-
-
+done_thirty:
 	; handle the cursor
 	; FIXME: not aligned well.  Do we care?
 
 	lda	TOP							; 3
 	and	#$1							; 2
-	beq	cursor_off						; 3/2
+	beq	cursor_off						; 3
+								;============
+								;         8
 cursor_on:
+									; -1
 	; it's lSB first
 	; blue is 6
 	; 1 1111110
@@ -149,6 +201,8 @@ cursor_on:
 	sta	$2F80	; 59						; 4
 
 	jmp	cursor_done						; 3
+								;============
+								;	 38
 cursor_off:
 	; blue is 6
 	; 1 1010101
@@ -164,20 +218,20 @@ cursor_off:
 	sta	$3F00	; 55						; 4
 	sta	$2780	; 57						; 4
 	sta	$2F80	; 59						; 4
-
+	nop								; 2
+								;============
+								;	 38
 
 
 cursor_done:
 
-
-
-	; Try X=9 Y=89 cycles=4540
-
+	; Try X=17 Y=49 cycles=4460 R6
 	nop
-	lda	$0
+	nop
+	nop
 
-	ldy     #89							; 2
-loopcoE:ldx	#9							; 2
+	ldy     #49							; 2
+loopcoE:ldx	#17							; 2
 loopcoF:dex								; 2
 	bne	loopcoF							; 2nt/3
 	dey								; 2
