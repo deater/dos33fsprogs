@@ -59,12 +59,12 @@ c64_opener:
 
 	; vapor lock returns with us at beginning of hsync in line
 	; 114 (7410 cycles), so with 5070 + 4550 lines to go (9620)
-	; - 16 = 9604
+	; - 16 = 9604, -3 for jmp = 9601
 
-	; Try X=57 Y=33 cycles=9604
+	; Try X=18 Y=100 cycles=9601
 
-	ldy	#33							; 2
-loopcoA:ldx	#57							; 2
+	ldy	#100							; 2
+loopcoA:ldx	#18							; 2
 loopcoB:dex								; 2
 	bne	loopcoB							; 2nt/3
 	dey								; 2
@@ -100,10 +100,10 @@ c64_split:
 
 	ldx	#192							; 2
 xloop:
-	lda	#14		; 18-4					; 2
-	jsr	delay_a							; 39
+	lda	#6		; 					; 2
+	jsr	delay_a						; 25+6= 31
 								;===========
-								;	 41
+								;	 33
 
 	bit	SET_TEXT						; 4
 	nop								; 2
@@ -114,11 +114,15 @@ xloop:
 
 	nop								; 2
 	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
 	lda	$0							; 3
 	dex								; 2
 	bne	xloop							; 3
 								;============
-								;	 12
+								;	 20
 	; kill 65*192 = 12480
 
 	; Try X=24 Y=99 cycles=12475 R5
