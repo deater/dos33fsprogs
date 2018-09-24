@@ -99,30 +99,15 @@ c64_split:
 	; 3 = delay 25+ 0, 40 open, 0
 
 	ldx	#192							; 2
-xloop:
-	lda	#6		; 					; 2
-	jsr	delay_a						; 25+6= 31
-								;===========
-								;	 33
+c64_loop:
+	jsr	hsplit4							; 6
 
-	bit	SET_TEXT						; 4
-	nop								; 2
-	nop								; 2
-	bit	SET_GR							; 4
-								;===========
-								;	 12
-
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	lda	$0							; 3
 	dex								; 2
-	bne	xloop							; 3
-								;============
-								;	 20
+	bne	c64_loop						; 3
+
+
+
+
 	; kill 65*192 = 12480
 
 	; Try X=24 Y=99 cycles=12475 R5
@@ -251,6 +236,47 @@ no_c64_keypress:
 
 done_c64:
 	rts						; 6
+
+
+
+	;========================================
+	; comes in with 6 on front, 11 on back
+	; (6)+19 = 25
+	; 8+12+15+(5) = 40
+
+hsplit4:
+	; delay 8 to end of HBLANK
+	lda	$0							; 3
+	lda	$0							; 3
+	lda	$0							; 3
+	lda	$0							; 3
+	lda	$0							; 3
+	nop								; 2
+	nop								; 2
+								;===========
+								;	  19
+	; delay 8 to middle of screen
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+								;===========
+								;	  8
+
+	bit	SET_TEXT						; 4
+	nop								; 2
+	nop								; 2
+	bit	SET_GR							; 4
+								;===========
+								;	 12
+
+	lda	$0							; 3
+	lda	$0							; 3
+	lda	$0							; 3
+	rts								; 6
+
+								;============
+								;	 15
 
 	;===================
 	; graphics
