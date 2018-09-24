@@ -14,7 +14,7 @@
 
 	; C64 Opening Sequence
 
-;	jsr	c64_opener
+	jsr	c64_opener
 
 	; Falling Apple II
 
@@ -35,7 +35,9 @@ loop_forever:
 	.include	"lz4_decode.s"
 	.include	"c64_opener.s"
 	.include	"falling_apple.s"
+.align $100
 	.include	"gr_offsets.s"
 	.include	"gr_hline.s"
 	.include	"vapor_lock.s"
 	.include	"delay_a.s"
+	.include	"wait_keypress.s"
