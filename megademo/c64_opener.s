@@ -70,7 +70,7 @@ loopcoB:dex								; 2
 	dey								; 2
 	bne	loopcoA							; 2nt/3
 
-        jmp     c64_split
+        beq	c64_split
 .align  $100
 
 
@@ -85,43 +85,172 @@ loopcoB:dex								; 2
 
 c64_split:
 
-	; curtain open
-	; 0 = delay 65
-	; 1 = delay 25+18, 4 open, 18
-	; 2 = delay 25+16, 8 open, 16
-	; 3 = delay 25+14, 12 open, 14
-	; 3 = delay 25+12, 16 open, 12
-	; 3 = delay 25+10, 20 open, 10
-	; 3 = delay 25+ 8, 24 open, 8
-	; 3 = delay 25+ 6, 28 open, 6
-	; 3 = delay 25+ 4, 32 open, 4
-	; 3 = delay 25+ 2, 36 open, 2
-	; 3 = delay 25+ 0, 40 open, 0
 
-	ldx	#192							; 2
-c64_loop:
-	jsr	hsplit4							; 6
+;=========================
+; Top third
 
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnNnNnNnTtttGgggNnNnNnNnNnNnNnNn	16= 4W
+
+
+
+	ldx	#64							; 2
+	jmp	c64_loop_1_five_in					; 3
+c64_loop_1:
+	lda	$0							; 3
+	nop								; 2
+c64_loop_1_five_in:
+	lda	$0							; 3
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+								;=============
+								;	 25
+
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+								;============
+								;	16
+
+	bit	SET_TEXT						; 4
+	bit	SET_GR							; 4
+
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+								;============
+								;	16
+c64_loop_1_end:
 	dex								; 2
-	bne	c64_loop						; 3
+	bne	c64_loop_1						; 3
+								;============
+								;	  5
 
 
 
 
-	; kill 65*192 = 12480
+;=========================
+; Middle third
 
-	; Try X=24 Y=99 cycles=12475 R5
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnNnNnTtttNnNnNnNnNnGgggNnNnNnNnLll	11=14W
 
-;	nop
-;	lda	$0
-;
-;	ldy     #99							; 2
-;loopcoC:ldx	#24							; 2
-;loopcoD:dex								; 2
-;	bne	loopcoD							; 2nt/3
-;	dey								; 2
-;	bne	loopcoC							; 2nt/3
 
+									; 5-1=4
+	ldx	#64							; 2
+	jmp	c64_loop_2_four_in					; 3
+
+c64_loop_2:
+	nop								; 2
+	nop								; 2
+c64_loop_2_four_in:
+	nop								; 2
+	lda	$0							; 3
+	lda	$0							; 3
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	lda	$0
+								;=============
+								;	 20
+
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	bit	SET_TEXT						; 4
+
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+
+	bit	SET_GR							; 4
+
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	lda	$0
+
+c64_loop_2_end:
+	dex								; 2
+	bne	c64_loop_2						; 3
+								;============
+								;	  5
+
+
+;=========================
+; Bottom third
+
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnTtttNnNnNnNnNnNnNnNnNnNnNnNnNnNnGgggNn	 2=32W
+
+									; 5-1=4
+	ldx	#64							; 2
+	jmp	c64_loop_3_four_in					; 3
+
+c64_loop_3:
+	nop								; 2
+	nop								; 2
+c64_loop_3_four_in:
+	nop								; 2
+	lda	$0							; 3
+	lda	$0							; 3
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+								;=============
+								;	 20
+
+	nop								; 2
+	bit	SET_TEXT						; 4
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+								;============
+								;	16
+
+
+
+
+
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	nop								; 2
+	bit	SET_GR							; 4
+	nop								; 2
+								;============
+								;	16
+c64_loop_3_end:
+	dex								; 2
+	bne	c64_loop_3						; 3
+								;============
+								;	  5
+
+									; -1
 
 
 	;======================================================
@@ -129,11 +258,11 @@ c64_loop:
 	;======================================================
 	; do_nothing should be      4550
 	;			     -10 keyboard handling
-	;			      -1 leftover from main screen
+	;			      +1 leftover from main screen
 	;			     -15
 	;			     -12
 	;			     -46
-	;			 =  4466
+	;			 =  4468
 
 
 	; run the 2Hz counter, overflow at 30 60Hz frames
@@ -214,10 +343,10 @@ cursor_off:
 
 cursor_done:
 
-	; Try X=17 Y=49 cycles=4460 R6
+	; Try X=17 Y=49 cycles=4460 R8
 	nop
-	nop
-	nop
+	lda	$0
+	lda	$0
 
 	ldy     #49							; 2
 loopcoE:ldx	#17							; 2
@@ -239,44 +368,6 @@ done_c64:
 
 
 
-	;========================================
-	; comes in with 6 on front, 11 on back
-	; (6)+19 = 25
-	; 8+12+15+(5) = 40
-
-hsplit4:
-	; delay 8 to end of HBLANK
-	lda	$0							; 3
-	lda	$0							; 3
-	lda	$0							; 3
-	lda	$0							; 3
-	lda	$0							; 3
-	nop								; 2
-	nop								; 2
-								;===========
-								;	  19
-	; delay 8 to middle of screen
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-								;===========
-								;	  8
-
-	bit	SET_TEXT						; 4
-	nop								; 2
-	nop								; 2
-	bit	SET_GR							; 4
-								;===========
-								;	 12
-
-	lda	$0							; 3
-	lda	$0							; 3
-	lda	$0							; 3
-	rts								; 6
-
-								;============
-								;	 15
 
 	;===================
 	; graphics
@@ -284,3 +375,30 @@ hsplit4:
 c64:
 .incbin "c64.img.lz4",11
 c64_end:
+
+
+
+;=========================================================
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNn	Nothing
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnNnNnNnTtttGgggNnNnNnNnNnNnNnNn	16= 4W
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnNnNnNnNnTtttNnGgggNnNnNnNnNnNnLll	15= 6W
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnNnNnTtttNnNnGgggNnNnNnNnNnNnNn	14= 8W
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnNnNnNnTtttNnNnNnGgggNnNnNnNnNnLll	13=10W
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnNnTtttNnNnNnNnGgggNnNnNnNnNnNn	12=12W
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnNnNnTtttNnNnNnNnNnGgggNnNnNnNnLll	11=14W
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnTtttNnNnNnNnNnNnGgggNnNnNnNnNn	10=16W
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnNnTtttNnNnNnNnNnNnNnGgggNnNnNnLll	 9=18W
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnTtttNnNnNnNnNnNnNnNnGgggNnNnNnNn	 8=20W
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnTtttNnNnNnNnNnNnNnNnNnGgggNnNnLll	 7=22W
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnTtttNnNnNnNnNnNnNnNnNnNnGgggNnNnNn	 6=24W
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnTtttNnNnNnNnNnNnNnNnNnNnNnGgggNnLll	 5=26W
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnTtttNnNnNnNnNnNnNnNnNnNnNnNnGgggNnNn	 4=28W
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnTtttNnNnNnNnNnNnNnNnNnNnNnNnNnGgggLll	 3=30W
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnTtttNnNnNnNnNnNnNnNnNnNnNnNnNnNnGgggNn	 2=32W
+
+; nLllDdBbbNnNnNnNnNnNnLllN nTtttNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnGgggN     NOPE
+; DdBbbNnNnNnNnNnNnNnNnNnNn TtttNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnGggg	 0=36W
+
+
+
+
