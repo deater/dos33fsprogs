@@ -1,3 +1,7 @@
+;
+;	Cycle-counting text/hgr/lowres demo
+;		by Vince Weaver
+
 .include "zp.inc"
 
 	FRAME	= $60
@@ -85,61 +89,40 @@ no_init_mb:
 	;==========================
 	; setup text screen
 
-	lda	#0
-	sta	CH
-	sta	CV
-	lda	#<line1
-	sta	OUTL
-	lda	#>line1
-	sta	OUTH
-	jsr	move_and_print
+	; clear top 6 lines to space
 
-	inc	CV
-	jsr	move_and_print
+	; takes (Y/2)*(6+435+7)+5 = ?
+	lda	#$A0			; space			; 2
+	ldy	#10			; 6 lines		; 2
+	jsr	clear_page_loop					; 2693???
 
-	inc	CV
-	jsr	move_and_print
+;                                1               2
+;                0123456789abcdef0123456789abcdef0123456
+;line1:.asciiz	"   *                            .      " $400
+;line2:.asciiz	"  *    .                            .  " $480
+;line3:.asciiz	"  *                                    " $500
+;line4:.asciiz	"   *                                   " $580
+;line5:.asciiz	" .                          .    .     " $600
+;line6:.asciiz	"             .                         " $680
 
-	inc	CV
-	jsr	move_and_print
-
-	inc	CV
-	jsr	move_and_print
-
-	inc	CV
-	jsr	move_and_print
-
+	lda	#'.'|$80	; print star			; 2
+	sta	$420						; 4
+	sta	$487						; 4
+	sta	$4A4						; 4
+	sta	$601						; 4
+	sta	$61c						; 4
+	sta	$621						; 4
+	sta	$68d						; 4
+							;============
+							;	 30
 	; draw the moon
-	lda	#0
-	sta	CV
-	lda	#3
-	sta	CH
-	jsr	htab_vtab	; vtab(1); htab(4)
-	lda	#32	; inverse space
-	ldy	#0
-	sta	(BASL),Y
-
-	inc	CV
-	dec	CH
-	jsr	htab_vtab
-	lda	#32
-	ldy	#0
-	sta	(BASL),Y
-
-	inc	CV
-	jsr	htab_vtab
-	lda	#32
-	ldy	#0
-	sta	(BASL),Y
-
-	inc	CV
-	inc	CH
-	jsr	htab_vtab
-	lda	#32
-	ldy	#0
-	sta	(BASL),Y
-
-
+	lda	#' '		; print inv space		; 2
+	sta	$403						; 4
+	sta	$482						; 4
+	sta	$502						; 4
+	sta	$583						; 4
+							;============
+							;	 18
 	; test letters
 ;letter_loop:
 ;	lda	#80
@@ -149,7 +132,7 @@ no_init_mb:
 
 	; Wait
 
-;	jsr	wait_until_keypressed
+	jsr	wait_until_keypressed
 
 	; GR part
 	bit	LORES
@@ -171,41 +154,9 @@ no_init_mb:
 
 	;=====================================================
 	; attempt vapor lock
-	;  by reading the "floating bus" we can see most recently
-	;  written value of the display
-	; we look for $44 (which is the green grass on low-res)
 	;=====================================================
-	; See:
-	; 	Have an Apple Split by Bob Bishop
-	; 	Softalk, October 1982
+	jsr	vapor_lock
 
-	; Challenges: each scan line scans 40 bytes.
-	; The blanking happens at the *beginning*
-	; So 65 bytes are scanned, starting at adress of the line - 25
-
-	; the scan takes 8 cycles, look for 4 repeats of the value
-	; to avoid false positive found if the horiz blanking is mirroring
-	; the line (max 3 repeats in that case)
-
-
-vapor_lock_loop:
-	LDA #$A0
-zxloop:
-	LDX #$04
-wiloop:
-	CMP $C051
-	BNE zxloop
-	DEX
-	BNE wiloop
-
-	LDA #$44
-zloop:
-	LDX #$04
-qloop:
-	CMP $C051
-	BNE zloop
-	DEX
-	BNE qloop
 
 	; found first line of low-res green, need to kill time
 	; until we can enter at top of screen
@@ -960,18 +911,17 @@ letters:
 	.byte	255
 
 
-line1:.asciiz	"   *                            .      "
-line2:.asciiz	"  *    .                            .  "
-line3:.asciiz	"  *                                    "
-line4:.asciiz	"   *                                   "
-line5:.asciiz	" .                          .    .     "
-line6:.asciiz	"             .                         "
 
+
+
+.include "vapor_lock.s"
+.include "delay_a.s"
+.include "gr_hline.s"
 .include "../asm_routines/text_print.s"
 .include "mockingboard.s"
+.include "../asm_routines/keypress.s"
 
 .align	$100
-.include "../asm_routines/gr_offsets.s"
 .include "tfv_sprites.inc"
 
 .include "lz4_decode.s"

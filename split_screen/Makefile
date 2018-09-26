@@ -33,7 +33,7 @@ RAINBOW.BAS:	rainbow.bas
 	$(TOKENIZE) < rainbow.bas > RAINBOW.BAS
 
 credits.o:	credits.s tfv_sprites.inc mockingboard.s \
-		lz4_decode.s \
+		lz4_decode.s vapor_lock.s \
 		KATC.BIN.lz4
 	ca65 -o credits.o credits.s -l credits.lst
 
