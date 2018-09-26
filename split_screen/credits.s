@@ -63,6 +63,26 @@ no_init_mb:
 
 
 	;==========================
+	; Load the background image
+
+	lda	#<katahdin
+	sta	LZ4_SRC
+	lda	#>katahdin
+	sta	LZ4_SRC+1
+
+	lda	#<(katahdin_end-8)		; skip checksum at end
+	sta	LZ4_END
+	lda	#>(katahdin_end-8)		; skip checksum at end
+	sta	LZ4_END+1
+
+	lda	#<$2000			; Destination is HGR page0
+	sta	LZ4_DST
+	lda	#>$2000
+	sta	LZ4_DST+1
+
+	jsr	lz4_decode
+
+	;==========================
 	; setup text screen
 
 	lda	#0
@@ -954,10 +974,14 @@ line6:.asciiz	"             .                         "
 .include "../asm_routines/gr_offsets.s"
 .include "tfv_sprites.inc"
 
-.align	$1000
+.include "lz4_decode.s"
 
-graphics:
-.incbin	"KATC.BIN"
+;.align	$1000
 
+katahdin:
+.incbin	"KATC.BIN.lz4",11		; skip the header
+katahdin_end:
+
+.align $100
 music:
 .incbin "music.tfv"

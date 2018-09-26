@@ -10,7 +10,7 @@ split.dsk:	BISHOP BISHOP.BAS RAINBOW.BAS RAINBOW KATC.BIN CREDITS
 	$(DOS33) -y split.dsk SAVE A BISHOP.BAS
 	$(DOS33) -y split.dsk SAVE A RAINBOW.BAS
 	$(DOS33) -y split.dsk BSAVE -a 0x0c00 RAINBOW
-	$(DOS33) -y split.dsk BSAVE -a 0x1000 CREDITS
+	$(DOS33) -y split.dsk BSAVE -a 0x4000 CREDITS
 #	$(DOS33) -y split.dsk BSAVE -a 0x2000 LENNA.BIN
 	$(DOS33) -y split.dsk BSAVE -a 0x2000 KATC.BIN
 
@@ -32,13 +32,17 @@ RAINBOW:	rainbow.o
 RAINBOW.BAS:	rainbow.bas
 	$(TOKENIZE) < rainbow.bas > RAINBOW.BAS
 
-credits.o:	credits.s tfv_sprites.inc mockingboard.s
+credits.o:	credits.s tfv_sprites.inc mockingboard.s \
+		lz4_decode.s \
+		KATC.BIN.lz4
 	ca65 -o credits.o credits.s -l credits.lst
 
 CREDITS:	credits.o
-	ld65 -o CREDITS credits.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o CREDITS credits.o -C ../linker_scripts/apple2_4000.inc
 
 
+KATC.BIN.lz4:	KATC.BIN
+	lz4 -f -16 KATC.BIN
 
 KATC.BIN:	kat.bmp
 	../bmp2dhr/b2d kat.bmp hgr dither
