@@ -1,0 +1,14 @@
+
+
+Memory Map:
+	$0000-$0100 = ZERO PAGE
+	$0100-$0200 = STACK
+	$0400-$0800 = TEXT/GR PAGE0
+	$0800-$0C00 = TEXT/GR PAGE1
+	$0C00-$0fff = we use this as TEXT/GR offscreen buffer
+	$1000-$1fff = 4k free
+	$2000-$3fFF = HGR1 page	; note we never use HGR2 ($4000-$6000)
+	$4000-$9600 = roughly 20k(?)
+	$9600-$BFFF = DOS3.3
+	$C000-$FFFF = peripherals/ROM
+

@@ -8,7 +8,7 @@ PNG_TO_40x96 = ../gr-utils/png_to_40x96
 all:	megademo.dsk
 
 megademo.dsk:	MEGADEMO
-	$(DOS33) -y megademo.dsk BSAVE -a 0x1000 MEGADEMO
+	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 MEGADEMO
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x2000 C64C.BIN
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x2000 C64.BIN
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x2000 C64_BW.BIN
@@ -17,13 +17,15 @@ megademo.dsk:	MEGADEMO
 ####
 
 MEGADEMO:	megademo.o
-	ld65 -o MEGADEMO megademo.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o MEGADEMO megademo.o -C ../linker_scripts/apple2_4000.inc
 
 megademo.o:	megademo.s \
 	zp.inc hardware.inc \
 	gr_hline.s gr_offsets.s vapor_lock.s delay_a.s wait_keypress.s \
 	c64_opener.s c64.img.lz4 \
-	falling_apple.s apple_40_96.inc
+	falling_apple.s apple_40_96.inc \
+	fireworks.s fw_background.inc fw_state_machine.s fw.s \
+	hgr.s random16.s move_letters.s
 	ca65 -o megademo.o megademo.s -l megademo.lst
 
 

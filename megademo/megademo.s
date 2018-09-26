@@ -11,7 +11,6 @@
 	;===================
 	jsr	HOME
 
-
 	; C64 Opening Sequence
 
 	jsr	c64_opener
@@ -24,6 +23,25 @@
 
 	; E-mail arriving
 
+	; Leaving house
+
+	; Riding bird
+
+	; Waterfall
+
+	; Enter ship
+
+	; Fly in space
+
+	; Arrive
+
+	; Fireworks
+
+	jsr	fireworks
+
+	; Game over
+game_over_man:
+	jmp	game_over_man
 
 	;===================
 	; Loop Forever
@@ -41,3 +59,8 @@ loop_forever:
 	.include	"vapor_lock.s"
 	.include	"delay_a.s"
 	.include	"wait_keypress.s"
+	.include	"random16.s"
+.align $100
+	.include	"fireworks.s"
+	.include	"hgr.s"
+	.include	"move_letters.s"

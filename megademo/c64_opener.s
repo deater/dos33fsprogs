@@ -29,10 +29,11 @@ c64_opener:
 	lda	#>c64
 	sta	LZ4_SRC+1
 
-	lda	#<c64_end
+	lda	#<(c64_end-8)		; skip checksum at end
 	sta	LZ4_END
-	lda	#>c64_end
+	lda	#>(c64_end-8)		; skip checksum at end
 	sta	LZ4_END+1
+
 
 
 	lda	#<$2000
@@ -44,7 +45,6 @@ c64_opener:
 
 
 	jsr	wait_until_keypress
-
 
 	;==============================
 	; setup graphics for vapor lock
@@ -375,7 +375,6 @@ done_c64:
 c64:
 .incbin "c64.img.lz4",11
 c64_end:
-
 
 
 ;=========================================================

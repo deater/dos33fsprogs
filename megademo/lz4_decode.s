@@ -18,7 +18,8 @@
 ;		size=0, checksum=1, reserved
 ;	MAX Blocksize: 40 (64kB)
 ;	HEADER CHECKSUM: a7
-;	BLOCK HEADER: 4 bytes (le)  If highest bit set, uncompressed!
+;	BLOCK HEADER: 4 bytes (le)  length If highest bit set, uncompressed!
+;			data (see below), followed by checksum?
 ; BLOCKS:
 ;	Token byte.  High 4-bits literal length, low 4-bits copy length
 ;	+ If literal length==15, then following byte gets added to length
@@ -29,6 +30,11 @@
 ;	+ The low 4-bits of the token are the copy length, which needs
 ;         4 added to it.  As with the literal length, if it is 15 then
 ;	  you read a byte and add (and if that byte is 255, keep adding)
+
+; At end you have 4 byte end-of-block marker (all zeros?) then
+;                 4 bytes of checksum (if marked in flags)
+;                 our code does that, so be sure to set end -8
+
 
 ;LZ4_SRC	EQU $00
 ;LZ4_DST	EQU $02
