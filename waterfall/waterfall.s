@@ -148,15 +148,12 @@ waterfall_demo:
 
 	; Try X=9 Y=6 cycles=307
 
-        ldy     #6							; 2
-loopA:
-        ldx	#9							; 2
-loopB:
-        dex                                                             ; 2
-        bne     loopB                                                   ; 2nt/3
-
-        dey                                                             ; 2
-        bne     loopA                                                   ; 2nt/3
+	ldy	#6							; 2
+wfloopA:ldx	#9							; 2
+wfloopB:dex								; 2
+        bne	wfloopB							; 2nt/3
+        dey								; 2
+	bne	wfloopA							; 2nt/3
 
         jmp     display_loop
 
@@ -207,18 +204,6 @@ display_loop:
 	lda	jump_table,y					; 4
 	pha							; 3
 	rts							; 6 ; 38
-
-	;========== old code
-
-
-	beq	even
-								; 2
-	lda	FRAME		; (nop)				; 3
-	jmp	display_odd					; 3
-even:
-								; 3
-	nop			; (nop)				; 2
-	jmp	display_odd					; 3
 
 display_loop_return:
 
