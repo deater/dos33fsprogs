@@ -220,8 +220,6 @@ vblank:
 	;			=============
 	;			      15 cycles
 
-;	jsr	do_nothing					; 6
-
 	; 15 cycles
 	inc	YPOS		; 5
 	nop			; 2
@@ -382,76 +380,7 @@ adjust_xpos:
 
 	jmp	display_loop				; 3
 
-
-	;=================================
-	; do nothing
-	;=================================
-	; and take 11-6 = 5 cycles to do it
-;do_nothing:
-
-	; Try X=3 Y=1 cycles=22
-
-;	nop	; 2
-;	nop	; 2
-
-;	ldy	#1							; 2
-;loop1:
-;	ldx	#3							; 2
-;loop2:
-;	dex								; 2
-;	bne	loop2							; 2nt/3
-
-;	dey								; 2
-;	bne	loop1							; 2nt/3
-
-
-;	rts							; 6
-
-
-
-	;==================================
-	; HLINE
-	;==================================
-
-	; Color in A
-	; Y has which line
-hline:
-	pha							; 3
-	ldx	gr_offsets,y					; 4+
-	stx	hline_loop+1					; 4
-	lda	gr_offsets+1,y					; 4+
-	clc							; 2
-	adc	DRAW_PAGE					; 3
-	sta	hline_loop+2					; 4
-	pla							; 4
-	ldx	#39						; 2
-hline_loop:
-	sta	$5d0,X		; 38				; 5
-	dex							; 2
-	bpl	hline_loop					; 2nt/3
-	rts							; 6
-
-	;==========================
-	; Clear gr screen
-	;==========================
-	; Color in A
-clear_gr:
-	ldy	#46
-clear_page_loop:
-	jsr	hline
-	dey
-	dey
-	bpl	clear_page_loop
-	rts
-
-.align	$100
-
-gr_offsets:
-	.word	$400,$480,$500,$580,$600,$680,$700,$780
-	.word	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
-	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
-
-
+.include "gr_hline.s"
 .include "../asm_routines/gr_unrle.s"
 .align	$100
 .include "../asm_routines/keypress.s"
@@ -563,194 +492,108 @@ even_twinkle_stars:
 
 twinkle_loop_even:
 
+	; page1 for 4 lines, 65 - 4 = 61 -2 = 59 - 25 = 34
+
 	; line 0
 	bit	PAGE1						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
+	; line 1
 	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE1						; 4
-	; endfalls
-	; delay 21
-	nop
-	nop
-;	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
 	; line 2
 	bit	PAGE1						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE1						; 4
-	; end falls
-	; delay 21
-;	asl	DUMMY						; 6
-	nop
-	nop
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
 	; line 3
 	bit	PAGE1						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE1						; 4
-	; end falls
-	; delay 21
-;	asl	DUMMY						; 6
-	nop
-	nop
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
+	lda	#29						; 2
+	jsr	delay_a						; 25+27
 
-	; line 4
-	bit	PAGE1						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE1						; 4 ; 44
-	; end falls
-	; delay 21 - 7 from loop
-;	asl	DUMMY						; 6
-	nop
-	nop
-	asl	DUMMY						; 6
-	nop							; 2 ; 58
+	; below: 7 if not zero
+	; 	 7 (including ldy later) if is zero
+
 
 	dey							; 2
-	beq	twinkle_loop_even_done				;
-								; 2
-	jmp	twinkle_loop_even				; 3
+	beq	twinkle_loop_even_done				; 3
+								;-1
+        jmp	twinkle_loop_even				; 3
+
+
+
 twinkle_loop_even_done:
 
 	ldy	#31						; 2
 falls_loop_even:
 
-	; line 0
+; === line 0
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
+	; delay 31
+	lda	#4						; 2
+	jsr	delay_a						; 25+4
+
+	; delay 11
+	bit	PAGE0						; 4
 	lda	YPOS						; 3
+	bit	PAGE0						; 4
+
+	; delay 19
 	nop							; 2
-	nop
-	; falls
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-	; endfalls
-	; delay 21
-;	asl	DUMMY						; 6
-	nop
-	nop
+	nop							; 2
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 
-	; line 2
+;=== line 1
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
+	; delay 31
+	lda	#4						; 2
+	jsr	delay_a						; 25+4
+
+	; delay 11
+	bit	PAGE0						; 4
 	lda	YPOS						; 3
+	bit	PAGE0						; 4
+
+	; delay 19
 	nop							; 2
-	nop
-	; falls
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-	; end falls
-	; delay 21
-;	asl	DUMMY						; 6
-	nop
-	nop
+	nop							; 2
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 
-	; line 3
+;=== line 2
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
+	; delay 31
+	lda	#4						; 2
+	jsr	delay_a						; 25+4
+
+	; delay 11
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
-	; end falls
-	; delay 21
-;	asl	DUMMY						; 6
-	nop
-	nop
+	; delay 19
+	nop							; 2
+	nop							; 2
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 
-	; line 4
+;== line 4
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
+	; delay 31
+	lda	#4						; 2
+	jsr	delay_a						; 25+4
+
+	; delay 11
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
-	bit	PAGE0						; 4 ; 44
-	; end falls
+	bit	PAGE0						; 4 ; 46
+
 	; delay 21 - 7 from loop
-;	asl	DUMMY						; 6
-	nop
-	nop
+	nop							; 2
+	nop							; 2
 	asl	DUMMY						; 6
 	nop							; 2 ; 58
 
@@ -764,96 +607,29 @@ falls_loop_even_done:
 
 ground_loop_even:
 
-	; line 0
+;==== line 0
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-	; endfalls
-	; delay 21
-;	asl	DUMMY						; 6
-	nop
-	nop
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
+	; delay 61
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
 
-	; line 2
+;==== line 1
 	bit	PAGE1						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE1						; 4
-	; end falls
-	; delay 21
-;	asl	DUMMY						; 6
-	nop
-	nop
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
+	; delay 61
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
 
-	; line 3
+;==== line 2
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-	; end falls
-	; delay 21
-;	asl	DUMMY						; 6
-	nop
-	nop
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
+	; delay 61
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
 
-	; line 4
+;=== line 3
 	bit	PAGE1						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE1						; 4 ; 44
-	; end falls
-	; delay 21 - 7 from loop
-;	asl	DUMMY						; 6
-	nop
-	nop
-	asl	DUMMY						; 6
-	nop							; 2 ; 58
+	; delay 54
+	lda	#27						; 2
+	jsr	delay_a						; 25+27
 
 	dey							; 2
 	beq	ground_loop_even_done				;
