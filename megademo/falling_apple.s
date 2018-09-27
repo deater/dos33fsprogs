@@ -165,7 +165,8 @@ no_keypress:
 	jmp	display_loop				; 3
 
 start_over:
-	rts
+	bit	KEYRESET	; clear keypress	; 4
+	rts						; 6
 
 
 	;=================================

@@ -391,29 +391,37 @@ bmloop6:dex								; 2
 
 ;=========================================================================
 
-
-
 	jsr	move_letters					; 6+126
 
 	; Blanking time:	 4550
 	; move_letters		 -132
+	; check keypress	   -7
 	; JMP at end		   -3
-	;========================4415 cycles
+	;========================4408 cycles
 
-	; Try X=24 Y=35 cycles=4411 R4
+	; Try X=175 Y=5 cycles=4406 R2
 
-	nop
-	nop
+	nop								; 2
 
-	ldy	#35							; 2
-loop7:	ldx	#24							; 2
-loop8:	dex								; 2
-	bne	loop8							; 2nt/3
+	ldy	#5							; 2
+bmloop7:ldx	#175							; 2
+bmloop8:dex								; 2
+	bne	bmloop8							; 2nt/3
 	dey								; 2
-	bne	loop7							; 2nt/3
+	bne	bmloop7							; 2nt/3
 
+	; Skip if keypressed
+
+	lda	KEYPRESS						; 4
+	bpl	bm_no_keypress						; 3
+        jmp	bm_done							; 3
+bm_no_keypress:
 
 	jmp	bm_display_loop						; 3
+
+bm_done:
+	bit	KEYRESET	; clear keypress			; 4
+        rts								; 6
 
 ;===========================================================
 ;===========================================================
