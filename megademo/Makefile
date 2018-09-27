@@ -9,6 +9,8 @@ all:	megademo.dsk
 
 megademo.dsk:	MEGADEMO
 	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 MEGADEMO
+#	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 D_HGRC.BIN
+#	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 FS_HGRC.BIN
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x2000 C64C.BIN
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x2000 C64.BIN
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x2000 C64_BW.BIN
@@ -46,6 +48,12 @@ c64.img:	c64_updated.png
 	../hgr-utils/png2hgr c64_updated.png > c64.img
 
 ####
+
+D_HGRC.BIN:	d_hgr.bmp
+	$(B2D) d_hgr.bmp HGR -d
+
+FS_HGRC.BIN:	fs_hgr.bmp
+	$(B2D) fs_hgr.bmp HGR -d
 
 C64C.BIN:	c64.bmp
 	$(B2D) c64.bmp HGR
