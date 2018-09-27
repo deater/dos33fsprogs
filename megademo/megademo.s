@@ -26,6 +26,7 @@
 	; Leaving house
 
 	; Riding bird
+	jsr	bird_mountain
 
 	; Waterfall
 
@@ -63,4 +64,7 @@ loop_forever:
 .align $100
 	.include	"fireworks.s"
 	.include	"hgr.s"
+	.include	"bird_mountain.s"
 	.include	"move_letters.s"
+.align $100
+	.include	"gr_putsprite.s"

@@ -47,16 +47,16 @@ setup_background:
 	sta	STATE
 	sta	WAITING
 init_letters:
-        lda     #<letters
-        sta     LETTERL
-        lda     #>letters
-        sta     LETTERH
-        lda     #39
-        sta     LETTERX
-        lda     #22
-        sta     LETTERY
-        lda     #25
-        sta     LETTERD
+	lda	#<fw_letters
+	sta	LETTERL
+	lda	#>fw_letters
+	sta	LETTERH
+	lda	#39
+	sta	LETTERX
+	lda	#22
+	sta	LETTERY
+	lda	#25
+	sta	LETTERD
 
 
 

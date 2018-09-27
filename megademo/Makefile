@@ -24,6 +24,7 @@ megademo.o:	megademo.s \
 	gr_hline.s gr_offsets.s vapor_lock.s delay_a.s wait_keypress.s \
 	c64_opener.s c64.img.lz4 \
 	falling_apple.s apple_40_96.inc \
+	bird_mountain.s \
 	fireworks.s fw_background.inc fw_state_machine.s fw.s \
 	hgr.s random16.s move_letters.s
 	ca65 -o megademo.o megademo.s -l megademo.lst
