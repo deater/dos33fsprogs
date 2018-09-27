@@ -86,43 +86,7 @@ no_init_mb:
 
 	jsr	lz4_decode
 
-	;==========================
-	; setup text screen
 
-	; clear top 6 lines to space
-
-	; takes (Y/2)*(6+435+7)+5 = ?
-	lda	#$A0			; space			; 2
-	ldy	#10			; 6 lines		; 2
-	jsr	clear_page_loop					; 2693???
-
-;                                1               2
-;                0123456789abcdef0123456789abcdef0123456
-;line1:.asciiz	"   *                            .      " $400
-;line2:.asciiz	"  *    .                            .  " $480
-;line3:.asciiz	"  *                                    " $500
-;line4:.asciiz	"   *                                   " $580
-;line5:.asciiz	" .                          .    .     " $600
-;line6:.asciiz	"             .                         " $680
-
-	lda	#'.'|$80	; print star			; 2
-	sta	$420						; 4
-	sta	$487						; 4
-	sta	$4A4						; 4
-	sta	$601						; 4
-	sta	$61c						; 4
-	sta	$621						; 4
-	sta	$68d						; 4
-							;============
-							;	 30
-	; draw the moon
-	lda	#' '		; print inv space		; 2
-	sta	$403						; 4
-	sta	$482						; 4
-	sta	$502						; 4
-	sta	$583						; 4
-							;============
-							;	 18
 	; test letters
 ;letter_loop:
 ;	lda	#80
@@ -158,23 +122,60 @@ no_init_mb:
 	jsr	vapor_lock
 
 
-	; found first line of low-res green, need to kill time
-	; until we can enter at top of screen
-	; so we want roughly 5200+4550 - 65 (for the scanline we missed)
+	;==========================
+	; setup text screen
 
-	; want 9685
-	; Try X=34 Y=55 cycles=9681
+	; clear top 6 lines to space
 
-	lda	#0							; 2
-	lda	#0							; 2
+	; takes (Y/2)*(6+435+7)+5 = ?
+	lda	#$A0			; space			; 2
+	ldy	#10			; 6 lines		; 2
+	jsr	clear_page_loop					; 2693
 
-	ldy	#55							; 2
-loopA:
-	ldx	#34							; 2
-loopB:
-	dex								; 2
+;                                1               2
+;                0123456789abcdef0123456789abcdef0123456
+;line1:.asciiz	"   *                            .      " $400
+;line2:.asciiz	"  *    .                            .  " $480
+;line3:.asciiz	"  *                                    " $500
+;line4:.asciiz	"   *                                   " $580
+;line5:.asciiz	" .                          .    .     " $600
+;line6:.asciiz	"             .                         " $680
+
+	lda	#'.'|$80	; print star			; 2
+	sta	$420						; 4
+	sta	$487						; 4
+	sta	$4A4						; 4
+	sta	$601						; 4
+	sta	$61c						; 4
+	sta	$621						; 4
+	sta	$68d						; 4
+							;============
+							;	 30
+	; draw the moon
+	lda	#' '		; print inv space		; 2
+	sta	$403						; 4
+	sta	$482						; 4
+	sta	$502						; 4
+	sta	$583						; 4
+							;============
+							;	 18
+
+
+
+	; vapor lock returns with us at beginning of hsync in line
+	; 114 (7410 cycles), so with 5070 cycles to go
+	; 5070+4550 = 9620
+	;	     -2745 (draw text)
+	;	===========
+	;	      6875
+
+
+	; Try X=97 Y=14 cycles=6875
+
+	ldy	#14							; 2
+loopA:	ldx	#97							; 2
+loopB:	dex								; 2
 	bne	loopB							; 2nt/3
-
 	dey								; 2
 	bne	loopA							; 2nt/3
 
