@@ -17,7 +17,6 @@ int main(int argc, char **argv) {
 
 	int row=0;
 	int col=0;
-	int enough=0;
 	int x;
 	unsigned char out_buffer[1024];
 

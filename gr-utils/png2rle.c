@@ -11,6 +11,7 @@
 
 #define OUTPUT_C	0
 #define OUTPUT_ASM	1
+#define OUTPUT_RAW	2
 
 /* Converts a PNG to RLE compressed data */
 
@@ -32,7 +33,7 @@ int rle_original(int out_type, char *varname,
 		fprintf(stdout,"unsigned char %s[]={\n",varname);
 		fprintf(stdout,"\t0x%X,0x%X,",xsize,ysize);
 	}
-	else {
+	else if (out_type==OUTPUT_ASM) {
 		fprintf(stdout,"%s:",varname);
 		fprintf(stdout,"\t.byte $%X,$%X",xsize,ysize);
 	}
@@ -59,7 +60,7 @@ int rle_original(int out_type, char *varname,
 					printf("\n\t");
 				}
 			}
-			else {
+			else if (out_type==OUTPUT_ASM) {
 				if (count==0) {
 					printf("\n\t.byte ");
 				}
@@ -71,8 +72,13 @@ int rle_original(int out_type, char *varname,
 			if (out_type==OUTPUT_C) {
 				printf("0x%02X,0x%02X, ",run,last);
 			}
-			else {
+			else if (out_type==OUTPUT_ASM) {
 				printf("$%02X,$%02X",run,last);
+			}
+			else {
+				printf("%c",run);
+				printf("%c",last);
+
 			}
 			size+=2;
 
@@ -91,7 +97,7 @@ int rle_original(int out_type, char *varname,
 				if (out_type==OUTPUT_C) {
 					printf("0x%02X,0x%02X, ",run,last);
 				}
-				else {
+				else if (out_type==OUTPUT_ASM) {
 					if (count==0) {
 						printf("\n\t.byte ");
 					}
@@ -99,6 +105,9 @@ int rle_original(int out_type, char *varname,
 						printf(", ");
 					}
 					printf("$%02X,$%02X\n",run,last);
+				} else {
+					printf("%c",run);
+					printf("%c",last);
 				}
 				size+=2;
 			}
@@ -115,7 +124,7 @@ int rle_original(int out_type, char *varname,
 	if (out_type==OUTPUT_C) {
 		fprintf(stdout,"0xFF,0xFF,");
 		fprintf(stdout,"\t};\n");
-	} else {
+	} else if (out_type==OUTPUT_ASM) {
 		fprintf(stdout,"\t.byte $FF,$FF\n");
 	}
 
@@ -138,14 +147,14 @@ static int print_run(int count, int out_type, int run, int last) {
 		if (out_type==OUTPUT_C) {
 			printf("\n\t");
 		}
-		else {
+		else if (out_type==OUTPUT_ASM) {
 			printf("\n\t.byte ");
 		}
 	}
 	else {
 		if (out_type==OUTPUT_C) {
 		}
-		else {
+		else if (out_type==OUTPUT_ASM) {
 			printf(", ");
 		}
 	}
@@ -154,8 +163,11 @@ static int print_run(int count, int out_type, int run, int last) {
 		if (out_type==OUTPUT_C) {
 			printf("0x%02X,",last);
 		}
-		else {
+		else if (out_type==OUTPUT_ASM) {
 			printf("$%02X",last);
+		}
+		else {
+			printf("%c",last);
 		}
 		size++;
 	}
@@ -163,8 +175,12 @@ static int print_run(int count, int out_type, int run, int last) {
 		if (out_type==OUTPUT_C) {
 			printf("0x%02X,0x%02X,",last,last);
 		}
-		else {
+		else if (out_type==OUTPUT_ASM) {
 			printf("$%02X,$%02X",last,last);
+		}
+		else {
+			printf("%c",last);
+			printf("%c",last);
 		}
 		size+=2;
 	}
@@ -173,8 +189,12 @@ static int print_run(int count, int out_type, int run, int last) {
 		if (out_type==OUTPUT_C) {
 			printf("0x%02X,0x%02X,",0xA0|run,last);
 		}
-		else {
+		else if (out_type==OUTPUT_ASM) {
 			printf("$%02X,$%02X",0xA0|run,last);
+		}
+		else {
+			printf("%c",0xA0|run);
+			printf("%c",last);
 		}
 		size+=2;
 	}
@@ -183,8 +203,13 @@ static int print_run(int count, int out_type, int run, int last) {
 		if (out_type==OUTPUT_C) {
 			printf("0x%02X,0x%02X,0x%02X,",0xA0,run,last);
 		}
-		else {
+		else if (out_type==OUTPUT_ASM) {
 			printf("$%02X,$%02X,$%02X",0xA0,run,last);
+		}
+		else {
+			printf("%c",0xA0);
+			printf("%c",run);
+			printf("%c",last);
 		}
 		size+=3;
 	}
@@ -211,9 +236,11 @@ int rle_smaller(int out_type, char *varname,
 		fprintf(stdout,"unsigned char %s[]={\n",varname);
 		fprintf(stdout,"\t0x%X, /* ysize=%d */",xsize,ysize);
 	}
-	else {
+	else if (out_type==OUTPUT_ASM) {
 		fprintf(stdout,"%s:",varname);
 		fprintf(stdout,"\t.byte $%X ; ysize=%d",xsize,ysize);
+	} else {
+		fprintf(stdout,"%c",xsize);
 	}
 
 	size+=2;
@@ -267,8 +294,10 @@ int rle_smaller(int out_type, char *varname,
 	if (out_type==OUTPUT_C) {
 		fprintf(stdout,"0xA1,");
 		fprintf(stdout,"\t};\n");
-	} else {
+	} else if (out_type==OUTPUT_ASM) {
 		fprintf(stdout,"\n\t.byte $A1\n");
+	} else {
+		fprintf(stdout,"%c",0xA1);
 	}
 
 	size+=1;
@@ -289,7 +318,7 @@ int main(int argc, char **argv) {
 
 	if (argc<4) {
 		fprintf(stderr,"Usage:\t%s type INFILE varname\n\n",argv[0]);
-		fprintf(stderr,"\ttype: c or asm\n");
+		fprintf(stderr,"\ttype: c or asm or raw\n");
 		fprintf(stderr,"\tvarname: label for graphic\n");
 		fprintf(stderr,"\n");
 
@@ -301,6 +330,9 @@ int main(int argc, char **argv) {
 	}
 	else if (!strcmp(argv[1],"asm")) {
 		out_type=OUTPUT_ASM;
+	}
+	else if (!strcmp(argv[1],"raw")) {
+		out_type=OUTPUT_RAW;
 	}
 
 	if (loadpng(argv[2],&image,&xsize,&ysize)<0) {
