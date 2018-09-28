@@ -158,8 +158,8 @@ wfloopB:dex								; 2
         jmp     display_loop
 
 jump_table:
-;	.word	(display_even-1)
-	.word	(display_odd-1)
+	.word	(display_even-1)
+;	.word	(display_odd-1)
 	.word	(display_odd-1)
 	.word	(display_three-1)
 	.word	(display_four-1)
@@ -506,7 +506,7 @@ twinkle_loop_even:
 	jsr	delay_a						; 25+34
 	; line 3
 	bit	PAGE1						; 4
-	lda	#29						; 2
+	lda	#27						; 2
 	jsr	delay_a						; 25+27
 
 	; below: 7 if not zero
@@ -578,7 +578,7 @@ falls_loop_even:
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 
-;== line 4
+;== line 3
 	bit	PAGE0						; 4
 	; delay 31
 	lda	#4						; 2
@@ -782,100 +782,33 @@ falls_loop_odd_done:
 
 ground_loop_odd:
 
-	; line 0
+;=== line 0
 	bit	PAGE1						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE1						; 4
-	; endfalls
-	; delay 21
-;	asl	DUMMY						; 6
-	nop
-	nop
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
+	; delay 61
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
 
-	; line 2
+;=== line 1
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-	; end falls
-	; delay 21
-;	asl	DUMMY						; 6
-	nop
-	nop
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
+	; delay 61
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
 
-	; line 3
+;==== line 2
 	bit	PAGE1						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE1						; 4
-	; end falls
-	; delay 21
-;	asl	DUMMY						; 6
-	nop
-	nop
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
+	; delay 61
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
 
-	; line 4
+;==== line 3
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4 ; 44
-	; end falls
-	; delay 21 - 7 from loop
-;	asl	DUMMY						; 6
-	nop
-	nop
-	asl	DUMMY						; 6
-	nop							; 2 ; 58
+	; delay 54
+	lda	#27						; 2
+	jsr	delay_a						; 25+27
 
 	dey							; 2
-	beq	ground_loop_odd_done				;
-								; 2
+	beq	ground_loop_odd_done				; 3
+								;-1
 	jmp	ground_loop_odd					; 3
 ground_loop_odd_done:
 
