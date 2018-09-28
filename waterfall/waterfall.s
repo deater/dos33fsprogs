@@ -159,12 +159,9 @@ wfloopB:dex								; 2
 
 jump_table:
 	.word	(display_even-1)
-;	.word	(display_odd-1)
 	.word	(display_odd-1)
 	.word	(display_three-1)
 	.word	(display_four-1)
-jump_addr:
-	.word	$00
 
 .align  $100
 
@@ -189,7 +186,7 @@ display_loop:
 	lda	FRAME						; 3
 	and	#$30						; 2
 
-	;========== new code
+	; 0011 0000, so more or less div by 16, 3.75Hz
 
 	lsr							; 2
 	lsr							; 2
