@@ -1,3 +1,8 @@
+/* Loads a 80x48 PNG image into a 40x48 Apple II layout */
+/* It's not interleaved like an actual Apple II */
+/* But the top/bottom are pre-packed into a naive 40x24 array */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 
