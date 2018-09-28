@@ -17,7 +17,7 @@ WATERFALL:	waterfall.o
 	ld65 -o WATERFALL waterfall.o -C ../linker_scripts/apple2_1000.inc
 
 waterfall.o:	waterfall.s gr_copy.s gr_unrolled_copy.s vapor_lock.s \
-	put_sprite.s delay_a.s \
+	gr_putsprite.s delay_a.s \
 	waterfall_page1.inc waterfall_page2.inc tfv_sprites.inc
 	ca65 -o waterfall.o waterfall.s -l waterfall.lst
 
