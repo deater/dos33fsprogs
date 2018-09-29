@@ -97,7 +97,7 @@ celoopB:dex								; 2
 	dey								; 2
 	bne	celoopA							; 2nt/3
 
-	jmp	em_display_loop
+	jmp	em_begin_loop
 .align  $100
 
 
@@ -110,12 +110,6 @@ celoopB:dex								; 2
 	; Vertical blank = 4550 cycles (70 scan lines)
 	; Total of 17030 cycles to get back to where was
 
-	; We want to alternate between page1 and page2 every 65 cycles
-        ;       vblank = 4550 cycles to do scrolling
-
-
-	; 2 + 48*(  (4+2+25*(2+3)) + (4+2+23*(2+3)+4+5)) + 9)
-	;     48*[(6+125)-1] + [(6+115+10)-1]
 
 	; For this part we want
 
@@ -128,32 +122,114 @@ celoopB:dex								; 2
 	; T11111111111111111111 G1111111111111111111111
 	; T11111111111111111111 G1111111111111111111111
 
+	; 0,1,0,1 0,0,1,1
+	; 54,55,54,55  54,54,55,55
+
+em_begin_loop:
 
 em_display_loop:
 
-	ldy	#48						; 2
-
+	ldy	#96
 em_outer_loop:
 
-	bit	PAGE0						; 4
-	ldx	#25		; 130 cycles with PAGE0		; 2
-em_page0_loop:			; delay 126+bit
-	dex							; 2
-	bne	em_page0_loop					; 2/3
-
-
-	bit	PAGE1						; 4
-	ldx	#23		; 130 cycles with PAGE1		; 2
-em_page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
-	dex							; 2
-	bne	em_page1_loop					; 2/3
-
-	nop							; 2
-	lda	DRAW_PAGE					; 3
+	bit	PAGE0			; 4
+	lda	#$54			; 2
+	sta	draw_line_p1+1		; 4
+	jsr	draw_line_1		; 6
+	bit	PAGE0			; 4
+	lda	#$54			; 2
+	sta	draw_line_p2+1		; 4
+	jsr	draw_line_2		; 6
 
 	dey							; 2
-	bne	em_outer_loop					; 2/3
+	bne	em_outer_loop					; 3
+								; -1
 
+
+	; 8+17+14 +8+15
+;em_begin_loop:
+;
+;em_display_loop:
+;
+;	ldy	#96						; 2
+
+;em_outer_loop:
+
+; line0
+
+;	bit	PAGE0						; 4
+
+;	lda	$0						; 3
+;	lda	$0						; 3
+;	lda	$0						; 3
+;	lda	$0						; 3
+;	lda	$0						; 3
+;	bit	SET_TEXT					; 4
+
+;	nop							; 2
+;	nop							; 2
+;	nop							; 2
+;	nop							; 2
+;	nop							; 2
+
+							;==============
+							;	33
+
+;	bit	PAGE0						; 4
+;	bit	SET_GR						; 4
+;	lda	$0
+;	lda	$0
+;	lda	$0
+;	lda	$0
+;	lda	$0
+;	lda	$0
+;	lda	$0
+;	lda	$0
+
+							;==============
+							;	32
+
+; line1
+;	bit	PAGE0						; 4
+
+
+;	lda	$0						; 3
+;	lda	$0						; 3
+;	lda	$0						; 3
+;	lda	$0						; 3
+;	lda	$0						; 3
+
+;	bit	SET_TEXT					; 4
+;	nop							; 2
+;	nop							; 2
+;	nop							; 2
+;	nop							; 2
+;	nop							; 2
+;
+							;==============
+							;	33
+
+;	bit	PAGE0						; 4
+;	bit	SET_GR						; 4
+
+
+;	lda	$0						; 3
+;	lda	$0						; 3
+;	lda	$0						; 3
+;	nop							; 2
+;	nop							; 2
+;	nop							; 2
+;	nop							; 2
+;	nop							; 2
+
+							;==============
+							;	27
+
+;em_page1_loop:
+
+;	dey							; 2
+;	bne	em_outer_loop					; 3
+								; -1
 
 
 	;======================================================
@@ -173,6 +249,86 @@ em_no_keypress:
 em_start_over:
 	bit	KEYRESET	; clear keypress	; 4
 	rts						; 6
+
+
+
+
+draw_line_1:	; line0
+
+	; come in with 16
+;	bit	PAGE0						; 4
+;	lda	$0						; 3
+;	lda	$0						; 3
+;	lda	$0						; 3
+;	lda	$0						; 3
+	lda	$0						; 3
+
+	bit	SET_TEXT					; 4
+	nop							; 2
+	nop							; 2
+	nop							; 2
+	nop							; 2
+	nop							; 2
+
+							;==============
+							;	33
+
+
+draw_line_p1:
+	bit	PAGE0						; 4
+	bit	SET_GR						; 4
+	lda	$0
+	lda	$0
+	lda	$0
+	lda	$0
+
+	nop
+	nop
+	nop
+;	lda	$0
+;	lda	$0
+	rts
+
+							;==============
+							;	32
+
+
+draw_line_2:	; line0
+
+	; come in with 16
+;	bit	PAGE0						; 4
+;	lda	$0						; 3
+;	lda	$0						; 3
+;	lda	$0						; 3
+;	lda	$0						; 3
+	lda	$0						; 3
+
+	bit	SET_TEXT					; 4
+	nop							; 2
+	nop							; 2
+	nop							; 2
+	nop							; 2
+	nop							; 2
+
+							;==============
+							;	33
+
+draw_line_p2:
+	bit	PAGE0						; 4
+	bit	SET_GR						; 4
+	lda	$0
+	lda	$0
+	lda	$0
+;	lda	$0
+;	nop
+	nop
+	nop
+;	lda	$0
+;	lda	$0
+	rts
+							;==============
+							;	32
+
 
 
 
