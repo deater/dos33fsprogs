@@ -17,6 +17,19 @@ check_email:
 	lda	#0
 	sta	DRAW_PAGE
 
+init_email_letters:
+        lda     #<em_letters
+        sta     LETTERL
+        lda     #>em_letters
+        sta     LETTERH
+        lda     #39
+        sta     LETTERX
+        lda     #22
+        sta     LETTERY
+        lda     #25
+        sta     LETTERD
+
+
 	;=============================
 	; Load graphic page0
 
@@ -181,98 +194,30 @@ em_outer_loop:
 								; -1
 
 
-	; 8+17+14 +8+15
-;em_begin_loop:
-;
-;em_display_loop:
-;
-;	ldy	#96						; 2
-
-;em_outer_loop:
-
-; line0
-
-;	bit	PAGE0						; 4
-
-;	lda	$0						; 3
-;	lda	$0						; 3
-;	lda	$0						; 3
-;	lda	$0						; 3
-;	lda	$0						; 3
-;	bit	SET_TEXT					; 4
-
-;	nop							; 2
-;	nop							; 2
-;	nop							; 2
-;	nop							; 2
-;	nop							; 2
-
-							;==============
-							;	33
-
-;	bit	PAGE0						; 4
-;	bit	SET_GR						; 4
-;	lda	$0
-;	lda	$0
-;	lda	$0
-;	lda	$0
-;	lda	$0
-;	lda	$0
-;	lda	$0
-;	lda	$0
-
-							;==============
-							;	32
-
-; line1
-;	bit	PAGE0						; 4
-
-
-;	lda	$0						; 3
-;	lda	$0						; 3
-;	lda	$0						; 3
-;	lda	$0						; 3
-;	lda	$0						; 3
-
-;	bit	SET_TEXT					; 4
-;	nop							; 2
-;	nop							; 2
-;	nop							; 2
-;	nop							; 2
-;	nop							; 2
-;
-							;==============
-							;	33
-
-;	bit	PAGE0						; 4
-;	bit	SET_GR						; 4
-
-
-;	lda	$0						; 3
-;	lda	$0						; 3
-;	lda	$0						; 3
-;	nop							; 2
-;	nop							; 2
-;	nop							; 2
-;	nop							; 2
-;	nop							; 2
-
-							;==============
-							;	27
-
-;em_page1_loop:
-
-;	dey							; 2
-;	bne	em_outer_loop					; 3
-								; -1
-
-
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
-	; do_nothing should be      4550+1 -2-9 -7= 4533
 
-	jsr	do_nothing				; 6
+	; do_nothing should be      4550
+	;			      +1 fallthrough from above
+	;			     -10 keypress
+	;			      -2 ldy at top
+	;			===========
+	;			    4539
+
+	; Try X=6 Y=126 cycles=4537 R2
+
+
+	nop								; 2
+
+	ldy	#126							; 2
+emloop1:ldx	#6							; 2
+emloop2:dex								; 2
+	bne	emloop2							; 2nt/3
+	dey								; 2
+	bne	emloop1							; 2nt/3
+
+
 
 	lda	KEYPRESS				; 4
 	bpl	em_no_keypress				; 3
@@ -370,7 +315,24 @@ draw_line_p2:
 
 
 
+em_letters:
+;       .byte	22,28,
+	.byte             " ",128
+	.byte	22+128,25," ",128
+
+	.byte	23,25,    " ",128
+	.byte	23+128,25," ",128
+
+	.byte	22,26,    "CODE BY",128
+	.byte	22+128,26,"CODE BY",128
+
+	.byte	23,26,    "DEATER",128
+	.byte	23+128,26,"DEATER",198
+
+	.byte	255
+
 
 .include "email_40_96.inc"
+
 
 
