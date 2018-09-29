@@ -12,3 +12,24 @@ Memory Map:
 	$9600-$BFFF = DOS3.3
 	$C000-$FFFF = peripherals/ROM
 
+
+
+C64:
+Apple II:
+Starring:
+	Three pages page flipping.  Hires colors subset of Lores so
+	can replicate a blocky color image.  Could in theory animate this
+	at 60Hz.  Also could flip between 4 pages, but need the 8k of
+	HGR page2.
+
+E-mail:
+	Half screen text, half 40x96 lores.
+	Text is also interlaced top/bottom to create new chars (including
+	some lowercase) on Apple II+ and before w/o lower case.
+	Trouble as the built-in font is offset a frame on II vs IIe?
+	Also annoyance, my GR compressor uses Grey2 (color $a) as encoding,
+	which means can't use a GR image to hold plain black spaces (char $a0)
+
+
+
+

@@ -129,17 +129,52 @@ em_begin_loop:
 
 em_display_loop:
 
-	ldy	#96
+	ldy	#24
 em_outer_loop:
 
+	;== line0
 	bit	PAGE0			; 4
 	lda	#$54			; 2
 	sta	draw_line_p1+1		; 4
 	jsr	draw_line_1		; 6
+	;== line1
 	bit	PAGE0			; 4
 	lda	#$54			; 2
+	sta	draw_line_p1+1		; 4
+	jsr	draw_line_1		; 6
+	;== line2
+	bit	PAGE0			; 4
+	lda	#$55			; 2
+	sta	draw_line_p1+1		; 4
+	jsr	draw_line_1		; 6
+	;== line3
+	bit	PAGE0			; 4
+	lda	#$55			; 2
+	sta	draw_line_p1+1		; 4
+	jsr	draw_line_1		; 6
+
+	;== line4
+	bit	PAGE1			; 4
+	lda	#$54			; 2
+	sta	draw_line_p1+1		; 4
+	jsr	draw_line_1		; 6
+	;== line5
+	bit	PAGE1			; 4
+	lda	#$54			; 2
+	sta	draw_line_p1+1		; 4
+	jsr	draw_line_1		; 6
+	;== line6
+	bit	PAGE1			; 4
+	lda	#$55			; 2
+	sta	draw_line_p1+1		; 4
+	jsr	draw_line_1		; 6
+
+	;== line7
+	bit	PAGE0			; 4
+	lda	#$55			; 2
 	sta	draw_line_p2+1		; 4
 	jsr	draw_line_2		; 6
+
 
 	dey							; 2
 	bne	em_outer_loop					; 3
@@ -252,18 +287,16 @@ em_start_over:
 
 
 
+	;======================
+	; Draw split line
+	; with no room for rec/jump at end
 
 draw_line_1:	; line0
 
 	; come in with 16
-;	bit	PAGE0						; 4
-;	lda	$0						; 3
-;	lda	$0						; 3
-;	lda	$0						; 3
-;	lda	$0						; 3
-	lda	$0						; 3
-
+	lda	$0
 	bit	SET_TEXT					; 4
+
 	nop							; 2
 	nop							; 2
 	nop							; 2
@@ -274,33 +307,36 @@ draw_line_1:	; line0
 							;	33
 
 
+	nop
+	nop
+
+	bit	SET_GR						; 4
 draw_line_p1:
 	bit	PAGE0						; 4
-	bit	SET_GR						; 4
+
+
+
 	lda	$0
 	lda	$0
 	lda	$0
 	lda	$0
 
+;	nop
+;	nop
 	nop
-	nop
-	nop
-;	lda	$0
-;	lda	$0
 	rts
 
 							;==============
 							;	32
 
 
+	;======================
+	; Draw split line
+	; with room for 5 cycles of dec/jump at end
+
 draw_line_2:	; line0
 
 	; come in with 16
-;	bit	PAGE0						; 4
-;	lda	$0						; 3
-;	lda	$0						; 3
-;	lda	$0						; 3
-;	lda	$0						; 3
 	lda	$0						; 3
 
 	bit	SET_TEXT					; 4
@@ -310,19 +346,22 @@ draw_line_2:	; line0
 	nop							; 2
 	nop							; 2
 
+	nop
+	nop
+
 							;==============
 							;	33
 
+	bit	SET_GR						; 4
 draw_line_p2:
 	bit	PAGE0						; 4
-	bit	SET_GR						; 4
 	lda	$0
 	lda	$0
 	lda	$0
 ;	lda	$0
 ;	nop
-	nop
-	nop
+;	nop
+;	nop
 ;	lda	$0
 ;	lda	$0
 	rts
