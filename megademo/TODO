@@ -1,0 +1,45 @@
+Overall:
+	fix off-by-one line vaporlock
+
+Music:
+	compose music
+	fit in RAM
+
+c64_opener:
+	get curtain-opening effect working
+	add text to background
+
+starring:
+	implement
+	complete graphics
+	add wipe effect with tengwar
+
+e-mail:
+	implement
+	half text
+	40x96 graphics
+	use existing move_letters?
+
+
+**01234567890123456**
+2  DEATER,
+3
+4  Wir MuSSEN
+5  ZUSAMMEN SEIN.
+6
+7  RAUMFAHRST DU
+8  SCHNELL.
+9
+10     DEIN IMMER
+11
+12    FroGGY SuE 
+13      _
+14     [_]
+15    /| |\
+16   /_|_|_\
+17     /_\
+18
+19
+20
+21
+22

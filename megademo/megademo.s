@@ -11,6 +11,8 @@
 	;===================
 	jsr	HOME
 
+	jsr	check_email
+
 	; C64 Opening Sequence
 
 	jsr	c64_opener
@@ -22,6 +24,8 @@
 	; Starring Screens
 
 	; E-mail arriving
+	jsr	check_email
+
 
 	; Leaving house
 
@@ -31,6 +35,8 @@
 	; Waterfall
 
 	; Enter ship
+
+	; mode7 (???)
 
 	; Fly in space
 
@@ -54,6 +60,7 @@ loop_forever:
 	.include	"lz4_decode.s"
 	.include	"c64_opener.s"
 	.include	"falling_apple.s"
+	.include	"check_email.s"
 .align $100
 	.include	"gr_offsets.s"
 	.include	"gr_hline.s"

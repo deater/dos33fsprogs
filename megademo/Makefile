@@ -26,6 +26,7 @@ megademo.o:	megademo.s \
 	gr_hline.s gr_offsets.s vapor_lock.s delay_a.s wait_keypress.s \
 	c64_opener.s c64.img.lz4 \
 	falling_apple.s apple_40_96.inc \
+	check_email.s email_40_96.inc \
 	bird_mountain.s \
 	fireworks.s fw_background.inc fw_state_machine.s fw.s \
 	hgr.s random16.s move_letters.s
@@ -36,6 +37,11 @@ megademo.o:	megademo.s \
 
 apple_40_96.inc:	./images/apple_40_96.png
 	$(PNG_TO_40x96) asm ./images/apple_40_96.png apple > apple_40_96.inc
+
+####
+
+email_40_96.inc:	./email_40_96.png
+	$(PNG_TO_40x96) asm ./email_40_96.png email > email_40_96.inc
 
 ####
 
