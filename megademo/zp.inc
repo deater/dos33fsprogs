@@ -37,6 +37,17 @@ DOSBUFH		= $63
 FILEML		= $64
 FILEMH		= $65
 
+
+FRAME           = $60
+WAITING         = $62
+LETTERL         = $63
+LETTERH         = $64
+LETTERX         = $65
+LETTERY         = $66
+LETTERD         = $67
+LETTER          = $68
+
+
 				;FACTOR_I	= $66
 				;FACTOR_F	= $67
 				;DX_I		= $68

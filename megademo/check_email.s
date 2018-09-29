@@ -22,11 +22,11 @@ init_email_letters:
         sta     LETTERL
         lda     #>em_letters
         sta     LETTERH
-        lda     #39
+        lda     #18
         sta     LETTERX
-        lda     #22
+        lda     #4
         sta     LETTERY
-        lda     #25
+        lda     #4
         sta     LETTERD
 
 
@@ -161,7 +161,7 @@ em_outer_loop:
 	sta	draw_line_p1+1		; 4
 	jsr	draw_line_1		; 6
 	;== line3
-	bit	PAGE0			; 4
+	bit	PAGE1			; 4
 	lda	#$55			; 2
 	sta	draw_line_p1+1		; 4
 	jsr	draw_line_1		; 6
@@ -202,22 +202,24 @@ em_outer_loop:
 	;			      +1 fallthrough from above
 	;			     -10 keypress
 	;			      -2 ldy at top
+	;			    -132 move letters
 	;			===========
-	;			    4539
+	;			    4407
 
-	; Try X=6 Y=126 cycles=4537 R2
-
+	; Try X=13 Y=62 cycles=4403 R4
 
 	nop								; 2
+	nop
 
-	ldy	#126							; 2
-emloop1:ldx	#6							; 2
+	ldy	#62							; 2
+emloop1:ldx	#13							; 2
 emloop2:dex								; 2
 	bne	emloop2							; 2nt/3
 	dey								; 2
 	bne	emloop1							; 2nt/3
 
 
+	jsr	move_letters				; 6+126
 
 	lda	KEYPRESS				; 4
 	bpl	em_no_keypress				; 3
@@ -316,19 +318,31 @@ draw_line_p2:
 
 
 em_letters:
-;       .byte	22,28,
-	.byte             " ",128
-	.byte	22+128,25," ",128
+	; note it is y,x
+;       .byte	4,4,
+	.byte	        "DA LA ",128		; DEATER
+	.byte	4+128,4,"DE&FEF",198
 
-	.byte	23,25,    " ",128
-	.byte	23+128,25," ",128
+	.byte	5,4,    " S C  !.",128		; IS COOL
+	.byte	5+128,4,"YS C88I.",128
 
-	.byte	22,26,    "CODE BY",128
-	.byte	22+128,26,"CODE BY",128
+	.byte	7,3,    "W   M",$22,"SSE  J A",128
+	.byte	7+128,3,"WYF MGSSEH 8YE",128
 
-	.byte	23,26,    "DEATER",128
-	.byte	23+128,26,"DEATER",198
+	.byte	8,3,    " A SAS LA KS",128
+	.byte	8+128,3,"FEYSESEHEEKS",128
 
+	.byte	9,3,    "EI L",$22,"SE .",128
+	.byte	9+128,3,"EIHLOSEH.",128
+
+	.byte	12,4,    "        /I",128
+	.byte	12+128,4,"        /Y",128
+	.byte	13,4,    "  __ __/_I",128
+	.byte	13+128,4,"  __ __/_Y",128
+	.byte	14,4,    " /__]    I/",128
+	.byte	14+128,4," /__]    Y/",128
+	.byte	15,4,    "/_____   I\",128
+	.byte	15+128,4,"/_____EEEE\"
 	.byte	255
 
 
