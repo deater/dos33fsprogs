@@ -71,7 +71,7 @@ loopcoB:dex								; 2
 	bne	loopcoA							; 2nt/3
 
         beq	c64_split
-.align  $100
+;.align  $100
 
 
 	;================================================

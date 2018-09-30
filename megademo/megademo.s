@@ -7,6 +7,20 @@
 
 
 	;===================
+	; Check for Apple II and patch
+	;===================
+
+	lda	$FBB3		; IIe and newer is $06
+	cmp	#6
+	beq	apple_iie
+
+	lda	#$54		; patch the check_email font code
+	sta	ce_patch+1
+
+
+apple_iie:
+
+	;===================
 	; set graphics mode
 	;===================
 	jsr	HOME

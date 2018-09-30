@@ -124,7 +124,9 @@ celoopB:dex								; 2
 	; Total of 17030 cycles to get back to where was
 
 
-	; For this part we want
+	; For this part we want on Apple II/II+
+	; On Apple IIe and newer want  T 000/11111
+	; because the font is shifted upwards a line
 
 	; T00000000000000000000 G0000000000000000000000
 	; T00000000000000000000 G0000000000000000000000
@@ -161,7 +163,10 @@ em_outer_loop:
 	sta	draw_line_p1+1		; 4
 	jsr	draw_line_1		; 6
 	;== line3
-	bit	PAGE1			; 4
+ce_patch:
+	bit	PAGE1	;IIe		; 4
+;	bit	PAGE0	;II/II+		; 4
+
 	lda	#$55			; 2
 	sta	draw_line_p1+1		; 4
 	jsr	draw_line_1		; 6
@@ -183,7 +188,7 @@ em_outer_loop:
 	jsr	draw_line_1		; 6
 
 	;== line7
-	bit	PAGE0			; 4
+	bit	PAGE1			; 4
 	lda	#$55			; 2
 	sta	draw_line_p2+1		; 4
 	jsr	draw_line_2		; 6
@@ -332,8 +337,8 @@ em_letters:
 	.byte	8,3,    " A SAS LA KS",128
 	.byte	8+128,3,"FEYSESEHEEKS",128
 
-	.byte	9,3,    "EI L",$22,"SE .",128
-	.byte	9+128,3,"EIHLOSEH.",128
+	.byte	9,3,    "A  !",$22,"SA .",128
+	.byte	9+128,3,"EYHIOSEH.",128
 
 	.byte	12,4,    "        /I",128
 	.byte	12+128,4,"        /Y",128
