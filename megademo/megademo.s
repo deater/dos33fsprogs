@@ -25,8 +25,6 @@ apple_iie:
 	;===================
 	jsr	HOME
 
-	jsr	check_email
-
 	; C64 Opening Sequence
 
 	jsr	c64_opener
@@ -39,7 +37,6 @@ apple_iie:
 
 	; E-mail arriving
 	jsr	check_email
-
 
 	; Leaving house
 

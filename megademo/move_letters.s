@@ -72,14 +72,18 @@ letter_erase:
 	nop			; nop					; 5
 
 	ldy	#0		; erase old char with space		; 2
-	lda	#' '|$80						; 2
+ml_patch_space:
+;	lda	#' '|$80						; 2
+	lda	#' '|$00						; 2
 	ldy	LETTERX							; 3
 	sta	(BASL),Y						; 6
 
 	dey			; draw new char				; 2
 	sty	LETTERX							; 3
 	lda	LETTER							; 3
-	ora	#$80							; 2
+ml_patch_or:
+;	ora	#$80							; 2
+	and	#$3f							; 2
 	ldy	LETTERX							; 3
 	sta	(BASL),Y						; 6
 
@@ -105,7 +109,10 @@ letter_next:
 	sta	LETTERH							; 3
 
 	inc	LETTERD		; inc destination X			; 5
-	lda	#39		; start at right of screen		; 2
+start_destination:
+ml_patch_dest:
+;	lda	#39		; start at right of screen		; 2
+	lda	#18		; start at right of screen		; 2
 	sta	LETTERX							; 3
 	rts								; 6
 								;===========

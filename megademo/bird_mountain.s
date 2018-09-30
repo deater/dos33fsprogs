@@ -27,6 +27,16 @@ bird_mountain:
 	; setup scrolling letters
 	;=========================
 
+	; Patch the inverse values out (as used by check_email)
+	lda	#39
+	sta	ml_patch_dest+1
+	lda	#$80
+	sta	ml_patch_or+1
+	lda	#$09
+	sta	ml_patch_or
+	lda	#' '|$80
+	sta	ml_patch_space+1
+
 	lda	#<letters_bm
 	sta	LETTERL
 	lda	#>letters_bm
