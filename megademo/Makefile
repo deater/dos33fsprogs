@@ -3,7 +3,7 @@ include ../Makefile.inc
 DOS33 = ../dos33fs-utils/dos33
 B2D = ../bmp2dhr/b2d
 PNG_TO_40x96 = ../gr-utils/png_to_40x96
-
+PNG_TO_RLE = ../gr-utils/png2rle
 
 all:	megademo.dsk
 
@@ -26,6 +26,7 @@ megademo.o:	megademo.s \
 	gr_hline.s gr_offsets.s vapor_lock.s delay_a.s wait_keypress.s \
 	c64_opener.s c64.img.lz4 \
 	falling_apple.s apple_40_96.inc \
+	starring.s starring1.inc starring2.inc \
 	check_email.s email_40_96.inc \
 	bird_mountain.s \
 	fireworks.s fw_background.inc fw_state_machine.s fw.s \
@@ -42,6 +43,17 @@ apple_40_96.inc:	./images/apple_40_96.png
 
 email_40_96.inc:	./email_40_96.png
 	$(PNG_TO_40x96) asm ./email_40_96.png email > email_40_96.inc
+
+####
+
+starring1.inc:	./starring_1.png
+	$(PNG_TO_RLE) asm ./starring_1.png starring1 > starring1.inc
+
+starring2.inc:	./starring_2.png
+	$(PNG_TO_RLE) asm ./starring_2.png starring2 > starring2.inc
+
+
+
 
 ####
 

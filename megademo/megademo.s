@@ -25,6 +25,8 @@ apple_iie:
 	;===================
 	jsr	HOME
 
+	jsr	starring
+
 	; C64 Opening Sequence
 
 	jsr	c64_opener
@@ -34,6 +36,7 @@ apple_iie:
 	jsr	falling_apple
 
 	; Starring Screens
+	jsr	starring
 
 	; E-mail arriving
 	jsr	check_email
@@ -71,6 +74,7 @@ loop_forever:
 	.include	"lz4_decode.s"
 	.include	"c64_opener.s"
 	.include	"falling_apple.s"
+	.include	"starring.s"
 	.include	"check_email.s"
 .align $100
 	.include	"gr_offsets.s"
