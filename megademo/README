@@ -22,6 +22,9 @@ Starring:
 	at 60Hz.  Also could flip between 4 pages, but need the 8k of
 	HGR page2.
 
+	For cycle-counting timing, jmp one into a bit $C055 instruction
+	which is EOR $C0,X (4 cycles)
+
 E-mail:
 	Half screen text, half 40x96 lores.
 	Text is also interlaced top/bottom to create new chars (including

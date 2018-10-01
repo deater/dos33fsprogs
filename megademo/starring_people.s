@@ -16,7 +16,6 @@ starring:
 	; init vars
 
 	lda	#0
-	sta	FRAME
 	sta	DRAW_PAGE
 
 	;=============================
@@ -99,105 +98,99 @@ stloopB:dex								; 2
 	dey								; 2
 	bne	stloopA							; 2nt/3
 
-	jmp	st_display_loop
+	jmp	st_begin_loop
 .align  $100
+
 
 	;================================================
 	; Starring Loop
 	;================================================
-	; just kill time, 65*192 = 12480
+	; each scan line 65 cycles
+	;       1 cycle each byte (40cycles) + 25 for horizontal
+	;       Total of 12480 cycles to draw screen
+	; Vertical blank = 4550 cycles (70 scan lines)
+	; Total of 17030 cycles to get back to where was
+
+	; G00000000000000000000 H0000000000000000000000
+
+
+st_begin_loop:
 
 st_display_loop:
 
-	; Try X=15 Y=154 cycles=12475 R5
+	ldy	#24
+st_outer_loop:
 
-	nop								; 2
-	lda	$0							; 3
+	;== line0
+	bit	PAGE0			; 4
+	lda	#$54			; 2
+	sta	draw_line_p1+1		; 4
+	jsr	draw_line_1		; 6
+	;== line1
+	bit	PAGE0			; 4
+	lda	#$54			; 2
+	sta	draw_line_p1+1		; 4
+	jsr	draw_line_1		; 6
+	;== line2
+	bit	PAGE0			; 4
+	lda	#$55			; 2
+	sta	draw_line_p1+1		; 4
+	jsr	draw_line_1		; 6
+	;== line3
+	bit	PAGE1	;IIe		; 4
+;	bit	PAGE0	;II/II+		; 4
 
-	ldy	#154							; 2
-suloop1:ldx	#15							; 2
-suloop2:dex								; 2
-	bne	suloop2							; 2nt/3
-	dey								; 2
-	bne	suloop1							; 2nt/3
+	lda	#$55			; 2
+	sta	draw_line_p1+1		; 4
+	jsr	draw_line_1		; 6
+
+	;== line4
+	bit	PAGE1			; 4
+	lda	#$54			; 2
+	sta	draw_line_p1+1		; 4
+	jsr	draw_line_1		; 6
+	;== line5
+	bit	PAGE1			; 4
+	lda	#$54			; 2
+	sta	draw_line_p1+1		; 4
+	jsr	draw_line_1		; 6
+	;== line6
+	bit	PAGE1			; 4
+	lda	#$55			; 2
+	sta	draw_line_p1+1		; 4
+	jsr	draw_line_1		; 6
+
+	;== line7
+	bit	PAGE1			; 4
+	lda	#$55			; 2
+	sta	draw_line_p2+1		; 4
+	jsr	draw_line_2		; 6
+
+
+	dey							; 2
+	bne	st_outer_loop					; 3
+								; -1
+
 
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 
-
-	; we want to flip between GR Page0, GR Page1, HGR Page0
-	; we want to flip at roughly 3Hz, so every 20 times through
-	; what if 16, for power-of-two easiness?  3.75Hz?
-
-	; FRAME== 0 GR/PAGE0
-	; FRAME==20 GR/PAGE1
-	; FRAME==40 HGR/PAGE0
-	; FRAME==60 reset
-
-	; default = 13+5+5+7  = 30
-	; sixty   = 13+17     = 30
-	; forty   = 13+5+12   = 30
-	; twenty  = 13+5+5+7  = 30
-
-
-	inc	FRAME							; 5
-	lda	FRAME							; 3
-	cmp	#60							; 2
-	bne	st_not_sixty						; 3
-								;===========
-								;        13
-
-st_sixty:								; -1
-	lda	#0			; wrap frame counter		; 2
-	sta	FRAME							; 3
-
-	bit	LORES							; 4
-	bit	PAGE0							; 4
-	nop								; 2
-	jmp	done_st_vblank						; 3
-								;===========
-								;	 17
-
-st_not_sixty:
-	cmp	#20							; 2
-	bne	st_not_twenty						; 3
-								;============
-								;         5
-
-st_twenty:								; -1
-	bit	LORES							; 4
-	nop								; 2
-st_seven_cycles:
-	bit	PAGE1	; 2C 55 C0, 55C0 = EOR $20,X (4 cyc)		; 4
-	jmp	done_st_vblank						; 3
-								;============
-								;	 12
-
-st_not_twenty:
-	cmp	#40							; 2
-	bne	st_seven_cycles+1					; 3
-								;============
-								;         5
-
-st_forty:								; -1
-	bit	HIRES							; 4
-	bit	PAGE0							; 4
-
-								;============
-								;	 7
-done_st_vblank:
-
 	; do_nothing should be      4550
+	;			      +1 fallthrough from above
 	;			     -10 keypress
-	;			     -30 page flipping
+	;			      -2 ldy at top
+	;			    -132 move letters
 	;			===========
 	;			    4407
 
-	; Try X=99 Y=9 cycles=4510
+	; Try X=13 Y=62 cycles=4403 R4
 
-	ldy	#9							; 2
-stloop1:ldx	#99							; 2
+	nop								; 2
+	nop
+
+	ldy	#62							; 2
+stloop1:ldx	#13							; 2
 stloop2:dex								; 2
 	bne	stloop2							; 2nt/3
 	dey								; 2
@@ -205,7 +198,6 @@ stloop2:dex								; 2
 
 	lda	KEYPRESS				; 4
 	bpl	st_no_keypress				; 3
-
 	jmp	st_start_over
 st_no_keypress:
 
@@ -214,6 +206,10 @@ st_no_keypress:
 st_start_over:
 	bit	KEYRESET	; clear keypress	; 4
 	rts						; 6
+
+
+
+
 
 .include "starring1.inc"
 .include "starring2.inc"
