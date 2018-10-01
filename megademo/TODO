@@ -10,9 +10,10 @@ c64_opener:
 	add text to background
 
 starring:
-	implement
 	complete graphics
-	add wipe effect with tengwar
+	figure out png2hgr off-by-one error?
+	add wipe effect with tengwar: just draw 4 bytes yellow, 4 bytes
+	from scroll buffer
 
 e-mail:
 	implement
