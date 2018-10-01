@@ -25,6 +25,9 @@ Starring:
 	For cycle-counting timing, jmp one into a bit $C055 instruction
 	which is EOR $C0,X (4 cycles)
 
+	Note, discover that the LORES and HIRES pages aren't exact matches
+	for each other, even when using same color.  Half-pixel off?
+
 E-mail:
 	Half screen text, half 40x96 lores.
 	Text is also interlaced top/bottom to create new chars (including
