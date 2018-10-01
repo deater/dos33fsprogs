@@ -26,7 +26,7 @@ megademo.o:	megademo.s \
 	gr_hline.s gr_offsets.s vapor_lock.s delay_a.s wait_keypress.s \
 	c64_opener.s c64.img.lz4 \
 	falling_apple.s apple_40_96.inc \
-	starring.s starring1.inc starring2.inc \
+	starring.s starring1.inc starring2.inc starring3.img.lz4\
 	check_email.s email_40_96.inc \
 	bird_mountain.s \
 	fireworks.s fw_background.inc fw_state_machine.s fw.s \
@@ -53,14 +53,16 @@ starring2.inc:	./starring_2.png
 	$(PNG_TO_RLE) asm ./starring_2.png starring2 > starring2.inc
 
 
+starring3.img.lz4:	starring3.img
+	lz4 -f -16 starring3.img
 
+starring3.img:	./starring_3_hgr.png
+		../hgr-utils/png2hgr starring_3_hgr.png > starring3.img
 
 ####
 
 c64.img.lz4:	c64.img
 	lz4 -f -16 c64.img
-
-####
 
 c64.img:	c64_updated.png
 	../hgr-utils/png2hgr c64_updated.png > c64.img

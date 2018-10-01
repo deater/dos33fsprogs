@@ -20,6 +20,27 @@ starring:
 	sta	DRAW_PAGE
 
 	;=============================
+	; Load graphic hgr
+
+	lda	#<starring3
+	sta	LZ4_SRC
+	lda	#>starring3
+	sta	LZ4_SRC+1
+
+	lda	#<(starring3_end-8)		; skip checksum at end
+	sta	LZ4_END
+	lda	#>(starring3_end-8)		; skip checksum at end
+	sta	LZ4_END+1
+
+	lda	#<$2000
+	sta	LZ4_DST
+	lda	#>$2000
+	sta	LZ4_DST+1
+
+	jsr	lz4_decode
+
+
+	;=============================
 	; Load graphic page0
 
 	lda	#$0c
@@ -218,3 +239,6 @@ st_start_over:
 .include "starring1.inc"
 .include "starring2.inc"
 
+starring3:
+.incbin	"starring3.img.lz4",11
+starring3_end:
