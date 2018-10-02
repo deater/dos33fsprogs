@@ -12,6 +12,9 @@ Memory Map:
 	$9600-$BFFF = DOS3.3
 	$C000-$FFFF = peripherals/ROM
 
+	Largest can load from $4000 to $9600 = 22,016
+	Largest can load from $1000 to $9600 = 34,304
+	$4000-$C000 = 32768
 
 
 C64:
