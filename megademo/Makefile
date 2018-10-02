@@ -27,6 +27,7 @@ megademo.o:	megademo.s \
 	c64_opener.s c64.img.lz4 \
 	falling_apple.s apple_40_96.inc \
 	starring.s starring1.inc starring2.inc starring3.img.lz4\
+	starring_people.s fs.inc FS_HGRC.BIN.lz4 deater.inc DEATER_HGRC.BIN.lz4\
 	check_email.s email_40_96.inc \
 	bird_mountain.s \
 	fireworks.s fw_background.inc fw_state_machine.s fw.s \
@@ -59,6 +60,30 @@ starring3.img.lz4:	starring3.img
 starring3.img:	./starring_3_hgr.png
 		../hgr-utils/png2hgr starring_3_hgr.png > starring3.img
 
+
+####
+
+fs.inc:	./fs.png
+	$(PNG_TO_RLE) asm ./fs.png fs > fs.inc
+
+FS_HGRC.BIN.lz4:	FS_HGRC.BIN
+	lz4 -f -16 FS_HGRC.BIN
+
+FS_HGRC.BIN:	fs_hgr.bmp
+	$(B2D) fs_hgr.bmp HGR -d
+
+####
+
+deater.inc:	deater.png
+	$(PNG_TO_RLE) asm ./deater.png deater > deater.inc
+
+DEATER_HGRC.BIN.lz4:	DEATER_HGRC.BIN
+	lz4 -f -16 DEATER_HGRC.BIN
+
+DEATER_HGRC.BIN:	deater_hgr.bmp
+	$(B2D) deater_hgr.bmp HGR -d
+
+
 ####
 
 c64.img.lz4:	c64.img
@@ -72,8 +97,6 @@ c64.img:	c64_updated.png
 D_HGRC.BIN:	d_hgr.bmp
 	$(B2D) d_hgr.bmp HGR -d
 
-FS_HGRC.BIN:	fs_hgr.bmp
-	$(B2D) fs_hgr.bmp HGR -d
 
 C64C.BIN:	c64.bmp
 	$(B2D) c64.bmp HGR

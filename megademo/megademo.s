@@ -25,8 +25,6 @@ apple_iie:
 	;===================
 	jsr	HOME
 
-	jsr	starring
-
 	; C64 Opening Sequence
 
 	jsr	c64_opener
@@ -37,6 +35,11 @@ apple_iie:
 
 	; Starring Screens
 	jsr	starring
+
+	jsr	setup_people_fs
+	jsr	starring_people
+	jsr	setup_people_deater
+	jsr	starring_people
 
 	; E-mail arriving
 	jsr	check_email
@@ -75,6 +78,7 @@ loop_forever:
 	.include	"c64_opener.s"
 	.include	"falling_apple.s"
 	.include	"starring.s"
+	.include	"starring_people.s"
 	.include	"check_email.s"
 .align $100
 	.include	"gr_offsets.s"

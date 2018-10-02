@@ -1,62 +1,17 @@
-; Display Starring Message
+; Display Starring w People
 
-; 1st screen = triple page flip
-; 2nd/3rd = split  low/hires
+; 2nd/3rd = split  low/hires w tengwar wipe at bottom
 
 
-starring:
+starring_people:
+
 
 	;===================
 	; init screen
-	jsr	TEXT
-	jsr	HOME
 	bit	KEYRESET
 
 	;===================
-	; init vars
-
-	lda	#0
-	sta	DRAW_PAGE
-
-	;=============================
-	; Load graphic page0
-
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image to $c00
-
-
-	lda	#<starring1
-	sta	GBASL
-	lda	#>starring1
-	sta	GBASH
-	jsr	load_rle_gr
-
-	lda	#4
-	sta	DRAW_PAGE
-
-	jsr	gr_copy_to_current	; copy to page1
-
-	; GR part
-	bit	PAGE1
-	bit	LORES							; 4
-	bit	SET_GR							; 4
-	bit	FULLGR							; 4
-
-	;=============================
-	; Load graphic page1
-
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image to $c00
-
-	lda	#<starring2
-	sta	GBASL
-	lda	#>starring2
-	sta	GBASH
-	jsr	load_rle_gr
+	; copy to page3
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -92,18 +47,18 @@ starring:
 	; Try X=9 Y=6 cycles=307
 
         ldy	#6							; 2
-stloopA:ldx	#9							; 2
-stloopB:dex								; 2
-	bne	stloopB							; 2nt/3
+sploopA:ldx	#9							; 2
+sploopB:dex								; 2
+	bne	sploopB							; 2nt/3
 	dey								; 2
-	bne	stloopA							; 2nt/3
+	bne	sploopA							; 2nt/3
 
-	jmp	st_begin_loop
+	jmp	sp_begin_loop
 .align  $100
 
 
 	;================================================
-	; Starring Loop
+	; Starring People Loop
 	;================================================
 	; each scan line 65 cycles
 	;       1 cycle each byte (40cycles) + 25 for horizontal
@@ -114,103 +69,235 @@ stloopB:dex								; 2
 	; G00000000000000000000 H0000000000000000000000
 
 
-st_begin_loop:
+sp_begin_loop:
 
-st_display_loop:
+sp_display_loop:
 
-	ldy	#24
-st_outer_loop:
+	ldy	#148
+sp_outer_loop:
 
-	;== line0
-	bit	PAGE0			; 4
-	lda	#$54			; 2
-	sta	draw_line_p1+1		; 4
-	jsr	draw_line_1		; 6
-	;== line1
-	bit	PAGE0			; 4
-	lda	#$54			; 2
-	sta	draw_line_p1+1		; 4
-	jsr	draw_line_1		; 6
-	;== line2
-	bit	PAGE0			; 4
-	lda	#$55			; 2
-	sta	draw_line_p1+1		; 4
-	jsr	draw_line_1		; 6
-	;== line3
-	bit	PAGE1	;IIe		; 4
-;	bit	PAGE0	;II/II+		; 4
+	bit	LORES			; 4
+	lda	#7			; 2
+	jsr	delay_a			; 25+7 = 32
+					;===========
+					; 38
 
-	lda	#$55			; 2
-	sta	draw_line_p1+1		; 4
-	jsr	draw_line_1		; 6
-
-	;== line4
-	bit	PAGE1			; 4
-	lda	#$54			; 2
-	sta	draw_line_p1+1		; 4
-	jsr	draw_line_1		; 6
-	;== line5
-	bit	PAGE1			; 4
-	lda	#$54			; 2
-	sta	draw_line_p1+1		; 4
-	jsr	draw_line_1		; 6
-	;== line6
-	bit	PAGE1			; 4
-	lda	#$55			; 2
-	sta	draw_line_p1+1		; 4
-	jsr	draw_line_1		; 6
-
-	;== line7
-	bit	PAGE1			; 4
-	lda	#$55			; 2
-	sta	draw_line_p2+1		; 4
-	jsr	draw_line_2		; 6
+	bit	HIRES			; 4
+	nop				; 2
+	nop				; 2
+	nop				; 2
+	lda	$0			; 3
+	lda	$0			; 3
+	lda	$0			; 3
+	lda	$0			; 3
+					;============
+					; 22
 
 
 	dey							; 2
-	bne	st_outer_loop					; 3
+	bne	sp_outer_loop					; 3
 								; -1
 
+
+	bit	LORES			; 4
+
+
+	; want to kill 44*65 -3 = 2857
 
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 
 	; do_nothing should be      4550
-	;			      +1 fallthrough from above
+	;			   +2857 fallthrough from above
 	;			     -10 keypress
 	;			      -2 ldy at top
-	;			    -132 move letters
 	;			===========
-	;			    4407
+	;			    7395
 
-	; Try X=13 Y=62 cycles=4403 R4
+	; Try X=18 Y=77 cycles=7393 R2
 
-	nop								; 2
 	nop
 
-	ldy	#62							; 2
-stloop1:ldx	#13							; 2
-stloop2:dex								; 2
-	bne	stloop2							; 2nt/3
+	ldy	#77							; 2
+sploop1:ldx	#18							; 2
+sploop2:dex								; 2
+	bne	sploop2							; 2nt/3
 	dey								; 2
-	bne	stloop1							; 2nt/3
+	bne	sploop1							; 2nt/3
 
 	lda	KEYPRESS				; 4
-	bpl	st_no_keypress				; 3
-	jmp	st_start_over
-st_no_keypress:
+	bpl	sp_no_keypress				; 3
+	jmp	sp_start_over
+sp_no_keypress:
 
-	jmp	st_display_loop				; 3
+	jmp	sp_display_loop				; 3
 
-st_start_over:
+sp_start_over:
 	bit	KEYRESET	; clear keypress	; 4
 	rts						; 6
 
 
 
 
+setup_people_fs:
 
-.include "starring1.inc"
-.include "starring2.inc"
+
+	;===================
+	; init vars
+
+	lda	#0
+	sta	DRAW_PAGE
+
+
+	;=============================
+	; Load graphic hgr
+
+	lda	#<fs_hgr
+	sta	LZ4_SRC
+	lda	#>fs_hgr
+	sta	LZ4_SRC+1
+
+	lda	#<(fs_hgr_end-8)	; skip checksum at end
+	sta	LZ4_END
+	lda	#>(fs_hgr_end-8)	; skip checksum at end
+	sta	LZ4_END+1
+
+	lda	#<$2000
+	sta	LZ4_DST
+	lda	#>$2000
+	sta	LZ4_DST+1
+
+	jsr	lz4_decode
+
+
+	;=============================
+	; Load graphic page0
+
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL                    ; load image to $c00
+
+
+	lda	#<fs
+	sta	GBASL
+	lda	#>fs
+	sta	GBASH
+	jsr	load_rle_gr
+
+	lda	#4
+	sta	DRAW_PAGE
+
+	jsr	gr_copy_to_current	; copy to page1
+
+	; GR part
+	bit	PAGE1
+	bit	LORES							; 4
+	bit	SET_GR							; 4
+	bit	FULLGR							; 4
+
+	;=============================
+	; Load graphic page1
+
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL                    ; load image to $c00
+
+	lda	#<fs
+	sta	GBASL
+	lda	#>fs
+	sta	GBASH
+	jsr	load_rle_gr
+
+	rts
+
+setup_people_deater:
+
+
+	;===================
+	; init vars
+
+	lda	#0
+	sta	DRAW_PAGE
+
+
+	;=============================
+	; Load graphic hgr
+
+	lda	#<deater_hgr
+	sta	LZ4_SRC
+	lda	#>deater_hgr
+	sta	LZ4_SRC+1
+
+	lda	#<(deater_hgr_end-8)	; skip checksum at end
+	sta	LZ4_END
+	lda	#>(deater_hgr_end-8)	; skip checksum at end
+	sta	LZ4_END+1
+
+	lda	#<$2000
+	sta	LZ4_DST
+	lda	#>$2000
+	sta	LZ4_DST+1
+
+	jsr	lz4_decode
+
+
+	;=============================
+	; Load graphic page0
+
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL                    ; load image to $c00
+
+
+	lda	#<deater
+	sta	GBASL
+	lda	#>deater
+	sta	GBASH
+	jsr	load_rle_gr
+
+	lda	#4
+	sta	DRAW_PAGE
+
+	jsr	gr_copy_to_current	; copy to page1
+
+	; GR part
+	bit	PAGE1
+	bit	LORES							; 4
+	bit	SET_GR							; 4
+	bit	FULLGR							; 4
+
+	;=============================
+	; Load graphic page1
+
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL                    ; load image to $c00
+
+	lda	#<deater
+	sta	GBASL
+	lda	#>deater
+	sta	GBASH
+	jsr	load_rle_gr
+
+	rts
+
+
+
+
+
+
+
+.include "fs.inc"
+.include "deater.inc"
+fs_hgr:
+.incbin "FS_HGRC.BIN.lz4",11
+fs_hgr_end:
+deater_hgr:
+.incbin "DEATER_HGRC.BIN.lz4",11
+deater_hgr_end:
 
