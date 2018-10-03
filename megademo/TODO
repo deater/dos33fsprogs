@@ -1,5 +1,6 @@
 Overall:
 	fix off-by-one line vaporlock
+	disk loader?
 
 Music:
 	compose music
@@ -9,22 +10,64 @@ c64_opener:
 	get curtain-opening effect working
 	add text to background
 
+falling_apple:
+	make it fall?
+	some sort of wipe?
+
 starring:
 	complete graphics
 	figure out png2hgr off-by-one error?
 	add wipe effect with tengwar: just draw 4 bytes yellow, 4 bytes
 	from scroll buffer
+	Add Susie starring role?
 
 e-mail:
-	implement
-	half text
-	40x96 graphics
-	use existing move_letters?
+	Update to proper text
+	Add susie?
+
+leave house:
+	Green, a house on left?  fence, bird?
+	have mountain in background?
+	
+
+running bird:
+	run to middle of screen, then have everything start moving?
+	update text
+
+waterfall:
+	finish packing down a bit
+
+arrival at ship
+	top HGR, bottom gr
+	close door
+	flames going
+	tree goes from big to small, horizon drops?
+
+mode7:
+	change path
+	change ground to night-time darkness.  grey water
+
+spacegame:
+	saturn-like planet?  raster bars?
+	score at top?
+	when done, blue horiz line?
+
+arrive at frogysue:
+	park ship on left
+	amethys crystals?
+	sky text/ground lgr?
+	susie follow?
+	haert when meet at center?
+
+fireworks:
+	update text
 
 
-Move over with black pixels, to make sure colorburst set?
-	paper slightly narrower, with inverse Os as char to make it look
-	like form-feed paper?
+
+
+
+
+e-mail notes:
 
 **01234567890123456**
 2  DEATER,
