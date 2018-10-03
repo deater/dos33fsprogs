@@ -69,6 +69,14 @@ mode7_flying:
 	jsr	init_multiply_tables
 
 
+	; initialize
+	lda	#>sky_background
+	sta	INH
+	lda	#<sky_background
+	sta	INL
+	jsr	decompress_scroll	; load sky background
+
+
 	;================================
 	; Clear screen and setup graphics
 	;================================
@@ -613,11 +621,8 @@ draw_background_mode7:
 	dec	DRAW_SKY	; usually 2 as we redraw both pages	; 5
 
 
-;	lda	DRAW_BLUE_SKY
-;	bne	draw_blue_sky
-
 draw_black_sky:
-	lda	#1
+	lda	#0
 	sta	CV
 
 	jsr	scroll_background
@@ -1059,7 +1064,7 @@ lookup_island_map:
 .include "starry_sky.scroll"
 
 .include "multiply_fast.s"
-
+.include "gr_scroll.s"
 
 ; 8.8 fixed point
 ; should we store as two arrays, one I one F?
