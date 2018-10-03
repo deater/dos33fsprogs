@@ -25,7 +25,7 @@ MARGIN		= 24
 
 ; Zero page addresses
 ;STATE		= $ED
-OFFSET		= $EF
+;OFFSET		= $EF
 COLOR_GROUP	= $F0
 X_VELOCITY	= $F1
 Y_VELOCITY_H	= $F2

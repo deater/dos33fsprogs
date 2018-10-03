@@ -25,6 +25,8 @@ apple_iie:
 	;===================
 	jsr	HOME
 
+	jsr	mode7_flying
+
 	; C64 Opening Sequence
 
 	jsr	c64_opener
@@ -54,6 +56,7 @@ apple_iie:
 	; Enter ship
 
 	; mode7 (???)
+	jsr	mode7_flying
 
 	; Fly in space
 
@@ -61,7 +64,7 @@ apple_iie:
 
 	; Fireworks
 
-	jsr	fireworks
+;	jsr	fireworks
 
 	; Game over
 game_over_man:
@@ -88,9 +91,10 @@ loop_forever:
 	.include	"wait_keypress.s"
 	.include	"random16.s"
 .align $100
-	.include	"fireworks.s"
+;	.include	"fireworks.s"
 	.include	"hgr.s"
 	.include	"bird_mountain.s"
 	.include	"move_letters.s"
 .align $100
 	.include	"gr_putsprite.s"
+	.include	"mode7.s"

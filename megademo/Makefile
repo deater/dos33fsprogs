@@ -30,6 +30,7 @@ megademo.o:	megademo.s \
 	starring_people.s fs.inc FS_HGRC.BIN.lz4 deater.inc DEATER_HGRC.BIN.lz4\
 	check_email.s email_40_96.inc \
 	bird_mountain.s \
+	mode7.s \
 	fireworks.s fw_background.inc fw_state_machine.s fw.s \
 	hgr.s random16.s move_letters.s
 	ca65 -o megademo.o megademo.s -l megademo.lst

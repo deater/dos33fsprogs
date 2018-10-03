@@ -1,3 +1,7 @@
+;; Zero Page
+
+FRAMEBUFFER     = $00   ; $00 - $0F
+
 ;; LZ4 addresses
 
 LZ4_SRC		= $00
@@ -46,7 +50,7 @@ LETTERX         = $65
 LETTERY         = $66
 LETTERD         = $67
 LETTER          = $68
-
+BLARGH          = $69
 
 				;FACTOR_I	= $66
 				;FACTOR_F	= $67
@@ -122,6 +126,7 @@ CURSOR		= $9D
 			;MATCH		=	$E2
 			;XX		=	$E3
 YY	=	$E4
+HGR_COLOR       = $E4
 			;SHIPY		=	$E4
 			;YADD		=	$E5
 			;LOOP		=	$E6
@@ -131,12 +136,16 @@ YY	=	$E4
 			;NAMEH		=	$EA
 			;NAMEX		=	$EB
 			;CHAR		=	$EC
+STATE           = $ED
 DISP_PAGE	= $ED
 DRAW_PAGE	= $EE
+OFFSET         = $EF
 
 				;FIRST		=	$F0
-				;LASTKEY	=	$F1
-				;PADDLE_STATUS	=	$F2
+
+LASTKEY         = $F1
+PADDLE_STATUS   = $F2
+
 SPRITETEMP	=	$F2
 XPOS		=	$F3
 YPOS		=	$F4
