@@ -30,6 +30,7 @@ megademo.o:	megademo.s \
 	starring_people.s fs.inc FS_HGRC.BIN.lz4 deater.inc DEATER_HGRC.BIN.lz4\
 	check_email.s email_40_96.inc \
 	bird_mountain.s \
+	takeoff.s takeoff.inc takeoff.img.lz4 \
 	mode7.s \
 	fireworks.s fw_background.inc fw_state_machine.s fw.s \
 	hgr.s random16.s move_letters.s
@@ -61,6 +62,16 @@ starring3.img.lz4:	starring3.img
 starring3.img:	./starring_3_hgr.png
 		../hgr-utils/png2hgr starring_3_hgr.png > starring3.img
 
+
+####
+takeoff.inc:	./takeoff.png
+	$(PNG_TO_RLE) asm ./takeoff.png takeoff > takeoff.inc
+
+takeoff.img.lz4:	takeoff.img
+	lz4 -f -16 takeoff.img
+
+takeoff.img:	takeoff_hgr.png
+	../hgr-utils/png2hgr takeoff_hgr.png > takeoff.img
 
 ####
 

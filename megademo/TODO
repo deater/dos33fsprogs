@@ -1,65 +1,70 @@
 Overall:
 	fix off-by-one line vaporlock
 	disk loader?
+	Load with HGR C64 at offset 0x2000 and then straight to 0x4000
+	Trim the last 8 bytes off of all the lz4 files
 
 Music:
 	compose music
 	fit in RAM
 
-c64_opener:
+Timing:
+	Except for fireworks, 15s for each? 150s = 2min 30s
+
+0: c64_opener:
 	get curtain-opening effect working
 	add text to background
 
-falling_apple:
+1: falling_apple:
 	make it fall?
 	some sort of wipe?
 
-starring:
+2: starring:
 	complete graphics
 	figure out png2hgr off-by-one error?
 	add wipe effect with tengwar: just draw 4 bytes yellow, 4 bytes
 	from scroll buffer
 	Add Susie starring role?
 
-e-mail:
+3: e-mail:
 	Update to proper text
 	Add susie?
 
-leave house:
+4: leave house:
 	Green, a house on left?  fence, bird?
 	have mountain in background?
 	
 
-running bird:
+5: running bird:
 	run to middle of screen, then have everything start moving?
 	update text
 
-waterfall:
+6: waterfall:
 	finish packing down a bit
 
-arrival at ship
+7: arrival at ship
 	top HGR, bottom gr
 	close door
 	flames going
 	tree goes from big to small, horizon drops?
 
-mode7:
+8: mode7:
 	change path
 	change ground to night-time darkness.  grey water
 
-spacegame:
+9: spacegame:
 	saturn-like planet?  raster bars?
 	score at top?
 	when done, blue horiz line?
 
-arrive at frogysue:
+10: arrive at frogysue:
 	park ship on left
 	amethys crystals?
 	sky text/ground lgr?
 	susie follow?
 	haert when meet at center?
 
-fireworks:
+11: fireworks:
 	update text
 
 

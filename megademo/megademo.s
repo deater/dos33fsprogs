@@ -25,7 +25,7 @@ apple_iie:
 	;===================
 	jsr	HOME
 
-	jsr	mode7_flying
+	jsr	rocket_takeoff
 
 	; C64 Opening Sequence
 
@@ -54,9 +54,10 @@ apple_iie:
 	; Waterfall
 
 	; Enter ship
+	jsr	rocket_takeoff
 
 	; mode7 (???)
-	jsr	mode7_flying
+;	jsr	mode7_flying
 
 	; Fly in space
 
@@ -91,10 +92,11 @@ loop_forever:
 	.include	"wait_keypress.s"
 	.include	"random16.s"
 .align $100
-;	.include	"fireworks.s"
+	.include	"fireworks.s"
 	.include	"hgr.s"
 	.include	"bird_mountain.s"
 	.include	"move_letters.s"
 .align $100
 	.include	"gr_putsprite.s"
-	.include	"mode7.s"
+;	.include	"mode7.s"
+	.include	"takeoff.s"

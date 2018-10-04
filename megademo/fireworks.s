@@ -3,7 +3,7 @@
 ; HGR plus 40x48d page1/page2 every-1-scanline pageflip mode
 
 ; Zero Page
-FRAMEBUFFER	= $00	; $00 - $0F
+;FRAMEBUFFER	= $00	; $00 - $0F
 ;YPOS		= $10
 ;FRAME		= $60
 ;WAITING	= $62
@@ -13,12 +13,12 @@ FRAMEBUFFER	= $00	; $00 - $0F
 ;LETTERY 	= $66
 ;LETTERD 	= $67
 ;LETTER  	= $68
-BLARGH		= $69
-HGR_COLOR	= $E4
-STATE		= $ED
+;BLARGH		= $69
+;HGR_COLOR	= $E4
+;STATE		= $ED
 ;DRAW_PAGE	= $EE
-LASTKEY		= $F1
-PADDLE_STATUS	= $F2
+;LASTKEY	= $F1
+;PADDLE_STATUS	= $F2
 
 
 	;==================================
