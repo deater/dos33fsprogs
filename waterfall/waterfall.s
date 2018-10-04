@@ -838,8 +838,6 @@ three_first_four_lines:
 	; we do mockingboard here
 	; we have 222 cycles (65*4 = 260 - 38 = 222)
 
-
-
 								; 38
 	; come in with 38
 	; 222 - 100 = 122 to kill
@@ -913,304 +911,143 @@ twinkle_loop_three:
 
 	; line 0
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-	; endfalls
-	; delay 21
-;	asl	DUMMY						; 6
-	nop
-	nop
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
+	; line 1
+	bit	PAGE1						; 4
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
 	; line 2
 	bit	PAGE1						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE1						; 4
-	; end falls
-	; delay 21
-;	asl	DUMMY						; 6
-	nop
-	nop
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-
-	; line 3
-	bit	PAGE1						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE1						; 4
-	; end falls
-	; delay 21
-;	asl	DUMMY						; 6
-	nop
-	nop
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
 
 	; line 4
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4 ; 44
-	; end falls
-	; delay 21 - 7 from loop
-	nop
-	nop
-;	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	nop							; 2 ; 58
+	lda	#27						; 2
+	jsr	delay_a						; 25+27
 
 	dey							; 2
-	beq	twinkle_loop_three_done				;
-								; 2
+	beq	twinkle_loop_three_done				; 3
+								; -1
 	jmp	twinkle_loop_three				; 3
+
+
 twinkle_loop_three_done:
 
 	ldy	#31						; 2
 falls_loop_three:
 
-	; line 0
+;=== line 0
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
+	; delay 31
+	lda	#4						; 2
+	jsr	delay_a						; 25+4
+
+	; delay 11
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
-	; endfalls
-	; delay 21
-	nop
-	nop
-;	asl	DUMMY						; 6
+
+	; delay 19
+	nop							; 2
+	nop							; 2
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 
-	; line 2
+;=== line 1
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
+	; delay 31
+	lda	#4						; 2
+	jsr	delay_a						; 25+4
+
+	; delay 11
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
-	; end falls
-	; delay 21
+
+	; delay 19
 	nop
 	nop
-;	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 
-	; line 3
+;=== line 2
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
+	; delay 31
+	lda	#4						; 2
+	jsr	delay_a						; 25+4
+
+	; delay 11
+	bit	PAGE0						; 4
 	lda	YPOS						; 3
+	bit	PAGE0						; 4
+
+	; delay 19
 	nop							; 2
-	nop
-	; falls
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-	; end falls
-	; delay 21
-	nop
-	nop
-;	asl	DUMMY						; 6
+	nop							; 2
 	asl	DUMMY						; 6
 	asl	DUMMY						; 6
 	lda	YPOS						; 3
 
-	; line 4
+;=== line 4
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
+	; delay 31
+	lda	#4						; 2
+	jsr	delay_a						; 25+4
+
+	; delay 11
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4 ; 44
-	; end falls
+
 	; delay 21 - 7 from loop
-	nop
-	nop
-;	asl	DUMMY						; 6
+	nop							; 2
+	nop							; 2
 	asl	DUMMY						; 6
 	nop							; 2 ; 58
 
 	dey							; 2
-	beq	falls_loop_three_done				;
-								; 2
-	jmp	falls_loop_three					; 3
+	beq	falls_loop_three_done				; 3
+								; -1
+	jmp	falls_loop_three				; 3
 falls_loop_three_done:
-								; 3
 	ldy	#12						; 2
 
 ground_loop_three:
 
-	; line 0
+;=== line 0
 	bit	PAGE1						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE1						; 4
-	; endfalls
-	; delay 21
-	nop
-	nop
-;	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
+	; delay 61
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
 
-	; line 2
+;=== line 1
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-	; end falls
-	; delay 21
-	nop
-	nop
-;	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
+	; delay 61
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
 
-	; line 3
+;=== line 2
 	bit	PAGE1						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE1						; 4
-	; end falls
-	; delay 21
-	nop
-	nop
-;	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
+	; delay 61
+	lda	#34						; 2
+	jsr	delay_a						; 25+34
 
-	; line 4
+;=== line 3
 	bit	PAGE0						; 4
-	; delay 29
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-	nop							; 2
-	nop
-	; falls
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4 ; 44
-	; end falls
-	; delay 21 - 7 from loop
-	nop
-	nop
-;	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	nop							; 2 ; 58
+	; delay 54
+	lda	#27						; 2
+	jsr	delay_a						; 25+27
 
 	dey							; 2
-	beq	ground_loop_three_done				;
-								; 2
-	jmp	ground_loop_three					; 3
+	beq	ground_loop_three_done				; 3
+								; -1
+	jmp	ground_loop_three				; 3
 ground_loop_three_done:
 
-
-								; 3
 	nop							; 2
 
 	jmp	display_loop_return				; 3
