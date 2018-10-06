@@ -318,8 +318,16 @@ adjust_xpos:
 .align	$100
 .include "gr_unrolled_copy.s"
 
-.include "waterfall_page1.inc"
-.include "waterfall_page2.inc"
+
+;		even	odd     three   four
+;twinkle:	1111	1111	0110	1111
+;falls:		000	010	010	000
+;		000	000	010	010
+;		010	000	000	010
+;		010	010	000	000
+;ground:	0101	1010	1010	0101
+; PAGE0=54 PAGE1=55
+
 
 
 .align	$100
@@ -336,42 +344,78 @@ adjust_xpos:
 	; second scanline, again kill so 65 killed
 
 display_even:
+	lda	#$55						; 2
+	; twinkle 11 falls 0011 ground 0101
+	sta	wf_modify1+1					; 4
+	sta	wf_modify2+1					; 4
+	;sta	wf_modify3+1					;
+	;sta	wf_modify4+1					;
+	sta	wf_modify5+1					; 4
+	sta	wf_modify6+1					; 4
+	;sta	wf_modify7+1					;
+	sta	wf_modify8+1					; 4
+	;sta	wf_modify9+1					;
+	sta	wf_modify10+1					; 4
 
-even_first_four_lines:
+	lda	#$54
+	; twinkle 11 falls 0011 ground 0101
+	;sta	wf_modify1+1					;
+	;sta	wf_modify2+1					;
+	sta	wf_modify3+1					; 4
+	sta	wf_modify4+1					; 4
+	;sta	wf_modify5+1					;
+	;sta	wf_modify6+1					;
+	sta	wf_modify7+1					; 4
+	;sta	wf_modify8+1					;
+	sta	wf_modify9+1					; 4
+	;sta	wf_modify10+1					;
+
+	jmp	first_four_lines				; 3
+							;============
+							;	 47
+
+
+first_four_lines:
 
 	; line 0-3 = 65*4 = 260
 	;		    -38
+	;		    -47
 	;		     -2
 	;                    -2
 	;                   -25
 	;=========================
-	;		    193
+	;		    146
 
-	lda	#193						; 2
-	jsr	delay_a						; 125
+	lda	#146						; 2
+	jsr	delay_a						; 25+146
 
 	ldy	#4						; 2
 
 
-even_twinkle_stars:
+twinkle_stars:
 
-twinkle_loop_even:
+twinkle_loop:
 
 	; page1 for 4 lines, 65 - 4 = 61 -2 = 59 - 25 = 34
 
 	; line 0
+wf_modify1:
 	bit	PAGE1						; 4
 	lda	#34						; 2
 	jsr	delay_a						; 25+34
+
 	; line 1
 	bit	PAGE1						; 4
 	lda	#34						; 2
 	jsr	delay_a						; 25+34
+
 	; line 2
 	bit	PAGE1						; 4
 	lda	#34						; 2
 	jsr	delay_a						; 25+34
+
 	; line 3
+wf_modify2:
 	bit	PAGE1						; 4
 	lda	#27						; 2
 	jsr	delay_a						; 25+27
@@ -381,24 +425,26 @@ twinkle_loop_even:
 
 
 	dey							; 2
-	beq	twinkle_loop_even_done				; 3
+	beq	twinkle_loop_done				; 3
 								;-1
-        jmp	twinkle_loop_even				; 3
+        jmp	twinkle_loop					; 3
 
 
 
-twinkle_loop_even_done:
+twinkle_loop_done:
 
 	ldy	#31						; 2
-falls_loop_even:
 
-; === line 0
+falls_loop:
+
+;=== line 0
 	bit	PAGE0						; 4
 	; delay 31
 	lda	#4						; 2
 	jsr	delay_a						; 25+4
 
 	; delay 11
+wf_modify3:
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
@@ -417,6 +463,7 @@ falls_loop_even:
 	jsr	delay_a						; 25+4
 
 	; delay 11
+wf_modify4:
 	bit	PAGE0						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
@@ -435,6 +482,7 @@ falls_loop_even:
 	jsr	delay_a						; 25+4
 
 	; delay 11
+wf_modify5:
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4
@@ -452,6 +500,7 @@ falls_loop_even:
 	jsr	delay_a						; 25+4
 
 	; delay 11
+wf_modify6:
 	bit	PAGE1						; 4
 	lda	YPOS						; 3
 	bit	PAGE0						; 4 ; 46
@@ -463,44 +512,48 @@ falls_loop_even:
 	nop							; 2 ; 58
 
 	dey							; 2
-	beq	falls_loop_even_done				; 3
+	beq	falls_loop_done					; 3
 								; -1
-	jmp	falls_loop_even					; 3
-falls_loop_even_done:
+	jmp	falls_loop					; 3
+falls_loop_done:
 
 	ldy	#12						; 2
 
-ground_loop_even:
+ground_loop:
 
 ;==== line 0
+wf_modify7:
 	bit	PAGE0						; 4
 	; delay 61
 	lda	#34						; 2
 	jsr	delay_a						; 25+34
 
 ;==== line 1
+wf_modify8:
 	bit	PAGE1						; 4
 	; delay 61
 	lda	#34						; 2
 	jsr	delay_a						; 25+34
 
 ;==== line 2
+wf_modify9:
 	bit	PAGE0						; 4
 	; delay 61
 	lda	#34						; 2
 	jsr	delay_a						; 25+34
 
 ;=== line 3
+wf_modify10:
 	bit	PAGE1						; 4
 	; delay 54
 	lda	#27						; 2
 	jsr	delay_a						; 25+27
 
 	dey							; 2
-	beq	ground_loop_even_done				; 3
+	beq	ground_loop_done				; 3
 								; -1
-	jmp	ground_loop_even				; 3
-ground_loop_even_done:
+	jmp	ground_loop					; 3
+ground_loop_done:
 	nop							; 2
 
 	jmp	wf_display_loop_return				; 3
@@ -1045,3 +1098,7 @@ ground_loop_four_done:
 	jmp	wf_display_loop_return				; 3
 
 
+
+
+;.include "waterfall_page1.inc"
+;.include "waterfall_page2.inc"
