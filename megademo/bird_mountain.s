@@ -495,8 +495,8 @@ letters_bm:
 	.byte	3,16,"IS HARD!"
 	.byte	255
 
-.align	$100
-.include "tfv_sprites.inc"
+;.align	$100
+;.include "tfv_sprites.inc"
 
 katahdin:
 .incbin	"KATC.BIN.lz4",11		; skip the header

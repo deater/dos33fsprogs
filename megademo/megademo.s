@@ -25,7 +25,7 @@ apple_iie:
 	;===================
 	jsr	HOME
 
-	jsr	rocket_takeoff
+	jsr	waterfall
 
 	; C64 Opening Sequence
 
@@ -49,9 +49,10 @@ apple_iie:
 	; Leaving house
 
 	; Riding bird
-	jsr	bird_mountain
+;	jsr	bird_mountain
 
 	; Waterfall
+	jsr	waterfall
 
 	; Enter ship
 	jsr	rocket_takeoff
@@ -94,9 +95,23 @@ loop_forever:
 .align $100
 	.include	"fireworks.s"
 	.include	"hgr.s"
-	.include	"bird_mountain.s"
+;	.include	"bird_mountain.s"
 	.include	"move_letters.s"
 .align $100
 	.include	"gr_putsprite.s"
 ;	.include	"mode7.s"
 	.include	"takeoff.s"
+	.include	"waterfall.s"
+
+
+;============================
+; Include Sprites
+;============================
+.align $100
+	.include "tfv_sprites.inc"
+
+;============================
+; Include Graphics
+;============================
+
+
