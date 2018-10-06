@@ -328,52 +328,109 @@ adjust_xpos:
 ;ground:	0101	1010	1010	0101
 ; PAGE0=54 PAGE1=55
 
-
-
-.align	$100
-
 	;=================================
 	; Display Even
 	;=================================
-	; we have 65 cycles per line
-	; the first 25 are in hblank
-	; we come in already 21 cycles into things
-	; so the first scanline is a loss (but that's OK)
-
-	; first scanline: 21+ 2 (from ldy) so need to kill 65-23 = 42
-	; second scanline, again kill so 65 killed
 
 display_even:
 	lda	#$55						; 2
 	; twinkle 11 falls 0011 ground 0101
 	sta	wf_modify1+1					; 4
 	sta	wf_modify2+1					; 4
-	;sta	wf_modify3+1					;
-	;sta	wf_modify4+1					;
 	sta	wf_modify5+1					; 4
 	sta	wf_modify6+1					; 4
-	;sta	wf_modify7+1					;
 	sta	wf_modify8+1					; 4
-	;sta	wf_modify9+1					;
 	sta	wf_modify10+1					; 4
 
 	lda	#$54
 	; twinkle 11 falls 0011 ground 0101
-	;sta	wf_modify1+1					;
-	;sta	wf_modify2+1					;
 	sta	wf_modify3+1					; 4
 	sta	wf_modify4+1					; 4
-	;sta	wf_modify5+1					;
-	;sta	wf_modify6+1					;
 	sta	wf_modify7+1					; 4
-	;sta	wf_modify8+1					;
 	sta	wf_modify9+1					; 4
-	;sta	wf_modify10+1					;
 
 	jmp	first_four_lines				; 3
 							;============
 							;	 47
 
+
+	;=================================
+	; Display Odd
+	;=================================
+
+display_odd:
+	lda	#$55						; 2
+	; twinkle 11 falls 1001 ground 1010
+	sta	wf_modify1+1					; 4
+	sta	wf_modify2+1					; 4
+	sta	wf_modify3+1					; 4
+	sta	wf_modify6+1					; 4
+	sta	wf_modify7+1					; 4
+	sta	wf_modify9+1					; 4
+
+	lda	#$54
+	; twinkle 11 falls 1001 ground 1010
+	sta	wf_modify4+1					; 4
+	sta	wf_modify5+1					; 4
+	sta	wf_modify8+1					; 4
+	sta	wf_modify10+1					; 4
+
+	jmp	first_four_lines				; 3
+							;============
+							;	 47
+
+	;=================================
+	; Display Three
+	;=================================
+
+display_three:
+	lda	#$55						; 2
+	; twinkle 00 falls 1100 ground 1010
+	sta	wf_modify3+1					; 4
+	sta	wf_modify4+1					; 4
+	sta	wf_modify7+1					; 4
+	sta	wf_modify9+1					; 4
+
+	lda	#$54
+	; twinkle 00 falls 1100 ground 1010
+	sta	wf_modify1+1					; 4
+	sta	wf_modify2+1					; 4
+	sta	wf_modify5+1					; 4
+	sta	wf_modify6+1					; 4
+	sta	wf_modify8+1					; 4
+	sta	wf_modify10+1					; 4
+
+	jmp	first_four_lines				; 3
+							;============
+							;	 47
+
+	;=================================
+	; Display Four
+	;=================================
+
+display_four:
+	lda	#$55						; 2
+	; twinkle 11 falls 0110 ground 0101
+	sta	wf_modify1+1					; 4
+	sta	wf_modify2+1					; 4
+	sta	wf_modify4+1					; 4
+	sta	wf_modify5+1					; 4
+	sta	wf_modify8+1					; 4
+	sta	wf_modify10+1					; 4
+
+	lda	#$54
+	; twinkle 11 falls 0110 ground 0101
+	sta	wf_modify3+1					; 4
+	sta	wf_modify6+1					; 4
+	sta	wf_modify7+1					; 4
+	sta	wf_modify9+1					; 4
+
+	jmp	first_four_lines				; 3
+							;============
+							;	 47
+
+
+.align	$100
 
 first_four_lines:
 
@@ -557,546 +614,6 @@ ground_loop_done:
 	nop							; 2
 
 	jmp	wf_display_loop_return				; 3
-
-.align	$100
-
-	;=================================
-	; Display Odd
-	;=================================
-	; we have 65 cycles per line
-	; the first 25 are in hblank
-
-display_odd:
-	; first scanline: comes in with 38
-
-odd_first_four_lines:
-
-	; line 0-3 = 65*4 = 260
-	;		    -38
-	;		     -2
-	;                    -2
-	;                   -25
-	;=========================
-	;		    193
-
-	lda	#193						; 2
-	jsr	delay_a						; 125
-
-	ldy	#4						; 2
-
-odd_twinkle_stars:
-
-twinkle_loop_odd:
-
-	; page1 for 4 lines, 65 - 4 = 61 -2 = 59 - 25 = 34
-
-	; line 0
-	bit	PAGE1						; 4
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-	; line 1
-	bit	PAGE1						; 4
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-	; line 2
-	bit	PAGE1						; 4
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-	; line 3
-	bit	PAGE1						; 4
-	lda	#27						; 2
-	jsr	delay_a						; 25+27
-
-	dey							; 2
-	beq	twinkle_loop_odd_done				; 3
-								; -1
-	jmp	twinkle_loop_odd				; 3
-twinkle_loop_odd_done:
-
-	ldy	#31						; 2
-falls_loop_odd:
-
-;=== line 0
-	bit	PAGE0						; 4
-	; delay 31
-	lda	#4						; 2
-	jsr	delay_a						; 25+4
-
-	; falls 11
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-
-	; delay 19
-	nop							; 2
-	nop							; 2
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-
-;==== line 1
-	bit	PAGE0						; 4
-	; delay 31
-	lda	#4						; 2
-	jsr	delay_a						; 25+4
-
-	; falls 8
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-
-	; delay 19
-	nop							; 2
-	nop							; 2
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-
-;=== line 2
-	bit	PAGE0						; 4
-	; delay 31
-	lda	#4						; 2
-	jsr	delay_a						; 25+4
-
-	; falls 8
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-
-	; delay 19
-	nop							; 2
-	nop							; 2
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-
-;===line 4
-	bit	PAGE0						; 4
-
-	; delay 31
-	lda	#4						; 2
-	jsr	delay_a						; 25+4
-
-	; falls 11
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4 ; 44
-
-	; end falls
-	; delay 21 - 7 from loop
-	nop							; 2
-	nop							; 2
-	asl	DUMMY						; 6
-	nop							; 2 ; 58
-
-	dey							; 2
-	beq	falls_loop_odd_done				; 3
-								;-1
-	jmp	falls_loop_odd					; 3
-falls_loop_odd_done:
-								; 3
-	ldy	#12						; 2
-
-ground_loop_odd:
-
-;=== line 0
-	bit	PAGE1						; 4
-	; delay 61
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-;=== line 1
-	bit	PAGE0						; 4
-	; delay 61
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-;==== line 2
-	bit	PAGE1						; 4
-	; delay 61
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-;==== line 3
-	bit	PAGE0						; 4
-	; delay 54
-	lda	#27						; 2
-	jsr	delay_a						; 25+27
-
-	dey							; 2
-	beq	ground_loop_odd_done				; 3
-								;-1
-	jmp	ground_loop_odd					; 3
-ground_loop_odd_done:
-
-
-								; 3
-	nop							; 2
-
-	jmp	wf_display_loop_return				; 3
-
-	rts							; 6
-
-
-.align	$100
-
-	;=================================
-	; Display 3
-	;=================================
-	; we have 65 cycles per line
-	; the first 25 are in hblank
-	; we come in already 21 cycles into things
-	; so the first scanline is a loss (but that's OK)
-
-	; first scanline: 21+ 2 (from ldy) so need to kill 65-23 = 42
-	; second scanline, again kill so 65 killed
-
-display_three:
-
-three_first_four_lines:
-
-	; line 0-3 = 65*4 = 260
-	;		    -38
-	;		     -2
-	;                    -2
-	;                   -25
-	;=========================
-	;		    193
-
-	lda	#193						; 2
-	jsr	delay_a						; 125
-
-	ldy	#4						; 2
-
-
-three_twinkle_stars:
-
-twinkle_loop_three:
-
-	; line 0
-	bit	PAGE0						; 4
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-	; line 1
-	bit	PAGE1						; 4
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-	; line 2
-	bit	PAGE1						; 4
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-	; line 4
-	bit	PAGE0						; 4
-	lda	#27						; 2
-	jsr	delay_a						; 25+27
-
-	dey							; 2
-	beq	twinkle_loop_three_done				; 3
-								; -1
-	jmp	twinkle_loop_three				; 3
-
-
-twinkle_loop_three_done:
-
-	ldy	#31						; 2
-falls_loop_three:
-
-;=== line 0
-	bit	PAGE0						; 4
-	; delay 31
-	lda	#4						; 2
-	jsr	delay_a						; 25+4
-
-	; delay 11
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-
-	; delay 19
-	nop							; 2
-	nop							; 2
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-
-;=== line 1
-	bit	PAGE0						; 4
-	; delay 31
-	lda	#4						; 2
-	jsr	delay_a						; 25+4
-
-	; delay 11
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-
-	; delay 19
-	nop
-	nop
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-
-;=== line 2
-	bit	PAGE0						; 4
-	; delay 31
-	lda	#4						; 2
-	jsr	delay_a						; 25+4
-
-	; delay 11
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-
-	; delay 19
-	nop							; 2
-	nop							; 2
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-
-;=== line 4
-	bit	PAGE0						; 4
-	; delay 31
-	lda	#4						; 2
-	jsr	delay_a						; 25+4
-
-	; delay 11
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4 ; 44
-
-	; delay 21 - 7 from loop
-	nop							; 2
-	nop							; 2
-	asl	DUMMY						; 6
-	nop							; 2 ; 58
-
-	dey							; 2
-	beq	falls_loop_three_done				; 3
-								; -1
-	jmp	falls_loop_three				; 3
-falls_loop_three_done:
-	ldy	#12						; 2
-
-ground_loop_three:
-
-;=== line 0
-	bit	PAGE1						; 4
-	; delay 61
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-;=== line 1
-	bit	PAGE0						; 4
-	; delay 61
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-;=== line 2
-	bit	PAGE1						; 4
-	; delay 61
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-;=== line 3
-	bit	PAGE0						; 4
-	; delay 54
-	lda	#27						; 2
-	jsr	delay_a						; 25+27
-
-	dey							; 2
-	beq	ground_loop_three_done				; 3
-								; -1
-	jmp	ground_loop_three				; 3
-ground_loop_three_done:
-
-	nop							; 2
-
-	jmp	wf_display_loop_return				; 3
-
-
-.align	$100
-
-	;=================================
-	; Display Four
-	;=================================
-	; we have 65 cycles per line
-	; the first 25 are in hblank
-	; we come in already 21 cycles into things
-	; so the first scanline is a loss (but that's OK)
-
-display_four:
-
-	; first scanline comes in with 38
-
-four_first_four_lines:
-	; line 0-3 = 65*4 = 260
-	;                   -38
-	;                    -2
-	;                    -2
-	;                   -25
-	;=========================
-	;                   193
-
-	lda	#193						; 2
-	jsr	delay_a						; 25+193
-
-	ldy     #4                                              ; 2
-
-four_twinkle_stars:
-
-twinkle_loop_four:
-
-;=== line 0
-	bit	PAGE1						; 4
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-;=== line 1
-	bit	PAGE1						; 4
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-;=== line 2
-	bit	PAGE1						; 4
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-
-;=== line 3
-	bit	PAGE1						; 4
-	lda	#27						; 2
-	jsr	delay_a						; 25+27
-
-
-	dey							; 2
-	beq	twinkle_loop_four_done				; 3
-								; -1
-	jmp	twinkle_loop_four				; 3
-twinkle_loop_four_done:
-
-	ldy	#31						; 2
-falls_loop_four:
-
-;=== line 0
-	bit	PAGE0						; 4
-	; delay 31
-	lda	#4						; 2
-	jsr	delay_a						; 25+4
-
-	; delay 11
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-
-	; delay 19
-	nop							; 2
-	nop							; 2
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-
-;=== line 1
-	bit	PAGE0						; 4
-	; delay 31
-	lda	#4						; 2
-	jsr	delay_a						; 25+4
-
-	; delay 11
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-
-	; delay 19
-	nop							; 2
-	nop							; 2
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-
-;=== line 2
-	bit	PAGE0						; 4
-	; delay 31
-	lda	#4						; 2
-	jsr	delay_a						; 25+4
-
-	; delay 11
-	bit	PAGE1						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4
-
-	; delay 19
-	nop							; 2
-	nop							; 2
-	asl	DUMMY						; 6
-	asl	DUMMY						; 6
-	lda	YPOS						; 3
-
-;=== line 3
-	bit	PAGE0						; 4
-	; delay 31
-	lda	#4						; 2
-	jsr	delay_a						; 25+4
-
-	; delay 11
-	bit	PAGE0						; 4
-	lda	YPOS						; 3
-	bit	PAGE0						; 4 ; 44
-
-	; delay 21 - 7 from loop
-	nop							; 2
-	nop							; 2
-	asl	DUMMY						; 6
-	nop							; 2 ; 58
-
-	dey							; 2
-	beq	falls_loop_four_done				; 3
-								; -1
-	jmp	falls_loop_four					; 3
-falls_loop_four_done:
-	ldy	#12						; 2
-
-ground_loop_four:
-
-;=== line 0
-	bit	PAGE0						; 4
-	; delay 61
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-;=== line 1
-	bit	PAGE1						; 4
-	; delay 61
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-;=== line 2
-	bit	PAGE0						; 4
-	; delay 61
-	lda	#34						; 2
-	jsr	delay_a						; 25+34
-
-
-;=== line 3
-	bit	PAGE1						; 4
-	; delay 54
-	lda	#27						; 2
-	jsr	delay_a						; 25+27
-
-	dey							; 2
-	beq	ground_loop_four_done				; 3
-								; -1
-	jmp	ground_loop_four				; 3
-ground_loop_four_done:
-	nop							; 2
-
-	jmp	wf_display_loop_return				; 3
-
 
 
 
