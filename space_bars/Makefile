@@ -17,7 +17,7 @@ SPACE_BARS:	space_bars.o
 
 space_bars.o:	space_bars.s instructions.s game.s \
 	game_over.s gr_copy.s text_print.s title.s \
-	spacebars_title.inc \
+	spacebars_title.inc screen_split.s \
 	vapor_lock.s delay_a.s lz4_decode.s SB_BACKGROUNDC.BIN.lz4
 	ca65 -o space_bars.o space_bars.s -l space_bars.lst
 

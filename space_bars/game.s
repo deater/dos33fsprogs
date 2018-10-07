@@ -38,17 +38,12 @@ game:
 	;=============================
 	; Load graphic page0
 
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image to $c00
+	lda	#8
+	sta	DRAW_PAGE
 
+	lda	#22
+	jsr	clear_gr
 
-;	lda	#<fs
-;	sta	GBASL
-;	lda	#>fs
-;	sta	GBASH
-;	jsr	load_rle_gr
 
 	lda	#4
 	sta	DRAW_PAGE
@@ -64,17 +59,12 @@ game:
 	;=============================
 	; Load graphic page1
 
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image to $c00
 
-;	lda	#<fs
-;	sta	GBASL
-;	lda	#>fs
-;	sta	GBASH
-;	jsr	load_rle_gr
+	lda	#8
+	sta	DRAW_PAGE
 
+	lda	#44
+	jsr	clear_gr
 
 	;===================
 	; copy to page3
