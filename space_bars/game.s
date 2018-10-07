@@ -213,22 +213,32 @@ sbloopD:dex								; 2
 
 sb_mixed:
 	nop		;kill 6 cycles (room for rts)	; 2
-	nop						; 2
-	ldy	#126					; 2
+	ldx	#9					; 2
+	ldy	#14 ; 126				; 2
 
 sb_mixed_loop:
-	nop
-	nop
-	nop
-	nop
+	lda	ss_multiples,x				; 4
+	sta	split_smc+1				; 4
+split_smc:
 	jsr	split_4					; 6+46
 	dey						; 2
 	bne	sb_mixed_loop				; 3
 
 							; -1
+	nop						; 2
+	ldy	#14					; 2
+	dex						; 2
+	bne	split_smc				; 3
 
-							; so need delay 5
-							; in vblank
+							; -1
+
+						; need to kill
+						; -6 from offset
+						; +1 fall through
+						; -9 from check 
+						; +1 from other fallthrough
+					;================
+					;	 -13
 
 
 
@@ -237,17 +247,16 @@ sb_all_gr:
 
 	; 18 * 65 = 1170
 	;             -4
-	;             -5
+	;            -13
 	;       =========
-	;	    1161
+	;	    1153
 
 	bit	LORES						; 4
 
+	; Try X=6 Y=32 cycles=1153
 
-	; Try X=22 Y=10 cycles=1161
-
-	ldy	#10							; 2
-sbloopE:ldx	#22							; 2
+	ldy	#32							; 2
+sbloopE:ldx	#6							; 2
 sbloopF:dex								; 2
 	bne	sbloopF							; 2nt/3
 	dey								; 2

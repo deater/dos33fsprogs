@@ -143,6 +143,7 @@ gr_offsets:
 .include "game.s"
 .include "text_print.s"
 .include "game_over.s"
+.align $100
 .include "vapor_lock.s"
 .include "delay_a.s"
 .include "lz4_decode.s"
