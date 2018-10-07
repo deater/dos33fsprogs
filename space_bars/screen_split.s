@@ -14,9 +14,10 @@
 ; 32 NnBBBBNnNnNnNnNnNnNnNnNnNnNnNnNnNnbbbbNnRrrrrr
 ; 36 BBBBNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnbbbbRrrrrr
 
+; add 23 each time?
 
 
-
+	; 23 bytes in size?
 split_4:
 	nop
 	nop
@@ -57,6 +58,153 @@ split_8:
 	nop
 	nop
 	nop
+	rts
+
+split_12:
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	LORES
+	nop
+	nop
+	nop
+	nop
+	bit	HIRES
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	rts
+
+split_16:
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	LORES
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	HIRES
+	nop
+	nop
+	nop
+	nop
+	nop
+	rts
+
+split_20:
+	nop
+	nop
+	nop
+	nop
+	bit	LORES
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	HIRES
+	nop
+	nop
+	nop
+	nop
+	rts
+
+split_24:
+	nop
+	nop
+	nop
+	bit	LORES
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	HIRES
+	nop
+	nop
+	nop
+	rts
+
+split_28:
+	nop
+	nop
+	bit	LORES
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	HIRES
+	nop
+	nop
+	rts
+
+split_32:
+	nop
+	bit	LORES
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	HIRES
+	nop
+	rts
+
+split_36:
+	bit	LORES
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	HIRES
 	rts
 
 
