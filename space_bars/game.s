@@ -186,26 +186,43 @@ sb_text_loop:
 
 
 sb_hgr_loop:
-	; delay 184*65 =  11960
+	; delay 40*65 =  2600
 	;                    -2
 	;		     +1
 	;		     -8
 	;=========================
-	;		11951
+	;		2591
 
 	bit	SET_GR				; 4
 	bit	HIRES				; 4
 
-	; Try X=22 Y=103 cycles=11949 R2
+	; Try X=1 Y=235 cycles=2586 R5
 
-	nop
+	nop		; 2
+	lda	$0	; 3
 
-	ldy	#103							; 2
-sbloopC:ldx	#22							; 2
+	ldy	#235							; 2
+sbloopC:ldx	#1							; 2
 sbloopD:dex								; 2
 	bne	sbloopD							; 2nt/3
 	dey								; 2
 	bne	sbloopC							; 2nt/3
+
+
+
+
+sb_mixed_loop:
+	; delay 144*65 =  9360
+
+	; Try X=37 Y=49 cycles=9360
+
+	ldy	#49							; 2
+sbloopE:ldx	#37							; 2
+sbloopF:dex								; 2
+	bne	sbloopF							; 2nt/3
+	dey								; 2
+	bne	sbloopE							; 2nt/3
+
 
 
 	;======================================================
