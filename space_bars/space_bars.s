@@ -8,6 +8,16 @@
 
 ; Zero Page
 FRAMEBUFFER	= $00	; $00 - $0F
+
+;; LZ4 addresses
+
+LZ4_SRC		= $00
+LZ4_DST		= $02
+LZ4_END		= $04
+COUNT		= $06
+DELTA		= $08
+
+
 YPOS		= $10
 YPOS_SIN	= $11
 CH		= $24
@@ -29,13 +39,17 @@ OUTH		= $FF
 KEYPRESS= $C000
 KEYRESET= $C010
 SET_GR	= $C050 ; Enable graphics
+SET_TEXT= $C051 ; Enable text
 FULLGR	= $C052	; Full screen, no text
 PAGE0	= $C054 ; Page0
 PAGE1	= $C055 ; Page1
 LORES	= $C056	; Enable LORES graphics
+HIRES	= $C057 ; Enable HIRES graphics
 PADDLE_BUTTON0 = $C061
 PADDL0	= $C064
 PTRIG	= $C070
+
+
 
 ; ROM routines
 
@@ -129,6 +143,9 @@ gr_offsets:
 .include "game.s"
 .include "text_print.s"
 .include "game_over.s"
+.include "vapor_lock.s"
+.include "delay_a.s"
+.include "lz4_decode.s"
 
 .include "spacebars_title.inc"
 
