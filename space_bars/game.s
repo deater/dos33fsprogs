@@ -211,17 +211,36 @@ sbloopD:dex								; 2
 
 
 
+sb_mixed:
+	nop		;kill 6 cycles (room for rts)	; 2
+	nop						; 2
+	ldy	#144					; 2
+
 sb_mixed_loop:
+	nop
+	nop
+	nop
+	nop
+	jsr	split_4					; 6+46
+	dey						; 2
+	bne	sb_mixed_loop				; 3
+
+							; -1
+
+							; so need delay 5
+							; in vblank
+
+
 	; delay 144*65 =  9360
 
 	; Try X=37 Y=49 cycles=9360
 
-	ldy	#49							; 2
-sbloopE:ldx	#37							; 2
-sbloopF:dex								; 2
-	bne	sbloopF							; 2nt/3
-	dey								; 2
-	bne	sbloopE							; 2nt/3
+;	ldy	#49							; 2
+;sbloopE:ldx	#37							; 2
+;sbloopF:dex								; 2
+;	bne	sbloopF							; 2nt/3
+;	dey								; 2
+;	bne	sbloopE							; 2nt/3
 
 
 
@@ -230,14 +249,17 @@ sbloopF:dex								; 2
 	;======================================================
 
 	; do_nothing should be      4550
+	;			     - 5 from above
 	;			     -10 keypress
 	;			===========
-	;			    4540
+	;			    4535
 
-	; Try X=9 Y=89 cycles=4540
+	; Try X=40 Y=22 cycles=4533 R2
 
-	ldy	#89							; 2
-sbloop1:ldx	#9							; 2
+	nop
+
+	ldy	#22							; 2
+sbloop1:ldx	#40							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
@@ -260,3 +282,4 @@ background_hgr:
 .incbin "SB_BACKGROUNDC.BIN.lz4",11
 background_hgr_end:
 
+.include "screen_split.s"
