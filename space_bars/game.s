@@ -292,23 +292,24 @@ sbloopF:dex								; 2
 
 	; do_nothing should be      4550
 	;			   -3470 draw_framebuffer
-	;			    -497 setup framebuffer
+	;			    -793 setup framebuffer
 	;			     -21 frame count
 	;			     -34 keypress
 	;				-1 adjust center mark back
 	;			===========
-	;			     527
+	;			     231
 
-	; Try X=104 Y=1 cycles=527
+	; Try X=8 Y=5 cycles=231
 
-	ldy	#1							; 2
-sbloop1:ldx	#104							; 2
+
+	ldy	#5							; 2
+sbloop1:ldx	#8							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
 	bne	sbloop1							; 2nt/3
 
-	jsr	setup_framebuffer			; 6+491
+	jsr	setup_framebuffer			; 6+787
 
 	jsr	draw_framebuffer			; 6+3464
 
@@ -516,31 +517,48 @@ raster_texture:
 	.byte	$1,$b,$f,$b,$1,$0,$0,$0		; red
 	.byte	$0,$0,$0,$0,$0,$0,$0,$0,$0
 
+offset_lookup:
+;	.byte	0,1,2,3,4,5,6,7,8,9,10,11,12
+;	.byte	13,14,15,16,17,18,19,20,21,22,23,24
 
-	; 5 + 37*13 + 5 = 491
+	.byte   25,24
+	.byte	23,22,21,20,19,18,17,16,15,14,13,12
+	.byte	11,10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
 
+.align $100
+
+	; 2 + 60*13 + 5 = 787
 setup_framebuffer:
 	ldx	#0							; 2
-	ldy	FRAMEH							; 3
 setup_fb_loop:
-	tya								; 2
+	lda	offset_lookup,X						; 4
+	clc								; 2
+	adc	FRAMEH							; 3
 	and	#$3f							; 2
 	tay								; 2
-
 	lda	raster_texture,y					; 4
 	asl								; 2
 	asl								; 2
 	asl								; 2
 	asl								; 2
-	ora	raster_texture+1,y					; 4
+	pha								; 3
+								;===========
+								;        28
+
+	lda	offset_lookup+1,X					; 4
+	clc								; 2
+	adc	FRAMEH							; 3
+	and	#$3f							; 2
+	tay								; 2
+	pla								; 4
+	ora	raster_texture,y					; 4
+
 	sta	FRAMEBUFFER,x				; zp		; 4
-	dey								; 2
-	dey								; 2
 	inx								; 2
 	cpx	#13							; 2
 	bne	setup_fb_loop						; 3
 								;===========
-								;        37
+								;        32
 
 									; -1
 	rts								; 6
