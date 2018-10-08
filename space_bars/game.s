@@ -260,32 +260,67 @@ sbloopF:dex								; 2
 	;======================================================
 
 	; do_nothing should be      4550
-	;			     -10 keypress
+	;			     -34 keypress
 	;				-1 adjust center mark back
 	;			===========
-	;			    4539
+	;			    4515
 
-	; Try X=9 Y=89 cycles=4540
-	; Try X=3 Y=216 cycles=4537 R2
+	; Try X=11 Y=74 cycles=4515
 
-	nop
-
-	ldy	#216							; 2
-sbloop1:ldx	#3							; 2
+	ldy	#74							; 2
+sbloop1:ldx	#11							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
 	bne	sbloop1							; 2nt/3
 
+
+	; no keypress =  10+(24)   = 34
+	; left pressed = 9+8+12+(5)= 34
+	; right pressed = 9+8+5+12 = 34
+
 	lda	KEYPRESS				; 4
 	bpl	sb_no_keypress				; 3
-	jmp	sb_start_over
+							; -1
+	jmp	sb_handle_keypress			; 3
 sb_no_keypress:
+	inc	$0					; 5
+	dec	$0					; 5
+	inc	$0					; 5
+	dec	$0					; 5
+	nop						; 2
+	nop						; 2
 
 	jmp	sb_display_loop				; 3
 
-sb_start_over:
+sb_handle_keypress:
 	bit	KEYRESET	; clear keypress	; 4
+	cmp	#'Q'|$80				; 2
+	beq	sb_exit					; 3
+							; -1
+
+sb_check_left:
+	cmp	#$15|$80	; left			; 2
+	bne	sb_check_right				; 3
+							; -1
+	dec	XPOS					; 5
+
+	nop		; nop				; 2
+	lda	$0	; nop				; 3
+	jmp	sb_display_loop				; 3
+
+sb_check_right:
+	cmp	#$8|$80					; 2
+	bne	sb_exit					; 3
+							; -1
+	inc	XPOS					; 5
+
+	jmp	sb_display_loop				; 3
+
+
+
+
+sb_exit:
 	rts						; 6
 
 
