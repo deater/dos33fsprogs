@@ -14,6 +14,27 @@ game:
 	lda	#38
 	sta	YPOS
 
+	;=============================
+	; Load graphic hgr
+
+	lda	#<background_hgr
+	sta	LZ4_SRC
+	lda	#>background_hgr
+	sta	LZ4_SRC+1
+
+	lda	#<(background_hgr_end-8)	; skip checksum at end
+	sta	LZ4_END
+	lda	#>(background_hgr_end-8)	; skip checksum at end
+	sta	LZ4_END+1
+
+	lda	#<$2000
+	sta	LZ4_DST
+	lda	#>$2000
+	sta	LZ4_DST+1
+
+	jsr	lz4_decode
+
+
 
 	;==================
 	; setup framebuffer
@@ -48,25 +69,6 @@ game:
 
 
 
-	;=============================
-	; Load graphic hgr
-
-	lda	#<background_hgr
-	sta	LZ4_SRC
-	lda	#>background_hgr
-	sta	LZ4_SRC+1
-
-	lda	#<(background_hgr_end-8)	; skip checksum at end
-	sta	LZ4_END
-	lda	#>(background_hgr_end-8)	; skip checksum at end
-	sta	LZ4_END+1
-
-	lda	#<$2000
-	sta	LZ4_DST
-	lda	#>$2000
-	sta	LZ4_DST+1
-
-	jsr	lz4_decode
 
 
 	;=============================
@@ -303,26 +305,25 @@ sbloopF:dex								; 2
 	;======================================================
 
 	; do_nothing should be      4550
-	;			    -853 draw_framebuffer
+	;			   -3697 draw_framebuffer
 	;			     -34 keypress
 	;				-1 adjust center mark back
 	;			===========
-	;			    3662
+	;			     818
 
-	; Try X=5 Y=118 cycles=3659 R3
-	; Try X=7 Y=97 cycles=3978 R4
-	; Try X=11 Y=74 cycles=4515
+	; Try X=53 Y=3 cycles=814 R4
 
-	lda	$0
+	nop
+	nop
 
-	ldy	#118							; 2
-sbloop1:ldx	#5							; 2
+	ldy	#3							; 2
+sbloop1:ldx	#53							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
 	bne	sbloop1							; 2nt/3
 
-	jsr	draw_framebuffer			; 6+527
+	jsr	draw_framebuffer			; 6+3691
 
 
 	; no keypress =  10+(24)   = 34
@@ -376,18 +377,81 @@ sb_exit:
 
 .align	$100
 
+	; total =
+	;	  24 wide:	   =  505
+	;	  28 wide:	   =  589
+	;         32 wide:	   =  673
+	;	  36 wide:         =  757
+	;         40 wide: 2+40*29 = 1162
+	;                               5
+	;====================================
+	;                            3691
 draw_framebuffer:
-	; 2 + 40*21 + 5 = 847
 
+
+	; 2 + (24*(X*8)+5) -1 =
+	; 2 + 24*(16+5) -1 = 505
+
+	ldx	#24					; 2
+fb24_loop:
+	lda	FRAMEBUFFER+2				; 3
+	sta	$6a8+12-1,x				; 5
+	lda	FRAMEBUFFER+3				; 3
+	sta	$728+12-1,x				; 5
+	dex						; 2
+	bne	fb24_loop				; 3
+
+	; 2 + (28*(X*8)+5) -1 =
+	; 2 + 28*(16+5) -1 = 589
+
+	ldx	#28					; 2
+fb28_loop:
+	lda	FRAMEBUFFER+4				; 3
+	sta	$7a8+8-1,x				; 5
+	lda	FRAMEBUFFER+5				; 3
+	sta	$450+8-1,x				; 5
+	dex						; 2
+	bne	fb28_loop				; 3
+
+
+	; 2 + (32*(X*8)+5) -1 =
+	; 2 + 32*(16+5) -1 = 673
+
+	ldx	#32					; 2
+fb32_loop:
+	lda	FRAMEBUFFER+6				; 3
+	sta	$4d0+4-1,x				; 5
+	lda	FRAMEBUFFER+7				; 3
+	sta	$550+4-1,x				; 5
+	dex						; 2
+	bne	fb32_loop				; 3
+
+
+	; 2 + (36*(X*8)+5) -1 =
+	; 2 + 36*(16+5) -1 = 757
+
+	ldx	#36					; 2
+fb36_loop:
+	lda	FRAMEBUFFER+8				; 3
+	sta	$5d0+2-1,x				; 5
+	lda	FRAMEBUFFER+9				; 3
+	sta	$650+2-1,x				; 5
+	dex						; 2
+	bne	fb36_loop				; 3
+
+	; 2 + (40*(X*8)+5) + 5 = 847
+	; 2 + 40*(24+5) + 5 = 1167
 
 	ldx	#40					; 2
-fb_loop:
+fb40_loop:
+	lda	FRAMEBUFFER+10				; 3
+	sta	$6d0-1,x				; 5
 	lda	FRAMEBUFFER+11				; 3
 	sta	$750-1,x				; 5
 	lda	FRAMEBUFFER+12				; 3
 	sta	$7d0-1,x				; 5
 	dex						; 2
-	bne	fb_loop					; 3
+	bne	fb40_loop				; 3
 
 							; -1
 	rts						; 6
