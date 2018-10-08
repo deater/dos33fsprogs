@@ -41,7 +41,7 @@ game:
 
 	lda	#$12
 	sta	FRAMEBUFFER+0
-	lda	#$34
+	lda	#$3f
 	sta	FRAMEBUFFER+1
 	lda	#$56
 	sta	FRAMEBUFFER+2
@@ -57,7 +57,7 @@ game:
 	sta	FRAMEBUFFER+7
 	lda	#$12
 	sta	FRAMEBUFFER+8
-	lda	#$34
+	lda	#$3f
 	sta	FRAMEBUFFER+9
 	lda	#$56
 	sta	FRAMEBUFFER+10
@@ -159,32 +159,15 @@ sb_begin_loop:
 
 sb_display_loop:
 
-	; 0-7  = text mode
+
 ;          1         2         3
 ;0123456789012345678901234567890123456789
 ;LEVEL: 6 LIVES: 2 SCORE: 01978 HI: 02018
 
-	; 8-47 = hgr
-	; 48 - 191 = split	.. 144 = 36grlins 
-	; 	6	4	25+16+8+16  NNNNNNNN
-	;	7	6	25+15+10+15 LNNNNNN
-	;	8	8	25+14+12+14 NNNNNNN
-	;	9	10	25+13+14+13 LNNNNN
-	;	10	12	25+12+16+12
-	;	11	14	25+11+18+11
-	;	12	16	25+10+20+10
-	;	13	18	25+09+22+09
-	;	14	20	25+08+24+08
-	;	15	22	25+07+26+07
-	;	16	24	25+06+28+06
-	;	17	26	25+05+30+05
-	;	18	28	25+04+32+04
-	;	19	30	25+03+34+03
-	;	20	32	25+02+36+02
-	;	21	34	25+01+38+01
-	;	22	36	25+00
-	;	23	38	25+12
-	;	24	40	25+12
+	; 0-7  = text mode
+	; 8-87 = hgr
+	; 88 - 168 = split
+	; 169 - 191 = gr
 
 
 	; 8 lines of text mode
@@ -207,12 +190,13 @@ sb_text_loop:
 
 
 sb_hgr_loop:
-	; delay 40*65 =  2600
+	; delay 80*65 =  5200
+	;                2180
 	;                    -2
 	;		     +1
 	;		     -8
 	;=========================
-	;		2591
+	;		3011
 
 	bit	SET_GR				; 4
 	bit	HIRES				; 4
@@ -231,14 +215,10 @@ sb_hgr_loop:
 
 
 
-	; Try X=1 Y=235 cycles=2586 R5
-
-	; Try X=7 Y=10 cycles=411
-;	nop		; 2
-;	lda	$0	; 3
+	; Try X=59 Y=10 cycles=3011
 
 	ldy	#10							; 2
-sbloopC:ldx	#7							; 2
+sbloopC:ldx	#59							; 2
 sbloopD:dex								; 2
 	bne	sbloopD							; 2nt/3
 	dey								; 2
@@ -250,7 +230,7 @@ sbloopD:dex								; 2
 sb_mixed:
 	lda	$0		;kill 6 cycles (room for rts)	; 2
 	ldx	#9					; 2
-	ldy	#14 ; 126				; 2
+	ldy	#9 ; 14 ; 126				; 2
 
 sb_mixed_loop:
 	lda	ss_multiples,x				; 4
@@ -262,7 +242,7 @@ split_smc:
 
 							; -1
 	nop						; 2
-	ldy	#14					; 2
+	ldy	#9					; 2
 	dex						; 2
 	bne	split_smc				; 3
 
@@ -279,20 +259,20 @@ split_smc:
 
 
 sb_all_gr:
-	; 18 lines of this
+	; 23 lines of this
 
-	; 18 * 65 = 1170
+	; 23 * 65 = 1495
 	;             -4
 	;            -13
 	;       =========
-	;	    1153
+	;	    1478
 
 	bit	LORES						; 4
 
-	; Try X=6 Y=32 cycles=1153
+	; Try X=41 Y=7 cycles=1478
 
-	ldy	#32							; 2
-sbloopE:ldx	#6							; 2
+	ldy	#7							; 2
+sbloopE:ldx	#41							; 2
 sbloopF:dex								; 2
 	bne	sbloopF							; 2nt/3
 	dey								; 2
@@ -305,24 +285,22 @@ sbloopF:dex								; 2
 	;======================================================
 
 	; do_nothing should be      4550
-	;			   -3278 draw_framebuffer
+	;			   -3470 draw_framebuffer
 	;			     -34 keypress
 	;				-1 adjust center mark back
 	;			===========
-	;			     1237
+	;			     1045
 
-	; Try X=246 Y=1 cycles=1237
+	; Try X=6 Y=29 cycles=1045
 
-;	nop
-
-	ldy	#1							; 2
-sbloop1:ldx	#246							; 2
+	ldy	#29							; 2
+sbloop1:ldx	#6							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
 	bne	sbloop1							; 2nt/3
 
-	jsr	draw_framebuffer			; 6+3272
+	jsr	draw_framebuffer			; 6+3464
 
 
 	; no keypress =  10+(24)   = 34
@@ -377,27 +355,25 @@ sb_exit:
 .align	$100
 
 	; total =
-	;	   4 wide:         =   85
+	;	   4 wide:         =   53
 	;	  12 wide:	   =  253
 	;	  20 wide:	   =  421
-	;         28 wide:	   =  589
+	;         28 wide:	   =  813
 	;	  36 wide:         =  757
 	;         40 wide:         = 1161
 	;                               6
 	;====================================
-	;                            3272
+	;                            3464
 draw_framebuffer:
 
 
 	; 2 + (4*(X*8)+5) -1 =
-	; 2 + 4*(16+5) -1 = 85
+	; 2 + 4*(8+5) -1 = 85
 
 	ldx	#4					; 2
 fb4_loop:
 	lda	FRAMEBUFFER+0				; 3
 	sta	$5a8+18-1,x				; 5
-	lda	FRAMEBUFFER+1				; 3
-	sta	$628+18-1,x				; 5
 	dex						; 2
 	bne	fb4_loop				; 3
 
@@ -407,10 +383,10 @@ fb4_loop:
 
 	ldx	#12					; 2
 fb12_loop:
+	lda	FRAMEBUFFER+1				; 3
+	sta	$628+14-1,x				; 5
 	lda	FRAMEBUFFER+2				; 3
 	sta	$6a8+14-1,x				; 5
-	lda	FRAMEBUFFER+3				; 3
-	sta	$728+14-1,x				; 5
 	dex						; 2
 	bne	fb12_loop				; 3
 
@@ -419,19 +395,21 @@ fb12_loop:
 
 	ldx	#20					; 2
 fb20_loop:
+	lda	FRAMEBUFFER+3				; 3
+	sta	$728+10-1,x				; 5
 	lda	FRAMEBUFFER+4				; 3
 	sta	$7a8+10-1,x				; 5
-	lda	FRAMEBUFFER+5				; 3
-	sta	$450+10-1,x				; 5
 	dex						; 2
 	bne	fb20_loop				; 3
 
 
 	; 2 + (28*(X*8)+5) -1 =
-	; 2 + 28*(16+5) -1 = 589
+	; 2 + 28*(24+5) -1 = 813
 
 	ldx	#28					; 2
 fb28_loop:
+	lda	FRAMEBUFFER+5				; 3
+	sta	$450+6-1,x				; 5
 	lda	FRAMEBUFFER+6				; 3
 	sta	$4d0+6-1,x				; 5
 	lda	FRAMEBUFFER+7				; 3
