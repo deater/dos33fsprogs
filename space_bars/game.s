@@ -14,6 +14,9 @@ game:
 	lda	#38
 	sta	YPOS
 
+	lda	#0
+	sta	FRAMEH
+
 	;=============================
 	; Load graphic hgr
 
@@ -289,27 +292,42 @@ sbloopF:dex								; 2
 
 	; do_nothing should be      4550
 	;			   -3470 draw_framebuffer
-	;			    -193 setup framebuffer
+	;			    -418 setup framebuffer
+	;			     -21 frame count
 	;			     -34 keypress
 	;				-1 adjust center mark back
 	;			===========
-	;			     852
+	;			     606
 
-	; Try X=6 Y=29 cycles=1045
-	; Try X=20 Y=8 cycles=849 R3
+	; Try X=23 Y=5 cycles=606
 
-	lda	$0
-
-	ldy	#8							; 2
-sbloop1:ldx	#20							; 2
+	ldy	#5							; 2
+sbloop1:ldx	#23							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
 	bne	sbloop1							; 2nt/3
 
-	jsr	setup_framebuffer			; 6+187
+	jsr	setup_framebuffer			; 6+412
 
 	jsr	draw_framebuffer			; 6+3464
+
+	; Increment frame count
+	; noflo: 16 + 2 + (3)  = 21
+	;  oflo: 16 + 5  = 21
+	inc	FRAME						; 5
+	lda	FRAME						; 3
+	and	#3			; 15 Hz			; 2
+	sta	FRAME						; 3
+	beq	sb_frame_oflo					; 3
+							;============
+							;        16
+								; -1
+	lda	$0			; nop			;  3
+	jmp	sb_frame_noflo					;  3
+sb_frame_oflo:
+	inc	FRAMEH						; 5
+sb_frame_noflo:
 
 
 	; no keypress =  10+(24)   = 34
@@ -499,18 +517,26 @@ raster_texture:
 	.byte	$0,$0,$0,$0,$0,$0,$0,$0
 
 
-	; 2 + 15*12 + 5 = 187
+	; 4 + 31*13 + 5 = 412
 
 setup_framebuffer:
 	ldx	#0							; 2
+	ldy	#0							; 2
 setup_fb_loop:
-	lda	raster_texture,x					; 4
-	sta	FRAMEBUFFER,x						; 4
+	lda	raster_texture+1,y					; 4
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	ora	raster_texture,y					; 4
+	sta	FRAMEBUFFER,x				; zp		; 4
+	iny								; 2
+	iny								; 2
 	inx								; 2
-	cpx	#12							; 2
+	cpx	#13							; 2
 	bne	setup_fb_loop						; 3
 								;===========
-								;        15
+								;        31
 
 									; -1
 	rts								; 6
