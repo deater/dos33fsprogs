@@ -151,7 +151,9 @@ gr_offsets:
 .include "vapor_lock.s"
 .include "delay_a.s"
 .include "lz4_decode.s"
+.align $100
 .include "gr_putsprite.s"
 
 .include "spacebars_title.inc"
+.align $100
 .include "mode7_sprites.inc"

@@ -15,6 +15,39 @@ game:
 	sta	YPOS
 
 
+	;==================
+	; setup framebuffer
+
+	lda	#$12
+	sta	FRAMEBUFFER+0
+	lda	#$34
+	sta	FRAMEBUFFER+1
+	lda	#$56
+	sta	FRAMEBUFFER+2
+	lda	#$78
+	sta	FRAMEBUFFER+3
+	lda	#$9A
+	sta	FRAMEBUFFER+4
+	lda	#$BC
+	sta	FRAMEBUFFER+5
+	lda	#$DE
+	sta	FRAMEBUFFER+6
+	lda	#$F0
+	sta	FRAMEBUFFER+7
+	lda	#$12
+	sta	FRAMEBUFFER+8
+	lda	#$34
+	sta	FRAMEBUFFER+9
+	lda	#$56
+	sta	FRAMEBUFFER+10
+	lda	#$78
+	sta	FRAMEBUFFER+11
+	lda	#$9A
+	sta	FRAMEBUFFER+12
+
+
+
+
 	;=============================
 	; Load graphic hgr
 
@@ -46,6 +79,8 @@ game:
 	jsr	clear_gr
 
 
+
+
 	;=============================
 	; Load graphic page2 $c00
 
@@ -55,6 +90,14 @@ game:
 
 	lda	#$44
 	jsr	clear_gr
+
+
+	lda	#<score_text
+        sta	OUTL
+        lda	#>score_text
+        sta	OUTH
+
+	jsr     move_and_print
 
 
 	lda	#0
@@ -260,19 +303,26 @@ sbloopF:dex								; 2
 	;======================================================
 
 	; do_nothing should be      4550
+	;			    -853 draw_framebuffer
 	;			     -34 keypress
 	;				-1 adjust center mark back
 	;			===========
-	;			    4515
+	;			    3662
 
+	; Try X=5 Y=118 cycles=3659 R3
+	; Try X=7 Y=97 cycles=3978 R4
 	; Try X=11 Y=74 cycles=4515
 
-	ldy	#74							; 2
-sbloop1:ldx	#11							; 2
+	lda	$0
+
+	ldy	#118							; 2
+sbloop1:ldx	#5							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
 	bne	sbloop1							; 2nt/3
+
+	jsr	draw_framebuffer			; 6+527
 
 
 	; no keypress =  10+(24)   = 34
@@ -300,7 +350,7 @@ sb_handle_keypress:
 							; -1
 
 sb_check_left:
-	cmp	#$15|$80	; left			; 2
+	cmp	#$08|$80	; left			; 2
 	bne	sb_check_right				; 3
 							; -1
 	dec	XPOS					; 5
@@ -310,7 +360,7 @@ sb_check_left:
 	jmp	sb_display_loop				; 3
 
 sb_check_right:
-	cmp	#$8|$80					; 2
+	cmp	#$15|$80				; 2
 	bne	sb_exit					; 3
 							; -1
 	inc	XPOS					; 5
@@ -324,6 +374,23 @@ sb_exit:
 	rts						; 6
 
 
+.align	$100
+
+draw_framebuffer:
+	; 2 + 40*21 + 5 = 847
+
+
+	ldx	#40					; 2
+fb_loop:
+	lda	FRAMEBUFFER+11				; 3
+	sta	$750-1,x				; 5
+	lda	FRAMEBUFFER+12				; 3
+	sta	$7d0-1,x				; 5
+	dex						; 2
+	bne	fb_loop					; 3
+
+							; -1
+	rts						; 6
 
 
 
@@ -336,3 +403,6 @@ background_hgr:
 .incbin "SB_BACKGROUNDC.BIN.lz4",11
 background_hgr_end:
 
+score_text:
+.byte 0,0
+.asciiz "LEVEL:6  LIVES:2  SCORE:001978 HI:002018"
