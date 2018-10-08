@@ -39,32 +39,35 @@ game:
 	;==================
 	; setup framebuffer
 
-	lda	#$12
-	sta	FRAMEBUFFER+0
-	lda	#$3f
-	sta	FRAMEBUFFER+1
-	lda	#$56
-	sta	FRAMEBUFFER+2
-	lda	#$78
-	sta	FRAMEBUFFER+3
-	lda	#$9A
-	sta	FRAMEBUFFER+4
-	lda	#$BC
-	sta	FRAMEBUFFER+5
-	lda	#$DE
-	sta	FRAMEBUFFER+6
-	lda	#$F0
-	sta	FRAMEBUFFER+7
-	lda	#$12
-	sta	FRAMEBUFFER+8
-	lda	#$3f
-	sta	FRAMEBUFFER+9
-	lda	#$56
-	sta	FRAMEBUFFER+10
-	lda	#$78
-	sta	FRAMEBUFFER+11
-	lda	#$9A
-	sta	FRAMEBUFFER+12
+	lda	#0
+	sta	ZPOS
+
+;	lda	#$12
+;	sta	FRAMEBUFFER+0
+;	lda	#$3f
+;	sta	FRAMEBUFFER+1
+;	lda	#$56
+;	sta	FRAMEBUFFER+2
+;	lda	#$78
+;	sta	FRAMEBUFFER+3
+;	lda	#$9A
+;	sta	FRAMEBUFFER+4
+;	lda	#$BC
+;	sta	FRAMEBUFFER+5
+;	lda	#$DE
+;	sta	FRAMEBUFFER+6
+;	lda	#$F0
+;	sta	FRAMEBUFFER+7
+;	lda	#$12
+;	sta	FRAMEBUFFER+8
+;	lda	#$3f
+;	sta	FRAMEBUFFER+9
+;	lda	#$56
+;	sta	FRAMEBUFFER+10
+;	lda	#$78
+;	sta	FRAMEBUFFER+11
+;	lda	#$9A
+;	sta	FRAMEBUFFER+12
 
 
 
@@ -286,19 +289,25 @@ sbloopF:dex								; 2
 
 	; do_nothing should be      4550
 	;			   -3470 draw_framebuffer
+	;			    -193 setup framebuffer
 	;			     -34 keypress
 	;				-1 adjust center mark back
 	;			===========
-	;			     1045
+	;			     852
 
 	; Try X=6 Y=29 cycles=1045
+	; Try X=20 Y=8 cycles=849 R3
 
-	ldy	#29							; 2
-sbloop1:ldx	#6							; 2
+	lda	$0
+
+	ldy	#8							; 2
+sbloop1:ldx	#20							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
 	bne	sbloop1							; 2nt/3
+
+	jsr	setup_framebuffer			; 6+187
 
 	jsr	draw_framebuffer			; 6+3464
 
@@ -461,3 +470,51 @@ background_hgr_end:
 score_text:
 .byte 0,0
 .asciiz "LEVEL:6  LIVES:2  SCORE:001978 HI:002018"
+
+
+
+; Note on the distance calculations
+; we use something simplistic here
+; see http://www.extentofthejam.com/pseudo/
+
+; "Texture": 64?
+; 0    GREY	5,7,f,7,5,0,0,0
+; 1		0,0,0,0,0,0,0,0
+; 2    BLUE	2,6,f,6,2,0,0,0
+; 3		0,0,0,0,0,0,0,0
+; 4    GREEN	4,c,f,c,4,0,0,0
+; 5		0,0,0,0,0,0,0,0
+; 6    RED	1,b,f,b,1,0,0,0
+; 7		0,0,0,0,0,0,0,0
+
+.align 64
+raster_texture:
+	.byte	$5,$7,$f,$7,$5,$0,$0,$0
+	.byte	$0,$0,$0,$0,$0,$0,$0,$0
+	.byte	$2,$6,$f,$6,$2,$0,$0,$0
+	.byte	$0,$0,$0,$0,$0,$0,$0,$0
+	.byte	$4,$c,$f,$c,$4,$0,$0,$0
+	.byte	$0,$0,$0,$0,$0,$0,$0,$0
+	.byte	$1,$b,$f,$b,$1,$0,$0,$0
+	.byte	$0,$0,$0,$0,$0,$0,$0,$0
+
+
+	; 2 + 15*12 + 5 = 187
+
+setup_framebuffer:
+	ldx	#0							; 2
+setup_fb_loop:
+	lda	raster_texture,x					; 4
+	sta	FRAMEBUFFER,x						; 4
+	inx								; 2
+	cpx	#12							; 2
+	bne	setup_fb_loop						; 3
+								;===========
+								;        15
+
+									; -1
+	rts								; 6
+
+
+
+
