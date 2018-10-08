@@ -292,24 +292,27 @@ sbloopF:dex								; 2
 
 	; do_nothing should be      4550
 	;			   -3470 draw_framebuffer
-	;			    -793 setup framebuffer
+	;			    -533 setup framebuffer
 	;			     -21 frame count
 	;			     -34 keypress
 	;				-1 adjust center mark back
 	;			===========
-	;			     231
+	;			     491
+
+	; Try X=11 Y=8 cycles=489 R2
 
 	; Try X=8 Y=5 cycles=231
 
+	nop
 
-	ldy	#5							; 2
-sbloop1:ldx	#8							; 2
+	ldy	#8							; 2
+sbloop1:ldx	#11							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
 	bne	sbloop1							; 2nt/3
 
-	jsr	setup_framebuffer			; 6+787
+	jsr	setup_framebuffer			; 6+527
 
 	jsr	draw_framebuffer			; 6+3464
 
@@ -521,13 +524,16 @@ offset_lookup:
 ;	.byte	0,1,2,3,4,5,6,7,8,9,10,11,12
 ;	.byte	13,14,15,16,17,18,19,20,21,22,23,24
 
-	.byte   25,24
-	.byte	23,22,21,20,19,18,17,16,15,14,13,12
-	.byte	11,10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+;	.byte   25,24
+;	.byte	23,22,21,20,19,18,17,16,15,14,13,12
+;	.byte	11,10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+
+;	.byte	13,12,11,10,9,8,7,6,5,4,3,2,1,0
+	.byte	26,24,22,20,18,16,14,12,10, 8, 6, 4, 2,0
 
 .align $100
 
-	; 2 + 60*13 + 5 = 787
+	; 2 + 40*13 + 5 = 527
 setup_framebuffer:
 	ldx	#0							; 2
 setup_fb_loop:
@@ -541,24 +547,17 @@ setup_fb_loop:
 	asl								; 2
 	asl								; 2
 	asl								; 2
-	pha								; 3
-								;===========
-								;        28
+								;============
+								;	25
 
-	lda	offset_lookup+1,X					; 4
-	clc								; 2
-	adc	FRAMEH							; 3
-	and	#$3f							; 2
-	tay								; 2
-	pla								; 4
-	ora	raster_texture,y					; 4
+	ora	raster_texture+1,y					; 4
 
 	sta	FRAMEBUFFER,x				; zp		; 4
 	inx								; 2
 	cpx	#13							; 2
 	bne	setup_fb_loop						; 3
 								;===========
-								;        32
+								;        15
 
 									; -1
 	rts								; 6
