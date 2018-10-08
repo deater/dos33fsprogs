@@ -292,23 +292,23 @@ sbloopF:dex								; 2
 
 	; do_nothing should be      4550
 	;			   -3470 draw_framebuffer
-	;			    -418 setup framebuffer
+	;			    -497 setup framebuffer
 	;			     -21 frame count
 	;			     -34 keypress
 	;				-1 adjust center mark back
 	;			===========
-	;			     606
+	;			     527
 
-	; Try X=23 Y=5 cycles=606
+	; Try X=104 Y=1 cycles=527
 
-	ldy	#5							; 2
-sbloop1:ldx	#23							; 2
+	ldy	#1							; 2
+sbloop1:ldx	#104							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
 	bne	sbloop1							; 2nt/3
 
-	jsr	setup_framebuffer			; 6+412
+	jsr	setup_framebuffer			; 6+491
 
 	jsr	draw_framebuffer			; 6+3464
 
@@ -507,36 +507,40 @@ score_text:
 
 .align 64
 raster_texture:
-	.byte	$5,$7,$f,$7,$5,$0,$0,$0
+	.byte	$5,$7,$f,$7,$5,$0,$0,$0		; grey
 	.byte	$0,$0,$0,$0,$0,$0,$0,$0
-	.byte	$2,$6,$f,$6,$2,$0,$0,$0
+	.byte	$2,$6,$f,$6,$2,$0,$0,$0		; blue
 	.byte	$0,$0,$0,$0,$0,$0,$0,$0
-	.byte	$4,$c,$f,$c,$4,$0,$0,$0
+	.byte	$4,$c,$f,$c,$4,$0,$0,$0		; green
 	.byte	$0,$0,$0,$0,$0,$0,$0,$0
-	.byte	$1,$b,$f,$b,$1,$0,$0,$0
-	.byte	$0,$0,$0,$0,$0,$0,$0,$0
+	.byte	$1,$b,$f,$b,$1,$0,$0,$0		; red
+	.byte	$0,$0,$0,$0,$0,$0,$0,$0,$0
 
 
-	; 4 + 31*13 + 5 = 412
+	; 5 + 37*13 + 5 = 491
 
 setup_framebuffer:
 	ldx	#0							; 2
-	ldy	#0							; 2
+	ldy	FRAMEH							; 3
 setup_fb_loop:
-	lda	raster_texture+1,y					; 4
+	tya								; 2
+	and	#$3f							; 2
+	tay								; 2
+
+	lda	raster_texture,y					; 4
 	asl								; 2
 	asl								; 2
 	asl								; 2
 	asl								; 2
-	ora	raster_texture,y					; 4
+	ora	raster_texture+1,y					; 4
 	sta	FRAMEBUFFER,x				; zp		; 4
-	iny								; 2
-	iny								; 2
+	dey								; 2
+	dey								; 2
 	inx								; 2
 	cpx	#13							; 2
 	bne	setup_fb_loop						; 3
 								;===========
-								;        31
+								;        37
 
 									; -1
 	rts								; 6
