@@ -17,21 +17,25 @@ LZ4_END		= $04
 COUNT		= $06
 DELTA		= $08
 
-
-YPOS		= $10
-YPOS_SIN	= $11
 CH		= $24
 CV		= $25
 GBASL		= $26
 GBASH		= $27
 BASL		= $28
 BASH		= $29
+MASK		= $2E
+COLOR		= $30
 FRAME		= $60
 BLARGH		= $69
 DRAW_PAGE	= $EE
 LASTKEY		= $F1
 PADDLE_STATUS	= $F2
+XPOS		= $F3
+YPOS		= $F4
 TEMP		= $FA
+TEMPY		= $FB
+INL		= $FC
+INH		= $FD
 OUTL		= $FE
 OUTH		= $FF
 
@@ -147,6 +151,7 @@ gr_offsets:
 .include "vapor_lock.s"
 .include "delay_a.s"
 .include "lz4_decode.s"
+.include "gr_putsprite.s"
 
 .include "spacebars_title.inc"
-
+.include "mode7_sprites.inc"

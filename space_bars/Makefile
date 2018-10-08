@@ -7,13 +7,13 @@ B2D = ../bmp2dhr/b2d
 all:	space_bars.dsk
 
 space_bars.dsk:	SPACE_BARS
-	$(DOS33) -y space_bars.dsk BSAVE -a 0x1000 SPACE_BARS
+	$(DOS33) -y space_bars.dsk BSAVE -a 0x4000 SPACE_BARS
 
 
 ####
 
 SPACE_BARS:	space_bars.o
-	ld65 -o SPACE_BARS space_bars.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o SPACE_BARS space_bars.o -C ../linker_scripts/apple2_4000.inc
 
 space_bars.o:	space_bars.s instructions.s game.s \
 	game_over.s gr_copy.s text_print.s title.s \
@@ -37,6 +37,6 @@ SB_BACKGROUNDC.BIN:	sb_background.bmp
 ###
 
 clean:		
-		rm -f *~ *.o *.lst *.inc SPACE_BARS
+		rm -f *~ *.o *.lst SPACE_BARS
 
 

@@ -9,9 +9,10 @@ game:
 
 	;===================
 	; init vars
-
-	lda	#0
-	sta	DRAW_PAGE
+	lda	#15
+	sta	XPOS
+	lda	#38
+	sta	YPOS
 
 
 	;=============================
@@ -36,43 +37,28 @@ game:
 
 
 	;=============================
-	; Load graphic page0
-
-	lda	#8
-	sta	DRAW_PAGE
-
-	lda	#22
-	jsr	clear_gr
-
+	; Load graphic page1 $800
 
 	lda	#4
 	sta	DRAW_PAGE
 
-	jsr	gr_copy_to_current	; copy to page1
+	lda	#$22
+	jsr	clear_gr
 
-	; GR part
-	bit	PAGE1
-	bit	LORES							; 4
-	bit	SET_GR							; 4
-	bit	FULLGR							; 4
 
 	;=============================
-	; Load graphic page1
+	; Load graphic page2 $c00
 
 
 	lda	#8
 	sta	DRAW_PAGE
 
-	lda	#44
+	lda	#$44
 	jsr	clear_gr
 
-	;===================
-	; copy to page3
 
 	lda	#0
 	sta	DRAW_PAGE
-
-	jsr	gr_copy_to_current
 
 	; GR part
 	bit	PAGE0
@@ -186,13 +172,28 @@ sb_hgr_loop:
 	bit	SET_GR				; 4
 	bit	HIRES				; 4
 
+
+
+	; draw sprite at same time
+	lda	#>ship_forward						; 2
+	sta	INH							; 3
+	lda	#<ship_forward						; 2
+	sta	INL							; 3
+	jsr	put_sprite						; 6
+								; + 2164
+								;===========
+								; 2180
+
+
+
 	; Try X=1 Y=235 cycles=2586 R5
 
-	nop		; 2
-	lda	$0	; 3
+	; Try X=7 Y=10 cycles=411
+;	nop		; 2
+;	lda	$0	; 3
 
-	ldy	#235							; 2
-sbloopC:ldx	#1							; 2
+	ldy	#10							; 2
+sbloopC:ldx	#7							; 2
 sbloopD:dex								; 2
 	bne	sbloopD							; 2nt/3
 	dey								; 2
@@ -202,7 +203,7 @@ sbloopD:dex								; 2
 
 
 sb_mixed:
-	nop		;kill 6 cycles (room for rts)	; 2
+	lda	$0		;kill 6 cycles (room for rts)	; 2
 	ldx	#9					; 2
 	ldy	#14 ; 126				; 2
 
@@ -260,13 +261,17 @@ sbloopF:dex								; 2
 
 	; do_nothing should be      4550
 	;			     -10 keypress
+	;				-1 adjust center mark back
 	;			===========
-	;			    4540
+	;			    4539
 
 	; Try X=9 Y=89 cycles=4540
+	; Try X=3 Y=216 cycles=4537 R2
 
-	ldy	#89							; 2
-sbloop1:ldx	#9							; 2
+	nop
+
+	ldy	#216							; 2
+sbloop1:ldx	#3							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2

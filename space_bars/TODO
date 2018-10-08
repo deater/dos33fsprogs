@@ -1,0 +1,9 @@
+Is it possible to get 40x96 as well as HGR?
+
+Have same HGR background page0/page1
+Alternate PAGE0/PAGE1 every two lines... do this in SPLIT?
+
+Is it even possible to draw the lines/sprites fast enough in the
+space remaining?
+
+Only draw the top half on odd frames, bottom on even?
