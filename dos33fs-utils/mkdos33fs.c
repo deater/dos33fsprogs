@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
 				break;
 			case 'd':
 				copy_dos=1;
-				strncpy(dos_src,optarg,BUFSIZ);
+				strncpy(dos_src,optarg,BUFSIZ-1);
 				break;
 			case 'f':
 				if (strlen(optarg)>30) {
@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
 		goto end_of_program;
 	}
 
-	strncpy(device,argv[optind],BUFSIZ);
+	strncpy(device,argv[optind],BUFSIZ-1);
 
 	/* Sanity check values */
 

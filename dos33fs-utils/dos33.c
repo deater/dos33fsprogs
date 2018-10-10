@@ -219,10 +219,8 @@ static int dos33_print_file_info(int fd,int catalog_tsf) {
 	printf("%.3i ",sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE+FILE_SIZE_L)]+
 		(sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE+FILE_SIZE_H)]<<8));
 
-	strncpy(temp_string,
-			dos33_filename_to_ascii(temp_string,sector_buffer+(CATALOG_FILE_LIST+
-			(catalog_file*CATALOG_ENTRY_SIZE+FILE_NAME)),30),
-			BUFSIZ);
+	dos33_filename_to_ascii(temp_string,sector_buffer+(CATALOG_FILE_LIST+
+			(catalog_file*CATALOG_ENTRY_SIZE+FILE_NAME)),30);
 
 	for(i=0;i<strlen(temp_string);i++) {
 		if (temp_string[i]<0x20) {
@@ -1122,10 +1120,8 @@ repeat_catalog:
 			goto continue_dump;
 		}
 
-		strncpy(temp_string,
-			dos33_filename_to_ascii(temp_string,
-				sector_buffer+(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_NAME)),30),
-				BUFSIZ);
+		dos33_filename_to_ascii(temp_string,
+			sector_buffer+(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_NAME)),30);
 
 		for(i=0;i<strlen(temp_string);i++) {
 			if (temp_string[i]<0x20) {
@@ -1311,10 +1307,9 @@ repeat_catalog:
 			goto continue_dump;
 		}
 
-		strncpy(temp_string,
-			dos33_filename_to_ascii(temp_string,
-				sector_buffer+(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_NAME)),30),
-				BUFSIZ);
+		dos33_filename_to_ascii(temp_string,
+			sector_buffer+(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_NAME)),
+			30);
 
 		for(i=0;i<strlen(temp_string);i++) {
 			if (temp_string[i]<0x20) {
@@ -1478,6 +1473,7 @@ static void display_help(char *name, int version_only) {
 #define COMMAND_BSAVE	12
 #define COMMAND_BLOAD	13
 #define COMMAND_SHOWFREE	14
+#define COMMAND_RAW_WRITE	15
 
 #define MAX_COMMAND	15
 #define COMMAND_UNKNOWN	255
@@ -1576,7 +1572,7 @@ int main(int argc, char **argv) {
 	}
 
 	/* get argument 1, which is image name */
-	strncpy(image,argv[optind],BUFSIZ);
+	strncpy(image,argv[optind],BUFSIZ-1);
 	dos_fd=open(image,O_RDWR);
 	if (dos_fd<0) {
 		fprintf(stderr,"Error opening disk_image: %s\n",image);
@@ -1592,7 +1588,7 @@ int main(int argc, char **argv) {
 	}
 
 	/* Grab command */
-	strncpy(temp_string,argv[optind],BUFSIZ);
+	strncpy(temp_string,argv[optind],BUFSIZ-1);
 
 	/* Make command be uppercase */
 	for(i=0;i<strlen(temp_string);i++) {
@@ -1632,12 +1628,12 @@ int main(int argc, char **argv) {
 		if (argc>optind) {
 			if (debug) printf("Using %s for filename\n",
 						local_filename);
-			strncpy(local_filename,argv[optind],BUFSIZ);
+			strncpy(local_filename,argv[optind],BUFSIZ-1);
 		}
 		else {
 			if (debug) printf("Using %s for filename\n",
 						apple_filename);
-			strncpy(local_filename,apple_filename,30);
+			strncpy(local_filename,apple_filename,31);
 		}
 
 		if (debug) printf("\tOutput filename: %s\n",local_filename);
@@ -1712,7 +1708,87 @@ int main(int argc, char **argv) {
 			goto exit_and_close;
 		}
 
-		strncpy(local_filename,argv[optind],BUFSIZ);
+		strncpy(local_filename,argv[optind],BUFSIZ-1);
+		optind++;
+
+		if (debug) printf("\tLocal filename: %s\n",local_filename);
+
+		if (argc>optind) {
+			/* apple filename specified */
+			truncate_filename(apple_filename,argv[optind]);
+		}
+		else {
+			/* If no filename specified for apple name    */
+			/* Then use the input name.  Note, we strip   */
+			/* everything up to the last slash so useless */
+			/* path info isn't used                       */
+
+			temp=local_filename+(strlen(local_filename)-1);
+
+			while(temp!=local_filename) {
+				temp--;
+				if (*temp == '/') {
+					temp++;
+					break;
+				}
+			}
+
+			truncate_filename(apple_filename,temp);
+		}
+
+		if (debug) printf("\tApple filename: %s\n",apple_filename);
+
+		catalog_entry=dos33_check_file_exists(dos_fd,apple_filename,
+							FILE_NORMAL);
+
+		if (catalog_entry>=0) {
+			fprintf(stderr,"Warning!  %s exists!\n",apple_filename);
+			if (!always_yes) {
+				printf("Over-write (y/n)?");
+				result_string=fgets(temp_string,BUFSIZ,stdin);
+				if ((result_string==NULL) || (temp_string[0]!='y')) {
+					printf("Exiting early...\n");
+					goto exit_and_close;
+				}
+			}
+			fprintf(stderr,"Deleting previous version...\n");
+			dos33_delete_file(dos_fd,catalog_entry);
+		}
+		if (command==COMMAND_SAVE) {
+			dos33_add_file(dos_fd,type,
+				ADD_RAW, address, length,
+				local_filename,apple_filename);
+		}
+		else {
+			dos33_add_file(dos_fd,type,
+				ADD_BINARY, address, length,
+				local_filename,apple_filename);
+		}
+		break;
+
+
+	case COMMAND_RAW_WRITE:
+
+		if (debug) printf("\ttype=%c\n",type);
+
+		if (argc==optind) {
+			fprintf(stderr,"Error! Need file_name\n");
+
+			if (command==COMMAND_BSAVE) {
+				fprintf(stderr,"%s %s BSAVE "
+						"file_name apple_filename\n\n",
+						argv[0],image);
+
+			}
+			else {
+				fprintf(stderr,"%s %s SAVE type "
+						"file_name apple_filename\n\n",
+						argv[0],image);
+			}
+			goto exit_and_close;
+		}
+
+		strncpy(local_filename,argv[optind],BUFSIZ-1);
 		optind++;
 
 		if (debug) printf("\tLocal filename: %s\n",local_filename);
