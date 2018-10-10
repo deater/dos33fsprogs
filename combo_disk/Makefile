@@ -11,7 +11,8 @@ combo_disk.dsk:	../two-liners/ENTROPY \
 	../mode7_demo/MODE7_DEMO \
 	../mockingboard/KSP_THEME_6CH \
 	../fancy_lores/DISP4096 \
-	../fireworks/FIREWORKS
+	../fireworks/FIREWORKS \
+	../space_bars/SPACE_BARS
 	$(DOS33) -y combo_disk.dsk BSAVE -a 0x0c00 ../two-liners/ENTROPY
 	$(DOS33) -y combo_disk.dsk BSAVE -a 0x1000 ../waterfall/WATERFALL
 	$(DOS33) -y combo_disk.dsk BSAVE -a 0x5900 ../still_alive/SA_COMPRESSED
@@ -22,6 +23,7 @@ combo_disk.dsk:	../two-liners/ENTROPY \
 	$(DOS33) -y combo_disk.dsk BSAVE -a 0x1000 ../fancy_lores/DISP4096
 	$(DOS33) -y combo_disk.dsk BSAVE -a 0x1000 ../fancy_lores/DISP4048D
 	$(DOS33) -y combo_disk.dsk BSAVE -a 0x1000 ../fireworks/FIREWORKS
+	$(DOS33) -y combo_disk.dsk BSAVE -a 0x4000 ../space_bars/SPACE_BARS SPACE-BARS
 
 clean:	
 	rm -f *~ *.o *.lst
