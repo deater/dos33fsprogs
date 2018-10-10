@@ -971,105 +971,105 @@ got_a_dentry:
 
     /* load a file.  fts=entry/track/sector */
 static int dos33_load_file(int fd,int fts,char *filename) {
- 
-    int output_fd;
-    int catalog_file,catalog_track,catalog_sector;
-    int file_type,file_size=-1,tsl_track,tsl_sector,data_t,data_s;
-    unsigned char data_sector[BYTES_PER_SECTOR];
-    int tsl_pointer=0,output_pointer=0;
-    int result;
-   
-    /* Fix me!  Warn if overwriting file! */
-    output_fd=open(filename,O_WRONLY|O_CREAT|O_TRUNC,0666);
-    if (output_fd<0) {
-       fprintf(stderr,"Error! could not open %s for local save\n",filename);
-       return -1;
-    }
 
-    catalog_file=fts>>16;
-    catalog_track=(fts>>8)&0xff;
-    catalog_sector=(fts&0xff);
+	int output_fd;
+	int catalog_file,catalog_track,catalog_sector;
+	int file_type,file_size=-1,tsl_track,tsl_sector,data_t,data_s;
+	unsigned char data_sector[BYTES_PER_SECTOR];
+	int tsl_pointer=0,output_pointer=0;
+	int result;
+
+	/* FIXME!  Warn if overwriting file! */
+	output_fd=open(filename,O_WRONLY|O_CREAT|O_TRUNC,0666);
+	if (output_fd<0) {
+		fprintf(stderr,"Error! could not open %s for local save\n",
+			filename);
+		return -1;
+	}
+
+	catalog_file=fts>>16;
+	catalog_track=(fts>>8)&0xff;
+	catalog_sector=(fts&0xff);
 
 
-       /* Read in Catalog Sector */
-    lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-    result=read(fd,sector_buffer,BYTES_PER_SECTOR);
-   
-    tsl_track=sector_buffer[CATALOG_FILE_LIST+
-			    (catalog_file*CATALOG_ENTRY_SIZE)+FILE_TS_LIST_T];
-    tsl_sector=sector_buffer[CATALOG_FILE_LIST+
-			     (catalog_file*CATALOG_ENTRY_SIZE)+FILE_TS_LIST_S];
-    file_type=dos33_file_type(sector_buffer[CATALOG_FILE_LIST+
-					    (catalog_file*CATALOG_ENTRY_SIZE)
-                                            +FILE_TYPE]);
-   
-//    printf("file_type: %c\n",file_type);
+	/* Read in Catalog Sector */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+
+	tsl_track=sector_buffer[CATALOG_FILE_LIST+
+			(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TS_LIST_T];
+	tsl_sector=sector_buffer[CATALOG_FILE_LIST+
+			(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TS_LIST_S];
+	file_type=dos33_file_type(sector_buffer[CATALOG_FILE_LIST+
+			(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TYPE]);
+
+//	printf("file_type: %c\n",file_type);
 
 keep_saving:
-       /* Read in TSL Sector */
-    lseek(fd,DISK_OFFSET(tsl_track,tsl_sector),SEEK_SET);
-    result=read(fd,sector_buffer,BYTES_PER_SECTOR);
-    tsl_pointer=0;
-   
-       /* check each track/sector pair in the list */       
-    while(tsl_pointer<TSL_MAX_NUMBER) {
-    
-       /* get the t/s value */
-       data_t=sector_buffer[TSL_LIST+(tsl_pointer*TSL_ENTRY_SIZE)];
-       data_s=sector_buffer[TSL_LIST+(tsl_pointer*TSL_ENTRY_SIZE)+1];
-       
-       if ((data_s==0) && (data_t==0)) {
-	  /* empty */
-       }
-       else {
-          lseek(fd,DISK_OFFSET(data_t,data_s),SEEK_SET);
-          result=read(fd,&data_sector,BYTES_PER_SECTOR);
+	/* Read in TSL Sector */
+	lseek(fd,DISK_OFFSET(tsl_track,tsl_sector),SEEK_SET);
+	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+	tsl_pointer=0;
 
-	     /* some file formats have the size in the first sector */
-	     /* so cheat and get real file size from file itself    */
-	  if (output_pointer==0) {
-	     switch(file_type) {  
-	        case 'A':
-	        case 'I':
-	           file_size=data_sector[0]+(data_sector[1]<<8)+2;
-		   break;
-	        case 'B':
-		   file_size=data_sector[2]+(data_sector[3]<<8)+4;
-		   break;
-	        default:
-	           file_size=-1;
-	     }
-	  }
+	/* check each track/sector pair in the list */
+	while(tsl_pointer<TSL_MAX_NUMBER) {
 
-	  /* write the block read in out to the output file */
-          lseek(output_fd,output_pointer*BYTES_PER_SECTOR,SEEK_SET);
-          result=write(output_fd,&data_sector,BYTES_PER_SECTOR);
-       }
-       output_pointer++;
-       tsl_pointer++;
-    }
-   
-      /* finished with TSL sector, see if we have another */
-    tsl_track=sector_buffer[TSL_NEXT_TRACK];
-    tsl_sector=sector_buffer[TSL_NEXT_SECTOR];
+		/* get the t/s value */
+		data_t=sector_buffer[TSL_LIST+(tsl_pointer*TSL_ENTRY_SIZE)];
+		data_s=sector_buffer[TSL_LIST+(tsl_pointer*TSL_ENTRY_SIZE)+1];
 
-//    printf("Next track/sector=%d/%d op=%d\n",tsl_track,tsl_sector,
-//	   output_pointer*BYTES_PER_SECTOR);
-   
-    if ((tsl_track==0) && (tsl_sector==0)) {
-    }
-    else goto keep_saving;
-   
-       /* Correct the file size */
-    if (file_size>=0) {    
-//       printf("Truncating file size to %d\n",file_size);
-       result=ftruncate(output_fd,file_size);
-    }
+		if ((data_s==0) && (data_t==0)) {
+			/* empty */
+		}
+		else {
+			lseek(fd,DISK_OFFSET(data_t,data_s),SEEK_SET);
+			result=read(fd,&data_sector,BYTES_PER_SECTOR);
 
-    if (result<0) fprintf(stderr,"Error on I/O\n");
-   
-    return 0;
-   
+			/* some file formats have the size in the first sector */
+			/* so cheat and get real file size from file itself    */
+			if (output_pointer==0) {
+				switch(file_type) {
+				case 'A':
+				case 'I':
+					file_size=data_sector[0]+(data_sector[1]<<8)+2;
+					break;
+				case 'B':
+					file_size=data_sector[2]+(data_sector[3]<<8)+4;
+					break;
+				default:
+					file_size=-1;
+				}
+			}
+
+			/* write the block read in out to the output file */
+			lseek(output_fd,output_pointer*BYTES_PER_SECTOR,SEEK_SET);
+			result=write(output_fd,&data_sector,BYTES_PER_SECTOR);
+		}
+		output_pointer++;
+		tsl_pointer++;
+	}
+
+	/* finished with TSL sector, see if we have another */
+	tsl_track=sector_buffer[TSL_NEXT_TRACK];
+	tsl_sector=sector_buffer[TSL_NEXT_SECTOR];
+
+//	printf("Next track/sector=%d/%d op=%d\n",tsl_track,tsl_sector,
+//		output_pointer*BYTES_PER_SECTOR);
+
+	if ((tsl_track==0) && (tsl_sector==0)) {
+	}
+	else goto keep_saving;
+
+	/* Correct the file size */
+	if (file_size>=0) {
+//		printf("Truncating file size to %d\n",file_size);
+		result=ftruncate(output_fd,file_size);
+	}
+
+	if (result<0) fprintf(stderr,"Error on I/O\n");
+
+	return 0;
+
 }
 
     /* lock a file.  fts=entry/track/sector */
