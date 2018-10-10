@@ -697,6 +697,278 @@ got_a_dentry:
 	return 0;
 }
 
+
+
+	/* Create raw file on disk starting at track/sector */
+	/* returns ?? */
+static int dos33_raw_file(int fd, char dos_type,
+		int track, int sector,
+		char *filename, char *apple_filename) {
+
+#if 0
+	int free_space,file_size,needed_sectors;
+	struct stat file_info;
+	int size_in_sectors=0;
+	int initial_ts_list=0,ts_list=0,i,data_ts,x,bytes_read=0,old_ts_list;
+	int catalog_track,catalog_sector,sectors_used=0;
+	int input_fd;
+	int result;
+	int first_write=1;
+
+	if (apple_filename[0]<64) {
+		fprintf(stderr,"Error!  First char of filename "
+				"must be ASCII 64 or above!\n");
+		return ERROR_INVALID_FILENAME;
+	}
+
+	/* Check for comma in filename */
+	for(i=0;i<strlen(apple_filename);i++) {
+		if (apple_filename[i]==',') {
+			fprintf(stderr,"Error!  "
+				"Cannot have , in a filename!\n");
+			return ERROR_INVALID_FILENAME;
+		}
+	}
+
+	/* FIXME */
+	/* check type */
+	/* and sanity check a/b filesize is set properly */
+
+	/* Determine size of file to upload */
+	if (stat(filename,&file_info)<0) {
+		fprintf(stderr,"Error!  %s not found!\n",filename);
+		return ERROR_FILE_NOT_FOUND;
+	}
+
+	file_size=(int)file_info.st_size;
+
+	if (debug) printf("Filesize: %d\n",file_size);
+
+	if (file_type==ADD_BINARY) {
+		if (debug) printf("Adding 4 bytes for size/offset\n");
+		if (length==0) length=file_size;
+		file_size+=4;
+	}
+
+	/* We need to round up to nearest sector size */
+	/* Add an extra sector for the T/S list */
+	/* Then add extra sector for a T/S list every 122*256 bytes (~31k) */
+	needed_sectors=(file_size/BYTES_PER_SECTOR)+ /* round sectors */
+			((file_size%BYTES_PER_SECTOR)!=0)+/* tail if needed */
+			1+/* first T/S list */
+			(file_size/(122*BYTES_PER_SECTOR)); /* extra t/s lists */
+
+	/* Get free space on device */
+	free_space=dos33_free_space(fd);
+
+	/* Check for free space */
+	if (needed_sectors*BYTES_PER_SECTOR>free_space) {
+		fprintf(stderr,"Error!  Not enough free space "
+				"on disk image (need %d have %d)\n",
+				needed_sectors*BYTES_PER_SECTOR,free_space);
+		return ERROR_NO_SPACE;
+	}
+
+	/* plus one because we need a sector for the tail */
+	size_in_sectors=(file_size/BYTES_PER_SECTOR)+
+		((file_size%BYTES_PER_SECTOR)!=0);
+	if (debug) printf("Need to allocate %i data sectors\n",size_in_sectors);
+	if (debug) printf("Need to allocate %i total sectors\n",needed_sectors);
+
+	/* Open the local file */
+	input_fd=open(filename,O_RDONLY);
+	if (input_fd<0) {
+		fprintf(stderr,"Error! could not open %s\n",filename);
+		return ERROR_IMAGE_NOT_FOUND;
+	}
+
+	i=0;
+	while (i<size_in_sectors) {
+
+		/* Create new T/S list if necessary */
+		if (i%TSL_MAX_NUMBER==0) {
+			old_ts_list=ts_list;
+
+			/* allocate a sector for the new list */
+			ts_list=dos33_allocate_sector(fd);
+			sectors_used++;
+			if (ts_list<0) return -1;
+
+			/* clear the t/s sector */
+			for(x=0;x<BYTES_PER_SECTOR;x++) {
+				sector_buffer[x]=0;
+			}
+			lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
+			result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+
+			if (i==0) {
+				initial_ts_list=ts_list;
+			}
+			else {
+				/* we aren't the first t/s list so do special stuff */
+
+				/* load in the old t/s list */
+				lseek(fd,
+					DISK_OFFSET(get_high_byte(old_ts_list),
+					get_low_byte(old_ts_list)),
+					SEEK_SET);
+
+				result=read(fd,&sector_buffer,BYTES_PER_SECTOR);
+
+				/* point from old ts list to new one we just made */
+				sector_buffer[TSL_NEXT_TRACK]=get_high_byte(ts_list);
+				sector_buffer[TSL_NEXT_SECTOR]=get_low_byte(ts_list);
+
+				/* set offset into file */
+				sector_buffer[TSL_OFFSET_H]=get_high_byte((i-122)*256);
+				sector_buffer[TSL_OFFSET_L]=get_low_byte((i-122)*256);
+
+				/* write out the old t/s list with updated info */
+				lseek(fd,
+					DISK_OFFSET(get_high_byte(old_ts_list),
+					get_low_byte(old_ts_list)),
+					SEEK_SET);
+
+				result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+			}
+		}
+
+		/* allocate a sector */
+		data_ts=dos33_allocate_sector(fd);
+		sectors_used++;
+
+		if (data_ts<0) return -1;
+
+		/* clear sector */
+		for(x=0;x<BYTES_PER_SECTOR;x++) sector_buffer[x]=0;
+
+		/* read from input */
+		if ((first_write) && (file_type==ADD_BINARY)) {
+			first_write=0;
+			sector_buffer[0]=address&0xff;
+			sector_buffer[1]=(address>>8)&0xff;
+			sector_buffer[2]=(length)&0xff;
+			sector_buffer[3]=((length)>>8)&0xff;
+			bytes_read=read(input_fd,sector_buffer+4,
+					BYTES_PER_SECTOR-4);
+			bytes_read+=4;
+		}
+		else {
+			bytes_read=read(input_fd,sector_buffer,
+					BYTES_PER_SECTOR);
+		}
+		first_write=0;
+
+		if (bytes_read<0) fprintf(stderr,"Error reading bytes!\n");
+
+		/* write to disk image */
+		lseek(fd,DISK_OFFSET((data_ts>>8)&0xff,data_ts&0xff),SEEK_SET);
+		result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+
+		if (debug) printf("Writing %i bytes to %i/%i\n",
+				bytes_read,(data_ts>>8)&0xff,data_ts&0xff);
+
+		/* add to T/s table */
+
+		/* read in t/s list */
+		lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
+		result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+
+		/* point to new data sector */
+		sector_buffer[((i%TSL_MAX_NUMBER)*2)+TSL_LIST]=(data_ts>>8)&0xff;
+		sector_buffer[((i%TSL_MAX_NUMBER)*2)+TSL_LIST+1]=(data_ts&0xff);
+
+		/* write t/s list back out */
+		lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
+		result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+
+		i++;
+	}
+
+	/* Add new file to Catalog */
+
+	/* read in vtoc */
+	dos33_read_vtoc(fd);
+
+	catalog_track=sector_buffer[VTOC_CATALOG_T];
+	catalog_sector=sector_buffer[VTOC_CATALOG_S];
+
+continue_parsing_catalog:
+
+          /* Read in Catalog Sector */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+
+	/* Find empty directory entry */
+	i=0;
+	while(i<7) {
+		/* for undelete purposes might want to skip 0xff */
+		/* (deleted) files first and only use if no room */
+
+		if ((sector_buffer[CATALOG_FILE_LIST+
+				(i*CATALOG_ENTRY_SIZE)]==0xff) ||
+			(sector_buffer[CATALOG_FILE_LIST+
+				(i*CATALOG_ENTRY_SIZE)]==0x00)) {
+			goto got_a_dentry;
+		}
+		i++;
+	}
+
+	if ((catalog_track=0x11) && (catalog_sector==1)) {
+		/* in theory can only have 105 files */
+		/* if full, we have no recourse!     */
+		/* can we allocate new catalog sectors */
+		/* and point to them?? */
+		fprintf(stderr,"Error!  No more room for files!\n");
+		return ERROR_CATALOG_FULL;
+	}
+
+	catalog_track=sector_buffer[CATALOG_NEXT_T];
+	catalog_sector=sector_buffer[CATALOG_NEXT_S];
+
+	goto continue_parsing_catalog;
+
+got_a_dentry:
+//	printf("Adding file at entry %i of catalog 0x%x:0x%x\n",
+//		i,catalog_track,catalog_sector);
+
+	/* Point entry to initial t/s list */
+	sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)]=(initial_ts_list>>8)&0xff;
+	sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+1]=(initial_ts_list&0xff);
+	/* set file type */
+	sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_TYPE]=
+		dos33_char_to_type(dos_type,0);
+
+//	printf("Pointing T/S to %x/%x\n",(initial_ts_list>>8)&0xff,initial_ts_list&0xff);
+
+	/* copy over filename */
+	for(x=0;x<strlen(apple_filename);x++) {
+		sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_NAME+x]=
+		apple_filename[x]^0x80;
+	}
+
+	/* pad out the filename with spaces */
+	for(x=strlen(apple_filename);x<FILE_NAME_SIZE;x++) {
+		sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_NAME+x]=' '^0x80;
+	}
+
+	/* fill in filesize in sectors */
+	sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_SIZE_L]=
+		sectors_used&0xff;
+	sector_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_SIZE_H]=
+		(sectors_used>>8)&0xff;
+
+	/* write out catalog sector */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+
+	if (result<0) fprintf(stderr,"Error on I/O\n");
+#endif
+	return 0;
+}
+
+
+
     /* load a file.  fts=entry/track/sector */
 static int dos33_load_file(int fd,int fts,char *filename) {
  
@@ -1496,6 +1768,7 @@ static struct command_type {
 	{COMMAND_HELLO,"HELLO"},
 	{COMMAND_BSAVE,"BSAVE"},
 	{COMMAND_SHOWFREE,"SHOWFREE"},
+	{COMMAND_RAW_WRITE,"RAWWRITE"},
 };
 
 static int lookup_command(char *name) {
@@ -1542,9 +1815,10 @@ int main(int argc, char **argv) {
 	char *temp,*endptr;
 	int c;
 	int address=0, length=0;
+	int track,sector;
 
 	/* Check command line arguments */
-	while ((c = getopt (argc, argv,"a:l:hvy"))!=-1) {
+	while ((c = getopt (argc, argv,"a:l:t:s:hvy"))!=-1) {
 		switch (c) {
 
 		case 'a':
@@ -1554,6 +1828,14 @@ int main(int argc, char **argv) {
 		case 'l':
 			length=strtol(optarg,&endptr,0);
 			if (debug) printf("Length=%d\n",address);
+			break;
+		case 't':
+			track=strtol(optarg,&endptr,0);
+			if (debug) printf("Track=%d\n",address);
+			break;
+		case 's':
+			sector=strtol(optarg,&endptr,0);
+			if (debug) printf("Sector=%d\n",address);
 			break;
 		case 'v':
 			display_help(argv[0],1);
@@ -1769,22 +2051,15 @@ int main(int argc, char **argv) {
 
 	case COMMAND_RAW_WRITE:
 
+		/* ??? */
 		if (debug) printf("\ttype=%c\n",type);
 
 		if (argc==optind) {
 			fprintf(stderr,"Error! Need file_name\n");
 
-			if (command==COMMAND_BSAVE) {
-				fprintf(stderr,"%s %s BSAVE "
-						"file_name apple_filename\n\n",
-						argv[0],image);
-
-			}
-			else {
-				fprintf(stderr,"%s %s SAVE type "
-						"file_name apple_filename\n\n",
-						argv[0],image);
-			}
+			fprintf(stderr,"%s %s RAWWRITE "
+					"file_name apple_filename\n\n",
+					argv[0],image);
 			goto exit_and_close;
 		}
 
@@ -1834,16 +2109,10 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"Deleting previous version...\n");
 			dos33_delete_file(dos_fd,catalog_entry);
 		}
-		if (command==COMMAND_SAVE) {
-			dos33_add_file(dos_fd,type,
-				ADD_RAW, address, length,
+
+		dos33_raw_file(dos_fd, type, track, sector,
 				local_filename,apple_filename);
-		}
-		else {
-			dos33_add_file(dos_fd,type,
-				ADD_BINARY, address, length,
-				local_filename,apple_filename);
-		}
+
 		break;
 
 	case COMMAND_DELETE:
