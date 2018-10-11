@@ -7,8 +7,10 @@ PNG_TO_RLE = ../gr-utils/png2rle
 
 all:	megademo.dsk
 
-megademo.dsk:	MEGADEMO
+megademo.dsk:	MEGADEMO MEGALOAD
 	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 MEGADEMO
+	$(DOS33) -y megademo.dsk BSAVE -a 0x800 MEGALOAD
+	$(DOS33) -y megademo.dsk RAWWRITE -t 27 -s 0 MEGADEMO MEGA2
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 D_HGRC.BIN
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 FS_HGRC.BIN
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x2000 C64C.BIN
@@ -37,6 +39,14 @@ megademo.o:	megademo.s \
 	hgr.s random16.s move_letters.s
 	ca65 -o megademo.o megademo.s -l megademo.lst
 
+
+####
+
+MEGALOAD:        megaload.o
+	ld65 -o MEGALOAD megaload.o -C ../linker_scripts/apple2_800.inc
+
+megaload.o:      megaload.s
+	ca65 -o megaload.o megaload.s -l megaload.lst
 
 ####
 
@@ -115,4 +125,4 @@ C64C.BIN:	c64.bmp
 	$(B2D) c64.bmp HGR
 
 clean:		
-		rm -f *~ *.o *.lst MEGADEMO c64.img
+		rm -f *~ *.o *.lst MEGADEMO MEGALOAD c64.img
