@@ -421,6 +421,71 @@ found_one:
 	return ((found_track<<8)+found_sector);
 }
 
+static int track=0,sector=0;
+
+/* FIXME: currently assume sector is going to be 0 */
+static int dos33_force_allocate_sector(int fd) {
+
+	int found_track=0,found_sector=0;
+	//unsigned char bitmap[4];
+	int i,start_track;//,track_dir,byte;
+	int result,so;
+
+	dos33_read_vtoc(fd);
+
+	/* Originally used to keep things near center of disk for speed */
+	/* We can use to avoid fragmentation possibly */
+//	start_track=sector_buffer[VTOC_LAST_ALLOC_T]%TRACKS_PER_DISK;
+//	track_dir=sector_buffer[VTOC_ALLOC_DIRECT];
+
+	start_track=track;
+
+	i=start_track;
+	so=!(sector/8);
+	found_sector=sector%8;
+
+	// FIXME: check if free
+	//bitmap[so]=sector_buffer[VTOC_FREE_BITMAPS+(i*4)+so];
+	/* clear bit indicating in use */
+	sector_buffer[VTOC_FREE_BITMAPS+(i*4)+so]&=~(0x1<<found_sector);
+	found_sector+=(8*(1-so));
+	found_track=i;
+
+	if (debug) {
+		printf("VMW: want %d/%d, found %d/%d\n",
+			track,sector,found_track,found_sector);
+	}
+
+	sector++;
+	if (sector>15) {
+		sector=0;
+		track++;
+	}
+
+//	fprintf(stderr,"No room for raw-write!\n");
+//	return -1;
+
+//found_one:
+	/* store new track/direction info */
+	//sector_buffer[VTOC_LAST_ALLOC_T]=found_track;
+//
+//	sector_buffer[VTOC_ALLOC_DIRECT]=1;
+//	else sector_buffer[VTOC_ALLOC_DIRECT]=-1;
+
+	/* Seek to VTOC */
+	lseek(fd,DISK_OFFSET(VTOC_TRACK,VTOC_SECTOR),SEEK_SET);
+
+	/* Write out VTOC */
+	result=write(fd,&sector_buffer,BYTES_PER_SECTOR);
+
+	if (result<0) fprintf(stderr,"Error on I/O\n");
+
+	if (debug) printf("raw: T=%d S=%d\n",found_track,found_sector);
+
+	return ((found_track<<8)+found_sector);
+}
+
+
 #define ERROR_INVALID_FILENAME	1
 #define ERROR_FILE_NOT_FOUND	2
 #define ERROR_NO_SPACE		3
@@ -705,7 +770,7 @@ static int dos33_raw_file(int fd, char dos_type,
 		int track, int sector,
 		char *filename, char *apple_filename) {
 
-#if 0
+
 	int free_space,file_size,needed_sectors;
 	struct stat file_info;
 	int size_in_sectors=0;
@@ -713,7 +778,6 @@ static int dos33_raw_file(int fd, char dos_type,
 	int catalog_track,catalog_sector,sectors_used=0;
 	int input_fd;
 	int result;
-	int first_write=1;
 
 	if (apple_filename[0]<64) {
 		fprintf(stderr,"Error!  First char of filename "
@@ -743,12 +807,6 @@ static int dos33_raw_file(int fd, char dos_type,
 	file_size=(int)file_info.st_size;
 
 	if (debug) printf("Filesize: %d\n",file_size);
-
-	if (file_type==ADD_BINARY) {
-		if (debug) printf("Adding 4 bytes for size/offset\n");
-		if (length==0) length=file_size;
-		file_size+=4;
-	}
 
 	/* We need to round up to nearest sector size */
 	/* Add an extra sector for the T/S list */
@@ -833,8 +891,9 @@ static int dos33_raw_file(int fd, char dos_type,
 			}
 		}
 
-		/* allocate a sector */
-		data_ts=dos33_allocate_sector(fd);
+		/* force-allocate a sector */
+// VMW
+		data_ts=dos33_force_allocate_sector(fd);
 		sectors_used++;
 
 		if (data_ts<0) return -1;
@@ -842,22 +901,8 @@ static int dos33_raw_file(int fd, char dos_type,
 		/* clear sector */
 		for(x=0;x<BYTES_PER_SECTOR;x++) sector_buffer[x]=0;
 
-		/* read from input */
-		if ((first_write) && (file_type==ADD_BINARY)) {
-			first_write=0;
-			sector_buffer[0]=address&0xff;
-			sector_buffer[1]=(address>>8)&0xff;
-			sector_buffer[2]=(length)&0xff;
-			sector_buffer[3]=((length)>>8)&0xff;
-			bytes_read=read(input_fd,sector_buffer+4,
-					BYTES_PER_SECTOR-4);
-			bytes_read+=4;
-		}
-		else {
-			bytes_read=read(input_fd,sector_buffer,
-					BYTES_PER_SECTOR);
-		}
-		first_write=0;
+
+		bytes_read=read(input_fd,sector_buffer,BYTES_PER_SECTOR);
 
 		if (bytes_read<0) fprintf(stderr,"Error reading bytes!\n");
 
@@ -963,7 +1008,7 @@ got_a_dentry:
 	result=write(fd,sector_buffer,BYTES_PER_SECTOR);
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
-#endif
+
 	return 0;
 }
 
@@ -1815,7 +1860,7 @@ int main(int argc, char **argv) {
 	char *temp,*endptr;
 	int c;
 	int address=0, length=0;
-	int track,sector;
+
 
 	/* Check command line arguments */
 	while ((c = getopt (argc, argv,"a:l:t:s:hvy"))!=-1) {
