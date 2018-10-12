@@ -207,9 +207,9 @@ void lsr(void) {
 
 	c=temp_a&0x1;
 	temp_a=temp_a>>1;
-	a=(temp_a&0xff);
+	a=(temp_a&0x7f);	// always shift 0 into top
 	z=(a==0);
-	n=!!(a&0x80);
+	n=!!(a&0x80);		// can this ever be 1?  no?
 //	printf("LSR A=%x\n",a);
 }
 
@@ -362,6 +362,21 @@ void bit(int value) {
 
 }
 
+	/* a is not modified */
+void bit_mem(int addr) {
+	int temp_a;
+
+	temp_a=a&ram[addr];
+	temp_a&=0xff;
+
+	z=(temp_a==0);
+
+	n=(ram[addr]&0x80);
+	v=(ram[addr]&0x40);
+
+}
+
+
 void lda(int addr) {
 
 	a=ram[addr];
@@ -440,6 +455,62 @@ void eor(int value) {
 	z=(a==0);
 
 }
+
+void ora(int value) {
+
+	int temp_a;
+	int temp_value;
+	int result;
+
+	temp_a=a&0xff;
+	temp_value=value&0xff;
+
+	result=(temp_a|temp_value);
+
+	n=(result&0x80)>>7;
+
+	a=result&0xff;
+	z=(a==0);
+
+}
+
+void ora_mem(int addr) {
+
+	int temp_a;
+	int temp_value;
+	int result;
+
+	temp_a=a&0xff;
+	temp_value=ram[addr]&0xff;
+
+	result=(temp_a|temp_value);
+
+	n=(result&0x80)>>7;
+
+	a=result&0xff;
+	z=(a==0);
+
+}
+
+void and(int value) {
+
+	int temp_a;
+	int temp_value;
+	int result;
+
+	temp_a=a&0xff;
+	temp_value=value&0xff;
+
+	result=(temp_a&temp_value);
+
+	n=(result&0x80)>>7;
+
+	a=result&0xff;
+	z=(a==0);
+
+}
+
+
 
 unsigned char high(int value) {
 	return (value>>8)&0xff;
