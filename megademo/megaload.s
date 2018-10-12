@@ -32,6 +32,7 @@
                 MOVE      = $fe2c
 
 start:
+;		jmp	start
 		jsr init ;one-time call to unhook DOS
 		;open and read a file
 		lda #<file_to_read
@@ -64,50 +65,57 @@ init:
 ;	sta	A2L
 ;	lda	#>(unreloc+(codeend-opendir)-1)
 ;	sta	A2H
-;	ldy	#0
+	ldy	#0
 ;	sty	A4L
 ;	lda	#>reloc
 ;	sta	A4H
 ;	jsr	MOVE	; move mem from A1-A2 to location A4
 
+	; Create nibble table?
 	ldx	#3
-L1:	stx	$3c
-	txa
-	asl
-	bit	$3c
-	beq	L3
-	ora	$3c
-	eor	#$ff
-	and	#$7e
-L2:	bcs	L3
-	lsr
-	bne	L2
-	tya
-	sta	nibtbl, x
-	iny
-L3:	inx
-	bpl	L1
+L1:	stx	$3c		; store tempx    (3?)	
+	txa			; a=x	     (a=3)
+	asl			; a*=2       (a=6)
+	bit	$3c		; a&tempx, set N/V (a=6)
+	beq	L3		; if 0, skip to L3
+	ora	$3c		; a|=tempx	(a=7)
+	eor	#$ff		; a=~a		(a=f8)
+	and	#$7e		; a&=0x7e 0111 1110 (a=78)
+L2:	bcs	L3		; this set way back at asl??
+	lsr			; a>>1		a=3c c=0
+				;		a=1e c=0
+				;		a=0f c=0
+				;		a=07 c=1
+	bne	L2		; if a!=0 goto l2
+	tya			; if a==0, a=y
+	sta	nibtbl, x	; write out to table
+	iny			; increment y
+L3:	inx			; increment x	x=4, a=0f
+	bpl	L1		; loop while high bit not set
 
 	rts
 
+.align	$100
 unreloc:
 ;!pseudopc reloc {
 
                 ;turn on drive and read volume table of contents
 
 opendir:
-	lda	$c0e9
+	lda	$c0e9		; turn slot#6 drive on
 	ldx	#0
-	stx	adrlo
-	stx	secsize
-	lda	#$11
+	stx	adrlo		; zero out adrlo
+	stx	secsize		; zero out secsize
+	lda	#$11		; a=$11 (VTOC?)
 	jsr	readdirsec
 firstent:
+	jmp	firstent
+
 	lda	dirbuf+1
 
 	;lock if entry not found
-
-	beq	*
+entry_not_found:
+	beq	entry_not_found
 
 	;read directory sector
 
@@ -275,6 +283,12 @@ L7:
 	bpl	L7
 	rts
 
+
+	;======================
+	; readdirsec
+	;======================
+	; a = track?
+	; x = sector?
 readdirsec:
 	ldy	#>dirbuf
 seekread:
@@ -289,47 +303,55 @@ seekread1:
 
 	lda	curtrk
 	cmp	phase
-	beq	checksec
+	beq	repeat_until_right_sector
 	jsr	seek
 
 	; [re-]read sector
 
-L8:
+re_read_addr:
 	jsr	readadr
-checksec:
-	cmp	reqsec
-	bne	L8
 
+repeat_until_right_sector:
+	cmp	reqsec
+	bne	re_read_addr
+
+blah2:	jmp blah2
+
+
+
+	;==========================
 	; read sector data
+	;==========================
+	;
 
 readdata:
-	ldy	$c0ec
+	ldy	$c0ec		; read data until valid
 	bpl	readdata
-L9:
-	cpy	#$d5
+find_D5:
+	cpy	#$d5		; if not D5, repeat
 	bne	readdata
-L10:
-	ldy	$c0ec
-	bpl	L10
-	cpy	#$aa                ;we need Y=#$AA later
-	bne	L9
-L11:
-	lda	$c0ec
-	bpl	L11
-	eor	#$ad                ;zero A if match
-	bne	*                   ;lock if read failure
+find_AA:
+	ldy	$c0ec		; read data until valid, should be AA
+	bpl	find_AA
+	cpy	#$aa		; we need Y=#$AA later
+	bne	find_D5
+find_AD:
+	lda	$c0ec		; read data until high bit set (valid)
+	bpl	find_AD
+	eor	#$ad		; should match $ad
+	bne	*		; lock if didn't find $ad (failure)
 L12:
-	ldx	$c0ec
+	ldx	$c0ec		; read data until high bit set (valid)
 	bpl	L12
 	eor	nibtbl-$80, x
 	sta	bit2tbl-$aa, y
 	iny
 	bne	L12
 L13:
-	ldx	$c0ec
+	ldx	$c0ec		; read data until high bit set (valid)
 	bpl	L13
 	eor	nibtbl-$80, x
-	sta	(adrlo), y          ;the real address
+	sta	(adrlo), y	; the real address
 	iny
 	cpy	secsize
 	bne 	L13
@@ -350,39 +372,50 @@ L15:
                 bne L15
                 rts
 
-                ;no tricks here, just the regular stuff
+	; no tricks here, just the regular stuff
 
+	;=================
+	; readadr -- read address field
+	;=================
+	; Find address field, put track in cutrk, sector in tmpsec
 readadr:
-	lda	$c0ec
+	lda	$c0ec		; read data until we find a $D5
 	bpl	readadr
-L16:
+adr_d5:
 	cmp	#$d5
 	bne	readadr
-L17:
-	lda	$c0ec
-	bpl	L17
+
+adr_aa:
+	lda	$c0ec		; read data until we find a $AA
+	bpl	adr_aa
 	cmp	#$aa
-	bne	L16
-L18:
-	lda	$c0ec
-	bpl	L18
+	bne	adr_d5
+
+adr_96:
+	lda	$c0ec		; read data until we find a $96
+	bpl	adr_96
 	cmp	#$96
-	bne	L16
-	ldy	#3
-L19:
-	sta	curtrk
+	bne	adr_d5
+
+	ldy	#3		; three?
+				; first read volume/volume
+				; then track/track
+				; then sector/sector?
+adr_read_two_bytes:
+	sta	curtrk		; store out current track
 L20:
-               lda $c0ec
-                bpl L20
-                rol
-                sta tmpsec
+	lda	$c0ec		; read until full value
+	bpl	L20
+	rol
+	sta	tmpsec
 L21:
-	lda	$c0ec
-	bpl	L21
+	lda	$c0ec		; read until full value
+	bpl	L21		; sector value is (v1<<1)&v2????
 	and	tmpsec
-	dey
-                bne L19
-                rts
+	dey			; loop 3 times
+	bne	adr_read_two_bytes
+
+	rts			; return
 
 	;=====================
 	; Stepper motor delay
@@ -408,24 +441,27 @@ seekret:
 	;================
 	; SEEK
 	;================
+	; current track in curtrk
+	; desired track in phase
 seek:
 	asl	curtrk
 	lda	#0
-	sta	step			; *** WAS *** stz step
+	sta	step		; *** WAS *** stz step
 	asl	phase
 copy_cur:
-	lda	curtrk
-	sta	tmptrk
+	lda	curtrk		; load current track
+	sta	tmptrk		; store as temtrk
+	sec			; calc current-desired
+	sbc	phase		;
+	beq	seekret		; if they match, we are done!
+
+	bcs	seek_neg	; if negative, skip ahead
+	eor	#$ff		; ones-complement the distance
+	inc	curtrk		; increment current?
+	bcc	L25		; skip ahead
+seek_neg:
 	sec
-	sbc	phase
-	beq	seekret
-	bcs	L24
-	eor	#$ff
-	inc	curtrk
-	bcc	L25
-L24:
-	sec
-	sbc	#1			; *** WAS *** dec
+	sbc	#1		; *** WAS *** dec
 	dec	curtrk
 L25:
 	cmp	step
@@ -449,11 +485,32 @@ L27:
 step1:	.byte $01, $30, $28, $24, $20, $1e, $1d, $1c
 step2:	.byte $70, $2c, $26, $22, $1f, $1e, $1d, $1c
 
-sectbl:	.byte 0, $0d, $0b, 9, 7, 5, 3, 1, $0e, $0c, $0a, 8, 6, 4, 2, $0f
+sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
+
+.align	$100
 
 codeend         = *
 
-nibtbl          = *
+; From $BA96 of DOS33
+nibtbl		= *
+;	.byte	$00,$01,$98,$99,$02,$03,$9C,$04	; $BA96	; 00
+;	.byte	$05,$06,$A0,$A1,$A2,$A4,$A4,$A5 ; $BA9E	; 08
+;	.byte	$07,$08,$A8,$A9,$AA,$09,$0A,$0B ; $BAA6	; 10
+;	.byte	$0C,$0D,$B0,$B1,$0E,$0F,$10,$11 ; $BAAE	; 18
+;	.byte	$12,$13,$B8,$14,$15,$16,$17,$18 ; $BAB6	; 20
+;	.byte	$19,$1A,$C0,$C1,$C2,$C3,$C4,$C5	; $BABE	; 28
+;	.byte	$C6,$C7,$C8,$C9,$CA,$1B,$CC,$1C ; $BAC6	; 30
+;	.byte	$1D,$1E,$D0,$D1,$D2,$1E,$D4,$D5 ; $BACE	; 38
+;	.byte	$20,$21,$D8,$22,$23,$24,$25,$26	; $BAD6	; 40
+;	.byte	$27,$28,$E0,$E1,$E2,$E3,$E4,$29	; $BADE ; 48
+;	.byte	$2A,$2B,$E8,$2C,$2D,$2E,$2F,$30	; $BAE6 ; 50
+;	.byte	$31,$32,$F0,$F1,$33,$34,$35,$36 ; $BAEE ; 58
+;	.byte	$37,$38,$F8,$39,$3A,$3B,$3C,$3D	; $BAF6	; 60
+;	.byte	$3E,$3F,$13,$00,$01,$02,$01,$00 ; $BAFE ; 68
+;	.byte	$00,$00,$00,$00,$00,$00,$00,$00
+;	.byte	$00,$00,$00,$00,$00,$00,$00,$00
+
+
 bit2tbl         = nibtbl+128
 filbuf          = bit2tbl+86
 dataend         = filbuf+4

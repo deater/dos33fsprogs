@@ -10,7 +10,7 @@ all:	megademo.dsk
 megademo.dsk:	MEGADEMO MEGALOAD
 	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 MEGADEMO
 	$(DOS33) -y megademo.dsk BSAVE -a 0x800 MEGALOAD
-	$(DOS33) -y megademo.dsk RAWWRITE -t 27 -s 0 MEGADEMO MEGA2
+#	$(DOS33) -y megademo.dsk RAWWRITE -t 27 -s 0 MEGADEMO MEGA2
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 D_HGRC.BIN
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 FS_HGRC.BIN
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x2000 C64C.BIN
