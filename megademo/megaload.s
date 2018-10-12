@@ -1,215 +1,464 @@
-;fast bootable seek/read, slot 6 version
-;copyright (c) Peter Ferrie 2011-2012
+;read any file slot 6 version
+;copyright (c) Peter Ferrie 2013
+;!cpu 65c02
+;!to "trk",plain
+;*=$800
 
-; Translated to ca64 by Vince Weaver
+                adrlo     = $26         ;constant from boot prom
+                adrhi     = $27         ;constant from boot prom
+                tmpsec    = $3c         ;constant from boot prom
+                reqsec    = $3d         ;constant from boot prom
+                A1L       = $3c         ;constant from ROM
+                A1H       = $3d         ;constant from ROM
+                A2L       = $3e         ;constant from ROM
+                A2H       = $3f         ;constant from ROM
+                curtrk    = $40
+                niblo     = $41
+                nibhi     = $42
+                A4L       = $42         ;constant from ROM
+                A4H       = $43         ;constant from ROM
+                sizelo    = $44
+                sizehi    = $45
+                secsize   = $46
+		TEMPX	= $f9
+		TEMPY	  = $fa
+                namlo     = $fb
+                namhi     = $fc
+                step      = $fd         ;state for stepper motor
+                tmptrk    = $fe         ;temporary copy of current track
+                phase     = $ff         ;current phase for seek
+                reloc     = $bc00
+                dirbuf    = $bf00
+                MOVE      = $fe2c
 
-		chksum    = 0		;otherwise safer but 12 bytes larger
-		secldr2   = $0e		;14th sector is fastest when loaded from bootsector but can be any of them
-		seekback  = 0		;set to 1 to enable seek backwards
+start:
+		jsr init ;one-time call to unhook DOS
+		;open and read a file
+		lda #<file_to_read
+		sta namlo
+		lda #>file_to_read
+		sta namhi
+		jsr opendir ;open and read entire file into memory at its load address
 
-		adrlo     = $26		;constant from boot prom
-		adrhi     = $27		;constant from boot prom
-		slot      = $2b		;constant from boot prom
-		tmpsec    = $3c		;constant from boot prom
-		tmpadr    = $41
-		partial2  = $f9		;copy of partial1
-		partial1  = $fa		;sectors to read from one track
-		total     = $fb		;total sectors to read
-		step      = $fc		;state for stepper motor
-		tmptrk    = $fd		;temporary copy of current track
-		curtrk    = $fe		;current track (must initialise before calling seek)
-		phase     = $ff		;current phase for seek
-		addrtbl   = $50		;requires 16 bytes
-		nibtbl    = $2d6	;constant from boot prom
-		bit2tbl   = $200	;hard-coded (uses $2aa-$2ff)
+blah:		jmp blah
 
-		maxsec    = $10		;sectors per track, usually 10 but 0b for Olympic Decathlon, 0c for Karateka
+; format of request name is 30-character Apple text:
+;e.g. !scrxor $80, "MYFILE                        "
+file_to_read:	;.byte "MYFILE                        "
+	.byte 'M'|$80,'E'|$80,'G'|$80,'A'|$80,'D'|$80,'E'|$80,'M'|$80,'O'|$80
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0
 
-		;this section is specific to bootsectors
-		;load second stage sector to $900, enabling track seek
-		tax			;1 sector
-		lda #secldr2
-		ldy #9
-		jsr seekread
-		jmp ldr2
-		;
 
-seekread:	stx total
-		sta addrtbl
-		sty tmpadr
-calcpart:	sec
-		lda #maxsec
-		sbc addrtbl
-		cmp total
-		bcs L1
-		tax
-L1:		stx partial1
-		stx partial2
-callseek:	jsr seek - 1		;(seekret) disabled during boot, increment to enable
-		ldy addrtbl
-		ldx #$0f
-		lda #0
-L2:		sta addrtbl, x
-		dex
-		bpl L2
-L3:		lda tmpadr
-		ldx sectbl, y
-		sta addrtbl, x
-		inc tmpadr
-		iny
-		dec partial1
-		bne L3
+                ;unhook DOS and build nibble table
 
-read:		ldx #0
-read1:
-L4:		jsr readnib
-L5:		cmp #$d5
-		bne L4
-		jsr readnib
-		cmp #$aa
-		bne L5
-		tay			;we need Y=#$AA later
-		jsr readnib
-		eor #$ad		;zero A if match
-		beq check_mode
+init:
+	jsr	$fe93					; clear COUT
+	jsr	$fe89					; clear KEYIN
+;	lda	#<unreloc
+;	sta	A1L
+;	lda	#>unreloc
+;	sta	A1H
+;	lda	#<(unreloc+(codeend-opendir)-1)
+;	sta	A2L
+;	lda	#>(unreloc+(codeend-opendir)-1)
+;	sta	A2H
+;	ldy	#0
+;	sty	A4L
+;	lda	#>reloc
+;	sta	A4H
+;	jsr	MOVE	; move mem from A1-A2 to location A4
 
-		;if not #$AD, then #$96 is assumed
+	ldx	#3
+L1:	stx	$3c
+	txa
+	asl
+	bit	$3c
+	beq	L3
+	ora	$3c
+	eor	#$ff
+	and	#$7e
+L2:	bcs	L3
+	lsr
+	bne	L2
+	tya
+	sta	nibtbl, x
+	iny
+L3:	inx
+	bpl	L1
 
-		ldy #2			;high 8 bits of bit2tbl
-		sty adrhi		;store 2-bits array at $2xx
-L6:		jsr readnib
-		rol			;set carry
-		sta tmpsec
-		jsr readnib
-		and tmpsec
-		dey
-		bpl L6
-.if chksum
-		sta tmpsec
-		tay
-		ldx addrtbl, y
-		stx step
-.else
-		tay
-		lda addrtbl, y
-		sta step
-		stx addrtbl, y
-		tax
-.endif
-		bcs read1
-check_mode:	cpx #0			;set carry if non-zero
-		beq read1
-		.byte $90
-L7:		clc
-L8:		ldx $c0ec
-		bpl L8
-		eor nibtbl, x
-		sta (adrlo), y		;$2xx initially, and then the real address
-		iny
-		bne L8
-		ldx step
-		stx adrhi		;set real address
-		bcs L7			;carry is set on first pass, clear on second, loops one time
-.if chksum
-L9:		ldx $c0ec
-		bpl L9
-		eor nibtbl, x
-		bne read
-		ldx tmpsec
-		sta addrtbl, x
-.endif
-L10:		ldx #$a9
-L11:		inx
-		beq L10
-		lda (adrlo), y
-		lsr bit2tbl, x
-		rol
-		lsr bit2tbl, x
-		rol
-		sta (adrlo), y
-		iny
-		bne L11
-		dec total
-		dec partial2
-		bne read		;read all requested sectors in one track
-		ldx total
-		beq seekret
-		inc phase
-		inc phase		;update current track
-		jmp calcpart
+	rts
 
-sectbl:		.byte 0, $0d, $0b, 9, 7, 5, 3, 1, $0e, $0c, $0a, 8, 6, 4, 2, $0f
+unreloc:
+;!pseudopc reloc {
 
-readnib:
-L12:		lda $c0ec
-		bpl L12
-seekret:	rts			;hard-coded relative to seek
+                ;turn on drive and read volume table of contents
 
-seek:		lda #0
-		sta step
-copy_cur:	lda curtrk
-		sta tmptrk
-		sec
-		sbc phase
-		beq seekret
-.if seekback
-		bcs L13
-.endif
-		eor #$ff
-		inc curtrk
-.if seekback
-		bcc L14
-L13:		adc #$fe
-		dec curtrk
+opendir:
+	lda	$c0e9
+	ldx	#0
+	stx	adrlo
+	stx	secsize
+	lda	#$11
+	jsr	readdirsec
+firstent:
+	lda	dirbuf+1
+
+	;lock if entry not found
+
+	beq	*
+
+	;read directory sector
+
+	ldx	dirbuf+2
+	jsr	seekread1
+	ldy	#7              ;number of directory entries in a sector
+	ldx	#$2b            ;offset of filename in directory entry
+nextent:
+	tya
+	pha			; was **phy**
+	txa
+	pha			; was **phx**
+	ldy	#$1d
+
+	; match name backwards (slower but smaller)
+
+L4:
+	lda	(namlo), y
+	cmp	dirbuf, x
+	beq	foundname
+	pla
+
+	; move to next directory in this block, if possible
+
+	clc
+	adc	#$23
+	tax
+	pla
+	tay			; was **ply**
+	dey
+	bne	nextent
+	beq	firstent	; was **bra**
+
+foundname:
+	dex
+	dey
+	bpl	L4
+	pla
+	tay			; was **ply**
+	pla
+
+	; read track/sector list
+
+	lda	dirbuf-32, y
+	ldx	dirbuf-31, y
+	jsr	seekread1
+
+	; read load offset and length info only, initially
+
+	lda	#<filbuf
+	sta	adrlo
+	lda	#4
+	sta	secsize
+	lda	dirbuf+12
+	ldx	dirbuf+13
+	ldy	#>filbuf
+	jsr	seekread
+
+	; reduce load offset by 4, to account for offset and length
+
+	sec
+	lda	filbuf
+	sbc	#4
+	sta	adrlo
+	lda	filbuf+1
+	sbc	#0
+	sta	adrhi
+
+	; save on stack bytes that will be overwritten by extra read
+
+	ldy	#3
+L5:
+	lda	(adrlo), y
+	pha
+	dey
+	bpl	L5
+
+	lda	adrhi
+	pha
+	lda	adrlo
+	pha
+
+	; increase load size by 4, to account for offst and length
+
+	lda	filbuf+2
+	adc	#3
+	sta	sizelo
+	sta	secsize
+	lda	filbuf+3
+	adc	#0
+	sta	sizehi
+	beq	readfirst
+	ldy	#0		; was **stz secsize**
+	sty	secsize
+
+readfirst:
+	ldy #$0c
+
+	; read a file sector
+
+readnext:
+	lda dirbuf, y
+	ldx dirbuf+1, y
+	sty TEMPY			; ** was phy **
+	jsr seekread1
+	ldy TEMPY			; ** was ply **
+
+	; if low count is non-zero then we are done
+	; (can happen only for partial last block)
+
+	lda secsize
+	bne readdone
+
+	; continue if more than $100 bytes left
+
+                dec sizehi
+                bne L6
+
+                ;set read size to min(length, $100)
+
+                lda sizelo
+                beq readdone
+                sta secsize
+L6:
+	inc	adrhi
+	iny
+	iny
+	bne 	readnext
+
+	; save current address for after t/s read
+
+	lda	adrhi
+	pha
+	lda	adrlo
+	pha
+	lda	#0
+	sta	adrlo			; was **stz adrlo**
+
+	; read next track/sector sector
+
+	lda	dirbuf+1
+	ldx	dirbuf+2
+	jsr	readdirsec
+	clc
+
+	; restore current address
+readdone:
+	pla
+	sta	adrhi
+	pla
+	sta	adrlo
+	bcc	readfirst
+
+	lda	$c0e8
+
+	; restore from stack bytes that were overwritten by extra read
+
+	ldx	#3
+	ldy	#0
+L7:
+	pla
+	sta	(adrlo), y
+	iny
+	dex
+	bpl	L7
+	rts
+
+readdirsec:
+	ldy	#>dirbuf
+seekread:
+	sty	adrhi
+seekread1:
+	sta	phase
+	lda	sectbl, x
+	sta	reqsec
+	jsr	readadr
+
+	; if track does not match, then seek
+
+	lda	curtrk
+	cmp	phase
+	beq	checksec
+	jsr	seek
+
+	; [re-]read sector
+
+L8:
+	jsr	readadr
+checksec:
+	cmp	reqsec
+	bne	L8
+
+	; read sector data
+
+readdata:
+	ldy	$c0ec
+	bpl	readdata
+L9:
+	cpy	#$d5
+	bne	readdata
+L10:
+	ldy	$c0ec
+	bpl	L10
+	cpy	#$aa                ;we need Y=#$AA later
+	bne	L9
+L11:
+	lda	$c0ec
+	bpl	L11
+	eor	#$ad                ;zero A if match
+	bne	*                   ;lock if read failure
+L12:
+	ldx	$c0ec
+	bpl	L12
+	eor	nibtbl-$80, x
+	sta	bit2tbl-$aa, y
+	iny
+	bne	L12
+L13:
+	ldx	$c0ec
+	bpl	L13
+	eor	nibtbl-$80, x
+	sta	(adrlo), y          ;the real address
+	iny
+	cpy	secsize
+	bne 	L13
+	ldy	#0
 L14:
-.endif
-		cmp step
-		bcc L15
-		lda step
-L15:		cmp #8
-		bcs L16
-		tay
-		sec
-L16:		lda curtrk
-		ldx step1, y
-		bne L18
-L17:		clc
-		lda tmptrk
-		ldx step2, y
-L18:		stx tmpsec
-		and  #3
-		rol
-		tax
-		sta $c0e0, x
-L19:		ldx #$13
-L20:		dex
-		bne L20
-		dec tmpsec
-		bne L19
-		lsr
-		bcs L17
-		inc step
-		bne copy_cur
+	ldx	#$a9
+L15:
+	inx
+	beq	L14
+                lda (adrlo), y
+                lsr bit2tbl-$aa, x
+                rol
+                lsr bit2tbl-$aa, x
+                rol
+                sta (adrlo), y
+                iny
+                cpy secsize
+                bne L15
+                rts
 
-step1:		.byte 1, $30, $28, $24, $20, $1e, $1d, $1c
-step2:		.byte $70, $2c, $26, $22, $1f, $1e, $1d, $1c
+                ;no tricks here, just the regular stuff
 
-		newtrk    = $36		;track*2 for main stage
-		newnum    = $80		;number of sectors in main stage
-		newsec    = 0		;first sector in main stage
-		newadr    = $40		;load address for main stage
-		newstart  = $4000	;start address for main stage
+readadr:
+	lda	$c0ec
+	bpl	readadr
+L16:
+	cmp	#$d5
+	bne	readadr
+L17:
+	lda	$c0ec
+	bpl	L17
+	cmp	#$aa
+	bne	L16
+L18:
+	lda	$c0ec
+	bpl	L18
+	cmp	#$96
+	bne	L16
+	ldy	#3
+L19:
+	sta	curtrk
+L20:
+               lda $c0ec
+                bpl L20
+                rol
+                sta tmpsec
+L21:
+	lda	$c0ec
+	bpl	L21
+	and	tmpsec
+	dey
+                bne L19
+                rts
 
-ldr2:		;jmp ldr2
-		;replace with something like the following:
-		inc callseek + 1
-		sty curtrk
-		lda #newtrk
-		sta phase
-		ldx #newnum
-		lda #newsec
-		ldy #newadr
-		jsr seekread
-;		jmp newstart
+	;=====================
+	; Stepper motor delay
+	;=====================
+stepdelay:
+	stx	TEMPX			; was **phx**
+	and	#3
+	rol
+	tax
+	lda	$c0e0, x
+	lda	TEMPX			; was **pla**
+L22:
+	ldx	#$13
+L23:
+	dex
+	bne	L23
+	sec
+	sbc	#1			; was **dec**
+	bne	L22
+seekret:
+	rts
 
-ldr3:		jmp ldr3
+	;================
+	; SEEK
+	;================
+seek:
+	asl	curtrk
+	lda	#0
+	sta	step			; *** WAS *** stz step
+	asl	phase
+copy_cur:
+	lda	curtrk
+	sta	tmptrk
+	sec
+	sbc	phase
+	beq	seekret
+	bcs	L24
+	eor	#$ff
+	inc	curtrk
+	bcc	L25
+L24:
+	sec
+	sbc	#1			; *** WAS *** dec
+	dec	curtrk
+L25:
+	cmp	step
+	bcc	L26
+	lda	step
+L26:
+	cmp	#8
+	bcs	L27
+	tay
+	sec
+L27:
+	lda	curtrk
+	ldx	step1, y
+	jsr	stepdelay
+	lda	tmptrk
+	ldx	step2, y
+	jsr	stepdelay
+	inc	step
+	bne	copy_cur
+
+step1:	.byte $01, $30, $28, $24, $20, $1e, $1d, $1c
+step2:	.byte $70, $2c, $26, $22, $1f, $1e, $1d, $1c
+
+sectbl:	.byte 0, $0d, $0b, 9, 7, 5, 3, 1, $0e, $0c, $0a, 8, 6, 4, 2, $0f
+
+codeend         = *
+
+nibtbl          = *
+bit2tbl         = nibtbl+128
+filbuf          = bit2tbl+86
+dataend         = filbuf+4
+;hack to error out when code is too large for current address
+;!if ((dirbuf-(dataend-opendir))&$ff00)<reloc {
+;1=1
+;}
+;}

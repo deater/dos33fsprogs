@@ -20,7 +20,8 @@
                 sizelo    = $44
                 sizehi    = $45
                 secsize   = $46
-		tempy	  = $fa
+		TEMPX	= $f9
+		TEMPY	  = $fa
                 namlo     = $fb
                 namhi     = $fc
                 step      = $fd         ;state for stepper motor
@@ -212,7 +213,7 @@ L6:
 	inc	adrhi
 	iny
 	iny
-	bne 	eadnext
+	bne 	readnext
 
 	; save current address for after t/s read
 
@@ -365,18 +366,19 @@ L21:
 	; Stepper motor delay
 	;=====================
 stepdelay:
-	phx
+	stx	TEMPX			; was **phx**
 	and	#3
 	rol
 	tax
 	lda	$c0e0, x
-	pla
+	lda	TEMPX			; was **pla**
 L22:
 	ldx	#$13
 L23:
 	dex
 	bne	L23
-	dec
+	sec
+	sbc	#1			; was **dec**
 	bne	L22
 seekret:
 	rts
@@ -399,7 +401,7 @@ copy_cur:
 	eor	#$ff
 	inc	curtrk
 	bcc	L25
-l24:
+L24:
 	sec
 	sbc	#1			; *** WAS *** dec
 	dec	curtrk
