@@ -219,11 +219,11 @@ readfirst:
 	; read a file sector
 
 readnext:
-	lda	dirbuf, y
-	ldx	dirbuf+1, y
-	sty	TEMPY			; ** was phy **
+	lda	dirbuf, y		; A = track
+	ldx	dirbuf+1, y		; x = sector
+	sty	TEMPY			; save t/s ptr ** was phy **
 	jsr	seekread1
-	ldy	TEMPY			; ** was ply **
+	ldy	TEMPY			; restore t/s ptr ** was ply **
 
 	; if low count is non-zero then we are done
 	; (can happen only for partial last block)
@@ -305,7 +305,7 @@ seekread1:
 
 	lda	curtrk
 	cmp	phase
-	beq	repeat_until_right_sector
+	beq	re_read_addr	; **was** repeat_until_right_sector
 	jsr	seek
 
 	; [re-]read sector
