@@ -396,90 +396,60 @@ seekret:
 	;================
 	; current track in curtrk
 	; desired track in phase
-;seek:
-;	asl	curtrk
-;	lda	#0
-;	sta	step		; *** WAS *** stz step
-;	asl	phase
-;copy_cur:
-;	lda	curtrk		; load current track
-;	sta	tmptrk		; store as temtrk
-;	sec			; calc current-desired
-;	sbc	phase		;
-;	beq	seekret		; if they match, we are done!
-
-;	bcs	seek_neg	; if negative, skip ahead
-;	eor	#$ff		; ones-complement the distance
-;	inc	curtrk		; increment current?
-;	bcc	L25		; skip ahead
-;seek_neg:
-;	sec
-;	sbc	#1		; *** WAS *** dec
-;	dec	curtrk
-;L25:
-;	cmp	step
-;	bcc	L26
-;	lda	step
-;L26:
-;	cmp	#8
-;	bcs	L27
-;	tay
-;	sec
-;L27:
-;	lda	curtrk
-;	ldx	step1, y
-;	jsr	stepdelay
-;	lda	tmptrk
-;	ldx	step2, y
-;	jsr	stepdelay
-;	inc	step
-;	bne	copy_cur
-
 
 seek:
-		asl	curtrk
-		asl	phase
-		lda #0
-                sta step
-copy_cur:       lda curtrk
-                sta tmptrk
-                sec
-                sbc phase
-                beq seekret
-                bcs L113
-                eor #$ff
-                inc curtrk
-                bcc L114
-L113:            adc #$fe
-                dec curtrk
+	asl	curtrk		; multiply by 2
+	asl	phase		; multiply by 2
+	lda	#0
+	sta	step
+copy_cur:
+	lda	curtrk		; load current track
+	sta	tmptrk		; store as temptrk
+	sec			; calc current-desired
+	sbc	phase
+	beq	seekret		; if they match, we are done!
+
+	bcs	seek_neg	; if negative, skip ahead
+	eor	#$ff		; ones-complement the distance
+	inc	curtrk		; increment current (make it 2s comp?)
+	bcc	L114		; skip ahead
+seek_neg:
+	adc	#$fe
+	dec	curtrk
 L114:
-                cmp step
-                bcc L115
-                lda step
-L115:            cmp #8
-                bcs L116
-                tay
-                sec
-L116:            lda curtrk
-                ldx step1, y
-                bne L118
-L117:            clc
-                lda tmptrk
-                ldx step2, y
-L118:            stx tmpsec
-                and  #3
-                rol
-                tax
-                sta $c0e0, x
-L119:            ldx #$13
-L120:            dex
-                bne L120
-                dec tmpsec
-                bne L119
-                lsr
-                bcs L117
-                inc step
-                bne copy_cur
+	cmp	step
+	bcc	L115
+	lda	step
+L115:
+	cmp	#8
+	bcs	L116
+	tay
+	sec
+L116:
+	lda	curtrk
+	ldx	step1, y
+	bne	L118
+L117:
+	clc
+	lda	tmptrk
+	ldx	step2, y
+L118:
+	stx	tmpsec
+	and	#3
+	rol
+	tax
+	sta	$c0e0, x
+L119:
+	ldx	#$13
+L120:
+	dex
+	bne	L120
+	dec	tmpsec
+	bne	L119
+	lsr
+	bcs	L117
+	inc	step
+	bne	copy_cur
 
 
 
@@ -488,7 +458,6 @@ step2:	.byte $70, $2c, $26, $22, $1f, $1e, $1d, $1c
 
 sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
 
-;.align	$100
 
 ; From $BA96 of DOS33
 nibtbl		= *
