@@ -36,6 +36,7 @@ megademo.o:	megademo.s \
 	waterfall.s gr_unrolled_copy.s waterfall_page1.inc waterfall_page2.inc \
 	takeoff.s takeoff.inc takeoff.img.lz4 \
 	mode7.s \
+	space_bars.s text_print.s \
 	fireworks.s fw_background.inc fw_state_machine.s fw.s \
 	hgr.s random16.s move_letters.s
 	ca65 -o megademo.o megademo.s -l megademo.lst

@@ -27,6 +27,8 @@ apple_iie:
 	;===================
 	jsr	HOME
 
+	jsr	space_bars
+
 	; C64 Opening Sequence
 
 	jsr	c64_opener
@@ -61,6 +63,7 @@ apple_iie:
 	jsr	mode7_flying
 
 	; Fly in space
+	jsr	space_bars
 
 	; Arrive
 
@@ -100,9 +103,10 @@ loop_forever:
 .align $100
 	.include	"gr_putsprite.s"
 	.include	"mode7.s"
+	.include	"space_bars.s"
 	.include	"takeoff.s"
 	.include	"waterfall.s"
-
+	.include	"text_print.s"
 
 ;============================
 ; Include Sprites
