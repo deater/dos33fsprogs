@@ -1,6 +1,8 @@
 ; read any file slot 6 version
 ; based on FASTLD6 and RTS copyright (c) Peter Ferrie 2011-2013
 
+; TODO:
+;	non-slot6?  self modfiy code?
 
 	adrlo	=	$26	; constant from boot prom
 	adrhi	=	$27	; constant from boot prom
@@ -16,7 +18,7 @@
 	step	=	$fd	; state for stepper motor
 	tmptrk	=	$fe	; temporary copy of current track
 	phase	=	$ff	; current phase for /seek
-	dirbuf	=	$bf00
+	dirbuf	=	$400
 
 start:
 	jsr	init	; unhook DOS, init nibble table
