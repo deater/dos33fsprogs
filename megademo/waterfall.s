@@ -293,15 +293,19 @@ convoluted:
 is_it_left:
 							; 5
 	cmp	#$8		; left arrow		; 2
-	beq	is_left
-							; 2
-	nop						; 2
-	lda	YPOS		; 3-cycle nop
+	beq	is_left					; 3
+
+							; -1
+	cmp	#0		; space?		; 2
+	bne	not_space				; 3
+	rts
+;	nop						; 2
+;	lda	YPOS		; 3-cycle nop		; 3
+not_space:
 	jmp	convoluted				; 3
 							; ------ 20 if neither
 
 is_left:
-							; 3
 	dec	XPOS					; 5	; 20 if left
 	lda	#1					; 2
 	sta	BIRD_DIR				; 3
@@ -313,6 +317,7 @@ adjust_xpos:
 	sta	XPOS					; 3
 
 	jmp	wf_display_loop				; 3
+
 
 
 .align	$100
@@ -616,6 +621,6 @@ ground_loop_done:
 	jmp	wf_display_loop_return				; 3
 
 
-
+; Moved to megademo.s
 ;.include "waterfall_page1.inc"
 ;.include "waterfall_page2.inc"
