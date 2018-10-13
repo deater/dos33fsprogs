@@ -18,15 +18,30 @@
 	step	=	$fd	; state for stepper motor
 	tmptrk	=	$fe	; temporary copy of current track
 	phase	=	$ff	; current phase for /seek
-	dirbuf	=	$400
+
+	dirbuf	=	$1e00	; note, don't put this immediately below
+				;   the value being read as destaddr-4
+				;   is temporarily overwritten during read
+				;   process
+
+
+	; note also, can't load file bigger than $8000 (32k) in size?
+	; seems to break things?
 
 start:
 	jsr	init	; unhook DOS, init nibble table
 
 	; open and read a file
-	lda	#<file_to_read
+	lda	#<megademo_filename
 	sta	namlo
-	lda	#>file_to_read
+	lda	#>megademo_filename
+	sta	namhi
+	jsr	opendir		; open and read entire file into memory
+
+	; open and read a file
+	lda	#<c64_filename
+	sta	namlo
+	lda	#>c64_filename
 	sta	namhi
 	jsr	opendir		; open and read entire file into memory
 
@@ -34,8 +49,14 @@ start:
 
 
 ; filename to open is 30-character Apple text:
-file_to_read:	;.byte "MEGADEMO                      "
+megademo_filename:	;.byte "MEGADEMO                      "
 	.byte 'M'|$80,'E'|$80,'G'|$80,'A'|$80,'D'|$80,'E'|$80,'M'|$80,'O'|$80
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0
+
+c64_filename:	;.byte "C64.IMG                       "
+	.byte 'C'|$80,'6'|$80,'4'|$80,'.'|$80,'I'|$80,'M'|$80,'G'|$80,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0
@@ -159,6 +180,7 @@ foundname:
 	lda	filbuf
 	sbc	#4
 	sta	adrlo
+
 	lda	filbuf+1
 	sbc	#0
 	sta	adrhi
@@ -183,6 +205,7 @@ L5:
 	adc	#3
 	sta	sizelo
 	sta	secsize
+
 	lda	filbuf+3
 	adc	#0
 	sta	sizehi
@@ -462,7 +485,7 @@ sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
 
 
 ; From $BA96 of DOS33
-nibtbl		= *
+nibtbl:	.res 128			;		= *
 ;	.byte	$00,$01,$98,$99,$02,$03,$9C,$04	; $BA96	; 00
 ;	.byte	$05,$06,$A0,$A1,$A2,$A4,$A4,$A5 ; $BA9E	; 08
 ;	.byte	$07,$08,$A8,$A9,$AA,$09,$0A,$0B ; $BAA6	; 10
@@ -481,7 +504,7 @@ nibtbl		= *
 ;	.byte	$00,$00,$00,$00,$00,$00,$00,$00
 
 
-bit2tbl         = nibtbl+128
-filbuf          = bit2tbl+86
-dataend         = filbuf+4
+bit2tbl:	.res 86			;	= nibtbl+128
+filbuf:		.res 4			;	= bit2tbl+86
+					;dataend         = filbuf+4
 

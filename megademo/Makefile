@@ -7,9 +7,10 @@ PNG_TO_RLE = ../gr-utils/png2rle
 
 all:	megademo.dsk
 
-megademo.dsk:	MEGADEMO MEGALOAD
+megademo.dsk:	MEGADEMO MEGALOAD c64.img
 	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 MEGADEMO
 	$(DOS33) -y megademo.dsk BSAVE -a 0x800 MEGALOAD
+	$(DOS33) -y megademo.dsk BSAVE -a 0x2000 c64.img C64.IMG
 #	$(DOS33) -y megademo.dsk RAWWRITE -t 27 -s 0 MEGADEMO MEGA2
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 D_HGRC.BIN
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 FS_HGRC.BIN

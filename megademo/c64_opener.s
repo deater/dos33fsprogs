@@ -24,24 +24,24 @@ c64_opener:
 	bit	HIRES			; hires mode !!!
 	bit	SET_GR			; graphics mode
 
-	lda	#<c64
-	sta	LZ4_SRC
-	lda	#>c64
-	sta	LZ4_SRC+1
+;	lda	#<c64
+;	sta	LZ4_SRC
+;	lda	#>c64
+;	sta	LZ4_SRC+1
 
-	lda	#<(c64_end-8)		; skip checksum at end
-	sta	LZ4_END
-	lda	#>(c64_end-8)		; skip checksum at end
-	sta	LZ4_END+1
+;	lda	#<(c64_end-8)		; skip checksum at end
+;	sta	LZ4_END
+;	lda	#>(c64_end-8)		; skip checksum at end
+;	sta	LZ4_END+1
 
 
 
-	lda	#<$2000
-	sta	LZ4_DST
-	lda	#>$2000
-	sta	LZ4_DST+1
+;	lda	#<$2000
+;	sta	LZ4_DST
+;	lda	#>$2000
+;	sta	LZ4_DST+1
 
-	jsr	lz4_decode
+;	jsr	lz4_decode
 
 
 	jsr	wait_until_keypress
@@ -370,11 +370,11 @@ done_c64:
 
 
 	;===================
-	; graphics
+	; c64 graphic, load at $2000-$4000 to start with
 	;===================
-c64:
-.incbin "c64.img.lz4",11
-c64_end:
+;c64:
+;.incbin "c64.img"
+;c64_end:
 
 
 ;=========================================================

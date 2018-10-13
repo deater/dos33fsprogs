@@ -6,6 +6,16 @@
 .include "hardware.inc"
 
 
+        ;===================
+        ; graphics
+        ;===================
+;c64:					; this should end up at $2000-$4000
+;.incbin "c64.img"
+;c64_end:
+
+
+real_start:				; this should end up at $4000
+
 	;===================
 	; Check for Apple II and patch
 	;===================
@@ -24,8 +34,6 @@ apple_iie:
 	; set graphics mode
 	;===================
 	jsr	HOME
-
-	jsr	waterfall
 
 	; C64 Opening Sequence
 
@@ -49,7 +57,7 @@ apple_iie:
 	; Leaving house
 
 	; Riding bird
-;	jsr	bird_mountain
+	jsr	bird_mountain
 
 	; Waterfall
 	jsr	waterfall
@@ -58,7 +66,7 @@ apple_iie:
 	jsr	rocket_takeoff
 
 	; mode7 (???)
-;	jsr	mode7_flying
+	jsr	mode7_flying
 
 	; Fly in space
 
@@ -66,7 +74,7 @@ apple_iie:
 
 	; Fireworks
 
-;	jsr	fireworks
+	jsr	fireworks
 
 	; Game over
 game_over_man:
@@ -95,11 +103,11 @@ loop_forever:
 .align $100
 	.include	"fireworks.s"
 	.include	"hgr.s"
-;	.include	"bird_mountain.s"
+	.include	"bird_mountain.s"
 	.include	"move_letters.s"
 .align $100
 	.include	"gr_putsprite.s"
-;	.include	"mode7.s"
+	.include	"mode7.s"
 	.include	"takeoff.s"
 	.include	"waterfall.s"
 
