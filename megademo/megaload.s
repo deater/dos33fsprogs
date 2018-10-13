@@ -1,54 +1,38 @@
-;read any file slot 6 version
-;copyright (c) Peter Ferrie 2013
-;!cpu 65c02
-;!to "trk",plain
-;*=$800
+; read any file slot 6 version
+; based on FASTLD6 and RTS copyright (c) Peter Ferrie 2011-2013
 
-                adrlo     = $26         ;constant from boot prom
-                adrhi     = $27         ;constant from boot prom
-                tmpsec    = $3c         ;constant from boot prom
-                reqsec    = $3d         ;constant from boot prom
-                A1L       = $3c         ;constant from ROM
-                A1H       = $3d         ;constant from ROM
-                A2L       = $3e         ;constant from ROM
-                A2H       = $3f         ;constant from ROM
-                curtrk    = $40
-                niblo     = $41
-                nibhi     = $42
-                A4L       = $42         ;constant from ROM
-                A4H       = $43         ;constant from ROM
-                sizelo    = $44
-                sizehi    = $45
-                secsize   = $46
-		TEMPX	= $f9
-		TEMPY	  = $fa
-                namlo     = $fb
-                namhi     = $fc
-                step      = $fd         ;state for stepper motor
-                tmptrk    = $fe         ;temporary copy of current track
-                phase     = $ff         ;current phase for /seek
-                reloc     = $bc00
-                dirbuf    = $bf00
-                MOVE      = $fe2c
+
+	adrlo	=	$26	; constant from boot prom
+	adrhi	=	$27	; constant from boot prom
+	tmpsec	=	$3c	; constant from boot prom
+	reqsec	=	$3d	; constant from boot prom
+	curtrk	=	$40
+	sizelo	=	$44
+	sizehi	=	$45
+	secsize	=	$46
+	TEMPY	=	$fa
+	namlo	=	$fb
+	namhi	=	$fc
+	step	=	$fd	; state for stepper motor
+	tmptrk	=	$fe	; temporary copy of current track
+	phase	=	$ff	; current phase for /seek
+	dirbuf	=	$bf00
 
 start:
-;		jmp	start
-		jsr init ;one-time call to unhook DOS
-		;open and read a file
-		lda #<file_to_read
-		sta namlo
-		lda #>file_to_read
-		sta namhi
-		jsr opendir ;open and read entire file into memory at its load address
+	jsr	init	; unhook DOS, init nibble table
+
+	; open and read a file
+	lda	#<file_to_read
+	sta	namlo
+	lda	#>file_to_read
+	sta	namhi
+	jsr	opendir		; open and read entire file into memory
+
+	jmp	$4000		; jump to entry point
 
 
-		jmp	$4000
-
-;blah:		jmp blah
-
-; format of request name is 30-character Apple text:
-;e.g. !scrxor $80, "MYFILE                        "
-file_to_read:	;.byte "MYFILE                        "
+; filename to open is 30-character Apple text:
+file_to_read:	;.byte "MEGADEMO                      "
 	.byte 'M'|$80,'E'|$80,'G'|$80,'A'|$80,'D'|$80,'E'|$80,'M'|$80,'O'|$80
 	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
@@ -60,23 +44,15 @@ file_to_read:	;.byte "MYFILE                        "
 init:
 	jsr	$fe93					; clear COUT
 	jsr	$fe89					; clear KEYIN
-;	lda	#<unreloc
-;	sta	A1L
-;	lda	#>unreloc
-;	sta	A1H
-;	lda	#<(unreloc+(codeend-opendir)-1)
-;	sta	A2L
-;	lda	#>(unreloc+(codeend-opendir)-1)
-;	sta	A2H
-	ldy	#0
-;	sty	A4L
-;	lda	#>reloc
-;	sta	A4H
-;	jsr	MOVE	; move mem from A1-A2 to location A4
 
-	; Create nibble table?
+	;========================
+	; Create nibble table
+	; Note: the table starts 16 bytes in, and is sparse
+	;	so it doesn't entirely look like the DOS33 table at
+
+	ldy	#0
 	ldx	#3
-L1:	stx	$3c		; store tempx    (3?)	
+L1:	stx	$3c		; store tempx    (3?)
 	txa			; a=x	     (a=3)
 	asl			; a*=2       (a=6)
 	bit	$3c		; a&tempx, set N/V (a=6)
@@ -98,29 +74,27 @@ L3:	inx			; increment x	x=4, a=0f
 
 	rts
 
-.align	$100
-unreloc:
-;!pseudopc reloc {
+	;===========================
+	; opendir
+	;===========================
 
-                ;turn on drive and read volume table of contents
-
+	; turn on drive and read volume table of contents
 opendir:
 	lda	$c0e9		; turn slot#6 drive on
 	ldx	#0
 	stx	adrlo		; zero out adrlo
 	stx	secsize		; zero out secsize
-	lda	#$11		; a=$11 (VTOC?)
+	lda	#$11		; a=$11 (VTOC)
 	jsr	readdirsec
 firstent:
-;	jmp	firstent
 
 	lda	dirbuf+1
 
-	;lock if entry not found
+	; lock if entry not found
 entry_not_found:
 	beq	entry_not_found
 
-	;read directory sector
+	; read directory sector
 
 	ldx	dirbuf+2
 	jsr	seekread1
@@ -215,33 +189,33 @@ L5:
 	sty	secsize
 
 readfirst:
-	ldy #$0c
+	ldy	#$0c
 
 	; read a file sector
 
 readnext:
-	lda dirbuf, y
-	ldx dirbuf+1, y
-	sty TEMPY			; ** was phy **
-	jsr seekread1
-	ldy TEMPY			; ** was ply **
+	lda	dirbuf, y
+	ldx	dirbuf+1, y
+	sty	TEMPY			; ** was phy **
+	jsr	seekread1
+	ldy	TEMPY			; ** was ply **
 
 	; if low count is non-zero then we are done
 	; (can happen only for partial last block)
 
-	lda secsize
-	bne readdone
+	lda	secsize
+	bne	readdone
 
 	; continue if more than $100 bytes left
 
-                dec sizehi
-                bne L6
+	dec	sizehi
+        bne	L6
 
-                ;set read size to min(length, $100)
+	; set read size to min(length, $100)
 
-                lda sizelo
-                beq readdone
-                sta secsize
+	lda	sizelo
+	beq	readdone
+	sta	secsize
 L6:
 	inc	adrhi
 	iny
@@ -318,10 +292,6 @@ repeat_until_right_sector:
 	cmp	reqsec
 	bne	re_read_addr
 
-;blah2:	jmp blah2
-
-
-
 	;==========================
 	; read sector data
 	;==========================
@@ -364,16 +334,16 @@ L14:
 L15:
 	inx
 	beq	L14
-                lda (adrlo), y
-                lsr bit2tbl-$aa, x
-                rol
-                lsr bit2tbl-$aa, x
-                rol
-                sta (adrlo), y
-                iny
-                cpy secsize
-                bne L15
-                rts
+	lda	(adrlo), y
+	lsr	bit2tbl-$aa, x
+	rol
+	lsr	bit2tbl-$aa, x
+	rol
+	sta	(adrlo), y
+	iny
+	cpy	secsize
+	bne	L15
+	rts
 
 	; no tricks here, just the regular stuff
 
@@ -418,28 +388,8 @@ L21:
 	dey			; loop 3 times
 	bne	adr_read_two_bytes
 
-	rts			; return
-
-	;=====================
-	; Stepper motor delay
-	;=====================
-stepdelay:
-	stx	TEMPX			; was **phx**
-	and	#3
-	rol
-	tax
-	lda	$c0e0, x
-	lda	TEMPX			; was **pla**
-L22:
-	ldx	#$13
-L23:
-	dex
-	bne	L23
-	sec
-	sbc	#1			; was **dec**
-	bne	L22
 seekret:
-	rts
+	rts			; return
 
 	;================
 	; SEEK
@@ -538,9 +488,7 @@ step2:	.byte $70, $2c, $26, $22, $1f, $1e, $1d, $1c
 
 sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
 
-.align	$100
-
-codeend         = *
+;.align	$100
 
 ; From $BA96 of DOS33
 nibtbl		= *
@@ -565,8 +513,4 @@ nibtbl		= *
 bit2tbl         = nibtbl+128
 filbuf          = bit2tbl+86
 dataend         = filbuf+4
-;hack to error out when code is too large for current address
-;!if ((dirbuf-(dataend-opendir))&$ff00)<reloc {
-;1=1
-;}
-;}
+
