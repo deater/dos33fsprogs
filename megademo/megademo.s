@@ -6,15 +6,7 @@
 .include "hardware.inc"
 
 
-        ;===================
-        ; graphics
-        ;===================
-;c64:					; this should end up at $2000-$4000
-;.incbin "c64.img"
-;c64_end:
-
-
-real_start:				; this should end up at $4000
+megademo_start:				; this should end up at $4000
 
 	;===================
 	; Check for Apple II and patch
