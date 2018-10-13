@@ -26,7 +26,7 @@
                 namhi     = $fc
                 step      = $fd         ;state for stepper motor
                 tmptrk    = $fe         ;temporary copy of current track
-                phase     = $ff         ;current phase for seek
+                phase     = $ff         ;current phase for /seek
                 reloc     = $bc00
                 dirbuf    = $bf00
                 MOVE      = $fe2c
@@ -41,7 +41,10 @@ start:
 		sta namhi
 		jsr opendir ;open and read entire file into memory at its load address
 
-blah:		jmp blah
+
+		jmp	$4000
+
+;blah:		jmp blah
 
 ; format of request name is 30-character Apple text:
 ;e.g. !scrxor $80, "MYFILE                        "
@@ -109,7 +112,7 @@ opendir:
 	lda	#$11		; a=$11 (VTOC?)
 	jsr	readdirsec
 firstent:
-	jmp	firstent
+;	jmp	firstent
 
 	lda	dirbuf+1
 
@@ -315,7 +318,7 @@ repeat_until_right_sector:
 	cmp	reqsec
 	bne	re_read_addr
 
-blah2:	jmp blah2
+;blah2:	jmp blah2
 
 
 
@@ -443,44 +446,92 @@ seekret:
 	;================
 	; current track in curtrk
 	; desired track in phase
-seek:
-	asl	curtrk
-	lda	#0
-	sta	step		; *** WAS *** stz step
-	asl	phase
-copy_cur:
-	lda	curtrk		; load current track
-	sta	tmptrk		; store as temtrk
-	sec			; calc current-desired
-	sbc	phase		;
-	beq	seekret		; if they match, we are done!
+;seek:
+;	asl	curtrk
+;	lda	#0
+;	sta	step		; *** WAS *** stz step
+;	asl	phase
+;copy_cur:
+;	lda	curtrk		; load current track
+;	sta	tmptrk		; store as temtrk
+;	sec			; calc current-desired
+;	sbc	phase		;
+;	beq	seekret		; if they match, we are done!
 
-	bcs	seek_neg	; if negative, skip ahead
-	eor	#$ff		; ones-complement the distance
-	inc	curtrk		; increment current?
-	bcc	L25		; skip ahead
-seek_neg:
-	sec
-	sbc	#1		; *** WAS *** dec
-	dec	curtrk
-L25:
-	cmp	step
-	bcc	L26
-	lda	step
-L26:
-	cmp	#8
-	bcs	L27
-	tay
-	sec
-L27:
-	lda	curtrk
-	ldx	step1, y
-	jsr	stepdelay
-	lda	tmptrk
-	ldx	step2, y
-	jsr	stepdelay
-	inc	step
-	bne	copy_cur
+;	bcs	seek_neg	; if negative, skip ahead
+;	eor	#$ff		; ones-complement the distance
+;	inc	curtrk		; increment current?
+;	bcc	L25		; skip ahead
+;seek_neg:
+;	sec
+;	sbc	#1		; *** WAS *** dec
+;	dec	curtrk
+;L25:
+;	cmp	step
+;	bcc	L26
+;	lda	step
+;L26:
+;	cmp	#8
+;	bcs	L27
+;	tay
+;	sec
+;L27:
+;	lda	curtrk
+;	ldx	step1, y
+;	jsr	stepdelay
+;	lda	tmptrk
+;	ldx	step2, y
+;	jsr	stepdelay
+;	inc	step
+;	bne	copy_cur
+
+
+seek:
+		asl	curtrk
+		asl	phase
+		lda #0
+                sta step
+copy_cur:       lda curtrk
+                sta tmptrk
+                sec
+                sbc phase
+                beq seekret
+                bcs L113
+                eor #$ff
+                inc curtrk
+                bcc L114
+L113:            adc #$fe
+                dec curtrk
+L114:
+                cmp step
+                bcc L115
+                lda step
+L115:            cmp #8
+                bcs L116
+                tay
+                sec
+L116:            lda curtrk
+                ldx step1, y
+                bne L118
+L117:            clc
+                lda tmptrk
+                ldx step2, y
+L118:            stx tmpsec
+                and  #3
+                rol
+                tax
+                sta $c0e0, x
+L119:            ldx #$13
+L120:            dex
+                bne L120
+                dec tmpsec
+                bne L119
+                lsr
+                bcs L117
+                inc step
+                bne copy_cur
+
+
 
 step1:	.byte $01, $30, $28, $24, $20, $1e, $1d, $1c
 step2:	.byte $70, $2c, $26, $22, $1f, $1e, $1d, $1c
