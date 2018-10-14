@@ -93,6 +93,37 @@ bird_mountain:
 	ldy	#10			; 6 lines		; 2
 	jsr	clear_page_loop					; 2693
 
+	jsr	draw_moon_sky					; 6+54
+
+
+
+
+	; vapor lock returns with us at beginning of hsync in line
+	; 114 (7410 cycles), so with 5070 cycles to go
+	; 5070+4550 = 9620
+	;	     -2757 (draw text)
+	;	===========
+	;	      6863
+
+
+	;; Try X=97 Y=14 cycles=6875
+	; Try X=136 Y=10 cycles=6861 R2
+
+	nop
+	ldy	#10							; 2
+bmloopA:ldx	#136							; 2
+bmloopB:dex								; 2
+	bne	bmloopB							; 2nt/3
+	dey								; 2
+	bne	bmloopA							; 2nt/3
+
+	jmp	bm_display_loop
+
+	;====================
+	; draw moon sky
+	;   54 cycles
+draw_moon_sky:
+
 ;                                1               2
 ;                0123456789abcdef0123456789abcdef0123456
 ;line1:.asciiz	"   *                            .      " $400
@@ -120,27 +151,8 @@ bird_mountain:
 	sta	$583						; 4
 							;============
 							;	 18
+	rts							; 6
 
-
-
-	; vapor lock returns with us at beginning of hsync in line
-	; 114 (7410 cycles), so with 5070 cycles to go
-	; 5070+4550 = 9620
-	;	     -2745 (draw text)
-	;	===========
-	;	      6875
-
-
-	; Try X=97 Y=14 cycles=6875
-
-	ldy	#14							; 2
-bmloopA:ldx	#97							; 2
-bmloopB:dex								; 2
-	bne	bmloopB							; 2nt/3
-	dey								; 2
-	bne	bmloopA							; 2nt/3
-
-	jmp	bm_display_loop
 .align	$100
 
 	;=====================================================

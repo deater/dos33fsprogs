@@ -27,7 +27,7 @@ apple_iie:
 	;===================
 	jsr	HOME
 
-	jsr	space_bars
+	jsr	leaving_home
 
 	; C64 Opening Sequence
 
@@ -49,6 +49,7 @@ apple_iie:
 	jsr	check_email
 
 	; Leaving house
+	jsr	leaving_home
 
 	; Riding bird
 	jsr	bird_mountain
@@ -105,6 +106,7 @@ loop_forever:
 	.include	"mode7.s"
 	.include	"space_bars.s"
 	.include	"takeoff.s"
+	.include	"leaving.s"
 	.include	"waterfall.s"
 	.include	"text_print.s"
 .align $100
@@ -120,10 +122,12 @@ loop_forever:
 ;============================
 ; Include Lores Graphics
 ;============================
-
+; leaving
+.include "leaving.inc"
 ; waterfall
 .include "waterfall_page1.inc"
 .include "waterfall_page2.inc"
+
 
 ;============================
 ; Include Hires Graphics
