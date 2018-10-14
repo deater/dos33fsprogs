@@ -2,82 +2,6 @@
 ; Rasterbars in Space
 ;=====================================
 
-; Zero Page
-;FRAMEBUFFER	= $00	; $00 - $0F
-
-;; LZ4 addresses
-
-;LZ4_SRC		= $00
-;LZ4_DST		= $02
-;LZ4_END		= $04
-;COUNT		= $06
-;DELTA		= $08
-
-;CH		= $24
-;CV		= $25
-;GBASL		= $26
-;GBASH		= $27
-;BASL		= $28
-;BASH		= $29
-;MASK		= $2E
-;COLOR		= $30
-;FRAME		= $60
-FRAMEH		= $61
-;BLARGH		= $69
-ZPOS		= $78
-;DRAW_PAGE	= $EE
-;LASTKEY		= $F1
-;PADDLE_STATUS	= $F2
-;XPOS		= $F3
-;YPOS		= $F4
-;TEMP		= $FA
-;TEMPY		= $FB
-;INL		= $FC
-;INH		= $FD
-;OUTL		= $FE
-;OUTH		= $FF
-
-; Soft Switches
-;KEYPRESS= $C000
-;KEYRESET= $C010
-;SET_GR	= $C050 ; Enable graphics
-;SET_TEXT= $C051 ; Enable text
-;FULLGR	= $C052	; Full screen, no text
-;PAGE0	= $C054 ; Page0
-;PAGE1	= $C055 ; Page1
-;LORES	= $C056	; Enable LORES graphics
-;HIRES	= $C057 ; Enable HIRES graphics
-;PADDLE_BUTTON0 = $C061
-;PADDL0	= $C064
-;PTRIG	= $C070
-
-
-
-; ROM routines
-
-;TEXT	= $FB36				;; Set text mode
-;HOME	= $FC58				;; Clear the text screen
-;WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
-
-
-;.include "../asm_routines/gr_unrle.s"
-;.include "../asm_routines/keypress.s"
-;.include "gr_copy.s"
-;.include "title.s"
-;.include "instructions.s"
-;.include "game.s"
-;.include "text_print.s"
-;.include "game_over.s"
-;.align $100
-;.include "vapor_lock.s"
-;.include "delay_a.s"
-;.include "lz4_decode.s"
-;.align $100
-;.include "gr_putsprite.s"
-
-;.align $100
-;.include "mode7_sprites.inc"
-
 
 space_bars:
 
@@ -98,14 +22,14 @@ space_bars:
 	;=============================
 	; Load graphic hgr
 
-	lda	#<background_hgr
+	lda	#<sb_background_hgr
 	sta	LZ4_SRC
-	lda	#>background_hgr
+	lda	#>sb_background_hgr
 	sta	LZ4_SRC+1
 
-	lda	#<(background_hgr_end-8)	; skip checksum at end
+	lda	#<(sb_background_hgr_end-8)	; skip checksum at end
 	sta	LZ4_END
-	lda	#>(background_hgr_end-8)	; skip checksum at end
+	lda	#>(sb_background_hgr_end-8)	; skip checksum at end
 	sta	LZ4_END+1
 
 	lda	#<$2000
@@ -122,37 +46,6 @@ space_bars:
 
 	lda	#0
 	sta	ZPOS
-
-;	lda	#$12
-;	sta	FRAMEBUFFER+0
-;	lda	#$3f
-;	sta	FRAMEBUFFER+1
-;	lda	#$56
-;	sta	FRAMEBUFFER+2
-;	lda	#$78
-;	sta	FRAMEBUFFER+3
-;	lda	#$9A
-;	sta	FRAMEBUFFER+4
-;	lda	#$BC
-;	sta	FRAMEBUFFER+5
-;	lda	#$DE
-;	sta	FRAMEBUFFER+6
-;	lda	#$F0
-;	sta	FRAMEBUFFER+7
-;	lda	#$12
-;	sta	FRAMEBUFFER+8
-;	lda	#$3f
-;	sta	FRAMEBUFFER+9
-;	lda	#$56
-;	sta	FRAMEBUFFER+10
-;	lda	#$78
-;	sta	FRAMEBUFFER+11
-;	lda	#$9A
-;	sta	FRAMEBUFFER+12
-
-
-
-
 
 
 	;=============================
@@ -558,14 +451,11 @@ fb40_loop:
 
 
 
-.align $100
-.include "screen_split.s"
-
-
-;.include "deater.inc"
-background_hgr:
-.incbin "SB_BACKGROUNDC.BIN.lz4",11
-background_hgr_end:
+;.align $100
+;.include "screen_split.s"
+;background_hgr:
+;.incbin "SB_BACKGROUNDC.BIN.lz4",11
+;background_hgr_end:
 
 score_text:
 .byte 0,0
@@ -586,8 +476,8 @@ score_text:
 ; 5		0,0,0,0,0,0,0,0
 ; 6    RED	1,b,f,b,1,0,0,0
 ; 7		0,0,0,0,0,0,0,0
-
-.align 64
+.align $100
+;.align 64
 raster_texture:
 	.byte	$5,$7,$f,$7,$5,$0,$0,$0		; grey
 	.byte	$0,$0,$0,$0,$0,$0,$0,$0
@@ -605,7 +495,7 @@ offset_lookup:
 
 	.byte	29,24,20,16,13,10,8,6,4,3,2,1,0,0
 
-.align $100
+;.align $100
 
 	; 2 + 40*13 + 5 = 527
 setup_framebuffer:
@@ -635,7 +525,4 @@ setup_fb_loop:
 
 									; -1
 	rts								; 6
-
-
-
 

@@ -43,6 +43,7 @@ FILEMH		= $65
 
 
 FRAME           = $60
+FRAMEH		= $61
 WAITING         = $62
 LETTERL         = $63
 LETTERH         = $64
@@ -62,6 +63,9 @@ BLARGH          = $69
 				;CX_F		= $6D
 				;DY_I		= $6E
 				;DY_F		= $6F
+
+
+ZPOS		= $78
 
 REGISTER_DUMP	= $70
 A_FINE_TONE	= $70

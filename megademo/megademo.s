@@ -107,19 +107,28 @@ loop_forever:
 	.include	"takeoff.s"
 	.include	"waterfall.s"
 	.include	"text_print.s"
+.align $100
+	.include	"screen_split.s"
 
 ;============================
 ; Include Sprites
 ;============================
 .align $100
 	.include "tfv_sprites.inc"
+	.include "mode7_sprites.inc"
 
 ;============================
-; Include Graphics
+; Include Lores Graphics
 ;============================
-
 
 ; waterfall
 .include "waterfall_page1.inc"
 .include "waterfall_page2.inc"
+
+;============================
+; Include Hires Graphics
+;============================
+sb_background_hgr:
+.incbin "SB_BACKGROUNDC.BIN.lz4",11
+sb_background_hgr_end:
 

@@ -1054,7 +1054,7 @@ lookup_island_map:
 .include "gr_fast_clear.s"
 .include "bg_scroll.s"
 
-.include "mode7_sprites.inc"
+;.include "mode7_sprites.inc"
 
 ;===============================================
 ; Tables
