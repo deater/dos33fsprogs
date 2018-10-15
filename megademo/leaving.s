@@ -162,37 +162,28 @@ lvloop7:dex								; 2
 							; 21
 
 
-
-	;   3640
-	; - 1255
-	; - 1418
-	; -   21
-	;==========
-	;   946
-
-	; Try X=3 Y=45 cycles=946
-
-	ldy	#45							; 2
-lvloopQ:ldx	#3							; 2
-lvloopR:dex								; 2
-	bne	lvloopR							; 2nt/3
-	dey								; 2
-	bne	lvloopQ							; 2nt/3
-
-
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 
-	; do_nothing should be      4550
+
+
+	; do_nothing should be      3640 (bottom of GR screen)
+	;			    4550 (vblank)
+	;			   -1255 (clear yard)
+	;                          -1418 (draw tfv)
+	;                            -21 (draw susie)
 	;			     -10 keypress
 	;			===========
-	;			    4540
+	;			    5486
 
-	; Try X=9 Y=89 cycles=4540
+	; Try X=51 Y=21 cycles=5482 R4
 
-	ldy	#89							; 2
-lvloop1:ldx	#9							; 2
+	nop
+	nop
+
+	ldy	#21							; 2
+lvloop1:ldx	#51							; 2
 lvloop2:dex								; 2
 	bne	lvloop2							; 2nt/3
 	dey								; 2
