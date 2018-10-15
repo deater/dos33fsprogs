@@ -2,10 +2,17 @@
 
 ; Simple Text/GR split
 
-
-; STATE1 = Walk over to bird
+; STATE??? Wait 1 s
+; STATE??? Open door
+; STATE1 = Walk over to bird (3s? 20steps? so at ~5Hz? 12 ticks per step?)
+;   56789012345678901234
 ; STATE2 = get on bird
 ; STATE3 = ride off on bird
+
+
+; Some zero-page action
+TFV_X = 0
+TFV_Y = 1
 
 
 leaving_home:
@@ -21,9 +28,16 @@ setup_leaving:
 	;===================
 	; init vars
 
+	lda	#0
+	sta	FRAME
+	sta	FRAMEH
+
 	lda	#8
 	sta	DRAW_PAGE
-
+	lda	#5
+	sta	TFV_X
+	lda	#22
+	sta	TFV_Y
 
 	;=============================
 	; Load graphic page0
@@ -106,14 +120,59 @@ lvloopB:dex								; 2
 
 lv_begin_loop:
 
+	; 3120
+	;   -4	set_text
+	;  -25	inc frame
+	;   -8	check if done
+	;=======
+	; 3083
+
 	bit	SET_TEXT						; 4
 
-	; Try X=11 Y=51 cycles=3112 R4
+	; Update frame count
+	; no carry:	13+(12) = 25
+	; carry:	13+12 = 25
 
+	inc	FRAME							; 5
+	lda	FRAME							; 3
+	cmp	#12							; 2
+	bne	lv_waste_12						; 3
+								;============
+								;        13
+
+									; -1
+	lda	#0							; 2
+	sta	FRAME							; 3
+	inc	FRAMEH							; 5
+	jmp	lv_no_carry						; 3
+								;============
+								;        12
+lv_waste_12:
+	lda	$0	; 3
+	lda	$0	; 3
+	lda	$0	; 3
+	lda	$0	; 3
+
+lv_no_carry:
+
+	;=================
+	; check if done
+	;=================
+
+	lda	FRAMEH							; 3
+	cmp	#25							; 2
+	bne	lv_not_done						; 3
+	jmp	lv_all_done
+lv_not_done:
+								;===========
+								;         8
+
+	; Try X=204 Y=3 cycles=3079 R4
 	nop
 	nop
-	ldy	#51							; 2
-lvloop8:ldx	#11							; 2
+
+	ldy	#3							; 2
+lvloop8:ldx	#204							; 2
 lvloop9:dex								; 2
 	bne	lvloop9							; 2nt/3
 	dey								; 2
@@ -204,12 +263,12 @@ lvloop2:dex								; 2
 
 	lda	KEYPRESS				; 4
 	bpl	lv_no_keypress				; 3
-	jmp	lv_start_over
+	jmp	lv_all_done
 lv_no_keypress:
 
 	jmp	lv_begin_loop				; 3
 
-lv_start_over:
+lv_all_done:
 	bit	KEYRESET	; clear keypress	; 4
 	rts						; 6
 
