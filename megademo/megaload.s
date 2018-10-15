@@ -1,5 +1,5 @@
 ; read any file slot 6 version
-; based on FASTLD6 and RTS copyright (c) Peter Ferrie 2011-2013
+; based on FASTLD6 and RTS copyright (c) Peter Ferrie 2011-2013,2018
 
 ; TODO:
 ;	non-slot6?  self modfiy code?
@@ -303,9 +303,11 @@ seekread1:
 
 	; if track does not match, then seek
 
-	lda	curtrk
-	cmp	phase
-	beq	re_read_addr	; **was** repeat_until_right_sector
+;	lda	curtrk		; BUG fixed recently
+;	cmp	phase
+
+	cpx	phase
+	beq	repeat_until_right_sector
 	jsr	seek
 
 	; [re-]read sector
@@ -401,6 +403,7 @@ adr_96:
 				; then sector/sector?
 adr_read_two_bytes:
 	sta	curtrk		; store out current track
+	tax
 L20:
 	lda	$c0ec		; read until full value
 	bpl	L20
