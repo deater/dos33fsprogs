@@ -136,14 +136,44 @@ lvloop7:dex								; 2
 
 	jsr	erase_yard					; 6+1249
 
+	; draw deater
+	lda	#>tfv_stand_right			; 2
+	sta	INH					; 3
+        lda	#<tfv_stand_right			; 2
+	sta	INL					; 3
+
+	lda	#20					; 2
+	sta	XPOS					; 3
+	lda     #22					; 2
+	sta	YPOS					; 3
+
+	jsr	put_sprite                              ; 6
+                                                        ;=========
+                                                        ; 26 + 1392 = 1418
+
+	; draw susie
+	ldx	#15					; 2
+	lda	#0					; 2
+	sta	$450,X					; 5
+	sta	$451,X					; 5
+	lda	#$0f					; 2
+	sta	$452,X					; 5
+							;=========
+							; 21
+
+
+
 	;   3640
 	; - 1255
+	; - 1418
+	; -   21
 	;==========
-	;   2385
+	;   946
 
-	; Try X=118 Y=4 cycles=2385
-	ldy	#4							; 2
-lvloopQ:ldx	#118							; 2
+	; Try X=3 Y=45 cycles=946
+
+	ldy	#45							; 2
+lvloopQ:ldx	#3							; 2
 lvloopR:dex								; 2
 	bne	lvloopR							; 2nt/3
 	dey								; 2
