@@ -123,9 +123,10 @@ lv_begin_loop:
 	; 3120
 	;   -4	set_text
 	;  -25	inc frame
+	;  -17	set state
 	;   -8	check if done
 	;=======
-	; 3083
+	; 3066
 
 	bit	SET_TEXT						; 4
 
@@ -160,19 +161,50 @@ lv_no_carry:
 	;=================
 
 	lda	FRAMEH							; 3
-	cmp	#25							; 2
+	cmp	#30							; 2
 	bne	lv_not_done						; 3
 	jmp	lv_all_done
 lv_not_done:
 								;===========
 								;         8
 
-	; Try X=204 Y=3 cycles=3079 R4
-	nop
+	; Set the state
+	; STATE0 = 5+4+(5)+3 = 17
+	; STATE2 = 5+5+4+3     = 17
+	; STATE4 = 5+5+2+3+(2) =17
+
+
+	cmp	#5							; 2
+	bcs	lv_state_notzero	; bge				; 3
+lv_state_zero:
+									; -1
+	lda	$0	; nop						; 3
+	nop								; 2
+	ldx	#0							; 2
+	jmp	lv_set_state						; 3
+lv_state_notzero:
+	cmp	#20							; 2
+	bcs	lv_state_four		; bge				; 3
+lv_state_two:
+									; -1
+	ldx	#2							; 2
+	jmp	lv_set_state						; 3
+lv_state_four:
+	nop								; 2
+	ldx	#4							; 2
+
+lv_set_state:
+	stx	STATE							; 3
+
+
+
+
+	; Try X=203 Y=3 cycles=3064 R2
+
 	nop
 
 	ldy	#3							; 2
-lvloop8:ldx	#204							; 2
+lvloop8:ldx	#203							; 2
 lvloop9:dex								; 2
 	bne	lvloop9							; 2nt/3
 	dey								; 2
@@ -190,7 +222,7 @@ lvloop7:dex								; 2
 	bne	lvloop6							; 2nt/3
 
 	;===============================
-	; do stuff
+	; Draw All the Sprites
 	;===============================
 
 	jsr	erase_yard					; 6+1249
