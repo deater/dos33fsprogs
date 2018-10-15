@@ -31,13 +31,13 @@ setup_leaving:
 	lda	#0
 	sta	FRAME
 	sta	FRAMEH
+	sta	TFV_X
 
 	lda	#8
 	sta	DRAW_PAGE
-	lda	#5
-	sta	TFV_X
-	lda	#22
-	sta	TFV_Y
+
+;	lda	#22
+;	sta	TFV_Y
 
 	;=============================
 	; Load graphic page0
@@ -124,9 +124,10 @@ lv_begin_loop:
 	;   -4	set_text
 	;  -25	inc frame
 	;  -17	set state
+	;  -11  move
 	;   -8	check if done
 	;=======
-	; 3066
+	; 3055
 
 	bit	SET_TEXT						; 4
 
@@ -183,7 +184,7 @@ lv_state_zero:
 	ldx	#0							; 2
 	jmp	lv_set_state						; 3
 lv_state_notzero:
-	cmp	#20							; 2
+	cmp	#25							; 2
 	bcs	lv_state_four		; bge				; 3
 lv_state_two:
 									; -1
@@ -196,12 +197,28 @@ lv_state_four:
 lv_set_state:
 	stx	STATE							; 3
 
-	; Try X=203 Y=3 cycles=3064 R2
+	;=====
+	; Move
+	; if move, 6+5=11
+	; if not move, 6+5=11
+	lda	FRAME		; only ove if FRAME==0			; 3
+	beq	lv_move							; 3
 
+lv_nomove:								; -1
+	lda	$0	;nop						; 3
+	jmp	lv_done_move						; 3
+lv_move:
+	inc	TFV_X							; 5
+lv_done_move:
+
+
+
+
+	; Try X=86 Y=7 cycles=3053 R2
 	nop
 
-	ldy	#3							; 2
-lvloop8:ldx	#203							; 2
+	ldy	#7							; 2
+lvloop8:ldx	#86							; 2
 lvloop9:dex								; 2
 	bne	lvloop9							; 2nt/3
 	dey								; 2
@@ -249,7 +266,7 @@ draw_the_yard:
 
 lv_jump_table:
 	.word   (lv_state0-1)
-	.word   (lv_state0-1)
+	.word   (lv_state2-1)
 	.word   (lv_state0-1)
 
 lv_back_from_jumptable:
@@ -263,18 +280,16 @@ lv_back_from_jumptable:
 	;			    4550 (vblank)
 	;			   -1255 (clear yard)
 	;			     -23 (setup jump table)
-	;			   -6158 (in state code)
+	;			   -5259 (in state code)
 	;			     -10 keypress
 	;			===========
-	;			     744
+	;			     1643
 
 
-	; Try X=147 Y=1 cycles=742 R2
+	; Try X=163 Y=2 cycles=1643
 
-	nop
-
-	ldy	#1							; 2
-lvloop1:ldx	#147							; 2
+	ldy	#2							; 2
+lvloop1:ldx	#163							; 2
 lvloop2:dex								; 2
 	bne	lvloop2							; 2nt/3
 	dey								; 2
@@ -297,13 +312,13 @@ lv_all_done:
 	;=====================
 	; State0 : do nothing
 	;=====================
-	; Delay 6158-3 = 6155
+	; Delay 5259-3 = 5256
 lv_state0:
 
-	; Try X=35 Y=34 cycles=6155
+	; Try X=209 Y=5 cycles=5256
 
-	ldy	#34							; 2
-lvloopT:ldx	#35							; 2
+	ldy	#5							; 2
+lvloopT:ldx	#209							; 2
 lvloopU:dex								; 2
 	bne	lvloopU							; 2nt/3
 	dey								; 2
@@ -311,16 +326,18 @@ lvloopU:dex								; 2
 
 	jmp	lv_back_from_jumptable				; 3
 
-	;======================
+
+
+	;======================================================
 	; State2 : draw walking
-	;======================
+	;======================================================
 	; 1490 = 1471+19 (draw tfv)
 	;   33 (draw susie)
 	; 2072 (draw bird)
-	; 1660 (draw door)
+	; 1661 (draw door)
 	;    3 (return)
 	;==========
-	; 6158
+	; 5259
 
 lv_state2:
 
@@ -364,14 +381,15 @@ lv_walk:
                                                         ; 16 + 1455 = 1471
 
 
-
+	; draw susie
+	; 33 cycles
 lv_susie:
 	; draw susie at TFV_X-5, IFF TFV_X>10
 	lda	TFV_X					; 3
 	sec						; 2
 	sbc	#5					; 2
 	tax						; 2
-	cpx	#10					; 2
+	cpx	#5					; 2
 	bcs	lv_yes_susie	; bge			; 3
 						;============
 						;	14
@@ -424,7 +442,7 @@ lv_done_susie:
 
 	jsr	put_sprite                              ; 6
                                                         ;=========
-                                                        ; 26 + 1634 = 1660
+                                                        ; 26 + 1635 = 1661
 
 
 
