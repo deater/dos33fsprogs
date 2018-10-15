@@ -130,12 +130,20 @@ lvloop7:dex								; 2
 	dey								; 2
 	bne	lvloop6							; 2nt/3
 
-	; Try X=120 Y=6 cycles=3637 R3
+	;===============================
+	; do stuff
+	;===============================
 
-	lda	$0
+	jsr	erase_yard					; 6+1249
 
-	ldy	#6							; 2
-lvloopQ:ldx	#120							; 2
+	;   3640
+	; - 1255
+	;==========
+	;   2385
+
+	; Try X=118 Y=4 cycles=2385
+	ldy	#4							; 2
+lvloopQ:ldx	#118							; 2
 lvloopR:dex								; 2
 	bne	lvloopR							; 2nt/3
 	dey								; 2
@@ -176,7 +184,7 @@ lv_start_over:
 
 
         ; 1209 cycles
-	; 4+ 30*[35 + 5 ] + 5 = 1209
+	; 4+ 31*[35 + 5 ] + 5 = 1249
 erase_yard:
 
 	lda     #$44 		; green					; 2
