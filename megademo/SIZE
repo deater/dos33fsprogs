@@ -1,0 +1,9 @@
+10/12:	26383
+	34063	-- add uncompressed c64 at start
+	25871   -- move c64 to be loaded separately
+	28687	-- adding space_bars
+	28741   -- actually getting it working
+	29049   -- leaving added in
+	29285	-- all sprites in
+	29228   -- adding susie + bird
+	29178   -- erase extraneous from leaving.png
