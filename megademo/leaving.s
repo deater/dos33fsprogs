@@ -162,7 +162,7 @@ lv_no_carry:
 	;=================
 
 	lda	FRAMEH							; 3
-	cmp	#30							; 2
+	cmp	#35							; 2
 	bne	lv_not_done						; 3
 	jmp	lv_all_done
 lv_not_done:
@@ -267,7 +267,7 @@ draw_the_yard:
 lv_jump_table:
 	.word   (lv_state0-1)
 	.word   (lv_state2-1)
-	.word   (lv_state0-1)
+	.word   (lv_state4-1)
 
 lv_back_from_jumptable:
 
@@ -312,13 +312,35 @@ lv_all_done:
 	;=====================
 	; State0 : do nothing
 	;=====================
-	; Delay 5259-3 = 5256
+	; Delay 5259
+	;      -2072
+	;         -3
+	;===========
+	;       3184
+
 lv_state0:
 
-	; Try X=209 Y=5 cycles=5256
 
-	ldy	#5							; 2
-lvloopT:ldx	#209							; 2
+	; draw bird
+	lda	#>bird_stand_right_sprite		; 2
+	sta	INH					; 3
+        lda	#<bird_stand_right_sprite		; 2
+	sta	INL					; 3
+
+	lda	#24					; 2
+	sta	XPOS					; 3
+	lda     #20					; 2
+	sta	YPOS					; 3
+
+	jsr	put_sprite                              ; 6
+                                                        ;=========
+                                                        ; 26 + 2046 = 2072
+
+
+	; Try X=211 Y=3 cycles=3184
+
+	ldy	#3							; 2
+lvloopT:ldx	#211							; 2
 lvloopU:dex								; 2
 	bne	lvloopU							; 2nt/3
 	dey								; 2
@@ -428,7 +450,7 @@ lv_done_susie:
 	jsr	put_sprite                              ; 6
                                                         ;=========
                                                         ; 26 + 2046 = 2072
-
+lv_draw_door:
 	; draw door
 	lda	#>door_sprite				; 2
 	sta	INH					; 3
@@ -447,6 +469,73 @@ lv_done_susie:
 
 
 	jmp	lv_back_from_jumptable				; 3
+
+
+
+	;======================================================
+	; State4 : on bird
+	;======================================================
+	;  5259
+	; -2227 = 2208+19 (draw bird)
+	; -1661 (draw door)
+	;    -6 (return)
+	;==========
+	; 1365
+
+lv_state4:
+
+	lda	TFV_X					; 3
+	sta	XPOS					; 3
+	lda     #20					; 2
+	sta	YPOS					; 3
+
+	lda	FRAMEH					; 3
+	and	#$1					; 2
+	beq	lv_bwalk				; 3
+						;===========
+						;	 19
+
+
+lv_bstand:
+	; draw bird/rider standing				; -1
+	lda	#>bird_rider_stand_right		; 2
+	sta	INH					; 3
+        lda	#<bird_rider_stand_right		; 2
+	sta	INL					; 3
+	jsr	put_sprite                              ; 6
+
+	jmp	lv_done_bwalk				; 3
+                                                        ;=========
+                                                        ; 18 + 2190 = 2208
+
+
+lv_bwalk:
+	; draw bird/rider walking
+	lda	#>bird_rider_walk_right			; 2
+	sta	INH					; 3
+        lda	#<bird_rider_walk_right			; 2
+	sta	INL					; 3
+	jsr	put_sprite                              ; 6
+	nop
+	inc	TFV_Y
+	inc	TFV_Y
+	inc	TFV_Y
+                                                        ;=========
+                                                        ; 16 + 2175
+
+lv_done_bwalk:
+	; delay
+
+	; Try X=67 Y=4 cycles=1365
+
+	ldy	#4							; 2
+lvloopV:ldx	#67							; 2
+lvloopW:dex								; 2
+	bne	lvloopW							; 2nt/3
+	dey								; 2
+	bne	lvloopV							; 2nt/3
+
+	jmp	lv_draw_door
 
 
 	;======================
@@ -472,9 +561,4 @@ yard_loop:
 	bpl	yard_loop						; 3
 									; -1
 	rts								; 6
-
-
-
-
-
 
