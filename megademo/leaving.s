@@ -161,6 +161,20 @@ lvloop7:dex								; 2
 							;=========
 							; 21
 
+	; draw bird
+	lda	#>bird_stand_right_sprite		; 2
+	sta	INH					; 3
+        lda	#<bird_stand_right_sprite		; 2
+	sta	INL					; 3
+
+	lda	#24					; 2
+	sta	XPOS					; 3
+	lda     #20					; 2
+	sta	YPOS					; 3
+
+	jsr	put_sprite                              ; 6
+                                                        ;=========
+                                                        ; 26 + 2046 = 2072
 
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
@@ -172,18 +186,17 @@ lvloop7:dex								; 2
 	;			    4550 (vblank)
 	;			   -1255 (clear yard)
 	;                          -1418 (draw tfv)
+	;			   -2072 (draw bird)
 	;                            -21 (draw susie)
 	;			     -10 keypress
 	;			===========
-	;			    5486
+	;			    3414
 
-	; Try X=51 Y=21 cycles=5482 R4
+	; Try X=67 Y=10 cycles=3411 R3
+	lda	$0
 
-	nop
-	nop
-
-	ldy	#21							; 2
-lvloop1:ldx	#51							; 2
+	ldy	#10							; 2
+lvloop1:ldx	#67							; 2
 lvloop2:dex								; 2
 	bne	lvloop2							; 2nt/3
 	dey								; 2
