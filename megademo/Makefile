@@ -32,7 +32,7 @@ megademo.o:	megademo.s \
 	starring.s starring1.inc starring2.inc starring3.img.lz4\
 	starring_people.s fs.inc FS_HGRC.BIN.lz4 deater.inc DEATER_HGRC.BIN.lz4\
 	check_email.s email_40_96.inc \
-	leaving.s leaving.inc \
+	leaving.s leaving.inc tfv_sprites.inc \
 	bird_mountain.s \
 	waterfall.s gr_unrolled_copy.s waterfall_page1.inc waterfall_page2.inc \
 	takeoff.s takeoff.inc takeoff.img.lz4 \

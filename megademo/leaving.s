@@ -96,8 +96,11 @@ lvloopB:dex								; 2
 	; Vertical blank = 4550 cycles (70 scan lines)
 	; Total of 17030 cycles to get back to where was
 
-	; want 12*4 = 48 lines of HIRES = 3120-4=3116
-	; want 192-48=144 lines of LORES = 9360-4=9356
+	; want 12*4 = 48 lines of TEXT = 3120-4=3116
+	; want 136-48 = 88 lines of undisturbed LORES = 5720 - 4 = 5716
+	; 	lores lines 20-33 (80 - 135) are changing
+	;	so don't do much then
+	; want 192-136=56 lines of LORES = 3640
 
 
 
@@ -118,16 +121,25 @@ lvloop9:dex								; 2
 
 	bit	SET_GR			; 4
 
-	; Try X=10 Y=167 cycles=9353 R3
+	; Try X=75 Y=15 cycles=5716
 
-	lda	$0
-
-	ldy	#167							; 2
-lvloop6:ldx	#10							; 2
+	ldy	#15							; 2
+lvloop6:ldx	#75							; 2
 lvloop7:dex								; 2
 	bne	lvloop7							; 2nt/3
 	dey								; 2
 	bne	lvloop6							; 2nt/3
+
+	; Try X=120 Y=6 cycles=3637 R3
+
+	lda	$0
+
+	ldy	#6							; 2
+lvloopQ:ldx	#120							; 2
+lvloopR:dex								; 2
+	bne	lvloopR							; 2nt/3
+	dey								; 2
+	bne	lvloopQ							; 2nt/3
 
 
 	;======================================================
@@ -162,4 +174,24 @@ lv_start_over:
 
 
 
+
+        ; 1209 cycles
+	; 4+ 30*[35 + 5 ] + 5 = 1209
+erase_yard:
+
+	lda     #$44 		; green					; 2
+	ldx	#30		; 9 - 40				; 2
+yard_loop:
+	sta	$528+9,X	; 20					; 5
+	sta	$5a8+9,X	; 22					; 5
+	sta	$628+9,X	; 24					; 5
+	sta	$6a8+9,X	; 26					; 5
+	sta	$728+9,X	; 28					; 5
+	sta	$7a8+9,X	; 30					; 5
+	sta	$450+9,X	; 32					; 5
+
+	dex								; 2
+	bpl	yard_loop						; 3
+									; -1
+	rts								; 6
 
