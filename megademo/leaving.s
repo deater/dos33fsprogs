@@ -196,9 +196,6 @@ lv_state_four:
 lv_set_state:
 	stx	STATE							; 3
 
-
-
-
 	; Try X=203 Y=3 cycles=3064 R2
 
 	nop
@@ -209,6 +206,11 @@ lvloop9:dex								; 2
 	bne	lvloop9							; 2nt/3
 	dey								; 2
 	bne	lvloop8							; 2nt/3
+
+
+	;==========================
+	; Set graphics mode, delay until done displaying the yard
+	;==========================
 
 	bit	SET_GR			; 4
 
@@ -222,35 +224,177 @@ lvloop7:dex								; 2
 	bne	lvloop6							; 2nt/3
 
 	;===============================
-	; Draw All the Sprites
+	; Draw the Yard
 	;===============================
-
+draw_the_yard:
 	jsr	erase_yard					; 6+1249
 
-	; draw deater
-	lda	#>tfv_stand_right			; 2
-	sta	INH					; 3
-        lda	#<tfv_stand_right			; 2
-	sta	INL					; 3
+	;===============================
+	; Draw one of three states
+	;===============================
+	; STATE0 = draw nothing
+	; STATE2 = draw open door + walking TFV+susie
+	; STATE4 = draw TFV on bird
 
-	lda	#20					; 2
+	; Set up jump table that runs same speed on 6502 and 65c02
+	ldy	STATE						; 3
+	lda	lv_jump_table+1,y				; 4
+	pha							; 3
+	lda	lv_jump_table,y					; 4
+	pha							; 3
+	rts							; 6
+
+                                                        ;=============
+                                                        ;        23
+
+lv_jump_table:
+	.word   (lv_state0-1)
+	.word   (lv_state0-1)
+	.word   (lv_state0-1)
+
+lv_back_from_jumptable:
+
+
+	;======================================================
+	; We have 4550 cycles in the vblank, use them wisely
+	;======================================================
+
+	; do_nothing should be      3640 (bottom of GR screen)
+	;			    4550 (vblank)
+	;			   -1255 (clear yard)
+	;			     -23 (setup jump table)
+	;			   -6158 (in state code)
+	;			     -10 keypress
+	;			===========
+	;			     744
+
+
+	; Try X=147 Y=1 cycles=742 R2
+
+	nop
+
+	ldy	#1							; 2
+lvloop1:ldx	#147							; 2
+lvloop2:dex								; 2
+	bne	lvloop2							; 2nt/3
+	dey								; 2
+	bne	lvloop1							; 2nt/3
+
+
+	lda	KEYPRESS				; 4
+	bpl	lv_no_keypress				; 3
+	jmp	lv_all_done
+lv_no_keypress:
+
+	jmp	lv_begin_loop				; 3
+
+lv_all_done:
+	bit	KEYRESET	; clear keypress	; 4
+	rts						; 6
+
+
+
+	;=====================
+	; State0 : do nothing
+	;=====================
+	; Delay 6158-3 = 6155
+lv_state0:
+
+	; Try X=35 Y=34 cycles=6155
+
+	ldy	#34							; 2
+lvloopT:ldx	#35							; 2
+lvloopU:dex								; 2
+	bne	lvloopU							; 2nt/3
+	dey								; 2
+	bne	lvloopT							; 2nt/3
+
+	jmp	lv_back_from_jumptable				; 3
+
+	;======================
+	; State2 : draw walking
+	;======================
+	; 1490 = 1471+19 (draw tfv)
+	;   33 (draw susie)
+	; 2072 (draw bird)
+	; 1660 (draw door)
+	;    3 (return)
+	;==========
+	; 6158
+
+lv_state2:
+
+	lda	TFV_X					; 3
 	sta	XPOS					; 3
 	lda     #22					; 2
 	sta	YPOS					; 3
 
+	lda	FRAMEH					; 3
+	and	#$1					; 2
+	beq	lv_walk					; 3
+						;===========
+						;	 19
+
+
+lv_stand:
+	; draw deater standing				; -1
+	lda	#>tfv_stand_right			; 2
+	sta	INH					; 3
+        lda	#<tfv_stand_right			; 2
+	sta	INL					; 3
+	jsr	put_sprite                              ; 6
+
+	; need to waste 61 cycles
+	lda	#34					; 2
+	jsr	delay_a					; 25+34 = 59
+
+	jmp	lv_susie				; 3
+                                                        ;=========
+                                                        ; 18 + 1392 = 1410
+
+
+lv_walk:
+	; draw deater walking
+	lda	#>tfv_walk_right			; 2
+	sta	INH					; 3
+        lda	#<tfv_walk_right			; 2
+	sta	INL					; 3
 	jsr	put_sprite                              ; 6
                                                         ;=========
-                                                        ; 26 + 1392 = 1418
+                                                        ; 16 + 1455 = 1471
 
-	; draw susie
-	ldx	#15					; 2
+
+
+lv_susie:
+	; draw susie at TFV_X-5, IFF TFV_X>10
+	lda	TFV_X					; 3
+	sec						; 2
+	sbc	#5					; 2
+	tax						; 2
+	cpx	#10					; 2
+	bcs	lv_yes_susie	; bge			; 3
+						;============
+						;	14
+lv_no_susie:
+							; -1
+	inc	TFV_Y					; 5
+	dec	TFV_Y					; 5
+	nop						; 2
+	nop						; 2
+	lda	$0					; 3
+	jmp	lv_done_susie				; 3
+						;============
+						;        19
+lv_yes_susie:
 	lda	#0					; 2
 	sta	$450,X					; 5
 	sta	$451,X					; 5
 	lda	#$0f					; 2
 	sta	$452,X					; 5
-							;=========
-							; 21
+lv_done_susie:
+						;===========
+						;	 19
+
 
 	; draw bird
 	lda	#>bird_stand_right_sprite		; 2
@@ -267,46 +411,29 @@ lvloop7:dex								; 2
                                                         ;=========
                                                         ; 26 + 2046 = 2072
 
-	;======================================================
-	; We have 4550 cycles in the vblank, use them wisely
-	;======================================================
+	; draw door
+	lda	#>door_sprite				; 2
+	sta	INH					; 3
+        lda	#<door_sprite				; 2
+	sta	INL					; 3
+
+	lda	#5					; 2
+	sta	XPOS					; 3
+	lda     #22					; 2
+	sta	YPOS					; 3
+
+	jsr	put_sprite                              ; 6
+                                                        ;=========
+                                                        ; 26 + 1634 = 1660
 
 
 
-	; do_nothing should be      3640 (bottom of GR screen)
-	;			    4550 (vblank)
-	;			   -1255 (clear yard)
-	;                          -1418 (draw tfv)
-	;			   -2072 (draw bird)
-	;                            -21 (draw susie)
-	;			     -10 keypress
-	;			===========
-	;			    3414
-
-	; Try X=67 Y=10 cycles=3411 R3
-	lda	$0
-
-	ldy	#10							; 2
-lvloop1:ldx	#67							; 2
-lvloop2:dex								; 2
-	bne	lvloop2							; 2nt/3
-	dey								; 2
-	bne	lvloop1							; 2nt/3
-
-	lda	KEYPRESS				; 4
-	bpl	lv_no_keypress				; 3
-	jmp	lv_all_done
-lv_no_keypress:
-
-	jmp	lv_begin_loop				; 3
-
-lv_all_done:
-	bit	KEYRESET	; clear keypress	; 4
-	rts						; 6
+	jmp	lv_back_from_jumptable				; 3
 
 
-
-
+	;======================
+	; erase yard
+	;======================
 
         ; 1209 cycles
 	; 4+ 31*[35 + 5 ] + 5 = 1249
@@ -327,4 +454,9 @@ yard_loop:
 	bpl	yard_loop						; 3
 									; -1
 	rts								; 6
+
+
+
+
+
 
