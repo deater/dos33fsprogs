@@ -5,7 +5,7 @@
 ; Some zero-page action
 ;TFV_X = 0
 ;TFV_Y = 1
-
+TFG_X = 2
 
 arriving_there:
 
@@ -28,8 +28,8 @@ setup_arrival:
 	lda	#8
 	sta	DRAW_PAGE
 
-;	lda	#22
-;	sta	TFV_Y
+	lda	#22
+	sta	TFG_X
 
 	;=============================
 	; Load graphic page0
@@ -94,7 +94,7 @@ arloopB:dex								; 2
 
 
 	;================================================
-	; Leaving Loop
+	; Arrival Loop
 	;================================================
 	; each scan line 65 cycles
 	;       1 cycle each byte (40cycles) + 25 for horizontal
@@ -129,7 +129,7 @@ ar_begin_loop:
 
 	inc	FRAME							; 5
 	lda	FRAME							; 3
-	cmp	#12							; 2
+	cmp	#20							; 2
 	bne	ar_waste_12						; 3
 								;============
 								;        13
@@ -236,7 +236,7 @@ arloop7:dex								; 2
 	; Draw the Field
 	;===============================
 draw_the_field:
-	jsr	erase_field					; 6+1249
+
 
 	;===============================
 	; Draw one of three states
@@ -258,8 +258,8 @@ draw_the_field:
 
 ar_jump_table:
 	.word   (ar_state0-1)
-	.word   (ar_state2-1)
-	.word   (ar_state4-1)
+	.word   (ar_state0-1)
+	.word   (ar_state0-1)
 
 ar_back_from_jumptable:
 
@@ -270,18 +270,16 @@ ar_back_from_jumptable:
 
 	; do_nothing should be      3640 (bottom of GR screen)
 	;			    4550 (vblank)
-	;			   -1255 (clear yard)
 	;			     -23 (setup jump table)
-	;			   -5259 (in state code)
+	;			   -6237 (in state code)
 	;			     -10 keypress
 	;			===========
-	;			     1643
+	;			     1920
 
+	; Try X=19 Y=19 cycles=1920
 
-	; Try X=163 Y=2 cycles=1643
-
-	ldy	#2							; 2
-arloop1:ldx	#163							; 2
+	ldy	#19							; 2
+arloop1:ldx	#19							; 2
 arloop2:dex								; 2
 	bne	arloop2							; 2nt/3
 	dey								; 2
@@ -304,35 +302,35 @@ ar_all_done:
 	;=====================
 	; State0 : do nothing
 	;=====================
-	; Delay 5259
-	;      -2072
+	; Delay 6237
+	;      -1524
 	;         -3
 	;===========
-	;       3184
+	;       4710
 
 ar_state0:
 
-
-	; draw bird
-	lda	#>bird_stand_right_sprite		; 2
+	; draw fs standing
+	lda	#>tfg_stand_left			; 2
 	sta	INH					; 3
-        lda	#<bird_stand_right_sprite		; 2
+	lda	#<tfg_stand_left			; 2
 	sta	INL					; 3
 
-	lda	#24					; 2
+	lda	#22					; 2
 	sta	XPOS					; 3
-	lda     #20					; 2
+	lda     #24					; 2
 	sta	YPOS					; 3
 
 	jsr	put_sprite                              ; 6
                                                         ;=========
-                                                        ; 26 + 2046 = 2072
+                                                        ; 26 + 1498 = 1524
 
-
-	; Try X=211 Y=3 cycles=3184
-
-	ldy	#3							; 2
-arloopT:ldx	#211							; 2
+	; Try X=35 Y=26 cycles=4707R3
+	; Try X=93 Y=10 cycles=4711
+	; Try X=53 Y=23 cycles=6234
+	lda	$0
+	ldy	#26							; 2
+arloopT:ldx	#35							; 2
 arloopU:dex								; 2
 	bne	arloopU							; 2nt/3
 	dey								; 2
@@ -345,15 +343,17 @@ arloopU:dex								; 2
 	;======================================================
 	; State2 : draw walking
 	;======================================================
+	; 1255 = erase field
 	; 1490 = 1471+19 (draw tfv)
 	;   33 (draw susie)
-	; 2072 (draw bird)
-	; 1661 (draw door)
+	; 1519 (draw fs)
+	; 1937 (draw falls)
 	;    3 (return)
 	;==========
-	; 5259
-
+	; 6237
+.align $100
 ar_state2:
+	jsr	erase_field					; 6+1249
 
 	lda	TFV_X					; 3
 	sta	XPOS					; 3
@@ -379,7 +379,7 @@ ar_stand:
 	lda	#34					; 2
 	jsr	delay_a					; 25+34 = 59
 
-	jmp	ar_susie				; 3
+	jmp	girl_walk				; 3
                                                         ;=========
                                                         ; 18 + 1392 = 1410
 
@@ -393,6 +393,46 @@ ar_walk:
 	jsr	put_sprite                              ; 6
                                                         ;=========
                                                         ; 16 + 1455 = 1471
+
+
+	; girl walk
+girl_walk:
+	lda	TFG_X					; 3
+	sta	XPOS					; 3
+	lda     #24					; 2
+	sta	YPOS					; 3
+
+	lda	FRAMEH					; 3
+	and	#$1					; 2
+	beq	arg_walk				; 3
+						;===========
+						;	 19
+
+
+arg_stand:
+	; draw fs standing				; -1
+	lda	#>tfg_stand_left			; 2
+	sta	INH					; 3
+        lda	#<tfg_stand_left			; 2
+	sta	INL					; 3
+	jsr	put_sprite                              ; 6
+
+	lda	$0	; nop				; 3
+
+	jmp	ar_susie				; 3
+                                                        ;=========
+                                                        ; 18 + 1498 = 1516
+
+
+arg_walk:
+	; draw deater walking
+	lda	#>tfg_walk_left				; 2
+	sta	INH					; 3
+        lda	#<tfg_walk_left				; 2
+	sta	INL					; 3
+	jsr	put_sprite                              ; 6
+                                                        ;=========
+                                                        ; 16 + 1503 = 1519
 
 
 	; draw susie
@@ -419,44 +459,31 @@ ar_no_susie:
 						;        19
 ar_yes_susie:
 	lda	#0					; 2
-	sta	$450,X					; 5
-	sta	$451,X					; 5
+	sta	$4d0,X					; 5
+	sta	$4d1,X					; 5
 	lda	#$0f					; 2
-	sta	$452,X					; 5
+	sta	$4d2,X					; 5
 ar_done_susie:
 						;===========
 						;	 19
 
 
-	; draw bird
-	lda	#>bird_stand_right_sprite		; 2
+
+ar_draw_wfall:
+	; draw minifalls
+	lda	#>wfall_sprite				; 2
 	sta	INH					; 3
-        lda	#<bird_stand_right_sprite		; 2
+        lda	#<wfall_sprite				; 2
 	sta	INL					; 3
 
-	lda	#24					; 2
-	sta	XPOS					; 3
-	lda     #20					; 2
-	sta	YPOS					; 3
-
-	jsr	put_sprite                              ; 6
-                                                        ;=========
-                                                        ; 26 + 2046 = 2072
-ar_draw_door:
-	; draw door
-	lda	#>door_sprite				; 2
-	sta	INH					; 3
-        lda	#<door_sprite				; 2
-	sta	INL					; 3
-
-	lda	#5					; 2
+	lda	#0					; 2
 	sta	XPOS					; 3
 	lda     #24					; 2
 	sta	YPOS					; 3
 
 	jsr	put_sprite                              ; 6
                                                         ;=========
-                                                        ; 26 + 1635 = 1661
+                                                        ; 26 + 1911 = 1937
 
 
 
@@ -527,7 +554,7 @@ arloopW:dex								; 2
 	dey								; 2
 	bne	arloopV							; 2nt/3
 
-	jmp	ar_draw_door
+	jmp	ar_draw_wfall
 
 
 	;======================
