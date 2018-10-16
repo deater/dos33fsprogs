@@ -10,8 +10,6 @@ THANKS:
 
 Overall:
 	fix off-by-one line vaporlock
-	disk loader?
-	Load with HGR C64 at offset 0x2000 and then straight to 0x4000
 	Trim the last 8 bytes off of all the lz4 files
 
 Music:
@@ -24,10 +22,12 @@ Timing:
 0: c64_opener:
 	get curtain-opening effect working
 	add text to background
+	auto timeout to next screen
 
 1: falling_apple:
 	make it fall?
 	some sort of wipe?
+	auto timeout to next screen
 
 2: starring:
 	complete graphics
@@ -35,44 +35,46 @@ Timing:
 	add wipe effect with tengwar: just draw 4 bytes yellow, 4 bytes
 	from scroll buffer
 	Add Susie starring role?
+	auto timeout to next screen
 
 3: e-mail:
 	Update to proper text
 	Add susie?
+	auto timeout to next screen
 
 4: leave house:
-	Green, a house on left?  fence, bird?
-	have mountain in background?
+	Add some sort of text?
 	
 
 5: running bird:
 	run to middle of screen, then have everything start moving?
 	update text
+	auto timeout to next screen
 
 6: waterfall:
 	finish packing down a bit
+	auto movement
+	auto timeout to next screen
 
 7: arrival at ship
 	top HGR, bottom gr
 	close door
 	flames going
 	tree goes from big to small, horizon drops?
+	auto timeout to next screen
 
 8: mode7:
 	change path
 	change ground to night-time darkness.  grey water
+	detect keypress
 
 9: spacegame:
-	saturn-like planet?  raster bars?
-	score at top?
+	auto movement
+	auto timeout to next screen
 	when done, blue horiz line?
 
 10: arrive at frogysue:
-	park ship on left
-	amethys crystals?
-	sky text/ground lgr?
-	susie follow?
-	haert when meet at center?
+	add text?
 
 11: fireworks:
 	update text

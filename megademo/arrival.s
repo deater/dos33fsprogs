@@ -24,7 +24,7 @@ setup_arrival:
 	sta	FRAME
 	sta	FRAMEH
 
-	lda	#250
+	lda	#0
 	sta	TFV_X
 
 	lda	#8
@@ -105,10 +105,10 @@ arloopB:dex								; 2
 	; Total of 17030 cycles to get back to where was
 
 	; want 12*4 = 48 lines of TEXT = 3120-4=3116
-	; want 136-48 = 88 lines of undisturbed LORES = 5720 - 4 = 5716
-	; 	lores lines 20-33 (80 - 135) are changing
+	; want 144-48 = 96 lines of undisturbed LORES = 6240 - 4 = 6236
+	; 	lores lines 24-36 (80 - 143) are changing
 	;	so don't do much then
-	; want 192-136=56 lines of LORES = 3640
+	; want 192-144=48 lines of LORES = 3120
 
 
 
@@ -225,10 +225,12 @@ arloop9:dex								; 2
 
 	bit	SET_GR			; 4
 
-	; Try X=75 Y=15 cycles=5716
+	; Try X=53 Y=23 cycles=6234 R2
 
-	ldy	#15							; 2
-arloop6:ldx	#75							; 2
+	nop
+
+	ldy	#23							; 2
+arloop6:ldx	#53							; 2
 arloop7:dex								; 2
 	bne	arloop7							; 2nt/3
 	dey								; 2
@@ -270,18 +272,22 @@ ar_back_from_jumptable:
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 
-	; do_nothing should be      3640 (bottom of GR screen)
+	; do_nothing should be      3120 (bottom of GR screen)
 	;			    4550 (vblank)
 	;			     -23 (setup jump table)
 	;			   -6237 (in state code)
 	;			     -10 keypress
 	;			===========
-	;			     1920
+	;			     1400
 
-	; Try X=19 Y=19 cycles=1920
+	; Try X=5 Y=45 cycles=1396 R4
 
-	ldy	#19							; 2
-arloop1:ldx	#19							; 2
+
+	nop
+	nop
+
+	ldy	#45							; 2
+arloop1:ldx	#5							; 2
 arloop2:dex								; 2
 	bne	arloop2							; 2nt/3
 	dey								; 2
