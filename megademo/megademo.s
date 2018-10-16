@@ -27,7 +27,7 @@ apple_iie:
 	;===================
 	jsr	HOME
 
-	jsr	leaving_home
+	jsr	arriving_there
 
 	; C64 Opening Sequence
 
@@ -67,9 +67,9 @@ apple_iie:
 	jsr	space_bars
 
 	; Arrive
+	jsr	arriving_there
 
 	; Fireworks
-
 	jsr	fireworks
 
 	; Game over
@@ -107,6 +107,7 @@ loop_forever:
 	.include	"space_bars.s"
 	.include	"takeoff.s"
 	.include	"leaving.s"
+	.include	"arrival.s"
 	.include	"waterfall.s"
 	.include	"text_print.s"
 .align $100
@@ -127,7 +128,8 @@ loop_forever:
 ; waterfall
 .include "waterfall_page1.inc"
 .include "waterfall_page2.inc"
-
+; arrival
+.include "arrival.inc"
 
 ;============================
 ; Include Hires Graphics
