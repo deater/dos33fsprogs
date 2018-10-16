@@ -118,14 +118,16 @@ ar_begin_loop:
 	;   -4	set_text
 	;  -25	inc frame
 	;  -17	set state
-	;  -11  move
+	;  -43  move
 	;   -8	check if done
 	;=======
-	; 3055
+	; 3023
 
 	bit	SET_TEXT						; 4
 
+	;====================
 	; Update frame count
+	;====================
 	; no carry:	13+(12) = 25
 	; carry:	13+12 = 25
 
@@ -178,7 +180,7 @@ ar_state_zero:
 	ldx	#0							; 2
 	jmp	ar_set_state						; 3
 ar_state_notzero:
-	cmp	#25							; 2
+	cmp	#16							; 2
 	bcs	ar_state_four		; bge				; 3
 ar_state_two:
 									; -1
@@ -191,28 +193,61 @@ ar_state_four:
 ar_set_state:
 	stx	STATE							; 3
 
-	;=====
-	; Move
-	; if move, 6+5=11
-	; if not move, 6+5=11
-	lda	FRAME		; only ove if FRAME==0			; 3
-	beq	ar_move							; 3
+	;====================
+	; Move TFV
+	;====================
+	; if move, 6+13=19
+	; if not move, 6+13=19
+	lda	FRAME		; only move if FRAME==0			; 3
+	beq	arv_move						; 3
 
-ar_nomove:								; -1
+arv_nomove:								; -1
 	lda	$0	;nop						; 3
-	jmp	ar_done_move						; 3
-ar_move:
-	inc	TFV_X							; 5
-ar_done_move:
+	lda	$0	;nop						; 3
+	lda	$0	;nop						; 3
+	nop								; 2
+	jmp	arv_done_move						; 3
+arv_move:
+	lda	STATE							; 3
+	lsr								; 2
+	clc								; 2
+	adc	TFV_X							; 3
+	sta	TFV_X							; 3
+arv_done_move:
+
+	;====================
+	; Move TFG
+	; if move, 6+18=24
+	; if not move, 6+18=24
+	lda	FRAME		; only move if FRAME===0		; 3
+	beq	arg_move						; 3
+
+arg_nomove:								; -1
+	lda	$0	;nop						; 3
+	lda	$0	;nop						; 3
+	lda	$0	;nop						; 3
+	lda	$0	;nop						; 3
+	nop								; 2
+	nop								; 2
+	jmp	arg_done_move						; 3
+arg_move:
+	lda	STATE							; 3
+	and	FRAMEH							; 3
+	lsr								; 2
+	eor	#$ff		; make negative				; 2
+	sec								; 2
+	adc	TFG_X							; 3
+	sta	TFG_X							; 3
+arg_done_move:
 
 
 
+	; Try X=29 Y=20 cycles=3021 R2
 
-	; Try X=86 Y=7 cycles=3053 R2
 	nop
 
-	ldy	#7							; 2
-arloop8:ldx	#86							; 2
+	ldy	#20							; 2
+arloop8:ldx	#29							; 2
 arloop9:dex								; 2
 	bne	arloop9							; 2nt/3
 	dey								; 2
@@ -461,10 +496,10 @@ ar_susie:
 	; draw susie at TFV_X-5, IFF TFV_X>10
 	lda	TFV_X					; 3
 	sec						; 2
-	sbc	#5					; 2
+	sbc	#4					; 2
 	tax						; 2
-	cpx	#5					; 2
-	bcs	ar_yes_susie	; bge			; 3
+	cpx	#1					; 2
+	bpl	ar_yes_susie	; bge			; 3
 						;============
 						;	14
 ar_no_susie:
@@ -588,12 +623,12 @@ erase_field:
 	lda     #$44 		; green					; 2
 	ldx	#20		; 4 - 25				; 2
 field_loop:
-	sta	$628+5,X	; 24					; 5
-	sta	$6a8+5,X	; 26					; 5
-	sta	$728+5,X	; 28					; 5
-	sta	$7a8+5,X	; 30					; 5
-	sta	$450+5,X	; 32					; 5
-	sta	$4d0+5,X	; 34					; 5
+	sta	$628+4,X	; 24					; 5
+	sta	$6a8+4,X	; 26					; 5
+	sta	$728+4,X	; 28					; 5
+	sta	$7a8+4,X	; 30					; 5
+	sta	$450+4,X	; 32					; 5
+	sta	$4d0+4,X	; 34					; 5
 
 	dex								; 2
 	bpl	field_loop						; 3
