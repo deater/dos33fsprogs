@@ -384,7 +384,7 @@ arloopU:dex								; 2
 	;======================================================
 	; State2 : draw walking
 	;======================================================
-	;  750 = erase field
+	;  785 = erase field
 	;    3 (return)
 	; 1490 = 1471+19 (draw tfv)
 	;   33 (draw susie)
@@ -392,17 +392,16 @@ arloopU:dex								; 2
 	; 1937 (draw falls)
 
 	;==========
-	; 5751
+	; 5786
 	; - 6237
 .align $100
 ar_state2:
-	jsr	erase_field				; 6+744
+	jsr	erase_field				; 6+779
 
-;Try X=95 Y=1 cycles=482 R4
+; Try X=2 Y=28 cycles=449 R2
 nop
-nop
-	ldy	#1							; 2
-arloopZ:ldx	#95							; 2
+	ldy	#28							; 2
+arloopZ:ldx	#2							; 2
 arloopX:dex								; 2
 	bne	arloopX							; 2nt/3
 	dey								; 2
@@ -617,11 +616,11 @@ arloopW:dex								; 2
 	;======================
 	; erase to green 4-25, 24-35
 
-	; 4+ 21*[30 + 5 ] + 5 = 744
+	; 4+ 22*[30 + 5 ] + 5 = 779
 erase_field:
 
 	lda     #$44 		; green					; 2
-	ldx	#20		; 4 - 25				; 2
+	ldx	#21		; 4 - 25				; 2
 field_loop:
 	sta	$628+4,X	; 24					; 5
 	sta	$6a8+4,X	; 26					; 5
