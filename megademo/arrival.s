@@ -23,6 +23,8 @@ setup_arrival:
 	lda	#0
 	sta	FRAME
 	sta	FRAMEH
+
+	lda	#250
 	sta	TFV_X
 
 	lda	#8
@@ -154,7 +156,7 @@ ar_no_carry:
 	;=================
 
 	lda	FRAMEH							; 3
-	cmp	#35							; 2
+	cmp	#45							; 2
 	bne	ar_not_done						; 3
 	jmp	ar_all_done
 ar_not_done:
@@ -258,7 +260,7 @@ draw_the_field:
 
 ar_jump_table:
 	.word   (ar_state0-1)
-	.word   (ar_state0-1)
+	.word   (ar_state2-1)
 	.word   (ar_state0-1)
 
 ar_back_from_jumptable:
@@ -325,9 +327,7 @@ ar_state0:
                                                         ;=========
                                                         ; 26 + 1498 = 1524
 
-	; Try X=35 Y=26 cycles=4707R3
-	; Try X=93 Y=10 cycles=4711
-	; Try X=53 Y=23 cycles=6234
+	; Try X=35 Y=26 cycles=4707 R3
 	lda	$0
 	ldy	#26							; 2
 arloopT:ldx	#35							; 2
@@ -343,17 +343,31 @@ arloopU:dex								; 2
 	;======================================================
 	; State2 : draw walking
 	;======================================================
-	; 1255 = erase field
+	;  750 = erase field
+	;    3 (return)
 	; 1490 = 1471+19 (draw tfv)
 	;   33 (draw susie)
-	; 1519 (draw fs)
+	; 1538 = 1519+19 (draw fs)
 	; 1937 (draw falls)
-	;    3 (return)
+
 	;==========
-	; 6237
+	; 5751
+	; - 6237
 .align $100
 ar_state2:
-	jsr	erase_field					; 6+1249
+	jsr	erase_field				; 6+744
+
+;Try X=95 Y=1 cycles=482 R4
+nop
+nop
+	ldy	#1							; 2
+arloopZ:ldx	#95							; 2
+arloopX:dex								; 2
+	bne	arloopX							; 2nt/3
+	dey								; 2
+	bne	arloopZ							; 2nt/3
+;
+;	jmp	ar_back_from_jumptable				; 3
 
 	lda	TFV_X					; 3
 	sta	XPOS					; 3
@@ -421,11 +435,11 @@ arg_stand:
 
 	jmp	ar_susie				; 3
                                                         ;=========
-                                                        ; 18 + 1498 = 1516
+                                                        ; 21 + 1498 = 1519
 
 
 arg_walk:
-	; draw deater walking
+	; draw fs walking
 	lda	#>tfg_walk_left				; 2
 	sta	INH					; 3
         lda	#<tfg_walk_left				; 2
@@ -562,19 +576,18 @@ arloopW:dex								; 2
 	;======================
 	; erase to green 4-25, 24-35
 
-        ; 1209 cycles
 	; 4+ 21*[30 + 5 ] + 5 = 744
 erase_field:
 
 	lda     #$44 		; green					; 2
 	ldx	#20		; 4 - 25				; 2
 field_loop:
-	sta	$628+9,X	; 24					; 5
-	sta	$6a8+9,X	; 26					; 5
-	sta	$728+9,X	; 28					; 5
-	sta	$7a8+9,X	; 30					; 5
-	sta	$450+9,X	; 32					; 5
-	sta	$4d0+9,X	; 34					; 5
+	sta	$628+5,X	; 24					; 5
+	sta	$6a8+5,X	; 26					; 5
+	sta	$728+5,X	; 28					; 5
+	sta	$7a8+5,X	; 30					; 5
+	sta	$450+5,X	; 32					; 5
+	sta	$4d0+5,X	; 34					; 5
 
 	dex								; 2
 	bpl	field_loop						; 3
