@@ -124,6 +124,9 @@ flying_loop:
 
 flying_keyboard:
 
+	lda	KEYPRESS						; 4
+	bmi	done_mode7
+
 ;	jsr	get_key		; get keypress				; 6
 
 	lda	KEY_COUNT
@@ -147,6 +150,8 @@ done_key:
 	cmp	#('Q')							; 2
 	bne	check_up						; 3/2nt
 
+done_mode7:
+	bit	KEYRESET
 	; done
 	rts
 
