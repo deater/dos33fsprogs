@@ -27,7 +27,8 @@ apple_iie:
 	;===================
 	jsr	HOME
 
-	jsr	bird_mountain
+	jsr	mode7_flying
+;	jsr	waterfall
 
 ;	jsr	arriving_there
 
