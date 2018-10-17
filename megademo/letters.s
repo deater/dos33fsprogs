@@ -4,11 +4,12 @@
 letters_bm:
 	;.byte	1,12
 	.byte	     "CYCLE",128
-	.byte	2,12,"COUNTING",128
-	.byte	3,12,"M E G A D E M O",150
-	.byte	1,12," ",128
-	.byte	2,12," ",128
-	.byte	3,12," ",128
+	.byte	2,16,"COUNTING",128
+;	.byte	3,12,"M E G A D E M O",150
+	.byte	3,16,"MEGADEMO",150
+	.byte	1,16," ",128
+	.byte	2,16," ",128
+	.byte	3,16," ",128
 	.byte	1,19,"BY",128
 	.byte	3,10,"VINCE ",34,"DEATER",34," WEAVER",150
 	.byte	1,19," ",128

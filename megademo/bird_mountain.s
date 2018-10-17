@@ -18,6 +18,10 @@ bird_mountain:
 	;==================
 	; Init vars
 
+	lda	#0
+	sta	FRAME
+	sta	FRAMEH
+
 	lda	#28
 	sta	TREE1X
 	lda	#37
@@ -45,7 +49,7 @@ bird_mountain:
 	sta	LETTERX
 	lda	#1
 	sta	LETTERY
-	lda	#12
+	lda	#16
 	sta	LETTERD
 
 	;=================
@@ -287,24 +291,43 @@ draw_bird:
 							; 2228
 
 
-	;==========================
-	; Update frame = 13 cycles
-
+	;=========================================
+	; Update frame
+	;=========================================
+	; 16 addition
+	;  7 inc high
+	;  7 if done
+	;=========
+	; 30 update frame
 
 	inc	FRAME			; frame++			; 5
 	lda	FRAME							; 3
 	and	#$3f			; roll over after 63		; 2
 	sta	FRAME							; 3
+	bne	bm_noflo						; 3
 
-								;===========
-								;        13
+									; -1
+	inc	FRAMEH							; 5
+	jmp	bm_check_done						; 3
+bm_noflo:
+	nop								; 2
+	nop								; 2
+	lda	$0	; nop						; 3
+bm_check_done:
+	; finish after so many cycles
+	lda	FRAMEH							; 3
+	cmp	#38							; 2
+	beq	bm_done							; 3
+									; -1
+
 
 	;===========================
-	; Update tree1 = 21 cycles
-	and	#$3f			; if (frame%64==0)		; 2
-	beq	dec_tree1
-									; 2
-	; need to do 19-5 cycles of nonsense
+	; Update tree1 = 22 cycles
+	lda	FRAME							; 3
+;	and	#$3f			; if (frame%64==0)		;
+	beq	dec_tree1						; 3
+
+	; need to do 19-5 cycles of nonsense				; -1
 	inc	TREE1X							; 5
 	dec	TREE1X							; 5
 	lda	#0							; 2
@@ -313,15 +336,14 @@ draw_bird:
 	jmp	done_tree1						; 3
 
 dec_tree1:
-									; 3
 	dec	TREE1X			; tree1_x--			; 5
 	lda	TREE1X							; 3
-	bmi	tree1_neg
-									; 2
+	bmi	tree1_neg						; 3
+
+									;-1
 	ldx	TREE1X							; 3
 	jmp	done_tree1						; 3
 tree1_neg:
-							; incoming br     3
 	ldx	#37							; 2
 	stx	TREE1X							; 3
 done_tree1:
@@ -358,19 +380,18 @@ done_tree2:
 	; want                   4160
 	; Tree2 Sprite		-1437
 	; Sprite		-2228
-	; Frame Update		  -13
-	; Tree1 Update		  -21
+	; Frame Update		  -30
+	; Tree1 Update		  -22
 	; Tree2 Update		  -24
 	; hgr bits		   -8
-	; ======================  429 cycles
+	; ======================  411 cycles
 
-	; Try X=13 Y=6 cycles=427 R2
+	; Try X=1 Y=37 cycles=408 R2
+	; Try X=7 Y=10 cycles=411
 
-	lda	#0							; 2
-
-	ldy	#6							; 2
+	ldy	#10							; 2
 loop3:
-	ldx	#13							; 2
+	ldx	#7							; 2
 loop4:
 	dex								; 2
 	bne	loop4							; 2nt/3
