@@ -559,11 +559,15 @@ ar_draw_wfall:
 	;======================================================
 	;  6237
 	;  -464 (draw heart)
+	;  -217 (erase heart)
 	;    -3 = return
 	;==========
-	; 5770
+	; 5553
+
 
 ar_state4:
+
+	jsr	erase_heart				; 6+211
 
 	lda	HEART_X					; 3
 	sta	XPOS					; 3
@@ -584,16 +588,30 @@ ar_state4:
 ar_done_heart:
 	; delay
 
-	; Try X=127 Y=9 cycles=5770
 
-	ldy	#9							; 2
-arloopV:ldx	#127							; 2
+	; Try X=21 Y=50 cycles=5551 R2
+
+	nop
+
+	ldy	#50							; 2
+arloopV:ldx	#21							; 2
 arloopW:dex								; 2
 	bne	arloopW							; 2nt/3
 	dey								; 2
 	bne	arloopV							; 2nt/3
 
 	jmp	ar_back_from_jumptable
+
+heart_path:
+	.byte	$14,$20
+	.byte	$14,$20
+	.byte	$13,$18
+	.byte	$13,$18
+	.byte	$14,$16
+	.byte	$15,$16
+;	.byte	$15,$14
+;	.byte	$14,$14
+
 
 
 	;======================
@@ -616,6 +634,31 @@ field_loop:
 
 	dex								; 2
 	bpl	field_loop						; 3
+									; -1
+	rts								; 6
+
+
+	;======================
+	; erase heart
+	;======================
+	; erase to black, (13-18,14-20)
+	; erase to green  (13-18,20-24)
+
+	; 2+ 6*[29 + 5 ] + 5 = 211
+erase_heart:
+
+
+	ldx	#5		; 13 - 18				; 2
+heart_loop:
+	lda	#$00		; black					; 2
+	sta	$780+13,X	; 14					; 5
+	sta	$428+13,X	; 16					; 5
+	sta	$4a8+13,X	; 18					; 5
+	lda     #$44 		; green					; 2
+	sta	$528+13,X	; 20					; 5
+	sta	$5a8+13,X	; 22					; 5
+	dex								; 2
+	bpl	heart_loop						; 3
 									; -1
 	rts								; 6
 
