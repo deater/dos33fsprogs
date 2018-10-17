@@ -6,6 +6,8 @@
 ;TFV_X = 0
 ;TFV_Y = 1
 TFG_X = 2
+HEART_X = 3
+HEART_Y = 4
 
 arriving_there:
 
@@ -30,8 +32,15 @@ setup_arrival:
 	lda	#8
 	sta	DRAW_PAGE
 
+	lda	#14
+	sta	HEART_X
+
+	lda	#20
+	sta	HEART_Y
+
 	lda	#22
 	sta	TFG_X
+
 
 	;=============================
 	; Load graphic page0
@@ -298,7 +307,7 @@ draw_the_field:
 ar_jump_table:
 	.word   (ar_state0-1)
 	.word   (ar_state2-1)
-	.word   (ar_state0-1)
+	.word   (ar_state4-1)
 
 ar_back_from_jumptable:
 
@@ -546,69 +555,45 @@ ar_draw_wfall:
 
 
 	;======================================================
-	; State4 : on bird
+	; State4 : heart
 	;======================================================
-	;  5259
-	; -2227 = 2208+19 (draw bird)
-	; -1661 (draw door)
-	;    -6 (return)
+	;  6237
+	;  -464 (draw heart)
+	;    -3 = return
 	;==========
-	; 1365
+	; 5770
 
 ar_state4:
 
-	lda	TFV_X					; 3
+	lda	HEART_X					; 3
 	sta	XPOS					; 3
-	lda     #20					; 2
+	lda     HEART_Y					; 3
 	sta	YPOS					; 3
 
-	lda	FRAMEH					; 3
-	and	#$1					; 2
-	beq	ar_bwalk				; 3
-						;===========
-						;	 19
-
-
-ar_bstand:
-	; draw bird/rider standing				; -1
-	lda	#>bird_rider_stand_right		; 2
+	; draw fs standing
+	lda	#>heart_sprite				; 2
 	sta	INH					; 3
-        lda	#<bird_rider_stand_right		; 2
+	lda	#<heart_sprite				; 2
 	sta	INL					; 3
+
 	jsr	put_sprite                              ; 6
-
-	jmp	ar_done_bwalk				; 3
                                                         ;=========
-                                                        ; 18 + 2190 = 2208
+                                                        ; 28 + 436 = 464
 
 
-ar_bwalk:
-	; draw bird/rider walking
-	lda	#>bird_rider_walk_right			; 2
-	sta	INH					; 3
-        lda	#<bird_rider_walk_right			; 2
-	sta	INL					; 3
-	jsr	put_sprite                              ; 6
-	nop
-	inc	TFV_Y
-	inc	TFV_Y
-	inc	TFV_Y
-                                                        ;=========
-                                                        ; 16 + 2175
-
-ar_done_bwalk:
+ar_done_heart:
 	; delay
 
-	; Try X=67 Y=4 cycles=1365
+	; Try X=127 Y=9 cycles=5770
 
-	ldy	#4							; 2
-arloopV:ldx	#67							; 2
+	ldy	#9							; 2
+arloopV:ldx	#127							; 2
 arloopW:dex								; 2
 	bne	arloopW							; 2nt/3
 	dey								; 2
 	bne	arloopV							; 2nt/3
 
-	jmp	ar_draw_wfall
+	jmp	ar_back_from_jumptable
 
 
 	;======================
