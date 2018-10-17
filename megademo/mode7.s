@@ -947,7 +947,7 @@ screenx_loop:
 
 nomatch:
 	; Get color to draw in A
-	jsr	island_lookup
+	jsr	lookup_island_map
 match:
 
 mask_label:
@@ -1036,19 +1036,7 @@ done_screeny:
 	; returns color in A
 	; CLOBBERS: A,Y
 	; this is used to check if above water or grass
-	; the high-performance per-pixel version has been inlined
 lookup_island_map:
-;	rts								; 6
-
-
-	;====================
-	; lookup_map
-	;====================
-	; finds value in space_x.i,space_y.i
-	; returns color in A
-	; CLOBBERS: A,Y
-
-island_lookup:
 	lda	SPACEX_I						; 3
 	sta	spacex_label+1	; self modifying code, LAST_SPACEX_I	; 4
 	and	#CONST_MAP_MASK_X	; wrap at 64			; 2
@@ -1072,28 +1060,28 @@ island_lookup:
 								;============
 								;	 39
 
-	bcs	@ocean_color		; bgt 8				; 2nt/3
+	bcs	ocean_color		; bgt 8				; 2nt/3
 	ldy	SPACEY_I						; 3
 	cpy	#$8							; 2
 								;=============
 								;	  7
 
-	bcs	@ocean_color		; bgt 8				; 2nt/3
+	bcs	ocean_color		; bgt 8				; 2nt/3
 
 	tay								; 2
 	lda	flying_map,Y		; load from array		; 4
 
-	bcc	@update_cache						; 3
+	bcc	update_cache						; 3
 								;============
 								;	11
-@ocean_color:
+ocean_color:
 	and	#$1f							; 2
 	tay								; 2
 	lda	water_map,Y		; the color of the sea		; 4
 								;===========
 								;	  8
 
-@update_cache:
+update_cache:
 	sta	map_color_label+1	; self-modifying		; 4
 
 								;===========
@@ -1134,6 +1122,7 @@ water_map:
 	.byte $ee,$22,$22,$22,  $22,$22,$22,$22
 	.byte $22,$22,$22,$22,  $22,$22,$22,$22
 	.byte $22,$22,$22,$22,  $ee,$22,$22,$22
+
 
 .include "starry_sky.scroll"
 
