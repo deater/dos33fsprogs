@@ -27,7 +27,9 @@ apple_iie:
 	;===================
 	jsr	HOME
 
-	jsr	arriving_there
+	jsr	bird_mountain
+
+;	jsr	arriving_there
 
 	; C64 Opening Sequence
 
@@ -137,4 +139,7 @@ loop_forever:
 sb_background_hgr:
 .incbin "SB_BACKGROUNDC.BIN.lz4",11
 sb_background_hgr_end:
+katahdin:
+.incbin "KATC.BIN.lz4",11               ; skip the header
+katahdin_end:
 

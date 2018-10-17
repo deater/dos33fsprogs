@@ -510,8 +510,8 @@ letters_bm:
 ;.align	$100
 ;.include "tfv_sprites.inc"
 
-katahdin:
-.incbin	"KATC.BIN.lz4",11		; skip the header
-katahdin_end:
+;katahdin:
+;.incbin	"KATC.BIN.lz4",11		; skip the header
+;katahdin_end:
 
 
