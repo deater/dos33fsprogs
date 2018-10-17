@@ -122,24 +122,40 @@ loop_forever:
 	.include "tfv_sprites.inc"
 	.include "mode7_sprites.inc"
 
+;=================================
+; Include Text for Sliding Letters
+;  *DONT CROSS PAGES*
+;=================================
+.include "letters.s"
+
 ;============================
 ; Include Lores Graphics
+; No Alignment Needed
 ;============================
+
 ; leaving
 .include "leaving.inc"
+
 ; waterfall
 .include "waterfall_page1.inc"
 .include "waterfall_page2.inc"
+
 ; arrival
 .include "arrival.inc"
 
 ;============================
 ; Include Hires Graphics
+; No Alignment Needed
 ;============================
-sb_background_hgr:
-.incbin "SB_BACKGROUNDC.BIN.lz4",11
-sb_background_hgr_end:
+
+; bird mountain
 katahdin:
 .incbin "KATC.BIN.lz4",11               ; skip the header
 katahdin_end:
+
+; spacebars
+sb_background_hgr:
+.incbin "SB_BACKGROUNDC.BIN.lz4",11
+sb_background_hgr_end:
+
 

@@ -45,7 +45,7 @@ bird_mountain:
 	sta	LETTERX
 	lda	#1
 	sta	LETTERY
-	lda	#15
+	lda	#12
 	sta	LETTERD
 
 	;=================
@@ -486,26 +486,6 @@ green_loop:
 
 ; 4 + (40*55) + 6 - 1
 
-
-letters_bm:
-	;.byte	1,15
-	.byte	     "T A L B O T",128
-	.byte	2,14,"F A N T A S Y",128
-	.byte	3,16,"S E V E N",128
-	.byte	1,15," ",128
-	.byte	2,14," ",128
-	.byte	3,16," ",128
-	.byte	1,19,"BY",128
-	.byte	3,14,"VINCE WEAVER",128
-	.byte	1,19," ",128
-	.byte	3,14," ",128
-	.byte	1,16,"MUSIC BY",128
-	.byte	3,12,"HIROKAZU TANAKA",128
-	.byte	1,16," ",128
-	.byte	3,12," ",128
-	.byte	2,13,"CYCLE COUNTING",128
-	.byte	3,16,"IS HARD!"
-	.byte	255
 
 ;.align	$100
 ;.include "tfv_sprites.inc"

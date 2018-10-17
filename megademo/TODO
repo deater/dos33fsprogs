@@ -47,9 +47,10 @@ Timing:
 	
 
 5: running bird:
-	run to middle of screen, then have everything start moving?
-	update text
 	auto timeout to next screen
+	run to middle of screen, then have everything start moving?
+	have sprites partially on all screen rather than jumping at edge?
+	stop scrolling and run off at end?
 
 6: waterfall:
 	finish packing down a bit
