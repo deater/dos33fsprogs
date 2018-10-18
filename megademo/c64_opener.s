@@ -90,7 +90,8 @@ c64_mixed:
         ldy     #24	; height?				; 2
 
 c64_mixed_loop:
-	lda	ss_multiples,x	; lookup split size	; 4    \
+c64_smc2:
+	lda	c64_multiples+15,x ; lookup split size	; 4    \
 	sta	c64_smc+1	; modify code		; 4    |
 c64_smc:						;      |-- 65
         jsr     split_4                                 ; 6+46 |
@@ -175,6 +176,11 @@ not_thirty:
 								;	 12
 
 done_thirty:
+
+
+c64_window_adjust:
+
+;	dec	c64_smc2+1						; 5
 
 
 	;=======================
@@ -320,3 +326,8 @@ loopc6b:dex								; 2
 
 
 
+c64_multiples:
+	.byte	184,184,184,184,184,184,184,184
+        .byte   161,138,115, 92, 69 ,46,23,   0
+	.byte	0,0,0,0,0,0,0,0
+	; end is c64_multiples+24
