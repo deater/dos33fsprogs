@@ -28,7 +28,7 @@ apple_iie:
 	jsr	HOME
 
 
-;	jsr	waterfall
+	jsr	starring
 
 ;	jsr	arriving_there
 
@@ -134,6 +134,10 @@ loop_forever:
 ; No Alignment Needed
 ;============================
 
+; starring
+.include "starring1.inc"
+.include "starring2.inc"
+
 ; leaving
 .include "leaving.inc"
 
@@ -149,6 +153,11 @@ loop_forever:
 ; No Alignment Needed
 ;============================
 
+; starring
+starring3:
+.incbin "starring3.img.lz4",11
+starring3_end:
+
 ; bird mountain
 katahdin:
 .incbin "KATC.BIN.lz4",11               ; skip the header
@@ -158,5 +167,3 @@ katahdin_end:
 sb_background_hgr:
 .incbin "SB_BACKGROUNDC.BIN.lz4",11
 sb_background_hgr_end:
-
-

@@ -17,6 +17,7 @@ starring:
 
 	lda	#0
 	sta	FRAME
+	sta	FRAMEH
 	sta	DRAW_PAGE
 
 	;=============================
@@ -142,9 +143,9 @@ suloop2:dex								; 2
 	dey								; 2
 	bne	suloop1							; 2nt/3
 
-	;======================================================
-	; We have 4550 cycles in the vblank, use them wisely
-	;======================================================
+;======================================================
+; We have 4550 cycles in the vblank, use them wisely
+;======================================================
 
 
 	; we want to flip between GR Page0, GR Page1, HGR Page0
@@ -157,7 +158,7 @@ suloop2:dex								; 2
 	; FRAME==60 reset
 
 	; default = 13+5+5+7  = 30
-	; sixty   = 13+17     = 30
+	; sixty   = 13+20     = 30
 	; forty   = 13+5+12   = 30
 	; twenty  = 13+5+5+7  = 30
 
@@ -209,16 +210,48 @@ st_forty:								; -1
 								;	 7
 done_st_vblank:
 
+	;================
+	; wrap counter
+	;================
+	; nowrap = 8+5=13
+	;   wrap = 8+5=13
+
+	lda	FRAME							; 3
+	cmp	#40	; ensure end on PAGE0				; 2
+	beq	st_wrap							; 3
+st_nowrap:
+									;-1
+	lda	$0			; nop				; 3
+	bne	st_wrap_done						; 3
+st_wrap:
+	inc	FRAMEH							; 5
+st_wrap_done:
+
+	;==============
+	; timeout after 4s or so?
+	;==============
+st_timeout:
+	lda	FRAMEH							; 3
+	cmp	#4							; 2
+	beq	st_done							; 3
+									; -1
+								;============
+								;	7
+
 	; do_nothing should be      4550
+	;			     -13 wrap
+	;			      -7 timeout
 	;			     -10 keypress
 	;			     -30 page flipping
 	;			===========
-	;			    4407
+	;			    4484
 
-	; Try X=99 Y=9 cycles=4510
+	; Try X=178 Y=5 cycles=4481 R3
 
-	ldy	#9							; 2
-stloop1:ldx	#99							; 2
+	lda	$0
+
+	ldy	#5							; 2
+stloop1:ldx	#178							; 2
 stloop2:dex								; 2
 	bne	stloop2							; 2nt/3
 	dey								; 2
@@ -227,18 +260,18 @@ stloop2:dex								; 2
 	lda	KEYPRESS				; 4
 	bpl	st_no_keypress				; 3
 
-	jmp	st_start_over
+	jmp	st_done
 st_no_keypress:
 
 	jmp	st_display_loop				; 3
 
-st_start_over:
+st_done:
 	bit	KEYRESET	; clear keypress	; 4
 	rts						; 6
 
-.include "starring1.inc"
-.include "starring2.inc"
+;.include "starring1.inc"
+;.include "starring2.inc"
 
-starring3:
-.incbin	"starring3.img.lz4",11
-starring3_end:
+;starring3:
+;.incbin	"starring3.img.lz4",11
+;starring3_end:
