@@ -21,12 +21,22 @@ c64_opener:
 
 	; We assume that the c64 image was put in $2000 by the loader
 
-;	bit	PAGE0                   ; first graphics page
-;	bit	FULLGR			; full screen graphics
-;	bit	HIRES			; hires mode !!!
-;	bit	SET_GR			; graphics mode
+	;===================
+	; setup text
+	;===================
 
-;	jsr	wait_until_keypress
+	lda	#8
+	sta	DRAW_PAGE
+
+	lda	#$A0			; regular spaces
+	jsr	clear_gr
+
+	lda	#<score_text
+	sta	OUTL
+	lda	#>score_text
+	sta	OUTH
+
+	jsr	move_and_print
 
 	;==============================
 	; setup graphics for vapor lock
@@ -62,28 +72,79 @@ loopcoB:dex								; 2
 	; We want to:
 	;	Wait 3s, just flashing cursor@1Hz
 	;	Then slowly open to text page0
-	; Count to 480?
 
-	; Width = 0 - 40, 10 steps
+	;===========================
+	; do one or the other
+	;  -- nothing = 8+3 = 11
+	;  -- split = 8+2 = 10
+
+
 
 c64_split:
 
-	jsr	c64_kill_time
+	; Put smc here to jmp to kill_time until we hit state2?
+
+c64_mixed:
+        nop		;kill 6 cycles (room for rts)		; 2
+        ldx     #8	; width of opening in table		; 2
+        ldy     #24	; height?				; 2
+
+c64_mixed_loop:
+	lda	ss_multiples,x	; lookup split size	; 4    \
+	sta	c64_smc+1	; modify code		; 4    |
+c64_smc:						;      |-- 65
+        jsr     split_4                                 ; 6+46 |
+        dey                                             ; 2    |
+        bne     c64_mixed_loop				; 3    /
+
+							; -1
+        nop						; 2
+        ldy     #24					; 2
+        dex						; 2
+        bne     c64_smc					; 3
+
+                                                        ; -1
+
+           ; need to kill
+						; -6 from offset
+						; +1 fall through
+						; -9 from check
+						; +1 from other fallthrough
+					;================
+					;        -13
 
 
+
+
+
+
+
+
+;	lda	FRAMEH						; 3
+;	cmp	#10						; 2
+;	bcc	c64_nothing					; 3
+
+;c64_do_split:							; -1
+;	jmp	c64_split_screen				; 3
+
+;c64_nothing:
+;	jmp	c64_kill_time					; 3
+
+
+c64_done_screen:
 
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 	; do_nothing should be      4550
+	;			     -13 from screen drawing
 	;			     -10 keyboard handling
-	;			      +1 leftover from main screen
 	;			     -15
 	;			     -12
 	;			      -7 check if past time
 	;			     -46
 	;==================================
-	;			 =  4461
+	;			 =  4447
 
 
 	; run the 2Hz counter, overflow at 30 60Hz frames
@@ -178,11 +239,11 @@ cursor_off:
 
 
 cursor_done:
-
+	; Try X=33 Y=26 cycles=4447
 	; Try X=88 Y=10 cycles=4461
 
-	ldy     #10							; 2
-loopcoE:ldx	#88							; 2
+	ldy     #26							; 2
+loopcoE:ldx	#33							; 2
 loopcoF:dex								; 2
 	bne	loopcoF							; 2nt/3
 	dey								; 2
@@ -239,190 +300,23 @@ done_c64:
 	;===========================================
 	; do nothing but blink cursor
 	; 192 * 65 = 12480 cycles
-	;               -6 jsr in
-	;		-6 rts back
+	;              -11 jsr in
+	;		-3 jmp back
 	;           ========
-	;            12468
+	;            12466
 c64_kill_time:
 
-	; Try X=17 Y=137 cycles=12468
+	; Try X=165 Y=15 cycles=12466
 
-	ldy     #137							; 2
-loopc6a:ldx	#17							; 2
+	ldy     #15							; 2
+loopc6a:ldx	#165							; 2
 loopc6b:dex								; 2
 	bne	loopc6b							; 2nt/3
 	dey								; 2
 	bne	loopc6a							; 2nt/3
 
 
-	rts								; 6
-
-
-c64_split_screen:
-
-;=========================
-; Top third
-
-; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnNnNnNnTtttGgggNnNnNnNnNnNnNnNn	16= 4W
+	jmp	c64_done_screen						; 3
 
 
 
-	ldx	#64							; 2
-	jmp	c64_loop_1_five_in					; 3
-c64_loop_1:
-	lda	$0							; 3
-	nop								; 2
-c64_loop_1_five_in:
-	lda	$0							; 3
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-								;=============
-								;	 25
-
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-								;============
-								;	16
-
-	bit	SET_TEXT						; 4
-	bit	SET_GR							; 4
-
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-								;============
-								;	16
-c64_loop_1_end:
-	dex								; 2
-	bne	c64_loop_1						; 3
-								;============
-								;	  5
-
-
-
-
-;=========================
-; Middle third
-
-; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnNnNnTtttNnNnNnNnNnGgggNnNnNnNnLll	11=14W
-
-
-									; 5-1=4
-	ldx	#64							; 2
-	jmp	c64_loop_2_four_in					; 3
-
-c64_loop_2:
-	nop								; 2
-	nop								; 2
-c64_loop_2_four_in:
-	nop								; 2
-	lda	$0							; 3
-	lda	$0							; 3
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	lda	$0
-								;=============
-								;	 20
-
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	bit	SET_TEXT						; 4
-
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-
-	bit	SET_GR							; 4
-
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	lda	$0
-
-c64_loop_2_end:
-	dex								; 2
-	bne	c64_loop_2						; 3
-								;============
-								;	  5
-
-
-;=========================
-; Bottom third
-
-; DdBbbNnNnNnNnNnNnNnNnNnNn NnTtttNnNnNnNnNnNnNnNnNnNnNnNnNnNnGgggNn	 2=32W
-
-									; 5-1=4
-	ldx	#64							; 2
-	jmp	c64_loop_3_four_in					; 3
-
-c64_loop_3:
-	nop								; 2
-	nop								; 2
-c64_loop_3_four_in:
-	nop								; 2
-	lda	$0							; 3
-	lda	$0							; 3
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-								;=============
-								;	 20
-
-	nop								; 2
-	bit	SET_TEXT						; 4
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-								;============
-								;	16
-
-
-
-
-
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	nop								; 2
-	bit	SET_GR							; 4
-	nop								; 2
-								;============
-								;	16
-c64_loop_3_end:
-	dex								; 2
-	bne	c64_loop_3						; 3
-								;============
-								;	  5
-
-									; -1
-	rts
