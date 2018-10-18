@@ -28,7 +28,7 @@ apple_iie:
 	jsr	HOME
 
 
-	jsr	waterfall
+;	jsr	waterfall
 
 ;	jsr	arriving_there
 

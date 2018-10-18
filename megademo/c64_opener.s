@@ -6,17 +6,14 @@
 
 ; Zero page addresses
 
-TOP	= $F0
-BOTTOM	= $F1
-
 c64_opener:
 
 	;===================
 	; init vars
 	;===================
 	lda	#0
-	sta	TOP
-	sta	BOTTOM
+	sta	FRAME
+	sta	FRAMEH
 
 	;===================
 	; setup graphics
@@ -24,12 +21,12 @@ c64_opener:
 
 	; We assume that the c64 image was put in $2000 by the loader
 
-	bit	PAGE0                   ; first graphics page
-	bit	FULLGR			; full screen graphics
-	bit	HIRES			; hires mode !!!
-	bit	SET_GR			; graphics mode
+;	bit	PAGE0                   ; first graphics page
+;	bit	FULLGR			; full screen graphics
+;	bit	HIRES			; hires mode !!!
+;	bit	SET_GR			; graphics mode
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
 	;==============================
 	; setup graphics for vapor lock
@@ -66,10 +63,202 @@ loopcoB:dex								; 2
 	;	Wait 3s, just flashing cursor@1Hz
 	;	Then slowly open to text page0
 	; Count to 480?
+
 	; Width = 0 - 40, 10 steps
 
 c64_split:
 
+	jsr	c64_kill_time
+
+
+
+	;======================================================
+	; We have 4550 cycles in the vblank, use them wisely
+	;======================================================
+	; do_nothing should be      4550
+	;			     -10 keyboard handling
+	;			      +1 leftover from main screen
+	;			     -15
+	;			     -12
+	;			      -7 check if past time
+	;			     -46
+	;==================================
+	;			 =  4461
+
+
+	; run the 2Hz counter, overflow at 30 60Hz frames
+	clc								; 2
+	lda	FRAME							; 3
+	adc	#1							; 2
+	sta	FRAME							; 3
+
+	cmp	#30							; 2
+	bne	not_thirty						; 3
+								;===========
+								;	15
+thirty:
+									; -1
+	lda	#0							; 2
+	sta	FRAME							; 3
+	inc	FRAMEH							; 5
+	jmp	done_thirty						; 3
+								;===========
+								;	 12
+
+not_thirty:
+	lda	$0	; nop						; 3
+	lda	$0	; nop						; 3
+	lda	$0	; nop						; 3
+	lda	$0	; nop						; 3
+								;===========
+								;	 12
+
+done_thirty:
+
+
+	;=======================
+	; see if done
+	;=======================
+
+	lda	FRAMEH							; 3
+	cmp	#20							; 2
+	beq	done_c64						; 3
+									; -1
+								;============
+								;	  7
+
+c64_blink_cursor:
+	; handle the cursor
+	; FIXME: not aligned well.  Do we care?
+
+	lda	FRAMEH							; 3
+	and	#$1							; 2
+	beq	cursor_off						; 3
+								;============
+								;         8
+cursor_on:
+									; -1
+	; it's lSB first
+	; blue is 6
+	; 1 1111110
+	lda	#$fE	; blue						; 2
+	sta	$3300	; 52						; 4
+	sta	$3B00	; 54						; 4
+	sta	$2380	; 56						; 4
+	sta	$2B80	; 58						; 4
+	; purple is 2
+	; 0 1111110
+	lda	#$7E	; purple					; 2
+	sta	$3700	; 53						; 4
+	sta	$3F00	; 55						; 4
+	sta	$2780	; 57						; 4
+	sta	$2F80	; 59						; 4
+
+	jmp	cursor_done						; 3
+								;============
+								;	 38
+cursor_off:
+	; blue is 6
+	; 1 1010101
+	lda	#$d5	; blue						; 2
+	sta	$3300	; 52						; 4
+	sta	$3B00	; 54						; 4
+	sta	$2380	; 56						; 4
+	sta	$2B80	; 58						; 4
+	; purple is 2
+	; 0 1010101
+	lda	#$55	; purple					; 2
+	sta	$3700	; 53						; 4
+	sta	$3F00	; 55						; 4
+	sta	$2780	; 57						; 4
+	sta	$2F80	; 59						; 4
+	nop								; 2
+								;============
+								;	 38
+
+
+cursor_done:
+
+	; Try X=88 Y=10 cycles=4461
+
+	ldy     #10							; 2
+loopcoE:ldx	#88							; 2
+loopcoF:dex								; 2
+	bne	loopcoF							; 2nt/3
+	dey								; 2
+	bne	loopcoE							; 2nt/3
+
+
+	lda	KEYPRESS				; 4
+	bpl	no_c64_keypress				; 3
+	jmp	done_c64
+no_c64_keypress:
+
+	jmp	c64_split				; 3
+
+done_c64:
+	bit	KEYRESET
+	rts						; 6
+
+
+
+
+	;===================
+	; c64 graphic, load at $2000-$4000 to start with
+	;===================
+;c64:
+;.incbin "c64.img"
+;c64_end:
+
+
+;=========================================================
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNn	Nothing
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnNnNnNnTtttGgggNnNnNnNnNnNnNnNn	16= 4W
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnNnNnNnNnTtttNnGgggNnNnNnNnNnNnLll	15= 6W
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnNnNnTtttNnNnGgggNnNnNnNnNnNnNn	14= 8W
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnNnNnNnTtttNnNnNnGgggNnNnNnNnNnLll	13=10W
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnNnTtttNnNnNnNnGgggNnNnNnNnNnNn	12=12W
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnNnNnTtttNnNnNnNnNnGgggNnNnNnNnLll	11=14W
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnTtttNnNnNnNnNnNnGgggNnNnNnNnNn	10=16W
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnNnTtttNnNnNnNnNnNnNnGgggNnNnNnLll	 9=18W
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnTtttNnNnNnNnNnNnNnNnGgggNnNnNnNn	 8=20W
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnTtttNnNnNnNnNnNnNnNnNnGgggNnNnLll	 7=22W
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnTtttNnNnNnNnNnNnNnNnNnNnGgggNnNnNn	 6=24W
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnTtttNnNnNnNnNnNnNnNnNnNnNnGgggNnLll	 5=26W
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnTtttNnNnNnNnNnNnNnNnNnNnNnNnGgggNnNn	 4=28W
+; DdBbbNnNnNnNnNnNnNnNnNnLl lNnTtttNnNnNnNnNnNnNnNnNnNnNnNnNnGgggLll	 3=30W
+; DdBbbNnNnNnNnNnNnNnNnNnNn NnTtttNnNnNnNnNnNnNnNnNnNnNnNnNnNnGgggNn	 2=32W
+
+; nLllDdBbbNnNnNnNnNnNnLllN nTtttNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnGgggN     NOPE
+; DdBbbNnNnNnNnNnNnNnNnNnNn TtttNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnGggg	 0=36W
+
+
+
+	;===========================================
+	; c64_kill_time
+	;===========================================
+	; do nothing but blink cursor
+	; 192 * 65 = 12480 cycles
+	;               -6 jsr in
+	;		-6 rts back
+	;           ========
+	;            12468
+c64_kill_time:
+
+	; Try X=17 Y=137 cycles=12468
+
+	ldy     #137							; 2
+loopc6a:ldx	#17							; 2
+loopc6b:dex								; 2
+	bne	loopc6b							; 2nt/3
+	dey								; 2
+	bne	loopc6a							; 2nt/3
+
+
+	rts								; 6
+
+
+c64_split_screen:
 
 ;=========================
 ; Top third
@@ -236,153 +425,4 @@ c64_loop_3_end:
 								;	  5
 
 									; -1
-
-
-	;======================================================
-	; We have 4550 cycles in the vblank, use them wisely
-	;======================================================
-	; do_nothing should be      4550
-	;			     -10 keyboard handling
-	;			      +1 leftover from main screen
-	;			     -15
-	;			     -12
-	;			     -46
-	;			 =  4468
-
-
-	; run the 2Hz counter, overflow at 30 60Hz frames
-	clc								; 2
-	lda	BOTTOM							; 3
-	adc	#1							; 2
-	sta	BOTTOM							; 3
-	cmp	#30							; 2
-	bne	not_thirty						; 3
-								;===========
-								;	15
-thirty:
-									; -1
-	lda	#0							; 2
-	sta	BOTTOM							; 3
-	inc	TOP							; 5
-	jmp	done_thirty						; 3
-								;===========
-								;	 12
-
-not_thirty:
-	lda	TOP							; 3
-	lda	TOP							; 3
-	lda	TOP							; 3
-	lda	TOP							; 3
-								;===========
-								;	 12
-
-done_thirty:
-	; handle the cursor
-	; FIXME: not aligned well.  Do we care?
-
-	lda	TOP							; 3
-	and	#$1							; 2
-	beq	cursor_off						; 3
-								;============
-								;         8
-cursor_on:
-									; -1
-	; it's lSB first
-	; blue is 6
-	; 1 1111110
-	lda	#$fE	; blue						; 2
-	sta	$3300	; 52						; 4
-	sta	$3B00	; 54						; 4
-	sta	$2380	; 56						; 4
-	sta	$2B80	; 58						; 4
-	; purple is 2
-	; 0 1111110
-	lda	#$7E	; purple					; 2
-	sta	$3700	; 53						; 4
-	sta	$3F00	; 55						; 4
-	sta	$2780	; 57						; 4
-	sta	$2F80	; 59						; 4
-
-	jmp	cursor_done						; 3
-								;============
-								;	 38
-cursor_off:
-	; blue is 6
-	; 1 1010101
-	lda	#$d5	; blue						; 2
-	sta	$3300	; 52						; 4
-	sta	$3B00	; 54						; 4
-	sta	$2380	; 56						; 4
-	sta	$2B80	; 58						; 4
-	; purple is 2
-	; 0 1010101
-	lda	#$55	; purple					; 2
-	sta	$3700	; 53						; 4
-	sta	$3F00	; 55						; 4
-	sta	$2780	; 57						; 4
-	sta	$2F80	; 59						; 4
-	nop								; 2
-								;============
-								;	 38
-
-
-cursor_done:
-
-	; Try X=17 Y=49 cycles=4460 R8
-	nop
-	lda	$0
-	lda	$0
-
-	ldy     #49							; 2
-loopcoE:ldx	#17							; 2
-loopcoF:dex								; 2
-	bne	loopcoF							; 2nt/3
-	dey								; 2
-	bne	loopcoE							; 2nt/3
-
-
-	lda	KEYPRESS				; 4
-	bpl	no_c64_keypress				; 3
-	jmp	done_c64
-no_c64_keypress:
-
-	jmp	c64_split				; 3
-
-done_c64:
-	rts						; 6
-
-
-
-
-	;===================
-	; c64 graphic, load at $2000-$4000 to start with
-	;===================
-;c64:
-;.incbin "c64.img"
-;c64_end:
-
-
-;=========================================================
-; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNn	Nothing
-; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnNnNnNnTtttGgggNnNnNnNnNnNnNnNn	16= 4W
-; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnNnNnNnNnTtttNnGgggNnNnNnNnNnNnLll	15= 6W
-; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnNnNnTtttNnNnGgggNnNnNnNnNnNnNn	14= 8W
-; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnNnNnNnTtttNnNnNnGgggNnNnNnNnNnLll	13=10W
-; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnNnTtttNnNnNnNnGgggNnNnNnNnNnNn	12=12W
-; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnNnNnTtttNnNnNnNnNnGgggNnNnNnNnLll	11=14W
-; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnNnTtttNnNnNnNnNnNnGgggNnNnNnNnNn	10=16W
-; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnNnTtttNnNnNnNnNnNnNnGgggNnNnNnLll	 9=18W
-; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnNnTtttNnNnNnNnNnNnNnNnGgggNnNnNnNn	 8=20W
-; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnNnTtttNnNnNnNnNnNnNnNnNnGgggNnNnLll	 7=22W
-; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnNnTtttNnNnNnNnNnNnNnNnNnNnGgggNnNnNn	 6=24W
-; DdBbbNnNnNnNnNnNnNnNnNnLl lNnNnTtttNnNnNnNnNnNnNnNnNnNnNnGgggNnLll	 5=26W
-; DdBbbNnNnNnNnNnNnNnNnNnNn NnNnTtttNnNnNnNnNnNnNnNnNnNnNnNnGgggNnNn	 4=28W
-; DdBbbNnNnNnNnNnNnNnNnNnLl lNnTtttNnNnNnNnNnNnNnNnNnNnNnNnNnGgggLll	 3=30W
-; DdBbbNnNnNnNnNnNnNnNnNnNn NnTtttNnNnNnNnNnNnNnNnNnNnNnNnNnNnGgggNn	 2=32W
-
-; nLllDdBbbNnNnNnNnNnNnLllN nTtttNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnGgggN     NOPE
-; DdBbbNnNnNnNnNnNnNnNnNnNn TtttNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnGggg	 0=36W
-
-
-
-
+	rts
