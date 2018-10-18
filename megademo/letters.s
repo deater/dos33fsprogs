@@ -18,13 +18,60 @@ letters_bm:
 	.byte	3,16,"????????",150
 	.byte	1,16," ",128
 	.byte	3,16," ",128
-	.byte	1,16,"BMP2DHR",128
-	.byte	3,14,"BILL BUCKELS",150
-	.byte	1,16," ",128
-	.byte	3,14," ",128
 	.byte	1,16,"LZ4+DISK",128
 	.byte	3,17,"QKUMBA",150
 	.byte	1,16," ",128
 	.byte	3,17," "
 	.byte	255
 
+fw_letters:
+;	.byte	22,28,
+	.byte		  " ",128
+	.byte   22+128,25," ",128
+
+	.byte	23,25,    " ",128
+	.byte	23+128,25," ",128
+
+	.byte	22,26,    "FIREWORKS",128
+	.byte	22+128,26,"FIREWORKS",128
+
+	.byte	23,26,    "FOZZTEXX",128
+	.byte	23+128,26,"FOZZTEXX",198
+
+	.byte   22,26,    " ",128
+	.byte   22+128,26," ",128
+
+	.byte	23,26,    " ",128
+	.byte	23+128,26," ",128
+
+	.byte	22,26,    "BMP2DHR",128
+	.byte	22+128,26,"BMP2DHR",128
+
+	.byte	23,26,    "B. BUCKELS",128
+	.byte	23+128,26,"B. BUCKELS",198
+
+	.byte   22,26,    " ",128
+	.byte   22+128,26," ",128
+
+	.byte	23,26,    " ",128
+	.byte	23+128,26," ",128
+
+	.byte	22,26,    "UTOPIA",128
+	.byte	22+128,26,"UTOPIA",128
+
+	.byte	23,26,    "BBS",128
+	.byte	23+128,26,"BBS",198
+
+	.byte   22,26,    " ",128
+	.byte   22+128,26," ",128
+
+	.byte	23,26,    " ",128
+	.byte	23+128,26," ",128
+
+	.byte	22,26,"A VMW",128
+	.byte	22+128,26,"A VMW",128
+
+	.byte	23,26,"PRODUCTION",128
+	.byte	23+128,26,"PRODUCTION"
+
+	.byte	255

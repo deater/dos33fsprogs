@@ -316,7 +316,7 @@ bm_noflo:
 bm_check_done:
 	; finish after so many cycles
 	lda	FRAMEH							; 3
-	cmp	#38							; 2
+	cmp	#30							; 2
 	beq	bm_done							; 3
 									; -1
 

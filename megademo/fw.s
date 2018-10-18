@@ -842,42 +842,5 @@ stars:	; even x so they are purple
 	.byte 240,124,  94,125,  12, 22, 216,116
 
 
-fw_letters:
-;	.byte	22,28,
-	.byte		  " ",128
-	.byte   22+128,25," ",128
-
-	.byte	23,25,    " ",128
-	.byte	23+128,25," ",128
-
-	.byte	22,26,    "CODE BY",128
-	.byte	22+128,26,"CODE BY",128
-
-	.byte	23,26,    "DEATER",128
-	.byte	23+128,26,"DEATER",198
-
-	.byte   22,26,    " ",128
-	.byte   22+128,26," ",128
-
-	.byte	23,26,    " ",128
-	.byte	23+128,26," ",128
-
-	.byte	22,26,    "FIREWORKS",128
-	.byte	22+128,26,"FIREWORKS",128
-
-	.byte	23,26,    "FOZZTEXX",128
-	.byte	23+128,26,"FOZZTEXX",198
-
-	.byte   22,26,    " ",128
-	.byte   22+128,26," ",128
-
-	.byte	23,26,    " ",128
-	.byte	23+128,26," ",128
-
-	.byte	22,26,"A VMW",128
-	.byte	22+128,26,"A VMW",128
-
-	.byte	23,26,"PRODUCTION",128
-	.byte	23+128,26,"PRODUCTION"
-
-	.byte	255
+; moved to letters.s
+; fw_letters:
