@@ -11,6 +11,81 @@ starring_people:
 	bit	KEYRESET
 
 	;===================
+	; init vars
+
+	lda	#0
+	sta	DRAW_PAGE
+
+
+	;=============================
+	; Load graphic hgr
+
+sp_smc1:
+	lda	#<fs_hgr
+	sta	LZ4_SRC
+sp_smc2:
+	lda	#>fs_hgr
+	sta	LZ4_SRC+1
+
+sp_smc3:
+	lda	#<(fs_hgr_end-8)	; skip checksum at end
+	sta	LZ4_END
+sp_smc4:
+	lda	#>(fs_hgr_end-8)	; skip checksum at end
+	sta	LZ4_END+1
+
+	lda	#<$2000
+	sta	LZ4_DST
+	lda	#>$2000
+	sta	LZ4_DST+1
+
+	jsr	lz4_decode
+
+
+	;=============================
+	; Load graphic page0
+
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL                    ; load image to $c00
+
+
+	; Load overwrite version
+	lda	#<fs
+	sta	GBASL
+	lda	#>fs
+	sta	GBASH
+	jsr	load_rle_gr
+
+	lda	#4
+	sta	DRAW_PAGE
+
+	jsr	gr_copy_to_current	; copy to page1
+
+	; GR part
+	bit	PAGE1
+	bit	LORES							; 4
+	bit	SET_GR							; 4
+	bit	FULLGR							; 4
+
+	;=============================
+	; Load graphic page1
+
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL                    ; load image to $c00
+
+sp_smc5:
+	lda	#<fs
+	sta	GBASL
+sp_smc6:
+	lda	#>fs
+	sta	GBASH
+	jsr	load_rle_gr
+
+	;===================
 	; copy to page3
 
 	lda	#0
@@ -141,151 +216,65 @@ sp_start_over:
 
 
 setup_people_fs:
-
-
-	;===================
-	; init vars
-
-	lda	#0
-	sta	DRAW_PAGE
-
-
-	;=============================
-	; Load graphic hgr
-
 	lda	#<fs_hgr
-	sta	LZ4_SRC
+	sta	sp_smc1+1
+
 	lda	#>fs_hgr
-	sta	LZ4_SRC+1
+	sta	sp_smc2+1
 
 	lda	#<(fs_hgr_end-8)	; skip checksum at end
-	sta	LZ4_END
+	sta	sp_smc3+1
 	lda	#>(fs_hgr_end-8)	; skip checksum at end
-	sta	LZ4_END+1
-
-	lda	#<$2000
-	sta	LZ4_DST
-	lda	#>$2000
-	sta	LZ4_DST+1
-
-	jsr	lz4_decode
-
-
-	;=============================
-	; Load graphic page0
-
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image to $c00
-
+	sta	sp_smc4+1
 
 	lda	#<fs
-	sta	GBASL
+	sta	sp_smc5+1
 	lda	#>fs
-	sta	GBASH
-	jsr	load_rle_gr
-
-	lda	#4
-	sta	DRAW_PAGE
-
-	jsr	gr_copy_to_current	; copy to page1
-
-	; GR part
-	bit	PAGE1
-	bit	LORES							; 4
-	bit	SET_GR							; 4
-	bit	FULLGR							; 4
-
-	;=============================
-	; Load graphic page1
-
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image to $c00
-
-	lda	#<fs
-	sta	GBASL
-	lda	#>fs
-	sta	GBASH
-	jsr	load_rle_gr
+	sta	sp_smc6+1
 
 	rts
 
 setup_people_deater:
 
-
-	;===================
-	; init vars
-
-	lda	#0
-	sta	DRAW_PAGE
-
-
-	;=============================
-	; Load graphic hgr
-
 	lda	#<deater_hgr
-	sta	LZ4_SRC
+	sta	sp_smc1+1
+
 	lda	#>deater_hgr
-	sta	LZ4_SRC+1
+	sta	sp_smc2+1
 
 	lda	#<(deater_hgr_end-8)	; skip checksum at end
-	sta	LZ4_END
+	sta	sp_smc3+1
 	lda	#>(deater_hgr_end-8)	; skip checksum at end
-	sta	LZ4_END+1
-
-	lda	#<$2000
-	sta	LZ4_DST
-	lda	#>$2000
-	sta	LZ4_DST+1
-
-	jsr	lz4_decode
-
-
-	;=============================
-	; Load graphic page0
-
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image to $c00
-
+	sta	sp_smc4+1
 
 	lda	#<deater
-	sta	GBASL
+	sta	sp_smc5+1
 	lda	#>deater
-	sta	GBASH
-	jsr	load_rle_gr
-
-	lda	#4
-	sta	DRAW_PAGE
-
-	jsr	gr_copy_to_current	; copy to page1
-
-	; GR part
-	bit	PAGE1
-	bit	LORES							; 4
-	bit	SET_GR							; 4
-	bit	FULLGR							; 4
-
-	;=============================
-	; Load graphic page1
-
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image to $c00
-
-	lda	#<deater
-	sta	GBASL
-	lda	#>deater
-	sta	GBASH
-	jsr	load_rle_gr
+	sta	sp_smc6+1
 
 	rts
 
+.if 0
+setup_people_lg:
+
+	lda	#<lg_hgr
+	sta	sp_smc1+1
+
+	lda	#>lg_hgr
+	sta	sp_smc2+1
+
+	lda	#<(lg_hgr_end-8)	; skip checksum at end
+	sta	sp_smc3+1
+	lda	#>(lg_hgr_end-8)	; skip checksum at end
+	sta	sp_smc4+1
+
+	lda	#<lg
+	sta	sp_smc5+1
+	lda	#>lg
+	sta	sp_smc6+1
+
+	rts
+.endif
 
 
 

@@ -28,7 +28,7 @@ apple_iie:
 	jsr	HOME
 
 
-	jsr	starring
+;	jsr	starring
 
 ;	jsr	arriving_there
 
@@ -47,6 +47,8 @@ apple_iie:
 	jsr	starring_people
 	jsr	setup_people_deater
 	jsr	starring_people
+;	jsr	setup_people_lg
+;	jsr	starring_people
 
 	; E-mail arriving
 	jsr	check_email
@@ -139,6 +141,7 @@ loop_forever:
 .include "starring2.inc"
 .include "fs.inc"
 .include "deater.inc"
+;.include "lg.inc"
 
 ; leaving
 .include "leaving.inc"
@@ -166,6 +169,9 @@ fs_hgr_end:
 deater_hgr:
 .incbin "DEATER_HGRC.BIN.lz4",11
 deater_hgr_end:
+;lg_hgr:
+;.incbin "LG_HGRC.BIN.lz4",11
+;lg_hgr_end:
 
 ; bird mountain
 katahdin:
@@ -176,6 +182,4 @@ katahdin_end:
 sb_background_hgr:
 .incbin "SB_BACKGROUNDC.BIN.lz4",11
 sb_background_hgr_end:
-
-
 
