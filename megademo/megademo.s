@@ -137,6 +137,8 @@ loop_forever:
 ; starring
 .include "starring1.inc"
 .include "starring2.inc"
+.include "fs.inc"
+.include "deater.inc"
 
 ; leaving
 .include "leaving.inc"
@@ -151,12 +153,19 @@ loop_forever:
 ;============================
 ; Include Hires Graphics
 ; No Alignment Needed
+;   FIXME: we can save 8 bytes per file by stripping checksums off end
 ;============================
 
 ; starring
 starring3:
 .incbin "starring3.img.lz4",11
 starring3_end:
+fs_hgr:
+.incbin "FS_HGRC.BIN.lz4",11
+fs_hgr_end:
+deater_hgr:
+.incbin "DEATER_HGRC.BIN.lz4",11
+deater_hgr_end:
 
 ; bird mountain
 katahdin:
@@ -167,3 +176,6 @@ katahdin_end:
 sb_background_hgr:
 .incbin "SB_BACKGROUNDC.BIN.lz4",11
 sb_background_hgr_end:
+
+
+

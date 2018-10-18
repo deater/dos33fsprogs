@@ -292,12 +292,12 @@ setup_people_deater:
 
 
 
-.include "fs.inc"
-.include "deater.inc"
-fs_hgr:
-.incbin "FS_HGRC.BIN.lz4",11
-fs_hgr_end:
-deater_hgr:
-.incbin "DEATER_HGRC.BIN.lz4",11
-deater_hgr_end:
+;.include "fs.inc"
+;.include "deater.inc"
+;fs_hgr:
+;.incbin "FS_HGRC.BIN.lz4",11
+;fs_hgr_end:
+;deater_hgr:
+;.incbin "DEATER_HGRC.BIN.lz4",11
+;deater_hgr_end:
 
