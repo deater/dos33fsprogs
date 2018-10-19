@@ -28,6 +28,8 @@ apple_iie:
 	jsr	HOME
 
 
+	jsr	waterfall
+
 ;	jsr	starring
 
 ;	jsr	arriving_there

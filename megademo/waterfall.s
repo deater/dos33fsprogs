@@ -30,9 +30,12 @@ waterfall:
 	sta	FRAME
 	sta	OLD_XPOS
 
+	lda	#1
+	sta	XPOS
+
 	lda	#4
 	sta	DRAW_PAGE
-	sta	XPOS
+
 
 	;=============================
 	; Load foreground to graphic page1 (apple page2)
@@ -147,29 +150,34 @@ vblank:
 	;======================================================
 	; do_nothing should be         4550
 	;				 -3 letfover from HBLANK code
-	;				** -9
+	;				************ -9 ??
 	;				-49 check for keypress
-	;			      -2252 copy screen
+	;			       -578 copy screen
 	;			      -2231 draw sprite
 	;			=============
-	;			      15 cycles
+	;			      1689 cycles
 
-	; 15 cycles
-	inc	YPOS		; 5
-	nop			; 2
-	nop			; 2
-	lda	YPOS		; 3
-	lda	YPOS		; 3
+	; Try X=36 Y=9 cycles=1675 R5
+	; Try X=41 Y=8 cycles=1689
 
+;	nop
+;	lda	$0
+
+	ldy	#8							; 2
+wfloopY:ldx	#41							; 2
+wfloopZ:dex								; 2
+        bne	wfloopZ							; 2nt/3
+        dey								; 2
+	bne	wfloopY							; 2nt/3
 
 
 	;=========================
 	; Clear background
 	;=========================
 
-	jsr	gr_copy_row22					; 6+ 2246
-							;=========
-							;	2252
+	jsr	gr_copy_row22					; 6+ 572
+								;=========
+								;	578
 
 
 	;==========================
