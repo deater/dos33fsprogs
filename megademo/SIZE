@@ -17,6 +17,8 @@
 	30319	-- messing around with the "starring" routine
 	30265   -- moving starring pictures to megademo.s
 	30009	-- starring people but with LG removed for now
+	28217	-- optimize the erase routine in waterfall
+	28097	-- move takeoff graphics to megademo
 
 Graphics sizes:
 	(LG lores=300B)

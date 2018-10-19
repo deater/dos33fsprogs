@@ -27,6 +27,7 @@ apple_iie:
 	;===================
 	jsr	HOME
 
+	jsr	rocket_takeoff
 
 
 ;	jsr	starring
@@ -151,6 +152,9 @@ loop_forever:
 .include "waterfall_page1.inc"
 .include "waterfall_page2.inc"
 
+; takeoff
+.include "takeoff.inc"
+
 ; arrival
 .include "arrival.inc"
 
@@ -179,8 +183,16 @@ katahdin:
 .incbin "KATC.BIN.lz4",11               ; skip the header
 katahdin_end:
 
+; takeoff
+takeoff_hgr:
+.incbin "takeoff.img.lz4",11
+takeoff_hgr_end:
+
 ; spacebars
 sb_background_hgr:
 .incbin "SB_BACKGROUNDC.BIN.lz4",11
 sb_background_hgr_end:
+
+
+
 

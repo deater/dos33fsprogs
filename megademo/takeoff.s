@@ -192,9 +192,7 @@ to_start_over:
 	rts						; 6
 
 
-.include "takeoff.inc"
-takeoff_hgr:
-.incbin "takeoff.img.lz4",11
-takeoff_hgr_end:
-
-
+;.include "takeoff.inc"
+;takeoff_hgr:
+;.incbin "takeoff.img.lz4",11
+;takeoff_hgr_end:
