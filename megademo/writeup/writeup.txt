@@ -1,0 +1,181 @@
+Notes on the MEGADEMO
+
+
+Finding HBLANK/VBLANK on the Apple II:
+
+	To do fancy mode switching, we need to switch graphic modes
+	(by writing to a soft-switch address) at the exact time we want
+	to switch modes.
+	Finding this is difficult on the original Apple II.
+	Unlike other machines,
+	there is no register or interrupt that tells where the scan
+	currently is.  (Later IIe, IIc and IIgs models do add such a 
+	register, but each is incompatible with the others)
+
+	The way this is found is to use a weird quirk of the Apple II:
+	the "floating bus".  If you read from a softswitch that doesn't
+	drive the bus, you get back the last value written due to the
+	residual capacitance on the bus lines.  The Apple II writes the
+	display each half cycle, so the values on this bus are the last
+	written video display value.
+	By drawing a pattern on the screen you can repeatedly read
+	this floating bus and figure out where on the screen you are,
+	and then calculate from there.
+
+	This is a well known feature of the bus (it was described
+	in the early 80s by at various times Bishop, Sather and Lancaster)
+	but was not widely used, partly because it was a pain to do,
+	but also because Apple made no guarantees this accidental
+	behavrior would continue to be available.
+
+Cycle counting on the 6502:
+
+	Cycle counting on an old 8-bit chip is a lot easier than on
+	modern hardware, as the cycle counts are mostly deterministic
+	(unlike a modern system that has out-of-order, caches, etc).
+
+	There are some issues that can get you:
+	* Conditional branches, taken take 3 cycles, not-taken 2 cycles.
+	* Some load/store instructions can take an extra cycle if the
+	  indexing crosses a 256-byte boundary.  This means your code
+	  might suddenly take longer if it ends up misaligned.
+        * Branches also take longer if they cross a 256-byte page boundary.
+	* The 65C02 chip found in newer Apple IIs have some timing
+	  differences from the NMOS 6502.  One that is easy to get
+	  caught on is using JMP indirect (used for jump tables).
+          There is a workaround for jump tables by pushing the value
+          to be jumped onto the stack and then doing a "rts" return
+	  instruction to jump to it.
+
+
+Notes on each screen:
+
++ Opening C64 screen
+
+	HGR/Text split.  The curtain opening effect isn't as great as
+	it could be.  The fastest you can switch modes on the II is
+	4 cycles, and in 4 cycles 28 pixels are output in hiresmode
+	(4 text chars wide).
+
++ Falling Apple II
+	This is done in the 40x96 forced lores mode, where it switches
+	between the two lo-res pages halfway through to double the
+	vertical resolution.
+
+	This was supposed to scroll into place but that got sidetracked,
+	especially as it's not possible to copy a full 1k lores screen
+	in 60Hz.
+
++ Incoming Message
+	This flips between page1/page2 again, but in text mode which allows
+	faking some lowercase looking characters on the original Apple II
+	which has no lowercase support.  Things like lowercase O can be
+	made with the bottom half of an 8.  Unfortunately the split to
+	get "o" makes it not possible to get things like umlauts using
+	".
+
+	One tricky thing here is between the Apple II and the IIe
+	they changed how font generation worked and all the characters
+	were shifted up one vertical line.  To fix that the demo
+	detects the newer hardware and self-modifies the code to work
+	on both.
+
+	This screen also does a Text/lores split
+
++ Starring
+	The first part is flipping between Lores Page1/Page2 and Hires Page1
+	to create a cheap animated effect.
+
+	In theory the hires colors are a subset of lores so you can make
+	exact matches, but in practice the generation in those modes is
+	off a bit so the text shifts a bit.
+	In theory you could add in Hires Page2 as well to get 4 frames,
+	but that would take another 8k of memory which we can't afford.
+
+	The timing code for this is the only place where I actually do
+	the trick of jumping into the middle of a BIT instruction 
+	which gets interpreted as a harmless nop for timing reasons.
+
++ Cast of characters
+	This is a Lores/Hires split, with some fancy copying from offscreen
+	memory to do the name flip.
+
++ Leaving
+	This has a split of text on top, lores on bottom.
+
+	These animated scenes are actually harder than some of the others.
+	Any time you have if/then/else type setups, you have to make
+	sure both branches (then vs else) take the *exact* same number
+	of cycles, and that's difficult to do.
+	So little scenes with a lot of movement in complex directions
+	quickly become a pain.
+
++ Bird in front of Mountain
+
+	This is a text/hires/lores three-way split with some animation
+	of sprites going on.
+	The sprites take different amounts of time to draw depending
+	on the pattern so the code has to account for this.
+
+	The text scrolling is actually fairly easy to do, no real
+	tricks with that.
+
++ Waterfall
+
+	This effect does some tricky lores 1/2 shifting ot where
+	the split happens to create an automated water effect, and
+	there are gaps which give a fake transparency effect when
+	the sprite walks behind the waterfall.
+
+	This code wasn't too awful to write, but making it small
+	using self-modifying code.
+
++ Rocket Takeoff
+
+	HGR/GR split, though it's subtle, but notice how the top
+	of the rocket's tail has a smooth diagonal.
+
+	Again scripting these behavios cycle exact is a pain with
+	state-machines, jump-tables, and self modifying code at times.
+
++ Mode7 flying
+
+	This is a SNES-style mode7 pseudo-3d effect.  If you're 
+	interested in how this works see my PoC||GTFO 0x18 article.
+
++ Saturn flyby
+
+	This is a TEXT/GR/HGR, but the GR/HGR part is mid-screen to
+	give sort of a tiered look.
+	It is tricky to do this on the fly.
+	The original goal was to have the rasterbars coming in
+	be 40x96 mode giving a much more impressive look, but it turns
+	out switching HIRES to LORES and also PAGE0 to PAGE1 at the
+	same time takes too many cycles.
+	It might still be possible to do this effect if the HGR picture
+	was mirrored in both PAGE1 and PAGE2, but we are using PAGE2 for
+	code and don't have the room to do this.
+
++ Arrival
+	Very similar to the leaving.
+	There are more effects I'd like to do but ran out of time.
+
++ Fireworks
+	This is a HIRES/LORES split, but with the bottom of the screen
+	doing interlaced every-other line LORES to give the gradient
+	effect.
+	The code is based on a BASIC program by Fozztexx which was modified
+	to have custom random routine, and also a deterministic HPLOT
+	(hi-res plot) routine.  The original code used HPLOT TO (to draw
+	lines in some cases) but making that deterministic was too much
+	of a hassle and was left off.
+	The interleaved text scrolling effect looks nice and came more
+	or less for free (well, for twice the string data).
+
+
+Other notes:
+	Hires apple graphics conversion uses the BMP2DHR util by
+	Bill Buckels which has knowledge of the weird Apple II hires
+	modes so does a better job than a regular paint program would.
+
+
