@@ -3,13 +3,10 @@
 ; Simple HGR/GR split
 
 
-; STATE1 = RIDE IN ON BIRD
-; STATE2 = OFF BIRD
-; STATE3 = BIRD RUNS AWAY
-; STATE4 = WALK INTO SHIP
-; STATE5 = PAUSE
-; STATE6 = SMOKE OUT BACK
-; STATE7 = ROTATING FLAME SPRITES + TREES MOVING/SPEED UP
+; STATE0 = RIDE IN ON BIRD
+; STATE2 = BIRD RUNS / WALK INTO SHIP
+; STATE4 = PAUSE / SMOKE OUT BACK
+; STATE6 = ROTATING / FLAME SPRITES + TREES MOVING/SPEED UP
 ;          also horizon drop away?
 
 
@@ -30,7 +27,10 @@ setup_rocket:
 
 	lda	#0
 	sta	DRAW_PAGE
-
+	sta	FRAME
+	sta	FRAMEH
+	sta	XPOS
+	sta	STATE
 
 	;=============================
 	; Load graphic hgr
@@ -120,7 +120,7 @@ toloopB:dex								; 2
 
 
 	;================================================
-	; Starring People Loop
+	; Takeoff Loop
 	;================================================
 	; each scan line 65 cycles
 	;       1 cycle each byte (40cycles) + 25 for horizontal
@@ -148,6 +148,16 @@ toloop9:dex								; 2
 	dey								; 2
 	bne	toloop8							; 2nt/3
 
+
+
+	;===========================
+	; Draw Lores bottom
+	; 144 * 65 = 9360
+	;	       -4 swith to LORES
+	;====================
+	;	     9356
+
+
 	bit	LORES			; 4
 
 	; Try X=10 Y=167 cycles=9353 R3
@@ -162,32 +172,50 @@ toloop7:dex								; 2
 	bne	toloop6							; 2nt/3
 
 
-	;======================================================
-	; We have 4550 cycles in the vblank, use them wisely
-	;======================================================
+;======================================================
+; We have 4550 cycles in the vblank, use them wisely
+;======================================================
 
 	; do_nothing should be      4550
+	;			     -23 state jump
+	;			   -3589 state
 	;			     -10 keypress
 	;			===========
-	;			    4540
+	;			     928
 
-	; Try X=9 Y=89 cycles=4540
+	; Try X=13 Y=13 cycles=924 R4
 
-	ldy	#89							; 2
-toloop1:ldx	#9							; 2
+	nop
+	nop
+
+	ldy	#13							; 2
+toloop1:ldx	#13							; 2
 toloop2:dex								; 2
 	bne	toloop2							; 2nt/3
 	dey								; 2
 	bne	toloop1							; 2nt/3
 
+	; Set up jump table that runs same speed on 6502 and 65c02
+	ldy     STATE						; 3
+	lda	to_jump_table+1,y				; 4
+	pha							; 3
+	lda	to_jump_table,y					; 4
+	pha							; 3
+	rts							; 6
+                                                        ;=============
+                                                        ;        23
+
+to_done_state:
+
+
 	lda	KEYPRESS				; 4
 	bpl	to_no_keypress				; 3
-	jmp	to_start_over
+	jmp	to_exit
 to_no_keypress:
 
 	jmp	to_begin_loop				; 3
 
-to_start_over:
+to_exit:
 	bit	KEYRESET	; clear keypress	; 4
 	rts						; 6
 
@@ -196,3 +224,96 @@ to_start_over:
 ;takeoff_hgr:
 ;.incbin "takeoff.img.lz4",11
 ;takeoff_hgr_end:
+
+to_jump_table:
+	.word   (to_state0-1)
+	.word   (to_state2-1)
+	.word   (to_state0-1)
+	.word   (to_state0-1)
+
+
+
+
+	;============================
+	; state0: Draw+move Bird+Rider
+	;============================
+	; 13 + 2208 + 1365 + 3 = 3589
+to_state0:
+
+	lda     #20					; 2
+	sta	YPOS					; 3
+
+	lda	FRAMEH					; 3
+	and	#$1					; 2
+	beq	to_bwalk				; 3
+						;===========
+						;        13
+
+to_bstand:
+	; draw bird/rider standing                              ; -1
+	lda	#>bird_rider_stand_right                ; 2
+	sta	INH                                     ; 3
+	lda	#<bird_rider_stand_right                ; 2
+	sta	INL                                     ; 3
+	jsr	put_sprite                              ; 6
+
+	jmp	to_done_bwalk                           ; 3
+                                                        ;=========
+                                                        ; 18 + 2190 = 2208
+
+
+to_bwalk:
+	; draw bird/rider walking
+	lda     #>bird_rider_walk_right                 ; 2
+	sta     INH                                     ; 3
+	lda     #<bird_rider_walk_right                 ; 2
+	sta     INL                                     ; 3
+	jsr     put_sprite                              ; 6
+
+	nop						; 2
+	inc     TFV_Y					; 5
+	inc     TFV_Y					; 5
+	inc     TFV_Y					; 5
+	                                                ;=========
+                                                        ; 33 + 2175 = 2208
+
+to_done_bwalk:
+        ; delay
+
+        ; Try X=67 Y=4 cycles=1365
+
+        ldy     #4                                                      ; 2
+toloopV:ldx     #67                                                     ; 2
+toloopW:dex                                                             ; 2
+        bne     toloopW                                                 ; 2nt/3
+        dey                                                             ; 2
+        bne     toloopV                                                 ; 2nt/3
+
+	jmp	to_done_state						; 3
+
+
+
+	;============================
+	; state2: Do nothing
+	;============================
+	; 3586 + 3 = 3589
+to_state2:
+
+        ; delay
+
+	; Try X=142 Y=5 cycles=3581 R5
+	nop
+	lda	$0
+
+	ldy	#5							; 2
+toloopZ:ldx	#142							; 2
+toloopY:dex                                                             ; 2
+	bne	toloopY                                                 ; 2nt/3
+	dey                                                             ; 2
+	bne	toloopZ							; 2nt/3
+
+	jmp	to_done_state						; 3
+
+
+
+
