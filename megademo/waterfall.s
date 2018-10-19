@@ -3,12 +3,8 @@
 ; by deater (Vince Weaver) <vince@deater.net>
 
 ; Zero Page
-;FRAMEBUFFER	= $00	; $00 - $0F
-;YPOS		= $10
-YPOS_SIN	= $11
 BIRD_STATE	= $E0
 BIRD_DIR	= $E1
-OLD_XPOS	= $F4
 
 ; location we don't care about
 
@@ -28,7 +24,7 @@ waterfall:
 	sta	BIRD_DIR
 	sta	BIRD_STATE
 	sta	FRAME
-	sta	OLD_XPOS
+	sta	FRAMEH
 
 	lda	#1
 	sta	XPOS
@@ -150,25 +146,55 @@ vblank:
 	;======================================================
 	; do_nothing should be         4550
 	;				 -3 letfover from HBLANK code
-	;				************ -9 ??
+	;				-20 move loop
+	;				 -7 see if done
 	;				-49 check for keypress
 	;			       -578 copy screen
 	;			      -2231 draw sprite
 	;			=============
-	;			      1689 cycles
+	;			      1662 cycles
 
-	; Try X=36 Y=9 cycles=1675 R5
-	; Try X=41 Y=8 cycles=1689
+	; Try X=29 Y=11 cycles=1662
 
-;	nop
-;	lda	$0
 
-	ldy	#8							; 2
-wfloopY:ldx	#41							; 2
+
+	ldy	#11							; 2
+wfloopY:ldx	#29							; 2
 wfloopZ:dex								; 2
         bne	wfloopZ							; 2nt/3
         dey								; 2
 	bne	wfloopY							; 2nt/3
+
+
+	; Move loop = 13
+wf_move_loop:
+	lda	FRAME							; 3
+	and	#$07							; 2
+	cmp	#4							; 2
+	beq	wf_move							; 3
+
+									; -1
+	lda	$0							; 3
+	lda	$0
+	nop
+	jmp	wf_see_if_done						; 3
+
+wf_move:
+	inc	XPOS							; 5
+	inc	BIRD_STATE						; 5
+								;============
+								;         20
+
+
+wf_see_if_done:
+	lda	XPOS							; 3
+	cmp	#34							; 2
+	beq	wf_exit							; 3
+									; -1
+								;============
+								;          7
+
+
 
 
 	;=========================
@@ -306,7 +332,12 @@ is_it_left:
 							; -1
 	cmp	#0		; space?		; 2
 	bne	not_space				; 3
+
+
+wf_exit:
+	bit	KEYRESET
 	rts
+
 ;	nop						; 2
 ;	lda	YPOS		; 3-cycle nop		; 3
 not_space:
