@@ -249,6 +249,7 @@ to_state0:
 						;===========
 						;        13
 
+
 to_bstand:
 	; draw bird/rider standing                              ; -1
 	lda	#>bird_rider_stand_right                ; 2
@@ -264,30 +265,34 @@ to_bstand:
 
 to_bwalk:
 	; draw bird/rider walking
-	lda     #>bird_rider_walk_right                 ; 2
-	sta     INH                                     ; 3
-	lda     #<bird_rider_walk_right                 ; 2
-	sta     INL                                     ; 3
-	jsr     put_sprite                              ; 6
+	lda     #>bird_rider_walk_right			; 2
+	sta     INH					; 3
+	lda     #<bird_rider_walk_right			; 2
+	sta     INL					; 3
+	jsr     put_sprite				; 6
 
 	nop						; 2
-	inc     TFV_Y					; 5
-	inc     TFV_Y					; 5
-	inc     TFV_Y					; 5
+	lda	$0
+	lda	$0
+	lda	$0
+	nop
+	nop
+	nop
 	                                                ;=========
                                                         ; 33 + 2175 = 2208
 
 to_done_bwalk:
         ; delay
 
+	; Try X=14 Y=47 cycles=3573
         ; Try X=67 Y=4 cycles=1365
 
-        ldy     #4                                                      ; 2
-toloopV:ldx     #67                                                     ; 2
+        ldy	#4							; 2
+toloopV:ldx	#67							; 2
 toloopW:dex                                                             ; 2
-        bne     toloopW                                                 ; 2nt/3
+        bne	toloopW                                                 ; 2nt/3
         dey                                                             ; 2
-        bne     toloopV                                                 ; 2nt/3
+        bne	toloopV                                                 ; 2nt/3
 
 	jmp	to_done_state						; 3
 
