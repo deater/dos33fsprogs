@@ -36,7 +36,7 @@ megademo.o:	megademo.s \
 	leaving.s leaving.inc tfv_sprites.inc \
 	arrival.s arrival.inc \
 	bird_mountain.s letters.s \
-	waterfall.s gr_unrolled_copy.s waterfall_page1.inc waterfall_page2.inc \
+	waterfall.s waterfall_page1.inc waterfall_page2.inc \
 	takeoff.s takeoff.inc takeoff.img.lz4 \
 	mode7.s \
 	space_bars.s text_print.s \
