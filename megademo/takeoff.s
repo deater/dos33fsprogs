@@ -237,10 +237,13 @@ to_jump_table:
 	;============================
 	; state0: Draw+move Bird+Rider
 	;============================
-	; 13 + 2208 + 1365 + 3 = 3589
+	; 13 + 2208 + 762 + 578 + 25 + 3 = 3589
 to_state0:
 
-	lda     #20					; 2
+	jsr	gr_copy_row22				; 6+572
+
+
+	lda     #22					; 2
 	sta	YPOS					; 3
 
 	lda	FRAMEH					; 3
@@ -282,13 +285,36 @@ to_bwalk:
                                                         ; 33 + 2175 = 2208
 
 to_done_bwalk:
+
+	inc	XPOS					; 5
+	lda	XPOS					; 3
+	cmp	#21					; 2
+	bne	to_keep_state				; 3
+
+							; -1
+	inc	STATE					; 5
+	inc	STATE					; 5
+	jmp	to_done_keep_state			; 3
+							;========
+							; 12
+to_keep_state:
+	lda	$0
+	lda	$0
+	lda	$0
+	lda	$0
+
+
+to_done_keep_state:
+
+
         ; delay
 
-	; Try X=14 Y=47 cycles=3573
-        ; Try X=67 Y=4 cycles=1365
 
-        ldy	#4							; 2
-toloopV:ldx	#67							; 2
+	; Try X=151 Y=1 cycles=762
+
+
+        ldy	#1							; 2
+toloopV:ldx	#151							; 2
 toloopW:dex                                                             ; 2
         bne	toloopW                                                 ; 2nt/3
         dey                                                             ; 2
