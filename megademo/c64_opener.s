@@ -31,9 +31,9 @@ c64_opener:
 	lda	#$A0			; regular spaces
 	jsr	clear_gr
 
-	lda	#<score_text
+	lda	#<apple2_text
 	sta	OUTL
-	lda	#>score_text
+	lda	#>apple2_text
 	sta	OUTH
 
 	jsr	move_and_print
@@ -53,10 +53,21 @@ c64_opener:
 	; 114 (7410 cycles), so with 5070 + 4550 lines to go (9620)
 	; - 16 = 9604, -3 for jmp = 9601
 
+	;	5070+4550 = 9620
+	;                    -16
+	;		      -3
+	;                  -9298
+	;                 =======
+	;		     303
+
+	jsr	gr_copy_to_current	; 6+ 9292
+
+	; Try X=29 Y=2 cycles=303
+
 	; Try X=18 Y=100 cycles=9601
 
-	ldy	#100							; 2
-loopcoA:ldx	#18							; 2
+	ldy	#2							; 2
+loopcoA:ldx	#29							; 2
 loopcoB:dex								; 2
 	bne	loopcoB							; 2nt/3
 	dey								; 2
@@ -331,3 +342,11 @@ c64_multiples:
         .byte   161,138,115, 92, 69 ,46,23,   0
 	.byte	0,0,0,0,0,0,0,0
 	; end is c64_multiples+24
+
+apple2_text:
+.byte 16,0
+.asciiz "APPLE ]["
+.byte 4,20
+.asciiz "NONE OF THIS SHOULD BE POSSIBLE,"
+.byte 5,21
+.asciiz "RACING THE BEAM TO THE EXTREME"
