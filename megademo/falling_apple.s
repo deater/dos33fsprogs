@@ -109,8 +109,6 @@ faloopB:dex								; 2
 	; Total of 17030 cycles to get back to where was
 
 	; We want to alternate between page1 and page2 every 65 cycles
-        ;       vblank = 4550 cycles to do scrolling
-
 
 	; 2 + 48*(  (4+2+25*(2+3)) + (4+2+23*(2+3)+4+5)) + 9)
 	;     48*[(6+125)-1] + [(6+115+10)-1]
@@ -142,12 +140,31 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 
 
 
-	;======================================================
-	; We have 4550 cycles in the vblank, use them wisely
-	;======================================================
-	; do_nothing should be      4550+1 -2-9 -7= 4533
+;======================================================
+; We have 4550 cycles in the vblank, use them wisely
+;======================================================
+	; 4550 cycles
+	;   +1-2 from above
+	;  -10 keypress
+	;================
+	; 4539
 
-	jsr	fa_do_nothing				; 6
+
+	; Try X=24 Y=36 cycles=4537 R2
+
+	nop	; 2
+
+	ldy	#36							; 2
+faloop1:ldx	#24							; 2
+faloop2:dex								; 2
+	bne	faloop2							; 2nt/3
+	dey								; 2
+	bne	faloop1							; 2nt/3
+
+
+	;=====================
+	; check for keypress
+	; 10 cycles
 
 	lda	KEYPRESS				; 4
 	bpl	fa_no_keypress				; 3
@@ -161,25 +178,6 @@ fa_done:
 	rts						; 6
 
 
-	;=================================
-	; do nothing
-	;=================================
-	; and take 4533-6 = 4527 cycles to do it
-fa_do_nothing:
-
-	; Try X=4 Y=174 cycles=4525 R2
-
-	nop	; 2
-
-	ldy	#174							; 2
-faloop1:ldx	#4							; 2
-faloop2:dex								; 2
-	bne	faloop2							; 2nt/3
-	dey								; 2
-	bne	faloop1							; 2nt/3
-
-
-	rts							; 6
 
 
 ;.include "../asm_routines/gr_unrle.s"
