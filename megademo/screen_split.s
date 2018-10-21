@@ -229,3 +229,220 @@ ss_multiples:
         ;       20      32      25+02+36+02
         ;       21      34      25+01+38+01
 
+; how quickly can we call this?
+; jump table, assuming size to split is in Y?
+
+; Autogenerate?  As we want both HGR/TXT and HGR/GR versions?
+
+
+; 4  NnNnNnNnNnNnNnNnBBBBbbbbNnNnNnNnNnNnNnNnRrrrrr
+; 8  NnNnNnNnNnNnNnBBBBNnNnbbbbNnNnNnNnNnNnNnRrrrrr
+; 12 NnNnNnNnNnNnBBBBNnNnNnNnbbbbNnNnNnNnNnNnRrrrrr
+; 16 NnNnNnNnNnBBBBNnNnNnNnNnNnbbbbNnNnNnNnNnRrrrrr
+; 20 NnNnNnNnBBBBNnNnNnNnNnNnNnNnbbbbNnNnNnNnRrrrrr
+; 24 NnNnNnBBBBNnNnNnNnNnNnNnNnNnNnbbbbNnNnNnRrrrrr
+; 28 NnNnBBBBNnNnNnNnNnNnNnNnNnNnNnNnbbbbNnNnRrrrrr
+; 32 NnBBBBNnNnNnNnNnNnNnNnNnNnNnNnNnNnbbbbNnRrrrrr
+; 36 BBBBNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnNnbbbbRrrrrr
+
+; add 23 each time?
+
+
+; TEXT/HGR version
+; should we just SMC on the fly?  That in theory would be 18*5=90*2=180 bytes
+;	so maybe not that great a win
+
+
+.align	$100
+
+	; 23 bytes in size?
+tsplit_4:
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	SET_TEXT
+	bit	SET_GR
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	rts
+
+tsplit_8:
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	SET_TEXT
+	nop
+	nop
+	bit	SET_GR
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	rts
+
+tsplit_12:
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	SET_TEXT
+	nop
+	nop
+	nop
+	nop
+	bit	SET_GR
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	rts
+
+tsplit_16:
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	SET_TEXT
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	SET_GR
+	nop
+	nop
+	nop
+	nop
+	nop
+	rts
+
+tsplit_20:
+	nop
+	nop
+	nop
+	nop
+	bit	SET_TEXT
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	SET_GR
+	nop
+	nop
+	nop
+	nop
+	rts
+
+tsplit_24:
+	nop
+	nop
+	nop
+	bit	SET_TEXT
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	SET_GR
+	nop
+	nop
+	nop
+	rts
+
+tsplit_28:
+	nop
+	nop
+	bit	SET_TEXT
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	SET_GR
+	nop
+	nop
+	rts
+
+tsplit_32:
+	nop
+	bit	SET_TEXT
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	SET_GR
+	nop
+	rts
+
+tsplit_36:
+	bit	SET_TEXT
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	SET_GR
+	rts
+
+

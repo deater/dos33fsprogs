@@ -86,21 +86,16 @@ loopcoB:dex								; 2
 	;	Wait 3s, just flashing cursor@1Hz
 	;	Then slowly open to text page0
 
-	;===========================
-	; do one or the other
-	;  -- nothing = 8+3 = 11
-	;  -- split = 8+2 = 10
-
-
 
 c64_split:
+c64_mixed:
+	jmp	c64_kill_time					; 3
 
 	; Put smc here to jmp to kill_time until we hit state2?
 
-c64_mixed:
-        nop		;kill 6 cycles (room for rts)		; 2
-        ldx     #8	; width of opening in table		; 2
-        ldy     #24	; height?				; 2
+; EA	nop		; kill 6 cycles (room for rts)		; 2
+; A2 08	ldx     #8	; width of opening in table		; 2
+	ldy     #24	; height?				; 2
 
 c64_mixed_loop:
 c64_smc2:
@@ -127,38 +122,20 @@ c64_smc:						;      |-- 65
 					;================
 					;        -13
 
-
-
-
-
-
-
-
-;	lda	FRAMEH						; 3
-;	cmp	#10						; 2
-;	bcc	c64_nothing					; 3
-
-;c64_do_split:							; -1
-;	jmp	c64_split_screen				; 3
-
-;c64_nothing:
-;	jmp	c64_kill_time					; 3
-
-
 c64_done_screen:
 
-	;======================================================
-	; We have 4550 cycles in the vblank, use them wisely
-	;======================================================
+;======================================================
+; We have 4550 cycles in the vblank, use them wisely
+;======================================================
 	; do_nothing should be      4550
 	;			     -13 from screen drawing
 	;			     -10 keyboard handling
-	;			     -15
-	;			     -12
+	;			     -27 frameh adjustment
+	;			     -28 state2 handling
 	;			      -7 check if past time
-	;			     -46
+	;			     -46 cursor blink
 	;==================================
-	;			 =  4447
+	;			 =  4419
 
 
 	; run the 2Hz counter, overflow at 30 60Hz frames
@@ -192,6 +169,32 @@ done_thirty:
 
 
 c64_window_adjust:
+
+	;===========================
+	; If > 4s then patch SMC and move window
+	;===========================
+
+	lda	FRAMEH							; 3
+	cmp	#8							; 2
+	bcc	c64_not_state2						; 3
+
+	; Update the code to not kill_time but do the split		; -1
+	lda	#$EA							; 2
+	sta	c64_mixed						; 4
+	lda	#$A2							; 2
+	sta	c64_mixed+1						; 4
+	lda	#$08							; 2
+	sta	c64_mixed+2						; 4
+	jmp	c64_done_states						; 3
+							;===================
+							;		20
+c64_not_state2:
+	inc	$0	; 5
+	dec	$0	; 5
+	inc	$0	; 5
+	dec	$0	; 5
+
+c64_done_states:
 
 ;	dec	c64_smc2+1						; 5
 
@@ -259,10 +262,11 @@ cursor_off:
 
 cursor_done:
 	; Try X=33 Y=26 cycles=4447
-	; Try X=88 Y=10 cycles=4461
+	; Try X=54 Y=16 cycles=4417R2
 
-	ldy     #26							; 2
-loopcoE:ldx	#33							; 2
+	nop
+	ldy     #16							; 2
+loopcoE:ldx	#54							; 2
 loopcoF:dex								; 2
 	bne	loopcoF							; 2nt/3
 	dey								; 2
@@ -319,16 +323,21 @@ done_c64:
 	;===========================================
 	; do nothing but blink cursor
 	; 192 * 65 = 12480 cycles
-	;              -11 jsr in
+	;              - 3 jsr in
 	;		-3 jmp back
+	;		+13 to match split
 	;           ========
-	;            12466
+	;            12487
 c64_kill_time:
 
-	; Try X=165 Y=15 cycles=12466
+	; Try X=165 Y=15 cycles=12466 R8
 
-	ldy     #15							; 2
-loopc6a:ldx	#165							; 2
+	; Try X=33 Y=73 cycles=12484 R3
+
+	lda	$0
+
+	ldy     #73							; 2
+loopc6a:ldx	#33							; 2
 loopc6b:dex								; 2
 	bne	loopc6b							; 2nt/3
 	dey								; 2
