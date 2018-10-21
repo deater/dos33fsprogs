@@ -93,6 +93,8 @@ loop_forever:
 	.include	"lz4_decode.s"
 	.include	"c64_opener.s"
 	.include	"falling_apple.s"
+	.include	"gr_unrle.s"
+	.include	"gr_copy.s"
 	.include	"starring.s"
 	.include	"starring_people.s"
 	.include	"check_email.s"
@@ -137,6 +139,9 @@ loop_forever:
 ; Include Lores Graphics
 ; No Alignment Needed
 ;============================
+
+;  falling_apple
+.include "apple_40_96.inc"
 
 ; starring
 .include "starring1.inc"

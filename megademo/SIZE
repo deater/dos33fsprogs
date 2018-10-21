@@ -20,6 +20,7 @@
 	28217	-- optimize the erase routine in waterfall
 	28097	-- move takeoff graphics to megademo
 	28594   -- c64 opener actually works
+	28483	-- move falling apple to megademo file
 
 Graphics sizes:
 	(LG lores=300B)

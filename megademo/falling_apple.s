@@ -5,8 +5,8 @@ falling_apple:
 
 	;===================
 	; init screen
-	jsr	TEXT
-	jsr	HOME
+;	jsr	TEXT
+;	jsr	HOME
 	bit	KEYRESET
 
 	;===================
@@ -193,9 +193,9 @@ loop2:
 	rts							; 6
 
 
-.include "../asm_routines/gr_unrle.s"
-.include "gr_copy.s"
+;.include "../asm_routines/gr_unrle.s"
+;.include "gr_copy.s"
 
-.include "apple_40_96.inc"
+;.include "apple_40_96.inc"
 
 
