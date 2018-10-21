@@ -14,6 +14,8 @@ falling_apple:
 
 	lda	#0
 	sta	DRAW_PAGE
+	sta	FRAME
+	sta	FRAMEH
 
 	;=============================
 	; Load graphic page0
@@ -108,10 +110,11 @@ faloopB:dex								; 2
 	; Vertical blank = 4550 cycles (70 scan lines)
 	; Total of 17030 cycles to get back to where was
 
-	; We want to alternate between page1 and page2 every 65 cycles
 
-	; 2 + 48*(  (4+2+25*(2+3)) + (4+2+23*(2+3)+4+5)) + 9)
-	;     48*[(6+125)-1] + [(6+115+10)-1]
+	; in the end, scrolling in was deemed to complex
+	; what we do is load both to PAGE1/PAGE2 and then
+	; slowly shift from all PAGE1 to PAGE1/PAGE every two scanlines
+
 
 fa_display_loop:
 
@@ -144,23 +147,54 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 ; We have 4550 cycles in the vblank, use them wisely
 ;======================================================
 	; 4550 cycles
-	;   +1-2 from above
+	;   -1 (+1-2) from above
+	;  -25 inc framecount
+	;   -7 see if timeout
 	;  -10 keypress
 	;================
-	; 4539
+	; 4507
 
+	; Try X=149 Y=6 cycles=4507
 
-	; Try X=24 Y=36 cycles=4537 R2
-
-	nop	; 2
-
-	ldy	#36							; 2
-faloop1:ldx	#24							; 2
+	ldy	#6							; 2
+faloop1:ldx	#149							; 2
 faloop2:dex								; 2
 	bne	faloop2							; 2nt/3
 	dey								; 2
 	bne	faloop1							; 2nt/3
 
+
+	;========================
+	; Increment Frame at 20Hz
+	;========================
+	; noinc: 13+12=25
+	;   inc: 13+12=25
+	inc	FRAME							; 5
+	lda	FRAME							; 3
+	cmp	#4							; 2
+	bne	fa_noinc						; 3
+
+									; -1
+	lda	#0							; 2
+	sta	FRAME							; 3
+	inc	FRAMEH							; 5
+	jmp	fa_doneinc						; 3
+fa_noinc:
+	lda	$0		; 3
+	lda	$0		; 3
+	lda	$0		; 3
+	lda	$0		; 3
+fa_doneinc:
+
+
+	;====================
+	; exit after 5s or so
+	;====================
+	; 7 cycles
+	lda	FRAMEH					; 3
+	cmp	#100					; 2
+	beq	fa_done					; 3
+							; -1
 
 	;=====================
 	; check for keypress
