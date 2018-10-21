@@ -5,8 +5,8 @@ falling_apple:
 
 	;===================
 	; init screen
-;	jsr	TEXT
-;	jsr	HOME
+	jsr	TEXT
+	jsr	HOME
 	bit	KEYRESET
 
 	;===================
@@ -41,9 +41,6 @@ falling_apple:
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
 
-;	jsr	wait_until_keypressed
-
-
 	;=============================
 	; Load graphic page1
 
@@ -65,8 +62,6 @@ falling_apple:
 
 	; GR part
 	bit	PAGE0
-
-;	jsr	wait_until_keypressed
 
 
 	;==============================
@@ -93,17 +88,14 @@ falling_apple:
 
 	; Try X=9 Y=6 cycles=307
 
-        ldy     #6							; 2
-loopA:
-        ldx	#9							; 2
-loopB:
-        dex                                                             ; 2
-        bne     loopB                                                   ; 2nt/3
+        ldy	#6							; 2
+faloopA:ldx	#9							; 2
+faloopB:dex								; 2
+	bne	faloopB							; 2nt/3
+	dey								; 2
+	bne	faloopA							; 2nt/3
 
-        dey                                                             ; 2
-        bne     loopA                                                   ; 2nt/3
-
-        jmp     display_loop
+        jmp	fa_display_loop						; 3
 .align  $100
 
 
@@ -123,7 +115,7 @@ loopB:
 	; 2 + 48*(  (4+2+25*(2+3)) + (4+2+23*(2+3)+4+5)) + 9)
 	;     48*[(6+125)-1] + [(6+115+10)-1]
 
-display_loop:
+fa_display_loop:
 
 	ldy	#48						; 2
 
@@ -155,16 +147,16 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;======================================================
 	; do_nothing should be      4550+1 -2-9 -7= 4533
 
-	jsr	do_nothing				; 6
+	jsr	fa_do_nothing				; 6
 
 	lda	KEYPRESS				; 4
-	bpl	no_keypress				; 3
-	jmp	start_over
-no_keypress:
+	bpl	fa_no_keypress				; 3
+	jmp	fa_done
+fa_no_keypress:
 
-	jmp	display_loop				; 3
+	jmp	fa_display_loop				; 3
 
-start_over:
+fa_done:
 	bit	KEYRESET	; clear keypress	; 4
 	rts						; 6
 
@@ -173,21 +165,18 @@ start_over:
 	; do nothing
 	;=================================
 	; and take 4533-6 = 4527 cycles to do it
-do_nothing:
+fa_do_nothing:
 
 	; Try X=4 Y=174 cycles=4525 R2
 
 	nop	; 2
 
 	ldy	#174							; 2
-loop1:
-	ldx	#4							; 2
-loop2:
-	dex								; 2
-	bne	loop2							; 2nt/3
-
+faloop1:ldx	#4							; 2
+faloop2:dex								; 2
+	bne	faloop2							; 2nt/3
 	dey								; 2
-	bne	loop1							; 2nt/3
+	bne	faloop1							; 2nt/3
 
 
 	rts							; 6

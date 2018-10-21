@@ -20,9 +20,7 @@ Timing:
 	Except for fireworks, 15s for each? 150s = 2min 30s
 
 0: c64_opener:
-	get curtain-opening effect working
-	add text to background
-	auto timeout to next screen
+	DONE???
 
 1: falling_apple:
 	make it fall?
