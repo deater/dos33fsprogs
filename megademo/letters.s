@@ -11,9 +11,9 @@ letters_bm:
 	.byte	2,16," ",128
 	.byte	3,16," ",128
 	.byte	1,19,"BY",128
-	.byte	3,10,"VINCE ",34,"DEATER",34," WEAVER",150
+	.byte	3,17,"DEATER",150
 	.byte	1,19," ",128
-	.byte	3,10," ",128
+	.byte	3,17," ",128
 	.byte	1,16,"MUSIC BY",128
 	.byte	3,16,"????????",150
 	.byte	1,16," ",128
