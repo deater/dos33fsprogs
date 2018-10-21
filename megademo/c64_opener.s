@@ -37,6 +37,8 @@ c64_opener:
 	sta	OUTH
 
 	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
 
 	;==============================
 	; setup graphics for vapor lock
@@ -105,8 +107,8 @@ c64_smc2:
 	lda	c64_multiples+15,x ; lookup split size	; 4    \
 	sta	c64_smc+1	; modify code		; 4    |
 c64_smc:						;      |-- 65
-        jsr     split_4                                 ; 6+46 |
-        dey                                             ; 2    |
+        jsr	tsplit_4				; 6+46 |
+        dey						; 2    |
         bne     c64_mixed_loop				; 3    /
 
 							; -1
