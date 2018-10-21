@@ -99,7 +99,7 @@ c64_mixed:
 
 c64_mixed_loop:
 c64_smc2:
-	lda	c64_multiples+15,x ; lookup split size	; 4    \
+	lda	c64_multiples+17,x ; lookup split size	; 4    \
 	sta	c64_smc+1	; modify code		; 4    |
 c64_smc:						;      |-- 65
         jsr	tsplit_4				; 6+46 |
@@ -131,11 +131,12 @@ c64_done_screen:
 	;			     -13 from screen drawing
 	;			     -10 keyboard handling
 	;			     -27 frameh adjustment
-	;			     -28 state2 handling
+	;			     -44 state2 handling
+	;			     -24 done_blinding
 	;			      -7 check if past time
 	;			     -46 cursor blink
 	;==================================
-	;			 =  4419
+	;			 =  4379
 
 
 	; run the 2Hz counter, overflow at 30 60Hz frames
@@ -171,12 +172,16 @@ done_thirty:
 c64_window_adjust:
 
 	;===========================
-	; If > 4s then patch SMC and move window
+	; If > 3.5s then patch SMC and move window
 	;===========================
+	; < 7 = 8+36 = 44
+	; > 7, not tick = 8+36=44
 
 	lda	FRAMEH							; 3
-	cmp	#8							; 2
+	cmp	#7							; 2
 	bcc	c64_not_state2						; 3
+								;============
+								;	  8
 
 	; Update the code to not kill_time but do the split		; -1
 	lda	#$EA							; 2
@@ -185,18 +190,74 @@ c64_window_adjust:
 	sta	c64_mixed+1						; 4
 	lda	#$08							; 2
 	sta	c64_mixed+2						; 4
+
+	lda	FRAME							; 3
+	and	#$03							; 2
+	bne	blj							; 3
+								;===========
+								;	25
+
+									; -1
+c64_smc3:
+	dec	c64_smc2+1						; 6
+	jmp	blj_done						; 3
+								;============
+								;	8
+blj:
+	nop
+	lda	$0
+	lda	$0
+blj_done:
+
+
+
 	jmp	c64_done_states						; 3
+
 							;===================
-							;		20
+							;		36
 c64_not_state2:
 	inc	$0	; 5
 	dec	$0	; 5
 	inc	$0	; 5
 	dec	$0	; 5
+	inc	$0	; 5
+	dec	$0	; 5
+	lda	$0	; 3
+	lda	$0	; 3
+
+
 
 c64_done_states:
 
-;	dec	c64_smc2+1						; 5
+	;=======================
+	; see if done blinding
+	;=======================
+	;
+
+	lda	FRAMEH							; 3
+	cmp	#9							; 2
+	bne	c64_wait_blinding					; 3
+								;===========
+								;	  8
+
+									; -1
+	lda	#$ea							; 2
+	sta	c64_smc3						; 4
+	sta	c64_smc3+1						; 4
+	sta	c64_smc3+2						; 4
+	jmp	c64_done_blinding					; 3
+								;===========
+								;        16
+c64_wait_blinding:
+	lda	$0
+	lda	$0
+	lda	$0
+	lda	$0
+	nop
+	nop
+
+c64_done_blinding:
+
 
 
 	;=======================
@@ -204,7 +265,7 @@ c64_done_states:
 	;=======================
 
 	lda	FRAMEH							; 3
-	cmp	#20							; 2
+	cmp	#22							; 2
 	beq	done_c64						; 3
 									; -1
 								;============
@@ -261,12 +322,14 @@ cursor_off:
 
 
 cursor_done:
-	; Try X=33 Y=26 cycles=4447
-	; Try X=54 Y=16 cycles=4417R2
+
+;	Try X=96 Y=9 cycles=4375 R4
 
 	nop
-	ldy     #16							; 2
-loopcoE:ldx	#54							; 2
+	nop
+
+	ldy	#9							; 2
+loopcoE:ldx	#96							; 2
 loopcoF:dex								; 2
 	bne	loopcoF							; 2nt/3
 	dey								; 2
@@ -347,12 +410,8 @@ loopc6b:dex								; 2
 	jmp	c64_done_screen						; 3
 
 
+.align $100
 
-c64_multiples:
-	.byte	184,184,184,184,184,184,184,184
-        .byte   161,138,115, 92, 69 ,46,23,   0
-	.byte	0,0,0,0,0,0,0,0
-	; end is c64_multiples+24
 
 apple2_text:
 .byte 16,0
@@ -361,3 +420,13 @@ apple2_text:
 .asciiz "NONE OF THIS SHOULD BE POSSIBLE,"
 .byte 5,21
 .asciiz "RACING THE BEAM TO THE EXTREME"
+
+; NOTE: Needs to start at least 15 bytes into the page
+c64_multiples:
+	.byte	184,184
+	.byte	184,184,184,184,184,184,184,184
+        .byte   161,138,115, 92, 69 ,46,23,   0
+	.byte	0,0,0,0,0,0,0,0
+	; end is c64_multiples+24
+
+
