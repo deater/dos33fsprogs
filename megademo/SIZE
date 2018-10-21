@@ -19,6 +19,7 @@
 	30009	-- starring people but with LG removed for now
 	28217	-- optimize the erase routine in waterfall
 	28097	-- move takeoff graphics to megademo
+	28594   -- c64 opener actually works
 
 Graphics sizes:
 	(LG lores=300B)

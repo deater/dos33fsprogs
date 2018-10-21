@@ -58,18 +58,21 @@ c64_opener:
 	;	5070+4550 = 9620
 	;                    -16
 	;		      -3
+	;                     +1 to get things aligned?
 	;                  -9298
 	;                 =======
-	;		     303
+	;		     304
 
 	jsr	gr_copy_to_current	; 6+ 9292
 
 	; Try X=29 Y=2 cycles=303
 
-	; Try X=18 Y=100 cycles=9601
+	; Try X=59 Y=1 cycles=302 R2
 
-	ldy	#2							; 2
-loopcoA:ldx	#29							; 2
+	nop
+
+	ldy	#1							; 2
+loopcoA:ldx	#59							; 2
 loopcoB:dex								; 2
 	bne	loopcoB							; 2nt/3
 	dey								; 2
