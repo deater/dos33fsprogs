@@ -266,9 +266,11 @@ L6:
 	; restore current address
 readdone:
 	pla
-	sta	adrhi
+;	sta	adrhi
+;	pla
+	sta	adrlo			; code originally had this backwards
 	pla
-	sta	adrlo
+	sta	adrhi
 	bcc	readfirst
 
 	lda	$c0e8
