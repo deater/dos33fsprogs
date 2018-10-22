@@ -1,12 +1,13 @@
 THANKS:
-	Code: DEATER
-	MUSIC:
-	Fireworks: FOZZTEX
-	DISK+LZ4: QKUMBA
+	* Code: DEATER
+	MUSIC: ???
+	* Fireworks: FOZZTEX
+	* DISK+LZ4: QKUMBA
+	* BMP2DHR: BILL BUCKELS
 	VOYAGER
 	TALBOT 0101B
-	UTOPIA BBS
-	VMW PRODUCTION
+	* UTOPIA BBS
+	* VMW PRODUCTION
 
 Overall:
 	fix off-by-one line vaporlock
@@ -69,7 +70,6 @@ Timing:
 
 9: spacebars:
 	auto movement
-	auto timeout to next screen
 	REACH: when done, ship move up (shrink) and disappear w blue horiz line?
 
 10: arrive at frogysue:
