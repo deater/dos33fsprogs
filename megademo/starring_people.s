@@ -15,7 +15,8 @@ starring_people:
 
 	lda	#0
 	sta	DRAW_PAGE
-
+	sta	FRAME
+	sta	FRAMEH
 
 	;=============================
 	; Load graphic hgr
@@ -179,23 +180,56 @@ sp_outer_loop:
 
 	; want to kill 44*65 -3 = 2857
 
-	;======================================================
-	; We have 4550 cycles in the vblank, use them wisely
-	;======================================================
+;======================================================
+; We have 4550 cycles in the vblank, use them wisely
+;======================================================
 
 	; do_nothing should be      4550
 	;			   +2857 fallthrough from above
+	;			     -23 increase frame
+	;			      -7 exit on timeout
 	;			     -10 keypress
 	;			      -2 ldy at top
 	;			===========
-	;			    7395
+	;			    7365
+
+
+	;================
+	; wrap counter
+	;================
+	; nowrap = 13+10=23
+	;   wrap = 13+10=23
+	inc	FRAME							; 5
+	lda	FRAME							; 3
+	cmp	#4	; 20Hz						; 2
+	beq	sp_wrap							; 3
+sp_nowrap:
+									;-1
+	lda	$0			; nop				; 3
+	lda	$0			; nop				; 3
+	nop								; 2
+	jmp	sp_wrap_done						; 3
+sp_wrap:
+	lda	#0							; 2
+	sta	FRAME							; 3
+	inc	FRAMEH                                                  ; 5
+sp_wrap_done:
+
+	;==============
+	; timeout after 5s or so?
+	;==============
+	; 7 cycles
+sp_timeout:
+	lda	FRAMEH							; 3
+	cmp	#80							; 2
+	beq     sp_done							; 3
+									; -1
 
 	; Try X=18 Y=77 cycles=7393 R2
+	; Try X=104 Y=14 cycles=7365
 
-	nop
-
-	ldy	#77							; 2
-sploop1:ldx	#18							; 2
+	ldy	#14							; 2
+sploop1:ldx	#104							; 2
 sploop2:dex								; 2
 	bne	sploop2							; 2nt/3
 	dey								; 2
@@ -203,12 +237,12 @@ sploop2:dex								; 2
 
 	lda	KEYPRESS				; 4
 	bpl	sp_no_keypress				; 3
-	jmp	sp_start_over
+	jmp	sp_done
 sp_no_keypress:
 
 	jmp	sp_display_loop				; 3
 
-sp_start_over:
+sp_done:
 	bit	KEYRESET	; clear keypress	; 4
 	rts						; 6
 

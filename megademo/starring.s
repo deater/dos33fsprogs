@@ -222,7 +222,7 @@ done_st_vblank:
 st_nowrap:
 									;-1
 	lda	$0			; nop				; 3
-	bne	st_wrap_done						; 3
+	jmp	st_wrap_done						; 3
 st_wrap:
 	inc	FRAMEH							; 5
 st_wrap_done:
