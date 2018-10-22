@@ -178,18 +178,53 @@ toloop7:dex								; 2
 
 	; do_nothing should be      4550
 	;			     -23 state jump
+	;			     -23 wrap counter
+	;			      -7 timeout
 	;			   -3589 state
 	;			     -10 keypress
 	;			===========
-	;			     928
+	;			     898
 
-	; Try X=13 Y=13 cycles=924 R4
 
+	;================
+	; wrap counter
+	;================
+	; nowrap = 13+10=23
+	;   wrap = 13+10=23
+	inc	FRAME							; 5
+	lda	FRAME							; 3
+	cmp	#4	; 20Hz						; 2
+	beq	to_wrap							; 3
+to_nowrap:
+									;-1
+	lda	$0			; nop				; 3
+	lda	$0			; nop				; 3
+	nop								; 2
+	jmp	to_wrap_done						; 3
+to_wrap:
+	lda	#0							; 2
+	sta	FRAME							; 3
+	inc	FRAMEH							; 5
+to_wrap_done:
+
+
+	;==============
+	; timeout after 5s or so?
+	;==============
+	; 7 cycles
+to_timeout:
+	lda	FRAMEH							; 3
+	cmp	#80							; 2
+	beq	to_exit							; 3
+									; -1
+
+
+	; Try X=88 Y=2 cycles=893 R5
+	lda	$0
 	nop
-	nop
 
-	ldy	#13							; 2
-toloop1:ldx	#13							; 2
+	ldy	#2							; 2
+toloop1:ldx	#88							; 2
 toloop2:dex								; 2
 	bne	toloop2							; 2nt/3
 	dey								; 2
