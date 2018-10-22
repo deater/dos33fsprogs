@@ -16,6 +16,8 @@ check_email:
 
 	lda	#0
 	sta	DRAW_PAGE
+	sta	FRAME
+	sta	FRAMEH
 
 init_email_letters:
         lda     #<em_letters
@@ -199,9 +201,9 @@ ce_patch:
 								; -1
 
 
-	;======================================================
-	; We have 4550 cycles in the vblank, use them wisely
-	;======================================================
+;======================================================
+; We have 4550 cycles in the vblank, use them wisely
+;======================================================
 
 	; do_nothing should be      4550
 	;			      +1 fallthrough from above
@@ -224,16 +226,24 @@ emloop2:dex								; 2
 	bne	emloop1							; 2nt/3
 
 
+	;==================
+	; move letters
+	;==================
+
 	jsr	move_letters				; 6+126
+
+	;==================
+	; check keys
+	;==================
 
 	lda	KEYPRESS				; 4
 	bpl	em_no_keypress				; 3
-	jmp	em_start_over
+	jmp	em_done
 em_no_keypress:
 
 	jmp	em_display_loop				; 3
 
-em_start_over:
+em_done:
 	bit	KEYRESET	; clear keypress	; 4
 	rts						; 6
 
