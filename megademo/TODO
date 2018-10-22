@@ -23,13 +23,14 @@ Timing:
 	DONE???
 
 1: falling_apple:
-	make it fall?
-	some sort of wipe?
-	auto timeout to next screen
+	TODO: roll in the change from all page1 to page1/page2
+	REACH: make it fall?
+	REACH: some sort of wipe?
 
 2: starring:
-	complete graphics
-	figure out png2hgr off-by-one error?
+	DONE???
+
+2.5: starring_people
 	add wipe effect with tengwar: just draw 4 bytes yellow, 4 bytes
 	from scroll buffer
 	Add Susie starring role?
