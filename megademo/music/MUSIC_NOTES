@@ -1,0 +1,37 @@
+Converting MOD to PT3
+
+Effects:
+	MOD					PT3
+	~~~					~~~
+	F02	Temp				100 Tone up
+	C0A	Volume				200 Tone Down
+	A20	Vol slide up			300 Portamendo
+	400	Vibrato				400 Sample offset
+	3FF	Tone Portamendo			500 Ornament offset
+						600 Vibrato
+						900 Envelope slide up
+						A00 Envelope slide down
+						B00 Speed
+
+PT3 fields:
+	Note
+	Sample#
+	Envelope Type
+	Ornament Number
+	Channel Volume
+
+Volume: On AY-3-8910 this is logarithmic
+
+	MOD	PT3
+	$40	f
+	$35-	e
+	$26-	d
+	$1b-	c
+	$13-	b
+	$e-	a
+	$9-	9
+	$7-	8
+	$4	7
+	$3	6
+	$2	5
+	$1	3
