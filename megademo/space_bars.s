@@ -17,6 +17,7 @@ space_bars:
 	sta	YPOS
 
 	lda	#0
+	sta	FRAME
 	sta	FRAMEH
 
 	;=============================
@@ -257,27 +258,35 @@ sbloopF:dex								; 2
 
 
 
-	;======================================================
-	; We have 4550 cycles in the vblank, use them wisely
-	;======================================================
+;======================================================
+; We have 4550 cycles in the vblank, use them wisely
+;======================================================
 
 	; do_nothing should be      4550
 	;			   -3470 draw_framebuffer
 	;			    -533 setup framebuffer
 	;			     -21 frame count
+	;			      -7 timeout
 	;			     -34 keypress
 	;				-1 adjust center mark back
 	;			===========
-	;			     491
+	;			     484
+
+
+	;=====================
+	; timeout
+	;=====================
+	; 7 cycles
+	lda	FRAMEH					; 3
+	cmp	#100					; 2
+	beq	sb_exit					; 3
+							; -1
 
 	; Try X=11 Y=8 cycles=489 R2
+	; Try X=31 Y=3 cycles=484
 
-	; Try X=8 Y=5 cycles=231
-
-	nop
-
-	ldy	#8							; 2
-sbloop1:ldx	#11							; 2
+	ldy	#3							; 2
+sbloop1:ldx	#31							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2

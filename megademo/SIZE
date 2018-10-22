@@ -23,7 +23,8 @@
 	28483	-- move falling apple to megademo file
 	28553	-- fill in the starring animation a bit more
 	28809	-- add timeouts to starring people
-	28733	-- add susie's cage to e-mail scene,  move to megademo file
+	28733	-- add susie's cage to e-mail scene, move to megademo file
+	28989	-- add timeouts to check-email, takeoff, and spacebars
 
 Graphics sizes:
 	(LG lores=300B)
