@@ -207,23 +207,56 @@ ce_patch:
 
 	; do_nothing should be      4550
 	;			      +1 fallthrough from above
+	;			     -23 frame count
+	;			      -7 timeout
 	;			     -10 keypress
 	;			      -2 ldy at top
 	;			    -132 move letters
 	;			===========
-	;			    4407
+	;			    4377
 
-	; Try X=13 Y=62 cycles=4403 R4
+	; Try X=96 Y=9 cycles=4375 R2
 
 	nop								; 2
-	nop
 
-	ldy	#62							; 2
-emloop1:ldx	#13							; 2
+	ldy	#9							; 2
+emloop1:ldx	#96							; 2
 emloop2:dex								; 2
 	bne	emloop2							; 2nt/3
 	dey								; 2
 	bne	emloop1							; 2nt/3
+
+
+	;=====================
+	; Update Frame Counter
+	;=====================
+	; nowrap = 13+10=23
+	;   wrap = 13+10=23
+	inc	FRAME							; 5
+	lda	FRAME							; 3
+	cmp	#60	; 1Hz						; 2
+	beq     em_wrap							; 3
+em_nowrap:
+									;-1
+	lda	$0			; nop				; 3
+	lda	$0			; nop				; 3
+	nop								; 2
+	jmp	em_wrap_done						; 3
+em_wrap:
+	lda	#0							; 2
+	sta	FRAME							; 3
+	inc	FRAMEH							; 5
+em_wrap_done:
+
+	;=========================
+	; timeout after 20s or so?
+	;=========================
+	; 7 cycles
+em_timeout:
+	lda	FRAMEH							; 3
+	cmp	#20							; 2
+	beq	em_done							; 3
+									; -1
 
 
 	;==================
