@@ -228,11 +228,11 @@ st_wrap:
 st_wrap_done:
 
 	;==============
-	; timeout after 4s or so?
+	; timeout after 6s or so?
 	;==============
 st_timeout:
 	lda	FRAMEH							; 3
-	cmp	#4							; 2
+	cmp	#6							; 2
 	beq	st_done							; 3
 									; -1
 								;============
