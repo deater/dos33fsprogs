@@ -150,6 +150,9 @@ loop_forever:
 .include "deater.inc"
 ;.include "lg.inc"
 
+; e-mail
+.include "email_40_96.inc"
+
 ; leaving
 .include "leaving.inc"
 
