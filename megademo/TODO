@@ -13,7 +13,8 @@ Overall:
 	Trim the last 8 bytes off of all the lz4 files
 
 Music:
-	compose music
+	convert to Pt3
+	write Pt3 player
 	fit in RAM
 
 Timing:
@@ -34,27 +35,26 @@ Timing:
 	add wipe effect with tengwar: just draw 4 bytes yellow, 4 bytes
 	from scroll buffer
 	Add Susie starring role?
-	auto timeout to next screen
 
 3: e-mail:
 	Update to proper text
 	REACH: have bits flowing through wire animation?
-	auto timeout to next screen
+		just change some of green in cable to dark green?
+	REACH: have hands over keyboard move too?
 
 4: leave house:
-	Add some sort of text?
-	
+	DONE?
+	REACH: Add some sort of text	
 
 5: running bird:
-	auto timeout to next screen
-	run to middle of screen, then have everything start moving?
-	have sprites partially on all screen rather than jumping at edge?
-	stop scrolling and run off at end?
+	REACH: run to middle of screen, then have everything start moving?
+	REACH: have sprites partially on all screen rather than jumping at edge?
+	REACH: stop scrolling and run off at end?
 
 6: waterfall:
-	finish packing down a bit
-	auto movement
-	auto timeout to next screen
+	DONE?
+	REACH: pause under falls?
+	REACH: waterfall sound effect?
 
 7: arrival at ship
 	top HGR, bottom gr
@@ -66,18 +66,21 @@ Timing:
 8: mode7:
 	change path
 	change ground to night-time darkness.  grey water
-	detect keypress
 
-9: spacegame:
+9: spacebars:
 	auto movement
 	auto timeout to next screen
-	when done, blue horiz line?
+	REACH: when done, ship move up (shrink) and disappear w blue horiz line?
 
 10: arrive at frogysue:
+	DONE?
 	add text?
+	REACH: have heart zigzag up?
 
 11: fireworks:
-	update text
+	DONE?
+	REACH: have VMW Production scroll logo into the GR mode next to it
+	have keypress restart entire demo (or exit) rather than re-start fireworks
 
 
 
