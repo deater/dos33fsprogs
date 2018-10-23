@@ -100,7 +100,7 @@ takeoff.img:	takeoff_hgr.png
 ####
 
 sp_names.inc:	sp_names.png
-	$(PNG_TO_RLE) asm ./deater.png sp_names > sp_names.inc
+	$(PNG_TO_RLE) asm ./sp_names.png sp_names > sp_names.inc
 
 ####
 

@@ -18,6 +18,9 @@ starring_people:
 	sta	FRAME
 	sta	FRAMEH
 
+	lda	#40
+	sta	XPOS
+
 	;=============================
 	; Load graphic hgr
 
@@ -44,34 +47,24 @@ sp_smc4:
 
 
 	;=============================
-	; Load graphic page0
+	; Load list of names to PAGE2
 
 	lda	#$0c
 	sta	BASH
 	lda	#$00
-	sta	BASL                    ; load image to $c00
-
-
-	; Load overwrite version
-	lda	#<fs
+	sta	BASL                    ; first load image to $c00
+	lda	#<sp_names
 	sta	GBASL
-	lda	#>fs
+	lda	#>sp_names
 	sta	GBASH
 	jsr	load_rle_gr
 
 	lda	#4
 	sta	DRAW_PAGE
-
-	jsr	gr_copy_to_current	; copy to page1
-
-	; GR part
-	bit	PAGE1
-	bit	LORES							; 4
-	bit	SET_GR							; 4
-	bit	FULLGR							; 4
+	jsr	gr_copy_to_current	; then copy to PAGE2
 
 	;=============================
-	; Load graphic page1
+	; Load person image to PAGE1
 
 	lda	#$0c
 	sta	BASH
@@ -86,13 +79,8 @@ sp_smc6:
 	sta	GBASH
 	jsr	load_rle_gr
 
-	;===================
-	; copy to page3
-
 	lda	#0
 	sta	DRAW_PAGE
-
-	jsr	gr_copy_to_current
 
 	; GR part
 	bit	PAGE0
@@ -190,9 +178,72 @@ sp_outer_loop:
 	;			      -7 exit on timeout
 	;			     -10 keypress
 	;			      -2 ldy at top
+	;			      -8 pause a bit
+	;			     -32 draw yellow
+	;			     -49 wipe
 	;			===========
-	;			    7365
+	;			    7276
 
+	lda	FRAMEH						; 3
+	cmp	#15						; 2
+	bcs	sp_name_wipe	; bge				; 3
+								; -1
+
+	lda	#52						; 2
+	jsr	delay_a						; 25+52
+	jmp	sp_done_copy					; 3
+
+sp_name_wipe:
+	;=======================
+	; do the name wipe
+	;=======================
+	; 10 + 22 = 32
+
+	lda	#$dd						; 2
+	ldx	XPOS						; 3
+	dex							; 2
+	bmi	sp_no_yellow					; 3
+
+								;-1
+	sta	$650,X						; 5
+	sta	$6d0,X						; 5
+	sta	$750,X						; 5
+	sta	$7d0,X						; 5
+	jmp	sp_done_yellow					; 3
+sp_no_yellow:
+	dec	XPOS
+	inc	XPOS
+	dec	XPOS
+	inc	XPOS
+	nop
+sp_done_yellow:
+
+	;=======================
+	; do the name wipe
+	;=======================
+	;	6 + 43
+	ldx	XPOS						; 3
+	bmi	sp_no_copy					; 3
+
+								;-1
+sp_smc8:
+	lda	$800,X						; 4
+	sta	$650,X						; 5
+sp_smc9:
+	lda	$880,X						; 4
+	sta	$6d0,X						; 5
+sp_smc10:
+	lda	$900,X						; 4
+	sta	$750,X						; 5
+sp_smc11:
+	lda	$980,X						; 4
+	sta	$7d0,X						; 5
+	dec	XPOS						; 5
+	jmp	sp_done_copy					; 3
+sp_no_copy:
+	lda	#16						; 2
+	jsr	delay_a						; 25+16
+sp_done_copy:
 
 	;================
 	; wrap counter
@@ -221,15 +272,16 @@ sp_wrap_done:
 	; 7 cycles
 sp_timeout:
 	lda	FRAMEH							; 3
-	cmp	#80							; 2
+	cmp	#75							; 2
 	beq     sp_done							; 3
 									; -1
 
-	; Try X=18 Y=77 cycles=7393 R2
-	; Try X=104 Y=14 cycles=7365
 
-	ldy	#14							; 2
-sploop1:ldx	#104							; 2
+	; Try X=17 Y=80 cycles=7281 R3
+	; Try X=57 Y=25 cycles=7276
+
+	ldy	#25							; 2
+sploop1:ldx	#57							; 2
 sploop2:dex								; 2
 	bne	sploop2							; 2nt/3
 	dey								; 2
@@ -266,6 +318,14 @@ setup_people_fs:
 	lda	#>fs
 	sta	sp_smc6+1
 
+	lda	#$0
+	sta	sp_smc8+1
+	sta	sp_smc10+1
+
+	lda	#$80
+	sta	sp_smc9+1
+	sta	sp_smc11+1
+
 	rts
 
 setup_people_deater:
@@ -286,9 +346,17 @@ setup_people_deater:
 	lda	#>deater
 	sta	sp_smc6+1
 
+
+	lda	#$28
+	sta	sp_smc8+1
+	sta	sp_smc10+1
+
+	lda	#$a8
+	sta	sp_smc9+1
+	sta	sp_smc11+1
+
 	rts
 
-.if 0
 setup_people_lg:
 
 	lda	#<lg_hgr
@@ -307,9 +375,15 @@ setup_people_lg:
 	lda	#>lg
 	sta	sp_smc6+1
 
-	rts
-.endif
+	lda	#$50
+	sta	sp_smc8+1
+	sta	sp_smc10+1
 
+	lda	#$d0
+	sta	sp_smc9+1
+	sta	sp_smc11+1
+
+	rts
 
 
 

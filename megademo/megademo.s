@@ -49,8 +49,8 @@ apple_iie:
 	jsr	starring_people
 	jsr	setup_people_deater
 	jsr	starring_people
-;	jsr	setup_people_lg
-;	jsr	starring_people
+	jsr	setup_people_lg
+	jsr	starring_people
 
 	; E-mail arriving
 	jsr	check_email
@@ -79,15 +79,12 @@ apple_iie:
 	; Fireworks
 	jsr	fireworks
 
+	;==================
 	; Game over
+	;==================
+	; we never get here
 game_over_man:
 	jmp	game_over_man
-
-	;===================
-	; Loop Forever
-	;===================
-loop_forever:
-	jmp	loop_forever
 
 
 	.include	"lz4_decode.s"
@@ -148,7 +145,8 @@ loop_forever:
 .include "starring2.inc"
 .include "fs.inc"
 .include "deater.inc"
-;.include "lg.inc"
+.include "lg.inc"
+.include "sp_names.inc"
 
 ; e-mail
 .include "email_40_96.inc"
@@ -182,9 +180,9 @@ fs_hgr_end:
 deater_hgr:
 .incbin "DEATER_HGRC.BIN.lz4",11
 deater_hgr_end:
-;lg_hgr:
-;.incbin "LG_HGRC.BIN.lz4",11
-;lg_hgr_end:
+lg_hgr:
+.incbin "LG_HGRC.BIN.lz4",11
+lg_hgr_end:
 
 ; bird mountain
 katahdin:

@@ -338,7 +338,6 @@ loopcoF:dex								; 2
 	dey								; 2
 	bne	loopcoE							; 2nt/3
 
-
 	lda	KEYPRESS				; 4
 	bpl	no_c64_keypress				; 3
 	jmp	done_c64
@@ -413,7 +412,7 @@ loopc6b:dex								; 2
 	jmp	c64_done_screen						; 3
 
 
-.align $100
+;.align $100
 
 
 apple2_text:
