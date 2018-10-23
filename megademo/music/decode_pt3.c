@@ -379,34 +379,48 @@ int main(int argc, char **argv) {
 
 	printf("Read %d bytes ($%04x) from %s\n",result,result,filename);
 
-	strncpy(pt3_name,(char *)buffer,98);
+	/* get name, 98 bytes long? */
+	/* Contains version info, name of song, and author name */
+	memcpy(pt3_name,(char *)buffer,98);
+
+	/* Get various paramaters that follow */
 	pt3_table=buffer[99];
 	pt3_delay=buffer[100];
 	pt3_numpos=buffer[101];
 	pt3_looppos=buffer[102];
 	pt3_pat_ptr=buffer[103]|buffer[104]<<8;
 
+	/* Load in the 32 sample pointers */
 	for(i=0;i<32;i++) {
 		pt3_sample_ptrs[i]=buffer[105+(2*i)]|buffer[106+(2*i)]<<8;
 	}
 
+	/* Load in the 16 ornament pointers */
 	for(i=0;i<16;i++) {
 		pt3_ornament_ptrs[i]=buffer[169+(2*i)]|buffer[170+(2*i)]<<8;
 	}
 
 	printf("PT3:\n");
+	pt3_name[29]='\n';
+	pt3_name[30]='\t';
 	printf("\t%s\n",pt3_name);
 	printf("\tTable: $%02x\n",pt3_table);
 	printf("\tDelay: $%02x\n",pt3_delay);
 	printf("\tNumPos: $%02x\n",pt3_numpos);
 	printf("\tLoopPos: $%02x\n",pt3_looppos);
 	printf("\tPatPtr: $%04x\n",pt3_pat_ptr);
-	printf("\tSmplPtr: ");
-		for(i=0;i<32;i++) printf(" $%04x",pt3_sample_ptrs[i]);
+	printf("\tSmplPtr:");
+		for(i=0;i<32;i++) {
+			if (i%8==0) printf("\n\t\t");
+			printf(" $%04x",pt3_sample_ptrs[i]);
+		}
 	printf("\n");
 
-	printf("\tOrnamentPtr: ");
-		for(i=0;i<16;i++) printf(" $%04x",pt3_ornament_ptrs[i]);
+	printf("\tOrnamentPtr:");
+		for(i=0;i<16;i++) {
+			if (i%8==0) printf("\n\t\t");
+			printf(" $%04x",pt3_ornament_ptrs[i]);
+		}
 	printf("\n");
 
 // File Format:
