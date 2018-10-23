@@ -25,6 +25,8 @@
 	28809	-- add timeouts to starring people
 	28733	-- add susie's cage to e-mail scene, move to megademo file
 	28989	-- add timeouts to check-email, takeoff, and spacebars
+	28893	-- convert people names to tengwar
+	29166	-- add back english names
 
 Graphics sizes:
 	(LG lores=300B)

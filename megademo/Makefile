@@ -30,7 +30,7 @@ megademo.o:	megademo.s \
 	c64_opener.s c64.img.lz4 \
 	falling_apple.s apple_40_96.inc \
 	starring.s starring1.inc starring2.inc starring3.img.lz4\
-	starring_people.s fs.inc FS_HGRC.BIN.lz4 \
+	starring_people.s sp_names.inc fs.inc FS_HGRC.BIN.lz4 \
 		deater.inc DEATER_HGRC.BIN.lz4 lg.inc LG_HGRC.BIN.lz4 \
 	check_email.s email_40_96.inc \
 	leaving.s leaving.inc tfv_sprites.inc \
@@ -96,6 +96,11 @@ takeoff.img.lz4:	takeoff.img
 
 takeoff.img:	takeoff_hgr.png
 	../hgr-utils/png2hgr takeoff_hgr.png > takeoff.img
+
+####
+
+sp_names.inc:	sp_names.png
+	$(PNG_TO_RLE) asm ./deater.png sp_names > sp_names.inc
 
 ####
 
