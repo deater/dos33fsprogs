@@ -15,9 +15,9 @@ letters_bm:
 	.byte	1,19," ",128
 	.byte	3,17," ",128
 	.byte	1,16,"MUSIC BY",128
-	.byte	3,16,"????????",150
+	.byte	3,17,"DASCON",150
 	.byte	1,16," ",128
-	.byte	3,16," ",128
+	.byte	3,17," ",128
 	.byte	1,16,"LZ4+DISK",128
 	.byte	3,17,"QKUMBA",150
 	.byte	1,16," ",128
