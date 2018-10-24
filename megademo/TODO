@@ -1,6 +1,6 @@
 THANKS:
 	* Code: DEATER
-	MUSIC: ???
+	* MUSIC: Dascon
 	* Fireworks: FOZZTEX
 	* DISK+LZ4: QKUMBA
 	* BMP2DHR: BILL BUCKELS
@@ -17,6 +17,23 @@ Music:
 	convert to Pt3
 	write Pt3 player
 	fit in RAM
+
+cycles free for music in VBLANK
+0: c64_opener:		4379
+1: falling_apple:	4507
+2: starring:		4484
+2.5: starring_people	7276
+3: e-mail:		4377
+4: leave house:		1643
+5: running bird:	4408
+6: waterfall:		1662
+7: arrival at ship	1400
+8: mode7:		n/a
+9: spacebars:		484
+10: arrive at frogysue:	1400
+11: fireworks		4504
+		so, 400 I guess?
+
 
 Timing:
 	Except for fireworks, 15s for each? 150s = 2min 30s

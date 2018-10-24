@@ -1,0 +1,212 @@
+http://garvalf.online.fr/index.php?page=articles_vortex_tracker.en
+
+I want arps!
+To create an arpeggio, use the ornaments tab. It's very simple and easy 
+to get the hang of, even though it looks scary.
+
+Adjust the length of the ornament to 3. Now, just enter "0" in the first 
+row, "3" in the second row, and "7" in the third row. Go to the test 
+field and hit some notes. Minor arp!
+
+00|+00
+00|+03
+00|+07
+
+To use this in your song, go back to the pattern editor. Change the 
+third period after the note you want to arp to "1". Play your song, and 
+you'll hear some arps. To turn the arping off (so you can have it 
+applying only to specific notes, not to a whole column), just enter the 
+number of an ornament you haven't used yet. Such as F.
+
+
+
+
+http://karoshi.auic.es/index.php?topic=397.msg4641#msg4641
+
+
+Hello.
+
+Long ago I tried to write a kind of doc about PT3 modules. I stopped it 
+but due to a certain person who asked for it ... (this goes especially 
+for Nerlaska) I write here what I have. I can't remember exactly what I 
+wrote on some papers so when you see something like (?), it means I 
+can't remember what I wrote Shocked Shocked Shocked
+
+It would be very nice if someone could complete the info here given. 
+It's very easy; just write some basic on Vortex Tracker II and start 
+watching with an hex-viewer the changes ... at least, that's what I did 
+Grin
+
+Have fun.
+
+===========================================================================
+
+PT3 format:
+
+*Info inside the module*
+
+$00: "ProTracker 3."
+$0D: Version (always "5" for Vortex Tracker II).
+$0E: " compilation of "
+$1E: Name of the module.
+$3E: " by "
+$42: Author of the module.
+$63: Frequency table (from 1 to 4).
+$64: Speed ----------------------------------------------------------- Delay:    1 byte
+$65: Number of patterns.
+$66: Pattern loop --------------------------------------------------- LPosPtr:  1 byte
+$67: Position of patterns inside the module ---------------- PatsPtrs: 2 bytes
+$69: Position of samples inside the module ----------------- SamPtrs:  2 bytes
+     (2 bytes per address * 32 samples = 64 bytes)
+$A9: Position of ornaments inside the module ------------- OrnPtrs:  2 bytes
+     (2 bytes per address * 16 ornaments = 32 bytes)
+$C9: It points to where the patterns order ist ------------- CrPsPtr:  2 bytes
+     If you have a look to where this address points you can see, for instance,
+     $00,$03,$06,$03,$FF, which means:
+
+pattern 0 ($00), pattern 1 ($03), pattern 2 ($06), pattern 1 ($03), END ($FF).
+As you can see, you have to multiply for 3 every pattern number.
+
+------------------------------------------------------------------------------
+
+Now, in group of 6 bytes, come the address of every channel of every pattern.
+So the first 6 bytes will point to the address of channel A, B and C of
+pattern 0 (3 channels * 2 bytes = 6 bytes). The next 6 bytes to the 3 channels
+of pattern 1, etc ...
+
+------------------------------------------------------------------------------
+
+In $69 (SamPtrs) we have the address where the definition of the samples
+start. So $69 and $70 will contain the address of the definition of the first
+sample in the module. $71 and $72 of the second, and so on.
+
+The definition of the samples are like this:
+
+byte 1: Loop
+byte 2: Length of the sample
+byte 3: 0 0 0 0 0 0 0 0
+           ¦_¦ ¦______¦ ¦___ 0: Envelope   1: No envelope
+            ¦         ¦
+            ¦         ¦________ Noise: 0 - 31
+            ¦
+            ¦______________ 10: Volume down   11: Volume up
+
+byte 4: 0 0 0 0 0 0 0 0
+           ¦_¦ ¦_¦  ¦____¦
+            ¦    ¦       ¦
+            ¦    ¦       ¦______ Volume
+            ¦    ¦
+            ¦    ¦___________ Noise slide (?)
+            ¦
+            ¦______________ Frequency slide (?)
+
+byte 5: Low byte.
+byte 6: High byte.
+These two bytes (5 and 6) contain the frequency slide. In case of negative
+slide (higher pitch) the frequency you want to rest is rested to $FFFF and
+stored in these 2 bytes.
+
+Bytes 3,4,5 and 6 form a line of the sample (raster). So a sample will have
+so many groups of these bytes as lines has the sample.
+
+------------------------------------------------------------------------------
+
+Definition of ornaments are much easier:
+
+Byte 1: Loop
+Byte 2: Length
+Byte 3: Note (0-95)
+
+The same as for samples. Byte 3 contains the definition of one line so there
+will be as much bytes containing the new note as lines of definition has the
+ornament.
+
+------------------------------------------------------------------------------
+
+Now it becomes more complex Smiley
+
+The address of the channels of every pattern come in group of 6, as we said.
+If we go to the address pointed for channel A (the first 2 bytes of those 6)
+we'll have definition of the channel A in the tracker. The bytes are coded so
+we have to read the higher 4 bites:
+
+$4x: Ornament ($40-$4F)
+$50-$AF: Note to play. There are 96 (12 notes * 8 octaves). The byte before
+         this one tells the length in lines inside the tracker. For instance:
+         $05,$50 will play C1 (Do in octave 1) during 5 lines of tracker. If
+         the Speed (Delay) is 6, the player will play this note during 30
+         (6 rasters * 5 lines in tracker) rasters.
+$Bx: Envelope. We have to add 1 to know which value should we give to register
+     13. If there's envelope (a value different to $B1) the next 2 bytes are
+     register 12 and register 11 of the PSG. An example: $B9, $00, $50 means
+     R13=$08, R12=$00, R11=$50.
+$Cx: Volume - $C0-$CF
+$Dx: Sample - $D0-$EF
+$0X: Effects/Commands ... The values they handle are set after note value
+     ($50-$AF).
+
+*Effects*
+
+$01: Sound frequency decreasing in that channel.
+     First byte indicates the delay used to add the new frequency.
+     Next 2 bytes will indicate the frequency to add. Example:
+     $02,$23,$00 will add $23 to the final frequency in that raster
+     and another $23 every 2 rasters.
+
+$01: Sound frequency increasing in that channel.
+     It's the same as above but the value is rested to $FFFF. Example:
+     $01,$DD,$FF will rest $23 to the final frequency in every raster.
+
+$02: Tone portamento.
+     First byte is delay again. (?)
+
+$03: Starts playing sample from a particular position/line definition.
+     Byte indicates from which position.
+
+$04: Starts playing ornament from a particular position/line definition.
+     Byte indicates from which position.
+
+$06: Periodical sound off/on in that channel.
+     Two bytes are used here. The first one tells how many rasters will be
+     played and the second how many will be not. Example. $03,$04 means
+     that that channel will be played 3 rasters, 4 not played, 3 played, ...
+
+$08: Envelope frequency increasing.
+     Two bytes will indicate the frequency to add to registers R12 and R11.
+     Example: $34,$00 will add $34 to R11.
+
+$09: Set playing speed (new Delay).
+     The byte after the note will tell the new delay.
+
+$0A: Envelope frequency decreasing.
+     Same as increasing but the value is rested to $FFFF.
+     Example: $CC,$FF will rest $34 to R11.
+
+------------------------------------------------------------------------------
+
+*Example 1*
+
+So if we have this in the module: $D2,$CF,$B1,$05,$50 we will have this in the
+tracker:
+
+C-1   2..F   ....
+---     ....    ....
+---     ....    ....
+---     ....    ....
+---     ....    ....
+
+$D2: Sample 2    ($Dx samples)
+$CF: Volume 15   ($Cx volume)
+$B1: No envelope ($Bx envelope)
+$05,$50: Play note $50 (C1) during five tracker lines.
+
+*Example 2*
+
+If we have this in the module: $D1,$CE,$09,$B1,$08,$50,$07
+
+$D1: Sample 1.
+$CE: Volume 14.
+$09: New delay will be set. See after note is set.
+$B1: No envelope.
+$08,$50: Play note $50 (C1) during eight tracker lines.
+$07: New Delay.
