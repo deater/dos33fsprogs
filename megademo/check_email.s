@@ -254,7 +254,7 @@ em_wrap_done:
 	; 7 cycles
 em_timeout:
 	lda	FRAMEH							; 3
-	cmp	#20							; 2
+	cmp	#34							; 2
 	beq	em_done							; 3
 									; -1
 
@@ -368,30 +368,61 @@ draw_line_p2:
 em_letters:
 	; note it is y,x
 ;       .byte	4,4,
-	.byte	        "DA LA ",128		; DEATER
-	.byte	4+128,4,"DE&FEF",198
+	.byte	        "RE: VISIT",128		; RE: VISIT
+	.byte	4+128,4,"RE: VISIT",198
 
-	.byte	5,4,    " S C  !.",128		; IS COOL
-	.byte	5+128,4,"YS C88I.",128
+	.byte	6,4,	"DA LA ",128		; DEATER
+	.byte	6+128,4,"DE&FEF",198
 
-	.byte	7,3,    "W   M",$22,"SSE  J A",128
-	.byte	7+128,3,"WYF MGSSEH 8YE",128
+	.byte	7,4,    " K MML L !J,",128	; KOMMT BALD,
+	.byte	7+128,4," K8MMF 8&I8,",128
 
-	.byte	8,3,    " A SAS LA KS",128
-	.byte	8+128,3,"FEYSESEHEEKS",128
+	.byte	8,4,    "ICL  A M SSA",128	; ICH VERMISSE
+	.byte	8+128,4,"ICH VEFMISSE",128
 
-	.byte	9,3,    "A  !",$22,"SA .",128
-	.byte	9+128,3,"EYHIOSEH.",128
+	.byte	9,4,    "J CL.",128
+	.byte	9+128,4,"8ICH.",128		; DICH.
 
-	.byte	12,4,    "        /I",128
-	.byte	12+128,4,"        /Y",128
-	.byte	13,4,    "  __ __/_I",128
-	.byte	13+128,4,"  __ __/_Y",128
-	.byte	14,4,    " /__]    I/",128
-	.byte	14+128,4," /__]    Y/",128
-	.byte	15,4,    "/_____   I\",128
-	.byte	15+128,4,"/_____EEEE\"
+	.byte	11,4,    "  F  GGYS A",128
+	.byte	11+128,4,"  FF8GGYSUE",128	; FROGGYSUE
+
+	.byte	13,10,          "  /I",128
+	.byte	13+128,10,      "  /Y",128
+	.byte	14,4,    "  __ __/_I",128
+	.byte	14+128,4,"  __ __/_Y",128
+	.byte	15,4,    " /__]    I/",128
+	.byte	15+128,4," /__]    Y/",128
+	.byte	16,4,    "/_____   I\",128
+	.byte	16+128,4,"/_____EEEE\"
 	.byte	255
+
+
+	; note it is y,x
+;       .byte	4,4,
+;	.byte	        "DA LA ",128	; DEATER
+;	.byte	4+128,4,"DE&FEF",198
+;
+;	.byte	5,4,    " S C  !.",128
+;	.byte	5+128,4,"YS C88I.",128
+;
+;	.byte	7,3,    "W   M",$22,"SSE  J A",128
+;	.byte	7+128,3,"WYF MGSSEH 8YE",128
+;
+;	.byte	8,3,    " A SAS LA KS",128
+;	.byte	8+128,3,"FEYSESEHEEKS",128
+;
+;	.byte	9,3,    "A  !",$22,"SA .",128
+;	.byte	9+128,3,"EYHIOSEH.",128
+
+;	.byte	12,4,    "        /I",128
+;	.byte	12+128,4,"        /Y",128
+;	.byte	13,4,    "  __ __/_I",128
+;	.byte	13+128,4,"  __ __/_Y",128
+;	.byte	14,4,    " /__]    I/",128
+;	.byte	14+128,4," /__]    Y/",128
+;	.byte	15,4,    "/_____   I\",128
+;	.byte	15+128,4,"/_____EEEE\"
+;	.byte	255
 
 
 ;.include "email_40_96.inc"
