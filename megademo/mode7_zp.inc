@@ -58,7 +58,7 @@ WHICH_CHUNK	= $97
 COLOR1		=	$E0
 COLOR2		=	$E1
 MATCH		=	$E2
-XX		=	$E3
+;XX		=	$E3
 
 
 SHIPY           =     $E4

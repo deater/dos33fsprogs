@@ -31,7 +31,7 @@ setup_rocket:
 	sta	FRAMEH
 	sta	STATE
 	lda	#1
-	sta	XPOS
+	sta	XX
 
 	;=============================
 	; Load graphic hgr
@@ -181,10 +181,10 @@ toloop7:dex								; 2
 	;			     -23 state jump
 	;			     -23 wrap counter
 	;			      -7 timeout
-	;			   -3602 state
+	;			   -3886 state
 	;			     -10 keypress
 	;			===========
-	;			     885
+	;			      601
 
 
 	;================
@@ -220,11 +220,13 @@ to_timeout:
 									; -1
 
 
-	; Try X=43 Y=4 cycles=885
-	; Try X=88 Y=2 cycles=893 R5
+	; Try X=118 Y=1 cycles=597 R4
 
-	ldy	#4							; 2
-toloop1:ldx	#43							; 2
+	nop
+	nop
+
+	ldy	#1							; 2
+toloop1:ldx	#118							; 2
 toloop2:dex								; 2
 	bne	toloop2							; 2nt/3
 	dey								; 2
@@ -263,8 +265,8 @@ to_exit:
 to_jump_table:
 	.word   (to_state0-1)
 	.word   (to_state2-1)
-	.word   (to_state0-1)
-	.word   (to_state0-1)
+	.word   (to_state4-1)
+	.word   (to_state4-1)
 
 
 ;.align	$100
@@ -272,16 +274,24 @@ to_jump_table:
 	;============================
 	; state0: Draw+move Bird+Rider
 	;============================
-	; 13 + 2208 + 762 + 578 + 13 + 25 + 3 = 3602
+	; 3886
+	; -578 gr_copy
+	;  -13 inc xpos
+	;  -19 which sprite
+	;-2208 draw sprites
+	;  -20 adjust state
+	;   -3 jmp
+	;====================
+	; 1045
 to_state0:
 
 	jsr	gr_copy_row22				; 6+572
 
-	; INC XPOS, 13 cycles
+	; INC XX, 13 cycles
 	lda	FRAME					; 3
 	bne	to_xpos_no_inc				; 3
 to_xpos_inc:						;-1
-	inc	XPOS					; 5
+	inc	XX					; 5
 	jmp	to_xpos_done				; 7
 to_xpos_no_inc:
 	lda	$0					; 3
@@ -292,12 +302,13 @@ to_xpos_done:
 
 	lda     #22					; 2
 	sta	YPOS					; 3
-
+	lda	XX					; 3
+	sta	XPOS					; 3
 	lda	FRAMEH					; 3
 	and	#$1					; 2
 	beq	to_bwalk				; 3
 						;===========
-						;        13
+						;        19
 
 
 to_bstand:
@@ -332,10 +343,7 @@ to_bwalk:
                                                         ; 33 + 2175 = 2208
 
 to_done_bwalk:
-	lda	$0
-	nop
-;	inc	XPOS					; 5
-	lda	XPOS					; 3
+	lda	XX					; 3
 	cmp	#21					; 2
 	bne	to_keep_state				; 3
 
@@ -356,10 +364,10 @@ to_done_keep_state:
 
         ; delay
 
-	; Try X=151 Y=1 cycles=762
+	; Try X=51 Y=4 cycles=1045
 
-        ldy	#1							; 2
-toloopV:ldx	#151							; 2
+        ldy	#4							; 2
+toloopV:ldx	#51							; 2
 toloopW:dex                                                             ; 2
         bne	toloopW                                                 ; 2nt/3
         dey                                                             ; 2
@@ -367,22 +375,149 @@ toloopW:dex                                                             ; 2
 
 	jmp	to_done_state						; 3
 
-
+.align	$100
 
 	;============================
-	; state2: Do nothing
+	; state2: Bird Returns
 	;============================
-	; 3599 + 3 = 3602
+	; want 3886
+	;      -578 gr_copy
+	;     -1418 tfv stand
+	;       -15 xpos adjust
+	;       -19 which sprite
+	;     -1833 draw bird
+	;       -20 (8+12) change state
+	;        -3 jump back
+	; ==========
+	;         0
+
 to_state2:
+
+	jsr	gr_copy_row22				; 6+572
+
+	; draw tfv
+
+	lda     #22					; 2
+	sta	YPOS					; 3
+	lda	#21					; 2
+	sta	XPOS					; 3
+	lda	#>tfv_stand_right			; 2
+	sta	INH                                     ; 3
+	lda	#<tfv_stand_right			; 2
+	sta	INL                                     ; 3
+	jsr	put_sprite                              ; 6
+
+                                                        ;=========
+							; 26 + 1392 = 1418
+
+	; INC XX, 15 cycles
+	lda	FRAME					; 3
+	and	#$3	; 0..7, 100 and 00		; 2
+	bne	to2_xpos_no_inc				; 3
+to2_xpos_inc:						;-1
+	dec	XX					; 5
+	jmp	to2_xpos_done				; 3
+to2_xpos_no_inc:
+	lda	$0					; 3
+	nop						; 2
+	nop						; 2
+to2_xpos_done:
+
+
+	lda     #24					; 2
+	sta	YPOS					; 3
+	lda	XX					; 3
+	sta	XPOS					; 3
+
+	lda	FRAMEH					; 3
+	and	#$1					; 2
+	beq	to2_bwalk				; 3
+						;===========
+						;        19
+
+
+to2_bstand:
+	; draw bird/rider standing                              ; -1
+	lda	#>bird_stand_left_sprite		; 2
+	sta	INH                                     ; 3
+	lda	#<bird_stand_left_sprite		; 2
+	sta	INL                                     ; 3
+	jsr	put_sprite                              ; 6
+
+	jmp	to2_done_bwalk				; 3
+                                                        ;=========
+                                                        ; 18 + 1815 = 1833
+
+
+to2_bwalk:
+	; draw bird/rider walking
+	lda     #>bird_walk_left_sprite			; 2
+	sta     INH					; 3
+	lda     #<bird_walk_left_sprite			; 2
+	sta     INL					; 3
+	jsr     put_sprite				; 6
+
+	inc	$0					; 5
+	inc	$0					; 5
+	inc	$0					; 5
+	nop						; 2
+
+	                                                ;=========
+                                                        ; 16 + 17 + 1800 = 1833
+
+to2_done_bwalk:
+	lda	XX					; 3
+	cmp	#0					; 2
+	bne	to2_keep_state				; 3
+
+							; -1
+	inc	STATE					; 5
+	inc	STATE					; 5
+	jmp	to2_done_keep_state			; 3
+							;========
+							; 12
+to2_keep_state:
+	lda	$0
+	lda	$0
+	lda	$0
+	lda	$0
+
+
+to2_done_keep_state:
 
         ; delay
 
-	; Try X=5 Y=116 cycles=3597 R2
+	; Try X=1 Y=104 cycles=1145 R5
+	; Try X=13 Y=16 cycles=1137 R3
 
+;	lda	$0
+
+;	ldy	#16							; 2
+;toloopT:ldx	#13							; 2
+;toloopU:dex								; 2
+;	bne	toloopU							; 2nt/3
+;	dey								; 2
+;	bne	toloopT							; 2nt/3
+
+	jmp	to_done_state						; 3
+
+
+
+
+
+	;============================
+	; state4: Do nothing
+	;============================
+	; 3886 - 3 = 3883
+to_state4:
+
+        ; delay
+
+	; Try X=154 Y=5 cycles=3881 R2
 	nop
 
-	ldy	#116							; 2
-toloopZ:ldx	#5							; 2
+	ldy	#5							; 2
+toloopZ:ldx	#154							; 2
 toloopY:dex                                                             ; 2
 	bne	toloopY                                                 ; 2nt/3
 	dey                                                             ; 2
