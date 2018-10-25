@@ -50,12 +50,10 @@ Timing:
 	DONE???
 
 2.5: starring_people
-	add wipe effect with tengwar: just draw 4 bytes yellow, 4 bytes
-	from scroll buffer
-	Add Susie starring role?
+	DONE???
 
 3: e-mail:
-	Update to proper text
+	DONE???
 	REACH: have bits flowing through wire animation?
 		just change some of green in cable to dark green?
 	REACH: have hands over keyboard move too?
@@ -65,6 +63,7 @@ Timing:
 	REACH: Add some sort of text	
 
 5: running bird:
+	DONE?
 	REACH: run to middle of screen, then have everything start moving?
 	REACH: have sprites partially on all screen rather than jumping at edge?
 	REACH: stop scrolling and run off at end?
@@ -107,6 +106,23 @@ Timing:
 e-mail notes:
 
 **01234567890123456**
+2  RE: ViSit
+3
+4  DeAteR,
+5   Kommt bald.
+6  Ich vermisse
+7  dich.
+9
+10    DEIN IMMER
+11
+12    FroGGY SuE 
+18         /|
+19   __ __/ I 
+20  /__I    I/
+21 /_____FFFI\
+22
+
+**01234567890123456**
 2  DEATER,
 3
 4  Wir MuSSEN
@@ -128,6 +144,7 @@ e-mail notes:
 20  /__I    I/
 21 /_____FFFI\
 22
+
 
 DEATER IS COOL
 

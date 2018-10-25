@@ -29,8 +29,9 @@ setup_rocket:
 	sta	DRAW_PAGE
 	sta	FRAME
 	sta	FRAMEH
-	sta	XPOS
 	sta	STATE
+	lda	#1
+	sta	XPOS
 
 	;=============================
 	; Load graphic hgr
@@ -180,10 +181,10 @@ toloop7:dex								; 2
 	;			     -23 state jump
 	;			     -23 wrap counter
 	;			      -7 timeout
-	;			   -3589 state
+	;			   -3602 state
 	;			     -10 keypress
 	;			===========
-	;			     898
+	;			     885
 
 
 	;================
@@ -193,7 +194,7 @@ toloop7:dex								; 2
 	;   wrap = 13+10=23
 	inc	FRAME							; 5
 	lda	FRAME							; 3
-	cmp	#4	; 20Hz						; 2
+	cmp	#8	; 7.5 Hz						; 2
 	beq	to_wrap							; 3
 to_nowrap:
 									;-1
@@ -219,12 +220,11 @@ to_timeout:
 									; -1
 
 
+	; Try X=43 Y=4 cycles=885
 	; Try X=88 Y=2 cycles=893 R5
-	lda	$0
-	nop
 
-	ldy	#2							; 2
-toloop1:ldx	#88							; 2
+	ldy	#4							; 2
+toloop1:ldx	#43							; 2
 toloop2:dex								; 2
 	bne	toloop2							; 2nt/3
 	dey								; 2
@@ -267,15 +267,27 @@ to_jump_table:
 	.word   (to_state0-1)
 
 
-
+;.align	$100
 
 	;============================
 	; state0: Draw+move Bird+Rider
 	;============================
-	; 13 + 2208 + 762 + 578 + 25 + 3 = 3589
+	; 13 + 2208 + 762 + 578 + 13 + 25 + 3 = 3602
 to_state0:
 
 	jsr	gr_copy_row22				; 6+572
+
+	; INC XPOS, 13 cycles
+	lda	FRAME					; 3
+	bne	to_xpos_no_inc				; 3
+to_xpos_inc:						;-1
+	inc	XPOS					; 5
+	jmp	to_xpos_done				; 7
+to_xpos_no_inc:
+	lda	$0					; 3
+	nop						; 2
+	nop						; 2
+to_xpos_done:
 
 
 	lda     #22					; 2
@@ -320,8 +332,9 @@ to_bwalk:
                                                         ; 33 + 2175 = 2208
 
 to_done_bwalk:
-
-	inc	XPOS					; 5
+	lda	$0
+	nop
+;	inc	XPOS					; 5
 	lda	XPOS					; 3
 	cmp	#21					; 2
 	bne	to_keep_state				; 3
@@ -341,12 +354,9 @@ to_keep_state:
 
 to_done_keep_state:
 
-
         ; delay
 
-
 	; Try X=151 Y=1 cycles=762
-
 
         ldy	#1							; 2
 toloopV:ldx	#151							; 2
@@ -362,17 +372,17 @@ toloopW:dex                                                             ; 2
 	;============================
 	; state2: Do nothing
 	;============================
-	; 3586 + 3 = 3589
+	; 3599 + 3 = 3602
 to_state2:
 
         ; delay
 
-	; Try X=142 Y=5 cycles=3581 R5
-	nop
-	lda	$0
+	; Try X=5 Y=116 cycles=3597 R2
 
-	ldy	#5							; 2
-toloopZ:ldx	#142							; 2
+	nop
+
+	ldy	#116							; 2
+toloopZ:ldx	#5							; 2
 toloopY:dex                                                             ; 2
 	bne	toloopY                                                 ; 2nt/3
 	dey                                                             ; 2
