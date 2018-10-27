@@ -150,14 +150,20 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;   -1 (+1-2) from above
 	;  -25 inc framecount
 	;   -7 see if timeout
+	; -100 play_music
 	;  -10 keypress
 	;================
-	; 4507
+	; 4407
 
-	; Try X=149 Y=6 cycles=4507
+	jsr	play_music	; 6+94
 
-	ldy	#6							; 2
-faloop1:ldx	#149							; 2
+
+	; Try X=219 Y=4 cycles=4405R2
+
+	nop
+
+	ldy	#4							; 2
+faloop1:ldx	#219							; 2
 faloop2:dex								; 2
 	bne	faloop2							; 2nt/3
 	dey								; 2
@@ -193,7 +199,8 @@ fa_doneinc:
 	; 7 cycles
 	lda	FRAMEH					; 3
 	cmp	#100					; 2
-	beq	fa_done					; 3
+	nop
+	;beq	fa_done					; 3
 							; -1
 
 	;=====================

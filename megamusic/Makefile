@@ -16,7 +16,8 @@ megamusic.dsk:	MEGAMUSIC MEGALOAD
 MEGAMUSIC:	megamusic.o
 	ld65 -o MEGAMUSIC megamusic.o -C ../linker_scripts/apple2_4000.inc
 
-megamusic.o:	megamusic.s
+megamusic.o:	megamusic.s \
+	play_music.s falling_apple.s
 	ca65 -o megamusic.o megamusic.s -l megamusic.lst
 
 
