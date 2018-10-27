@@ -57,7 +57,7 @@ mb_smc1:
 
 	; mah
 mb_smc2:
-	lda	mah00,Y		; 4
+	lda	mal00,Y		; 4
 	and	#$f		; 2
 	sta	MB_VALUE	; 3
 	ldx	#1		; 2
@@ -66,7 +66,7 @@ mb_smc2:
 				; 82
 
 mb_smc3:
-	lda	mah00,Y		; 4
+	lda	mal00,Y		; 4
 	lsr			; 2
 	lsr			; 2
 	lsr			; 2
@@ -108,7 +108,7 @@ mb_smc6:
 				; 88
 	; mcl
 mb_smc7:
-	lda	mcl00,Y		; 4
+	lda	mal00,Y		; 4
 	sta	MB_VALUE	; 3
 	ldx	#4		; 2
 	jsr	write_ay_both	; 6+65
@@ -117,7 +117,7 @@ mb_smc7:
 
 	; mch
 mb_smc8:
-	lda	mch00,Y		; 4
+	lda	mal00,Y		; 4
 	and	#$f		; 2
 	sta	MB_VALUE	; 3
 	ldx	#5		; 2
@@ -126,7 +126,7 @@ mb_smc8:
 				; 82
 
 mb_smc9:
-	lda	mch00,Y		; 4
+	lda	mal00,Y		; 4
 	lsr			; 2
 	lsr			; 2
 	lsr			; 2
@@ -138,7 +138,7 @@ mb_smc9:
 				; 88
 	; mnl
 mb_smc10:
-	lda	mnl00,Y		; 4
+	lda	mal00,Y		; 4
 	sta	MB_VALUE	; 3
 	ldx	#6		; 2
 	jsr	write_ay_both	; 6+65
@@ -177,7 +177,7 @@ mal_pattern:
 .byte	>mal02,>mal02,>mal02,>mal02,>mal02,>mal02,>mal02,>mal02
 .byte	>mal02,>mal02,>mal02,>mal02,>mal02,>mal02,>mal02,>mal00
 mah_pattern:
-.byte	>mah00,>mah00,>mah02,>mah03,>mah04,>mah05,>mah04,>mah07
+.byte	>mal00,>mal00,>mah02,>mah03,>mah04,>mah05,>mah04,>mah07
 .byte	>mah04,>mah05,>mah10,>mah11,>mah04,>mah05,>mah04,>mah07
 .byte	>mah04,>mah05,>mah10,>mah11,>mah04,>mah05,>mah04,>mah07
 .byte	>mah04,>mah05,>mah10,>mah11,>mah10,>mah11,>mah30,>mal00
@@ -192,17 +192,17 @@ mbh_pattern:
 .byte	>mbh08,>mbh05,>mbh10,>mbh11,>mbh04,>mbh05,>mbh22,>mbh23
 .byte	>mbh08,>mbh05,>mbh10,>mbh11,>mbh10,>mbh11,>mbh30,>mal00
 mcl_pattern:
-.byte	>mcl00,>mcl00,>mcl00,>mcl03,>mcl04,>mcl05,>mcl04,>mcl07
+.byte	>mal00,>mal00,>mal00,>mcl03,>mcl04,>mcl05,>mcl04,>mcl07
 .byte	>mcl08,>mcl09,>mcl10,>mcl11,>mcl04,>mcl05,>mcl04,>mcl07
 .byte	>mcl08,>mcl09,>mcl10,>mcl11,>mcl04,>mcl05,>mcl22,>mcl23
 .byte	>mcl08,>mcl09,>mcl10,>mcl11,>mcl10,>mcl11,>mcl30,>mal00
 mch_pattern:
-.byte	>mch00,>mch00,>mch00,>mch03,>mch04,>mch05,>mch04,>mch07
+.byte	>mal00,>mal00,>mal00,>mch03,>mch04,>mch05,>mch04,>mch07
 .byte	>mch08,>mch09,>mch10,>mch11,>mch04,>mch05,>mch04,>mch07
 .byte	>mch08,>mch09,>mch10,>mch11,>mch04,>mch05,>mch22,>mch23
 .byte	>mch08,>mch09,>mch10,>mch11,>mch10,>mch11,>mch30,>mal00
 mnl_pattern:
-.byte	>mnl00,>mnl00,>mnl00,>mnl03,>mnl04,>mnl05,>mnl04,>mnl07
+.byte	>mal00,>mal00,>mal00,>mnl03,>mnl04,>mnl05,>mnl04,>mnl07
 .byte	>mnl04,>mnl05,>mnl10,>mnl11,>mnl04,>mnl05,>mnl04,>mnl07
 .byte	>mnl04,>mnl05,>mnl10,>mnl11,>mnl04,>mnl05,>mnl04,>mnl07
 .byte	>mnl04,>mnl05,>mnl10,>mnl11,>mnl10,>mnl11,>mnl30,>mal00
@@ -219,8 +219,7 @@ mal00:
 mal02:
 .incbin "music/mock.al.02"
 
-mah00:
-.incbin "music/mock.ah.00"
+
 mah02:
 .incbin "music/mock.ah.02"
 mah03:
@@ -279,8 +278,6 @@ mbh30:
 .incbin "music/mock.bh.30"
 
 
-mcl00:
-.incbin "music/mock.cl.00"
 mcl03:
 .incbin "music/mock.cl.03"
 mcl04:
@@ -304,8 +301,6 @@ mcl23:
 mcl30:
 .incbin "music/mock.cl.30"
 
-mch00:
-.incbin "music/mock.ch.00"
 mch03:
 .incbin "music/mock.ch.03"
 mch04:
@@ -329,8 +324,6 @@ mch23:
 mch30:
 .incbin "music/mock.ch.30"
 
-mnl00:
-.incbin "music/mock.nl.00"
 mnl03:
 .incbin "music/mock.nl.03"
 mnl04:
