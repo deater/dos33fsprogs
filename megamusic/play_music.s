@@ -1,15 +1,17 @@
 
 	; takes
-	; 3 + 79 +
+	; 3 + 83 +
 	; 80 + 82 + 88 +
 	; 80 + 82 + 88 +
 	; 80 + 82 + 88 +
 	; 80 + 80 +
-	; 11 = 1003
+	; 21 = 1017
 play_music:
 
 	; self-modify the code
-	ldy	MB_PATTERN	; 3
+	lda	MB_PATTERN	; 3
+	and	#$1f		; 2
+	tay			; 2
 
 	lda	mal_pattern,Y	; 4
 	sta	mb_smc1+1	; 4
@@ -34,7 +36,7 @@ play_music:
 	lda	mnh_pattern,Y	; 4
 	sta	mb_smc11+1	; 4
 				;=======
-				; 79
+				; 83
 
 
 
@@ -153,8 +155,19 @@ mb_smc11:
 
 	inc	MB_FRAME	; 5
 
-	rts			; 6
+	bne	mb_no_change	; 3
+				; -1
+	inc	MB_PATTERN	; 5
+	jmp	mb_done_change	; 3
+mb_no_change:
+	lda	$0		; 3
+	nop			; 2
+	nop			; 2
+mb_done_change:
 
+	rts			; 6
+				;=======
+				; 21
 .align	$100
 
 ; patterns 31 long
@@ -162,42 +175,42 @@ mal_pattern:
 .byte	<mal00,<mal00,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
-.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
+.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal00
 mah_pattern:
 .byte	<mah00,<mal00,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
-.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
+.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal00
 mbl_pattern:
 .byte	<mbl00,<mal00,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
-.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
+.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal00
 mbh_pattern:
 .byte	<mbh00,<mal00,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
-.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
+.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal00
 mcl_pattern:
 .byte	<mcl00,<mal00,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
-.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
+.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal00
 mch_pattern:
 .byte	<mch00,<mal00,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
-.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
+.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal00
 mnl_pattern:
 .byte	<mnl00,<mal00,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
-.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
+.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal00
 mnh_pattern:
 .byte	<mnh00,<mal00,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
 .byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
-.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02
+.byte	<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal02,<mal00
 
 .align	$100
 
