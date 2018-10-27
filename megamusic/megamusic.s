@@ -8,6 +8,10 @@
 
 megamusic_start:				; this should end up at $4000
 
+	lda	#0
+	sta	MB_FRAME
+	sta	MB_PATTERN
+
 	;===================
 	; Init mockingboard
 	;===================
