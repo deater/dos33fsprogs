@@ -212,15 +212,18 @@ ce_patch:
 	;			     -10 keypress
 	;			      -2 ldy at top
 	;			    -132 move letters
+	;			   -1038 play_music
 	;			===========
-	;			    4377
+	;			    3339
 
-	; Try X=96 Y=9 cycles=4375 R2
+	jsr	play_music	; 6+1032
+
+	; Try X=110 Y=6 cycles=3337 R2
 
 	nop								; 2
 
-	ldy	#9							; 2
-emloop1:ldx	#96							; 2
+	ldy	#6							; 2
+emloop1:ldx	#110							; 2
 emloop2:dex								; 2
 	bne	emloop2							; 2nt/3
 	dey								; 2

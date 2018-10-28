@@ -238,20 +238,24 @@ st_timeout:
 								;============
 								;	7
 
-	; do_nothing should be      4550
+	;                           4550
 	;			     -13 wrap
 	;			      -7 timeout
 	;			     -10 keypress
 	;			     -30 page flipping
+	;			   -1038 music
 	;			===========
-	;			    4484
+	;			    3446
 
-	; Try X=178 Y=5 cycles=4481 R3
+	jsr	play_music	; 6+1032
 
-	lda	$0
+	; Try X=21 Y=31 cycles=3442 R4
 
-	ldy	#5							; 2
-stloop1:ldx	#178							; 2
+	nop
+	nop
+
+	ldy	#31							; 2
+stloop1:ldx	#21							; 2
 stloop2:dex								; 2
 	bne	stloop2							; 2nt/3
 	dey								; 2

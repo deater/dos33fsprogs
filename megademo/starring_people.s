@@ -181,8 +181,9 @@ sp_outer_loop:
 	;			      -8 pause a bit
 	;			     -32 draw yellow
 	;			     -49 wipe
+	;			   -1038 music
 	;			===========
-	;			    7276
+	;			    6238
 
 	lda	FRAMEH						; 3
 	cmp	#15						; 2
@@ -276,12 +277,14 @@ sp_timeout:
 	beq     sp_done							; 3
 									; -1
 
+	jsr	play_music	; 6+1032
 
 	; Try X=17 Y=80 cycles=7281 R3
 	; Try X=57 Y=25 cycles=7276
+	; Try X=45 Y=27 cycles=6238
 
-	ldy	#25							; 2
-sploop1:ldx	#57							; 2
+	ldy	#27							; 2
+sploop1:ldx	#45							; 2
 sploop2:dex								; 2
 	bne	sploop2							; 2nt/3
 	dey								; 2
