@@ -19,7 +19,8 @@
 	tmptrk	=	$fe	; temporary copy of current track
 	phase	=	$ff	; current phase for /seek
 
-	dirbuf	=	$1e00	; note, don't put this immediately below
+	dirbuf	=	$e00
+			;$1e00	; note, don't put this immediately below
 				;   the value being read as destaddr-4
 				;   is temporarily overwritten during read
 				;   process
@@ -31,10 +32,80 @@
 start:
 	jsr	init	; unhook DOS, init nibble table
 
+;======================
+
+	; Language card!  READ ROM, WRITE RAM, $D000 bank 1
+	lda	$c089
+	lda	$c089
+
+	; open and read a file
+	lda	#<md000_filename
+	sta	namlo
+	lda	#>md000_filename
+	sta	namhi
+	jsr	opendir		; open and read entire file into memory
+
+	; copy 12k from $4000 to $d000
+
+	ldy	#0
+yloop:
+	ldx	#0
+xloop:
+xloop_smc1:
+	lda	$4000,X
+xloop_smc2:
+	sta	$D000,X
+	inx
+	bne	xloop
+	iny
+	inc	xloop_smc1+2
+	inc	xloop_smc2+2
+	cpy	#48
+	bne	yloop
+
+
+	; open and read a file
+	lda	#<md000x2_filename
+	sta	namlo
+	lda	#>md000x2_filename
+	sta	namhi
+	jsr	opendir		; open and read entire file into memory
+
+	; Language card!  READ ROM, WRITE RAM, $D000 bank 2
+	lda	$c081
+	lda	$c081
+
+	; copy 4k from $4000 to $d000
+
+	ldy	#0
+yloop2:
+	ldx	#0
+xloop2:
+xloop2_smc1:
+	lda	$4000,X
+xloop2_smc2:
+	sta	$D000,X
+	inx
+	bne	xloop2
+	iny
+	inc	xloop2_smc1+2
+	inc	xloop2_smc2+2
+	cpy	#16
+	bne	yloop2
+
+
+
 	; open and read a file
 	lda	#<megademo_filename
 	sta	namlo
 	lda	#>megademo_filename
+	sta	namhi
+	jsr	opendir		; open and read entire file into memory
+
+	; open and read a file
+	lda	#<m1000_filename
+	sta	namlo
+	lda	#>m1000_filename
 	sta	namhi
 	jsr	opendir		; open and read entire file into memory
 
@@ -58,6 +129,24 @@ megademo_filename:	;.byte "MEGADEMO                      "
 c64_filename:	;.byte "C64.IMG                       "
 	.byte 'C'|$80,'6'|$80,'4'|$80,'.'|$80,'I'|$80,'M'|$80,'G'|$80,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0
+
+m1000_filename: ;.byte "MUSIC.1000                       "
+	.byte 'M'|$80,'U'|$80,'S'|$80,'I'|$80,'C'|$80,'.'|$80,'1'|$80,'0'|$80
+	.byte '0'|$80,'0'|$80,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0
+
+md000_filename: ;.byte "MUSIC.D000                       "
+	.byte 'M'|$80,'U'|$80,'S'|$80,'I'|$80,'C'|$80,'.'|$80,'D'|$80,'0'|$80
+	.byte '0'|$80,'0'|$80,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0
+
+md000x2_filename:	;.byte "MUSIC.D000X2                     "
+	.byte 'M'|$80,'U'|$80,'S'|$80,'I'|$80,'C'|$80,'.'|$80,'D'|$80,'0'|$80
+	.byte '0'|$80,'0'|$80,'X'|$80,'2'|$80,$A0,$A0,$A0,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0
 
