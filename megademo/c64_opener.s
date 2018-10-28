@@ -138,8 +138,9 @@ c64_done_screen:
 	;			     -24 done_blinding
 	;			      -7 check if past time
 	;			     -46 cursor blink
+	;			   -1038 play music
 	;==================================
-	;			 =  4379
+	;			 =  3341
 
 
 	; run the 2Hz counter, overflow at 30 60Hz frames
@@ -262,7 +263,6 @@ c64_wait_blinding:
 c64_done_blinding:
 
 
-
 	;=======================
 	; see if done
 	;=======================
@@ -323,16 +323,17 @@ cursor_off:
 								;============
 								;	 38
 
-
 cursor_done:
 
-;	Try X=96 Y=9 cycles=4375 R4
+	jsr	play_music		; 6+1032
+
+	; Try X=110 Y=6 cycles=3337 R4
 
 	nop
 	nop
 
-	ldy	#9							; 2
-loopcoE:ldx	#96							; 2
+	ldy	#6							; 2
+loopcoE:ldx	#110							; 2
 loopcoF:dex								; 2
 	bne	loopcoF							; 2nt/3
 	dey								; 2

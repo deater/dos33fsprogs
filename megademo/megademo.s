@@ -5,6 +5,11 @@
 .include "zp.inc"
 .include "hardware.inc"
 
+; external routines
+
+play_music=$1000
+mockingboard_init=$1100
+
 
 megademo_start:				; this should end up at $4000
 
@@ -21,6 +26,16 @@ megademo_start:				; this should end up at $4000
 
 
 apple_iie:
+
+	;==================
+	; Init mockingboard
+	;==================
+
+	lda	#0
+	sta	MB_FRAME
+	sta	MB_PATTERN
+
+	jsr	mockingboard_init
 
 	;===================
 	; set graphics mode
@@ -78,8 +93,8 @@ apple_iie:
 	; Game over
 	;==================
 	; we never get here
-game_over_man:
-	jmp	game_over_man
+;game_over_man:
+;	jmp	game_over_man
 
 
 	.include	"lz4_decode.s"
