@@ -7,10 +7,13 @@ PNG_TO_RLE = ../gr-utils/png2rle
 
 all:	megademo.dsk
 
-megademo.dsk:	MEGADEMO MEGALOAD c64.img
+megademo.dsk:	MEGADEMO MEGALOAD c64.img MUSIC.D000X2 MUSIC.D000 MUSIC.1000
 	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 MEGADEMO
 	$(DOS33) -y megademo.dsk BSAVE -a 0x800 MEGALOAD
 	$(DOS33) -y megademo.dsk BSAVE -a 0x2000 c64.img C64.IMG
+	$(DOS33) -y megademo.dsk BSAVE -a 0x1000 MUSIC.1000
+	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 MUSIC.D000
+	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 MUSIC.D000X2
 #	$(DOS33) -y megademo.dsk RAWWRITE -t 27 -s 0 MEGADEMO MEGA2
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 D_HGRC.BIN
 #	$(DOS33) -y megademo.dsk BSAVE -a 0x4000 FS_HGRC.BIN
@@ -52,6 +55,30 @@ MEGALOAD:        megaload.o
 
 megaload.o:      megaload.s
 	ca65 -o megaload.o megaload.s -l megaload.lst
+
+####
+
+MUSIC.1000:	music_1000.o
+	ld65 -o MUSIC.1000 music_1000.o -C ../linker_scripts/apple2_1000.inc
+
+music_1000.o:	music_1000.s
+	ca65 -o music_1000.o music_1000.s -l music_1000.lst
+
+####
+
+MUSIC.D000:	music_d000.o
+	ld65 -o MUSIC.D000 music_d000.o -C ../linker_scripts/apple2_d000.inc
+
+music_d000.o:	music_d000.s
+	ca65 -o music_d000.o music_d000.s
+
+####
+
+MUSIC.D000X2:	music_2nd_d000.o
+	ld65 -o MUSIC.D000X2 music_2nd_d000.o -C ../linker_scripts/apple2_d000.inc
+
+music_2nd_d000.o:	music_2nd_d000.s
+	ca65 -o music_2nd_d000.o music_2nd_d000.s
 
 ####
 
@@ -155,4 +182,5 @@ C64C.BIN:	c64.bmp
 	$(B2D) c64.bmp HGR
 
 clean:		
-		rm -f *~ *.o *.lst MEGADEMO MEGALOAD c64.img
+		rm -f *~ *.o *.lst MEGADEMO MEGALOAD c64.img \
+			MUSIC.1000 MUSIC.D000 MUSIC.D000X2
