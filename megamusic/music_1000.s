@@ -75,21 +75,34 @@ MB_FRAME = $94
 MB_PATTERN = $95
 
 	; takes
-	; 4 +
-	; 3 + 79 +
-	; 80 + 82 + 88 +
-	; 80 + 82 + 88 +
-	; 80 + 82 + 88 +
-	; 80 + 80 +
-	; 25 = 1025
+	;   7 load pattern
+	;  11 lang card setup
+	;  76 smc
+	;   3 loop init
+	; 910 play music 80 + 82 + 88 + 80 + 82 + 88 + 80 + 82 + 88 + 80 + 80
+	;  25 end
+	;==========
+	;      = 1032
 play_music:
-	; turn on language card
-	lda	$C088		; 4
 
 	; self-modify the code
 	lda	MB_PATTERN	; 3
 	and	#$1f		; 2
 	tay			; 2
+
+	; if > 16 use $D000 PAGE2 of language card
+	cpy	#16		; 2
+	bcs	use_page2	; 3
+use_page1:
+	; turn on language card	; -1
+	lda	$C088		; 4
+	jmp	done_lang_card	; 3
+use_page2:
+	lda	$C080		; 4
+	nop			; 2
+done_lang_card:
+
+
 
 	lda	mal_pattern,Y	; 4
 	sta	mb_smc1+2	; 4
@@ -115,7 +128,7 @@ play_music:
 	lda	mnh_pattern,Y	; 4
 	sta	mb_smc11+2	; 4
 				;=======
-				; 79
+				; 76
 
 
 
