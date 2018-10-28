@@ -9,7 +9,7 @@ all:	megamusic.dsk
 
 megamusic.dsk:	MEGAMUSIC MEGALOAD HALFMUSIC MUSIC.D000X2 MUSIC.D000 MUSIC.1000
 	$(DOS33) -y megamusic.dsk BSAVE -a 0x1000 MUSIC.1000
-	$(DOS33) -y megamusic.dsk BSAVE -a 0xD000 MUSIC.D000
+	$(DOS33) -y megamusic.dsk BSAVE -a 0x4000 MUSIC.D000
 	$(DOS33) -y megamusic.dsk BSAVE -a 0xD000 MUSIC.D000X2
 	$(DOS33) -y megamusic.dsk BSAVE -a 0x4000 MEGAMUSIC
 	$(DOS33) -y megamusic.dsk BSAVE -a 0x4000 HALFMUSIC
@@ -22,7 +22,7 @@ MUSIC.1000:	music_1000.o
 	ld65 -o MUSIC.1000 music_1000.o -C ../linker_scripts/apple2_1000.inc
 
 music_1000.o:	music_1000.s
-	ca65 -o music_1000.o music_1000.s
+	ca65 -o music_1000.o music_1000.s -l music_1000.lst
 
 ####
 
@@ -70,4 +70,5 @@ megaload.o:      megaload.s
 ####
 
 clean:
-		rm -f *~ *.o *.lst MEGAMUSIC MEGALOAD HALFMUSIC
+		rm -f *~ *.o *.lst MEGAMUSIC MEGALOAD HALFMUSIC \
+			MUSIC.1000 MUSIC.D000 MUSIC.D000X2

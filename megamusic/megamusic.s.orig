@@ -5,8 +5,6 @@
 .include "zp.inc"
 .include "hardware.inc"
 
-play_music=$1000
-mockingboard_init=$1100
 
 megamusic_start:				; this should end up at $4000
 
@@ -44,9 +42,9 @@ game_over_man:
 	.include	"gr_hline.s"
 	.include	"vapor_lock.s"
 	.include	"delay_a.s"
-;.align $100
-;	.include	"mockingboard.s"
-;	.include	"play_music.s"
+.align $100
+	.include	"mockingboard.s"
+	.include	"play_music.s"
 
 ;============================
 ; Include Lores Graphics
