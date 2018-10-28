@@ -75,13 +75,16 @@ MB_FRAME = $94
 MB_PATTERN = $95
 
 	; takes
+	; 4 +
 	; 3 + 79 +
 	; 80 + 82 + 88 +
 	; 80 + 82 + 88 +
 	; 80 + 82 + 88 +
 	; 80 + 80 +
-	; 21 = 1017
+	; 25 = 1025
 play_music:
+	; turn on language card
+	lda	$C088		; 4
 
 	; self-modify the code
 	lda	MB_PATTERN	; 3
@@ -241,10 +244,13 @@ mb_no_change:
 	nop			; 2
 mb_done_change:
 
+	; restore language card
+	lda	$C08A		; 4
 	rts			; 6
 				;=======
-				; 21
+				; 25
 
+.align $100
 .include "mockingboard.s"
 
 .align	$100
