@@ -39,9 +39,9 @@ start:
 	jsr	opendir		; open and read entire file into memory
 
 	; open and read a file
-;	lda	#<c64_filename
+;	lda	#<half_filename
 ;	sta	namlo
-;	lda	#>c64_filename
+;	lda	#>half_filename
 ;	sta	namhi
 ;	jsr	opendir		; open and read entire file into memory
 
@@ -55,9 +55,9 @@ megademo_filename:	;.byte "MEGAMUSIC                     "
 	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0
 
-c64_filename:	;.byte "C64.IMG                       "
-	.byte 'C'|$80,'6'|$80,'4'|$80,'.'|$80,'I'|$80,'M'|$80,'G'|$80,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+half_filename:	;.byte "HALFMUSIC                       "
+	.byte 'H'|$80,'A'|$80,'L'|$80,'F'|$80,'M'|$80,'U'|$80,'S'|$80,'I'|$80
+	.byte 'C'|$80,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0
 

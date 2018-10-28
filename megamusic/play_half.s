@@ -1,13 +1,38 @@
 
 	; takes
-	; 3 + 79 +
+	; 3 + 83 +
 	; 80 + 82 + 88 +
 	; 80 + 82 + 88 +
 	; 80 + 82 + 88 +
 	; 80 + 80 +
-	; 21 = 1017
+	; 26 = 1022 + 8 = 1030
 play_music:
+	lda	FRAME		; 3
+	and	#1		; 2
+	beq	play_half	; 3
 
+				; -1
+play_nothing:
+
+	; need to delay 1022-6= 1016
+
+	; Try X=201 Y=1 cycles=1012 R4
+
+	nop
+	nop
+
+        ldy     #1                                                      ; 2
+hmloopA:ldx     #201                                                      ; 2
+hmloopB:dex                                                             ; 2
+        bne     hmloopB                                                 ; 2nt/3
+        dey                                                             ; 2
+        bne     hmloopA                                                 ; 2nt/3
+
+
+
+	rts			; 6
+
+play_half:
 	; self-modify the code
 	lda	MB_PATTERN	; 3
 	and	#$1f		; 2
@@ -25,7 +50,6 @@ play_music:
 	sta	mb_smc5+2	; 4
 	sta	mb_smc6+2	; 4
 
-	; mcl and mch patterns are the same
 	lda	mcl_pattern,Y	; 4
 	sta	mb_smc7+2	; 4
 	lda	mch_pattern,Y	; 4
@@ -37,7 +61,7 @@ play_music:
 	lda	mnh_pattern,Y	; 4
 	sta	mb_smc11+2	; 4
 				;=======
-				; 79
+				; 83
 
 
 
@@ -155,6 +179,7 @@ mb_smc11:
 				; 80
 
 	inc	MB_FRAME	; 5
+	inc	MB_FRAME	; 5
 
 	bne	mb_no_change	; 3
 				; -1
@@ -168,7 +193,7 @@ mb_done_change:
 
 	rts			; 6
 				;=======
-				; 21
+				; 26
 .align	$100
 
 ; patterns 31 long
@@ -197,7 +222,6 @@ mcl_pattern:
 .byte	>mcl08,>mcl09,>mcl10,>mcl11,>mcl04,>mcl05,>mcl04,>mcl07
 .byte	>mcl08,>mcl09,>mcl10,>mcl11,>mcl04,>mcl05,>mcl22,>mcl23
 .byte	>mcl08,>mcl09,>mcl10,>mcl11,>mcl10,>mcl11,>mcl30,>mal00
-
 mch_pattern:
 .byte	>mal00,>mal00,>mal00,>mch03,>mch04,>mch05,>mch04,>mch07
 .byte	>mch08,>mch09,>mch10,>mch11,>mch04,>mch05,>mch04,>mch07
@@ -215,15 +239,13 @@ mnh_pattern:
 .byte	>mnh08,>mnh09,>mnh10,>mnh11,>mnh10,>mnh11,>mnh30,>mal00
 
 .align	$100
-; total = 2+8+8+11+11+11+7+13=71
 
-; 2
 mal00:
 .incbin "music/mock.al.00"
 mal02:
 .incbin "music/mock.al.02"
 
-; 8
+
 mah02:
 .incbin "music/mock.ah.02"
 mah03:
@@ -241,7 +263,6 @@ mah11:
 mah30:
 .incbin "music/mock.ah.30"
 
-; 8
 mbl00:
 .incbin "music/mock.bl.00"
 mbl01:
@@ -259,7 +280,6 @@ mbl22:
 mbl23:
 .incbin "music/mock.bl.23"
 
-; 11
 mbh00:
 .incbin "music/mock.bh.00"
 mbh01:
@@ -283,7 +303,7 @@ mbh23:
 mbh30:
 .incbin "music/mock.bh.30"
 
-; 11
+
 mcl03:
 .incbin "music/mock.cl.03"
 mcl04:
@@ -307,7 +327,6 @@ mcl23:
 mcl30:
 .incbin "music/mock.cl.30"
 
-; 11
 mch03:
 .incbin "music/mock.ch.03"
 mch04:
@@ -331,7 +350,6 @@ mch23:
 mch30:
 .incbin "music/mock.ch.30"
 
-;7
 mnl03:
 .incbin "music/mock.nl.03"
 mnl04:
@@ -347,7 +365,7 @@ mnl11:
 mnl30:
 .incbin "music/mock.nl.30"
 
-; 13
+
 mnh00:
 .incbin "music/mock.nh.00"
 mnh01:

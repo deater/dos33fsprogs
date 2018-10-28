@@ -1,7 +1,7 @@
 ; Display Falling Apple II and message
 
 
-falling_apple:
+falling_half:
 
 	;===================
 	; init screen
@@ -160,8 +160,6 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 
 
 	; Try X=231 Y=3 cycles=3484
-
-
 
 	ldy	#3							; 2
 faloop1:ldx	#231							; 2
