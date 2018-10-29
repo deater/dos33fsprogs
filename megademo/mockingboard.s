@@ -108,8 +108,60 @@ reset_ay_right:
 	sta	MB_VALUE
 	jsr	write_ay_both
 
+	;=========================
+	; Setup Interrupt Handler
+	;=========================
+	; Vector address goes to 0x3fe/0x3ff
+	; FIXME: should chain any existing handler
+
+	lda	#<interrupt_handler
+	sta	$03fe
+	lda	#>interrupt_handler
+	sta	$03ff
+
+	;============================
+	; Enable 50Hz clock on 6522
+	;============================
+
+	sei			; disable interrupts just in case
+
+	lda	#$40		; Continuous interrupts, don't touch PB7
+	sta	$C40B		; ACR register
+	lda	#$7F		; clear all interrupt flags
+	sta	$C40E		; IER register (interrupt enable)
+
+	lda	#$C0
+	sta	$C40D		; IFR: 1100, enable interrupt on timer one oflow
+	sta	$C40E		; IER: 1100, enable timer one interrupt
+
+	lda	#$1A
+	sta	$C404		; write into low-order latch
+	lda	#$41
+	sta	$C405		; write into high-order latch,
+				; load both values into counter
+				; clear interrupt and start counting
+
+	; 4fe7 / 1e6 = .020s, 50Hz
+	; 411a / 1e6 = .016s, 60Hz
+
 	rts
 
+interrupt_handler:
+	; A saved by firmware in $45
+	txa
+	pha			; save X
+	tya
+	pha			; save Y
+
+	jsr	play_music
+
+	pla
+	tay			; restore Y
+	pla
+	tax			; restore X
+	lda	$45		; restore A
+
+	rti			; return from interrupt                 ; 6
 
 
 	;=========================================
