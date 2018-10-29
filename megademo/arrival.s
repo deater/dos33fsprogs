@@ -14,7 +14,7 @@ arriving_there:
 
 	;===================
 	; init screen
-	bit	KEYRESET
+
 
 setup_arrival:
 
@@ -65,6 +65,8 @@ setup_arrival:
 	sta	DRAW_PAGE
 
 	bit	PAGE0
+
+	sei		; disable interrupt music
 
 	;==============================
 	; setup graphics for vapor lock
@@ -351,6 +353,7 @@ ar_no_keypress:
 
 ar_all_done:
 	bit	KEYRESET	; clear keypress	; 4
+	cli			; re-enable interrupt music
 	rts						; 6
 
 

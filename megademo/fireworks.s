@@ -112,6 +112,7 @@ init_letters:
 
 ;	jsr	wait_until_keypressed
 
+	sei	; disable interrupt music
 
 	;==============================
 	; setup graphics for vapor lock

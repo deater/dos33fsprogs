@@ -63,6 +63,8 @@ setup_leaving:
 
 	bit	PAGE0
 
+	sei	; disable interrupt music
+
 	;==============================
 	; setup graphics for vapor lock
 	;==============================
@@ -306,6 +308,7 @@ lv_no_keypress:
 
 lv_all_done:
 	bit	KEYRESET	; clear keypress	; 4
+	cli			; re-enable interrupt music
 	rts						; 6
 
 

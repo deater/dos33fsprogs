@@ -90,8 +90,8 @@ play_music:
 	and	#$1f		; 2
 	tay			; 2
 
-	; if > 16 use $D000 PAGE2 of language card
-	cpy	#16		; 2
+	; if > 17 use $D000 PAGE2 of language card
+	cpy	#17		; 2
 	bcs	use_page2	; 3
 use_page1:
 	; turn on language card	; -1

@@ -63,6 +63,8 @@ waterfall:
 	sta	GBASH
 	jsr	load_rle_gr
 
+	sei	; disable interrupt music
+
 	;==============================
 	; setup graphics for vapor lock
 	;==============================
@@ -341,6 +343,7 @@ is_it_left:
 
 wf_exit:
 	bit	KEYRESET
+	cli		; re-enable interrupt music
 	rts
 
 ;	nop						; 2

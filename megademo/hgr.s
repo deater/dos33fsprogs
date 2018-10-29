@@ -38,12 +38,12 @@ hgr:
 	; F3E2
 	lda	#$20		; HIRES Page 1 at $2000
 	bit	LOWSCR		; BIT SW.LOWSCR Use PAGE1 ($C054)
-	bit	MIXSET		;  BIT SW.MIXSET (Mixed text)
+;	bit	MIXSET		;  BIT SW.MIXSET (Mixed text)
 sethpg:
 	; F3EA
 	sta	HGR_PAGE
-	lda	HIRES
-	lda	TXTCLR
+;	lda	HIRES
+;	lda	TXTCLR
 hclr:
 	lda	#0			; black background
 	sta	HGR_BITS

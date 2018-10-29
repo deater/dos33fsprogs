@@ -86,6 +86,7 @@ space_bars:
 	; GR part
 	bit	PAGE0
 
+	sei	; disable interrupt music
 
 	;==============================
 	; setup graphics for vapor lock
@@ -366,6 +367,8 @@ sb_check_right:
 
 
 sb_exit:
+	bit	KEYRESET
+	cli		; re-enable interrupt music
 	rts						; 6
 
 

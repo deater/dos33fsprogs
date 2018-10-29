@@ -80,6 +80,7 @@ bird_mountain:
 
 	jsr	lz4_decode
 
+	sei				; disable interrupt music
 
 	;=====================================================
 	; attempt vapor lock
@@ -316,7 +317,7 @@ bm_noflo:
 bm_check_done:
 	; finish after so many cycles
 	lda	FRAMEH							; 3
-	cmp	#30							; 2
+	cmp	#23							; 2
 	beq	bm_done							; 3
 									; -1
 
@@ -468,7 +469,8 @@ bm_no_keypress:
 
 bm_done:
 	bit	KEYRESET	; clear keypress			; 4
-        rts								; 6
+	cli		; re-enable interrupt music
+	rts								; 6
 
 ;===========================================================
 ;===========================================================

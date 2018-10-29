@@ -259,7 +259,7 @@ em_wrap_done:
 	; 7 cycles
 em_timeout:
 	lda	FRAMEH							; 3
-	cmp	#34							; 2
+	cmp	#27							; 2
 	beq	em_done							; 3
 									; -1
 
@@ -283,6 +283,7 @@ em_no_keypress:
 
 em_done:
 	bit	KEYRESET	; clear keypress	; 4
+	cli			; enable interrupt music
 	rts						; 6
 
 
@@ -369,7 +370,36 @@ draw_line_p2:
 							;	32
 
 
+em_letters:
+	; note it is y,x
+;       .byte	4,4,
+	.byte	        "RE: VISIT",128		; RE: VISIT
+	.byte	4+128,4,"RE: VISIT",128
 
+	.byte	6,4,	"DA LA , K MML",128	; DEATER, KOMMT
+	.byte	6+128,4,"DE&FEF, K8MMF",128
+
+	.byte	7,4,    " L !J, ICL",128	; BALD, ICH
+	.byte	7+128,4," 8&I8, ICH",128
+
+	.byte	8,4,    " A M SSA J CL",128	; VERMISSE DICH.
+	.byte	8+128,4,"VEFMISSE 8ICH.",128
+
+	.byte	10,4,    "  F  GGYS A",128
+	.byte	10+128,4,"  FF8GGYSUE",128	; FROGGYSUE
+
+	.byte	13,10,          "  /I",128
+	.byte	13+128,10,      "  /Y",128
+	.byte	14,10,          " /_I",128
+	.byte	14+128,4,"  __ __/_Y", 128
+	.byte	15,4,    " /__]    I/",128
+	.byte	15+128,4," /__]    Y/",128
+	.byte	16,4,    "/_____   I\",128
+	.byte	16+128,4,"/_____EEEE\"
+	.byte	255
+
+
+.if 0
 em_letters:
 	; note it is y,x
 ;       .byte	4,4,
@@ -429,7 +459,7 @@ em_letters:
 ;	.byte	15+128,4,"/_____EEEE\"
 ;	.byte	255
 
-
+.endif
 ;.include "email_40_96.inc"
 
 
