@@ -33,7 +33,7 @@ shadow_left:
 	.byte $aa,$00,$a0
 	.byte $a0,$0a,$00
 
-.align 100
+.align $100
 
 .assert         >ship_forward = >ship_forward_end, error, "ship_forward crosses page"
 

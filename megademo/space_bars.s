@@ -272,12 +272,28 @@ sbloopF:dex								; 2
 	;			   -3470 draw_framebuffer
 	;			    -533 setup framebuffer
 	;			     -21 frame count
+	;			     -16 auto-move
 	;			      -7 timeout
 	;			     -34 keypress
 	;				-1 adjust center mark back
 	;			===========
-	;			     484
+	;			     468
 
+
+
+	;====================
+	; Auto-move ship
+	;====================
+	; look it up in lookup table?
+
+	lda	FRAMEH			; 3
+	lsr				; 2
+	and	#$1f			; 2
+	tax				; 2
+	lda	sb_x_lookup,X		; 4
+	sta	XPOS			; 3
+					;=======
+					; 16
 
 	;=====================
 	; timeout
@@ -290,9 +306,12 @@ sbloopF:dex								; 2
 
 	; Try X=11 Y=8 cycles=489 R2
 	; Try X=31 Y=3 cycles=484
+	; Try X=22 Y=4 cycles=465 R3
 
-	ldy	#3							; 2
-sbloop1:ldx	#31							; 2
+	lda	$0
+
+	ldy	#4							; 2
+sbloop1:ldx	#22							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
@@ -511,6 +530,10 @@ offset_lookup:
 ;	.byte	26,24,22,20,18,16,14,12,10, 8, 6, 4, 2,0
 
 	.byte	29,24,20,16,13,10,8,6,4,3,2,1,0,0
+
+sb_x_lookup:
+	.byte	15,14,13,12,11,10, 9, 8,  8, 9,10,11,12,13,14,15
+	.byte	15,16,17,18,19,20,21,22, 22,21,20,19,18,17,16,15
 
 ;.align $100
 

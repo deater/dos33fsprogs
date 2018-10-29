@@ -44,7 +44,7 @@ apple_iie:
 	;===================
 	jsr	HOME
 
-;	jsr	mode7_flying
+;	jsr	space_bars
 
 	; C64 Opening Sequence
 
