@@ -101,7 +101,6 @@ reset_ay_right:
 	; Setup initial conditions
 	;=========================
 
-
 	; 7: ENABLE
 	ldx	#7
 	lda	#$38			; noise disabled, ABC enabled
@@ -120,7 +119,7 @@ reset_ay_right:
 	sta	$03ff
 
 	;============================
-	; Enable 50Hz clock on 6522
+	; Enable 60Hz clock on 6522
 	;============================
 
 	sei			; disable interrupts just in case
@@ -134,13 +133,14 @@ reset_ay_right:
 	sta	$C40D		; IFR: 1100, enable interrupt on timer one oflow
 	sta	$C40E		; IER: 1100, enable timer one interrupt
 
-	lda	#$1A
+	lda	#$1a
 	sta	$C404		; write into low-order latch
 	lda	#$41
 	sta	$C405		; write into high-order latch,
 				; load both values into counter
 				; clear interrupt and start counting
 
+	; 9c40 / 1e6 = .040s, 25Hz
 	; 4fe7 / 1e6 = .020s, 50Hz
 	; 411a / 1e6 = .016s, 60Hz
 
@@ -148,6 +148,7 @@ reset_ay_right:
 
 interrupt_handler:
 	; A saved by firmware in $45
+	sta	$45
 	txa
 	pha			; save X
 	tya
@@ -160,6 +161,8 @@ interrupt_handler:
 	pla
 	tax			; restore X
 	lda	$45		; restore A
+
+	bit     $C404           ; clear 6522 interrupt by reading T1C-L ; 4
 
 	rti			; return from interrupt                 ; 6
 

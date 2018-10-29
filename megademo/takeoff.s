@@ -140,6 +140,7 @@ to_begin_loop:
 
 	; 3116 - 1038 (music) = 2078
 
+	jsr	play_music
 
 	; Try X=5 Y=67 cycles=2078
 	; Try X=11 Y=51 cycles=3112 R4

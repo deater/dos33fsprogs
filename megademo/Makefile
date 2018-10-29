@@ -30,6 +30,7 @@ MEGADEMO:	megademo.o
 megademo.o:	megademo.s \
 	zp.inc hardware.inc \
 	gr_hline.s gr_offsets.s vapor_lock.s delay_a.s wait_keypress.s \
+	mockingboard.s \
 	c64_opener.s c64.img.lz4 \
 	falling_apple.s apple_40_96.inc \
 	starring.s starring1.inc starring2.inc starring3.img.lz4\
@@ -61,7 +62,7 @@ megaload.o:      megaload.s
 MUSIC.1000:	music_1000.o
 	ld65 -o MUSIC.1000 music_1000.o -C ../linker_scripts/apple2_1000.inc
 
-music_1000.o:	music_1000.s
+music_1000.o:	music_1000.s mockingboard.s
 	ca65 -o music_1000.o music_1000.s -l music_1000.lst
 
 ####

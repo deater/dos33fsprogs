@@ -62,6 +62,8 @@ island_flying_directions:
 
 mode7_flying:
 
+	cli	; enable interrupts (play music)
+
 	;================================
 	; one-time setup
 	;================================
@@ -153,6 +155,7 @@ done_key:
 done_mode7:
 	bit	KEYRESET
 	; done
+	sei			; disable interrupts
 	rts
 
 check_up:
