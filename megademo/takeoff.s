@@ -224,7 +224,7 @@ to_wrap_done:
 	; 7 cycles
 to_timeout:
 	lda	FRAMEH							; 3
-	cmp	#80							; 2
+	cmp	#68							; 2
 	beq	to_exit							; 3
 									; -1
 
@@ -278,6 +278,12 @@ to_jump_table:
 	.word   (to_state3-1)
 	.word   (to_state4-1)
 
+to_sprite_table:
+	.word   (flame1)
+	.word   (flame2)
+	.word   (flame3)
+	.word   (flame4)
+
 
 ;.align	$100
 
@@ -286,16 +292,33 @@ to_jump_table:
 	;============================
 	; 3886
 	; -578 gr_copy
+	; -602 draw tree
 	;  -13 inc xpos
 	;  -19 which sprite
 	;-2208 draw sprites
 	;  -20 adjust state
 	;   -3 jmp
 	;====================
-	; 1045
+	;  443
 to_state0:
 
 	jsr	gr_copy_row22				; 6+572
+
+
+	; draw tree
+	lda	#32					; 2
+	sta	XPOS					; 3
+	lda     #30					; 2
+	sta	YPOS					; 3
+	lda	#>small_tree				; 2
+	sta	INH                                     ; 3
+	lda	#<small_tree				; 2
+	sta	INL                                     ; 3
+	jsr	put_sprite                              ; 6
+							;========
+							; 26 + 576 = 602
+
+
 
 	; INC XX, 13 cycles
 	lda	FRAME					; 3
@@ -374,10 +397,10 @@ to_done_keep_state:
 
         ; delay
 
-	; Try X=51 Y=4 cycles=1045
+	; Try X=4 Y=17 cycles=443
 
-        ldy	#4							; 2
-toloopV:ldx	#51							; 2
+        ldy	#17							; 2
+toloopV:ldx	#4							; 2
 toloopW:dex                                                             ; 2
         bne	toloopW                                                 ; 2nt/3
         dey                                                             ; 2
@@ -523,10 +546,10 @@ to2_done_keep_state:
 	;      -578 gr_copy
 	;	-31 handle door
 	;       -37 flame
-	;       -20 (8+12) change state
+	;       -25 (8+17) change state
 	;        -3 jump back
 	; ==========
-	;      3217
+	;      3212
 
 to_state3:
 
@@ -596,25 +619,31 @@ to3_update_state:
 							; -1
 	inc	STATE					; 5
 	inc	STATE					; 5
+	lda	#32		; for tree		; 2
+	sta	XX					; 3
 	jmp	to3_done_keep_state			; 3
 							;========
-							; 12
+							; 17
 to3_keep_state:
-	lda	$0					; 4
-	lda	$0					; 4
-	lda	$0					; 4
-	lda	$0					; 4
+	lda	$0					; 3
+	lda	$0					; 3
+	lda	$0					; 3
+	lda	$0					; 3
+	lda	$0					; 3
+	nop						; 2
 						;=============
-						;        12
+						;        17
 
 to3_done_keep_state:
 
         ; delay
 
-	; Try X=39 Y=16 cycles=3217
+	; Try X=79 Y=8 cycles=3209 R3
 
-	ldy	#16							; 2
-toloopG:ldx	#39							; 2
+	lda	$0
+
+	ldy	#8							; 2
+toloopG:ldx	#79							; 2
 toloopH:dex								; 2
 	bne	toloopH							; 2nt/3
 	dey								; 2
@@ -630,11 +659,26 @@ toloopH:dex								; 2
 	; state4: Flame On
 	;============================
 	; 	3886
-	;      -2204 flame
+	;      -2217 flame
+	;	 -20 erase landing legs
+	;	-584 erase tree
+	;	 -11 move tree
+	;       -597 tree
 	;         -3 return
 	;  ===============
-	;       1679
+	;        454
 to_state4:
+
+	lda	FRAME					; 3
+	and	#$3					; 2
+	asl						; 2
+	tax						; 2
+	lda	to_sprite_table+1,x			; 4
+	sta	INH                                     ; 3
+	lda	to_sprite_table,x			; 4
+	sta	INL                                     ; 3
+						;=============
+						;	23
 
 	; draw flame
 
@@ -642,23 +686,63 @@ to_state4:
 	sta	YPOS					; 3
 	lda	#0					; 2
 	sta	XPOS					; 3
-	lda	#>flame1				; 2
-	sta	INH                                     ; 3
-	lda	#<flame1				; 2
-	sta	INL                                     ; 3
 	jsr	put_sprite                              ; 6
 
                                                         ;=========
-							; 26 + 2178 = 2204
+							; 16 + 23 + 2178 = 2217
+
+
+
+
+	; erase tree
+
+	lda	XX					; 3
+	sta	XPOS					; 3
+	jsr	gr_copy_row22				; 6+572
+
+
+	; erase landing legs
+
+	lda	#$44					; 2
+	sta	$6a8+11		; 11,26 29,26		; 4
+	sta	$6a8+29		; 29,26			; 4
+	lda	#$45					; 2
+	sta	$628+12					; 4
+	sta	$628+28					; 4
+							;=======
+							; 20
+
+
+
+	; move tree FRAME
+	lda	FRAME					; 3
+	beq	to_move_tree				; 3
+to_no_move_tree:
+							; -1
+	lda	$0					; 3
+	jmp	to_done_move_tree			; 3
+to_move_tree:
+	dec	XX					; 5
+to_done_move_tree:
+
+
+	; draw tree
+	lda     #30					; 2
+	sta	YPOS					; 3
+	lda	#>small_tree				; 2
+	sta	INH                                     ; 3
+	lda	#<small_tree				; 2
+	sta	INL                                     ; 3
+	jsr	put_sprite                              ; 6
+							;========
+							; 21 + 576 = 597
 
         ; delay
 
-	; Try X=36 Y=9 cycles=1675 R4
-	nop
-	nop
+	; Try X=29 Y=3 cycles=454
 
-	ldy	#9							; 2
-toloopZ:ldx	#36							; 2
+	ldy	#3							; 2
+toloopZ:ldx	#29							; 2
 toloopY:dex                                                             ; 2
 	bne	toloopY                                                 ; 2nt/3
 	dey                                                             ; 2
