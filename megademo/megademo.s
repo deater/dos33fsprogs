@@ -32,8 +32,9 @@ apple_iie:
 	;==================
 
 	lda	#0
-	sta	MB_FRAME
 	sta	MB_PATTERN
+	lda	#$60
+	sta	MB_FRAME
 
 	jsr	mockingboard_init
 
@@ -97,6 +98,7 @@ apple_iie:
 ;	jmp	game_over_man
 
 
+.align $100
 	.include	"lz4_decode.s"
 	.include	"c64_opener.s"
 	.include	"falling_apple.s"

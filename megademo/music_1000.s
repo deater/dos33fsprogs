@@ -270,45 +270,45 @@ mb_done_change:
 
 ; patterns 31 long
 mal_pattern:
-.byte	>mal00,>mal00,>mal02,>mal02,>mal02,>mal02,>mal02,>mal02
+.byte	>mal00,>mal00,>mal00,>mal02,>mal02,>mal02,>mal02,>mal02,>mal02
 .byte	>mal02,>mal02,>mal02,>mal02,>mal02,>mal02,>mal02,>mal02
 .byte	>mal02,>mal02,>mal02,>mal02,>mal02,>mal02,>mal02,>mal02
-.byte	>mal02,>mal02,>mal02,>mal02,>mal02,>mal02,>mal02,>mal00
+.byte	>mal02,>mal02,>mal02,>mal02,>mal02,>mal02,>mal02
 mah_pattern:
-.byte	>mal00,>mal00,>mah02,>mah03,>mah04,>mah05,>mah04,>mah07
+.byte	>mal00,>mal00,>mal00,>mah02,>mah03,>mah04,>mah05,>mah04,>mah07
 .byte	>mah04,>mah05,>mah10,>mah11,>mah04,>mah05,>mah04,>mah07
 .byte	>mah04,>mah05,>mah10,>mah11,>mah04,>mah05,>mah04,>mah07
-.byte	>mah04,>mah05,>mah10,>mah11,>mah10,>mah11,>mah30,>mal00
+.byte	>mah04,>mah05,>mah10,>mah11,>mah10,>mah11,>mah30
 mbl_pattern:
-.byte	>mbl00,>mbl01,>mbl02,>mbl01,>mbl00,>mbl01,>mbl00,>mbl07
+.byte	>mal00,>mbl00,>mbl01,>mbl02,>mbl01,>mbl00,>mbl01,>mbl00,>mbl07
 .byte	>mbl00,>mbl01,>mbl10,>mbl11,>mbl00,>mbl01,>mbl00,>mbl07
 .byte	>mbl00,>mbl01,>mbl10,>mbl11,>mbl00,>mbl01,>mbl22,>mbl23
-.byte	>mbl00,>mbl01,>mbl10,>mbl11,>mbl10,>mbl11,>mbl01,>mbl00
+.byte	>mbl00,>mbl01,>mbl10,>mbl11,>mbl10,>mbl11,>mbl01
 mbh_pattern:
-.byte	>mbh00,>mbh01,>mbh00,>mbh01,>mbh04,>mbh05,>mbh04,>mbh07
+.byte	>mal00,>mbh00,>mbh01,>mbh00,>mbh01,>mbh04,>mbh05,>mbh04,>mbh07
 .byte	>mbh08,>mbh05,>mbh10,>mbh11,>mbh04,>mbh05,>mbh04,>mbh07
 .byte	>mbh08,>mbh05,>mbh10,>mbh11,>mbh04,>mbh05,>mbh22,>mbh23
-.byte	>mbh08,>mbh05,>mbh10,>mbh11,>mbh10,>mbh11,>mbh30,>mal00
+.byte	>mbh08,>mbh05,>mbh10,>mbh11,>mbh10,>mbh11,>mbh30
 mcl_pattern:
-.byte	>mal00,>mal00,>mal00,>mcl03,>mcl04,>mcl05,>mcl04,>mcl07
+.byte	>mal00,>mal00,>mal00,>mal00,>mcl03,>mcl04,>mcl05,>mcl04,>mcl07
 .byte	>mcl08,>mcl09,>mcl10,>mcl11,>mcl04,>mcl05,>mcl04,>mcl07
 .byte	>mcl08,>mcl09,>mcl10,>mcl11,>mcl04,>mcl05,>mcl22,>mcl23
-.byte	>mcl08,>mcl09,>mcl10,>mcl11,>mcl10,>mcl11,>mcl30,>mal00
+.byte	>mcl08,>mcl09,>mcl10,>mcl11,>mcl10,>mcl11,>mcl30
 mch_pattern:
-.byte	>mal00,>mal00,>mal00,>mch03,>mch04,>mch05,>mch04,>mch07
+.byte	>mal00,>mal00,>mal00,>mal00,>mch03,>mch04,>mch05,>mch04,>mch07
 .byte	>mch08,>mch09,>mch10,>mch11,>mch04,>mch05,>mch04,>mch07
 .byte	>mch08,>mch09,>mch10,>mch11,>mch04,>mch05,>mch22,>mch23
-.byte	>mch08,>mch09,>mch10,>mch11,>mch10,>mch11,>mch30,>mal00
+.byte	>mch08,>mch09,>mch10,>mch11,>mch10,>mch11,>mch30
 mnl_pattern:
-.byte	>mal00,>mal00,>mal00,>mnl03,>mnl04,>mnl05,>mnl04,>mnl07
+.byte	>mal00,>mal00,>mal00,>mal00,>mnl03,>mnl04,>mnl05,>mnl04,>mnl07
 .byte	>mnl04,>mnl05,>mnl10,>mnl11,>mnl04,>mnl05,>mnl04,>mnl07
 .byte	>mnl04,>mnl05,>mnl10,>mnl11,>mnl04,>mnl05,>mnl04,>mnl07
-.byte	>mnl04,>mnl05,>mnl10,>mnl11,>mnl10,>mnl11,>mnl30,>mal00
+.byte	>mnl04,>mnl05,>mnl10,>mnl11,>mnl10,>mnl11,>mnl30
 mnh_pattern:
-.byte	>mnh00,>mnh01,>mnh02,>mnh03,>mnh04,>mnh05,>mnh04,>mnh07
+.byte	>mal00,>mnh00,>mnh01,>mnh02,>mnh03,>mnh04,>mnh05,>mnh04,>mnh07
 .byte	>mnh08,>mnh09,>mnh10,>mnh11,>mnh04,>mnh05,>mnh04,>mnh07
 .byte	>mnh08,>mnh09,>mnh10,>mnh11,>mnh04,>mnh05,>mnh04,>mnh23
-.byte	>mnh08,>mnh09,>mnh10,>mnh11,>mnh10,>mnh11,>mnh30,>mal00
+.byte	>mnh08,>mnh09,>mnh10,>mnh11,>mnh10,>mnh11,>mnh30
 
 .align	$100
 

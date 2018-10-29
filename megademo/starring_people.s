@@ -273,7 +273,7 @@ sp_wrap_done:
 	; 7 cycles
 sp_timeout:
 	lda	FRAMEH							; 3
-	cmp	#75							; 2
+	cmp	#62							; 2
 	beq     sp_done							; 3
 									; -1
 

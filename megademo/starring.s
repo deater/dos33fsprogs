@@ -232,7 +232,7 @@ st_wrap_done:
 	;==============
 st_timeout:
 	lda	FRAMEH							; 3
-	cmp	#6							; 2
+	cmp	#5							; 2
 	beq	st_done							; 3
 									; -1
 								;============
