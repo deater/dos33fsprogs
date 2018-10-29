@@ -137,18 +137,24 @@ toloopB:dex								; 2
 
 
 to_begin_loop:
+	; 12*4 = 48 lines of HIRES = 3120
+	;                              -4 set HIRES
+	;			    -1038 play_music
+	;			=========
+	;			     2078
 
 	bit	HIRES			; 4
 
-	; 3116 - 1038 (music) = 2078
-
-	jsr	play_music
+;	jsr	play_music	; 6 + 1032
 
 	; Try X=5 Y=67 cycles=2078
 	; Try X=11 Y=51 cycles=3112 R4
 
-	ldy	#67							; 2
-toloop8:ldx	#5							; 2
+	nop
+	nop
+
+	ldy	#51							; 2
+toloop8:ldx	#11							; 2
 toloop9:dex								; 2
 	bne	toloop9							; 2nt/3
 	dey								; 2

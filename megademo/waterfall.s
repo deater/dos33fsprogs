@@ -366,13 +366,15 @@ adjust_xpos:
 	jmp	wf_display_loop				; 3
 
 
-
+.align $100
 
 	;=========================================================
 	; fast copy rows 22-36 from $C00 to $400
 	;=========================================================
 	;
 	; 7+ 8*[9*7 + 7] + 5 = 572
+
+.assert         >gr_copy_row22 = >gr_copy_row_done, error, "gr_copy_row22 crosses page"
 
 gr_copy_row22:
 	ldy	#8							; 2
@@ -399,7 +401,7 @@ grcr_loop:
 	bne	grcr_loop						; 3
 									; -1
 	rts								; 6
-
+gr_copy_row_done:
 
 
 
