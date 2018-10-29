@@ -145,16 +145,14 @@ to_begin_loop:
 
 	bit	HIRES			; 4
 
-;	jsr	play_music	; 6 + 1032
+	jsr	play_music	; 6 + 1032
 
 	; Try X=5 Y=67 cycles=2078
 	; Try X=11 Y=51 cycles=3112 R4
 
-	nop
-	nop
 
-	ldy	#51							; 2
-toloop8:ldx	#11							; 2
+	ldy	#67							; 2
+toloop8:ldx	#5							; 2
 toloop9:dex								; 2
 	bne	toloop9							; 2nt/3
 	dey								; 2
@@ -277,7 +275,7 @@ to_exit:
 to_jump_table:
 	.word   (to_state0-1)
 	.word   (to_state2-1)
-	.word   (to_state4-1)
+	.word   (to_state3-1)
 	.word   (to_state4-1)
 
 
@@ -387,6 +385,8 @@ toloopW:dex                                                             ; 2
 
 	jmp	to_done_state						; 3
 
+
+
 .align	$100
 
 	;============================
@@ -479,7 +479,7 @@ to2_bwalk:
 
 to2_done_bwalk:
 	lda	XX					; 3
-	cmp	#0					; 2
+	cmp	#1					; 2
 	bne	to2_keep_state				; 3
 
 							; -1
@@ -514,22 +514,151 @@ to2_done_keep_state:
 	jmp	to_done_state						; 3
 
 
-
-
+.align	$100
 
 	;============================
-	; state4: Do nothing
+	; state3: Takeoff
 	;============================
-	; 3886 - 3 = 3883
-to_state4:
+	; want 3886
+	;      -578 gr_copy
+	;	-31 handle door
+	;       -37 flame
+	;       -20 (8+12) change state
+	;        -3 jump back
+	; ==========
+	;      3217
+
+to_state3:
+
+	jsr	gr_copy_row22				; 6+572
+
+	; Erase door
+
+	lda	#22					; 2
+	sta	XPOS					; 3
+	; $FF at 22,18 23,18
+	; $FF at 22,20 23,20
+	; $FF at 22,22 23,22
+	; $45 at 22,24 23,24
+
+	lda	#$ff					; 2
+	sta	$4a8+22					; 4
+	sta	$4a8+23					; 4
+	sta	$528+22					; 4
+	sta	$528+23					; 4
+	sta	$da8+22					; 4
+	sta	$da8+23					; 4
+						;============
+						; 31
+
+	inc	XX					; 5
+	lda	XX					; 3
+	cmp	#$40					; 2
+	bcs	to3_flame				; 3
+						;============
+						;	13
+
+							; -1
+	lda	$0					; 3
+	nop						; 2
+	lda	$0					; 3
+	nop						; 2
+	lda	$0					; 3
+	nop						; 2
+	lda	$0					; 3
+	nop						; 2
+	nop
+
+	jmp	to3_done_flame				; 3
+						;============
+						; 	 24
+to3_flame:
+	lda	#$d4					; 2
+	sta	$428+5		; 5,8			; 4
+	lda	#$9d					; 2
+	sta	$428+6		; 6,8			; 4
+	lda	#$4d					; 2
+	sta	$4a8+5		; 5,9			; 4
+	lda	#$d9					; 2
+	sta	$4a8+6		; 6,9			; 4
+						;============
+						; 	 24
+to3_done_flame:
+
+
+to3_update_state:
+	lda	XX					; 3
+	cmp	#$60					; 2
+	bne	to3_keep_state				; 3
+							;=====
+							; 8
+
+							; -1
+	inc	STATE					; 5
+	inc	STATE					; 5
+	jmp	to3_done_keep_state			; 3
+							;========
+							; 12
+to3_keep_state:
+	lda	$0					; 4
+	lda	$0					; 4
+	lda	$0					; 4
+	lda	$0					; 4
+						;=============
+						;        12
+
+to3_done_keep_state:
 
         ; delay
 
-	; Try X=154 Y=5 cycles=3881 R2
+	; Try X=39 Y=16 cycles=3217
+
+	ldy	#16							; 2
+toloopG:ldx	#39							; 2
+toloopH:dex								; 2
+	bne	toloopH							; 2nt/3
+	dey								; 2
+	bne	toloopG							; 2nt/3
+
+	jmp	to_done_state						; 3
+
+
+
+
+
+	;============================
+	; state4: Flame On
+	;============================
+	; 	3886
+	;      -2204 flame
+	;         -3 return
+	;  ===============
+	;       1679
+to_state4:
+
+	; draw flame
+
+	lda     #14					; 2
+	sta	YPOS					; 3
+	lda	#0					; 2
+	sta	XPOS					; 3
+	lda	#>flame1				; 2
+	sta	INH                                     ; 3
+	lda	#<flame1				; 2
+	sta	INL                                     ; 3
+	jsr	put_sprite                              ; 6
+
+                                                        ;=========
+							; 26 + 2178 = 2204
+
+        ; delay
+
+	; Try X=36 Y=9 cycles=1675 R4
+	nop
 	nop
 
-	ldy	#5							; 2
-toloopZ:ldx	#154							; 2
+	ldy	#9							; 2
+toloopZ:ldx	#36							; 2
 toloopY:dex                                                             ; 2
 	bne	toloopY                                                 ; 2nt/3
 	dey                                                             ; 2
