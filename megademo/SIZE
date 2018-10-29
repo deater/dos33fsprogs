@@ -33,3 +33,8 @@
 	30378	-- update the e-mail text
 	30633	-- with all the music added in
 	31323	-- finish takeoff
+
+Further ideas to reduce:
+	+ Optimize all the .align calls
+	+ Can save 8 bytes one each LZ4 file
+	; repeat until keypressed no longer needed?

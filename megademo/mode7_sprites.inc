@@ -33,6 +33,10 @@ shadow_left:
 	.byte $aa,$00,$a0
 	.byte $a0,$0a,$00
 
+.align 100
+
+.assert         >ship_forward = >ship_forward_end, error, "ship_forward crosses page"
+
 ship_forward:
 	.byte $9,$5
 	.byte $00,$00,$00,$00,$ff,$00,$00,$00,$00	; 00=8 0X=0 X0=0 XX=1
@@ -40,6 +44,7 @@ ship_forward:
 	.byte $00,$00,$70,$2f,$12,$2f,$70,$00,$00	; 00=4 0x=0 X0=2 XX=3
 	.byte $f0,$f7,$f7,$f2,$d9,$f2,$f7,$f7,$f0	; 00=0 0x=0 X0=2 XX=7
 	.byte $00,$00,$00,$00,$0d,$00,$00,$00,$00	; 00=8 0x=1 X0=0 XX=0
+ship_forward_end:
 							;=====================
 							;  26   1    4    14
 	; 00=26 0X=1 X0=4 XX=14 

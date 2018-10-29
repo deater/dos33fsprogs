@@ -7,7 +7,6 @@ space_bars:
 
 	;===================
 	; init screen
-	bit	KEYRESET
 
 	;===================
 	; init vars
