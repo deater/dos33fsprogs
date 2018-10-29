@@ -32,28 +32,28 @@ CONST_LOWRES_HALF_F	=	$00
 
 island_flying_directions:
 	.byte	$2,$00		; 2 frames, do nothing
-	.byte	$1,'Z'		; start moving forward
-	.byte	$10,$00		; 16 frames, do nothing
+	.byte	$2,'Z'		; start moving forward
+	.byte	$8,$00		; 8 frames, do nothing
 	.byte	$3,'D'		; 3 frames, turn right
 	.byte	$1,'Z'		; move faster
-	.byte	$8,$00		; 8 frames, do nothing
+	.byte	$6,$00		; 6 frames, do nothing
 	.byte	$2,'D'		; 2 frames, turn left
-	.byte	$8,$00		; 8 frames, do nothing
+	.byte	$6,$00		; 8 frames, do nothing
 	.byte	$3,'A'		; 3 frames, turn left
 	.byte	$1,'Z'		; speedup
-	.byte	$8,$00		; 8 frames, do nothing
+	.byte	$6,$00		; 6 frames, do nothing
 	.byte	$6,'S'		; 6 frames down
-	.byte	$6,$00		; 6 frames do nothing
+	.byte	$4,$00		; 4 frames do nothing
 	.byte	$3,'A'		; 3 frames left
 	.byte	$3,'D'		; 3 frames right
 	.byte	$2,$00		; 2 frames nothing
 	.byte	$1,'D'		; 1 frame right
 	.byte	$2,$00		; 2 frames nothing
 	.byte	$8,'D'		; 8 frame right
-	.byte	$1,'Z'		; 8 frames up
+	.byte	$1,'Z'		; 1 frames up
 	.byte	$6,'W'		; 2 speedup
-	.byte	$a,$00		; 10 nothing
-	.byte	$3,'S'		; 3 down
+	.byte	$8,$00		; 8 nothing
+	.byte	$2,'S'		; 2 down
 	.byte	$1,'Q'		; quit
 
 	;=====================
@@ -91,14 +91,16 @@ mode7_flying:
 	;===============
 	lda	#20
 	sta	SHIPY
+	lda	#4
+	sta	ANGLE
+	sta	CY_I
+	lda	#6
+	sta	CX_I
 	lda	#0
 	sta	TURNING
-	sta	ANGLE
 	sta	SPACEX_I
 	sta	SPACEY_I
-	sta	CX_I
 	sta	CX_F
-	sta	CY_I
 	sta	CY_F
 	sta	DRAW_SPLASH
 	sta	SPEED

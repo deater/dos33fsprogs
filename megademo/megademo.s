@@ -44,7 +44,7 @@ apple_iie:
 	;===================
 	jsr	HOME
 
-;	jsr	rocket_takeoff
+;	jsr	mode7_flying
 
 	; C64 Opening Sequence
 
