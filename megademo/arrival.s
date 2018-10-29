@@ -321,17 +321,21 @@ ar_back_from_jumptable:
 	;			     -23 (setup jump table)
 	;			   -6237 (in state code)
 	;			     -10 keypress
+	;			   -1038 play_music
 	;			===========
-	;			     1400
+	;			     362
+
+	jsr	play_music	; 6+1032
 
 	; Try X=5 Y=45 cycles=1396 R4
 
+	; Try X=3 Y=17 cycles=358 R4
 
 	nop
 	nop
 
-	ldy	#45							; 2
-arloop1:ldx	#5							; 2
+	ldy	#17							; 2
+arloop1:ldx	#3							; 2
 arloop2:dex								; 2
 	bne	arloop2							; 2nt/3
 	dey								; 2

@@ -138,12 +138,14 @@ to_begin_loop:
 
 	bit	HIRES			; 4
 
+	; 3116 - 1038 (music) = 2078
+
+
+	; Try X=5 Y=67 cycles=2078
 	; Try X=11 Y=51 cycles=3112 R4
 
-	nop
-	nop
-	ldy	#51							; 2
-toloop8:ldx	#11							; 2
+	ldy	#67							; 2
+toloop8:ldx	#5							; 2
 toloop9:dex								; 2
 	bne	toloop9							; 2nt/3
 	dey								; 2

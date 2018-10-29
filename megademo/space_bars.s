@@ -175,6 +175,9 @@ sb_hgr_loop:
 	;		     -8
 	;=========================
 	;		3011
+	;	       -1038 play_music
+	;================================
+	;               1973
 
 	bit	SET_GR				; 4
 	bit	HIRES				; 4
@@ -192,11 +195,14 @@ sb_hgr_loop:
 								; 2180
 
 
+	jsr	play_music		; 6+1032
+
+	; Try X=196 Y=2 cycles=1973
 
 	; Try X=59 Y=10 cycles=3011
 
-	ldy	#10							; 2
-sbloopC:ldx	#59							; 2
+	ldy	#2							; 2
+sbloopC:ldx	#196							; 2
 sbloopD:dex								; 2
 	bne	sbloopD							; 2nt/3
 	dey								; 2

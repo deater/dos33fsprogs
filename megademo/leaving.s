@@ -126,8 +126,9 @@ lv_begin_loop:
 	;  -17	set state
 	;  -11  move
 	;   -8	check if done
+	;-1038  play music
 	;=======
-	; 3055
+	; 2017
 
 	bit	SET_TEXT						; 4
 
@@ -212,13 +213,13 @@ lv_move:
 lv_done_move:
 
 
+	jsr	play_music
 
-
+	; Try X=10 Y=36 cycles=2017
 	; Try X=86 Y=7 cycles=3053 R2
-	nop
 
-	ldy	#7							; 2
-lvloop8:ldx	#86							; 2
+	ldy	#36							; 2
+lvloop8:ldx	#10							; 2
 lvloop9:dex								; 2
 	bne	lvloop9							; 2nt/3
 	dey								; 2

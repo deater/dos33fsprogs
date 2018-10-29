@@ -438,16 +438,20 @@ bmloop6:dex								; 2
 
 	; Blanking time:	 4550
 	; move_letters		 -132
+	; play_music		-1038
 	; check keypress	   -7
 	; JMP at end		   -3
-	;========================4408 cycles
+	;========================3370 cycles
+
+	jsr	play_music	; 6+1032
 
 	; Try X=175 Y=5 cycles=4406 R2
+	; Try X=17 Y=37 cycles=3368 R2
 
 	nop								; 2
 
-	ldy	#5							; 2
-bmloop7:ldx	#175							; 2
+	ldy	#37							; 2
+bmloop7:ldx	#17							; 2
 bmloop8:dex								; 2
 	bne	bmloop8							; 2nt/3
 	dey								; 2

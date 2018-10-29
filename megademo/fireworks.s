@@ -176,7 +176,9 @@ fw_display_loop:
 	;	      -12 for HIRES/PAGE0 at top
 	;	       -5 for LORES+ldy+br fallthrough at bottom
 	;	     -132 for move_letters
-	;	     9731
+	;           -1038 for music
+	;===================================
+	;	     8693
 
 	bit	HIRES						; 4
 	bit	PAGE0						; 4
@@ -185,13 +187,13 @@ fw_display_loop:
 							;	 12
 	jsr	move_letters					; 6+126
 
+	jsr	play_music					; 6+1032
+
 	; Try X=242 Y=8 cycles=9729 R2
+	; Try X=20 Y=82 cycles=8693
 
-	nop							; 2
-
-
-	ldy	#8							; 2
-hgloop1:ldx	#242							; 2
+	ldy	#82							; 2
+hgloop1:ldx	#20							; 2
 hgloop2:dex								; 2
 	bne	hgloop2							; 2nt/3
 	dey								; 2

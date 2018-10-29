@@ -151,15 +151,20 @@ vblank:
 	;				-49 check for keypress
 	;			       -578 copy screen
 	;			      -2231 draw sprite
+	;			      -1038 play music
 	;			=============
-	;			      1662 cycles
+	;			        624 cycles
+
+	jsr	play_music	; 6+1032
 
 	; Try X=29 Y=11 cycles=1662
 
+	; Try X=123 Y=1 cycles=622 R2
 
+	nop
 
-	ldy	#11							; 2
-wfloopY:ldx	#29							; 2
+	ldy	#1							; 2
+wfloopY:ldx	#123							; 2
 wfloopZ:dex								; 2
         bne	wfloopZ							; 2nt/3
         dey								; 2
