@@ -65,6 +65,7 @@ falling_apple:
 	; GR part
 	bit	PAGE0
 
+	sei
 
 	;==============================
 	; setup graphics for vapor lock
@@ -212,6 +213,8 @@ fa_no_keypress:
 
 fa_done:
 	bit	KEYRESET	; clear keypress	; 4
+;	jsr	mockingboard_mute
+	cli
 	rts						; 6
 
 

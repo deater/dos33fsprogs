@@ -202,5 +202,8 @@ write_ay_both:
 								;===========
 								;       65
 
-
-
+mockingboard_mute:
+	ldx	#7
+	lda	#$ff
+	sta	MB_VALUE
+	jmp	write_ay_both

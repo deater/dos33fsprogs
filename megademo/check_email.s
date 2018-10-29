@@ -80,6 +80,8 @@ init_email_letters:
 	; GR part
 	bit	PAGE0
 
+	; disable interrupt music
+	sei
 
 	;==============================
 	; setup graphics for vapor lock

@@ -85,6 +85,7 @@ sp_smc6:
 	; GR part
 	bit	PAGE0
 
+	sei
 
 	;==============================
 	; setup graphics for vapor lock
@@ -299,6 +300,8 @@ sp_no_keypress:
 
 sp_done:
 	bit	KEYRESET	; clear keypress	; 4
+	; jsr	mockingboard_mute
+	cli
 	rts						; 6
 
 

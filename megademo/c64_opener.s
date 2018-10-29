@@ -348,6 +348,8 @@ no_c64_keypress:
 
 done_c64:
 	bit	KEYRESET
+	;jsr	mockingboard_mute
+	cli
 	rts						; 6
 
 

@@ -9,6 +9,7 @@
 
 play_music=$1000
 mockingboard_init=$1100
+mockingboard_mute=$11a1
 
 
 megademo_start:				; this should end up at $4000

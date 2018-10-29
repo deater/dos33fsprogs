@@ -89,6 +89,7 @@ starring:
 	; GR part
 	bit	PAGE0
 
+	sei
 
 	;==============================
 	; setup graphics for vapor lock
@@ -271,6 +272,8 @@ st_no_keypress:
 
 st_done:
 	bit	KEYRESET	; clear keypress	; 4
+	;jsr	mockingboard_mute
+	cli
 	rts						; 6
 
 ;.include "starring1.inc"
