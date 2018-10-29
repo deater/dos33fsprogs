@@ -148,11 +148,13 @@ reset_ay_right:
 
 interrupt_handler:
 	; A saved by firmware in $45
-	sta	$45
+;	sta	$45
 	txa
 	pha			; save X
 	tya
 	pha			; save Y
+
+	bit     $C404           ; clear 6522 interrupt by reading T1C-L ; 4
 
 	jsr	play_music
 
@@ -161,8 +163,6 @@ interrupt_handler:
 	pla
 	tax			; restore X
 	lda	$45		; restore A
-
-	bit     $C404           ; clear 6522 interrupt by reading T1C-L ; 4
 
 	rti			; return from interrupt                 ; 6
 
