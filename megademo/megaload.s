@@ -396,12 +396,183 @@ seekread1:
 
 	; if track does not match, then seek
 
-;	lda	curtrk		; BUG fixed recently
-;	cmp	phase
-
 	cpx	phase
-	beq	repeat_until_right_sector
+	beq	checksec
 	jsr	seek
+
+
+	;=========================================
+	; re merge in with qkumba's recent changes
+	; to fix seek problem?
+	;=========================================
+
+	; [re-]read sector
+
+re_read_addr:
+	jsr	readadr
+checksec:
+	cmp	reqsec
+	bne	re_read_addr
+
+	;=========================
+	; read sector data
+	;=========================
+
+readdata:
+	jsr	readd5aa
+	eor	#$ad		; zero A if match
+	bne	re_read_addr
+
+L12:
+	ldx	$c0ec		; read until valid data (high bit set)
+	bpl	L12
+	eor	nibtbl-$80, x
+	sta	bit2tbl-$aa, y
+	iny
+	bne	L12
+L13:
+	ldx	$c0ec		; read until valid data (high bit set)
+	bpl	L13
+	eor	nibtbl-$80, x
+	sta	(adrlo), y	; the real address
+	iny
+	cpy	secsize
+	bne	L13
+	ldy	#0
+L14:
+	ldx	#$a9
+L15:
+	inx
+	beq	L14
+	lda	(adrlo), y
+	lsr	bit2tbl-$aa, x
+	rol
+	lsr	bit2tbl-$aa, x
+	rol
+	sta	(adrlo), y
+	iny
+	cpy	secsize
+	bne	L15
+	rts
+
+	; no tricks here, just the regular stuff
+
+	;=======================
+	; readaddr -- read the address field
+	;=======================
+	; Find address field, put track in cutrk, sector in tmpsec
+
+readadr:
+	jsr	readd5aa
+	cmp	#$96
+	bne	readadr
+	ldy	#3		; three?
+				; first read volume/volume
+				; then track/track
+				; then sector/sector?
+adr_read_two_bytes:
+	tax
+	jsr	readnib
+	rol
+	sta	tmpsec
+	jsr	readnib
+	and	tmpsec
+	dey
+	bne	adr_read_two_bytes
+	rts
+
+	;========================
+	; make sure we see the $D5 $AA pattern
+
+readd5aa:
+L16:
+	jsr	readnib
+L17:
+	cmp	#$d5
+	bne	L16
+	jsr	readnib
+	cmp	#$aa
+	bne	L17
+	tay		; we need Y=#$AA later
+
+readnib:
+	lda	$c0ec		; read until valid (high bit set)
+	bpl	readnib
+
+seekret:
+	rts
+
+	;=====================
+	; SEEK
+	;=====================
+	; current track in X?
+	; desired track in phase
+
+seek:
+	ldy	#0
+	sty	step
+	asl	phase		; multiply by two
+	txa			; current track?
+	asl			; mul by two
+copy_cur:
+	tax
+	sta	tmptrk
+	sec
+	sbc	phase
+	beq	L22
+	bcs	L18
+	eor	#$ff
+	inx
+	bcc	L19
+L18:
+	sbc	#1
+	dex
+L19:
+	cmp	step
+	bcc	L20
+	lda	step
+L20:
+	cmp	#8
+	bcs	L21
+	tay
+	sec
+L21:
+	txa
+	pha
+	ldx	step1, y
+L22:
+	php
+	bne	L24
+L23:
+	clc
+	lda	tmptrk
+	ldx	step2, y
+L24:
+	stx	tmpsec
+	and	#3
+	rol
+	tax
+	lsr
+	lda	$c0e0, x
+L25:
+	ldx	#$12
+L26:
+	dex
+	bpl	L26
+	dec	tmpsec
+	bne	L25
+	bcs	L23
+	plp
+	beq	seekret
+	pla
+	inc	step
+	bne	copy_cur
+
+
+.if 0
+	;==============================
+	; old code
+
 
 	; [re-]read sector
 
@@ -571,7 +742,7 @@ L120:
 	bcs	L117
 	inc	step
 	bne	copy_cur
-
+.endif
 
 
 step1:	.byte $01, $30, $28, $24, $20, $1e, $1d, $1c
