@@ -46,6 +46,8 @@ apple_iie:
 
 ;	jsr	space_bars
 
+;	jsr	arriving_there
+
 	; C64 Opening Sequence
 
 	jsr	c64_opener

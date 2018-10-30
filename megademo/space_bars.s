@@ -381,12 +381,12 @@ sb_check_right:
 
 	jmp	sb_display_loop				; 3
 
-
-
-
 sb_exit:
-	bit	KEYRESET
 	cli		; re-enable interrupt music
+	jmp	blue_line
+
+sb_real_exit:
+	bit	KEYRESET
 	rts						; 6
 
 
@@ -566,3 +566,142 @@ setup_fb_loop:
 									; -1
 	rts								; 6
 
+
+
+
+blue_line:
+	bit	PAGE0			; set page 0
+	bit	LORES			; Lo-res graphics
+	bit	FULLGR
+        bit	SET_GR			; set graphics
+
+	lda	#0
+	sta	DRAW_PAGE
+	jsr	clear_all
+;	jsr	clear_screens_notext	; clear top/bottom of page 0/1
+
+blueline_loop:
+
+	;================
+	; draw the ship
+	;================
+draw_ship_big:
+	jsr	clear_all
+
+	lda	#>ship_forward
+	sta	INH
+	lda	#<ship_forward
+	sta	INL
+
+	lda	#15
+	sta	XPOS
+	lda	#34
+	sta	YPOS
+	jsr	put_sprite
+
+draw_ship_small:
+	jsr	delay_1s
+	jsr	clear_all
+
+	lda	#>ship_small
+	sta	INH
+	lda	#<ship_small
+	sta	INL
+
+	lda	#17
+	sta	XPOS
+	lda	#30
+	sta	YPOS
+	jsr	put_sprite
+
+draw_ship_tiny:
+	jsr	delay_1s
+	jsr	clear_all
+
+	lda	#>ship_tiny
+	sta	INH
+	lda	#<ship_tiny
+	sta	INL
+
+	lda	#18
+	sta	XPOS
+	lda	#28
+	sta	YPOS
+	jsr	put_sprite
+
+	lda	#18
+	sta	SPEED
+
+	jsr	delay_1s
+
+draw_ship_line:
+	lda	#2
+	jsr	delay_custom
+	jsr	clear_all
+
+	lda	#COLOR_LIGHTBLUE
+	sta	COLOR
+
+	clc
+	lda	#20
+	adc	SPEED
+	sta	V2
+
+	sec
+	lda	#20
+	sbc	SPEED
+	tay
+
+	; 20 - 0 to 0 - 20, 20 - 40
+
+	lda	#26
+	jsr	hlin_double
+
+	dec	SPEED
+	bne	draw_ship_line
+
+draw_ship_done:
+	lda	#$77
+	sta	clear_all_color+1
+	jsr	clear_all
+
+	lda	#2
+	jsr	delay_custom
+
+	lda	#$0
+	sta	clear_all_color+1
+	jsr	clear_all
+
+	jsr	delay_1s
+
+	lda	#40
+	jsr	delay_custom
+
+	jmp	sb_real_exit
+
+;1s = 17030*60 = 1021800
+
+
+delay_1s:
+	lda	#20
+delay_custom:
+	sta	STATE
+delay_1s_loop:
+
+	; 17030 - 1038 = 15992
+
+;	jsr	play_music	; 6+1032
+
+	; Try X=113 Y=28 cycles=15989 R3
+
+	ldy	#28							; 2
+sbloopU:ldx	#113							; 2
+sbloopV:dex								; 2
+	bne	sbloopV							; 2nt/3
+	dey								; 2
+	bne	sbloopU							; 2nt/3
+
+	dec	STATE
+	bne	delay_1s_loop
+
+	rts

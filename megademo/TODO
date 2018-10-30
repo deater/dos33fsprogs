@@ -1,6 +1,4 @@
 TODO TODO:
-	+ Add in fly off scene
-	+ Moving heart
 	+ Get timing right
 	+ Fix qkumbas seek code
 	+ Fix one-line glitch
@@ -31,7 +29,8 @@ Music:
 	DONE???
 
 1: falling_apple:
-	TODO: roll in the change from all page1 to page1/page2
+	DONE?
+	REACH: roll in the change from all page1 to page1/page2
 	REACH: make it fall?
 	REACH: some sort of wipe?
 
@@ -71,13 +70,11 @@ Music:
 	REACH: change ground to night-time darkness.  grey water
 
 9: spacebars:
-	auto movement
-	REACH: when done, ship move up (shrink) and disappear w blue horiz line?
+	DONE?
 
 10: arrive at frogysue:
 	DONE?
 	add text?
-	REACH: have heart zigzag up?
 
 11: fireworks:
 	DONE?
