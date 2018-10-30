@@ -6,8 +6,8 @@
 ;TFV_X = 0
 ;TFV_Y = 1
 TFG_X = 2
-HEART_X = 3
-HEART_Y = 4
+;HEART_X = 3
+;HEART_Y = 4
 
 arriving_there:
 
@@ -32,11 +32,11 @@ setup_arrival:
 	lda	#8
 	sta	DRAW_PAGE
 
-	lda	#14
-	sta	HEART_X
+;	lda	#14
+;	sta	HEART_X
 
-	lda	#20
-	sta	HEART_Y
+;	lda	#20
+;	sta	HEART_Y
 
 	lda	#22
 	sta	TFG_X
@@ -169,7 +169,7 @@ ar_no_carry:
 	;=================
 
 	lda	FRAMEH							; 3
-	cmp	#45							; 2
+	cmp	#30							; 2
 	bne	ar_not_done						; 3
 	jmp	ar_all_done
 ar_not_done:
@@ -293,7 +293,7 @@ draw_the_field:
 	;===============================
 	; STATE0 = draw nothing
 	; STATE2 = draw open door + walking TFV+susie
-	; STATE4 = draw TFV on bird
+	; STATE4 = draw heart
 
 	; Set up jump table that runs same speed on 6502 and 65c02
 	ldy	STATE						; 3
@@ -559,29 +559,33 @@ ar_draw_wfall:
 
 	jmp	ar_back_from_jumptable				; 3
 
-
+.align $100
 
 	;======================================================
 	; State4 : heart
 	;======================================================
 	;  6237
-	;  -464 (draw heart)
+	;  -473 (draw heart)
 	;  -217 (erase heart)
 	;    -3 = return
 	;==========
-	; 5553
+	; 5544
 
 
 ar_state4:
 
 	jsr	erase_heart				; 6+211
 
-	lda	HEART_X					; 3
+	lda	FRAMEH					; 3
+	and	#$f					; 2
+	tax						; 2
+	lda	ar_heart_lookup_x,x			; 4
 	sta	XPOS					; 3
-	lda     HEART_Y					; 3
+
+	lda	ar_heart_lookup_y,x			; 4
 	sta	YPOS					; 3
 
-	; draw fs standing
+	; draw heart
 	lda	#>heart_sprite				; 2
 	sta	INH					; 3
 	lda	#<heart_sprite				; 2
@@ -589,36 +593,22 @@ ar_state4:
 
 	jsr	put_sprite                              ; 6
                                                         ;=========
-                                                        ; 28 + 436 = 464
+                                                        ; 37 + 436 = 473
 
 
 ar_done_heart:
 	; delay
 
+	; Try X=47 Y=23 cycles=5544
 
-	; Try X=21 Y=50 cycles=5551 R2
-
-	nop
-
-	ldy	#50							; 2
-arloopV:ldx	#21							; 2
+	ldy	#23							; 2
+arloopV:ldx	#47							; 2
 arloopW:dex								; 2
 	bne	arloopW							; 2nt/3
 	dey								; 2
 	bne	arloopV							; 2nt/3
 
 	jmp	ar_back_from_jumptable
-
-heart_path:
-	.byte	$14,$20
-	.byte	$14,$20
-	.byte	$13,$18
-	.byte	$13,$18
-	.byte	$14,$16
-	.byte	$15,$16
-;	.byte	$15,$14
-;	.byte	$14,$14
-
 
 
 	;======================
@@ -668,4 +658,23 @@ heart_loop:
 	bpl	heart_loop						; 3
 									; -1
 	rts								; 6
+
+ar_heart_lookup_x:
+	.byte 14,14,13,13,14,14,14,14
+;	.byte 14,14,15,15,14,14,14,14
+	.byte 14,14,14,14,14,14,14,14
+ar_heart_lookup_y:	; HEART_Y
+	.byte 20,20,18,18,16,16,16,16
+	.byte 16,16,16,16,16,16,16,16
+
+heart_path:
+;	.byte	$14,$20
+;	.byte	$14,$20
+;	.byte	$13,$18
+;	.byte	$13,$18
+;	.byte	$14,$16
+;	.byte	$15,$16
+;	.byte	$15,$14
+;	.byte	$14,$14
+
 
