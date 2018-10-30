@@ -299,8 +299,8 @@ L5:
 	adc	#0
 	sta	sizehi
 	beq	readfirst
-	ldy	#0		; was **stz secsize**
-	sty	secsize
+	lda	#0		; was **stz secsize**
+	sta	secsize
 
 readfirst:
 	ldy	#$0c
@@ -308,11 +308,13 @@ readfirst:
 	; read a file sector
 
 readnext:
+	tya
+	pha
 	lda	dirbuf, y		; A = track
 	ldx	dirbuf+1, y		; x = sector
-	sty	TEMPY			; save t/s ptr ** was phy **
 	jsr	seekread1
-	ldy	TEMPY			; restore t/s ptr ** was ply **
+	pla
+	tay
 
 	; if low count is non-zero then we are done
 	; (can happen only for partial last block)
