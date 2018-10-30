@@ -3,6 +3,7 @@
 
 ; TODO:
 ;	non-slot6?  self modfiy code?
+;		Slot<<4 is in $2b by boot firmware? can we rely on that?
 
 	adrlo	=	$26	; constant from boot prom
 	adrhi	=	$27	; constant from boot prom
@@ -154,6 +155,30 @@ md000x2_filename:	;.byte "MUSIC.D000X2                     "
                 ;unhook DOS and build nibble table
 
 init:
+	; patch to use current drive
+	lda	$2b		; has boot slot << 4 ?
+	ora	#$80		; add in $80
+
+	; c0e0
+	sta	mlsmc06+1
+
+	; c0e8
+	clc
+	adc	#8
+	sta	mlsmc02+1
+
+	; c0e9
+	clc
+	adc	#1
+	sta	mlsmc01+1
+
+	; c0ec
+	clc
+	adc	#3
+	sta	mlsmc03+1
+	sta	mlsmc04+1
+	sta	mlsmc05+1
+
 	jsr	$fe93					; clear COUT
 	jsr	$fe89					; clear KEYIN
 
@@ -192,7 +217,7 @@ L3:	inx			; increment x	x=4, a=0f
 
 	; turn on drive and read volume table of contents
 opendir:
-	lda	$c0e9		; turn slot#6 drive on
+mlsmc01:lda	$c0e9		; turn slot#6 drive on
 	ldx	#0
 	stx	adrlo		; zero out adrlo
 	stx	secsize		; zero out secsize
@@ -364,7 +389,7 @@ readdone:
 	sta	adrhi
 	bcc	readfirst
 
-	lda	$c0e8
+mlsmc02:lda	$c0e8
 
 	; restore from stack bytes that were overwritten by extra read
 
@@ -424,14 +449,14 @@ readdata:
 	bne	re_read_addr
 
 L12:
-	ldx	$c0ec		; read until valid data (high bit set)
+mlsmc03:ldx	$c0ec		; read until valid data (high bit set)
 	bpl	L12
 	eor	nibtbl-$80, x
 	sta	bit2tbl-$aa, y
 	iny
 	bne	L12
 L13:
-	ldx	$c0ec		; read until valid data (high bit set)
+mlsmc04:ldx	$c0ec		; read until valid data (high bit set)
 	bpl	L13
 	eor	nibtbl-$80, x
 	sta	(adrlo), y	; the real address
@@ -496,7 +521,7 @@ L17:
 	tay		; we need Y=#$AA later
 
 readnib:
-	lda	$c0ec		; read until valid (high bit set)
+mlsmc05:lda	$c0ec		; read until valid (high bit set)
 	bpl	readnib
 
 seekret:
@@ -553,7 +578,7 @@ L24:
 	rol
 	tax
 	lsr
-	lda	$c0e0, x
+mlsmc06:lda	$c0e0, x
 L25:
 	ldx	#$12
 L26:
@@ -589,30 +614,32 @@ repeat_until_right_sector:
 	;
 
 readdata:
+mlsmc07:
 	ldy	$c0ec		; read data until valid
 	bpl	readdata
 find_D5:
 	cpy	#$d5		; if not D5, repeat
 	bne	readdata
 find_AA:
+mlsmc08:
 	ldy	$c0ec		; read data until valid, should be AA
 	bpl	find_AA
 	cpy	#$aa		; we need Y=#$AA later
 	bne	find_D5
 find_AD:
-	lda	$c0ec		; read data until high bit set (valid)
+mlsmc09:lda	$c0ec		; read data until high bit set (valid)
 	bpl	find_AD
 	eor	#$ad		; should match $ad
 	bne	*		; lock if didn't find $ad (failure)
 L12:
-	ldx	$c0ec		; read data until high bit set (valid)
+mlsmc0A:ldx	$c0ec		; read data until high bit set (valid)
 	bpl	L12
 	eor	nibtbl-$80, x
 	sta	bit2tbl-$aa, y
 	iny
 	bne	L12
 L13:
-	ldx	$c0ec		; read data until high bit set (valid)
+mlsmc0B:ldx	$c0ec		; read data until high bit set (valid)
 	bpl	L13
 	eor	nibtbl-$80, x
 	sta	(adrlo), y	; the real address
@@ -643,20 +670,20 @@ L15:
 	;=================
 	; Find address field, put track in cutrk, sector in tmpsec
 readadr:
-	lda	$c0ec		; read data until we find a $D5
+mlsmc0C:lda	$c0ec		; read data until we find a $D5
 	bpl	readadr
 adr_d5:
 	cmp	#$d5
 	bne	readadr
 
 adr_aa:
-	lda	$c0ec		; read data until we find a $AA
+mlsmc0D:lda	$c0ec		; read data until we find a $AA
 	bpl	adr_aa
 	cmp	#$aa
 	bne	adr_d5
 
 adr_96:
-	lda	$c0ec		; read data until we find a $96
+mlsmc0E:lda	$c0ec		; read data until we find a $96
 	bpl	adr_96
 	cmp	#$96
 	bne	adr_d5
@@ -669,12 +696,12 @@ adr_read_two_bytes:
 	sta	curtrk		; store out current track
 	tax
 L20:
-	lda	$c0ec		; read until full value
+mlsmc0F:lda	$c0ec		; read until full value
 	bpl	L20
 	rol
 	sta	tmpsec
 L21:
-	lda	$c0ec		; read until full value
+mlsmc10:lda	$c0ec		; read until full value
 	bpl	L21		; sector value is (v1<<1)&v2????
 	and	tmpsec
 	dey			; loop 3 times
@@ -730,7 +757,7 @@ L118:
 	and	#3
 	rol
 	tax
-	sta	$c0e0, x
+mlsmc11:sta	$c0e0, x
 L119:
 	ldx	#$13
 L120:
