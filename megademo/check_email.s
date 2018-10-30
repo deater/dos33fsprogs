@@ -379,11 +379,11 @@ em_letters:
 	.byte	6,4,	"DA LA , K MML",128	; DEATER, KOMMT
 	.byte	6+128,4,"DE&FEF, K8MMF",128
 
-	.byte	7,4,    " L !J, ICL",128	; BALD, ICH
-	.byte	7+128,4," 8&I8, ICH",128
+	.byte	7,4,    " L !J, I L",128	; BALD, ICH
+	.byte	7+128,4," 8&I8, IEH",128
 
-	.byte	8,4,    " A M SSA J CL",128	; VERMISSE DICH.
-	.byte	8+128,4,"VEFMISSE 8ICH.",128
+	.byte	8,4,    " A M SSA J  L",128	; VERMISSE DICH.
+	.byte	8+128,4,"VEFMISSE 8IEH.",128
 
 	.byte	10,4,    "  F  GGYS A",128
 	.byte	10+128,4,"  FF8GGYSUE",128	; FROGGYSUE
