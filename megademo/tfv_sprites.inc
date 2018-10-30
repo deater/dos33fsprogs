@@ -204,7 +204,7 @@ heart_sprite:
         ; = 33 + 2*52 + 30*2 + 64*1 + 69*1 + 54*2 - 2
         ; = 436
 
-
+.if 0
 flame1:
 	.byte $7,$5
 	.byte $dd,$dd,$dd,$dd,$dd,$dd,$dd
@@ -252,6 +252,63 @@ flame4:
 	.byte $11,$11,$11,$11,$11,$11,$11
 	.byte $11,$11,$11,$11,$11,$11,$11
 	.byte $41,$41,$41,$41,$41,$41,$41
+
+	; 00=0 0X=0 X0=0 XX=30 
+	; = 33 + Y*(52)+ [30A + 64B + 69C + 54D]-Y
+	; = 33 + 5*52 + 30*0 + 64*0 + 69*0 + 54*35 - 5
+	; = 2178
+.endif
+
+; yellow = d green=4 pale-blue=e
+; orange = 9 aqua=e
+
+flame1:
+	.byte $7,$5
+	.byte $9d,$99,$dd,$d4,$d4,$dd,$dd
+	.byte $dd,$dd,$ed,$fd,$dd,$de,$dd
+	.byte $dd,$de,$ef,$ff,$df,$dd,$dd
+	.byte $9d,$9d,$9d,$dd,$dd,$de,$dd
+	.byte $4d,$49,$4d,$44,$44,$4d,$4d
+
+	; 00=0 0X=0 X0=0 XX=35 
+	; = 33 + Y*(52)+ [30A + 64B + 69C + 54D]-Y
+	; = 33 + 5*52 + 30*0 + 64*0 + 69*0 + 54*35 - 5
+	; = 2178
+
+flame2:
+	.byte $7,$5
+	.byte $99,$99,$d9,$d4,$d4,$d9,$d9
+	.byte $d9,$dd,$ed,$fd,$e7,$dd,$dd
+	.byte $da,$de,$ef,$ff,$df,$dd,$dd
+	.byte $99,$9d,$9d,$dd,$d7,$dd,$dd
+	.byte $49,$49,$49,$44,$44,$49,$49
+
+	; 00=0 0X=0 X0=0 XX=30 
+	; = 33 + Y*(52)+ [30A + 64B + 69C + 54D]-Y
+	; = 33 + 5*52 + 30*0 + 64*0 + 69*0 + 54*35 - 5
+	; = 2178
+
+
+flame3:
+	.byte $7,$5
+	.byte $94,$d1,$d9,$94,$94,$dd,$dd
+	.byte $dd,$dd,$ed,$f7,$dd,$dd,$dd
+	.byte $de,$de,$ef,$ff,$ef,$dd,$dd
+	.byte $9d,$dd,$9d,$97,$9d,$dd,$dd
+	.byte $44,$41,$49,$44,$44,$4d,$4d
+
+	; 00=0 0X=0 X0=0 XX=30 
+	; = 33 + Y*(52)+ [30A + 64B + 69C + 54D]-Y
+	; = 33 + 5*52 + 30*0 + 64*0 + 69*0 + 54*35 - 5
+	; = 2178
+
+flame4:
+	.byte $7,$5
+	.byte $1d,$d9,$9d,$d4,$d4,$dd,$dd
+	.byte $dd,$dd,$7d,$f7,$dd,$dd,$dd
+	.byte $dd,$d7,$7f,$ff,$df,$dd,$dd
+	.byte $1d,$dd,$9d,$d7,$dd,$dd,$dd
+	.byte $4d,$49,$4d,$44,$44,$4d,$4d
 
 	; 00=0 0X=0 X0=0 XX=30 
 	; = 33 + Y*(52)+ [30A + 64B + 69C + 54D]-Y
