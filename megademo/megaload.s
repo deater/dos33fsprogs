@@ -1,15 +1,14 @@
 ; read any file slot 6 version
 ; based on FASTLD6 and RTS copyright (c) Peter Ferrie 2011-2013,2018
 
-; TODO:
-;	non-slot6?  self modfiy code?
-;		Slot<<4 is in $2b by boot firmware? can we rely on that?
+; modified to assembled with ca64 -- vmw
+; added code to patch it to run from current disk slot -- vmw
+
 
 	adrlo	=	$26	; constant from boot prom
 	adrhi	=	$27	; constant from boot prom
 	tmpsec	=	$3c	; constant from boot prom
 	reqsec	=	$3d	; constant from boot prom
-	curtrk	=	$40
 	sizelo	=	$44
 	sizehi	=	$45
 	secsize	=	$46
@@ -156,7 +155,18 @@ md000x2_filename:	;.byte "MUSIC.D000X2                     "
 
 init:
 	; patch to use current drive
-	lda	$2b		; has boot slot << 4 ?
+
+	; locate input paramater list
+	jsr	$3E3
+	; result is in A:Y
+	sta	$FF
+	sty	$FE
+	ldy	#1
+	lda	($FE),y
+
+	; list+1 should have slot<<8
+
+
 	ora	#$80		; add in $80
 
 	; c0e0
