@@ -34,6 +34,7 @@
 	30633	-- with all the music added in
 	31323	-- finish takeoff
 	31607	-- space-bars auto-driving
+	32038	-- align letters, few extra thanks
 
 Further ideas to reduce:
 	+ Optimize all the .align calls

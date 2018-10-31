@@ -67,7 +67,7 @@ space_bars:
 	lda	#8
 	sta	DRAW_PAGE
 
-	lda	#$44
+	lda	#$00
 	jsr	clear_gr
 
 

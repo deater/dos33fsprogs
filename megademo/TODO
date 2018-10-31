@@ -1,7 +1,5 @@
 TODO TODO:
 	+ Get timing right
-	+ Fix qkumbas seek code
-	+ Fix one-line glitch
 	+ Add play_music call in slow vapor_lock code?
 
 THANKS:
@@ -10,13 +8,12 @@ THANKS:
 	* Fireworks: FOZZTEX
 	* DISK+LZ4: QKUMBA
 	* BMP2DHR: BILL BUCKELS
-	VOYAGER
-	TALBOT 0101B
+	* VOYAGER 2
+	* TALBOT 0101B
 	* UTOPIA BBS
 	* VMW PRODUCTION
 
 Overall:
-	fix off-by-one line vaporlock
 	Trim the last 8 bytes off of all the lz4 files
 
 Music:

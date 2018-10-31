@@ -48,15 +48,15 @@ vapor_lock:
 
 	lda	#$dd
 	ldy	#40
-	jsr	clear_page_loop			; make top half grey2 $aa
+	jsr	clear_page_loop			; make bottom half yellow $dd
 
 	lda	#$aa
 	ldy	#24
-	jsr	clear_page_loop			; make top half grey2 $aa
+	jsr	clear_page_loop			; make middle grey2 $aa
 
 	lda	#$ee
 	ldy	#10
-	jsr	clear_page_loop			; make top half grey2 $aa
+	jsr	clear_page_loop			; make top half aqua $ee
 
 	; set up a rainbow to aid in exact lock
 
@@ -149,6 +149,11 @@ qloop:
 	; 6 17 28 39, clock at 40
 
 
+
+
+;btt:
+;	jmp	btt
+
 	; In theory near end of line 104
 
 	; now skip ahead 8 lines and read from the rainbow pattern we set
@@ -158,15 +163,32 @@ qloop:
 	; we back off a few to make sure we're not in the horiz blank
 	; try to delay 510
 
-	lda	#230				; 2
-	jsr	delay_a				; delay 25+230 = 255
+	; *NOTE* sometimes we end up going one (or rarely, two??) lines too far
+	; so instead try going 7 lines ahead, and if still dd then one more
 
-	lda	#226				; 2
-	jsr	delay_a				; delay 25+226 = 251
+	; so single step until we get a rainbow color
+
+	; go to next line, -10
+	lda	#28				; 2
+	jsr	delay_a				; delay 25+28 = 53
+						; total delay = 55
+
+vl_try_again:
+	lda	#29				; 2
+	jsr	delay_a				; delay 25+29 = 54
+						; total delay = 56
+
+
+
+	lda	$C051				; 4
+	cmp	#$dd				; 2
+	beq	vl_try_again			; 3
+						; -1
 
 
 	; now near end of line 112
-
+	;lda	$0	; nop to match old code	; 3
+;	nop	; nop to match old code	; 2
 
 	lda	$C051				; 4
 ;kbb:
