@@ -41,30 +41,17 @@ fw_letters:
 	.byte   22,26,    " ",128
 	.byte   22+128,26," ",128
 
-	.byte	22,26,    "UTOPIA",128
-	.byte	22+128,26,"UTOPIA",128
-
-	.byte	23,26,    "BBS",128
-	.byte	23+128,26,"BBS",198
+	.byte	22,26,    "UTOPIA BBS",128
+	.byte	22+128,26,"UTOPIA BBS",198
 
 	.byte   22,26,    " ",128
 	.byte   22+128,26," ",128
 
-	.byte	23,26,    " ",128
-	.byte	23+128,26," ",128
+;	.byte	22,26,    "TALBOT 0101",128
+;	.byte	22+128,26,"TALBOT 0101",198
 
-	.byte	22,26,    "TALBOT",128
-	.byte	22+128,26,"TALBOT",128
-
-	.byte	23,26,    "0101",128
-	.byte	23+128,26,"0101",198
-
-	.byte   22,26,    " ",128
-	.byte   22+128,26," ",128
-
-	.byte	23,26,    " ",128
-	.byte	23+128,26," ",128
-
+;	.byte   22,26,    " ",128
+;	.byte   22+128,26," ",128
 
 	.byte	22,26,"A VMW",128
 	.byte	22+128,26,"A VMW",128
@@ -74,6 +61,7 @@ fw_letters:
 
 	.byte	255
 
+;.align $100
 
 letters_bm:
 	;.byte	1,12
