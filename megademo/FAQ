@@ -1,8 +1,11 @@
 Q: Is this based on a true story?
 
-A: I took some artistic liberties.
+A: Yes, though I took some artistic liberties.
 
    For example, the real Froggysue wouldn't be caught dead in a dress.
+
+   Also, Susie would have chewed through the phone cable inside, 
+	and ran off at 100mph outside (rather than following me).
 
 
 Q: Why is the e-mail in German?
@@ -28,3 +31,39 @@ Q. What sort of creature is Stealth Susie?
 
 A. Stealth Susie / Little Girl was an American Crested Guinea Pig.
 	She has her own website: http://www.deater.net/susie/
+
+	Despite apperances, she's not one of those creatures from
+	the beginning of Out of this World / Another World.
+
+
+Q.  Why isn't Susie visible when you get off of the large bird?
+
+A.  Typically she preferred riding around in the darkness of my shirt.
+
+
+Q. What language is that in the "starring" part
+
+A. Tengwar
+
+
+Q. Did you fully implement everything you wanted in this demo?
+
+A. No, I had some plans for a lot more subtle sub-animations.
+   Also, the Apple II in scene 2 was supposed to scroll in from the top.
+   
+
+Q. Why are the mid-screen mode flips glitchy?
+
+A. Because you really aren't supposed to be doing them.
+
+   If I had more time I'd try to minimize the glitches.  They don't
+   appear under emulation and I waited too late to test things on
+   real hardware.
+
+
+Q. What is the Rasterbar field around Saturn supposed to represent?
+
+A. It's a metaphor for US Route 15 through Pennsylvania.
+
+
+
