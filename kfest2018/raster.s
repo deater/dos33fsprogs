@@ -133,7 +133,11 @@ data_loop2:
 	bne	data_loop2
 
 
+	; NOTE: proper vapor_lock code that handles most corner cases
+	;	was written later.  The code included below fails sometimes
+	;	but that's all I had time for at kfest
 
+;	jsr	vapor_lock
 
 	;=====================================================
 	; attempt vapor lock
@@ -1075,3 +1079,6 @@ write_ay_both:
 								;       65
 
 
+; added post kfest18
+;.include	"vapor_lock.s"
+;.include	"delay_a.s"

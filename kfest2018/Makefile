@@ -9,7 +9,7 @@ kfest18.dsk:	RASTER RASTER_C
 	$(DOS33) -y kfest18.dsk BSAVE -a 0x2000 RASTER
 	$(DOS33) -y kfest18.dsk BSAVE -a 0x1000 RASTER_C
 
-raster.o:	raster.s
+raster.o:	raster.s vapor_lock.s
 	ca65 -o raster.o raster.s -l raster.lst
 
 RASTER.lz4: RASTER
