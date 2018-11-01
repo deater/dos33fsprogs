@@ -2,8 +2,6 @@
 
 ;==================================
 ; First $D000 page, 4k of room, room for 16
-;		we dupe 5 of them as we don't have enough
-;		that only occur in 1st half
 
 ;mah03:
 .incbin "music_chunks/mock.ah.03"
@@ -27,17 +25,17 @@
 .incbin "music_chunks/mock.nh.03"
 ;mnh07:
 .incbin "music_chunks/mock.nh.07"
-;==============5 dupes follow
-mbh22:
-.incbin "music_chunks/mock.bh.22"
-mbh23:
-.incbin "music_chunks/mock.bh.23"
-mbl22:
-.incbin "music_chunks/mock.bl.22"
-mbl23:
-.incbin "music_chunks/mock.bl.23"
-mah11:
-.incbin "music_chunks/mock.ah.11"
+
+;mnh00:
+.incbin "music_chunks/mock.nh.00"
+;mch07:
+.incbin "music_chunks/mock.ch.07"
+;mcl07:
+.incbin "music_chunks/mock.cl.07"
+;mbh02:
+.incbin "music_chunks/mock.bh.02"
+;mah02:
+.incbin "music_chunks/mock.ah.02"
 
 
 
@@ -61,8 +59,8 @@ mah11:
 .incbin "music_chunks/mock.cl.04"
 ;mcl05:
 .incbin "music_chunks/mock.cl.05"
-;mcl07:
-.incbin "music_chunks/mock.cl.07"
+;mbl05:
+.incbin "music_chunks/mock.bl.05"
 ;mcl08:
 .incbin "music_chunks/mock.cl.08"
 ;mcl09:
@@ -79,8 +77,8 @@ mah11:
 .incbin "music_chunks/mock.ch.04"
 ;mch05:
 .incbin "music_chunks/mock.ch.05"
-;mch07:
-.incbin "music_chunks/mock.ch.07"
+;mbh09:
+.incbin "music_chunks/mock.bh.09"
 ;mch08:
 .incbin "music_chunks/mock.ch.08"
 ;mch09:
@@ -107,8 +105,8 @@ mah11:
 
 
 ; 13
-;mnh00:
-.incbin "music_chunks/mock.nh.00"
+;mnh22:
+.incbin "music_chunks/mock.nh.22"
 ;mnh04:
 .incbin "music_chunks/mock.nh.04"
 ;mnh05:

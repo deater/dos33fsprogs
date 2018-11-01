@@ -2,7 +2,8 @@
 
 ;==================================
 ; Second $D000 page, 4k of room
-; 11 that only happen in second half, plus dupes
+; 16 that only happen in second half
+
 ;mah30:
 .incbin "music_chunks/mock.ah.30"
 ;mbh30:
@@ -25,7 +26,7 @@
 .incbin "music_chunks/mock.ch.23"
 ;mnh23:
 .incbin "music_chunks/mock.nh.23"
-;==============5 dupes follow
+
 ;mbh22:
 .incbin "music_chunks/mock.bh.22"
 ;mbh23:

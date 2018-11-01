@@ -19,6 +19,13 @@ mnh01=$d700
 mnh02=$d800
 mnh03=$d900
 mnh07=$da00
+
+mnh00=$db00
+mch07=$dc00
+mcl07=$dd00
+mbh02=$de00
+mah02=$df00
+
 mbh01=$e000
 mbh04=$e100
 mbh05=$e200
@@ -27,14 +34,14 @@ mbh10=$e400
 mbh11=$e500
 mcl04=$e600
 mcl05=$e700
-mcl07=$e800
+mbl05=$e800
 mcl08=$e900
 mcl09=$ea00
 mcl10=$eb00
 mcl11=$ec00
 mch04=$ed00
 mch05=$ee00
-mch07=$ef00
+mbh09=$ef00
 mch08=$f000
 mch09=$f100
 mch10=$f200
@@ -44,7 +51,7 @@ mnl05=$f500
 mnl07=$f600
 mnl10=$f700
 mnl11=$f800
-mnh00=$f900
+mnh22=$f900
 mnh04=$fa00
 mnh05=$fb00
 mnh08=$fc00
@@ -280,15 +287,15 @@ mah_pattern:
 .byte	>mah04,>mah05,>mah10,>mah11,>mah04,>mah05,>mah04,>mah07
 .byte	>mah04,>mah05,>mah10,>mah11,>mah10,>mah11,>mah30
 mbl_pattern:
-.byte	>mal00,>mbl00,>mbl01,>mbl02,>mbl01,>mbl00,>mbl01,>mbl00,>mbl07
-.byte	>mbl00,>mbl01,>mbl10,>mbl11,>mbl00,>mbl01,>mbl00,>mbl07
-.byte	>mbl00,>mbl01,>mbl10,>mbl11,>mbl00,>mbl01,>mbl22,>mbl23
-.byte	>mbl00,>mbl01,>mbl10,>mbl11,>mbl10,>mbl11,>mbl01
+.byte	>mal00,>mbl00,>mbl01,>mbl02,>mbl01,>mbl04,>mbl05,>mbl04,>mbl07
+.byte	>mbl00,>mbl01,>mbl10,>mbl11,>mbl04,>mbl05,>mbl04,>mbl07
+.byte	>mbl00,>mbl01,>mbl10,>mbl11,>mbl04,>mbl05,>mbl22,>mbl23
+.byte	>mbl00,>mbl01,>mbl10,>mbl11,>mbl10,>mbl11,>mbl30
 mbh_pattern:
-.byte	>mal00,>mbh00,>mbh01,>mbh00,>mbh01,>mbh04,>mbh05,>mbh04,>mbh07
-.byte	>mbh08,>mbh05,>mbh10,>mbh11,>mbh04,>mbh05,>mbh04,>mbh07
-.byte	>mbh08,>mbh05,>mbh10,>mbh11,>mbh04,>mbh05,>mbh22,>mbh23
-.byte	>mbh08,>mbh05,>mbh10,>mbh11,>mbh10,>mbh11,>mbh30
+.byte	>mal00,>mbh00,>mbh01,>mbh02,>mbh01,>mbh04,>mbh05,>mbh04,>mbh07
+.byte	>mbh08,>mbh09,>mbh10,>mbh11,>mbh04,>mbh05,>mbh04,>mbh07
+.byte	>mbh08,>mbh09,>mbh10,>mbh11,>mbh04,>mbh05,>mbh22,>mbh23
+.byte	>mbh08,>mbh09,>mbh10,>mbh11,>mbh10,>mbh11,>mbh30
 mcl_pattern:
 .byte	>mal00,>mal00,>mal00,>mal00,>mcl03,>mcl04,>mcl05,>mcl04,>mcl07
 .byte	>mcl08,>mcl09,>mcl10,>mcl11,>mcl04,>mcl05,>mcl04,>mcl07
@@ -307,7 +314,7 @@ mnl_pattern:
 mnh_pattern:
 .byte	>mal00,>mnh00,>mnh01,>mnh02,>mnh03,>mnh04,>mnh05,>mnh04,>mnh07
 .byte	>mnh08,>mnh09,>mnh10,>mnh11,>mnh04,>mnh05,>mnh04,>mnh07
-.byte	>mnh08,>mnh09,>mnh10,>mnh11,>mnh04,>mnh05,>mnh04,>mnh23
+.byte	>mnh08,>mnh09,>mnh10,>mnh11,>mnh04,>mnh05,>mnh22,>mnh23
 .byte	>mnh08,>mnh09,>mnh10,>mnh11,>mnh10,>mnh11,>mnh30
 
 .align	$100
@@ -318,8 +325,8 @@ mal00:
 .incbin "music_chunks/mock.al.00"
 mal02:
 .incbin "music_chunks/mock.al.02"
-mah02:
-.incbin "music_chunks/mock.ah.02"
+mbl04:
+.incbin "music_chunks/mock.bl.04"
 mah04:
 .incbin "music_chunks/mock.ah.04"
 mah05:
@@ -338,3 +345,5 @@ mbl11:
 .incbin "music_chunks/mock.bl.11"
 mbh00:
 .incbin "music_chunks/mock.bh.00"
+mbl30:
+.incbin "music_chunks/mock.bl.30"
