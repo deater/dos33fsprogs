@@ -1,0 +1,15 @@
+Load into wine VT.exe 
+To get from roughly 50Hz to 60Hz save with speed=4
+
+Save, load into AY_emul
+	Click "PL" to bring up playlist
+	Right click on filename
+	Convert to YM6
+	Make sure to save as 1MHz, 60Hz
+
+Now, break it into chunks
+	~/research/vmw-meter.git/ay-3-8910/conversion_tools/ym5_to_mega
+	~/research/vmw-meter.git/ay-3-8910/conversion_tools/ym5_to_mega ./mockingbird_fix4.ym
+
+	By hand I used things like md5sum * | sort to find duplicates
+

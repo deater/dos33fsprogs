@@ -196,7 +196,7 @@ fa_doneinc:
 	;====================
 	; 7 cycles
 	lda	FRAMEH					; 3
-	cmp	#80					; 2
+	cmp	#77					; 2
 	beq	fa_done					; 3
 							; -1
 

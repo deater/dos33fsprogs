@@ -169,7 +169,7 @@ ar_no_carry:
 	;=================
 
 	lda	FRAMEH							; 3
-	cmp	#30							; 2
+	cmp	#32							; 2
 	bne	ar_not_done						; 3
 	jmp	ar_all_done
 ar_not_done:
@@ -181,8 +181,12 @@ ar_not_done:
 	; STATE2 = 5+5+4+3     = 17
 	; STATE4 = 5+5+2+3+(2) =17
 
+	; looking at FRAMEH (orig 5,16,30) -> 9, 20, 32
+	; if  0 <  9 then STATE0 (waiting)  $0  < $9
+	; if  9 < 20 then STATE2 (walking)  $9  < $14
+	; if 20 < 32 then STATE4 (heart)    $14 < $20
 
-	cmp	#5							; 2
+	cmp	#9							; 2
 	bcs	ar_state_notzero	; bge				; 3
 ar_state_zero:
 									; -1
@@ -191,7 +195,7 @@ ar_state_zero:
 	ldx	#0							; 2
 	jmp	ar_set_state						; 3
 ar_state_notzero:
-	cmp	#16							; 2
+	cmp	#20							; 2
 	bcs	ar_state_four		; bge				; 3
 ar_state_two:
 									; -1
@@ -660,12 +664,15 @@ heart_loop:
 	rts								; 6
 
 ar_heart_lookup_x:
-	.byte 14,14,13,13,14,14,14,14
+	.byte 14,14,14,14,14,14,13,13,14,14,14,14
+
 ;	.byte 14,14,15,15,14,14,14,14
-	.byte 14,14,14,14,14,14,14,14
+
+	.byte 14,14,14,14
+
 ar_heart_lookup_y:	; HEART_Y
-	.byte 20,20,18,18,16,16,16,16
-	.byte 16,16,16,16,16,16,16,16
+	.byte 16,16,16,16,20,20,18,18,16,16,16,16
+	.byte 16,16,16,16
 
 heart_path:
 ;	.byte	$14,$20
