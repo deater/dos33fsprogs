@@ -94,9 +94,17 @@ sp_smc6:
 	jsr	vapor_lock						; 6
 
 	; vapor lock returns with us at beginning of hsync in line
-	; 114 (7410 cycles), so with 5070 lines to go
+	; 114 (7410 cycles), so with 5070 cycles to go
+
+	; so to get to end of blank = 9620 - 9298 = 322
+	; really could use a sound update in the middle there, but 1038 cycles?
+
+	jsr	play_music			; 6+1032
 
 	jsr	gr_copy_to_current		; 6+ 9292
+
+	; 322-1028 = 716 cycles into display, so need to delay
+	; 12480 - 716 = 11764
 
 	; now we have 322 left
 
@@ -111,12 +119,33 @@ sp_smc6:
 
 	; Try X=9 Y=6 cycles=307
 
-        ldy	#6							; 2
-sploopA:ldx	#9							; 2
+	; 11749
+	; Try X=70 Y=33 cycles=11749
+
+        ldy	#33							; 2
+sploopA:ldx	#70							; 2
 sploopB:dex								; 2
 	bne	sploopB							; 2nt/3
 	dey								; 2
 	bne	sploopA							; 2nt/3
+
+
+	jsr	play_music			; 6+1032
+	; 4550 - 1038 = 3512
+
+	; Try X=99 Y=7 cycles=3508 R4
+
+	nop
+	nop
+
+        ldy	#7							; 2
+sploopT:ldx	#99							; 2
+sploopQ:dex								; 2
+	bne	sploopQ							; 2nt/3
+	dey								; 2
+	bne	sploopT							; 2nt/3
+
+
 
 	jmp	sp_begin_loop
 .align  $100
