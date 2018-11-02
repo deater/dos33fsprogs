@@ -43,7 +43,7 @@ X_OLD		= $FD
 X_OLDER		= $FE
 FWTEMP		= $FF
 
-.align	$100
+;.align	$100
 
 	;===========================
 	; LAUNCH_FIREWORK

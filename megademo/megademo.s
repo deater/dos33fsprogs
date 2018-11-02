@@ -48,6 +48,8 @@ apple_iie:
 
 ;	jsr	arriving_there
 
+;	jsr	fireworks
+
 	; C64 Opening Sequence
 
 	jsr	c64_opener
@@ -115,7 +117,7 @@ apple_iie:
 	.include	"gr_hline.s"
 	.include	"vapor_lock.s"
 	.include	"delay_a.s"
-	.include	"wait_keypress.s"
+;	.include	"wait_keypress.s"
 	.include	"random16.s"
 .align $100
 	.include	"fireworks.s"

@@ -11,6 +11,8 @@ SEEDH = $4F
 
 XOR_MAGIC = $7657	; "vW"
 
+.assert >random16 = >random16_after, error, "random16 crosses page"
+
 	;=============================
 	; random16
 	;=============================
@@ -116,4 +118,4 @@ cep:
 
 
 
-
+random16_after:

@@ -29,7 +29,9 @@ MIXCLR	=	$C052
 HISCR	=	$C055
 
 
-.align	$100
+;.align	$100
+
+.assert >hgr = >hgr_after, error, "hgr crosses page"
 
 	;==========================
 	; HGR
@@ -68,9 +70,18 @@ bkgnd_loop:
 	and	#$1f			; see if $40 or $60
 	bne	bkgnd_loop
 	rts
+hgr_after:
 
+
+.assert >msktbl = >msktbl_after, error, "msktbl crosses page"
 
 msktbl:	.byte $81,$82,$84,$88,$90,$A0,$C0	; original
+msktbl_after:
+
+.align $100
+
+
+.assert >hposn = >hposn_after, error, "hposn crosses page"
 
 	;====================================================
 	; HPOSN
@@ -220,22 +231,6 @@ done_mod:
 								;===========
 								;	 23
 
-	;=====================================
-	; HPLOT0
-	;=====================================
-	; point in (YX),A
-	; 244 cycles
-hplot0:
-	; F457
-	jsr	hposn							; 6+210
-	lda	HGR_BITS						; 3
-	eor	(GBASL),y						; 5+
-	and	HMASK							; 3
-	eor	(GBASL),y						; 5+
-	sta	(GBASL),y						; 6
-	rts								; 6
-								;============
-								;	 244
 
 	;===================================
 	; COLOR_SHIFT
@@ -259,7 +254,34 @@ done_color_shift:
 	nop								; 2
 	rts								; 6
 
-.align	$100
+hposn_after:
+
+;.align $100
+
+.assert >hplot0 = >hplot0_after, error, "hplot0 crosses page"
+
+	;=====================================
+	; HPLOT0
+	;=====================================
+	; point in (YX),A
+	; 244 cycles
+hplot0:
+	; F457
+	jsr	hposn							; 6+210
+	lda	HGR_BITS						; 3
+	eor	(GBASL),y						; 5+
+	and	HMASK							; 3
+	eor	(GBASL),y						; 5+
+	sta	(GBASL),y						; 6
+	rts								; 6
+								;============
+								;	 244
+
+
+
+hplot0_after:
+
+.assert >hcolor_equals = >hcolor_equals_after, error, "hce crosses page"
 
 	;=============================
 	; HCOLOR_EQUALS
@@ -278,3 +300,4 @@ hcolor_equals:
 colortbl:
 	.byte	$00,$2A,$55,$7F,$80,$AA,$D5,$FF
 
+hcolor_equals_after:

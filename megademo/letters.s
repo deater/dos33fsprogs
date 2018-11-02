@@ -3,6 +3,8 @@
 
 .align $100
 
+.assert >fw_letters = >fw_letters_done, error, "fw_letters crosses page"
+
 fw_letters:
 ;	.byte	22,28,
 	.byte		  " ",128
@@ -61,7 +63,9 @@ fw_letters:
 
 	.byte	255
 
-;.align $100
+fw_letters_done:
+
+.align $100
 
 letters_bm:
 	;.byte	1,12

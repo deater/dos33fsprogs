@@ -10,6 +10,8 @@
 
 	; all forced to be 126
 
+.assert >move_letters = >move_letters_after, error, "move_letters crosses page"
+
 move_letters:
 	ldy	WAITING							; 3
 	beq	not_waiting						; 3
@@ -188,3 +190,5 @@ waste_28:
 	inc	BLARGH		; 5
 	inc	BLARGH		; 5
 	rts			; 6
+
+move_letters_after:

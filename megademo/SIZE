@@ -36,6 +36,7 @@
 	31607	-- space-bars auto-driving
 	32038	-- align letters, few extra thanks
 	31976	-- no room to thank Talbot Hall
+	31574	-- optimize some aligns while trying to find firework bug
 
 Further ideas to reduce:
 	+ Optimize all the .align calls
