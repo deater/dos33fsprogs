@@ -179,6 +179,9 @@ apple_iie:
 ; arrival
 .include "arrival.inc"
 
+;background:
+.include "fw_background.inc"
+
 ;============================
 ; Include Hires Graphics
 ; No Alignment Needed

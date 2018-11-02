@@ -81,6 +81,7 @@ Zloop2:	dex								; 2
 
 	jmp	fw_check_keyboard			; 3
 
+.align $100
 
 	;=================================
 	; action_continue_explosion

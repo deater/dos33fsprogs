@@ -397,6 +397,5 @@ jump_table:
 ;.include "move_letters.s"
 ;.include "delay_a.s"
 
-background:
-
-.include "fw_background.inc"
+;background:
+;.include "fw_background.inc"
