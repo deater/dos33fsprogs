@@ -1,3 +1,102 @@
+In my last writeup I described a demo for the Apple II, but said
+I'd leave all the fancy cycle-counting and modeswitching to the
+French Touch group.
+
+But then I realized that no, I was jealous of the Atari and other hackers,
+and I wanted to race the beam too.
+On an Apple II, however, the challenge isn't racing the beam, it's
+*finding* the beam.
+
+Graphics mode on the Apple II
+
+Lemonade stand, hires?, text?
+
+The original apple II has three video modes.
+Text, which is 40x24.  The font is in ROM and cannot be changed.
+There are two pages, one at $400 and one at $800.
+Lores graphics, which is 40x48 blocks in 15 NTSC artifact colors
+	(there are two identical greys).  This re-used the same
+	RAM as text mode, but interprets each byte as upper and lower
+	4-bit colored blocks.
+Hires graphics, which is 280*192 (sort of) 6-color graphics with all
+	sorts of restrictions.  Two pages, one at $2000 and one at $4000.
+The graphics modes can optionally be set to display the bottom 4 lines
+of text mode text.
+
+Later Apple II models, starting with the IIe, can do some more advanced
+things but we are targeting the older models here.
+
+Some more fun with the graphics displays.
+They are not linear framebuffers.  To save a few gates, and to get DRAM
+refresh for free, Woz scattered the addresses about so the video refresh
+circuitry (which runs in the half of the 6502 clock phase where the CPU
+is not accessing memory) touches each DRAM page.
+This means a table lookup (or costly math) any time you want to move
+to a new Y position.
+Also the LORES PAGE0 has ``holes'' in the address space that may be
+used by peripherals (original Apple II only 4k of RAM so had to have
+scratch space low) so you have to be careful not to over-write these by mistake.
+
+Finally in hires mode the pixel patterns are complex.  Two 00 next to
+each other always is black.
+Two 11 is always white.  01 starting in an even pixel is one color, 10 is
+another.  Which color (orange/blue or purple/green) depends on the high
+bit of the byte.  There are 7 bits left in the byte, so some colors
+end up split between two bytes.
+The black and white colors happen any time you get consecutive 0s or 1s
+so ther tend to be white or black edge artifacts whenever you have colors
+touching.
+
+Anyway, enough about the challenges of drawing these modes. 
+Can we make this work, and switch modes mid-screen to create graphics
+combinations mostly undreamed of?
+
+Yes!  ANd it turns out this is a really old technique, Bob Bishop
+introduced it in 1982(?) in an article in Softtalk, and Don Lancaster
+expanded on it at length a few years later.
+
+So why weren't these effects exploited back in the day?
+Mostly because it's a pain to program.  Also because Apple would never
+guarantee the way of finding things would always work.
+
+
+
+
+
+Fitting the music.
+
+I waited a bit late to find some music, but managed to find someone
+at the last minute.
+Dascon was kind enough to put together a 3-channel Amiga MOD file which
+I poorly converted by hand to a Vortex Tracker PT3 file, the kind played
+on ZX spectrums.
+It is possible to write very small trackers to play this format, but alas
+none seem to be available for the 6502, and if they were, it's unlikely
+they'd be cycle-invariant.
+
+So in the end I have to give up the dream of fitting in 48k, and
+managed to get the audio plus AY-3-8910/Mockingboard sound player
+to fit in the 4k of space I had leftover for music, plus 16k of the
+Language Card.
+The Language Card was Apple's bank switching hack of an expansion card
+that allowed swapping out the ROM for RAM in a 12k chunk at \$D000 and an
+alternate 4k chunk at \$D000 
+(it's not possible to swap out the address space at \$C000 as that's where
+the expansion card ROM and softswitches live).
+
+The code runs fine even if you don't have one, the code will try to play
+your ROM as music
+to much less satisfying results.
+
+THe music is compressed to only have 8 of the AY-3-8910s registers
+needing updated (no envelope effects).
+The tracker pattern buffer is used to play the 31 patterns, each of which
+fit in four 256 byte chunks.
+Deduplication was used to make this fit in the roughly 17k we had available.
+Much of that was done by hand due to lack of time to automate it.
+
+
+
 Notes on the MEGADEMO
 
 
@@ -10,7 +109,9 @@ Finding HBLANK/VBLANK on the Apple II:
 	Unlike other machines,
 	there is no register or interrupt that tells where the scan
 	currently is.  (Later IIe, IIc and IIgs models do add such a 
-	register, but each is incompatible with the others)
+	register, but each is incompatible with the others.
+	Also, even those only gave you roughly +/- 7 cycles of
+	VBLANK starting, not exact notification)
 
 	The way this is found is to use a weird quirk of the Apple II:
 	the "floating bus".  If you read from a softswitch that doesn't
@@ -80,7 +181,8 @@ Notes on each screen:
 	detects the newer hardware and self-modifies the code to work
 	on both.
 
-	This screen also does a Text/lores split
+	This screen also does a Text/lores split, and the lores is
+	in the 40x96 mode.
 
 + Starring
 	The first part is flipping between Lores Page1/Page2 and Hires Page1
