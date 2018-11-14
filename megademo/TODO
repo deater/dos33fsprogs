@@ -1,3 +1,11 @@
+After Demosplash TODO:
+	+ Force 1MHz mode on GS?
+	+ Autodetect language card?
+	+ Autodetect mockingboard?
+	+ Patch vapor lock on II+ (mode switches 1-cycle early?)
+	+ Fix the mid-screen switches to look right on real hardware?
+
+
 TODO TODO:
 	+ Get timing right
 	+ Add play_music call in slow vapor_lock code?
