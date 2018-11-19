@@ -3,9 +3,15 @@
 .include	"zp.inc"
 				; program is ~4k, so from 0xc00 to 0x1C00
 LZ4_BUFFER	EQU	$1C00		; $1C00 - $5C00, 16k for now
-UNPACK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
-					; trying not to hit DOS at $9600
-					; Reserve 3 chunks plus spare (14k)
+DISK_BUFFER	EQU	$5D00		; for disk loading
+UNPACK_BUFFER	EQU	$6000		; $6000 - $9800, 14k, $3800
+
+					; by using qkumba's RTS code
+					; no need for DOS, so we actually
+					; are free the whole way to $C000
+					; instead of stopping at $9600
+					; $6000 - $C000 = 24k
+
 
 NUM_FILES	EQU	15
 
@@ -15,6 +21,10 @@ NUM_FILES	EQU	15
 	jsr     HOME
 	jsr     TEXT
 
+	; Init disk code
+
+	jsr	rts_init
+
 	; init variables
 
 	lda	#0
@@ -22,16 +32,17 @@ NUM_FILES	EQU	15
 	sta	CH
 	sta	CV
 	sta	DONE_PLAYING
-	sta	XPOS
 	sta	MB_CHUNK_OFFSET
 	sta	DECODE_ERROR
 
 	lda	#$ff
 	sta	RASTERBARS_ON
 
+	lda	#0
+
 ;	lda	#4				; start at DEMO4
 ;	lda	#7				; start at LYRA
-	lda	#10				; start at SDEMO
+;	lda	#10				; start at SDEMO
 	sta	WHICH_FILE
 
 	; print detection message
@@ -288,7 +299,7 @@ new_song:
 
 	jsr	get_filename
 
-	lda	#8
+	lda	#8		; print filename to screen
 	sta	CH
 	lda	#21
 	sta	CV
@@ -299,9 +310,16 @@ new_song:
 	sta	OUTH
 	jsr	print_both_pages
 
-disk_buff	EQU	LZ4_BUFFER
-read_size	EQU	$4000
+;disk_buff	EQU	LZ4_BUFFER
+;read_size	EQU	$4000
 
+	; open and read a file
+	; needs to be space-padded $A0 30-byte filename
+	; loads to whatever it was BSAVED at (default is $1C00)
+	lda	#<readfile_filename
+	sta	namlo
+	lda	#>readfile_filename
+	sta	namhi
 	jsr	read_file		; read KRW file from disk
 
 
@@ -569,7 +587,8 @@ krw_file:
 .include	"../asm_routines/pageflip.s"
 .include	"../asm_routines/gr_unrle.s"
 .include	"../asm_routines/gr_setpage.s"
-.include	"../asm_routines/dos33_routines.s"
+;.include	"../asm_routines/dos33_routines.s"
+.include	"qkumba_rts.s"
 .include	"../asm_routines/gr_hlin.s"
 .include	"../asm_routines/lz4_decode.s"
 .include	"../asm_routines/keypress_minimal.s"

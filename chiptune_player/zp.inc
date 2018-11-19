@@ -153,8 +153,18 @@ DRAW_PAGE	EQU $EE
 				;FIRST		EQU	$F0
 LASTKEY		EQU $F1
 				;PADDLE_STATUS	EQU	$F2
-XPOS		EQU $F3
-YPOS		EQU $F4
+				;XPOS		EQU $F3
+				;YPOS		EQU $F4
+
+
+       namlo   =       $f6
+       namhi   =       $f7
+       step    =       $f8     ; state for stepper motor
+       tmptrk  =       $f9     ; temporary copy of current track
+       phase   =       $fa     ; current phase for /seek
+
+
+
 TEMP		EQU $FA
 				;RUN		EQU	$FA
 				;TEMP2		EQU	$FB
