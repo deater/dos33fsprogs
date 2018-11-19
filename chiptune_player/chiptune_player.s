@@ -554,25 +554,10 @@ done_decrement:
 ;==========
 ; filenames
 ;==========
+
 krw_file:
-	.asciiz "CAMOUFLAGE.KRW"
-	.asciiz "CHRISTMAS.KRW"
-	.asciiz	"CRMOROS.KRW"
-	.asciiz "DEATH2.KRW"
-	.asciiz "DEMO4.KRW"
-	.asciiz "HARKONEN.KRW"
-	.asciiz "INTRO2.KRW"
-	.asciiz "LYRA2.KRW"
-	.asciiz "RANDOM.KRW"
-	.asciiz "ROBOT.KRW"
-	.asciiz "SDEMO.KRW"
-	.asciiz "SPUTNIK.KRW"
-	.asciiz "TECHNO.KRW"
-	.asciiz "UNIVERSE.KRW"
-	.asciiz "WAVE.KRW"
 
-
-
+.include "song_list.inc"
 
 ;=========
 ;routines
