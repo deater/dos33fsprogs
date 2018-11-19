@@ -15,11 +15,19 @@ UNPACK_BUFFER	EQU	$6000		; $6000 - $9800, 14k, $3800
 
 NUM_FILES	EQU	15
 
+
+	jmp	chiptune_setup
+
+.include "chip_title_uncompressed.inc"
+
+	.align	$400
+
 	;=============================
 	; Setup
 	;=============================
-	jsr     HOME
-	jsr     TEXT
+chiptune_setup:
+;	jsr     HOME
+;	jsr     TEXT
 
 	; Init disk code
 
@@ -35,23 +43,23 @@ NUM_FILES	EQU	15
 	sta	MB_CHUNK_OFFSET
 	sta	DECODE_ERROR
 
-	lda	#$ff
-	sta	RASTERBARS_ON
-
-	lda	#0
-
+;	lda	#0
 ;	lda	#4				; start at DEMO4
 ;	lda	#7				; start at LYRA
 ;	lda	#10				; start at SDEMO
 	sta	WHICH_FILE
 
+
+	lda	#$ff
+	sta	RASTERBARS_ON
+
 	; print detection message
 
-	lda	#<mocking_message		; load loading message
-	sta	OUTL
-	lda	#>mocking_message
-	sta	OUTH
-	jsr	move_and_print			; print it
+;	lda	#<mocking_message		; load loading message
+;	sta	OUTL
+;	lda	#>mocking_message
+;	sta	OUTH
+;	jsr	move_and_print			; print it
 
 	jsr	mockingboard_detect_slot4	; call detection routine
 	cpx	#$1
@@ -122,25 +130,27 @@ mockingboard_found:
 	; Draw title screen
 	;============================
 
-	jsr	set_gr_page0			; set page 0
+;	jsr	set_gr_page0			; set page 0
 
-	lda	#$4				; draw page 1
-	sta	DRAW_PAGE
+;	lda	#$4				; draw page 1
+;	sta	DRAW_PAGE
 
-	jsr	clear_screens			; clear both screens
+;	jsr	clear_screens			; clear both screens
 
-	lda	#<chip_title			; point to title data
-	sta	GBASL
-	lda	#>chip_title
-	sta	GBASH
+;	lda	#<chip_title			; point to title data
+;	sta	GBASL
+;	lda	#>chip_title
+;	sta	GBASH
+
+;	bit	PAGE1
 
 	; Load image				; load the image
-	lda	#<$400
-	sta	BASL
-	lda	#>$400
-	sta	BASH
+;	lda	#<$800
+;	sta	BASL
+;	lda	#>$800
+;	sta	BASH
 
-	jsr	load_rle_gr
+;	jsr	load_rle_gr
 
 	;==================
 	; load first song
@@ -606,9 +616,8 @@ krw_file:
 .include	"../asm_routines/mockingboard_a.s"
 .include	"../asm_routines/gr_fast_clear.s"
 .include	"../asm_routines/pageflip.s"
-.include	"../asm_routines/gr_unrle.s"
+;.include	"../asm_routines/gr_unrle.s"
 .include	"../asm_routines/gr_setpage.s"
-;.include	"../asm_routines/dos33_routines.s"
 .include	"qkumba_rts.s"
 .include	"../asm_routines/gr_hlin.s"
 .include	"../asm_routines/lz4_decode.s"
@@ -623,13 +632,9 @@ krw_file:
 ;=========
 ; strings
 ;=========
-mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
+;mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
 not_message:		.byte   "NOT "
 found_message:		.asciiz "FOUND"
 ;done_message:		.asciiz "DONE PLAYING"
 loading_message:	.asciiz "LOADING"
 
-;============
-; graphics
-;============
-.include "chip_title.inc"
