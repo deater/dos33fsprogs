@@ -3,56 +3,17 @@ include ../Makefile.inc
 DOS33 = ../dos33fs-utils/dos33
 PNG2GR = ../gr-utils/png2gr
 
-all:	chiptune_player.dsk chiptune_unrolled.dsk
+all:	chiptune_dya.dsk
 
 $(DOS33):
 	cd ../dos33fs-utils && make
 
-chiptune_player.dsk:	CHIPTUNE_PLAYER ./krw/INTRO2.KRW HELLO
-	cp chiptune_empty.dsk chiptune_player.dsk
-	$(DOS33) -y chiptune_player.dsk SAVE A HELLO
-	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x0C00 CHIPTUNE_PLAYER
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/CAMOUFLAGE.KRW
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/CHRISTMAS.KRW
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/CRMOROS.KRW
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/DEATH2.KRW
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/DEMO4.KRW
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/HARKONEN.KRW
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/INTRO2.KRW
-#	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/KORO.KRW
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/LYRA2.KRW
-#	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/MMCM.KRW
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/RANDOM.KRW
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/ROBOT.KRW
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/SDEMO.KRW
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/SPUTNIK.KRW
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/TECHNO.KRW
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/UNIVERSE.KRW
-	$(DOS33) -y chiptune_player.dsk SAVE B ./krw/WAVE.KRW
-#	$(DOS33) -y chiptune_player.dsk SAVE B OUT.LZ4
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x6000 OUT.0
-
-
-chiptune_unrolled.dsk:	CHIPTUNE_UNROLLED ./krw/INTRO2.KRW
-	cp chiptune_empty.dsk chiptune_unrolled.dsk
-	$(DOS33) -y chiptune_unrolled.dsk BSAVE -a 0x0C00 CHIPTUNE_UNROLLED
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/CAMOUFLAGE.KRW
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/CHRISTMAS.KRW
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/CRMOROS.KRW
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/DEATH2.KRW
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/DEMO4.KRW
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/HARKONEN.KRW
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/INTRO2.KRW
-#	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/KORO.KRW
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/LYRA2.KRW
-#	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/MMCM.KRW
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/RANDOM.KRW
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/ROBOT.KRW
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/SDEMO.KRW
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/SPUTNIK.KRW
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/TECHNO.KRW
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/UNIVERSE.KRW
-	$(DOS33) -y chiptune_unrolled.dsk SAVE B ./krw/WAVE.KRW
+chiptune_dya.dsk:	CHIPTUNE_PLAYER HELLO
+	cp chiptune_empty.dsk chiptune_dya.dsk
+	$(DOS33) -y chiptune_dya.dsk SAVE A HELLO
+	$(DOS33) -y chiptune_dya.dsk BSAVE -a 0x0C00 CHIPTUNE_PLAYER
+	$(DOS33) -y chiptune_dya.dsk SAVE B DOTD1.KRW
+	$(DOS33) -y chiptune_dya.dsk SAVE B DOTD2.KRW
 
 HELLO:	hello.bas
 	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
@@ -84,5 +45,5 @@ chiptune_unrolled.o:	chiptune_player.s \
 
 clean:	
 	rm -f *~ TITLE.GR *.o *.lst \
-		CHIPTUNE_PLAYER CHIPTUNE_UNROLLED
+		CHIPTUNE_PLAYER HELLO
 
