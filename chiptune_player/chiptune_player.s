@@ -310,16 +310,37 @@ new_song:
 	sta	OUTH
 	jsr	print_both_pages
 
-;disk_buff	EQU	LZ4_BUFFER
-;read_size	EQU	$4000
 
-	; open and read a file
 	; needs to be space-padded $A0 30-byte filename
-	; loads to whatever it was BSAVED at (default is $1C00)
+
 	lda	#<readfile_filename
 	sta	namlo
 	lda	#>readfile_filename
 	sta	namhi
+
+	ldy	#0
+	ldx	#30		; 30 chars
+name_loop:
+	lda	(INL),Y
+	beq	space_loop
+	ora	#$80
+	sta	(namlo),Y
+	iny
+	dex
+	bne	name_loop
+	beq	done_name_loop
+space_loop:
+	lda	#$a0		; pad with ' '
+	sta	(namlo),Y
+	iny
+	dex
+	bne	space_loop
+
+done_name_loop:
+
+	; open and read a file
+	; loads to whatever it was BSAVED at (default is $1C00)
+
 	jsr	read_file		; read KRW file from disk
 
 
