@@ -3,35 +3,17 @@
 .include	"zp.inc"
 				; program is ~4k, so from 0xc00 to 0x1C00
 LZ4_BUFFER	EQU	$1C00		; $1C00 - $5C00, 16k for now
-DISK_BUFFER	EQU	$5D00		; for disk loading
-UNPACK_BUFFER	EQU	$6000		; $6000 - $9800, 14k, $3800
-
-					; by using qkumba's RTS code
-					; no need for DOS, so we actually
-					; are free the whole way to $C000
-					; instead of stopping at $9600
-					; $6000 - $C000 = 24k
-
+UNPACK_BUFFER	EQU	$5E00		; $5E00 - $9600, 14k, $3800
+					; trying not to hit DOS at $9600
+					; Reserve 3 chunks plus spare (14k)
 
 NUM_FILES	EQU	15
-
-
-	jmp	chiptune_setup
-
-.include "chip_title_uncompressed.inc"
-
-	.align	$400
 
 	;=============================
 	; Setup
 	;=============================
-chiptune_setup:
-;	jsr     HOME
-;	jsr     TEXT
-
-	; Init disk code
-
-	jsr	rts_init
+	jsr     HOME
+	jsr     TEXT
 
 	; init variables
 
@@ -40,26 +22,25 @@ chiptune_setup:
 	sta	CH
 	sta	CV
 	sta	DONE_PLAYING
+	sta	XPOS
 	sta	MB_CHUNK_OFFSET
 	sta	DECODE_ERROR
-
-;	lda	#0
-;	lda	#4				; start at DEMO4
-;	lda	#7				; start at LYRA
-;	lda	#10				; start at SDEMO
-	sta	WHICH_FILE
-
 
 	lda	#$ff
 	sta	RASTERBARS_ON
 
+;	lda	#4				; start at DEMO4
+;	lda	#7				; start at LYRA
+	lda	#10				; start at SDEMO
+	sta	WHICH_FILE
+
 	; print detection message
 
-;	lda	#<mocking_message		; load loading message
-;	sta	OUTL
-;	lda	#>mocking_message
-;	sta	OUTH
-;	jsr	move_and_print			; print it
+	lda	#<mocking_message		; load loading message
+	sta	OUTL
+	lda	#>mocking_message
+	sta	OUTH
+	jsr	move_and_print			; print it
 
 	jsr	mockingboard_detect_slot4	; call detection routine
 	cpx	#$1
@@ -130,27 +111,25 @@ mockingboard_found:
 	; Draw title screen
 	;============================
 
-;	jsr	set_gr_page0			; set page 0
+	jsr	set_gr_page0			; set page 0
 
-;	lda	#$4				; draw page 1
-;	sta	DRAW_PAGE
+	lda	#$4				; draw page 1
+	sta	DRAW_PAGE
 
-;	jsr	clear_screens			; clear both screens
+	jsr	clear_screens			; clear both screens
 
-;	lda	#<chip_title			; point to title data
-;	sta	GBASL
-;	lda	#>chip_title
-;	sta	GBASH
-
-;	bit	PAGE1
+	lda	#<chip_title			; point to title data
+	sta	GBASL
+	lda	#>chip_title
+	sta	GBASH
 
 	; Load image				; load the image
-;	lda	#<$800
-;	sta	BASL
-;	lda	#>$800
-;	sta	BASH
+	lda	#<$400
+	sta	BASL
+	lda	#>$400
+	sta	BASH
 
-;	jsr	load_rle_gr
+	jsr	load_rle_gr
 
 	;==================
 	; load first song
@@ -309,7 +288,7 @@ new_song:
 
 	jsr	get_filename
 
-	lda	#8		; print filename to screen
+	lda	#8
 	sta	CH
 	lda	#21
 	sta	CV
@@ -320,36 +299,8 @@ new_song:
 	sta	OUTH
 	jsr	print_both_pages
 
-
-	; needs to be space-padded $A0 30-byte filename
-
-	lda	#<readfile_filename
-	sta	namlo
-	lda	#>readfile_filename
-	sta	namhi
-
-	ldy	#0
-	ldx	#30		; 30 chars
-name_loop:
-	lda	(INL),Y
-	beq	space_loop
-	ora	#$80
-	sta	(namlo),Y
-	iny
-	dex
-	bne	name_loop
-	beq	done_name_loop
-space_loop:
-	lda	#$a0		; pad with ' '
-	sta	(namlo),Y
-	iny
-	dex
-	bne	space_loop
-
-done_name_loop:
-
-	; open and read a file
-	; loads to whatever it was BSAVED at (default is $1C00)
+disk_buff	EQU	LZ4_BUFFER
+read_size	EQU	$4000
 
 	jsr	read_file		; read KRW file from disk
 
@@ -616,9 +567,9 @@ krw_file:
 .include	"../asm_routines/mockingboard_a.s"
 .include	"../asm_routines/gr_fast_clear.s"
 .include	"../asm_routines/pageflip.s"
-;.include	"../asm_routines/gr_unrle.s"
+.include	"../asm_routines/gr_unrle.s"
 .include	"../asm_routines/gr_setpage.s"
-.include	"qkumba_rts.s"
+.include	"../asm_routines/dos33_routines.s"
 .include	"../asm_routines/gr_hlin.s"
 .include	"../asm_routines/lz4_decode.s"
 .include	"../asm_routines/keypress_minimal.s"
@@ -632,9 +583,13 @@ krw_file:
 ;=========
 ; strings
 ;=========
-;mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
+mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
 not_message:		.byte   "NOT "
 found_message:		.asciiz "FOUND"
 ;done_message:		.asciiz "DONE PLAYING"
 loading_message:	.asciiz "LOADING"
 
+;============
+; graphics
+;============
+.include "chip_title.inc"

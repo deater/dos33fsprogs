@@ -9,9 +9,7 @@
 
 #include "loadpng.h"
 
-/* Converts a PNG to a GR file you can BLOAD to 0x400		*/
-/* HOWEVER you *never* want to do this in real life		*/
-/* as it will clobber important values in the memory holes	*/
+/* Converts a PNG to a GR file you can include in your code */
 
 int main(int argc, char **argv) {
 
@@ -24,16 +22,12 @@ int main(int argc, char **argv) {
 	int xsize,ysize;
 	FILE *outfile;
 
-	if (argc<3) {
-		fprintf(stderr,"Usage:\t%s INFILE OUTFILE\n\n",argv[0]);
+	if (argc<2) {
+		fprintf(stderr,"Usage:\t%s INFILE\n\n",argv[0]);
 		exit(-1);
 	}
 
-	outfile=fopen(argv[2],"w");
-	if (outfile==NULL) {
-		fprintf(stderr,"Error!  Could not open %s\n",argv[2]);
-		exit(-1);
-	}
+	outfile=stdout;
 
 	if (loadpng(argv[1],&image,&xsize,&ysize)<0) {
 		fprintf(stderr,"Error loading png!\n");
@@ -55,7 +49,27 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	for(x=0;x<1024;x++) fputc( out_buffer[x],outfile);
+	int line=0,which=0;
+
+	for(x=0;x<1024;x++) {
+		line=x%128;
+		which=(x/128)+(line/40)*8;
+		if (line%40==0) {
+			if (line==120) {
+				fprintf(outfile,"\n; SCREEN HOLE");
+			}
+			else {
+				fprintf(outfile,"\n; LINE %d-%d",
+					which*2,(which*2)+1);
+			}
+		}
+		if (line%10==0) {
+			fprintf(outfile,"\n.byte ");
+		}
+		fprintf(outfile,"$%02X",out_buffer[x]);
+		if ((line%10!=9) && (line!=127)) fprintf(outfile,",");
+	}
+	fprintf(outfile,"\n");
 
 	fclose(outfile);
 
