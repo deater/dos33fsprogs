@@ -41,16 +41,12 @@ chiptune_setup:
 	sta	CV
 	sta	DONE_PLAYING
 	sta	MB_CHUNK_OFFSET
-	sta	DECODE_ERROR
-
-;	lda	#0
-;	lda	#4				; start at DEMO4
-;	lda	#7				; start at LYRA
-;	lda	#10				; start at SDEMO
+	sta	DECODE_ERROR			; clear out error message
 	sta	WHICH_FILE
 
 
-	lda	#$ff
+	; Disable the rasterbars for now, they take too long :(
+;	lda	#$ff
 	sta	RASTERBARS_ON
 
 	; print detection message
@@ -152,10 +148,10 @@ mockingboard_found:
 	; Loop forever
 	;============================
 main_loop:
-	lda	DECODE_ERROR
+	lda	DECODE_ERROR		; see if an error happened
 	beq	check_copy
-	sei
-	brk
+	sei				; turn off music
+	brk				; if so, stop
 
 check_copy:
 	lda	COPY_TIME
@@ -176,7 +172,7 @@ check_copy_loop:
 	sta	COPY_TIME
 
 check_decompress:
-	lda	DECOMPRESS_TIME
+	lda	DECOMPRESS_TIME		; see if it is time to decompress
 	beq	check_done		; if zero, skip
 
 	jsr	setup_next_subsong	; decompress
@@ -473,9 +469,9 @@ setup_next_subsong:
 	adc	#0
 	sta	LZ4_SRC+1
 
-	lda	#>UNPACK_BUFFER1	; original unpacked data offset
+	lda	#>UNPACK_BUFFER2	; original unpacked data offset
 	sta	LZ4_DST+1
-	lda	#<UNPACK_BUFFER1
+	lda	#<UNPACK_BUFFER2
 	sta	LZ4_DST
 
 

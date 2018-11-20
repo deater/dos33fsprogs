@@ -204,8 +204,8 @@ wraparound_to_a:
 	sta	DECODER_STATE
 	sta	COPY_TIME			; start copying
 
-	lda	DECOMPRESS_TIME
-	beq	blah
+	lda	DECOMPRESS_TIME			; Trouble if decompressing
+	beq	blah				; takes too long?
 	lda	#1
 	sta	DECODE_ERROR
 blah:
