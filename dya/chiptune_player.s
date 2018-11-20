@@ -4,6 +4,7 @@
 				; program is ~4k, so from 0xc00 to 0x1C00
 LZ4_BUFFER	EQU	$1C00		; $1C00 - $4400, 10k = $2800
 DISK_BUFFER	EQU	$4400		; for disk loading
+LZ4_BUFFER2	EQU	$D100		; $D100 - $F900
 UNPACK_BUFFER1	EQU	$5000		; $5000 - $8800, 14k, $3800
 UNPACK_BUFFER2	EQU	$8800		; $8800 - $C000, 14k, $3800
 					; by using qkumba's RTS code
@@ -13,7 +14,7 @@ UNPACK_BUFFER2	EQU	$8800		; $8800 - $C000, 14k, $3800
 					; $6000 - $C000 = 24k
 
 
-NUM_FILES	EQU	2
+NUM_FILES	EQU	1
 
 
 	jmp	chiptune_setup
@@ -32,6 +33,25 @@ chiptune_setup:
 	; Init disk code
 
 	jsr	rts_init
+
+	ldx	#0
+copy_from_ff00:
+	lda	$ff00,X
+	sta	$6000,X
+	inx
+	bne	copy_from_ff00
+
+	; Setup language card
+	lda     $C08B           ; 4
+	lda     $C08B           ; 4	; RR C08B = read RAM/write RAM
+
+	ldx	#0
+copy_to_ff00:
+	lda	$6000,X
+	sta	$ff00,X
+	inx
+	bne	copy_to_ff00
+
 
 	; init variables
 
@@ -264,6 +284,42 @@ new_song:
 	sta	OUTH
         jsr     print_both_pages
 
+	;===========================
+	; Load 2nd file first
+	;===========================
+	; needs to be space-padded $A0 30-byte filename
+	; this is hard-coded for now
+
+	lda	#<readfile_filename
+	sta	namlo
+	lda	#>readfile_filename
+	sta	namhi
+
+	ldy	#0
+	ldx	#30		; 30 chars
+name_loop2:
+	lda	filename2,Y
+	beq	space_loop2
+	ora	#$80
+	sta	(namlo),Y
+	iny
+	dex
+	bne	name_loop2
+	beq	done_name_loop2
+space_loop2:
+	lda	#$a0		; pad with ' '
+	sta	(namlo),Y
+	iny
+	dex
+	bne	space_loop2
+
+done_name_loop2:
+
+	; open and read a file
+	; loads to whatever it was BSAVED at (default is $D100)
+
+	jsr	read_file		; read KRW file from disk
+
 
 	;===========================
 	; Load in KRW file
@@ -359,7 +415,24 @@ done_name_loop:
 	sta	$777
 	sta	$B77
 
-	; Point LZ4 src at proper place
+
+	; Point Second LZ4 src at proper place
+
+	ldy	#0
+	lda	#>(LZ4_BUFFER2+3)
+	sta	LZ4_SRC2+1
+	lda	#<(LZ4_BUFFER2+3)
+	sta	LZ4_SRC2
+
+	lda	(LZ4_SRC2),Y		; get header skip
+	clc
+	adc	LZ4_SRC2
+	sta	LZ4_SRC2
+	lda	LZ4_SRC2+1
+	adc	#0
+	sta	LZ4_SRC2+1
+
+	; Point First LZ4 src at proper place
 
 	ldy	#0
 	lda	#>(LZ4_BUFFER+3)
@@ -398,11 +471,9 @@ done_name_loop:
 
 	lda	LZ4_SRC
 	sta	LZ4_SRC1
-	sta	LZ4_SRC2
 
 	lda	LZ4_SRC+1
 	sta	LZ4_SRC1+1
-	sta	LZ4_SRC2+1
 
 	jsr	setup_next_subsong
 
@@ -673,7 +744,7 @@ krw_file:
 .include	"../asm_routines/gr_fast_clear.s"
 .include	"../asm_routines/pageflip.s"
 ;.include	"../asm_routines/gr_unrle.s"
-.include	"../asm_routines/gr_setpage.s"
+.include	"gr_setpage.s"
 .include	"qkumba_rts.s"
 .include	"../asm_routines/gr_hlin.s"
 .include	"lz4_decode.s"

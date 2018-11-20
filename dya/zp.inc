@@ -223,25 +223,25 @@ PTRIG		EQU	$C070
 
 ;; BASIC ROUTINES
 
-NORMAL	EQU	$F273
+;NORMAL	EQU	$F273
 
 ;; MONITOR ROUTINES
 
-HLINE	EQU $F819			;; HLINE Y,$2C at A
-VLINE	EQU $F828			;; VLINE A,$2D at Y
-CLRSCR	EQU $F832			;; Clear low-res screen
-CLRTOP	EQU $F836			;; clear only top of low-res screen
-SETCOL	EQU $F864			;; COLOR=A
-TEXT	EQU $FB36
-TABV	EQU $FB5B			;; VTAB to A
-BASCALC	EQU $FBC1			;;
-VTAB	EQU $FC22			;; VTAB to CV
-HOME	EQU $FC58			;; Clear the text screen
-WAIT	EQU $FCA8			;; delay 1/2(26+27A+5A^2) us
-SETINV	EQU $FE80			;; INVERSE
-SETNORM	EQU $FE84			;; NORMAL
-COUT	EQU $FDED			;; output A to screen
-COUT1	EQU $FDF0			;; output A to screen
+;HLINE	EQU $F819			;; HLINE Y,$2C at A
+;VLINE	EQU $F828			;; VLINE A,$2D at Y
+;CLRSCR	EQU $F832			;; Clear low-res screen
+;CLRTOP	EQU $F836			;; clear only top of low-res screen
+;SETCOL	EQU $F864			;; COLOR=A
+;TEXT	EQU $FB36
+;TABV	EQU $FB5B			;; VTAB to A
+;BASCALC	EQU $FBC1			;;
+;VTAB	EQU $FC22			;; VTAB to CV
+;HOME	EQU $FC58			;; Clear the text screen
+;WAIT	EQU $FCA8			;; delay 1/2(26+27A+5A^2) us
+;SETINV	EQU $FE80			;; INVERSE
+;SETNORM	EQU $FE84			;; NORMAL
+;COUT	EQU $FDED			;; output A to screen
+;COUT1	EQU $FDF0			;; output A to screen
 
 
 

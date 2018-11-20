@@ -13,7 +13,7 @@ chiptune_dya.dsk:	CHIPTUNE_PLAYER HELLO
 	$(DOS33) -y chiptune_dya.dsk SAVE A HELLO
 	$(DOS33) -y chiptune_dya.dsk BSAVE -a 0x0800 CHIPTUNE_PLAYER
 	$(DOS33) -y chiptune_dya.dsk BSAVE -a 0x1c00 DOTD1.KRW
-	$(DOS33) -y chiptune_dya.dsk BSAVE -a 0x1c00 DOTD2.KRW
+	$(DOS33) -y chiptune_dya.dsk BSAVE -a 0xd100 DOTD2.KRW
 
 HELLO:	hello.bas
 	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO

@@ -1,0 +1,25 @@
+Horrible hack of the VMW chiptune player code to try to play a 6-channel file.
+
+There's really not enough RAM to do things this way.
+
+Proper solution is to write a real pt3 tracker.
+
+
+
+Hacks:
+	Needs 10k+10k RAM for each KRW file (converted PT3)
+	Needs 14k+14k for buffers
+	Needs 4k for player
+	==================
+		52k RAM, more than we have on stock Apple II
+
+	We cheat and use language card which gives up 64k in theory.
+
+	The problem is we use interrupts, and the interrupt routine is
+	hard-coded to jump into the $F000 range.  IIe/IIc might
+	be smart enough to handle this, but older machines are not.
+
+	Hack: copy the FXXX range into the language card so it doesn't
+	matter?
+
+
