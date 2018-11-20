@@ -557,6 +557,34 @@ page_copy_loop:
 	sta	$1000,X							; 5
 	inx								; 2
 	bne	page_copy_loop						; 2nt/3
+
+
+	;========================
+	; page copy2
+	;========================
+	; want to copy:
+	;	SRC: chunk_buffer+(2*256)+(COPY_OFFSET*3*256)
+	;	DST: chunk_buffer+$2A00+(COPY_OFFSET*256)
+page_copy2:
+	clc								; 2
+	lda	#>(UNPACK_BUFFER2+512)					; 3
+	adc	COPY_OFFSET						; 3
+	adc	COPY_OFFSET						; 3
+	adc	COPY_OFFSET						; 3
+	sta	page_copy_loop2+2			; self modify	; 5
+
+	lda	#>(UNPACK_BUFFER2+$2A00)					; 2
+	adc	COPY_OFFSET						; 3
+	sta	page_copy_loop2+5			; self modify	; 5
+
+	ldx	#$00							; 2
+page_copy_loop2:
+	lda	$1000,x							; 4
+	sta	$1000,X							; 5
+	inx								; 2
+	bne	page_copy_loop2						; 2nt/3
+
+
 	rts								; 6
 							;======================
 							; 2+14*256+6+29= 3621
