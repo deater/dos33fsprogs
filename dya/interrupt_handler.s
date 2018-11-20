@@ -77,26 +77,19 @@ mb_not_13:
 
 	; address
 	stx	MOCK_6522_ORA1		; put address on PA1		; 4
-	stx	MOCK_6522_ORA2		; put address on PA2		; 4
 	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
 	sta	MOCK_6522_ORB1		; latch_address on PB1          ; 4
-	sta	MOCK_6522_ORB2		; latch_address on PB2		; 4
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_ORB1						; 4
-	sta	MOCK_6522_ORB2						; 4
 
         ; value
 	lda	REGISTER_DUMP,X		; load register value		; 4
 	sta	MOCK_6522_ORA1		; put value on PA1		; 4
-	sta	MOCK_6522_ORA2		; put value on PA2		; 4
 	lda	#MOCK_AY_WRITE		;				; 2
 	sta	MOCK_6522_ORB1		; write on PB1			; 4
-	sta	MOCK_6522_ORB2		; write on PB2			; 4
 	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sta	MOCK_6522_ORB1						; 4
-	sta	MOCK_6522_ORB2						; 4
-								;===========
-								; 	62
+
 mb_no_write:
 	inx				; point to next register	; 2
 	cpx	#14			; if 14 we're done		; 2
@@ -118,6 +111,75 @@ mb_reg_copy:
 								;=============
 								; 	171
 
+
+	;======================================
+	; Write frames to Mockingboard
+	;======================================
+	; actually plays frame loaded at end of
+	; last interrupt, so 20ms behind?
+
+mb_write_frame2:
+
+
+	ldx	#0		; set up reg count			; 2
+								;============
+								;	  2
+mb_write_loop2:
+	lda	REGISTER_DUMP2,X	; load register value			; 4
+	cmp	REGISTER_OLD2,X	; compare with old values		; 4
+	beq	mb_no_write2						; 3/2nt
+								;=============
+								; typ 11
+
+	; special case R13.  If it is 0xff, then don't update
+	; otherwise might spuriously reset the envelope settings
+
+	cpx	#13							; 2
+	bne	mb_not_132						; 3/2nt
+	cmp	#$ff							; 2
+	beq	mb_skip_132						; 3/2nt
+								;============
+								; typ 5
+mb_not_132:
+
+
+	; address
+	stx	MOCK_6522_ORA2		; put address on PA2		; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sta	MOCK_6522_ORB2		; latch_address on PB2		; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+        ; value
+	lda	REGISTER_DUMP2,X		; load register value		; 4
+	sta	MOCK_6522_ORA2		; put value on PA2		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB2			; 4
+	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sta	MOCK_6522_ORB2						; 4
+
+mb_no_write2:
+	inx				; point to next register	; 2
+	cpx	#14			; if 14 we're done		; 2
+	bmi	mb_write_loop2		; otherwise, loop		; 3/2nt
+								;============
+								; 	7
+mb_skip_132:
+
+
+	;=====================================
+	; Copy registers to old
+	;=====================================
+	ldx	#13							; 2
+mb_reg_copy2:
+	lda	REGISTER_DUMP2,X	; load register value			; 4
+	sta	REGISTER_OLD2,X	; compare with old values		; 4
+	dex								; 2
+	bpl	mb_reg_copy2						; 2nt/3
+								;=============
+								; 	171
+
+
 	;===================================
 	; Load all 14 registers in advance
 	;===================================
@@ -134,6 +196,8 @@ mb_load_values:
 mb_load_loop:
 	lda	(INL),y		; load register value			; 5
 	sta	REGISTER_DUMP,X						; 4
+	lda	(INL2),y
+	sta	REGISTER_DUMP2,X
 								;============
 								;	9
 	;====================
@@ -144,6 +208,11 @@ mb_load_loop:
 	lda	INH			; page by adding CHUNKSIZE (3/1); 3
 	adc	CHUNKSIZE						; 3
 	sta	INH							; 3
+
+	clc
+	lda	INH2
+	adc	CHUNKSIZE
+	sta	INH2
 
 	inx				; point to next register	; 2
 	cpx	#14			; if 14 we're done		; 2
@@ -225,15 +294,24 @@ back_to_first_reg_b:
 
 back_to_first_reg_a:
 	clc								; 2
-	adc	#>UNPACK_BUFFER1		; in proper chunk 1 or 2	; 2
+	adc	#>UNPACK_BUFFER1		; in proper chunk 1 or 2; 2
+	sta	INH		; update r0 pointer			; 3
+	sec
+	sbc	#>UNPACK_BUFFER1
+	clc
+	adc	#>UNPACK_BUFFER2
+	sta	INH2
 
 	jmp	update_r0_pointer					; 3
 
 back_to_first_reg_c:
-	lda	#>(UNPACK_BUFFER1+$2A00)	; in linear C area		; 2
+	lda	#>(UNPACK_BUFFER1+$2A00)	; in linear C area	; 2
+	sta	INH		; update r0 pointer			; 3
+	lda	#>(UNPACK_BUFFER2+$2A00)	; in linear C area	; 2
+	sta	INH2		; update r0 pointer			; 3
 
 update_r0_pointer:
-	sta	INH		; update r0 pointer			; 3
+
 
 
 
@@ -351,6 +429,8 @@ quiet_exit:
 mb_clear_reg:
 	sta	REGISTER_DUMP,X ; clear register value			; 4
 	sta	REGISTER_OLD,X	; clear old values			; 4
+	sta	REGISTER_DUMP2,X ; clear register value			; 4
+	sta	REGISTER_OLD2,X	; clear old values			; 4
 	dex								; 2
 	bpl	mb_clear_reg						; 2nt/3
 
@@ -373,4 +453,7 @@ exit_interrupt:
 
 
 REGISTER_OLD:
+	.byte	0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
+REGISTER_OLD2:
 	.byte	0,0,0,0,0,0,0,0,0,0,0,0,0,0

@@ -380,6 +380,11 @@ done_name_loop:
 	lda	#>UNPACK_BUFFER1
 	sta	INH
 
+	lda	#<UNPACK_BUFFER2		; set input pointer
+	sta	INL2
+	lda	#>UNPACK_BUFFER2
+	sta	INH2
+
 	; Decompress first chunks
 
 	lda	#$0
