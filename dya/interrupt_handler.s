@@ -225,12 +225,12 @@ back_to_first_reg_b:
 
 back_to_first_reg_a:
 	clc								; 2
-	adc	#>UNPACK_BUFFER		; in proper chunk 1 or 2	; 2
+	adc	#>UNPACK_BUFFER1		; in proper chunk 1 or 2	; 2
 
 	jmp	update_r0_pointer					; 3
 
 back_to_first_reg_c:
-	lda	#>(UNPACK_BUFFER+$2A00)	; in linear C area		; 2
+	lda	#>(UNPACK_BUFFER1+$2A00)	; in linear C area		; 2
 
 update_r0_pointer:
 	sta	INH		; update r0 pointer			; 3

@@ -22,9 +22,8 @@ CHIPTUNE_PLAYER:	chiptune_player.o
 	ld65 -o CHIPTUNE_PLAYER chiptune_player.o -C ../linker_scripts/apple2_800.inc
 
 chiptune_player.o:	chiptune_player.s \
-	../asm_routines/mockingboard.s \
-	../asm_routines/dos33_routines.s \
-	../asm_routines/lz4_decode.s \
+	mockingboard_a.s \
+	lz4_decode.s \
 	../asm_routines/keypress_minimal.s \
 	rasterbars.s volume_bars.s interrupt_handler.s qkumba_rts.s \
 	chip_title_uncompressed.inc zp.inc

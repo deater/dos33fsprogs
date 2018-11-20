@@ -5,6 +5,8 @@ LZ4_DST		EQU $02
 LZ4_END		EQU $04
 COUNT		EQU $06
 DELTA		EQU $08
+LZ4_SRC1	EQU $0A
+LZ4_SRC2	EQU $0C
 
 ;; Zero page monitor routines addresses
 

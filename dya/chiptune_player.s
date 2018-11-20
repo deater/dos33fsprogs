@@ -2,10 +2,10 @@
 
 .include	"zp.inc"
 				; program is ~4k, so from 0xc00 to 0x1C00
-LZ4_BUFFER	EQU	$1C00		; $1C00 - $5C00, 16k for now
-DISK_BUFFER	EQU	$5D00		; for disk loading
-UNPACK_BUFFER	EQU	$6000		; $6000 - $9800, 14k, $3800
-
+LZ4_BUFFER	EQU	$1C00		; $1C00 - $4400, 10k = $2800
+DISK_BUFFER	EQU	$4400		; for disk loading
+UNPACK_BUFFER1	EQU	$5000		; $5000 - $8800, 14k, $3800
+UNPACK_BUFFER2	EQU	$8800		; $8800 - $C000, 14k, $3800
 					; by using qkumba's RTS code
 					; no need for DOS, so we actually
 					; are free the whole way to $C000
@@ -13,7 +13,7 @@ UNPACK_BUFFER	EQU	$6000		; $6000 - $9800, 14k, $3800
 					; $6000 - $C000 = 24k
 
 
-NUM_FILES	EQU	15
+NUM_FILES	EQU	2
 
 
 	jmp	chiptune_setup
@@ -126,32 +126,6 @@ mockingboard_found:
 	; 4fe7 / 1e6 = .020s, 50Hz
 
 
-	;============================
-	; Draw title screen
-	;============================
-
-;	jsr	set_gr_page0			; set page 0
-
-;	lda	#$4				; draw page 1
-;	sta	DRAW_PAGE
-
-;	jsr	clear_screens			; clear both screens
-
-;	lda	#<chip_title			; point to title data
-;	sta	GBASL
-;	lda	#>chip_title
-;	sta	GBASH
-
-;	bit	PAGE1
-
-	; Load image				; load the image
-;	lda	#<$800
-;	sta	BASL
-;	lda	#>$800
-;	sta	BASH
-
-;	jsr	load_rle_gr
-
 	;==================
 	; load first song
 	;==================
@@ -212,14 +186,6 @@ check_decompress:
 
 	lda	#0
 	sta	DECOMPRESS_TIME
-
-	;============================
-	; visualization
-	;============================
-;	jsr	clear_top
-;	jsr	draw_rasters
-;	jsr	volume_bars
-;	jsr	page_flip
 
 check_done:
 	lda	#$ff
@@ -397,10 +363,6 @@ done_name_loop:
 	sta	$777
 	sta	$B77
 
-
-
-
-
 	; Point LZ4 src at proper place
 
 	ldy	#0
@@ -417,9 +379,9 @@ done_name_loop:
 	adc	#0
 	sta	LZ4_SRC+1
 
-	lda	#<UNPACK_BUFFER		; set input pointer
+	lda	#<UNPACK_BUFFER1		; set input pointer
 	sta	INL
-	lda	#>UNPACK_BUFFER
+	lda	#>UNPACK_BUFFER1
 	sta	INH
 
 	; Decompress first chunks
@@ -433,6 +395,14 @@ done_name_loop:
 	sta	DECODER_STATE
 	sta	COPY_TIME
 
+	lda	LZ4_SRC
+	sta	LZ4_SRC1
+	sta	LZ4_SRC2
+
+	lda	LZ4_SRC+1
+	sta	LZ4_SRC1+1
+	sta	LZ4_SRC2+1
+
 	jsr	setup_next_subsong
 
 	rts
@@ -442,7 +412,15 @@ done_name_loop:
 	;=================
 setup_next_subsong:
 
+	;==============
+	; Left side
+
 	ldy	#0
+
+	lda	LZ4_SRC1
+	sta	LZ4_SRC
+	lda	LZ4_SRC1+1
+	sta	LZ4_SRC+1
 
 	lda	(LZ4_SRC),Y		; get next size value
 	sta	LZ4_END
@@ -458,7 +436,56 @@ setup_next_subsong:
 	adc	#0
 	sta	LZ4_SRC+1
 
+	lda	#>UNPACK_BUFFER1	; original unpacked data offset
+	sta	LZ4_DST+1
+	lda	#<UNPACK_BUFFER1
+	sta	LZ4_DST
+
+
 	jsr	lz4_decode		; decode
+
+	lda	LZ4_SRC
+	sta	LZ4_SRC1
+	lda	LZ4_SRC+1
+	sta	LZ4_SRC1+1
+
+	;==================
+	; right side
+
+	ldy	#0
+
+	lda	LZ4_SRC2
+	sta	LZ4_SRC
+	lda	LZ4_SRC2+1
+	sta	LZ4_SRC+1
+
+	lda	(LZ4_SRC),Y		; get next size value
+	sta	LZ4_END
+	iny
+	lda	(LZ4_SRC),Y
+	sta	LZ4_END+1
+
+	lda	#2			; increment pointer
+	clc
+	adc	LZ4_SRC
+	sta	LZ4_SRC
+	lda	LZ4_SRC+1
+	adc	#0
+	sta	LZ4_SRC+1
+
+	lda	#>UNPACK_BUFFER1	; original unpacked data offset
+	sta	LZ4_DST+1
+	lda	#<UNPACK_BUFFER1
+	sta	LZ4_DST
+
+
+	jsr	lz4_decode		; decode
+
+	lda	LZ4_SRC
+	sta	LZ4_SRC2
+	lda	LZ4_SRC+1
+	sta	LZ4_SRC2+1
+
 
 					; tail-call?
 
@@ -513,13 +540,13 @@ bloop22:
 	;	DST: chunk_buffer+$2A00+(COPY_OFFSET*256)
 page_copy:
 	clc								; 2
-	lda	#>(UNPACK_BUFFER+512)					; 3
+	lda	#>(UNPACK_BUFFER1+512)					; 3
 	adc	COPY_OFFSET						; 3
 	adc	COPY_OFFSET						; 3
 	adc	COPY_OFFSET						; 3
 	sta	page_copy_loop+2			; self modify	; 5
 
-	lda	#>(UNPACK_BUFFER+$2A00)					; 2
+	lda	#>(UNPACK_BUFFER1+$2A00)					; 2
 	adc	COPY_OFFSET						; 3
 	sta	page_copy_loop+5			; self modify	; 5
 
@@ -613,14 +640,14 @@ krw_file:
 ;=========
 .include	"../asm_routines/gr_offsets.s"
 .include	"text_print.s"
-.include	"../asm_routines/mockingboard_a.s"
+.include	"mockingboard_a.s"
 .include	"../asm_routines/gr_fast_clear.s"
 .include	"../asm_routines/pageflip.s"
 ;.include	"../asm_routines/gr_unrle.s"
 .include	"../asm_routines/gr_setpage.s"
 .include	"qkumba_rts.s"
 .include	"../asm_routines/gr_hlin.s"
-.include	"../asm_routines/lz4_decode.s"
+.include	"lz4_decode.s"
 .include	"../asm_routines/keypress_minimal.s"
 .include	"rasterbars.s"
 .include	"volume_bars.s"
