@@ -25,28 +25,38 @@ middle_loop:
 	pha								; 3
 
 	cmp	#8							; 2
-	beq	middle_black						; 2nt/3
+	beq	middle_black_jmp						; 2nt/3
 	cmp	#26							; 2
-	beq	middle_black						; 2nt/3
+	beq	middle_black_jmp						; 2nt/3
+	bne	after_middle_black_jmp
+middle_black_jmp:
+	jmp	middle_black
+after_middle_black_jmp:
 
 	cmp	#10							; 2
 	bne	not_top							; 2nt/3
 
 	ldx	#$3B			; pink/purple			; 2
 	stx	A_COLOR							; 3
+	stx	A2_COLOR
 	ldx	#$7E			; light-blue/aqua		; 2
 	stx	B_COLOR							; 3
+	stx	B2_COLOR
 	ldx	#$CD			; light-green/yellow		; 2
 	stx	C_COLOR							; 3
+	stx	C2_COLOR
 	jmp	calc_volume						; 3
 
 not_top:
 	ldx	#COLOR_BOTH_RED						; 2
 	stx	A_COLOR							; 3
+	stx	A2_COLOR
 	ldx	#COLOR_BOTH_DARKBLUE					; 2
 	stx	B_COLOR							; 3
+	stx	B2_COLOR
 	ldx	#COLOR_BOTH_DARKGREEN					; 2
 	stx	C_COLOR							; 3
+	stx	C2_COLOR
 
 calc_volume:
 
@@ -68,7 +78,7 @@ mod_a:
 	adc	#24		; 24-A					; 2
 	sec								; 2
 	sbc	A_VOLUME						; 2
-	bmi	mod_b							; 2nt/3
+	bmi	mod_a2							; 2nt/3
 	beq	mod_a_bottom						; 2nt/3
 mod_a_zero:
 	lda	#0							; 2
@@ -79,6 +89,28 @@ mod_a_bottom:
 done_a:
 	sta	A_COLOR							; 2
 
+
+mod_a2:
+	pla
+	pha
+	sec								; 2
+	eor	#$ff		; negate				; 2
+	adc	#24		; 24-A					; 2
+	sec								; 2
+	sbc	A_VOLUME2						; 2
+	bmi	mod_b							; 2nt/3
+	beq	mod_a2_bottom						; 2nt/3
+mod_a2_zero:
+	lda	#0							; 2
+	beq	done_a2							; 2nt/3
+mod_a2_bottom:
+	lda	A2_COLOR						; 2
+	and	#$f0							; 2
+done_a2:
+	sta	A2_COLOR						; 2
+
+
+
 mod_b:
 	pla								; 4
 	pha								; 3
@@ -87,7 +119,7 @@ mod_b:
 	adc	#24		; 24-A					; 2
 	sec								; 2
 	sbc	B_VOLUME						; 2
-	bmi	mod_c							; 2nt/3
+	bmi	mod_b2							; 2nt/3
 	beq	mod_b_bottom						; 2nt/3
 mod_b_zero:
 	lda	#0							; 2
@@ -98,6 +130,27 @@ mod_b_bottom:
 done_b:
 	sta	B_COLOR							; 3
 
+mod_b2:
+	pla								; 4
+	pha								; 3
+	sec								; 2
+	eor	#$ff		; negate				; 2
+	adc	#24		; 24-A					; 2
+	sec								; 2
+	sbc	B_VOLUME2						; 2
+	bmi	mod_c							; 2nt/3
+	beq	mod_b2_bottom						; 2nt/3
+mod_b2_zero:
+	lda	#0							; 2
+	beq	done_b2							; 2nt/3
+mod_b2_bottom:
+	lda	B2_COLOR							; 3
+	and	#$f0							; 2
+done_b2:
+	sta	B2_COLOR							; 3
+
+
+
 mod_c:
 	pla								; 4
 	pha								; 3
@@ -106,7 +159,7 @@ mod_c:
 	adc	#24		; 24-A					; 2
 	sec								; 2
 	sbc	C_VOLUME						; 2
-	bmi	mod_d							; 2nt/3
+	bmi	mod_c2							; 2nt/3
 	beq	mod_c_bottom						; 2nt/3
 mod_c_zero:
 	lda	#0							; 2
@@ -116,6 +169,26 @@ mod_c_bottom:
 	and	#$f0							; 2
 done_c:
 	sta	C_COLOR							; 3
+
+mod_c2:
+	pla								; 4
+	pha								; 3
+	sec								; 2
+	eor	#$ff		; negate				; 2
+	adc	#24		; 24-A					; 2
+	sec								; 2
+	sbc	C_VOLUME2						; 2
+	bmi	mod_d							; 2nt/3
+	beq	mod_c2_bottom						; 2nt/3
+mod_c2_zero:
+	lda	#0							; 2
+	beq	done_c2							; 2nt/3
+mod_c2_bottom:
+	lda	C2_COLOR							; 3
+	and	#$f0							; 2
+done_c2:
+	sta	C2_COLOR							; 3
+
 
 mod_d:
 	pla								; 4
@@ -127,6 +200,9 @@ middle_black:
 	stx	A_COLOR							; 3
 	stx	B_COLOR							; 3
 	stx	C_COLOR							; 3
+	stx	A2_COLOR							; 3
+	stx	B2_COLOR							; 3
+	stx	C2_COLOR							; 3
 
 middle_color_done:
 
@@ -150,11 +226,22 @@ middle_color_done:
 	; A volume
 	lda	A_COLOR							; 3
 	sta	COLOR							; 3
-
-	ldx	#3							; 2
+	ldx	#1							; 2
+	jsr	hlin_double_continue				; 10+3*16=58
+	; A space
+	lda	#0
+	sta	COLOR
+	ldx	#1							; 2
+	jsr	hlin_double_continue				; 10+3*16=58
+	; A2 volume
+	lda	A2_COLOR						; 3
+	sta	COLOR							; 3
+	ldx	#1							; 2
 	jsr	hlin_double_continue				; 10+3*16=58
 
-	; A space
+
+
+	; AB space
 	lda	#COLOR_BOTH_BLACK					; 2
 	sta	COLOR							; 3
 
@@ -164,14 +251,23 @@ middle_color_done:
 	; B volume
 	lda	B_COLOR							; 3
 	sta	COLOR							; 3
-
-	ldx	#3							; 2
+	ldx	#1							; 2
 	jsr	hlin_double_continue					; 6
-								; 10+3*16=58
 	; B space
+	lda	#0							; 3
+	sta	COLOR							; 3
+	ldx	#1							; 2
+	jsr	hlin_double_continue					; 6
+	; B2 volume
+	lda	B2_COLOR							; 3
+	sta	COLOR							; 3
+	ldx	#1							; 2
+	jsr	hlin_double_continue					; 6
+
+								; 10+3*16=58
+	; BC space
 	lda	#COLOR_BOTH_BLACK					; 2
 	sta	COLOR							; 3
-
 	ldx	#1							; 2
 	jsr	hlin_double_continue					; 6
 								; 10+1*16=27
@@ -179,8 +275,17 @@ middle_color_done:
 	; C volume
 	lda	C_COLOR							; 3
 	sta	COLOR							; 3
-
-	ldx	#3							; 2
+	ldx	#1							; 2
+	jsr	hlin_double_continue					; 6
+	; C space
+	lda	#0							; 3
+	sta	COLOR							; 3
+	ldx	#1							; 2
+	jsr	hlin_double_continue					; 6
+	; C2 volume
+	lda	C2_COLOR							; 3
+	sta	COLOR							; 3
+	ldx	#1							; 2
 	jsr	hlin_double_continue					; 6
 								; 10+3*16=58
 
