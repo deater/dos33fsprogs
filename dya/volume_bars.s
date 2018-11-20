@@ -216,93 +216,73 @@ middle_color_done:
 
 	jsr	hlin_double						; 6
 								; 63+1*16=79
+
+	ldy	#0
 	; border space
 	lda	#COLOR_BOTH_BLACK					; 2
-	sta	COLOR							; 3
-
-	ldx	#1							; 2
-	jsr	hlin_double_continue				; 10+1*16=27
+	sta	(GBASL),Y
+	iny
 
 	; A volume
 	lda	A_COLOR							; 3
-	sta	COLOR							; 3
-	ldx	#1							; 2
-	jsr	hlin_double_continue				; 10+3*16=58
+	sta	(GBASL),Y						; 3
+	iny
 	; A space
 	lda	#0
-	sta	COLOR
-	ldx	#1							; 2
-	jsr	hlin_double_continue				; 10+3*16=58
+	sta	(GBASL),Y
+	iny
 	; A2 volume
 	lda	A2_COLOR						; 3
-	sta	COLOR							; 3
-	ldx	#1							; 2
-	jsr	hlin_double_continue				; 10+3*16=58
-
-
+	sta	(GBASL),Y						; 3
+	iny
 
 	; AB space
 	lda	#COLOR_BOTH_BLACK					; 2
-	sta	COLOR							; 3
-
-	ldx	#1							; 2
-	jsr	hlin_double_continue					; 6
+	sta	(GBASL),Y
+	iny
 								; 10+1*16=27
 	; B volume
 	lda	B_COLOR							; 3
-	sta	COLOR							; 3
-	ldx	#1							; 2
-	jsr	hlin_double_continue					; 6
+	sta	(GBASL),Y
+	iny
 	; B space
 	lda	#0							; 3
-	sta	COLOR							; 3
-	ldx	#1							; 2
-	jsr	hlin_double_continue					; 6
+	sta	(GBASL),Y						; 3
+	iny
 	; B2 volume
-	lda	B2_COLOR							; 3
-	sta	COLOR							; 3
-	ldx	#1							; 2
-	jsr	hlin_double_continue					; 6
-
+	lda	B2_COLOR						; 3
+	sta	(GBASL),Y
+	iny
 								; 10+3*16=58
 	; BC space
 	lda	#COLOR_BOTH_BLACK					; 2
-	sta	COLOR							; 3
-	ldx	#1							; 2
-	jsr	hlin_double_continue					; 6
+	sta	(GBASL),Y						; 3
+	iny
 								; 10+1*16=27
 
 	; C volume
 	lda	C_COLOR							; 3
-	sta	COLOR							; 3
-	ldx	#1							; 2
-	jsr	hlin_double_continue					; 6
+	sta	(GBASL),Y						; 3
+	iny
 	; C space
 	lda	#0							; 3
-	sta	COLOR							; 3
-	ldx	#1							; 2
-	jsr	hlin_double_continue					; 6
+	sta	(GBASL),Y
+	iny
 	; C2 volume
 	lda	C2_COLOR							; 3
-	sta	COLOR							; 3
-	ldx	#1							; 2
-	jsr	hlin_double_continue					; 6
-								; 10+3*16=58
+	sta	(GBASL),Y
+	iny
 
 	; C space
 	lda	#COLOR_BOTH_BLACK					; 2
-	sta	COLOR							; 3
-
-	ldx	#1							; 2
-	jsr	hlin_double_continue					; 6
+	sta	(GBASL),Y
+	iny
 								; 10+1*16=27
 	; Right border
 
 	lda	#COLOR_BOTH_GREY					; 2
-	sta	COLOR							; 3
-
-	ldx	#1							; 2
-	jsr	hlin_double_continue					; 6
+	sta	(GBASL),Y						; 3
+	iny
 								; 10+1*16=27
 
 	pla								; 4
