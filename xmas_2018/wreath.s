@@ -22,14 +22,14 @@ wreath:
 	;=============================
 	; Load graphic hgr
 
-	lda	#<sb_background_hgr
+	lda	#<wreath_hgr
 	sta	LZ4_SRC
-	lda	#>sb_background_hgr
+	lda	#>wreath_hgr
 	sta	LZ4_SRC+1
 
-	lda	#<(sb_background_hgr_end-8)	; skip checksum at end
+	lda	#<(wreath_hgr_end-8)	; skip checksum at end
 	sta	LZ4_END
-	lda	#>(sb_background_hgr_end-8)	; skip checksum at end
+	lda	#>(wreath_hgr_end-8)	; skip checksum at end
 	sta	LZ4_END+1
 
 	lda	#<$2000
@@ -50,7 +50,7 @@ wreath:
 
 	; so we have 5070 + 4550 = 9620 to kill
 
-	jsr	gr_copy_to_current		; 6+ 9292
+;	jsr	gr_copy_to_current		; 6+ 9292
 
 	; now we have 322 left
 
@@ -137,17 +137,17 @@ sb_hgr_loop:
 
 
 	; draw sprite at same time
-	lda	#>ship_forward						; 2
-	sta	INH							; 3
-	lda	#<ship_forward						; 2
-	sta	INL							; 3
-	jsr	put_sprite						; 6
+;	lda	#>ship_forward						; 2
+;	sta	INH							; 3
+;	lda	#<ship_forward						; 2
+;	sta	INL							; 3
+;	jsr	put_sprite						; 6
 								; + 2164
 								;===========
 								; 2180
 
 
-	jsr	play_music		; 6+1032
+;	jsr	play_music		; 6+1032
 
 	; Try X=196 Y=2 cycles=1973
 
@@ -169,10 +169,10 @@ sb_mixed:
 	ldy	#9 ; 14 ; 126				; 2
 
 sb_mixed_loop:
-	lda	ss_multiples,x				; 4
+;	lda	ss_multiples,x				; 4
 	sta	split_smc+1				; 4
 split_smc:
-	jsr	split_4					; 6+46
+;	jsr	split_4					; 6+46
 	dey						; 2
 	bne	sb_mixed_loop				; 3
 
@@ -540,120 +540,16 @@ blueline_loop:
 draw_ship_big:
 	jsr	clear_all
 
-	lda	#>ship_forward
-	sta	INH
-	lda	#<ship_forward
-	sta	INL
+;	lda	#>ship_forward
+;	sta	INH
+;	lda	#<ship_forward
+;	sta	INL
 
-	lda	#15
-	sta	XPOS
-	lda	#34
-	sta	YPOS
-	jsr	put_sprite
+;	lda	#15
+;	sta	XPOS
+;	lda	#34
+;	sta	YPOS
+;	jsr	put_sprite
 
-draw_ship_small:
-	jsr	delay_1s
-	jsr	clear_all
-
-	lda	#>ship_small
-	sta	INH
-	lda	#<ship_small
-	sta	INL
-
-	lda	#17
-	sta	XPOS
-	lda	#30
-	sta	YPOS
-	jsr	put_sprite
-
-draw_ship_tiny:
-	jsr	delay_1s
-	jsr	clear_all
-
-	lda	#>ship_tiny
-	sta	INH
-	lda	#<ship_tiny
-	sta	INL
-
-	lda	#18
-	sta	XPOS
-	lda	#28
-	sta	YPOS
-	jsr	put_sprite
-
-	lda	#18
-	sta	SPEED
-
-	jsr	delay_1s
-
-draw_ship_line:
-	lda	#2
-	jsr	delay_custom
-	jsr	clear_all
-
-	lda	#COLOR_LIGHTBLUE
-	sta	COLOR
-
-	clc
-	lda	#20
-	adc	SPEED
-	sta	V2
-
-	sec
-	lda	#20
-	sbc	SPEED
-	tay
-
-	; 20 - 0 to 0 - 20, 20 - 40
-
-	lda	#26
-	jsr	hlin_double
-
-	dec	SPEED
-	bne	draw_ship_line
-
-draw_ship_done:
-	lda	#$77
-	sta	clear_all_color+1
-	jsr	clear_all
-
-	lda	#2
-	jsr	delay_custom
-
-	lda	#$0
-	sta	clear_all_color+1
-	jsr	clear_all
-
-	jsr	delay_1s
-
-	lda	#40
-	jsr	delay_custom
-
-	jmp	sb_real_exit
-
-;1s = 17030*60 = 1021800
-
-
-delay_1s:
-	lda	#20
-delay_custom:
-	sta	STATE
-delay_1s_loop:
-
-	; 17030 - 1038 = 15992
-
-;	jsr	play_music	; 6+1032
-
-	; Try X=113 Y=28 cycles=15989 R3
-
-	ldy	#28							; 2
-sbloopU:ldx	#113							; 2
-sbloopV:dex								; 2
-	bne	sbloopV							; 2nt/3
-	dey								; 2
-	bne	sbloopU							; 2nt/3
-
-	dec	STATE
-	bne	delay_1s_loop
 
 	rts

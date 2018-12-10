@@ -156,7 +156,7 @@ interrupt_handler:
 
 	bit     $C404           ; clear 6522 interrupt by reading T1C-L ; 4
 
-	jsr	play_music
+;	jsr	play_music
 
 	pla
 	tay			; restore Y

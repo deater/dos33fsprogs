@@ -37,6 +37,9 @@ xmas2018.o:	xmas2018.s \
 #D_HGRC.BIN:	d_hgr.bmp
 #	$(B2D) d_hgr.bmp HGR -d
 
+wreath.img.lz4:	wreath.img
+	lz4 -f -16 wreath.img
+
 wreath.img:	WREATHC.BIN
 	cp WREATHC.BIN wreath.img
 
