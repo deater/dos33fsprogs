@@ -7,7 +7,8 @@ PNG_TO_RLE = ../gr-utils/png2rle
 
 all:	xmas2018.dsk
 
-xmas2018.dsk:	XMAS2018 wreath.img
+xmas2018.dsk:	HELLO XMAS2018 wreath.img
+	$(DOS33) -y xmas2018.dsk SAVE A HELLO
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x4000 XMAS2018
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x2000 wreath.img WREATH.IMG
 
@@ -25,6 +26,10 @@ xmas2018.o:	xmas2018.s \
 
 
 ####
+
+HELLO:	hello.bas
+	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+
 
 #c64.img.lz4:	c64.img
 #	lz4 -f -16 c64.img
