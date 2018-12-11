@@ -50,23 +50,27 @@ wreath:
 
 	; so we have 5070 + 4550 = 9620 to kill
 
+	; FIXME: clear page0/page1 screens
+
 ;	jsr	gr_copy_to_current		; 6+ 9292
 
 	; now we have 322 left
 
 	; GR part
-	bit	LORES							; 4
+;	bit	HIRES							; 4
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
 
-	; 322 - 12 = 310
-	; - 3 for jmp
-	; 307
+	; 9620
+	;   -8 mode set
+	;  - 3 for jmp
+	;=======
+	; 9609
 
-	; Try X=9 Y=6 cycles=307
+	; Try X=239 Y=8 cycles=9609
 
-        ldy	#6							; 2
-sbloopA:ldx	#9							; 2
+        ldy	#8							; 2
+sbloopA:ldx	#239							; 2
 sbloopB:dex								; 2
 	bne	sbloopB							; 2nt/3
 	dey								; 2
@@ -89,36 +93,36 @@ wreath_begin_loop:
 
 wreath_display_loop:
 
+	; (40*65)-4 = 2596
 
-;	jsr	play_music		; 6+1032
+	; 40 lines of LORES
+	bit	LORES							; 4
 
-	; Try X=196 Y=2 cycles=1973
+	; Try X=42 Y=12 cycles=2593 R3
 
-	; Try X=59 Y=10 cycles=3011
+	lda	$0	; nop						; 3
 
-	ldy	#2							; 2
-wrloopC:ldx	#196							; 2
+	ldy	#12							; 2
+wrloopC:ldx	#42							; 2
 wrloopD:dex								; 2
 	bne	wrloopD							; 2nt/3
 	dey								; 2
 	bne	wrloopC							; 2nt/3
 
 
-wr_all_gr:
-	; 23 lines of this
+	; rest of screen is hires page0
+	; (152*65)-4 = 9876
 
-	; 23 * 65 = 1495
-	;             -4
-	;            -13
-	;       =========
-	;	    1478
+	bit	HIRES							; 4
 
-	bit	LORES						; 4
+	; Try X=13 Y=139 cycles=9870 R6
 
-	; Try X=41 Y=7 cycles=1478
+	nop
+	nop
+	nop
 
-	ldy	#7							; 2
-wrloopE:ldx	#41							; 2
+	ldy	#139							; 2
+wrloopE:ldx	#13							; 2
 wrloopF:dex								; 2
 	bne	wrloopF							; 2nt/3
 	dey								; 2
@@ -131,68 +135,34 @@ wrloopF:dex								; 2
 ;======================================================
 
 	; do_nothing should be      4550
-	;			      -7 timeout
-	;			     -34 keypress
+	;			     -10 keypress
 	;			===========
-	;			     468
+	;			    4540
 
 
+;	jsr	play_music		; 6+1032
 
-	; Try X=11 Y=8 cycles=489 R2
-	; Try X=31 Y=3 cycles=484
-	; Try X=22 Y=4 cycles=465 R3
 
-	lda	$0
+	; Try X=9 Y=89 cycles=4540
 
-	ldy	#4							; 2
-wrloop1:ldx	#22							; 2
+	ldy	#89							; 2
+wrloop1:ldx	#9							; 2
 wrloop2:dex								; 2
 	bne	wrloop2							; 2nt/3
 	dey								; 2
 	bne	wrloop1							; 2nt/3
 
-
-	inc	FRAME						; 5
-	lda	FRAME						; 3
-	and	#3			; 15 Hz			; 2
-	sta	FRAME						; 3
-	beq	wr_frame_oflo					; 3
-							;============
-							;        16
-								; -1
-	lda	$0			; nop			;  3
-	jmp	wr_frame_noflo					;  3
-wr_frame_oflo:
-	inc	FRAMEH						; 5
-wr_frame_noflo:
-
-
 	; no keypress =  10+(24)   = 34
-	; left pressed = 9+8+12+(5)= 34
-	; right pressed = 9+8+5+12 = 34
 
 	lda	KEYPRESS				; 4
 	bpl	wr_no_keypress				; 3
 							; -1
 	jmp	wr_handle_keypress			; 3
 wr_no_keypress:
-	inc	$0					; 5
-	dec	$0					; 5
-	inc	$0					; 5
-	dec	$0					; 5
-	nop						; 2
-	nop						; 2
-
 	jmp	wreath_display_loop			; 3
 
 wr_handle_keypress:
 	bit	KEYRESET	; clear keypress	; 4
-	cmp	#'Q'|$80				; 2
-	beq	wr_exit					; 3
-							; -1
-wr_exit:
-wr_real_exit:
-	bit	KEYRESET
 	rts						; 6
 
 
