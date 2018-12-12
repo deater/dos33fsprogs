@@ -22,8 +22,8 @@ xmas2018.o:	xmas2018.s \
 	zp.inc hardware.inc \
 	vapor_lock.s delay_a.s wait_keypress.s \
 	mockingboard.s \
-	wreath.img.lz4 \
-	wreath.s
+	wreath.s wreath.img.lz4 \
+	ball.s ball.img.lz4
 	ca65 -o xmas2018.o xmas2018.s -l xmas2018.lst
 
 

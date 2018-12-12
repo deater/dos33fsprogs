@@ -1,9 +1,9 @@
 ;=====================================
-; XMAS2018 -- Wreath Part
+; XMAS2018 -- Ball Part
 ;=====================================
 
 
-wreath:
+ball:
 
 	;===================
 	; init screen
@@ -22,14 +22,14 @@ wreath:
 	;=============================
 	; Load graphic hgr
 
-	lda	#<wreath_hgr
+	lda	#<ball_hgr
 	sta	LZ4_SRC
-	lda	#>wreath_hgr
+	lda	#>ball_hgr
 	sta	LZ4_SRC+1
 
-	lda	#<(wreath_hgr_end-8)	; skip checksum at end
+	lda	#<(ball_hgr_end-8)	; skip checksum at end
 	sta	LZ4_END
-	lda	#>(wreath_hgr_end-8)	; skip checksum at end
+	lda	#>(ball_hgr_end-8)	; skip checksum at end
 	sta	LZ4_END+1
 
 	lda	#<$2000
@@ -70,18 +70,18 @@ wreath:
 	; Try X=239 Y=8 cycles=9609
 
         ldy	#8							; 2
-wrloopA:ldx	#239							; 2
-wrloopB:dex								; 2
-	bne	wrloopB							; 2nt/3
+baloopA:ldx	#239							; 2
+baloopB:dex								; 2
+	bne	baloopB							; 2nt/3
 	dey								; 2
-	bne	wrloopA							; 2nt/3
+	bne	baloopA							; 2nt/3
 
-	jmp	wreath_begin_loop
+	jmp	ball_begin_loop
 .align  $100
 
 
 	;================================================
-	; Wreath Loop
+	; Ball Loop
 	;================================================
 	; each scan line 65 cycles
 	;       1 cycle each byte (40cycles) + 25 for horizontal
@@ -89,9 +89,9 @@ wrloopB:dex								; 2
 	; Vertical blank = 4550 cycles (70 scan lines)
 	; Total of 17030 cycles to get back to where was
 
-wreath_begin_loop:
+ball_begin_loop:
 
-wreath_display_loop:
+ball_display_loop:
 
 	; (40*65)-4 = 2596
 
@@ -103,11 +103,11 @@ wreath_display_loop:
 	lda	$0	; nop						; 3
 
 	ldy	#12							; 2
-wrloopC:ldx	#42							; 2
-wrloopD:dex								; 2
-	bne	wrloopD							; 2nt/3
+baloopC:ldx	#42							; 2
+baloopD:dex								; 2
+	bne	baloopD							; 2nt/3
 	dey								; 2
-	bne	wrloopC							; 2nt/3
+	bne	baloopC							; 2nt/3
 
 
 	; rest of screen is hires page0
@@ -122,11 +122,11 @@ wrloopD:dex								; 2
 	nop
 
 	ldy	#139							; 2
-wrloopE:ldx	#13							; 2
-wrloopF:dex								; 2
-	bne	wrloopF							; 2nt/3
+baloopE:ldx	#13							; 2
+baloopF:dex								; 2
+	bne	baloopF							; 2nt/3
 	dey								; 2
-	bne	wrloopE							; 2nt/3
+	bne	baloopE							; 2nt/3
 
 
 
@@ -146,22 +146,22 @@ wrloopF:dex								; 2
 	; Try X=9 Y=89 cycles=4540
 
 	ldy	#89							; 2
-wrloop1:ldx	#9							; 2
-wrloop2:dex								; 2
-	bne	wrloop2							; 2nt/3
+baloop1:ldx	#9							; 2
+baloop2:dex								; 2
+	bne	baloop2							; 2nt/3
 	dey								; 2
-	bne	wrloop1							; 2nt/3
+	bne	baloop1							; 2nt/3
 
 	; no keypress =  10+(24)   = 34
 
 	lda	KEYPRESS				; 4
-	bpl	wr_no_keypress				; 3
+	bpl	ba_no_keypress				; 3
 							; -1
-	jmp	wr_handle_keypress			; 3
-wr_no_keypress:
-	jmp	wreath_display_loop			; 3
+	jmp	ba_handle_keypress			; 3
+ba_no_keypress:
+	jmp	ball_display_loop			; 3
 
-wr_handle_keypress:
+ba_handle_keypress:
 	bit	KEYRESET	; clear keypress	; 4
 	rts						; 6
 

@@ -46,6 +46,8 @@ apple_iie:
 
 	jsr	wreath
 
+	jsr	ball
+
 	;==================
 	; Game over
 	;==================
@@ -56,6 +58,7 @@ game_over_man:
 
 .align $100
 	.include	"wreath.s"
+	.include	"ball.s"
 	.include	"lz4_decode.s"
 	.include	"gr_offsets.s"
 	.include	"gr_hline.s"
@@ -95,9 +98,12 @@ game_over_man:
 ;   FIXME: we can save 8 bytes per file by stripping checksums off end
 ;============================
 
-; starring
 wreath_hgr:
 .incbin "wreath.img.lz4",11
 wreath_hgr_end:
+
+ball_hgr:
+.incbin "ball.img.lz4",11
+ball_hgr_end:
 
 
