@@ -48,6 +48,8 @@ apple_iie:
 
 	jsr	ball
 
+	jsr	merry
+
 	;==================
 	; Game over
 	;==================
@@ -59,6 +61,7 @@ game_over_man:
 .align $100
 	.include	"wreath.s"
 	.include	"ball.s"
+	.include	"merry.s"
 	.include	"lz4_decode.s"
 	.include	"gr_offsets.s"
 	.include	"gr_hline.s"
@@ -105,5 +108,9 @@ wreath_hgr_end:
 ball_hgr:
 .incbin "ball.img.lz4",11
 ball_hgr_end:
+
+merry_hgr:
+.incbin "merry.img.lz4",11
+merry_hgr_end:
 
 

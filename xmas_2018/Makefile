@@ -23,7 +23,8 @@ xmas2018.o:	xmas2018.s \
 	vapor_lock.s delay_a.s wait_keypress.s \
 	mockingboard.s \
 	wreath.s wreath.img.lz4 \
-	ball.s ball.img.lz4
+	ball.s ball.img.lz4 \
+	merry.s merry.img.lz4
 	ca65 -o xmas2018.o xmas2018.s -l xmas2018.lst
 
 
@@ -32,17 +33,15 @@ xmas2018.o:	xmas2018.s \
 HELLO:	hello.bas
 	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
 
-
-#c64.img.lz4:	c64.img
-#	lz4 -f -16 c64.img
-#
-#c64.img:	c64_updated.png
-#	../hgr-utils/png2hgr c64_updated.png > c64.img
-
 ####
 
-#D_HGRC.BIN:	d_hgr.bmp
-#	$(B2D) d_hgr.bmp HGR -d
+merry.img.lz4:	merry.img
+	lz4 -f -16 merry.img
+
+merry.img:	merry_christmas.png
+	../hgr-utils/png2hgr merry_christmas.png > merry.img
+
+####
 
 wreath.img.lz4:	wreath.img
 	lz4 -f -16 wreath.img
