@@ -7,10 +7,11 @@ PNG_TO_RLE = ../gr-utils/png2rle
 
 all:	xmas2018.dsk
 
-xmas2018.dsk:	HELLO XMAS2018 wreath.img
+xmas2018.dsk:	HELLO XMAS2018 wreath.img ball.img
 	$(DOS33) -y xmas2018.dsk SAVE A HELLO
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x4000 XMAS2018
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x2000 wreath.img WREATH.IMG
+	$(DOS33) -y xmas2018.dsk BSAVE -a 0x2000 ball.img BALL.IMG
 
 ####
 
@@ -52,6 +53,17 @@ wreath.img:	WREATHC.BIN
 WREATHC.BIN:	wreath.bmp
 	$(B2D) wreath.bmp HGR -d
 
+#
+
+ball.img.lz4:	ball.img
+	lz4 -f -16 ball.img
+
+ball.img:	BALLC.BIN
+	cp BALLC.BIN ball.img
+
+BALLC.BIN:	ball.bmp
+	$(B2D) ball.bmp HGR -d
+
 clean:
-		rm -f *~ *.o *.lst XMAS2018 wreath.img WREATHC.BIN
+		rm -f *~ *.o *.lst XMAS2018 wreath.img ball.img BALLC.BIN WREATHC.BIN
 
