@@ -7,21 +7,24 @@ PNG_TO_RLE = ../gr-utils/png2rle
 
 all:	xmas2018.dsk
 
-xmas2018.dsk:	HELLO XMAS2018 wreath.img ball.img
+xmas2018.dsk:	HELLO XMAS2018 wreath.img.lz4 ball.img.lz4 merry.img.lz4
 	$(DOS33) -y xmas2018.dsk SAVE A HELLO
-	$(DOS33) -y xmas2018.dsk BSAVE -a 0x4000 XMAS2018
-	$(DOS33) -y xmas2018.dsk BSAVE -a 0x2000 wreath.img WREATH.IMG
-	$(DOS33) -y xmas2018.dsk BSAVE -a 0x2000 ball.img BALL.IMG
+	$(DOS33) -y xmas2018.dsk BSAVE -a 0x1000 XMAS2018
+	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 wreath.img.lz4 WREATH.LZ4
+	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 ball.img.lz4 BALL.LZ4
+	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 merry.img.lz4 MERRY.LZ4
+#	$(DOS33) -y xmas2018.dsk BSAVE -a 0x2000 wreath.img WREATH.IMG
+#	$(DOS33) -y xmas2018.dsk BSAVE -a 0x2000 ball.img BALL.IMG
 
 ####
 
 XMAS2018:	xmas2018.o
-	ld65 -o XMAS2018 xmas2018.o -C ../linker_scripts/apple2_4000.inc
+	ld65 -o XMAS2018 xmas2018.o -C ../linker_scripts/apple2_1000.inc
 
 xmas2018.o:	xmas2018.s \
 	zp.inc hardware.inc \
 	vapor_lock.s delay_a.s wait_keypress.s \
-	mockingboard.s \
+	mockingboard.s rts.s \
 	wreath.s wreath.img.lz4 \
 	ball.s ball.img.lz4 \
 	merry.s merry.img.lz4

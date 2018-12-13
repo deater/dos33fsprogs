@@ -1,0 +1,14 @@
+Memory Map:
+
+	00	Zero Page
+	01	Stack
+	02-03	Reserved
+	04-07	GR PAGE0
+	08-0b	GR PAGE1
+	0c-1f	CODE	(5k)
+	20-3f	HGR PAGE0 (wreath)
+	40-5f	HGR PAGE1 (ball)
+	60-7f	(merry)
+	80-9f	(music)
+	a0-bf	(staging)
+	c0-ff	RESERVED/ROM

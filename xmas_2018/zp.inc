@@ -166,3 +166,27 @@ OUTH		=	$FF
 
 
 
+
+; read any file slot 6 version
+; based on FASTLD6 and RTS copyright (c) Peter Ferrie 2011-2013,2018
+
+; modified to assembled with ca64 -- vmw
+; added code to patch it to run from current disk slot -- vmw
+
+
+	adrlo	=	$26	; constant from boot prom
+	adrhi	=	$27	; constant from boot prom
+	tmpsec	=	$3c	; constant from boot prom
+	reqsec	=	$3d	; constant from boot prom
+	sizelo	=	$44
+	sizehi	=	$45
+	secsize	=	$46
+
+	ldsizel	=	$f0
+	ldsizeh	=	$f1
+	namlo	=	$fb
+	namhi	=	$fc
+	step	=	$fd	; state for stepper motor
+	tmptrk	=	$fe	; temporary copy of current track
+	phase	=	$ff	; current phase for /seek
+

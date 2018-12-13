@@ -42,29 +42,17 @@
 ;COUNT		EQU $06
 ;DELTA		EQU $08
 
-;UNPACK_BUFFER	EQU $5E00	; offset of first unpacked byte
-
 
 	;======================
 	; LZ4 decode
 	;======================
 	; input buffer in LZ4_SRC
-        ; output buffer hardcoded still
-	; size in ENDH:ENDL
+	; end of input in LZ4_END
+        ; output buffer in LZ4_DST
+
 
 lz4_decode:
-;	lda	LZ4_SRC	 		; packed data offset
-;	clc
-;	adc	LZ4_END
-;	sta	LZ4_END
-;	lda	LZ4_SRC+1
-;	adc	LZ4_END+1
-;	sta	LZ4_END+1
 
-;	lda	#>UNPACK_BUFFER		; original unpacked data offset
-;	sta	LZ4_DST+1
-;	lda	#<UNPACK_BUFFER
-;	sta	LZ4_DST
 
 unpmain:
 	ldy	#0			; used to index, always zero

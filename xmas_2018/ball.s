@@ -22,22 +22,22 @@ ball:
 	;=============================
 	; Load graphic hgr
 
-	lda	#<ball_hgr
-	sta	LZ4_SRC
-	lda	#>ball_hgr
-	sta	LZ4_SRC+1
+;	lda	#<ball_hgr
+;	sta	LZ4_SRC
+;	lda	#>ball_hgr
+;	sta	LZ4_SRC+1
 
-	lda	#<(ball_hgr_end-8)	; skip checksum at end
-	sta	LZ4_END
-	lda	#>(ball_hgr_end-8)	; skip checksum at end
-	sta	LZ4_END+1
+;	lda	#<(ball_hgr_end-8)	; skip checksum at end
+;	sta	LZ4_END
+;	lda	#>(ball_hgr_end-8)	; skip checksum at end
+;	sta	LZ4_END+1
 
-	lda	#<$2000
-	sta	LZ4_DST
-	lda	#>$2000
-	sta	LZ4_DST+1
+;	lda	#<$2000
+;	sta	LZ4_DST
+;	lda	#>$2000
+;	sta	LZ4_DST+1
 
-	jsr	lz4_decode
+;	jsr	lz4_decode
 
 	;==============================
 	; setup graphics for vapor lock

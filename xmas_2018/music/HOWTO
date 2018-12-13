@@ -1,0 +1,6 @@
+Make hark.pt3 with VortexTracker
+
+Convert to ym6 format with AY_emul
+	Set for 1MHz / 60Hz when converting
+
+
