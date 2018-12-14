@@ -116,7 +116,6 @@ game_over_man:
 	.include	"vapor_lock.s"
 	.include	"delay_a.s"
 	.include	"wait_keypress.s"
-	.include	"mockingboard.s"
 ;	.include	"random16.s"
 ;	.include	"hgr.s"
 ;	.include	"move_letters.s"
@@ -124,12 +123,16 @@ game_over_man:
 ;	.include	"text_print.s"
 ;	.include	"screen_split.s"
 
+	.include	"play_music.s"
+
 ;============================
 ; Include Sprites
 ;============================
 ;.align $100
 ;	.include "tfv_sprites.inc"
 ;	.include "mode7_sprites.inc"
+
+
 
 ;=================================
 ; Include Text for Sliding Letters

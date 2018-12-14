@@ -135,18 +135,20 @@ wrloopF:dex								; 2
 ;======================================================
 
 	; do_nothing should be      4550
+	; play music		    1023
 	;			     -10 keypress
-	;			===========
-	;			    4540
+	;			=======-===
+	;			    3517
 
 
-;	jsr	play_music		; 6+1032
+	jsr	play_music		; 6+1017
 
 
-	; Try X=9 Y=89 cycles=4540
+	; Try X=116 Y=6 cycles=3517
 
-	ldy	#89							; 2
-wrloop1:ldx	#9							; 2
+
+	ldy	#6							; 2
+wrloop1:ldx	#116							; 2
 wrloop2:dex								; 2
 	bne	wrloop2							; 2nt/3
 	dey								; 2
