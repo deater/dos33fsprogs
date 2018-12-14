@@ -57,12 +57,8 @@ apple_iie:
 	sta     LZ4_SRC+1
 
 	lda	#<($a000+4103-8)	; skip checksum at end
-;	lda	ldsizel
 	sta	LZ4_END
 	lda	#>($a000+4103-8)	; skip checksum at end
-;	lda	ldsizeh
-;	clc
-;	adc	#$a0
 	sta	LZ4_END+1
 
 	lda	#<$2000
@@ -72,6 +68,41 @@ apple_iie:
 
 	jsr	lz4_decode
 
+	;===================
+	; Load music
+	;===================
+
+	; load MUSIC.LZ4 to $6000
+
+	lda	#<music_filename
+	sta	namlo
+	lda	#>music_filename
+	sta	namhi
+	jsr	opendir		; open and read entire file into memory
+
+	; decompress to $8000
+	; decompress from $8000
+	; size in ???
+
+
+	lda     #<($6000+11)
+	sta     LZ4_SRC
+	lda     #>($6000+11)
+	sta     LZ4_SRC+1
+
+	lda	#<($6000+865-8)	; skip checksum at end
+	sta	LZ4_END
+	lda	#>($6000+865-8)	; skip checksum at end
+	sta	LZ4_END+1
+
+	lda	#<$8000
+	sta	LZ4_DST
+	lda	#>$8000
+	sta	LZ4_DST+1
+
+	jsr	lz4_decode
+
+
 
 
 	;==================
@@ -80,7 +111,8 @@ apple_iie:
 
 	lda	#0
 	sta	MB_PATTERN
-	lda	#$60
+
+	lda	#$0
 	sta	MB_FRAME
 
 	jsr	mockingboard_init
@@ -169,5 +201,11 @@ game_over_man:
 wreath_filename:	;.byte "WREATH.LZ4                    "
        .byte 'W'|$80,'R'|$80,'E'|$80,'A'|$80,'T'|$80,'H'|$80,'.'|$80,'L'|$80
        .byte 'Z'|$80,'4'|$80,$A0,$A0,$A0,$A0,$A0,$A0
+       .byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+       .byte $A0,$A0,$A0,$A0,$A0,$A0
+
+music_filename:	;.byte "MUSIC.LZ4                     "
+       .byte 'M'|$80,'U'|$80,'S'|$80,'I'|$80,'C'|$80,'.'|$80,'L'|$80,'Z'|$80
+       .byte '4'|$80,$A0,$A0,$A0,$A0,$A0,$A0,$A0
        .byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
        .byte $A0,$A0,$A0,$A0,$A0,$A0

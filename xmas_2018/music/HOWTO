@@ -1,6 +1,7 @@
 Make hark.pt3 with VortexTracker
 
 Convert to ym6 format with AY_emul
-	Set for 1MHz / 60Hz when converting
+	Set for 1.7MHz (spectrum) / 60Hz when converting
 
+~/research/vmw-meter.git/ay-3-8910/conversion_tools/ym5_to_mega ./hark.ym
 

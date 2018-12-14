@@ -137,7 +137,7 @@ wrloopF:dex								; 2
 	; do_nothing should be      4550
 	; play music		    1023
 	;			     -10 keypress
-	;			=======-===
+	;			===========
 	;			    3517
 
 

@@ -82,7 +82,7 @@ play_music:
 
 	; self-modify the code
 	lda	MB_PATTERN	; 3
-	and	#$1f		; 2
+	and	#$07		; 2
 	tay			; 2
 
 	lda	mal_pattern,Y	; 4

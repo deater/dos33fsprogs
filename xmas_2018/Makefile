@@ -7,12 +7,13 @@ PNG_TO_RLE = ../gr-utils/png2rle
 
 all:	xmas2018.dsk
 
-xmas2018.dsk:	HELLO XMAS2018 wreath.img.lz4 ball.img.lz4 merry.img.lz4 MUSIC
+xmas2018.dsk:	HELLO XMAS2018 wreath.img.lz4 ball.img.lz4 merry.img.lz4 MUSIC.lz4
 	$(DOS33) -y xmas2018.dsk SAVE A HELLO
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x1000 XMAS2018
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 wreath.img.lz4 WREATH.LZ4
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 ball.img.lz4 BALL.LZ4
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 merry.img.lz4 MERRY.LZ4
+	$(DOS33) -y xmas2018.dsk BSAVE -a 0x6000 MUSIC.lz4 MUSIC.LZ4
 #	$(DOS33) -y xmas2018.dsk BSAVE -a 0x2000 wreath.img WREATH.IMG
 #	$(DOS33) -y xmas2018.dsk BSAVE -a 0x2000 ball.img BALL.IMG
 
@@ -31,6 +32,9 @@ xmas2018.o:	xmas2018.s \
 	ca65 -o xmas2018.o xmas2018.s -l xmas2018.lst
 
 ####
+
+MUSIC.lz4:	MUSIC
+	lz4 -16 -f MUSIC
 
 MUSIC:	music.o
 	ld65 -o MUSIC music.o -C ../linker_scripts/apple2_1000.inc
