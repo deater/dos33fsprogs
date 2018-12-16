@@ -136,19 +136,36 @@ wrloopF:dex								; 2
 
 	; do_nothing should be      4550
 	; play music		    1023
+	; sprite		     536
 	;			     -10 keypress
 	;			===========
-	;			    3517
+	;			    2981
 
 
 	jsr	play_music		; 6+1017
 
 
-	; Try X=116 Y=6 cycles=3517
+	;========================
+	; draw sprites
+	;========================
 
+	lda	#>wide_flame0					; 2
+	sta	INH						; 3
+	lda	#<wide_flame0					; 2
+	sta	INL						; 3
 
-	ldy	#6							; 2
-wrloop1:ldx	#116							; 2
+	lda	#4						; 2
+	sta	XPOS						; 3
+	lda	#4						; 2
+	sta	YPOS						; 3
+	jsr	put_sprite					; 6+510
+							;===============
+							;	536
+
+	; Try X=118 Y=5 cycles=2981
+
+	ldy	#5							; 2
+wrloop1:ldx	#118							; 2
 wrloop2:dex								; 2
 	bne	wrloop2							; 2nt/3
 	dey								; 2
@@ -168,3 +185,4 @@ wr_handle_keypress:
 	rts						; 6
 
 
+.include "sprites.inc"
