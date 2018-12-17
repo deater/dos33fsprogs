@@ -50,11 +50,11 @@ wreath:
 
 	; so we have 5070 + 4550 = 9620 to kill
 
-	; FIXME: clear page0/page1 screens
+	; FIXME: clear page0 screen
+	
+	jsr	clear_top			; 6+5410
 
-;	jsr	gr_copy_to_current		; 6+ 9292
-
-	; now we have 322 left
+	; now we have  left
 
 	; GR part
 ;	bit	HIRES							; 4
@@ -62,15 +62,16 @@ wreath:
 	bit	FULLGR							; 4
 
 	; 9620
+	;-5416 clear gr page0 top
 	;   -8 mode set
 	;  - 3 for jmp
 	;=======
-	; 9609
+	; 4193
 
-	; Try X=239 Y=8 cycles=9609
+	; Try X=25 Y=32 cycles=4193
 
-        ldy	#8							; 2
-wrloopA:ldx	#239							; 2
+        ldy	#32							; 2
+wrloopA:ldx	#25							; 2
 wrloopB:dex								; 2
 	bne	wrloopB							; 2nt/3
 	dey								; 2
