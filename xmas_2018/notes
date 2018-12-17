@@ -21,3 +21,12 @@ Merry Christmas picture:
 	https://www.freevector.com/merry-christmas-text
 	Creative Commons Attribution 4.0 license.
 
+
+
+For x=0 to 80
+	For y=0 to 192
+		old=image[x][y]<<2 | image[x+1][y]
+		screen: 01 23 45 67 89 ab cd
+
+		[1] 6 54 32 10  [2] dc ba 98 7
+
