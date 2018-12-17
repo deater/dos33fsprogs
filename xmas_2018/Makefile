@@ -15,7 +15,7 @@ xmas2018.dsk:	HELLO XMAS2018 wreath.img.lz4 ball.img.lz4 merry.img.lz4 MUSIC.lz4
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 merry.img.lz4 MERRY.LZ4
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x6000 MUSIC.lz4 MUSIC.LZ4
 #	$(DOS33) -y xmas2018.dsk BSAVE -a 0x2000 wreath.img WREATH.IMG
-#	$(DOS33) -y xmas2018.dsk BSAVE -a 0x2000 ball.img BALL.IMG
+	$(DOS33) -y xmas2018.dsk BSAVE -a 0x4000 ball.img BALL.IMG
 
 ####
 

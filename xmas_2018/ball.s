@@ -57,20 +57,21 @@ ball:
 	; now we have 322 left
 
 	; GR part
-;	bit	HIRES							; 4
+	bit	HIRES							; 4
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
+	bit	PAGE1							; 4
 
 	; 9620
-	;   -8 mode set
+	;  -16 mode set
 	;  - 3 for jmp
 	;=======
-	; 9609
+	; 9601
 
-	; Try X=239 Y=8 cycles=9609
+	; Try X=18 Y=100 cycles=9601
 
-        ldy	#8							; 2
-baloopA:ldx	#239							; 2
+	ldy	#100							; 2
+baloopA:ldx	#18							; 2
 baloopB:dex								; 2
 	bne	baloopB							; 2nt/3
 	dey								; 2
@@ -93,36 +94,37 @@ ball_begin_loop:
 
 ball_display_loop:
 
-	; (40*65)-4 = 2596
+	; draw 160 lines of hires PAGE1
+	bit	HIRES							; 4
+	bit	PAGE1							; 4
 
-	; 40 lines of LORES
-	bit	LORES							; 4
+	; (160*65)-8 = 10392
 
-	; Try X=42 Y=12 cycles=2593 R3
+	; Try X=43 Y=47 cycles=10388 R4
 
-	lda	$0	; nop						; 3
+	nop
+	nop
 
-	ldy	#12							; 2
-baloopC:ldx	#42							; 2
+	ldy	#47							; 2
+baloopC:ldx	#43							; 2
 baloopD:dex								; 2
 	bne	baloopD							; 2nt/3
 	dey								; 2
 	bne	baloopC							; 2nt/3
 
 
-	; rest of screen is hires page0
-	; (152*65)-4 = 9876
+	; draw 32 (4) lines of lores PAGE0
+	bit	LORES							; 4
+	bit	PAGE0							; 4
 
-	bit	HIRES							; 4
+	; (32*65)-8 = 2072
 
-	; Try X=13 Y=139 cycles=9870 R6
+	; Try X=1 Y=188 cycles=2069
 
-	nop
-	nop
-	nop
+	lda	$0
 
-	ldy	#139							; 2
-baloopE:ldx	#13							; 2
+	ldy	#188							; 2
+baloopE:ldx	#1							; 2
 baloopF:dex								; 2
 	bne	baloopF							; 2nt/3
 	dey								; 2

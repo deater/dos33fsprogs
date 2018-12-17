@@ -102,8 +102,13 @@ apple_iie:
 
 	jsr	lz4_decode
 
+	; load BALL.IMG to $4000
 
-
+	lda	#<ball_filename
+	sta	namlo
+	lda	#>ball_filename
+	sta	namhi
+	jsr	opendir		; open and read entire file into memory
 
 	;==================
 	; Init mockingboard
@@ -203,6 +208,13 @@ wreath_filename:	;.byte "WREATH.LZ4                    "
        .byte 'Z'|$80,'4'|$80,$A0,$A0,$A0,$A0,$A0,$A0
        .byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
        .byte $A0,$A0,$A0,$A0,$A0,$A0
+
+ball_filename:	;.byte "BALL.IMG                      "
+       .byte 'B'|$80,'A'|$80,'L'|$80,'L'|$80,'.'|$80,'I'|$80,'M'|$80,'G'|$80
+       .byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+       .byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+       .byte $A0,$A0,$A0,$A0,$A0,$A0
+
 
 music_filename:	;.byte "MUSIC.LZ4                     "
        .byte 'M'|$80,'U'|$80,'S'|$80,'I'|$80,'C'|$80,'.'|$80,'L'|$80,'Z'|$80
