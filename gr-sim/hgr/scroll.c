@@ -73,21 +73,60 @@ int main(int argc, char **argv) {
 	*/
 
 
-	int x,y,i,j,addr;
+	int xx,addr,count=0;
+	int current,next,high;
 
 	while(1) {
 		for(addr=0x2000;addr<0x4000;addr+=0x80) {
-			for(x=0;x<40;x++) {
-				ram[addr+x]=ram[addr+x+1];
+			for(xx=0;xx<40;xx++) {
+				current=ram[addr+xx];
+				next=ram[addr+xx+1];
+				if ((count%7==2) || (count%7==6)) {
+					high=next&0x80;
+				}
+				else {
+					high=current&0x80;
+				}
+
+				if (xx==39) next=ram[addr+0x2000];
+
+				current>>=2;
+				current&=0x1f;
+				current|=high;
+				current|=(next&3)<<5;
+				ram[addr+xx]=current;
+			}
+
+			for(xx=0;xx<40;xx++) {
+				current=ram[addr+0x2000+xx];
+				next=ram[addr+0x2000+xx+1];
+				if ((count%7==2) ||(count%7==6)) {
+					high=next&0x80;
+				}
+				else {
+					high=current&0x80;
+
+				}
+				current>>=2;
+				current&=0x1f;
+				current|=high;
+				current|=(next&3)<<5;
+				ram[addr+0x2000+xx]=current;
 			}
 		}
+
 
 		grsim_update();
 		ch=grsim_input();
 		if (ch) break;
-		usleep(100000);
+		usleep(17000);	// 60Hz = 17ms
+		count++;
+		if (count==140) break;
 	}
 
-
+	while(1) {
+		ch=grsim_input();
+		if (ch) break;
+	}
 	return 0;
 }
