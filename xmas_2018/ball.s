@@ -138,12 +138,13 @@ baloopF:dex								; 2
 
 	; do_nothing should be      4550
 	;                          -1023 music
-	;                          -1841 scroll
+	;                          -1841 scroll/else
 	;			     -18 frame adjust
 	;			     -10 keypress
+	;			      -8 pick which
 	;			      -7 check for end
 	;			===========
-	;			    1651
+	;			    1643
 
 	inc	FRAME						; 5
 	lda	FRAME						; 3
@@ -172,13 +173,44 @@ done_framing:
 
 	jsr	play_music		; 6+1017
 
+
+	; slow things down a bit
+
+	lda	FRAME						; 3
+	and	#1						; 2
+	beq	do_scrolling					; 3
+							;=============
+							;         8
+
+do_nothing:
+								; -1
+
+	; 1839 - 1 + 3 = 1841
+
+	; Try X=60 Y=6 cycles=1837 R2
+
+	nop
+
+	ldy	#6							; 2
+baloopQ:ldx	#60							; 2
+baloopR:dex								; 2
+	bne	baloopR							; 2nt/3
+	dey								; 2
+	bne	baloopQ							; 2nt/3
+
+	jmp	done_actions						; 3
+
+
+do_scrolling:
 	jsr	scroll_loop		; 6+1835
+					;=========
+					; 1841
+done_actions:
 
+	; Try X=163 Y=2 cycles=1643
 
-	; Try X=1 Y=150 cycles=1651
-
-	ldy	#150							; 2
-baloop1:ldx	#1							; 2
+	ldy	#2							; 2
+baloop1:ldx	#163							; 2
 baloop2:dex								; 2
 	bne	baloop2							; 2nt/3
 	dey								; 2
