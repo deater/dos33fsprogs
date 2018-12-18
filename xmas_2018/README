@@ -16,3 +16,5 @@ Memory Map:
 SIZE:
 	3903	-- 12/18
 	3647	-- use LZ4 encryption on scroll text
+	3903	-- add in support for all 5 candles
+	3647	-- make sprites non-transparent

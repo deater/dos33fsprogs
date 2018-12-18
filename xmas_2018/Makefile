@@ -24,7 +24,7 @@ XMAS2018:	xmas2018.o
 
 xmas2018.o:	xmas2018.s \
 	zp.inc hardware.inc \
-	vapor_lock.s delay_a.s wait_keypress.s \
+	vapor_lock.s delay_a.s wait_keypress.s gr_putsprite.s \
 	play_music.s mockingboard.s rts.s \
 	wreath.s wreath.img.lz4 sprites.inc \
 	ball.s ball.img.lz4 greets.raw.lz4 gr_scroll.s \
