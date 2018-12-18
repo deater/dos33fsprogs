@@ -31,13 +31,25 @@ ball:
 	;=============================
 	; decompress scroll image to $800
 
-	lda	#>a2_scroll
-	sta	INH
-	lda	#<a2_scroll
-	sta	INL
+	lda     #<greets
+	sta	LZ4_SRC
+	lda	#>greets
+	sta	LZ4_SRC+1
 
-	jsr	decompress_scroll
+	lda	#<(greets_end-8)	; skip checksum at end
+	sta	LZ4_END
+	lda	#>(greets_end-8)	; skip checksum at end
+	sta	LZ4_END+1
 
+	lda	#<$800
+	sta	LZ4_DST
+	lda	#>$800
+	sta	LZ4_DST+1
+
+	jsr	lz4_decode
+
+	lda	#237
+	sta	SCROLL_LENGTH
 
 	;==============================
 	; setup graphics for vapor lock
@@ -231,4 +243,6 @@ ball_done:
 
 
 .include "gr_scroll.s"
-.include "greets.inc"
+greets:
+.incbin "greets.raw.lz4",11
+greets_end:

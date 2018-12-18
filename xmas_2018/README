@@ -4,11 +4,15 @@ Memory Map:
 	01	Stack
 	02-03	Reserved
 	04-07	GR PAGE0
-	08-0b	GR PAGE1
+	08-0b	GR PAGE1 (scroll text)
 	0c-1f	CODE	(5k)
 	20-3f	HGR PAGE0 (wreath)
 	40-5f	HGR PAGE1 (ball)
 	60-7f	(merry)
 	80-9f	(music)
-	a0-bf	(staging)
+	a0-bf	(music)
 	c0-ff	RESERVED/ROM
+
+SIZE:
+	3903	-- 12/18
+	3647	-- use LZ4 encryption on scroll text

@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 static unsigned char font[256][9]={
 	{0,0,0,0,0,0,0,0,0},	// 0
@@ -661,6 +663,18 @@ int main(int argc, char **argv) {
 	new_size++;
 	printf("; Compressed size = %d bytes\n",new_size);
 
+
+	int fd;
+
+	fd=open("scroll.raw",O_CREAT|O_WRONLY,0666);
+	if (fd<0) {
+		fprintf(stderr,"Error opening\n");
+		exit(1);
+	}
+	for(y=0;y<4;y++) {
+		write(fd,&row[y],256);
+	}
+	close(fd);
 
 	return 0;
 }
