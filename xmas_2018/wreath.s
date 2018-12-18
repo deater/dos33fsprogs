@@ -120,13 +120,12 @@ wrloopF:dex								; 2
 
 	; do_nothing should be      4550
 	; play music		    1023
-	; sprites (536*3+374*2)	=   ;2356
-	;			     398
+	; sprites (398*3+305*2)	=   1804
 	;			     -18 frame adjust
 	;                             -7 end detect
 	;			     -10 keypress
 	;			===========
-	;			    1136
+	;			    1688
 
 
 
@@ -174,7 +173,6 @@ done_wframing:
 	jsr	put_sprite_no_transparency			; 6+372
 							;===============
 							;	398
-.if 0
 	; Candle 2 (Peace)
 
 	lda	#>flame0					; 2
@@ -186,9 +184,9 @@ done_wframing:
 	sta	XPOS						; 3
 	lda	#4						; 2
 	sta	YPOS						; 3
-	jsr	put_sprite_no_transparency					; 6+348
+	jsr	put_sprite_no_transparency			; 6+279
 							;===============
-							;	374
+							;	305
 
 	; Candle 3 (Joy)
 
@@ -201,24 +199,24 @@ done_wframing:
 	sta	XPOS						; 3
 	lda	#4						; 2
 	sta	YPOS						; 3
-	jsr	put_sprite_no_transparency					; 6+348
+	jsr	put_sprite_no_transparency			; 6+279
 							;===============
-							;	374
+							;	305
 
 	; Candle 4 (Love)
 
 	lda	#>wide_flame1					; 2
 	sta	INH						; 3
-	lda	#<wide_flame0					; 2
+	lda	#<wide_flame1					; 2
 	sta	INL						; 3
 
 	lda	#26						; 2
 	sta	XPOS						; 3
 	lda	#4						; 2
 	sta	YPOS						; 3
-	jsr	put_sprite_no_transparency					; 6+510
+	jsr	put_sprite_no_transparency			; 6+372
 							;===============
-							;	536
+							;	398
 
 	; Candle 5 (Christmas)
 
@@ -231,16 +229,14 @@ done_wframing:
 	sta	XPOS						; 3
 	lda	#4						; 2
 	sta	YPOS						; 3
-	jsr	put_sprite_no_transparency					; 6+510
+	jsr	put_sprite_no_transparency			; 6+372
 							;===============
-							;	536
-.endif
+							;	398
 
-	; Try X=225 Y=1 cycles=1132 R4
-	; Try X=205 Y=3 cycles=3094
+	; Try X=47 Y=7 cycles=1688
 
-	ldy	#3							; 2
-wrloop1:ldx	#205							; 2
+	ldy	#7							; 2
+wrloop1:ldx	#47							; 2
 wrloop2:dex								; 2
 	bne	wrloop2							; 2nt/3
 	dey								; 2

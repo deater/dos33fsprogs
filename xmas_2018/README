@@ -18,3 +18,4 @@ SIZE:
 	3647	-- use LZ4 encryption on scroll text
 	3903	-- add in support for all 5 candles
 	3647	-- make sprites non-transparent
+	3903	-- turn all flames back on
