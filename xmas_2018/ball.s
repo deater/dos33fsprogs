@@ -20,24 +20,24 @@ ball:
 	sta	FRAMEH
 
 	;=============================
-	; Load graphic hgr
+	;  ball graphic already loaded to $4000 (HGR page1)
 
-;	lda	#<ball_hgr
-;	sta	LZ4_SRC
-;	lda	#>ball_hgr
-;	sta	LZ4_SRC+1
+	;=============================
+	; set up scrolling
 
-;	lda	#<(ball_hgr_end-8)	; skip checksum at end
-;	sta	LZ4_END
-;	lda	#>(ball_hgr_end-8)	; skip checksum at end
-;	sta	LZ4_END+1
+	lda	#0
+	sta	OFFSET
 
-;	lda	#<$2000
-;	sta	LZ4_DST
-;	lda	#>$2000
-;	sta	LZ4_DST+1
+	;=============================
+	; decompress scroll image to $800
 
-;	jsr	lz4_decode
+	lda	#>a2_scroll
+	sta	INH
+	lda	#<a2_scroll
+	sta	INL
+
+	jsr	decompress_scroll
+
 
 	;==============================
 	; setup graphics for vapor lock
@@ -137,24 +137,29 @@ baloopF:dex								; 2
 ;======================================================
 
 	; do_nothing should be      4550
+	;                          -1023 music
+	;                          -1841 scroll
 	;			     -10 keypress
 	;			===========
-	;			    4540
+	;			    1676
 
 
-;	jsr	play_music		; 6+1032
+	jsr	play_music		; 6+1017
 
+	jsr	scroll_loop		; 6+1835
 
-	; Try X=9 Y=89 cycles=4540
+	; Try X=1 Y=152 cycles=1673 R3
 
-	ldy	#89							; 2
-baloop1:ldx	#9							; 2
+	lda	$0	; nop
+
+	ldy	#152							; 2
+baloop1:ldx	#1							; 2
 baloop2:dex								; 2
 	bne	baloop2							; 2nt/3
 	dey								; 2
 	bne	baloop1							; 2nt/3
 
-	; no keypress =  10+(24)   = 34
+	; keypress = 10
 
 	lda	KEYPRESS				; 4
 	bpl	ba_no_keypress				; 3
@@ -168,3 +173,5 @@ ba_handle_keypress:
 	rts						; 6
 
 
+.include "gr_scroll.s"
+.include "greets.inc"
