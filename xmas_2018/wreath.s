@@ -20,24 +20,7 @@ wreath:
 	sta	FRAMEH
 
 	;=============================
-	; Load graphic hgr
-
-;	lda	#<wreath_hgr
-;	sta	LZ4_SRC
-;	lda	#>wreath_hgr
-;	sta	LZ4_SRC+1
-
-;	lda	#<(wreath_hgr_end-8)	; skip checksum at end
-;	sta	LZ4_END
-;	lda	#>(wreath_hgr_end-8)	; skip checksum at end
-;	sta	LZ4_END+1
-
-;	lda	#<$2000
-;	sta	LZ4_DST
-;	lda	#>$2000
-;	sta	LZ4_DST+1
-
-;	jsr	lz4_decode
+	; Wreath image already loaded to $2000 (HGR Page 0)
 
 	;==============================
 	; setup graphics for vapor lock
@@ -51,7 +34,7 @@ wreath:
 	; so we have 5070 + 4550 = 9620 to kill
 
 	; FIXME: clear page0 screen
-	
+
 	jsr	clear_top			; 6+5410
 
 	; now we have  left
@@ -138,9 +121,35 @@ wrloopF:dex								; 2
 	; do_nothing should be      4550
 	; play music		    1023
 	; sprite		     536
+	;			     -18 frame adjust
+	;                             -7 end detect
 	;			     -10 keypress
 	;			===========
-	;			    2981
+	;			    2956
+
+
+
+	inc	FRAME						; 5
+	lda	FRAME						; 3
+	and	#63						; 2
+	beq	wframing					; 3
+
+								; -1
+	lda	$0						; 3
+	jmp	done_wframing					; 3
+wframing:
+	inc	FRAMEH						; 5
+done_wframing:
+							;=============
+							;       18
+
+	lda	FRAMEH						; 3
+	cmp	#30		; length of song?		; 2
+	beq	wreath_done					; 3
+								; -1
+							;===============
+							;         7
+
 
 
 	jsr	play_music		; 6+1017
@@ -163,10 +172,10 @@ wrloopF:dex								; 2
 							;===============
 							;	536
 
-	; Try X=118 Y=5 cycles=2981
+	; Try X=117 Y=5 cycles=2956
 
 	ldy	#5							; 2
-wrloop1:ldx	#118							; 2
+wrloop1:ldx	#117							; 2
 wrloop2:dex								; 2
 	bne	wrloop2							; 2nt/3
 	dey								; 2
@@ -177,13 +186,14 @@ wrloop2:dex								; 2
 	lda	KEYPRESS				; 4
 	bpl	wr_no_keypress				; 3
 							; -1
-	jmp	wr_handle_keypress			; 3
+	jmp	wreath_done				; 3
 wr_no_keypress:
 	jmp	wreath_display_loop			; 3
 
-wr_handle_keypress:
+wreath_done:
 	bit	KEYRESET	; clear keypress	; 4
 	rts						; 6
 
 
 .include "sprites.inc"
+
