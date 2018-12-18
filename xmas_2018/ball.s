@@ -139,20 +139,45 @@ baloopF:dex								; 2
 	; do_nothing should be      4550
 	;                          -1023 music
 	;                          -1841 scroll
+	;			     -18 frame adjust
 	;			     -10 keypress
+	;			      -7 check for end
 	;			===========
-	;			    1676
+	;			    1651
+
+	inc	FRAME						; 5
+	lda	FRAME						; 3
+	and	#63						; 2
+	beq	framing						; 3
+
+								; -1
+	lda	$0						; 3
+	jmp	done_framing					; 3
+framing:
+	inc	FRAMEH						; 5
+done_framing:
+							;=============
+							;	18
+
+
+	lda	FRAMEH						; 3
+	cmp	#30		; length of song?		; 2
+	beq	ball_done					; 3
+								; -1
+							;===============
+							;         7
+
+
 
 
 	jsr	play_music		; 6+1017
 
 	jsr	scroll_loop		; 6+1835
 
-	; Try X=1 Y=152 cycles=1673 R3
 
-	lda	$0	; nop
+	; Try X=1 Y=150 cycles=1651
 
-	ldy	#152							; 2
+	ldy	#150							; 2
 baloop1:ldx	#1							; 2
 baloop2:dex								; 2
 	bne	baloop2							; 2nt/3
@@ -164,11 +189,11 @@ baloop2:dex								; 2
 	lda	KEYPRESS				; 4
 	bpl	ba_no_keypress				; 3
 							; -1
-	jmp	ba_handle_keypress			; 3
+	jmp	ball_done				; 3
 ba_no_keypress:
 	jmp	ball_display_loop			; 3
 
-ba_handle_keypress:
+ball_done:
 	bit	KEYRESET	; clear keypress	; 4
 	rts						; 6
 

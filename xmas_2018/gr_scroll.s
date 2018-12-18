@@ -3,7 +3,7 @@ scroll_row2	=	$900
 scroll_row3	=	$A00
 scroll_row4	=	$B00
 
-SCROLL_LENGTH	=	$61
+SCROLL_LENGTH	=	$63
 ;OFFSET		=	$62
 
 
