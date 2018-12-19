@@ -19,3 +19,4 @@ SIZE:
 	3903	-- add in support for all 5 candles
 	3647	-- make sprites non-transparent
 	3903	-- turn all flames back on
+	3853	-- stop padding filenames

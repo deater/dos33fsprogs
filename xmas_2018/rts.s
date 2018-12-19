@@ -4,7 +4,10 @@
 ; modified to assembled with ca64 -- vmw
 ; added code to patch it to run from current disk slot -- vmw
 
-; also stores filesize in ldsizel:ldsizeh
+; USAGE:
+;	file to load in namlo:namhi
+;	Loads file contents to addr from filesystem
+;	also stores filesize in ldsizel:ldsizeh
 
 	dirbuf	=	$900
 				; note, don't put this immediately below
@@ -12,55 +15,21 @@
 				;   is temporarily overwritten during read
 				;   process
 
-
-	; note also, can't load file bigger than $8000 (32k) in size?
-	; seems to break things?
-
 	;======================
 
 
-	; open and read a file
-;	lda	#<md000_filename
-;	sta	namlo
-;	lda	#>md000_filename
-;	sta	namhi
-;	jsr	opendir		; open and read entire file into memory
-
 
 ; filename to open is 30-character Apple text:
-;megademo_filename:	;.byte "MEGADEMO                      "
-;	.byte 'M'|$80,'E'|$80,'G'|$80,'A'|$80,'D'|$80,'E'|$80,'M'|$80,'O'|$80
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0
+filename:
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0
 
-;c64_filename:	;.byte "C64.IMG                       "
-;	.byte 'C'|$80,'6'|$80,'4'|$80,'.'|$80,'I'|$80,'M'|$80,'G'|$80,$A0
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0
-
-;m1000_filename: ;.byte "MUSIC.1000                       "
-;	.byte 'M'|$80,'U'|$80,'S'|$80,'I'|$80,'C'|$80,'.'|$80,'1'|$80,'0'|$80
-;	.byte '0'|$80,'0'|$80,$A0,$A0,$A0,$A0,$A0,$A0
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0
-
-;md000_filename: ;.byte "MUSIC.D000                       "
-;	.byte 'M'|$80,'U'|$80,'S'|$80,'I'|$80,'C'|$80,'.'|$80,'D'|$80,'0'|$80
-;	.byte '0'|$80,'0'|$80,$A0,$A0,$A0,$A0,$A0,$A0
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0
-
-;md000x2_filename:	;.byte "MUSIC.D000X2                     "
-;	.byte 'M'|$80,'U'|$80,'S'|$80,'I'|$80,'C'|$80,'.'|$80,'D'|$80,'0'|$80
-;	.byte '0'|$80,'0'|$80,'X'|$80,'2'|$80,$A0,$A0,$A0,$A0
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0
-
-
+;=======================================================
+;=======================================================
+;=======================================================
                 ;unhook DOS and build nibble table
-
 rts_init:
 	; patch to use current drive
 
@@ -128,6 +97,45 @@ L3:	inx			; increment x	x=4, a=0f
 	bpl	L1		; loop while high bit not set
 
 	rts
+
+
+;=======================================================
+;=======================================================
+;=======================================================
+
+	; filename in OUTL:OUTH
+
+opendir_filename:
+
+	; clear out the filename with $A0 (space)
+
+	lda	#<filename
+	sta	namlo
+	lda	#>filename
+	sta	namhi
+
+	ldy	#29
+wipe_filename_loop:
+	lda	#$A0
+	sta	(namlo),Y
+	dey
+	bpl	wipe_filename_loop
+
+	ldy	#0
+copy_filename_loop:
+	lda	(OUTL),Y
+	beq	copy_filename_done
+	sta	(namlo),Y
+	iny
+	bne	copy_filename_loop
+
+copy_filename_done:
+
+	; fallthrough
+
+;=======================================================
+;=======================================================
+;=======================================================
 
 	;===========================
 	; opendir

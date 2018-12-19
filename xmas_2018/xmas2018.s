@@ -5,14 +5,7 @@
 .include "zp.inc"
 .include "hardware.inc"
 
-; external routines
-
-;play_music=$1000
-;mockingboard_init=$1100
-;mockingboard_mute=$11a1
-
-
-xmas2018_start:				; this should end up at $4000
+xmas2018_start:
 
 	;===================
 	; Check for Apple II and patch
@@ -22,7 +15,7 @@ xmas2018_start:				; this should end up at $4000
 	cmp	#6
 	beq	apple_iie
 
-;	lda	#$54		; patch the check_email font code
+;	lda	#$54		;
 ;	sta	ce_patch+1
 
 
@@ -39,15 +32,14 @@ apple_iie:
 	;===================
 
 	; load WREATH.LZ4 to $a000
+	; then decompress it to $2000 (HGR PAGE0)
 
 	lda	#<wreath_filename
-	sta	namlo
+	sta	OUTL
 	lda	#>wreath_filename
-	sta	namhi
-	jsr	opendir		; open and read entire file into memory
+	sta	OUTH
+	jsr	opendir_filename	; open and read entire file into memory
 
-	; decompress to $2000
-	; decompress from $a000
 	; size in ldsizeh:ldsizel (f1/f0)
 
 	clc
@@ -73,31 +65,61 @@ apple_iie:
 
 	jsr	lz4_decode
 
+	; load MERRY.LZ4 to $4000
+	; then decompress it to $6000
+
+	lda	#<merry_filename
+	sta	OUTL
+	lda	#>merry_filename
+	sta	OUTH
+	jsr	opendir_filename	; open and read entire file into memory
+
+	; size in ldsizeh:ldsizel (f1/f0)
+
+	clc
+	lda     #<($4000)
+	sta     LZ4_SRC
+	adc	ldsizel
+	sta	LZ4_END
+
+	lda     #>($4000)
+	sta     LZ4_SRC+1
+	adc	ldsizeh
+	sta	LZ4_END+1
+
+	lda	#<$6000
+	sta	LZ4_DST
+	lda	#>$6000
+	sta	LZ4_DST+1
+
+	jsr	lz4_decode
+
+
 	;===================
 	; Load music
 	;===================
 
-	; load MUSIC.LZ4 to $6000
+	; load MUSIC.LZ4 to $4000
 
 	lda	#<music_filename
-	sta	namlo
+	sta	OUTL
 	lda	#>music_filename
-	sta	namhi
-	jsr	opendir		; open and read entire file into memory
+	sta	OUTH
+	jsr	opendir_filename	; open and read entire file into memory
 
 	; decompress to $8000
-	; decompress from $8000
-	; size in ???
+	; decompress from $4000
+	; size in ldsizeh:ldsizel (f1/f0)
 
-
-	lda     #<($6000+11)
+	clc
+	lda     #<($4000)
 	sta     LZ4_SRC
-	lda     #>($6000+11)
-	sta     LZ4_SRC+1
-
-	lda	#<($6000+865-8)	; skip checksum at end
+	adc	ldsizel
 	sta	LZ4_END
-	lda	#>($6000+865-8)	; skip checksum at end
+
+	lda     #>($4000)
+	sta     LZ4_SRC+1
+	adc	ldsizeh
 	sta	LZ4_END+1
 
 	lda	#<$8000
@@ -110,10 +132,10 @@ apple_iie:
 	; load BALL.IMG to $4000
 
 	lda	#<ball_filename
-	sta	namlo
+	sta	OUTL
 	lda	#>ball_filename
-	sta	namhi
-	jsr	opendir		; open and read entire file into memory
+	sta	OUTH
+	jsr	opendir_filename	; open and read entire file into memory
 
 	;==================
 	; Init mockingboard
@@ -161,71 +183,23 @@ game_over_man:
 	.include	"vapor_lock.s"
 	.include	"delay_a.s"
 	.include	"wait_keypress.s"
-;	.include	"random16.s"
-;	.include	"hgr.s"
-;	.include	"move_letters.s"
 	.include	"gr_putsprite.s"
 ;	.include	"text_print.s"
-;	.include	"screen_split.s"
-
 	.include	"play_music.s"
 
-;============================
-; Include Sprites
-;============================
-;.align $100
-;	.include "tfv_sprites.inc"
-;	.include "mode7_sprites.inc"
-
-
-
-;=================================
-; Include Text for Sliding Letters
-;  *DONT CROSS PAGES*
-;=================================
-;.include "letters.s"
-
-;============================
-; Include Lores Graphics
-; No Alignment Needed
-;============================
-
-;============================
-; Include Hires Graphics
-; No Alignment Needed
-;   FIXME: we can save 8 bytes per file by stripping checksums off end
-;============================
-
-;wreath_hgr:
-;.incbin "wreath.img.lz4",11
-;wreath_hgr_end:
-
-;ball_hgr:
-;.incbin "ball.img.lz4",11
-;ball_hgr_end:
-
-;merry_hgr:
-;.incbin "merry.img.lz4",11
-;merry_hgr_end:
-
-
-
 ; filename to open is 30-character Apple text:
-wreath_filename:	;.byte "WREATH.LZ4                    "
-       .byte 'W'|$80,'R'|$80,'E'|$80,'A'|$80,'T'|$80,'H'|$80,'.'|$80,'L'|$80
-       .byte 'Z'|$80,'4'|$80,$A0,$A0,$A0,$A0,$A0,$A0
-       .byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-       .byte $A0,$A0,$A0,$A0,$A0,$A0
+wreath_filename:	; .byte "WREATH.LZ4",0
+	.byte 'W'|$80,'R'|$80,'E'|$80,'A'|$80,'T'|$80,'H'|$80,'.'|$80,'L'|$80
+	.byte 'Z'|$80,'4'|$80,$00
 
-ball_filename:	;.byte "BALL.IMG                      "
+merry_filename:	;.byte "MERRY.LZ4",0
+       .byte 'M'|$80,'E'|$80,'R'|$80,'R'|$80,'Y'|$80,'.'|$80,'L'|$80,'Z'|$80
+       .byte '4'|$80,$00
+
+ball_filename:	;.byte "BALL.IMG",0
        .byte 'B'|$80,'A'|$80,'L'|$80,'L'|$80,'.'|$80,'I'|$80,'M'|$80,'G'|$80
-       .byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-       .byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-       .byte $A0,$A0,$A0,$A0,$A0,$A0
+       .byte $00
 
-
-music_filename:	;.byte "MUSIC.LZ4                     "
+music_filename:	;.byte "MUSIC.LZ4",0
        .byte 'M'|$80,'U'|$80,'S'|$80,'I'|$80,'C'|$80,'.'|$80,'L'|$80,'Z'|$80
-       .byte '4'|$80,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-       .byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-       .byte $A0,$A0,$A0,$A0,$A0,$A0
+       .byte '4'|$80,$0

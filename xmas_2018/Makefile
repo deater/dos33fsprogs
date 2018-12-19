@@ -7,13 +7,13 @@ PNG_TO_RLE = ../gr-utils/png2rle
 
 all:	xmas2018.dsk
 
-xmas2018.dsk:	HELLO XMAS2018 wreath.img.lz4t ball.img.lz4 merry.img.lz4 MUSIC.lz4
+xmas2018.dsk:	HELLO XMAS2018 wreath.img.lz4t ball.img.lz4 merry.img.lz4t MUSIC.lz4t
 	$(DOS33) -y xmas2018.dsk SAVE A HELLO
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x1000 XMAS2018
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 wreath.img.lz4t WREATH.LZ4
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 ball.img.lz4 BALL.LZ4
-	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 merry.img.lz4 MERRY.LZ4
-	$(DOS33) -y xmas2018.dsk BSAVE -a 0x6000 MUSIC.lz4 MUSIC.LZ4
+	$(DOS33) -y xmas2018.dsk BSAVE -a 0x4000 merry.img.lz4t MERRY.LZ4
+	$(DOS33) -y xmas2018.dsk BSAVE -a 0x4000 MUSIC.lz4t MUSIC.LZ4
 #	$(DOS33) -y xmas2018.dsk BSAVE -a 0x2000 wreath.img WREATH.IMG
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x4000 ball.img BALL.IMG
 
@@ -33,6 +33,10 @@ xmas2018.o:	xmas2018.s \
 
 ####
 
+MUSIC.lz4t:	MUSIC.lz4
+	dd if=MUSIC.lz4 of=MUSIC.lz4t bs=1 skip=11
+	truncate MUSIC.lz4t -s -8
+
 MUSIC.lz4:	MUSIC
 	lz4 -16 -f MUSIC
 
@@ -48,6 +52,10 @@ HELLO:	hello.bas
 	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
 
 ####
+
+merry.img.lz4t:	merry.img.lz4
+	dd if=merry.img.lz4 of=merry.img.lz4t bs=1 skip=11
+	truncate merry.img.lz4t -s -8
 
 merry.img.lz4:	merry.img
 	lz4 -f -16 merry.img
