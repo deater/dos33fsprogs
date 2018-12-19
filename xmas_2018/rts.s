@@ -4,6 +4,8 @@
 ; modified to assembled with ca64 -- vmw
 ; added code to patch it to run from current disk slot -- vmw
 
+; also stores filesize in ldsizel:ldsizeh
+
 	dirbuf	=	$900
 				; note, don't put this immediately below
 				;   the value being read as destaddr-4
@@ -232,12 +234,15 @@ L5:
 	; increase load size by 4, to account for offst and length
 
 	lda	filbuf+2
+	sta	ldsizel				; store out raw size
+
 	adc	#3
 	sta	sizelo
 	sta	secsize
-	sta	ldsizel
 
 	lda	filbuf+3
+	sta	ldsizeh				; store out raw size
+
 	adc	#0
 	sta	sizehi
 	sta	ldsizeh

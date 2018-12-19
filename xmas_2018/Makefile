@@ -7,10 +7,10 @@ PNG_TO_RLE = ../gr-utils/png2rle
 
 all:	xmas2018.dsk
 
-xmas2018.dsk:	HELLO XMAS2018 wreath.img.lz4 ball.img.lz4 merry.img.lz4 MUSIC.lz4
+xmas2018.dsk:	HELLO XMAS2018 wreath.img.lz4t ball.img.lz4 merry.img.lz4 MUSIC.lz4
 	$(DOS33) -y xmas2018.dsk SAVE A HELLO
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x1000 XMAS2018
-	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 wreath.img.lz4 WREATH.LZ4
+	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 wreath.img.lz4t WREATH.LZ4
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 ball.img.lz4 BALL.LZ4
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 merry.img.lz4 MERRY.LZ4
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x6000 MUSIC.lz4 MUSIC.LZ4
@@ -56,6 +56,10 @@ merry.img:	merry_christmas.png
 	../hgr-utils/png2hgr merry_christmas.png > merry.img
 
 ####
+
+wreath.img.lz4t:	wreath.img.lz4
+	dd if=wreath.img.lz4 of=wreath.img.lz4t bs=1 skip=11
+	truncate wreath.img.lz4t -s -8
 
 wreath.img.lz4:	wreath.img
 	lz4 -f -16 wreath.img

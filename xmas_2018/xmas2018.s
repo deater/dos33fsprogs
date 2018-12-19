@@ -48,18 +48,23 @@ apple_iie:
 
 	; decompress to $2000
 	; decompress from $a000
-	; size in ???
+	; size in ldsizeh:ldsizel (f1/f0)
 
-
-	lda     #<($a000+11)
+	clc
+	lda     #<($a000)
 	sta     LZ4_SRC
-	lda     #>($a000+11)
-	sta     LZ4_SRC+1
-
-	lda	#<($a000+4103-8)	; skip checksum at end
+	adc	ldsizel
 	sta	LZ4_END
-	lda	#>($a000+4103-8)	; skip checksum at end
+
+	lda     #>($a000)
+	sta     LZ4_SRC+1
+	adc	ldsizeh
 	sta	LZ4_END+1
+
+;	lda	#<($a000+4103-8)	; skip checksum at end
+;	sta	LZ4_END
+;	lda	#>($a000+4103-8)	; skip checksum at end
+;	sta	LZ4_END+1
 
 	lda	#<$2000
 	sta	LZ4_DST
