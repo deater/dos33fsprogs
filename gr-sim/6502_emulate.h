@@ -6,6 +6,7 @@ extern unsigned int n,z,c,v;
 
 unsigned short y_indirect(unsigned char base, unsigned char y);
 int init_6502(void);
+void clc(void);
 void adc(int value);
 void sbc(int value);
 void and(int value);

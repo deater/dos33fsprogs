@@ -41,6 +41,10 @@ unsigned short y_indirect(unsigned char base, unsigned char y) {
 
 }
 
+void clc(void) {
+	c=0;
+}
+
 void adc(int value) {
 
 	int temp_a;

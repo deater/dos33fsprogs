@@ -75,72 +75,113 @@ int main(int argc, char **argv) {
 	*/
 
 
-	int xx,addr,count=0;
-	int current,next;
+	int count=0;
 
-#define HIGH	0
-#define CURRENT	1
-#define NEXT	2
+#define HIGH	0x00
+#define CURRENT	0x01
+#define NEXT	0x02
+#define INL	0xfc
+#define INH	0xfd
+#define OUTL	0xfe
+#define OUTH	0xff
 
-	while(1) {
-		for(addr=0x4000;addr<0x6000;addr+=0x80) {
-			for(xx=0;xx<40;xx++) {
-				ram[CURRENT]=ram[addr+xx];
-				ram[NEXT]=ram[addr+xx+1];
-				if ((count%7==2) || (count%7==6)) {
-					ram[HIGH]=ram[NEXT]&0x80;
-				}
-				else {
-					ram[HIGH]=ram[CURRENT]&0x80;
-				}
+//ram[y_indirect(OUTL,y)]
 
-				if (xx==39) ram[NEXT]=ram[addr+0x2000];
+scroll_loop:
 
-				a=ram[NEXT];
-				and(0x3);
-				asl();
-				asl();
-				asl();
-				asl();
-				asl();
-				ram[NEXT]=a;
+	ram[OUTH]=0x40;
+	ram[OUTL]=0x00;
+	ram[INH]=0x60;
+	ram[INL]=0x00;
+left_one_loop:
+//	printf("%d %02x:%02x\n",count,ram[OUTH],ram[OUTL]);
 
-				a=ram[CURRENT];
-				lsr();
-				lsr();			// current>>=2;
-				and(0x1f);		// current&=0x1f;
-				ora_mem(HIGH);
-				ora_mem(NEXT);
+	for(y=0;y<40;y++) {
+		ram[CURRENT]=ram[y_indirect(OUTL,y)];
+		ram[NEXT]=ram[y_indirect(OUTL,y+1)];
+		if ((count%7==2) || (count%7==6)) {
+			ram[HIGH]=ram[NEXT]&0x80;
+		}
+		else {
+			ram[HIGH]=ram[CURRENT]&0x80;
+		}
+		if (y==39) ram[NEXT]=ram[y_indirect(INL,0)];
 
-				ram[addr+xx]=a;
-			}
+		a=ram[NEXT];
+		and(0x3);
+		asl();
+		asl();
+		asl();
+		asl();
+		asl();
+		ram[NEXT]=a;
 
-			for(xx=0;xx<40;xx++) {
-				current=ram[addr+0x2000+xx];
-				next=ram[addr+0x2000+xx+1];
-				if ((count%7==2) ||(count%7==6)) {
-					ram[HIGH]=next&0x80;
-				}
-				else {
-					ram[HIGH]=current&0x80;
+		a=ram[CURRENT];
+		lsr();
+		lsr();			// current>>=2;
+		and(0x1f);		// current&=0x1f;
+		ora_mem(HIGH);
+		ora_mem(NEXT);
+		ram[y_indirect(OUTL,y)]=a;
+	}
 
-				}
-				current>>=2;
-				current&=0x1f;
-				current|=ram[HIGH];
-				current|=(next&3)<<5;
-				ram[addr+0x2000+xx]=current;
-			}
+	for(y=0;y<40;y++) {
+		ram[CURRENT]=ram[y_indirect(INL,y)];
+		ram[NEXT]=ram[y_indirect(INL,y+1)];
+		if ((count%7==2) ||(count%7==6)) {
+			ram[HIGH]=ram[NEXT]&0x80;
+		}
+		else {
+			ram[HIGH]=ram[CURRENT]&0x80;
 		}
 
+		a=ram[NEXT];
+		and(0x3);
+		asl();
+		asl();
+		asl();
+		asl();
+		asl();
+		ram[NEXT]=a;
 
-		grsim_update();
-		ch=grsim_input();
-		if (ch) break;
-		usleep(17000);	// 60Hz = 17ms
-		count++;
-		if (count==140) break;
+		a=ram[CURRENT];
+		lsr();
+		lsr();			// current>>=2;
+		and(0x1f);		// current&=0x1f;
+		ora_mem(HIGH);
+		ora_mem(NEXT);
+		ram[y_indirect(INL,y)]=a;
 	}
+
+
+
+	clc();
+	a=ram[INL];
+	adc(0x80);
+	ram[INL]=a;
+	a=ram[INH];
+	adc(0x0);
+	ram[INH]=a;
+
+	clc();
+	a=ram[OUTL];
+	adc(0x80);
+	ram[OUTL]=a;
+	a=ram[OUTH];
+	adc(0x0);
+	ram[OUTH]=a;
+
+	if (a!=0x60) goto left_one_loop;
+
+	grsim_update();
+	ch=grsim_input();
+	if (ch) goto scroll_done;
+	usleep(17000);	// 60Hz = 17ms
+	count++;
+	if (count==140) goto scroll_done;
+
+	goto scroll_loop;
+scroll_done:
 
 	while(1) {
 		ch=grsim_input();
