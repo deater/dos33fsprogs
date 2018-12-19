@@ -17,7 +17,18 @@ wreath:
 
 	lda	#0
 	sta	FRAME
-	sta	FRAMEH
+
+	; setup candle flames
+	lda	#254
+	sta	FLAME1
+	lda	#252
+	sta	FLAME2
+	lda	#250
+	sta	FLAME3
+	lda	#248
+	sta	FLAME4
+	lda	#246
+	sta	FLAME5
 
 	;=============================
 	; Wreath image already loaded to $2000 (HGR Page 0)
@@ -123,12 +134,12 @@ wrloopF:dex								; 2
 
 	; do_nothing should be      4550
 	; play music		    1023
-	; sprites 10+(403*3+310*2)= 1839
-	;			     -18 frame adjust
+	; sprites 10+(409*3+316*2)= 1869
+	;			     -38 frame adjust
 	;                             -7 end detect
 	;			     -10 keypress
 	;			===========
-	;			    1653
+	;			    1603
 
 
 
@@ -138,13 +149,22 @@ wrloopF:dex								; 2
 	beq	wframing					; 3
 
 								; -1
+	inc	FLAME1						; 5
+	dec	FLAME1						; 5
+	inc	FLAME1						; 5
+	dec	FLAME1						; 5
 	lda	$0						; 3
 	jmp	done_wframing					; 3
 wframing:
-	inc	FRAMEH						; 5
+	inc	FLAME1						; 5
+	inc	FLAME2						; 5
+	inc	FLAME3						; 5
+	inc	FLAME4						; 5
+	inc	FLAME5						; 5
+
 done_wframing:
 							;=============
-							;       18
+							;       38
 
 
 	jsr	play_music		; 6+1017
@@ -165,8 +185,19 @@ done_wframing:
 
 	lda	#>wide_flame0					; 2
 	sta	INH						; 3
+
+	lda	FLAME1						; 3
+	bpl	flame1_lit					; 3
+
+								; -1
+	lda	$0						; 3
+	lda	#<wide_empty					; 2
+	jmp	flame1_go					; 3
+
+flame1_lit:
 	ldx	FLAME_STATE					; 3
 	lda	wide_lookup,X					; 4
+flame1_go:
 	sta	INL						; 3
 
 	lda	#4						; 2
@@ -175,13 +206,24 @@ done_wframing:
 	sta	YPOS						; 3
 	jsr	put_sprite_no_transparency			; 6+372
 							;===============
-							;	403
+							;tot=	409
 	; Candle 2 (Peace)
 
 	lda	#>flame0					; 2
 	sta	INH						; 3
+
+	lda	FLAME2						; 3
+	bpl	flame2_lit					; 3
+
+								; -1
+	lda	$0						; 3
+	lda	#<empty						; 2
+	jmp	flame2_go					; 3
+
+flame2_lit:
 	ldx	FLAME_STATE					; 3
 	lda	flame_lookup,X					; 4
+flame2_go:
 	sta	INL						; 3
 
 	lda	#14						; 2
@@ -190,14 +232,25 @@ done_wframing:
 	sta	YPOS						; 3
 	jsr	put_sprite_no_transparency			; 6+279
 							;===============
-							;	310
+							;	316
 
 	; Candle 3 (Joy)
 
 	lda	#>flame0					; 2
 	sta	INH						; 3
+
+	lda	FLAME3						; 3
+	bpl	flame3_lit					; 3
+
+								; -1
+	lda	$0						; 3
+	lda	#<empty						; 2
+	jmp	flame3_go					; 3
+
+flame3_lit:
 	ldx	FLAME_STATE					; 3
 	lda	flame_lookup,X					; 4
+flame3_go:
 	sta	INL						; 3
 
 	lda	#31						; 2
@@ -206,14 +259,25 @@ done_wframing:
 	sta	YPOS						; 3
 	jsr	put_sprite_no_transparency			; 6+279
 							;===============
-							;	310
+							;	316
 
 	; Candle 4 (Love)
 
 	lda	#>wide_flame0					; 2
 	sta	INH						; 3
+
+	lda	FLAME4						; 3
+	bpl	flame4_lit					; 3
+
+								; -1
+	lda	$0						; 3
+	lda	#<wide_empty					; 2
+	jmp	flame4_go					; 3
+
+flame4_lit:
 	ldx	FLAME_STATE					; 3
 	lda	wide_lookup,X					; 4
+flame4_go:
 	sta	INL						; 3
 
 	lda	#26						; 2
@@ -222,14 +286,25 @@ done_wframing:
 	sta	YPOS						; 3
 	jsr	put_sprite_no_transparency			;31+372
 							;===============
-							;	403
+							;	409
 
 	; Candle 5 (Christmas)
 
 	lda	#>wide_flame0					; 2
 	sta	INH						; 3
+
+	lda	FLAME5						; 3
+	bpl	flame5_lit					; 3
+
+								; -1
+	lda	$0						; 3
+	lda	#<wide_empty					; 2
+	jmp	flame5_go					; 3
+
+flame5_lit:
 	ldx	FLAME_STATE					; 3
 	lda	wide_lookup,X					; 4
+flame5_go:
 	sta	INL						; 3
 
 	lda	#20						; 2
@@ -238,19 +313,20 @@ done_wframing:
 	sta	YPOS						; 3
 	jsr	put_sprite_no_transparency			; 6+372
 							;===============
-							;	403
+							;	409
 
-	; Try X=164 Y=2 cycles=1653
+
+	; Try X=159 Y=2 cycles=1603
 
 	ldy	#2							; 2
-wrloop1:ldx	#164							; 2
+wrloop1:ldx	#159							; 2
 wrloop2:dex								; 2
 	bne	wrloop2							; 2nt/3
 	dey								; 2
 	bne	wrloop1							; 2nt/3
 
 
-	lda	FRAMEH						; 3
+	lda	FLAME1						; 3
 	cmp	#30		; length of song?		; 2
 	beq	wreath_done					; 3
 								; -1

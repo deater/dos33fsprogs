@@ -4,8 +4,15 @@ FRAMEBUFFER     = $00   ; $00 - $0F
 
 ;; LZ4 addresses
 
-LZ4_SRC		= $00
 FLAME_STATE	= $00
+FLAME1		= $01
+FLAME2		= $02
+FLAME3		= $03
+FLAME4		= $04
+FLAME5		= $05
+
+
+LZ4_SRC		= $00
 LZ4_DST		= $02
 LZ4_END		= $04
 COUNT		= $06
