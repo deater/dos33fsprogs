@@ -155,6 +155,8 @@ apple_iie:
 	jsr	HOME
 
 forever:
+	bit	PAGE0
+
 	jsr	wreath
 
 	jsr	ball

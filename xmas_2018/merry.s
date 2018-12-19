@@ -2,7 +2,6 @@
 ; XMAS2018 -- Merry Christmas Part
 ;=====================================
 
-
 merry:
 
 	;===================
@@ -20,24 +19,8 @@ merry:
 	sta	FRAMEH
 
 	;=============================
-	; Load graphic hgr
+	; Load graphic hgr -- already loaded at $6000
 
-;	lda	#<merry_hgr
-;	sta	LZ4_SRC
-;	lda	#>merry_hgr
-;	sta	LZ4_SRC+1
-
-;	lda	#<(merry_hgr_end-8)	; skip checksum at end
-;	sta	LZ4_END
-;	lda	#>(merry_hgr_end-8)	; skip checksum at end
-;	sta	LZ4_END+1
-
-;	lda	#<$2000
-;	sta	LZ4_DST
-;	lda	#>$2000
-;	sta	LZ4_DST+1
-
-;	jsr	lz4_decode
 
 	;==============================
 	; setup graphics for vapor lock
@@ -57,20 +40,21 @@ merry:
 	; now we have 322 left
 
 	; GR part
-;	bit	HIRES							; 4
+	bit	HIRES							; 4
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
+	bit	PAGE1							; 4
 
 	; 9620
-	;   -8 mode set
+	;  -12 mode set
 	;  - 3 for jmp
 	;=======
-	; 9609
+	; 9605
 
-	; Try X=239 Y=8 cycles=9609
+	; Try X=136 Y=14 cycles=9605
 
-	ldy	#8							; 2
-meloopA:ldx	#239							; 2
+	ldy	#14							; 2
+meloopA:ldx	#136							; 2
 meloopB:dex								; 2
 	bne	meloopB							; 2nt/3
 	dey								; 2
@@ -93,36 +77,16 @@ merry_begin_loop:
 
 merry_display_loop:
 
-	; (40*65)-4 = 2596
+	; 192 lines of hires page1
+	; (192*65) = 12480
 
-	; 40 lines of LORES
-	bit	LORES							; 4
+	; Try X=24 Y=99 cycles=12475 R5
 
-	; Try X=42 Y=12 cycles=2593 R3
-
-	lda	$0	; nop						; 3
-
-	ldy	#12							; 2
-meloopC:ldx	#42							; 2
-meloopD:dex								; 2
-	bne	meloopD							; 2nt/3
-	dey								; 2
-	bne	meloopC							; 2nt/3
-
-
-	; rest of screen is hires page0
-	; (152*65)-4 = 9876
-
-	bit	HIRES							; 4
-
-	; Try X=13 Y=139 cycles=9870 R6
-
-	nop
-	nop
+	lda	$0
 	nop
 
-	ldy	#139							; 2
-meloopE:ldx	#13							; 2
+	ldy	#99							; 2
+meloopE:ldx	#24							; 2
 meloopF:dex								; 2
 	bne	meloopF							; 2nt/3
 	dey								; 2
@@ -166,3 +130,150 @@ me_handle_keypress:
 	rts						; 6
 
 
+.if 0
+
+	/*	  0     1     2     3     4     5     6     7
+	00	= $2000 $2400 $2800 $2c00 $3000 $3400 $3800 $3c00
+	08	= $2080 $2480 $2880 $2c80 $3080 $3480 $3880 $3c80
+	16	= $2100 $2500 $2900 $2d00 $3100 $3500 $3900 $3d00
+	24	= $2180 $2580 $2980 $2d80 $3180 $3580 $3980 $3d80
+	32	= $2200 $2600 $2a00 $2e00 $3200 $3600 $3a00 $3e00
+	40	= $2280 $2680 $2a80 $2e80 $3280 $3680 $3a80 $3e80
+	48	= $2300 $2700 $2b00 $2f00 $3300 $3700 $3b00 $3f00
+	56	= $2380 $2780 $2b80 $2f80 $3380 $3780 $3b80 $3f80
+	-----
+	64	= $2028 $2428 $2828 $2c28 $3028 $3428 $3828 $3c28
+	72	= $20a8 $24a8 $28a8 $2ca8 $30a8 $34a8 $38a8 $3ca8
+	80	= $2128 $2528 $2928 $2d28 $3128 $3528 $3928 $3d28
+	88	= $21a8 $25a8 $29a8 $2da8 $31a8 $35a8 $39a8 $3da8
+	96	= $2228 $2628 $2a28 $2e28 $3228 $3628 $3a28 $3e28
+	104	= $22a8 $26a8 $2aa8 $2ea8 $32a8 $36a8 $3aa8 $3ea8
+	112	= $2328 $2728 $2b28 $2f28 $3328 $3728 $3b28 $3f28
+	120	= $23a8 $27a8 $2ba8 $2fa8 $33a8 $37a8 $3ba8 $3fa8
+	-----
+	128	= $2050 $2450 $2850 $2c50 $3050 $3450 $3850 $3c50
+	136	= $20d0 $24d0 $28d0 $2cd0 $30d0 $34d0 $38d0 $3cd0
+	144	= $2150 $2550 $2950 $2d50 $3150 $3550 $3950 $3d50
+	152	= $21d0 $25d0 $29d0 $2dd0 $31d0 $35d0 $39d0 $3dd0
+	160	= $2250 $2650 $2a50 $2e50 $3250 $3650 $3a50 $3e50
+	168	= $22d0 $26d0 $2ad0 $2ed0 $32d0 $36d0 $3ad0 $3ed0
+	176	= $2350 $2750 $2b50 $2f50 $3350 $3750 $3b50 $3f50
+	184	= $23d0 $27d0 $2bd0 $2fd0 $33d0 $37d0 $3bd0 $3fd0
+	-----
+	*/
+
+
+	int count=0;
+
+#define HIGH	0x00
+#define CURRENT	0x01
+#define NEXT	0x02
+#define INL	0xfc
+#define INH	0xfd
+#define OUTL	0xfe
+#define OUTH	0xff
+
+//ram[y_indirect(OUTL,y)]
+
+scroll_loop:
+
+	ram[OUTH]=0x40;
+	ram[OUTL]=0x00;
+	ram[INH]=0x60;
+	ram[INL]=0x00;
+left_one_loop:
+//	printf("%d %02x:%02x\n",count,ram[OUTH],ram[OUTL]);
+
+	for(y=0;y<40;y++) {
+		ram[CURRENT]=ram[y_indirect(OUTL,y)];
+		ram[NEXT]=ram[y_indirect(OUTL,y+1)];
+		if ((count mod 7==2) || (count mod 7==6)) {
+			ram[HIGH]=ram[NEXT]&0x80;
+		}
+		else {
+			ram[HIGH]=ram[CURRENT]&0x80;
+		}
+		if (y==39) ram[NEXT]=ram[y_indirect(INL,0)];
+
+		a=ram[NEXT];
+		and(0x3);
+		asl();
+		asl();
+		asl();
+		asl();
+		asl();
+		ram[NEXT]=a;
+
+		a=ram[CURRENT];
+		lsr();
+		lsr();			// current>>=2;
+		and(0x1f);		// current&=0x1f;
+		ora_mem(HIGH);
+		ora_mem(NEXT);
+		ram[y_indirect(OUTL,y)]=a;
+	}
+
+	for(y=0;y<40;y++) {
+		ram[CURRENT]=ram[y_indirect(INL,y)];
+		ram[NEXT]=ram[y_indirect(INL,y+1)];
+		if ((count mod 7==2) ||(count mod 7==6)) {
+			ram[HIGH]=ram[NEXT]&0x80;
+		}
+		else {
+			ram[HIGH]=ram[CURRENT]&0x80;
+		}
+
+		a=ram[NEXT];
+		and(0x3);
+		asl();
+		asl();
+		asl();
+		asl();
+		asl();
+		ram[NEXT]=a;
+
+		a=ram[CURRENT];
+		lsr();
+		lsr();			// current>>=2;
+		and(0x1f);		// current&=0x1f;
+		ora_mem(HIGH);
+		ora_mem(NEXT);
+		ram[y_indirect(INL,y)]=a;
+	}
+
+
+
+	clc();
+	a=ram[INL];
+	adc(0x80);
+	ram[INL]=a;
+	a=ram[INH];
+	adc(0x0);
+	ram[INH]=a;
+
+	clc();
+	a=ram[OUTL];
+	adc(0x80);
+	ram[OUTL]=a;
+	a=ram[OUTH];
+	adc(0x0);
+	ram[OUTH]=a;
+
+	if (a!=0x60) goto left_one_loop;
+
+	grsim_update();
+	ch=grsim_input();
+	if (ch) goto scroll_done;
+	usleep(17000);	// 60Hz = 17ms
+	count++;
+	if (count==140) goto scroll_done;
+
+	goto scroll_loop;
+scroll_done:
+
+	while(1) {
+		ch=grsim_input();
+		if (ch) break;
+	}
+	return 0;
+.endif
