@@ -61,6 +61,9 @@ wrloopB:dex								; 2
 	bne	wrloopA							; 2nt/3
 
 	jmp	wreath_begin_loop
+
+.include "sprites.inc"
+
 .align  $100
 
 
@@ -120,12 +123,12 @@ wrloopF:dex								; 2
 
 	; do_nothing should be      4550
 	; play music		    1023
-	; sprites (398*3+305*2)	=   1804
+	; sprites 10+(403*3+310*2)= 1839
 	;			     -18 frame adjust
 	;                             -7 end detect
 	;			     -10 keypress
 	;			===========
-	;			    1688
+	;			    1653
 
 
 
@@ -143,6 +146,110 @@ done_wframing:
 							;=============
 							;       18
 
+
+	jsr	play_music		; 6+1017
+
+
+	;========================
+	; draw sprites
+	;========================
+
+	lda	FRAME						; 3
+	lsr							; 2
+	and	#3						; 2
+	sta	FLAME_STATE					; 3
+							;===========
+							;	 10
+
+	; Candle 1 (Hope)
+
+	lda	#>wide_flame0					; 2
+	sta	INH						; 3
+	ldx	FLAME_STATE					; 3
+	lda	wide_lookup,X					; 4
+	sta	INL						; 3
+
+	lda	#4						; 2
+	sta	XPOS						; 3
+	lda	#4						; 2
+	sta	YPOS						; 3
+	jsr	put_sprite_no_transparency			; 6+372
+							;===============
+							;	403
+	; Candle 2 (Peace)
+
+	lda	#>flame0					; 2
+	sta	INH						; 3
+	ldx	FLAME_STATE					; 3
+	lda	flame_lookup,X					; 4
+	sta	INL						; 3
+
+	lda	#14						; 2
+	sta	XPOS						; 3
+	lda	#4						; 2
+	sta	YPOS						; 3
+	jsr	put_sprite_no_transparency			; 6+279
+							;===============
+							;	310
+
+	; Candle 3 (Joy)
+
+	lda	#>flame0					; 2
+	sta	INH						; 3
+	ldx	FLAME_STATE					; 3
+	lda	flame_lookup,X					; 4
+	sta	INL						; 3
+
+	lda	#31						; 2
+	sta	XPOS						; 3
+	lda	#4						; 2
+	sta	YPOS						; 3
+	jsr	put_sprite_no_transparency			; 6+279
+							;===============
+							;	310
+
+	; Candle 4 (Love)
+
+	lda	#>wide_flame0					; 2
+	sta	INH						; 3
+	ldx	FLAME_STATE					; 3
+	lda	wide_lookup,X					; 4
+	sta	INL						; 3
+
+	lda	#26						; 2
+	sta	XPOS						; 3
+	lda	#4						; 2
+	sta	YPOS						; 3
+	jsr	put_sprite_no_transparency			;31+372
+							;===============
+							;	403
+
+	; Candle 5 (Christmas)
+
+	lda	#>wide_flame0					; 2
+	sta	INH						; 3
+	ldx	FLAME_STATE					; 3
+	lda	wide_lookup,X					; 4
+	sta	INL						; 3
+
+	lda	#20						; 2
+	sta	XPOS						; 3
+	lda	#4						; 2
+	sta	YPOS						; 3
+	jsr	put_sprite_no_transparency			; 6+372
+							;===============
+							;	403
+
+	; Try X=164 Y=2 cycles=1653
+
+	ldy	#2							; 2
+wrloop1:ldx	#164							; 2
+wrloop2:dex								; 2
+	bne	wrloop2							; 2nt/3
+	dey								; 2
+	bne	wrloop1							; 2nt/3
+
+
 	lda	FRAMEH						; 3
 	cmp	#30		; length of song?		; 2
 	beq	wreath_done					; 3
@@ -152,95 +259,6 @@ done_wframing:
 
 
 
-	jsr	play_music		; 6+1017
-
-
-	;========================
-	; draw sprites
-	;========================
-
-	; Candle 1 (Hope)
-
-	lda	#>wide_flame0					; 2
-	sta	INH						; 3
-	lda	#<wide_flame0					; 2
-	sta	INL						; 3
-
-	lda	#4						; 2
-	sta	XPOS						; 3
-	lda	#4						; 2
-	sta	YPOS						; 3
-	jsr	put_sprite_no_transparency			; 6+372
-							;===============
-							;	398
-	; Candle 2 (Peace)
-
-	lda	#>flame0					; 2
-	sta	INH						; 3
-	lda	#<flame0					; 2
-	sta	INL						; 3
-
-	lda	#14						; 2
-	sta	XPOS						; 3
-	lda	#4						; 2
-	sta	YPOS						; 3
-	jsr	put_sprite_no_transparency			; 6+279
-							;===============
-							;	305
-
-	; Candle 3 (Joy)
-
-	lda	#>flame0					; 2
-	sta	INH						; 3
-	lda	#<flame0					; 2
-	sta	INL						; 3
-
-	lda	#31						; 2
-	sta	XPOS						; 3
-	lda	#4						; 2
-	sta	YPOS						; 3
-	jsr	put_sprite_no_transparency			; 6+279
-							;===============
-							;	305
-
-	; Candle 4 (Love)
-
-	lda	#>wide_flame1					; 2
-	sta	INH						; 3
-	lda	#<wide_flame1					; 2
-	sta	INL						; 3
-
-	lda	#26						; 2
-	sta	XPOS						; 3
-	lda	#4						; 2
-	sta	YPOS						; 3
-	jsr	put_sprite_no_transparency			; 6+372
-							;===============
-							;	398
-
-	; Candle 5 (Christmas)
-
-	lda	#>wide_flame0					; 2
-	sta	INH						; 3
-	lda	#<wide_flame0					; 2
-	sta	INL						; 3
-
-	lda	#20						; 2
-	sta	XPOS						; 3
-	lda	#4						; 2
-	sta	YPOS						; 3
-	jsr	put_sprite_no_transparency			; 6+372
-							;===============
-							;	398
-
-	; Try X=47 Y=7 cycles=1688
-
-	ldy	#7							; 2
-wrloop1:ldx	#47							; 2
-wrloop2:dex								; 2
-	bne	wrloop2							; 2nt/3
-	dey								; 2
-	bne	wrloop1							; 2nt/3
 
 	; no keypress =  10+(24)   = 34
 
@@ -256,5 +274,5 @@ wreath_done:
 	rts						; 6
 
 
-.include "sprites.inc"
+
 

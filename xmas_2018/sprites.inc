@@ -1,4 +1,5 @@
 
+
 wide_empty:
 	.byte $2,$3
 	.byte $00,$00
@@ -70,7 +71,9 @@ flame3:
 	; = 33 + Y*(51+31*X) = 33 + 3*(51+31) = 279
 
 wide_lookup:
-	.byte >wide_flame0,>wide_flame1,>wide_flame2,>wide_flame3
+	.byte <wide_flame0,<wide_flame1,<wide_flame2,<wide_flame3
 
 flame_lookup:
-	.byte >flame0,>flame1,>flame2,>flame3
+	.byte <flame0,<flame1,<flame2,<flame3
+
+.assert         >wide_empty = >(flame_lookup+4), error, "sprites cross page"
