@@ -127,11 +127,14 @@ apple_iie:
 	;===================
 	jsr	HOME
 
+forever:
 	jsr	wreath
 
 	jsr	ball
 
 	jsr	merry
+
+	jmp	forever
 
 	;==================
 	; Game over
