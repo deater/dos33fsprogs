@@ -304,15 +304,14 @@ scroll_done:
 	;
 	; 	2	init
 	;	40*
-	;		hgr_scroll_line_loop:		20
-	;		high bit			22
-	;		get_offpage_byte:		 5
+	;		hgr_scroll_line_loop:		25
+	;		high bit			20
 	;		prepare bits:			18
 	;		output new byte:		21
 	;		increment and loop:		 7
 	;	5 return
 	;
-	; original total = (93*40)+7=3727
+	; (93*40)+7=3727	-- original total
 	;
 hgr_scroll_line:
 
@@ -323,36 +322,35 @@ hgr_scroll_line:
 hgr_scroll_line_loop:
 	lda	(OUTL),Y	; get pixel block of interest		; 5
 	sta	CURRENT							; 3
-	iny								; 2
-	lda	(OUTL),Y	; get subsequent pixel block		; 5/6 if off end
-	sta	NEXT							; 3
-	dey			; restore Y				; 2
-								;============
-								;        20
-get_offpage_byte:
+
 	cpy	#39							; 2
 	bne	not_thirtynine						; 3
-	sty	TEMPY							; 3
+thirtynine:
+									; -1
+	sty	TEMPY		; save Y				; 3
 	ldy	#0							; 2
 	lda	(INL),Y							; 5
-	sta	NEXT							; 3
-	ldy	TEMPY							; 3
+	ldy	TEMPY		; restore Y				; 3
+	jmp	done_thirtynine						; 3
 not_thirtynine:
+	iny								; 2
+	lda	(OUTL),Y	; get subsequent pixel block		; 5
+	dey								; 2
+done_thirtynine:
+	sta	NEXT							; 3
 							;===================
-							; usually: 	  5
-
+							; usually: 	 25
+							; rarely:	 31
 
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
 	; makes some color flicker, is there a better way?
 high_bit:
 	lda	COUNTL							; 3
+	and	#$3							; 2
 	cmp	#2							; 2
-	beq	move_high_bit						; 3
-	cmp	#6							; -1,2
-	beq	move_high_bit						; 3
-	bne	keep_high_bit						; -1,3
-
+	bne	keep_high_bit						; 3
 move_high_bit:
+									; -1
 	lda	NEXT							; 3
 	jmp	done_high_bit						; 3
 keep_high_bit:
@@ -361,7 +359,8 @@ done_high_bit:
 	and	#$80							; 2
 	sta	HIGH							; 3
 							;===================
-							; worst:	22
+							; 2or6:		 20
+							; else:		 18
 
 
 prepare_bits:
