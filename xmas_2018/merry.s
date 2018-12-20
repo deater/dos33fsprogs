@@ -276,15 +276,23 @@ hgr_scroll_line_loop:
 	sta	NEXT							; 3
 	dey			; restore Y				; 2
 
-; if ((count mod 7==2) || (count mod 7==6)) {
-;			ram[HIGH]=ram[NEXT]&0x80;
-;}
-;		else {
+	lda	COUNTL
 
+	cmp	#2
+	beq	move_high_bit
+	cmp	#6
+	beq	move_high_bit
+	bne	keep_high_bit
+
+move_high_bit:
+	lda	NEXT
+	jmp	done_high_bit
+
+keep_high_bit:
 	lda	CURRENT							; 3
+done_high_bit:
 	and	#$80							; 2
 	sta	HIGH							; 3
-;		}
 
 	cpy	#39
 	bne	not_thirtynine
@@ -293,7 +301,6 @@ hgr_scroll_line_loop:
 	lda	(INL),Y
 	sta	NEXT
 	ldy	TEMPY
-;		if (y==39) ram[NEXT]=ram[y_indirect(INL,0)];
 
 not_thirtynine:
 	lda	NEXT							; 3
