@@ -195,16 +195,17 @@ OFFSCREEN	=	$05
 
 	; Timing
 	;	scroll_hgr_left:	8
-	;	140* scroll_hgr_loop:		13 setup
-	;		64*left_one_loop		30+2*???
-	;						41 (increments)
+	;	140* scroll_hgr_loop:		10 setup
+	;		64*left_one_loop		6+3651
+	;						23 (increments)
 	;					29 increment counts
 	;					10 check and loop
-	;				5 return
+	;				6 return
 
-	; total time = 13 + 140*(13+29+10+64*(41+30+2*(3567)))
+	; total time = 14 + 140*(10+29+10+64*(41+23+(3657)))
 	; 67,431,293 cycles = roughly 67s	-- original
 	; 64,564,093 cycles = roughly 64s	-- optimize inner loop a bit
+	; 33,347,034 cycles = roughly 33s	-- don't shift hidden page
 
 scroll_hgr_left:
 
@@ -217,14 +218,11 @@ scroll_hgr_left:
 scroll_hgr_loop:
 	lda	#$40							; 2
 	sta	OUTH							; 3
-	lda	#$60							; 2
-	sta	INH							; 3
 scroll_hgr_smc:
 	lda	#$0							; 2
-	sta	INL							; 3
 	sta	OUTL							; 3
 								;============
-								;	 13
+								;	 10
 
 	; repeats 64 times, once for east hline of 1/3 the screen
 left_one_loop:
@@ -233,31 +231,10 @@ left_one_loop:
 
 	jsr	hgr_scroll_line					; 6+???
 
-	; scroll second page
-
-;	lda	OUTH							; 3
-;	sta	TEMP							; 3
-;	lda	INH							; 3
-;	sta	OUTH							; 3
-
-;	jsr	hgr_scroll_line					; 6+???
-
-	; restore pointers
-
-;	lda	TEMP							; 3
-;	sta	OUTH							; 3
 								;============
-								; 30+2*???
+								; 6+2*???
 
 	clc								; 2
-	lda	INL							; 3
-	adc	#$80							; 2
-	sta	INL							; 3
-	lda	INH							; 3
-	adc	#$0							; 2
-	sta	INH							; 3
-
-	clc		; needed?					; 2
 	lda	OUTL							; 3
 	adc	#$80							; 2
 	sta	OUTL							; 3
@@ -268,7 +245,7 @@ left_one_loop:
 	cmp	#$60							; 2
 	bne	left_one_loop						; 3
 								;==========
-								;	 41
+								;	 23
 
 
 									; -1
@@ -304,7 +281,7 @@ scroll_done:
 	; hgr_scroll_line
 	;===========================================
 	;
-	; 	2	init
+	; 	86	init
 	;	40*
 	;		hgr_scroll_line_loop:		25
 	;		high bit			20
@@ -316,95 +293,95 @@ scroll_done:
 	; (93*40)+7=3727	-- original total
 	; (91*40)+7=3647	-- remove branch in highbit code
 	; (89*40)+7=3567	-- convert 5 asl to 4 ror
+	; (89*40)+91=3651	-- re-write with col40 pre-calculated
 
 hgr_scroll_line:
 
-	lda	COUNTH
-	asl
-	clc
-	adc	OUTL
-	sta	INL
+setup_column_40:
+	lda	COUNTH							; 3
+	asl								; 2
+	clc								; 2
+	adc	OUTL							; 3
+	sta	INL							; 3
 
-	clc	; necessary?
-	lda	OUTH
-	adc	#$20
-	sta	INH
+	clc	; necessary?						; 2
+	lda	OUTH							; 3
+	adc	#$20							; 2
+	sta	INH							; 3
 
 	ldy	#0							; 2
-	lda	(INL),Y							; *
-	sta	HIGH
-	ldx	COUNTL
+	lda	(INL),Y							; 5
+	sta	HIGH							; 3
+	ldx	COUNTL							; 3
+								;===========
+								;	 36
 count0:
-	beq	done_count		; if 0, need to do nothing
-	cpx	#1
+	beq	done_count		; if 0, need to do nothing	; 3
+	cpx	#1							; -1/2
 count1:
-	beq	shiftright2		; if 1, C>>2
-	cpx	#2
+	beq	shiftright2		; if 1, C>>2			; 3
+	cpx	#2							; -1/2
 count2:
-	beq	shiftright4		; if 2, C>>4
+	beq	shiftright4		; if 2, C>>4			; 3
 count3:
-	sta	TEMP			; save C
+	sta	TEMP			; save C			; -1/3
 
-	iny
-	lda	(INL),Y							; *
-	sta	HIGH
-	cpx	#3
-	bne	not3
+	iny								; 2
+	lda	(INL),Y							; 5
+	sta	HIGH							; 3
+	cpx	#3							; 2
+	bne	not3							; 3
 
-	asl				; if 3, D<<1 | C>>6
-	and	#$2
-	sta	TEMPY
-	lda	TEMP
-	lsr
-	lsr
-	lsr
-	lsr
-	lsr
-	lsr
-	and	#$1
-	ora	TEMPY
+	asl				; if 3, D<<1 | C>>6		; -1/2
+	and	#$2							; 2
+	sta	TEMPY							; 3
+	lda	TEMP							; 3
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	and	#$1							; 2
+	ora	TEMPY							; 3
 
-	jmp	done_count
+	jmp	done_count						; 3
 
 not3:
 
-	cpx	#4
+	cpx	#4							; 2
 count4:
-	beq	shiftright1		; if 4, D>>1
+	beq	shiftright1		; if 4, D>>1			; 3
 count5:
-	cpx	#5
-	beq	shiftright3		; if 5, D>>3
+	cpx	#5							; 2/-1
+	beq	shiftright3		; if 5, D>>3			; 3
 count6:					; if 6, D>>5
-
+									; -1
 shiftright5:
-	lsr
+	lsr								; 2
 shiftright4:
-	lsr
+	lsr								; 2
 shiftright3:
-	lsr
+	lsr								; 2
 shiftright2:
-	lsr
+	lsr								; 2
 shiftright1:
-	lsr
+	lsr								; 2
 shiftright0:
 
 done_count:
-	and	#$7f
-	sta	OFFSCREEN						; *
-	lda	HIGH
-	and	#$80
-	ora	OFFSCREEN
-	sta	OFFSCREEN
+	and	#$7f							; 2
+	sta	OFFSCREEN						; 3
+	lda	HIGH							; 3
+	and	#$80							; 2
+	ora	OFFSCREEN						; 3
+	sta	OFFSCREEN						; 3
 
 	ldy	#0							; 2
 
-
-
-
-
-	ldy	#0							; 2
-								;===========
-								;         2
+							;====================
+							; best case(0)=   19
+							; worse case(3)=  56
 
 	; repeated 40 times
 hgr_scroll_line_loop:
@@ -415,7 +392,7 @@ hgr_scroll_line_loop:
 	bne	not_thirtynine						; 3
 thirtynine:
 									; -1
-	lda	OFFSCREEN						; *
+	lda	OFFSCREEN						; 3
 	jmp	done_thirtynine						; 3
 not_thirtynine:
 	iny								; 2
@@ -425,7 +402,7 @@ done_thirtynine:
 	sta	NEXT							; 3
 							;===================
 							; usually: 	 25
-							; rarely:	 31
+							; rarely:	 18
 
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
 	; makes some color flicker, is there a better way?
