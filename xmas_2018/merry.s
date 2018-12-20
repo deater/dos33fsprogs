@@ -187,15 +187,32 @@ COUNTL	=	$04
 	;===========================================
 	;===========================================
 	;===========================================
+	; Scroll HGR Left
+	;
+	; very slowly scroll screen left, 1/3 of screen at a time
+	; scrolls page pointed to by INL:INH into OUTL:OUTH
+
+	; Timing
+	;	scroll_hgr_left:	8
+	;	140* scroll_hgr_loop:		13 setup
+	;		64*left_one_loop		30+2*???
+	;						41 (increments)
+	;					29 increment counts
+	;					10 check and loop
+	;				5 return
+
+	; total time = 13 + 140*(13+29+10+64*(41+30+2*(3727)))
+	; original time = 67,431,293 cycles = roughly 67s
 
 scroll_hgr_left:
 
 	lda	#$0							; 2
 	sta	COUNTH							; 3
 	sta	COUNTL							; 3
+								;===========
+								;         8
 
 scroll_hgr_loop:
-
 	lda	#$40							; 2
 	sta	OUTH							; 3
 	lda	#$60							; 2
@@ -204,21 +221,31 @@ scroll_hgr_smc:
 	lda	#$0							; 2
 	sta	INL							; 3
 	sta	OUTL							; 3
+								;============
+								;	 13
 
+	; repeats 64 times, once for east hline of 1/3 the screen
 left_one_loop:
 
-	jsr	hgr_scroll_line					; 6+???
-
-	lda	OUTH
-	sta	TEMP
-
-	lda	INH
-	sta	OUTH
+	; scroll first page
 
 	jsr	hgr_scroll_line					; 6+???
 
-	lda	TEMP
-	sta	OUTH
+	; scroll second page
+
+	lda	OUTH							; 3
+	sta	TEMP							; 3
+	lda	INH							; 3
+	sta	OUTH							; 3
+
+	jsr	hgr_scroll_line					; 6+???
+
+	; restore pointers
+
+	lda	TEMP							; 3
+	sta	OUTH							; 3
+								;============
+								; 30+2*???
 
 	clc								; 2
 	lda	INL							; 3
@@ -237,8 +264,12 @@ left_one_loop:
 	sta	OUTH							; 3
 
 	cmp	#$60							; 2
-	bne	left_one_loop
+	bne	left_one_loop						; 3
+								;==========
+								;	 41
 
+
+									; -1
 	lda	KEYPRESS						; 4
 	bmi	scroll_done						; 3
 
@@ -251,6 +282,9 @@ left_one_loop:
 	sta	COUNTL							; 3
 	inc	COUNTH							; 5
 
+								;===========
+								;	29
+
 scroll_noinc_counth:
 	lda	COUNTH							; 3
 	cmp	#20							; 2
@@ -258,51 +292,75 @@ scroll_noinc_counth:
 
 									;-1
 	jmp	scroll_hgr_loop						; 3
+								;==========
+								;	10
 scroll_done:
 
 	rts								; 6
 
-
+	;===========================================
+	; hgr_scroll_line
+	;===========================================
+	;
+	; 	2	init
+	;	40*
+	;		hgr_scroll_line_loop:		20
+	;		high bit			22
+	;		get_offpage_byte:		 5
+	;		prepare bits:			18
+	;		output new byte:		21
+	;		increment and loop:		 7
+	;	5 return
+	;
+	; total = (93*40)+7=3727
 hgr_scroll_line:
 
 	ldy	#0							; 2
+								;===========
+								;         2
+
 hgr_scroll_line_loop:
 	lda	(OUTL),Y	; get pixel block of interest		; 5
 	sta	CURRENT							; 3
-
 	iny								; 2
-	lda	(OUTL),Y	; get subsequent pixel block		; 5
-								;(note, 6 if off end?)
+	lda	(OUTL),Y	; get subsequent pixel block		; 5/6 if off end
 	sta	NEXT							; 3
 	dey			; restore Y				; 2
+								;============
+								;        20
 
-	lda	COUNTL
-
-	cmp	#2
-	beq	move_high_bit
-	cmp	#6
-	beq	move_high_bit
-	bne	keep_high_bit
+high_bit:
+	lda	COUNTL							; 3
+	cmp	#2							; 2
+	beq	move_high_bit						; 3
+	cmp	#6							; -1,2
+	beq	move_high_bit						; 3
+	bne	keep_high_bit						; -1,3
 
 move_high_bit:
-	lda	NEXT
-	jmp	done_high_bit
-
+	lda	NEXT							; 3
+	jmp	done_high_bit						; 3
 keep_high_bit:
 	lda	CURRENT							; 3
 done_high_bit:
 	and	#$80							; 2
 	sta	HIGH							; 3
+							;===================
+							; worst:	22
 
-	cpy	#39
-	bne	not_thirtynine
-	sty	TEMPY
-	ldy	#0
-	lda	(INL),Y
-	sta	NEXT
-	ldy	TEMPY
+get_offpage_byte:
+	cpy	#39							; 2
+	bne	not_thirtynine						; 3
+	sty	TEMPY							; 3
+	ldy	#0							; 2
+	lda	(INL),Y							; 5
+	sta	NEXT							; 3
+	ldy	TEMPY							; 3
+							;===================
+							; usually: 	  5
 
 not_thirtynine:
+	; get right byte, bottom 2 bits, shifted left to be in 6+5
 	lda	NEXT							; 3
 	and	#$3							; 2
 	asl								; 2
@@ -311,19 +369,26 @@ not_thirtynine:
 	asl								; 2
 	asl								; 2
 	sta	NEXT							; 3
+								;==========
+								;	 18
 
+	; get current, mask off bottom 2 bits (no longer needed)
+	; then OR in the saved high (color) bit as well as NEXT bits
 	lda	CURRENT							; 3
 	lsr								; 2
 	lsr								; 2
 	and	#$1f							; 2
 	ora	HIGH							; 3
 	ora	NEXT							; 3
-
 	sta	(OUTL),Y						; 6
+								;===========
+								;	 21
 
 	iny								; 2
 	cpy	#40							; 2
 	bne	hgr_scroll_line_loop					; 3
-									; -1
+								;===========
+								;	  7
 
+									; -1
 	rts								; 6
