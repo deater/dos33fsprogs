@@ -312,7 +312,8 @@ scroll_done:
 	;		increment and loop:		 7
 	;	5 return
 	;
-	; total = (93*40)+7=3727
+	; original total = (93*40)+7=3727
+	;
 hgr_scroll_line:
 
 	ldy	#0							; 2
@@ -328,7 +329,21 @@ hgr_scroll_line_loop:
 	dey			; restore Y				; 2
 								;============
 								;        20
+get_offpage_byte:
+	cpy	#39							; 2
+	bne	not_thirtynine						; 3
+	sty	TEMPY							; 3
+	ldy	#0							; 2
+	lda	(INL),Y							; 5
+	sta	NEXT							; 3
+	ldy	TEMPY							; 3
+not_thirtynine:
+							;===================
+							; usually: 	  5
 
+
+	; if in bit 2 or 6 of horiz scroll, shift the color bit over
+	; makes some color flicker, is there a better way?
 high_bit:
 	lda	COUNTL							; 3
 	cmp	#2							; 2
@@ -348,18 +363,8 @@ done_high_bit:
 							;===================
 							; worst:	22
 
-get_offpage_byte:
-	cpy	#39							; 2
-	bne	not_thirtynine						; 3
-	sty	TEMPY							; 3
-	ldy	#0							; 2
-	lda	(INL),Y							; 5
-	sta	NEXT							; 3
-	ldy	TEMPY							; 3
-							;===================
-							; usually: 	  5
 
-not_thirtynine:
+prepare_bits:
 	; get right byte, bottom 2 bits, shifted left to be in 6+5
 	lda	NEXT							; 3
 	and	#$3							; 2
@@ -372,6 +377,7 @@ not_thirtynine:
 								;==========
 								;	 18
 
+output_new:
 	; get current, mask off bottom 2 bits (no longer needed)
 	; then OR in the saved high (color) bit as well as NEXT bits
 	lda	CURRENT							; 3
