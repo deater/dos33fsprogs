@@ -306,13 +306,15 @@ scroll_done:
 	;	40*
 	;		hgr_scroll_line_loop:		25
 	;		high bit			20
-	;		prepare bits:			18
+	;		prepare bits:			16
 	;		output new byte:		21
 	;		increment and loop:		 7
 	;	5 return
 	;
 	; (93*40)+7=3727	-- original total
-	;
+	; (91*40)+7=3647	-- remove branch in highbit code
+	; (89*40)+7=3567	-- convert 5 asl to 4 ror
+
 hgr_scroll_line:
 
 	ldy	#0							; 2
@@ -366,15 +368,16 @@ done_high_bit:
 prepare_bits:
 	; get right byte, bottom 2 bits, shifted left to be in 6+5
 	lda	NEXT							; 3
-	and	#$3							; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
+	; this method 2 cycles faster than asl x 5
+	ror								; 2
+	ror								; 2
+	ror								; 2
+	ror								; 2
+	and	#$60							; 2
+
 	sta	NEXT							; 3
 								;==========
-								;	 18
+								;	 16
 
 output_new:
 	; get current, mask off bottom 2 bits (no longer needed)
