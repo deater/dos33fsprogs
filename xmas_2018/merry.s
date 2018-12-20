@@ -183,6 +183,7 @@ CURRENT	=	$01
 NEXT	=	$02
 COUNTH	=	$03
 COUNTL	=	$04
+OFFSCREEN	=	$05
 
 	;===========================================
 	;===========================================
@@ -201,8 +202,9 @@ COUNTL	=	$04
 	;					10 check and loop
 	;				5 return
 
-	; total time = 13 + 140*(13+29+10+64*(41+30+2*(3727)))
-	; original time = 67,431,293 cycles = roughly 67s
+	; total time = 13 + 140*(13+29+10+64*(41+30+2*(3567)))
+	; 67,431,293 cycles = roughly 67s	-- original
+	; 64,564,093 cycles = roughly 64s	-- optimize inner loop a bit
 
 scroll_hgr_left:
 
@@ -233,17 +235,17 @@ left_one_loop:
 
 	; scroll second page
 
-	lda	OUTH							; 3
-	sta	TEMP							; 3
-	lda	INH							; 3
-	sta	OUTH							; 3
+;	lda	OUTH							; 3
+;	sta	TEMP							; 3
+;	lda	INH							; 3
+;	sta	OUTH							; 3
 
-	jsr	hgr_scroll_line					; 6+???
+;	jsr	hgr_scroll_line					; 6+???
 
 	; restore pointers
 
-	lda	TEMP							; 3
-	sta	OUTH							; 3
+;	lda	TEMP							; 3
+;	sta	OUTH							; 3
 								;============
 								; 30+2*???
 
@@ -317,10 +319,94 @@ scroll_done:
 
 hgr_scroll_line:
 
+	lda	COUNTH
+	asl
+	clc
+	adc	OUTL
+	sta	INL
+
+	clc	; necessary?
+	lda	OUTH
+	adc	#$20
+	sta	INH
+
+	ldy	#0							; 2
+	lda	(INL),Y							; *
+	sta	HIGH
+	ldx	COUNTL
+count0:
+	beq	done_count		; if 0, need to do nothing
+	cpx	#1
+count1:
+	beq	shiftright2		; if 1, C>>2
+	cpx	#2
+count2:
+	beq	shiftright4		; if 2, C>>4
+count3:
+	sta	TEMP			; save C
+
+	iny
+	lda	(INL),Y							; *
+	sta	HIGH
+	cpx	#3
+	bne	not3
+
+	asl				; if 3, D<<1 | C>>6
+	and	#$2
+	sta	TEMPY
+	lda	TEMP
+	lsr
+	lsr
+	lsr
+	lsr
+	lsr
+	lsr
+	and	#$1
+	ora	TEMPY
+
+	jmp	done_count
+
+not3:
+
+	cpx	#4
+count4:
+	beq	shiftright1		; if 4, D>>1
+count5:
+	cpx	#5
+	beq	shiftright3		; if 5, D>>3
+count6:					; if 6, D>>5
+
+shiftright5:
+	lsr
+shiftright4:
+	lsr
+shiftright3:
+	lsr
+shiftright2:
+	lsr
+shiftright1:
+	lsr
+shiftright0:
+
+done_count:
+	and	#$7f
+	sta	OFFSCREEN						; *
+	lda	HIGH
+	and	#$80
+	ora	OFFSCREEN
+	sta	OFFSCREEN
+
+	ldy	#0							; 2
+
+
+
+
+
 	ldy	#0							; 2
 								;===========
 								;         2
 
+	; repeated 40 times
 hgr_scroll_line_loop:
 	lda	(OUTL),Y	; get pixel block of interest		; 5
 	sta	CURRENT							; 3
@@ -329,10 +415,7 @@ hgr_scroll_line_loop:
 	bne	not_thirtynine						; 3
 thirtynine:
 									; -1
-	sty	TEMPY		; save Y				; 3
-	ldy	#0							; 2
-	lda	(INL),Y							; 5
-	ldy	TEMPY		; restore Y				; 3
+	lda	OFFSCREEN						; *
 	jmp	done_thirtynine						; 3
 not_thirtynine:
 	iny								; 2
