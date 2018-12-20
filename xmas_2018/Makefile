@@ -9,7 +9,7 @@ all:	xmas2018.dsk
 
 xmas2018.dsk:	HELLO XMAS2018 wreath.img.lz4t ball.img.lz4 merry.img.lz4t MUSIC.lz4t
 	$(DOS33) -y xmas2018.dsk SAVE A HELLO
-	$(DOS33) -y xmas2018.dsk BSAVE -a 0x1000 XMAS2018
+	$(DOS33) -y xmas2018.dsk BSAVE -a 0x0c00 XMAS2018
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 wreath.img.lz4t WREATH.LZ4
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 ball.img.lz4 BALL.LZ4
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x4000 merry.img.lz4t MERRY.LZ4
@@ -20,7 +20,7 @@ xmas2018.dsk:	HELLO XMAS2018 wreath.img.lz4t ball.img.lz4 merry.img.lz4t MUSIC.l
 ####
 
 XMAS2018:	xmas2018.o
-	ld65 -o XMAS2018 xmas2018.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o XMAS2018 xmas2018.o -C ../linker_scripts/apple2_c00.inc
 
 xmas2018.o:	xmas2018.s \
 	zp.inc hardware.inc \
