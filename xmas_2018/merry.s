@@ -107,8 +107,17 @@ meloopF:dex								; 2
 ;	jsr	play_music		; 6+1032
 
 
-	jsr	scroll_hgr_loop
+	lda	#$00
+	sta	scroll_hgr_smc+1
+	jsr	scroll_hgr_left
 
+	lda	#$28
+	sta	scroll_hgr_smc+1
+	jsr	scroll_hgr_left
+
+	lda	#$50
+	sta	scroll_hgr_smc+1
+	jsr	scroll_hgr_left
 
 	; Try X=9 Y=89 cycles=4540
 
@@ -172,10 +181,18 @@ me_handle_keypress:
 HIGH	=	$00
 CURRENT	=	$01
 NEXT	=	$02
+COUNTH	=	$03
+COUNTL	=	$04
 
 	;===========================================
 	;===========================================
 	;===========================================
+
+scroll_hgr_left:
+
+	lda	#$0							; 2
+	sta	COUNTH							; 3
+	sta	COUNTL							; 3
 
 scroll_hgr_loop:
 
@@ -183,87 +200,25 @@ scroll_hgr_loop:
 	sta	OUTH							; 3
 	lda	#$60							; 2
 	sta	INH							; 3
+scroll_hgr_smc:
 	lda	#$0							; 2
 	sta	INL							; 3
 	sta	OUTL							; 3
-	sta	COUNT
 
 left_one_loop:
 
-	ldy	#0							; 2
-page1_loop:
-	lda	(OUTL),Y	; get pixel block of interest		; 5
-	sta	CURRENT							; 3
+	jsr	hgr_scroll_line					; 6+???
 
-	iny								; 2
-	lda	(OUTL),Y	; get subsequent pixel block		; 5
-								;(note, 6 if off end?)
-	sta	NEXT							; 3
-	dey			; restore Y				; 2
+	lda	OUTH
+	sta	TEMP
 
-; if ((count mod 7==2) || (count mod 7==6)) {
-;			ram[HIGH]=ram[NEXT]&0x80;
-;}
-;		else {
+	lda	INH
+	sta	OUTH
 
-	lda	CURRENT							; 3
-	and	#$80							; 2
-	sta	HIGH							; 3
-;		}
-;		if (y==39) ram[NEXT]=ram[y_indirect(INL,0)];
+	jsr	hgr_scroll_line					; 6+???
 
-	lda	NEXT							; 3
-	and	#$3							; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	sta	NEXT							; 3
-
-	lda	CURRENT							; 3
-	lsr								; 2
-	lsr								; 2
-	and	#$1f							; 2
-	ora	HIGH							; 3
-	ora	NEXT							; 3
-
-	sta	(OUTL),Y						; 6
-
-	iny								; 2
-	cpy	#40							; 2
-	bne	page1_loop						; 3
-									; -1
-.if 0
-
-	for(y=0;y<40;y++) {
-		ram[CURRENT]=ram[y_indirect(INL,y)];
-		ram[NEXT]=ram[y_indirect(INL,y+1)];
-		if ((count mod 7==2) ||(count mod 7==6)) {
-			ram[HIGH]=ram[NEXT]&0x80;
-		}
-		else {
-			ram[HIGH]=ram[CURRENT]&0x80;
-		}
-
-		a=ram[NEXT];
-		and(0x3);
-		asl();
-		asl();
-		asl();
-		asl();
-		asl();
-		ram[NEXT]=a;
-
-		a=ram[CURRENT];
-		lsr();
-		lsr();			// current>>=2;
-		and(0x1f);		// current&=0x1f;
-		ora_mem(HIGH);
-		ora_mem(NEXT);
-		ram[y_indirect(INL,y)]=a;
-	}
-.endif
+	lda	TEMP
+	sta	OUTH
 
 	clc								; 2
 	lda	INL							; 3
@@ -287,13 +242,81 @@ page1_loop:
 	lda	KEYPRESS						; 4
 	bmi	scroll_done						; 3
 
-	inc	COUNT							; 5
-	lda	COUNT							; 3
-	cmp	#140							; 2
+	inc	COUNTL							; 5
+	lda	COUNTL							; 3
+	cmp	#7							; 2
+	bne	scroll_noinc_counth					; 3
+
+	lda	#0							; 2
+	sta	COUNTL							; 3
+	inc	COUNTH							; 5
+
+scroll_noinc_counth:
+	lda	COUNTH							; 3
+	cmp	#20							; 2
 	beq	scroll_done						; 3
 
 									;-1
 	jmp	scroll_hgr_loop						; 3
 scroll_done:
+
+	rts								; 6
+
+
+hgr_scroll_line:
+
+	ldy	#0							; 2
+hgr_scroll_line_loop:
+	lda	(OUTL),Y	; get pixel block of interest		; 5
+	sta	CURRENT							; 3
+
+	iny								; 2
+	lda	(OUTL),Y	; get subsequent pixel block		; 5
+								;(note, 6 if off end?)
+	sta	NEXT							; 3
+	dey			; restore Y				; 2
+
+; if ((count mod 7==2) || (count mod 7==6)) {
+;			ram[HIGH]=ram[NEXT]&0x80;
+;}
+;		else {
+
+	lda	CURRENT							; 3
+	and	#$80							; 2
+	sta	HIGH							; 3
+;		}
+
+	cpy	#39
+	bne	not_thirtynine
+	sty	TEMPY
+	ldy	#0
+	lda	(INL),Y
+	sta	NEXT
+	ldy	TEMPY
+;		if (y==39) ram[NEXT]=ram[y_indirect(INL,0)];
+
+not_thirtynine:
+	lda	NEXT							; 3
+	and	#$3							; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	sta	NEXT							; 3
+
+	lda	CURRENT							; 3
+	lsr								; 2
+	lsr								; 2
+	and	#$1f							; 2
+	ora	HIGH							; 3
+	ora	NEXT							; 3
+
+	sta	(OUTL),Y						; 6
+
+	iny								; 2
+	cpy	#40							; 2
+	bne	hgr_scroll_line_loop					; 3
+									; -1
 
 	rts								; 6
