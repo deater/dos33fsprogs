@@ -4,6 +4,14 @@
 
 merry:
 
+	;====================================================
+	; ensure we have proper graphics mode (page1 visible)
+
+	bit	HIRES							; 4
+	bit	SET_GR							; 4
+	bit	FULLGR							; 4
+	bit	PAGE1							; 4
+
 	;===================
 	; init vars
 
@@ -15,89 +23,13 @@ merry:
 	; Load graphic hgr -- already loaded at $6000
 
 
-	;==============================
-	; setup graphics for vapor lock
-	;==============================
-
-;	jsr	vapor_lock						; 6
-
-	; vapor lock returns with us at beginning of hsync in line
-	; 114 (7410 cycles), so with 5070 lines to go
-
-	; so we have 5070 + 4550 = 9620 to kill
-
-	; FIXME: clear page0/page1 screens
-
-;	jsr	gr_copy_to_current		; 6+ 9292
-
-	; now we have 322 left
-
-	; GR part
-	bit	HIRES							; 4
-	bit	SET_GR							; 4
-	bit	FULLGR							; 4
-	bit	PAGE1							; 4
-
-	; 9620
-	;  -12 mode set
-	;  - 3 for jmp
-	;=======
-	; 9605
-
-	; Try X=136 Y=14 cycles=9605
-
-;	ldy	#14							; 2
-;meloopA:ldx	#136							; 2
-;meloopB:dex								; 2
-;	bne	meloopB							; 2nt/3
-;	dey								; 2
-;	bne	meloopA							; 2nt/3
-
-;	jmp	merry_begin_loop
-;.align  $100
-
-
 	;================================================
 	; Merry Christmas Loop
 	;================================================
-	; each scan line 65 cycles
-	;       1 cycle each byte (40cycles) + 25 for horizontal
-	;       Total of 12480 cycles to draw screen
-	; Vertical blank = 4550 cycles (70 scan lines)
-	; Total of 17030 cycles to get back to where was
 
-merry_begin_loop:
+merry_begin:
 
-merry_display_loop:
-
-	; 192 lines of hires page1
-	; (192*65) = 12480
-
-	; Try X=24 Y=99 cycles=12475 R5
-
-;	lda	$0
-;	nop
-
-;	ldy	#99							; 2
-;meloopE:ldx	#24							; 2
-;meloopF:dex								; 2
-;	bne	meloopF							; 2nt/3
-;	dey								; 2
-;	bne	meloopE							; 2nt/3
-
-
-
-;======================================================
-; We have 4550 cycles in the vblank, use them wisely
-;======================================================
-
-	; do_nothing should be      4550
-	;			     -10 keypress
-	;			===========
-	;			    4540
-
-
-;	cli	; start music interrupt
+	cli	; start music interrupt
 
 ;	jsr	play_music		; 6+1032
 
@@ -114,29 +46,10 @@ merry_display_loop:
 	sta	scroll_hgr_smc+1
 	jsr	scroll_hgr_left
 
-	; Try X=9 Y=89 cycles=4540
-
-;	ldy	#89							; 2
-;meloop1:ldx	#9							; 2
-;meloop2:dex								; 2
-;	bne	meloop2							; 2nt/3
-;	dey								; 2
-;	bne	meloop1							; 2nt/3
-
-	; no keypress =  10+(24)   = 34
-
 	bit	KEYRESET	; clear keypress	; 4
 
-me_keyloop:
-	lda	KEYPRESS				; 4
-	bpl	me_keyloop				; 3
-							; -1
-;	jmp	me_handle_keypress			; 3
-me_no_keypress:
-;	jmp	merry_display_loop			; 3
+	sei	; disable interrupts/music
 
-me_handle_keypress:
-	bit	KEYRESET	; clear keypress	; 4
 	rts						; 6
 
 

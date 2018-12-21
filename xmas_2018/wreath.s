@@ -325,7 +325,7 @@ wrloop2:dex								; 2
 
 
 	lda	FLAME1						; 3
-	cmp	#15		; length of song?		; 2
+	cmp	#16		; length of song?		; 2
 	beq	wreath_done					; 3
 								; -1
 							;===============

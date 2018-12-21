@@ -175,20 +175,24 @@ game_over_man:
 	jmp	game_over_man
 
 
+; Things included here should be aligned
+; as they are called during cycle-counting
 .align $100
 	.include	"wreath.s"
 	.include	"ball.s"
-	.include	"merry.s"
-	.include	"lz4_decode.s"
-	.include	"rts.s"
 	.include	"gr_offsets.s"
 	.include	"gr_hline.s"
 	.include	"gr_fast_clear.s"
 	.include	"vapor_lock.s"
-	.include	"delay_a.s"
-	.include	"wait_keypress.s"
 	.include	"gr_putsprite.s"
+	.include	"delay_a.s"
 	.include	"play_music.s"
+
+; Things here alignment doesn't matter
+	.include	"wait_keypress.s"
+	.include	"merry.s"
+	.include	"lz4_decode.s"
+	.include	"rts.s"
 
 ; filename to open is 30-character Apple text:
 wreath_filename:	; .byte "WREATH.LZ4",0

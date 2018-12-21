@@ -36,9 +36,9 @@ ball:
 	lda	#>greets
 	sta	LZ4_SRC+1
 
-	lda	#<(greets_end-8)	; skip checksum at end
+	lda	#<(greets_end)
 	sta	LZ4_END
-	lda	#>(greets_end-8)	; skip checksum at end
+	lda	#>(greets_end)
 	sta	LZ4_END+1
 
 	lda	#<$800
@@ -174,7 +174,7 @@ done_framing:
 
 
 	lda	FRAMEH						; 3
-	cmp	#14		; length of song?		; 2
+	cmp	#13		; length of song?		; 2
 	beq	ball_done					; 3
 								; -1
 							;===============
@@ -244,5 +244,5 @@ ball_done:
 
 .include "gr_scroll.s"
 greets:
-.incbin "greets.raw.lz4",11
+.incbin "greets.raw.lz4t"
 greets_end:
