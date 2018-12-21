@@ -179,16 +179,16 @@ game_over_man:
 ; as they are called during cycle-counting
 .align $100
 	.include	"wreath.s"
-	.include	"ball.s"
 	.include	"gr_putsprite.s"
 	.include	"gr_offsets.s"
-	.include	"vapor_lock.s"
 	.include	"gr_fast_clear.s"
+	.include	"vapor_lock.s"
 .align	$100
 	.include	"play_music.s"
 	.include	"delay_a.s"
 	.include	"gr_scroll.s"
 	.include	"mockingboard.s"
+	.include	"ball.s"
 
 
 ; Things here alignment doesn't matter

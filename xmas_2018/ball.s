@@ -196,22 +196,20 @@ done_framing:
 
 do_something_else:
 								; -1
-	jsr	do_reflection					; 6+36
+	jsr	do_reflection					; 6+126
 
 
 	; 1842 (+1 incoming)
 	;   -3 jmp
-	;  -42 do_reflection
+	; -132 do_reflection
 	;===================
-	; 1797
+	; 1707
 
-	; Try X=10 Y=32 cycles=1793 R4
-
-	nop
+	; Try X=84 Y=4 cycles=1705 R2
 	nop
 
-	ldy	#32							; 2
-baloopQ:ldx	#10							; 2
+	ldy	#4							; 2
+baloopQ:ldx	#84							; 2
 baloopR:dex								; 2
 	bne	baloopR							; 2nt/3
 	dey								; 2
@@ -250,9 +248,12 @@ ball_done:
 
 
 ;======================================
-; 30 + 6 = 36
+; 120 + 6 = 126
 
 do_reflection:
+
+	;=============
+	; LORES 20x40 -> HIRES 126x156
 	lda	$664							; 4
 
 	; if 0 make 0, otherwise make FF
@@ -268,5 +269,62 @@ do_reflection:
 	sta	$5dd0+(126/7)						; 4
 								;===========
 								;	30
+
+	;=============
+	; LORES 20x42 -> HIRES 126x152
+	lda	$6E4							; 4
+
+	; if 0 make 0, otherwise make FF
+	cmp	#1							; 2
+	lda	#$00							; 2
+	adc	#$ff							; 2
+	eor	#$ff							; 2
+
+	and	#$ff							; 2
+	sta	$5150+(126/7)						; 4
+	sta	$5550+(126/7)						; 4
+	sta	$5950+(126/7)						; 4
+	sta	$5d50+(126/7)						; 4
+								;===========
+								;	30
+
+	;=============
+	; LORES 20x44 -> HIRES 126x148
+	lda	$764							; 4
+
+	; if 0 make 0, otherwise make FF
+	cmp	#1							; 2
+	lda	#$00							; 2
+	adc	#$ff							; 2
+	eor	#$ff							; 2
+
+	and	#$ff							; 2
+	sta	$41d0+(126/7)						; 4
+	sta	$45d0+(126/7)						; 4
+	sta	$49d0+(126/7)						; 4
+	sta	$4dd0+(126/7)						; 4
+								;===========
+								;	30
+
+	;=============
+	; LORES 20x46 -> HIRES 126x144
+	lda	$7E4							; 4
+
+	; if 0 make 0, otherwise make FF
+	cmp	#1							; 2
+	lda	#$00							; 2
+	adc	#$ff							; 2
+	eor	#$ff							; 2
+
+	and	#$ff							; 2
+	sta	$4150+(126/7)						; 4
+	sta	$4550+(126/7)						; 4
+	sta	$4950+(126/7)						; 4
+	sta	$4d50+(126/7)						; 4
+								;===========
+								;	30
+
+
+
 
 	rts								; 6
