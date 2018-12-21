@@ -5,14 +5,7 @@
 merry:
 
 	;===================
-	; init screen
-
-	;===================
 	; init vars
-	lda	#15
-	sta	XPOS
-	lda	#38
-	sta	YPOS
 
 	lda	#0
 	sta	FRAME
@@ -26,7 +19,7 @@ merry:
 	; setup graphics for vapor lock
 	;==============================
 
-	jsr	vapor_lock						; 6
+;	jsr	vapor_lock						; 6
 
 	; vapor lock returns with us at beginning of hsync in line
 	; 114 (7410 cycles), so with 5070 lines to go
@@ -53,15 +46,15 @@ merry:
 
 	; Try X=136 Y=14 cycles=9605
 
-	ldy	#14							; 2
-meloopA:ldx	#136							; 2
-meloopB:dex								; 2
-	bne	meloopB							; 2nt/3
-	dey								; 2
-	bne	meloopA							; 2nt/3
+;	ldy	#14							; 2
+;meloopA:ldx	#136							; 2
+;meloopB:dex								; 2
+;	bne	meloopB							; 2nt/3
+;	dey								; 2
+;	bne	meloopA							; 2nt/3
 
-	jmp	merry_begin_loop
-.align  $100
+;	jmp	merry_begin_loop
+;.align  $100
 
 
 	;================================================
@@ -82,15 +75,15 @@ merry_display_loop:
 
 	; Try X=24 Y=99 cycles=12475 R5
 
-	lda	$0
-	nop
+;	lda	$0
+;	nop
 
-	ldy	#99							; 2
-meloopE:ldx	#24							; 2
-meloopF:dex								; 2
-	bne	meloopF							; 2nt/3
-	dey								; 2
-	bne	meloopE							; 2nt/3
+;	ldy	#99							; 2
+;meloopE:ldx	#24							; 2
+;meloopF:dex								; 2
+;	bne	meloopF							; 2nt/3
+;	dey								; 2
+;	bne	meloopE							; 2nt/3
 
 
 
@@ -103,6 +96,8 @@ meloopF:dex								; 2
 	;			===========
 	;			    4540
 
+
+;	cli	; start music interrupt
 
 ;	jsr	play_music		; 6+1032
 
@@ -121,12 +116,12 @@ meloopF:dex								; 2
 
 	; Try X=9 Y=89 cycles=4540
 
-	ldy	#89							; 2
-meloop1:ldx	#9							; 2
-meloop2:dex								; 2
-	bne	meloop2							; 2nt/3
-	dey								; 2
-	bne	meloop1							; 2nt/3
+;	ldy	#89							; 2
+;meloop1:ldx	#9							; 2
+;meloop2:dex								; 2
+;	bne	meloop2							; 2nt/3
+;	dey								; 2
+;	bne	meloop1							; 2nt/3
 
 	; no keypress =  10+(24)   = 34
 

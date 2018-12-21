@@ -174,7 +174,7 @@ done_framing:
 
 
 	lda	FRAMEH						; 3
-	cmp	#10		; length of song?		; 2
+	cmp	#14		; length of song?		; 2
 	beq	ball_done					; 3
 								; -1
 							;===============
