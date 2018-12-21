@@ -196,18 +196,19 @@ OFFSCREEN	=	$05
 	; Timing
 	;	scroll_hgr_left:	8
 	;	140* scroll_hgr_loop:		10 setup
-	;		64*left_one_loop		6+3225
+	;		64*left_one_loop		6+3145
 	;						23 (increments)
 	;					29 increment counts
 	;					10 check and loop
 	;				6 return
 
-	; total time = 14 + 140*(10+29+10+64*(41+23+(3225)))
+	; total time = 14 + 140*(10+29+10+64*(41+23+(3151)))
 	; 67,431,293 cycles = roughly 67s	-- original
 	; 64,564,093 cycles = roughly 64s	-- optimize inner loop a bit
 	; 33,347,034 cycles = roughly 33s	-- don't shift hidden page
 	; 30,569,434 cycles = roughly 30s	-- unroll 4 times
 	; 29,476,314 cycles = roughly 29s	-- add back INH for +1 address
+	; 28,813,247 cycles = roughly 29s	-- use X register for NEXT
 scroll_hgr_left:
 
 	lda	#$0							; 2
@@ -284,14 +285,14 @@ scroll_done:
 	;
 	; 	86	init
 	;	10* (unrolled)
-	;		3* hgr_scroll_line_loop:		16
+	;		3* hgr_scroll_line_loop:		15
 	;			high bit			20
-	;			prepare bits:			16
-	;			output new byte:		23
-	;		1* hgr_scroll_line_loop:		21
+	;			prepare bits:			18
+	;			output new byte:		20
+	;		1* hgr_scroll_line_loop:		20
 	;			high bit			20
-	;			prepare bits:			16
-	;			output new byte:		23
+	;			prepare bits:			18
+	;			output new byte:		20
 	;		1*
 	;		increment and loop:		 7
 	;	5 return
@@ -300,8 +301,9 @@ scroll_done:
 	; (91*40)+7=3647	-- remove branch in highbit code
 	; (89*40)+7=3567	-- convert 5 asl to 4 ror
 	; (89*40)+91=3651	-- re-write with col40 pre-calculated
-	; (79*3 + 84*1 + 7)*10+91 = 3341
-	; (75*3 + 80*1 + 7)*10+105= 3225
+	; (79*3 + 84*1 + 7)*10+91 = 3341 -- unroll 4 times
+	; (75*3 + 80*1 + 7)*10+105= 3225 -- move to INL=OUTL+1
+	; (73*3 + 78*1 + 7)*10+105= 3145 -- use X register for next
 hgr_scroll_line:
 
 setup_column_40:
@@ -407,9 +409,9 @@ hgr_scroll_line_loop:
 	sta	CURRENT							; 3
 
 	lda	(INL),Y		; get subsequent pixel block		; 5
-	sta	NEXT							; 3
+	tax			; NEXT					; 2
 							;===================
-							; 	 	 20
+							; 	 	 15
 
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
 	; makes some color flicker, is there a better way?
@@ -420,7 +422,7 @@ high_bit0:
 	bne	keep_high_bit0						; 3
 move_high_bit0:
 									; -1
-	lda	NEXT							; 3
+	txa	; NEXT							; 2
 	jmp	done_high_bit0						; 3
 keep_high_bit0:
 	lda	CURRENT							; 3
@@ -432,19 +434,20 @@ done_high_bit0:
 							; else:		 18
 
 
+
 prepare_bits0:
 	; get right byte, bottom 2 bits, shifted left to be in 6+5
-	lda	NEXT							; 3
+	txa	; NEXT							; 2
 	; this method 2 cycles faster than asl x 5
 	ror								; 2
 	ror								; 2
 	ror								; 2
 	ror								; 2
 	and	#$60							; 2
-
-	sta	NEXT							; 3
+	ora	HIGH							; 3
+	sta	HIGH							; 3
 								;==========
-								;	 16
+								;	 18
 
 output_new0:
 	; get current, mask off bottom 2 bits (no longer needed)
@@ -454,12 +457,11 @@ output_new0:
 	lsr								; 2
 	and	#$1f							; 2
 	ora	HIGH							; 3
-	ora	NEXT							; 3
 	sta	(OUTL),Y						; 6
 
 	iny								; 2
 								;===========
-								;	 23
+								;	 20
 
 
 
@@ -469,9 +471,9 @@ output_new0:
 	sta	CURRENT							; 3
 
 	lda	(INL),Y		; get subsequent pixel block		; 5
-	sta	NEXT							; 3
+	tax			; NEXT					; 2
 							;===================
-							; 	 	 20
+							; 	 	 15
 
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
 	; makes some color flicker, is there a better way?
@@ -482,7 +484,7 @@ high_bit1:
 	bne	keep_high_bit1						; 3
 move_high_bit1:
 									; -1
-	lda	NEXT							; 3
+	txa	; NEXT							; 2
 	jmp	done_high_bit1						; 3
 keep_high_bit1:
 	lda	CURRENT							; 3
@@ -496,17 +498,17 @@ done_high_bit1:
 
 prepare_bits1:
 	; get right byte, bottom 2 bits, shifted left to be in 6+5
-	lda	NEXT							; 3
+	txa	; NEXT							; 2
 	; this method 2 cycles faster than asl x 5
 	ror								; 2
 	ror								; 2
 	ror								; 2
 	ror								; 2
 	and	#$60							; 2
-
-	sta	NEXT							; 3
+	ora	HIGH							; 3
+	sta	HIGH							; 3
 								;==========
-								;	 16
+								;	 18
 
 output_new1:
 	; get current, mask off bottom 2 bits (no longer needed)
@@ -516,12 +518,11 @@ output_new1:
 	lsr								; 2
 	and	#$1f							; 2
 	ora	HIGH							; 3
-	ora	NEXT							; 3
 	sta	(OUTL),Y						; 6
 
 	iny								; 2
 								;===========
-								;	 23
+								;	 20
 
 
 
@@ -531,9 +532,9 @@ output_new1:
 	sta	CURRENT							; 3
 
 	lda	(INL),Y		; get subsequent pixel block		; 5
-	sta	NEXT							; 3
+	tax			; NEXT					; 2
 							;===================
-							; 	 	 16
+							; 	 	 15
 
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
 	; makes some color flicker, is there a better way?
@@ -544,7 +545,7 @@ high_bit2:
 	bne	keep_high_bit2						; 3
 move_high_bit2:
 									; -1
-	lda	NEXT							; 3
+	txa	; NEXT							; 2
 	jmp	done_high_bit2						; 3
 keep_high_bit2:
 	lda	CURRENT							; 3
@@ -558,17 +559,17 @@ done_high_bit2:
 
 prepare_bits2:
 	; get right byte, bottom 2 bits, shifted left to be in 6+5
-	lda	NEXT							; 3
+	txa	; NEXT							; 2
 	; this method 2 cycles faster than asl x 5
 	ror								; 2
 	ror								; 2
 	ror								; 2
 	ror								; 2
 	and	#$60							; 2
-
-	sta	NEXT							; 3
+	ora	HIGH							; 3
+	sta	HIGH							; 3
 								;==========
-								;	 16
+								;	 18
 
 output_new2:
 	; get current, mask off bottom 2 bits (no longer needed)
@@ -577,13 +578,13 @@ output_new2:
 	lsr								; 2
 	lsr								; 2
 	and	#$1f							; 2
+
 	ora	HIGH							; 3
-	ora	NEXT							; 3
 	sta	(OUTL),Y						; 6
 
 	iny								; 2
 								;===========
-								;	 23
+								;	 20
 
 
 	;============= Unroll 3
@@ -600,9 +601,9 @@ thirtynine:
 not_thirtynine:
 	lda	(INL),Y	; get subsequent pixel block			; 5
 done_thirtynine:
-	sta	NEXT							; 3
+	tax	; NEXT							; 2
 							;===================
-							; usually: 	 21
+							; usually: 	 20
 							; rarely:	 18
 
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
@@ -614,7 +615,7 @@ high_bit:
 	bne	keep_high_bit						; 3
 move_high_bit:
 									; -1
-	lda	NEXT							; 3
+	txa	; NEXT							; 2
 	jmp	done_high_bit						; 3
 keep_high_bit:
 	lda	CURRENT							; 3
@@ -628,17 +629,17 @@ done_high_bit:
 
 prepare_bits:
 	; get right byte, bottom 2 bits, shifted left to be in 6+5
-	lda	NEXT							; 3
+	txa	; NEXT							; 2
 	; this method 2 cycles faster than asl x 5
 	ror								; 2
 	ror								; 2
 	ror								; 2
 	ror								; 2
 	and	#$60							; 2
-
-	sta	NEXT							; 3
+	ora	HIGH							; 3
+	sta	HIGH							; 3
 								;==========
-								;	 16
+								;	 18
 
 output_new:
 	; get current, mask off bottom 2 bits (no longer needed)
@@ -648,12 +649,11 @@ output_new:
 	lsr								; 2
 	and	#$1f							; 2
 	ora	HIGH							; 3
-	ora	NEXT							; 3
 	sta	(OUTL),Y						; 6
 
 	iny								; 2
 								;===========
-								;	 23
+								;	 20
 
 
 	cpy	#40							; 2
