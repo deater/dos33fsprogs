@@ -188,6 +188,7 @@ game_over_man:
 	.include	"delay_a.s"
 	.include	"gr_scroll.s"
 	.include	"mockingboard.s"
+.align	$100
 	.include	"ball.s"
 
 
