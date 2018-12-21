@@ -27,7 +27,7 @@ xmas2018.o:	xmas2018.s \
 	vapor_lock.s delay_a.s wait_keypress.s gr_putsprite.s \
 	play_music.s mockingboard.s rts.s \
 	wreath.s wreath.img.lz4 sprites.inc \
-	ball.s ball.img.lz4 greets.raw.lz4t gr_scroll.s \
+	ball.s ball.img.lz4 greets.raw.lz4t gr_scroll.s reflection.s \
 	merry.s merry.img.lz4
 	ca65 -o xmas2018.o xmas2018.s -l xmas2018.lst
 

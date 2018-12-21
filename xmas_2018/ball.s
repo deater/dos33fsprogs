@@ -150,13 +150,13 @@ baloopF:dex								; 2
 
 	; do_nothing should be      4550
 	;                          -1023 music
-	;                          -1841 scroll/else
+	;                          -1844 scroll/else
 	;			     -18 frame adjust
 	;			     -10 keypress
 	;			      -8 pick which
 	;			      -7 check for end
 	;			===========
-	;			    1643
+	;			    1640
 
 	inc	FRAME						; 5
 	lda	FRAME						; 3
@@ -196,39 +196,41 @@ done_framing:
 
 do_something_else:
 								; -1
-	jsr	do_reflection					; 6+678
+	jsr	do_reflection					; 6+1836
 
 
-	; 1842 (+1 incoming)
+	; 1845 (+1 incoming)
 	;   -3 jmp
-	; -684 do_reflection
+	;-1842 do_reflection
 	;===================
-	; 1155
+	;   0
 
-	; Try X=114 Y=2 cycles=1153 R2
+	; Try X=16 Y=1 cycles=87
 
-	nop
-
-	ldy	#2							; 2
-baloopQ:ldx	#114							; 2
-baloopR:dex								; 2
-	bne	baloopR							; 2nt/3
-	dey								; 2
-	bne	baloopQ							; 2nt/3
+;	ldy	#1							; 2
+;baloopQ:ldx	#16							; 2
+;baloopR:dex								; 2
+;	bne	baloopR							; 2nt/3
+;	dey								; 2
+;	bne	baloopQ							; 2nt/3
 
 	jmp	done_actions						; 3
 
 
 do_scrolling:
 	jsr	scroll_loop		; 6+1835
+	lda	$0			; 3
 					;=========
-					; 1841
+					; 1844
 done_actions:
 
-	; Try X=163 Y=2 cycles=1643
+	; Try X=16 Y=19 cycles=1635 R5
 
-	ldy	#2							; 2
-baloop1:ldx	#163							; 2
+	nop
+	lda	$0
+
+	ldy	#19							; 2
+baloop1:ldx	#16							; 2
 baloop2:dex								; 2
 	bne	baloop2							; 2nt/3
 	dey								; 2
@@ -248,459 +250,4 @@ ball_done:
 	rts						; 6
 
 
-;======================================
-; First two = (30*4)*2 =     240
-; Next two = (30*2+26*2) =   224
-; Next two = (26*4)*2 =      208
-; return		       6
-;======================================
-;                            678
-
-do_reflection:
-
-	;20========================
-	;==========================
-	;==========================
-
-	;=============
-	; LORES 20x40 -> HIRES 126x156
-	lda	$664							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$aa							; 2
-	sta	$51d0+(126/7)						; 4
-	sta	$55d0+(126/7)						; 4
-	sta	$59d0+(126/7)						; 4
-	sta	$5dd0+(126/7)						; 4
-								;===========
-								;	30
-
-	;=============
-	; LORES 20x42 -> HIRES 126x152
-	lda	$6E4							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$aa							; 2
-	sta	$5150+(126/7)						; 4
-	sta	$5550+(126/7)						; 4
-	sta	$5950+(126/7)						; 4
-	sta	$5d50+(126/7)						; 4
-								;===========
-								;	30
-
-	;=============
-	; LORES 20x44 -> HIRES 126x148
-	lda	$764							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$aa							; 2
-	sta	$41d0+(126/7)						; 4
-	sta	$45d0+(126/7)						; 4
-	sta	$49d0+(126/7)						; 4
-	sta	$4dd0+(126/7)						; 4
-								;===========
-								;	30
-
-	;=============
-	; LORES 20x46 -> HIRES 126x144
-	lda	$7E4							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$aa							; 2
-	sta	$4150+(126/7)						; 4
-	sta	$4550+(126/7)						; 4
-	sta	$4950+(126/7)						; 4
-	sta	$4d50+(126/7)						; 4
-								;===========
-								;	30
-
-	;19========================
-	;==========================
-	;==========================
-
-	;=============
-	; LORES 19x40 -> HIRES 119x156
-	lda	$663							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$d5							; 2
-	sta	$51d0+(119/7)						; 4
-	sta	$55d0+(119/7)						; 4
-	sta	$59d0+(119/7)						; 4
-	sta	$5dd0+(119/7)						; 4
-								;===========
-								;	30
-
-	;=============
-	; LORES 19x42 -> HIRES 119x152
-	lda	$6E3							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$d5							; 2
-	sta	$5150+(119/7)						; 4
-	sta	$5550+(119/7)						; 4
-	sta	$5950+(119/7)						; 4
-	sta	$5d50+(119/7)						; 4
-								;===========
-								;	30
-
-	;=============
-	; LORES 19x44 -> HIRES 119x148
-	lda	$763							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$d5							; 2
-	sta	$41d0+(119/7)						; 4
-	sta	$45d0+(119/7)						; 4
-	sta	$49d0+(119/7)						; 4
-	sta	$4dd0+(119/7)						; 4
-								;===========
-								;	30
-
-	;=============
-	; LORES 19x46 -> HIRES 119x144
-	lda	$7E3							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$d5							; 2
-	sta	$4150+(119/7)						; 4
-	sta	$4550+(119/7)						; 4
-	sta	$4950+(119/7)						; 4
-	sta	$4d50+(119/7)						; 4
-								;===========
-								;	30
-
-	;18========================
-	;==========================
-	;==========================
-
-	;=============
-	; LORES 18x40 -> HIRES 112x153x4
-	lda	$662							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$aa							; 2
-	sta	$5550+(112/7)						; 4
-	sta	$5950+(112/7)						; 4
-	sta	$5d50+(112/7)						; 4
-	sta	$51d0+(112/7)						; 4
-								;===========
-								;	30
-	;=============
-	; LORES 18x42 -> HIRES 112x149x4
-	lda	$6E2							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$aa							; 2
-	sta	$45d0+(112/7)						; 4
-	sta	$49d0+(112/7)						; 4
-	sta	$4dd0+(112/7)						; 4
-	sta	$5150+(112/7)						; 4
-								;===========
-								;	30
-
-	;=============
-	; LORES 18x44 -> HIRES 112x146x3
-	lda	$762							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$aa							; 2
-	sta	$4950+(112/7)						; 4
-	sta	$4d50+(112/7)						; 4
-	sta	$41d0+(112/7)						; 4
-								;===========
-								;	26
-
-	;=============
-	; LORES 18x46 -> HIRES 112x143x3
-	lda	$7E2							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$aa							; 2
-	sta	$5cd0+(112/7)						; 4
-	sta	$4150+(112/7)						; 4
-	sta	$4550+(112/7)						; 4
-								;===========
-								;	26
-
-	;16========================
-	;==========================
-	;==========================
-
-	;=============
-	; LORES 16x40 -> HIRES 105x151x4
-	lda	$660							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$d5							; 2
-	sta	$4dd0+(105/7)						; 4
-	sta	$5150+(105/7)						; 4
-	sta	$5550+(105/7)						; 4
-	sta	$5950+(105/7)						; 4
-								;===========
-								;	30
-
-	;=============
-	; LORES 16x42 -> HIRES 105x147x4
-	lda	$6E0							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$d5							; 2
-	sta	$4d50+(105/7)						; 4
-	sta	$41d0+(105/7)						; 4
-	sta	$45d0+(105/7)						; 4
-	sta	$49d0+(105/7)						; 4
-								;===========
-								;	30
-
-	;=============
-	; LORES 16x44 -> HIRES 105x144x3
-	lda	$760							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$d5							; 2
-	sta	$4150+(105/7)						; 4
-	sta	$4550+(105/7)						; 4
-	sta	$4950+(105/7)						; 4
-								;===========
-								;	26
-
-	;=============
-	; LORES 16x46 -> HIRES 105x141x3
-	lda	$7E0							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$d5							; 2
-	sta	$54d0+(105/7)						; 4
-	sta	$58d0+(105/7)						; 4
-	sta	$5cd0+(105/7)						; 4
-								;===========
-								;	26
-
-	;13========================
-	;==========================
-	;==========================
-
-	;=============
-	; LORES 13x40 -> HIRES 98x149x3
-	lda	$65d							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$aa							; 2
-	sta	$45d0+(98/7)						; 4
-	sta	$49d0+(98/7)						; 4
-	sta	$4dd0+(98/7)						; 4
-								;===========
-								;	26
-	;=============
-	; LORES 13x42 -> HIRES 98x145x3
-	lda	$6dd							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$aa							; 2
-	sta	$4550+(98/7)						; 4
-	sta	$4950+(98/7)						; 4
-	sta	$4d50+(98/7)						; 4
-								;===========
-								;	26
-
-	;=============
-	; LORES 13x44 -> HIRES 98x142x3
-	lda	$75d							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$aa							; 2
-	sta	$58d0+(98/7)						; 4
-	sta	$5cd0+(98/7)						; 4
-	sta	$4150+(98/7)						; 4
-								;===========
-								;	26
-
-	;=============
-	; LORES 13x46 -> HIRES 98x139x3
-	lda	$7dd							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$aa							; 2
-	sta	$4c90+(98/7)						; 4
-	sta	$50d0+(98/7)						; 4
-	sta	$54d0+(98/7)						; 4
-								;===========
-								;	26
-
-	;10========================
-	;==========================
-	;==========================
-
-	;=============
-	; LORES 10x40 -> HIRES 91x145x3
-	lda	$65a							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$d5							; 2
-	sta	$4550+(91/7)						; 4
-	sta	$4950+(91/7)						; 4
-	sta	$4d50+(91/7)						; 4
-								;===========
-								;	26
-
-	;=============
-	; LORES 10x42 -> HIRES 91x142x4
-	lda	$6da							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$d5							; 2
-	sta	$58d0+(91/7)						; 4
-	sta	$5cd0+(91/7)						; 4
-	sta	$4150+(91/7)						; 4
-								;===========
-								;	26
-
-	;=============
-	; LORES 10x44 -> HIRES 91x139x3
-	lda	$75a							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$d5							; 2
-	sta	$4cd0+(91/7)						; 4
-	sta	$50d0+(91/7)						; 4
-	sta	$54d0+(91/7)						; 4
-								;===========
-								;	26
-
-	;=============
-	; LORES 10x46 -> HIRES 91x136x3
-	lda	$7da							; 4
-
-	; if 0 make 0, otherwise make FF
-	cmp	#1							; 2
-	lda	#$00							; 2
-	adc	#$ff							; 2
-	eor	#$ff							; 2
-
-	and	#$d5							; 2
-	sta	$40d0+(91/7)						; 4
-	sta	$44d0+(91/7)						; 4
-	sta	$48d0+(91/7)						; 4
-								;===========
-								;	26
-
-
-
-
-	rts								; 6
+.include "reflection.s"
