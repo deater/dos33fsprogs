@@ -44,13 +44,11 @@ wreath:
 
 	; so we have 5070 + 4550 = 9620 to kill
 
-	; FIXME: clear page0 screen
+	; clear page0 screen
 
 	jsr	clear_top			; 6+5410
 
-	; now we have  left
-
-	; GR part
+	; Set graphics mode
 ;	bit	HIRES							; 4
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
@@ -327,7 +325,7 @@ wrloop2:dex								; 2
 
 
 	lda	FLAME1						; 3
-	cmp	#30		; length of song?		; 2
+	cmp	#15		; length of song?		; 2
 	beq	wreath_done					; 3
 								; -1
 							;===============
@@ -350,5 +348,5 @@ wreath_done:
 	rts						; 6
 
 
-
+;.assert         >wreath_begin_loop = >(wreath_done), error, "wreath crosses page"
 

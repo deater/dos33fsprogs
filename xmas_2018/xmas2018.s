@@ -30,7 +30,7 @@ apple_iie:
 	;===================
 	; Load graphics
 	;===================
-
+reload_everything:
 	; load WREATH.LZ4 to $a000
 	; then decompress it to $2000 (HGR PAGE0)
 
@@ -163,7 +163,9 @@ forever:
 
 	jsr	merry
 
-	jmp	forever
+	jsr	wait_until_keypress
+
+	jmp	reload_everything
 
 	;==================
 	; Game over
@@ -186,7 +188,6 @@ game_over_man:
 	.include	"delay_a.s"
 	.include	"wait_keypress.s"
 	.include	"gr_putsprite.s"
-;	.include	"text_print.s"
 	.include	"play_music.s"
 
 ; filename to open is 30-character Apple text:
