@@ -324,7 +324,7 @@ scroll_done:
 	;			prepare bits:			18
 	;			output new byte:		20
 	;		1*
-	;		increment and loop:		 7
+	;		increment and loop:		 	7
 	;	5 return
 	;
 	; (93*40)+7=3727	-- original total
