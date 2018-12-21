@@ -196,19 +196,21 @@ OFFSCREEN	=	$05
 	; Timing
 	;	scroll_hgr_left:	8
 	;	140* scroll_hgr_loop:		10 setup
-	;		64*left_one_loop		6+3145
+	;		64*left_one_loop		6+2945
 	;						23 (increments)
 	;					29 increment counts
 	;					10 check and loop
 	;				6 return
 
-	; total time = 14 + 140*(10+29+10+64*(41+23+(3151)))
+	; total time = 14 + 140*(10+29+10+64*(41+23+(2951)))
 	; 67,431,293 cycles = roughly 67s	-- original
 	; 64,564,093 cycles = roughly 64s	-- optimize inner loop a bit
 	; 33,347,034 cycles = roughly 33s	-- don't shift hidden page
 	; 30,569,434 cycles = roughly 30s	-- unroll 4 times
 	; 29,476,314 cycles = roughly 29s	-- add back INH for +1 address
 	; 28,813,247 cycles = roughly 29s	-- use X register for NEXT
+	; 28,813,247 cycles = roughly 29s	-- use X register for NEXT
+	; 27,031,274 cycles = roughly 27s	-- save LAST / skip OUTL
 scroll_hgr_left:
 
 	lda	#$0							; 2
@@ -285,11 +287,11 @@ scroll_done:
 	;
 	; 	86	init
 	;	10* (unrolled)
-	;		3* hgr_scroll_line_loop:		15
+	;		3* hgr_scroll_line_loop:		10
 	;			high bit			20
 	;			prepare bits:			18
 	;			output new byte:		20
-	;		1* hgr_scroll_line_loop:		20
+	;		1* hgr_scroll_line_loop:		15
 	;			high bit			20
 	;			prepare bits:			18
 	;			output new byte:		20
@@ -304,6 +306,7 @@ scroll_done:
 	; (79*3 + 84*1 + 7)*10+91 = 3341 -- unroll 4 times
 	; (75*3 + 80*1 + 7)*10+105= 3225 -- move to INL=OUTL+1
 	; (73*3 + 78*1 + 7)*10+105= 3145 -- use X register for next
+	; (68*3 + 73*1 + 7)*10+105= 2945 -- use LAST instead of load
 hgr_scroll_line:
 
 setup_column_40:
@@ -400,18 +403,20 @@ done_count:
 								;===========
 								;	 14
 
+	lda	(OUTL),Y	; get pixel block of interest		; 5
+	tax
+
 	; repeated 10 times
 hgr_scroll_line_loop:
 
 	;============= Unroll 0
 
-	lda	(OUTL),Y	; get pixel block of interest		; 5
-	sta	CURRENT							; 3
+	stx	CURRENT							; 3
 
 	lda	(INL),Y		; get subsequent pixel block		; 5
 	tax			; NEXT					; 2
 							;===================
-							; 	 	 15
+							; 	 	 10
 
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
 	; makes some color flicker, is there a better way?
@@ -467,13 +472,12 @@ output_new0:
 
 	;============= Unroll 1
 
-	lda	(OUTL),Y	; get pixel block of interest		; 5
-	sta	CURRENT							; 3
+	stx	CURRENT		; CURRENT=NEXT				; 3
 
 	lda	(INL),Y		; get subsequent pixel block		; 5
 	tax			; NEXT					; 2
 							;===================
-							; 	 	 15
+							; 	 	 10
 
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
 	; makes some color flicker, is there a better way?
@@ -528,13 +532,12 @@ output_new1:
 
 	;============= Unroll 2
 
-	lda	(OUTL),Y	; get pixel block of interest		; 5
-	sta	CURRENT							; 3
+	stx	CURRENT		; CURRENT=NEXT				; 3
 
 	lda	(INL),Y		; get subsequent pixel block		; 5
 	tax			; NEXT					; 2
 							;===================
-							; 	 	 15
+							; 	 	 10
 
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
 	; makes some color flicker, is there a better way?
@@ -589,8 +592,7 @@ output_new2:
 
 	;============= Unroll 3
 
-	lda	(OUTL),Y	; get pixel block of interest		; 5
-	sta	CURRENT							; 3
+	stx	CURRENT		; CURRENT=NEXT				; 3
 
 	cpy	#39							; 2
 	bne	not_thirtynine						; 3
@@ -603,8 +605,8 @@ not_thirtynine:
 done_thirtynine:
 	tax	; NEXT							; 2
 							;===================
-							; usually: 	 20
-							; rarely:	 18
+							; usually: 	 15
+							; rarely:	 15
 
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
 	; makes some color flicker, is there a better way?
