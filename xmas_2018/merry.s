@@ -184,6 +184,7 @@ NEXT	=	$02
 COUNTH	=	$03
 COUNTL	=	$04
 OFFSCREEN	=	$05
+FLIPHIGH	=	$06
 
 	;===========================================
 	;===========================================
@@ -196,13 +197,15 @@ OFFSCREEN	=	$05
 	; Timing
 	;	scroll_hgr_left:	8
 	;	140* scroll_hgr_loop:		10 setup
+	;					12 set fliphigh
+	;					 6 check keypress
 	;		64*left_one_loop		6+2945
 	;						23 (increments)
-	;					29 increment counts
+	;					22 increment counts
 	;					10 check and loop
 	;				6 return
 
-	; total time = 14 + 140*(10+29+10+64*(41+23+(2951)))
+	; total time = 14 + 140*(10+12+6+22+10+64*(41+23+(2951)))
 	; 67,431,293 cycles = roughly 67s	-- original
 	; 64,564,093 cycles = roughly 64s	-- optimize inner loop a bit
 	; 33,347,034 cycles = roughly 33s	-- don't shift hidden page
@@ -211,6 +214,7 @@ OFFSCREEN	=	$05
 	; 28,813,247 cycles = roughly 29s	-- use X register for NEXT
 	; 28,813,247 cycles = roughly 29s	-- use X register for NEXT
 	; 27,031,274 cycles = roughly 27s	-- save LAST / skip OUTL
+	; 27,022,814 cycles = roughly 27s	-- move some things around
 scroll_hgr_left:
 
 	lda	#$0							; 2
@@ -218,6 +222,7 @@ scroll_hgr_left:
 	sta	COUNTL							; 3
 								;===========
 								;         8
+; repeats 140 times
 
 scroll_hgr_loop:
 	lda	#$40							; 2
@@ -228,20 +233,45 @@ scroll_hgr_smc:
 								;============
 								;	 10
 
+	; 0 000 00
+	; 1 001 01
+	;*2 010 10
+	; 3 011 11
+	; 4 100 00
+	; 5 101 01
+	;*6 110 10
+	; Sets FLIPHIGH if we are on 2nd or 6th iteration out of 7
+
+	lda	COUNTL							; 3
+	and	#$3							; 2
+	sec								; 2
+	sbc	#2							; 2
+	sta	FLIPHIGH						; 3
+								;===========
+								;	12
+
+
+	lda	KEYPRESS						; 4
+	bmi	scroll_done						; 3
+									; -1
+								;============
+								;	6
+
 	; repeats 64 times, once for east hline of 1/3 the screen
 left_one_loop:
 
 	; scroll first page
 
-	jsr	hgr_scroll_line					; 6+???
+	jsr	hgr_scroll_line					; 6+????
 
 								;============
-								; 6+2*???
+								; 6+????
 
 	clc								; 2
 	lda	OUTL							; 3
 	adc	#$80							; 2
 	sta	OUTL							; 3
+
 	lda	OUTH							; 3
 	adc	#$0							; 2
 	sta	OUTH							; 3
@@ -252,10 +282,8 @@ left_one_loop:
 								;	 23
 
 
-									; -1
-	lda	KEYPRESS						; 4
-	bmi	scroll_done						; 3
 
+									; -1
 	inc	COUNTL							; 5
 	lda	COUNTL							; 3
 	cmp	#7							; 2
@@ -266,7 +294,7 @@ left_one_loop:
 	inc	COUNTH							; 5
 
 								;===========
-								;	29
+								;	22
 
 scroll_noinc_counth:
 	lda	COUNTH							; 3
@@ -285,7 +313,7 @@ scroll_done:
 	; hgr_scroll_line
 	;===========================================
 	;
-	; 	86	init
+	; 	93	init
 	;	10* (unrolled)
 	;		3* hgr_scroll_line_loop:		10
 	;			high bit			20
@@ -306,7 +334,7 @@ scroll_done:
 	; (79*3 + 84*1 + 7)*10+91 = 3341 -- unroll 4 times
 	; (75*3 + 80*1 + 7)*10+105= 3225 -- move to INL=OUTL+1
 	; (73*3 + 78*1 + 7)*10+105= 3145 -- use X register for next
-	; (68*3 + 73*1 + 7)*10+105= 2945 -- use LAST instead of load
+	; (68*3 + 73*1 + 7)*10+112= 2952 -- use LAST instead of load
 hgr_scroll_line:
 
 setup_column_40:
@@ -403,15 +431,20 @@ done_count:
 								;===========
 								;	 14
 
-	lda	(OUTL),Y	; get pixel block of interest		; 5
-	tax
+	lda	(OUTL),Y	; get initial NEXT			; 5
+	tax								; 2
+								;===========
+								;         7
+
+
+
 
 	; repeated 10 times
 hgr_scroll_line_loop:
 
 	;============= Unroll 0
 
-	stx	CURRENT							; 3
+	stx	CURRENT		; CURRENT=NEXT				; 3
 
 	lda	(INL),Y		; get subsequent pixel block		; 5
 	tax			; NEXT					; 2
@@ -421,23 +454,37 @@ hgr_scroll_line_loop:
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
 	; makes some color flicker, is there a better way?
 high_bit0:
-	lda	COUNTL							; 3
-	and	#$3							; 2
-	cmp	#2							; 2
-	bne	keep_high_bit0						; 3
+	lda	FLIPHIGH		; 3 3				; 3
+	bne	keep_high_bit0		; 3 2				; 3
 move_high_bit0:
 									; -1
-	txa	; NEXT							; 2
-	jmp	done_high_bit0						; 3
+	txa	; NEXT			;   2				; 2
+	jmp	done_high_bit0		;   3				; 3
 keep_high_bit0:
-	lda	CURRENT							; 3
+	lda	CURRENT			; 3				; 3
 done_high_bit0:
-	and	#$80							; 2
-	sta	HIGH							; 3
+	and	#$80			; 2 2				; 2
+	sta	HIGH			; 3 3				; 3
 							;===================
-							; 2or6:		 20
-							; else:		 18
+							; 2or6:		 15
+							; else:		 14
+.if 0
+high_bit0:
+	lda	FLIPHIGH		; 3 3				; 3
+	beq	keep_high_bit0		; 2 3				; 3
+									; -1
+	lda	CURRENT			; 3 				; 3
+	.byte	$24			; 3				; 3
+keep_high_bit0:
+	txa	; NEXT			;   2				; 2
+done_high_bit0:
+	and	#$80			; 2 2				; 2
+	sta	HIGH			; 3 3				; 3
+							;===================
+							; 2or6:		 13
+							; else:		 16
 
+.endif
 
 
 prepare_bits0:
@@ -482,9 +529,7 @@ output_new0:
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
 	; makes some color flicker, is there a better way?
 high_bit1:
-	lda	COUNTL							; 3
-	and	#$3							; 2
-	cmp	#2							; 2
+	lda	FLIPHIGH						; 3
 	bne	keep_high_bit1						; 3
 move_high_bit1:
 									; -1
@@ -496,8 +541,8 @@ done_high_bit1:
 	and	#$80							; 2
 	sta	HIGH							; 3
 							;===================
-							; 2or6:		 20
-							; else:		 18
+							; 2or6:		 15
+							; else:		 14
 
 
 prepare_bits1:
@@ -542,9 +587,7 @@ output_new1:
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
 	; makes some color flicker, is there a better way?
 high_bit2:
-	lda	COUNTL							; 3
-	and	#$3							; 2
-	cmp	#2							; 2
+	lda	FLIPHIGH						; 3
 	bne	keep_high_bit2						; 3
 move_high_bit2:
 									; -1
@@ -556,8 +599,8 @@ done_high_bit2:
 	and	#$80							; 2
 	sta	HIGH							; 3
 							;===================
-							; 2or6:		 20
-							; else:		 18
+							; 2or6:		 15
+							; else:		 14
 
 
 prepare_bits2:
@@ -611,9 +654,7 @@ done_thirtynine:
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
 	; makes some color flicker, is there a better way?
 high_bit:
-	lda	COUNTL							; 3
-	and	#$3							; 2
-	cmp	#2							; 2
+	lda	FLIPHIGH						; 3
 	bne	keep_high_bit						; 3
 move_high_bit:
 									; -1
@@ -625,8 +666,8 @@ done_high_bit:
 	and	#$80							; 2
 	sta	HIGH							; 3
 							;===================
-							; 2or6:		 20
-							; else:		 18
+							; 2or6:		 15
+							; else:		 14
 
 
 prepare_bits:
