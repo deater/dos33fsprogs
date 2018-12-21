@@ -184,6 +184,7 @@ game_over_man:
 	.include	"gr_offsets.s"
 	.include	"vapor_lock.s"
 	.include	"gr_fast_clear.s"
+.align	$100
 	.include	"play_music.s"
 	.include	"delay_a.s"
 	.include	"gr_scroll.s"

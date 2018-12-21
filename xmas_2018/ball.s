@@ -194,17 +194,24 @@ done_framing:
 							;=============
 							;         8
 
-do_nothing:
+do_something_else:
 								; -1
+	jsr	do_reflection					; 6+36
 
-	; 1839 - 1 + 3 = 1841
 
-	; Try X=60 Y=6 cycles=1837 R2
+	; 1842 (+1 incoming)
+	;   -3 jmp
+	;  -42 do_reflection
+	;===================
+	; 1797
+
+	; Try X=10 Y=32 cycles=1793 R4
 
 	nop
+	nop
 
-	ldy	#6							; 2
-baloopQ:ldx	#60							; 2
+	ldy	#32							; 2
+baloopQ:ldx	#10							; 2
 baloopR:dex								; 2
 	bne	baloopR							; 2nt/3
 	dey								; 2
@@ -242,7 +249,24 @@ ball_done:
 	rts						; 6
 
 
-;.include "gr_scroll.s"
-;greets:
-;.incbin "greets.raw.lz4t"
-;greets_end:
+;======================================
+; 30 + 6 = 36
+
+do_reflection:
+	lda	$664							; 4
+
+	; if 0 make 0, otherwise make FF
+	cmp	#1							; 2
+	lda	#$00							; 2
+	adc	#$ff							; 2
+	eor	#$ff							; 2
+
+	and	#$ff							; 2
+	sta	$51d0+(126/7)						; 4
+	sta	$55d0+(126/7)						; 4
+	sta	$59d0+(126/7)						; 4
+	sta	$5dd0+(126/7)						; 4
+								;===========
+								;	30
+
+	rts								; 6
