@@ -165,6 +165,13 @@ forever:
 
 	jsr	wait_until_keypress
 
+	sei	; disable music interrupt
+	jsr	mockingboard_mute
+
+	; wait again before restarting
+
+	jsr	wait_until_keypress
+
 	jmp	reload_everything
 
 	;==================

@@ -48,7 +48,7 @@ merry_begin:
 
 	bit	KEYRESET	; clear keypress	; 4
 
-	sei	; disable interrupts/music
+;	sei	; disable interrupts/music
 
 	rts						; 6
 
