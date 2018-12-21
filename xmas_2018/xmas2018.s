@@ -180,19 +180,26 @@ game_over_man:
 .align $100
 	.include	"wreath.s"
 	.include	"ball.s"
-	.include	"gr_offsets.s"
-	.include	"gr_hline.s"
-	.include	"gr_fast_clear.s"
-	.include	"vapor_lock.s"
 	.include	"gr_putsprite.s"
-	.include	"delay_a.s"
+	.include	"gr_offsets.s"
+	.include	"vapor_lock.s"
+	.include	"gr_fast_clear.s"
 	.include	"play_music.s"
+	.include	"delay_a.s"
+	.include	"gr_scroll.s"
+	.include	"mockingboard.s"
+
 
 ; Things here alignment doesn't matter
+	.include	"gr_hline.s"
 	.include	"wait_keypress.s"
 	.include	"merry.s"
 	.include	"lz4_decode.s"
 	.include	"rts.s"
+
+greets:
+.incbin "greets.raw.lz4t"
+greets_end:
 
 ; filename to open is 30-character Apple text:
 wreath_filename:	; .byte "WREATH.LZ4",0

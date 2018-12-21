@@ -238,3 +238,6 @@ done_vapor_lock:
 	;		language on the Apple II computer.
 	;	Cavanagh and Anstis: Visual psychophysics on the
 	;		Apple II: Getting started
+
+.assert         >vapor_lock_loop = >done_vapor_lock, error, "vapor_lock crosses page"
+

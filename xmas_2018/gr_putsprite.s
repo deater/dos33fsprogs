@@ -69,4 +69,6 @@ put_sprite_pixel:
 									; -1
 	rts				; return			; 6
 
+put_sprite_end:
 
+.assert         >put_sprite_no_transparency = >put_sprite_end, error, "put_sprite crosses page"

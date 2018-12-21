@@ -91,7 +91,9 @@ no_draw_bottom:
 	bpl	clear_top_fast_loop					; 2nt/3
 
 	rts								; 6
+clear_top_end:
 
+.assert         >clear_top = >clear_top_end, error, "clear_top crosses page"
 
 
 

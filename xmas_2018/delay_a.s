@@ -5,6 +5,7 @@
 ; The branches must not cross page boundaries!
 ;
 
+delay_begin:
 			;       Cycles              Accumulator         Carry flag
 			; 0  1  2  3  4  5  6          (hex)           0 1 2 3 4 5 6
 
@@ -23,3 +24,7 @@ dly2:	bne	dly3	; 2  2              3   00 00             01   0 1         0
 dly3:	rts		; 6  6  6  6  6  6  6   00 00 00 00 01 01 01   0 1 1 1 0 0 1
 	;
 	; Total cycles:	 25 26 27 28 29 30 31
+
+delay_end:
+
+.assert         >delay_begin = >delay_end, error, "delay_a crosses page"

@@ -242,9 +242,13 @@ mb_done_change:
 	rts			; 6
 				;=======
 				; 21
+play_music_end:
+
+.assert         >play_music = >play_music_end, error, "play_music crosses page"
 
 .align $100
-.include "mockingboard.s"
+
+pattern_begin:
 
 ; patterns 8 long
 mal_pattern:
@@ -264,6 +268,6 @@ mnl_pattern:
 mnh_pattern:
 .byte   >mnh00,>mnh01,>mnh02,>mnh03,>mnh04,>mnh05,>mnh06,>mnh07
 
+pattern_end:
 
-
-
+.assert         >pattern_begin = >pattern_end, error, "pattern crosses page"

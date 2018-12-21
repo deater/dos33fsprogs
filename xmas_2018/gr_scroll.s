@@ -63,3 +63,5 @@ no_wrap:
 done_wrap:
 	rts							; 6
 
+
+.assert         >scroll_loop = >done_wrap, error, "gr_scroll crosses page"

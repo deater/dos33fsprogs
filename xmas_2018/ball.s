@@ -242,7 +242,7 @@ ball_done:
 	rts						; 6
 
 
-.include "gr_scroll.s"
-greets:
-.incbin "greets.raw.lz4t"
-greets_end:
+;.include "gr_scroll.s"
+;greets:
+;.incbin "greets.raw.lz4t"
+;greets_end:
