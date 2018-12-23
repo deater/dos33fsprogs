@@ -185,6 +185,7 @@ game_over_man:
 ; Things included here should be aligned
 ; as they are called during cycle-counting
 .align $100
+	.include "scroll.table"
 	.include	"wreath.s"
 	.include	"gr_putsprite.s"
 	.include	"gr_offsets.s"
