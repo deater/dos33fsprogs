@@ -11,9 +11,9 @@ xmas2018_start:
 	; Check for Apple II and patch
 	;===================
 
-	lda	$FBB3		; IIe and newer is $06
-	cmp	#6
-	beq	apple_iie
+;	lda	$FBB3		; IIe and newer is $06
+;	cmp	#6
+;	beq	apple_iie
 
 ;	lda	#$54		;
 ;	sta	ce_patch+1
@@ -163,14 +163,17 @@ forever:
 
 	jsr	merry
 
-	jsr	wait_until_keypress
+	; wait 5s before restarting
+
+	ldx	#20
+wait_at_merry:
+	lda	#255
+	jsr	WAIT
+	dex
+	bne	wait_at_merry
 
 	sei	; disable music interrupt
 	jsr	mockingboard_mute
-
-	; wait again before restarting
-
-	jsr	wait_until_keypress
 
 	jmp	reload_everything
 
@@ -178,8 +181,8 @@ forever:
 	; Game over
 	;==================
 	; we never get here
-game_over_man:
-	jmp	game_over_man
+;game_over_man:
+;	jmp	game_over_man
 
 
 ; Things included here should be aligned

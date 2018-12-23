@@ -553,3 +553,36 @@ hgr_scroll_return:
 									; -1
 	rts								; 6
 
+
+
+
+
+mute_music:
+	sei
+	jsr	mockingboard_mute
+
+	lda	#$4c		; jmp
+	sta	mute_smc
+	lda	#<play_nothing
+	sta	mute_smc+1
+	lda	#>play_nothing
+	sta	mute_smc+2
+
+	rts
+
+play_nothing:
+	; do nothing for 1017-3-6 = 1008 cycles
+
+        ; Try X=1 Y=91 cycles=1002 R6
+
+	lda	$0
+	lda	$0
+
+	ldy	#91							; 2
+muloopA:ldx	#1							; 2
+muloopB:dex								; 2
+	bne	muloopB							; 2nt/3
+	dey								; 2
+	bne	muloopA							; 2nt/3
+
+	rts

@@ -80,6 +80,7 @@ mnl07 = $BF00
 	;      = 1017
 play_music:
 
+mute_smc:
 	; self-modify the code
 	lda	MB_PATTERN	; 3
 	and	#$07		; 2

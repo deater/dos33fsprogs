@@ -339,11 +339,18 @@ wrloop2:dex								; 2
 	lda	KEYPRESS				; 4
 	bpl	wr_no_keypress				; 3
 							; -1
-	jmp	wreath_done				; 3
+	jmp	wreath_check_key			; 3
 wr_no_keypress:
 	jmp	wreath_display_loop			; 3
 
+wreath_check_key:
+	cmp	#'M'|$80
+	bne	wreath_done
+
+	jsr	mute_music
+
 wreath_done:
+
 	bit	KEYRESET	; clear keypress	; 4
 	rts						; 6
 
