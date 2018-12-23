@@ -105,15 +105,15 @@ FLIPHIGH	=	$06
 	; Timing
 	;	scroll_hgr_left:	8
 	;	140* scroll_hgr_loop:		10 setup
-	;					12 set fliphigh
+	;					39 set fliphigh
 	;					 6 check keypress
-	;		64*left_one_loop		6+2945
+	;		64*left_one_loop		6+2232
 	;						23 (increments)
 	;					22 increment counts
 	;					10 check and loop
 	;				6 return
 
-	; total time = 14 + 140*(10+12+6+22+10+64*(41+23+(2951)))
+	; total time = 14 + 140*(10+39+6+22+10+64*(41+23+(2232)))
 	; 67,431,293 cycles = roughly 67s	-- original
 	; 64,564,093 cycles = roughly 64s	-- optimize inner loop a bit
 	; 33,347,034 cycles = roughly 33s	-- don't shift hidden page
@@ -123,6 +123,7 @@ FLIPHIGH	=	$06
 	; 28,813,247 cycles = roughly 29s	-- use X register for NEXT
 	; 27,031,274 cycles = roughly 27s	-- save LAST / skip OUTL
 	; 27,022,814 cycles = roughly 27s	-- move some things around
+	; 20,583,794 cycles = roughly 21s	-- use lookup table in inner
 scroll_hgr_left:
 
 	lda	#$0							; 2
@@ -154,16 +155,21 @@ scroll_hgr_smc:
 	and	#$3							; 2
 	sec								; 2
 	sbc	#2							; 2
-	bne	store_txa
-	lda	#$EA	; nop						; 3
-	jmp	store_done
+	bne	store_txa						; 3
+									; -1
+	lda	#$EA	; nop						; 2
+	jmp	store_done						; 3
 store_txa:
-	lda	#$8A	; txa
+	lda	#$8A	; txa						; 2
 store_done:
-	sta	smc_n1
+	sta	smc_n0							; 4
+	sta	smc_n1							; 4
+	sta	smc_n2							; 4
+	sta	smc_n3							; 4
+	sta	smc_n4							; 4
 
 								;===========
-								;	12
+								;	39
 
 
 	lda	KEYPRESS						; 4
@@ -229,15 +235,13 @@ scroll_done:
 	;===========================================
 	;
 	; 	93	init
-	;	10* (unrolled)
-	;		3* hgr_scroll_line_loop:		10
-	;			high bit			20
-	;			prepare bits:			18
-	;			output new byte:		20
-	;		1* hgr_scroll_line_loop:		15
-	;			high bit			20
-	;			prepare bits:			18
-	;			output new byte:		20
+	;	8* (unrolled)
+	;		4* hgr_scroll_line_loop:		13
+	;			high bit			10
+	;			output new byte:		27
+	;		1* hgr_scroll_line_loop:		18
+	;			high bit			10
+	;			output new byte:		27
 	;		1*
 	;		increment and loop:		 	7
 	;	5 return
@@ -250,6 +254,8 @@ scroll_done:
 	; (75*3 + 80*1 + 7)*10+105= 3225 -- move to INL=OUTL+1
 	; (73*3 + 78*1 + 7)*10+105= 3145 -- use X register for next
 	; (68*3 + 73*1 + 7)*10+112= 2952 -- use LAST instead of load
+	; (50*3 + 55*1 + 7)*10+112= 2232 -- use lookup table
+	; (50*4 + 55*1 + 7)*8+112 = 2208 -- unroll 5 times
 hgr_scroll_line:
 
 setup_column_40:
@@ -354,28 +360,21 @@ done_count:
 
 
 
-	; repeated 40 times
+	; repeated 8 times
 hgr_scroll_line_loop:
 
 	;============= Unroll 0
-
-	cpy	#39							; 2
-	bne	not_thirtynine						; 3
-thirtynine:
-	lda	OFFSCREEN						; 3
-	jmp	done_thirtynine						; 3
-not_thirtynine:
 	lda	(INL),Y		; get subsequent pixel block		; 5
-done_thirtynine:
-	sta	NEXT		; NEXT					; 2
+	sta	NEXT		; NEXT					; 3
 	and	#$3							; 2
 	sta	TEMP							; 3
+								;===========
+								;	13
 
-	lda	NEXT
-smc_n1:
+	; get highbit
+	lda	NEXT							; 3
+smc_n0:
 	txa	; or nop						; 2
-
-
 	and	#$80							; 2
 	sta	HIGH							; 3
 							;===================
@@ -383,9 +382,9 @@ smc_n1:
 
 	; if in bit 2 or 6 of horiz scroll, shift the color bit over
 	; makes some color flicker, is there a better way?
-high_bit0:
+
 	txa	; 		; CURRENT=OLD NEXT			; 2
-	and	#$fc							; 2
+	and	#$7c							; 2
 	ora	TEMP							; 3
 	tax								; 2
 	lda	table_lookup,X						; 4
@@ -395,7 +394,153 @@ high_bit0:
 
 	iny								; 2
 								;===========
-								;	 31
+								;	 27
+	;============= Unroll 1
+	lda	(INL),Y		; get subsequent pixel block		; 5
+	sta	NEXT		; NEXT					; 3
+	and	#$3							; 2
+	sta	TEMP							; 3
+								;===========
+								;	13
+
+	; get highbit
+	lda	NEXT							; 3
+smc_n1:
+	txa	; or nop						; 2
+	and	#$80							; 2
+	sta	HIGH							; 3
+							;===================
+							; 	 	 10
+
+	; if in bit 2 or 6 of horiz scroll, shift the color bit over
+	; makes some color flicker, is there a better way?
+
+	txa	; 		; CURRENT=OLD NEXT			; 2
+	and	#$7c							; 2
+	ora	TEMP							; 3
+	tax								; 2
+	lda	table_lookup,X						; 4
+	ora	HIGH							; 3
+	ldx	NEXT							; 3
+	sta	(OUTL),Y						; 6
+
+	iny								; 2
+								;===========
+								;	 27
+	;============= Unroll 2
+	lda	(INL),Y		; get subsequent pixel block		; 5
+	sta	NEXT		; NEXT					; 3
+	and	#$3							; 2
+	sta	TEMP							; 3
+								;===========
+								;	13
+
+	; get highbit
+	lda	NEXT							; 3
+smc_n2:
+	txa	; or nop						; 2
+	and	#$80							; 2
+	sta	HIGH							; 3
+							;===================
+							; 	 	 10
+
+	; if in bit 2 or 6 of horiz scroll, shift the color bit over
+	; makes some color flicker, is there a better way?
+
+	txa	; 		; CURRENT=OLD NEXT			; 2
+	and	#$7c							; 2
+	ora	TEMP							; 3
+	tax								; 2
+	lda	table_lookup,X						; 4
+	ora	HIGH							; 3
+	ldx	NEXT							; 3
+	sta	(OUTL),Y						; 6
+
+	iny								; 2
+								;===========
+								;	 27
+
+	;============= Unroll 3
+	lda	(INL),Y		; get subsequent pixel block		; 5
+	sta	NEXT		; NEXT					; 3
+	and	#$3							; 2
+	sta	TEMP							; 3
+								;===========
+								;	10
+
+	; get highbit
+	lda	NEXT							; 3
+smc_n3:
+	txa	; or nop						; 2
+	and	#$80							; 2
+	sta	HIGH							; 3
+							;===================
+							; 	 	 10
+
+	; if in bit 2 or 6 of horiz scroll, shift the color bit over
+	; makes some color flicker, is there a better way?
+
+	txa	; 		; CURRENT=OLD NEXT			; 2
+	and	#$7c							; 2
+	ora	TEMP							; 3
+	tax								; 2
+	lda	table_lookup,X						; 4
+	ora	HIGH							; 3
+	ldx	NEXT							; 3
+	sta	(OUTL),Y						; 6
+
+	iny								; 2
+								;===========
+								;	 27
+
+
+
+
+
+	;============= Unroll 4
+
+	cpy	#39							; 2
+	bne	not_thirtynine						; 3
+thirtynine:
+									;-1
+	lda	OFFSCREEN						; 3
+	jmp	done_thirtynine						; 3
+not_thirtynine:
+	lda	(INL),Y		; get subsequent pixel block		; 5
+done_thirtynine:
+	sta	NEXT		; NEXT					; 3
+	and	#$3							; 2
+	sta	TEMP							; 3
+								;===========
+								; 39:  18
+								; not: 18
+
+	; get highbit
+	lda	NEXT							; 3
+smc_n4:
+	txa	; or nop						; 2
+	and	#$80							; 2
+	sta	HIGH							; 3
+							;===================
+							; 	 	 10
+
+	; if in bit 2 or 6 of horiz scroll, shift the color bit over
+	; makes some color flicker, is there a better way?
+
+	txa	; 		; CURRENT=OLD NEXT			; 2
+	and	#$7c							; 2
+	ora	TEMP							; 3
+	tax								; 2
+	lda	table_lookup,X						; 4
+	ora	HIGH							; 3
+	ldx	NEXT							; 3
+	sta	(OUTL),Y						; 6
+
+	iny								; 2
+								;===========
+								;	 27
+
+
 
 
 	cpy	#40							; 2
