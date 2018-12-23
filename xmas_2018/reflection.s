@@ -610,7 +610,7 @@ reflection44:
 
 	; 139x3
 	and	MASK							; 3
-	sta	$4c90,Y							; 5
+	sta	$4cd0,Y							; 5
 	sta	$50d0,Y							; 5
 	sta	$54d0,Y							; 5
 	rts								; 6
