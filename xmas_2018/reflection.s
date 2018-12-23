@@ -132,21 +132,21 @@ do_reflection:
 								;=============
 								;	49
 	;=============
-	; LORES 21x42 -> HIRES 112x149x4
+	; LORES 21x42 -> HIRES 133x149x4
 	lda	$6E5							; 4
 	jsr	reflection22						; 6+37
 								;=============
 								;	47
 
 	;=============
-	; LORES 21x44 -> HIRES 112x146x3
+	; LORES 21x44 -> HIRES 133x146x3
 	lda	$765							; 4
 	jsr	reflection23						; 6+32
 								;=============
 								;	42
 
 	;=============
-	; LORES 21x46 -> HIRES 112x143x3
+	; LORES 21x46 -> HIRES 133x143x3
 	lda	$7E5							; 4
 	jsr	reflection24						; 6+32
 								;=============
@@ -191,7 +191,7 @@ do_reflection:
 	;==========================
 
 	;=============
-	; LORES 23x40 -> HIRES 133x151x4
+	; LORES 23x40 -> HIRES 140x151x4
 	ldx	#$aa							; 2
 	stx	MASK							; 3
 	ldy	#(140/7)						; 2
@@ -199,17 +199,17 @@ do_reflection:
 	jsr	reflection31						; 6+37
 
 	;=============
-	; LORES 23x42 -> HIRES 133x147x4
+	; LORES 23x42 -> HIRES 140x147x4
 	lda	$6E7							; 4
 	jsr	reflection32						; 6+37
 
 	;=============
-	; LORES 23x44 -> HIRES 133x144x3
+	; LORES 23x44 -> HIRES 140x144x3
 	lda	$767							; 4
 	jsr	reflection33						; 6+32
 
 	;=============
-	; LORES 23x46 -> HIRES 133x141x3
+	; LORES 23x46 -> HIRES 140x141x3
 	lda	$7E7							; 4
 	jsr	reflection34						; 6+32
 
@@ -354,6 +354,7 @@ reflection11:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 156x4
 	and	MASK							; 3
 	sta	$51d0,Y							; 5
 	sta	$55d0,Y							; 5
@@ -371,11 +372,12 @@ reflection12:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 152x4
 	and	MASK							; 3
-	sta	$5150,Y							; 5
-	sta	$5550,Y							; 5
-	sta	$5950,Y							; 5
-	sta	$5d50,Y							; 5
+	sta	$41d0,Y							; 5
+	sta	$45d0,Y							; 5
+	sta	$49d0,Y							; 5
+	sta	$4dd0,Y							; 5
 	rts								; 6
 								;===========
 								;	37
@@ -386,11 +388,12 @@ reflection13:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 148x3
 	and	MASK							; 3
-	sta	$41d0,Y							; 5
-	sta	$45d0,Y							; 5
-	sta	$49d0,Y							; 5
-	sta	$4dd0,Y							; 5
+	sta	$5150,Y							; 5
+	sta	$5550,Y							; 5
+	sta	$5950,Y							; 5
+	sta	$5d50,Y							; 5
 	rts								; 6
 								;===========
 								;	37
@@ -402,6 +405,7 @@ reflection14:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 144x4
 	and	MASK							; 3
 	sta	$4150,Y							; 5
 	sta	$4550,Y							; 5
@@ -419,10 +423,11 @@ reflection21:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 153x4
 	and	MASK							; 3
-	sta	$5550,Y							; 5
-	sta	$5950,Y							; 5
-	sta	$5d50,Y							; 5
+	sta	$45d0,Y							; 5
+	sta	$49d0,Y							; 5
+	sta	$4dd0,Y							; 5
 	sta	$51d0,Y							; 5
 	rts								; 6
 								;===========
@@ -435,11 +440,12 @@ reflection22:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 149x4
 	and	MASK							; 3
-	sta	$45d0,Y							; 5
-	sta	$49d0,Y							; 5
-	sta	$4dd0,Y							; 5
-	sta	$5150,Y							; 5
+	sta	$5550,Y							; 5
+	sta	$5950,Y							; 5
+	sta	$5d50,Y							; 5
+	sta	$41d0,Y							; 5
 	rts								; 6
 								;===========
 								;	37
@@ -451,10 +457,11 @@ reflection23:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 146x3
 	and	MASK							; 3
 	sta	$4950,Y							; 5
 	sta	$4d50,Y							; 5
-	sta	$41d0,Y							; 5
+	sta	$5150,Y							; 5
 	rts								; 6
 								;===========
 								;	32
@@ -466,6 +473,7 @@ reflection24:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 143x3
 	and	MASK							; 3
 	sta	$5cd0,Y							; 5
 	sta	$4150,Y							; 5
@@ -482,11 +490,12 @@ reflection31:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 151x4
 	and	MASK							; 3
-	sta	$4dd0,Y							; 5
-	sta	$5150,Y							; 5
-	sta	$5550,Y							; 5
-	sta	$5950,Y							; 5
+	sta	$5d50,Y							; 5
+	sta	$41d0,Y							; 5
+	sta	$45d0,Y							; 5
+	sta	$49d0,Y							; 5
 	rts								; 6
 								;===========
 								;	37
@@ -499,11 +508,12 @@ reflection32:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 147x4
 	and	MASK							; 3
 	sta	$4d50,Y							; 5
-	sta	$41d0,Y							; 5
-	sta	$45d0,Y							; 5
-	sta	$49d0,Y							; 5
+	sta	$5150,Y							; 5
+	sta	$5550,Y							; 5
+	sta	$5950,Y							; 5
 	rts								; 6
 								;===========
 								;	37
@@ -516,6 +526,7 @@ reflection33:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 144x3
 	and	MASK							; 3
 	sta	$4150,Y							; 5
 	sta	$4550,Y							; 5
@@ -531,6 +542,7 @@ reflection34:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 141x3
 	and	MASK							; 3
 	sta	$54d0,Y							; 5
 	sta	$58d0,Y							; 5
@@ -546,10 +558,11 @@ reflection41:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 149x3
 	and	MASK							; 3
-	sta	$45d0,Y							; 5
-	sta	$49d0,Y							; 5
-	sta	$4dd0,Y							; 5
+	sta	$5550,Y							; 5
+	sta	$5950,Y							; 5
+	sta	$5d50,Y							; 5
 	rts								; 6
 								;===========
 								;	32
@@ -561,6 +574,7 @@ reflection42:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 145x3
 	and	MASK							; 3
 	sta	$4550,Y							; 5
 	sta	$4950,Y							; 5
@@ -577,6 +591,7 @@ reflection43:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 142x3
 	and	MASK							; 3
 	sta	$58d0,Y							; 5
 	sta	$5cd0,Y							; 5
@@ -593,6 +608,7 @@ reflection44:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 139x3
 	and	MASK							; 3
 	sta	$4c90,Y							; 5
 	sta	$50d0,Y							; 5
@@ -609,6 +625,7 @@ reflection51:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 145x3
 	and	MASK							; 3
 	sta	$4550,Y							; 5
 	sta	$4950,Y							; 5
@@ -625,6 +642,7 @@ reflection52:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 142x3
 	and	MASK							; 3
 	sta	$58d0,Y							; 5
 	sta	$5cd0,Y							; 5
@@ -641,6 +659,7 @@ reflection53:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 139x3
 	and	MASK							; 3
 	sta	$4cd0,Y							; 5
 	sta	$50d0,Y							; 5
@@ -656,6 +675,7 @@ reflection54:
 	adc	#$ff							; 2
 	eor	#$ff							; 2
 
+	; 136x3
 	and	MASK							; 3
 	sta	$40d0,Y							; 5
 	sta	$44d0,Y							; 5
