@@ -1,3 +1,5 @@
+/* Note, based on info from http://fabiensanglard.net/doom_fire_psx/ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
