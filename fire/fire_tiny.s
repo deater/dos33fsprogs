@@ -15,6 +15,9 @@
 ; 152 bytes -- reduce lookup to top half colors (had to remove brown)
 ;		also changed maroon to pink
 ; 149 bytes -- use monitor GR
+; 149 bytes -- load into zero page
+; 140 bytes -- start using zero-page addressing
+
 
 ; Zero Page
 SEEDL		= $4E
@@ -43,38 +46,38 @@ fire_demo:
 	; Setup white line on bottom
 
 	lda	#$ff							; 2
-	ldx	#39							; 2
+	ldy	#39							; 2
 white_loop:
-	sta	$7d0,X			; hline 24 (46+47)		; 3
-	dex								; 1
+	sta	$7d0,Y			; hline 24 (46+47)		; 3
+	dey								; 1
 	bpl	white_loop						; 2
 								;============
 								;        10
 
 fire_loop:
 
-	ldy	#44			; 22 * 2
+	ldx	#44			; 22 * 2
 
 yloop:
 
-	lda	gr_offsets,Y
-	sta	smc2+1
-	lda	gr_offsets+1,Y
-	sta	smc2+2
-	lda	gr_offsets+2,Y
-	sta	smc1+1
-	lda	gr_offsets+3,Y
-	sta	smc1+2
+	lda	<gr_offsets,X
+	sta	<smc2+1
+	lda	<gr_offsets+1,X
+	sta	<smc2+2
+	lda	<gr_offsets+2,X
+	sta	<smc1+1
+	lda	<gr_offsets+3,X
+	sta	<smc1+2
 
-	sty	TEMPY
+	stx	TEMPY
 
-	ldx	#39
+	ldy	#39
 xloop:
 smc1:
-	lda	$7d0,X
+	lda	$7d0,Y
 	sta	TEMP
 	and	#$7		; mask off
-	tay
+	tax
 
 	;=============================
 	; random8
@@ -98,21 +101,21 @@ noEor:	sta	SEEDL
 	beq	no_change
 
 decrement:
-	lda	color_progression,Y
+	lda	<color_progression,X
 	jmp	done_change
 no_change:
 	lda	TEMP
 done_change:
 
 smc2:
-	sta	$750,X
-	dex
+	sta	$750,Y
+	dey
 	bpl	xloop
 
-	ldy	TEMPY
+	ldx	TEMPY
 
-	dey
-	dey
+	dex
+	dex
 	bpl	yloop
 
 	bmi	fire_loop
