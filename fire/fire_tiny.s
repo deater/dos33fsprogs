@@ -19,10 +19,11 @@
 ; 140 bytes -- start using zero-page addressing
 ; 139 bytes -- rotate instead of mask for low bit
 ; 138 bytes -- bcs instead of jmp
+; 137 bytes -- BIT nop trick to get rid of jump
+; 135 bytes -- push/pull instead of saving to zero page
 
 ; Zero Page
 SEEDL		= $4E
-TEMP		= $00
 TEMPY		= $01
 
 ; 100 = $64
@@ -75,7 +76,7 @@ yloop:
 xloop:
 smc1:
 	lda	$7d0,Y							; 3
-	sta	TEMP							; 2
+	pha			; save on stack				; 1
 	and	#$7		; mask off				; 2
 	tax								; 1
 
@@ -98,14 +99,14 @@ noEor:	sta	SEEDL
 	; end inlined RNG
 
 	ror			; shift into carry			; 1
-	bcc	no_change						; 2
 
-decrement:
-	lda	<color_progression,X					; 2
-	bcs	done_change						; 2
+	pla								; 1
+
+	bcs	no_change						; 2
+
+	.byte	$2c	; BIT trick, nops out next instruction
 no_change:
-	lda	TEMP							; 2
-done_change:
+	lda	<color_progression,X					; 2
 
 smc2:
 	sta	$750,Y							; 3
