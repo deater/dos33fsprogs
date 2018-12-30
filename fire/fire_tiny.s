@@ -17,7 +17,8 @@
 ; 149 bytes -- use monitor GR
 ; 149 bytes -- load into zero page
 ; 140 bytes -- start using zero-page addressing
-
+; 139 bytes -- rotate instead of mask for low bit
+; 138 bytes -- bcs instead of jmp
 
 ; Zero Page
 SEEDL		= $4E
@@ -56,28 +57,27 @@ white_loop:
 
 fire_loop:
 
-	ldx	#44			; 22 * 2
+	ldx	#44			; 22 * 2			; 2
 
 yloop:
+	lda	<gr_offsets,X						; 2
+	sta	<smc2+1							; 2
+	lda	<gr_offsets+1,X						; 2
+	sta	<smc2+2							; 2
+	lda	<gr_offsets+2,X						; 2
+	sta	<smc1+1							; 2
+	lda	<gr_offsets+3,X						; 2
+	sta	<smc1+2							; 2
 
-	lda	<gr_offsets,X
-	sta	<smc2+1
-	lda	<gr_offsets+1,X
-	sta	<smc2+2
-	lda	<gr_offsets+2,X
-	sta	<smc1+1
-	lda	<gr_offsets+3,X
-	sta	<smc1+2
+	stx	TEMPY							; 2
 
-	stx	TEMPY
-
-	ldy	#39
+	ldy	#39							; 2
 xloop:
 smc1:
-	lda	$7d0,Y
-	sta	TEMP
-	and	#$7		; mask off
-	tax
+	lda	$7d0,Y							; 3
+	sta	TEMP							; 2
+	and	#$7		; mask off				; 2
+	tax								; 1
 
 	;=============================
 	; random8
@@ -97,20 +97,20 @@ noEor:	sta	SEEDL
 
 	; end inlined RNG
 
-	and	#$1
-	beq	no_change
+	ror			; shift into carry			; 1
+	bcc	no_change						; 2
 
 decrement:
-	lda	<color_progression,X
-	jmp	done_change
+	lda	<color_progression,X					; 2
+	bcs	done_change						; 2
 no_change:
-	lda	TEMP
+	lda	TEMP							; 2
 done_change:
 
 smc2:
-	sta	$750,Y
-	dey
-	bpl	xloop
+	sta	$750,Y							; 3
+	dey								; 1
+	bpl	xloop							; 2
 
 	ldx	TEMPY
 
