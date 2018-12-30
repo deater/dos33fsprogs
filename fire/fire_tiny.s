@@ -5,43 +5,51 @@
 ; based on code described here http://fabiensanglard.net/doom_fire_psx/
 
 ; 611 bytes at first
-; 601 bytes -- strip out some unused code6
+; 601 bytes -- strip out some unused code
 ; 592 bytes -- don't init screen
 ; 443 bytes -- remove more dead code
 ; 206 bytes -- no need to clear screen
 ; 193 bytes -- un-cycle exact the random16 code
+; 189 bytes -- more optimization of random16 code
+; 161 bytes -- move to 8-bit RNG
+; 152 bytes -- reduce lookup to top half colors (had to remove brown)
+;		also changed maroon to pink
+; 149 bytes -- use monitor GR
 
 ; Zero Page
 SEEDL		= $4E
-SEEDH		= $4F
-TEMP		= $FA
-TEMPY		= $FB
+TEMP		= $00
+TEMPY		= $01
 
-XOR_MAGIC = $7657	; "vW"
+; 100 = $64
 
 ; Soft Switches
 SET_GR	= $C050 ; Enable graphics
 FULLGR	= $C052	; Full screen, no text
 LORES	= $C056	; Enable LORES graphics
 
+; monitor routines
+GR	=	$F390
 
 fire_demo:
 
 	; GR part
-	bit	LORES							; 4
-	bit	SET_GR							; 4
-	bit	FULLGR							; 4
+	jsr	GR							; 3
+	bit	FULLGR							; 3
+								;==========
+								;         6
 
 
 	; Setup white line on bottom
 
-	lda	#$ff
-	ldx	#39
+	lda	#$ff							; 2
+	ldx	#39							; 2
 white_loop:
-	sta	$7d0,X			; hline 24 (46+47)
-	dex
-	bpl	white_loop
-
+	sta	$7d0,X			; hline 24 (46+47)		; 3
+	dex								; 1
+	bpl	white_loop						; 2
+								;============
+								;        10
 
 fire_loop:
 
@@ -65,11 +73,27 @@ xloop:
 smc1:
 	lda	$7d0,X
 	sta	TEMP
-	and	#$f		; mask off
+	and	#$7		; mask off
 	tay
 
-	jsr	random16
+	;=============================
+	; random8
+	;=============================
+	; 8-bit 6502 Random Number Generator
+	; Linear feedback shift register PRNG by White Flame
+	; http://codebase64.org/doku.php?id=base:small_fast_8-bit_prng
+
+random8:
 	lda	SEEDL
+	beq	doEor
+	asl
+	beq	noEor	; if the input was $80, skip the EOR
+	bcc	noEor
+doEor:	eor	#$1d
+noEor:	sta	SEEDL
+
+	; end inlined RNG
+
 	and	#$1
 	beq	no_change
 
@@ -91,88 +115,21 @@ smc2:
 	dey
 	bpl	yloop
 
-
-	jmp	fire_loop
+	bmi	fire_loop
 
 
 color_progression:
-	.byte	0	; 0->0
-	.byte	$88	; 1->8
-	.byte	0	; 2->0
-	.byte	0	; 3->0
-	.byte	0	; 4->0
-	.byte	0	; 5->0
-	.byte	0	; 6->0
-	.byte	0	; 7->0
-	.byte	$55	; 8->5
-	.byte	$11	; 9->1
-	.byte	0	; 10->0
-	.byte	0	; 11->0
-	.byte	0	; 12->0
-	.byte	$99	; 13->9
-	.byte	0	; 14->0
-	.byte	$dd	; 15->13
-
-
-; 16-bit 6502 Random Number Generator
-; Linear feedback shift register PRNG by White Flame
-; http://codebase64.org/doku.php?id=base:small_fast_16-bit_prng
-
-	;=============================
-	; random16
-	;=============================
-random16:
-
-	lda	SEEDL							; 3
-	beq	low_zero	; $0000 and $8000 are special values	; 3
-								;==========
-								;	  6
-lownz:
-									; -1
-	asl	SEEDL		; Do a normal shift			; 5
-	lda	SEEDH							; 3
-	rol								; 2
-	bcs	do_eor							; 3
-	bcc	no_eor							; 3
-do_eor:
-				; high byte is in A
-	eor	#>XOR_MAGIC						; 2
-	sta	SEEDH							; 3
-	lda	SEEDL							; 3
-	eor	#<XOR_MAGIC						; 2
-	sta	SEEDL							; 3
-eor_rts:
-	rts								; 6
-
-no_eor:
-	sta	SEEDH							; 3
-	jmp	eor_rts							; 3+6
-								;===========
-								;	 20
-low_zero:
-	lda	SEEDH							; 3
-	beq	do_eor			; High byte is also zero	; 3
-					; so apply the EOR
-
-ceo:									; -1
-				; wasn't zero, check for $8000
-	asl								; 2
-	beq	no_eor			; if $00 is left after the shift; 3
-					; then it was $80
-
-		; else, do the EOR based on the carry
-cep:
-	bcc	no_eor
-	bcs	do_eor
-
-
-
-
-
+	.byte	$00	; 8->0		; 1000 0101
+	.byte	$bb	; 9->11		; 1001 0001
+	.byte	0	; 10->0		; 1010 0000
+	.byte	$aa	; 11->10	; 1011 0000
+	.byte	0	; 12->0		; 1100 0000
+	.byte	$99	; 13->9		; 1101 1001
+	.byte	$00	; 14->0		; 1110 0000
+	.byte	$dd	; 15->13	; 1111 1101
 
 gr_offsets:
 	.word	$400,$480,$500,$580,$600,$680,$700,$780
 	.word	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
 	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
-
 

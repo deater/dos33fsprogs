@@ -9,7 +9,7 @@ all:	fire.dsk
 fire.dsk:	FIRE FIRE_TINY HELLO
 	$(DOS33) -y fire.dsk SAVE A HELLO
 	$(DOS33) -y fire.dsk BSAVE -a 0x1000 FIRE
-	$(DOS33) -y fire.dsk BSAVE -a 0x1000 FIRE_TINY
+	$(DOS33) -y fire.dsk BSAVE -a 0x70 FIRE_TINY
 
 ####
 
@@ -23,7 +23,7 @@ fire.o:	fire.s gr_fast_clear.s vapor_lock.s \
 ####
 
 FIRE_TINY:	fire_tiny.o
-	ld65 -o FIRE_TINY fire_tiny.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o FIRE_TINY fire_tiny.o -C ../linker_scripts/apple2_70.inc
 
 fire_tiny.o:	fire_tiny.s
 	ca65 -o fire_tiny.o fire_tiny.s -l fire_tiny.lst
