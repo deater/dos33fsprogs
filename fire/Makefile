@@ -15,7 +15,7 @@ fire.dsk:	FIRE HELLO
 FIRE:	fire.o
 	ld65 -o FIRE fire.o -C ../linker_scripts/apple2_1000.inc
 
-fire.o:	fire.s gr_copy.s gr_unrolled_copy.s vapor_lock.s \
+fire.o:	fire.s gr_fast_clear.s vapor_lock.s \
 	delay_a.s
 	ca65 -o fire.o fire.s -l fire.lst
 

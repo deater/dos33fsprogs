@@ -5,32 +5,13 @@
 ; based on code described here http://fabiensanglard.net/doom_fire_psx/
 
 ; Zero Page
-FRAMEBUFFER	= $00	; $00 - $0F
-YPOS		= $10
-YPOS_SIN	= $11
-CH		= $24
-CV		= $25
-GBASL		= $26
-GBASH		= $27
-BASL		= $28
-BASH		= $29
-MASK		= $2E
 COLOR		= $30
-FRAME		= $60
-MB_VALUE	= $91
-BIRD_STATE	= $E0
-BIRD_DIR	= $E1
+SEEDL		= $4E
 DRAW_PAGE	= $EE
-LASTKEY		= $F1
-PADDLE_STATUS	= $F2
-XPOS		= $F3
-OLD_XPOS	= $F4
 TEMP		= $FA
 TEMPY		= $FB
-INL		= $FC
-INH		= $FD
-OUTL		= $FE
-OUTH		= $FF
+
+
 
 ; Soft Switches
 KEYPRESS= $C000
@@ -95,7 +76,68 @@ fire_demo:
 ;	bne	wfloopA							; 2nt/3
 
 
+	jsr	clear_screens_notext
+
+	; Setup white line on bottom
+
+	lda	#$ff
+	ldx	#39
+white_loop:
+	sta	$7d0,X			; hline 24 (46+47)
+	dex
+	bpl	white_loop
+
+
 fire_loop:
+
+	ldy	#44			; 22 * 2
+
+yloop:
+
+	lda	gr_offsets,Y
+	sta	smc2+1
+	lda	gr_offsets+1,Y
+	sta	smc2+2
+	lda	gr_offsets+2,Y
+	sta	smc1+1
+	lda	gr_offsets+3,Y
+	sta	smc1+2
+
+	sty	TEMPY
+
+	ldx	#39
+xloop:
+smc1:
+	lda	$7d0,X
+	sta	TEMP
+	and	#$f		; mask off
+	tay
+
+	jsr	random16
+	lda	SEEDL
+	and	#$1
+	beq	no_change
+
+decrement:
+	lda	color_progression,Y
+	jmp	done_change
+no_change:
+	lda	TEMP
+done_change:
+
+smc2:
+	sta	$750,X
+	dex
+	bpl	xloop
+
+	ldy	TEMPY
+
+	dey
+	dey
+	bpl	yloop
+
+
+
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
@@ -119,10 +161,26 @@ keypress:
 	jmp	keypress
 
 
+color_progression:
+	.byte	0	; 0->0
+	.byte	$88	; 1->8
+	.byte	0	; 2->0
+	.byte	0	; 3->0
+	.byte	0	; 4->0
+	.byte	0	; 5->0
+	.byte	0	; 6->0
+	.byte	0	; 7->0
+	.byte	$55	; 8->5
+	.byte	$11	; 9->1
+	.byte	0	; 10->0
+	.byte	0	; 11->0
+	.byte	0	; 12->0
+	.byte	$99	; 13->9
+	.byte	0	; 14->0
+	.byte	$dd	; 15->13
+
 .include "gr_hline.s"
-;.include "../asm_routines/keypress.s"
-.include "gr_copy.s"
-.include "gr_unrolled_copy.s"
+.include "gr_fast_clear.s"
 .include "vapor_lock.s"
 .include "delay_a.s"
-
+.include "random16.s"
