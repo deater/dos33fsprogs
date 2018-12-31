@@ -6,10 +6,11 @@ PNG_TO_RLE = ../gr-utils/png2rle
 
 all:	fire.dsk
 
-fire.dsk:	FIRE FIRE_TINY HELLO
+fire.dsk:	FIRE FIRE_TINY HELLO COOL_EFFECT
 	$(DOS33) -y fire.dsk SAVE A HELLO
 	$(DOS33) -y fire.dsk BSAVE -a 0x1000 FIRE
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 FIRE_TINY
+	$(DOS33) -y fire.dsk BSAVE -a 0x70 COOL_EFFECT
 
 ####
 
@@ -29,6 +30,15 @@ fire_tiny.o:	fire_tiny.s
 	ca65 -o fire_tiny.o fire_tiny.s -l fire_tiny.lst
 
 
+####
+
+COOL_EFFECT:	cool_effect.o
+	ld65 -o COOL_EFFECT cool_effect.o -C ../linker_scripts/apple2_70.inc
+
+cool_effect.o:	cool_effect.s
+	ca65 -o cool_effect.o cool_effect.s -l cool_effect.lst
+
+
 
 ####
 
@@ -39,6 +49,6 @@ HELLO:  hello.bas
 #####
 
 clean:		
-		rm -f *~ *.o *.lst FIRE FIRE_TINY HELLO
+		rm -f *~ *.o *.lst FIRE FIRE_TINY COOL_EFFECT HELLO
 
 

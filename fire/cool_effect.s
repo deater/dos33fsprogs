@@ -21,8 +21,6 @@
 ; 138 bytes -- bcs instead of jmp
 ; 137 bytes -- BIT nop trick to get rid of jump
 ; 135 bytes -- push/pull instead of saving to zero page
-; 134 bytes -- replace half of lookup table with math
-; 119 bytes -- replace that half of lookup table with better math
 
 ; Zero Page
 SEEDL		= $4E
@@ -61,14 +59,17 @@ white_loop:
 
 fire_loop:
 
-	ldx	#22			; 22				; 2
+	ldx	#44			; 22 * 2			; 2
 
 yloop:
 	; low bytes of address
 	lda	<gr_offsets,X						; 2
-	sta	<smc_sta+1						; 2
-	lda	<gr_offsets+1,X						; 2
-	sta	<smc_lda+1						; 2
+	sta	<smc2+1							; 2
+	lda	<gr_offsets+2,X						; 2
+	sta	<smc1+1							; 2
+
+	dec	<smc2+2
+	dec	<smc1+2
 
 	stx	TEMPY	; txa/pha not any better			; 2
 
@@ -76,30 +77,20 @@ yloop:
 ;	lda	<gr_offsets+1,X						; 2
 ;	sta	<smc2+2							; 2
 
-;	lda	<gr_offsets+3,X						; 2
-;	sta	<smc1+2							; 2
-
+	ldx	<smc2+2							; 2
+	dex								; 1
 	txa								; 1
-	and	#$7
-	lsr								; 1
-	ora	#$4							; 2
-	sta	<smc_sta+2						; 2
-
-	inx								; 1
-	txa								; 1
-	and	#$7
-	lsr								; 1
-	ora	#$4							; 2
-	sta	<smc_lda+2						; 2
+	ora	#$4		; make sure it's 4-7			; 2
+	sta	<smc2+2							; 2
 
 
-
-
+	lda	<gr_offsets+3,X						; 2
+	sta	<smc1+2							; 2
 
 	ldy	#39							; 2
 xloop:
-smc_lda:
-	lda	$8d0,Y							; 3
+smc1:
+	lda	$7d0,Y							; 3
 	pha			; save on stack				; 1
 	and	#$7		; mask off				; 2
 	tax								; 1
@@ -132,13 +123,14 @@ noEor:	sta	SEEDL
 no_change:
 	lda	<color_progression,X					; 2
 
-smc_sta:
+smc2:
 	sta	$750,Y							; 3
 	dey								; 1
 	bpl	xloop							; 2
 
 	ldx	TEMPY
 
+	dex
 	dex
 	bpl	yloop
 
@@ -156,11 +148,7 @@ color_progression:
 	.byte	$dd	; 15->13	; 1111 1101
 
 gr_offsets:
-;	.word	$400,$480,$500,$580,$600,$680,$700,$780
-;	.word	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
-;	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
-
-	.byte	$00,$80,$00,$80,$00,$80,$00,$80
-	.byte	$28,$a8,$28,$a8,$28,$a8,$28,$a8
-	.byte	$50,$d0,$50,$d0,$50,$d0,$50,$d0
+	.word	$400,$480,$500,$580,$600,$680,$700,$780
+	.word	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
+	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
 
