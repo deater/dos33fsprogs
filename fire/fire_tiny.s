@@ -30,11 +30,17 @@
 ; 113 bytes -- make get_row a subroutine
 ; 112 bytes -- regrettable change to the low-byte code
 ; 109 bytes -- replace BIT/OR in low calc with an ADC
+; 107 bytes -- replace self-modifying load/store absolute with Y-indirect
+; 106 bytes -- assume bit 8 is as random as bit 0
 
 ; Zero Page
 SEEDL		= $4E
 TEMP		= $00
 TEMPY		= $01
+OUTL		= $02
+OUTH		= $03
+INL		= $04
+INH		= $05
 
 ; 100 = $64
 
@@ -73,26 +79,21 @@ fire_loop:
 yloop:
 	stx	TEMPY	; txa/pha not any better			; 2
 
-	; Self-modify the inner loop so it loads/stores from proper
-	; low-res address.  Generate the proper row memory address
+	; setup the load/store addresses
+	; using Y-indirect is smaller than self-modifying code
 
 	jsr	get_row							; 3
-	sty	<smc_sta+1						; 2
-	sta	<smc_sta+2						; 2
+	sty	OUTL							; 2
+	sta	OUTH							; 2
 
 	inx								; 1
 
 	jsr	get_row							; 3
-	sty	<smc_lda+1						; 2
-	sta	<smc_lda+2						; 2
+	sty	INL							; 2
+	sta	INH							; 2
 
 	ldy	#39							; 2
 xloop:
-smc_lda:
-	lda	$7d0,Y		; load value at row+1			; 3
-	pha			; save on stack				; 1
-	and	#$7		; mask off				; 2
-	tax								; 1
 
 	;=============================
 	; random8
@@ -112,18 +113,21 @@ noEor:	sta	SEEDL							; 2
 
 	; end inlined RNG
 
-	ror			; shift into carry			; 1
+	bmi	no_change	; assume bit 8 is as random as bit 0	; 2
 
-	pla								; 1
 
-	bcs	no_change						; 2
+	lda	(INL),Y		; load value at row+1			; 2
+	and	#$7		; mask off				; 2
+	tax								; 1
+	lda	<(color_progression),X					; 2
 
 	.byte	$2c	; BIT trick, nops out next instruction		; 1
 no_change:
-	lda	<(color_progression),X					; 2
+	lda	(INL),Y		; load value at row+1			; 2
+
 
 smc_sta:
-	sta	$750,Y							; 3
+	sta	(OUTL),Y						; 2
 	dey								; 1
 	bpl	xloop							; 2
 
@@ -136,10 +140,10 @@ smc_sta:
 
 
 color_progression:
-	.byte	$00	; 8->0		; 1000 0101
-	.byte	$bb	; 9->11		; 1001 0001
+	.byte	$00	; 8->0		; 1000 0000
+	.byte	$bb	; 9->11		; 1001 1011
 	.byte	$00	; 10->0		; 1010 0000
-	.byte	$aa	; 11->10	; 1011 0000
+	.byte	$aa	; 11->10	; 1011 1010
 	.byte	$00	; 12->0		; 1100 0000
 	.byte	$99	; 13->9		; 1101 1001
 	.byte	$00	; 14->0		; 1110 0000
