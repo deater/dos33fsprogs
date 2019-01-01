@@ -28,12 +28,13 @@
 ; 129 bytes -- use Y instead of X
 ; 125 bytes -- optimize low byte generationw with branch
 ; 113 bytes -- make get_row a subroutine
+; 112 bytes -- regrettable change to the low-byte code
+; 109 bytes -- replace BIT/OR in low calc with an ADC
 
 ; Zero Page
 SEEDL		= $4E
 TEMP		= $00
 TEMPY		= $01
-LOW		= $02
 
 ; 100 = $64
 
@@ -80,68 +81,15 @@ yloop:
 	sta	<smc_sta+2						; 2
 
 	inx								; 1
+
 	jsr	get_row							; 3
 	sty	<smc_lda+1						; 2
 	sta	<smc_lda+2						; 2
 
-	; low byte of store address:
-
-	; 000X X00X
-	; 0000 XX00 C
-
-;	txa								; 1
-;	and	#$19							; 2
-;	lsr								; 1
-;	bcs	odd_sta							; 2
-;	.byte	$2C	; bit, nop					; 1
-;odd_sta:
-;	ora	#$2							; 2
-
-;	lsr								; 1
-;	tay								; 1
-;	lda	<low_offsets,Y						; 2
-;	sta	<smc_sta+1						; 2
-								;===========
-								;        15
-
-	; high byte of store address
-;	txa								; 1
-;	and	#$7							; 2
-;	lsr								; 1
-;	ora	#$4							; 2
-;	sta	<smc_sta+2						; 2
-								;===========
-								;	  8
-
-
-	; low byte of load address (one row more than store)
-
-;	inx								; 1
-
-;	txa								; 1
-;	and	#$19							; 2
-;	lsr								; 1
-;	bcs	odd_lda							; 2
-;	.byte	$2C	; bit, nop					; 1
-;odd_lda:
-;	ora	#$2							; 2
-
-;	lsr								; 1
-;	tay								; 1
-;	lda	<low_offsets,Y						; 2
-;	sta	<smc_lda+1						; 2
-
-	; high byte of load address
-;	txa								; 1
-;	and	#$7							; 2
-;	lsr								; 1
-;	ora	#$4							; 2
-;	sta	<smc_lda+2						; 2
-
 	ldy	#39							; 2
 xloop:
 smc_lda:
-	lda	$8d0,Y							; 3
+	lda	$7d0,Y		; load value at row+1			; 3
 	pha			; save on stack				; 1
 	and	#$7		; mask off				; 2
 	tax								; 1
@@ -154,13 +102,13 @@ smc_lda:
 	; http://codebase64.org/doku.php?id=base:small_fast_8-bit_prng
 
 random8:
-	lda	SEEDL
-	beq	doEor
-	asl
-	beq	noEor	; if the input was $80, skip the EOR
-	bcc	noEor
-doEor:	eor	#$1d
-noEor:	sta	SEEDL
+	lda	SEEDL							; 2
+	beq	doEor							; 2
+	asl								; 1
+	beq	noEor	; if the input was $80, skip the EOR		; 2
+	bcc	noEor							; 2
+doEor:	eor	#$1d							; 2
+noEor:	sta	SEEDL							; 2
 
 	; end inlined RNG
 
@@ -170,29 +118,29 @@ noEor:	sta	SEEDL
 
 	bcs	no_change						; 2
 
-	.byte	$2c	; BIT trick, nops out next instruction
+	.byte	$2c	; BIT trick, nops out next instruction		; 1
 no_change:
-	lda	<color_progression,X					; 2
+	lda	<(color_progression),X					; 2
 
 smc_sta:
 	sta	$750,Y							; 3
 	dey								; 1
 	bpl	xloop							; 2
 
-	ldx	TEMPY
+	ldx	TEMPY							; 2
 
-	dex
-	bpl	yloop
+	dex								; 1
+	bpl	yloop							; 2
 
-	bmi	fire_loop
+	bmi	fire_loop						; 2
 
 
 color_progression:
 	.byte	$00	; 8->0		; 1000 0101
 	.byte	$bb	; 9->11		; 1001 0001
-	.byte	0	; 10->0		; 1010 0000
+	.byte	$00	; 10->0		; 1010 0000
 	.byte	$aa	; 11->10	; 1011 0000
-	.byte	0	; 12->0		; 1100 0000
+	.byte	$00	; 12->0		; 1100 0000
 	.byte	$99	; 13->9		; 1101 1001
 	.byte	$00	; 14->0		; 1110 0000
 	.byte	$dd	; 15->13	; 1111 1101
@@ -204,20 +152,30 @@ color_progression:
 get_row:
 	; get low byte
 
+	; 000X X00O
+	;	lsr
+	; 0000 XX00   O
+	;      adc #1
+	; 0000 XXOx
+	; lsr
+	; 0000 0XXO
+	; lsr
+	; 0000 00XX   O
+	; ror
+
 	txa								; 1
 	and	#$19							; 2
 	lsr								; 1
-	bcs	odd_row							; 2
-	.byte	$2C	; bit, nop					; 1
-odd_row:
-	ora	#$2							; 2
-
+	adc	#1							; 2
+	lsr								; 1
 	lsr								; 1
 	tay								; 1
 	lda	<low_offsets,Y						; 2
+	ror								; 1
 	tay								; 1
 								;===========
-								;        14
+								;        13
+
 
 	; high byte of store address
 	txa								; 1
@@ -229,5 +187,13 @@ odd_row:
 
 	rts								; 1
 
+
+	; 14+6 = 20, as opposed to full lookup table which would be
+	; at least 24
+	; down to 13+3 at the expense of readability
+
+	; these are shifted left by one due to the algorithm
 low_offsets:
-	.byte	$00,$80,$28,$a8,$50,$d0
+	.byte	$00,$50,$a0
+
+
