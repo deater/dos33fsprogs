@@ -23,11 +23,17 @@
 ; 135 bytes -- push/pull instead of saving to zero page
 ; 134 bytes -- replace half of lookup table with math
 ; 119 bytes -- replace that half of lookup table with better math
+; 134 bytes -- replace other half of lookup table with math
+; 132 bytes -- replace stack with zp loads
+; 129 bytes -- use Y instead of X
+; 125 bytes -- optimize low byte generationw with branch
+; 113 bytes -- make get_row a subroutine
 
 ; Zero Page
 SEEDL		= $4E
 TEMP		= $00
 TEMPY		= $01
+LOW		= $02
 
 ; 100 = $64
 
@@ -64,37 +70,73 @@ fire_loop:
 	ldx	#22			; 22				; 2
 
 yloop:
-	; low bytes of address
-	lda	<gr_offsets,X						; 2
-	sta	<smc_sta+1						; 2
-	lda	<gr_offsets+1,X						; 2
-	sta	<smc_lda+1						; 2
-
 	stx	TEMPY	; txa/pha not any better			; 2
 
-	; high bytes of address
-;	lda	<gr_offsets+1,X						; 2
-;	sta	<smc2+2							; 2
+	; Self-modify the inner loop so it loads/stores from proper
+	; low-res address.  Generate the proper row memory address
 
-;	lda	<gr_offsets+3,X						; 2
-;	sta	<smc1+2							; 2
-
-	txa								; 1
-	and	#$7
-	lsr								; 1
-	ora	#$4							; 2
+	jsr	get_row							; 3
+	sty	<smc_sta+1						; 2
 	sta	<smc_sta+2						; 2
 
 	inx								; 1
-	txa								; 1
-	and	#$7
-	lsr								; 1
-	ora	#$4							; 2
+	jsr	get_row							; 3
+	sty	<smc_lda+1						; 2
 	sta	<smc_lda+2						; 2
 
+	; low byte of store address:
+
+	; 000X X00X
+	; 0000 XX00 C
+
+;	txa								; 1
+;	and	#$19							; 2
+;	lsr								; 1
+;	bcs	odd_sta							; 2
+;	.byte	$2C	; bit, nop					; 1
+;odd_sta:
+;	ora	#$2							; 2
+
+;	lsr								; 1
+;	tay								; 1
+;	lda	<low_offsets,Y						; 2
+;	sta	<smc_sta+1						; 2
+								;===========
+								;        15
+
+	; high byte of store address
+;	txa								; 1
+;	and	#$7							; 2
+;	lsr								; 1
+;	ora	#$4							; 2
+;	sta	<smc_sta+2						; 2
+								;===========
+								;	  8
 
 
+	; low byte of load address (one row more than store)
 
+;	inx								; 1
+
+;	txa								; 1
+;	and	#$19							; 2
+;	lsr								; 1
+;	bcs	odd_lda							; 2
+;	.byte	$2C	; bit, nop					; 1
+;odd_lda:
+;	ora	#$2							; 2
+
+;	lsr								; 1
+;	tay								; 1
+;	lda	<low_offsets,Y						; 2
+;	sta	<smc_lda+1						; 2
+
+	; high byte of load address
+;	txa								; 1
+;	and	#$7							; 2
+;	lsr								; 1
+;	ora	#$4							; 2
+;	sta	<smc_lda+2						; 2
 
 	ldy	#39							; 2
 xloop:
@@ -155,12 +197,37 @@ color_progression:
 	.byte	$00	; 14->0		; 1110 0000
 	.byte	$dd	; 15->13	; 1111 1101
 
-gr_offsets:
-;	.word	$400,$480,$500,$580,$600,$680,$700,$780
-;	.word	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
-;	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
 
-	.byte	$00,$80,$00,$80,$00,$80,$00,$80
-	.byte	$28,$a8,$28,$a8,$28,$a8,$28,$a8
-	.byte	$50,$d0,$50,$d0,$50,$d0,$50,$d0
 
+
+	; Take row X and convert to address A:Y
+get_row:
+	; get low byte
+
+	txa								; 1
+	and	#$19							; 2
+	lsr								; 1
+	bcs	odd_row							; 2
+	.byte	$2C	; bit, nop					; 1
+odd_row:
+	ora	#$2							; 2
+
+	lsr								; 1
+	tay								; 1
+	lda	<low_offsets,Y						; 2
+	tay								; 1
+								;===========
+								;        14
+
+	; high byte of store address
+	txa								; 1
+	and	#$7							; 2
+	lsr								; 1
+	ora	#$4							; 2
+								;===========
+								;	  6
+
+	rts								; 1
+
+low_offsets:
+	.byte	$00,$80,$28,$a8,$50,$d0
