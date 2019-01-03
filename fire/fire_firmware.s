@@ -32,15 +32,22 @@
 ; 109 bytes -- replace BIT/OR in low calc with an ADC
 ; 107 bytes -- replace self-modifying load/store absolute with Y-indirect
 ; 106 bytes -- assume bit 8 is as random as bit 0
+;  82 bytes -- use VTAB in firmware to setup addresses
+;		(Antoine Vignau on comp.sys.apple2 reminded me of this)
+
 
 ; Zero Page
 SEEDL		= $4E
 TEMP		= $00
 TEMPY		= $01
-OUTL		= $02
-OUTH		= $03
-INL		= $04
-INH		= $05
+OUTL		= $04
+OUTH		= $05
+BASL		= $28
+BASH		= $29
+COLOR		= $30
+
+; CRAZY OPT: start with BASL for hline in 7d0 already in place
+
 
 ; 100 = $64
 
@@ -52,6 +59,16 @@ LORES	= $C056	; Enable LORES graphics
 ; monitor routines
 GR	=	$F390
 
+; VTAB notes
+;	if Applesoft ROM, we can jump to ASOFT_VTAB which takes value in X
+;	this won't work on the original Apple II with Integer ROM
+;	we can jum to MON.TABV instead but then have to copy the value
+;	to Accumulator first
+;	This ovewrites CV (25)
+;	Result is in BASL:BASH (28/29)
+ASOFT_VTAB = $F25A
+MON_TABV   = $FB5B
+
 fire_demo:
 
 	; GR part
@@ -62,6 +79,9 @@ fire_demo:
 
 
 	; Setup white line on bottom
+
+	; note: calling HLINE in firmware would take at least 13 bytes
+	; open coded is 10
 
 	lda	#$ff							; 2
 	ldy	#39							; 2
@@ -82,15 +102,16 @@ yloop:
 	; setup the load/store addresses
 	; using Y-indirect is smaller than self-modifying code
 
-	jsr	get_row							; 3
-	sty	OUTL							; 2
+	jsr	ASOFT_VTAB						; 3
+
+	lda	BASL							; 2
+	sta	OUTL							; 2
+	lda	BASH							; 2
 	sta	OUTH							; 2
 
-	inx								; 1
+	inx
 
-	jsr	get_row							; 3
-	sty	INL							; 2
-	sta	INH							; 2
+	jsr	ASOFT_VTAB						; 3
 
 	ldy	#39							; 2
 xloop:
@@ -116,14 +137,14 @@ noEor:	sta	SEEDL							; 2
 	bmi	no_change	; assume bit 8 is as random as bit 0	; 2
 
 
-	lda	(INL),Y		; load value at row+1			; 2
+	lda	(BASL),Y		; load value at row+1			; 2
 	and	#$7		; mask off				; 2
 	tax								; 1
 	lda	<(color_progression),X					; 2
 
 	.byte	$2c	; BIT trick, nops out next instruction		; 1
 no_change:
-	lda	(INL),Y		; load value at row+1			; 2
+	lda	(BASL),Y		; load value at row+1			; 2
 
 
 smc_sta:
@@ -148,56 +169,5 @@ color_progression:
 	.byte	$99	; 13->9		; 1101 1001
 	.byte	$00	; 14->0		; 1110 0000
 	.byte	$dd	; 15->13	; 1111 1101
-
-
-
-
-	; Take row X and convert to address A:Y
-get_row:
-	; get low byte
-
-	; 000X X00O
-	;	lsr
-	; 0000 XX00   O
-	;      adc #1
-	; 0000 XXOx
-	; lsr
-	; 0000 0XXO
-	; lsr
-	; 0000 00XX   O
-	; ror
-
-	txa								; 1
-	and	#$19							; 2
-	lsr								; 1
-	adc	#1							; 2
-	lsr								; 1
-	lsr								; 1
-	tay								; 1
-	lda	<low_offsets,Y						; 2
-	ror								; 1
-	tay								; 1
-								;===========
-								;        13
-
-
-	; high byte of store address
-	txa								; 1
-	and	#$7							; 2
-	lsr								; 1
-	ora	#$4							; 2
-								;===========
-								;	  6
-
-	rts								; 1
-
-
-	; 14+6 = 20, as opposed to full lookup table which would be
-	; at least 24
-	; down to 13+3 at the expense of readability
-
-	; these are shifted left by one due to the algorithm
-low_offsets:
-	.byte	$00,$50,$a0
 
 
