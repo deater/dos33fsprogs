@@ -32,6 +32,9 @@
 ; 109 bytes -- replace BIT/OR in low calc with an ADC
 ; 107 bytes -- replace self-modifying load/store absolute with Y-indirect
 ; 106 bytes -- assume bit 8 is as random as bit 0
+; 105 bytes -- qkumba points out that GR leaves BASL:BASH pointing at line 23
+;              so we can use Y-indirect of BASL to draw the bottom white line
+
 
 ; Zero Page
 SEEDL		= $4E
@@ -41,6 +44,7 @@ OUTL		= $02
 OUTH		= $03
 INL		= $04
 INH		= $05
+BASL		= $28
 
 ; 100 = $64
 
@@ -64,10 +68,12 @@ fire_demo:
 
 	; Setup white line on bottom
 
+	; GR leaves BASL pointing at hline 23
+
 	lda	#$ff							; 2
 	ldy	#39							; 2
 white_loop:
-	sta	$7d0,Y			; hline 24 (46+47)		; 3
+	sta	(BASL),Y		; hline 23 (46+47)		; 3
 	dey								; 1
 	bpl	white_loop						; 2
 								;============

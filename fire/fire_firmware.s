@@ -34,7 +34,8 @@
 ; 106 bytes -- assume bit 8 is as random as bit 0
 ;  82 bytes -- use VTAB in firmware to setup addresses
 ;		(Antoine Vignau on comp.sys.apple2 reminded me of this)
-
+;  81 bytes -- qkumba points out that GR leaves BASL:BASH pointing at line 23
+;              so we can use Y-indirect of BASL to draw the bottom white line
 
 ; Zero Page
 SEEDL		= $4E
@@ -82,16 +83,19 @@ fire_demo:
 	; Setup white line on bottom
 
 	; note: calling HLINE in firmware would take at least 13 bytes
-	; open coded is 10
+
+	; below code is 9
+	; we depend on the call to MON_SETGR leaving BASL:BASH set for line 39
+	;  (thanks to qkumba)
 
 	lda	#$ff							; 2
 	ldy	#39							; 2
 white_loop:
-	sta	$7d0,Y			; hline 24 (46+47)		; 3
+	sta	(BASL),Y		; hline 23 (46+47)		; 2
 	dey								; 1
 	bpl	white_loop						; 2
 								;============
-								;        10
+								;         9
 
 fire_loop:
 
