@@ -40,6 +40,7 @@
 ;  83 bytes -- tried flipping x/y loops in case it allowed more optimization
 ;		but the display runs way too slow in that case
 ;  81 bytes -- call LF to increment CV + VTAB all at once
+;  80 bytes -- re-arrange how the random stuff happens.  remove last BIT hack
 
 ; Zero Page
 SEEDL		= $4E
@@ -128,6 +129,12 @@ yloop:
 	ldy	#39							; 2
 xloop:
 
+
+	lda	(BASL),Y		; load value at row+1		; 2
+	sta	(OUTL),Y						; 2
+	and	#$7		; mask off				; 2
+	tax								; 1
+
 	;=============================
 	; random8
 	;=============================
@@ -148,19 +155,10 @@ noEor:	sta	SEEDL							; 2
 
 	bmi	no_change	; assume bit 7 is as random as bit 0	; 2
 
-
-	lda	(BASL),Y		; load value at row+1		; 2
-	and	#$7		; mask off				; 2
-	tax								; 1
 	lda	<(color_progression),X					; 2
-
-	.byte	$2c	; BIT trick, nops out next instruction		; 1
-no_change:
-	lda	(BASL),Y		; load value at row+1		; 2
-
-
-smc_sta:
 	sta	(OUTL),Y						; 2
+no_change:
+
 	dey								; 1
 	bpl	xloop							; 2
 
