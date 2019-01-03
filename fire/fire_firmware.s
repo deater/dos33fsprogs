@@ -36,6 +36,8 @@
 ;		(Antoine Vignau on comp.sys.apple2 reminded me of this)
 ;  81 bytes -- qkumba points out that GR leaves BASL:BASH pointing at line 23
 ;              so we can use Y-indirect of BASL to draw the bottom white line
+;  83 bytes -- remove use of X as counter, use CV instead
+
 
 ; Zero Page
 SEEDL		= $4E
@@ -43,12 +45,10 @@ TEMP		= $00
 TEMPY		= $01
 OUTL		= $04
 OUTH		= $05
+CV		= $25
 BASL		= $28
 BASH		= $29
 COLOR		= $30
-
-; CRAZY OPT: start with BASL for hline in 7d0 already in place
-
 
 ; 100 = $64
 
@@ -70,6 +70,7 @@ MON_SETGR	=	$FB40
 ;	Result is in BASL:BASH (28/29)
 ASOFT_VTAB = $F25A
 MON_TABV   = $FB5B
+VTAB		= $FC22
 
 fire_demo:
 
@@ -99,24 +100,27 @@ white_loop:
 
 fire_loop:
 
-	ldx	#22			; 22				; 2
+	lda	#22		; start at line 22			; 2
+	sta	CV	; 						; 2
 
 yloop:
-	stx	TEMPY	; txa/pha not any better			; 2
+
 
 	; setup the load/store addresses
 	; using Y-indirect is smaller than self-modifying code
 
-	jsr	ASOFT_VTAB						; 3
+	jsr	VTAB							; 3
 
 	lda	BASL							; 2
 	sta	OUTL							; 2
 	lda	BASH							; 2
 	sta	OUTH							; 2
 
-	inx
+	inc	CV							; 2
 
-	jsr	ASOFT_VTAB						; 3
+	jsr	VTAB							; 3
+
+	dec	CV							; 2
 
 	ldy	#39							; 2
 xloop:
@@ -139,17 +143,17 @@ noEor:	sta	SEEDL							; 2
 
 	; end inlined RNG
 
-	bmi	no_change	; assume bit 8 is as random as bit 0	; 2
+	bmi	no_change	; assume bit 7 is as random as bit 0	; 2
 
 
-	lda	(BASL),Y		; load value at row+1			; 2
+	lda	(BASL),Y		; load value at row+1		; 2
 	and	#$7		; mask off				; 2
 	tax								; 1
 	lda	<(color_progression),X					; 2
 
 	.byte	$2c	; BIT trick, nops out next instruction		; 1
 no_change:
-	lda	(BASL),Y		; load value at row+1			; 2
+	lda	(BASL),Y		; load value at row+1		; 2
 
 
 smc_sta:
@@ -157,9 +161,8 @@ smc_sta:
 	dey								; 1
 	bpl	xloop							; 2
 
-	ldx	TEMPY							; 2
+	dec	CV							; 2
 
-	dex								; 1
 	bpl	yloop							; 2
 
 	bmi	fire_loop						; 2
