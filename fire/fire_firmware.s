@@ -51,6 +51,7 @@ OUTH		= $05
 CV		= $25
 BASL		= $28
 BASH		= $29
+H2		= $2C
 COLOR		= $30
 
 ; 100 = $64
@@ -92,6 +93,13 @@ fire_demo:
 	; below code is 9
 	; we depend on the call to MON_SETGR leaving BASL:BASH set for line 39
 	;  (thanks to qkumba)
+
+CLEOL2 = $FCA0 ; on original II, they got rid of it on IIe :(
+
+
+;	lda	#$ff			; 2 bytes shorter on II/II+
+;	ldy	#0
+;	jsr	CLEOL2
 
 	lda	#$ff							; 2
 	ldy	#39							; 2
