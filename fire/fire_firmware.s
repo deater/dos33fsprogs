@@ -37,7 +37,9 @@
 ;  81 bytes -- qkumba points out that GR leaves BASL:BASH pointing at line 23
 ;              so we can use Y-indirect of BASL to draw the bottom white line
 ;  83 bytes -- remove use of X as counter, use CV instead
-
+;  83 bytes -- tried flipping x/y loops in case it allowed more optimization
+;		but the display runs way too slow in that case
+;  81 bytes -- call LF to increment CV + VTAB all at once
 
 ; Zero Page
 SEEDL		= $4E
@@ -71,6 +73,7 @@ MON_SETGR	=	$FB40
 ASOFT_VTAB = $F25A
 MON_TABV   = $FB5B
 VTAB		= $FC22
+LF		= $FC66
 
 fire_demo:
 
@@ -109,6 +112,7 @@ yloop:
 	; setup the load/store addresses
 	; using Y-indirect is smaller than self-modifying code
 
+	; setup destination to write to (CV) in OUTL:OUTH
 	jsr	VTAB							; 3
 
 	lda	BASL							; 2
@@ -116,11 +120,10 @@ yloop:
 	lda	BASH							; 2
 	sta	OUTH							; 2
 
-	inc	CV							; 2
+	; setup source to read from in (CV+1) in BASL:BASH
+	jsr	LF			; this increments CV and calls VTAB
 
-	jsr	VTAB							; 3
-
-	dec	CV							; 2
+	dec	CV			; restore CV			; 2
 
 	ldy	#39							; 2
 xloop:
