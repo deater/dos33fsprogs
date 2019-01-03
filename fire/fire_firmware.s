@@ -57,7 +57,8 @@ FULLGR	= $C052	; Full screen, no text
 LORES	= $C056	; Enable LORES graphics
 
 ; monitor routines
-GR	=	$F390
+ASOFT_GR	=	$F390
+MON_SETGR	=	$FB40
 
 ; VTAB notes
 ;	if Applesoft ROM, we can jump to ASOFT_VTAB which takes value in X
@@ -72,7 +73,7 @@ MON_TABV   = $FB5B
 fire_demo:
 
 	; GR part
-	jsr	GR							; 3
+	jsr	MON_SETGR						; 3
 	bit	FULLGR							; 3
 								;==========
 								;         6
