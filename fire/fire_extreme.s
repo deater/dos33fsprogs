@@ -11,6 +11,15 @@
 ;  64 bytes -- use the firmware SCROLL routine to handle the scrolling
 ;              this adds some flicker but saves many bytes
 ;  63 bytes -- qkumba noted that SCROLL leaves BAS2L:BAS2H pointing at $7d0
+;  66 bytes -- tried on real hardware.  Found that the original firmware
+;              never sets MIXCLR on boot, and my II+ machine was leaving
+;              it off so for correctness need to add it on.
+;  66 bytes -- wasted a lot of time trying to either find clever ways to
+;              get $C050/C052 accessed, or to shorten the lookup table
+;              in half by lsr.  Nothing panned out.
+;  64 bytes -- realized I could save/restore the random SEEDL on the stack!
+;              doesn't seem to affect the output pattern either.
+
 
 ; Zero Page
 
@@ -25,7 +34,7 @@ SEEDL		= $4E
 
 ; Soft Switches
 SET_GR	= $C050 ; Enable graphics
-FULLGR	= $C052	; Full screen, no text
+MIXCLR	= $C052	; Full screen, no text at bottom
 LORES	= $C056	; Enable LORES graphics
 
 ; Monitor ROM routines.  Try to use well-known entry points as
@@ -39,10 +48,14 @@ fire_demo:
 	; Set lores graphics
 
 	bit	SET_GR		; force graphics mode			; 3
-				; happily at bootup FULLGR and LORES
-				; seem to already be in the right positions
-				; so we get LORES 40x48 mode
+				; LORES and LOWSCR (lo-res page1)
+				; are set by the boot rom
 
+	bit	MIXCLR		; want full-screen graphics w/o mixed	; 3
+				; text the boot process doesn't set this
+				; (it doesn't matter in text mode)
+				; and while IIe and emulators come up clear
+				; my Apple II+ doesn't
 
 	; Set window.  This seems to be set properly at boot though
 	;	lda	#0
@@ -95,13 +108,15 @@ xloop:
 	; http://codebase64.org/doku.php?id=base:small_fast_8-bit_prng
 
 random8:
-	lda	SEEDL							; 2
+	pla
+;	lda	SEEDL							; 2
 	beq	doEor							; 2
 	asl								; 1
 	beq	noEor	; if the input was $80, skip the EOR		; 2
 	bcc	noEor							; 2
 doEor:	eor	#$1d							; 2
-noEor:	sta	SEEDL							; 2
+noEor:	;sta	SEEDL							; 2
+	pha
 
 	; end inlined RNG
 
@@ -125,14 +140,13 @@ no_change:
 
 	bmi	scroll_loop						; 2
 
-
 color_progression:
-	.byte	$00	; 8->0		; 1000 0000
-	.byte	$bb	; 9->11		; 1001 1011
-	.byte	$00	; 10->0		; 1010 0000
-	.byte	$aa	; 11->10	; 1011 1010
-	.byte	$00	; 12->0		; 1100 0000
-	.byte	$99	; 13->9		; 1101 1001
-	.byte	$00	; 14->0		; 1110 0000
-	.byte	$dd	; 15->13	; 1111 1101
+	.byte	$00	; 8->0		; 1000 -> 0000	; needed
+	.byte	$bb	; 9->11		; 1001 -> 1011
+	.byte	$00	; 10->0		; 1010 -> 0000  ; needed
+	.byte	$aa	; 11->10	; 1011 -> 1010
+	.byte	$00	; 12->0		; 1100 -> 0000	; don't care
+	.byte	$99	; 13->9		; 1101 -> 1001
+	.byte	$00	; 14->0		; 1110 -> 0000	; don't care
+	.byte	$dd	; 15->13	; 1111 -> 1101
 
