@@ -1,4 +1,4 @@
-; Apple ][ Lo-res fire animation, size-optimized to 63 bytes
+; Apple ][ Lo-res fire animation, size-optimized to 64 bytes
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
