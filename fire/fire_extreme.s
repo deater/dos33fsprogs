@@ -1,4 +1,4 @@
-; Apple ][ Lo-res fire animation, size-optimized to 64 bytes
+; Apple ][ Lo-res fire animation, size-optimized to 63 bytes
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -10,7 +10,7 @@
 ;  80 bytes -- the size of tire_tiny.s
 ;  64 bytes -- use the firmware SCROLL routine to handle the scrolling
 ;              this adds some flicker but saves many bytes
-
+;  63 bytes -- qkumba noted that SCROLL leaves BAS2L:BAS2H pointing at $7d0
 
 ; Zero Page
 
@@ -19,6 +19,8 @@ WNDBTM		= $23
 CV		= $25
 BASL		= $28
 BASH		= $29
+BAS2L		= $2A
+BAS2H		= $2B
 SEEDL		= $4E
 
 ; Soft Switches
@@ -57,13 +59,17 @@ scroll_loop:
 	;======================================
 	; re-draw bottom line (row 23) as white
 
-	lda	#$ff			; top/bottom white		; 2
-;	ldy	#39			; Y is left at 40 after SCROLL
 
+	; Y is left at 40 after SCROLL
+	; also BAS2L:BAS2H is left at $7d0
+	; this code over-writes $7F8 (the MSLOT screen hole value)
+	;   but this should not matter for this demo
+
+	lda	#$ff			; top/bottom white		; 2
 w_loop:
-	sta	$7cf,Y		; hline 23 (46+47)			; 2
+	sta	(BAS2L),Y		; hline 23 (46+47)		; 2
 	dey								; 1
-	bne	w_loop							; 2
+	bpl	w_loop							; 2
 								;============
 								;         8
 
