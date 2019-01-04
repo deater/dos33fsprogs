@@ -30,7 +30,7 @@ LORES	= $C056	; Enable LORES graphics
 ;			these did sometimes change with newer models
 SCROLL	= $FC70
 VTAB	= $FC22	; takes row in CV, Result is in BASL:BASH ($28/$29)
-VTABZ	= $FC24	; VTABZ variant vakes row in Accumulator
+VTABZ	= $FC24	; VTABZ variant takes row in Accumulator
 
 fire_demo:
 
