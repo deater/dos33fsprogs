@@ -6,13 +6,14 @@ PNG_TO_RLE = ../gr-utils/png2rle
 
 all:	fire.dsk
 
-fire.dsk:	FIRE FIRE_TINY FIRE_FIRMWARE FIRE_EXTREME FIRE_QKUMBA HELLO COOL_EFFECT
+fire.dsk:	FIRE FIRE_TINY FIRE_FIRMWARE FIRE_EXTREME FIRE_QKUMBA HELLO COOL_EFFECT RASTER
 	$(DOS33) -y fire.dsk SAVE A HELLO
 	$(DOS33) -y fire.dsk BSAVE -a 0x1000 FIRE
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 FIRE_TINY
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 FIRE_FIRMWARE
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 FIRE_EXTREME
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 FIRE_QKUMBA
+	$(DOS33) -y fire.dsk BSAVE -a 0x70 RASTER
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 COOL_EFFECT
 
 ####
@@ -67,6 +68,14 @@ cool_effect.o:	cool_effect.s
 	ca65 -o cool_effect.o cool_effect.s -l cool_effect.lst
 
 
+####
+
+
+RASTER:	raster.o
+	ld65 -o RASTER raster.o -C ../linker_scripts/apple2_70.inc
+
+raster.o:	raster.s
+	ca65 -o raster.o raster.s -l raster.lst
 
 ####
 
@@ -77,6 +86,7 @@ HELLO:  hello.bas
 #####
 
 clean:		
-		rm -f *~ *.o *.lst FIRE FIRE_TINY FIRE_FIRMWARE COOL_EFFECT HELLO FIRE_EXTREME FIRE_QKUMBA
+		rm -f *~ *.o *.lst FIRE FIRE_TINY FIRE_FIRMWARE COOL_EFFECT HELLO FIRE_EXTREME FIRE_QKUMBA RASTER
+
 
 
