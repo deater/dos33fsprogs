@@ -6,12 +6,13 @@ PNG_TO_RLE = ../gr-utils/png2rle
 
 all:	fire.dsk
 
-fire.dsk:	FIRE FIRE_TINY FIRE_FIRMWARE FIRE_EXTREME HELLO COOL_EFFECT
+fire.dsk:	FIRE FIRE_TINY FIRE_FIRMWARE FIRE_EXTREME FIRE_QKUMBA HELLO COOL_EFFECT
 	$(DOS33) -y fire.dsk SAVE A HELLO
 	$(DOS33) -y fire.dsk BSAVE -a 0x1000 FIRE
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 FIRE_TINY
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 FIRE_FIRMWARE
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 FIRE_EXTREME
+	$(DOS33) -y fire.dsk BSAVE -a 0x70 FIRE_QKUMBA
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 COOL_EFFECT
 
 ####
@@ -47,6 +48,14 @@ FIRE_EXTREME:	fire_extreme.o
 fire_extreme.o:	fire_extreme.s
 	ca65 -o fire_extreme.o fire_extreme.s -l fire_extreme.lst
 
+####
+
+FIRE_QKUMBA:	fire_qkumba.o
+	ld65 -o FIRE_QKUMBA fire_qkumba.o -C ../linker_scripts/apple2_70.inc
+
+fire_qkumba.o:	fire_qkumba.s
+	ca65 -o fire_qkumba.o fire_qkumba.s -l fire_qkumba.lst
+
 
 
 ####
@@ -68,6 +77,6 @@ HELLO:  hello.bas
 #####
 
 clean:		
-		rm -f *~ *.o *.lst FIRE FIRE_TINY FIRE_FIRMWARE COOL_EFFECT HELLO FIRE_EXTREME
+		rm -f *~ *.o *.lst FIRE FIRE_TINY FIRE_FIRMWARE COOL_EFFECT HELLO FIRE_EXTREME FIRE_QKUMBA
 
 
