@@ -85,18 +85,14 @@ no_change:
 
 
 color_progression:
-	.byte	$03
-	.byte	$bf
-	.byte	$b3
-	.byte	$00
-	.byte	$00
-	.byte	$02
-	.byte	$6f
-	.byte	$62
-
-
-
-
+	.byte	$00	; 8->0		; 1000 -> 0000	; needed
+	.byte	$bb	; 9->11		; 1001 -> 1011
+	.byte	$00	; 10->0		; 1010 -> 0000  ; needed
+	.byte	$aa	; 11->10	; 1011 -> 1010
+	.byte	$00	; 12->0		; 1100 -> 0000	; don't care
+	.byte	$99	; 13->9		; 1101 -> 1001
+	.byte	$00	; 14->0		; 1110 -> 0000	; don't care
+	.byte	$dd	; 15->13	; 1111 -> 1101
 
 
 	;=============================
