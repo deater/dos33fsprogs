@@ -24,6 +24,8 @@ SCROLL	= $FC70
 VTAB	= $FC22	; takes row in CV, Result is in BASL:BASH ($28/$29)
 VTABZ	= $FC24	; VTABZ variant takes row in Accumulator
 
+WAIT    = $FCA8                 ;; delay 1/2(26+27A+5A^2) us
+
 raster_demo:
 
 	; Set lores graphics
@@ -46,10 +48,15 @@ raster_demo:
 
 reset_scroll:
 
+
 	jsr	random8
 	sta	CV
 
 scroll_loop:
+
+	lda	#$80
+	jsr	WAIT
+
 
 	jsr	SCROLL		; scrolls screen up one row		; 3
 
