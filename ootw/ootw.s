@@ -185,32 +185,26 @@ draw_physicist:
 	sta	GAIT
 	tax
 
-	lda	DIRECTION
-	beq	facing_left
-
-facing_right:
-
-	lda	adv_walk_right_progression,X
+	lda	phys_walk_progression,X
 	sta	INL
 
-	lda	adv_walk_right_progression+1,X
+	lda	phys_walk_progression+1,X
 	sta	INH
-	jmp	draw_him
+
+	lda	PHYSICIST_X
+	sta	XPOS
+	lda	PHYSICIST_Y
+	sta	YPOS
+
+	lda	DIRECTION
+	bne	facing_right
 
 facing_left:
-	lda	adv_walk_left_progression,X
-	sta	INL
-	lda	adv_walk_left_progression+1,X
-	sta	INH
-
-draw_him:
-
-        lda     PHYSICIST_X
-        sta     XPOS
-        lda     PHYSICIST_Y
-        sta     YPOS
-
         jsr     put_sprite	; make this a "jmp"?
+	rts
+
+facing_right:
+	jsr	put_sprite_flipped
 
 	rts
 
