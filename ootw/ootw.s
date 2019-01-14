@@ -61,6 +61,9 @@ title_screen:
 	lda	#20
 	sta	ADV_X
 
+	lda	#1
+	sta	DIRECTION
+
 game_loop:
 
 	; check keyboard
@@ -73,13 +76,23 @@ game_loop:
 
 	; draw adventurer
 
-	lda	#>stand_right
+	lda	DIRECTION
+	beq	stand_left
+
+stand_right:
+	lda	#>adv_stand_right
 	sta	INH
-	lda	#<stand_right
+	lda	#<adv_stand_right
+	sta	INL
+	jmp	done_walking
+
+stand_left:
+	lda	#>adv_stand_left
+	sta	INH
+	lda	#<adv_stand_left
 	sta	INL
 
 done_walking:
-
 
         lda     ADV_X
         sta     XPOS
@@ -136,7 +149,15 @@ check_left:
 	cmp	#$8		; left arrow
 	bne	check_right
 left:
+	lda	DIRECTION
+	bne	face_left
+
 	dec	ADV_X
+	jmp	done_keypress
+
+face_left:
+	lda	#0
+	sta	DIRECTION
 	jmp	done_keypress
 
 check_right:
@@ -145,7 +166,15 @@ check_right:
 	cmp	#$15
 	bne	unknown
 right:
+	lda	DIRECTION
+	beq	face_right
+
 	inc	ADV_X
+	jmp	done_keypress
+
+face_right:
+	lda	#1
+	sta	DIRECTION
 	jmp	done_keypress
 
 unknown:

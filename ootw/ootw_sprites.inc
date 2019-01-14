@@ -1,4 +1,4 @@
-stand_right:
+adv_stand_right:
 	.byte $4,$8
 	.byte $aa,$9a,$9a,$aa
 	.byte $aa,$99,$bb,$aa
@@ -9,7 +9,7 @@ stand_right:
 	.byte $aa,$44,$aa,$aa
 	.byte $aa,$f4,$fa,$aa
 
-stand_left:
+adv_stand_left:
 	.byte $4,$8
 	.byte $aa,$9a,$9a,$aa
 	.byte $aa,$bb,$99,$aa

@@ -147,14 +147,12 @@ DISP_PAGE	= $ED
 DRAW_PAGE	= $EE
 OFFSET         = $EF
 
-				;FIRST		=	$F0
-
-ADV_X		=	$F1
-ADV_Y		=	$F2
-
+ADV_X		=	$F0
+ADV_Y		=	$F1
 SPRITETEMP	=	$F2
 XPOS		=	$F3
 YPOS		=	$F4
+DIRECTION	=	$F5
 TEMP		=	$FA
 TEMPY		=	$FB
 INL		=	$FC
