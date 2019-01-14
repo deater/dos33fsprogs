@@ -57,12 +57,15 @@ title_screen:
 	;=================================
 	; setup vars
 	lda	#22
-	sta	ADV_Y
+	sta	PHYSICIST_Y
 	lda	#20
-	sta	ADV_X
+	sta	PHYSICIST_X
 
 	lda	#1
 	sta	DIRECTION
+
+	lda	#0
+	sta	GAIT
 
 game_loop:
 
@@ -74,33 +77,9 @@ game_loop:
 
 	jsr	gr_copy_to_current
 
-	; draw adventurer
+	; draw physicist
 
-	lda	DIRECTION
-	beq	stand_left
-
-stand_right:
-	lda	#>adv_stand_right
-	sta	INH
-	lda	#<adv_stand_right
-	sta	INL
-	jmp	done_walking
-
-stand_left:
-	lda	#>adv_stand_left
-	sta	INH
-	lda	#<adv_stand_left
-	sta	INL
-
-done_walking:
-
-        lda     ADV_X
-        sta     XPOS
-        lda     ADV_Y
-        sta     YPOS
-
-        jsr     put_sprite
-
+	jsr	draw_physicist
 
 
 	; draw bad guys
@@ -152,12 +131,16 @@ left:
 	lda	DIRECTION
 	bne	face_left
 
-	dec	ADV_X
+	dec	PHYSICIST_X
+	inc	GAIT
+	inc	GAIT
+
 	jmp	done_keypress
 
 face_left:
 	lda	#0
 	sta	DIRECTION
+	sta	GAIT
 	jmp	done_keypress
 
 check_right:
@@ -169,10 +152,14 @@ right:
 	lda	DIRECTION
 	beq	face_right
 
-	inc	ADV_X
+	inc	PHYSICIST_X
+	inc	GAIT
+	inc	GAIT
 	jmp	done_keypress
 
 face_right:
+	lda	#0
+	sta	GAIT
 	lda	#1
 	sta	DIRECTION
 	jmp	done_keypress
@@ -187,7 +174,48 @@ no_keypress:
 
 
 
-;.include "wait_keypress.s"
+;======================================
+; draw physicist
+;======================================
+
+draw_physicist:
+
+	lda	GAIT
+	and	#$f
+	sta	GAIT
+	tax
+
+	lda	DIRECTION
+	beq	facing_left
+
+facing_right:
+
+	lda	adv_walk_right_progression,X
+	sta	INL
+
+	lda	adv_walk_right_progression+1,X
+	sta	INH
+	jmp	draw_him
+
+facing_left:
+	lda	adv_walk_left_progression,X
+	sta	INL
+	lda	adv_walk_left_progression+1,X
+	sta	INH
+
+draw_him:
+
+        lda     PHYSICIST_X
+        sta     XPOS
+        lda     PHYSICIST_Y
+        sta     YPOS
+
+        jsr     put_sprite	; make this a "jmp"?
+
+	rts
+
+
+
 .include "gr_pageflip.s"
 .include "gr_unrle.s"
 .include "gr_fast_clear.s"
