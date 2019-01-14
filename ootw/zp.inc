@@ -149,8 +149,8 @@ OFFSET         = $EF
 
 				;FIRST		=	$F0
 
-LASTKEY         = $F1
-PADDLE_STATUS   = $F2
+ADV_X		=	$F1
+ADV_Y		=	$F2
 
 SPRITETEMP	=	$F2
 XPOS		=	$F3

@@ -33,12 +33,12 @@ title_screen:
 
 
 	;=============================
-	; Load title_rle
+	; Load background to $c00
 
 	lda	#$0c
 	sta	BASH
 	lda	#$00
-	sta	BASL			; load image off-screen 0xc00
+	sta	BASL			; load image off-screen $c00
 
 	lda     #>(planet_rle)
         sta     GBASH
@@ -47,32 +47,89 @@ title_screen:
 	jsr	load_rle_gr
 
 	;=================================
-	; copy to both pages
+	; copy to both pages $400/$800
 
 	jsr	gr_copy_to_current
 	jsr	page_flip
 	jsr	gr_copy_to_current
 
-	lda	#20
-	sta	YPOS
-	lda	#20
-	sta	XPOS
 
 	;=================================
-	; wait for keypress
+	; setup vars
+	lda	#22
+	sta	ADV_Y
+	lda	#20
+	sta	ADV_X
 
-forever:
-	jsr	wait_until_keypress
+game_loop:
 
-;	jsr	TEXT
+	; check keyboard
+
+	jsr	handle_keypress
+
+	; copy background to current page
+
+	; draw adventurer
+
+	lda	#>stand_right
+	sta	INH
+	lda	#<stand_right
+	sta	INL
+
+done_walking:
+
+
+        lda     ADV_X
+        sta     XPOS
+        lda     ADV_Y
+        sta     YPOS
+
+        jsr     put_sprite
+
+
+
+	; draw bad guys
+
+	; draw foreground
+
+	; page flip
 
 	jsr	page_flip
 
-	jmp	forever
+	; pause?
 
-.include "wait_keypress.s"
+	; loop forever
+
+	jmp	game_loop
+
+
+;======================================
+; handle keypress
+;======================================
+
+handle_keypress:
+
+	lda	KEYPRESS						; 4
+	bpl	no_keypress						; 3
+
+									; -1
+
+
+	bit	KEYRESET	; clear the keyboard strobe		; 4
+
+
+no_keypress:
+	rts								; 6
+
+
+
+;.include "wait_keypress.s"
 .include "gr_pageflip.s"
 .include "gr_unrle.s"
 .include "gr_fast_clear.s"
 .include "gr_copy.s"
+.include "gr_putsprite.s"
+.include "gr_offsets.s"
 .include "ootw_backgrounds.inc"
+.include "ootw_sprites.inc"
+

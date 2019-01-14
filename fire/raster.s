@@ -92,14 +92,18 @@ no_change:
 
 
 color_progression:
-	.byte	$03
-	.byte	$bf
-	.byte	$b3
+;	.byte	$04	; black / d.green
+;	.byte	$cf	; l.green / white
+;	.byte	$c4	; l.green / d.green
+
+	.byte	$03	; black / purple
+	.byte	$bf	; pink / white
+	.byte	$b3	; pink / purple
 	.byte	$00
 	.byte	$00
-	.byte	$02
-	.byte	$6f
-	.byte	$62
+	.byte	$02	; black/ dblue
+	.byte	$6f	; med blue / white
+	.byte	$62	; med blue / dblue
 
 
 
