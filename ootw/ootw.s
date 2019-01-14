@@ -94,6 +94,18 @@ done_walking:
 
 	; draw foreground
 
+	lda	#>foreground_plant
+	sta	INH
+	lda	#<foreground_plant
+	sta	INL
+
+        lda     #4
+        sta     XPOS
+        lda     #30
+        sta     YPOS
+
+	jsr	put_sprite
+
 	; page flip
 
 	jsr	page_flip
