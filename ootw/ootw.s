@@ -69,6 +69,8 @@ game_loop:
 
 	; copy background to current page
 
+	jsr	gr_copy_to_current
+
 	; draw adventurer
 
 	lda	#>stand_right
@@ -114,7 +116,28 @@ handle_keypress:
 
 									; -1
 
+	and	#$7f		; clear high bit
 
+check_left:
+	cmp	#'A'
+	beq	left
+	cmp	#$8		; left arrow
+	bne	check_right
+left:
+	dec	ADV_X
+	jmp	done_keypress
+
+check_right:
+	cmp	#'D'
+	beq	right
+	cmp	#$15
+	bne	unknown
+right:
+	inc	ADV_X
+	jmp	done_keypress
+
+unknown:
+done_keypress:
 	bit	KEYRESET	; clear the keyboard strobe		; 4
 
 
