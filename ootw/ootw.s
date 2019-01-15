@@ -200,14 +200,10 @@ draw_physicist:
 	bne	facing_right
 
 facing_left:
-        jsr     put_sprite	; make this a "jmp"?
-	rts
+        jmp	put_sprite
 
 facing_right:
-	jsr	put_sprite_flipped
-
-	rts
-
+	jmp	put_sprite_flipped
 
 
 .include "gr_pageflip.s"

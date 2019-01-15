@@ -101,8 +101,8 @@ phys_walk_left7:
 
 
 
-
-
+;=======================
+; scenery
 
 foreground_plant:
 	.byte	$5,$5
@@ -112,3 +112,34 @@ foreground_plant:
 	.byte	$0a,$0a,$00,$aa,$0a
 	.byte	$aa,$aa,$00,$aa,$00
 
+
+pool_ripples:
+	.word	ripple1
+	.word	ripple2
+	.word	ripple3
+
+
+ripple1:
+	.byte	$3,$1
+	.byte	$5a,$5a,$5a
+
+ripple2:
+	.byte	$3,$1
+	.byte	$aa,$5a,$aa
+
+ripple3:
+	.byte	$3,$1
+	.byte	$aa,$aa,$aa
+
+
+
+;=========================
+; slug creatures
+
+slug1:
+	.byte	$3,$1
+	.byte	$0a,$0a,$0a
+
+slug2:
+	.byte	$3,$1
+	.byte	$0a,$a0,$0a
