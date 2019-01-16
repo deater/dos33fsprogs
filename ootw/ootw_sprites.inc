@@ -112,6 +112,14 @@ foreground_plant:
 	.byte	$0a,$0a,$00,$aa,$0a
 	.byte	$aa,$aa,$00,$aa,$00
 
+foreground_plant2:
+	.byte	$5,$5
+	.byte	$aa,$00,$aa,$aa,$aa
+	.byte	$aa,$a0,$0a,$aa,$aa
+	.byte	$aa,$aa,$00,$aa,$aa
+	.byte	$0a,$0a,$00,$aa,$0a
+	.byte	$aa,$aa,$00,$aa,$00
+
 
 pool_ripples:
 	.word	ripple1
@@ -151,3 +159,159 @@ slug_attack:
 	.byte	$4,$2
 	.byte	$00,$aa,$aa,$aa
 	.byte	$00,$aa,$aa,$aa
+
+
+;=======================
+; Tentacle
+
+tentacle0:
+	.byte	$2,$5
+	.byte	$aa,$aa
+	.byte	$aa,$aa
+	.byte	$aa,$aa
+	.byte	$aa,$aa
+	.byte	$aa,$5a
+
+tentacle1:
+	.byte	$2,$5
+	.byte	$aa,$aa
+	.byte	$aa,$aa
+	.byte	$aa,$aa
+	.byte	$aa,$aa
+	.byte	$aa,$00
+
+tentacle2:
+	.byte	$2,$5
+	.byte	$aa,$aa
+	.byte	$aa,$aa
+	.byte	$aa,$aa
+	.byte	$00,$aa
+	.byte	$aa,$00
+
+tentacle3:
+	.byte	$2,$5
+	.byte	$aa,$aa
+	.byte	$aa,$aa
+	.byte	$aa,$00
+	.byte	$00,$aa
+	.byte	$aa,$00
+
+tentacle4:
+	.byte	$2,$5
+	.byte	$aa,$aa
+	.byte	$00,$aa
+	.byte	$aa,$00
+	.byte	$00,$aa
+	.byte	$aa,$00
+
+tentacle5:
+	.byte	$2,$5
+	.byte	$aa,$00
+	.byte	$00,$aa
+	.byte	$aa,$00
+	.byte	$00,$aa
+	.byte	$aa,$00
+
+; TODO: trim right and bottom off sprites
+
+caught0:
+	.byte	$7,$8
+	.byte	$aa,$aa,$aa,$9a,$9a,$aa,$aa
+	.byte	$aa,$00,$00,$99,$bb,$aa,$aa
+	.byte	$aa,$00,$aa,$0b,$aa,$aa,$aa
+	.byte	$00,$aa,$aa,$bb,$aa,$aa,$aa
+	.byte	$aa,$00,$aa,$bb,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$44,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$44,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$f4,$fa,$aa,$aa
+
+caught1:
+	.byte	$7,$8
+	.byte	$aa,$aa,$aa,$9a,$9a,$aa,$aa
+	.byte	$aa,$aa,$aa,$99,$bb,$aa,$aa
+	.byte	$aa,$00,$00,$0b,$00,$aa,$aa
+	.byte	$00,$aa,$aa,$bb,$00,$0a,$aa
+	.byte	$aa,$00,$aa,$bb,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$44,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$44,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$f4,$fa,$aa,$aa
+
+caught2:
+	.byte	$7,$8
+	.byte	$aa,$aa,$aa,$9a,$9a,$aa,$aa
+	.byte	$aa,$bb,$aa,$bb,$bb,$aa,$bb
+	.byte	$aa,$aa,$bb,$0b,$0b,$bb,$aa
+	.byte	$aa,$0a,$0a,$00,$00,$0a,$aa
+	.byte	$aa,$00,$aa,$00,$00,$a0,$aa
+	.byte	$aa,$aa,$aa,$44,$44,$aa,$aa
+	.byte	$aa,$aa,$aa,$44,$44,$aa,$aa
+	.byte	$aa,$aa,$aa,$f4,$f4,$aa,$aa
+
+caught3:
+	.byte	$7,$8
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$b9,$b9,$aa,$aa
+	.byte	$aa,$aa,$bb,$0b,$0b,$bb,$aa
+	.byte	$aa,$0a,$0a,$00,$00,$0a,$aa
+	.byte	$aa,$00,$aa,$00,$00,$a0,$aa
+	.byte	$aa,$aa,$aa,$44,$44,$aa,$aa
+	.byte	$aa,$aa,$aa,$af,$af,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+
+caught4:
+	.byte	$7,$8
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$9a,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$bb,$aa,$aa,$aa
+	.byte	$aa,$aa,$0a,$0b,$aa,$aa,$aa
+	.byte	$aa,$aa,$00,$40,$0a,$a0,$aa
+	.byte	$aa,$aa,$aa,$af,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+
+caught5:
+	.byte	$7,$8
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$9a,$aa,$aa,$aa
+	.byte	$aa,$ae,$0a,$b0,$ae,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+
+caught6:
+	.byte	$7,$8
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$ea,$aa,$aa,$aa,$ea,$aa
+	.byte	$aa,$aa,$5a,$0e,$5a,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+
+caught7:
+	.byte	$7,$8
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$ea,$aa,$aa,$aa
+	.byte	$aa,$ae,$5a,$5a,$5a,$ae,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+
+caught8:
+	.byte	$7,$8
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$5e,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+
+
+
