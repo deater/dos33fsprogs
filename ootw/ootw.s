@@ -5,7 +5,7 @@
 
 
 
-title_screen:
+ootw:
 	;===========================
 	; Enable graphics
 
@@ -77,12 +77,18 @@ game_loop:
 
 	jsr	gr_copy_to_current
 
+
+	; draw pool ripples
+
+
 	; draw physicist
 
 	jsr	draw_physicist
 
 
-	; draw bad guys
+	; draw slugs
+
+	jsr	draw_slugs
 
 	; draw foreground
 
@@ -121,6 +127,14 @@ handle_keypress:
 									; -1
 
 	and	#$7f		; clear high bit
+
+check_quit:
+	cmp	#'Q'
+	beq	quit
+	cmp	#27
+	bne	check_left
+quit:
+	jmp	quit_level
 
 check_left:
 	cmp	#'A'
@@ -205,6 +219,105 @@ facing_left:
 facing_right:
 	jmp	put_sprite_flipped
 
+
+;==================================
+; draw slugs
+;==================================
+
+slugg0_out:	.byte	$1
+slugg0_x:	.byte	$01
+slugg0_dir:	.byte	$1
+slugg0_gait:	.byte	$0
+
+; ___  _-_  
+
+draw_slugs:
+
+	lda	slugg0_out
+	beq	slug_done		; don't draw if not there
+
+	inc	slugg0_gait
+
+	lda	slugg0_gait
+	and	#$1f
+	cmp	#$00
+	bne	slug_no_move
+
+slug_move:
+	lda	slugg0_x
+	clc
+	adc	slugg0_dir
+	sta	slugg0_x
+
+	cmp	#37
+	beq	remove_slug
+
+slug_no_move:
+
+	lda	slugg0_gait
+	and	#$10
+	beq	slug_squinched
+
+slug_flat:
+	lda	#<slug1
+	sta	INL
+	lda	#>slug1
+	sta	INH
+	bne	slug_selected
+
+slug_squinched:
+	lda	#<slug2
+	sta	INL
+	lda	#>slug2
+	sta	INH
+
+slug_selected:
+
+
+	lda	slugg0_x
+	sta	XPOS
+	lda	#34
+	sta	YPOS
+
+	lda	DIRECTION
+	bmi	slug_right
+
+slug_left:
+        jsr	put_sprite
+	jmp	slug_done
+
+slug_right:
+	jsr	put_sprite_flipped
+
+slug_done:
+	rts
+
+remove_slug:
+	lda	#0
+	sta	slugg0_out
+	rts
+
+
+;===========================
+; quit_level
+;===========================
+
+quit_level:
+	jsr	TEXT
+	jsr	HOME
+	lda	KEYRESET		; clear strobe
+
+wait_loop:
+	lda	KEYPRESS
+	bpl	wait_loop
+
+	lda	KEYRESET		; clear strobe
+
+	jmp	ootw
+
+
+.byte	"PRESS RETURN TO CONTINUE"
+.byte	"ACCESS CODE: IH8S"
 
 .include "gr_pageflip.s"
 .include "gr_unrle.s"

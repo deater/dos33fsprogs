@@ -135,11 +135,19 @@ ripple3:
 
 ;=========================
 ; slug creatures
+;	going left
 
 slug1:
-	.byte	$3,$1
-	.byte	$0a,$0a,$0a
+	.byte	$4,$2
+	.byte	$aa,$aa,$aa,$aa
+	.byte	$0a,$0a,$0a,$0a
 
 slug2:
-	.byte	$3,$1
-	.byte	$0a,$a0,$0a
+	.byte	$4,$2
+	.byte	$aa,$aa,$aa,$aa
+	.byte	$0a,$a0,$0a,$aa
+
+slug_attack:
+	.byte	$4,$2
+	.byte	$00,$aa,$aa,$aa
+	.byte	$00,$aa,$aa,$aa
