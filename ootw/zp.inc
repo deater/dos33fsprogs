@@ -131,6 +131,7 @@ CURSOR		= $9D
 XX	=	$E3
 YY	=	$E4
 HGR_COLOR       = $E4
+GAME_OVER	= $E5
 			;SHIPY		=	$E4
 			;YADD		=	$E5
 			;LOOP		=	$E6
