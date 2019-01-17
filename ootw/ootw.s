@@ -244,6 +244,14 @@ right:
 	beq	face_right
 
 	inc	PHYSICIST_X
+	lda	PHYSICIST_X
+	cmp	#37
+	bne	just_fine_right
+too_far_right:
+	dec	PHYSICIST_X
+just_fine_right:
+
+
 	inc	GAIT
 	inc	GAIT
 	jmp	done_keypress
