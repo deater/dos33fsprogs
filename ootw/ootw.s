@@ -67,12 +67,16 @@ ootw:
 	lda	#0
 	sta	GAIT
 
+	;============================
+	; Main Loop
+	;============================
 game_loop:
 
 	; check keyboard
 
 	jsr	handle_keypress
 
+	;================================
 	; copy background to current page
 
 	jsr	gr_copy_to_current
@@ -143,22 +147,32 @@ game_loop:
 	jsr	put_sprite
 
 
-
+	;===============
 	; draw physicist
 
 	jsr	draw_physicist
 
-
+	;===============
 	; draw slugs
 
 	jsr	draw_slugs
 
-	; draw foreground
+	;======================
+	; draw foreground plant
 
-	lda	#>foreground_plant
-	sta	INH
-	lda	#<foreground_plant
+	lda	FRAMEL
+	and	#$c0		; 0110 1100
+	lsr
+	lsr
+	lsr
+	lsr
+	lsr
+	tax
+
+	lda	plant_wind,X
 	sta	INL
+	lda	plant_wind+1,X
+	sta	INH
 
         lda     #4
         sta     XPOS

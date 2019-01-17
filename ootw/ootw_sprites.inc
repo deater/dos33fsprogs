@@ -104,21 +104,43 @@ phys_walk_left7:
 ;=======================
 ; scenery
 
-foreground_plant:
-	.byte	$5,$5
-	.byte	$aa,$00,$aa,$aa,$aa
-	.byte	$aa,$a0,$0a,$aa,$aa
-	.byte	$aa,$aa,$00,$aa,$aa
-	.byte	$0a,$0a,$00,$aa,$0a
-	.byte	$aa,$aa,$00,$aa,$00
+plant_wind:
+	.word	plant1
+	.word	plant2
+	.word	plant3
+	.word	plant4
 
-foreground_plant2:
-	.byte	$5,$5
-	.byte	$aa,$00,$aa,$aa,$aa
-	.byte	$aa,$a0,$0a,$aa,$aa
-	.byte	$aa,$aa,$00,$aa,$aa
-	.byte	$0a,$0a,$00,$aa,$0a
-	.byte	$aa,$aa,$00,$aa,$00
+plant1:
+	.byte	$4,$5
+	.byte	$aa,$00,$aa,$aa
+	.byte	$aa,$00,$aa,$aa
+	.byte	$aa,$00,$aa,$aa
+	.byte	$aa,$00,$aa,$00
+	.byte	$aa,$00,$aa,$00
+
+plant2:
+	.byte	$4,$5
+	.byte	$a0,$0a,$aa,$aa
+	.byte	$aa,$00,$aa,$aa
+	.byte	$aa,$00,$aa,$aa
+	.byte	$aa,$00,$aa,$00
+	.byte	$aa,$00,$aa,$00
+
+plant3:
+	.byte	$4,$5
+	.byte	$00,$aa,$aa,$aa
+	.byte	$a0,$0a,$aa,$aa
+	.byte	$aa,$00,$aa,$aa
+	.byte	$aa,$00,$aa,$00
+	.byte	$aa,$00,$aa,$00
+
+plant4:
+	.byte	$4,$5
+	.byte	$00,$aa,$aa,$aa
+	.byte	$aa,$00,$aa,$aa
+	.byte	$aa,$00,$aa,$aa
+	.byte	$aa,$00,$aa,$00
+	.byte	$aa,$00,$aa,$00
 
 
 pool_ripples:
