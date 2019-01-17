@@ -37,9 +37,9 @@ ootw_cavern:
 	lda	#$00
 	sta	BASL			; load image off-screen $c00
 
-	lda     #>(pool_rle)
+	lda     #>(cavern_rle)
         sta     GBASH
-	lda     #<(pool_rle)
+	lda     #<(cavern_rle)
         sta     GBASL
 	jsr	load_rle_gr
 
@@ -53,16 +53,17 @@ ootw_cavern:
 
 	;=================================
 	; setup vars
-	lda	#22
-	sta	PHYSICIST_Y
-	lda	#20
-	sta	PHYSICIST_X
+;	lda	#22
+;	sta	PHYSICIST_Y
+;	lda	#20
+;	sta	PHYSICIST_X
 
-	lda	#1
-	sta	DIRECTION
+;	lda	#1
+;	sta	DIRECTION
 
 	lda	#0
 	sta	GAIT
+	sta	GAME_OVER
 
 	lda	#30
 	sta	TENTACLE_PROGRESS
@@ -114,8 +115,18 @@ frame_no_oflo_c:
 
 	; see if game over
 	lda	GAME_OVER
-	bne	done_cavern
+	cmp	#$ff
+	beq	done_cavern
 
+	; see if left level
+	cmp	#1
+	bne	still_in_cavern
+
+	lda	#37
+	sta	PHYSICIST_X
+	jmp	ootw_pool
+
+still_in_cavern:
 	; loop forever
 
 	jmp	cavern_loop
@@ -143,7 +154,7 @@ check_quit_c:
 	cmp	#27
 	bne	check_left_c
 quit_c:
-	lda	#1
+	lda	#$ff
 	sta	GAME_OVER
 	rts
 
@@ -159,7 +170,11 @@ left_c:
 	dec	PHYSICIST_X
 	bpl	just_fine_left_c
 too_far_left_c:
-	inc	PHYSICIST_X
+
+	lda	#1
+	sta	GAME_OVER
+	rts
+
 just_fine_left_c:
 
 	inc	GAIT

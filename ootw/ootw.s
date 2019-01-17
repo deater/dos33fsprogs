@@ -8,8 +8,18 @@
 
 
 ootw:
+	; Initialize some variables
+
 	lda	#0
 	sta	GAME_OVER
+
+	lda     #22
+	sta     PHYSICIST_Y
+	lda     #20
+	sta     PHYSICIST_X
+
+	lda     #1
+	sta     DIRECTION
 
 	jsr	ootw_pool
 

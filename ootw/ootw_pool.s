@@ -50,16 +50,17 @@ ootw_pool:
 
 	;=================================
 	; setup vars
-	lda	#22
-	sta	PHYSICIST_Y
-	lda	#20
-	sta	PHYSICIST_X
+;	lda	#22
+;	sta	PHYSICIST_Y
+;	lda	#20
+;	sta	PHYSICIST_X
 
-	lda	#1
-	sta	DIRECTION
+;	lda	#1
+;	sta	DIRECTION
 
 	lda	#0
 	sta	GAIT
+	sta	GAME_OVER
 
 	lda	#30
 	sta	TENTACLE_PROGRESS
@@ -243,10 +244,22 @@ frame_no_oflo:
 
 	; pause?
 
-	; check if game over
+	; check if done this level
 
 	lda	GAME_OVER
-	bne	done_pool
+	cmp	#$ff
+	beq	done_pool
+
+	; check if done this level
+	cmp	#$1
+	bne	not_done_pool
+
+	lda	#0
+	sta	PHYSICIST_X
+
+	jmp	ootw_cavern
+
+not_done_pool:
 
 	; loop forever
 
@@ -274,7 +287,7 @@ check_quit:
 	cmp	#27
 	bne	check_left
 quit:
-	lda	#1
+	lda	#$ff		; could just dec
 	sta	GAME_OVER
 	rts
 
@@ -318,7 +331,11 @@ right:
 	cmp	#37
 	bne	just_fine_right
 too_far_right:
-	dec	PHYSICIST_X
+
+	lda	#1
+	sta	GAME_OVER
+	rts
+
 just_fine_right:
 
 
