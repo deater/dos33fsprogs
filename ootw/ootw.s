@@ -1,4 +1,4 @@
-	; Ootw
+; Ootw
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -40,9 +40,9 @@ ootw:
 	lda	#$00
 	sta	BASL			; load image off-screen $c00
 
-	lda     #>(planet_rle)
+	lda     #>(pool_rle)
         sta     GBASH
-	lda     #<(planet_rle)
+	lda     #<(pool_rle)
         sta     GBASL
 	jsr	load_rle_gr
 
@@ -494,5 +494,6 @@ end_message:
 .include "gr_copy.s"
 .include "gr_putsprite.s"
 .include "gr_offsets.s"
-.include "ootw_backgrounds.inc"
+.include "ootw_pool.inc"
+.include "ootw_cavern.inc"
 .include "ootw_sprites.inc"

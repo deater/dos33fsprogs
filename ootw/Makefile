@@ -17,7 +17,7 @@ OOTW:	ootw.o
 
 ootw.o:	ootw.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
-	ootw_backgrounds.inc ootw_sprites.inc
+	ootw_pool.inc ootw_cavern.inc ootw_sprites.inc
 	ca65 -o ootw.o ootw.s -l ootw.lst
 ####
 
@@ -27,8 +27,11 @@ HELLO:  hello.bas
 
 #####
 
-ootw_backgrounds.inc:	$(PNG2RLE) another.png
-	$(PNG2RLE) asm another.png planet_rle > ootw_backgrounds.inc
+ootw_pool.inc:	$(PNG2RLE) another.png
+	$(PNG2RLE) asm another.png pool_rle > ootw_pool.inc
+
+ootw_cavern.inc:	$(PNG2RLE) another_cave.png
+	$(PNG2RLE) asm another_cave.png cavern_rle > ootw_cavern.inc
 
 #####
 
