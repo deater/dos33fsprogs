@@ -1,7 +1,5 @@
 ;; Zero Page
 
-FRAMEBUFFER     = $00   ; $00 - $0F
-
 ;; LZ4 addresses
 
 LZ4_SRC		= $00
@@ -42,7 +40,7 @@ FILEML		= $64
 FILEMH		= $65
 
 
-FRAME           = $60
+FRAMEL		= $60
 FRAMEH		= $61
 WAITING         = $62
 LETTERL         = $63

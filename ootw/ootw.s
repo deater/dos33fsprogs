@@ -78,7 +78,70 @@ game_loop:
 	jsr	gr_copy_to_current
 
 
+	;=======================
 	; draw pool ripples
+
+	lda	FRAMEL
+	and	#$30		; 0110 1100
+	lsr
+	lsr
+	lsr
+	tax
+
+	lda	pool_ripples,X
+	sta	INL
+	lda	pool_ripples+1,X
+	sta	INH
+
+	lda	#9
+	sta	XPOS
+	lda	#30
+	sta	YPOS
+
+	jsr	put_sprite
+
+
+	lda	FRAMEL
+	and	#$30		; 0110 1100
+	lsr
+	lsr
+	lsr
+	clc
+	adc	#2
+	and	#$6
+	tax
+
+	lda	pool_ripples,X
+	sta	INL
+	lda	pool_ripples+1,X
+	sta	INH
+
+
+	lda	#27
+	sta	XPOS
+	lda	#30
+	sta	YPOS
+
+	jsr	put_sprite
+
+
+	lda	FRAMEL
+	and	#$30		; 0110 1100
+	lsr
+	lsr
+	lsr
+	clc
+	adc	#4
+	and	#$6
+	tax
+
+	lda     #18
+	sta     XPOS
+	lda     #28
+	sta     YPOS
+
+	jsr	put_sprite
+
 
 
 	; draw physicist
@@ -107,6 +170,15 @@ game_loop:
 	; page flip
 
 	jsr	page_flip
+
+
+	; inc frame count
+
+	inc	FRAMEL
+	bne	frame_no_oflo
+	inc	FRAMEH
+
+frame_no_oflo:
 
 	; pause?
 
@@ -146,6 +218,11 @@ left:
 	bne	face_left
 
 	dec	PHYSICIST_X
+	bpl	just_fine_left
+too_far_left:
+	inc	PHYSICIST_X
+just_fine_left:
+
 	inc	GAIT
 	inc	GAIT
 

@@ -125,17 +125,22 @@ pool_ripples:
 	.word	ripple1
 	.word	ripple2
 	.word	ripple3
+	.word	ripple4
 
 
 ripple1:
 	.byte	$3,$1
-	.byte	$5a,$5a,$5a
+	.byte	$5a,$5a,$aa
 
 ripple2:
 	.byte	$3,$1
 	.byte	$aa,$5a,$aa
 
 ripple3:
+	.byte	$3,$1
+	.byte	$aa,$aa,$aa
+
+ripple4:
 	.byte	$3,$1
 	.byte	$aa,$aa,$aa
 
