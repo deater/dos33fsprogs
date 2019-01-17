@@ -67,6 +67,9 @@ ootw:
 	lda	#0
 	sta	GAIT
 
+	lda	#30
+	sta	TENTACLE_PROGRESS
+
 	;============================
 	; Main Loop
 	;============================
@@ -146,6 +149,60 @@ game_loop:
 
 	jsr	put_sprite
 
+
+	;===============
+	; move/draw tentacle monster
+
+	lda	FRAMEH
+	and	#3
+	bne	tentacle_move
+	lda	FRAMEL
+	cmp	#$ff
+	bne	tentacle_move
+tentacle_init:
+	sec
+	lda	PHYSICIST_X
+	sbc	#2
+	sta	TENTACLE_X
+
+	lda	#0
+	sta	TENTACLE_PROGRESS
+
+tentacle_move:
+
+	lda	TENTACLE_PROGRESS
+	cmp	#26
+	bpl	no_tentacle
+
+;	lda	FRAMEL
+;	and	#$30		; 0110 1100
+;	lsr
+;	lsr
+;	lsr
+
+	tax
+
+	lda	tentacle_progression,X
+	sta	INL
+	lda	tentacle_progression+1,X
+	sta	INH
+
+	lda	TENTACLE_X
+	sta	XPOS
+	lda	#22
+	sta	YPOS
+
+	lda	FRAMEL
+	and	#$3f
+	bne	no_tentacle_progress
+
+	inc	TENTACLE_PROGRESS
+	inc	TENTACLE_PROGRESS
+no_tentacle_progress:
+
+
+	jsr	put_sprite
+no_tentacle:
 
 	;===============
 	; draw physicist

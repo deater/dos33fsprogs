@@ -191,6 +191,26 @@ slug_attack:
 ;=======================
 ; Tentacle
 
+
+tentacle_progression:
+	.word	tentacle0	; 0
+	.word	tentacle1	; 1
+	.word	tentacle2	; 2
+	.word	tentacle3	; 3
+	.word	tentacle4	; 4
+	.word	tentacle5	; 5
+	.word	tentacle5	; 6
+	.word	tentacle5	; 7
+	.word	tentacle4	; 8
+	.word	tentacle3	; 9
+	.word	tentacle2	; 10
+	.word	tentacle1	; 11
+	.word	tentacle0	; 12
+
+
+
+
+
 tentacle0:
 	.byte	$2,$5
 	.byte	$aa,$aa
