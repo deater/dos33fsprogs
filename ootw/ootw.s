@@ -28,6 +28,30 @@ ootw:
 	lda	#40
 	sta	BOULDER_Y
 
+	;=======================
+	; Initialize the slugs
+	;=======================
+
+	lda	#1
+	sta	slugg0_out
+
+	lda	#0
+	sta	slugg0_attack
+	sta	slugg0_dieing
+
+	lda	#$ff
+	sta	slugg0_dir
+
+	jsr	random16
+	and	#$f
+	clc
+	adc	#16
+	sta	slugg0_x
+
+	jsr	random16
+	and	#$3
+	sta	slugg0_gait
+
 	jsr	ootw_pool
 
 ;===========================

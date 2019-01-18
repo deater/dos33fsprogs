@@ -394,6 +394,7 @@ no_keypress_c:
 
 slugg0_out:	.byte	1
 slugg0_attack:	.byte	0
+slugg0_dieing:	.byte	0
 slugg0_x:	.byte	30
 slugg0_dir:	.byte	$ff
 slugg0_gait:	.byte	0
@@ -474,11 +475,36 @@ slug_no_move:
 	;===============================
 	;===============================
 
+	;==============
 	; if exploding
+	;==============
+
+	lda	slugg0_dieing
+	beq	check_draw_attacking
+slug_exploding:
+	lda	slug_die_progression,X
+	sta	INL
+	lda	slug_die_progression+1,X
+	sta	INH
+
+	lda	FRAMEL
+	and	#$1f
+	bne	no_progress
+
+	dec	slugg0_dieing
+	dec	slugg0_dieing
+	bpl	no_progress
+	jmp	remove_slug
+
+no_progress:
+
+	jmp	slug_selected
+
 
 	;==============
 	; if attacking
 	;==============
+check_draw_attacking:
 	lda	slugg0_attack
 	beq	slug_normal
 slug_attacking:

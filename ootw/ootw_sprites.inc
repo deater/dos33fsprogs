@@ -302,10 +302,10 @@ slug2:
 	.byte	$0a,$a0,$0a,$aa
 
 slug_die_progression:
-	.word	slug_die1
-	.word	slug_die2
-	.word	slug_die3
 	.word	slug_die4
+	.word	slug_die3
+	.word	slug_die2
+	.word	slug_die1
 
 slug_die1:
 	.byte	$4,$4
@@ -343,9 +343,9 @@ slug_attack_progression:
 	.word	slug_attack2
 	.word	slug_attack3
 	.word	slug_attack4
-	.word	slug_attack5
-	.word	slug_attack6
-	.word	slug_attack7
+	.word	slug_attack1
+	.word	slug_attack2
+	.word	slug_attack3
 
 slug_attack0:
 	.byte	$4,$4
@@ -382,26 +382,26 @@ slug_attack4:
 	.byte	$00,$aa,$aa,$aa
 	.byte	$00,$aa,$aa,$aa
 
-slug_attack5:
-	.byte	$4,$4
-	.byte	$aa,$aa,$aa,$aa
-	.byte	$00,$aa,$aa,$aa
-	.byte	$aa,$00,$aa,$aa
-	.byte	$aa,$aa,$00,$aa
+;slug_attack5:
+;	.byte	$4,$4
+;	.byte	$aa,$aa,$aa,$aa
+;	.byte	$00,$aa,$aa,$aa
+;	.byte	$aa,$00,$aa,$aa
+;	.byte	$aa,$aa,$00,$aa
 
-slug_attack6:
-	.byte	$4,$4
-	.byte	$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa
-	.byte	$00,$00,$00,$aa
+;slug_attack6:
+;	.byte	$4,$4
+;	.byte	$aa,$aa,$aa,$aa
+;	.byte	$aa,$aa,$aa,$aa
+;	.byte	$aa,$aa,$aa,$aa
+;	.byte	$00,$00,$00,$aa
 
-slug_attack7:
-	.byte	$4,$4
-	.byte	$aa,$aa,$aa,$aa
-	.byte	$00,$aa,$00,$aa
-	.byte	$aa,$00,$aa,$aa
-	.byte	$00,$aa,$aa,$aa
+;slug_attack7:
+;	.byte	$4,$4
+;	.byte	$aa,$aa,$aa,$aa
+;	.byte	$aa,$aa,$00,$aa
+;	.byte	$aa,$00,$aa,$aa
+;	.byte	$00,$aa,$aa,$aa
 
 
 
