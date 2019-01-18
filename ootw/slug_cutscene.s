@@ -1,6 +1,80 @@
 
 slug_cutscene:
 
+	;====================
+	; First the slug part
+
+	lda	#$8
+	sta	DRAW_PAGE
+        jsr	clear_top
+
+	lda	#<slug_background
+	sta	INL
+	lda	#>slug_background
+	sta	INH
+
+	lda	#15
+	sta     XPOS
+
+	lda	#10
+	sta	YPOS
+
+	jsr	put_sprite
+
+	lda	#$0
+	sta	DRAW_PAGE
+
+	jsr     gr_copy_to_current
+        jsr     page_flip
+        jsr     gr_copy_to_current
+	jsr	page_flip
+
+	ldx	#0
+	stx	CUTFRAME
+sluggy_loop:
+        jsr     gr_copy_to_current
+
+	ldx	CUTFRAME
+
+	lda	slug_frames,X
+	sta	INL
+	lda	slug_frames+1,X
+	sta	INH
+
+	lda	#15
+	sta     XPOS
+
+	lda	#18
+	sta	YPOS
+
+	jsr	put_sprite
+
+	jsr	page_flip
+
+	ldx	#3
+long_delay:
+	lda	#250
+	jsr	WAIT
+	dex
+	bne	long_delay
+
+
+	ldx	CUTFRAME
+	inx
+	inx
+	stx	CUTFRAME
+
+	cpx	#12
+	beq	sluggy_end
+
+	jmp	sluggy_loop
+
+sluggy_end:
+
+
+	;====================
+	; Then the leg part
+
 	lda	#$8
 	sta	DRAW_PAGE
         jsr	clear_top
@@ -46,14 +120,14 @@ leg_loop:
 
 	jsr	put_sprite
 
-	ldx	#6
-long_delay:
+	jsr	page_flip
+
+	ldx	#5
+long_delay2:
 	lda	#250
 	jsr	WAIT
 	dex
-	bne	long_delay
-
-	jsr	page_flip
+	bne	long_delay2
 
 	ldx	CUTFRAME
 	inx
@@ -61,15 +135,11 @@ long_delay:
 	stx	CUTFRAME
 
 	cpx	#12
-	beq	slug_end
+	beq	leg_end
 
 	jmp	leg_loop
 
-slug_end:
-;	lda	KEYPRESS
-;	bpl	slug_end
-
-;	lda	KEYRESET
+leg_end:
 
 	;=============================
 	; Restore background to $c00
@@ -86,6 +156,85 @@ slug_end:
 	jsr	load_rle_gr
 
 	rts
+
+
+slug_background:
+	.byte 10,10
+	.byte $22,$22,$22,$22,$22,$22,$22,$22,$22,$22
+	.byte $22,$22,$22,$22,$22,$22,$22,$22,$22,$22
+	.byte $22,$22,$22,$22,$22,$22,$22,$22,$22,$22
+	.byte $22,$22,$22,$22,$22,$22,$22,$22,$22,$22
+	.byte $22,$22,$22,$22,$22,$22,$22,$22,$22,$22
+	.byte $22,$22,$22,$22,$22,$22,$22,$22,$22,$22
+	.byte $22,$22,$22,$22,$22,$22,$22,$22,$22,$22
+	.byte $22,$22,$22,$22,$22,$22,$22,$22,$22,$22
+	.byte $22,$22,$22,$22,$22,$22,$22,$22,$22,$22
+	.byte $22,$22,$22,$22,$22,$22,$22,$22,$22,$22
+
+
+; sluggy freelance
+
+slug_frames:
+	.word	sluggy1
+	.word	sluggy2
+	.word	sluggy3
+	.word	sluggy4
+	.word	sluggy5
+	.word	sluggy6
+
+sluggy1:
+	.byte 10,6
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$0A,$0A,$0A,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$77,$00,$00,$00
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$07,$00,$00,$00
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00
+
+sluggy2:
+	.byte 10,6
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$0A,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$77,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$07,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+
+sluggy3:
+	.byte 10,6
+	.byte $AA,$AA,$AA,$AA,$AA,$0A,$0A,$0A,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$7A,$07,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$A1,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+
+sluggy4:
+	.byte 10,6
+	.byte $AA,$1A,$AA,$7A,$7A,$70,$00,$00,$0A,$AA
+	.byte $AA,$AA,$AA,$AA,$1A,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+
+sluggy5:
+	.byte 10,6
+	.byte $1A,$AA,$AA,$7A,$7A,$70,$00,$00,$0A,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$1A,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+
+sluggy6:
+	.byte 10,6
+	.byte $AA,$AA,$AA,$7A,$7A,$70,$00,$00,$0A,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$1A,$AA,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$00,$00,$00,$00,$AA
 
 
 leg_background:
