@@ -390,19 +390,33 @@ no_keypress_c:
 ; draw slugs
 ;==================================
 
+	; outstate 0=dead 1=normal 2=dieing 3=falling
+
 slugg0_out:	.byte	1
+slugg0_attack:	.byte	0
 slugg0_x:	.byte	30
 slugg0_dir:	.byte	$ff
 slugg0_gait:	.byte	0
 
-; ___  _-_
+slugg1_out:	.byte	1
+slugg1_x:	.byte	30
+slugg1_dir:	.byte	$ff
+slugg1_gait:	.byte	0
+
+slugg2_out:	.byte	1
+slugg2_x:	.byte	30
+slugg2_dir:	.byte	$ff
+slugg2_gait:	.byte	0
+
 
 draw_slugs:
 
 	lda	slugg0_out
-	beq	slug_done		; don't draw if not there
+	bne	check_attack		; don't draw if not there
+	jmp	slug_done
 
-
+check_attack:
+	;==================
 	; see if attack
 
 	lda	PHYSICIST_X
@@ -413,7 +427,12 @@ draw_slugs:
 	and	#$fc
 	bne	no_attack
 attack:
-	; FIXME: make slug stand up if in range
+
+	;=================
+	; start an attack
+
+	lda	#1
+	sta	slugg0_attack
 
 	lda	SLUGDEATH		; don't re-attack if already dead
 	bne	no_attack
@@ -448,6 +467,39 @@ slug_move:
 
 slug_no_move:
 
+
+	;===============================
+	;===============================
+	; DRAW SLUG
+	;===============================
+	;===============================
+
+	; if exploding
+
+	;==============
+	; if attacking
+	;==============
+	lda	slugg0_attack
+	beq	slug_normal
+slug_attacking:
+
+	lda	slugg0_gait
+	and	#$70
+	lsr
+	lsr
+	lsr
+	tax
+
+	lda	slug_attack_progression,X
+	sta	INL
+	lda	slug_attack_progression+1,X
+	sta	INH
+	jmp	slug_selected
+
+	;==============
+	; if normal
+	;==============
+slug_normal:
 	lda	slugg0_gait
 	and	#$20
 	beq	slug_squinched
@@ -465,13 +517,17 @@ slug_squinched:
 	lda	#>slug2
 	sta	INH
 
+	;================
+	; end slug normal
+	;================
+
 slug_selected:
 
 
 	lda	slugg0_x
 	sta	XPOS
 
-	lda	#34
+	lda	#30
 	sec
 	sbc	EARTH_OFFSET
 	sta	YPOS

@@ -51,7 +51,7 @@ sluggy_loop:
 
 	jsr	page_flip
 
-	ldx	#3
+	ldx	#2
 long_delay:
 	lda	#250
 	jsr	WAIT
@@ -122,7 +122,7 @@ leg_loop:
 
 	jsr	page_flip
 
-	ldx	#5
+	ldx	#4
 long_delay2:
 	lda	#250
 	jsr	WAIT
