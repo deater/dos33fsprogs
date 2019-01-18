@@ -361,6 +361,13 @@ caught8:
 	.byte	$aa,$aa,$aa,$aa
 	.byte	$aa,$aa,$aa,$5e
 
+	;============================
+	; Falling boulder
+
+boulder:
+	.byte	$3,$2
+	.byte	$22,$22,$2a
+	.byte	$22,$22,$22
 
 
 

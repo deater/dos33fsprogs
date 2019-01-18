@@ -23,6 +23,9 @@ ootw:
 	lda     #1
 	sta     DIRECTION
 
+	lda	#40
+	sta	BOULDER_Y
+
 	jsr	ootw_pool
 
 ;===========================

@@ -94,6 +94,16 @@ earthquake_init:
 	lda	#200
 	sta	EQUAKE_PROGRESS
 
+	lda	#0
+	sta	BOULDER_Y
+	jsr	random16
+	lda	SEEDL
+	and	#$1f
+	clc
+	adc	#4
+	sta	BOULDER_X
+
+
 earth_mover:
 	lda	EQUAKE_PROGRESS
 	beq	earth_still
@@ -144,7 +154,28 @@ done_shake:
 	;======================
 	; draw falling boulders
 
+	lda	BOULDER_Y
+	cmp	#38
+	bpl	no_boulder
 
+	lda	#<boulder
+	sta	INL
+	lda	#>boulder
+	sta	INH
+
+	lda	BOULDER_X
+	sta	XPOS
+	lda	BOULDER_Y
+	sta	YPOS
+        jsr	put_sprite
+
+	lda	FRAMEL
+	and	#$3
+	bne	no_boulder
+	inc	BOULDER_Y
+	inc	BOULDER_Y
+
+no_boulder:
 	;=======================
 	; page flip
 
