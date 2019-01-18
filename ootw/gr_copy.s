@@ -4,7 +4,7 @@
 	; copy 0xc00 to DRAW_PAGE
 	;
 	; 45 + 2 + 120*(8*9 + 5) -1 + 6 = 9292
-.align	$100
+;.align	$100
 gr_copy_to_current:
 
 	lda	DRAW_PAGE					; 3

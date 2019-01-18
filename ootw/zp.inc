@@ -24,6 +24,10 @@ H2	= $2C
 V2	= $2D
 MASK	= $2E
 COLOR	= $30
+
+SEEDL	= $4e
+SEEDH	= $4f
+
 			;INVFLG	= $32
 
 ; dos33 zero page = 26-2f, 35-38, 3e 3f 40-4d 
@@ -132,6 +136,8 @@ XX	=	$E3
 YY	=	$E4
 HGR_COLOR       = $E4
 GAME_OVER	= $E5
+EQUAKE_PROGRESS = $E6
+EARTH_OFFSET	= $E7
 			;SHIPY		=	$E4
 			;YADD		=	$E5
 			;LOOP		=	$E6

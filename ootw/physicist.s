@@ -17,7 +17,10 @@ draw_physicist:
 
 	lda	PHYSICIST_X
 	sta	XPOS
+
 	lda	PHYSICIST_Y
+	sec
+	sbc	EARTH_OFFSET	; adjust for earthquakes
 	sta	YPOS
 
 	lda	DIRECTION

@@ -12,6 +12,8 @@ ootw:
 
 	lda	#0
 	sta	GAME_OVER
+	sta	EQUAKE_PROGRESS
+	sta	EARTH_OFFSET
 
 	lda     #22
 	sta     PHYSICIST_Y
@@ -66,6 +68,8 @@ end_message:
 .include "gr_copy.s"
 .include "gr_putsprite.s"
 .include "gr_offsets.s"
+.include "random16.s"
 .include "ootw_pool.inc"
 .include "ootw_cavern.inc"
+.include "ootw_quake.inc"
 .include "ootw_sprites.inc"

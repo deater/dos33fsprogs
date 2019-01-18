@@ -1,7 +1,5 @@
 ; Cavern scene (with the slugs)
 
-
-
 ootw_cavern:
 	;===========================
 	; Enable graphics
@@ -9,7 +7,6 @@ ootw_cavern:
 	bit	LORES
 	bit	SET_GR
 	bit	FULLGR
-
 
 
 	;===========================
@@ -43,6 +40,21 @@ ootw_cavern:
         sta     GBASL
 	jsr	load_rle_gr
 
+	;=============================
+	; Load quake background to $1000
+
+	lda	#$10
+	sta	BASH
+	lda	#$00
+	sta	BASL			; load image off-screen $c00
+
+	lda     #>(quake_rle)
+        sta     GBASH
+	lda     #<(quake_rle)
+        sta     GBASL
+	jsr	load_rle_gr
+
+
 	;=================================
 	; copy to both pages $400/$800
 
@@ -53,20 +65,10 @@ ootw_cavern:
 
 	;=================================
 	; setup vars
-;	lda	#22
-;	sta	PHYSICIST_Y
-;	lda	#20
-;	sta	PHYSICIST_X
-
-;	lda	#1
-;	sta	DIRECTION
 
 	lda	#0
 	sta	GAIT
 	sta	GAME_OVER
-
-	lda	#30
-	sta	TENTACLE_PROGRESS
 
 	;============================
 	; Cavern Loop (not a palindrome)
@@ -77,10 +79,56 @@ cavern_loop:
 
 	jsr	handle_keypress_cavern
 
+
+	;==========================
+	; check for earthquake
+
+earthquake_handler:
+	lda     FRAMEH
+	and	#3
+	bne	earth_mover
+	lda	FRAMEL
+	cmp	#$ff
+	bne	earth_mover
+earthquake_init:
+	lda	#200
+	sta	EQUAKE_PROGRESS
+
+earth_mover:
+	lda	EQUAKE_PROGRESS
+	beq	earth_still
+
+	and	#$8
+	bne	earth_calm
+
+	lda	#2
+	bne	earth_decrement
+
+earth_calm:
+	lda	#0
+earth_decrement:
+	sta	EARTH_OFFSET
+	dec	EQUAKE_PROGRESS
+	jmp	earth_done
+
+
+earth_still:
+	lda	#0
+	sta	EARTH_OFFSET
+
+earth_done:
+
 	;================================
 	; copy background to current page
 
+	lda	EARTH_OFFSET
+	bne	shake_shake
+no_shake:
 	jsr	gr_copy_to_current
+	jmp	done_shake
+shake_shake:
+	jsr	gr_copy_to_current_40
+done_shake:
 
 
 	;===============
@@ -302,3 +350,63 @@ remove_slug:
 	lda	#0
 	sta	slugg0_out
 	rts
+
+
+
+
+	;=========================================================
+	; gr_copy_to_current, 40x48 version
+	;=========================================================
+	; copy 0x1000 to DRAW_PAGE
+
+gr_copy_to_current_40:
+
+	lda	DRAW_PAGE					; 3
+	clc							; 2
+	adc	#$4						; 2
+	sta	gr_copy_line_40+5				; 4
+	sta	gr_copy_line_40+11				; 4
+	adc	#$1						; 2
+	sta	gr_copy_line_40+17				; 4
+	sta	gr_copy_line_40+23				; 4
+	adc	#$1						; 2
+	sta	gr_copy_line_40+29				; 4
+	sta	gr_copy_line_40+35				; 4
+	adc	#$1						; 2
+	sta	gr_copy_line_40+41				; 4
+	sta	gr_copy_line_40+47				; 4
+							;===========
+							;	45
+
+	ldy	#119		; for early ones, copy 120 bytes	; 2
+
+gr_copy_line_40:
+	lda	$1000,Y		; load a byte (self modified)		; 4
+	sta	$400,Y		; store a byte (self modified)		; 5
+
+	lda	$1080,Y		; load a byte (self modified)		; 4
+	sta	$480,Y		; store a byte (self modified)		; 5
+
+	lda	$1100,Y		; load a byte (self modified)		; 4
+	sta	$500,Y		; store a byte (self modified)		; 5
+
+	lda	$1180,Y		; load a byte (self modified)		; 4
+	sta	$580,Y		; store a byte (self modified)		; 5
+
+	lda	$1200,Y		; load a byte (self modified)		; 4
+	sta	$600,Y		; store a byte (self modified)		; 5
+
+	lda	$1280,Y		; load a byte (self modified)		; 4
+	sta	$680,Y		; store a byte (self modified)		; 5
+
+	lda	$1300,Y		; load a byte (self modified)		; 4
+	sta	$700,Y		; store a byte (self modified)		; 5
+
+	lda	$1380,Y		; load a byte (self modified)		; 4
+	sta	$780,Y		; store a byte (self modified)		; 5
+
+	dey			; decrement pointer			; 2
+	bpl	gr_copy_line_40	;					; 2nt/3
+
+	rts								; 6
+
