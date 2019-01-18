@@ -109,8 +109,10 @@ collapse_progression:
 	.word	collapse3
 	.word	collapse4
 	.word	collapse5
-	.word	collapse5
-	.word	collapse5
+	.word	collapse5	; 6
+	.word	collapse5	; 7
+	.word	collapse5	; 8
+	.word	collapse5	; 9
 
 collapse1:
 	.byte $4,$8
