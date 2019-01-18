@@ -329,8 +329,11 @@ done_pool:
 handle_keypress_pool:
 
 	lda	KEYPRESS						; 4
-	bpl	no_keypress						; 3
+	bmi	keypress_pool						; 3
 
+	rts
+
+keypress_pool:
 									; -1
 
 	and	#$7f		; clear high bit
@@ -351,6 +354,9 @@ check_left:
 	cmp	#$8		; left arrow
 	bne	check_right
 left:
+	lda	#0
+	sta	CROUCHING
+
 	lda	DIRECTION
 	bne	face_left
 
@@ -375,8 +381,11 @@ check_right:
 	cmp	#'D'
 	beq	right
 	cmp	#$15
-	bne	unknown
+	bne	check_down
 right:
+	lda	#0
+	sta	CROUCHING
+
 	lda	DIRECTION
 	beq	face_right
 
@@ -391,8 +400,6 @@ too_far_right:
 	rts
 
 just_fine_right:
-
-
 	inc	GAIT
 	inc	GAIT
 	jmp	done_keypress
@@ -404,6 +411,29 @@ face_right:
 	sta	DIRECTION
 	jmp	done_keypress
 
+check_down:
+	cmp	#'S'
+	beq	down
+	cmp	#$0A
+	bne	check_space
+down:
+	lda	#48
+	sta	CROUCHING
+	lda	#0
+	sta	GAIT
+
+	jmp	done_keypress
+
+check_space:
+	cmp	#' '
+	beq	space
+	cmp	#$15
+	bne	unknown
+space:
+	lda	#15
+	sta	KICKING
+	lda	#0
+	sta	GAIT
 unknown:
 done_keypress:
 	bit	KEYRESET	; clear the keyboard strobe		; 4

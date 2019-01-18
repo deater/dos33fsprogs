@@ -215,14 +215,17 @@ done_cavern:
 
 
 ;======================================
-; handle keypress
+; handle keypress (cavern)
 ;======================================
 
 handle_keypress_cavern:
 
 	lda	KEYPRESS						; 4
-	bpl	no_keypress_c						; 3
+	bmi	keypress_cavern						; 3
 
+	rts
+
+keypress_cavern:
 									; -1
 
 	and	#$7f		; clear high bit
@@ -243,6 +246,9 @@ check_left_c:
 	cmp	#$8		; left arrow
 	bne	check_right_c
 left_c:
+	lda	#0
+	sta	CROUCHING
+
 	lda	DIRECTION
 	bne	face_left_c
 
@@ -271,8 +277,11 @@ check_right_c:
 	cmp	#'D'
 	beq	right_c
 	cmp	#$15
-	bne	unknown_c
+	bne	check_down_c
 right_c:
+	lda	#0
+	sta	CROUCHING
+
 	lda	DIRECTION
 	beq	face_right_c
 
@@ -296,6 +305,29 @@ face_right_c:
 	sta	DIRECTION
 	jmp	done_keypress_c
 
+check_down_c:
+	cmp	#'S'
+	beq	down_c
+	cmp	#$0A
+	bne	check_space_c
+down_c:
+	lda	#48
+	sta	CROUCHING
+	lda	#0
+	sta	GAIT
+
+	jmp	done_keypress_c
+
+check_space_c:
+	cmp     #' '
+	beq	space_c
+	cmp	#$15
+	bne	unknown_c
+space_c:
+	lda	#15
+	sta	KICKING
+	lda	#0
+	sta	GAIT
 unknown_c:
 done_keypress_c:
 	bit	KEYRESET	; clear the keyboard strobe		; 4

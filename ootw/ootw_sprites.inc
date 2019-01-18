@@ -178,38 +178,40 @@ crouch_progression:
 crouch1:
 	.byte $3,$8
 	.byte $aa,$aa,$aa
-	.byte $aa,$9a,$9a
-	.byte $aa,$99,$bb
+	.byte $9a,$9a,$aa
+	.byte $bb,$99,$aa
 	.byte $aa,$0b,$aa
 	.byte $aa,$bb,$aa
 	.byte $aa,$bb,$aa
-	.byte $aa,$44,$44
-	.byte $f4,$fc,$5a
+	.byte $44,$44,$aa
+	.byte $5a,$fc,$f4
 
 crouch2:
 	.byte $3,$8
 	.byte $aa,$aa,$aa
 	.byte $aa,$aa,$aa
-	.byte $aa,$9a,$9a
-	.byte $aa,$99,$bb
-	.byte $0a,$0b,$aa
-	.byte $00,$bb,$aa
-	.byte $aa,$4b,$ba
-	.byte $f4,$f4,$54
+	.byte $9a,$9a,$aa
+	.byte $bb,$99,$aa
+	.byte $aa,$0b,$0a
+	.byte $aa,$bb,$00
+	.byte $ba,$4b,$aa
+	.byte $54,$f4,$f4
+
 
 ;=======================
 ; Kicking
-
+; note: he needs to be facing left by default
 kick1:
 	.byte $4,$8
 	.byte $aa,$9a,$9a,$aa
-	.byte $aa,$99,$bb,$aa
-	.byte $aa,$0b,$aa,$aa
-	.byte $aa,$0b,$ba,$aa
-	.byte $ba,$00,$ab,$bb
-	.byte $aa,$44,$aa,$aa
-	.byte $ca,$a4,$44,$aa
-	.byte $5c,$5a,$f4,$af
+	.byte $aa,$bb,$99,$aa
+	.byte $aa,$aa,$0b,$aa
+	.byte $aa,$ba,$0b,$aa
+	.byte $bb,$ab,$00,$ba
+	.byte $aa,$aa,$44,$aa
+	.byte $aa,$44,$a4,$ca
+	.byte $af,$f4,$5a,$5c
+
 
 
 ;=======================

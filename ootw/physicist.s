@@ -4,6 +4,40 @@
 
 draw_physicist:
 
+	; FIXME: what happens if crouch+kick
+	;	or crouch+walk?
+
+check_if_still_kicking:
+	lda	KICKING
+	beq	check_crouching
+kicking:
+	lda	#<kick1
+	sta	INL
+
+	lda	#>kick1
+	sta	INH
+
+	dec	KICKING
+
+	jmp	finally_draw_him
+
+check_crouching:
+	lda	CROUCHING
+	beq	walking
+
+crouching:
+
+	; FIXME: we have an animation?
+
+	lda	#<crouch2
+	sta	INL
+
+	lda	#>crouch2
+	sta	INH
+
+	jmp	finally_draw_him
+
+walking:
 	lda	GAIT
 	and	#$f
 	sta	GAIT
@@ -15,6 +49,7 @@ draw_physicist:
 	lda	phys_walk_progression+1,X
 	sta	INH
 
+finally_draw_him:
 	lda	PHYSICIST_X
 	sta	XPOS
 

@@ -1,6 +1,6 @@
-; Ootw for Apple II
+; Ootw for Apple II Lores
 
-; by Vince "Deater" Weaver
+; by Vince "Deater" Weaver	<vince@deater.net>
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -14,6 +14,8 @@ ootw:
 	sta	GAME_OVER
 	sta	EQUAKE_PROGRESS
 	sta	EARTH_OFFSET
+	sta	KICKING
+	sta	CROUCHING
 
 	lda     #22
 	sta     PHYSICIST_Y
