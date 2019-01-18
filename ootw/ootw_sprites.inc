@@ -259,9 +259,6 @@ tentacle5:
 	.byte	$00,$aa
 	.byte	$aa,$00
 
-; TODO: trim right and bottom off sprites
-
-
 caught_progression:
 	.word	caught0
 	.word	caught1
@@ -279,26 +276,26 @@ caught_progression:
 
 
 caught0:
-	.byte	$7,$8
-	.byte	$aa,$aa,$aa,$9a,$9a,$aa,$aa
-	.byte	$aa,$00,$00,$99,$bb,$aa,$aa
-	.byte	$aa,$00,$aa,$0b,$aa,$aa,$aa
-	.byte	$00,$aa,$aa,$bb,$aa,$aa,$aa
-	.byte	$aa,$00,$aa,$bb,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$44,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$44,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$f4,$fa,$aa,$aa
+	.byte	$5,$8
+	.byte	$aa,$aa,$aa,$9a,$9a
+	.byte	$aa,$00,$00,$99,$bb
+	.byte	$aa,$00,$aa,$0b,$aa
+	.byte	$00,$aa,$aa,$bb,$aa
+	.byte	$aa,$00,$aa,$bb,$aa
+	.byte	$aa,$aa,$aa,$44,$aa
+	.byte	$aa,$aa,$aa,$44,$aa
+	.byte	$aa,$aa,$aa,$f4,$fa
 
 caught1:
-	.byte	$7,$8
-	.byte	$aa,$aa,$aa,$9a,$9a,$aa,$aa
-	.byte	$aa,$aa,$aa,$99,$bb,$aa,$aa
-	.byte	$aa,$00,$00,$0b,$00,$aa,$aa
-	.byte	$00,$aa,$aa,$bb,$00,$0a,$aa
-	.byte	$aa,$00,$aa,$bb,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$44,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$44,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$f4,$fa,$aa,$aa
+	.byte	$6,$8
+	.byte	$aa,$aa,$aa,$9a,$9a,$aa
+	.byte	$aa,$aa,$aa,$99,$bb,$aa
+	.byte	$aa,$00,$00,$0b,$00,$aa
+	.byte	$00,$aa,$aa,$bb,$00,$0a
+	.byte	$aa,$00,$aa,$bb,$aa,$aa
+	.byte	$aa,$aa,$aa,$44,$aa,$aa
+	.byte	$aa,$aa,$aa,$44,$aa,$aa
+	.byte	$aa,$aa,$aa,$f4,$fa,$aa
 
 caught2:
 	.byte	$7,$8
@@ -312,70 +309,58 @@ caught2:
 	.byte	$aa,$aa,$aa,$f4,$f4,$aa,$aa
 
 caught3:
-	.byte	$7,$8
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$b9,$b9,$aa,$aa
-	.byte	$aa,$aa,$bb,$0b,$0b,$bb,$aa
-	.byte	$aa,$0a,$0a,$00,$00,$0a,$aa
-	.byte	$aa,$00,$aa,$00,$00,$a0,$aa
-	.byte	$aa,$aa,$aa,$44,$44,$aa,$aa
-	.byte	$aa,$aa,$aa,$af,$af,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$6,$7
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$b9,$b9,$aa
+	.byte	$aa,$aa,$bb,$0b,$0b,$bb
+	.byte	$aa,$0a,$0a,$00,$00,$0a
+	.byte	$aa,$00,$aa,$00,$00,$a0
+	.byte	$aa,$aa,$aa,$44,$44,$aa
+	.byte	$aa,$aa,$aa,$af,$af,$aa
+
 
 caught4:
-	.byte	$7,$8
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$9a,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$bb,$aa,$aa,$aa
-	.byte	$aa,$aa,$0a,$0b,$aa,$aa,$aa
-	.byte	$aa,$aa,$00,$40,$0a,$a0,$aa
-	.byte	$aa,$aa,$aa,$af,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$6,$6
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$9a,$aa,$aa
+	.byte	$aa,$aa,$aa,$bb,$aa,$aa
+	.byte	$aa,$aa,$0a,$0b,$aa,$aa
+	.byte	$aa,$aa,$00,$40,$0a,$a0
+	.byte	$aa,$aa,$aa,$af,$aa,$aa
 
 caught5:
-	.byte	$7,$8
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$9a,$aa,$aa,$aa
-	.byte	$aa,$ae,$0a,$b0,$ae,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$5,$5
+	.byte	$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$9a,$aa
+	.byte	$aa,$ae,$0a,$b0,$ae
 
 caught6:
-	.byte	$7,$8
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$ea,$aa,$aa,$aa,$ea,$aa
-	.byte	$aa,$aa,$5a,$0e,$5a,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$6,$5
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$ea,$aa,$aa,$aa,$ea
+	.byte	$aa,$aa,$5a,$0e,$5a,$aa
+
 
 caught7:
-	.byte	$7,$8
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$ea,$aa,$aa,$aa
-	.byte	$aa,$ae,$5a,$5a,$5a,$ae,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$6,$5
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$ea,$aa,$aa
+	.byte	$aa,$ae,$5a,$5a,$5a,$ae
 
 caught8:
-	.byte	$7,$8
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$5e,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte	$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte	$4,$5
+	.byte	$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$aa
+	.byte	$aa,$aa,$aa,$5e
+
 
 
 
