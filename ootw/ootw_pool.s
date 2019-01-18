@@ -12,13 +12,13 @@ ootw_pool:
 	;===========================
 	; Clear both bottoms
 
-	lda	#$4
-	sta	DRAW_PAGE
-	jsr     clear_bottom
+;	lda	#$4
+;	sta	DRAW_PAGE
+;	jsr     clear_bottom
 
-	lda	#$0
-	sta	DRAW_PAGE
-	jsr     clear_bottom
+;	lda	#$0
+;	sta	DRAW_PAGE
+;	jsr     clear_bottom
 
 	lda	#0
 	sta	DRAW_PAGE

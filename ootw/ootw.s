@@ -78,3 +78,4 @@ end_message:
 .include "ootw_cavern.inc"
 .include "ootw_quake.inc"
 .include "ootw_sprites.inc"
+.include "slug_cutscene.s"

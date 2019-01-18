@@ -142,6 +142,7 @@ BOULDER_X	= $E8
 BOULDER_Y	= $E9
 CROUCHING	= $EA
 KICKING		= $EB
+CUTFRAME	= $EC
 			;SHIPY		=	$E4
 			;YADD		=	$E5
 			;LOOP		=	$E6

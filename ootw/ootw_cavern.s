@@ -12,13 +12,13 @@ ootw_cavern:
 	;===========================
 	; Clear both bottoms
 
-	lda	#$4
-	sta	DRAW_PAGE
-	jsr     clear_bottom
+;	lda	#$4
+;	sta	DRAW_PAGE
+;	jsr     clear_bottom
 
 	lda	#$0
 	sta	DRAW_PAGE
-	jsr     clear_bottom
+;	jsr     clear_bottom
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -422,6 +422,8 @@ attack:
 	sta	SLUGDEATH
 	lda	#0
 	sta	SLUGDEATH_PROGRESS
+
+	jsr	slug_cutscene
 
 
 no_attack:
