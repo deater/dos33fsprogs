@@ -75,11 +75,6 @@ ootw_cavern:
 	;============================
 cavern_loop:
 
-	; check keyboard
-
-	jsr	handle_keypress_cavern
-
-
 	;==========================
 	; check for earthquake
 
@@ -142,9 +137,27 @@ done_shake:
 
 
 	;===============
+	; handle slug death
+
+	lda	SLUGDEATH
+	beq	still_alive
+
+
+	jmp	just_slugs
+
+still_alive:
+
+	;===============
+	; check keyboard
+
+	jsr	handle_keypress_cavern
+
+	;===============
 	; draw physicist
 
 	jsr	draw_physicist
+
+just_slugs:
 
 	;===============
 	; draw slugs
@@ -353,9 +366,24 @@ draw_slugs:
 	lda	slugg0_out
 	beq	slug_done		; don't draw if not there
 
-	inc	slugg0_gait
 
-	lda	slugg0_gait
+	; see if attack
+	lda	PHYSICIST_X
+	sec
+	sbc	slugg0_x		; -2 to +2
+	clc
+	adc	#2
+	and	#$fc
+	bne	no_attack
+attack:
+	lda	#$1
+	sta	SLUGDEATH
+	; FIXME: make slug stand up
+
+no_attack:
+	inc	slugg0_gait		; increment slug gait counter
+
+	lda	slugg0_gait		; only move every 64 frames
 	and	#$3f
 	cmp	#$00
 	bne	slug_no_move
