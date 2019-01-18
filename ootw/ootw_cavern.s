@@ -413,12 +413,44 @@ slugg2_gait:	.byte	0
 draw_slugs:
 
 	lda	slugg0_out
-	bne	check_attack		; don't draw if not there
+	bne	check_kicked		; don't draw if not there
 	jmp	slug_done
+
+check_kicked:
+	lda	slugg0_out		; only kick if normal
+	cmp	#1
+	bne	check_attack
+
+	;==================
+	; see if kicked
+
+	lda	KICKING
+	beq	check_attack
+
+	lda	PHYSICIST_X
+	sec
+	sbc	slugg0_x		; -4 to +4
+	clc
+	adc	#4
+	and	#$f8
+	bne	not_kicked
+kicked:
+	lda	#2
+	sta	slugg0_out
+	lda	#10
+	sta	slugg0_dieing
+	lda	DIRECTION
+	sta	slugg0_dir
+
+not_kicked:
 
 check_attack:
 	;==================
 	; see if attack
+
+	lda	slugg0_out
+	cmp	#1
+	bne	no_attack
 
 	lda	PHYSICIST_X
 	sec
@@ -482,18 +514,23 @@ slug_no_move:
 	lda	slugg0_dieing
 	beq	check_draw_attacking
 slug_exploding:
+	tax					; urgh can't forget tax
 	lda	slug_die_progression,X
 	sta	INL
 	lda	slug_die_progression+1,X
 	sta	INH
 
+	bit	SPEAKER
+
 	lda	FRAMEL
-	and	#$1f
+	and	#$f
 	bne	no_progress
+
+	bit	SPEAKER
 
 	dec	slugg0_dieing
 	dec	slugg0_dieing
-	bpl	no_progress
+	bne	no_progress
 	jmp	remove_slug
 
 no_progress:
