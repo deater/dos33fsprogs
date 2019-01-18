@@ -57,28 +57,26 @@ ootw:
 	sta	slugg0_x
 
 	jsr	random16
-	and	#$f
+	and	#$7
 	clc
 	adc	#16
 	sta	slugg1_x
 
-	jsr	random16
-	and	#$f
 	clc
-	adc	#16
+	adc	#10
 	sta	slugg2_x
 
 
 	jsr	random16
-	and	#$3
+;	and	#$3
 	sta	slugg0_gait
 
 	jsr	random16
-	and	#$3
+;	and	#$3
 	sta	slugg1_gait
 
 	jsr	random16
-	and	#$3
+;	and	#$3
 	sta	slugg2_gait
 
 
