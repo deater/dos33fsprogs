@@ -341,10 +341,10 @@ no_keypress_c:
 ; draw slugs
 ;==================================
 
-slugg0_out:	.byte	$1
-slugg0_x:	.byte	$01
-slugg0_dir:	.byte	$1
-slugg0_gait:	.byte	$0
+slugg0_out:	.byte	1
+slugg0_x:	.byte	30
+slugg0_dir:	.byte	$ff
+slugg0_gait:	.byte	0
 
 ; ___  _-_
 
@@ -367,6 +367,9 @@ slug_move:
 	sta	slugg0_x
 
 	cmp	#37
+	beq	remove_slug
+
+	cmp	#0
 	beq	remove_slug
 
 slug_no_move:
@@ -393,7 +396,10 @@ slug_selected:
 
 	lda	slugg0_x
 	sta	XPOS
+
 	lda	#34
+	sec
+	sbc	EARTH_OFFSET
 	sta	YPOS
 
 	lda	DIRECTION
