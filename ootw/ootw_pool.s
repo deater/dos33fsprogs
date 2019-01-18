@@ -50,17 +50,11 @@ ootw_pool:
 
 	;=================================
 	; setup vars
-;	lda	#22
-;	sta	PHYSICIST_Y
-;	lda	#20
-;	sta	PHYSICIST_X
-
-;	lda	#1
-;	sta	DIRECTION
 
 	lda	#0
 	sta	GAIT
 	sta	GAME_OVER
+	sta	TENTACLE_GRAB
 
 	lda	#30
 	sta	TENTACLE_PROGRESS
@@ -69,10 +63,6 @@ ootw_pool:
 	; Pool Loop (palindrome)
 	;============================
 pool_loop:
-
-	; check keyboard
-
-	jsr	handle_keypress_pool
 
 	;================================
 	; copy background to current page
@@ -145,9 +135,51 @@ pool_loop:
 	jsr	put_sprite
 
 
+
+	;==============================
+	; handle being grabbed
+
+	lda	TENTACLE_GRAB
+	beq	tentacle_action
+
+	;=================================
+	; actively being grabbed
+
+	lda	TENTACLE_PROGRESS
+	tax
+
+	lda	caught_progression,X
+	sta	INL
+	lda	caught_progression+1,X
+	sta	INH
+
+	lda	TENTACLE_X
+	sta	XPOS
+	lda	#22
+	sta	YPOS
+
+	lda	FRAMEL
+	and	#$1f
+	bne	no_caught_progress
+
+	inc	TENTACLE_PROGRESS
+	inc	TENTACLE_PROGRESS
+no_caught_progress:
+	jsr	put_sprite
+
+	lda	TENTACLE_PROGRESS
+	cmp	#24
+	bne	beyond_tentacles
+
+	lda	#$ff
+	sta	GAME_OVER
+
+	jmp	beyond_tentacles
+
+
 	;===============
 	; move/draw tentacle monster
-
+tentacle_action:
 	lda	FRAMEH
 	and	#3
 	bne	tentacle_move
@@ -169,12 +201,6 @@ tentacle_move:
 	cmp	#26
 	bpl	no_tentacle
 
-;	lda	FRAMEL
-;	and	#$30		; 0110 1100
-;	lsr
-;	lsr
-;	lsr
-
 	tax
 
 	lda	tentacle_progression,X
@@ -194,15 +220,43 @@ tentacle_move:
 	inc	TENTACLE_PROGRESS
 	inc	TENTACLE_PROGRESS
 no_tentacle_progress:
-
-
 	jsr	put_sprite
+
+	; See if we are fully extended
+	; if we are close enough to grab
+
+	lda	TENTACLE_PROGRESS
+	cmp	#12
+	bne	no_tentacle
+
+	sec
+	lda	PHYSICIST_X
+	sbc	TENTACLE_X		; want -4 to 4
+	clc
+	adc	#4			; want 0 to 8
+	and	#$f8
+	bne	no_tentacle
+
+	lda	#0
+	sta	TENTACLE_PROGRESS
+	lda	#1
+	sta	TENTACLE_GRAB
+
 no_tentacle:
+
+	;===============================
+	; check keyboard
+
+	jsr	handle_keypress_pool
+
 
 	;===============
 	; draw physicist
 
 	jsr	draw_physicist
+
+
+beyond_tentacles:
 
 	;======================
 	; draw foreground plant

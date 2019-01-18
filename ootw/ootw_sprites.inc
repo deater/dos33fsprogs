@@ -261,6 +261,23 @@ tentacle5:
 
 ; TODO: trim right and bottom off sprites
 
+
+caught_progression:
+	.word	caught0
+	.word	caught1
+	.word	caught2
+	.word	caught3
+	.word	caught4
+	.word	caught5
+	.word	caught6
+	.word	caught7
+	.word	caught8
+	.word	ripple4
+	.word	ripple4
+	.word	ripple4	; 12
+
+
+
 caught0:
 	.byte	$7,$8
 	.byte	$aa,$aa,$aa,$9a,$9a,$aa,$aa
