@@ -356,7 +356,7 @@ draw_slugs:
 	inc	slugg0_gait
 
 	lda	slugg0_gait
-	and	#$1f
+	and	#$3f
 	cmp	#$00
 	bne	slug_no_move
 
@@ -375,7 +375,7 @@ slug_move:
 slug_no_move:
 
 	lda	slugg0_gait
-	and	#$10
+	and	#$20
 	beq	slug_squinched
 
 slug_flat:
