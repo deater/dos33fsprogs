@@ -9,6 +9,12 @@ ootw_pool:
 	bit	FULLGR
 
 
+	;=============
+	; disable earthquake
+
+	lda	#0
+	sta	EARTH_OFFSET
+
 	;===========================
 	; Clear both bottoms
 

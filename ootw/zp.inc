@@ -132,6 +132,7 @@ CURSOR		= $9D
 			;COLOR1		=	$E0
 			;COLOR2		=	$E1
 			;MATCH		=	$E2
+WHICH_SLUG	= $E2
 XX	=	$E3
 YY	=	$E4
 HGR_COLOR       = $E4
