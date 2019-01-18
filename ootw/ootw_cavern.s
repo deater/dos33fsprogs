@@ -420,9 +420,9 @@ slugg2_gait:	.byte	0
 draw_slugs:
 
 	ldx	#0
-	sta	WHICH_SLUG
+	stx	WHICH_SLUG
 draw_slugs_loop:
-
+	ldx	WHICH_SLUG
 	lda	slugg0_out,X
 	bne	check_kicked		; don't draw if not there
 	jmp	slug_done
@@ -629,6 +629,18 @@ slug_right:
 	jsr	put_sprite_flipped
 
 slug_done:
+	lda	WHICH_SLUG
+	clc
+	adc	#6
+	tax
+	stx	WHICH_SLUG
+
+	cpx	#18
+	beq	slug_exit
+
+	jmp	draw_slugs_loop
+
+slug_exit:
 	rts
 
 remove_slug:
