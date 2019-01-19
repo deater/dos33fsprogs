@@ -8,23 +8,22 @@ ootw_cavern:
 	bit	SET_GR
 	bit	FULLGR
 
+	;==================
+	; setup drawing
 
-	;===========================
-	; Clear both bottoms
-
-;	lda	#$4
-;	sta	DRAW_PAGE
-;	jsr     clear_bottom
-
-	lda	#$0
-	sta	DRAW_PAGE
-;	jsr     clear_bottom
 
 	lda	#0
 	sta	DRAW_PAGE
 	lda	#1
 	sta	DISP_PAGE
 
+	;===================
+	; setup room boundaries
+
+	lda	#0
+	sta	LEFT_LIMIT
+	lda	#37
+	sta	RIGHT_LIMIT
 
 	;=============================
 	; Load background to $c00
@@ -186,7 +185,7 @@ still_alive:
 	;===============
 	; check keyboard
 
-	jsr	handle_keypress_cavern
+	jsr	handle_keypress
 
 	;===============
 	; draw physicist
@@ -261,129 +260,6 @@ still_in_cavern:
 
 done_cavern:
 	rts
-
-
-;======================================
-; handle keypress (cavern)
-;======================================
-
-handle_keypress_cavern:
-
-	lda	KEYPRESS						; 4
-	bmi	keypress_cavern						; 3
-
-	rts
-
-keypress_cavern:
-									; -1
-
-	and	#$7f		; clear high bit
-
-check_quit_c:
-	cmp	#'Q'
-	beq	quit_c
-	cmp	#27
-	bne	check_left_c
-quit_c:
-	lda	#$ff
-	sta	GAME_OVER
-	rts
-
-check_left_c:
-	cmp	#'A'
-	beq	left_c
-	cmp	#$8		; left arrow
-	bne	check_right_c
-left_c:
-	lda	#0
-	sta	CROUCHING
-
-	lda	DIRECTION
-	bne	face_left_c
-
-	dec	PHYSICIST_X
-	bpl	just_fine_left_c
-too_far_left_c:
-
-	lda	#1
-	sta	GAME_OVER
-	rts
-
-just_fine_left_c:
-
-	inc	GAIT
-	inc	GAIT
-
-	jmp	done_keypress_c
-
-face_left_c:
-	lda	#0
-	sta	DIRECTION
-	sta	GAIT
-	jmp	done_keypress_c
-
-check_right_c:
-	cmp	#'D'
-	beq	right_c
-	cmp	#$15
-	bne	check_down_c
-right_c:
-	lda	#0
-	sta	CROUCHING
-
-	lda	DIRECTION
-	beq	face_right_c
-
-	inc	PHYSICIST_X
-	lda	PHYSICIST_X
-	cmp	#37
-	bne	just_fine_right_c
-too_far_right_c:
-	dec	PHYSICIST_X
-just_fine_right_c:
-
-
-	inc	GAIT
-	inc	GAIT
-	jmp	done_keypress_c
-
-face_right_c:
-	lda	#0
-	sta	GAIT
-	lda	#1
-	sta	DIRECTION
-	jmp	done_keypress_c
-
-check_down_c:
-	cmp	#'S'
-	beq	down_c
-	cmp	#$0A
-	bne	check_space_c
-down_c:
-	lda	#48
-	sta	CROUCHING
-	lda	#0
-	sta	GAIT
-
-	jmp	done_keypress_c
-
-check_space_c:
-	cmp     #' '
-	beq	space_c
-	cmp	#$15
-	bne	unknown_c
-space_c:
-	lda	#15
-	sta	KICKING
-	lda	#0
-	sta	GAIT
-unknown_c:
-done_keypress_c:
-	bit	KEYRESET	; clear the keyboard strobe		; 4
-
-
-no_keypress_c:
-	rts								; 6
 
 
 ;==================================

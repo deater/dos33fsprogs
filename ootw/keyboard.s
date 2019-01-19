@@ -80,9 +80,11 @@ right:
 	bne	just_fine_right
 too_far_right:
 
+	dec	PHYSICIST_X
+
 	lda	#2
 	sta	GAME_OVER
-	rts
+
 
 just_fine_right:
 	inc	GAIT
