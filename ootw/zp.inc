@@ -129,9 +129,8 @@ CURSOR		= $9D
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
-			;COLOR1		=	$E0
-			;COLOR2		=	$E1
-			;MATCH		=	$E2
+LEFT_LIMIT	= $E0
+RIGHT_LIMIT	= $E1
 WHICH_SLUG	= $E2
 XX	=	$E3
 YY	=	$E4

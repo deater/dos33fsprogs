@@ -8,7 +8,6 @@ ootw_pool:
 	bit	SET_GR
 	bit	FULLGR
 
-
 	;=============
 	; disable earthquake
 
@@ -16,21 +15,20 @@ ootw_pool:
 	sta	EARTH_OFFSET
 
 	;===========================
-	; Clear both bottoms
-
-;	lda	#$4
-;	sta	DRAW_PAGE
-;	jsr     clear_bottom
-
-;	lda	#$0
-;	sta	DRAW_PAGE
-;	jsr     clear_bottom
+	; Setup pages (is this necessary?)
 
 	lda	#0
 	sta	DRAW_PAGE
 	lda	#1
 	sta	DISP_PAGE
 
+	;===========================
+	; Setup right/left exit paramaters
+
+	lda	#37
+	sta	RIGHT_LIMIT
+	lda	#0
+	sta	LEFT_LIMIT
 
 	;=============================
 	; Load background to $c00
@@ -253,7 +251,7 @@ no_tentacle:
 	;===============================
 	; check keyboard
 
-	jsr	handle_keypress_pool
+	jsr	handle_keypress
 
 
 	;===============
@@ -311,7 +309,7 @@ frame_no_oflo:
 	beq	done_pool
 
 	; check if done this level
-	cmp	#$1
+	cmp	#$2
 	bne	not_done_pool
 
 	lda	#0
@@ -327,125 +325,3 @@ not_done_pool:
 
 done_pool:
 	rts
-
-;======================================
-; handle keypress (pool)
-;======================================
-
-handle_keypress_pool:
-
-	lda	KEYPRESS						; 4
-	bmi	keypress_pool						; 3
-
-	rts
-
-keypress_pool:
-									; -1
-
-	and	#$7f		; clear high bit
-
-check_quit:
-	cmp	#'Q'
-	beq	quit
-	cmp	#27
-	bne	check_left
-quit:
-	lda	#$ff		; could just dec
-	sta	GAME_OVER
-	rts
-
-check_left:
-	cmp	#'A'
-	beq	left
-	cmp	#$8		; left arrow
-	bne	check_right
-left:
-	lda	#0
-	sta	CROUCHING
-
-	lda	DIRECTION
-	bne	face_left
-
-	dec	PHYSICIST_X
-	bpl	just_fine_left
-too_far_left:
-	inc	PHYSICIST_X
-just_fine_left:
-
-	inc	GAIT
-	inc	GAIT
-
-	jmp	done_keypress
-
-face_left:
-	lda	#0
-	sta	DIRECTION
-	sta	GAIT
-	jmp	done_keypress
-
-check_right:
-	cmp	#'D'
-	beq	right
-	cmp	#$15
-	bne	check_down
-right:
-	lda	#0
-	sta	CROUCHING
-
-	lda	DIRECTION
-	beq	face_right
-
-	inc	PHYSICIST_X
-	lda	PHYSICIST_X
-	cmp	#37
-	bne	just_fine_right
-too_far_right:
-
-	lda	#1
-	sta	GAME_OVER
-	rts
-
-just_fine_right:
-	inc	GAIT
-	inc	GAIT
-	jmp	done_keypress
-
-face_right:
-	lda	#0
-	sta	GAIT
-	lda	#1
-	sta	DIRECTION
-	jmp	done_keypress
-
-check_down:
-	cmp	#'S'
-	beq	down
-	cmp	#$0A
-	bne	check_space
-down:
-	lda	#48
-	sta	CROUCHING
-	lda	#0
-	sta	GAIT
-
-	jmp	done_keypress
-
-check_space:
-	cmp	#' '
-	beq	space
-	cmp	#$15
-	bne	unknown
-space:
-	lda	#15
-	sta	KICKING
-	lda	#0
-	sta	GAIT
-unknown:
-done_keypress:
-	bit	KEYRESET	; clear the keyboard strobe		; 4
-
-
-no_keypress:
-	rts								; 6
-
-

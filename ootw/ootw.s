@@ -126,6 +126,7 @@ end_message:
 .include "gr_putsprite.s"
 .include "gr_offsets.s"
 .include "random16.s"
+.include "keyboard.s"
 .include "ootw_pool.inc"
 .include "ootw_cavern.inc"
 .include "ootw_quake.inc"
