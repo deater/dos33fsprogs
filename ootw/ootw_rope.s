@@ -21,7 +21,7 @@ ootw_rope:
 
 	lda	#37
 	sta	RIGHT_LIMIT
-	lda	#22		; until we learn to climb slopes?
+	lda	#26		; until we learn to climb slopes?
 	sta	LEFT_LIMIT
 
 	;=============================
