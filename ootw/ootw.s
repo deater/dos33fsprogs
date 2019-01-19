@@ -115,6 +115,7 @@ end_message:
 .byte	8,10,"PRESS RETURN TO CONTINUE",0
 .byte	11,20,"ACCESS CODE: IH8S",0
 
+.include "ootw_rope.s"
 .include "ootw_pool.s"
 .include "ootw_cavern.s"
 .include "physicist.s"
@@ -130,5 +131,6 @@ end_message:
 .include "ootw_pool.inc"
 .include "ootw_cavern.inc"
 .include "ootw_quake.inc"
+.include "ootw_rope.inc"
 .include "ootw_sprites.inc"
 .include "slug_cutscene.s"

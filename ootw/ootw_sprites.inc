@@ -282,6 +282,14 @@ ripple4:
 	.byte	$aa,$aa,$aa
 
 
+foreground_spikes:
+	.byte	$4,$5
+	.byte	$00,$aa,$aa,$00
+	.byte	$00,$aa,$0a,$00
+	.byte	$00,$aa,$00,$00
+	.byte	$00,$aa,$00,$00
+	.byte	$00,$aa,$aa,$00
+
 
 ;=========================
 ; slug creatures

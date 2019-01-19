@@ -1,5 +1,15 @@
 TODO:
 + slugs on ceiling
++ ability to run
++ ability to jump
+
++ make slug init a loop
++ add rope room, with falling rocks and earthquake
++ add cavern2 room with more slugs
+
++ add routine that auto-generates the two earthquake backgrounds
+  from one background image
+
 
 far-out:
 + add the shooting-in-hallway scene

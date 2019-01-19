@@ -310,12 +310,23 @@ frame_no_oflo:
 
 	; check if done this level
 	cmp	#$2
-	bne	not_done_pool
+	bne	not_to_right
+
+	; exit to right
 
 	lda	#0
 	sta	PHYSICIST_X
 
 	jmp	ootw_cavern
+
+not_to_right:
+	cmp	#$1
+	bne	not_done_pool
+
+	lda	#37
+	sta	PHYSICIST_X
+
+	jmp	ootw_rope
 
 not_done_pool:
 
