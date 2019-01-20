@@ -17,7 +17,7 @@ OOTW:	ootw.o
 
 ootw.o:	ootw.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
-	keyboard.s \
+	keyboard.s sluggy.s \
 	ootw_rope.s \
 	ootw_pool.s ootw_cavern.s physicist.s random16.s slug_cutscene.s \
 	ootw_pool.inc \
