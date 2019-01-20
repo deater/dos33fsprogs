@@ -60,3 +60,32 @@ done_shake:
 
 	rts
 
+
+	;======================
+	; draw falling boulders
+draw_boulder:
+	lda	BOULDER_Y
+	cmp	#38
+	bpl	no_boulder
+
+	lda	#<boulder
+	sta	INL
+	lda	#>boulder
+	sta	INH
+
+	lda	BOULDER_X
+	sta	XPOS
+	lda	BOULDER_Y
+	sta	YPOS
+        jsr	put_sprite
+
+	lda	FRAMEL
+	and	#$3
+	bne	no_boulder
+	inc	BOULDER_Y
+	inc	BOULDER_Y
+
+no_boulder:
+
+	rts
+

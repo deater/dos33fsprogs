@@ -38,8 +38,13 @@ ootw_rope:
         sta     GBASL
 	jsr	load_rle_gr
 
+	;================================
+	; Load quake background to $1000
+
+	jsr	gr_make_quake
+
 	;=================================
-	; copy to both pages $400/$800
+	; copy $c00 to both pages $400/$800
 
 	jsr	gr_copy_to_current
 	jsr	page_flip
@@ -59,9 +64,9 @@ ootw_rope:
 rope_loop:
 
 	;================================
-	; copy background to current page
+	; handle earthquakes
 
-	jsr	gr_copy_to_current
+	jsr	earthquake_handler
 
 
 	;===============================
@@ -87,9 +92,17 @@ rope_loop:
         lda     #30
         sta     XPOS
         lda     #30
+	sec
+	sbc	EARTH_OFFSET
         sta     YPOS
 
 	jsr	put_sprite
+
+	;================
+	; draw falling boulder
+
+	jsr	draw_boulder
+
 
 	;===============
 	; page flip
@@ -119,6 +132,7 @@ rope_frame_no_oflo:
 
 	lda	#0
 	sta	PHYSICIST_X
+	sta	EARTH_OFFSET
 
 	jmp	ootw_pool
 
