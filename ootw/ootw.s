@@ -119,6 +119,7 @@ end_message:
 .include "ootw_rope.s"
 .include "ootw_pool.s"
 .include "ootw_cavern.s"
+.include "ootw_mesa.s"
 .include "physicist.s"
 .include "sluggy.s"
 .include "earthquake.s"

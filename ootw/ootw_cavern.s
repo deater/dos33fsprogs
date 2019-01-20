@@ -33,9 +33,31 @@ ootw_cavern:
 	sta	BASL			; load image off-screen $c00
 
 
+	; Setup some stuff based on which cave we are in
+
+
 	lda	WHICH_CAVE
+	bne	cave_bg1
 
 cave_bg0:
+	; set right exit
+	lda	#1
+	sta	cer_smc+1
+	lda	#<ootw_cavern
+	sta	cer_smc+5
+	lda	#>ootw_cavern
+	sta	cer_smc+6
+
+	; set left exit
+	lda	#0
+	sta	cel_smc+1
+	lda	#<ootw_pool
+	sta	cel_smc+5
+	lda	#>ootw_pool
+	sta	cel_smc+6
+
+
+	; load background
 	lda     #>(cavern_rle)
         sta     GBASH
 	lda     #<(cavern_rle)
@@ -43,6 +65,24 @@ cave_bg0:
 	jmp	cave_bg_done
 
 cave_bg1:
+
+	; set right exit
+	lda	#1
+	sta	cer_smc+1
+	lda	#<ootw_mesa
+	sta	cer_smc+5
+	lda	#>ootw_mesa
+	sta	cer_smc+6
+
+	; set left exit
+	lda	#0
+	sta	cel_smc+1
+	lda	#<ootw_cavern
+	sta	cel_smc+5
+	lda	#>ootw_cavern
+	sta	cel_smc+6
+
+	; load background
 	lda     #>(cavern2_rle)
         sta     GBASH
 	lda     #<(cavern2_rle)
@@ -185,19 +225,38 @@ no_boulder:
 
 frame_no_oflo_c:
 
-	; pause?
 
+
+	;=================
 	; see if game over
 	lda	GAME_OVER
-	cmp	#$ff
+	beq	still_in_cavern		; if 0, continue as per normal
+
+	cmp	#$ff			; if $ff, we died
 	beq	done_cavern
 
-	; see if left level
+	;===========================
+	; see if exited room to right
 	cmp	#1
-	bne	still_in_cavern
+	beq	cavern_exit_left
 
+cavern_exit_right:
+	lda	#0
+	sta	PHYSICIST_X
+cer_smc:
+	lda	#$0
+	sta	WHICH_CAVE
+	jmp	ootw_pool
+
+
+	;==========================
+	; see if exited room to left
+cavern_exit_left:
 	lda	#37
 	sta	PHYSICIST_X
+cel_smc:
+	lda	#$0
+	sta	WHICH_CAVE
 	jmp	ootw_pool
 
 still_in_cavern:

@@ -316,6 +316,7 @@ frame_no_oflo:
 
 	lda	#0
 	sta	PHYSICIST_X
+	sta	WHICH_CAVE
 
 	jmp	ootw_cavern
 
