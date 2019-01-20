@@ -270,7 +270,7 @@ leg1:
 leg2:
 	.byte $4,$6
 	.byte $AA,$AA,$AA,$AA
-	.byte $bA,$AA,$00,$AA
+	.byte $bA,$AA,$0A,$AA
 	.byte $AA,$A7,$00,$00
 	.byte $AA,$AA,$00,$00
 	.byte $AA,$AA,$00,$00
