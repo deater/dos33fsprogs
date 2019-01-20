@@ -56,3 +56,61 @@ gr_copy_line:
 
 	rts								; 6
 
+
+
+	;=========================================================
+	; gr_copy_to_current, 40x48 version
+	;=========================================================
+	; copy 0x1000 to DRAW_PAGE
+
+gr_copy_to_current_40:
+
+	lda	DRAW_PAGE					; 3
+	clc							; 2
+	adc	#$4						; 2
+	sta	gr_copy_line_40+5				; 4
+	sta	gr_copy_line_40+11				; 4
+	adc	#$1						; 2
+	sta	gr_copy_line_40+17				; 4
+	sta	gr_copy_line_40+23				; 4
+	adc	#$1						; 2
+	sta	gr_copy_line_40+29				; 4
+	sta	gr_copy_line_40+35				; 4
+	adc	#$1						; 2
+	sta	gr_copy_line_40+41				; 4
+	sta	gr_copy_line_40+47				; 4
+							;===========
+							;	45
+
+	ldy	#119		; for early ones, copy 120 bytes	; 2
+
+gr_copy_line_40:
+	lda	$1000,Y		; load a byte (self modified)		; 4
+	sta	$400,Y		; store a byte (self modified)		; 5
+
+	lda	$1080,Y		; load a byte (self modified)		; 4
+	sta	$480,Y		; store a byte (self modified)		; 5
+
+	lda	$1100,Y		; load a byte (self modified)		; 4
+	sta	$500,Y		; store a byte (self modified)		; 5
+
+	lda	$1180,Y		; load a byte (self modified)		; 4
+	sta	$580,Y		; store a byte (self modified)		; 5
+
+	lda	$1200,Y		; load a byte (self modified)		; 4
+	sta	$600,Y		; store a byte (self modified)		; 5
+
+	lda	$1280,Y		; load a byte (self modified)		; 4
+	sta	$680,Y		; store a byte (self modified)		; 5
+
+	lda	$1300,Y		; load a byte (self modified)		; 4
+	sta	$700,Y		; store a byte (self modified)		; 5
+
+	lda	$1380,Y		; load a byte (self modified)		; 4
+	sta	$780,Y		; store a byte (self modified)		; 5
+
+	dey			; decrement pointer			; 2
+	bpl	gr_copy_line_40	;					; 2nt/3
+
+	rts								; 6
+
