@@ -133,7 +133,6 @@ end_message:
 .include "ootw_cavern.inc"
 .include "ootw_cavern2.inc"
 .include "ootw_cavern3.inc"
-.include "ootw_quake.inc"
 .include "ootw_rope.inc"
 .include "ootw_sprites.inc"
 .include "slug_cutscene.s"

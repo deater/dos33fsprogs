@@ -42,16 +42,7 @@ ootw_cavern:
 	;=============================
 	; Load quake background to $1000
 
-	lda	#$10
-	sta	BASH
-	lda	#$00
-	sta	BASL			; load image off-screen $c00
-
-	lda     #>(quake_rle)
-        sta     GBASH
-	lda     #<(quake_rle)
-        sta     GBASL
-	jsr	load_rle_gr
+	jsr	gr_make_quake
 
 
 	;=================================
@@ -131,7 +122,7 @@ no_shake:
 	jsr	gr_copy_to_current
 	jmp	done_shake
 shake_shake:
-	jsr	gr_copy_to_current_40
+	jsr	gr_copy_to_current_1000
 done_shake:
 
 
