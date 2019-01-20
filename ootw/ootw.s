@@ -121,6 +121,7 @@ end_message:
 .include "ootw_cavern.s"
 .include "physicist.s"
 .include "sluggy.s"
+.include "earthquake.s"
 .include "text_print.s"
 .include "gr_pageflip.s"
 .include "gr_unrle.s"
