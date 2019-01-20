@@ -1,0 +1,14 @@
+Q. Are you implementing the game just like the original?
+
+A. No, this is just a quick hack using all sprites.
+   I'm not doing something amazing like writing a 6502 optimized
+   vector drawing library.
+
+
+
+Q.  How are you making the graphics?
+
+A.  Using the orignal for reference (currently a Windows/EGA version
+    for some reason?)  Size down to 80x40.  Manually map colors to
+    Apple II Lo-res pallette.  Then manually adjust to 40x40.
+    Finally fine tune in a bit while using original for reference.
