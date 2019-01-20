@@ -1,4 +1,4 @@
-; Cavern scene (with the slugs)
+; Cavern scenes (with the slugs)
 
 ootw_cavern:
 	;===========================
@@ -11,13 +11,12 @@ ootw_cavern:
 	;==================
 	; setup drawing
 
-
 	lda	#0
 	sta	DRAW_PAGE
 	lda	#1
 	sta	DISP_PAGE
 
-	;===================
+	;======================
 	; setup room boundaries
 
 	lda	#0
@@ -33,20 +32,33 @@ ootw_cavern:
 	lda	#$00
 	sta	BASL			; load image off-screen $c00
 
+
+	lda	WHICH_CAVE
+
+cave_bg0:
 	lda     #>(cavern_rle)
         sta     GBASH
 	lda     #<(cavern_rle)
         sta     GBASL
+	jmp	cave_bg_done
+
+cave_bg1:
+	lda     #>(cavern2_rle)
+        sta     GBASH
+	lda     #<(cavern2_rle)
+        sta     GBASL
+cave_bg_done:
 	jsr	load_rle_gr
 
-	;=============================
+
+	;================================
 	; Load quake background to $1000
 
 	jsr	gr_make_quake
 
 
 	;=================================
-	; copy to both pages $400/$800
+	; copy $c00 background to both pages $400/$800
 
 	jsr	gr_copy_to_current
 	jsr	page_flip

@@ -16,6 +16,7 @@ ootw:
 	sta	EARTH_OFFSET
 	sta	KICKING
 	sta	CROUCHING
+	sta	WHICH_CAVE
 
 	lda     #22
 	sta     PHYSICIST_Y
