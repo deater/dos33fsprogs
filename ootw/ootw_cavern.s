@@ -75,7 +75,7 @@ cave_bg1:
 	; set slug table to use
 	lda	#18
 	sta	ds_smc1+1
-	lda	#36
+	lda	#42
 	sta	ds_smc2+1
 
 	; set right exit

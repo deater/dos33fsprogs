@@ -8,21 +8,21 @@
 
 slugg0_out:	.byte	1		; 0
 slugg0_attack:	.byte	0		; 1
-slugg0_dieing:	.byte	0		; 2
+slugg0_dying:	.byte	0		; 2
 slugg0_x:	.byte	30		; 3
 slugg0_dir:	.byte	$ff		; 4
 slugg0_gait:	.byte	0		; 5
 
 slugg1_out:	.byte	1		; 6
 slugg1_attack:	.byte	0
-slugg1_dieing:	.byte	0
+slugg1_dying:	.byte	0
 slugg1_x:	.byte	30
 slugg1_dir:	.byte	$ff
 slugg1_gait:	.byte	0
 
 slugg2_out:	.byte	1
 slugg2_attack:	.byte	0
-slugg2_dieing:	.byte	0
+slugg2_dying:	.byte	0
 slugg2_x:	.byte	30
 slugg2_dir:	.byte	$ff
 slugg2_gait:	.byte	0
@@ -31,24 +31,31 @@ slugg2_gait:	.byte	0
 
 slugg3_out:	.byte	1		; 0
 slugg3_attack:	.byte	0		; 1
-slugg3_dieing:	.byte	0		; 2
+slugg3_dying:	.byte	0		; 2
 slugg3_x:	.byte	30		; 3
 slugg3_dir:	.byte	$ff		; 4
 slugg3_gait:	.byte	0		; 5
 
 slugg4_out:	.byte	1		; 6
 slugg4_attack:	.byte	0
-slugg4_dieing:	.byte	0
+slugg4_dying:	.byte	0
 slugg4_x:	.byte	30
 slugg4_dir:	.byte	$ff
 slugg4_gait:	.byte	0
 
 slugg5_out:	.byte	1
 slugg5_attack:	.byte	0
-slugg5_dieing:	.byte	0
+slugg5_dying:	.byte	0
 slugg5_x:	.byte	30
 slugg5_dir:	.byte	$ff
 slugg5_gait:	.byte	0
+
+slugg6_out:	.byte	1
+slugg6_attack:	.byte	0
+slugg6_dying:	.byte	0
+slugg6_x:	.byte	30
+slugg6_dir:	.byte	$ff
+slugg6_gait:	.byte	0
 
 
 
@@ -60,32 +67,55 @@ init_slugs:
 
 	ldx	#0
 init_slug_loop:
+
+	; Mark slug as out and alive
+
 	lda	#1
 	sta	slugg0_out,X
 
+
+	; Mark slug as not attacking or dying
+
 	lda	#0
 	sta	slugg0_attack,X
-	sta	slugg0_dieing,X
+	sta	slugg0_dying,X
+
+	; Point the slug in the correct direction (left in this case)
 
 	lda	#$ff
 	sta	slugg0_dir,X
 
-	jsr	random16
-	and	#$f
-	clc
-	adc	#16
-	sta	slugg0_x,X
+	; Randomly pick an X value to appear at
 
 	jsr	random16
+	lda	SEEDL
+	and	#$1f
+	clc
+	adc	#8		; appear from x = 8..36
+
+	cmp	#36
+	bcc	slugx_not_too_high		; blt
+	lda	#36		; max out at 36
+slugx_not_too_high:
+	sta	slugg0_x,X
+
+	; Make the slug movement random so they don't all move in sync
+
+	jsr	random16
+	lda	SEEDL
 	sta	slugg0_gait,X
+
+	; incrememnt struct pointer until all are initialized
 
 	clc
 	txa
 	adc	#6
 	tax
 
-	cpx	#36
+	cpx	#42
 	bne	init_slug_loop
+
+	; FIXME: originally forced some spacing between them
 
 	rts
 
@@ -96,6 +126,7 @@ init_slug_loop:
 
 draw_slugs:
 
+ds_smc1:
 	ldx	#0
 	stx	WHICH_SLUG
 draw_slugs_loop:
@@ -126,7 +157,7 @@ kicked:
 	lda	#2
 	sta	slugg0_out,X
 	lda	#10
-	sta	slugg0_dieing,X
+	sta	slugg0_dying,X
 	lda	DIRECTION
 	sta	slugg0_dir,X
 
@@ -204,7 +235,7 @@ slug_no_move:
 	; if exploding
 	;==============
 
-	lda	slugg0_dieing,X
+	lda	slugg0_dying,X
 	beq	check_draw_attacking
 slug_exploding:
 	stx	WHICH_SLUG
@@ -223,8 +254,8 @@ slug_exploding:
 
 	bit	SPEAKER
 
-	dec	slugg0_dieing,X
-	dec	slugg0_dieing,X
+	dec	slugg0_dying,X
+	dec	slugg0_dying,X
 	bne	no_progress
 	jmp	remove_slug
 
@@ -312,6 +343,7 @@ slug_done:
 	tax
 	stx	WHICH_SLUG
 
+ds_smc2:
 	cpx	#18
 	beq	slug_exit
 
