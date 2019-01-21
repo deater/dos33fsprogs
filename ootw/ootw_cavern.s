@@ -40,6 +40,12 @@ ootw_cavern:
 	bne	cave_bg1
 
 cave_bg0:
+	; set slug table to use
+	lda	#0
+	sta	ds_smc1+1
+	lda	#18
+	sta	ds_smc2+1
+
 	; set right exit
 	lda	#1
 	sta	cer_smc+1
@@ -65,6 +71,12 @@ cave_bg0:
 	jmp	cave_bg_done
 
 cave_bg1:
+
+	; set slug table to use
+	lda	#18
+	sta	ds_smc1+1
+	lda	#36
+	sta	ds_smc2+1
 
 	; set right exit
 	lda	#1
