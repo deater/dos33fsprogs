@@ -3,13 +3,15 @@ TODO:
 + ability to run
 + ability to jump
 
-+ make slug init a loop
-+ add rope room, with falling rocks and earthquake
-+ add cavern2 room with more slugs
++ have more slugs in cavern2 than cavern1
++ spread slugs out a bit more
 
-+ add routine that auto-generates the two earthquake backgrounds
-  from one background image
++ add arrival-underwater scene
 
++ ability to change physicist_y in rope room
++ add beast cutscene
++ ability to grab rope in rope room
++ ability to reach 1st checkpoint
 
 far-out:
 + add the shooting-in-hallway scene
