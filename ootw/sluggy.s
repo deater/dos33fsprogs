@@ -4,7 +4,7 @@
 ; draw slugs
 ;==================================
 
-	; outstate 0=dead 1=normal 2=dieing 3=falling
+	; out-state 0=dead 1=normal (2=falling?)
 
 slugg0_out:	.byte	1		; 0
 slugg0_attack:	.byte	0		; 1
@@ -29,7 +29,70 @@ slugg2_gait:	.byte	0
 
 
 
+slugg3_out:	.byte	1		; 0
+slugg3_attack:	.byte	0		; 1
+slugg3_dieing:	.byte	0		; 2
+slugg3_x:	.byte	30		; 3
+slugg3_dir:	.byte	$ff		; 4
+slugg3_gait:	.byte	0		; 5
 
+slugg4_out:	.byte	1		; 6
+slugg4_attack:	.byte	0
+slugg4_dieing:	.byte	0
+slugg4_x:	.byte	30
+slugg4_dir:	.byte	$ff
+slugg4_gait:	.byte	0
+
+slugg5_out:	.byte	1
+slugg5_attack:	.byte	0
+slugg5_dieing:	.byte	0
+slugg5_x:	.byte	30
+slugg5_dir:	.byte	$ff
+slugg5_gait:	.byte	0
+
+
+
+	;========================
+	; Init the slug creatures
+	;========================
+
+init_slugs:
+
+	ldx	#0
+init_slug_loop:
+	lda	#1
+	sta	slugg0_out,X
+
+	lda	#0
+	sta	slugg0_attack,X
+	sta	slugg0_dieing,X
+
+	lda	#$ff
+	sta	slugg0_dir,X
+
+	jsr	random16
+	and	#$f
+	clc
+	adc	#16
+	sta	slugg0_x,X
+
+	jsr	random16
+	sta	slugg0_gait,X
+
+	clc
+	txa
+	adc	#6
+	tax
+
+	cpx	#36
+	bne	init_slug_loop
+
+	rts
+
+
+	;========================
+	; Draw the slug creatures
+	;========================
 
 draw_slugs:
 

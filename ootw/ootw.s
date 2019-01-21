@@ -33,53 +33,11 @@ ootw:
 	; Initialize the slugs
 	;=======================
 
-	lda	#1
-	sta	slugg0_out
-	sta	slugg1_out
-	sta	slugg2_out
+	jsr	init_slugs
 
-	lda	#0
-	sta	slugg0_attack
-	sta	slugg0_dieing
-	sta	slugg1_attack
-	sta	slugg1_dieing
-	sta	slugg2_attack
-	sta	slugg2_dieing
-
-	lda	#$ff
-	sta	slugg0_dir
-	sta	slugg1_dir
-	sta	slugg2_dir
-
-	jsr	random16
-	and	#$f
-	clc
-	adc	#16
-	sta	slugg0_x
-
-	jsr	random16
-	and	#$7
-	clc
-	adc	#16
-	sta	slugg1_x
-
-	clc
-	adc	#10
-	sta	slugg2_x
-
-
-	jsr	random16
-;	and	#$3
-	sta	slugg0_gait
-
-	jsr	random16
-;	and	#$3
-	sta	slugg1_gait
-
-	jsr	random16
-;	and	#$3
-	sta	slugg2_gait
-
+	;=======================
+	; Enter the game
+	;=======================
 
 	jsr	ootw_pool
 
