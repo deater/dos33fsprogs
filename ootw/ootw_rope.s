@@ -21,8 +21,9 @@ ootw_rope:
 
 	lda	#37
 	sta	RIGHT_LIMIT
-	lda	#26		; until we learn to climb slopes?
+	lda	#11
 	sta	LEFT_LIMIT
+
 
 	;=============================
 	; Load background to $c00
@@ -77,6 +78,33 @@ rope_loop:
 
 	;===============
 	; draw physicist
+
+	; adjust y for slope
+
+	lda	PHYSICIST_X
+	cmp	#26
+	bcs	phys_no_adjust_y	; blt
+
+	cmp	#17
+	bcc	phys_on_platform
+
+;	lda	PHYSICIST_X
+	sec
+	sbc	#3
+	and	#$fe			; our sprite code only draws even y
+
+	jmp	phys_done_adjust_y
+				; slope is 15 - 26 ( 28 - 36)
+				; 26 -> 22
+
+phys_on_platform:
+	lda	#14
+	bne	phys_done_adjust_y
+
+phys_no_adjust_y:
+	lda	#22
+phys_done_adjust_y:
+	sta	PHYSICIST_Y
 
 	jsr	draw_physicist
 
