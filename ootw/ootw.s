@@ -90,10 +90,16 @@ end_message:
 .include "gr_offsets.s"
 .include "random16.s"
 .include "keyboard.s"
+; room backgrounds
 .include "ootw_pool.inc"
 .include "ootw_cavern.inc"
 .include "ootw_cavern2.inc"
 .include "ootw_cavern3.inc"
 .include "ootw_rope.inc"
-.include "ootw_sprites.inc"
+.include "ootw_underwater.inc"
+; sprites
+.include "sprites_ootw.inc"
+.include "sprites_physicist.inc"
+.include "sprites_slugs.inc"
+; cutscenes
 .include "slug_cutscene.s"

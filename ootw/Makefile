@@ -21,8 +21,9 @@ ootw.o:	ootw.s \
 	ootw_rope.s earthquake.s ootw_mesa.s \
 	ootw_pool.s ootw_cavern.s physicist.s random16.s slug_cutscene.s \
 	ootw_pool.inc \
-	ootw_cavern.inc ootw_cavern2.inc ootw_cavern3.inc \
-	ootw_rope.inc ootw_sprites.inc
+	ootw_cavern.inc ootw_cavern2.inc ootw_cavern3.inc ootw_underwater.inc \
+	ootw_rope.inc \
+	sprites_physicist.inc sprites_slugs.inc sprites_ootw.inc
 	ca65 -o ootw.o ootw.s -l ootw.lst
 ####
 
@@ -46,6 +47,9 @@ ootw_cavern3.inc:	$(PNG2RLE) another_cave3.png
 
 ootw_rope.inc:	$(PNG2RLE) another_rope.png
 	$(PNG2RLE) asm another_rope.png rope_rle > ootw_rope.inc
+
+ootw_underwater.inc:	$(PNG2RLE) another_uboot.png
+	$(PNG2RLE) asm another_uboot.png underwater_rle > ootw_underwater.inc
 
 #####
 
