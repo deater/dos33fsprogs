@@ -1,15 +1,29 @@
 TODO:
-+ slugs on ceiling
 + ability to run
 + ability to jump
 
+sprites_to_draw:
++ jumping
++ swimming
++ getting out of pool
++ beast
+
+cavern:
 + spread slugs out a bit more
++ slugs on ceiling
 
+underwater:
 + add arrival-underwater scene
++ ability to swim
 
+beast:
 + add beast cutscene
++ add beast sprite
+
+rope_room:
 + ability to grab rope in rope room
-+ ability to reach 1st checkpoint
 
 far-out:
 + add the shooting-in-hallway scene
++ ability to reach 1st checkpoint
++ implement intro movie

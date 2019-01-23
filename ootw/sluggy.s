@@ -4,12 +4,15 @@
 ; draw slugs
 ;==================================
 
+SLUG_STRUCT_SIZE	=	7
+
 	; out-state 0=dead 1=normal (2=falling?)
 
 slugg0_out:	.byte	1		; 0
 slugg0_attack:	.byte	0		; 1
 slugg0_dying:	.byte	0		; 2
 slugg0_x:	.byte	30		; 3
+slugg0_y:	.byte	30		; 3
 slugg0_dir:	.byte	$ff		; 4
 slugg0_gait:	.byte	0		; 5
 
@@ -17,6 +20,7 @@ slugg1_out:	.byte	1		; 6
 slugg1_attack:	.byte	0
 slugg1_dying:	.byte	0
 slugg1_x:	.byte	30
+slugg1_y:	.byte	30
 slugg1_dir:	.byte	$ff
 slugg1_gait:	.byte	0
 
@@ -24,6 +28,7 @@ slugg2_out:	.byte	1
 slugg2_attack:	.byte	0
 slugg2_dying:	.byte	0
 slugg2_x:	.byte	30
+slugg2_y:	.byte	30
 slugg2_dir:	.byte	$ff
 slugg2_gait:	.byte	0
 
@@ -33,6 +38,7 @@ slugg3_out:	.byte	1		; 0
 slugg3_attack:	.byte	0		; 1
 slugg3_dying:	.byte	0		; 2
 slugg3_x:	.byte	30		; 3
+slugg3_y:	.byte	30		; 3
 slugg3_dir:	.byte	$ff		; 4
 slugg3_gait:	.byte	0		; 5
 
@@ -40,6 +46,7 @@ slugg4_out:	.byte	1		; 6
 slugg4_attack:	.byte	0
 slugg4_dying:	.byte	0
 slugg4_x:	.byte	30
+slugg4_y:	.byte	30
 slugg4_dir:	.byte	$ff
 slugg4_gait:	.byte	0
 
@@ -47,6 +54,7 @@ slugg5_out:	.byte	1
 slugg5_attack:	.byte	0
 slugg5_dying:	.byte	0
 slugg5_x:	.byte	30
+slugg5_y:	.byte	30
 slugg5_dir:	.byte	$ff
 slugg5_gait:	.byte	0
 
@@ -54,8 +62,17 @@ slugg6_out:	.byte	1
 slugg6_attack:	.byte	0
 slugg6_dying:	.byte	0
 slugg6_x:	.byte	30
+slugg6_y:	.byte	30
 slugg6_dir:	.byte	$ff
 slugg6_gait:	.byte	0
+
+slugg7_out:	.byte	1
+slugg7_attack:	.byte	0
+slugg7_dying:	.byte	0
+slugg7_x:	.byte	30
+slugg7_y:	.byte	30
+slugg7_dir:	.byte	$ff
+slugg7_gait:	.byte	0
 
 
 
@@ -109,10 +126,10 @@ slugx_not_too_high:
 
 	clc
 	txa
-	adc	#6
+	adc	#SLUG_STRUCT_SIZE
 	tax
 
-	cpx	#42
+	cpx	#(SLUG_STRUCT_SIZE*8)
 	bne	init_slug_loop
 
 	; FIXME: originally forced some spacing between them
@@ -320,7 +337,7 @@ slug_selected:
 	lda	slugg0_x,X
 	sta	XPOS
 
-	lda	#30
+	lda	slugg0_y,X
 	sec
 	sbc	EARTH_OFFSET
 	sta	YPOS
@@ -339,12 +356,12 @@ slug_right:
 slug_done:
 	lda	WHICH_SLUG
 	clc
-	adc	#6
+	adc	#SLUG_STRUCT_SIZE
 	tax
 	stx	WHICH_SLUG
 
 ds_smc2:
-	cpx	#18
+	cpx	#(3*SLUG_STRUCT_SIZE)
 	beq	slug_exit
 
 	jmp	draw_slugs_loop

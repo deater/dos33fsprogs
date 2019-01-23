@@ -43,7 +43,7 @@ cave_bg0:
 	; set slug table to use
 	lda	#0
 	sta	ds_smc1+1
-	lda	#18
+	lda	#(SLUG_STRUCT_SIZE*3)
 	sta	ds_smc2+1
 
 	; set right exit
@@ -73,9 +73,9 @@ cave_bg0:
 cave_bg1:
 
 	; set slug table to use
-	lda	#18
+	lda	#(SLUG_STRUCT_SIZE*3)
 	sta	ds_smc1+1
-	lda	#42
+	lda	#(SLUG_STRUCT_SIZE*7)
 	sta	ds_smc2+1
 
 	; set right exit
