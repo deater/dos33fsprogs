@@ -25,21 +25,22 @@ ootw_cavern:
 	sta	RIGHT_LIMIT
 
 	;=============================
-	; Load background to $c00
+	; Load backgrounds to $c00 / $1000
 
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL			; load image off-screen $c00
+	jsr	cavern_load_background
 
+	;================================
+	; Load quake background to $1000
 
-	; Setup some stuff based on which cave we are in
+	jsr	gr_make_quake
 
+	;================================
+	; setup per-cave variables
 
 	lda	WHICH_CAVE
-	bne	cave_bg1
+	bne	cave1
 
-cave_bg0:
+cave0:
 	; set slug table to use
 	lda	#0
 	sta	ds_smc1+1
@@ -62,15 +63,9 @@ cave_bg0:
 	lda	#>ootw_pool
 	sta	cel_smc+6
 
+	jmp	cave_setup_done
 
-	; load background
-	lda     #>(cavern_rle)
-        sta     GBASH
-	lda     #<(cavern_rle)
-        sta     GBASL
-	jmp	cave_bg_done
-
-cave_bg1:
+cave1:
 
 	; set slug table to use
 	lda	#(SLUG_STRUCT_SIZE*3)
@@ -94,19 +89,7 @@ cave_bg1:
 	lda	#>ootw_cavern
 	sta	cel_smc+6
 
-	; load background
-	lda     #>(cavern2_rle)
-        sta     GBASH
-	lda     #<(cavern2_rle)
-        sta     GBASL
-cave_bg_done:
-	jsr	load_rle_gr
-
-
-	;================================
-	; Load quake background to $1000
-
-	jsr	gr_make_quake
+cave_setup_done:
 
 
 	;=================================
@@ -259,3 +242,35 @@ still_in_cavern:
 done_cavern:
 	rts
 
+
+
+	;===============================
+	; load proper background to $c00
+	;===============================
+
+cavern_load_background:
+
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL			; load image off-screen $c00
+
+	lda	WHICH_CAVE
+	bne	cave_bg1
+
+cave_bg0:
+	; load background
+	lda     #>(cavern_rle)
+        sta     GBASH
+	lda     #<(cavern_rle)
+        sta     GBASL
+	jmp	cave_bg_done
+
+cave_bg1:
+	; load background
+	lda     #>(cavern2_rle)
+        sta     GBASH
+	lda     #<(cavern2_rle)
+        sta     GBASL
+cave_bg_done:
+	jmp	load_rle_gr		; tail call

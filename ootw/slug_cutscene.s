@@ -144,18 +144,9 @@ leg_end:
 	;=============================
 	; Restore background to $c00
 
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL
+	jmp	cavern_load_background
 
-	lda	#>(cavern_rle)
-	sta	GBASH
-	lda	#<(cavern_rle)
-	sta	GBASL
-	jsr	load_rle_gr
-
-	rts
+;	rts		; tail call?
 
 
 slug_background:
