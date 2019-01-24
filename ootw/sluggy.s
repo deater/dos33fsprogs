@@ -1,46 +1,62 @@
 ; Sluggy Freelance
 
+
+; slug behavior:
+;	cavern1: three slugs: 2 on ceiling
+;	cavern2: four slugs: 1 on ceiling, but 3 more will respawn on ceiling
+
+;	Crawl forward.  When close, attack.
+;	Ceiling: crawl until within X of physicist
+;		then swing a few times and fall
+;		face toward physicist when start crawling
+;	Attacks: only attack if on ground and physicist is on ground
+;		will attempt to attack if you jump over
+;	Off edge of screen: will disappear but will respawn if leave/re-enter
+
 ;==================================
 ; draw slugs
 ;==================================
 
-SLUG_STRUCT_SIZE	=	7
+SLUG_STRUCT_SIZE	=	8
 
-	; out-state 0=dead 1=normal (2=falling?)
+	; TODO: use less space?  merge some of these?
 
 slugg0_out:	.byte	1		; 0
 slugg0_attack:	.byte	0		; 1
 slugg0_dying:	.byte	0		; 2
 slugg0_x:	.byte	30		; 3
-slugg0_y:	.byte	30		; 3
-slugg0_dir:	.byte	$ff		; 4
-slugg0_gait:	.byte	0		; 5
+slugg0_y:	.byte	30		; 4
+slugg0_dir:	.byte	$ff		; 5
+slugg0_gait:	.byte	0		; 6
+slugg0_falling:	.byte	0		; 7
 
-slugg1_out:	.byte	1		; 6
+slugg1_out:	.byte	1		; 8
 slugg1_attack:	.byte	0
 slugg1_dying:	.byte	0
 slugg1_x:	.byte	30
 slugg1_y:	.byte	30
 slugg1_dir:	.byte	$ff
 slugg1_gait:	.byte	0
+slugg1_falling:	.byte	0
 
 slugg2_out:	.byte	1
 slugg2_attack:	.byte	0
 slugg2_dying:	.byte	0
 slugg2_x:	.byte	30
-slugg2_y:	.byte	30
+slugg2_y:	.byte	0
 slugg2_dir:	.byte	$ff
 slugg2_gait:	.byte	0
-
+slugg2_falling:	.byte	0
 
 
 slugg3_out:	.byte	1		; 0
 slugg3_attack:	.byte	0		; 1
 slugg3_dying:	.byte	0		; 2
 slugg3_x:	.byte	30		; 3
-slugg3_y:	.byte	30		; 3
-slugg3_dir:	.byte	$ff		; 4
-slugg3_gait:	.byte	0		; 5
+slugg3_y:	.byte	30		; 4
+slugg3_dir:	.byte	$ff		; 5
+slugg3_gait:	.byte	0		; 6
+slugg3_falling:	.byte	0		; 7
 
 slugg4_out:	.byte	1		; 6
 slugg4_attack:	.byte	0
@@ -49,6 +65,7 @@ slugg4_x:	.byte	30
 slugg4_y:	.byte	30
 slugg4_dir:	.byte	$ff
 slugg4_gait:	.byte	0
+slugg4_falling:	.byte	0
 
 slugg5_out:	.byte	1
 slugg5_attack:	.byte	0
@@ -57,23 +74,25 @@ slugg5_x:	.byte	30
 slugg5_y:	.byte	30
 slugg5_dir:	.byte	$ff
 slugg5_gait:	.byte	0
+slugg5_falling:	.byte	0
 
 slugg6_out:	.byte	1
 slugg6_attack:	.byte	0
 slugg6_dying:	.byte	0
 slugg6_x:	.byte	30
-slugg6_y:	.byte	30
+slugg6_y:	.byte	0
 slugg6_dir:	.byte	$ff
 slugg6_gait:	.byte	0
+slugg6_falling:	.byte	0
 
 slugg7_out:	.byte	1
 slugg7_attack:	.byte	0
 slugg7_dying:	.byte	0
 slugg7_x:	.byte	30
-slugg7_y:	.byte	30
+slugg7_y:	.byte	0
 slugg7_dir:	.byte	$ff
 slugg7_gait:	.byte	0
-
+slugg7_falling:	.byte	0
 
 
 	;========================
@@ -144,7 +163,7 @@ slugx_not_too_high:
 draw_slugs:
 
 ds_smc1:
-	ldx	#0
+	ldx	#0			; loop through all.  self-modify
 	stx	WHICH_SLUG
 draw_slugs_loop:
 	ldx	WHICH_SLUG
@@ -155,6 +174,10 @@ draw_slugs_loop:
 check_kicked:
 	lda	slugg0_out,X		; only kick if normal
 	cmp	#1
+	bne	check_attack
+
+	lda	slugg0_y,X		; only kick if on ground
+	cmp	#30
 	bne	check_attack
 
 	;==================
@@ -184,8 +207,16 @@ check_attack:
 	;==================
 	; see if attack
 
-	lda	slugg0_out,X
+	lda	slugg0_out,X		; only attack if out
 	cmp	#1
+	bne	no_attack
+
+	lda	slugg0_y,X		; only attack if on ground
+	cmp	#30
+	bne	no_attack
+
+	lda	PHYSICIST_Y		; only attack if physicist on ground
+	cmp	#22
 	bne	no_attack
 
 	lda	PHYSICIST_X
