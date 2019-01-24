@@ -102,4 +102,5 @@ end_message:
 .include "sprites_physicist.inc"
 .include "sprites_slugs.inc"
 ; cutscenes
-.include "slug_cutscene.s"
+.include "cutscene_slug.s"
+.include "cutscene_beast.s"
