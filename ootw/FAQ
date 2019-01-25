@@ -1,4 +1,5 @@
-Q. Are you implementing the game just like the original?
+Q. Are you implementing the game just like the original (i.e. vector
+	drawing)?
 
 A. No, this is just a quick hack using all sprites.
    I'm not doing something amazing like writing a 6502 optimized
@@ -8,7 +9,51 @@ A. No, this is just a quick hack using all sprites.
 
 Q.  How are you making the graphics?
 
-A.  Using the orignal for reference (currently a Windows/EGA version
+A.  Using the original for reference (currently a Windows/EGA version
     for some reason?)  Size down to 80x40.  Manually map colors to
-    Apple II Lo-res pallette.  Then manually adjust to 40x40.
+    Apple II Lo-res palette.  Then manually adjust to 40x40.
     Finally fine tune in a bit while using original for reference.
+
+
+Q.  Why lores graphics?  It's so *horribly* blocky.
+
+A.  Yes, but I like it anyway.  So many colors!
+	I spent a lot of time as an ANSI artist so I am used to blocky
+	16-color graphics, and to be honest with you my art skills sort
+	of peak at that resolution.
+
+	Also Apple II graphics programming is painful and LORES is the
+	easiest of them all.
+
+	Partly nostalgia too, but my family only had a monochrome monitor
+	so I never got to experience full-color lores back in the day.
+	Unfortunately this game doesn't really play well in monochrome.
+
+
+
+Q.  Are you going to make a version using Hi-res or Double Hi-res graphics?
+
+A.  No, there's an official version for the Apple IIgs if you want something
+	like that.  Apple II hires graphics with sprites are a huge pain
+	to program, would probably be slower, and would take up a lot more
+	RAM.
+
+
+Q.  How about double-lores graphics (80x48)?  It would give you almost
+	square pixels?
+
+A.  While not as bad as Hires, double-lores is also a pain.  It only
+	works on the IIe with 128k or newer.  Also you now have to copy
+	things to aux memory, and your sprites have to worry about the
+	colors being shifted (I think) on the AUX page.  It will take
+	twice the ram and probably run 1/2 the speed.
+
+	Also the current code uses page-flipping to avoid flicker/tearing,
+	but doing page-flipping in double-lores is really tricky.
+
+
+Q.  Why are you targeting such an old machine, an original Apple II or II+?
+
+A.  Well, I own one.  Also there's something about programming on a machine
+	from 1977, whose graphics hardware is a glorified shift register,
+	and is implemented entirely out of 7400 series logic and 555 timers.

@@ -1,9 +1,13 @@
 TODO:
+
+movement -- note these are hard due to limitations of the Apple II keyboard
 + ability to run
 + ability to jump
++ ability to kick while crouching
 
 sprites_to_draw:
 + jumping
++ hanging on rope
 + swimming
 + getting out of pool
 + beast
@@ -12,21 +16,28 @@ pool:
 + only have beast on rock if it's not out
 
 cavern:
-+ spread slugs out a bit more
-+ slugs on ceiling
++ slugs on ceiling drop
 
 underwater:
 + add arrival-underwater scene
 + ability to swim
 
 beast:
-+ add beast cutscene
++ add beast death cutscene
 + add beast sprite
 
 rope_room:
-+ ability to grab rope in rope room
++ ability to swing on rope in rope room
 
-far-out:
-+ add the shooting-in-hallway scene
-+ ability to reach 1st checkpoint
-+ implement intro movie
+cutscenes:
++ death by beast
++ aliens shooting beast
++ aliens shooting physicist
+
+Intro:
++ Implement it?
+
+Level/Checkpoint #2:
++ Intro movie
++ Swing in the cage
++ Ability to pick up gun, with all that entails
