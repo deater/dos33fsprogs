@@ -43,7 +43,7 @@ slugg2_out:	.byte	1
 slugg2_attack:	.byte	0
 slugg2_dying:	.byte	0
 slugg2_x:	.byte	30
-slugg2_y:	.byte	0
+slugg2_y:	.byte	2
 slugg2_dir:	.byte	$ff
 slugg2_gait:	.byte	0
 slugg2_falling:	.byte	0
@@ -80,7 +80,7 @@ slugg6_out:	.byte	1
 slugg6_attack:	.byte	0
 slugg6_dying:	.byte	0
 slugg6_x:	.byte	30
-slugg6_y:	.byte	0
+slugg6_y:	.byte	2
 slugg6_dir:	.byte	$ff
 slugg6_gait:	.byte	0
 slugg6_falling:	.byte	0
@@ -89,7 +89,7 @@ slugg7_out:	.byte	1
 slugg7_attack:	.byte	0
 slugg7_dying:	.byte	0
 slugg7_x:	.byte	30
-slugg7_y:	.byte	0
+slugg7_y:	.byte	2
 slugg7_dir:	.byte	$ff
 slugg7_gait:	.byte	0
 slugg7_falling:	.byte	0
@@ -127,11 +127,11 @@ init_slug_loop:
 	lda	SEEDL
 	and	#$1f
 	clc
-	adc	#8		; appear from x = 8..36
+	adc	#8		; appear from x = 8..32
 
-	cmp	#36
+	cmp	#32
 	bcc	slugx_not_too_high		; blt
-	lda	#36		; max out at 36
+	asl			; div by two if too large
 slugx_not_too_high:
 	sta	slugg0_x,X
 
@@ -317,7 +317,7 @@ no_progress:
 	;==============
 check_draw_attacking:
 	lda	slugg0_attack,X
-	beq	slug_normal
+	beq	check_slug_ceiling
 slug_attacking:
 
 	lda	slugg0_gait,X
@@ -334,6 +334,35 @@ slug_attacking:
 	sta	INH
 
 	ldx	WHICH_SLUG
+
+	jmp	slug_selected
+
+
+	;==============
+	; if on ceiling
+	;==============
+check_slug_ceiling:
+	lda	slugg0_y,X
+	cmp	#30
+	beq	slug_normal
+slug_ceiling:
+
+	lda	slugg0_gait,X
+	and	#$20
+	beq	slug_ceiling_squinched
+
+slug_ceiling_flat:
+	lda	#<slug_ceiling1
+	sta	INL
+	lda	#>slug_ceiling1
+	sta	INH
+	bne	slug_selected
+
+slug_ceiling_squinched:
+	lda	#<slug_ceiling2
+	sta	INL
+	lda	#>slug_ceiling2
+	sta	INH
 
 	jmp	slug_selected
 
@@ -363,7 +392,6 @@ slug_squinched:
 	;================
 
 slug_selected:
-
 
 	lda	slugg0_x,X
 	sta	XPOS

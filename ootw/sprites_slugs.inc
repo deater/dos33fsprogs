@@ -1,6 +1,6 @@
 ;=========================
 ; slug creatures
-;	going left
+;	going left on ground
 
 slug1:
 	.byte	$4,$4
@@ -15,6 +15,19 @@ slug2:
 	.byte	$aa,$aa,$aa
 	.byte	$aa,$aa,$aa
 	.byte	$0a,$a0,$0a
+
+;=========================
+; slug creatures
+;	going left on roof
+
+slug_ceiling1:
+	.byte	$4,$1
+	.byte	$a0,$a0,$a0,$a0
+
+
+slug_ceiling2:
+	.byte	$3,$1
+	.byte	$a0,$0a,$a0
 
 ;===============
 ;===============
