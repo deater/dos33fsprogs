@@ -17,6 +17,7 @@ ootw:
 	sta	KICKING
 	sta	CROUCHING
 	sta	WHICH_CAVE
+	sta	BEAST_OUT
 
 	lda     #22
 	sta     PHYSICIST_Y

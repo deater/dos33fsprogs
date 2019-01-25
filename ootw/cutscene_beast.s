@@ -36,15 +36,15 @@ beast_loop:
 
 	ldx	CUTFRAME
 
-	lda	slug_frames,X
+	lda	beast_frames,X
 	sta	INL
-	lda	slug_frames+1,X
+	lda	beast_frames+1,X
 	sta	INH
 
 	lda	#15
 	sta     XPOS
 
-	lda	#18
+	lda	#10
 	sta	YPOS
 
 	jsr	put_sprite
@@ -64,7 +64,7 @@ beast_long_delay:
 	inx
 	stx	CUTFRAME
 
-	cpx	#12
+	cpx	#28
 	beq	beast_end
 
 	jmp	beast_loop
@@ -102,20 +102,20 @@ beast_background:
 
 
 beast_frames:
-	.word	beast_frame1
-	.word	beast_frame2
-	.word	beast_frame3
-	.word	beast_frame4
-	.word	beast_frame5
-	.word	beast_frame6
-	.word	beast_frame7
-	.word	beast_frame8
-	.word	beast_frame9
-	.word	beast_frame10
-	.word	beast_frame11
-	.word	beast_frame12
-	.word	beast_frame9
-	.word	beast_frame9
+	.word	beast_frame1		; 0
+	.word	beast_frame2		; 1
+	.word	beast_frame3		; 2
+	.word	beast_frame4		; 3
+	.word	beast_frame5		; 4
+	.word	beast_frame6		; 5
+	.word	beast_frame7		; 6
+	.word	beast_frame8		; 7
+	.word	beast_frame9		; 8
+	.word	beast_frame10		; 9
+	.word	beast_frame11		; 10
+	.word	beast_frame12		; 11
+	.word	beast_frame8		; 12
+	.word	beast_frame8		; 13
 
 
 beast_frame1: ; piskel2
@@ -133,7 +133,7 @@ beast_frame2: ; piskel3
 
 
 beast_frame3: ; piskel4
-	.byte 9,6
+	.byte 9,5
 	.byte $AA,$00,$01,$10,$00,$00,$10,$01,$00
 	.byte $AA,$00,$00,$00,$00,$00,$00,$00,$00
 	.byte $AA,$00,$00,$AA,$00,$00,$AA,$00,$00
@@ -142,8 +142,8 @@ beast_frame3: ; piskel4
 
 
 beast_frame4: ; piskel5
-	.byte 9,8
-	.byte $AA,$AA,$00,$00,$00,$00,$10,$01,$AA
+	.byte 9,7
+	.byte $AA,$AA,$00,$00,$00,$00,$00,$00,$AA
 	.byte $AA,$0A,$00,$00,$00,$00,$00,$00,$0A
 	.byte $AA,$00,$01,$10,$00,$00,$10,$01,$00
 	.byte $AA,$00,$00,$00,$00,$00,$00,$00,$00

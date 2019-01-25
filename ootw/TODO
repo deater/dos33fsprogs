@@ -8,6 +8,9 @@ sprites_to_draw:
 + getting out of pool
 + beast
 
+pool:
++ only have beast on rock if it's not out
+
 cavern:
 + spread slugs out a bit more
 + slugs on ceiling

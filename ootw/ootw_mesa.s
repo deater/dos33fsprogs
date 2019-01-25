@@ -100,9 +100,23 @@ mesa_frame_no_oflo:
 
 	;====================
 	; check if leaving room
+mesa_check_right:
+	cmp	#$2
+	bne	mesa_check_left
 
-	cmp	#$2			
-	beq	not_done_mesa		; we can't, dead end
+	lda	BEAST_OUT			; trigger beast
+	bne	not_done_mesa
+
+	lda	#1
+	sta	BEAST_OUT
+
+	jsr	beast_cutscene
+
+	jmp	not_done_mesa
+
+mesa_check_left:
+	cmp	#$1
+	bne	not_done_mesa
 
 	; off screen to left
 mesa_off_left:
