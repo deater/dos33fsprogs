@@ -131,7 +131,7 @@ init_slug_loop:
 
 	cmp	#32
 	bcc	slugx_not_too_high		; blt
-	asl			; div by two if too large
+	lsr			; div by two if too large
 slugx_not_too_high:
 	sta	slugg0_x,X
 
