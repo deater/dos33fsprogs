@@ -24,7 +24,8 @@ ootw.o:	ootw.s \
 	ootw_pool.inc \
 	ootw_cavern.inc ootw_cavern2.inc ootw_cavern3.inc ootw_underwater.inc \
 	ootw_rope.inc \
-	sprites_physicist.inc sprites_slugs.inc sprites_ootw.inc
+	sprites_physicist.inc sprites_slugs.inc \
+	sprites_ootw.inc sprites_beast.inc
 	ca65 -o ootw.o ootw.s -l ootw.lst
 ####
 

@@ -102,6 +102,7 @@ end_message:
 .include "sprites_ootw.inc"
 .include "sprites_physicist.inc"
 .include "sprites_slugs.inc"
+.include "sprites_beast.inc"
 ; cutscenes
 .include "cutscene_slug.s"
 .include "cutscene_beast.s"
