@@ -44,6 +44,29 @@ ootw_pool:
         sta     GBASL
 	jsr	load_rle_gr
 
+	;===================================================
+	; put beast in background if it hasn't been released
+
+	lda	BEAST_OUT
+	bne	beast_in
+
+	lda	#8
+	sta	DRAW_PAGE
+
+	lda     #<background_beast
+	sta	INL
+	lda     #>background_beast
+        sta     INH
+
+	lda	#34
+	sta	XPOS
+	lda	#8
+	sta	YPOS
+
+        jsr	put_sprite
+
+
+beast_in:
 	;=================================
 	; copy to both pages $400/$800
 
