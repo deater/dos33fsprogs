@@ -6,6 +6,13 @@ A. No, this is just a quick hack using all sprites.
    vector drawing library.
 
 
+Q.  Is there anything impressive going on here, like with your other demos?
+
+A.  No, it's pretty much straight up "sprite" drawing.
+    One unusual thing is I am using grey2 (color 10) as the transparent
+    color rather than black, as there is black in the sprites.
+    It's actually refreshing not having to cycle count.
+
 
 Q.  How are you making the graphics?
 

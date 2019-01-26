@@ -4,16 +4,21 @@ movement -- note these are hard due to limitations of the Apple II keyboard
 + ability to run
 + ability to jump
 + ability to kick while crouching
++ ability to shoot
 
 sprites_to_draw:
-+ jumping
-+ hanging on rope
-+ swimming
-+ getting out of pool
-+ beast
++ physicist jumping
++ physicist hanging on rope
++ physicist swimming
++ physicist getting out of pool
++ beast tripping
++ physicist putting hand up
++ physicist shot backwards
++ physicist holding gun
++ physicist shot
 
 pool:
-+ only have beast on rock if it's not out
++
 
 cavern:
 + slugs on ceiling drop
@@ -24,7 +29,7 @@ underwater:
 
 beast:
 + add beast death cutscene
-+ add beast sprite
++ add beast tripping
 
 rope_room:
 + ability to swing on rope in rope room
