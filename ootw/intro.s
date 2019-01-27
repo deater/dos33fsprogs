@@ -135,12 +135,65 @@ off_elevator_loop:
 ;===============================
 ;===============================
 
+	;=============================
+	; Load background to $c00
+
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL			; load image off-screen $c00
+
+	lda	#>(keypad_rle)
+	sta	GBASH
+	lda	#<(keypad_rle)
+	sta	GBASL
+	jsr	load_rle_gr
+
+	;=================================
+	; copy $c00 to both pages $400/$800
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+	jsr	gr_copy_to_current
+
+keypad_loop:
+	lda	KEYPRESS
+	bpl	keypad_loop
+	bit	KEYRESET
+
 
 ;===============================
 ;===============================
 ; Scanner
 ;===============================
 ;===============================
+
+
+	;=============================
+	; Load background to $c00
+
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL			; load image off-screen $c00
+
+	lda	#>(scanner_rle)
+	sta	GBASH
+	lda	#<(scanner_rle)
+	sta	GBASL
+	jsr	load_rle_gr
+
+	;=================================
+	; copy $c00 to both pages $400/$800
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+	jsr	gr_copy_to_current
+
+scanner_loop:
+	lda	KEYPRESS
+	bpl	scanner_loop
+	bit	KEYRESET
 
 
 ;===============================
@@ -150,14 +203,43 @@ off_elevator_loop:
 ;===============================
 
 
-	;===============================
-	; Sitting at Desk
+;===============================
+; Sitting at Desk
+;===============================
 
-	;===============================
-	; Peanut OS
+	;=============================
+	; Load background to $c00
 
-	;===============================
-	; Particle Accelerator Screen
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL			; load image off-screen $c00
+
+	lda	#>(unzapped_rle)
+	sta	GBASH
+	lda	#<(unzapped_rle)
+	sta	GBASL
+	jsr	load_rle_gr
+
+	;=================================
+	; copy $c00 to both pages $400/$800
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+	jsr	gr_copy_to_current
+
+unzapped_loop:
+	lda	KEYPRESS
+	bpl	unzapped_loop
+	bit	KEYRESET
+
+;===============================
+; Peanut OS
+;===============================
+
+;===============================
+; Particle Accelerator Screen
+;===============================
 
 ;===============================
 ;===============================
@@ -165,7 +247,31 @@ off_elevator_loop:
 ;===============================
 ;===============================
 
+	;=============================
+	; Load background to $c00
 
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL			; load image off-screen $c00
+
+	lda	#>(open_soda_rle)
+	sta	GBASH
+	lda	#<(open_soda_rle)
+	sta	GBASL
+	jsr	load_rle_gr
+
+	;=================================
+	; copy $c00 to both pages $400/$800
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+	jsr	gr_copy_to_current
+
+open_soda_loop:
+	lda	KEYPRESS
+	bpl	open_soda_loop
+	bit	KEYRESET
 
 ;===============================
 ;===============================
@@ -364,7 +470,11 @@ gone_loop:
 .include "intro_building.inc"
 .include "intro_elevator.inc"
 .include "intro_off_elevator.inc"
+.include "intro_keypad.inc"
+.include "intro_scanner.inc"
+.include "intro_open_soda.inc"
 .include "intro_drinking.inc"
+.include "intro_unzapped.inc"
 .include "intro_collider_ui.inc"
 .include "intro_tunnel1.inc"
 .include "intro_tunnel2.inc"
