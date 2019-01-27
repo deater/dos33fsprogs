@@ -37,8 +37,8 @@ intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
 	keyboard.s random16.s \
 	intro_building.inc intro_elevator.inc intro_off_elevator.inc \
-	intro_drinking.inc \
-	intro_tunnel2.inc intro_gone.inc
+	intro_drinking.inc intro_collider_ui.inc \
+	intro_tunnel1.inc intro_tunnel2.inc intro_gone.inc
 	ca65 -o intro.o intro.s -l intro.lst
 ####
 
@@ -84,6 +84,12 @@ intro_drinking.inc:	$(PNG2RLE) intro_drinking.png
 
 intro_gone.inc:	$(PNG2RLE) intro_gone.png
 	$(PNG2RLE) asm intro_gone.png gone_rle > intro_gone.inc
+
+intro_collider_ui.inc:	$(PNG2RLE) intro_collider_ui.png
+	$(PNG2RLE) asm intro_collider_ui.png collider_ui_rle > intro_collider_ui.inc
+
+intro_tunnel1.inc:	$(PNG2RLE) intro_tunnel1.png
+	$(PNG2RLE) asm intro_tunnel1.png tunnel1_rle > intro_tunnel1.inc
 
 intro_tunnel2.inc:	$(PNG2RLE) intro_tunnel2.png
 	$(PNG2RLE) asm intro_tunnel2.png tunnel2_rle > intro_tunnel2.inc

@@ -200,14 +200,78 @@ drinking_loop:
 	bpl	drinking_loop
 	bit	KEYRESET
 
-	;===============================
-	; More crazy screen
+;===============================
+;===============================
+; More crazy screen
+;===============================
+;===============================
 
-	;===============================
-	; Thunderstorm Outside
+	;=============================
+	; Load background to $c00
 
-	;===============================
-	; Tunnel 1
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL			; load image off-screen $c00
+
+	lda	#>(collider_ui_rle)
+	sta	GBASH
+	lda	#<(collider_ui_rle)
+	sta	GBASL
+	jsr	load_rle_gr
+
+	;=================================
+	; copy $c00 to both pages $400/$800
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+	jsr	gr_copy_to_current
+
+collider_ui_loop:
+	lda	KEYPRESS
+	bpl	collider_ui_loop
+	bit	KEYRESET
+
+
+;===============================
+;===============================
+; Thunderstorm Outside
+;===============================
+;===============================
+
+
+;===============================
+;===============================
+; Tunnel 1
+;===============================
+;===============================
+
+	;=============================
+	; Load background to $c00
+
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL			; load image off-screen $c00
+
+	lda	#>(tunnel1_rle)
+	sta	GBASH
+	lda	#<(tunnel1_rle)
+	sta	GBASL
+	jsr	load_rle_gr
+
+	;=================================
+	; copy $c00 to both pages $400/$800
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+	jsr	gr_copy_to_current
+
+tunnel1_loop:
+	lda	KEYPRESS
+	bpl	tunnel1_loop
+	bit	KEYRESET
+
 
 
 ;===============================
@@ -301,5 +365,7 @@ gone_loop:
 .include "intro_elevator.inc"
 .include "intro_off_elevator.inc"
 .include "intro_drinking.inc"
+.include "intro_collider_ui.inc"
+.include "intro_tunnel1.inc"
 .include "intro_tunnel2.inc"
 .include "intro_gone.inc"
