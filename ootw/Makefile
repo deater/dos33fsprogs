@@ -9,6 +9,7 @@ all:	ootw.dsk
 ootw.dsk:	HELLO OOTW INTRO
 	$(DOS33) -y ootw.dsk SAVE A HELLO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 OOTW
+	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 INTRO
 
 ####
 
