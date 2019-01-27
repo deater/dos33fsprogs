@@ -51,24 +51,104 @@ intro:
 building_loop:
 	lda	KEYPRESS
 	bpl	building_loop
+	bit	KEYRESET
 
-	;===============================
-	; Walk into door
+;===============================
+;===============================
+; Walk into door
+;===============================
+;===============================
 
-	;===============================
-	; Elevator going down
 
-	;===============================
-	; Getting out of Elevator
 
-	;===============================
-	; Keycode
 
-	;===============================
-	; Scanner
+;===============================
+;===============================
+; Elevator going down
+;===============================
+;===============================
 
-	;===============================
-	; Spinny DNA / Key
+	;=============================
+	; Load background to $c00
+
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL			; load image off-screen $c00
+
+	lda	#>(elevator_rle)
+	sta	GBASH
+	lda	#<(elevator_rle)
+	sta	GBASL
+	jsr	load_rle_gr
+
+	;=================================
+	; copy $c00 to both pages $400/$800
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+	jsr	gr_copy_to_current
+
+elevator_loop:
+	lda	KEYPRESS
+	bpl	elevator_loop
+	bit	KEYRESET
+
+
+;===============================
+;===============================
+; Getting out of Elevator
+;===============================
+;===============================
+
+
+	;=============================
+	; Load background to $c00
+
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL			; load image off-screen $c00
+
+	lda	#>(off_elevator_rle)
+	sta	GBASH
+	lda	#<(off_elevator_rle)
+	sta	GBASL
+	jsr	load_rle_gr
+
+	;=================================
+	; copy $c00 to both pages $400/$800
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+	jsr	gr_copy_to_current
+
+off_elevator_loop:
+	lda	KEYPRESS
+	bpl	off_elevator_loop
+	bit	KEYRESET
+
+
+;===============================
+;===============================
+; Keycode
+;===============================
+;===============================
+
+
+;===============================
+;===============================
+; Scanner
+;===============================
+;===============================
+
+
+;===============================
+;===============================
+; Spinny DNA / Key
+;===============================
+;===============================
+
 
 	;===============================
 	; Sitting at Desk
@@ -79,8 +159,46 @@ building_loop:
 	;===============================
 	; Particle Accelerator Screen
 
-	;===============================
-	; Soda
+;===============================
+;===============================
+; Opening Soda
+;===============================
+;===============================
+
+
+
+;===============================
+;===============================
+; Drinking Soda
+;===============================
+;===============================
+
+
+	;=============================
+	; Load background to $c00
+
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL			; load image off-screen $c00
+
+	lda	#>(drinking_rle)
+	sta	GBASH
+	lda	#<(drinking_rle)
+	sta	GBASL
+	jsr	load_rle_gr
+
+	;=================================
+	; copy $c00 to both pages $400/$800
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+	jsr	gr_copy_to_current
+
+drinking_loop:
+	lda	KEYPRESS
+	bpl	drinking_loop
+	bit	KEYRESET
 
 	;===============================
 	; More crazy screen
@@ -91,14 +209,73 @@ building_loop:
 	;===============================
 	; Tunnel 1
 
-	;===============================
-	; Tunnel 2
 
-	;===============================
-	; Zappo
+;===============================
+;===============================
+; Tunnel 2
+;===============================
+;===============================
 
 
+	;=============================
+	; Load background to $c00
 
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL			; load image off-screen $c00
+
+	lda	#>(tunnel2_rle)
+	sta	GBASH
+	lda	#<(tunnel2_rle)
+	sta	GBASL
+	jsr	load_rle_gr
+
+	;=================================
+	; copy $c00 to both pages $400/$800
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+	jsr	gr_copy_to_current
+
+tunnel2_loop:
+	lda	KEYPRESS
+	bpl	tunnel2_loop
+	bit	KEYRESET
+
+
+;===============================
+;===============================
+; Zappo / Gone
+;===============================
+;===============================
+
+
+	;=============================
+	; Load background to $c00
+
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL			; load image off-screen $c00
+
+	lda	#>(gone_rle)
+	sta	GBASH
+	lda	#<(gone_rle)
+	sta	GBASL
+	jsr	load_rle_gr
+
+	;=================================
+	; copy $c00 to both pages $400/$800
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+	jsr	gr_copy_to_current
+
+gone_loop:
+	lda	KEYPRESS
+	bpl	gone_loop
+	bit	KEYRESET
 
 
 
@@ -119,4 +296,10 @@ building_loop:
 .include "gr_copy.s"
 .include "gr_offsets.s"
 
+; background graphics
 .include "intro_building.inc"
+.include "intro_elevator.inc"
+.include "intro_off_elevator.inc"
+.include "intro_drinking.inc"
+.include "intro_tunnel2.inc"
+.include "intro_gone.inc"
