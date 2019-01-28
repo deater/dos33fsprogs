@@ -5,6 +5,7 @@
 LZ4_SRC		= $00
 LZ4_DST		= $02
 LZ4_END		= $04
+WHICH_LOAD	= $05
 COUNT		= $06
 DELTA		= $08
 

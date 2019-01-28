@@ -6,8 +6,9 @@ PNG2RLE = ../gr-utils/png2rle
 
 all:	ootw.dsk
 
-ootw.dsk:	HELLO OOTW INTRO
+ootw.dsk:	HELLO LOADER OOTW INTRO
 	$(DOS33) -y ootw.dsk SAVE A HELLO
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1800 LOADER
 	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 OOTW
 	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 INTRO
 
@@ -28,6 +29,7 @@ ootw.o:	ootw.s \
 	sprites_physicist.inc sprites_slugs.inc \
 	sprites_ootw.inc sprites_beast.inc
 	ca65 -o ootw.o ootw.s -l ootw.lst
+
 ####
 
 INTRO:	intro.o
@@ -41,6 +43,15 @@ intro.o:	intro.s \
 	intro_open_soda.inc intro_drinking.inc intro_collider_ui.inc \
 	intro_tunnel1.inc intro_tunnel2.inc intro_gone.inc
 	ca65 -o intro.o intro.s -l intro.lst
+
+####
+
+LOADER:	loader.o
+	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1800.inc
+
+loader.o:	loader.s
+	ca65 -o loader.o loader.s -l loader.lst
+
 ####
 
 
