@@ -6,11 +6,13 @@ PNG2RLE = ../gr-utils/png2rle
 
 all:	ootw.dsk
 
-ootw.dsk:	HELLO LOADER OOTW INTRO
+ootw.dsk:	HELLO LOADER INTRO OOTW OOTW_C2
 	$(DOS33) -y ootw.dsk SAVE A HELLO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1800 LOADER
-	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 OOTW
 	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 INTRO
+	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 OOTW
+	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 OOTW_C2
+
 
 ####
 
@@ -29,6 +31,20 @@ ootw.o:	ootw.s \
 	sprites_physicist.inc sprites_slugs.inc \
 	sprites_ootw.inc sprites_beast.inc
 	ca65 -o ootw.o ootw.s -l ootw.lst
+
+####
+
+OOTW_C2:	ootw_c2.o
+	ld65 -o OOTW_C2 ootw_c2.o -C ../linker_scripts/apple2_2000.inc
+
+ootw_c2.o:	ootw_c2.s \
+	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
+	keyboard.s sluggy.s \
+	sprites_physicist.inc \
+	ootw_c2_cage.s \
+	ootw_c2_cage.inc
+	ca65 -o ootw_c2.o ootw_c2.s -l ootw_c2.lst
+
 
 ####
 
@@ -76,8 +92,10 @@ ootw_cavern3.inc:	$(PNG2RLE) another_cave3.png
 ootw_rope.inc:	$(PNG2RLE) another_rope.png
 	$(PNG2RLE) asm another_rope.png rope_rle > ootw_rope.inc
 
-ootw_underwater.inc:	$(PNG2RLE) another_uboot.png
-	$(PNG2RLE) asm another_uboot.png underwater_rle > ootw_underwater.inc
+#####
+
+ootw_c2_cage.inc:	$(PNG2RLE) ootw_c2_cage.png
+	$(PNG2RLE) asm ootw_c2_cage.png cage_rle > ootw_c2_cage.inc
 
 
 #####
@@ -121,7 +139,4 @@ intro_tunnel2.inc:	$(PNG2RLE) intro_tunnel2.png
 #####
 
 clean:		
-		rm -f *~ *.o *.lst HELLO OOTW
-
-
-
+		rm -f *~ *.o *.lst HELLO OOTW OOTW_C2 INTRO LOADER

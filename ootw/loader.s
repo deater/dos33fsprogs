@@ -77,8 +77,8 @@ load_ootw_cp2:
 	sta	namlo
 	lda	#>ootw_c2_filename
 	sta	namhi
-	jmp	load_done
 
+	; fall through
 
 load_done:
 
@@ -104,7 +104,7 @@ ootw_filename:	;.byte "OOTW                       "
 	.byte $A0,$A0,$A0,$A0,$A0,$A0
 
 ootw_c2_filename: ;.byte "OOTW_C2                       "
-	.byte 'O'|$80,'O'|$80,'T'|$80,'W'|$80,'_'|$80,'C'|$80,'w'|$80,$A0
+	.byte 'O'|$80,'O'|$80,'T'|$80,'W'|$80,'_'|$80,'C'|$80,'2'|$80,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0
