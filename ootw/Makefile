@@ -61,7 +61,8 @@ intro.o:	intro.s \
 	intro_tunnel1.inc intro_tunnel2.inc intro_gone.inc \
 	intro_graphics/01_building/intro_car.inc \
 	intro_graphics/01_building/intro_building_car.inc \
-	intro_graphics/01_building/intro_building.inc
+	intro_graphics/01_building/intro_building.inc \
+	intro_graphics/02_outer_door/outer_door.inc
 	ca65 -o intro.o intro.s -l intro.lst
 
 ####

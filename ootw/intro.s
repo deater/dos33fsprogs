@@ -45,164 +45,18 @@ intro:
 	jsr	gr_copy_to_current
 	jsr	page_flip
 
-building_loop:
-	lda	KEYPRESS
-	bpl	building_loop
-	bit	KEYRESET
+	;==================================
+	; draw the car driving up
 
-	lda	#>(intro_car1)
-	sta	GBASH
-	lda	#<(intro_car1)
-	sta	GBASL
-	lda	#$10			; load to $1000
-	jsr	load_rle_gr
+	lda	#<building_sequence
+	sta	INTRO_LOOPL
+	lda	#>building_sequence
+	sta	INTRO_LOOPH
 
-	jsr	gr_overlay
-	jsr	page_flip
+	jsr	run_sequence
 
-building_loop2:
-	lda	KEYPRESS
-	bpl	building_loop2
-	bit	KEYRESET
-
-	lda	#>(intro_car2)
-	sta	GBASH
-	lda	#<(intro_car2)
-	sta	GBASL
-	lda	#$10			; load to $1000
-	jsr	load_rle_gr
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-building_loop3:
-	lda	KEYPRESS
-	bpl	building_loop3
-	bit	KEYRESET
-
-	lda	#>(intro_car3)
-	sta	GBASH
-	lda	#<(intro_car3)
-	sta	GBASL
-	lda	#$10			; load to $1000
-	jsr	load_rle_gr
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-building_loop4:
-	lda	KEYPRESS
-	bpl	building_loop4
-	bit	KEYRESET
-
-	lda	#>(intro_car4)
-	sta	GBASH
-	lda	#<(intro_car4)
-	sta	GBASL
-	lda	#$10			; load to $1000
-	jsr	load_rle_gr
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-building_loop5:
-	lda	KEYPRESS
-	bpl	building_loop5
-	bit	KEYRESET
-
-	lda	#>(intro_car5)
-	sta	GBASH
-	lda	#<(intro_car5)
-	sta	GBASL
-	lda	#$10			; load to $1000
-	jsr	load_rle_gr
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-building_loop6:
-	lda	KEYPRESS
-	bpl	building_loop6
-	bit	KEYRESET
-
-	lda	#>(intro_car6)
-	sta	GBASH
-	lda	#<(intro_car6)
-	sta	GBASL
-	lda	#$10			; load to $1000
-	jsr	load_rle_gr
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-building_loop7:
-	lda	KEYPRESS
-	bpl	building_loop7
-	bit	KEYRESET
-
-	lda	#>(intro_car7)
-	sta	GBASH
-	lda	#<(intro_car7)
-	sta	GBASL
-	lda	#$10			; load to $1000
-	jsr	load_rle_gr
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-building_loop8:
-	lda	KEYPRESS
-	bpl	building_loop8
-	bit	KEYRESET
-
-	lda	#>(intro_car8)
-	sta	GBASH
-	lda	#<(intro_car8)
-	sta	GBASL
-	lda	#$10			; load to $1000
-	jsr	load_rle_gr
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-building_loop9:
-	lda	KEYPRESS
-	bpl	building_loop9
-	bit	KEYRESET
-
-	lda	#>(intro_car9)
-	sta	GBASH
-	lda	#<(intro_car9)
-	sta	GBASL
-	lda	#$10			; load to $1000
-	jsr	load_rle_gr
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-building_loop10:
-	lda	KEYPRESS
-	bpl	building_loop10
-	bit	KEYRESET
-
-	lda	#>(intro_car10)
-	sta	GBASH
-	lda	#<(intro_car10)
-	sta	GBASL
-	lda	#$10			; load to $1000
-	jsr	load_rle_gr
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-building_loop11:
-	lda	KEYPRESS
-	bpl	building_loop11
-	bit	KEYRESET
-
-
-	;=============================
-	; Load background to $c00
+	;==================================
+	; Load building with car background
 
 	lda	#>(building_car_rle)
 	sta	GBASH
@@ -216,57 +70,17 @@ building_loop11:
 	jsr	gr_copy_to_current
 	jsr	page_flip
 
-building_loop12:
-	lda	KEYPRESS
-	bpl	building_loop12
-	bit	KEYRESET
 
+	;==================================
+	; draw getting out of the car
 
-	lda	#>(intro_car12)
-	sta	GBASH
-	lda	#<(intro_car12)
-	sta	GBASL
-	lda	#$10			; load to $1000
-	jsr	load_rle_gr
+	lda	#<outtacar_sequence
+	sta	INTRO_LOOPL
+	lda	#>outtacar_sequence
+	sta	INTRO_LOOPH
 
-	jsr	gr_overlay
-	jsr	page_flip
+	jsr	run_sequence
 
-building_loop13:
-	lda	KEYPRESS
-	bpl	building_loop13
-	bit	KEYRESET
-
-
-	lda	#>(intro_car13)
-	sta	GBASH
-	lda	#<(intro_car13)
-	sta	GBASL
-	lda	#$10			; load to $1000
-	jsr	load_rle_gr
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-building_loop14:
-	lda	KEYPRESS
-	bpl	building_loop14
-	bit	KEYRESET
-
-	lda	#>(intro_car14)
-	sta	GBASH
-	lda	#<(intro_car14)
-	sta	GBASL
-	lda	#$10			; load to $1000
-	jsr	load_rle_gr
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-building_loop15:
-	lda	KEYPRESS
-	bpl	building_loop15
-	bit	KEYRESET
 
 
 
@@ -653,6 +467,8 @@ gone_loop:
 .include "intro_graphics/01_building/intro_building_car.inc"
 .include "intro_graphics/01_building/intro_car.inc"
 
+.include "intro_graphics/02_outer_door/outer_door.inc"
+
 
 .include "intro_elevator.inc"
 .include "intro_off_elevator.inc"
@@ -666,4 +482,81 @@ gone_loop:
 .include "intro_tunnel2.inc"
 .include "intro_gone.inc"
 
+
+	;=================================
+	; Display a sequence of images
+
+run_sequence:
+	ldy	#0
+
+run_sequence_loop:
+	lda	(INTRO_LOOPL),Y		; get time
+	beq	run_sequence_done
+	tax
+
+run_sequence_timer:
+	lda	#64
+	jsr	WAIT			; delay
+	dex
+	bne	run_sequence_timer
+
+	iny
+
+	lda	(INTRO_LOOPL),Y
+	sta	GBASL
+	iny
+	lda	(INTRO_LOOPL),Y
+	sta	GBASH
+	iny
+	sty	INTRO_LOOPER		; save for later
+	lda	#$10			; load to $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+	ldy	INTRO_LOOPER
+
+	jmp	run_sequence_loop
+run_sequence_done:
+	rts
+
+;========================
+; Car driving up sequence
+
+building_sequence:
+	.byte	128
+	.word	intro_car1
+	.byte	2
+	.word	intro_car2
+	.byte	2
+	.word	intro_car3
+	.byte	2
+	.word	intro_car4
+	.byte	2
+	.word	intro_car5
+	.byte	2
+	.word	intro_car6
+	.byte	2
+	.word	intro_car7
+	.byte	2
+	.word	intro_car8
+	.byte	2
+	.word	intro_car9
+	.byte	128
+	.word	intro_car10
+	.byte	0
+
+;========================
+; Getting out of car sequence
+
+outtacar_sequence:
+	.byte	32
+	.word	intro_car12
+	.byte	32
+	.word	intro_car13
+	.byte	32
+	.word	intro_car14
+	.byte	200
+	.word	intro_car14
+	.byte	0
 
