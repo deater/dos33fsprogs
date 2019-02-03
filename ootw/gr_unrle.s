@@ -1,100 +1,87 @@
 	;=================
 	; load RLE image
 	;=================
-	; Output is BASH/BASL
+	; Output is A:00 (assume page aligned)
 	; Input is in GBASH/GBASL
-load_rle_gr:
-	lda	#$0
-	tay				; init Y to 0
-	sta	TEMP			; stores the xcoord
 
-	sta	CV			; ycoord=0
+	; format: first byte=xsize
+	; A0,X,Y means run of X bytes of Y color
+	; A1 means end of file
+	; A2-AF,X means run of low nibble, X color
+	; if high nibble not A: just display color
+
+	; CV = current Y
+	; CH = max xsize (usually 40)
+	; TEMP = page
+	; TEMPY= current X
+
+
+load_rle_gr:
+	sec
+	sbc	#4			; adjust page to write to
+					; to match gr_offsets
+	sta	TEMP
+
+	ldy	#$0			; init Y to 0
+	sty	CV
 
 	jsr	load_and_increment	; load xsize
 	sta	CH
 
+	jsr	unrle_new_y
+
+
 rle_loop:
 	jsr	load_and_increment
 
+	tax
+
 	cmp	#$A1			; if 0xa1
 	beq	rle_done		; we are done
-
-	pha
 
 	and	#$f0			; mask
 	cmp	#$a0			; see if special AX
 	beq	decompress_special
 
-	pla				; note, PLA sets flags!
+	; not special, just color
 
+	txa				; put color back in A
 	ldx	#$1			; only want to print 1
 	bne	decompress_run
 
 decompress_special:
-	pla
+	txa				; put read value back in A
 
 	and	#$0f			; check if was A0
 
 	bne	decompress_color	; if A0 need to read run, color
 
 decompress_large:
-	jsr	load_and_increment	; get run length
+	jsr	load_and_increment	; run length now in A
 
 decompress_color:
 	tax				; put runlen into X
-	jsr	load_and_increment	; get color
+	jsr	load_and_increment	; get color into A
 
 decompress_run:
 rle_run_loop:
 	sta	(BASL),y		; write out the value
-	inc	BASL			; increment the pointer
-	bne	rle_skip3		; if wrapped
-	inc	BASH			; then increment the high value
+	inc	BASL
+	dec	TEMPY
+	bne	rle_not_eol		; if less then keep going
 
-rle_skip3:
-	pha				; store colore for later
+	; if here, we are > max_X
 
-	inc	TEMP			; increment the X value
-	lda	TEMP
-	cmp	CH			; compare against the image width
-	bcc	rle_not_eol		; if less then keep going
-
-	lda	BASL			; cheat to avoid a 16-bit add
-	cmp	#$a7			; we are adding 0x58 to get
-	bcc	rle_add_skip		; to the next line
-	inc	BASH
-rle_add_skip:
-	clc
-	adc	#$58			; actually do the 0x58 add
-	sta	BASL			; and store it back
-
-	inc	CV			; add 2 to ypos
-	inc	CV			; each "line" is two high
-
-	lda	CV			; load value
-	cmp	#15			; if it's greater than 14 it wraps
-	bcc	rle_no_wrap		; Thanks Woz
-
-	lda	#$0			; we wrapped, so set to zero
-	sta	CV
-
-					; when wrapping have to sub 0x3d8
-	sec				; this is a 16-bit subtract routine
-	lda	BASL
-	sbc	#$d8			; LSB
-	sta	BASL
-	lda	BASH			; MSB
-	sbc	#$3			;
-	sta	BASH
-
-rle_no_wrap:
-	lda	#$0			; set X value back to zero
-	sta	TEMP
+	inc	CV
+	inc	CV
+	pha
+	jsr	unrle_new_y
+	pla
 
 rle_not_eol:
-	pla				; restore color
 	dex
 	bne	rle_run_loop		; if not zero, keep looping
+
 	beq	rle_loop		; and branch always
 
 rle_done:
@@ -104,12 +91,22 @@ rle_done:
 
 
 load_and_increment:
-	lda	(GBASL),y		; load value		; 5?
-	inc	GBASL						; 5?
-	bne	lskip2						; 2nt/3
-	inc	GBASH						; 5?
-lskip2:
-	rts							; 6
+	lda	(GBASL),Y
+	inc	GBASL
+	bne	lai_no_oflo
+	inc	GBASH
+lai_no_oflo:
+	rts
 
-
-
+unrle_new_y:
+	ldy	CV
+	lda	gr_offsets,Y
+	sta	BASL
+	lda	gr_offsets+1,Y
+	clc
+	adc	TEMP			; adjust for page
+	sta	BASH
+	lda	CH
+	sta	TEMPY
+	ldy	#0
+	rts

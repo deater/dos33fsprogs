@@ -28,15 +28,11 @@ ootw_rope:
 	;=============================
 	; Load background to $c00
 
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL			; load image off-screen $c00
-
 	lda     #>(rope_rle)
         sta     GBASH
 	lda     #<(rope_rle)
         sta     GBASL
+	lda	#$c			; load image off-screen $c00
 	jsr	load_rle_gr
 
 	;================================

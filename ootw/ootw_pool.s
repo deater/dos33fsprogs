@@ -33,15 +33,11 @@ ootw_pool:
 	;=============================
 	; Load background to $c00
 
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL			; load image off-screen $c00
-
 	lda     #>(pool_rle)
         sta     GBASH
 	lda     #<(pool_rle)
         sta     GBASL
+	lda	#$c			; load image off-screen $c00
 	jsr	load_rle_gr
 
 	;===================================================

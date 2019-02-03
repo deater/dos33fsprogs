@@ -250,11 +250,6 @@ done_cavern:
 
 cavern_load_background:
 
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL			; load image off-screen $c00
-
 	lda	WHICH_CAVE
 	bne	cave_bg1
 
@@ -273,4 +268,5 @@ cave_bg1:
 	lda     #<(cavern2_rle)
         sta     GBASL
 cave_bg_done:
+	lda	#$c			; load image off-screen $c00
 	jmp	load_rle_gr		; tail call

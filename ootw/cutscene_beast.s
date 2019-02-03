@@ -74,16 +74,11 @@ beast_end:
 	;=============================
 	; Restore background to $c00
 
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image off-screen $c00
-
 	lda	#>(cavern3_rle)
 	sta	GBASH
 	lda	#<(cavern3_rle)
 	sta	GBASL
-
+	lda	#$c			; load image off-screen $c00
 	jmp	load_rle_gr
 
 
