@@ -27,15 +27,11 @@ ootw_cage:
 	;=============================
 	; Load background to $c00
 
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL			; load image off-screen $c00
-
 	lda     #>(cage_rle)
         sta     GBASH
 	lda     #<(cage_rle)
         sta     GBASL
+	lda	#$c			; load image off-screen $c00
 	jsr	load_rle_gr
 
 	;=================================
