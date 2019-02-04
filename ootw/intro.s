@@ -82,22 +82,30 @@ intro:
 	jsr	run_sequence
 
 
-
-
-
-
-
-
-
-
-
-
 ;===============================
 ;===============================
 ; Walk into door
 ;===============================
 ;===============================
 
+	;=============================
+	; Load background to $c00
+
+	lda	#>(outer_door_rle)
+	sta	GBASH
+	lda	#<(outer_door_rle)
+	sta	GBASL
+	lda	#$c			; load to off-screen $c00
+	jsr	load_rle_gr
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+
+
+door_loop:
+	lda	KEYPRESS
+	bpl	door_loop
+	bit	KEYRESET
 
 
 
@@ -550,11 +558,11 @@ building_sequence:
 ; Getting out of car sequence
 
 outtacar_sequence:
-	.byte	32
+	.byte	100
 	.word	intro_car12
-	.byte	32
+	.byte	50
 	.word	intro_car13
-	.byte	32
+	.byte	50
 	.word	intro_car14
 	.byte	200
 	.word	intro_car14
