@@ -102,6 +102,18 @@ intro:
 	jsr	page_flip
 
 
+	;==================================
+	; draw feet going into door
+
+	lda	#<feet_sequence
+	sta	INTRO_LOOPL
+	lda	#>feet_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence
+
+
+
 door_loop:
 	lda	KEYPRESS
 	bpl	door_loop
@@ -476,6 +488,7 @@ gone_loop:
 .include "intro_graphics/01_building/intro_car.inc"
 
 .include "intro_graphics/02_outer_door/outer_door.inc"
+.include "intro_graphics/02_outer_door/feet.inc"
 
 
 .include "intro_elevator.inc"
@@ -566,5 +579,44 @@ outtacar_sequence:
 	.word	intro_car14
 	.byte	200
 	.word	intro_car14
+	.byte	0
+
+; Getting out of car sequence
+
+feet_sequence:
+	.byte	100
+	.word	feet01_rle
+	.byte	10
+	.word	feet02_rle
+	.byte	10
+	.word	feet03_rle
+	.byte	10
+	.word	feet04_rle
+	.byte	10
+	.word	feet05_rle
+	.byte	10
+	.word	feet06_rle
+	.byte	10
+	.word	feet07_rle
+	.byte	10
+	.word	feet08_rle
+	.byte	30
+	.word	feet09_rle
+	.byte	10
+	.word	feet10_rle
+	.byte	10
+	.word	feet11_rle
+	.byte	10
+	.word	feet12_rle
+	.byte	10
+	.word	feet13_rle
+	.byte	10
+	.word	feet14_rle
+	.byte	10
+	.word	feet15_rle
+	.byte	10
+	.word	blank_rle
+	.byte	100
+	.word	blank_rle
 	.byte	0
 

@@ -62,7 +62,8 @@ intro.o:	intro.s \
 	intro_graphics/01_building/intro_car.inc \
 	intro_graphics/01_building/intro_building_car.inc \
 	intro_graphics/01_building/intro_building.inc \
-	intro_graphics/02_outer_door/outer_door.inc
+	intro_graphics/02_outer_door/outer_door.inc \
+	intro_graphics/02_outer_door/feet.inc
 	ca65 -o intro.o intro.s -l intro.lst
 
 ####
