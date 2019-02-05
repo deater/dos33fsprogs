@@ -490,8 +490,8 @@ gone_loop:
 .include "intro_graphics/02_outer_door/outer_door.inc"
 .include "intro_graphics/02_outer_door/feet.inc"
 
+.include "intro_graphics/03_elevator/intro_elevator.inc"
 
-.include "intro_elevator.inc"
 .include "intro_off_elevator.inc"
 .include "intro_keypad.inc"
 .include "intro_scanner.inc"
