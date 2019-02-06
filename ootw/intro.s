@@ -496,9 +496,69 @@ elevator_exit:
 
 	jsr	gr_copy_to_current
 
+	lda	#$22
+	sta	COLOR
 
-; 13 14 15 16 17 18 19     20    21 22 23 24 25 26
+	lda	#40
+	sta	V2
+	ldx	#2
+	ldy	#20
+	jsr	vlin	; X, V2 at Y
+
+
+
+	lda	#10
+	sta	ELEVATOR_COUNT
+	lda	#$00
+	sta	COLOR
+
+	jmp	skip_first
+
+elevator_open_loop:
+	jsr	gr_copy_to_current
+skip_first:
+
+
+; 9 10 11 12 13 14 15 16 17 18 19     20    21 22 23 24 25 26 27 28 29 30
+
+
+	lda	ELEVATOR_COUNT
+	sta	ELEVATOR_CYCLE
+elevator_inner_loop:
+	lda	#9
+	clc
+	adc	ELEVATOR_CYCLE
+	tay
+
+	lda	#40
+	sta	V2
+	ldx	#0
+	jsr	vlin	; X, V2 at Y
+
+	sec
+	lda	#30
+	sbc	ELEVATOR_CYCLE
+	tay
+
+	lda	#40
+	sta	V2
+	ldx	#0
+	jsr	vlin	; X, V2 at Y
+
+	dec	ELEVATOR_CYCLE
+	bne	elevator_inner_loop
+
 	jsr	page_flip
+
+	ldx	#30
+	jsr	long_wait
+
+	dec	ELEVATOR_COUNT
+	bne	elevator_open_loop
+
+
+
+
 
 
 off_elevator_loop:
@@ -821,9 +881,11 @@ gone_loop:
 .include "intro_graphics/02_outer_door/feet.inc"
 
 .include "intro_graphics/03_elevator/intro_elevator.inc"
+.include "intro_graphics/03_elevator/intro_off_elevator.inc"
 
-.include "intro_off_elevator.inc"
-.include "intro_keypad.inc"
+.include "intro_graphics/04_keypad/intro_scanner_door.inc"
+.include "intro_graphics/04_keypad/intro_keypad.inc"
+
 .include "intro_scanner.inc"
 .include "intro_open_soda.inc"
 .include "intro_drinking.inc"

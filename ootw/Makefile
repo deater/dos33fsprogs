@@ -55,8 +55,7 @@ intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
 	gr_overlay.s \
 	keyboard.s random16.s \
-	intro_off_elevator.inc \
-	intro_keypad.inc intro_scanner.inc intro_unzapped.inc \
+	intro_scanner.inc intro_unzapped.inc \
 	intro_open_soda.inc intro_drinking.inc intro_collider_ui.inc \
 	intro_tunnel1.inc intro_tunnel2.inc intro_gone.inc \
 	intro_graphics/01_building/intro_car.inc \
@@ -64,7 +63,10 @@ intro.o:	intro.s \
 	intro_graphics/01_building/intro_building.inc \
 	intro_graphics/02_outer_door/outer_door.inc \
 	intro_graphics/02_outer_door/feet.inc \
-	intro_graphics/03_elevator/intro_elevator.inc
+	intro_graphics/03_elevator/intro_elevator.inc \
+	intro_graphics/03_elevator/intro_off_elevator.inc \
+	intro_graphics/04_keypad/intro_scanner_door.inc \
+	intro_graphics/04_keypad/intro_keypad.inc
 	ca65 -o intro.o intro.s -l intro.lst
 
 ####
@@ -106,15 +108,6 @@ ootw_c2_cage.inc:	$(PNG2RLE) ootw_c2_cage.png
 
 
 #####
-
-intro_elevator.inc:	$(PNG2RLE) intro_elevator.png
-	$(PNG2RLE) asm intro_elevator.png elevator_rle > intro_elevator.inc
-
-intro_off_elevator.inc:	$(PNG2RLE) intro_off_elevator.png
-	$(PNG2RLE) asm intro_off_elevator.png off_elevator_rle > intro_off_elevator.inc
-
-intro_keypad.inc:	$(PNG2RLE) intro_keypad.png
-	$(PNG2RLE) asm intro_keypad.png keypad_rle > intro_keypad.inc
 
 intro_scanner.inc:	$(PNG2RLE) intro_scanner.png
 	$(PNG2RLE) asm intro_scanner.png scanner_rle > intro_scanner.inc
