@@ -21,7 +21,7 @@ intro:
 	lda	#0
 	sta	DISP_PAGE
 
-	jmp	elevator_exit
+;	jmp	elevator_exit
 
 ;===============================
 ;===============================
@@ -544,8 +544,8 @@ elevator_inner_loop:
 
 	jsr	page_flip
 
-	ldx	#30
-	jsr	long_wait
+	ldx	#25
+	jsr	long_wait		; pause
 
 	dec	ELEVATOR_COUNT
 	bne	elevator_open_loop
@@ -560,20 +560,43 @@ elevator_inner_loop:
 
 	jsr	run_sequence
 
+	;======================================
+	; make background black and pause a bit
 
+	jsr	clear_all
+	jsr	page_flip
 
-
-off_elevator_loop:
-	lda	KEYPRESS
-	bpl	off_elevator_loop
-	bit	KEYRESET
-
+	ldx	#80
+	jsr	long_wait
 
 ;===============================
 ;===============================
 ; Keycode
 ;===============================
 ;===============================
+
+	;=============================
+	; Load background to $c00
+
+	lda	#>(scanner_door_rle)
+	sta	GBASH
+	lda	#<(scanner_door_rle)
+	sta	GBASL
+	lda	#$c			; load to off-screen $c00
+	jsr	load_rle_gr
+
+
+;	jsr	gr_copy_to_current
+;	jsr	page_flip
+
+
+	lda	#<approach_sequence
+	sta	INTRO_LOOPL
+	lda	#>approach_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence
+
 
 	;=============================
 	; Load background to $c00
@@ -585,12 +608,10 @@ off_elevator_loop:
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
-	;=================================
-	; copy $c00 to both pages $400/$800
 
 	jsr	gr_copy_to_current
 	jsr	page_flip
-	jsr	gr_copy_to_current
+
 
 keypad_loop:
 	lda	KEYPRESS
@@ -888,6 +909,7 @@ gone_loop:
 
 .include "intro_graphics/04_keypad/intro_scanner_door.inc"
 .include "intro_graphics/04_keypad/intro_keypad.inc"
+.include "intro_graphics/04_keypad/intro_approach.inc"
 
 .include "intro_scanner.inc"
 .include "intro_open_soda.inc"
@@ -1043,7 +1065,32 @@ walking_sequence:
 	.word	walking07_rle
 	.byte	20
 	.word	walking08_rle
+	.byte	20
+	.word	walking08_rle
 	.byte	0
+
+; Approaching keypad sequence
+
+approach_sequence:
+	.byte	20
+	.word	approach01_rle
+	.byte	20
+	.word	approach02_rle
+	.byte	20
+	.word	approach03_rle
+	.byte	20
+	.word	approach04_rle
+	.byte	20
+	.word	approach05_rle
+	.byte	20
+	.word	approach06_rle
+	.byte	20
+	.word	approach07_rle
+	.byte	80
+	.word	approach07_rle
+	.byte	0
+
+
 
 
 

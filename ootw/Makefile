@@ -67,7 +67,8 @@ intro.o:	intro.s \
 	intro_graphics/03_elevator/intro_off_elevator.inc \
 	intro_graphics/03_elevator/intro_walking.inc \
 	intro_graphics/04_keypad/intro_scanner_door.inc \
-	intro_graphics/04_keypad/intro_keypad.inc
+	intro_graphics/04_keypad/intro_keypad.inc \
+	intro_graphics/04_keypad/intro_approach.inc
 	ca65 -o intro.o intro.s -l intro.lst
 
 ####
