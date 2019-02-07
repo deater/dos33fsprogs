@@ -21,7 +21,7 @@ intro:
 	lda	#0
 	sta	DISP_PAGE
 
-	jmp	elevator
+	jmp	elevator_exit
 
 ;===============================
 ;===============================
@@ -351,7 +351,7 @@ not_too_big:
 
 	jsr	page_flip
 
-	ldx	#10			; pause
+	ldx	#8			; pause
 	jsr	long_wait
 
 	inc	ELEVATOR_COUNT
@@ -413,7 +413,7 @@ gdb_smc:
 
 	jsr	page_flip
 
-	ldx	#10			; pause
+	ldx	#8			; pause
 	jsr	long_wait
 
 	inc	ELEVATOR_COUNT
@@ -452,7 +452,7 @@ going_down_black:
 
 	jsr	page_flip
 
-	ldx	#10			; pause
+	ldx	#8			; pause
 	jsr	long_wait
 
 	inc	ELEVATOR_COUNT
@@ -469,10 +469,14 @@ going_down_black:
 	; black, 2, blue, black about 20
 	; blue until hit bottom, doors open
 
+
+
 elevator_exit:
 
 	ldx	#100			; pause
 	jsr	long_wait
+
+
 
 ;===============================
 ;===============================
@@ -491,33 +495,23 @@ elevator_exit:
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
-	;=================================
-	; copy $c00 to both pages $400/$800
-
-	jsr	gr_copy_to_current
-
-	lda	#$22
-	sta	COLOR
-
-	lda	#40
-	sta	V2
-	ldx	#2
-	ldy	#20
-	jsr	vlin	; X, V2 at Y
-
+	lda	#>(walking00_rle)
+	sta	GBASH
+	lda	#<(walking00_rle)
+	sta	GBASL
+	lda	#$10			; load to off-screen $1000
+	jsr	load_rle_gr
 
 
 	lda	#10
 	sta	ELEVATOR_COUNT
+
+elevator_open_loop:
+	jsr	gr_overlay		; note: overwrites color
 	lda	#$00
 	sta	COLOR
 
-	jmp	skip_first
-
-elevator_open_loop:
-	jsr	gr_copy_to_current
-skip_first:
-
+; Would have liked to have a central purple stripe, but not easy
 
 ; 9 10 11 12 13 14 15 16 17 18 19     20    21 22 23 24 25 26 27 28 29 30
 
@@ -556,7 +550,15 @@ elevator_inner_loop:
 	dec	ELEVATOR_COUNT
 	bne	elevator_open_loop
 
+	;==================================
+	; draw walking off the elevator
 
+	lda	#<walking_sequence
+	sta	INTRO_LOOPL
+	lda	#>walking_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence
 
 
 
@@ -882,6 +884,7 @@ gone_loop:
 
 .include "intro_graphics/03_elevator/intro_elevator.inc"
 .include "intro_graphics/03_elevator/intro_off_elevator.inc"
+.include "intro_graphics/03_elevator/intro_walking.inc"
 
 .include "intro_graphics/04_keypad/intro_scanner_door.inc"
 .include "intro_graphics/04_keypad/intro_keypad.inc"
@@ -1020,4 +1023,27 @@ feet_sequence:
 	.byte	100
 	.word	blank_rle
 	.byte	0
+
+; Walking off elevator sequence
+
+walking_sequence:
+	.byte	20
+	.word	walking01_rle
+	.byte	20
+	.word	walking02_rle
+	.byte	20
+	.word	walking03_rle
+	.byte	20
+	.word	walking04_rle
+	.byte	20
+	.word	walking05_rle
+	.byte	20
+	.word	walking06_rle
+	.byte	20
+	.word	walking07_rle
+	.byte	20
+	.word	walking08_rle
+	.byte	0
+
+
 
