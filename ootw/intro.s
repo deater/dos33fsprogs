@@ -21,7 +21,7 @@ intro:
 	lda	#0
 	sta	DISP_PAGE
 
-;	jmp	elevator_exit
+	jmp	keypad
 
 ;===============================
 ;===============================
@@ -575,6 +575,7 @@ elevator_inner_loop:
 ;===============================
 ;===============================
 
+keypad:
 	;=============================
 	; Load background to $c00
 
@@ -608,9 +609,15 @@ elevator_inner_loop:
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
+	;==================================
+	; draw walking off the elevator
 
-	jsr	gr_copy_to_current
-	jsr	page_flip
+	lda	#<keypad_sequence
+	sta	INTRO_LOOPL
+	lda	#>keypad_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence
 
 
 keypad_loop:
@@ -908,8 +915,10 @@ gone_loop:
 .include "intro_graphics/03_elevator/intro_walking.inc"
 
 .include "intro_graphics/04_keypad/intro_scanner_door.inc"
-.include "intro_graphics/04_keypad/intro_keypad.inc"
 .include "intro_graphics/04_keypad/intro_approach.inc"
+.include "intro_graphics/04_keypad/intro_keypad_bg.inc"
+.include "intro_graphics/04_keypad/intro_hands.inc"
+
 
 .include "intro_scanner.inc"
 .include "intro_open_soda.inc"
@@ -1088,6 +1097,21 @@ approach_sequence:
 	.word	approach07_rle
 	.byte	80
 	.word	approach07_rle
+	.byte	0
+
+; Using keypad sequence
+
+keypad_sequence:
+	.byte	20
+	.word	hand04_01_rle
+	.byte	20
+	.word	hand04_02_rle
+	.byte	20
+	.word	hand04_03_rle
+	.byte	20
+	.word	hand04_02_rle
+	.byte	20
+	.word	hand04_02_rle
 	.byte	0
 
 
