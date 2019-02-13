@@ -55,7 +55,7 @@ intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
 	gr_overlay.s \
 	keyboard.s random16.s \
-	intro_scanner.inc intro_unzapped.inc \
+	intro_unzapped.inc \
 	intro_open_soda.inc intro_drinking.inc intro_collider_ui.inc \
 	intro_tunnel1.inc intro_tunnel2.inc intro_gone.inc \
 	intro_graphics/01_building/intro_car.inc \
@@ -70,7 +70,8 @@ intro.o:	intro.s \
 	intro_graphics/04_keypad/intro_approach.inc \
 	intro_graphics/04_keypad/intro_keypad_bg.inc \
 	intro_graphics/04_keypad/intro_hands.inc \
-	intro_graphics/04_keypad/intro_opening.inc
+	intro_graphics/04_keypad/intro_opening.inc \
+	intro_graphics/05_scanner/intro_scanner.inc
 	ca65 -o intro.o intro.s -l intro.lst
 
 ####
@@ -112,9 +113,6 @@ ootw_c2_cage.inc:	$(PNG2RLE) ootw_c2_cage.png
 
 
 #####
-
-intro_scanner.inc:	$(PNG2RLE) intro_scanner.png
-	$(PNG2RLE) asm intro_scanner.png scanner_rle > intro_scanner.inc
 
 intro_open_soda.inc:	$(PNG2RLE) intro_open_soda.png
 	$(PNG2RLE) asm intro_open_soda.png open_soda_rle > intro_open_soda.inc

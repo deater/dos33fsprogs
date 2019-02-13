@@ -940,8 +940,8 @@ gone_loop:
 .include "intro_graphics/04_keypad/intro_hands.inc"
 .include "intro_graphics/04_keypad/intro_opening.inc"
 
+.include "intro_graphics/05_scanner/intro_scanner.inc"
 
-.include "intro_scanner.inc"
 .include "intro_open_soda.inc"
 .include "intro_drinking.inc"
 .include "intro_unzapped.inc"
