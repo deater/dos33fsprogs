@@ -639,13 +639,6 @@ keypad:
 	jsr	run_sequence
 
 
-
-keypad_loop:
-	lda	KEYPRESS
-	bpl	keypad_loop
-	bit	KEYRESET
-
-
 ;===============================
 ;===============================
 ; Scanner
@@ -663,12 +656,15 @@ keypad_loop:
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
-	;=================================
-	; copy $c00 to both pages $400/$800
-
 	jsr	gr_copy_to_current
 	jsr	page_flip
-	jsr	gr_copy_to_current
+
+	lda	#<scanning_sequence
+	sta	INTRO_LOOPL
+	lda	#>scanning_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence
 
 scanner_loop:
 	lda	KEYPRESS
@@ -941,6 +937,7 @@ gone_loop:
 .include "intro_graphics/04_keypad/intro_opening.inc"
 
 .include "intro_graphics/05_scanner/intro_scanner.inc"
+.include "intro_graphics/05_scanner/intro_scanning.inc"
 
 .include "intro_open_soda.inc"
 .include "intro_drinking.inc"
@@ -1218,3 +1215,50 @@ opening_sequence:
 	.byte	100
 	.word	blank_rle
 	.byte	0
+
+; Scanning sequence
+
+scanning_sequence:
+	.byte	15
+	.word	scan01_rle
+	.byte	15
+	.word	scan02_rle
+	.byte	15
+	.word	scan03_rle
+	.byte	15
+	.word	scan04_rle
+	.byte	15
+	.word	scan05_rle
+	.byte	15
+	.word	scan06_rle
+	.byte	15
+	.word	scan07_rle
+	.byte	15
+	.word	scan08_rle
+	.byte	15
+	.word	scan09_rle
+	.byte	15
+	.word	scan10_rle
+	.byte	15
+	.word	scan11_rle
+	.byte	15
+	.word	scan12_rle
+	.byte	15
+	.word	scan13_rle
+	.byte	15
+	.word	scan14_rle
+	.byte	30
+	.word	scan15_rle
+	.byte	30
+	.word	scan16_rle
+	.byte	30
+	.word	scan17_rle
+	.byte	30
+	.word	scan18_rle
+	.byte	30
+	.word	scan19_rle
+	.byte	30
+	.word	scan19_rle
+	.byte	0
+
+

@@ -71,7 +71,8 @@ intro.o:	intro.s \
 	intro_graphics/04_keypad/intro_keypad_bg.inc \
 	intro_graphics/04_keypad/intro_hands.inc \
 	intro_graphics/04_keypad/intro_opening.inc \
-	intro_graphics/05_scanner/intro_scanner.inc
+	intro_graphics/05_scanner/intro_scanner.inc \
+	intro_graphics/05_scanner/intro_scanning.inc
 	ca65 -o intro.o intro.s -l intro.lst
 
 ####
