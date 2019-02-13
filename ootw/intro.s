@@ -620,6 +620,26 @@ keypad:
 	jsr	run_sequence
 
 
+	;==================================
+	; doop opening sequence
+
+	lda	#>(scanner_door_rle)
+	sta	GBASH
+	lda	#<(scanner_door_rle)
+	sta	GBASL
+	lda	#$c			; load to off-screen $c00
+	jsr	load_rle_gr
+
+
+	lda	#<opening_sequence
+	sta	INTRO_LOOPL
+	lda	#>opening_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence
+
+
+
 keypad_loop:
 	lda	KEYPRESS
 	bpl	keypad_loop
@@ -918,6 +938,7 @@ gone_loop:
 .include "intro_graphics/04_keypad/intro_approach.inc"
 .include "intro_graphics/04_keypad/intro_keypad_bg.inc"
 .include "intro_graphics/04_keypad/intro_hands.inc"
+.include "intro_graphics/04_keypad/intro_opening.inc"
 
 
 .include "intro_scanner.inc"
@@ -1165,6 +1186,35 @@ keypad_sequence:
 	.byte	0
 
 
+; Door opening sequence
 
-
-
+opening_sequence:
+	.byte	15
+	.word	opening01_rle
+	.byte	15
+	.word	opening02_rle
+	.byte	15
+	.word	opening03_rle
+	.byte	15
+	.word	opening04_rle
+	.byte	15
+	.word	opening05_rle
+	.byte	15
+	.word	opening06_rle
+	.byte	15
+	.word	opening07_rle
+	.byte	15
+	.word	opening08_rle
+	.byte	15
+	.word	opening09_rle
+	.byte	15
+	.word	opening10_rle
+	.byte	15
+	.word	opening11_rle
+	.byte	15
+	.word	opening12_rle
+	.byte	15
+	.word	blank_rle
+	.byte	100
+	.word	blank_rle
+	.byte	0
