@@ -3,7 +3,8 @@ include ../../../Makefile.inc
 PNG2RLE = ../../../gr-utils/png2rle
 
 
-all:	intro_scanner_door.inc intro_keypad_bg.inc intro_approach.inc intro_hands.inc
+all:	intro_scanner_door.inc intro_keypad_bg.inc \
+	intro_approach.inc intro_hands.inc intro_opening.inc
 
 #####
 
@@ -57,6 +58,25 @@ intro_hands.inc:	$(PNG2RLE) hand04_01.png hand04_02.png \
 	$(PNG2RLE) asm hand02_03.png hand02_03_rle >> intro_hands.inc
 	$(PNG2RLE) asm hand02_04.png hand02_04_rle >> intro_hands.inc
 	$(PNG2RLE) asm hand02_05.png hand02_05_rle >> intro_hands.inc
+
+####
+
+intro_opening.inc:	$(PNG2RLE) opening01.png opening02.png \
+	opening03.png opening04.png opening05.png opening06.png \
+	opening07.png opening08.png opening09.png opening10.png \
+	opening11.png opening12.png
+	$(PNG2RLE) asm opening01.png opening01_rle > intro_opening.inc
+	$(PNG2RLE) asm opening02.png opening02_rle >> intro_opening.inc
+	$(PNG2RLE) asm opening03.png opening03_rle >> intro_opening.inc
+	$(PNG2RLE) asm opening04.png opening04_rle >> intro_opening.inc
+	$(PNG2RLE) asm opening05.png opening05_rle >> intro_opening.inc
+	$(PNG2RLE) asm opening06.png opening06_rle >> intro_opening.inc
+	$(PNG2RLE) asm opening07.png opening07_rle >> intro_opening.inc
+	$(PNG2RLE) asm opening08.png opening08_rle >> intro_opening.inc
+	$(PNG2RLE) asm opening09.png opening09_rle >> intro_opening.inc
+	$(PNG2RLE) asm opening10.png opening10_rle >> intro_opening.inc
+	$(PNG2RLE) asm opening11.png opening11_rle >> intro_opening.inc
+	$(PNG2RLE) asm opening12.png opening12_rle >> intro_opening.inc
 
 
 #####
