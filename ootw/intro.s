@@ -1243,21 +1243,21 @@ scanning_sequence:
 	.word	scan11_rle
 	.byte	15
 	.word	scan12_rle
-	.byte	15
+	.byte	30
 	.word	scan13_rle
-	.byte	15
+	.byte	30
 	.word	scan14_rle
-	.byte	30
+	.byte	60
 	.word	scan15_rle
-	.byte	30
+	.byte	60
 	.word	scan16_rle
-	.byte	30
+	.byte	60
 	.word	scan17_rle
-	.byte	30
+	.byte	60
 	.word	scan18_rle
-	.byte	30
+	.byte	60
 	.word	scan19_rle
-	.byte	30
+	.byte	60
 	.word	scan19_rle
 	.byte	0
 
