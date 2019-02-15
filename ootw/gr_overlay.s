@@ -7,6 +7,8 @@
 gr_overlay:
 	jsr	gr_copy_to_current
 
+
+gr_overlay_noload:
 	ldy	#0
 	lda	#40
 	sta	CH		; xsize is in CH			; 3
@@ -99,5 +101,15 @@ gr_overlay_done_draw:
 
 
 	rts				; return			; 6
+
+
+
+
+
+
+
+
+
+
 
 

@@ -678,6 +678,74 @@ keypad:
 	jsr	gr_copy_to_current
 	jsr	page_flip
 
+	; Identification (nothing)
+
+
+	lda	#<ai_sequence
+	sta	INTRO_LOOPL
+	lda	#>ai_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence_static
+
+
+	; BG1 + /
+
+	; BG1 + |
+
+	; BG1 + -
+
+	; BG1 + /
+
+	; BG1 + nothing (pause)
+
+	; BG2 + /
+
+	; BG2 + |
+
+	; BG2 + -
+
+	; BG2 + /
+
+	; BG2 + nothing (pause)
+
+	; BG3 + /
+
+	; BG3 + |
+
+	; BG3 + -
+
+	; BG3 + /
+
+	; BG3 + nothing (pause)
+
+	; BG4 + /
+
+	; BG4 + |
+
+	; BG4 + -   !!! DNA START 1 line
+
+	; BG4 + /   !!! DNA start 1 line
+
+	; BG4 + nothing !!! DNA 2 lines
+
+	; DNA 5 lines
+
+	; Good evening professor.
+
+	; DNA all lines
+
+	; Key. + |
+
+	; I see you have driven here in your \ Ferrari.
+
+	; Key + -
+
+	; Key + / 
+
+	; Key + nothing (pause)
+
+
 uz_loop:
 	lda	KEYPRESS
 	bpl	uz_loop
@@ -704,6 +772,11 @@ uz_loop:
 	jsr	page_flip
 	jsr	gr_copy_to_current
 
+	; Display rises up
+
+	; Zoom in, mouse move
+
+
 unzapped_loop:
 	lda	KEYPRESS
 	bpl	unzapped_loop
@@ -713,9 +786,79 @@ unzapped_loop:
 ; Peanut OS
 ;===============================
 
+	; Copyright (c) 1990 Peanut Computer, Inc.
+	; All rights reserved.
+	;
+	; CDOS Version 5.01
+	;
+	; > #
+
+	; RUN PROJECT 23# (typed)
+	; #
+
 ;===============================
 ; Particle Accelerator Screen
 ;===============================
+
+	; MODIFICATION OF PARAMETERS
+	; RELATING TO PARTICLE
+	; ACCELERATOR (SYNCHOTRON).
+	;		 E: 23%
+	;		 g: .005
+	;
+	;		 RK: 77.2L
+	;
+	;		 opt: g+
+	;
+	;		  Shield:
+	;		 1: OFF
+	;		 2: ON
+	;		 3: ON
+	;
+	;		 P^: 1
+
+	; cursor down, change g+ to g-
+
+	; FLASH: RUN EXPERIMENT ?
+	;				Y
+
+
+	; --- Theoretical study ---
+	;
+	; - Phase 0:
+	; INJECTION of particles
+	; into synchrotron
+
+	; dark blue going around
+	; - Phase 1:
+	; Particle ACCELERATION.
+	;
+
+	; 5 times around?
+
+	; - Phase 2:
+	; EJECTION of particles
+	; on the shield.
+
+	; smash on shield
+
+	; A  N  A  L  Y  S  I  S
+
+
+	; - RESULT:
+	; Probability of creating:
+	;  ANTIMATTER: 91.V %
+	;  NEUTRINO 27:  0.04 %
+	;  NEUTRINO 424: 18 %
+
+	; Practical verification Y/N ?
+
+	; THE EXPERIMENT WILL BEGIN IN 20 SECONDS
+
+	; 19, 18, 17
+
+
+
 
 ;===============================
 ;===============================
@@ -779,6 +922,27 @@ drinking_loop:
 ; More crazy screen
 ;===============================
 ;===============================
+
+	; THE EXPERIMENT WILL BEGIN IN 5  SECONDS
+
+	; Shield 9A.5F Ok
+	; Flux % 5.0177 Ok
+	; CDI Vector ok
+	; %%%ddd ok
+	; Race-Track ok
+	;    -----REPEAT
+	; 4  SECONDS
+	; Shield "
+	;    -----REPEAT
+	; 3 SECONDS
+	; Sheild "
+	;    -----REPEAT
+	; 2 SECONDS
+	; 1 SECONDS (at CDI Vector)
+	; 0 SECONDS (at %%%)
+	; EXPERIMENT LINES GOES AWAY
+	; Stop printing at race track
+	; dark blue going around track
 
 	;=============================
 	; Load background to $c00
@@ -985,6 +1149,74 @@ run_sequence_loop:
 
 	jmp	run_sequence_loop
 run_sequence_done:
+	rts
+
+
+
+	;=================================
+	; Display a sequence of images
+	; with static overlay
+
+run_sequence_static:
+	ldy	#0				; init
+
+run_sequence_static_loop:
+	lda	(INTRO_LOOPL),Y			; pause for time
+	beq	run_sequence_static_done
+	tax
+	jsr	long_wait
+
+	iny					; point to overlay
+
+	lda	#8				; set up static loop
+	sta	STATIC_LOOPER
+
+	sty	INTRO_LOOPER		; save for later
+
+static_loop:
+
+	lda	(INTRO_LOOPL),Y
+	sta	GBASL
+	iny
+	lda	(INTRO_LOOPL),Y
+	sta	GBASH
+
+	lda	#$10			; load to $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+
+	ldy	STATIC_LOOPER
+	lda	static_pattern,Y
+	sta	GBASL
+	lda	static_pattern+1,Y
+	sta	GBASH
+
+	lda	#$10			; load to $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay_noload
+
+
+
+
+	jsr	page_flip
+
+	ldy	INTRO_LOOPER
+
+	ldx	#$30
+	jsr	long_wait
+
+	dec	STATIC_LOOPER
+	dec	STATIC_LOOPER
+
+	bne	static_loop
+
+	iny
+	iny
+
+	jmp	run_sequence_static_loop
+run_sequence_static_done:
 	rts
 
 
@@ -1267,4 +1499,29 @@ scanning_sequence:
 	.word	scan19_rle
 	.byte	0
 
+
+
+; AI sequence
+
+ai_sequence:
+	.byte	50
+	.word	ai01_rle
+	.byte	50
+	.word	ai02_rle
+	.byte	50
+	.word	ai03_rle
+	.byte	50
+	.word	ai04_rle
+	.byte	50
+	.word	ai05_rle
+	.byte	50
+	.word	ai05_rle
+	.byte	0
+
+static_pattern:
+	.word	static01_rle
+	.word	static02_rle
+	.word	static03_rle
+	.word	static01_rle
+	.word	blank_rle
 
