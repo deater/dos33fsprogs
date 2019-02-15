@@ -3,7 +3,28 @@ include ../../../Makefile.inc
 PNG2RLE = ../../../gr-utils/png2rle
 
 
-all:	intro_scanner.inc intro_scanning.inc
+all:	intro_scanner.inc intro_scanning.inc intro_ai_bg.inc intro_ai.inc
+
+#####
+
+intro_ai_bg.inc:	$(PNG2RLE) ai_background.png
+	$(PNG2RLE) asm ai_background.png ai_bg_rle > intro_ai_bg.inc
+
+#####
+
+intro_ai.inc:	$(PNG2RLE) ai01.png ai02.png ai03.png ai04.png ai05.png \
+	static01.png static02.png static03.png
+	$(PNG2RLE) asm ai01.png ai01_rle > intro_ai.inc
+	$(PNG2RLE) asm ai02.png ai02_rle >> intro_ai.inc
+	$(PNG2RLE) asm ai03.png ai03_rle >> intro_ai.inc
+	$(PNG2RLE) asm ai04.png ai04_rle >> intro_ai.inc
+	$(PNG2RLE) asm ai05.png ai05_rle >> intro_ai.inc
+	$(PNG2RLE) asm static01.png static01_rle >> intro_ai.inc
+	$(PNG2RLE) asm static02.png static02_rle >> intro_ai.inc
+	$(PNG2RLE) asm static03.png static03_rle >> intro_ai.inc
+
+
+
 
 #####
 

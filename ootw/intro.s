@@ -645,10 +645,6 @@ keypad:
 ;===============================
 ;===============================
 
-
-	;=============================
-	; Load background to $c00
-
 	lda	#>(scanner_rle)
 	sta	GBASH
 	lda	#<(scanner_rle)
@@ -666,18 +662,26 @@ keypad:
 
 	jsr	run_sequence
 
-scanner_loop:
-	lda	KEYPRESS
-	bpl	scanner_loop
-	bit	KEYRESET
-
-
 ;===============================
 ;===============================
 ; Spinny DNA / Key
 ;===============================
 ;===============================
 
+	lda	#>(ai_bg_rle)
+	sta	GBASH
+	lda	#<(ai_bg_rle)
+	sta	GBASL
+	lda	#$c			; load to off-screen $c00
+	jsr	load_rle_gr
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+
+uz_loop:
+	lda	KEYPRESS
+	bpl	uz_loop
+	bit	KEYRESET
 
 ;===============================
 ; Sitting at Desk
@@ -938,6 +942,8 @@ gone_loop:
 
 .include "intro_graphics/05_scanner/intro_scanner.inc"
 .include "intro_graphics/05_scanner/intro_scanning.inc"
+.include "intro_graphics/05_scanner/intro_ai_bg.inc"
+.include "intro_graphics/05_scanner/intro_ai.inc"
 
 .include "intro_open_soda.inc"
 .include "intro_drinking.inc"
@@ -1120,65 +1126,65 @@ approach_sequence:
 ; Using keypad sequence
 
 keypad_sequence:
-	.byte	10
+	.byte	9
 	.word	hand04_01_rle
-	.byte	10
+	.byte	9
 	.word	hand04_02_rle
-	.byte	10
+	.byte	9
 	.word	hand04_03_rle
-	.byte	10
+	.byte	9
 	.word	hand04_02_rle
-	.byte	10
+	.byte	9
 	.word	hand05_01_rle
-	.byte	10
+	.byte	9
 	.word	hand05_02_rle
-	.byte	10
+	.byte	9
 	.word	hand05_03_rle
-	.byte	10
+	.byte	9
 	.word	hand05_04_rle
-	.byte	10
+	.byte	9
 	.word	hand01_01_rle
-	.byte	10
+	.byte	9
 	.word	hand01_02_rle
-	.byte	10
+	.byte	9
 	.word	hand01_03_rle
-	.byte	10
+	.byte	9
 	.word	hand04_02_rle
-	.byte	10
+	.byte	9
 	.word	hand01_02_rle
-	.byte	10
+	.byte	9
 	.word	hand01_03_rle
-	.byte	10
+	.byte	9
 	.word	hand04_02_rle
-	.byte	10
+	.byte	9
 	.word	hand09_01_rle
-	.byte	10
+	.byte	9
 	.word	hand09_02_rle
-	.byte	10
+	.byte	9
 	.word	hand09_03_rle
-	.byte	10
+	.byte	9
 	.word	hand09_04_rle
-	.byte	10
+	.byte	9
 	.word	hand09_05_rle
-	.byte	10
+	.byte	9
 	.word	hand03_01_rle
-	.byte	10
+	.byte	9
 	.word	hand03_02_rle
-	.byte	10
+	.byte	9
 	.word	hand03_03_rle
-	.byte	10
+	.byte	9
 	.word	hand03_04_rle
-	.byte	10
+	.byte	9
 	.word	hand02_01_rle
-	.byte	10
+	.byte	9
 	.word	hand02_02_rle
-	.byte	10
+	.byte	9
 	.word	hand02_03_rle
-	.byte	10
+	.byte	9
 	.word	hand02_04_rle
-	.byte	10
+	.byte	9
 	.word	hand02_05_rle
-	.byte	25
+	.byte	22
 	.word	hand02_05_rle
 	.byte	0
 
@@ -1237,11 +1243,11 @@ scanning_sequence:
 	.word	scan08_rle
 	.byte	15
 	.word	scan09_rle
-	.byte	15
+	.byte	30
 	.word	scan10_rle
-	.byte	15
+	.byte	30
 	.word	scan11_rle
-	.byte	15
+	.byte	30
 	.word	scan12_rle
 	.byte	30
 	.word	scan13_rle
