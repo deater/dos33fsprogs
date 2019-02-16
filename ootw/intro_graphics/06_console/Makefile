@@ -7,8 +7,12 @@ all:	intro_desktop.inc intro_cursor.inc
 
 #####
 
-intro_desktop.inc:	$(PNG2RLE) intro_desktop.png
+intro_desktop.inc:	$(PNG2RLE) intro_desktop.png \
+		powerup01.png powerup02.png powerup03.png
 	$(PNG2RLE) asm intro_desktop.png desktop_rle > intro_desktop.inc
+	$(PNG2RLE) asm powerup01.png powerup01_rle >> intro_desktop.inc
+	$(PNG2RLE) asm powerup02.png powerup02_rle >> intro_desktop.inc
+	$(PNG2RLE) asm powerup03.png powerup03_rle >> intro_desktop.inc
 
 #####
 

@@ -727,12 +727,12 @@ uz_loop:
 	; Display rises up
 	;=================================
 
-;	lda	#<powerup_sequence
-;	sta	INTRO_LOOPL
-;	lda	#>powerup_sequence
-;	sta	INTRO_LOOPH
+	lda	#<powerup_sequence
+	sta	INTRO_LOOPL
+	lda	#>powerup_sequence
+	sta	INTRO_LOOPH
 
-;	jsr	run_sequence
+	jsr	run_sequence
 
 
 	;=================================
@@ -757,11 +757,6 @@ uz_loop:
 
 	jsr	run_sequence
 
-
-unzapped_loop:
-	lda	KEYPRESS
-	bpl	unzapped_loop
-	bit	KEYRESET
 
 ;===============================
 ; Peanut OS
@@ -1547,6 +1542,20 @@ static_pattern:
 	.word	static02_rle	; 6
 	.word	static01_rle	; 8
 
+; Power-up sequence
+
+powerup_sequence:
+	.byte	30
+	.word	powerup01_rle
+	.byte	20
+	.word	powerup02_rle
+	.byte	20
+	.word	powerup03_rle
+	.byte	60
+	.word	powerup03_rle
+	.byte	0
+
+
 ; Cursor sequence
 
 cursor_sequence:
@@ -1564,9 +1573,9 @@ cursor_sequence:
 	.word	cursor06_rle
 	.byte	20
 	.word	cursor07_rle
-	.byte	20
+	.byte	60
 	.word	cursor08_rle
-	.byte	20
+	.byte	0
 	.word	cursor08_rle
 	.byte	0
 
