@@ -87,9 +87,8 @@ cursor06_rle:	.byte $28 ; ysize=48
 	.byte $66, $A0,$18,$AA, $66, $00, $CC, $66, $60
 	.byte $66, $6A, $A3,$AA, $66, $00, $CC, $66
 	.byte $00, $66, $A0,$18,$AA, $66, $6C, $60, $66,$66
-	.byte $A0,$01,$A6, $6A, $55, $A0,$02,$AA, $66, $C0, $0C
-	.byte $66, $6C, $A0,$01,$A6, $A0,$1D,$AA, $A3,$A5, $A0,$02,$AA, $A4,$A6
-	.byte $A0,$FF,$AA, $A0,$74,$AA
+	.byte $A0,$01,$A6, $6A, $A3,$AA, $66, $C0, $0C, $66
+	.byte $6C, $A0,$01,$A6, $A0,$22,$AA, $A4,$A6, $A0,$FF,$AA, $A0,$74,$AA
 	.byte $A1
 cursor07_rle:	.byte $28 ; ysize=48
 	.byte $A0,$FF,$AA, $A0,$2C,$AA, $A4,$CA, $A0,$1D,$AA, $CA, $A0,$01,$AC, $A6,$AA
@@ -100,11 +99,11 @@ cursor07_rle:	.byte $28 ; ysize=48
 	.byte $6C, $60, $06, $66, $A0,$18,$AA, $CC, $00
 	.byte $CC,$CC, $60, $6C, $6A, $A3,$AA, $66, $00
 	.byte $CC, $66, $00, $66, $A0,$18,$AA, $CC,$CC, $C0
-	.byte $CC, $66, $A0,$01,$A6, $6A, $55, $A0,$02,$AA, $66
-	.byte $C0, $0C, $66, $6C, $A0,$01,$A6, $A0,$18,$AA, $CA
-	.byte $A0,$01,$AC, $CA,$CA, $A0,$01,$AA, $A0,$01,$A5, $C5, $A0,$01,$A5, $A0,$02,$AA
-	.byte $A4,$A6, $A0,$19,$AA, $A0,$01,$AC, $A6,$AA, $CC, $A0,$01,$AA, $CA
-	.byte $A0,$23,$AA, $CA,$CA, $CC, $A0,$01,$AC, $A0,$FF,$AA, $A0,$2A,$AA
+	.byte $CC, $66, $A0,$01,$A6, $6A, $A3,$AA, $66, $C0
+	.byte $0C, $66, $6C, $A0,$01,$A6, $A0,$18,$AA, $CA, $A0,$01,$AC
+	.byte $CA,$CA, $A0,$02,$AA, $CA, $A3,$AA, $A4,$A6, $A0,$19,$AA, $A0,$01,$AC
+	.byte $A6,$AA, $CC, $A0,$01,$AA, $CA, $A0,$23,$AA, $CA,$CA, $CC
+	.byte $A0,$01,$AC, $A0,$FF,$AA, $A0,$2A,$AA
 	.byte $A1
 cursor08_rle:	.byte $28 ; ysize=48
 	.byte $A0,$FC,$AA, $CA, $A0,$01,$AC, $A0,$25,$AA, $CC, $A3,$AC, $A5,$AA
@@ -115,10 +114,9 @@ cursor08_rle:	.byte $28 ; ysize=48
 	.byte $6C, $60, $06, $66, $A0,$18,$AA, $CC, $00
 	.byte $CC,$CC, $60, $6C, $6A, $A3,$AA, $66, $00
 	.byte $CC, $66, $00, $66, $A0,$17,$AA, $CA, $CC,$CC
-	.byte $C0, $CC, $66, $A0,$01,$A6, $6A, $55, $A0,$02,$AA
-	.byte $66, $C0, $0C, $66, $6C, $A0,$01,$A6, $A0,$17,$AA
-	.byte $CC, $A5,$AA, $A3,$A5, $A0,$02,$AA, $A4,$A6, $A0,$18,$AA, $CA
-	.byte $A3,$AC, $A4,$AA, $CA, $A0,$1E,$AA, $A0,$01,$AC, $A8,$AA, $CC
-	.byte $A0,$01,$AA, $CA, $A0,$23,$AA, $CA,$CA, $CC, $A0,$01,$AC, $A0,$FF,$AA
-	.byte $A0,$02,$AA
+	.byte $C0, $CC, $66, $A0,$01,$A6, $6A, $A3,$AA, $66
+	.byte $C0, $0C, $66, $6C, $A0,$01,$A6, $A0,$17,$AA, $CC
+	.byte $AA,$AA, $A4,$A6, $A0,$18,$AA, $CA, $A3,$AC, $A4,$AA, $CA
+	.byte $A0,$1E,$AA, $A0,$01,$AC, $A8,$AA, $CC, $A0,$01,$AA, $CA, $A0,$23,$AA
+	.byte $CA,$CA, $CC, $A0,$01,$AC, $A0,$FF,$AA, $A0,$02,$AA
 	.byte $A1

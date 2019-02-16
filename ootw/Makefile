@@ -55,7 +55,7 @@ intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
 	gr_overlay.s \
 	keyboard.s random16.s \
-	intro_open_soda.inc intro_drinking.inc intro_collider_ui.inc \
+	intro_collider_ui.inc \
 	intro_tunnel1.inc intro_tunnel2.inc intro_gone.inc \
 	intro_graphics/01_building/intro_car.inc \
 	intro_graphics/01_building/intro_building_car.inc \
@@ -75,7 +75,9 @@ intro.o:	intro.s \
 	intro_graphics/05_scanner/intro_ai_bg.inc \
 	intro_graphics/05_scanner/intro_ai.inc \
 	intro_graphics/06_console/intro_desktop.inc \
-	intro_graphics/06_console/intro_cursor.inc
+	intro_graphics/06_console/intro_cursor.inc \
+	intro_graphics/07_soda/intro_open_soda.inc \
+	intro_graphics/07_soda/intro_drinking.inc
 	ca65 -o intro.o intro.s -l intro.lst
 
 ####
@@ -118,11 +120,6 @@ ootw_c2_cage.inc:	$(PNG2RLE) ootw_c2_cage.png
 
 #####
 
-intro_open_soda.inc:	$(PNG2RLE) intro_open_soda.png
-	$(PNG2RLE) asm intro_open_soda.png open_soda_rle > intro_open_soda.inc
-
-intro_drinking.inc:	$(PNG2RLE) intro_drinking.png
-	$(PNG2RLE) asm intro_drinking.png drinking_rle > intro_drinking.inc
 
 intro_unzapped.inc:	$(PNG2RLE) intro_unzapped.png
 	$(PNG2RLE) asm intro_unzapped.png unzapped_rle > intro_unzapped.inc

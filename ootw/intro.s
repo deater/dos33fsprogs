@@ -689,62 +689,20 @@ keypad:
 	jsr	run_sequence_static
 
 
-	; BG1 + /
-
-	; BG1 + |
-
-	; BG1 + -
-
-	; BG1 + /
-
-	; BG1 + nothing (pause)
-
-	; BG2 + /
-
-	; BG2 + |
-
-	; BG2 + -
-
-	; BG2 + /
-
-	; BG2 + nothing (pause)
-
-	; BG3 + /
-
-	; BG3 + |
-
-	; BG3 + -
-
-	; BG3 + /
-
-	; BG3 + nothing (pause)
-
-	; BG4 + /
-
-	; BG4 + |
-
-	; BG4 + -   !!! DNA START 1 line
-
-	; BG4 + /   !!! DNA start 1 line
-
-	; BG4 + nothing !!! DNA 2 lines
-
+	; slices        / | - / nothing (pause)
+	; more slices   / | - / nothing (pause)
+	; small circle  / | - / nothing (pause)
+	; big circle    / | - / nothing (pause)
+	;                   -   !!! DNA START 1 line
+	;                     /   !!! DNA start 1 line
+	;                         !!! DNA 2 lines
 	; DNA 5 lines
-
 	; Good evening professor.
-
 	; DNA all lines
 
-	; Key. + |
-
+	; Key             |
 	; I see you have driven here in your \ Ferrari.
-
-	; Key + -
-
-	; Key + / 
-
-	; Key + nothing (pause)
-
+	; Key                - / nothing (pause)
 
 uz_loop:
 	lda	KEYPRESS
@@ -755,9 +713,6 @@ uz_loop:
 ; Sitting at Desk
 ;===============================
 
-	;=============================
-	; Load background to $c00
-
 	lda	#>(desktop_rle)
 	sta	GBASH
 	lda	#<(desktop_rle)
@@ -765,16 +720,42 @@ uz_loop:
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
+	jsr	gr_copy_to_current
+	jsr	page_flip
+
 	;=================================
-	; copy $c00 to both pages $400/$800
+	; Display rises up
+	;=================================
+
+;	lda	#<powerup_sequence
+;	sta	INTRO_LOOPL
+;	lda	#>powerup_sequence
+;	sta	INTRO_LOOPH
+
+;	jsr	run_sequence
+
+
+	;=================================
+	; Zoom in, mouse move
+	;=================================
+	; FIXME: shimmery edges to display?
+
+	lda	#>(desktop_bg_rle)
+	sta	GBASH
+	lda	#<(desktop_bg_rle)
+	sta	GBASL
+	lda	#$c			; load to off-screen $c00
+	jsr	load_rle_gr
 
 	jsr	gr_copy_to_current
 	jsr	page_flip
-	jsr	gr_copy_to_current
 
-	; Display rises up
+	lda	#<cursor_sequence
+	sta	INTRO_LOOPL
+	lda	#>cursor_sequence
+	sta	INTRO_LOOPH
 
-	; Zoom in, mouse move
+	jsr	run_sequence
 
 
 unzapped_loop:
@@ -785,8 +766,10 @@ unzapped_loop:
 ;===============================
 ; Peanut OS
 ;===============================
-
-	; Copyright (c) 1990 Peanut Computer, Inc.
+	;           1         2         3
+	; 0123456789012345678901234567890123456789
+	;
+	; Copyright (c) 1977 Peanut Computer, Inc.
 	; All rights reserved.
 	;
 	; CDOS Version 5.01
@@ -796,6 +779,33 @@ unzapped_loop:
 	; RUN PROJECT 23# (typed)
 	; #
 
+	lda	#$a0
+	jsr	clear_top_a
+	jsr	clear_bottom
+
+	lda	#<peanut
+	sta	OUTL
+	lda	#>peanut
+	sta	OUTH
+
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+
+	jsr	page_flip
+
+	bit     SET_TEXT
+
+
+
+peanut_loop:
+	lda	KEYPRESS
+	bpl	peanut_loop
+	bit	KEYRESET
+
+
+	bit     SET_GR
 ;===============================
 ; Particle Accelerator Screen
 ;===============================
@@ -944,9 +954,6 @@ drinking_loop:
 	; Stop printing at race track
 	; dark blue going around track
 
-	;=============================
-	; Load background to $c00
-
 	lda	#>(collider_ui_rle)
 	sta	GBASH
 	lda	#<(collider_ui_rle)
@@ -959,7 +966,6 @@ drinking_loop:
 
 	jsr	gr_copy_to_current
 	jsr	page_flip
-	jsr	gr_copy_to_current
 
 collider_ui_loop:
 	lda	KEYPRESS
@@ -973,15 +979,27 @@ collider_ui_loop:
 ;===============================
 ;===============================
 
+	lda	#>(building_rle)
+	sta	GBASH
+	lda	#<(building_rle)
+	sta	GBASL
+	lda	#$c			; load to off-screen $c00
+	jsr	load_rle_gr
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+
+outside_loop:
+	lda	KEYPRESS
+	bpl	outside_loop
+	bit	KEYRESET
+
 
 ;===============================
 ;===============================
 ; Tunnel 1
 ;===============================
 ;===============================
-
-	;=============================
-	; Load background to $c00
 
 	lda	#>(tunnel1_rle)
 	sta	GBASH
@@ -1085,6 +1103,7 @@ gone_loop:
 .include "gr_vlin.s"
 .include "gr_plot.s"
 .include "gr_fast_clear.s"
+.include "text_print.s"
 
 ; background graphics
 .include "intro_graphics/01_building/intro_building.inc"
@@ -1112,8 +1131,9 @@ gone_loop:
 .include "intro_graphics/06_console/intro_desktop.inc"
 .include "intro_graphics/06_console/intro_cursor.inc"
 
-.include "intro_open_soda.inc"
-.include "intro_drinking.inc"
+.include "intro_graphics/07_soda/intro_open_soda.inc"
+.include "intro_graphics/07_soda/intro_drinking.inc"
+
 .include "intro_collider_ui.inc"
 .include "intro_tunnel1.inc"
 .include "intro_tunnel2.inc"
@@ -1206,13 +1226,13 @@ static_loop:
 
 	ldy	INTRO_LOOPER
 
-	ldx	#$30
+	ldx	#3
 	jsr	long_wait
 
 	dec	STATIC_LOOPER
 	dec	STATIC_LOOPER
 
-	bne	static_loop
+	bpl	static_loop
 
 	iny
 	iny
@@ -1418,7 +1438,7 @@ keypad_sequence:
 	.word	hand02_04_rle
 	.byte	9
 	.word	hand02_05_rle
-	.byte	22
+	.byte	12
 	.word	hand02_05_rle
 	.byte	0
 
@@ -1477,27 +1497,27 @@ scanning_sequence:
 	.word	scan08_rle
 	.byte	15
 	.word	scan09_rle
-	.byte	30
+	.byte	15
 	.word	scan10_rle
-	.byte	30
+	.byte	20
 	.word	scan11_rle
-	.byte	30
+	.byte	20
 	.word	scan12_rle
-	.byte	30
+	.byte	20
 	.word	scan13_rle
-	.byte	30
+	.byte	20
 	.word	scan14_rle
-	.byte	60
+	.byte	20
 	.word	scan15_rle
-	.byte	60
+	.byte	20
 	.word	scan16_rle
-	.byte	60
+	.byte	40
 	.word	scan17_rle
-	.byte	60
+	.byte	40
 	.word	scan18_rle
-	.byte	60
+	.byte	40
 	.word	scan19_rle
-	.byte	60
+	.byte	40
 	.word	scan19_rle
 	.byte	0
 
@@ -1521,9 +1541,38 @@ ai_sequence:
 	.byte	0
 
 static_pattern:
-	.word	static01_rle
-	.word	static02_rle
-	.word	static03_rle
-	.word	static01_rle
-	.word	blank_rle
+	.word	blank_rle	; 0
+	.word	static01_rle	; 2
+	.word	static03_rle	; 4
+	.word	static02_rle	; 6
+	.word	static01_rle	; 8
 
+; Cursor sequence
+
+cursor_sequence:
+	.byte	20
+	.word	cursor01_rle
+	.byte	20
+	.word	cursor02_rle
+	.byte	20
+	.word	cursor03_rle
+	.byte	20
+	.word	cursor04_rle
+	.byte	20
+	.word	cursor05_rle
+	.byte	20
+	.word	cursor06_rle
+	.byte	20
+	.word	cursor07_rle
+	.byte	20
+	.word	cursor08_rle
+	.byte	20
+	.word	cursor08_rle
+	.byte	0
+
+
+peanut:
+	.byte 0,2,"COPYRIGHT (C) 1977 PEANUT COMPUTER, INC.",0
+	.byte 0,3,"ALL RIGHTS RESERVED.",0
+	.byte 0,5,"CDOS VERSION 5.01",0
+	.byte 0,18,"> ",0
