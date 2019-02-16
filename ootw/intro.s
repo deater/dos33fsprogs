@@ -758,9 +758,9 @@ uz_loop:
 	;=============================
 	; Load background to $c00
 
-	lda	#>(unzapped_rle)
+	lda	#>(desktop_rle)
 	sta	GBASH
-	lda	#<(unzapped_rle)
+	lda	#<(desktop_rle)
 	sta	GBASL
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
@@ -1109,9 +1109,11 @@ gone_loop:
 .include "intro_graphics/05_scanner/intro_ai_bg.inc"
 .include "intro_graphics/05_scanner/intro_ai.inc"
 
+.include "intro_graphics/06_console/intro_desktop.inc"
+.include "intro_graphics/06_console/intro_cursor.inc"
+
 .include "intro_open_soda.inc"
 .include "intro_drinking.inc"
-.include "intro_unzapped.inc"
 .include "intro_collider_ui.inc"
 .include "intro_tunnel1.inc"
 .include "intro_tunnel2.inc"

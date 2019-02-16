@@ -55,7 +55,6 @@ intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
 	gr_overlay.s \
 	keyboard.s random16.s \
-	intro_unzapped.inc \
 	intro_open_soda.inc intro_drinking.inc intro_collider_ui.inc \
 	intro_tunnel1.inc intro_tunnel2.inc intro_gone.inc \
 	intro_graphics/01_building/intro_car.inc \
@@ -74,7 +73,9 @@ intro.o:	intro.s \
 	intro_graphics/05_scanner/intro_scanner.inc \
 	intro_graphics/05_scanner/intro_scanning.inc \
 	intro_graphics/05_scanner/intro_ai_bg.inc \
-	intro_graphics/05_scanner/intro_ai.inc
+	intro_graphics/05_scanner/intro_ai.inc \
+	intro_graphics/06_console/intro_desktop.inc \
+	intro_graphics/06_console/intro_cursor.inc
 	ca65 -o intro.o intro.s -l intro.lst
 
 ####
