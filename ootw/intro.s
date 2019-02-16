@@ -771,9 +771,6 @@ uz_loop:
 	;
 	; > #
 
-	; RUN PROJECT 23# (typed)
-	; #
-
 	lda	#$a0
 	jsr	clear_top_a
 	jsr	clear_bottom
@@ -792,6 +789,9 @@ uz_loop:
 
 	bit     SET_TEXT
 
+
+	; RUN PROJECT 23# (typed)
+	; #
 
 
 peanut_loop:
@@ -956,9 +956,6 @@ drinking_loop:
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
-	;=================================
-	; copy $c00 to both pages $400/$800
-
 	jsr	gr_copy_to_current
 	jsr	page_flip
 
@@ -974,9 +971,9 @@ collider_ui_loop:
 ;===============================
 ;===============================
 
-	lda	#>(building_rle)
+	lda	#>(building_car_rle)
 	sta	GBASH
-	lda	#<(building_rle)
+	lda	#<(building_car_rle)
 	sta	GBASL
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
@@ -1551,7 +1548,7 @@ powerup_sequence:
 	.word	powerup02_rle
 	.byte	20
 	.word	powerup03_rle
-	.byte	60
+	.byte	80
 	.word	powerup03_rle
 	.byte	0
 
@@ -1573,9 +1570,9 @@ cursor_sequence:
 	.word	cursor06_rle
 	.byte	20
 	.word	cursor07_rle
-	.byte	60
+	.byte	20
 	.word	cursor08_rle
-	.byte	0
+	.byte	60
 	.word	cursor08_rle
 	.byte	0
 
@@ -1585,3 +1582,17 @@ peanut:
 	.byte 0,3,"ALL RIGHTS RESERVED.",0
 	.byte 0,5,"CDOS VERSION 5.01",0
 	.byte 0,18,"> ",0
+
+accelerator:
+	.byte 0,0,"MODIFICATION OF PARAMETERS",0
+	.byte 0,1,"RELATING TO PARTICLE",0
+	.byte 0,2,"ACCELERATOR (SYNCHOTRON).",0
+	.byte 15,3,"E: 23%",0
+	.byte 15,4,"G: .005",0
+	.byte 15,5,"RK: 77.2L",0
+	.byte 15,7,"OPT: G+",0
+	.byte 15,9," SHIELD:",0
+	.byte 15,10,"1: OFF",0
+	.byte 15,11,"2: ON",0
+	.byte 15,12,"3: ON",0
+	.byte 15,14," P^: 1",0
