@@ -54,7 +54,7 @@ INTRO:	intro.o
 intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
 	gr_overlay.s \
-	keyboard.s random16.s \
+	keyboard.s random16.s text_print.s \
 	intro_collider_ui.inc \
 	intro_tunnel1.inc intro_tunnel2.inc intro_gone.inc \
 	intro_graphics/01_building/intro_car.inc \

@@ -780,10 +780,7 @@ uz_loop:
 	lda	#>peanut
 	sta	OUTH
 
-	jsr	move_and_print
-	jsr	move_and_print
-	jsr	move_and_print
-	jsr	move_and_print
+	jsr	move_and_print_list
 
 	jsr	page_flip
 
@@ -800,7 +797,7 @@ peanut_loop:
 	bit	KEYRESET
 
 
-	bit     SET_GR
+
 ;===============================
 ; Particle Accelerator Screen
 ;===============================
@@ -821,6 +818,21 @@ peanut_loop:
 	;		 3: ON
 	;
 	;		 P^: 1
+
+
+	lda	#$a0
+	jsr	clear_top_a
+	jsr	clear_bottom
+
+	lda	#<accelerator
+	sta	OUTL
+	lda	#>accelerator
+	sta	OUTH
+
+	jsr	move_and_print_list
+
+	jsr	page_flip
+
 
 	; cursor down, change g+ to g-
 
@@ -863,7 +875,12 @@ peanut_loop:
 	; 19, 18, 17
 
 
+peanut_loop2:
+	lda	KEYPRESS
+	bpl	peanut_loop2
+	bit	KEYRESET
 
+	bit     SET_GR
 
 ;===============================
 ;===============================
@@ -1582,17 +1599,19 @@ peanut:
 	.byte 0,3,"ALL RIGHTS RESERVED.",0
 	.byte 0,5,"CDOS VERSION 5.01",0
 	.byte 0,18,"> ",0
+	.byte 255
 
 accelerator:
 	.byte 0,0,"MODIFICATION OF PARAMETERS",0
 	.byte 0,1,"RELATING TO PARTICLE",0
 	.byte 0,2,"ACCELERATOR (SYNCHOTRON).",0
-	.byte 15,3,"E: 23%",0
-	.byte 15,4,"G: .005",0
-	.byte 15,5,"RK: 77.2L",0
-	.byte 15,7,"OPT: G+",0
-	.byte 15,9," SHIELD:",0
-	.byte 15,10,"1: OFF",0
-	.byte 15,11,"2: ON",0
-	.byte 15,12,"3: ON",0
-	.byte 15,14," P^: 1",0
+	.byte 15,4,"E: 23%",0
+	.byte 15,5,"G: .005",0
+	.byte 15,6,"RK: 77.2L",0
+	.byte 15,8,"OPT: G+",0
+	.byte 15,10," SHIELD:",0
+	.byte 15,11,"1: OFF",0
+	.byte 15,12,"2: ON",0
+	.byte 15,13,"3: ON",0
+	.byte 15,15,"P^: 1",0
+	.byte 255

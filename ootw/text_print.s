@@ -42,7 +42,7 @@ print_string:
 print_string_loop:
 	lda	(OUTL),Y
 	beq	done_print_string
-	ora	#$80
+	eor	#$80			; flip from ASCII to text char
 	sta	(BASL),Y
 	iny
 	bne	print_string_loop
@@ -55,5 +55,14 @@ done_print_string:
 	lda	OUTH
 	adc	#0
 	sta	OUTH
+
+	rts
+
+
+move_and_print_list:
+	jsr	move_and_print
+	ldy	#0
+	lda	(OUTL),Y
+	bpl	move_and_print_list
 
 	rts
