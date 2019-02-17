@@ -671,6 +671,9 @@ scanner:
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
+	jsr	clear_bottom
+	bit	TEXTGR			; split graphics/text
+
 	jsr	gr_copy_to_current
 	jsr	page_flip
 
@@ -717,6 +720,9 @@ uz_loop:
 	jsr	load_rle_gr
 
 	jsr	gr_copy_to_current
+
+	bit	FULLGR			; back to full graphics
+
 	jsr	page_flip
 
 	;=================================
@@ -840,6 +846,8 @@ peanut_loop:
 ;======================
 ; Accelerate
 ;======================
+	bit	SET_GR
+
 	lda	#>(collider_ui_rle)
 	sta	GBASH
 	lda	#<(collider_ui_rle)
@@ -891,7 +899,6 @@ peanut_loop2:
 	bpl	peanut_loop2
 	bit	KEYRESET
 
-	bit     SET_GR
 
 ;===============================
 ;===============================
@@ -899,22 +906,23 @@ peanut_loop2:
 ;===============================
 ;===============================
 
-	;=============================
-	; Load background to $c00
-
-	lda	#>(open_soda_rle)
+	lda	#>(soda_bg_rle)
 	sta	GBASH
-	lda	#<(open_soda_rle)
+	lda	#<(soda_bg_rle)
 	sta	GBASL
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
-	;=================================
-	; copy $c00 to both pages $400/$800
-
 	jsr	gr_copy_to_current
 	jsr	page_flip
-	jsr	gr_copy_to_current
+
+	lda	#<soda_sequence
+	sta	INTRO_LOOPL
+	lda	#>soda_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence
+
 
 open_soda_loop:
 	lda	KEYPRESS
@@ -938,12 +946,8 @@ open_soda_loop:
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
-	;=================================
-	; copy $c00 to both pages $400/$800
-
 	jsr	gr_copy_to_current
 	jsr	page_flip
-	jsr	gr_copy_to_current
 
 drinking_loop:
 	lda	KEYPRESS
@@ -1585,7 +1589,7 @@ powerup_sequence:
 ; Cursor sequence
 
 cursor_sequence:
-	.byte	20
+	.byte	60
 	.word	cursor01_rle
 	.byte	20
 	.word	cursor02_rle
@@ -1634,3 +1638,29 @@ accelerator:
 	.byte 0,17, ": _________:_:",0
 	.byte 0,18, ":/_________:/",0
 	.byte 255
+
+
+; Power-up sequence
+
+soda_sequence:
+	.byte	20
+	.word	soda01_rle
+	.byte	20
+	.word	soda02_rle
+	.byte	20
+	.word	soda03_rle
+	.byte	20
+	.word	soda04_rle
+	.byte	20
+	.word	soda05_rle
+	.byte	20
+	.word	soda06_rle
+	.byte	20
+	.word	soda07_rle
+	.byte	20
+	.word	soda08_rle
+	.byte	20
+	.word	soda09_rle
+	.byte	20
+	.word	soda09_rle
+	.byte	0
