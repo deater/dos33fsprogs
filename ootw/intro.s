@@ -699,9 +699,9 @@ scanner:
 	; small circle  / | - / nothing (pause)
 	; big circle    / | - / nothing (pause)
 
-	jsr	gr_copy_to_current_40x40
-	jsr	draw_dna
-	jsr	page_flip
+;	jsr	gr_copy_to_current_40x40
+;	jsr	draw_dna
+;	jsr	page_flip
 
 	; approx one rotation until "Good evening"
 	; two rotation, then switch to key + Ferrari
@@ -1230,6 +1230,11 @@ run_sequence_static:
 	ldy	#0				; init
 
 run_sequence_static_loop:
+
+	lda	(INTRO_LOOPL),Y			; draw DNA
+	sta	DNA_OUT
+	iny
+
 	lda	(INTRO_LOOPL),Y			; pause for time
 	beq	run_sequence_static_done
 	tax
@@ -1240,7 +1245,7 @@ run_sequence_static_loop:
 	lda	#8				; set up static loop
 	sta	STATIC_LOOPER
 
-	sty	INTRO_LOOPER		; save for later
+	sty	INTRO_LOOPER			; save for later
 
 static_loop:
 
@@ -1269,6 +1274,12 @@ static_loop:
 
 	jsr	gr_overlay_40x40_noload
 
+	lda	DNA_OUT
+	beq	no_dna
+
+	jsr	draw_dna
+
+no_dna:
 	jsr	page_flip
 
 	ldy	INTRO_LOOPER
@@ -1573,18 +1584,22 @@ scanning_sequence:
 ; AI sequence
 
 ai_sequence:
-	.byte	50
+	.byte	0,50		; pause at start, no dna
 	.word	ai01_rle	; slices
-	.byte	50
-	.word	ai02_rle	; slices_zoom
-	.byte	50
-	.word	ai03_rle	; little circle
-	.byte	50
-	.word	ai04_rle	; big circle
-	.byte	0
 
-;	.word	ai05_rle	; key
-;	.byte	50
+	.byte	0,50		; pause at start, no dna
+	.word	ai02_rle	; slices_zoom
+
+	.byte	0,50		; pasue as start, no dna
+	.word	ai03_rle	; little circle
+
+	.byte	0,50		; pause at start, no dna
+	.word	ai04_rle	; big circle
+
+	.byte	1,100		; pause longer, yes dna
+	.word	ai05_rle	; key
+
+	.byte	0,0
 ;	.word	ai05_rle	; key
 ;	.byte	0
 
@@ -1718,8 +1733,11 @@ draw_dna_loop:
 	lda     #26
         sta     XPOS
 
-	lda	DNA_PROGRESS
-;	lsr
+	lda	DNA_COUNT		; 0, 4, 8, 12, 16....
+	lsr
+	clc
+	adc	DNA_PROGRESS		; 0,2,4,6,8,...
+
 	and	#$e
 	tax
 
@@ -1728,7 +1746,7 @@ draw_dna_loop:
 	lda     dna_list+1,X
 	sta	INH
 
-        jsr     put_sprite
+	jsr	put_sprite
 
 	lda	DNA_COUNT
 	clc
@@ -1737,6 +1755,9 @@ draw_dna_loop:
 
 	cmp	#28
 	bne	draw_dna_loop
+
+	inc	DNA_PROGRESS
+	inc	DNA_PROGRESS
 
 	rts
 
@@ -1748,6 +1769,7 @@ dna_list:
 	.word dna4_sprite
 	.word dna5_sprite
 	.word dna6_sprite
+	.word dna7_sprite
 
 dna0_sprite:
 	.byte   $7,$2
@@ -1783,3 +1805,8 @@ dna6_sprite:
 	.byte   $7,$2
 	.byte   $CC,$40,$40,$40,$40,$40,$66
 	.byte   $0C,$00,$00,$00,$00,$00,$06
+
+dna7_sprite:
+	.byte   $7,$2
+	.byte   $66,$40,$40,$40,$40,$40,$cc
+	.byte   $06,$00,$00,$00,$00,$00,$0c
