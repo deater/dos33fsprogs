@@ -21,7 +21,7 @@ intro:
 	lda	#0
 	sta	DISP_PAGE
 
-	jmp	scanner2
+	jmp	peanutos
 
 ;===============================
 ;===============================
@@ -809,6 +809,9 @@ spin_on_key:
 ;===============================
 ; Peanut OS
 ;===============================
+
+peanutos:
+
 	;           1         2         3
 	; 0123456789012345678901234567890123456789
 	;
@@ -834,15 +837,82 @@ spin_on_key:
 
 	bit     SET_TEXT
 
+	; wait 1s
 
+	ldx	#60
+	jsr	long_wait
+
+	lda	#1
+	sta	CURSOR_COUNT
+
+project_23_loop:
 	; RUN PROJECT 23# (typed)
 	; #
 
+	lda	#$a0
+	jsr	clear_top_a
+	jsr	clear_bottom
 
-peanut_loop:
-	lda	KEYPRESS
-	bpl	peanut_loop
-	bit	KEYRESET
+	lda	#<peanut
+	sta	OUTL
+	lda	#>peanut
+	sta	OUTH
+
+	jsr	move_and_print_list
+
+	; $550
+
+	lda	#$5
+	clc
+	adc	DRAW_PAGE
+	sta	OUTH
+	lda	#$52
+	sta	OUTL
+
+	ldy	#0
+print_project23_loop:
+
+	lda	project_23,Y
+	eor	#$80
+	sta	(OUTL),Y
+
+	iny
+	cpy	CURSOR_COUNT
+	bne	print_project23_loop
+
+	lda	#' '
+	sta	(OUTL),Y
+
+	jsr	page_flip
+
+	ldx	#15
+	jsr	long_wait
+
+	inc	CURSOR_COUNT
+	lda	CURSOR_COUNT
+	cmp	#15
+	bne	project_23_loop
+
+	ldx	#20			; brief pasue at end of line
+	jsr	long_wait
+
+	lda	#(' '|$80)		; clear out last cursor
+	sta	(OUTL),Y
+
+	lda	#' '			; put cursor on next line
+	sta	$5d2			; both pages
+	sta	$9d2
+
+
+	; wait 1s
+
+	ldx	#100
+	jsr	long_wait
+
+;peanut_loop:
+;	lda	KEYPRESS
+;	bpl	peanut_loop
+;	bit	KEYRESET
 
 
 
@@ -1705,8 +1775,10 @@ peanut:
 	.byte 0,2,"COPYRIGHT (C) 1977 PEANUT COMPUTER, INC.",0
 	.byte 0,3,"ALL RIGHTS RESERVED.",0
 	.byte 0,5,"CDOS VERSION 5.01",0
-	.byte 0,18,"> ",0
+	.byte 0,18,"> ",(' '|$80),0
 	.byte 255
+project_23:
+	.byte "RUN PROJECT 23",0
 
 accelerator:
 	.byte 0,0,  "MODIFICATION OF PARAMETERS",0
