@@ -117,6 +117,47 @@ gr_copy_line_40:
 
 
 	;=========================================================
+	; gr_copy_to_current_40x40
+	;=========================================================
+	; Take image in 0xc00
+	; 	Copy to DRAW_PAGE
+	;	Actually copy lines 0..39
+	; Don't over-write bottom 4 lines of text
+gr_copy_to_current_40x40:
+
+	ldx	#0
+gc_40x40_loop:
+	lda	gr_offsets,x
+	sta	OUTL
+	sta	INL
+	lda	gr_offsets+1,x
+	clc
+	adc	DRAW_PAGE
+	sta	OUTH
+
+	lda	gr_offsets+1,x
+	clc
+	adc	#$8
+	sta	INH
+
+	ldy	#39
+gc_40x40_inner:
+	lda	(INL),Y
+	sta	(OUTL),Y
+
+	dey
+	bpl	gc_40x40_inner
+
+	inx
+	inx
+
+	cpx	#40
+	bne	gc_40x40_loop
+
+	rts								; 6
+
+
+	;=========================================================
 	; gr_make_quake
 	;=========================================================
 	; Take image in 0xc00

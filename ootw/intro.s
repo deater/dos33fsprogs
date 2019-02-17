@@ -674,8 +674,10 @@ scanner:
 	jsr	clear_bottom
 	bit	TEXTGR			; split graphics/text
 
-	jsr	gr_copy_to_current
+	jsr	gr_copy_to_current_40x40
 	jsr	page_flip
+
+	jsr	clear_bottom
 
 	; Identification (nothing)
 
@@ -1202,7 +1204,7 @@ run_sequence_done:
 
 	;=================================
 	; Display a sequence of images
-	; with static overlay
+	; with /-|/ static overlay
 
 run_sequence_static:
 	ldy	#0				; init
@@ -1231,7 +1233,7 @@ static_loop:
 	lda	#$10			; load to $1000
 	jsr	load_rle_gr
 
-	jsr	gr_overlay
+	jsr	gr_overlay_40x40
 
 	ldy	STATIC_LOOPER
 	lda	static_pattern,Y
@@ -1242,10 +1244,10 @@ static_loop:
 	lda	#$10			; load to $1000
 	jsr	load_rle_gr
 
-	jsr	gr_overlay_noload
 
+	; force 40x40 overlay
 
-
+	jsr	gr_overlay_40x40_noload
 
 	jsr	page_flip
 

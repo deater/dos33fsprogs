@@ -1,4 +1,22 @@
 	;=========================================================
+	; gr_overlay, 40x40 version
+	;=========================================================
+	; copy 0xc00 to DRAW_PAGE
+	; then overlay with 0x1000, treating 0xa as transparent
+
+gr_overlay_40x40:
+	jsr	gr_copy_to_current_40x40
+
+gr_overlay_40x40_noload:
+	lda	#40
+	sta	CH		; xsize is in CH			; 3
+	lda	#38
+	sta	CV		; ysize is in CV			; 3
+
+	jmp	gr_overlay_custom
+
+
+	;=========================================================
 	; gr_overlay, 40x48 version
 	;=========================================================
 	; copy 0xc00 to DRAW_PAGE
@@ -9,11 +27,15 @@ gr_overlay:
 
 
 gr_overlay_noload:
-	ldy	#0
+
 	lda	#40
 	sta	CH		; xsize is in CH			; 3
 	lda	#46
 	sta	CV		; ysize is in CV			; 3
+
+gr_overlay_custom:
+
+	ldy	#0
 
 gr_overlay_loop:
 
@@ -101,15 +123,3 @@ gr_overlay_done_draw:
 
 
 	rts				; return			; 6
-
-
-
-
-
-
-
-
-
-
-
-

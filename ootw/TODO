@@ -1,5 +1,8 @@
 TODO:
 
+general:
++ move gr_make_quake out of gr_copy
+
 movement -- note these are hard due to limitations of the Apple II keyboard
 + ability to run
 + ability to jump
