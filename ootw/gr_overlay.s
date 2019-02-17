@@ -87,7 +87,7 @@ gr_overlay_bottom:
 	lda	COLOR			; re-load color			; 3
 	and	#$0f			; check if bottom nibble zero	; 2
 	cmp	#$0a
-	bne	put_sprite_all		; if not, skip ahead		; 2nt/3
+	bne	overlay_put_sprite_all	; if not, skip ahead		; 2nt/3
 								;=============
 								;	7/8
 
@@ -107,7 +107,7 @@ gr_overlay_mask:
 
 	jmp	gr_overlay_done_draw	; we are done			; 3
 
-put_sprite_all:
+overlay_put_sprite_all:
 	lda	COLOR			; load color			; 3
 	sta	(OUTL),Y		; and write it out		; 6
 

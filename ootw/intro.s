@@ -679,8 +679,13 @@ scanner:
 
 	jsr	clear_bottom
 
+	;=============================
 	; Identification (nothing)
+	;=============================
 
+	lda	#0
+	sta	DNA_OUT
+	sta	DNA_PROGRESS
 
 	lda	#<ai_sequence
 	sta	INTRO_LOOPL
@@ -689,17 +694,31 @@ scanner:
 
 	jsr	run_sequence_static
 
-
 	; slices        / | - / nothing (pause)
 	; more slices   / | - / nothing (pause)
 	; small circle  / | - / nothing (pause)
 	; big circle    / | - / nothing (pause)
+
+	jsr	gr_copy_to_current_40x40
+	jsr	draw_dna
+	jsr	page_flip
+
+	; approx one rotation until "Good evening"
+	; two rotation, then switch to key + Ferrari
+	; three rotations, then done
+
 	;                   -   !!! DNA START 1 line
 	;                     /   !!! DNA start 1 line
 	;                         !!! DNA 2 lines
 	; DNA 5 lines
 	; Good evening professor.
 	; DNA all lines
+
+	; Triggers:
+	; + DNA starts midway through big circle
+	; + Good evening printed at DNA_OUT=5
+	; + Switch to key, print ferrari
+
 
 	; Key             |
 	; I see you have driven here in your \ Ferrari.
@@ -1129,6 +1148,7 @@ gone_loop:
 .include "gr_vlin.s"
 .include "gr_plot.s"
 .include "gr_fast_clear.s"
+.include "gr_putsprite.s"
 .include "text_print.s"
 
 ; background graphics
@@ -1554,18 +1574,19 @@ scanning_sequence:
 
 ai_sequence:
 	.byte	50
-	.word	ai01_rle
+	.word	ai01_rle	; slices
 	.byte	50
-	.word	ai02_rle
+	.word	ai02_rle	; slices_zoom
 	.byte	50
-	.word	ai03_rle
+	.word	ai03_rle	; little circle
 	.byte	50
-	.word	ai04_rle
-	.byte	50
-	.word	ai05_rle
-	.byte	50
-	.word	ai05_rle
+	.word	ai04_rle	; big circle
 	.byte	0
+
+;	.word	ai05_rle	; key
+;	.byte	50
+;	.word	ai05_rle	; key
+;	.byte	0
 
 static_pattern:
 	.word	blank_rle	; 0
@@ -1666,3 +1687,99 @@ soda_sequence:
 	.byte	20
 	.word	soda09_rle
 	.byte	0
+
+
+
+	; Scanning text
+
+good_evening:
+	.byte 2,21,"GOOD EVENING PROFESSOR.",0
+ferrari:
+	.byte 2,21,"I SEE YOU HAVE DRIVEN HERE IN YOUR",0
+	.byte 2,22,"FERRARI.",0
+
+
+
+
+	;====================================
+	; Draw DNA
+	;====================================
+draw_dna:
+
+	lda	#0	; count
+	sta	DNA_COUNT
+
+draw_dna_loop:
+	clc
+	lda	DNA_COUNT
+	adc	#10
+	sta	YPOS
+
+	lda     #26
+        sta     XPOS
+
+	lda	DNA_PROGRESS
+;	lsr
+	and	#$e
+	tax
+
+	lda	dna_list,X
+	sta	INL
+	lda     dna_list+1,X
+	sta	INH
+
+        jsr     put_sprite
+
+	lda	DNA_COUNT
+	clc
+	adc	#4
+	sta	DNA_COUNT
+
+	cmp	#28
+	bne	draw_dna_loop
+
+	rts
+
+dna_list:
+	.word dna0_sprite
+	.word dna1_sprite
+	.word dna2_sprite
+	.word dna3_sprite
+	.word dna4_sprite
+	.word dna5_sprite
+	.word dna6_sprite
+
+dna0_sprite:
+	.byte   $7,$2
+	.byte   $66,$40,$40,$40,$40,$40,$cc
+	.byte   $06,$00,$00,$00,$00,$00,$0c
+
+dna1_sprite:
+	.byte   $7,$2
+	.byte   $00,$66,$40,$40,$40,$cc,$00
+	.byte   $00,$06,$00,$00,$00,$0c,$00
+
+dna2_sprite:
+	.byte   $7,$2
+	.byte   $00,$00,$66,$40,$cc,$00,$00
+	.byte   $00,$00,$06,$00,$0c,$00,$00
+
+dna3_sprite:
+	.byte   $7,$2
+	.byte   $00,$00,$00,$66,$00,$00,$00
+	.byte   $00,$00,$00,$06,$00,$00,$00
+
+dna4_sprite:
+	.byte   $7,$2
+	.byte   $00,$00,$CC,$40,$66,$00,$00
+	.byte   $00,$00,$0C,$00,$06,$00,$00
+
+dna5_sprite:
+	.byte   $7,$2
+	.byte   $00,$CC,$40,$40,$40,$66,$00
+	.byte   $00,$0C,$00,$00,$00,$06,$00
+
+dna6_sprite:
+	.byte   $7,$2
+	.byte   $CC,$40,$40,$40,$40,$40,$66
+	.byte   $0C,$00,$00,$00,$00,$00,$06
