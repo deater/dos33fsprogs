@@ -21,7 +21,7 @@ intro:
 	lda	#0
 	sta	DISP_PAGE
 
-	jmp	keypad
+	jmp	scanner
 
 ;===============================
 ;===============================
@@ -586,11 +586,6 @@ keypad:
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
-
-;	jsr	gr_copy_to_current
-;	jsr	page_flip
-
-
 	lda	#<approach_sequence
 	sta	INTRO_LOOPL
 	lda	#>approach_sequence
@@ -645,6 +640,7 @@ keypad:
 ;===============================
 ;===============================
 
+scanner:
 	lda	#>(scanner_rle)
 	sta	GBASH
 	lda	#<(scanner_rle)
@@ -805,20 +801,21 @@ peanut_loop:
 	; MODIFICATION OF PARAMETERS
 	; RELATING TO PARTICLE
 	; ACCELERATOR (SYNCHOTRON).
-	;		 E: 23%
-	;		 g: .005
-	;
-	;		 RK: 77.2L
-	;
-	;		 opt: g+
-	;
-	;		  Shield:
-	;		 1: OFF
-	;		 2: ON
-	;		 3: ON
-	;
-	;		 P^: 1
-
+	;____________    E: 23%
+	; ROOM 3   X:\	 g: .005
+	;           : :
+	;	    : :  RK: 77.2L
+	;           : :
+	;___________:_:	 opt: g+
+	; ROOM 1   X: :
+	;	    : :	  Shield:
+	;	    : :	 1: OFF
+	;	    : :	 2: ON
+	;	    : :	 3: ON
+	;           : :
+	;	    : :	 P^: 1
+        ; __________: :
+	;/__________|/
 
 	lda	#$a0
 	jsr	clear_top_a
@@ -838,6 +835,20 @@ peanut_loop:
 
 	; FLASH: RUN EXPERIMENT ?
 	;				Y
+
+
+;======================
+; Accelerate
+;======================
+	lda	#>(collider_ui_rle)
+	sta	GBASH
+	lda	#<(collider_ui_rle)
+	sta	GBASL
+	lda	#$c			; load to off-screen $c00
+	jsr	load_rle_gr
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
 
 
 	; --- Theoretical study ---
@@ -1139,11 +1150,12 @@ gone_loop:
 
 .include "intro_graphics/06_console/intro_desktop.inc"
 .include "intro_graphics/06_console/intro_cursor.inc"
+.include "intro_graphics/06_console/intro_collider_ui.inc"
 
 .include "intro_graphics/07_soda/intro_open_soda.inc"
 .include "intro_graphics/07_soda/intro_drinking.inc"
 
-.include "intro_collider_ui.inc"
+
 .include "intro_tunnel1.inc"
 .include "intro_tunnel2.inc"
 .include "intro_gone.inc"
@@ -1602,16 +1614,23 @@ peanut:
 	.byte 255
 
 accelerator:
-	.byte 0,0,"MODIFICATION OF PARAMETERS",0
-	.byte 0,1,"RELATING TO PARTICLE",0
-	.byte 0,2,"ACCELERATOR (SYNCHOTRON).",0
-	.byte 15,4,"E: 23%",0
-	.byte 15,5,"G: .005",0
-	.byte 15,6,"RK: 77.2L",0
-	.byte 15,8,"OPT: G+",0
-	.byte 15,10," SHIELD:",0
-	.byte 15,11,"1: OFF",0
-	.byte 15,12,"2: ON",0
-	.byte 15,13,"3: ON",0
-	.byte 15,15,"P^: 1",0
+	.byte 0,0,  "MODIFICATION OF PARAMETERS",0
+	.byte 0,1,  "RELATING TO PARTICLE",0
+	.byte 0,2,  "ACCELERATOR (SYNCHOTRON).",0
+	.byte 0,3,  " ___________",0
+	.byte 0,4,  ":ROOM 3   ",('+'|$80),":\  E: 23%",0
+	.byte 0,5,  ":          : : G: .005",0
+	.byte 0,6,  ":          : : RK: 77.2L",0
+	.byte 0,7,  ":          : :",0
+	.byte 0,8,  ":          : : OPT: G+",0
+	.byte 0,9,  ":          : :",0
+	.byte 0,10, ":__________:_:  SHIELD:",0
+	.byte 0,11, ":ROOM 1   ",('+'|$80),": : 1: OFF",0
+	.byte 0,12, ":          : : 2: ON",0
+	.byte 0,13, ":          : : 3: ON",0
+	.byte 0,14, ":          : :",0
+	.byte 0,15, ":          : : P^: 1",0
+	.byte 0,16, ":          : :",0
+	.byte 0,17, ": _________:_:",0
+	.byte 0,18, ":/_________:/",0
 	.byte 255
