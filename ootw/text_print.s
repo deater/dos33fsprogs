@@ -1,3 +1,33 @@
+print_both_pages:
+	lda	DRAW_PAGE
+	pha
+
+	lda	OUTL
+	pha
+	lda	OUTH
+	pha
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	jsr	move_and_print
+
+	pla
+	sta	OUTH
+	pla
+	sta	OUTL
+
+	lda	#4
+	sta	DRAW_PAGE
+
+	jsr	move_and_print
+
+	pla
+	sta	DRAW_PAGE
+
+
+	rts
+
 	;================================
 	; move_and_print
 	;================================

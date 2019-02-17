@@ -21,7 +21,7 @@ intro:
 	lda	#0
 	sta	DISP_PAGE
 
-	jmp	scanner
+	jmp	scanner2
 
 ;===============================
 ;===============================
@@ -664,6 +664,8 @@ scanner:
 ;===============================
 ;===============================
 
+scanner2:
+
 	lda	#>(ai_bg_rle)
 	sta	GBASH
 	lda	#<(ai_bg_rle)
@@ -724,10 +726,28 @@ scanner:
 	; I see you have driven here in your \ Ferrari.
 	; Key                - / nothing (pause)
 
-uz_loop:
-	lda	KEYPRESS
-	bpl	uz_loop
-	bit	KEYRESET
+
+	ldx	#35
+spin_on_key:
+	txa
+	pha
+
+	jsr	draw_dna
+	jsr	page_flip
+
+	pla
+	tax
+
+	lda	#250
+	jsr	WAIT
+
+	dex
+	bne	spin_on_key
+
+;uz_loop:
+;	lda	KEYPRESS
+;	bpl	uz_loop
+;	bit	KEYRESET
 
 ;===============================
 ; Sitting at Desk
@@ -757,6 +777,8 @@ uz_loop:
 
 	jsr	run_sequence
 
+	ldx	#80		; pause a bit
+	jsr	long_wait
 
 	;=================================
 	; Zoom in, mouse move
@@ -779,6 +801,9 @@ uz_loop:
 	sta	INTRO_LOOPH
 
 	jsr	run_sequence
+
+	ldx	#40		; pause a bit
+	jsr	long_wait
 
 
 ;===============================
@@ -1238,11 +1263,39 @@ run_sequence_static_loop:
 	lda	(INTRO_LOOPL),Y			; pause for time
 	beq	run_sequence_static_done
 	tax
+
+	lda	DNA_OUT
+	bne	pause_draw_dna
+
 	jsr	long_wait
+	jmp	done_pause_dna
+pause_draw_dna:
+	txa
+	pha
+
+	tya
+	pha
+
+	jsr	draw_dna
+	jsr	page_flip
+
+	pla
+	tay
+
+	pla
+	tax
+
+	lda	#250
+	jsr	WAIT
+
+	dex
+	bne	pause_draw_dna
+
+done_pause_dna:
 
 	iny					; point to overlay
 
-	lda	#8				; set up static loop
+	lda	#10				; set up static loop
 	sta	STATIC_LOOPER
 
 	sty	INTRO_LOOPER			; save for later
@@ -1310,7 +1363,6 @@ long_wait:
 	dex
 	bne	long_wait
 	rts
-
 
 ;========================
 ; Car driving up sequence
@@ -1596,7 +1648,7 @@ ai_sequence:
 	.byte	0,50		; pause at start, no dna
 	.word	ai04_rle	; big circle
 
-	.byte	1,100		; pause longer, yes dna
+	.byte	1,20		; pause longer, yes dna
 	.word	ai05_rle	; key
 
 	.byte	0,0
@@ -1605,21 +1657,22 @@ ai_sequence:
 
 static_pattern:
 	.word	blank_rle	; 0
-	.word	static01_rle	; 2
-	.word	static03_rle	; 4
-	.word	static02_rle	; 6
-	.word	static01_rle	; 8
+	.word	blank_rle	; 2
+	.word	static01_rle	; 4
+	.word	static03_rle	; 6
+	.word	static02_rle	; 8
+	.word	static01_rle	; 10
 
 ; Power-up sequence
 
 powerup_sequence:
-	.byte	30
-	.word	powerup01_rle
 	.byte	20
+	.word	powerup01_rle
+	.byte	60
 	.word	powerup02_rle
 	.byte	20
 	.word	powerup03_rle
-	.byte	80
+	.byte	20
 	.word	powerup03_rle
 	.byte	0
 
@@ -1629,7 +1682,7 @@ powerup_sequence:
 cursor_sequence:
 	.byte	60
 	.word	cursor01_rle
-	.byte	20
+	.byte	40
 	.word	cursor02_rle
 	.byte	20
 	.word	cursor03_rle
@@ -1759,6 +1812,31 @@ draw_dna_loop:
 	inc	DNA_PROGRESS
 	inc	DNA_PROGRESS
 
+	; see if printing message
+	lda	DNA_PROGRESS
+	cmp	#10
+	bne	no_good_message
+
+	lda	#<good_evening
+	sta	OUTL
+	lda	#>good_evening
+	sta	OUTH
+	jsr	print_both_pages
+	jmp	no_ferrari_message
+
+no_good_message:
+	cmp	#$30
+	bne	no_ferrari_message
+
+	lda	#<ferrari
+	sta	OUTL
+	lda	#>ferrari
+	sta	OUTH
+	jsr	print_both_pages
+	jsr	print_both_pages
+
+
+no_ferrari_message:
 	rts
 
 dna_list:
