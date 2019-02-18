@@ -1316,27 +1316,6 @@ drinking_loop:
 ;===============================
 ;===============================
 
-	; THE EXPERIMENT WILL BEGIN IN 5  SECONDS
-
-	; Shield 9A.5F Ok
-	; Flux % 5.0177 Ok
-	; CDI Vector ok
-	; %%%ddd ok
-	; Race-Track ok
-	;    -----REPEAT
-	; 4  SECONDS
-	; Shield "
-	;    -----REPEAT
-	; 3 SECONDS
-	; Sheild "
-	;    -----REPEAT
-	; 2 SECONDS
-	; 1 SECONDS (at CDI Vector)
-	; 0 SECONDS (at %%%)
-	; EXPERIMENT LINES GOES AWAY
-	; Stop printing at race track
-	; dark blue going around track
-
 	lda	#>(collider_rle)
 	sta	GBASH
 	lda	#<(collider_rle)
@@ -1344,13 +1323,136 @@ drinking_loop:
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
-	jsr	gr_copy_to_current
+	bit	TEXTGR
+	jsr	clear_bottoms
+
+	; THE EXPERIMENT WILL BEGIN IN 5  SECONDS
+	jsr	gr_copy_to_current_40x40
 	jsr	page_flip
 
-collider_ui_loop:
-	lda	KEYPRESS
-	bpl	collider_ui_loop
-	bit	KEYRESET
+	lda	#<experiment
+	sta	OUTL
+	lda	#>experiment
+	sta	OUTH
+	jsr	print_both_pages
+
+	lda	#<five
+	sta	OUTL
+	lda	#>five
+	sta	OUTH
+	jsr	print_both_pages
+
+	lda	#0
+	sta	MESSAGE_COUNT
+	sta	MESSAGE_CURRENT
+	sta	TIME_COUNT
+message_loop:
+
+	; Shield 9A.5F Ok
+	; Flux % 5.0177 Ok
+	; CDI Vector ok
+	; %%%ddd ok
+	; Race-Track ok
+	;    -----REPEAT	; 10
+
+	ldx	MESSAGE_CURRENT
+	lda	message_list,X
+	sta	OUTL
+	lda	message_list+1,X
+	sta	OUTH
+	jsr	print_both_pages
+
+	inc	MESSAGE_CURRENT
+	inc	MESSAGE_CURRENT
+	lda	MESSAGE_CURRENT
+	cmp	#10
+	bne	not_ten
+	lda	#0
+	sta	MESSAGE_CURRENT
+not_ten:
+
+	; 4  SECONDS
+	; Shield "
+	;    -----REPEAT	; 10
+
+	; 3 SECONDS
+	; Sheild "
+	;    -----REPEAT	; 10
+
+	; 2 SECONDS		; 10
+
+	; 1 SECONDS (at CDI Vector)	; 10
+	; 0 SECONDS (at %%%)	; 10
+
+	ldx	#10
+	jsr	long_wait
+
+	inc	CURSOR_COUNT
+
+	lda	CURSOR_COUNT
+	and	#$07
+	bne	not_time_oflo
+
+	inc	TIME_COUNT
+	inc	TIME_COUNT
+
+	; update seconds
+
+	ldx	TIME_COUNT
+	lda	times,X
+	sta	OUTL
+	lda	times+1,X
+	sta	OUTH
+	jsr	print_both_pages
+
+not_time_oflo:
+
+	lda	CURSOR_COUNT
+	cmp	#42
+	bne	not_time_gone
+
+	; clear out when near end
+	jsr	clear_bottoms
+
+not_time_gone:
+
+	lda	CURSOR_COUNT
+	cmp	#48
+	bne	message_loop
+
+	;=============================
+	; EXPERIMENT LINES GOES AWAY
+	; Stop printing at race track
+	; dark blue going around track
+
+	; Note: goes around at least 4 times
+
+	jsr	clear_bottoms
+
+	ldx	#30
+	jsr	long_wait
+
+	; 1 times around? (total = 8)
+
+	lda	#0
+	sta	PARTICLE_COUNT
+
+particle_loop2:
+	jsr	gr_copy_to_current_40x40
+	jsr	plot_particle
+	jsr	page_flip
+	ldx	#20
+	jsr	long_wait
+
+	lda	PARTICLE_COUNT
+	cmp	#10
+	bne	particle_loop2
+
+
+;collider_ui_loop:
+;	lda	KEYPRESS
+;	bpl	collider_ui_loop
+;	bit	KEYRESET
 
 
 ;===============================
@@ -1368,6 +1470,7 @@ collider_ui_loop:
 
 	jsr	gr_copy_to_current
 	jsr	page_flip
+	bit	FULLGR
 
 outside_loop:
 	lda	KEYPRESS
@@ -2345,10 +2448,10 @@ practical_verification:
 
 	; THE EXPERIMENT WILL BEGIN IN 20 SECONDS
 experiment:
-	.byte 0,21,"THE EXPERIMENT WILL BEGIN IN 20 SECONDS",0
-	.byte 29,21,"19",0
-	.byte 29,21,"18",0
-	.byte 29,21,"17",0
+	.byte 0,20,"THE EXPERIMENT WILL BEGIN IN 20 SECONDS",0
+	.byte 29,20,"19",0
+	.byte 29,20,"18",0
+	.byte 29,20,"17",0
 
 
 	; Particle co-ordinates
@@ -2401,4 +2504,39 @@ shield_sequence:
 	.word collider_p200_rle
 	.byte 0
 	.word collider_p200_rle
+
+message0:
+	.byte	8,22,"SHIELD 9A.5F OK ",0
+message1:
+	.byte	8,22,"FLUX % 5.0177 OK",0
+message2:
+	.byte	8,22,"CDI VECTOR OK   ",0
+message3:
+	.byte	8,22,"%%%DDD OK       ",0
+message4:
+	.byte	8,22,"RACE-TRACK OK   ",0
+
+message_list:
+	.word	message0
+	.word	message1
+	.word	message2
+	.word	message3
+	.word	message4
+
+
+five:
+	.byte 29,20,"5 ",0
+four:
+	.byte 29,20,"4 ",0
+three:
+	.byte 29,20,"3 ",0
+two:
+	.byte 29,20,"2 ",0
+one:
+	.byte 29,20,"1 ",0
+zero:
+	.byte 29,20,"0 ",0
+
+times:
+	.word five,four,three,two,one,zero
 
