@@ -1284,6 +1284,9 @@ soda:
 	jsr	run_sequence
 
 
+;	ldx	#30
+;	jsr	long_wait
+
 ;open_soda_loop:
 ;	lda	KEYPRESS
 ;	bpl	open_soda_loop
@@ -1295,20 +1298,27 @@ soda:
 ;===============================
 ;===============================
 
-	lda	#>(drinking_rle)
+	lda	#>(drinking02_rle)
 	sta	GBASH
-	lda	#<(drinking_rle)
+	lda	#<(drinking02_rle)
 	sta	GBASL
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
-	jsr	gr_copy_to_current
-	jsr	page_flip
+	lda	#<drinking_sequence
+	sta	INTRO_LOOPL
+	lda	#>drinking_sequence
+	sta	INTRO_LOOPH
 
-drinking_loop:
-	lda	KEYPRESS
-	bpl	drinking_loop
-	bit	KEYRESET
+	jsr	run_sequence
+
+	ldx	#200
+	jsr	long_wait
+
+;drinking_loop:
+;	lda	KEYPRESS
+;	bpl	drinking_loop
+;	bit	KEYRESET
 
 ;===============================
 ;===============================
@@ -2539,4 +2549,18 @@ zero:
 
 times:
 	.word five,four,three,two,one,zero
+
+
+
+drinking_sequence:
+	.byte 30
+	.word drinking02_rle
+	.byte 30
+	.word drinking03_rle
+	.byte 30
+	.word drinking04_rle
+	.byte 30
+	.word drinking05_rle
+	.byte 0
+	.word drinking05_rle
 
