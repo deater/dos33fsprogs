@@ -21,7 +21,7 @@ intro:
 	lda	#0
 	sta	DISP_PAGE
 
-	jmp	peanutos
+	jmp	scanner
 
 ;===============================
 ;===============================
@@ -2160,8 +2160,25 @@ draw_dna_loop:
 	adc	#4
 	sta	DNA_COUNT
 
+	; for DNA_PROGRESS 0,2,4,6,8,10,12 we only want to print
+	; first X lines (gradually fade in)
+	; after that, draw the whole thing
+
+	lda	DNA_PROGRESS
+	cmp	#14
+	bpl	dna_full
+
+	asl
+	cmp	DNA_COUNT
+	bpl	draw_dna_loop
+	bmi	dna_full_done
+
+dna_full:
+	lda	DNA_COUNT
 	cmp	#28
 	bne	draw_dna_loop
+
+dna_full_done:
 
 	inc	DNA_PROGRESS
 	inc	DNA_PROGRESS
