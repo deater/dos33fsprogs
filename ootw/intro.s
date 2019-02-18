@@ -2347,9 +2347,9 @@ particles:
 	.byte	21,15
 	.byte 	22,7
 	.byte	27,2
-	.byte 	31,5
+	.byte 	32,6
 	.byte	34,13
-	.byte 	32,24
+	.byte 	31,26
 	.byte 	27,28
 
 	;======================
