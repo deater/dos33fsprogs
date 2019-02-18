@@ -1033,12 +1033,6 @@ not_yes:
 	dec	CURSOR_COUNT
 	bpl	flash_loop
 
-;peanut_loop:
-;	lda	KEYPRESS
-;	bpl	peanut_loop
-;	bit	KEYRESET
-
-
 
 ;======================
 ; Accelerate
@@ -1073,6 +1067,9 @@ not_yes:
 	; INJECTION of particles
 	; into synchrotron
 
+	lda	#0
+	sta	PARTICLE_COUNT
+
 	lda	#<phase0
 	sta	OUTL
 	lda	#>phase0
@@ -1080,9 +1077,18 @@ not_yes:
 
 	jsr	move_and_print_list_both_pages
 
-
-	ldx	#30
+	jsr	gr_copy_to_current_40x40
+	jsr	plot_particle
+	jsr	page_flip
+	ldx	#40
 	jsr	long_wait
+
+	jsr	gr_copy_to_current_40x40
+	jsr	plot_particle
+	jsr	page_flip
+	ldx	#40
+	jsr	long_wait
+
 
 	;===========================
 	; - Phase 1:
@@ -1108,15 +1114,25 @@ not_yes:
 
 	jsr	move_and_print_list_both_pages
 
-	ldx	#200
+	; 5 times around? (total = 39)
+
+particle_loop:
+	jsr	gr_copy_to_current_40x40
+	jsr	plot_particle
+	jsr	page_flip
+	ldx	#20
 	jsr	long_wait
+
+	lda	PARTICLE_COUNT
+	cmp	#38
+	bne	particle_loop
 
 	;=====================================
 	; - Phase 2:
 	; EJECTION of particles
 	; on the shield.
 
-	; Note: goes around once, then does shield animation
+	; Note: goes around once more, then does shield animation
 
 	jsr	clear_bottoms
 
@@ -1135,9 +1151,22 @@ not_yes:
 
 	jsr	move_and_print_list_both_pages
 
-	ldx	#200
+
+	jsr	gr_copy_to_current_40x40
+	jsr	plot_particle
+	jsr	page_flip
+	ldx	#20
 	jsr	long_wait
 
+	lda	#<shield_sequence
+	sta	INTRO_LOOPL
+	lda	#>shield_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence_40x40
+
+	ldx	#30
+	jsr	long_wait
 
 	;=============================
 	; A  N  A  L  Y  S  I  S
@@ -1158,7 +1187,6 @@ not_yes:
 	sta	OUTH
 
 	jsr	print_both_pages
-
 
 	ldx	#200
 	jsr	long_wait
@@ -1201,6 +1229,9 @@ not_yes:
 	;==========================================
 	; THE EXPERIMENT WILL BEGIN IN 20 SECONDS
 	; 19, 18, 17
+
+	jsr	gr_copy_to_current_40x40
+	jsr	page_flip
 
 	jsr	clear_bottoms
 
@@ -1529,6 +1560,41 @@ run_sequence_loop:
 
 	jmp	run_sequence_loop
 run_sequence_done:
+	rts
+
+
+
+	;====================================
+	; Display a sequence of images 40x40
+
+run_sequence_40x40:
+	ldy	#0
+
+run_sequence_40x40_loop:
+	lda	(INTRO_LOOPL),Y		; get time
+	beq	run_sequence_40x40_done
+	tax
+
+	jsr	long_wait
+
+	iny
+
+	lda	(INTRO_LOOPL),Y
+	sta	GBASL
+	iny
+	lda	(INTRO_LOOPL),Y
+	sta	GBASH
+	iny
+	sty	INTRO_LOOPER		; save for later
+	lda	#$10			; load to $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay_40x40
+	jsr	page_flip
+	ldy	INTRO_LOOPER
+
+	jmp	run_sequence_40x40_loop
+run_sequence_40x40_done:
 	rts
 
 
@@ -2249,7 +2315,7 @@ phase2:
 
 	; A  N  A  L  Y  S  I  S
 analysis:
-	.byte 9,21,"A  N  A  L  Y  S  I  S",0
+	.byte 8,22,"A  N  A  L  Y  S  I  S",0
 
 	; - RESULT:
 	; Probability of creating:
@@ -2273,4 +2339,56 @@ experiment:
 	.byte 29,21,"19",0
 	.byte 29,21,"18",0
 	.byte 29,21,"17",0
+
+
+	; Particle co-ordinates
+particles:
+	.byte	21,23
+	.byte	21,15
+	.byte 	22,7
+	.byte	27,2
+	.byte 	31,5
+	.byte	34,13
+	.byte 	32,24
+	.byte 	27,28
+
+	;======================
+	; plot particle
+	;======================
+plot_particle:
+	; Xcoord in X
+        ; Ycoord in A
+        ; color in COLOR
+
+	lda	#$22
+	sta	COLOR
+
+	lda	PARTICLE_COUNT
+	and	#7
+	asl
+	tay
+	ldx	particles,Y
+	lda	particles+1,Y
+
+	jsr	plot
+
+	inc	PARTICLE_COUNT
+
+	rts
+
+
+
+shield_sequence:
+	.byte 30
+	.word collider_p200_rle
+	.byte 30
+	.word collider_p201_rle
+	.byte 30
+	.word collider_p202_rle
+	.byte 30
+	.word collider_p203_rle
+	.byte 30
+	.word collider_p200_rle
+	.byte 0
+	.word collider_p200_rle
 
