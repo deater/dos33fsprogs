@@ -21,7 +21,7 @@ intro:
 	lda	#0
 	sta	DISP_PAGE
 
-	jmp	scanner
+	jmp	soda
 
 ;===============================
 ;===============================
@@ -1266,16 +1266,13 @@ particle_loop:
 ; Opening Soda
 ;===============================
 ;===============================
-
+soda:
 	lda	#>(soda_bg_rle)
 	sta	GBASH
 	lda	#<(soda_bg_rle)
 	sta	GBASL
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
-
-	jsr	gr_copy_to_current
-	jsr	page_flip
 
 	bit	FULLGR
 
@@ -1287,20 +1284,16 @@ particle_loop:
 	jsr	run_sequence
 
 
-open_soda_loop:
-	lda	KEYPRESS
-	bpl	open_soda_loop
-	bit	KEYRESET
+;open_soda_loop:
+;	lda	KEYPRESS
+;	bpl	open_soda_loop
+;	bit	KEYRESET
 
 ;===============================
 ;===============================
 ; Drinking Soda
 ;===============================
 ;===============================
-
-
-	;=============================
-	; Load background to $c00
 
 	lda	#>(drinking_rle)
 	sta	GBASH
@@ -2090,21 +2083,21 @@ accelerator:
 soda_sequence:
 	.byte	20
 	.word	soda01_rle
-	.byte	20
+	.byte	15
 	.word	soda02_rle
-	.byte	20
+	.byte	15
 	.word	soda03_rle
-	.byte	20
+	.byte	15
 	.word	soda04_rle
-	.byte	20
+	.byte	15
 	.word	soda05_rle
-	.byte	20
+	.byte	15
 	.word	soda06_rle
-	.byte	20
+	.byte	15
 	.word	soda07_rle
-	.byte	20
+	.byte	15
 	.word	soda08_rle
-	.byte	20
+	.byte	15
 	.word	soda09_rle
 	.byte	20
 	.word	soda09_rle
