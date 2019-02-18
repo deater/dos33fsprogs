@@ -65,3 +65,19 @@ Q.  Why are you targeting such an old machine, an original Apple II or II+?
 A.  Well, I own one.  Also there's something about programming on a machine
 	from 1977, whose graphics hardware is a glorified shift register,
 	and is implemented entirely out of 7400 series logic and 555 timers.
+
+
+
+Q.  In the intro, why not have lowercase letters?
+
+A.  The Apple II/II+ only supported uppercase letters by default.
+    Also no "|" character, which explains why some of the ASCII art
+    looks a bit odd.
+
+
+Q.  Does this have joystick support?
+
+A.  It should not be hard to add, and in fact would give better controls
+    than the keyboard.   I don't currently have a joystick though so
+    it's hard to test properly.
+

@@ -1,32 +1,3 @@
-print_both_pages:
-	lda	DRAW_PAGE
-	pha
-
-	lda	OUTL
-	pha
-	lda	OUTH
-	pha
-
-	lda	#0
-	sta	DRAW_PAGE
-
-	jsr	move_and_print
-
-	pla
-	sta	OUTH
-	pla
-	sta	OUTL
-
-	lda	#4
-	sta	DRAW_PAGE
-
-	jsr	move_and_print
-
-	pla
-	sta	DRAW_PAGE
-
-
-	rts
 
 	;================================
 	; move_and_print
@@ -89,10 +60,83 @@ done_print_string:
 	rts
 
 
+	;================================
+	; move and print a list of lines
+	;================================
 move_and_print_list:
 	jsr	move_and_print
 	ldy	#0
 	lda	(OUTL),Y
 	bpl	move_and_print_list
+
+	rts
+
+
+
+	;================================
+	; move and print a list of lines
+	;================================
+move_and_print_list_both_pages:
+	lda	DRAW_PAGE
+	pha
+
+	lda	OUTL
+	pha
+	lda	OUTH
+	pha
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	jsr	move_and_print_list
+
+	pla
+	sta	OUTH
+	pla
+	sta	OUTL
+
+	lda	#4
+	sta	DRAW_PAGE
+
+	jsr	move_and_print_list
+
+	pla
+	sta	DRAW_PAGE
+
+
+	rts
+
+
+
+	;=======================
+	; print to both pages
+	;=======================
+print_both_pages:
+	lda	DRAW_PAGE
+	pha
+
+	lda	OUTL
+	pha
+	lda	OUTH
+	pha
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	jsr	move_and_print
+
+	pla
+	sta	OUTH
+	pla
+	sta	OUTL
+
+	lda	#4
+	sta	DRAW_PAGE
+
+	jsr	move_and_print
+
+	pla
+	sta	DRAW_PAGE
+
 
 	rts

@@ -1055,46 +1055,179 @@ not_yes:
 	jsr	gr_copy_to_current
 	jsr	page_flip
 
+	bit	TEXTGR
+	jsr	clear_bottoms
 
-	; --- Theoretical study ---
-	;
+	; --- Theoretical Study ---
+	; make this inverse?
+
+	lda	#<theoretical_study
+	sta	OUTL
+	lda	#>theoretical_study
+	sta	OUTH
+
+	jsr	print_both_pages
+
+	;==========================
 	; - Phase 0:
 	; INJECTION of particles
 	; into synchrotron
 
-	; dark blue going around
+	lda	#<phase0
+	sta	OUTL
+	lda	#>phase0
+	sta	OUTH
+
+	jsr	move_and_print_list_both_pages
+
+
+	ldx	#30
+	jsr	long_wait
+
+	;===========================
 	; - Phase 1:
 	; Particle ACCELERATION.
-	;
 
-	; 5 times around?
 
+	; Note: goes around at least 4 times
+
+	jsr	clear_bottoms
+
+	; --- Theoretical Study ---
+	lda	#<theoretical_study
+	sta	OUTL
+	lda	#>theoretical_study
+	sta	OUTH
+
+	jsr	print_both_pages
+
+	lda	#<phase1
+	sta	OUTL
+	lda	#>phase1
+	sta	OUTH
+
+	jsr	move_and_print_list_both_pages
+
+	ldx	#200
+	jsr	long_wait
+
+	;=====================================
 	; - Phase 2:
 	; EJECTION of particles
 	; on the shield.
 
-	; smash on shield
+	; Note: goes around once, then does shield animation
 
+	jsr	clear_bottoms
+
+	; --- Theoretical Study ---
+	lda	#<theoretical_study
+	sta	OUTL
+	lda	#>theoretical_study
+	sta	OUTH
+
+	jsr	print_both_pages
+
+	lda	#<phase2
+	sta	OUTL
+	lda	#>phase2
+	sta	OUTH
+
+	jsr	move_and_print_list_both_pages
+
+	ldx	#200
+	jsr	long_wait
+
+
+	;=============================
 	; A  N  A  L  Y  S  I  S
 
+	jsr	clear_bottoms
 
+	; --- Theoretical Study ---
+	lda	#<theoretical_study
+	sta	OUTL
+	lda	#>theoretical_study
+	sta	OUTH
+
+	jsr	print_both_pages
+
+	lda	#<analysis
+	sta	OUTL
+	lda	#>analysis
+	sta	OUTH
+
+	jsr	print_both_pages
+
+
+	ldx	#200
+	jsr	long_wait
+
+	;=============================
 	; - RESULT:
 	; Probability of creating:
-	;  ANTIMATTER: 91.V %
-	;  NEUTRINO 27:  0.04 %
-	;  NEUTRINO 424: 18 %
+	; ANTIMATTER: 91.V %
+	; NEUTRINO 27:  0.04 %
+	; NEUTRINO 424: 18 %
 
-	; Practical verification Y/N ?
+	jsr	clear_bottoms
 
+	lda	#<result
+	sta	OUTL
+	lda	#>result
+	sta	OUTH
+
+	jsr	move_and_print_list_both_pages
+
+	ldx	#200
+	jsr	long_wait
+
+
+	;================================
+	; Practical verification Y/N ?"
+
+	jsr	clear_bottoms
+
+	lda	#<practical_verification
+	sta	OUTL
+	lda	#>practical_verification
+	sta	OUTH
+
+	jsr	print_both_pages
+
+	ldx	#200
+	jsr	long_wait
+
+	;==========================================
 	; THE EXPERIMENT WILL BEGIN IN 20 SECONDS
-
 	; 19, 18, 17
 
+	jsr	clear_bottoms
 
-peanut_loop2:
-	lda	KEYPRESS
-	bpl	peanut_loop2
-	bit	KEYRESET
+	lda	#<experiment
+	sta	OUTL
+	lda	#>experiment
+	sta	OUTH
+
+	; 20
+	jsr	print_both_pages
+	ldx	#100
+	jsr	long_wait
+
+	; 19
+	jsr	print_both_pages
+	ldx	#100
+	jsr	long_wait
+
+	; 18
+	jsr	print_both_pages
+	ldx	#100
+	jsr	long_wait
+
+	; 17
+	jsr	print_both_pages
+	ldx	#100
+	jsr	long_wait
 
 
 ;===============================
@@ -1112,6 +1245,8 @@ peanut_loop2:
 
 	jsr	gr_copy_to_current
 	jsr	page_flip
+
+	bit	FULLGR
 
 	lda	#<soda_sequence
 	sta	INTRO_LOOPL
@@ -2078,3 +2213,64 @@ run_blank:
 ;	.byte 10,20,'R'|$80,'U'|$80,'N'|$80,' '|$80
 ;	.byte 'E'|$80,'X'|$80,'P'|$80,'E'|$80,'R'|$80,'I'|$80
 ;	.byte 'M'|$80,'E'|$80,'N'|$80,'T'|$80,' '|$80,'?'|$80,0
+
+
+
+
+	; --- Theoretical Study ---
+	; make this inverse?
+theoretical_study:
+	.byte 7,20,"--- THEORETICAL STUDY ---",0
+
+	; - Phase 0:
+	; INJECTION of particles
+	; into synchrotron
+phase0:
+	.byte 0,21,"- PHASE 0:",0
+	.byte 0,22,"INJECTION OF PARTICLES",0
+	.byte 0,23,"INTO SYNCHROTRON",0
+	.byte $ff
+
+	; - Phase 1:
+	; Particle ACCELERATION.
+phase1:
+	.byte 0,21,"- PHASE 1:",0
+	.byte 0,22,"PARTICLE ACCELERATION.",0
+	.byte $ff
+
+	; - Phase 2:
+	; EJECTION of particles
+	; on the shield.
+phase2:
+	.byte 0,21,"- PHASE 2:",0
+	.byte 0,22,"EJECTION OF PARTICLES",0
+	.byte 0,23,"ON THE SHIELD.",0
+	.byte $ff
+
+	; A  N  A  L  Y  S  I  S
+analysis:
+	.byte 9,21,"A  N  A  L  Y  S  I  S",0
+
+	; - RESULT:
+	; Probability of creating:
+	; ANTIMATTER: 91.V %
+	; NEUTRINO 27:  0.04 %
+	; NEUTRINO 424: 18 %
+result:
+	.byte 0,20,"- RESULT, PROBABILITY OF CREATING:",0
+	.byte 10,21,"ANTIMATTER: 91.V %",0
+	.byte 10,22,"NEUTRINO 27:  0.04 %",0
+	.byte 10,23,"NEUTRINO 424: 18 %",0
+	.byte $ff
+
+	; Practical verification Y/N ?"
+practical_verification:
+	.byte 6,21,"PRACTICAL VERIFICATION Y/N ?",0
+
+	; THE EXPERIMENT WILL BEGIN IN 20 SECONDS
+experiment:
+	.byte 0,21,"THE EXPERIMENT WILL BEGIN IN 20 SECONDS",0
+	.byte 29,21,"19",0
+	.byte 29,21,"18",0
+	.byte 29,21,"17",0
+

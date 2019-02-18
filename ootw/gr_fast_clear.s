@@ -20,6 +20,10 @@ clear_screens:
         rts
 
 clear_bottoms:
+
+	lda	DRAW_PAGE
+	pha
+
 	;===================================
 	; Clear bottom of page 0
 	;===================================
@@ -35,6 +39,9 @@ clear_bottoms:
 	lda	#$4
 	sta	DRAW_PAGE
 	jsr	clear_bottom
+
+	pla
+	sta	DRAW_PAGE
 
         rts
 
