@@ -75,7 +75,7 @@ intro.o:	intro.s \
 	intro_graphics/05_scanner/intro_ai.inc \
 	intro_graphics/06_console/intro_desktop.inc \
 	intro_graphics/06_console/intro_cursor.inc \
-	intro_graphics/06_console/intro_collider_ui.inc \
+	intro_graphics/06_console/intro_collider.inc \
 	intro_graphics/07_soda/intro_open_soda.inc \
 	intro_graphics/07_soda/intro_drinking.inc
 	ca65 -o intro.o intro.s -l intro.lst

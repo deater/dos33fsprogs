@@ -1045,9 +1045,9 @@ not_yes:
 ;======================
 	bit	SET_GR
 
-	lda	#>(collider_ui_rle)
+	lda	#>(collider_rle)
 	sta	GBASH
-	lda	#<(collider_ui_rle)
+	lda	#<(collider_rle)
 	sta	GBASL
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
@@ -1178,9 +1178,9 @@ drinking_loop:
 	; Stop printing at race track
 	; dark blue going around track
 
-	lda	#>(collider_ui_rle)
+	lda	#>(collider_rle)
 	sta	GBASH
-	lda	#<(collider_ui_rle)
+	lda	#<(collider_rle)
 	sta	GBASL
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
@@ -1352,7 +1352,7 @@ gone_loop:
 
 .include "intro_graphics/06_console/intro_desktop.inc"
 .include "intro_graphics/06_console/intro_cursor.inc"
-.include "intro_graphics/06_console/intro_collider_ui.inc"
+.include "intro_graphics/06_console/intro_collider.inc"
 
 .include "intro_graphics/07_soda/intro_open_soda.inc"
 .include "intro_graphics/07_soda/intro_drinking.inc"

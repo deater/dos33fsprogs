@@ -3,12 +3,19 @@ include ../../../Makefile.inc
 PNG2RLE = ../../../gr-utils/png2rle
 
 
-all:	intro_desktop.inc intro_cursor.inc intro_collider_ui.inc
+all:	intro_desktop.inc intro_cursor.inc intro_collider.inc
 
 #####
 
-intro_collider_ui.inc:	$(PNG2RLE) intro_collider_ui.png
-	$(PNG2RLE) asm intro_collider_ui.png collider_ui_rle > intro_collider_ui.inc
+intro_collider.inc:	$(PNG2RLE) collider_bg.png \
+		collider_phase2_00.png collider_phase2_01.png \
+		collider_phase2_02.png collider_phase2_03.png
+	$(PNG2RLE) asm collider_bg.png collider_rle > intro_collider.inc
+	$(PNG2RLE) asm collider_phase2_00.png collider_p200_rle >> intro_collider.inc
+	$(PNG2RLE) asm collider_phase2_01.png collider_p201_rle >> intro_collider.inc
+	$(PNG2RLE) asm collider_phase2_02.png collider_p202_rle >> intro_collider.inc
+	$(PNG2RLE) asm collider_phase2_03.png collider_p203_rle >> intro_collider.inc
+
 
 #####
 
