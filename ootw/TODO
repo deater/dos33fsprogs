@@ -1,5 +1,8 @@
 TODO:
 
+Intro:
+	gradually fade in DNA
+
 general:
 + move gr_make_quake out of gr_copy
 
@@ -41,9 +44,6 @@ cutscenes:
 + death by beast
 + aliens shooting beast
 + aliens shooting physicist
-
-Intro:
-+ Implement it?
 
 Level/Checkpoint #2:
 + Intro movie

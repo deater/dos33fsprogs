@@ -885,7 +885,7 @@ print_project23_loop:
 
 	jsr	page_flip
 
-	ldx	#15
+	ldx	#10
 	jsr	long_wait
 
 	inc	CURSOR_COUNT
@@ -908,11 +908,6 @@ print_project23_loop:
 
 	ldx	#100
 	jsr	long_wait
-
-;peanut_loop:
-;	lda	KEYPRESS
-;	bpl	peanut_loop
-;	bit	KEYRESET
 
 
 
@@ -939,6 +934,10 @@ print_project23_loop:
         ; __________: :
 	;/__________|/
 
+	; the actual intro draws background 3-d stuff first, gradually
+	; then writes text
+
+
 	lda	#$a0
 	jsr	clear_top_a
 	jsr	clear_bottom
@@ -952,11 +951,93 @@ print_project23_loop:
 
 	jsr	page_flip
 
+	ldx	#50
+	jsr	long_wait
 
-	; cursor down, change g+ to g-
+	; Cusrsor starts at E
+	; Down to .005 (pauses)
+	; End of RK
+	; End of g+ (pauses)
+	; erase +
+	; change to - (pauses)
+	; down to 1 (pauses)
+	; down to 2
+	; down to 3
+	; down to P (pause)
 
-	; FLASH: RUN EXPERIMENT ?
+	ldy	#0
+	lda	#<accel_paramaters
+	sta	INL
+	lda	#>accel_paramaters
+	sta	INH
+accel_input_loop:
+	lda	(INL),Y		; get X
+	cmp	#$ff
+	beq	done_accel_input
+	sta	accel_smc+1
+	sta	accel_smc+4
+	iny
+	lda	(INL),Y		; get Y
+	sta	accel_smc+2
+	clc
+	adc	#$4
+	sta	accel_smc+5
+	iny
+	lda	(INL),Y		; get char
+	iny
+accel_smc:
+	sta	$400
+	sta	$800
+
+	lda	(INL),Y		; get time
+	tax
+	jsr	long_wait
+	iny
+	jmp	accel_input_loop
+done_accel_input:
+
+
+	; FLASH: RUN EXPERIMENT ? (pause)
 	;				Y
+	lda	#2
+	sta	CURSOR_COUNT
+flash_loop:
+
+	lda	#<run_experiment
+	sta	OUTL
+	lda	#>run_experiment
+	sta	OUTH
+	jsr	print_both_pages
+
+	ldx	#75
+	jsr	long_wait
+
+	lda	#<run_blank
+	sta	OUTL
+	lda	#>run_blank
+	sta	OUTH
+	jsr	print_both_pages
+
+	ldx	#75
+	jsr	long_wait
+
+	lda	CURSOR_COUNT
+	cmp	#1
+	bne	not_yes
+
+	lda	#'Y'|$80
+	sta	$670
+	sta	$A70
+
+not_yes:
+	dec	CURSOR_COUNT
+	bpl	flash_loop
+
+;peanut_loop:
+;	lda	KEYPRESS
+;	bpl	peanut_loop
+;	bit	KEYRESET
+
 
 
 ;======================
@@ -1787,17 +1868,17 @@ accelerator:
 	.byte 0,3,  " ___________",0
 	.byte 0,4,  ":ROOM 3   ",('+'|$80),":\  E: 23%",0
 	.byte 0,5,  ":          : : G: .005",0
-	.byte 0,6,  ":          : : RK: 77.2L",0
+	.byte 0,6,  ": :        : : RK: 77.2L",0
 	.byte 0,7,  ":          : :",0
 	.byte 0,8,  ":          : : OPT: G+",0
-	.byte 0,9,  ":          : :",0
+	.byte 0,9,  ": :        : :",0
 	.byte 0,10, ":__________:_:  SHIELD:",0
 	.byte 0,11, ":ROOM 1   ",('+'|$80),": : 1: OFF",0
-	.byte 0,12, ":          : : 2: ON",0
+	.byte 0,12, ": :        : : 2: ON",0
 	.byte 0,13, ":          : : 3: ON",0
-	.byte 0,14, ":          : :",0
+	.byte 0,14, ": :        : :",0
 	.byte 0,15, ":          : : P^: 1",0
-	.byte 0,16, ":          : :",0
+	.byte 0,16, ": :        : :",0
 	.byte 0,17, ": _________:_:",0
 	.byte 0,18, ":/_________:/",0
 	.byte 255
@@ -1960,3 +2041,40 @@ dna7_sprite:
 	.byte   $7,$2
 	.byte   $66,$40,$40,$40,$40,$40,$cc
 	.byte   $06,$00,$00,$00,$00,$00,$0c
+
+
+
+accel_paramaters:
+	.byte	$15,$6,' ',20		; 21,4 = $615 Cursor starts at E
+	.byte	$15,$6,' '|$80,1	;             Cusrsor off at E
+	.byte	$96,$6,' ',100		; 22,5 = $696 Down to .005 (pauses)
+	.byte	$96,$6,' '|$80,1	;             off
+	.byte	$18,$7,' ',20		; 24,6 = $718 End of RK
+	.byte	$18,$7,' '|$80,1	;             off
+	.byte	$3E,$4,' ',100		; 22,8 = $43E End of g+ (pauses)
+	.byte	$3E,$4,' '|$80,1	;             off
+	.byte	$3D,$4,' ',20		; 21,8 = $43D erase +
+	.byte	$3D,$4,'-'|$80,1	;             change to - (pauses)
+	.byte	$3E,$4,' ',100		; 22,8 = $43e change to - (pauses)
+	.byte	$3E,$4,' '|$80,1	;             off
+	.byte	$BD,$5,' ',100		; 22,11= $5bd down to 1 (pauses)
+	.byte	$BD,$5,' '|$80,1	;             off
+	.byte	$3C,$6,' ',20		; 21,12= $63c down to 2
+	.byte	$3C,$6,' '|$80,1	;             off
+	.byte	$BC,$6,' ',20		; 21,13= $6bc down to 3
+	.byte	$BC,$6,' '|$80,1	;             off
+	.byte	$BC,$7,' ',20		; 21,15= $7bc down to P (pause)
+	.byte	$BC,$7,' '|$80,1	;             off
+	.byte	$ff
+
+
+	; FLASH: RUN EXPERIMENT ? (pause)
+run_experiment:
+	.byte 10,20,"RUN EXPERIMENT ?",0
+run_blank:
+	.byte 10,20,"                ",0
+
+;'R'|$80,'U'|$80,'N'|$80,' '|$80
+;	.byte 10,20,'R'|$80,'U'|$80,'N'|$80,' '|$80
+;	.byte 'E'|$80,'X'|$80,'P'|$80,'E'|$80,'R'|$80,'I'|$80
+;	.byte 'M'|$80,'E'|$80,'N'|$80,'T'|$80,' '|$80,'?'|$80,0
