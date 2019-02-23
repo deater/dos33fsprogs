@@ -21,7 +21,7 @@ intro:
 	lda	#0
 	sta	DISP_PAGE
 
-	jmp	soda
+;	jmp	soda
 
 ;===============================
 ;===============================
@@ -1482,6 +1482,59 @@ particle_loop2:
 	jsr	page_flip
 	bit	FULLGR
 
+
+	; 125 start
+	; 126, small central lightning
+	;	1,2,3,4
+	; 128.2 center glow in cloud
+	;	5,6,5
+	; 128.7 inverse flash
+	; 129.6 center left glow in cloud
+	;	8
+	; 130.1 glow in cloud, right
+	;	9
+	; 130.4 glow in cloud, right
+	;	10
+	; 131.7 small glow, center right
+	;	11,12
+	; 133.5 lightning bolt right
+	;	13,14,15,16
+	; 134.7 glow center left
+	;	8
+	; 135.2 small glow center
+	;	5,6,5
+	; 135.4 inverse flash
+	; 135.8 another inverse flash
+	; 135.5 glow right
+	;	9
+	; 136 small glow right
+	;	10
+	; 138.6 cloud glow
+	;	12,11,12
+	; 139.6 small bolt center
+	;	1,2,3,4
+	; 141.4 right glow in cloud
+	;	10
+	; 143 glow in center
+	;	5,6,5
+	; 144.8 glow left
+	;	8
+	; 145.7 center glow cloud
+	;	11,12
+	; 147 bolt right
+	;	13,14,15
+	; 	screen goes white
+	;	*all white
+	;	lightning animation
+	;	* bolt1, 2,3,4,5,6,7
+	;	* all white (a while)
+	; 	* all black (a while)
+	; 148.3 big bolt behind car
+	;	29 .. 38, 40.. 42 (38 twice as long?)
+	; by 150faded out and on to tunnel
+
+
+
 outside_loop:
 	lda	KEYPRESS
 	bpl	outside_loop
@@ -1628,6 +1681,8 @@ gone_loop:
 
 .include "intro_graphics/07_soda/intro_open_soda.inc"
 .include "intro_graphics/07_soda/intro_drinking.inc"
+
+.include "intro_graphics/08_lightning/lightning.inc"
 
 
 .include "intro_tunnel1.inc"
@@ -2194,9 +2249,9 @@ accelerator:
 ; Power-up sequence
 
 soda_sequence:
-	.byte	20
+	.byte	1
 	.word	soda01_rle
-	.byte	15
+	.byte	30
 	.word	soda02_rle
 	.byte	15
 	.word	soda03_rle
