@@ -9,7 +9,7 @@ all:	lightning.inc
 
 lightning.inc:	$(PNG2RLE) \
 	bolt1.png bolt2.png bolt3.png bolt4.png bolt5.png bolt6.png bolt7.png \
-	flash.png white.png black.png \
+	flash.png white.png black.png nothing.png \
 	storm01.png storm02.png storm03.png storm04.png storm05.png \
 	storm06.png storm08.png storm09.png storm10.png storm11.png \
 	storm12.png storm13.png storm14.png storm15.png storm16.png \
@@ -26,6 +26,7 @@ lightning.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm flash.png flash_rle >> lightning.inc
 	$(PNG2RLE) asm white.png white_rle >> lightning.inc
 	$(PNG2RLE) asm black.png black_rle >> lightning.inc
+	$(PNG2RLE) asm nothing.png nothing_rle >> lightning.inc
 	$(PNG2RLE) asm storm01.png storm01_rle >> lightning.inc
 	$(PNG2RLE) asm storm02.png storm02_rle >> lightning.inc
 	$(PNG2RLE) asm storm03.png storm03_rle >> lightning.inc

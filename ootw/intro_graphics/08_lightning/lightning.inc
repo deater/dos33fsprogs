@@ -221,6 +221,9 @@ white_rle:	.byte $28 ; ysize=48
 black_rle:	.byte $28 ; ysize=48
 	.byte $A0,$FF,$00, $A0,$FF,$00, $A0,$FF,$00, $A0,$C3,$00
 	.byte $A1
+nothing_rle:	.byte $28 ; ysize=48
+	.byte $A0,$FF,$AA, $A0,$FF,$AA, $A0,$FF,$AA, $A0,$C3,$AA
+	.byte $A1
 storm01_rle:	.byte $28 ; ysize=48
 	.byte $AA,$AA, $66, $A7,$65, $A0,$20,$AA, $26, $27, $FF
 	.byte $2F, $27, $A3,$26, $A0,$21,$AA, $FF, $A0,$FF,$AA, $A0,$FF,$AA

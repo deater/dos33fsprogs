@@ -21,7 +21,7 @@ intro:
 	lda	#0
 	sta	DISP_PAGE
 
-;	jmp	soda
+	jmp	soda
 
 ;===============================
 ;===============================
@@ -1471,6 +1471,7 @@ particle_loop2:
 ;===============================
 ;===============================
 
+thunderstorm:
 	lda	#>(building_car_rle)
 	sta	GBASH
 	lda	#<(building_car_rle)
@@ -1482,56 +1483,12 @@ particle_loop2:
 	jsr	page_flip
 	bit	FULLGR
 
+	lda	#<lightning_sequence
+	sta	INTRO_LOOPL
+	lda	#>lightning_sequence
+	sta	INTRO_LOOPH
 
-	; 125 start
-	; 126, small central lightning
-	;	1,2,3,4
-	; 128.2 center glow in cloud
-	;	5,6,5
-	; 128.7 inverse flash
-	; 129.6 center left glow in cloud
-	;	8
-	; 130.1 glow in cloud, right
-	;	9
-	; 130.4 glow in cloud, right
-	;	10
-	; 131.7 small glow, center right
-	;	11,12
-	; 133.5 lightning bolt right
-	;	13,14,15,16
-	; 134.7 glow center left
-	;	8
-	; 135.2 small glow center
-	;	5,6,5
-	; 135.4 inverse flash
-	; 135.8 another inverse flash
-	; 135.5 glow right
-	;	9
-	; 136 small glow right
-	;	10
-	; 138.6 cloud glow
-	;	12,11,12
-	; 139.6 small bolt center
-	;	1,2,3,4
-	; 141.4 right glow in cloud
-	;	10
-	; 143 glow in center
-	;	5,6,5
-	; 144.8 glow left
-	;	8
-	; 145.7 center glow cloud
-	;	11,12
-	; 147 bolt right
-	;	13,14,15
-	; 	screen goes white
-	;	*all white
-	;	lightning animation
-	;	* bolt1, 2,3,4,5,6,7
-	;	* all white (a while)
-	; 	* all black (a while)
-	; 148.3 big bolt behind car
-	;	29 .. 38, 40.. 42 (38 twice as long?)
-	; by 150faded out and on to tunnel
+	jsr	run_sequence
 
 
 
@@ -2618,4 +2575,185 @@ drinking_sequence:
 	.word drinking05_rle
 	.byte 0
 	.word drinking05_rle
+
+
+
+	; Lightning sequence
+lightning_sequence:
+	; 125 start
+	; 126, small central lightning 1,2,3,4
+	;
+	.byte 120
+	.word storm01_rle
+	.byte 10
+	.word storm02_rle
+	.byte 10
+	.word storm03_rle
+	.byte 10
+	.word storm04_rle
+	.byte 10
+	; 128.2 center glow in cloud 5,6,5
+	;
+	.word nothing_rle
+	.byte 200
+	.word storm05_rle
+	.byte 10
+	.word storm06_rle
+	.byte 10
+	.word storm05_rle
+	.byte 10
+	.word nothing_rle
+	.byte 50
+	; 128.7 inverse flash
+	;
+	.word flash_rle
+	.byte 20
+	.word nothing_rle
+	.byte 80
+	; 129.6 center left glow in cloud 8
+	;
+	.word storm08_rle
+	.byte 20
+	.word nothing_rle
+	.byte 80
+	; 130.1 glow in cloud, right 9
+	;
+	.word storm09_rle
+	.byte 20
+	.word nothing_rle
+	.byte 80
+	; 130.4 glow in cloud, right 10
+	;
+	.word storm10_rle
+	.byte 20
+	.word nothing_rle
+	.byte 120
+	; 131.7 small glow, center right 11,12
+	;
+	.word storm11_rle
+	.byte 20
+	.word storm12_rle
+	.byte 20
+	.word nothing_rle
+	.byte 120
+	; 133.5 lightning bolt right 13,14,15,16
+	;
+	.word storm13_rle
+	.byte 20
+	.word storm14_rle
+	.byte 20
+	.word storm15_rle
+	.byte 20
+	.word storm16_rle
+	.byte 20
+	.word nothing_rle
+	.byte 120
+	; 134.7 glow center left 8
+	;
+	.word storm08_rle
+	.byte 20
+	.word nothing_rle
+	.byte 80
+	; 135.2 small glow center 5,6,5
+	;
+	.word storm05_rle
+	.byte 20
+	.word storm06_rle
+	.byte 20
+	.word storm05_rle
+	.byte 20
+	.word nothing_rle
+	.byte 50
+	; 135.4 inverse flash
+	;
+	.word flash_rle
+	.byte 20
+	.word nothing_rle
+	.byte 80
+	; 135.8 another inverse flash
+	;
+	.word flash_rle
+	.byte 20
+	.word nothing_rle
+	.byte 80
+	; 135.5 glow right 9
+	;
+	.word storm09_rle
+	.byte 20
+	.word nothing_rle
+	.byte 80
+	; 136 small glow right 0
+	;
+	.word storm10_rle
+	.byte 20
+	.word nothing_rle
+	.byte 120
+	; 138.6 cloud glow 12,11,12
+	;
+	.word storm12_rle
+	.byte 15
+	.word storm11_rle
+	.byte 15
+	.word storm12_rle
+	.byte 15
+	.word nothing_rle
+	.byte 120
+	; 139.6 small bolt center 1,2,3,4
+	;
+	.word storm01_rle
+	.byte 15
+	.word storm02_rle
+	.byte 15
+	.word storm03_rle
+	.byte 15
+	.word storm04_rle
+	.byte 15
+	.word nothing_rle
+	.byte 120
+	; 141.4 right glow in cloud 10
+	;
+	.word storm10_rle
+	.byte 20
+	.word nothing_rle
+	.byte 120
+	; 143 glow in center 5,6,5
+	;
+	.word storm05_rle
+	.byte 15
+	.word storm06_rle
+	.byte 15
+	.word storm05_rle
+	.byte 15
+	.word nothing_rle
+	.byte 120
+	; 144.8 glow left 8
+	;
+	.word storm08_rle
+	.byte 20
+	.word nothing_rle
+	.byte 120
+	; 145.7 center glow cloud 11,12
+	;
+	.word storm11_rle
+	.byte 20
+	.word storm12_rle
+	.byte 20
+	.word nothing_rle
+	.byte 120
+	;=======================
+	; 147 bolt right
+	;=======================
+	;	13,14,15
+	; 	screen goes white
+	;	*all white
+	;	lightning animation
+	;	* bolt1, 2,3,4,5,6,7
+	;	* all white (a while)
+	; 	* all black (a while)
+	; 148.3 big bolt behind car
+	;	29 .. 38, 40.. 42 (38 twice as long?)
+	; by 150faded out and on to tunnel
+	.word storm42_rle
+	.byte 0
+	.word nothing_rle
 
