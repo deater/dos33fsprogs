@@ -120,18 +120,6 @@ ootw_rope.inc:	$(PNG2RLE) another_rope.png
 ootw_c2_cage.inc:	$(PNG2RLE) ootw_c2_cage.png
 	$(PNG2RLE) asm ootw_c2_cage.png cage_rle > ootw_c2_cage.inc
 
-
-#####
-
-intro_gone.inc:	$(PNG2RLE) intro_gone.png
-	$(PNG2RLE) asm intro_gone.png gone_rle > intro_gone.inc
-
-intro_tunnel1.inc:	$(PNG2RLE) intro_tunnel1.png
-	$(PNG2RLE) asm intro_tunnel1.png tunnel1_rle > intro_tunnel1.inc
-
-intro_tunnel2.inc:	$(PNG2RLE) intro_tunnel2.png
-	$(PNG2RLE) asm intro_tunnel2.png tunnel2_rle > intro_tunnel2.inc
-
 #####
 
 clean:		
