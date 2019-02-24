@@ -1490,6 +1490,14 @@ thunderstorm:
 
 	jsr	run_sequence
 
+	lda	#<bolt_sequence
+	sta	INTRO_LOOPL
+	lda	#>bolt_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence
+
+
 
 
 outside_loop:
@@ -2739,21 +2747,80 @@ lightning_sequence:
 	.word storm12_rle
 	.byte 20
 	.word nothing_rle
+	.byte 0
+	.word nothing_rle
+
+	;==============
+	; split, as was > 256
+
+bolt_sequence:
 	.byte 120
 	;=======================
 	; 147 bolt right
 	;=======================
 	;	13,14,15
+	.word storm13_rle
+	.byte 20
+	.word storm14_rle
+	.byte 20
+	.word storm15_rle
+	.byte 20
 	; 	screen goes white
 	;	*all white
+	.word white_rle
+	.byte 20
 	;	lightning animation
 	;	* bolt1, 2,3,4,5,6,7
+	.word bolt1_rle
+	.byte 20
+	.word bolt2_rle
+	.byte 20
+	.word bolt3_rle
+	.byte 20
+	.word bolt4_rle
+	.byte 20
+	.word bolt5_rle
+	.byte 20
+	.word bolt6_rle
+	.byte 20
+	.word bolt7_rle
+	.byte 20
 	;	* all white (a while)
+	.word white_rle
+	.byte 80
 	; 	* all black (a while)
+	.word black_rle
+	.byte 80
 	; 148.3 big bolt behind car
 	;	29 .. 38, 40.. 42 (38 twice as long?)
-	; by 150faded out and on to tunnel
+	.word storm29_rle
+	.byte 20
+	.word storm30_rle
+	.byte 20
+	.word storm31_rle
+	.byte 20
+	.word storm32_rle
+	.byte 20
+	.word storm33_rle
+	.byte 20
+	.word storm34_rle
+	.byte 20
+	.word storm35_rle
+	.byte 20
+	.word storm36_rle
+	.byte 20
+	.word storm37_rle
+	.byte 20
+	.word storm38_rle
+	.byte 20
+	.word storm40_rle
+	.byte 20
+	.word storm41_rle
+	.byte 20
 	.word storm42_rle
+	.byte 20
+	; by 150faded out and on to tunnel
+	.word nothing_rle
 	.byte 0
 	.word nothing_rle
 
