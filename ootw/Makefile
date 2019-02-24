@@ -55,7 +55,6 @@ intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
 	gr_overlay.s \
 	keyboard.s random16.s text_print.s \
-	intro_tunnel1.inc intro_tunnel2.inc intro_gone.inc \
 	intro_graphics/01_building/intro_car.inc \
 	intro_graphics/01_building/intro_building_car.inc \
 	intro_graphics/01_building/intro_building.inc \
@@ -78,7 +77,10 @@ intro.o:	intro.s \
 	intro_graphics/06_console/intro_collider.inc \
 	intro_graphics/07_soda/intro_open_soda.inc \
 	intro_graphics/07_soda/intro_drinking.inc \
-	intro_graphics/08_lightning/lightning.inc
+	intro_graphics/08_lightning/lightning.inc \
+	intro_graphics/09_tunnel/intro_tunnel1.inc \
+	intro_graphics/09_tunnel/intro_tunnel2.inc \
+	intro_graphics/09_tunnel/intro_gone.inc
 	ca65 -o intro.o intro.s -l intro.lst
 
 ####
