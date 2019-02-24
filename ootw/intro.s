@@ -1442,6 +1442,13 @@ not_time_gone:
 	ldx	#30
 	jsr	long_wait
 
+;collider_ui_loop:
+;	lda	KEYPRESS
+;	bpl	collider_ui_loop
+;	bit	KEYRESET
+
+
+
 	; 1 times around? (total = 8)
 
 	lda	#0
@@ -1497,13 +1504,10 @@ thunderstorm:
 
 	jsr	run_sequence
 
-
-
-
-outside_loop:
-	lda	KEYPRESS
-	bpl	outside_loop
-	bit	KEYRESET
+;outside_loop:
+;	lda	KEYPRESS
+;	bpl	outside_loop
+;	bit	KEYRESET
 
 
 ;===============================
@@ -1591,18 +1595,6 @@ gone_loop:
 	lda	KEYPRESS
 	bpl	gone_loop
 	bit	KEYRESET
-
-
-
-
-
-
-
-
-
-
-
-
 
 	rts
 
@@ -2486,14 +2478,14 @@ experiment:
 
 	; Particle co-ordinates
 particles:
-	.byte	21,23
-	.byte	21,15
-	.byte 	22,7
-	.byte	27,2
-	.byte 	32,6
-	.byte	34,13
-	.byte 	31,26
-	.byte 	27,28
+	.byte	21,23	; 0
+	.byte	21,15	; 1
+	.byte 	22,7	; 2
+	.byte	27,2	; 3
+	.byte 	32,6	; 4
+	.byte	34,13	; 5
+	.byte 	31,26	; 6
+	.byte 	27,28	; 7
 
 	;======================
 	; plot particle
@@ -2533,7 +2525,7 @@ shield_sequence:
 	.byte 30
 	.word collider_p200_rle
 	.byte 0
-	.word collider_p200_rle
+
 
 message0:
 	.byte	8,22,"SHIELD 9A.5F OK ",0
@@ -2568,7 +2560,9 @@ zero:
 	.byte 29,20,"0 ",0
 
 times:
-	.word five,four,three,two,one,zero
+	; note, the second zero is there because we get a TIME_COUNT
+	; of 6 even though it is printed then erased (but never displayed)
+	.word five,four,three,two,one,zero,zero
 
 
 
@@ -2582,7 +2576,7 @@ drinking_sequence:
 	.byte 30
 	.word drinking05_rle
 	.byte 0
-	.word drinking05_rle
+
 
 
 
@@ -2591,161 +2585,161 @@ lightning_sequence:
 	; 125 start
 	; 126, small central lightning 1,2,3,4
 	;
-	.byte 120
+	.byte 100
 	.word storm01_rle
-	.byte 10
+	.byte 7
 	.word storm02_rle
-	.byte 10
+	.byte 7
 	.word storm03_rle
-	.byte 10
+	.byte 7
 	.word storm04_rle
-	.byte 10
+	.byte 7
 	; 128.2 center glow in cloud 5,6,5
 	;
 	.word nothing_rle
-	.byte 200
+	.byte 100
 	.word storm05_rle
-	.byte 10
+	.byte 7
 	.word storm06_rle
-	.byte 10
+	.byte 7
 	.word storm05_rle
-	.byte 10
+	.byte 7
 	.word nothing_rle
-	.byte 50
+	.byte 40
 	; 128.7 inverse flash
 	;
 	.word flash_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
-	.byte 80
+	.byte 40
 	; 129.6 center left glow in cloud 8
 	;
 	.word storm08_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
-	.byte 80
+	.byte 40
 	; 130.1 glow in cloud, right 9
 	;
 	.word storm09_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
-	.byte 80
+	.byte 40
 	; 130.4 glow in cloud, right 10
 	;
 	.word storm10_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
-	.byte 120
+	.byte 80
 	; 131.7 small glow, center right 11,12
 	;
 	.word storm11_rle
-	.byte 20
+	.byte 7
 	.word storm12_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
-	.byte 120
+	.byte 80
 	; 133.5 lightning bolt right 13,14,15,16
 	;
 	.word storm13_rle
-	.byte 20
+	.byte 7
 	.word storm14_rle
-	.byte 20
+	.byte 7
 	.word storm15_rle
-	.byte 20
+	.byte 7
 	.word storm16_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
-	.byte 120
+	.byte 80
 	; 134.7 glow center left 8
 	;
 	.word storm08_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
-	.byte 80
+	.byte 40
 	; 135.2 small glow center 5,6,5
 	;
 	.word storm05_rle
-	.byte 20
+	.byte 7
 	.word storm06_rle
-	.byte 20
+	.byte 7
 	.word storm05_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
-	.byte 50
+	.byte 40
 	; 135.4 inverse flash
 	;
 	.word flash_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
-	.byte 80
+	.byte 40
 	; 135.8 another inverse flash
 	;
 	.word flash_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
-	.byte 80
+	.byte 40
 	; 135.5 glow right 9
 	;
 	.word storm09_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
-	.byte 80
+	.byte 40
 	; 136 small glow right 0
 	;
 	.word storm10_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
-	.byte 120
+	.byte 80
 	; 138.6 cloud glow 12,11,12
 	;
 	.word storm12_rle
-	.byte 15
+	.byte 7
 	.word storm11_rle
-	.byte 15
+	.byte 7
 	.word storm12_rle
-	.byte 15
+	.byte 7
 	.word nothing_rle
-	.byte 120
+	.byte 80
 	; 139.6 small bolt center 1,2,3,4
 	;
 	.word storm01_rle
-	.byte 15
+	.byte 7
 	.word storm02_rle
-	.byte 15
+	.byte 7
 	.word storm03_rle
-	.byte 15
+	.byte 7
 	.word storm04_rle
-	.byte 15
+	.byte 7
 	.word nothing_rle
-	.byte 120
+	.byte 80
 	; 141.4 right glow in cloud 10
 	;
 	.word storm10_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
-	.byte 120
+	.byte 80
 	; 143 glow in center 5,6,5
 	;
 	.word storm05_rle
-	.byte 15
+	.byte 7
 	.word storm06_rle
-	.byte 15
+	.byte 7
 	.word storm05_rle
-	.byte 15
+	.byte 7
 	.word nothing_rle
-	.byte 120
+	.byte 80
 	; 144.8 glow left 8
 	;
 	.word storm08_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
-	.byte 120
+	.byte 80
 	; 145.7 center glow cloud 11,12
 	;
 	.word storm11_rle
-	.byte 20
+	.byte 7
 	.word storm12_rle
-	.byte 20
+	.byte 7
 	.word nothing_rle
 	.byte 0
 	.word nothing_rle
@@ -2754,72 +2748,72 @@ lightning_sequence:
 	; split, as was > 256
 
 bolt_sequence:
-	.byte 120
+	.byte 80
 	;=======================
 	; 147 bolt right
 	;=======================
 	;	13,14,15
 	.word storm13_rle
-	.byte 20
+	.byte 5
 	.word storm14_rle
-	.byte 20
+	.byte 5
 	.word storm15_rle
-	.byte 20
+	.byte 5
 	; 	screen goes white
 	;	*all white
 	.word white_rle
-	.byte 20
+	.byte 8
 	;	lightning animation
 	;	* bolt1, 2,3,4,5,6,7
 	.word bolt1_rle
-	.byte 20
+	.byte 5
 	.word bolt2_rle
-	.byte 20
+	.byte 5
 	.word bolt3_rle
-	.byte 20
+	.byte 5
 	.word bolt4_rle
-	.byte 20
+	.byte 5
 	.word bolt5_rle
-	.byte 20
+	.byte 5
 	.word bolt6_rle
-	.byte 20
+	.byte 5
 	.word bolt7_rle
-	.byte 20
+	.byte 5
 	;	* all white (a while)
 	.word white_rle
-	.byte 80
+	.byte 30
 	; 	* all black (a while)
 	.word black_rle
-	.byte 80
+	.byte 30
 	; 148.3 big bolt behind car
 	;	29 .. 38, 40.. 42 (38 twice as long?)
 	.word storm29_rle
-	.byte 20
+	.byte 5
 	.word storm30_rle
-	.byte 20
+	.byte 5
 	.word storm31_rle
-	.byte 20
+	.byte 5
 	.word storm32_rle
-	.byte 20
+	.byte 5
 	.word storm33_rle
-	.byte 20
+	.byte 5
 	.word storm34_rle
-	.byte 20
+	.byte 5
 	.word storm35_rle
-	.byte 20
+	.byte 5
 	.word storm36_rle
-	.byte 20
+	.byte 5
 	.word storm37_rle
-	.byte 20
+	.byte 5
 	.word storm38_rle
-	.byte 20
+	.byte 5
 	.word storm40_rle
-	.byte 20
+	.byte 5
 	.word storm41_rle
-	.byte 20
+	.byte 5
 	.word storm42_rle
-	.byte 20
-	; by 150faded out and on to tunnel
+	.byte 5
+	; by 150 faded out and on to tunnel
 	.word nothing_rle
 	.byte 0
 	.word nothing_rle
