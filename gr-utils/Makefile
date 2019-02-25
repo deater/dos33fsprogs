@@ -2,7 +2,7 @@ include ../Makefile.inc
 
 CFLAGS = -g -Wall -O2
 
-all:	png2gr png2gr_text png2rle png_to_40x48d png_to_40x96
+all:	png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96
 
 
 ###
@@ -38,6 +38,16 @@ png2rle.o:		png2rle.c loadpng.h
 
 ###
 
+png2lz4:		png2lz4.o loadpng.o
+	$(CC) $(LFLAGS) -lpng -o png2lz4 png2lz4.o loadpng.o
+
+png2lz4.o:		png2lz4.c loadpng.h
+	$(CC) $(CFLAGS) -c png2lz4.c
+
+
+
+###
+
 png_to_40x48d:		png_to_40x48d.o
 	$(CC) $(LFLAGS) -lpng -o png_to_40x48d png_to_40x48d.o
 
@@ -56,8 +66,8 @@ png_to_40x96.o:		png_to_40x96.c
 ###
 
 install:	
-		cp png2gr png2gr_text png2rle png_to_40x48d png_to_40x96 $(INSTALL_LOC)
+		cp png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 $(INSTALL_LOC)
 
 clean:		
-		rm -f *~ *.o png2gr png2gr_text png2rle png_to_40x48d png_to_40x96
+		rm -f *~ *.o png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96
 

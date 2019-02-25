@@ -2,16 +2,18 @@ include ../Makefile.inc
 
 DOS33 = ../dos33fs-utils/dos33
 PNG2RLE = ../gr-utils/png2rle
+PNG2LZ4 = ../gr-utils/png2lz4
 
 
 all:	ootw.dsk
 
-ootw.dsk:	HELLO LOADER INTRO OOTW OOTW_C2
+ootw.dsk:	HELLO LOADER INTRO OOTW OOTW_C2 COMPRESS-TEST
 	$(DOS33) -y ootw.dsk SAVE A HELLO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1800 LOADER
 	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 INTRO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 OOTW
 	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 OOTW_C2
+	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 COMPRESS-TEST
 
 
 ####
@@ -119,6 +121,18 @@ ootw_rope.inc:	$(PNG2RLE) another_rope.png
 
 ootw_c2_cage.inc:	$(PNG2RLE) ootw_c2_cage.png
 	$(PNG2RLE) asm ootw_c2_cage.png cage_rle > ootw_c2_cage.inc
+
+#####
+
+compress_test.inc:	intro_graphics/07_soda/drinking01.png
+	$(PNG2RLE) asm intro_graphics/07_soda/drinking01.png test_rle > compress_test.inc
+	$(PNG2LZ4) asm intro_graphics/07_soda/drinking01.png test_lz4 >> compress_test.inc
+
+COMPRESS-TEST:	compress_test.o
+	ld65 -o COMPRESS-TEST compress_test.o -C ../linker_scripts/apple2_2000.inc
+
+compress_test.o:	compress_test.s compress_test.inc
+	ca65 -o compress_test.o compress_test.s -l compress_test.lst
 
 #####
 
