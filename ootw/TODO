@@ -1,5 +1,9 @@
 TODO:
 
+intro:
++ keyboard: skip to end, r to repeat forever
++ use LZ4 instead of RLE
+
 general:
 + move gr_make_quake out of gr_copy
 

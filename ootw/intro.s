@@ -1523,12 +1523,21 @@ thunderstorm:
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
-	;=================================
-	; copy $c00 to both pages $400/$800
-
 	jsr	gr_copy_to_current
 	jsr	page_flip
 	jsr	gr_copy_to_current
+
+	; tunnel01
+	; tunnel02
+	; tunnel03
+	; tunnel04
+	; tunnel05
+	; back to blank for a bit
+	; tunnel06 (lightning)
+	; tunnel07
+	; pure white
+	; 
+
 
 tunnel1_loop:
 	lda	KEYPRESS
