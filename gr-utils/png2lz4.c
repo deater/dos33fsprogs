@@ -16,18 +16,92 @@
 
 #include "loadpng.h"
 
+#include "lz4.h"
+#include "lz4hc.h"
+
+
 #define OUTPUT_C	0
 #define OUTPUT_ASM	1
 #define OUTPUT_RAW	2
 
+static int gr_offsets[24]={
+	0x400,0x480,0x500,0x580,0x600,0x680,0x700,0x780,
+	0x428,0x4A8,0x528,0x5A8,0x628,0x6A8,0x728,0x7A8,
+	0x450,0x4D0,0x550,0x5D0,0x650,0x6D0,0x750,0x7D0,
+};
 
-int gr_lz4(int out_type, char *name, int xsize, int ysize,
+static int gr_lz4(int out_type, char *varname, int xsize, int ysize,
 		unsigned char *image) {
+
+	unsigned char gr[1024];
+	unsigned char output[2048];
+	int x,y;
+	int size;
 
 	/* our image pointer is not-interleaved, but it does */
 	/* have the top/bottom pixels properly packed for us */
 
-	return 0;
+	memset(gr,0,1024);
+
+	if ((xsize!=40) && (ysize!=48)) {
+		fprintf(stderr,"Error, wrong file size\n");
+		return -1;
+	}
+
+	/* Copy our image into raw interleaved GR format */
+	for(y=0;y<24;y++) {
+		for(x=0;x<40;x++) {
+			gr[(gr_offsets[y]-0x400)+x]=
+				image[((y/2)*xsize)+x];
+		}
+	}
+
+	/* Fill in holes */
+	/* Fill with last color in line for extra compression? */
+	for(x=0x478;x<0x480;x++) gr[x-0x400]=gr[0x477-0x400];
+	for(x=0x578;x<0x580;x++) gr[x-0x400]=gr[0x577-0x400];
+	for(x=0x678;x<0x680;x++) gr[x-0x400]=gr[0x677-0x400];
+	for(x=0x778;x<0x780;x++) gr[x-0x400]=gr[0x777-0x400];
+
+	/* Now lz4 compress the thing */
+
+	size=LZ4_compress_HC ((char *)gr,// src
+			      (char *)output,	// dest
+			      1024,	// src size
+			      2048,	// src capacity
+			      16);	// compression level
+
+	if (out_type==OUTPUT_C) {
+		fprintf(stdout,"unsigned char %s[]={",varname);
+		for(x=0;x<size;x++) {
+			if (x%16==0) {
+				printf("\n\t");
+			}
+			printf("0x%02X,",output[x]);
+		}
+		printf("\n};\n");
+	}
+	else if (out_type==OUTPUT_ASM) {
+		fprintf(stdout,"%s:",varname);
+		for(x=0;x<size;x++) {
+			if (x%16==0) {
+				printf("\n\t.byte ");
+			}
+			else {
+				printf(",");
+			}
+			printf("$%02X",output[x]);
+		}
+		printf("\n};\n");
+	}
+	else if (out_type==OUTPUT_RAW) {
+		write(1,output,size);
+	}
+	else {
+		return -1;
+	}
+
+	return size;
 }
 
 
@@ -68,6 +142,10 @@ int main(int argc, char **argv) {
 
 	size=gr_lz4(out_type,argv[3],
 		xsize,ysize,image);
+
+	if (size<0) {
+		return -1;
+	}
 
 	fprintf(stderr,"Size %d bytes\n",size);
 

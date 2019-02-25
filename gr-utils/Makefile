@@ -39,7 +39,7 @@ png2rle.o:		png2rle.c loadpng.h
 ###
 
 png2lz4:		png2lz4.o loadpng.o
-	$(CC) $(LFLAGS) -lpng -o png2lz4 png2lz4.o loadpng.o
+	$(CC) $(LFLAGS) -llz4 -lpng -o png2lz4 png2lz4.o loadpng.o
 
 png2lz4.o:		png2lz4.c loadpng.h
 	$(CC) $(CFLAGS) -c png2lz4.c
