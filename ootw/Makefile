@@ -131,7 +131,7 @@ compress_test.inc:	intro_graphics/07_soda/drinking01.png
 COMPRESS-TEST:	compress_test.o
 	ld65 -o COMPRESS-TEST compress_test.o -C ../linker_scripts/apple2_2000.inc
 
-compress_test.o:	compress_test.s compress_test.inc
+compress_test.o:	compress_test.s lz4_decode.s compress_test.inc
 	ca65 -o compress_test.o compress_test.s -l compress_test.lst
 
 #####

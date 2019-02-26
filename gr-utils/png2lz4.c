@@ -14,6 +14,8 @@
 #include <string.h>
 #include <stdarg.h>
 
+#include <fcntl.h>
+
 #include "loadpng.h"
 
 #include "lz4.h"
@@ -36,7 +38,7 @@ static int gr_lz4(int out_type, char *varname, int xsize, int ysize,
 	unsigned char gr[1024];
 	unsigned char output[2048];
 	int x,y;
-	int size;
+	int size,count=0;
 
 	/* our image pointer is not-interleaved, but it does */
 	/* have the top/bottom pixels properly packed for us */
@@ -52,7 +54,7 @@ static int gr_lz4(int out_type, char *varname, int xsize, int ysize,
 	for(y=0;y<24;y++) {
 		for(x=0;x<40;x++) {
 			gr[(gr_offsets[y]-0x400)+x]=
-				image[((y/2)*xsize)+x];
+				image[(y*xsize)+x];
 		}
 	}
 
@@ -71,28 +73,45 @@ static int gr_lz4(int out_type, char *varname, int xsize, int ysize,
 			      2048,	// src capacity
 			      16);	// compression level
 
+
+	/* Note, unlike the on-disk format we do *not* */
+	/* have to skip 11 bytes at front or 8 bytes at end */
+	/* also, we write the 16-bit size (little endian) at front */
+
 	if (out_type==OUTPUT_C) {
 		fprintf(stdout,"unsigned char %s[]={",varname);
+		printf("\t0x%02X,0x%02X,\n",(size)&0xff,
+				((size)>>8)&0xff);
 		for(x=0;x<size;x++) {
-			if (x%16==0) {
+			if (count%16==0) {
 				printf("\n\t");
 			}
 			printf("0x%02X,",output[x]);
+			count++;
 		}
 		printf("\n};\n");
 	}
 	else if (out_type==OUTPUT_ASM) {
-		fprintf(stdout,"%s:",varname);
+//		int blargh;
+//		blargh=open("blargh",O_CREAT|O_WRONLY,0777);
+//		write(blargh,gr,1024);
+//		close(blargh);
+
+		fprintf(stdout,"%s:\n",varname);
+
+		// size includes this size value
+		printf("\t.byte $%02X,$%02X",(size+2)&0xff,
+				((size+2)>>8)&0xff);
 		for(x=0;x<size;x++) {
-			if (x%16==0) {
+			if (count%16==0) {
 				printf("\n\t.byte ");
 			}
 			else {
 				printf(",");
 			}
 			printf("$%02X",output[x]);
+			count++;
 		}
-		printf("\n};\n");
 	}
 	else if (out_type==OUTPUT_RAW) {
 		write(1,output,size);
@@ -101,7 +120,7 @@ static int gr_lz4(int out_type, char *varname, int xsize, int ysize,
 		return -1;
 	}
 
-	return size;
+	return (size+2);
 }
 
 

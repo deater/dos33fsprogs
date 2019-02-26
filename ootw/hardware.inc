@@ -36,6 +36,7 @@ CLRTOP	= $F836			;; clear only top of low-res screen
 SETCOL	= $F864			;; COLOR=A
 TEXT	= $FB36
 TABV	= $FB5B			;; VTAB to A
+BELL	= $FBDD			;; ring the bell
 BASCALC	= $FBC1			;;
 VTAB	= $FC22			;; VTAB to CV
 HOME	= $FC58			;; Clear the text screen
