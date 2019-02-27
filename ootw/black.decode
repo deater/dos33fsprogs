@@ -1,0 +1,19 @@
+33 bytes?
+
+Header:
+04 22 4d 18 64 40 a7 0e  00 00 00
+
+Payload:
+ 1f	--  1 literal, matchlength 15 means 19+
+ 00     --  the literal
+01 00  -- offset (1 means current position)
+ff ff ff ea  -- rest of match length, 19+255+255+255+234 = 1018
+	Last 5 values have to be literal
+	50 00 00 00 00  00
+
+
+Checksum:
+00 00 00 00 e8 cc a6 d2
+
+
+

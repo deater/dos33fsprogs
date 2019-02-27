@@ -1652,7 +1652,8 @@ gone_loop:
 
 .include "intro_graphics/09_tunnel/intro_tunnel1.inc"
 .include "intro_graphics/09_tunnel/intro_tunnel2.inc"
-.include "intro_graphics/09_tunnel/intro_gone.inc"
+
+.include "intro_graphics/10_gone/intro_gone.inc"
 
 
 	;=================================

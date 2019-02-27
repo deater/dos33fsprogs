@@ -82,7 +82,7 @@ intro.o:	intro.s \
 	intro_graphics/08_lightning/lightning.inc \
 	intro_graphics/09_tunnel/intro_tunnel1.inc \
 	intro_graphics/09_tunnel/intro_tunnel2.inc \
-	intro_graphics/09_tunnel/intro_gone.inc
+	intro_graphics/10_gone/intro_gone.inc
 	ca65 -o intro.o intro.s -l intro.lst
 
 ####
