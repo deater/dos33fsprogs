@@ -1525,18 +1525,13 @@ thunderstorm:
 
 	jsr	gr_copy_to_current
 	jsr	page_flip
-	jsr	gr_copy_to_current
 
-	; tunnel01
-	; tunnel02
-	; tunnel03
-	; tunnel04
-	; tunnel05
-	; back to blank for a bit
-	; tunnel06 (lightning)
-	; tunnel07
-	; pure white
-	; 
+	lda	#<tunnel1_sequence
+	sta	INTRO_LOOPL
+	lda	#>tunnel1_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence
 
 
 tunnel1_loop:
@@ -2827,3 +2822,59 @@ bolt_sequence:
 	.byte 0
 	.word nothing_rle
 
+
+	;=======================
+	; Tunnel1 Sequence
+	;=======================
+tunnel1_sequence:
+	.byte 10
+	.word nothing_rle
+	.byte 80
+	; red blob
+	.word tunnel1_01_rle
+	.byte 20
+	.word tunnel1_02_rle
+	.byte 20
+	.word tunnel1_03_rle
+	.byte 20
+	.word tunnel1_04_rle
+	.byte 20
+	.word tunnel1_05_rle
+	.byte 20
+
+	; lightning blob
+	.word nothing_rle
+	.byte 80
+	.word tunnel1_06_rle
+	.byte 20
+	.word tunnel1_07_rle
+	.byte 20
+	.word white_rle
+	.byte 20
+	.word tunnel1_08_rle
+	.byte 20
+	.word tunnel1_09_rle
+	.byte 20
+	.word tunnel1_10_rle
+	.byte 20
+	.word tunnel1_11_rle
+	.byte 20
+	.word tunnel1_12_rle
+	.byte 20
+	.word tunnel1_13_rle
+	.byte 20
+	.word tunnel1_14_rle
+	.byte 20
+	.word tunnel1_15_rle
+	.byte 20
+	.word tunnel1_16_rle
+	.byte 20
+	.word tunnel1_17_rle
+	.byte 20
+	.word tunnel1_18_rle
+	.byte 20
+	.word tunnel1_19_rle
+	.byte 20
+	.word nothing_rle
+	.byte 0
+	.word nothing_rle

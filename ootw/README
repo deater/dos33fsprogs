@@ -14,3 +14,23 @@ Up to tunnel1, using RLE:
 	35875	INTRO
 
 		using LZ4:
+
+
+
+
+
+Memory map:
+	00	zero page
+	01	stack
+	02-03	
+	04-07	GR page0
+	08-0b	GR page1
+	0c-0f	offscreen data
+	10-13	offscreen data2
+	14-17   *****************free???
+	18-1c	loader
+	1d	loader buffer
+	1e-1f	*****************free???
+	20-bf	program/data (40k)
+	c0-cf	I/O
+	d0-ff	ROM
