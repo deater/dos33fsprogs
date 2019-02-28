@@ -38,8 +38,31 @@ intro_tunnel1.inc:	$(PNG2RLE) \
 #####
 
 intro_tunnel2.inc:	$(PNG2RLE) \
-	intro_tunnel2.png
+	intro_tunnel2.png \
+	tunnel2_01.png tunnel2_02.png tunnel2_03.png tunnel2_04.png \
+	tunnel2_05.png tunnel2_06.png tunnel2_07.png tunnel2_08.png \
+	tunnel2_09.png tunnel2_10.png tunnel2_11.png tunnel2_12.png \
+	tunnel2_13.png tunnel2_14.png tunnel2_15.png tunnel2_16.png \
+	tunnel2_17.png
 	$(PNG2RLE) asm intro_tunnel2.png tunnel2_rle > intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_01.png tunnel2_01_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_02.png tunnel2_02_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_03.png tunnel2_03_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_04.png tunnel2_04_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_05.png tunnel2_05_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_06.png tunnel2_06_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_07.png tunnel2_07_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_08.png tunnel2_08_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_09.png tunnel2_09_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_10.png tunnel2_10_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_11.png tunnel2_11_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_12.png tunnel2_12_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_13.png tunnel2_13_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_14.png tunnel2_14_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_15.png tunnel2_15_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_16.png tunnel2_16_rle >> intro_tunnel2.inc
+	$(PNG2RLE) asm tunnel2_17.png tunnel2_17_rle >> intro_tunnel2.inc
+
 
 #####
 

@@ -1535,10 +1535,10 @@ tunnel1:
 	jsr	run_sequence
 
 
-tunnel1_loop:
-	lda	KEYPRESS
-	bpl	tunnel1_loop
-	bit	KEYRESET
+;tunnel1_loop:
+;	lda	KEYPRESS
+;	bpl	tunnel1_loop
+;	bit	KEYRESET
 
 
 
@@ -1559,12 +1559,16 @@ tunnel1_loop:
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
-	;=================================
-	; copy $c00 to both pages $400/$800
-
 	jsr	gr_copy_to_current
 	jsr	page_flip
-	jsr	gr_copy_to_current
+
+	lda	#<tunnel2_sequence
+	sta	INTRO_LOOPL
+	lda	#>tunnel2_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence
+
 
 tunnel2_loop:
 	lda	KEYPRESS
@@ -1588,9 +1592,6 @@ tunnel2_loop:
 	sta	GBASL
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
-
-	;=================================
-	; copy $c00 to both pages $400/$800
 
 	jsr	gr_copy_to_current
 	jsr	page_flip
@@ -2875,6 +2876,57 @@ tunnel1_sequence:
 	.word tunnel1_18_rle
 	.byte 2
 	.word tunnel1_19_rle
+	.byte 2
+	.word nothing_rle
+	.byte 0
+	.word nothing_rle
+
+
+	;=======================
+	; Tunnel2 Sequence
+	;=======================
+tunnel2_sequence:
+	.byte 10
+	.word nothing_rle
+	.byte 50
+	; red blob
+	.word tunnel2_01_rle
+	.byte 2
+	.word tunnel2_02_rle
+	.byte 2
+	.word tunnel2_03_rle
+	.byte 2
+	.word tunnel2_04_rle
+	.byte 2
+	.word tunnel2_05_rle
+	.byte 2
+	.word tunnel2_06_rle
+	.byte 2
+	.word tunnel2_07_rle
+	.byte 2
+	.word tunnel2_08_rle
+	.byte 2
+	.word tunnel2_09_rle
+	.byte 2
+	.word nothing_rle
+	.byte 50
+
+	; lightning blob
+	.word tunnel2_10_rle
+	.byte 2
+	.word tunnel2_11_rle
+	.byte 2
+	.word tunnel2_12_rle
+	.byte 2
+	.word tunnel2_13_rle
+	.byte 2
+	.word tunnel2_14_rle
+	.byte 2
+	.word tunnel2_15_rle
+	.byte 2
+	.word tunnel2_16_rle
+	.byte 2
+	.word tunnel2_17_rle
 	.byte 2
 	.word nothing_rle
 	.byte 0
