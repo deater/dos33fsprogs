@@ -21,7 +21,7 @@ intro:
 	lda	#0
 	sta	DISP_PAGE
 
-	jmp	soda
+	jmp	tunnel1
 
 ;===============================
 ;===============================
@@ -1516,6 +1516,7 @@ thunderstorm:
 ;===============================
 ;===============================
 
+tunnel1:
 	lda	#>(tunnel1_rle)
 	sta	GBASH
 	lda	#<(tunnel1_rle)
@@ -2829,52 +2830,52 @@ bolt_sequence:
 tunnel1_sequence:
 	.byte 10
 	.word nothing_rle
-	.byte 80
+	.byte 50
 	; red blob
 	.word tunnel1_01_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_02_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_03_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_04_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_05_rle
-	.byte 20
+	.byte 2
 
 	; lightning blob
 	.word nothing_rle
-	.byte 80
+	.byte 50
 	.word tunnel1_06_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_07_rle
-	.byte 20
+	.byte 2
 	.word white_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_08_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_09_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_10_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_11_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_12_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_13_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_14_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_15_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_16_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_17_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_18_rle
-	.byte 20
+	.byte 2
 	.word tunnel1_19_rle
-	.byte 20
+	.byte 2
 	.word nothing_rle
 	.byte 0
 	.word nothing_rle
