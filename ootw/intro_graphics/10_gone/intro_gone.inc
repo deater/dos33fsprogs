@@ -263,55 +263,6 @@ gone28_rle:	.byte $28 ; ysize=48
 	.byte $77, $A0,$02,$AA, $7A, $A0,$27,$AA, $A0,$01,$A7, $A0,$FF,$AA, $A0,$FF,$AA
 	.byte $A0,$DE,$AA
 	.byte $A1
-gone29_rle:	.byte $28 ; ysize=48
-	.byte $A7,$EE, $22, $2E, $A5,$EE, $2E, $22, $EE
-	.byte $22,$22, $A3,$EE, $6E, $66, $A4,$EE, $22, $EE
-	.byte $5E, $A3,$EE, $22, $AD,$EE, $E2, $22, $2E
-	.byte $EE, $2E, $22, $E2, $2E, $EE, $22
-	.byte $EE, $FE, $EE,$EE, $E6,$E6, $EE,$EE, $E2, $EE
-	.byte $22, $A5,$EE, $E2, $2E, $AE,$EE, $E2, $22
-	.byte $E2, $EE,$EE, $22,$22, $EE,$EE, $F6, $EF, $FE
-	.byte $EE, $2E, $E2, $EE,$EE, $22, $A7,$EE, $E2
-	.byte $2E, $A0,$12,$EE, $22, $EE, $2E, $A4,$EE, $EF
-	.byte $FE, $A3,$EE, $22, $EE, $A3,$FE, $EF,$EF, $EE,$EE
-	.byte $22, $AE,$EE, $2E, $FE, $EE,$EE, $22, $EE
-	.byte $22, $EE,$EE, $A4,$2E, $2F, $FE, $2E, $E2
-	.byte $EF, $A0,$15,$EE, $E2, $2F, $FF, $EF, $EE
-	.byte $22, $EE, $22, $A7,$EE, $2F, $22, $A7,$E2
-	.byte $EE,$EE, $22, $A9,$EE, $22, $A3,$FF, $EE,$EE, $E2
-	.byte $EE,$EE, $22, $EE, $22, $A3,$EE, $FE,$FE, $EF
-	.byte $2E, $EE, $2E, $EF, $FE, $A7,$EE, $22
-	.byte $A9,$EE, $22, $A3,$FF, $A5,$EE, $22, $EE, $22
-	.byte $EE, $FE, $EF, $EE,$EE, $2E, $A3,$EE, $2E
-	.byte $EF, $FE, $A6,$EE, $22, $A9,$EE, $22, $FF
-	.byte $FE, $FF, $EE,$EE, $A3,$FE, $22, $2E, $EE
-	.byte $EF, $EE,$EE, $2E, $E2, $A7,$EE, $FF, $A5,$EE
-	.byte $22, $A9,$EE, $22, $A3,$FF, $EF,$EF, $A3,$EE, $22
-	.byte $E2, $2E, $EE,$EE, $2E, $A3,$EE, $6E,$6E, $FF
-	.byte $EE, $E2, $EE, $EF, $FE, $A4,$EE, $E2
-	.byte $A9,$EE, $22, $A3,$FF, $A4,$EE, $A3,$22, $E2, $2E
-	.byte $A5,$EE, $66,$66, $EF, $A8,$EE, $2E, $AA,$EE, $22,$22
-	.byte $A3,$FF, $EE,$EE, $22,$22, $62, $26, $22, $E2
-	.byte $A5,$EE, $E6,$E6, $A3,$EE, $E2, $62, $A3,$EE, $2E
-	.byte $E2, $AA,$EE, $22,$22, $A3,$FF, $EE, $2E, $22,$22
-	.byte $66, $22, $E2, $AE,$EE, $2E,$2E, $E2, $AB,$EE
-	.byte $22,$22, $FF, $2F, $A5,$22, $E2, $2E, $22
-	.byte $AC,$2E, $22,$22, $F2, $AD,$EE, $22,$22, $E2, $2E
-	.byte $A3,$22, $E2, $EE, $A5,$22, $A3,$62, $22, $62,$62
-	.byte $A3,$22, $E2, $F2, $FF,$FF, $2E,$2E, $A9,$EE, $2E
-	.byte $22, $E2, $2E, $A5,$22, $2E, $EE, $E2
-	.byte $A3,$22, $66, $22, $66, $22, $66, $22,$22
-	.byte $26, $E2,$E2, $EE, $FF, $F6, $FF, $A4,$22
-	.byte $2E,$2E, $A3,$EE, $2E, $A3,$22, $2E, $E2, $A6,$22
-	.byte $EE,$EE, $22,$22, $26, $66, $22, $FE, $22
-	.byte $6E, $A5,$22, $EE, $A3,$FF, $A7,$22, $2E, $A7,$22
-	.byte $A3,$2E, $E2, $A3,$22, $EE, $E2, $2E, $22
-	.byte $66, $22, $66, $22, $26, $A4,$22, $E2
-	.byte $EE, $A3,$FF, $A0,$11,$22, $E2, $2E, $A3,$22, $2E
-	.byte $EE, $A4,$22, $26, $A4,$22, $62, $22, $EE,$EE
-	.byte $A3,$FF, $AE,$22, $E2, $2E,$2E, $A6,$22, $EE, $A3,$22
-	.byte $62, $A4,$22, $26,$26, $A4,$22, $2F, $A0,$A8,$22
-	.byte $A1
 gone31_rle:	.byte $28 ; ysize=48
 	.byte $A0,$3E,$AA, $7A, $A0,$27,$AA, $77, $A0,$27,$AA, $77, $A0,$27,$AA
 	.byte $77, $7A,$7A, $A3,$AA, $A3,$A7, $A0,$25,$AA, $7A, $A0,$FF,$AA
@@ -355,102 +306,10 @@ gone39_rle:	.byte $28 ; ysize=48
 	.byte $EE, $A0,$27,$AA, $A0,$01,$A7, $A0,$FF,$AA, $A0,$FF,$AA, $A0,$8F,$AA
 	.byte $A1
 gone40_rle:	.byte $28 ; ysize=48
-	.byte $A7,$EE, $22, $2E, $A5,$EE, $2E, $22, $EE
-	.byte $22,$22, $A3,$EE, $6E, $66, $A4,$EE, $22, $EE
-	.byte $5E, $A3,$EE, $22, $AD,$EE, $E2, $22, $2E
-	.byte $EE, $2E, $22, $E2, $2E, $EE, $22
-	.byte $EE, $FE, $EE,$EE, $E6,$E6, $EE,$EE, $E2, $EE
-	.byte $22, $A5,$EE, $E2, $2E, $AE,$EE, $E2, $22
-	.byte $E2, $EE,$EE, $22,$22, $EE,$EE, $F6, $EF, $FE
-	.byte $EE, $2E, $E2, $EE,$EE, $22, $A7,$EE, $E2
-	.byte $2E, $A0,$12,$EE, $22, $EE, $2E, $A4,$EE, $EF
-	.byte $FE, $EF, $FF,$FF, $6F, $EE, $A3,$FE, $EF,$EF
-	.byte $EE,$EE, $22, $AE,$EE, $2E, $FE, $EE,$EE, $22
-	.byte $EE, $22, $EE,$EE, $A3,$2E, $FF, $6F, $FE,$FE
-	.byte $E6, $FF, $A0,$15,$EE, $E2, $2F, $FF, $EF
-	.byte $EE, $22, $EE, $22, $A5,$EE, $FF, $EE
-	.byte $FF,$FF, $E6, $FF, $A5,$E2, $EE,$EE, $22, $A9,$EE
-	.byte $22, $A3,$FF, $EE,$EE, $E2, $EE,$EE, $22, $EE
-	.byte $22, $A3,$EE, $FE,$FE, $EF, $A3,$FE, $FF,$FF, $A7,$EE
-	.byte $22, $A9,$EE, $22, $A3,$FF, $A5,$EE, $22, $EE
-	.byte $22, $EE, $FE, $EF, $EE,$EE, $2E, $A3,$EE
-	.byte $2E, $EF, $FE, $A6,$EE, $22, $A9,$EE, $22
-	.byte $FF, $FE, $FF, $EE,$EE, $A3,$FE, $22, $2E
-	.byte $EE, $EF, $EE,$EE, $2E, $E2, $A7,$EE, $FF
-	.byte $A5,$EE, $22, $A9,$EE, $22, $A3,$FF, $EF,$EF, $A3,$EE
-	.byte $22, $E2, $2E, $EE,$EE, $2E, $A3,$EE, $6E,$6E
-	.byte $FF, $EE, $E2, $EE, $EF, $FE, $A4,$EE
-	.byte $E2, $A9,$EE, $22, $A3,$FF, $A4,$EE, $A3,$22, $E2
-	.byte $2E, $A5,$EE, $66,$66, $EF, $A8,$EE, $2E, $AA,$EE
-	.byte $22,$22, $A3,$FF, $EE,$EE, $22,$22, $62, $26, $22
-	.byte $E2, $A5,$EE, $E6,$E6, $A3,$EE, $E2, $62, $A3,$EE
-	.byte $2E, $E2, $AA,$EE, $22,$22, $A3,$FF, $EE, $2E
-	.byte $22,$22, $66, $22, $E2, $AE,$EE, $2E,$2E, $E2
-	.byte $AB,$EE, $22,$22, $FF, $2F, $A5,$22, $E2, $2E
-	.byte $22, $AC,$2E, $22,$22, $F2, $AD,$EE, $22,$22, $E2
-	.byte $2E, $A3,$22, $E2, $EE, $A5,$22, $A3,$62, $22
-	.byte $62,$62, $A3,$22, $E2, $F2, $FF,$FF, $2E,$2E, $A9,$EE
-	.byte $2E, $22, $E2, $2E, $A5,$22, $2E, $EE
-	.byte $E2, $A3,$22, $66, $22, $66, $22, $66
-	.byte $22,$22, $26, $E2,$E2, $EE, $FF, $F6, $FF
-	.byte $A4,$22, $2E,$2E, $A3,$EE, $2E, $A3,$22, $2E, $E2
-	.byte $A6,$22, $EE,$EE, $22,$22, $26, $66, $22, $FE
-	.byte $22, $6E, $A5,$22, $EE, $A3,$FF, $A7,$22, $2E
-	.byte $A7,$22, $A3,$2E, $E2, $A3,$22, $EE, $E2, $2E
-	.byte $22, $66, $22, $66, $22, $26, $A4,$22
-	.byte $E2, $EE, $A3,$FF, $A0,$11,$22, $E2, $2E, $A3,$22
-	.byte $2E, $EE, $A4,$22, $26, $A4,$22, $62, $22
-	.byte $EE,$EE, $A3,$FF, $AE,$22, $E2, $2E,$2E, $A6,$22, $EE
-	.byte $A3,$22, $62, $A4,$22, $26,$26, $A4,$22, $2F, $A0,$A8,$22
-	.byte $A1
-gone41_rle:	.byte $28 ; ysize=48
-	.byte $A7,$EE, $22, $2E, $A5,$EE, $2E, $22, $EE
-	.byte $22,$22, $A3,$EE, $6E, $66, $A4,$EE, $22, $EE
-	.byte $5E, $A3,$EE, $22, $AD,$EE, $E2, $22, $2E
-	.byte $EE, $2E, $22, $E2, $2E, $EE, $22
-	.byte $EE, $FE, $EE,$EE, $E6,$E6, $EE,$EE, $E2, $EE
-	.byte $22, $A5,$EE, $E2, $2E, $AE,$EE, $E2, $22
-	.byte $E2, $EE,$EE, $22,$22, $EE,$EE, $F6, $EF, $FE
-	.byte $EE, $2E, $E2, $EE,$EE, $22, $A7,$EE, $E2
-	.byte $2E, $A0,$12,$EE, $22, $EE, $2E, $A4,$EE, $EF
-	.byte $FE, $A3,$EE, $22, $EE, $A3,$FE, $EF,$EF, $EE,$EE
-	.byte $22, $AE,$EE, $2E, $FE, $EE,$EE, $22, $EE
-	.byte $22, $EE,$EE, $A4,$2E, $2F, $FE, $2E, $E2
-	.byte $EF, $A0,$15,$EE, $E2, $2F, $FF, $EF, $EE
-	.byte $22, $EE, $22, $A7,$EE, $2F, $22, $A7,$E2
-	.byte $EE,$EE, $22, $A9,$EE, $22, $A3,$FF, $EE,$EE, $E2
-	.byte $EE,$EE, $22, $EE, $22, $A3,$EE, $FE,$FE, $EF
-	.byte $2E, $EE, $2E, $EF, $FE, $A7,$EE, $22
-	.byte $A9,$EE, $22, $A3,$FF, $A5,$EE, $22, $EE, $22
-	.byte $EE, $FE, $EF, $EE,$EE, $2E, $A3,$EE, $2E
-	.byte $EF, $FE, $A6,$EE, $22, $A9,$EE, $22, $FF
-	.byte $FE, $FF, $EE,$EE, $A3,$FE, $22, $2E, $EE
-	.byte $EF, $EE,$EE, $2E, $E2, $A7,$EE, $FF, $A5,$EE
-	.byte $22, $A9,$EE, $22, $A3,$FF, $EF,$EF, $A3,$EE, $22
-	.byte $E2, $2E, $EE,$EE, $2E, $A3,$EE, $6E,$6E, $FF
-	.byte $EE, $E2, $EE, $EF, $FE, $A4,$EE, $E2
-	.byte $A9,$EE, $22, $A3,$FF, $A4,$EE, $A3,$22, $E2, $2E
-	.byte $A5,$EE, $66,$66, $EF, $A8,$EE, $2E, $AA,$EE, $22,$22
-	.byte $A3,$FF, $EE,$EE, $22,$22, $62, $26, $22, $E2
-	.byte $A5,$EE, $E6,$E6, $A3,$EE, $E2, $62, $A3,$EE, $2E
-	.byte $E2, $AA,$EE, $22,$22, $A3,$FF, $EE, $2E, $22,$22
-	.byte $66, $22, $E2, $AE,$EE, $2E,$2E, $E2, $AB,$EE
-	.byte $22,$22, $FF, $2F, $A5,$22, $E2, $2E, $22
-	.byte $AC,$2E, $22,$22, $F2, $AD,$EE, $22,$22, $E2, $2E
-	.byte $A3,$22, $E2, $EE, $A5,$22, $A3,$62, $22, $62,$62
-	.byte $A3,$22, $E2, $F2, $FF,$FF, $2E,$2E, $A9,$EE, $2E
-	.byte $22, $E2, $2E, $A5,$22, $2E, $EE, $E2
-	.byte $A3,$22, $66, $22, $66, $22, $66, $22,$22
-	.byte $26, $E2,$E2, $EE, $FF, $F6, $FF, $A4,$22
-	.byte $2E,$2E, $A3,$EE, $2E, $A3,$22, $2E, $E2, $A6,$22
-	.byte $EE,$EE, $22,$22, $26, $66, $22, $FE, $22
-	.byte $6E, $A5,$22, $EE, $A3,$FF, $A7,$22, $2E, $A7,$22
-	.byte $A3,$2E, $E2, $A3,$22, $EE, $E2, $2E, $22
-	.byte $66, $22, $66, $22, $26, $A4,$22, $E2
-	.byte $EE, $A3,$FF, $A0,$11,$22, $E2, $2E, $A3,$22, $2E
-	.byte $EE, $A4,$22, $26, $A4,$22, $62, $22, $EE,$EE
-	.byte $A3,$FF, $AE,$22, $E2, $2E,$2E, $A6,$22, $EE, $A3,$22
-	.byte $62, $A4,$22, $26,$26, $A4,$22, $2F, $A0,$A8,$22
+	.byte $A0,$8F,$AA, $FE, $EF, $FF,$FF, $6F, $A0,$23,$AA, $FF
+	.byte $6F, $FE,$FE, $E6, $FF, $A0,$22,$AA, $FF, $EE
+	.byte $FF,$FF, $E6, $FF, $A0,$22,$AA, $A0,$01,$AF, $A3,$FE, $FF,$FF
+	.byte $A0,$FF,$AA, $A0,$FF,$AA, $A0,$B5,$AA
 	.byte $A1
 gone42_rle:	.byte $28 ; ysize=48
 	.byte $A0,$92,$AA, $EA, $A0,$25,$AA, $EA, $FA, $FE, $EA

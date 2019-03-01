@@ -3147,10 +3147,10 @@ gone_sequence:
 	.byte 7
 	.word gone28_rle	; LB
 
-	.byte 255
-	.word gone10_rle	; CY into $c00
+;	.byte 255
+;	.word gone10_rle	; CY into $c00
 	.byte 7
-	.word gone29_rle	; CY
+	.word gone10_rle	; CY (same as 10)
 
 	.byte 255
 	.word gone09_rle	; LB into $c00
@@ -3198,7 +3198,7 @@ gone_sequence:
 	.word gone40_rle	; CY
 
 	.byte 7
-	.word gone41_rle	; CY
+	.word gone10_rle	; CY (same as 10)
 
 	.byte 255
 	.word gone09_rle	; LB into $c00

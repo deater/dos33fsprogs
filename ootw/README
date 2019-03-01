@@ -41,3 +41,4 @@ Memory squeeze!
 	 8,562 over	move gr_make_quake out of common code
 	 8,374 over	remove extraneous code (mostly put_sprite_flipped)
 	 5,469 over     allow changing bg on fly in sequence
+	 4,122 over	modify cyan frames to be on fly
