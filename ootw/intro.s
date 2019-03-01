@@ -1,3 +1,6 @@
+.define HACK 1
+
+
 ;=====================================
 ; Intro
 
@@ -28,9 +31,8 @@ intro:
 ; Opening scene with car
 ;===============================
 ;===============================
-
-	;=============================
-	; Load background to $c00
+.if HACK
+	; Load background
 
 	lda	#>(building_rle)
 	sta	GBASH
@@ -38,11 +40,7 @@ intro:
 	sta	GBASL
 
 	lda	#$0c				; load to $c00
-
 	jsr	load_rle_gr
-
-	;=================================
-	; copy $c00 to both pages $400/$800
 
 	jsr	gr_copy_to_current
 	jsr	page_flip
@@ -66,7 +64,6 @@ intro:
 	sta	GBASL
 
 	lda	#$0c				; load to $c00
-
 	jsr	load_rle_gr
 
 	jsr	gr_copy_to_current
@@ -97,6 +94,7 @@ intro:
 	sta	GBASH
 	lda	#<(outer_door_rle)
 	sta	GBASL
+
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
 
@@ -128,13 +126,15 @@ elevator:
 	sta	GBASH
 	lda	#<(elevator_rle)
 	sta	GBASL
+
 	lda	#$c			; load to off-screen $c00
 	jsr	load_rle_gr
+
 	lda	#>(elevator_rle)
 	sta	GBASH
 	lda	#<(elevator_rle)
 	sta	GBASL
-	lda	#$10			; load to off-screen $c00
+	lda	#$10			; load also to off-screen $1000
 	jsr	load_rle_gr
 
 
@@ -486,7 +486,7 @@ elevator_exit:
 
 
 	;=============================
-	; Load background to $c00
+	; Load elevator background
 
 	lda	#>(off_elevator_rle)
 	sta	GBASH
@@ -605,7 +605,7 @@ keypad:
 	jsr	load_rle_gr
 
 	;==================================
-	; draw walking off the elevator
+	; draw keypad sequence
 
 	lda	#<keypad_sequence
 	sta	INTRO_LOOPL
@@ -1509,7 +1509,7 @@ thunderstorm:
 ;	bpl	outside_loop
 ;	bit	KEYRESET
 
-
+.endif
 ;===============================
 ;===============================
 ; Tunnel 1
@@ -1645,6 +1645,8 @@ gone_loop:
 .include "intro_graphics/01_building/intro_building_car.inc"
 .include "intro_graphics/01_building/intro_car.inc"
 
+.if HACK
+
 .include "intro_graphics/02_outer_door/outer_door.inc"
 .include "intro_graphics/02_outer_door/feet.inc"
 
@@ -1657,6 +1659,8 @@ gone_loop:
 .include "intro_graphics/04_keypad/intro_keypad_bg.inc"
 .include "intro_graphics/04_keypad/intro_hands.inc"
 .include "intro_graphics/04_keypad/intro_opening.inc"
+
+.endif
 
 .include "intro_graphics/05_scanner/intro_scanner.inc"
 .include "intro_graphics/05_scanner/intro_scanning.inc"
@@ -1687,8 +1691,25 @@ run_sequence:
 run_sequence_loop:
 	lda	(INTRO_LOOPL),Y		; get time
 	beq	run_sequence_done
-	tax
 
+	cmp	#$ff
+	bne	not_reload
+
+	iny
+
+	lda	(INTRO_LOOPL),Y
+	sta	GBASL
+	iny
+	lda	(INTRO_LOOPL),Y
+	sta	GBASH
+	iny
+	sty	INTRO_LOOPER		; save for later
+	lda	#$0c			; load to $c00
+	jsr	load_rle_gr
+	jmp	seq_stuff
+
+not_reload:
+	tax
 	jsr	long_wait
 
 	iny
@@ -1705,6 +1726,7 @@ run_sequence_loop:
 
 	jsr	gr_overlay
 	jsr	page_flip
+seq_stuff:
 	ldy	INTRO_LOOPER
 
 	jmp	run_sequence_loop
@@ -1906,7 +1928,7 @@ outtacar_sequence:
 
 
 ; Getting out of car sequence
-
+.if HACK
 feet_sequence:
 	.byte	100
 	.word	feet01_rle
@@ -1943,6 +1965,8 @@ feet_sequence:
 	.byte	100
 	.word	nothing_rle
 	.byte	0
+
+
 
 ; Walking off elevator sequence
 
@@ -2132,7 +2156,7 @@ scanning_sequence:
 	.word	scan19_rle
 	.byte	0
 
-
+.endif
 
 ; AI sequence
 
@@ -2232,7 +2256,6 @@ accelerator:
 	.byte 0,17, ": _________:_:",0
 	.byte 0,18, ":/_________:/",0
 	.byte 255
-
 
 ; Power-up sequence
 
@@ -2608,7 +2631,7 @@ drinking_sequence:
 	.word drinking05_rle
 	.byte 0
 
-
+.if HACK
 
 	; Lightning sequence
 lightning_sequence:
@@ -2848,7 +2871,7 @@ bolt_sequence:
 	.byte 0
 ;	.word nothing_rle
 
-
+.endif
 	;=======================
 	; Tunnel1 Sequence
 	;=======================
@@ -3029,93 +3052,165 @@ gone_sequence:
 
 	.byte 50
 	.word white_rle
+
 	.byte 7
 	.word gone01_rle	; B
+
 	.byte 7
 	.word gone02_rle	; B
+
 	.byte 7
 	.word gone03_rle	; B
+
 	.byte 7
 	.word gone04_rle	; B
+
 	.byte 7
 	.word gone05_rle	; B
+
 	.byte 7
 	.word gone06_rle	; B
+
 	.byte 7
 	.word gone07_rle	; B
+
 	.byte 7
 	.word gone08_rle	; B
+
 	.byte 7
 	.word gone09_rle	; LB
+
 	.byte 7
 	.word gone10_rle	; CY
+
+	.byte 255
+	.word gone09_rle	; LB into $c00
 	.byte 7
 	.word gone11_rle	; LB
+
+	.byte 255
+	.word gone_rle		; B back into $c00
 	.byte 7
 	.word gone02_rle	; B (12 is dupe of 2)
+
 	.byte 7
 	.word gone13_rle	; B
+
+	.byte 255
+	.word gone09_rle	; LB into $c00
 	.byte 7
 	.word gone14_rle	; LB
+
+	.byte 255
+	.word gone_rle		; B back into $c00 + plain
 	.byte 7
-	.word nothing_rle	; B (plain?)
+	.word nothing_rle
+
 	.byte 7
 	.word gone16_rle	; B
+
 	.byte 7
 	.word nothing_rle	; B (plain?)
+
 	.byte 7
 	.word gone18_rle	; B
+
 	.byte 7
 	.word gone19_rle	; B
+
 	.byte 7
 	.word gone20_rle	; B
+
 	.byte 7
 	.word gone21_rle	; B
+
 	.byte 7
 	.word nothing_rle	; B (plain?)
+
 	.byte 7
 	.word gone23_rle	; B
+
 	.byte 7
 	.word gone24_rle	; B
+
 	.byte 7
 	.word gone25_rle	; B
+
 	.byte 7
 	.word gone26_rle	; B
+
 	.byte 7
 	.word gone27_rle	; B
+
+	.byte 255
+	.word gone09_rle	; LB into $c00
 	.byte 7
 	.word gone28_rle	; LB
+
+	.byte 255
+	.word gone10_rle	; CY into $c00
 	.byte 7
 	.word gone29_rle	; CY
+
+	.byte 255
+	.word gone09_rle	; LB into $c00
 	.byte 7
-	.word gone30_rle	; LB
+	.word gone28_rle	; LB (30 same as 28)
+
+	.byte 255
+	.word gone_rle		; B back into $c00 + plain
 	.byte 7
 	.word gone31_rle	; B
+
+	.byte 255
+	.word gone09_rle	; LB into $c00
 	.byte 7
 	.word gone32_rle	; LB
+
+	.byte 255
+	.word gone_rle		; B back into $c00 + plain
 	.byte 7
 	.word nothing_rle	; B (plain?)
+
 	.byte 7
 	.word gone34_rle	; B
+
 	.byte 7
 	.word gone35_rle	; B
+
 	.byte 7
 	.word gone36_rle	; B
+
 	.byte 7
 	.word gone37_rle	; B
+
 	.byte 7
 	.word gone38_rle	; B
+
+	.byte 255
+	.word gone09_rle	; LB into $c00
 	.byte 7
 	.word gone39_rle	; LB
+
+	.byte 255
+	.word gone10_rle	; CY into $c00
 	.byte 7
 	.word gone40_rle	; CY
+
 	.byte 7
 	.word gone41_rle	; CY
+
+	.byte 255
+	.word gone09_rle	; LB into $c00
 	.byte 7
 	.word gone42_rle	; LB
+
+	.byte 255
+	.word gone_rle		; B back into $c00 + plain
 	.byte 7
 	.word gone43_rle	; B
+
 	.byte 7
 	.word nothing_rle
 	.byte 0
-;	.word nothing_rle
+

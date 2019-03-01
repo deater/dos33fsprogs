@@ -105,7 +105,7 @@ intro_gone.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm gone27.png gone27_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone28.png gone28_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone29.png gone29_rle >> intro_gone.inc
-	$(PNG2RLE) asm gone30.png gone30_rle >> intro_gone.inc
+#	$(PNG2RLE) asm gone30.png gone30_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone31.png gone31_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone32.png gone32_rle >> intro_gone.inc
 #	$(PNG2RLE) asm gone33.png gone33_rle >> intro_gone.inc
