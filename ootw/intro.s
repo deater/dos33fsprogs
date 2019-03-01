@@ -1645,8 +1645,6 @@ gone_loop:
 .include "intro_graphics/01_building/intro_building_car.inc"
 .include "intro_graphics/01_building/intro_car.inc"
 
-.if 0
-
 .include "intro_graphics/02_outer_door/outer_door.inc"
 .include "intro_graphics/02_outer_door/feet.inc"
 
@@ -1659,6 +1657,8 @@ gone_loop:
 .include "intro_graphics/04_keypad/intro_keypad_bg.inc"
 .include "intro_graphics/04_keypad/intro_hands.inc"
 .include "intro_graphics/04_keypad/intro_opening.inc"
+
+.if 0
 
 .include "intro_graphics/05_scanner/intro_scanner.inc"
 .include "intro_graphics/05_scanner/intro_scanning.inc"
@@ -2779,7 +2779,7 @@ lightning_sequence:
 	.byte 7
 	.word nothing_rle
 	.byte 0
-	.word nothing_rle
+;	.word nothing_rle
 
 	;==============
 	; split, as was > 256
@@ -2853,7 +2853,7 @@ bolt_sequence:
 	; by 150 faded out and on to tunnel
 	.word nothing_rle
 	.byte 0
-	.word nothing_rle
+;	.word nothing_rle
 
 
 	;=======================
@@ -2910,7 +2910,7 @@ tunnel1_sequence:
 	.byte 2
 	.word nothing_rle
 	.byte 0
-	.word nothing_rle
+;	.word nothing_rle
 
 
 	;=======================
@@ -2961,7 +2961,7 @@ tunnel2_sequence:
 	.byte 2
 	.word nothing_rle
 	.byte 0
-	.word nothing_rle
+;	.word nothing_rle
 
 	;=======================
 	; Zappo Sequence
@@ -3006,24 +3006,24 @@ zappo_sequence:
 	.word zappo17_rle	; B
 	.byte 2
 	.word white_rle
-	.byte 1
+	.byte 5
 	.word black_rle
-	.byte 1
+	.byte 5
 	.word white_rle
-	.byte 1
+	.byte 5
 	.word black_rle
-	.byte 1
-	.word white_rle
-	.byte 1
-	.word black_rle
-	.byte 1
-	.word white_rle
-	.byte 1
-	.word black_rle
-	.byte 1
-	.word white_rle
-	.byte 1
-	.word black_rle
+;	.byte 5
+;	.word white_rle
+;	.byte 1
+;	.word black_rle
+;	.byte 1
+;	.word white_rle
+;	.byte 1
+;	.word black_rle
+;	.byte 1
+;	.word white_rle
+;	.byte 1
+;	.word black_rle
 	.byte 0
 	.word nothing_rle
 
@@ -3125,4 +3125,4 @@ gone_sequence:
 	.byte 7
 	.word nothing_rle
 	.byte 0
-	.word nothing_rle
+;	.word nothing_rle
