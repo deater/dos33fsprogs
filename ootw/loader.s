@@ -84,7 +84,7 @@ load_done:
 
 	jsr	opendir		; open and read entire file into memory
 
-	jsr	$2000		; jump to common entry point
+	jsr	$1800		; jump to common entry point
 
 	; hope they updated the WHICH_LOAD value
 
