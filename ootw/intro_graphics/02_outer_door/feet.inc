@@ -195,6 +195,3 @@ feet15_rle:	.byte $28 ; ysize=48
 	.byte $A5,$00, $A0,$23,$AA, $A5,$00, $A0,$23,$AA, $A5,$00, $A0,$23,$AA, $A5,$00
 	.byte $A0,$23,$AA, $A5,$00, $A0,$23,$AA, $A5,$00, $A0,$23,$AA, $A5,$00, $A0,$1D,$AA
 	.byte $A1
-blank_rle:	.byte $28 ; ysize=48
-	.byte $A0,$FF,$AA, $A0,$FF,$AA, $A0,$FF,$AA, $A0,$C3,$AA
-	.byte $A1

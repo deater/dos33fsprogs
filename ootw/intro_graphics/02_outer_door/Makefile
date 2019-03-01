@@ -30,7 +30,7 @@ feet.inc:	$(PNG2RLE) feet01.png feet02.png \
 	$(PNG2RLE) asm feet13.png feet13_rle >> feet.inc
 	$(PNG2RLE) asm feet14.png feet14_rle >> feet.inc
 	$(PNG2RLE) asm feet15.png feet15_rle >> feet.inc
-	$(PNG2RLE) asm blank.png blank_rle >> feet.inc
+
 
 
 

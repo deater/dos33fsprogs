@@ -1939,9 +1939,9 @@ feet_sequence:
 	.byte	10
 	.word	feet15_rle
 	.byte	10
-	.word	blank_rle
+	.word	nothing_rle
 	.byte	100
-	.word	blank_rle
+	.word	nothing_rle
 	.byte	0
 
 ; Walking off elevator sequence
@@ -2082,9 +2082,9 @@ opening_sequence:
 	.byte	15
 	.word	opening12_rle
 	.byte	15
-	.word	blank_rle
+	.word	nothing_rle
 	.byte	100
-	.word	blank_rle
+	.word	nothing_rle
 	.byte	0
 
 ; Scanning sequence
@@ -2157,8 +2157,8 @@ ai_sequence:
 ;	.byte	0
 
 static_pattern:
-	.word	blank_rle	; 0
-	.word	blank_rle	; 2
+	.word	nothing_rle	; 0
+	.word	nothing_rle	; 2
 	.word	static01_rle	; 4
 	.word	static03_rle	; 6
 	.word	static02_rle	; 8
