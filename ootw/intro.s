@@ -2949,39 +2949,39 @@ zappo_sequence:
 	.byte 50
 	.word white_rle
 	.byte 20
-	.word zappo01_rle
+	.word zappo01_rle	; B
 	.byte 20
-	.word zappo02_rle
+	.word zappo02_rle	; B
 	.byte 20
-	.word zappo03_rle
+	.word zappo03_rle	; A
 	.byte 20
-	.word zappo04_rle
+	.word zappo04_rle	; B
 	.byte 20
-	.word zappo05_rle
+	.word zappo05_rle	; B
 	.byte 20
-	.word zappo06_rle
+	.word zappo06_rle	; A
 	.byte 20
-	.word zappo07_rle
+	.word zappo07_rle	; B
 	.byte 20
-	.word zappo08_rle
+	.word zappo08_rle	; B
 	.byte 20
-	.word zappo09_rle
+	.word zappo09_rle	; A
 	.byte 20
-	.word zappo10_rle
+	.word zappo10_rle	; B
 	.byte 20
-	.word zappo11_rle
+	.word zappo11_rle	; A
 	.byte 20
-	.word zappo12_rle
+	.word zappo12_rle	; B
 	.byte 20
-	.word zappo13_rle
+	.word zappo13_rle	; B
 	.byte 20
-	.word zappo14_rle
+	.word zappo14_rle	; B
 	.byte 20
-	.word zappo15_rle
+	.word zappo15_rle	; A
 	.byte 20
-	.word zappo16_rle
+	.word zappo16_rle	; B
 	.byte 20
-	.word zappo17_rle
+	.word zappo17_rle	; B
 	.byte 20
 	.word white_rle
 	.byte 20
