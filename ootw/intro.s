@@ -1570,10 +1570,10 @@ tunnel1:
 	jsr	run_sequence
 
 
-tunnel2_loop:
-	lda	KEYPRESS
-	bpl	tunnel2_loop
-	bit	KEYRESET
+;tunnel2_loop:
+;	lda	KEYPRESS
+;	bpl	tunnel2_loop
+;	bit	KEYRESET
 
 
 ;===============================
@@ -1582,9 +1582,18 @@ tunnel2_loop:
 ;===============================
 ;===============================
 
+	lda	#>(blue_zappo_rle)
+	sta	GBASH
+	lda	#<(blue_zappo_rle)
+	sta	GBASL
+	lda	#$c			; load to off-screen $c00
+	jsr	load_rle_gr
 
-	;=============================
-	; Load background to $c00
+	lda	#<zappo_sequence
+	sta	INTRO_LOOPL
+	lda	#>zappo_sequence
+	sta	INTRO_LOOPH
+
 
 	lda	#>(gone_rle)
 	sta	GBASH
@@ -1650,8 +1659,8 @@ gone_loop:
 .include "intro_graphics/09_tunnel/intro_tunnel1.inc"
 .include "intro_graphics/09_tunnel/intro_tunnel2.inc"
 
+.include "intro_graphics/10_gone/intro_zappo.inc"
 .include "intro_graphics/10_gone/intro_gone.inc"
-
 
 	;=================================
 	; Display a sequence of images
@@ -2929,5 +2938,69 @@ tunnel2_sequence:
 	.word tunnel2_17_rle
 	.byte 2
 	.word nothing_rle
+	.byte 0
+	.word nothing_rle
+
+	;=======================
+	; Zappo Sequence
+	;=======================
+zappo_sequence:
+
+	.byte 50
+	.word white_rle
+	.byte 20
+	.word zappo01_rle
+	.byte 20
+	.word zappo02_rle
+	.byte 20
+	.word zappo03_rle
+	.byte 20
+	.word zappo04_rle
+	.byte 20
+	.word zappo05_rle
+	.byte 20
+	.word zappo06_rle
+	.byte 20
+	.word zappo07_rle
+	.byte 20
+	.word zappo08_rle
+	.byte 20
+	.word zappo09_rle
+	.byte 20
+	.word zappo10_rle
+	.byte 20
+	.word zappo11_rle
+	.byte 20
+	.word zappo12_rle
+	.byte 20
+	.word zappo13_rle
+	.byte 20
+	.word zappo14_rle
+	.byte 20
+	.word zappo15_rle
+	.byte 20
+	.word zappo16_rle
+	.byte 20
+	.word zappo17_rle
+	.byte 20
+	.word white_rle
+	.byte 20
+	.word black_rle
+	.byte 20
+	.word white_rle
+	.byte 20
+	.word black_rle
+	.byte 20
+	.word white_rle
+	.byte 20
+	.word black_rle
+	.byte 20
+	.word white_rle
+	.byte 20
+	.word black_rle
+	.byte 20
+	.word white_rle
+	.byte 20
+	.word black_rle
 	.byte 0
 	.word nothing_rle
