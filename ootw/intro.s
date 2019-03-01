@@ -1578,7 +1578,7 @@ tunnel1:
 ;	bit	KEYRESET
 
 
-.if HACK
+
 ;===============================
 ;===============================
 ; Zappo / Gone
@@ -1607,7 +1607,7 @@ tunnel1:
 
 	;======================
 	; gone
-
+.if HACK
 	lda	#>(gone_rle)
 	sta	GBASH
 	lda	#<(gone_rle)
@@ -1623,13 +1623,15 @@ tunnel1:
 	lda	#>gone_sequence
 	sta	INTRO_LOOPH
 
+
 	jsr	run_sequence
+.endif
 
 gone_loop:
 	lda	KEYPRESS
 	bpl	gone_loop
 	bit	KEYRESET
-.endif
+
 
 	rts
 

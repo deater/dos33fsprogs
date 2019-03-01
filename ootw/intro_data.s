@@ -873,7 +873,7 @@ tunnel2_sequence:
 	.byte 0
 
 
-.if HACK
+
 
 	;=======================
 	; Zappo Sequence
@@ -958,7 +958,7 @@ zappo_sequence:
 	.word nothing_rle
 
 
-
+.if HACK
 	;=======================
 	; Gone Sequence
 	;=======================
