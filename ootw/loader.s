@@ -3,7 +3,9 @@
 ; the BASIC program sets $05 with which thing to load
 
 
-
+nibtbl =  $300	; nothing uses the bottom 128 bytes of $300, do they?
+bit2tbl = $380 	; bit2tbl:	.res 86			;	= nibtbl+128
+filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 
 ; read any file slot 6 version
 ; based on FASTLD6 and RTS copyright (c) Peter Ferrie 2011-2013,2018
@@ -84,7 +86,7 @@ load_done:
 
 	jsr	opendir		; open and read entire file into memory
 
-	jsr	$1800		; jump to common entry point
+	jsr	$1700		; jump to common entry point
 
 	; hope they updated the WHICH_LOAD value
 
@@ -748,7 +750,7 @@ sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
 
 
 ; From $BA96 of DOS33
-nibtbl:	.res 128			;		= *
+;nibtbl:	.res 128			;		= *
 ;	.byte	$00,$01,$98,$99,$02,$03,$9C,$04	; $BA96	; 00
 ;	.byte	$05,$06,$A0,$A1,$A2,$A4,$A4,$A5 ; $BA9E	; 08
 ;	.byte	$07,$08,$A8,$A9,$AA,$09,$0A,$0B ; $BAA6	; 10
@@ -767,7 +769,7 @@ nibtbl:	.res 128			;		= *
 ;	.byte	$00,$00,$00,$00,$00,$00,$00,$00
 
 
-bit2tbl:	.res 86			;	= nibtbl+128
-filbuf:		.res 4			;	= bit2tbl+86
+;bit2tbl:	.res 86			;	= nibtbl+128
+;filbuf:		.res 4			;	= bit2tbl+86
 					;dataend         = filbuf+4
 

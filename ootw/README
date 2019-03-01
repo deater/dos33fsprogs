@@ -28,8 +28,8 @@ Memory map:
 	08-0b	GR page1
 	0c-0f	offscreen data  ($c00 = disk load buffer)
 	10-13	offscreen data2
-	14-17	loader
-	18-bf	program/data (42k)
+	14-16	loader
+	17-bf	program/data (42.25k)
 	c0-cf	I/O
 	d0-ff	ROM
 
@@ -44,3 +44,5 @@ Memory squeeze!
 	 5,469 over     allow changing bg on fly in sequence
 	 4,122 over	modify cyan frames to be on fly
 	 2,749 over	do same for zappo routines
+	 2,493 over	squish disk loader vars to page 3
+	

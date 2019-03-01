@@ -10,16 +10,16 @@ all:	ootw.dsk
 ootw.dsk:	HELLO LOADER INTRO OOTW OOTW_C2 COMPRESS-TEST
 	$(DOS33) -y ootw.dsk SAVE A HELLO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1400 LOADER
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1800 INTRO
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1800 OOTW
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1800 OOTW_C2
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 INTRO
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C2
 	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 COMPRESS-TEST
 
 
 ####
 
 OOTW:	ootw.o
-	ld65 -o OOTW ootw.o -C ../linker_scripts/apple2_1800.inc
+	ld65 -o OOTW ootw.o -C ../linker_scripts/apple2_1700.inc
 
 ootw.o:	ootw.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
@@ -38,7 +38,7 @@ ootw.o:	ootw.s \
 ####
 
 OOTW_C2:	ootw_c2.o
-	ld65 -o OOTW_C2 ootw_c2.o -C ../linker_scripts/apple2_1800.inc
+	ld65 -o OOTW_C2 ootw_c2.o -C ../linker_scripts/apple2_1700.inc
 
 ootw_c2.o:	ootw_c2.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
@@ -52,7 +52,7 @@ ootw_c2.o:	ootw_c2.s \
 ####
 
 INTRO:	intro.o
-	ld65 -o INTRO intro.o -C ../linker_scripts/apple2_1800.inc
+	ld65 -o INTRO intro.o -C ../linker_scripts/apple2_1700.inc
 
 intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
