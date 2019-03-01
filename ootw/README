@@ -39,4 +39,4 @@ Memory squeeze!
 	10,734 over	remove extraneous blank bg image
 	 8,658 over	re-arrange memory map, 42k avail now
 	 8,562 over	move gr_make_quake out of common code
-
+	 8,374 over	remove extraneous code (mostly put_sprite_flipped)

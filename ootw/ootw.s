@@ -89,6 +89,7 @@ end_message:
 .include "gr_copy.s"
 .include "gr_make_quake.s"
 .include "gr_putsprite.s"
+.include "gr_putsprite_flipped.s"
 .include "gr_offsets.s"
 .include "random16.s"
 .include "keyboard.s"

@@ -1,23 +1,23 @@
-clear_screens:
-	;===================================
-	; Clear top/bottom of page 0
-	;===================================
+;clear_screens:
+;	;===================================
+;	; Clear top/bottom of page 0
+;	;===================================
+;
+;	lda	#$0
+;	sta	DRAW_PAGE
+;	jsr	clear_top
+;	jsr	clear_bottom
 
-	lda	#$0
-	sta	DRAW_PAGE
-	jsr	clear_top
-	jsr	clear_bottom
-
-	;===================================
-	; Clear top/bottom of page 1
-	;===================================
-
-	lda	#$4
-	sta	DRAW_PAGE
-	jsr	clear_top
-	jsr	clear_bottom
-
-        rts
+;	;===================================
+;	; Clear top/bottom of page 1
+;	;===================================
+;
+;	lda	#$4
+;	sta	DRAW_PAGE
+;	jsr	clear_top
+;	jsr	clear_bottom
+;
+;	rts
 
 clear_bottoms:
 
@@ -135,24 +135,24 @@ __cbf2:
 	rts								; 6
 
 
-clear_screens_notext:
+;clear_screens_notext:
         ;===================================
         ; Clear top/bottom of page 0
         ;===================================
 
-        lda     #$0
-        sta     DRAW_PAGE
-        jsr     clear_all
+;	lda	#$0
+;	sta	DRAW_PAGE
+;	jsr	clear_all
 
-        ;===================================
+	;===================================
         ; Clear top/bottom of page 1
         ;===================================
 
-        lda     #$4
-        sta     DRAW_PAGE
-        jsr     clear_all
+;	lda	#$4
+;	sta	DRAW_PAGE
+;	jsr	clear_all
 
-        rts
+;	rts
 
 
 	;=========================================================
