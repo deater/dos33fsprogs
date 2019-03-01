@@ -83,7 +83,7 @@ intro:
 
 	jsr	run_sequence
 
-.if 0
+
 ;===============================
 ;===============================
 ; Walk into door
@@ -1471,7 +1471,7 @@ particle_loop2:
 ;	bpl	collider_ui_loop
 ;	bit	KEYRESET
 
-.endif
+
 ;===============================
 ;===============================
 ; Thunderstorm Outside
@@ -1658,8 +1658,6 @@ gone_loop:
 .include "intro_graphics/04_keypad/intro_hands.inc"
 .include "intro_graphics/04_keypad/intro_opening.inc"
 
-.if 0
-
 .include "intro_graphics/05_scanner/intro_scanner.inc"
 .include "intro_graphics/05_scanner/intro_scanning.inc"
 .include "intro_graphics/05_scanner/intro_ai_bg.inc"
@@ -1671,8 +1669,6 @@ gone_loop:
 
 .include "intro_graphics/07_soda/intro_open_soda.inc"
 .include "intro_graphics/07_soda/intro_drinking.inc"
-
-.endif
 
 .include "intro_graphics/08_lightning/lightning.inc"
 
@@ -1750,7 +1746,6 @@ run_sequence_40x40_loop:
 run_sequence_40x40_done:
 	rts
 
-.if 0
 
 	;=================================
 	; Display a sequence of images
@@ -1856,7 +1851,7 @@ no_dna:
 	jmp	run_sequence_static_loop
 run_sequence_static_done:
 	rts
-.endif
+
 
 	;=====================
 	; long(er) wait
@@ -1909,7 +1904,6 @@ outtacar_sequence:
 	.word	intro_car14
 	.byte	0
 
-.if 0
 
 ; Getting out of car sequence
 
@@ -2614,7 +2608,6 @@ drinking_sequence:
 	.word drinking05_rle
 	.byte 0
 
-.endif
 
 
 	; Lightning sequence
