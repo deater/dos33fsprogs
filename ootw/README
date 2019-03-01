@@ -22,7 +22,8 @@ Up to tunnel1, using RLE:
 Memory map:
 	00	zero page
 	01	stack
-	02-03	
+	02	????
+	03	dos33 nibble table
 	04-07	GR page0
 	08-0b	GR page1
 	0c-0f	offscreen data  ($c00 = disk load buffer)
@@ -42,3 +43,4 @@ Memory squeeze!
 	 8,374 over	remove extraneous code (mostly put_sprite_flipped)
 	 5,469 over     allow changing bg on fly in sequence
 	 4,122 over	modify cyan frames to be on fly
+	 2,749 over	do same for zappo routines

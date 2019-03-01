@@ -2996,26 +2996,51 @@ zappo_sequence:
 	.word zappo04_rle	; B
 	.byte 2
 	.word zappo05_rle	; B
+
+	.byte 255
+	.word zappo03_rle	; load A
 	.byte 2
 	.word zappo06_rle	; A
+
+	.byte 255
+	.word blue_zappo_rle	; load b
 	.byte 2
 	.word zappo07_rle	; B
+
 	.byte 2
 	.word zappo08_rle	; B
+
+	.byte 255
+	.word zappo03_rle	; load A
 	.byte 2
 	.word zappo09_rle	; A
+
+	.byte 255
+	.word blue_zappo_rle	; load b
 	.byte 2
 	.word zappo10_rle	; B
+
+	.byte 255
+	.word zappo03_rle	; load A
 	.byte 2
 	.word zappo11_rle	; A
+
+	.byte 255
+	.word blue_zappo_rle	; load b
 	.byte 2
 	.word zappo12_rle	; B
 	.byte 2
 	.word zappo13_rle	; B
 	.byte 2
 	.word zappo14_rle	; B
+
+	.byte 255
+	.word zappo03_rle	; load A
 	.byte 2
 	.word zappo15_rle	; A
+
+	.byte 255
+	.word blue_zappo_rle	; load b
 	.byte 2
 	.word zappo16_rle	; B
 	.byte 2
