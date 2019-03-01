@@ -87,17 +87,17 @@ intro_gone.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm gone09.png gone09_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone10.png gone10_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone11.png gone11_rle >> intro_gone.inc
-	$(PNG2RLE) asm gone12.png gone12_rle >> intro_gone.inc
+#	$(PNG2RLE) asm gone12.png gone12_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone13.png gone13_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone14.png gone14_rle >> intro_gone.inc
-	$(PNG2RLE) asm gone15.png gone15_rle >> intro_gone.inc
+#	$(PNG2RLE) asm gone15.png gone15_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone16.png gone16_rle >> intro_gone.inc
-	$(PNG2RLE) asm gone17.png gone17_rle >> intro_gone.inc
+#	$(PNG2RLE) asm gone17.png gone17_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone18.png gone18_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone19.png gone19_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone20.png gone20_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone21.png gone21_rle >> intro_gone.inc
-	$(PNG2RLE) asm gone22.png gone22_rle >> intro_gone.inc
+#	$(PNG2RLE) asm gone22.png gone22_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone23.png gone23_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone24.png gone24_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone25.png gone25_rle >> intro_gone.inc
@@ -108,7 +108,7 @@ intro_gone.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm gone30.png gone30_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone31.png gone31_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone32.png gone32_rle >> intro_gone.inc
-	$(PNG2RLE) asm gone33.png gone33_rle >> intro_gone.inc
+#	$(PNG2RLE) asm gone33.png gone33_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone34.png gone34_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone35.png gone35_rle >> intro_gone.inc
 	$(PNG2RLE) asm gone36.png gone36_rle >> intro_gone.inc
