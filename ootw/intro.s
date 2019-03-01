@@ -83,7 +83,7 @@ intro:
 
 	jsr	run_sequence
 
-
+.if 0
 ;===============================
 ;===============================
 ; Walk into door
@@ -1471,7 +1471,7 @@ particle_loop2:
 ;	bpl	collider_ui_loop
 ;	bit	KEYRESET
 
-
+.endif
 ;===============================
 ;===============================
 ; Thunderstorm Outside
@@ -1615,9 +1615,9 @@ tunnel1:
 	jsr	gr_copy_to_current
 	jsr	page_flip
 
-	lda	#<zappo_sequence
+	lda	#<gone_sequence
 	sta	INTRO_LOOPL
-	lda	#>zappo_sequence
+	lda	#>gone_sequence
 	sta	INTRO_LOOPH
 
 	jsr	run_sequence
@@ -1645,6 +1645,8 @@ gone_loop:
 .include "intro_graphics/01_building/intro_building_car.inc"
 .include "intro_graphics/01_building/intro_car.inc"
 
+.if 0
+
 .include "intro_graphics/02_outer_door/outer_door.inc"
 .include "intro_graphics/02_outer_door/feet.inc"
 
@@ -1669,6 +1671,8 @@ gone_loop:
 
 .include "intro_graphics/07_soda/intro_open_soda.inc"
 .include "intro_graphics/07_soda/intro_drinking.inc"
+
+.endif
 
 .include "intro_graphics/08_lightning/lightning.inc"
 
@@ -1746,7 +1750,7 @@ run_sequence_40x40_loop:
 run_sequence_40x40_done:
 	rts
 
-
+.if 0
 
 	;=================================
 	; Display a sequence of images
@@ -1852,7 +1856,7 @@ no_dna:
 	jmp	run_sequence_static_loop
 run_sequence_static_done:
 	rts
-
+.endif
 
 	;=====================
 	; long(er) wait
@@ -1904,6 +1908,8 @@ outtacar_sequence:
 	.byte	200
 	.word	intro_car14
 	.byte	0
+
+.if 0
 
 ; Getting out of car sequence
 
@@ -2608,7 +2614,7 @@ drinking_sequence:
 	.word drinking05_rle
 	.byte 0
 
-
+.endif
 
 
 	; Lightning sequence
@@ -2964,59 +2970,59 @@ zappo_sequence:
 
 	.byte 50
 	.word white_rle
-	.byte 20
+	.byte 2
 	.word zappo01_rle	; B
-	.byte 20
+	.byte 2
 	.word zappo02_rle	; B
-	.byte 20
+	.byte 2
 	.word zappo03_rle	; A
-	.byte 20
+	.byte 2
 	.word zappo04_rle	; B
-	.byte 20
+	.byte 2
 	.word zappo05_rle	; B
-	.byte 20
+	.byte 2
 	.word zappo06_rle	; A
-	.byte 20
+	.byte 2
 	.word zappo07_rle	; B
-	.byte 20
+	.byte 2
 	.word zappo08_rle	; B
-	.byte 20
+	.byte 2
 	.word zappo09_rle	; A
-	.byte 20
+	.byte 2
 	.word zappo10_rle	; B
-	.byte 20
+	.byte 2
 	.word zappo11_rle	; A
-	.byte 20
+	.byte 2
 	.word zappo12_rle	; B
-	.byte 20
+	.byte 2
 	.word zappo13_rle	; B
-	.byte 20
+	.byte 2
 	.word zappo14_rle	; B
-	.byte 20
+	.byte 2
 	.word zappo15_rle	; A
-	.byte 20
+	.byte 2
 	.word zappo16_rle	; B
-	.byte 20
+	.byte 2
 	.word zappo17_rle	; B
-	.byte 20
+	.byte 2
 	.word white_rle
-	.byte 20
+	.byte 1
 	.word black_rle
-	.byte 20
+	.byte 1
 	.word white_rle
-	.byte 20
+	.byte 1
 	.word black_rle
-	.byte 20
+	.byte 1
 	.word white_rle
-	.byte 20
+	.byte 1
 	.word black_rle
-	.byte 20
+	.byte 1
 	.word white_rle
-	.byte 20
+	.byte 1
 	.word black_rle
-	.byte 20
+	.byte 1
 	.word white_rle
-	.byte 20
+	.byte 1
 	.word black_rle
 	.byte 0
 	.word nothing_rle
@@ -3030,93 +3036,93 @@ gone_sequence:
 
 	.byte 50
 	.word white_rle
-	.byte 20
+	.byte 7
 	.word gone01_rle	; B
-	.byte 20
+	.byte 7
 	.word gone02_rle	; B
-	.byte 20
+	.byte 7
 	.word gone03_rle	; B
-	.byte 20
+	.byte 7
 	.word gone04_rle	; B
-	.byte 20
+	.byte 7
 	.word gone05_rle	; B
-	.byte 20
+	.byte 7
 	.word gone06_rle	; B
-	.byte 20
+	.byte 7
 	.word gone07_rle	; B
-	.byte 20
+	.byte 7
 	.word gone08_rle	; B
-	.byte 20
+	.byte 7
 	.word gone09_rle	; LB
-	.byte 20
+	.byte 7
 	.word gone10_rle	; CY
-	.byte 20
+	.byte 7
 	.word gone11_rle	; LB
-	.byte 20
+	.byte 7
 	.word gone02_rle	; B (12 is dupe of 2)
-	.byte 20
+	.byte 7
 	.word gone13_rle	; B
-	.byte 20
+	.byte 7
 	.word gone14_rle	; LB
-	.byte 20
+	.byte 7
 	.word nothing_rle	; B (plain?)
-	.byte 20
+	.byte 7
 	.word gone16_rle	; B
-	.byte 20
+	.byte 7
 	.word nothing_rle	; B (plain?)
-	.byte 20
+	.byte 7
 	.word gone18_rle	; B
-	.byte 20
+	.byte 7
 	.word gone19_rle	; B
-	.byte 20
+	.byte 7
 	.word gone20_rle	; B
-	.byte 20
+	.byte 7
 	.word gone21_rle	; B
-	.byte 20
+	.byte 7
 	.word nothing_rle	; B (plain?)
-	.byte 20
+	.byte 7
 	.word gone23_rle	; B
-	.byte 20
+	.byte 7
 	.word gone24_rle	; B
-	.byte 20
+	.byte 7
 	.word gone25_rle	; B
-	.byte 20
+	.byte 7
 	.word gone26_rle	; B
-	.byte 20
+	.byte 7
 	.word gone27_rle	; B
-	.byte 20
+	.byte 7
 	.word gone28_rle	; LB
-	.byte 20
+	.byte 7
 	.word gone29_rle	; CY
-	.byte 20
+	.byte 7
 	.word gone30_rle	; LB
-	.byte 20
+	.byte 7
 	.word gone31_rle	; B
-	.byte 20
+	.byte 7
 	.word gone32_rle	; LB
-	.byte 20
+	.byte 7
 	.word nothing_rle	; B (plain?)
-	.byte 20
+	.byte 7
 	.word gone34_rle	; B
-	.byte 20
+	.byte 7
 	.word gone35_rle	; B
-	.byte 20
+	.byte 7
 	.word gone36_rle	; B
-	.byte 20
+	.byte 7
 	.word gone37_rle	; B
-	.byte 20
+	.byte 7
 	.word gone38_rle	; B
-	.byte 20
+	.byte 7
 	.word gone39_rle	; LB
-	.byte 20
+	.byte 7
 	.word gone40_rle	; CY
-	.byte 20
+	.byte 7
 	.word gone41_rle	; CY
-	.byte 20
+	.byte 7
 	.word gone42_rle	; LB
-	.byte 20
+	.byte 7
 	.word gone43_rle	; B
-	.byte 20
+	.byte 7
 	.word nothing_rle
 	.byte 0
 	.word nothing_rle
