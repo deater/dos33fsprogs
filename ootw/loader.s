@@ -27,8 +27,8 @@
 	tmptrk	=	$fe	; temporary copy of current track
 	phase	=	$ff	; current phase for /seek
 
-	dirbuf	=	$1d00
-			;$1e00	; note, don't put this immediately below
+	dirbuf	=	$c00
+				; note, don't put this immediately below
 				;   the value being read as destaddr-4
 				;   is temporarily overwritten during read
 				;   process

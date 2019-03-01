@@ -9,7 +9,7 @@ all:	ootw.dsk
 
 ootw.dsk:	HELLO LOADER INTRO OOTW OOTW_C2 COMPRESS-TEST
 	$(DOS33) -y ootw.dsk SAVE A HELLO
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1800 LOADER
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1400 LOADER
 	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 INTRO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 OOTW
 	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 OOTW_C2
@@ -89,7 +89,7 @@ intro.o:	intro.s \
 ####
 
 LOADER:	loader.o
-	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1800.inc
+	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1400.inc
 
 loader.o:	loader.s
 	ca65 -o loader.o loader.s -l loader.lst
