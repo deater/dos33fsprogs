@@ -36,7 +36,7 @@ Memory map:
 
 Memory squeeze!
 
-	10,748 over	all graphincs in
+	10,748 over	all graphics in
 	10,734 over	remove extraneous blank bg image
 	 8,658 over	re-arrange memory map, 42k avail now
 	 8,562 over	move gr_make_quake out of common code
@@ -45,4 +45,4 @@ Memory squeeze!
 	 4,122 over	modify cyan frames to be on fly
 	 2,749 over	do same for zappo routines
 	 2,493 over	squish disk loader vars to page 3
-	
+	 2,165 over	horrible hack to auto-go to next image in sequence

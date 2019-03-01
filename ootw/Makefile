@@ -7,6 +7,13 @@ PNG2LZ4 = ../gr-utils/png2lz4
 
 all:	ootw.dsk
 
+#later_data
+#later_data:	later_data.o
+#	ld65 -o later_data later_data.o -C ../linker_scripts/apple2_2000.inc
+#
+#later_data.o:	later_data.s
+#	ca65 -o later_data.o later_data.s -l later_data.lst
+
 ootw.dsk:	HELLO LOADER INTRO OOTW OOTW_C2 COMPRESS-TEST
 	$(DOS33) -y ootw.dsk SAVE A HELLO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1400 LOADER
@@ -56,7 +63,7 @@ INTRO:	intro.o
 
 intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
-	gr_overlay.s \
+	gr_overlay.s intro_data.s \
 	keyboard.s random16.s text_print.s \
 	intro_graphics/01_building/intro_car.inc \
 	intro_graphics/01_building/intro_building_car.inc \
