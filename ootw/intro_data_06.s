@@ -1,4 +1,8 @@
-; background graphics
+;=================================
+;=================================
+; Intro Segment 06 Data (Console)
+;=================================
+;=================================
 
 .include "intro_graphics/06_console/intro_desktop.inc"
 .include "intro_graphics/06_console/intro_cursor.inc"
@@ -224,3 +228,38 @@ times:
 	; of 6 even though it is printed then erased (but never displayed)
 	.word five,four,three,two,one,zero,zero
 
+
+;=================================
+;=================================
+; Intro Segment 07 Data (Soda)
+;=================================
+;=================================
+
+.include "intro_graphics/07_soda/intro_open_soda.inc"
+.include "intro_graphics/07_soda/intro_drinking.inc"
+
+; Soda sequence
+
+soda_sequence:
+	.byte	1
+	.word	soda01_rle
+	.byte	128+30	;	.word	soda02_rle
+	.byte	128+15	;	.word	soda03_rle
+	.byte	128+15	;	.word	soda04_rle
+	.byte	128+15	;	.word	soda05_rle
+	.byte	128+15	;	.word	soda06_rle
+	.byte	128+15	;	.word	soda07_rle
+	.byte	128+15	;	.word	soda08_rle
+	.byte	128+15	;	.word	soda09_rle
+	.byte	20
+	.word	soda09_rle
+	.byte	0
+
+
+drinking_sequence:
+	.byte 30
+	.word drinking02_rle
+	.byte 128+30	;	.word drinking03_rle
+	.byte 128+30	;	.word drinking04_rle
+	.byte 128+30	;	.word drinking05_rle
+	.byte 0

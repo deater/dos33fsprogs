@@ -694,11 +694,25 @@ spin_on_key:
 	bne	spin_on_key
 
 
-.if 0
 
 ;===============================
 ; Sitting at Desk
 ;===============================
+
+	;==================================
+	; Uncompress the data
+	;==================================
+	lda	#<intro6_data_lz4
+	sta	LZ4_SRC
+	lda	#>intro6_data_lz4
+	sta	LZ4_SRC+1
+
+	lda	#$80		; load to $8000
+
+	jsr	lz4_decode
+
+	;======================
+	; load bg
 
 	lda	#>(desktop_rle)
 	sta	GBASH
@@ -1208,6 +1222,7 @@ particle_loop:
 	jsr	long_wait
 
 
+
 ;===============================
 ;===============================
 ; Opening Soda
@@ -1419,6 +1434,8 @@ particle_loop2:
 ;	bpl	collider_ui_loop
 ;	bit	KEYRESET
 
+
+.if 0
 
 ;===============================
 ;===============================
@@ -1911,7 +1928,6 @@ no_good_message:
 no_ferrari_message:
 	rts
 
-.if 0
 
 	;======================
 	; Plot particle
@@ -1936,8 +1952,6 @@ plot_particle:
 	inc	PARTICLE_COUNT
 
 	rts
-
-.endif
 
 
 ;.include "intro_data.s"
@@ -1975,12 +1989,48 @@ ai_bg_rle	  =	(DATA_LOCATION+$2747)
 scanning_sequence =	(DATA_LOCATION+$2CF5)
 scanner_rle       =	(DATA_LOCATION+$2066)
 
-
-
 intro4_data_lz4:
 	.word (intro4_data_lz4_end-intro4_data_lz4)
 	.incbin "intro_data_04.lz4",11
 intro4_data_lz4_end:
+
+; intro6,intro7
+
+experiment		= (DATA_LOCATION+$0D2C)
+practical_verification	= (DATA_LOCATION+$0D0D)
+result			= (DATA_LOCATION+$0CA6)
+analysis		= (DATA_LOCATION+$0C8D)
+shield_sequence		= (DATA_LOCATION+$0D75)
+phase2			= (DATA_LOCATION+$0C56)
+phase1			= (DATA_LOCATION+$0C2F)
+phase0			= (DATA_LOCATION+$0BF5)
+particles		= (DATA_LOCATION+$0D65)
+theoretical_study	= (DATA_LOCATION+$0BD9)
+collider_rle		= (DATA_LOCATION+$06D8)
+run_blank		= (DATA_LOCATION+$0BC6)
+run_experiment		= (DATA_LOCATION+$0BB3)
+accel_paramaters	= (DATA_LOCATION+$0B62)
+accelerator		= (DATA_LOCATION+$09C1)
+project_23		= (DATA_LOCATION+$09B2)
+peanut			= (DATA_LOCATION+$0955)
+cursor_sequence		= (DATA_LOCATION+$0947)
+desktop_bg_rle		= (DATA_LOCATION+$0242)
+powerup_sequence	= (DATA_LOCATION+$093E)
+desktop_rle		= (DATA_LOCATION+$0000)
+
+times			= (DATA_LOCATION+$0E0C)
+message_list		= (DATA_LOCATION+$0DE4)
+five			= (DATA_LOCATION+$0DEE)
+drinking_sequence	= (DATA_LOCATION+$1C29)
+drinking02_rle		= (DATA_LOCATION+$1705)
+soda_sequence		= (DATA_LOCATION+$1C1A)
+soda_bg_rle		= (DATA_LOCATION+$0E1A)
+
+
+intro6_data_lz4:
+	.word (intro6_data_lz4_end-intro6_data_lz4)
+	.incbin "intro_data_06.lz4",11
+intro6_data_lz4_end:
 
 
 
