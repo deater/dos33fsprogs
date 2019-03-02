@@ -59,7 +59,7 @@ ootw_c2.o:	ootw_c2.s \
 ####
 
 INTRO:	intro.o
-	ld65 -o INTRO intro.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o INTRO intro.o -C ../linker_scripts/apple2_1700_8000.inc
 
 intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
@@ -103,7 +103,7 @@ intro_data_01.lz4:	intro_data_01
 	truncate -s-8 intro_data_01.lz4
 
 intro_data_01:	intro_data_01.o
-	ld65 -o intro_data_01 intro_data_01.o -C ../linker_scripts/apple2_9000.inc
+	ld65 -o intro_data_01 intro_data_01.o -C ../linker_scripts/apple2_8000.inc
 
 intro_data_01.o:	intro_data_01.s
 	ca65 -o intro_data_01.o intro_data_01.s -l intro_data_01.lst
@@ -114,7 +114,7 @@ intro_data_04.lz4:	intro_data_04
 	truncate -s-8 intro_data_04.lz4
 
 intro_data_04:	intro_data_04.o
-	ld65 -o intro_data_04 intro_data_04.o -C ../linker_scripts/apple2_9000.inc
+	ld65 -o intro_data_04 intro_data_04.o -C ../linker_scripts/apple2_8000.inc
 
 intro_data_04.o:	intro_data_04.s
 	ca65 -o intro_data_04.o intro_data_04.s -l intro_data_04.lst

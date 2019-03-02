@@ -38,7 +38,7 @@ intro:
 	lda	#>intro1_data_lz4
 	sta	LZ4_SRC+1
 
-	lda	#$90		; load to $9000
+	lda	#$80		; load to $8000
 
 	jsr	lz4_decode
 
@@ -500,8 +500,11 @@ elevator_inner_loop:
 	jsr	clear_all
 	jsr	page_flip
 
-	ldx	#80
-	jsr	long_wait
+	; no need to pause as uncompressing LZ4 below
+	; takes a bit
+
+;	ldx	#80
+;	jsr	long_wait
 
 ;===============================
 ;===============================
@@ -518,7 +521,7 @@ keypad:
 	lda	#>intro4_data_lz4
 	sta	LZ4_SRC+1
 
-	lda	#$90		; load to $9000
+	lda	#$80		; load to $8000
 
 	jsr	lz4_decode
 
@@ -579,7 +582,7 @@ keypad:
 
 	jsr	run_sequence
 
-.if 0
+
 ;===============================
 ;===============================
 ; Scanner
@@ -690,10 +693,8 @@ spin_on_key:
 	dex
 	bne	spin_on_key
 
-;uz_loop:
-;	lda	KEYPRESS
-;	bpl	uz_loop
-;	bit	KEYRESET
+
+.if 0
 
 ;===============================
 ; Sitting at Desk
@@ -1680,8 +1681,6 @@ run_sequence_done:
 	rts
 
 
-.if 0
-
 	;====================================
 	; Display a sequence of images 40x40
 
@@ -1912,7 +1911,7 @@ no_good_message:
 no_ferrari_message:
 	rts
 
-
+.if 0
 
 	;======================
 	; Plot particle
@@ -1943,7 +1942,7 @@ plot_particle:
 
 ;.include "intro_data.s"
 
-DATA_LOCATION	=	$9000
+DATA_LOCATION	=	$8000
 
 ; intro1,intro2,intro3
 building_sequence =	(DATA_LOCATION+$0840)
@@ -1959,13 +1958,24 @@ intro1_data_lz4:
 	.incbin "intro_data_01.lz4",11
 intro1_data_lz4_end:
 
-; intro4
+; intro4,intro5
 
 opening_sequence  =	(DATA_LOCATION+$2051)
 keypad_sequence   =	(DATA_LOCATION+$1FF6)
 keypad_rle        =	(DATA_LOCATION+$0496)
 approach_sequence =	(DATA_LOCATION+$1FE9)
 scanner_door_rle  =	(DATA_LOCATION+$0000)
+
+ferrari		  =	(DATA_LOCATION+$2D4A)
+good_evening	  =	(DATA_LOCATION+$2D30)
+dna_list	  =	(DATA_LOCATION+$2D7A)
+static_pattern	  =	(DATA_LOCATION+$2D24)
+ai_sequence	  =	(DATA_LOCATION+$2D0E)
+ai_bg_rle	  =	(DATA_LOCATION+$2747)
+scanning_sequence =	(DATA_LOCATION+$2CF5)
+scanner_rle       =	(DATA_LOCATION+$2066)
+
+
 
 intro4_data_lz4:
 	.word (intro4_data_lz4_end-intro4_data_lz4)
