@@ -4,13 +4,18 @@ PNG2RLE = ../../../gr-utils/png2rle
 PNG2LZ4 = ../../../gr-utils/png2lz4
 
 
-all:	lightning.inc lightning_lz4.inc
+all:	nothing.inc lightning.inc nothing_lz4.inc lightning_lz4.inc
+
+
+#####
+nothing.inc:	nothing.png $(PNG2RLE)
+	$(PNG2RLE) asm nothing.png nothing_rle > nothing.inc
 
 #####
 
 lightning.inc:	$(PNG2RLE) \
 	bolt1.png bolt2.png bolt3.png bolt4.png bolt5.png bolt6.png bolt7.png \
-	flash.png white.png black.png nothing.png \
+	flash.png white.png black.png \
 	storm01.png storm02.png storm03.png storm04.png storm05.png \
 	storm06.png storm08.png storm09.png storm10.png storm11.png \
 	storm12.png storm13.png storm14.png storm15.png storm16.png \
@@ -60,9 +65,13 @@ lightning.inc:	$(PNG2RLE) \
 #####
 #####
 
+nothing_lz4.inc:	$(PNG2LZ4)
+	$(PNG2LZ4) asm nothing.png nothing_rle > nothing_lz4.inc
+
+
 lightning_lz4.inc:	$(PNG2LZ4) \
 	bolt1.png bolt2.png bolt3.png bolt4.png bolt5.png bolt6.png bolt7.png \
-	flash.png white.png black.png nothing.png \
+	flash.png white.png black.png \
 	storm01.png storm02.png storm03.png storm04.png storm05.png \
 	storm06.png storm08.png storm09.png storm10.png storm11.png \
 	storm12.png storm13.png storm14.png storm15.png storm16.png \
@@ -79,7 +88,6 @@ lightning_lz4.inc:	$(PNG2LZ4) \
 	$(PNG2LZ4) asm flash.png flash_rle >> lightning_lz4.inc
 	$(PNG2LZ4) asm white.png white_rle >> lightning_lz4.inc
 	$(PNG2LZ4) asm black.png black_rle >> lightning_lz4.inc
-	$(PNG2LZ4) asm nothing.png nothing_rle >> lightning_lz4.inc
 	$(PNG2LZ4) asm storm01.png storm01_rle >> lightning_lz4.inc
 	$(PNG2LZ4) asm storm02.png storm02_rle >> lightning_lz4.inc
 	$(PNG2LZ4) asm storm03.png storm03_rle >> lightning_lz4.inc

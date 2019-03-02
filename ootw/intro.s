@@ -1,5 +1,3 @@
-.define HACK 1
-
 
 ;=====================================
 ; Intro
@@ -56,8 +54,6 @@ intro:
 
 	jsr	run_sequence
 
-.if 0
-
 ;===============================
 ;===============================
 ; Walk into door
@@ -73,7 +69,6 @@ intro:
 	sta	INTRO_LOOPH
 
 	jsr	run_sequence
-
 
 
 ;===============================
@@ -513,6 +508,9 @@ elevator_inner_loop:
 ; Keycode
 ;===============================
 ;===============================
+
+
+.if 0
 
 keypad:
 	;=============================
@@ -1546,7 +1544,7 @@ tunnel1:
 
 	;======================
 	; gone
-.if HACK
+
 	lda	#>(gone_rle)
 	sta	GBASH
 	lda	#<(gone_rle)
@@ -1564,7 +1562,7 @@ tunnel1:
 
 
 	jsr	run_sequence
-.endif
+
 .endif
 
 gone_loop:
@@ -1938,8 +1936,14 @@ plot_particle:
 
 DATA_LOCATION	=	$9000
 
-; intro1
-building_sequence =	$9840
+; intro1,intro2,intro3
+building_sequence =	(DATA_LOCATION+$0840)
+feet_sequence	  =	(DATA_LOCATION+$12D0)
+walking_sequence  =	(DATA_LOCATION+$1A35)
+walking00_rle	  =	(DATA_LOCATION+$1597)
+off_elevator_rle  =	(DATA_LOCATION+$1499)
+indicators	  =	(DATA_LOCATION+$1A2B)
+elevator_rle	  =	(DATA_LOCATION+$12EC)
 
 intro1_data_lz4:
 	.word (intro1_data_lz4_end-intro1_data_lz4)
