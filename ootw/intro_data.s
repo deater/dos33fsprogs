@@ -152,12 +152,17 @@ feet_sequence:
 	.byte	0
 
 	; Elevator light co-ordinates
+	; we load them backwards
 indicators:
-;	.byte	16,1	; 0
-;	.byte	18,2	; 1
-;	.byte 	14,2	; 2
-;	.byte	16,3	; 3
-;	.byte 	18,4	; 4
+	.byte 	18,4	; 4
+	.byte	16,3	; 3
+	.byte 	14,2	; 2
+	.byte	18,2	; 1
+	.byte	16,1	; 0
+
+
+
+
 
 
 ; Walking off elevator sequence

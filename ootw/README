@@ -47,3 +47,4 @@ Memory squeeze!
 	 2,493 over	squish disk loader vars to page 3
 	 2,165 over	horrible hack to auto-go to next image in sequence
 	 2,114 over	move bg loading into seq
+	 2,053 over	make elevator indicator a loop

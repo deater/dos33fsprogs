@@ -1,4 +1,4 @@
-.define HACK 1
+.define HACK 0
 
 
 ;=====================================
@@ -202,50 +202,71 @@ yellow_line_down:
 	lda	#5
 	sta	V2
 
-	; 16,1
+	lda	#4
+	sta	PARTICLE_COUNT
+floor_loop:
+
 	jsr	gr_copy_to_current_1000
-	ldx	#16
-	lda	#1
-	jsr	plot
+
+	lda	 PARTICLE_COUNT
+	asl
+	tay
+	ldx     indicators,Y
+        lda     indicators+1,Y
+
+	jsr     plot
+
 	jsr	page_flip
 	ldx	#150
 	jsr	long_wait
+
+	dec	PARTICLE_COUNT
+	bpl	floor_loop
+
+	; 16,1
+;	jsr	gr_copy_to_current_1000
+;	ldx	#16
+;	lda	#1
+;	jsr	plot
+;	jsr	page_flip
+;	ldx	#150
+;	jsr	long_wait
 
 	; 18,2
-	jsr	gr_copy_to_current_1000
-	ldx	#18
-	lda	#2
-	jsr	plot
-	jsr	page_flip
-	ldx	#150
-	jsr	long_wait
+;	jsr	gr_copy_to_current_1000
+;	ldx	#18
+;	lda	#2
+;	jsr	plot
+;	jsr	page_flip
+;	ldx	#150
+;	jsr	long_wait
 
 	; 14,2
-	jsr	gr_copy_to_current_1000
-	ldx	#14
-	lda	#2
-	jsr	plot
-	jsr	page_flip
-	ldx	#150
-	jsr	long_wait
+;	jsr	gr_copy_to_current_1000
+;	ldx	#14
+;	lda	#2
+;	jsr	plot
+;	jsr	page_flip
+;	ldx	#150
+;	jsr	long_wait
 
 	; 16,3
-	jsr	gr_copy_to_current_1000
-	ldx	#16
-	lda	#3
-	jsr	plot
-	jsr	page_flip
-	ldx	#150
-	jsr	long_wait
+;	jsr	gr_copy_to_current_1000
+;	ldx	#16
+;	lda	#3
+;	jsr	plot
+;	jsr	page_flip
+;	ldx	#150
+;	jsr	long_wait
 
 	; 18,4
-	jsr	gr_copy_to_current_1000
-	ldx	#18
-	lda	#4
-	jsr	plot
-	jsr	page_flip
-	ldx	#150
-	jsr	long_wait
+;	jsr	gr_copy_to_current_1000
+;	ldx	#18
+;	lda	#4
+;	jsr	plot
+;	jsr	page_flip
+;	ldx	#150
+;	jsr	long_wait
 
 	;====================
 	; dark elevator
