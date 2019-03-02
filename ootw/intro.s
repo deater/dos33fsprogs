@@ -1,4 +1,4 @@
-.define HACK 0
+.define HACK 1
 
 
 ;=====================================
@@ -32,50 +32,15 @@ intro:
 ;===============================
 ;===============================
 
-	; Load background
-
-	lda	#>(building_rle)
-	sta	GBASH
-	lda	#<(building_rle)
-	sta	GBASL
-
-	lda	#$c				; load to $c00
-	jsr	load_rle_gr
-
-	jsr	gr_copy_to_current
-	jsr	page_flip
 
 	;==================================
 	; draw the car driving up
+	;==================================
+	; draw getting out of the car
 
 	lda	#<building_sequence
 	sta	INTRO_LOOPL
 	lda	#>building_sequence
-	sta	INTRO_LOOPH
-
-	jsr	run_sequence
-
-	;==================================
-	; Load building with car background
-
-	lda	#>(building_car_rle)
-	sta	GBASH
-	lda	#<(building_car_rle)
-	sta	GBASL
-
-	lda	#$0c				; load to $c00
-	jsr	load_rle_gr
-
-	jsr	gr_copy_to_current
-	jsr	page_flip
-
-
-	;==================================
-	; draw getting out of the car
-
-	lda	#<outtacar_sequence
-	sta	INTRO_LOOPL
-	lda	#>outtacar_sequence
 	sta	INTRO_LOOPH
 
 	jsr	run_sequence
@@ -86,21 +51,6 @@ intro:
 ; Walk into door
 ;===============================
 ;===============================
-
-	;=============================
-	; Load background to $c00
-
-	lda	#>(outer_door_rle)
-	sta	GBASH
-	lda	#<(outer_door_rle)
-	sta	GBASL
-
-	lda	#$c			; load to off-screen $c00
-	jsr	load_rle_gr
-
-	jsr	gr_copy_to_current
-	jsr	page_flip
-
 
 	;==================================
 	; draw feet going into door
@@ -149,14 +99,13 @@ elevator:
 	stx	V2
 	ldx	#4
 	ldy	#14
-	jsr	vlin	; X, V2 at Y
+	jsr	vlin	; VLIN 4,39 AT 14 (X, V2 at Y)
 
 	ldx	#35
 	stx	V2
 	ldx	#7
 	ldy	#18
-
-	jsr	vlin	; X, V2 at Y
+	jsr	vlin	; VLIN 7,35 AT 18 (X, V2 at Y)
 
 	; elevator inner door
 	ldx	#2
@@ -229,7 +178,7 @@ yellow_line_down:
 
 	inc	V2
 	lda	V2
-	cmp	#38
+	cmp	#37
 	bne	yellow_line_down
 
 	lda	DRAW_PAGE
@@ -1703,8 +1652,11 @@ no_set_image_ptr:
 	txa
 	and	#$7f
 	tax
+	cpx	#1
+	beq	seq_no_wait
 
 	jsr	long_wait
+seq_no_wait:
 
 	iny
 	sty	INTRO_LOOPER		; save for later

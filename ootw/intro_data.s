@@ -2,8 +2,9 @@
 
 .if 1
 .include "intro_graphics/01_building/intro_building.inc"
-.include "intro_graphics/01_building/intro_building_car.inc"
 .include "intro_graphics/01_building/intro_car.inc"
+.include "intro_graphics/01_building/intro_building_car.inc"
+
 
 .include "intro_graphics/02_outer_door/outer_door.inc"
 .include "intro_graphics/02_outer_door/feet.inc"
@@ -43,8 +44,8 @@
 .else
 
 .include "intro_graphics/01_building/intro_building_lz4.inc"
-.include "intro_graphics/01_building/intro_building_car_lz4.inc"
 .include "intro_graphics/01_building/intro_car_lz4.inc"
+.include "intro_graphics/01_building/intro_building_car_lz4.inc"
 
 .include "intro_graphics/02_outer_door/outer_door_lz4.inc"
 .include "intro_graphics/02_outer_door/feet_lz4.inc"
@@ -88,8 +89,11 @@
 ; Car driving up sequence
 
 building_sequence:
-	.byte	127
-	.word	intro_car1
+	.byte	255
+	.word	building_rle
+	.byte	1
+	.word	building_rle
+	.byte	128+126	;	.word	intro_car1
 	.byte	128+2	;	.word	intro_car2
 	.byte	128+2	;	.word	intro_car3
 	.byte	128+2	;	.word	intro_car4
@@ -99,12 +103,16 @@ building_sequence:
 	.byte	128+2	;	.word	intro_car8
 	.byte	128+2	;	.word	intro_car9
 	.byte	128+126	;	.word	intro_car10
-	.byte	0
+;	.byte	0
 
 ;========================
 ; Getting out of car sequence
 
 outtacar_sequence:
+	.byte	255
+	.word	building_car_rle
+	.byte	1
+	.word	building_car_rle
 	.byte	100
 	.word	intro_car12
 	.byte	128+50	;	.word	intro_car13
@@ -114,11 +122,15 @@ outtacar_sequence:
 	.byte	0
 
 
-; Getting out of car sequence
+;=============================
+; Feet going in door sequence
 
 feet_sequence:
-	.byte	100
-	.word	feet01_rle
+	.byte	255
+	.word	outer_door_rle
+	.byte	1
+	.word	outer_door_rle
+	.byte	128+100	;	.word	feet01_rle
 	.byte	128+10	;	.word	feet02_rle
 	.byte	128+10	;	.word	feet03_rle
 	.byte	128+10	;	.word	feet04_rle
@@ -138,6 +150,15 @@ feet_sequence:
 	.byte	100
 	.word	nothing_rle
 	.byte	0
+
+	; Elevator light co-ordinates
+indicators:
+;	.byte	16,1	; 0
+;	.byte	18,2	; 1
+;	.byte 	14,2	; 2
+;	.byte	16,3	; 3
+;	.byte 	18,4	; 4
+
 
 ; Walking off elevator sequence
 

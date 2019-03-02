@@ -46,3 +46,4 @@ Memory squeeze!
 	 2,749 over	do same for zappo routines
 	 2,493 over	squish disk loader vars to page 3
 	 2,165 over	horrible hack to auto-go to next image in sequence
+	 2,114 over	move bg loading into seq
