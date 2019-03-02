@@ -23,7 +23,7 @@ indicators:
 ; Walking off elevator sequence
 
 walking_sequence:
-	.byte	20
+	.byte	1
 	.word	walking01_rle
 	.byte	128+20	;	.word	walking02_rle
 	.byte	128+20	;	.word	walking03_rle
