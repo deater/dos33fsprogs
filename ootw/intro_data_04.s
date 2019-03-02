@@ -1,4 +1,8 @@
-; background graphics
+;=================================
+;=================================
+; Intro Segment 01 Data (Building)
+;=================================
+;=================================
 
 .include "intro_graphics/04_keypad/intro_scanner_door.inc"
 .include "intro_graphics/04_keypad/intro_approach.inc"
@@ -6,6 +10,7 @@
 .include "intro_graphics/04_keypad/intro_hands.inc"
 .include "intro_graphics/04_keypad/intro_opening.inc"
 
+.include "intro_graphics/08_lightning/nothing.inc"
 
 ; Approaching keypad sequence
 

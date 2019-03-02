@@ -509,10 +509,19 @@ elevator_inner_loop:
 ;===============================
 ;===============================
 
-
-.if 0
-
 keypad:
+	;==================================
+	; Uncompress the data
+	;==================================
+	lda	#<intro4_data_lz4
+	sta	LZ4_SRC
+	lda	#>intro4_data_lz4
+	sta	LZ4_SRC+1
+
+	lda	#$90		; load to $9000
+
+	jsr	lz4_decode
+
 	;=============================
 	; Load background to $c00
 
@@ -570,7 +579,7 @@ keypad:
 
 	jsr	run_sequence
 
-
+.if 0
 ;===============================
 ;===============================
 ; Scanner
@@ -1949,3 +1958,20 @@ intro1_data_lz4:
 	.word (intro1_data_lz4_end-intro1_data_lz4)
 	.incbin "intro_data_01.lz4",11
 intro1_data_lz4_end:
+
+; intro4
+
+opening_sequence  =	(DATA_LOCATION+$2051)
+keypad_sequence   =	(DATA_LOCATION+$1FF6)
+keypad_rle        =	(DATA_LOCATION+$0496)
+approach_sequence =	(DATA_LOCATION+$1FE9)
+scanner_door_rle  =	(DATA_LOCATION+$0000)
+
+intro4_data_lz4:
+	.word (intro4_data_lz4_end-intro4_data_lz4)
+	.incbin "intro_data_04.lz4",11
+intro4_data_lz4_end:
+
+
+
+
