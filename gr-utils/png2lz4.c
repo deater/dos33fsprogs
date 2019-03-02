@@ -157,6 +157,8 @@ int main(int argc, char **argv) {
 		exit(-1);
 	}
 
+	printf("\n");
+
 	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
 
 	size=gr_lz4(out_type,argv[3],

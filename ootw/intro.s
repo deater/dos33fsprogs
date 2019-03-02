@@ -1638,6 +1638,8 @@ gone_loop:
 
 .include "gr_pageflip.s"
 .include "gr_unrle.s"
+;.include "lz4_decode.s"
+;load_rle_gr:
 .include "gr_copy.s"
 .include "gr_offsets.s"
 .include "gr_overlay.s"
@@ -1646,7 +1648,6 @@ gone_loop:
 .include "gr_fast_clear.s"
 .include "gr_putsprite.s"
 .include "text_print.s"
-
 
 .include "intro_data.s"
 

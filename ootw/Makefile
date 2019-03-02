@@ -145,5 +145,19 @@ compress_test.o:	compress_test.s lz4_decode.s compress_test.inc
 
 #####
 
+rle_size:	rle_size.o
+	ld65 -o rle_size rle_size.o -C ../linker_scripts/apple2_2000.inc
+
+rle_size.o:	rle_size.s
+	ca65 -o rle_size.o rle_size.s
+
+lz4_size:	lz4_size.o
+	ld65 -o lz4_size lz4_size.o -C ../linker_scripts/apple2_2000.inc
+
+lz4_size.o:	lz4_size.s
+	ca65 -o lz4_size.o lz4_size.s
+
+#####
+
 clean:		
-		rm -f *~ *.o *.lst HELLO OOTW OOTW_C2 INTRO LOADER
+		rm -f *~ *.o *.lst HELLO OOTW OOTW_C2 INTRO LOADER lz4_size rle_size
