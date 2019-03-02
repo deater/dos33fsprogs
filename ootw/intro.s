@@ -32,6 +32,17 @@ intro:
 ;===============================
 ;===============================
 
+	;==================================
+	; Uncompress the data
+	;==================================
+	lda	#<intro1_data_lz4
+	sta	LZ4_SRC
+	lda	#>intro1_data_lz4
+	sta	LZ4_SRC+1
+
+	lda	#$90		; load to $9000
+
+	jsr	lz4_decode
 
 	;==================================
 	; draw the car driving up
@@ -1923,4 +1934,14 @@ plot_particle:
 .endif
 
 
-.include "intro_data.s"
+;.include "intro_data.s"
+
+DATA_LOCATION	=	$9000
+
+; intro1
+building_sequence =	$9840
+
+intro1_data_lz4:
+	.word (intro1_data_lz4_end-intro1_data_lz4)
+	.incbin "intro_data_01.lz4",11
+intro1_data_lz4_end:

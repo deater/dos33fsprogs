@@ -91,8 +91,23 @@ intro.o:	intro.s \
 	intro_graphics/09_tunnel/intro_tunnel1.inc \
 	intro_graphics/09_tunnel/intro_tunnel2.inc \
 	intro_graphics/10_gone/intro_zappo.inc \
-	intro_graphics/10_gone/intro_gone.inc
+	intro_graphics/10_gone/intro_gone.inc \
+	intro_data_01.lz4
 	ca65 -o intro.o intro.s -l intro.lst
+
+####
+
+
+
+intro_data_01.lz4:	intro_data_01
+	lz4 -f -16 intro_data_01
+	truncate -s-8 intro_data_01.lz4
+
+intro_data_01:	intro_data_01.o
+	ld65 -o intro_data_01 intro_data_01.o -C ../linker_scripts/apple2_9000.inc
+
+intro_data_01.o:	intro_data_01.s
+	ca65 -o intro_data_01.o intro_data_01.s -l intro_data_01.lst
 
 ####
 
