@@ -1,4 +1,4 @@
-.define HACK 0
+.define HACK 1
 
 
 ;=====================================
@@ -45,6 +45,7 @@ intro:
 
 	jsr	run_sequence
 
+.if 0
 
 ;===============================
 ;===============================
@@ -61,6 +62,8 @@ intro:
 	sta	INTRO_LOOPH
 
 	jsr	run_sequence
+
+
 
 ;===============================
 ;===============================
@@ -222,51 +225,6 @@ floor_loop:
 
 	dec	PARTICLE_COUNT
 	bpl	floor_loop
-
-	; 16,1
-;	jsr	gr_copy_to_current_1000
-;	ldx	#16
-;	lda	#1
-;	jsr	plot
-;	jsr	page_flip
-;	ldx	#150
-;	jsr	long_wait
-
-	; 18,2
-;	jsr	gr_copy_to_current_1000
-;	ldx	#18
-;	lda	#2
-;	jsr	plot
-;	jsr	page_flip
-;	ldx	#150
-;	jsr	long_wait
-
-	; 14,2
-;	jsr	gr_copy_to_current_1000
-;	ldx	#14
-;	lda	#2
-;	jsr	plot
-;	jsr	page_flip
-;	ldx	#150
-;	jsr	long_wait
-
-	; 16,3
-;	jsr	gr_copy_to_current_1000
-;	ldx	#16
-;	lda	#3
-;	jsr	plot
-;	jsr	page_flip
-;	ldx	#150
-;	jsr	long_wait
-
-	; 18,4
-;	jsr	gr_copy_to_current_1000
-;	ldx	#18
-;	lda	#4
-;	jsr	plot
-;	jsr	page_flip
-;	ldx	#150
-;	jsr	long_wait
 
 	;====================
 	; dark elevator
@@ -1596,6 +1554,7 @@ tunnel1:
 
 	jsr	run_sequence
 .endif
+.endif
 
 gone_loop:
 	lda	KEYPRESS
@@ -1608,8 +1567,7 @@ gone_loop:
 
 .include "gr_pageflip.s"
 .include "gr_unrle.s"
-;.include "lz4_decode.s"
-;load_rle_gr:
+.include "lz4_decode.s"
 .include "gr_copy.s"
 .include "gr_offsets.s"
 .include "gr_overlay.s"
@@ -1619,9 +1577,19 @@ gone_loop:
 .include "gr_putsprite.s"
 .include "text_print.s"
 
-.include "intro_data.s"
 
 
+
+	;=====================
+	; long(er) wait
+	; waits approximately ?? ms
+
+long_wait:
+	lda	#64
+	jsr	WAIT			; delay
+	dex
+	bne	long_wait
+	rts
 
 	;=================================
 	; Display a sequence of images
@@ -1694,6 +1662,7 @@ run_sequence_done:
 	rts
 
 
+.if 0
 
 	;====================================
 	; Display a sequence of images 40x40
@@ -1835,16 +1804,7 @@ run_sequence_static_done:
 	rts
 
 
-	;=====================
-	; long(er) wait
-	; waits approximately ?? ms
 
-long_wait:
-	lda	#64
-	jsr	WAIT			; delay
-	dex
-	bne	long_wait
-	rts
 
 
 	;====================================
@@ -1960,7 +1920,7 @@ plot_particle:
 
 	rts
 
+.endif
 
 
-
-
+.include "intro_data.s"

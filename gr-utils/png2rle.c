@@ -173,7 +173,6 @@ int rle_smaller(int out_type, char *varname,
 //		}
 
 		/* If color change (or too big) then output our run */
-		/* Note 0xff for run length is special case meaning "finished" */
 		if ((next!=last) || (run>254)) {
 
 			size+=print_run(count,out_type,run,last);

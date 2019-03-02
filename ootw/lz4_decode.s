@@ -32,7 +32,6 @@
 	; input buffer in LZ4_SRC
         ; A is destination page
 	; size in first two bytes
-
 lz4_decode:
 	sta	LZ4_DST+1	; set to page we want
 	lda	#0

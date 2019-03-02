@@ -48,3 +48,38 @@ Memory squeeze!
 	 2,165 over	horrible hack to auto-go to next image in sequence
 	 2,114 over	move bg loading into seq
 	 2,053 over	make elevator indicator a loop
+	 1,347 over	use LZ4 instead of RLE
+
+
+
+4000 code
+
+40000 data
+
+20000 -> 12000
+20000 -> 12000
+	 24000+20000=44000
+
+20000 -> 10000
+20000 -> 10000
+	20000+2000=
+
+
+
+ID1 =	1461		2143\
+ID2 =   1759		2687|
+ID3 =	1195		1879/		
+ID4 =   2514		8280 |
+ID5 =	1947		3492\
+ID6 =	2584		3610|
+ID7 =   2834		3606/
+ID8 =	3705		4918 |  
+ID9 =	4494		5901\
+ID10 =	3397		5558/
+	=====          ======
+	25890             12k
+
+
+
+
+

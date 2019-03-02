@@ -3,6 +3,7 @@
 ;; LZ4 addresses
 
 LZ4_SRC		= $00
+;LZ4_SRC		= $26
 LZ4_DST		= $02
 LZ4_END		= $04
 WHICH_LOAD	= $05

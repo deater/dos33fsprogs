@@ -14,13 +14,13 @@ all:	ootw.dsk
 #later_data.o:	later_data.s
 #	ca65 -o later_data.o later_data.s -l later_data.lst
 
-ootw.dsk:	HELLO LOADER INTRO OOTW OOTW_C2 COMPRESS-TEST
+ootw.dsk:	HELLO LOADER INTRO OOTW OOTW_C2 #COMPRESS-TEST
 	$(DOS33) -y ootw.dsk SAVE A HELLO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1400 LOADER
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 INTRO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C2
-	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 COMPRESS-TEST
+#	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 COMPRESS-TEST
 
 
 ####
@@ -64,7 +64,7 @@ INTRO:	intro.o
 intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
 	gr_overlay.s intro_data.s \
-	keyboard.s random16.s text_print.s \
+	keyboard.s random16.s text_print.s zp.inc \
 	intro_graphics/01_building/intro_car.inc \
 	intro_graphics/01_building/intro_building_car.inc \
 	intro_graphics/01_building/intro_building.inc \
@@ -151,11 +151,82 @@ rle_size:	rle_size.o
 rle_size.o:	rle_size.s
 	ca65 -o rle_size.o rle_size.s
 
+rle_size_all:	rle_size_all.o
+	ld65 -o rle_size_all rle_size_all.o -C ../linker_scripts/apple2_1700.inc
+
+rle_size_all.o:	rle_size_all.s
+	ca65 -o rle_size_all.o rle_size_all.s
+
+
 lz4_size:	lz4_size.o
 	ld65 -o lz4_size lz4_size.o -C ../linker_scripts/apple2_2000.inc
 
 lz4_size.o:	lz4_size.s
 	ca65 -o lz4_size.o lz4_size.s
+
+#####
+
+id1:	id1.o
+	ld65 -o id1 id1.o -C ../linker_scripts/apple2_2000.inc
+
+id1.o:	id1.s
+	ca65 -o id1.o id1.s
+
+id2:	id2.o
+	ld65 -o id2 id2.o -C ../linker_scripts/apple2_2000.inc
+
+id2.o:	id2.s
+	ca65 -o id2.o id2.s
+
+id3:	id3.o
+	ld65 -o id3 id3.o -C ../linker_scripts/apple2_2000.inc
+
+id3.o:	id3.s
+	ca65 -o id3.o id3.s
+
+id4:	id4.o
+	ld65 -o id4 id4.o -C ../linker_scripts/apple2_2000.inc
+
+id4.o:	id4.s
+	ca65 -o id4.o id4.s
+
+id5:	id5.o
+	ld65 -o id5 id5.o -C ../linker_scripts/apple2_2000.inc
+
+id5.o:	id5.s
+	ca65 -o id5.o id5.s
+
+id6:	id6.o
+	ld65 -o id6 id6.o -C ../linker_scripts/apple2_2000.inc
+
+id6.o:	id6.s
+	ca65 -o id6.o id6.s
+
+id7:	id7.o
+	ld65 -o id7 id7.o -C ../linker_scripts/apple2_2000.inc
+
+id7.o:	id7.s
+	ca65 -o id7.o id7.s
+
+id8:	id8.o
+	ld65 -o id8 id8.o -C ../linker_scripts/apple2_2000.inc
+
+id8.o:	id8.s
+	ca65 -o id8.o id8.s
+
+id9:	id9.o
+	ld65 -o id9 id9.o -C ../linker_scripts/apple2_2000.inc
+
+id9.o:	id9.s
+	ca65 -o id9.o id9.s
+
+id10:	id10.o
+	ld65 -o id10 id10.o -C ../linker_scripts/apple2_2000.inc
+
+id10.o:	id10.s
+	ca65 -o id10.o id10.s
+
+
 
 #####
 
