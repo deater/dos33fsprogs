@@ -38,7 +38,7 @@ intro:
 	lda	#>intro1_data_lz4
 	sta	LZ4_SRC+1
 
-	lda	#$80		; load to $8000
+	lda	#$90		; load to $9000
 
 	jsr	lz4_decode
 
@@ -521,7 +521,7 @@ keypad:
 	lda	#>intro4_data_lz4
 	sta	LZ4_SRC+1
 
-	lda	#$80		; load to $8000
+	lda	#$90		; load to $9000
 
 	jsr	lz4_decode
 
@@ -707,7 +707,7 @@ spin_on_key:
 	lda	#>intro6_data_lz4
 	sta	LZ4_SRC+1
 
-	lda	#$80		; load to $8000
+	lda	#$90		; load to $9000
 
 	jsr	lz4_decode
 
@@ -1435,7 +1435,6 @@ particle_loop2:
 ;	bit	KEYRESET
 
 
-.if 0
 
 ;===============================
 ;===============================
@@ -1445,6 +1444,20 @@ particle_loop2:
 
 
 thunderstorm:
+
+	;==================================
+	; Uncompress the data
+	;==================================
+	lda	#<intro8_data_lz4
+	sta	LZ4_SRC
+	lda	#>intro8_data_lz4
+	sta	LZ4_SRC+1
+
+	lda	#$90		; load to $9000
+
+	jsr	lz4_decode
+
+
 	lda	#>(building_car_rle)
 	sta	GBASH
 	lda	#<(building_car_rle)
@@ -1483,6 +1496,20 @@ thunderstorm:
 ;===============================
 
 tunnel1:
+
+	;==================================
+	; Uncompress the data
+	;==================================
+	lda	#<intro9_data_lz4
+	sta	LZ4_SRC
+	lda	#>intro9_data_lz4
+	sta	LZ4_SRC+1
+
+	lda	#$90		; load to $9000
+
+	jsr	lz4_decode
+
+
 	lda	#>(tunnel1_rle)
 	sta	GBASH
 	lda	#<(tunnel1_rle)
@@ -1589,8 +1616,6 @@ tunnel1:
 
 
 	jsr	run_sequence
-
-.endif
 
 gone_loop:
 	lda	KEYPRESS
@@ -1956,7 +1981,7 @@ plot_particle:
 
 ;.include "intro_data.s"
 
-DATA_LOCATION	=	$8000
+DATA_LOCATION	=	$9000
 
 ; intro1,intro2,intro3
 building_sequence =	(DATA_LOCATION+$0840)
@@ -2031,6 +2056,33 @@ intro6_data_lz4:
 	.word (intro6_data_lz4_end-intro6_data_lz4)
 	.incbin "intro_data_06.lz4",11
 intro6_data_lz4_end:
+
+; intro8
+
+bolt_sequence		= (DATA_LOCATION+$1488)
+lightning_sequence	= (DATA_LOCATION+$13D6)
+building_car_rle	= (DATA_LOCATION+$1259)
+
+intro8_data_lz4:
+	.word (intro8_data_lz4_end-intro8_data_lz4)
+	.incbin "intro_data_08.lz4",11
+intro8_data_lz4_end:
+
+; intro9, intro10
+
+gone_sequence		= (DATA_LOCATION+$2C66)
+gone_rle		= (DATA_LOCATION+$2039)
+zappo_sequence		= (DATA_LOCATION+$2C1B)
+blue_zappo_rle		= (DATA_LOCATION+$1737)
+tunnel2_sequence	= (DATA_LOCATION+$1718)
+tunnel2_rle		= (DATA_LOCATION+$0B0F)
+tunnel1_sequence	= (DATA_LOCATION+$16F2)
+tunnel1_rle		= (DATA_LOCATION+$0000)
+
+intro9_data_lz4:
+	.word (intro9_data_lz4_end-intro9_data_lz4)
+	.incbin "intro_data_09.lz4",11
+intro9_data_lz4_end:
 
 
 

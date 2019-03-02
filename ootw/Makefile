@@ -59,7 +59,7 @@ ootw_c2.o:	ootw_c2.s \
 ####
 
 INTRO:	intro.o
-	ld65 -o INTRO intro.o -C ../linker_scripts/apple2_1700_8000.inc
+	ld65 -o INTRO intro.o -C ../linker_scripts/apple2_1700_9000.inc
 
 intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
@@ -94,7 +94,9 @@ intro.o:	intro.s \
 	intro_graphics/10_gone/intro_gone.inc \
 	intro_data_01.lz4 \
 	intro_data_04.lz4 \
-	intro_data_06.lz4
+	intro_data_06.lz4 \
+	intro_data_08.lz4 \
+	intro_data_09.lz4
 	ca65 -o intro.o intro.s -l intro.lst
 
 ####
@@ -104,7 +106,7 @@ intro_data_01.lz4:	intro_data_01
 	truncate -s-8 intro_data_01.lz4
 
 intro_data_01:	intro_data_01.o
-	ld65 -o intro_data_01 intro_data_01.o -C ../linker_scripts/apple2_8000.inc
+	ld65 -o intro_data_01 intro_data_01.o -C ../linker_scripts/apple2_9000.inc
 
 intro_data_01.o:	intro_data_01.s
 	ca65 -o intro_data_01.o intro_data_01.s -l intro_data_01.lst
@@ -115,7 +117,7 @@ intro_data_04.lz4:	intro_data_04
 	truncate -s-8 intro_data_04.lz4
 
 intro_data_04:	intro_data_04.o
-	ld65 -o intro_data_04 intro_data_04.o -C ../linker_scripts/apple2_8000.inc
+	ld65 -o intro_data_04 intro_data_04.o -C ../linker_scripts/apple2_9000.inc
 
 intro_data_04.o:	intro_data_04.s
 	ca65 -o intro_data_04.o intro_data_04.s -l intro_data_04.lst
@@ -126,10 +128,33 @@ intro_data_06.lz4:	intro_data_06
 	truncate -s-8 intro_data_06.lz4
 
 intro_data_06:	intro_data_06.o
-	ld65 -o intro_data_06 intro_data_06.o -C ../linker_scripts/apple2_8000.inc
+	ld65 -o intro_data_06 intro_data_06.o -C ../linker_scripts/apple2_9000.inc
 
 intro_data_06.o:	intro_data_06.s
 	ca65 -o intro_data_06.o intro_data_06.s -l intro_data_06.lst
+
+
+intro_data_08.lz4:	intro_data_08
+	lz4 -f -16 intro_data_08
+	truncate -s-8 intro_data_08.lz4
+
+intro_data_08:	intro_data_08.o
+	ld65 -o intro_data_08 intro_data_08.o -C ../linker_scripts/apple2_9000.inc
+
+intro_data_08.o:	intro_data_08.s
+	ca65 -o intro_data_08.o intro_data_08.s -l intro_data_08.lst
+
+
+intro_data_09.lz4:	intro_data_09
+	lz4 -f -16 intro_data_09
+	truncate -s-8 intro_data_09.lz4
+
+intro_data_09:	intro_data_09.o
+	ld65 -o intro_data_09 intro_data_09.o -C ../linker_scripts/apple2_9000.inc
+
+intro_data_09.o:	intro_data_09.s
+	ca65 -o intro_data_09.o intro_data_09.s -l intro_data_09.lst
+
 
 
 

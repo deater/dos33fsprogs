@@ -4,12 +4,18 @@ PNG2RLE = ../../../gr-utils/png2rle
 PNG2LZ4 = ../../../gr-utils/png2lz4
 
 
-all:	nothing.inc lightning.inc nothing_lz4.inc lightning_lz4.inc
+all:	nothing.inc lightning.inc whiteblack.inc \
+	nothing_lz4.inc lightning_lz4.inc whiteblack_lz4.inc
 
 
 #####
 nothing.inc:	nothing.png $(PNG2RLE)
 	$(PNG2RLE) asm nothing.png nothing_rle > nothing.inc
+
+#####
+whiteblack.inc:	white.png black.png $(PNG2RLE)
+	$(PNG2RLE) asm white.png white_rle > whiteblack.inc
+	$(PNG2RLE) asm black.png black_rle >> whiteblack.inc
 
 #####
 
@@ -67,6 +73,13 @@ lightning.inc:	$(PNG2RLE) \
 
 nothing_lz4.inc:	$(PNG2LZ4)
 	$(PNG2LZ4) asm nothing.png nothing_rle > nothing_lz4.inc
+
+
+#####
+whiteblack_lz4.inc:	white.png black.png $(PNG2L4)
+	$(PNG2LZ4) asm white.png white_rle > whiteblack_lz4.inc
+	$(PNG2LZ4) asm black.png black_rle >> whiteblack_lz4.inc
+
 
 
 lightning_lz4.inc:	$(PNG2LZ4) \

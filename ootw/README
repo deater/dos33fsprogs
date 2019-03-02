@@ -65,8 +65,8 @@ Memory squeeze!
 	20000+2000=
 
 
-Let's take a 10k region of memory = $3000
-	$C000 - $4000 = starting at $8000
+Let's take a 12k region of memory = $3000
+	$C000 - $3000 = starting at $9000
 
 
 ID1 =	1461		2143\

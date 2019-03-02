@@ -1,7 +1,11 @@
-; background graphics
+;=================================
+;=================================
+; Intro Segment 08 Data (Lightning)
+;=================================
+;=================================
 
 .include "intro_graphics/08_lightning/lightning.inc"
-
+.include "intro_graphics/01_building/intro_building_car.inc"
 
 	; Lightning sequence
 lightning_sequence:
