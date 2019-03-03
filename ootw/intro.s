@@ -1984,13 +1984,13 @@ plot_particle:
 DATA_LOCATION	=	$9000
 
 ; intro1,intro2,intro3
-building_sequence =	(DATA_LOCATION+$0840)
-feet_sequence	  =	(DATA_LOCATION+$12D0)
-walking_sequence  =	(DATA_LOCATION+$1A35)
-walking00_rle	  =	(DATA_LOCATION+$1597)
-off_elevator_rle  =	(DATA_LOCATION+$1499)
-indicators	  =	(DATA_LOCATION+$1A2B)
-elevator_rle	  =	(DATA_LOCATION+$12EC)
+building_sequence =	(DATA_LOCATION+$083C)
+feet_sequence	  =	(DATA_LOCATION+$12CC)
+walking_sequence  =	(DATA_LOCATION+$1A31)
+walking00_rle	  =	(DATA_LOCATION+$1593)
+off_elevator_rle  =	(DATA_LOCATION+$1495)
+indicators	  =	(DATA_LOCATION+$1A27)
+elevator_rle	  =	(DATA_LOCATION+$12E8)
 
 intro1_data_lz4:
 	.word (intro1_data_lz4_end-intro1_data_lz4)
@@ -1999,20 +1999,20 @@ intro1_data_lz4_end:
 
 ; intro4,intro5
 
-opening_sequence  =	(DATA_LOCATION+$2051)
-keypad_sequence   =	(DATA_LOCATION+$1FF6)
+opening_sequence  =	(DATA_LOCATION+$204E)
+keypad_sequence   =	(DATA_LOCATION+$1FF3)
 keypad_rle        =	(DATA_LOCATION+$0496)
-approach_sequence =	(DATA_LOCATION+$1FE9)
+approach_sequence =	(DATA_LOCATION+$1FE6)
 scanner_door_rle  =	(DATA_LOCATION+$0000)
 
-ferrari		  =	(DATA_LOCATION+$2D4A)
-good_evening	  =	(DATA_LOCATION+$2D30)
-dna_list	  =	(DATA_LOCATION+$2D7A)
-static_pattern	  =	(DATA_LOCATION+$2D24)
-ai_sequence	  =	(DATA_LOCATION+$2D0E)
-ai_bg_rle	  =	(DATA_LOCATION+$2747)
-scanning_sequence =	(DATA_LOCATION+$2CF5)
-scanner_rle       =	(DATA_LOCATION+$2066)
+ferrari		  =	(DATA_LOCATION+$2D47)
+good_evening	  =	(DATA_LOCATION+$2D2D)
+dna_list	  =	(DATA_LOCATION+$2D77)
+static_pattern	  =	(DATA_LOCATION+$2D21)
+ai_sequence	  =	(DATA_LOCATION+$2D0B)
+ai_bg_rle	  =	(DATA_LOCATION+$2744)
+scanning_sequence =	(DATA_LOCATION+$2CF2)
+scanner_rle       =	(DATA_LOCATION+$2063)
 
 intro4_data_lz4:
 	.word (intro4_data_lz4_end-intro4_data_lz4)
@@ -2059,8 +2059,8 @@ intro6_data_lz4_end:
 
 ; intro8
 
-bolt_sequence		= (DATA_LOCATION+$1488)
-lightning_sequence	= (DATA_LOCATION+$13D6)
+bolt_sequence		= (DATA_LOCATION+$1484)
+lightning_sequence	= (DATA_LOCATION+$13D2)
 building_car_rle	= (DATA_LOCATION+$1259)
 
 intro8_data_lz4:
@@ -2083,7 +2083,3 @@ intro9_data_lz4:
 	.word (intro9_data_lz4_end-intro9_data_lz4)
 	.incbin "intro_data_09.lz4",11
 intro9_data_lz4_end:
-
-
-
-
