@@ -1,15 +1,5 @@
 TODO:
 
-intro:
-+ keyboard: skip to end, r to repeat forever
-+ Some bugs to fix at some point
-	-> closing panel at entry to scanner, one frame missing grey line
-	-> on building_car bg there are some grey patches that are
-		grey 10 instead of grey 5
-
-general:
-+ move gr_make_quake out of gr_copy
-
 movement -- note these are hard due to limitations of the Apple II keyboard
 + ability to run
 + ability to jump

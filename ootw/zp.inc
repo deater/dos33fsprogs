@@ -70,6 +70,7 @@ BLARGH          = $69
 				;DY_F		= $6F
 
 
+INTRO_REPEAT	= $7E
 ZPOS		= $78
 
 REGISTER_DUMP	= $70

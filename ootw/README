@@ -1,35 +1,52 @@
+Another / Out-of-This World Demake for Apple II+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	by Vince "Deater" Weaver (vince@deater.net) 
+		http://www.deater.net/weave/vmwprod/ootw/
+	Disk and LZ4 routines by qkumba
 
-Saw the amazing PICO-8 version of this:
++ The game "Another World" was released in 1991.
+	Written by Eric Chahi.
+  It was eventually ported to many systems (I played it on IBM PC).
+
+  It even got an Apple IIgs port (the IIgs is 16-bit with fancy
+	graphics and sound).  However you couldn't play it on
+	earlier Apple II systems... until now.
+
++ I was inspired to do this by this amazing PICO-8 version of:
 	https://liquidream.itch.io/another-world-survival
 
-and thought the lo-res pallette might be just barely enough to do
-it justice.
+  and thought the Apple II lo-res palette (15 colors, 40x48 graphics)
+  might be just barely enough to do it justice.
 
-Of course you could just play on your IIgs, but what's the fun in that.
+==================
+Game controls:
+==================
+  Use WASD keys to move, also arrow keys where available.
+	This is tricky as the original Apple II keyboard is very
+		simplistic so it's hard to get auto-repeat or multi keypress.
+  Spacebar is action.
+
+  During the intro, you can press R to make it repeat forever.
+
+  Joystick support: none yet?
 
 
-
-
-Up to tunnel1, using RLE:
-	35875	INTRO
-
-		using LZ4:
-
-
-
-
+==================
+Development notes:
+==================
 
 Memory map:
 	00	zero page
 	01	stack
 	02	????
-	03	dos33 nibble table
+	03	nibble table/disk data
 	04-07	GR page0
 	08-0b	GR page1
 	0c-0f	offscreen data  ($c00 = disk load buffer)
 	10-13	offscreen data2
 	14-16	loader
-	17-bf	program/data (42.25k)
+	17-89	program/compressed-data (30.25k)
+	90-bf	currently decompressed level data (12k)
 	c0-cf	I/O
 	d0-ff	ROM
 
@@ -50,19 +67,8 @@ Memory squeeze!
 	 2,053 over	make elevator indicator a loop
 	 1,347 over	use LZ4 instead of RLE
 
-
-
-4000 code
-
-40000 data
-
-20000 -> 12000
-20000 -> 12000
-	 24000+20000=44000
-
-20000 -> 10000
-20000 -> 10000
-	20000+2000=
+Gave up, see if we can compress in chunks and decompress, sort of like
+my chiptune player does.
 
 
 Let's take a 12k region of memory = $3000
@@ -70,7 +76,7 @@ Let's take a 12k region of memory = $3000
 
 
 ID1 =	1461		2143\
-ID2 =   1759		2687|--- togeter in 01
+ID2 =   1759		2687|--- together in 01
 ID3 =	1195		1879/
 ID4 =   2514		8280\--- in 04
 ID5 =	1947		3492/
@@ -81,8 +87,4 @@ ID9 =	4494		5901\  -- in 09
 ID10 =	3397		5558/
 	=====          ======
 	25890             12k
-
-
-
-
 

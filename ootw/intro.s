@@ -6,7 +6,11 @@
 .include "hardware.inc"
 
 intro:
+	lda	#0
+	sta	INTRO_REPEAT
+	bit	KEYRESET
 
+repeat_intro:
 	;===========================
 	; Enable graphics
 
@@ -1617,11 +1621,43 @@ tunnel1:
 
 	jsr	run_sequence
 
-gone_loop:
-	lda	KEYPRESS
-	bpl	gone_loop
-	bit	KEYRESET
+	;======================
+	; Pause a bit
 
+	ldx	#180
+	jsr	long_wait
+
+;gone_loop:
+;	lda	KEYPRESS
+;	bpl	gone_loop
+;	bit	KEYRESET
+
+	; see if R pressed, if so, repeat
+	; otherwise, return and indicate we want to start the game
+
+	lda	KEYPRESS
+	bpl	check_repeat	; if no keypress, jump ahead
+
+	and	#$7f		; clear high bit
+
+	cmp	#'R'
+	bne	check_repeat
+
+	lda	INTRO_REPEAT
+	eor	#$1
+	sta	INTRO_REPEAT
+
+
+check_repeat:
+	bit	KEYRESET	; reset keyboard strobe
+	lda	INTRO_REPEAT
+	beq	done_intro
+
+	jmp	repeat_intro
+
+done_intro:
+	lda	#1		; start game
+	sta	WHICH_LOAD
 
 	rts
 
