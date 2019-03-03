@@ -2,7 +2,10 @@ TODO:
 
 intro:
 + keyboard: skip to end, r to repeat forever
-+ use LZ4 instead of RLE
++ Some bugs to fix at some point
+	-> closing panel at entry to scanner, one frame missing grey line
+	-> on building_car bg there are some grey patches that are
+		grey 10 instead of grey 5
 
 general:
 + move gr_make_quake out of gr_copy
