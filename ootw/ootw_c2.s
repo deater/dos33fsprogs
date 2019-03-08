@@ -80,7 +80,7 @@ end_message:
 .include "keyboard.s"
 
 ; room backgrounds
-.include "ootw_c2_cage.inc"
+.include "ootw_graphics/cage/ootw_c2_cage.inc"
 ; sprites
 .include "sprites_physicist.inc"
 ; cutscenes

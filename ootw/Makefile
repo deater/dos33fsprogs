@@ -29,8 +29,11 @@ ootw.o:	ootw.s \
 	ootw_pool.s ootw_cavern.s physicist.s random16.s \
 	cutscene_slug.s cutscene_beast.s \
 	ootw_graphics/pool/ootw_pool.inc \
-	ootw_cavern.inc ootw_cavern2.inc ootw_cavern3.inc ootw_underwater.inc \
-	ootw_rope.inc \
+	ootw_graphics/underwater/ootw_underwater.inc \
+	ootw_graphics/caves/ootw_cavern.inc \
+	ootw_graphics/caves/ootw_cavern2.inc \
+	ootw_graphics/caves/ootw_cavern3.inc \
+	ootw_graphics/rope/ootw_rope.inc \
 	sprites_physicist.inc sprites_slugs.inc \
 	sprites_ootw.inc sprites_beast.inc
 	ca65 -o ootw.o ootw.s -l ootw.lst
@@ -45,7 +48,7 @@ ootw_c2.o:	ootw_c2.s \
 	keyboard.s sluggy.s \
 	sprites_physicist.inc \
 	ootw_c2_cage.s \
-	ootw_c2_cage.inc
+	ootw_graphics/cage/ootw_c2_cage.inc
 	ca65 -o ootw_c2.o ootw_c2.s -l ootw_c2.lst
 
 
@@ -165,26 +168,6 @@ loader.o:	loader.s
 HELLO:  hello.bas
 	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
 
-
-#####
-
-ootw_cavern.inc:	$(PNG2RLE) another_cave.png
-	$(PNG2RLE) asm another_cave.png cavern_rle > ootw_cavern.inc
-
-ootw_cavern2.inc:	$(PNG2RLE) another_cave2.png
-	$(PNG2RLE) asm another_cave2.png cavern2_rle > ootw_cavern2.inc
-
-ootw_cavern3.inc:	$(PNG2RLE) another_cave3.png
-	$(PNG2RLE) asm another_cave3.png cavern3_rle > ootw_cavern3.inc
-
-ootw_rope.inc:	$(PNG2RLE) another_rope.png
-	$(PNG2RLE) asm another_rope.png rope_rle > ootw_rope.inc
-
-#####
-
-ootw_c2_cage.inc:	$(PNG2RLE) ootw_c2_cage.png
-	$(PNG2RLE) asm ootw_c2_cage.png cage_rle > ootw_c2_cage.inc
-
 #####
 
 compress_test.inc:	intro_graphics/07_soda/drinking01.png
@@ -202,5 +185,6 @@ compress_test.o:	compress_test.s lz4_decode.s compress_test.inc
 
 clean:		
 		rm -f *~ *.o *.lst *.lz4 HELLO OOTW OOTW_C2 INTRO LOADER \
+			COMPRESS-TEST \
 			intro_data_01 intro_data_04 intro_data_06 \
 			intro_data_08 intro_data_09
