@@ -28,7 +28,7 @@ ootw.o:	ootw.s \
 	ootw_rope.s earthquake.s ootw_mesa.s \
 	ootw_pool.s ootw_cavern.s physicist.s random16.s \
 	cutscene_slug.s cutscene_beast.s \
-	ootw_pool.inc \
+	ootw_graphics/pool/ootw_pool.inc \
 	ootw_cavern.inc ootw_cavern2.inc ootw_cavern3.inc ootw_underwater.inc \
 	ootw_rope.inc \
 	sprites_physicist.inc sprites_slugs.inc \
@@ -167,9 +167,6 @@ HELLO:  hello.bas
 
 
 #####
-
-ootw_pool.inc:	$(PNG2RLE) another.png
-	$(PNG2RLE) asm another.png pool_rle > ootw_pool.inc
 
 ootw_cavern.inc:	$(PNG2RLE) another_cave.png
 	$(PNG2RLE) asm another_cave.png cavern_rle > ootw_cavern.inc

@@ -94,7 +94,7 @@ end_message:
 .include "random16.s"
 .include "keyboard.s"
 ; room backgrounds
-.include "ootw_pool.inc"
+.include "ootw_graphics/pool/ootw_pool.inc"
 .include "ootw_cavern.inc"
 .include "ootw_cavern2.inc"
 .include "ootw_cavern3.inc"
