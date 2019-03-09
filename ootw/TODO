@@ -1,7 +1,7 @@
 TODO:
 
 intro:
-	there's still a bit of a pause when the elevator door finishes opening
++ there's still a bit of a pause when the elevator door finishes opening
 
 movement -- note these are hard due to limitations of the Apple II keyboard
 + ability to run
@@ -21,10 +21,11 @@ sprites_to_draw:
 + physicist shot
 
 pool:
-+
++ bacground of beast moving off
 
 cavern:
 + slugs on ceiling drop
++ background of beast moving off
 
 underwater:
 + add arrival-underwater scene

@@ -15,8 +15,8 @@ keypress:
 	and	#$7f		; clear high bit
 
 check_quit:
-	cmp	#'Q'
-	beq	quit
+;	cmp	#'Q'
+;	beq	quit
 	cmp	#27
 	bne	check_left
 quit:

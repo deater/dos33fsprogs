@@ -133,6 +133,8 @@ CURSOR		= $9D
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
+JUMPING		= $D0
+
 LEFT_LIMIT	= $E0
 RIGHT_LIMIT	= $E1
 WHICH_SLUG	= $E2
@@ -173,12 +175,15 @@ YPOS		=	$F4
 DIRECTION	=	$F5
 GAIT		=	$F6
 TENTACLE_X	=	$F7
+
 TENTACLE_PROGRESS =	$F8
 SLUGDEATH_PROGRESS =	$F8
 ELEVATOR_CYCLE	=	$F8
+
 TENTACLE_GRAB	=	$F9
 SLUGDEATH	=	$F9
 ELEVATOR_COUNT	=	$F9
+
 TEMP		=	$FA
 TEMPY		=	$FB
 INL		=	$FC
