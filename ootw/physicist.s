@@ -39,8 +39,16 @@ crouching:
 
 walking:
 	lda	GAIT
-	and	#$f
+	cmp	#40
+	bcc	gait_fine	; blt
+
+	lda	#0
 	sta	GAIT
+
+gait_fine:
+	lsr
+	and	#$fe
+
 	tax
 
 	lda	phys_walk_progression,X

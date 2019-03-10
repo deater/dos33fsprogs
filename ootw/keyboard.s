@@ -39,8 +39,16 @@ left:
 	lda	DIRECTION		; if facing right, turn to face left
 	bne	face_left
 
+	inc	GAIT			; cycle through animation
+
+	lda	GAIT
+	and	#$7
+	cmp	#$4
+	bne	no_move_left
+
 	dec	PHYSICIST_X		; walk left
 
+no_move_left:
 	lda	PHYSICIST_X
 	cmp	LEFT_LIMIT
 	bpl	just_fine_left
@@ -51,8 +59,7 @@ too_far_left:
 
 just_fine_left:
 
-	inc	GAIT			; cycle through animation
-	inc	GAIT
+
 
 	jmp	done_keypress		; done
 
@@ -74,7 +81,16 @@ right:
 	lda	DIRECTION
 	beq	face_right
 
+	inc	GAIT
+
+	lda	GAIT
+	and	#$7
+	cmp	#$4
+	bne	no_move_right
+
 	inc	PHYSICIST_X
+no_move_right:
+
 	lda	PHYSICIST_X
 	cmp	RIGHT_LIMIT
 	bne	just_fine_right
@@ -87,8 +103,7 @@ too_far_right:
 
 
 just_fine_right:
-	inc	GAIT
-	inc	GAIT
+
 	jmp	done_keypress
 
 face_right:

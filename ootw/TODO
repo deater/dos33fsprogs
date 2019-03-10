@@ -1,27 +1,28 @@
 TODO:
 
+BUGS:
++ beast grab you a edge of pool (glitch)
+
 intro:
 + there's still a bit of a pause when the elevator door finishes opening
 
 movement -- note these are hard due to limitations of the Apple II keyboard
 + ability to run
+	Missing one running frame
 + ability to jump
 + ability to kick while crouching
 + ability to shoot
 
 sprites_to_draw:
 + physicist jumping
-+ physicist hanging on rope
 + physicist swimming
 + physicist getting out of pool
 + beast tripping
-+ physicist putting hand up
-+ physicist shot backwards
 + physicist holding gun
 + physicist shot
 
 pool:
-+ bacground of beast moving off
++ background of beast moving off
 
 cavern:
 + slugs on ceiling drop
