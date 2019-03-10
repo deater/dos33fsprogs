@@ -82,6 +82,6 @@ end_message:
 ; room backgrounds
 .include "ootw_graphics/cage/ootw_c2_cage.inc"
 ; sprites
-.include "sprites_physicist.inc"
+.include "ootw_graphics/sprites/sprites_physicist.inc"
 ; cutscenes
 

@@ -34,7 +34,8 @@ ootw.o:	ootw.s \
 	ootw_graphics/caves/ootw_cavern2.inc \
 	ootw_graphics/caves/ootw_cavern3.inc \
 	ootw_graphics/rope/ootw_rope.inc \
-	sprites_physicist.inc sprites_slugs.inc \
+	ootw_graphics/sprites/sprites_physicist.inc \
+	sprites_slugs.inc \
 	sprites_ootw.inc sprites_beast.inc
 	ca65 -o ootw.o ootw.s -l ootw.lst
 
@@ -46,7 +47,7 @@ OOTW_C2:	ootw_c2.o
 ootw_c2.o:	ootw_c2.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
 	keyboard.s sluggy.s \
-	sprites_physicist.inc \
+	ootw_graphics/sprites/sprites_physicist.inc \
 	ootw_c2_cage.s \
 	ootw_graphics/cage/ootw_c2_cage.inc
 	ca65 -o ootw_c2.o ootw_c2.s -l ootw_c2.lst

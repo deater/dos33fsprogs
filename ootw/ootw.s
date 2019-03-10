@@ -102,7 +102,7 @@ end_message:
 .include "ootw_graphics/underwater/ootw_underwater.inc"
 ; sprites
 .include "sprites_ootw.inc"
-.include "sprites_physicist.inc"
+.include "ootw_graphics/sprites/sprites_physicist.inc"
 .include "sprites_slugs.inc"
 .include "sprites_beast.inc"
 ; cutscenes
