@@ -468,8 +468,109 @@ collapse5:
 
 
 
+;=====================
+;=====================
+; JUMPING
+;=====================
+;=====================
 
 
+jump_progression:
+	.word	jump1
+	.word	jump2
+	.word	jump3
+	.word	jump4
+	.word	jump5
+	.word	jump6
+	.word	jump7
+	.word	jump8
 
 
+jump1:
+	.byte $5,$8
+	.byte $aa,$9a,$9a,$aa,$aa
+	.byte $aa,$bb,$99,$aa,$aa
+	.byte $aa,$aa,$0b,$aa,$aa
+	.byte $aa,$aa,$bb,$aa,$aa
+	.byte $aa,$ba,$0b,$aa,$aa
+	.byte $aa,$aa,$44,$aa,$aa
+	.byte $aa,$44,$cc,$aa,$aa
+	.byte $fa,$f4,$5c,$aa,$aa
+
+jump2:
+	.byte $5,$8
+	.byte $9a,$9a,$aa,$aa,$aa
+	.byte $bb,$99,$aa,$aa,$aa
+	.byte $aa,$0b,$00,$aa,$aa
+	.byte $aa,$00,$bb,$aa,$aa
+	.byte $aa,$a0,$bb,$aa,$aa
+	.byte $aa,$44,$cb,$aa,$aa
+	.byte $aa,$44,$cc,$aa,$aa
+	.byte $fa,$f4,$5c,$aa,$aa
+
+jump3:
+	.byte $5,$8
+	.byte $9a,$9a,$aa,$aa,$aa
+	.byte $bb,$99,$aa,$aa,$aa
+	.byte $aa,$0b,$00,$aa,$aa
+	.byte $aa,$00,$bb,$aa,$aa
+	.byte $aa,$a0,$bb,$aa,$aa
+	.byte $44,$c4,$cb,$aa,$aa
+	.byte $a4,$4c,$cc,$cc,$aa
+	.byte $fa,$f4,$5a,$a5,$aa
+
+jump4:
+	.byte $5,$8
+	.byte $9a,$9a,$aa,$aa,$aa
+	.byte $bb,$99,$aa,$aa,$aa
+	.byte $aa,$0b,$00,$aa,$aa
+	.byte $aa,$00,$bb,$aa,$aa
+	.byte $aa,$a0,$bb,$aa,$aa
+	.byte $aa,$4b,$c4,$ca,$5a
+	.byte $aa,$44,$4c,$ac,$55
+	.byte $aa,$aa,$f4,$f4,$aa
+
+jump5:
+	.byte $5,$8
+	.byte $b9,$99,$aa,$aa,$aa
+	.byte $ab,$b9,$aa,$aa,$aa
+	.byte $ba,$b0,$0b,$aa,$aa
+	.byte $aa,$aa,$00,$aa,$aa
+	.byte $aa,$aa,$00,$aa,$aa
+	.byte $aa,$cc,$44,$4a,$aa
+	.byte $5a,$5c,$a4,$44,$fa
+	.byte $aa,$aa,$aa,$aa,$af
+
+jump6:
+	.byte $5,$8
+	.byte $aa,$b9,$99,$aa,$aa
+	.byte $aa,$ab,$b9,$aa,$aa
+	.byte $ab,$ba,$b0,$aa,$aa
+	.byte $aa,$aa,$00,$aa,$aa
+	.byte $aa,$aa,$40,$aa,$aa
+	.byte $aa,$cc,$44,$4a,$fa
+	.byte $aa,$cc,$a4,$a4,$ff
+	.byte $a5,$a5,$aa,$aa,$aa
+
+jump7:
+	.byte $5,$8
+	.byte $aa,$b9,$99,$aa,$aa
+	.byte $aa,$ab,$b9,$aa,$aa
+	.byte $aa,$aa,$b0,$aa,$aa
+	.byte $ab,$ab,$00,$aa,$aa
+	.byte $aa,$aa,$40,$aa,$aa
+	.byte $aa,$cc,$44,$4a,$fa
+	.byte $aa,$cc,$a4,$a4,$ff
+	.byte $a5,$a5,$aa,$aa,$aa
+
+jump8:
+	.byte $5,$8
+	.byte $aa,$9a,$9a,$aa,$aa
+	.byte $aa,$bb,$99,$aa,$aa
+	.byte $aa,$aa,$0b,$aa,$aa
+	.byte $aa,$b0,$bb,$aa,$aa
+	.byte $aa,$aa,$40,$aa,$aa
+	.byte $aa,$4a,$44,$aa,$aa
+	.byte $aa,$44,$c4,$ca,$aa
+	.byte $fa,$f4,$5a,$5c,$aa
 
