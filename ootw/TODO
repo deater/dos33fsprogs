@@ -1,14 +1,13 @@
+
+
+KNOWN BUGS:
++ ootw: pool monster grabs you a edge of pool (glitch)
++ intro: there's still a bit of a pause when the elevator door finishes opening
+
 TODO:
 
-BUGS:
-+ beast grab you a edge of pool (glitch)
-
-intro:
-+ there's still a bit of a pause when the elevator door finishes opening
-
 movement -- note these are hard due to limitations of the Apple II keyboard
-+ ability to run
-	Missing one running frame
++ running: Missing one running frame
 + ability to jump
 + ability to kick while crouching
 + ability to shoot

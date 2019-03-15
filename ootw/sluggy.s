@@ -185,7 +185,7 @@ check_kicked:
 
 	lda	PHYSICIST_STATE
 	cmp	#P_KICKING
-	beq	check_attack
+	bne	check_attack
 
 	lda	PHYSICIST_X
 	sec

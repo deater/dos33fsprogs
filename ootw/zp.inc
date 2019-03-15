@@ -133,8 +133,6 @@ CURSOR		= $9D
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
-JUMPING		= $D0
-
 LEFT_LIMIT	= $E0
 RIGHT_LIMIT	= $E1
 WHICH_SLUG	= $E2
@@ -161,6 +159,7 @@ PHYSICIST_STATE	= $EA
 	P_RUNNING   = $02
 	P_CROUCHING = $03
 	P_KICKING   = $04
+	P_JUMPING   = $05
 
 ;	CROUCHING	= $EA
 ;	KICKING		= $EB

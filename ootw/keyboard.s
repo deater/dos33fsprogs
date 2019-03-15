@@ -15,23 +15,28 @@ keypress:
 	and	#$7f		; clear high bit
 
 check_quit:
-;	cmp	#'Q'
-;	beq	quit
-	cmp	#27
-	bne	check_left
+	cmp	#27		; quit if ESCAPE pressed
+	bne	check_walk_left
+
+	;=====================
+	; QUIT
+	;=====================
 quit:
 	lda	#$ff		; could just dec
 	sta	GAME_OVER
 	rts
 
-check_left:
+check_walk_left:
 	cmp	#'A'
-	beq	left
+	beq	walk_left
 	cmp	#$8		; left arrow
-	bne	check_right
-left:
+	bne	check_walk_right
 
-	; walk left
+
+	;====================
+	; Walk left
+	;====================
+walk_left:
 
 	lda	#P_WALKING
 	sta	PHYSICIST_STATE		; stand from crouching
@@ -59,8 +64,6 @@ too_far_left:
 
 just_fine_left:
 
-
-
 	jmp	done_keypress		; done
 
 face_left:
@@ -69,12 +72,17 @@ face_left:
 	sta	GAIT
 	jmp	done_keypress
 
-check_right:
+check_walk_right:
 	cmp	#'D'
-	beq	right
+	beq	walk_right
 	cmp	#$15
-	bne	check_down
-right:
+	bne	check_run_left
+
+
+	;===================
+	; Walk Right
+	;===================
+walk_right:
 	lda	#P_WALKING
 	sta	PHYSICIST_STATE
 
@@ -113,11 +121,79 @@ face_right:
 	sta	DIRECTION
 	jmp	done_keypress
 
+
+
+check_run_left:
+	cmp	#'Q'
+	bne	check_run_right
+
+
+	;====================
+	; Run left
+	;====================
+run_left:
+
+	lda	#P_RUNNING
+	sta	PHYSICIST_STATE		; stand from crouching
+
+	lda	DIRECTION		; if facing right, turn to face left
+	bne	face_left
+
+	inc	GAIT			; cycle through animation
+	inc	GAIT			; cycle through animation
+
+	dec	PHYSICIST_X		; walk left
+
+	jmp	no_move_left
+
+
+check_run_right:
+	cmp	#'E'
+	bne	check_up
+
+	;===================
+	; Run Right
+	;===================
+run_right:
+	lda	#P_RUNNING
+	sta	PHYSICIST_STATE
+
+	lda	DIRECTION
+	beq	face_right
+
+	inc	GAIT
+	inc	GAIT
+
+	inc	PHYSICIST_X
+
+	jmp	no_move_right
+
+check_up:
+	cmp	#'W'
+	beq	up
+	cmp	#$0B
+	bne	check_down
+up:
+	;========================
+	; Jump
+	;========================
+
+	lda	#P_JUMPING
+	sta	PHYSICIST_STATE
+	lda	#0
+	sta	GAIT
+
+	jmp	done_keypress
+
 check_down:
 	cmp	#'S'
 	beq	down
 	cmp	#$0A
 	bne	check_space
+
+	;======================
+	; Crouch
+	;======================
 down:
 	lda	#P_CROUCHING
 	sta	PHYSICIST_STATE
@@ -131,6 +207,10 @@ check_space:
 	beq	space
 	cmp	#$15
 	bne	unknown
+
+	;======================
+	; Kick
+	;======================
 space:
 	lda	#P_KICKING
 	sta	PHYSICIST_STATE

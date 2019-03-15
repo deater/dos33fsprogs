@@ -4,12 +4,14 @@ pstate_table_lo:
 	.byte <physicist_running
 	.byte <physicist_crouching
 	.byte <physicist_kicking
+	.byte <physicist_jumping
 pstate_table_hi:
 	.byte >physicist_standing
 	.byte >physicist_standing
 	.byte >physicist_running
 	.byte >physicist_crouching
 	.byte >physicist_kicking
+	.byte >physicist_jumping
 
 pjump:
 	.word	$0000
@@ -78,6 +80,23 @@ physicist_crouching:
 	sta	INH
 
 	jmp	finally_draw_him
+
+;===================================
+; JUMPING
+;===================================
+
+physicist_jumping:
+
+	; FIXME: we have an animation?
+
+	lda	#<crouch2
+	sta	INL
+
+	lda	#>crouch2
+	sta	INH
+
+	jmp	finally_draw_him
+
 
 
 ;===============================
