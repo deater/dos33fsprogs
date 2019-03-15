@@ -475,7 +475,7 @@ collapse5:
 ;=====================
 
 
-jump_progression:
+phys_jump_progression:
 	.word	jump1
 	.word	jump2
 	.word	jump3

@@ -60,11 +60,12 @@ physicist_kicking:
 	; If kicking long enough, return to standing
 
 	dec	GAIT
-	bne	finally_draw_him
+	bne	short_draw
 
 	lda	#P_STANDING
 	sta	PHYSICIST_STATE
 
+short_draw:
 	jmp	finally_draw_him
 
 ;===================================
@@ -89,14 +90,37 @@ physicist_crouching:
 
 physicist_jumping:
 
-	; FIXME: we have an animation?
+	lda	GAIT
+	cmp	#16
+	bcc	still_jumping	; blt
 
-	lda	#<crouch2
+	lda	#0
+	sta	GAIT
+	lda	#P_WALKING
+	sta	PHYSICIST_STATE
+	jmp	physicist_walking
+
+still_jumping:
+
+	lsr
+	and	#$fe
+
+	tax
+
+	lda	phys_jump_progression,X
 	sta	INL
 
-	lda	#>crouch2
+	lda	phys_jump_progression+1,X
 	sta	INH
 
+	inc	GAIT
+
+	lda	GAIT
+	and	#$3
+	bne	jump_no_move
+
+	inc	PHYSICIST_X
+jump_no_move:
 	jmp	finally_draw_him
 
 
