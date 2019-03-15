@@ -13,8 +13,7 @@ ootw_c2:
 
 	lda	#0
 	sta	GAME_OVER
-	sta	KICKING
-	sta	CROUCHING
+	sta	PHYSICIST_STATE
 
 	lda     #22
 	sta     PHYSICIST_Y

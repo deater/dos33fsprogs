@@ -183,7 +183,8 @@ check_kicked:
 	;==================
 	; see if kicked
 
-	lda	KICKING
+	lda	PHYSICIST_STATE
+	cmp	#P_KICKING
 	beq	check_attack
 
 	lda	PHYSICIST_X

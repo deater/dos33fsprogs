@@ -33,8 +33,8 @@ left:
 
 	; walk left
 
-	lda	#0
-	sta	CROUCHING		; stanid crouching
+	lda	#P_WALKING
+	sta	PHYSICIST_STATE		; stand from crouching
 
 	lda	DIRECTION		; if facing right, turn to face left
 	bne	face_left
@@ -75,8 +75,8 @@ check_right:
 	cmp	#$15
 	bne	check_down
 right:
-	lda	#0
-	sta	CROUCHING
+	lda	#P_WALKING
+	sta	PHYSICIST_STATE
 
 	lda	DIRECTION
 	beq	face_right
@@ -119,8 +119,8 @@ check_down:
 	cmp	#$0A
 	bne	check_space
 down:
-	lda	#48
-	sta	CROUCHING
+	lda	#P_CROUCHING
+	sta	PHYSICIST_STATE
 	lda	#0
 	sta	GAIT
 
@@ -132,9 +132,9 @@ check_space:
 	cmp	#$15
 	bne	unknown
 space:
+	lda	#P_KICKING
+	sta	PHYSICIST_STATE
 	lda	#15
-	sta	KICKING
-	lda	#0
 	sta	GAIT
 unknown:
 done_keypress:
