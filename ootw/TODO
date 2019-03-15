@@ -26,6 +26,7 @@ pool:
 cavern:
 + slugs on ceiling drop
 + background of beast moving off
++ adjust slug attack range
 
 underwater:
 + add arrival-underwater scene

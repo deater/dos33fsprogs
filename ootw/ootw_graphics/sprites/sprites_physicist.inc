@@ -352,70 +352,119 @@ crouch2:
 	; your embrace, and my collapse
 
 collapse_progression:
-	.word	collapse1
-	.word	collapse2
-	.word	collapse3
-	.word	collapse4
-	.word	collapse5
-	.word	collapse5	; 6
-	.word	collapse5	; 7
-	.word	collapse5	; 8
-	.word	collapse5	; 9
+	.word	collapse1	; 00
+	.word	collapse2	; 02
+	.word	collapse3	; 04
+	.word	collapse4	; 06
+	.word	collapse5	; 08
+	.word	collapse5	; 10
+	.word	collapse5	; 12
+	.word	collapse5	; 14
+	.word	collapse5	; 16
 
 collapse1:
 	.byte $4,$8
-	.byte $aa,$aa,$9a,$9a
-	.byte $aa,$aa,$99,$ab
-	.byte $aa,$aa,$0b,$aa
-	.byte $aa,$aa,$bb,$aa
-	.byte $aa,$aa,$bb,$aa
-	.byte $aa,$aa,$44,$aa
-	.byte $aa,$4a,$a4,$aa
-	.byte $aa,$f4,$fa,$aa
+;	.byte $aa,$aa,$9a,$9a
+;	.byte $aa,$aa,$99,$ab
+;	.byte $aa,$aa,$0b,$aa
+;	.byte $aa,$aa,$bb,$aa
+;	.byte $aa,$aa,$bb,$aa
+;	.byte $aa,$aa,$44,$aa
+;	.byte $aa,$4a,$a4,$aa
+;	.byte $aa,$f4,$fa,$aa
+
+	.byte $9a,$9a,$aa,$aa
+	.byte $ab,$99,$aa,$aa
+	.byte $aa,$0b,$aa,$aa
+	.byte $aa,$bb,$aa,$aa
+	.byte $aa,$bb,$aa,$aa
+	.byte $aa,$44,$aa,$aa
+	.byte $aa,$a4,$4a,$aa
+	.byte $aa,$fa,$f4,$aa
+
 
 collapse2:
 	.byte $5,$8
+;	.byte $aa,$aa,$aa,$aa,$aa
+;	.byte $aa,$aa,$aa,$99,$b9
+;	.byte $aa,$aa,$aa,$b9,$ab
+;	.byte $aa,$aa,$aa,$b0,$aa
+;	.byte $aa,$aa,$00,$bb,$aa
+;	.byte $aa,$4a,$44,$bb,$aa
+;	.byte $4a,$a4,$aa,$ab,$aa
+;	.byte $f4,$fa,$aa,$aa,$aa
+
 	.byte $aa,$aa,$aa,$aa,$aa
-	.byte $aa,$aa,$aa,$99,$b9
-	.byte $aa,$aa,$aa,$b9,$ab
-	.byte $aa,$aa,$aa,$b0,$aa
-	.byte $aa,$aa,$00,$bb,$aa
-	.byte $aa,$4a,$44,$bb,$aa
-	.byte $4a,$a4,$aa,$ab,$aa
-	.byte $f4,$fa,$aa,$aa,$aa
+	.byte $b9,$99,$aa,$aa,$aa
+	.byte $ab,$b9,$aa,$aa,$aa
+	.byte $aa,$b0,$aa,$aa,$aa
+	.byte $aa,$bb,$00,$aa,$aa
+	.byte $aa,$bb,$44,$4a,$aa
+	.byte $aa,$ab,$aa,$a4,$4a
+	.byte $aa,$aa,$aa,$fa,$f4
+
+
 
 collapse3:
 	.byte $6,$8
+;	.byte $aa,$aa,$aa,$aa,$aa,$aa
+;	.byte $aa,$aa,$aa,$aa,$aa,$aa
+;	.byte $aa,$aa,$aa,$aa,$9a,$9a
+;	.byte $aa,$aa,$aa,$aa,$99,$bb
+;	.byte $aa,$aa,$aa,$0a,$0b,$aa
+;	.byte $aa,$aa,$4a,$00,$bb,$aa
+;	.byte $fa,$44,$44,$a0,$bb,$aa
+;	.byte $ff,$a4,$aa,$aa,$ab,$aa
+
 	.byte $aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa
-	.byte $aa,$aa,$aa,$aa,$9a,$9a
-	.byte $aa,$aa,$aa,$aa,$99,$bb
-	.byte $aa,$aa,$aa,$0a,$0b,$aa
-	.byte $aa,$aa,$4a,$00,$bb,$aa
-	.byte $fa,$44,$44,$a0,$bb,$aa
-	.byte $ff,$a4,$aa,$aa,$ab,$aa
+	.byte $9a,$9a,$aa,$aa,$aa,$aa
+	.byte $bb,$99,$aa,$aa,$aa,$aa
+	.byte $aa,$0b,$0a,$aa,$aa,$aa
+	.byte $aa,$bb,$00,$4a,$aa,$aa
+	.byte $aa,$bb,$a0,$44,$44,$fa
+	.byte $aa,$ab,$aa,$aa,$a4,$ff
 
 collapse4:
 	.byte $7,$8
+;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
+;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
+;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
+;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
+;	.byte $aa,$aa,$aa,$aa,$aa,$9a,$9a
+;	.byte $aa,$aa,$aa,$0a,$00,$bb,$99
+;	.byte $fa,$4a,$44,$00,$bb,$aa,$aa
+;	.byte $ff,$a4,$aa,$bb,$aa,$aa,$aa
+
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte $aa,$aa,$aa,$aa,$aa,$9a,$9a
-	.byte $aa,$aa,$aa,$0a,$00,$bb,$99
-	.byte $fa,$4a,$44,$00,$bb,$aa,$aa
-	.byte $ff,$a4,$aa,$bb,$aa,$aa,$aa
+	.byte $9a,$9a,$aa,$aa,$aa,$aa,$aa
+	.byte $99,$bb,$00,$0a,$aa,$aa,$aa
+	.byte $aa,$aa,$bb,$00,$44,$4a,$fa
+	.byte $aa,$aa,$aa,$bb,$aa,$a4,$ff
+
 
 collapse5:
 	.byte $8,$8
+;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
+;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
+;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
+;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
+;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
+;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
+;	.byte $aa,$4a,$bb,$00,$b0,$00,$b9,$99
+;	.byte $ff,$44,$b4,$bb,$aa,$aa,$ab,$a9
+
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte $aa,$4a,$bb,$00,$b0,$00,$b9,$99
-	.byte $ff,$44,$b4,$bb,$aa,$aa,$ab,$a9
+	.byte $99,$b9,$00,$b0,$00,$bb,$4a,$aa
+	.byte $a9,$ab,$aa,$aa,$bb,$b4,$44,$ff
 
 
 

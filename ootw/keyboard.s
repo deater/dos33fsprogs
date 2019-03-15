@@ -4,8 +4,13 @@
 
 handle_keypress:
 
+	lda	PHYSICIST_STATE
+	cmp	#P_COLLAPSING		; ignore keypress if dying
+	beq	no_keypress
+
 	lda	KEYPRESS						; 4
 	bmi	keypress						; 3
+no_keypress:
 
 	rts	; nothing pressed, return
 

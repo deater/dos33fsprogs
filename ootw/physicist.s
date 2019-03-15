@@ -5,6 +5,7 @@ pstate_table_lo:
 	.byte <physicist_crouching
 	.byte <physicist_kicking
 	.byte <physicist_jumping
+	.byte <physicist_collapsing
 pstate_table_hi:
 	.byte >physicist_standing
 	.byte >physicist_standing
@@ -12,6 +13,7 @@ pstate_table_hi:
 	.byte >physicist_crouching
 	.byte >physicist_kicking
 	.byte >physicist_jumping
+	.byte >physicist_collapsing
 
 pjump:
 	.word	$0000
@@ -152,9 +154,45 @@ run_gait_fine:
 	jmp	finally_draw_him
 
 
+;==================================
+; COLLAPSING
+;==================================
+
+physicist_collapsing:
+
+	lda	GAIT
+	cmp	#18
+	bne	collapse_not_done
+
+really_dead:
+	lda	#$ff
+	sta	GAME_OVER
+	jmp	finally_draw_him
+
+collapse_not_done:
+
+	ldx	GAIT
+
+	lda	collapse_progression,X
+	sta	INL
+	lda	collapse_progression+1,X
+	sta	INH
+
+	lda	FRAMEL
+	and	#$1f
+	bne	no_collapse_progress
+
+	inc	GAIT
+	inc	GAIT
+
+no_collapse_progress:
+
+
+	jmp	finally_draw_him
+
 
 ;=============================
-; Actuall Draw Him
+; Actually Draw Him
 ;=============================
 
 

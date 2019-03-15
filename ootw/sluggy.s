@@ -235,13 +235,14 @@ attack:
 	lda	#1
 	sta	slugg0_attack,X
 
-	lda	SLUGDEATH		; don't re-attack if already dead
-	bne	no_attack
+	lda	PHYSICIST_STATE		; don't re-attack if already dead
+	cmp	#P_COLLAPSING
+	beq	no_attack
 
-	lda	#$1
-	sta	SLUGDEATH
+	lda	#P_COLLAPSING		; start collapsing
+	sta	PHYSICIST_STATE
 	lda	#0
-	sta	SLUGDEATH_PROGRESS
+	sta	GAIT
 
 	stx	WHICH_SLUG
 	jsr	slug_cutscene

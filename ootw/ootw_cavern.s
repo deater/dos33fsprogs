@@ -120,49 +120,49 @@ cavern_loop:
 	;===============
 	; handle slug death
 
-	lda	SLUGDEATH
-	beq	still_alive
+;	lda	SLUGDEATH
+;	beq	still_alive
 
-collapsing:
-	lda     SLUGDEATH_PROGRESS
-        cmp     #18
-        bmi     still_collapsing
+;collapsing:
+;	lda     SLUGDEATH_PROGRESS
+;       cmp     #18
+;        bmi     still_collapsing
 
-really_dead:
-	lda	#$ff
-	sta	GAME_OVER
-	jmp	just_slugs
-
-
-still_collapsing:
-        tax
-
-        lda     collapse_progression,X
-        sta     INL
-        lda     collapse_progression+1,X
-        sta     INH
-
-        lda     PHYSICIST_X
-        sta     XPOS
-        lda     PHYSICIST_Y
-	sec
-	sbc	EARTH_OFFSET
-        sta     YPOS
-
-	jsr	put_sprite
-
-        lda     FRAMEL
-        and     #$1f
-        bne     no_collapse_progress
-
-        inc     SLUGDEATH_PROGRESS
-        inc     SLUGDEATH_PROGRESS
-no_collapse_progress:
+;really_dead:
+;	lda	#$ff
+;	sta	GAME_OVER
+;	jmp	just_slugs
 
 
-	jmp	just_slugs
+;still_collapsing:
+;       tax
 
-still_alive:
+;        lda     collapse_progression,X
+ ;       sta     INL
+  ;      lda     collapse_progression+1,X
+   ;     sta     INH
+
+;        lda     PHYSICIST_X
+ ;       sta     XPOS
+  ;      lda     PHYSICIST_Y
+;	sec
+;	sbc	EARTH_OFFSET
+ ;       sta     YPOS
+
+;	jsr	put_sprite
+
+ ;       lda     FRAMEL
+  ;      and     #$1f
+   ;     bne     no_collapse_progress
+
+;        inc     SLUGDEATH_PROGRESS
+;        inc     SLUGDEATH_PROGRESS
+;no_collapse_progress:
+
+
+;	jmp	just_slugs
+
+;still_alive:
 
 	;===============
 	; check keyboard
