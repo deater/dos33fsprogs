@@ -15,8 +15,15 @@ pstate_table_hi:
 	.byte >physicist_jumping
 	.byte >physicist_collapsing
 
+; Urgh, make sure this doesn't end up at $FF or you hit the
+;	NMOS 6502 bug
+
+.align 2
+
 pjump:
 	.word	$0000
+
+.align 1
 
 ;======================================
 ; draw physicist
@@ -247,3 +254,40 @@ facing_left:
 facing_right:
 	jmp	put_sprite_flipped
 
+
+
+;======================================
+; Check screen limits
+;======================================
+
+check_screen_limit:
+
+	lda	PHYSICIST_X
+	cmp	LEFT_LIMIT
+	bpl	just_fine_left		; (bge==bcs)
+
+too_far_left:
+;	inc	PHYSICIST_X
+
+	lda	#1
+	sta	GAME_OVER
+	rts
+
+just_fine_left:
+
+	; Check right edige of screen
+
+	lda	PHYSICIST_X
+	cmp	RIGHT_LIMIT
+	bcc	just_fine_right		; blt
+
+too_far_right:
+
+;	dec	PHYSICIST_X
+
+	lda	#2
+	sta	GAME_OVER
+
+just_fine_right:
+
+	rts

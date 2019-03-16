@@ -272,6 +272,10 @@ no_tentacle:
 
 	jsr	handle_keypress
 
+	;===============================
+	; check limits
+
+	jsr	check_screen_limit
 
 	;===============
 	; draw physicist
@@ -343,7 +347,7 @@ not_to_right:
 	cmp	#$1
 	bne	not_done_pool
 
-	lda	#37
+	lda	#36
 	sta	PHYSICIST_X
 
 	jmp	ootw_rope

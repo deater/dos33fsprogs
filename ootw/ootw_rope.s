@@ -71,6 +71,11 @@ rope_loop:
 
 	jsr	handle_keypress
 
+	;===============================
+	; check screen limits
+
+	jsr	check_screen_limit
+
 
 	;===============
 	; draw physicist
@@ -152,7 +157,7 @@ rope_frame_no_oflo:
 
 	; check if done this level
 	cmp	#$2
-	bne	not_done_rope
+	bne	check_cliff_edge
 
 	lda	#0
 	sta	PHYSICIST_X
@@ -160,8 +165,19 @@ rope_frame_no_oflo:
 
 	jmp	ootw_pool
 
-not_done_rope:
 
+	; at edge of cliff
+check_cliff_edge:
+	cmp	#$1
+	bne	not_done_rope
+
+	lda	#0
+	sta	GAME_OVER
+
+	lda	#11
+	sta	PHYSICIST_X
+
+not_done_rope:
 	; loop forever
 
 	jmp	rope_loop

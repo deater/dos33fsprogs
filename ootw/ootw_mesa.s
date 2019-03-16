@@ -65,6 +65,12 @@ mesa_loop:
 
 	jsr	handle_keypress
 
+	;===============================
+	; check limits
+
+	jsr	check_screen_limit
+
+
 
 	;===============
 	; draw physicist

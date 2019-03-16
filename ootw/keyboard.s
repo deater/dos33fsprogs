@@ -7,6 +7,8 @@ handle_keypress:
 	lda	PHYSICIST_STATE
 	cmp	#P_COLLAPSING		; ignore keypress if dying
 	beq	no_keypress
+	cmp	#P_JUMPING		; ignore keypress if jumping
+	beq	no_keypress
 
 	lda	KEYPRESS						; 4
 	bmi	keypress						; 3
@@ -59,15 +61,16 @@ walk_left:
 	dec	PHYSICIST_X		; walk left
 
 no_move_left:
-	lda	PHYSICIST_X
-	cmp	LEFT_LIMIT
-	bpl	just_fine_left
-too_far_left:
-	inc	PHYSICIST_X
-	lda	#1
-	sta	GAME_OVER
 
-just_fine_left:
+;	lda	PHYSICIST_X
+;	cmp	LEFT_LIMIT
+;	bpl	just_fine_left
+;too_far_left:
+;	inc	PHYSICIST_X
+;	lda	#1
+;	sta	GAME_OVER
+
+;just_fine_left:
 
 	jmp	done_keypress		; done
 
@@ -104,18 +107,18 @@ walk_right:
 	inc	PHYSICIST_X
 no_move_right:
 
-	lda	PHYSICIST_X
-	cmp	RIGHT_LIMIT
-	bne	just_fine_right
-too_far_right:
+;	lda	PHYSICIST_X
+;	cmp	RIGHT_LIMIT
+;	bne	just_fine_right
+;too_far_right:
 
-	dec	PHYSICIST_X
+;	dec	PHYSICIST_X
 
-	lda	#2
-	sta	GAME_OVER
+;	lda	#2
+;	sta	GAME_OVER
 
 
-just_fine_right:
+;just_fine_right:
 
 	jmp	done_keypress
 

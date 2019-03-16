@@ -170,6 +170,12 @@ cavern_loop:
 	jsr	handle_keypress
 
 	;===============
+	; check room limits
+
+	jsr	check_screen_limit
+
+
+	;===============
 	; draw physicist
 
 	jsr	draw_physicist
