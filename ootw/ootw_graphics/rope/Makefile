@@ -7,8 +7,9 @@ all:	ootw_rope.inc ootw_swing.inc
 
 #####
 
-ootw_rope.inc:	$(PNG2RLE) another_rope.png
+ootw_rope.inc:	$(PNG2RLE) another_rope.png another_norope.png
 	$(PNG2RLE) asm another_rope.png rope_rle > ootw_rope.inc
+	$(PNG2RLE) asm another_norope.png broke_rope_rle >> ootw_rope.inc
 
 
 #####

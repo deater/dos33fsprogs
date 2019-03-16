@@ -16,7 +16,7 @@ ootw_rope:
 	lda	#1
 	sta	DISP_PAGE
 
-	;===========================
+	;=================================
 	; Setup right/left exit paramaters
 
 	lda	#37
@@ -28,10 +28,23 @@ ootw_rope:
 	;=============================
 	; Load background to $c00
 
+	lda	BEFORE_SWING
+	beq	after_swing_bg
+
+before_swing_bg:
 	lda     #>(rope_rle)
         sta     GBASH
 	lda     #<(rope_rle)
         sta     GBASL
+	jmp	load_swing_bg
+
+after_swing_bg:
+	lda     #>(broke_rope_rle)
+        sta     GBASH
+	lda     #<(broke_rope_rle)
+        sta     GBASL
+
+load_swing_bg:
 	lda	#$c			; load image off-screen $c00
 	jsr	load_rle_gr
 
@@ -45,8 +58,6 @@ ootw_rope:
 
 	jsr	gr_copy_to_current
 	jsr	page_flip
-	jsr	gr_copy_to_current
-
 
 	;=================================
 	; setup vars
@@ -173,6 +184,12 @@ check_cliff_edge:
 
 	lda	#0
 	sta	GAME_OVER
+
+	;===================
+	; at cliff's edge
+
+;	lda	#0
+;	sta	BEFORE_SWING
 
 	lda	#11
 	sta	PHYSICIST_X

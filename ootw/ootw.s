@@ -18,6 +18,9 @@ ootw:
 	sta	WHICH_CAVE
 	sta	BEAST_OUT
 
+	lda	#1
+	sta	BEFORE_SWING
+
 	lda     #22
 	sta     PHYSICIST_Y
 	lda     #20

@@ -159,9 +159,11 @@ PHYSICIST_STATE	= $EA
 	P_RUNNING    = $02
 	P_CROUCHING  = $03
 	P_KICKING    = $04
-	P_JUMPING    = $05
-	P_COLLAPSING = $06
+	P_JUMPING    = $05	; no keypress
+	P_COLLAPSING = $06	; no keypress
+	P_SWINGING   = $07	; no keypress
 
+BEFORE_SWING	= $EB
 CUTFRAME	= $EC
 DISP_PAGE	= $ED
 DRAW_PAGE	= $EE
