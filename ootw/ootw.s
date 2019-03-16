@@ -98,6 +98,7 @@ end_message:
 .include "ootw_graphics/caves/ootw_cavern2.inc"
 .include "ootw_graphics/caves/ootw_cavern3.inc"
 .include "ootw_graphics/rope/ootw_rope.inc"
+.include "ootw_graphics/rope/ootw_swing.inc"
 .include "ootw_graphics/underwater/ootw_underwater.inc"
 ; sprites
 .include "sprites_ootw.inc"

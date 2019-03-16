@@ -34,6 +34,7 @@ ootw.o:	ootw.s \
 	ootw_graphics/caves/ootw_cavern2.inc \
 	ootw_graphics/caves/ootw_cavern3.inc \
 	ootw_graphics/rope/ootw_rope.inc \
+	ootw_graphics/rope/ootw_swing.inc \
 	ootw_graphics/sprites/sprites_physicist.inc \
 	sprites_slugs.inc \
 	sprites_ootw.inc sprites_beast.inc
