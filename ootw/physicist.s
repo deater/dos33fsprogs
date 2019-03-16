@@ -91,12 +91,12 @@ physicist_crouching:
 physicist_jumping:
 
 	lda	GAIT
-	cmp	#16
+	cmp	#32
 	bcc	still_jumping	; blt
 
 	lda	#0
 	sta	GAIT
-	lda	#P_WALKING
+	lda	#P_STANDING
 	sta	PHYSICIST_STATE
 	jmp	physicist_walking
 
@@ -116,10 +116,19 @@ still_jumping:
 	inc	GAIT
 
 	lda	GAIT
-	and	#$3
+	and	#$7
 	bne	jump_no_move
 
+	lda	DIRECTION
+	beq	jump_left
+
+jump_right:
 	inc	PHYSICIST_X
+	jmp	finally_draw_him
+
+jump_left:
+	dec	PHYSICIST_X
+
 jump_no_move:
 	jmp	finally_draw_him
 
