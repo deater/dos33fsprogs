@@ -300,6 +300,19 @@ kick1:
 ;=====================
 ;=====================
 
+; note: he falls into a crouch
+
+phys_falling:
+	.byte $5,$8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$9a,$9a,$aa
+	.byte $aa,$aa,$bb,$99,$aa
+	.byte $ab,$ba,$ba,$b0,$0b
+	.byte $aa,$aa,$aa,$00,$00
+	.byte $aa,$aa,$aa,$44,$44
+	.byte $ca,$4c,$44,$a4,$aa
+	.byte $f5,$f4,$aa,$aa,$aa
+
 
 
 ;=====================

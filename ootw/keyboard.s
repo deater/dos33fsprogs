@@ -9,11 +9,16 @@ handle_keypress:
 	beq	no_keypress
 	cmp	#P_JUMPING		; ignore keypress if jumping
 	beq	no_keypress
+	cmp	#P_SWINGING
+	beq	no_keypress
+	cmp	#P_FALLING
+	beq	no_keypress
 
 	lda	KEYPRESS						; 4
 	bmi	keypress						; 3
 no_keypress:
-
+	bit	KEYRESET			; clear
+						; avoid keeping old keys around
 	rts	; nothing pressed, return
 
 keypress:

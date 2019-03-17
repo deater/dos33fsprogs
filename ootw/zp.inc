@@ -161,7 +161,9 @@ PHYSICIST_STATE	= $EA
 	P_KICKING    = $04
 	P_JUMPING    = $05	; no keypress
 	P_COLLAPSING = $06	; no keypress
-	P_SWINGING   = $07	; no keypress
+	P_FALLING    = $07	; no keypress
+	P_SWINGING   = $08	; no keypress
+
 
 BEFORE_SWING	= $EB
 CUTFRAME	= $EC
@@ -183,6 +185,7 @@ DIRECTION	=	$F5
 GAIT		=	$F6
 TENTACLE_X	=	$F7
 
+SWING_PROGRESS	=	$F8
 TENTACLE_PROGRESS =	$F8
 ;SLUGDEATH_PROGRESS =	$F8
 ELEVATOR_CYCLE	=	$F8

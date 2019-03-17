@@ -1,19 +1,21 @@
 pstate_table_lo:
-	.byte <physicist_standing
-	.byte <physicist_walking
-	.byte <physicist_running
-	.byte <physicist_crouching
-	.byte <physicist_kicking
-	.byte <physicist_jumping
-	.byte <physicist_collapsing
+	.byte <physicist_standing	; 00
+	.byte <physicist_walking	; 01
+	.byte <physicist_running	; 02
+	.byte <physicist_crouching	; 03
+	.byte <physicist_kicking	; 04
+	.byte <physicist_jumping	; 05
+	.byte <physicist_collapsing	; 06
+	.byte <physicist_falling	; 07
 pstate_table_hi:
 	.byte >physicist_standing
-	.byte >physicist_standing
+	.byte >physicist_walking
 	.byte >physicist_running
 	.byte >physicist_crouching
 	.byte >physicist_kicking
 	.byte >physicist_jumping
 	.byte >physicist_collapsing
+	.byte >physicist_falling
 
 ; Urgh, make sure this doesn't end up at $FF or you hit the
 ;	NMOS 6502 bug
@@ -227,6 +229,45 @@ collapse_not_done:
 
 no_collapse_progress:
 
+
+	jmp	finally_draw_him
+
+
+;==================================
+; FALLING
+;==================================
+
+physicist_falling:
+
+
+	lda	FRAMEL
+	and	#$3
+	bne	no_fall_progress
+
+	inc	PHYSICIST_X
+	inc	PHYSICIST_Y	; must me mul of 2
+	inc	PHYSICIST_Y
+
+no_fall_progress:
+
+	lda	PHYSICIST_Y
+	cmp	#22
+	bne	still_falling
+done_falling:
+;	lda	#0
+;	sta	GAIT
+
+	lda	#P_CROUCHING
+	sta	PHYSICIST_STATE
+	jmp	physicist_crouching
+
+still_falling:
+
+	lda	#<phys_falling
+	sta	INL
+
+	lda	#>phys_falling
+	sta	INH
 
 	jmp	finally_draw_him
 
