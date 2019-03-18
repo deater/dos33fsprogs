@@ -35,7 +35,22 @@ Game controls:
 Development notes:
 ==================
 
-Memory map:
+Ootw Memory map:
+	00	zero page
+	01	stack
+	02	????
+	03	nibble table/disk data
+	04-07	GR page0
+	08-0b	GR page1
+	0c-0f	background  ($c00 = disk load buffer)
+	10-13	earthquake background (shifted) background
+	14-16	loader
+	17-bf	program-data (42.25k)
+	c0-cf	I/O
+	d0-ff	ROM
+
+
+Intro Memory map:
 	00	zero page
 	01	stack
 	02	????
@@ -51,7 +66,7 @@ Memory map:
 	d0-ff	ROM
 
 
-Memory squeeze!
+Intro Memory squeeze!
 
 	10,748 over	all graphics in
 	10,734 over	remove extraneous blank bg image
