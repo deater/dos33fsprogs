@@ -17,11 +17,16 @@ ootw_mesa:
 	sta	DISP_PAGE
 
 	;===========================
+	; init some vars
+
+	lda	#0
+	sta     LEVELEND_PROGRESS
+
+	;===========================
 	; Setup right/left exit paramaters
 
 	lda	BEAST_OUT		; if beast out, we can go full right
 	beq	beast_not_out_yet
-
 
 	lda	#37			; beast trigger
 	sta	RIGHT_LIMIT
@@ -63,11 +68,47 @@ mesa_left:
 	;============================
 mesa_loop:
 
+	;===================================
+	; Check if in end-of-level animation
+	;===================================
+
+	lda     LEVELEND_PROGRESS
+	beq	no_levelend
+
+	cmp	#66			; only load background on first frame
+	bne	levelend_not_first
+
+	lda	#<cavern3_rle
+	sta	GBASL
+	lda	#>cavern3_rle
+	sta	GBASH
+	lda	#$C			; load image off-screen $C00
+	jsr	load_rle_gr
+
+levelend_not_first:
+        dec     LEVELEND_PROGRESS
+        dec     LEVELEND_PROGRESS
+
+	ldx	LEVELEND_PROGRESS
+	lda	endl1_progression,X
+	sta	GBASL
+	lda	endl1_progression+1,X
+	sta	GBASH
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay_40x40
+
+	jmp     beyond_mesa_normal
+
+no_levelend:
+
 	;================================
 	; copy background to current page
 
 	jsr	gr_copy_to_current
 
+beyond_mesa_normal:
 
 	;===============================
 	; check keyboard
@@ -80,11 +121,14 @@ mesa_loop:
 	jsr	check_screen_limit
 
 
-
 	;===============
 	; draw physicist
 
-	jsr	draw_physicist
+	lda	LEVELEND_PROGRESS	; only draw if not in end animation
+	bne	level1_ending
+
+        jsr     draw_physicist
+level1_ending:
 
 	;===============
 	; page flip
