@@ -21,10 +21,19 @@ Another / Out-of-This World Demake for Apple II+
 ==================
 Game controls:
 ==================
-  Use WASD keys to move, also arrow keys where available.
-	This is tricky as the original Apple II keyboard is very
-		simplistic so it's hard to get auto-repeat or multi keypress.
-  Spacebar is action.
+  Keyboard:
+	Note, Apple II has simplistic keyboard support.
+	In general it's not possible to read more than one key at a time.
+	Additionally, on older models there's no auto-repeat unless you
+		hold down the REPT key, which makes running difficult.
+	This means it's really not possible to use the keyboard the
+		same way as the original game.
+
+	Q/E		- walk left/right
+	A/D <-/->	- run left/right
+	W up		- jump
+	S down		- crouch
+	space		- kick
 
   During the intro, you can press R to make it repeat forever.
 
@@ -108,3 +117,4 @@ ID10 =	3397		5558/
 ootw memory squeeze:
 	after full rope sequence in:	23065
 	make transparent overlays:	13971
+	add end-of-l1 cutscene:		26314

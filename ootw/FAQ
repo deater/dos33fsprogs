@@ -5,6 +5,27 @@ A. No, this is just a quick hack using all sprites.
    I'm not doing something amazing like writing a 6502 optimized
    vector drawing library.
 
+---
+
+
+Q. Why aren't the keyboard controls the same as the original game?
+
+A. The Apple II has simplistic keyboard support.
+   In general it's not possible to read more than one key at a time.
+   Additionally, on older models there's no auto-repeat unless you
+      hold down the REPT key, which makes running difficult.
+   The original game really depends on being able to detect having
+      multiple keys down at once.
+
+---
+
+Q.  Does this have joystick support?
+
+A.  It should not be hard to add, and in fact would give better controls
+    than the keyboard.   I don't currently have a joystick though so
+    it's hard to test properly.
+
+----
 
 Q.  Is there anything impressive going on here, like with your other demos?
 
@@ -14,6 +35,8 @@ A.  No, it's pretty much straight up "sprite" drawing.
 
     It's actually refreshing not having to cycle count.
 
+---
+
 
 Q.  How are you making the graphics?
 
@@ -22,6 +45,8 @@ A.  Using the original for reference (currently a Windows/EGA version
     Apple II Lo-res palette.  Then manually adjust to 40x40.
     Finally fine tune in a bit while using original for reference.
 
+
+---
 
 Q.  Why lores graphics?  It's so *horribly* blocky.
 
@@ -37,7 +62,7 @@ A.  Yes, but I like it anyway.  So many colors!
 	so I never got to experience full-color lores back in the day.
 	Unfortunately this game doesn't really play well in monochrome.
 
-
+---
 
 Q.  Are you going to make a version using Hi-res or Double Hi-res graphics?
 
@@ -46,6 +71,7 @@ A.  No, there's an official version for the Apple IIgs if you want something
 	to program, would probably be slower, and would take up a lot more
 	RAM.
 
+---
 
 Q.  How about double-lores graphics (80x48)?  It would give you almost
 	square pixels?
@@ -59,6 +85,7 @@ A.  While not as bad as Hires, double-lores is also a pain.  It only
 	Also the current code uses page-flipping to avoid flicker/tearing,
 	but doing page-flipping in double-lores is really tricky.
 
+---
 
 Q.  Why are you targeting such an old machine, an original Apple II or II+?
 
@@ -66,7 +93,7 @@ A.  Well, I own one.  Also there's something about programming on a machine
 	from 1977, whose graphics hardware is a glorified shift register,
 	and is implemented entirely out of 7400 series logic and 555 timers.
 
-
+---
 
 Q.  In the intro, why not have lowercase letters?
 
@@ -74,13 +101,10 @@ A.  The Apple II/II+ only supported uppercase letters by default.
     Also no "|" character, which explains why some of the ASCII art
     looks a bit odd.
 
+    I suppose I could auto-uppercase on older machines on the fly like
+    my Still Alive demo does.  The memory budget is a bit tight though.
 
-Q.  Does this have joystick support?
-
-A.  It should not be hard to add, and in fact would give better controls
-    than the keyboard.   I don't currently have a joystick though so
-    it's hard to test properly.
-
+---
 
 Q.  Could you really use this on an original Apple II from 1977?
 

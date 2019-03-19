@@ -114,3 +114,4 @@ end_message:
 ; cutscenes
 .include "cutscene_slug.s"
 .include "cutscene_beast.s"
+.include "ootw_graphics/endl1/ootw_l1end.inc"
