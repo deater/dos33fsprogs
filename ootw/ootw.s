@@ -95,6 +95,9 @@ end_message:
 .include "gr_offsets.s"
 .include "random16.s"
 .include "keyboard.s"
+.include "gr_overlay.s"
+
+
 ; room backgrounds
 .include "ootw_graphics/pool/ootw_pool.inc"
 .include "ootw_graphics/caves/ootw_cavern.inc"

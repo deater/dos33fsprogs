@@ -81,6 +81,18 @@ rope_loop:
 	lda	SWING_PROGRESS
 	beq	no_swing
 
+
+	cmp	#80			; only load background on first frame
+	bne	swing_not_first
+
+	lda     #<no_rope_rle
+        sta     GBASL
+	lda	#>no_rope_rle
+        sta     GBASH
+	lda	#$C			; load image off-screen $C00
+	jsr	load_rle_gr
+
+swing_not_first:
 	dec	SWING_PROGRESS
 	dec	SWING_PROGRESS
 
@@ -89,11 +101,16 @@ rope_loop:
         sta     GBASL
 	lda     swing_progression+1,X
         sta     GBASH
-	lda	#$c			; load image off-screen $c00
+	lda	#$10			; load image off-screen $1000
 	jsr	load_rle_gr
-	jsr	gr_make_quake		; make quake
+
+	jsr	gr_overlay_40x40
 
 
+; FIXME
+;	jsr	gr_make_quake		; make quake
+
+	jmp	beyond_quake
 
 no_swing:
 
@@ -102,6 +119,7 @@ no_swing:
 
 	jsr	earthquake_handler
 
+beyond_quake:
 
 	;===============================
 	; check keyboard
@@ -127,6 +145,8 @@ no_swing:
 
 	lda	#5
 	sta	GAME_OVER
+
+
 
 done_swing_check:
 	;===============

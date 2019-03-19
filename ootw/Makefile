@@ -23,7 +23,7 @@ OOTW:	ootw.o
 
 ootw.o:	ootw.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
-	gr_make_quake.s zp.inc \
+	gr_make_quake.s gr_overlay.s zp.inc \
 	keyboard.s sluggy.s \
 	ootw_rope.s earthquake.s ootw_mesa.s \
 	ootw_pool.s ootw_cavern.s physicist.s random16.s \
