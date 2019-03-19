@@ -43,9 +43,10 @@ Ootw Memory map:
 	04-07	GR page0
 	08-0b	GR page1
 	0c-0f	background  ($c00 = disk load buffer)
-	10-13	earthquake background (shifted) background
+	10-13	background overlay
 	14-16	loader
-	17-bf	program-data (42.25k)
+	17-bf	program-data (41.25k)
+	bc-bf   earthquake background (shifted)
 	c0-cf	I/O
 	d0-ff	ROM
 

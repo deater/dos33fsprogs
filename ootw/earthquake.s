@@ -55,7 +55,7 @@ no_shake:
 	jsr	gr_copy_to_current
 	jmp	done_shake
 shake_shake:
-	jsr	gr_copy_to_current_1000
+	jsr	gr_copy_to_current_BC00
 done_shake:
 
 	rts
@@ -88,4 +88,61 @@ draw_boulder:
 no_boulder:
 
 	rts
+
+
+	;=========================================================
+	; gr_copy_to_current, 40x48 version
+	;=========================================================
+	; copy $BC00 to DRAW_PAGE
+
+gr_copy_to_current_BC00:
+
+	lda	DRAW_PAGE					; 3
+	clc							; 2
+	adc	#$4						; 2
+	sta	gr_copy_line_BC+5				; 4
+	sta	gr_copy_line_BC+11				; 4
+	adc	#$1						; 2
+	sta	gr_copy_line_BC+17				; 4
+	sta	gr_copy_line_BC+23				; 4
+	adc	#$1						; 2
+	sta	gr_copy_line_BC+29				; 4
+	sta	gr_copy_line_BC+35				; 4
+	adc	#$1						; 2
+	sta	gr_copy_line_BC+41				; 4
+	sta	gr_copy_line_BC+47				; 4
+							;===========
+							;	45
+
+	ldy	#119		; for early ones, copy 120 bytes	; 2
+
+gr_copy_line_BC:
+	lda	$BC00,Y		; load a byte (self modified)		; 4
+	sta	$400,Y		; store a byte (self modified)		; 5
+
+	lda	$BC80,Y		; load a byte (self modified)		; 4
+	sta	$480,Y		; store a byte (self modified)		; 5
+
+	lda	$BD00,Y		; load a byte (self modified)		; 4
+	sta	$500,Y		; store a byte (self modified)		; 5
+
+	lda	$BD80,Y		; load a byte (self modified)		; 4
+	sta	$580,Y		; store a byte (self modified)		; 5
+
+	lda	$BE00,Y		; load a byte (self modified)		; 4
+	sta	$600,Y		; store a byte (self modified)		; 5
+
+	lda	$BE80,Y		; load a byte (self modified)		; 4
+	sta	$680,Y		; store a byte (self modified)		; 5
+
+	lda	$BF00,Y		; load a byte (self modified)		; 4
+	sta	$700,Y		; store a byte (self modified)		; 5
+
+	lda	$BF80,Y		; load a byte (self modified)		; 4
+	sta	$780,Y		; store a byte (self modified)		; 5
+
+	dey			; decrement pointer			; 2
+	bpl	gr_copy_line_BC	;					; 2nt/3
+
+	rts								; 6
 

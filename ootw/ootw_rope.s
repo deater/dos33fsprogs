@@ -52,7 +52,7 @@ load_swing_bg:
 	jsr	load_rle_gr
 
 	;================================
-	; Load quake background to $1000
+	; Load quake background to $BC00
 
 	jsr	gr_make_quake
 

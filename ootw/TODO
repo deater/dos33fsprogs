@@ -9,11 +9,13 @@ TODO:
 movement -- note these are hard due to limitations of the Apple II keyboard
 + running: Missing one running frame
 + ability to jump
++ ability to run+jump
 + ability to kick while crouching
 + ability to shoot
 
 sprites_to_draw:
-+ physicist jumping
++ physicist crouch-kicking
++ physicist run+jumping
 + physicist swimming
 + physicist getting out of pool
 + beast tripping

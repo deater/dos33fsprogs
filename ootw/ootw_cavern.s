@@ -25,12 +25,12 @@ ootw_cavern:
 	sta	RIGHT_LIMIT
 
 	;=============================
-	; Load backgrounds to $c00 / $1000
+	; Load background to $c00
 
 	jsr	cavern_load_background
 
 	;================================
-	; Load quake background to $1000
+	; Load quake background to $BC00
 
 	jsr	gr_make_quake
 

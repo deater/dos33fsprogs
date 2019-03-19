@@ -1,8 +1,8 @@
 	;=========================================================
 	; gr_make_quake
 	;=========================================================
-	; Take image in 0xc00
-	; 	Copy to 0x1000
+	; Take image in $c00
+	; 	Copy to $BC00
 	;	Actually copy lines 2..41 to 0..39
 gr_make_quake:
 
@@ -12,7 +12,7 @@ make_quake_loop:
 	sta	OUTL
 	lda	gr_offsets+1,x
 	clc
-	adc	#$C
+	adc	#$B8
 	sta	OUTH
 
 	inx
@@ -43,7 +43,7 @@ quake_clear_bottom:
 	sta	OUTL
 	lda	gr_offsets+1,x
 	clc
-	adc	#$C
+	adc	#$B8
 	sta	OUTH
 
 	inx
