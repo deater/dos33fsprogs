@@ -39,7 +39,8 @@ beast:
 + add beast tripping
 
 rope_room:
-+ ability to swing on rope in rope room
++ re-enable earthquake while swinging
+
 
 cutscenes:
 + death by beast

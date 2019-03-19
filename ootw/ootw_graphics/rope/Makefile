@@ -18,7 +18,7 @@ ootw_rope.inc:	$(PNG2RLE) another_rope.png another_norope.png
 ootw_swing.inc:	$(PNG2RLE) \
 	another_swing01.png another_swing02.png another_swing03.png \
 	another_swing04.png another_swing05.png another_swing06.png \
-	another_swing07.png another_swing08.png another_swing09.png \
+	another_swing08.png \
 	another_swing10.png another_swing11.png another_swing12.png \
 	another_swing13.png another_swing14.png another_swing15.png \
 	another_swing16.png another_swing17.png another_swing18.png \
@@ -31,9 +31,9 @@ ootw_swing.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm another_swing04.png swing04_rle >> ootw_swing.inc
 	$(PNG2RLE) asm another_swing05.png swing05_rle >> ootw_swing.inc
 	$(PNG2RLE) asm another_swing06.png swing06_rle >> ootw_swing.inc
-	$(PNG2RLE) asm another_swing07.png swing07_rle >> ootw_swing.inc
+#	$(PNG2RLE) asm another_swing07.png swing07_rle >> ootw_swing.inc
 	$(PNG2RLE) asm another_swing08.png swing08_rle >> ootw_swing.inc
-	$(PNG2RLE) asm another_swing09.png swing09_rle >> ootw_swing.inc
+#	$(PNG2RLE) asm another_swing09.png swing09_rle >> ootw_swing.inc
 	$(PNG2RLE) asm another_swing10.png swing10_rle >> ootw_swing.inc
 	$(PNG2RLE) asm another_swing11.png swing11_rle >> ootw_swing.inc
 	$(PNG2RLE) asm another_swing12.png swing12_rle >> ootw_swing.inc
