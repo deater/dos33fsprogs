@@ -18,7 +18,16 @@ ootw_l1end.inc:	$(PNG2RLE) \
 	l1end22.png l1end23.png l1end24.png \
 	l1end25.png l1end26.png l1end27.png \
 	l1end28.png l1end29.png l1end30.png \
-	l1end31.png l1end32.png l1end33.png
+	l1end31.png l1end32.png l1end33.png \
+	ootw_deadbeast.png \
+	ootw_gunguy.png \
+	ootw_peace.png \
+	l1end36.png l1end37.png l1end38.png \
+	l1end39.png l1end40.png l1end41.png \
+	l1end42.png l1end43.png l1end44.png \
+	l1end45.png l1end46.png l1end47.png \
+	l1end48.png l1end49.png l1end50.png \
+	l1end51.png black.png
 	$(PNG2RLE) asm l1end01.png l1end01_rle > ootw_l1end.inc
 	$(PNG2RLE) asm l1end02.png l1end02_rle >> ootw_l1end.inc
 	$(PNG2RLE) asm l1end03.png l1end03_rle >> ootw_l1end.inc
@@ -52,7 +61,26 @@ ootw_l1end.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm l1end31.png l1end31_rle >> ootw_l1end.inc
 	$(PNG2RLE) asm l1end32.png l1end32_rle >> ootw_l1end.inc
 	$(PNG2RLE) asm l1end33.png l1end33_rle >> ootw_l1end.inc
-
+	$(PNG2RLE) asm l1end36.png l1end36_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end37.png l1end37_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end38.png l1end38_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end39.png l1end39_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end40.png l1end40_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end41.png l1end41_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end42.png l1end42_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end43.png l1end43_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end44.png l1end44_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end45.png l1end45_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end46.png l1end46_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end47.png l1end47_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end48.png l1end48_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end49.png l1end49_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end50.png l1end50_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm l1end51.png l1end51_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm ootw_deadbeast.png deadbeast_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm ootw_gunguy.png gunguy_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm ootw_peace.png peace_rle >> ootw_l1end.inc
+	$(PNG2RLE) asm black.png black_rle >> ootw_l1end.inc
 
 #####
 

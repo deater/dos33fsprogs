@@ -75,7 +75,7 @@ mesa_loop:
 	lda     LEVELEND_PROGRESS
 	beq	no_levelend
 
-	cmp	#66			; only load background on first frame
+	cmp	#MAX_PROGRESSION	; only load background on first frame
 	bne	levelend_not_first
 
 	lda	#<cavern3_rle
@@ -98,6 +98,16 @@ levelend_not_first:
 	jsr	load_rle_gr
 
 	jsr	gr_overlay_40x40
+
+
+	;====================
+	; pause
+	lda	LEVELEND_PROGRESS
+	lsr
+	tax
+	lda	endl_pauses,X
+	tax
+	jsr	long_wait
 
 	jmp     beyond_mesa_normal
 
@@ -168,7 +178,7 @@ mesa_check_right:
 	;=====================
 	; trigger ending
 
-	lda	#66
+	lda	#MAX_PROGRESSION
 	sta	LEVELEND_PROGRESS
 
 	lda	#0
@@ -219,8 +229,27 @@ done_mesa:
 	rts
 
 
+        ;=====================
+        ; long(er) wait
+        ; waits approximately ?? ms
+
+long_wait:
+	lda	#64
+	jsr	WAIT			; delay
+	dex
+	bne	long_wait
+	rts
+
+
+MAX_PROGRESSION = 106
 
 endl1_progression:
+.word	black_rle,black_rle
+.word	l1end51_rle,l1end50_rle,l1end49_rle,l1end48_rle,l1end47_rle
+.word	l1end46_rle,l1end45_rle,l1end44_rle,l1end43_rle,l1end42_rle
+.word	l1end41_rle,l1end40_rle,l1end39_rle,l1end38_rle,l1end37_rle
+.word	l1end36_rle
+.word	gunguy_rle,peace_rle
 .word   l1end33_rle,l1end32_rle,l1end31_rle,l1end30_rle
 .word   l1end29_rle,l1end28_rle,l1end27_rle,l1end26_rle,l1end25_rle
 .word   l1end24_rle,l1end23_rle,l1end22_rle,l1end21_rle,l1end20_rle
@@ -229,4 +258,18 @@ endl1_progression:
 .word   l1end09_rle,l1end08_rle,l1end07_rle,l1end06_rle,l1end05_rle
 .word   l1end04_rle,l1end03_rle,l1end02_rle,l1end01_rle
 
-
+; pause is *before* image indicated
+endl_pauses:
+.byte	10,10		; black,black
+.byte	10,10,10,10,220	; 51,50,49,48,47
+.byte	3,3,3,3,3	; 46,45,44,43,42
+.byte	3,3,3,3,3	; 41,40,39,38,37
+.byte	250		; 36
+.byte	230,80		; gun, peace
+.byte	80,80,80,80	; 33,32,31,30
+.byte	80,10,10,10,10	; 29,28,27,26,25
+.byte	10,10,10,10,10	; 24,23,22,21,20
+.byte	3,3,3,3,3	; 19,18,17,16,15
+.byte	3,3,3,3,3	; 14,13,12,11,10
+.byte	3,3,3,3,3	; 09,08,07,06,05
+.byte	3,3,3,3		; 04,03,02,01
