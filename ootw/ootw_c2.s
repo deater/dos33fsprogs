@@ -23,9 +23,6 @@ ootw_c2:
 	lda     #1
 	sta     DIRECTION
 
-	lda	#40
-	sta	BOULDER_Y
-
 	;=======================
 	; Enter the game
 	;=======================

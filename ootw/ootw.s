@@ -1,4 +1,4 @@
-; Ootw for Apple II Lores
+; Ootw Level 1 for Apple II Lores
 
 ; by Vince "Deater" Weaver	<vince@deater.net>
 
@@ -47,8 +47,21 @@ ootw:
 ;===========================
 ; quit_level
 ;===========================
+	lda	GAME_OVER		; see why we quit
+	cmp	#$ff
+	beq	l1_quit_or_died
 
-quit_level:
+	;====================
+	; go to next level
+l1_defeated:
+	lda	#2			; go to next level
+	sta	WHICH_LOAD
+	rts
+
+	;========================
+	; print death message
+	; then restart
+l1_quit_or_died:
 	jsr	TEXT
 	jsr	HOME
 	lda	KEYRESET		; clear strobe

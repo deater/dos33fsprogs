@@ -102,6 +102,14 @@ levelend_not_first:
         dec     LEVELEND_PROGRESS
         dec     LEVELEND_PROGRESS
 
+	bne	not_beginning_of_end
+beginning_of_end:
+	lda	#5
+	sta	GAME_OVER
+	jmp	l1_game_over_check
+
+not_beginning_of_end:
+
 	ldx	LEVELEND_PROGRESS
 	lda	endl1_progression,X
 	sta	GBASL
@@ -168,12 +176,19 @@ level1_ending:
 mesa_frame_no_oflo:
 
 
-	; check if done this level
-
-	lda	GAME_OVER
+	;========================================
+	;========================================
+	; check if at edge of screen or game over
+	;========================================
+	;========================================
+l1_game_over_check:
+	lda	GAME_OVER		; if not game over, skip ahead
 	beq	not_done_mesa
 
-	cmp	#$ff			; check if dead
+	cmp	#$ff			; check if died, if so exit
+	beq	done_mesa
+
+	cmp	#$5			; check if defeated, if so exit
 	beq	done_mesa
 
 	;====================
@@ -244,11 +259,11 @@ done_mesa:
 
         ;=====================
         ; long(er) wait
-        ; waits approximately ?? ms
+        ; waits approximately 10ms * X 
 
 long_wait:
 	lda	#64
-	jsr	WAIT			; delay
+	jsr	WAIT			; delay 1/2(26+27A+5A^2) us, 11,117
 	dex
 	bne	long_wait
 	rts
