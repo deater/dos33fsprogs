@@ -16,11 +16,6 @@ ootw_mesa:
 	lda	#1
 	sta	DISP_PAGE
 
-	;===========================
-	; init some vars
-
-	lda	#0
-	sta     LEVELEND_PROGRESS
 
 	;===========================
 	; Setup right/left exit paramaters
@@ -62,9 +57,14 @@ mesa_left:
 	lda	#0
 	sta	GAIT
 	sta	GAME_OVER
+	sta     LEVELEND_PROGRESS
 
 	;============================
-	; Rope Loop
+	;============================
+	;============================
+	; Mesa main Loop
+	;============================
+	;============================
 	;============================
 mesa_loop:
 
@@ -75,12 +75,25 @@ mesa_loop:
 	lda     LEVELEND_PROGRESS
 	beq	no_levelend
 
+	;=== load special background on first frame and frame 19
+
+	cmp	#(MAX_PROGRESSION-36)		; on frame 19?
+	bne	check_if_first
+
+	lda	#<deadbeast_rle
+	sta	GBASL
+	lda	#>deadbeast_rle
+	jmp	finish_first
+
+check_if_first:
+
 	cmp	#MAX_PROGRESSION	; only load background on first frame
 	bne	levelend_not_first
 
 	lda	#<cavern3_rle
 	sta	GBASL
 	lda	#>cavern3_rle
+finish_first:
 	sta	GBASH
 	lda	#$C			; load image off-screen $C00
 	jsr	load_rle_gr
@@ -260,15 +273,20 @@ endl1_progression:
 
 ; pause is *before* image indicated
 endl_pauses:
+; fading out
 .byte	10,10		; black,black
 .byte	10,10,10,10,220	; 51,50,49,48,47
+; getting shot
 .byte	3,3,3,3,3	; 46,45,44,43,42
 .byte	3,3,3,3,3	; 41,40,39,38,37
 .byte	250		; 36
 .byte	230,80		; gun, peace
-.byte	80,80,80,80	; 33,32,31,30
-.byte	80,10,10,10,10	; 29,28,27,26,25
+; raising hand
+.byte	20,150,20,20	; 33,32,31,30
+; getting up
+.byte	20,20,150,10,10	; 29,28,27,26,25
 .byte	10,10,10,10,10	; 24,23,22,21,20
+; shooting of beast
 .byte	3,3,3,3,3	; 19,18,17,16,15
 .byte	3,3,3,3,3	; 14,13,12,11,10
 .byte	3,3,3,3,3	; 09,08,07,06,05
