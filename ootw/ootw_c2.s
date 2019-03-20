@@ -24,6 +24,12 @@ ootw_c2:
 	sta     DIRECTION
 
 	;=======================
+	; Run the intro
+	;=======================
+
+	jsr	ootw_c2_intro
+
+	;=======================
 	; Enter the game
 	;=======================
 
@@ -63,6 +69,7 @@ end_message:
 .byte	11,20,"ACCESS CODE: RAGE",0
 
 .include "ootw_c2_cage.s"
+.include "ootw_c2_intro.s"
 .include "physicist.s"
 .include "text_print.s"
 .include "gr_pageflip.s"
@@ -72,6 +79,8 @@ end_message:
 .include "gr_putsprite.s"
 .include "gr_putsprite_flipped.s"
 .include "gr_offsets.s"
+.include "gr_run_sequence.s"
+.include "gr_overlay.s"
 .include "random16.s"
 .include "keyboard.s"
 
@@ -79,5 +88,7 @@ end_message:
 .include "ootw_graphics/cage/ootw_c2_cage.inc"
 ; sprites
 .include "ootw_graphics/sprites/sprites_physicist.inc"
-; cutscenes
+; intro
+.include "ootw_graphics/l2intro/ootw_l2intro.inc"
+
 

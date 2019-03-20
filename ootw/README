@@ -121,3 +121,8 @@ ootw memory squeeze:
 	make transparent overlays:	17821
 	add in rest of end cutscene	23906
 	make those transparent		21236
+
+
+ootw2 memory squeeze:
+	before intro			3872
+	after intro			9234

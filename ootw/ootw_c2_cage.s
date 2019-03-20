@@ -1,4 +1,4 @@
-; Ootw -- Despite all my Rage...
+; Ootw Checkpoint2 -- Despite all my Rage...
 
 ootw_cage:
 	;===========================
@@ -35,12 +35,10 @@ ootw_cage:
 	jsr	load_rle_gr
 
 	;=================================
-	; copy to both pages $400/$800
+	; copy to screen
 
 	jsr	gr_copy_to_current
 	jsr	page_flip
-	jsr	gr_copy_to_current
-
 
 	;=================================
 	; setup vars

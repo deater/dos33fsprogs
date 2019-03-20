@@ -48,10 +48,11 @@ OOTW_C2:	ootw_c2.o
 
 ootw_c2.o:	ootw_c2.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
-	keyboard.s sluggy.s \
+	keyboard.s gr_run_sequence.s \
 	ootw_graphics/sprites/sprites_physicist.inc \
-	ootw_c2_cage.s \
-	ootw_graphics/cage/ootw_c2_cage.inc
+	ootw_c2_cage.s ootw_c2_intro.s \
+	ootw_graphics/cage/ootw_c2_cage.inc \
+	ootw_graphics/l2intro/ootw_l2intro.inc
 	ca65 -o ootw_c2.o ootw_c2.s -l ootw_c2.lst
 
 
@@ -62,7 +63,7 @@ INTRO:	intro.o
 
 intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
-	gr_overlay.s \
+	gr_overlay.s gr_run_sequence.s \
 	keyboard.s random16.s text_print.s zp.inc \
 	intro_graphics/01_building/intro_car.inc \
 	intro_graphics/01_building/intro_building_car.inc \

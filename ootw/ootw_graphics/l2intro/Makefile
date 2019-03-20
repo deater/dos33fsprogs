@@ -16,6 +16,7 @@ ootw_l2intro.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm cage_02.png cage_02_rle >> ootw_l2intro.inc
 	$(PNG2RLE) asm cage_03.png cage_03_rle >> ootw_l2intro.inc
 	$(PNG2RLE) asm cage_04.png cage_04_rle >> ootw_l2intro.inc
+	$(PNG2RLE) asm eyes_bg.png eyes_bg_rle >> ootw_l2intro.inc
 	$(PNG2RLE) asm eyes_01.png eyes_01_rle >> ootw_l2intro.inc
 	$(PNG2RLE) asm eyes_02.png eyes_02_rle >> ootw_l2intro.inc
 	$(PNG2RLE) asm eyes_03.png eyes_03_rle >> ootw_l2intro.inc
