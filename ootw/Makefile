@@ -50,7 +50,7 @@ ootw_c2.o:	ootw_c2.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
 	keyboard.s gr_run_sequence.s \
 	ootw_graphics/sprites/sprites_physicist.inc \
-	ootw_c2_cage.s ootw_c2_intro.s \
+	ootw_c2_cage.s ootw_c2_jail.s ootw_c2_intro.s \
 	ootw_graphics/cage/ootw_c2_cage.inc \
 	ootw_graphics/l2intro/ootw_l2intro.inc
 	ca65 -o ootw_c2.o ootw_c2.s -l ootw_c2.lst

@@ -7,7 +7,8 @@ all:	ootw_c2_cage.inc
 
 #####
 
-ootw_c2_cage.inc:	$(PNG2RLE) ootw_c2_cage.png
+ootw_c2_cage.inc:	$(PNG2RLE) \
+	ootw_c2_cage.png
 	$(PNG2RLE) asm ootw_c2_cage.png cage_rle > ootw_c2_cage.inc
 
 #####

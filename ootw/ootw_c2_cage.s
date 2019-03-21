@@ -16,14 +16,6 @@ ootw_cage:
 	lda	#1
 	sta	DISP_PAGE
 
-	;===========================
-	; Setup right/left exit paramaters
-
-	lda	#37
-	sta	RIGHT_LIMIT
-	lda	#0
-	sta	LEFT_LIMIT
-
 	;=============================
 	; Load background to $c00
 
@@ -44,8 +36,9 @@ ootw_cage:
 	; setup vars
 
 	lda	#0
-	sta	GAIT
 	sta	GAME_OVER
+
+        bit     KEYRESET		; clear keypress
 
 	;============================
 	; Cage Loop
@@ -64,7 +57,28 @@ cage_loop:
 	;===============================
 	; check keyboard
 
-	jsr	handle_keypress
+	lda	KEYPRESS
+        bpl	cage_no_keypress
+
+	;===========================
+	; Done with cage, enter jail
+
+
+        bit     KEYRESET		; clear keyboard
+
+	lda	#1
+	sta	DIRECTION
+	lda	#22
+	sta	PHYSICIST_Y
+	lda	#24
+	sta	PHYSICIST_X
+	lda	#0
+	sta	PHYSICIST_STATE
+	sta	WHICH_JAIL
+
+	jmp	ootw_jail
+
+cage_no_keypress:
 
 
 	;===============

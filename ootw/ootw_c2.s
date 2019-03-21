@@ -69,6 +69,7 @@ end_message:
 .byte	11,20,"ACCESS CODE: RAGE",0
 
 .include "ootw_c2_cage.s"
+.include "ootw_c2_jail.s"
 .include "ootw_c2_intro.s"
 .include "physicist.s"
 .include "text_print.s"
@@ -86,6 +87,7 @@ end_message:
 
 ; room backgrounds
 .include "ootw_graphics/cage/ootw_c2_cage.inc"
+.include "ootw_graphics/l2jail/ootw_c2_jail.inc"
 ; sprites
 .include "ootw_graphics/sprites/sprites_physicist.inc"
 ; intro
