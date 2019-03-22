@@ -290,7 +290,7 @@ finally_draw_him:
 	bne	facing_right
 
 facing_left:
-        jmp	put_sprite
+        jmp	put_sprite_crop
 
 facing_right:
 	jmp	put_sprite_flipped

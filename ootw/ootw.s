@@ -109,7 +109,7 @@ end_message:
 .include "random16.s"
 .include "keyboard.s"
 .include "gr_overlay.s"
-
+.include "gr_putsprite_crop.s"
 
 ; room backgrounds
 .include "ootw_graphics/pool/ootw_pool.inc"
