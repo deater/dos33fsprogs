@@ -2,6 +2,21 @@
 ; handle keypress
 ;======================================
 
+; A or <-   : start moving left
+; D or ->   : start moving right
+; W or up   : jump
+; S or down : crouch or pickup
+; space     : action
+; escape    : quit
+
+; if left: if running right, walk right
+;          if walk right, stand right
+;          if stand right, stand left
+;	   if stand left, walk left
+;	   if walk left, run left
+
+
+
 handle_keypress:
 
 	lda	PHYSICIST_STATE
