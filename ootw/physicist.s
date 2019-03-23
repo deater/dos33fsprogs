@@ -1,5 +1,7 @@
 	;=======================================
 	; Move physicist based on current state
+	;
+	; TODO: only update on even frames to slow things down?
 
 move_physicist:
 	lda	PHYSICIST_STATE
@@ -17,7 +19,7 @@ move_physicist_walking:
 
 	lda     GAIT
 	and     #$7
-	cmp     #$4
+	cmp     #$4			; only walk roughly 1/8 of time
 	bne     no_move_walk
 
 	lda	DIRECTION
@@ -33,8 +35,13 @@ no_move_walk:
 	;======================
 	; running
 move_physicist_running:
+;	inc	GAIT			; cycle through animation
 	inc	GAIT			; cycle through animation
-	inc	GAIT			; cycle through animation
+
+	lda     GAIT
+	and     #$3
+	cmp     #$2			; only run roughly 1/4 of time
+	bne     no_move_run
 
 	lda	DIRECTION
 	beq	p_run_left
@@ -43,7 +50,7 @@ move_physicist_running:
 	rts
 p_run_left:
 	dec	PHYSICIST_X		; run left
-
+no_move_run:
 	rts
 	;======================
 	; standing
