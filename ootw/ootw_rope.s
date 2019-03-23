@@ -19,9 +19,9 @@ ootw_rope:
 	;=================================
 	; Setup right/left exit paramaters
 
-	lda	#37
+	lda	#(39+128)
 	sta	RIGHT_LIMIT
-	lda	#11
+	lda	#(11+128)
 	sta	LEFT_LIMIT
 
 	lda	#0

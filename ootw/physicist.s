@@ -293,7 +293,7 @@ facing_left:
         jmp	put_sprite_crop
 
 facing_right:
-	jmp	put_sprite_flipped
+	jmp	put_sprite_flipped_crop
 
 
 
@@ -303,32 +303,56 @@ facing_right:
 
 check_screen_limit:
 
+	clc
 	lda	PHYSICIST_X
+	adc	#$80
 	cmp	LEFT_LIMIT
-	bpl	just_fine_left		; (bge==bcs)
+	bcs	just_fine_left		; (bge==bcs)
 
 too_far_left:
-;	inc	PHYSICIST_X
-
 	lda	#1
 	sta	GAME_OVER
 	rts
 
 just_fine_left:
 
-	; Check right edige of screen
+	; Check right edge of screen
 
-	lda	PHYSICIST_X
+;	lda	PHYSICIST_X
 	cmp	RIGHT_LIMIT
 	bcc	just_fine_right		; blt
 
 too_far_right:
-
-;	dec	PHYSICIST_X
-
 	lda	#2
 	sta	GAME_OVER
 
 just_fine_right:
 
 	rts
+
+
+
+; LIMIT		VALUE		FLAGS
+; 0		10		-----
+; 0		0		Z----
+; 0		FF		
+
+
+; 1 -> 129
+; 0 -> 128
+; -1 -> 127    FF + 80 = 7f
+
+
+
+; XPOS    XSIZE		XMAX
+;  -5	    8		3
+;  -4			4
+;  -3			5
+;  -2			6
+;  -1			7
+;   0			8
+;   1			9
+;   2
+;   3
+;   4
+;   5

@@ -31,9 +31,9 @@ ootw_jail:
 	bne	jail1
 
 jail0:
-	lda	#20
+	lda	#(20+128)
 	sta	LEFT_LIMIT
-	lda	#37
+	lda	#(39+128)
 	sta	RIGHT_LIMIT
 
 	; set right exit
@@ -56,9 +56,9 @@ jail0:
 	jmp	jail_setup_done
 
 jail1:
-	lda	#0
+	lda	#(-4+128)
 	sta	LEFT_LIMIT
-	lda	#37
+	lda	#(39+128)
 	sta	RIGHT_LIMIT
 
 jail_setup_done:

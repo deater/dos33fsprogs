@@ -30,7 +30,7 @@ COLOR	= $30
 
 SEEDL	= $4e
 SEEDH	= $4f
-
+XMAX	= $50
 			;INVFLG	= $32
 
 ; dos33 zero page = 26-2f, 35-38, 3e 3f 40-4d 

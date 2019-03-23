@@ -22,7 +22,8 @@ OOTW:	ootw.o
 	ld65 -o OOTW ootw.o -C ../linker_scripts/apple2_1700.inc
 
 ootw.o:	ootw.s \
-	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
+	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
+	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	gr_make_quake.s gr_overlay.s zp.inc \
 	keyboard.s sluggy.s \
 	ootw_rope.s earthquake.s ootw_mesa.s \

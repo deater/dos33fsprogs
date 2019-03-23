@@ -25,9 +25,9 @@ ootw_pool:
 	;===========================
 	; Setup right/left exit paramaters
 
-	lda	#37
+	lda	#(40+128)
 	sta	RIGHT_LIMIT
-	lda	#0
+	lda	#(-5+128)
 	sta	LEFT_LIMIT
 
 	;=============================

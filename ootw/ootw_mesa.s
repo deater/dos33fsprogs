@@ -23,16 +23,16 @@ ootw_mesa:
 	lda	BEAST_OUT		; if beast out, we can go full right
 	beq	beast_not_out_yet
 
-	lda	#37			; beast trigger
+	lda	#(128+39)		; aliens trigger
 	sta	RIGHT_LIMIT
 	jmp	mesa_left
 
 beast_not_out_yet:
-	lda	#20			; beast trigger
+	lda	#(128+20)		; beast trigger
 	sta	RIGHT_LIMIT
 
 mesa_left:
-	lda	#0
+	lda	#(128-3)
 	sta	LEFT_LIMIT
 
 	;=============================
@@ -226,7 +226,7 @@ trigger_beast:
 	lda	#0
 	sta	GAME_OVER
 
-	lda	#37			; update right side of screen
+	lda	#(39+128)		; update right side of screen
 	sta	RIGHT_LIMIT		; this is mostly for testing
 
 	jsr	beast_cutscene

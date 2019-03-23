@@ -79,6 +79,7 @@ end_message:
 .include "gr_copy.s"
 .include "gr_putsprite.s"
 .include "gr_putsprite_flipped.s"
+.include "gr_putsprite_crop.s"
 .include "gr_offsets.s"
 .include "gr_run_sequence.s"
 .include "gr_overlay.s"
