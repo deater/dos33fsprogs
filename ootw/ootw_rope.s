@@ -127,6 +127,11 @@ beyond_quake:
 	jsr	handle_keypress
 
 	;===============================
+	; move physicist
+
+	jsr	move_physicist
+
+	;===============================
 	; check screen limits
 
 	jsr	check_screen_limit

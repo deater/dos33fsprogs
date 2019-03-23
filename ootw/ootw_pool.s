@@ -272,6 +272,12 @@ no_tentacle:
 
 	jsr	handle_keypress
 
+
+	;===============================
+	; move physicist
+
+	jsr	move_physicist
+
 	;===============================
 	; check limits
 

@@ -1,3 +1,59 @@
+	;=======================================
+	; Move physicist based on current state
+
+move_physicist:
+	lda	PHYSICIST_STATE
+	cmp	#P_WALKING
+	beq	move_physicist_walking
+	cmp	#P_RUNNING
+	beq	move_physicist_running
+	rts
+
+	;======================
+	; walking
+
+move_physicist_walking:
+	inc     GAIT			; cycle through animation
+
+	lda     GAIT
+	and     #$7
+	cmp     #$4
+	bne     no_move_walk
+
+	lda	DIRECTION
+	beq	p_walk_left
+
+	inc	PHYSICIST_X		; walk right
+	rts
+p_walk_left:
+	dec     PHYSICIST_X		; walk left
+no_move_walk:
+	rts
+
+	;======================
+	; running
+move_physicist_running:
+	inc	GAIT			; cycle through animation
+	inc	GAIT			; cycle through animation
+
+	lda	DIRECTION
+	beq	p_run_left
+
+	inc	PHYSICIST_X		; run right
+	rts
+p_run_left:
+	dec	PHYSICIST_X		; run left
+
+	rts
+	;======================
+	; standing
+
+move_physicist_standing:
+
+
+
+
+
 pstate_table_lo:
 	.byte <physicist_standing	; 00
 	.byte <physicist_walking	; 01

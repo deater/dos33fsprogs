@@ -141,10 +141,18 @@ no_levelend:
 
 beyond_mesa_normal:
 
+	lda	LEVELEND_PROGRESS	; only draw if not in end animation
+	bne	level1_ending
+
 	;===============================
 	; check keyboard
 
 	jsr	handle_keypress
+
+	;===============================
+	; Move physicist
+
+	jsr	move_physicist
 
 	;===============================
 	; check limits
@@ -155,10 +163,8 @@ beyond_mesa_normal:
 	;===============
 	; draw physicist
 
-	lda	LEVELEND_PROGRESS	; only draw if not in end animation
-	bne	level1_ending
-
         jsr     draw_physicist
+
 level1_ending:
 
 	;===============

@@ -1,3 +1,4 @@
+
 ;======================================
 ; handle keypress
 ;======================================
@@ -41,9 +42,12 @@ keypress:
 
 	and	#$7f		; clear high bit
 
+	;======================
+	; check escape
+
 check_quit:
 	cmp	#27		; quit if ESCAPE pressed
-	bne	check_walk_left
+	bne	check_left
 
 	;=====================
 	; QUIT
@@ -53,148 +57,138 @@ quit:
 	sta	GAME_OVER
 	rts
 
-check_walk_left:
+	;======================
+	; check left
+check_left:
 	cmp	#'A'
-	beq	walk_left
+	beq	left_pressed
 	cmp	#$8		; left arrow
-	bne	check_walk_right
+	bne	check_right
 
 
 	;====================
-	; Walk left
+	; Left Pressed
 	;====================
-walk_left:
-
-	lda	#P_WALKING
-	sta	PHYSICIST_STATE		; stand from crouching
-
+left_pressed:
+					; left==0
 	lda	DIRECTION		; if facing right, turn to face left
-	bne	face_left
+	bne	left_going_right
 
-	inc	GAIT			; cycle through animation
+left_going_left:
+	lda	PHYSICIST_STATE
+	cmp	#P_STANDING
+	beq	walk_left
+	cmp	#P_WALKING
+	beq	run_left
 
-	lda	GAIT
-	and	#$7
-	cmp	#$4
-	bne	no_move_left
+	;=============================
+	; already running, do nothing?
+	rts
 
-	dec	PHYSICIST_X		; walk left
-
-no_move_left:
-
-;	lda	PHYSICIST_X
-;	cmp	LEFT_LIMIT
-;	bpl	just_fine_left
-;too_far_left:
-;	inc	PHYSICIST_X
-;	lda	#1
-;	sta	GAME_OVER
-
-;just_fine_left:
-
-	jmp	done_keypress		; done
-
-face_left:
-	lda	#0
-	sta	DIRECTION
-	sta	GAIT
-	jmp	done_keypress
-
-check_walk_right:
-	cmp	#'D'
+left_going_right:
+	lda	PHYSICIST_STATE
+	cmp	#P_RUNNING
 	beq	walk_right
+	cmp	#P_WALKING
+	beq	stand_right
+	cmp	#P_STANDING
+	beq	stand_left
+
+	;===========================
+	; otherwise?
+	rts
+
+	;========================
+	; check for right pressed
+
+check_right:
+	cmp	#'D'
+	beq	right_pressed
 	cmp	#$15
-	bne	check_run_left
-
-
-	;===================
-	; Walk Right
-	;===================
-walk_right:
-	lda	#P_WALKING
-	sta	PHYSICIST_STATE
-
-	lda	DIRECTION
-	beq	face_right
-
-	inc	GAIT
-
-	lda	GAIT
-	and	#$7
-	cmp	#$4
-	bne	no_move_right
-
-	inc	PHYSICIST_X
-no_move_right:
-
-;	lda	PHYSICIST_X
-;	cmp	RIGHT_LIMIT
-;	bne	just_fine_right
-;too_far_right:
-
-;	dec	PHYSICIST_X
-
-;	lda	#2
-;	sta	GAME_OVER
-
-
-;just_fine_right:
-
-	jmp	done_keypress
-
-face_right:
-	lda	#0
-	sta	GAIT
-	lda	#1
-	sta	DIRECTION
-	jmp	done_keypress
-
-
-
-check_run_left:
-	cmp	#'Q'
-	bne	check_run_right
-
-
-	;====================
-	; Run left
-	;====================
-run_left:
-
-	lda	#P_RUNNING
-	sta	PHYSICIST_STATE		; stand from crouching
-
-	lda	DIRECTION		; if facing right, turn to face left
-	bne	face_left
-
-	inc	GAIT			; cycle through animation
-	inc	GAIT			; cycle through animation
-
-	dec	PHYSICIST_X		; walk left
-
-	jmp	no_move_left
-
-
-check_run_right:
-	cmp	#'E'
 	bne	check_up
 
+
 	;===================
-	; Run Right
+	; Right Pressed
 	;===================
+right_pressed:
+
+					; right==1
+	lda	DIRECTION		; if facing right, turn to face left
+	beq	right_going_left
+
+
+right_going_right:
+	lda	PHYSICIST_STATE
+	cmp	#P_STANDING
+	beq	walk_right
+	cmp	#P_WALKING
+	beq	run_right
+
+	;=============================
+	; already running, do nothing?
+	rts
+
+right_going_left:
+	lda	PHYSICIST_STATE
+	cmp	#P_RUNNING
+	beq	walk_left
+	cmp	#P_WALKING
+	beq	stand_left
+	cmp	#P_STANDING
+	beq	stand_right
+
+	;===========================
+	; otherwise?
+	rts
+
+
+	;=====================
+	; Left, direction=0
+	; Right, direction=1
+
+stand_left:
+	lda	#0		; left
+	sta	DIRECTION
+	sta	GAIT
+	lda	#P_STANDING
+	beq	update_state
+
+walk_left:
+	lda	#P_WALKING
+	bne	update_state
+
+run_left:
+	lda	#P_RUNNING
+	bne	update_state
+
+
+stand_right:
+	lda	#0
+	sta	GAIT
+	lda	#1		 ; just inc DIRECTION?
+	sta	DIRECTION
+	lda	#P_STANDING
+	beq	update_state
+
+walk_right:
+	lda	#P_WALKING
+	bne	update_state
+
 run_right:
 	lda	#P_RUNNING
+	bne	update_state
+
+update_state:
 	sta	PHYSICIST_STATE
+	bit	KEYRESET
+	rts
 
-	lda	DIRECTION
-	beq	face_right
 
-	inc	GAIT
-	inc	GAIT
 
-	inc	PHYSICIST_X
 
-	jmp	no_move_right
+	;=====================
+	; check up
 
 check_up:
 	cmp	#'W'
@@ -203,7 +197,7 @@ check_up:
 	bne	check_down
 up:
 	;========================
-	; Jump
+	; Jump -- Up Pressed
 	;========================
 
 	lda	#P_JUMPING
@@ -249,5 +243,3 @@ done_keypress:
 	bit	KEYRESET	; clear the keyboard strobe		; 4
 
 	rts								; 6
-
-

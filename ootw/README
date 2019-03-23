@@ -29,11 +29,11 @@ Game controls:
 	This means it's really not possible to use the keyboard the
 		same way as the original game.
 
-	Q/E		- walk left/right
-	A/D <-/->	- run left/right
+	D ->		- move right (twice to run)
+	A <-		- move left (twice to run)
 	W up		- jump
-	S down		- crouch
-	space		- kick
+	S down		- crouch / pickup
+	space		- kick / gun
 
   During the intro, you can press R to make it repeat forever.
 

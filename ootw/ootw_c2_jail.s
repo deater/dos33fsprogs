@@ -96,6 +96,11 @@ jail_loop:
 
 	jsr	handle_keypress
 
+	;===============================
+	; move physicist
+
+	jsr	move_physicist
+
 	;===============
 	; check room limits
 

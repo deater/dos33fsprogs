@@ -26,13 +26,10 @@
  305  HTAB 8:PRINT "LOADING (BE PATIENT...)"
  310  PRINT:PRINT:PRINT:PRINT
  315  PRINT "CONTROLS:"
- 320  PRINT "   A OR <-      : WALK LEFT"
- 325  PRINT "   D OR ->      : WALK RIGHT"
- 330  PRINT "   Q            : RUN LEFT"
- 335  PRINT "   E            : RUN RIGHT"
+ 320  PRINT "   A OR <-      : MOVE LEFT"
+ 325  PRINT "   D OR ->      : MOVE RIGHT"
  340  PRINT "   W OR UP      : JUMP"
  345  PRINT "   S OR DOWN    : CROUCH / PICKUP"
- 350  PRINT "   SPACEBAR     : KICK"
- 355  PRINT "   RETURN       : SHOOTS"
+ 350  PRINT "   SPACEBAR     : KICK / SHOOT"
  360  PRINT "   ESC          : QUITS"
  365  RETURN
