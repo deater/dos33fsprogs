@@ -38,8 +38,9 @@ ootw.o:	ootw.s \
 	ootw_graphics/rope/ootw_swing.inc \
 	ootw_graphics/endl1/ootw_l1end.inc \
 	ootw_graphics/sprites/sprites_physicist.inc \
-	sprites_slugs.inc \
-	sprites_ootw.inc sprites_beast.inc
+	ootw_graphics/sprites/sprites_slugs.inc \
+	ootw_graphics/sprites/sprites_ootw.inc \
+	ootw_graphics/sprites/sprites_beast.inc
 	ca65 -o ootw.o ootw.s -l ootw.lst
 
 ####

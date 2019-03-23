@@ -120,10 +120,10 @@ end_message:
 .include "ootw_graphics/rope/ootw_swing.inc"
 .include "ootw_graphics/underwater/ootw_underwater.inc"
 ; sprites
-.include "sprites_ootw.inc"
+.include "ootw_graphics/sprites/sprites_ootw.inc"
 .include "ootw_graphics/sprites/sprites_physicist.inc"
-.include "sprites_slugs.inc"
-.include "sprites_beast.inc"
+.include "ootw_graphics/sprites/sprites_slugs.inc"
+.include "ootw_graphics/sprites/sprites_beast.inc"
 ; cutscenes
 .include "cutscene_slug.s"
 .include "cutscene_beast.s"
