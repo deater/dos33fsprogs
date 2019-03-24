@@ -96,6 +96,7 @@ end_message:
 .include "ootw_mesa.s"
 .include "physicist.s"
 .include "sluggy.s"
+.include "beast.s"
 .include "earthquake.s"
 .include "text_print.s"
 .include "gr_pageflip.s"

@@ -17,6 +17,19 @@ beast_standing:
 	.byte	$aa,$aa,$00,$a0,$aa,$a0,$00,$00,$aa
 	.byte	$aa,$aa,$00,$aa,$aa,$aa,$00,$aa,$00
 
+
+beast_run_progression:
+	.word	beast_running1
+	.word	beast_running2
+	.word	beast_running3
+	.word	beast_running4
+	.word	beast_running5
+	.word	beast_running6
+	.word	beast_running7
+	.word	beast_running8
+
+
+
 beast_running1:	; piskel2
 	.byte	$9,$6
 	.byte	$aa,$0a,$00,$00,$0a,$aa,$aa,$aa,$aa

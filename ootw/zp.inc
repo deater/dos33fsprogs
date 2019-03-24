@@ -30,7 +30,17 @@ COLOR	= $30
 
 SEEDL	= $4e
 SEEDH	= $4f
-XMAX	= $50
+XMAX		= $50
+BEAST_X		= $51
+BEAST_GAIT	= $52
+BEAST_COUNT	= $53
+BEAST_STATE	= $54
+	B_STANDING	=	$00
+	B_RUNNING	=	$01
+	B_FALLING	=	$02
+	B_DEAD		=	$03
+BEAST_DIRECTION	= $55
+
 			;INVFLG	= $32
 
 ; dos33 zero page = 26-2f, 35-38, 3e 3f 40-4d 

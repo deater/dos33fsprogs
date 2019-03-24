@@ -1,6 +1,7 @@
 ; Ootw mesa at far right
 
 ootw_mesa:
+
 	;===========================
 	; Enable graphics
 
@@ -159,12 +160,29 @@ beyond_mesa_normal:
 
 	jsr	check_screen_limit
 
-
 	;===============
 	; draw physicist
 
         jsr     draw_physicist
 
+
+	;================
+	; handle beast
+
+	lda	BEAST_OUT
+	beq	mesa_no_beast
+
+	;================
+	; draw beast
+
+	jsr	move_beast
+
+	;================
+	; draw beast
+
+	jsr	draw_beast
+
+mesa_no_beast:
 level1_ending:
 
 	;===============
@@ -230,7 +248,15 @@ trigger_beast:
 	sta	BEAST_OUT
 
 	lda	#0
+	sta	BEAST_DIRECTION
+	sta	BEAST_GAIT
+	sta	BEAST_STATE		; B_STANDING
 	sta	GAME_OVER
+	sta	PHYSICIST_STATE		; stop in tracks
+
+	lda	#30
+	sta	BEAST_X
+
 
 	lda	#(39+128)		; update right side of screen
 	sta	RIGHT_LIMIT		; this is mostly for testing

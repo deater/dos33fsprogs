@@ -21,7 +21,7 @@ ootw_cavern:
 
 	lda	#(0+128)
 	sta	LEFT_LIMIT
-	lda	#(37+128)
+	lda	#(38+128)
 	sta	RIGHT_LIMIT
 
 	;=============================
