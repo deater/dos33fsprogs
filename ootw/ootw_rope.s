@@ -69,8 +69,12 @@ load_swing_bg:
 	sta	GAIT
 	sta	GAME_OVER
 
+	jsr	setup_beast
+
+	;============================
 	;============================
 	; Rope Loop
+	;============================
 	;============================
 rope_loop:
 
@@ -135,6 +139,26 @@ beyond_quake:
 	; check screen limits
 
 	jsr	check_screen_limit
+
+
+	;================
+	; handle beast
+
+	lda	BEAST_OUT
+	beq	rope_no_beast
+
+	;================
+	; move beast
+
+	jsr	move_beast
+
+	;================
+	; draw beast
+
+	jsr	draw_beast
+
+rope_no_beast:
+
 
 	;===============================
 	; check if swinging off

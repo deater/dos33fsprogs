@@ -82,8 +82,14 @@ beast_in:
 	lda	#30
 	sta	TENTACLE_PROGRESS
 
+	jsr	setup_beast
+
+	;============================
+	;============================
 	;============================
 	; Pool Loop (palindrome)
+	;============================
+	;============================
 	;============================
 pool_loop:
 
@@ -287,6 +293,24 @@ no_tentacle:
 	; draw physicist
 
 	jsr	draw_physicist
+
+	;================
+	; handle beast
+
+	lda	BEAST_OUT
+	beq	pool_no_beast
+
+	;================
+	; move beast
+
+	jsr	move_beast
+
+	;================
+	; draw beast
+
+	jsr	draw_beast
+
+pool_no_beast:
 
 
 beyond_tentacles:

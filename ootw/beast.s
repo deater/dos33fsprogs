@@ -1,12 +1,44 @@
 	;=======================================
+	; Setup Beast
+
+	; FIXME: distance for count should be related
+	;	to X distance behind on previous screen
+
+setup_beast:
+	lda	BEAST_OUT
+	beq	setup_no_beast
+
+	lda	#30
+	sta	BEAST_COUNT
+	lda	#B_STANDING
+	sta	BEAST_STATE
+
+	lda	BEAST_DIRECTION
+	beq	setup_beast_left
+
+setup_beast_right:
+	lda	#-8
+	sta	BEAST_X
+	jmp	setup_no_beast
+
+setup_beast_left:
+	lda	#41
+	sta	BEAST_X
+
+setup_no_beast:
+	rts
+
+	;=======================================
 	; Move Beast
+	;
+	; FIXME: stop at edge of screen, or at physicist
 
 move_beast:
-;	lda	PHYSICIST_STATE
-;	cmp	#P_WALKING
-;	beq	move_physicist_walking
-;	cmp	#P_RUNNING
-;	beq	move_physicist_running
+	lda	BEAST_STATE
+	cmp	#B_RUNNING
+	beq	move_beast_running
+	cmp	#B_STANDING
+	beq	move_beast_standing
 	rts
 
 	;======================
@@ -33,7 +65,17 @@ b_no_move_run:
 	; standing
 
 move_beast_standing:
+	lda	BEAST_COUNT
+	beq	beast_stand_done	; if 0, perma-stand
 
+	dec	BEAST_COUNT
+	bne	beast_stand_done
+
+	lda	#B_RUNNING
+	sta	BEAST_STATE
+
+beast_stand_done:
+	rts
 
 ;======================================
 ; draw beast
@@ -74,10 +116,10 @@ b_running:
 	bcc	brun_gait_fine	; blt
 
 	lda	#0
-	sta	GAIT
+	sta	BEAST_GAIT
 
 brun_gait_fine:
-	lsr
+;	lsr
 	and	#$fe
 
 	tax

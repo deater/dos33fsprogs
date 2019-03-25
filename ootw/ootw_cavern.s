@@ -107,8 +107,15 @@ cave_setup_done:
 	sta	GAIT
 	sta	GAME_OVER
 
+
+	jsr	setup_beast
+
+	;============================
+	;============================
 	;============================
 	; Cavern Loop (not a palindrome)
+	;============================
+	;============================
 	;============================
 cavern_loop:
 
@@ -134,11 +141,29 @@ cavern_loop:
 
 	jsr	check_screen_limit
 
-
 	;===============
 	; draw physicist
 
 	jsr	draw_physicist
+
+	;================
+	; handle beast
+
+	lda	BEAST_OUT
+	beq	cavern_no_beast
+
+	;================
+	; move beast
+
+	jsr	move_beast
+
+        ;================
+        ; draw beast
+
+        jsr     draw_beast
+
+cavern_no_beast:
+
 
 just_slugs:
 

@@ -173,7 +173,7 @@ beyond_mesa_normal:
 	beq	mesa_no_beast
 
 	;================
-	; draw beast
+	; move beast
 
 	jsr	move_beast
 
@@ -253,6 +253,9 @@ trigger_beast:
 	sta	BEAST_STATE		; B_STANDING
 	sta	GAME_OVER
 	sta	PHYSICIST_STATE		; stop in tracks
+
+	lda	#50
+	sta	BEAST_COUNT
 
 	lda	#30
 	sta	BEAST_X
