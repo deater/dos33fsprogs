@@ -17,7 +17,7 @@ setup_beast:
 	beq	setup_beast_left
 
 setup_beast_right:
-	lda	#-8
+	lda	#248		; -8 = 248
 	sta	BEAST_X
 	jmp	setup_no_beast
 
@@ -112,7 +112,7 @@ b_standing:
 
 b_running:
 	lda	BEAST_GAIT
-	cmp	#16
+	cmp	#18
 	bcc	brun_gait_fine	; blt
 
 	lda	#0
