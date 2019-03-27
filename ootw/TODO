@@ -1,5 +1,3 @@
-
-
 KNOWN BUGS:
 + ootw: pool monster grabs you a edge of pool (glitch)
 + intro: there's still a bit of a pause when the elevator door finishes opening
@@ -7,12 +5,9 @@ KNOWN BUGS:
 TODO:
 
 + sprites that don't draw off edge of screen
-+ Revamp movement
 
-
-movement -- note these are hard due to limitations of the Apple II keyboard
-+ running: Missing one running frame
-+ ability to jump
+Movement:
++ running: Missing one running frame (?)
 + ability to run+jump
 + ability to kick while crouching
 + ability to shoot
@@ -28,15 +23,21 @@ sprites_to_draw:
 
 pool:
 + background of beast moving off
++ adjust tentacle to not go off edge of screen
++ adjust x position of tentacle grab
 
 cavern:
 + slugs on ceiling drop
-+ background of beast moving off
++ background of beast moving off ?
 + adjust slug attack range
 
 underwater:
 + add arrival-underwater scene
++ falling console
 + ability to swim
++ tentacles to grab
++ shimmery water at top
++ ripples in water
 
 beast:
 + add beast death cutscene
@@ -44,13 +45,22 @@ beast:
 
 rope_room:
 + re-enable earthquake while swinging
++ speed up background if possible
 
-
-cutscenes:
-+ death by beast
 
 Level/Checkpoint #2:
+
+cage room:
 + Swing in the cage
 + Ability to pick up gun, with all that entails
++ Animation of friend?
++ animated miners in background
+
+Jail:
++ Foreground animations
++ Doors that open/blast?
+
+Elevator:
 + Elevator ride, view of city?
 + 1-bit audio recording of friend talking
++ music play when viewing city

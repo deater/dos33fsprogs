@@ -234,14 +234,14 @@ put_spritefc_loop:
 								;	34
 put_spritefc_pixel:
 
-	sec
-	txa			; want (CH-X)+XPOS
+	clc
+	txa			; want (CH-X-1)+XPOS
 	eor	#$ff
 	adc	CH
 	adc	XPOS
 
 	bmi	cskip_drawing
-	cmp	#41
+	cmp	#40
 
 	bcs	cskip_drawing		; if off-screen right, skip draw
 
