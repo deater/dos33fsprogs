@@ -80,6 +80,8 @@ left_going_left:
 	beq	walk_left
 	cmp	#P_WALKING
 	beq	run_left
+	cmp	#P_CROUCHING
+	beq	stand_left
 
 	;=============================
 	; already running, do nothing?
@@ -92,6 +94,8 @@ left_going_right:
 	cmp	#P_WALKING
 	beq	stand_right
 	cmp	#P_STANDING
+	beq	stand_left
+	cmp	#P_CROUCHING
 	beq	stand_left
 
 	;===========================
@@ -124,6 +128,8 @@ right_going_right:
 	beq	walk_right
 	cmp	#P_WALKING
 	beq	run_right
+	cmp	#P_CROUCHING
+	beq	stand_right
 
 	;=============================
 	; already running, do nothing?
@@ -137,6 +143,8 @@ right_going_left:
 	beq	stand_left
 	cmp	#P_STANDING
 	beq	stand_right
+	cmp	#P_CROUCHING
+	beq	stand_left
 
 	;===========================
 	; otherwise?

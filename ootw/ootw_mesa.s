@@ -60,6 +60,8 @@ mesa_left:
 	sta	GAME_OVER
 	sta     LEVELEND_PROGRESS
 
+	jsr	setup_beast
+
 	;============================
 	;============================
 	;============================

@@ -44,6 +44,40 @@ move_beast:
 	;======================
 	; running
 move_beast_running:
+
+	;=======================
+	; stop at edge or at physicist
+
+	lda	BEAST_DIRECTION
+	beq	check_beast_left
+
+check_beast_right:
+
+	clc
+	lda     BEAST_X
+	adc     #$80
+
+	cmp     RIGHT_LIMIT
+        bcc	beast_no_stop          ; (blt==bcc)
+	bcs	stop_beast
+
+check_beast_left:
+
+	clc
+	lda     BEAST_X
+	adc     #$80
+
+	cmp     LEFT_LIMIT
+        bcs     beast_no_stop          ; (bge==bcs)
+
+stop_beast:
+	lda	#B_STANDING
+	sta	BEAST_STATE
+	rts
+
+
+
+beast_no_stop:
 	inc	BEAST_GAIT		; cycle through animation
 
 	lda	BEAST_GAIT

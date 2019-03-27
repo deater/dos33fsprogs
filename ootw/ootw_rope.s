@@ -306,10 +306,15 @@ check_swung_off:
 	cmp	#$5
 	bne	not_done_rope
 
+
+	;==========================
+	; swung off screen to right
+
 	lda	#1
 	sta	PHYSICIST_X
 	sta	EARTH_OFFSET
 	sta	DIRECTION		; face right
+	sta	BEAST_DIRECTION
 	lda	#10
 	sta	PHYSICIST_Y
 	lda	#P_FALLING
