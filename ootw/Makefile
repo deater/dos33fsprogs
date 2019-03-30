@@ -49,7 +49,8 @@ OOTW_C2:	ootw_c2.o
 	ld65 -o OOTW_C2 ootw_c2.o -C ../linker_scripts/apple2_1700.inc
 
 ootw_c2.o:	ootw_c2.s \
-	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
+	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
+	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
 	ootw_graphics/sprites/sprites_physicist.inc \
 	ootw_c2_cage.s ootw_c2_jail.s ootw_c2_intro.s \
