@@ -32,5 +32,5 @@ ootw_beast_end.inc:	$(PNG2RLE) \
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lzz *.inc
+		rm -f *~ *.o *.lst *.lzz ootw_beast_end.inc
 

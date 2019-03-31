@@ -28,7 +28,7 @@ ootw.o:	ootw.s \
 	keyboard.s sluggy.s beast.s \
 	ootw_rope.s earthquake.s ootw_mesa.s \
 	ootw_pool.s ootw_cavern.s physicist.s random16.s \
-	cutscene_slug.s cutscene_beast.s \
+	ootw_cut_slug.s ootw_cut_beast.s \
 	ootw_graphics/pool/ootw_pool.inc \
 	ootw_graphics/underwater/ootw_underwater.inc \
 	ootw_graphics/caves/ootw_cavern.inc \
@@ -40,7 +40,10 @@ ootw.o:	ootw.s \
 	ootw_graphics/sprites/sprites_physicist.inc \
 	ootw_graphics/sprites/sprites_slugs.inc \
 	ootw_graphics/sprites/sprites_ootw.inc \
-	ootw_graphics/sprites/sprites_beast.inc
+	ootw_graphics/sprites/sprites_beast.inc \
+	ootw_graphics/end_scenes/ootw_beast_end.inc \
+	ootw_graphics/end_scenes/ootw_beast_intro.inc \
+	ootw_graphics/end_scenes/ootw_slug_end.inc
 	ca65 -o ootw.o ootw.s -l ootw.lst
 
 ####

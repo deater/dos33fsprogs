@@ -112,6 +112,10 @@ end_message:
 .include "gr_overlay.s"
 .include "gr_putsprite_crop.s"
 
+; cutscenes
+.include "ootw_cut_slug.s"
+.include "ootw_cut_beast.s"
+
 ; room backgrounds
 .include "ootw_graphics/pool/ootw_pool.inc"
 .include "ootw_graphics/caves/ootw_cavern.inc"
@@ -125,7 +129,8 @@ end_message:
 .include "ootw_graphics/sprites/sprites_physicist.inc"
 .include "ootw_graphics/sprites/sprites_slugs.inc"
 .include "ootw_graphics/sprites/sprites_beast.inc"
-; cutscenes
-.include "cutscene_slug.s"
-.include "cutscene_beast.s"
+; cutscene data
 .include "ootw_graphics/endl1/ootw_l1end.inc"
+.include "ootw_graphics/end_scenes/ootw_beast_end.inc"
+.include "ootw_graphics/end_scenes/ootw_slug_end.inc"
+.include "ootw_graphics/end_scenes/ootw_beast_intro.inc"

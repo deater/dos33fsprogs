@@ -4,7 +4,6 @@ KNOWN BUGS:
 
 TODO:
 
-+ sprites that don't draw off edge of screen
 
 Movement:
 + running: Missing one running frame (?)
@@ -40,7 +39,8 @@ underwater:
 + ripples in water
 
 beast:
-+ add beast death cutscene
++ hook up beast ending cutscene
++ compress/transparency beast ending cutscene
 + add beast tripping
 
 rope_room:
