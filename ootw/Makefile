@@ -24,8 +24,8 @@ OOTW:	ootw.o
 ootw.o:	ootw.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
-	gr_make_quake.s gr_overlay.s zp.inc \
-	keyboard.s sluggy.s beast.s \
+	gr_make_quake.s gr_overlay.s zp.inc keyboard.s \
+	ootw_sluggy.s ootw_beast.s \
 	ootw_rope.s earthquake.s ootw_mesa.s \
 	ootw_pool.s ootw_cavern.s physicist.s random16.s \
 	ootw_cut_slug.s ootw_cut_beast.s \
