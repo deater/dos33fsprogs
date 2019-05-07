@@ -461,7 +461,7 @@ song_list:
 ;.include	"rasterbars.s"
 ;.include	"volume_bars.s"
 .include	"interrupt_handler.s"
-.include	"pt3.s"
+.include	"pt3_lib.s"
 
 ;=========
 ; strings
