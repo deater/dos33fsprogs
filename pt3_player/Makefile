@@ -10,9 +10,9 @@ $(DOS33):
 
 pt3_player.dsk:	PT3_PLAYER HELLO
 	cp empty.dsk pt3_player.dsk
-	$(DOS33) -y chiptune_player.dsk SAVE A HELLO
-	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x0800 PT3_PLAYER
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/CAMOUFLAGE.KRW
+	$(DOS33) -y pt3_player.dsk SAVE A HELLO
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x0800 PT3_PLAYER
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x2000 EA.PT3
 #	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/CHRISTMAS.KRW
 #	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/CRMOROS.KRW
 #	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/DEATH2.KRW
