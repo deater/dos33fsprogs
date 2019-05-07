@@ -12,6 +12,9 @@ NOTE_ENVELOPE_ENABLED=4
 NOTE_SAMPLE_POINTER=5
 NOTE_SAMPLE_LOOP=7
 NOTE_SAMPLE_LENGTH=8
+NOTE_TONE_L=9
+NOTE_TONE_H=10
+NOTE_AMPLITUDE=11
 
 note_a:
 	.byte	'A'	; NOTE_WHICH
@@ -22,6 +25,9 @@ note_a:
 	.word	$0	; NOTE_SAMPLE_POINTER
 	.byte	$0	; NOTE_SAMPLE_LOOP
 	.byte	$0	; NOTE_SAMPLE_LENGTH
+	.byte	$0	; NOTE_TONE_L
+	.byte	$0	; NOTE_TONE_H
+	.byte	$0	; NOTE_AMPLITUDE
 note_b:
 	.byte	'B'	; NOTE_WHICH
 	.byte	$0	; NOTE_VOLUME
@@ -31,6 +37,9 @@ note_b:
 	.word	$0	; NOTE_SAMPLE_POINTER
 	.byte	$0	; NOTE_SAMPLE_LOOP
 	.byte	$0	; NOTE_SAMPLE_LENGTH
+	.byte	$0	; NOTE_TONE_L
+	.byte	$0	; NOTE_TONE_H
+	.byte	$0	; NOTE_AMPLITUDE
 note_c:
 	.byte	'C'	; NOTE_WHICH
 	.byte	$0	; NOTE_VOLUME
@@ -40,13 +49,20 @@ note_c:
 	.word	$0	; NOTE_SAMPLE_POINTER
 	.byte	$0	; NOTE_SAMPLE_LOOP
 	.byte	$0	; NOTE_SAMPLE_LENGTH
+	.byte	$0	; NOTE_TONE_L
+	.byte	$0	; NOTE_TONE_H
+	.byte	$0	; NOTE_AMPLITUDE
 
 pt3_noise_period:	.byte	$0
 pt3_noise_add:		.byte	$0
+
 pt3_envelope_period:	.byte	$0
+pt3_envelope_add:	.byte	$0
 pt3_envelope_type:	.byte	$0
+
 pt3_current_pattern:	.byte	$0
 pt3_music_len:		.byte	$0
+pt3_mixer_value:	.byte	$0
 
 ; Header offsets
 
@@ -98,7 +114,117 @@ pt3_init_song:
 	;=====================================
 	; Calculate Note
 	;=====================================
-CalculateNote:
+calculate_note:
+
+;if (a->enabled) {
+;  b0 = pt3->data[a->sample_pointer + a->sample_position * 4];
+;  b1 = pt3->data[a->sample_pointer + a->sample_position * 4 + 1];
+;  a->tone = pt3->data[a->sample_pointer + a->sample_position * 4 + 2];
+;  a->tone += (pt3->data[a->sample_pointer + a->sample_position * 4 + 3])<<8;
+;  a->tone += a->tone_accumulator;
+;  if ((b1 & 0x40) != 0) {
+;     a->tone_accumulator=a->tone;
+;  }
+;  j = a->note + ((pt3->data[a->ornament_pointer + a->ornament_position]<<24)>>24);
+;  if (j < 0) j = 0;
+;  else if (j > 95) j = 95;
+;  w = GetNoteFreq(j,pt3->frequency_table);
+;  a->tone = (a->tone + a->tone_sliding + w) & 0xfff;
+;  if (a->tone_slide_count > 0) {
+;     a->tone_slide_count--;
+;     if (a->tone_slide_count==0) {
+;        a->tone_sliding+=a->tone_slide_step;
+;        a->tone_slide_count = a->tone_slide_delay;
+;        if (!a->simplegliss) {
+;           if ( ((a->tone_slide_step < 0) &&
+;                (a->tone_sliding <= a->tone_delta)) ||
+;                ((a->tone_slide_step >= 0) &&
+;                (a->tone_sliding >= a->tone_delta)) ) {
+;              a->note = a->slide_to_note;
+;              a->tone_slide_count = 0;
+;              a->tone_sliding = 0;
+;           }
+;         }
+;     }
+;  }
+
+;  a->amplitude= (b1 & 0xf);
+;  if ((b0 & 0x80)!=0) {
+;     if ((b0&0x40)!=0) {
+;        if (a->amplitude_sliding < 15) {
+;           a->amplitude_sliding++;
+;        }
+;     }
+;     else {
+;        if (a->amplitude_sliding > -15) {
+;           a->amplitude_sliding--;
+;        }
+;     }
+;  }
+
+;  a->amplitude+=a->amplitude_sliding;
+
+;  if (a->amplitude < 0) a->amplitude = 0;
+;  else if (a->amplitude > 15) a->amplitude = 15;
+
+;  //if (PlParams.PT3.PT3_Version <= 4)
+;  //   a->amplitude = PT3VolumeTable_33_34[a->volume][a->amplitude];
+;  //}
+;  //else
+;     a->amplitude = PT3VolumeTable_35[a->volume][a->amplitude];
+
+;  if (((b0 & 0x1) == 0) && ( a->envelope_enabled)) {
+;     a->amplitude |= 16;
+;  }
+
+;  /* Frequency slide */
+;  /* If b1 top bits are 10 or 11 */
+;  if ((b1 & 0x80) != 0) {
+;     if ((b0 & 0x20) != 0) {
+;        j = ((b0>>1)|0xF0) + a->envelope_sliding;
+;     }
+;     else {
+;        j = ((b0>>1)&0xF) + a->envelope_sliding;
+;     }
+;     if (( b1 & 0x20) != 0) {
+;        a->envelope_sliding = j;
+;     }
+;     pt3->envelope_add+=j;
+;  }
+;  /* Noise slide */
+;  else {
+;     pt3->noise_add = (b0>>1) + a->noise_sliding;
+;     if ((b1 & 0x20) != 0) {
+;        a->noise_sliding = pt3->noise_add;
+;     }
+;  }
+
+;  pt3->mixer_value = ((b1 >>1) & 0x48) | pt3->mixer_value;
+
+;  a->sample_position++;
+;  if (a->sample_position >= a->sample_length) {
+;     a->sample_position = a->sample_loop;
+;  }
+
+;  a->ornament_position++;
+;  if (a->ornament_position >= a->ornament_length) {
+;     a->ornament_position = a->ornament_loop;
+;  }
+;} else {
+;   a->amplitude=0;
+;}
+
+;pt3->mixer_value=pt3->mixer_value>>1;
+
+;if (a->onoff>0) {
+;   a->onoff--;
+;   if (a->onoff==0) {
+;      a->enabled=!a->enabled;
+;      if (a->enabled) a->onoff=a->onoff_delay;
+;      else a->onoff=a->offon_delay;
+;   }
+;}
+
 
 	rts
 
@@ -106,10 +232,107 @@ CalculateNote:
 	; Decode Note
 	;=====================================
 
-DecodeNote:
+decode_note:
 
 	rts
 
+	;=====================================
+	; pt3 make frame
+	;=====================================
+pt3_make_frame:
+;       for(i=0;i < pt3.music_len;i++) {
+;          pt3_set_pattern(i,&pt3);
+;          for(j=0;j<64;j++) {
+;             if (pt3_decode_line(&pt3)) break;
+;             for(f=0;f<pt3.speed;f++) {
+
+	; AY-3-8910 register summary
+	;
+	; R0/R1 = A period low/high
+	; R2/R3 = B period low/high
+	; R4/R5 = C period low/high
+	; R6 = Noise period */
+	; R7 = Enable XX Noise=!CBA Tone=!CBA */
+	; R8/R9/R10 = Channel A/B/C amplitude M3210, M=envelope enable
+	; R11/R12 = Envelope Period low/high
+	; R13 = Envelope Shape, 0xff means don't write
+	; R14/R15 = I/O (ignored)
+
+	lda	#0
+	sta	pt3_mixer_value
+	sta	pt3_envelope_add
+
+	lda	#0			; Note A
+	jsr	calculate_note
+	lda	#1			; Note B
+	jsr	calculate_note
+	lda	#2			; Note C
+	jsr	calculate_note
+
+	; Load up the Frequency Registers
+
+	lda	note_a+NOTE_TONE_L	; Note A Period L
+	sta	REGISTER_DUMP+0		; into R0
+	lda	note_a+NOTE_TONE_H	; Note A Period H
+	sta	REGISTER_DUMP+1		; into R1
+
+	lda	note_b+NOTE_TONE_L	; Note B Period L
+	sta	REGISTER_DUMP+2		; into R2
+	lda	note_b+NOTE_TONE_H	; Note B Period H
+	sta	REGISTER_DUMP+3		; into R3
+
+	lda	note_c+NOTE_TONE_L	; Note C Period L
+	sta	REGISTER_DUMP+4		; into R4
+	lda	note_c+NOTE_TONE_H	; Note C Period H
+	sta	REGISTER_DUMP+5		; into R5
+
+	; Noise
+	; frame[6]= (pt3->noise_period+pt3->noise_add)&0x1f;
+	clc
+	lda	pt3_noise_period
+	adc	pt3_noise_add
+	and	#$1f
+	sta	REGISTER_DUMP+6
+
+
+	; Mixer
+	lda	pt3_mixer_value
+	sta	REGISTER_DUMP+7
+
+	; Amplitudes
+	lda	note_a+NOTE_AMPLITUDE
+	sta	REGISTER_DUMP+8
+	lda	note_b+NOTE_AMPLITUDE
+	sta	REGISTER_DUMP+9
+	lda	note_c+NOTE_AMPLITUDE
+	sta	REGISTER_DUMP+10
+
+	; Envelope period
+;	temp_envelope=pt3->envelope_period+
+;			pt3->envelope_add+
+;			pt3->envelope_slide;
+;	frame[11]=(temp_envelope&0xff);
+;	frame[12]=(temp_envelope>>8);
+
+;	Envelope shape
+;	if (pt3->envelope_type==pt3->envelope_type_old) {
+;		frame[13]=0xff;
+;	}
+;	else {
+;		frame[13]=pt3->envelope_type;
+;	}
+;	pt3->envelope_type_old=pt3->envelope_type;
+;
+;	if (pt3->envelope_delay > 0) {
+;		pt3->envelope_delay--;
+;		if (pt3->envelope_delay==0) {
+;			pt3->envelope_delay=pt3->envelope_delay_orig;
+;			pt3->envelope_slide+=pt3->envelope_slide_add;
+;		}
+;	}
+
+
+	rts
 
 	;======================================
 	; GetNoteFreq

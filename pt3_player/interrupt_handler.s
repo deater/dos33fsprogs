@@ -38,19 +38,14 @@ interrupt_handler:
 pt3_play_music:
 
 
-;       frame_num=0;
 ;       for(i=0;i < pt3.music_len;i++) {
 ;          pt3_set_pattern(i,&pt3);
 ;          for(j=0;j<64;j++) {
 ;             if (pt3_decode_line(&pt3)) break;
 ;             for(f=0;f<pt3.speed;f++) {
-;                pt3_make_frame(&pt3,frame);
-;                ym_play_frame(frame,shift_size,
-;                                 &ds, diff_mode,play_music,mute_channel);
-;                frame_num++;
-;             }
-;          }
-;        }
+
+
+	jsr	pt3_make_frame
 
 	;======================================
 	; Write frames to Mockingboard
