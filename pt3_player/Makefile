@@ -39,7 +39,7 @@ PT3_PLAYER:	pt3_player.o
 	ld65 -o PT3_PLAYER pt3_player.o -C ../linker_scripts/apple2_1000.inc
 
 pt3_player.o:	pt3_player.s \
-	gr_fast_clear.s pt3_lib.s
+	gr_fast_clear.s pt3_lib.s interrupt_handler.s
 #	mockingboard.s \
 #	keypress_minimal.s \
 #	qkumba_rts.s \

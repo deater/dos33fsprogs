@@ -23,10 +23,10 @@ pt3_setup:
 	; init variables
 
 	lda	#0
-;	sta	DRAW_PAGE
+	sta	DRAW_PAGE
 ;	sta	CH
 ;	sta	CV
-;	sta	DONE_PLAYING
+	sta	DONE_PLAYING
 ;	sta	MB_CHUNK_OFFSET
 ;	sta	DECODE_ERROR
 	sta	WHICH_FILE
@@ -77,10 +77,10 @@ mockingboard_found:
 	; Vector address goes to 0x3fe/0x3ff
 	; FIXME: should chain any existing handler
 
-;	lda	#<interrupt_handler
-;	sta	$03fe
-;	lda	#>interrupt_handler
-;	sta	$03ff
+	lda	#<interrupt_handler
+	sta	$03fe
+	lda	#>interrupt_handler
+	sta	$03ff
 
 	;============================
 	; Enable 50Hz clock on 6522
@@ -152,7 +152,7 @@ mockingboard_found:
 	; Enable 6502 interrupts
 	;============================
 
-;	cli		; clear interrupt mask
+	cli		; clear interrupt mask
 
 
 	;============================

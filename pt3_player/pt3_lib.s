@@ -48,6 +48,10 @@ pt3_envelope_type:	.byte	$0
 pt3_current_pattern:	.byte	$0
 pt3_music_len:		.byte	$0
 
+; Header offsets
+
+PT3_HEADER_FREQUENCY = $63
+
 load_ornament:
 	rts
 
@@ -91,6 +95,44 @@ pt3_init_song:
 
 	rts
 
+	;=====================================
+	; Calculate Note
+	;=====================================
+CalculateNote:
+
+	rts
+
+	;=====================================
+	; Decode Note
+	;=====================================
+
+DecodeNote:
+
+	rts
+
+
+	;======================================
+	; GetNoteFreq
+	;======================================
+
+	; Return frequency from lookup table
+	; Which note is in Y
+	; return in X,A (high,low)
+GetNoteFreq:
+	lda	PT3_LOC+PT3_HEADER_FREQUENCY
+	cmp	#1
+	bne	freq_table_2
+
+	lda	PT3NoteTable_ST_high,Y
+	tax
+	lda	PT3NoteTable_ST_low,Y
+	rts
+
+freq_table_2:
+	lda	PT3NoteTable_ASM_34_35_high,Y
+	tax
+	lda	PT3NoteTable_ASM_34_35_low,Y
+        rts
 
 
 
@@ -139,7 +181,7 @@ PT3NoteTable_ASM_34_35_high:
 .byte $00,$00,$00,$00,$00,$00,$00,$00
 .byte $00,$00,$00,$00,$00,$00,$00,$00
 
-PT3NoteTable_ASM_34_35_lo:
+PT3NoteTable_ASM_34_35_low:
 .byte $10,$55,$A4,$FC,$5F,$CA,$3D,$B8
 .byte $3B,$C5,$55,$EC,$88,$2A,$D2,$7E
 .byte $2F,$E5,$9E,$5C,$1D,$E2,$AB,$76
