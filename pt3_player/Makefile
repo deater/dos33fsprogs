@@ -11,7 +11,7 @@ $(DOS33):
 pt3_player.dsk:	PT3_PLAYER HELLO
 	cp empty.dsk pt3_player.dsk
 	$(DOS33) -y pt3_player.dsk SAVE A HELLO
-	$(DOS33) -y pt3_player.dsk BSAVE -a 0x0800 PT3_PLAYER
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x1000 PT3_PLAYER
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x2000 EA.PT3
 #	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/CHRISTMAS.KRW
 #	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/CRMOROS.KRW
@@ -36,9 +36,10 @@ HELLO:	hello.bas
 	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
 
 PT3_PLAYER:	pt3_player.o
-	ld65 -o PT3_PLAYER pt3_player.o -C ../linker_scripts/apple2_800.inc
+	ld65 -o PT3_PLAYER pt3_player.o -C ../linker_scripts/apple2_1000.inc
 
-pt3_player.o:	pt3_player.s
+pt3_player.o:	pt3_player.s \
+	gr_fast_clear.s pt3.s
 #	mockingboard.s \
 #	keypress_minimal.s \
 #	qkumba_rts.s \

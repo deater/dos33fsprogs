@@ -1,33 +1,20 @@
 ; VMW Chiptune Player
 
 .include	"zp.inc"
-				; program is ~4k, so from 0xc00 to 0x1C00
-LZ4_BUFFER	EQU	$1C00		; $1C00 - $5C00, 16k for now
-DISK_BUFFER	EQU	$5D00		; for disk loading
+
+PT3_LOC = $2000
+
 UNPACK_BUFFER	EQU	$6000		; $6000 - $9800, 14k, $3800
-
-					; by using qkumba's RTS code
-					; no need for DOS, so we actually
-					; are free the whole way to $C000
-					; instead of stopping at $9600
-					; $6000 - $C000 = 24k
-
-
 NUM_FILES	EQU	15
 
 
-	jmp	chiptune_setup
-
-.include "chip_title_uncompressed.inc"
-
-	.align	$400
 
 	;=============================
 	; Setup
 	;=============================
-chiptune_setup:
-;	jsr     HOME
-;	jsr     TEXT
+pt3_setup:
+	jsr     HOME
+	jsr     TEXT
 
 	; Init disk code
 
@@ -36,22 +23,16 @@ chiptune_setup:
 	; init variables
 
 	lda	#0
-	sta	DRAW_PAGE
-	sta	CH
-	sta	CV
-	sta	DONE_PLAYING
-	sta	MB_CHUNK_OFFSET
-	sta	DECODE_ERROR
-
-;	lda	#0
-;	lda	#4				; start at DEMO4
-;	lda	#7				; start at LYRA
-;	lda	#10				; start at SDEMO
+;	sta	DRAW_PAGE
+;	sta	CH
+;	sta	CV
+;	sta	DONE_PLAYING
+;	sta	MB_CHUNK_OFFSET
+;	sta	DECODE_ERROR
 	sta	WHICH_FILE
 
-
-	lda	#$ff
-	sta	RASTERBARS_ON
+;	lda	#$ff
+;	sta	RASTERBARS_ON
 
 	; print detection message
 
@@ -96,10 +77,10 @@ mockingboard_found:
 	; Vector address goes to 0x3fe/0x3ff
 	; FIXME: should chain any existing handler
 
-	lda	#<interrupt_handler
-	sta	$03fe
-	lda	#>interrupt_handler
-	sta	$03ff
+;	lda	#<interrupt_handler
+;	sta	$03fe
+;	lda	#>interrupt_handler
+;	sta	$03ff
 
 	;============================
 	; Enable 50Hz clock on 6522
@@ -161,65 +142,26 @@ mockingboard_found:
 	;============================
 	; Init Background
 	;============================
-	jsr	set_gr_page0
+;	jsr	set_gr_page0
 
-	lda	#0
-	sta	DRAW_PAGE
-	sta	SCREEN_Y
+;	lda	#0
+;	sta	DRAW_PAGE
+;	sta	SCREEN_Y
 
 	;============================
 	; Enable 6502 interrupts
 	;============================
 
-	cli		; clear interrupt mask
+;	cli		; clear interrupt mask
 
 
 	;============================
 	; Loop forever
 	;============================
 main_loop:
-	lda	DECODE_ERROR
-	beq	check_copy
-	sei
-	brk
 
-check_copy:
-	lda	COPY_TIME
-	beq	check_decompress	; if zero, skip
 
-	lda	#0
-	sta	COPY_OFFSET
-check_copy_loop:
-	jsr     page_copy                                               ;6+3621
-
-	inc     COPY_OFFSET     ; (opt: make subtract?)                 ; 5
-
-	lda	#14		; NOT HEX URGH!
-	cmp	COPY_OFFSET
-	bne	check_copy_loop
-
-	lda	#0			; we are done
-	sta	COPY_TIME
-
-check_decompress:
-	lda	DECOMPRESS_TIME
-	beq	check_done		; if zero, skip
-
-	jsr	setup_next_subsong	; decompress
-
-	lda	MB_CHUNK_OFFSET
-	sta	TIME_TAKEN
-
-	lda	#0
-	sta	DECOMPRESS_TIME
-
-	;============================
-	; visualization
-	;============================
-;	jsr	clear_top
-;	jsr	draw_rasters
-;	jsr	volume_bars
-;	jsr	page_flip
+	jmp	main_loop
 
 check_done:
 	lda	#$ff
@@ -271,19 +213,19 @@ new_song:
 	; Init Variables
 	;=========================
 
-	lda	#$0
-	sta	FRAME_COUNT
-	sta	A_VOLUME
-	sta	B_VOLUME
-	sta	C_VOLUME
-	sta	COPY_OFFSET
-	sta	DECOMPRESS_TIME
-	sta	COPY_TIME
-	sta	MB_CHUNK_OFFSET
-	lda	#$20
-	sta	DECODER_STATE
-	lda	#3
-	sta	CHUNKSIZE
+;	lda	#$0
+;	sta	FRAME_COUNT
+;	sta	A_VOLUME
+;	sta	B_VOLUME
+;	sta	C_VOLUME
+;	sta	COPY_OFFSET
+;	sta	DECOMPRESS_TIME
+;	sta	COPY_TIME
+;	sta	MB_CHUNK_OFFSET
+;	lda	#$20
+;	sta	DECODER_STATE
+;	lda	#3
+;	sta	CHUNKSIZE
 
 	;===========================
 	; Print loading message
@@ -304,7 +246,7 @@ new_song:
 
 
 	;===========================
-	; Load in KRW file
+	; Load in PT3 file
 	;===========================
 
 	jsr	get_filename
@@ -349,9 +291,9 @@ space_loop:
 done_name_loop:
 
 	; open and read a file
-	; loads to whatever it was BSAVED at (default is $1C00)
+	; loads to whatever it was BSAVED at (default is $2000)
 
-	jsr	read_file		; read KRW file from disk
+	jsr	read_file		; read PT3 file from disk
 
 
 	;=========================
@@ -360,24 +302,34 @@ done_name_loop:
 
 	jsr	clear_bottoms		; clear bottom of page 0/1
 
-	lda	#>LZ4_BUFFER		; point to LZ4 data
-	sta	OUTH
-	lda	#<LZ4_BUFFER
-	sta	OUTL
-
-	ldy	#3			; skip KRW magic at front
+	; NUL terminate the strings we want to print
+	lda	#0
+	sta	PT3_LOC+$3E
+	sta	PT3_LOC+$62
 
 	; print title
+
+	lda	#>(PT3_LOC+$1E)		; point to header title
+	sta	OUTH
+	lda	#<(PT3_LOC+$1E)
+	sta	OUTL
+
 	lda	#20			; VTAB 20: HTAB from file
 	jsr	print_header_info
 
 	; Print Author
+
+	lda	#>(PT3_LOC+$42)		; point to header title
+	sta	OUTH
+	lda	#<(PT3_LOC+$42)
+	sta	OUTL
+
 	lda	#21			; VTAB 21: HTAB from file
 	jsr	print_header_info
 
 	; Print clock
-	lda	#23			; VTAB 23: HTAB from file
-	jsr	print_header_info
+;	lda	#23			; VTAB 23: HTAB from file
+;	jsr	print_header_info
 
 	; Print Left Arrow (INVERSE)
 	lda	#'<'
@@ -397,73 +349,9 @@ done_name_loop:
 	sta	$777
 	sta	$B77
 
-
-
-
-
-	; Point LZ4 src at proper place
-
-	ldy	#0
-	lda	#>(LZ4_BUFFER+3)
-	sta	LZ4_SRC+1
-	lda	#<(LZ4_BUFFER+3)
-	sta	LZ4_SRC
-
-	lda	(LZ4_SRC),Y		; get header skip
-	clc
-	adc	LZ4_SRC
-	sta	LZ4_SRC
-	lda	LZ4_SRC+1
-	adc	#0
-	sta	LZ4_SRC+1
-
-	lda	#<UNPACK_BUFFER		; set input pointer
-	sta	INL
-	lda	#>UNPACK_BUFFER
-	sta	INH
-
-	; Decompress first chunks
-
-	lda	#$0
-	sta	COPY_OFFSET
-	sta	DECOMPRESS_TIME
-	lda	#$3
-	sta	CHUNKSIZE
-	lda	#$20
-	sta	DECODER_STATE
-	sta	COPY_TIME
-
-	jsr	setup_next_subsong
+	jsr	pt3_init_song
 
 	rts
-
-	;=================
-	; next sub-song
-	;=================
-setup_next_subsong:
-
-	ldy	#0
-
-	lda	(LZ4_SRC),Y		; get next size value
-	sta	LZ4_END
-	iny
-	lda	(LZ4_SRC),Y
-	sta	LZ4_END+1
-
-	lda	#2			; increment pointer
-	clc
-	adc	LZ4_SRC
-	sta	LZ4_SRC
-	lda	LZ4_SRC+1
-	adc	#0
-	sta	LZ4_SRC+1
-
-	jsr	lz4_decode		; decode
-
-					; tail-call?
-
-	rts
-
 
 
 	;===================
@@ -475,63 +363,11 @@ setup_next_subsong:
 print_header_info:
 
 	sta	CV
-
-	iny				; adjust pointer
-	tya
-	ldy	#0
-	clc
-	adc	OUTL
-	sta	OUTL
-	lda	OUTH
-	adc	#$0
-	sta	OUTH
-
-	lda	(OUTL),Y		; get HTAB value
+	lda	#4
 	sta	CH
-
-	inc	OUTL			; increment 16-bits
-	bne	bloop22
-	inc	OUTH
-bloop22:
-
 	jmp     print_both_pages	; print, tail call
 
 
-	;==============================================
-	; plan: takes 256  50Hz to play a chunk
-	; need to copy 14 256-byte blocks
-	; PLAY A (copying C)
-	; PLAY B (copying C)
-	; PLAY D (decompressing A/B/C)
-
-
-	;========================
-	; page copy
-	;========================
-	; want to copy:
-	;	SRC: chunk_buffer+(2*256)+(COPY_OFFSET*3*256)
-	;	DST: chunk_buffer+$2A00+(COPY_OFFSET*256)
-page_copy:
-	clc								; 2
-	lda	#>(UNPACK_BUFFER+512)					; 3
-	adc	COPY_OFFSET						; 3
-	adc	COPY_OFFSET						; 3
-	adc	COPY_OFFSET						; 3
-	sta	page_copy_loop+2			; self modify	; 5
-
-	lda	#>(UNPACK_BUFFER+$2A00)					; 2
-	adc	COPY_OFFSET						; 3
-	sta	page_copy_loop+5			; self modify	; 5
-
-	ldx	#$00							; 2
-page_copy_loop:
-	lda	$1000,x							; 4
-	sta	$1000,X							; 5
-	inx								; 2
-	bne	page_copy_loop						; 2nt/3
-	rts								; 6
-							;======================
-							; 2+14*256+6+29= 3621
 
 
 	;==================
@@ -546,9 +382,9 @@ get_filename:
 	ldy	#0
 	ldx	WHICH_FILE
 
-	lda	#<krw_file			; point to filename
+	lda	#<song_list			; point to filename
 	sta	INL
-	lda	#>krw_file
+	lda	#>song_list
 	sta	INH
 
 get_filename_loop:
@@ -604,7 +440,7 @@ done_decrement:
 ; filenames
 ;==========
 
-krw_file:
+song_list:
 
 .include "song_list.inc"
 
@@ -614,7 +450,7 @@ krw_file:
 .include	"../asm_routines/gr_offsets.s"
 .include	"text_print.s"
 .include	"../asm_routines/mockingboard_a.s"
-.include	"../asm_routines/gr_fast_clear.s"
+.include	"gr_fast_clear.s"
 .include	"../asm_routines/pageflip.s"
 ;.include	"../asm_routines/gr_unrle.s"
 .include	"../asm_routines/gr_setpage.s"
@@ -622,13 +458,11 @@ krw_file:
 .include	"../asm_routines/gr_hlin.s"
 .include	"../asm_routines/lz4_decode.s"
 .include	"../asm_routines/keypress_minimal.s"
-.include	"rasterbars.s"
-.include	"volume_bars.s"
-.if .def(UNROLLED)
-.include	"interrupt_handler_unrolled.s"
-.else
+;.include	"rasterbars.s"
+;.include	"volume_bars.s"
 .include	"interrupt_handler.s"
-.endif
+.include	"pt3.s"
+
 ;=========
 ; strings
 ;=========

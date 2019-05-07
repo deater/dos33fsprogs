@@ -291,13 +291,13 @@ done_time:
 	; Visualization
 	;============================
 
-	jsr	clear_top
-	lda	RASTERBARS_ON
-	beq	skip_rasters
-	jsr	draw_rasters
-skip_rasters:
-	jsr	volume_bars
-	jsr	page_flip
+;	jsr	clear_top
+;	lda	RASTERBARS_ON
+;	beq	skip_rasters
+;	jsr	draw_rasters
+;skip_rasters:
+;	jsr	volume_bars
+;	jsr	page_flip
 
 
 check_keyboard:
