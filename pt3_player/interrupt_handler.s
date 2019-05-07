@@ -27,16 +27,30 @@ interrupt_handler:
 	bit	$C404		; clear 6522 interrupt by reading T1C-L	; 4
 
 
-	jmp	exit_interrupt
+;	jmp	exit_interrupt
 
-;	lda	DONE_PLAYING						; 3
-;	beq	mb_play_music	; if song done, don't play music	; 3/2nt
-;	jmp	check_keyboard						; 3
+	lda	DONE_PLAYING						; 3
+	beq	pt3_play_music	; if song done, don't play music	; 3/2nt
+	jmp	check_keyboard						; 3
 								;============
 								;	13
 
-mb_play_music:
+pt3_play_music:
 
+
+;       frame_num=0;
+;       for(i=0;i < pt3.music_len;i++) {
+;          pt3_set_pattern(i,&pt3);
+;          for(j=0;j<64;j++) {
+;             if (pt3_decode_line(&pt3)) break;
+;             for(f=0;f<pt3.speed;f++) {
+;                pt3_make_frame(&pt3,frame);
+;                ym_play_frame(frame,shift_size,
+;                                 &ds, diff_mode,play_music,mute_channel);
+;                frame_num++;
+;             }
+;          }
+;        }
 
 	;======================================
 	; Write frames to Mockingboard
@@ -55,15 +69,9 @@ mb_write_frame:
 	; loop through the 14 registers
 	; reading the value, then write out
 	;==================================
-	; inlined "write_ay_both" to save up to 156 (12*13) cycles
-	; unrolled
 
 mb_write_loop:
 	lda	REGISTER_DUMP,X	; load register value			; 4
-	cmp	REGISTER_OLD,X	; compare with old values		; 4
-	beq	mb_no_write						; 3/2nt
-								;=============
-								; typ 11
 
 	; special case R13.  If it is 0xff, then don't update
 	; otherwise might spuriously reset the envelope settings
@@ -106,137 +114,6 @@ mb_no_write:
 								;============
 								; 	7
 mb_skip_13:
-
-
-	;=====================================
-	; Copy registers to old
-	;=====================================
-	ldx	#13							; 2
-mb_reg_copy:
-	lda	REGISTER_DUMP,X	; load register value			; 4
-	sta	REGISTER_OLD,X	; compare with old values		; 4
-	dex								; 2
-	bpl	mb_reg_copy						; 2nt/3
-								;=============
-								; 	171
-
-	;===================================
-	; Load all 14 registers in advance
-	;===================================
-	; note, assuming not cross page boundary, not any slower
-	; then loading from zero page?
-
-mb_load_values:
-
-	ldx	#0		; set up reg count			; 2
-	ldy	MB_CHUNK_OFFSET	; get chunk offset			; 3
-								;=============
-								;	5
-
-mb_load_loop:
-	lda	(INL),y		; load register value			; 5
-	sta	REGISTER_DUMP,X						; 4
-								;============
-								;	9
-	;====================
-	; point to next page
-	;====================
-
-	clc				; point to next interleaved	; 2
-	lda	INH			; page by adding CHUNKSIZE (3/1); 3
-	adc	CHUNKSIZE						; 3
-	sta	INH							; 3
-
-	inx				; point to next register	; 2
-	cpx	#14			; if 14 we're done		; 2
-	bmi	mb_load_loop		; otherwise, loop		; 3/2nt
-								;============
-								; 	18
-
-	;=========================================
-	; if A_COARSE_TONE is $ff then we are done
-
-	lda	A_COARSE_TONE						; 3
-	bpl	mb_not_done						; 3/2nt
-
-	lda	#1		; set done playing			; 2
-
-	jmp	quiet_exit						; 3
-								;===========
-								; typ 6
-mb_not_done:
-
-	;==============================================
-	; incremement offset.  If 0 move to next chunk
-	;==============================================
-
-increment_offset:
-
-	inc	MB_CHUNK_OFFSET		; increment offset		; 5
-	bne	back_to_first_reg	; if not zero,	done		; 3/2nt
-
-
-	;=====================
-	; move to next state
-	;=====================
-
-	clc
-	rol	DECODER_STATE		; next state			; 5
-					; 20 -> 40 -> 80 -> c+00
-	bcs	wraparound_to_a						; 3/2nt
-
-	bit	DECODER_STATE		;bit7->N bit6->V
-	bvs	back_to_first_reg	; do nothing on B		; 3/2nt
-
-start_c:
-	lda	#1
-	sta	CHUNKSIZE
-
-	; setup next three chunks of song
-
-	lda	#1				; start decompressing
-	sta	DECOMPRESS_TIME			; outside of handler
-
-	jmp	back_to_first_reg
-
-wraparound_to_a:
-	lda	#$3
-	sta	CHUNKSIZE
-	lda	#$20
-	sta	DECODER_STATE
-	sta	COPY_TIME			; start copying
-
-	lda	DECOMPRESS_TIME
-	beq	blah
-	lda	#1
-	sta	DECODE_ERROR
-blah:
-	;==============================
-	; After 14th reg, reset back to
-	; read R0 data
-	;==============================
-
-back_to_first_reg:
-	lda	#0							; 2
-	bit	DECODER_STATE						; 3
-	bmi	back_to_first_reg_c					; 2nt/3
-	bvc	back_to_first_reg_a					; 2nt/3
-
-back_to_first_reg_b:
-	lda	#$1			; offset by 1
-
-back_to_first_reg_a:
-	clc								; 2
-	adc	#>UNPACK_BUFFER		; in proper chunk 1 or 2	; 2
-
-	jmp	update_r0_pointer					; 3
-
-back_to_first_reg_c:
-	lda	#>(UNPACK_BUFFER+$2A00)	; in linear C area		; 2
-
-update_r0_pointer:
-	sta	INH		; update r0 pointer			; 3
-
 
 
 	;=================================
@@ -352,7 +229,6 @@ quiet_exit:
 	lda	#0							; 2
 mb_clear_reg:
 	sta	REGISTER_DUMP,X ; clear register value			; 4
-	sta	REGISTER_OLD,X	; clear old values			; 4
 	dex								; 2
 	bpl	mb_clear_reg						; 2nt/3
 
@@ -374,5 +250,4 @@ exit_interrupt:
 								; ???? cycles
 
 
-REGISTER_OLD:
-	.byte	0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
