@@ -8,9 +8,10 @@ all:	pt3_player.dsk
 $(DOS33):
 	cd ../dos33fs-utils && make
 
-pt3_player.dsk:	PT3_PLAYER HELLO
+pt3_player.dsk:	PT3_PLAYER PT3_DUMPER HELLO
 	cp empty.dsk pt3_player.dsk
 	$(DOS33) -y pt3_player.dsk SAVE A HELLO
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x1000 PT3_DUMPER
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x1000 PT3_PLAYER
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x2000 EA.PT3
 #	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/CHRISTMAS.KRW
@@ -46,6 +47,15 @@ pt3_player.o:	pt3_player.s \
 #	rasterbars.s volume_bars.s interrupt_handler.s \
 #	song_list.inc chip_title.inc zp.inc chip_title_uncompressed.inc
 	ca65 -o pt3_player.o pt3_player.s -l pt3_player.lst
+
+
+PT3_DUMPER:	pt3_dumper.o
+	ld65 -o PT3_DUMPER pt3_dumper.o -C ../linker_scripts/apple2_1000.inc
+
+pt3_dumper.o:	pt3_dumper.s \
+	gr_fast_clear.s pt3_lib.s interrupt_handler.s
+	ca65 -o pt3_dumper.o pt3_dumper.s -l pt3_dumper.lst
+
 
 clean:	
 	rm -f *~ TITLE.GR *.o *.lst \

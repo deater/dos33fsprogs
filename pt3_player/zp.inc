@@ -18,11 +18,23 @@ GBASL	EQU $26
 GBASH	EQU $27
 BASL	EQU $28
 BASH	EQU $29
+BAS2L	EQU $2A
+BAS2H	EQU $2B
 H2	EQU $2C
 V2	EQU $2D
 MASK	EQU $2E
+LASTIN	EQU $3F
 COLOR	EQU $30
-			;INVFLG	EQU $32
+MODE	EQU $31
+INVFLG	EQU $32
+PROMPT	EQU $33
+YSAV	EQU $34
+YSAV1	EQU $35
+CSWL	EQU $36		; address of COUT1 routine
+CSWH	EQU $37
+KSWL	EQU $38		; key in routine
+KSWH	EQU $39
+
 
 ; dos33 zero page = 26-2f, 35-38, 3e 3f 40-4d 
 ; overlap applesoft  67-6a,6f,70,af,b0,ca-cd,d8 
@@ -219,7 +231,8 @@ SETINV	EQU $FE80			;; INVERSE
 SETNORM	EQU $FE84			;; NORMAL
 COUT	EQU $FDED			;; output A to screen
 COUT1	EQU $FDF0			;; output A to screen
-
+CROUT	EQU $FD8E			;; send a RETURN
+CROUT1	EQU $FD8B			;; send a RETURN and clear end of line
 
 
 
