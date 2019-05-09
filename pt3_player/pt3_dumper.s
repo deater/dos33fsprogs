@@ -40,6 +40,9 @@ pt3_setup:
 	; Loop forever
 	;============================
 main_loop:
+
+	jsr	pt3_make_frame
+
 	lda	FRAMEH
 	jsr	PRBYTE
 	lda	FRAMEL

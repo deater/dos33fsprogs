@@ -62,14 +62,25 @@ pt3_loop:		.byte	$0
 pt3_noise_period:	.byte	$0
 pt3_noise_add:		.byte	$0
 
-pt3_envelope_period:	.byte	$0
+pt3_envelope_period_l:	.byte	$0
+pt3_envelope_period_h:	.byte	$0
+pt3_envelope_slide_l:	.byte	$0
+pt3_envelope_slide_h:	.byte	$0
+pt3_envelope_slide_add_l:.byte	$0
+pt3_envelope_slide_add_h:.byte	$0
 pt3_envelope_add:	.byte	$0
 pt3_envelope_type:	.byte	$0
 pt3_envelope_type_old:	.byte	$0
+pt3_envelope_delay:	.byte	$0
+pt3_envelope_delay_orig:.byte	$0
 
 pt3_current_pattern:	.byte	$0
 pt3_music_len:		.byte	$0
 pt3_mixer_value:	.byte	$0
+
+temp_word_l:		.byte	$0
+temp_word_h:		.byte	$0
+
 
 ; Header offsets
 
@@ -112,7 +123,8 @@ pt3_init_song:
 	lda	#$0
 	sta	pt3_noise_period
 	sta	pt3_noise_add
-	sta	pt3_envelope_period
+	sta	pt3_envelope_period_l
+	sta	pt3_envelope_period_h
 	sta	pt3_envelope_type
 	sta	pt3_current_pattern
 
@@ -399,11 +411,24 @@ do_frame:
 	sta	REGISTER_DUMP+10
 
 	; Envelope period
-;	temp_envelope=pt3->envelope_period+
-;			pt3->envelope_add+
-;			pt3->envelope_slide;
-;	frame[11]=(temp_envelope&0xff);
-;	frame[12]=(temp_envelope>>8);
+	; result=period+add+slide (16-bits)
+	clc
+	lda	pt3_envelope_period_l
+	adc	pt3_envelope_add
+	sta	temp_word_l
+	lda	pt3_envelope_period_h
+	adc	#0
+	sta	temp_word_h
+
+	clc
+	lda	pt3_envelope_slide_l
+	adc	temp_word_l
+;	sta	temp_word_l
+	sta	REGISTER_DUMP+11
+	lda	temp_word_h
+	adc	pt3_envelope_slide_h
+;	sta	temp_word_h
+	sta	REGISTER_DUMP+12
 
 	; Envelope shape
 	lda	pt3_envelope_type
@@ -418,14 +443,24 @@ envelope_diff:
 	sta	pt3_envelope_type_old	; copy old to new
 
 
-;	if (pt3->envelope_delay > 0) {
-;		pt3->envelope_delay--;
-;		if (pt3->envelope_delay==0) {
-;			pt3->envelope_delay=pt3->envelope_delay_orig;
-;			pt3->envelope_slide+=pt3->envelope_slide_add;
-;		}
-;	}
+	lda	pt3_envelope_delay
+	beq	done_do_frame		; assume can't be negative?
+					; do this if envelope_delay>0
+	dec	pt3_envelope_delay
+	bne	done_do_frame
+					; only do if we hit 0
+	lda	pt3_envelope_delay_orig	; reset envelope delay
+	sta	pt3_envelope_delay
 
+	clc				; 16-bit add
+	lda	pt3_envelope_slide_l
+	adc	pt3_envelope_slide_add_l
+	sta	pt3_envelope_slide_l
+	lda	pt3_envelope_slide_h
+	adc	pt3_envelope_slide_add_h
+	sta	pt3_envelope_slide_h
+
+done_do_frame:
 
 	rts
 
