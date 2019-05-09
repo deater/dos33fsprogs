@@ -6,52 +6,85 @@
 
 NOTE_WHICH=0
 NOTE_VOLUME=1
-NOTE_TONE_SLIDING=2
-NOTE_ENABLED=3
-NOTE_ENVELOPE_ENABLED=4
-NOTE_SAMPLE_POINTER=5
-NOTE_SAMPLE_LOOP=7
-NOTE_SAMPLE_LENGTH=8
-NOTE_TONE_L=9
-NOTE_TONE_H=10
-NOTE_AMPLITUDE=11
+NOTE_TONE_SLIDING_L=2
+NOTE_TONE_SLIDING_H=3
+NOTE_ENABLED=4
+NOTE_ENVELOPE_ENABLED=5
+NOTE_SAMPLE_POINTER_L=6
+NOTE_SAMPLE_POINTER_H=7
+NOTE_SAMPLE_LOOP=8
+NOTE_SAMPLE_LENGTH=9
+NOTE_TONE_L=10
+NOTE_TONE_H=11
+NOTE_AMPLITUDE=12
+NOTE_NOTE=13
+NOTE_LEN=14
+NOTE_LEN_COUNT=15
+NOTE_SPEC_COMMAND=16		; is this one needed?
+NOTE_NEW_NOTE=17
+
 
 note_a:
 	.byte	'A'	; NOTE_WHICH
 	.byte	$0	; NOTE_VOLUME
-	.byte	$0	; NOTE_TONE_SLIDING
+	.byte	$0	; NOTE_TONE_SLIDING_L
+	.byte	$0	; NOTE_TONE_SLIDING_H
 	.byte	$0	; NOTE_ENABLED
 	.byte	$0	; NOTE_ENVELOPE_ENABLED
-	.word	$0	; NOTE_SAMPLE_POINTER
+	.byte	$0	; NOTE_SAMPLE_POINTER_L
+	.byte	$0	; NOTE_SAMPLE_POINTER_H
 	.byte	$0	; NOTE_SAMPLE_LOOP
 	.byte	$0	; NOTE_SAMPLE_LENGTH
 	.byte	$0	; NOTE_TONE_L
 	.byte	$0	; NOTE_TONE_H
 	.byte	$0	; NOTE_AMPLITUDE
+	.byte	$0	; NOTE_NOTE
+	.byte	$0	; NOTE_LEN
+	.byte	$0	; NOTE_LEN_COUNT
+	.byte	$0	; NOTE_SPEC_COMMAND
+	.byte	$0	; NOTE_NEW_NOTE
+
+
 note_b:
 	.byte	'B'	; NOTE_WHICH
 	.byte	$0	; NOTE_VOLUME
-	.byte	$0	; NOTE_TONE_SLIDING
+	.byte	$0	; NOTE_TONE_SLIDING_L
+	.byte	$0	; NOTE_TONE_SLIDING_H
 	.byte	$0	; NOTE_ENABLED
 	.byte	$0	; NOTE_ENVELOPE_ENABLED
-	.word	$0	; NOTE_SAMPLE_POINTER
+	.byte	$0	; NOTE_SAMPLE_POINTER_L
+	.byte	$0	; NOTE_SAMPLE_POINTER_H
 	.byte	$0	; NOTE_SAMPLE_LOOP
 	.byte	$0	; NOTE_SAMPLE_LENGTH
 	.byte	$0	; NOTE_TONE_L
 	.byte	$0	; NOTE_TONE_H
 	.byte	$0	; NOTE_AMPLITUDE
+	.byte	$0	; NOTE_NOTE
+	.byte	$0	; NOTE_LEN
+	.byte	$0	; NOTE_LEN_COUNT
+	.byte	$0	; NOTE_SPEC_COMMAND
+	.byte	$0	; NOTE_NEW_NOTE
+
 note_c:
 	.byte	'C'	; NOTE_WHICH
 	.byte	$0	; NOTE_VOLUME
-	.byte	$0	; NOTE_TONE_SLIDING
+	.byte	$0	; NOTE_TONE_SLIDING_L
+	.byte	$0	; NOTE_TONE_SLIDING_H
 	.byte	$0	; NOTE_ENABLED
 	.byte	$0	; NOTE_ENVELOPE_ENABLED
-	.word	$0	; NOTE_SAMPLE_POINTER
+	.byte	$0	; NOTE_SAMPLE_POINTER_L
+	.byte	$0	; NOTE_SAMPLE_POINTER_H
 	.byte	$0	; NOTE_SAMPLE_LOOP
 	.byte	$0	; NOTE_SAMPLE_LENGTH
 	.byte	$0	; NOTE_TONE_L
 	.byte	$0	; NOTE_TONE_H
 	.byte	$0	; NOTE_AMPLITUDE
+	.byte	$0	; NOTE_NOTE
+	.byte	$0	; NOTE_LEN
+	.byte	$0	; NOTE_LEN_COUNT
+	.byte	$0	; NOTE_SPEC_COMMAND
+	.byte	$0	; NOTE_NEW_NOTE
+
 
 pt3_version:		.byte	$0
 pt3_frequency_table:	.byte	$0
@@ -98,9 +131,12 @@ pt3_init_song:
 	sta	note_b+NOTE_VOLUME
 	sta	note_c+NOTE_VOLUME
 	lda	#$0
-	sta	note_a+NOTE_TONE_SLIDING
-	sta	note_b+NOTE_TONE_SLIDING
-	sta	note_c+NOTE_TONE_SLIDING
+	sta	note_a+NOTE_TONE_SLIDING_L
+	sta	note_b+NOTE_TONE_SLIDING_L
+	sta	note_c+NOTE_TONE_SLIDING_L
+	sta	note_a+NOTE_TONE_SLIDING_H
+	sta	note_b+NOTE_TONE_SLIDING_H
+	sta	note_c+NOTE_TONE_SLIDING_H
 	sta	note_a+NOTE_ENABLED
 	sta	note_b+NOTE_ENABLED
 	sta	note_c+NOTE_ENABLED
@@ -275,11 +311,311 @@ done_note:
 
 	rts
 
+prev_note:	.byte $0
+prev_sliding_l:	.byte $0
+prev_sliding_h:	.byte $0
+
 	;=====================================
 	; Decode Note
 	;=====================================
 
 decode_note:
+
+;	int a_done=0;
+;	int current_val;
+
+	; Init vars
+
+	lda	#0
+	sta	note_a+NOTE_NEW_NOTE		; for printing notes?
+	sta	note_a+NOTE_SPEC_COMMAND	; These are only if printing?
+
+	; Skip decode if note still running
+	lda	note_a+NOTE_LEN_COUNT
+	beq	keep_decoding			; assume not negative
+
+	; we are still running, decrement and early return
+	dec	note_a+NOTE_LEN_COUNT
+	rts
+
+keep_decoding:
+
+	lda	note_a+NOTE_NOTE		; store prev note
+	sta	prev_note
+
+	lda	note_a+NOTE_TONE_SLIDING_H	; store prev sliding
+	sta	prev_sliding_h
+	lda	note_a+NOTE_TONE_SLIDING_L
+	sta	prev_sliding_l
+
+
+note_decode_loop:
+;	a->len_count=a->len;
+
+;	current_val=pt3->data[*addr];
+;	switch((current_val>>4)&0xf) {
+;	case 0:
+;		if (current_val==0x0) {
+;			a->len_count=0;
+;			a->all_done=1;
+;			a_done=1;
+;		}
+;		else { /* FIXME: what if multiple spec commands? */
+;			/* Doesn't seem to happen in practice */
+;			/* But AY_emul has code to handle it */
+;			a->spec_command=current_val&0xf;
+;		}
+;		break;
+;	case 1:
+;		if ((current_val&0xf)==0x0) {
+;			a->envelope_enabled=0;
+;		}
+;		else {
+;			pt3->envelope_type_old=0x78;
+;			pt3->envelope_type=(current_val&0xf);
+
+;			(*addr)++;
+;			current_val=pt3->data[*addr];
+;			pt3->envelope_period=(current_val<<8);
+
+;			(*addr)++;
+
+;			current_val=pt3->data[(*addr)];
+;			pt3->envelope_period|=(current_val&0xff$
+
+;			a->envelope_enabled=1;
+;			pt3->envelope_slide=0;
+;			pt3->envelope_delay=0;
+;		}
+;		(*addr)++;
+;		current_val=pt3->data[(*addr)];
+;		a->sample=(current_val/2);
+;		pt3_load_sample(pt3,a->which);
+
+;		a->ornament_position=0;
+
+;		break;
+;	case 2:
+;		pt3->noise_period=(current_val&0xf);
+;		break;
+;	case 3:
+;		pt3->noise_period=(current_val&0xf)+0x10;
+;		break;
+;	case 4:
+;		a->ornament=(current_val&0xf);
+;		pt3_load_ornament(pt3,a->which);
+;		a->ornament_position=0;
+;		break;
+;	case 5:
+;	case 6:
+;	case 7:
+;	case 8:
+;	case 9:
+;	case 0xa:
+;		a->new_note=1;
+;		a->note=(current_val-0x50);
+;		a->sample_position=0;
+;		a->amplitude_sliding=0;
+;		a->noise_sliding=0;
+;		a->envelope_sliding=0;
+;		a->ornament_position=0;
+;		a->tone_slide_count=0;
+;		a->tone_sliding=0;
+;		a->tone_accumulator=0;
+;		a->onoff=0;
+;		a->enabled=1;
+;		a_done=1;
+;		break;
+;	case 0xb:
+;		/* Disable envelope */
+;		if (current_val==0xb0) {
+;			a->envelope_enabled=0;
+;			a->ornament_position=0;
+;		}
+;		/* set len */
+;		else if (current_val==0xb1) {
+;			(*addr)++;
+;			current_val=pt3->data[(*addr)];
+;			a->len=current_val;
+;			a->len_count=a->len;
+;		}
+;		else {
+;			a->envelope_enabled=1;
+;			pt3->envelope_type_old=0x78;
+;			pt3->envelope_type=(current_val&0xf)-1;
+;			(*addr)++;
+;			current_val=pt3->data[(*addr)];
+;			pt3->envelope_period=(current_val<<8);
+;			(*addr)++;
+;			current_val=pt3->data[(*addr)];
+;			pt3->envelope_period|=(current_val&0xff$
+;			a->ornament_position=0;
+;			pt3->envelope_slide=0;
+;			pt3->envelope_delay=0;
+;		}
+;		break;
+;	case 0xc:       /* volume */
+;		if ((current_val&0xf)==0) {
+;			a->sample_position=0;
+;			a->amplitude_sliding=0;
+;			a->noise_sliding=0;
+;			a->envelope_sliding=0;
+;			a->ornament_position=0;
+;			a->tone_slide_count=0;
+;			a->tone_sliding=0;
+;			a->tone_accumulator=0;
+;			a->onoff=0;
+;			a->enabled=0;
+;			a_done=1;
+;		}
+;		else {
+;			a->volume=current_val&0xf;
+;		}
+;		break;
+;	case 0xd:
+;		if (current_val==0xd0) {
+;			a_done=1;
+;		}
+;		else {
+;			a->sample=(current_val&0xf);
+;			pt3_load_sample(pt3,a->which);
+;		}
+;		break;
+;	case 0xe:
+;		a->sample=(current_val-0xd0);
+;		pt3_load_sample(pt3,a->which);
+;		break;
+;	case 0xf:
+;		a->envelope_enabled=0;
+;		a->ornament=(current_val&0xf);
+;		pt3_load_ornament(pt3,a->which);
+;		(*addr)++;
+;		current_val=pt3->data[*addr];
+
+;		a->sample=current_val/2;
+;		a->sample_pointer=pt3->sample_patterns[a->sampl$
+;		pt3_load_sample(pt3,a->which);
+;		break;
+;	}
+
+;	(*addr)++;
+;	/* Note, the AYemul code has code to make sure these are applied */
+;	/* In the same order they appear.  We don't bother? */
+;	if (a_done) {
+;		if (a->spec_command==0x0) {
+;		}
+;		/* Tone Down */
+;		else if (a->spec_command==0x1) {
+;			current_val=pt3->data[(*addr)];
+;			a->spec_delay=current_val;
+;			a->tone_slide_delay=current_val;
+;			a->tone_slide_count=a->tone_slide_delay;
+;			(*addr)++;
+;			current_val=pt3->data[(*addr)];
+;			a->spec_lo=(current_val);
+;			(*addr)++;
+;			current_val=pt3->data[(*addr)];
+;			a->spec_hi=(current_val);
+;			a->tone_slide_step=(a->spec_lo)|(a->spec_hi<<8);
+;			/* Sign Extend */
+;			a->tone_slide_step=(a->tone_slide_step<<16)>>16;
+;			a->simplegliss=1;
+;			a->onoff=0;
+;			(*addr)++;
+;		}
+;		/* port */
+;		else if (a->spec_command==0x2) {
+;			a->simplegliss=0;
+;			a->onoff=0;
+
+;			current_val=pt3->data[(*addr)];
+;			a->spec_delay=current_val;
+
+;			a->tone_slide_delay=current_val;
+;			a->tone_slide_count=a->tone_slide_delay;
+
+;			(*addr)++;
+;			(*addr)++;
+;			(*addr)++;
+;			current_val=pt3->data[(*addr)];
+;			a->spec_lo=current_val;
+
+;			(*addr)++;
+;			current_val=pt3->data[(*addr)];
+;			a->spec_hi=current_val;
+;			(*addr)++;
+
+;			a->tone_slide_step=(a->spec_hi<<8)|(a->spec_lo);
+;			/* sign extend */
+;			a->tone_slide_step=(a->tone_slide_step<<16)>>16;
+;			/* abs() */
+;			if (a->tone_slide_step<0) a->tone_slide_step=-a$
+;			a->tone_delta=GetNoteFreq(a->note,pt3)-
+;				GetNoteFreq(prev_note,pt3);
+;			a->slide_to_note=a->note;
+;			a->note=prev_note;
+;			if (pt3->version >= 6) {
+;				a->tone_sliding = prev_sliding;
+;			}
+;			if ((a->tone_delta - a->tone_sliding) < 0) {
+;				a->tone_slide_step = -a->tone_slide_ste$
+;			}
+;		}
+;		/* Position in Sample */
+;		else if (a->spec_command==0x3) {
+;			current_val=pt3->data[(*addr)];
+;			a->sample_position=current_val;
+;			(*addr)++;
+;		}
+;		/* Position in Ornament */
+;		else if (a->spec_command==0x4) {
+;			current_val=pt3->data[(*addr)];
+;			a->ornament_position=current_val;
+;			(*addr)++;
+;		}
+;		/* Vibrato */
+;		else if (a->spec_command==0x5) {
+;			current_val=pt3->data[(*addr)];
+;			a->onoff_delay=current_val;
+;			(*addr)++;
+;			current_val=pt3->data[(*addr)];
+;			a->offon_delay=current_val;
+;			(*addr)++;
+
+;			a->onoff=a->onoff_delay;
+;			a->tone_slide_count=0;
+;			a->tone_sliding=0;
+
+;		}
+;		/* Envelope Down */
+;		else if (a->spec_command==0x8) {
+
+;			/* delay? */
+;			current_val=pt3->data[(*addr)];
+;			pt3->envelope_delay=current_val;
+;			pt3->envelope_delay_orig=current_val;
+;			a->spec_delay=current_val;
+;			(*addr)++;
+
+;			/* Low? */
+;			current_val=pt3->data[(*addr)];
+;			a->spec_lo=current_val&0xff;
+;			(*addr)++;
+
+;			/* High? */
+;			current_val=pt3->data[(*addr)];
+;			a->spec_hi=current_val&0xff;
+;			(*addr)++;
+;			pt3->envelope_slide_add=(a->spec_hi<<8)|(a->spe$
+;		/* Set Speed */
+;		else  if (a->spec_command==0x9) {
+;			current_val=pt3->data[(*addr)];
+;			a->spec_lo=current_val;
+;			pt3->speed=current_val;
+;			(*addr)++;
+;		}
+;		break;
+;	}
 
 	rts
 
@@ -288,6 +624,18 @@ decode_note:
 	;=====================================
 
 pt3_decode_line:
+	; decode_note(&pt3->a,&(pt3->a_addr),pt3);
+	jsr	decode_note
+
+	; decode_note(&pt3->b,&(pt3->b_addr),pt3);
+	jsr	decode_note
+
+	; decode_note(&pt3->c,&(pt3->c_addr),pt3);
+	jsr	decode_note
+
+;	if (pt3->a.all_done && pt3->b.all_done && pt3->c.all_done) {
+;		return 1;
+;	}
 
 	rts
 
