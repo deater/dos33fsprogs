@@ -53,12 +53,19 @@ note_c:
 	.byte	$0	; NOTE_TONE_H
 	.byte	$0	; NOTE_AMPLITUDE
 
+pt3_version:		.byte	$0
+pt3_frequency_table:	.byte	$0
+pt3_speed:		.byte	$0
+pt3_num_patterns:	.byte	$0
+pt3_loop:		.byte	$0
+
 pt3_noise_period:	.byte	$0
 pt3_noise_add:		.byte	$0
 
 pt3_envelope_period:	.byte	$0
 pt3_envelope_add:	.byte	$0
 pt3_envelope_type:	.byte	$0
+pt3_envelope_type_old:	.byte	$0
 
 pt3_current_pattern:	.byte	$0
 pt3_music_len:		.byte	$0
@@ -115,8 +122,17 @@ pt3_init_song:
 	; Calculate Note
 	;=====================================
 calculate_note:
+	ldy	#0
 
-;if (a->enabled) {
+	lda	note_a+NOTE_ENABLED,Y
+	bne	note_enabled
+
+	lda	#0
+	sta	note_a+NOTE_AMPLITUDE,Y
+	jmp	done_note
+
+note_enabled:
+
 ;  b0 = pt3->data[a->sample_pointer + a->sample_position * 4];
 ;  b1 = pt3->data[a->sample_pointer + a->sample_position * 4 + 1];
 ;  a->tone = pt3->data[a->sample_pointer + a->sample_position * 4 + 2];
@@ -164,8 +180,21 @@ calculate_note:
 
 ;  a->amplitude+=a->amplitude_sliding;
 
-;  if (a->amplitude < 0) a->amplitude = 0;
-;  else if (a->amplitude > 15) a->amplitude = 15;
+	; clamp amplitude to 0 - 15
+
+	lda	note_a+NOTE_AMPLITUDE,Y
+check_amp_lo:
+	bpl	check_amp_hi
+	lda	#0
+	jmp	write_clamp_amplitude
+
+check_amp_hi:
+	cmp	#16
+	bcc	done_clamp_amplitude	; blt
+	lda	#15
+write_clamp_amplitude:
+	sta	note_a+NOTE_AMPLITUDE,Y
+done_clamp_amplitude:
 
 ;  //if (PlParams.PT3.PT3_Version <= 4)
 ;  //   a->amplitude = PT3VolumeTable_33_34[a->volume][a->amplitude];
@@ -214,7 +243,13 @@ calculate_note:
 ;   a->amplitude=0;
 ;}
 
-;pt3->mixer_value=pt3->mixer_value>>1;
+done_note:
+	; set mixer value
+	; this is a bit complex (from original code)
+	; after 3 calls it is set up properly
+	lda	pt3_mixer_value
+	lsr
+	sta	pt3_mixer_value
 
 ;if (a->onoff>0) {
 ;   a->onoff--;
@@ -237,6 +272,28 @@ decode_note:
 	rts
 
 	;=====================================
+	; Decode Line
+	;=====================================
+
+pt3_decode_line:
+
+	rts
+
+
+	;=====================================
+	; Set Pattern
+	;=====================================
+
+pt3_set_pattern:
+
+	rts
+
+
+current_subframe:	.byte	$0
+current_line:		.byte	$0
+current_pattern:	.byte	$0
+
+	;=====================================
 	; pt3 make frame
 	;=====================================
 pt3_make_frame:
@@ -244,8 +301,42 @@ pt3_make_frame:
 ;          pt3_set_pattern(i,&pt3);
 ;          for(j=0;j<64;j++) {
 ;             if (pt3_decode_line(&pt3)) break;
-;             for(f=0;f<pt3.speed;f++) {
 
+next_subframe:
+	inc	current_subframe	; for(f=0;f<pt3.speed;f++) {
+	lda	current_subframe
+	cmp	pt3_speed
+	bne	do_frame
+
+next_line:
+	lda	#0
+	sta	current_subframe
+
+	jsr	pt3_decode_line
+
+	inc	current_line
+	cmp	#64
+	bne	do_frame
+
+next_pattern:
+	lda	#0
+	sta	current_line
+
+	inc	current_pattern
+	lda	current_pattern
+	cmp	pt3_music_len
+	beq	done_song
+
+	jsr	pt3_set_pattern
+	jmp	do_frame
+
+done_song:
+	lda	#$ff
+	sta	DONE_PLAYING
+
+	rts
+
+do_frame:
 	; AY-3-8910 register summary
 	;
 	; R0/R1 = A period low/high
@@ -314,15 +405,19 @@ pt3_make_frame:
 ;	frame[11]=(temp_envelope&0xff);
 ;	frame[12]=(temp_envelope>>8);
 
-;	Envelope shape
-;	if (pt3->envelope_type==pt3->envelope_type_old) {
-;		frame[13]=0xff;
-;	}
-;	else {
-;		frame[13]=pt3->envelope_type;
-;	}
-;	pt3->envelope_type_old=pt3->envelope_type;
-;
+	; Envelope shape
+	lda	pt3_envelope_type
+	cmp	pt3_envelope_type_old
+	bne	envelope_diff
+envelope_same:
+	lda	#$ff			; if same, store $ff
+envelope_diff:
+	sta	REGISTER_DUMP+13
+
+	lda	pt3_envelope_type
+	sta	pt3_envelope_type_old	; copy old to new
+
+
 ;	if (pt3->envelope_delay > 0) {
 ;		pt3->envelope_delay--;
 ;		if (pt3->envelope_delay==0) {
