@@ -233,7 +233,8 @@ COUT	EQU $FDED			;; output A to screen
 COUT1	EQU $FDF0			;; output A to screen
 CROUT	EQU $FD8E			;; send a RETURN
 CROUT1	EQU $FD8B			;; send a RETURN and clear end of line
-
+PRBYTE	EQU $FDDA
+PRHEX	EQU $FDE3
 
 
 

@@ -7,9 +7,7 @@
 
 PT3_LOC = $2000
 
-UNPACK_BUFFER	EQU	$6000		; $6000 - $9800, 14k, $3800
 NUM_FILES	EQU	15
-
 
 
 	;=============================
@@ -42,19 +40,156 @@ pt3_setup:
 	; Loop forever
 	;============================
 main_loop:
+	lda	FRAMEH
+	jsr	PRBYTE
+	lda	FRAMEL
+	jsr	PRBYTE
+	lda	#':'+$80
+	jsr	COUT
+	lda	#' '+$80
+	jsr	COUT
 
+	; A
+	lda	#'A'+$80
+	jsr	COUT
+	lda	#':'+$80
+	jsr	COUT
+	lda	REGISTER_DUMP+1
+	jsr	PRBYTE
+	lda	REGISTER_DUMP+0
+	jsr	PRBYTE
+	lda	#' '+$80
+	jsr	COUT
 
+	; B
+	lda	#'B'+$80
+	jsr	COUT
+	lda	#':'+$80
+	jsr	COUT
+	lda	REGISTER_DUMP+3
+	jsr	PRBYTE
+	lda	REGISTER_DUMP+2
+	jsr	PRBYTE
+	lda	#' '+$80
+	jsr	COUT
+
+	; C
+	lda	#'C'+$80
+	jsr	COUT
+	lda	#':'+$80
+	jsr	COUT
+	lda	REGISTER_DUMP+5
+	jsr	PRBYTE
+	lda	REGISTER_DUMP+4
+	jsr	PRBYTE
+	lda	#' '+$80
+	jsr	COUT
+
+	; N
+	lda	#'N'+$80
+	jsr	COUT
+	lda	#':'+$80
+	jsr	COUT
+	lda	REGISTER_DUMP+6
+	jsr	PRBYTE
+	lda	#' '+$80
+	jsr	COUT
+
+	; M
+	lda	#'M'+$80
+	jsr	COUT
+	lda	#':'+$80
+	jsr	COUT
+	lda	REGISTER_DUMP+7
+	jsr	PRBYTE
+	lda	#' '+$80
+	jsr	COUT
+
+	jsr	CROUT1
+
+	ldx	#6
+six_space:
+	lda	#' '+$80
+	jsr	COUT
+	dex
+	bne	six_space
+
+	; A amp
+	lda	#'V'+$80
+	jsr	COUT
+	lda	#':'+$80
+	jsr	COUT
+	lda	REGISTER_DUMP+8
+	jsr	PRBYTE
+	lda	#' '+$80
+	jsr	COUT
+	lda	#' '+$80
+	jsr	COUT
+	lda	#' '+$80
+	jsr	COUT
+
+	; B amp
+	lda	#'V'+$80
+	jsr	COUT
+	lda	#':'+$80
+	jsr	COUT
+	lda	REGISTER_DUMP+9
+	jsr	PRBYTE
+	lda	#' '+$80
+	jsr	COUT
+	lda	#' '+$80
+	jsr	COUT
+	lda	#' '+$80
+	jsr	COUT
+
+	; C amp
+	lda	#'V'+$80
+	jsr	COUT
+	lda	#':'+$80
+	jsr	COUT
+	lda	REGISTER_DUMP+10
+	jsr	PRBYTE
+	lda	#' '+$80
+	jsr	COUT
+	lda	#' '+$80
+	jsr	COUT
+	lda	#' '+$80
+	jsr	COUT
+
+	; Envelope
+	lda	#'E'+$80
+	jsr	COUT
+	lda	#':'+$80
+	jsr	COUT
+	lda	REGISTER_DUMP+12
+	jsr	PRBYTE
+	lda	REGISTER_DUMP+11
+	jsr	PRBYTE
+
+	; Envelope type
+	lda	#','+$80
+	jsr	COUT
+	lda	REGISTER_DUMP+13
+	jsr	PRBYTE
+
+	jsr	CROUT1
+
+	inc	FRAMEL
+	bne	no_frame_oflo
+	inc	FRAMEH
+no_frame_oflo:
+
+	lda	FRAMEL
+	cmp	#8
+	beq	all_done
+
+	lda	DONE_PLAYING
+	bne	all_done
 	jmp	main_loop
 
-check_done:
-	lda	#$ff
-	bit	DONE_PLAYING
-;	beq	main_loop	; if was all zeros, loop
-;	bmi	main_loop	; if high bit set, paused
-;	bvs	minus_song	; if bit 6 set, then left pressed
+all_done:
+	jmp	all_done
 
-				; else, either song finished or
-				; right pressed
 
 
 
@@ -245,6 +380,11 @@ cout_loop:
 
 cout_done:
 	rts
+
+
+
+FRAMEL:	.byte	$00
+FRAMEH:	.byte	$00
 
 
 
