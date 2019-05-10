@@ -29,6 +29,15 @@ NOTE_ORNAMENT_POINTER_L=21
 NOTE_ORNAMENT_POINTER_H=22
 NOTE_ORNAMENT_LOOP=23
 NOTE_ORNAMENT_LENGTH=24
+NOTE_ONOFF=25
+NOTE_TONE_ACCUMULATOR_L=26
+NOTE_TONE_ACCUMULATOR_H=27
+NOTE_TONE_SLIDE_COUNT=28
+NOTE_ORNAMENT_POSITION=29
+NOTE_SAMPLE_POSITION=30
+NOTE_ENVELOPE_SLIDING=31
+NOTE_NOISE_SLIDING=32
+NOTE_AMPLITUDE_SLIDING=33
 
 note_a:
 	.byte	'A'	; NOTE_WHICH
@@ -56,6 +65,15 @@ note_a:
 	.byte	$0	; NOTE_ORNAMENT_POINTER_H
 	.byte	$0	; NOTE_ORNAMENT_LOOP
 	.byte	$0	; NOTE_ORNAMENT_LENGTH
+	.byte	$0	; NOTE_ONOFF
+	.byte	$0	; NOTE_TONE_ACCUMULATOR_L
+	.byte	$0	; NOTE_TONE_ACCUMULATOR_H
+	.byte	$0	; NOTE_TONE_SLIDE_COUNT
+	.byte	$0	; NOTE_ORNAMENT_POSITION
+	.byte	$0	; NOTE_SAMPLE_POSITION
+	.byte	$0	; NOTE_ENVELOPE_SLIDING
+	.byte	$0	; NOTE_NOISE_SLIDING
+	.byte	$0	; NOTE_AMPLITUDE_SLIDING
 
 note_b:
 	.byte	'B'	; NOTE_WHICH
@@ -83,6 +101,15 @@ note_b:
 	.byte	$0	; NOTE_ORNAMENT_POINTER_H
 	.byte	$0	; NOTE_ORNAMENT_LOOP
 	.byte	$0	; NOTE_ORNAMENT_LENGTH
+	.byte	$0	; NOTE_ONOFF
+	.byte	$0	; NOTE_TONE_ACCUMULATOR_L
+	.byte	$0	; NOTE_TONE_ACCUMULATOR_H
+	.byte	$0	; NOTE_TONE_SLIDE_COUNT
+	.byte	$0	; NOTE_ORNAMENT_POSITION
+	.byte	$0	; NOTE_SAMPLE_POSITION
+	.byte	$0	; NOTE_ENVELOPE_SLIDING
+	.byte	$0	; NOTE_NOISE_SLIDING
+	.byte	$0	; NOTE_AMPLITUDE_SLIDING
 
 note_c:
 	.byte	'C'	; NOTE_WHICH
@@ -110,6 +137,15 @@ note_c:
 	.byte	$0	; NOTE_ORNAMENT_POINTER_H
 	.byte	$0	; NOTE_ORNAMENT_LOOP
 	.byte	$0	; NOTE_ORNAMENT_LENGTH
+	.byte	$0	; NOTE_ONOFF
+	.byte	$0	; NOTE_TONE_ACCUMULATOR_L
+	.byte	$0	; NOTE_TONE_ACCUMULATOR_H
+	.byte	$0	; NOTE_TONE_SLIDE_COUNT
+	.byte	$0	; NOTE_ORNAMENT_POSITION
+	.byte	$0	; NOTE_SAMPLE_POSITION
+	.byte	$0	; NOTE_ENVELOPE_SLIDING
+	.byte	$0	; NOTE_NOISE_SLIDING
+	.byte	$0	; NOTE_AMPLITUDE_SLIDING
 
 pt3_version:		.byte	$0
 pt3_frequency_table:	.byte	$0
@@ -378,7 +414,7 @@ done_note:
 prev_note:	.byte $0
 prev_sliding_l:	.byte $0
 prev_sliding_h:	.byte $0
-a_done:		.byte $0
+decode_done:	.byte $0
 current_val:	.byte $0
 
 	;=====================================
@@ -392,7 +428,7 @@ decode_note:
 	lda	#0
 	sta	note_a+NOTE_NEW_NOTE		; for printing notes?
 	sta	note_a+NOTE_SPEC_COMMAND	; These are only if printing?
-	sta	a_done
+	sta	decode_done
 
 	; Skip decode if note still running
 	lda	note_a+NOTE_LEN_COUNT
@@ -426,12 +462,16 @@ note_decode_loop:
 
 	; get next value
 	lda	(PATTERN_L),Y
+	tax				; save to X termporarily
 
-blah:	jmp	blah
+	; FIXME: use a jump table??
 
-;	current_val=pt3->data[*addr];
-;	switch((current_val>>4)&0xf) {
-;	case 0:
+	and	#$f0
+
+	cmp	#$00
+	bne	decode_case_1X
+
+decode_case_0X:
 ;		if (current_val==0x0) {
 ;			a->len_count=0;
 ;			a->all_done=1;
@@ -443,7 +483,10 @@ blah:	jmp	blah
 ;			a->spec_command=current_val&0xf;
 ;		}
 ;		break;
-;	case 1:
+decode_case_1X:
+	cmp	#$10
+	bne	decode_case_2X
+
 ;		if ((current_val&0xf)==0x0) {
 ;			a->envelope_enabled=0;
 ;		}
@@ -472,38 +515,84 @@ blah:	jmp	blah
 ;		a->ornament_position=0;
 
 ;		break;
-;	case 2:
-;		pt3->noise_period=(current_val&0xf);
-;		break;
-;	case 3:
-;		pt3->noise_period=(current_val&0xf)+0x10;
-;		break;
-;	case 4:
+decode_case_2X:
+	;==============================
+	; $2X set noise period
+	;==============================
+
+	cmp	#$20
+	bne	decode_case_3X
+
+	txa
+	and	#$f
+	sta	pt3_noise_period
+
+	jmp	done_decode
+
+decode_case_3X:
+	;==============================
+	; $3X set noise period (FIXME: merge with above)
+	;==============================
+	cmp	#$30
+	bne	decode_case_4X
+
+	txa
+	and	#$0f
+	ora	#$10
+	sta	pt3_noise_period
+
+	jmp	done_decode
+
+decode_case_4X:
+	;==============================
+	; $4X
+	;==============================
+	cmp	#$40
+	bne	decode_case_5X
+
 ;		a->ornament=(current_val&0xf);
 ;		pt3_load_ornament(pt3,a->which);
 ;		a->ornament_position=0;
 ;		break;
-;	case 5:
-;	case 6:
-;	case 7:
-;	case 8:
-;	case 9:
-;	case 0xa:
-;		a->new_note=1;
-;		a->note=(current_val-0x50);
-;		a->sample_position=0;
-;		a->amplitude_sliding=0;
-;		a->noise_sliding=0;
-;		a->envelope_sliding=0;
-;		a->ornament_position=0;
-;		a->tone_slide_count=0;
-;		a->tone_sliding=0;
-;		a->tone_accumulator=0;
-;		a->onoff=0;
-;		a->enabled=1;
-;		a_done=1;
-;		break;
-;	case 0xb:
+decode_case_5X:
+	;==============================
+	; $5X-$AX set note
+	;==============================
+	cmp	#$B0
+	bcs	decode_case_bX		 ; branch greater/equal
+
+	txa
+	sec
+	sbc	#$50
+	sta	note_a+NOTE_NOTE	; note=(current_val-0x50);
+
+	lda	#0
+	sta	note_a+NOTE_SAMPLE_POSITION	; sample_position=0
+	sta	note_a+NOTE_AMPLITUDE_SLIDING	; amplitude_sliding=0
+	sta	note_a+NOTE_NOISE_SLIDING	; noise_sliding=0
+	sta	note_a+NOTE_ENVELOPE_SLIDING	; envelope_sliding=0
+	sta	note_a+NOTE_ORNAMENT_POSITION	; ornament_position=0
+	sta	note_a+NOTE_TONE_SLIDE_COUNT	; tone_slide_count=0
+	sta	note_a+NOTE_TONE_SLIDING_L	; tone_sliding=0
+	sta	note_a+NOTE_TONE_SLIDING_H
+	sta	note_a+NOTE_TONE_ACCUMULATOR_L	; tone_accumulator=0
+	sta	note_a+NOTE_TONE_ACCUMULATOR_H
+	sta	note_a+NOTE_ONOFF		; onoff=0;
+
+	lda	#1
+	sta	note_a+NOTE_NEW_NOTE		; new=1
+	sta	note_a+NOTE_ENABLED		; enabled=1
+	sta	decode_done			; decode_done-1
+	jmp	done_decode
+
+decode_case_bX:
+	;==============================
+	; $BX
+	;==============================
+	cmp	#$b0
+	bne	decode_case_cX
+
+
 ;		/* Disable envelope */
 ;		if (current_val==0xb0) {
 ;			a->envelope_enabled=0;
@@ -531,7 +620,14 @@ blah:	jmp	blah
 ;			pt3->envelope_delay=0;
 ;		}
 ;		break;
-;	case 0xc:       /* volume */
+decode_case_cX:
+	;==============================
+	; $CX
+	;==============================
+	cmp	#$c0
+	bne	decode_case_dX
+
+		; volume
 ;		if ((current_val&0xf)==0) {
 ;			a->sample_position=0;
 ;			a->amplitude_sliding=0;
@@ -549,7 +645,13 @@ blah:	jmp	blah
 ;			a->volume=current_val&0xf;
 ;		}
 ;		break;
-;	case 0xd:
+decode_case_dX:
+	;==============================
+	; $DX
+	;==============================
+	cmp	#$d0
+	bne	decode_case_eX
+
 ;		if (current_val==0xd0) {
 ;			a_done=1;
 ;		}
@@ -558,24 +660,50 @@ blah:	jmp	blah
 ;			pt3_load_sample(pt3,a->which);
 ;		}
 ;		break;
-;	case 0xe:
+decode_case_eX:
+	;==============================
+	; $EX
+	;==============================
+	cmp	#$e0
+	bne	decode_case_fX
 ;		a->sample=(current_val-0xd0);
 ;		pt3_load_sample(pt3,a->which);
 ;		break;
-;	case 0xf:
-;		a->envelope_enabled=0;
-;		a->ornament=(current_val&0xf);
-;		pt3_load_ornament(pt3,a->which);
-;		(*addr)++;
-;		current_val=pt3->data[*addr];
 
-;		a->sample=current_val/2;
-;		a->sample_pointer=pt3->sample_patterns[a->sampl$
-;		pt3_load_sample(pt3,a->which);
-;		break;
-;	}
+decode_case_fX:
+	;==============================
+	; $FX - change ornament/sample
+	;==============================
 
-;	(*addr)++;
+	; disable envelope
+	lda	#0
+	sta	note_a+NOTE_ENVELOPE_ENABLED
+
+	; Set ornament to low byte of command
+	txa
+	and	#$f
+	jsr	load_ornament		; ornament to load in A
+
+	; Get next byte
+	iny				; point to next byte
+	lda	(PATTERN_L),Y
+
+	; Set sample to value/2
+	lsr				; divide by two
+	jsr	load_sample		; sample to load in A
+
+	; fallthrough
+
+done_decode:
+
+	iny		; point to next byte
+
+	lda	decode_done
+	bne	handle_effects
+
+	jmp	keep_decoding
+
+handle_effects:
 ;	/* Note, the AYemul code has code to make sure these are applied */
 ;	/* In the same order they appear.  We don't bother? */
 ;	if (a_done) {
@@ -774,8 +902,6 @@ pt3_set_pattern:
 	sta	note_c+NOTE_ALL_DONE
 
 	sta	pt3_noise_period
-
-	blah4:	jmp	blah4
 
 	rts
 

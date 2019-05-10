@@ -290,6 +290,7 @@ done_name_loop:
 	jsr	print_cout
 
 	jsr	CROUT1
+	jsr	CROUT1
 
 	jsr	pt3_init_song
 
