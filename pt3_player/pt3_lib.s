@@ -472,48 +472,84 @@ note_decode_loop:
 	bne	decode_case_1X
 
 decode_case_0X:
-;		if (current_val==0x0) {
-;			a->len_count=0;
-;			a->all_done=1;
-;			a_done=1;
-;		}
-;		else { /* FIXME: what if multiple spec commands? */
-;			/* Doesn't seem to happen in practice */
-;			/* But AY_emul has code to handle it */
-;			a->spec_command=current_val&0xf;
-;		}
+	;==============================
+	; $0X set special effect
+	;==============================
+
+	txa
+	and	#$f
+
+	bne	decode_case_0X_not_zero
+
+	; Do we ever actually hit this case?
+
+	sta	note_a+NOTE_LEN_COUNT	; len_count=0;
+
+	lda	#1
+	sta	note_a+NOTE_ALL_DONE
+	sta	decode_done
+
+	jmp	done_decode
+
+decode_case_0X_not_zero:
+
+	; FIXME: what if multiple spec commands?
+	; Doesn't seem to happen in practice
+	; But AY_emul has code to handle it
+
+	sta	note_a+NOTE_SPEC_COMMAND
+
 	jmp	done_decode
 
 decode_case_1X:
+	;==============================
+	; $1X -- Set Envelope Type
+	;==============================
+
 	cmp	#$10
 	bne	decode_case_2X
 
-;		if ((current_val&0xf)==0x0) {
-;			a->envelope_enabled=0;
-;		}
-;		else {
-;			pt3->envelope_type_old=0x78;
-;			pt3->envelope_type=(current_val&0xf);
+	txa
+	and	#$0f
+	bne	decode_case_not_10
 
-;			(*addr)++;
-;			current_val=pt3->data[*addr];
-;			pt3->envelope_period=(current_val<<8);
+decode_case_10:
+	sta	note_a+NOTE_ENVELOPE_ENABLED
+	jmp	decode_case_1x_common
 
-;			(*addr)++;
 
-;			current_val=pt3->data[(*addr)];
-;			pt3->envelope_period|=(current_val&0xff$
+decode_case_not_10:
+	; Needed?
+	; FIXME: combine this with the BX code somehow?
+	; pt3->envelope_type_old=0x78;
 
-;			a->envelope_enabled=1;
-;			pt3->envelope_slide=0;
-;			pt3->envelope_delay=0;
-;		}
-;		(*addr)++;
-;		current_val=pt3->data[(*addr)];
-;		a->sample=(current_val/2);
-;		pt3_load_sample(pt3,a->which);
+	sta	pt3_envelope_type
 
-;		a->ornament_position=0;
+	; get next byte
+	iny
+	lda	(PATTERN_L),Y
+	sta	pt3_envelope_period_h
+
+	iny
+	lda	(PATTERN_L),Y
+	sta	pt3_envelope_period_l
+
+	lda	#0
+	sta	pt3_envelope_delay		; envelope_delay=0
+	sta	pt3_envelope_slide_l		; envelope_slide=0
+	sta	pt3_envelope_slide_h
+	lda	#1
+	sta	note_a+NOTE_ENVELOPE_ENABLED	; envelope_enabled=1
+
+decode_case_1x_common:
+
+	iny					; FIXME: combine?
+	lda	(PATTERN_L),Y
+	lsr
+	jsr	load_sample
+
+	lda	#0
+	sta	note_a+NOTE_ORNAMENT_POSITION	; ornament_position=0
 
 	jmp	done_decode
 
@@ -599,33 +635,59 @@ decode_case_bX:
 	cmp	#$b0
 	bne	decode_case_cX
 
+	txa
+	and	#$f
+	beq	decode_case_b0
+	cmp	#1
+	beq	decode_case_b1
+	jmp	decode_case_bx_higher
 
-;		/* Disable envelope */
-;		if (current_val==0xb0) {
-;			a->envelope_enabled=0;
-;			a->ornament_position=0;
-;		}
-;		/* set len */
-;		else if (current_val==0xb1) {
-;			(*addr)++;
-;			current_val=pt3->data[(*addr)];
-;			a->len=current_val;
-;			a->len_count=a->len;
-;		}
-;		else {
-;			a->envelope_enabled=1;
-;			pt3->envelope_type_old=0x78;
-;			pt3->envelope_type=(current_val&0xf)-1;
-;			(*addr)++;
-;			current_val=pt3->data[(*addr)];
-;			pt3->envelope_period=(current_val<<8);
-;			(*addr)++;
-;			current_val=pt3->data[(*addr)];
-;			pt3->envelope_period|=(current_val&0xff$
-;			a->ornament_position=0;
-;			pt3->envelope_slide=0;
-;			pt3->envelope_delay=0;
-;		}
+decode_case_b0:
+	; Disable envelope
+	lda	#0
+	sta	note_a+NOTE_ENVELOPE_ENABLED
+	sta	note_a+NOTE_ORNAMENT_POSITION
+	jmp	done_decode
+
+
+decode_case_b1:
+	; Set Length
+
+	; get next byte
+	iny
+	lda	(PATTERN_L),Y
+
+	sta	note_a+NOTE_LEN
+	sta	note_a+NOTE_LEN_COUNT
+	jmp	done_decode
+
+decode_case_bx_higher:
+
+;	give fake old to force update?  maybe only needed if printing?
+;	pt3->envelope_type_old=0x78;
+
+	sec
+	sbc	#1
+	sta	pt3_envelope_type	; envelope_type=(current_val&0xf)-1;
+
+	; get next byte
+	iny
+	lda	(PATTERN_L),Y
+	sta	pt3_envelope_period_h
+
+	; get next byte
+	iny
+	lda	(PATTERN_L),Y
+	sta	pt3_envelope_period_l
+
+	lda	#0
+	sta	note_a+NOTE_ORNAMENT_POSITION	; ornament_position=0
+	sta	pt3_envelope_slide_l		; envelope_slide=0
+	sta	pt3_envelope_slide_h
+	sta	pt3_envelope_delay		; envelope_delay=0
+
+	lda	#1
+	sta	note_a+NOTE_ENVELOPE_ENABLED	; envelope_enabled=1;
 	jmp	done_decode
 
 decode_case_cX:
