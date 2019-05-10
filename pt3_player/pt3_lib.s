@@ -482,7 +482,8 @@ decode_case_0X:
 ;			/* But AY_emul has code to handle it */
 ;			a->spec_command=current_val&0xf;
 ;		}
-;		break;
+	jmp	done_decode
+
 decode_case_1X:
 	cmp	#$10
 	bne	decode_case_2X
@@ -514,7 +515,8 @@ decode_case_1X:
 
 ;		a->ornament_position=0;
 
-;		break;
+	jmp	done_decode
+
 decode_case_2X:
 	;==============================
 	; $2X set noise period
@@ -545,15 +547,20 @@ decode_case_3X:
 
 decode_case_4X:
 	;==============================
-	; $4X
+	; $4X -- set ornament
 	;==============================
 	cmp	#$40
 	bne	decode_case_5X
 
-;		a->ornament=(current_val&0xf);
-;		pt3_load_ornament(pt3,a->which);
-;		a->ornament_position=0;
-;		break;
+	txa
+	and	#$0f				; set ornament to bottom nibble
+	jsr	load_ornament
+
+	lda	#0
+	sta	note_a+NOTE_ORNAMENT_POSITION	; FIXME: put this in load_orn?
+
+	jmp	done_decode
+
 decode_case_5X:
 	;==============================
 	; $5X-$AX set note
@@ -586,9 +593,9 @@ decode_case_5X:
 	jmp	done_decode
 
 decode_case_bX:
-	;==============================
-	; $BX
-	;==============================
+	;============================================
+	; $BX -- note length or envelope manipulation
+	;============================================
 	cmp	#$b0
 	bne	decode_case_cX
 
@@ -619,56 +626,84 @@ decode_case_bX:
 ;			pt3->envelope_slide=0;
 ;			pt3->envelope_delay=0;
 ;		}
-;		break;
+	jmp	done_decode
+
 decode_case_cX:
 	;==============================
-	; $CX
+	; $CX -- set volume
 	;==============================
 	cmp	#$c0
 	bne	decode_case_dX
 
-		; volume
-;		if ((current_val&0xf)==0) {
-;			a->sample_position=0;
-;			a->amplitude_sliding=0;
-;			a->noise_sliding=0;
-;			a->envelope_sliding=0;
-;			a->ornament_position=0;
-;			a->tone_slide_count=0;
-;			a->tone_sliding=0;
-;			a->tone_accumulator=0;
-;			a->onoff=0;
-;			a->enabled=0;
-;			a_done=1;
-;		}
-;		else {
-;			a->volume=current_val&0xf;
-;		}
-;		break;
+	txa
+	and	#$0f
+	bne	decode_case_cx_not_c0
+
+decode_case_c0:
+	; special case $C0 means shut down the note
+
+	lda	#0
+	; FIXME: merge with other clearing code?
+	sta	note_a+NOTE_SAMPLE_POSITION	; sample_position=0
+	sta	note_a+NOTE_AMPLITUDE_SLIDING	; amplitude_sliding=0
+	sta	note_a+NOTE_NOISE_SLIDING	; noise_sliding=0
+	sta	note_a+NOTE_ENVELOPE_SLIDING	; envelope_sliding=0
+	sta	note_a+NOTE_ORNAMENT_POSITION	; ornament_position=0
+	sta	note_a+NOTE_TONE_SLIDE_COUNT	; tone_slide_count=0
+	sta	note_a+NOTE_TONE_SLIDING_L	; tone_sliding=0
+	sta	note_a+NOTE_TONE_SLIDING_H
+	sta	note_a+NOTE_TONE_ACCUMULATOR_L	; tone_accumulator=0
+	sta	note_a+NOTE_TONE_ACCUMULATOR_H
+	sta	note_a+NOTE_ONOFF		; onoff=0
+	sta	note_a+NOTE_ENABLED		; enabled=0
+
+	lda	#1
+	sta	decode_done
+
+	jmp done_decode
+
+decode_case_cx_not_c0:
+	sta	note_a+NOTE_VOLUME		; volume=current_val&0xf;
+	jmp	done_decode
+
 decode_case_dX:
 	;==============================
-	; $DX
+	; $DX -- change sample
 	;==============================
+	; FIXME: merge with below?
+
 	cmp	#$d0
 	bne	decode_case_eX
 
-;		if (current_val==0xd0) {
-;			a_done=1;
-;		}
-;		else {
-;			a->sample=(current_val&0xf);
-;			pt3_load_sample(pt3,a->which);
-;		}
-;		break;
+	txa
+	and	#$0f
+	bne	decode_case_dx_not_d0
+
+	;========================
+	; d0 case means end note
+
+	lda	#1
+	sta	decode_done
+
+	jmp	done_decode
+decode_case_dx_not_d0:
+
+	jsr	load_sample	; load sample in bottom nybble
+
+	jmp	done_decode
 decode_case_eX:
 	;==============================
-	; $EX
+	; $EX -- change sample
 	;==============================
 	cmp	#$e0
 	bne	decode_case_fX
-;		a->sample=(current_val-0xd0);
-;		pt3_load_sample(pt3,a->which);
-;		break;
+
+	txa
+	sec
+	sbc	#$d0
+	jsr	load_sample
+
+	jmp	done_decode
 
 decode_case_fX:
 	;==============================
