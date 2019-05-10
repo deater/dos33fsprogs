@@ -417,6 +417,17 @@ note_decode_loop:
 	lda	note_a+NOTE_LEN			; re-up length count
 	sta	note_a+NOTE_LEN_COUNT
 
+	ldy	#0
+
+	lda	note_a+NOTE_ADDR_L
+	sta	PATTERN_L
+	lda	note_a+NOTE_ADDR_H
+	sta	PATTERN_H
+
+	; get next value
+	lda	(PATTERN_L),Y
+
+blah:	jmp	blah
 
 ;	current_val=pt3->data[*addr];
 ;	switch((current_val>>4)&0xf) {
@@ -727,14 +738,16 @@ pt3_set_pattern:
 	lda	PT3_LOC+PT3_PATTERN_LOC_L
 	sta	PATTERN_L
 	lda	PT3_LOC+PT3_PATTERN_LOC_H
+	adc	#>PT3_LOC		; assume page boundary
 	sta	PATTERN_H
 
 	lda	(PATTERN_L),Y
 	sta	note_a+NOTE_ADDR_L
 	iny
 
+	clc
 	lda	(PATTERN_L),Y
-	adc	>PT3_LOC		; assume page boundary
+	adc	#>PT3_LOC		; assume page boundary
 	sta	note_a+NOTE_ADDR_H
 	iny
 
@@ -743,7 +756,7 @@ pt3_set_pattern:
 	iny
 
 	lda	(PATTERN_L),Y
-	adc	>PT3_LOC		; assume page boundary
+	adc	#>PT3_LOC		; assume page boundary
 	sta	note_b+NOTE_ADDR_H
 	iny
 
@@ -752,7 +765,7 @@ pt3_set_pattern:
 	iny
 
 	lda	(PATTERN_L),Y
-	adc	>PT3_LOC		; assume page boundary
+	adc	#>PT3_LOC		; assume page boundary
 	sta	note_c+NOTE_ADDR_H
 
 	lda	#0
@@ -761,6 +774,8 @@ pt3_set_pattern:
 	sta	note_c+NOTE_ALL_DONE
 
 	sta	pt3_noise_period
+
+	blah4:	jmp	blah4
 
 	rts
 
@@ -775,32 +790,55 @@ pt3_make_frame:
 ;          for(j=0;j<64;j++) {
 ;             if (pt3_decode_line(&pt3)) break;
 
-next_subframe:
-	inc	current_subframe	; for(f=0;f<pt3.speed;f++) {
+
+	; see if we need a new pattern
+	; we do if line==0 and subframe==0
+	lda	current_line
+	bne	line_good
 	lda	current_subframe
-	cmp	pt3_speed
+	bne	line_good
+
+	; load a new patterh in
+	jsr	pt3_set_pattern
+
+pattern_good:
+
+	; see if we need a new line
+
+	lda	current_subframe
+	bne	line_good
+
+	; decode a new line
+	jsr	pt3_decode_line
+line_good:
+
+	; Increment everything
+
+	inc	current_subframe	; subframe++
+	lda	current_subframe
+	cmp	pt3_speed		; if we hit pt3_speed, move to next
 	bne	do_frame
 
 next_line:
-	lda	#0
+	lda	#0			; reset subframe to 0
 	sta	current_subframe
 
-	jsr	pt3_decode_line
+	inc	current_line		; and increment line
 
-	inc	current_line
-	cmp	#64
+					; FIXME: not always 64
+	cmp	#64			; if not max, continue
 	bne	do_frame
 
 next_pattern:
-	lda	#0
+	lda	#0			; reset line to 0
 	sta	current_line
 
-	inc	current_pattern
+	inc	current_pattern		; increment pattern
 	lda	current_pattern
-	cmp	pt3_music_len
+
+	cmp	pt3_music_len		; if end of song, mark it as so
 	beq	done_song
 
-	jsr	pt3_set_pattern
 	jmp	do_frame
 
 done_song:
