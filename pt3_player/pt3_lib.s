@@ -22,7 +22,13 @@ NOTE_LEN=14
 NOTE_LEN_COUNT=15
 NOTE_SPEC_COMMAND=16		; is this one needed?
 NOTE_NEW_NOTE=17
-
+NOTE_ALL_DONE=18
+NOTE_ADDR_L=19
+NOTE_ADDR_H=20
+NOTE_ORNAMENT_POINTER_L=21
+NOTE_ORNAMENT_POINTER_H=22
+NOTE_ORNAMENT_LOOP=23
+NOTE_ORNAMENT_LENGTH=24
 
 note_a:
 	.byte	'A'	; NOTE_WHICH
@@ -43,7 +49,13 @@ note_a:
 	.byte	$0	; NOTE_LEN_COUNT
 	.byte	$0	; NOTE_SPEC_COMMAND
 	.byte	$0	; NOTE_NEW_NOTE
-
+	.byte	$0	; NOTE_ALL_DONE
+	.byte	$0	; NOTE_ADDR_L
+	.byte	$0	; NOTE_ADDR_H
+	.byte	$0	; NOTE_ORNAMENT_POINTER_L
+	.byte	$0	; NOTE_ORNAMENT_POINTER_H
+	.byte	$0	; NOTE_ORNAMENT_LOOP
+	.byte	$0	; NOTE_ORNAMENT_LENGTH
 
 note_b:
 	.byte	'B'	; NOTE_WHICH
@@ -64,6 +76,13 @@ note_b:
 	.byte	$0	; NOTE_LEN_COUNT
 	.byte	$0	; NOTE_SPEC_COMMAND
 	.byte	$0	; NOTE_NEW_NOTE
+	.byte	$0	; NOTE_ALL_DONE
+	.byte	$0	; NOTE_ADDR_L
+	.byte	$0	; NOTE_ADDR_H
+	.byte	$0	; NOTE_ORNAMENT_POINTER_L
+	.byte	$0	; NOTE_ORNAMENT_POINTER_H
+	.byte	$0	; NOTE_ORNAMENT_LOOP
+	.byte	$0	; NOTE_ORNAMENT_LENGTH
 
 note_c:
 	.byte	'C'	; NOTE_WHICH
@@ -84,7 +103,13 @@ note_c:
 	.byte	$0	; NOTE_LEN_COUNT
 	.byte	$0	; NOTE_SPEC_COMMAND
 	.byte	$0	; NOTE_NEW_NOTE
-
+	.byte	$0	; NOTE_ALL_DONE
+	.byte	$0	; NOTE_ADDR_L
+	.byte	$0	; NOTE_ADDR_H
+	.byte	$0	; NOTE_ORNAMENT_POINTER_L
+	.byte	$0	; NOTE_ORNAMENT_POINTER_H
+	.byte	$0	; NOTE_ORNAMENT_LOOP
+	.byte	$0	; NOTE_ORNAMENT_LENGTH
 
 pt3_version:		.byte	$0
 pt3_frequency_table:	.byte	$0
@@ -107,7 +132,7 @@ pt3_envelope_type_old:	.byte	$0
 pt3_envelope_delay:	.byte	$0
 pt3_envelope_delay_orig:.byte	$0
 
-pt3_current_pattern:	.byte	$0
+;pt3_current_pattern:	.byte	$0
 pt3_music_len:		.byte	$0
 pt3_mixer_value:	.byte	$0
 
@@ -117,12 +142,51 @@ temp_word_h:		.byte	$0
 
 ; Header offsets
 
-PT3_HEADER_FREQUENCY = $63
+PT3_HEADER_FREQUENCY	= $63
+PT3_PATTERN_LOC_L	= $67
+PT3_PATTERN_LOC_H	= $68
+PT3_SAMPLE_LOC_L	= $69
+PT3_SAMPLE_LOC_H	= $6A
+PT3_ORNAMENT_LOC_L	= $A9
+PT3_OTNAMENT_LOC_H	= $AA
+PT3_PATTERN_TABLE	= $C9
+
+	;===========================
+	; Load Ornament
+	;===========================
 
 load_ornament:
+
+	ldy	#0
+
+;	a->ornament_pointer=pt3->ornament_patterns[a->ornament];
+;	a->ornament_loop=pt3->data[a->ornament_pointer];
+;	a->ornament_pointer++;
+;	a->ornament_length=pt3->data[a->ornament_pointer];
+;	a->ornament_pointer++;
+
+	clc
+	lda	note_a+NOTE_ORNAMENT_POINTER_L
+	adc	#2
+	sta	note_a+NOTE_ORNAMENT_POINTER_L
+	lda	note_a+NOTE_ORNAMENT_POINTER_H
+	adc	#0
+	sta	note_a+NOTE_ORNAMENT_POINTER_H
+
+
 	rts
 
+	;===========================
+	; Load Sample
+	;===========================
+	;
 load_sample:
+;	a->sample_pointer=pt3->sample_patterns[a->sample];
+;	a->sample_loop=pt3->data[a->sample_pointer];
+;	a->sample_pointer++;
+;	a->sample_length=pt3->data[a->sample_pointer];
+;	a->sample_pointer++;
+
 	rts
 
 pt3_init_song:
@@ -162,7 +226,7 @@ pt3_init_song:
 	sta	pt3_envelope_period_l
 	sta	pt3_envelope_period_h
 	sta	pt3_envelope_type
-	sta	pt3_current_pattern
+;	sta	pt3_current_pattern
 
 	rts
 
@@ -314,6 +378,8 @@ done_note:
 prev_note:	.byte $0
 prev_sliding_l:	.byte $0
 prev_sliding_h:	.byte $0
+a_done:		.byte $0
+current_val:	.byte $0
 
 	;=====================================
 	; Decode Note
@@ -321,14 +387,12 @@ prev_sliding_h:	.byte $0
 
 decode_note:
 
-;	int a_done=0;
-;	int current_val;
-
 	; Init vars
 
 	lda	#0
 	sta	note_a+NOTE_NEW_NOTE		; for printing notes?
 	sta	note_a+NOTE_SPEC_COMMAND	; These are only if printing?
+	sta	a_done
 
 	; Skip decode if note still running
 	lda	note_a+NOTE_LEN_COUNT
@@ -350,7 +414,9 @@ keep_decoding:
 
 
 note_decode_loop:
-;	a->len_count=a->len;
+	lda	note_a+NOTE_LEN			; re-up length count
+	sta	note_a+NOTE_LEN_COUNT
+
 
 ;	current_val=pt3->data[*addr];
 ;	switch((current_val>>4)&0xf) {
@@ -640,18 +706,65 @@ pt3_decode_line:
 	rts
 
 
+current_subframe:	.byte	$0
+current_line:		.byte	$0
+current_pattern:	.byte	$0
+
 	;=====================================
 	; Set Pattern
 	;=====================================
 
 pt3_set_pattern:
 
+	ldy	current_pattern
+	lda	PT3_LOC+PT3_PATTERN_TABLE,Y	; get pattern table value
+
+	asl		; mul by two, as word sized
+	tay
+
+	clc
+
+	lda	PT3_LOC+PT3_PATTERN_LOC_L
+	sta	PATTERN_L
+	lda	PT3_LOC+PT3_PATTERN_LOC_H
+	sta	PATTERN_H
+
+	lda	(PATTERN_L),Y
+	sta	note_a+NOTE_ADDR_L
+	iny
+
+	lda	(PATTERN_L),Y
+	adc	>PT3_LOC		; assume page boundary
+	sta	note_a+NOTE_ADDR_H
+	iny
+
+	lda	(PATTERN_L),Y
+	sta	note_b+NOTE_ADDR_L
+	iny
+
+	lda	(PATTERN_L),Y
+	adc	>PT3_LOC		; assume page boundary
+	sta	note_b+NOTE_ADDR_H
+	iny
+
+	lda	(PATTERN_L),Y
+	sta	note_c+NOTE_ADDR_L
+	iny
+
+	lda	(PATTERN_L),Y
+	adc	>PT3_LOC		; assume page boundary
+	sta	note_c+NOTE_ADDR_H
+
+	lda	#0
+	sta	note_a+NOTE_ALL_DONE
+	sta	note_b+NOTE_ALL_DONE
+	sta	note_c+NOTE_ALL_DONE
+
+	sta	pt3_noise_period
+
 	rts
 
 
-current_subframe:	.byte	$0
-current_line:		.byte	$0
-current_pattern:	.byte	$0
 
 	;=====================================
 	; pt3 make frame

@@ -40,7 +40,7 @@ PT3_PLAYER:	pt3_player.o
 	ld65 -o PT3_PLAYER pt3_player.o -C ../linker_scripts/apple2_1000.inc
 
 pt3_player.o:	pt3_player.s \
-	gr_fast_clear.s pt3_lib.s interrupt_handler.s
+	gr_fast_clear.s pt3_lib.s interrupt_handler.s zp.inc
 #	mockingboard.s \
 #	keypress_minimal.s \
 #	qkumba_rts.s \
@@ -53,7 +53,7 @@ PT3_DUMPER:	pt3_dumper.o
 	ld65 -o PT3_DUMPER pt3_dumper.o -C ../linker_scripts/apple2_1000.inc
 
 pt3_dumper.o:	pt3_dumper.s \
-	gr_fast_clear.s pt3_lib.s interrupt_handler.s
+	gr_fast_clear.s pt3_lib.s interrupt_handler.s zp.inc
 	ca65 -o pt3_dumper.o pt3_dumper.s -l pt3_dumper.lst
 
 
