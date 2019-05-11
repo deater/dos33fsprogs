@@ -342,25 +342,42 @@ no_accum:
 ;     }
 ;  }
 
+	;====================
+	; set amplitude
+
 	lda	sample_b1		;  a->amplitude= (b1 & 0xf);
 	and	#$f
 	sta	note_a+NOTE_AMPLITUDE
 
+	; adjust amplitude sliding
 
-;  if ((b0 & 0x80)!=0) {
-;     if ((b0&0x40)!=0) {
-;        if (a->amplitude_sliding < 15) {
-;           a->amplitude_sliding++;
-;        }
-;     }
-;     else {
-;        if (a->amplitude_sliding > -15) {
-;           a->amplitude_sliding--;
-;        }
-;     }
-;  }
+	lda	sample_b0		;  if ((b0 & 0x80)!=0) {
+	and	#$80
+	beq	done_amp_sliding
 
-;  a->amplitude+=a->amplitude_sliding;
+	lda	sample_b0		;     if ((b0&0x40)!=0) {
+	and	#$40
+	beq	amp_slide_down
+amp_slide_up:
+	lda	note_a+NOTE_AMPLITUDE_SLIDING
+	cmp	#15
+	bcs	done_amp_sliding	; bge
+					;        if (a->amplitude_sliding < 15) {
+	inc	note_a+NOTE_AMPLITUDE_SLIDING	;           a->amplitude_sliding++;
+	jmp	done_amp_sliding
+amp_slide_down:
+	lda	note_a+NOTE_AMPLITUDE_SLIDING
+	cmp	#$f2			; -14 1111 0010
+	bcc	done_amp_sliding	;        if (a->amplitude_sliding > -15) {
+	dec	note_a+NOTE_AMPLITUDE_SLIDING	;	; a->amplitude_sliding--;
+
+done_amp_sliding:
+
+	; a->amplitude+=a->amplitude_sliding;
+	clc
+	lda	note_a+NOTE_AMPLITUDE
+	adc	note_a+NOTE_AMPLITUDE_SLIDING
+	sta	note_a+NOTE_AMPLITUDE
 
 	; clamp amplitude to 0 - 15
 
@@ -429,7 +446,15 @@ freq_slide:
 ;     }
 ;  }
 
-;  pt3->mixer_value = ((b1 >>1) & 0x48) | pt3->mixer_value;
+	;======================
+	; set mixer
+
+	lda	sample_b1	;  pt3->mixer_value = ((b1 >>1) & 0x48) | pt3->mixer_value;
+	lsr
+	and	#$48
+	ora	pt3_mixer_value
+	sta	pt3_mixer_value
+
 
 ;  a->sample_position++;
 ;  if (a->sample_position >= a->sample_length) {
