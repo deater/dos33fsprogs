@@ -38,6 +38,8 @@ NOTE_SAMPLE_POSITION=30
 NOTE_ENVELOPE_SLIDING=31
 NOTE_NOISE_SLIDING=32
 NOTE_AMPLITUDE_SLIDING=33
+NOTE_ONOFF_DELAY=34
+NOTE_OFFON_DELAY=35
 
 note_a:
 	.byte	'A'	; NOTE_WHICH
@@ -74,6 +76,8 @@ note_a:
 	.byte	$0	; NOTE_ENVELOPE_SLIDING
 	.byte	$0	; NOTE_NOISE_SLIDING
 	.byte	$0	; NOTE_AMPLITUDE_SLIDING
+	.byte	$0	; NOTE_ONOFF_DELAY
+	.byte	$0	; NOTE_OFFON_DELAY
 
 note_b:
 	.byte	'B'	; NOTE_WHICH
@@ -110,6 +114,8 @@ note_b:
 	.byte	$0	; NOTE_ENVELOPE_SLIDING
 	.byte	$0	; NOTE_NOISE_SLIDING
 	.byte	$0	; NOTE_AMPLITUDE_SLIDING
+	.byte	$0	; NOTE_ONOFF_DELAY
+	.byte	$0	; NOTE_OFFON_DELAY
 
 note_c:
 	.byte	'C'	; NOTE_WHICH
@@ -146,6 +152,8 @@ note_c:
 	.byte	$0	; NOTE_ENVELOPE_SLIDING
 	.byte	$0	; NOTE_NOISE_SLIDING
 	.byte	$0	; NOTE_AMPLITUDE_SLIDING
+	.byte	$0	; NOTE_ONOFF_DELAY
+	.byte	$0	; NOTE_OFFON_DELAY
 
 pt3_version:		.byte	$0
 pt3_frequency_table:	.byte	$0
@@ -175,6 +183,8 @@ pt3_mixer_value:	.byte	$0
 temp_word_l:		.byte	$0
 temp_word_h:		.byte	$0
 
+sample_b0:		.byte	$0
+sample_b1:		.byte	$0
 
 ; Header offsets
 
@@ -190,10 +200,18 @@ PT3_PATTERN_TABLE	= $C9
 	;===========================
 	; Load Ornament
 	;===========================
+	; ornament value in A
 
 load_ornament:
 
-	ldy	#0
+	; save as new ornament
+	; sta	note_a+NOTE_ORNAMENT ; do we use this?
+
+	;pt3->ornament_patterns[i]=
+        ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
+
+;	20A9+(a*2) -> ornament_pointer_l
+;	20AA+(a*2) -> ornament_pointer_h
 
 ;	a->ornament_pointer=pt3->ornament_patterns[a->ornament];
 ;	a->ornament_loop=pt3->data[a->ornament_pointer];
@@ -244,14 +262,17 @@ pt3_init_song:
 	sta	note_b+NOTE_ENVELOPE_ENABLED
 	sta	note_c+NOTE_ENVELOPE_ENABLED
 	lda	#'A'
+	lda	#0
 	jsr	load_ornament
 	lda	#'A'
 	jsr	load_sample
 	lda	#'B'
+	lda	#0
 	jsr	load_ornament
 	lda	#'B'
 	jsr	load_sample
 	lda	#'C'
+	lda	#0
 	jsr	load_ornament
 	lda	#'C'
 	jsr	load_sample
@@ -286,9 +307,18 @@ note_enabled:
 ;  a->tone = pt3->data[a->sample_pointer + a->sample_position * 4 + 2];
 ;  a->tone += (pt3->data[a->sample_pointer + a->sample_position * 4 + 3])<<8;
 ;  a->tone += a->tone_accumulator;
-;  if ((b1 & 0x40) != 0) {
-;     a->tone_accumulator=a->tone;
-;  }
+
+	lda	#$40		; if (b1&0x40)
+	bit	sample_b1
+	beq	no_accum
+
+	lda	note_a+NOTE_TONE_L	; tone_accumulator=tone
+	sta	note_a+NOTE_TONE_ACCUMULATOR_L
+	lda	note_a+NOTE_TONE_H
+	sta	note_a+NOTE_TONE_ACCUMULATOR_H
+
+no_accum:
+
 ;  j = a->note + ((pt3->data[a->ornament_pointer + a->ornament_position]<<24)>>24);
 ;  if (j < 0) j = 0;
 ;  else if (j > 95) j = 95;
@@ -312,7 +342,11 @@ note_enabled:
 ;     }
 ;  }
 
-;  a->amplitude= (b1 & 0xf);
+	lda	sample_b1		;  a->amplitude= (b1 & 0xf);
+	and	#$f
+	sta	note_a+NOTE_AMPLITUDE
+
+
 ;  if ((b0 & 0x80)!=0) {
 ;     if ((b0&0x40)!=0) {
 ;        if (a->amplitude_sliding < 15) {
@@ -344,16 +378,35 @@ write_clamp_amplitude:
 	sta	note_a+NOTE_AMPLITUDE,Y
 done_clamp_amplitude:
 
-;  //if (PlParams.PT3.PT3_Version <= 4)
-;  //   a->amplitude = PT3VolumeTable_33_34[a->volume][a->amplitude];
-;  //}
-;  //else
-;     a->amplitude = PT3VolumeTable_35[a->volume][a->amplitude];
+	; if (PlParams.PT3.PT3_Version <= 4)
+	;	a->amplitude = PT3VolumeTable_33_34[a->volume][a->amplitude];
+	; }
+	; else {
 
-;  if (((b0 & 0x1) == 0) && ( a->envelope_enabled)) {
-;     a->amplitude |= 16;
-;  }
+	lda	note_a+NOTE_VOLUME,Y
+	asl
+	asl
+	asl
+	asl
+	ora	note_a+NOTE_AMPLITUDE,Y
+	tax
+	lda	PT3VolumeTable_35,X
+	sta	note_a+NOTE_AMPLITUDE,Y ;     a->amplitude = PT3VolumeTable_35[a->volume][a->amplitude];
+;	}
 
+	lda	sample_b0	;  if (((b0 & 0x1) == 0) && ( a->envelope_enabled)) {
+	and	#$1
+	bne	freq_slide
+
+	lda	note_a+NOTE_ENVELOPE_ENABLED
+	beq	freq_slide
+
+	lda	note_a+NOTE_AMPLITUDE	; a->amplitude |= 16;
+	ora	#$10
+	sta	note_a+NOTE_AMPLITUDE
+
+
+freq_slide:
 ;  /* Frequency slide */
 ;  /* If b1 top bits are 10 or 11 */
 ;  if ((b1 & 0x80) != 0) {
@@ -387,9 +440,7 @@ done_clamp_amplitude:
 ;  if (a->ornament_position >= a->ornament_length) {
 ;     a->ornament_position = a->ornament_loop;
 ;  }
-;} else {
-;   a->amplitude=0;
-;}
+
 
 done_note:
 	; set mixer value
@@ -399,15 +450,27 @@ done_note:
 	lsr
 	sta	pt3_mixer_value
 
-;if (a->onoff>0) {
-;   a->onoff--;
-;   if (a->onoff==0) {
-;      a->enabled=!a->enabled;
-;      if (a->enabled) a->onoff=a->onoff_delay;
-;      else a->onoff=a->offon_delay;
-;   }
-;}
+handle_onoff:
+	lda	note_a+NOTE_ONOFF	;if (a->onoff>0) {
+	beq	done_onoff
 
+	dec	note_a+NOTE_ONOFF	; a->onoff--;
+
+	bne	done_onoff		;   if (a->onoff==0) {
+	lda	note_a+NOTE_ENABLED
+	eor	#$1			; toggle
+	sta	note_a+NOTE_ENABLED
+
+	bne	do_offon
+do_onoff:
+	lda	note_a+NOTE_ONOFF_DELAY	; if (a->enabled) a->onoff=a->onoff_delay;
+	jmp	put_offon
+do_offon:
+	lda	note_a+NOTE_OFFON_DELAY ;      else a->onoff=a->offon_delay;
+put_offon:
+	sta	note_a+NOTE_ONOFF
+
+done_onoff:
 
 	rts
 
@@ -449,11 +512,13 @@ keep_decoding:
 	sta	prev_sliding_l
 
 
+
+	ldy	#0
+
+
 note_decode_loop:
 	lda	note_a+NOTE_LEN			; re-up length count
 	sta	note_a+NOTE_LEN_COUNT
-
-	ldy	#0
 
 	lda	note_a+NOTE_ADDR_L
 	sta	PATTERN_L
@@ -798,7 +863,7 @@ done_decode:
 	lda	decode_done
 	bne	handle_effects
 
-	jmp	keep_decoding
+	jmp	note_decode_loop
 
 handle_effects:
 ;	/* Note, the AYemul code has code to make sure these are applied */
