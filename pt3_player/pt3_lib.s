@@ -197,6 +197,8 @@ PT3_ORNAMENT_LOC_L	= $A9
 PT3_OTNAMENT_LOC_H	= $AA
 PT3_PATTERN_TABLE	= $C9
 
+ysave:	.byte $00
+
 	;===========================
 	; Load Ornament
 	;===========================
@@ -204,42 +206,102 @@ PT3_PATTERN_TABLE	= $C9
 
 load_ornament:
 
+	sty	ysave
+
 	; save as new ornament
 	; sta	note_a+NOTE_ORNAMENT ; do we use this?
 
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
 
-;	20A9+(a*2) -> ornament_pointer_l
-;	20AA+(a*2) -> ornament_pointer_h
-
-;	a->ornament_pointer=pt3->ornament_patterns[a->ornament];
-;	a->ornament_loop=pt3->data[a->ornament_pointer];
-;	a->ornament_pointer++;
-;	a->ornament_length=pt3->data[a->ornament_pointer];
-;	a->ornament_pointer++;
+	; 20A9+(a*2) -> ornament_pointer_l
 
 	clc
-	lda	note_a+NOTE_ORNAMENT_POINTER_L
-	adc	#2
-	sta	note_a+NOTE_ORNAMENT_POINTER_L
-	lda	note_a+NOTE_ORNAMENT_POINTER_H
-	adc	#0
-	sta	note_a+NOTE_ORNAMENT_POINTER_H
+	asl			; A*2
+	adc	#$a9
+	tay
 
+	lda	PT3_LOC,Y
+	sta	ORNAMENT_A_L
+
+	iny
+	lda	PT3_LOC,Y
+	clc
+	adc	#>PT3_LOC
+	sta	ORNAMENT_A_H	;	a->ornament_pointer=pt3->ornament_patterns[a->ornament];
+
+	ldy	#0
+
+	lda	(ORNAMENT_A_L),Y
+	sta	note_a+NOTE_ORNAMENT_LOOP
+;	a->ornament_loop=pt3->data[a->ornament_pointer];
+
+	iny
+	lda	(ORNAMENT_A_L),Y
+	sta	note_a+NOTE_ORNAMENT_LENGTH
+
+;	a->ornament_length=pt3->data[a->ornament_pointer];
+
+
+	clc
+	lda	ORNAMENT_A_L
+	adc	#$2
+	sta	ORNAMENT_A_L
+
+;	clc
+;	lda	note_a+NOTE_ORNAMENT_POINTER_L
+;	adc	#2
+;	sta	note_a+NOTE_ORNAMENT_POINTER_L
+;	lda	note_a+NOTE_ORNAMENT_POINTER_H
+;	adc	#0
+;	sta	note_a+NOTE_ORNAMENT_POINTER_H
+
+
+	ldy	ysave
 
 	rts
 
 	;===========================
 	; Load Sample
 	;===========================
-	;
+	; sample in A
 load_sample:
-;	a->sample_pointer=pt3->sample_patterns[a->sample];
-;	a->sample_loop=pt3->data[a->sample_pointer];
-;	a->sample_pointer++;
-;	a->sample_length=pt3->data[a->sample_pointer];
-;	a->sample_pointer++;
+
+	sty	ysave
+
+	;pt3->ornament_patterns[i]=
+        ;               (pt3->data[0x6a+(i*2)]<<8)|pt3->data[0x69+(i*2)];
+
+	clc
+	asl			; A*2
+	adc	#$69
+	tay
+
+	lda	PT3_LOC,Y
+	sta	SAMPLE_A_L
+
+	iny
+	lda	PT3_LOC,Y
+	clc
+	adc	#>PT3_LOC
+	sta	SAMPLE_A_H	;	a->sample_pointer=pt3->sample_patterns[a->sample];
+
+	ldy	#0
+
+	lda	(SAMPLE_A_L),Y
+	sta	note_a+NOTE_SAMPLE_LOOP	;	a->sample_loop=pt3->data[a->sample_pointer];
+
+	iny
+	lda	(SAMPLE_A_L),Y
+	sta	note_a+NOTE_SAMPLE_LENGTH	;	a->sample_length=pt3->data[a->sample_pointer];
+
+	clc
+	lda	SAMPLE_A_L
+	adc	#$2
+	sta	SAMPLE_A_L
+
+
+	ldy	ysave
 
 	rts
 
@@ -265,17 +327,20 @@ pt3_init_song:
 	lda	#0
 	jsr	load_ornament
 	lda	#'A'
+	lda	#1
 	jsr	load_sample
-	lda	#'B'
-	lda	#0
-	jsr	load_ornament
-	lda	#'B'
-	jsr	load_sample
-	lda	#'C'
-	lda	#0
-	jsr	load_ornament
-	lda	#'C'
-	jsr	load_sample
+;	lda	#'B'
+;	lda	#0
+;	jsr	load_ornament
+;	lda	#'B'
+;	lda	#1
+;	jsr	load_sample
+;	lda	#'C'
+;	lda	#0
+;	jsr	load_ornament
+;	lda	#'C'
+;	lda	#1
+;	jsr	load_sample
 
 	lda	#$0
 	sta	pt3_noise_period
@@ -291,16 +356,43 @@ pt3_init_song:
 	; Calculate Note
 	;=====================================
 calculate_note:
-	ldy	#0
 
-	lda	note_a+NOTE_ENABLED,Y
+	lda	note_a+NOTE_ENABLED
 	bne	note_enabled
 
 	lda	#0
-	sta	note_a+NOTE_AMPLITUDE,Y
+	sta	note_a+NOTE_AMPLITUDE
 	jmp	done_note
 
 note_enabled:
+
+	lda	note_a+NOTE_SAMPLE_POSITION
+	asl
+	asl
+	tay
+	lda	(SAMPLE_A_L),Y
+	sta	sample_b0
+
+	iny
+	lda	(SAMPLE_A_L),Y
+	sta	sample_b1
+
+	iny
+	lda	(SAMPLE_A_L),Y
+	sta	note_a+NOTE_TONE_L
+
+	iny
+	lda	(SAMPLE_A_L),Y
+	sta	note_a+NOTE_TONE_H
+
+	clc
+	lda	note_a+NOTE_TONE_ACCUMULATOR_L
+	adc	note_a+NOTE_TONE_L
+	sta	note_a+NOTE_TONE_L
+	lda	note_a+NOTE_TONE_H
+	adc	note_a+NOTE_TONE_ACCUMULATOR_H
+	sta	note_a+NOTE_TONE_H
+
 
 ;  b0 = pt3->data[a->sample_pointer + a->sample_position * 4];
 ;  b1 = pt3->data[a->sample_pointer + a->sample_position * 4 + 1];
@@ -381,7 +473,7 @@ done_amp_sliding:
 
 	; clamp amplitude to 0 - 15
 
-	lda	note_a+NOTE_AMPLITUDE,Y
+	lda	note_a+NOTE_AMPLITUDE
 check_amp_lo:
 	bpl	check_amp_hi
 	lda	#0
@@ -392,7 +484,7 @@ check_amp_hi:
 	bcc	done_clamp_amplitude	; blt
 	lda	#15
 write_clamp_amplitude:
-	sta	note_a+NOTE_AMPLITUDE,Y
+	sta	note_a+NOTE_AMPLITUDE
 done_clamp_amplitude:
 
 	; if (PlParams.PT3.PT3_Version <= 4)
@@ -400,15 +492,15 @@ done_clamp_amplitude:
 	; }
 	; else {
 
-	lda	note_a+NOTE_VOLUME,Y
+	lda	note_a+NOTE_VOLUME
 	asl
 	asl
 	asl
 	asl
-	ora	note_a+NOTE_AMPLITUDE,Y
+	ora	note_a+NOTE_AMPLITUDE
 	tax
 	lda	PT3VolumeTable_35,X
-	sta	note_a+NOTE_AMPLITUDE,Y ;     a->amplitude = PT3VolumeTable_35[a->volume][a->amplitude];
+	sta	note_a+NOTE_AMPLITUDE ;     a->amplitude = PT3VolumeTable_35[a->volume][a->amplitude];
 ;	}
 
 	lda	sample_b0	;  if (((b0 & 0x1) == 0) && ( a->envelope_enabled)) {
@@ -722,7 +814,7 @@ decode_case_bX:
 	;============================================
 	; $BX -- note length or envelope manipulation
 	;============================================
-	cmp	#$b0
+	cmp	#$b0		; FIXME: this cmp not needed, from before?
 	bne	decode_case_cX
 
 	txa
@@ -1020,10 +1112,10 @@ pt3_decode_line:
 	jsr	decode_note
 
 	; decode_note(&pt3->b,&(pt3->b_addr),pt3);
-	jsr	decode_note
+;	jsr	decode_note
 
 	; decode_note(&pt3->c,&(pt3->c_addr),pt3);
-	jsr	decode_note
+;	jsr	decode_note
 
 ;	if (pt3->a.all_done && pt3->b.all_done && pt3->c.all_done) {
 ;		return 1;
@@ -1179,10 +1271,10 @@ do_frame:
 
 	lda	#0			; Note A
 	jsr	calculate_note
-	lda	#1			; Note B
-	jsr	calculate_note
-	lda	#2			; Note C
-	jsr	calculate_note
+;	lda	#1			; Note B
+;	jsr	calculate_note
+;	lda	#2			; Note C
+;	jsr	calculate_note
 
 	; Load up the Frequency Registers
 

@@ -1,2 +1,5 @@
 PT3_player
 
+
+
+ASR = CMP #$80 / ROR
