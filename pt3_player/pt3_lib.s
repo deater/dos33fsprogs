@@ -10,8 +10,8 @@ NOTE_TONE_SLIDING_L=2
 NOTE_TONE_SLIDING_H=3
 NOTE_ENABLED=4
 NOTE_ENVELOPE_ENABLED=5
-NOTE_SAMPLE_POINTER_L=6		; FIXME: needed?
-NOTE_SAMPLE_POINTER_H=7		; FIXME: needed?
+NOTE_SAMPLE_POINTER_L=6
+NOTE_SAMPLE_POINTER_H=7
 NOTE_SAMPLE_LOOP=8
 NOTE_SAMPLE_LENGTH=9
 NOTE_TONE_L=10
@@ -25,8 +25,8 @@ NOTE_NEW_NOTE=17
 NOTE_ALL_DONE=18
 NOTE_ADDR_L=19
 NOTE_ADDR_H=20
-NOTE_ORNAMENT_POINTER_L=21	; FIXME: needed?
-NOTE_ORNAMENT_POINTER_H=22	; FIXME: needed?
+NOTE_ORNAMENT_POINTER_L=21
+NOTE_ORNAMENT_POINTER_H=22
 NOTE_ORNAMENT_LOOP=23
 NOTE_ORNAMENT_LENGTH=24
 NOTE_ONOFF=25
@@ -259,36 +259,36 @@ load_ornament:
 	; a->ornament_pointer=pt3->ornament_patterns[a->ornament];
 
 	lda	PT3_LOC,Y
-	sta	ORNAMENT_A_L
+	sta	ORNAMENT_L
 
 	iny
 	lda	PT3_LOC,Y
 	clc
 	adc	#>PT3_LOC
-	sta	ORNAMENT_A_H
+	sta	ORNAMENT_H
 
 	ldy	#0
 
 	; Set the loop value
 	;     a->ornament_loop=pt3->data[a->ornament_pointer];
-	lda	(ORNAMENT_A_L),Y
+	lda	(ORNAMENT_L),Y
 	sta	note_a+NOTE_ORNAMENT_LOOP,X
 
 	; Set the length value
 	;     a->ornament_length=pt3->data[a->ornament_pointer];
 	iny
-	lda	(ORNAMENT_A_L),Y
+	lda	(ORNAMENT_L),Y
 	sta	note_a+NOTE_ORNAMENT_LENGTH,X
 
 	; Set the pointer to the value past the length
 
 	clc
-	lda	ORNAMENT_A_L
+	lda	ORNAMENT_L
 	adc	#$2
-	sta	ORNAMENT_A_L
-	lda	ORNAMENT_A_H
+	sta	note_a+NOTE_ORNAMENT_POINTER_L,X
+	lda	ORNAMENT_H
 	adc	#$0
-	sta	ORNAMENT_A_H
+	sta	note_a+NOTE_ORNAMENT_POINTER_H,X
 
 	ldy	ysave
 
@@ -316,37 +316,37 @@ load_sample:
 	;     a->sample_pointer=pt3->sample_patterns[a->sample];
 
 	lda	PT3_LOC,Y
-	sta	SAMPLE_A_L
+	sta	SAMPLE_L
 
 	iny
 	lda	PT3_LOC,Y
 	clc
 	adc	#>PT3_LOC
-	sta	SAMPLE_A_H
+	sta	SAMPLE_H
 
 	; Set the loop value
 	;     a->sample_loop=pt3->data[a->sample_pointer];
 
 	ldy	#0
-	lda	(SAMPLE_A_L),Y
+	lda	(SAMPLE_L),Y
 	sta	note_a+NOTE_SAMPLE_LOOP,X
 
 	; Set the length value
 	;     a->sample_length=pt3->data[a->sample_pointer];
 
 	iny
-	lda	(SAMPLE_A_L),Y
+	lda	(SAMPLE_L),Y
 	sta	note_a+NOTE_SAMPLE_LENGTH,X
 
 	; Set pointer to beginning of samples
 
 	clc
-	lda	SAMPLE_A_L
+	lda	SAMPLE_L
 	adc	#$2
-	sta	SAMPLE_A_L
-	lda	SAMPLE_A_H
+	sta	note_a+NOTE_SAMPLE_POINTER_L,X
+	lda	SAMPLE_H
 	adc	#$0
-	sta	SAMPLE_A_H
+	sta	note_a+NOTE_SAMPLE_POINTER_H,X
 
 	ldy	ysave
 
@@ -426,28 +426,39 @@ calculate_note:
 
 note_enabled:
 
+	lda	note_a+NOTE_SAMPLE_POINTER_H
+	sta	SAMPLE_H
+	lda	note_a+NOTE_SAMPLE_POINTER_L
+	sta	SAMPLE_L
+
+	lda	note_a+NOTE_ORNAMENT_POINTER_H
+	sta	ORNAMENT_H
+	lda	note_a+NOTE_ORNAMENT_POINTER_L
+	sta	ORNAMENT_L
+
+
 	lda	note_a+NOTE_SAMPLE_POSITION,X
 	asl
 	asl
 	tay
 
 	;  b0 = pt3->data[a->sample_pointer + a->sample_position * 4];
-	lda	(SAMPLE_A_L),Y
+	lda	(SAMPLE_L),Y
 	sta	sample_b0
 
 	;  b1 = pt3->data[a->sample_pointer + a->sample_position * 4 + 1];
 	iny
-	lda	(SAMPLE_A_L),Y
+	lda	(SAMPLE_L),Y
 	sta	sample_b1
 
 	;  a->tone = pt3->data[a->sample_pointer + a->sample_position * 4 + 2];
 	;  a->tone += (pt3->data[a->sample_pointer + a->sample_position * 4 + 3])<<8;
 	iny
-	lda	(SAMPLE_A_L),Y
+	lda	(SAMPLE_L),Y
 	sta	note_a+NOTE_TONE_L,X
 
 	iny
-	lda	(SAMPLE_A_L),Y
+	lda	(SAMPLE_L),Y
 	sta	note_a+NOTE_TONE_H,X
 
 	;  a->tone += a->tone_accumulator;
@@ -479,7 +490,7 @@ no_accum:
 	clc
 	lda	note_a+NOTE_ORNAMENT_POSITION,X
 	tay
-	lda	(ORNAMENT_A_L),Y
+	lda	(ORNAMENT_L),Y
 	adc	note_a+NOTE_NOTE,X
 
 	;  if (j < 0) j = 0;
