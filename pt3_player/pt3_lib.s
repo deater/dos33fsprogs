@@ -463,15 +463,16 @@ note_enabled:
 
 	;  a->tone += a->tone_accumulator;
 	clc
-	lda	note_a+NOTE_TONE_ACCUMULATOR_L,X
-	adc	note_a+NOTE_TONE_L,X
+	lda	note_a+NOTE_TONE_L,X
+	adc	note_a+NOTE_TONE_ACCUMULATOR_L,X
 	sta	note_a+NOTE_TONE_L,X
 	lda	note_a+NOTE_TONE_H,X
 	adc	note_a+NOTE_TONE_ACCUMULATOR_H,X
 	sta	note_a+NOTE_TONE_H,X
 
-	;========================
+	;=============================
 	; Accumulate tone if set
+	;	(if sample_b1 & $40)
 
 	lda	#$40		; if (b1&0x40)
 	bit	sample_b1
@@ -500,7 +501,7 @@ no_accum:
 	; if (j > 95) j = 95;
 note_not_negative:
 	cmp	#96
-	bcc	note_not_too_high
+	bcc	note_not_too_high	; blt
 
 	lda	#95
 
@@ -526,7 +527,7 @@ note_not_too_high:
 	adc	freq_l
 	sta	note_a+NOTE_TONE_L,X
 	lda	note_a+NOTE_TONE_H,X
-	adc	note_a+NOTE_TONE_SLIDING_H,X
+	adc	freq_h
 	and	#$0f
 	sta	note_a+NOTE_TONE_H,X
 
