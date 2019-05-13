@@ -49,6 +49,8 @@ NOTE_TONE_DELTA_L=41
 NOTE_TONE_DELTA_H=42
 NOTE_TONE_SLIDE_TO_STEP=43
 
+NOTE_STRUCT_SIZE=44
+
 note_a:
 	.byte	'A'	; NOTE_WHICH
 	.byte	$0	; NOTE_VOLUME
@@ -405,19 +407,20 @@ e_slide_amount:	.byte	$0
 	;=====================================
 	; Calculate Note
 	;=====================================
-	;
+	; note offset in X
+
 calculate_note:
 
-	lda	note_a+NOTE_ENABLED
+	lda	note_a+NOTE_ENABLED,X
 	bne	note_enabled
 
 	lda	#0
-	sta	note_a+NOTE_AMPLITUDE
+	sta	note_a+NOTE_AMPLITUDE,X
 	jmp	done_note
 
 note_enabled:
 
-	lda	note_a+NOTE_SAMPLE_POSITION
+	lda	note_a+NOTE_SAMPLE_POSITION,X
 	asl
 	asl
 	tay
@@ -435,20 +438,20 @@ note_enabled:
 	;  a->tone += (pt3->data[a->sample_pointer + a->sample_position * 4 + 3])<<8;
 	iny
 	lda	(SAMPLE_A_L),Y
-	sta	note_a+NOTE_TONE_L
+	sta	note_a+NOTE_TONE_L,X
 
 	iny
 	lda	(SAMPLE_A_L),Y
-	sta	note_a+NOTE_TONE_H
+	sta	note_a+NOTE_TONE_H,X
 
 	;  a->tone += a->tone_accumulator;
 	clc
-	lda	note_a+NOTE_TONE_ACCUMULATOR_L
-	adc	note_a+NOTE_TONE_L
-	sta	note_a+NOTE_TONE_L
-	lda	note_a+NOTE_TONE_H
-	adc	note_a+NOTE_TONE_ACCUMULATOR_H
-	sta	note_a+NOTE_TONE_H
+	lda	note_a+NOTE_TONE_ACCUMULATOR_L,X
+	adc	note_a+NOTE_TONE_L,X
+	sta	note_a+NOTE_TONE_L,X
+	lda	note_a+NOTE_TONE_H,X
+	adc	note_a+NOTE_TONE_ACCUMULATOR_H,X
+	sta	note_a+NOTE_TONE_H,X
 
 	;========================
 	; Accumulate tone if set
@@ -457,10 +460,10 @@ note_enabled:
 	bit	sample_b1
 	beq	no_accum
 
-	lda	note_a+NOTE_TONE_L	; tone_accumulator=tone
-	sta	note_a+NOTE_TONE_ACCUMULATOR_L
-	lda	note_a+NOTE_TONE_H
-	sta	note_a+NOTE_TONE_ACCUMULATOR_H
+	lda	note_a+NOTE_TONE_L,X	; tone_accumulator=tone
+	sta	note_a+NOTE_TONE_ACCUMULATOR_L,X
+	lda	note_a+NOTE_TONE_H,X
+	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X
 
 no_accum:
 
@@ -468,10 +471,10 @@ no_accum:
 	; Calculate tone
 	;  j = a->note + (pt3->data[a->ornament_pointer + a->ornament_position]
 	clc
-	lda	note_a+NOTE_ORNAMENT_POSITION
+	lda	note_a+NOTE_ORNAMENT_POSITION,X
 	tay
 	lda	(ORNAMENT_A_L),Y
-	adc	note_a+NOTE_NOTE
+	adc	note_a+NOTE_NOTE,X
 
 	;  if (j < 0) j = 0;
 	bpl	note_not_negative
@@ -494,90 +497,90 @@ note_not_too_high:
 	;  a->tone = (a->tone + a->tone_sliding + w) & 0xfff;
 
 	clc
-	lda	note_a+NOTE_TONE_L
-	adc	note_a+NOTE_TONE_SLIDING_L
-	sta	note_a+NOTE_TONE_L
-	lda	note_a+NOTE_TONE_H
-	adc	note_a+NOTE_TONE_SLIDING_H
-	sta	note_a+NOTE_TONE_H
+	lda	note_a+NOTE_TONE_L,X
+	adc	note_a+NOTE_TONE_SLIDING_L,X
+	sta	note_a+NOTE_TONE_L,X
+	lda	note_a+NOTE_TONE_H,X
+	adc	note_a+NOTE_TONE_SLIDING_H,X
+	sta	note_a+NOTE_TONE_H,X
 
 	clc
-	lda	note_a+NOTE_TONE_L
+	lda	note_a+NOTE_TONE_L,X
 	adc	freq_l
-	sta	note_a+NOTE_TONE_L
-	lda	note_a+NOTE_TONE_H
-	adc	note_a+NOTE_TONE_SLIDING_H
+	sta	note_a+NOTE_TONE_L,X
+	lda	note_a+NOTE_TONE_H,X
+	adc	note_a+NOTE_TONE_SLIDING_H,X
 	and	#$0f
-	sta	note_a+NOTE_TONE_H
+	sta	note_a+NOTE_TONE_H,X
 
 	;=====================
 	; handle tone sliding
 
-	lda	note_a+NOTE_TONE_SLIDE_COUNT
+	lda	note_a+NOTE_TONE_SLIDE_COUNT,X
 	bmi	no_tone_sliding		;  if (a->tone_slide_count > 0) {
 
-	dec	note_a+NOTE_TONE_SLIDE_COUNT	; a->tone_slide_count--;
+	dec	note_a+NOTE_TONE_SLIDE_COUNT,X	; a->tone_slide_count--;
 	bne	no_tone_sliding		; if (a->tone_slide_count==0) {
 
 
 	; a->tone_sliding+=a->tone_slide_step
 	clc
-	lda	note_a+NOTE_TONE_SLIDING_L
-	adc	note_a+NOTE_TONE_SLIDE_STEP_L
-	sta	note_a+NOTE_TONE_SLIDING_L
-	lda	note_a+NOTE_TONE_SLIDING_H
-	adc	note_a+NOTE_TONE_SLIDE_STEP_H
-	sta	note_a+NOTE_TONE_SLIDING_H
+	lda	note_a+NOTE_TONE_SLIDING_L,X
+	adc	note_a+NOTE_TONE_SLIDE_STEP_L,X
+	sta	note_a+NOTE_TONE_SLIDING_L,X
+	lda	note_a+NOTE_TONE_SLIDING_H,X
+	adc	note_a+NOTE_TONE_SLIDE_STEP_H,X
+	sta	note_a+NOTE_TONE_SLIDING_H,X
 
 	; a->tone_slide_count = a->tone_slide_delay;
-	lda	note_a+NOTE_TONE_SLIDE_DELAY
-	sta	note_a+NOTE_TONE_SLIDE_COUNT
+	lda	note_a+NOTE_TONE_SLIDE_DELAY,X
+	sta	note_a+NOTE_TONE_SLIDE_COUNT,X
 
-	lda	note_a+NOTE_SIMPLE_GLISS
+	lda	note_a+NOTE_SIMPLE_GLISS,X
 	bne	no_tone_sliding		; if (!a->simplegliss) {
 
 check1:
-	lda	note_a+NOTE_TONE_SLIDE_STEP_H
+	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	bpl	check2	;           if ( ((a->tone_slide_step < 0) &&
-;	lda	note_a+NOTE_TONE_SLIDING
-;	cmp	note_a+NOTE_TONE_DELTA
+;	lda	note_a+NOTE_TONE_SLIDING,X
+;	cmp	note_a+NOTE_TONE_DELTA,X
 ;	bcc	slide_to_note	; (a->tone_sliding <= a->tone_delta)) ||
 ;	beq	slide_to_note
 
 
-	lda	note_a+NOTE_TONE_SLIDING_H	; compare high bytes
-	cmp	note_a+NOTE_TONE_DELTA_H
+	lda	note_a+NOTE_TONE_SLIDING_H,X	; compare high bytes
+	cmp	note_a+NOTE_TONE_DELTA_H,X
 	bcc	slide_to_note	; if NUM1H < NUM2H then NUM1 < NUM2
 	bne	check2		; if NUM1H <> NUM2H then NUM1 > NUM2 (so NUM1 >= NUM2)
-	lda	note_a+NOTE_TONE_SLIDING_L	; compare low bytes
-	cmp	note_a+NOTE_TONE_DELTA_L
+	lda	note_a+NOTE_TONE_SLIDING_L,X	; compare low bytes
+	cmp	note_a+NOTE_TONE_DELTA_L,X
 	bcc	slide_to_note
 	beq	slide_to_note
 
 check2:
-	lda	note_a+NOTE_TONE_SLIDE_STEP_H
+	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	bmi	no_tone_sliding		; ((a->tone_slide_step >= 0) &&
 
-;	lda	note_a+NOTE_TONE_SLIDING
-;	cmp	note_a+NOTE_TONE_DELTA
+;	lda	note_a+NOTE_TONE_SLIDING,X
+;	cmp	note_a+NOTE_TONE_DELTA,X
 ;	bcc	no_tone_sliding	; blt (a->tone_sliding >= a->tone_delta)) {
 
 
-	lda	note_a+NOTE_TONE_SLIDING_H	; compare high bytes
-	cmp	note_a+NOTE_TONE_DELTA_H
+	lda	note_a+NOTE_TONE_SLIDING_H,X	; compare high bytes
+	cmp	note_a+NOTE_TONE_DELTA_H,X
 	bcc	no_tone_sliding		; if NUM1H < NUM2H then NUM1 < NUM2
         bne	slide_to_note	; if NUM1H <> NUM2H then NUM1 > NUM2 (so NUM1 >= NUM2)
-	lda	note_a+NOTE_TONE_SLIDING_L	; compare low bytes
-	cmp	note_a+NOTE_TONE_DELTA_L
+	lda	note_a+NOTE_TONE_SLIDING_L,X	; compare low bytes
+	cmp	note_a+NOTE_TONE_DELTA_L,X
 	bcc	no_tone_sliding		; if NUM1L < NUM2L then NUM1 < NUM2
 
 slide_to_note:
-	lda	note_a+NOTE_SLIDE_TO_NOTE
-	sta	note_a+NOTE_NOTE	; a->note = a->slide_to_note;
+	lda	note_a+NOTE_SLIDE_TO_NOTE,X
+	sta	note_a+NOTE_NOTE,X	; a->note = a->slide_to_note;
 	lda	#0
-	sta	note_a+NOTE_TONE_SLIDE_COUNT
-	sta	note_a+NOTE_TONE_SLIDING_L
-	sta	note_a+NOTE_TONE_SLIDING_H
+	sta	note_a+NOTE_TONE_SLIDE_COUNT,X
+	sta	note_a+NOTE_TONE_SLIDING_L,X
+	sta	note_a+NOTE_TONE_SLIDING_H,X
 
 
 no_tone_sliding:
@@ -586,7 +589,7 @@ no_tone_sliding:
 
 	lda	sample_b1		;  a->amplitude= (b1 & 0xf);
 	and	#$f
-	sta	note_a+NOTE_AMPLITUDE
+	sta	note_a+NOTE_AMPLITUDE,X
 
 	; adjust amplitude sliding
 
@@ -598,29 +601,29 @@ no_tone_sliding:
 	and	#$40
 	beq	amp_slide_down
 amp_slide_up:
-	lda	note_a+NOTE_AMPLITUDE_SLIDING
+	lda	note_a+NOTE_AMPLITUDE_SLIDING,X
 	cmp	#15
 	bcs	done_amp_sliding	; bge
 					;        if (a->amplitude_sliding < 15) {
-	inc	note_a+NOTE_AMPLITUDE_SLIDING	;           a->amplitude_sliding++;
+	inc	note_a+NOTE_AMPLITUDE_SLIDING,X	;           a->amplitude_sliding++;
 	jmp	done_amp_sliding
 amp_slide_down:
-	lda	note_a+NOTE_AMPLITUDE_SLIDING
+	lda	note_a+NOTE_AMPLITUDE_SLIDING,X
 	cmp	#$f2			; -14 1111 0010
 	bcc	done_amp_sliding	;        if (a->amplitude_sliding > -15) {
-	dec	note_a+NOTE_AMPLITUDE_SLIDING	;	; a->amplitude_sliding--;
+	dec	note_a+NOTE_AMPLITUDE_SLIDING,X	;	; a->amplitude_sliding--;
 
 done_amp_sliding:
 
 	; a->amplitude+=a->amplitude_sliding;
 	clc
-	lda	note_a+NOTE_AMPLITUDE
-	adc	note_a+NOTE_AMPLITUDE_SLIDING
-	sta	note_a+NOTE_AMPLITUDE
+	lda	note_a+NOTE_AMPLITUDE,X
+	adc	note_a+NOTE_AMPLITUDE_SLIDING,X
+	sta	note_a+NOTE_AMPLITUDE,X
 
 	; clamp amplitude to 0 - 15
 
-	lda	note_a+NOTE_AMPLITUDE
+	lda	note_a+NOTE_AMPLITUDE,X
 check_amp_lo:
 	bpl	check_amp_hi
 	lda	#0
@@ -631,7 +634,7 @@ check_amp_hi:
 	bcc	done_clamp_amplitude	; blt
 	lda	#15
 write_clamp_amplitude:
-	sta	note_a+NOTE_AMPLITUDE
+	sta	note_a+NOTE_AMPLITUDE,X
 done_clamp_amplitude:
 
 	; if (PlParams.PT3.PT3_Version <= 4)
@@ -639,27 +642,28 @@ done_clamp_amplitude:
 	; }
 	; else {
 
-	lda	note_a+NOTE_VOLUME
+	lda	note_a+NOTE_VOLUME,X
 	asl
 	asl
 	asl
 	asl
-	ora	note_a+NOTE_AMPLITUDE
-	tax
-	lda	PT3VolumeTable_35,X
-	sta	note_a+NOTE_AMPLITUDE ;     a->amplitude = PT3VolumeTable_35[a->volume][a->amplitude];
+	ora	note_a+NOTE_AMPLITUDE,X
+
+	tay
+	lda	PT3VolumeTable_35,Y
+	sta	note_a+NOTE_AMPLITUDE,X ;     a->amplitude = PT3VolumeTable_35[a->volume][a->amplitude];
 ;	}
 
 	lda	sample_b0	;  if (((b0 & 0x1) == 0) && ( a->envelope_enabled)) {
 	and	#$1
 	bne	envelope_slide
 
-	lda	note_a+NOTE_ENVELOPE_ENABLED
+	lda	note_a+NOTE_ENVELOPE_ENABLED,X
 	beq	envelope_slide
 
-	lda	note_a+NOTE_AMPLITUDE	; a->amplitude |= 16;
+	lda	note_a+NOTE_AMPLITUDE,X	; a->amplitude |= 16;
 	ora	#$10
-	sta	note_a+NOTE_AMPLITUDE
+	sta	note_a+NOTE_AMPLITUDE,X
 
 
 envelope_slide:
@@ -680,7 +684,7 @@ envelope_slide_up:
 	lsr
 	ora	#$f0
 	clc
-	adc	note_a+NOTE_ENVELOPE_SLIDING
+	adc	note_a+NOTE_ENVELOPE_SLIDING,X
 	sta	e_slide_amount	; j = ((b0>>1)|0xF0) + a->envelope_sliding
 	jmp	envelope_slide_done
 envelope_slide_down:
@@ -688,7 +692,7 @@ envelope_slide_down:
 	lsr
 	and	#$0f
 	clc
-	adc	note_a+NOTE_ENVELOPE_SLIDING
+	adc	note_a+NOTE_ENVELOPE_SLIDING,X
 	sta	e_slide_amount  ; j = ((b0>>1)&0xF) + a->envelope_sliding;
 
 envelope_slide_done:
@@ -697,7 +701,7 @@ envelope_slide_done:
 	bit	sample_b1
 	beq	last_envelope	;     if (( b1 & 0x20) != 0) {
 	lda	e_slide_amount
-	sta	note_a+NOTE_ENVELOPE_SLIDING	; a->envelope_sliding = j;
+	sta	note_a+NOTE_ENVELOPE_SLIDING,X	; a->envelope_sliding = j;
 
 last_envelope:
 
@@ -713,14 +717,14 @@ noise_slide:
 	lda	sample_b0
 	lsr
 	clc
-	adc	note_a+NOTE_NOISE_SLIDING
+	adc	note_a+NOTE_NOISE_SLIDING,X
 	sta	pt3_noise_add	; pt3->noise_add = (b0>>1) + a->noise_sliding;
 
 	lda	#$20
 	bit	sample_b1
 	beq	noise_slide_done	;     if ((b1 & 0x20) != 0) {
 	lda	pt3_noise_add
-	sta	note_a+NOTE_NOISE_SLIDING	; noise_sliding = pt3_noise_add
+	sta	note_a+NOTE_NOISE_SLIDING,X	; noise_sliding = pt3_noise_add
 
 noise_slide_done:
 	;======================
@@ -736,28 +740,28 @@ noise_slide_done:
 	;========================
 	; increment sample position
 
-	inc	note_a+NOTE_SAMPLE_POSITION	;  a->sample_position++;
-	lda	note_a+NOTE_SAMPLE_POSITION
-	cmp	note_a+NOTE_SAMPLE_LENGTH
+	inc	note_a+NOTE_SAMPLE_POSITION,X	;  a->sample_position++;
+	lda	note_a+NOTE_SAMPLE_POSITION,X
+	cmp	note_a+NOTE_SAMPLE_LENGTH,X
 
 	bcc	sample_pos_ok			; blt
 
-	lda	note_a+NOTE_SAMPLE_LOOP
-	sta	note_a+NOTE_SAMPLE_POSITION
+	lda	note_a+NOTE_SAMPLE_LOOP,X
+	sta	note_a+NOTE_SAMPLE_POSITION,X
 
 sample_pos_ok:
 
 	;========================
 	; increment ornament position
 
-	inc	note_a+NOTE_ORNAMENT_POSITION	;  a->ornament_position++;
-	lda	note_a+NOTE_ORNAMENT_POSITION
-	cmp	note_a+NOTE_ORNAMENT_LENGTH
+	inc	note_a+NOTE_ORNAMENT_POSITION,X	;  a->ornament_position++;
+	lda	note_a+NOTE_ORNAMENT_POSITION,X
+	cmp	note_a+NOTE_ORNAMENT_LENGTH,X
 
 	bcc	ornament_pos_ok			; blt
 
-	lda	note_a+NOTE_ORNAMENT_LOOP
-	sta	note_a+NOTE_SAMPLE_POSITION
+	lda	note_a+NOTE_ORNAMENT_LOOP,X
+	sta	note_a+NOTE_SAMPLE_POSITION,X
 ornament_pos_ok:
 
 
@@ -770,24 +774,24 @@ done_note:
 	sta	pt3_mixer_value
 
 handle_onoff:
-	lda	note_a+NOTE_ONOFF	;if (a->onoff>0) {
+	lda	note_a+NOTE_ONOFF,X	;if (a->onoff>0) {
 	beq	done_onoff
 
-	dec	note_a+NOTE_ONOFF	; a->onoff--;
+	dec	note_a+NOTE_ONOFF,X	; a->onoff--;
 
 	bne	done_onoff		;   if (a->onoff==0) {
-	lda	note_a+NOTE_ENABLED
+	lda	note_a+NOTE_ENABLED,X
 	eor	#$1			; toggle
-	sta	note_a+NOTE_ENABLED
+	sta	note_a+NOTE_ENABLED,X
 
 	bne	do_offon
 do_onoff:
-	lda	note_a+NOTE_ONOFF_DELAY	; if (a->enabled) a->onoff=a->onoff_delay;
+	lda	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
 	jmp	put_offon
 do_offon:
-	lda	note_a+NOTE_OFFON_DELAY ;      else a->onoff=a->offon_delay;
+	lda	note_a+NOTE_OFFON_DELAY,X ;      else a->onoff=a->offon_delay;
 put_offon:
-	sta	note_a+NOTE_ONOFF
+	sta	note_a+NOTE_ONOFF,X
 
 done_onoff:
 
@@ -1445,10 +1449,12 @@ pt3_decode_line:
 	jsr	decode_note
 
 	; decode_note(&pt3->b,&(pt3->b_addr),pt3);
-;	jsr	decode_note
+	ldx	#(NOTE_STRUCT_SIZE*1)
+	jsr	decode_note
 
 	; decode_note(&pt3->c,&(pt3->c_addr),pt3);
-;	jsr	decode_note
+	ldx	#(NOTE_STRUCT_SIZE*2)
+	jsr	decode_note
 
 ;	if (pt3->a.all_done && pt3->b.all_done && pt3->c.all_done) {
 ;		return 1;
@@ -1602,12 +1608,12 @@ do_frame:
 	sta	pt3_mixer_value
 	sta	pt3_envelope_add
 
-	lda	#0			; Note A
+	ldx	#0			; Note A
 	jsr	calculate_note
-;	lda	#1			; Note B
-;	jsr	calculate_note
-;	lda	#2			; Note C
-;	jsr	calculate_note
+	ldx	#(NOTE_STRUCT_SIZE*1)	; Note B
+	jsr	calculate_note
+	ldx	#(NOTE_STRUCT_SIZE*2)	; Note C
+	jsr	calculate_note
 
 	; Load up the Frequency Registers
 
