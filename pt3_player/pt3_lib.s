@@ -400,9 +400,12 @@ pt3_init_song:
 
 	rts
 
+e_slide_amount:	.byte	$0
+
 	;=====================================
 	; Calculate Note
 	;=====================================
+	;
 calculate_note:
 
 	lda	note_a+NOTE_ENABLED
@@ -638,28 +641,66 @@ done_clamp_amplitude:
 
 
 envelope_slide:
-;  /* Envelope slide */
-;  /* If b1 top bits are 10 or 11 */
-;  if ((b1 & 0x80) != 0) {
-;     if ((b0 & 0x20) != 0) {
-;        j = ((b0>>1)|0xF0) + a->envelope_sliding;
-;     }
-;     else {
-;        j = ((b0>>1)&0xF) + a->envelope_sliding;
-;     }
-;     if (( b1 & 0x20) != 0) {
-;        a->envelope_sliding = j;
-;     }
-;     pt3->envelope_add+=j;
-;  }
-;  /* Noise slide */
-;  else {
-;     pt3->noise_add = (b0>>1) + a->noise_sliding;
-;     if ((b1 & 0x20) != 0) {
-;        a->noise_sliding = pt3->noise_add;
-;     }
-;  }
+	; Envelope slide
+	; If b1 top bits are 10 or 11
 
+	lda	#$80
+	bit	sample_b1
+	beq	noise_slide		; if ((b1 & 0x80) != 0) {
+
+	lda	#$20
+	bit	sample_b0
+	beq	envelope_slide_down	;     if ((b0 & 0x20) != 0) {
+
+	; FIXME: this can be optimized
+envelope_slide_up:
+	lda	sample_b0
+	lsr
+	ora	#$f0
+	clc
+	adc	note_a+NOTE_ENVELOPE_SLIDING
+	sta	e_slide_amount	; j = ((b0>>1)|0xF0) + a->envelope_sliding
+	jmp	envelope_slide_done
+envelope_slide_down:
+	lda	sample_b0
+	lsr
+	and	#$0f
+	clc
+	adc	note_a+NOTE_ENVELOPE_SLIDING
+	sta	e_slide_amount  ; j = ((b0>>1)&0xF) + a->envelope_sliding;
+
+envelope_slide_done:
+
+	lda	#$20
+	bit	sample_b1
+	beq	last_envelope	;     if (( b1 & 0x20) != 0) {
+	lda	e_slide_amount
+	sta	note_a+NOTE_ENVELOPE_SLIDING	; a->envelope_sliding = j;
+
+last_envelope:
+
+	clc
+	lda	e_slide_amount
+	adc	pt3_envelope_add
+	sta	pt3_envelope_add	; pt3->envelope_add+=j;
+
+noise_slide:
+	; Noise slide
+	;  else {
+
+	lda	sample_b0
+	lsr
+	clc
+	adc	note_a+NOTE_NOISE_SLIDING
+	sta	pt3_noise_add	; pt3->noise_add = (b0>>1) + a->noise_sliding;
+
+	lda	#$20
+	bit	sample_b1
+	beq	noise_slide_done	;     if ((b1 & 0x20) != 0) {
+	lda	pt3_noise_add
+	sta	note_a+NOTE_NOISE_SLIDING	; noise_sliding = pt3_noise_add
+
+noise_slide_done:
 	;======================
 	; set mixer
 
