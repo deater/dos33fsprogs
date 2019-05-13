@@ -183,7 +183,7 @@ six_space:
 no_frame_oflo:
 
 	lda	FRAMEL
-	cmp	#8
+	cmp	#16
 	beq	all_done
 
 	lda	DONE_PLAYING

@@ -863,7 +863,8 @@ decode_note:
 
 	; Skip decode if note still running
 	lda	note_a+NOTE_LEN_COUNT,X
-	beq	keep_decoding			; assume not negative
+	cmp	#2
+	bcc	keep_decoding			; blt, assume not negative
 
 	; we are still running, decrement and early return
 	dec	note_a+NOTE_LEN_COUNT,X
@@ -1582,9 +1583,9 @@ pt3_make_frame:
 	; see if we need a new pattern
 	; we do if line==0 and subframe==0
 	lda	current_line
-	bne	line_good
+	bne	pattern_good
 	lda	current_subframe
-	bne	line_good
+	bne	pattern_good
 
 	; load a new patterh in
 	jsr	pt3_set_pattern
@@ -1598,6 +1599,7 @@ pattern_good:
 
 	; decode a new line
 	jsr	pt3_decode_line
+
 line_good:
 
 	; Increment everything
@@ -1612,7 +1614,7 @@ next_line:
 	sta	current_subframe
 
 	inc	current_line		; and increment line
-
+	lda	current_line
 					; FIXME: not always 64
 	cmp	#64			; if not max, continue
 	bne	do_frame
