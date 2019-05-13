@@ -1162,13 +1162,23 @@ done_decode:
 
 	jmp	note_decode_loop
 
+
+	;=================================
+	; handle effects
+	;=================================
+	; Note, the AYemul code has code to make sure these are applied
+	; In the same order they appear.  We don't bother?
 handle_effects:
-;	/* Note, the AYemul code has code to make sure these are applied */
-;	/* In the same order they appear.  We don't bother? */
-;	if (a_done) {
-;		if (a->spec_command==0x0) {
-;		}
-;		/* Tone Down */
+
+	lda	note_a+NOTE_SPEC_COMMAND
+
+	;==============================
+	; Effect #1 -- Tone Down
+	;==============================
+effect_1:
+	cmp	#$1
+	bne	effect_2
+
 ;		else if (a->spec_command==0x1) {
 ;			current_val=pt3->data[(*addr)];
 ;			a->spec_delay=current_val;
@@ -1187,6 +1197,14 @@ handle_effects:
 ;			a->onoff=0;
 ;			(*addr)++;
 ;		}
+
+	;==============================
+	; Effect #2 -- Portamento
+	;==============================
+effect_2:
+	cmp	#$2
+	bne	effect_3
+
 ;		/* port */
 ;		else if (a->spec_command==0x2) {
 ;			a->simplegliss=0;
@@ -1225,18 +1243,44 @@ handle_effects:
 ;				a->tone_slide_step = -a->tone_slide_ste$
 ;			}
 ;		}
+
+
+	;==============================
+	; Effect #3 -- Sample Position
+	;==============================
+effect_3:
+	cmp	#$3
+	bne	effect_4
+
 ;		/* Position in Sample */
 ;		else if (a->spec_command==0x3) {
 ;			current_val=pt3->data[(*addr)];
 ;			a->sample_position=current_val;
 ;			(*addr)++;
 ;		}
+
+	;==============================
+	; Effect #4 -- Ornament Position
+	;==============================
+effect_4:
+	cmp	#$4
+	bne	effect_5
+
 ;		/* Position in Ornament */
 ;		else if (a->spec_command==0x4) {
 ;			current_val=pt3->data[(*addr)];
 ;			a->ornament_position=current_val;
 ;			(*addr)++;
 ;		}
+
+	;==============================
+	; Effect #5 -- Vibrato
+	;==============================
+effect_5:
+	cmp	#$5
+	bne	effect_8
+
+
 ;		/* Vibrato */
 ;		else if (a->spec_command==0x5) {
 ;			current_val=pt3->data[(*addr)];
@@ -1251,6 +1295,14 @@ handle_effects:
 ;			a->tone_sliding=0;
 
 ;		}
+
+	;==============================
+	; Effect #8 -- Envelope Down
+	;==============================
+effect_8:
+	cmp	#$8
+	bne	effect_9
+
 ;		/* Envelope Down */
 ;		else if (a->spec_command==0x8) {
 
@@ -1271,6 +1323,14 @@ handle_effects:
 ;			a->spec_hi=current_val&0xff;
 ;			(*addr)++;
 ;			pt3->envelope_slide_add=(a->spec_hi<<8)|(a->spe$
+
+	;==============================
+	; Effect #9 -- Set Speed
+	;==============================
+effect_9:
+	cmp	#$9
+	bne	no_effect
+
 ;		/* Set Speed */
 ;		else  if (a->spec_command==0x9) {
 ;			current_val=pt3->data[(*addr)];
@@ -1280,6 +1340,20 @@ handle_effects:
 ;		}
 ;		break;
 ;	}
+
+no_effect:
+
+	;================================
+	; add y into the address pointer
+
+;	clc
+;	tya
+;	adc	note_a+NOTE_ADDR_L
+;	sta	note_a+NOTE_ADDR_L
+;	lda	#0
+;	adc	note_a+NOTE_ADDR_H
+;	sta	note_a+NOTE_ADDR_H
+;	sta	PATTERN_H
 
 	rts
 
