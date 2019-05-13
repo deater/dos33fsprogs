@@ -802,32 +802,33 @@ current_val:	.byte $0
 	;=====================================
 	; Decode Note
 	;=====================================
+	; X points to the note offset
 
 decode_note:
 
 	; Init vars
 
 	lda	#0
-	sta	note_a+NOTE_NEW_NOTE		; for printing notes?
-	sta	note_a+NOTE_SPEC_COMMAND	; These are only if printing?
+	sta	note_a+NOTE_NEW_NOTE,X		; for printing notes?
+	sta	note_a+NOTE_SPEC_COMMAND,X	; These are only if printing?
 	sta	decode_done
 
 	; Skip decode if note still running
-	lda	note_a+NOTE_LEN_COUNT
+	lda	note_a+NOTE_LEN_COUNT,X
 	beq	keep_decoding			; assume not negative
 
 	; we are still running, decrement and early return
-	dec	note_a+NOTE_LEN_COUNT
+	dec	note_a+NOTE_LEN_COUNT,X
 	rts
 
 keep_decoding:
 
-	lda	note_a+NOTE_NOTE		; store prev note
+	lda	note_a+NOTE_NOTE,X		; store prev note
 	sta	prev_note
 
-	lda	note_a+NOTE_TONE_SLIDING_H	; store prev sliding
+	lda	note_a+NOTE_TONE_SLIDING_H,X	; store prev sliding
 	sta	prev_sliding_h
-	lda	note_a+NOTE_TONE_SLIDING_L
+	lda	note_a+NOTE_TONE_SLIDING_L,X
 	sta	prev_sliding_l
 
 
@@ -836,17 +837,17 @@ keep_decoding:
 
 
 note_decode_loop:
-	lda	note_a+NOTE_LEN			; re-up length count
-	sta	note_a+NOTE_LEN_COUNT
+	lda	note_a+NOTE_LEN,X		; re-up length count
+	sta	note_a+NOTE_LEN_COUNT,X
 
-	lda	note_a+NOTE_ADDR_L
+	lda	note_a+NOTE_ADDR_L,X
 	sta	PATTERN_L
-	lda	note_a+NOTE_ADDR_H
+	lda	note_a+NOTE_ADDR_H,X
 	sta	PATTERN_H
 
 	; get next value
 	lda	(PATTERN_L),Y
-	tax				; save to X termporarily
+	sta	sample_b0			; save to X termporarily
 
 	; FIXME: use a jump table??
 
@@ -860,17 +861,17 @@ decode_case_0X:
 	; $0X set special effect
 	;==============================
 
-	txa
+	lda	sample_b0
 	and	#$f
 
 	bne	decode_case_0X_not_zero
 
 	; Do we ever actually hit this case?
 
-	sta	note_a+NOTE_LEN_COUNT	; len_count=0;
+	sta	note_a+NOTE_LEN_COUNT,X	; len_count=0;
 
 	lda	#1
-	sta	note_a+NOTE_ALL_DONE
+	sta	note_a+NOTE_ALL_DONE,X
 	sta	decode_done
 
 	jmp	done_decode
@@ -881,7 +882,7 @@ decode_case_0X_not_zero:
 	; Doesn't seem to happen in practice
 	; But AY_emul has code to handle it
 
-	sta	note_a+NOTE_SPEC_COMMAND
+	sta	note_a+NOTE_SPEC_COMMAND,X
 
 	jmp	done_decode
 
@@ -893,12 +894,12 @@ decode_case_1X:
 	cmp	#$10
 	bne	decode_case_2X
 
-	txa
+	lda	sample_b0
 	and	#$0f
 	bne	decode_case_not_10
 
 decode_case_10:
-	sta	note_a+NOTE_ENVELOPE_ENABLED
+	sta	note_a+NOTE_ENVELOPE_ENABLED,X
 	jmp	decode_case_1x_common
 
 
@@ -923,7 +924,7 @@ decode_case_not_10:
 	sta	pt3_envelope_slide_l		; envelope_slide=0
 	sta	pt3_envelope_slide_h
 	lda	#1
-	sta	note_a+NOTE_ENVELOPE_ENABLED	; envelope_enabled=1
+	sta	note_a+NOTE_ENVELOPE_ENABLED,X	; envelope_enabled=1
 
 decode_case_1x_common:
 
@@ -933,7 +934,7 @@ decode_case_1x_common:
 	jsr	load_sample
 
 	lda	#0
-	sta	note_a+NOTE_ORNAMENT_POSITION	; ornament_position=0
+	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0
 
 	jmp	done_decode
 
@@ -945,7 +946,7 @@ decode_case_2X:
 	cmp	#$20
 	bne	decode_case_3X
 
-	txa
+	lda	sample_b0
 	and	#$f
 	sta	pt3_noise_period
 
@@ -958,7 +959,7 @@ decode_case_3X:
 	cmp	#$30
 	bne	decode_case_4X
 
-	txa
+	lda	sample_b0
 	and	#$0f
 	ora	#$10
 	sta	pt3_noise_period
@@ -972,12 +973,12 @@ decode_case_4X:
 	cmp	#$40
 	bne	decode_case_5X
 
-	txa
+	lda	sample_b0
 	and	#$0f				; set ornament to bottom nibble
 	jsr	load_ornament
 
 	lda	#0
-	sta	note_a+NOTE_ORNAMENT_POSITION	; FIXME: put this in load_orn?
+	sta	note_a+NOTE_ORNAMENT_POSITION,X	; FIXME: put this in load_orn?
 
 	jmp	done_decode
 
@@ -988,27 +989,27 @@ decode_case_5X:
 	cmp	#$B0
 	bcs	decode_case_bX		 ; branch greater/equal
 
-	txa
+	lda	sample_b0
 	sec
 	sbc	#$50
-	sta	note_a+NOTE_NOTE	; note=(current_val-0x50);
+	sta	note_a+NOTE_NOTE,X	; note=(current_val-0x50);
 
 	lda	#0
-	sta	note_a+NOTE_SAMPLE_POSITION	; sample_position=0
-	sta	note_a+NOTE_AMPLITUDE_SLIDING	; amplitude_sliding=0
-	sta	note_a+NOTE_NOISE_SLIDING	; noise_sliding=0
-	sta	note_a+NOTE_ENVELOPE_SLIDING	; envelope_sliding=0
-	sta	note_a+NOTE_ORNAMENT_POSITION	; ornament_position=0
-	sta	note_a+NOTE_TONE_SLIDE_COUNT	; tone_slide_count=0
-	sta	note_a+NOTE_TONE_SLIDING_L	; tone_sliding=0
-	sta	note_a+NOTE_TONE_SLIDING_H
-	sta	note_a+NOTE_TONE_ACCUMULATOR_L	; tone_accumulator=0
-	sta	note_a+NOTE_TONE_ACCUMULATOR_H
-	sta	note_a+NOTE_ONOFF		; onoff=0;
+	sta	note_a+NOTE_SAMPLE_POSITION,X	; sample_position=0
+	sta	note_a+NOTE_AMPLITUDE_SLIDING,X	; amplitude_sliding=0
+	sta	note_a+NOTE_NOISE_SLIDING,X	; noise_sliding=0
+	sta	note_a+NOTE_ENVELOPE_SLIDING,X	; envelope_sliding=0
+	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0
+	sta	note_a+NOTE_TONE_SLIDE_COUNT,X	; tone_slide_count=0
+	sta	note_a+NOTE_TONE_SLIDING_L,X	; tone_sliding=0
+	sta	note_a+NOTE_TONE_SLIDING_H,X
+	sta	note_a+NOTE_TONE_ACCUMULATOR_L,X	; tone_accumulator=0
+	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X
+	sta	note_a+NOTE_ONOFF,X		; onoff=0;
 
 	lda	#1
-	sta	note_a+NOTE_NEW_NOTE		; new=1
-	sta	note_a+NOTE_ENABLED		; enabled=1
+	sta	note_a+NOTE_NEW_NOTE,X		; new=1
+	sta	note_a+NOTE_ENABLED,X		; enabled=1
 	sta	decode_done			; decode_done-1
 	jmp	done_decode
 
@@ -1019,7 +1020,7 @@ decode_case_bX:
 	cmp	#$b0		; FIXME: this cmp not needed, from before?
 	bne	decode_case_cX
 
-	txa
+	lda	sample_b0
 	and	#$f
 	beq	decode_case_b0
 	cmp	#1
@@ -1029,8 +1030,8 @@ decode_case_bX:
 decode_case_b0:
 	; Disable envelope
 	lda	#0
-	sta	note_a+NOTE_ENVELOPE_ENABLED
-	sta	note_a+NOTE_ORNAMENT_POSITION
+	sta	note_a+NOTE_ENVELOPE_ENABLED,X
+	sta	note_a+NOTE_ORNAMENT_POSITION,X
 	jmp	done_decode
 
 
@@ -1041,8 +1042,8 @@ decode_case_b1:
 	iny
 	lda	(PATTERN_L),Y
 
-	sta	note_a+NOTE_LEN
-	sta	note_a+NOTE_LEN_COUNT
+	sta	note_a+NOTE_LEN,X
+	sta	note_a+NOTE_LEN_COUNT,X
 	jmp	done_decode
 
 decode_case_bx_higher:
@@ -1065,13 +1066,13 @@ decode_case_bx_higher:
 	sta	pt3_envelope_period_l
 
 	lda	#0
-	sta	note_a+NOTE_ORNAMENT_POSITION	; ornament_position=0
+	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0
 	sta	pt3_envelope_slide_l		; envelope_slide=0
 	sta	pt3_envelope_slide_h
 	sta	pt3_envelope_delay		; envelope_delay=0
 
 	lda	#1
-	sta	note_a+NOTE_ENVELOPE_ENABLED	; envelope_enabled=1;
+	sta	note_a+NOTE_ENVELOPE_ENABLED,X	; envelope_enabled=1;
 	jmp	done_decode
 
 decode_case_cX:
@@ -1081,7 +1082,7 @@ decode_case_cX:
 	cmp	#$c0
 	bne	decode_case_dX
 
-	txa
+	lda	sample_b0
 	and	#$0f
 	bne	decode_case_cx_not_c0
 
@@ -1090,18 +1091,18 @@ decode_case_c0:
 
 	lda	#0
 	; FIXME: merge with other clearing code?
-	sta	note_a+NOTE_SAMPLE_POSITION	; sample_position=0
-	sta	note_a+NOTE_AMPLITUDE_SLIDING	; amplitude_sliding=0
-	sta	note_a+NOTE_NOISE_SLIDING	; noise_sliding=0
-	sta	note_a+NOTE_ENVELOPE_SLIDING	; envelope_sliding=0
-	sta	note_a+NOTE_ORNAMENT_POSITION	; ornament_position=0
-	sta	note_a+NOTE_TONE_SLIDE_COUNT	; tone_slide_count=0
-	sta	note_a+NOTE_TONE_SLIDING_L	; tone_sliding=0
-	sta	note_a+NOTE_TONE_SLIDING_H
-	sta	note_a+NOTE_TONE_ACCUMULATOR_L	; tone_accumulator=0
-	sta	note_a+NOTE_TONE_ACCUMULATOR_H
-	sta	note_a+NOTE_ONOFF		; onoff=0
-	sta	note_a+NOTE_ENABLED		; enabled=0
+	sta	note_a+NOTE_SAMPLE_POSITION,X	; sample_position=0
+	sta	note_a+NOTE_AMPLITUDE_SLIDING,X	; amplitude_sliding=0
+	sta	note_a+NOTE_NOISE_SLIDING,X	; noise_sliding=0
+	sta	note_a+NOTE_ENVELOPE_SLIDING,X	; envelope_sliding=0
+	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0
+	sta	note_a+NOTE_TONE_SLIDE_COUNT,X	; tone_slide_count=0
+	sta	note_a+NOTE_TONE_SLIDING_L,X	; tone_sliding=0
+	sta	note_a+NOTE_TONE_SLIDING_H,X
+	sta	note_a+NOTE_TONE_ACCUMULATOR_L,X	; tone_accumulator=0
+	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X
+	sta	note_a+NOTE_ONOFF,X		; onoff=0
+	sta	note_a+NOTE_ENABLED,X		; enabled=0
 
 	lda	#1
 	sta	decode_done
@@ -1109,7 +1110,7 @@ decode_case_c0:
 	jmp done_decode
 
 decode_case_cx_not_c0:
-	sta	note_a+NOTE_VOLUME		; volume=current_val&0xf;
+	sta	note_a+NOTE_VOLUME,X		; volume=current_val&0xf;
 	jmp	done_decode
 
 decode_case_dX:
@@ -1121,7 +1122,7 @@ decode_case_dX:
 	cmp	#$d0
 	bne	decode_case_eX
 
-	txa
+	lda	sample_b0
 	and	#$0f
 	bne	decode_case_dx_not_d0
 
@@ -1144,7 +1145,7 @@ decode_case_eX:
 	cmp	#$e0
 	bne	decode_case_fX
 
-	txa
+	lda	sample_b0
 	sec
 	sbc	#$d0
 	jsr	load_sample
@@ -1158,10 +1159,10 @@ decode_case_fX:
 
 	; disable envelope
 	lda	#0
-	sta	note_a+NOTE_ENVELOPE_ENABLED
+	sta	note_a+NOTE_ENVELOPE_ENABLED,X
 
 	; Set ornament to low byte of command
-	txa
+	lda	sample_b0
 	and	#$f
 	jsr	load_ornament		; ornament to load in A
 
@@ -1192,7 +1193,7 @@ done_decode:
 	; In the same order they appear.  We don't bother?
 handle_effects:
 
-	lda	note_a+NOTE_SPEC_COMMAND
+	lda	note_a+NOTE_SPEC_COMMAND,X
 
 	;==============================
 	; Effect #1 -- Tone Down
@@ -1204,21 +1205,21 @@ effect_1:
 	lda	(PATTERN_L),Y	; load byte, set as slide delay
 	iny
 
-	sta	note_a+NOTE_TONE_SLIDE_DELAY
-	sta	note_a+NOTE_TONE_SLIDE_COUNT
+	sta	note_a+NOTE_TONE_SLIDE_DELAY,X
+	sta	note_a+NOTE_TONE_SLIDE_COUNT,X
 
 	lda	(PATTERN_L),Y	; load byte, set as slide step low
 	iny
-	sta	note_a+NOTE_TONE_SLIDE_STEP_L
+	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
 
 	lda	(PATTERN_L),Y	; load byte, set as slide step high
 	iny
-	sta	note_a+NOTE_TONE_SLIDE_STEP_H
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
 
 	lda	#0
-	sta	note_a+NOTE_ONOFF
+	sta	note_a+NOTE_ONOFF,X
 	lda	#1
-	sta	note_a+NOTE_SIMPLE_GLISS
+	sta	note_a+NOTE_SIMPLE_GLISS,X
 
 	jmp	no_effect
 
@@ -1231,14 +1232,14 @@ effect_2:
 	jmp	effect_3
 effect_2_small:			; FIXME: make smaller
 	lda	#0
-	sta	note_a+NOTE_SIMPLE_GLISS
-	sta	note_a+NOTE_ONOFF
+	sta	note_a+NOTE_SIMPLE_GLISS,X
+	sta	note_a+NOTE_ONOFF,X
 
 	lda	(PATTERN_L),Y	; load byte, set as delay
 	iny
 
-	sta	note_a+NOTE_TONE_SLIDE_DELAY
-	sta	note_a+NOTE_TONE_SLIDE_COUNT
+	sta	note_a+NOTE_TONE_SLIDE_DELAY,X
+	sta	note_a+NOTE_TONE_SLIDE_COUNT,X
 
 	iny
 	iny
@@ -1246,88 +1247,88 @@ effect_2_small:			; FIXME: make smaller
 
 	lda	(PATTERN_L),Y	; load byte, set as slide_step low
 	iny
-	sta	note_a+NOTE_TONE_SLIDE_STEP_L
+	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
 
 	lda	(PATTERN_L),Y	; load byte, set as slide_step high
 	iny
-	sta	note_a+NOTE_TONE_SLIDE_STEP_H
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
 
 	; 16-bit absolute value
 	bpl	slide_step_positive
 
 	eor	#$ff
-	sta	note_a+NOTE_TONE_SLIDE_STEP_H
-	lda	note_a+NOTE_TONE_SLIDE_STEP_L
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
+	lda	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	eor	#$ff
 	sec
 	adc	#$1
-	sta	note_a+NOTE_TONE_SLIDE_STEP_L
-	lda	note_a+NOTE_TONE_SLIDE_STEP_H
+	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
+	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	adc	#$0
-	sta	note_a+NOTE_TONE_SLIDE_STEP_H
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
 
 slide_step_positive:
 
 ;	a->tone_delta=GetNoteFreq(a->note,pt3)-
 ;		GetNoteFreq(prev_note,pt3);
 
-	lda	note_a+NOTE_NOTE
+	lda	note_a+NOTE_NOTE,X
 	jsr	GetNoteFreq
 	lda	freq_l
-	sta	note_a+NOTE_TONE_DELTA_L
+	sta	note_a+NOTE_TONE_DELTA_L,X
 	lda	freq_h
-	sta	note_a+NOTE_TONE_DELTA_H
+	sta	note_a+NOTE_TONE_DELTA_H,X
 
 	lda	prev_note
 	jsr	GetNoteFreq
 
 	sec
-	lda	note_a+NOTE_TONE_DELTA_L
+	lda	note_a+NOTE_TONE_DELTA_L,X
 	sbc	freq_l
-	sta	note_a+NOTE_TONE_DELTA_L
-	lda	note_a+NOTE_TONE_DELTA_H
+	sta	note_a+NOTE_TONE_DELTA_L,X
+	lda	note_a+NOTE_TONE_DELTA_H,X
 	sbc	freq_h
-	sta	note_a+NOTE_TONE_DELTA_H
+	sta	note_a+NOTE_TONE_DELTA_H,X
 
-	lda	note_a+NOTE_NOTE
-	sta	note_a+NOTE_SLIDE_TO_NOTE	; a->slide_to_note=a->note;
+	lda	note_a+NOTE_NOTE,X
+	sta	note_a+NOTE_SLIDE_TO_NOTE,X	; a->slide_to_note=a->note;
 
 	lda	prev_note
-	sta	note_a+NOTE_NOTE		; a->note=prev_note;
+	sta	note_a+NOTE_NOTE,X		; a->note=prev_note;
 
 	lda	pt3_version
 	cmp	#$6
 	bcc	weird_version			; blt
 
 	lda	prev_sliding_l
-	sta	note_a+NOTE_TONE_SLIDING_L
+	sta	note_a+NOTE_TONE_SLIDING_L,X
 	lda	prev_sliding_h
-	sta	note_a+NOTE_TONE_SLIDING_H
+	sta	note_a+NOTE_TONE_SLIDING_H,X
 
 weird_version:
 
 	; annoying 16-bit subtract, only care if negative
 	;	if ((a->tone_delta - a->tone_sliding) < 0) {
 	sec
-	lda	note_a+NOTE_TONE_DELTA_L
-	sbc	note_a+NOTE_TONE_SLIDING_L
-	lda	note_a+NOTE_TONE_DELTA_H
-	sbc	note_a+NOTE_TONE_SLIDING_H
+	lda	note_a+NOTE_TONE_DELTA_L,X
+	sbc	note_a+NOTE_TONE_SLIDING_L,X
+	lda	note_a+NOTE_TONE_DELTA_H,X
+	sbc	note_a+NOTE_TONE_SLIDING_H,X
 	bpl	no_need
 
 	; a->tone_slide_step = -a->tone_slide_step;
 
-	lda	note_a+NOTE_TONE_SLIDE_STEP_H
+	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	eor	#$ff
-	sta	note_a+NOTE_TONE_SLIDE_STEP_H
-	lda	note_a+NOTE_TONE_SLIDE_STEP_L
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
+	lda	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	eor	#$ff
 	sec
 	adc	#$1
-	sta	note_a+NOTE_TONE_SLIDE_STEP_L
-	lda	note_a+NOTE_TONE_SLIDE_STEP_H
+	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
+	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	adc	#$0
-	sta	note_a+NOTE_TONE_SLIDE_STEP_H
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
 
 no_need:
 
@@ -1342,7 +1343,7 @@ effect_3:
 
 	lda	(PATTERN_L),Y	; load byte, set as sample position
 	iny
-	sta	note_a+NOTE_SAMPLE_POSITION
+	sta	note_a+NOTE_SAMPLE_POSITION,X
 
 	jmp	no_effect
 
@@ -1355,7 +1356,7 @@ effect_4:
 
 	lda	(PATTERN_L),Y	; load byte, set as ornament position
 	iny
-	sta	note_a+NOTE_ORNAMENT_POSITION
+	sta	note_a+NOTE_ORNAMENT_POSITION,X
 
 	jmp	no_effect
 
@@ -1368,17 +1369,17 @@ effect_5:
 
 	lda	(PATTERN_L),Y	; load byte, set as onoff delay
 	iny
-	sta	note_a+NOTE_ONOFF_DELAY
-	sta	note_a+NOTE_ONOFF
+	sta	note_a+NOTE_ONOFF_DELAY,X
+	sta	note_a+NOTE_ONOFF,X
 
 	lda	(PATTERN_L),Y	; load byte, set as offon delay
 	iny
-	sta	note_a+NOTE_OFFON_DELAY
+	sta	note_a+NOTE_OFFON_DELAY,X
 
 	lda	#0
-	sta	note_a+NOTE_TONE_SLIDE_COUNT
-	sta	note_a+NOTE_TONE_SLIDING_L
-	sta	note_a+NOTE_TONE_SLIDING_H
+	sta	note_a+NOTE_TONE_SLIDE_COUNT,X
+	sta	note_a+NOTE_TONE_SLIDING_L,X
+	sta	note_a+NOTE_TONE_SLIDING_H,X
 
 	jmp	no_effect
 
@@ -1425,11 +1426,11 @@ no_effect:
 
 	clc
 	tya
-	adc	note_a+NOTE_ADDR_L
-	sta	note_a+NOTE_ADDR_L
+	adc	note_a+NOTE_ADDR_L,X
+	sta	note_a+NOTE_ADDR_L,X
 	lda	#0
-	adc	note_a+NOTE_ADDR_H
-	sta	note_a+NOTE_ADDR_H
+	adc	note_a+NOTE_ADDR_H,X
+	sta	note_a+NOTE_ADDR_H,X
 	sta	PATTERN_H
 
 	rts
@@ -1440,6 +1441,7 @@ no_effect:
 
 pt3_decode_line:
 	; decode_note(&pt3->a,&(pt3->a_addr),pt3);
+	ldx	#0
 	jsr	decode_note
 
 	; decode_note(&pt3->b,&(pt3->b_addr),pt3);
