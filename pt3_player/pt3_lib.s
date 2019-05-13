@@ -536,6 +536,7 @@ note_not_too_high:
 
 	lda	note_a+NOTE_TONE_SLIDE_COUNT,X
 	bmi	no_tone_sliding		;  if (a->tone_slide_count > 0) {
+	beq	no_tone_sliding
 
 	dec	note_a+NOTE_TONE_SLIDE_COUNT,X	; a->tone_slide_count--;
 	bne	no_tone_sliding		; if (a->tone_slide_count==0) {
@@ -563,6 +564,8 @@ check1:
 	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	bpl	check2	;           if ( ((a->tone_slide_step < 0) &&
 
+	;				(a->tone_sliding <= a->tone_delta) ||
+
 	lda	note_a+NOTE_TONE_SLIDING_H,X	; compare high bytes
 	cmp	note_a+NOTE_TONE_DELTA_H,X
 	bcc	slide_to_note	; if NUM1H < NUM2H then NUM1 < NUM2
@@ -576,6 +579,7 @@ check2:
 	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	bmi	no_tone_sliding		; ((a->tone_slide_step >= 0) &&
 
+	;				(a->tone_sliding >= a->tone_delta)
 	lda	note_a+NOTE_TONE_SLIDING_H,X	; compare high bytes
 	cmp	note_a+NOTE_TONE_DELTA_H,X
 	bcc	no_tone_sliding		; if NUM1H < NUM2H then NUM1 < NUM2
@@ -594,12 +598,19 @@ slide_to_note:
 
 
 no_tone_sliding:
-	;====================
-	; set amplitude
+
+	;=========================
+	; Calculate the amplitude
+	;=========================
+
+	; get base value from the sample (bottom 4 bits of sample_b1)
 
 	lda	sample_b1		;  a->amplitude= (b1 & 0xf);
 	and	#$f
 	sta	note_a+NOTE_AMPLITUDE,X
+
+	;========================================
+	; if b1 top bit is set, it means sliding
 
 	; adjust amplitude sliding
 
@@ -607,9 +618,14 @@ no_tone_sliding:
 	and	#$80
 	beq	done_amp_sliding
 
+	;================================
+	; if top bits 0b11 then slide up
+	; if top buts 0b10 then slide down
+
 	lda	sample_b0		;     if ((b0&0x40)!=0) {
 	and	#$40
 	beq	amp_slide_down
+
 amp_slide_up:
 	; if (a->amplitude_sliding < 15) {
 	; a pain to do signed compares
@@ -622,6 +638,7 @@ asu_signed:
 	bpl	done_amp_sliding	; skip if A>=15
 	inc	note_a+NOTE_AMPLITUDE_SLIDING,X	; a->amplitude_sliding++;
 	jmp	done_amp_sliding
+
 amp_slide_down:
 	; if (a->amplitude_sliding > -15) {
 	; a pain to do signed compares
@@ -657,15 +674,19 @@ check_amp_hi:
 	lda	#15
 write_clamp_amplitude:
 	sta	note_a+NOTE_AMPLITUDE,X
+
 done_clamp_amplitude:
+
+	;=======================
+	; get actual output from table
+
+	; if (PlParams.PT3.PT3_Version <= 4)
 
 	lda	pt3_version
 	cmp	#5
 	bcs	other_table	; bge
 
-	; if (PlParams.PT3.PT3_Version <= 4)
-	;	a->amplitude = PT3VolumeTable_33_34[a->volume][a->amplitude];
-	; }
+	; a->amplitude = PT3VolumeTable_33_34[a->volume][a->amplitude];
 
 	lda	note_a+NOTE_VOLUME,X
 	asl
@@ -696,12 +717,23 @@ other_table:
 ;	}
 done_table:
 
-	lda	sample_b0	;  if (((b0 & 0x1) == 0) && ( a->envelope_enabled)) {
+
+check_envelope_enable:
+	; Bottom bit of b0 indicates our sample has envelope
+	; Also make sure envelopes are enabled
+
+
+	;  if (((b0 & 0x1) == 0) && ( a->envelope_enabled)) {
+	lda	sample_b0
 	and	#$1
 	bne	envelope_slide
 
 	lda	note_a+NOTE_ENVELOPE_ENABLED,X
 	beq	envelope_slide
+
+
+	; Bit 4 of the per-channel AY-3-8910 amplitude specifies
+	; envelope enabled
 
 	lda	note_a+NOTE_AMPLITUDE,X	; a->amplitude |= 16;
 	ora	#$10
