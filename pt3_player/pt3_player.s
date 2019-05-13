@@ -2,7 +2,7 @@
 
 .include	"zp.inc"
 
-PT3_LOC = $2000
+PT3_LOC = $3000
 
 UNPACK_BUFFER	EQU	$6000		; $6000 - $9800, 14k, $3800
 NUM_FILES	EQU	15

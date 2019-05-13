@@ -5,7 +5,7 @@
 
 .include	"zp.inc"
 
-PT3_LOC = $2000
+PT3_LOC = $3000
 
 NUM_FILES	EQU	15
 
