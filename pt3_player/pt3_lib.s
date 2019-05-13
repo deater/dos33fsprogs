@@ -239,6 +239,7 @@ freq_h:	.byte	$00
 	; Load Ornament
 	;===========================
 	; ornament value in A
+	; note offset in X
 
 load_ornament:
 
@@ -271,13 +272,13 @@ load_ornament:
 	; Set the loop value
 	;     a->ornament_loop=pt3->data[a->ornament_pointer];
 	lda	(ORNAMENT_A_L),Y
-	sta	note_a+NOTE_ORNAMENT_LOOP
+	sta	note_a+NOTE_ORNAMENT_LOOP,X
 
 	; Set the length value
 	;     a->ornament_length=pt3->data[a->ornament_pointer];
 	iny
 	lda	(ORNAMENT_A_L),Y
-	sta	note_a+NOTE_ORNAMENT_LENGTH
+	sta	note_a+NOTE_ORNAMENT_LENGTH,X
 
 	; Set the pointer to the value past the length
 
@@ -297,6 +298,8 @@ load_ornament:
 	; Load Sample
 	;===========================
 	; sample in A
+	; which note offset in X
+
 load_sample:
 
 	sty	ysave
@@ -326,14 +329,14 @@ load_sample:
 
 	ldy	#0
 	lda	(SAMPLE_A_L),Y
-	sta	note_a+NOTE_SAMPLE_LOOP
+	sta	note_a+NOTE_SAMPLE_LOOP,X
 
 	; Set the length value
 	;     a->sample_length=pt3->data[a->sample_pointer];
 
 	iny
 	lda	(SAMPLE_A_L),Y
-	sta	note_a+NOTE_SAMPLE_LENGTH
+	sta	note_a+NOTE_SAMPLE_LENGTH,X
 
 	; Set pointer to beginning of samples
 
@@ -373,24 +376,27 @@ pt3_init_song:
 	sta	note_a+NOTE_ENVELOPE_ENABLED
 	sta	note_b+NOTE_ENVELOPE_ENABLED
 	sta	note_c+NOTE_ENVELOPE_ENABLED
-	lda	#'A'
+
+	; default ornament/sample in A
 	lda	#0
+	ldx	#0
 	jsr	load_ornament
-	lda	#'A'
 	lda	#1
 	jsr	load_sample
-;	lda	#'B'
-;	lda	#0
-;	jsr	load_ornament
-;	lda	#'B'
-;	lda	#1
-;	jsr	load_sample
-;	lda	#'C'
-;	lda	#0
-;	jsr	load_ornament
-;	lda	#'C'
-;	lda	#1
-;	jsr	load_sample
+
+	; default ornament/sample in B
+	lda	#0
+	ldx	#(NOTE_STRUCT_SIZE*1)
+	jsr	load_ornament
+	lda	#1
+	jsr	load_sample
+
+	; default ornament/sample in C
+	lda	#0
+	ldx	#(NOTE_STRUCT_SIZE*2)
+	jsr	load_ornament
+	lda	#1
+	jsr	load_sample
 
 	lda	#$0
 	sta	pt3_noise_period
