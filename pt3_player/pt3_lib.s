@@ -44,10 +44,10 @@ NOTE_TONE_SLIDE_STEP_L=36
 NOTE_TONE_SLIDE_STEP_H=37
 NOTE_TONE_SLIDE_DELAY=38
 NOTE_SIMPLE_GLISS=39
-NOTE_TONE_SLIDING=41
-NOTE_SLIDE_TO_NOTE=42
-NOTE_TONE_DELTA=43
-NOTE_TONE_SLIDE_TO_STEP=44
+NOTE_SLIDE_TO_NOTE=40
+NOTE_TONE_DELTA_L=41
+NOTE_TONE_DELTA_H=42
+NOTE_TONE_SLIDE_TO_STEP=43
 
 note_a:
 	.byte	'A'	; NOTE_WHICH
@@ -90,9 +90,9 @@ note_a:
 	.byte	$0	; NOTE_TONE_SLIDE_STEP_H
 	.byte	$0	; NOTE_TONE_SLIDE_DELAY
 	.byte	$0	; NOTE_SIMPLE_GLISS
-	.byte	$0	; NOTE_TONE_SLIDING
 	.byte	$0	; NOTE_SLIDE_TO_NOTE
-	.byte	$0	; NOTE_TONE_DELTA
+	.byte	$0	; NOTE_TONE_DELTA_L
+	.byte	$0	; NOTE_TONE_DELTA_H
 	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
 
 note_b:
@@ -136,9 +136,9 @@ note_b:
 	.byte	$0	; NOTE_TONE_SLIDE_STEP_H
 	.byte	$0	; NOTE_TONE_SLIDE_DELAY
 	.byte	$0	; NOTE_SIMPLE_GLISS
-	.byte	$0	; NOTE_TONE_SLIDING
 	.byte	$0	; NOTE_SLIDE_TO_NOTE
-	.byte	$0	; NOTE_TONE_DELTA
+	.byte	$0	; NOTE_TONE_DELTA_L
+	.byte	$0	; NOTE_TONE_DELTA_H
 	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
 
 note_c:
@@ -182,9 +182,9 @@ note_c:
 	.byte	$0	; NOTE_TONE_SLIDE_STEP_H
 	.byte	$0	; NOTE_TONE_SLIDE_DELAY
 	.byte	$0	; NOTE_SIMPLE_GLISS
-	.byte	$0	; NOTE_TONE_SLIDING
 	.byte	$0	; NOTE_SLIDE_TO_NOTE
-	.byte	$0	; NOTE_TONE_DELTA
+	.byte	$0	; NOTE_TONE_DELTA_L
+	.byte	$0	; NOTE_TONE_DELTA_H
 	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
 
 pt3_version:		.byte	$0
@@ -539,24 +539,46 @@ note_not_too_high:
 check1:
 	lda	note_a+NOTE_TONE_SLIDE_STEP_H
 	bpl	check2	;           if ( ((a->tone_slide_step < 0) &&
-	lda	note_a+NOTE_TONE_SLIDING
-	cmp	note_a+NOTE_TONE_DELTA
-	bcc	slide_to_note	; (a->tone_sliding <= a->tone_delta)) ||
+;	lda	note_a+NOTE_TONE_SLIDING
+;	cmp	note_a+NOTE_TONE_DELTA
+;	bcc	slide_to_note	; (a->tone_sliding <= a->tone_delta)) ||
+;	beq	slide_to_note
+
+
+	lda	note_a+NOTE_TONE_SLIDING_H	; compare high bytes
+	cmp	note_a+NOTE_TONE_DELTA_H
+	bcc	slide_to_note	; if NUM1H < NUM2H then NUM1 < NUM2
+	bne	check2		; if NUM1H <> NUM2H then NUM1 > NUM2 (so NUM1 >= NUM2)
+	lda	note_a+NOTE_TONE_SLIDING_L	; compare low bytes
+	cmp	note_a+NOTE_TONE_DELTA_L
+	bcc	slide_to_note
 	beq	slide_to_note
 
 check2:
 	lda	note_a+NOTE_TONE_SLIDE_STEP_H
 	bmi	no_tone_sliding		; ((a->tone_slide_step >= 0) &&
-	lda	note_a+NOTE_TONE_SLIDING
-	cmp	note_a+NOTE_TONE_DELTA
-	bcc	no_tone_sliding	; blt (a->tone_sliding >= a->tone_delta)) {
+
+;	lda	note_a+NOTE_TONE_SLIDING
+;	cmp	note_a+NOTE_TONE_DELTA
+;	bcc	no_tone_sliding	; blt (a->tone_sliding >= a->tone_delta)) {
+
+
+	lda	note_a+NOTE_TONE_SLIDING_H	; compare high bytes
+	cmp	note_a+NOTE_TONE_DELTA_H
+	bcc	no_tone_sliding		; if NUM1H < NUM2H then NUM1 < NUM2
+        bne	slide_to_note	; if NUM1H <> NUM2H then NUM1 > NUM2 (so NUM1 >= NUM2)
+	lda	note_a+NOTE_TONE_SLIDING_L	; compare low bytes
+	cmp	note_a+NOTE_TONE_DELTA_L
+	bcc	no_tone_sliding		; if NUM1L < NUM2L then NUM1 < NUM2
 
 slide_to_note:
 	lda	note_a+NOTE_SLIDE_TO_NOTE
 	sta	note_a+NOTE_NOTE	; a->note = a->slide_to_note;
 	lda	#0
 	sta	note_a+NOTE_TONE_SLIDE_COUNT
-	sta	note_a+NOTE_TONE_SLIDING
+	sta	note_a+NOTE_TONE_SLIDING_L
+	sta	note_a+NOTE_TONE_SLIDING_H
+
 
 no_tone_sliding:
 	;====================
@@ -1179,71 +1201,137 @@ effect_1:
 	cmp	#$1
 	bne	effect_2
 
-;		else if (a->spec_command==0x1) {
-;			current_val=pt3->data[(*addr)];
-;			a->spec_delay=current_val;
-;			a->tone_slide_delay=current_val;
-;			a->tone_slide_count=a->tone_slide_delay;
-;			(*addr)++;
-;			current_val=pt3->data[(*addr)];
-;			a->spec_lo=(current_val);
-;			(*addr)++;
-;			current_val=pt3->data[(*addr)];
-;			a->spec_hi=(current_val);
-;			a->tone_slide_step=(a->spec_lo)|(a->spec_hi<<8);
-;			/* Sign Extend */
-;			a->tone_slide_step=(a->tone_slide_step<<16)>>16;
-;			a->simplegliss=1;
-;			a->onoff=0;
-;			(*addr)++;
-;		}
+	lda	(PATTERN_L),Y	; load byte, set as slide delay
+	iny
+
+	sta	note_a+NOTE_TONE_SLIDE_DELAY
+	sta	note_a+NOTE_TONE_SLIDE_COUNT
+
+	lda	(PATTERN_L),Y	; load byte, set as slide step low
+	iny
+	sta	note_a+NOTE_TONE_SLIDE_STEP_L
+
+	lda	(PATTERN_L),Y	; load byte, set as slide step high
+	iny
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H
+
+	lda	#0
+	sta	note_a+NOTE_ONOFF
+	lda	#1
+	sta	note_a+NOTE_SIMPLE_GLISS
+
+	jmp	no_effect
 
 	;==============================
 	; Effect #2 -- Portamento
 	;==============================
 effect_2:
 	cmp	#$2
-	bne	effect_3
+	beq	effect_2_small
+	jmp	effect_3
+effect_2_small:			; FIXME: make smaller
+	lda	#0
+	sta	note_a+NOTE_SIMPLE_GLISS
+	sta	note_a+NOTE_ONOFF
 
-;		/* port */
-;		else if (a->spec_command==0x2) {
-;			a->simplegliss=0;
-;			a->onoff=0;
+	lda	(PATTERN_L),Y	; load byte, set as delay
+	iny
 
-;			current_val=pt3->data[(*addr)];
-;			a->spec_delay=current_val;
+	sta	note_a+NOTE_TONE_SLIDE_DELAY
+	sta	note_a+NOTE_TONE_SLIDE_COUNT
 
-;			a->tone_slide_delay=current_val;
-;			a->tone_slide_count=a->tone_slide_delay;
+	iny
+	iny
+	iny
 
-;			(*addr)++;
-;			(*addr)++;
-;			(*addr)++;
-;			current_val=pt3->data[(*addr)];
-;			a->spec_lo=current_val;
+	lda	(PATTERN_L),Y	; load byte, set as slide_step low
+	iny
+	sta	note_a+NOTE_TONE_SLIDE_STEP_L
 
-;			(*addr)++;
-;			current_val=pt3->data[(*addr)];
-;			a->spec_hi=current_val;
-;			(*addr)++;
+	lda	(PATTERN_L),Y	; load byte, set as slide_step high
+	iny
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H
 
-;			a->tone_slide_step=(a->spec_hi<<8)|(a->spec_lo);
-;			/* sign extend */
-;			a->tone_slide_step=(a->tone_slide_step<<16)>>16;
-;			/* abs() */
-;			if (a->tone_slide_step<0) a->tone_slide_step=-a$
-;			a->tone_delta=GetNoteFreq(a->note,pt3)-
-;				GetNoteFreq(prev_note,pt3);
-;			a->slide_to_note=a->note;
-;			a->note=prev_note;
-;			if (pt3->version >= 6) {
-;				a->tone_sliding = prev_sliding;
-;			}
-;			if ((a->tone_delta - a->tone_sliding) < 0) {
-;				a->tone_slide_step = -a->tone_slide_ste$
-;			}
-;		}
+	; 16-bit absolute value
+	bpl	slide_step_positive
 
+	eor	#$ff
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H
+	lda	note_a+NOTE_TONE_SLIDE_STEP_L
+	eor	#$ff
+	sec
+	adc	#$1
+	sta	note_a+NOTE_TONE_SLIDE_STEP_L
+	lda	note_a+NOTE_TONE_SLIDE_STEP_H
+	adc	#$0
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H
+
+slide_step_positive:
+
+;	a->tone_delta=GetNoteFreq(a->note,pt3)-
+;		GetNoteFreq(prev_note,pt3);
+
+	lda	note_a+NOTE_NOTE
+	jsr	GetNoteFreq
+	lda	freq_l
+	sta	note_a+NOTE_TONE_DELTA_L
+	lda	freq_h
+	sta	note_a+NOTE_TONE_DELTA_H
+
+	lda	prev_note
+	jsr	GetNoteFreq
+
+	sec
+	lda	note_a+NOTE_TONE_DELTA_L
+	sbc	freq_l
+	sta	note_a+NOTE_TONE_DELTA_L
+	lda	note_a+NOTE_TONE_DELTA_H
+	sbc	freq_h
+	sta	note_a+NOTE_TONE_DELTA_H
+
+	lda	note_a+NOTE_NOTE
+	sta	note_a+NOTE_SLIDE_TO_NOTE	; a->slide_to_note=a->note;
+
+	lda	prev_note
+	sta	note_a+NOTE_NOTE		; a->note=prev_note;
+
+	lda	pt3_version
+	cmp	#$6
+	bcc	weird_version			; blt
+
+	lda	prev_sliding_l
+	sta	note_a+NOTE_TONE_SLIDING_L
+	lda	prev_sliding_h
+	sta	note_a+NOTE_TONE_SLIDING_H
+
+weird_version:
+
+	; annoying 16-bit subtract, only care if negative
+	;	if ((a->tone_delta - a->tone_sliding) < 0) {
+	sec
+	lda	note_a+NOTE_TONE_DELTA_L
+	sbc	note_a+NOTE_TONE_SLIDING_L
+	lda	note_a+NOTE_TONE_DELTA_H
+	sbc	note_a+NOTE_TONE_SLIDING_H
+	bpl	no_need
+
+	; a->tone_slide_step = -a->tone_slide_step;
+
+	lda	note_a+NOTE_TONE_SLIDE_STEP_H
+	eor	#$ff
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H
+	lda	note_a+NOTE_TONE_SLIDE_STEP_L
+	eor	#$ff
+	sec
+	adc	#$1
+	sta	note_a+NOTE_TONE_SLIDE_STEP_L
+	lda	note_a+NOTE_TONE_SLIDE_STEP_H
+	adc	#$0
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H
+
+no_need:
+
+	jmp	no_effect
 
 	;==============================
 	; Effect #3 -- Sample Position
@@ -1252,12 +1340,11 @@ effect_3:
 	cmp	#$3
 	bne	effect_4
 
-;		/* Position in Sample */
-;		else if (a->spec_command==0x3) {
-;			current_val=pt3->data[(*addr)];
-;			a->sample_position=current_val;
-;			(*addr)++;
-;		}
+	lda	(PATTERN_L),Y	; load byte, set as sample position
+	iny
+	sta	note_a+NOTE_SAMPLE_POSITION
+
+	jmp	no_effect
 
 	;==============================
 	; Effect #4 -- Ornament Position
@@ -1266,12 +1353,11 @@ effect_4:
 	cmp	#$4
 	bne	effect_5
 
-;		/* Position in Ornament */
-;		else if (a->spec_command==0x4) {
-;			current_val=pt3->data[(*addr)];
-;			a->ornament_position=current_val;
-;			(*addr)++;
-;		}
+	lda	(PATTERN_L),Y	; load byte, set as ornament position
+	iny
+	sta	note_a+NOTE_ORNAMENT_POSITION
+
+	jmp	no_effect
 
 	;==============================
 	; Effect #5 -- Vibrato
@@ -1280,21 +1366,21 @@ effect_5:
 	cmp	#$5
 	bne	effect_8
 
+	lda	(PATTERN_L),Y	; load byte, set as onoff delay
+	iny
+	sta	note_a+NOTE_ONOFF_DELAY
+	sta	note_a+NOTE_ONOFF
 
-;		/* Vibrato */
-;		else if (a->spec_command==0x5) {
-;			current_val=pt3->data[(*addr)];
-;			a->onoff_delay=current_val;
-;			(*addr)++;
-;			current_val=pt3->data[(*addr)];
-;			a->offon_delay=current_val;
-;			(*addr)++;
+	lda	(PATTERN_L),Y	; load byte, set as offon delay
+	iny
+	sta	note_a+NOTE_OFFON_DELAY
 
-;			a->onoff=a->onoff_delay;
-;			a->tone_slide_count=0;
-;			a->tone_sliding=0;
+	lda	#0
+	sta	note_a+NOTE_TONE_SLIDE_COUNT
+	sta	note_a+NOTE_TONE_SLIDING_L
+	sta	note_a+NOTE_TONE_SLIDING_H
 
-;		}
+	jmp	no_effect
 
 	;==============================
 	; Effect #8 -- Envelope Down
@@ -1303,26 +1389,23 @@ effect_8:
 	cmp	#$8
 	bne	effect_9
 
-;		/* Envelope Down */
-;		else if (a->spec_command==0x8) {
+	; delay
+	lda	(PATTERN_L),Y	; load byte, set as speed
+	iny
+	sta	pt3_envelope_delay
+	sta	pt3_envelope_delay_orig
 
-;			/* delay? */
-;			current_val=pt3->data[(*addr)];
-;			pt3->envelope_delay=current_val;
-;			pt3->envelope_delay_orig=current_val;
-;			a->spec_delay=current_val;
-;			(*addr)++;
+	; low value
+	lda	(PATTERN_L),Y	; load byte, set as low
+	iny
+	sta	pt3_envelope_slide_add_l
 
-;			/* Low? */
-;			current_val=pt3->data[(*addr)];
-;			a->spec_lo=current_val&0xff;
-;			(*addr)++;
+	; high value
+	lda	(PATTERN_L),Y	; load byte, set as high
+	iny
+	sta	pt3_envelope_slide_add_h
 
-;			/* High? */
-;			current_val=pt3->data[(*addr)];
-;			a->spec_hi=current_val&0xff;
-;			(*addr)++;
-;			pt3->envelope_slide_add=(a->spec_hi<<8)|(a->spe$
+	jmp	no_effect
 
 	;==============================
 	; Effect #9 -- Set Speed
@@ -1331,29 +1414,23 @@ effect_9:
 	cmp	#$9
 	bne	no_effect
 
-;		/* Set Speed */
-;		else  if (a->spec_command==0x9) {
-;			current_val=pt3->data[(*addr)];
-;			a->spec_lo=current_val;
-;			pt3->speed=current_val;
-;			(*addr)++;
-;		}
-;		break;
-;	}
+	lda	(PATTERN_L),Y	; load byte, set as speed
+	iny
+	sta	pt3_speed
 
 no_effect:
 
 	;================================
 	; add y into the address pointer
 
-;	clc
-;	tya
-;	adc	note_a+NOTE_ADDR_L
-;	sta	note_a+NOTE_ADDR_L
-;	lda	#0
-;	adc	note_a+NOTE_ADDR_H
-;	sta	note_a+NOTE_ADDR_H
-;	sta	PATTERN_H
+	clc
+	tya
+	adc	note_a+NOTE_ADDR_L
+	sta	note_a+NOTE_ADDR_L
+	lda	#0
+	adc	note_a+NOTE_ADDR_H
+	sta	note_a+NOTE_ADDR_H
+	sta	PATTERN_H
 
 	rts
 
