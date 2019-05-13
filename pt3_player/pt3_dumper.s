@@ -17,6 +17,7 @@ pt3_setup:
 	jsr     HOME
 	jsr     TEXT
 
+
 	; Init disk code
 
 	jsr	rts_init
@@ -33,8 +34,15 @@ pt3_setup:
 	; load first song
 	;==================
 
-	jsr	new_song
 
+	; Set COUT to the printer in PR#1
+
+	lda	#$02
+	sta	$36
+	lda	#$C1
+	sta	$37
+
+	jsr	new_song
 
 	;============================
 	; Loop forever
@@ -182,9 +190,9 @@ six_space:
 	inc	FRAMEH
 no_frame_oflo:
 
-	lda	FRAMEL
-	cmp	#16
-	beq	all_done
+;	lda	FRAMEL
+;	cmp	#16
+;	beq	all_done
 
 	lda	DONE_PLAYING
 	bne	all_done

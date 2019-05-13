@@ -8,9 +8,10 @@ all:	pt3_player.dsk
 $(DOS33):
 	cd ../dos33fs-utils && make
 
-pt3_player.dsk:	PT3_PLAYER PT3_DUMPER HELLO
+pt3_player.dsk:	PT3_PLAYER PT3_DUMPER HELLO DUMP
 	cp empty.dsk pt3_player.dsk
 	$(DOS33) -y pt3_player.dsk SAVE A HELLO
+	$(DOS33) -y pt3_player.dsk SAVE A DUMP
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x1000 PT3_DUMPER
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x1000 PT3_PLAYER
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x3000 EA.PT3
@@ -35,6 +36,9 @@ pt3_player.dsk:	PT3_PLAYER PT3_DUMPER HELLO
 
 HELLO:	hello.bas
 	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+
+DUMP:	dump.bas
+	../asoft_basic-utils/tokenize_asoft < dump.bas > DUMP
 
 PT3_PLAYER:	pt3_player.o
 	ld65 -o PT3_PLAYER pt3_player.o -C ../linker_scripts/apple2_1000.inc
