@@ -556,14 +556,11 @@ note_not_too_high:
 	lda	note_a+NOTE_SIMPLE_GLISS,X
 	bne	no_tone_sliding		; if (!a->simplegliss) {
 
+	; FIXME: do these need to be signed compares?
+
 check1:
 	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	bpl	check2	;           if ( ((a->tone_slide_step < 0) &&
-;	lda	note_a+NOTE_TONE_SLIDING,X
-;	cmp	note_a+NOTE_TONE_DELTA,X
-;	bcc	slide_to_note	; (a->tone_sliding <= a->tone_delta)) ||
-;	beq	slide_to_note
-
 
 	lda	note_a+NOTE_TONE_SLIDING_H,X	; compare high bytes
 	cmp	note_a+NOTE_TONE_DELTA_H,X
@@ -577,11 +574,6 @@ check1:
 check2:
 	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	bmi	no_tone_sliding		; ((a->tone_slide_step >= 0) &&
-
-;	lda	note_a+NOTE_TONE_SLIDING,X
-;	cmp	note_a+NOTE_TONE_DELTA,X
-;	bcc	no_tone_sliding	; blt (a->tone_sliding >= a->tone_delta)) {
-
 
 	lda	note_a+NOTE_TONE_SLIDING_H,X	; compare high bytes
 	cmp	note_a+NOTE_TONE_DELTA_H,X
@@ -772,6 +764,7 @@ noise_slide_done:
 	; increment sample position
 
 	inc	note_a+NOTE_SAMPLE_POSITION,X	;  a->sample_position++;
+
 	lda	note_a+NOTE_SAMPLE_POSITION,X
 	cmp	note_a+NOTE_SAMPLE_LENGTH,X
 
@@ -792,7 +785,7 @@ sample_pos_ok:
 	bcc	ornament_pos_ok			; blt
 
 	lda	note_a+NOTE_ORNAMENT_LOOP,X
-	sta	note_a+NOTE_SAMPLE_POSITION,X
+	sta	note_a+NOTE_ORNAMENT_POSITION,X
 ornament_pos_ok:
 
 
