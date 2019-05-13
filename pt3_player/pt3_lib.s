@@ -40,6 +40,14 @@ NOTE_NOISE_SLIDING=32
 NOTE_AMPLITUDE_SLIDING=33
 NOTE_ONOFF_DELAY=34
 NOTE_OFFON_DELAY=35
+NOTE_TONE_SLIDE_STEP_L=36
+NOTE_TONE_SLIDE_STEP_H=37
+NOTE_TONE_SLIDE_DELAY=38
+NOTE_SIMPLE_GLISS=39
+NOTE_TONE_SLIDING=41
+NOTE_SLIDE_TO_NOTE=42
+NOTE_TONE_DELTA=43
+NOTE_TONE_SLIDE_TO_STEP=44
 
 note_a:
 	.byte	'A'	; NOTE_WHICH
@@ -78,6 +86,14 @@ note_a:
 	.byte	$0	; NOTE_AMPLITUDE_SLIDING
 	.byte	$0	; NOTE_ONOFF_DELAY
 	.byte	$0	; NOTE_OFFON_DELAY
+	.byte	$0	; NOTE_TONE_SLIDE_STEP_L
+	.byte	$0	; NOTE_TONE_SLIDE_STEP_H
+	.byte	$0	; NOTE_TONE_SLIDE_DELAY
+	.byte	$0	; NOTE_SIMPLE_GLISS
+	.byte	$0	; NOTE_TONE_SLIDING
+	.byte	$0	; NOTE_SLIDE_TO_NOTE
+	.byte	$0	; NOTE_TONE_DELTA
+	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
 
 note_b:
 	.byte	'B'	; NOTE_WHICH
@@ -116,6 +132,14 @@ note_b:
 	.byte	$0	; NOTE_AMPLITUDE_SLIDING
 	.byte	$0	; NOTE_ONOFF_DELAY
 	.byte	$0	; NOTE_OFFON_DELAY
+	.byte	$0	; NOTE_TONE_SLIDE_STEP_L
+	.byte	$0	; NOTE_TONE_SLIDE_STEP_H
+	.byte	$0	; NOTE_TONE_SLIDE_DELAY
+	.byte	$0	; NOTE_SIMPLE_GLISS
+	.byte	$0	; NOTE_TONE_SLIDING
+	.byte	$0	; NOTE_SLIDE_TO_NOTE
+	.byte	$0	; NOTE_TONE_DELTA
+	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
 
 note_c:
 	.byte	'C'	; NOTE_WHICH
@@ -154,6 +178,14 @@ note_c:
 	.byte	$0	; NOTE_AMPLITUDE_SLIDING
 	.byte	$0	; NOTE_ONOFF_DELAY
 	.byte	$0	; NOTE_OFFON_DELAY
+	.byte	$0	; NOTE_TONE_SLIDE_STEP_L
+	.byte	$0	; NOTE_TONE_SLIDE_STEP_H
+	.byte	$0	; NOTE_TONE_SLIDE_DELAY
+	.byte	$0	; NOTE_SIMPLE_GLISS
+	.byte	$0	; NOTE_TONE_SLIDING
+	.byte	$0	; NOTE_SLIDE_TO_NOTE
+	.byte	$0	; NOTE_TONE_DELTA
+	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
 
 pt3_version:		.byte	$0
 pt3_frequency_table:	.byte	$0
@@ -476,26 +508,54 @@ note_not_too_high:
 	sta	note_a+NOTE_TONE_H
 
 	;=====================
-	; handle sliding
+	; handle tone sliding
 
-;  if (a->tone_slide_count > 0) {
-;     a->tone_slide_count--;
-;     if (a->tone_slide_count==0) {
-;        a->tone_sliding+=a->tone_slide_step;
-;        a->tone_slide_count = a->tone_slide_delay;
-;        if (!a->simplegliss) {
-;           if ( ((a->tone_slide_step < 0) &&
-;                (a->tone_sliding <= a->tone_delta)) ||
-;                ((a->tone_slide_step >= 0) &&
-;                (a->tone_sliding >= a->tone_delta)) ) {
-;              a->note = a->slide_to_note;
-;              a->tone_slide_count = 0;
-;              a->tone_sliding = 0;
-;           }
-;         }
-;     }
-;  }
+	lda	note_a+NOTE_TONE_SLIDE_COUNT
+	bmi	no_tone_sliding		;  if (a->tone_slide_count > 0) {
 
+	dec	note_a+NOTE_TONE_SLIDE_COUNT	; a->tone_slide_count--;
+	bne	no_tone_sliding		; if (a->tone_slide_count==0) {
+
+
+	; a->tone_sliding+=a->tone_slide_step
+	clc
+	lda	note_a+NOTE_TONE_SLIDING_L
+	adc	note_a+NOTE_TONE_SLIDE_STEP_L
+	sta	note_a+NOTE_TONE_SLIDING_L
+	lda	note_a+NOTE_TONE_SLIDING_H
+	adc	note_a+NOTE_TONE_SLIDE_STEP_H
+	sta	note_a+NOTE_TONE_SLIDING_H
+
+	; a->tone_slide_count = a->tone_slide_delay;
+	lda	note_a+NOTE_TONE_SLIDE_DELAY
+	sta	note_a+NOTE_TONE_SLIDE_COUNT
+
+	lda	note_a+NOTE_SIMPLE_GLISS
+	bne	no_tone_sliding		; if (!a->simplegliss) {
+
+check1:
+	lda	note_a+NOTE_TONE_SLIDE_STEP_H
+	bpl	check2	;           if ( ((a->tone_slide_step < 0) &&
+	lda	note_a+NOTE_TONE_SLIDING
+	cmp	note_a+NOTE_TONE_DELTA
+	bcc	slide_to_note	; (a->tone_sliding <= a->tone_delta)) ||
+	beq	slide_to_note
+
+check2:
+	lda	note_a+NOTE_TONE_SLIDE_STEP_H
+	bmi	no_tone_sliding		; ((a->tone_slide_step >= 0) &&
+	lda	note_a+NOTE_TONE_SLIDING
+	cmp	note_a+NOTE_TONE_DELTA
+	bcc	no_tone_sliding	; blt (a->tone_sliding >= a->tone_delta)) {
+
+slide_to_note:
+	lda	note_a+NOTE_SLIDE_TO_NOTE
+	sta	note_a+NOTE_NOTE	; a->note = a->slide_to_note;
+	lda	#0
+	sta	note_a+NOTE_TONE_SLIDE_COUNT
+	sta	note_a+NOTE_TONE_SLIDING
+
+no_tone_sliding:
 	;====================
 	; set amplitude
 
