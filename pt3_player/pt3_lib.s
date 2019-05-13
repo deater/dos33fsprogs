@@ -10,8 +10,8 @@ NOTE_TONE_SLIDING_L=2
 NOTE_TONE_SLIDING_H=3
 NOTE_ENABLED=4
 NOTE_ENVELOPE_ENABLED=5
-NOTE_SAMPLE_POINTER_L=6
-NOTE_SAMPLE_POINTER_H=7
+NOTE_SAMPLE_POINTER_L=6		; FIXME: needed?
+NOTE_SAMPLE_POINTER_H=7		; FIXME: needed?
 NOTE_SAMPLE_LOOP=8
 NOTE_SAMPLE_LENGTH=9
 NOTE_TONE_L=10
@@ -25,8 +25,8 @@ NOTE_NEW_NOTE=17
 NOTE_ALL_DONE=18
 NOTE_ADDR_L=19
 NOTE_ADDR_H=20
-NOTE_ORNAMENT_POINTER_L=21
-NOTE_ORNAMENT_POINTER_H=22
+NOTE_ORNAMENT_POINTER_L=21	; FIXME: needed?
+NOTE_ORNAMENT_POINTER_H=22	; FIXME: needed?
 NOTE_ORNAMENT_LOOP=23
 NOTE_ORNAMENT_LENGTH=24
 NOTE_ONOFF=25
@@ -197,7 +197,9 @@ PT3_ORNAMENT_LOC_L	= $A9
 PT3_OTNAMENT_LOC_H	= $AA
 PT3_PATTERN_TABLE	= $C9
 
-ysave:	.byte $00
+ysave:	.byte	$00
+freq_l:	.byte	$00
+freq_h:	.byte	$00
 
 	;===========================
 	; Load Ornament
@@ -214,12 +216,12 @@ load_ornament:
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
 
-	; 20A9+(a*2) -> ornament_pointer_l
-
 	clc
 	asl			; A*2
 	adc	#$a9
 	tay
+
+	; a->ornament_pointer=pt3->ornament_patterns[a->ornament];
 
 	lda	PT3_LOC,Y
 	sta	ORNAMENT_A_L
@@ -228,34 +230,30 @@ load_ornament:
 	lda	PT3_LOC,Y
 	clc
 	adc	#>PT3_LOC
-	sta	ORNAMENT_A_H	;	a->ornament_pointer=pt3->ornament_patterns[a->ornament];
+	sta	ORNAMENT_A_H
 
 	ldy	#0
 
+	; Set the loop value
+	;     a->ornament_loop=pt3->data[a->ornament_pointer];
 	lda	(ORNAMENT_A_L),Y
 	sta	note_a+NOTE_ORNAMENT_LOOP
-;	a->ornament_loop=pt3->data[a->ornament_pointer];
 
+	; Set the length value
+	;     a->ornament_length=pt3->data[a->ornament_pointer];
 	iny
 	lda	(ORNAMENT_A_L),Y
 	sta	note_a+NOTE_ORNAMENT_LENGTH
 
-;	a->ornament_length=pt3->data[a->ornament_pointer];
-
+	; Set the pointer to the value past the length
 
 	clc
 	lda	ORNAMENT_A_L
 	adc	#$2
 	sta	ORNAMENT_A_L
-
-;	clc
-;	lda	note_a+NOTE_ORNAMENT_POINTER_L
-;	adc	#2
-;	sta	note_a+NOTE_ORNAMENT_POINTER_L
-;	lda	note_a+NOTE_ORNAMENT_POINTER_H
-;	adc	#0
-;	sta	note_a+NOTE_ORNAMENT_POINTER_H
-
+	lda	ORNAMENT_A_H
+	adc	#$0
+	sta	ORNAMENT_A_H
 
 	ldy	ysave
 
@@ -277,6 +275,9 @@ load_sample:
 	adc	#$69
 	tay
 
+	; Set the initial sample pointer
+	;     a->sample_pointer=pt3->sample_patterns[a->sample];
+
 	lda	PT3_LOC,Y
 	sta	SAMPLE_A_L
 
@@ -284,26 +285,41 @@ load_sample:
 	lda	PT3_LOC,Y
 	clc
 	adc	#>PT3_LOC
-	sta	SAMPLE_A_H	;	a->sample_pointer=pt3->sample_patterns[a->sample];
+	sta	SAMPLE_A_H
+
+	; Set the loop value
+	;     a->sample_loop=pt3->data[a->sample_pointer];
 
 	ldy	#0
-
 	lda	(SAMPLE_A_L),Y
-	sta	note_a+NOTE_SAMPLE_LOOP	;	a->sample_loop=pt3->data[a->sample_pointer];
+	sta	note_a+NOTE_SAMPLE_LOOP
+
+	; Set the length value
+	;     a->sample_length=pt3->data[a->sample_pointer];
 
 	iny
 	lda	(SAMPLE_A_L),Y
-	sta	note_a+NOTE_SAMPLE_LENGTH	;	a->sample_length=pt3->data[a->sample_pointer];
+	sta	note_a+NOTE_SAMPLE_LENGTH
+
+	; Set pointer to beginning of samples
 
 	clc
 	lda	SAMPLE_A_L
 	adc	#$2
 	sta	SAMPLE_A_L
-
+	lda	SAMPLE_A_H
+	adc	#$0
+	sta	SAMPLE_A_H
 
 	ldy	ysave
 
 	rts
+
+
+	;====================================
+	; pt3_init_song
+	;====================================
+	;
 
 pt3_init_song:
 	lda	#$f
@@ -370,13 +386,18 @@ note_enabled:
 	asl
 	asl
 	tay
+
+	;  b0 = pt3->data[a->sample_pointer + a->sample_position * 4];
 	lda	(SAMPLE_A_L),Y
 	sta	sample_b0
 
+	;  b1 = pt3->data[a->sample_pointer + a->sample_position * 4 + 1];
 	iny
 	lda	(SAMPLE_A_L),Y
 	sta	sample_b1
 
+	;  a->tone = pt3->data[a->sample_pointer + a->sample_position * 4 + 2];
+	;  a->tone += (pt3->data[a->sample_pointer + a->sample_position * 4 + 3])<<8;
 	iny
 	lda	(SAMPLE_A_L),Y
 	sta	note_a+NOTE_TONE_L
@@ -385,6 +406,7 @@ note_enabled:
 	lda	(SAMPLE_A_L),Y
 	sta	note_a+NOTE_TONE_H
 
+	;  a->tone += a->tone_accumulator;
 	clc
 	lda	note_a+NOTE_TONE_ACCUMULATOR_L
 	adc	note_a+NOTE_TONE_L
@@ -393,12 +415,8 @@ note_enabled:
 	adc	note_a+NOTE_TONE_ACCUMULATOR_H
 	sta	note_a+NOTE_TONE_H
 
-
-;  b0 = pt3->data[a->sample_pointer + a->sample_position * 4];
-;  b1 = pt3->data[a->sample_pointer + a->sample_position * 4 + 1];
-;  a->tone = pt3->data[a->sample_pointer + a->sample_position * 4 + 2];
-;  a->tone += (pt3->data[a->sample_pointer + a->sample_position * 4 + 3])<<8;
-;  a->tone += a->tone_accumulator;
+	;========================
+	; Accumulate tone if set
 
 	lda	#$40		; if (b1&0x40)
 	bit	sample_b1
@@ -411,11 +429,55 @@ note_enabled:
 
 no_accum:
 
-;  j = a->note + ((pt3->data[a->ornament_pointer + a->ornament_position]<<24)>>24);
-;  if (j < 0) j = 0;
-;  else if (j > 95) j = 95;
-;  w = GetNoteFreq(j,pt3->frequency_table);
-;  a->tone = (a->tone + a->tone_sliding + w) & 0xfff;
+	;============================
+	; Calculate tone
+	;  j = a->note + (pt3->data[a->ornament_pointer + a->ornament_position]
+	clc
+	lda	note_a+NOTE_ORNAMENT_POSITION
+	tay
+	lda	(ORNAMENT_A_L),Y
+	adc	note_a+NOTE_NOTE
+
+	;  if (j < 0) j = 0;
+	bpl	note_not_negative
+	lda	#0
+
+	; if (j > 95) j = 95;
+note_not_negative:
+	cmp	#96
+	bcc	note_not_too_high
+
+	lda	#95
+
+note_not_too_high:
+
+
+	;  w = GetNoteFreq(j,pt3->frequency_table);
+
+	jsr	GetNoteFreq
+
+	;  a->tone = (a->tone + a->tone_sliding + w) & 0xfff;
+
+	clc
+	lda	note_a+NOTE_TONE_L
+	adc	note_a+NOTE_TONE_SLIDING_L
+	sta	note_a+NOTE_TONE_L
+	lda	note_a+NOTE_TONE_H
+	adc	note_a+NOTE_TONE_SLIDING_H
+	sta	note_a+NOTE_TONE_H
+
+	clc
+	lda	note_a+NOTE_TONE_L
+	adc	freq_l
+	sta	note_a+NOTE_TONE_L
+	lda	note_a+NOTE_TONE_H
+	adc	note_a+NOTE_TONE_SLIDING_H
+	and	#$0f
+	sta	note_a+NOTE_TONE_H
+
+	;=====================
+	; handle sliding
+
 ;  if (a->tone_slide_count > 0) {
 ;     a->tone_slide_count--;
 ;     if (a->tone_slide_count==0) {
@@ -505,18 +567,18 @@ done_clamp_amplitude:
 
 	lda	sample_b0	;  if (((b0 & 0x1) == 0) && ( a->envelope_enabled)) {
 	and	#$1
-	bne	freq_slide
+	bne	envelope_slide
 
 	lda	note_a+NOTE_ENVELOPE_ENABLED
-	beq	freq_slide
+	beq	envelope_slide
 
 	lda	note_a+NOTE_AMPLITUDE	; a->amplitude |= 16;
 	ora	#$10
 	sta	note_a+NOTE_AMPLITUDE
 
 
-freq_slide:
-;  /* Frequency slide */
+envelope_slide:
+;  /* Envelope slide */
 ;  /* If b1 top bits are 10 or 11 */
 ;  if ((b1 & 0x80) != 0) {
 ;     if ((b0 & 0x20) != 0) {
@@ -548,15 +610,32 @@ freq_slide:
 	sta	pt3_mixer_value
 
 
-;  a->sample_position++;
-;  if (a->sample_position >= a->sample_length) {
-;     a->sample_position = a->sample_loop;
-;  }
+	;========================
+	; increment sample position
 
-;  a->ornament_position++;
-;  if (a->ornament_position >= a->ornament_length) {
-;     a->ornament_position = a->ornament_loop;
-;  }
+	inc	note_a+NOTE_SAMPLE_POSITION	;  a->sample_position++;
+	lda	note_a+NOTE_SAMPLE_POSITION
+	cmp	note_a+NOTE_SAMPLE_LENGTH
+
+	bcc	sample_pos_ok			; blt
+
+	lda	note_a+NOTE_SAMPLE_LOOP
+	sta	note_a+NOTE_SAMPLE_POSITION
+
+sample_pos_ok:
+
+	;========================
+	; increment ornament position
+
+	inc	note_a+NOTE_ORNAMENT_POSITION	;  a->ornament_position++;
+	lda	note_a+NOTE_ORNAMENT_POSITION
+	cmp	note_a+NOTE_ORNAMENT_LENGTH
+
+	bcc	ornament_pos_ok			; blt
+
+	lda	note_a+NOTE_ORNAMENT_LOOP
+	sta	note_a+NOTE_SAMPLE_POSITION
+ornament_pos_ok:
 
 
 done_note:
@@ -1371,24 +1450,33 @@ done_do_frame:
 	;======================================
 	; GetNoteFreq
 	;======================================
-
 	; Return frequency from lookup table
-	; Which note is in Y
-	; return in X,A (high,low)
+	; Which note is in A
+	; return in freq_l/freq_h
 GetNoteFreq:
+
+	sty	ysave
+
+	tay
 	lda	PT3_LOC+PT3_HEADER_FREQUENCY
 	cmp	#1
 	bne	freq_table_2
 
 	lda	PT3NoteTable_ST_high,Y
-	tax
+	sta	freq_h
 	lda	PT3NoteTable_ST_low,Y
+	sta	freq_l
+
+	ldy	ysave
 	rts
 
 freq_table_2:
 	lda	PT3NoteTable_ASM_34_35_high,Y
 	tax
 	lda	PT3NoteTable_ASM_34_35_low,Y
+
+	ldy	ysave
+
         rts
 
 
