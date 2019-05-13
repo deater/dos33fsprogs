@@ -658,9 +658,28 @@ write_clamp_amplitude:
 	sta	note_a+NOTE_AMPLITUDE,X
 done_clamp_amplitude:
 
+	lda	pt3_version
+	cmp	#5
+	bcs	other_table	; bge
+
 	; if (PlParams.PT3.PT3_Version <= 4)
 	;	a->amplitude = PT3VolumeTable_33_34[a->volume][a->amplitude];
 	; }
+
+	lda	note_a+NOTE_VOLUME,X
+	asl
+	asl
+	asl
+	asl
+	ora	note_a+NOTE_AMPLITUDE,X
+
+	tay
+	lda	PT3VolumeTable_33_34,Y
+	sta	note_a+NOTE_AMPLITUDE,X ;     a->amplitude = PT3VolumeTable_35[a->volume][a->amplitude];
+
+	jmp	done_table
+
+other_table:
 	; else {
 
 	lda	note_a+NOTE_VOLUME,X
@@ -674,6 +693,7 @@ done_clamp_amplitude:
 	lda	PT3VolumeTable_35,Y
 	sta	note_a+NOTE_AMPLITUDE,X ;     a->amplitude = PT3VolumeTable_35[a->volume][a->amplitude];
 ;	}
+done_table:
 
 	lda	sample_b0	;  if (((b0 & 0x1) == 0) && ( a->envelope_enabled)) {
 	and	#$1
