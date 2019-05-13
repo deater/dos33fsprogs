@@ -601,17 +601,29 @@ no_tone_sliding:
 	and	#$40
 	beq	amp_slide_down
 amp_slide_up:
+	; if (a->amplitude_sliding < 15) {
+	; a pain to do signed compares
 	lda	note_a+NOTE_AMPLITUDE_SLIDING,X
-	cmp	#15
-	bcs	done_amp_sliding	; bge
-					;        if (a->amplitude_sliding < 15) {
-	inc	note_a+NOTE_AMPLITUDE_SLIDING,X	;           a->amplitude_sliding++;
+	sec
+	sbc	#15
+	bvc	asu_signed
+	eor	#$80
+asu_signed:
+	bpl	done_amp_sliding	; skip if A>=15
+	inc	note_a+NOTE_AMPLITUDE_SLIDING,X	; a->amplitude_sliding++;
 	jmp	done_amp_sliding
 amp_slide_down:
+	; if (a->amplitude_sliding > -15) {
+	; a pain to do signed compares
 	lda	note_a+NOTE_AMPLITUDE_SLIDING,X
-	cmp	#$f2			; -14 1111 0010
-	bcc	done_amp_sliding	;        if (a->amplitude_sliding > -15) {
-	dec	note_a+NOTE_AMPLITUDE_SLIDING,X	;	; a->amplitude_sliding--;
+	sec
+	sbc	#$f1		; -15
+	bvc	asd_signed
+	eor	#$80
+asd_signed:
+	bmi	done_amp_sliding	; if A < -15, skip subtract
+
+	dec	note_a+NOTE_AMPLITUDE_SLIDING,X	; a->amplitude_sliding--;
 
 done_amp_sliding:
 
@@ -709,6 +721,8 @@ last_envelope:
 	lda	e_slide_amount
 	adc	pt3_envelope_add
 	sta	pt3_envelope_add	; pt3->envelope_add+=j;
+
+	jmp	noise_slide_done	; skip else
 
 noise_slide:
 	; Noise slide

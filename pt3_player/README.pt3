@@ -3,3 +3,19 @@ PT3_player
 
 
 ASR = CMP #$80 / ROR
+
+
+
+Notes:
+
+signed 8-bit comparison
+see http://6502.org/tutorials/compare_beyond.html#2.2
+
+          SEC       ; prepare carry for SBC
+          SBC NUM   ; A-NUM
+          BVC LABEL ; if V is 0, N eor V = N, otherwise N eor V = N eor 1
+          EOR #$80  ; A = A eor $80, and N = N eor 1
+    LABEL
+
+If the N flag is 1, then A (signed) < NUM (signed) and BMI will branch
+If the N flag is 0, then A (signed) >= NUM (signed) and BPL will branch 
