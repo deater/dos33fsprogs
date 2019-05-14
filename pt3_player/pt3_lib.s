@@ -22,7 +22,7 @@ NOTE_LEN=14
 NOTE_LEN_COUNT=15
 NOTE_SPEC_COMMAND=16		; is this one needed?
 NOTE_NEW_NOTE=17
-NOTE_ALL_DONE=18
+;NOTE_ALL_DONE=18
 NOTE_ADDR_L=19
 NOTE_ADDR_H=20
 NOTE_ORNAMENT_POINTER_L=21
@@ -210,8 +210,9 @@ pt3_envelope_type_old:	.byte	$0
 pt3_envelope_delay:	.byte	$0
 pt3_envelope_delay_orig:.byte	$0
 
-;pt3_music_len:		.byte	$0
 pt3_mixer_value:	.byte	$0
+
+pt3_pattern_done:	.byte	$0
 
 temp_word_l:		.byte	$0
 temp_word_h:		.byte	$0
@@ -1009,8 +1010,10 @@ decode_case_0X:
 	sta	note_a+NOTE_LEN_COUNT,X	; len_count=0;
 
 	lda	#1
-	sta	note_a+NOTE_ALL_DONE,X
 	sta	decode_done
+
+	;	sta	note_a+NOTE_ALL_DONE,X
+	dec	pt3_pattern_done
 
 	jmp	done_decode
 
@@ -1667,11 +1670,15 @@ not_done:
 	sta	note_c+NOTE_ADDR_H
 
 	lda	#0
-	sta	note_a+NOTE_ALL_DONE
-	sta	note_b+NOTE_ALL_DONE
-	sta	note_c+NOTE_ALL_DONE
-
 	sta	pt3_noise_period
+;	sta	note_a+NOTE_ALL_DONE
+;	sta	note_b+NOTE_ALL_DONE
+;	sta	note_c+NOTE_ALL_DONE
+
+	lda	#3			; FIXME: num_channels
+	sta	pt3_pattern_done
+
+
 
 	rts
 
@@ -1726,9 +1733,12 @@ next_line:
 
 	inc	current_line		; and increment line
 	lda	current_line
-					; FIXME: not always 64
-	cmp	#64			; if not max, continue
-	bne	do_frame
+
+	lda	pt3_pattern_done	; check if pattern done early
+	beq	next_pattern
+
+	cmp	#64			; always end at 64.
+	bne	do_frame		; is this always needed?
 
 next_pattern:
 	lda	#0			; reset line to 0

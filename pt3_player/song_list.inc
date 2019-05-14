@@ -1,2 +1,2 @@
-	.asciiz "EA.PT3"
+	.asciiz "SR.PT3"
 

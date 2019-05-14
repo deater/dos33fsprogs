@@ -209,6 +209,9 @@ CROUT1	EQU $FD8B			;; send a RETURN and clear end of line
 PRBYTE	EQU $FDDA
 PRHEX	EQU $FDE3
 
+;; Applesoft routines
+HCLR	EQU $F3F2
+;HGR_PAGE	EQU	$E6
 
 
 

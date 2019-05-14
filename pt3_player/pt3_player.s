@@ -2,7 +2,7 @@
 
 .include	"zp.inc"
 
-PT3_LOC = $3000
+PT3_LOC = $4000
 
 UNPACK_BUFFER	EQU	$6000		; $6000 - $9800, 14k, $3800
 NUM_FILES	EQU	15
@@ -15,6 +15,14 @@ NUM_FILES	EQU	15
 pt3_setup:
 	jsr     HOME
 	jsr     TEXT
+
+	bit	HIRES
+	bit	SET_GR
+        bit	TEXTGR		; split text/graphics
+
+;	lda	#$20
+;	sta	HGR_PAGE
+;	jsr	HCLR
 
 	; Init disk code
 
