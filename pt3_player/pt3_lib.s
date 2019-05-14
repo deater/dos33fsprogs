@@ -210,7 +210,7 @@ pt3_envelope_type_old:	.byte	$0
 pt3_envelope_delay:	.byte	$0
 pt3_envelope_delay_orig:.byte	$0
 
-pt3_music_len:		.byte	$0
+;pt3_music_len:		.byte	$0
 pt3_mixer_value:	.byte	$0
 
 temp_word_l:		.byte	$0
@@ -408,14 +408,14 @@ pt3_init_song:
 	;============================
 	; calculate patterns in song
 	; FIXME: is this necessary?  can just end when we hit FF playing?
-	ldy	#0
-length_loop:
-	lda	PT3_LOC+PT3_PATTERN_TABLE,Y
-	iny
-	cmp	#$ff
-	bne	length_loop
+;	ldy	#0
+;length_loop:
+;	lda	PT3_LOC+PT3_PATTERN_TABLE,Y
+;	iny
+;	cmp	#$ff
+;	bne	length_loop
 
-	sty	pt3_music_len
+;	sty	pt3_music_len
 
 	;======================
 	; calculate version
@@ -1390,7 +1390,7 @@ effect_2_small:			; FIXME: make smaller
 	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	lda	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	eor	#$ff
-	sec
+	clc
 	adc	#$1
 	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
@@ -1420,11 +1420,13 @@ slide_step_positive:
 	sbc	freq_h
 	sta	note_a+NOTE_TONE_DELTA_H,X
 
+	; a->slide_to_note=a->note;
 	lda	note_a+NOTE_NOTE,X
-	sta	note_a+NOTE_SLIDE_TO_NOTE,X	; a->slide_to_note=a->note;
+	sta	note_a+NOTE_SLIDE_TO_NOTE,X
 
+	; a->note=prev_note;
 	lda	prev_note
-	sta	note_a+NOTE_NOTE,X		; a->note=prev_note;
+	sta	note_a+NOTE_NOTE,X
 
 	lda	pt3_version
 	cmp	#$6
@@ -1453,7 +1455,7 @@ weird_version:
 	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	lda	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	eor	#$ff
-	sec
+	clc
 	adc	#$1
 	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
@@ -1602,6 +1604,14 @@ pt3_set_pattern:
 	ldy	current_pattern
 	lda	PT3_LOC+PT3_PATTERN_TABLE,Y	; get pattern table value
 
+	cmp	#$ff
+	bne	not_done
+
+	sta	DONE_PLAYING
+	rts
+
+not_done:
+
 	asl		; mul by two, as word sized
 	tay
 
@@ -1671,6 +1681,10 @@ pt3_make_frame:
 	; load a new patterh in
 	jsr	pt3_set_pattern
 
+	lda	DONE_PLAYING
+	beq	pattern_good
+	rts
+
 pattern_good:
 
 	; see if we need a new line
@@ -1705,18 +1719,18 @@ next_pattern:
 	sta	current_line
 
 	inc	current_pattern		; increment pattern
-	lda	current_pattern
 
-	cmp	pt3_music_len		; if end of song, mark it as so
-	beq	done_song
+;	lda	current_pattern
+;	cmp	pt3_music_len		; if end of song, mark it as so
+;	beq	done_song
 
 	jmp	do_frame
 
-done_song:
-	lda	#$ff
-	sta	DONE_PLAYING
+;done_song:
+;	lda	#$ff
+;	sta	DONE_PLAYING
 
-	rts
+;	rts
 
 do_frame:
 	; AY-3-8910 register summary
