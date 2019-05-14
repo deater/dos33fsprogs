@@ -221,6 +221,7 @@ sample_b1:		.byte	$0
 
 ; Header offsets
 
+PT3_VERSION		= $D
 PT3_HEADER_FREQUENCY	= $63
 PT3_PATTERN_LOC_L	= $67
 PT3_PATTERN_LOC_H	= $68
@@ -403,6 +404,33 @@ pt3_init_song:
 	sta	pt3_envelope_period_l
 	sta	pt3_envelope_period_h
 	sta	pt3_envelope_type
+
+	;============================
+	; calculate patterns in song
+	; FIXME: is this necessary?  can just end when we hit FF playing?
+	ldy	#0
+length_loop:
+	lda	PT3_LOC+PT3_PATTERN_TABLE,Y
+	iny
+	cmp	#$ff
+	bne	length_loop
+
+	sty	pt3_music_len
+
+	;======================
+	; calculate version
+	lda	#6
+	sta	pt3_version
+	lda	PT3_LOC+PT3_VERSION
+	cmp	#'0'
+	bcc	not_ascii_number	; blt
+	cmp	#'9'
+	bcs	not_ascii_number	; bge
+	sec
+	sbc	#'0'
+	sta	pt3_version
+
+not_ascii_number:
 
 	rts
 
@@ -1344,7 +1372,6 @@ effect_2_small:			; FIXME: make smaller
 	sta	note_a+NOTE_TONE_SLIDE_DELAY,X
 	sta	note_a+NOTE_TONE_SLIDE_COUNT,X
 
-	iny
 	iny
 	iny
 

@@ -192,13 +192,16 @@ no_frame_oflo:
 
 	; STOP EARLY for DEBUGGING
 
-	lda	FRAMEL
-	cmp	#$A4
-	bne	checkcheck
-	lda	FRAMEH
-	cmp	#$1
-	beq	all_done
-checkcheck:
+;	lda	FRAMEL
+;	cmp	#$A4
+;	bne	checkcheck
+;	lda	FRAMEH
+;	cmp	#$1
+;	beq	all_done
+;checkcheck:
+
+
+	; check if end
 	lda	DONE_PLAYING
 	bne	all_done
 	jmp	main_loop
