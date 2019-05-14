@@ -1,0 +1,77 @@
+
+
+If you are making a game or a demo for the old Apple II, you will want
+some sound.
+
+Having a built-in speaker was a nice feature in 1977 when the Apple II
+first launched, but your output audio is a bit limited as it is driven
+by a flip-flop that you need to bitbang (and there are no timers or
+interrupt sources to help like there was on the IBM PC).
+(Note, we are discussing the first few generations of Apple II products here,
+the IIgs which came out in 1987(?) had a built-in advanced sound chip
+but that is another story for another day).
+
+Despite that you can do some interesting sound, including sampled audio
+(that would take up a  good fraction of a flopp disk, like in the game
+X) or even two-channel ``Electric Duet'' (which used up most of the CPU
+power leaving not much time for anything else).
+
+The Apple II did have 7 expansion slots, and so many sound boards were
+made for it.  None became a standard though, so only a small fraction
+of games released for the platform.
+One of the more common was the Mockingboard.
+
+A Mockingboard card has two AY-3-8910 sound chips on it, and optionally
+had speech chips (type).  You will often find empty sockets there as they
+are xpensive these days.
+
+The AY-3-8910 was common at the time, made by X who went on to become
+Microchip (of PIC fame).
+The chip was found in many arcade cabinets, as well as 
+the Atari ST and some models of ZX Spectrum.
+It can make three channels of square waves, with noise applied, and
+one hadrware evenlope.
+It can make for some nice sound in skilled hands, although the Commodore
+readers are probably already scoffing in comparison to their SID chips
+(and we won't even start with the Amiga fans).
+
+Programming the AY-3-8910 is fairly straightforward, the diagram is in Figure
+X.  There are 16 registers, but the top two are only used for GPIO lines
+on the earlier 40-pin versions of the chip.
+
+You have registers for the audio period of channel A, B, and C, 12-bits.
+Then a 4-bit amplitude setting for each channel (logarithmic).
+Then a noise channel, a mixer to pick what noise/audio channels are playing.
+Then the preiod and type for the hardware envelope.
+
+Writing the registers is straightforward, using three wires with a protocol
+easy enough to do in small hacking projects.  Typically with some shift
+registers and SPI. 
+The Mockingboard has two AY-3-8910 chips (allowing 6-channels, split
+left/right stereo).  It uses two 6522 I/O chips to interface with the
+Apple II bus, and they also provide a timer interrupt source (something
+a stock Apple II lacks).
+
+One complication is frequency.  The Apple II drives it at 1MHz, but for
+example the ZX runs it at 1.77MHz, so the frequencies will be different
+unless you translate before hand.
+
+TODO: diagram of chip
+
+
+Related Work/Earlier
+
+	French-touch
+
+	YM5 files, limitation
+
+Vortex Tracker format
+
+	By a Russian, russian docs, Delphi/Pascal.
+
+Final Output
+
+
+
+
+
