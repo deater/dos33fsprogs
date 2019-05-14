@@ -1030,6 +1030,10 @@ decode_case_not_10:
 
 	sta	pt3_envelope_type
 
+	lda	#$78
+	sta	pt3_envelope_type_old
+
+
 	; get next byte
 	iny
 	lda	(PATTERN_L),Y
@@ -1174,6 +1178,9 @@ decode_case_bx_higher:
 	sec
 	sbc	#1
 	sta	pt3_envelope_type	; envelope_type=(current_val&0xf)-1;
+
+	lda	#$78
+	sta	pt3_envelope_type_old
 
 	; get next byte
 	iny
