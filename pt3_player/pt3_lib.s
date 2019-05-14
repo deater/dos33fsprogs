@@ -1701,7 +1701,7 @@ pt3_make_frame:
 	lda	current_subframe
 	bne	pattern_good
 
-	; load a new patterh in
+	; load a new pattern in
 	jsr	pt3_set_pattern
 
 	lda	DONE_PLAYING
@@ -1717,6 +1717,19 @@ pattern_good:
 
 	; decode a new line
 	jsr	pt3_decode_line
+
+	; check if pattern done early
+	lda	pt3_pattern_done
+	bne	line_good
+
+	;==========================
+	; pattern done early!
+
+	inc	current_pattern		; increment pattern
+	lda	#0
+	sta	current_line
+	sta	current_subframe
+	jmp	pt3_make_frame
 
 line_good:
 
@@ -1734,9 +1747,6 @@ next_line:
 	inc	current_line		; and increment line
 	lda	current_line
 
-	lda	pt3_pattern_done	; check if pattern done early
-	beq	next_pattern
-
 	cmp	#64			; always end at 64.
 	bne	do_frame		; is this always needed?
 
@@ -1746,17 +1756,7 @@ next_pattern:
 
 	inc	current_pattern		; increment pattern
 
-;	lda	current_pattern
-;	cmp	pt3_music_len		; if end of song, mark it as so
-;	beq	done_song
-
 	jmp	do_frame
-
-;done_song:
-;	lda	#$ff
-;	sta	DONE_PLAYING
-
-;	rts
 
 do_frame:
 	; AY-3-8910 register summary
