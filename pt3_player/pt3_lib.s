@@ -210,7 +210,6 @@ pt3_envelope_type_old:	.byte	$0
 pt3_envelope_delay:	.byte	$0
 pt3_envelope_delay_orig:.byte	$0
 
-;pt3_current_pattern:	.byte	$0
 pt3_music_len:		.byte	$0
 pt3_mixer_value:	.byte	$0
 
@@ -246,7 +245,7 @@ load_ornament:
 	sty	ysave
 
 	; save as new ornament
-	; sta	note_a+NOTE_ORNAMENT ; do we use this?
+	; sta	note_a+NOTE_ORNAMENT,X ; do we use this?
 
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
@@ -379,7 +378,7 @@ pt3_init_song:
 
 	; default ornament/sample in A
 	lda	#0
-	ldx	#0
+	ldx	#(NOTE_STRUCT_SIZE*0)
 	jsr	load_ornament
 	lda	#1
 	jsr	load_sample
@@ -404,7 +403,6 @@ pt3_init_song:
 	sta	pt3_envelope_period_l
 	sta	pt3_envelope_period_h
 	sta	pt3_envelope_type
-;	sta	pt3_current_pattern
 
 	rts
 
@@ -426,14 +424,14 @@ calculate_note:
 
 note_enabled:
 
-	lda	note_a+NOTE_SAMPLE_POINTER_H
+	lda	note_a+NOTE_SAMPLE_POINTER_H,X
 	sta	SAMPLE_H
-	lda	note_a+NOTE_SAMPLE_POINTER_L
+	lda	note_a+NOTE_SAMPLE_POINTER_L,X
 	sta	SAMPLE_L
 
-	lda	note_a+NOTE_ORNAMENT_POINTER_H
+	lda	note_a+NOTE_ORNAMENT_POINTER_H,X
 	sta	ORNAMENT_H
-	lda	note_a+NOTE_ORNAMENT_POINTER_L
+	lda	note_a+NOTE_ORNAMENT_POINTER_L,X
 	sta	ORNAMENT_L
 
 
@@ -476,7 +474,7 @@ note_enabled:
 
 	lda	#$40		; if (b1&0x40)
 	bit	sample_b1
-	beq	no_accum
+	beq	no_accum	;     (so, if b1&0x40 is zero, skip it)
 
 	lda	note_a+NOTE_TONE_L,X	; tone_accumulator=tone
 	sta	note_a+NOTE_TONE_ACCUMULATOR_L,X
@@ -566,27 +564,50 @@ check1:
 
 	;				(a->tone_sliding <= a->tone_delta) ||
 
-	lda	note_a+NOTE_TONE_SLIDING_H,X	; compare high bytes
-	cmp	note_a+NOTE_TONE_DELTA_H,X
-	bcc	slide_to_note	; if NUM1H < NUM2H then NUM1 < NUM2
-	bne	check2		; if NUM1H <> NUM2H then NUM1 > NUM2 (so NUM1 >= NUM2)
-	lda	note_a+NOTE_TONE_SLIDING_L,X	; compare low bytes
-	cmp	note_a+NOTE_TONE_DELTA_L,X
-	bcc	slide_to_note
+	; 16 bit signed compare
+	lda	note_a+NOTE_TONE_SLIDING_L,X	; NUM1-NUM2
+	cmp	note_a+NOTE_TONE_DELTA_L,X	;
+	lda	note_a+NOTE_TONE_SLIDING_H,X
+	sbc	note_a+NOTE_TONE_DELTA_H,X
+	bvc	sc_loser1			; N eor V
+	eor	#$80
+sc_loser1:
+	bmi	slide_to_note	; then A (signed) < NUM (signed) and BMI will branch
 	beq	slide_to_note
+
+;	lda	note_a+NOTE_TONE_SLIDING_H,X	; compare high bytes
+;	cmp	note_a+NOTE_TONE_DELTA_H,X
+;	bcc	slide_to_note	; if NUM1H < NUM2H then NUM1 < NUM2
+;	bne	check2		; if NUM1H <> NUM2H then NUM1 > NUM2 (so NUM1 >= NUM2)
+;	lda	note_a+NOTE_TONE_SLIDING_L,X	; compare low bytes
+;	cmp	note_a+NOTE_TONE_DELTA_L,X
+;	bcc	slide_to_note
+;	beq	slide_to_note
 
 check2:
 	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	bmi	no_tone_sliding		; ((a->tone_slide_step >= 0) &&
 
 	;				(a->tone_sliding >= a->tone_delta)
-	lda	note_a+NOTE_TONE_SLIDING_H,X	; compare high bytes
-	cmp	note_a+NOTE_TONE_DELTA_H,X
-	bcc	no_tone_sliding		; if NUM1H < NUM2H then NUM1 < NUM2
-        bne	slide_to_note	; if NUM1H <> NUM2H then NUM1 > NUM2 (so NUM1 >= NUM2)
-	lda	note_a+NOTE_TONE_SLIDING_L,X	; compare low bytes
-	cmp	note_a+NOTE_TONE_DELTA_L,X
-	bcc	no_tone_sliding		; if NUM1L < NUM2L then NUM1 < NUM2
+
+	; 16 bit signed compare
+	lda	note_a+NOTE_TONE_SLIDING_L,X	; NUM1-NUM2
+	cmp	note_a+NOTE_TONE_DELTA_L,X	;
+	lda	note_a+NOTE_TONE_SLIDING_H,X
+	sbc	note_a+NOTE_TONE_DELTA_H,X
+	bvc	sc_loser2			; N eor V
+	eor	#$80
+sc_loser2:
+	bmi	no_tone_sliding	; then A (signed) < NUM (signed) and BMI will branch
+
+
+;	lda	note_a+NOTE_TONE_SLIDING_H,X	; compare high bytes
+;	cmp	note_a+NOTE_TONE_DELTA_H,X
+;	bcc	no_tone_sliding		; if NUM1H < NUM2H then NUM1 < NUM2
+;       bne	slide_to_note	; if NUM1H <> NUM2H then NUM1 > NUM2 (so NUM1 >= NUM2)
+;	lda	note_a+NOTE_TONE_SLIDING_L,X	; compare low bytes
+;	cmp	note_a+NOTE_TONE_DELTA_L,X
+;	bcc	no_tone_sliding		; if NUM1L < NUM2L then NUM1 < NUM2
 
 slide_to_note:
 	lda	note_a+NOTE_SLIDE_TO_NOTE,X
@@ -602,7 +623,7 @@ no_tone_sliding:
 	;=========================
 	; Calculate the amplitude
 	;=========================
-
+calc_amplitude:
 	; get base value from the sample (bottom 4 bits of sample_b1)
 
 	lda	sample_b1		;  a->amplitude= (b1 & 0xf);
@@ -616,7 +637,7 @@ no_tone_sliding:
 
 	lda	sample_b0		;  if ((b0 & 0x80)!=0) {
 	and	#$80
-	beq	done_amp_sliding
+	beq	done_amp_sliding	; so if top bit not set, skip
 
 	;================================
 	; if top bits 0b11 then slide up
@@ -1523,7 +1544,7 @@ no_effect:
 
 pt3_decode_line:
 	; decode_note(&pt3->a,&(pt3->a_addr),pt3);
-	ldx	#0
+	ldx	#(NOTE_STRUCT_SIZE*0)
 	jsr	decode_note
 
 	; decode_note(&pt3->b,&(pt3->b_addr),pt3);
@@ -1687,7 +1708,7 @@ do_frame:
 	sta	pt3_mixer_value
 	sta	pt3_envelope_add
 
-	ldx	#0			; Note A
+	ldx	#(NOTE_STRUCT_SIZE*0)	; Note A
 	jsr	calculate_note
 	ldx	#(NOTE_STRUCT_SIZE*1)	; Note B
 	jsr	calculate_note
@@ -1811,8 +1832,9 @@ GetNoteFreq:
 
 freq_table_2:
 	lda	PT3NoteTable_ASM_34_35_high,Y
-	tax
+	sta	freq_h
 	lda	PT3NoteTable_ASM_34_35_low,Y
+	sta	freq_l
 
 	ldy	ysave
 

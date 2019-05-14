@@ -190,10 +190,15 @@ six_space:
 	inc	FRAMEH
 no_frame_oflo:
 
-;	lda	FRAMEL
-;	cmp	#16
-;	beq	all_done
+	; STOP EARLY for DEBUGGING
 
+	lda	FRAMEL
+	cmp	#$A4
+	bne	checkcheck
+	lda	FRAMEH
+	cmp	#$1
+	beq	all_done
+checkcheck:
 	lda	DONE_PLAYING
 	bne	all_done
 	jmp	main_loop
