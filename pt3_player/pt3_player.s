@@ -8,7 +8,6 @@ UNPACK_BUFFER	EQU	$6000		; $6000 - $9800, 14k, $3800
 NUM_FILES	EQU	15
 
 
-
 	;=============================
 	; Setup
 	;=============================
@@ -32,11 +31,7 @@ pt3_setup:
 
 	lda	#0
 	sta	DRAW_PAGE
-;	sta	CH
-;	sta	CV
 	sta	DONE_PLAYING
-;	sta	MB_CHUNK_OFFSET
-;	sta	DECODE_ERROR
 	sta	WHICH_FILE
 
 ;	lda	#$ff
@@ -119,27 +114,7 @@ mockingboard_found:
 	; Draw title screen
 	;============================
 
-;	jsr	set_gr_page0			; set page 0
 
-;	lda	#$4				; draw page 1
-;	sta	DRAW_PAGE
-
-;	jsr	clear_screens			; clear both screens
-
-;	lda	#<chip_title			; point to title data
-;	sta	GBASL
-;	lda	#>chip_title
-;	sta	GBASH
-
-;	bit	PAGE1
-
-	; Load image				; load the image
-;	lda	#<$800
-;	sta	BASL
-;	lda	#>$800
-;	sta	BASH
-
-;	jsr	load_rle_gr
 
 	;==================
 	; load first song
@@ -221,8 +196,8 @@ new_song:
 	; Init Variables
 	;=========================
 
-;	lda	#$0
-;	sta	FRAME_COUNT
+	lda	#$0
+	sta	FRAME_COUNT
 ;	sta	A_VOLUME
 ;	sta	B_VOLUME
 ;	sta	C_VOLUME
@@ -336,6 +311,33 @@ done_name_loop:
 	jsr	print_header_info
 
 	; Print clock
+	lda	#'0'+$80
+	sta	$7D0+13
+	sta	$7D0+13+2
+	sta	$7D0+13+3
+	sta	$BD0+13
+	sta	$BD0+13+2
+	sta	$BD0+13+3
+
+	sta	$7D0+13+7
+	sta	$7D0+13+9
+	sta	$7D0+13+10
+	sta	$BD0+13+7
+	sta	$BD0+13+9
+	sta	$BD0+13+10
+
+	lda	#':'+$80
+	sta	$7D0+13+1
+	sta	$BD0+13+1
+	sta	$7D0+13+8
+	sta	$BD0+13+8
+
+	lda	#'/'+$80
+	sta	$7D0+13+5
+	sta	$BD0+13+5
+
+
+
 ;	lda	#23			; VTAB 23: HTAB from file
 ;	jsr	print_header_info
 
@@ -356,6 +358,122 @@ done_name_loop:
 	lda	#'>'
 	sta	$777
 	sta	$B77
+
+	jsr	pt3_init_song
+
+;=================================
+; BLARCH
+;=================================
+	lda	#$0
+	sta	current_line
+	sta	current_subframe
+	sta	current_pattern
+
+frame_count_loop:
+
+	lda	current_line
+	bne	fc_pattern_good
+	lda	current_subframe
+	bne	fc_pattern_good
+
+	; load a new pattern in
+	jsr	pt3_set_pattern
+
+	lda	DONE_PLAYING
+	beq	fc_pattern_good
+        jmp	done_counting
+
+fc_pattern_good:
+	lda     current_subframe
+	bne	fc_line_good
+
+	jsr	pt3_decode_line
+
+	lda	pt3_pattern_done
+	bne	fc_line_good
+
+	inc     current_pattern         ; increment pattern
+        lda     #0
+        sta     current_line
+        sta     current_subframe
+        jmp     frame_count_loop
+
+fc_line_good:
+        inc     current_subframe        ; subframe++
+        lda     current_subframe
+        cmp     pt3_speed               ; if we hit pt3_speed, move to next
+        bne     fc_do_frame
+
+fc_next_line:
+	lda     #0                      ; reset subframe to 0
+        sta     current_subframe
+
+        inc     current_line            ; and increment line
+        lda     current_line
+
+        cmp     #64                     ; always end at 64.
+        bne     fc_do_frame                ; is this always needed?
+
+fc_next_pattern:
+        lda     #0                      ; reset line to 0
+        sta     current_line
+
+        inc     current_pattern         ; increment pattern
+
+fc_do_frame:
+	inc	time_frame
+	lda	time_frame
+	cmp	#50
+	bne	fc_bayern
+
+	lda	#0
+	sta	time_frame
+
+	; see if overflow low s
+	lda	$BD0+13+10
+	cmp	#'9'+$80
+	bne	inc_low_s
+
+	; see if overflow high s
+	lda	$BD0+13+9
+	cmp	#'5'+$80
+	bne	inc_high_s
+
+	inc	$7D0+13+7
+	inc	$BD0+13+7
+
+	lda	#'0'+$80
+	sta	$7D0+13+9
+	sta	$BD0+13+9
+	jmp	clear_low_s
+
+inc_high_s:
+	inc	$7D0+13+9
+	inc	$BD0+13+9
+
+clear_low_s:
+	lda	#'0'+$80
+	sta	$7D0+13+10
+	sta	$BD0+13+10
+
+	jmp	inc_done
+
+inc_low_s:
+	inc	$7D0+13+10
+	inc	$BD0+13+10
+
+inc_done:
+
+fc_bayern:
+	jmp	frame_count_loop
+
+
+done_counting:
+
+	; re-init, as we've run through it
+	lda	#0
+	sta	DONE_PLAYING
+	sta	current_pattern
 
 	jsr	pt3_init_song
 
@@ -443,6 +561,15 @@ decrement_file:
 	sta	WHICH_FILE
 done_decrement:
 	rts
+
+;=========
+; vars
+;=========
+
+
+time_frame:	.byte	$0
+
+
 
 ;==========
 ; filenames

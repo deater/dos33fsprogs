@@ -22,7 +22,7 @@ interrupt_handler:
 
 
 
-	inc	$0404		; debug (flashes char onscreen)
+;	inc	$0404		; debug (flashes char onscreen)
 
 	bit	$C404		; clear 6522 interrupt by reading T1C-L	; 4
 
