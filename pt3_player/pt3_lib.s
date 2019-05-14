@@ -533,7 +533,6 @@ note_not_negative:
 
 note_not_too_high:
 
-
 	;  w = GetNoteFreq(j,pt3->frequency_table);
 
 	jsr	GetNoteFreq
@@ -601,16 +600,14 @@ check1:
 	eor	#$80
 sc_loser1:
 	bmi	slide_to_note	; then A (signed) < NUM (signed) and BMI will branch
-	beq	slide_to_note
 
-;	lda	note_a+NOTE_TONE_SLIDING_H,X	; compare high bytes
-;	cmp	note_a+NOTE_TONE_DELTA_H,X
-;	bcc	slide_to_note	; if NUM1H < NUM2H then NUM1 < NUM2
-;	bne	check2		; if NUM1H <> NUM2H then NUM1 > NUM2 (so NUM1 >= NUM2)
-;	lda	note_a+NOTE_TONE_SLIDING_L,X	; compare low bytes
-;	cmp	note_a+NOTE_TONE_DELTA_L,X
-;	bcc	slide_to_note
-;	beq	slide_to_note
+	; equals case
+	lda	note_a+NOTE_TONE_SLIDING_L,X
+	cmp	note_a+NOTE_TONE_DELTA_L,X
+	bne	check2
+	lda	note_a+NOTE_TONE_SLIDING_H,X
+	cmp	note_a+NOTE_TONE_DELTA_H,X
+	beq	slide_to_note
 
 check2:
 	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
@@ -628,18 +625,10 @@ check2:
 sc_loser2:
 	bmi	no_tone_sliding	; then A (signed) < NUM (signed) and BMI will branch
 
-
-;	lda	note_a+NOTE_TONE_SLIDING_H,X	; compare high bytes
-;	cmp	note_a+NOTE_TONE_DELTA_H,X
-;	bcc	no_tone_sliding		; if NUM1H < NUM2H then NUM1 < NUM2
-;       bne	slide_to_note	; if NUM1H <> NUM2H then NUM1 > NUM2 (so NUM1 >= NUM2)
-;	lda	note_a+NOTE_TONE_SLIDING_L,X	; compare low bytes
-;	cmp	note_a+NOTE_TONE_DELTA_L,X
-;	bcc	no_tone_sliding		; if NUM1L < NUM2L then NUM1 < NUM2
-
 slide_to_note:
+	; a->note = a->slide_to_note;
 	lda	note_a+NOTE_SLIDE_TO_NOTE,X
-	sta	note_a+NOTE_NOTE,X	; a->note = a->slide_to_note;
+	sta	note_a+NOTE_NOTE,X
 	lda	#0
 	sta	note_a+NOTE_TONE_SLIDE_COUNT,X
 	sta	note_a+NOTE_TONE_SLIDING_L,X
@@ -1380,7 +1369,6 @@ effect_2_small:			; FIXME: make smaller
 	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
 
 	lda	(PATTERN_L),Y	; load byte, set as slide_step high
-	iny
 	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
 
 	; 16-bit absolute value
@@ -1398,6 +1386,9 @@ effect_2_small:			; FIXME: make smaller
 	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
 
 slide_step_positive:
+
+	iny	; moved here as it messed with flags
+
 
 ;	a->tone_delta=GetNoteFreq(a->note,pt3)-
 ;		GetNoteFreq(prev_note,pt3);
