@@ -223,6 +223,7 @@ sample_b1:		.byte	$0
 
 PT3_VERSION		= $D
 PT3_HEADER_FREQUENCY	= $63
+PT3_SPEED		= $64
 PT3_PATTERN_LOC_L	= $67
 PT3_PATTERN_LOC_H	= $68
 PT3_SAMPLE_LOC_L	= $69
@@ -429,6 +430,12 @@ pt3_init_song:
 	sec
 	sbc	#'0'
 	sta	pt3_version
+
+	;=======================
+	; load default speed
+
+	lda	PT3_LOC+PT3_SPEED
+	sta	pt3_speed
 
 not_ascii_number:
 
@@ -784,61 +791,72 @@ envelope_slide:
 
 	lda	#$80
 	bit	sample_b1
-	beq	noise_slide		; if ((b1 & 0x80) != 0) {
+	beq	else_noise_slide	; if ((b1 & 0x80) != 0) {
 
 	lda	#$20
 	bit	sample_b0
 	beq	envelope_slide_down	;     if ((b0 & 0x20) != 0) {
 
 	; FIXME: this can be optimized
-envelope_slide_up:
+
+envelope_slide_down:
+
+	; j = ((b0>>1)|0xF0) + a->envelope_sliding
 	lda	sample_b0
 	lsr
 	ora	#$f0
 	clc
 	adc	note_a+NOTE_ENVELOPE_SLIDING,X
-	sta	e_slide_amount	; j = ((b0>>1)|0xF0) + a->envelope_sliding
-	jmp	envelope_slide_done
-envelope_slide_down:
+	sta	e_slide_amount				; j
+
+envelope_slide_up:
+	; j = ((b0>>1)&0xF) + a->envelope_sliding;
 	lda	sample_b0
 	lsr
 	and	#$0f
 	clc
 	adc	note_a+NOTE_ENVELOPE_SLIDING,X
-	sta	e_slide_amount  ; j = ((b0>>1)&0xF) + a->envelope_sliding;
+	sta	e_slide_amount				; j
 
 envelope_slide_done:
 
 	lda	#$20
 	bit	sample_b1
 	beq	last_envelope	;     if (( b1 & 0x20) != 0) {
+
+	; a->envelope_sliding = j;
 	lda	e_slide_amount
-	sta	note_a+NOTE_ENVELOPE_SLIDING,X	; a->envelope_sliding = j;
+	sta	note_a+NOTE_ENVELOPE_SLIDING,X
 
 last_envelope:
+
+	; pt3->envelope_add+=j;
 
 	clc
 	lda	e_slide_amount
 	adc	pt3_envelope_add
-	sta	pt3_envelope_add	; pt3->envelope_add+=j;
+	sta	pt3_envelope_add
 
 	jmp	noise_slide_done	; skip else
 
-noise_slide:
+else_noise_slide:
 	; Noise slide
 	;  else {
 
+	; pt3->noise_add = (b0>>1) + a->noise_sliding;
 	lda	sample_b0
 	lsr
 	clc
 	adc	note_a+NOTE_NOISE_SLIDING,X
-	sta	pt3_noise_add	; pt3->noise_add = (b0>>1) + a->noise_sliding;
+	sta	pt3_noise_add
 
 	lda	#$20
 	bit	sample_b1
 	beq	noise_slide_done	;     if ((b1 & 0x20) != 0) {
+
+	; noise_sliding = pt3_noise_add
 	lda	pt3_noise_add
-	sta	note_a+NOTE_NOISE_SLIDING,X	; noise_sliding = pt3_noise_add
+	sta	note_a+NOTE_NOISE_SLIDING,X
 
 noise_slide_done:
 	;======================

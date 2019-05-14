@@ -15,6 +15,7 @@ pt3_player.dsk:	PT3_PLAYER PT3_DUMPER HELLO DUMP
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x1000 PT3_DUMPER
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x1000 PT3_PLAYER
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x3000 EA.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x3000 VC.PT3
 #	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/CHRISTMAS.KRW
 #	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/CRMOROS.KRW
 #	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/DEATH2.KRW
