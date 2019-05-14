@@ -431,13 +431,13 @@ pt3_init_song:
 	sbc	#'0'
 	sta	pt3_version
 
+not_ascii_number:
+
 	;=======================
 	; load default speed
 
 	lda	PT3_LOC+PT3_SPEED
 	sta	pt3_speed
-
-not_ascii_number:
 
 	rts
 
