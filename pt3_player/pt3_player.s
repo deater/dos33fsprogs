@@ -4,8 +4,8 @@
 
 PT3_LOC = $4000
 
-UNPACK_BUFFER	EQU	$6000		; $6000 - $9800, 14k, $3800
-NUM_FILES	EQU	15
+
+NUM_FILES	EQU	3
 
 
 	;=============================
@@ -144,8 +144,6 @@ mockingboard_found:
 main_loop:
 
 
-	jmp	main_loop
-
 check_done:
 	lda	#$ff
 	bit	DONE_PLAYING
@@ -170,10 +168,10 @@ done_play:
 	lda	#0
 	sta	DONE_PLAYING
 
-	lda	#0
-	sta	CH
+;	lda	#0
+;	sta	CH
 
-	jsr	clear_bottoms
+;	jsr	clear_bottoms
 
 	jsr	new_song
 
@@ -379,7 +377,7 @@ frame_count_loop:
 	; load a new pattern in
 	jsr	pt3_set_pattern
 
-	lda	DONE_PLAYING
+	lda	DONE_SONG
 	beq	fc_pattern_good
         jmp	done_counting
 
@@ -591,7 +589,6 @@ song_list:
 .include	"../asm_routines/gr_setpage.s"
 .include	"qkumba_rts.s"
 .include	"../asm_routines/gr_hlin.s"
-.include	"../asm_routines/lz4_decode.s"
 .include	"../asm_routines/keypress_minimal.s"
 ;.include	"rasterbars.s"
 ;.include	"volume_bars.s"

@@ -365,7 +365,9 @@ pt3_init_song:
 	sta	note_a+NOTE_VOLUME
 	sta	note_b+NOTE_VOLUME
 	sta	note_c+NOTE_VOLUME
+
 	lda	#$0
+	sta	DONE_SONG
 	sta	note_a+NOTE_TONE_SLIDING_L
 	sta	note_b+NOTE_TONE_SLIDING_L
 	sta	note_c+NOTE_TONE_SLIDING_L
@@ -442,7 +444,17 @@ not_ascii_number:
 
 	rts
 
+
+
+
+
+
 e_slide_amount:	.byte	$0
+
+
+
+
+
 
 	;=====================================
 	; Calculate Note
@@ -1626,7 +1638,7 @@ pt3_set_pattern:
 	cmp	#$ff
 	bne	not_done
 
-	sta	DONE_PLAYING
+	sta	DONE_SONG
 	rts
 
 not_done:
@@ -1704,7 +1716,7 @@ pt3_make_frame:
 	; load a new pattern in
 	jsr	pt3_set_pattern
 
-	lda	DONE_PLAYING
+	lda	DONE_SONG
 	beq	pattern_good
 	rts
 

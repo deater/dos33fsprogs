@@ -47,6 +47,14 @@ pt3_play_music:
 
 	jsr	pt3_make_frame
 
+	; set song over
+	lda	DONE_SONG
+	beq	mb_write_frame
+
+	; same as "press right"
+	lda	#$40
+	jmp	quiet_exit
+
 	;======================================
 	; Write frames to Mockingboard
 	;======================================
@@ -216,16 +224,6 @@ done_key:
 quiet_exit:
 	sta	DONE_PLAYING
 	jsr	clear_ay_both
-
-	;=====================================
-	; clear register area
-	;=====================================
-	ldx	#13							; 2
-	lda	#0							; 2
-mb_clear_reg:
-	sta	REGISTER_DUMP,X ; clear register value			; 4
-	dex								; 2
-	bpl	mb_clear_reg						; 2nt/3
 
 exit_interrupt:
 
