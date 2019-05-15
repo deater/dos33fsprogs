@@ -8,12 +8,13 @@ all:	pt3_player.dsk
 $(DOS33):
 	cd ../dos33fs-utils && make
 
-pt3_player.dsk:	PT3_PLAYER PT3_DUMPER HELLO DUMP
+pt3_player.dsk:	PT3_PLAYER PT3_DUMPER PT3_TIMER HELLO DUMP
 	cp empty.dsk pt3_player.dsk
 	$(DOS33) -y pt3_player.dsk SAVE A HELLO
 	$(DOS33) -y pt3_player.dsk SAVE A DUMP
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x1000 PT3_DUMPER
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x2000 PT3_PLAYER
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x2000 PT3_TIMER
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 EA.PT3
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 VC.PT3
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 SR.PT3
@@ -42,18 +43,26 @@ HELLO:	hello.bas
 DUMP:	dump.bas
 	../asoft_basic-utils/tokenize_asoft < dump.bas > DUMP
 
+
+#
+
 PT3_PLAYER:	pt3_player.o
 	ld65 -o PT3_PLAYER pt3_player.o -C ../linker_scripts/apple2_2000.inc
 
 pt3_player.o:	pt3_player.s \
 	gr_fast_clear.s pt3_lib.s interrupt_handler.s zp.inc
-#	mockingboard.s \
-#	keypress_minimal.s \
-#	qkumba_rts.s \
-#	rasterbars.s volume_bars.s interrupt_handler.s \
-#	song_list.inc chip_title.inc zp.inc chip_title_uncompressed.inc
 	ca65 -o pt3_player.o pt3_player.s -l pt3_player.lst
 
+#
+
+PT3_TIMER:	pt3_timer.o
+	ld65 -o PT3_TIMER pt3_timer.o -C ../linker_scripts/apple2_2000.inc
+
+pt3_timer.o:	pt3_timer.s \
+	gr_fast_clear.s pt3_lib.s interrupt_handler.s zp.inc
+	ca65 -o pt3_timer.o pt3_timer.s -l pt3_timer.lst
+
+#
 
 PT3_DUMPER:	pt3_dumper.o
 	ld65 -o PT3_DUMPER pt3_dumper.o -C ../linker_scripts/apple2_1000.inc
@@ -65,5 +74,5 @@ pt3_dumper.o:	pt3_dumper.s \
 
 clean:	
 	rm -f *~ TITLE.GR *.o *.lst \
-		PT3_PLAYER
+		PT3_PLAYER PT3_TIMER PT3_DUMPER
 

@@ -584,7 +584,7 @@ song_list:
 ;=========
 .include	"../asm_routines/gr_offsets.s"
 .include	"text_print.s"
-.include	"../asm_routines/mockingboard_a.s"
+.include	"mockingboard_a.s"
 .include	"gr_fast_clear.s"
 .include	"../asm_routines/pageflip.s"
 ;.include	"../asm_routines/gr_unrle.s"
