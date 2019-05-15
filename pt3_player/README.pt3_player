@@ -1,12 +1,89 @@
-PT3_player
+The PT3_player
+~~~~~~~~~~~~~~
+
+	by Vince "Deater" Weaver
+	15 May 2019
+	http://www.deater.net/weave/vmwprod/pt3_player/
+
+	Plays Vortex Tracker II .pt3 files on the Apple II
 
 
+Background
+~~~~~~~~~~
+	Vortex Tracker is commonly used to create AY-3-8910 music for the
+	ZX Spectrum and Atari ST systems.  A large number of great pt3 files
+	can be found on the internet.
+
+	There are many benefits to using .pt3 format, but until now there
+	was no player available for Apple II/6502.  (Though some people
+	had been playing the files using a z80-card in their system).
+	Part of the challenge was the documentation for the format was
+	in Russian, and the only source-code available for .pt3
+	players were in uncommented z80 assembly or else Russian-commented
+	Pascal.
+
+	Why .pt3?  Why not play YM5 files?
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	There are already many projects (including one of my own) for
+	playing the .YM file format, which is much simpler.  It is just a
+	series of AY-3-8910 raw-register dumps which can quickly be sent
+	to the Mockingboard.
+
+	The issue is uncompressed YM5 files are really huge.  So you have to
+	do some sort of decompression on the fly, and even then you are looking
+	at 32k+ or more of RAM.  This might be fine on an Apple IIe with
+	128k of RAM, but I am targetting a II+ where I don't have that much
+	available.
+
+	A PT3 file is a tracker format, meaning a list of notes, patterns, and
+	ornaments and can be played in place.  Once you load the music file and
+	the player, no additional RAM is needed at all.  It does take more CPU
+	than playing a YM5 file.
+
+
+Using the PT3_PLAYER
+~~~~~~~~~~~~~~~~~~~~
+
+	TODO: keyboard/other info
+
+Adding other files
+~~~~~~~~~~~~~~~~~~
+
+	Unlike YM5 players which require complicated preparation of files
+	(with often complex, or hard-to find tools) the PT3_PLAYER can in
+	theory play plain .pt3 files.
+
+	To get the player to play them, just rename them to fit the naming
+	scheme (I think it will just be 00.PT3, 01.PT3, 02.PT3) and replace
+	the existing files on the disk image with your favorite Apple II
+	disk tool.
+
+
+Code Optimization
+~~~~~~~~~~~~~~~~~
+
+	The original working code is about 4k (not counting the pt3 file)
+	and has an overhead of roughly 20% when playing a song interrupt-driven
+	at 50Hz.
+
+	I'm keeping some stats here as I try to optimize the size and speed.
+
+	Song: "Summer of Rain"
+	~~~~~~~~~~~~~~~~~~~~~~
+					lz4 compressed
+	pt3 size:	raw size:	ym5 size:	pt3.lz4:
+	3871		137015		7637		1793
+
+	Decoder Type	size	ZP use	decode	total	CPU overhead
+	-------------------------------------------------------------
+	Original	4k(?)	22B	28.16s	171s	16%
+
+
+Random Programming Reminders
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ASR = CMP #$80 / ROR
-
-
-
-Notes:
 
 signed 8-bit comparison
 see http://6502.org/tutorials/compare_beyond.html#2.2
