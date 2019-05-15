@@ -45,7 +45,22 @@ Background
 Using the PT3_PLAYER
 ~~~~~~~~~~~~~~~~~~~~
 
-	TODO: keyboard/other info
+	The pt3_player.dsk should boot automatically.
+
+	Use the right/left arrow keys to switch songs.
+	Press the space bar to pause playback.
+
+	FUTURE FEATURES:
+		Key to disable visualization
+		Key to skip ahead/back in pattern list
+		L to enable looping in the song
+
+Known Bugs:
+~~~~~~~~~~~
+	Will try to display lowecase names on a II/II+
+
+	ZX Spectrum songs expect a 1.77MHz AY-3-8910, but
+		the Apple II is 1MHz so song are higher(?) pitched
 
 Adding other files
 ~~~~~~~~~~~~~~~~~~
