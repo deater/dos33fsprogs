@@ -15,6 +15,7 @@ pt3_player.dsk:	PT3_PLAYER HELLO
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 EA.PT3
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 VC.PT3
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 SR.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 OS.PT3
 
 pt3_debug.dsk:	PT3_PLAYER PT3_DUMPER PT3_TIMER HELLO_DEBUG DUMP
 	cp empty.dsk pt3_debug.dsk
@@ -26,6 +27,7 @@ pt3_debug.dsk:	PT3_PLAYER PT3_DUMPER PT3_TIMER HELLO_DEBUG DUMP
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 EA.PT3
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 VC.PT3
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 SR.PT3
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 OS.PT3
 
 HELLO:	hello.bas
 	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO

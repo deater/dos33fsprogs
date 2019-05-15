@@ -5,7 +5,7 @@
 PT3_LOC = $4000
 
 
-NUM_FILES	EQU	3
+NUM_FILES	EQU	4
 
 
 	;=============================
