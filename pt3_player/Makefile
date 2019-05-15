@@ -3,46 +3,38 @@ include ../Makefile.inc
 DOS33 = ../dos33fs-utils/dos33
 PNG2GR = ../gr-utils/png2gr
 
-all:	pt3_player.dsk
+all:	pt3_player.dsk pt3_debug.dsk
 
 $(DOS33):
 	cd ../dos33fs-utils && make
 
-pt3_player.dsk:	PT3_PLAYER PT3_DUMPER PT3_TIMER HELLO DUMP
+pt3_player.dsk:	PT3_PLAYER HELLO
 	cp empty.dsk pt3_player.dsk
 	$(DOS33) -y pt3_player.dsk SAVE A HELLO
-	$(DOS33) -y pt3_player.dsk SAVE A DUMP
-	$(DOS33) -y pt3_player.dsk BSAVE -a 0x1000 PT3_DUMPER
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x2000 PT3_PLAYER
-	$(DOS33) -y pt3_player.dsk BSAVE -a 0x2000 PT3_TIMER
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 EA.PT3
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 VC.PT3
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 SR.PT3
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/CHRISTMAS.KRW
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/CRMOROS.KRW
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/DEATH2.KRW
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/DEMO4.KRW
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/HARKONEN.KRW
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/INTRO2.KRW
-##	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/KORO.KRW
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/LYRA2.KRW
-##	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/MMCM.KRW
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/RANDOM.KRW
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/ROBOT.KRW
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/SDEMO.KRW
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/SPUTNIK.KRW
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/TECHNO.KRW
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/UNIVERSE.KRW
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x1c00 ./krw/WAVE.KRW
-#	$(DOS33) -y chiptune_player.dsk SAVE B OUT.LZ4
-#	$(DOS33) -y chiptune_player.dsk BSAVE -a 0x6000 OUT.0
+
+pt3_debug.dsk:	PT3_PLAYER PT3_DUMPER PT3_TIMER HELLO_DEBUG DUMP
+	cp empty.dsk pt3_debug.dsk
+	$(DOS33) -y pt3_debug.dsk SAVE A HELLO_DEBUG HELLO
+	$(DOS33) -y pt3_debug.dsk SAVE A DUMP
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x1000 PT3_DUMPER
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x2000 PT3_PLAYER
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x2000 PT3_TIMER
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 EA.PT3
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 VC.PT3
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 SR.PT3
 
 HELLO:	hello.bas
 	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
 
+HELLO_DEBUG:	hello_debug.bas
+	../asoft_basic-utils/tokenize_asoft < hello_debug.bas > HELLO_DEBUG
+
 DUMP:	dump.bas
 	../asoft_basic-utils/tokenize_asoft < dump.bas > DUMP
-
 
 #
 
