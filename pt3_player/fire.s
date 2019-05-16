@@ -231,86 +231,85 @@ fire_update_done:
 	; copy framebuffer to low-res screen
 	;===============================
 
-	lda	#<fire_framebuffer
-	sta	FIRE_FB_L
+	lda	#<fire_framebuffer					; 2
+	sta	FIRE_FB_L						; 3
 
-	lda	#>fire_framebuffer
-	sta	FIRE_FB_H
+	lda	#>fire_framebuffer					; 2
+	sta	FIRE_FB_H						; 3
 
-	lda	#<(fire_framebuffer+40)
-	sta	FIRE_FB2_L
+	lda	#<(fire_framebuffer+40)					; 2
+	sta	FIRE_FB2_L						; 3
 
-	lda	#>(fire_framebuffer+40)
-	sta	FIRE_FB2_H
+	lda	#>(fire_framebuffer+40)					; 2
+	sta	FIRE_FB2_H						; 3
 
-	lda	#16
-	sta	FIRE_FB_LINE
+	lda	#16							; 2
+	sta	FIRE_FB_LINE						; 3
 
-	ldx	#(FIRE_YSIZE/2)
+	ldx	#(FIRE_YSIZE/2)						; 2
 
 fire_fb_copy:
-	lda	FIRE_FB_LINE
-	clc
-	adc	#$2
-	sta	FIRE_FB_LINE
-	tay
 
-	lda	gr_offsets,Y
-	sta	OUTL
-	lda	gr_offsets+1,Y
-	clc
-	adc	DRAW_PAGE
-	sta	OUTH
+	ldy	FIRE_FB_LINE						; 3
+	iny								; 2
+	iny								; 2
+	sty	FIRE_FB_LINE						; 3
+
+	lda	gr_offsets,Y						; 4+
+	sta	OUTL							; 3
+	lda	gr_offsets+1,Y						; 4+
+	clc								; 2
+	adc	DRAW_PAGE						; 3
+	sta	OUTH							; 3
 
 	; FIXME: below, can we do this better?  self-modifying code?
 
-	ldy	#39
+	ldy	#39							; 2
 fire_fb_copy_loop:
-	txa
-	pha
+	txa								; 2
+	pha								; 3
 
 	; get top byte
-	lda	(FIRE_FB_L),Y
-	tax
-	lda	fire_colors_low,X
-	pha
+	lda	(FIRE_FB_L),Y						; 5+
+	tax								; 2
+	lda	fire_colors_low,X					; 4+
+	pha								; 3
 
 	; get bottom byte
-	lda	(FIRE_FB2_L),Y
-	tax
-	pla
-	ora	fire_colors_high,X
-	sta	(OUTL),Y		; store out
-	pla
-	tax
+	lda	(FIRE_FB2_L),Y						; 5+
+	tax								; 2
+	pla								; 4
+	ora	fire_colors_high,X					; 4+
+	sta	(OUTL),Y		; store out			; 6
+	pla								; 4
+	tax								; 2
 
-	dey
-	bpl	fire_fb_copy_loop
+	dey								; 2
+	bpl	fire_fb_copy_loop					; 2/3
 done_fire_fb_copy_loop:
 
 	; complicated adjustment
-	clc
-	lda	FIRE_FB_L
-	adc	#80
-	sta	FIRE_FB_L
-	lda	FIRE_FB_H
-	adc	#0
-	sta	FIRE_FB_H
+	clc								; 2
+	lda	FIRE_FB_L						; 3
+	adc	#80							; 2
+	sta	FIRE_FB_L						; 3
+	lda	FIRE_FB_H						; 3
+	adc	#0							; 2
+	sta	FIRE_FB_H						; 3
 
-	clc
-	lda	FIRE_FB2_L
-	adc	#80
-	sta	FIRE_FB2_L
-	lda	FIRE_FB2_H
-	adc	#0
-	sta	FIRE_FB2_H
+	clc								; 2
+	lda	FIRE_FB2_L						; 3
+	adc	#80							; 2
+	sta	FIRE_FB2_L						; 3
+	lda	FIRE_FB2_H						; 3
+	adc	#0							; 2
+	sta	FIRE_FB2_H						; 3
+
+	dex								; 2
+	bne	fire_fb_copy						; 2/3
 
 
-	dex
-	bne	fire_fb_copy
-
-
-	rts
+	rts								; 6
 
 fire_colors_low:	.byte	$00,$00,$03,$02,$06,$07,$0E,$0F
 fire_colors_high:	.byte	$00,$00,$30,$20,$60,$70,$E0,$F0
