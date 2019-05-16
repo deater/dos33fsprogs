@@ -77,9 +77,71 @@ draw_fire_frame:
 	; Update fire frame
 	;===============================
 
+	lda	#<fire_framebuffer
+	sta	FIRE_FB_L
+
+	lda	#>fire_framebuffer
+	sta	FIRE_FB_H
+
+	lda	#<(fire_framebuffer+40)
+	sta	FIRE_FB2_L
+
+	lda	#>(fire_framebuffer+40)
+	sta	FIRE_FB2_H
+
+	ldx	#0
+
+fire_fb_update:
+
+	ldy	#39
+fire_fb_update_loop:
+
+	; get next line color
+	lda	(FIRE_FB2_L),Y
+
+	; adjust it
+	clc
+	adc	#$ff
+
+	; saturate to 0
+	bpl	fb_positive
+	lda	#0
+fb_positive:
+
+	; store out
+	sta	(FIRE_FB_L),Y		; store out
+
+	dey
+	bpl	fire_fb_update_loop
+
+done_fire_fb_update_loop:
+
+	; complicated adjustment
+	clc
+	lda	FIRE_FB_L
+	adc	#40
+	sta	FIRE_FB_L
+	lda	FIRE_FB_H
+	adc	#0
+	sta	FIRE_FB_H
+
+	clc
+	lda	FIRE_FB2_L
+	adc	#40
+	sta	FIRE_FB2_L
+	lda	FIRE_FB2_H
+	adc	#0
+	sta	FIRE_FB2_H
+
+	inx
+	cpx	#(FIRE_YSIZE-1)
+	bne	fire_fb_update
+
+
+
 	;===============================
 	; copy framebuffer to low-res screen
-
+	;===============================
 
 	lda	#<fire_framebuffer
 	sta	FIRE_FB_L
@@ -122,14 +184,14 @@ fire_fb_copy_loop:
 	; get top byte
 	lda	(FIRE_FB_L),Y
 	tax
-	lda	fire_colors_high,X
+	lda	fire_colors_low,X
 	pha
 
 	; get bottom byte
 	lda	(FIRE_FB2_L),Y
 	tax
 	pla
-	ora	fire_colors_low,X
+	ora	fire_colors_high,X
 	sta	(OUTL),Y		; store out
 	pla
 	tax
