@@ -1,3 +1,43 @@
+1.  Merge some of the common code in decode_note()
+2.  Use a jump table for the two switch() statements in decode_note()
+3.  Make the frequency and volume table lookups use self-modify code
+    instead of checking which table to use at runtime
+4.  The time-length calculation can be much faster, it only needs to find
+        the length of one channel (not all three, right now re-using code)
+5.  I also should run some more PT3 files through to verify correctness,
+    I've only validated 3 so far.
+6.  Merge mockingboard output to register calc, instead of setting
+	all 13 registers then walking through and outputting them
+
+some further out things
+
+1.  I think the z80 assembly version generates the lookup tables at startup,
+    potentially saving a lot of space
+2.  Each channel uses roughly 40 bytes of state, so 120 bytes total.
+    Putting that in the zero page will save a lot of space in the executable
+    (though wouldn't really help speed that much if I keep using index-X
+    addressing mode).  I don't think game/demo authors would be excited
+    about giving up half the zero page though.
+
+
+Player:
+1.  Loop support
+2.  Keys to increase/decrease pattern
+3.  Fix issue
+4.  Auto-detect II/II+ and uppercase strings
+5.  Show num files total (on file 4/10)
+6.  Handle LZ4 compressed files?
+7.  Have RTS code exit with error if file not found
+
+
+Visualization:
+
+Volume bars
+
+Note names.  6 long buffer for each
+
+Flame effect?
+
 Notes into background?
 Colored, octave is color?
 
