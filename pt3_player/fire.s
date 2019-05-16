@@ -17,12 +17,11 @@ fire_init:
 clear_fire_loop:
 
 	lda	#0
-	ldy	#40
+	ldy	#39
 clear_fire_line_loop:
-	beq	done_fire_line_loop
 	sta	(FIRE_FB_L),Y
 	dey
-	jmp	clear_fire_line_loop
+	bpl	clear_fire_line_loop
 done_fire_line_loop:
 
 	clc
@@ -96,12 +95,18 @@ fire_fb_update:
 	ldy	#39
 fire_fb_update_loop:
 
+	jsr	random16
+
+	lda	SEEDL
+	and	#$1
+	sta	FIRE_Q
+
 	; get next line color
 	lda	(FIRE_FB2_L),Y
 
 	; adjust it
-	clc
-	adc	#$ff
+	sec
+	sbc	FIRE_Q
 
 	; saturate to 0
 	bpl	fb_positive

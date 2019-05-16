@@ -588,7 +588,7 @@ song_list:
 .include	"interrupt_handler.s"
 .include	"pt3_lib.s"
 .include	"fire.s"
-
+.include	"random16.s"
 
 ;=========
 ; strings

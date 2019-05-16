@@ -35,6 +35,9 @@ CSWH	EQU $37
 KSWL	EQU $38		; key in routine
 KSWH	EQU $39
 
+SEEDL	EQU	$4E
+SEEDH	EQU	$4F
+
 
 ; dos33 zero page = 26-2f, 35-38, 3e 3f 40-4d 
 ; overlap applesoft  67-6a,6f,70,af,b0,ca-cd,d8 
@@ -120,6 +123,7 @@ FIRE_FB_H	EQU $A5
 FIRE_FB2_L	EQU $A6
 FIRE_FB2_H	EQU $A7
 FIRE_FB_LINE	EQU $A8
+FIRE_Q		EQU $A9
 
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
