@@ -92,6 +92,10 @@ draw_fire_frame:
 
 fire_fb_update:
 
+	; FIXME: optimize
+	;	original = ??? (complex)
+	;	-X : move 
+
 	ldy	#39							; 2
 fire_fb_update_loop:
 
@@ -99,130 +103,124 @@ fire_fb_update_loop:
 
 	jsr	random16						; 40
 
-	cpy	#13							; 2
-	bcs	fire_b		; bge					; 2/3
-fire_a:
-	lda	A_VOLUME						; 3
-	jmp	fire_vol						; 3
-
-fire_b:
-	cpy	#26							; 2
-	bcs	fire_c		; bge					; 2/3
-	lda	B_VOLUME						; 3
-	jmp	fire_vol						; 3
-fire_c:
-	lda	C_VOLUME						; 3
-fire_vol:
-	and	#$f							; 2
-	sta	FIRE_VOLUME						; 3
-
-	; get random number
+	; get random number Q
 
 	lda	SEEDL							; 3
 	and	#$3							; 2
 	sta	FIRE_Q							; 3
 
+
+	; 0..12 = A volume, 13-25 = B volume, 26-39 = C volume
+
+	lda	A_VOLUME						; 3
+	cpy	#13							; 2
+	bcc	fire_vol	; blt					; 2/3
+
+	lda	B_VOLUME						; 3
+	cpy	#26							; 2
+	bcc	fire_vol	; blt					; 2/3
+
+	lda	C_VOLUME						; 3
+
+fire_vol:
+	and	#$f							; 2
+
 	; adjust fire height with volume
 
-	lda	FIRE_VOLUME
-	cmp	#$8
-	bcs	fire_medium	; bge
+	cmp	#$8							; 2
+	bcs	fire_medium	; bge					; 2/3
 fire_low:
 	; Q=1 3/4 of time
-	lda	FIRE_Q
-	beq	fire_height_done
+	lda	FIRE_Q							; 3
+	beq	fire_height_done					; 2/3
 fire_low_br:
-	lda	#1
-	jmp	fire_height_done
+	lda	#1							; 2
+	jmp	fire_height_done					; 3
 
 fire_medium:
-	cmp	#$d
-	bcs	fire_high	; blt
+	cmp	#$d							; 2
+	bcs	fire_high	; blt					; 2/3
 
 	; Q=1 1/2 of time
-	lda	FIRE_Q
-	and	#$1
+	lda	FIRE_Q							; 3
+	and	#$1							; 2
 
-	jmp	fire_height_done
+	jmp	fire_height_done					; 3
 fire_high:
 	; Q=1 1/4 of time
-	lda	FIRE_Q
-	cmp	#1
-	beq	fire_height_done
+	lda	FIRE_Q							; 3
+	cmp	#1							; 2
+	beq	fire_height_done					; 2/3
 fire_high_br:
-	lda	#0
+	lda	#0							; 2
 
 fire_height_done:
-	sta	FIRE_Q
+	sta	FIRE_Q							; 3
 
-	sty	FIRE_Y
+	sty	FIRE_Y							; 3
 
 	;
-	cpy	#0
-	beq	fire_r_same
-	cpy	#39
-	beq	fire_r_same
+	cpy	#0							; 2
+	beq	fire_r_same						; 2/3
+	cpy	#39							; 2
+	beq	fire_r_same						; 2/3
 
-
-
-	lda	#$2
-	bit	SEEDH
-	bne	fire_r_same
-	lda	SEEDH
-	and	#$1
-	beq	r_up
+	lda	#$2							; 2
+	bit	SEEDH							; 3
+	bne	fire_r_same						; 2/3
+	lda	SEEDH							; 3
+	and	#$1							; 2
+	beq	r_up							; 2/3
 r_down:
-	dey
-	jmp	fire_r_same
+	dey								; 2
+	jmp	fire_r_same						; 3
 r_up:
-	iny
+	iny								; 2
 fire_r_same:
 
 	; get next line color
-	lda	(FIRE_FB2_L),Y
+	lda	(FIRE_FB2_L),Y						; 5+
 
-	ldy	FIRE_Y
-
-	;
+	ldy	FIRE_Y							; 3
 
 	; adjust it
-	sec
-	sbc	FIRE_Q
+	sec								; 2
+	sbc	FIRE_Q							; 3
 
 	; saturate to 0
-	bpl	fb_positive
-	lda	#0
+	bpl	fb_positive						; 2/3
+	lda	#0							; 2
 fb_positive:
 
 	; store out
-	sta	(FIRE_FB_L),Y		; store out
+	sta	(FIRE_FB_L),Y		; store out			; 6
 
-	dey
-	bpl	fire_fb_update_loop
+	dey								; 2
+	bpl	fire_fb_update_loop					; 2/3
 
 done_fire_fb_update_loop:
 
 	; complicated adjustment
-	clc
-	lda	FIRE_FB_L
-	adc	#40
-	sta	FIRE_FB_L
-	lda	FIRE_FB_H
-	adc	#0
-	sta	FIRE_FB_H
+	clc								; 2
+	lda	FIRE_FB_L						; 3
+	adc	#40							; 2
+	sta	FIRE_FB_L						; 3
+	lda	FIRE_FB_H						; 3
+	adc	#0							; 2
+	sta	FIRE_FB_H						; 3
 
-	clc
-	lda	FIRE_FB2_L
-	adc	#40
-	sta	FIRE_FB2_L
-	lda	FIRE_FB2_H
-	adc	#0
-	sta	FIRE_FB2_H
+	clc								; 2
+	lda	FIRE_FB2_L						; 3
+	adc	#40							; 2
+	sta	FIRE_FB2_L						; 3
+	lda	FIRE_FB2_H						; 3
+	adc	#0							; 2
+	sta	FIRE_FB2_H						; 3
 
-	inx
-	cpx	#(FIRE_YSIZE-1)
-	beq	fire_update_done
-	jmp	fire_fb_update
+	inx								; 2
+	cpx	#(FIRE_YSIZE-1)						; 2
+	beq	fire_update_done					; 2/3
+	jmp	fire_fb_update						; 3
 
 fire_update_done:
 

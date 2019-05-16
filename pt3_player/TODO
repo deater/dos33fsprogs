@@ -8,6 +8,8 @@
     I've only validated 3 so far.
 6.  Merge mockingboard output to register calc, instead of setting
 	all 13 registers then walking through and outputting them
+7.  Clear out the channel data with a memset() instead of explicitly
+	setting values?
 
 some further out things
 

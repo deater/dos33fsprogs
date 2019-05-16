@@ -124,9 +124,8 @@ FIRE_FB2_L	EQU $A6
 FIRE_FB2_H	EQU $A7
 FIRE_FB_LINE	EQU $A8
 FIRE_Q		EQU $A9
-FIRE_VOLUME	EQU $AA
-FIRE_Y		EQU $AB
-FIRE_X		EQU $AC
+FIRE_Y		EQU $AA
+FIRE_X		EQU $AB
 
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
