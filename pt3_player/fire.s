@@ -76,33 +76,114 @@ draw_fire_frame:
 	; Update fire frame
 	;===============================
 
-	lda	#<fire_framebuffer
-	sta	FIRE_FB_L
+	lda	#<fire_framebuffer					; 2
+	sta	FIRE_FB_L						; 3
 
-	lda	#>fire_framebuffer
-	sta	FIRE_FB_H
+	lda	#>fire_framebuffer					; 2
+	sta	FIRE_FB_H						; 3
 
-	lda	#<(fire_framebuffer+40)
-	sta	FIRE_FB2_L
+	lda	#<(fire_framebuffer+40)					; 2
+	sta	FIRE_FB2_L						; 3
 
-	lda	#>(fire_framebuffer+40)
-	sta	FIRE_FB2_H
+	lda	#>(fire_framebuffer+40)					; 2
+	sta	FIRE_FB2_H						; 3
 
-	ldx	#0
+	ldx	#0							; 2
 
 fire_fb_update:
 
-	ldy	#39
+	ldy	#39							; 2
 fire_fb_update_loop:
 
-	jsr	random16
+	; Get random 16-bit number
 
-	lda	SEEDL
+	jsr	random16						; 40
+
+	cpy	#13							; 2
+	bcs	fire_b		; bge					; 2/3
+fire_a:
+	lda	A_VOLUME						; 3
+	jmp	fire_vol						; 3
+
+fire_b:
+	cpy	#26							; 2
+	bcs	fire_c		; bge					; 2/3
+	lda	B_VOLUME						; 3
+	jmp	fire_vol						; 3
+fire_c:
+	lda	C_VOLUME						; 3
+fire_vol:
+	and	#$f							; 2
+	sta	FIRE_VOLUME						; 3
+
+	; get random number
+
+	lda	SEEDL							; 3
+	and	#$3							; 2
+	sta	FIRE_Q							; 3
+
+	; adjust fire height with volume
+
+	lda	FIRE_VOLUME
+	cmp	#$8
+	bcs	fire_medium	; bge
+fire_low:
+	; Q=1 3/4 of time
+	lda	FIRE_Q
+	beq	fire_height_done
+fire_low_br:
+	lda	#1
+	jmp	fire_height_done
+
+fire_medium:
+	cmp	#$d
+	bcs	fire_high	; blt
+
+	; Q=1 1/2 of time
+	lda	FIRE_Q
 	and	#$1
+
+	jmp	fire_height_done
+fire_high:
+	; Q=1 1/4 of time
+	lda	FIRE_Q
+	cmp	#1
+	beq	fire_height_done
+fire_high_br:
+	lda	#0
+
+fire_height_done:
 	sta	FIRE_Q
+
+	sty	FIRE_Y
+
+	;
+	cpy	#0
+	beq	fire_r_same
+	cpy	#39
+	beq	fire_r_same
+
+
+
+	lda	#$2
+	bit	SEEDH
+	bne	fire_r_same
+	lda	SEEDH
+	and	#$1
+	beq	r_up
+r_down:
+	dey
+	jmp	fire_r_same
+r_up:
+	iny
+fire_r_same:
 
 	; get next line color
 	lda	(FIRE_FB2_L),Y
+
+	ldy	FIRE_Y
+
+	;
 
 	; adjust it
 	sec
@@ -140,8 +221,10 @@ done_fire_fb_update_loop:
 
 	inx
 	cpx	#(FIRE_YSIZE-1)
-	bne	fire_fb_update
+	beq	fire_update_done
+	jmp	fire_fb_update
 
+fire_update_done:
 
 
 	;===============================
