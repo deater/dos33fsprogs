@@ -115,6 +115,9 @@ MB_ADDRH	EQU $A0
 DONE_PLAYING	EQU $A1
 MB_CHUNK_OFFSET EQU $A2
 DONE_SONG	EQU $A3
+FIRE_FB_L	EQU $A4
+FIRE_FB_H	EQU $A5
+
 
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related

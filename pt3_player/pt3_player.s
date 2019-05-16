@@ -15,13 +15,9 @@ pt3_setup:
 	jsr     HOME
 	jsr     TEXT
 
-	bit	HIRES
+	bit	LORES
 	bit	SET_GR
         bit	TEXTGR		; split text/graphics
-
-;	lda	#$20
-;	sta	HGR_PAGE
-;	jsr	HCLR
 
 	; Init disk code
 
@@ -33,9 +29,6 @@ pt3_setup:
 	sta	DRAW_PAGE
 	sta	DONE_PLAYING
 	sta	WHICH_FILE
-
-;	lda	#$ff
-;	sta	RASTERBARS_ON
 
 	; print detection message
 
@@ -111,7 +104,7 @@ mockingboard_found:
 
 
 	;============================
-	; Draw title screen
+	; Draw title screen?
 	;============================
 
 
@@ -125,11 +118,10 @@ mockingboard_found:
 	;============================
 	; Init Background
 	;============================
-;	jsr	set_gr_page0
 
-;	lda	#0
-;	sta	DRAW_PAGE
-;	sta	SCREEN_Y
+	jsr	set_gr_page0
+	jsr	fire_init
+
 
 	;============================
 	; Enable 6502 interrupts
@@ -580,20 +572,19 @@ song_list:
 ;=========
 ;routines
 ;=========
-.include	"../asm_routines/gr_offsets.s"
+.include	"gr_offsets.s"
 .include	"text_print.s"
 .include	"mockingboard_a.s"
 .include	"gr_fast_clear.s"
-.include	"../asm_routines/pageflip.s"
-;.include	"../asm_routines/gr_unrle.s"
-.include	"../asm_routines/gr_setpage.s"
+;.include	"../asm_routines/pageflip.s"
+.include	"gr_setpage.s"
 .include	"qkumba_rts.s"
-.include	"../asm_routines/gr_hlin.s"
-.include	"../asm_routines/keypress_minimal.s"
-;.include	"rasterbars.s"
-;.include	"volume_bars.s"
+;.include	"../asm_routines/gr_hlin.s"
+.include	"keypress_minimal.s"
 .include	"interrupt_handler.s"
 .include	"pt3_lib.s"
+.include	"fire.s"
+
 
 ;=========
 ; strings

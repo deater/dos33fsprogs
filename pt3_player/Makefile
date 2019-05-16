@@ -11,7 +11,7 @@ $(DOS33):
 pt3_player.dsk:	PT3_PLAYER HELLO
 	cp empty.dsk pt3_player.dsk
 	$(DOS33) -y pt3_player.dsk SAVE A HELLO
-	$(DOS33) -y pt3_player.dsk BSAVE -a 0x2000 PT3_PLAYER
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x1000 PT3_PLAYER
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 EA.PT3
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 VC.PT3
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 SR.PT3
@@ -22,8 +22,8 @@ pt3_debug.dsk:	PT3_PLAYER PT3_DUMPER PT3_TIMER HELLO_DEBUG DUMP
 	$(DOS33) -y pt3_debug.dsk SAVE A HELLO_DEBUG HELLO
 	$(DOS33) -y pt3_debug.dsk SAVE A DUMP
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x1000 PT3_DUMPER
-	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x2000 PT3_PLAYER
-	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x2000 PT3_TIMER
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x1000 PT3_PLAYER
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x1000 PT3_TIMER
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 EA.PT3
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 VC.PT3
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 SR.PT3
@@ -41,16 +41,16 @@ DUMP:	dump.bas
 #
 
 PT3_PLAYER:	pt3_player.o
-	ld65 -o PT3_PLAYER pt3_player.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o PT3_PLAYER pt3_player.o -C ../linker_scripts/apple2_1000.inc
 
 pt3_player.o:	pt3_player.s \
-	gr_fast_clear.s pt3_lib.s interrupt_handler.s zp.inc
+	gr_fast_clear.s pt3_lib.s interrupt_handler.s fire.s zp.inc
 	ca65 -o pt3_player.o pt3_player.s -l pt3_player.lst
 
 #
 
 PT3_TIMER:	pt3_timer.o
-	ld65 -o PT3_TIMER pt3_timer.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o PT3_TIMER pt3_timer.o -C ../linker_scripts/apple2_1000.inc
 
 pt3_timer.o:	pt3_timer.s \
 	gr_fast_clear.s pt3_lib.s interrupt_handler.s zp.inc
@@ -64,9 +64,9 @@ PT3_DUMPER:	pt3_dumper.o
 pt3_dumper.o:	pt3_dumper.s \
 	gr_fast_clear.s pt3_lib.s interrupt_handler.s zp.inc
 	ca65 -o pt3_dumper.o pt3_dumper.s -l pt3_dumper.lst
-
+#
 
 clean:	
 	rm -f *~ TITLE.GR *.o *.lst \
-		PT3_PLAYER PT3_TIMER PT3_DUMPER
+		PT3_PLAYER PT3_TIMER PT3_DUMPER FIRE
 
