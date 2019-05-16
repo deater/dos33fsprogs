@@ -77,16 +77,15 @@ draw_fire_frame:
 	;===============================
 
 	lda	#<fire_framebuffer					; 2
-	sta	FIRE_FB_L						; 3
-
+	sta	fire_smc5_fb+1						; 4
 	lda	#>fire_framebuffer					; 2
-	sta	FIRE_FB_H						; 3
+	sta	fire_smc5_fb+2						; 4
 
 	lda	#<(fire_framebuffer+40)					; 2
-	sta	FIRE_FB2_L						; 3
+	sta	fire_smc5_fb2+1						; 4
 
 	lda	#>(fire_framebuffer+40)					; 2
-	sta	FIRE_FB2_H						; 3
+	sta	fire_smc5_fb2+2						; 4
 
 	ldx	#0							; 2
 
@@ -96,7 +95,8 @@ fire_fb_update:
 	;	original = ??? (complex)
 	;	-X : move 
 
-	ldy	#39							; 2
+	ldy	#39
+;	stx	FIRE_X							; 2
 fire_fb_update_loop:
 
 	; Get random 16-bit number
@@ -159,7 +159,8 @@ fire_height_done:
 
 	sty	FIRE_Y							; 3
 
-	;
+	; bounds check
+
 	cpy	#0							; 2
 	beq	fire_r_same						; 2/3
 	cpy	#39							; 2
@@ -179,7 +180,8 @@ r_up:
 fire_r_same:
 
 	; get next line color
-	lda	(FIRE_FB2_L),Y						; 5+
+fire_smc5_fb2:
+	lda	$1234,Y							; 4+
 
 	ldy	FIRE_Y							; 3
 
@@ -193,7 +195,8 @@ fire_r_same:
 fb_positive:
 
 	; store out
-	sta	(FIRE_FB_L),Y		; store out			; 6
+fire_smc5_fb:
+	sta	$1234,Y			; store out			; 5
 
 	dey								; 2
 	bpl	fire_fb_update_loop					; 2/3
@@ -202,20 +205,20 @@ done_fire_fb_update_loop:
 
 	; complicated adjustment
 	clc								; 2
-	lda	FIRE_FB_L						; 3
+	lda	fire_smc5_fb+1						; 4
 	adc	#40							; 2
-	sta	FIRE_FB_L						; 3
-	lda	FIRE_FB_H						; 3
+	sta	fire_smc5_fb+1						; 4
+	lda	fire_smc5_fb+2						; 4
 	adc	#0							; 2
-	sta	FIRE_FB_H						; 3
+	sta	fire_smc5_fb+2						; 4
 
 	clc								; 2
-	lda	FIRE_FB2_L						; 3
+	lda	fire_smc5_fb2+1						; 4
 	adc	#40							; 2
-	sta	FIRE_FB2_L						; 3
-	lda	FIRE_FB2_H						; 3
+	sta	fire_smc5_fb2+1						; 4
+	lda	fire_smc5_fb2+2						; 4
 	adc	#0							; 2
-	sta	FIRE_FB2_H						; 3
+	sta	fire_smc5_fb2+2						; 4
 
 	inx								; 2
 	cpx	#(FIRE_YSIZE-1)						; 2
@@ -223,7 +226,7 @@ done_fire_fb_update_loop:
 	jmp	fire_fb_update						; 3
 
 fire_update_done:
-
+;	ldx	FIRE_X
 
 	;===============================
 	; copy framebuffer to low-res screen
