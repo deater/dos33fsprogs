@@ -19,6 +19,8 @@ pt3_setup:
 	bit	SET_GR
         bit	TEXTGR		; split text/graphics
 
+	jsr	clear_screens
+
 	; Init disk code
 
 	jsr	rts_init
@@ -135,6 +137,10 @@ mockingboard_found:
 	;============================
 main_loop:
 
+	; Do the visualization
+
+	jsr	draw_fire_frame
+	jsr	page_flip
 
 check_done:
 	lda	#$ff
@@ -160,12 +166,17 @@ done_play:
 	lda	#0
 	sta	DONE_PLAYING
 
-;	lda	#0
-;	sta	CH
+	; clear the flame for now
+	jsr	fire_setline
+
 
 ;	jsr	clear_bottoms
 
 	jsr	new_song
+
+	; clear the flame for now
+	lda	#7
+	jsr	fire_setline
 
 	cli				; re-enable interrupts
 
@@ -192,13 +203,6 @@ new_song:
 ;	sta	B_VOLUME
 ;	sta	C_VOLUME
 ;	sta	COPY_OFFSET
-;	sta	DECOMPRESS_TIME
-;	sta	COPY_TIME
-;	sta	MB_CHUNK_OFFSET
-;	lda	#$20
-;	sta	DECODER_STATE
-;	lda	#3
-;	sta	CHUNKSIZE
 
 	;===========================
 	; Print loading message
@@ -352,7 +356,7 @@ done_name_loop:
 	jsr	pt3_init_song
 
 ;=================================
-; BLARCH
+; Calculate Length of Song
 ;=================================
 	lda	#$0
 	sta	current_line
@@ -576,7 +580,7 @@ song_list:
 .include	"text_print.s"
 .include	"mockingboard_a.s"
 .include	"gr_fast_clear.s"
-;.include	"../asm_routines/pageflip.s"
+.include	"pageflip.s"
 .include	"gr_setpage.s"
 .include	"qkumba_rts.s"
 ;.include	"../asm_routines/gr_hlin.s"

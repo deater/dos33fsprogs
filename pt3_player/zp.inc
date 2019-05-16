@@ -117,7 +117,9 @@ MB_CHUNK_OFFSET EQU $A2
 DONE_SONG	EQU $A3
 FIRE_FB_L	EQU $A4
 FIRE_FB_H	EQU $A5
-
+FIRE_FB2_L	EQU $A6
+FIRE_FB2_H	EQU $A7
+FIRE_FB_LINE	EQU $A8
 
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
