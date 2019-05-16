@@ -12,10 +12,22 @@ pt3_player.dsk:	PT3_PLAYER HELLO
 	cp empty.dsk pt3_player.dsk
 	$(DOS33) -y pt3_player.dsk SAVE A HELLO
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x1000 PT3_PLAYER
-	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 EA.PT3
-	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 VC.PT3
-	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 SR.PT3
-	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 OS.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/SR.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/EA.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/VC.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/OS.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/BA.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/CR.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/DF.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/F4.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/FC.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/HI.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/I2.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/IT.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/MB.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/RI.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/SD.PT3
+
 
 pt3_debug.dsk:	PT3_PLAYER PT3_DUMPER PT3_TIMER HELLO_DEBUG DUMP
 	cp empty.dsk pt3_debug.dsk
@@ -24,10 +36,10 @@ pt3_debug.dsk:	PT3_PLAYER PT3_DUMPER PT3_TIMER HELLO_DEBUG DUMP
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x1000 PT3_DUMPER
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x1000 PT3_PLAYER
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x1000 PT3_TIMER
-	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 EA.PT3
-	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 VC.PT3
-	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 SR.PT3
-	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 OS.PT3
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/EA.PT3
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/VC.PT3
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/SR.PT3
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/OS.PT3
 
 HELLO:	hello.bas
 	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
