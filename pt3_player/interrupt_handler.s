@@ -193,6 +193,18 @@ check_keyboard:
 key_space:
 	lda	#$80
 	eor	DONE_PLAYING
+
+	sta	DONE_PLAYING
+	beq	yes_bar
+	lda	#0
+	jmp	lowbar
+yes_bar:
+	lda	#7
+lowbar:
+	jsr	fire_setline
+
+	lda	DONE_PLAYING
+
 	jmp	quiet_exit
 
 key_R:
