@@ -140,6 +140,7 @@ main_loop:
 	; Do the visualization
 
 	jsr	draw_fire_frame
+	jsr	put_letters
 	jsr	page_flip
 
 check_done:
@@ -589,6 +590,8 @@ song_list:
 .include	"pt3_lib.s"
 .include	"fire.s"
 .include	"random16.s"
+.include	"gr_putsprite.s"
+.include	"put_letters.s"
 
 ;=========
 ; strings

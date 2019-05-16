@@ -150,8 +150,8 @@ DRAW_PAGE	EQU $EE
 				;FIRST		EQU	$F0
 LASTKEY		EQU $F1
 				;PADDLE_STATUS	EQU	$F2
-				;XPOS		EQU $F3
-				;YPOS		EQU $F4
+XPOS		EQU $F3
+YPOS		EQU $F4
 
 
        namlo   =       $f6

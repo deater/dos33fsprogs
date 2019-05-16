@@ -45,7 +45,7 @@ PT3_PLAYER:	pt3_player.o
 
 pt3_player.o:	pt3_player.s \
 	gr_fast_clear.s pt3_lib.s interrupt_handler.s random16.s fire.s \
-	zp.inc
+	gr_putsprite.s put_letters.s zp.inc
 	ca65 -o pt3_player.o pt3_player.s -l pt3_player.lst
 
 #
