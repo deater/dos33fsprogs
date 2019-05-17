@@ -27,6 +27,10 @@ pt3_player.dsk:	PT3_PLAYER HELLO
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/MB.PT3
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/RI.PT3
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/SD.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/FR.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/CH.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/BH.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/ND.PT3
 
 
 pt3_debug.dsk:	PT3_PLAYER PT3_DUMPER PT3_TIMER HELLO_DEBUG DUMP

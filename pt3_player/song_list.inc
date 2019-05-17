@@ -12,4 +12,8 @@
 	.asciiz	"MB.PT3"
 	.asciiz	"RI.PT3"
 	.asciiz	"SD.PT3"
+	.asciiz "FR.PT3"
+	.asciiz "CH.PT3"
+	.asciiz	"BH.PT3"
+	.asciiz "ND.PT3"
 
