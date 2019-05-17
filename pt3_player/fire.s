@@ -6,6 +6,11 @@
 
 FIRE_YSIZE=20
 
+	;=======================
+	; fire_init
+	;=======================
+	; call at beginning to clear out framebuffer
+
 fire_init:
 	lda	#<fire_framebuffer
 	sta	FIRE_FB_L
@@ -45,7 +50,7 @@ done_fire_line_loop:
 	;======================================
 	; set bottom line to color in A
 	;======================================
-	;
+	; Set to 7 to init, Set to 0 to have fire go out
 fire_setline:
 
 	ldx	#<(fire_framebuffer+(FIRE_YSIZE-1)*40)
@@ -76,39 +81,44 @@ draw_fire_frame:
 	; Update fire frame
 	;===============================
 
+	; set up working line (to store to)
+
 	lda	#<fire_framebuffer					; 2
 	sta	fire_smc5_fb+1						; 4
 	lda	#>fire_framebuffer					; 2
 	sta	fire_smc5_fb+2						; 4
 
+	; set up input line, one below,  (to load from)
+
 	lda	#<(fire_framebuffer+40)					; 2
 	sta	fire_smc5_fb2+1						; 4
-
 	lda	#>(fire_framebuffer+40)					; 2
 	sta	fire_smc5_fb2+2						; 4
 
-	ldx	#0							; 2
 
+	; loop X (ypos) from 0 - FIRE_YSIZE-1
+
+	ldx	#0							; 2
 fire_fb_update:
 
 	; FIXME: optimize
 	;	original = ??? (complex)
-	;	-X : move 
+	;	-X : move
 
-	ldy	#39
-;	stx	FIRE_X							; 2
+	; Loopy Y (xpos) from 39 to 0
+	ldy	#39							; 2
 fire_fb_update_loop:
 
 	; Get random 16-bit number
 
 	jsr	random16						; 40
 
-	; get random number Q
+	; get random number Q 0..3
+	; Q used to see if whether we grab same lower value or if decrement
 
 	lda	SEEDL							; 3
 	and	#$3							; 2
 	sta	FIRE_Q							; 3
-
 
 	; 0..12 = A volume, 13-25 = B volume, 26-39 = C volume
 
@@ -203,6 +213,11 @@ fire_smc5_fb:
 
 done_fire_fb_update_loop:
 
+	; if just finished odd line, we are already set up
+	; to do the framebuffer copy for the prev two lines?
+
+
+
 	; complicated adjustment
 	clc								; 2
 	lda	fire_smc5_fb+1						; 4
@@ -226,11 +241,12 @@ done_fire_fb_update_loop:
 	jmp	fire_fb_update						; 3
 
 fire_update_done:
-;	ldx	FIRE_X
 
-	;===============================
+
+
+	;===================================
 	; copy framebuffer to low-res screen
-	;===============================
+	;===================================
 
 	lda	#<fire_framebuffer					; 2
 	sta	fire_smc_fb+1						; 5
