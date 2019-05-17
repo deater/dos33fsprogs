@@ -155,25 +155,12 @@ update_minutes:
 				; we don't handle > 9:59 songs yet
 done_time:
 								;=============
-								;     90 worst
+								;     89 worst
 
 
 	;=================================
-	; Moved visualization here as a hack
+	; Handle keyboard
 	;=================================
-
-	;============================
-	; Visualization
-	;============================
-
-;	jsr	clear_top
-;	lda	RASTERBARS_ON
-;	beq	skip_rasters
-;	jsr	draw_rasters
-;skip_rasters:
-;	jsr	volume_bars
-;	jsr	page_flip
-
 
 check_keyboard:
 
@@ -181,11 +168,16 @@ check_keyboard:
 	lda	LASTKEY
 	beq	exit_interrupt
 
+	;====================
+	; space pauses
+
 	cmp	#(' '+$80)
 	bne	key_M
 key_space:
 	lda	#$80
 	eor	DONE_PLAYING
+
+	; disable fire when paused
 
 	sta	DONE_PLAYING
 	beq	yes_bar
@@ -200,6 +192,9 @@ lowbar:
 
 	jmp	quiet_exit
 
+	;===========================
+	; M key switches MHz mode
+
 key_M:
 	cmp	#'M'
 	bne	key_left
@@ -208,6 +203,8 @@ key_M:
 	eor	#$1
 	sta	convert_177
 	beq	at_1MHz
+
+	; update text on screen
 
 	lda	#'7'+$80
 	sta	$7F4
@@ -219,8 +216,10 @@ at_1MHz:
 	sta	$7F4
 	sta	$BF4
 
-
 	jmp	done_key
+
+	;======================
+	; left key, to next song
 
 key_left:
 	cmp	#'A'
@@ -228,6 +227,9 @@ key_left:
 
 	lda	#$40
 	bne	quiet_exit
+
+	;========================
+	; right key, to prev song
 
 key_right:
 	cmp	#'D'
@@ -238,6 +240,11 @@ key_right:
 
 done_key:
 	jmp	exit_interrupt
+
+	;========================
+	; stop playing for now
+	; quiet down the Mockingboard
+	; (otherwise will be stuck on last note)
 
 quiet_exit:
 	sta	DONE_PLAYING
@@ -259,6 +266,5 @@ exit_interrupt:
 								;============
 								; typical
 								; ???? cycles
-
 
 
