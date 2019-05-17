@@ -2,7 +2,7 @@ The PT3_player
 ~~~~~~~~~~~~~~
 
 	by Vince "Deater" Weaver
-	15 May 2019
+	17 May 2019
 	http://www.deater.net/weave/vmwprod/pt3_player/
 
 	Plays Vortex Tracker II .pt3 files on the Apple II
@@ -76,11 +76,20 @@ Adding other files
 	(with often complex, or hard-to find tools) the PT3_PLAYER can in
 	theory play plain .pt3 files.
 
-	To get the player to play them, just rename them to fit the naming
-	scheme (I think it will just be 00.PT3, 01.PT3, 02.PT3) and replace
-	the existing files on the disk image with your favorite Apple II
-	disk tool.
+	To play your own files, just copy the file you want over an
+	existing file (using the same filename).
 
+	TODO: It would be great if the player was smart enough to catalog
+	the disk and just play all the files it finds, but that's a level
+	of disk manipulation I don't have time to mess with right now.
+
+
+Other Future Plans
+~~~~~~~~~~~~~~~~~~
+
+	The PT3 format can handle 6-channel songs (which a Mockingboard
+	can play).  I'd like to add support for this, but it will
+	need some low-level changes to the code.
 
 Code Optimization
 ~~~~~~~~~~~~~~~~~

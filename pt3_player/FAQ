@@ -1,0 +1,19 @@
+PT3_Player Frequently Asked Questions
+
+Q: Will this play on any Apple II?
+
+A. Yes, though you need a Mockingboard in Slot 4 to hear the music.
+
+	You probably need 48k of RAM too.
+
+
+Q: Can you fit more than 18 songs on the disk?
+
+A: Yes, it depends on how complex the PT3 files are.
+   Also, PT3 files compress nicely and I could fit even more if I LZ4
+	compressed them, it's just that would make it harder for other
+	people to use the player.
+
+	Yes, I could write code that automatically decode in LZ4 encoded,
+	but that gets tricky for various reasons, and you also need
+	some RAM to decode the image into.

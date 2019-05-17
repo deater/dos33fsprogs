@@ -1,10 +1,15 @@
-; VMW Chiptune Player
+;===============
+; VMW PT3 Player
+;===============
 
+; zero page definitions
 .include	"zp.inc"
 
+; Location the files load at.
+; If you change this, you need to update the Makefile
 PT3_LOC = $4000
 
-
+; Number of files.  Should probably detect this automatically
 NUM_FILES	EQU	18
 
 
@@ -15,38 +20,49 @@ pt3_setup:
 	jsr     HOME
 	jsr     TEXT
 
-	bit	LORES
+	bit	LORES		; Lo-res graphics
 	bit	SET_GR
         bit	TEXTGR		; split text/graphics
 
 	jsr	clear_screens
 
 
-	;===================
-	; Check for Apple II and patch
-	;===================
+	;=======================
+	; Check for Apple II/II+
+	;=======================
+	; this is used to see if we have lowecase support
 
 	lda	$FBB3           ; IIe and newer is $06
 	cmp	#6
 	beq	apple_iie
 
-	lda	#1
+	lda	#1		; set if older than a IIe
 	sta	apple_ii
-
 apple_iie:
 
-
-
+	;===============
 	; Init disk code
+	;===============
 
 	jsr	rts_init
 
+	;===============
 	; init variables
+	;===============
 
 	lda	#0
 	sta	DRAW_PAGE
 	sta	DONE_PLAYING
 	sta	WHICH_FILE
+
+	;=======================
+	; Detect mockingboard
+	;========================
+
+	; Note, we do this, but then ignore it, as sometimes
+	; the test fails and then you don't get music.
+	; In theory this could do bad things if you had something
+	; easily confused in slot4, but that's probably not an issue.
 
 	; print detection message
 
@@ -121,12 +137,6 @@ mockingboard_found:
 	; 4fe7 / 1e6 = .020s, 50Hz
 
 
-	;============================
-	; Draw title screen?
-	;============================
-
-
-
 	;==================
 	; load first song
 	;==================
@@ -144,7 +154,7 @@ mockingboard_found:
 	;============================
 	; Enable 6502 interrupts
 	;============================
-
+start_interrupts:
 	cli		; clear interrupt mask
 
 
@@ -183,24 +193,19 @@ done_play:
 	lda	#0
 	sta	DONE_PLAYING
 
-	; clear the flame for now
+	; clear the flame
+	; FIXME: doesn't matter as we aren't displaying right now
+
 	jsr	fire_setline
-
-
-;	jsr	clear_bottoms
 
 	jsr	new_song
 
-	; clear the flame for now
+	; re-enable the flame
 	lda	#7
 	jsr	fire_setline
 
-	cli				; re-enable interrupts
+	jmp	start_interrupts
 
-	jmp	main_loop
-
-forever_loop:
-	jmp	forever_loop
 
 
 
@@ -461,6 +466,15 @@ done_MHz:
 ; Calculate Length of Song
 ;=================================
 
+	; There's no easy way to do this? (???)
+	; We walk through the song counting frames
+	; We can't even do this quickly, as the number of frames
+	;   per pattern can vary, and you have to parse a channel
+	;   to see this, and channel data is varying-width and so
+	;   you have to parse it all.
+	; Time is just number of frames/50Hz
+
+
 	lda	#$0
 	sta	current_line
 	sta	current_subframe
@@ -484,7 +498,14 @@ fc_pattern_good:
 	lda     current_subframe
 	bne	fc_line_good
 
-	jsr	pt3_decode_line
+	; we only calc length of chanel A, hopefully enough
+
+	lda	#1
+	sta	pt3_pattern_done
+
+        ; decode_note(&pt3->a,&(pt3->a_addr),pt3);
+        ldx     #(NOTE_STRUCT_SIZE*0)
+        jsr     decode_note
 
 	lda	pt3_pattern_done
 	bne	fc_line_good
@@ -715,7 +736,6 @@ song_list:
 .include	"pageflip.s"
 .include	"gr_setpage.s"
 .include	"qkumba_rts.s"
-;.include	"../asm_routines/gr_hlin.s"
 .include	"keypress_minimal.s"
 .include	"interrupt_handler.s"
 .include	"pt3_lib.s"
