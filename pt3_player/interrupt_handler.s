@@ -42,6 +42,19 @@ pt3_play_music:
 	lda	DONE_SONG
 	beq	mb_write_frame
 
+	lda	LOOP			; see if looping
+	beq	move_to_next
+
+	lda	pt3_loop
+	sta	current_pattern
+	lda	#$0
+	sta	current_line
+	sta	current_subframe
+	sta	DONE_SONG
+
+	jmp	done_interrupt
+
+move_to_next:
 	; same as "press right"
 	lda	#$40
 	jmp	quiet_exit
@@ -197,7 +210,7 @@ lowbar:
 
 key_M:
 	cmp	#'M'
-	bne	key_left
+	bne	key_L
 
 	lda	convert_177
 	eor	#$1
@@ -217,6 +230,34 @@ at_1MHz:
 	sta	$BF4
 
 	jmp	done_key
+
+
+	;===========================
+	; L enables loop mode
+
+key_L:
+	cmp	#'L'
+	bne	key_left
+
+	lda	LOOP
+	eor	#$1
+	sta	LOOP
+	beq	music_looping
+
+	; update text on screen
+
+	lda	#'L'+$80
+	sta	$7D0+18
+	sta	$BD0+18
+	jmp	done_key
+
+music_looping:
+	lda	#'/'+$80
+	sta	$7D0+18
+	sta	$BD0+18
+
+	jmp	done_key
+
 
 	;======================
 	; left key, to next song
@@ -249,6 +290,9 @@ done_key:
 quiet_exit:
 	sta	DONE_PLAYING
 	jsr	clear_ay_both
+
+	lda	#$ff		; also mute the channel
+	sta	REGISTER_DUMP+7 ; just in case
 
 exit_interrupt:
 

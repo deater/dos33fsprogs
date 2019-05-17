@@ -54,6 +54,7 @@ apple_iie:
 	sta	DRAW_PAGE
 	sta	DONE_PLAYING
 	sta	WHICH_FILE
+	sta	LOOP
 
 	;=======================
 	; Detect mockingboard

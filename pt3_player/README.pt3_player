@@ -51,11 +51,12 @@ Using the PT3_PLAYER
 		Right/Left arrow	Switch songs
 		Spacebar		Pause playback.
 		M			Switch from 1MHz to 1.77MHz mode
+		L			Enables looping in the song
 
 	FUTURE FEATURES:
 		Key to disable visualization
 		Key to skip ahead/back in pattern list
-		L to enable looping in the song
+
 
 ZX Compatability:
 ~~~~~~~~~~~~~~~~~

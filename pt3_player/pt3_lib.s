@@ -192,7 +192,7 @@ note_c:
 pt3_version:		.byte	$0
 pt3_frequency_table:	.byte	$0
 pt3_speed:		.byte	$0
-pt3_num_patterns:	.byte	$0
+;pt3_num_patterns:	.byte	$0
 pt3_loop:		.byte	$0
 
 pt3_noise_period:	.byte	$0
@@ -227,6 +227,7 @@ convert_177:		.byte	$1
 PT3_VERSION		= $D
 PT3_HEADER_FREQUENCY	= $63
 PT3_SPEED		= $64
+PT3_LOOP		= $66
 PT3_PATTERN_LOC_L	= $67
 PT3_PATTERN_LOC_H	= $68
 PT3_SAMPLE_LOC_L	= $69
@@ -443,6 +444,12 @@ not_ascii_number:
 
 	lda	PT3_LOC+PT3_SPEED
 	sta	pt3_speed
+
+	;=======================
+	; load default speed
+
+	lda	PT3_LOC+PT3_LOOP
+	sta	pt3_loop
 
 	rts
 
