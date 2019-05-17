@@ -78,7 +78,7 @@ mb_write_frame:
 	;==================================
 
 mb_write_loop:
-	lda	REGISTER_DUMP,X	; load register value			; 4
+	lda	AY_REGISTERS,X	; load register value			; 4
 
 	; special case R13.  If it is 0xff, then don't update
 	; otherwise might spuriously reset the envelope settings
@@ -103,7 +103,7 @@ mb_not_13:
 	sta	MOCK_6522_ORB2						; 4
 
         ; value
-	lda	REGISTER_DUMP,X		; load register value		; 4
+	lda	AY_REGISTERS,X		; load register value		; 4
 	sta	MOCK_6522_ORA1		; put value on PA1		; 4
 	sta	MOCK_6522_ORA2		; put value on PA2		; 4
 	lda	#MOCK_AY_WRITE		;				; 2
@@ -292,7 +292,7 @@ quiet_exit:
 	jsr	clear_ay_both
 
 	lda	#$ff		; also mute the channel
-	sta	REGISTER_DUMP+7 ; just in case
+	sta	AY_REGISTERS+7 ; just in case
 
 exit_interrupt:
 

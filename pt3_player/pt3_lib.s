@@ -1806,9 +1806,9 @@ do_frame:
 	; Load up the Frequency Registers
 
 	lda	note_a+NOTE_TONE_L	; Note A Period L
-	sta	REGISTER_DUMP+0		; into R0
+	sta	AY_REGISTERS+0		; into R0
 	lda	note_a+NOTE_TONE_H	; Note A Period H
-	sta	REGISTER_DUMP+1		; into R1
+	sta	AY_REGISTERS+1		; into R1
 
 	lda	convert_177
 	beq	no_scale_a
@@ -1816,41 +1816,41 @@ do_frame:
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
 	; first multiply by 8
-	asl	REGISTER_DUMP+0
-	rol	REGISTER_DUMP+1
-	asl	REGISTER_DUMP+0
-	rol	REGISTER_DUMP+1
-	asl	REGISTER_DUMP+0
-	rol	REGISTER_DUMP+1
+	asl	AY_REGISTERS+0
+	rol	AY_REGISTERS+1
+	asl	AY_REGISTERS+0
+	rol	AY_REGISTERS+1
+	asl	AY_REGISTERS+0
+	rol	AY_REGISTERS+1
 
 	; add in original to get 9
 	clc
 	lda	note_a+NOTE_TONE_L
-	adc	REGISTER_DUMP+0
-	sta	REGISTER_DUMP+0
+	adc	AY_REGISTERS+0
+	sta	AY_REGISTERS+0
 	lda	note_a+NOTE_TONE_H
-	adc	REGISTER_DUMP+1
-	sta	REGISTER_DUMP+1
+	adc	AY_REGISTERS+1
+	sta	AY_REGISTERS+1
 
 	; divide by 16 to get proper value
-	ror	REGISTER_DUMP+1
-	ror	REGISTER_DUMP+0
-	ror	REGISTER_DUMP+1
-	ror	REGISTER_DUMP+0
-	ror	REGISTER_DUMP+1
-	ror	REGISTER_DUMP+0
-	ror	REGISTER_DUMP+1
-	ror	REGISTER_DUMP+0
-	lda	REGISTER_DUMP+1
+	ror	AY_REGISTERS+1
+	ror	AY_REGISTERS+0
+	ror	AY_REGISTERS+1
+	ror	AY_REGISTERS+0
+	ror	AY_REGISTERS+1
+	ror	AY_REGISTERS+0
+	ror	AY_REGISTERS+1
+	ror	AY_REGISTERS+0
+	lda	AY_REGISTERS+1
 	and	#$0f
-	sta	REGISTER_DUMP+1
+	sta	AY_REGISTERS+1
 
 no_scale_a:
 
 	lda	note_b+NOTE_TONE_L	; Note B Period L
-	sta	REGISTER_DUMP+2		; into R2
+	sta	AY_REGISTERS+2		; into R2
 	lda	note_b+NOTE_TONE_H	; Note B Period H
-	sta	REGISTER_DUMP+3		; into R3
+	sta	AY_REGISTERS+3		; into R3
 
 	lda	convert_177
 	beq	no_scale_b
@@ -1858,41 +1858,41 @@ no_scale_a:
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
 	; first multiply by 8
-	asl	REGISTER_DUMP+2
-	rol	REGISTER_DUMP+3
-	asl	REGISTER_DUMP+2
-	rol	REGISTER_DUMP+3
-	asl	REGISTER_DUMP+2
-	rol	REGISTER_DUMP+3
+	asl	AY_REGISTERS+2
+	rol	AY_REGISTERS+3
+	asl	AY_REGISTERS+2
+	rol	AY_REGISTERS+3
+	asl	AY_REGISTERS+2
+	rol	AY_REGISTERS+3
 
 	; add in original to get 9
 	clc
 	lda	note_b+NOTE_TONE_L
-	adc	REGISTER_DUMP+2
-	sta	REGISTER_DUMP+2
+	adc	AY_REGISTERS+2
+	sta	AY_REGISTERS+2
 	lda	note_b+NOTE_TONE_H
-	adc	REGISTER_DUMP+3
-	sta	REGISTER_DUMP+3
+	adc	AY_REGISTERS+3
+	sta	AY_REGISTERS+3
 
 	; divide by 16 to get proper value
-	ror	REGISTER_DUMP+3
-	ror	REGISTER_DUMP+2
-	ror	REGISTER_DUMP+3
-	ror	REGISTER_DUMP+2
-	ror	REGISTER_DUMP+3
-	ror	REGISTER_DUMP+2
-	ror	REGISTER_DUMP+3
-	ror	REGISTER_DUMP+2
-	lda	REGISTER_DUMP+3
+	ror	AY_REGISTERS+3
+	ror	AY_REGISTERS+2
+	ror	AY_REGISTERS+3
+	ror	AY_REGISTERS+2
+	ror	AY_REGISTERS+3
+	ror	AY_REGISTERS+2
+	ror	AY_REGISTERS+3
+	ror	AY_REGISTERS+2
+	lda	AY_REGISTERS+3
 	and	#$0f
-	sta	REGISTER_DUMP+3
+	sta	AY_REGISTERS+3
 
 no_scale_b:
 
 	lda	note_c+NOTE_TONE_L	; Note C Period L
-	sta	REGISTER_DUMP+4		; into R4
+	sta	AY_REGISTERS+4		; into R4
 	lda	note_c+NOTE_TONE_H	; Note C Period H
-	sta	REGISTER_DUMP+5		; into R5
+	sta	AY_REGISTERS+5		; into R5
 
 	lda	convert_177
 	beq	no_scale_c
@@ -1900,34 +1900,34 @@ no_scale_b:
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
 	; first multiply by 8
-	asl	REGISTER_DUMP+4
-	rol	REGISTER_DUMP+5
-	asl	REGISTER_DUMP+4
-	rol	REGISTER_DUMP+5
-	asl	REGISTER_DUMP+4
-	rol	REGISTER_DUMP+5
+	asl	AY_REGISTERS+4
+	rol	AY_REGISTERS+5
+	asl	AY_REGISTERS+4
+	rol	AY_REGISTERS+5
+	asl	AY_REGISTERS+4
+	rol	AY_REGISTERS+5
 
 	; add in original to get 9
 	clc
 	lda	note_c+NOTE_TONE_L
-	adc	REGISTER_DUMP+4
-	sta	REGISTER_DUMP+4
+	adc	AY_REGISTERS+4
+	sta	AY_REGISTERS+4
 	lda	note_c+NOTE_TONE_H
-	adc	REGISTER_DUMP+5
-	sta	REGISTER_DUMP+5
+	adc	AY_REGISTERS+5
+	sta	AY_REGISTERS+5
 
 	; divide by 16 to get proper value
-	ror	REGISTER_DUMP+5
-	ror	REGISTER_DUMP+4
-	ror	REGISTER_DUMP+5
-	ror	REGISTER_DUMP+4
-	ror	REGISTER_DUMP+5
-	ror	REGISTER_DUMP+4
-	ror	REGISTER_DUMP+5
-	ror	REGISTER_DUMP+4
-	lda	REGISTER_DUMP+5
+	ror	AY_REGISTERS+5
+	ror	AY_REGISTERS+4
+	ror	AY_REGISTERS+5
+	ror	AY_REGISTERS+4
+	ror	AY_REGISTERS+5
+	ror	AY_REGISTERS+4
+	ror	AY_REGISTERS+5
+	ror	AY_REGISTERS+4
+	lda	AY_REGISTERS+5
 	and	#$0f
-	sta	REGISTER_DUMP+5
+	sta	AY_REGISTERS+5
 
 no_scale_c:
 
@@ -1938,7 +1938,7 @@ no_scale_c:
 	lda	pt3_noise_period
 	adc	pt3_noise_add
 	and	#$1f
-	sta	REGISTER_DUMP+6
+	sta	AY_REGISTERS+6
 	sta	temp_word_l
 
 	lda	convert_177
@@ -1947,23 +1947,23 @@ no_scale_c:
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
 	; first multiply by 8
-	asl	REGISTER_DUMP+6
-	asl	REGISTER_DUMP+6
-	asl	REGISTER_DUMP+6
+	asl	AY_REGISTERS+6
+	asl	AY_REGISTERS+6
+	asl	AY_REGISTERS+6
 
 	; add in original to get 9
 	clc
 	lda	temp_word_l
-	adc	REGISTER_DUMP+6
+	adc	AY_REGISTERS+6
 
 	; divide by 16 to get proper value
-	ror	REGISTER_DUMP+6
-	ror	REGISTER_DUMP+6
-	ror	REGISTER_DUMP+6
-	ror	REGISTER_DUMP+6
-	lda	REGISTER_DUMP+6
+	ror	AY_REGISTERS+6
+	ror	AY_REGISTERS+6
+	ror	AY_REGISTERS+6
+	ror	AY_REGISTERS+6
+	lda	AY_REGISTERS+6
 	and	#$1f
-	sta	REGISTER_DUMP+6
+	sta	AY_REGISTERS+6
 
 no_scale_n:
 
@@ -1971,15 +1971,15 @@ no_scale_n:
 
 	; Mixer
 	lda	pt3_mixer_value
-	sta	REGISTER_DUMP+7
+	sta	AY_REGISTERS+7
 
 	; Amplitudes
 	lda	note_a+NOTE_AMPLITUDE
-	sta	REGISTER_DUMP+8
+	sta	AY_REGISTERS+8
 	lda	note_b+NOTE_AMPLITUDE
-	sta	REGISTER_DUMP+9
+	sta	AY_REGISTERS+9
 	lda	note_c+NOTE_AMPLITUDE
-	sta	REGISTER_DUMP+10
+	sta	AY_REGISTERS+10
 
 	; Envelope period
 	; result=period+add+slide (16-bits)
@@ -1995,11 +1995,11 @@ no_scale_n:
 	lda	pt3_envelope_slide_l
 	adc	temp_word_l
 	sta	temp_word_l
-	sta	REGISTER_DUMP+11
+	sta	AY_REGISTERS+11
 	lda	temp_word_h
 	adc	pt3_envelope_slide_h
 	sta	temp_word_h
-	sta	REGISTER_DUMP+12
+	sta	AY_REGISTERS+12
 
 	lda	convert_177
 	beq	no_scale_e
@@ -2007,34 +2007,34 @@ no_scale_n:
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
 	; first multiply by 8
-	asl	REGISTER_DUMP+11
-	rol	REGISTER_DUMP+12
-	asl	REGISTER_DUMP+11
-	rol	REGISTER_DUMP+12
-	asl	REGISTER_DUMP+11
-	rol	REGISTER_DUMP+12
+	asl	AY_REGISTERS+11
+	rol	AY_REGISTERS+12
+	asl	AY_REGISTERS+11
+	rol	AY_REGISTERS+12
+	asl	AY_REGISTERS+11
+	rol	AY_REGISTERS+12
 
 	; add in original to get 9
 	clc
 	lda	temp_word_l
-	adc	REGISTER_DUMP+11
-	sta	REGISTER_DUMP+11
+	adc	AY_REGISTERS+11
+	sta	AY_REGISTERS+11
 	lda	temp_word_h
-	adc	REGISTER_DUMP+12
-	sta	REGISTER_DUMP+12
+	adc	AY_REGISTERS+12
+	sta	AY_REGISTERS+12
 
 	; divide by 16 to get proper value
-	ror	REGISTER_DUMP+12
-	ror	REGISTER_DUMP+11
-	ror	REGISTER_DUMP+12
-	ror	REGISTER_DUMP+11
-	ror	REGISTER_DUMP+12
-	ror	REGISTER_DUMP+11
-	ror	REGISTER_DUMP+12
-	ror	REGISTER_DUMP+11
-	lda	REGISTER_DUMP+12
+	ror	AY_REGISTERS+12
+	ror	AY_REGISTERS+11
+	ror	AY_REGISTERS+12
+	ror	AY_REGISTERS+11
+	ror	AY_REGISTERS+12
+	ror	AY_REGISTERS+11
+	ror	AY_REGISTERS+12
+	ror	AY_REGISTERS+11
+	lda	AY_REGISTERS+12
 	and	#$0f
-	sta	REGISTER_DUMP+12
+	sta	AY_REGISTERS+12
 
 no_scale_e:
 
@@ -2046,7 +2046,7 @@ no_scale_e:
 envelope_same:
 	lda	#$ff			; if same, store $ff
 envelope_diff:
-	sta	REGISTER_DUMP+13
+	sta	AY_REGISTERS+13
 
 	lda	pt3_envelope_type
 	sta	pt3_envelope_type_old	; copy old to new

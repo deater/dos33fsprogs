@@ -65,9 +65,9 @@ main_loop:
 	jsr	COUT
 	lda	#':'+$80
 	jsr	COUT
-	lda	REGISTER_DUMP+1
+	lda	AY_REGISTERS+1
 	jsr	PRBYTE
-	lda	REGISTER_DUMP+0
+	lda	AY_REGISTERS+0
 	jsr	PRBYTE
 	lda	#' '+$80
 	jsr	COUT
@@ -77,9 +77,9 @@ main_loop:
 	jsr	COUT
 	lda	#':'+$80
 	jsr	COUT
-	lda	REGISTER_DUMP+3
+	lda	AY_REGISTERS+3
 	jsr	PRBYTE
-	lda	REGISTER_DUMP+2
+	lda	AY_REGISTERS+2
 	jsr	PRBYTE
 	lda	#' '+$80
 	jsr	COUT
@@ -89,9 +89,9 @@ main_loop:
 	jsr	COUT
 	lda	#':'+$80
 	jsr	COUT
-	lda	REGISTER_DUMP+5
+	lda	AY_REGISTERS+5
 	jsr	PRBYTE
-	lda	REGISTER_DUMP+4
+	lda	AY_REGISTERS+4
 	jsr	PRBYTE
 	lda	#' '+$80
 	jsr	COUT
@@ -101,7 +101,7 @@ main_loop:
 	jsr	COUT
 	lda	#':'+$80
 	jsr	COUT
-	lda	REGISTER_DUMP+6
+	lda	AY_REGISTERS+6
 	jsr	PRBYTE
 	lda	#' '+$80
 	jsr	COUT
@@ -111,7 +111,7 @@ main_loop:
 	jsr	COUT
 	lda	#':'+$80
 	jsr	COUT
-	lda	REGISTER_DUMP+7
+	lda	AY_REGISTERS+7
 	jsr	PRBYTE
 	lda	#' '+$80
 	jsr	COUT
@@ -130,7 +130,7 @@ six_space:
 	jsr	COUT
 	lda	#':'+$80
 	jsr	COUT
-	lda	REGISTER_DUMP+8
+	lda	AY_REGISTERS+8
 	jsr	PRBYTE
 	lda	#' '+$80
 	jsr	COUT
@@ -144,7 +144,7 @@ six_space:
 	jsr	COUT
 	lda	#':'+$80
 	jsr	COUT
-	lda	REGISTER_DUMP+9
+	lda	AY_REGISTERS+9
 	jsr	PRBYTE
 	lda	#' '+$80
 	jsr	COUT
@@ -158,7 +158,7 @@ six_space:
 	jsr	COUT
 	lda	#':'+$80
 	jsr	COUT
-	lda	REGISTER_DUMP+10
+	lda	AY_REGISTERS+10
 	jsr	PRBYTE
 	lda	#' '+$80
 	jsr	COUT
@@ -172,15 +172,15 @@ six_space:
 	jsr	COUT
 	lda	#':'+$80
 	jsr	COUT
-	lda	REGISTER_DUMP+12
+	lda	AY_REGISTERS+12
 	jsr	PRBYTE
-	lda	REGISTER_DUMP+11
+	lda	AY_REGISTERS+11
 	jsr	PRBYTE
 
 	; Envelope type
 	lda	#','+$80
 	jsr	COUT
-	lda	REGISTER_DUMP+13
+	lda	AY_REGISTERS+13
 	jsr	PRBYTE
 
 	jsr	CROUT1
