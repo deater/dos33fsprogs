@@ -281,7 +281,7 @@ space_loop:
 done_name_loop:
 
 	; open and read a file
-	; loads to whatever it was BSAVED at (default is $2000)
+	; loads to whatever it was BSAVED at (default is $4000)
 
 	jsr	read_file		; read PT3 file from disk
 
@@ -407,6 +407,7 @@ done_MHz:
 ;=================================
 ; Calculate Length of Song
 ;=================================
+
 	lda	#$0
 	sta	current_line
 	sta	current_subframe
@@ -454,8 +455,8 @@ fc_next_line:
         inc     current_line            ; and increment line
         lda     current_line
 
-        cmp     #64                     ; always end at 64.
-        bne     fc_do_frame                ; is this always needed?
+        cmp     #64			; always end at 64.
+        bne     fc_do_frame		; is this always needed?
 
 fc_next_pattern:
         lda     #0                      ; reset line to 0

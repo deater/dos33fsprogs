@@ -25,32 +25,10 @@ some further out things
 Player:
 1.  Loop support
 2.  Keys to increase/decrease pattern
-3.  Fix issue
-4.  Auto-detect II/II+ and uppercase strings
-5.  Show num files total (on file 4/10)
-6.  Handle LZ4 compressed files?
-7.  Have RTS code exit with error if file not found
+3.  Show num files total (on file 4/10)
+4.  Handle LZ4 compressed files?
+5.  Have RTS code exit with error if file not found
 
-
-Visualization:
-
-Volume bars
-
-Note names.  6 long buffer for each
-
-Flame effect?
-
-Notes into background?
-Colored, octave is color?
-
-
-
-
-
-   AA
-
- AA      5555
-A  A     5
-AAAA     555
-A  A        5
-A  A     555
+Bugs:
+Sometimes when using arrows, the next song will have channels out
+of synch?
