@@ -104,9 +104,10 @@ fire_fb_update:
 
 	; FIXME: optimize
 	;	original = ??? (complex)
-	;	-X : move
+	; TODO: unroll once and combine with the lores copy on even lines?
 
-	; Loopy Y (xpos) from 39 to 0
+
+	; Loop Y (xpos) from 39 to 0
 	ldy	#39							; 2
 fire_fb_update_loop:
 
@@ -164,11 +165,14 @@ fire_set:
 
 
 
+	;=================
+	; check if flame from left/right
 
-
+	; store Y as we over-write it
 	sty	FIRE_Y							; 3
 
 	; bounds check
+	; on edges, don't wrap
 
 	cpy	#0							; 2
 	beq	fire_r_same						; 2/3
@@ -197,6 +201,7 @@ fire_r_same:
 fire_smc5_fb2:
 	lda	$1234,Y							; 4+
 
+	; restore saved Y
 	ldy	FIRE_Y							; 3
 
 	; have value, subtract Q
@@ -227,8 +232,7 @@ done_fire_fb_update_loop:
 	lda	fire_smc5_fb+1						; 4
 	adc	#40							; 2
 	sta	fire_smc5_fb+1						; 4
-	lda	fire_smc5_fb+2	
-					; 4
+	lda	fire_smc5_fb+2						; 4
 	adc	#0							; 2
 	sta	fire_smc5_fb+2						; 4
 
