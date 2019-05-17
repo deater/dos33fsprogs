@@ -220,6 +220,8 @@ temp_word_h:		.byte	$0
 sample_b0:		.byte	$0
 sample_b1:		.byte	$0
 
+convert_177:		.byte	$1
+
 ; Header offsets
 
 PT3_VERSION		= $D

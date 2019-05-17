@@ -2,7 +2,6 @@
 	.asciiz "SR.PT3"
 	.asciiz "EA.PT3"
 	.asciiz "VC.PT3"
-	.asciiz "BA.PT3"
 	.asciiz "CR.PT3"
 	.asciiz "DF.PT3"
 	.asciiz "F4.PT3"

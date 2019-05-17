@@ -5,7 +5,7 @@
 PT3_LOC = $4000
 
 
-NUM_FILES	EQU	15
+NUM_FILES	EQU	14
 
 
 	;=============================
@@ -200,10 +200,6 @@ new_song:
 
 	lda	#$0
 	sta	FRAME_COUNT
-;	sta	A_VOLUME
-;	sta	B_VOLUME
-;	sta	C_VOLUME
-;	sta	COPY_OFFSET
 
 	;===========================
 	; Print loading message
@@ -293,7 +289,11 @@ done_name_loop:
 	sta	OUTL
 
 	lda	#20			; VTAB 20: HTAB from file
-	jsr	print_header_info
+	sta	CV
+	lda	#4
+	sta	CH
+	jsr     print_both_pages	; print, tail call
+
 
 	; Print Author
 
@@ -303,56 +303,54 @@ done_name_loop:
 	sta	OUTL
 
 	lda	#21			; VTAB 21: HTAB from file
-	jsr	print_header_info
+	sta	CV
+	lda	#4
+	sta	CH
+	jsr     print_both_pages	; print, tail call
 
 	; Print clock
-	lda	#'0'+$80
-	sta	$7D0+13
-	sta	$7D0+13+2
-	sta	$7D0+13+3
-	sta	$BD0+13
-	sta	$BD0+13+2
-	sta	$BD0+13+3
 
-	sta	$7D0+13+7
-	sta	$7D0+13+9
-	sta	$7D0+13+10
-	sta	$BD0+13+7
-	sta	$BD0+13+9
-	sta	$BD0+13+10
+	lda	#>(clock_string)	; point to clock string
+	sta	OUTH
+	lda	#<(clock_string)
+	sta	OUTL
 
-	lda	#':'+$80
-	sta	$7D0+13+1
-	sta	$BD0+13+1
-	sta	$7D0+13+8
-	sta	$BD0+13+8
+	lda	#23			; VTAB 23: HTAB 13
+	sta	CV
+	lda	#13
+	sta	CH
+	jsr     print_both_pages	; print, tail call
 
-	lda	#'/'+$80
-	sta	$7D0+13+5
-	sta	$BD0+13+5
+	; Print MHz indicator
 
+	lda	#>(mhz_string)	; point to MHz string
+	sta	OUTH
+	lda	#<(mhz_string)
+	sta	OUTL
 
-
-;	lda	#23			; VTAB 23: HTAB from file
-;	jsr	print_header_info
+	lda	#23			; VTAB 23: HTAB 34
+	sta	CV
+	lda	#34
+	sta	CH
+	jsr     print_both_pages	; print, tail call
 
 	; Print Left Arrow (INVERSE)
 	lda	#'<'
-	sta	$750
-	sta	$B50
+	sta	$6D0
+	sta	$AD0
 
 	lda	#'-'
-	sta	$751
-	sta	$B51
+	sta	$6D1
+	sta	$AD1
 
 	; Print Rright Arrow (INVERSE)
 	lda	#'-'
-	sta	$776
-	sta	$B76
+	sta	$6F6
+	sta	$AF6
 
 	lda	#'>'
-	sta	$777
-	sta	$B77
+	sta	$6F7
+	sta	$AF7
 
 	jsr	pt3_init_song
 
@@ -475,18 +473,10 @@ done_counting:
 	rts
 
 
-	;===================
-	; print header info
-	;===================
-	; shortcut to print header info
-	; a = VTAB
 
-print_header_info:
 
-	sta	CV
-	lda	#4
-	sta	CH
-	jmp     print_both_pages	; print, tail call
+
+
 
 
 
@@ -601,4 +591,6 @@ not_message:		.byte   "NOT "
 found_message:		.asciiz "FOUND"
 ;done_message:		.asciiz "DONE PLAYING"
 loading_message:	.asciiz "LOADING"
+clock_string:		.asciiz "0:00 / 0:00"
+mhz_string:		.asciiz "1.0MHZ"
 
