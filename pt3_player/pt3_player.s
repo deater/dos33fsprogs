@@ -204,6 +204,24 @@ forever_loop:
 
 
 
+
+
+;========================================
+;========================================
+
+; Helper routines below
+
+;========================================
+;========================================
+
+
+
+
+
+
+
+
+
 	;=================
 	; load a new song
 	;=================
@@ -356,6 +374,42 @@ no_uppercase:
 	lda	#13
 	sta	CH
 	jsr     print_both_pages	; print, tail call
+
+
+	; Print which file
+
+	; first update with current values
+
+	lda	WHICH_FILE
+	clc
+	adc	#$1
+	jsr	convert_decimal
+	lda	which_10s
+	sta	which_song_string
+	lda	which_1s
+	sta	which_song_string+1
+
+	lda	#NUM_FILES
+	jsr	convert_decimal
+	lda	which_10s
+	sta	which_song_string+3
+	lda	which_1s
+	sta	which_song_string+4
+
+	; now print modified string
+
+	lda	#>(which_song_string)	; point to which song string
+	sta	OUTH
+	lda	#<(which_song_string)
+	sta	OUTL
+
+	lda	#23			; VTAB 23: HTAB 1
+	sta	CV
+	lda	#0
+	sta	CH
+	jsr     print_both_pages	; print, tail call
+
+
 
 	; Print MHz indicator
 
@@ -598,6 +652,41 @@ decrement_file:
 done_decrement:
 	rts
 
+
+	;=========================
+	; convert_decimal
+	;=========================
+	; convert byte (<100) to tens/ones decimal
+	; this is probably not the optimal way to do this
+	; value in A, output in ASCII+$80 in which_10s:which_1s
+	; trashes X
+convert_decimal:
+
+	tax
+
+	lda	#'0'+$80
+	sta	which_1s
+	sta	which_10s
+
+	txa				; special case zero
+	beq	conv_decimal_done
+conv_decimal_loop:
+	inc	which_1s
+	lda	which_1s
+	cmp	#':'+$80
+	bne	conv_decimal_not_10
+	lda	#'0'+$80
+	sta	which_1s
+	inc	which_10s
+conv_decimal_not_10:
+	dex
+	bne	conv_decimal_loop
+
+conv_decimal_done:
+	rts
+
+
+
 ;=========
 ; vars
 ;=========
@@ -605,6 +694,8 @@ done_decrement:
 
 time_frame:	.byte	$0
 apple_ii:	.byte	$0
+which_10s:	.byte	$0
+which_1s:	.byte	$0
 
 
 ;==========
@@ -644,4 +735,4 @@ found_message:		.asciiz "FOUND"
 loading_message:	.asciiz "LOADING"
 clock_string:		.asciiz "0:00 / 0:00"
 mhz_string:		.asciiz "1.7MHZ"
-
+which_song_string:	.asciiz	"00/00"
