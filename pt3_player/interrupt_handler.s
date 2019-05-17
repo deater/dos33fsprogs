@@ -40,23 +40,23 @@ pt3_play_music:
 
 	; handle song over condition
 	lda	DONE_SONG
-	beq	mb_write_frame
+	beq	mb_write_frame		; if not done, continue
 
 	lda	LOOP			; see if looping
 	beq	move_to_next
 
-	lda	pt3_loop
+	lda	pt3_loop		; looping, move to loop location
 	sta	current_pattern
 	lda	#$0
 	sta	current_line
 	sta	current_subframe
-	sta	DONE_SONG
+	sta	DONE_SONG		; undo the next song
 
 	jmp	done_interrupt
 
 move_to_next:
 	; same as "press right"
-	lda	#$40
+	lda	#$20
 	jmp	quiet_exit
 
 	;======================================
@@ -260,7 +260,7 @@ music_looping:
 
 
 	;======================
-	; left key, to next song
+	; left key, to prev song
 
 key_left:
 	cmp	#'A'
@@ -270,7 +270,7 @@ key_left:
 	bne	quiet_exit
 
 	;========================
-	; right key, to prev song
+	; right key, to next song
 
 key_right:
 	cmp	#'D'
