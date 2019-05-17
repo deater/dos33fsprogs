@@ -26,9 +26,6 @@ interrupt_handler:
 
 	bit	$C404		; clear 6522 interrupt by reading T1C-L	; 4
 
-
-;	jmp	exit_interrupt
-
 	lda	DONE_PLAYING						; 3
 	beq	pt3_play_music	; if song done, don't play music	; 3/2nt
 	jmp	check_keyboard						; 3
@@ -37,17 +34,11 @@ interrupt_handler:
 
 pt3_play_music:
 
-
-;       for(i=0;i < pt3.music_len;i++) {
-;          pt3_set_pattern(i,&pt3);
-;          for(j=0;j<64;j++) {
-;             if (pt3_decode_line(&pt3)) break;
-;             for(f=0;f<pt3.speed;f++) {
-
+	; decode a frame of music
 
 	jsr	pt3_make_frame
 
-	; set song over
+	; handle song over condition
 	lda	DONE_SONG
 	beq	mb_write_frame
 
@@ -58,8 +49,8 @@ pt3_play_music:
 	;======================================
 	; Write frames to Mockingboard
 	;======================================
-	; actually plays frame loaded at end of
-	; last interrupt, so 20ms behind?
+	; for speed could merge this into
+	; the decode code
 
 mb_write_frame:
 
@@ -129,14 +120,16 @@ done_interrupt:
 	;=====================
 	; Update time counter
 	;=====================
+	; self-modifying version via qkumba
 update_time:
-	inc	FRAME_COUNT						; 5
-	lda	FRAME_COUNT						; 3
+	inc	frame_count_smc+1					; 5
+frame_count_smc:
+	lda	#$0							; 2
 	cmp	#50							; 3
 	bne	done_time						; 3/2nt
 
 	lda	#$0							; 2
-	sta	FRAME_COUNT						; 3
+	sta	frame_count_smc+1					; 3
 
 update_second_ones:
 	inc	$7d0+TIME_OFFSET+3					; 6

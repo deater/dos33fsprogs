@@ -222,8 +222,7 @@ new_song:
 	; Init Variables
 	;=========================
 
-	lda	#$0
-	sta	FRAME_COUNT
+	; ?
 
 
 	;===========================
