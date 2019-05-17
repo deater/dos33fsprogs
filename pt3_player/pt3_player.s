@@ -334,6 +334,20 @@ done_name_loop:
 	sta	CH
 	jsr     print_both_pages	; print, tail call
 
+	; update the MHz indicator with current state
+
+	lda	convert_177
+	beq	set_1MHz
+
+	lda	#'7'+$80
+	jmp     done_MHz
+
+set_1MHz:
+	lda     #'0'+$80
+done_MHz:
+        sta     $7F4
+        sta     $BF4
+
 	; Print Left Arrow (INVERSE)
 	lda	#'<'
 	sta	$6D0
@@ -592,5 +606,5 @@ found_message:		.asciiz "FOUND"
 ;done_message:		.asciiz "DONE PLAYING"
 loading_message:	.asciiz "LOADING"
 clock_string:		.asciiz "0:00 / 0:00"
-mhz_string:		.asciiz "1.0MHZ"
+mhz_string:		.asciiz "1.7MHZ"
 

@@ -47,20 +47,27 @@ Using the PT3_PLAYER
 
 	The pt3_player.dsk should boot automatically.
 
-	Use the right/left arrow keys to switch songs.
-	Press the space bar to pause playback.
+	Controls:
+		Right/Left arrow	Switch songs
+		Spacebar		Pause playback.
+		M			Switch from 1MHz to 1.77MHz mode
 
 	FUTURE FEATURES:
 		Key to disable visualization
 		Key to skip ahead/back in pattern list
 		L to enable looping in the song
 
-Known Bugs:
-~~~~~~~~~~~
-	Will try to display lowecase names on a II/II+
+ZX Compatability:
+~~~~~~~~~~~~~~~~~
 
-	ZX Spectrum songs expect a 1.77MHz AY-3-8910, but
-		the Apple II is 1MHz so song are higher(?) pitched
+	ZX Spectrum songs expect a 1.77MHz AY-3-8910, but the Apple II
+		is 1MHz so by default songs would sound lower
+		pitched.  By default now we multiply by 9/16 to scale
+		things properly, but that does eat up extra CPU cycles.
+		You can toggle this on/off by pressing "M" when playing.
+
+	In theory we can create songs that expect 1MHz, but the pt3 format
+		has no way of indicating this.
 
 Adding other files
 ~~~~~~~~~~~~~~~~~~

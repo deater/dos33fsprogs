@@ -189,7 +189,7 @@ check_keyboard:
 	beq	exit_interrupt
 
 	cmp	#(' '+$80)
-	bne	key_R
+	bne	key_M
 key_space:
 	lda	#$80
 	eor	DONE_PLAYING
@@ -207,13 +207,26 @@ lowbar:
 
 	jmp	quiet_exit
 
-key_R:
-	cmp	#'R'
+key_M:
+	cmp	#'M'
 	bne	key_left
 
-	lda	#$ff
-	eor	RASTERBARS_ON
-	sta	RASTERBARS_ON
+	lda	convert_177
+	eor	#$1
+	sta	convert_177
+	beq	at_1MHz
+
+	lda	#'7'+$80
+	sta	$7F4
+	sta	$BF4
+	jmp	done_key
+
+at_1MHz:
+	lda	#'0'+$80
+	sta	$7F4
+	sta	$BF4
+
+
 	jmp	done_key
 
 key_left:

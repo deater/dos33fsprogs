@@ -1803,15 +1803,127 @@ do_frame:
 	lda	note_a+NOTE_TONE_H	; Note A Period H
 	sta	REGISTER_DUMP+1		; into R1
 
+	lda	convert_177
+	beq	no_scale_a
+
+	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
+
+	; first multiply by 8
+	asl	REGISTER_DUMP+0
+	rol	REGISTER_DUMP+1
+	asl	REGISTER_DUMP+0
+	rol	REGISTER_DUMP+1
+	asl	REGISTER_DUMP+0
+	rol	REGISTER_DUMP+1
+
+	; add in original to get 9
+	clc
+	lda	note_a+NOTE_TONE_L
+	adc	REGISTER_DUMP+0
+	sta	REGISTER_DUMP+0
+	lda	note_a+NOTE_TONE_H
+	adc	REGISTER_DUMP+1
+	sta	REGISTER_DUMP+1
+
+	; divide by 16 to get proper value
+	ror	REGISTER_DUMP+1
+	ror	REGISTER_DUMP+0
+	ror	REGISTER_DUMP+1
+	ror	REGISTER_DUMP+0
+	ror	REGISTER_DUMP+1
+	ror	REGISTER_DUMP+0
+	ror	REGISTER_DUMP+1
+	ror	REGISTER_DUMP+0
+	lda	REGISTER_DUMP+1
+	and	#$0f
+	sta	REGISTER_DUMP+1
+
+no_scale_a:
+
 	lda	note_b+NOTE_TONE_L	; Note B Period L
 	sta	REGISTER_DUMP+2		; into R2
 	lda	note_b+NOTE_TONE_H	; Note B Period H
 	sta	REGISTER_DUMP+3		; into R3
 
+	lda	convert_177
+	beq	no_scale_b
+
+	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
+
+	; first multiply by 8
+	asl	REGISTER_DUMP+2
+	rol	REGISTER_DUMP+3
+	asl	REGISTER_DUMP+2
+	rol	REGISTER_DUMP+3
+	asl	REGISTER_DUMP+2
+	rol	REGISTER_DUMP+3
+
+	; add in original to get 9
+	clc
+	lda	note_b+NOTE_TONE_L
+	adc	REGISTER_DUMP+2
+	sta	REGISTER_DUMP+2
+	lda	note_b+NOTE_TONE_H
+	adc	REGISTER_DUMP+3
+	sta	REGISTER_DUMP+3
+
+	; divide by 16 to get proper value
+	ror	REGISTER_DUMP+3
+	ror	REGISTER_DUMP+2
+	ror	REGISTER_DUMP+3
+	ror	REGISTER_DUMP+2
+	ror	REGISTER_DUMP+3
+	ror	REGISTER_DUMP+2
+	ror	REGISTER_DUMP+3
+	ror	REGISTER_DUMP+2
+	lda	REGISTER_DUMP+3
+	and	#$0f
+	sta	REGISTER_DUMP+3
+
+no_scale_b:
+
 	lda	note_c+NOTE_TONE_L	; Note C Period L
 	sta	REGISTER_DUMP+4		; into R4
 	lda	note_c+NOTE_TONE_H	; Note C Period H
 	sta	REGISTER_DUMP+5		; into R5
+
+	lda	convert_177
+	beq	no_scale_c
+
+	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
+
+	; first multiply by 8
+	asl	REGISTER_DUMP+4
+	rol	REGISTER_DUMP+5
+	asl	REGISTER_DUMP+4
+	rol	REGISTER_DUMP+5
+	asl	REGISTER_DUMP+4
+	rol	REGISTER_DUMP+5
+
+	; add in original to get 9
+	clc
+	lda	note_c+NOTE_TONE_L
+	adc	REGISTER_DUMP+4
+	sta	REGISTER_DUMP+4
+	lda	note_c+NOTE_TONE_H
+	adc	REGISTER_DUMP+5
+	sta	REGISTER_DUMP+5
+
+	; divide by 16 to get proper value
+	ror	REGISTER_DUMP+5
+	ror	REGISTER_DUMP+4
+	ror	REGISTER_DUMP+5
+	ror	REGISTER_DUMP+4
+	ror	REGISTER_DUMP+5
+	ror	REGISTER_DUMP+4
+	ror	REGISTER_DUMP+5
+	ror	REGISTER_DUMP+4
+	lda	REGISTER_DUMP+5
+	and	#$0f
+	sta	REGISTER_DUMP+5
+
+no_scale_c:
+
 
 	; Noise
 	; frame[6]= (pt3->noise_period+pt3->noise_add)&0x1f;
@@ -1820,6 +1932,34 @@ do_frame:
 	adc	pt3_noise_add
 	and	#$1f
 	sta	REGISTER_DUMP+6
+	sta	temp_word_l
+
+	lda	convert_177
+	beq	no_scale_n
+
+	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
+
+	; first multiply by 8
+	asl	REGISTER_DUMP+6
+	asl	REGISTER_DUMP+6
+	asl	REGISTER_DUMP+6
+
+	; add in original to get 9
+	clc
+	lda	temp_word_l
+	adc	REGISTER_DUMP+6
+
+	; divide by 16 to get proper value
+	ror	REGISTER_DUMP+6
+	ror	REGISTER_DUMP+6
+	ror	REGISTER_DUMP+6
+	ror	REGISTER_DUMP+6
+	lda	REGISTER_DUMP+6
+	and	#$1f
+	sta	REGISTER_DUMP+6
+
+no_scale_n:
+
 
 
 	; Mixer
@@ -1847,12 +1987,50 @@ do_frame:
 	clc
 	lda	pt3_envelope_slide_l
 	adc	temp_word_l
-;	sta	temp_word_l
+	sta	temp_word_l
 	sta	REGISTER_DUMP+11
 	lda	temp_word_h
 	adc	pt3_envelope_slide_h
-;	sta	temp_word_h
+	sta	temp_word_h
 	sta	REGISTER_DUMP+12
+
+	lda	convert_177
+	beq	no_scale_e
+
+	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
+
+	; first multiply by 8
+	asl	REGISTER_DUMP+11
+	rol	REGISTER_DUMP+12
+	asl	REGISTER_DUMP+11
+	rol	REGISTER_DUMP+12
+	asl	REGISTER_DUMP+11
+	rol	REGISTER_DUMP+12
+
+	; add in original to get 9
+	clc
+	lda	temp_word_l
+	adc	REGISTER_DUMP+11
+	sta	REGISTER_DUMP+11
+	lda	temp_word_h
+	adc	REGISTER_DUMP+12
+	sta	REGISTER_DUMP+12
+
+	; divide by 16 to get proper value
+	ror	REGISTER_DUMP+12
+	ror	REGISTER_DUMP+11
+	ror	REGISTER_DUMP+12
+	ror	REGISTER_DUMP+11
+	ror	REGISTER_DUMP+12
+	ror	REGISTER_DUMP+11
+	ror	REGISTER_DUMP+12
+	ror	REGISTER_DUMP+11
+	lda	REGISTER_DUMP+12
+	and	#$0f
+	sta	REGISTER_DUMP+12
+
+no_scale_e:
+
 
 	; Envelope shape
 	lda	pt3_envelope_type
