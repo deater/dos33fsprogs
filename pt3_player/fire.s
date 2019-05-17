@@ -80,6 +80,7 @@ draw_fire_frame:
 	;===============================
 	; Update fire frame
 	;===============================
+	; Unroll x 2
 
 	; set up working line (to store to)
 
@@ -125,13 +126,10 @@ fire_fb_update_loop:
 	lda	A_VOLUME						; 3
 	cpy	#13							; 2
 	bcc	fire_vol	; blt					; 2/3
-
 	lda	B_VOLUME						; 3
 	cpy	#26							; 2
 	bcc	fire_vol	; blt					; 2/3
-
 	lda	C_VOLUME						; 3
-
 fire_vol:
 	and	#$f							; 2
 
@@ -142,30 +140,31 @@ fire_vol:
 fire_low:
 	; Q=1 3/4 of time
 	lda	FIRE_Q							; 3
-	beq	fire_height_done					; 2/3
-fire_low_br:
-	lda	#1							; 2
-	jmp	fire_height_done					; 3
-
+	bne	fire_one	; 0-3, is not 0 3/4 of time		; 2/3
+	beq	fire_zero						; 3
 fire_medium:
 	cmp	#$d							; 2
-	bcs	fire_high	; blt					; 2/3
+	bcs	fire_high	; bge					; 2/3
 
 	; Q=1 1/2 of time
 	lda	FIRE_Q							; 3
 	and	#$1							; 2
-
-	jmp	fire_height_done					; 3
+	jmp	fire_set						; 3
 fire_high:
 	; Q=1 1/4 of time
-	lda	FIRE_Q							; 3
-	cmp	#1							; 2
-	beq	fire_height_done					; 2/3
-fire_high_br:
+	lda	FIRE_Q		; is 0 1/4 of time			; 3
+	bne	fire_zero						; 2/3
+fire_one:
+	lda	#1							; 2
+	bne	fire_set						; 3
+fire_zero:
 	lda	#0							; 2
-
-fire_height_done:
+fire_set:
 	sta	FIRE_Q							; 3
+
+
+
+
 
 	sty	FIRE_Y							; 3
 
@@ -175,6 +174,11 @@ fire_height_done:
 	beq	fire_r_same						; 2/3
 	cpy	#39							; 2
 	beq	fire_r_same						; 2/3
+
+	; RAND_R
+	; 50% chance fire comes from below
+	; 25% chance comes from right
+	; 25% change comes from left
 
 	lda	#$2							; 2
 	bit	SEEDH							; 3
@@ -195,7 +199,7 @@ fire_smc5_fb2:
 
 	ldy	FIRE_Y							; 3
 
-	; adjust it
+	; have value, subtract Q
 	sec								; 2
 	sbc	FIRE_Q							; 3
 
@@ -223,7 +227,8 @@ done_fire_fb_update_loop:
 	lda	fire_smc5_fb+1						; 4
 	adc	#40							; 2
 	sta	fire_smc5_fb+1						; 4
-	lda	fire_smc5_fb+2						; 4
+	lda	fire_smc5_fb+2	
+					; 4
 	adc	#0							; 2
 	sta	fire_smc5_fb+2						; 4
 
