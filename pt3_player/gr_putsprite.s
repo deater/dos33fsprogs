@@ -1,11 +1,14 @@
 
 	;=============================================
-	; put_sprite_color_no_transparent
+	; put_sprite_one_color_no_transparent
 	;=============================================
 	; Sprite to display in INH,INL
 	; Location is XPOS,YPOS
 	; Note, only works if YPOS is multiple of two
 
+	; This is a fast sprite with no transparency and assumes
+	; only black/white sprite.  Can change color by setting the
+	; sprite_color_smc+1 value
 
 put_sprite:
 
@@ -45,26 +48,30 @@ put_sprite_pixel:
 
 	sty	TEMP			; save sprite pointer		; 3
 
-	cmp	#$00
-	beq	sprite_output
 
-	cmp	#$ff
-	bne	not_ff
-sprite_color_ff_smc:
-	lda	#$ff
-	jmp	sprite_output
-not_ff:
-	cmp	#$f0
-	bne	not_f0
-sprite_color_f0_smc:
-	lda	#$f0
-	jmp	sprite_output
+sprite_color_smc:
+	and	#$ff
 
-not_f0:
-sprite_color_0f_smc:
-	lda	#$0f
+;	cmp	#$00
+;	beq	sprite_output
 
-sprite_output:
+;	cmp	#$ff
+;	bne	not_ff
+;sprite_color_ff_smc:
+;	lda	#$ff
+;	jmp	sprite_output
+;not_ff:
+;	cmp	#$f0
+;	bne	not_f0
+;sprite_color_f0_smc:
+;	lda	#$f0
+;	jmp	sprite_output
+
+;not_f0:
+;sprite_color_0f_smc:
+;	lda	#$0f
+
+;sprite_output:
 
 	ldy	#$0							; 2
 	sta	(OUTL),Y		; and write it out		; 6

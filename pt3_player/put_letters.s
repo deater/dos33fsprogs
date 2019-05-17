@@ -9,14 +9,7 @@ put_letters:
 	;================
 first_note_a:
 	lda	#$bb
-	sta	sprite_color_ff_smc+1
-
-	lda	#$0b
-	sta	sprite_color_0f_smc+1
-
-	lda	#$b0
-	sta	sprite_color_f0_smc+1
-
+	sta	sprite_color_smc+1
 
 	ldx	note_a+NOTE_NOTE
 ;	cpx	olda
@@ -94,14 +87,7 @@ do_sharp_a:
 first_note_b:
 
 	lda	#$22
-	sta	sprite_color_ff_smc+1
-
-	lda	#$02
-	sta	sprite_color_0f_smc+1
-
-	lda	#$20
-	sta	sprite_color_f0_smc+1
-
+	sta	sprite_color_smc+1
 
 	ldx	note_b+NOTE_NOTE
 ;	cpx	oldb
@@ -180,14 +166,7 @@ do_sharp_b:
 first_note_c:
 
 	lda	#$33
-	sta	sprite_color_ff_smc+1
-
-	lda	#$03
-	sta	sprite_color_0f_smc+1
-
-	lda	#$30
-	sta	sprite_color_f0_smc+1
-
+	sta	sprite_color_smc+1
 
 	ldx	note_c+NOTE_NOTE
 ;	cpx	oldc
