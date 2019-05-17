@@ -21,6 +21,22 @@ pt3_setup:
 
 	jsr	clear_screens
 
+
+	;===================
+	; Check for Apple II and patch
+	;===================
+
+	lda	$FBB3           ; IIe and newer is $06
+	cmp	#6
+	beq	apple_iie
+
+	lda	#1
+	sta	apple_ii
+
+apple_iie:
+
+
+
 	; Init disk code
 
 	jsr	rts_init
@@ -281,6 +297,26 @@ done_name_loop:
 	sta	PT3_LOC+$3E
 	sta	PT3_LOC+$62
 
+upcase:
+	; if Apple II/II+, uppercase the lowercase letters
+	lda	apple_ii
+	beq	no_uppercase
+
+	ldy	#$1e
+upcase_loop:
+	lda	PT3_LOC,Y
+
+	cmp	#$60
+	bcc	not_lowercase	; blt
+	sec
+	sbc	#$20
+	sta	PT3_LOC,Y
+not_lowercase:
+	iny
+	cpy	#$63
+	bne	upcase_loop
+
+no_uppercase:
 	; print title
 
 	lda	#>(PT3_LOC+$1E)		; point to header title
@@ -567,7 +603,7 @@ done_decrement:
 
 
 time_frame:	.byte	$0
-
+apple_ii:	.byte	$0
 
 
 ;==========
