@@ -7,6 +7,24 @@ A. Yes, though you need a Mockingboard in Slot 4 to hear the music.
 	You probably need 48k of RAM too.
 
 
+Q. Why does the audio sound scratchy on some songs (on real hardware)?
+
+A. I've spent a lot of time trying to track this down.
+
+   In the perfect world of emulators, chiptune music on the Mockingboard
+	sounds great.
+
+   However, on real hardware, it doesn't.  It's almost that some combination
+	of writes to the register cause a timer to wait 2^16 cycles before
+	updating, leading to glitches in the music.  Possibly it's easier
+	to trigger this on the 1MHz Mockingboard than on the 1.77MHz
+	Spectrum (or the 2MHz ST) a lot of the music was written on.
+
+   The problem is more noticible on some songs than others.
+
+   Also I think some audio amplifiers have more trouble amplifying the
+	square wave signal put out by the AY-3-8910.
+
 Q: Can you fit more than 18 songs on the disk?
 
 A: Yes, it depends on how complex the PT3 files are.
