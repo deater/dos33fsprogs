@@ -1,4 +1,4 @@
-; VMW Chiptune Player
+; PT3 Timer -- times how long it takes
 
 .include	"zp.inc"
 
@@ -271,6 +271,9 @@ done_decrement:
 
 song_list:
 
+	.asciiz "DF.PT3"
+
+
 .include "song_list.inc"
 
 ;=========
@@ -353,6 +356,8 @@ interrupt_simulator:
 
 ;	bit	$C404		; clear 6522 interrupt by reading T1C-L	; 4
 
+	bit	$1234
+
 	lda	DONE_PLAYING						; 3
 	beq	pt3_play_music	; if song done, don't play music	; 3/2nt
 	jmp	check_keyboard						; 3
@@ -362,6 +367,13 @@ interrupt_simulator:
 pt3_play_music:
 
 	jsr	pt3_make_frame
+
+	lda	DONE_SONG
+	beq	mb_write_frame
+
+	lda	#$20
+	jmp	quiet_exit
+
 
 	;======================================
 	; Write frames to Mockingboard
