@@ -7,15 +7,18 @@ Code Optimization
 
 	I'm keeping some stats here as I try to optimize the size and speed.
 
-	Song: "Summer of Rain"
-	~~~~~~~~~~~~~~~~~~~~~~
+	Song: "Summer of Rain" SR.PT3
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 					lz4 compressed
 	pt3 size:	raw size:	ym5 size:	pt3.lz4:
 	3871		137015		7637		1793
 
+
+Size=pt3lib_end - note_a = 1787 - A38
+
 	Decoder Type	size	ZP use	decode	total	CPU overhead
 	-------------------------------------------------------------
-	Original	4k(?)	22B	28.16s	171s	16%
+	Original	3407	22B	31s	171s	18%
 
 
 
@@ -26,7 +29,7 @@ Code Optimization
 
 
 
-Times:
+Times:							Validated
 	BH.PT3:	10.0B	16	1:33	 93	17.2%
 	CH.PT3:	1D.12	29	2:49	169	17.2%
 	CR.PT3:	0F.25	15	1:30	 90	16.7%

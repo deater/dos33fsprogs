@@ -246,58 +246,75 @@ freq_h:	.byte	$00
 	; ornament value in A
 	; note offset in X
 
+	; Ornament table pointers are 16-bits little endian
+	; There are 16 of these pointers starting at $aa:$a9
+	; Our ornament starts at address (A*2)+that pointer
+	; We point ORNAMENT_H:ORNAMENT_L to this
+	; then we load the length/data values
+	; and then leave ORNAMENT_H:ORNAMENT_L pointing to begnning of
+	; the ornament data
+
+	; Optimization:
+	;	Loop and length only used once, can be located negative
+	;	from the pointer, but 6502 doesn't make addressing like that
+	;	easy.  Can't self modify as channels A/B/C have own copies
+	; 	of the var.
+
 load_ornament:
 
-	sty	ysave
-
-	; save as new ornament
-	; sta	note_a+NOTE_ORNAMENT,X ; do we use this?
+	sty	ysave		; save Y value				; 3
 
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
 
-	clc
-	asl			; A*2
-	adc	#$a9
-	tay
+	clc								; 2
+	asl			; A*2					; 2
+	adc	#PT3_ORNAMENT_LOC_L					; 2
+	tay								; 2
 
 	; a->ornament_pointer=pt3->ornament_patterns[a->ornament];
 
-	lda	PT3_LOC,Y
-	sta	ORNAMENT_L
+	lda	PT3_LOC,Y						; 4+
+	sta	ORNAMENT_L						; 3
 
-	iny
-	lda	PT3_LOC,Y
-	clc
-	adc	#>PT3_LOC
-	sta	ORNAMENT_H
+	iny								; 2
+	lda	PT3_LOC,Y						; 4+
+	clc								; 2
 
-	ldy	#0
+	; we're assuming PT3 is loaded to a page boundary
+
+	adc	#>PT3_LOC						; 2
+	sta	ORNAMENT_H						; 3
+
+	ldy	#0							; 2
 
 	; Set the loop value
 	;     a->ornament_loop=pt3->data[a->ornament_pointer];
-	lda	(ORNAMENT_L),Y
-	sta	note_a+NOTE_ORNAMENT_LOOP,X
+	lda	(ORNAMENT_L),Y						; 5+
+	sta	note_a+NOTE_ORNAMENT_LOOP,X				; 5
 
 	; Set the length value
 	;     a->ornament_length=pt3->data[a->ornament_pointer];
-	iny
-	lda	(ORNAMENT_L),Y
-	sta	note_a+NOTE_ORNAMENT_LENGTH,X
+	iny								; 2
+	lda	(ORNAMENT_L),Y						; 5+
+	sta	note_a+NOTE_ORNAMENT_LENGTH,X				; 5
 
 	; Set the pointer to the value past the length
 
-	clc
-	lda	ORNAMENT_L
-	adc	#$2
-	sta	note_a+NOTE_ORNAMENT_POINTER_L,X
-	lda	ORNAMENT_H
-	adc	#$0
-	sta	note_a+NOTE_ORNAMENT_POINTER_H,X
+	clc								; 2
+	lda	ORNAMENT_L						; 3
+	adc	#$2							; 2
+	sta	note_a+NOTE_ORNAMENT_POINTER_L,X			; 5
+	lda	ORNAMENT_H						; 3
+	adc	#$0							; 2
+	sta	note_a+NOTE_ORNAMENT_POINTER_H,X			; 5
 
-	ldy	ysave
+	ldy	ysave		; restore Y value			; 3
 
-	rts
+	rts								; 6
+
+								;============
+								;	86
 
 	;===========================
 	; Load Sample
@@ -305,58 +322,72 @@ load_ornament:
 	; sample in A
 	; which note offset in X
 
+	; Sample table pointers are 16-bits little endian
+	; There are 32 of these pointers starting at $6a:$69
+	; Our sample starts at address (A*2)+that pointer
+	; We point SAMPLE_H:SAMPLE_L to this
+	; then we load the length/data values
+	; and then leave SAMPLE_H:SAMPLE_L pointing to begnning of
+	; the sample data
+
+	; Optimization:
+	;	see comments on ornament setting
+
 load_sample:
 
-	sty	ysave
+	sty	ysave							; 3
 
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0x6a+(i*2)]<<8)|pt3->data[0x69+(i*2)];
 
-	clc
-	asl			; A*2
-	adc	#$69
-	tay
+	clc								; 2
+	asl			; A*2					; 2
+	adc	#SAMPLE_LOC_L						; 2
+	tay								; 2
 
 	; Set the initial sample pointer
 	;     a->sample_pointer=pt3->sample_patterns[a->sample];
 
-	lda	PT3_LOC,Y
-	sta	SAMPLE_L
+	lda	PT3_LOC,Y						; 4+
+	sta	SAMPLE_L						; 3
 
-	iny
-	lda	PT3_LOC,Y
-	clc
-	adc	#>PT3_LOC
-	sta	SAMPLE_H
+	iny								; 2
+	lda	PT3_LOC,Y						; 4+
+	clc								; 2
+
+	; assume pt3 file is at page boundary
+	adc	#>PT3_LOC						; 2
+	sta	SAMPLE_H						; 3
 
 	; Set the loop value
 	;     a->sample_loop=pt3->data[a->sample_pointer];
 
-	ldy	#0
-	lda	(SAMPLE_L),Y
-	sta	note_a+NOTE_SAMPLE_LOOP,X
+	ldy	#0							; 2
+	lda	(SAMPLE_L),Y						; 5+
+	sta	note_a+NOTE_SAMPLE_LOOP,X				; 5
 
 	; Set the length value
 	;     a->sample_length=pt3->data[a->sample_pointer];
 
-	iny
-	lda	(SAMPLE_L),Y
-	sta	note_a+NOTE_SAMPLE_LENGTH,X
+	iny								; 2
+	lda	(SAMPLE_L),Y						; 5+
+	sta	note_a+NOTE_SAMPLE_LENGTH,X				; 5
 
 	; Set pointer to beginning of samples
 
-	clc
-	lda	SAMPLE_L
-	adc	#$2
-	sta	note_a+NOTE_SAMPLE_POINTER_L,X
-	lda	SAMPLE_H
-	adc	#$0
-	sta	note_a+NOTE_SAMPLE_POINTER_H,X
+	clc								; 2
+	lda	SAMPLE_L						; 3
+	adc	#$2							; 2
+	sta	note_a+NOTE_SAMPLE_POINTER_L,X				; 5
+	lda	SAMPLE_H						; 3
+	adc	#$0							; 2
+	sta	note_a+NOTE_SAMPLE_POINTER_H,X				; 5
 
-	ldy	ysave
+	ldy	ysave							; 3
 
-	rts
-
+	rts								; 6
+								;============
+								;	 86
 
 	;====================================
 	; pt3_init_song
@@ -2206,3 +2237,4 @@ PT3VolumeTable_35:
 .byte $0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E,$F
 
 
+pt3_lib_end:
