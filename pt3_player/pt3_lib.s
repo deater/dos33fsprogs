@@ -220,7 +220,7 @@ convert_177:		.byte	$1
 
 ; Header offsets
 
-PT3_VERSION		= $D
+PT3_VERSION		= $0D
 PT3_HEADER_FREQUENCY	= $63
 PT3_SPEED		= $64
 PT3_LOOP		= $66
@@ -235,6 +235,14 @@ PT3_PATTERN_TABLE	= $C9
 ysave:	.byte	$00
 freq_l:	.byte	$00
 freq_h:	.byte	$00
+
+e_slide_amount:	.byte	$0
+
+prev_note:	.byte $0
+prev_sliding_l:	.byte $0
+prev_sliding_h:	.byte $0
+decode_done:	.byte $0
+current_val:	.byte $0
 
 	;===========================
 	; Load Ornament
@@ -338,7 +346,7 @@ load_sample:
 
 	clc								; 2
 	asl			; A*2					; 2
-	adc	#PT3_SAMPLE_LOC_L						; 2
+	adc	#PT3_SAMPLE_LOC_L					; 2
 	tay								; 2
 
 	; Set the initial sample pointer
@@ -476,7 +484,7 @@ not_ascii_number:
 
 
 
-e_slide_amount:	.byte	$0
+
 
 
 	;=====================================
@@ -966,11 +974,7 @@ done_onoff:
 
 	rts
 
-prev_note:	.byte $0
-prev_sliding_l:	.byte $0
-prev_sliding_h:	.byte $0
-decode_done:	.byte $0
-current_val:	.byte $0
+
 
 	;=====================================
 	; Decode Note
@@ -1652,89 +1656,99 @@ current_pattern:	.byte	$0
 	;=====================================
 	; Set Pattern
 	;=====================================
+	; FIXME: inline this?  we do call it from outside
+	;	in the player note length code
 
 pt3_set_pattern:
 
-	ldy	current_pattern
-	lda	PT3_LOC+PT3_PATTERN_TABLE,Y	; get pattern table value
+	; Lookup current pattern in pattern table
+	ldy	current_pattern						; 4
+	lda	PT3_LOC+PT3_PATTERN_TABLE,Y				; 4+
 
-	cmp	#$ff
-	bne	not_done
+	; if value is $FF we are at the end of the song
+	cmp	#$ff							; 2
+	bne	not_done						; 2/3
 
-	sta	DONE_SONG
-	rts
+	; done with song, set it to non-zero
+	sta	DONE_SONG						; 3
+	rts								; 6
+								;============
+								;   21 if end
 
 not_done:
 
-	asl		; mul by two, as word sized
-	tay
+	; set up the three pattern address pointers
 
-	clc
+	asl		; mul pattern offset by two, as word sized	; 2
+	tay								; 2
 
-	lda	PT3_LOC+PT3_PATTERN_LOC_L
-	sta	PATTERN_L
-	lda	PT3_LOC+PT3_PATTERN_LOC_H
-	adc	#>PT3_LOC		; assume page boundary
-	sta	PATTERN_H
+	; point PATTERN_H/PATTERN_L to the pattern address table
 
-	lda	(PATTERN_L),Y
-	sta	note_a+NOTE_ADDR_L
-	iny
+	clc								; 2
+	lda	PT3_LOC+PT3_PATTERN_LOC_L				; 4
+	sta	PATTERN_L						; 3
+	lda	PT3_LOC+PT3_PATTERN_LOC_H				; 4
+	adc	#>PT3_LOC		; assume page boundary		; 2
+	sta	PATTERN_H						; 3
 
-	clc
-	lda	(PATTERN_L),Y
-	adc	#>PT3_LOC		; assume page boundary
-	sta	note_a+NOTE_ADDR_H
-	iny
+	; First 16-bits points to the Channel A address
+	lda	(PATTERN_L),Y						; 5+
+	sta	note_a+NOTE_ADDR_L					; 4
+	iny								; 2
+	clc					; needed?		; 2
+	lda	(PATTERN_L),Y						; 5+
+	adc	#>PT3_LOC		; assume page boundary		; 2
+	sta	note_a+NOTE_ADDR_H					; 4
+	iny								; 2
 
-	lda	(PATTERN_L),Y
-	sta	note_b+NOTE_ADDR_L
-	iny
+	; Next 16-bits points to the Channel B address
+	lda	(PATTERN_L),Y						; 5+
+	sta	note_b+NOTE_ADDR_L					; 4
+	iny								; 2
+	lda	(PATTERN_L),Y						; 5+
+	adc	#>PT3_LOC		; assume page boundary		; 2
+	sta	note_b+NOTE_ADDR_H					; 4
+	iny								; 2
 
-	lda	(PATTERN_L),Y
-	adc	#>PT3_LOC		; assume page boundary
-	sta	note_b+NOTE_ADDR_H
-	iny
+	; Next 16-bits points to the Channel C address
+	lda	(PATTERN_L),Y						; 5+
+	sta	note_c+NOTE_ADDR_L					; 4
+	iny								; 2
+	lda	(PATTERN_L),Y						; 5+
+	adc	#>PT3_LOC		; assume page boundary		; 2
+	sta	note_c+NOTE_ADDR_H					; 4
 
-	lda	(PATTERN_L),Y
-	sta	note_c+NOTE_ADDR_L
-	iny
+	; clear out the noise channel
+	lda	#0							; 2
+	sta	pt3_noise_period					; 4
 
-	lda	(PATTERN_L),Y
-	adc	#>PT3_LOC		; assume page boundary
-	sta	note_c+NOTE_ADDR_H
+	; Set all three channels as active
+	; FIXME: num_channels, may need to be 6 if doing 6-channel pt3?
+	lda	#3							; 2
+	sta	pt3_pattern_done					; 4
 
-	lda	#0
-	sta	pt3_noise_period
-
-	lda	#3			; FIXME: num_channels
-	sta	pt3_pattern_done
-
-
-
-	rts
+	rts								; 6
 
 
 
 	;=====================================
 	; pt3 make frame
 	;=====================================
-pt3_make_frame:
-;       for(i=0;i < pt3.music_len;i++) {
-;          pt3_set_pattern(i,&pt3);
-;          for(j=0;j<64;j++) {
-;             if (pt3_decode_line(&pt3)) break;
+	; update pattern or line if necessary
+	; then calculate the values for the next frame
 
+
+pt3_make_frame:
 
 	; see if we need a new pattern
 	; we do if line==0 and subframe==0
-	lda	current_line
-	bne	pattern_good
-	lda	current_subframe
-	bne	pattern_good
+	lda	current_line						; 4
+	bne	pattern_good						; 2/3
+	lda	current_subframe					; 4
+	bne	pattern_good						; 2/3
 
 	; load a new pattern in
-	jsr	pt3_set_pattern
+	jsr	pt3_set_pattern						;6+?
 
 	lda	DONE_SONG
 	beq	pattern_good
