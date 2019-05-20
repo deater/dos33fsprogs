@@ -1,3 +1,4 @@
+
 1.  Merge some of the common code in decode_note()
 2.  Use a jump table for the two switch() statements in decode_note()
 3.  Make the frequency and volume table lookups use self-modify code
@@ -10,6 +11,8 @@
 	all 13 registers then walking through and outputting them
 7.  Clear out the channel data with a memset() instead of explicitly
 	setting values?
+8.  Self modify the 1MHz vs 1.7MHz change
+
 
 some further out things
 
