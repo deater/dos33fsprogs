@@ -342,7 +342,7 @@ load_sample:
 
 	clc								; 2
 	asl			; A*2					; 2
-	adc	#SAMPLE_LOC_L						; 2
+	adc	#PT3_SAMPLE_LOC_L						; 2
 	tay								; 2
 
 	; Set the initial sample pointer
