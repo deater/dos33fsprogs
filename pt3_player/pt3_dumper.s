@@ -29,6 +29,9 @@ pt3_setup:
 	sta	DONE_PLAYING
 	sta	WHICH_FILE
 
+	; Set to 1MHz mode (no translate) for validation purposes
+	sta	convert_177
+
 
 	;==================
 	; load first song
@@ -202,7 +205,7 @@ no_frame_oflo:
 
 
 	; check if end
-	lda	DONE_PLAYING
+	lda	DONE_SONG
 	bne	all_done
 	jmp	main_loop
 
@@ -413,21 +416,13 @@ FRAMEH:	.byte	$00
 
 song_list:
 
-.include "song_list.inc"
+	.asciiz "EA.PT3"
 
 ;=========
 ;routines
 ;=========
 .include	"qkumba_rts.s"
-.include	"../asm_routines/keypress_minimal.s"
 .include	"pt3_lib.s"
 
-;=========
-; strings
-;=========
-;mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
-;not_message:		.byte   "NOT "
-;found_message:		.asciiz "FOUND"
-;done_message:		.asciiz "DONE PLAYING"
-;loading_message:	.asciiz "LOADING"
+
 
