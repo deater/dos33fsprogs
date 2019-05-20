@@ -393,96 +393,87 @@ load_sample:
 	; pt3_init_song
 	;====================================
 	;
+	;	TODO: change to a memset type instruction?
 
 pt3_init_song:
-	lda	#$f
-	sta	note_a+NOTE_VOLUME
-	sta	note_b+NOTE_VOLUME
-	sta	note_c+NOTE_VOLUME
+	lda	#$f							; 2
+	sta	note_a+NOTE_VOLUME					; 4
+	sta	note_b+NOTE_VOLUME					; 4
+	sta	note_c+NOTE_VOLUME					; 4
 
-	lda	#$0
-	sta	DONE_SONG
-	sta	note_a+NOTE_TONE_SLIDING_L
-	sta	note_b+NOTE_TONE_SLIDING_L
-	sta	note_c+NOTE_TONE_SLIDING_L
-	sta	note_a+NOTE_TONE_SLIDING_H
-	sta	note_b+NOTE_TONE_SLIDING_H
-	sta	note_c+NOTE_TONE_SLIDING_H
-	sta	note_a+NOTE_ENABLED
-	sta	note_b+NOTE_ENABLED
-	sta	note_c+NOTE_ENABLED
-	sta	note_a+NOTE_ENVELOPE_ENABLED
-	sta	note_b+NOTE_ENVELOPE_ENABLED
-	sta	note_c+NOTE_ENVELOPE_ENABLED
+	lda	#$0							; 2
+	sta	DONE_SONG						; 3
+	sta	note_a+NOTE_TONE_SLIDING_L				; 4
+	sta	note_b+NOTE_TONE_SLIDING_L				; 4
+	sta	note_c+NOTE_TONE_SLIDING_L				; 4
+	sta	note_a+NOTE_TONE_SLIDING_H				; 4
+	sta	note_b+NOTE_TONE_SLIDING_H				; 4
+	sta	note_c+NOTE_TONE_SLIDING_H				; 4
+	sta	note_a+NOTE_ENABLED					; 4
+	sta	note_b+NOTE_ENABLED					; 4
+	sta	note_c+NOTE_ENABLED					; 4
+	sta	note_a+NOTE_ENVELOPE_ENABLED				; 4
+	sta	note_b+NOTE_ENVELOPE_ENABLED				; 4
+	sta	note_c+NOTE_ENVELOPE_ENABLED				; 4
+
+	sta	pt3_noise_period					; 4
+	sta	pt3_noise_add						; 4
+	sta	pt3_envelope_period_l					; 4
+	sta	pt3_envelope_period_h					; 4
+	sta	pt3_envelope_type					; 4
 
 	; default ornament/sample in A
-	lda	#0
-	ldx	#(NOTE_STRUCT_SIZE*0)
-	jsr	load_ornament
-	lda	#1
-	jsr	load_sample
+	lda	#0							; 2
+	ldx	#(NOTE_STRUCT_SIZE*0)					; 2
+	jsr	load_ornament						; 6+86
+	lda	#1							; 2
+	jsr	load_sample						; 6+86
 
 	; default ornament/sample in B
-	lda	#0
-	ldx	#(NOTE_STRUCT_SIZE*1)
-	jsr	load_ornament
-	lda	#1
-	jsr	load_sample
+	lda	#0							; 2
+	ldx	#(NOTE_STRUCT_SIZE*1)					; 2
+	jsr	load_ornament						; 6+86
+	lda	#1							; 2
+	jsr	load_sample						; 6+86
 
 	; default ornament/sample in C
-	lda	#0
-	ldx	#(NOTE_STRUCT_SIZE*2)
-	jsr	load_ornament
-	lda	#1
-	jsr	load_sample
+	lda	#0							; 2
+	ldx	#(NOTE_STRUCT_SIZE*2)					; 2
+	jsr	load_ornament						; 6+86
+	lda	#1							; 2
+	jsr	load_sample						; 6+86
 
-	lda	#$0
-	sta	pt3_noise_period
-	sta	pt3_noise_add
-	sta	pt3_envelope_period_l
-	sta	pt3_envelope_period_h
-	sta	pt3_envelope_type
-
-	;============================
-	; calculate patterns in song
-	; FIXME: is this necessary?  can just end when we hit FF playing?
-;	ldy	#0
-;length_loop:
-;	lda	PT3_LOC+PT3_PATTERN_TABLE,Y
-;	iny
-;	cmp	#$ff
-;	bne	length_loop
-
-;	sty	pt3_music_len
 
 	;======================
 	; calculate version
-	lda	#6
-	sta	pt3_version
-	lda	PT3_LOC+PT3_VERSION
-	cmp	#'0'
-	bcc	not_ascii_number	; blt
-	cmp	#'9'
-	bcs	not_ascii_number	; bge
-	sec
-	sbc	#'0'
-	sta	pt3_version
+	lda	#6							; 2
+	sta	pt3_version						; 3
+	lda	PT3_LOC+PT3_VERSION					; 4
+	cmp	#'0'							; 2
+	bcc	not_ascii_number	; blt				; 2/3
+	cmp	#'9'							; 2
+	bcs	not_ascii_number	; bge				; 2/3
+	sec								; 2
+	sbc	#'0'							; 2
+	sta	pt3_version						; 4
 
 not_ascii_number:
 
 	;=======================
 	; load default speed
+	; FIXME: change to self-modifying code
 
-	lda	PT3_LOC+PT3_SPEED
-	sta	pt3_speed
+	lda	PT3_LOC+PT3_SPEED					; 4
+	sta	pt3_speed						; 4
 
 	;=======================
-	; load default speed
+	; load loop
+	; FIXME: change to self-modifying code
 
-	lda	PT3_LOC+PT3_LOOP
-	sta	pt3_loop
+	lda	PT3_LOC+PT3_LOOP					; 4
+	sta	pt3_loop						; 4
 
-	rts
+	rts								; 6
 
 
 
@@ -490,10 +481,6 @@ not_ascii_number:
 
 
 e_slide_amount:	.byte	$0
-
-
-
-
 
 
 	;=====================================
@@ -1723,9 +1710,6 @@ not_done:
 
 	lda	#0
 	sta	pt3_noise_period
-;	sta	note_a+NOTE_ALL_DONE
-;	sta	note_b+NOTE_ALL_DONE
-;	sta	note_c+NOTE_ALL_DONE
 
 	lda	#3			; FIXME: num_channels
 	sta	pt3_pattern_done
@@ -1816,8 +1800,8 @@ do_frame:
 	; R0/R1 = A period low/high
 	; R2/R3 = B period low/high
 	; R4/R5 = C period low/high
-	; R6 = Noise period */
-	; R7 = Enable XX Noise=!CBA Tone=!CBA */
+	; R6 = Noise period
+	; R7 = Enable XX Noise=!CBA Tone=!CBA
 	; R8/R9/R10 = Channel A/B/C amplitude M3210, M=envelope enable
 	; R11/R12 = Envelope Period low/high
 	; R13 = Envelope Shape, 0xff means don't write
