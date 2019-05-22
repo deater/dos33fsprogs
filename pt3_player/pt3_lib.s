@@ -2250,3 +2250,133 @@ PT3VolumeTable_35:
 
 
 pt3_lib_end:
+
+
+
+; VolTableCreator
+; based on z80 code by Ivan Roshin
+; Called with carry==0 for 3.3/3.4 table
+; Called with carry==1 for 3.5 table
+
+; 177f-1932 = 435 bytes, not that much better than 512 of lookup
+
+
+z80_h:	.byte $0
+z80_l:	.byte $0
+z80_d:	.byte $0
+z80_e:	.byte $0
+
+VolTableCreator:
+	lda	#$0
+	sta	z80_h
+	sta	z80_d
+	sta	z80_e
+	lda	#$11
+	sta	z80_l
+	lda	#$2A		; ROL for self-modify
+	bcc	vol_type1
+
+	lda	#$10
+	sta	z80_l		; l=16
+	sta	z80_e		; e=16
+
+	lda	#$ea		; NOP for self modify
+
+vol_type1:
+	sta	vol_smc
+
+	ldy	#16		; skip first row, all zeros
+	ldx	#16		; c=16
+vol_outer:
+	lda	z80_h
+	pha
+	lda	z80_l
+	pha			; save HL
+
+	clc			; add HL,DE
+	lda	z80_l
+	adc	z80_e
+	sta	z80_l
+	lda	z80_h
+	adc	z80_d
+	sta	z80_h		; carry is important
+
+	lda	z80_h		; ex de,hl             ; swap
+	pha
+	lda	z80_l
+	pha
+	lda	z80_d
+	sta	z80_h
+	lda	z80_e
+	sta	z80_l
+	pla
+	sta	z80_e
+	pla
+	sta	z80_d
+
+			; sbc hl,hl
+	bcc	vol_ffs
+vol_zeros:
+	lda	#0
+	beq	vol_write
+
+vol_ffs:
+	lda	#$ff
+vol_write:
+	sta	z80_h
+	sta	z80_l
+
+vol_inner:
+	lda	z80_l
+
+vol_smc:
+	nop			; nop or ROL depending
+
+	lda	z80_h
+
+	adc	#$0		; a=a+carry;
+
+	sta	VolumeTable,Y
+	iny
+
+	clc			; add HL,DE
+	lda	z80_l
+	adc	z80_e
+	sta	z80_l
+	lda	z80_h
+	adc	z80_d
+	sta	z80_h
+
+	inx		; inc C
+	txa		; a=c
+	and	#$f
+	bne	vol_inner
+
+
+	pla
+	sta	z80_l
+	pla
+	sta	z80_h	; restore HL
+
+	lda	z80_e	; a=e
+	cmp	#$77
+	bne	vol_m3
+
+	inc	z80_e
+	bne	vol_blah
+	inc	z80_d
+vol_blah:
+
+vol_m3:
+	txa			; a=c
+	;bne	vol_outer
+	beq	vol_done
+	jmp	vol_outer
+
+vol_done:
+	rts
+
+
+
+VolumeTable:
+	.res 256,0
