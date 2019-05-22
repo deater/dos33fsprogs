@@ -1,3 +1,18 @@
+;===========================================
+; Library to decode Vortex Tracker PT3 files
+; in 6502 assembly for Apple ][ Mockingboard
+;
+; by Vince Weaver <vince@deater.net>
+
+; Roughly based on the Pascal code from Ay_Emul
+
+; Size Optimization -- Mem+Code (pt3_lib_end-note_a)
+; + 3407 bytes -- original working implementation
+; + 3302 bytes -- autogenerate the volume tables
+
+
+
+
 ; TODO
 ;   move some of these flags to be bits rather than bytes?
 ;   enabled could be bit 6 or 7 for fast checking
@@ -188,7 +203,6 @@ note_c:
 pt3_version:		.byte	$0
 pt3_frequency_table:	.byte	$0
 pt3_speed:		.byte	$0
-;pt3_num_patterns:	.byte	$0
 pt3_loop:		.byte	$0
 
 pt3_noise_period:	.byte	$0
@@ -229,7 +243,7 @@ PT3_PATTERN_LOC_H	= $68
 PT3_SAMPLE_LOC_L	= $69
 PT3_SAMPLE_LOC_H	= $6A
 PT3_ORNAMENT_LOC_L	= $A9
-PT3_OTNAMENT_LOC_H	= $AA
+PT3_ORNAMENT_LOC_H	= $AA
 PT3_PATTERN_TABLE	= $C9
 
 ysave:	.byte	$00
@@ -507,30 +521,30 @@ not_ascii_number:
 
 calculate_note:
 
-	lda	note_a+NOTE_ENABLED,X
-	bne	note_enabled
+	lda	note_a+NOTE_ENABLED,X					; 4+
+	bne	note_enabled						; 2/3
 
-	lda	#0
-	sta	note_a+NOTE_AMPLITUDE,X
-	jmp	done_note
+	lda	#0							; 2
+	sta	note_a+NOTE_AMPLITUDE,X					; 5
+	jmp	done_note						; 3
 
 note_enabled:
 
-	lda	note_a+NOTE_SAMPLE_POINTER_H,X
-	sta	SAMPLE_H
-	lda	note_a+NOTE_SAMPLE_POINTER_L,X
-	sta	SAMPLE_L
+	lda	note_a+NOTE_SAMPLE_POINTER_H,X				; 4+
+	sta	SAMPLE_H						; 3
+	lda	note_a+NOTE_SAMPLE_POINTER_L,X				; 4+
+	sta	SAMPLE_L						; 3
 
-	lda	note_a+NOTE_ORNAMENT_POINTER_H,X
-	sta	ORNAMENT_H
-	lda	note_a+NOTE_ORNAMENT_POINTER_L,X
-	sta	ORNAMENT_L
+	lda	note_a+NOTE_ORNAMENT_POINTER_H,X			; 4+
+	sta	ORNAMENT_H						; 3
+	lda	note_a+NOTE_ORNAMENT_POINTER_L,X			; 4+
+	sta	ORNAMENT_L						; 3
 
 
-	lda	note_a+NOTE_SAMPLE_POSITION,X
-	asl
-	asl
-	tay
+	lda	note_a+NOTE_SAMPLE_POSITION,X				; 4+
+	asl								; 2
+	asl								; 2
+	tay								; 2
 
 	;  b0 = pt3->data[a->sample_pointer + a->sample_position * 4];
 	lda	(SAMPLE_L),Y
@@ -712,7 +726,7 @@ calc_amplitude:
 	sta	note_a+NOTE_AMPLITUDE,X
 
 	;========================================
-	; if b1 top bit is set, it means sliding
+	; if b0 top bit is set, it means sliding
 
 	; adjust amplitude sliding
 
@@ -963,7 +977,7 @@ put_offon:
 
 done_onoff:
 
-	rts
+	rts								; 6
 
 
 
@@ -976,7 +990,7 @@ decode_note:
 
 	; Init vars
 
-	lda	#0
+	lda	#0							; 2
 	sta	note_a+NOTE_NEW_NOTE,X		; for printing notes?
 	sta	note_a+NOTE_SPEC_COMMAND,X	; These are only if printing?
 	sta	decode_done
