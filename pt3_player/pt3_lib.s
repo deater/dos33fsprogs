@@ -4,13 +4,13 @@
 ;
 ; by Vince Weaver <vince@deater.net>
 
-; Roughly based on the Pascal code from Ay_Emul
+; Roughly based on the Formats.pas Pascal code from Ay_Emul
 
 ; Size Optimization -- Mem+Code (pt3_lib_end-note_a)
 ; + 3407 bytes -- original working implementation
 ; + 3302 bytes -- autogenerate the volume tables
-
-
+; + 3297 bytes -- remove some un-needed bytes from struct
+; + 3262 bytes -- combine some duplicated code in $1X/$BX env setting
 
 
 ; TODO
@@ -19,54 +19,51 @@
 ;
 ; Use memset to set things to 0?
 
-NOTE_WHICH		=0
-NOTE_VOLUME		=1
-NOTE_TONE_SLIDING_L	=2
-NOTE_TONE_SLIDING_H	=3
-NOTE_ENABLED		=4
-NOTE_ENVELOPE_ENABLED	=5
-NOTE_SAMPLE_POINTER_L	=6
-NOTE_SAMPLE_POINTER_H	=7
-NOTE_SAMPLE_LOOP	=8
-NOTE_SAMPLE_LENGTH	=9
-NOTE_TONE_L		=10
-NOTE_TONE_H		=11
-NOTE_AMPLITUDE		=12
-NOTE_NOTE		=13
-NOTE_LEN		=14
-NOTE_LEN_COUNT		=15
-NOTE_SPEC_COMMAND	=16		; is this one needed?
-NOTE_NEW_NOTE		=17
-NOTE_ADDR_L		=18
-NOTE_ADDR_H		=19
-NOTE_ORNAMENT_POINTER_L	=20
-NOTE_ORNAMENT_POINTER_H	=21
-NOTE_ORNAMENT_LOOP	=22
-NOTE_ORNAMENT_LENGTH	=23
-NOTE_ONOFF		=24
-NOTE_TONE_ACCUMULATOR_L	=25
-NOTE_TONE_ACCUMULATOR_H	=26
-NOTE_TONE_SLIDE_COUNT	=27
-NOTE_ORNAMENT_POSITION	=28
-NOTE_SAMPLE_POSITION	=29
-NOTE_ENVELOPE_SLIDING	=30
-NOTE_NOISE_SLIDING	=31
-NOTE_AMPLITUDE_SLIDING	=32
-NOTE_ONOFF_DELAY	=33
-NOTE_OFFON_DELAY	=34
-NOTE_TONE_SLIDE_STEP_L	=35
-NOTE_TONE_SLIDE_STEP_H	=36
-NOTE_TONE_SLIDE_DELAY	=37
-NOTE_SIMPLE_GLISS	=38
-NOTE_SLIDE_TO_NOTE	=39
-NOTE_TONE_DELTA_L	=40
-NOTE_TONE_DELTA_H	=41
-NOTE_TONE_SLIDE_TO_STEP	=42
+NOTE_VOLUME		=0
+NOTE_TONE_SLIDING_L	=1
+NOTE_TONE_SLIDING_H	=2
+NOTE_ENABLED		=3
+NOTE_ENVELOPE_ENABLED	=4
+NOTE_SAMPLE_POINTER_L	=5
+NOTE_SAMPLE_POINTER_H	=6
+NOTE_SAMPLE_LOOP	=7
+NOTE_SAMPLE_LENGTH	=8
+NOTE_TONE_L		=9
+NOTE_TONE_H		=10
+NOTE_AMPLITUDE		=11
+NOTE_NOTE		=12
+NOTE_LEN		=13
+NOTE_LEN_COUNT		=14
+NOTE_NEW_NOTE		=15
+NOTE_ADDR_L		=16
+NOTE_ADDR_H		=17
+NOTE_ORNAMENT_POINTER_L	=18
+NOTE_ORNAMENT_POINTER_H	=19
+NOTE_ORNAMENT_LOOP	=20
+NOTE_ORNAMENT_LENGTH	=21
+NOTE_ONOFF		=22
+NOTE_TONE_ACCUMULATOR_L	=23
+NOTE_TONE_ACCUMULATOR_H	=24
+NOTE_TONE_SLIDE_COUNT	=25
+NOTE_ORNAMENT_POSITION	=26
+NOTE_SAMPLE_POSITION	=27
+NOTE_ENVELOPE_SLIDING	=28
+NOTE_NOISE_SLIDING	=29
+NOTE_AMPLITUDE_SLIDING	=30
+NOTE_ONOFF_DELAY	=31
+NOTE_OFFON_DELAY	=32
+NOTE_TONE_SLIDE_STEP_L	=33
+NOTE_TONE_SLIDE_STEP_H	=34
+NOTE_TONE_SLIDE_DELAY	=35
+NOTE_SIMPLE_GLISS	=36
+NOTE_SLIDE_TO_NOTE	=37
+NOTE_TONE_DELTA_L	=38
+NOTE_TONE_DELTA_H	=39
+NOTE_TONE_SLIDE_TO_STEP	=40
 
-NOTE_STRUCT_SIZE=43
+NOTE_STRUCT_SIZE=41
 
 note_a:
-	.byte	'A'	; NOTE_WHICH
 	.byte	$0	; NOTE_VOLUME
 	.byte	$0	; NOTE_TONE_SLIDING_L
 	.byte	$0	; NOTE_TONE_SLIDING_H
@@ -82,7 +79,6 @@ note_a:
 	.byte	$0	; NOTE_NOTE
 	.byte	$0	; NOTE_LEN
 	.byte	$0	; NOTE_LEN_COUNT
-	.byte	$0	; NOTE_SPEC_COMMAND
 	.byte	$0	; NOTE_NEW_NOTE
 	.byte	$0	; NOTE_ADDR_L
 	.byte	$0	; NOTE_ADDR_H
@@ -111,7 +107,6 @@ note_a:
 	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
 
 note_b:
-	.byte	'B'	; NOTE_WHICH
 	.byte	$0	; NOTE_VOLUME
 	.byte	$0	; NOTE_TONE_SLIDING_L
 	.byte	$0	; NOTE_TONE_SLIDING_H
@@ -127,7 +122,6 @@ note_b:
 	.byte	$0	; NOTE_NOTE
 	.byte	$0	; NOTE_LEN
 	.byte	$0	; NOTE_LEN_COUNT
-	.byte	$0	; NOTE_SPEC_COMMAND
 	.byte	$0	; NOTE_NEW_NOTE
 	.byte	$0	; NOTE_ADDR_L
 	.byte	$0	; NOTE_ADDR_H
@@ -156,7 +150,6 @@ note_b:
 	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
 
 note_c:
-	.byte	'C'	; NOTE_WHICH
 	.byte	$0	; NOTE_VOLUME
 	.byte	$0	; NOTE_TONE_SLIDING_L
 	.byte	$0	; NOTE_TONE_SLIDING_H
@@ -172,7 +165,6 @@ note_c:
 	.byte	$0	; NOTE_NOTE
 	.byte	$0	; NOTE_LEN
 	.byte	$0	; NOTE_LEN_COUNT
-	.byte	$0	; NOTE_SPEC_COMMAND
 	.byte	$0	; NOTE_NEW_NOTE
 	.byte	$0	; NOTE_ADDR_L
 	.byte	$0	; NOTE_ADDR_H
@@ -227,6 +219,7 @@ pt3_pattern_done:	.byte	$0
 temp_word_l:		.byte	$0
 temp_word_h:		.byte	$0
 
+note_command:		; shared space with sample_b0
 sample_b0:		.byte	$0
 sample_b1:		.byte	$0
 
@@ -496,8 +489,8 @@ not_ascii_number:
 
 	; if (PlParams.PT3.PT3_Version <= 4)
 
-	lda	pt3_version
-	cmp	#5
+	lda	pt3_version						; 4
+	cmp	#5							; 2
 
 	; carry clear = 3.3/3.4 table
 	; carry set = 3.5 table
@@ -547,32 +540,32 @@ note_enabled:
 	tay								; 2
 
 	;  b0 = pt3->data[a->sample_pointer + a->sample_position * 4];
-	lda	(SAMPLE_L),Y
-	sta	sample_b0
+	lda	(SAMPLE_L),Y						; 5+
+	sta	sample_b0						; 4
 
 	;  b1 = pt3->data[a->sample_pointer + a->sample_position * 4 + 1];
-	iny
-	lda	(SAMPLE_L),Y
-	sta	sample_b1
+	iny								; 2
+	lda	(SAMPLE_L),Y						; 5+
+	sta	sample_b1						; 4
 
-	;  a->tone = pt3->data[a->sample_pointer + a->sample_position * 4 + 2];
-	;  a->tone += (pt3->data[a->sample_pointer + a->sample_position * 4 + 3])<<8;
-	iny
-	lda	(SAMPLE_L),Y
-	sta	note_a+NOTE_TONE_L,X
+	;  a->tone = pt3->data[a->sample_pointer + a->sample_position*4+2];
+	;  a->tone+=(pt3->data[a->sample_pointer + a->sample_position*4+3])<<8;
+	iny								; 2
+	lda	(SAMPLE_L),Y						; 5+
+	sta	note_a+NOTE_TONE_L,X					; 4
 
-	iny
-	lda	(SAMPLE_L),Y
-	sta	note_a+NOTE_TONE_H,X
+	iny								; 2
+	lda	(SAMPLE_L),Y						; 5+
+	sta	note_a+NOTE_TONE_H,X					; 4
 
 	;  a->tone += a->tone_accumulator;
-	clc
-	lda	note_a+NOTE_TONE_L,X
-	adc	note_a+NOTE_TONE_ACCUMULATOR_L,X
-	sta	note_a+NOTE_TONE_L,X
-	lda	note_a+NOTE_TONE_H,X
-	adc	note_a+NOTE_TONE_ACCUMULATOR_H,X
-	sta	note_a+NOTE_TONE_H,X
+	clc								; 2
+	lda	note_a+NOTE_TONE_L,X					; 4+
+	adc	note_a+NOTE_TONE_ACCUMULATOR_L,X			; 4+
+	sta	note_a+NOTE_TONE_L,X					; 4+
+	lda	note_a+NOTE_TONE_H,X					; 4+
+	adc	note_a+NOTE_TONE_ACCUMULATOR_H,X			; 4+
+	sta	note_a+NOTE_TONE_H,X					; 4+
 
 	;=============================
 	; Accumulate tone if set
@@ -981,139 +974,137 @@ done_onoff:
 
 
 
+
+
+
+
+spec_command:	.byte	$0
+
 	;=====================================
 	; Decode Note
 	;=====================================
 	; X points to the note offset
+
+	; Timings (from ===>)
+	;	00: 14+30
+	;	0X: 14+15
+	;	1X: 14+5+
+	;	2X: 14+5+
 
 decode_note:
 
 	; Init vars
 
 	lda	#0							; 2
-	sta	note_a+NOTE_NEW_NOTE,X		; for printing notes?
-	sta	note_a+NOTE_SPEC_COMMAND,X	; These are only if printing?
-	sta	decode_done
+	sta	note_a+NOTE_NEW_NOTE,X		; for printing notes?	; 5
+	sta	spec_command						; 4
+	sta	decode_done						; 4
 
 	; Skip decode if note still running
-	lda	note_a+NOTE_LEN_COUNT,X
-	cmp	#2
-	bcc	keep_decoding			; blt, assume not negative
+	lda	note_a+NOTE_LEN_COUNT,X					; 4+
+	cmp	#2							; 2
+	bcc	keep_decoding		; blt, assume not negative	; 2/3
 
 	; we are still running, decrement and early return
-	dec	note_a+NOTE_LEN_COUNT,X
-	rts
+	dec	note_a+NOTE_LEN_COUNT,X					; 7
+	rts								; 6
 
 keep_decoding:
 
-	lda	note_a+NOTE_NOTE,X		; store prev note
-	sta	prev_note
+	lda	note_a+NOTE_NOTE,X		; store prev note	; 4+
+	sta	prev_note						; 4
 
-	lda	note_a+NOTE_TONE_SLIDING_H,X	; store prev sliding
-	sta	prev_sliding_h
-	lda	note_a+NOTE_TONE_SLIDING_L,X
-	sta	prev_sliding_l
+	lda	note_a+NOTE_TONE_SLIDING_H,X	; store prev sliding	; 4+
+	sta	prev_sliding_h						; 4
+	lda	note_a+NOTE_TONE_SLIDING_L,X				; 4+
+	sta	prev_sliding_l						; 4
 
 
-
-	ldy	#0
-
+	ldy	#0							; 2
+								;============
+								;	 26
 
 note_decode_loop:
-	lda	note_a+NOTE_LEN,X		; re-up length count
-	sta	note_a+NOTE_LEN_COUNT,X
+	lda	note_a+NOTE_LEN,X		; re-up length count	; 4+
+	sta	note_a+NOTE_LEN_COUNT,X					; 5
 
-	lda	note_a+NOTE_ADDR_L,X
-	sta	PATTERN_L
-	lda	note_a+NOTE_ADDR_H,X
-	sta	PATTERN_H
-
+	lda	note_a+NOTE_ADDR_L,X					; 4+
+	sta	PATTERN_L						; 3
+	lda	note_a+NOTE_ADDR_H,X					; 4+
+	sta	PATTERN_H						; 3
+;===>
 	; get next value
-	lda	(PATTERN_L),Y
-	sta	sample_b0			; save to X termporarily
+	lda	(PATTERN_L),Y						; 5+
+	sta	note_command		; save termporarily		; 4
 
 	; FIXME: use a jump table??
+	;  further reflection, that would require 32-bytes of addresses
+	;  in addition to needing X or Y to index the jump table.  hmmm
 
-	and	#$f0
+	and	#$f0							; 2
 
-	cmp	#$00
-	bne	decode_case_1X
+	; cmp	#$00
+	bne	decode_case_1X						; 2/3
+								;=============
+								;	14
 
 decode_case_0X:
 	;==============================
 	; $0X set special effect
 	;==============================
+									; -1
+	lda	note_command						; 4
+	and	#$f							; 2
 
-	lda	sample_b0
-	and	#$f
-
-	bne	decode_case_0X_not_zero
-
-	; 00 case
-	; means end of pattern
-
-	sta	note_a+NOTE_LEN_COUNT,X	; len_count=0;
-
-	lda	#1
-	sta	decode_done
-
-	dec	pt3_pattern_done
-
-	jmp	done_decode
-
-decode_case_0X_not_zero:
+	; we can always store spec as 0 means no spec
 
 	; FIXME: what if multiple spec commands?
 	; Doesn't seem to happen in practice
 	; But AY_emul has code to handle it
 
-	sta	note_a+NOTE_SPEC_COMMAND,X
+	sta	spec_command						; 4
 
-	jmp	done_decode
+	bne	decode_case_0X_not_zero					; 2/3
+								;=============
+								;	12
+	; 00 case
+	; means end of pattern
+									; -1
+	sta	note_a+NOTE_LEN_COUNT,X	; len_count=0;			; 5
+
+	lda	#1							; 2
+	sta	decode_done						; 4+
+
+	dec	pt3_pattern_done					; 6
+
+decode_case_0X_not_zero:
+
+	jmp	done_decode						; 3
+
 
 decode_case_1X:
 	;==============================
 	; $1X -- Set Envelope Type
 	;==============================
 
-	cmp	#$10
-	bne	decode_case_2X
+	cmp	#$10							; 2
+	bne	decode_case_2X						; 2/3
+								;============
+								;         5
 
-	lda	sample_b0
+									; -1
+	lda	note_command						; 4
 	and	#$0f
-	bne	decode_case_not_10
+	bne	decode_case_not_10					; 2/3
 
 decode_case_10:
-	sta	note_a+NOTE_ENVELOPE_ENABLED,X
-	jmp	decode_case_1x_common
-
+	; 10 case - disable
+	sta	note_a+NOTE_ENVELOPE_ENABLED,X	; A is 0		; 5
+	beq	decode_case_1x_common		; branch always		; 3
 
 decode_case_not_10:
-	; Needed?
-	; FIXME: combine this with the BX code somehow?
-	; pt3->envelope_type_old=0x78;
 
-	sta	pt3_envelope_type
-
-	lda	#$78
-	sta	pt3_envelope_type_old
-
-
-	; get next byte
-	iny
-	lda	(PATTERN_L),Y
-	sta	pt3_envelope_period_h
-
-	iny
-	lda	(PATTERN_L),Y
-	sta	pt3_envelope_period_l
-
-	lda	#0
-	sta	pt3_envelope_delay		; envelope_delay=0
-	sta	pt3_envelope_slide_l		; envelope_slide=0
-	sta	pt3_envelope_slide_h
-	lda	#1
-	sta	note_a+NOTE_ENVELOPE_ENABLED,X	; envelope_enabled=1
+	jsr	set_envelope						; 6+64
 
 decode_case_1x_common:
 
@@ -1135,7 +1126,7 @@ decode_case_2X:
 	cmp	#$20
 	bne	decode_case_3X
 
-	lda	sample_b0
+	lda	note_command
 	and	#$f
 	sta	pt3_noise_period
 
@@ -1148,7 +1139,7 @@ decode_case_3X:
 	cmp	#$30
 	bne	decode_case_4X
 
-	lda	sample_b0
+	lda	note_command
 	and	#$0f
 	ora	#$10
 	sta	pt3_noise_period
@@ -1162,7 +1153,7 @@ decode_case_4X:
 	cmp	#$40
 	bne	decode_case_5X
 
-	lda	sample_b0
+	lda	note_command
 	and	#$0f				; set ornament to bottom nibble
 	jsr	load_ornament
 
@@ -1178,7 +1169,7 @@ decode_case_5X:
 	cmp	#$B0
 	bcs	decode_case_bX		 ; branch greater/equal
 
-	lda	sample_b0
+	lda	note_command
 	sec
 	sbc	#$50
 	sta	note_a+NOTE_NOTE,X	; note=(current_val-0x50);
@@ -1209,7 +1200,7 @@ decode_case_bX:
 	cmp	#$b0		; FIXME: this cmp not needed, from before?
 	bne	decode_case_cX
 
-	lda	sample_b0
+	lda	note_command
 	and	#$f
 	beq	decode_case_b0
 	cmp	#1
@@ -1237,34 +1228,11 @@ decode_case_b1:
 
 decode_case_bx_higher:
 
-;	give fake old to force update?  maybe only needed if printing?
-;	pt3->envelope_type_old=0x78;
-
 	sec
-	sbc	#1
-	sta	pt3_envelope_type	; envelope_type=(current_val&0xf)-1;
+	sbc	#1		; envelope_type=(current_val&0xf)-1;
 
-	lda	#$78
-	sta	pt3_envelope_type_old
+	jsr	set_envelope						; 6+64
 
-	; get next byte
-	iny
-	lda	(PATTERN_L),Y
-	sta	pt3_envelope_period_h
-
-	; get next byte
-	iny
-	lda	(PATTERN_L),Y
-	sta	pt3_envelope_period_l
-
-	lda	#0
-	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0
-	sta	pt3_envelope_slide_l		; envelope_slide=0
-	sta	pt3_envelope_slide_h
-	sta	pt3_envelope_delay		; envelope_delay=0
-
-	lda	#1
-	sta	note_a+NOTE_ENVELOPE_ENABLED,X	; envelope_enabled=1;
 	jmp	done_decode
 
 decode_case_cX:
@@ -1274,7 +1242,7 @@ decode_case_cX:
 	cmp	#$c0
 	bne	decode_case_dX
 
-	lda	sample_b0
+	lda	note_command
 	and	#$0f
 	bne	decode_case_cx_not_c0
 
@@ -1314,7 +1282,7 @@ decode_case_dX:
 	cmp	#$d0
 	bne	decode_case_eX
 
-	lda	sample_b0
+	lda	note_command
 	and	#$0f
 	bne	decode_case_dx_not_d0
 
@@ -1337,7 +1305,7 @@ decode_case_eX:
 	cmp	#$e0
 	bne	decode_case_fX
 
-	lda	sample_b0
+	lda	note_command
 	sec
 	sbc	#$d0
 	jsr	load_sample
@@ -1354,7 +1322,7 @@ decode_case_fX:
 	sta	note_a+NOTE_ENVELOPE_ENABLED,X
 
 	; Set ornament to low byte of command
-	lda	sample_b0
+	lda	note_command
 	and	#$f
 	jsr	load_ornament		; ornament to load in A
 
@@ -1385,7 +1353,7 @@ done_decode:
 	; In the same order they appear.  We don't bother?
 handle_effects:
 
-	lda	note_a+NOTE_SPEC_COMMAND,X
+	lda	spec_command						; 4
 
 	;==============================
 	; Effect #1 -- Tone Down
@@ -1629,6 +1597,46 @@ no_effect:
 	sta	PATTERN_H
 
 	rts
+
+
+	;=======================================
+	; Set Envelope
+	;=======================================
+	; pulls out common code from $1X and $BX
+	;	commands
+
+	; A = new envelope type
+
+set_envelope:
+
+	sta	pt3_envelope_type					; 4
+
+;	give fake old to force update?  maybe only needed if printing?
+;	pt3->envelope_type_old=0x78;
+
+	lda	#$78							; 2
+	sta	pt3_envelope_type_old					; 4
+
+	; get next byte
+	iny								; 2
+	lda	(PATTERN_L),Y						; 5+
+	sta	pt3_envelope_period_h					; 4
+
+	iny								; 2
+	lda	(PATTERN_L),Y						; 5+
+	sta	pt3_envelope_period_l					; 4
+
+	lda	#0							; 2
+	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0	; 5
+	sta	pt3_envelope_delay		; envelope_delay=0	; 4
+	sta	pt3_envelope_slide_l		; envelope_slide=0	; 4
+	sta	pt3_envelope_slide_h					; 4
+	lda	#1							; 2
+	sta	note_a+NOTE_ENVELOPE_ENABLED,X	; envelope_enabled=1	; 5
+
+	rts								; 6
+								;===========
+								;	64
 
 	;=====================================
 	; Decode Line

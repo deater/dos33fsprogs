@@ -19,8 +19,8 @@ Code Optimization
 	Decoder Type	size	ZP use	raw	decode	total	CPU overhead
 	-------------------------------------------------------------
 	Original	3407	22B	1F.22	31s	171s	18%
-	VolTableGen	3302	22B	20.0E	32s	171s	18%	
-
+	VolTableGen	3302	22B	20.0E	32s	171s	19%
+	SizeOpts	3262	22B	20.0A	32s	171s	19%
 
 
 
