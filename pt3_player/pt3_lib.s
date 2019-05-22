@@ -447,6 +447,20 @@ pt3_init_song:
 	lda	#1							; 2
 	jsr	load_sample						; 6+86
 
+	;=======================
+	; load default speed
+	; FIXME: change to self-modifying code
+
+	lda	PT3_LOC+PT3_SPEED					; 4
+	sta	pt3_speed						; 4
+
+	;=======================
+	; load loop
+	; FIXME: change to self-modifying code
+
+	lda	PT3_LOC+PT3_LOOP					; 4
+	sta	pt3_loop						; 4
+
 
 	;======================
 	; calculate version
@@ -464,18 +478,17 @@ pt3_init_song:
 not_ascii_number:
 
 	;=======================
-	; load default speed
-	; FIXME: change to self-modifying code
+	; Pick which volume number, based on version
 
-	lda	PT3_LOC+PT3_SPEED					; 4
-	sta	pt3_speed						; 4
+	; if (PlParams.PT3.PT3_Version <= 4)
 
-	;=======================
-	; load loop
-	; FIXME: change to self-modifying code
+	lda	pt3_version
+	cmp	#5
 
-	lda	PT3_LOC+PT3_LOOP					; 4
-	sta	pt3_loop						; 4
+	; carry clear = 3.3/3.4 table
+	; carry set = 3.5 table
+
+	jsr	VolTableCreator
 
 	rts								; 6
 
@@ -766,44 +779,22 @@ write_clamp_amplitude:
 
 done_clamp_amplitude:
 
-	;=======================
-	; get actual output from table
-
-	; if (PlParams.PT3.PT3_Version <= 4)
-
-	lda	pt3_version
-	cmp	#5
-	bcs	other_table	; bge
-
+	; We generate the proper table at runtime now
+	; so always in Volume Table
 	; a->amplitude = PT3VolumeTable_33_34[a->volume][a->amplitude];
+	; a->amplitude = PT3VolumeTable_35[a->volume][a->amplitude];
 
-	lda	note_a+NOTE_VOLUME,X
-	asl
-	asl
-	asl
-	asl
-	ora	note_a+NOTE_AMPLITUDE,X
+	lda	note_a+NOTE_VOLUME,X					; 4+
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	ora	note_a+NOTE_AMPLITUDE,X					; 4+
 
-	tay
-	lda	PT3VolumeTable_33_34,Y
-	sta	note_a+NOTE_AMPLITUDE,X ;     a->amplitude = PT3VolumeTable_35[a->volume][a->amplitude];
+	tay								; 2
+	lda	VolumeTable,Y						; 4+
+	sta	note_a+NOTE_AMPLITUDE,X					; 5
 
-	jmp	done_table
-
-other_table:
-	; else {
-
-	lda	note_a+NOTE_VOLUME,X
-	asl
-	asl
-	asl
-	asl
-	ora	note_a+NOTE_AMPLITUDE,X
-
-	tay
-	lda	PT3VolumeTable_35,Y
-	sta	note_a+NOTE_AMPLITUDE,X ;     a->amplitude = PT3VolumeTable_35[a->volume][a->amplitude];
-;	}
 done_table:
 
 
@@ -2211,54 +2202,55 @@ PT3NoteTable_ASM_34_35_low:
 .byte $15,$14,$12,$11,$10,$0F,$0E,$0D
 
 
-PT3VolumeTable_33_34:
-.byte $0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0
-.byte $0,$0,$0,$0,$0,$0,$0,$0,$1,$1,$1,$1,$1,$1,$1,$1
-.byte $0,$0,$0,$0,$0,$0,$1,$1,$1,$1,$1,$2,$2,$2,$2,$2
-.byte $0,$0,$0,$0,$1,$1,$1,$1,$2,$2,$2,$2,$3,$3,$3,$3
-.byte $0,$0,$0,$0,$1,$1,$1,$2,$2,$2,$3,$3,$3,$4,$4,$4
-.byte $0,$0,$0,$1,$1,$1,$2,$2,$3,$3,$3,$4,$4,$4,$5,$5
-.byte $0,$0,$0,$1,$1,$2,$2,$3,$3,$3,$4,$4,$5,$5,$6,$6
-.byte $0,$0,$1,$1,$2,$2,$3,$3,$4,$4,$5,$5,$6,$6,$7,$7
-.byte $0,$0,$1,$1,$2,$2,$3,$3,$4,$5,$5,$6,$6,$7,$7,$8
-.byte $0,$0,$1,$1,$2,$3,$3,$4,$5,$5,$6,$6,$7,$8,$8,$9
-.byte $0,$0,$1,$2,$2,$3,$4,$4,$5,$6,$6,$7,$8,$8,$9,$A
-.byte $0,$0,$1,$2,$3,$3,$4,$5,$6,$6,$7,$8,$9,$9,$A,$B
-.byte $0,$0,$1,$2,$3,$4,$4,$5,$6,$7,$8,$8,$9,$A,$B,$C
-.byte $0,$0,$1,$2,$3,$4,$5,$6,$7,$7,$8,$9,$A,$B,$C,$D
-.byte $0,$0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E
-.byte $0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E,$F
+;PT3VolumeTable_33_34:
+;.byte $0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0
+;.byte $0,$0,$0,$0,$0,$0,$0,$0,$1,$1,$1,$1,$1,$1,$1,$1
+;.byte $0,$0,$0,$0,$0,$0,$1,$1,$1,$1,$1,$2,$2,$2,$2,$2
+;.byte $0,$0,$0,$0,$1,$1,$1,$1,$2,$2,$2,$2,$3,$3,$3,$3
+;.byte $0,$0,$0,$0,$1,$1,$1,$2,$2,$2,$3,$3,$3,$4,$4,$4
+;.byte $0,$0,$0,$1,$1,$1,$2,$2,$3,$3,$3,$4,$4,$4,$5,$5
+;.byte $0,$0,$0,$1,$1,$2,$2,$3,$3,$3,$4,$4,$5,$5,$6,$6
+;.byte $0,$0,$1,$1,$2,$2,$3,$3,$4,$4,$5,$5,$6,$6,$7,$7
+;.byte $0,$0,$1,$1,$2,$2,$3,$3,$4,$5,$5,$6,$6,$7,$7,$8
+;.byte $0,$0,$1,$1,$2,$3,$3,$4,$5,$5,$6,$6,$7,$8,$8,$9
+;.byte $0,$0,$1,$2,$2,$3,$4,$4,$5,$6,$6,$7,$8,$8,$9,$A
+;.byte $0,$0,$1,$2,$3,$3,$4,$5,$6,$6,$7,$8,$9,$9,$A,$B
+;.byte $0,$0,$1,$2,$3,$4,$4,$5,$6,$7,$8,$8,$9,$A,$B,$C
+;.byte $0,$0,$1,$2,$3,$4,$5,$6,$7,$7,$8,$9,$A,$B,$C,$D
+;.byte $0,$0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E
+;.byte $0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E,$F
 
-
-PT3VolumeTable_35:
-.byte $0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0
-.byte $0,$0,$0,$0,$0,$0,$0,$0,$1,$1,$1,$1,$1,$1,$1,$1
-.byte $0,$0,$0,$0,$1,$1,$1,$1,$1,$1,$1,$1,$2,$2,$2,$2
-.byte $0,$0,$0,$1,$1,$1,$1,$1,$2,$2,$2,$2,$2,$3,$3,$3
-.byte $0,$0,$1,$1,$1,$1,$2,$2,$2,$2,$3,$3,$3,$3,$4,$4
-.byte $0,$0,$1,$1,$1,$2,$2,$2,$3,$3,$3,$4,$4,$4,$5,$5
-.byte $0,$0,$1,$1,$2,$2,$2,$3,$3,$4,$4,$4,$5,$5,$6,$6
-.byte $0,$0,$1,$1,$2,$2,$3,$3,$4,$4,$5,$5,$6,$6,$7,$7
-.byte $0,$1,$1,$2,$2,$3,$3,$4,$4,$5,$5,$6,$6,$7,$7,$8
-.byte $0,$1,$1,$2,$2,$3,$4,$4,$5,$5,$6,$7,$7,$8,$8,$9
-.byte $0,$1,$1,$2,$3,$3,$4,$5,$5,$6,$7,$7,$8,$9,$9,$A
-.byte $0,$1,$1,$2,$3,$4,$4,$5,$6,$7,$7,$8,$9,$A,$A,$B
-.byte $0,$1,$2,$2,$3,$4,$5,$6,$6,$7,$8,$9,$A,$A,$B,$C
-.byte $0,$1,$2,$3,$3,$4,$5,$6,$7,$8,$9,$A,$A,$B,$C,$D
-.byte $0,$1,$2,$3,$4,$5,$6,$7,$7,$8,$9,$A,$B,$C,$D,$E
-.byte $0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E,$F
-
-
-pt3_lib_end:
+;PT3VolumeTable_35:
+;.byte $0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0
+;.byte $0,$0,$0,$0,$0,$0,$0,$0,$1,$1,$1,$1,$1,$1,$1,$1
+;.byte $0,$0,$0,$0,$1,$1,$1,$1,$1,$1,$1,$1,$2,$2,$2,$2
+;.byte $0,$0,$0,$1,$1,$1,$1,$1,$2,$2,$2,$2,$2,$3,$3,$3
+;.byte $0,$0,$1,$1,$1,$1,$2,$2,$2,$2,$3,$3,$3,$3,$4,$4
+;.byte $0,$0,$1,$1,$1,$2,$2,$2,$3,$3,$3,$4,$4,$4,$5,$5
+;.byte $0,$0,$1,$1,$2,$2,$2,$3,$3,$4,$4,$4,$5,$5,$6,$6
+;.byte $0,$0,$1,$1,$2,$2,$3,$3,$4,$4,$5,$5,$6,$6,$7,$7
+;.byte $0,$1,$1,$2,$2,$3,$3,$4,$4,$5,$5,$6,$6,$7,$7,$8
+;.byte $0,$1,$1,$2,$2,$3,$4,$4,$5,$5,$6,$7,$7,$8,$8,$9
+;.byte $0,$1,$1,$2,$3,$3,$4,$5,$5,$6,$7,$7,$8,$9,$9,$A
+;.byte $0,$1,$1,$2,$3,$4,$4,$5,$6,$7,$7,$8,$9,$A,$A,$B
+;.byte $0,$1,$2,$2,$3,$4,$5,$6,$6,$7,$8,$9,$A,$A,$B,$C
+;.byte $0,$1,$2,$3,$3,$4,$5,$6,$7,$8,$9,$A,$A,$B,$C,$D
+;.byte $0,$1,$2,$3,$4,$5,$6,$7,$7,$8,$9,$A,$B,$C,$D,$E
+;.byte $0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E,$F
 
 
 
-; VolTableCreator
-; based on z80 code by Ivan Roshin
-; Called with carry==0 for 3.3/3.4 table
-; Called with carry==1 for 3.5 table
+	;==========================
+	; VolTableCreator
+	;==========================
+	; Creates the appropriate volume table
+	; based on z80 code by Ivan Roshin ZXAYHOBETA/VTII10bG.asm
+	;
 
-; 177f-1932 = 435 bytes, not that much better than 512 of lookup
+	; Called with carry==0 for 3.3/3.4 table
+	; Called with carry==1 for 3.5 table
+
+	; 177f-1932 = 435 bytes, not that much better than 512 of lookup
 
 
 z80_h:	.byte $0
@@ -2267,14 +2259,24 @@ z80_d:	.byte $0
 z80_e:	.byte $0
 
 VolTableCreator:
+
+	; Init initial variables
 	lda	#$0
 	sta	z80_h
 	sta	z80_d
 	sta	z80_e
 	lda	#$11
 	sta	z80_l
+
+	; Set up self modify
+
 	lda	#$2A		; ROL for self-modify
-	bcc	vol_type1
+	bcs	vol_type_35
+
+vol_type_33:
+
+	; For older table, we set initial conditions a bit
+	; different
 
 	lda	#$10
 	sta	z80_l		; l=16
@@ -2282,8 +2284,8 @@ VolTableCreator:
 
 	lda	#$ea		; NOP for self modify
 
-vol_type1:
-	sta	vol_smc
+vol_type_35:
+	sta	vol_smc		; set the self-modify code
 
 	ldy	#16		; skip first row, all zeros
 	ldx	#16		; c=16
@@ -2315,7 +2317,7 @@ vol_outer:
 	sta	z80_d
 
 			; sbc hl,hl
-	bcc	vol_ffs
+	bcs	vol_ffs
 vol_zeros:
 	lda	#0
 	beq	vol_write
@@ -2380,3 +2382,6 @@ vol_done:
 
 VolumeTable:
 	.res 256,0
+
+
+pt3_lib_end:

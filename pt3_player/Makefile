@@ -33,18 +33,18 @@ pt3_player.dsk:	PT3_PLAYER HELLO
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/ND.PT3
 
 
-pt3_debug.dsk:	PT3_DUMPER PT3_TIMER HELLO_DEBUG DUMP
+pt3_debug.dsk:	PT3_DUMPER PT3_TIMER PT3_TABLE_TEST HELLO_DEBUG DUMP
 	cp empty.dsk pt3_debug.dsk
 	$(DOS33) -y pt3_debug.dsk SAVE A HELLO_DEBUG HELLO
 	$(DOS33) -y pt3_debug.dsk SAVE A DUMP
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x1000 PT3_DUMPER
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x1000 PT3_PLAYER
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x1000 PT3_TIMER
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x1000 PT3_TABLE_TEST
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/SR.PT3
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/EA.PT3
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/VC.PT3
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/OS.PT3
-#	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/BA.PT3
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/CR.PT3
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/DF.PT3
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/F4.PT3
@@ -96,9 +96,19 @@ PT3_DUMPER:	pt3_dumper.o
 pt3_dumper.o:	pt3_dumper.s \
 	gr_fast_clear.s pt3_lib.s interrupt_handler.s zp.inc
 	ca65 -o pt3_dumper.o pt3_dumper.s -l pt3_dumper.lst
+
+#
+
+PT3_TABLE_TEST:	pt3_table_test.o
+	ld65 -o PT3_TABLE_TEST pt3_table_test.o -C ../linker_scripts/apple2_1000.inc
+
+pt3_table_test.o:	pt3_table_test.s \
+	gr_fast_clear.s pt3_lib.s interrupt_handler.s zp.inc
+	ca65 -o pt3_table_test.o pt3_table_test.s -l pt3_table_test.lst
+
 #
 
 clean:	
 	rm -f *~ TITLE.GR *.o *.lst \
-		PT3_PLAYER PT3_TIMER PT3_DUMPER FIRE
+		PT3_PLAYER PT3_TIMER PT3_DUMPER PT3_TABLE_TEST
 

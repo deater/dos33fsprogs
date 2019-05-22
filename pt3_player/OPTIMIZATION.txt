@@ -14,18 +14,13 @@ Code Optimization
 	3871		137015		7637		1793
 
 
-Size=pt3lib_end - note_a = 1787 - A38
+	Size=pt3lib_end - note_a
 
-	Decoder Type	size	ZP use	decode	total	CPU overhead
+	Decoder Type	size	ZP use	raw	decode	total	CPU overhead
 	-------------------------------------------------------------
-	Original	3407	22B	31s	171s	18%
+	Original	3407	22B	1F.22	31s	171s	18%
+	VolTableGen	3302	22B	20.0E	32s	171s	18%	
 
-
-
-	Song: "Outer Space"
-	~~~~~~~~~~~~~~~~~~~
-
-	pt3 size
 
 
 

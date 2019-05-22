@@ -271,10 +271,7 @@ done_decrement:
 
 song_list:
 
-	.asciiz "DF.PT3"
-
-
-.include "song_list.inc"
+	.asciiz "SR.PT3"
 
 ;=========
 ;routines
