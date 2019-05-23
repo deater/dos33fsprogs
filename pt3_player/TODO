@@ -12,6 +12,7 @@
 7.  Clear out the channel data with a memset() instead of explicitly
 	setting values?
 8.  Self modify the 1MHz vs 1.7MHz change
+9.  Align the volume/frequency tables.  Save a few cycles on the reads?
 
 
 some further out things
