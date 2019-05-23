@@ -120,99 +120,115 @@ void NoteTableCreator(int which) {
 	unsigned short s[16];
 	unsigned int temp1,temp2;
 	int self_modified=0;
+	int sp=0;
 
 //LD HL,NT_DATA
 	s[0]=de;	// PUSH DE
-	
-        LD D,B
-        ADD A,A
-        LD E,A
-        ADD HL,DE
-        LD E,(HL)
-        INC HL
-        SRL E
-        SBC A,A
-        AND #A7 ;#00 (NOP) or #A7 (AND A)
-        LD (L3),A
-        EX DE,HL
-        POP BC ;BC=T1_
-        ADD HL,BC
+	sp++;
 
-        LD A,(DE)
-        ADD A,T_
-        LD C,A
-        ADC A,T_/256
-        SUB C
-        LD B,A
-        PUSH BC
-        LD DE,NT_
-        PUSH DE
+	de=de&0x00ff;
+	de|=b<<8;	//LD D,B
 
-        LD B,12
-L1      PUSH BC
-        LD C,(HL)
-        INC HL
-        PUSH HL
-        LD B,(HL)
-
-        PUSH DE
-        EX DE,HL
-        LD DE,23
-        LD IXH,8
-L2      SRL B
-        RR C
-L3      DB #19  ;AND A or NOP
-        LD A,C
-        ADC A,D ;=ADC 0
-        LD (HL),A
-        INC HL
-        LD A,B
-        ADC A,D
-        LD (HL),A
-        ADD HL,DE
-        DEC IXH
-        JR NZ,L2
-
-        POP DE
-        INC DE
-        INC DE
-        POP HL
-        INC HL
-        POP BC
-        DJNZ L1
-        POP HL
-        POP DE
-
-        LD A,E
-        CP TCOLD_1
-        JR NZ,CORR_1
-        LD A,#FD
-        LD (NT_+#2E),A
-
-CORR_1  LD A,(DE)
-        AND A
-        JR Z,TC_EXIT
-        RRA
-        PUSH AF
-        ADD A,A
-        LD C,A
-        ADD HL,BC
-        POP AF
-        JR NC,CORR_2
-        DEC (HL)
-        DEC (HL)
-CORR_2  INC (HL)
-        AND A
-        SBC HL,BC
-        INC DE
-        JR CORR_1
-
-TC_EXIT
-
-        POP AF
+	if (a&0x80) carry=1;
+	else carry=0;
+	a=a+a;		//ADD A,A
 
 
-#endif
+	de=de&0xff00;
+	de|=a;		//LD E,A
+
+	hl=hl+de;	//ADD HL,DE
+
+//LD E,(HL)
+	hl++;		// INC HL
+//SRL E
+//SBC A,A
+//AND #A7 ;#00 (NOP) or #A7 (AND A)
+//LD (L3),A
+//EX DE,HL
+//POP BC ;BC=T1_
+//ADD HL,BC
+
+//LD A,(DE)
+//ADD A,T_
+	c=a;		// LD C,A
+//ADC A,T_/256
+//SUB C
+	b=a;		// LD B,A
+//PUSH BC
+//LD DE,NT_
+//PUSH DE
+
+	b=12;		// LD B,12
+L1:
+//PUSH BC
+//LD C,(HL)
+//INC HL
+//PUSH HL
+//LD B,(HL)
+
+//PUSH DE
+//EX DE,HL
+//LD DE,23
+//LD IXH,8
+L2:
+//SRL B
+//RR C
+L3:
+//DB #19  ;AND A or NOP
+	a=c;		// LD A,C
+//ADC A,D ;=ADC 0
+//LD (HL),A
+	hl++;		// INC HL
+//LD A,B
+//ADC A,D
+//LD (HL),A
+//ADD HL,DE
+//DEC IXH
+//JR NZ,L2
+
+//POP DE
+	de++;		// INC DE
+	de++;		// INC DE
+//POP HL
+	hl++;		// INC HL
+//POP BC
+//DJNZ L1
+//POP HL
+//POP DE
+
+	a=(de&0xff);	// LD A,E
+//CP TCOLD_1
+//JR NZ,CORR_1
+//LD A,#FD
+//LD (NT_+#2E),A
+CORR_1:
+//LD A,(DE)
+//AND A
+	if (a==0) goto TC_EXIT;		// JR Z,TC_EXIT
+//RRA
+//PUSH AF
+//ADD A,A
+	c=a;	// LD C,A
+//ADD HL,BC
+//POP AF
+	if (carry==0) goto CORR_2;	// JR NC,CORR_2
+//DEC (HL)
+//DEC (HL)
+CORR_2:
+//INC (HL)
+//AND A
+//SBC HL,BC
+	de++;		//INC DE
+	goto CORR_1;	// JR CORR_1
+
+TC_EXIT:
+
+	sp--;
+	a=(s[sp]>>8); //POP AF
+
+
+
 }
 
 
