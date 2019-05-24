@@ -11,12 +11,15 @@
 ; + 3302 bytes -- autogenerate the volume tables
 ; + 3297 bytes -- remove some un-needed bytes from struct
 ; + 3262 bytes -- combine some duplicated code in $1X/$BX env setting
+; + 3253 bytes -- remove unnecessary variable
 
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?
 ;   enabled could be bit 6 or 7 for fast checking
-;
+; NOTE_ENABLED,ENVELOPE_ENABLED,SIMPLE_GLISS,ENV_SLIDING,AMP_SLIDING?
+
+
 ; Use memset to set things to 0?
 
 NOTE_VOLUME		=0
@@ -34,34 +37,33 @@ NOTE_AMPLITUDE		=11
 NOTE_NOTE		=12
 NOTE_LEN		=13
 NOTE_LEN_COUNT		=14
-NOTE_NEW_NOTE		=15
-NOTE_ADDR_L		=16
-NOTE_ADDR_H		=17
-NOTE_ORNAMENT_POINTER_L	=18
-NOTE_ORNAMENT_POINTER_H	=19
-NOTE_ORNAMENT_LOOP	=20
-NOTE_ORNAMENT_LENGTH	=21
-NOTE_ONOFF		=22
-NOTE_TONE_ACCUMULATOR_L	=23
-NOTE_TONE_ACCUMULATOR_H	=24
-NOTE_TONE_SLIDE_COUNT	=25
-NOTE_ORNAMENT_POSITION	=26
-NOTE_SAMPLE_POSITION	=27
-NOTE_ENVELOPE_SLIDING	=28
-NOTE_NOISE_SLIDING	=29
-NOTE_AMPLITUDE_SLIDING	=30
-NOTE_ONOFF_DELAY	=31
-NOTE_OFFON_DELAY	=32
-NOTE_TONE_SLIDE_STEP_L	=33
-NOTE_TONE_SLIDE_STEP_H	=34
-NOTE_TONE_SLIDE_DELAY	=35
-NOTE_SIMPLE_GLISS	=36
-NOTE_SLIDE_TO_NOTE	=37
-NOTE_TONE_DELTA_L	=38
-NOTE_TONE_DELTA_H	=39
-NOTE_TONE_SLIDE_TO_STEP	=40
+NOTE_ADDR_L		=15
+NOTE_ADDR_H		=16
+NOTE_ORNAMENT_POINTER_L	=17
+NOTE_ORNAMENT_POINTER_H	=18
+NOTE_ORNAMENT_LOOP	=19
+NOTE_ORNAMENT_LENGTH	=20
+NOTE_ONOFF		=21
+NOTE_TONE_ACCUMULATOR_L	=22
+NOTE_TONE_ACCUMULATOR_H	=23
+NOTE_TONE_SLIDE_COUNT	=24
+NOTE_ORNAMENT_POSITION	=25
+NOTE_SAMPLE_POSITION	=26
+NOTE_ENVELOPE_SLIDING	=27
+NOTE_NOISE_SLIDING	=28
+NOTE_AMPLITUDE_SLIDING	=29
+NOTE_ONOFF_DELAY	=30
+NOTE_OFFON_DELAY	=31
+NOTE_TONE_SLIDE_STEP_L	=32
+NOTE_TONE_SLIDE_STEP_H	=33
+NOTE_TONE_SLIDE_DELAY	=34
+NOTE_SIMPLE_GLISS	=35
+NOTE_SLIDE_TO_NOTE	=36
+NOTE_TONE_DELTA_L	=37
+NOTE_TONE_DELTA_H	=38
+NOTE_TONE_SLIDE_TO_STEP	=39
 
-NOTE_STRUCT_SIZE=41
+NOTE_STRUCT_SIZE=40
 
 note_a:
 	.byte	$0	; NOTE_VOLUME
@@ -79,7 +81,6 @@ note_a:
 	.byte	$0	; NOTE_NOTE
 	.byte	$0	; NOTE_LEN
 	.byte	$0	; NOTE_LEN_COUNT
-	.byte	$0	; NOTE_NEW_NOTE
 	.byte	$0	; NOTE_ADDR_L
 	.byte	$0	; NOTE_ADDR_H
 	.byte	$0	; NOTE_ORNAMENT_POINTER_L
@@ -122,7 +123,6 @@ note_b:
 	.byte	$0	; NOTE_NOTE
 	.byte	$0	; NOTE_LEN
 	.byte	$0	; NOTE_LEN_COUNT
-	.byte	$0	; NOTE_NEW_NOTE
 	.byte	$0	; NOTE_ADDR_L
 	.byte	$0	; NOTE_ADDR_H
 	.byte	$0	; NOTE_ORNAMENT_POINTER_L
@@ -165,7 +165,6 @@ note_c:
 	.byte	$0	; NOTE_NOTE
 	.byte	$0	; NOTE_LEN
 	.byte	$0	; NOTE_LEN_COUNT
-	.byte	$0	; NOTE_NEW_NOTE
 	.byte	$0	; NOTE_ADDR_L
 	.byte	$0	; NOTE_ADDR_H
 	.byte	$0	; NOTE_ORNAMENT_POINTER_L
@@ -996,7 +995,6 @@ decode_note:
 	; Init vars
 
 	lda	#0							; 2
-	sta	note_a+NOTE_NEW_NOTE,X		; for printing notes?	; 5
 	sta	spec_command						; 4
 	sta	decode_done						; 4
 
@@ -1188,7 +1186,6 @@ decode_case_5X:
 	sta	note_a+NOTE_ONOFF,X		; onoff=0;
 
 	lda	#1
-	sta	note_a+NOTE_NEW_NOTE,X		; new=1
 	sta	note_a+NOTE_ENABLED,X		; enabled=1
 	sta	decode_done			; decode_done-1
 	jmp	done_decode
