@@ -12,7 +12,7 @@
 ; + 3297 bytes -- remove some un-needed bytes from struct
 ; + 3262 bytes -- combine some duplicated code in $1X/$BX env setting
 ; + 3253 bytes -- remove unnecessary variable
-
+; + 3203 bytes -- combine common code in note decoder
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?
@@ -296,7 +296,10 @@ load_ornament:
 	adc	#>PT3_LOC						; 2
 	sta	ORNAMENT_H						; 3
 
-	ldy	#0							; 2
+	lda	#0							; 2
+	sta	note_a+NOTE_ORNAMENT_POSITION,X				; 5
+
+	tay								; 2
 
 	; Set the loop value
 	;     a->ornament_loop=pt3->data[a->ornament_pointer];
@@ -324,7 +327,7 @@ load_ornament:
 	rts								; 6
 
 								;============
-								;	86
+								;	93
 
 	;===========================
 	; Load Sample
@@ -435,21 +438,21 @@ pt3_init_song:
 	; default ornament/sample in A
 	lda	#0							; 2
 	ldx	#(NOTE_STRUCT_SIZE*0)					; 2
-	jsr	load_ornament						; 6+86
+	jsr	load_ornament						; 6+93
 	lda	#1							; 2
 	jsr	load_sample						; 6+86
 
 	; default ornament/sample in B
 	lda	#0							; 2
 	ldx	#(NOTE_STRUCT_SIZE*1)					; 2
-	jsr	load_ornament						; 6+86
+	jsr	load_ornament						; 6+93
 	lda	#1							; 2
 	jsr	load_sample						; 6+86
 
 	; default ornament/sample in C
 	lda	#0							; 2
 	ldx	#(NOTE_STRUCT_SIZE*2)					; 2
-	jsr	load_ornament						; 6+86
+	jsr	load_ornament						; 6+93
 	lda	#1							; 2
 	jsr	load_sample						; 6+86
 
@@ -494,7 +497,7 @@ not_ascii_number:
 	; carry clear = 3.3/3.4 table
 	; carry set = 3.5 table
 
-	jsr	VolTableCreator
+	jsr	VolTableCreator						; 6+??
 
 	rts								; 6
 
@@ -985,10 +988,14 @@ spec_command:	.byte	$0
 	; X points to the note offset
 
 	; Timings (from ===>)
-	;	00: 14+30
-	;	0X: 14+15
-	;	1X: 14+5+
-	;	2X: 14+5+
+	;	00:    14+30
+	;	0X:    14+15
+	;	10:    14+5 +124
+	;	1X:    14+5 +193
+	;	2X/3X: 14+5 +17
+	;	4X:    14+5+5 + 111
+	;	5X:	14+5+5+ 102
+	;	
 
 decode_note:
 
@@ -1093,108 +1100,88 @@ decode_case_1X:
 									; -1
 	lda	note_command						; 4
 	and	#$0f
-	bne	decode_case_not_10					; 2/3
+	bne	decode_case_not_10					; 3
 
 decode_case_10:
-	; 10 case - disable
+	; 10 case - disable						; -1
 	sta	note_a+NOTE_ENVELOPE_ENABLED,X	; A is 0		; 5
 	beq	decode_case_1x_common		; branch always		; 3
 
 decode_case_not_10:
-
+									; -1
 	jsr	set_envelope						; 6+64
 
 decode_case_1x_common:
 
-	iny					; FIXME: combine?
-	lda	(PATTERN_L),Y
-	lsr
-	jsr	load_sample
+	iny								; 2
+	lda	(PATTERN_L),Y						; 5+
+	lsr								; 2
+	jsr	load_sample						; 6+86
 
-	lda	#0
-	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0
+	lda	#0							; 2
+	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0	; 5
 
-	jmp	done_decode
+	jmp	done_decode						; 3
 
 decode_case_2X:
-	;==============================
-	; $2X set noise period
-	;==============================
-
-	cmp	#$20
-	bne	decode_case_3X
-
-	lda	note_command
-	and	#$f
-	sta	pt3_noise_period
-
-	jmp	done_decode
-
 decode_case_3X:
 	;==============================
-	; $3X set noise period (FIXME: merge with above)
+	; $2X/$3X set noise period
 	;==============================
-	cmp	#$30
-	bne	decode_case_4X
 
-	lda	note_command
-	and	#$0f
-	ora	#$10
-	sta	pt3_noise_period
+	cmp	#$40							; 2
+	bcs	decode_case_4X		; branch greater/equal		; 3
+									; -1
+	lda	note_command						; 3
+	sec								; 2
+	sbc	#$20							; 2
+	sta	pt3_noise_period					; 3
 
-	jmp	done_decode
+	jmp	done_decode						; 3
+								;===========
+								;	17
 
 decode_case_4X:
 	;==============================
 	; $4X -- set ornament
 	;==============================
-	cmp	#$40
-	bne	decode_case_5X
+;	cmp	#$40		; already set				;
+	bne	decode_case_5X						; 3
+									; -1
+	lda	note_command						; 4
+	and	#$0f		; set ornament to bottom nibble		; 2
+	jsr	load_ornament						; 6+93
 
-	lda	note_command
-	and	#$0f				; set ornament to bottom nibble
-	jsr	load_ornament
-
-	lda	#0
-	sta	note_a+NOTE_ORNAMENT_POSITION,X	; FIXME: put this in load_orn?
-
-	jmp	done_decode
+	jmp	done_decode						; 3
+								;============
+								;	110
 
 decode_case_5X:
 	;==============================
 	; $5X-$AX set note
 	;==============================
-	cmp	#$B0
-	bcs	decode_case_bX		 ; branch greater/equal
+	cmp	#$B0							; 2
+	bcs	decode_case_bX		 ; branch greater/equal		; 3
 
-	lda	note_command
-	sec
-	sbc	#$50
-	sta	note_a+NOTE_NOTE,X	; note=(current_val-0x50);
+									; -1
+	lda	note_command						; 4
+	sec								; 2
+	sbc	#$50							; 2
+	sta	note_a+NOTE_NOTE,X	; note=(current_val-0x50);	; 5
 
-	lda	#0
-	sta	note_a+NOTE_SAMPLE_POSITION,X	; sample_position=0
-	sta	note_a+NOTE_AMPLITUDE_SLIDING,X	; amplitude_sliding=0
-	sta	note_a+NOTE_NOISE_SLIDING,X	; noise_sliding=0
-	sta	note_a+NOTE_ENVELOPE_SLIDING,X	; envelope_sliding=0
-	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0
-	sta	note_a+NOTE_TONE_SLIDE_COUNT,X	; tone_slide_count=0
-	sta	note_a+NOTE_TONE_SLIDING_L,X	; tone_sliding=0
-	sta	note_a+NOTE_TONE_SLIDING_H,X
-	sta	note_a+NOTE_TONE_ACCUMULATOR_L,X	; tone_accumulator=0
-	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X
-	sta	note_a+NOTE_ONOFF,X		; onoff=0;
+	jsr	reset_note						; 6+69
 
-	lda	#1
-	sta	note_a+NOTE_ENABLED,X		; enabled=1
-	sta	decode_done			; decode_done-1
-	jmp	done_decode
+	lda	#1							; 2
+	sta	note_a+NOTE_ENABLED,X		; enabled=1		; 5
+
+
+	jmp	done_decode						; 3
 
 decode_case_bX:
 	;============================================
 	; $BX -- note length or envelope manipulation
 	;============================================
-	cmp	#$b0		; FIXME: this cmp not needed, from before?
+;	cmp	#$b0		; already set from before
 	bne	decode_case_cX
 
 	lda	note_command
@@ -1247,24 +1234,11 @@ decode_case_c0:
 	; special case $C0 means shut down the note
 
 	lda	#0
-	; FIXME: merge with other clearing code?
-	sta	note_a+NOTE_SAMPLE_POSITION,X	; sample_position=0
-	sta	note_a+NOTE_AMPLITUDE_SLIDING,X	; amplitude_sliding=0
-	sta	note_a+NOTE_NOISE_SLIDING,X	; noise_sliding=0
-	sta	note_a+NOTE_ENVELOPE_SLIDING,X	; envelope_sliding=0
-	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0
-	sta	note_a+NOTE_TONE_SLIDE_COUNT,X	; tone_slide_count=0
-	sta	note_a+NOTE_TONE_SLIDING_L,X	; tone_sliding=0
-	sta	note_a+NOTE_TONE_SLIDING_H,X
-	sta	note_a+NOTE_TONE_ACCUMULATOR_L,X	; tone_accumulator=0
-	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X
-	sta	note_a+NOTE_ONOFF,X		; onoff=0
 	sta	note_a+NOTE_ENABLED,X		; enabled=0
 
-	lda	#1
-	sta	decode_done
+	jsr	reset_note						; 6+69
 
-	jmp done_decode
+	jmp	done_decode
 
 decode_case_cx_not_c0:
 	sta	note_a+NOTE_VOLUME,X		; volume=current_val&0xf;
@@ -1634,6 +1608,35 @@ set_envelope:
 	rts								; 6
 								;===========
 								;	64
+
+	;========================
+	; reset note
+	;========================
+	; common code from the decode note code
+
+reset_note:
+	lda	#0							; 2
+	sta	note_a+NOTE_SAMPLE_POSITION,X	; sample_position=0	; 5
+	sta	note_a+NOTE_AMPLITUDE_SLIDING,X	; amplitude_sliding=0	; 5
+	sta	note_a+NOTE_NOISE_SLIDING,X	; noise_sliding=0	; 5
+	sta	note_a+NOTE_ENVELOPE_SLIDING,X	; envelope_sliding=0	; 5
+	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0	; 5
+	sta	note_a+NOTE_TONE_SLIDE_COUNT,X	; tone_slide_count=0	; 5
+	sta	note_a+NOTE_TONE_SLIDING_L,X	; tone_sliding=0	; 5
+	sta	note_a+NOTE_TONE_SLIDING_H,X				; 5
+	sta	note_a+NOTE_TONE_ACCUMULATOR_L,X ; tone_accumulator=0	; 5
+	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X			; 5
+	sta	note_a+NOTE_ONOFF,X		; onoff=0;		; 5
+
+	lda	#1							; 2
+	sta	decode_done			; decode_done=1		; 4
+
+	rts								; 6
+								;============
+								;	69
+
+
+
 
 	;=====================================
 	; Decode Line
