@@ -21,27 +21,24 @@ put_sprite:
 	sta	CV		; ysize is in CV			; 3
 	iny								; 2
 
-	lda	YPOS		; make a copy of ypos			; 3
-	sta	TEMPY		; as we modify it			; 3
+	ldx	YPOS		; make a copy of ypos			; 3
 								;===========
-								;	28
+								;	25
 put_sprite_loop:
-	sty	TEMP		; save sprite pointer			; 3
-	ldy	TEMPY							; 3
-	lda	gr_offsets,Y	; lookup low-res memory address		; 4
+	stx	TEMPY		; as we modify it			; 3
+	lda	gr_offsets,X	; lookup low-res memory address		; 4
 	clc								; 2
 	adc	XPOS		; add in xpos				; 3
 	sta	OUTL		; store out low byte of addy		; 3
-	lda	gr_offsets+1,Y	; look up high byte			; 4
+	lda	gr_offsets+1,X	; look up high byte			; 4
 	adc	DRAW_PAGE	;					; 3
 	sta	OUTH		; and store it out			; 3
-	ldy	TEMP		; restore sprite pointer		; 3
 
 				; OUTH:OUTL now points at right place
 
 	ldx	CH		; load xsize into x			; 3
 								;===========
-								;	34
+								;	28
 put_sprite_pixel:
 	lda	(INL),Y			; get sprite colors		; 5
 	iny				; increment sprite pointer	; 2
@@ -88,12 +85,13 @@ put_sprite_done_draw:
 								;==============
 								;	12/13
 
-	inc	TEMPY			; each line has two y vars	; 5
-	inc	TEMPY							; 5
+	ldx	TEMPY							; 3
+	inx				; each line has two y vars	; 2
+	inx								; 2
 	dec	CV			; decemenet total y count	; 5
 	bne	put_sprite_loop		; loop if not done		; 2nt/3
 								;==============
-								;	17/18
+								;	14/15
 
 	rts				; return			; 6
 

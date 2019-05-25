@@ -66,6 +66,7 @@ reset_ay_both:
 	; Reset Right AY-3-8910
 	;======================
 ;reset_ay_right:
+;could be merged with both
 	lda	#MOCK_AY_RESET
 	sta	MOCK_6522_ORB2
 	lda	#MOCK_AY_INACTIVE
@@ -163,6 +164,41 @@ mb_not_in_this_slot:
 	bne	mb_detect_loop		; loop down to one
 	ldx	#00
 	beq	done_mb_detect
+
+;alternative MB detection from Nox Archaist
+;	lda	#$04
+;	sta	MB_ADDRL
+;	ldx	#$c7
+;
+;find_mb:
+;	stx	MB_ADDRH
+;
+;	;detect sound I
+;
+;	sec
+;	ldy	#$00
+;	lda	(MB_ADDRL), y
+;	sbc	(MB_ADDRL), y
+;	cmp	#$05
+;	beq	found_mb
+;	dex
+;	cpx	#$c0
+;	bne	find_mb
+;	ldx	#$00 ;no mockingboard found
+;	rts
+;
+;found_mb:
+;	ldx	#$01 ;mockingboard found
+;	rts
+;
+;	;optionally detect sound II
+;
+;	sec
+;	ldy	#$80
+;	lda	(MB_ADDRL), y
+;	sbc	(MB_ADDRL), y
+;	cmp	#$05
+;	beq	found_mb
 
 
 	;=======================================
