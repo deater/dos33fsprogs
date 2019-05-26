@@ -205,7 +205,7 @@ done_play:
 	lda	#7
 	jsr	fire_setline
 
-	jmp	start_interrupts
+	bmi	start_interrupts
 
 
 
@@ -326,12 +326,13 @@ upcase:
 	beq	no_uppercase
 
 	ldy	#$1e
+	;;lda	#>(PT3_LOC+$1E)		; point to header title
+	sta	OUTH
 upcase_loop:
 	lda	PT3_LOC,Y
 
 	cmp	#$60
 	bcc	not_lowercase	; blt
-	sec
 	sbc	#$20
 	sta	PT3_LOC,Y
 not_lowercase:
@@ -342,12 +343,10 @@ not_lowercase:
 no_uppercase:
 	; print title
 
-	lda	#>(PT3_LOC+$1E)		; point to header title
-	sta	OUTH
 	lda	#<(PT3_LOC+$1E)
 	sta	OUTL
 
-	lda	#20			; VTAB 20: HTAB from file
+	lda	#20			; VTAB 20: HTAB 4
 	sta	CV
 	lda	#4
 	sta	CH
@@ -356,15 +355,10 @@ no_uppercase:
 
 	; Print Author
 
-	lda	#>(PT3_LOC+$42)		; point to header title
-	sta	OUTH
 	lda	#<(PT3_LOC+$42)
 	sta	OUTL
 
-	lda	#21			; VTAB 21: HTAB from file
-	sta	CV
-	lda	#4
-	sta	CH
+	inc	CV			; VTAB 21: HTAB 4
 	jsr     print_both_pages	; print, tail call
 
 	; Print clock
@@ -408,9 +402,7 @@ no_uppercase:
 	lda	#<(which_song_string)
 	sta	OUTL
 
-	lda	#23			; VTAB 23: HTAB 1
-	sta	CV
-	lda	#0
+	lda	#0			; HTAB 1
 	sta	CH
 	jsr     print_both_pages	; print, tail call
 
@@ -423,9 +415,7 @@ no_uppercase:
 	lda	#<(mhz_string)
 	sta	OUTL
 
-	lda	#23			; VTAB 23: HTAB 34
-	sta	CV
-	lda	#34
+	lda	#34			; HTAB 34
 	sta	CH
 	jsr     print_both_pages	; print, tail call
 
@@ -435,7 +425,7 @@ no_uppercase:
 	beq	set_1MHz
 
 	lda	#'7'+$80
-	jmp     done_MHz
+	bne     done_MHz		; branch always
 
 set_1MHz:
 	lda     #'0'+$80
@@ -476,7 +466,6 @@ done_MHz:
 	; Time is just number of frames/50Hz
 
 
-	lda	#$0
 	sta	current_line
 	sta	current_subframe
 	sta	current_pattern
@@ -515,37 +504,34 @@ fc_pattern_good:
         lda     #0
         sta     current_line
         sta     current_subframe
-        jmp     frame_count_loop
+        beq     frame_count_loop	; branch always
 
 fc_line_good:
         inc     current_subframe        ; subframe++
         lda     current_subframe
-        cmp     pt3_speed               ; if we hit pt3_speed, move to next
+        eor     pt3_speed               ; if we hit pt3_speed, move to next
         bne     fc_do_frame
 
 fc_next_line:
-	lda     #0                      ; reset subframe to 0
-        sta     current_subframe
+        sta     current_subframe	; reset subframe to 0
 
         inc     current_line            ; and increment line
         lda     current_line
 
-        cmp     #64			; always end at 64.
+        eor     #64			; always end at 64.
         bne     fc_do_frame		; is this always needed?
 
 fc_next_pattern:
-        lda     #0                      ; reset line to 0
-        sta     current_line
+        sta     current_line		; reset line to 0
 
         inc     current_pattern         ; increment pattern
 
 fc_do_frame:
 	inc	time_frame
 	lda	time_frame
-	cmp	#50
-	bne	fc_bayern
+	eor	#50
+	bne	frame_count_loop
 
-	lda	#0
 	sta	time_frame
 
 	; see if overflow low s
@@ -564,7 +550,7 @@ fc_do_frame:
 	lda	#'0'+$80
 	sta	$7D0+13+9
 	sta	$BD0+13+9
-	jmp	clear_low_s
+	bne	clear_low_s
 
 inc_high_s:
 	inc	$7D0+13+9
@@ -575,7 +561,7 @@ clear_low_s:
 	sta	$7D0+13+10
 	sta	$BD0+13+10
 
-	jmp	inc_done
+	bne	inc_done
 
 inc_low_s:
 	inc	$7D0+13+10
@@ -594,9 +580,7 @@ done_counting:
 	sta	DONE_PLAYING
 	sta	current_pattern
 
-	jsr	pt3_init_song
-
-	rts
+	jmp	pt3_init_song
 
 
 
@@ -617,16 +601,15 @@ done_counting:
 get_filename:
 
 	ldy	#0
-	ldx	WHICH_FILE
 
 	lda	#<song_list			; point to filename
 	sta	INL
 	lda	#>song_list
 	sta	INH
+	ldx	WHICH_FILE
+	beq	filename_found
 
 get_filename_loop:
-	cpx	#0
-	beq	filename_found
 
 inner_loop:
 	iny
@@ -636,16 +619,16 @@ inner_loop:
 	iny
 
 	dex
-	jmp	get_filename_loop
+	bne	get_filename_loop
 
 filename_found:
 	tya
 	clc
 	adc	INL
 	sta	INL
-	lda	INH
-	adc	#0
-	sta	INH
+	bcc	skip_inh_inc
+	inc	INH
+skip_inh_inc:
 
 	rts
 
@@ -656,8 +639,7 @@ increment_file:
 	inc	WHICH_FILE
 	lda	WHICH_FILE
 	cmp	#NUM_FILES
-	bne	done_increment
-	lda	#0
+	eor	done_increment
 	sta	WHICH_FILE
 done_increment:
 	rts
@@ -683,13 +665,11 @@ done_decrement:
 	; trashes X
 convert_decimal:
 
-	tax
+	ldx	#'0'+$80
+	stx	which_1s
+	stx	which_10s
 
-	lda	#'0'+$80
-	sta	which_1s
-	sta	which_10s
-
-	txa				; special case zero
+	tax				; special case zero
 	beq	conv_decimal_done
 conv_decimal_loop:
 	inc	which_1s
