@@ -52,8 +52,8 @@ NOTE_SAMPLE_POSITION	=26
 NOTE_ENVELOPE_SLIDING	=27
 NOTE_NOISE_SLIDING	=28
 NOTE_AMPLITUDE_SLIDING	=29
-NOTE_ONOFF_DELAY	=30
-NOTE_OFFON_DELAY	=31
+NOTE_ONOFF_DELAY	=30	;ordering of DELAYs is hard-coded now
+NOTE_OFFON_DELAY	=31	;ordering of DELAYs is hard-coded now
 NOTE_TONE_SLIDE_STEP_L	=32
 NOTE_TONE_SLIDE_STEP_H	=33
 NOTE_TONE_SLIDE_DELAY	=34
@@ -278,16 +278,14 @@ load_ornament:
         ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
 
 	asl			; A*2					; 2
-	adc	#PT3_ORNAMENT_LOC_L					; 2
 	tay								; 2
 
 	; a->ornament_pointer=pt3->ornament_patterns[a->ornament];
 
-	lda	PT3_LOC,Y						; 4+
+	lda	PT3_LOC+PT3_ORNAMENT_LOC_L,Y				; 4+
 	sta	ORNAMENT_L						; 3
 
-	iny								; 2
-	lda	PT3_LOC,Y						; 4+
+	lda	PT3_LOC+PT3_ORNAMENT_LOC_L+1,Y				; 4+
 
 	; we're assuming PT3 is loaded to a page boundary
 
@@ -324,7 +322,7 @@ load_ornament:
 	rts								; 6
 
 								;============
-								;	87
+								;	83
 
 	;===========================
 	; Load Sample
@@ -351,17 +349,15 @@ load_sample:
         ;               (pt3->data[0x6a+(i*2)]<<8)|pt3->data[0x69+(i*2)];
 
 	asl			; A*2					; 2
-	adc	#PT3_SAMPLE_LOC_L					; 2
 	tay								; 2
 
 	; Set the initial sample pointer
 	;     a->sample_pointer=pt3->sample_patterns[a->sample];
 
-	lda	PT3_LOC,Y						; 4+
+	lda	PT3_LOC+PT3_SAMPLE_LOC_L,Y				; 4+
 	sta	SAMPLE_L						; 3
 
-	iny								; 2
-	lda	PT3_LOC,Y						; 4+
+	lda	PT3_LOC+PT3_SAMPLE_LOC_L+1,Y				; 4+
 
 	; assume pt3 file is at page boundary
 	adc	#>PT3_LOC						; 2
@@ -394,7 +390,7 @@ load_sample:
 
 	rts								; 6
 								;============
-								;	 80
+								;	 76
 
 	;====================================
 	; pt3_init_song
@@ -488,9 +484,116 @@ not_ascii_number:
 	; carry clear = 3.3/3.4 table
 	; carry set = 3.5 table
 
-	jsr	VolTableCreator						; 6+??
+	;==========================
+	; VolTableCreator
+	;==========================
+	; Creates the appropriate volume table
+	; based on z80 code by Ivan Roshin ZXAYHOBETA/VTII10bG.asm
+	;
 
-	rts								; 6
+	; Called with carry==0 for 3.3/3.4 table
+	; Called with carry==1 for 3.5 table
+
+	; 177f-1932 = 435 bytes, not that much better than 512 of lookup
+
+
+VolTableCreator:
+
+	; Init initial variables
+	lda	#$0
+	sta	z80_h
+	sta	z80_d
+	ldy	#$11
+
+	; Set up self modify
+
+	ldx	#$2A		; ROL for self-modify
+	bcs	vol_type_35
+
+vol_type_33:
+
+	; For older table, we set initial conditions a bit
+	; different
+
+	dey
+	tya
+
+	ldx	#$ea		; NOP for self modify
+
+vol_type_35:
+	sty	z80_l		; l=16 or 17
+	sta	z80_e		; e=16 or 0
+	stx	vol_smc		; set the self-modify code
+
+	ldy	#16		; skip first row, all zeros
+	ldx	#16		; c=16
+vol_outer:
+	lda	z80_h
+	pha			; save H
+
+	clc			; add HL,DE
+	lda	z80_l
+	adc	z80_e
+	sta	z80_e
+	lda	z80_h
+	adc	z80_d
+	sta	z80_d		; carry is important
+
+			; sbc hl,hl
+	lda	#$ff
+	bcs	vol_ffs
+vol_zeros:
+	lda	#0
+
+vol_ffs:
+vol_write:
+	sta	z80_h
+	pha
+
+vol_inner:
+	pla
+	pha
+
+vol_smc:
+	nop			; nop or ROL depending
+
+	lda	z80_h
+
+	adc	#$0		; a=a+carry;
+
+	sta	VolumeTable,Y
+	iny
+
+	pla			; add HL,DE
+	adc	z80_e
+	pha
+	lda	z80_h
+	adc	z80_d
+	sta	z80_h
+
+	inx		; inc C
+	txa		; a=c
+	and	#$f
+	bne	vol_inner
+
+
+	pla
+	pla
+	sta	z80_h	; restore H
+
+	lda	z80_e	; a=e
+	cmp	#$77
+	bne	vol_m3
+
+	inc	z80_e
+
+vol_m3:
+	txa			; a=c
+	bne	vol_outer
+
+vol_done:
+	rts
+
 
 
 
@@ -544,7 +647,6 @@ note_enabled:
 	;  a->tone+=(pt3->data[a->sample_pointer + a->sample_position*4+3])<<8;
 	;  a->tone += a->tone_accumulator;
 	iny								; 2
-	clc								; 2
 	lda	(SAMPLE_L),Y						; 5+
 	adc	note_a+NOTE_TONE_ACCUMULATOR_L,X			; 4+
 	sta	note_a+NOTE_TONE_L,X					; 4
@@ -794,8 +896,9 @@ check_envelope_enable:
 
 	;  if (((b0 & 0x1) == 0) && ( a->envelope_enabled)) {
 	lda	sample_b0
-	and	#$1
-	bne	envelope_slide
+	lsr
+	tay
+	bcs	envelope_slide
 
 	lda	note_a+NOTE_ENVELOPE_ENABLED,X
 	beq	envelope_slide
@@ -810,9 +913,6 @@ check_envelope_enable:
 
 
 envelope_slide:
-	lda	sample_b0
-	lsr
-	tay
 
 	; Envelope slide
 	; If b1 top bits are 10 or 11
@@ -943,8 +1043,8 @@ handle_onoff:
 
 	bne	do_offon
 do_onoff:
-	lda	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
-	jmp	put_offon
+	dex				; select ONOFF
+	;lda	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
 do_offon:
 	lda	note_a+NOTE_OFFON_DELAY,X ;      else a->onoff=a->offon_delay;
 put_offon:
@@ -977,22 +1077,45 @@ spec_command:	.byte	$0
 	;	5X:	14+5+5+ 102
 	;	
 
-decode_note:
-
-	; Init vars
-
-	lda	#0							; 2
-	sta	spec_command						; 4
-	sta	decode_done						; 4
-
-	; Skip decode if note still running
-	lda	note_a+NOTE_LEN_COUNT,X					; 4+
-	cmp	#2							; 2
-	bcc	keep_decoding		; blt, assume not negative	; 2/3
+stop_decoding:
 
 	; we are still running, decrement and early return
 	dec	note_a+NOTE_LEN_COUNT,X					; 7
 	rts								; 6
+
+	;=====================================
+	; Decode Line
+	;=====================================
+
+pt3_decode_line:
+	; decode_note(&pt3->a,&(pt3->a_addr),pt3);
+	ldx	#(NOTE_STRUCT_SIZE*0)
+	jsr	decode_note
+
+	; decode_note(&pt3->b,&(pt3->b_addr),pt3);
+	ldx	#(NOTE_STRUCT_SIZE*1)
+	jsr	decode_note
+
+	; decode_note(&pt3->c,&(pt3->c_addr),pt3);
+	ldx	#(NOTE_STRUCT_SIZE*2)
+	;;jsr	decode_note	; fall through
+
+;	if (pt3->a.all_done && pt3->b.all_done && pt3->c.all_done) {
+;		return 1;
+;	}
+
+decode_note:
+
+	; Init vars
+
+	ldy	#0							; 2
+	sty	spec_command						; 4
+	sty	decode_done						; 4
+
+	; Skip decode if note still running
+	lda	note_a+NOTE_LEN_COUNT,X					; 4+
+	cmp	#2							; 2
+	bcs	stop_decoding		; blt, assume not negative	; 2/3
 
 keep_decoding:
 
@@ -1005,9 +1128,8 @@ keep_decoding:
 	sta	prev_sliding_l						; 4
 
 
-	ldy	#0							; 2
 								;============
-								;	 26
+								;	 24
 
 note_decode_loop:
 	lda	note_a+NOTE_LEN,X		; re-up length count	; 4+
@@ -1057,8 +1179,7 @@ decode_case_0X:
 									; -1
 	sta	note_a+NOTE_LEN_COUNT,X	; len_count=0;			; 5
 
-	lda	#1							; 2
-	sta	decode_done						; 4+
+	inc	decode_done						; 6
 
 	dec	pt3_pattern_done					; 6
 
@@ -1113,13 +1234,12 @@ decode_case_3X:
 	bcs	decode_case_4X		; branch greater/equal		; 3
 									; -1
 	lda	note_command						; 3
-	sec								; 2
-	sbc	#$20							; 2
+	adc	#$e0							; 2
 	sta	pt3_noise_period					; 3
 
 	jmp	done_decode						; 3
 								;===========
-								;	17
+								;	15
 
 decode_case_4X:
 	;==============================
@@ -1145,8 +1265,7 @@ decode_case_5X:
 
 									; -1
 	lda	note_command						; 4
-	sec								; 2
-	sbc	#$50							; 2
+	adc	#$b0							; 2
 	sta	note_a+NOTE_NOTE,X	; note=(current_val-0x50);	; 5
 
 	jsr	reset_note						; 6+69
@@ -1155,7 +1274,7 @@ decode_case_5X:
 	sta	note_a+NOTE_ENABLED,X		; enabled=1		; 5
 
 
-	jmp	done_decode						; 3
+	bne	done_decode						; 2
 
 decode_case_bX:
 	;============================================
@@ -1167,7 +1286,7 @@ decode_case_bX:
 	lda	note_command
 	and	#$f
 	beq	decode_case_b0
-	cmp	#1
+	sbc	#1		; envelope_type=(current_val&0xf)-1;
 	bne	decode_case_bx_higher
 
 decode_case_b1:
@@ -1179,23 +1298,20 @@ decode_case_b1:
 
 	sta	note_a+NOTE_LEN,X
 	sta	note_a+NOTE_LEN_COUNT,X
-	jmp	done_decode
+	bcs	done_decode			; branch always
 
 decode_case_b0:
 	; Disable envelope
 	sta	note_a+NOTE_ENVELOPE_ENABLED,X
 	sta	note_a+NOTE_ORNAMENT_POSITION,X
-	jmp	done_decode
+	beq	done_decode
 
 
 decode_case_bx_higher:
 
-	sec
-	sbc	#1		; envelope_type=(current_val&0xf)-1;
-
 	jsr	set_envelope						; 6+64
 
-	jmp	done_decode
+	bcs	done_decode			; branch always
 
 decode_case_cX:
 	;==============================
@@ -1215,11 +1331,11 @@ decode_case_c0:
 
 	jsr	reset_note						; 6+69
 
-	jmp	done_decode
+	bne	done_decode			; branch always
 
 decode_case_cx_not_c0:
 	sta	note_a+NOTE_VOLUME,X		; volume=current_val&0xf;
-	jmp	done_decode
+	bne	done_decode			; branch always
 
 decode_case_dX:
 	;==============================
@@ -1237,10 +1353,9 @@ decode_case_dX:
 	;========================
 	; d0 case means end note
 
-	lda	#1
-	sta	decode_done
+	rol	decode_done
 
-	jmp	done_decode
+	bne	done_decode
 decode_case_eX:
 	;==============================
 	; $EX -- change sample
@@ -1257,7 +1372,7 @@ decode_case_dx_not_d0:
 
 	jsr	load_sample	; load sample in bottom nybble
 
-	jmp	done_decode
+	bcc	done_decode	; branch always
 decode_case_fX:
 	;==============================
 	; $FX - change ornament/sample
@@ -1452,7 +1567,7 @@ effect_3:
 	iny
 	sta	note_a+NOTE_SAMPLE_POSITION,X
 
-	jmp	no_effect
+	bne	no_effect	; branch always
 
 	;==============================
 	; Effect #4 -- Ornament Position
@@ -1465,7 +1580,7 @@ effect_4:
 	iny
 	sta	note_a+NOTE_ORNAMENT_POSITION,X
 
-	jmp	no_effect
+	bne	no_effect	; branch always
 
 	;==============================
 	; Effect #5 -- Vibrato
@@ -1488,7 +1603,7 @@ effect_5:
 	sta	note_a+NOTE_TONE_SLIDING_L,X
 	sta	note_a+NOTE_TONE_SLIDING_H,X
 
-	jmp	no_effect
+	beq	no_effect	; branch always
 
 	;==============================
 	; Effect #8 -- Envelope Down
@@ -1513,7 +1628,7 @@ effect_8:
 	iny
 	sta	pt3_envelope_slide_add_h
 
-	jmp	no_effect
+	bne	no_effect	; branch always
 
 	;==============================
 	; Effect #9 -- Set Speed
@@ -1601,38 +1716,13 @@ reset_note:
 	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X			; 5
 	sta	note_a+NOTE_ONOFF,X		; onoff=0;		; 5
 
-	lda	#1							; 2
-	sta	decode_done			; decode_done=1		; 4
+	rol	decode_done			; decode_done=1		; 6
 
 	rts								; 6
 								;============
 								;	69
 
 
-
-
-	;=====================================
-	; Decode Line
-	;=====================================
-
-pt3_decode_line:
-	; decode_note(&pt3->a,&(pt3->a_addr),pt3);
-	ldx	#(NOTE_STRUCT_SIZE*0)
-	jsr	decode_note
-
-	; decode_note(&pt3->b,&(pt3->b_addr),pt3);
-	ldx	#(NOTE_STRUCT_SIZE*1)
-	jsr	decode_note
-
-	; decode_note(&pt3->c,&(pt3->c_addr),pt3);
-	ldx	#(NOTE_STRUCT_SIZE*2)
-	jsr	decode_note
-
-;	if (pt3->a.all_done && pt3->b.all_done && pt3->c.all_done) {
-;		return 1;
-;	}
-
-	rts
 
 
 current_subframe:	.byte	$0
@@ -1645,6 +1735,11 @@ current_pattern:	.byte	$0
 	; FIXME: inline this?  we do call it from outside
 	;	in the player note length code
 
+is_done:
+	; done with song, set it to non-zero
+	sta	DONE_SONG						; 3
+	rts								; 6
+
 pt3_set_pattern:
 
 	; Lookup current pattern in pattern table
@@ -1653,13 +1748,10 @@ pt3_set_pattern:
 
 	; if value is $FF we are at the end of the song
 	cmp	#$ff							; 2
-	bne	not_done						; 2/3
+	beq	is_done							; 2/3
 
-	; done with song, set it to non-zero
-	sta	DONE_SONG						; 3
-	rts								; 6
 								;============
-								;   21 if end
+								;   22 if end
 
 not_done:
 
@@ -1681,7 +1773,6 @@ not_done:
 	lda	(PATTERN_L),Y						; 5+
 	sta	note_a+NOTE_ADDR_L					; 4
 	iny								; 2
-	clc					; needed?		; 2
 	lda	(PATTERN_L),Y						; 5+
 	adc	#>PT3_LOC		; assume page boundary		; 2
 	sta	note_a+NOTE_ADDR_H					; 4
@@ -1802,6 +1893,7 @@ do_frame:
 	; R13 = Envelope Shape, 0xff means don't write
 	; R14/R15 = I/O (ignored)
 
+	lda	#0							; 2
 	sta	pt3_mixer_value						; 4
 	sta	pt3_envelope_add					; 4
 
@@ -1944,13 +2036,12 @@ no_scale_c:
 	and	#$1f							; 2
 	sta	AY_REGISTERS+6						; 3
 
-	lda	convert_177						; 3
+	ldx	convert_177						; 3
 	beq	no_scale_n						; 2/3
 
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
 	; first multiply by 8
-	lda	AY_REGISTERS+6						; 3
 	asl								; 2
 	asl								; 2
 	asl								; 2
@@ -1965,9 +2056,9 @@ no_scale_c:
 	ror								; 2
 	ror								; 2
 	and	#$1f							; 2
-	sta	AY_REGISTERS+6						; 3
 
 no_scale_n:
+	sta	AY_REGISTERS+6						; 3
 
 	;=======================
 	; Mixer
@@ -2217,130 +2308,10 @@ PT3NoteTable_ASM_34_35_low:
 
 
 
-	;==========================
-	; VolTableCreator
-	;==========================
-	; Creates the appropriate volume table
-	; based on z80 code by Ivan Roshin ZXAYHOBETA/VTII10bG.asm
-	;
-
-	; Called with carry==0 for 3.3/3.4 table
-	; Called with carry==1 for 3.5 table
-
-	; 177f-1932 = 435 bytes, not that much better than 512 of lookup
-
-
 z80_h:	.byte $0
 z80_l:	.byte $0
 z80_d:	.byte $0
 z80_e:	.byte $0
-
-VolTableCreator:
-
-	; Init initial variables
-	lda	#$0
-	sta	z80_h
-	sta	z80_d
-	sta	z80_e
-	lda	#$11
-	sta	z80_l
-
-	; Set up self modify
-
-	lda	#$2A		; ROL for self-modify
-	bcs	vol_type_35
-
-vol_type_33:
-
-	; For older table, we set initial conditions a bit
-	; different
-
-	lda	#$10
-	sta	z80_l		; l=16
-	sta	z80_e		; e=16
-
-	lda	#$ea		; NOP for self modify
-
-vol_type_35:
-	sta	vol_smc		; set the self-modify code
-
-	ldy	#16		; skip first row, all zeros
-	ldx	#16		; c=16
-vol_outer:
-	lda	z80_h
-	pha
-	lda	z80_l
-	pha			; save HL
-
-	clc			; add HL,DE
-	adc	z80_e
-	sta	z80_e
-	lda	z80_h
-	adc	z80_d
-	sta	z80_d		; carry is important
-
-			; sbc hl,hl
-	lda	#$ff
-	bcs	vol_ffs
-vol_zeros:
-	lda	#0
-
-vol_ffs:
-vol_write:
-	sta	z80_h
-	sta	z80_l
-
-vol_inner:
-	lda	z80_l
-
-vol_smc:
-	nop			; nop or ROL depending
-
-	lda	z80_h
-
-	adc	#$0		; a=a+carry;
-
-	sta	VolumeTable,Y
-	iny
-
-	clc			; add HL,DE
-	lda	z80_l
-	adc	z80_e
-	sta	z80_l
-	lda	z80_h
-	adc	z80_d
-	sta	z80_h
-
-	inx		; inc C
-	txa		; a=c
-	and	#$f
-	bne	vol_inner
-
-
-	pla
-	sta	z80_l
-	pla
-	sta	z80_h	; restore HL
-
-	lda	z80_e	; a=e
-	cmp	#$77
-	bne	vol_m3
-
-	inc	z80_e
-	bne	vol_blah
-	inc	z80_d
-vol_blah:
-
-vol_m3:
-	txa			; a=c
-	;bne	vol_outer
-	beq	vol_done
-	jmp	vol_outer
-
-vol_done:
-	rts
-
-
 
 VolumeTable:
 	.res 256,0

@@ -56,7 +56,7 @@ pt3_play_music:
 
 move_to_next:
 	; same as "press right"
-	lda	#$20
+	ldx	#$20
 	jmp	quiet_exit
 
 	;======================================
@@ -200,7 +200,7 @@ yes_bar:
 lowbar:
 	jsr	fire_setline
 
-	lda	DONE_PLAYING
+	ldx	DONE_PLAYING
 
 	bcs	quiet_exit		; branch always
 
@@ -209,26 +209,23 @@ lowbar:
 
 key_M:
 	cmp	#'M'
-	bne	key_L
+	bne	key_L			; set carry if true
 
+	ldx	#'0'+$80
 	lda	convert_177
 	eor	#$1
 	sta	convert_177
-	beq	at_1MHz
+	beq	at_MHz
 
 	; update text on screen
 
-	lda	#'7'+$80
-	sta	$7F4
-	sta	$BF4
-	bne	done_key		; branch always
+	ldx	#'7'+$80
 
-at_1MHz:
-	lda	#'0'+$80
-	sta	$7F4
-	sta	$BF4
+at_MHz:
+	stx	$7F4
+	stx	$BF4
 
-	bne	done_key		; branch always
+	bcs	done_key		; branch always
 
 
 	;===========================
@@ -236,8 +233,9 @@ at_1MHz:
 
 key_L:
 	cmp	#'L'
-	bne	key_left
+	bne	key_left		; set carry if true
 
+	ldx	#'/'+$80
 	lda	LOOP
 	eor	#$1
 	sta	LOOP
@@ -245,37 +243,30 @@ key_L:
 
 	; update text on screen
 
-	lda	#'L'+$80
-	sta	$7D0+18
-	sta	$BD0+18
-	bne	done_key		; branch always
+	ldx	#'L'+$80
 
 music_looping:
-	lda	#'/'+$80
 	sta	$7D0+18
 	sta	$BD0+18
 
-	bne	done_key		; branch always
+	bcs	done_key		; branch always
 
 
 	;======================
 	; left key, to prev song
 
 key_left:
+	ldx	#$40
 	cmp	#'A'
-	bne	key_right
-
-	lda	#$40
-	bne	quiet_exit
+	beq	quiet_exit
 
 	;========================
 	; right key, to next song
 
 key_right:
+	ldx	#$20
 	cmp	#'D'
 	bne	done_key
-
-	lda	#$20
 
 	;========================
 	; stop playing for now
@@ -283,11 +274,11 @@ key_right:
 	; (otherwise will be stuck on last note)
 
 quiet_exit:
-	sta	DONE_PLAYING
+	stx	DONE_PLAYING
 	jsr	clear_ay_both
 
-	lda	#$ff		; also mute the channel
-	sta	AY_REGISTERS+7 ; just in case
+	;ldx	#$ff		; also mute the channel
+	stx	AY_REGISTERS+7 ; just in case
 
 done_key:
 exit_interrupt:
