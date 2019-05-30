@@ -13,7 +13,6 @@
 ; + 3262 bytes -- combine some duplicated code in $1X/$BX env setting
 ; + 3253 bytes -- remove unnecessary variable
 ; + 3203 bytes -- combine common code in note decoder
-; + 2922 bytes -- qkumba optimizations
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?

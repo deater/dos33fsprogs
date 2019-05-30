@@ -22,7 +22,7 @@ Code Optimization
 	VolTableGen	3302	22B	20.0E	32s	171s	19%
 	SizeOpts	3262	22B	20.0A	32s	171s	19%
 	MoreSizeOpt	3203	22B	1F.1D	31s	171s	18%
-	Qkumba		2922	??	1D.0E	29s	171s	17%
+
 
 Times:							Validated
 	BH.PT3:	10.0B	16	1:33	 93	17.2%	
