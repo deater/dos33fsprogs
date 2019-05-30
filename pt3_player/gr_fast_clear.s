@@ -15,8 +15,28 @@ clear_screens:
 	lda	#$4
 	sta	DRAW_PAGE
 	jsr	clear_top
-	jmp	clear_bottom
+	jsr	clear_bottom
 
+        rts
+
+clear_bottoms:
+	;===================================
+	; Clear bottom of page 0
+	;===================================
+
+	lda	#$0
+	sta	DRAW_PAGE
+	jsr	clear_bottom
+
+	;===================================
+	; Clear bottom of page 1
+	;===================================
+
+	lda	#$4
+	sta	DRAW_PAGE
+	jsr	clear_bottom
+
+        rts
 
 
 
@@ -74,22 +94,6 @@ no_draw_bottom:
 
 
 
-clear_bottoms:
-	;===================================
-	; Clear bottom of page 0
-	;===================================
-
-	lda	#$0
-	sta	DRAW_PAGE
-	jsr	clear_bottom
-
-	;===================================
-	; Clear bottom of page 1
-	;===================================
-
-	lda	#$4
-	sta	DRAW_PAGE
-	; fall through
 
 	;=========================================================
 	; clear_bottom
@@ -139,7 +143,9 @@ clear_screens_notext:
 
         lda     #$4
         sta     DRAW_PAGE
-        ; fall through
+        jsr     clear_all
+
+        rts
 
 
 	;=========================================================
