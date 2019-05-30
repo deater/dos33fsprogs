@@ -52,7 +52,7 @@ pt3_play_music:
 	sta	current_subframe
 	sta	DONE_SONG		; undo the next song
 
-	beq	done_interrupt		; branch always
+	jmp	done_interrupt
 
 move_to_next:
 	; same as "press right"
@@ -68,7 +68,7 @@ move_to_next:
 mb_write_frame:
 
 
-	tax			; set up reg count			; 2
+	ldx	#0		; set up reg count			; 2
 								;============
 								;	  2
 
@@ -138,9 +138,10 @@ update_time:
 	inc	frame_count_smc+1					; 5
 frame_count_smc:
 	lda	#$0							; 2
-	eor	#50							; 3
+	cmp	#50							; 3
 	bne	done_time						; 3/2nt
 
+	lda	#$0							; 2
 	sta	frame_count_smc+1					; 3
 
 update_second_ones:
@@ -167,7 +168,7 @@ update_minutes:
 				; we don't handle > 9:59 songs yet
 done_time:
 								;=============
-								;     87 worst
+								;     89 worst
 
 
 	;=================================
@@ -183,7 +184,7 @@ check_keyboard:
 	;====================
 	; space pauses
 
-	cmp	#(' '+$80)		; set carry if true
+	cmp	#(' '+$80)
 	bne	key_M
 key_space:
 	lda	#$80
@@ -194,7 +195,7 @@ key_space:
 	sta	DONE_PLAYING
 	beq	yes_bar
 	lda	#0
-	beq	lowbar			; branch always
+	jmp	lowbar
 yes_bar:
 	lda	#7
 lowbar:
@@ -202,7 +203,7 @@ lowbar:
 
 	lda	DONE_PLAYING
 
-	bcs	quiet_exit		; branch always
+	jmp	quiet_exit
 
 	;===========================
 	; M key switches MHz mode
@@ -221,14 +222,14 @@ key_M:
 	lda	#'7'+$80
 	sta	$7F4
 	sta	$BF4
-	bne	done_key		; branch always
+	jmp	done_key
 
 at_1MHz:
 	lda	#'0'+$80
 	sta	$7F4
 	sta	$BF4
 
-	bne	done_key		; branch always
+	jmp	done_key
 
 
 	;===========================
@@ -248,14 +249,14 @@ key_L:
 	lda	#'L'+$80
 	sta	$7D0+18
 	sta	$BD0+18
-	bne	done_key		; branch always
+	jmp	done_key
 
 music_looping:
 	lda	#'/'+$80
 	sta	$7D0+18
 	sta	$BD0+18
 
-	bne	done_key		; branch always
+	jmp	done_key
 
 
 	;======================
@@ -276,6 +277,10 @@ key_right:
 	bne	done_key
 
 	lda	#$20
+	bne	quiet_exit
+
+done_key:
+	jmp	exit_interrupt
 
 	;========================
 	; stop playing for now
@@ -289,7 +294,6 @@ quiet_exit:
 	lda	#$ff		; also mute the channel
 	sta	AY_REGISTERS+7 ; just in case
 
-done_key:
 exit_interrupt:
 
 ;	pla			; restore a				; 4
