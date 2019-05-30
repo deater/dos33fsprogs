@@ -52,11 +52,11 @@ pt3_play_music:
 	sta	current_subframe
 	sta	DONE_SONG		; undo the next song
 
-	jmp	done_interrupt
+	beq	done_interrupt		; branch always
 
 move_to_next:
 	; same as "press right"
-	lda	#$20
+	ldx	#$20
 	jmp	quiet_exit
 
 	;======================================
@@ -68,7 +68,7 @@ move_to_next:
 mb_write_frame:
 
 
-	ldx	#0		; set up reg count			; 2
+	tax			; set up reg count			; 2
 								;============
 								;	  2
 
@@ -138,10 +138,9 @@ update_time:
 	inc	frame_count_smc+1					; 5
 frame_count_smc:
 	lda	#$0							; 2
-	cmp	#50							; 3
+	eor	#50							; 3
 	bne	done_time						; 3/2nt
 
-	lda	#$0							; 2
 	sta	frame_count_smc+1					; 3
 
 update_second_ones:
@@ -168,7 +167,7 @@ update_minutes:
 				; we don't handle > 9:59 songs yet
 done_time:
 								;=============
-								;     89 worst
+								;     87 worst
 
 
 	;=================================
@@ -184,7 +183,7 @@ check_keyboard:
 	;====================
 	; space pauses
 
-	cmp	#(' '+$80)
+	cmp	#(' '+$80)		; set carry if true
 	bne	key_M
 key_space:
 	lda	#$80
@@ -195,41 +194,38 @@ key_space:
 	sta	DONE_PLAYING
 	beq	yes_bar
 	lda	#0
-	jmp	lowbar
+	beq	lowbar			; branch always
 yes_bar:
 	lda	#7
 lowbar:
 	jsr	fire_setline
 
-	lda	DONE_PLAYING
+	ldx	DONE_PLAYING
 
-	jmp	quiet_exit
+	bcs	quiet_exit		; branch always
 
 	;===========================
 	; M key switches MHz mode
 
 key_M:
 	cmp	#'M'
-	bne	key_L
+	bne	key_L			; set carry if true
 
+	ldx	#'0'+$80
 	lda	convert_177
 	eor	#$1
 	sta	convert_177
-	beq	at_1MHz
+	beq	at_MHz
 
 	; update text on screen
 
-	lda	#'7'+$80
-	sta	$7F4
-	sta	$BF4
-	jmp	done_key
+	ldx	#'7'+$80
 
-at_1MHz:
-	lda	#'0'+$80
-	sta	$7F4
-	sta	$BF4
+at_MHz:
+	stx	$7F4
+	stx	$BF4
 
-	jmp	done_key
+	bcs	done_key		; branch always
 
 
 	;===========================
@@ -237,8 +233,9 @@ at_1MHz:
 
 key_L:
 	cmp	#'L'
-	bne	key_left
+	bne	key_left		; set carry if true
 
+	ldx	#'/'+$80
 	lda	LOOP
 	eor	#$1
 	sta	LOOP
@@ -246,41 +243,30 @@ key_L:
 
 	; update text on screen
 
-	lda	#'L'+$80
-	sta	$7D0+18
-	sta	$BD0+18
-	jmp	done_key
+	ldx	#'L'+$80
 
 music_looping:
-	lda	#'/'+$80
 	sta	$7D0+18
 	sta	$BD0+18
 
-	jmp	done_key
+	bcs	done_key		; branch always
 
 
 	;======================
 	; left key, to prev song
 
 key_left:
+	ldx	#$40
 	cmp	#'A'
-	bne	key_right
-
-	lda	#$40
-	bne	quiet_exit
+	beq	quiet_exit
 
 	;========================
 	; right key, to next song
 
 key_right:
+	ldx	#$20
 	cmp	#'D'
 	bne	done_key
-
-	lda	#$20
-	bne	quiet_exit
-
-done_key:
-	jmp	exit_interrupt
 
 	;========================
 	; stop playing for now
@@ -288,12 +274,13 @@ done_key:
 	; (otherwise will be stuck on last note)
 
 quiet_exit:
-	sta	DONE_PLAYING
+	stx	DONE_PLAYING
 	jsr	clear_ay_both
 
-	lda	#$ff		; also mute the channel
-	sta	AY_REGISTERS+7 ; just in case
+	;ldx	#$ff		; also mute the channel
+	stx	AY_REGISTERS+7 ; just in case
 
+done_key:
 exit_interrupt:
 
 ;	pla			; restore a				; 4

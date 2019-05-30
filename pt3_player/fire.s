@@ -33,17 +33,18 @@ done_fire_line_loop:
 	lda	FIRE_FB_L
 	adc	#40
 	sta	FIRE_FB_L
-	lda	FIRE_FB_H
-	adc	#0
-	sta	FIRE_FB_H
+	bcc	skip_inc_hi
+	inc	FIRE_FB_H
+skip_inc_hi:
 
 	dex
 	bne	clear_fire_loop
 
 	lda	#7
-	jsr	fire_setline
+	;fall through
+	;jsr	fire_setline
 
-	rts
+	;rts
 
 
 
@@ -118,7 +119,6 @@ fire_fb_update_loop:
 	; get random number Q 0..3
 	; Q used to see if whether we grab same lower value or if decrement
 
-	lda	SEEDL							; 3
 	and	#$3							; 2
 	sta	FIRE_Q							; 3
 
@@ -142,18 +142,18 @@ fire_low:
 	; Q=1 3/4 of time
 	lda	FIRE_Q							; 3
 	bne	fire_one	; 0-3, is not 0 3/4 of time		; 2/3
-	beq	fire_zero						; 3
+	beq	fire_set						; 3
 fire_medium:
 	cmp	#$d							; 2
+	lda	FIRE_Q							; 3
 	bcs	fire_high	; bge					; 2/3
 
 	; Q=1 1/2 of time
-	lda	FIRE_Q							; 3
 	and	#$1							; 2
-	jmp	fire_set						; 3
+	bcc	fire_set	; branch always				; 3
 fire_high:
 	; Q=1 1/4 of time
-	lda	FIRE_Q		; is 0 1/4 of time			; 3
+	;;lda	FIRE_Q		; is 0 1/4 of time			; 3
 	bne	fire_zero						; 2/3
 fire_one:
 	lda	#1							; 2
@@ -174,7 +174,7 @@ fire_set:
 	; bounds check
 	; on edges, don't wrap
 
-	cpy	#0							; 2
+	tya								; 2
 	beq	fire_r_same						; 2/3
 	cpy	#39							; 2
 	beq	fire_r_same						; 2/3
@@ -184,15 +184,14 @@ fire_set:
 	; 25% chance comes from right
 	; 25% change comes from left
 
-	lda	#$2							; 2
-	bit	SEEDH							; 3
-	bne	fire_r_same						; 2/3
 	lda	SEEDH							; 3
+	lsr								; 2
 	and	#$1							; 2
-	beq	r_up							; 2/3
+	bne	fire_r_same						; 2/3
+	bcc	r_up							; 2/3
 r_down:
 	dey								; 2
-	jmp	fire_r_same						; 3
+	.byte	$a9							; 2
 r_up:
 	iny								; 2
 fire_r_same:
@@ -232,22 +231,22 @@ done_fire_fb_update_loop:
 	lda	fire_smc5_fb+1						; 4
 	adc	#40							; 2
 	sta	fire_smc5_fb+1						; 4
-	lda	fire_smc5_fb+2						; 4
-	adc	#0							; 2
-	sta	fire_smc5_fb+2						; 4
-
+	bcc	skip_fb_inc1						; 2/3
+	inc	fire_smc5_fb+2						; 4
 	clc								; 2
+skip_fb_inc1:
+
 	lda	fire_smc5_fb2+1						; 4
 	adc	#40							; 2
 	sta	fire_smc5_fb2+1						; 4
-	lda	fire_smc5_fb2+2						; 4
-	adc	#0							; 2
-	sta	fire_smc5_fb2+2						; 4
+	bcc	skip_fb2_inc1						; 2/3
+	inc	fire_smc5_fb2+2						; 4
+skip_fb2_inc1:
 
 	inx								; 2
 	cpx	#(FIRE_YSIZE-1)						; 2
-	beq	fire_update_done					; 2/3
-	jmp	fire_fb_update						; 3
+	;beq	fire_update_done					; 2/3
+	bne	fire_fb_update						; 3
 
 fire_update_done:
 
@@ -259,11 +258,12 @@ fire_update_done:
 
 	lda	#<fire_framebuffer					; 2
 	sta	fire_smc_fb+1						; 5
-	lda	#>fire_framebuffer					; 2
-	sta	fire_smc_fb+2						; 5
-
 	lda	#<(fire_framebuffer+40)					; 2
 	sta	fire_smc_fb2+1						; 5
+
+	lda	#>fire_framebuffer					; 2
+	sta	fire_smc_fb+2						; 5
+	;this lda could be omitted if values match
 	lda	#>(fire_framebuffer+40)					; 2
 	sta	fire_smc_fb2+2						; 5
 
@@ -323,17 +323,17 @@ done_fire_fb_copy_loop:
 	lda	fire_smc_fb+1						; 4
 	adc	#80							; 2
 	sta	fire_smc_fb+1						; 5
-	lda	fire_smc_fb+2						; 4
-	adc	#0							; 2
-	sta	fire_smc_fb+2						; 5
-
+	bcc	skip_fb_inc2						; 2/3
+	inc	fire_smc_fb+2						; 5
 	clc								; 2
+skip_fb_inc2:
+
 	lda	fire_smc_fb2+1						; 4
 	adc	#80							; 2
 	sta	fire_smc_fb2+1						; 5
-	lda	fire_smc_fb2+2						; 4
-	adc	#0							; 2
-	sta	fire_smc_fb2+2						; 5
+	bcc	skip_fb2_inc2						; 2/3
+	inc	fire_smc_fb2+2						; 5
+skip_fb2_inc2:
 
 	dex								; 2
 	bne	fire_fb_copy						; 2/3
