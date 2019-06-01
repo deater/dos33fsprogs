@@ -707,17 +707,15 @@ calc_amplitude:
 
 	; adjust amplitude sliding
 
-	lda	sample_b0		;  if ((b0 & 0x80)!=0) {
-	and	#$80
-	beq	done_amp_sliding	; so if top bit not set, skip
+	bit	sample_b0		;  if ((b0 & 0x80)!=0) {
+	bpl	done_amp_sliding	; so if top bit not set, skip
 
 	;================================
 	; if top bits 0b11 then slide up
 	; if top buts 0b10 then slide down
 
-	lda	sample_b0		;     if ((b0&0x40)!=0) {
-	and	#$40
-	beq	amp_slide_down
+					;  if ((b0 & 0x40)!=0) {
+	bvc	amp_slide_down
 
 amp_slide_up:
 	; if (a->amplitude_sliding < 15) {
@@ -730,7 +728,7 @@ amp_slide_up:
 asu_signed:
 	bpl	done_amp_sliding	; skip if A>=15
 	inc	note_a+NOTE_AMPLITUDE_SLIDING,X	; a->amplitude_sliding++;
-	jmp	done_amp_sliding
+	bne	done_amp_sliding
 
 amp_slide_down:
 	; if (a->amplitude_sliding > -15) {
@@ -759,7 +757,7 @@ done_amp_sliding:
 check_amp_lo:
 	bpl	check_amp_hi
 	lda	#0
-	jmp	write_clamp_amplitude
+	beq	write_clamp_amplitude
 
 check_amp_hi:
 	cmp	#16
