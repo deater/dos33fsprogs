@@ -1433,9 +1433,9 @@ weird_version:
 	clc
 	adc	#$1
 	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
-	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
-	adc	#$0
-	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
+	bcc	skip_step_inc2
+	inc	note_a+NOTE_TONE_SLIDE_STEP_H,X
+skip_step_inc2:
 
 no_need:
 
@@ -1570,13 +1570,13 @@ set_envelope:
 	lda	(PATTERN_L),Y						; 5+
 	sta	pt3_envelope_period_l					; 4
 
-	lda	#0							; 2
+	lda	#1							; 2
+	sta	note_a+NOTE_ENVELOPE_ENABLED,X	; envelope_enabled=1	; 5
+	lsr								; 2
 	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0	; 5
 	sta	pt3_envelope_delay		; envelope_delay=0	; 4
 	sta	pt3_envelope_slide_l		; envelope_slide=0	; 4
 	sta	pt3_envelope_slide_h					; 4
-	lda	#1							; 2
-	sta	note_a+NOTE_ENVELOPE_ENABLED,X	; envelope_enabled=1	; 5
 
 	rts								; 6
 								;===========
@@ -1723,13 +1723,15 @@ not_done:
 	; update pattern or line if necessary
 	; then calculate the values for the next frame
 
+	;==========================
+	; pattern done early!
 
-pt3_make_frame:
+early_end:
+	inc	current_pattern		; increment pattern		; 6
+	sta	current_line						; 4
+	sta	current_subframe					; 4
 
-	; see if we need a new pattern
-	; we do if line==0 and subframe==0
-	lda	current_line						; 4
-	bne	pattern_good						; 2/3
+check_subframe:
 	lda	current_subframe					; 4
 	bne	pattern_good						; 2/3
 
@@ -1739,6 +1741,14 @@ pt3_make_frame:
 	lda	DONE_SONG						; 3
 	beq	pattern_good						; 2/3
 	rts								; 6
+
+pt3_make_frame:
+
+	; see if we need a new pattern
+	; we do if line==0 and subframe==0
+	; allow fallthrough where possible
+	lda	current_line						; 4
+	beq	check_subframe						; 2/3
 
 pattern_good:
 
@@ -1752,16 +1762,7 @@ pattern_good:
 
 	; check if pattern done early
 	lda	pt3_pattern_done					; 4
-	bne	line_good						; 2/3
-
-	;==========================
-	; pattern done early!
-
-	inc	current_pattern		; increment pattern		; 6
-	lda	#0							; 2
-	sta	current_line						; 4
-	sta	current_subframe					; 4
-	jmp	pt3_make_frame						; 3
+	beq	early_end						; 2/3
 
 line_good:
 
@@ -1771,22 +1772,20 @@ line_good:
 	lda	current_subframe					; 4
 
 	; if we hit pt3_speed, move to next
-	cmp	pt3_speed						; 4
+	eor	pt3_speed						; 4
 	bne	do_frame						; 2/3
 
 next_line:
-	lda	#0			; reset subframe to 0		; 2
-	sta	current_subframe					; 4
+	sta	current_subframe	; reset subframe to 0		; 4
 
 	inc	current_line		; and increment line		; 6
 	lda	current_line						; 4
 
-	cmp	#64			; always end at 64.		; 2
+	eor	#64			; always end at 64.		; 2
 	bne	do_frame		; is this always needed?	; 2/3
 
 next_pattern:
-	lda	#0			; reset line to 0		; 2
-	sta	current_line						; 4
+	sta	current_line		; reset line to 0		; 4
 
 	inc	current_pattern		; increment pattern		; 6
 
