@@ -2282,34 +2282,19 @@ vol_outer:
 	pha			; save HL
 
 	clc			; add HL,DE
-	lda	z80_l
 	adc	z80_e
-	sta	z80_l
+	sta	z80_e
 	lda	z80_h
 	adc	z80_d
-	sta	z80_h		; carry is important
-
-	lda	z80_h		; ex de,hl             ; swap
-	pha
-	lda	z80_l
-	pha
-	lda	z80_d
-	sta	z80_h
-	lda	z80_e
-	sta	z80_l
-	pla
-	sta	z80_e
-	pla
-	sta	z80_d
+	sta	z80_d		; carry is important
 
 			; sbc hl,hl
+	lda	#$ff
 	bcs	vol_ffs
 vol_zeros:
 	lda	#0
-	beq	vol_write
 
 vol_ffs:
-	lda	#$ff
 vol_write:
 	sta	z80_h
 	sta	z80_l
