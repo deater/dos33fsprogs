@@ -964,7 +964,7 @@ else_noise_slide:
 	sta	pt3_noise_add
 
 	plp
-	bcc	noise_slide_done	;     if ((b1 & 0x20) != 0) {
+	beq	noise_slide_done	;     if ((b1 & 0x20) != 0) {
 
 	; noise_sliding = pt3_noise_add
 	sta	note_a+NOTE_NOISE_SLIDING,X
