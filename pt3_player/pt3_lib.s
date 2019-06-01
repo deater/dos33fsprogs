@@ -542,44 +542,36 @@ note_enabled:
 
 	;  a->tone = pt3->data[a->sample_pointer + a->sample_position*4+2];
 	;  a->tone+=(pt3->data[a->sample_pointer + a->sample_position*4+3])<<8;
+	;  a->tone += a->tone_accumulator;
 	iny								; 2
+	clc								; 2
 	lda	(SAMPLE_L),Y						; 5+
+	adc	note_a+NOTE_TONE_ACCUMULATOR_L,X			; 4+
 	sta	note_a+NOTE_TONE_L,X					; 4
 
 	iny								; 2
 	lda	(SAMPLE_L),Y						; 5+
-	sta	note_a+NOTE_TONE_H,X					; 4
-
-	;  a->tone += a->tone_accumulator;
-	clc								; 2
-	lda	note_a+NOTE_TONE_L,X					; 4+
-	adc	note_a+NOTE_TONE_ACCUMULATOR_L,X			; 4+
-	sta	note_a+NOTE_TONE_L,X					; 4+
-	lda	note_a+NOTE_TONE_H,X					; 4+
 	adc	note_a+NOTE_TONE_ACCUMULATOR_H,X			; 4+
-	sta	note_a+NOTE_TONE_H,X					; 4+
+	sta	note_a+NOTE_TONE_H,X					; 4
 
 	;=============================
 	; Accumulate tone if set
 	;	(if sample_b1 & $40)
 
-	lda	#$40		; if (b1&0x40)
 	bit	sample_b1
-	beq	no_accum	;     (so, if b1&0x40 is zero, skip it)
+	bvc	no_accum	;     (so, if b1&0x40 is zero, skip it)
 
+	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X
 	lda	note_a+NOTE_TONE_L,X	; tone_accumulator=tone
 	sta	note_a+NOTE_TONE_ACCUMULATOR_L,X
-	lda	note_a+NOTE_TONE_H,X
-	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X
 
 no_accum:
 
 	;============================
 	; Calculate tone
 	;  j = a->note + (pt3->data[a->ornament_pointer + a->ornament_position]
-	clc
-	lda	note_a+NOTE_ORNAMENT_POSITION,X
-	tay
+	clc	;;can be removed if ADC ACCUMULATOR_H cannot overflow
+	ldy	note_a+NOTE_ORNAMENT_POSITION,X
 	lda	(ORNAMENT_L),Y
 	adc	note_a+NOTE_NOTE,X
 
@@ -610,7 +602,7 @@ note_not_too_high:
 	adc	note_a+NOTE_TONE_SLIDING_H,X
 	sta	note_a+NOTE_TONE_H,X
 
-	clc
+	clc	;;can be removed if ADC SLIDING_H cannot overflow
 	lda	note_a+NOTE_TONE_L,X
 	adc	freq_l
 	sta	note_a+NOTE_TONE_L,X
@@ -631,7 +623,7 @@ note_not_too_high:
 
 
 	; a->tone_sliding+=a->tone_slide_step
-	clc
+	clc	;;can be removed if ADC freq_h cannot overflow
 	lda	note_a+NOTE_TONE_SLIDING_L,X
 	adc	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	sta	note_a+NOTE_TONE_SLIDING_L,X
