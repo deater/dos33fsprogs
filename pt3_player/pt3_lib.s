@@ -431,7 +431,6 @@ pt3_init_song:
 	sta	pt3_envelope_type					; 4
 
 	; default ornament/sample in A
-	lda	#0							; 2
 	ldx	#(NOTE_STRUCT_SIZE*0)					; 2
 	jsr	load_ornament						; 6+93
 	lda	#1							; 2
@@ -468,26 +467,23 @@ pt3_init_song:
 
 	;======================
 	; calculate version
-	lda	#6							; 2
-	sta	pt3_version						; 3
+	ldx	#6							; 2
 	lda	PT3_LOC+PT3_VERSION					; 4
-	cmp	#'0'							; 2
-	bcc	not_ascii_number	; blt				; 2/3
-	cmp	#'9'							; 2
-	bcs	not_ascii_number	; bge				; 2/3
 	sec								; 2
 	sbc	#'0'							; 2
-	sta	pt3_version						; 4
+	cmp	#9							; 2
+	bcs	not_ascii_number	; bge				; 2/3
+	tax								; 2
 
 not_ascii_number:
+	stx	pt3_version						; 3
 
 	;=======================
 	; Pick which volume number, based on version
 
 	; if (PlParams.PT3.PT3_Version <= 4)
 
-	lda	pt3_version						; 4
-	cmp	#5							; 2
+	cpx	#5							; 2
 
 	; carry clear = 3.3/3.4 table
 	; carry set = 3.5 table
@@ -514,7 +510,6 @@ calculate_note:
 	lda	note_a+NOTE_ENABLED,X					; 4+
 	bne	note_enabled						; 2/3
 
-	lda	#0							; 2
 	sta	note_a+NOTE_AMPLITUDE,X					; 5
 	jmp	done_note						; 3
 
