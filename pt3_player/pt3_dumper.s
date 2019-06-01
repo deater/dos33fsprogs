@@ -30,7 +30,12 @@ pt3_setup:
 	sta	WHICH_FILE
 
 	; Set to 1MHz mode (no translate) for validation purposes
-	sta	convert_177
+	lda	#$18
+	sta	convert_177_smc1
+	sta	convert_177_smc2
+	sta	convert_177_smc3
+	sta	convert_177_smc4
+	sta	convert_177_smc5
 
 
 	;==================
