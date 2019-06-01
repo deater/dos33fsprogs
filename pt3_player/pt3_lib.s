@@ -810,15 +810,23 @@ check_envelope_enable:
 
 
 envelope_slide:
+	lda	sample_b0
+	lsr
+	tay
+
 	; Envelope slide
 	; If b1 top bits are 10 or 11
 
-	lda	#$80
-	bit	sample_b1
-	beq	else_noise_slide	; if ((b1 & 0x80) != 0) {
-
 	lda	#$20
 	bit	sample_b0
+        php
+
+	bit	sample_b1
+	bpl	else_noise_slide	; if ((b1 & 0x80) != 0) {
+
+	plp
+	php
+;;bug? always falls through
 	beq	envelope_slide_down	;     if ((b0 & 0x20) != 0) {
 
 	; FIXME: this can be optimized
@@ -826,17 +834,16 @@ envelope_slide:
 envelope_slide_down:
 
 	; j = ((b0>>1)|0xF0) + a->envelope_sliding
-	lda	sample_b0
-	lsr
+	tya
 	ora	#$f0
 	clc
 	adc	note_a+NOTE_ENVELOPE_SLIDING,X
 	sta	e_slide_amount				; j
+;;+jmp envelope_slide_done?
 
 envelope_slide_up:
 	; j = ((b0>>1)&0xF) + a->envelope_sliding;
-	lda	sample_b0
-	lsr
+	tya
 	and	#$0f
 	clc
 	adc	note_a+NOTE_ENVELOPE_SLIDING,X
@@ -844,12 +851,10 @@ envelope_slide_up:
 
 envelope_slide_done:
 
-	lda	#$20
-	bit	sample_b1
+	plp
 	beq	last_envelope	;     if (( b1 & 0x20) != 0) {
 
 	; a->envelope_sliding = j;
-	lda	e_slide_amount
 	sta	note_a+NOTE_ENVELOPE_SLIDING,X
 
 last_envelope:
@@ -868,18 +873,15 @@ else_noise_slide:
 	;  else {
 
 	; pt3->noise_add = (b0>>1) + a->noise_sliding;
-	lda	sample_b0
-	lsr
+	tya
 	clc
 	adc	note_a+NOTE_NOISE_SLIDING,X
 	sta	pt3_noise_add
 
-	lda	#$20
-	bit	sample_b1
+	plp
 	beq	noise_slide_done	;     if ((b1 & 0x20) != 0) {
 
 	; noise_sliding = pt3_noise_add
-	lda	pt3_noise_add
 	sta	note_a+NOTE_NOISE_SLIDING,X
 
 noise_slide_done:
