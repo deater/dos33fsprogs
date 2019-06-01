@@ -277,7 +277,6 @@ load_ornament:
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
 
-	clc								; 2
 	asl			; A*2					; 2
 	adc	#PT3_ORNAMENT_LOC_L					; 2
 	tay								; 2
@@ -289,7 +288,6 @@ load_ornament:
 
 	iny								; 2
 	lda	PT3_LOC,Y						; 4+
-	clc								; 2
 
 	; we're assuming PT3 is loaded to a page boundary
 
@@ -314,7 +312,6 @@ load_ornament:
 
 	; Set the pointer to the value past the length
 
-	clc								; 2
 	lda	ORNAMENT_L						; 3
 	adc	#$2							; 2
 	sta	note_a+NOTE_ORNAMENT_POINTER_L,X			; 5
@@ -327,7 +324,7 @@ load_ornament:
 	rts								; 6
 
 								;============
-								;	93
+								;	87
 
 	;===========================
 	; Load Sample
@@ -353,7 +350,6 @@ load_sample:
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0x6a+(i*2)]<<8)|pt3->data[0x69+(i*2)];
 
-	clc								; 2
 	asl			; A*2					; 2
 	adc	#PT3_SAMPLE_LOC_L					; 2
 	tay								; 2
@@ -366,7 +362,6 @@ load_sample:
 
 	iny								; 2
 	lda	PT3_LOC,Y						; 4+
-	clc								; 2
 
 	; assume pt3 file is at page boundary
 	adc	#>PT3_LOC						; 2
@@ -388,7 +383,6 @@ load_sample:
 
 	; Set pointer to beginning of samples
 
-	clc								; 2
 	lda	SAMPLE_L						; 3
 	adc	#$2							; 2
 	sta	note_a+NOTE_SAMPLE_POINTER_L,X				; 5
@@ -400,14 +394,15 @@ load_sample:
 
 	rts								; 6
 								;============
-								;	 86
+								;	 80
 
 	;====================================
 	; pt3_init_song
 	;====================================
 	;
 	;	TODO: change to a memset type instruction?
-
+	;	it will save bytes only if the labels are adjacent
+	;	it will add a lot more cycles, though
 pt3_init_song:
 	lda	#$f							; 2
 	sta	note_a+NOTE_VOLUME					; 4
