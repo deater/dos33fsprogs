@@ -928,9 +928,7 @@ done_note:
 	; set mixer value
 	; this is a bit complex (from original code)
 	; after 3 calls it is set up properly
-	lda	pt3_mixer_value
-	lsr
-	sta	pt3_mixer_value
+	lsr	pt3_mixer_value
 
 handle_onoff:
 	lda	note_a+NOTE_ONOFF,X	;if (a->onoff>0) {
@@ -1170,16 +1168,7 @@ decode_case_bX:
 	and	#$f
 	beq	decode_case_b0
 	cmp	#1
-	beq	decode_case_b1
-	jmp	decode_case_bx_higher
-
-decode_case_b0:
-	; Disable envelope
-	lda	#0
-	sta	note_a+NOTE_ENVELOPE_ENABLED,X
-	sta	note_a+NOTE_ORNAMENT_POSITION,X
-	jmp	done_decode
-
+	bne	decode_case_bx_higher
 
 decode_case_b1:
 	; Set Length
@@ -1191,6 +1180,13 @@ decode_case_b1:
 	sta	note_a+NOTE_LEN,X
 	sta	note_a+NOTE_LEN_COUNT,X
 	jmp	done_decode
+
+decode_case_b0:
+	; Disable envelope
+	sta	note_a+NOTE_ENVELOPE_ENABLED,X
+	sta	note_a+NOTE_ORNAMENT_POSITION,X
+	jmp	done_decode
+
 
 decode_case_bx_higher:
 
@@ -1215,7 +1211,6 @@ decode_case_cX:
 decode_case_c0:
 	; special case $C0 means shut down the note
 
-	lda	#0
 	sta	note_a+NOTE_ENABLED,X		; enabled=0
 
 	jsr	reset_note						; 6+69
@@ -1246,11 +1241,6 @@ decode_case_dX:
 	sta	decode_done
 
 	jmp	done_decode
-decode_case_dx_not_d0:
-
-	jsr	load_sample	; load sample in bottom nybble
-
-	jmp	done_decode
 decode_case_eX:
 	;==============================
 	; $EX -- change sample
@@ -1261,10 +1251,13 @@ decode_case_eX:
 	lda	note_command
 	sec
 	sbc	#$d0
-	jsr	load_sample
+	;fall through
+
+decode_case_dx_not_d0:
+
+	jsr	load_sample	; load sample in bottom nybble
 
 	jmp	done_decode
-
 decode_case_fX:
 	;==============================
 	; $FX - change ornament/sample
@@ -1315,6 +1308,10 @@ effect_1:
 	cmp	#$1
 	bne	effect_2
 
+	sta	note_a+NOTE_SIMPLE_GLISS,X
+	lsr
+	sta	note_a+NOTE_ONOFF,X
+
 	lda	(PATTERN_L),Y	; load byte, set as slide delay
 	iny
 
@@ -1328,11 +1325,6 @@ effect_1:
 	lda	(PATTERN_L),Y	; load byte, set as slide step high
 	iny
 	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
-
-	lda	#0
-	sta	note_a+NOTE_ONOFF,X
-	lda	#1
-	sta	note_a+NOTE_SIMPLE_GLISS,X
 
 	jmp	no_effect
 
@@ -1371,12 +1363,11 @@ effect_2_small:			; FIXME: make smaller
 	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	lda	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	eor	#$ff
-	clc
-	adc	#$1
+	adc	#$0	;+carry set by earlier CMP
 	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
-	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
-	adc	#$0
-	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
+	bcc	skip_step_inc1
+	inc	note_a+NOTE_TONE_SLIDE_STEP_H,X
+skip_step_inc1:
 
 slide_step_positive:
 
