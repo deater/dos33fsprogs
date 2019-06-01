@@ -41,9 +41,10 @@ skip_inc_hi:
 	bne	clear_fire_loop
 
 	lda	#7
-	jsr	fire_setline
+	;fall through
+	;jsr	fire_setline
 
-	rts
+	;rts
 
 
 
@@ -115,10 +116,11 @@ fire_fb_update_loop:
 
 	jsr	random16						; 40
 
+	; A randomly has either SEEDL or SEEDH here, I guess that's enough?
+
 	; get random number Q 0..3
 	; Q used to see if whether we grab same lower value or if decrement
 
-	lda	SEEDL							; 3
 	and	#$3							; 2
 	sta	FIRE_Q							; 3
 
@@ -245,8 +247,8 @@ skip_fb2_inc1:
 
 	inx								; 2
 	cpx	#(FIRE_YSIZE-1)						; 2
-	beq	fire_update_done					; 2/3
-	jmp	fire_fb_update						; 3
+	;beq	fire_update_done					; 2/3
+	bne	fire_fb_update						; 3
 
 fire_update_done:
 
