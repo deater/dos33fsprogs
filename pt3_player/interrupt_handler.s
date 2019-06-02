@@ -252,8 +252,8 @@ key_L:
 	ldx	#'L'+$80
 
 music_looping:
-	sta	$7D0+18
-	sta	$BD0+18
+	stx	$7D0+18
+	stx	$BD0+18
 
 	bcs	done_key		; branch always
 
