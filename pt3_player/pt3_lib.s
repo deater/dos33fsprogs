@@ -647,7 +647,6 @@ note_enabled:
 	;  a->tone+=(pt3->data[a->sample_pointer + a->sample_position*4+3])<<8;
 	;  a->tone += a->tone_accumulator;
 	iny								; 2
-	clc								; 2
 	lda	(SAMPLE_L),Y						; 5+
 	adc	note_a+NOTE_TONE_ACCUMULATOR_L,X			; 4+
 	sta	note_a+NOTE_TONE_L,X					; 4
@@ -897,8 +896,9 @@ check_envelope_enable:
 
 	;  if (((b0 & 0x1) == 0) && ( a->envelope_enabled)) {
 	lda	sample_b0
-	and	#$1
-	bne	envelope_slide
+	lsr
+	tay
+	bcs	envelope_slide
 
 	lda	note_a+NOTE_ENVELOPE_ENABLED,X
 	beq	envelope_slide
@@ -913,9 +913,6 @@ check_envelope_enable:
 
 
 envelope_slide:
-	lda	sample_b0
-	lsr
-	tay
 
 	; Envelope slide
 	; If b1 top bits are 10 or 11
@@ -1046,8 +1043,8 @@ handle_onoff:
 
 	bne	do_offon
 do_onoff:
-	lda	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
-	jmp	put_offon
+	dex				; select ONOFF
+	;lda	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
 do_offon:
 	lda	note_a+NOTE_OFFON_DELAY,X ;      else a->onoff=a->offon_delay;
 put_offon:
@@ -1080,22 +1077,45 @@ spec_command:	.byte	$0
 	;	5X:	14+5+5+ 102
 	;	
 
-decode_note:
-
-	; Init vars
-
-	lda	#0							; 2
-	sta	spec_command						; 4
-	sta	decode_done						; 4
-
-	; Skip decode if note still running
-	lda	note_a+NOTE_LEN_COUNT,X					; 4+
-	cmp	#2							; 2
-	bcc	keep_decoding		; blt, assume not negative	; 2/3
+stop_decoding:
 
 	; we are still running, decrement and early return
 	dec	note_a+NOTE_LEN_COUNT,X					; 7
 	rts								; 6
+
+	;=====================================
+	; Decode Line
+	;=====================================
+
+pt3_decode_line:
+	; decode_note(&pt3->a,&(pt3->a_addr),pt3);
+	ldx	#(NOTE_STRUCT_SIZE*0)
+	jsr	decode_note
+
+	; decode_note(&pt3->b,&(pt3->b_addr),pt3);
+	ldx	#(NOTE_STRUCT_SIZE*1)
+	jsr	decode_note
+
+	; decode_note(&pt3->c,&(pt3->c_addr),pt3);
+	ldx	#(NOTE_STRUCT_SIZE*2)
+	;;jsr	decode_note	; fall through
+
+;	if (pt3->a.all_done && pt3->b.all_done && pt3->c.all_done) {
+;		return 1;
+;	}
+
+decode_note:
+
+	; Init vars
+
+	ldy	#0							; 2
+	sty	spec_command						; 4
+	sty	decode_done						; 4
+
+	; Skip decode if note still running
+	lda	note_a+NOTE_LEN_COUNT,X					; 4+
+	cmp	#2							; 2
+	bcs	stop_decoding		; blt, assume not negative	; 2/3
 
 keep_decoding:
 
@@ -1108,9 +1128,8 @@ keep_decoding:
 	sta	prev_sliding_l						; 4
 
 
-	ldy	#0							; 2
 								;============
-								;	 26
+								;	 24
 
 note_decode_loop:
 	lda	note_a+NOTE_LEN,X		; re-up length count	; 4+
@@ -1160,8 +1179,7 @@ decode_case_0X:
 									; -1
 	sta	note_a+NOTE_LEN_COUNT,X	; len_count=0;			; 5
 
-	lda	#1							; 2
-	sta	decode_done						; 4+
+	inc	decode_done						; 6
 
 	dec	pt3_pattern_done					; 6
 
@@ -1216,13 +1234,12 @@ decode_case_3X:
 	bcs	decode_case_4X		; branch greater/equal		; 3
 									; -1
 	lda	note_command						; 3
-	sec								; 2
-	sbc	#$20							; 2
+	adc	#$e0							; 2
 	sta	pt3_noise_period					; 3
 
 	jmp	done_decode						; 3
 								;===========
-								;	17
+								;	15
 
 decode_case_4X:
 	;==============================
@@ -1248,8 +1265,7 @@ decode_case_5X:
 
 									; -1
 	lda	note_command						; 4
-	sec								; 2
-	sbc	#$50							; 2
+	adc	#$b0							; 2
 	sta	note_a+NOTE_NOTE,X	; note=(current_val-0x50);	; 5
 
 	jsr	reset_note						; 6+69
@@ -1258,7 +1274,7 @@ decode_case_5X:
 	sta	note_a+NOTE_ENABLED,X		; enabled=1		; 5
 
 
-	jmp	done_decode						; 3
+	bne	done_decode						; 2
 
 decode_case_bX:
 	;============================================
@@ -1270,7 +1286,7 @@ decode_case_bX:
 	lda	note_command
 	and	#$f
 	beq	decode_case_b0
-	cmp	#1
+	sbc	#1		; envelope_type=(current_val&0xf)-1;
 	bne	decode_case_bx_higher
 
 decode_case_b1:
@@ -1282,23 +1298,20 @@ decode_case_b1:
 
 	sta	note_a+NOTE_LEN,X
 	sta	note_a+NOTE_LEN_COUNT,X
-	jmp	done_decode
+	bcs	done_decode			; branch always
 
 decode_case_b0:
 	; Disable envelope
 	sta	note_a+NOTE_ENVELOPE_ENABLED,X
 	sta	note_a+NOTE_ORNAMENT_POSITION,X
-	jmp	done_decode
+	beq	done_decode
 
 
 decode_case_bx_higher:
 
-	sec
-	sbc	#1		; envelope_type=(current_val&0xf)-1;
-
 	jsr	set_envelope						; 6+64
 
-	jmp	done_decode
+	bcs	done_decode			; branch always
 
 decode_case_cX:
 	;==============================
@@ -1318,11 +1331,11 @@ decode_case_c0:
 
 	jsr	reset_note						; 6+69
 
-	jmp	done_decode
+	bne	done_decode			; branch always
 
 decode_case_cx_not_c0:
 	sta	note_a+NOTE_VOLUME,X		; volume=current_val&0xf;
-	jmp	done_decode
+	bne	done_decode			; branch always
 
 decode_case_dX:
 	;==============================
@@ -1340,10 +1353,9 @@ decode_case_dX:
 	;========================
 	; d0 case means end note
 
-	lda	#1
-	sta	decode_done
+	rol	decode_done
 
-	jmp	done_decode
+	bne	done_decode
 decode_case_eX:
 	;==============================
 	; $EX -- change sample
@@ -1360,7 +1372,7 @@ decode_case_dx_not_d0:
 
 	jsr	load_sample	; load sample in bottom nybble
 
-	jmp	done_decode
+	bcc	done_decode	; branch always
 decode_case_fX:
 	;==============================
 	; $FX - change ornament/sample
@@ -1555,7 +1567,7 @@ effect_3:
 	iny
 	sta	note_a+NOTE_SAMPLE_POSITION,X
 
-	jmp	no_effect
+	bne	no_effect	; branch always
 
 	;==============================
 	; Effect #4 -- Ornament Position
@@ -1568,7 +1580,7 @@ effect_4:
 	iny
 	sta	note_a+NOTE_ORNAMENT_POSITION,X
 
-	jmp	no_effect
+	bne	no_effect	; branch always
 
 	;==============================
 	; Effect #5 -- Vibrato
@@ -1591,7 +1603,7 @@ effect_5:
 	sta	note_a+NOTE_TONE_SLIDING_L,X
 	sta	note_a+NOTE_TONE_SLIDING_H,X
 
-	jmp	no_effect
+	beq	no_effect	; branch always
 
 	;==============================
 	; Effect #8 -- Envelope Down
@@ -1616,7 +1628,7 @@ effect_8:
 	iny
 	sta	pt3_envelope_slide_add_h
 
-	jmp	no_effect
+	bne	no_effect	; branch always
 
 	;==============================
 	; Effect #9 -- Set Speed
@@ -1704,38 +1716,13 @@ reset_note:
 	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X			; 5
 	sta	note_a+NOTE_ONOFF,X		; onoff=0;		; 5
 
-	lda	#1							; 2
-	sta	decode_done			; decode_done=1		; 4
+	rol	decode_done			; decode_done=1		; 6
 
 	rts								; 6
 								;============
 								;	69
 
 
-
-
-	;=====================================
-	; Decode Line
-	;=====================================
-
-pt3_decode_line:
-	; decode_note(&pt3->a,&(pt3->a_addr),pt3);
-	ldx	#(NOTE_STRUCT_SIZE*0)
-	jsr	decode_note
-
-	; decode_note(&pt3->b,&(pt3->b_addr),pt3);
-	ldx	#(NOTE_STRUCT_SIZE*1)
-	jsr	decode_note
-
-	; decode_note(&pt3->c,&(pt3->c_addr),pt3);
-	ldx	#(NOTE_STRUCT_SIZE*2)
-	jsr	decode_note
-
-;	if (pt3->a.all_done && pt3->b.all_done && pt3->c.all_done) {
-;		return 1;
-;	}
-
-	rts
 
 
 current_subframe:	.byte	$0
@@ -1748,6 +1735,11 @@ current_pattern:	.byte	$0
 	; FIXME: inline this?  we do call it from outside
 	;	in the player note length code
 
+is_done:
+	; done with song, set it to non-zero
+	sta	DONE_SONG						; 3
+	rts								; 6
+
 pt3_set_pattern:
 
 	; Lookup current pattern in pattern table
@@ -1756,13 +1748,10 @@ pt3_set_pattern:
 
 	; if value is $FF we are at the end of the song
 	cmp	#$ff							; 2
-	bne	not_done						; 2/3
+	beq	is_done							; 2/3
 
-	; done with song, set it to non-zero
-	sta	DONE_SONG						; 3
-	rts								; 6
 								;============
-								;   21 if end
+								;   22 if end
 
 not_done:
 
@@ -1784,7 +1773,6 @@ not_done:
 	lda	(PATTERN_L),Y						; 5+
 	sta	note_a+NOTE_ADDR_L					; 4
 	iny								; 2
-	clc					; needed?		; 2
 	lda	(PATTERN_L),Y						; 5+
 	adc	#>PT3_LOC		; assume page boundary		; 2
 	sta	note_a+NOTE_ADDR_H					; 4
