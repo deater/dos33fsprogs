@@ -2044,13 +2044,12 @@ no_scale_c:
 	and	#$1f							; 2
 	sta	AY_REGISTERS+6						; 3
 
-	lda	convert_177						; 3
+	ldx	convert_177						; 3
 	beq	no_scale_n						; 2/3
 
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
 	; first multiply by 8
-	lda	AY_REGISTERS+6						; 3
 	asl								; 2
 	asl								; 2
 	asl								; 2
@@ -2065,9 +2064,9 @@ no_scale_c:
 	ror								; 2
 	ror								; 2
 	and	#$1f							; 2
-	sta	AY_REGISTERS+6						; 3
 
 no_scale_n:
+	sta	AY_REGISTERS+6						; 3
 
 	;=======================
 	; Mixer
