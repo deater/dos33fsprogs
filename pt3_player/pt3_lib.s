@@ -484,9 +484,116 @@ not_ascii_number:
 	; carry clear = 3.3/3.4 table
 	; carry set = 3.5 table
 
-	jsr	VolTableCreator						; 6+??
+	;==========================
+	; VolTableCreator
+	;==========================
+	; Creates the appropriate volume table
+	; based on z80 code by Ivan Roshin ZXAYHOBETA/VTII10bG.asm
+	;
 
-	rts								; 6
+	; Called with carry==0 for 3.3/3.4 table
+	; Called with carry==1 for 3.5 table
+
+	; 177f-1932 = 435 bytes, not that much better than 512 of lookup
+
+
+VolTableCreator:
+
+	; Init initial variables
+	lda	#$0
+	sta	z80_h
+	sta	z80_d
+	ldy	#$11
+
+	; Set up self modify
+
+	ldx	#$2A		; ROL for self-modify
+	bcs	vol_type_35
+
+vol_type_33:
+
+	; For older table, we set initial conditions a bit
+	; different
+
+	dey
+	tya
+
+	ldx	#$ea		; NOP for self modify
+
+vol_type_35:
+	sty	z80_l		; l=16 or 17
+	sta	z80_e		; e=16 or 0
+	stx	vol_smc		; set the self-modify code
+
+	ldy	#16		; skip first row, all zeros
+	ldx	#16		; c=16
+vol_outer:
+	lda	z80_h
+	pha			; save H
+
+	clc			; add HL,DE
+	lda	z80_l
+	adc	z80_e
+	sta	z80_e
+	lda	z80_h
+	adc	z80_d
+	sta	z80_d		; carry is important
+
+			; sbc hl,hl
+	lda	#$ff
+	bcs	vol_ffs
+vol_zeros:
+	lda	#0
+
+vol_ffs:
+vol_write:
+	sta	z80_h
+	pha
+
+vol_inner:
+	pla
+	pha
+
+vol_smc:
+	nop			; nop or ROL depending
+
+	lda	z80_h
+
+	adc	#$0		; a=a+carry;
+
+	sta	VolumeTable,Y
+	iny
+
+	pla			; add HL,DE
+	adc	z80_e
+	pha
+	lda	z80_h
+	adc	z80_d
+	sta	z80_h
+
+	inx		; inc C
+	txa		; a=c
+	and	#$f
+	bne	vol_inner
+
+
+	pla
+	pla
+	sta	z80_h	; restore H
+
+	lda	z80_e	; a=e
+	cmp	#$77
+	bne	vol_m3
+
+	inc	z80_e
+
+vol_m3:
+	txa			; a=c
+	bne	vol_outer
+
+vol_done:
+	rts
+
 
 
 
@@ -2222,130 +2329,10 @@ PT3NoteTable_ASM_34_35_low:
 
 
 
-	;==========================
-	; VolTableCreator
-	;==========================
-	; Creates the appropriate volume table
-	; based on z80 code by Ivan Roshin ZXAYHOBETA/VTII10bG.asm
-	;
-
-	; Called with carry==0 for 3.3/3.4 table
-	; Called with carry==1 for 3.5 table
-
-	; 177f-1932 = 435 bytes, not that much better than 512 of lookup
-
-
 z80_h:	.byte $0
 z80_l:	.byte $0
 z80_d:	.byte $0
 z80_e:	.byte $0
-
-VolTableCreator:
-
-	; Init initial variables
-	lda	#$0
-	sta	z80_h
-	sta	z80_d
-	sta	z80_e
-	lda	#$11
-	sta	z80_l
-
-	; Set up self modify
-
-	lda	#$2A		; ROL for self-modify
-	bcs	vol_type_35
-
-vol_type_33:
-
-	; For older table, we set initial conditions a bit
-	; different
-
-	lda	#$10
-	sta	z80_l		; l=16
-	sta	z80_e		; e=16
-
-	lda	#$ea		; NOP for self modify
-
-vol_type_35:
-	sta	vol_smc		; set the self-modify code
-
-	ldy	#16		; skip first row, all zeros
-	ldx	#16		; c=16
-vol_outer:
-	lda	z80_h
-	pha
-	lda	z80_l
-	pha			; save HL
-
-	clc			; add HL,DE
-	adc	z80_e
-	sta	z80_e
-	lda	z80_h
-	adc	z80_d
-	sta	z80_d		; carry is important
-
-			; sbc hl,hl
-	lda	#$ff
-	bcs	vol_ffs
-vol_zeros:
-	lda	#0
-
-vol_ffs:
-vol_write:
-	sta	z80_h
-	sta	z80_l
-
-vol_inner:
-	lda	z80_l
-
-vol_smc:
-	nop			; nop or ROL depending
-
-	lda	z80_h
-
-	adc	#$0		; a=a+carry;
-
-	sta	VolumeTable,Y
-	iny
-
-	clc			; add HL,DE
-	lda	z80_l
-	adc	z80_e
-	sta	z80_l
-	lda	z80_h
-	adc	z80_d
-	sta	z80_h
-
-	inx		; inc C
-	txa		; a=c
-	and	#$f
-	bne	vol_inner
-
-
-	pla
-	sta	z80_l
-	pla
-	sta	z80_h	; restore HL
-
-	lda	z80_e	; a=e
-	cmp	#$77
-	bne	vol_m3
-
-	inc	z80_e
-	bne	vol_blah
-	inc	z80_d
-vol_blah:
-
-vol_m3:
-	txa			; a=c
-	;bne	vol_outer
-	beq	vol_done
-	jmp	vol_outer
-
-vol_done:
-	rts
-
-
 
 VolumeTable:
 	.res 256,0
