@@ -52,8 +52,8 @@ NOTE_SAMPLE_POSITION	=26
 NOTE_ENVELOPE_SLIDING	=27
 NOTE_NOISE_SLIDING	=28
 NOTE_AMPLITUDE_SLIDING	=29
-NOTE_ONOFF_DELAY	=30
-NOTE_OFFON_DELAY	=31
+NOTE_ONOFF_DELAY	=30	;ordering of DELAYs is hard-coded now
+NOTE_OFFON_DELAY	=31	;ordering of DELAYs is hard-coded now
 NOTE_TONE_SLIDE_STEP_L	=32
 NOTE_TONE_SLIDE_STEP_H	=33
 NOTE_TONE_SLIDE_DELAY	=34
@@ -278,16 +278,14 @@ load_ornament:
         ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
 
 	asl			; A*2					; 2
-	adc	#PT3_ORNAMENT_LOC_L					; 2
 	tay								; 2
 
 	; a->ornament_pointer=pt3->ornament_patterns[a->ornament];
 
-	lda	PT3_LOC,Y						; 4+
+	lda	PT3_LOC+PT3_ORNAMENT_LOC_L,Y				; 4+
 	sta	ORNAMENT_L						; 3
 
-	iny								; 2
-	lda	PT3_LOC,Y						; 4+
+	lda	PT3_LOC+PT3_ORNAMENT_LOC_L+1,Y				; 4+
 
 	; we're assuming PT3 is loaded to a page boundary
 
@@ -324,7 +322,7 @@ load_ornament:
 	rts								; 6
 
 								;============
-								;	87
+								;	83
 
 	;===========================
 	; Load Sample
@@ -351,17 +349,15 @@ load_sample:
         ;               (pt3->data[0x6a+(i*2)]<<8)|pt3->data[0x69+(i*2)];
 
 	asl			; A*2					; 2
-	adc	#PT3_SAMPLE_LOC_L					; 2
 	tay								; 2
 
 	; Set the initial sample pointer
 	;     a->sample_pointer=pt3->sample_patterns[a->sample];
 
-	lda	PT3_LOC,Y						; 4+
+	lda	PT3_LOC+PT3_SAMPLE_LOC_L,Y				; 4+
 	sta	SAMPLE_L						; 3
 
-	iny								; 2
-	lda	PT3_LOC,Y						; 4+
+	lda	PT3_LOC+PT3_SAMPLE_LOC_L+1,Y				; 4+
 
 	; assume pt3 file is at page boundary
 	adc	#>PT3_LOC						; 2
@@ -394,7 +390,7 @@ load_sample:
 
 	rts								; 6
 								;============
-								;	 80
+								;	 76
 
 	;====================================
 	; pt3_init_song
