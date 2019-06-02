@@ -14,6 +14,7 @@
 ; + 3253 bytes -- remove unnecessary variable
 ; + 3203 bytes -- combine common code in note decoder
 ; + 2937 bytes -- qkumba first pass
+; + 2879 bytes -- qkumba second pass
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?

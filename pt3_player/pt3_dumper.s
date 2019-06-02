@@ -421,7 +421,8 @@ FRAMEH:	.byte	$00
 
 song_list:
 
-	.asciiz "CR.PT3"
+;	.asciiz "CR.PT3"
+	.asciiz "EA.PT3"
 
 ;=========
 ;routines
