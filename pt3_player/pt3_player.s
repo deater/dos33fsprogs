@@ -171,11 +171,11 @@ main_loop:
 	jsr	page_flip
 
 check_done:
-	lda	#$ff
-	bit	DONE_PLAYING
+	lda	DONE_PLAYING
+	asl			; bit 7 to carry, bit 6 to bit 7
 	beq	main_loop	; if was all zeros, loop
-	bmi	main_loop	; if high bit set, paused
-	bvs	minus_song	; if bit 6 set, then left pressed
+	bcs	main_loop	; if high bit set, paused
+	bmi	minus_song	; if bit 6 set, then left pressed
 
 				; else, either song finished or
 				; right pressed
@@ -266,8 +266,8 @@ new_song:
 
 	lda	#8		; print filename to screen
 	sta	CH
-	lda	#21
-	sta	CV
+	;lda	#21
+	;sta	CV
 
 	lda	INL
 	sta	OUTL
@@ -326,8 +326,6 @@ upcase:
 	beq	no_uppercase
 
 	ldy	#$1e
-	;;lda	#>(PT3_LOC+$1E)		; point to header title
-	sta	OUTH
 upcase_loop:
 	lda	PT3_LOC,Y
 
@@ -343,6 +341,8 @@ not_lowercase:
 no_uppercase:
 	; print title
 
+	lda	#>(PT3_LOC+$1E)		; point to header title
+	sta	OUTH
 	lda	#<(PT3_LOC+$1E)
 	sta	OUTL
 
@@ -421,17 +421,15 @@ no_uppercase:
 
 	; update the MHz indicator with current state
 
+	ldx     #'0'+$80
 	lda	convert_177
-	beq	set_1MHz
+	beq	done_MHz
 
-	lda	#'7'+$80
-	bne     done_MHz		; branch always
+	ldx	#'7'+$80
 
-set_1MHz:
-	lda     #'0'+$80
 done_MHz:
-        sta     $7F4
-        sta     $BF4
+        stx     $7F4
+        stx     $BF4
 
 	; Print Left Arrow (INVERSE)
 	lda	#'<'
@@ -501,10 +499,9 @@ fc_pattern_good:
 	bne	fc_line_good
 
 	inc     current_pattern         ; increment pattern
-        lda     #0
         sta     current_line
         sta     current_subframe
-        beq     frame_count_loop	; branch always
+        bne     frame_count_loop	; branch always
 
 fc_line_good:
         inc     current_subframe        ; subframe++
@@ -638,8 +635,8 @@ skip_inh_inc:
 increment_file:
 	inc	WHICH_FILE
 	lda	WHICH_FILE
-	cmp	#NUM_FILES
-	eor	done_increment
+	eor	#NUM_FILES
+	bne	done_increment
 	sta	WHICH_FILE
 done_increment:
 	rts
