@@ -4,7 +4,6 @@ clear_screens:
 	;===================================
 
 	lda	#$0
-	sta	DRAW_PAGE
 	jsr	clear_top
 	jsr	clear_bottom
 
@@ -13,7 +12,6 @@ clear_screens:
 	;===================================
 
 	lda	#$4
-	sta	DRAW_PAGE
 	jsr	clear_top
 	jmp	clear_bottom
 
@@ -29,11 +27,12 @@ clear_screens:
 	;		(pageX,40rows): 50*120+4+6 = 6010 = 6.0ms 166Hz
 	;				50*120+4+6+37 = 6055 = 6.0ms 166Hz
 clear_top:
-	lda	#0							; 2
-clear_top_a:
-	sta	COLOR							; 3
+	ldy	#0							; 2
+
+clear_top_y:
+	sty	COLOR							; 3
+	sta	DRAW_PAGE						; 3
 	clc								; 2
-	lda	DRAW_PAGE						; 3
 
 	adc	#4							; 2
 	sta	__ctf+2							; 3
@@ -80,7 +79,6 @@ clear_bottoms:
 	;===================================
 
 	lda	#$0
-	sta	DRAW_PAGE
 	jsr	clear_bottom
 
 	;===================================
@@ -88,7 +86,6 @@ clear_bottoms:
 	;===================================
 
 	lda	#$4
-	sta	DRAW_PAGE
 	; fall through
 
 	;=========================================================
@@ -97,8 +94,8 @@ clear_bottoms:
 	; clear bottom of draw page
 
 clear_bottom:
+	sta	DRAW_PAGE						; 3
 	clc								; 2
-	lda	DRAW_PAGE						; 3
 
 	adc	#6							; 2
 	sta	__cbf2+2						; 3
@@ -130,7 +127,6 @@ clear_screens_notext:
         ;===================================
 
         lda     #$0
-        sta     DRAW_PAGE
         jsr     clear_all
 
         ;===================================
@@ -138,7 +134,6 @@ clear_screens_notext:
         ;===================================
 
         lda     #$4
-        sta     DRAW_PAGE
         ; fall through
 
 
@@ -149,8 +144,8 @@ clear_screens_notext:
 	; clear color: clear_all_color+1
 
 clear_all:
+	sta	DRAW_PAGE						; 3
 	clc								; 2
-	lda	DRAW_PAGE						; 3
 
 	adc	#4							; 2
 	sta	__caf+2							; 3
