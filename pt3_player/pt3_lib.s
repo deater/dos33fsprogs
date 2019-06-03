@@ -796,7 +796,6 @@ calc_amplitude:
 
 	lda	sample_b1		;  a->amplitude= (b1 & 0xf);
 	and	#$f
-	sta	note_a+NOTE_AMPLITUDE,X
 
 	;========================================
 	; if b0 top bit is set, it means sliding
@@ -805,32 +804,31 @@ calc_amplitude:
 
 	bit	sample_b0		;  if ((b0 & 0x80)!=0) {
 	bpl	done_amp_sliding	; so if top bit not set, skip
+	tay
 
 	;================================
 	; if top bits 0b11 then slide up
-	; if top buts 0b10 then slide down
+	; if top bits 0b10 then slide down
 
 					;  if ((b0 & 0x40)!=0) {
+	lda	note_a+NOTE_AMPLITUDE_SLIDING,X
+	sec
 	bvc	amp_slide_down
 
 amp_slide_up:
 	; if (a->amplitude_sliding < 15) {
 	; a pain to do signed compares
-	lda	note_a+NOTE_AMPLITUDE_SLIDING,X
-	sec
 	sbc	#15
 	bvc	asu_signed
 	eor	#$80
 asu_signed:
 	bpl	done_amp_sliding	; skip if A>=15
 	inc	note_a+NOTE_AMPLITUDE_SLIDING,X	; a->amplitude_sliding++;
-	bne	done_amp_sliding
+	bne	done_amp_sliding_y
 
 amp_slide_down:
 	; if (a->amplitude_sliding > -15) {
 	; a pain to do signed compares
-	lda	note_a+NOTE_AMPLITUDE_SLIDING,X
-	sec
 	sbc	#$f1		; -15
 	bvc	asd_signed
 	eor	#$80
@@ -839,28 +837,29 @@ asd_signed:
 
 	dec	note_a+NOTE_AMPLITUDE_SLIDING,X	; a->amplitude_sliding--;
 
+done_amp_sliding_y:
+	tya
+
 done_amp_sliding:
 
 	; a->amplitude+=a->amplitude_sliding;
 	clc
-	lda	note_a+NOTE_AMPLITUDE,X
 	adc	note_a+NOTE_AMPLITUDE_SLIDING,X
-	sta	note_a+NOTE_AMPLITUDE,X
 
 	; clamp amplitude to 0 - 15
 
-	lda	note_a+NOTE_AMPLITUDE,X
 check_amp_lo:
-	bpl	check_amp_hi
-	lda	#0
-	beq	write_clamp_amplitude
+	bmi	write_clamp_amplitude
 
 check_amp_hi:
 	cmp	#16
-	bcc	done_clamp_amplitude	; blt
+	bcc	write_amplitude	; blt
 	lda	#15
+	.byte	$2C
 write_clamp_amplitude:
-	sta	note_a+NOTE_AMPLITUDE,X
+	lda	#0
+write_amplitude:
+	sta	note_amp_smc+1
 
 done_clamp_amplitude:
 
@@ -874,7 +873,8 @@ done_clamp_amplitude:
 	asl								; 2
 	asl								; 2
 	asl								; 2
-	ora	note_a+NOTE_AMPLITUDE,X					; 4+
+note_amp_smc:
+	ora	#0							; 4+
 
 	tay								; 2
 	lda	VolumeTable,Y						; 4+
