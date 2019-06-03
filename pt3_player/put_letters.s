@@ -37,6 +37,7 @@ first_note_a:
 	; second
 	clc
 	ldx	note_a+NOTE_NOTE
+	lda	note_lookup_letter,X
 	and	#$80
 
 	bne	sharp_a
@@ -115,6 +116,7 @@ first_note_b:
 
 	clc
 	ldx	note_b+NOTE_NOTE
+	lda	note_lookup_letter,X
 	and	#$80
 
 	bne	sharp_b
@@ -194,6 +196,7 @@ first_note_c:
 
 	clc
 	ldx	note_c+NOTE_NOTE
+	lda	note_lookup_letter,X
 	and	#$80
 
 	bne	sharp_c

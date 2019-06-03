@@ -68,46 +68,46 @@ NOTE_TONE_SLIDE_TO_STEP	=39
 NOTE_STRUCT_SIZE=40
 
 note_a:
-	.byte	$0	; NOTE_VOLUME
-	.byte	$0	; NOTE_TONE_SLIDING_L
-	.byte	$0	; NOTE_TONE_SLIDING_H
-	.byte	$0	; NOTE_ENABLED
-	.byte	$0	; NOTE_ENVELOPE_ENABLED
-	.byte	$0	; NOTE_SAMPLE_POINTER_L
-	.byte	$0	; NOTE_SAMPLE_POINTER_H
-	.byte	$0	; NOTE_SAMPLE_LOOP
-	.byte	$0	; NOTE_SAMPLE_LENGTH
-	.byte	$0	; NOTE_TONE_L
-	.byte	$0	; NOTE_TONE_H
-	.byte	$0	; NOTE_AMPLITUDE
-	.byte	$0	; NOTE_NOTE
-	.byte	$0	; NOTE_LEN
-	.byte	$0	; NOTE_LEN_COUNT
-	.byte	$0	; NOTE_ADDR_L
-	.byte	$0	; NOTE_ADDR_H
-	.byte	$0	; NOTE_ORNAMENT_POINTER_L
-	.byte	$0	; NOTE_ORNAMENT_POINTER_H
-	.byte	$0	; NOTE_ORNAMENT_LOOP
-	.byte	$0	; NOTE_ORNAMENT_LENGTH
-	.byte	$0	; NOTE_ONOFF
-	.byte	$0	; NOTE_TONE_ACCUMULATOR_L
-	.byte	$0	; NOTE_TONE_ACCUMULATOR_H
-	.byte	$0	; NOTE_TONE_SLIDE_COUNT
-	.byte	$0	; NOTE_ORNAMENT_POSITION
-	.byte	$0	; NOTE_SAMPLE_POSITION
-	.byte	$0	; NOTE_ENVELOPE_SLIDING
-	.byte	$0	; NOTE_NOISE_SLIDING
-	.byte	$0	; NOTE_AMPLITUDE_SLIDING
-	.byte	$0	; NOTE_ONOFF_DELAY
-	.byte	$0	; NOTE_OFFON_DELAY
-	.byte	$0	; NOTE_TONE_SLIDE_STEP_L
-	.byte	$0	; NOTE_TONE_SLIDE_STEP_H
-	.byte	$0	; NOTE_TONE_SLIDE_DELAY
-	.byte	$0	; NOTE_SIMPLE_GLISS
-	.byte	$0	; NOTE_SLIDE_TO_NOTE
-	.byte	$0	; NOTE_TONE_DELTA_L
-	.byte	$0	; NOTE_TONE_DELTA_H
-	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
+	.byte	$0	; NOTE_VOLUME				; 0
+	.byte	$0	; NOTE_TONE_SLIDING_L			; 1
+	.byte	$0	; NOTE_TONE_SLIDING_H			; 2
+	.byte	$0	; NOTE_ENABLED				; 3
+	.byte	$0	; NOTE_ENVELOPE_ENABLED			; 4
+	.byte	$0	; NOTE_SAMPLE_POINTER_L			; 5
+	.byte	$0	; NOTE_SAMPLE_POINTER_H			; 6
+	.byte	$0	; NOTE_SAMPLE_LOOP			; 7
+	.byte	$0	; NOTE_SAMPLE_LENGTH			; 8
+	.byte	$0	; NOTE_TONE_L				; 9
+	.byte	$0	; NOTE_TONE_H				; 10
+	.byte	$0	; NOTE_AMPLITUDE			; 11
+	.byte	$0	; NOTE_NOTE				; 12
+	.byte	$0	; NOTE_LEN				; 13
+	.byte	$0	; NOTE_LEN_COUNT			; 14
+	.byte	$0	; NOTE_ADDR_L				; 15
+	.byte	$0	; NOTE_ADDR_H				; 16
+	.byte	$0	; NOTE_ORNAMENT_POINTER_L		; 17
+	.byte	$0	; NOTE_ORNAMENT_POINTER_H		; 18
+	.byte	$0	; NOTE_ORNAMENT_LOOP			; 19
+	.byte	$0	; NOTE_ORNAMENT_LENGTH			; 20
+	.byte	$0	; NOTE_ONOFF				; 21
+	.byte	$0	; NOTE_TONE_ACCUMULATOR_L		; 22
+	.byte	$0	; NOTE_TONE_ACCUMULATOR_H		; 23
+	.byte	$0	; NOTE_TONE_SLIDE_COUNT			; 24
+	.byte	$0	; NOTE_ORNAMENT_POSITION		; 25
+	.byte	$0	; NOTE_SAMPLE_POSITION			; 26
+	.byte	$0	; NOTE_ENVELOPE_SLIDING			; 27
+	.byte	$0	; NOTE_NOISE_SLIDING			; 28
+	.byte	$0	; NOTE_AMPLITUDE_SLIDING		; 29
+	.byte	$0	; NOTE_ONOFF_DELAY			; 30
+	.byte	$0	; NOTE_OFFON_DELAY			; 31
+	.byte	$0	; NOTE_TONE_SLIDE_STEP_L		; 32
+	.byte	$0	; NOTE_TONE_SLIDE_STEP_H		; 33
+	.byte	$0	; NOTE_TONE_SLIDE_DELAY			; 34
+	.byte	$0	; NOTE_SIMPLE_GLISS			; 35
+	.byte	$0	; NOTE_SLIDE_TO_NOTE			; 36
+	.byte	$0	; NOTE_TONE_DELTA_L			; 37
+	.byte	$0	; NOTE_TONE_DELTA_H			; 38
+	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP		; 39
 
 note_b:
 	.byte	$0	; NOTE_VOLUME
