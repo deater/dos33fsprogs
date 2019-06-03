@@ -911,35 +911,26 @@ envelope_slide:
 	; Envelope slide
 	; If b1 top bits are 10 or 11
 
+	lda	sample_b0
+	asl
+	asl
+	asl				; b0 bit 5 to carry flag
 	lda	#$20
-	bit	sample_b0
-        php
-
-	bit	sample_b1
-	bpl	else_noise_slide	; if ((b1 & 0x80) != 0) {
-
-	plp
+	bit	sample_b1		; b1 bit 7 to sign flag, bit 5 to zero flag
 	php
-;;bug? always falls through
-	beq	envelope_slide_down	;     if ((b0 & 0x20) != 0) {
+	bpl	else_noise_slide	; if ((b1 & 0x80) != 0) {
+	tya
+	ora	#$f0
+	bcs	envelope_slide_down	;     if ((b0 & 0x20) == 0) {
 
-	; FIXME: this can be optimized
+envelope_slide_up:
+	; j = ((b0>>1)&0xF) + a->envelope_sliding;
+	and	#$0f
+	clc
 
 envelope_slide_down:
 
 	; j = ((b0>>1)|0xF0) + a->envelope_sliding
-	tya
-	ora	#$f0
-	clc
-	adc	note_a+NOTE_ENVELOPE_SLIDING,X
-	sta	e_slide_amount				; j
-;;+jmp envelope_slide_done?
-
-envelope_slide_up:
-	; j = ((b0>>1)&0xF) + a->envelope_sliding;
-	tya
-	and	#$0f
-	clc
 	adc	note_a+NOTE_ENVELOPE_SLIDING,X
 	sta	e_slide_amount				; j
 
@@ -950,6 +941,7 @@ envelope_slide_done:
 
 	; a->envelope_sliding = j;
 	sta	note_a+NOTE_ENVELOPE_SLIDING,X
+	clc
 
 last_envelope:
 
@@ -973,7 +965,7 @@ else_noise_slide:
 	sta	pt3_noise_add
 
 	plp
-	beq	noise_slide_done	;     if ((b1 & 0x20) != 0) {
+	bcc	noise_slide_done	;     if ((b1 & 0x20) != 0) {
 
 	; noise_sliding = pt3_noise_add
 	sta	note_a+NOTE_NOISE_SLIDING,X
@@ -1035,7 +1027,7 @@ handle_onoff:
 	eor	#$1			; toggle
 	sta	note_a+NOTE_ENABLED,X
 
-	bne	do_offon
+	.byte	$a9 ;mask do_onoff
 do_onoff:
 	dex				; select ONOFF
 	;lda	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
@@ -1457,30 +1449,33 @@ effect_2_small:			; FIXME: make smaller
 
 	iny
 	iny
-
-	lda	(PATTERN_L),Y	; load byte, set as slide_step low
 	iny
-	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
 
 	lda	(PATTERN_L),Y	; load byte, set as slide_step high
-	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
+	php
 
 	; 16-bit absolute value
-	bpl	slide_step_positive
-
+	bpl	slide_step_positive1
 	eor	#$ff
+
+slide_step_positive1:
 	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
-	lda	note_a+NOTE_TONE_SLIDE_STEP_L,X
+	dey
+	lda	(PATTERN_L),Y	; load byte, set as slide_step low
+	plp
+	bpl	slide_step_positive2
 	eor	#$ff
 	adc	#$0	;+carry set by earlier CMP
+
+slide_step_positive2:
 	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	bcc	skip_step_inc1
 	inc	note_a+NOTE_TONE_SLIDE_STEP_H,X
 skip_step_inc1:
 
-slide_step_positive:
 
 	iny	; moved here as it messed with flags
+	iny
 
 
 ;	a->tone_delta=GetNoteFreq(a->note,pt3)-
@@ -1489,18 +1484,18 @@ slide_step_positive:
 	lda	note_a+NOTE_NOTE,X
 	jsr	GetNoteFreq
 	lda	freq_l
-	sta	note_a+NOTE_TONE_DELTA_L,X
+	sta	temp_word_l
 	lda	freq_h
-	sta	note_a+NOTE_TONE_DELTA_H,X
+	sta	temp_word_h
 
 	lda	prev_note
 	jsr	GetNoteFreq
 
 	sec
-	lda	note_a+NOTE_TONE_DELTA_L,X
+	lda	temp_word_l
 	sbc	freq_l
 	sta	note_a+NOTE_TONE_DELTA_L,X
-	lda	note_a+NOTE_TONE_DELTA_H,X
+	lda	temp_word_h
 	sbc	freq_h
 	sta	note_a+NOTE_TONE_DELTA_H,X
 
