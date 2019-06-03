@@ -1529,17 +1529,15 @@ weird_version:
 
 	; a->tone_slide_step = -a->tone_slide_step;
 
-	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
-	eor	#$ff
-	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	lda	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	eor	#$ff
 	clc
 	adc	#$1
 	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
-	bcc	skip_step_inc2
-	inc	note_a+NOTE_TONE_SLIDE_STEP_H,X
-skip_step_inc2:
+	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
+	eor	#$ff
+	adc	#$0
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
 
 no_need:
 
