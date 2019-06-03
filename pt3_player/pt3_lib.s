@@ -195,8 +195,6 @@ note_c:
 
 pt3_version:		.byte	$0
 pt3_frequency_table:	.byte	$0
-pt3_speed:		.byte	$0
-pt3_loop:		.byte	$0
 
 pt3_noise_period:	.byte	$0
 pt3_noise_add:		.byte	$0
@@ -223,8 +221,6 @@ temp_word_h:		.byte	$0
 note_command:		; shared space with sample_b0
 sample_b0:		.byte	$0
 sample_b1:		.byte	$0
-
-convert_177:		.byte	$1
 
 ; Header offsets
 
@@ -272,9 +268,12 @@ current_val:	.byte $0
 	;	easy.  Can't self modify as channels A/B/C have own copies
 	; 	of the var.
 
+load_ornament0:
+	lda	#0							; 2
+
 load_ornament:
 
-	sty	ysave		; save Y value				; 3
+	sty	TEMP		; save Y value				; 3
 
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
@@ -319,7 +318,7 @@ load_ornament:
 	adc	#$0							; 2
 	sta	note_a+NOTE_ORNAMENT_POINTER_H,X			; 5
 
-	ldy	ysave		; restore Y value			; 3
+	ldy	TEMP		; restore Y value			; 3
 
 	rts								; 6
 
@@ -343,9 +342,12 @@ load_ornament:
 	; Optimization:
 	;	see comments on ornament setting
 
+load_sample1:
+	lda	#1							; 2
+
 load_sample:
 
-	sty	ysave							; 3
+	sty	TEMP							; 3
 
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0x6a+(i*2)]<<8)|pt3->data[0x69+(i*2)];
@@ -388,7 +390,7 @@ load_sample:
 	adc	#$0							; 2
 	sta	note_a+NOTE_SAMPLE_POINTER_H,X				; 5
 
-	ldy	ysave							; 3
+	ldy	TEMP							; 3
 
 	rts								; 6
 								;============
@@ -450,17 +452,15 @@ pt3_init_song:
 
 	;=======================
 	; load default speed
-	; FIXME: change to self-modifying code
 
 	lda	PT3_LOC+PT3_SPEED					; 4
-	sta	pt3_speed						; 4
+	sta	pt3_speed_smc+1						; 4
 
 	;=======================
 	; load loop
-	; FIXME: change to self-modifying code
 
 	lda	PT3_LOC+PT3_LOOP					; 4
-	sta	pt3_loop						; 4
+	sta	pt3_loop_smc+1						; 4
 
 
 	;======================
@@ -1641,7 +1641,7 @@ effect_9:
 
 	lda	(PATTERN_L),Y	; load byte, set as speed
 	iny
-	sta	pt3_speed
+	sta	pt3_speed_smc+1
 
 no_effect:
 
@@ -1865,7 +1865,8 @@ line_good:
 	lda	current_subframe					; 4
 
 	; if we hit pt3_speed, move to next
-	eor	pt3_speed						; 4
+pt3_speed_smc:
+	eor	#0							; 2
 	bne	do_frame						; 2/3
 
 next_line:
@@ -1906,10 +1907,8 @@ do_frame:
 	ldx	#(NOTE_STRUCT_SIZE*2)	; Note C			; 2
 	jsr	calculate_note						; 6+?
 
-	; FIXME: make this self-modifying?
-
-	lda	convert_177						; 4
-	cmp	#1							; 2
+convert_177_smc1:
+	sec								; 2
 
 	; Load up the Frequency Registers
 
@@ -1954,8 +1953,8 @@ do_frame:
 
 no_scale_a:
 
-	lda	convert_177						; 4
-	cmp	#1							; 2
+convert_177_smc2:
+	sec								; 2
 
 	lda	note_b+NOTE_TONE_L	; Note B Period L		; 4
 	sta	AY_REGISTERS+2		; into R2			; 3
@@ -1996,8 +1995,8 @@ no_scale_a:
 
 no_scale_b:
 
-	lda	convert_177						; 4
-	cmp	#1							; 2
+convert_177_smc3:
+	sec								; 2
 
 	lda	note_c+NOTE_TONE_L	; Note C Period L		; 4
 	sta	AY_REGISTERS+4		; into R4			; 3
@@ -2046,8 +2045,9 @@ no_scale_c:
 	and	#$1f							; 2
 	sta	AY_REGISTERS+6						; 3
 
-	ldx	convert_177						; 3
-	beq	no_scale_n						; 2/3
+convert_177_smc4:
+	sec								; 2
+	bcc	no_scale_n						; 2/3
 
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
@@ -2057,8 +2057,7 @@ no_scale_c:
 	asl								; 2
 
 	; add in original to get 9
-	clc								; 2
-	adc	temp_word_l						; 4
+	adc	AY_REGISTERS+6						; 3
 
 	; divide by 16 to get proper value
 	ror								; 2
@@ -2092,25 +2091,26 @@ no_scale_n:
 	clc								; 2
 	lda	pt3_envelope_period_l					; 4
 	adc	pt3_envelope_add					; 4
-	sta	temp_word_l						; 4
+	tay								; 2
 	lda	pt3_envelope_period_h					; 4
 	adc	#0							; 2
 	sta	temp_word_h						; 4
 
 	clc								; 2
-	lda	pt3_envelope_slide_l					; 4
-	adc	temp_word_l						; 4
+	tya								; 2
+	adc	pt3_envelope_slide_l					; 4
 	sta	AY_REGISTERS+11						; 3
 	lda	temp_word_h						; 4
 	adc	pt3_envelope_slide_h					; 4
-	sta	temp_word_h						; 4
 	sta	AY_REGISTERS+12						; 3
 
-	lda	convert_177						; 4
-	beq	no_scale_e						; 2/3
+convert_177_smc5:
+	sec
+	bcc	no_scale_e						; 2/3
 
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
+	tay								; 2
 	; first multiply by 8
 	lda	AY_REGISTERS+11						; 3
 	asl								; 2
@@ -2124,7 +2124,7 @@ no_scale_n:
 	clc								; 2
 	adc	AY_REGISTERS+11						; 3
 	sta	AY_REGISTERS+11						; 3
-	lda	temp_word_h						; 4
+	tya								; 2
 	adc	AY_REGISTERS+12						; 3
 
 	; divide by 16 to get proper value

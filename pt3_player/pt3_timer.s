@@ -467,5 +467,9 @@ exit_interrupt:
 	rts			; return from interrupt			; 6
 
 
+;============
+; dummy vars
+;============
 
+pt3_loop_smc:
 

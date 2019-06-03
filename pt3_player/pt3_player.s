@@ -422,7 +422,8 @@ no_uppercase:
 	; update the MHz indicator with current state
 
 	ldx     #'0'+$80
-	lda	convert_177
+	lda	convert_177_smc1
+	cmp	#$18
 	beq	done_MHz
 
 	ldx	#'7'+$80
@@ -506,7 +507,7 @@ fc_pattern_good:
 fc_line_good:
         inc     current_subframe        ; subframe++
         lda     current_subframe
-        eor     pt3_speed               ; if we hit pt3_speed, move to next
+        eor     pt3_speed_smc+1         ; if we hit pt3_speed, move to next
         bne     fc_do_frame
 
 fc_next_line:
