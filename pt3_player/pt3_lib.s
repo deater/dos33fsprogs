@@ -236,7 +236,6 @@ PT3_ORNAMENT_LOC_L	= $A9
 PT3_ORNAMENT_LOC_H	= $AA
 PT3_PATTERN_TABLE	= $C9
 
-ysave:	.byte	$00
 freq_l:	.byte	$00
 freq_h:	.byte	$00
 
@@ -433,22 +432,17 @@ pt3_init_song:
 	; default ornament/sample in A
 	ldx	#(NOTE_STRUCT_SIZE*0)					; 2
 	jsr	load_ornament						; 6+93
-	lda	#1							; 2
-	jsr	load_sample						; 6+86
+	jsr	load_sample1						; 6+86
 
 	; default ornament/sample in B
-	lda	#0							; 2
 	ldx	#(NOTE_STRUCT_SIZE*1)					; 2
-	jsr	load_ornament						; 6+93
-	lda	#1							; 2
-	jsr	load_sample						; 6+86
+	jsr	load_ornament0						; 6+93
+	jsr	load_sample1						; 6+86
 
 	; default ornament/sample in C
-	lda	#0							; 2
 	ldx	#(NOTE_STRUCT_SIZE*2)					; 2
-	jsr	load_ornament						; 6+93
-	lda	#1							; 2
-	jsr	load_sample						; 6+86
+	jsr	load_ornament0						; 6+93
+	jsr	load_sample1						; 6+86
 
 	;=======================
 	; load default speed
@@ -2190,7 +2184,7 @@ done_do_frame:
 	; FIXME: self modify code
 GetNoteFreq:
 
-	sty	ysave							; 4
+	sty	TEMP							; 3
 
 	tay								; 2
 	lda	PT3_LOC+PT3_HEADER_FREQUENCY				; 4
@@ -2202,7 +2196,7 @@ GetNoteFreq:
 	lda	PT3NoteTable_ST_low,Y					; 4+
 	sta	freq_l							; 4
 
-	ldy	ysave							; 4
+	ldy	TEMP							; 
 	rts								; 6
 								;===========
 								;	40
@@ -2214,7 +2208,7 @@ freq_table_2:
 	lda	PT3NoteTable_ASM_34_35_low,Y				; 4+
 	sta	freq_l							; 4
 
-	ldy	ysave							; 4
+	ldy	TEMP							; 3
         rts								; 6
 								;===========
 								;	41
