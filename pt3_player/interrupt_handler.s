@@ -178,7 +178,7 @@ done_time:
 check_keyboard:
 
 	jsr	get_key
-	lda	LASTKEY
+	cmp	#0
 	beq	exit_interrupt
 
 	;====================

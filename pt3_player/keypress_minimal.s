@@ -11,7 +11,7 @@ get_key:
 
 figure_out_key:
 	cmp	#' '+128		; the mask destroys space	; 2
-	beq	save_key		; so handle it specially	; 2nt/3
+	beq	return_key		; so handle it specially	; 2nt/3
 
 check_right_arrow:
 	cmp	#$95							; 2
@@ -32,15 +32,14 @@ check_down_arrow:
 check_escape:
 	and	#$5f			; mask, to make upper-case	; 2
         cmp	#$1B							; 2
-	bne	save_key						; 2nt/3
+	bne	return_key						; 2nt/3
 	lda	#'Q'							; 2
-	bne	save_key		; branch always			; 3
+	bne	return_key		; branch always			; 3
 
 no_key:
-	lda	#0			; no key, so save a zero	; 2
+	lda	#0			; no key, so return a zero	; 2
 
-save_key:
-	sta	LASTKEY			; save the key to our buffer	; 2
+return_key:
 	rts								; 6
 								;============
 
