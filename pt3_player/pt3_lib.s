@@ -195,6 +195,8 @@ note_c:
 
 pt3_version:		.byte	$0
 pt3_frequency_table:	.byte	$0
+pt3_speed:		.byte	$0
+pt3_loop:		.byte	$0
 
 pt3_noise_period:	.byte	$0
 pt3_noise_add:		.byte	$0
@@ -222,6 +224,8 @@ note_command:		; shared space with sample_b0
 sample_b0:		.byte	$0
 sample_b1:		.byte	$0
 
+convert_177:		.byte	$1
+
 ; Header offsets
 
 PT3_VERSION		= $0D
@@ -236,6 +240,7 @@ PT3_ORNAMENT_LOC_L	= $A9
 PT3_ORNAMENT_LOC_H	= $AA
 PT3_PATTERN_TABLE	= $C9
 
+ysave:	.byte	$00
 freq_l:	.byte	$00
 freq_h:	.byte	$00
 
@@ -267,12 +272,9 @@ current_val:	.byte $0
 	;	easy.  Can't self modify as channels A/B/C have own copies
 	; 	of the var.
 
-load_ornament0:
-	lda	#0							; 2
-
 load_ornament:
 
-	sty	TEMP		; save Y value				; 3
+	sty	ysave		; save Y value				; 3
 
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
@@ -317,7 +319,7 @@ load_ornament:
 	adc	#$0							; 2
 	sta	note_a+NOTE_ORNAMENT_POINTER_H,X			; 5
 
-	ldy	TEMP		; restore Y value			; 3
+	ldy	ysave		; restore Y value			; 3
 
 	rts								; 6
 
@@ -341,12 +343,9 @@ load_ornament:
 	; Optimization:
 	;	see comments on ornament setting
 
-load_sample1:
-	lda	#1							; 2
-
 load_sample:
 
-	sty	TEMP							; 3
+	sty	ysave							; 3
 
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0x6a+(i*2)]<<8)|pt3->data[0x69+(i*2)];
@@ -389,7 +388,7 @@ load_sample:
 	adc	#$0							; 2
 	sta	note_a+NOTE_SAMPLE_POINTER_H,X				; 5
 
-	ldy	TEMP							; 3
+	ldy	ysave							; 3
 
 	rts								; 6
 								;============
@@ -432,29 +431,36 @@ pt3_init_song:
 	; default ornament/sample in A
 	ldx	#(NOTE_STRUCT_SIZE*0)					; 2
 	jsr	load_ornament						; 6+93
-	jsr	load_sample1						; 6+86
+	lda	#1							; 2
+	jsr	load_sample						; 6+86
 
 	; default ornament/sample in B
+	lda	#0							; 2
 	ldx	#(NOTE_STRUCT_SIZE*1)					; 2
-	jsr	load_ornament0						; 6+93
-	jsr	load_sample1						; 6+86
+	jsr	load_ornament						; 6+93
+	lda	#1							; 2
+	jsr	load_sample						; 6+86
 
 	; default ornament/sample in C
+	lda	#0							; 2
 	ldx	#(NOTE_STRUCT_SIZE*2)					; 2
-	jsr	load_ornament0						; 6+93
-	jsr	load_sample1						; 6+86
+	jsr	load_ornament						; 6+93
+	lda	#1							; 2
+	jsr	load_sample						; 6+86
 
 	;=======================
 	; load default speed
+	; FIXME: change to self-modifying code
 
 	lda	PT3_LOC+PT3_SPEED					; 4
-	sta	pt3_speed_smc+1						; 4
+	sta	pt3_speed						; 4
 
 	;=======================
 	; load loop
+	; FIXME: change to self-modifying code
 
 	lda	PT3_LOC+PT3_LOOP					; 4
-	sta	pt3_loop_smc+1						; 4
+	sta	pt3_loop						; 4
 
 
 	;======================
@@ -536,10 +542,12 @@ vol_outer:
 	sta	z80_d		; carry is important
 
 			; sbc hl,hl
+	lda	#$ff
+	bcs	vol_ffs
+vol_zeros:
 	lda	#0
-	adc	#$ff
-	eor	#$ff
 
+vol_ffs:
 vol_write:
 	sta	z80_h
 	pha
@@ -796,6 +804,7 @@ calc_amplitude:
 
 	lda	sample_b1		;  a->amplitude= (b1 & 0xf);
 	and	#$f
+	sta	note_a+NOTE_AMPLITUDE,X
 
 	;========================================
 	; if b0 top bit is set, it means sliding
@@ -804,31 +813,32 @@ calc_amplitude:
 
 	bit	sample_b0		;  if ((b0 & 0x80)!=0) {
 	bpl	done_amp_sliding	; so if top bit not set, skip
-	tay
 
 	;================================
 	; if top bits 0b11 then slide up
 	; if top buts 0b10 then slide down
 
 					;  if ((b0 & 0x40)!=0) {
-	lda	note_a+NOTE_AMPLITUDE_SLIDING,X
-	sec
 	bvc	amp_slide_down
 
 amp_slide_up:
 	; if (a->amplitude_sliding < 15) {
 	; a pain to do signed compares
+	lda	note_a+NOTE_AMPLITUDE_SLIDING,X
+	sec
 	sbc	#15
 	bvc	asu_signed
 	eor	#$80
 asu_signed:
 	bpl	done_amp_sliding	; skip if A>=15
 	inc	note_a+NOTE_AMPLITUDE_SLIDING,X	; a->amplitude_sliding++;
-	bne	done_amp_sliding_y
+	bne	done_amp_sliding
 
 amp_slide_down:
 	; if (a->amplitude_sliding > -15) {
 	; a pain to do signed compares
+	lda	note_a+NOTE_AMPLITUDE_SLIDING,X
+	sec
 	sbc	#$f1		; -15
 	bvc	asd_signed
 	eor	#$80
@@ -837,29 +847,28 @@ asd_signed:
 
 	dec	note_a+NOTE_AMPLITUDE_SLIDING,X	; a->amplitude_sliding--;
 
-done_amp_sliding_y:
-	tya
-
 done_amp_sliding:
 
 	; a->amplitude+=a->amplitude_sliding;
 	clc
+	lda	note_a+NOTE_AMPLITUDE,X
 	adc	note_a+NOTE_AMPLITUDE_SLIDING,X
+	sta	note_a+NOTE_AMPLITUDE,X
 
 	; clamp amplitude to 0 - 15
 
+	lda	note_a+NOTE_AMPLITUDE,X
 check_amp_lo:
-	bmi	write_clamp_amplitude
+	bpl	check_amp_hi
+	lda	#0
+	beq	write_clamp_amplitude
 
 check_amp_hi:
 	cmp	#16
-	bcc	write_amplitude	; blt
+	bcc	done_clamp_amplitude	; blt
 	lda	#15
-	.byte	$2C
 write_clamp_amplitude:
-	lda	#0
-write_amplitude:
-	sta	note_amp_smc+1
+	sta	note_a+NOTE_AMPLITUDE,X
 
 done_clamp_amplitude:
 
@@ -873,8 +882,7 @@ done_clamp_amplitude:
 	asl								; 2
 	asl								; 2
 	asl								; 2
-note_amp_smc:
-	ora	#0							; 4+
+	ora	note_a+NOTE_AMPLITUDE,X					; 4+
 
 	tay								; 2
 	lda	VolumeTable,Y						; 4+
@@ -911,26 +919,35 @@ envelope_slide:
 	; Envelope slide
 	; If b1 top bits are 10 or 11
 
-	lda	sample_b0
-	asl
-	asl
-	asl				; b0 bit 5 to carry flag
 	lda	#$20
-	bit	sample_b1		; b1 bit 7 to sign flag, bit 5 to zero flag
-	php
-	bpl	else_noise_slide	; if ((b1 & 0x80) != 0) {
-	tya
-	ora	#$f0
-	bcs	envelope_slide_down	;     if ((b0 & 0x20) == 0) {
+	bit	sample_b0
+        php
 
-envelope_slide_up:
-	; j = ((b0>>1)&0xF) + a->envelope_sliding;
-	and	#$0f
-	clc
+	bit	sample_b1
+	bpl	else_noise_slide	; if ((b1 & 0x80) != 0) {
+
+	plp
+	php
+;;bug? always falls through
+	beq	envelope_slide_down	;     if ((b0 & 0x20) != 0) {
+
+	; FIXME: this can be optimized
 
 envelope_slide_down:
 
 	; j = ((b0>>1)|0xF0) + a->envelope_sliding
+	tya
+	ora	#$f0
+	clc
+	adc	note_a+NOTE_ENVELOPE_SLIDING,X
+	sta	e_slide_amount				; j
+;;+jmp envelope_slide_done?
+
+envelope_slide_up:
+	; j = ((b0>>1)&0xF) + a->envelope_sliding;
+	tya
+	and	#$0f
+	clc
 	adc	note_a+NOTE_ENVELOPE_SLIDING,X
 	sta	e_slide_amount				; j
 
@@ -941,7 +958,6 @@ envelope_slide_done:
 
 	; a->envelope_sliding = j;
 	sta	note_a+NOTE_ENVELOPE_SLIDING,X
-	clc
 
 last_envelope:
 
@@ -1027,7 +1043,7 @@ handle_onoff:
 	eor	#$1			; toggle
 	sta	note_a+NOTE_ENABLED,X
 
-	.byte	$a9 ;mask do_onoff
+	bne	do_offon
 do_onoff:
 	dex				; select ONOFF
 	;lda	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
@@ -1449,33 +1465,30 @@ effect_2_small:			; FIXME: make smaller
 
 	iny
 	iny
+
+	lda	(PATTERN_L),Y	; load byte, set as slide_step low
 	iny
+	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
 
 	lda	(PATTERN_L),Y	; load byte, set as slide_step high
-	php
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
 
 	; 16-bit absolute value
-	bpl	slide_step_positive1
-	eor	#$ff
+	bpl	slide_step_positive
 
-slide_step_positive1:
+	eor	#$ff
 	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
-	dey
-	lda	(PATTERN_L),Y	; load byte, set as slide_step low
-	plp
-	bpl	slide_step_positive2
+	lda	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	eor	#$ff
 	adc	#$0	;+carry set by earlier CMP
-
-slide_step_positive2:
 	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	bcc	skip_step_inc1
 	inc	note_a+NOTE_TONE_SLIDE_STEP_H,X
 skip_step_inc1:
 
+slide_step_positive:
 
 	iny	; moved here as it messed with flags
-	iny
 
 
 ;	a->tone_delta=GetNoteFreq(a->note,pt3)-
@@ -1484,18 +1497,18 @@ skip_step_inc1:
 	lda	note_a+NOTE_NOTE,X
 	jsr	GetNoteFreq
 	lda	freq_l
-	sta	temp_word_l
+	sta	note_a+NOTE_TONE_DELTA_L,X
 	lda	freq_h
-	sta	temp_word_h
+	sta	note_a+NOTE_TONE_DELTA_H,X
 
 	lda	prev_note
 	jsr	GetNoteFreq
 
 	sec
-	lda	temp_word_l
+	lda	note_a+NOTE_TONE_DELTA_L,X
 	sbc	freq_l
 	sta	note_a+NOTE_TONE_DELTA_L,X
-	lda	temp_word_h
+	lda	note_a+NOTE_TONE_DELTA_H,X
 	sbc	freq_h
 	sta	note_a+NOTE_TONE_DELTA_H,X
 
@@ -1531,13 +1544,15 @@ weird_version:
 
 	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	eor	#$ff
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
+	lda	note_a+NOTE_TONE_SLIDE_STEP_L,X
+	eor	#$ff
 	clc
 	adc	#$1
 	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
-	lda	note_a+NOTE_TONE_SLIDE_STEP_H,X
-	eor	#$ff
-	adc	#$0
-	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
+	bcc	skip_step_inc2
+	inc	note_a+NOTE_TONE_SLIDE_STEP_H,X
+skip_step_inc2:
 
 no_need:
 
@@ -1626,7 +1641,7 @@ effect_9:
 
 	lda	(PATTERN_L),Y	; load byte, set as speed
 	iny
-	sta	pt3_speed_smc+1
+	sta	pt3_speed
 
 no_effect:
 
@@ -1850,8 +1865,7 @@ line_good:
 	lda	current_subframe					; 4
 
 	; if we hit pt3_speed, move to next
-pt3_speed_smc:
-	eor	#0							; 2
+	eor	pt3_speed						; 4
 	bne	do_frame						; 2/3
 
 next_line:
@@ -1892,8 +1906,10 @@ do_frame:
 	ldx	#(NOTE_STRUCT_SIZE*2)	; Note C			; 2
 	jsr	calculate_note						; 6+?
 
-convert_177_smc1:
-	sec								; 2
+	; FIXME: make this self-modifying?
+
+	lda	convert_177						; 4
+	cmp	#1							; 2
 
 	; Load up the Frequency Registers
 
@@ -1938,8 +1954,8 @@ convert_177_smc1:
 
 no_scale_a:
 
-convert_177_smc2:
-	sec								; 2
+	lda	convert_177						; 4
+	cmp	#1							; 2
 
 	lda	note_b+NOTE_TONE_L	; Note B Period L		; 4
 	sta	AY_REGISTERS+2		; into R2			; 3
@@ -1980,8 +1996,8 @@ convert_177_smc2:
 
 no_scale_b:
 
-convert_177_smc3:
-	sec								; 2
+	lda	convert_177						; 4
+	cmp	#1							; 2
 
 	lda	note_c+NOTE_TONE_L	; Note C Period L		; 4
 	sta	AY_REGISTERS+4		; into R4			; 3
@@ -2030,9 +2046,8 @@ no_scale_c:
 	and	#$1f							; 2
 	sta	AY_REGISTERS+6						; 3
 
-convert_177_smc4:
-	sec								; 2
-	bcc	no_scale_n						; 2/3
+	ldx	convert_177						; 3
+	beq	no_scale_n						; 2/3
 
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
@@ -2042,7 +2057,8 @@ convert_177_smc4:
 	asl								; 2
 
 	; add in original to get 9
-	adc	AY_REGISTERS+6						; 3
+	clc								; 2
+	adc	temp_word_l						; 4
 
 	; divide by 16 to get proper value
 	ror								; 2
@@ -2076,26 +2092,25 @@ no_scale_n:
 	clc								; 2
 	lda	pt3_envelope_period_l					; 4
 	adc	pt3_envelope_add					; 4
-	tay								; 2
+	sta	temp_word_l						; 4
 	lda	pt3_envelope_period_h					; 4
 	adc	#0							; 2
 	sta	temp_word_h						; 4
 
 	clc								; 2
-	tya								; 2
-	adc	pt3_envelope_slide_l					; 4
+	lda	pt3_envelope_slide_l					; 4
+	adc	temp_word_l						; 4
 	sta	AY_REGISTERS+11						; 3
 	lda	temp_word_h						; 4
 	adc	pt3_envelope_slide_h					; 4
+	sta	temp_word_h						; 4
 	sta	AY_REGISTERS+12						; 3
 
-convert_177_smc5:
-	sec
-	bcc	no_scale_e						; 2/3
+	lda	convert_177						; 4
+	beq	no_scale_e						; 2/3
 
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
-	tay								; 2
 	; first multiply by 8
 	lda	AY_REGISTERS+11						; 3
 	asl								; 2
@@ -2109,7 +2124,7 @@ convert_177_smc5:
 	clc								; 2
 	adc	AY_REGISTERS+11						; 3
 	sta	AY_REGISTERS+11						; 3
-	tya								; 2
+	lda	temp_word_h						; 4
 	adc	AY_REGISTERS+12						; 3
 
 	; divide by 16 to get proper value
@@ -2175,7 +2190,7 @@ done_do_frame:
 	; FIXME: self modify code
 GetNoteFreq:
 
-	sty	TEMP							; 3
+	sty	ysave							; 4
 
 	tay								; 2
 	lda	PT3_LOC+PT3_HEADER_FREQUENCY				; 4
@@ -2187,7 +2202,7 @@ GetNoteFreq:
 	lda	PT3NoteTable_ST_low,Y					; 4+
 	sta	freq_l							; 4
 
-	ldy	TEMP							; 
+	ldy	ysave							; 4
 	rts								; 6
 								;===========
 								;	40
@@ -2199,7 +2214,7 @@ freq_table_2:
 	lda	PT3NoteTable_ASM_34_35_low,Y				; 4+
 	sta	freq_l							; 4
 
-	ldy	TEMP							; 3
+	ldy	ysave							; 4
         rts								; 6
 								;===========
 								;	41
