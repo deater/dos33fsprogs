@@ -536,12 +536,10 @@ vol_outer:
 	sta	z80_d		; carry is important
 
 			; sbc hl,hl
-	lda	#$ff
-	bcs	vol_ffs
-vol_zeros:
 	lda	#0
+	adc	#$ff
+	eor	#$ff
 
-vol_ffs:
 vol_write:
 	sta	z80_h
 	pha
