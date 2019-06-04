@@ -41,7 +41,7 @@ TEXT	= $FB36				;; Set text mode
 HOME	= $FC58				;; Clear the text screen
 WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 
-MAX	= 2
+MAX	= 4
 
 	lda	#$ff
 	sta	WHICH
@@ -346,7 +346,11 @@ gr_offsets:
 pictures:
 	.word apple_low,apple_high
 	.word katahdin_low,katahdin_high
+	.word df_girl_low,df_girl_high
+	.word df_girl2_low,df_girl2_high
 
 .include "apple_40_96.inc"
 .include "katahdin_40_96.inc"
+.include "df_girl_40_96.inc"
+.include "df_girl2_40_96.inc"
 
