@@ -17,6 +17,7 @@
 ; + 2879 bytes -- qkumba second pass
 ; + 2839 bytes -- mask note command in common code
 ; + 2832 bytes -- combine $D0 and $E0 decode
+; + 2816 bytes -- eliminate "decode_done" variable (2.75k)
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?
@@ -251,7 +252,6 @@ e_slide_amount:	.byte	$0
 prev_note:	.byte $0
 prev_sliding_l:	.byte $0
 prev_sliding_h:	.byte $0
-decode_done:	.byte $0
 current_val:	.byte $0
 
 z80_h:	.byte $0
@@ -1062,6 +1062,7 @@ done_onoff:
 	;=====================================
 	; X points to the note offset
 
+	; Note! These timings are out of date (FIXME)
 	; Timings (from ===>)
 	;	00:    14+30
 	;	0X:    14+15
@@ -1069,8 +1070,10 @@ done_onoff:
 	;	1X:    14+5 +193
 	;	2X/3X: 14+5 +17
 	;	4X:    14+5+5 + 111
-	;	5X:	14+5+5+ 102
-	;	
+	;	5X-BX:	14+5+5+ 102
+	;	CX:
+	;	DX/EX:
+	;	FX:
 
 stop_decoding:
 
@@ -1105,7 +1108,6 @@ decode_note:
 
 	ldy	#0							; 2
 	sty	spec_command						; 4
-	sty	decode_done						; 4
 
 	; Skip decode if note still running
 	lda	note_a+NOTE_LEN_COUNT,X					; 4+
@@ -1176,13 +1178,13 @@ decode_case_0X:
 									; -1
 	sta	note_a+NOTE_LEN_COUNT,X	; len_count=0;			; 5
 
-	inc	decode_done						; 6
-
 	dec	pt3_pattern_done					; 6
+
+	jmp	note_done_decoding					; 3
 
 decode_case_0X_not_zero:
 
-	jmp	done_decode						; 3
+	jmp	done_decode_loop					; 3
 
 
 decode_case_1X:
@@ -1218,7 +1220,7 @@ decode_case_1x_common:
 	lda	#0							; 2
 	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0	; 5
 
-	jmp	done_decode						; 3
+	jmp	done_decode_loop					; 3
 
 decode_case_2X:
 decode_case_3X:
@@ -1233,7 +1235,7 @@ decode_case_3X:
 	adc	#$e0			; same as subtract $20		; 2
 	sta	pt3_noise_period					; 3
 
-	jmp	done_decode						; 3
+	jmp	done_decode_loop					; 3
 								;===========
 								;	15
 
@@ -1247,7 +1249,7 @@ decode_case_4X:
 	lda	note_command_bottom	; set ornament to bottom nibble	; 4
 	jsr	load_ornament						; 6+93
 
-	jmp	done_decode						; 3
+	jmp	done_decode_loop					; 3
 								;============
 								;	110
 
@@ -1269,7 +1271,7 @@ decode_case_5X:
 	sta	note_a+NOTE_ENABLED,X		; enabled=1		; 5
 
 
-	bne	done_decode						; 2
+	bne	note_done_decoding					; 3
 
 decode_case_bX:
 	;============================================
@@ -1293,20 +1295,20 @@ decode_case_b1:
 
 	sta	note_a+NOTE_LEN,X					; 5
 	sta	note_a+NOTE_LEN_COUNT,X					; 5
-	bcs	done_decode			; branch always		; 3
+	bcs	done_decode_loop		; branch always		; 3
 
 decode_case_b0:
 	; Disable envelope
 	sta	note_a+NOTE_ENVELOPE_ENABLED,X				; 5
 	sta	note_a+NOTE_ORNAMENT_POSITION,X				; 5
-	beq	done_decode						; 3
+	beq	done_decode_loop					; 3
 
 
 decode_case_bx_higher:
 
 	jsr	set_envelope						; 6+64
 
-	bcs	done_decode			; branch always		; 3
+	bcs	done_decode_loop		; branch always		; 3
 
 decode_case_cX:
 	;==============================
@@ -1325,11 +1327,11 @@ decode_case_c0:
 
 	jsr	reset_note						; 6+69
 
-	bne	done_decode			; branch always		; 3
+	beq	note_done_decoding		; branch always		; 3
 
 decode_case_cx_not_c0:
 	sta	note_a+NOTE_VOLUME,X		; volume=current_val&0xf; 5
-	bne	done_decode			; branch always		; 3
+	bne	done_decode_loop		; branch always		; 3
 
 decode_case_dX:
 	;==============================
@@ -1344,22 +1346,20 @@ decode_case_dX:
 
 	lda	note_command						; 4
 	sec								; 2
-	sbc	#$d0							; 3
-	beq	decode_case_d0
+	sbc	#$d0							; 2
+	beq	note_done_decoding					; 3
 
 decode_case_not_d0:
+									; -1
 
 	jsr	load_sample	; load sample in bottom nybble		; 6+??
 
-	bcc	done_decode	; branch always				; 3
+	bcc	done_decode_loop; branch always				; 3
 
 	;========================
 	; d0 case means end note
-decode_case_d0:
-
-	rol	decode_done	; deep magic				; 6
-				; where is C set?
-	bne	done_decode	; branch always				; 3
+;decode_case_d0:
+;	jmp	note_done_decoding
 
 
 	;==============================
@@ -1384,15 +1384,15 @@ decode_case_fX:
 
 	; fallthrough
 
-done_decode:
+done_decode_loop:
 
 	iny				; point to next byte		; 2
 
-	lda	decode_done						; 4
-	bne	handle_effects						; 3
-									; -1
 	jmp	note_decode_loop					; 3
 
+note_done_decoding:
+
+	iny				; point to next byte		; 2
 
 	;=================================
 	; handle effects
@@ -1703,8 +1703,6 @@ reset_note:
 	sta	note_a+NOTE_TONE_ACCUMULATOR_L,X ; tone_accumulator=0	; 5
 	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X			; 5
 	sta	note_a+NOTE_ONOFF,X		; onoff=0;		; 5
-
-	rol	decode_done			; decode_done=1		; 6
 
 	rts								; 6
 								;============
