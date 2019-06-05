@@ -1321,15 +1321,15 @@ decode_case_cX:
 decode_case_c0:
 	; special case $C0 means shut down the note
 
-	sta	note_a+NOTE_ENABLED,X		; enabled=0
+	sta	note_a+NOTE_ENABLED,X		; enabled=0		; 5
 
 	jsr	reset_note						; 6+69
 
-	bne	done_decode			; branch always
+	bne	done_decode			; branch always		; 3
 
 decode_case_cx_not_c0:
-	sta	note_a+NOTE_VOLUME,X		; volume=current_val&0xf;
-	bne	done_decode			; branch always
+	sta	note_a+NOTE_VOLUME,X		; volume=current_val&0xf; 5
+	bne	done_decode			; branch always		; 3
 
 decode_case_dX:
 	;==============================
@@ -1367,31 +1367,31 @@ decode_case_d0:
 	;==============================
 decode_case_fX:
 	; disable envelope
-	lda	#0
-	sta	note_a+NOTE_ENVELOPE_ENABLED,X
+	lda	#0							; 2
+	sta	note_a+NOTE_ENVELOPE_ENABLED,X				; 5
 
 	; Set ornament to low byte of command
-	lda	note_command_bottom
-	jsr	load_ornament		; ornament to load in A
+	lda	note_command_bottom					; 4
+	jsr	load_ornament		; ornament to load in A		; 6+?
 
 	; Get next byte
-	iny				; point to next byte
-	lda	(PATTERN_L),Y
+	iny				; point to next byte		; 2
+	lda	(PATTERN_L),Y						; 5
 
 	; Set sample to value/2
-	lsr				; divide by two
-	jsr	load_sample		; sample to load in A
+	lsr				; divide by two			; 2
+	jsr	load_sample		; sample to load in A		; 6+?
 
 	; fallthrough
 
 done_decode:
 
-	iny		; point to next byte
+	iny				; point to next byte		; 2
 
-	lda	decode_done
-	bne	handle_effects
-
-	jmp	note_decode_loop
+	lda	decode_done						; 4
+	bne	handle_effects						; 3
+									; -1
+	jmp	note_decode_loop					; 3
 
 
 	;=================================
