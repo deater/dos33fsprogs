@@ -209,8 +209,16 @@ note_c:
 	.byte	$0	; NOTE_TONE_DELTA_H
 	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
 
-pt3_version:		.byte	$0
-pt3_frequency_table:	.byte	$0
+
+pt3_version:		.byte	$0		; FIXME: make SMC
+
+;====================================
+; Global vars that must be preserved
+
+current_subframe:	.byte	$0
+current_line:		.byte	$0
+current_pattern:	.byte	$0
+pt3_pattern_done:	.byte	$0
 
 pt3_noise_period:	.byte	$0
 pt3_noise_add:		.byte	$0
@@ -229,20 +237,19 @@ pt3_envelope_delay_orig:.byte	$0
 
 pt3_mixer_value:	.byte	$0
 
-pt3_pattern_done:	.byte	$0
 
-temp_word_l:		.byte	$0
-temp_word_h:		.byte	$0
+;==========================
+; local variables
 
 note_command:		; shared space with sample_b0
 sample_b0:		.byte	$0
 note_command_bottom:	; shared space with sample_b1
 sample_b1:		.byte	$0
-spec_command:		.byte	$0
 
-current_subframe:	.byte	$0
-current_line:		.byte	$0
-current_pattern:	.byte	$0
+temp_word_l:		.byte	$0
+temp_word_h:		.byte	$0
+
+spec_command:		.byte	$0
 
 freq_l:	.byte	$00
 freq_h:	.byte	$00
@@ -252,14 +259,11 @@ e_slide_amount:	.byte	$0
 prev_note:	.byte $0
 prev_sliding_l:	.byte $0
 prev_sliding_h:	.byte $0
-current_val:	.byte $0
 
 z80_h:	.byte $0
 z80_l:	.byte $0
 z80_d:	.byte $0
 z80_e:	.byte $0
-
-
 
 
 
