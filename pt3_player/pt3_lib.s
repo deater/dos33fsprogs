@@ -1423,76 +1423,79 @@ handle_effects:
 	; Effect #1 -- Tone Down
 	;==============================
 effect_1:
-	cmp	#$1
-	bne	effect_2
+	cmp	#$1							; 2
+	bne	effect_2						; 3
+									; -1
+	sta	note_a+NOTE_SIMPLE_GLISS,X				; 5
+	lsr								; 2
+	sta	note_a+NOTE_ONOFF,X					; 5
 
-	sta	note_a+NOTE_SIMPLE_GLISS,X
-	lsr
-	sta	note_a+NOTE_ONOFF,X
+	lda	(PATTERN_L),Y	; load byte, set as slide delay		; 5
+	iny								; 2
 
-	lda	(PATTERN_L),Y	; load byte, set as slide delay
-	iny
+	sta	note_a+NOTE_TONE_SLIDE_DELAY,X				; 5
+	sta	note_a+NOTE_TONE_SLIDE_COUNT,X				; 5
 
-	sta	note_a+NOTE_TONE_SLIDE_DELAY,X
-	sta	note_a+NOTE_TONE_SLIDE_COUNT,X
+	lda	(PATTERN_L),Y	; load byte, set as slide step low	; 5
+	iny								; 2
+	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X				; 5
 
-	lda	(PATTERN_L),Y	; load byte, set as slide step low
-	iny
-	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
+	lda	(PATTERN_L),Y	; load byte, set as slide step high	; 5
+	iny								; 2
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X				; 5
 
-	lda	(PATTERN_L),Y	; load byte, set as slide step high
-	iny
-	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
-
-	jmp	no_effect
+	jmp	no_effect						; 3
 
 	;==============================
 	; Effect #2 -- Portamento
 	;==============================
 effect_2:
-	cmp	#$2
-	beq	effect_2_small
-	jmp	effect_3
+	cmp	#$2							; 2
+	beq	effect_2_small						; 3
+									; -1
+	jmp	effect_3						; 3
 effect_2_small:			; FIXME: make smaller
-	lda	#0
-	sta	note_a+NOTE_SIMPLE_GLISS,X
-	sta	note_a+NOTE_ONOFF,X
+	lda	#0							; 2
+	sta	note_a+NOTE_SIMPLE_GLISS,X				; 5
+	sta	note_a+NOTE_ONOFF,X					; 5
 
-	lda	(PATTERN_L),Y	; load byte, set as delay
-	iny
+	lda	(PATTERN_L),Y	; load byte, set as delay		; 5
+	iny								; 2
 
-	sta	note_a+NOTE_TONE_SLIDE_DELAY,X
-	sta	note_a+NOTE_TONE_SLIDE_COUNT,X
+	sta	note_a+NOTE_TONE_SLIDE_DELAY,X				; 5
+	sta	note_a+NOTE_TONE_SLIDE_COUNT,X				; 5
 
-	iny
-	iny
-	iny
+	iny								; 2
+	iny								; 2
+	iny								; 2
 
-	lda	(PATTERN_L),Y	; load byte, set as slide_step high
-	php
+	lda	(PATTERN_L),Y	; load byte, set as slide_step high	; 5
+	php								; 3
 
 	; 16-bit absolute value
-	bpl	slide_step_positive1
-	eor	#$ff
+	bpl	slide_step_positive1					; 3
+									;-1
+	eor	#$ff							; 2
 
 slide_step_positive1:
-	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
-	dey
-	lda	(PATTERN_L),Y	; load byte, set as slide_step low
-	plp
-	bpl	slide_step_positive2
-	eor	#$ff
-	adc	#$0	;+carry set by earlier CMP
+	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X				; 5
+	dey								; 2
+	lda	(PATTERN_L),Y	; load byte, set as slide_step low	; 5
+	plp								; 4
+	bpl	slide_step_positive2					; 3
+									;-1
+	eor	#$ff							; 2
+	adc	#$0	;+carry set by earlier CMP			; 2
 
 slide_step_positive2:
-	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X
-	bcc	skip_step_inc1
-	inc	note_a+NOTE_TONE_SLIDE_STEP_H,X
+	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X				; 5
+	bcc	skip_step_inc1						; 3
+	inc	note_a+NOTE_TONE_SLIDE_STEP_H,X				; 7
 skip_step_inc1:
 
 
-	iny	; moved here as it messed with flags
-	iny
+	iny	; moved here as it messed with flags			; 2
+	iny								; 2
 
 
 ;	a->tone_delta=GetNoteFreq(a->note,pt3)-
