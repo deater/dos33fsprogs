@@ -497,7 +497,6 @@ VolTableCreator:
 
 	; Init initial variables
 	lda	#$0
-	sta	z80_h
 	sta	z80_d
 	ldy	#$11
 
@@ -524,14 +523,11 @@ vol_type_35:
 	ldy	#16		; skip first row, all zeros
 	ldx	#16		; c=16
 vol_outer:
-	lda	z80_h
-	pha			; save H
-
 	clc			; add HL,DE
 	lda	z80_l
 	adc	z80_e
 	sta	z80_e
-	lda	z80_h
+	lda	#0
 	adc	z80_d
 	sta	z80_d		; carry is important
 
@@ -572,8 +568,6 @@ vol_smc:
 
 
 	pla
-	pla
-	sta	z80_h	; restore H
 
 	lda	z80_e	; a=e
 	cmp	#$77
@@ -691,8 +685,9 @@ note_not_too_high:
 	;  a->tone = (a->tone + a->tone_sliding + w) & 0xfff;
 
 	clc
-	lda	note_a+NOTE_TONE_L,X
-	adc	note_a+NOTE_TONE_SLIDING_L,X
+	ldy	note_a+NOTE_TONE_SLIDING_L,X
+	tya
+	adc	note_a+NOTE_TONE_L,X
 	sta	note_a+NOTE_TONE_L,X
 	lda	note_a+NOTE_TONE_H,X
 	adc	note_a+NOTE_TONE_SLIDING_H,X
@@ -720,9 +715,10 @@ note_not_too_high:
 
 	; a->tone_sliding+=a->tone_slide_step
 	clc	;;can be removed if ADC freq_h cannot overflow
-	lda	note_a+NOTE_TONE_SLIDING_L,X
+	tya
 	adc	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	sta	note_a+NOTE_TONE_SLIDING_L,X
+	tay
 	lda	note_a+NOTE_TONE_SLIDING_H,X
 	adc	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	sta	note_a+NOTE_TONE_SLIDING_H,X
@@ -743,7 +739,7 @@ check1:
 	;				(a->tone_sliding <= a->tone_delta) ||
 
 	; 16 bit signed compare
-	lda	note_a+NOTE_TONE_SLIDING_L,X	; NUM1-NUM2
+	tya					; NUM1-NUM2
 	cmp	note_a+NOTE_TONE_DELTA_L,X	;
 	lda	note_a+NOTE_TONE_SLIDING_H,X
 	sbc	note_a+NOTE_TONE_DELTA_H,X
@@ -753,7 +749,7 @@ sc_loser1:
 	bmi	slide_to_note	; then A (signed) < NUM (signed) and BMI will branch
 
 	; equals case
-	lda	note_a+NOTE_TONE_SLIDING_L,X
+	tya
 	cmp	note_a+NOTE_TONE_DELTA_L,X
 	bne	check2
 	lda	note_a+NOTE_TONE_SLIDING_H,X
@@ -767,7 +763,7 @@ check2:
 	;				(a->tone_sliding >= a->tone_delta)
 
 	; 16 bit signed compare
-	lda	note_a+NOTE_TONE_SLIDING_L,X	; NUM1-NUM2
+	tya					; NUM1-NUM2
 	cmp	note_a+NOTE_TONE_DELTA_L,X	;
 	lda	note_a+NOTE_TONE_SLIDING_H,X
 	sbc	note_a+NOTE_TONE_DELTA_H,X
@@ -941,7 +937,6 @@ envelope_slide_done:
 
 	; a->envelope_sliding = j;
 	sta	note_a+NOTE_ENVELOPE_SLIDING,X
-	clc
 
 last_envelope:
 

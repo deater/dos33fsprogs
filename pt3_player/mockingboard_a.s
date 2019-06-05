@@ -90,9 +90,9 @@ write_ay_both:
 	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
 	sta	MOCK_6522_ORB1		; latch_address on PB1		; 3
 	sta	MOCK_6522_ORB2		; latch_address on PB2		; 3
-	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sta	MOCK_6522_ORB1						; 3
-	sta	MOCK_6522_ORB2						; 3
+	ldy	#MOCK_AY_INACTIVE	; go inactive			; 2
+	sty	MOCK_6522_ORB1						; 3
+	sty	MOCK_6522_ORB2						; 3
 
 	; value
 	lda	MB_VALUE						; 3
@@ -101,13 +101,12 @@ write_ay_both:
 	lda	#MOCK_AY_WRITE		;				; 2
 	sta	MOCK_6522_ORB1		; write on PB1			; 3
 	sta	MOCK_6522_ORB2		; write on PB2			; 3
-	lda	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sta	MOCK_6522_ORB1						; 3
-	sta	MOCK_6522_ORB2						; 3
+	sty	MOCK_6522_ORB1						; 3
+	sty	MOCK_6522_ORB2						; 3
 
 	rts								; 6
 								;===========
-								;       53
+								;       51
 	;=======================================
 	; clear ay -- clear all 14 AY registers
 	; should silence the card
