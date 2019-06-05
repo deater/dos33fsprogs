@@ -1332,27 +1332,31 @@ decode_case_cx_not_c0:
 
 decode_case_dX:
 	;==============================
-	; $DX -- change sample
+	; $DX/$EX -- change sample
 	;==============================
-	; FIXME: merge with below?
 
-	cmp	#$d0
-	bne	decode_case_eX
 
-	lda	note_command_bottom
-	bne	decode_case_dx_not_d0
+	; if $D0
+	cmp	#$d0							; 2
+	bne	decode_case_dX_eX					; 3
+									; -1
+
+	; only gets here if $D0??
+
+	lda	note_command_bottom					; 4
+	bne	decode_case_dx_not_d0					; 3
 
 	;========================
 	; d0 case means end note
 
-	rol	decode_done
+	rol	decode_done	; deep magic				; 6
+				; where is C set?
+	bne	done_decode	; branch always				; 3
 
-	bne	done_decode
-decode_case_eX:
-	;==============================
-	; $EX -- change sample
-	;==============================
-	cmp	#$e0
+
+decode_case_dX_eX:
+
+	cmp	#$e0							; 2
 	bne	decode_case_fX
 
 	lda	note_command
@@ -1365,11 +1369,11 @@ decode_case_dx_not_d0:
 	jsr	load_sample	; load sample in bottom nybble
 
 	bcc	done_decode	; branch always
-decode_case_fX:
+
 	;==============================
 	; $FX - change ornament/sample
 	;==============================
-
+decode_case_fX:
 	; disable envelope
 	lda	#0
 	sta	note_a+NOTE_ENVELOPE_ENABLED,X
@@ -2190,7 +2194,7 @@ GetNoteFreq:
 	lda	PT3NoteTable_ST_low,Y					; 4+
 	sta	freq_l							; 4
 
-	ldy	TEMP							; 
+	ldy	TEMP							; 3
 	rts								; 6
 								;===========
 								;	40
