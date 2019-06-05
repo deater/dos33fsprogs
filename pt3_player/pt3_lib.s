@@ -16,6 +16,7 @@
 ; + 2937 bytes -- qkumba first pass
 ; + 2879 bytes -- qkumba second pass
 ; + 2839 bytes -- mask note command in common code
+; + 2832 bytes -- combine $D0 and $E0 decode
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?
@@ -1311,7 +1312,7 @@ decode_case_cX:
 	;==============================
 	; $CX -- set volume
 	;==============================
-	cmp	#$c0							; 2
+	cmp	#$c0			; check top nibble $C		; 2
 	bne	decode_case_dX						; 3
 									; -1
 	lda	note_command_bottom					; 4
@@ -1334,41 +1335,32 @@ decode_case_dX:
 	;==============================
 	; $DX/$EX -- change sample
 	;==============================
+	;  D0 = special case (end note)
+	;  D1-EF = set sample to (value - $D0)
 
-
-	; if $D0
-	cmp	#$d0							; 2
-	bne	decode_case_dX_eX					; 3
+	cmp	#$f0			; check top nibble $D/$E	; 2
+	beq	decode_case_fX						; 3
 									; -1
 
-	; only gets here if $D0??
+	lda	note_command						; 4
+	sec								; 2
+	sbc	#$d0							; 3
+	beq	decode_case_d0
 
-	lda	note_command_bottom					; 4
-	bne	decode_case_dx_not_d0					; 3
+decode_case_not_d0:
+
+	jsr	load_sample	; load sample in bottom nybble		; 6+??
+
+	bcc	done_decode	; branch always				; 3
 
 	;========================
 	; d0 case means end note
+decode_case_d0:
 
 	rol	decode_done	; deep magic				; 6
 				; where is C set?
 	bne	done_decode	; branch always				; 3
 
-
-decode_case_dX_eX:
-
-	cmp	#$e0							; 2
-	bne	decode_case_fX
-
-	lda	note_command
-	sec
-	sbc	#$d0
-	;fall through
-
-decode_case_dx_not_d0:
-
-	jsr	load_sample	; load sample in bottom nybble
-
-	bcc	done_decode	; branch always
 
 	;==============================
 	; $FX - change ornament/sample
