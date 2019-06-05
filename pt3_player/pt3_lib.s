@@ -22,6 +22,19 @@
 ;   enabled could be bit 6 or 7 for fast checking
 ; NOTE_ENABLED,ENVELOPE_ENABLED,SIMPLE_GLISS,ENV_SLIDING,AMP_SLIDING?
 
+; Header offsets
+
+PT3_VERSION		= $0D
+PT3_HEADER_FREQUENCY	= $63
+PT3_SPEED		= $64
+PT3_LOOP		= $66
+PT3_PATTERN_LOC_L	= $67
+PT3_PATTERN_LOC_H	= $68
+PT3_SAMPLE_LOC_L	= $69
+PT3_SAMPLE_LOC_H	= $6A
+PT3_ORNAMENT_LOC_L	= $A9
+PT3_ORNAMENT_LOC_H	= $AA
+PT3_PATTERN_TABLE	= $C9
 
 ; Use memset to set things to 0?
 
@@ -223,20 +236,11 @@ note_command:		; shared space with sample_b0
 sample_b0:		.byte	$0
 note_command_bottom:	; shared space with sample_b1
 sample_b1:		.byte	$0
+spec_command:		.byte	$0
 
-; Header offsets
-
-PT3_VERSION		= $0D
-PT3_HEADER_FREQUENCY	= $63
-PT3_SPEED		= $64
-PT3_LOOP		= $66
-PT3_PATTERN_LOC_L	= $67
-PT3_PATTERN_LOC_H	= $68
-PT3_SAMPLE_LOC_L	= $69
-PT3_SAMPLE_LOC_H	= $6A
-PT3_ORNAMENT_LOC_L	= $A9
-PT3_ORNAMENT_LOC_H	= $AA
-PT3_PATTERN_TABLE	= $C9
+current_subframe:	.byte	$0
+current_line:		.byte	$0
+current_pattern:	.byte	$0
 
 freq_l:	.byte	$00
 freq_h:	.byte	$00
@@ -248,6 +252,16 @@ prev_sliding_l:	.byte $0
 prev_sliding_h:	.byte $0
 decode_done:	.byte $0
 current_val:	.byte $0
+
+z80_h:	.byte $0
+z80_l:	.byte $0
+z80_d:	.byte $0
+z80_e:	.byte $0
+
+
+
+
+
 
 	;===========================
 	; Load Ornament
@@ -1042,9 +1056,6 @@ done_onoff:
 
 
 
-
-spec_command:	.byte	$0
-
 	;=====================================
 	; Decode Note
 	;=====================================
@@ -1706,9 +1717,7 @@ reset_note:
 
 
 
-current_subframe:	.byte	$0
-current_line:		.byte	$0
-current_pattern:	.byte	$0
+
 
 	;=====================================
 	; Set Pattern
@@ -2297,10 +2306,7 @@ PT3NoteTable_ASM_34_35_low:
 
 
 
-z80_h:	.byte $0
-z80_l:	.byte $0
-z80_d:	.byte $0
-z80_e:	.byte $0
+
 
 VolumeTable:
 	.res 256,0
