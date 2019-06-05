@@ -24,6 +24,7 @@ Code Optimization
 	MoreSizeOpt	3203	22B	1F.1D	31s	171s	18%
 	Qkumba#1	2937	??	1D.18	29s	171s	17%
 	Qkumba#2	2879	??	1C.18	28s	171s	16%
+	Qkumba#3+vmw	2816	??	1C.22	28s	171s	16%
 
 Times:							Validated
 	BH.PT3:	10.0B	16	1:33	 93	17.2%	
