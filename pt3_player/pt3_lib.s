@@ -15,6 +15,7 @@
 ; + 3203 bytes -- combine common code in note decoder
 ; + 2937 bytes -- qkumba first pass
 ; + 2879 bytes -- qkumba second pass
+; + 2839 bytes -- mask note command in common code
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?
@@ -220,6 +221,7 @@ temp_word_h:		.byte	$0
 
 note_command:		; shared space with sample_b0
 sample_b0:		.byte	$0
+note_command_bottom:	; shared space with sample_b1
 sample_b1:		.byte	$0
 
 ; Header offsets
@@ -1124,6 +1126,9 @@ note_decode_loop:
 	; get next value
 	lda	(PATTERN_L),Y						; 5+
 	sta	note_command		; save termporarily		; 4
+	and	#$0f							; 2
+	sta	note_command_bottom					; 4
+	lda	note_command						; 4
 
 	; FIXME: use a jump table??
 	;  further reflection, that would require 32-bytes of addresses
@@ -1141,8 +1146,7 @@ decode_case_0X:
 	; $0X set special effect
 	;==============================
 									; -1
-	lda	note_command						; 4
-	and	#$f							; 2
+	lda	note_command_bottom					; 4
 
 	; we can always store spec as 0 means no spec
 
@@ -1180,8 +1184,7 @@ decode_case_1X:
 								;         5
 
 									; -1
-	lda	note_command						; 4
-	and	#$0f
+	lda	note_command_bottom					; 4
 	bne	decode_case_not_10					; 3
 
 decode_case_10:
@@ -1215,7 +1218,7 @@ decode_case_3X:
 	bcs	decode_case_4X		; branch greater/equal		; 3
 									; -1
 	lda	note_command						; 3
-	adc	#$e0							; 2
+	adc	#$e0			; same as subtract $20		; 2
 	sta	pt3_noise_period					; 3
 
 	jmp	done_decode						; 3
@@ -1229,8 +1232,7 @@ decode_case_4X:
 ;	cmp	#$40		; already set				;
 	bne	decode_case_5X						; 3
 									; -1
-	lda	note_command						; 4
-	and	#$0f		; set ornament to bottom nibble		; 2
+	lda	note_command_bottom	; set ornament to bottom nibble	; 4
 	jsr	load_ornament						; 6+93
 
 	jmp	done_decode						; 3
@@ -1262,49 +1264,48 @@ decode_case_bX:
 	; $BX -- note length or envelope manipulation
 	;============================================
 ;	cmp	#$b0		; already set from before
-	bne	decode_case_cX
-
-	lda	note_command
-	and	#$f
-	beq	decode_case_b0
-	sbc	#1		; envelope_type=(current_val&0xf)-1;
-	bne	decode_case_bx_higher
+	bne	decode_case_cX						; 3
+									; -1
+	lda	note_command_bottom					; 4
+	beq	decode_case_b0						; 3
+									; -1
+	sbc	#1		; envelope_type=(current_val&0xf)-1;	; 2
+	bne	decode_case_bx_higher					; 3
 
 decode_case_b1:
 	; Set Length
 
 	; get next byte
-	iny
-	lda	(PATTERN_L),Y
+	iny								; 2
+	lda	(PATTERN_L),Y						; 5
 
-	sta	note_a+NOTE_LEN,X
-	sta	note_a+NOTE_LEN_COUNT,X
-	bcs	done_decode			; branch always
+	sta	note_a+NOTE_LEN,X					; 5
+	sta	note_a+NOTE_LEN_COUNT,X					; 5
+	bcs	done_decode			; branch always		; 3
 
 decode_case_b0:
 	; Disable envelope
-	sta	note_a+NOTE_ENVELOPE_ENABLED,X
-	sta	note_a+NOTE_ORNAMENT_POSITION,X
-	beq	done_decode
+	sta	note_a+NOTE_ENVELOPE_ENABLED,X				; 5
+	sta	note_a+NOTE_ORNAMENT_POSITION,X				; 5
+	beq	done_decode						; 3
 
 
 decode_case_bx_higher:
 
 	jsr	set_envelope						; 6+64
 
-	bcs	done_decode			; branch always
+	bcs	done_decode			; branch always		; 3
 
 decode_case_cX:
 	;==============================
 	; $CX -- set volume
 	;==============================
-	cmp	#$c0
-	bne	decode_case_dX
-
-	lda	note_command
-	and	#$0f
-	bne	decode_case_cx_not_c0
-
+	cmp	#$c0							; 2
+	bne	decode_case_dX						; 3
+									; -1
+	lda	note_command_bottom					; 4
+	bne	decode_case_cx_not_c0					; 3
+									; -1
 decode_case_c0:
 	; special case $C0 means shut down the note
 
@@ -1327,8 +1328,7 @@ decode_case_dX:
 	cmp	#$d0
 	bne	decode_case_eX
 
-	lda	note_command
-	and	#$0f
+	lda	note_command_bottom
 	bne	decode_case_dx_not_d0
 
 	;========================
@@ -1364,8 +1364,7 @@ decode_case_fX:
 	sta	note_a+NOTE_ENVELOPE_ENABLED,X
 
 	; Set ornament to low byte of command
-	lda	note_command
-	and	#$f
+	lda	note_command_bottom
 	jsr	load_ornament		; ornament to load in A
 
 	; Get next byte
