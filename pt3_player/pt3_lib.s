@@ -18,6 +18,7 @@
 ; + 2839 bytes -- mask note command in common code
 ; + 2832 bytes -- combine $D0 and $E0 decode
 ; + 2816 bytes -- eliminate "decode_done" variable (2.75k)
+; + 2817 bytes -- eliminate pt3_version.  Slighly faster but also bigger
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?
@@ -209,8 +210,6 @@ note_c:
 	.byte	$0	; NOTE_TONE_DELTA_H
 	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
 
-
-pt3_version:		.byte	$0		; FIXME: make SMC
 
 ;====================================
 ; Global vars that must be preserved
@@ -489,7 +488,20 @@ pt3_init_song:
 	tax								; 2
 
 not_ascii_number:
-	stx	pt3_version						; 3
+
+	; adjust version<6 SMC code in the slide code
+
+	; FIXME: I am sure there's a more clever way to do this
+
+	lda	#$2C		; BIT					; 2
+	cpx	#$6							; 2
+	bcc	version_less_than_6		; blt			; 3
+	; carry is set
+	adc	#$1F		; BIT->JMP  2C->4C			; 2
+version_less_than_6:
+	sta	version_smc						; 4
+
+pick_volume_table:
 
 	;=======================
 	; Pick which volume number, based on version
@@ -1512,9 +1524,10 @@ skip_step_inc1:
 	lda	prev_note
 	sta	note_a+NOTE_NOTE,X
 
-	lda	pt3_version
-	cmp	#$6
-	bcc	weird_version			; blt
+	; implement file version 6 and above slide behavior
+	; this is done by SMC at song init time
+version_smc:
+	jmp	weird_version	; (JMP to BIT via smc)		; 3
 
 	lda	prev_sliding_l
 	sta	note_a+NOTE_TONE_SLIDING_L,X
