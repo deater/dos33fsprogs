@@ -25,7 +25,7 @@ put_sprite:
 								;===========
 								;	25
 put_sprite_loop:
-	stx	TEMPY		; as we modify it			; 3
+	stx	put_sprite_loop_smc+1	; as we modify it		; 4
 	lda	gr_offsets,X	; lookup low-res memory address		; 4
 	clc								; 2
 	adc	XPOS		; add in xpos				; 3
@@ -43,7 +43,7 @@ put_sprite_pixel:
 	lda	(INL),Y			; get sprite colors		; 5
 	iny				; increment sprite pointer	; 2
 
-	sty	TEMP			; save sprite pointer		; 3
+	sty	put_sprite_pixel_smc+1	; save sprite pointer		; 4
 
 
 sprite_color_smc:
@@ -77,7 +77,8 @@ sprite_color_smc:
 
 put_sprite_done_draw:
 
-	ldy	TEMP			; restore sprite pointer	; 3
+put_sprite_pixel_smc:
+	ldy	#$d1			; restore sprite pointer	; 2
 
 	inc	OUTL			; increment output pointer	; 5
 	dex				; decrement x counter		; 2
@@ -85,7 +86,8 @@ put_sprite_done_draw:
 								;==============
 								;	12/13
 
-	ldx	TEMPY							; 3
+put_sprite_loop_smc:
+	ldx	#$d1							; 2
 	inx				; each line has two y vars	; 2
 	inx								; 2
 	dec	CV			; decemenet total y count	; 5

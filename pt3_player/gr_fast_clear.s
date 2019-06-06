@@ -5,16 +5,14 @@ clear_screens:
 
 	lda	#$0
 	jsr	clear_top
-	jsr	clear_bottom0
+	jsr	clear_bottoms
 
 	;===================================
 	; Clear top/bottom of page 1
 	;===================================
 
 	lda	#$4
-	jsr	clear_top
-	jmp	clear_bottom4
-
+	; fall through
 
 
 
@@ -85,7 +83,6 @@ clear_bottoms:
 	; Clear bottom of page 1
 	;===================================
 
-clear_bottom4:
 	lda	#$4
 	; fall through
 
@@ -96,7 +93,6 @@ clear_bottom4:
 
 clear_bottom:
 	sta	DRAW_PAGE						; 3
-clear_bottom0:
 	clc								; 2
 
 	adc	#6							; 2

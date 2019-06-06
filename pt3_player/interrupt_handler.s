@@ -46,11 +46,13 @@ pt3_play_music:
 	beq	move_to_next
 
 pt3_loop_smc:
-	lda	#0			; looping, move to loop location
-	sta	current_pattern
+	lda	#$d1			; looping, move to loop location
+					; non-zero to avoid the temptation
+					; to merge with following lda #$0
+	sta	current_pattern_smc+1
 	lda	#$0
-	sta	current_line
-	sta	current_subframe
+	sta	current_line_smc+1
+	sta	current_subframe_smc+1
 	sta	DONE_SONG		; undo the next song
 
 	beq	done_interrupt		; branch always
@@ -96,15 +98,14 @@ mb_not_13:
 	; address
 	stx	MOCK_6522_ORA1		; put address on PA1		; 4
 	stx	MOCK_6522_ORA2		; put address on PA2		; 4
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
-	sta	MOCK_6522_ORB1		; latch_address on PB1          ; 4
-	sta	MOCK_6522_ORB2		; latch_address on PB2		; 4
+	ldy	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	sty	MOCK_6522_ORB1		; latch_address on PB1          ; 4
+	sty	MOCK_6522_ORB2		; latch_address on PB2		; 4
 	ldy	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sty	MOCK_6522_ORB1						; 4
 	sty	MOCK_6522_ORB2						; 4
 
         ; value
-	lda	AY_REGISTERS,X		; load register value		; 4
 	sta	MOCK_6522_ORA1		; put value on PA1		; 4
 	sta	MOCK_6522_ORA2		; put value on PA2		; 4
 	lda	#MOCK_AY_WRITE		;				; 2
@@ -113,7 +114,7 @@ mb_not_13:
 	sty	MOCK_6522_ORB1						; 4
 	sty	MOCK_6522_ORB2						; 4
 								;===========
-								; 	60
+								; 	56
 mb_no_write:
 	inx				; point to next register	; 2
 	cpx	#14			; if 14 we're done		; 2
@@ -143,31 +144,35 @@ frame_count_smc:
 
 	sta	frame_count_smc+1					; 3
 
-update_second_ones:
-	inc	$7d0+TIME_OFFSET+3					; 6
-	inc	$bd0+TIME_OFFSET+3					; 6
-	lda	$bd0+TIME_OFFSET+3					; 4
-	cmp	#$ba			; one past '9'			; 2
-	bne	done_time						; 3/2nt
-	lda	#'0'+$80						; 2
-	sta	$7d0+TIME_OFFSET+3					; 4
-	sta	$bd0+TIME_OFFSET+3					; 4
-update_second_tens:
-	inc	$7d0+TIME_OFFSET+2					; 6
-	inc	$bd0+TIME_OFFSET+2					; 6
-	lda	$bd0+TIME_OFFSET+2					; 4
-	cmp	#$b6		; 6 (for 60 seconds)			; 2
-	bne	done_time						; 3/2nt
-	lda	#'0'+$80						; 2
-	sta	$7d0+TIME_OFFSET+2					; 4
-	sta	$bd0+TIME_OFFSET+2					; 4
+	ldx	$7d0+TIME_OFFSET+3					; 4
+	cpx	#'9'+$80						; 2
+	bne	update_second_ones					; 3/2nt
+
+	ldx	$7d0+TIME_OFFSET+2					; 4
+	cpx	#'5'+$80	; 6-1 (for 60 seconds)			; 2
+	bne	update_second_tens					; 3/2nt
+
 update_minutes:
 	inc	$7d0+TIME_OFFSET					; 6
 	inc	$bd0+TIME_OFFSET					; 6
+
+	ldx	#'0'+$80-1						; 2
+
+update_second_tens:
+	inx								; 2
+	stx	$7d0+TIME_OFFSET+2					; 4
+	stx	$bd0+TIME_OFFSET+2					; 4
+
+	ldx	#'0'+$80-1						; 2
+
+update_second_ones:
+	inx								; 2
+	stx	$7d0+TIME_OFFSET+3					; 4
+	stx	$bd0+TIME_OFFSET+3					; 4
 				; we don't handle > 9:59 songs yet
 done_time:
 								;=============
-								;     87 worst
+								;     52 worst
 
 
 	;=================================
@@ -177,7 +182,7 @@ done_time:
 check_keyboard:
 
 	jsr	get_key
-	cmp	#0
+	tax
 	beq	exit_interrupt
 
 	;====================

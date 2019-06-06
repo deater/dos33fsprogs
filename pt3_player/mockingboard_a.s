@@ -74,6 +74,15 @@ reset_ay_both:
 	rts
 
 
+	;=======================================
+	; clear ay -- clear all 14 AY registers
+	; should silence the card
+	;=======================================
+clear_ay_both:
+	ldx	#14
+	lda	#0
+	sta	MB_VALUE
+clear_ay_left_loop:
 ;	Write sequence
 ;	Inactive -> Latch Address -> Inactive -> Write Data -> Inactive
 
@@ -104,19 +113,8 @@ write_ay_both:
 	sty	MOCK_6522_ORB1						; 3
 	sty	MOCK_6522_ORB2						; 3
 
-	rts								; 6
 								;===========
-								;       51
-	;=======================================
-	; clear ay -- clear all 14 AY registers
-	; should silence the card
-	;=======================================
-clear_ay_both:
-	ldx	#14
-	lda	#0
-	sta	MB_VALUE
-clear_ay_left_loop:
-	jsr	write_ay_both
+								;       45
 	dex
 	bpl	clear_ay_left_loop
 	rts
