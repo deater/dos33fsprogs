@@ -134,82 +134,34 @@ in_range:
 	; setup graphics for vapor lock
 	;==============================
 
-	; Clear Page0
-	lda	#$0
-	sta	DRAW_PAGE
-	lda	#$44
-	jsr	clear_gr
+	jsr	vapor_lock
 
-	; Make screen half green
-	lda	#$11
-	ldy	#24
-	jsr	clear_page_loop
+	; vapor lock returns with us at beginning of hsync in line
+        ; 114 (7410 cycles), so with 5070 lines to go
 
+        ; GR part
+        bit     LORES                                                   ; 4
+        bit     SET_GR                                                  ; 4
+        bit     FULLGR                                                  ; 4
 
-	;=====================================================
-	; attempt vapor lock
-	;  by reading the "floating bus" we can see most recently
-	;  written value of the display
-	; we look for $55 (which is the grey line)
-	;=====================================================
-	; See:
-	;	Have an Apple Split by Bob Bishop
-        ;	Softalk, October 1982
+	jsr	gr_copy_to_current			; 6+ 9292
 
-	; Challenges: each scan line scans 40 bytes.
-	; The blanking happens at the *beginning*
-	; So 65 bytes are scanned, starting at adress of the line - 25
+	; now we have 322 left
 
-	; the scan takes 8 cycles, look for 4 repeats of the value
-	; to avoid false positive found if the horiz blanking is mirroring
-	; the line (max 3 repeats in that case)
+	; 322 - 12 = 310
+	; - 3 for jmp
+	; 307
 
-vapor_lock_loop:		; first make sure we have all zeroes
-	LDA #$11
-zxloop:
-	LDX #$04
-wiloop:
-	CMP $C051
-	BNE zxloop
-	DEX
-	BNE wiloop
+	; Try X=9 Y=6 cycles=307
 
-	LDA #$44		; now look for our border color (4 times)
-zloop:
-	LDX #$04
-qloop:
-	CMP $C051
-	BNE zloop
-	DEX
-	BNE qloop
+	ldy	#6							; 2
+loopA:	ldx	#9							; 2
+loopB:	dex								; 2
+	bne	loopB							; 2nt/3
+	dey								; 2
+	bne	loopA							; 2nt/3
 
-	; found first line of black after green, at up to line 26 on screen
-        ; so we want roughly 22 lines * 4 = 88*65 = 5720 + 4550 = 10270
-	; - 65 (for the scanline we missed) = 10205 - 12 = 10193
-
-	jsr	gr_copy_to_current		; 6+ 9292
-	; 10193 - 9298 = 895
-	; Fudge factor (unknown) -30 = 865
-
-	; GR part
-	bit	LORES							; 4
-	bit	SET_GR							; 4
-	bit	FULLGR							; 4
-
-	; Try X=88 Y=2 cycles=893 R2
-
-	nop
-        ldy     #2							; 2
-loopA:
-        ldx	#88							; 2
-loopB:
-        dex                                                             ; 2
-        bne     loopB                                                   ; 2nt/3
-
-        dey                                                             ; 2
-        bne     loopA                                                   ; 2nt/3
-
-        jmp     display_loop
+	jmp	display_loop						; 3
 .align  $100
 
 
@@ -342,6 +294,8 @@ gr_offsets:
 .include "../asm_routines/gr_unrle.s"
 .include "../asm_routines/keypress.s"
 .include "gr_copy.s"
+.include "delay_a.s"
+.include "vapor_lock.s"
 
 pictures:
 	.word apple_low,apple_high
