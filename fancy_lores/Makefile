@@ -29,7 +29,7 @@ DISP4048D:	disp4048d.o
 	ld65 -o DISP4048D disp4048d.o -C ../linker_scripts/apple2_1000.inc
 
 disp4048d.o:	disp4048d.s gr_copy.s \
-	apple_40_48d.inc katahdin_40_48d.inc spacebars_40_48d.inc df_girl_40_48d.inc
+	apple_40_48d.inc katahdin_40_48d.inc spacebars_40_48d.inc df_girl_40_48d.inc k_40_48d.inc
 	ca65 -o disp4048d.o disp4048d.s -l disp4048d.lst
 
 
@@ -60,6 +60,9 @@ apple_40_48d.inc:	apple_40_48d.png
 
 df_girl_40_48d.inc:	df_girl_40_48d.png
 	$(PNG_TO_40x48D) asm df_girl_40_48d.png df_girl > df_girl_40_48d.inc
+
+k_40_48d.inc:	k_40_48d.png
+	$(PNG_TO_40x48D) asm k_40_48d.png k > k_40_48d.inc
 
 
 
