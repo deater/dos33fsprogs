@@ -10,9 +10,18 @@
 	; It then calculates if it is a BRK or not (which trashes A)
 	; Then it sets up the stack like an interrupt and calls 0x3fe
 
+	; Note: the IIc is much more complicated
+	;	its firmware tries to decode the proper source
+	;	based on various things, including screen hole values
+	;	we bypass that by switching out ROM and replacing the
+	;	$fffe vector with this, but that does mean we have
+	;	to be sure status flag and accumulator set properly
+
+
 TIME_OFFSET	EQU	13
 
 interrupt_handler:
+	php			; save status flags
 	pha			; save A				; 3
 				; A is saved in $45 by firmware
 	txa
@@ -147,10 +156,10 @@ exit_interrupt:
 	tax			; restore X
 	pla			; restore a				; 4
 
-
 	; on II+/IIe (but not IIc) we need to do this?
 interrupt_smc:
 	lda	$45		; restore A
+	plp
 
 	rti			; return from interrupt			; 6
 
