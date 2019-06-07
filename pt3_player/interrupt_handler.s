@@ -288,14 +288,12 @@ quiet_exit:
 done_key:
 exit_interrupt:
 
-;	pla			; restore a				; 4
-
 	pla
 	tay			; restore Y
 	pla
 	tax			; restore X
 	lda	$45		; restore A
-
+;	pla			; restore a				; 4
 
 	rti			; return from interrupt			; 6
 

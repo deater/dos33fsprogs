@@ -27,11 +27,39 @@ pt3_setup:
 
 	lda	$FBB3           ; IIe and newer is $06
 	cmp	#6
-	beq	apple_iie
+	beq	apple_iie_or_newer
 
 	lda	#1		; set if older than a IIe
 	sta	apple_ii
-apple_iie:
+	jmp	done_apple_detect
+apple_iie_or_newer:
+	lda	$FBC0		; 0 on a IIc
+	bne	done_apple_detect
+apple_iic:
+	; activate IIc mockingboard?
+	; this might only be necessary to allow detection
+	; I get the impression the Mockingboard 4c activates
+	; when you access any of the 6522 ports in Slot 4
+	lda	#$ff
+	sta	$C403
+	sta	$C404
+
+	; bypass the firmware interrupt handler
+	; should we do this on IIe too? probably faster
+
+	sei				; disable interrupts
+	lda	$c08b			; disable ROM (enable language card)
+	lda	$c08b
+	lda	#<interrupt_handler
+	sta	$fffe
+	lda	#>interrupt_handler
+	sta	$ffff
+
+	lda	#$EA			; nop out the "lda $45" in the irq hand
+	sta	interrupt_smc
+	sta	interrupt_smc+1
+
+done_apple_detect:
 
 	;===============
 	; init variables
