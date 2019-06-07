@@ -179,8 +179,16 @@ loopB:	dex								; 2
         ;       vblank = 4550 cycles to do scrolling
 
 
-	; 2 + 48*(  (4+2+25*(2+3)) + (4+2+23*(2+3)+4+5)) + 9)
-	;     48*[(6+125)-1] + [(6+115+10)-1]
+
+	; want colors 01234567
+	; line 0: $X0
+	; line 1: $X1
+	; line 2: $X2
+	; line 3: $X3
+	; line 4: $4X
+	; line 5: $5X
+	; line 6: $6X
+	; line 7: $7X
 
 display_loop:
 
@@ -189,7 +197,194 @@ display_loop:
 	; 0
 	; 65 cycles total
 	bit	PAGE0	; 4
+	lda	#$01	; 2
+	sta	$800	; 4
 	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 65 cycles
+	bit	PAGE1	; 4
+	lda	#$02	; 2
+	sta	$400	; 4
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 1
+	; 65 cycles
+	bit	PAGE0	; 4
+	lda	#$03	; 2
+	sta	$800	; 4
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 65 cycles
+	bit	PAGE1	; 4
+	lda	#$40	; 2
+	sta	$400	; 4
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 2
+	; 65 cycles
+	bit	PAGE0	; 4
+	lda	#$50	; 2
+	sta	$800	; 4
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 65 cycles
+	bit	PAGE1	; 4
+	lda	#$60	; 2
+	sta	$400	; 4
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 3
+	; 65 cycles
+	bit	PAGE0	; 4
+	lda	#$70	; 2
+	sta	$800	; 4
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 65 cycles
+	bit	PAGE1	; 4
+	lda	#$08	; 2
+	sta	$480	; 4
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 4
+	; 65 cycles
+	bit	PAGE0	; 4
+	lda	#$09	; 2
+	sta	$880	; 4
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 65 cycles
+	bit	PAGE1	; 4
+	lda	#$0A	; 2
+	sta	$480	; 4
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 5
+	; 65 cycles
+	bit	PAGE0	; 4
+	lda	#$0B	; 2
+	sta	$880	; 4
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 65 cycles
+	bit	PAGE1	; 4
+	lda	#$C0	; 2
+	sta	$480	; 4
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 6
+	; 65 cycles
+	bit	PAGE0						; 4
+	lda	#$D0	; 2
+	sta	$880	; 4
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -203,181 +398,8 @@ display_loop:
 
 	; 65 cycles
 	bit	PAGE1						; 4
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	bit	krg	; 4
-	lda	TEMP	; 3
-
-	; 1
-	bit	PAGE0						; 4
-	; 61 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	bit	krg	; 4
-	lda	TEMP	; 3
-
-	bit	PAGE1						; 4
-	; 61 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	bit	krg	; 4
-	lda	TEMP	; 3
-
-	; 2
-	bit	PAGE0						; 4
-	; 61 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	bit	krg	; 4
-	lda	TEMP	; 3
-
-	bit	PAGE1						; 4
-	; 61 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	bit	krg	; 4
-	lda	TEMP	; 3
-
-	; 3
-	bit	PAGE0						; 4
-	; 61 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	bit	krg	; 4
-	lda	TEMP	; 3
-
-	bit	PAGE1						; 4
-	; 61 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	bit	krg	; 4
-	lda	TEMP	; 3
-
-	; 4
-	bit	PAGE0						; 4
-	; 61 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	bit	krg	; 4
-	lda	TEMP	; 3
-
-	bit	PAGE1						; 4
-	; 61 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	bit	krg	; 4
-	lda	TEMP	; 3
-
-	; 5
-	bit	PAGE0						; 4
-	; 61 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	bit	krg	; 4
-	lda	TEMP	; 3
-
-	bit	PAGE1						; 4
-	; 61 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	bit	krg	; 4
-	lda	TEMP	; 3
-
-	; 6
-	bit	PAGE0						; 4
-	; 61 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	bit	krg	; 4
-	lda	TEMP	; 3
-
-	bit	PAGE1						; 4
-	; 61 cycles
-	inc	krg	; 6
+	lda	#$E0	; 2
+	sta	$480	; 4
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -390,9 +412,10 @@ display_loop:
 	lda	TEMP	; 3
 
 	; 7
+	; 65 cycles
 	bit	PAGE0						; 4
-	; 61 cycles
-	inc	krg	; 6
+	lda	#$F0	; 2
+	sta	$880	; 4
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -404,9 +427,10 @@ display_loop:
 	bit	krg	; 4
 	lda	TEMP	; 3
 
+	; 65 cycles
 	bit	PAGE1						; 4
-	; 61 cycles
-	inc	krg	; 6
+	lda	#$00	; 2
+	sta	$500	; 4
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -420,7 +444,7 @@ display_loop:
 
 	; 8
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -434,7 +458,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -449,7 +473,7 @@ display_loop:
 
 	; 9
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -463,7 +487,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -478,7 +502,7 @@ display_loop:
 
 	; 10
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -492,7 +516,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -507,7 +531,7 @@ display_loop:
 
 	; 11
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -521,7 +545,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -536,7 +560,7 @@ display_loop:
 
 	; 12
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -550,7 +574,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -565,7 +589,7 @@ display_loop:
 
 	; 13
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -579,7 +603,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -594,7 +618,7 @@ display_loop:
 
 	; 14
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -608,7 +632,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -623,7 +647,7 @@ display_loop:
 
 	; 15
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -637,7 +661,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -652,7 +676,7 @@ display_loop:
 
 	; 16
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -666,7 +690,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -681,7 +705,7 @@ display_loop:
 
 	; 17
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -695,7 +719,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -710,7 +734,7 @@ display_loop:
 
 	; 18
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -724,7 +748,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -739,7 +763,7 @@ display_loop:
 
 	; 19
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -753,7 +777,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -768,7 +792,7 @@ display_loop:
 
 	; 20
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -782,7 +806,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -797,7 +821,7 @@ display_loop:
 
 	; 21
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -811,7 +835,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -826,7 +850,7 @@ display_loop:
 
 	; 22
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -840,7 +864,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -855,7 +879,7 @@ display_loop:
 
 	; 23
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -869,7 +893,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -884,7 +908,7 @@ display_loop:
 
 	; 24
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -898,7 +922,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -913,7 +937,7 @@ display_loop:
 
 	; 25
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -927,7 +951,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -942,7 +966,7 @@ display_loop:
 
 	; 26
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -956,7 +980,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -971,7 +995,7 @@ display_loop:
 
 	; 27
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -985,7 +1009,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1000,7 +1024,7 @@ display_loop:
 
 	; 28
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1014,7 +1038,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1029,7 +1053,7 @@ display_loop:
 
 	; 29
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1043,7 +1067,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1058,7 +1082,7 @@ display_loop:
 
 	; 30
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1072,7 +1096,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1087,7 +1111,7 @@ display_loop:
 
 	; 31
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1101,7 +1125,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1116,7 +1140,7 @@ display_loop:
 
 	; 32
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1130,7 +1154,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1145,7 +1169,7 @@ display_loop:
 
 	; 33
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1159,7 +1183,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1174,7 +1198,7 @@ display_loop:
 
 	; 34
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1188,7 +1212,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1203,7 +1227,7 @@ display_loop:
 
 	; 35
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1217,7 +1241,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1232,7 +1256,7 @@ display_loop:
 
 	; 36
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1246,7 +1270,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1261,7 +1285,7 @@ display_loop:
 
 	; 37
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1275,7 +1299,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1290,7 +1314,7 @@ display_loop:
 
 	; 38
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1304,7 +1328,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1319,7 +1343,7 @@ display_loop:
 
 	; 39
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1333,7 +1357,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1348,7 +1372,7 @@ display_loop:
 
 	; 40
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1362,7 +1386,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1377,7 +1401,7 @@ display_loop:
 
 	; 41
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1391,7 +1415,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1406,7 +1430,7 @@ display_loop:
 
 	; 42
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1420,7 +1444,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1435,7 +1459,7 @@ display_loop:
 
 	; 43
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1449,7 +1473,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1464,7 +1488,7 @@ display_loop:
 
 	; 44
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1478,7 +1502,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1493,7 +1517,7 @@ display_loop:
 
 	; 45
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1507,7 +1531,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1522,7 +1546,7 @@ display_loop:
 
 	; 46
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1536,7 +1560,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1551,7 +1575,7 @@ display_loop:
 
 	; 47
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1565,7 +1589,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1580,7 +1604,7 @@ display_loop:
 
 	; 48
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1594,7 +1618,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1609,7 +1633,7 @@ display_loop:
 
 	; 49
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1623,7 +1647,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1638,7 +1662,7 @@ display_loop:
 
 	; 50
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1652,7 +1676,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1667,7 +1691,7 @@ display_loop:
 
 	; 51
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1681,7 +1705,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1696,7 +1720,7 @@ display_loop:
 
 	; 52
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1710,7 +1734,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1725,7 +1749,7 @@ display_loop:
 
 	; 53
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1739,7 +1763,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1754,7 +1778,7 @@ display_loop:
 
 	; 54
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1768,7 +1792,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1783,7 +1807,7 @@ display_loop:
 
 	; 55
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1797,7 +1821,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1812,7 +1836,7 @@ display_loop:
 
 	; 56
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1826,7 +1850,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1841,7 +1865,7 @@ display_loop:
 
 	; 57
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1855,7 +1879,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1870,7 +1894,7 @@ display_loop:
 
 	; 58
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1884,7 +1908,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1899,7 +1923,7 @@ display_loop:
 
 	; 59
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1913,7 +1937,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1928,7 +1952,7 @@ display_loop:
 
 	; 60
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1942,7 +1966,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1957,7 +1981,7 @@ display_loop:
 
 	; 61
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1971,7 +1995,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -1986,7 +2010,7 @@ display_loop:
 
 	; 62
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2000,7 +2024,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2015,7 +2039,7 @@ display_loop:
 
 	; 63
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2029,7 +2053,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2044,7 +2068,7 @@ display_loop:
 
 	; 64
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2058,7 +2082,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2073,7 +2097,7 @@ display_loop:
 
 	; 65
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2087,7 +2111,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2102,7 +2126,7 @@ display_loop:
 
 	; 66
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2116,7 +2140,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2131,7 +2155,7 @@ display_loop:
 
 	; 67
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2145,7 +2169,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2160,7 +2184,7 @@ display_loop:
 
 	; 68
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2174,7 +2198,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2189,7 +2213,7 @@ display_loop:
 
 	; 69
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2203,7 +2227,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2218,7 +2242,7 @@ display_loop:
 
 	; 70
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2232,7 +2256,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2247,7 +2271,7 @@ display_loop:
 
 	; 71
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2261,7 +2285,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2276,7 +2300,7 @@ display_loop:
 
 	; 72
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2290,7 +2314,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2305,7 +2329,7 @@ display_loop:
 
 	; 73
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2319,7 +2343,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2334,7 +2358,7 @@ display_loop:
 
 	; 74
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2348,7 +2372,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2363,7 +2387,7 @@ display_loop:
 
 	; 75
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2377,7 +2401,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2392,7 +2416,7 @@ display_loop:
 
 	; 76
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2406,7 +2430,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2421,7 +2445,7 @@ display_loop:
 
 	; 77
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2435,7 +2459,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2450,7 +2474,7 @@ display_loop:
 
 	; 78
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2464,7 +2488,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2479,7 +2503,7 @@ display_loop:
 
 	; 79
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2493,7 +2517,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2508,7 +2532,7 @@ display_loop:
 
 	; 80
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2522,7 +2546,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2537,7 +2561,7 @@ display_loop:
 
 	; 81
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2551,7 +2575,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2566,7 +2590,7 @@ display_loop:
 
 	; 82
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2580,7 +2604,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2595,7 +2619,7 @@ display_loop:
 
 	; 83
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2609,7 +2633,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2624,7 +2648,7 @@ display_loop:
 
 	; 84
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2638,7 +2662,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2653,7 +2677,7 @@ display_loop:
 
 	; 85
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2667,7 +2691,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2682,7 +2706,7 @@ display_loop:
 
 	; 86
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2696,7 +2720,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2711,7 +2735,7 @@ display_loop:
 
 	; 87
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2725,7 +2749,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2740,7 +2764,7 @@ display_loop:
 
 	; 88
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2754,7 +2778,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2769,7 +2793,7 @@ display_loop:
 
 	; 89
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2783,7 +2807,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2798,7 +2822,7 @@ display_loop:
 
 	; 90
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2812,7 +2836,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2827,7 +2851,7 @@ display_loop:
 
 	; 91
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2841,7 +2865,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2856,7 +2880,7 @@ display_loop:
 
 	; 92
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2870,7 +2894,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2885,7 +2909,7 @@ display_loop:
 
 	; 93
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2899,7 +2923,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2914,7 +2938,7 @@ display_loop:
 
 	; 94
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2928,7 +2952,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2943,7 +2967,7 @@ display_loop:
 
 	; 95
 	bit	PAGE0						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2957,7 +2981,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	; 61 cycles
+	; 65 cycles
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
