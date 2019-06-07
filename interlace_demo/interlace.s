@@ -22,6 +22,7 @@ PADDLE_STATUS	= $F2
 TEMP		= $FA
 WHICH		= $FB
 
+
 ; Soft Switches
 KEYPRESS= $C000
 KEYRESET= $C010
@@ -183,36 +184,2804 @@ loopB:	dex								; 2
 
 display_loop:
 
-	ldy	#96						; 2
+	; UNROLL 96 TIMES!  ARE WE MAD?  YES!
 
-outer_loop:
+	; 0
+	; 65 cycles total
+	bit	PAGE0	; 4
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
 
+	; 65 cycles
+	bit	PAGE1						; 4
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 1
 	bit	PAGE0						; 4
-	ldx	#12		; 65 cycles with PAGE0		; 2
-page0_loop:			; delay 61+bit
-	dex							; 2
-	bne	page0_loop					; 2/3
-
-
-	; bit(4) -1(fallthrough) + loop*5 -1(fallthrouh)+4 extra = 61
-	; 5L = 55
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
 
 	bit	PAGE1						; 4
-	ldx	#11		; 65 cycles with PAGE1		; 2
-				;
-page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
-	dex							; 2
-	bne	page1_loop					; 2/3
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
 
-	dey							; 2
-	bne	outer_loop					; 2/3
+	; 2
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 3
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 4
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 5
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 6
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 7
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 8
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 9
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 10
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 11
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 12
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 13
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 14
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 15
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 16
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 17
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 18
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 19
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 20
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 21
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 22
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 23
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 24
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 25
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 26
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 27
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 28
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 29
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 30
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 31
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 32
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 33
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 34
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 35
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 36
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 37
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 38
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 39
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 40
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 41
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 42
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 43
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 44
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 45
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 46
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 47
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 48
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 49
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 50
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 51
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 52
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 53
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 54
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 55
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 56
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 57
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 58
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 59
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 60
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 61
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 62
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 63
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 64
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 65
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 66
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 67
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 68
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 69
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 70
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 71
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 72
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 73
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 74
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 75
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 76
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 77
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 78
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 79
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 80
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 81
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 82
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 83
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 84
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 85
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 86
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 87
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 88
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 89
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 90
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 91
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 92
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 93
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 94
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	; 95
+	bit	PAGE0						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
+	bit	PAGE1						; 4
+	; 61 cycles
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	bit	krg	; 4
+	lda	TEMP	; 3
+
 
 
 
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
-	; do_nothing should be      4550+1 -2-9 -7= 4533
+	; do_nothing should be
+	;	4550
+	;	  -6
+	;        -10
+	;=============
+	;       4534
 
 	jsr	do_nothing				; 6
 
@@ -228,23 +2997,19 @@ no_keypress:
 	;=================================
 	; do nothing
 	;=================================
-	; and take 4533-6 = 4527 cycles to do it
+	; and take 4534-6 = 4528 cycles to do it
 do_nothing:
 
 	; Try X=4 Y=174 cycles=4525 R2
 
-	nop	; 2
+	lda	TEMP	; 3
 
 	ldy	#174							; 2
-loop1:
-	ldx	#4							; 2
-loop2:
-	dex								; 2
+loop1:	ldx	#4							; 2
+loop2:	dex								; 2
 	bne	loop2							; 2nt/3
-
 	dey								; 2
 	bne	loop1							; 2nt/3
-
 
 	rts							; 6
 
@@ -302,3 +3067,5 @@ pictures:
 
 .include "k_40_48d.inc"
 
+krg:
+	.byte $0
