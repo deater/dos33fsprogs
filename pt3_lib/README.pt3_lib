@@ -1,0 +1,17 @@
+The PT3_player Library
+~~~~~~~~~~~~~~~~~~~~~~
+
+	by Vince "Deater" Weaver
+	7 June 2019
+	http://www.deater.net/weave/vmwprod/pt3_player/
+
+	Plays Vortex Tracker II .pt3 files on the Apple II
+
+
+This code is meant as a relatively simple, reasonably optimized version
+of the PT3 Vortex-Tracker player for use in other programs.
+
+The orignal player code can be found in ../pt3_player/
+That codebase is being *extremely* optimized to the point it's no longer
+very straightforward to reuse the code.
+
