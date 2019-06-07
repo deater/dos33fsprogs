@@ -73,8 +73,9 @@ rts_init:
 	sta	mlsmc04+1
 	sta	mlsmc05+1
 
-	jsr	$fe93					; clear COUT
-	jsr	$fe89					; clear KEYIN
+	; Are these needed?  they break on iic as we have ROM turned off
+;	jsr	$fe93					; clear COUT
+;	jsr	$fe89					; clear KEYIN
 
 	;========================
 	; Create nibble table

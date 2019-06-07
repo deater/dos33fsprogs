@@ -13,7 +13,8 @@
 TIME_OFFSET	EQU	13
 
 interrupt_handler:
-;	pha			; save A				; 3
+	php
+	pha			; save A				; 3
 				; A is saved in $45 by firmware
 	txa
 	pha			; save X
@@ -292,8 +293,13 @@ exit_interrupt:
 	tay			; restore Y
 	pla
 	tax			; restore X
+
+	pla			; restore a				; 4
+
+	; this is needed on II+/IIe not not IIc
+interrupt_smc:
 	lda	$45		; restore A
-;	pla			; restore a				; 4
+	plp
 
 	rti			; return from interrupt			; 6
 
