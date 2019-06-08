@@ -46,7 +46,7 @@ first_note_a:
 	sta	INL
 	lda	#>letter_none
 	sta	INH
-	jmp	do_sharp_a
+	bne	do_sharp_a		; branch always
 
 sharp_a:
 	lda	#<letter_sharp
@@ -125,7 +125,7 @@ first_note_b:
 	sta	INL
 	lda	#>letter_none
 	sta	INH
-	jmp	do_sharp_b
+	bne	do_sharp_b		; branch always
 
 sharp_b:
 	lda	#<letter_sharp
@@ -205,7 +205,7 @@ first_note_c:
 	sta	INL
 	lda	#>letter_none
 	sta	INH
-	jmp	do_sharp_c
+	bne	do_sharp_c		; branch always
 
 sharp_c:
 	lda	#<letter_sharp
@@ -238,11 +238,11 @@ do_sharp_c:
 	lda	#2
 	sta	YPOS
 
-	jsr	put_sprite
+	jmp	put_sprite
 
 done_print_note:
 
-	rts
+	;rts
 
 olda:	.byte $00
 oldb:	.byte $00
