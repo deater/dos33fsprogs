@@ -423,9 +423,6 @@ load_sample:
 	; pt3_init_song
 	;====================================
 	;
-	;	TODO: change to a memset type instruction?
-	;	it will save bytes only if the labels are adjacent
-	;	it will add a lot more cycles, though
 pt3_init_song:
 
 	lda	#$0

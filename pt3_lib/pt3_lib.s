@@ -84,6 +84,8 @@ NOTE_TONE_SLIDE_TO_STEP	=39
 
 NOTE_STRUCT_SIZE=40
 
+begin_vars:
+
 note_a:
 	.byte	$0	; NOTE_VOLUME				; 0
 	.byte	$0	; NOTE_TONE_SLIDING_L			; 1
@@ -236,6 +238,7 @@ pt3_envelope_delay_orig:.byte	$0
 
 pt3_mixer_value:	.byte	$0
 
+end_vars:
 
 ;==========================
 ; local variables
@@ -419,15 +422,23 @@ load_sample:
 	; pt3_init_song
 	;====================================
 	;
-	;	TODO: change to a memset type instruction?
-	;	it will save bytes only if the labels are adjacent
-	;	it will add a lot more cycles, though
+
 pt3_init_song:
+
+	lda     #$0
+	sta	DONE_SONG						; 3
+	ldx	#(end_vars-begin_vars)
+zero_song_structs_loop:
+	dex
+	sta	note_a,X
+	bne	zero_song_structs_loop
+
+
 	lda	#$f							; 2
 	sta	note_a+NOTE_VOLUME					; 4
 	sta	note_b+NOTE_VOLUME					; 4
 	sta	note_c+NOTE_VOLUME					; 4
-
+.if 0
 	lda	#$0							; 2
 	sta	DONE_SONG						; 3
 	sta	note_a+NOTE_TONE_SLIDING_L				; 4
@@ -448,7 +459,7 @@ pt3_init_song:
 	sta	pt3_envelope_period_l					; 4
 	sta	pt3_envelope_period_h					; 4
 	sta	pt3_envelope_type					; 4
-
+.endif
 	; default ornament/sample in A
 	ldx	#(NOTE_STRUCT_SIZE*0)					; 2
 	jsr	load_ornament						; 6+93
