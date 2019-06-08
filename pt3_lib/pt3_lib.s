@@ -1482,12 +1482,14 @@ slide_step_positive1:
 	dey								; 2
 	lda	(PATTERN_L),Y	; load byte, set as slide_step low	; 5
 	plp								; 4
+	clc								; 2
 	bpl	slide_step_positive2					; 3
 									;-1
 	eor	#$ff							; 2
-	adc	#$0	;+carry set by earlier CMP			; 2
+	sec								; 2
 
 slide_step_positive2:
+	adc	#$0							; 2
 	sta	note_a+NOTE_TONE_SLIDE_STEP_L,X				; 5
 	bcc	skip_step_inc1						; 3
 	inc	note_a+NOTE_TONE_SLIDE_STEP_H,X				; 7
