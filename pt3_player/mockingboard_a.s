@@ -19,24 +19,24 @@
 
 
 ; left speaker
-MOCK_6522_ORB1	EQU	$C400	; 6522 #1 port b data
-MOCK_6522_ORA1	EQU	$C401	; 6522 #1 port a data
-MOCK_6522_DDRB1	EQU	$C402	; 6522 #1 data direction port B
-MOCK_6522_DDRA1	EQU	$C403	; 6522 #1 data direction port A
+MOCK_6522_ORB1	=	$C400	; 6522 #1 port b data
+MOCK_6522_ORA1	=	$C401	; 6522 #1 port a data
+MOCK_6522_DDRB1	=	$C402	; 6522 #1 data direction port B
+MOCK_6522_DDRA1	=	$C403	; 6522 #1 data direction port A
 
 ; right speaker
-MOCK_6522_ORB2	EQU	$C480	; 6522 #2 port b data
-MOCK_6522_ORA2	EQU	$C481	; 6522 #2 port a data
-MOCK_6522_DDRB2	EQU	$C482	; 6522 #2 data direction port B
-MOCK_6522_DDRA2	EQU	$C483	; 6522 #2 data direction port A
+MOCK_6522_ORB2	=	$C480	; 6522 #2 port b data
+MOCK_6522_ORA2	=	$C481	; 6522 #2 port a data
+MOCK_6522_DDRB2	=	$C482	; 6522 #2 data direction port B
+MOCK_6522_DDRA2	=	$C483	; 6522 #2 data direction port A
 
 ; AY-3-8910 commands on port B
 ;						RESET	BDIR	BC1
-MOCK_AY_RESET		EQU	$0	;	0	0	0
-MOCK_AY_INACTIVE	EQU	$4	;	1	0	0
-MOCK_AY_READ		EQU	$5	;	1	0	1
-MOCK_AY_WRITE		EQU	$6	;	1	1	0
-MOCK_AY_LATCH_ADDR	EQU	$7	;	1	1	1
+MOCK_AY_RESET		=	$0	;	0	0	0
+MOCK_AY_INACTIVE	=	$4	;	1	0	0
+MOCK_AY_READ		=	$5	;	1	0	1
+MOCK_AY_WRITE		=	$6	;	1	1	0
+MOCK_AY_LATCH_ADDR	=	$7	;	1	1	1
 
 
 	;========================

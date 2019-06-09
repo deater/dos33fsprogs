@@ -18,7 +18,7 @@
 	;	to be sure status flag and accumulator set properly
 
 
-TIME_OFFSET	EQU	13
+TIME_OFFSET	=	13
 
 interrupt_handler:
 	php

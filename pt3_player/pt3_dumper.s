@@ -7,7 +7,7 @@
 
 PT3_LOC = $4000
 
-NUM_FILES	EQU	15
+NUM_FILES	=	15
 
 
 	;=============================
@@ -422,7 +422,8 @@ FRAMEH:	.byte	$00
 song_list:
 
 ;	.asciiz "CR.PT3"
-	.asciiz "EA.PT3"
+;	.asciiz "EA.PT3"
+	.asciiz "RI.PT3"
 
 ;=========
 ;routines

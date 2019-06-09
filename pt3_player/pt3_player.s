@@ -10,7 +10,7 @@
 PT3_LOC = $4000
 
 ; Number of files.  Should probably detect this automatically
-NUM_FILES	EQU	18
+NUM_FILES	=	18
 
 
 	;=============================
