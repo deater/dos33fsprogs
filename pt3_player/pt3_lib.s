@@ -22,6 +22,7 @@
 ; + 2828 bytes -- fix some correctness issues
 ; + 2776 bytes -- init vars with loop (slower, but more correct and smaller)
 ; + 2739 bytes -- qkumba's crazy SMC everywhere patch
+; + 2430+120 = 2650 bytes -- move NOTE structs to page0
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?
@@ -87,9 +88,18 @@ NOTE_TONE_SLIDE_TO_STEP	=39
 
 NOTE_STRUCT_SIZE=40
 
+note_a	=	$80
+note_b	=	$80+(NOTE_STRUCT_SIZE*1)
+note_c	=	$80+(NOTE_STRUCT_SIZE*2)
+
+begin_vars=$80
+end_vars=$80+(NOTE_STRUCT_SIZE*3)
+
+.if 0
 begin_vars:
 
 note_a:									; reset?
+
 	.byte	$0	; NOTE_VOLUME				; 0	; Y
 	.byte	$0	; NOTE_TONE_SLIDING_L			; 1	; Y
 	.byte	$0	; NOTE_TONE_SLIDING_H			; 2	; Y
@@ -215,6 +225,7 @@ note_c:
 	.byte	$0	; NOTE_TONE_DELTA_H
 	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
 end_vars:
+.endif
 
 load_ornament0_sample1:
 	lda	#0							; 2
