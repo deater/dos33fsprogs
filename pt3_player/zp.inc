@@ -37,108 +37,66 @@ SEEDH	=	$4F
 
 ; DOS33: Confirmed kills $68
 
-RWTSL		= $60
-RWTSH		= $61
-DOSBUFL		= $62
-DOSBUFH		= $63
-FILEML		= $64
-FILEMH		= $65
+;RWTSL		= $60
+;RWTSH		= $61
+;DOSBUFL		= $62
+;DOSBUFH		= $63
+;FILEML		= $64
+;FILEMH		= $65
 
-AY_REGISTERS	= $70
-A_FINE_TONE	= $70
-A_COARSE_TONE	= $71
-B_FINE_TONE	= $72
-B_COARSE_TONE	= $73
-C_FINE_TONE	= $74
-C_COARSE_TONE	= $75
-NOISE		= $76
-ENABLE		= $77
-A_VOLUME	= $78
-B_VOLUME	= $79
-C_VOLUME	= $7A
-ENVELOPE_FINE	= $7B
-ENVELOPE_COARSE	= $7C
-ENVELOPE_SHAPE  = $7D
-COPY_OFFSET	= $7E
-DECODER_STATE	= $7F
+AY_REGISTERS	= $50
+A_FINE_TONE	= $50
+A_COARSE_TONE	= $51
+B_FINE_TONE	= $52
+B_COARSE_TONE	= $53
+C_FINE_TONE	= $54
+C_COARSE_TONE	= $55
+NOISE		= $56
+ENABLE		= $57
+A_VOLUME	= $58
+B_VOLUME	= $59
+C_VOLUME	= $5A
+ENVELOPE_FINE	= $5B
+ENVELOPE_COARSE	= $5C
+ENVELOPE_SHAPE  = $5D
 
-PATTERN_L	= $80
-PATTERN_H	= $81
-ORNAMENT_L	= $82
-ORNAMENT_H	= $83
-SAMPLE_L	= $84
-SAMPLE_H	= $85
+PATTERN_L	= $00
+PATTERN_H	= $01
+ORNAMENT_L	= $02
+ORNAMENT_H	= $03
+SAMPLE_L	= $04
+SAMPLE_H	= $05
 
-DECODE_ERROR	= $90
-A_COLOR		= $91
-B_COLOR		= $92
-C_COLOR		= $93
-COPY_TIME	= $94
-DECOMPRESS_TIME	= $95
-TIME_TAKEN	= $96
-SCREEN_Y	= $97
-WHICH_FILE	= $98
-COLOR_MASK	= $99
-RASTERBARS_ON	= $9A
-RANDOM_POINTER	= $9B
-LOOP		= $9C
-MB_VALUE	= $9D
-;MB_CHUNK	= $9E
-MB_ADDRL	= $9F
-MB_ADDRH	= $A0
-DONE_PLAYING	= $A1
-MB_CHUNK_OFFSET = $A2
-DONE_SONG	= $A3
-FIRE_FB_L	= $A4
-FIRE_FB_H	= $A5
-FIRE_FB2_L	= $A6
-FIRE_FB2_H	= $A7
-FIRE_FB_LINE	= $A8
-FIRE_Q		= $A9
-FIRE_Y		= $AA
-FIRE_X		= $AB
-
-; More zero-page addresses
-; we try not to conflict with anything DOS, MONITOR or BASIC related
-
-			;COLOR1		= $E0
-COLOR2	= $E1
-			;MATCH		= $E2
-XX	= $E3
-			;YY		= $E4
-			;SHIPY		= $E4
-			;YADD		= $E5
-			;LOOP		= $E6
-			;MEMPTRL	= $E7
-			;MEMPTRH	= $E8
-	;NAMEL		=	$E9
-	;NAMEH		=	$EA
-				;NAMEX		=	$EB
-				;CHAR		=	$EC
-DISP_PAGE	= $ED
-DRAW_PAGE	= $EE
-
-				;FIRST		=	$F0
-LASTKEY		= $F1
-				;PADDLE_STATUS	=	$F2
-XPOS		= $F3
-YPOS		= $F4
+WHICH_FILE	= $62
+LOOP		= $63
+MB_VALUE	= $64
+MB_ADDRL	= $65
+MB_ADDRH	= $66
+DONE_PLAYING	= $67
+DONE_SONG	= $68
+FIRE_FB_L	= $69
+FIRE_FB_H	= $6A
+FIRE_FB2_L	= $6B
+FIRE_FB2_H	= $6C
+FIRE_FB_LINE	= $6D
+FIRE_Q		= $6E
+FIRE_Y		= $6F
+FIRE_X		= $70
+DISP_PAGE	= $71
+DRAW_PAGE	= $72
+XPOS		= $73
+YPOS		= $74
+namlo		= $76
+namhi		= $77
+step		= $78     ; state for stepper motor
+tmptrk		= $79     ; temporary copy of current track
+phase		= $7a     ; current phase for /seek
+TEMP		= $7A
+TEMPY		= $7B
+INL		= $7C
+INH		= $7D
+OUTL		= $7E
+OUTH		= $7F
 
 
-       namlo   =       $f6
-       namhi   =       $f7
-       step    =       $f8     ; state for stepper motor
-       tmptrk  =       $f9     ; temporary copy of current track
-       phase   =       $fa     ; current phase for /seek
-
-
-
-TEMP		= $FA
-				;RUN		=	$FA
-				;TEMP2		=	$FB
-TEMPY		= $FB
-INL		= $FC
-INH		= $FD
-OUTL		= $FE
-OUTH		= $FF
-
+; 80+ = 120 bytes of NOTE data
