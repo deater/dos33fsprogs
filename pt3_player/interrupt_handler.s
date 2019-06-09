@@ -55,11 +55,13 @@ pt3_play_music:
 	beq	move_to_next
 
 pt3_loop_smc:
-	lda	#0			; looping, move to loop location
-	sta	current_pattern
+	lda	#$d1			; looping, move to loop location
+					; non-zero to avoid the temptation
+					; to merge with following lda #$0
+	sta	current_pattern_smc+1
 	lda	#$0
-	sta	current_line
-	sta	current_subframe
+	sta	current_line_smc+1
+	sta	current_subframe_smc+1
 	sta	DONE_SONG		; undo the next song
 
 	beq	done_interrupt		; branch always
@@ -151,31 +153,35 @@ frame_count_smc:
 
 	sta	frame_count_smc+1					; 3
 
-update_second_ones:
-	inc	$7d0+TIME_OFFSET+3					; 6
-	inc	$bd0+TIME_OFFSET+3					; 6
-	lda	$bd0+TIME_OFFSET+3					; 4
-	cmp	#$ba			; one past '9'			; 2
-	bne	done_time						; 3/2nt
-	lda	#'0'+$80						; 2
-	sta	$7d0+TIME_OFFSET+3					; 4
-	sta	$bd0+TIME_OFFSET+3					; 4
-update_second_tens:
-	inc	$7d0+TIME_OFFSET+2					; 6
-	inc	$bd0+TIME_OFFSET+2					; 6
-	lda	$bd0+TIME_OFFSET+2					; 4
-	cmp	#$b6		; 6 (for 60 seconds)			; 2
-	bne	done_time						; 3/2nt
-	lda	#'0'+$80						; 2
-	sta	$7d0+TIME_OFFSET+2					; 4
-	sta	$bd0+TIME_OFFSET+2					; 4
+	ldx	$7d0+TIME_OFFSET+3					; 4
+	cpx	#'9'+$80						; 2
+	bne	update_second_ones					; 3/2nt
+
+	ldx	$7d0+TIME_OFFSET+2					; 4
+	cpx	#'5'+$80	; 6-1 (for 60 seconds)			; 2
+	bne	update_second_tens					; 3/2nt
+
 update_minutes:
 	inc	$7d0+TIME_OFFSET					; 6
 	inc	$bd0+TIME_OFFSET					; 6
+
+	ldx	#'0'+$80-1						; 2
+
+update_second_tens:
+	inx								; 2
+	stx	$7d0+TIME_OFFSET+2					; 4
+	stx	$bd0+TIME_OFFSET+2					; 4
+
+	ldx	#'0'+$80-1						; 2
+
+update_second_ones:
+	inx								; 2
+	stx	$7d0+TIME_OFFSET+3					; 4
+	stx	$bd0+TIME_OFFSET+3					; 4
 				; we don't handle > 9:59 songs yet
 done_time:
 								;=============
-								;     87 worst
+								;     52 worst
 
 
 	;=================================
@@ -185,7 +191,7 @@ done_time:
 check_keyboard:
 
 	jsr	get_key
-	cmp	#0
+	tax
 	beq	exit_interrupt
 
 	;====================

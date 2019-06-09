@@ -18,14 +18,15 @@ Code Optimization
 
 	Decoder Type	size	ZP use	raw	decode	total	CPU overhead
 	-------------------------------------------------------------
-	Original	3407	22B	1F.22	31s	171s	18%
-	VolTableGen	3302	22B	20.0E	32s	171s	19%
-	SizeOpts	3262	22B	20.0A	32s	171s	19%
-	MoreSizeOpt	3203	22B	1F.1D	31s	171s	18%
-	Qkumba#1	2937	??	1D.18	29s	171s	17%
-	Qkumba#2	2879	??	1C.18	28s	171s	16%
-	Qkumba#3+vmw	2816	??	1C.22	28s	171s	16%
-	Fixes,zero init 2776	??	1C.10	28s	171s	16%
+	Original	3407	22B	1F.22	31s	171s	18.1%
+	VolTableGen	3302	22B	20.0E	32s	171s	18.7%
+	SizeOpts	3262	22B	20.0A	32s	171s	18.7%
+	MoreSizeOpt	3203	22B	1F.1D	31s	171s	18.1%
+	Qkumba#1	2937	??	1D.18	29s	171s	16.9%
+	Qkumba#2	2879	??	1C.18	28s	171s	16.3%
+	Qkumba#3+vmw	2816	??	1C.22	28s	171s	16.3%
+	Fixes,zero init 2776	??	1C.10	28s	171s	16.3%
+	Qkumba-SuperSMC	2739	??	1B.15	27s	171s	15.8%
 
 Times:							Validated
 	BH.PT3:	10.0B	16	1:33	 93	17.2%	

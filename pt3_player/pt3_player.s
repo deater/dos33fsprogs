@@ -36,9 +36,9 @@ pt3_setup:
 	cmp	#6
 	beq	apple_iie_or_newer
 
-	lda	#1		; set if older than a IIe
-	sta	apple_ii
-	jmp	done_apple_detect
+	lda	#$d0		; set if older than a IIe
+	sta	apple_ii_smc
+	bne	done_apple_detect	; branch always
 apple_iie_or_newer:
 	lda	$FBC0		; 0 on a IIc
 	bne	done_apple_detect
@@ -204,18 +204,17 @@ check_done:
 	asl			; bit 7 to carry, bit 6 to bit 7
 	beq	main_loop	; if was all zeros, loop
 	bcs	main_loop	; if high bit set, paused
+	sei			; disable interrupts
 	bmi	minus_song	; if bit 6 set, then left pressed
 
 				; else, either song finished or
 				; right pressed
 
 plus_song:
-	sei			; disable interrupts
 	jsr	increment_file
-	jmp	done_play
+	bcc	done_play	; branch always
 
 minus_song:
-	sei			; disable interrupts
 	jsr	decrement_file
 
 done_play:
@@ -351,7 +350,7 @@ done_name_loop:
 
 upcase:
 	; if Apple II/II+, uppercase the lowercase letters
-	lda	apple_ii
+apple_ii_smc:
 	beq	no_uppercase
 
 	ldy	#$1e
@@ -409,20 +408,13 @@ no_uppercase:
 	; first update with current values
 
 	lda	WHICH_FILE
-	clc
 	adc	#$1
+        ldy     #0
 	jsr	convert_decimal
-	lda	which_10s
-	sta	which_song_string
-	lda	which_1s
-	sta	which_song_string+1
 
 	lda	#NUM_FILES
+        ldy     #3
 	jsr	convert_decimal
-	lda	which_10s
-	sta	which_song_string+3
-	lda	which_1s
-	sta	which_song_string+4
 
 	; now print modified string
 
@@ -494,110 +486,103 @@ done_MHz:
 	; Time is just number of frames/50Hz
 
 
-	sta	current_line
-	sta	current_subframe
-	sta	current_pattern
+	sta	current_pattern_smc+1
+
+frame_count_loop_store:
+	sta	current_line_smc+1
+	sta	current_subframe_smc+1
 
 frame_count_loop:
 
-	lda	current_line
-	bne	fc_pattern_good
-	lda	current_subframe
+	lda	current_line_smc+1
+	ora	current_subframe_smc+1
 	bne	fc_pattern_good
 
 	; load a new pattern in
 	jsr	pt3_set_pattern
 
 	lda	DONE_SONG
-	beq	fc_pattern_good
-        jmp	done_counting
+        bne	done_counting
 
 fc_pattern_good:
-	lda     current_subframe
+	ldx     current_subframe_smc+1	;;ldx     #(NOTE_STRUCT_SIZE*0)
 	bne	fc_line_good
 
 	; we only calc length of chanel A, hopefully enough
 
 	lda	#1
-	sta	pt3_pattern_done
+	sta	pt3_pattern_done_smc+1
 
         ; decode_note(&pt3->a,&(pt3->a_addr),pt3);
-        ldx     #(NOTE_STRUCT_SIZE*0)
         jsr     decode_note
 
-	lda	pt3_pattern_done
+	lda	pt3_pattern_done_smc+1
 	bne	fc_line_good
 
-	inc     current_pattern         ; increment pattern
-        sta     current_line
-        sta     current_subframe
-        bne     frame_count_loop	; branch always
+	inc     current_pattern_smc+1   ; increment pattern
+        bne     frame_count_loop_store	; branch always
 
 fc_line_good:
-        inc     current_subframe        ; subframe++
-        lda     current_subframe
+        inc     current_subframe_smc+1  ; subframe++
+        lda     current_subframe_smc+1
         eor     pt3_speed_smc+1         ; if we hit pt3_speed, move to next
         bne     fc_do_frame
 
 fc_next_line:
-        sta     current_subframe	; reset subframe to 0
+        sta     current_subframe_smc+1	; reset subframe to 0
 
-        inc     current_line            ; and increment line
-        lda     current_line
+        inc     current_line_smc+1      ; and increment line
+        lda     current_line_smc+1
 
         eor     #64			; always end at 64.
         bne     fc_do_frame		; is this always needed?
 
 fc_next_pattern:
-        sta     current_line		; reset line to 0
+        sta     current_line_smc+1	; reset line to 0
 
-        inc     current_pattern         ; increment pattern
+        inc     current_pattern_smc+1   ; increment pattern
 
 fc_do_frame:
-	inc	time_frame
-	lda	time_frame
+	inc	time_frame_smc+1
+time_frame_smc:
+	lda	#$00
 	eor	#50
 	bne	frame_count_loop
 
-	sta	time_frame
+	sta	time_frame_smc+1
 
 	; see if overflow low s
-	lda	$BD0+13+10
-	cmp	#'9'+$80
+	ldx	$BD0+13+10
+	cpx	#'9'+$80
 	bne	inc_low_s
 
 	; see if overflow high s
-	lda	$BD0+13+9
-	cmp	#'5'+$80
+	ldx	$BD0+13+9
+	cpx	#'5'+$80
 	bne	inc_high_s
 
 	inc	$7D0+13+7
 	inc	$BD0+13+7
 
-	lda	#'0'+$80
-	sta	$7D0+13+9
-	sta	$BD0+13+9
-	bne	clear_low_s
+	ldx	#'0'+$80-1
 
 inc_high_s:
-	inc	$7D0+13+9
-	inc	$BD0+13+9
+	inx
+	stx	$7D0+13+9
+	stx	$BD0+13+9
 
 clear_low_s:
-	lda	#'0'+$80
-	sta	$7D0+13+10
-	sta	$BD0+13+10
-
-	bne	inc_done
+	ldx	#'0'+$80-1
 
 inc_low_s:
-	inc	$7D0+13+10
-	inc	$BD0+13+10
+	inx
+	stx	$7D0+13+10
+	stx	$BD0+13+10
 
 inc_done:
 
 fc_bayern:
-	jmp	frame_count_loop
+	bne	frame_count_loop
 
 
 done_counting:
@@ -605,7 +590,7 @@ done_counting:
 	; re-init, as we've run through it
 	lda	#0
 	sta	DONE_PLAYING
-	sta	current_pattern
+	sta	current_pattern_smc+1
 
 	jmp	pt3_init_song
 
@@ -693,37 +678,32 @@ done_decrement:
 convert_decimal:
 
 	ldx	#'0'+$80
-	stx	which_1s
-	stx	which_10s
+	stx	which_1s_smc+1
+	stx	which_10s_smc+1
 
 	tax				; special case zero
 	beq	conv_decimal_done
 conv_decimal_loop:
-	inc	which_1s
-	lda	which_1s
+	inc	which_1s_smc+1
+which_1s_smc:
+	lda	#$d1
 	cmp	#':'+$80
 	bne	conv_decimal_not_10
 	lda	#'0'+$80
-	sta	which_1s
-	inc	which_10s
+	sta	which_1s_smc+1
+	inc	which_10s_smc+1
 conv_decimal_not_10:
 	dex
 	bne	conv_decimal_loop
 
 conv_decimal_done:
+which_10s_smc:
+	lda	#$d1
+	sta	which_song_string,y
+	lda	which_1s_smc+1
+	sta	which_song_string+1,y
 	rts
 
-
-
-;=========
-; vars
-;=========
-
-
-time_frame:	.byte	$0
-apple_ii:	.byte	$0
-which_10s:	.byte	$0
-which_1s:	.byte	$0
 
 
 ;==========
