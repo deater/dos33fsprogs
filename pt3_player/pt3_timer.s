@@ -1,6 +1,7 @@
 ; PT3 Timer -- times how long it takes
 
 .include	"zp.inc"
+.include	"hardware.inc"
 
 PT3_LOC = $4000
 

@@ -4,6 +4,7 @@
 
 ; zero page definitions
 .include	"zp.inc"
+.include	"hardware.inc"
 
 ; Location the files load at.
 ; If you change this, you need to update the Makefile

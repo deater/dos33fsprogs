@@ -4,6 +4,7 @@
 ; we re-route this to the printer in Slot #1 for debugging
 
 .include	"zp.inc"
+.include	"hardware.inc"
 
 PT3_LOC = $4000
 
