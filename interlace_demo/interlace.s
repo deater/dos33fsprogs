@@ -181,8 +181,8 @@ loopB:	dex								; 2
 
 
 	; want colors 01234567
-	; line 0: $X0
-	; line 1: $X1
+	; line 0: $X0 to $800
+	; line 1: $X1 to $400
 	; line 2: $X2
 	; line 3: $X3
 	; line 4: $4X
@@ -197,168 +197,162 @@ display_loop:
 	; 0
 	; 65 cycles total
 	bit	PAGE0	; 4
-	lda	#$a3	; 2
+	lda	#$0b	; 2
 	sta	$800	; 4
-	lda	#$a3	; 2
 	sta	$801	; 4
-	lda	#$a3	; 2
 	sta	$802	; 4
-	lda	#$de	; 2
 	sta	$803	; 4
-	lda	#$a3	; 2
 	sta	$804	; 4
-	lda	#$a3	; 2
 	sta	$805	; 4
-	lda	#$a3	; 2
 	sta	$806	; 4
-	lda	#$a3	; 2
 	sta	$807	; 4
-	lda	#$a3	; 2
 	sta	$808	; 4
-	bit	krg	; 4
+	sta	$809	; 4
+	sta	$80a	; 4
+	sta	$80b	; 4
+	sta	$80c	; 4
+	sta	$80d	; 4
 	lda	TEMP	; 3
 
 	; 65 cycles
 	bit	PAGE1	; 4
-	lda	#$f4	; 2
+	lda	#$0f	; 2
 	sta	$400	; 4
-	lda	#$f4	; 2
 	sta	$401	; 4
-	lda	#$f4	; 2
 	sta	$402	; 4
-	lda	#$f4	; 2
 	sta	$403	; 4
-	lda	#$f4	; 2
 	sta	$404	; 4
-	lda	#$f4	; 2
 	sta	$405	; 4
-	lda	#$f4	; 2
 	sta	$406	; 4
-	lda	#$f4	; 2
 	sta	$407	; 4
-	lda	#$f4	; 2
 	sta	$408	; 4
-	bit	krg	; 4
+	sta	$409	; 4
+	sta	$40a	; 4
+	sta	$40b	; 4
+	sta	$40c	; 4
+	sta	$40d	; 4
 	lda	TEMP	; 3
+
 
 	; 1
 	; 65 cycles
 	bit	PAGE0	; 4
-	lda	#$a3	; 2
+	lda	#$0b	; 2
 	sta	$800	; 4
-	lda	#$a3	; 2
 	sta	$801	; 4
-	lda	#$a3	; 2
 	sta	$802	; 4
-	lda	#$ed	; 2
 	sta	$803	; 4
-	lda	#$a3	; 2
 	sta	$804	; 4
-	lda	#$a3	; 2
 	sta	$805	; 4
-	lda	#$a3	; 2
 	sta	$806	; 4
-	lda	#$a3	; 2
 	sta	$807	; 4
-	lda	#$a3	; 2
 	sta	$808	; 4
-	bit	krg	; 4
+	sta	$809	; 4
+	sta	$80a	; 4
+	sta	$80b	; 4
+	sta	$80c	; 4
+	sta	$80d	; 4
 	lda	TEMP	; 3
 
 	; 65 cycles
 	bit	PAGE1	; 4
-	lda	#$04	; 2
+	lda	#$30	; 2
+	sta	$400	; 4
+	sta	$401	; 4
+	sta	$402	; 4
+	sta	$403	; 4
+	sta	$404	; 4
+	sta	$405	; 4
+	sta	$406	; 4
+	sta	$407	; 4
+	sta	$408	; 4
+	sta	$409	; 4
 	sta	$40a	; 4
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	lda	#$40	; 2
-	sta	$40a	; 4
-	bit	krg	; 4
+	sta	$40b	; 4
+	sta	$40c	; 4
+	sta	$40d	; 4
 	lda	TEMP	; 3
 
 	; 2
 	; 65 cycles
 	bit	PAGE0	; 4
-	lda	#$a3	; 2
+	lda	#$00	; 2
 	sta	$800	; 4
-	lda	#$a3	; 2
 	sta	$801	; 4
-	lda	#$a3	; 2
 	sta	$802	; 4
-	lda	#$2d	; 2
 	sta	$803	; 4
-	lda	#$a3	; 2
 	sta	$804	; 4
-	lda	#$a3	; 2
 	sta	$805	; 4
-	lda	#$a3	; 2
 	sta	$806	; 4
-	lda	#$a3	; 2
 	sta	$807	; 4
-	lda	#$a3	; 2
 	sta	$808	; 4
-	bit	krg	; 4
+	sta	$809	; 4
+	sta	$80a	; 4
+	sta	$80b	; 4
+	sta	$80c	; 4
+	sta	$80d	; 4
 	lda	TEMP	; 3
 
 	; 65 cycles
 	bit	PAGE1	; 4
-	lda	#$06	; 2
+	lda	#$00	; 2
+	sta	$400	; 4
+	sta	$401	; 4
+	sta	$402	; 4
+	sta	$403	; 4
+	sta	$404	; 4
+	sta	$405	; 4
+	sta	$406	; 4
+	sta	$407	; 4
+	sta	$408	; 4
+	sta	$409	; 4
 	sta	$40a	; 4
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	bit	krg	; 4
+	sta	$40b	; 4
+	sta	$40c	; 4
+	sta	$40d	; 4
 	lda	TEMP	; 3
 
 	; 3
 	; 65 cycles
 	bit	PAGE0	; 4
-	lda	#$a3	; 2
+	lda	#$00	; 2
 	sta	$800	; 4
-	lda	#$a3	; 2
 	sta	$801	; 4
-	lda	#$a3	; 2
 	sta	$802	; 4
-	lda	#$3d	; 2
 	sta	$803	; 4
-	lda	#$a3	; 2
 	sta	$804	; 4
-	lda	#$a3	; 2
 	sta	$805	; 4
-	lda	#$a3	; 2
 	sta	$806	; 4
-	lda	#$a3	; 2
 	sta	$807	; 4
-	lda	#$a3	; 2
 	sta	$808	; 4
-	bit	krg	; 4
+	sta	$809	; 4
+	sta	$80a	; 4
+	sta	$80b	; 4
+	sta	$80c	; 4
+	sta	$80d	; 4
 	lda	TEMP	; 3
 
 	; 65 cycles
 	bit	PAGE1	; 4
-	lda	#$08	; 2
+	lda	#$00	; 2
+	sta	$400	; 4
+	sta	$401	; 4
+	sta	$402	; 4
+	sta	$403	; 4
+	sta	$404	; 4
+	sta	$405	; 4
+	sta	$406	; 4
+	sta	$407	; 4
+	sta	$408	; 4
+	sta	$409	; 4
 	sta	$40a	; 4
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	bit	krg	; 4
+	sta	$40b	; 4
+	sta	$40c	; 4
+	sta	$40d	; 4
 	lda	TEMP	; 3
 
+;===================================
+;===================================
 	; 4
 	; 65 cycles
 	bit	PAGE0	; 4
@@ -423,7 +417,7 @@ display_loop:
 
 	; 6
 	; 65 cycles
-	bit	PAGE0						; 4
+	bit	PAGE0	; 4
 	lda	#$D0	; 2
 	sta	$880	; 4
 	inc	krg	; 6
@@ -438,7 +432,7 @@ display_loop:
 	lda	TEMP	; 3
 
 	; 65 cycles
-	bit	PAGE1						; 4
+	bit	PAGE1	; 4
 	lda	#$E0	; 2
 	sta	$480	; 4
 	inc	krg	; 6
@@ -454,7 +448,7 @@ display_loop:
 
 	; 7
 	; 65 cycles
-	bit	PAGE0						; 4
+	bit	PAGE0	; 4
 	lda	#$F0	; 2
 	sta	$880	; 4
 	inc	krg	; 6
@@ -469,119 +463,193 @@ display_loop:
 	lda	TEMP	; 3
 
 	; 65 cycles
-	bit	PAGE1						; 4
-	lda	#$00	; 2
+	bit	PAGE1	; 4
+	lda	#$01	; 2
 	sta	$500	; 4
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	lda	#$01	; 2
+	sta	$501	; 4
+	lda	#$01	; 2
+	sta	$502	; 4
+	lda	#$01	; 2
+	sta	$503	; 4
+	lda	#$01	; 2
+	sta	$504	; 4
+	lda	#$01	; 2
+	sta	$505	; 4
+	lda	#$01	; 2
+	sta	$506	; 4
+	lda	#$01	; 2
+	sta	$507	; 4
+	lda	#$01	; 2
+	sta	$508	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
+
+;================================
+;================================
 
 	; 8
-	bit	PAGE0						; 4
 	; 65 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	bit	PAGE0	; 4
+	lda	#$09	; 2
+	sta	$900	; 4
+	lda	#$09	; 2
+	sta	$901	; 4
+	lda	#$09	; 2
+	sta	$902	; 4
+	lda	#$09	; 2
+	sta	$903	; 4
+	lda	#$09	; 2
+	sta	$904	; 4
+	lda	#$09	; 2
+	sta	$905	; 4
+	lda	#$09	; 2
+	sta	$906	; 4
+	lda	#$09	; 2
+	sta	$907	; 4
+	lda	#$09	; 2
+	sta	$908	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
 
-	bit	PAGE1						; 4
 	; 65 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	bit	PAGE1	; 4
+	lda	#$0d	; 2
+	sta	$500	; 4
+	lda	#$0d	; 2
+	sta	$501	; 4
+	lda	#$0d	; 2
+	sta	$502	; 4
+	lda	#$0d	; 2
+	sta	$503	; 4
+	lda	#$0d	; 2
+	sta	$504	; 4
+	lda	#$0d	; 2
+	sta	$505	; 4
+	lda	#$0d	; 2
+	sta	$506	; 4
+	lda	#$0d	; 2
+	sta	$507	; 4
+	lda	#$0d	; 2
+	sta	$508	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
 
 	; 9
-	bit	PAGE0						; 4
 	; 65 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	bit	PAGE0	; 4
+	lda	#$04	; 2
+	sta	$900	; 4
+	lda	#$04	; 2
+	sta	$901	; 4
+	lda	#$04	; 2
+	sta	$902	; 4
+	lda	#$04	; 2
+	sta	$903	; 4
+	lda	#$04	; 2
+	sta	$904	; 4
+	lda	#$04	; 2
+	sta	$905	; 4
+	lda	#$04	; 2
+	sta	$906	; 4
+	lda	#$04	; 2
+	sta	$907	; 4
+	lda	#$04	; 2
+	sta	$908	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
 
-	bit	PAGE1						; 4
 	; 65 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	bit	PAGE1	; 4
+	lda	#$06	; 2
+	sta	$500	; 4
+	lda	#$06	; 2
+	sta	$501	; 4
+	lda	#$06	; 2
+	sta	$502	; 4
+	lda	#$06	; 2
+	sta	$503	; 4
+	lda	#$06	; 2
+	sta	$504	; 4
+	lda	#$06	; 2
+	sta	$505	; 4
+	lda	#$06	; 2
+	sta	$506	; 4
+	lda	#$06	; 2
+	sta	$507	; 4
+	lda	#$06	; 2
+	sta	$508	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
 
 	; 10
-	bit	PAGE0						; 4
 	; 65 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	bit	PAGE0	; 4
+	lda	#$20	; 2
+	sta	$900	; 4
+	lda	#$20	; 2
+	sta	$901	; 4
+	lda	#$20	; 2
+	sta	$902	; 4
+	lda	#$20	; 2
+	sta	$903	; 4
+	lda	#$20	; 2
+	sta	$904	; 4
+	lda	#$20	; 2
+	sta	$905	; 4
+	lda	#$20	; 2
+	sta	$906	; 4
+	lda	#$20	; 2
+	sta	$907	; 4
+	lda	#$20	; 2
+	sta	$908	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
 
-	bit	PAGE1						; 4
 	; 65 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	bit	PAGE1	; 4
+	lda	#$00	; 2
+	sta	$500	; 4
+	lda	#$00	; 2
+	sta	$501	; 4
+	lda	#$00	; 2
+	sta	$502	; 4
+	lda	#$00	; 2
+	sta	$503	; 4
+	lda	#$00	; 2
+	sta	$504	; 4
+	lda	#$00	; 2
+	sta	$505	; 4
+	lda	#$00	; 2
+	sta	$506	; 4
+	lda	#$00	; 2
+	sta	$507	; 4
+	lda	#$00	; 2
+	sta	$508	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
 
 	; 11
-	bit	PAGE0						; 4
 	; 65 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	bit	PAGE0	; 4
+	lda	#$00	; 2
+	sta	$900	; 4
+	lda	#$00	; 2
+	sta	$901	; 4
+	lda	#$00	; 2
+	sta	$902	; 4
+	lda	#$00	; 2
+	sta	$903	; 4
+	lda	#$00	; 2
+	sta	$904	; 4
+	lda	#$00	; 2
+	sta	$905	; 4
+	lda	#$00	; 2
+	sta	$906	; 4
+	lda	#$00	; 2
+	sta	$907	; 4
+	lda	#$00	; 2
+	sta	$908	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
 
@@ -3024,25 +3092,21 @@ display_loop:
 
 	; 65 cycles
 	bit	PAGE1	; 4
-	lda	#$f4	; 2
+	lda	#$03	; 2
 	sta	$400	; 4
-	lda	#$f4	; 2
-	sta	$400	; 4
-	lda	#$f4	; 2
-	sta	$400	; 4
-	lda	#$f4	; 2
-	sta	$400	; 4
-	lda	#$f4	; 2
-	sta	$400	; 4
-	lda	#$f4	; 2
-	sta	$400	; 4
-	lda	#$f4	; 2
-	sta	$400	; 4
-	lda	#$f4	; 2
-	sta	$400	; 4
-	lda	#$f4	; 2
-	sta	$400	; 4
-	bit	krg	; 4
+	sta	$401	; 4
+	sta	$402	; 4
+	sta	$403	; 4
+	sta	$404	; 4
+	sta	$405	; 4
+	sta	$406	; 4
+	sta	$407	; 4
+	sta	$408	; 4
+	sta	$409	; 4
+	sta	$40a	; 4
+	sta	$40b	; 4
+	sta	$40c	; 4
+	sta	$40d	; 4
 	lda	TEMP	; 3
 
 
