@@ -464,7 +464,6 @@ done_MHz:
 	sta	$AD1
 
 	; Print Rright Arrow (INVERSE)
-	lda	#'-'
 	sta	$6F6
 	sta	$AF6
 
