@@ -197,85 +197,118 @@ display_loop:
 	; 0
 	; 65 cycles total
 	bit	PAGE0	; 4
-	lda	#$01	; 2
+	lda	#$a3	; 2
 	sta	$800	; 4
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	lda	#$a3	; 2
+	sta	$801	; 4
+	lda	#$a3	; 2
+	sta	$802	; 4
+	lda	#$de	; 2
+	sta	$803	; 4
+	lda	#$a3	; 2
+	sta	$804	; 4
+	lda	#$a3	; 2
+	sta	$805	; 4
+	lda	#$a3	; 2
+	sta	$806	; 4
+	lda	#$a3	; 2
+	sta	$807	; 4
+	lda	#$a3	; 2
+	sta	$808	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
 
 	; 65 cycles
 	bit	PAGE1	; 4
-	lda	#$02	; 2
+	lda	#$f4	; 2
 	sta	$400	; 4
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	lda	#$f4	; 2
+	sta	$401	; 4
+	lda	#$f4	; 2
+	sta	$402	; 4
+	lda	#$f4	; 2
+	sta	$403	; 4
+	lda	#$f4	; 2
+	sta	$404	; 4
+	lda	#$f4	; 2
+	sta	$405	; 4
+	lda	#$f4	; 2
+	sta	$406	; 4
+	lda	#$f4	; 2
+	sta	$407	; 4
+	lda	#$f4	; 2
+	sta	$408	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
 
 	; 1
 	; 65 cycles
 	bit	PAGE0	; 4
-	lda	#$03	; 2
+	lda	#$a3	; 2
 	sta	$800	; 4
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	lda	#$a3	; 2
+	sta	$801	; 4
+	lda	#$a3	; 2
+	sta	$802	; 4
+	lda	#$ed	; 2
+	sta	$803	; 4
+	lda	#$a3	; 2
+	sta	$804	; 4
+	lda	#$a3	; 2
+	sta	$805	; 4
+	lda	#$a3	; 2
+	sta	$806	; 4
+	lda	#$a3	; 2
+	sta	$807	; 4
+	lda	#$a3	; 2
+	sta	$808	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
 
 	; 65 cycles
 	bit	PAGE1	; 4
+	lda	#$04	; 2
+	sta	$40a	; 4
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
+	inc	krg	; 6
 	lda	#$40	; 2
-	sta	$400	; 4
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	sta	$40a	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
 
 	; 2
 	; 65 cycles
 	bit	PAGE0	; 4
-	lda	#$50	; 2
+	lda	#$a3	; 2
 	sta	$800	; 4
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	lda	#$a3	; 2
+	sta	$801	; 4
+	lda	#$a3	; 2
+	sta	$802	; 4
+	lda	#$2d	; 2
+	sta	$803	; 4
+	lda	#$a3	; 2
+	sta	$804	; 4
+	lda	#$a3	; 2
+	sta	$805	; 4
+	lda	#$a3	; 2
+	sta	$806	; 4
+	lda	#$a3	; 2
+	sta	$807	; 4
+	lda	#$a3	; 2
+	sta	$808	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
 
 	; 65 cycles
 	bit	PAGE1	; 4
-	lda	#$60	; 2
-	sta	$400	; 4
+	lda	#$06	; 2
+	sta	$40a	; 4
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -290,23 +323,31 @@ display_loop:
 	; 3
 	; 65 cycles
 	bit	PAGE0	; 4
-	lda	#$70	; 2
+	lda	#$a3	; 2
 	sta	$800	; 4
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	lda	#$a3	; 2
+	sta	$801	; 4
+	lda	#$a3	; 2
+	sta	$802	; 4
+	lda	#$3d	; 2
+	sta	$803	; 4
+	lda	#$a3	; 2
+	sta	$804	; 4
+	lda	#$a3	; 2
+	sta	$805	; 4
+	lda	#$a3	; 2
+	sta	$806	; 4
+	lda	#$a3	; 2
+	sta	$807	; 4
+	lda	#$a3	; 2
+	sta	$808	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
 
 	; 65 cycles
 	bit	PAGE1	; 4
 	lda	#$08	; 2
-	sta	$480	; 4
+	sta	$40a	; 4
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -322,7 +363,7 @@ display_loop:
 	; 65 cycles
 	bit	PAGE0	; 4
 	lda	#$09	; 2
-	sta	$880	; 4
+	sta	$80a	; 4
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -337,7 +378,7 @@ display_loop:
 	; 65 cycles
 	bit	PAGE1	; 4
 	lda	#$0A	; 2
-	sta	$480	; 4
+	sta	$40a	; 4
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -353,7 +394,7 @@ display_loop:
 	; 65 cycles
 	bit	PAGE0	; 4
 	lda	#$0B	; 2
-	sta	$880	; 4
+	sta	$80a	; 4
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2966,8 +3007,8 @@ display_loop:
 	lda	TEMP	; 3
 
 	; 95
-	bit	PAGE0						; 4
 	; 65 cycles
+	bit	PAGE0	; 4
 	inc	krg	; 6
 	inc	krg	; 6
 	inc	krg	; 6
@@ -2980,17 +3021,27 @@ display_loop:
 	bit	krg	; 4
 	lda	TEMP	; 3
 
-	bit	PAGE1						; 4
+
 	; 65 cycles
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
-	inc	krg	; 6
+	bit	PAGE1	; 4
+	lda	#$f4	; 2
+	sta	$400	; 4
+	lda	#$f4	; 2
+	sta	$400	; 4
+	lda	#$f4	; 2
+	sta	$400	; 4
+	lda	#$f4	; 2
+	sta	$400	; 4
+	lda	#$f4	; 2
+	sta	$400	; 4
+	lda	#$f4	; 2
+	sta	$400	; 4
+	lda	#$f4	; 2
+	sta	$400	; 4
+	lda	#$f4	; 2
+	sta	$400	; 4
+	lda	#$f4	; 2
+	sta	$400	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
 
