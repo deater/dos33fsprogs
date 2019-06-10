@@ -17,9 +17,6 @@
 	;	$fffe vector with this, but that does mean we have
 	;	to be sure status flag and accumulator set properly
 
-
-TIME_OFFSET	EQU	13
-
 interrupt_handler:
 	php			; save status flags
 	pha			; save A				; 3
