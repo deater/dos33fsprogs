@@ -147,9 +147,13 @@ in_range:
 
 	jsr	gr_copy_to_current			; 6+ 9292
 
-	; now we have 322 left
+	; 5070 + 4550 = 9620
+	;		9292
+	;		  12
+	;		   6
+	;		====
+	;		 310
 
-	; 322 - 12 = 310
 	; - 3 for jmp
 	; 307
 
@@ -561,23 +565,23 @@ display_loop:
 
 	; 65 cycles
 	bit	PAGE1	; 4
-	lda	#$06	; 2
+	lda	#$60	; 2
 	sta	$500	; 4
-	lda	#$06	; 2
+	lda	#$60	; 2
 	sta	$501	; 4
-	lda	#$06	; 2
+	lda	#$60	; 2
 	sta	$502	; 4
-	lda	#$06	; 2
+	lda	#$60	; 2
 	sta	$503	; 4
-	lda	#$06	; 2
+	lda	#$60	; 2
 	sta	$504	; 4
-	lda	#$06	; 2
+	lda	#$60	; 2
 	sta	$505	; 4
-	lda	#$06	; 2
+	lda	#$60	; 2
 	sta	$506	; 4
-	lda	#$06	; 2
+	lda	#$60	; 2
 	sta	$507	; 4
-	lda	#$06	; 2
+	lda	#$60	; 2
 	sta	$508	; 4
 	bit	krg	; 4
 	lda	TEMP	; 3
@@ -3197,6 +3201,7 @@ gr_offsets:
 
 .include "../asm_routines/gr_unrle.s"
 .include "../asm_routines/keypress.s"
+.align $100
 .include "gr_copy.s"
 .include "vapor_lock.s"
 .include "delay_a.s"
