@@ -183,25 +183,33 @@ display_loop:
 	;======================================================
 
 	; 4550	-- VBLANK
-	; -134  -- raster
+	; -148  -- raster 16+6+126 = 148
 	;  -10  -- keypress
 	;=======
-	; 4406
+	; 4392
 
 pad_time:
 
 	; we erase, then draw
 	; doing a blanket erase of all 128 lines would cost 3459 cycles!
 
+	; move red
 
-	ldx	#10				; 2
+	ldy	red_x				; 4
+	lda	movement_table,Y		; 4
+	sta	red_x				; 4
+	and	#$7f				; 2
+	tax					; 2
+
 	jsr	draw_rasterbar			; 6+126
 
 
-	; Try X=175 Y=5 cycles=4406
+	; Try X=3 Y=209 cycles=4390 R2
 
-	ldy	#5							; 2
-loop1:	ldx	#175							; 2
+	nop
+
+	ldy	#209							; 2
+loop1:	ldx	#3							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -330,6 +338,7 @@ gr_offsets:
 .include "../asm_routines/keypress.s"
 .align $100
 .include "rasterbars_table.s"
+.include "movement_table.s"
 .include "gr_copy.s"
 .include "vapor_lock.s"
 .include "delay_a.s"

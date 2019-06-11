@@ -33,7 +33,7 @@ RASTERBARS:	rasterbars.o
 	ld65 -o RASTERBARS rasterbars.o -C ../linker_scripts/apple2_1000.inc
 
 rasterbars.o:	rasterbars.s gr_copy.s \
-	rasterbars_screen.s rasterbars_table.s k_40_48d.inc
+	rasterbars_screen.s rasterbars_table.s movement_table.s k_40_48d.inc
 	ca65 -o rasterbars.o rasterbars.s -l rasterbars.lst
 
 
