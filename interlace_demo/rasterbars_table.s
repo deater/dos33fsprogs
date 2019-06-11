@@ -1,0 +1,34 @@
+y_lookup_h:
+.byte	>smc032,>smc033,>smc034,>smc035,>smc036,>smc037,>smc038,>smc039
+.byte	>smc040,>smc041,>smc042,>smc043,>smc044,>smc045,>smc046,>smc047
+.byte	>smc048,>smc049,>smc050,>smc051,>smc052,>smc053,>smc054,>smc055
+.byte	>smc056,>smc057,>smc058,>smc059,>smc060,>smc061,>smc062,>smc063
+.byte	>smc064,>smc065,>smc066,>smc067,>smc068,>smc069,>smc070,>smc071
+.byte	>smc072,>smc073,>smc074,>smc075,>smc076,>smc077,>smc078,>smc079
+.byte	>smc080,>smc081,>smc082,>smc083,>smc084,>smc085,>smc086,>smc087
+.byte	>smc088,>smc089,>smc090,>smc091,>smc092,>smc093,>smc094,>smc095
+.byte	>smc096,>smc097,>smc098,>smc099,>smc100,>smc101,>smc102,>smc103
+.byte	>smc104,>smc105,>smc106,>smc107,>smc108,>smc109,>smc110,>smc111
+.byte	>smc112,>smc113,>smc114,>smc115,>smc116,>smc117,>smc118,>smc119
+.byte	>smc120,>smc121,>smc122,>smc123,>smc124,>smc125,>smc126,>smc127
+.byte	>smc128,>smc129,>smc130,>smc131,>smc132,>smc133,>smc134,>smc135
+.byte	>smc136,>smc137,>smc138,>smc139,>smc140,>smc141,>smc142,>smc143
+.byte	>smc144,>smc145,>smc146,>smc147,>smc148,>smc149,>smc150,>smc151
+.byte	>smc152,>smc153,>smc154,>smc155,>smc156,>smc157,>smc158,>smc159
+y_lookup_l:
+.byte	<smc032,<smc033,<smc034,<smc035,<smc036,<smc037,<smc038,<smc039
+.byte	<smc040,<smc041,<smc042,<smc043,<smc044,<smc045,<smc046,<smc047
+.byte	<smc048,<smc049,<smc050,<smc051,<smc052,<smc053,<smc054,<smc055
+.byte	<smc056,<smc057,<smc058,<smc059,<smc060,<smc061,<smc062,<smc063
+.byte	<smc064,<smc065,<smc066,<smc067,<smc068,<smc069,<smc070,<smc071
+.byte	<smc072,<smc073,<smc074,<smc075,<smc076,<smc077,<smc078,<smc079
+.byte	<smc080,<smc081,<smc082,<smc083,<smc084,<smc085,<smc086,<smc087
+.byte	<smc088,<smc089,<smc090,<smc091,<smc092,<smc093,<smc094,<smc095
+.byte	<smc096,<smc097,<smc098,<smc099,<smc100,<smc101,<smc102,<smc103
+.byte	<smc104,<smc105,<smc106,<smc107,<smc108,<smc109,<smc110,<smc111
+.byte	<smc112,<smc113,<smc114,<smc115,<smc116,<smc117,<smc118,<smc119
+.byte	<smc120,<smc121,<smc122,<smc123,<smc124,<smc125,<smc126,<smc127
+.byte	<smc128,<smc129,<smc130,<smc131,<smc132,<smc133,<smc134,<smc135
+.byte	<smc136,<smc137,<smc138,<smc139,<smc140,<smc141,<smc142,<smc143
+.byte	<smc144,<smc145,<smc146,<smc147,<smc148,<smc149,<smc150,<smc151
+.byte	<smc152,<smc153,<smc154,<smc155,<smc156,<smc157,<smc158,<smc159
