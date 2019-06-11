@@ -62,7 +62,7 @@ point_to_end_string:
 	;================================
 print_both_pages:
 	lda	DRAW_PAGE
-	pha
+	sta	draw_page_smc+1
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -72,7 +72,8 @@ print_both_pages:
 	sta	DRAW_PAGE
 	jsr	move_and_print
 
-	pla
+draw_page_smc:
+	lda	#$d1
 	sta	DRAW_PAGE
 
 	rts	; oops forgot this initially
