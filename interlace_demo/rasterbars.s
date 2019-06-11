@@ -183,15 +183,18 @@ display_loop:
 	;======================================================
 
 	; 4550	-- VBLANK
-	; -148  -- raster 16+6+126 = 148
+	; -174  -- raster 16+26+6+126 = 174
 	;  -10  -- keypress
 	;=======
-	; 4392
+	; 4366
 
 pad_time:
 
 	; we erase, then draw
 	; doing a blanket erase of all 128 lines would cost 3459 cycles!
+
+
+
 
 	; move red
 
@@ -200,16 +203,30 @@ pad_time:
 	sta	red_x				; 4
 	and	#$7f				; 2
 	tax					; 2
+					;==========
+					;	 16
+
+	; draw red
+
+	lda	#$33				; 2
+	sta	smc_raster_color1_1+1		; 4
+	sta	smc_raster_color1_2+1		; 4
+	lda	#$bb				; 2
+	sta	smc_raster_color2_1+1		; 4
+	sta	smc_raster_color2_2+1		; 4
+	lda	#$ff				; 2
+	sta	smc_raster_color3_1+1		; 4
+					;=============
+					;	26
+
 
 	jsr	draw_rasterbar			; 6+126
 
 
-	; Try X=3 Y=209 cycles=4390 R2
+	; Try X=57 Y=15 cycles=4366
 
-	nop
-
-	ldy	#209							; 2
-loop1:	ldx	#3							; 2
+	ldy	#15							; 2
+loop1:	ldx	#57							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -243,6 +260,7 @@ draw_rasterbar:
 	lda	y_lookup_h,X		; 4
 	sta	OUTH			; 3
 
+smc_raster_color1_1:
 	lda	#$33			; 2
 	sta	(OUTL),Y		; 6
 				;============
@@ -254,6 +272,7 @@ draw_rasterbar:
 	lda	y_lookup_h,X		; 4
 	sta	OUTH			; 3
 
+smc_raster_color2_1:
 	lda	#$bb			; 2
 	sta	(OUTL),Y		; 6
 
@@ -263,6 +282,7 @@ draw_rasterbar:
 	lda	y_lookup_h,X		; 4
 	sta	OUTH			; 3
 
+smc_raster_color3_1:
 	lda	#$ff			; 2
 	sta	(OUTL),Y		; 6
 
@@ -272,6 +292,7 @@ draw_rasterbar:
 	lda	y_lookup_h,X		; 4
 	sta	OUTH			; 3
 
+smc_raster_color2_2:
 	lda	#$bb			; 2
 	sta	(OUTL),Y		; 6
 
@@ -281,6 +302,7 @@ draw_rasterbar:
 	lda	y_lookup_h,X		; 4
 	sta	OUTH			; 3
 
+smc_raster_color1_2:
 	lda	#$33			; 2
 	sta	(OUTL),Y		; 6
 
