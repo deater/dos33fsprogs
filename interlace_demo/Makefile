@@ -33,7 +33,7 @@ RASTERBARS:	rasterbars.o
 	ld65 -o RASTERBARS rasterbars.o -C ../linker_scripts/apple2_1000.inc
 
 rasterbars.o:	rasterbars.s gr_copy.s \
-	rasterbars_screen.s rasterbars_table.s movement_table.s k_40_48d.inc
+	rasterbars_screen.s rasterbars_table.s movement_table.s rb_bg.inc
 	ca65 -o rasterbars.o rasterbars.s -l rasterbars.lst
 
 
@@ -41,6 +41,9 @@ rasterbars.o:	rasterbars.s gr_copy.s \
 
 k_40_48d.inc:	k_40_48d.png
 	$(PNG_TO_40x48D) asm k_40_48d.png k > k_40_48d.inc
+
+rb_bg.inc:	rb_bg.png
+	$(PNG_TO_40x48D) asm rb_bg.png rb_bg > rb_bg.inc
 
 ###
 

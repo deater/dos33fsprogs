@@ -58,36 +58,37 @@ start_rasterbars:
 
 	lda	#0
 	sta	DRAW_PAGE
+	sta	WHICH
 
 	;=============================
 	; Load graphic page0
 
-;	lda	#$0c
-;	sta	BASH
-;	lda	#$00
-;	sta	BASL                    ; load image to $c00
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL                    ; load image to $c00
 
-;	lda	WHICH
-;	asl
-;	asl				; which*4
-;	tay
+	lda	WHICH
+	asl
+	asl				; which*4
+	tay
 
-;	lda	pictures,Y
-;	sta	GBASL
-;	lda	pictures+1,Y
-;	sta	GBASH
-;	jsr	load_rle_gr
+	lda	pictures,Y
+	sta	GBASL
+	lda	pictures+1,Y
+	sta	GBASH
+	jsr	load_rle_gr
 
-;	lda	#4
-;	sta	DRAW_PAGE
+	lda	#4
+	sta	DRAW_PAGE
 
-;	jsr	gr_copy_to_current	; copy to page1
+	jsr	gr_copy_to_current	; copy to page1
 
-;	; GR part
-;	bit	PAGE1
-;	bit	LORES							; 4
-;	bit	SET_GR							; 4
-;	bit	FULLGR							; 4
+	; GR part
+	bit	PAGE1
+	bit	LORES							; 4
+	bit	SET_GR							; 4
+	bit	FULLGR							; 4
 
 ;	jsr	wait_until_keypressed
 
@@ -95,29 +96,29 @@ start_rasterbars:
 	;=============================
 	; Load graphic page1
 
-;	lda	#$0c
-;	sta	BASH
-;	lda	#$00
-;	sta	BASL                    ; load image to $c00
+	lda	#$0c
+	sta	BASH
+	lda	#$00
+	sta	BASL                    ; load image to $c00
 
-;	lda	WHICH
-;	asl
-;	asl				; which*4
-;	tay
+	lda	WHICH
+	asl
+	asl				; which*4
+	tay
 
-;	lda	pictures+2,Y
-;	sta	GBASL
-;	lda	pictures+3,Y
-;	sta	GBASH
-;	jsr	load_rle_gr
+	lda	pictures+2,Y
+	sta	GBASL
+	lda	pictures+3,Y
+	sta	GBASH
+	jsr	load_rle_gr
 
-;	lda	#0
-;	sta	DRAW_PAGE
+	lda	#0
+	sta	DRAW_PAGE
 
-;	jsr	gr_copy_to_current
+	jsr	gr_copy_to_current
 
 ;	; GR part
-;	bit	PAGE0
+	bit	PAGE0
 
 ;	jsr	wait_until_keypressed
 
@@ -183,17 +184,33 @@ display_loop:
 	;======================================================
 
 	; 4550	-- VBLANK
+	; -162	-- erase     22+8+6+126 = 162
 	; -174  -- raster 16+26+6+126 = 174
 	;  -10  -- keypress
 	;=======
-	; 4366
+	; 4204
 
 pad_time:
 
 	; we erase, then draw
 	; doing a blanket erase of all 128 lines would cost 3459 cycles!
 
+	; erase red
 
+	lda	#$00				; 2
+	sta	smc_raster_color1_1+1		; 4
+	sta	smc_raster_color1_2+1		; 4
+	sta	smc_raster_color2_1+1		; 4
+	sta	smc_raster_color2_2+1		; 4
+	sta	smc_raster_color3_1+1		; 4
+					;=============
+					;	22
+
+	lda	red_x				; 4
+	and	#$7f				; 2
+	tax					; 2
+
+	jsr	draw_rasterbar			; 6+126
 
 
 	; move red
@@ -222,11 +239,13 @@ pad_time:
 
 	jsr	draw_rasterbar			; 6+126
 
+	; Try X=43 Y=19 cycles=4200 R4
 
-	; Try X=57 Y=15 cycles=4366
+	nop
+	nop
 
-	ldy	#15							; 2
-loop1:	ldx	#57							; 2
+	ldy	#19							; 2
+loop1:	ldx	#43							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -251,7 +270,6 @@ no_keypress:
 
 draw_rasterbar:
 
-	; clear all lines
 	ldy	#0			; 2
 					;====
 
@@ -366,11 +384,8 @@ gr_offsets:
 .include "delay_a.s"
 
 pictures:
-	.word k_low,k_high
+	.word rb_bg_low,rb_bg_high
 
-.include "k_40_48d.inc"
-
-krg:
-	.byte $0
+.include "rb_bg.inc"
 
 red_x:	.byte $10

@@ -1,571 +1,571 @@
 ; 0
 	bit	PAGE0	; 4
 smc000:	lda	#$00	; 2
-	sta	$80d	; 4
-	sta	$80e	; 4
-	sta	$80f	; 4
-	sta	$810	; 4
-	sta	$811	; 4
-	sta	$812	; 4
-	sta	$813	; 4
-	sta	$814	; 4
-	sta	$815	; 4
-	sta	$816	; 4
-	sta	$817	; 4
-	sta	$818	; 4
-	sta	$819	; 4
-	sta	$81a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 1
 	bit	PAGE1	; 4
 smc001:	lda	#$00	; 2
-	sta	$40d	; 4
-	sta	$40e	; 4
-	sta	$40f	; 4
-	sta	$410	; 4
-	sta	$411	; 4
-	sta	$412	; 4
-	sta	$413	; 4
-	sta	$414	; 4
-	sta	$415	; 4
-	sta	$416	; 4
-	sta	$417	; 4
-	sta	$418	; 4
-	sta	$419	; 4
-	sta	$41a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 2
 	bit	PAGE0	; 4
 smc002:	lda	#$00	; 2
-	sta	$80d	; 4
-	sta	$80e	; 4
-	sta	$80f	; 4
-	sta	$810	; 4
-	sta	$811	; 4
-	sta	$812	; 4
-	sta	$813	; 4
-	sta	$814	; 4
-	sta	$815	; 4
-	sta	$816	; 4
-	sta	$817	; 4
-	sta	$818	; 4
-	sta	$819	; 4
-	sta	$81a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 3
 	bit	PAGE1	; 4
 smc003:	lda	#$00	; 2
-	sta	$40d	; 4
-	sta	$40e	; 4
-	sta	$40f	; 4
-	sta	$410	; 4
-	sta	$411	; 4
-	sta	$412	; 4
-	sta	$413	; 4
-	sta	$414	; 4
-	sta	$415	; 4
-	sta	$416	; 4
-	sta	$417	; 4
-	sta	$418	; 4
-	sta	$419	; 4
-	sta	$41a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 4
 	bit	PAGE0	; 4
 smc004:	lda	#$00	; 2
-	sta	$80d	; 4
-	sta	$80e	; 4
-	sta	$80f	; 4
-	sta	$810	; 4
-	sta	$811	; 4
-	sta	$812	; 4
-	sta	$813	; 4
-	sta	$814	; 4
-	sta	$815	; 4
-	sta	$816	; 4
-	sta	$817	; 4
-	sta	$818	; 4
-	sta	$819	; 4
-	sta	$81a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 5
 	bit	PAGE1	; 4
 smc005:	lda	#$00	; 2
-	sta	$40d	; 4
-	sta	$40e	; 4
-	sta	$40f	; 4
-	sta	$410	; 4
-	sta	$411	; 4
-	sta	$412	; 4
-	sta	$413	; 4
-	sta	$414	; 4
-	sta	$415	; 4
-	sta	$416	; 4
-	sta	$417	; 4
-	sta	$418	; 4
-	sta	$419	; 4
-	sta	$41a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 6
 	bit	PAGE0	; 4
 smc006:	lda	#$00	; 2
-	sta	$80d	; 4
-	sta	$80e	; 4
-	sta	$80f	; 4
-	sta	$810	; 4
-	sta	$811	; 4
-	sta	$812	; 4
-	sta	$813	; 4
-	sta	$814	; 4
-	sta	$815	; 4
-	sta	$816	; 4
-	sta	$817	; 4
-	sta	$818	; 4
-	sta	$819	; 4
-	sta	$81a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 7
 	bit	PAGE1	; 4
 smc007:	lda	#$00	; 2
-	sta	$40d	; 4
-	sta	$40e	; 4
-	sta	$40f	; 4
-	sta	$410	; 4
-	sta	$411	; 4
-	sta	$412	; 4
-	sta	$413	; 4
-	sta	$414	; 4
-	sta	$415	; 4
-	sta	$416	; 4
-	sta	$417	; 4
-	sta	$418	; 4
-	sta	$419	; 4
-	sta	$41a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 8
 	bit	PAGE0	; 4
 smc008:	lda	#$00	; 2
-	sta	$88d	; 4
-	sta	$88e	; 4
-	sta	$88f	; 4
-	sta	$890	; 4
-	sta	$891	; 4
-	sta	$892	; 4
-	sta	$893	; 4
-	sta	$894	; 4
-	sta	$895	; 4
-	sta	$896	; 4
-	sta	$897	; 4
-	sta	$898	; 4
-	sta	$899	; 4
-	sta	$89a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 9
 	bit	PAGE1	; 4
 smc009:	lda	#$00	; 2
-	sta	$48d	; 4
-	sta	$48e	; 4
-	sta	$48f	; 4
-	sta	$490	; 4
-	sta	$491	; 4
-	sta	$492	; 4
-	sta	$493	; 4
-	sta	$494	; 4
-	sta	$495	; 4
-	sta	$496	; 4
-	sta	$497	; 4
-	sta	$498	; 4
-	sta	$499	; 4
-	sta	$49a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 10
 	bit	PAGE0	; 4
 smc010:	lda	#$00	; 2
-	sta	$88d	; 4
-	sta	$88e	; 4
-	sta	$88f	; 4
-	sta	$890	; 4
-	sta	$891	; 4
-	sta	$892	; 4
-	sta	$893	; 4
-	sta	$894	; 4
-	sta	$895	; 4
-	sta	$896	; 4
-	sta	$897	; 4
-	sta	$898	; 4
-	sta	$899	; 4
-	sta	$89a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 11
 	bit	PAGE1	; 4
 smc011:	lda	#$00	; 2
-	sta	$48d	; 4
-	sta	$48e	; 4
-	sta	$48f	; 4
-	sta	$490	; 4
-	sta	$491	; 4
-	sta	$492	; 4
-	sta	$493	; 4
-	sta	$494	; 4
-	sta	$495	; 4
-	sta	$496	; 4
-	sta	$497	; 4
-	sta	$498	; 4
-	sta	$499	; 4
-	sta	$49a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 12
 	bit	PAGE0	; 4
 smc012:	lda	#$00	; 2
-	sta	$88d	; 4
-	sta	$88e	; 4
-	sta	$88f	; 4
-	sta	$890	; 4
-	sta	$891	; 4
-	sta	$892	; 4
-	sta	$893	; 4
-	sta	$894	; 4
-	sta	$895	; 4
-	sta	$896	; 4
-	sta	$897	; 4
-	sta	$898	; 4
-	sta	$899	; 4
-	sta	$89a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 13
 	bit	PAGE1	; 4
 smc013:	lda	#$00	; 2
-	sta	$48d	; 4
-	sta	$48e	; 4
-	sta	$48f	; 4
-	sta	$490	; 4
-	sta	$491	; 4
-	sta	$492	; 4
-	sta	$493	; 4
-	sta	$494	; 4
-	sta	$495	; 4
-	sta	$496	; 4
-	sta	$497	; 4
-	sta	$498	; 4
-	sta	$499	; 4
-	sta	$49a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 14
 	bit	PAGE0	; 4
 smc014:	lda	#$00	; 2
-	sta	$88d	; 4
-	sta	$88e	; 4
-	sta	$88f	; 4
-	sta	$890	; 4
-	sta	$891	; 4
-	sta	$892	; 4
-	sta	$893	; 4
-	sta	$894	; 4
-	sta	$895	; 4
-	sta	$896	; 4
-	sta	$897	; 4
-	sta	$898	; 4
-	sta	$899	; 4
-	sta	$89a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 15
 	bit	PAGE1	; 4
 smc015:	lda	#$00	; 2
-	sta	$48d	; 4
-	sta	$48e	; 4
-	sta	$48f	; 4
-	sta	$490	; 4
-	sta	$491	; 4
-	sta	$492	; 4
-	sta	$493	; 4
-	sta	$494	; 4
-	sta	$495	; 4
-	sta	$496	; 4
-	sta	$497	; 4
-	sta	$498	; 4
-	sta	$499	; 4
-	sta	$49a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 16
 	bit	PAGE0	; 4
 smc016:	lda	#$00	; 2
-	sta	$90d	; 4
-	sta	$90e	; 4
-	sta	$90f	; 4
-	sta	$910	; 4
-	sta	$911	; 4
-	sta	$912	; 4
-	sta	$913	; 4
-	sta	$914	; 4
-	sta	$915	; 4
-	sta	$916	; 4
-	sta	$917	; 4
-	sta	$918	; 4
-	sta	$919	; 4
-	sta	$91a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 17
 	bit	PAGE1	; 4
 smc017:	lda	#$00	; 2
-	sta	$50d	; 4
-	sta	$50e	; 4
-	sta	$50f	; 4
-	sta	$510	; 4
-	sta	$511	; 4
-	sta	$512	; 4
-	sta	$513	; 4
-	sta	$514	; 4
-	sta	$515	; 4
-	sta	$516	; 4
-	sta	$517	; 4
-	sta	$518	; 4
-	sta	$519	; 4
-	sta	$51a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 18
 	bit	PAGE0	; 4
 smc018:	lda	#$00	; 2
-	sta	$90d	; 4
-	sta	$90e	; 4
-	sta	$90f	; 4
-	sta	$910	; 4
-	sta	$911	; 4
-	sta	$912	; 4
-	sta	$913	; 4
-	sta	$914	; 4
-	sta	$915	; 4
-	sta	$916	; 4
-	sta	$917	; 4
-	sta	$918	; 4
-	sta	$919	; 4
-	sta	$91a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 19
 	bit	PAGE1	; 4
 smc019:	lda	#$00	; 2
-	sta	$50d	; 4
-	sta	$50e	; 4
-	sta	$50f	; 4
-	sta	$510	; 4
-	sta	$511	; 4
-	sta	$512	; 4
-	sta	$513	; 4
-	sta	$514	; 4
-	sta	$515	; 4
-	sta	$516	; 4
-	sta	$517	; 4
-	sta	$518	; 4
-	sta	$519	; 4
-	sta	$51a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 20
 	bit	PAGE0	; 4
 smc020:	lda	#$00	; 2
-	sta	$90d	; 4
-	sta	$90e	; 4
-	sta	$90f	; 4
-	sta	$910	; 4
-	sta	$911	; 4
-	sta	$912	; 4
-	sta	$913	; 4
-	sta	$914	; 4
-	sta	$915	; 4
-	sta	$916	; 4
-	sta	$917	; 4
-	sta	$918	; 4
-	sta	$919	; 4
-	sta	$91a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 21
 	bit	PAGE1	; 4
 smc021:	lda	#$00	; 2
-	sta	$50d	; 4
-	sta	$50e	; 4
-	sta	$50f	; 4
-	sta	$510	; 4
-	sta	$511	; 4
-	sta	$512	; 4
-	sta	$513	; 4
-	sta	$514	; 4
-	sta	$515	; 4
-	sta	$516	; 4
-	sta	$517	; 4
-	sta	$518	; 4
-	sta	$519	; 4
-	sta	$51a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 22
 	bit	PAGE0	; 4
 smc022:	lda	#$00	; 2
-	sta	$90d	; 4
-	sta	$90e	; 4
-	sta	$90f	; 4
-	sta	$910	; 4
-	sta	$911	; 4
-	sta	$912	; 4
-	sta	$913	; 4
-	sta	$914	; 4
-	sta	$915	; 4
-	sta	$916	; 4
-	sta	$917	; 4
-	sta	$918	; 4
-	sta	$919	; 4
-	sta	$91a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 23
 	bit	PAGE1	; 4
 smc023:	lda	#$00	; 2
-	sta	$50d	; 4
-	sta	$50e	; 4
-	sta	$50f	; 4
-	sta	$510	; 4
-	sta	$511	; 4
-	sta	$512	; 4
-	sta	$513	; 4
-	sta	$514	; 4
-	sta	$515	; 4
-	sta	$516	; 4
-	sta	$517	; 4
-	sta	$518	; 4
-	sta	$519	; 4
-	sta	$51a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 24
 	bit	PAGE0	; 4
 smc024:	lda	#$00	; 2
-	sta	$98d	; 4
-	sta	$98e	; 4
-	sta	$98f	; 4
-	sta	$990	; 4
-	sta	$991	; 4
-	sta	$992	; 4
-	sta	$993	; 4
-	sta	$994	; 4
-	sta	$995	; 4
-	sta	$996	; 4
-	sta	$997	; 4
-	sta	$998	; 4
-	sta	$999	; 4
-	sta	$99a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 25
 	bit	PAGE1	; 4
 smc025:	lda	#$00	; 2
-	sta	$58d	; 4
-	sta	$58e	; 4
-	sta	$58f	; 4
-	sta	$590	; 4
-	sta	$591	; 4
-	sta	$592	; 4
-	sta	$593	; 4
-	sta	$594	; 4
-	sta	$595	; 4
-	sta	$596	; 4
-	sta	$597	; 4
-	sta	$598	; 4
-	sta	$599	; 4
-	sta	$59a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 26
 	bit	PAGE0	; 4
 smc026:	lda	#$00	; 2
-	sta	$98d	; 4
-	sta	$98e	; 4
-	sta	$98f	; 4
-	sta	$990	; 4
-	sta	$991	; 4
-	sta	$992	; 4
-	sta	$993	; 4
-	sta	$994	; 4
-	sta	$995	; 4
-	sta	$996	; 4
-	sta	$997	; 4
-	sta	$998	; 4
-	sta	$999	; 4
-	sta	$99a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 27
 	bit	PAGE1	; 4
 smc027:	lda	#$00	; 2
-	sta	$58d	; 4
-	sta	$58e	; 4
-	sta	$58f	; 4
-	sta	$590	; 4
-	sta	$591	; 4
-	sta	$592	; 4
-	sta	$593	; 4
-	sta	$594	; 4
-	sta	$595	; 4
-	sta	$596	; 4
-	sta	$597	; 4
-	sta	$598	; 4
-	sta	$599	; 4
-	sta	$59a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 28
 	bit	PAGE0	; 4
 smc028:	lda	#$00	; 2
-	sta	$98d	; 4
-	sta	$98e	; 4
-	sta	$98f	; 4
-	sta	$990	; 4
-	sta	$991	; 4
-	sta	$992	; 4
-	sta	$993	; 4
-	sta	$994	; 4
-	sta	$995	; 4
-	sta	$996	; 4
-	sta	$997	; 4
-	sta	$998	; 4
-	sta	$999	; 4
-	sta	$99a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 29
 	bit	PAGE1	; 4
 smc029:	lda	#$00	; 2
-	sta	$58d	; 4
-	sta	$58e	; 4
-	sta	$58f	; 4
-	sta	$590	; 4
-	sta	$591	; 4
-	sta	$592	; 4
-	sta	$593	; 4
-	sta	$594	; 4
-	sta	$595	; 4
-	sta	$596	; 4
-	sta	$597	; 4
-	sta	$598	; 4
-	sta	$599	; 4
-	sta	$59a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 30
@@ -590,20 +590,20 @@ smc030:	lda	#$00	; 2
 ; 31
 	bit	PAGE1	; 4
 smc031:	lda	#$00	; 2
-	sta	$58d	; 4
-	sta	$58e	; 4
-	sta	$58f	; 4
-	sta	$590	; 4
-	sta	$591	; 4
-	sta	$592	; 4
-	sta	$593	; 4
-	sta	$594	; 4
-	sta	$595	; 4
-	sta	$596	; 4
-	sta	$597	; 4
-	sta	$598	; 4
-	sta	$599	; 4
-	sta	$59a	; 4
+	sta	$60d	; 4
+	sta	$60e	; 4
+	sta	$60f	; 4
+	sta	$610	; 4
+	sta	$611	; 4
+	sta	$612	; 4
+	sta	$613	; 4
+	sta	$614	; 4
+	sta	$615	; 4
+	sta	$616	; 4
+	sta	$617	; 4
+	sta	$618	; 4
+	sta	$619	; 4
+	sta	$61a	; 4
 	lda	TEMP	; 3
 
 ; 32
@@ -742,20 +742,20 @@ smc038:	lda	#$00	; 2
 ; 39
 	bit	PAGE1	; 4
 smc039:	lda	#$00	; 2
-	sta	$60d	; 4
-	sta	$60e	; 4
-	sta	$60f	; 4
-	sta	$610	; 4
-	sta	$611	; 4
-	sta	$612	; 4
-	sta	$613	; 4
-	sta	$614	; 4
-	sta	$615	; 4
-	sta	$616	; 4
-	sta	$617	; 4
-	sta	$618	; 4
-	sta	$619	; 4
-	sta	$61a	; 4
+	sta	$68d	; 4
+	sta	$68e	; 4
+	sta	$68f	; 4
+	sta	$690	; 4
+	sta	$691	; 4
+	sta	$692	; 4
+	sta	$693	; 4
+	sta	$694	; 4
+	sta	$695	; 4
+	sta	$696	; 4
+	sta	$697	; 4
+	sta	$698	; 4
+	sta	$699	; 4
+	sta	$69a	; 4
 	lda	TEMP	; 3
 
 ; 40
@@ -894,20 +894,20 @@ smc046:	lda	#$00	; 2
 ; 47
 	bit	PAGE1	; 4
 smc047:	lda	#$00	; 2
-	sta	$68d	; 4
-	sta	$68e	; 4
-	sta	$68f	; 4
-	sta	$690	; 4
-	sta	$691	; 4
-	sta	$692	; 4
-	sta	$693	; 4
-	sta	$694	; 4
-	sta	$695	; 4
-	sta	$696	; 4
-	sta	$697	; 4
-	sta	$698	; 4
-	sta	$699	; 4
-	sta	$69a	; 4
+	sta	$70d	; 4
+	sta	$70e	; 4
+	sta	$70f	; 4
+	sta	$710	; 4
+	sta	$711	; 4
+	sta	$712	; 4
+	sta	$713	; 4
+	sta	$714	; 4
+	sta	$715	; 4
+	sta	$716	; 4
+	sta	$717	; 4
+	sta	$718	; 4
+	sta	$719	; 4
+	sta	$71a	; 4
 	lda	TEMP	; 3
 
 ; 48
@@ -1046,20 +1046,20 @@ smc054:	lda	#$00	; 2
 ; 55
 	bit	PAGE1	; 4
 smc055:	lda	#$00	; 2
-	sta	$70d	; 4
-	sta	$70e	; 4
-	sta	$70f	; 4
-	sta	$710	; 4
-	sta	$711	; 4
-	sta	$712	; 4
-	sta	$713	; 4
-	sta	$714	; 4
-	sta	$715	; 4
-	sta	$716	; 4
-	sta	$717	; 4
-	sta	$718	; 4
-	sta	$719	; 4
-	sta	$71a	; 4
+	sta	$78d	; 4
+	sta	$78e	; 4
+	sta	$78f	; 4
+	sta	$790	; 4
+	sta	$791	; 4
+	sta	$792	; 4
+	sta	$793	; 4
+	sta	$794	; 4
+	sta	$795	; 4
+	sta	$796	; 4
+	sta	$797	; 4
+	sta	$798	; 4
+	sta	$799	; 4
+	sta	$79a	; 4
 	lda	TEMP	; 3
 
 ; 56
@@ -1198,20 +1198,20 @@ smc062:	lda	#$00	; 2
 ; 63
 	bit	PAGE1	; 4
 smc063:	lda	#$00	; 2
-	sta	$78d	; 4
-	sta	$78e	; 4
-	sta	$78f	; 4
-	sta	$790	; 4
-	sta	$791	; 4
-	sta	$792	; 4
-	sta	$793	; 4
-	sta	$794	; 4
-	sta	$795	; 4
-	sta	$796	; 4
-	sta	$797	; 4
-	sta	$798	; 4
-	sta	$799	; 4
-	sta	$79a	; 4
+	sta	$435	; 4
+	sta	$436	; 4
+	sta	$437	; 4
+	sta	$438	; 4
+	sta	$439	; 4
+	sta	$43a	; 4
+	sta	$43b	; 4
+	sta	$43c	; 4
+	sta	$43d	; 4
+	sta	$43e	; 4
+	sta	$43f	; 4
+	sta	$440	; 4
+	sta	$441	; 4
+	sta	$442	; 4
 	lda	TEMP	; 3
 
 ; 64
@@ -1350,20 +1350,20 @@ smc070:	lda	#$00	; 2
 ; 71
 	bit	PAGE1	; 4
 smc071:	lda	#$00	; 2
-	sta	$435	; 4
-	sta	$436	; 4
-	sta	$437	; 4
-	sta	$438	; 4
-	sta	$439	; 4
-	sta	$43a	; 4
-	sta	$43b	; 4
-	sta	$43c	; 4
-	sta	$43d	; 4
-	sta	$43e	; 4
-	sta	$43f	; 4
-	sta	$440	; 4
-	sta	$441	; 4
-	sta	$442	; 4
+	sta	$4b5	; 4
+	sta	$4b6	; 4
+	sta	$4b7	; 4
+	sta	$4b8	; 4
+	sta	$4b9	; 4
+	sta	$4ba	; 4
+	sta	$4bb	; 4
+	sta	$4bc	; 4
+	sta	$4bd	; 4
+	sta	$4be	; 4
+	sta	$4bf	; 4
+	sta	$4c0	; 4
+	sta	$4c1	; 4
+	sta	$4c2	; 4
 	lda	TEMP	; 3
 
 ; 72
@@ -1502,20 +1502,20 @@ smc078:	lda	#$00	; 2
 ; 79
 	bit	PAGE1	; 4
 smc079:	lda	#$00	; 2
-	sta	$4b5	; 4
-	sta	$4b6	; 4
-	sta	$4b7	; 4
-	sta	$4b8	; 4
-	sta	$4b9	; 4
-	sta	$4ba	; 4
-	sta	$4bb	; 4
-	sta	$4bc	; 4
-	sta	$4bd	; 4
-	sta	$4be	; 4
-	sta	$4bf	; 4
-	sta	$4c0	; 4
-	sta	$4c1	; 4
-	sta	$4c2	; 4
+	sta	$535	; 4
+	sta	$536	; 4
+	sta	$537	; 4
+	sta	$538	; 4
+	sta	$539	; 4
+	sta	$53a	; 4
+	sta	$53b	; 4
+	sta	$53c	; 4
+	sta	$53d	; 4
+	sta	$53e	; 4
+	sta	$53f	; 4
+	sta	$540	; 4
+	sta	$541	; 4
+	sta	$542	; 4
 	lda	TEMP	; 3
 
 ; 80
@@ -1654,20 +1654,20 @@ smc086:	lda	#$00	; 2
 ; 87
 	bit	PAGE1	; 4
 smc087:	lda	#$00	; 2
-	sta	$535	; 4
-	sta	$536	; 4
-	sta	$537	; 4
-	sta	$538	; 4
-	sta	$539	; 4
-	sta	$53a	; 4
-	sta	$53b	; 4
-	sta	$53c	; 4
-	sta	$53d	; 4
-	sta	$53e	; 4
-	sta	$53f	; 4
-	sta	$540	; 4
-	sta	$541	; 4
-	sta	$542	; 4
+	sta	$5b5	; 4
+	sta	$5b6	; 4
+	sta	$5b7	; 4
+	sta	$5b8	; 4
+	sta	$5b9	; 4
+	sta	$5ba	; 4
+	sta	$5bb	; 4
+	sta	$5bc	; 4
+	sta	$5bd	; 4
+	sta	$5be	; 4
+	sta	$5bf	; 4
+	sta	$5c0	; 4
+	sta	$5c1	; 4
+	sta	$5c2	; 4
 	lda	TEMP	; 3
 
 ; 88
@@ -1806,20 +1806,20 @@ smc094:	lda	#$00	; 2
 ; 95
 	bit	PAGE1	; 4
 smc095:	lda	#$00	; 2
-	sta	$5b5	; 4
-	sta	$5b6	; 4
-	sta	$5b7	; 4
-	sta	$5b8	; 4
-	sta	$5b9	; 4
-	sta	$5ba	; 4
-	sta	$5bb	; 4
-	sta	$5bc	; 4
-	sta	$5bd	; 4
-	sta	$5be	; 4
-	sta	$5bf	; 4
-	sta	$5c0	; 4
-	sta	$5c1	; 4
-	sta	$5c2	; 4
+	sta	$635	; 4
+	sta	$636	; 4
+	sta	$637	; 4
+	sta	$638	; 4
+	sta	$639	; 4
+	sta	$63a	; 4
+	sta	$63b	; 4
+	sta	$63c	; 4
+	sta	$63d	; 4
+	sta	$63e	; 4
+	sta	$63f	; 4
+	sta	$640	; 4
+	sta	$641	; 4
+	sta	$642	; 4
 	lda	TEMP	; 3
 
 ; 96
@@ -1958,20 +1958,20 @@ smc102:	lda	#$00	; 2
 ; 103
 	bit	PAGE1	; 4
 smc103:	lda	#$00	; 2
-	sta	$635	; 4
-	sta	$636	; 4
-	sta	$637	; 4
-	sta	$638	; 4
-	sta	$639	; 4
-	sta	$63a	; 4
-	sta	$63b	; 4
-	sta	$63c	; 4
-	sta	$63d	; 4
-	sta	$63e	; 4
-	sta	$63f	; 4
-	sta	$640	; 4
-	sta	$641	; 4
-	sta	$642	; 4
+	sta	$6b5	; 4
+	sta	$6b6	; 4
+	sta	$6b7	; 4
+	sta	$6b8	; 4
+	sta	$6b9	; 4
+	sta	$6ba	; 4
+	sta	$6bb	; 4
+	sta	$6bc	; 4
+	sta	$6bd	; 4
+	sta	$6be	; 4
+	sta	$6bf	; 4
+	sta	$6c0	; 4
+	sta	$6c1	; 4
+	sta	$6c2	; 4
 	lda	TEMP	; 3
 
 ; 104
@@ -2110,20 +2110,20 @@ smc110:	lda	#$00	; 2
 ; 111
 	bit	PAGE1	; 4
 smc111:	lda	#$00	; 2
-	sta	$6b5	; 4
-	sta	$6b6	; 4
-	sta	$6b7	; 4
-	sta	$6b8	; 4
-	sta	$6b9	; 4
-	sta	$6ba	; 4
-	sta	$6bb	; 4
-	sta	$6bc	; 4
-	sta	$6bd	; 4
-	sta	$6be	; 4
-	sta	$6bf	; 4
-	sta	$6c0	; 4
-	sta	$6c1	; 4
-	sta	$6c2	; 4
+	sta	$735	; 4
+	sta	$736	; 4
+	sta	$737	; 4
+	sta	$738	; 4
+	sta	$739	; 4
+	sta	$73a	; 4
+	sta	$73b	; 4
+	sta	$73c	; 4
+	sta	$73d	; 4
+	sta	$73e	; 4
+	sta	$73f	; 4
+	sta	$740	; 4
+	sta	$741	; 4
+	sta	$742	; 4
 	lda	TEMP	; 3
 
 ; 112
@@ -2262,20 +2262,20 @@ smc118:	lda	#$00	; 2
 ; 119
 	bit	PAGE1	; 4
 smc119:	lda	#$00	; 2
-	sta	$735	; 4
-	sta	$736	; 4
-	sta	$737	; 4
-	sta	$738	; 4
-	sta	$739	; 4
-	sta	$73a	; 4
-	sta	$73b	; 4
-	sta	$73c	; 4
-	sta	$73d	; 4
-	sta	$73e	; 4
-	sta	$73f	; 4
-	sta	$740	; 4
-	sta	$741	; 4
-	sta	$742	; 4
+	sta	$7b5	; 4
+	sta	$7b6	; 4
+	sta	$7b7	; 4
+	sta	$7b8	; 4
+	sta	$7b9	; 4
+	sta	$7ba	; 4
+	sta	$7bb	; 4
+	sta	$7bc	; 4
+	sta	$7bd	; 4
+	sta	$7be	; 4
+	sta	$7bf	; 4
+	sta	$7c0	; 4
+	sta	$7c1	; 4
+	sta	$7c2	; 4
 	lda	TEMP	; 3
 
 ; 120
@@ -2414,20 +2414,20 @@ smc126:	lda	#$00	; 2
 ; 127
 	bit	PAGE1	; 4
 smc127:	lda	#$00	; 2
-	sta	$7b5	; 4
-	sta	$7b6	; 4
-	sta	$7b7	; 4
-	sta	$7b8	; 4
-	sta	$7b9	; 4
-	sta	$7ba	; 4
-	sta	$7bb	; 4
-	sta	$7bc	; 4
-	sta	$7bd	; 4
-	sta	$7be	; 4
-	sta	$7bf	; 4
-	sta	$7c0	; 4
-	sta	$7c1	; 4
-	sta	$7c2	; 4
+	sta	$45d	; 4
+	sta	$45e	; 4
+	sta	$45f	; 4
+	sta	$460	; 4
+	sta	$461	; 4
+	sta	$462	; 4
+	sta	$463	; 4
+	sta	$464	; 4
+	sta	$465	; 4
+	sta	$466	; 4
+	sta	$467	; 4
+	sta	$468	; 4
+	sta	$469	; 4
+	sta	$46a	; 4
 	lda	TEMP	; 3
 
 ; 128
@@ -2566,20 +2566,20 @@ smc134:	lda	#$00	; 2
 ; 135
 	bit	PAGE1	; 4
 smc135:	lda	#$00	; 2
-	sta	$45d	; 4
-	sta	$45e	; 4
-	sta	$45f	; 4
-	sta	$460	; 4
-	sta	$461	; 4
-	sta	$462	; 4
-	sta	$463	; 4
-	sta	$464	; 4
-	sta	$465	; 4
-	sta	$466	; 4
-	sta	$467	; 4
-	sta	$468	; 4
-	sta	$469	; 4
-	sta	$46a	; 4
+	sta	$4dd	; 4
+	sta	$4de	; 4
+	sta	$4df	; 4
+	sta	$4e0	; 4
+	sta	$4e1	; 4
+	sta	$4e2	; 4
+	sta	$4e3	; 4
+	sta	$4e4	; 4
+	sta	$4e5	; 4
+	sta	$4e6	; 4
+	sta	$4e7	; 4
+	sta	$4e8	; 4
+	sta	$4e9	; 4
+	sta	$4ea	; 4
 	lda	TEMP	; 3
 
 ; 136
@@ -2718,20 +2718,20 @@ smc142:	lda	#$00	; 2
 ; 143
 	bit	PAGE1	; 4
 smc143:	lda	#$00	; 2
-	sta	$4dd	; 4
-	sta	$4de	; 4
-	sta	$4df	; 4
-	sta	$4e0	; 4
-	sta	$4e1	; 4
-	sta	$4e2	; 4
-	sta	$4e3	; 4
-	sta	$4e4	; 4
-	sta	$4e5	; 4
-	sta	$4e6	; 4
-	sta	$4e7	; 4
-	sta	$4e8	; 4
-	sta	$4e9	; 4
-	sta	$4ea	; 4
+	sta	$55d	; 4
+	sta	$55e	; 4
+	sta	$55f	; 4
+	sta	$560	; 4
+	sta	$561	; 4
+	sta	$562	; 4
+	sta	$563	; 4
+	sta	$564	; 4
+	sta	$565	; 4
+	sta	$566	; 4
+	sta	$567	; 4
+	sta	$568	; 4
+	sta	$569	; 4
+	sta	$56a	; 4
 	lda	TEMP	; 3
 
 ; 144
@@ -2870,20 +2870,20 @@ smc150:	lda	#$00	; 2
 ; 151
 	bit	PAGE1	; 4
 smc151:	lda	#$00	; 2
-	sta	$55d	; 4
-	sta	$55e	; 4
-	sta	$55f	; 4
-	sta	$560	; 4
-	sta	$561	; 4
-	sta	$562	; 4
-	sta	$563	; 4
-	sta	$564	; 4
-	sta	$565	; 4
-	sta	$566	; 4
-	sta	$567	; 4
-	sta	$568	; 4
-	sta	$569	; 4
-	sta	$56a	; 4
+	sta	$5dd	; 4
+	sta	$5de	; 4
+	sta	$5df	; 4
+	sta	$5e0	; 4
+	sta	$5e1	; 4
+	sta	$5e2	; 4
+	sta	$5e3	; 4
+	sta	$5e4	; 4
+	sta	$5e5	; 4
+	sta	$5e6	; 4
+	sta	$5e7	; 4
+	sta	$5e8	; 4
+	sta	$5e9	; 4
+	sta	$5ea	; 4
 	lda	TEMP	; 3
 
 ; 152
@@ -2965,683 +2965,684 @@ smc155:	lda	#$00	; 2
 ; 156
 	bit	PAGE0	; 4
 smc156:	lda	#$00	; 2
-	sta	$9dd	; 4
-	sta	$9de	; 4
-	sta	$9df	; 4
-	sta	$9e0	; 4
-	sta	$9e1	; 4
-	sta	$9e2	; 4
-	sta	$9e3	; 4
-	sta	$9e4	; 4
-	sta	$9e5	; 4
-	sta	$9e6	; 4
-	sta	$9e7	; 4
-	sta	$9e8	; 4
-	sta	$9e9	; 4
-	sta	$9ea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 157
 	bit	PAGE1	; 4
 smc157:	lda	#$00	; 2
-	sta	$5dd	; 4
-	sta	$5de	; 4
-	sta	$5df	; 4
-	sta	$5e0	; 4
-	sta	$5e1	; 4
-	sta	$5e2	; 4
-	sta	$5e3	; 4
-	sta	$5e4	; 4
-	sta	$5e5	; 4
-	sta	$5e6	; 4
-	sta	$5e7	; 4
-	sta	$5e8	; 4
-	sta	$5e9	; 4
-	sta	$5ea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 158
 	bit	PAGE0	; 4
 smc158:	lda	#$00	; 2
-	sta	$9dd	; 4
-	sta	$9de	; 4
-	sta	$9df	; 4
-	sta	$9e0	; 4
-	sta	$9e1	; 4
-	sta	$9e2	; 4
-	sta	$9e3	; 4
-	sta	$9e4	; 4
-	sta	$9e5	; 4
-	sta	$9e6	; 4
-	sta	$9e7	; 4
-	sta	$9e8	; 4
-	sta	$9e9	; 4
-	sta	$9ea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 159
 	bit	PAGE1	; 4
 smc159:	lda	#$00	; 2
-	sta	$5dd	; 4
-	sta	$5de	; 4
-	sta	$5df	; 4
-	sta	$5e0	; 4
-	sta	$5e1	; 4
-	sta	$5e2	; 4
-	sta	$5e3	; 4
-	sta	$5e4	; 4
-	sta	$5e5	; 4
-	sta	$5e6	; 4
-	sta	$5e7	; 4
-	sta	$5e8	; 4
-	sta	$5e9	; 4
-	sta	$5ea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 160
 	bit	PAGE0	; 4
 smc160:	lda	#$00	; 2
-	sta	$a5d	; 4
-	sta	$a5e	; 4
-	sta	$a5f	; 4
-	sta	$a60	; 4
-	sta	$a61	; 4
-	sta	$a62	; 4
-	sta	$a63	; 4
-	sta	$a64	; 4
-	sta	$a65	; 4
-	sta	$a66	; 4
-	sta	$a67	; 4
-	sta	$a68	; 4
-	sta	$a69	; 4
-	sta	$a6a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 161
 	bit	PAGE1	; 4
 smc161:	lda	#$00	; 2
-	sta	$65d	; 4
-	sta	$65e	; 4
-	sta	$65f	; 4
-	sta	$660	; 4
-	sta	$661	; 4
-	sta	$662	; 4
-	sta	$663	; 4
-	sta	$664	; 4
-	sta	$665	; 4
-	sta	$666	; 4
-	sta	$667	; 4
-	sta	$668	; 4
-	sta	$669	; 4
-	sta	$66a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 162
 	bit	PAGE0	; 4
 smc162:	lda	#$00	; 2
-	sta	$a5d	; 4
-	sta	$a5e	; 4
-	sta	$a5f	; 4
-	sta	$a60	; 4
-	sta	$a61	; 4
-	sta	$a62	; 4
-	sta	$a63	; 4
-	sta	$a64	; 4
-	sta	$a65	; 4
-	sta	$a66	; 4
-	sta	$a67	; 4
-	sta	$a68	; 4
-	sta	$a69	; 4
-	sta	$a6a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 163
 	bit	PAGE1	; 4
 smc163:	lda	#$00	; 2
-	sta	$65d	; 4
-	sta	$65e	; 4
-	sta	$65f	; 4
-	sta	$660	; 4
-	sta	$661	; 4
-	sta	$662	; 4
-	sta	$663	; 4
-	sta	$664	; 4
-	sta	$665	; 4
-	sta	$666	; 4
-	sta	$667	; 4
-	sta	$668	; 4
-	sta	$669	; 4
-	sta	$66a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 164
 	bit	PAGE0	; 4
 smc164:	lda	#$00	; 2
-	sta	$a5d	; 4
-	sta	$a5e	; 4
-	sta	$a5f	; 4
-	sta	$a60	; 4
-	sta	$a61	; 4
-	sta	$a62	; 4
-	sta	$a63	; 4
-	sta	$a64	; 4
-	sta	$a65	; 4
-	sta	$a66	; 4
-	sta	$a67	; 4
-	sta	$a68	; 4
-	sta	$a69	; 4
-	sta	$a6a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 165
 	bit	PAGE1	; 4
 smc165:	lda	#$00	; 2
-	sta	$65d	; 4
-	sta	$65e	; 4
-	sta	$65f	; 4
-	sta	$660	; 4
-	sta	$661	; 4
-	sta	$662	; 4
-	sta	$663	; 4
-	sta	$664	; 4
-	sta	$665	; 4
-	sta	$666	; 4
-	sta	$667	; 4
-	sta	$668	; 4
-	sta	$669	; 4
-	sta	$66a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 166
 	bit	PAGE0	; 4
 smc166:	lda	#$00	; 2
-	sta	$a5d	; 4
-	sta	$a5e	; 4
-	sta	$a5f	; 4
-	sta	$a60	; 4
-	sta	$a61	; 4
-	sta	$a62	; 4
-	sta	$a63	; 4
-	sta	$a64	; 4
-	sta	$a65	; 4
-	sta	$a66	; 4
-	sta	$a67	; 4
-	sta	$a68	; 4
-	sta	$a69	; 4
-	sta	$a6a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 167
 	bit	PAGE1	; 4
 smc167:	lda	#$00	; 2
-	sta	$65d	; 4
-	sta	$65e	; 4
-	sta	$65f	; 4
-	sta	$660	; 4
-	sta	$661	; 4
-	sta	$662	; 4
-	sta	$663	; 4
-	sta	$664	; 4
-	sta	$665	; 4
-	sta	$666	; 4
-	sta	$667	; 4
-	sta	$668	; 4
-	sta	$669	; 4
-	sta	$66a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 168
 	bit	PAGE0	; 4
 smc168:	lda	#$00	; 2
-	sta	$add	; 4
-	sta	$ade	; 4
-	sta	$adf	; 4
-	sta	$ae0	; 4
-	sta	$ae1	; 4
-	sta	$ae2	; 4
-	sta	$ae3	; 4
-	sta	$ae4	; 4
-	sta	$ae5	; 4
-	sta	$ae6	; 4
-	sta	$ae7	; 4
-	sta	$ae8	; 4
-	sta	$ae9	; 4
-	sta	$aea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 169
 	bit	PAGE1	; 4
 smc169:	lda	#$00	; 2
-	sta	$6dd	; 4
-	sta	$6de	; 4
-	sta	$6df	; 4
-	sta	$6e0	; 4
-	sta	$6e1	; 4
-	sta	$6e2	; 4
-	sta	$6e3	; 4
-	sta	$6e4	; 4
-	sta	$6e5	; 4
-	sta	$6e6	; 4
-	sta	$6e7	; 4
-	sta	$6e8	; 4
-	sta	$6e9	; 4
-	sta	$6ea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 170
 	bit	PAGE0	; 4
 smc170:	lda	#$00	; 2
-	sta	$add	; 4
-	sta	$ade	; 4
-	sta	$adf	; 4
-	sta	$ae0	; 4
-	sta	$ae1	; 4
-	sta	$ae2	; 4
-	sta	$ae3	; 4
-	sta	$ae4	; 4
-	sta	$ae5	; 4
-	sta	$ae6	; 4
-	sta	$ae7	; 4
-	sta	$ae8	; 4
-	sta	$ae9	; 4
-	sta	$aea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 171
 	bit	PAGE1	; 4
 smc171:	lda	#$00	; 2
-	sta	$6dd	; 4
-	sta	$6de	; 4
-	sta	$6df	; 4
-	sta	$6e0	; 4
-	sta	$6e1	; 4
-	sta	$6e2	; 4
-	sta	$6e3	; 4
-	sta	$6e4	; 4
-	sta	$6e5	; 4
-	sta	$6e6	; 4
-	sta	$6e7	; 4
-	sta	$6e8	; 4
-	sta	$6e9	; 4
-	sta	$6ea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 172
 	bit	PAGE0	; 4
 smc172:	lda	#$00	; 2
-	sta	$add	; 4
-	sta	$ade	; 4
-	sta	$adf	; 4
-	sta	$ae0	; 4
-	sta	$ae1	; 4
-	sta	$ae2	; 4
-	sta	$ae3	; 4
-	sta	$ae4	; 4
-	sta	$ae5	; 4
-	sta	$ae6	; 4
-	sta	$ae7	; 4
-	sta	$ae8	; 4
-	sta	$ae9	; 4
-	sta	$aea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 173
 	bit	PAGE1	; 4
 smc173:	lda	#$00	; 2
-	sta	$6dd	; 4
-	sta	$6de	; 4
-	sta	$6df	; 4
-	sta	$6e0	; 4
-	sta	$6e1	; 4
-	sta	$6e2	; 4
-	sta	$6e3	; 4
-	sta	$6e4	; 4
-	sta	$6e5	; 4
-	sta	$6e6	; 4
-	sta	$6e7	; 4
-	sta	$6e8	; 4
-	sta	$6e9	; 4
-	sta	$6ea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 174
 	bit	PAGE0	; 4
 smc174:	lda	#$00	; 2
-	sta	$add	; 4
-	sta	$ade	; 4
-	sta	$adf	; 4
-	sta	$ae0	; 4
-	sta	$ae1	; 4
-	sta	$ae2	; 4
-	sta	$ae3	; 4
-	sta	$ae4	; 4
-	sta	$ae5	; 4
-	sta	$ae6	; 4
-	sta	$ae7	; 4
-	sta	$ae8	; 4
-	sta	$ae9	; 4
-	sta	$aea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 175
 	bit	PAGE1	; 4
 smc175:	lda	#$00	; 2
-	sta	$6dd	; 4
-	sta	$6de	; 4
-	sta	$6df	; 4
-	sta	$6e0	; 4
-	sta	$6e1	; 4
-	sta	$6e2	; 4
-	sta	$6e3	; 4
-	sta	$6e4	; 4
-	sta	$6e5	; 4
-	sta	$6e6	; 4
-	sta	$6e7	; 4
-	sta	$6e8	; 4
-	sta	$6e9	; 4
-	sta	$6ea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 176
 	bit	PAGE0	; 4
 smc176:	lda	#$00	; 2
-	sta	$b5d	; 4
-	sta	$b5e	; 4
-	sta	$b5f	; 4
-	sta	$b60	; 4
-	sta	$b61	; 4
-	sta	$b62	; 4
-	sta	$b63	; 4
-	sta	$b64	; 4
-	sta	$b65	; 4
-	sta	$b66	; 4
-	sta	$b67	; 4
-	sta	$b68	; 4
-	sta	$b69	; 4
-	sta	$b6a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 177
 	bit	PAGE1	; 4
 smc177:	lda	#$00	; 2
-	sta	$75d	; 4
-	sta	$75e	; 4
-	sta	$75f	; 4
-	sta	$760	; 4
-	sta	$761	; 4
-	sta	$762	; 4
-	sta	$763	; 4
-	sta	$764	; 4
-	sta	$765	; 4
-	sta	$766	; 4
-	sta	$767	; 4
-	sta	$768	; 4
-	sta	$769	; 4
-	sta	$76a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 178
 	bit	PAGE0	; 4
 smc178:	lda	#$00	; 2
-	sta	$b5d	; 4
-	sta	$b5e	; 4
-	sta	$b5f	; 4
-	sta	$b60	; 4
-	sta	$b61	; 4
-	sta	$b62	; 4
-	sta	$b63	; 4
-	sta	$b64	; 4
-	sta	$b65	; 4
-	sta	$b66	; 4
-	sta	$b67	; 4
-	sta	$b68	; 4
-	sta	$b69	; 4
-	sta	$b6a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 179
 	bit	PAGE1	; 4
 smc179:	lda	#$00	; 2
-	sta	$75d	; 4
-	sta	$75e	; 4
-	sta	$75f	; 4
-	sta	$760	; 4
-	sta	$761	; 4
-	sta	$762	; 4
-	sta	$763	; 4
-	sta	$764	; 4
-	sta	$765	; 4
-	sta	$766	; 4
-	sta	$767	; 4
-	sta	$768	; 4
-	sta	$769	; 4
-	sta	$76a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 180
 	bit	PAGE0	; 4
 smc180:	lda	#$00	; 2
-	sta	$b5d	; 4
-	sta	$b5e	; 4
-	sta	$b5f	; 4
-	sta	$b60	; 4
-	sta	$b61	; 4
-	sta	$b62	; 4
-	sta	$b63	; 4
-	sta	$b64	; 4
-	sta	$b65	; 4
-	sta	$b66	; 4
-	sta	$b67	; 4
-	sta	$b68	; 4
-	sta	$b69	; 4
-	sta	$b6a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 181
 	bit	PAGE1	; 4
 smc181:	lda	#$00	; 2
-	sta	$75d	; 4
-	sta	$75e	; 4
-	sta	$75f	; 4
-	sta	$760	; 4
-	sta	$761	; 4
-	sta	$762	; 4
-	sta	$763	; 4
-	sta	$764	; 4
-	sta	$765	; 4
-	sta	$766	; 4
-	sta	$767	; 4
-	sta	$768	; 4
-	sta	$769	; 4
-	sta	$76a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 182
 	bit	PAGE0	; 4
 smc182:	lda	#$00	; 2
-	sta	$b5d	; 4
-	sta	$b5e	; 4
-	sta	$b5f	; 4
-	sta	$b60	; 4
-	sta	$b61	; 4
-	sta	$b62	; 4
-	sta	$b63	; 4
-	sta	$b64	; 4
-	sta	$b65	; 4
-	sta	$b66	; 4
-	sta	$b67	; 4
-	sta	$b68	; 4
-	sta	$b69	; 4
-	sta	$b6a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 183
 	bit	PAGE1	; 4
 smc183:	lda	#$00	; 2
-	sta	$75d	; 4
-	sta	$75e	; 4
-	sta	$75f	; 4
-	sta	$760	; 4
-	sta	$761	; 4
-	sta	$762	; 4
-	sta	$763	; 4
-	sta	$764	; 4
-	sta	$765	; 4
-	sta	$766	; 4
-	sta	$767	; 4
-	sta	$768	; 4
-	sta	$769	; 4
-	sta	$76a	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 184
 	bit	PAGE0	; 4
 smc184:	lda	#$00	; 2
-	sta	$bdd	; 4
-	sta	$bde	; 4
-	sta	$bdf	; 4
-	sta	$be0	; 4
-	sta	$be1	; 4
-	sta	$be2	; 4
-	sta	$be3	; 4
-	sta	$be4	; 4
-	sta	$be5	; 4
-	sta	$be6	; 4
-	sta	$be7	; 4
-	sta	$be8	; 4
-	sta	$be9	; 4
-	sta	$bea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 185
 	bit	PAGE1	; 4
 smc185:	lda	#$00	; 2
-	sta	$7dd	; 4
-	sta	$7de	; 4
-	sta	$7df	; 4
-	sta	$7e0	; 4
-	sta	$7e1	; 4
-	sta	$7e2	; 4
-	sta	$7e3	; 4
-	sta	$7e4	; 4
-	sta	$7e5	; 4
-	sta	$7e6	; 4
-	sta	$7e7	; 4
-	sta	$7e8	; 4
-	sta	$7e9	; 4
-	sta	$7ea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 186
 	bit	PAGE0	; 4
 smc186:	lda	#$00	; 2
-	sta	$bdd	; 4
-	sta	$bde	; 4
-	sta	$bdf	; 4
-	sta	$be0	; 4
-	sta	$be1	; 4
-	sta	$be2	; 4
-	sta	$be3	; 4
-	sta	$be4	; 4
-	sta	$be5	; 4
-	sta	$be6	; 4
-	sta	$be7	; 4
-	sta	$be8	; 4
-	sta	$be9	; 4
-	sta	$bea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 187
 	bit	PAGE1	; 4
 smc187:	lda	#$00	; 2
-	sta	$7dd	; 4
-	sta	$7de	; 4
-	sta	$7df	; 4
-	sta	$7e0	; 4
-	sta	$7e1	; 4
-	sta	$7e2	; 4
-	sta	$7e3	; 4
-	sta	$7e4	; 4
-	sta	$7e5	; 4
-	sta	$7e6	; 4
-	sta	$7e7	; 4
-	sta	$7e8	; 4
-	sta	$7e9	; 4
-	sta	$7ea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 188
 	bit	PAGE0	; 4
 smc188:	lda	#$00	; 2
-	sta	$bdd	; 4
-	sta	$bde	; 4
-	sta	$bdf	; 4
-	sta	$be0	; 4
-	sta	$be1	; 4
-	sta	$be2	; 4
-	sta	$be3	; 4
-	sta	$be4	; 4
-	sta	$be5	; 4
-	sta	$be6	; 4
-	sta	$be7	; 4
-	sta	$be8	; 4
-	sta	$be9	; 4
-	sta	$bea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 189
 	bit	PAGE1	; 4
 smc189:	lda	#$00	; 2
-	sta	$7dd	; 4
-	sta	$7de	; 4
-	sta	$7df	; 4
-	sta	$7e0	; 4
-	sta	$7e1	; 4
-	sta	$7e2	; 4
-	sta	$7e3	; 4
-	sta	$7e4	; 4
-	sta	$7e5	; 4
-	sta	$7e6	; 4
-	sta	$7e7	; 4
-	sta	$7e8	; 4
-	sta	$7e9	; 4
-	sta	$7ea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 190
 	bit	PAGE0	; 4
 smc190:	lda	#$00	; 2
-	sta	$bdd	; 4
-	sta	$bde	; 4
-	sta	$bdf	; 4
-	sta	$be0	; 4
-	sta	$be1	; 4
-	sta	$be2	; 4
-	sta	$be3	; 4
-	sta	$be4	; 4
-	sta	$be5	; 4
-	sta	$be6	; 4
-	sta	$be7	; 4
-	sta	$be8	; 4
-	sta	$be9	; 4
-	sta	$bea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
 
 ; 191
 	bit	PAGE1	; 4
 smc191:	lda	#$00	; 2
-	sta	$7dd	; 4
-	sta	$7de	; 4
-	sta	$7df	; 4
-	sta	$7e0	; 4
-	sta	$7e1	; 4
-	sta	$7e2	; 4
-	sta	$7e3	; 4
-	sta	$7e4	; 4
-	sta	$7e5	; 4
-	sta	$7e6	; 4
-	sta	$7e7	; 4
-	sta	$7e8	; 4
-	sta	$7e9	; 4
-	sta	$7ea	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
+	sta	$c00	; 4
 	lda	TEMP	; 3
+
