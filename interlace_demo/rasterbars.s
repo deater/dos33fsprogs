@@ -184,18 +184,20 @@ display_loop:
 	;======================================================
 
 	; 4550	-- VBLANK
-	; -162	-- erase     22+8+6+126 = 162
-	; -174  -- raster 16+26+6+126 = 174
+	; -582	-- erase     22+4*(8+6+126) = 582
+	; -696  -- move+draw 4*(16+26+6+126) = 696
 	;  -10  -- keypress
 	;=======
-	; 4204
+	; 3262
 
 pad_time:
 
 	; we erase, then draw
 	; doing a blanket erase of all 128 lines would cost 3459 cycles!
 
-	; erase red
+	;=========================
+	; ERASE
+	;=========================
 
 	lda	#$00				; 2
 	sta	smc_raster_color1_1+1		; 4
@@ -206,13 +208,45 @@ pad_time:
 					;=============
 					;	22
 
+	; erase red
+
 	lda	red_x				; 4
 	and	#$7f				; 2
 	tax					; 2
 
 	jsr	draw_rasterbar			; 6+126
 
+	; erase yellow
 
+	lda	yellow_x				; 4
+	and	#$7f				; 2
+	tax					; 2
+
+	jsr	draw_rasterbar			; 6+126
+
+	; erase green
+
+	lda	green_x				; 4
+	and	#$7f				; 2
+	tax					; 2
+
+	jsr	draw_rasterbar			; 6+126
+
+	; erase red
+
+	lda	blue_x				; 4
+	and	#$7f				; 2
+	tax					; 2
+
+	jsr	draw_rasterbar			; 6+126
+
+
+	;=========================
+	; MOVE and DRAW
+	;=========================
+
+
+	;============
 	; move red
 
 	ldy	red_x				; 4
@@ -239,13 +273,102 @@ pad_time:
 
 	jsr	draw_rasterbar			; 6+126
 
-	; Try X=43 Y=19 cycles=4200 R4
+
+	;============
+	; move yellow
+
+	ldy	yellow_x			; 4
+	lda	movement_table,Y		; 4
+	sta	yellow_x			; 4
+	and	#$7f				; 2
+	tax					; 2
+					;==========
+					;	 16
+
+	; draw yellow
+
+	lda	#$33				; 2
+	sta	smc_raster_color1_1+1		; 4
+	sta	smc_raster_color1_2+1		; 4
+	lda	#$bb				; 2
+	sta	smc_raster_color2_1+1		; 4
+	sta	smc_raster_color2_2+1		; 4
+	lda	#$ff				; 2
+	sta	smc_raster_color3_1+1		; 4
+					;=============
+					;	26
+
+
+	jsr	draw_rasterbar			; 6+126
+
+	;============
+	; move green
+
+	ldy	green_x				; 4
+	lda	movement_table,Y		; 4
+	sta	green_x				; 4
+	and	#$7f				; 2
+	tax					; 2
+					;==========
+					;	 16
+
+	; draw green
+
+	lda	#$33				; 2
+	sta	smc_raster_color1_1+1		; 4
+	sta	smc_raster_color1_2+1		; 4
+	lda	#$bb				; 2
+	sta	smc_raster_color2_1+1		; 4
+	sta	smc_raster_color2_2+1		; 4
+	lda	#$ff				; 2
+	sta	smc_raster_color3_1+1		; 4
+					;=============
+					;	26
+
+
+	jsr	draw_rasterbar			; 6+126
+
+	;============
+	; move blue
+
+	ldy	blue_x				; 4
+	lda	movement_table,Y		; 4
+	sta	blue_x				; 4
+	and	#$7f				; 2
+	tax					; 2
+					;==========
+					;	 16
+
+	; draw blue
+
+	lda	#$33				; 2
+	sta	smc_raster_color1_1+1		; 4
+	sta	smc_raster_color1_2+1		; 4
+	lda	#$bb				; 2
+	sta	smc_raster_color2_1+1		; 4
+	sta	smc_raster_color2_2+1		; 4
+	lda	#$ff				; 2
+	sta	smc_raster_color3_1+1		; 4
+					;=============
+					;	26
+
+
+	jsr	draw_rasterbar			; 6+126
+
+
+
+
+	;============================
+	; WAIT for VBLANK to finish
+	;============================
+	; Try X=5 Y=105 cycles=3256 R6
 
 	nop
 	nop
+	nop
 
-	ldy	#19							; 2
-loop1:	ldx	#43							; 2
+	ldy	#105							; 2
+loop1:	ldx	#5							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -388,4 +511,7 @@ pictures:
 
 .include "rb_bg.inc"
 
-red_x:	.byte $10
+red_x:		.byte $10
+yellow_x:	.byte $20
+green_x:	.byte $30
+blue_x:		.byte $40
