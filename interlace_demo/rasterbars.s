@@ -287,10 +287,10 @@ pad_time:
 
 	; draw yellow
 
-	lda	#$33				; 2
+	lda	#$88				; 2
 	sta	smc_raster_color1_1+1		; 4
 	sta	smc_raster_color1_2+1		; 4
-	lda	#$bb				; 2
+	lda	#$dd				; 2
 	sta	smc_raster_color2_1+1		; 4
 	sta	smc_raster_color2_2+1		; 4
 	lda	#$ff				; 2
@@ -314,10 +314,10 @@ pad_time:
 
 	; draw green
 
-	lda	#$33				; 2
+	lda	#$44				; 2
 	sta	smc_raster_color1_1+1		; 4
 	sta	smc_raster_color1_2+1		; 4
-	lda	#$bb				; 2
+	lda	#$cc				; 2
 	sta	smc_raster_color2_1+1		; 4
 	sta	smc_raster_color2_2+1		; 4
 	lda	#$ff				; 2
@@ -341,10 +341,10 @@ pad_time:
 
 	; draw blue
 
-	lda	#$33				; 2
+	lda	#$22				; 2
 	sta	smc_raster_color1_1+1		; 4
 	sta	smc_raster_color1_2+1		; 4
-	lda	#$bb				; 2
+	lda	#$66				; 2
 	sta	smc_raster_color2_1+1		; 4
 	sta	smc_raster_color2_2+1		; 4
 	lda	#$ff				; 2
