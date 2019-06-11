@@ -22,6 +22,9 @@ PADDLE_STATUS	= $F2
 TEMP		= $FA
 WHICH		= $FB
 
+OUTL		= $FE
+OUTH		= $FF
+
 
 ; Soft Switches
 KEYPRESS= $C000
@@ -171,34 +174,39 @@ loopB:	dex								; 2
         ;       vblank = 4550 cycles to do scrolling
 
 
-
-	; want colors 01234567
-	; line 0: $X0 to $800
-	; line 1: $X1 to $400
-	; line 2: $X2
-	; line 3: $X3
-	; line 4: $4X
-	; line 5: $5X
-	; line 6: $6X
-	; line 7: $7X
-
 display_loop:
 
 .include "rasterbars_screen.s"
 
-
-
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
-	; do_nothing should be
-	;	4550
-	;	  -6
-	;        -10
-	;=============
-	;       4534
 
-	jsr	do_nothing				; 6
+	; 4550	-- VBLANK
+	; -134  -- raster
+	;  -10  -- keypress
+	;=======
+	; 4406
+
+pad_time:
+
+	; we erase, then draw
+	; doing a blanket erase of all 128 lines would cost 3459 cycles!
+
+
+	ldx	#10				; 2
+	jsr	draw_rasterbar			; 6+126
+
+
+	; Try X=175 Y=5 cycles=4406
+
+	ldy	#5							; 2
+loop1:	ldx	#175							; 2
+loop2:	dex								; 2
+	bne	loop2							; 2nt/3
+	dey								; 2
+	bne	loop1							; 2nt/3
+
 
 	lda	KEYPRESS				; 4
 	bpl	no_keypress				; 3
@@ -208,42 +216,72 @@ no_keypress:
 	jmp	display_loop				; 3
 
 
+	;========================
+	; Draw a rasterbar
+	;	unroll as memory is free!  haha
+	;========================
+	; X is location
 
-	;=================================
-	; do nothing
-	;=================================
-	; and take 4534-6 = 4528 cycles to do it
+	; 2+22+24+24+24+24+6 = 126
+
+draw_rasterbar:
+
+	; clear all lines
+	ldy	#0			; 2
+					;====
+
+	lda	y_lookup_l,X		; 4
+	sta	OUTL			; 3
+	lda	y_lookup_h,X		; 4
+	sta	OUTH			; 3
+
+	lda	#$33			; 2
+	sta	(OUTL),Y		; 6
+				;============
+				;	22
+
+	inx				; 2
+	lda	y_lookup_l,X		; 4
+	sta	OUTL			; 3
+	lda	y_lookup_h,X		; 4
+	sta	OUTH			; 3
+
+	lda	#$bb			; 2
+	sta	(OUTL),Y		; 6
+
+	inx				; 2
+	lda	y_lookup_l,X		; 4
+	sta	OUTL			; 3
+	lda	y_lookup_h,X		; 4
+	sta	OUTH			; 3
+
+	lda	#$ff			; 2
+	sta	(OUTL),Y		; 6
+
+	inx
+	lda	y_lookup_l,X		; 4
+	sta	OUTL			; 3
+	lda	y_lookup_h,X		; 4
+	sta	OUTH			; 3
+
+	lda	#$bb			; 2
+	sta	(OUTL),Y		; 6
+
+	inx
+	lda	y_lookup_l,X		; 4
+	sta	OUTL			; 3
+	lda	y_lookup_h,X		; 4
+	sta	OUTH			; 3
+
+	lda	#$33			; 2
+	sta	(OUTL),Y		; 6
+
+	rts				; 6
 
 
-	; blah, current code the tight loops are right at a page boundary
-
-do_nothing:
-
-	; want 4528-12=4516
-
-	; Try X=4 Y=174 cycles=4525 R3 -3 X loops
-
-	; Try X=3 Y=215 cycles=4516
-
-	nop		; 2
-	nop		; 2
-
-	nop		; 2
-	nop		; 2
-
-	nop		; 2
-	nop		; 2
 
 
 
-	ldy	#215							; 2
-loop1:	ldx	#3							; 2
-loop2:	dex								; 2
-	bne	loop2							; 2nt/3
-	dey								; 2
-	bne	loop1							; 2nt/3
-
-	rts							; 6
 
 
 
@@ -303,3 +341,5 @@ pictures:
 
 krg:
 	.byte $0
+
+red_x:	.byte $10
