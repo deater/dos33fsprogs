@@ -21,6 +21,7 @@ LASTKEY		= $F1
 PADDLE_STATUS	= $F2
 TEMP		= $FA
 WHICH		= $FB
+TEMPY		= $FC
 
 OUTL		= $FE
 OUTH		= $FF
@@ -186,20 +187,117 @@ display_loop:
 	;======================================================
 
 	; 4550	-- VBLANK
-	;  488	-- draw ship (4+32+32+32+32+32+34+34+38+36+38+36+38+36+34)
+	; 1820	-- draw ship (130*14)
 	;  -10  -- keypress
 	;=======
-	; 4084
+	; 2720
 
 
 	;==========================
 	; draw the ship
 	; at Y=64 for now
-	ldx	#64			; 2
-	ldy	#0			; 2
-					;====
-					; 4
 
+	ldy	#64			; 2
+
+	; line 0
+	ldx	#0			; 2
+	jsr	sprite_line		; 6+120
+					;====
+					; 128
+
+	; line 1
+	iny				; 2
+	ldx	#7			; 2
+	jsr	sprite_line		; 6+120
+					;====
+					; 130
+
+	; line 2
+	iny				; 2
+	ldx	#14			; 2
+	jsr	sprite_line		; 6+120
+					;====
+					; 130
+
+	; line 3
+	iny				; 2
+	ldx	#21			; 2
+	jsr	sprite_line		; 6+120
+					;====
+					; 130
+
+	; line 4
+	iny				; 2
+	ldx	#28			; 2
+	jsr	sprite_line		; 6+120
+					;====
+					; 130
+
+	; line 5
+	iny				; 2
+	ldx	#35			; 2
+	jsr	sprite_line		; 6+120
+					;====
+					; 130
+
+	; line 6
+	iny				; 2
+	ldx	#42			; 2
+	jsr	sprite_line		; 6+120
+					;====
+					; 130
+
+	; line 7
+	iny				; 2
+	ldx	#49			; 2
+	jsr	sprite_line		; 6+120
+					;====
+					; 130
+
+	; line 8
+	iny				; 2
+	ldx	#56			; 2
+	jsr	sprite_line		; 6+120
+					;====
+					; 130
+
+	; line 9
+	iny				; 2
+	ldx	#63			; 2
+	jsr	sprite_line		; 6+120
+					;====
+					; 130
+
+	; line 10
+	iny				; 2
+	ldx	#70			; 2
+	jsr	sprite_line		; 6+120
+					;====
+					; 130
+
+	; line 11
+	iny				; 2
+	ldx	#77			; 2
+	jsr	sprite_line		; 6+120
+					;====
+					; 130
+
+	; line 12
+	iny				; 2
+	ldx	#84			; 2
+	jsr	sprite_line		; 6+120
+					;====
+					; 130
+
+	; line 13
+	iny				; 2
+	ldx	#91			; 2
+	jsr	sprite_line		; 6+120
+					;====
+					; 130
+
+
+.if 0
 	; line 0
 
 	lda	#0			; 2
@@ -270,7 +368,6 @@ display_loop:
 					;====
 					; 32
 
-;.if 0
 	; line 5
 
 	lda	#0			; 2
@@ -410,7 +507,7 @@ display_loop:
 	sta	smc077+28	; 5	; 4
 					;====
 					; 34
-;.endif
+.endif
 
 pad_time:
 
@@ -421,11 +518,14 @@ pad_time:
 
 	; Try X=13 Y=57 cycles=4048 R4
 
-	nop
+	;Try X=79 Y=11 cycles=4412 R4
+
+	; Try X=1 Y=247 cycles=2718 R2
+
 	nop
 
-	ldy	#57							; 2
-loop1:	ldx	#13							; 2
+	ldy	#247							; 2
+loop1:	ldx	#1							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -441,6 +541,67 @@ no_keypress:
 
 
 
+
+	;========================
+	; Draw a line of a sprite
+	;========================
+	; Y = y value
+	; x = location in sprite
+	; 17+10+(7*12)+3+6 = 120
+sprite_line:
+	sty	TEMPY			; 3
+
+	lda	y_lookup_l,Y		; 4
+	sta	OUTL			; 3
+	lda	y_lookup_h,Y		; 4
+	sta	OUTH			; 3
+					;=======
+					; 17
+
+	; XPOS
+	lda	#1	; xpos=1	; 2
+	ldy	#0			; 2
+	sta	(OUTL),Y		; 6
+					;=======
+					; 10
+	; COL0
+	ldy	#2			; 2
+	lda	ship_sprite+0,X		; 4
+	sta	(OUTL),Y		; 6
+					;=======
+					; 12
+	; COL1
+	ldy	#7			; 2
+	lda	ship_sprite+1,X		; 4
+	sta	(OUTL),Y		; 6
+
+	; COL2
+	ldy	#12			; 2
+	lda	ship_sprite+2,X		; 4
+	sta	(OUTL),Y		; 6
+
+	; COL3
+	ldy	#17			; 2
+	lda	ship_sprite+3,X		; 4
+	sta	(OUTL),Y		; 6
+
+	; COL4
+	ldy	#22			; 2
+	lda	ship_sprite+4,X		; 4
+	sta	(OUTL),Y		; 6
+
+	; COL5
+	ldy	#27			; 2
+	lda	ship_sprite+5,X		; 4
+	sta	(OUTL),Y		; 6
+
+	; COL6
+	ldy	#32			; 2
+	lda	ship_sprite+6,X		; 4
+	sta	(OUTL),Y		; 6
+
+	ldy	TEMPY			; 3
+	rts				; 6
 
 
 .include "gr_simple_clear.s"
@@ -461,7 +622,35 @@ pictures:
 
 .include "earth.inc"
 
-red_x:		.byte $10
-yellow_x:	.byte $20
-green_x:	.byte $30
-blue_x:		.byte $40
+.align $100
+
+ship_sprite:
+	; l0:     0   1   2   3   4   5   6
+	.byte	$00,$00,$00,$ff,$00,$00,$00
+	; l1:
+	.byte	$00,$00,$00,$ff,$00,$00,$00
+	; l2:
+	.byte	$00,$00,$00,$ff,$00,$00,$00
+	; l3:
+	.byte	$00,$00,$00,$ff,$00,$00,$00
+	; l4:
+	.byte	$00,$00,$00,$77,$00,$00,$00
+	; l5:
+	.byte	$00,$00,$00,$ff,$ff,$22,$00
+	; l6:
+	.byte	$00,$00,$22,$ff,$ff,$22,$00
+	; l7:
+	.byte	$00,$dd,$66,$11,$22,$22,$00
+	; l8:
+	.byte	$dd,$99,$22,$44,$44,$22,$22
+	; l9:
+	.byte	$99,$11,$66,$ff,$ff,$22,$22
+	; l10:
+	.byte	$dd,$99,$22,$ff,$ff,$22,$22
+	; l11:
+	.byte	$00,$dd,$66,$77,$77,$77,$ff
+	; l12:
+	.byte	$00,$00,$22,$ff,$ff,$77,$ff
+	; l13:
+	.byte	$00,$00,$00,$ff,$ff,$77,$ff
+
