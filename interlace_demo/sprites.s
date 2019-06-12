@@ -197,11 +197,49 @@ display_loop:
 
 	; 4550	-- VBLANK
 	; 1821	-- draw ship (130*14)+1
+	;  829	-- erase ship (100*8)+(14*2)+1
 	;  -31	-- move ship
 	;  -61  -- keypress
 	;   -8  -- loop
 	;=======
-	; 2629
+	; 1800
+
+	;================
+	; erase old ship
+
+	ldy	YPOS			; 3		; 0
+	jsr	erase_line		; 6+94
+
+	iny				; 2		; 1
+	jsr	erase_line		; 6+94
+
+	iny				; 2		; 2
+	jsr	erase_line		; 6+94
+
+	iny				; 2		; 3
+	jsr	erase_line		; 6+94
+
+	iny				; 2		; 4
+;	jsr	erase_line		; 6+94
+	iny				; 2		; 5
+;	jsr	erase_line		; 6+94
+	iny				; 2		; 6
+;	jsr	erase_line		; 6+94
+	iny				; 2		; 7
+;	jsr	erase_line		; 6+94
+	iny				; 2		; 8
+;	jsr	erase_line		; 6+94
+	iny				; 2		; 9
+;	jsr	erase_line		; 6+94
+	iny				; 2		; 10
+	jsr	erase_line		; 6+94
+	iny				; 2		; 11
+	jsr	erase_line		; 6+94
+	iny				; 2		; 12
+	jsr	erase_line		; 6+94
+	iny				; 2		; 13
+	jsr	erase_line		; 6+94
+
 
 	;==========================
 	; move the ship
@@ -222,12 +260,12 @@ minus:
 	sta	YADD			; 3
 	jmp	done_move_delay_7	; 3
 not_minus:
-	cmp	#111			; 2
+	cmp	#104			; 2
 	bcc	done_move_delay_12	; blt	; 3
 					; -1
 	lda	#$0			; 2
 	sta	YADD			; 3
-	lda	#110			; 2
+	lda	#103			; 2
 	sta	YPOS			; 3
 	jmp	done_move		; 3
 done_move_delay_12:
@@ -354,15 +392,29 @@ pad_time:
 	;============================
 	; WAIT for VBLANK to finish
 	;============================
-
+wait_loop:
 	; Try X=6 Y=73 cycles=2629
+	; Try X=19 Y=25 cycles=2526
+	; Try X=1 Y=109 cycles=1200
 
-	ldy	#73							; 2
-loop1:	ldx	#6							; 2
+	; Try X=7 Y=54 cycles=2215 R5
+
+	; Try X=1 Y=163 cycles=1794 R6
+
+	lda	TEMP
+	lda	TEMP
+
+
+	ldy	#163							; 2
+loop1:	ldx	#1							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
 	bne	loop1							; 2nt/3
+wait_loop_end:
+
+	;===============
+	; check keypress
 
 	jsr	handle_keypress					; 6+55
 
@@ -477,6 +529,7 @@ keypress_done:
 	rts						; 6
 
 
+
 	;========================
 	; Draw a line of a sprite
 	;========================
@@ -505,34 +558,96 @@ sprite_line:
 	sta	(OUTL),Y		; 6
 					;=======
 					; 12
+
 	; COL1
 	ldy	#7			; 2
 	lda	ship_sprite+1,X		; 4
 	sta	(OUTL),Y		; 6
+					;=======
+					; 12
 
 	; COL2
 	ldy	#12			; 2
 	lda	ship_sprite+2,X		; 4
 	sta	(OUTL),Y		; 6
+					;=======
+					; 12
 
 	; COL3
 	ldy	#17			; 2
 	lda	ship_sprite+3,X		; 4
 	sta	(OUTL),Y		; 6
+					;=======
+					; 12
 
 	; COL4
 	ldy	#22			; 2
 	lda	ship_sprite+4,X		; 4
 	sta	(OUTL),Y		; 6
+					;=======
+					; 12
 
 	; COL5
 	ldy	#27			; 2
 	lda	ship_sprite+5,X		; 4
 	sta	(OUTL),Y		; 6
+					;=======
+					; 12
 
 	; COL6
 	ldy	#32			; 2
 	lda	ship_sprite+6,X		; 4
+	sta	(OUTL),Y		; 6
+					;=======
+					; 12
+
+	ldy	TEMPY			; 3
+	rts				; 6
+
+	;========================
+	; Erase a line of a sprite
+	;========================
+	; Y = y value
+	; 17+10+2+(7*8)+3+6 = 94
+erase_line:
+	sty	TEMPY			; 3
+
+	lda	y_lookup_l,Y		; 4
+	sta	OUTL			; 3
+	lda	y_lookup_h,Y		; 4
+	sta	OUTH			; 3
+					;=======
+					; 17
+
+	; XPOS
+	lda	#1	; xpos=1	; 2
+	ldy	#0			; 2
+	sta	(OUTL),Y		; 6
+					;=======
+					; 10
+
+	lda	#0			; 2
+
+	; COL0
+	ldy	#2			; 2
+	sta	(OUTL),Y		; 6
+	; COL1
+	ldy	#7			; 2
+	sta	(OUTL),Y		; 6
+	; COL2
+	ldy	#12			; 2
+	sta	(OUTL),Y		; 6
+	; COL3
+	ldy	#17			; 2
+	sta	(OUTL),Y		; 6
+	; COL4
+	ldy	#22			; 2
+	sta	(OUTL),Y		; 6
+	; COL5
+	ldy	#27			; 2
+	sta	(OUTL),Y		; 6
+	; COL6
+	ldy	#32			; 2
 	sta	(OUTL),Y		; 6
 
 	ldy	TEMPY			; 3
@@ -540,17 +655,22 @@ sprite_line:
 
 
 .include "gr_simple_clear.s"
-.include "gr_offsets.s"
 
 
 .include "../asm_routines/gr_unrle.s"
-.include "../asm_routines/keypress.s"
+;.include "../asm_routines/keypress.s"
 .align $100
 .include "sprites_table.s"
-.include "movement_table.s"
+.include "gr_offsets.s"
+
+;.include "movement_table.s"
 .include "gr_copy.s"
 .include "vapor_lock.s"
 .include "delay_a.s"
+
+
+.assert >gr_offsets = >gr_offsets_done, error, "gr_offsets crosses page"
+.assert >wait_loop = >(wait_loop_end-1), error, "wait_loop crosses page"
 
 pictures:
 	.word earth_low,earth_high

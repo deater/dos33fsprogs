@@ -7,7 +7,7 @@ static int gr_offsets[]={
 	0x450,0x4d0,0x550,0x5d0,0x650,0x6d0,0x750,0x7d0,
 };
 
-#define X_OFFSET	0
+#define X_OFFSET	1
 
 int main(int argc, char **argv) {
 
@@ -18,9 +18,9 @@ int main(int argc, char **argv) {
 
 		printf("; %d\n",i*2);
 		printf("\tbit\tPAGE0\t; 4\n");
-		printf("smc%03d:\tldx\t#$00\t; 2\n",i*2);
+		printf("smc%03d:\tldx\t#$%02x\t; 2\n",i*2,X_OFFSET);
 		for(j=0;j<7;j++) {
-			address=gr_offsets[lookup]+0x400+j+X_OFFSET;
+			address=gr_offsets[lookup]+0x400+j;
 			if (i<15) address=0xc00;
 			if (i>77) address=0xc00;
 			printf("\tlda\t#$00\t; 2\n");
@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 		}
 		printf("\tldx\t#$00\t; 2\n");
 		printf("\tlda\tZERO\t; 3\n");
-		address=gr_offsets[lookup]+0x400+X_OFFSET;
+		address=gr_offsets[lookup]+0x400;
 		if (i<15) address=0xc00;
 		if (i>77) address=0xc00;
 		printf("\tsta\t$%3x,X\t; 5\n",address);
@@ -68,9 +68,9 @@ int main(int argc, char **argv) {
 
 		printf("; %d\n",(i*2)+1);
 		printf("\tbit\tPAGE1\t; 4\n");
-		printf("smc%03d:\tldx\t#$00\t; 2\n",(i*2)+1);
+		printf("smc%03d:\tldx\t#$%02x\t; 2\n",(i*2)+1,X_OFFSET);
 		for(j=0;j<7;j++) {
-			address=gr_offsets[lookup]+j+X_OFFSET;
+			address=gr_offsets[lookup]+j;
 			if (i<15) address=0xc00;
 			if (i>77) address=0xc00;
 			printf("\tlda\t#$00\t; 2\n");
@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
 		}
 		printf("\tldx\t#$00\t; 2\n");
 		printf("\tlda\tZERO\t; 3\n");
-		address=gr_offsets[lookup]+X_OFFSET;
+		address=gr_offsets[lookup];
 		if (i<15) address=0xc00;
 		if (i>77) address=0xc00;
 		printf("\tsta\t$%3x,X\t; 5\n",address);

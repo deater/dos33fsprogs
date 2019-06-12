@@ -1,6 +1,6 @@
 ; 0
 	bit	PAGE0	; 4
-smc000:	ldx	#$00	; 2
+smc000:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -21,7 +21,7 @@ smc000:	ldx	#$00	; 2
 
 ; 1
 	bit	PAGE1	; 4
-smc001:	ldx	#$00	; 2
+smc001:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -42,7 +42,7 @@ smc001:	ldx	#$00	; 2
 
 ; 2
 	bit	PAGE0	; 4
-smc002:	ldx	#$00	; 2
+smc002:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -63,7 +63,7 @@ smc002:	ldx	#$00	; 2
 
 ; 3
 	bit	PAGE1	; 4
-smc003:	ldx	#$00	; 2
+smc003:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -84,7 +84,7 @@ smc003:	ldx	#$00	; 2
 
 ; 4
 	bit	PAGE0	; 4
-smc004:	ldx	#$00	; 2
+smc004:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -105,7 +105,7 @@ smc004:	ldx	#$00	; 2
 
 ; 5
 	bit	PAGE1	; 4
-smc005:	ldx	#$00	; 2
+smc005:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -126,7 +126,7 @@ smc005:	ldx	#$00	; 2
 
 ; 6
 	bit	PAGE0	; 4
-smc006:	ldx	#$00	; 2
+smc006:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -147,7 +147,7 @@ smc006:	ldx	#$00	; 2
 
 ; 7
 	bit	PAGE1	; 4
-smc007:	ldx	#$00	; 2
+smc007:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -168,7 +168,7 @@ smc007:	ldx	#$00	; 2
 
 ; 8
 	bit	PAGE0	; 4
-smc008:	ldx	#$00	; 2
+smc008:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -189,7 +189,7 @@ smc008:	ldx	#$00	; 2
 
 ; 9
 	bit	PAGE1	; 4
-smc009:	ldx	#$00	; 2
+smc009:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -210,7 +210,7 @@ smc009:	ldx	#$00	; 2
 
 ; 10
 	bit	PAGE0	; 4
-smc010:	ldx	#$00	; 2
+smc010:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -231,7 +231,7 @@ smc010:	ldx	#$00	; 2
 
 ; 11
 	bit	PAGE1	; 4
-smc011:	ldx	#$00	; 2
+smc011:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -252,7 +252,7 @@ smc011:	ldx	#$00	; 2
 
 ; 12
 	bit	PAGE0	; 4
-smc012:	ldx	#$00	; 2
+smc012:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -273,7 +273,7 @@ smc012:	ldx	#$00	; 2
 
 ; 13
 	bit	PAGE1	; 4
-smc013:	ldx	#$00	; 2
+smc013:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -294,7 +294,7 @@ smc013:	ldx	#$00	; 2
 
 ; 14
 	bit	PAGE0	; 4
-smc014:	ldx	#$00	; 2
+smc014:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -315,7 +315,7 @@ smc014:	ldx	#$00	; 2
 
 ; 15
 	bit	PAGE1	; 4
-smc015:	ldx	#$00	; 2
+smc015:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -336,7 +336,7 @@ smc015:	ldx	#$00	; 2
 
 ; 16
 	bit	PAGE0	; 4
-smc016:	ldx	#$00	; 2
+smc016:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -357,7 +357,7 @@ smc016:	ldx	#$00	; 2
 
 ; 17
 	bit	PAGE1	; 4
-smc017:	ldx	#$00	; 2
+smc017:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -378,7 +378,7 @@ smc017:	ldx	#$00	; 2
 
 ; 18
 	bit	PAGE0	; 4
-smc018:	ldx	#$00	; 2
+smc018:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -399,7 +399,7 @@ smc018:	ldx	#$00	; 2
 
 ; 19
 	bit	PAGE1	; 4
-smc019:	ldx	#$00	; 2
+smc019:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -420,7 +420,7 @@ smc019:	ldx	#$00	; 2
 
 ; 20
 	bit	PAGE0	; 4
-smc020:	ldx	#$00	; 2
+smc020:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -441,7 +441,7 @@ smc020:	ldx	#$00	; 2
 
 ; 21
 	bit	PAGE1	; 4
-smc021:	ldx	#$00	; 2
+smc021:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -462,7 +462,7 @@ smc021:	ldx	#$00	; 2
 
 ; 22
 	bit	PAGE0	; 4
-smc022:	ldx	#$00	; 2
+smc022:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -483,7 +483,7 @@ smc022:	ldx	#$00	; 2
 
 ; 23
 	bit	PAGE1	; 4
-smc023:	ldx	#$00	; 2
+smc023:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -504,7 +504,7 @@ smc023:	ldx	#$00	; 2
 
 ; 24
 	bit	PAGE0	; 4
-smc024:	ldx	#$00	; 2
+smc024:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -525,7 +525,7 @@ smc024:	ldx	#$00	; 2
 
 ; 25
 	bit	PAGE1	; 4
-smc025:	ldx	#$00	; 2
+smc025:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -546,7 +546,7 @@ smc025:	ldx	#$00	; 2
 
 ; 26
 	bit	PAGE0	; 4
-smc026:	ldx	#$00	; 2
+smc026:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -567,7 +567,7 @@ smc026:	ldx	#$00	; 2
 
 ; 27
 	bit	PAGE1	; 4
-smc027:	ldx	#$00	; 2
+smc027:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -588,7 +588,7 @@ smc027:	ldx	#$00	; 2
 
 ; 28
 	bit	PAGE0	; 4
-smc028:	ldx	#$00	; 2
+smc028:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -609,7 +609,7 @@ smc028:	ldx	#$00	; 2
 
 ; 29
 	bit	PAGE1	; 4
-smc029:	ldx	#$00	; 2
+smc029:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -630,7 +630,7 @@ smc029:	ldx	#$00	; 2
 
 ; 30
 	bit	PAGE0	; 4
-smc030:	ldx	#$00	; 2
+smc030:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$980,X	; 5
 	lda	#$00	; 2
@@ -651,7 +651,7 @@ smc030:	ldx	#$00	; 2
 
 ; 31
 	bit	PAGE1	; 4
-smc031:	ldx	#$00	; 2
+smc031:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$600,X	; 5
 	lda	#$00	; 2
@@ -672,7 +672,7 @@ smc031:	ldx	#$00	; 2
 
 ; 32
 	bit	PAGE0	; 4
-smc032:	ldx	#$00	; 2
+smc032:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$a00,X	; 5
 	lda	#$00	; 2
@@ -693,7 +693,7 @@ smc032:	ldx	#$00	; 2
 
 ; 33
 	bit	PAGE1	; 4
-smc033:	ldx	#$00	; 2
+smc033:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$600,X	; 5
 	lda	#$00	; 2
@@ -714,7 +714,7 @@ smc033:	ldx	#$00	; 2
 
 ; 34
 	bit	PAGE0	; 4
-smc034:	ldx	#$00	; 2
+smc034:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$a00,X	; 5
 	lda	#$00	; 2
@@ -735,7 +735,7 @@ smc034:	ldx	#$00	; 2
 
 ; 35
 	bit	PAGE1	; 4
-smc035:	ldx	#$00	; 2
+smc035:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$600,X	; 5
 	lda	#$00	; 2
@@ -756,7 +756,7 @@ smc035:	ldx	#$00	; 2
 
 ; 36
 	bit	PAGE0	; 4
-smc036:	ldx	#$00	; 2
+smc036:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$a00,X	; 5
 	lda	#$00	; 2
@@ -777,7 +777,7 @@ smc036:	ldx	#$00	; 2
 
 ; 37
 	bit	PAGE1	; 4
-smc037:	ldx	#$00	; 2
+smc037:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$600,X	; 5
 	lda	#$00	; 2
@@ -798,7 +798,7 @@ smc037:	ldx	#$00	; 2
 
 ; 38
 	bit	PAGE0	; 4
-smc038:	ldx	#$00	; 2
+smc038:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$a00,X	; 5
 	lda	#$00	; 2
@@ -819,7 +819,7 @@ smc038:	ldx	#$00	; 2
 
 ; 39
 	bit	PAGE1	; 4
-smc039:	ldx	#$00	; 2
+smc039:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$680,X	; 5
 	lda	#$00	; 2
@@ -840,7 +840,7 @@ smc039:	ldx	#$00	; 2
 
 ; 40
 	bit	PAGE0	; 4
-smc040:	ldx	#$00	; 2
+smc040:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$a80,X	; 5
 	lda	#$00	; 2
@@ -861,7 +861,7 @@ smc040:	ldx	#$00	; 2
 
 ; 41
 	bit	PAGE1	; 4
-smc041:	ldx	#$00	; 2
+smc041:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$680,X	; 5
 	lda	#$00	; 2
@@ -882,7 +882,7 @@ smc041:	ldx	#$00	; 2
 
 ; 42
 	bit	PAGE0	; 4
-smc042:	ldx	#$00	; 2
+smc042:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$a80,X	; 5
 	lda	#$00	; 2
@@ -903,7 +903,7 @@ smc042:	ldx	#$00	; 2
 
 ; 43
 	bit	PAGE1	; 4
-smc043:	ldx	#$00	; 2
+smc043:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$680,X	; 5
 	lda	#$00	; 2
@@ -924,7 +924,7 @@ smc043:	ldx	#$00	; 2
 
 ; 44
 	bit	PAGE0	; 4
-smc044:	ldx	#$00	; 2
+smc044:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$a80,X	; 5
 	lda	#$00	; 2
@@ -945,7 +945,7 @@ smc044:	ldx	#$00	; 2
 
 ; 45
 	bit	PAGE1	; 4
-smc045:	ldx	#$00	; 2
+smc045:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$680,X	; 5
 	lda	#$00	; 2
@@ -966,7 +966,7 @@ smc045:	ldx	#$00	; 2
 
 ; 46
 	bit	PAGE0	; 4
-smc046:	ldx	#$00	; 2
+smc046:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$a80,X	; 5
 	lda	#$00	; 2
@@ -987,7 +987,7 @@ smc046:	ldx	#$00	; 2
 
 ; 47
 	bit	PAGE1	; 4
-smc047:	ldx	#$00	; 2
+smc047:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$700,X	; 5
 	lda	#$00	; 2
@@ -1008,7 +1008,7 @@ smc047:	ldx	#$00	; 2
 
 ; 48
 	bit	PAGE0	; 4
-smc048:	ldx	#$00	; 2
+smc048:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$b00,X	; 5
 	lda	#$00	; 2
@@ -1029,7 +1029,7 @@ smc048:	ldx	#$00	; 2
 
 ; 49
 	bit	PAGE1	; 4
-smc049:	ldx	#$00	; 2
+smc049:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$700,X	; 5
 	lda	#$00	; 2
@@ -1050,7 +1050,7 @@ smc049:	ldx	#$00	; 2
 
 ; 50
 	bit	PAGE0	; 4
-smc050:	ldx	#$00	; 2
+smc050:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$b00,X	; 5
 	lda	#$00	; 2
@@ -1071,7 +1071,7 @@ smc050:	ldx	#$00	; 2
 
 ; 51
 	bit	PAGE1	; 4
-smc051:	ldx	#$00	; 2
+smc051:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$700,X	; 5
 	lda	#$00	; 2
@@ -1092,7 +1092,7 @@ smc051:	ldx	#$00	; 2
 
 ; 52
 	bit	PAGE0	; 4
-smc052:	ldx	#$00	; 2
+smc052:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$b00,X	; 5
 	lda	#$00	; 2
@@ -1113,7 +1113,7 @@ smc052:	ldx	#$00	; 2
 
 ; 53
 	bit	PAGE1	; 4
-smc053:	ldx	#$00	; 2
+smc053:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$700,X	; 5
 	lda	#$00	; 2
@@ -1134,7 +1134,7 @@ smc053:	ldx	#$00	; 2
 
 ; 54
 	bit	PAGE0	; 4
-smc054:	ldx	#$00	; 2
+smc054:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$b00,X	; 5
 	lda	#$00	; 2
@@ -1155,7 +1155,7 @@ smc054:	ldx	#$00	; 2
 
 ; 55
 	bit	PAGE1	; 4
-smc055:	ldx	#$00	; 2
+smc055:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$780,X	; 5
 	lda	#$00	; 2
@@ -1176,7 +1176,7 @@ smc055:	ldx	#$00	; 2
 
 ; 56
 	bit	PAGE0	; 4
-smc056:	ldx	#$00	; 2
+smc056:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$b80,X	; 5
 	lda	#$00	; 2
@@ -1197,7 +1197,7 @@ smc056:	ldx	#$00	; 2
 
 ; 57
 	bit	PAGE1	; 4
-smc057:	ldx	#$00	; 2
+smc057:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$780,X	; 5
 	lda	#$00	; 2
@@ -1218,7 +1218,7 @@ smc057:	ldx	#$00	; 2
 
 ; 58
 	bit	PAGE0	; 4
-smc058:	ldx	#$00	; 2
+smc058:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$b80,X	; 5
 	lda	#$00	; 2
@@ -1239,7 +1239,7 @@ smc058:	ldx	#$00	; 2
 
 ; 59
 	bit	PAGE1	; 4
-smc059:	ldx	#$00	; 2
+smc059:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$780,X	; 5
 	lda	#$00	; 2
@@ -1260,7 +1260,7 @@ smc059:	ldx	#$00	; 2
 
 ; 60
 	bit	PAGE0	; 4
-smc060:	ldx	#$00	; 2
+smc060:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$b80,X	; 5
 	lda	#$00	; 2
@@ -1281,7 +1281,7 @@ smc060:	ldx	#$00	; 2
 
 ; 61
 	bit	PAGE1	; 4
-smc061:	ldx	#$00	; 2
+smc061:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$780,X	; 5
 	lda	#$00	; 2
@@ -1302,7 +1302,7 @@ smc061:	ldx	#$00	; 2
 
 ; 62
 	bit	PAGE0	; 4
-smc062:	ldx	#$00	; 2
+smc062:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$b80,X	; 5
 	lda	#$00	; 2
@@ -1323,7 +1323,7 @@ smc062:	ldx	#$00	; 2
 
 ; 63
 	bit	PAGE1	; 4
-smc063:	ldx	#$00	; 2
+smc063:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$428,X	; 5
 	lda	#$00	; 2
@@ -1344,7 +1344,7 @@ smc063:	ldx	#$00	; 2
 
 ; 64
 	bit	PAGE0	; 4
-smc064:	ldx	#$00	; 2
+smc064:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$828,X	; 5
 	lda	#$00	; 2
@@ -1365,7 +1365,7 @@ smc064:	ldx	#$00	; 2
 
 ; 65
 	bit	PAGE1	; 4
-smc065:	ldx	#$00	; 2
+smc065:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$428,X	; 5
 	lda	#$00	; 2
@@ -1386,7 +1386,7 @@ smc065:	ldx	#$00	; 2
 
 ; 66
 	bit	PAGE0	; 4
-smc066:	ldx	#$00	; 2
+smc066:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$828,X	; 5
 	lda	#$00	; 2
@@ -1407,7 +1407,7 @@ smc066:	ldx	#$00	; 2
 
 ; 67
 	bit	PAGE1	; 4
-smc067:	ldx	#$00	; 2
+smc067:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$428,X	; 5
 	lda	#$00	; 2
@@ -1428,7 +1428,7 @@ smc067:	ldx	#$00	; 2
 
 ; 68
 	bit	PAGE0	; 4
-smc068:	ldx	#$00	; 2
+smc068:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$828,X	; 5
 	lda	#$00	; 2
@@ -1449,7 +1449,7 @@ smc068:	ldx	#$00	; 2
 
 ; 69
 	bit	PAGE1	; 4
-smc069:	ldx	#$00	; 2
+smc069:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$428,X	; 5
 	lda	#$00	; 2
@@ -1470,7 +1470,7 @@ smc069:	ldx	#$00	; 2
 
 ; 70
 	bit	PAGE0	; 4
-smc070:	ldx	#$00	; 2
+smc070:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$828,X	; 5
 	lda	#$00	; 2
@@ -1491,7 +1491,7 @@ smc070:	ldx	#$00	; 2
 
 ; 71
 	bit	PAGE1	; 4
-smc071:	ldx	#$00	; 2
+smc071:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$4a8,X	; 5
 	lda	#$00	; 2
@@ -1512,7 +1512,7 @@ smc071:	ldx	#$00	; 2
 
 ; 72
 	bit	PAGE0	; 4
-smc072:	ldx	#$00	; 2
+smc072:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$8a8,X	; 5
 	lda	#$00	; 2
@@ -1533,7 +1533,7 @@ smc072:	ldx	#$00	; 2
 
 ; 73
 	bit	PAGE1	; 4
-smc073:	ldx	#$00	; 2
+smc073:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$4a8,X	; 5
 	lda	#$00	; 2
@@ -1554,7 +1554,7 @@ smc073:	ldx	#$00	; 2
 
 ; 74
 	bit	PAGE0	; 4
-smc074:	ldx	#$00	; 2
+smc074:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$8a8,X	; 5
 	lda	#$00	; 2
@@ -1575,7 +1575,7 @@ smc074:	ldx	#$00	; 2
 
 ; 75
 	bit	PAGE1	; 4
-smc075:	ldx	#$00	; 2
+smc075:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$4a8,X	; 5
 	lda	#$00	; 2
@@ -1596,7 +1596,7 @@ smc075:	ldx	#$00	; 2
 
 ; 76
 	bit	PAGE0	; 4
-smc076:	ldx	#$00	; 2
+smc076:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$8a8,X	; 5
 	lda	#$00	; 2
@@ -1617,7 +1617,7 @@ smc076:	ldx	#$00	; 2
 
 ; 77
 	bit	PAGE1	; 4
-smc077:	ldx	#$00	; 2
+smc077:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$4a8,X	; 5
 	lda	#$00	; 2
@@ -1638,7 +1638,7 @@ smc077:	ldx	#$00	; 2
 
 ; 78
 	bit	PAGE0	; 4
-smc078:	ldx	#$00	; 2
+smc078:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$8a8,X	; 5
 	lda	#$00	; 2
@@ -1659,7 +1659,7 @@ smc078:	ldx	#$00	; 2
 
 ; 79
 	bit	PAGE1	; 4
-smc079:	ldx	#$00	; 2
+smc079:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$528,X	; 5
 	lda	#$00	; 2
@@ -1680,7 +1680,7 @@ smc079:	ldx	#$00	; 2
 
 ; 80
 	bit	PAGE0	; 4
-smc080:	ldx	#$00	; 2
+smc080:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$928,X	; 5
 	lda	#$00	; 2
@@ -1701,7 +1701,7 @@ smc080:	ldx	#$00	; 2
 
 ; 81
 	bit	PAGE1	; 4
-smc081:	ldx	#$00	; 2
+smc081:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$528,X	; 5
 	lda	#$00	; 2
@@ -1722,7 +1722,7 @@ smc081:	ldx	#$00	; 2
 
 ; 82
 	bit	PAGE0	; 4
-smc082:	ldx	#$00	; 2
+smc082:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$928,X	; 5
 	lda	#$00	; 2
@@ -1743,7 +1743,7 @@ smc082:	ldx	#$00	; 2
 
 ; 83
 	bit	PAGE1	; 4
-smc083:	ldx	#$00	; 2
+smc083:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$528,X	; 5
 	lda	#$00	; 2
@@ -1764,7 +1764,7 @@ smc083:	ldx	#$00	; 2
 
 ; 84
 	bit	PAGE0	; 4
-smc084:	ldx	#$00	; 2
+smc084:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$928,X	; 5
 	lda	#$00	; 2
@@ -1785,7 +1785,7 @@ smc084:	ldx	#$00	; 2
 
 ; 85
 	bit	PAGE1	; 4
-smc085:	ldx	#$00	; 2
+smc085:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$528,X	; 5
 	lda	#$00	; 2
@@ -1806,7 +1806,7 @@ smc085:	ldx	#$00	; 2
 
 ; 86
 	bit	PAGE0	; 4
-smc086:	ldx	#$00	; 2
+smc086:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$928,X	; 5
 	lda	#$00	; 2
@@ -1827,7 +1827,7 @@ smc086:	ldx	#$00	; 2
 
 ; 87
 	bit	PAGE1	; 4
-smc087:	ldx	#$00	; 2
+smc087:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$5a8,X	; 5
 	lda	#$00	; 2
@@ -1848,7 +1848,7 @@ smc087:	ldx	#$00	; 2
 
 ; 88
 	bit	PAGE0	; 4
-smc088:	ldx	#$00	; 2
+smc088:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$9a8,X	; 5
 	lda	#$00	; 2
@@ -1869,7 +1869,7 @@ smc088:	ldx	#$00	; 2
 
 ; 89
 	bit	PAGE1	; 4
-smc089:	ldx	#$00	; 2
+smc089:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$5a8,X	; 5
 	lda	#$00	; 2
@@ -1890,7 +1890,7 @@ smc089:	ldx	#$00	; 2
 
 ; 90
 	bit	PAGE0	; 4
-smc090:	ldx	#$00	; 2
+smc090:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$9a8,X	; 5
 	lda	#$00	; 2
@@ -1911,7 +1911,7 @@ smc090:	ldx	#$00	; 2
 
 ; 91
 	bit	PAGE1	; 4
-smc091:	ldx	#$00	; 2
+smc091:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$5a8,X	; 5
 	lda	#$00	; 2
@@ -1932,7 +1932,7 @@ smc091:	ldx	#$00	; 2
 
 ; 92
 	bit	PAGE0	; 4
-smc092:	ldx	#$00	; 2
+smc092:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$9a8,X	; 5
 	lda	#$00	; 2
@@ -1953,7 +1953,7 @@ smc092:	ldx	#$00	; 2
 
 ; 93
 	bit	PAGE1	; 4
-smc093:	ldx	#$00	; 2
+smc093:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$5a8,X	; 5
 	lda	#$00	; 2
@@ -1974,7 +1974,7 @@ smc093:	ldx	#$00	; 2
 
 ; 94
 	bit	PAGE0	; 4
-smc094:	ldx	#$00	; 2
+smc094:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$9a8,X	; 5
 	lda	#$00	; 2
@@ -1995,7 +1995,7 @@ smc094:	ldx	#$00	; 2
 
 ; 95
 	bit	PAGE1	; 4
-smc095:	ldx	#$00	; 2
+smc095:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$628,X	; 5
 	lda	#$00	; 2
@@ -2016,7 +2016,7 @@ smc095:	ldx	#$00	; 2
 
 ; 96
 	bit	PAGE0	; 4
-smc096:	ldx	#$00	; 2
+smc096:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$a28,X	; 5
 	lda	#$00	; 2
@@ -2037,7 +2037,7 @@ smc096:	ldx	#$00	; 2
 
 ; 97
 	bit	PAGE1	; 4
-smc097:	ldx	#$00	; 2
+smc097:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$628,X	; 5
 	lda	#$00	; 2
@@ -2058,7 +2058,7 @@ smc097:	ldx	#$00	; 2
 
 ; 98
 	bit	PAGE0	; 4
-smc098:	ldx	#$00	; 2
+smc098:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$a28,X	; 5
 	lda	#$00	; 2
@@ -2079,7 +2079,7 @@ smc098:	ldx	#$00	; 2
 
 ; 99
 	bit	PAGE1	; 4
-smc099:	ldx	#$00	; 2
+smc099:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$628,X	; 5
 	lda	#$00	; 2
@@ -2100,7 +2100,7 @@ smc099:	ldx	#$00	; 2
 
 ; 100
 	bit	PAGE0	; 4
-smc100:	ldx	#$00	; 2
+smc100:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$a28,X	; 5
 	lda	#$00	; 2
@@ -2121,7 +2121,7 @@ smc100:	ldx	#$00	; 2
 
 ; 101
 	bit	PAGE1	; 4
-smc101:	ldx	#$00	; 2
+smc101:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$628,X	; 5
 	lda	#$00	; 2
@@ -2142,7 +2142,7 @@ smc101:	ldx	#$00	; 2
 
 ; 102
 	bit	PAGE0	; 4
-smc102:	ldx	#$00	; 2
+smc102:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$a28,X	; 5
 	lda	#$00	; 2
@@ -2163,7 +2163,7 @@ smc102:	ldx	#$00	; 2
 
 ; 103
 	bit	PAGE1	; 4
-smc103:	ldx	#$00	; 2
+smc103:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$6a8,X	; 5
 	lda	#$00	; 2
@@ -2184,7 +2184,7 @@ smc103:	ldx	#$00	; 2
 
 ; 104
 	bit	PAGE0	; 4
-smc104:	ldx	#$00	; 2
+smc104:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$aa8,X	; 5
 	lda	#$00	; 2
@@ -2205,7 +2205,7 @@ smc104:	ldx	#$00	; 2
 
 ; 105
 	bit	PAGE1	; 4
-smc105:	ldx	#$00	; 2
+smc105:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$6a8,X	; 5
 	lda	#$00	; 2
@@ -2226,7 +2226,7 @@ smc105:	ldx	#$00	; 2
 
 ; 106
 	bit	PAGE0	; 4
-smc106:	ldx	#$00	; 2
+smc106:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$aa8,X	; 5
 	lda	#$00	; 2
@@ -2247,7 +2247,7 @@ smc106:	ldx	#$00	; 2
 
 ; 107
 	bit	PAGE1	; 4
-smc107:	ldx	#$00	; 2
+smc107:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$6a8,X	; 5
 	lda	#$00	; 2
@@ -2268,7 +2268,7 @@ smc107:	ldx	#$00	; 2
 
 ; 108
 	bit	PAGE0	; 4
-smc108:	ldx	#$00	; 2
+smc108:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$aa8,X	; 5
 	lda	#$00	; 2
@@ -2289,7 +2289,7 @@ smc108:	ldx	#$00	; 2
 
 ; 109
 	bit	PAGE1	; 4
-smc109:	ldx	#$00	; 2
+smc109:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$6a8,X	; 5
 	lda	#$00	; 2
@@ -2310,7 +2310,7 @@ smc109:	ldx	#$00	; 2
 
 ; 110
 	bit	PAGE0	; 4
-smc110:	ldx	#$00	; 2
+smc110:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$aa8,X	; 5
 	lda	#$00	; 2
@@ -2331,7 +2331,7 @@ smc110:	ldx	#$00	; 2
 
 ; 111
 	bit	PAGE1	; 4
-smc111:	ldx	#$00	; 2
+smc111:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$728,X	; 5
 	lda	#$00	; 2
@@ -2352,7 +2352,7 @@ smc111:	ldx	#$00	; 2
 
 ; 112
 	bit	PAGE0	; 4
-smc112:	ldx	#$00	; 2
+smc112:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$b28,X	; 5
 	lda	#$00	; 2
@@ -2373,7 +2373,7 @@ smc112:	ldx	#$00	; 2
 
 ; 113
 	bit	PAGE1	; 4
-smc113:	ldx	#$00	; 2
+smc113:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$728,X	; 5
 	lda	#$00	; 2
@@ -2394,7 +2394,7 @@ smc113:	ldx	#$00	; 2
 
 ; 114
 	bit	PAGE0	; 4
-smc114:	ldx	#$00	; 2
+smc114:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$b28,X	; 5
 	lda	#$00	; 2
@@ -2415,7 +2415,7 @@ smc114:	ldx	#$00	; 2
 
 ; 115
 	bit	PAGE1	; 4
-smc115:	ldx	#$00	; 2
+smc115:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$728,X	; 5
 	lda	#$00	; 2
@@ -2436,7 +2436,7 @@ smc115:	ldx	#$00	; 2
 
 ; 116
 	bit	PAGE0	; 4
-smc116:	ldx	#$00	; 2
+smc116:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$b28,X	; 5
 	lda	#$00	; 2
@@ -2457,7 +2457,7 @@ smc116:	ldx	#$00	; 2
 
 ; 117
 	bit	PAGE1	; 4
-smc117:	ldx	#$00	; 2
+smc117:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$728,X	; 5
 	lda	#$00	; 2
@@ -2478,7 +2478,7 @@ smc117:	ldx	#$00	; 2
 
 ; 118
 	bit	PAGE0	; 4
-smc118:	ldx	#$00	; 2
+smc118:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$b28,X	; 5
 	lda	#$00	; 2
@@ -2499,7 +2499,7 @@ smc118:	ldx	#$00	; 2
 
 ; 119
 	bit	PAGE1	; 4
-smc119:	ldx	#$00	; 2
+smc119:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$7a8,X	; 5
 	lda	#$00	; 2
@@ -2520,7 +2520,7 @@ smc119:	ldx	#$00	; 2
 
 ; 120
 	bit	PAGE0	; 4
-smc120:	ldx	#$00	; 2
+smc120:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$ba8,X	; 5
 	lda	#$00	; 2
@@ -2541,7 +2541,7 @@ smc120:	ldx	#$00	; 2
 
 ; 121
 	bit	PAGE1	; 4
-smc121:	ldx	#$00	; 2
+smc121:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$7a8,X	; 5
 	lda	#$00	; 2
@@ -2562,7 +2562,7 @@ smc121:	ldx	#$00	; 2
 
 ; 122
 	bit	PAGE0	; 4
-smc122:	ldx	#$00	; 2
+smc122:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$ba8,X	; 5
 	lda	#$00	; 2
@@ -2583,7 +2583,7 @@ smc122:	ldx	#$00	; 2
 
 ; 123
 	bit	PAGE1	; 4
-smc123:	ldx	#$00	; 2
+smc123:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$7a8,X	; 5
 	lda	#$00	; 2
@@ -2604,7 +2604,7 @@ smc123:	ldx	#$00	; 2
 
 ; 124
 	bit	PAGE0	; 4
-smc124:	ldx	#$00	; 2
+smc124:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$ba8,X	; 5
 	lda	#$00	; 2
@@ -2625,7 +2625,7 @@ smc124:	ldx	#$00	; 2
 
 ; 125
 	bit	PAGE1	; 4
-smc125:	ldx	#$00	; 2
+smc125:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$7a8,X	; 5
 	lda	#$00	; 2
@@ -2646,7 +2646,7 @@ smc125:	ldx	#$00	; 2
 
 ; 126
 	bit	PAGE0	; 4
-smc126:	ldx	#$00	; 2
+smc126:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$ba8,X	; 5
 	lda	#$00	; 2
@@ -2667,7 +2667,7 @@ smc126:	ldx	#$00	; 2
 
 ; 127
 	bit	PAGE1	; 4
-smc127:	ldx	#$00	; 2
+smc127:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$450,X	; 5
 	lda	#$00	; 2
@@ -2688,7 +2688,7 @@ smc127:	ldx	#$00	; 2
 
 ; 128
 	bit	PAGE0	; 4
-smc128:	ldx	#$00	; 2
+smc128:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$850,X	; 5
 	lda	#$00	; 2
@@ -2709,7 +2709,7 @@ smc128:	ldx	#$00	; 2
 
 ; 129
 	bit	PAGE1	; 4
-smc129:	ldx	#$00	; 2
+smc129:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$450,X	; 5
 	lda	#$00	; 2
@@ -2730,7 +2730,7 @@ smc129:	ldx	#$00	; 2
 
 ; 130
 	bit	PAGE0	; 4
-smc130:	ldx	#$00	; 2
+smc130:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$850,X	; 5
 	lda	#$00	; 2
@@ -2751,7 +2751,7 @@ smc130:	ldx	#$00	; 2
 
 ; 131
 	bit	PAGE1	; 4
-smc131:	ldx	#$00	; 2
+smc131:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$450,X	; 5
 	lda	#$00	; 2
@@ -2772,7 +2772,7 @@ smc131:	ldx	#$00	; 2
 
 ; 132
 	bit	PAGE0	; 4
-smc132:	ldx	#$00	; 2
+smc132:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$850,X	; 5
 	lda	#$00	; 2
@@ -2793,7 +2793,7 @@ smc132:	ldx	#$00	; 2
 
 ; 133
 	bit	PAGE1	; 4
-smc133:	ldx	#$00	; 2
+smc133:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$450,X	; 5
 	lda	#$00	; 2
@@ -2814,7 +2814,7 @@ smc133:	ldx	#$00	; 2
 
 ; 134
 	bit	PAGE0	; 4
-smc134:	ldx	#$00	; 2
+smc134:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$850,X	; 5
 	lda	#$00	; 2
@@ -2835,7 +2835,7 @@ smc134:	ldx	#$00	; 2
 
 ; 135
 	bit	PAGE1	; 4
-smc135:	ldx	#$00	; 2
+smc135:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$4d0,X	; 5
 	lda	#$00	; 2
@@ -2856,7 +2856,7 @@ smc135:	ldx	#$00	; 2
 
 ; 136
 	bit	PAGE0	; 4
-smc136:	ldx	#$00	; 2
+smc136:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$8d0,X	; 5
 	lda	#$00	; 2
@@ -2877,7 +2877,7 @@ smc136:	ldx	#$00	; 2
 
 ; 137
 	bit	PAGE1	; 4
-smc137:	ldx	#$00	; 2
+smc137:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$4d0,X	; 5
 	lda	#$00	; 2
@@ -2898,7 +2898,7 @@ smc137:	ldx	#$00	; 2
 
 ; 138
 	bit	PAGE0	; 4
-smc138:	ldx	#$00	; 2
+smc138:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$8d0,X	; 5
 	lda	#$00	; 2
@@ -2919,7 +2919,7 @@ smc138:	ldx	#$00	; 2
 
 ; 139
 	bit	PAGE1	; 4
-smc139:	ldx	#$00	; 2
+smc139:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$4d0,X	; 5
 	lda	#$00	; 2
@@ -2940,7 +2940,7 @@ smc139:	ldx	#$00	; 2
 
 ; 140
 	bit	PAGE0	; 4
-smc140:	ldx	#$00	; 2
+smc140:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$8d0,X	; 5
 	lda	#$00	; 2
@@ -2961,7 +2961,7 @@ smc140:	ldx	#$00	; 2
 
 ; 141
 	bit	PAGE1	; 4
-smc141:	ldx	#$00	; 2
+smc141:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$4d0,X	; 5
 	lda	#$00	; 2
@@ -2982,7 +2982,7 @@ smc141:	ldx	#$00	; 2
 
 ; 142
 	bit	PAGE0	; 4
-smc142:	ldx	#$00	; 2
+smc142:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$8d0,X	; 5
 	lda	#$00	; 2
@@ -3003,7 +3003,7 @@ smc142:	ldx	#$00	; 2
 
 ; 143
 	bit	PAGE1	; 4
-smc143:	ldx	#$00	; 2
+smc143:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$550,X	; 5
 	lda	#$00	; 2
@@ -3024,7 +3024,7 @@ smc143:	ldx	#$00	; 2
 
 ; 144
 	bit	PAGE0	; 4
-smc144:	ldx	#$00	; 2
+smc144:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$950,X	; 5
 	lda	#$00	; 2
@@ -3045,7 +3045,7 @@ smc144:	ldx	#$00	; 2
 
 ; 145
 	bit	PAGE1	; 4
-smc145:	ldx	#$00	; 2
+smc145:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$550,X	; 5
 	lda	#$00	; 2
@@ -3066,7 +3066,7 @@ smc145:	ldx	#$00	; 2
 
 ; 146
 	bit	PAGE0	; 4
-smc146:	ldx	#$00	; 2
+smc146:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$950,X	; 5
 	lda	#$00	; 2
@@ -3087,7 +3087,7 @@ smc146:	ldx	#$00	; 2
 
 ; 147
 	bit	PAGE1	; 4
-smc147:	ldx	#$00	; 2
+smc147:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$550,X	; 5
 	lda	#$00	; 2
@@ -3108,7 +3108,7 @@ smc147:	ldx	#$00	; 2
 
 ; 148
 	bit	PAGE0	; 4
-smc148:	ldx	#$00	; 2
+smc148:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$950,X	; 5
 	lda	#$00	; 2
@@ -3129,7 +3129,7 @@ smc148:	ldx	#$00	; 2
 
 ; 149
 	bit	PAGE1	; 4
-smc149:	ldx	#$00	; 2
+smc149:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$550,X	; 5
 	lda	#$00	; 2
@@ -3150,7 +3150,7 @@ smc149:	ldx	#$00	; 2
 
 ; 150
 	bit	PAGE0	; 4
-smc150:	ldx	#$00	; 2
+smc150:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$950,X	; 5
 	lda	#$00	; 2
@@ -3171,7 +3171,7 @@ smc150:	ldx	#$00	; 2
 
 ; 151
 	bit	PAGE1	; 4
-smc151:	ldx	#$00	; 2
+smc151:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$5d0,X	; 5
 	lda	#$00	; 2
@@ -3192,7 +3192,7 @@ smc151:	ldx	#$00	; 2
 
 ; 152
 	bit	PAGE0	; 4
-smc152:	ldx	#$00	; 2
+smc152:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$9d0,X	; 5
 	lda	#$00	; 2
@@ -3213,7 +3213,7 @@ smc152:	ldx	#$00	; 2
 
 ; 153
 	bit	PAGE1	; 4
-smc153:	ldx	#$00	; 2
+smc153:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$5d0,X	; 5
 	lda	#$00	; 2
@@ -3234,7 +3234,7 @@ smc153:	ldx	#$00	; 2
 
 ; 154
 	bit	PAGE0	; 4
-smc154:	ldx	#$00	; 2
+smc154:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$9d0,X	; 5
 	lda	#$00	; 2
@@ -3255,7 +3255,7 @@ smc154:	ldx	#$00	; 2
 
 ; 155
 	bit	PAGE1	; 4
-smc155:	ldx	#$00	; 2
+smc155:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$5d0,X	; 5
 	lda	#$00	; 2
@@ -3276,7 +3276,7 @@ smc155:	ldx	#$00	; 2
 
 ; 156
 	bit	PAGE0	; 4
-smc156:	ldx	#$00	; 2
+smc156:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3297,7 +3297,7 @@ smc156:	ldx	#$00	; 2
 
 ; 157
 	bit	PAGE1	; 4
-smc157:	ldx	#$00	; 2
+smc157:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3318,7 +3318,7 @@ smc157:	ldx	#$00	; 2
 
 ; 158
 	bit	PAGE0	; 4
-smc158:	ldx	#$00	; 2
+smc158:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3339,7 +3339,7 @@ smc158:	ldx	#$00	; 2
 
 ; 159
 	bit	PAGE1	; 4
-smc159:	ldx	#$00	; 2
+smc159:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3360,7 +3360,7 @@ smc159:	ldx	#$00	; 2
 
 ; 160
 	bit	PAGE0	; 4
-smc160:	ldx	#$00	; 2
+smc160:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3381,7 +3381,7 @@ smc160:	ldx	#$00	; 2
 
 ; 161
 	bit	PAGE1	; 4
-smc161:	ldx	#$00	; 2
+smc161:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3402,7 +3402,7 @@ smc161:	ldx	#$00	; 2
 
 ; 162
 	bit	PAGE0	; 4
-smc162:	ldx	#$00	; 2
+smc162:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3423,7 +3423,7 @@ smc162:	ldx	#$00	; 2
 
 ; 163
 	bit	PAGE1	; 4
-smc163:	ldx	#$00	; 2
+smc163:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3444,7 +3444,7 @@ smc163:	ldx	#$00	; 2
 
 ; 164
 	bit	PAGE0	; 4
-smc164:	ldx	#$00	; 2
+smc164:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3465,7 +3465,7 @@ smc164:	ldx	#$00	; 2
 
 ; 165
 	bit	PAGE1	; 4
-smc165:	ldx	#$00	; 2
+smc165:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3486,7 +3486,7 @@ smc165:	ldx	#$00	; 2
 
 ; 166
 	bit	PAGE0	; 4
-smc166:	ldx	#$00	; 2
+smc166:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3507,7 +3507,7 @@ smc166:	ldx	#$00	; 2
 
 ; 167
 	bit	PAGE1	; 4
-smc167:	ldx	#$00	; 2
+smc167:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3528,7 +3528,7 @@ smc167:	ldx	#$00	; 2
 
 ; 168
 	bit	PAGE0	; 4
-smc168:	ldx	#$00	; 2
+smc168:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3549,7 +3549,7 @@ smc168:	ldx	#$00	; 2
 
 ; 169
 	bit	PAGE1	; 4
-smc169:	ldx	#$00	; 2
+smc169:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3570,7 +3570,7 @@ smc169:	ldx	#$00	; 2
 
 ; 170
 	bit	PAGE0	; 4
-smc170:	ldx	#$00	; 2
+smc170:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3591,7 +3591,7 @@ smc170:	ldx	#$00	; 2
 
 ; 171
 	bit	PAGE1	; 4
-smc171:	ldx	#$00	; 2
+smc171:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3612,7 +3612,7 @@ smc171:	ldx	#$00	; 2
 
 ; 172
 	bit	PAGE0	; 4
-smc172:	ldx	#$00	; 2
+smc172:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3633,7 +3633,7 @@ smc172:	ldx	#$00	; 2
 
 ; 173
 	bit	PAGE1	; 4
-smc173:	ldx	#$00	; 2
+smc173:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3654,7 +3654,7 @@ smc173:	ldx	#$00	; 2
 
 ; 174
 	bit	PAGE0	; 4
-smc174:	ldx	#$00	; 2
+smc174:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3675,7 +3675,7 @@ smc174:	ldx	#$00	; 2
 
 ; 175
 	bit	PAGE1	; 4
-smc175:	ldx	#$00	; 2
+smc175:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3696,7 +3696,7 @@ smc175:	ldx	#$00	; 2
 
 ; 176
 	bit	PAGE0	; 4
-smc176:	ldx	#$00	; 2
+smc176:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3717,7 +3717,7 @@ smc176:	ldx	#$00	; 2
 
 ; 177
 	bit	PAGE1	; 4
-smc177:	ldx	#$00	; 2
+smc177:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3738,7 +3738,7 @@ smc177:	ldx	#$00	; 2
 
 ; 178
 	bit	PAGE0	; 4
-smc178:	ldx	#$00	; 2
+smc178:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3759,7 +3759,7 @@ smc178:	ldx	#$00	; 2
 
 ; 179
 	bit	PAGE1	; 4
-smc179:	ldx	#$00	; 2
+smc179:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3780,7 +3780,7 @@ smc179:	ldx	#$00	; 2
 
 ; 180
 	bit	PAGE0	; 4
-smc180:	ldx	#$00	; 2
+smc180:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3801,7 +3801,7 @@ smc180:	ldx	#$00	; 2
 
 ; 181
 	bit	PAGE1	; 4
-smc181:	ldx	#$00	; 2
+smc181:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3822,7 +3822,7 @@ smc181:	ldx	#$00	; 2
 
 ; 182
 	bit	PAGE0	; 4
-smc182:	ldx	#$00	; 2
+smc182:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3843,7 +3843,7 @@ smc182:	ldx	#$00	; 2
 
 ; 183
 	bit	PAGE1	; 4
-smc183:	ldx	#$00	; 2
+smc183:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3864,7 +3864,7 @@ smc183:	ldx	#$00	; 2
 
 ; 184
 	bit	PAGE0	; 4
-smc184:	ldx	#$00	; 2
+smc184:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3885,7 +3885,7 @@ smc184:	ldx	#$00	; 2
 
 ; 185
 	bit	PAGE1	; 4
-smc185:	ldx	#$00	; 2
+smc185:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3906,7 +3906,7 @@ smc185:	ldx	#$00	; 2
 
 ; 186
 	bit	PAGE0	; 4
-smc186:	ldx	#$00	; 2
+smc186:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3927,7 +3927,7 @@ smc186:	ldx	#$00	; 2
 
 ; 187
 	bit	PAGE1	; 4
-smc187:	ldx	#$00	; 2
+smc187:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3948,7 +3948,7 @@ smc187:	ldx	#$00	; 2
 
 ; 188
 	bit	PAGE0	; 4
-smc188:	ldx	#$00	; 2
+smc188:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3969,7 +3969,7 @@ smc188:	ldx	#$00	; 2
 
 ; 189
 	bit	PAGE1	; 4
-smc189:	ldx	#$00	; 2
+smc189:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -3990,7 +3990,7 @@ smc189:	ldx	#$00	; 2
 
 ; 190
 	bit	PAGE0	; 4
-smc190:	ldx	#$00	; 2
+smc190:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
@@ -4011,7 +4011,7 @@ smc190:	ldx	#$00	; 2
 
 ; 191
 	bit	PAGE1	; 4
-smc191:	ldx	#$00	; 2
+smc191:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
 	lda	#$00	; 2
