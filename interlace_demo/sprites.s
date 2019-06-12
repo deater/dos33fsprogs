@@ -25,6 +25,8 @@ WHICH		= $FB
 OUTL		= $FE
 OUTH		= $FF
 
+ZERO		= $80
+
 
 ; Soft Switches
 KEYPRESS= $C000
@@ -45,7 +47,7 @@ HOME	= $FC58				;; Clear the text screen
 WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 
 
-start_rasterbars:
+start_sprites:
 
 	;===================
 	; init screen
@@ -177,7 +179,7 @@ loopB:	dex								; 2
 
 display_loop:
 
-.include "rasterbars_screen.s"
+.include "sprites_screen.s"
 
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
@@ -455,10 +457,11 @@ smc_raster_color1_2:
 .include "gr_simple_clear.s"
 .include "gr_offsets.s"
 
+
 .include "../asm_routines/gr_unrle.s"
 .include "../asm_routines/keypress.s"
 .align $100
-.include "rasterbars_table.s"
+.include "sprites_table.s"
 .include "movement_table.s"
 .include "gr_copy.s"
 .include "vapor_lock.s"

@@ -7,10 +7,11 @@ PNG_TO_40x48D = ../gr-utils/png_to_40x48d
 
 all:	interlace.dsk
 
-interlace.dsk:	INTERLACE RASTERBARS HELLO
+interlace.dsk:	INTERLACE RASTERBARS SPRITES HELLO
 	$(DOS33) -y interlace.dsk SAVE A HELLO
 	$(DOS33) -y interlace.dsk BSAVE -a 0x1000 INTERLACE
 	$(DOS33) -y interlace.dsk BSAVE -a 0x1000 RASTERBARS
+	$(DOS33) -y interlace.dsk BSAVE -a 0x1000 SPRITES
 
 ####
 
@@ -36,6 +37,16 @@ rasterbars.o:	rasterbars.s gr_copy.s \
 	rasterbars_screen.s rasterbars_table.s movement_table.s rb_bg.inc
 	ca65 -o rasterbars.o rasterbars.s -l rasterbars.lst
 
+####
+
+SPRITES:	sprites.o
+	ld65 -o SPRITES sprites.o -C ../linker_scripts/apple2_1000.inc
+
+sprites.o:	sprites.s gr_copy.s \
+	sprites_screen.s sprites_table.s movement_table.s rb_bg.inc
+	ca65 -o sprites.o sprites.s -l sprites.lst
+
+
 
 ####
 
@@ -52,4 +63,4 @@ install:
 
 
 clean:		
-		rm -f *~ *.o *.lst *.inc INTERLACE RASTERBARS HELLO
+		rm -f *~ *.o *.lst *.inc INTERLACE RASTERBARS SPRITES HELLO
