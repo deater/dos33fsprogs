@@ -1,3 +1,12 @@
+; TODO
+; + merge with spacebars code
+; + make flame move (write to the sprite table directly)
+; + end of game, fly to the right
+; + implement shooting with space bar
+; + implement both blasts
+; + add meteor+explosion sprites
+
+
 ; Uses the 40x48d page1/page2 every-1-scanline pageflip mode
 
 ; self modifying code to get some extra colors (pseudo 40x192 mode)
@@ -15,8 +24,9 @@ BASH		= $29
 FRAME		= $60
 BLARGH		= $69
 DRAW_PAGE	= $EE
-LASTKEY		= $F1
-PADDLE_STATUS	= $F2
+
+FIRE_X		= $F0
+
 YPOS		= $F3
 YADD		= $F4
 BLAST1		= $F5
@@ -68,6 +78,7 @@ start_sprites:
 	sta	ZERO
 	sta	YADD
 	sta	LEVEL_DONE
+	sta	FIRE_X
 
 	lda	#64
 	sta	YPOS
@@ -199,10 +210,11 @@ display_loop:
 	; 1821	-- draw ship (130*14)+1
 	;  829	-- erase ship (100*8)+(14*2)+1
 	;  -31	-- move ship
+	;  -17  -- move fire
 	;  -61  -- keypress
 	;   -8  -- loop
 	;=======
-	; 1800
+	; 1783
 
 	;================
 	; erase old ship
@@ -218,6 +230,9 @@ display_loop:
 
 	iny				; 2		; 3
 	jsr	erase_line		; 6+94
+
+	; note, to be complete should erase all these
+	; only an issue if moving up/down really fast
 
 	iny				; 2		; 4
 ;	jsr	erase_line		; 6+94
@@ -239,6 +254,36 @@ display_loop:
 	jsr	erase_line		; 6+94
 	iny				; 2		; 13
 	jsr	erase_line		; 6+94
+
+	;==========================
+	; erase the fire
+	;==========================
+
+
+	;==========================
+	; move the fire
+	;==========================
+	; no-fire:	6+7	= 13 [4]
+	; too-far:	6+4+7	= 17
+	; moving:	6+4+7	= 17
+
+
+	lda	FIRE_X		; 3
+	beq	no_fire		; 3
+				; -1
+	cmp	#$39		; 2
+	bcs	kill_fire	; bge 3
+				; -1
+	inc	FIRE_X		; 5
+	jmp	done_move_fire	; 3
+no_fire:
+	nop
+	nop
+kill_fire:
+	nop			; 2
+	lda	#0		; 2
+	sta	FIRE_X		; 3
+done_move_fire:
 
 
 	;==========================
@@ -392,21 +437,25 @@ pad_time:
 	;============================
 	; WAIT for VBLANK to finish
 	;============================
+
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+
+
 wait_loop:
-	; Try X=6 Y=73 cycles=2629
-	; Try X=19 Y=25 cycles=2526
-	; Try X=1 Y=109 cycles=1200
 
-	; Try X=7 Y=54 cycles=2215 R5
+	; Try X=175 Y=2 cycles=1763 R20
 
-	; Try X=1 Y=163 cycles=1794 R6
-
-	lda	TEMP
-	lda	TEMP
-
-
-	ldy	#163							; 2
-loop1:	ldx	#1							; 2
+	ldy	#2							; 2
+loop1:	ldx	#175							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
