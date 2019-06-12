@@ -6,8 +6,6 @@
 
 ; Zero Page
 FRAMEBUFFER	= $00	; $00 - $0F
-YPOS		= $10
-YPOS_SIN	= $11
 CH		= $24
 CV		= $25
 GBASL		= $26
@@ -19,6 +17,8 @@ BLARGH		= $69
 DRAW_PAGE	= $EE
 LASTKEY		= $F1
 PADDLE_STATUS	= $F2
+YPOS		= $F3
+YADD		= $F4
 TEMP		= $FA
 WHICH		= $FB
 TEMPY		= $FC
@@ -62,6 +62,11 @@ start_sprites:
 	lda	#0
 	sta	DRAW_PAGE
 	sta	WHICH
+	sta	ZERO
+	sta	YADD
+
+	lda	#64
+	sta	YPOS
 
 	;=============================
 	; Load graphic page0
@@ -187,17 +192,57 @@ display_loop:
 	;======================================================
 
 	; 4550	-- VBLANK
-	; 1820	-- draw ship (130*14)
+	; 1821	-- draw ship (130*14)+1
+	;  -31	-- move ship
 	;  -10  -- keypress
 	;=======
-	; 2720
+	; 2688
+
+	;==========================
+	; move the ship
+	; in bounds:	14+5 =    19 [12]
+	; too small:	14+10 =   24 [7]
+	; too big:	14+5+12 = 31
+
+	clc				; 2
+	lda	YPOS			; 3
+	adc	YADD			; 3
+	sta	YPOS			; 3
+	bpl	not_minus		; 3
+
+minus:
+					; -1
+	lda	#$0			; 2
+	sta	YPOS			; 3
+	sta	YADD			; 3
+	jmp	done_move_delay_7	; 3
+not_minus:
+	cmp	#111			; 2
+	bcc	done_move_delay_12	; blt	; 3
+					; -1
+	lda	#$0			; 2
+	sta	YADD			; 3
+	lda	#110			; 2
+	sta	YPOS			; 3
+	jmp	done_move		; 3
+done_move_delay_12:
+	lda	TEMP			; 3
+	nop				; 2
+done_move_delay_7:
+	lda	TEMP			; 3
+	nop				; 2
+	nop				; 2
+
+done_move:
+
+
 
 
 	;==========================
 	; draw the ship
 	; at Y=64 for now
 
-	ldy	#64			; 2
+	ldy	YPOS			; 3
 
 	; line 0
 	ldx	#0			; 2
@@ -297,217 +342,6 @@ display_loop:
 					; 130
 
 
-.if 0
-	; line 0
-
-	lda	#0			; 2
-	sta	smc064+3	; 0	; 4
-	sta	smc064+8	; 1	; 4
-	sta	smc064+13	; 2	; 4
-	sta	smc064+23	; 4	; 4
-	sta	smc064+28	; 5	; 4
-	sta	smc064+33	; 6	; 4
-	lda	#$ff			; 2
-	sta	smc064+18	; 3	; 4
-					;====
-					; 32
-
-	; line 1
-
-	lda	#0			; 2
-	sta	smc065+3	; 0	; 4
-	sta	smc065+8	; 1	; 4
-	sta	smc065+13	; 2	; 4
-	sta	smc065+23	; 4	; 4
-	sta	smc065+28	; 5	; 4
-	sta	smc065+33	; 6	; 4
-	lda	#$ff			; 2
-	sta	smc065+18	; 3	; 4
-					;====
-					; 32
-
-	; line 2
-
-	lda	#0			; 2
-	sta	smc066+3	; 0	; 4
-	sta	smc066+8	; 1	; 4
-	sta	smc066+13	; 2	; 4
-	sta	smc066+23	; 4	; 4
-	sta	smc066+28	; 5	; 4
-	sta	smc066+33	; 6	; 4
-	lda	#$ff			; 2
-	sta	smc066+18	; 3	; 4
-					;====
-					; 32
-
-	; line 3
-
-	lda	#0			; 2
-	sta	smc067+3	; 0	; 4
-	sta	smc067+8	; 1	; 4
-	sta	smc067+13	; 2	; 4
-	sta	smc067+23	; 4	; 4
-	sta	smc067+28	; 5	; 4
-	sta	smc067+33	; 6	; 4
-	lda	#$ff			; 2
-	sta	smc067+18	; 3	; 4
-					;=====
-					; 32
-
-	; line 4
-
-	lda	#0			; 2
-	sta	smc068+3	; 0	; 4
-	sta	smc068+8	; 1	; 4
-	sta	smc068+13	; 2	; 4
-	sta	smc068+23	; 4	; 4
-	sta	smc068+28	; 5	; 4
-	sta	smc068+33	; 6	; 4
-	lda	#$77			; 2
-	sta	smc068+18	; 3	; 4
-					;====
-					; 32
-
-	; line 5
-
-	lda	#0			; 2
-	sta	smc069+3	; 0	; 4
-	sta	smc069+8	; 1	; 4
-	sta	smc069+13	; 2	; 4
-	sta	smc069+33	; 6	; 4
-	lda	#$ff			; 2
-	sta	smc069+18	; 3	; 4
-	sta	smc069+23	; 4	; 4
-	lda	#$22			; 2
-	sta	smc069+28	; 5	; 4
-					;=====
-					; 34
-	; line 6
-
-	lda	#0			; 2
-	sta	smc070+3	; 0	; 4
-	sta	smc070+8	; 1	; 4
-	sta	smc070+33	; 6	; 4
-	lda	#$ff			; 2
-	sta	smc070+18	; 3	; 4
-	sta	smc070+23	; 4	; 4
-	lda	#$22			; 2
-	sta	smc070+13	; 2	; 4
-	sta	smc070+28	; 5	; 4
-					;====
-					; 34
-
-	; line 7
-
-	lda	#0			; 2
-	sta	smc071+3	; 0	; 4
-	sta	smc071+33	; 6	; 4
-	lda	#$dd			; 2
-	sta	smc071+8	; 1	; 4
-	lda	#$66			; 2
-	sta	smc071+13	; 2	; 4
-	lda	#$11			; 2
-	sta	smc071+18	; 3	; 4
-	lda	#$22			; 2
-	sta	smc071+23	; 4	; 4
-	sta	smc071+28	; 5	; 4
-					;====
-					; 38
-	; line 8
-
-	lda	#$dd			; 2
-	sta	smc072+3	; 0	; 4
-	lda	#$99			; 2
-	sta	smc072+8	; 1	; 4
-	lda	#$22			; 2
-	sta	smc072+13	; 2	; 4
-	sta	smc072+28	; 5	; 4
-	sta	smc072+33	; 6	; 4
-	lda	#$44			; 2
-	sta	smc072+18	; 3	; 4
-	sta	smc072+23	; 4	; 4
-					;====
-					; 36
-	; line 9
-
-	lda	#$99			; 2
-	sta	smc073+3	; 0	; 4
-	lda	#$11			; 2
-	sta	smc073+8	; 1	; 4
-	lda	#$66			; 2
-	sta	smc073+13	; 2	; 4
-	lda	#$ff			; 2
-	sta	smc073+18	; 3	; 4
-	sta	smc073+23	; 4	; 4
-	lda	#$22			; 2
-	sta	smc073+28	; 5	; 4
-	sta	smc073+33	; 6	; 4
-					;====
-					; 38
-
-	; line 10
-
-	lda	#$dd			; 2
-	sta	smc074+3	; 0	; 4
-	lda	#$99			; 2
-	sta	smc074+8	; 1	; 4
-	lda	#$22			; 2
-	sta	smc074+13	; 2	; 4
-	sta	smc074+28	; 5	; 4
-	sta	smc074+33	; 6	; 4
-	lda	#$ff			; 2
-	sta	smc074+18	; 3	; 4
-	sta	smc074+23	; 4	; 4
-					;====
-					; 36
-	; line 11
-
-	lda	#0			; 2
-	sta	smc075+3	; 0	; 4
-	lda	#$dd			; 2
-	sta	smc075+8	; 1	; 4
-	lda	#$66			; 2
-	sta	smc075+13	; 2	; 4
-	lda	#$77			; 2
-	sta	smc075+18	; 3	; 4
-	sta	smc075+23	; 4	; 4
-	sta	smc075+28	; 5	; 4
-	lda	#$ff			; 2
-	sta	smc075+33	; 6	; 4
-					;====
-					; 38
-
-	; line 12
-
-	lda	#0			; 2
-	sta	smc076+3	; 0	; 4
-	sta	smc076+8	; 1	; 4
-	lda	#$22			; 2
-	sta	smc076+13	; 2	; 4
-	lda	#$ff			; 2
-	sta	smc076+18	; 3	; 4
-	sta	smc076+23	; 4	; 4
-	sta	smc076+33	; 6	; 4
-	lda	#$77			; 2
-	sta	smc076+28	; 5	; 4
-					;====
-					; 36
-
-	; line 13
-
-	lda	#0			; 2
-	sta	smc077+3	; 0	; 4
-	sta	smc077+8	; 1	; 4
-	sta	smc077+13	; 2	; 4
-	lda	#$ff			; 2
-	sta	smc077+18	; 3	; 4
-	sta	smc077+23	; 4	; 4
-	sta	smc077+33	; 6	; 4
-	lda	#$77			; 2
-	sta	smc077+28	; 5	; 4
-					;====
-					; 34
-.endif
 
 pad_time:
 
@@ -516,16 +350,12 @@ pad_time:
 	; WAIT for VBLANK to finish
 	;============================
 
-	; Try X=13 Y=57 cycles=4048 R4
+	; Try X=11 Y=44 cycles=2685 R3
 
-	;Try X=79 Y=11 cycles=4412 R4
+	lda	TEMP
 
-	; Try X=1 Y=247 cycles=2718 R2
-
-	nop
-
-	ldy	#247							; 2
-loop1:	ldx	#1							; 2
+	ldy	#44							; 2
+loop1:	ldx	#11							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
