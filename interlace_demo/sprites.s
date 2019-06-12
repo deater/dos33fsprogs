@@ -19,10 +19,13 @@ LASTKEY		= $F1
 PADDLE_STATUS	= $F2
 YPOS		= $F3
 YADD		= $F4
+BLAST1		= $F5
+BLAST2		= $F6
+FIRE		= $F7
 TEMP		= $FA
 WHICH		= $FB
 TEMPY		= $FC
-
+LEVEL_DONE	= $FD
 OUTL		= $FE
 OUTH		= $FF
 
@@ -64,6 +67,7 @@ start_sprites:
 	sta	WHICH
 	sta	ZERO
 	sta	YADD
+	sta	LEVEL_DONE
 
 	lda	#64
 	sta	YPOS
@@ -194,9 +198,10 @@ display_loop:
 	; 4550	-- VBLANK
 	; 1821	-- draw ship (130*14)+1
 	;  -31	-- move ship
-	;  -10  -- keypress
+	;  -61  -- keypress
+	;   -8  -- loop
 	;=======
-	; 2688
+	; 2629
 
 	;==========================
 	; move the ship
@@ -350,26 +355,126 @@ pad_time:
 	; WAIT for VBLANK to finish
 	;============================
 
-	; Try X=11 Y=44 cycles=2685 R3
+	; Try X=6 Y=73 cycles=2629
 
-	lda	TEMP
-
-	ldy	#44							; 2
-loop1:	ldx	#11							; 2
+	ldy	#73							; 2
+loop1:	ldx	#6							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
 	bne	loop1							; 2nt/3
 
+	jsr	handle_keypress					; 6+55
 
+	;===============
+	; check for end
+
+	lda	LEVEL_DONE					; 3
+	bne	done_level					; 2
+	jmp	display_loop					; 3
+
+done_level:
+	rts
+
+.align	$100
+	;=======================
+	; handle keypress
+	;=======================
+	; separate function so we an align to avoid branches
+	; crossing page boundaries
+	;
+	; NONE = 6+7			= 13	[42]
+	; ESC  = doesn't matter
+	; ' '  = 6+6+9+5+7		= 33	[22] [[20]]
+	; '.'  = 6+6+9+5+5+7		= 48	[17] [[5]]
+	; ','  = 6+6+9+5+5+5+7		= 43	[12] [[5]]
+	; 'A'  = 6+6+9+5+5+5+7+7	= 50	[5]  [[7]]
+	; 'Z'  = 6+6+9+5+5+5+7+5+7	= 55	[0]  [[5]]
+	; unkno= 6+6+9+5+5+5+7+5+3+[4]	= 55	[0]
+handle_keypress:
 	lda	KEYPRESS				; 4
-	bpl	no_keypress				; 3
-	jmp	display_loop
-no_keypress:
+	bpl	key_delay_42				; 3
+							; -1
 
-	jmp	display_loop				; 3
+	bit	KEYRESET	; clear strobe		; 4
 
+	cmp	#27+$80					; 2
+	bne	key_not_escape				; 3
 
+	lda	#1
+	sta	LEVEL_DONE
+
+	rts
+
+key_not_escape:
+
+	cmp	#' '+$80				; 2
+	bne	key_not_space				; 3
+							; -1
+	lda	#1					; 2
+	sta	FIRE					; 3
+	jmp	key_delay_22				; 3
+
+key_not_space:
+	cmp	#'.'+$80				; 2
+	bne	key_not_period				; 3
+							; -1
+	lda	#1					; 2
+	sta	BLAST1					; 3
+	jmp	key_delay_17				; 3
+
+key_not_period:
+	cmp	#','+$80				; 2
+	bne	key_not_comma				; 3
+							; -1
+	lda	#1					; 2
+	sta	BLAST2					; 3
+	jmp	key_delay_12				; 3
+
+key_not_comma:
+	and	#$5f	; make uppercase		; 2
+
+	cmp	#'A'					; 2
+	bne	key_not_a				; 3
+							; -1
+	dec	YADD					; 5
+	jmp	key_delay_5				; 3
+
+key_not_a:
+	cmp	#'Z'					; 2
+	bne	key_not_z				; 3
+							; -1
+	inc	YADD					; 5
+	jmp	keypress_done				; 3
+
+key_not_z:
+	nop						; 2
+	nop						; 2
+	jmp	keypress_done				; 3
+
+key_delay_42:
+	inc	TEMP					; 5
+	dec	TEMP					; 5
+	inc	TEMP					; 5
+	dec	TEMP					; 5
+
+key_delay_22:
+	nop						; 2
+	lda	TEMP					; 3
+key_delay_17:
+	nop						; 2
+	lda	TEMP					; 3
+key_delay_12:
+	nop						; 2
+	nop						; 2
+	lda	TEMP					; 3
+
+key_delay_5:
+	nop						; 2
+	lda	TEMP					; 3
+
+keypress_done:
+	rts						; 6
 
 
 	;========================
