@@ -457,9 +457,9 @@ no_keypress:
 .include "delay_a.s"
 
 pictures:
-	.word rb_bg_low,rb_bg_high
+	.word earth_low,earth_high
 
-.include "rb_bg.inc"
+.include "earth.inc"
 
 red_x:		.byte $10
 yellow_x:	.byte $20

@@ -43,7 +43,7 @@ SPRITES:	sprites.o
 	ld65 -o SPRITES sprites.o -C ../linker_scripts/apple2_1000.inc
 
 sprites.o:	sprites.s gr_copy.s \
-	sprites_screen.s sprites_table.s movement_table.s rb_bg.inc
+	sprites_screen.s sprites_table.s movement_table.s earth.inc
 	ca65 -o sprites.o sprites.s -l sprites.lst
 
 
@@ -55,6 +55,9 @@ k_40_48d.inc:	k_40_48d.png
 
 rb_bg.inc:	rb_bg.png
 	$(PNG_TO_40x48D) asm rb_bg.png rb_bg > rb_bg.inc
+
+earth.inc:	earth.png
+	$(PNG_TO_40x48D) asm earth.png earth > earth.inc
 
 ###
 
