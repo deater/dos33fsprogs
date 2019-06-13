@@ -255,9 +255,10 @@ display_loop:
 	;  -61  -- keypress
 	;  -33	-- handle fire press
 	;  -51	-- exploding asteroid
+	;  -47	-- sparkle
 	;   -8  -- loop
 	;=======
-	;  325
+	;  278
 	; -40 nop sled
 
 
@@ -782,6 +783,64 @@ draw_asteroid:
 					; 348
 
 
+	;==================
+	; sparkle flame
+	;==================
+	; 14+20+13 = 47
+
+sparkle_flame:
+	inc	FRAME			; 5
+	lda	FRAME			; 3
+	and	#$7			; 2
+	asl				; 2
+	tay				; 2
+
+	 ; Set up jump table that runs same speed on 6502 and 65c02
+	lda	jump_table+1,y					; 4
+	pha							; 3
+	lda	jump_table,y					; 4
+	pha							; 3
+	rts							; 6
+                                                        ;=============
+                                                        ;        20
+jump_table:
+	.word	(sparkle1-1),(sparkle_motion-1),(sparkle2-1),(sparkle_motion-1)
+	.word	(sparkle3-1),(sparkle_motion-1),(sparkle4-1),(sparkle_motion-1)
+
+sparkle1:
+	lda	ship_sprite_l9+0	; 4
+	eor	#$88			; 2
+	sta	ship_sprite_l9+0	; 4
+	jmp	done_sparkle		; 3
+
+sparkle2:
+	lda	ship_sprite_l9+1	; 4
+	eor	#$88			; 2
+	sta	ship_sprite_l9+1	; 4
+	jmp	done_sparkle		; 3
+
+sparkle3:
+	lda	ship_sprite_l8+0	; 4
+	eor	#$44			; 2
+	sta	ship_sprite_l8+0	; 4
+	jmp	done_sparkle		; 3
+
+sparkle4:
+	lda	ship_sprite_l10+0	; 4
+	eor	#$44			; 2
+	sta	ship_sprite_l10+0	; 4
+	jmp	done_sparkle		; 3
+
+sparkle_motion:
+	lda	TEMP			; 3
+	lda	TEMP			; 3
+	nop
+	nop
+	jmp	done_sparkle		; 3
+
+done_sparkle:
+
+
 
 
 pad_time:
@@ -805,12 +864,14 @@ pad_time:
 
 wait_loop:
 
-	; Try X=27 Y=2 cycles=283R2
+	; Try X=3 Y=11 cycles=232 R6
 
 	nop
+	nop
+	nop
 
-	ldy	#2							; 2
-loop1:	ldx	#27							; 2
+	ldy	#11							; 2
+loop1:	ldx	#3							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -1297,10 +1358,13 @@ ship_sprite:
 	; l7:
 	.byte	$00,$dd,$66,$11,$22,$22,$00
 	; l8:
+ship_sprite_l8:
 	.byte	$dd,$99,$22,$44,$44,$22,$22
 	; l9:
+ship_sprite_l9:
 	.byte	$99,$11,$66,$ff,$ff,$22,$22
 	; l10:
+ship_sprite_l10:
 	.byte	$dd,$99,$22,$ff,$ff,$22,$22
 	; l11:
 	.byte	$00,$dd,$66,$77,$77,$77,$ff
