@@ -29,6 +29,7 @@ RANDOM_PTR	= $E2
 
 ASTEROID_X	= $E3
 ASTEROID_Y	= $E4
+ASTEROID_SUBX	= $E5
 
 DRAW_PAGE	= $EE
 
@@ -44,7 +45,7 @@ TEMP		= $F7
 WHICH		= $F8
 TEMPY		= $F9
 LEVEL_DONE	= $FA
-
+ASTEROID_SPEED	= $FB
 INL		= $FC
 INH		= $FD
 OUTL		= $FE
@@ -94,6 +95,7 @@ start_sprites:
 	sta	YADD
 	sta	LEVEL_DONE
 	sta	FIRE_X
+	sta	ASTEROID_SUBX
 
 	lda	#$44
 	sta	GREEN0
@@ -112,6 +114,9 @@ start_sprites:
 
 	lda	#64
 	sta	YPOS
+
+	lda	#1
+	sta	ASTEROID_SPEED
 
 	;=============================
 	; Load graphic page0
@@ -243,14 +248,16 @@ display_loop:
 	; -337	-- erase asteroid
 	;  -31	-- move ship
 	;  -17  -- move fire
-	;  -36	-- move asteroid
+	;  -56	-- move asteroid
 	; -436	-- draw fire
 	; -337	-- draw asteroid
 	;  -61  -- keypress
 	;  -33	-- handle fire press
 	;   -8  -- loop
 	;=======
-	;  774
+	;  417
+
+
 
 	;================
 	; erase old ship
@@ -335,14 +342,29 @@ display_loop:
 
 
 	;==========================
-	; move/collide the asteroid
+	; move the asteroid
 	;==========================
-	; move ok:			8 [28]
-	; move off screen:		8+28 = 36
+	; move none:			16 	 [12+28]= 56
+	; move ok:			16+12    [28]	= 56
+	; move off screen:		16+12+28 	= 56
 	; game over: who cares
+move_asteroid:
+	clc			; 2
+	lda	ASTEROID_SUBX	; 3
+	adc	ASTEROID_SPEED	; 3
+	sta	ASTEROID_SUBX	; 3
+	cmp	#$8		; 2
+	bcc	no_new_asteroid2; 3 blt
+				;========
+				; 16
 
+				; -1
+	lda	#0		; 2
+	sta	ASTEROID_SUBX	; 3
 	dec	ASTEROID_X	; 5
 	bne	no_new_asteroid	; 3
+				;=====
+				; 12
 new_asteroid:
 						; -1
 	inc	RANDOM_PTR			; 5
@@ -358,6 +380,11 @@ new_asteroid:
 					;===========
 					;	28
 
+no_new_asteroid2:
+	inc	TEMP				; 5
+	inc	TEMP				; 5
+	nop					; 2
+
 no_new_asteroid:
 	inc	TEMP				; 5
 	inc	TEMP				; 5
@@ -365,7 +392,8 @@ no_new_asteroid:
 	inc	TEMP				; 5
 	inc	TEMP				; 5
 	lda	TEMP				; 3
-
+						;====
+						; 28
 
 done_move_asteroid:
 
@@ -703,13 +731,13 @@ pad_time:
 
 wait_loop:
 
-	; Try X=5 Y=14 cycles=435 R2
+	; Try X=82 Y=1 cycles=417
 
-	nop
+;	nop
 ;	nop
 
-	ldy	#14							; 2
-loop1:	ldx	#5							; 2
+	ldy	#1							; 2
+loop1:	ldx	#82							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
