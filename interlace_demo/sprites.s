@@ -2,10 +2,8 @@
 ; + merge with spacebars code
 ; + make flame move (write to the sprite table directly) frame count+xor?
 ; + end of game, fly to the right
-; + implement shooting with space bar
 ; + implement both blasts
-; + add meteor+explosion sprites
-; + collision, just use SCRN rather than collision detection?
+
 
 ; Uses the 40x48d page1/page2 every-1-scanline pageflip mode
 
@@ -251,15 +249,16 @@ display_loop:
 	;  -31	-- move ship
 	;  -17  -- move fire
 	;  -51  -- collide asteroid/fire
-	;  -56	-- move asteroid
+	;  -35	-- move asteroid
 	; -436	-- draw fire
 	; -337	-- draw asteroid
 	;  -61  -- keypress
 	;  -33	-- handle fire press
+	;  -51	-- exploding asteroid
 	;   -8  -- loop
 	;=======
-	;  355
-
+	;  325
+	; -40 nop sled
 
 
 	;================
@@ -347,9 +346,9 @@ display_loop:
 	;==========================
 	; move the asteroid
 	;==========================
-	; move none:			16 	 [12+28]= 56
-	; move ok:			16+12    [28]	= 56
-	; move off screen:		16+12+28 	= 56
+	; move none:			16 	 [12+7]	= 35
+	; move ok:			16+12    [7]	= 35
+	; move off screen:		16+12+7 	= 35
 	; game over: who cares
 move_asteroid:
 	clc			; 2
@@ -370,18 +369,11 @@ move_asteroid:
 				; 12
 new_asteroid:
 						; -1
-	inc	RANDOM_PTR			; 5
-	ldy	RANDOM_PTR			; 3
-	lda	random_values,Y			; 4
-	and	#$1e				; 2
-	clc					; 2
-	adc	#$4				; 2
-	sta	ASTEROID_Y			; 3
-	lda	#36				; 2
-	sta	ASTEROID_X			; 3
+	lda	#7				; 2
+	sta	ASTEROID_EXPLODE		; 3
 	jmp	done_move_asteroid		; 3
 					;===========
-					;	28
+					;	7
 
 no_new_asteroid2:
 	inc	TEMP				; 5
@@ -389,14 +381,11 @@ no_new_asteroid2:
 	nop					; 2
 
 no_new_asteroid:
-	inc	TEMP				; 5
-	inc	TEMP				; 5
-	inc	TEMP				; 5
-	inc	TEMP				; 5
-	inc	TEMP				; 5
+	nop					; 2
+	nop					; 2
 	lda	TEMP				; 3
 						;====
-						; 28
+						; 7
 
 done_move_asteroid:
 
@@ -465,6 +454,30 @@ done_move_delay_7:
 
 done_move:
 
+	nop
+	nop
+	nop
+	nop
+	nop
+
+	nop
+	nop
+	nop
+	nop
+	nop
+
+	nop
+	nop
+	nop
+	nop
+	nop
+
+	nop
+	nop
+	nop
+	nop
+	nop
+
 
 
 	;==========================
@@ -496,8 +509,8 @@ done_move:
 					; 20
 
 					; -1
-	lda	#36			; 2
-	sta	ASTEROID_X		; 3
+	lda	#1			; 2
+	sta	ASTEROID_EXPLODE	; 3
 
 	lda	#0			; 2
 	sta	FIRE_X			; 3
@@ -754,7 +767,7 @@ draw_asteroid:
 	sta	DRAW_PAGE		; 3
 
 	lda	ASTEROID_EXPLODE	; 3
-	asl				; 2
+	and	#$fe			; 2
 	tax				; 2
 	lda	asteroid_lookup,X	; 4
 	sta	INL			; 3
@@ -792,12 +805,12 @@ pad_time:
 
 wait_loop:
 
-	; Try X=2 Y=22 cycles=353 R2
+	; Try X=27 Y=2 cycles=283R2
 
 	nop
 
-	ldy	#22							; 2
-loop1:	ldx	#2							; 2
+	ldy	#2							; 2
+loop1:	ldx	#27							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -809,8 +822,9 @@ wait_loop_end:
 
 	jsr	handle_keypress					; 6+55
 
-	;===============
+	;=================================
 	; handle fire
+	;=================================
 	; FIRE: 6+5+17+5      = 33
 	; FIRE but OUT: 6+5+5 = 16 [17]
 	; no FIRE:      6+5   = 11 [22]
@@ -848,8 +862,59 @@ really_no_firing:
 
 
 
-	;===============
+	;=================================
+	; handle exploding asteroid
+	;=================================
+	; none: 	6    [12+33]
+	; exploding:	6+12 [33]
+	; done:		6+12+33 = 51
+
+	lda	ASTEROID_EXPLODE	; 3
+	beq	asteroid_no_explode	; 3
+					;==
+					; 6
+
+					; -1
+	inc	ASTEROID_EXPLODE	; 5
+	lda	ASTEROID_EXPLODE	; 3
+	cmp	#9			; 2
+	bne	asteroid_not_done	; 3
+					;===
+					; 12
+asteroid_done:
+						; -1
+	lda	#0				; 2
+	sta	ASTEROID_EXPLODE		; 3
+	inc	RANDOM_PTR			; 5
+	ldy	RANDOM_PTR			; 3
+	lda	random_values,Y			; 4
+	and	#$1e				; 2
+	clc					; 2
+	adc	#$4				; 2
+	sta	ASTEROID_Y			; 3
+	lda	#36				; 2
+	sta	ASTEROID_X			; 3
+	jmp	asteroid_done_done		; 3
+						;====
+						;33
+asteroid_no_explode:
+	inc	TEMP	; 5
+	inc	TEMP	; 5
+	nop		; 2
+asteroid_not_done:
+	inc	TEMP	; 5
+	inc	TEMP	; 5
+	inc	TEMP	; 5
+	inc	TEMP	; 5
+	inc	TEMP	; 5
+	inc	TEMP	; 5
+	lda	TEMP	; 3
+asteroid_done_done:
+
+
+	;=========================
 	; check for end
+	;=========================
 
 	lda	LEVEL_DONE					; 3
 	bne	done_level					; 2
@@ -1201,6 +1266,7 @@ random_values:
 .include "gr_copy.s"
 .include "vapor_lock.s"
 .include "delay_a.s"
+.align $100
 .include "gr_putsprite.s"
 
 .assert >gr_offsets = >gr_offsets_done, error, "gr_offsets crosses page"

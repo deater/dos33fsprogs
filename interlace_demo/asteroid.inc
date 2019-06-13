@@ -1,7 +1,7 @@
 ; all hard-coded 3x2
 
 asteroid_lookup:
-	.word	asteroid_p1,explode0_p1,explode1_p1,explode2_p1
+	.word	asteroid_p1,explode0_p1,explode1_p1,explode2_p1,void_p1
 
 asteroid_p1:
 .byte	$50,$85,$80
