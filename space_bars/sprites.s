@@ -37,6 +37,9 @@ start_sprites:
 	sta	FIRE
 	sta	BLAST1
 	sta	BLAST2
+	sta	SPRITE_XPOS
+	sta	SPRITE_YPOS
+	sta	FIRE_Y
 
 	lda	#$44
 	sta	GREEN0
