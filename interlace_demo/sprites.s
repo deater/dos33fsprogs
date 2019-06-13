@@ -237,7 +237,7 @@ display_loop:
 	;======================================================
 
 	; 4550	-- VBLANK
-	;-1821	-- draw ship (130*14)+1
+	;-1835	-- draw ship (131*14)+1
 	; -829	-- erase ship (100*8)+(14*2)+1
 	; -167	-- erase fire
 	; -348	-- erase asteroid
@@ -256,7 +256,7 @@ display_loop:
 	;  -25  -- loop
 	;  -3	-- alignment
 	;=======
-	;  182
+	;  168
 	; -40 nop sled
 
 
@@ -598,100 +598,100 @@ ship_collision_done:
 
 	; line 0
 	ldx	#0			; 2
-	jsr	sprite_line		; 6+120
+	jsr	sprite_line		; 6+121
 					;====
-					; 128
+					; 129
 
 	; line 1
 	iny				; 2
 	ldx	#7			; 2
-	jsr	sprite_line		; 6+120
+	jsr	sprite_line		; 6+121
 					;====
-					; 130
+					; 131
 
 	; line 2
 	iny				; 2
 	ldx	#14			; 2
-	jsr	sprite_line		; 6+120
+	jsr	sprite_line		; 6+121
 					;====
-					; 130
+					; 131
 
 	; line 3
 	iny				; 2
 	ldx	#21			; 2
-	jsr	sprite_line		; 6+120
+	jsr	sprite_line		; 6+121
 					;====
-					; 130
+					; 131
 
 	; line 4
 	iny				; 2
 	ldx	#28			; 2
-	jsr	sprite_line		; 6+120
+	jsr	sprite_line		; 6+121
 					;====
-					; 130
+					; 131
 
 	; line 5
 	iny				; 2
 	ldx	#35			; 2
-	jsr	sprite_line		; 6+120
+	jsr	sprite_line		; 6+121
 					;====
-					; 130
+					; 131
 
 	; line 6
 	iny				; 2
 	ldx	#42			; 2
-	jsr	sprite_line		; 6+120
+	jsr	sprite_line		; 6+121
 					;====
-					; 130
+					; 131
 
 	; line 7
 	iny				; 2
 	ldx	#49			; 2
-	jsr	sprite_line		; 6+120
+	jsr	sprite_line		; 6+121
 					;====
-					; 130
+					; 131
 
 	; line 8
 	iny				; 2
 	ldx	#56			; 2
-	jsr	sprite_line		; 6+120
+	jsr	sprite_line		; 6+121
 					;====
-					; 130
+					; 131
 
 	; line 9
 	iny				; 2
 	ldx	#63			; 2
-	jsr	sprite_line		; 6+120
+	jsr	sprite_line		; 6+121
 					;====
-					; 130
+					; 131
 
 	; line 10
 	iny				; 2
 	ldx	#70			; 2
-	jsr	sprite_line		; 6+120
+	jsr	sprite_line		; 6+121
 					;====
-					; 130
+					; 131
 
 	; line 11
 	iny				; 2
 	ldx	#77			; 2
-	jsr	sprite_line		; 6+120
+	jsr	sprite_line		; 6+121
 					;====
-					; 130
+					; 131
 
 	; line 12
 	iny				; 2
 	ldx	#84			; 2
-	jsr	sprite_line		; 6+120
+	jsr	sprite_line		; 6+121
 					;====
-					; 130
+					; 131
 
 	; line 13
 	iny				; 2
 	ldx	#91			; 2
-	jsr	sprite_line		; 6+120
+	jsr	sprite_line		; 6+121
 					;====
-					; 130
+					; 131
 
 
 
@@ -952,15 +952,13 @@ pad_time:
 
 wait_loop:
 
-	; Try X=12 Y=2 cycles=133R2
+	; Try X=7 Y=3 cycles=124R4
 
-	; Try X=8 Y=3 cycles=139R3
-
-	lda	TEMP
-
+	nop
+	nop
 
 	ldy	#3							; 2
-loop1:	ldx	#8							; 2
+loop1:	ldx	#7							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -1211,7 +1209,7 @@ keypress_done:
 	;========================
 	; Y = y value
 	; x = location in sprite
-	; 17+10+(7*12)+3+6 = 120
+	; 17+11+(7*12)+3+6 = 121
 sprite_line:
 	sty	TEMPY			; 3
 
@@ -1223,11 +1221,11 @@ sprite_line:
 					; 17
 
 	; XPOS
-	lda	#1	; xpos=1	; 2
+	lda	XPOS			; 3
 	ldy	#0			; 2
 	sta	(OUTL),Y		; 6
 					;=======
-					; 10
+					; 11
 	; COL0
 	ldy	#2			; 2
 	lda	ship_sprite+0,X		; 4
