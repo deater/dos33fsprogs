@@ -257,9 +257,10 @@ display_loop:
 	;  -33	-- handle fire press
 	;  -51	-- exploding asteroid
 	;  -47	-- sparkle
+	;  -36 	-- blast (18+18)
 	;   -8  -- loop
 	;=======
-	;  238
+	;  202
 	; -40 nop sled
 
 
@@ -839,6 +840,52 @@ draw_asteroid:
 					; 348
 
 
+	;=================
+	; BLAST1
+	;=================
+	; blast1: 6+7+5		= 18
+	; noblast1: 6+5+[7]
+
+	lda	BLAST1		; 3
+	beq	no_blast1d	; 3
+blast1:
+				; -1
+	inc	ZERO		; 5
+	jmp	no_blast1	; 3
+no_blast1d:
+	lda	TEMP		; 3
+	nop			; 2
+	nop			; 2
+
+no_blast1:
+	lda	#0		; 2
+	sta	BLAST1		; 3
+
+
+	;=================
+	; BLAST2
+	;=================
+	; blast2: 6+7+5		= 18
+	; noblast1: 6+5+[7]
+
+	lda	BLAST2		; 3
+	beq	no_blast2d	; 3
+blast2:
+				; -1
+	lda	#0		; 2
+	sta	ZERO		; 3
+	jmp	no_blast2	; 3
+no_blast2d:
+	lda	TEMP
+	nop
+	nop
+no_blast2:
+	lda	#0		; 2
+	sta	BLAST2		; 3
+
+
+
+
 	;==================
 	; sparkle flame
 	;==================
@@ -907,18 +954,13 @@ pad_time:
 	;============================
 
 wait_loop:
-
-
-	; Try X=3 Y=11 cycles=232R6
-
-	; Try X=37 Y=1 cycles=192R6
+	; Try X=30 Y=1 cycles=157 R2
 
 	nop
-	nop
-	nop
+
 
 	ldy	#1							; 2
-loop1:	ldx	#37							; 2
+loop1:	ldx	#30							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -969,7 +1011,10 @@ really_no_firing:
 	sta	FIRE			; 3
 
 
+	jmp	blah			; 3
+.align $100
 
+blah:
 	;=================================
 	; handle exploding asteroid
 	;=================================
