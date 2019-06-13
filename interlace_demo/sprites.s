@@ -5,7 +5,7 @@
 ; + implement shooting with space bar
 ; + implement both blasts
 ; + add meteor+explosion sprites
-
+; + collision, just use SCRN rather than collision detection?
 
 ; Uses the 40x48d page1/page2 every-1-scanline pageflip mode
 
@@ -223,6 +223,7 @@ display_loop:
 	; 4550	-- VBLANK
 	;-1821	-- draw ship (130*14)+1
 	; -829	-- erase ship (100*8)+(14*2)+1
+	; -278  -- erase fire
 	;  -31	-- move ship
 	;  -17  -- move fire
 	; -306	-- draw fire (61*5)+1
@@ -230,7 +231,7 @@ display_loop:
 	;  -28	-- handle fire press
 	;   -8  -- loop
 	;=======
-	; 1449
+	; 1171
 
 	;================
 	; erase old ship
@@ -274,6 +275,16 @@ display_loop:
 	;==========================
 	; erase the fire
 	;==========================
+
+	ldy	FIRE_Y			; 3
+	jsr	erase_fire		; 6+49
+	jsr	erase_fire		; 6+49
+	jsr	erase_fire		; 6+49
+	jsr	erase_fire		; 6+49
+	jsr	erase_fire		; 6+49
+					;====
+					; 278
+
 
 
 	;==========================
@@ -449,6 +460,7 @@ done_move:
 
 	;==========================
 	; draw the fire
+	;==========================
 
 	ldy	FIRE_Y			; 3
 
@@ -509,10 +521,11 @@ pad_time:
 
 wait_loop:
 
-	; Try X=35 Y=8 cycles=1449
+	; Try X=4 Y=45 cycles=1171
 
-	ldy	#8							; 2
-loop1:	ldx	#35							; 2
+
+	ldy	#45							; 2
+loop1:	ldx	#4							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -537,7 +550,7 @@ wait_loop_end:
 
 	clc				; 2
 	lda	YPOS			; 3
-	adc	#$4			; 2
+	adc	#10			; 2
 	sta	FIRE_Y			; 3
 
 	lda	#7			; 2
@@ -831,6 +844,45 @@ fire_line:
 	rts				; 6
 					;=======
 					; 9
+
+
+	;========================
+	; Erase a line of a fire
+	;========================
+	; Y = y value
+	; 17+31+11 = 49
+erase_fire:
+	sty	TEMPY			; 3
+
+	lda	y_lookup_l,Y		; 4
+	sta	OUTL			; 3
+	lda	y_lookup_h,Y		; 4
+	sta	OUTH			; 3
+					;=======
+					; 17
+
+	; ldx in smc should already be
+	; set to value from last draw?
+
+	; COL0
+	ldy	#6			; 2
+	lda	(OUTL),Y		; 5+
+	sta	fz_smc+1		; 5
+	iny				; 2
+	lda	(OUTL),Y		; 5+
+	sta	fz_smc+2		; 5
+	lda	#0			; 2
+fz_smc:
+	sta	$c00,Y			; 5
+					;=======
+					; 31
+
+	ldy	TEMPY			; 3
+	iny				; 2
+	rts				; 6
+					;=======
+					; 11
+
 
 .include "gr_simple_clear.s"
 
