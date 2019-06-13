@@ -25,15 +25,46 @@ BASL		= $28
 BASH		= $29
 MASK		= $2E
 COLOR		= $30
+
 FRAME		= $60
 FRAMEH		= $61
 BLARGH		= $69
+
 ZPOS		= $78
+
+GREEN0		= $80
+GREEN1		= $81
+GREEN2		= $82
+GREEN3		= $83
+GREEN4		= $84
+ZERO		= $85
+GAME_OVER	= $86
+
+SPRITE_XPOS	= $E0
+SPRITE_YPOS	= $E1
+RANDOM_PTR	= $E2
+ASTEROID_X	= $E3
+ASTEROID_Y	= $E4
+ASTEROID_SUBX	= $E5
+ASTEROID_EXPLODE= $E6
+FIRE_X		= $E7
+FIRE_Y		= $E8
+
+YADD		= $E9
+BLAST1		= $EA
+BLAST2		= $EB
+FIRE		= $EC
+LEVEL_DONE	= $ED
 DRAW_PAGE	= $EE
+
 LASTKEY		= $F1
 PADDLE_STATUS	= $F2
 XPOS		= $F3
 YPOS		= $F4
+
+WHICH		= $F5
+ASTEROID_SPEED	= $F6
+
 TEMP		= $FA
 TEMPY		= $FB
 INL		= $FC
@@ -65,6 +96,15 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 
 
 
+
+
+
+
+
+
+
+
+
 	;==================
 	; show title screen
 	;==================
@@ -81,6 +121,17 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	; Mode7
 	;==================
 
+	; TODO
+
+	;==================
+	; 40x192 sprites
+	;==================
+
+	jsr	start_sprites
+
+	lda	GAME_OVER
+	bne	game_over_man
+
 	;==================
 	; Rasterbars
 	;==================
@@ -90,7 +141,7 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	;==================
 	; Game Over
 	;==================
-
+game_over_man:
 	jsr	game_over
 
 loop_forever:
@@ -135,11 +186,8 @@ clear_page_loop:
 	bpl	clear_page_loop
 	rts
 
-gr_offsets:
-	.word	$400,$480,$500,$580,$600,$680,$700,$780
-	.word	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
-	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
 
+.include "gr_offsets.s"
 
 .include "../asm_routines/gr_unrle.s"
 .include "../asm_routines/keypress.s"
@@ -159,3 +207,6 @@ gr_offsets:
 .include "spacebars_title.inc"
 .align $100
 .include "mode7_sprites.inc"
+
+.align $100
+.include "sprites.s"
