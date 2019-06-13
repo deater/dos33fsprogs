@@ -106,10 +106,10 @@ start_sprites:
 	lda	#$ff
 	sta	GREEN2
 
-	lda	#$36
+	lda	#36
 	sta	ASTEROID_X
 
-	lda	#$12
+	lda	#12
 	sta	ASTEROID_Y
 
 	lda	#64
@@ -248,6 +248,7 @@ display_loop:
 	; -337	-- erase asteroid
 	;  -31	-- move ship
 	;  -17  -- move fire
+	;  -51  -- collide asteroid/fire
 	;  -56	-- move asteroid
 	; -436	-- draw fire
 	; -337	-- draw asteroid
@@ -255,7 +256,7 @@ display_loop:
 	;  -33	-- handle fire press
 	;   -8  -- loop
 	;=======
-	;  417
+	;  366
 
 
 
@@ -462,6 +463,61 @@ done_move_delay_7:
 
 done_move:
 
+
+
+	;==========================
+	; collision (fire/asteroid)
+	;==========================
+	; none:			13    [20+18]
+	; xmatch not y:		13+20 [18]
+	; explosion:		13+20+18 = 51
+
+	sec				; 2
+	lda	ASTEROID_X		; 3
+	sbc	FIRE_X			; 3
+	cmp	#252			; 2
+	bcc	no_collide_x		; 3	; blt
+					;===
+					; 13
+
+					; -1
+	lda	FIRE_Y			; 3
+	lsr				; 2
+	lsr				; 2
+	clc				; 2
+	adc	#$9			; 2
+	sec				; 2
+	sbc	ASTEROID_Y		; 3
+	cmp	#4			; 2
+	bcs	no_collide_y		; 3	; bge
+					;===
+					; 20
+
+					; -1
+	lda	#36			; 2
+	sta	ASTEROID_X		; 3
+
+	lda	#0			; 2
+	sta	FIRE_X			; 3
+
+	inc	$408			; 6
+
+	jmp	collision_done		; 3
+					;====
+					; 18
+no_collide_x:
+	inc	TEMP	; 5
+	inc	TEMP	; 5
+	inc	TEMP	; 5
+	inc	TEMP	; 5
+
+no_collide_y:
+	inc	TEMP	; 5
+	inc	TEMP	; 5
+	inc	TEMP	; 5
+	lda	TEMP	; 3
+
+collision_done:
 
 
 
@@ -717,11 +773,11 @@ pad_time:
 	; WAIT for VBLANK to finish
 	;============================
 
-;	nop
-;	nop
-;	nop
-;	nop
-;	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 ;	nop
 ;	nop
 ;	nop
@@ -730,14 +786,12 @@ pad_time:
 
 
 wait_loop:
-
-	; Try X=82 Y=1 cycles=417
+	; Try X=13 Y=5 cycles=356
 
 ;	nop
-;	nop
 
-	ldy	#1							; 2
-loop1:	ldx	#82							; 2
+	ldy	#5							; 2
+loop1:	ldx	#13							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -979,6 +1033,7 @@ sprite_line:
 	ldy	TEMPY			; 3
 	rts				; 6
 
+
 	;========================
 	; Erase a line of a sprite
 	;========================
@@ -1027,7 +1082,6 @@ erase_line:
 
 	ldy	TEMPY			; 3
 	rts				; 6
-
 
 	;========================
 	; Draw a line of a fire
