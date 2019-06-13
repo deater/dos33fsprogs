@@ -109,13 +109,13 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 	; show title screen
 	;==================
 
-;	jsr	title_screen
+	jsr	title_screen
 
 	;==================
 	; Display Text
 	;==================
 
-;	jsr	instructions
+	jsr	instructions
 
 	;==================
 	; Mode7
