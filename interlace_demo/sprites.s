@@ -243,7 +243,7 @@ display_loop:
 	; -348	-- erase asteroid
 	;  -31	-- move ship
 	;  -17  -- move fire
-	;  -51  -- collide asteroid/fire
+	;  -56  -- collide asteroid/fire
 	;  -40	-- collide ship
 	;  -35	-- move asteroid
 	; -436	-- draw fire
@@ -256,7 +256,7 @@ display_loop:
 	;  -25  -- loop
 	;  -3	-- alignment
 	;=======
-	;  168
+	;  163
 	; -40 nop sled
 
 
@@ -354,7 +354,7 @@ move_asteroid:
 	lda	ASTEROID_SUBX	; 3
 	adc	ASTEROID_SPEED	; 3
 	sta	ASTEROID_SUBX	; 3
-	cmp	#$8		; 2
+	cmp	#$12		; 2
 	bcc	no_new_asteroid2; 3 blt
 				;========
 				; 16
@@ -484,9 +484,9 @@ nop_sled:
 	;==========================
 	; collision (fire/asteroid)
 	;==========================
-	; none:			13    [20+18]
-	; xmatch not y:		13+20 [18]
-	; explosion:		13+20+18 = 51
+	; none:			13    [20+23]
+	; xmatch not y:		13+20 [23]
+	; explosion:		13+20+23 = 56
 
 	sec				; 2
 	lda	ASTEROID_X		; 3
@@ -513,6 +513,8 @@ nop_sled:
 	lda	#1			; 2
 	sta	ASTEROID_EXPLODE	; 3
 
+	inc	ASTEROID_SPEED		; 5
+
 	lda	#0			; 2
 	sta	FIRE_X			; 3
 
@@ -520,7 +522,7 @@ nop_sled:
 
 	jmp	collision_done		; 3
 					;====
-					; 18
+					; 23
 no_collide_x:
 	inc	TEMP	; 5
 	inc	TEMP	; 5
@@ -528,6 +530,7 @@ no_collide_x:
 	inc	TEMP	; 5
 
 no_collide_y:
+	inc	TEMP	; 5
 	inc	TEMP	; 5
 	inc	TEMP	; 5
 	inc	TEMP	; 5
@@ -954,13 +957,10 @@ pad_time:
 
 wait_loop:
 
-	; Try X=7 Y=3 cycles=124R4
+	; Try X=11 Y=2 cycles=123
 
-	nop
-	nop
-
-	ldy	#3							; 2
-loop1:	ldx	#7							; 2
+	ldy	#2							; 2
+loop1:	ldx	#11							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
