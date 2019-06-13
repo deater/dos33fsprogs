@@ -221,15 +221,16 @@ display_loop:
 	;======================================================
 
 	; 4550	-- VBLANK
-	; 1821	-- draw ship (130*14)+1
-	;  829	-- erase ship (100*8)+(14*2)+1
+	;-1821	-- draw ship (130*14)+1
+	; -829	-- erase ship (100*8)+(14*2)+1
 	;  -31	-- move ship
 	;  -17  -- move fire
 	; -306	-- draw fire (61*5)+1
 	;  -61  -- keypress
+	;  -24	-- handle fire press
 	;   -8  -- loop
 	;=======
-	; 1477
+	; 1453
 
 	;================
 	; erase old ship
@@ -507,12 +508,11 @@ pad_time:
 
 
 wait_loop:
-	; Try X=6 Y=41 cycles=1477
 
-	; Try X=175 Y=2 cycles=1763 R20
+	; Try X=1 Y=132 cycles=1453
 
-	ldy	#41							; 2
-loop1:	ldx	#6							; 2
+	ldy	#132							; 2
+loop1:	ldx	#1							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -525,6 +525,33 @@ wait_loop_end:
 	jsr	handle_keypress					; 6+55
 
 	;===============
+	; handle fire
+	; FIRE: 24
+	; no FIRE: 6 [18]
+
+	lda	FIRE			; 3
+	beq	no_firing		; 3
+					; -1
+	lda	#0			; 2
+	sta	FIRE			; 3
+
+	lda	YPOS			; 3
+	sta	FIRE_Y			; 3
+
+	lda	#7			; 2
+	sta	FIRE_X			; 3
+
+	jmp	really_no_firing	; 3
+
+no_firing:
+	inc	TEMP			; 5
+	inc	TEMP			; 5
+	inc	TEMP			; 5
+	lda	TEMP			; 3
+
+really_no_firing:
+
+	;===============
 	; check for end
 
 	lda	LEVEL_DONE					; 3
@@ -533,6 +560,11 @@ wait_loop_end:
 
 done_level:
 	rts
+
+
+
+
+
 
 .align	$100
 	;=======================
