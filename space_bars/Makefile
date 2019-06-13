@@ -6,7 +6,8 @@ B2D = ../bmp2dhr/b2d
 
 all:	space_bars.dsk
 
-space_bars.dsk:	SPACE_BARS
+space_bars.dsk:	SPACE_BARS HELLO
+	$(DOS33) -y space_bars.dsk SAVE A HELLO
 	$(DOS33) -y space_bars.dsk BSAVE -a 0x4000 SPACE_BARS
 
 
@@ -21,6 +22,11 @@ space_bars.o:	space_bars.s instructions.s game.s \
 	sprites.s sprites_table.s sprites_screen.s \
 	vapor_lock.s delay_a.s lz4_decode.s SB_BACKGROUNDC.BIN.lz4
 	ca65 -o space_bars.o space_bars.s -l space_bars.lst
+
+####
+
+HELLO:	hello.bas
+	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
 
 ####
 
