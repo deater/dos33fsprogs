@@ -850,30 +850,42 @@ fire_line:
 	; Erase a line of a fire
 	;========================
 	; Y = y value
-	; 17+31+11 = 49
+	; 27+11+11 = 49
 erase_fire:
 	sty	TEMPY			; 3
 
-	lda	y_lookup_l,Y		; 4
+	clc				; 2
+	tya				; 2
+	lsr				; 2
+	lsr				; 2
+	adc	#$8			; 2
+
+	lda	gr_offsets,Y		; 4
 	sta	OUTL			; 3
-	lda	y_lookup_h,Y		; 4
+	lda	gr_offsets+1,Y		; 4
 	sta	OUTH			; 3
 					;=======
-					; 17
+					; 27
+
+	ldy	FIRE_X			; 3
+	lda	#0			; 2
+	sta	(OUTL),Y		; 6
+					;======
+					; 11
 
 	; ldx in smc should already be
 	; set to value from last draw?
 
 	; COL0
-	ldy	#6			; 2
-	lda	(OUTL),Y		; 5+
-	sta	fz_smc+1		; 5
-	iny				; 2
-	lda	(OUTL),Y		; 5+
-	sta	fz_smc+2		; 5
-	lda	#0			; 2
-fz_smc:
-	sta	$c00,Y			; 5
+;	ldy	#6			; 2
+;	lda	(OUTL),Y		; 5+
+;	sta	fz_smc+1		; 5
+;	iny				; 2
+;	lda	(OUTL),Y		; 5+
+;	sta	fz_smc+2		; 5
+;	lda	#0			; 2
+;fz_smc:
+;	sta	$c00,Y			; 5
 					;=======
 					; 31
 
