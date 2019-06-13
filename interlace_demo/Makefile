@@ -43,7 +43,7 @@ SPRITES:	sprites.o
 	ld65 -o SPRITES sprites.o -C ../linker_scripts/apple2_1000.inc
 
 sprites.o:	sprites.s gr_copy.s \
-	sprites_screen.s sprites_table.s movement_table.s earth.inc
+	sprites_screen.s sprites_table.s movement_table.s earth.inc asteroid.inc
 	ca65 -o sprites.o sprites.s -l sprites.lst
 
 

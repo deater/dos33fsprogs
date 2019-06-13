@@ -232,11 +232,12 @@ display_loop:
 	;  -31	-- move ship
 	;  -17  -- move fire
 	; -436	-- draw fire
+	; -335	-- draw asteroid
 	;  -61  -- keypress
 	;  -33	-- handle fire press
 	;   -8  -- loop
 	;=======
-	; 1147
+	; 812
 
 	;================
 	; erase old ship
@@ -589,6 +590,28 @@ no_draw_fire:
 
 done_draw_fire:
 
+
+	;=====================
+	; draw the asteroid
+
+	lda	#$0			; 2
+	sta	DRAW_PAGE		; 3
+
+	lda	#<asteroid_p1		; 2
+	sta	INL			; 3
+	lda	#>asteroid_p1		; 2
+	sta	INH			; 3
+	lda	#30			; 2
+	sta	SPRITE_XPOS		; 3
+	lda	#12			; 2
+	sta	SPRITE_YPOS		; 3
+	jsr	put_sprite		; 6+304
+					;======
+					; 335
+
+
+
+
 pad_time:
 
 
@@ -610,13 +633,12 @@ pad_time:
 
 wait_loop:
 
-	; Try X=37 Y=6 cycles=1147
-
+	; Try X=161 Y=1 cycles=812
 ;	nop
 ;	nop
 
-	ldy	#6							; 2
-loop1:	ldx	#37							; 2
+	ldy	#1							; 2
+loop1:	ldx	#161							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -1060,3 +1082,5 @@ ship_sprite:
 	; l13:
 	.byte	$00,$00,$00,$ff,$ff,$77,$ff
 
+
+.include	"asteroid.inc"
