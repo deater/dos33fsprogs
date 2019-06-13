@@ -223,15 +223,15 @@ display_loop:
 	; 4550	-- VBLANK
 	;-1821	-- draw ship (130*14)+1
 	; -829	-- erase ship (100*8)+(14*2)+1
-	; -278  -- erase fire
+	; -167	-- erase fire
 	;  -31	-- move ship
 	;  -17  -- move fire
-	; -306	-- draw fire (61*5)+1
+	; -428	-- draw fire (61*7)+1
 	;  -61  -- keypress
 	;  -28	-- handle fire press
 	;   -8  -- loop
 	;=======
-	; 1171
+	; 1160
 
 	;================
 	; erase old ship
@@ -277,13 +277,21 @@ display_loop:
 	;==========================
 
 	ldy	FIRE_Y			; 3
-	jsr	erase_fire		; 6+49
-	jsr	erase_fire		; 6+49
-	jsr	erase_fire		; 6+49
-	jsr	erase_fire		; 6+49
-	jsr	erase_fire		; 6+49
+	iny				; 2
+	jsr	erase_fire		; 6+71
+	iny				; 2
+	iny				; 2
+	iny				; 2
+	iny				; 2
+	jsr	erase_fire		; 6+71
+					;========
+					; 167
+
+;	jsr	erase_fire		; 6+71
+;	jsr	erase_fire		; 6+71
+;	jsr	erase_fire		; 6+71
 					;====
-					; 278
+					; 388
 
 
 
@@ -498,6 +506,20 @@ done_move:
 					;====
 					; 61
 
+	; line 5
+	iny				; 2
+	ldx	#5			; 2
+	jsr	fire_line		; 6+51
+					;====
+					; 61
+
+	; line 6
+	iny				; 2
+	ldx	#5	; zero again	; 2
+	jsr	fire_line		; 6+51
+					;====
+					; 61
+
 
 
 pad_time:
@@ -520,12 +542,12 @@ pad_time:
 
 
 wait_loop:
+	; Try X=11 Y=19 cycles=1160
+;	nop
+;	nop
 
-	; Try X=4 Y=45 cycles=1171
-
-
-	ldy	#45							; 2
-loop1:	ldx	#4							; 2
+	ldy	#19							; 2
+loop1:	ldx	#11							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -850,28 +872,37 @@ fire_line:
 	; Erase a line of a fire
 	;========================
 	; Y = y value
-	; 27+11+11 = 49
+	; 31+29+11 = 71
 erase_fire:
 	sty	TEMPY			; 3
 
-	clc				; 2
 	tya				; 2
 	lsr				; 2
 	lsr				; 2
+	and	#$fe			; 2
+	clc				; 2
 	adc	#$8			; 2
+
+	tay				; 2
 
 	lda	gr_offsets,Y		; 4
 	sta	OUTL			; 3
 	lda	gr_offsets+1,Y		; 4
 	sta	OUTH			; 3
 					;=======
-					; 27
+					; 31
 
 	ldy	FIRE_X			; 3
 	lda	#0			; 2
 	sta	(OUTL),Y		; 6
+	lda	#$4			; 2
+	clc				; 2
+	adc	OUTH			; 3
+	sta	OUTH			; 3
+	lda	#0			; 2
+	sta	(OUTL),Y		; 6
 					;======
-					; 11
+					; 29
 
 	; ldx in smc should already be
 	; set to value from last draw?
