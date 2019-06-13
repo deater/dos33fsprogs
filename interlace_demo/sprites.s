@@ -30,7 +30,7 @@ RANDOM_PTR	= $E2
 ASTEROID_X	= $E3
 ASTEROID_Y	= $E4
 ASTEROID_SUBX	= $E5
-
+ASTEROID_EXPLODE= $E6
 DRAW_PAGE	= $EE
 
 
@@ -57,6 +57,7 @@ GREEN2		= $82
 GREEN3		= $83
 GREEN4		= $84
 ZERO		= $85
+
 
 ; Soft Switches
 KEYPRESS= $C000
@@ -96,6 +97,7 @@ start_sprites:
 	sta	LEVEL_DONE
 	sta	FIRE_X
 	sta	ASTEROID_SUBX
+	sta	ASTEROID_EXPLODE
 
 	lda	#$44
 	sta	GREEN0
@@ -245,7 +247,7 @@ display_loop:
 	;-1821	-- draw ship (130*14)+1
 	; -829	-- erase ship (100*8)+(14*2)+1
 	; -167	-- erase fire
-	; -337	-- erase asteroid
+	; -348	-- erase asteroid
 	;  -31	-- move ship
 	;  -17  -- move fire
 	;  -51  -- collide asteroid/fire
@@ -256,7 +258,7 @@ display_loop:
 	;  -33	-- handle fire press
 	;   -8  -- loop
 	;=======
-	;  366
+	;  355
 
 
 
@@ -747,13 +749,16 @@ done_draw_fire:
 
 	;=====================
 	; draw the asteroid
-
+draw_asteroid:
 	lda	#$0			; 2
 	sta	DRAW_PAGE		; 3
 
-	lda	#<asteroid_p1		; 2
+	lda	ASTEROID_EXPLODE	; 3
+	asl				; 2
+	tax				; 2
+	lda	asteroid_lookup,X	; 4
 	sta	INL			; 3
-	lda	#>asteroid_p1		; 2
+	lda	asteroid_lookup+1,X	; 4
 	sta	INH			; 3
 	lda	ASTEROID_X		; 3
 	sta	SPRITE_XPOS		; 3
@@ -761,7 +766,7 @@ done_draw_fire:
 	sta	SPRITE_YPOS		; 3
 	jsr	put_sprite		; 6+304
 					;======
-					; 337
+					; 348
 
 
 
@@ -773,11 +778,11 @@ pad_time:
 	; WAIT for VBLANK to finish
 	;============================
 
-	nop
-	nop
-	nop
-	nop
-	nop
+;	nop
+;	nop
+;	nop
+;	nop
+;	nop
 ;	nop
 ;	nop
 ;	nop
@@ -786,12 +791,13 @@ pad_time:
 
 
 wait_loop:
-	; Try X=13 Y=5 cycles=356
 
-;	nop
+	; Try X=2 Y=22 cycles=353 R2
 
-	ldy	#5							; 2
-loop1:	ldx	#13							; 2
+	nop
+
+	ldy	#22							; 2
+loop1:	ldx	#2							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
