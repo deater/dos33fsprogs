@@ -34,7 +34,7 @@ start_sprites:
 	sta	ASTEROID_SUBX
 	sta	ASTEROID_EXPLODE
 	sta	GAME_OVER
-;	sta	FIRE
+	sta	FIRE
 	sta	BLAST1
 	sta	BLAST2
 
@@ -113,6 +113,17 @@ start_sprites:
 	sta	DRAW_PAGE
 
 	jsr	gr_copy_to_current
+
+	lda	#8
+	sta	DRAW_PAGE
+
+	lda     #<score_text2
+	sta     OUTL
+	lda     #>score_text2
+	sta     OUTH
+
+	jsr     move_and_print
+
 
 ;	; GR part
 	bit	PAGE0
@@ -459,7 +470,7 @@ nop_sled:
 	lda	#0			; 2
 	sta	FIRE_X			; 3
 
-	inc	$408			; 6
+	inc	$41D			; 6
 
 	jmp	collision_done		; 3
 					;====
@@ -1431,3 +1442,9 @@ ship_sprite_l10:
 
 
 .include	"asteroid.inc"
+
+
+score_text2:
+.byte 0,0
+.asciiz "LEVEL:3  LIVES:1  SCORE:000000 HI:001978"
+

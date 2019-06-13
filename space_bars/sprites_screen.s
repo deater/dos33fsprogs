@@ -1,7 +1,6 @@
 ; 0
 	bit	PAGE0	; 4
-smc000:	ldx	#$01	; 2
-	lda	#$00	; 2
+smc000:	bit	SET_TEXT ; 4
 	sta	$c00,X	; 5
 	lda	#$00	; 2
 	sta	$c00,X	; 5
@@ -20,7 +19,7 @@ smc000:	ldx	#$01	; 2
 	sta	$c00,X	; 5
 
 ; 1
-	bit	PAGE1	; 4
+	bit	PAGE0	; 4
 smc001:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
@@ -62,7 +61,7 @@ smc002:	ldx	#$01	; 2
 	sta	$c00,X	; 5
 
 ; 3
-	bit	PAGE1	; 4
+	bit	PAGE0	; 4
 smc003:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
@@ -104,7 +103,7 @@ smc004:	ldx	#$01	; 2
 	sta	$c00,X	; 5
 
 ; 5
-	bit	PAGE1	; 4
+	bit	PAGE0	; 4
 smc005:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
@@ -146,7 +145,7 @@ smc006:	ldx	#$01	; 2
 	sta	$c00,X	; 5
 
 ; 7
-	bit	PAGE1	; 4
+	bit	PAGE0	; 4
 smc007:	ldx	#$01	; 2
 	lda	#$00	; 2
 	sta	$c00,X	; 5
@@ -188,9 +187,9 @@ smc008:	ldx	#$01	; 2
 	sta	$c00,X	; 5
 
 ; 9
-	bit	PAGE1	; 4
-smc009:	ldx	#$01	; 2
-	lda	#$00	; 2
+	bit	PAGE0	; 4
+smc009:	bit	SET_GR	; 4
+	
 	sta	$c00,X	; 5
 	lda	#$00	; 2
 	sta	$c00,X	; 5
