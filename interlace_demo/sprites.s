@@ -240,6 +240,7 @@ display_loop:
 	;-1821	-- draw ship (130*14)+1
 	; -829	-- erase ship (100*8)+(14*2)+1
 	; -167	-- erase fire
+	; -337	-- erase asteroid
 	;  -31	-- move ship
 	;  -17  -- move fire
 	;  -36	-- move asteroid
@@ -311,6 +312,26 @@ display_loop:
 					;====
 					; 388
 
+
+
+
+	;=====================
+	; erase the asteroid
+
+	lda	#$0			; 2
+	sta	DRAW_PAGE		; 3
+
+	lda	#<void_p1		; 2
+	sta	INL			; 3
+	lda	#>void_p1		; 2
+	sta	INH			; 3
+	lda	ASTEROID_X		; 3
+	sta	SPRITE_XPOS		; 3
+	lda	ASTEROID_Y		; 3
+	sta	SPRITE_YPOS		; 3
+	jsr	put_sprite		; 6+304
+					;======
+					; 337
 
 
 	;==========================
@@ -682,12 +703,13 @@ pad_time:
 
 wait_loop:
 
-	; Try X=153 Y=1 cycles=772R2
+	; Try X=5 Y=14 cycles=435 R2
+
 	nop
 ;	nop
 
-	ldy	#1							; 2
-loop1:	ldx	#153							; 2
+	ldy	#14							; 2
+loop1:	ldx	#5							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
