@@ -23,20 +23,25 @@ BASL		= $28
 BASH		= $29
 FRAME		= $60
 BLARGH		= $69
+SPRITE_XPOS	= $E0
+SPRITE_YPOS	= $E1
 DRAW_PAGE	= $EE
+
 
 FIRE_X		= $F0
 FIRE_Y		= $F1
+YPOS		= $F2
+YADD		= $F3
+BLAST1		= $F4
+BLAST2		= $F5
+FIRE		= $F6
+TEMP		= $F7
+WHICH		= $F8
+TEMPY		= $F9
+LEVEL_DONE	= $FA
 
-YPOS		= $F3
-YADD		= $F4
-BLAST1		= $F5
-BLAST2		= $F6
-FIRE		= $F7
-TEMP		= $FA
-WHICH		= $FB
-TEMPY		= $FC
-LEVEL_DONE	= $FD
+INL		= $FC
+INH		= $FD
 OUTL		= $FE
 OUTH		= $FF
 
@@ -1013,7 +1018,7 @@ erase_fire:
 .include "gr_copy.s"
 .include "vapor_lock.s"
 .include "delay_a.s"
-
+.include "gr_putsprite.s"
 
 .assert >gr_offsets = >gr_offsets_done, error, "gr_offsets crosses page"
 .assert >wait_loop = >(wait_loop_end-1), error, "wait_loop crosses page"
