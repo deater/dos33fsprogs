@@ -55,7 +55,7 @@ GREEN2		= $82
 GREEN3		= $83
 GREEN4		= $84
 ZERO		= $85
-
+GAME_OVER	= $86
 
 ; Soft Switches
 KEYPRESS= $C000
@@ -567,9 +567,11 @@ ship_collision:
 	lda	#1			; 2
 	sta	ASTEROID_EXPLODE	; 3
 
-	lda	#3			; 2
+	lda	#1			; 2
 	sta	LEVEL_DONE		; 3
-	nop
+
+	lda	#1
+	sta	GAME_OVER
 
 	jmp	ship_collision_done	; 3
 					;====
