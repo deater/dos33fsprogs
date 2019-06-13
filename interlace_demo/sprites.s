@@ -1,6 +1,6 @@
 ; TODO
 ; + merge with spacebars code
-; + make flame move (write to the sprite table directly)
+; + make flame move (write to the sprite table directly) frame count+xor?
 ; + end of game, fly to the right
 ; + implement shooting with space bar
 ; + implement both blasts
@@ -26,6 +26,7 @@ BLARGH		= $69
 DRAW_PAGE	= $EE
 
 FIRE_X		= $F0
+FIRE_Y		= $F1
 
 YPOS		= $F3
 YADD		= $F4
@@ -39,8 +40,12 @@ LEVEL_DONE	= $FD
 OUTL		= $FE
 OUTH		= $FF
 
-ZERO		= $80
-
+GREEN0		= $80
+GREEN1		= $81
+GREEN2		= $82
+GREEN3		= $83
+GREEN4		= $84
+ZERO		= $85
 
 ; Soft Switches
 KEYPRESS= $C000
@@ -79,6 +84,15 @@ start_sprites:
 	sta	YADD
 	sta	LEVEL_DONE
 	sta	FIRE_X
+
+	lda	#$44
+	sta	GREEN0
+	sta	GREEN4
+	lda	#$cc
+	sta	GREEN1
+	sta	GREEN3
+	lda	#$ff
+	sta	GREEN2
 
 	lda	#64
 	sta	YPOS
@@ -211,10 +225,11 @@ display_loop:
 	;  829	-- erase ship (100*8)+(14*2)+1
 	;  -31	-- move ship
 	;  -17  -- move fire
+	; -306	-- draw fire (61*5)+1
 	;  -61  -- keypress
 	;   -8  -- loop
 	;=======
-	; 1783
+	; 1477
 
 	;================
 	; erase old ship
@@ -328,7 +343,6 @@ done_move:
 
 	;==========================
 	; draw the ship
-	; at Y=64 for now
 
 	ldy	YPOS			; 3
 
@@ -431,6 +445,48 @@ done_move:
 
 
 
+
+	;==========================
+	; draw the fire
+
+	ldy	FIRE_Y			; 3
+
+	; line 0
+	ldx	#0			; 2
+	jsr	fire_line		; 6+51
+					;====
+					; 59
+
+	; line 1
+	iny				; 2
+	ldx	#1			; 2
+	jsr	fire_line		; 6+51
+					;====
+					; 61
+
+	; line 2
+	iny				; 2
+	ldx	#2			; 2
+	jsr	fire_line		; 6+51
+					;====
+					; 61
+
+	; line 3
+	iny				; 2
+	ldx	#3			; 2
+	jsr	fire_line		; 6+51
+					;====
+					; 61
+
+	; line 4
+	iny				; 2
+	ldx	#4			; 2
+	jsr	fire_line		; 6+51
+					;====
+					; 61
+
+
+
 pad_time:
 
 
@@ -438,24 +494,25 @@ pad_time:
 	; WAIT for VBLANK to finish
 	;============================
 
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
+;	nop
+;	nop
+;	nop
+;	nop
+;	nop
+;	nop
+;	nop
+;	nop
+;	nop
+;	nop
 
 
 wait_loop:
+	; Try X=6 Y=41 cycles=1477
 
 	; Try X=175 Y=2 cycles=1763 R20
 
-	ldy	#2							; 2
-loop1:	ldx	#175							; 2
+	ldy	#41							; 2
+loop1:	ldx	#6							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -702,6 +759,43 @@ erase_line:
 	ldy	TEMPY			; 3
 	rts				; 6
 
+
+	;========================
+	; Draw a line of a fire
+	;========================
+	; Y = y value
+	; x = location in sprite
+	; 17+11+14+9 = 51
+fire_line:
+	sty	TEMPY			; 3
+
+	lda	y_lookup_l,Y		; 4
+	sta	OUTL			; 3
+	lda	y_lookup_h,Y		; 4
+	sta	OUTH			; 3
+					;=======
+					; 17
+
+	; 38/40
+	; XPOS
+	lda	FIRE_X			; 3
+	ldy	#37			; 2
+	sta	(OUTL),Y		; 6
+					;=======
+					; 11
+	; COL0
+	ldy	#39			; 2
+	txa				; 2
+	ora	#$80			; 2
+	tax				; 2
+	sta	(OUTL),Y		; 6
+					;=======
+					; 14
+
+	ldy	TEMPY			; 3
+	rts				; 6
+					;=======
+					; 9
 
 .include "gr_simple_clear.s"
 
