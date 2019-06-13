@@ -1,8 +1,8 @@
 ; TODO
 ; + merge with spacebars code
-; + make flame move (write to the sprite table directly) frame count+xor?
 ; + end of game, fly to the right
-; + implement both blasts
+; + make harder as shoot more
+; + end level with enough hits?
 
 
 ; Uses the 40x48d page1/page2 every-1-scanline pageflip mode
@@ -30,7 +30,7 @@ ASTEROID_Y	= $E4
 ASTEROID_SUBX	= $E5
 ASTEROID_EXPLODE= $E6
 DRAW_PAGE	= $EE
-
+XPOS		= $EF
 
 FIRE_X		= $F0
 FIRE_Y		= $F1
@@ -117,6 +117,7 @@ start_sprites:
 
 	lda	#1
 	sta	ASTEROID_SPEED
+	sta	XPOS
 
 	;=============================
 	; Load graphic page0
@@ -148,9 +149,6 @@ start_sprites:
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
 
-;	jsr	wait_until_keypressed
-
-
 	;=============================
 	; Load graphic page1
 
@@ -177,9 +175,6 @@ start_sprites:
 
 ;	; GR part
 	bit	PAGE0
-
-;	jsr	wait_until_keypressed
-
 
 	;==============================
 	; setup graphics for vapor lock
@@ -258,9 +253,10 @@ display_loop:
 	;  -51	-- exploding asteroid
 	;  -47	-- sparkle
 	;  -36 	-- blast (18+18)
-	;   -8  -- loop
+	;  -25  -- loop
+	;  -3	-- alignment
 	;=======
-	;  202
+	;  182
 	; -40 nop sled
 
 
@@ -571,8 +567,9 @@ ship_collision:
 	lda	#1			; 2
 	sta	ASTEROID_EXPLODE	; 3
 
-	lda	#20			; 2
+	lda	#3			; 2
 	sta	LEVEL_DONE		; 3
+	nop
 
 	jmp	ship_collision_done	; 3
 					;====
@@ -954,13 +951,16 @@ pad_time:
 	;============================
 
 wait_loop:
-	; Try X=30 Y=1 cycles=157 R2
 
-	nop
+	; Try X=12 Y=2 cycles=133R2
+
+	; Try X=8 Y=3 cycles=139R3
+
+	lda	TEMP
 
 
-	ldy	#1							; 2
-loop1:	ldx	#30							; 2
+	ldy	#3							; 2
+loop1:	ldx	#8							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -1011,6 +1011,7 @@ really_no_firing:
 	sta	FIRE			; 3
 
 
+alignment:
 	jmp	blah			; 3
 .align $100
 
@@ -1068,9 +1069,31 @@ asteroid_done_done:
 	;=========================
 	; check for end
 	;=========================
+	; not done = 6+3 = 9 + [16] = 25
+	; done	   = who cares
+	; dying    = 6+4+12+3 = 25
 
 	lda	LEVEL_DONE					; 3
-	bne	done_level					; 2
+	beq	final_loop_short				; 3
+
+								;-1
+	cmp	#1						;2
+	beq	done_level					;3
+
+								;-1
+	dec	LEVEL_DONE					; 5
+	inc	XPOS						; 5
+	jmp	final_loop					; 3
+								;=====
+								; 12 
+
+final_loop_short:
+	inc	TEMP
+	inc	TEMP
+	lda	TEMP
+	lda	TEMP
+final_loop:
+
 	jmp	display_loop					; 3
 
 done_level:
@@ -1106,7 +1129,7 @@ handle_keypress:
 	cmp	#27+$80					; 2
 	bne	key_not_escape				; 3
 
-	lda	#1
+	lda	#32
 	sta	LEVEL_DONE
 
 	rts
