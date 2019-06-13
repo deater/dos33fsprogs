@@ -227,10 +227,10 @@ display_loop:
 	;  -17  -- move fire
 	; -306	-- draw fire (61*5)+1
 	;  -61  -- keypress
-	;  -24	-- handle fire press
+	;  -28	-- handle fire press
 	;   -8  -- loop
 	;=======
-	; 1453
+	; 1449
 
 	;================
 	; erase old ship
@@ -287,7 +287,7 @@ display_loop:
 	lda	FIRE_X		; 3
 	beq	no_fire		; 3
 				; -1
-	cmp	#$39		; 2
+	cmp	#39		; 2
 	bcs	kill_fire	; bge 3
 				; -1
 	inc	FIRE_X		; 5
@@ -509,10 +509,10 @@ pad_time:
 
 wait_loop:
 
-	; Try X=1 Y=132 cycles=1453
+	; Try X=35 Y=8 cycles=1449
 
-	ldy	#132							; 2
-loop1:	ldx	#1							; 2
+	ldy	#8							; 2
+loop1:	ldx	#35							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -526,8 +526,8 @@ wait_loop_end:
 
 	;===============
 	; handle fire
-	; FIRE: 24
-	; no FIRE: 6 [18]
+	; FIRE: 28
+	; no FIRE: 6 [22]
 
 	lda	FIRE			; 3
 	beq	no_firing		; 3
@@ -535,7 +535,9 @@ wait_loop_end:
 	lda	#0			; 2
 	sta	FIRE			; 3
 
+	clc				; 2
 	lda	YPOS			; 3
+	adc	#$4			; 2
 	sta	FIRE_Y			; 3
 
 	lda	#7			; 2
@@ -547,7 +549,8 @@ no_firing:
 	inc	TEMP			; 5
 	inc	TEMP			; 5
 	inc	TEMP			; 5
-	lda	TEMP			; 3
+	inc	TEMP			; 3
+	nop				; 2
 
 really_no_firing:
 
