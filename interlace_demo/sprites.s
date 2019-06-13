@@ -473,7 +473,6 @@ done_move:
 
 	lda	FIRE_X			; 3
 	beq	no_draw_fire		; 3
-
 					; -1
 	ldy	FIRE_Y			; 3
 
@@ -529,15 +528,59 @@ done_move:
 
 no_draw_fire:
 
-	; delay 436-6 = 430
+	; want 436, have 6+1+(61*7)=434
 
-	; delay 200
-	lda	#(200-25-2)
-	jsr	delay_a
+	nop	; 2
 
-	; delay 230
-	lda	#(230-25-2)
-	jsr	delay_a
+	ldy	FIRE_Y			; 3
+
+	; line 0
+	ldx	#5			; 2
+	jsr	fire_line		; 6+51
+					;====
+					; 61+1
+
+	; line 1
+	iny				; 2
+	ldx	#5			; 2
+	jsr	fire_line		; 6+51
+					;====
+					; 61
+
+	; line 2
+	iny				; 2
+	ldx	#5			; 2
+	jsr	fire_line		; 6+51
+					;====
+					; 61
+
+	; line 3
+	iny				; 2
+	ldx	#5			; 2
+	jsr	fire_line		; 6+51
+					;====
+					; 61
+
+	; line 4
+	iny				; 2
+	ldx	#5			; 2
+	jsr	fire_line		; 6+51
+					;====
+					; 61
+
+	; line 5
+	iny				; 2
+	ldx	#5			; 2
+	jsr	fire_line		; 6+51
+					;====
+					; 61
+
+	; line 6
+	iny				; 2
+	ldx	#5	; zero again	; 2
+	jsr	fire_line		; 6+51
+					;====
+					; 61
 
 done_draw_fire:
 
