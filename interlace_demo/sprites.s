@@ -249,6 +249,7 @@ display_loop:
 	;  -31	-- move ship
 	;  -17  -- move fire
 	;  -51  -- collide asteroid/fire
+	;  -40	-- collide ship
 	;  -35	-- move asteroid
 	; -436	-- draw fire
 	; -337	-- draw asteroid
@@ -258,7 +259,7 @@ display_loop:
 	;  -47	-- sparkle
 	;   -8  -- loop
 	;=======
-	;  278
+	;  238
 	; -40 nop sled
 
 
@@ -536,6 +537,59 @@ no_collide_y:
 	lda	TEMP	; 3
 
 collision_done:
+
+
+	;==========================
+	; collision (ship/asteroid)
+	;==========================
+	; none:			8    [20+12]
+	; xmatch not y:		8+20 [12]
+	; explosion:		8+20+12 = 40
+ship_collision:
+
+	lda	ASTEROID_X		; 3
+	cmp	#$8			; 2
+	bcs	no_ship_collide_x	; 3	; blt
+					;===
+					; 8
+
+					; -1
+	lda	YPOS			; 3
+	lsr				; 2
+	lsr				; 2
+	clc				; 2
+	adc	#10			; 2
+	sec				; 2
+	sbc	ASTEROID_Y		; 3
+	cmp	#6			; 2
+	bcs	no_ship_collide_y	; 3	; bge
+					;===
+					; 20
+
+					; -1
+	lda	#1			; 2
+	sta	ASTEROID_EXPLODE	; 3
+
+	lda	#20			; 2
+	sta	LEVEL_DONE		; 3
+
+	jmp	ship_collision_done	; 3
+					;====
+					; 12
+no_ship_collide_x:
+	inc	TEMP	; 5
+	inc	TEMP	; 5
+	inc	TEMP	; 5
+	inc	TEMP	; 5
+
+no_ship_collide_y:
+	lda	TEMP	; 3
+	lda	TEMP	; 3
+	lda	TEMP	; 3
+	lda	TEMP	; 3
+
+ship_collision_done:
+
 
 
 
@@ -854,14 +908,17 @@ pad_time:
 
 wait_loop:
 
+
 	; Try X=3 Y=11 cycles=232R6
 
+	; Try X=37 Y=1 cycles=192R6
+
 	nop
 	nop
 	nop
 
-	ldy	#11							; 2
-loop1:	ldx	#3							; 2
+	ldy	#1							; 2
+loop1:	ldx	#37							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
