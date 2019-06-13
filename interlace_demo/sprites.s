@@ -455,6 +455,8 @@ done_move_delay_7:
 
 done_move:
 
+
+nop_sled:
 	nop
 	nop
 	nop
@@ -850,21 +852,9 @@ pad_time:
 	; WAIT for VBLANK to finish
 	;============================
 
-;	nop
-;	nop
-;	nop
-;	nop
-;	nop
-;	nop
-;	nop
-;	nop
-;	nop
-;	nop
-
-
 wait_loop:
 
-	; Try X=3 Y=11 cycles=232 R6
+	; Try X=3 Y=11 cycles=232R6
 
 	nop
 	nop
