@@ -226,12 +226,12 @@ display_loop:
 	; -167	-- erase fire
 	;  -31	-- move ship
 	;  -17  -- move fire
-	; -428	-- draw fire (61*7)+1
+	; -436	-- draw fire
 	;  -61  -- keypress
 	;  -33	-- handle fire press
 	;   -8  -- loop
 	;=======
-	; 1155
+	; 1147
 
 	;================
 	; erase old ship
@@ -469,14 +469,19 @@ done_move:
 	;==========================
 	; draw the fire
 	;==========================
+	; 6+(61*7)+3 = 436
 
+	lda	FIRE_X			; 3
+	beq	no_draw_fire		; 3
+
+					; -1
 	ldy	FIRE_Y			; 3
 
 	; line 0
 	ldx	#0			; 2
 	jsr	fire_line		; 6+51
 					;====
-					; 59
+					; 61
 
 	; line 1
 	iny				; 2
@@ -520,7 +525,21 @@ done_move:
 					;====
 					; 61
 
+	jmp	done_draw_fire		; 3
 
+no_draw_fire:
+
+	; delay 436-6 = 430
+
+	; delay 200
+	lda	#(200-25-2)
+	jsr	delay_a
+
+	; delay 230
+	lda	#(230-25-2)
+	jsr	delay_a
+
+done_draw_fire:
 
 pad_time:
 
@@ -543,13 +562,13 @@ pad_time:
 
 wait_loop:
 
-	; Try X=2 Y=72 cycles=1153 R2
+	; Try X=37 Y=6 cycles=1147
 
-	nop
+;	nop
 ;	nop
 
-	ldy	#72							; 2
-loop1:	ldx	#2							; 2
+	ldy	#6							; 2
+loop1:	ldx	#37							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
