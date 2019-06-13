@@ -25,6 +25,11 @@ FRAME		= $60
 BLARGH		= $69
 SPRITE_XPOS	= $E0
 SPRITE_YPOS	= $E1
+RANDOM_PTR	= $E2
+
+ASTEROID_X	= $E3
+ASTEROID_Y	= $E4
+
 DRAW_PAGE	= $EE
 
 
@@ -98,6 +103,12 @@ start_sprites:
 	sta	GREEN3
 	lda	#$ff
 	sta	GREEN2
+
+	lda	#$36
+	sta	ASTEROID_X
+
+	lda	#$12
+	sta	ASTEROID_Y
 
 	lda	#64
 	sta	YPOS
@@ -231,13 +242,14 @@ display_loop:
 	; -167	-- erase fire
 	;  -31	-- move ship
 	;  -17  -- move fire
+	;  -36	-- move asteroid
 	; -436	-- draw fire
-	; -335	-- draw asteroid
+	; -337	-- draw asteroid
 	;  -61  -- keypress
 	;  -33	-- handle fire press
 	;   -8  -- loop
 	;=======
-	; 812
+	;  774
 
 	;================
 	; erase old ship
@@ -298,6 +310,43 @@ display_loop:
 ;	jsr	erase_fire		; 6+71
 					;====
 					; 388
+
+
+
+	;==========================
+	; move/collide the asteroid
+	;==========================
+	; move ok:			8 [28]
+	; move off screen:		8+28 = 36
+	; game over: who cares
+
+	dec	ASTEROID_X	; 5
+	bne	no_new_asteroid	; 3
+new_asteroid:
+						; -1
+	inc	RANDOM_PTR			; 5
+	ldy	RANDOM_PTR			; 3
+	lda	random_values,Y			; 4
+	and	#$1e				; 2
+	clc					; 2
+	adc	#$4				; 2
+	sta	ASTEROID_Y			; 3
+	lda	#36				; 2
+	sta	ASTEROID_X			; 3
+	jmp	done_move_asteroid		; 3
+					;===========
+					;	28
+
+no_new_asteroid:
+	inc	TEMP				; 5
+	inc	TEMP				; 5
+	inc	TEMP				; 5
+	inc	TEMP				; 5
+	inc	TEMP				; 5
+	lda	TEMP				; 3
+
+
+done_move_asteroid:
 
 
 
@@ -601,13 +650,13 @@ done_draw_fire:
 	sta	INL			; 3
 	lda	#>asteroid_p1		; 2
 	sta	INH			; 3
-	lda	#30			; 2
+	lda	ASTEROID_X		; 3
 	sta	SPRITE_XPOS		; 3
-	lda	#12			; 2
+	lda	ASTEROID_Y		; 3
 	sta	SPRITE_YPOS		; 3
 	jsr	put_sprite		; 6+304
 					;======
-					; 335
+					; 337
 
 
 
@@ -633,12 +682,12 @@ pad_time:
 
 wait_loop:
 
-	; Try X=161 Y=1 cycles=812
-;	nop
+	; Try X=153 Y=1 cycles=772R2
+	nop
 ;	nop
 
 	ldy	#1							; 2
-loop1:	ldx	#161							; 2
+loop1:	ldx	#153							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -1033,6 +1082,8 @@ erase_fire:
 .include "../asm_routines/gr_unrle.s"
 ;.include "../asm_routines/keypress.s"
 .align $100
+random_values:
+.incbin	"random.data"
 .include "sprites_table.s"
 .include "gr_offsets.s"
 
