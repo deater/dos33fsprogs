@@ -228,10 +228,10 @@ display_loop:
 	;  -17  -- move fire
 	; -428	-- draw fire (61*7)+1
 	;  -61  -- keypress
-	;  -28	-- handle fire press
+	;  -33	-- handle fire press
 	;   -8  -- loop
 	;=======
-	; 1160
+	; 1155
 
 	;================
 	; erase old ship
@@ -542,12 +542,14 @@ pad_time:
 
 
 wait_loop:
-	; Try X=11 Y=19 cycles=1160
-;	nop
+
+	; Try X=2 Y=72 cycles=1153 R2
+
+	nop
 ;	nop
 
-	ldy	#19							; 2
-loop1:	ldx	#11							; 2
+	ldy	#72							; 2
+loop1:	ldx	#2							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -561,14 +563,18 @@ wait_loop_end:
 
 	;===============
 	; handle fire
-	; FIRE: 28
-	; no FIRE: 6 [22]
+	; FIRE: 6+5+17+5      = 33
+	; FIRE but OUT: 6+5+5 = 16 [17]
+	; no FIRE:      6+5   = 11 [22]
+	; urgh pain to make this invariant
 
 	lda	FIRE			; 3
-	beq	no_firing		; 3
+	beq	no_firing2		; 3
 					; -1
-	lda	#0			; 2
-	sta	FIRE			; 3
+
+	lda	FIRE_X			; 3
+	bne	no_firing		; 3
+					; -1
 
 	clc				; 2
 	lda	YPOS			; 3
@@ -580,14 +586,19 @@ wait_loop_end:
 
 	jmp	really_no_firing	; 3
 
+no_firing2:
+	inc	TEMP			; 5
 no_firing:
 	inc	TEMP			; 5
 	inc	TEMP			; 5
 	inc	TEMP			; 5
-	inc	TEMP			; 3
 	nop				; 2
 
 really_no_firing:
+	lda	#0			; 2
+	sta	FIRE			; 3
+
+
 
 	;===============
 	; check for end
@@ -639,7 +650,7 @@ key_not_escape:
 	cmp	#' '+$80				; 2
 	bne	key_not_space				; 3
 							; -1
-	lda	#1					; 2
+	lda	#$ff					; 2
 	sta	FIRE					; 3
 	jmp	key_delay_22				; 3
 
