@@ -18,7 +18,7 @@ space_bars_begin:
 	;==================
 	; show title screen
 	;==================
-
+view_title:
 	jsr	title_screen
 
 	;==================
@@ -53,6 +53,9 @@ space_bars_begin:
 	;==================
 game_over_man:
 	jsr	game_over
+
+	bit	KEYRESET
+	jmp	view_title
 
 loop_forever:
 	jmp	loop_forever
