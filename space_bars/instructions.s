@@ -23,6 +23,11 @@ instructions:
 
 	jsr	move_and_print
 	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
 
 	jsr	wait_until_keypressed		; tail call?
 
@@ -34,16 +39,15 @@ inst_text:
 
 .byte  6, 0,	 "*** RASTERBARS IN SPACE ***",0
 
-.byte  8, 3,	   "BY VINCE 'DEATER' WEAVER",0
+.byte  7, 3,	  "BY: VINCE 'DEATER' WEAVER",0
 
-.asciiz      "WWW.DEATER.NET/WEAVE/VMWPROD"
+.byte  6, 5,     "WWW.DEATER.NET/WEAVE/VMWPROD",0
 
-.asciiz "======================================="
+.byte  0, 7,"=======================================",0
 
-.asciiz	     "ARROWS, WASD: STEER"
-.asciiz	     "Z: ACCELERATE"
-.asciiz	     "SPACE: FIRE"
-.asciiz      "ESC: QUITS"
+.byte  1,9,   "ARROWS: LEFT/RIGHT  -- A/Z: UP/DOWN",0
+.byte  1,10,  "SPACE: FIRE         -- ,/.: ????",0
+.byte  1,11,  "ESC: QUITS",0
 
 .asciiz      "M: TOGGLE SOUND, CURRENTLY ON"
 
