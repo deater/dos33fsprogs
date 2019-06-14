@@ -354,7 +354,7 @@ sb_no_keypress:
 
 sb_handle_keypress:
 	bit	KEYRESET	; clear keypress	; 4
-	cmp	#'Q'|$80				; 2
+	cmp	#27|$80		; escape		; 2
 	beq	sb_exit					; 3
 							; -1
 
@@ -370,13 +370,16 @@ sb_check_left:
 
 sb_check_right:
 	cmp	#$15|$80				; 2
-	bne	sb_exit					; 3
+	bne	sb_unknown				; 3
 							; -1
 	inc	XPOS					; 5
 
 	jmp	sb_display_loop				; 3
 
-
+sb_unknown:
+	nop
+	nop
+	jmp	sb_display_loop				; 3
 
 
 sb_exit:
