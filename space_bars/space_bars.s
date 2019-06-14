@@ -37,7 +37,7 @@ view_title:
 	; EARTH:	40x192 sprites
 	;=============================
 
-	jsr	start_sprites
+	jsr	level3_earth
 
 	lda	GAME_OVER
 	bne	game_over_man
@@ -46,7 +46,7 @@ view_title:
 	; SATURN:	Rasterbars
 	;============================
 
-	jsr	game
+	jsr	level6_saturn
 
 	;==================
 	; Game Over
@@ -65,12 +65,12 @@ loop_forever:
 
 .include "gr_offsets.s"
 
-.include "../asm_routines/gr_unrle.s"
-.include "../asm_routines/keypress.s"
+.include "gr_unrle.s"
+.include "keypress.s"
 .include "gr_copy.s"
 .include "title.s"
 .include "instructions.s"
-.include "game.s"
+.include "level6_saturn.s"
 .include "text_print.s"
 .include "game_over.s"
 .align $100
@@ -85,4 +85,4 @@ loop_forever:
 .include "mode7_sprites.inc"
 
 .align $100
-.include "sprites.s"
+.include "level3_earth.s"

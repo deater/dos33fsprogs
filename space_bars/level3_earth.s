@@ -1,10 +1,3 @@
-; TODO
-; + merge with spacebars code
-; + end of game, fly to the right
-; + make harder as shoot more
-; + end level with enough hits?
-
-
 ; Uses the 40x48d page1/page2 every-1-scanline pageflip mode
 
 ; self modifying code to get some extra colors (pseudo 40x192 mode)
@@ -12,8 +5,12 @@
 ; by deater (Vince Weaver) <vince@deater.net>
 
 
+; TODO:
+;	end level after a certain number of points
+;	track score properly
 
-start_sprites:
+
+level3_earth:
 
 	;===================
 	; init screen
