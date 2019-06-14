@@ -66,4 +66,4 @@ install:
 
 
 clean:		
-		rm -f *~ *.o *.lst *.inc INTERLACE RASTERBARS SPRITES HELLO
+		rm -f *~ *.o *.lst INTERLACE RASTERBARS SPRITES HELLO
