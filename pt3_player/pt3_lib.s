@@ -421,7 +421,8 @@ zero_song_structs_loop:
 	sta	note_c+NOTE_VOLUME					; 4
 
 	; default ornament/sample in A
-	ldx	#(NOTE_STRUCT_SIZE*0)					; 2
+	; 	X is zero coming in here
+	;ldx	#(NOTE_STRUCT_SIZE*0)					; 2
 	jsr	load_ornament0_sample1					; 6+93
 
 	; default ornament/sample in B
