@@ -7,11 +7,12 @@ PNG_TO_40x48D = ../gr-utils/png_to_40x48d
 
 all:	interlace.dsk
 
-interlace.dsk:	INTERLACE RASTERBARS SPRITES HELLO
+interlace.dsk:	INTERLACE RASTERBARS SPRITES HELLO RASTERBARS_SOUND
 	$(DOS33) -y interlace.dsk SAVE A HELLO
 	$(DOS33) -y interlace.dsk BSAVE -a 0x1000 INTERLACE
 	$(DOS33) -y interlace.dsk BSAVE -a 0x1000 RASTERBARS
 	$(DOS33) -y interlace.dsk BSAVE -a 0x1000 SPRITES
+	$(DOS33) -y interlace.dsk BSAVE -a 0x1000 RASTERBARS_SOUND
 
 ####
 
@@ -36,6 +37,17 @@ RASTERBARS:	rasterbars.o
 rasterbars.o:	rasterbars.s gr_copy.s \
 	rasterbars_screen.s rasterbars_table.s movement_table.s rb_bg.inc
 	ca65 -o rasterbars.o rasterbars.s -l rasterbars.lst
+
+####
+
+RASTERBARS_SOUND:	rasterbars_sound.o
+	ld65 -o RASTERBARS_SOUND rasterbars_sound.o -C ../linker_scripts/apple2_1000.inc
+
+rasterbars_sound.o:	rasterbars_sound.s gr_copy.s \
+	rasterbars_screen.s rasterbars_table.s movement_table.s rb_bg.inc \
+	pt3_lib.s interrupt_handler.s
+	ca65 -o rasterbars_sound.o rasterbars_sound.s -l rasterbars_sound.lst
+
 
 ####
 
@@ -66,4 +78,4 @@ install:
 
 
 clean:		
-		rm -f *~ *.o *.lst INTERLACE RASTERBARS SPRITES HELLO
+		rm -f *~ *.o *.lst INTERLACE RASTERBARS SPRITES HELLO RASTERBARS_SOUND
