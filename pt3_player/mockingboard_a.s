@@ -81,7 +81,7 @@ reset_ay_both:
 clear_ay_both:
 	ldx	#14
 	lda	#0
-	sta	MB_VALUE
+	sta	MB_VALUE_smc+1
 clear_ay_left_loop:
 ;	Write sequence
 ;	Inactive -> Latch Address -> Inactive -> Write Data -> Inactive
@@ -104,7 +104,8 @@ write_ay_both:
 	sty	MOCK_6522_ORB2						; 3
 
 	; value
-	lda	MB_VALUE						; 3
+MB_VALUE_smc:
+	lda	#$d1							; 2
 	sta	MOCK_6522_ORA1		; put value on PA1		; 3
 	sta	MOCK_6522_ORA2		; put value on PA2		; 3
 	lda	#MOCK_AY_WRITE		;				; 2
@@ -114,7 +115,7 @@ write_ay_both:
 	sty	MOCK_6522_ORB2						; 3
 
 								;===========
-								;       45
+								;       44
 	dex
 	bpl	clear_ay_left_loop
 	rts
