@@ -239,10 +239,20 @@ mb4_not_in_this_slot:
 	beq	done_mb4_detect
 
 
+
+
+
+
+
+
+
+
 	;====================================
 	; mb_write_frame
 	;====================================
 	; cycle counted
+
+	; 2 + 13*(28+28+7) + 5
 
 mb_write_frame:
 
@@ -256,17 +266,25 @@ mb_write_frame:
 	;==================================
 
 mb_write_loop:
+	;=============================
+	; not r13 	-- 4+5+[ ]+28+28+7
+	; r13, not ff	-- 4+5+ 3 +28+28+7
+	; r13 is ff 	-- 4+5+ 4 
+
+
 	lda	AY_REGISTERS,X	; load register value			; 4
 
 	; special case R13.  If it is 0xff, then don't update
 	; otherwise might spuriously reset the envelope settings
 
 	cpx	#13							; 2
-	bne	mb_not_13						; 3/2nt
+	bne	mb_not_13						; 3
+
+									; -1
 	cmp	#$ff							; 2
-	beq	mb_skip_13						; 3/2nt
-								;============
-								; typ 5
+	beq	mb_skip_13						; 3
+									; -1
+
 mb_not_13:
 
 
@@ -279,7 +297,8 @@ mb_not_13:
 	ldy	#MOCK_AY_INACTIVE	; go inactive			; 2
 	sty	MOCK_6522_ORB1						; 4
 	sty	MOCK_6522_ORB2						; 4
-
+								;==========
+								;	28
         ; value
 	sta	MOCK_6522_ORA1		; put value on PA1		; 4
 	sta	MOCK_6522_ORA2		; put value on PA2		; 4
@@ -289,15 +308,15 @@ mb_not_13:
 	sty	MOCK_6522_ORB1						; 4
 	sty	MOCK_6522_ORB2						; 4
 								;===========
-								; 	56
+								; 	28
 mb_no_write:
 	inx				; point to next register	; 2
 	cpx	#14			; if 14 we're done		; 2
-	bmi	mb_write_loop		; otherwise, loop		; 3/2nt
+	bmi	mb_write_loop		; otherwise, loop		; 3
 								;============
 								; 	7
 mb_skip_13:
-
+									; -1
 	rts								; 6
 
 
