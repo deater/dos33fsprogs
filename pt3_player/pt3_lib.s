@@ -1027,12 +1027,12 @@ done_note:
 	lsr	pt3_mixer_value_smc+1
 
 handle_onoff:
-	lda	note_a+NOTE_ONOFF,X	;if (a->onoff>0) {
+	ldy	note_a+NOTE_ONOFF,X	;if (a->onoff>0) {
 	beq	done_onoff
 
-	dec	note_a+NOTE_ONOFF,X	; a->onoff--;
+	dey				; a->onoff--;
 
-	bne	done_onoff		;   if (a->onoff==0) {
+	bne	put_offon		;   if (a->onoff==0) {
 	lda	note_a+NOTE_ENABLED,X
 	eor	#$1			; toggle
 	sta	note_a+NOTE_ENABLED,X
@@ -1042,9 +1042,9 @@ do_onoff:
 	dex				; select ONOFF
 	;lda	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
 do_offon:
-	lda	note_a+NOTE_OFFON_DELAY,X ;      else a->onoff=a->offon_delay;
+	ldy	note_a+NOTE_OFFON_DELAY,X ;      else a->onoff=a->offon_delay;
 put_offon:
-	sta	note_a+NOTE_ONOFF,X
+	sty	note_a+NOTE_ONOFF,X
 
 done_onoff:
 
