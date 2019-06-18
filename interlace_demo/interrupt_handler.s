@@ -129,18 +129,6 @@ mb_no_write:
 mb_skip_13:
 
 
-
-	; stop playing for now
-	; quiet down the Mockingboard
-	; (otherwise will be stuck on last note)
-
-quiet_exit:
-	stx	DONE_PLAYING
-	jsr	clear_ay_both
-
-	;ldx	#$ff		; also mute the channel
-	stx	AY_REGISTERS+7 ; just in case
-
 	;=================================
 	; Finally done with this interrupt
 	;=================================
@@ -168,3 +156,17 @@ interrupt_smc:
 								; ???? cycles
 
 
+
+
+	; stop playing for now
+	; quiet down the Mockingboard
+	; (otherwise will be stuck on last note)
+
+quiet_exit:
+	stx	DONE_PLAYING
+	jsr	clear_ay_both
+
+	;ldx	#$ff		; also mute the channel
+	stx	AY_REGISTERS+7 ; just in case
+
+	jmp	done_interrupt
