@@ -1,33 +1,10 @@
-;===========================================
-; Library to decode Vortex Tracker PT3 files
+;===========================================================
+; Cycle-invariant Library to decode Vortex Tracker PT3 files
 ; in 6502 assembly for Apple ][ Mockingboard
 ;
 ; by Vince Weaver <vince@deater.net>
 
 ; Roughly based on the Formats.pas Pascal code from Ay_Emul
-
-; Size Optimization -- Mem+Code (pt3_lib_end-note_a)
-; + 3407 bytes -- original working implementation
-; + 3302 bytes -- autogenerate the volume tables
-; + 3297 bytes -- remove some un-needed bytes from struct
-; + 3262 bytes -- combine some duplicated code in $1X/$BX env setting
-; + 3253 bytes -- remove unnecessary variable
-; + 3203 bytes -- combine common code in note decoder
-; + 2937 bytes -- qkumba first pass
-; + 2879 bytes -- qkumba second pass
-; + 2839 bytes -- mask note command in common code
-; + 2832 bytes -- combine $D0 and $E0 decode
-; + 2816 bytes -- eliminate "decode_done" variable (2.75k)
-; + 2817 bytes -- eliminate pt3_version.  Slighly faster but also bigger
-; + 2828 bytes -- fix some correctness issues
-; + 2776 bytes -- init vars with loop (slower, but more correct and smaller)
-; + 2739 bytes -- qkumba's crazy SMC everywhere patch
-; + 2430+120 = 2650 bytes -- move NOTE structs to page0
-
-; TODO
-;   move some of these flags to be bits rather than bytes?
-;   enabled could be bit 6 or 7 for fast checking
-; NOTE_ENABLED,ENVELOPE_ENABLED,SIMPLE_GLISS,ENV_SLIDING,AMP_SLIDING?
 
 ; Header offsets
 
@@ -2286,48 +2263,7 @@ PT3NoteTable_ASM_34_35_low:
 .byte $15,$14,$12,$11,$10,$0F,$0E,$0D
 
 
-;PT3VolumeTable_33_34:
-;.byte $0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0
-;.byte $0,$0,$0,$0,$0,$0,$0,$0,$1,$1,$1,$1,$1,$1,$1,$1
-;.byte $0,$0,$0,$0,$0,$0,$1,$1,$1,$1,$1,$2,$2,$2,$2,$2
-;.byte $0,$0,$0,$0,$1,$1,$1,$1,$2,$2,$2,$2,$3,$3,$3,$3
-;.byte $0,$0,$0,$0,$1,$1,$1,$2,$2,$2,$3,$3,$3,$4,$4,$4
-;.byte $0,$0,$0,$1,$1,$1,$2,$2,$3,$3,$3,$4,$4,$4,$5,$5
-;.byte $0,$0,$0,$1,$1,$2,$2,$3,$3,$3,$4,$4,$5,$5,$6,$6
-;.byte $0,$0,$1,$1,$2,$2,$3,$3,$4,$4,$5,$5,$6,$6,$7,$7
-;.byte $0,$0,$1,$1,$2,$2,$3,$3,$4,$5,$5,$6,$6,$7,$7,$8
-;.byte $0,$0,$1,$1,$2,$3,$3,$4,$5,$5,$6,$6,$7,$8,$8,$9
-;.byte $0,$0,$1,$2,$2,$3,$4,$4,$5,$6,$6,$7,$8,$8,$9,$A
-;.byte $0,$0,$1,$2,$3,$3,$4,$5,$6,$6,$7,$8,$9,$9,$A,$B
-;.byte $0,$0,$1,$2,$3,$4,$4,$5,$6,$7,$8,$8,$9,$A,$B,$C
-;.byte $0,$0,$1,$2,$3,$4,$5,$6,$7,$7,$8,$9,$A,$B,$C,$D
-;.byte $0,$0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E
-;.byte $0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E,$F
-
-;PT3VolumeTable_35:
-;.byte $0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0
-;.byte $0,$0,$0,$0,$0,$0,$0,$0,$1,$1,$1,$1,$1,$1,$1,$1
-;.byte $0,$0,$0,$0,$1,$1,$1,$1,$1,$1,$1,$1,$2,$2,$2,$2
-;.byte $0,$0,$0,$1,$1,$1,$1,$1,$2,$2,$2,$2,$2,$3,$3,$3
-;.byte $0,$0,$1,$1,$1,$1,$2,$2,$2,$2,$3,$3,$3,$3,$4,$4
-;.byte $0,$0,$1,$1,$1,$2,$2,$2,$3,$3,$3,$4,$4,$4,$5,$5
-;.byte $0,$0,$1,$1,$2,$2,$2,$3,$3,$4,$4,$4,$5,$5,$6,$6
-;.byte $0,$0,$1,$1,$2,$2,$3,$3,$4,$4,$5,$5,$6,$6,$7,$7
-;.byte $0,$1,$1,$2,$2,$3,$3,$4,$4,$5,$5,$6,$6,$7,$7,$8
-;.byte $0,$1,$1,$2,$2,$3,$4,$4,$5,$5,$6,$7,$7,$8,$8,$9
-;.byte $0,$1,$1,$2,$3,$3,$4,$5,$5,$6,$7,$7,$8,$9,$9,$A
-;.byte $0,$1,$1,$2,$3,$4,$4,$5,$6,$7,$7,$8,$9,$A,$A,$B
-;.byte $0,$1,$2,$2,$3,$4,$5,$6,$6,$7,$8,$9,$A,$A,$B,$C
-;.byte $0,$1,$2,$3,$3,$4,$5,$6,$7,$8,$9,$A,$A,$B,$C,$D
-;.byte $0,$1,$2,$3,$4,$5,$6,$7,$7,$8,$9,$A,$B,$C,$D,$E
-;.byte $0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E,$F
-
-
-
-
-
 VolumeTable:
 	.res 256,0
-
 
 pt3_lib_end:

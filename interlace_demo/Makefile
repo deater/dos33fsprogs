@@ -45,7 +45,7 @@ RASTERBARS_SOUND:	rasterbars_sound.o
 
 rasterbars_sound.o:	rasterbars_sound.s gr_copy.s \
 	rasterbars_screen.s rasterbars_table.s movement_table.s rb_bg.inc \
-	pt3_lib.s interrupt_handler.s
+	pt3_lib_ci.s interrupt_handler.s
 	ca65 -o rasterbars_sound.o rasterbars_sound.s -l rasterbars_sound.lst
 
 

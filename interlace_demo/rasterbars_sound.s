@@ -60,17 +60,17 @@ apple_iic:
 	; bypass the firmware interrupt handler
         ; should we do this on IIe too? probably faster
 
-	sei				; disable interrupts
-	lda	$c08b			; disable ROM (enable language card)
-	lda	$c08b
-	lda	#<interrupt_handler
-	sta	$fffe
-	lda	#>interrupt_handler
-	sta	$ffff
+;	sei				; disable interrupts
+;	lda	$c08b			; disable ROM (enable language card)
+;	lda	$c08b
+;	lda	#<interrupt_handler
+;	sta	$fffe
+;	lda	#>interrupt_handler
+;	sta	$ffff
 
-	lda	#$EA			; nop out the "lda $45" in the irq hand
-	sta	interrupt_smc
-	sta	interrupt_smc+1
+;	lda	#$EA			; nop out the "lda $45" in the irq hand
+;	sta	interrupt_smc
+;	sta	interrupt_smc+1
 
 done_apple_detect:
 
@@ -126,10 +126,10 @@ mockingboard_found:
         ; Vector address goes to 0x3fe/0x3ff
         ; FIXME: should chain any existing handler
 
-        lda     #<interrupt_handler
-        sta     $03fe
-        lda     #>interrupt_handler
-        sta     $03ff
+;	lda	#<interrupt_handler
+;	sta	$03fe
+;	lda	#>interrupt_handler
+;	sta	$03ff
 
         ;============================
         ; Enable 50Hz clock on 6522
@@ -244,10 +244,11 @@ mockingboard_found:
 	;		 310
 
 	; -3 for jmp
-	; -2 for cli
-	; 305
+	; 307
 
-	; Try X=14 Y=4 cycles=305
+	; Try X=14 Y=4 cycles=305R2
+
+	nop
 
 	ldy	#4							; 2
 loopA:	ldx	#14							; 2
@@ -255,13 +256,6 @@ loopB:	dex								; 2
 	bne	loopB							; 2nt/3
 	dey								; 2
 	bne	loopA							; 2nt/3
-
-
-	;============================
-        ; Enable 6502 interrupts
-        ;============================
-start_interrupts:
-	cli	; clear interrupt mask					; 2
 
 
 
@@ -463,6 +457,13 @@ pad_time:
 	jsr	draw_rasterbar			; 6+126
 
 
+	;============================
+	; Play music
+	;============================
+
+
+	jsr	pt3_make_frame
+	jsr	mb_write_frame
 
 
 	;============================
@@ -580,8 +581,8 @@ yellow_x:	.byte $20
 green_x:	.byte $30
 blue_x:		.byte $40
 
-.include "interrupt_handler.s"
-.include "pt3_lib.s"
+;.include "interrupt_handler.s"
+.include "pt3_lib_ci.s"
 .include "mockingboard_a.s"
 
 ;=============
