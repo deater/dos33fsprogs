@@ -23,10 +23,9 @@ pt3_setup:
 
 	bit	LORES		; Lo-res graphics
 	bit	SET_GR
-        bit	TEXTGR		; split text/graphics
+	bit	TEXTGR		; split text/graphics
 
 	jsr	clear_screens
-
 
 	;===============================
 	; Check for Apple II/II+/IIe/IIc
