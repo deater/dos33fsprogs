@@ -409,7 +409,7 @@ zero_song_structs_loop:
 	sta	pt3_envelope_delay_smc+1				; 4
 	sta	pt3_envelope_delay_orig_smc+1				; 4
 
-	sta	pt3_mixer_value_smc+1					; 4
+	sta	PT3_MIXER_VAL						; 3
 
 	sta	current_pattern_smc+1					; 4
 	sta	current_line_smc+1					; 4
@@ -986,9 +986,9 @@ noise_slide_done:
 	lda	sample_b1_smc+1	;  pt3->mixer_value = ((b1 >>1) & 0x48) | pt3->mixer_value;
 	lsr
 	and	#$48
-pt3_mixer_value_smc:
-	ora	#$d1
-	sta	pt3_mixer_value_smc+1
+
+	ora	PT3_MIXER_VAL					; 3
+	sta	PT3_MIXER_VAL					; 3
 
 
 	;========================
@@ -1024,7 +1024,7 @@ done_note:
 	; set mixer value
 	; this is a bit complex (from original code)
 	; after 3 calls it is set up properly
-	lsr	pt3_mixer_value_smc+1
+	lsr	PT3_MIXER_VAL
 
 handle_onoff:
 	ldy	note_a+NOTE_ONOFF,X	;if (a->onoff>0) {
@@ -1890,7 +1890,7 @@ do_frame:
 	; R14/R15 = I/O (ignored)
 
 	ldx	#0			; needed			; 2
-	stx	pt3_mixer_value_smc+1					; 4
+	stx	PT3_MIXER_VAL						; 3
 	stx	pt3_envelope_add_smc+1					; 4
 
 	;;ldx	#(NOTE_STRUCT_SIZE*0)	; Note A			; 2
@@ -2067,17 +2067,16 @@ no_scale_n:
 	;=======================
 	; Mixer
 
-	lda	pt3_mixer_value_smc+1					; 4
-	sta	AY_REGISTERS+7						; 3
+	; PT3_MIXER_VAL is already in AY_REGISTERS+7
 
 	;=======================
 	; Amplitudes
 
-	lda	note_a+NOTE_AMPLITUDE					; 4
+	lda	note_a+NOTE_AMPLITUDE					; 3
 	sta	AY_REGISTERS+8						; 3
-	lda	note_b+NOTE_AMPLITUDE					; 4
+	lda	note_b+NOTE_AMPLITUDE					; 3
 	sta	AY_REGISTERS+9						; 3
-	lda	note_c+NOTE_AMPLITUDE					; 4
+	lda	note_c+NOTE_AMPLITUDE					; 3
 	sta	AY_REGISTERS+10						; 3
 
 	;======================================
