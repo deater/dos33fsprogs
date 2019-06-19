@@ -1783,9 +1783,11 @@ not_done:
 	; update pattern or line if necessary
 	; then calculate the values for the next frame
 
+	; 8+???
+
 	;==========================
 	; pattern done early!
-
+.if 0
 early_end:
 	inc	current_pattern_smc+1	; increment pattern		; 6
 	sta	current_line_smc+1					; 4
@@ -1802,29 +1804,33 @@ check_subframe:
 	beq	pattern_good						; 2/3
 	rts								; 6
 
+.endif
 pt3_make_frame:
-
 	; see if we need a new pattern
 	; we do if line==0 and subframe==0
 	; allow fallthrough where possible
 current_line_smc:
 	lda	#$d1							; 2
+.if 0
 	beq	check_subframe						; 2/3
 
 pattern_good:
 
 	; see if we need a new line
-
+.endif
 current_subframe_smc:
 	lda	#$d1							; 2
+.if 0
 	bne	line_good						; 2/3
 
 	; decode a new line
 	jsr	pt3_decode_line						; 6+?
 
 	; check if pattern done early
+.endif
 pt3_pattern_done_smc:
 	lda	#$d1							; 2
+.if 0
 	beq	early_end						; 2/3
 
 line_good:
@@ -1833,10 +1839,11 @@ line_good:
 
 	inc	current_subframe_smc+1	; subframe++			; 6
 	lda	current_subframe_smc+1					; 4
-
+.endif
 	; if we hit pt3_speed, move to next
 pt3_speed_smc:
 	eor	#$d1							; 2
+.if 0
 	bne	do_frame						; 2/3
 
 next_line:
@@ -1854,6 +1861,16 @@ next_pattern:
 	inc	current_pattern_smc+1	; increment pattern		; 6
 
 
+.endif
+
+	;======================================
+	; do frame
+	;======================================
+	; ????? FIXME/calculate note
+	;
+
+	; 9+36+11+18+30+18+49 = 171
+
 do_frame:
 	; AY-3-8910 register summary
 	;
@@ -1870,14 +1887,18 @@ do_frame:
 	ldx	#0			; needed			; 2
 	stx	PT3_MIXER_VAL						; 3
 	stx	pt3_envelope_add_smc+1					; 4
-
+								;===========
+								;	9
+.if 0
 	;;ldx	#(NOTE_STRUCT_SIZE*0)	; Note A			; 2
 	jsr	calculate_note						; 6+?
 	ldx	#(NOTE_STRUCT_SIZE*1)	; Note B			; 2
 	jsr	calculate_note						; 6+?
 	ldx	#(NOTE_STRUCT_SIZE*2)	; Note C			; 2
 	jsr	calculate_note						; 6+?
-
+								;=============
+								;	FIXME
+.endif
 	; Note, we assume 1MHz timings, adjust pt3 as needed
 
 	; Load up the Frequency Registers
@@ -1985,14 +2006,24 @@ envelope_diff:
 	; end-of-frame envelope update
 	;==============================
 
+	; if envelope delay 0, skip
+	;	= 5+6 + [38] = 49
+	; else if envelope delay 1, skip
+	;	= 5+8+6 + [30] = 49
+	; else
+	;	= 5+8+30+6 = 49
+
 pt3_envelope_delay_smc:
 	lda	#$d1							; 2
-	beq	done_do_frame		; assume can't be negative?	; 3
-									; -1
+	beq	done_do_frame_x		; assume can't be negative?	; 3
 					; do this if envelope_delay>0
+									; -1
 	dec	pt3_envelope_delay_smc+1				; 6
-	bne	done_do_frame						; 2/3
+	bne	done_do_frame_y						; 3
 					; only do if we hit 0
+
+
+									; -1
 pt3_envelope_delay_orig_smc:
 	lda	#$d1			; reset envelope delay		; 2
 	sta	pt3_envelope_delay_smc+1				; 4
@@ -2006,6 +2037,24 @@ pt3_envelope_slide_add_l_smc:
 pt3_envelope_slide_add_h_smc:
 	adc	#$d1							; 2
 	sta	pt3_envelope_slide_h_smc+1				; 4
+	jmp	done_do_frame						; 3
+								;===========
+								;	30
+done_do_frame_x:
+	; waste 8
+	nop			; 2
+	nop			; 2
+	nop			; 2
+	nop			; 2
+
+done_do_frame_y:
+	; waste 30
+	inc	CYCLE_WASTE	; 5
+	inc	CYCLE_WASTE	; 5
+	inc	CYCLE_WASTE	; 5
+	inc	CYCLE_WASTE	; 5
+	inc	CYCLE_WASTE	; 5
+	inc	CYCLE_WASTE	; 5
 
 done_do_frame:
 

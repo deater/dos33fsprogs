@@ -288,9 +288,10 @@ display_loop:
 	; -582	-- erase     22+4*(8+6+126) = 582
 	; -696  -- move+draw 4*(16+26+6+126) = 696
 	;  -10  -- keypress
+	; -185	-- calc values
 	; -997  -- mockingboard out
 	;=======
-	; 2265
+	; 2080
 
 pad_time:
 
@@ -463,7 +464,7 @@ pad_time:
 	;============================
 
 
-	jsr	pt3_make_frame
+	jsr	pt3_make_frame		; 6+179
 	jsr	mb_write_frame		; 6+921
 
 
@@ -471,11 +472,10 @@ pad_time:
 	; WAIT for VBLANK to finish
 	;============================
 
-	; Try X=112 Y=4 cycles=2265
+	; Try X=45 Y=9 cycles=2080
 
-
-	ldy	#4							; 2
-loop1:	ldx	#112							; 2
+	ldy	#9							; 2
+loop1:	ldx	#45							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
