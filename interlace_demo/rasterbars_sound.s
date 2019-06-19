@@ -288,8 +288,9 @@ display_loop:
 	; -582	-- erase     22+4*(8+6+126) = 582
 	; -696  -- move+draw 4*(16+26+6+126) = 696
 	;  -10  -- keypress
+	; -997  -- mockingboard out
 	;=======
-	; 3262
+	; 2265
 
 pad_time:
 
@@ -462,21 +463,19 @@ pad_time:
 	;============================
 
 
-	jsr	pt3_make_frame
-	jsr	mb_write_frame
+;	jsr	pt3_make_frame
+	jsr	mb_write_frame		; 6+921
 
 
 	;============================
 	; WAIT for VBLANK to finish
 	;============================
-	; Try X=5 Y=105 cycles=3256 R6
 
-	nop
-	nop
-	nop
+	; Try X=112 Y=4 cycles=2265
 
-	ldy	#105							; 2
-loop1:	ldx	#5							; 2
+
+	ldy	#4							; 2
+loop1:	ldx	#112							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -489,6 +488,12 @@ loop2:	dex								; 2
 no_keypress:
 
 	jmp	display_loop				; 3
+
+
+
+
+
+
 
 
 	;========================

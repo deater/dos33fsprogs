@@ -252,7 +252,7 @@ mb4_not_in_this_slot:
 	;====================================
 	; cycle counted
 
-	; 2 + 13*(28+28+7) + 5
+	; 2 + 13*(70) + 74 + 5  = 991
 
 mb_write_frame:
 
@@ -267,9 +267,9 @@ mb_write_frame:
 
 mb_write_loop:
 	;=============================
-	; not r13 	-- 4+5+[ ]+28+28+7
-	; r13, not ff	-- 4+5+ 3 +28+28+7
-	; r13 is ff 	-- 4+5+ 4 
+	; not r13 	-- 4+5+28+26+7		= 70
+	; r13, not ff	-- 4+5+ 4 +28+26+7	= 74
+	; r13 is ff 	-- 4+5+3+1=[61] 	= 74
 
 
 	lda	AY_REGISTERS,X	; load register value			; 4
@@ -282,8 +282,24 @@ mb_write_loop:
 
 									; -1
 	cmp	#$ff							; 2
-	beq	mb_skip_13						; 3
+	bne	mb_not_13						; 3
 									; -1
+
+
+	; delay 61
+	inc	TEMP		; 5
+	inc	TEMP		; 5
+	inc	TEMP		; 5
+	inc	TEMP		; 5
+	inc	TEMP		; 5
+	inc	TEMP		; 5
+	inc	TEMP		; 5
+	inc	TEMP		; 5
+	inc	TEMP		; 5
+	inc	TEMP		; 5
+	inc	TEMP		; 5
+	lda	TEMP		; 3
+	jmp	mb_skip_13	; 3
 
 mb_not_13:
 
@@ -308,7 +324,7 @@ mb_not_13:
 	sty	MOCK_6522_ORB1						; 4
 	sty	MOCK_6522_ORB2						; 4
 								;===========
-								; 	28
+								; 	26
 mb_no_write:
 	inx				; point to next register	; 2
 	cpx	#14			; if 14 we're done		; 2
