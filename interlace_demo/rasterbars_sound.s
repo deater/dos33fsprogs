@@ -57,21 +57,6 @@ apple_iic:
 	sta	$C403
 	sta	$C404
 
-	; bypass the firmware interrupt handler
-        ; should we do this on IIe too? probably faster
-
-;	sei				; disable interrupts
-;	lda	$c08b			; disable ROM (enable language card)
-;	lda	$c08b
-;	lda	#<interrupt_handler
-;	sta	$fffe
-;	lda	#>interrupt_handler
-;	sta	$ffff
-
-;	lda	#$EA			; nop out the "lda $45" in the irq hand
-;	sta	interrupt_smc
-;	sta	interrupt_smc+1
-
 done_apple_detect:
 
 	;=======================
@@ -119,42 +104,6 @@ mockingboard_found:
         jsr     mockingboard_init
         jsr     reset_ay_both
         jsr     clear_ay_both
-
-        ;=========================
-        ; Setup Interrupt Handler
-        ;=========================
-        ; Vector address goes to 0x3fe/0x3ff
-        ; FIXME: should chain any existing handler
-
-;	lda	#<interrupt_handler
-;	sta	$03fe
-;	lda	#>interrupt_handler
-;	sta	$03ff
-
-        ;============================
-        ; Enable 50Hz clock on 6522
-        ;============================
-
-        sei                     ; disable interrupts just in case
-
-        lda     #$40            ; Continuous interrupts, don't touch PB7
-        sta     $C40B           ; ACR register
-        lda     #$7F            ; clear all interrupt flags
-        sta     $C40E           ; IER register (interrupt enable)
-
-        lda     #$C0
-        sta     $C40D           ; IFR: 1100, enable interrupt on timer one oflow
-        sta     $C40E           ; IER: 1100, enable timer one interrupt
-
-        lda     #$E7
-        sta     $C404           ; write into low-order latch
-        lda     #$4f
-        sta     $C405           ; write into high-order latch,
-                                ; load both values into counter
-                                ; clear interrupt and start counting
-
-        ; 4fe7 / 1e6 = .020s, 50Hz
-
 
         ;==================
         ; init song
@@ -288,10 +237,10 @@ display_loop:
 	; -582	-- erase     22+4*(8+6+126) = 582
 	; -696  -- move+draw 4*(16+26+6+126) = 696
 	;  -10  -- keypress
-	; -185	-- calc values
+	; -369	-- calc values
 	; -997  -- mockingboard out
 	;=======
-	; 2080
+	; 1896
 
 pad_time:
 
@@ -464,23 +413,25 @@ pad_time:
 	;============================
 
 
-	jsr	pt3_make_frame		; 6+179
-	jsr	mb_write_frame		; 6+921
+	jsr	pt3_make_frame		; 6+363	= 369
+	jsr	mb_write_frame		; 6+991 = 997
 
 
 	;============================
 	; WAIT for VBLANK to finish
 	;============================
 
-	; Try X=45 Y=9 cycles=2080
+	; Try X=125 Y=3 cycles=1894R2
 
-	ldy	#9							; 2
-loop1:	ldx	#45							; 2
+	nop
+
+	ldy	#3							; 2
+loop1:	ldx	#125							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
 	bne	loop1							; 2nt/3
-
+wait_loop_end:
 
 	lda	KEYPRESS				; 4
 	bpl	no_keypress				; 3
@@ -489,7 +440,7 @@ no_keypress:
 
 	jmp	display_loop				; 3
 
-
+.assert >loop1 = >(wait_loop_end-1), error, "wait_loop crosses page"
 
 
 
@@ -586,7 +537,6 @@ yellow_x:	.byte $20
 green_x:	.byte $30
 blue_x:		.byte $40
 
-;.include "interrupt_handler.s"
 .include "pt3_lib_ci.s"
 .include "mockingboard_a.s"
 
@@ -598,4 +548,3 @@ blue_x:		.byte $40
 			; to be made throughout the player code
 song:
 .incbin "../pt3_player/music/EA.PT3"
-

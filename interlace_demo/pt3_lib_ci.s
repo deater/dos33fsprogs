@@ -65,6 +65,8 @@ NOTE_TONE_SLIDE_TO_STEP	=39
 
 NOTE_STRUCT_SIZE=40
 
+; All vars in zero page or SMC
+
 note_a	=	$80
 note_b	=	$80+(NOTE_STRUCT_SIZE*1)
 note_c	=	$80+(NOTE_STRUCT_SIZE*2)
@@ -72,288 +74,7 @@ note_c	=	$80+(NOTE_STRUCT_SIZE*2)
 begin_vars=$80
 end_vars=$80+(NOTE_STRUCT_SIZE*3)
 
-.if 0
-begin_vars:
 
-note_a:									; reset?
-
-	.byte	$0	; NOTE_VOLUME				; 0	; Y
-	.byte	$0	; NOTE_TONE_SLIDING_L			; 1	; Y
-	.byte	$0	; NOTE_TONE_SLIDING_H			; 2	; Y
-	.byte	$0	; NOTE_ENABLED				; 3	; Y
-	.byte	$0	; NOTE_ENVELOPE_ENABLED			; 4	; Y
-	.byte	$0	; NOTE_SAMPLE_POINTER_L			; 5	; Y
-	.byte	$0	; NOTE_SAMPLE_POINTER_H			; 6	; Y
-	.byte	$0	; NOTE_SAMPLE_LOOP			; 7	; Y
-	.byte	$0	; NOTE_SAMPLE_LENGTH			; 8	; Y
-	.byte	$0	; NOTE_TONE_L				; 9
-	.byte	$0	; NOTE_TONE_H				; 10
-	.byte	$0	; NOTE_AMPLITUDE			; 11
-	.byte	$0	; NOTE_NOTE				; 12
-	.byte	$0	; NOTE_LEN				; 13
-	.byte	$0	; NOTE_LEN_COUNT			; 14
-	.byte	$0	; NOTE_ADDR_L				; 15
-	.byte	$0	; NOTE_ADDR_H				; 16
-	.byte	$0	; NOTE_ORNAMENT_POINTER_L		; 17	; Y
-	.byte	$0	; NOTE_ORNAMENT_POINTER_H		; 18	; Y
-	.byte	$0	; NOTE_ORNAMENT_LOOP			; 19	; Y
-	.byte	$0	; NOTE_ORNAMENT_LENGTH			; 20	; Y
-	.byte	$0	; NOTE_ONOFF				; 21
-	.byte	$0	; NOTE_TONE_ACCUMULATOR_L		; 22
-	.byte	$0	; NOTE_TONE_ACCUMULATOR_H		; 23
-	.byte	$0	; NOTE_TONE_SLIDE_COUNT			; 24
-	.byte	$0	; NOTE_ORNAMENT_POSITION		; 25	; Y
-	.byte	$0	; NOTE_SAMPLE_POSITION			; 26	; Y
-	.byte	$0	; NOTE_ENVELOPE_SLIDING			; 27
-	.byte	$0	; NOTE_NOISE_SLIDING			; 28
-	.byte	$0	; NOTE_AMPLITUDE_SLIDING		; 29
-	.byte	$0	; NOTE_ONOFF_DELAY			; 30
-	.byte	$0	; NOTE_OFFON_DELAY			; 31
-	.byte	$0	; NOTE_TONE_SLIDE_STEP_L		; 32
-	.byte	$0	; NOTE_TONE_SLIDE_STEP_H		; 33
-	.byte	$0	; NOTE_TONE_SLIDE_DELAY			; 34
-	.byte	$0	; NOTE_SIMPLE_GLISS			; 35
-	.byte	$0	; NOTE_SLIDE_TO_NOTE			; 36
-	.byte	$0	; NOTE_TONE_DELTA_L			; 37
-	.byte	$0	; NOTE_TONE_DELTA_H			; 38
-	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP		; 39
-
-note_b:
-	.byte	$0	; NOTE_VOLUME
-	.byte	$0	; NOTE_TONE_SLIDING_L
-	.byte	$0	; NOTE_TONE_SLIDING_H
-	.byte	$0	; NOTE_ENABLED
-	.byte	$0	; NOTE_ENVELOPE_ENABLED
-	.byte	$0	; NOTE_SAMPLE_POINTER_L
-	.byte	$0	; NOTE_SAMPLE_POINTER_H
-	.byte	$0	; NOTE_SAMPLE_LOOP
-	.byte	$0	; NOTE_SAMPLE_LENGTH
-	.byte	$0	; NOTE_TONE_L
-	.byte	$0	; NOTE_TONE_H
-	.byte	$0	; NOTE_AMPLITUDE
-	.byte	$0	; NOTE_NOTE
-	.byte	$0	; NOTE_LEN
-	.byte	$0	; NOTE_LEN_COUNT
-	.byte	$0	; NOTE_ADDR_L
-	.byte	$0	; NOTE_ADDR_H
-	.byte	$0	; NOTE_ORNAMENT_POINTER_L
-	.byte	$0	; NOTE_ORNAMENT_POINTER_H
-	.byte	$0	; NOTE_ORNAMENT_LOOP
-	.byte	$0	; NOTE_ORNAMENT_LENGTH
-	.byte	$0	; NOTE_ONOFF
-	.byte	$0	; NOTE_TONE_ACCUMULATOR_L
-	.byte	$0	; NOTE_TONE_ACCUMULATOR_H
-	.byte	$0	; NOTE_TONE_SLIDE_COUNT
-	.byte	$0	; NOTE_ORNAMENT_POSITION
-	.byte	$0	; NOTE_SAMPLE_POSITION
-	.byte	$0	; NOTE_ENVELOPE_SLIDING
-	.byte	$0	; NOTE_NOISE_SLIDING
-	.byte	$0	; NOTE_AMPLITUDE_SLIDING
-	.byte	$0	; NOTE_ONOFF_DELAY
-	.byte	$0	; NOTE_OFFON_DELAY
-	.byte	$0	; NOTE_TONE_SLIDE_STEP_L
-	.byte	$0	; NOTE_TONE_SLIDE_STEP_H
-	.byte	$0	; NOTE_TONE_SLIDE_DELAY
-	.byte	$0	; NOTE_SIMPLE_GLISS
-	.byte	$0	; NOTE_SLIDE_TO_NOTE
-	.byte	$0	; NOTE_TONE_DELTA_L
-	.byte	$0	; NOTE_TONE_DELTA_H
-	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
-
-note_c:
-	.byte	$0	; NOTE_VOLUME
-	.byte	$0	; NOTE_TONE_SLIDING_L
-	.byte	$0	; NOTE_TONE_SLIDING_H
-	.byte	$0	; NOTE_ENABLED
-	.byte	$0	; NOTE_ENVELOPE_ENABLED
-	.byte	$0	; NOTE_SAMPLE_POINTER_L
-	.byte	$0	; NOTE_SAMPLE_POINTER_H
-	.byte	$0	; NOTE_SAMPLE_LOOP
-	.byte	$0	; NOTE_SAMPLE_LENGTH
-	.byte	$0	; NOTE_TONE_L
-	.byte	$0	; NOTE_TONE_H
-	.byte	$0	; NOTE_AMPLITUDE
-	.byte	$0	; NOTE_NOTE
-	.byte	$0	; NOTE_LEN
-	.byte	$0	; NOTE_LEN_COUNT
-	.byte	$0	; NOTE_ADDR_L
-	.byte	$0	; NOTE_ADDR_H
-	.byte	$0	; NOTE_ORNAMENT_POINTER_L
-	.byte	$0	; NOTE_ORNAMENT_POINTER_H
-	.byte	$0	; NOTE_ORNAMENT_LOOP
-	.byte	$0	; NOTE_ORNAMENT_LENGTH
-	.byte	$0	; NOTE_ONOFF
-	.byte	$0	; NOTE_TONE_ACCUMULATOR_L
-	.byte	$0	; NOTE_TONE_ACCUMULATOR_H
-	.byte	$0	; NOTE_TONE_SLIDE_COUNT
-	.byte	$0	; NOTE_ORNAMENT_POSITION
-	.byte	$0	; NOTE_SAMPLE_POSITION
-	.byte	$0	; NOTE_ENVELOPE_SLIDING
-	.byte	$0	; NOTE_NOISE_SLIDING
-	.byte	$0	; NOTE_AMPLITUDE_SLIDING
-	.byte	$0	; NOTE_ONOFF_DELAY
-	.byte	$0	; NOTE_OFFON_DELAY
-	.byte	$0	; NOTE_TONE_SLIDE_STEP_L
-	.byte	$0	; NOTE_TONE_SLIDE_STEP_H
-	.byte	$0	; NOTE_TONE_SLIDE_DELAY
-	.byte	$0	; NOTE_SIMPLE_GLISS
-	.byte	$0	; NOTE_SLIDE_TO_NOTE
-	.byte	$0	; NOTE_TONE_DELTA_L
-	.byte	$0	; NOTE_TONE_DELTA_H
-	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
-end_vars:
-.endif
-
-load_ornament0_sample1:
-	lda	#0							; 2
-	jsr	load_ornament						; 6
-	; fall through
-
-	;===========================
-	; Load Sample
-	;===========================
-	; sample in A
-	; which note offset in X
-
-	; Sample table pointers are 16-bits little endian
-	; There are 32 of these pointers starting at $6a:$69
-	; Our sample starts at address (A*2)+that pointer
-	; We point SAMPLE_H:SAMPLE_L to this
-	; then we load the length/data values
-	; and then leave SAMPLE_H:SAMPLE_L pointing to begnning of
-	; the sample data
-
-	; Optimization:
-	;	see comments on ornament setting
-
-load_sample1:
-	lda	#1							; 2
-
-load_sample:
-
-	sty	TEMP							; 3
-
-	;pt3->ornament_patterns[i]=
-        ;               (pt3->data[0x6a+(i*2)]<<8)|pt3->data[0x69+(i*2)];
-
-	asl			; A*2					; 2
-	tay								; 2
-
-	; Set the initial sample pointer
-	;     a->sample_pointer=pt3->sample_patterns[a->sample];
-
-	lda	PT3_LOC+PT3_SAMPLE_LOC_L,Y				; 4+
-	sta	SAMPLE_L						; 3
-
-	lda	PT3_LOC+PT3_SAMPLE_LOC_L+1,Y				; 4+
-
-	; assume pt3 file is at page boundary
-	adc	#>PT3_LOC						; 2
-	sta	SAMPLE_H						; 3
-
-	; Set the loop value
-	;     a->sample_loop=pt3->data[a->sample_pointer];
-
-	ldy	#0							; 2
-	lda	(SAMPLE_L),Y						; 5+
-	sta	note_a+NOTE_SAMPLE_LOOP,X				; 5
-
-	; Set the length value
-	;     a->sample_length=pt3->data[a->sample_pointer];
-
-	iny								; 2
-	lda	(SAMPLE_L),Y						; 5+
-	sta	note_a+NOTE_SAMPLE_LENGTH,X				; 5
-
-	; Set pointer to beginning of samples
-
-	lda	SAMPLE_L						; 3
-	adc	#$2							; 2
-	sta	note_a+NOTE_SAMPLE_POINTER_L,X				; 5
-	lda	SAMPLE_H						; 3
-	adc	#$0							; 2
-	sta	note_a+NOTE_SAMPLE_POINTER_H,X				; 5
-
-	ldy	TEMP							; 3
-
-	rts								; 6
-								;============
-								;	 76
-
-
-	;===========================
-	; Load Ornament
-	;===========================
-	; ornament value in A
-	; note offset in X
-
-	; Ornament table pointers are 16-bits little endian
-	; There are 16 of these pointers starting at $aa:$a9
-	; Our ornament starts at address (A*2)+that pointer
-	; We point ORNAMENT_H:ORNAMENT_L to this
-	; then we load the length/data values
-	; and then leave ORNAMENT_H:ORNAMENT_L pointing to begnning of
-	; the ornament data
-
-	; Optimization:
-	;	Loop and length only used once, can be located negative
-	;	from the pointer, but 6502 doesn't make addressing like that
-	;	easy.  Can't self modify as channels A/B/C have own copies
-	; 	of the var.
-
-load_ornament:
-
-	sty	TEMP		; save Y value				; 3
-
-	;pt3->ornament_patterns[i]=
-        ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
-
-	asl			; A*2					; 2
-	tay								; 2
-
-	; a->ornament_pointer=pt3->ornament_patterns[a->ornament];
-
-	lda	PT3_LOC+PT3_ORNAMENT_LOC_L,Y				; 4+
-	sta	ORNAMENT_L						; 3
-
-	lda	PT3_LOC+PT3_ORNAMENT_LOC_L+1,Y				; 4+
-
-	; we're assuming PT3 is loaded to a page boundary
-
-	adc	#>PT3_LOC						; 2
-	sta	ORNAMENT_H						; 3
-
-	lda	#0							; 2
-	sta	note_a+NOTE_ORNAMENT_POSITION,X				; 5
-
-	tay								; 2
-
-	; Set the loop value
-	;     a->ornament_loop=pt3->data[a->ornament_pointer];
-	lda	(ORNAMENT_L),Y						; 5+
-	sta	note_a+NOTE_ORNAMENT_LOOP,X				; 5
-
-	; Set the length value
-	;     a->ornament_length=pt3->data[a->ornament_pointer];
-	iny								; 2
-	lda	(ORNAMENT_L),Y						; 5+
-	sta	note_a+NOTE_ORNAMENT_LENGTH,X				; 5
-
-	; Set the pointer to the value past the length
-
-	lda	ORNAMENT_L						; 3
-	adc	#$2							; 2
-	sta	note_a+NOTE_ORNAMENT_POINTER_L,X			; 5
-	lda	ORNAMENT_H						; 3
-	adc	#$0							; 2
-	sta	note_a+NOTE_ORNAMENT_POINTER_H,X			; 5
-
-	ldy	TEMP		; restore Y value			; 3
-
-	rts								; 6
-
-								;============
-								;	83
 
 
 
@@ -570,6 +291,184 @@ vol_done:
 
 
 
+;========================================================================
+;========================================================================
+;========================================================================
+;========================================================================
+;========================================================================
+; EVERYTHING AFTER THIS IS CYCLE COUNTED
+;========================================================================
+;========================================================================
+;========================================================================
+;========================================================================
+;========================================================================
+
+.align	$100
+
+
+	;===========================
+	; Load Ornament 0/Sample 1
+	;===========================
+
+load_ornament0_sample1:
+	lda	#0							; 2
+	jsr	load_ornament						; 6
+	; fall through
+
+	;===========================
+	; Load Sample
+	;===========================
+	; sample in A
+	; which note offset in X
+
+	; Sample table pointers are 16-bits little endian
+	; There are 32 of these pointers starting at $6a:$69
+	; Our sample starts at address (A*2)+that pointer
+	; We point SAMPLE_H:SAMPLE_L to this
+	; then we load the length/data values
+	; and then leave SAMPLE_H:SAMPLE_L pointing to begnning of
+	; the sample data
+
+	; Optimization:
+	;	see comments on ornament setting
+
+load_sample1:
+	lda	#1							; 2
+
+load_sample:
+
+	sty	TEMP							; 3
+
+	;pt3->ornament_patterns[i]=
+        ;               (pt3->data[0x6a+(i*2)]<<8)|pt3->data[0x69+(i*2)];
+
+	asl			; A*2					; 2
+	tay								; 2
+
+	; Set the initial sample pointer
+	;     a->sample_pointer=pt3->sample_patterns[a->sample];
+
+	lda	PT3_LOC+PT3_SAMPLE_LOC_L,Y				; 4+
+	sta	SAMPLE_L						; 3
+
+	lda	PT3_LOC+PT3_SAMPLE_LOC_L+1,Y				; 4+
+
+	; assume pt3 file is at page boundary
+	adc	#>PT3_LOC						; 2
+	sta	SAMPLE_H						; 3
+
+	; Set the loop value
+	;     a->sample_loop=pt3->data[a->sample_pointer];
+
+	ldy	#0							; 2
+	lda	(SAMPLE_L),Y						; 5+
+	sta	note_a+NOTE_SAMPLE_LOOP,X				; 5
+
+	; Set the length value
+	;     a->sample_length=pt3->data[a->sample_pointer];
+
+	iny								; 2
+	lda	(SAMPLE_L),Y						; 5+
+	sta	note_a+NOTE_SAMPLE_LENGTH,X				; 5
+
+	; Set pointer to beginning of samples
+
+	lda	SAMPLE_L						; 3
+	adc	#$2							; 2
+	sta	note_a+NOTE_SAMPLE_POINTER_L,X				; 5
+	lda	SAMPLE_H						; 3
+	adc	#$0							; 2
+	sta	note_a+NOTE_SAMPLE_POINTER_H,X				; 5
+
+	ldy	TEMP							; 3
+
+	rts								; 6
+								;============
+								;	 76
+
+
+	;===========================
+	; Load Ornament
+	;===========================
+	; ornament value in A
+	; note offset in X
+
+	; Ornament table pointers are 16-bits little endian
+	; There are 16 of these pointers starting at $aa:$a9
+	; Our ornament starts at address (A*2)+that pointer
+	; We point ORNAMENT_H:ORNAMENT_L to this
+	; then we load the length/data values
+	; and then leave ORNAMENT_H:ORNAMENT_L pointing to begnning of
+	; the ornament data
+
+	; Optimization:
+	;	Loop and length only used once, can be located negative
+	;	from the pointer, but 6502 doesn't make addressing like that
+	;	easy.  Can't self modify as channels A/B/C have own copies
+	; 	of the var.
+
+load_ornament:
+
+	sty	TEMP		; save Y value				; 3
+
+	;pt3->ornament_patterns[i]=
+        ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
+
+	asl			; A*2					; 2
+	tay								; 2
+
+	; a->ornament_pointer=pt3->ornament_patterns[a->ornament];
+
+	lda	PT3_LOC+PT3_ORNAMENT_LOC_L,Y				; 4+
+	sta	ORNAMENT_L						; 3
+
+	lda	PT3_LOC+PT3_ORNAMENT_LOC_L+1,Y				; 4+
+
+	; we're assuming PT3 is loaded to a page boundary
+
+	adc	#>PT3_LOC						; 2
+	sta	ORNAMENT_H						; 3
+
+	lda	#0							; 2
+	sta	note_a+NOTE_ORNAMENT_POSITION,X				; 5
+
+	tay								; 2
+
+	; Set the loop value
+	;     a->ornament_loop=pt3->data[a->ornament_pointer];
+	lda	(ORNAMENT_L),Y						; 5+
+	sta	note_a+NOTE_ORNAMENT_LOOP,X				; 5
+
+	; Set the length value
+	;     a->ornament_length=pt3->data[a->ornament_pointer];
+	iny								; 2
+	lda	(ORNAMENT_L),Y						; 5+
+	sta	note_a+NOTE_ORNAMENT_LENGTH,X				; 5
+
+	; Set the pointer to the value past the length
+
+	lda	ORNAMENT_L						; 3
+	adc	#$2							; 2
+	sta	note_a+NOTE_ORNAMENT_POINTER_L,X			; 5
+	lda	ORNAMENT_H						; 3
+	adc	#$0							; 2
+	sta	note_a+NOTE_ORNAMENT_POINTER_H,X			; 5
+
+	ldy	TEMP		; restore Y value			; 3
+
+	rts								; 6
+
+								;============
+								;	83
+
+
+
+
+
+
+
+
+
 
 
 
@@ -579,8 +478,11 @@ vol_done:
 	;=====================================
 	; note offset in X
 
+	;	6+48 = 54
+
 calculate_note:
 
+.if 0
 	lda	note_a+NOTE_ENABLED,X					; 4+
 	bne	note_enabled						; 2/3
 
@@ -664,32 +566,35 @@ note_not_too_high:
 	;  w = GetNoteFreq(j,pt3->frequency_table);
 
 	jsr	GetNoteFreq
+.endif
 
 	;  a->tone = (a->tone + a->tone_sliding + w) & 0xfff;
 
-	clc
-	ldy	note_a+NOTE_TONE_SLIDING_L,X
-	tya
-	adc	note_a+NOTE_TONE_L,X
+	clc								; 2
+	ldy	note_a+NOTE_TONE_SLIDING_L,X				; 4
+	tya								; 2
+	adc	note_a+NOTE_TONE_L,X					; 4
 
-	sta	temp_word_l1_smc+1
-	lda	note_a+NOTE_TONE_H,X
-	adc	note_a+NOTE_TONE_SLIDING_H,X
-	sta	temp_word_h1_smc+1
+	sta	temp_word_l1_smc+1					; 4
+	lda	note_a+NOTE_TONE_H,X					; 4
+	adc	note_a+NOTE_TONE_SLIDING_H,X				; 4
+	sta	temp_word_h1_smc+1					; 4
 
-	clc	;;can be removed if ADC SLIDING_H cannot overflow
+	clc	;;can be removed if ADC SLIDING_H cannot overflow	; 2
 temp_word_l1_smc:
-	lda	#$d1
+	lda	#$d1							; 2
 freq_l_smc:
-	adc	#$d1
-	sta	note_a+NOTE_TONE_L,X
+	adc	#$d1							; 2
+	sta	note_a+NOTE_TONE_L,X					; 4
 temp_word_h1_smc:
-	lda	#$d1
+	lda	#$d1							; 2
 freq_h_smc:
-	adc	#$d1
-	and	#$0f
-	sta	note_a+NOTE_TONE_H,X
-
+	adc	#$d1							; 2
+	and	#$0f							; 2
+	sta	note_a+NOTE_TONE_H,X					; 4
+								;===========
+								;	48
+.if 0
 	;=====================
 	; handle tone sliding
 
@@ -1022,6 +927,8 @@ do_offon:
 	ldy	note_a+NOTE_OFFON_DELAY,X ;      else a->onoff=a->offon_delay;
 put_offon:
 	sty	note_a+NOTE_ONOFF,X
+
+.endif
 
 done_onoff:
 
@@ -1783,7 +1690,7 @@ not_done:
 	; update pattern or line if necessary
 	; then calculate the values for the next frame
 
-	; 8+???
+	; 8+355=363
 
 	;==========================
 	; pattern done early!
@@ -1869,7 +1776,7 @@ next_pattern:
 	; ????? FIXME/calculate note
 	;
 
-	; 9+36+11+18+30+18+49 = 171
+	; 9+ 184 +    36+11+18+30+18+49 = 355
 
 do_frame:
 	; AY-3-8910 register summary
@@ -1889,16 +1796,16 @@ do_frame:
 	stx	pt3_envelope_add_smc+1					; 4
 								;===========
 								;	9
-.if 0
-	;;ldx	#(NOTE_STRUCT_SIZE*0)	; Note A			; 2
-	jsr	calculate_note						; 6+?
+
+	;;ldx	#(NOTE_STRUCT_SIZE*0)	; Note A
+	jsr	calculate_note						; 6+54
 	ldx	#(NOTE_STRUCT_SIZE*1)	; Note B			; 2
-	jsr	calculate_note						; 6+?
+	jsr	calculate_note						; 6+54
 	ldx	#(NOTE_STRUCT_SIZE*2)	; Note C			; 2
-	jsr	calculate_note						; 6+?
+	jsr	calculate_note						; 6+54
 								;=============
-								;	FIXME
-.endif
+								; FIXME 184
+
 	; Note, we assume 1MHz timings, adjust pt3 as needed
 
 	; Load up the Frequency Registers
