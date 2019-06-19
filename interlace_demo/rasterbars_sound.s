@@ -463,7 +463,7 @@ pad_time:
 	;============================
 
 
-;	jsr	pt3_make_frame
+	jsr	pt3_make_frame
 	jsr	mb_write_frame		; 6+921
 
 

@@ -386,7 +386,7 @@ zero_song_structs_loop:
 	sta	pt3_envelope_delay_smc+1				; 4
 	sta	pt3_envelope_delay_orig_smc+1				; 4
 
-	sta	pt3_mixer_value_smc+1					; 4
+	sta	PT3_MIXER_VAL						; 3
 
 	sta	current_pattern_smc+1					; 4
 	sta	current_line_smc+1					; 4
@@ -963,9 +963,9 @@ noise_slide_done:
 	lda	sample_b1_smc+1	;  pt3->mixer_value = ((b1 >>1) & 0x48) | pt3->mixer_value;
 	lsr
 	and	#$48
-pt3_mixer_value_smc:
-	ora	#$d1
-	sta	pt3_mixer_value_smc+1
+
+	ora	PT3_MIXER_VAL					; 3
+	sta	PT3_MIXER_VAL
 
 
 	;========================
@@ -1001,7 +1001,7 @@ done_note:
 	; set mixer value
 	; this is a bit complex (from original code)
 	; after 3 calls it is set up properly
-	lsr	pt3_mixer_value_smc+1
+	lsr	PT3_MIXER_VAL
 
 handle_onoff:
 	ldy	note_a+NOTE_ONOFF,X	;if (a->onoff>0) {
@@ -1853,6 +1853,7 @@ next_pattern:
 
 	inc	current_pattern_smc+1	; increment pattern		; 6
 
+
 do_frame:
 	; AY-3-8910 register summary
 	;
@@ -1867,7 +1868,7 @@ do_frame:
 	; R14/R15 = I/O (ignored)
 
 	ldx	#0			; needed			; 2
-	stx	pt3_mixer_value_smc+1					; 4
+	stx	PT3_MIXER_VAL						; 3
 	stx	pt3_envelope_add_smc+1					; 4
 
 	;;ldx	#(NOTE_STRUCT_SIZE*0)	; Note A			; 2
@@ -1877,138 +1878,31 @@ do_frame:
 	ldx	#(NOTE_STRUCT_SIZE*2)	; Note C			; 2
 	jsr	calculate_note						; 6+?
 
-convert_177_smc1:
-	sec								; 2
+	; Note, we assume 1MHz timings, adjust pt3 as needed
 
 	; Load up the Frequency Registers
 
-	lda	note_a+NOTE_TONE_L      ; Note A Period L               ; 4
+	lda	note_a+NOTE_TONE_L      ; Note A Period L	(ZP)	; 3
 	sta	AY_REGISTERS+0          ; into R0                       ; 3
 
-	lda	note_a+NOTE_TONE_H	; Note A Period H		; 4
+	lda	note_a+NOTE_TONE_H	; Note A Period H		; 3
 	sta	AY_REGISTERS+1		; into R1			; 3
-	lda	note_a+NOTE_TONE_L	; Note A Period L		; 4
-	bcc	no_scale_a						; 2/3
 
-	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
-
-	; conversion costs 100 cycles!
-
-	; first multiply by 8
-	asl								; 2
-	rol	AY_REGISTERS+1						; 5
-	asl								; 2
-	rol	AY_REGISTERS+1						; 5
-	asl								; 2
-	rol	AY_REGISTERS+1						; 5
-
-	; add in original to get 9
-	clc								; 2
-	adc	note_a+NOTE_TONE_L					; 4
-	sta	AY_REGISTERS+0						; 3
-	lda	note_a+NOTE_TONE_H					; 4
-	adc	AY_REGISTERS+1						; 3
-
-	; divide by 16 to get proper value
-	ror								; 2
-	ror	AY_REGISTERS+0						; 5
-	ror								; 2
-	ror	AY_REGISTERS+0						; 5
-	ror								; 2
-	ror	AY_REGISTERS+0						; 5
-	ror								; 2
-	ror	AY_REGISTERS+0						; 5
-	and	#$0f							; 2
-	sta	AY_REGISTERS+1						; 3
-
-no_scale_a:
-
-convert_177_smc2:
-	sec								; 2
-
-	lda	note_b+NOTE_TONE_L	; Note B Period L		; 4
+	lda	note_b+NOTE_TONE_L	; Note B Period L		; 3
 	sta	AY_REGISTERS+2		; into R2			; 3
 
-	lda	note_b+NOTE_TONE_H	; Note B Period H		; 4
+	lda	note_b+NOTE_TONE_H	; Note B Period H		; 3
 	sta	AY_REGISTERS+3		; into R3			; 3
-	lda	note_b+NOTE_TONE_L	; Note B Period L		; 4
-	bcc	no_scale_b						; 2/3
 
-	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
-
-	; first multiply by 8
-	asl								; 2
-	rol	AY_REGISTERS+3						; 5
-	asl								; 2
-	rol	AY_REGISTERS+3						; 5
-	asl								; 2
-	rol	AY_REGISTERS+3						; 5
-
-	; add in original to get 9
-	clc								; 2
-	adc	note_b+NOTE_TONE_L					; 4
-	sta	AY_REGISTERS+2						; 3
-	lda	note_b+NOTE_TONE_H					; 4
-	adc	AY_REGISTERS+3						; 3
-
-	; divide by 16 to get proper value
-	ror								; 2
-	ror	AY_REGISTERS+2						; 5
-	ror								; 2
-	ror	AY_REGISTERS+2						; 5
-	ror								; 2
-	ror	AY_REGISTERS+2						; 5
-	ror								; 2
-	ror	AY_REGISTERS+2						; 5
-	and	#$0f							; 2
-	sta	AY_REGISTERS+3						; 3
-
-no_scale_b:
-
-convert_177_smc3:
-	sec								; 2
-
-	lda	note_c+NOTE_TONE_L	; Note C Period L		; 4
+	lda	note_c+NOTE_TONE_L	; Note C Period L		; 3
 	sta	AY_REGISTERS+4		; into R4			; 3
-	lda	note_c+NOTE_TONE_H	; Note C Period H		; 4
+
+	lda	note_c+NOTE_TONE_H	; Note C Period H		; 3
 	sta	AY_REGISTERS+5		; into R5			; 3
-	lda	note_c+NOTE_TONE_L	; Note C Period L		; 4
-	bcc	no_scale_c						; 2/3
-
-	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
-
-	; first multiply by 8
-	asl								; 2
-	rol	AY_REGISTERS+5						; 5
-	asl								; 2
-	rol	AY_REGISTERS+5						; 5
-	asl								; 2
-	rol	AY_REGISTERS+5						; 5
-
-	; add in original to get 9
-	clc								; 2
-	adc	note_c+NOTE_TONE_L					; 4
-	sta	AY_REGISTERS+4						; 3
-	lda	note_c+NOTE_TONE_H					; 4
-	adc	AY_REGISTERS+5						; 3
-
-	; divide by 16 to get proper value
-	ror								; 2
-	ror	AY_REGISTERS+4						; 5
-	ror								; 2
-	ror	AY_REGISTERS+4						; 5
-	ror								; 2
-	ror	AY_REGISTERS+4						; 5
-	ror								; 2
-	ror	AY_REGISTERS+4						; 5
-	and	#$0f							; 2
-	sta	AY_REGISTERS+5						; 3
-
-no_scale_c:
-
 
 	; Noise
 	; frame[6]= (pt3->noise_period+pt3->noise_add)&0x1f;
+
 	clc								; 2
 pt3_noise_period_smc:
 	lda	#$d1							; 2
@@ -2017,44 +1911,19 @@ pt3_noise_add_smc:
 	and	#$1f							; 2
 	sta	AY_REGISTERS+6						; 3
 
-convert_177_smc4:
-	sec								; 2
-	bcc	no_scale_n						; 2/3
-
-	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
-
-	; first multiply by 8
-	asl								; 2
-	asl								; 2
-	asl								; 2
-
-	; add in original to get 9
-	adc	AY_REGISTERS+6						; 3
-
-	; divide by 16 to get proper value
-	ror								; 2
-	ror								; 2
-	ror								; 2
-	ror								; 2
-	and	#$1f							; 2
-
-no_scale_n:
-	sta	AY_REGISTERS+6						; 3
-
 	;=======================
 	; Mixer
 
-	lda	pt3_mixer_value_smc+1					; 4
-	sta	AY_REGISTERS+7						; 3
+	; PT3_MIXER_VAL is already in AY_REGISTERS+7
 
 	;=======================
 	; Amplitudes
 
-	lda	note_a+NOTE_AMPLITUDE					; 4
+	lda	note_a+NOTE_AMPLITUDE					; 3
 	sta	AY_REGISTERS+8						; 3
-	lda	note_b+NOTE_AMPLITUDE					; 4
+	lda	note_b+NOTE_AMPLITUDE					; 3
 	sta	AY_REGISTERS+9						; 3
-	lda	note_c+NOTE_AMPLITUDE					; 4
+	lda	note_c+NOTE_AMPLITUDE					; 3
 	sta	AY_REGISTERS+10						; 3
 
 	;======================================
@@ -2080,43 +1949,6 @@ pt3_envelope_slide_l_smc:
 pt3_envelope_slide_h_smc:
 	adc	#$d1							; 2
 	sta	AY_REGISTERS+12						; 3
-
-convert_177_smc5:
-	sec
-	bcc	no_scale_e						; 2/3
-
-	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
-
-	tay								; 2
-	; first multiply by 8
-	lda	AY_REGISTERS+11						; 3
-	asl								; 2
-	rol	AY_REGISTERS+12						; 5
-	asl								; 2
-	rol	AY_REGISTERS+12						; 5
-	asl								; 2
-	rol	AY_REGISTERS+12						; 5
-
-	; add in original to get 9
-	clc								; 2
-	adc	AY_REGISTERS+11						; 3
-	sta	AY_REGISTERS+11						; 3
-	tya								; 2
-	adc	AY_REGISTERS+12						; 3
-
-	; divide by 16 to get proper value
-	ror								; 2
-	ror	AY_REGISTERS+11						; 5
-	ror								; 2
-	ror	AY_REGISTERS+11						; 5
-	ror								; 2
-	ror	AY_REGISTERS+11						; 5
-	ror								; 2
-	ror	AY_REGISTERS+11						; 5
-	and	#$0f							; 2
-	sta	AY_REGISTERS+12						; 3
-
-no_scale_e:
 
 	;========================
 	; Envelope shape
@@ -2162,6 +1994,11 @@ pt3_envelope_slide_add_h_smc:
 done_do_frame:
 
 	rts								; 6
+
+
+
+
+
 
 	;======================================
 	; GetNoteFreq
