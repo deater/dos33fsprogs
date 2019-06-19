@@ -1899,7 +1899,8 @@ do_frame:
 
 	lda	note_c+NOTE_TONE_H	; Note C Period H		; 3
 	sta	AY_REGISTERS+5		; into R5			; 3
-
+								;===========
+								;	36
 	; Noise
 	; frame[6]= (pt3->noise_period+pt3->noise_add)&0x1f;
 
@@ -1910,6 +1911,8 @@ pt3_noise_add_smc:
 	adc	#$d1							; 2
 	and	#$1f							; 2
 	sta	AY_REGISTERS+6						; 3
+								;============
+								;	11
 
 	;=======================
 	; Mixer
@@ -1925,6 +1928,8 @@ pt3_noise_add_smc:
 	sta	AY_REGISTERS+9						; 3
 	lda	note_c+NOTE_AMPLITUDE					; 3
 	sta	AY_REGISTERS+10						; 3
+								;===========
+								;	18
 
 	;======================================
 	; Envelope period
@@ -1949,21 +1954,31 @@ pt3_envelope_slide_l_smc:
 pt3_envelope_slide_h_smc:
 	adc	#$d1							; 2
 	sta	AY_REGISTERS+12						; 3
+								;===========
+								;	30
 
 	;========================
 	; Envelope shape
+	; same=18
+	; diff=14+[4]
 
 pt3_envelope_type_smc:
 	lda	#$d1							; 2
 pt3_envelope_type_old_smc:
 	cmp	#$d1							; 2
 	sta	pt3_envelope_type_old_smc+1; copy old to new		; 4
-	bne	envelope_diff						; 2/3
+	bne	envelope_diff_waste					; 3
 envelope_same:
+									;-1
 	lda	#$ff			; if same, store $ff		; 2
+	jmp	envelope_diff						; 3
+envelope_diff_waste:
+	nop								; 2
+	nop								; 2
 envelope_diff:
 	sta	AY_REGISTERS+13						; 3
-
+								;============
+								;	18
 
 
 	;==============================
@@ -1972,7 +1987,8 @@ envelope_diff:
 
 pt3_envelope_delay_smc:
 	lda	#$d1							; 2
-	beq	done_do_frame		; assume can't be negative?	; 2/3
+	beq	done_do_frame		; assume can't be negative?	; 3
+									; -1
 					; do this if envelope_delay>0
 	dec	pt3_envelope_delay_smc+1				; 6
 	bne	done_do_frame						; 2/3
