@@ -1583,21 +1583,21 @@ set_envelope:
 
 reset_note:
 	lda	#0							; 2
-	sta	note_a+NOTE_SAMPLE_POSITION,X	; sample_position=0	; 5
-	sta	note_a+NOTE_AMPLITUDE_SLIDING,X	; amplitude_sliding=0	; 5
-	sta	note_a+NOTE_NOISE_SLIDING,X	; noise_sliding=0	; 5
-	sta	note_a+NOTE_ENVELOPE_SLIDING,X	; envelope_sliding=0	; 5
-	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0	; 5
-	sta	note_a+NOTE_TONE_SLIDE_COUNT,X	; tone_slide_count=0	; 5
-	sta	note_a+NOTE_TONE_SLIDING_L,X	; tone_sliding=0	; 5
-	sta	note_a+NOTE_TONE_SLIDING_H,X				; 5
-	sta	note_a+NOTE_TONE_ACCUMULATOR_L,X ; tone_accumulator=0	; 5
-	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X			; 5
-	sta	note_a+NOTE_ONOFF,X		; onoff=0;		; 5
+	sta	note_a+NOTE_SAMPLE_POSITION,X	; sample_position=0	; 4
+	sta	note_a+NOTE_AMPLITUDE_SLIDING,X	; amplitude_sliding=0	; 4
+	sta	note_a+NOTE_NOISE_SLIDING,X	; noise_sliding=0	; 4
+	sta	note_a+NOTE_ENVELOPE_SLIDING,X	; envelope_sliding=0	; 4
+	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0	; 4
+	sta	note_a+NOTE_TONE_SLIDE_COUNT,X	; tone_slide_count=0	; 4
+	sta	note_a+NOTE_TONE_SLIDING_L,X	; tone_sliding=0	; 4
+	sta	note_a+NOTE_TONE_SLIDING_H,X				; 4
+	sta	note_a+NOTE_TONE_ACCUMULATOR_L,X ; tone_accumulator=0	; 4
+	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X			; 4
+	sta	note_a+NOTE_ONOFF,X		; onoff=0;		; 4
 
 	rts								; 6
 								;============
-								;	69
+								;	52
 
 
 
@@ -1696,22 +1696,31 @@ not_done:
 	; pattern done early!
 .if 0
 early_end:
+	; A is pattern_done which is zero at this point
 	inc	current_pattern_smc+1	; increment pattern		; 6
 	sta	current_line_smc+1					; 4
 	sta	current_subframe_smc+1					; 4
+
+	; always goes to set_pattern here?
+
+	jmp	set_pattern						; 3
 
 check_subframe:
 	lda	current_subframe_smc+1					; 4
 	bne	pattern_good						; 2/3
 
+set_pattern:
 	; load a new pattern in
 	jsr	pt3_set_pattern						;6+?
 
 	lda	DONE_SONG						; 3
-	beq	pattern_good						; 2/3
+	beq	pt3_new_line						; 2/3
 	rts								; 6
 
 .endif
+	;==========================================
+	; real entry point
+
 pt3_make_frame:
 	; see if we need a new pattern
 	; we do if line==0 and subframe==0
@@ -1730,6 +1739,7 @@ current_subframe_smc:
 .if 0
 	bne	line_good						; 2/3
 
+pt3_new_line:
 	; decode a new line
 	jsr	pt3_decode_line						; 6+?
 
@@ -1740,6 +1750,8 @@ pt3_pattern_done_smc:
 .if 0
 	beq	early_end						; 2/3
 
+
+	;========================================
 line_good:
 
 	; Increment everything
