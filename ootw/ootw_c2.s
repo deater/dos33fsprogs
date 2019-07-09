@@ -27,13 +27,61 @@ ootw_c2:
 	; Run the intro
 	;=======================
 
-	jsr	ootw_c2_intro
+;	jsr	ootw_c2_intro
 
 	;=======================
 	; Enter the game
 	;=======================
 
 	jsr	ootw_cage
+
+	;=======================
+	; Start Levels
+	;=======================
+
+	lda     #1
+	sta     DIRECTION
+	lda     #22
+	sta     PHYSICIST_Y
+	lda     #24
+	sta     PHYSICIST_X
+	lda     #0
+	sta     PHYSICIST_STATE
+	sta     WHICH_JAIL
+
+	;=========================
+	; c2_new_room
+	;=========================
+	; enter new room on level2
+
+c2_new_room:
+
+	lda	WHICH_JAIL
+	cmp	#4
+	bcs	elevator_room		; bge
+jail_room:
+	jsr	ootw_jail
+	jmp	c2_check_done
+
+elevator_room:
+	cmp	#8
+	bcs	multilevel_room		; bge
+	jsr	ootw_elevator
+	jmp	c2_check_done
+
+multilevel_room:
+	; FIXME
+
+
+
+c2_check_done:
+	; only exit if done level
+	; FIXME: or quit pressed?
+
+	lda	WHICH_JAIL
+	cmp	#11
+	bne	c2_new_room
+
 
 ;===========================
 ; quit_level
@@ -70,6 +118,7 @@ end_message:
 
 .include "ootw_c2_cage.s"
 .include "ootw_c2_jail.s"
+.include "ootw_c2_elevator.s"
 .include "ootw_c2_intro.s"
 .include "physicist.s"
 .include "text_print.s"

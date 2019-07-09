@@ -66,17 +66,8 @@ cage_loop:
 
         bit     KEYRESET		; clear keyboard
 
-	lda	#1
-	sta	DIRECTION
-	lda	#22
-	sta	PHYSICIST_Y
-	lda	#24
-	sta	PHYSICIST_X
-	lda	#0
-	sta	PHYSICIST_STATE
-	sta	WHICH_JAIL
 
-	jmp	ootw_jail
+	rts
 
 cage_no_keypress:
 

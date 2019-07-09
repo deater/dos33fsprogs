@@ -1,6 +1,6 @@
-; Ootw Checkpoint2 -- Running around the Jail
+; Ootw Checkpoint2 -- Using the elevator
 
-ootw_jail:
+ootw_elevator:
 	;===========================
 	; Enable graphics
 
@@ -26,9 +26,9 @@ ootw_jail:
 	; setup per-room variables
 
 	lda	WHICH_JAIL
-	bne	jail1
+	bne	elevator1
 
-jail0:
+elevator0:
 	lda	#(20+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
@@ -53,13 +53,13 @@ jail0:
 
 	jmp	jail_setup_done
 
-jail1:
+elevator1:
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
 	sta	RIGHT_LIMIT
 
-jail_setup_done:
+elevator_setup_done:
 
 
 	;=================================
@@ -76,17 +76,14 @@ jail_setup_done:
 	sta	GAME_OVER
 
 	;============================
-	; Cage Loop
+	; Elevator Loop
 	;============================
-jail_loop:
+elevator_loop:
 
 	;================================
 	; copy background to current page
 
 	jsr	gr_copy_to_current
-
-	;=======================
-	; draw miners mining
 
 	;===============================
 	; check keyboard
@@ -122,47 +119,47 @@ jail_loop:
 	; inc frame count
 
 	inc	FRAMEL
-	bne	jail_frame_no_oflo
+	bne	elevator_frame_no_oflo
 	inc	FRAMEH
 
-jail_frame_no_oflo:
+elevator_frame_no_oflo:
 
 	; check if done this level
 
 	lda	GAME_OVER
-	beq	still_in_jail
+	beq	still_in_elevator
 
 	cmp	#$ff			; if $ff, we died
-	beq	done_jail
+	beq	done_elevator
 
 	;===============================
 	; check if exited room to right
 	cmp	#1
-	beq	jail_exit_left
+	beq	elevator_exit_left
 
 	; exit to right
-jail_exit_right:
+elevator_exit_right:
 	lda	#0
 	sta	PHYSICIST_X
-jer_smc:
+eer_smc:
 	lda	#$0
 	sta	WHICH_CAVE
-	jmp	ootw_jail
+	jmp	ootw_elevator
 
-jail_exit_left:
+elevator_exit_left:
 	lda	#37
 	sta	PHYSICIST_X
-jel_smc:
+eel_smc:
 	lda	#0
 	sta	WHICH_CAVE
-	jmp	ootw_jail
+	jmp	ootw_elevator
 
 
 	; loop forever
-still_in_jail:
-	jmp	jail_loop
+still_in_elevator:
+	jmp	elevator_loop
 
-done_jail:
+done_elevator:
 	rts
 
 
@@ -172,26 +169,26 @@ done_jail:
 	; load proper background to $c00
 	;===============================
 
-jail_load_background:
+elevator_load_background:
 
 	lda	WHICH_JAIL
-	bne	jail_bg1
+	bne	elevator_bg1
 
-jail_bg0:
+elevator_bg0:
 	; load background
 	lda	#>(cage_fell_rle)
 	sta	GBASH
 	lda	#<(cage_fell_rle)
 	sta	GBASL
-	jmp	jail_bg_done
+	jmp	elevator_bg_done
 
-jail_bg1:
+elevator_bg1:
 	; load background
 	lda	#>(jail2_rle)
 	sta	GBASH
 	lda	#<(jail2_rle)
 	sta	GBASL
-jail_bg_done:
+elevator_bg_done:
 	lda	#$c				; load to page $c00
 	jmp	load_rle_gr			; tail call
 
