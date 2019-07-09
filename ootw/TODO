@@ -55,6 +55,7 @@ cage room:
 + Ability to pick up gun, with all that entails
 + Animation of friend?
 + animated miners in background
++ 1-bit audio recording of friend talking
 
 Jail:
 + Foreground animations
@@ -62,5 +63,4 @@ Jail:
 
 Elevator:
 + Elevator ride, view of city?
-+ 1-bit audio recording of friend talking
 + music play when viewing city

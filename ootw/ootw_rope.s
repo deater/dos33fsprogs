@@ -185,7 +185,7 @@ done_swing_check:
 
 	lda	PHYSICIST_X
 	cmp	#26
-	bcs	phys_no_adjust_y	; blt
+	bcs	phys_no_adjust_y	; bge
 
 	cmp	#17
 	bcc	phys_on_platform

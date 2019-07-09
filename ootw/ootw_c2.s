@@ -36,7 +36,7 @@ ootw_c2:
 	jsr	ootw_cage
 
 	;=======================
-	; Start Levels
+	; Start Level After Cage
 	;=======================
 
 	lda     #1
@@ -55,6 +55,8 @@ ootw_c2:
 	; enter new room on level2
 
 c2_new_room:
+	lda	#0
+	sta	GAME_OVER
 
 	lda	WHICH_JAIL
 	cmp	#4
@@ -75,6 +77,10 @@ multilevel_room:
 
 
 c2_check_done:
+	lda	GAME_OVER
+	cmp	#$ff
+	beq	quit_level
+
 	; only exit if done level
 	; FIXME: or quit pressed?
 

@@ -19,7 +19,7 @@ ootw_elevator:
 	;=============================
 	; load background image
 
-	jsr	jail_load_background
+	jsr	elevator_load_background
 
 
 	;==============================
@@ -171,24 +171,30 @@ done_elevator:
 
 elevator_load_background:
 
-	lda	WHICH_JAIL
-	bne	elevator_bg1
+; Line 0
+	lda	#$88
+	ldx	#0
+line0_left_loop:
+	sta	$c00,X
+	inx
+	cpx	#16
+	bne	line0_left_loop
 
-elevator_bg0:
-	; load background
-	lda	#>(cage_fell_rle)
-	sta	GBASH
-	lda	#<(cage_fell_rle)
-	sta	GBASL
-	jmp	elevator_bg_done
+	lda	#$00
+line0_center_loop:
+	sta	$c00,X
+	inx
+	cpx	#25
+	bne	line0_center_loop
 
-elevator_bg1:
-	; load background
-	lda	#>(jail2_rle)
-	sta	GBASH
-	lda	#<(jail2_rle)
-	sta	GBASL
-elevator_bg_done:
-	lda	#$c				; load to page $c00
-	jmp	load_rle_gr			; tail call
+	lda	#$88
+line0_right_loop:
+	sta	$c00,X
+	inx
+	cpx	#39
+	bne	line0_right_loop
+
+
+
+
 
