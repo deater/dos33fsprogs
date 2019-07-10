@@ -245,3 +245,7 @@ elevator_sprite:
 	.byte	$8,$1
 	.byte	$25,$25,$25,$25,$25,$25,$25,$25
 
+; low/high	nothing
+; high/low	xBxxxxxx
+; low/high	xxBBBxxx
+; high low	xxxxxxBx
