@@ -26,38 +26,31 @@ ootw_elevator:
 	; setup per-room variables
 
 	lda	WHICH_JAIL
-	bne	elevator1
+	cmp	#4
+	bne	elevator5
 
-elevator0:
-	lda	#(20+128)
+elevator4:
+	lda	#(-4+128)
 	sta	LEFT_LIMIT
-	lda	#(39+128)
+	lda	#(30+128)
 	sta	RIGHT_LIMIT
 
 	; set right exit
-	lda     #1
-	sta     jer_smc+1
-	lda     #<ootw_jail
-	sta     jer_smc+5
-	lda     #>ootw_jail
-	sta     jer_smc+6
+	lda     #3
+	sta     eel_smc+1
 
-	; set left exit
-	lda     #0
-	sta     jel_smc+1
-	lda     #<ootw_jail
-	sta     jel_smc+5
-	lda     #>ootw_jail
-	sta     jel_smc+6
+	jmp	elevator_setup_done
 
+elevator5:
+	cmp	#5
+	bne	elevator6
 
-	jmp	jail_setup_done
-
-elevator1:
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
-	lda	#(39+128)
+	lda	#(30+128)
 	sta	RIGHT_LIMIT
+
+elevator6:
 
 elevator_setup_done:
 
@@ -144,7 +137,7 @@ elevator_exit_right:
 eer_smc:
 	lda	#$0
 	sta	WHICH_CAVE
-	jmp	ootw_elevator
+	jmp	done_elevator
 
 elevator_exit_left:
 	lda	#37
@@ -152,7 +145,7 @@ elevator_exit_left:
 eel_smc:
 	lda	#0
 	sta	WHICH_CAVE
-	jmp	ootw_elevator
+	jmp	done_elevator
 
 
 	; loop forever
@@ -171,8 +164,20 @@ done_elevator:
 
 elevator_load_background:
 
-; Line 0
-	lda	#$88
+	ldy	#0
+elevator_background_loop:
+
+	lda	gr_offsets,Y
+	sta	line0_left_loop+1
+	sta	line0_center_loop+1
+
+	lda	gr_offsets+1,Y
+	clc
+	adc	#$8
+	sta	line0_left_loop+2
+	sta	line0_center_loop+2
+
+	lda	elevator_fb,Y
 	ldx	#0
 line0_left_loop:
 	sta	$c00,X
@@ -180,7 +185,7 @@ line0_left_loop:
 	cpx	#16
 	bne	line0_left_loop
 
-	lda	#$00
+	lda	elevator_fb+1,Y
 line0_center_loop:
 	sta	$c00,X
 	inx
@@ -194,7 +199,18 @@ line0_right_loop:
 	cpx	#39
 	bne	line0_right_loop
 
+	iny
+	iny
+	cpy	#48
+	bne	elevator_background_loop
+
+	rts
 
 
+elevator_fb:
+	.byte	$88,$88,$88,$88,$88,$88,$88,$88,$88
+	.byte	$00,$00,$00,$00,$00,$00,$00
+	.byte	$88,$88,$88,$88,$88,$88,$88,$88
 
-
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
