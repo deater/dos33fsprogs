@@ -21,6 +21,12 @@ ootw_elevator:
 
 	jsr	elevator_load_background
 
+	;==============================
+	; setup physicist
+
+	lda	#16
+	sta	PHYSICIST_Y
+
 
 	;==============================
 	; setup per-room variables
@@ -77,6 +83,22 @@ elevator_loop:
 	; copy background to current page
 
 	jsr	gr_copy_to_current
+
+	;================================
+	; draw elevator
+
+	lda	#17
+        sta	XPOS
+        lda	#32
+	sta	YPOS
+
+	lda	#<elevator_sprite
+	sta	INL
+	lda	#>elevator_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
 
 	;===============================
 	; check keyboard
@@ -167,25 +189,27 @@ elevator_load_background:
 	ldy	#0
 elevator_background_loop:
 
-	lda	gr_offsets,Y
+	lda	gr_offsets_l,Y
 	sta	line0_left_loop+1
 	sta	line0_center_loop+1
+	sta	line0_right_loop+1
 
-	lda	gr_offsets+1,Y
+	lda	gr_offsets_h,Y
 	clc
 	adc	#$8
 	sta	line0_left_loop+2
 	sta	line0_center_loop+2
+	sta	line0_right_loop+2
 
-	lda	elevator_fb,Y
+	lda	elevator_fb_l,Y
 	ldx	#0
 line0_left_loop:
 	sta	$c00,X
 	inx
-	cpx	#16
+	cpx	#17
 	bne	line0_left_loop
 
-	lda	elevator_fb+1,Y
+	lda	elevator_fb_c,Y
 line0_center_loop:
 	sta	$c00,X
 	inx
@@ -196,21 +220,28 @@ line0_center_loop:
 line0_right_loop:
 	sta	$c00,X
 	inx
-	cpx	#39
+	cpx	#40
 	bne	line0_right_loop
 
 	iny
-	iny
-	cpy	#48
+	cpy	#24
 	bne	elevator_background_loop
 
 	rts
 
 
-elevator_fb:
-	.byte	$88,$88,$88,$88,$88,$88,$88,$88,$88
-	.byte	$00,$00,$00,$00,$00,$00,$00
+elevator_fb_l:
+	.byte	$88,$88,$88,$88,$88,$88,$88
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00
 	.byte	$88,$88,$88,$88,$88,$88,$88,$88
 
+elevator_fb_c:
 	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+
+
+
+elevator_sprite:
+	.byte	$8,$1
+	.byte	$25,$25,$25,$25,$25,$25,$25,$25
+
