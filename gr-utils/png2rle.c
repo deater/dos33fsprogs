@@ -154,7 +154,7 @@ int rle_smaller(int out_type, char *varname,
 		fprintf(stdout,"%c",xsize);
 	}
 
-	size+=2;
+	size+=1;
 
 	/* Get first top/bottom color pair */
 	last=image[x];

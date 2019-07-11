@@ -166,20 +166,39 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 		for(y=0;y<height;y+=2) {
 			for(x=0;x<width/2;x++) {
 
-				/* top color */
-				a2_color=row_pointers[y][x*2];
+				if (bit_depth==8) {
+					/* top color */
+					a2_color=row_pointers[y][x*2];
 
-				/* bottom color */
-				color=row_pointers[y+1][x*2];
+					/* bottom color */
+					color=row_pointers[y+1][x*2];
 
-				a2_color|=(color<<4);
+					a2_color|=(color<<4);
 
-				if (debug) {
-					printf("%x ",a2_color);
+					if (debug) {
+						printf("%x ",a2_color);
+					}
+
+					*out_ptr=a2_color;
+					out_ptr++;
 				}
+				else if (bit_depth==4) {
+					/* top color */
+					a2_color=row_pointers[y][x];
 
-				*out_ptr=a2_color;
-				out_ptr++;
+					/* bottom color */
+					color=row_pointers[y+1][x];
+
+					a2_color|=(color<<4);
+
+					if (debug) {
+						printf("%x ",a2_color);
+					}
+
+					*out_ptr=a2_color;
+					out_ptr++;
+
+				}
 			}
 			if (debug) printf("\n");
 		}
