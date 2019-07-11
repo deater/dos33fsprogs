@@ -25,12 +25,12 @@ ootw_elevator:
 
 	;==============================
 	; setup per-room variables
-check_elevator4:
+check_elevator7:
 	lda	WHICH_JAIL
-	cmp	#4
-	bne	check_elevator5
+	cmp	#7
+	bne	check_elevator8
 
-elevator4:
+elevator7:
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
 	lda	#(21+128)
@@ -41,11 +41,11 @@ elevator4:
 	sta     eel_smc+1
 
 	; set up exit
-	lda	#7
+	lda	#10
 	sta	going_up_smc+1
 
 	; set down exit
-	lda	#5
+	lda	#8
 	sta	going_down_smc+1
 
 	lda	#48
@@ -53,25 +53,25 @@ elevator4:
 
 	jmp	elevator_setup_done
 
-check_elevator5:
-	cmp	#5
-	bne	check_elevator6
-elevator5:
+check_elevator8:
+	cmp	#8
+	bne	check_elevator9
+elevator8:
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
 	lda	#(21+128)
 	sta	RIGHT_LIMIT
 
 	; set left exit
-	lda     #9
+	lda     #4
 	sta     eel_smc+1
 
 	; set up exit
-	lda	#4
+	lda	#7
 	sta	going_up_smc+1
 
 	; set down exit
-	lda	#6
+	lda	#9
 	sta	going_down_smc+1
 
 	lda	#96
@@ -80,22 +80,22 @@ elevator5:
 	jmp	elevator_setup_done
 
 
-check_elevator6:
-	cmp	#6
-	bne	elevator7
+check_elevator9:
+	cmp	#9
+	bne	elevator10
 
-elevator6:
+elevator9:
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
 	lda	#(21+128)
 	sta	RIGHT_LIMIT
 
 	; set left exit
-	lda     #8
+	lda     #6
 	sta     eel_smc+1
 
 	; set up exit
-	lda	#5
+	lda	#8
 	sta	going_up_smc+1
 
 	; no down exit
@@ -105,7 +105,7 @@ elevator6:
 
 	jmp	elevator_setup_done
 
-elevator7:
+elevator10:
 
 	lda	#(10+128)
 	sta	LEFT_LIMIT
@@ -116,7 +116,7 @@ elevator7:
 	; no up exit
 
 	; set down exit
-	lda	#4
+	lda	#7
 	sta	going_down_smc+1
 
 	lda	#0

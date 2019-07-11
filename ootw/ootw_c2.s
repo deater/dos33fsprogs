@@ -60,22 +60,14 @@ c2_new_room:
 	sta	GAME_OVER
 
 	lda	WHICH_JAIL
-	cmp	#4
+	cmp	#7
 	bcs	elevator_room		; bge
 jail_room:
 	jsr	ootw_jail
 	jmp	c2_check_done
 
 elevator_room:
-	cmp	#8
-	bcs	multilevel_room		; bge
 	jsr	ootw_elevator
-	jmp	c2_check_done
-
-multilevel_room:
-	; FIXME
-
-
 
 c2_check_done:
 	lda	GAME_OVER

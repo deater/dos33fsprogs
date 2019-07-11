@@ -3,6 +3,12 @@
 ootw_jail:
 
 	;==============================
+	; init
+
+	lda	#0
+	sta	ON_ELEVATOR
+
+	;==============================
 	; setup per-room variables
 
 	lda	WHICH_JAIL
@@ -29,15 +35,10 @@ jail0:
 	lda	#>(cage_fell_rle)
 	sta	GBASH
 	lda	#<(cage_fell_rle)
-	sta	GBASL
-	lda	#$c				; load to page $c00
-	jsr	load_rle_gr			; tail call
-
 
 	jmp	jail_setup_done
 
 jail1:
-	lda	WHICH_JAIL
 	cmp	#1
 	bne	jail2
 
@@ -61,14 +62,10 @@ jail1:
 	lda	#>(jail2_rle)
 	sta	GBASH
 	lda	#<(jail2_rle)
-	sta	GBASL
-	lda	#$c				; load to page $c00
-	jsr	load_rle_gr			; tail call
 
 	jmp	jail_setup_done
 
 jail2:
-	lda	WHICH_JAIL
 	cmp	#2
 	bne	jail3
 
@@ -89,13 +86,66 @@ jail2:
 	lda	#>(jail3_rle)
 	sta	GBASH
 	lda	#<(jail3_rle)
-	sta	GBASL
-	lda	#$c				; load to page $c00
-	jsr	load_rle_gr			; tail call
 
 	jmp	jail_setup_done
 
 jail3:
+	cmp	#3
+	bne	jail4
+
+	lda	#(-4+128)
+	sta	LEFT_LIMIT
+	lda	#(39+128)
+	sta	RIGHT_LIMIT
+
+	; set right exit
+	lda     #7
+	sta     jer_smc+1
+
+	; set left exit
+	lda     #2
+	sta     jel_smc+1
+
+	lda	#30
+	sta	PHYSICIST_Y
+
+	; load background
+	lda	#>(jail4_rle)
+	sta	GBASH
+	lda	#<(jail4_rle)
+
+	jmp	jail_setup_done
+
+jail4:
+	cmp	#4
+	bne	jail5
+
+	lda	#(-4+128)
+	sta	LEFT_LIMIT
+	lda	#(39+128)
+	sta	RIGHT_LIMIT
+
+	; set right exit
+	lda     #8
+	sta     jer_smc+1
+
+	; set left exit
+	lda     #5
+	sta     jel_smc+1
+
+	lda	#30
+	sta	PHYSICIST_Y
+
+	; load background
+	lda	#>(room_b4_rle)
+	sta	GBASH
+	lda	#<(room_b4_rle)
+
+	jmp	jail_setup_done
+
+jail5:
+	cmp	#5
+	bne	jail6
 
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
@@ -106,20 +156,44 @@ jail3:
 	lda     #4
 	sta     jer_smc+1
 
-	; set left exit
-	lda     #2
-	sta     jel_smc+1
+	lda	#30
+	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(jail4_rle)
+	lda	#>(room_b3_rle)
 	sta	GBASH
-	lda	#<(jail4_rle)
+	lda	#<(room_b3_rle)
+
+	jmp	jail_setup_done
+
+jail6:
+
+	lda	#(-4+128)
+	sta	LEFT_LIMIT
+	lda	#(39+128)
+	sta	RIGHT_LIMIT
+
+	; set right exit
+	lda     #9
+	sta     jer_smc+1
+
+	lda	#20
+	sta	PHYSICIST_Y
+
+	; load background
+	lda	#>(room_b2_rle)
+	sta	GBASH
+	lda	#<(room_b2_rle)
+
+	jmp	jail_setup_done
+
+
+jail_setup_done:
+
 	sta	GBASL
 	lda	#$c				; load to page $c00
 	jsr	load_rle_gr			; tail call
 
-
-jail_setup_done:
 
 ootw_jail_already_set:
 	;===========================
