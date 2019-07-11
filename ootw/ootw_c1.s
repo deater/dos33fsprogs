@@ -17,6 +17,7 @@ ootw:
 	sta	PHYSICIST_STATE
 	sta	WHICH_CAVE
 	sta	BEAST_OUT
+	sta	ON_ELEVATOR
 
 	lda	#1
 	sta	BEFORE_SWING
@@ -90,10 +91,10 @@ end_message:
 .byte	8,10,"PRESS RETURN TO CONTINUE",0
 .byte	11,20,"ACCESS CODE: IH8S",0
 
-.include "ootw_rope.s"
-.include "ootw_pool.s"
-.include "ootw_cavern.s"
-.include "ootw_mesa.s"
+.include "ootw_c1_rope.s"
+.include "ootw_c1_pool.s"
+.include "ootw_c1_cavern.s"
+.include "ootw_c1_mesa.s"
 .include "physicist.s"
 .include "ootw_sluggy.s"
 .include "ootw_beast.s"

@@ -18,16 +18,16 @@ ootw.dsk:	HELLO LOADER INTRO OOTW OOTW_C2 #COMPRESS-TEST
 
 ####
 
-OOTW:	ootw.o
-	ld65 -o OOTW ootw.o -C ../linker_scripts/apple2_1700.inc
+OOTW:	ootw_c1.o
+	ld65 -o OOTW ootw_c1.o -C ../linker_scripts/apple2_1700.inc
 
-ootw.o:	ootw.s \
+ootw_c1.o:	ootw_c1.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	gr_make_quake.s gr_overlay.s zp.inc keyboard.s \
 	ootw_sluggy.s ootw_beast.s \
-	ootw_rope.s earthquake.s ootw_mesa.s \
-	ootw_pool.s ootw_cavern.s physicist.s random16.s \
+	ootw_c1_rope.s earthquake.s ootw_c1_mesa.s \
+	ootw_c1_pool.s ootw_c1_cavern.s physicist.s random16.s \
 	ootw_cut_slug.s ootw_cut_beast.s \
 	ootw_graphics/pool/ootw_pool.inc \
 	ootw_graphics/underwater/ootw_underwater.inc \
@@ -44,7 +44,7 @@ ootw.o:	ootw.s \
 	ootw_graphics/end_scenes/ootw_beast_end.inc \
 	ootw_graphics/end_scenes/ootw_beast_intro.inc \
 	ootw_graphics/end_scenes/ootw_slug_end.inc
-	ca65 -o ootw.o ootw.s -l ootw.lst
+	ca65 -o ootw_c1.o ootw_c1.s -l ootw_c1.lst
 
 ####
 

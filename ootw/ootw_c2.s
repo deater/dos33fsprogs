@@ -14,6 +14,7 @@ ootw_c2:
 	lda	#0
 	sta	GAME_OVER
 	sta	PHYSICIST_STATE
+	sta	ON_ELEVATOR
 
 	lda     #22
 	sta     PHYSICIST_Y
