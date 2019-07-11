@@ -5,8 +5,8 @@
 
 ; A or <-   : start moving left
 ; D or ->   : start moving right
-; W or up   : jump
-; S or down : crouch or pickup
+; W or up   : jump or elevator/transporter up
+; S or down : crouch or pickup or elevator/transporter down
 ; space     : action
 ; escape    : quit
 
@@ -205,8 +205,20 @@ check_up:
 	bne	check_down
 up:
 	;========================
-	; Jump -- Up Pressed
+	; UP -- Jump
 	;========================
+
+	lda	ON_ELEVATOR
+	beq	up_not_elevator
+
+up_on_elevator:
+	lda	#P_ELEVATING_UP
+	sta	PHYSICIST_STATE
+	lda	#0
+	sta	GAIT
+	jmp	done_keypress
+
+up_not_elevator:
 
 	lda	#P_JUMPING
 	sta	PHYSICIST_STATE
@@ -222,9 +234,21 @@ check_down:
 	bne	check_space
 
 	;======================
-	; Crouch
+	; DOWN -- Crouch
 	;======================
 down:
+
+	lda	ON_ELEVATOR
+	beq	down_not_elevator
+
+down_on_elevator:
+	lda	#P_ELEVATING_DOWN
+	sta	PHYSICIST_STATE
+	lda	#0
+	sta	GAIT
+	jmp	done_keypress
+
+down_not_elevator:
 	lda	#P_CROUCHING
 	sta	PHYSICIST_STATE
 	lda	#0

@@ -147,16 +147,17 @@ BOULDER_X	= $E8		; C1
 BOULDER_Y	= $E9		; C1
 
 PHYSICIST_STATE	= $EA
-	P_STANDING   = $00
-	P_WALKING    = $01
-	P_RUNNING    = $02
-	P_CROUCHING  = $03
-	P_KICKING    = $04
-	P_JUMPING    = $05	; no keypress
-	P_COLLAPSING = $06	; no keypress
-	P_FALLING    = $07	; no keypress
-	P_SWINGING   = $08	; no keypress
-
+	P_STANDING		= $00
+	P_WALKING		= $01
+	P_RUNNING		= $02
+	P_CROUCHING		= $03
+	P_KICKING		= $04
+	P_JUMPING		= $05	; no keypress
+	P_COLLAPSING		= $06	; no keypress
+	P_FALLING		= $07	; no keypress
+	P_SWINGING		= $08	; no keypress
+	P_ELEVATING_UP		= $09
+	P_ELEVATING_DOWN	= $0A
 
 BEFORE_SWING	=	$EB
 CUTFRAME	=	$EC

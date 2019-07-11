@@ -45,6 +45,15 @@ elevator4:
 	lda     #3
 	sta     eel_smc+1
 
+	; set up exit
+	lda	#7
+	sta	going_up_smc+1
+
+	; set down exit
+	lda	#5
+	sta	going_down_smc+1
+
+
 	jmp	elevator_setup_done
 
 elevator5:
@@ -53,10 +62,60 @@ elevator5:
 
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
+	lda	#(21+128)
+	sta	RIGHT_LIMIT
+
+	; set left exit
+	lda     #9
+	sta     eel_smc+1
+
+	; set up exit
+	lda	#4
+	sta	going_up_smc+1
+
+	; set down exit
+	lda	#6
+	sta	going_down_smc+1
+
+	jmp	elevator_setup_done
+
+
+elevator6:
+	cmp	#6
+	bne	elevator7
+
+	lda	#(-4+128)
+	sta	LEFT_LIMIT
+	lda	#(21+128)
+	sta	RIGHT_LIMIT
+
+	; set left exit
+	lda     #8
+	sta     eel_smc+1
+
+	; set up exit
+	lda	#5
+	sta	going_up_smc+1
+
+	; no down exit
+
+	jmp	elevator_setup_done
+
+elevator7:
+
+	lda	#(10+128)
+	sta	LEFT_LIMIT
 	lda	#(30+128)
 	sta	RIGHT_LIMIT
 
-elevator6:
+	; set up exit
+	; no up exit
+
+	; set down exit
+	lda	#4
+	sta	going_down_smc+1
+
+	; fallthrough
 
 elevator_setup_done:
 
@@ -153,7 +212,66 @@ draw_elevator:
 
 elevator_frame_no_oflo:
 
-	; check if done this level
+
+	;==========================
+	; handle elevator
+	;==========================
+
+	lda	PHYSICIST_X
+	cmp	#17
+	bcc	not_on_elevator		; blt
+	lda	#1
+	bne	update_elevator		; balways
+
+not_on_elevator:
+	lda	#0
+update_elevator:
+	sta	ON_ELEVATOR
+
+
+	;==========================
+	; handle elevating
+	;==========================
+	lda	PHYSICIST_STATE
+
+elevator_check_up:
+	cmp	#P_ELEVATING_UP
+	bne	elevator_check_down
+
+going_up:
+going_up_smc:
+	lda	#7
+	sta	WHICH_JAIL
+
+	lda	#0
+	sta	PHYSICIST_STATE
+
+	jmp	done_elevator
+
+elevator_check_down:
+	cmp	#P_ELEVATING_DOWN
+	bne	going_nowhere
+
+going_down:
+going_down_smc:
+	lda	#4
+	sta	WHICH_JAIL
+
+	lda	#0
+	sta	PHYSICIST_STATE
+
+	jmp	done_elevator
+
+
+
+going_nowhere:
+
+
+
+
+	;==========================
+	; check if done this room
+	;==========================
 
 	lda	GAME_OVER
 	beq	still_in_elevator

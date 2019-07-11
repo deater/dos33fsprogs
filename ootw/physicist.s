@@ -70,6 +70,10 @@ pstate_table_lo:
 	.byte <physicist_jumping	; 05
 	.byte <physicist_collapsing	; 06
 	.byte <physicist_falling	; 07
+	.byte <physicist_standing	; 08 swinging
+	.byte <physicist_standing	; 09 elevator up
+	.byte <physicist_standing	; 0A elevator down
+
 pstate_table_hi:
 	.byte >physicist_standing
 	.byte >physicist_walking
@@ -79,6 +83,9 @@ pstate_table_hi:
 	.byte >physicist_jumping
 	.byte >physicist_collapsing
 	.byte >physicist_falling
+	.byte >physicist_standing	; 08 swinging
+	.byte >physicist_standing	; 09 elevator up
+	.byte >physicist_standing	; 0A elevator down
 
 ; Urgh, make sure this doesn't end up at $FF or you hit the
 ;	NMOS 6502 bug
