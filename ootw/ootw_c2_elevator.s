@@ -16,11 +16,6 @@ ootw_elevator:
 	lda	#1
 	sta	DISP_PAGE
 
-	;=============================
-	; load background image
-
-	jsr	elevator_load_background
-
 	;==============================
 	; setup physicist
 
@@ -30,10 +25,10 @@ ootw_elevator:
 
 	;==============================
 	; setup per-room variables
-
+check_elevator4:
 	lda	WHICH_JAIL
 	cmp	#4
-	bne	elevator5
+	bne	check_elevator5
 
 elevator4:
 	lda	#(-4+128)
@@ -53,13 +48,15 @@ elevator4:
 	lda	#5
 	sta	going_down_smc+1
 
+	lda	#48
+	sta	ELEVATOR_OFFSET
 
 	jmp	elevator_setup_done
 
-elevator5:
+check_elevator5:
 	cmp	#5
-	bne	elevator6
-
+	bne	check_elevator6
+elevator5:
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
 	lda	#(21+128)
@@ -77,13 +74,17 @@ elevator5:
 	lda	#6
 	sta	going_down_smc+1
 
+	lda	#96
+	sta	ELEVATOR_OFFSET
+
 	jmp	elevator_setup_done
 
 
-elevator6:
+check_elevator6:
 	cmp	#6
 	bne	elevator7
 
+elevator6:
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
 	lda	#(21+128)
@@ -98,6 +99,9 @@ elevator6:
 	sta	going_up_smc+1
 
 	; no down exit
+
+	lda	#144
+	sta	ELEVATOR_OFFSET
 
 	jmp	elevator_setup_done
 
@@ -115,9 +119,17 @@ elevator7:
 	lda	#4
 	sta	going_down_smc+1
 
+	lda	#0
+	sta	ELEVATOR_OFFSET
+
 	; fallthrough
 
 elevator_setup_done:
+
+	;=============================
+	; load background image
+
+	jsr	elevator_load_background
 
 
 	;=================================
@@ -320,8 +332,26 @@ done_elevator:
 
 elevator_load_background:
 
+	lda	ELEVATOR_OFFSET
+	cmp	#24
+	bcs	elevator_bg_no_dome
+
+	; load background
+	lda	#>(dome_rle)
+	sta	GBASH
+	lda	#<(dome_rle)
+	sta	GBASL
+	lda	#$c			; load to page $c00
+	jsr	load_rle_gr
+
+	rts
+
+elevator_bg_no_dome:
+
 	ldy	#0
 elevator_background_loop:
+
+	; self modify line we're on
 
 	lda	gr_offsets_l,Y
 	sta	line0_left_loop+1
@@ -335,7 +365,26 @@ elevator_background_loop:
 	sta	line0_center_loop+2
 	sta	line0_right_loop+2
 
-	lda	elevator_fb_l,Y
+	sty	TEMP
+
+	; calculate framebuffer offset
+	tya
+	clc
+	adc	ELEVATOR_OFFSET
+	sec
+	sbc	#24
+	tay
+
+	; draw left part
+
+	lda	elevator_fb,Y
+	and	#$f0
+	beq	elevator_right_none
+
+	lda	#$88
+
+elevator_right_none:
+
 	ldx	#0
 line0_left_loop:
 	sta	$c00,X
@@ -343,7 +392,14 @@ line0_left_loop:
 	cpx	#17
 	bne	line0_left_loop
 
-	lda	elevator_fb_c,Y
+	; draw center part
+
+	lda	elevator_fb,Y
+	and	#$0f
+	beq	line0_center_loop
+
+	lda	#$88
+
 line0_center_loop:
 	sta	$c00,X
 	inx
@@ -357,6 +413,7 @@ line0_right_loop:
 	cpx	#40
 	bne	line0_right_loop
 
+	ldy	TEMP
 	iny
 	cpy	#24
 	bne	elevator_background_loop
@@ -364,16 +421,172 @@ line0_right_loop:
 	rts
 
 
-elevator_fb_l:
-	.byte	$88,$88,$88,$88,$88,$88,$88
-	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00
-	.byte	$88,$88,$88,$88,$88,$88,$88,$88
+elevator_fb:
+			; /----------------\
+			; /----------------\
+			; /----------------\
+			; /----------------\
+			; /----------------\
+			; /----------------\
+			; /----------------\
+			; /----------------\
+			; /----------------\
+			; /----------------\
+			; /----------------\
+			; /----------------\
+			; /----------------\
+			; /----------------\
+	.byte	$80	; ########    ########	0 (24)
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	;+########    ########
 
-elevator_fb_c:
-	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte	$80	; ########    ########	; 24 (48) (Room4)
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	;+########    ########
 
 
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	;+########    ########
+
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	;+########    ########
+
+
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	;+########    ########
+
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$80	; ########    ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$00	;             ########
+	.byte	$80	; ########    ########
+	.byte	$88	; ####################
+	.byte	$88	; ####################
+	.byte	$88	; ####################
+	.byte	$88	; ####################
+	.byte	$88	; ####################
+	.byte	$88	; ####################
+	.byte	$88	;+####################
 
 elevator_sprite1:
 	.byte	10,1
