@@ -38,10 +38,10 @@ ootw_elevator:
 elevator4:
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
-	lda	#(30+128)
+	lda	#(21+128)
 	sta	RIGHT_LIMIT
 
-	; set right exit
+	; set left exit
 	lda     #3
 	sta     eel_smc+1
 
@@ -72,12 +72,14 @@ elevator_setup_done:
 
 	lda	#0
 	sta	GAIT
-	sta	GAME_OVER
 
 	;============================
 	; Elevator Loop
 	;============================
 elevator_loop:
+
+	lda	#0
+	sta	GAME_OVER
 
 	;================================
 	; copy background to current page
@@ -87,16 +89,28 @@ elevator_loop:
 	;================================
 	; draw elevator
 
-	lda	#17
+	lda	#16
         sta	XPOS
         lda	#32
 	sta	YPOS
 
-	lda	#<elevator_sprite
+	lda	FRAMEL
+	and	#$10
+	bne	elevator_anim2
+
+	lda	#<elevator_sprite1
 	sta	INL
-	lda	#>elevator_sprite
+	lda	#>elevator_sprite1
+	sta	INH
+	jmp	draw_elevator
+
+elevator_anim2:
+	lda	#<elevator_sprite2
+	sta	INL
+	lda	#>elevator_sprite2
 	sta	INH
 
+draw_elevator:
 	jsr	put_sprite_crop
 
 
@@ -152,14 +166,16 @@ elevator_frame_no_oflo:
 	cmp	#1
 	beq	elevator_exit_left
 
-	; exit to right
+	; exit to right ???
+	; it's never possible to exit right from an elevator screen
 elevator_exit_right:
 	lda	#0
+	sta	PHYSICIST_STATE
+	lda	RIGHT_LIMIT
+	sec
+	sbc	#$81
 	sta	PHYSICIST_X
-eer_smc:
-	lda	#$0
-	sta	WHICH_CAVE
-	jmp	done_elevator
+	jmp	still_in_elevator
 
 elevator_exit_left:
 	lda	#37
@@ -241,9 +257,14 @@ elevator_fb_c:
 
 
 
-elevator_sprite:
-	.byte	$8,$1
-	.byte	$25,$25,$25,$25,$25,$25,$25,$25
+elevator_sprite1:
+	.byte	10,1
+	.byte	$5A,$25,$25,$25,$25,$25,$25,$25,$25,$A5
+
+elevator_sprite2:
+	.byte	10,1
+	.byte	$A5,$25,$25,$25,$25,$25,$25,$25,$25,$5A
+
 
 ; low/high	nothing
 ; high/low	xBxxxxxx
