@@ -354,15 +354,21 @@ elevator_load_background:
 
 	lda	ELEVATOR_OFFSET
 	cmp	#24
-	bcs	elevator_bg_no_dome
+	bcs	elevator_bg_no_dome	; bge
 
-	; load background
+	; dome, dome on the range
+
 	lda	#>(dome_rle)
 	sta	GBASH
 	lda	#<(dome_rle)
 	sta	GBASL
-	lda	#$c			; load to page $c00
+	lda	#$10			; load to page $1000
 	jsr	load_rle_gr
+
+	lda	ELEVATOR_OFFSET
+	tay
+
+	jsr	gr_copy_to_offset
 
 	rts
 
