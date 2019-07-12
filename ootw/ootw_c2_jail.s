@@ -238,6 +238,36 @@ jail_loop:
 	; draw background action
 	; FIXME
 
+	lda	WHICH_JAIL
+	cmp	#6
+	bne	c2_no_bg_action
+
+	; draw power
+	lda	JAIL_POWER_ON
+	beq	c2_no_bg_action		; skip if power off already
+
+	lda	#20
+	sta	XPOS
+	lda	#0
+	sta	YPOS
+
+	lda	FRAMEL
+	lsr
+	lsr
+	lsr
+	and	#$6
+	tay
+
+	lda     power_line_sprites,Y
+        sta     INL
+        lda     power_line_sprites+1,Y
+        sta     INH
+
+        jsr     put_sprite_crop
+
+
+c2_no_bg_action:
+
 	;===============================
 	; check keyboard
 
@@ -328,5 +358,28 @@ done_jail:
 
 
 
+power_line_sprites:
+	.word	power_line_sprite0
+	.word	power_line_sprite1
+	.word	power_line_sprite2
+	.word	power_line_sprite3
 
+power_line_sprite0:
+	.byte	1,8
+	; XXXoXXXoXXXoXXXo
+	.byte	$77,$67,$77,$67,$77,$67,$77,$07
 
+power_line_sprite1:
+	.byte	1,8
+	; XXoXXXoXXXoXXXoX
+	.byte	$77,$76,$77,$76,$77,$76,$77,$06
+
+power_line_sprite2:
+	.byte	1,8
+	; XoXXXoXXXoXXXoXX
+	.byte	$67,$77,$67,$77,$67,$77,$67,$07
+
+power_line_sprite3:
+	.byte	1,8
+	; oXXXoXXXoXXXoXXX
+	.byte	$76,$77,$76,$77,$76,$77,$76,$07

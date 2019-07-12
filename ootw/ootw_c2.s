@@ -17,6 +17,9 @@ ootw_c2:
 	sta	ON_ELEVATOR
 	sta	CITY_MOVIE_SEEN
 
+	lda	#1
+	sta	JAIL_POWER_ON
+
 	lda     #22
 	sta     PHYSICIST_Y
 	lda     #20
