@@ -16,6 +16,10 @@ ootw_c2:
 	sta	PHYSICIST_STATE
 	sta	ON_ELEVATOR
 	sta	CITY_MOVIE_SEEN
+	sta	CART_OUT
+
+	lda	#$FA
+	sta	CART_X
 
 	lda	#1
 	sta	JAIL_POWER_ON

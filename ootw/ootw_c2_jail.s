@@ -293,7 +293,63 @@ c2_no_bg_action:
 
 	;========================
 	; draw foreground action
-	; FIXME
+
+	lda	WHICH_JAIL
+	cmp	#1
+	bne	c2_no_fg_action
+
+c2_draw_cart:
+
+	lda	CART_X
+	sta	XPOS
+	lda	#36
+	sta	YPOS
+	lda	#<cart_sprite
+	sta	INL
+	lda	#>cart_sprite
+	sta	INH
+        jsr     put_sprite_crop
+	jmp	c2_no_fg_action
+
+c2_no_fg_action:
+
+
+	;====================
+	; activate fg objects
+	;====================
+	lda	WHICH_JAIL
+	cmp	#1
+	bne	c2_move_fg_objects
+
+	lda	CART_OUT
+	bne	c2_move_fg_objects
+
+	inc	CART_OUT
+
+
+	;================
+	; move fg objects
+	;================
+c2_move_fg_objects:
+	lda	CART_OUT
+	cmp	#1
+	bne	cart_not_out
+
+	; move cart
+
+	lda	FRAMEL
+	and	#$3
+	bne	cart_not_out
+
+	inc	CART_X
+	lda	CART_X
+	cmp	#39
+	bne	cart_not_out
+	inc	CART_OUT
+
+
+cart_not_out:
+
 
 	;===============
 	; page flip
@@ -384,3 +440,13 @@ power_line_sprite3:
 	.byte	1,8
 	; oXXXoXXXoXXXoXXX
 	.byte	$76,$77,$76,$77,$76,$77,$76,$07
+
+
+cart_sprite:
+	.byte 7,6
+	.byte	$00,$aa,$00,$aa,$00,$aa,$00
+	.byte	$00,$aa,$00,$aa,$00,$aa,$00
+	.byte	$00,$0a,$00,$0a,$00,$0a,$00
+	.byte	$00,$aa,$00,$aa,$00,$aa,$00
+	.byte	$00,$0a,$00,$0a,$00,$0a,$00
+	.byte	$00,$aa,$00,$aa,$00,$aa,$00
