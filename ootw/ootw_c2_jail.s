@@ -148,7 +148,7 @@ jail5:
 	cmp	#5
 	bne	jail6
 
-	lda	#(-4+128)
+	lda	#(30+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
 	sta	RIGHT_LIMIT
@@ -226,7 +226,7 @@ ootw_jail_already_set:
 	sta	GAME_OVER
 
 	;============================
-	; Cage Loop
+	; Jail Loop
 	;============================
 jail_loop:
 
@@ -237,7 +237,6 @@ jail_loop:
 
 	;==================================
 	; draw background action
-	; FIXME
 
 	lda	WHICH_JAIL
 	cmp	#6
@@ -424,6 +423,74 @@ dude_not_out:
 	inc	FRAMEH
 jail_frame_no_oflo:
 
+
+	;====================
+	; handle teleporters
+
+	lda	WHICH_JAIL
+	cmp	#4
+	bne	no_teleporters
+
+	lda	PHYSICIST_X
+	cmp	#14
+	bcs	no_teleporters		; bge
+
+	cmp	#11
+	bcc	no_teleporters		; blt
+
+	lda	#1
+	bne	save_teleporters	; bra
+
+no_teleporters:
+	lda	#0
+save_teleporters:
+	sta	ON_ELEVATOR
+
+	;==========================
+	; handle teleporting
+	;==========================
+
+	lda	PHYSICIST_STATE
+teleporter_check_up:
+	cmp	#P_ELEVATING_UP
+	bne	teleporter_check_down
+
+teleporting_up:
+	jsr	teleport
+
+	lda	#8
+	sta	PHYSICIST_Y
+
+	lda	#(10+128)
+	sta	LEFT_LIMIT
+
+	lda	#(39+128)
+	sta	RIGHT_LIMIT
+
+	jmp	done_teleport
+
+teleporter_check_down:
+
+	cmp	#P_ELEVATING_DOWN
+	bne	not_teleporting_today
+
+teleporting_down:
+	jsr	teleport
+
+	lda	#30
+	sta	PHYSICIST_Y
+
+	lda	#(-4+128)
+	sta	LEFT_LIMIT
+
+	lda	#(28+128)
+	sta	RIGHT_LIMIT
+
+
+done_teleport:
+
+not_teleporting_today:
+
 	;==========================
 	; check if done this level
 	;==========================
@@ -544,5 +611,11 @@ walking_dude2: .byte 6,6
 	.byte $AA,$00,$77,$77,$77,$00
 
 
+	;=============================
+	; do the teleport
 
+teleport:
+	lda	#0
+	sta	PHYSICIST_STATE
 
+	rts
