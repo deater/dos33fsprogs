@@ -130,6 +130,7 @@ end_message:
 .include "gr_putsprite_flipped.s"
 .include "gr_putsprite_crop.s"
 .include "gr_offsets.s"
+.include "gr_offsets_hl.s"
 .include "gr_run_sequence.s"
 .include "gr_overlay.s"
 .include "random16.s"
