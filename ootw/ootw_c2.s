@@ -48,7 +48,7 @@ ootw_c2:
 	sta     DIRECTION
 	lda     #22
 	sta     PHYSICIST_Y
-	lda     #24
+	lda     #26
 	sta     PHYSICIST_X
 	lda     #0
 	sta     PHYSICIST_STATE
