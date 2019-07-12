@@ -120,7 +120,7 @@ jail4:
 	cmp	#4
 	bne	jail5
 
-	lda	#(-4+128)
+	lda	#(10+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
 	sta	RIGHT_LIMIT
@@ -133,7 +133,8 @@ jail4:
 	lda     #5
 	sta     jel_smc+1
 
-	lda	#30
+	; FIXME: different if in from left?
+	lda	#8
 	sta	PHYSICIST_Y
 
 	; load background

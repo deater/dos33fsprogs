@@ -4,7 +4,6 @@ KNOWN BUGS:
 
 TODO:
 
-
 Movement:
 + running: Missing one running frame (?)
 + ability to run+jump
@@ -56,11 +55,25 @@ cage room:
 + Animation of friend?
 + animated miners in background
 + 1-bit audio recording of friend talking
++ Implement enemies
 
 Jail:
 + Foreground animations
 + Doors that open/blast?
 
 Elevator:
-+ Elevator ride, view of city?
++ Elevator ride
+
+View:
 + music play when viewing city
+
+Teleporters:
++ Implement
++ Sprite displayed as it happens
+
+
+Level/Checkpoint #3:
++ Implement
+
+Level/Checkpoint #4:
++ Implement

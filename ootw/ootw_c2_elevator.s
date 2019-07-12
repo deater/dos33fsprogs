@@ -4,17 +4,17 @@ ootw_elevator:
 	;===========================
 	; Enable graphics
 
-	bit	LORES
-	bit	SET_GR
-	bit	FULLGR
+;	bit	LORES
+;	bit	SET_GR
+;	bit	FULLGR
 
 	;===========================
 	; Setup pages (is this necessary?)
 
-	lda	#0
-	sta	DRAW_PAGE
-	lda	#1
-	sta	DISP_PAGE
+;	lda	#0
+;	sta	DRAW_PAGE
+;	lda	#1
+;	sta	DISP_PAGE
 
 	;==============================
 	; setup physicist
@@ -137,7 +137,7 @@ elevator_setup_done:
 	; copy to screen
 
 	jsr	gr_copy_to_current
-	jsr	page_flip
+;	jsr	page_flip
 
 	;=================================
 	; setup vars
@@ -252,12 +252,14 @@ elevator_check_up:
 	bne	elevator_check_down
 
 going_up:
+
+	jsr	move_elevator
+
 going_up_smc:
 	lda	#7
 	sta	WHICH_JAIL
 
-	lda	#0
-	sta	PHYSICIST_STATE
+
 
 	jmp	done_elevator
 
@@ -266,16 +268,16 @@ elevator_check_down:
 	bne	going_nowhere
 
 going_down:
+
+	jsr	move_elevator
+
 going_down_smc:
 	lda	#4
 	sta	WHICH_JAIL
 
-	lda	#0
-	sta	PHYSICIST_STATE
+
 
 	jmp	done_elevator
-
-
 
 going_nowhere:
 
@@ -687,3 +689,103 @@ city_frames:
 	.word	city14_rle		; 16
 	.word	city14_rle		; 17
 
+
+
+	;====================================
+	; run the elevator ride
+	;====================================
+
+move_elevator:
+
+	lda	PHYSICIST_STATE
+	cmp	#P_ELEVATING_UP
+	bne	move_elevator_down
+
+move_elevator_up:
+	lda	WHICH_JAIL
+	cmp	#10		; if top floor, no up
+	beq	elevator_all_done
+
+	lda	ELEVATOR_OFFSET
+	sec
+	sbc	#48
+	sta	elevator_end_smc+1
+
+	lda	#$C6				; dec
+	sta	elevator_direction_smc
+
+	jmp	move_elevator_loop
+
+move_elevator_down:
+	lda	WHICH_JAIL
+	cmp	#9		; if bottom floor, no down
+	beq	elevator_all_done
+
+	lda	ELEVATOR_OFFSET
+	clc
+	adc	#48
+	sta	elevator_end_smc+1
+
+	lda	#$E6				; inc
+	sta	elevator_direction_smc
+
+move_elevator_loop:
+	lda	#0
+	sta	PHYSICIST_STATE
+
+elevator_direction_smc:
+	inc	ELEVATOR_OFFSET		; E6=inc, C6=DEC
+
+	jsr	elevator_load_background
+
+	jsr	gr_copy_to_current
+
+
+	;===============
+	; draw physicist
+
+	jsr	draw_physicist
+
+
+	;================================
+	; draw elevator moving
+
+	lda	#16
+        sta	XPOS
+        lda	#32
+	sta	YPOS
+
+	lda	FRAMEL
+	and	#$10
+	bne	elevator_moving_anim2
+
+	lda	#<elevator_sprite1
+	sta	INL
+	lda	#>elevator_sprite1
+	sta	INH
+	jmp	draw_moving_elevator
+
+elevator_moving_anim2:
+	lda	#<elevator_sprite2
+	sta	INL
+	lda	#>elevator_sprite2
+	sta	INH
+
+draw_moving_elevator:
+	jsr	put_sprite_crop
+
+
+
+
+	jsr	page_flip
+
+	lda	ELEVATOR_OFFSET
+elevator_end_smc:
+	cmp	#$ff
+	bne	move_elevator_loop
+
+elevator_all_done:
+	lda	#0
+	sta	PHYSICIST_STATE
+
+	rts
