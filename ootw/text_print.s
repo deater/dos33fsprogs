@@ -21,7 +21,7 @@ move_and_print:
 	adc	CH		; add in xpos
 	sta	BASL		; store out low byte of addy
 
-	lda	gr_offsets,Y	; look up high byte
+	lda	gr_offsets+1,Y	; look up high byte
 	adc	DRAW_PAGE	;
 	sta	BASH		; and store it out
 				; BASH:BASL now points at right place

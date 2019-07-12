@@ -7,12 +7,13 @@ PNG2LZ4 = ../gr-utils/png2lz4
 
 all:	ootw.dsk
 
-ootw.dsk:	HELLO LOADER INTRO OOTW OOTW_C2 #COMPRESS-TEST
+ootw.dsk:	HELLO LOADER INTRO OOTW OOTW_C2 OOTW_C3
 	$(DOS33) -y ootw.dsk SAVE A HELLO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1400 LOADER
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 INTRO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C2
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C3
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 COMPRESS-TEST
 
 
@@ -61,6 +62,18 @@ ootw_c2.o:	ootw_c2.s \
 	ootw_graphics/l2intro/ootw_l2intro.inc
 	ca65 -o ootw_c2.o ootw_c2.s -l ootw_c2.lst
 
+####
+
+OOTW_C3:	ootw_c3.o
+	ld65 -o OOTW_C3 ootw_c3.o -C ../linker_scripts/apple2_1700.inc
+
+ootw_c3.o:	ootw_c3.s \
+	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
+	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
+	keyboard.s gr_run_sequence.s physicist.s \
+	ootw_graphics/sprites/sprites_physicist.inc \
+	ootw_graphics/l3vent/ootw_c3_vent.inc
+	ca65 -o ootw_c3.o ootw_c3.s -l ootw_c3.lst
 
 ####
 

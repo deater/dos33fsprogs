@@ -51,6 +51,8 @@ which_load_loop:
 	beq	load_ootw_cp1
 	cmp	#2
 	beq	load_ootw_cp2
+	cmp	#3
+	beq	load_ootw_cp3
 
 	; fall through
 
@@ -79,8 +81,18 @@ load_ootw_cp2:
 	sta	namlo
 	lda	#>ootw_c2_filename
 	sta	namhi
+	jmp	load_done
+
+load_ootw_cp3:
+
+	; open and read a file
+	lda	#<ootw_c3_filename
+	sta	namlo
+	lda	#>ootw_c3_filename
+	sta	namhi
 
 	; fall through
+
 
 load_done:
 
@@ -107,6 +119,12 @@ ootw_filename:	;.byte "OOTW                       "
 
 ootw_c2_filename: ;.byte "OOTW_C2                       "
 	.byte 'O'|$80,'O'|$80,'T'|$80,'W'|$80,'_'|$80,'C'|$80,'2'|$80,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0
+
+ootw_c3_filename: ;.byte "OOTW_C3                       "
+	.byte 'O'|$80,'O'|$80,'T'|$80,'W'|$80,'_'|$80,'C'|$80,'3'|$80,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0
