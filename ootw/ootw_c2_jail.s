@@ -120,10 +120,26 @@ jail4:
 	cmp	#4
 	bne	jail5
 
+	lda	PHYSICIST_Y
+	cmp	#30		; see if coming in on bottom
+	bne	jail4_top
+jail4_bottom:
+	lda	#(-4+128)
+	sta	LEFT_LIMIT
+	lda	#(28+128)
+	sta	RIGHT_LIMIT
+
+	jmp	jail4_ok
+jail4_top:
 	lda	#(10+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
 	sta	RIGHT_LIMIT
+
+	lda	#8
+	sta	PHYSICIST_Y
+
+jail4_ok:
 
 	; set right exit
 	lda     #8
@@ -133,9 +149,24 @@ jail4:
 	lda     #5
 	sta     jel_smc+1
 
-	; FIXME: different if in from left?
-	lda	#8
-	sta	PHYSICIST_Y
+
+
+
+
+	; setup teleporter
+	lda	#(-4+128)
+	sta	td_left_smc1+1
+
+	lda	#(28+128)
+	sta	td_right_smc1+1
+
+	lda	#(10+128)
+	sta	tu_left_smc1+1
+
+	lda	#(39+128)
+	sta	tu_right_smc1+1
+
+
 
 	; load background
 	lda	#>(room_b4_rle)
@@ -159,6 +190,19 @@ jail5:
 
 	lda	#30
 	sta	PHYSICIST_Y
+
+	; set up teleporter
+	lda	#(30+128)
+	sta	td_left_smc1+1
+
+	lda	#(39+128)
+	sta	td_right_smc1+1
+
+	lda	#(6+128)
+	sta	tu_left_smc1+1
+
+	lda	#(32+128)
+	sta	tu_right_smc1+1
 
 	; load background
 	lda	#>(room_b3_rle)
@@ -429,13 +473,30 @@ jail_frame_no_oflo:
 
 	lda	WHICH_JAIL
 	cmp	#4
+	beq	handle_teleporter1
+
+	cmp	#5
+	beq	handle_teleporter2
+
 	bne	no_teleporters
 
+handle_teleporter1:
 	lda	PHYSICIST_X
 	cmp	#14
 	bcs	no_teleporters		; bge
 
 	cmp	#11
+	bcc	no_teleporters		; blt
+
+	lda	#1
+	bne	save_teleporters	; bra
+
+handle_teleporter2:
+	lda	PHYSICIST_X
+	cmp	#32
+	bcs	no_teleporters		; bge
+
+	cmp	#29
 	bcc	no_teleporters		; blt
 
 	lda	#1
@@ -461,9 +522,11 @@ teleporting_up:
 	lda	#8
 	sta	PHYSICIST_Y
 
+tu_left_smc1:
 	lda	#(10+128)
 	sta	LEFT_LIMIT
 
+tu_right_smc1:
 	lda	#(39+128)
 	sta	RIGHT_LIMIT
 
@@ -480,9 +543,11 @@ teleporting_down:
 	lda	#30
 	sta	PHYSICIST_Y
 
+td_left_smc1:
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
 
+td_right_smc1:
 	lda	#(28+128)
 	sta	RIGHT_LIMIT
 
