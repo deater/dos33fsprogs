@@ -17,6 +17,10 @@ ootw_c2:
 	sta	ON_ELEVATOR
 	sta	CITY_MOVIE_SEEN
 	sta	CART_OUT
+	sta	DUDE_OUT
+
+	lda	#39
+	sta	DUDE_X
 
 	lda	#$FA
 	sta	CART_X

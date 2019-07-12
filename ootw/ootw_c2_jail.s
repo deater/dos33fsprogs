@@ -296,7 +296,7 @@ c2_no_bg_action:
 
 	lda	WHICH_JAIL
 	cmp	#1
-	bne	c2_no_fg_action
+	bne	c2_no_cart_action
 
 c2_draw_cart:
 
@@ -311,26 +311,66 @@ c2_draw_cart:
         jsr     put_sprite_crop
 	jmp	c2_no_fg_action
 
+c2_no_cart_action:
+
+	lda	WHICH_JAIL
+	cmp	#2
+	bne	c2_no_fg_action
+
+c2_draw_dude:
+
+	lda	DUDE_X
+	sta	XPOS
+	lda	#36
+	sta	YPOS
+
+	lda	DUDE_X
+	and	#3
+	asl
+	tay
+
+	lda	walking_dude_sprites,Y
+	sta	INL
+	lda	walking_dude_sprites+1,Y
+	sta	INH
+        jsr     put_sprite_crop
+	jmp	c2_no_fg_action
+
 c2_no_fg_action:
+
 
 
 	;====================
 	; activate fg objects
 	;====================
+c2_fg_check_jail1:
 	lda	WHICH_JAIL
 	cmp	#1
-	bne	c2_move_fg_objects
+	bne	c2_fg_check_jail2
 
 	lda	CART_OUT
-	bne	c2_move_fg_objects
+	bne	c2_fg_check_jail2
 
 	inc	CART_OUT
+
+
+c2_fg_check_jail2:
+	lda	WHICH_JAIL
+	cmp	#2
+	bne	c2_move_fg_objects
+
+	lda	DUDE_OUT
+	bne	c2_move_fg_objects
+
+	inc	DUDE_OUT
+
 
 
 	;================
 	; move fg objects
 	;================
 c2_move_fg_objects:
+
 	lda	CART_OUT
 	cmp	#1
 	bne	cart_not_out
@@ -349,6 +389,26 @@ c2_move_fg_objects:
 
 
 cart_not_out:
+
+	lda	DUDE_OUT
+	cmp	#1
+	bne	dude_not_out
+
+	; move dude
+
+	lda	FRAMEL
+	and	#$7
+	bne	dude_not_out
+
+	dec	DUDE_X
+	lda	DUDE_X
+	cmp	#$fa
+	bne	dude_not_out
+	inc	DUDE_OUT
+
+
+dude_not_out:
+
 
 
 	;===============
@@ -450,3 +510,39 @@ cart_sprite:
 	.byte	$00,$aa,$00,$aa,$00,$aa,$00
 	.byte	$00,$0a,$00,$0a,$00,$0a,$00
 	.byte	$00,$aa,$00,$aa,$00,$aa,$00
+
+
+
+walking_dude_sprites:
+	.word	walking_dude0
+	.word	walking_dude1
+	.word	walking_dude2
+	.word	walking_dude1
+
+walking_dude0: .byte 6,6
+	.byte $AA,$AA,$AA,$AA,$AA,$AA
+	.byte $7A,$77,$f7,$f7,$7A,$AA
+	.byte $77,$7f,$77,$77,$77,$AA
+	.byte $A7,$77,$77,$07,$07,$AA
+	.byte $AA,$07,$70,$f7,$70,$00
+	.byte $AA,$00,$77,$7f,$77,$00
+
+walking_dude1: .byte 6,6
+	.byte $AA,$AA,$7A,$7A,$7A,$AA
+	.byte $77,$f7,$7f,$7f,$77,$AA
+	.byte $77,$77,$77,$77,$77,$AA
+	.byte $AA,$77,$07,$70,$00,$0A
+	.byte $AA,$00,$77,$ff,$77,$00
+	.byte $AA,$00,$77,$77,$77,$00
+
+walking_dude2: .byte 6,6
+	.byte $7A,$77,$f7,$f7,$7A,$AA
+	.byte $77,$7f,$77,$77,$77,$AA
+	.byte $A7,$77,$77,$07,$07,$AA
+	.byte $AA,$07,$70,$f7,$70,$00
+	.byte $AA,$00,$77,$7f,$77,$00
+	.byte $AA,$00,$77,$77,$77,$00
+
+
+
+
