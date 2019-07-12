@@ -16,6 +16,18 @@ ootw_elevator:
 ;	lda	#1
 ;	sta	DISP_PAGE
 
+
+	;===========================
+	; load dome for later
+
+	lda	#>(dome_rle)
+	sta	GBASH
+	lda	#<(dome_rle)
+	sta	GBASL
+	lda	#$10			; load to page $1000
+	jsr	load_rle_gr
+
+
 	;==============================
 	; setup physicist
 
@@ -222,7 +234,6 @@ draw_elevator:
 	inc	FRAMEL
 	bne	elevator_frame_no_oflo
 	inc	FRAMEH
-
 elevator_frame_no_oflo:
 
 
@@ -358,12 +369,8 @@ elevator_load_background:
 
 	; dome, dome on the range
 
-	lda	#>(dome_rle)
-	sta	GBASH
-	lda	#<(dome_rle)
-	sta	GBASL
-	lda	#$10			; load to page $1000
-	jsr	load_rle_gr
+
+	; loaded the dome at entry to level, rather than every cycle
 
 	lda	ELEVATOR_OFFSET
 	tay
@@ -614,19 +621,8 @@ elevator_fb:
 	.byte	$88	; ####################
 	.byte	$88	;+####################
 
-elevator_sprite1:
-	.byte	10,1
-	.byte	$5A,$25,$25,$25,$25,$25,$25,$25,$25,$A5
-
-elevator_sprite2:
-	.byte	10,1
-	.byte	$A5,$25,$25,$25,$25,$25,$25,$25,$25,$5A
 
 
-; low/high	nothing
-; high/low	xBxxxxxx
-; low/high	xxBBBxxx
-; high low	xxxxxxBx
 
 
 	;===================================
@@ -752,6 +748,14 @@ elevator_direction_smc:
 
 	jsr	draw_physicist
 
+	;===============
+	; increment frame count
+
+	inc	FRAMEL
+	bne	elevator_moving_frame_no_oflo
+	inc	FRAMEH
+elevator_moving_frame_no_oflo:
+
 
 	;================================
 	; draw elevator moving
@@ -762,26 +766,19 @@ elevator_direction_smc:
 	sta	YPOS
 
 	lda	FRAMEL
-	and	#$10
-	bne	elevator_moving_anim2
+	lsr
+;	lsr
+	and	#$6
+	tay
 
-	lda	#<elevator_sprite1
+	lda	elevator_moving_sprites,Y
 	sta	INL
-	lda	#>elevator_sprite1
+	lda	elevator_moving_sprites+1,Y
 	sta	INH
-	jmp	draw_moving_elevator
-
-elevator_moving_anim2:
-	lda	#<elevator_sprite2
-	sta	INL
-	lda	#>elevator_sprite2
-	sta	INH
-
-draw_moving_elevator:
 	jsr	put_sprite_crop
 
-
-
+	;========================
+	; flip pages
 
 	jsr	page_flip
 
@@ -795,3 +792,46 @@ elevator_all_done:
 	sta	PHYSICIST_STATE
 
 	rts
+
+
+
+elevator_sprite1:
+	.byte	10,1
+	.byte	$5A,$25,$25,$25,$25,$25,$25,$25,$25,$A5
+
+elevator_sprite2:
+	.byte	10,1
+	.byte	$A5,$25,$25,$25,$25,$25,$25,$25,$25,$5A
+
+
+; low/high	nothing
+; high/low	xBxxxxxx
+; low/high	xxBBBxxx
+; high low	xxxxxxBx
+
+elevator_moving_sprites:
+	.word elevator_moving_sprite0
+	.word elevator_moving_sprite1
+	.word elevator_moving_sprite2
+	.word elevator_moving_sprite3
+
+
+elevator_moving_sprite0:
+	.byte	10,1
+	.byte	$5A,$25,$25,$25,$25,$25,$25,$25,$25,$A5
+
+elevator_moving_sprite1:
+	.byte	10,1
+	.byte	$A5,$25,$75,$25,$25,$25,$25,$25,$25,$5A
+
+elevator_moving_sprite2:
+	.byte	10,1
+	.byte	$5A,$25,$25,$75,$75,$75,$25,$25,$25,$A5
+
+elevator_moving_sprite3:
+	.byte	10,1
+	.byte	$A5,$25,$25,$25,$25,$25,$25,$75,$25,$5A
+
+
+
+

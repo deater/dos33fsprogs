@@ -3,6 +3,7 @@
 	;=========================================================
 	; copy $1000 + line offset to $c00
 	; offset is in Y
+	; FIXME: smaller code if put offset in A instead?
 
 gr_copy_to_offset:
 
