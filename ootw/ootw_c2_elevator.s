@@ -242,10 +242,13 @@ elevator_frame_no_oflo:
 	;==========================
 
 	lda	PHYSICIST_X
-	cmp	#17
+	cmp	#16
 	bcc	not_on_elevator		; blt
+	cmp	#23
+	bcs	not_on_elevator		; bge
+
 	lda	#1
-	bne	update_elevator		; balways
+	bne	update_elevator		; bra
 
 not_on_elevator:
 	lda	#0

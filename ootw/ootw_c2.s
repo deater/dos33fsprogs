@@ -40,7 +40,7 @@ ootw_c2:
 	; Run the intro
 	;=======================
 
-	jsr	ootw_c2_intro
+;	jsr	ootw_c2_intro
 
 	lda	#0
 	sta	CITY_MOVIE_SEEN
