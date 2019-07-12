@@ -15,6 +15,7 @@ ootw_c2:
 	sta	GAME_OVER
 	sta	PHYSICIST_STATE
 	sta	ON_ELEVATOR
+	sta	CITY_MOVIE_SEEN
 
 	lda     #22
 	sta     PHYSICIST_Y
@@ -141,5 +142,5 @@ end_message:
 .include "ootw_graphics/sprites/sprites_physicist.inc"
 ; intro
 .include "ootw_graphics/l2intro/ootw_l2intro.inc"
-
-
+; city movie
+.include "ootw_graphics/city/city_movie.inc"

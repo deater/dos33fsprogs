@@ -279,8 +279,30 @@ going_down_smc:
 going_nowhere:
 
 
+	;==================================
+	; see if we should play city movie
+	;==================================
 
+	lda	WHICH_JAIL
+	cmp	#10
+	bne	no_city_movie
 
+	lda	PHYSICIST_X
+	cmp	#28
+	bne	no_city_movie
+
+	lda	CITY_MOVIE_SEEN
+	bne	no_city_movie
+
+	jsr	play_city_movie
+
+	lda	#1
+	sta	CITY_MOVIE_SEEN
+
+	lda	#0
+	sta	PHYSICIST_STATE
+
+no_city_movie:
 	;==========================
 	; check if done this room
 	;==========================
@@ -601,3 +623,71 @@ elevator_sprite2:
 ; high/low	xBxxxxxx
 ; low/high	xxBBBxxx
 ; high low	xxxxxxBx
+
+
+	;===================================
+	; play city movie
+	;===================================
+play_city_movie:
+
+	ldy	#0
+
+city_loop:
+	; load background
+	lda	city_frames+1,Y
+	sta	GBASH
+	lda	city_frames,Y
+	sta	GBASL
+
+	tya
+	pha
+
+	lda	#$c
+
+
+	jsr	load_rle_gr
+
+	jsr     gr_copy_to_current
+        jsr     page_flip
+
+	ldx	#2
+city_long_delay:
+	lda	#250
+	jsr	WAIT
+	dex
+	bne	city_long_delay
+
+	pla
+	tay
+	iny
+	iny
+
+	cpy	#36
+	bne	city_loop
+
+city_end:
+
+	jsr	elevator_load_background
+
+	rts
+
+city_frames:
+	.word	city01_rle		; 0
+	.word	city02_rle		; 1
+	.word	city03_rle		; 2
+	.word	city04_rle		; 3
+	.word	city05_rle		; 4
+	.word	city06_rle		; 5
+	.word	city07_rle		; 6
+	.word	city08_rle		; 7
+	.word	city09_rle		; 8
+	.word	city10_rle		; 9
+	.word	city11_rle		; 10
+	.word	city12_rle		; 11
+	.word	city13_rle		; 12
+	.word	city14_rle		; 13
+	.word	city14_rle		; 14
+	.word	city14_rle		; 15
+	.word	city14_rle		; 16
+	.word	city14_rle		; 17
+
