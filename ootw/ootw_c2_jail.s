@@ -7,6 +7,7 @@ ootw_jail:
 
 	lda	#0
 	sta	ON_ELEVATOR
+	sta	TELEPORTING
 
 	;==============================
 	; setup per-room variables
@@ -331,7 +332,26 @@ c2_no_bg_action:
 	;===============
 	; draw physicist
 
+	lda	TELEPORTING
+	bne	actively_teleporting
+
 	jsr	draw_physicist
+	jmp	c2_done_draw_physicist
+
+actively_teleporting:
+	lda	PHYSICIST_X
+	sta	XPOS
+	lda	#24
+	sta	YPOS
+	lda     #<teleport_sprite
+        sta     INL
+        lda     #>teleport_sprite
+        sta     INH
+        jsr     put_sprite_crop
+
+	dec	TELEPORTING
+
+c2_done_draw_physicist:
 
 
 	;========================
@@ -517,7 +537,12 @@ teleporter_check_up:
 	bne	teleporter_check_down
 
 teleporting_up:
-	jsr	teleport
+
+	lda	#3
+	sta	TELEPORTING
+
+	lda	#0
+	sta	PHYSICIST_STATE
 
 	lda	#8
 	sta	PHYSICIST_Y
@@ -538,7 +563,12 @@ teleporter_check_down:
 	bne	not_teleporting_today
 
 teleporting_down:
-	jsr	teleport
+
+	lda	#3
+	sta	TELEPORTING
+
+	lda	#0
+	sta	PHYSICIST_STATE
 
 	lda	#30
 	sta	PHYSICIST_Y
@@ -676,11 +706,16 @@ walking_dude2: .byte 6,6
 	.byte $AA,$00,$77,$77,$77,$00
 
 
-	;=============================
-	; do the teleport
 
-teleport:
-	lda	#0
-	sta	PHYSICIST_STATE
 
-	rts
+teleport_sprite:
+	.byte	3,8
+	.byte	$BB,$AA,$BA
+	.byte	$BB,$44,$BB
+	.byte	$BB,$44,$BB
+	.byte	$BB,$44,$BB
+	.byte	$BB,$44,$BA
+	.byte	$BB,$99,$BB
+	.byte	$AB,$59,$BB
+	.byte	$AA,$45,$AB
+
