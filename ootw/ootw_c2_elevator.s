@@ -105,9 +105,10 @@ elevator9:
 
 	jmp	elevator_setup_done
 
+	; The dome
 elevator10:
 
-	lda	#(10+128)
+	lda	#(4+128)
 	sta	LEFT_LIMIT
 	lda	#(30+128)
 	sta	RIGHT_LIMIT
@@ -321,12 +322,7 @@ no_city_movie:
 	; exit to right ???
 	; it's never possible to exit right from an elevator screen
 elevator_exit_right:
-	lda	#0
-	sta	PHYSICIST_STATE
-	lda	RIGHT_LIMIT
-	sec
-	sbc	#$81
-	sta	PHYSICIST_X
+
 	jmp	still_in_elevator
 
 elevator_exit_left:

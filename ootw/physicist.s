@@ -368,8 +368,12 @@ facing_right:
 
 
 ;======================================
+;======================================
 ; Check screen limits
 ;======================================
+;======================================
+; If too far right or left, stop at boundary
+; If also > 39 or < -4 then exit room
 
 check_screen_limit:
 
@@ -378,6 +382,26 @@ check_screen_limit:
 	adc	#$80
 	cmp	LEFT_LIMIT
 	bcs	just_fine_left		; (bge==bcs)
+
+left_on_screen:
+
+	; if limit was -4, means we are off screen
+	; otherwise, stop physicist at limit
+
+	lda	LEFT_LIMIT
+	cmp	#($80 - 4)
+	beq	too_far_left
+
+left_stop_at_barrier:
+	lda     #0
+        sta     PHYSICIST_STATE
+
+        lda     LEFT_LIMIT
+        sec
+        sbc     #$7f
+        sta     PHYSICIST_X
+
+	rts
 
 too_far_left:
 	lda	#1
@@ -391,6 +415,26 @@ just_fine_left:
 ;	lda	PHYSICIST_X
 	cmp	RIGHT_LIMIT
 	bcc	just_fine_right		; blt
+
+
+right_on_screen:
+
+	; if limit was 39, means we are off screen
+	; otherwise, stop physicist at limit
+
+	lda	RIGHT_LIMIT
+	cmp	#($80 + 39)
+	beq	too_far_right
+
+right_stop_at_barrier:
+	lda	#0
+	sta	PHYSICIST_STATE
+
+	lda	RIGHT_LIMIT
+	clc
+	adc	#$7f
+	sta	PHYSICIST_X
+	rts
 
 too_far_right:
 	lda	#2

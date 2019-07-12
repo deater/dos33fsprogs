@@ -168,7 +168,7 @@ jail5:
 
 jail6:
 
-	lda	#(-4+128)
+	lda	#(17+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
 	sta	RIGHT_LIMIT
@@ -279,6 +279,7 @@ jail_frame_no_oflo:
 
 	;==========================
 	; check if done this level
+	;==========================
 
 	lda	GAME_OVER
 	beq	still_in_jail
@@ -293,15 +294,6 @@ jail_frame_no_oflo:
 
 	;=================
 	; exit to right
-jail_exit_right:
-	lda	PHYSICIST_X
-	cmp	#35
-	bcs	jail_right_yes_exit	; bge
-
-jail_right_stop_not_exit:
-	lda	#0
-	sta	PHYSICIST_STATE
-	jmp	still_in_jail
 
 jail_right_yes_exit:
 
@@ -316,19 +308,7 @@ jer_smc:
 	; exit to left
 
 jail_exit_left:
-	lda	PHYSICIST_X
-	bmi	jail_left_yes_exit	; off screen so negative
 
-jail_left_stop_not_exit:
-	lda	#0
-	sta	PHYSICIST_STATE
-	lda	LEFT_LIMIT
-	sec
-	sbc	#$7f
-	sta	PHYSICIST_X
-	jmp	still_in_jail
-
-jail_left_yes_exit:
 	lda	#37
 	sta	PHYSICIST_X
 jel_smc:
