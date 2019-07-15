@@ -1,0 +1,10 @@
+
+Based on info here:
+	https://groups.google.com/forum/#!searchin/comp.sys.apple2/qkumba$20audio/comp.sys.apple2/Fx2SkEWuXAE/aCS8ie20GQAJ
+
+Get wav file.
+Use audacity to convert to a mono 33kHz wave.
+
+Load into BtC converter via wine, write out 1-bit btc file.
+
+
