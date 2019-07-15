@@ -4,72 +4,73 @@ KNOWN BUGS:
 
 TODO:
 
-Movement:
-+ running: Missing one running frame (?)
-+ ability to run+jump
-+ ability to kick while crouching
-+ ability to shoot
+General:
 
-sprites_to_draw:
-+ physicist crouch-kicking
-+ physicist run+jumping
-+ physicist swimming
-+ physicist getting out of pool
-+ beast tripping
-+ physicist holding gun
-+ physicist shot
+* Movement:
+  + running: Missing one running frame (?)
+  + ability to run+jump
+  + ability to kick while crouching
+  + ability to shoot
 
-pool:
-+ background of beast moving off
-+ adjust tentacle to not go off edge of screen
-+ adjust x position of tentacle grab
+* sprites_to_draw:
+  + physicist crouch-kicking
+  + physicist run+jumping
+  + physicist swimming
+  + physicist getting out of pool
+  + beast tripping
+  + physicist holding gun
+  + physicist shot
 
-cavern:
-+ slugs on ceiling drop
-+ background of beast moving off ?
-+ adjust slug attack range
 
-underwater:
-+ add arrival-underwater scene
-+ falling console
-+ ability to swim
-+ tentacles to grab
-+ shimmery water at top
-+ ripples in water
+* underwater:
+  + add arrival-underwater scene
+  + falling console
+  + ability to swim
+  + tentacles to grab
+  + shimmery water at top
+  + ripples in water
 
-beast:
-+ hook up beast ending cutscene
-+ compress/transparency beast ending cutscene
-+ add beast tripping
+* pool:
+  + background of beast moving off
+  + adjust tentacle to not go off edge of screen
+  + adjust x position of tentacle grab
 
-rope_room:
-+ re-enable earthquake while swinging
-+ speed up background if possible
+* cavern:
+  + slugs on ceiling drop
+  + background of beast moving off ?
+  + adjust slug attack range
+
+* beast:
+  + hook up beast ending cutscene
+  + compress/transparency beast ending cutscene
+  + add beast tripping
+
+* rope_room:
+  + re-enable earthquake while swinging
+  + speed up background if possible
 
 
 Level/Checkpoint #2:
 
-cage room:
-+ Swing in the cage
-+ Ability to pick up gun, with all that entails
-+ Animation of friend?
-+ animated miners in background
-+ 1-bit audio recording of friend talking
-+ Implement enemies
+* cage room:
+  + Swing in the cage (take into account keyboard input)
+  + Ability to pick up gun, with all that entails
+  + Animation of friend?
+  + 1-bit audio recording of friend talking
 
-Jail:
-+ Foreground animations
-+ Doors that open/blast?
+* Jail:
+  + Doors that open/blast?
+  + flashes from gunfire in neighboring room
+  + Implement enemies
+  + death animation
+  + in actual game foreground enemies can continue to next screen
 
-Elevator:
-+ Elevator ride
+* Elevator:
+  + Elevator can change direction mid-floor
 
-View:
-+ music play when viewing city
+* View:
+  + music play when viewing city
 
-Teleporters:
-+ Implement
-+ Sprite displayed as it happens
 
 
 Level/Checkpoint #3:
