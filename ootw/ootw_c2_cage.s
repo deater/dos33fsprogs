@@ -39,6 +39,7 @@ ootw_cage:
 	sta	GAME_OVER
 	sta	CAGE_AMPLITUDE
 	sta	CAGE_OFFSET
+	sta	CAGE_GUARD
 
         bit     KEYRESET		; clear keypress
 
@@ -60,6 +61,7 @@ cage_loop:
 
 	;======================
 	; draw cage
+	;======================
 
 	lda	#11
 	sta	XPOS
@@ -111,6 +113,40 @@ cage_amp_2:
 
 
 done_drawing_cage:
+
+
+	;======================
+	; draw guard
+	;======================
+
+	lda	CAGE_GUARD
+	cmp	#15
+	bcs	guard_changed
+
+	lda	#34
+	sta	XPOS
+	lda     #28
+        sta     YPOS
+
+	lda	CAGE_GUARD
+	asl
+	tay
+
+        lda     changing_guard_sprites,Y
+        sta     INL
+        lda     changing_guard_sprites+1,Y
+        sta     INH
+
+        jsr     put_sprite_crop
+
+;	inc	CAGE_GUARD
+
+	jmp	done_cage_guard
+guard_changed:
+
+	; other guard activity
+
+done_cage_guard:
 
 	;===============================
 	; check keyboard
@@ -164,8 +200,18 @@ cage_frame_no_oflo:
 
 no_move_cage:
 
+	;=====================
+	; move cage guard
+
+	lda	FRAMEL		; slow down a bit
+	and	#$f
+	bne	no_move_cage_guard
+
+	inc	CAGE_GUARD
+no_move_cage_guard:
 
 
+	;===========================
 	; check if done this level
 
 	lda	GAME_OVER
@@ -295,4 +341,184 @@ cage_left2_sprite:
 	.byte	$55,$AA,$44,$55,$55,$55,$AA,$AA,$AA,$AA,$AA
 	.byte	$85,$8A,$74,$55,$00,$55,$AA,$AA,$AA,$AA,$AA
 	.byte	$AA,$AA,$A8,$A8,$80,$85,$AA,$AA,$AA,$AA,$AA
+
+
+
+changing_guard_sprites:
+	.word changing_guard1_sprite		; 0
+	.word changing_guard2_sprite		; 1
+	.word changing_guard3_sprite		; 2
+	.word changing_guard4_sprite		; 3
+	.word changing_guard5_sprite		; 4
+	.word changing_guard6_sprite		; 5
+	.word changing_guard7_sprite		; 6
+	.word changing_guard8_sprite		; 7
+	.word changing_guard9_sprite		; 8
+	.word changing_guard10_sprite		; 9
+	.word changing_guard11_sprite		; 10
+	.word changing_guard11_sprite		; 11
+	.word changing_guard11_sprite		; 12
+	.word changing_guard12_sprite		; 13
+	.word changing_guard13_sprite		; 14
+
+
+
+changing_guard1_sprite:
+	.byte	4,9
+	.byte	$AA,$AA,$AA,$AA
+	.byte	$AA,$0A,$00,$AA
+	.byte	$AA,$00,$00,$0A
+	.byte	$0A,$00,$00,$00
+	.byte	$A0,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+
+changing_guard2_sprite:
+	.byte	4,9
+	.byte	$AA,$AA,$AA,$AA
+	.byte	$AA,$0A,$00,$0A
+	.byte	$00,$00,$00,$00
+	.byte	$A0,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+
+changing_guard3_sprite:
+	.byte	4,9
+	.byte	$AA,$AA,$AA,$AA
+	.byte	$AA,$0A,$00,$00
+	.byte	$00,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+	.byte	$AA,$AA,$00,$00
+	.byte	$AA,$0A,$00,$00
+
+changing_guard4_sprite:
+	.byte	4,9
+	.byte	$AA,$AA,$AA,$AA
+	.byte	$AA,$0A,$00,$AA
+	.byte	$AA,$00,$00,$00
+	.byte	$00,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+	.byte	$AA,$A0,$00,$00
+	.byte	$AA,$AA,$00,$00
+	.byte	$AA,$AA,$07,$05
+	.byte	$AA,$0A,$00,$00
+
+changing_guard5_sprite:
+	.byte	4,9
+	.byte	$AA,$AA,$AA,$AA
+	.byte	$AA,$0A,$00,$AA
+	.byte	$AA,$00,$00,$00
+	.byte	$0A,$00,$00,$00
+	.byte	$00,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+	.byte	$AA,$A0,$00,$50
+	.byte	$AA,$AA,$07,$05
+	.byte	$AA,$0A,$00,$00
+
+changing_guard6_sprite:
+	.byte	4,9
+	.byte	$AA,$AA,$AA,$AA
+	.byte	$AA,$0A,$00,$AA
+	.byte	$AA,$00,$00,$00
+	.byte	$AA,$00,$00,$00
+	.byte	$00,$00,$00,$00
+	.byte	$00,$00,$70,$50
+	.byte	$00,$AA,$77,$55
+	.byte	$A0,$AA,$07,$05
+	.byte	$AA,$0A,$00,$00
+
+changing_guard7_sprite:
+	.byte	4,9
+	.byte	$AA,$AA,$AA,$AA
+	.byte	$AA,$77,$75,$AA
+	.byte	$0A,$07,$00,$00
+	.byte	$00,$50,$00,$00
+	.byte	$00,$00,$00,$00
+	.byte	$00,$00,$70,$50
+	.byte	$00,$AA,$77,$55
+	.byte	$A0,$AA,$07,$05
+	.byte	$AA,$0A,$00,$00
+
+changing_guard8_sprite:
+	.byte	4,9
+	.byte	$AA,$AA,$AA,$AA
+	.byte	$AA,$77,$75,$AA
+	.byte	$AA,$A7,$00,$00
+	.byte	$00,$50,$00,$00
+	.byte	$00,$00,$00,$00
+	.byte	$00,$00,$70,$50
+	.byte	$00,$A0,$77,$55
+	.byte	$00,$AA,$07,$05
+	.byte	$AA,$0A,$00,$00
+
+changing_guard9_sprite:
+	.byte	4,9
+	.byte	$AA,$AA,$AA,$AA
+	.byte	$AA,$77,$77,$AA
+	.byte	$0A,$00,$00,$0A
+	.byte	$70,$00,$00,$50
+	.byte	$77,$00,$00,$55
+	.byte	$A7,$00,$00,$A5
+	.byte	$7A,$A0,$A0,$5A
+	.byte	$07,$AA,$AA,$05
+	.byte	$00,$AA,$AA,$00
+
+changing_guard10_sprite:
+	.byte	4,9
+	.byte	$22,$A2,$A2,$22
+	.byte	$22,$77,$77,$22
+	.byte	$02,$00,$00,$02
+	.byte	$70,$00,$00,$50
+	.byte	$77,$00,$00,$55
+	.byte	$A7,$00,$00,$A5
+	.byte	$7A,$A0,$00,$5A
+	.byte	$07,$AA,$A0,$05
+	.byte	$00,$AA,$AA,$00
+
+changing_guard11_sprite:
+	.byte	4,9
+	.byte	$22,$02,$02,$22
+	.byte	$22,$77,$77,$22
+	.byte	$02,$00,$00,$02
+	.byte	$70,$00,$00,$50
+	.byte	$77,$00,$00,$55
+	.byte	$A7,$00,$00,$AA
+	.byte	$7A,$A0,$A0,$5A
+	.byte	$07,$AA,$AA,$05
+	.byte	$00,$AA,$AA,$00
+
+changing_guard12_sprite:
+	.byte	4,9
+	.byte	$22,$02,$02,$22
+	.byte	$22,$77,$75,$22
+	.byte	$A2,$07,$00,$A2
+	.byte	$AA,$77,$00,$AA
+	.byte	$AA,$77,$10,$AA
+	.byte	$AA,$00,$00,$AA
+	.byte	$AA,$77,$A0,$55
+	.byte	$AA,$07,$AA,$05
+	.byte	$0A,$00,$0A,$00
+
+changing_guard13_sprite:
+	.byte	4,9
+	.byte	$22,$02,$02,$22
+	.byte	$22,$77,$75,$22
+	.byte	$A2,$07,$00,$A2
+	.byte	$AA,$00,$77,$AA
+	.byte	$AA,$77,$10,$AA
+	.byte	$AA,$00,$00,$AA
+	.byte	$AA,$77,$A0,$55
+	.byte	$AA,$07,$AA,$05
+	.byte	$0A,$00,$0A,$00
+
+
+
 
