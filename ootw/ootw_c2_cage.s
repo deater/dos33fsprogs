@@ -37,6 +37,8 @@ ootw_cage:
 
 	lda	#0
 	sta	GAME_OVER
+	sta	CAGE_AMPLITUDE
+	sta	CAGE_OFFSET
 
         bit     KEYRESET		; clear keypress
 
@@ -64,29 +66,73 @@ cage_loop:
 	lda     #0
         sta     YPOS
 
+	lda	CAGE_AMPLITUDE
+	cmp	#2
+	beq	cage_amp_2
+	cmp	#1
+	beq	cage_amp_1
+
+cage_amp_0:
+
         lda     #<cage_center_sprite
         sta     INL
         lda     #>cage_center_sprite
         sta     INH
 
         jsr     put_sprite_crop
+	jmp	done_drawing_cage
+
+cage_amp_1:
+	lda	CAGE_OFFSET
+	and	#$0e
+	tay
+
+        lda     cage_amp1_sprites,Y
+        sta     INL
+        lda     cage_amp1_sprites+1,Y
+        sta     INH
+
+        jsr     put_sprite_crop
+
+	jmp	done_drawing_cage
+
+cage_amp_2:
+
+	lda	CAGE_OFFSET
+	and	#$0e
+	tay
+
+        lda     cage_amp2_sprites,Y
+        sta     INL
+        lda     cage_amp2_sprites+1,Y
+        sta     INH
+
+        jsr     put_sprite_crop
+
+
+done_drawing_cage:
 
 	;===============================
 	; check keyboard
 
 	lda	KEYPRESS
-        bpl	cage_no_keypress
+        bpl	cage_continue
+
+	inc	CAGE_AMPLITUDE
+	lda	CAGE_AMPLITUDE
+	cmp	#3
+	bne	cage_continue
+
 
 	;===========================
 	; Done with cage, enter jail
 
 
         bit     KEYRESET		; clear keyboard
-
-
 	rts
 
-cage_no_keypress:
+cage_continue:
+        bit     KEYRESET		; clear keyboard
 
 
 	;===============
@@ -103,7 +149,22 @@ cage_no_keypress:
 
 cage_frame_no_oflo:
 
-	; pause?
+
+	;================
+	; move cage
+
+	lda	FRAMEL		; slow down a bit
+	and	#$7
+	bne	no_move_cage
+
+	lda	CAGE_AMPLITUDE
+	beq	no_move_cage
+
+	inc	CAGE_OFFSET
+
+no_move_cage:
+
+
 
 	; check if done this level
 
@@ -142,9 +203,31 @@ done_cage:
 	rts
 
 
+cage_amp1_sprites:
+	.word	cage_center_sprite
+	.word	cage_right1_sprite
+	.word	cage_right1_sprite
+	.word	cage_right1_sprite
+	.word	cage_center_sprite
+	.word	cage_left1_sprite
+	.word	cage_left1_sprite
+	.word	cage_left1_sprite
+
+
+cage_amp2_sprites:
+	.word	cage_center_sprite
+	.word	cage_right1_sprite
+	.word	cage_right2_sprite
+	.word	cage_right1_sprite
+	.word	cage_center_sprite
+	.word	cage_left1_sprite
+	.word	cage_left2_sprite
+	.word	cage_left1_sprite
+
+
 
 cage_center_sprite:
-	.byte	11,12
+	.byte	11,11
 	.byte	$AA,$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA,$AA
 	.byte	$AA,$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA,$AA
 	.byte	$AA,$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA,$AA
@@ -156,5 +239,60 @@ cage_center_sprite:
 	.byte	$AA,$AA,$55,$AA,$44,$55,$00,$50,$55,$AA,$AA
 	.byte	$AA,$AA,$55,$AA,$44,$55,$05,$00,$55,$AA,$AA
 	.byte	$AA,$AA,$85,$8A,$87,$85,$80,$80,$85,$AA,$AA
-	.byte	$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+
+cage_right1_sprite:
+	.byte	11,11
+	.byte	$AA,$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$AA,$AA,$AA,$A5,$5A,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$AA,$AA,$AA,$AA,$85,$8A,$8A,$8A,$AA
+	.byte	$AA,$AA,$AA,$58,$A8,$98,$55,$AA,$AA,$55,$AA
+	.byte	$AA,$AA,$AA,$55,$AA,$BB,$55,$AA,$AA,$55,$AA
+	.byte	$AA,$AA,$AA,$55,$AB,$00,$55,$77,$77,$55,$AA
+	.byte	$AA,$AA,$AA,$55,$AA,$00,$55,$07,$57,$55,$AA
+	.byte	$AA,$AA,$AA,$55,$AA,$44,$55,$05,$50,$55,$AA
+	.byte	$AA,$AA,$AA,$55,$AA,$44,$55,$00,$00,$55,$AA
+	.byte	$AA,$AA,$AA,$85,$87,$87,$85,$80,$80,$55,$AA
+
+cage_right2_sprite:
+	.byte	11,11
+	.byte	$AA,$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$AA,$AA,$AA,$AA,$A5,$5A,$AA,$AA,$AA
+	.byte	$AA,$AA,$AA,$AA,$AA,$AA,$8A,$85,$A8,$5A,$AA
+	.byte	$AA,$AA,$AA,$AA,$58,$98,$55,$AA,$AA,$55,$AA
+	.byte	$AA,$AA,$AA,$AA,$55,$BB,$55,$AA,$AA,$55,$AA
+	.byte	$AA,$AA,$AA,$AA,$55,$00,$55,$77,$77,$55,$AA
+	.byte	$AA,$AA,$AA,$AA,$55,$00,$55,$07,$57,$58,$5A
+	.byte	$AA,$AA,$AA,$AA,$AA,$55,$44,$55,$50,$00,$55
+	.byte	$AA,$AA,$AA,$AA,$AA,$55,$44,$55,$00,$80,$85
+	.byte	$AA,$AA,$AA,$AA,$AA,$85,$87,$A8,$A8,$AA,$AA
+
+cage_left1_sprite:
+	.byte	11,11
+	.byte	$AA,$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$AA,$AA,$5A,$A5,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$8A,$8A,$8A,$85,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$55,$AA,$B9,$55,$A8,$A8,$58,$AA,$AA,$AA
+	.byte	$AA,$55,$BA,$0B,$55,$AA,$AA,$55,$AA,$AA,$AA
+	.byte	$AA,$55,$AA,$00,$55,$7A,$7A,$55,$AA,$AA,$AA
+	.byte	$AA,$55,$AA,$40,$55,$77,$77,$55,$AA,$AA,$AA
+	.byte	$AA,$55,$AA,$44,$55,$00,$00,$55,$AA,$AA,$AA
+	.byte	$AA,$55,$AA,$74,$55,$00,$05,$55,$AA,$AA,$AA
+	.byte	$AA,$A8,$A8,$A8,$A8,$80,$80,$85,$AA,$AA,$AA
+
+cage_left2_sprite:
+	.byte	11,11
+	.byte	$AA,$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$AA,$5A,$A5,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$58,$A8,$85,$8A,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$55,$AA,$B9,$55,$A8,$58,$AA,$AA,$AA,$AA
+	.byte	$AA,$55,$BA,$0B,$55,$AA,$55,$AA,$AA,$AA,$AA
+	.byte	$AA,$55,$AA,$00,$55,$7A,$55,$AA,$AA,$AA,$AA
+	.byte	$5A,$A5,$4A,$40,$55,$77,$55,$AA,$AA,$AA,$AA
+	.byte	$55,$AA,$44,$55,$55,$55,$AA,$AA,$AA,$AA,$AA
+	.byte	$85,$8A,$74,$55,$00,$55,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$A8,$A8,$80,$85,$AA,$AA,$AA,$AA,$AA
 
