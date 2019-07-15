@@ -56,6 +56,21 @@ cage_loop:
 
 	jsr	ootw_draw_miners
 
+	;======================
+	; draw cage
+
+	lda	#11
+	sta	XPOS
+	lda     #0
+        sta     YPOS
+
+        lda     #<cage_center_sprite
+        sta     INL
+        lda     #>cage_center_sprite
+        sta     INH
+
+        jsr     put_sprite_crop
+
 	;===============================
 	; check keyboard
 
@@ -73,14 +88,6 @@ cage_loop:
 
 cage_no_keypress:
 
-
-	;===============
-	; draw physicist
-
-;	jsr	draw_physicist
-
-	;======================
-	; draw cage
 
 	;===============
 	; page flip
@@ -125,7 +132,7 @@ cage_frame_no_oflo:
 
 ;	jmp	ootw_rope
 
-;not_done_pool:
+
 
 	; loop forever
 
@@ -133,3 +140,21 @@ cage_frame_no_oflo:
 
 done_cage:
 	rts
+
+
+
+cage_center_sprite:
+	.byte	11,12
+	.byte	$AA,$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$AA,$AA,$AA,$55,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$58,$A8,$98,$58,$A8,$A8,$58,$AA,$AA
+	.byte	$AA,$AA,$55,$AA,$BB,$55,$AA,$AA,$55,$AA,$AA
+	.byte	$AA,$AA,$55,$AB,$00,$55,$77,$77,$55,$AA,$AA
+	.byte	$AA,$AA,$55,$AA,$00,$55,$07,$07,$55,$AA,$AA
+	.byte	$AA,$AA,$55,$AA,$44,$55,$00,$50,$55,$AA,$AA
+	.byte	$AA,$AA,$55,$AA,$44,$55,$05,$00,$55,$AA,$AA
+	.byte	$AA,$AA,$85,$8A,$87,$85,$80,$80,$85,$AA,$AA
+	.byte	$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+
