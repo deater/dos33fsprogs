@@ -54,6 +54,8 @@ cage_loop:
 	;=======================
 	; draw miners mining
 
+	jsr	ootw_draw_miners
+
 	;===============================
 	; check keyboard
 

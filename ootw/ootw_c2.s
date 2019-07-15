@@ -151,6 +151,9 @@ end_message:
 .include "random16.s"
 .include "keyboard.s"
 
+; background miners
+.include "ootw_c2_miners.s"
+
 ; room backgrounds
 .include "ootw_graphics/cage/ootw_c2_cage.inc"
 .include "ootw_graphics/l2jail/ootw_c2_jail.inc"
@@ -160,3 +163,5 @@ end_message:
 .include "ootw_graphics/l2intro/ootw_l2intro.inc"
 ; city movie
 .include "ootw_graphics/city/city_movie.inc"
+
+
