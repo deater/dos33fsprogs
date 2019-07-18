@@ -395,3 +395,60 @@ alien_turning_sprite:
 	.byte $aa,$77,$55,$aa,$aa
 	.byte $07,$aa,$05,$aa,$aa
 	.byte $00,$aa,$00,$aa,$aa
+
+
+;=====================
+;=====================
+; YELLING
+;=====================
+;=====================
+
+alien_yell_progression:
+	.word	alien_yelling_1
+	.word	alien_yelling_2
+
+alien_yelling_1:
+	.byte $5,$8
+	.byte $aa,$7a,$57,$75,$aa
+	.byte $0a,$a7,$07,$00,$aa
+	.byte $00,$aa,$00,$77,$aa
+	.byte $aa,$55,$10,$77,$7a
+	.byte $aa,$aa,$00,$00,$a7
+	.byte $aa,$aa,$55,$77,$aa
+	.byte $aa,$aa,$a5,$07,$aa
+	.byte $aa,$0a,$00,$00,$aa
+
+alien_yelling_2:
+	.byte $5,$8
+	.byte $aa,$7a,$57,$75,$aa
+	.byte $00,$77,$07,$00,$aa
+	.byte $0a,$5a,$00,$77,$aa
+	.byte $aa,$a5,$10,$77,$7a
+	.byte $aa,$aa,$00,$00,$a7
+	.byte $aa,$aa,$55,$77,$aa
+	.byte $aa,$aa,$a5,$07,$aa
+	.byte $aa,$0a,$00,$00,$aa
+
+
+;=====================
+;=====================
+; SHOOTING UPWARD
+;=====================
+;=====================
+
+alien_shoot_up_progression:
+	.word alien_shooting_up_sprite
+	.word alien_shooting_up_sprite
+	.word alien_yelling_1
+	.word alien_yelling_2
+
+alien_shooting_up_sprite:
+	.byte $5,$8
+	.byte $00,$7a,$57,$75,$aa
+	.byte $00,$77,$07,$00,$aa
+	.byte $55,$aa,$00,$77,$aa
+	.byte $aa,$55,$10,$77,$7a
+	.byte $aa,$aa,$00,$00,$a7
+	.byte $aa,$aa,$55,$77,$aa
+	.byte $aa,$aa,$a5,$07,$aa
+	.byte $aa,$0a,$00,$00,$aa

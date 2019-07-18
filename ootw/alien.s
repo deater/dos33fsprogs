@@ -32,6 +32,8 @@ A_WALKING	= 1
 A_RUNNING	= 2
 A_CROUCHING	= 3
 A_TURNING	= 4
+A_YELLING	= 5
+A_SHOOTING_UP	= 6
 
 	;=======================================
 	; Move alien based on current state
@@ -46,11 +48,19 @@ move_alien:
 
 	lda	alien_state+ALIEN_STATE,X
 
-	cmp	#P_WALKING
+	cmp	#A_WALKING
 	beq	move_alien_walking
-	cmp	#P_RUNNING
+	cmp	#A_RUNNING
 	beq	move_alien_running
+	cmp	#A_YELLING
+	beq	move_alien_yelling
 done_move_alien:
+	rts
+
+	;======================
+	; yelling
+move_alien_yelling:
+	inc	alien_state+ALIEN_GAIT,X	; cycle through animation
 	rts
 
 	;======================
@@ -109,6 +119,7 @@ astate_table_lo:
 	.byte <alien_running	; 02
 	.byte <alien_crouching	; 03
 	.byte <alien_turning	; 04
+	.byte <alien_yelling	; 05
 
 astate_table_hi:
 	.byte >alien_standing	; 00
@@ -116,6 +127,7 @@ astate_table_hi:
 	.byte >alien_running	; 02
 	.byte >alien_crouching	; 03
 	.byte >alien_turning	; 04
+	.byte >alien_yelling	; 05
 
 ; Urgh, make sure this doesn't end up at $FF or you hit the
 ;	NMOS 6502 bug
@@ -273,6 +285,51 @@ alien_draw_turning:
 	sta	INL
 
 	lda	#>alien_turning_sprite
+	sta	INH
+
+	jmp	finally_draw_alien
+
+
+
+;===============================
+; Yelling
+;================================
+
+alien_yelling:
+	lda	alien_state+ALIEN_GAIT,X
+	and	#$10
+
+	lsr
+	lsr
+	and	#2
+	tay
+
+	lda	alien_yell_progression,Y
+	sta	INL
+
+	lda	alien_yell_progression+1,Y
+	sta	INH
+
+	jmp	finally_draw_alien
+
+
+;===============================
+; Shooting Upward
+;================================
+
+alien_shooting_up:
+	lda	alien_state+ALIEN_GAIT,X
+	and	#$10
+
+	lsr
+	lsr
+	and	#2
+	tay
+
+	lda	alien_shoot_up_progression,Y
+	sta	INL
+
+	lda	alien_shoot_up_progression+1,Y
 	sta	INH
 
 	jmp	finally_draw_alien

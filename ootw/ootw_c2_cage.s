@@ -69,6 +69,8 @@ cage_loop:
         sta     YPOS
 
 	lda	CAGE_AMPLITUDE
+	cmp	#3
+	beq	cage_amp_2
 	cmp	#2
 	beq	cage_amp_2
 	cmp	#1
@@ -171,15 +173,44 @@ patrolling_right:
 	sta	alien0_state
 
 patrolling_move:
-	jsr	move_alien
 
-	jsr	draw_alien
+	lda	CAGE_AMPLITUDE
+	cmp	#2
+	beq	guard_yelling
+	cmp	#3
+	beq	guard_shooting
+
+	jmp	guard_move_and_draw
+
+guard_yelling:
+
+	lda	alien0_x
+	cmp	#21
+	bne	guard_move_and_draw
+
+	lda	#A_YELLING
+	sta	alien0_state
+	jmp	guard_move_and_draw
 
 guard_shooting:
 
 	; guard shooting
 
+	lda	alien0_x
+	cmp	#21
+	bne	guard_move_and_draw
 
+	lda	#A_SHOOTING_UP
+	sta	alien0_state
+	jmp	guard_move_and_draw
+
+
+
+guard_move_and_draw:
+
+	jsr	move_alien
+	jsr	draw_alien
+	jmp	done_cage_guard
 
 
 done_cage_guard:
@@ -204,10 +235,15 @@ check_amp1:
 check_amp2:
 	cmp	#2
 	bne	check_amp3
-
+					; if amp=2, guard shouts
+	jmp	cage_continue
 
 check_amp3:
 	cmp	#3
+	bne	check_amp4		; if amp=3, guard shoots
+
+check_amp4:
+	cmp	#4			; if amp=4, cage falls
 	bne	cage_continue
 
 
