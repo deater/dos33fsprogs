@@ -121,7 +121,9 @@ done_drawing_cage:
 
 	lda	CAGE_GUARD
 	cmp	#15
-	bcs	guard_changed
+	bcs	guard_patrol	; bge
+
+	; guard changing uniform
 
 	lda	#34
 	sta	XPOS
@@ -142,9 +144,19 @@ done_drawing_cage:
 ;	inc	CAGE_GUARD
 
 	jmp	done_cage_guard
-guard_changed:
 
-	; other guard activity
+guard_patrol:
+
+	; guard patroling
+
+	jsr	draw_alien
+
+guard_shooting:
+
+	; guard shooting
+
+
+
 
 done_cage_guard:
 
@@ -207,7 +219,39 @@ no_move_cage:
 	and	#$f
 	bne	no_move_cage_guard
 
+	lda	CAGE_GUARD
+	cmp	#16
+	bcs	guard_done_change
+
+guard_blah:
 	inc	CAGE_GUARD
+	jmp	no_move_cage_guard
+
+guard_done_change:
+	cmp	#16
+	bne	no_move_cage_guard
+
+	; start patrol
+
+	lda	#1
+	sta	alien0_out
+
+	lda	#34
+	sta	alien0_x
+
+	lda	#30
+	sta	alien0_y
+
+	lda	#A_WALKING
+	sta	alien0_state
+
+	lda	#0
+	sta	alien0_gait
+
+	lda	#0
+	sta	alien0_direction
+
+
 no_move_cage_guard:
 
 

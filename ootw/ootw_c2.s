@@ -134,7 +134,6 @@ end_message:
 .include "ootw_c2_jail.s"
 .include "ootw_c2_elevator.s"
 .include "ootw_c2_intro.s"
-.include "physicist.s"
 .include "text_print.s"
 .include "gr_pageflip.s"
 .include "gr_unrle.s"
@@ -151,6 +150,9 @@ end_message:
 .include "random16.s"
 .include "keyboard.s"
 
+.include "physicist.s"
+.include "alien.s"
+
 ; background miners
 .include "ootw_c2_miners.s"
 
@@ -159,6 +161,7 @@ end_message:
 .include "ootw_graphics/l2jail/ootw_c2_jail.inc"
 ; sprites
 .include "ootw_graphics/sprites/sprites_physicist.inc"
+.include "ootw_graphics/sprites/sprites_alien.inc"
 ; intro
 .include "ootw_graphics/l2intro/ootw_l2intro.inc"
 ; city movie
