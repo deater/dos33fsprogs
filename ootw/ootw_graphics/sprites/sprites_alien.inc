@@ -42,7 +42,7 @@ alien_walk_progression:
 
 alien_walk_left1:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $aa,$5a,$00,$77,$aa
 	.byte $aa,$55,$10,$77,$aa
@@ -53,7 +53,7 @@ alien_walk_left1:
 
 alien_walk_left2:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $aa,$aa,$00,$77,$aa
 	.byte $aa,$5a,$77,$17,$aa
@@ -64,7 +64,7 @@ alien_walk_left2:
 
 alien_walk_left3:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $aa,$aa,$00,$77,$aa
 	.byte $aa,$aa,$77,$10,$aa
@@ -75,7 +75,7 @@ alien_walk_left3:
 
 alien_walk_left4:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $aa,$aa,$00,$77,$aa
 	.byte $aa,$aa,$77,$10,$aa
@@ -86,7 +86,7 @@ alien_walk_left4:
 
 alien_walk_left5:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $aa,$aa,$00,$77,$aa
 	.byte $aa,$aa,$77,$10,$aa
@@ -97,7 +97,7 @@ alien_walk_left5:
 
 alien_walk_left6:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $aa,$aa,$00,$77,$aa
 	.byte $aa,$aa,$77,$17,$5a
@@ -108,7 +108,7 @@ alien_walk_left6:
 
 alien_walk_left7:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $aa,$aa,$00,$77,$aa
 	.byte $aa,$aa,$10,$77,$aa
@@ -119,7 +119,7 @@ alien_walk_left7:
 
 alien_walk_left8:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $aa,$aa,$00,$77,$aa
 	.byte $aa,$5a,$10,$77,$7a
@@ -148,7 +148,7 @@ alien_walk_gun_progression:
 
 alien_walk_gun_left1:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $a0,$5a,$00,$77,$aa
 	.byte $aa,$aa,$10,$77,$aa
@@ -159,7 +159,7 @@ alien_walk_gun_left1:
 
 alien_walk_gun_left2:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $0a,$aa,$00,$77,$aa
 	.byte $aa,$5a,$77,$17,$aa
@@ -170,7 +170,7 @@ alien_walk_gun_left2:
 
 alien_walk_gun_left3:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $0a,$aa,$00,$77,$aa
 	.byte $aa,$aa,$77,$10,$aa
@@ -181,7 +181,7 @@ alien_walk_gun_left3:
 
 alien_walk_gun_left4:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $0a,$aa,$00,$77,$aa
 	.byte $aa,$a5,$77,$10,$aa
@@ -192,7 +192,7 @@ alien_walk_gun_left4:
 
 alien_walk_gun_left5:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $a0,$5a,$00,$77,$aa
 	.byte $aa,$aa,$77,$10,$aa
@@ -203,7 +203,7 @@ alien_walk_gun_left5:
 
 alien_walk_gun_left6:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $a0,$5a,$00,$77,$aa
 	.byte $aa,$aa,$77,$17,$aa
@@ -214,7 +214,7 @@ alien_walk_gun_left6:
 
 alien_walk_gun_left7:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $0a,$aa,$00,$77,$aa
 	.byte $aa,$a5,$10,$77,$aa
@@ -225,7 +225,7 @@ alien_walk_gun_left7:
 
 alien_walk_gun_left8:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $0a,$aa,$00,$77,$aa
 	.byte $aa,$a5,$10,$77,$7a
@@ -409,7 +409,7 @@ alien_yell_progression:
 
 alien_yelling_1:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $0a,$a7,$07,$00,$aa
 	.byte $00,$aa,$00,$77,$aa
 	.byte $aa,$55,$10,$77,$7a
@@ -420,7 +420,7 @@ alien_yelling_1:
 
 alien_yelling_2:
 	.byte $5,$8
-	.byte $aa,$7a,$57,$75,$aa
+	.byte $aa,$7a,$f7,$7f,$aa
 	.byte $00,$77,$07,$00,$aa
 	.byte $0a,$5a,$00,$77,$aa
 	.byte $aa,$a5,$10,$77,$7a
@@ -444,7 +444,7 @@ alien_shoot_up_progression:
 
 alien_shooting_up_sprite:
 	.byte $5,$8
-	.byte $00,$7a,$57,$75,$aa
+	.byte $00,$7a,$f7,$7f,$aa
 	.byte $00,$77,$07,$00,$aa
 	.byte $55,$aa,$00,$77,$aa
 	.byte $aa,$55,$10,$77,$7a

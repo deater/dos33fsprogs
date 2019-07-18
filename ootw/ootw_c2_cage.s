@@ -50,12 +50,14 @@ cage_loop:
 
 	;================================
 	; copy background to current page
+	;================================
 
 	jsr	gr_copy_to_current
 
 
 	;=======================
 	; draw miners mining
+	;=======================
 
 	jsr	ootw_draw_miners
 
@@ -196,13 +198,13 @@ guard_shooting:
 
 	; guard shooting
 
-	lda	alien0_x
-	cmp	#21
-	bne	guard_move_and_draw
+;	lda	alien0_x
+;	cmp	#21
+;	bne	guard_move_and_draw
 
-	lda	#A_SHOOTING_UP
-	sta	alien0_state
-	jmp	guard_move_and_draw
+;	lda	#A_SHOOTING_UP
+;	sta	alien0_state
+;	jmp	guard_move_and_draw
 
 
 
@@ -210,7 +212,6 @@ guard_move_and_draw:
 
 	jsr	move_alien
 	jsr	draw_alien
-	jmp	done_cage_guard
 
 
 done_cage_guard:

@@ -297,11 +297,19 @@ alien_draw_turning:
 
 alien_yelling:
 	lda	alien_state+ALIEN_GAIT,X
-	and	#$10
 
+	and	#$c0
+	bne	alien_yelling_no_waving
+
+	lda	alien_state+ALIEN_GAIT,X
+
+alien_yelling_no_waving:
+	and	#$10
+	lsr
 	lsr
 	lsr
 	and	#2
+
 	tay
 
 	lda	alien_yell_progression,Y
