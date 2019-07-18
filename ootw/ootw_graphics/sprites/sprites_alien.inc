@@ -272,3 +272,19 @@ alien_crouch2:
 	.byte $54,$f4,$f4
 
 
+
+;=====================
+;=====================
+; TURNING
+;=====================
+;=====================
+alien_turning_sprite:
+	.byte $5,$8
+	.byte $aa,$57,$77,$aa,$aa
+	.byte $0a,$05,$00,$0a,$aa
+	.byte $77,$00,$00,$55,$aa
+	.byte $77,$00,$00,$55,$aa
+	.byte $aa,$00,$00,$a5,$aa
+	.byte $aa,$77,$55,$aa,$aa
+	.byte $07,$aa,$05,$aa,$aa
+	.byte $00,$aa,$00,$aa,$aa

@@ -28,6 +28,7 @@ A_STANDING	= 0
 A_WALKING	= 1
 A_RUNNING	= 2
 A_CROUCHING	= 3
+A_TURNING	= 4
 
 	;=======================================
 	; Move alien based on current state
@@ -56,8 +57,8 @@ move_alien_walking:
 	inc	alien_state+ALIEN_GAIT,X	; cycle through animation
 
 	lda     alien_state+ALIEN_GAIT,X
-	and     #$7
-	cmp     #$4			; only walk roughly 1/8 of time
+	and     #$f
+	cmp     #$8			; only walk roughly 1/8 of time
 	bne     alien_no_move_walk
 
 	lda	alien_state+ALIEN_DIRECTION,X
@@ -104,12 +105,14 @@ astate_table_lo:
 	.byte <alien_walking	; 01
 	.byte <alien_running	; 02
 	.byte <alien_crouching	; 03
+	.byte <alien_turning	; 04
 
 astate_table_hi:
-	.byte >alien_standing
-	.byte >alien_walking
-	.byte >alien_running
-	.byte >alien_crouching
+	.byte >alien_standing	; 00
+	.byte >alien_walking	; 01
+	.byte >alien_running	; 02
+	.byte >alien_crouching	; 03
+	.byte >alien_turning	; 04
 
 ; Urgh, make sure this doesn't end up at $FF or you hit the
 ;	NMOS 6502 bug
@@ -181,13 +184,14 @@ alien_crouching:
 
 alien_walking:
 	lda	alien_state+ALIEN_GAIT,X
-	cmp	#32
+	cmp	#64
 	bcc	alien_gait_fine	; blt
 
 	lda	#0
 	sta	alien_state+ALIEN_GAIT,X
 
 alien_gait_fine:
+	lsr
 	lsr
 	and	#$fe
 
@@ -226,6 +230,36 @@ alien_run_gait_fine:
 	sta	INH
 
 	jmp	finally_draw_alien
+
+;===============================
+; Turning
+;================================
+
+alien_turning:
+
+	dec	alien_state+ALIEN_GAIT,X
+	bpl	alien_draw_turning
+
+	lda	#0
+	sta	alien_state+ALIEN_GAIT,X
+
+	; switch direction
+	lda	alien_state+ALIEN_DIRECTION,X
+	eor	#$1
+	sta	alien_state+ALIEN_DIRECTION,X
+
+	lda	#A_WALKING
+	sta	alien_state+ALIEN_STATE,X
+
+alien_draw_turning:
+	lda	#<alien_turning_sprite
+	sta	INL
+
+	lda	#>alien_turning_sprite
+	sta	INH
+
+	jmp	finally_draw_alien
+
 
 
 ;=============================

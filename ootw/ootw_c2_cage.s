@@ -149,6 +149,28 @@ guard_patrol:
 	; guard patroling
 	;   CAGE_GUARD=15+
 
+	; switch direction if at end
+	lda	alien0_direction
+	bne	patrolling_right
+patrolling_left:
+	lda	alien0_x
+	cmp	#22
+	bcs	patrolling_move		; bge
+
+	lda	#A_TURNING
+	sta	alien0_state
+
+	jmp	patrolling_move
+patrolling_right:
+
+	lda	alien0_x
+	cmp	#34
+	bcc	patrolling_move		; blt
+
+	lda	#A_TURNING
+	sta	alien0_state
+
+patrolling_move:
 	jsr	move_alien
 
 	jsr	draw_alien
@@ -549,7 +571,7 @@ changing_guard11_sprite:
 
 changing_guard12_sprite:
 	.byte	4,9
-	.byte	$22,$02,$02,$22
+	.byte	$22,$A2,$A2,$22
 	.byte	$72,$57,$75,$22
 	.byte	$77,$07,$00,$A2
 	.byte	$AA,$77,$00,$AA
@@ -561,7 +583,7 @@ changing_guard12_sprite:
 
 changing_guard13_sprite:
 	.byte	4,9
-	.byte	$22,$02,$02,$22
+	.byte	$22,$A2,$A2,$22
 	.byte	$72,$57,$75,$22
 	.byte	$77,$07,$00,$A2
 	.byte	$AA,$00,$77,$AA
