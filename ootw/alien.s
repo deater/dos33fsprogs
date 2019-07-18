@@ -8,6 +8,7 @@ alien0:
 	alien0_state:		.byte	0
 	alien0_gait:		.byte	0
 	alien0_direction:	.byte	0
+	alien0_gun:		.byte	0
 
 alien1:
 	alien1_out:		.byte	0
@@ -16,6 +17,7 @@ alien1:
 	alien1_state:		.byte	0
 	alien1_gait:		.byte	0
 	alien1_direction:	.byte	0
+	alien1_gun:		.byte	0
 
 ALIEN_OUT	= 0
 ALIEN_X		= 1
@@ -23,6 +25,7 @@ ALIEN_Y		= 2
 ALIEN_STATE	= 3
 ALIEN_GAIT	= 4
 ALIEN_DIRECTION	= 5
+ALIEN_GUN	= 6
 
 A_STANDING	= 0
 A_WALKING	= 1
@@ -197,6 +200,20 @@ alien_gait_fine:
 
 	tay
 
+	lda	alien_state+ALIEN_GUN,X
+	beq	alien_walk_nogun
+
+alien_walk_gun:
+
+	lda	alien_walk_gun_progression,Y
+	sta	INL
+
+	lda	alien_walk_gun_progression+1,Y
+	sta	INH
+
+	jmp	finally_draw_alien
+
+alien_walk_nogun:
 	lda	alien_walk_progression,Y
 	sta	INL
 

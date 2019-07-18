@@ -192,8 +192,24 @@ done_cage_guard:
 
 	inc	CAGE_AMPLITUDE
 	lda	CAGE_AMPLITUDE
+
+check_amp1:
+	cmp	#1
+	bne	check_amp2
+
+;	lda	#1			; if amp=1, guard gets gun out
+	sta	alien0_gun
+	jmp	cage_continue
+
+check_amp2:
+	cmp	#2
+	bne	check_amp3
+
+
+check_amp3:
 	cmp	#3
 	bne	cage_continue
+
 
 
 	;===========================
