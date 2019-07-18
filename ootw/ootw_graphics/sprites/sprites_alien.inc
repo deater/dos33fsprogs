@@ -119,7 +119,6 @@ alien_walk_left7:
 
 alien_walk_left8:
 	.byte $5,$8
-	.byte $5,$8
 	.byte $aa,$7a,$57,$75,$aa
 	.byte $aa,$77,$07,$00,$aa
 	.byte $aa,$aa,$00,$77,$aa

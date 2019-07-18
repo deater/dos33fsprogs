@@ -181,7 +181,7 @@ alien_crouching:
 
 alien_walking:
 	lda	alien_state+ALIEN_GAIT,X
-	cmp	#40
+	cmp	#32
 	bcc	alien_gait_fine	; blt
 
 	lda	#0
@@ -207,7 +207,7 @@ alien_gait_fine:
 
 alien_running:
 	lda	alien_state+ALIEN_GAIT,X
-	cmp	#40
+	cmp	#32
 	bcc	alien_run_gait_fine	; blt
 
 	lda	#0

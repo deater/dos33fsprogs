@@ -124,6 +124,7 @@ done_drawing_cage:
 	bcs	guard_patrol	; bge
 
 	; guard changing uniform
+	;  CAGE_GUARD=0..14
 
 	lda	#34
 	sta	XPOS
@@ -141,13 +142,14 @@ done_drawing_cage:
 
         jsr     put_sprite_crop
 
-;	inc	CAGE_GUARD
-
 	jmp	done_cage_guard
 
 guard_patrol:
 
 	; guard patroling
+	;   CAGE_GUARD=15+
+
+	jsr	move_alien
 
 	jsr	draw_alien
 
@@ -220,15 +222,20 @@ no_move_cage:
 	bne	no_move_cage_guard
 
 	lda	CAGE_GUARD
-	cmp	#16
-	bcs	guard_done_change
+	cmp	#15
+	bcc	guard_ch		; blt, 0..14
+	jmp	no_move_cage_guard	; 15+
 
-guard_blah:
+
+guard_ch:
+	; CAGE_GUARD = 0..14
+
 	inc	CAGE_GUARD
-	jmp	no_move_cage_guard
+;	jmp	no_move_cage_guard
 
 guard_done_change:
-	cmp	#16
+	lda	CAGE_GUARD
+	cmp	#15
 	bne	no_move_cage_guard
 
 	; start patrol
@@ -236,7 +243,7 @@ guard_done_change:
 	lda	#1
 	sta	alien0_out
 
-	lda	#34
+	lda	#33
 	sta	alien0_x
 
 	lda	#30
@@ -251,6 +258,7 @@ guard_done_change:
 	lda	#0
 	sta	alien0_direction
 
+	inc	CAGE_GUARD		; now 16
 
 no_move_cage_guard:
 
@@ -542,8 +550,8 @@ changing_guard11_sprite:
 changing_guard12_sprite:
 	.byte	4,9
 	.byte	$22,$02,$02,$22
-	.byte	$22,$77,$75,$22
-	.byte	$A2,$07,$00,$A2
+	.byte	$72,$57,$75,$22
+	.byte	$77,$07,$00,$A2
 	.byte	$AA,$77,$00,$AA
 	.byte	$AA,$77,$10,$AA
 	.byte	$AA,$00,$00,$AA
@@ -554,8 +562,8 @@ changing_guard12_sprite:
 changing_guard13_sprite:
 	.byte	4,9
 	.byte	$22,$02,$02,$22
-	.byte	$22,$77,$75,$22
-	.byte	$A2,$07,$00,$A2
+	.byte	$72,$57,$75,$22
+	.byte	$77,$07,$00,$A2
 	.byte	$AA,$00,$77,$AA
 	.byte	$AA,$77,$10,$AA
 	.byte	$AA,$00,$00,$AA
