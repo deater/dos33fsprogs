@@ -11,6 +11,7 @@ General:
   + ability to run+jump
   + ability to kick while crouching
   + ability to shoot
+  + running then crouch, you slide a bit
 
 * sprites_to_draw:
   + physicist crouch-kicking
@@ -20,6 +21,10 @@ General:
   + beast tripping
   + physicist holding gun
   + physicist shot
+  + alien shot
+  + alien running
+  + friend walking
+  + friend running
 
 
 * underwater:
@@ -57,6 +62,7 @@ Level/Checkpoint #2:
   + Ability to pick up gun, with all that entails
   + Animation of friend?
   + 1-bit audio recording of friend talking
+  + in game, after some time the guard calms down
 
 * Jail:
   + Doors that open/blast?
