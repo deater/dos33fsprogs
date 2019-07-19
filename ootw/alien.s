@@ -359,11 +359,13 @@ alien_shooting_up:
 	cpy	#0
 
 	lda	alien_state+ALIEN_GAIT,X
-	and	#$3f
+;	and	#$ff
 	bne	finally_draw_alien
 
-	lda	#30
-	sta	SHOOTING
+	lda	#32
+	sta	SHOOTING_BOTTOM
+	lda	#28
+	sta	SHOOTING_TOP
 
 ;	bne	finally_draw_alien	; bra
 

@@ -40,7 +40,8 @@ ootw_cage:
 	sta	CAGE_AMPLITUDE
 	sta	CAGE_OFFSET
 	sta	CAGE_GUARD
-	sta	SHOOTING
+	sta	SHOOTING_BOTTOM
+	sta	SHOOTING_TOP
 
         bit     KEYRESET		; clear keypress
 
@@ -123,27 +124,41 @@ done_drawing_cage:
 	; draw laser
 	;======================
 
-	lda	SHOOTING
+	lda	SHOOTING_BOTTOM
 	beq	done_draw_laser
+
+	; 30 - 27, 30-24, 30-21
 
 	lda	#$11
 	sta	COLOR
-	ldx	SHOOTING
+
+	ldx	SHOOTING_BOTTOM
 	stx	V2
 
-	lda	SHOOTING
-	sec
-	sbc	#20
-	bpl	laser_not_offscreen
-	lda	#0
-laser_not_offscreen:
-	tax
-	ldy	#21
+	ldx	SHOOTING_TOP
+
+	ldy	#21		; X location
 	jsr	vlin
 
-	dec	SHOOTING
-	dec	SHOOTING
-	dec	SHOOTING
+	; if shooting top < 10, decrement Y2
+	lda	SHOOTING_TOP
+	cmp	#10
+	bcs	shoot_up_noadj	; bge
+
+	dec	SHOOTING_BOTTOM
+	dec	SHOOTING_BOTTOM
+	dec	SHOOTING_BOTTOM
+	dec	SHOOTING_BOTTOM
+shoot_up_noadj:
+
+
+	lda	SHOOTING_TOP
+	beq	done_draw_laser
+
+	dec	SHOOTING_TOP
+	dec	SHOOTING_TOP
+	dec	SHOOTING_TOP
+	dec	SHOOTING_TOP
 
 done_draw_laser:
 

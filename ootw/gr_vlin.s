@@ -3,6 +3,7 @@
 	; vlin
 	;=========================================
 	; X, V2 at Y
+	; from x=top, v2=bottom
 vlin:
 
 	sty	TEMPY		; save Y (x location)
