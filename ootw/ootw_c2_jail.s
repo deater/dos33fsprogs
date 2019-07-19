@@ -324,11 +324,22 @@ jail_loop:
 	lda	WHICH_JAIL
 
 bg_jail0:
-	; Jail #0, draw miners
+	; Jail #0, draw miners, gun
 
 	cmp	#0
 	bne	bg_jail6
 	jsr	ootw_draw_miners
+
+	lda	GUN_OUT
+	beq	c2_no_bg_action
+
+        lda     #30
+        sta     XPOS
+        lda     #44
+        sta     YPOS
+        jsr     draw_gun
+
+	jmp	c2_no_bg_action
 
 bg_jail6:
 	; Jail #6, draw power animation
@@ -685,7 +696,6 @@ done_jail:
 	rts
 
 
-
 power_line_sprites:
 	.word	power_line_sprite0
 	.word	power_line_sprite1
@@ -754,9 +764,6 @@ walking_dude2: .byte 6,6
 	.byte $AA,$00,$77,$7f,$77,$00
 	.byte $AA,$00,$77,$77,$77,$00
 
-
-
-
 teleport_sprite:
 	.byte	3,8
 	.byte	$BB,$AA,$BA
@@ -768,3 +775,20 @@ teleport_sprite:
 	.byte	$AB,$59,$BB
 	.byte	$AA,$45,$AB
 
+
+gun_sprite:
+	.byte	3,1
+	.byte	$0a,$0a,$00
+
+
+	;====================
+	; draw gun
+	;====================
+	; xpos/ypos already set
+draw_gun:
+	lda	#<gun_sprite
+	sta	INL
+	lda	#>gun_sprite
+	sta	INH
+
+	jmp	put_sprite_crop

@@ -796,7 +796,7 @@ done_cage_endcage:
 	cmp	#10
 	bcs	done_guard_endcage	; bge
 
-	lda	#22
+	lda	#21
 	sta	XPOS
 	lda     #28
 	sta     YPOS
@@ -809,6 +809,19 @@ done_cage_endcage:
 	jsr	put_sprite_crop
 
 done_guard_endcage:
+
+	;===============
+	; draw gun
+	;===============
+
+	lda	#30
+	sta	XPOS
+
+	lda	#44
+	sta	YPOS
+
+	jsr	draw_gun
+
 
 	;===============
 	; page flip
