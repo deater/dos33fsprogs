@@ -719,13 +719,16 @@ little_guy_out2_sprite:
 	; Cage Ending
 	;============================
 cage_ending:
+	lda	#0
+	sta	FRAMEL
+
+cage_ending_loop:
 
 	;================================
 	; copy background to current page
 	;================================
 
 	jsr	gr_copy_to_current
-
 
 	;=======================
 	; draw miners mining
@@ -737,10 +740,20 @@ cage_ending:
 	; draw cage (if applicable)
 	;==========================
 
-	lda	#11
-	sta	XPOS
-	lda     #0
+	lda	FRAMEL
+	cmp	#10
+	bcs	done_cage_endcage	; bge
+
+	lda	FRAMEL
+	asl
+	clc
+	adc	#6
+
+cage_set_ypos:
         sta     YPOS
+
+	lda     #18
+	sta	XPOS
 
         lda     #<cage_center_sprite
         sta     INL
@@ -748,6 +761,26 @@ cage_ending:
         sta     INH
 
         jsr     put_sprite_crop
+
+done_cage_endcage:
+
+	;==========================
+	; draw little dude
+	;==========================
+
+	lda     #27
+	sta	XPOS
+
+	lda	#34
+        sta     YPOS
+
+        lda     #<little_guy_in_sprite
+        sta     INL
+        lda     #>little_guy_in_sprite
+        sta     INH
+
+        jsr     put_sprite_crop
+
 
 	;======================
 	; draw laser
@@ -759,33 +792,45 @@ cage_ending:
 	; draw guard (if applicable)
 	;===========================
 
-	lda	#34
+	lda	FRAMEL
+	cmp	#10
+	bcs	done_guard_endcage	; bge
+
+	lda	#22
 	sta	XPOS
 	lda     #28
-        sta     YPOS
+	sta     YPOS
 
-        lda     changing_guard_sprites,Y
-        sta     INL
-        lda     changing_guard_sprites+1,Y
-        sta     INH
+	lda     #<alien_shooting_up_sprite
+	sta	INL
+	lda	#>alien_shooting_up_sprite
+	sta	INH
 
-        jsr     put_sprite_crop
+	jsr	put_sprite_crop
 
+done_guard_endcage:
 
 	;===============
 	; page flip
 
 	jsr	page_flip
 
+
+	;================
+	; delay
+
+	lda	#200
+	jsr	WAIT
+
+
 	;================
 	; inc frame count
 
 	inc	FRAMEL
-	bne	end_cage_frame_no_oflo
-	inc	FRAMEH
 
-end_cage_frame_no_oflo:
+	bmi	done_cage_end
 
+	jmp	cage_ending_loop
 
 
 done_cage_end:

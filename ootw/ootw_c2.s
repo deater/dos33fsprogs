@@ -13,16 +13,6 @@ ootw_c2:
 
 	lda	#0
 	sta	GAME_OVER
-	sta	PHYSICIST_STATE
-	sta	ON_ELEVATOR
-
-	lda     #22
-	sta     PHYSICIST_Y
-	lda     #20
-	sta     PHYSICIST_X
-
-	lda     #1
-	sta     DIRECTION
 
 	;=======================
 	; Run the intro
@@ -43,15 +33,7 @@ ootw_c2:
 	; Start Level After Cage
 	;=======================
 
-	lda     #1
-	sta     DIRECTION
-	lda     #22
-	sta     PHYSICIST_Y
-	lda     #26
-	sta     PHYSICIST_X
-	lda     #0
-	sta     PHYSICIST_STATE
-	sta     WHICH_JAIL
+	jsr	ootw_jail_init
 
 	;=========================
 	; c2_new_room

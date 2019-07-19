@@ -1,17 +1,15 @@
 ; Ootw Checkpoint2 -- Running around the Jail
 
-ootw_jail:
 
-	;==============================
-	; init
-
+	; call once before entering jail for first time
+ootw_jail_init:
 	lda	#0
-	sta	ON_ELEVATOR
-	sta	TELEPORTING
 	sta	CITY_MOVIE_SEEN
 	sta	CART_OUT
 	sta	DUDE_OUT
 	sta	friend_direction
+	sta	PHYSICIST_STATE
+	sta	WHICH_JAIL
 
 	lda	#1
 	sta	JAIL_POWER_ON
@@ -23,6 +21,30 @@ ootw_jail:
 	lda	#$FA
 	sta	CART_X
 
+	lda	#25
+	sta	PHYSICIST_X
+	lda	#30
+	sta	PHYSICIST_Y
+
+	lda	#1
+	sta	DIRECTION
+
+	rts
+
+
+	;===========================
+	; enter new room in jail
+	;===========================
+
+ootw_jail:
+
+	;==============================
+	; each room init
+
+	lda	#0
+	sta	ON_ELEVATOR
+	sta	TELEPORTING
+
 	;==============================
 	; setup per-room variables
 
@@ -30,7 +52,7 @@ ootw_jail:
 	bne	jail1
 
 jail0:
-	lda	#(18+128)
+	lda	#(24+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
 	sta	RIGHT_LIMIT
@@ -43,7 +65,7 @@ jail0:
 	lda     #0
 	sta     jel_smc+1
 
-	lda	#22
+	lda	#30
 	sta	PHYSICIST_Y
 
 	; load background
@@ -274,8 +296,8 @@ ootw_jail_already_set:
 	;=================================
 	; copy to screen
 
-	jsr	gr_copy_to_current
-	jsr	page_flip
+;	jsr	gr_copy_to_current
+;	jsr	page_flip
 
 	;=================================
 	; setup vars
@@ -285,7 +307,9 @@ ootw_jail_already_set:
 	sta	GAME_OVER
 
 	;============================
+	;============================
 	; Jail Loop
+	;============================
 	;============================
 jail_loop:
 
@@ -298,6 +322,17 @@ jail_loop:
 	; draw background action
 
 	lda	WHICH_JAIL
+
+bg_jail0:
+	; Jail #0, draw miners
+
+	cmp	#0
+	bne	bg_jail6
+	jsr	ootw_draw_miners
+
+bg_jail6:
+	; Jail #6, draw power animation
+
 	cmp	#6
 	bne	c2_no_bg_action
 

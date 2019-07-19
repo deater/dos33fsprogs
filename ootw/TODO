@@ -73,6 +73,7 @@ Level/Checkpoint #2:
 
 * Elevator:
   + Elevator can change direction mid-floor
+  + Elevator should shoot sparks every 20 frames or so
 
 * View:
   + music play when viewing city
