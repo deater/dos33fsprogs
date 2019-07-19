@@ -253,6 +253,36 @@ hes_swinging:
 
 rope_frame_no_oflo:
 
+
+	;===================
+	; check cliff's edge
+
+	lda	PHYSICIST_X
+	cmp	#11
+	bcs	already_swung
+
+	lda	BEFORE_SWING
+	beq	already_swung
+
+	lda	#0
+	sta	BEFORE_SWING
+
+	; FIXME: check for jump
+
+	lda	#80
+	sta	SWING_PROGRESS
+
+	lda	#11
+	sta	PHYSICIST_X
+
+	lda	#P_SWINGING
+	sta	PHYSICIST_STATE
+
+	jmp	not_done_rope
+
+already_swung:
+
+
 	;=========================
 	; check if done this room
 	;=========================
@@ -283,24 +313,6 @@ check_cliff_edge:
 	lda	#0
 	sta	GAME_OVER
 
-	;===================
-	; at cliff's edge
-
-	lda	#0
-	sta	BEFORE_SWING
-
-	; FIXME: check for jump
-
-	lda	#80
-	sta	SWING_PROGRESS
-
-	lda	#11
-	sta	PHYSICIST_X
-
-	lda	#P_SWINGING
-	sta	PHYSICIST_STATE
-
-	jmp	not_done_rope
 
 check_swung_off:
 	cmp	#$5

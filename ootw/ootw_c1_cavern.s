@@ -19,9 +19,9 @@ ootw_cavern:
 	;======================
 	; setup room boundaries
 
-	lda	#(0+128)
+	lda	#(-4+128)
 	sta	LEFT_LIMIT
-	lda	#(38+128)
+	lda	#(39+128)
 	sta	RIGHT_LIMIT
 
 	;=============================

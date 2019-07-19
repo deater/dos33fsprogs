@@ -1,14 +1,14 @@
 ; Ootw Pool Party
 
 ootw_pool:
-	;===========================
+	;================
 	; Enable graphics
 
 	bit	LORES
 	bit	SET_GR
 	bit	FULLGR
 
-	;=============
+	;===================
 	; disable earthquake
 
 	lda	#0
@@ -25,9 +25,9 @@ ootw_pool:
 	;===========================
 	; Setup right/left exit paramaters
 
-	lda	#(40+128)
+	lda	#(39+128)
 	sta	RIGHT_LIMIT
-	lda	#(-5+128)
+	lda	#(-4+128)
 	sta	LEFT_LIMIT
 
 	;=============================

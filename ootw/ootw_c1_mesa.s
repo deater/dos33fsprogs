@@ -33,7 +33,7 @@ beast_not_out_yet:
 	sta	RIGHT_LIMIT
 
 mesa_left:
-	lda	#(128-3)
+	lda	#(128-4)
 	sta	LEFT_LIMIT
 
 	;=============================
@@ -204,6 +204,47 @@ mesa_frame_no_oflo:
 
 	;========================================
 	;========================================
+	; check if triggering beast
+	;========================================
+	;========================================
+	lda	BEAST_OUT
+	bne	mesa_done_check_beast
+
+	lda	PHYSICIST_X
+	cmp	#19
+	bne	mesa_done_check_beast		; blt
+
+trigger_beast:
+	;=======================
+	; trigger beast emerging
+	lda	#1
+	sta	BEAST_OUT
+
+	lda	#0
+	sta	BEAST_DIRECTION
+	sta	BEAST_GAIT
+	sta	BEAST_STATE		; B_STANDING
+	sta	GAME_OVER
+	sta	PHYSICIST_STATE		; stop in tracks
+
+	lda	#50
+	sta	BEAST_COUNT
+
+	lda	#30
+	sta	BEAST_X
+
+	lda	#(39+128)		; update right side of screen
+	sta	RIGHT_LIMIT		; this is mostly for testing
+
+	jsr	beast_cutscene
+
+	jmp	not_done_mesa
+
+
+mesa_done_check_beast:
+
+	;========================================
+	;========================================
 	; check if at edge of screen or game over
 	;========================================
 	;========================================
@@ -225,11 +266,6 @@ mesa_check_right:
 
 	;=====================
 	; off screen to right
-
-	lda	BEAST_OUT		; if beast out trigger end
-	beq	trigger_beast		; otherwise trigger beast
-
-	;=====================
 	; trigger ending
 
 	lda	#MAX_PROGRESSION
@@ -243,32 +279,7 @@ mesa_check_right:
 
 	jmp	not_done_mesa
 
-trigger_beast:
-	;=======================
-	; trigger beast emerging
-	lda	#1
-	sta	BEAST_OUT
 
-	lda	#0
-	sta	BEAST_DIRECTION
-	sta	BEAST_GAIT
-	sta	BEAST_STATE		; B_STANDING
-	sta	GAME_OVER
-	sta	PHYSICIST_STATE		; stop in tracks
-
-	lda	#50
-	sta	BEAST_COUNT
-
-	lda	#30
-	sta	BEAST_X
-
-
-	lda	#(39+128)		; update right side of screen
-	sta	RIGHT_LIMIT		; this is mostly for testing
-
-	jsr	beast_cutscene
-
-	jmp	not_done_mesa
 
 mesa_check_left:
 	cmp	#$1
