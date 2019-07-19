@@ -14,8 +14,10 @@ ootw_jail_init:
 	sta	JAIL_POWER_ON
 	sta	GUN_OUT
 	sta	friend_out
-	sta	friend_state
 	sta	friend_direction
+
+	lda	#F_RUNNING
+	sta	friend_state
 
 	lda	#39
 	sta	DUDE_X
