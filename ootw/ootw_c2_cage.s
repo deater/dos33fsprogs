@@ -738,12 +738,112 @@ cage_ending_loop:
 	;================
 	; draw physicist
 	;================
-	; frame
+	; frame 10 crouching
+	; frame 40 getting up one step?
+	; frame 60 all stood up
+	; frame 70 jump -- 90
+	; frame 90 standing left (taps)
+	; frame 100 turn right
+	; frame 120 turn left
+
+	lda	#19
+	sta	XPOS
+	lda	#28
+	sta	YPOS
+
+	lda	FRAMEL
+	cmp	#10
+	bcc	ce_done_physicist	; blt
+
+	cmp	#120
+	bcs	ce_stand_left		; bge
+
+	cmp	#100
+	bcs	ce_stand_right		; bge
+
+	cmp	#90
+	bcs	ce_stand_left		; bge
+
+	cmp	#70
+	bcs	ce_jump			; bge
+
+	cmp	#60
+	bcs	ce_stand_cage		; bge
+
+	cmp	#40
+	bcs	ce_half_stand_cage	; bge
+
+ce_crouch_cage:
+
+	ldx	#<crouch2
+	ldy	#>crouch2
+	jmp	ce_draw_physicist_right
+
+ce_half_stand_cage:
+
+	ldx	#<crouch1
+	ldy	#>crouch1
+	jmp	ce_draw_physicist_right
+
+ce_stand_cage:
+
+	ldx	#<phys_stand
+	ldy	#>phys_stand
+	jmp	ce_draw_physicist_right
+
+ce_jump:
+
+	ldx	#<phys_stand
+	ldy	#>phys_stand
+	jmp	ce_draw_physicist_right
+
+
+ce_stand_right:
+	lda	#27
+	sta	XPOS
+	lda	#30
+	sta	YPOS
+
+	ldx	#<phys_stand
+	ldy	#>phys_stand
+	jmp	ce_draw_physicist_right
+
+
+ce_stand_left:
+	lda	#27
+	sta	XPOS
+	lda	#30
+	sta	YPOS
+
+	ldx	#<phys_stand
+	ldy	#>phys_stand
+
+ce_draw_physicist_left:
+	stx	INL
+	sty	INH
+        jsr     put_sprite_crop
+	jmp	ce_done_physicist
+
+ce_draw_physicist_right:
+	stx	INL
+	sty	INH
+        jsr     put_sprite_flipped_crop
+
+ce_done_physicist:
 
 	;============
 	; draw friend
 	;============
-	; frame
+	; frame 10 crouching
+	; frame 34 getting up one step?
+	; frame 38 all stood up
+	; frame 60 turns
+	; frame 62 standing left
+	; frame 74 turns
+	; frame 76 standing right
+	; frame 90-100 taps
+	; frame 116 points, my tuba
+	
 
 	;===========
 	; draw cage
@@ -878,7 +978,7 @@ ce_guard_not_standing:
 
 ce_guard_not_falling:
 
-	lda	#19
+	lda	#18
 	sta	XPOS
 	lda     #42
 	sta     YPOS

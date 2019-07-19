@@ -21,7 +21,7 @@ ootw_jail_init:
 	lda	#$FA
 	sta	CART_X
 
-	lda	#25
+	lda	#27
 	sta	PHYSICIST_X
 	lda	#30
 	sta	PHYSICIST_Y
