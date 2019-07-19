@@ -40,6 +40,7 @@ ootw_cage:
 	sta	CAGE_AMPLITUDE
 	sta	CAGE_OFFSET
 	sta	CAGE_GUARD
+	sta	SHOOTING
 
         bit     KEYRESET		; clear keypress
 
@@ -118,6 +119,33 @@ cage_amp_2:
 
 done_drawing_cage:
 
+	;======================
+	; draw laser
+	;======================
+
+	lda	SHOOTING
+	beq	done_draw_laser
+
+	lda	#$11
+	sta	COLOR
+	ldx	SHOOTING
+	stx	V2
+
+	lda	SHOOTING
+	sec
+	sbc	#20
+	bpl	laser_not_offscreen
+	lda	#0
+laser_not_offscreen:
+	tax
+	ldy	#21
+	jsr	vlin
+
+	dec	SHOOTING
+	dec	SHOOTING
+	dec	SHOOTING
+
+done_draw_laser:
 
 	;======================
 	; draw guard
@@ -179,6 +207,7 @@ patrolling_move:
 	lda	CAGE_AMPLITUDE
 	cmp	#2
 	beq	guard_yelling
+
 	cmp	#3
 	beq	guard_shooting
 
@@ -198,14 +227,12 @@ guard_shooting:
 
 	; guard shooting
 
-;	lda	alien0_x
-;	cmp	#21
-;	bne	guard_move_and_draw
+	lda	alien0_x
+	cmp	#21
+	bne	guard_move_and_draw
 
-;	lda	#A_SHOOTING_UP
-;	sta	alien0_state
-;	jmp	guard_move_and_draw
-
+	lda	#A_SHOOTING_UP
+	sta	alien0_state
 
 
 guard_move_and_draw:
@@ -344,27 +371,6 @@ no_move_cage_guard:
 	lda	GAME_OVER
 	cmp	#$ff
 	beq	done_cage
-
-	; check if done this level
-;	cmp	#$2
-;	bne	not_to_right
-
-	; exit to right
-
-;	lda	#0
-;	sta	PHYSICIST_X
-;	sta	WHICH_CAVE
-
-;	jmp	ootw_cavern
-
-;not_to_right:
-;	cmp	#$1
-;	bne	not_done_pool
-
-;	lda	#37
-;	sta	PHYSICIST_X
-
-;	jmp	ootw_rope
 
 
 
@@ -625,7 +631,7 @@ changing_guard11_sprite:
 changing_guard12_sprite:
 	.byte	4,9
 	.byte	$22,$A2,$A2,$22
-	.byte	$72,$57,$75,$22
+	.byte	$72,$f7,$7f,$22
 	.byte	$77,$07,$00,$A2
 	.byte	$AA,$77,$00,$AA
 	.byte	$AA,$77,$10,$AA
@@ -637,7 +643,7 @@ changing_guard12_sprite:
 changing_guard13_sprite:
 	.byte	4,9
 	.byte	$22,$A2,$A2,$22
-	.byte	$72,$57,$75,$22
+	.byte	$72,$f7,$7f,$22
 	.byte	$77,$07,$00,$A2
 	.byte	$AA,$00,$77,$AA
 	.byte	$AA,$77,$10,$AA

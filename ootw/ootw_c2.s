@@ -147,6 +147,7 @@ end_message:
 .include "gr_offsets_hl.s"
 .include "gr_run_sequence.s"
 .include "gr_overlay.s"
+.include "gr_vlin.s"
 .include "random16.s"
 .include "keyboard.s"
 

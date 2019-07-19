@@ -54,6 +54,8 @@ move_alien:
 	beq	move_alien_running
 	cmp	#A_YELLING
 	beq	move_alien_yelling
+	cmp	#A_SHOOTING_UP
+	beq	move_alien_yelling
 done_move_alien:
 	rts
 
@@ -120,6 +122,7 @@ astate_table_lo:
 	.byte <alien_crouching	; 03
 	.byte <alien_turning	; 04
 	.byte <alien_yelling	; 05
+	.byte <alien_shooting_up; 06
 
 astate_table_hi:
 	.byte >alien_standing	; 00
@@ -128,6 +131,7 @@ astate_table_hi:
 	.byte >alien_crouching	; 03
 	.byte >alien_turning	; 04
 	.byte >alien_yelling	; 05
+	.byte >alien_shooting_up; 06
 
 ; Urgh, make sure this doesn't end up at $FF or you hit the
 ;	NMOS 6502 bug
@@ -298,7 +302,12 @@ alien_draw_turning:
 alien_yelling:
 	lda	alien_state+ALIEN_GAIT,X
 
-	and	#$c0
+	; 00
+	; 01
+	; 10
+	; 11
+
+	and	#$40
 	bne	alien_yelling_no_waving
 
 	lda	alien_state+ALIEN_GAIT,X
@@ -327,11 +336,18 @@ alien_yelling_no_waving:
 
 alien_shooting_up:
 	lda	alien_state+ALIEN_GAIT,X
-	and	#$10
+	and	#$30
+
+	;  000 000
+	;  010 000
+	;  100 000
+	;  110 000
 
 	lsr
 	lsr
-	and	#2
+	lsr
+
+	and	#6
 	tay
 
 	lda	alien_shoot_up_progression,Y
@@ -340,7 +356,16 @@ alien_shooting_up:
 	lda	alien_shoot_up_progression+1,Y
 	sta	INH
 
-	jmp	finally_draw_alien
+	cpy	#0
+
+	lda	alien_state+ALIEN_GAIT,X
+	and	#$3f
+	bne	finally_draw_alien
+
+	lda	#30
+	sta	SHOOTING
+
+;	bne	finally_draw_alien	; bra
 
 
 
