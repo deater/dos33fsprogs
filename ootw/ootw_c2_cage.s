@@ -711,12 +711,10 @@ little_guy_out2_sprite:
 
 
 
-
-
-
-
+	;============================
 	;============================
 	; Cage Ending
+	;============================
 	;============================
 cage_ending:
 	lda	#0
@@ -736,18 +734,33 @@ cage_ending_loop:
 
 	jsr	ootw_draw_miners
 
-	;==========================
-	; draw cage (if applicable)
-	;==========================
+
+	;================
+	; draw physicist
+	;================
+	; frame
+
+	;============
+	; draw friend
+	;============
+	; frame
+
+	;===========
+	; draw cage
+	;===========
+	; frame 0 .. 10 falling
+	; frame 10 - ??? sproinging
+	; frame 20 -- permanent
+
 
 	lda	FRAMEL
 	cmp	#10
-	bcs	done_cage_endcage	; bge
+	bcs	done_cage_ground	; bge
 
 	lda	FRAMEL
 	asl
 	clc
-	adc	#6
+	adc	#2
 
 cage_set_ypos:
         sta     YPOS
@@ -755,18 +768,38 @@ cage_set_ypos:
 	lda     #18
 	sta	XPOS
 
-        lda     #<cage_center_sprite
-        sta     INL
-        lda     #>cage_center_sprite
-        sta     INH
+	ldx	#<cage_center_sprite
+	ldy	#>cage_center_sprite
 
-        jsr     put_sprite_crop
+	jmp	done_cage_endcage
+
+done_cage_ground:
+
+	lda     #18
+	sta	XPOS
+	lda	#32
+        sta     YPOS
+
+	ldx	#<cage_ground_sprite
+	ldy	#>cage_ground_sprite
 
 done_cage_endcage:
+	stx	INL
+	sty	INH
+        jsr     put_sprite_crop
+
+	;================
+	; draw cage parts
+	;================
+	; FIXME
 
 	;==========================
 	; draw little dude
 	;==========================
+	; frame 0 - 17 : watching
+	; frame 18- 20 : out1
+	; frame 20- 23 : out2
+	; frame 24 : gone
 
 	lda     #27
 	sta	XPOS
@@ -774,17 +807,37 @@ done_cage_endcage:
 	lda	#34
         sta     YPOS
 
-        lda     #<little_guy_in_sprite
-        sta     INL
-        lda     #>little_guy_in_sprite
-        sta     INH
+	lda	FRAMEL
+	cmp	#24
+	bcs	done_cage_draw_lg	; bge
 
+	ldx	#<little_guy_out2_sprite
+	ldy	#>little_guy_out2_sprite
+
+	cmp	#20
+	bcs	cage_draw_lg
+
+	ldx	#<little_guy_out1_sprite
+	ldy	#>little_guy_out1_sprite
+
+	cmp	#18
+	bcs	cage_draw_lg
+
+	ldx	#<little_guy_in_sprite
+	ldy	#>little_guy_in_sprite
+
+cage_draw_lg:
+
+	stx	INL
+	sty	INH
         jsr     put_sprite_crop
 
+done_cage_draw_lg:
 
 	;======================
 	; draw laser
 	;======================
+	; continue drawing in case a shot was fired as we fell
 
 	jsr	draw_laser
 
@@ -792,36 +845,97 @@ done_cage_endcage:
 	; draw guard (if applicable)
 	;===========================
 
+	; frame 0-10  : standing
+	; frame 11-12 : falling
+	; frame 13+   : on ground
+
 	lda	FRAMEL
 	cmp	#10
-	bcs	done_guard_endcage	; bge
+	bcs	ce_guard_not_standing	; bge
 
 	lda	#21
 	sta	XPOS
 	lda     #28
 	sta     YPOS
 
-	lda     #<alien_shooting_up_sprite
-	sta	INL
-	lda	#>alien_shooting_up_sprite
-	sta	INH
+	ldx	#<alien_shooting_up_sprite
+	ldy	#>alien_shooting_up_sprite
+	jmp	done_guard_endcage
 
-	jsr	put_sprite_crop
+ce_guard_not_standing:
+
+	cmp	#12
+	bcs	ce_guard_not_falling	; bge
+
+	lda	#21
+	sta	XPOS
+	lda     #28
+	sta     YPOS
+
+	ldx	#<guard_crashing_sprite
+	ldy	#>guard_crashing_sprite
+	jmp	done_guard_endcage
+
+ce_guard_not_falling:
+
+	lda	#19
+	sta	XPOS
+	lda     #42
+	sta     YPOS
+
+	ldx	#<guard_dead_sprite
+	ldy	#>guard_dead_sprite
+
 
 done_guard_endcage:
+	stx	INL
+	sty	INH
+	jsr	put_sprite_crop
+
+
 
 	;===============
 	; draw gun
 	;===============
+	; frame 0 - 9 no draw
+	; frame 10 -- in air		28,36
+	; frame 12 -- lower		28,40
+	; frame 14 -- on ground		28,44
+	; frame 16 -- bounce		28,42
+	; frame 18 -- ground		29,44
+	; frame 20 -- left2		30,44
+	; frame 22 -- left2		31,44
+	; frame 24 -- left1		32,44
+	; frame 26 -- left1 (done)	32,44
 
-	lda	#30
+	lda	FRAMEL
+	cmp	#10
+	bcc	ce_done_gun		; blt
+
+	cmp	#26
+	bcs	ce_default_gun		; bge
+
+	sec
+	sbc	#10
+	and	#$fe
+	tay
+	lda	gun_arc,Y
 	sta	XPOS
+	lda	gun_arc+1,Y
+	sta	YPOS
 
+	jmp	ce_draw_gun
+
+ce_default_gun:
+	lda	#32
+	sta	XPOS
 	lda	#44
 	sta	YPOS
 
+ce_draw_gun:
 	jsr	draw_gun
 
+ce_done_gun:
 
 	;===============
 	; page flip
@@ -832,7 +946,7 @@ done_guard_endcage:
 	;================
 	; delay
 
-	lda	#200
+	lda	#150
 	jsr	WAIT
 
 
@@ -850,4 +964,46 @@ done_cage_end:
 
         bit     KEYRESET		; clear keyboard
 	rts
+
+
+
+; at 19,42
+guard_dead_sprite:
+.byte	9,3
+.byte	$AA,$AA,$AA,$0A,$1A,$0A,$0A,$7A,$7A
+.byte	$00,$77,$77,$00,$11,$00,$70,$07,$77
+.byte	$AA,$AA,$AA,$AA,$AA,$AA,$77,$AA,$AA
+
+guard_crashing_sprite:
+.byte	7,8
+.byte	$AA,$AA,$AA,$AA,$5A,$A5,$AA
+.byte	$AA,$AA,$AA,$AA,$55,$77,$77
+.byte	$AA,$AA,$AA,$AA,$55,$07,$A7
+.byte	$AA,$AA,$AA,$0A,$05,$00,$AA
+.byte	$AA,$AA,$AA,$00,$00,$AA,$AA
+.byte	$AA,$AA,$AA,$70,$77,$AA,$AA
+.byte	$AA,$AA,$07,$A7,$05,$AA,$AA
+.byte	$0a,$00,$AA,$0A,$A0,$AA,$AA
+
+; at 18,32
+cage_ground_sprite:
+.byte 9,6
+.byte $55,$AA,$AA,$AA,$55,$AA,$AA,$AA,$55
+.byte $AA,$55,$AA,$AA,$55,$AA,$AA,$55,$AA
+.byte $AA,$55,$AA,$AA,$55,$AA,$AA,$55,$AA
+.byte $AA,$55,$AA,$AA,$55,$AA,$AA,$55,$AA
+.byte $AA,$55,$AA,$AA,$55,$AA,$AA,$55,$AA
+.byte $AA,$85,$8A,$A8,$A8,$A8,$A8,$AA,$AA
+
+
+gun_arc:
+	.byte 28,36	; frame 10 -- in air		28,36
+	.byte 28,40	; frame 12 -- lower		28,40
+	.byte 28,44	; frame 14 -- on ground		28,44
+	.byte 28,42	; frame 16 -- bounce		28,42
+	.byte 29,44	; frame 18 -- ground		29,44
+	.byte 30,44	; frame 20 -- left2		30,44
+	.byte 31,44	; frame 22 -- left2		31,44
+	.byte 32,44	; frame 24 -- left1		32,44
+
 

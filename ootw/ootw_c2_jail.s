@@ -333,7 +333,7 @@ bg_jail0:
 	lda	GUN_OUT
 	beq	c2_no_bg_action
 
-        lda     #30
+        lda     #32
         sta     XPOS
         lda     #44
         sta     YPOS
