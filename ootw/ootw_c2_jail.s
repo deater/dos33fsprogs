@@ -7,7 +7,6 @@ ootw_jail_init:
 	sta	CITY_MOVIE_SEEN
 	sta	CART_OUT
 	sta	DUDE_OUT
-	sta	friend_direction
 	sta	PHYSICIST_STATE
 	sta	WHICH_JAIL
 
@@ -15,13 +14,21 @@ ootw_jail_init:
 	sta	JAIL_POWER_ON
 	sta	GUN_OUT
 	sta	friend_out
+	sta	friend_state
+	sta	friend_direction
 
 	lda	#39
 	sta	DUDE_X
 	lda	#$FA
 	sta	CART_X
 
-	lda	#27
+	lda	#25
+	sta	friend_x
+	lda	#30
+	sta	friend_y
+
+
+	lda	#29
 	sta	PHYSICIST_X
 	lda	#30
 	sta	PHYSICIST_Y
@@ -333,7 +340,7 @@ bg_jail0:
 	lda	GUN_OUT
 	beq	c2_no_bg_action
 
-        lda     #32
+        lda     #34
         sta     XPOS
         lda     #44
         sta     YPOS
@@ -380,8 +387,16 @@ c2_no_bg_action:
 
 	;===============================
 	; move physicist
+	;===============================
 
 	jsr	move_physicist
+
+	;===============================
+	; move friend
+	;===============================
+
+	jsr	move_friend
+
 
 	;===============
 	; check room limits
@@ -412,6 +427,16 @@ actively_teleporting:
 	dec	TELEPORTING
 
 c2_done_draw_physicist:
+
+
+
+	;===============
+	; draw friend
+
+	jsr	draw_friend
+
+c2_done_draw_friend:
+
 
 
 	;========================

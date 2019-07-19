@@ -799,7 +799,7 @@ ce_jump:
 
 
 ce_stand_right:
-	lda	#27
+	lda	#29
 	sta	XPOS
 	lda	#30
 	sta	YPOS
@@ -810,7 +810,7 @@ ce_stand_right:
 
 
 ce_stand_left:
-	lda	#27
+	lda	#29
 	sta	XPOS
 	lda	#30
 	sta	YPOS
@@ -830,20 +830,6 @@ ce_draw_physicist_right:
         jsr     put_sprite_flipped_crop
 
 ce_done_physicist:
-
-	;============
-	; draw friend
-	;============
-	; frame 10 crouching
-	; frame 34 getting up one step?
-	; frame 38 all stood up
-	; frame 60 turns
-	; frame 62 standing left
-	; frame 74 turns
-	; frame 76 standing right
-	; frame 90-100 taps
-	; frame 116 points, my tuba
-	
 
 	;===========
 	; draw cage
@@ -892,6 +878,101 @@ done_cage_endcage:
 	; draw cage parts
 	;================
 	; FIXME
+
+
+	;============
+	; draw friend
+	;============
+	; frame 10 crouching
+	; frame 34 getting up one step?
+	; frame 38 all stood up (right)
+	; frame 60 turns
+	; frame 62 standing left
+	; frame 74 turns
+	; frame 76 standing right
+	; frame 90-100 taps
+	; frame 116 points, my tuba
+
+	lda	#25
+	sta	XPOS
+	lda	#30
+	sta	YPOS
+
+	lda	FRAMEL
+	cmp	#10
+	bcc	ce_done_friend		; blt
+
+	cmp	#76
+	bcs	ce_friend_stand_right	; bge
+
+	cmp	#74
+	bcs	ce_friend_turn		; bge
+
+	cmp	#62
+	bcs	ce_friend_stand_left	; bge
+
+	cmp	#60
+	bcs	ce_friend_turn		; bge
+
+	cmp	#38
+	bcs	ce_friend_stand_right	; bge
+
+	cmp	#34
+	bcs	ce_friend_half_stand_cage	; bge
+
+
+
+ce_friend_crouch_cage:
+
+	ldx	#<friend_crouch2
+	ldy	#>friend_crouch2
+	jmp	ce_draw_friend_right
+
+ce_friend_half_stand_cage:
+
+	ldx	#<friend_crouch1
+	ldy	#>friend_crouch1
+	jmp	ce_draw_friend_right
+
+ce_friend_stand_cage:
+
+	ldx	#<friend_turning_sprite
+	ldy	#>friend_turning_sprite
+	jmp	ce_draw_friend_right
+
+ce_friend_turn:
+
+	ldx	#<friend_stand
+	ldy	#>friend_stand
+	jmp	ce_draw_friend_right
+
+ce_friend_stand_right:
+
+	ldx	#<friend_stand
+	ldy	#>friend_stand
+	jmp	ce_draw_friend_right
+
+
+ce_friend_stand_left:
+
+	ldx	#<friend_stand
+	ldy	#>friend_stand
+
+ce_draw_friend_left:
+	stx	INL
+	sty	INH
+        jsr     put_sprite_crop
+	jmp	ce_done_friend
+
+ce_draw_friend_right:
+	stx	INL
+	sty	INH
+        jsr     put_sprite_flipped_crop
+ce_done_friend:
+
+
+
+
 
 	;==========================
 	; draw little dude
@@ -1000,13 +1081,13 @@ done_guard_endcage:
 	; frame 0 - 9 no draw
 	; frame 10 -- in air		28,36
 	; frame 12 -- lower		28,40
-	; frame 14 -- on ground		28,44
-	; frame 16 -- bounce		28,42
-	; frame 18 -- ground		29,44
-	; frame 20 -- left2		30,44
-	; frame 22 -- left2		31,44
-	; frame 24 -- left1		32,44
-	; frame 26 -- left1 (done)	32,44
+	; frame 14 -- on ground		29,44
+	; frame 16 -- bounce		29,42
+	; frame 18 -- ground		30,44
+	; frame 20 -- left2		31,44
+	; frame 22 -- left2		32,44
+	; frame 24 -- left1		33,44
+	; frame 26 -- left1 (done)	34,44
 
 	lda	FRAMEL
 	cmp	#10
@@ -1027,7 +1108,7 @@ done_guard_endcage:
 	jmp	ce_draw_gun
 
 ce_default_gun:
-	lda	#32
+	lda	#34
 	sta	XPOS
 	lda	#44
 	sta	YPOS
@@ -1099,11 +1180,14 @@ cage_ground_sprite:
 gun_arc:
 	.byte 28,36	; frame 10 -- in air		28,36
 	.byte 28,40	; frame 12 -- lower		28,40
-	.byte 28,44	; frame 14 -- on ground		28,44
-	.byte 28,42	; frame 16 -- bounce		28,42
-	.byte 29,44	; frame 18 -- ground		29,44
-	.byte 30,44	; frame 20 -- left2		30,44
-	.byte 31,44	; frame 22 -- left2		31,44
-	.byte 32,44	; frame 24 -- left1		32,44
+	.byte 29,44	; frame 14 -- on ground		29,44
+	.byte 29,42	; frame 16 -- bounce		29,42
+	.byte 30,44	; frame 18 -- ground		30,44
+	.byte 31,44	; frame 20 -- left2		31,44
+	.byte 32,44	; frame 22 -- left2		32,44
+	.byte 33,44	; frame 24 -- left1		33,44
+
+
+
 
 

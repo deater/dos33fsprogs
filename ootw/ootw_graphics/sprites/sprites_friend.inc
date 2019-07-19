@@ -10,16 +10,15 @@
 	; Going Left
 
 friend_stand:
-	.byte $5,$8
-	.byte $aa,$9a,$9a,$aa,$aa
-	.byte $aa,$bb,$99,$aa,$aa
-	.byte $aa,$aa,$0b,$aa,$aa
-	.byte $aa,$aa,$bb,$aa,$aa
-	.byte $aa,$aa,$bb,$aa,$aa
-	.byte $aa,$aa,$44,$aa,$aa
-	.byte $aa,$aa,$44,$aa,$aa
-	.byte $aa,$fa,$f4,$aa,$aa
-
+        .byte $5,$8
+        .byte $aa,$fa,$7f,$f7,$aa
+        .byte $aa,$ff,$0f,$0f,$aa
+        .byte $aa,$aa,$00,$ff,$aa
+        .byte $aa,$aa,$00,$ff,$aa
+        .byte $aa,$aa,$0f,$00,$aa
+        .byte $aa,$aa,$ff,$a7,$7a
+        .byte $aa,$aa,$0f,$aa,$07
+        .byte $aa,$0a,$00,$0a,$00
 
 ;=====================
 ;=====================
@@ -42,90 +41,90 @@ friend_walk_progression:
 
 friend_walk_left1:
 	.byte $5,$8
-	.byte $aa,$7a,$f7,$7f,$aa
-	.byte $aa,$77,$07,$00,$aa
-	.byte $aa,$5a,$00,$77,$aa
-	.byte $aa,$55,$10,$77,$aa
-	.byte $aa,$aa,$00,$07,$aa
-	.byte $aa,$aa,$77,$a5,$5a
-	.byte $aa,$aa,$07,$aa,$05
+	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$ff,$0f,$0f,$aa
+	.byte $aa,$7a,$00,$ff,$aa
+	.byte $aa,$77,$00,$ff,$aa
+	.byte $aa,$aa,$00,$0f,$aa
+	.byte $aa,$aa,$ff,$a7,$7a
+	.byte $aa,$aa,$0f,$aa,$07
 	.byte $aa,$a0,$00,$0a,$00
 
 friend_walk_left2:
 	.byte $5,$8
-	.byte $aa,$7a,$f7,$7f,$aa
-	.byte $aa,$77,$07,$00,$aa
-	.byte $aa,$aa,$00,$77,$aa
-	.byte $aa,$5a,$77,$17,$aa
-	.byte $aa,$aa,$07,$00,$aa
-	.byte $aa,$aa,$77,$55,$aa
-	.byte $aa,$aa,$07,$aa,$05
+	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$ff,$0f,$0f,$aa
+	.byte $aa,$aa,$00,$ff,$aa
+	.byte $aa,$7a,$ff,$0f,$aa
+	.byte $aa,$aa,$0f,$00,$aa
+	.byte $aa,$aa,$ff,$77,$aa
+	.byte $aa,$aa,$0f,$aa,$07
 	.byte $aa,$0a,$00,$00,$a0
 
 friend_walk_left3:
 	.byte $5,$8
-	.byte $aa,$7a,$f7,$7f,$aa
-	.byte $aa,$77,$07,$00,$aa
-	.byte $aa,$aa,$00,$77,$aa
-	.byte $aa,$aa,$77,$10,$aa
-	.byte $aa,$aa,$07,$00,$aa
-	.byte $aa,$aa,$77,$55,$aa
-	.byte $aa,$aa,$07,$00,$0a
+	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$ff,$0f,$0f,$aa
+	.byte $aa,$aa,$00,$ff,$aa
+	.byte $aa,$aa,$ff,$00,$aa
+	.byte $aa,$aa,$0f,$00,$aa
+	.byte $aa,$aa,$ff,$77,$aa
+	.byte $aa,$aa,$0f,$00,$0a
 	.byte $aa,$0a,$00,$aa,$a0
 
 friend_walk_left4:
 	.byte $5,$8
-	.byte $aa,$7a,$f7,$7f,$aa
-	.byte $aa,$77,$07,$00,$aa
-	.byte $aa,$aa,$00,$77,$aa
-	.byte $aa,$aa,$77,$10,$aa
-	.byte $aa,$a7,$00,$00,$aa
-	.byte $aa,$aa,$77,$55,$aa
-	.byte $aa,$aa,$07,$05,$aa
+	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$ff,$0f,$0f,$aa
+	.byte $aa,$aa,$00,$ff,$aa
+	.byte $aa,$aa,$ff,$00,$aa
+	.byte $aa,$af,$00,$00,$aa
+	.byte $aa,$aa,$ff,$77,$aa
+	.byte $aa,$aa,$0f,$07,$aa
 	.byte $aa,$0a,$00,$00,$aa
 
 friend_walk_left5:
 	.byte $5,$8
-	.byte $aa,$7a,$f7,$7f,$aa
-	.byte $aa,$77,$07,$00,$aa
-	.byte $aa,$aa,$00,$77,$aa
-	.byte $aa,$aa,$77,$10,$aa
-	.byte $aa,$a7,$00,$00,$aa
-	.byte $aa,$5a,$55,$77,$aa
-	.byte $aa,$00,$a7,$07,$aa
+	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$ff,$0f,$0f,$aa
+	.byte $aa,$aa,$00,$ff,$aa
+	.byte $aa,$aa,$ff,$00,$aa
+	.byte $aa,$af,$00,$00,$aa
+	.byte $aa,$7a,$77,$ff,$aa
+	.byte $aa,$00,$af,$0f,$aa
 	.byte $a0,$a0,$0a,$00,$aa
 
 friend_walk_left6:
 	.byte $5,$8
-	.byte $aa,$7a,$f7,$7f,$aa
-	.byte $aa,$77,$07,$00,$aa
-	.byte $aa,$aa,$00,$77,$aa
-	.byte $aa,$aa,$77,$17,$5a
-	.byte $aa,$aa,$07,$00,$a5
-	.byte $aa,$5a,$55,$77,$7a
-	.byte $aa,$05,$aa,$aa,$07
+	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$ff,$0f,$0f,$aa
+	.byte $aa,$aa,$00,$ff,$aa
+	.byte $aa,$aa,$ff,$0f,$7a
+	.byte $aa,$aa,$0f,$00,$a7
+	.byte $aa,$7a,$77,$ff,$fa
+	.byte $aa,$07,$aa,$aa,$0f
 	.byte $a0,$a0,$aa,$0a,$00
 
 friend_walk_left7:
 	.byte $5,$8
-	.byte $aa,$7a,$f7,$7f,$aa
-	.byte $aa,$77,$07,$00,$aa
-	.byte $aa,$aa,$00,$77,$aa
-	.byte $aa,$aa,$10,$77,$aa
-	.byte $aa,$aa,$00,$07,$aa
-	.byte $aa,$aa,$57,$77,$aa
-	.byte $aa,$aa,$05,$a7,$07
+	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$ff,$0f,$0f,$aa
+	.byte $aa,$aa,$00,$ff,$aa
+	.byte $aa,$aa,$00,$ff,$aa
+	.byte $aa,$aa,$00,$0f,$aa
+	.byte $aa,$aa,$7f,$ff,$aa
+	.byte $aa,$aa,$07,$af,$0f
 	.byte $aa,$0a,$00,$00,$a0
 
 friend_walk_left8:
 	.byte $5,$8
-	.byte $aa,$7a,$f7,$7f,$aa
-	.byte $aa,$77,$07,$00,$aa
-	.byte $aa,$aa,$00,$77,$aa
-	.byte $aa,$5a,$10,$77,$7a
-	.byte $aa,$a5,$00,$00,$a7
-	.byte $aa,$aa,$55,$77,$aa
-	.byte $aa,$aa,$a5,$07,$aa
+	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$ff,$0f,$0f,$aa
+	.byte $aa,$aa,$00,$ff,$aa
+	.byte $aa,$7a,$00,$ff,$fa
+	.byte $aa,$a7,$00,$00,$af
+	.byte $aa,$aa,$77,$ff,$aa
+	.byte $aa,$aa,$a7,$0f,$aa
 	.byte $aa,$aa,$00,$00,$aa
 
 
