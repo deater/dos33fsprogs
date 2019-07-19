@@ -669,4 +669,43 @@ changing_guard13_sprite:
 
 
 
+little_guy_in1_sprite:
+	.byte 4,5
+	.byte $AA,$AA,$AA,$77
+	.byte $AA,$AA,$50,$00
+	.byte $AA,$AA,$77,$70
+	.byte $AA,$AA,$AA,$A7
+	.byte $AA,$AA,$AA,$AA
+
+little_guy_in2_sprite:
+	.byte 4,5
+	.byte $AA,$AA,$77,$AF
+	.byte $AA,$A5,$00,$00
+	.byte $AA,$AA,$77,$AA
+	.byte $AA,$AA,$55,$07
+	.byte $AA,$AA,$AA,$A0
+
+little_guy_in_sprite:
+	.byte 4,5
+	.byte $AA,$77,$AA,$AA
+	.byte $55,$00,$77,$AA
+	.byte $A5,$00,$07,$AA
+	.byte $AA,$07,$0A,$AA
+	.byte $A0,$AA,$A0,$AA
+
+little_guy_out1_sprite:
+	.byte 4,5
+	.byte $AA,$AA,$77,$AA
+	.byte $AA,$77,$00,$55
+	.byte $AA,$00,$07,$AA
+	.byte $AA,$07,$05,$AA
+	.byte $A0,$AA,$A0,$AA
+
+little_guy_out2_sprite:
+	.byte 4,5
+	.byte $AA,$AA,$A7,$A7
+	.byte $AA,$AA,$AA,$A5
+	.byte $AA,$AA,$AA,$5A
+	.byte $AA,$AA,$A7,$A7
+	.byte $AA,$AA,$AA,$AA
 
