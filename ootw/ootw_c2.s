@@ -153,6 +153,7 @@ end_message:
 
 .include "physicist.s"
 .include "alien.s"
+.include "friend.s"
 
 ; background miners
 .include "ootw_c2_miners.s"
@@ -163,6 +164,7 @@ end_message:
 ; sprites
 .include "ootw_graphics/sprites/sprites_physicist.inc"
 .include "ootw_graphics/sprites/sprites_alien.inc"
+.include "ootw_graphics/sprites/sprites_friend.inc"
 ; intro
 .include "ootw_graphics/l2intro/ootw_l2intro.inc"
 ; city movie
