@@ -27,12 +27,6 @@ ootw_cage:
 	jsr	load_rle_gr
 
 	;=================================
-	; copy to screen
-
-	jsr	gr_copy_to_current
-	jsr	page_flip
-
-	;=================================
 	; setup vars
 
 	lda	#0
@@ -124,43 +118,7 @@ done_drawing_cage:
 	; draw laser
 	;======================
 
-	lda	SHOOTING_BOTTOM
-	beq	done_draw_laser
-
-	; 30 - 27, 30-24, 30-21
-
-	lda	#$11
-	sta	COLOR
-
-	ldx	SHOOTING_BOTTOM
-	stx	V2
-
-	ldx	SHOOTING_TOP
-
-	ldy	#21		; X location
-	jsr	vlin
-
-	; if shooting top < 10, decrement Y2
-	lda	SHOOTING_TOP
-	cmp	#10
-	bcs	shoot_up_noadj	; bge
-
-	dec	SHOOTING_BOTTOM
-	dec	SHOOTING_BOTTOM
-	dec	SHOOTING_BOTTOM
-	dec	SHOOTING_BOTTOM
-shoot_up_noadj:
-
-
-	lda	SHOOTING_TOP
-	beq	done_draw_laser
-
-	dec	SHOOTING_TOP
-	dec	SHOOTING_TOP
-	dec	SHOOTING_TOP
-	dec	SHOOTING_TOP
-
-done_draw_laser:
+	jsr	draw_laser
 
 	;======================
 	; draw guard
@@ -292,11 +250,9 @@ check_amp4:
 
 
 	;===========================
-	; Done with cage, enter jail
+	; Done with cage, run ending sequence
 
-
-        bit     KEYRESET		; clear keyboard
-	rts
+	jmp	cage_ending
 
 cage_continue:
         bit     KEYRESET		; clear keyboard
@@ -396,6 +352,50 @@ no_move_cage_guard:
 done_cage:
 	rts
 
+
+	;======================
+	; Draw Laser
+	;======================
+
+draw_laser:
+	lda	SHOOTING_BOTTOM
+	beq	done_draw_laser
+
+	; 30 - 27, 30-24, 30-21
+
+	lda	#$11
+	sta	COLOR
+
+	ldx	SHOOTING_BOTTOM
+	stx	V2
+
+	ldx	SHOOTING_TOP
+
+	ldy	#21		; X location
+	jsr	vlin
+
+	; if shooting top < 10, decrement Y2
+	lda	SHOOTING_TOP
+	cmp	#10
+	bcs	shoot_up_noadj	; bge
+
+	dec	SHOOTING_BOTTOM
+	dec	SHOOTING_BOTTOM
+	dec	SHOOTING_BOTTOM
+	dec	SHOOTING_BOTTOM
+shoot_up_noadj:
+
+
+	lda	SHOOTING_TOP
+	beq	done_draw_laser
+
+	dec	SHOOTING_TOP
+	dec	SHOOTING_TOP
+	dec	SHOOTING_TOP
+	dec	SHOOTING_TOP
+
+done_draw_laser:
+	rts
 
 cage_amp1_sprites:
 	.word	cage_center_sprite
@@ -708,4 +708,88 @@ little_guy_out2_sprite:
 	.byte $AA,$AA,$AA,$5A
 	.byte $AA,$AA,$A7,$A7
 	.byte $AA,$AA,$AA,$AA
+
+
+
+
+
+
+
+	;============================
+	; Cage Ending
+	;============================
+cage_ending:
+
+	;================================
+	; copy background to current page
+	;================================
+
+	jsr	gr_copy_to_current
+
+
+	;=======================
+	; draw miners mining
+	;=======================
+
+	jsr	ootw_draw_miners
+
+	;==========================
+	; draw cage (if applicable)
+	;==========================
+
+	lda	#11
+	sta	XPOS
+	lda     #0
+        sta     YPOS
+
+        lda     #<cage_center_sprite
+        sta     INL
+        lda     #>cage_center_sprite
+        sta     INH
+
+        jsr     put_sprite_crop
+
+	;======================
+	; draw laser
+	;======================
+
+	jsr	draw_laser
+
+	;===========================
+	; draw guard (if applicable)
+	;===========================
+
+	lda	#34
+	sta	XPOS
+	lda     #28
+        sta     YPOS
+
+        lda     changing_guard_sprites,Y
+        sta     INL
+        lda     changing_guard_sprites+1,Y
+        sta     INH
+
+        jsr     put_sprite_crop
+
+
+	;===============
+	; page flip
+
+	jsr	page_flip
+
+	;================
+	; inc frame count
+
+	inc	FRAMEL
+	bne	end_cage_frame_no_oflo
+	inc	FRAMEH
+
+end_cage_frame_no_oflo:
+
+
+
+done_cage_end:
+
+        bit     KEYRESET		; clear keyboard
+	rts
 

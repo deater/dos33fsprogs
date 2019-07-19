@@ -8,6 +8,20 @@ ootw_jail:
 	lda	#0
 	sta	ON_ELEVATOR
 	sta	TELEPORTING
+	sta	CITY_MOVIE_SEEN
+	sta	CART_OUT
+	sta	DUDE_OUT
+	sta	friend_direction
+
+	lda	#1
+	sta	JAIL_POWER_ON
+	sta	GUN_OUT
+	sta	friend_out
+
+	lda	#39
+	sta	DUDE_X
+	lda	#$FA
+	sta	CART_X
 
 	;==============================
 	; setup per-room variables
