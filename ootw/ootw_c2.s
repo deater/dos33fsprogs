@@ -11,21 +11,16 @@ ootw_c2:
 
 	; Initialize some variables
 
-	lda	#0
-	sta	GAME_OVER
-
 	;=======================
 	; Run the intro
 	;=======================
 
-;	jsr	ootw_c2_intro
-
-	lda	#0
-	sta	CITY_MOVIE_SEEN
+	jsr	ootw_c2_intro
 
 	;=======================
 	; Enter the game
 	;=======================
+ootw_c2_restart:
 
 	jsr	ootw_cage
 	lda	GAME_OVER
@@ -96,7 +91,10 @@ wait_loop:
 
 	lda	KEYRESET		; clear strobe
 
-	jmp	ootw_c2
+	lda	#0
+	sta	GAME_OVER
+
+	jmp	ootw_c2_restart
 
 
 end_message:

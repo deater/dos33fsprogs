@@ -8,6 +8,7 @@ ootw_c2_intro:
 	bit	SET_GR
 	bit	FULLGR
 
+	bit	KEYRESET
 	;===========================
 	; Setup pages (is this necessary?)
 

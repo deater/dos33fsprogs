@@ -1,18 +1,10 @@
 
 
-	;=====================
-	; long(er) wait
-	; waits approximately ?? ms
-
-long_wait:
-	lda	#64
-	jsr	WAIT			; delay
-	dex
-	bne	long_wait
-	rts
 
 	;=================================
 	; Display a sequence of images
+	;=================================
+	; quit if escape pressed?
 
 	; pattern is TIME, PTR
 	; if time==0, then done
@@ -77,6 +69,13 @@ seq_no_wait:
 seq_stuff:
 	ldy	INTRO_LOOPER
 
+	; exit early if escape pressed
+
+	lda	KEYPRESS
+	cmp	#27+$80
+	beq	run_sequence_done
+	bit	KEYRESET
+
 	jmp	run_sequence_loop
 run_sequence_done:
 	rts
@@ -115,3 +114,16 @@ run_sequence_40x40_loop:
 run_sequence_40x40_done:
 	rts
 
+
+
+
+	;=====================
+	; long(er) wait
+	; waits approximately ?? ms
+
+long_wait:
+	lda	#64
+	jsr	WAIT			; delay
+	dex
+	bne	long_wait
+	rts
