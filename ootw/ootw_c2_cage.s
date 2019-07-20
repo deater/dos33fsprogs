@@ -728,6 +728,40 @@ cage_ending_loop:
 
 	jsr	gr_copy_to_current
 
+
+	;================
+	; draw cage parts
+	;================
+	; frame 12+13 == draw debris1
+	; frame 14+15 == draw debris2
+	; frame 16+17 == draw debris3
+
+
+	lda	FRAMEL
+	cmp	#12
+	bcc	done_debris		; blt
+
+	cmp	#18
+	bcs	done_debris		; bge
+
+	sec
+	sbc	#12
+	and	#$fe
+	tay
+
+	lda	debris_list,Y
+	sta	GBASL
+	lda	debris_list+1,Y
+	sta	GBASH
+
+	lda     #$10
+        jsr     load_rle_gr
+
+	jsr	gr_overlay
+
+done_debris:
+
+
 	;=======================
 	; draw miners mining
 	;=======================
@@ -1040,10 +1074,9 @@ done_cage_endcage:
 	sty	INH
         jsr     put_sprite_crop
 
-	;================
-	; draw cage parts
-	;================
-	; FIXME
+
+
+
 
 
 	;==========================
@@ -1263,3 +1296,7 @@ gun_arc:
 
 
 
+debris_list:
+	.word	debris1_rle
+	.word	debris2_rle
+	.word	debris3_rle
