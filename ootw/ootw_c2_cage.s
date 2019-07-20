@@ -1094,6 +1094,12 @@ ce_friend_tap:
 
 ce_friend_point:
 
+	cmp	#115
+	bne	no_audio
+	jsr	playaud
+no_audio:
+
+	lda	FRAMEL
 	sec
 	sbc	#110
 	and	#$fe
@@ -1107,7 +1113,6 @@ ce_friend_point:
 
 	lda	#25		; one off
 	sta	XPOS
-
 
 	jmp	ce_draw_friend_right
 
