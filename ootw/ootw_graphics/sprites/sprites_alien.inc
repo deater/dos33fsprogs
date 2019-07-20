@@ -357,28 +357,27 @@ alien_crouch_progression:
 	.word	alien_crouch2
 
 alien_crouch1:
-	.byte $3,$8
-	.byte $aa,$aa,$aa
-	.byte $9a,$9a,$aa
-	.byte $bb,$99,$aa
-	.byte $aa,$0b,$aa
-	.byte $aa,$bb,$aa
-	.byte $aa,$bb,$aa
-	.byte $44,$44,$aa
-	.byte $5a,$fc,$f4
+	.byte $5,$8
+	.byte $AA,$AA,$AA,$AA,$AA
+	.byte $AA,$7A,$f7,$7f,$aa
+	.byte $AA,$77,$07,$00,$aa
+	.byte $AA,$AA,$00,$77,$aa
+	.byte $AA,$A7,$17,$07,$aa
+	.byte $AA,$AA,$70,$70,$aa
+	.byte $AA,$AA,$07,$05,$0a
+	.byte $AA,$0A,$00,$AA,$00
+
 
 alien_crouch2:
-	.byte $3,$8
-	.byte $aa,$aa,$aa
-	.byte $aa,$aa,$aa
-	.byte $9a,$9a,$aa
-	.byte $bb,$99,$aa
-	.byte $aa,$0b,$0a
-	.byte $aa,$bb,$00
-	.byte $ba,$4b,$aa
-	.byte $54,$f4,$f4
-
-
+	.byte $5,$8
+	.byte $AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$7A,$fA,$aa
+	.byte $AA,$77,$7f,$07,$aa
+	.byte $AA,$A7,$00,$70,$aa
+	.byte $AA,$7A,$70,$07,$aa
+	.byte $AA,$AA,$70,$70,$aa
+	.byte $AA,$AA,$07,$55,$0a
+	.byte $AA,$0A,$00,$0A,$00
 
 ;=====================
 ;=====================

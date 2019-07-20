@@ -16,9 +16,9 @@ friend_stand:
         .byte $aa,$aa,$00,$ff,$aa
         .byte $aa,$aa,$00,$ff,$aa
         .byte $aa,$aa,$0f,$00,$aa
-        .byte $aa,$aa,$ff,$a7,$7a
-        .byte $aa,$aa,$0f,$aa,$07
-        .byte $aa,$0a,$00,$0a,$00
+        .byte $aa,$aa,$ff,$77,$aa
+        .byte $aa,$aa,$0f,$07,$aa
+        .byte $aa,$0a,$00,$00,$aa
 
 ;=====================
 ;=====================
@@ -251,27 +251,26 @@ friend_crouch_progression:
 	.word	friend_crouch2
 
 friend_crouch1:
-	.byte $3,$8
-	.byte $aa,$aa,$aa
-	.byte $9a,$9a,$aa
-	.byte $bb,$99,$aa
-	.byte $aa,$0b,$aa
-	.byte $aa,$bb,$aa
-	.byte $aa,$bb,$aa
-	.byte $44,$44,$aa
-	.byte $5a,$fc,$f4
+	.byte 5,8
+        .byte $AA,$AA,$AA,$AA,$AA
+        .byte $AA,$fA,$7f,$f7,$aa
+        .byte $AA,$ff,$0f,$0f,$aa
+        .byte $AA,$AA,$00,$ff,$aa
+        .byte $AA,$Af,$0f,$0f,$aa
+        .byte $AA,$AA,$f0,$f0,$aa
+        .byte $AA,$AA,$0f,$07,$0a
+        .byte $AA,$0A,$00,$AA,$00
 
 friend_crouch2:
-	.byte $3,$8
-	.byte $aa,$aa,$aa
-	.byte $aa,$aa,$aa
-	.byte $9a,$9a,$aa
-	.byte $bb,$99,$aa
-	.byte $aa,$0b,$0a
-	.byte $aa,$bb,$00
-	.byte $ba,$4b,$aa
-	.byte $54,$f4,$f4
-
+        .byte 5,8
+        .byte $AA,$AA,$AA,$AA,$AA
+        .byte $AA,$AA,$fA,$7A,$aa
+        .byte $AA,$ff,$f7,$0f,$aa
+        .byte $AA,$Af,$00,$ff,$aa
+        .byte $AA,$fA,$f0,$0f,$aa
+        .byte $AA,$AA,$f0,$f0,$aa
+        .byte $AA,$AA,$0f,$77,$0a
+        .byte $AA,$0A,$00,$0A,$00
 
 
 ;=====================

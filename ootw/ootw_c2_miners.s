@@ -36,7 +36,7 @@ miner2:
 
 
 
-	lda	#15
+	lda	#14
 	sta	XPOS
 	lda	#28
 	sta	YPOS
