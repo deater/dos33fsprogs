@@ -130,7 +130,7 @@ WHICH_CAVE	= $E3		; C1
 WHICH_JAIL	= $E3		; C2
 
 BEAST_OUT	= $E4		; C1
-GUN_OUT		= $E4		; C2 jail
+HAVE_GUN	= $E4		; C2 jail+
 
 GAME_OVER	= $E5		; ALL
 DNA_OUT		= $E5		; INTRO

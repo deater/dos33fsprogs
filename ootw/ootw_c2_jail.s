@@ -10,10 +10,10 @@ ootw_jail_init:
 	sta	PHYSICIST_STATE
 	sta	WHICH_JAIL
 	sta	DIRECTION		; left
+	sta	HAVE_GUN
 
 	lda	#1
 	sta	JAIL_POWER_ON
-	sta	GUN_OUT
 	sta	friend_out
 	sta	friend_direction
 
@@ -339,8 +339,8 @@ bg_jail0:
 	bne	bg_jail6
 	jsr	ootw_draw_miners
 
-	lda	GUN_OUT
-	beq	c2_no_bg_action
+	lda	HAVE_GUN
+	bne	c2_no_bg_action
 
         lda     #35
         sta     XPOS
@@ -673,6 +673,37 @@ done_teleport:
 
 not_teleporting_today:
 
+
+	;==========================
+	; see if picking up gun
+	;==========================
+
+	lda	WHICH_JAIL
+	bne	not_picking_up_gun
+
+	lda	HAVE_GUN
+	bne	not_picking_up_gun
+
+	lda	PHYSICIST_STATE
+	cmp	#P_CROUCHING
+	bne	not_picking_up_gun
+
+	; gun at 35,36,37
+	; so we should be at 32-39
+	lda	PHYSICIST_X
+	cmp	#32
+	bcc	not_picking_up_gun	; blt
+
+	lda	#1
+	sta	HAVE_GUN
+
+	jsr	gun_movie
+
+	lda	#P_STANDING
+	sta	PHYSICIST_STATE
+
+not_picking_up_gun:
+
 	;==========================
 	; check if done this level
 	;==========================
@@ -837,29 +868,83 @@ draw_gun:
 	; 40 of blank
 
 laser_movie:
-	.word	laserg_01_rle
+	.word	laserg_01_rle	; 0
 
-	.word	laserg_02_rle
-	.word	laserg_02_rle
-	.word	laserg_02_rle
+	.word	laserg_02_rle	; 1
+	.word	laserg_02_rle	; 2
+	.word	laserg_02_rle	; 3
 
-	.word	laserg_01_rle
-	.word	laserg_01_rle
-	.word	laserg_01_rle
+	.word	laserg_01_rle	; 4
+	.word	laserg_01_rle	; 5
+	.word	laserg_01_rle	; 6
 
-	.word	laserg_02_rle
-	.word	laserg_02_rle
-	.word	laserg_02_rle
+	.word	laserg_02_rle	; 7
+	.word	laserg_02_rle	; 8
+	.word	laserg_02_rle	; 9
 
-	.word	laserg_03_rle
-	.word	laserg_04_rle
-	.word	laserg_05_rle
-	.word	laserg_06_rle
-	.word	laserg_07_rle
-	.word	laserg_08_rle
+	.word	laserg_03_rle	; 10
+	.word	laserg_04_rle	; 11
+	.word	laserg_05_rle	; 12
+	.word	laserg_06_rle	; 13
+	.word	laserg_07_rle	; 14
+	.word	laserg_08_rle	; 15
 
-	.word	laserg_blank_rle
-	.word	laserg_blank_rle
-	.word	laserg_blank_rle
-	.word	laserg_blank_rle
-	.word	laserg_blank_rle
+	.word	laserg_blank_rle	; 16
+	.word	laserg_blank_rle	; 17
+	.word	laserg_blank_rle	; 18
+	.word	laserg_blank_rle	; 19
+	.word	laserg_blank_rle	; 20
+	.word	laserg_blank_rle	; 21
+
+	;==========================
+	; play the gun pickup movie
+	;==========================
+gun_movie:
+
+	lda	#<laser_bg_rle
+	sta	GBASL
+	lda	#>laser_bg_rle
+	sta	GBASH
+
+        lda     #$c
+        jsr     load_rle_gr
+
+	ldx	#0
+
+gun_movie_loop:
+	lda     laser_movie,X
+	sta     GBASL
+	lda     laser_movie+1,X
+	sta     GBASH
+
+	txa
+	pha
+
+	lda     #$10
+	jsr     load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	lda	#180
+	jsr	WAIT
+
+	pla
+	tax
+
+	inx
+	inx
+	cmp	#42
+	bne	gun_movie_loop
+
+	; restore background
+
+	lda	#<(cage_fell_rle)
+	sta	GBASL
+	lda	#>(cage_fell_rle)
+	sta	GBASH
+
+        lda     #$c
+        jsr     load_rle_gr
+
+	rts
