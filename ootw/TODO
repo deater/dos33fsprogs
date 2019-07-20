@@ -57,6 +57,10 @@ General:
 
 Level/Checkpoint #2:
 
+* general
+  + If aliens catch you, they punch you
+  + Shields disappear if you leave the room
+
 * cage room:
   + Swing in the cage (take into account keyboard input)
   + Ability to pick up gun, with all that entails

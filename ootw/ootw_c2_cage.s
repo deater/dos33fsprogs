@@ -776,9 +776,8 @@ done_debris:
 	; frame 40 getting up one step?
 	; frame 60 all stood up
 	; frame 70 jump -- 90
-	; frame 90 standing left (taps)
-	; frame 100 turn right
-	; frame 120 turn left
+	; frame 90 standing right (taps)
+	; frame 100 turn left
 
 	lda	#20
 	sta	XPOS
@@ -789,14 +788,11 @@ done_debris:
 	cmp	#18
 	bcc	ce_done_physicist	; blt
 
-	cmp	#120
-	bcs	ce_stand_left		; bge
-
 	cmp	#100
-	bcs	ce_stand_right		; bge
+	bcs	ce_stand_left		; bge
 
 	cmp	#90
-	bcs	ce_stand_left		; bge
+	bcs	ce_stand_right		; bge
 
 	cmp	#70
 	bcs	ce_jump			; bge
@@ -904,7 +900,21 @@ ce_done_physicist:
 
 	lda	FRAMEL
 	cmp	#18
-	bcc	ce_done_friend		; blt
+	bcs	ce_friend_keep		; bge
+
+	jmp	ce_done_friend		; too far to branch
+ce_friend_keep:
+	cmp	#120
+	bcs	ce_friend_stand_right	; bge
+
+	cmp	#110
+	bcs	ce_friend_point		; bge
+
+	cmp	#100
+	bcs	ce_friend_stand_right	; bge
+
+	cmp	#90
+	bcs	ce_friend_tap		; bge
 
 	cmp	#76
 	bcs	ce_friend_stand_right	; bge
@@ -940,16 +950,55 @@ ce_friend_half_stand_cage:
 	ldy	#>friend_crouch1
 	jmp	ce_draw_friend_right
 
+ce_friend_tap:
+
+	sec
+	sbc	#90
+	and	#$fe
+	tay
+
+
+	lda	tap_sequence,Y
+	tax
+	lda	tap_sequence+1,Y
+	tay
+
+	lda	#25		; one off
+	sta	XPOS
+
+
+	jmp	ce_draw_friend_right
+
+ce_friend_point:
+
+	sec
+	sbc	#110
+	and	#$fe
+	tay
+
+
+	lda	point_sequence,Y
+	tax
+	lda	point_sequence+1,Y
+	tay
+
+	lda	#25		; one off
+	sta	XPOS
+
+
+	jmp	ce_draw_friend_right
+
+
 ce_friend_stand_cage:
 
-	ldx	#<friend_turning_sprite
-	ldy	#>friend_turning_sprite
+	ldx	#<friend_stand
+	ldy	#>friend_stand
 	jmp	ce_draw_friend_right
 
 ce_friend_turn:
 
-	ldx	#<friend_stand
-	ldy	#>friend_stand
+	ldx	#<friend_turning_sprite
+	ldy	#>friend_turning_sprite
 	jmp	ce_draw_friend_right
 
 ce_friend_stand_right:
@@ -1198,13 +1247,13 @@ ce_done_gun:
 	;================
 	; delay
 
-;	lda	#150
-;	jsr	WAIT
+	lda	#150
+	jsr	WAIT
 
 wuk:
-	lda	KEYPRESS
-	bpl	wuk
-	bit	KEYRESET
+;	lda	KEYPRESS
+;	bpl	wuk
+;	bit	KEYRESET
 
 
 
@@ -1338,5 +1387,64 @@ ce_phys_jump:
 .word crouch2
 .byte	29,30		; 88
 .word crouch1
+
+tap_sequence:
+.word	friend_tap1	; 90
+.word	friend_tap2	; 92
+.word	friend_tap3	; 94
+.word	friend_tap2	; 96
+.word	friend_tap3	; 98
+
+point_sequence:
+.word	friend_tap1	; 110
+.word	friend_mouth	; 112
+.word	friend_tap3	; 114
+.word	friend_tap2	; 116
+.word	friend_tap3	; 118
+
+
+friend_tap1:
+	.byte 5,8
+	.byte $AA,$AA,$fa,$ff,$f7
+	.byte $AA,$AA,$ff,$0f,$0f
+	.byte $AA,$fA,$fA,$f0,$0f
+	.byte $AA,$AA,$AA,$00,$00
+	.byte $AA,$AA,$AA,$00,$00
+	.byte $AA,$AA,$AA,$ff,$77
+	.byte $AA,$AA,$AA,$0f,$07
+	.byte $AA,$AA,$0A,$00,$00
+
+friend_tap2:
+	.byte 5,8
+	.byte $AA,$AA,$fa,$ff,$f7
+	.byte $AA,$AA,$ff,$0f,$0f
+	.byte $Af,$Af,$Af,$0f,$0f
+	.byte $AA,$AA,$AA,$00,$00
+	.byte $AA,$AA,$AA,$00,$00
+	.byte $AA,$AA,$AA,$ff,$77
+	.byte $AA,$AA,$AA,$0f,$07
+	.byte $AA,$AA,$0A,$00,$00
+
+friend_tap3:
+	.byte 5,8
+	.byte $AA,$AA,$fa,$ff,$f7
+	.byte $AA,$AA,$ff,$0f,$0f
+	.byte $AA,$fA,$fA,$0f,$0f
+	.byte $AA,$AA,$AA,$00,$00
+	.byte $AA,$AA,$AA,$00,$00
+	.byte $AA,$AA,$AA,$ff,$77
+	.byte $AA,$AA,$AA,$0f,$07
+	.byte $AA,$AA,$0A,$00,$00
+
+friend_mouth:
+	.byte 5,8
+	.byte $AA,$AA,$fa,$ff,$f7
+	.byte $AA,$AA,$ff,$0f,$0f
+	.byte $AA,$AA,$Af,$ff,$ff
+	.byte $AA,$AA,$AA,$00,$0f
+	.byte $AA,$AA,$AA,$00,$00
+	.byte $AA,$AA,$AA,$ff,$77
+	.byte $AA,$AA,$AA,$0f,$07
+	.byte $AA,$AA,$0A,$00,$00
 
 

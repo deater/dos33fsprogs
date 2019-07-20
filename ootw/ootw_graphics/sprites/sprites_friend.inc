@@ -11,7 +11,7 @@
 
 friend_stand:
         .byte $5,$8
-        .byte $aa,$fa,$7f,$f7,$aa
+        .byte $aa,$fa,$ff,$f7,$aa
         .byte $aa,$ff,$0f,$0f,$aa
         .byte $aa,$aa,$00,$ff,$aa
         .byte $aa,$aa,$00,$ff,$aa
@@ -41,7 +41,7 @@ friend_walk_progression:
 
 friend_walk_left1:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$7a,$00,$ff,$aa
 	.byte $aa,$77,$00,$ff,$aa
@@ -52,7 +52,7 @@ friend_walk_left1:
 
 friend_walk_left2:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$aa,$00,$ff,$aa
 	.byte $aa,$7a,$ff,$0f,$aa
@@ -63,7 +63,7 @@ friend_walk_left2:
 
 friend_walk_left3:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$aa,$00,$ff,$aa
 	.byte $aa,$aa,$ff,$00,$aa
@@ -74,7 +74,7 @@ friend_walk_left3:
 
 friend_walk_left4:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$aa,$00,$ff,$aa
 	.byte $aa,$aa,$ff,$00,$aa
@@ -85,7 +85,7 @@ friend_walk_left4:
 
 friend_walk_left5:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$aa,$00,$ff,$aa
 	.byte $aa,$aa,$ff,$00,$aa
@@ -96,7 +96,7 @@ friend_walk_left5:
 
 friend_walk_left6:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$aa,$00,$ff,$aa
 	.byte $aa,$aa,$ff,$0f,$7a
@@ -107,7 +107,7 @@ friend_walk_left6:
 
 friend_walk_left7:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$aa,$00,$ff,$aa
 	.byte $aa,$aa,$00,$ff,$aa
@@ -118,7 +118,7 @@ friend_walk_left7:
 
 friend_walk_left8:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$aa,$00,$ff,$aa
 	.byte $aa,$7a,$00,$ff,$fa
@@ -147,7 +147,7 @@ friend_run_progression:
 
 friend_run_left1:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$7a,$00,$ff,$aa
 	.byte $aa,$77,$00,$ff,$aa
@@ -158,7 +158,7 @@ friend_run_left1:
 
 friend_run_left2:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$aa,$00,$ff,$aa
 	.byte $aa,$7a,$ff,$0f,$aa
@@ -169,7 +169,7 @@ friend_run_left2:
 
 friend_run_left3:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$aa,$00,$ff,$aa
 	.byte $aa,$aa,$ff,$00,$aa
@@ -180,7 +180,7 @@ friend_run_left3:
 
 friend_run_left4:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$aa,$00,$ff,$aa
 	.byte $aa,$aa,$ff,$00,$aa
@@ -191,7 +191,7 @@ friend_run_left4:
 
 friend_run_left5:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$aa,$00,$ff,$aa
 	.byte $aa,$aa,$ff,$00,$aa
@@ -202,7 +202,7 @@ friend_run_left5:
 
 friend_run_left6:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$aa,$00,$ff,$aa
 	.byte $aa,$aa,$ff,$0f,$7a
@@ -213,7 +213,7 @@ friend_run_left6:
 
 friend_run_left7:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$aa,$00,$ff,$aa
 	.byte $aa,$aa,$00,$ff,$aa
@@ -224,7 +224,7 @@ friend_run_left7:
 
 friend_run_left8:
 	.byte $5,$8
-	.byte $aa,$fa,$7f,$f7,$aa
+	.byte $aa,$fa,$ff,$f7,$aa
 	.byte $aa,$ff,$0f,$0f,$aa
 	.byte $aa,$aa,$00,$ff,$aa
 	.byte $aa,$7a,$00,$ff,$fa
@@ -253,7 +253,7 @@ friend_crouch_progression:
 friend_crouch1:
 	.byte 5,8
         .byte $AA,$AA,$AA,$AA,$AA
-        .byte $AA,$fA,$7f,$f7,$aa
+        .byte $AA,$fA,$ff,$f7,$aa
         .byte $AA,$ff,$0f,$0f,$aa
         .byte $AA,$AA,$00,$ff,$aa
         .byte $AA,$Af,$0f,$0f,$aa
@@ -265,7 +265,7 @@ friend_crouch2:
         .byte 5,8
         .byte $AA,$AA,$AA,$AA,$AA
         .byte $AA,$AA,$fA,$7A,$aa
-        .byte $AA,$ff,$f7,$0f,$aa
+        .byte $AA,$ff,$ff,$0f,$aa
         .byte $AA,$Af,$00,$ff,$aa
         .byte $AA,$fA,$f0,$0f,$aa
         .byte $AA,$AA,$f0,$f0,$aa
@@ -280,13 +280,13 @@ friend_crouch2:
 ;=====================
 friend_turning_sprite:
 	.byte $5,$8
-	.byte $aa,$57,$77,$aa,$aa
-	.byte $0a,$05,$00,$0a,$aa
-	.byte $77,$00,$00,$55,$aa
-	.byte $77,$00,$00,$55,$aa
-	.byte $aa,$00,$00,$a5,$aa
-	.byte $aa,$77,$55,$aa,$aa
-	.byte $07,$aa,$05,$aa,$aa
+	.byte $aa,$7f,$ff,$aa,$aa
+	.byte $0a,$07,$0f,$0a,$aa
+	.byte $ff,$00,$00,$77,$aa
+	.byte $ff,$00,$00,$77,$aa
+	.byte $af,$00,$00,$a7,$aa
+	.byte $aa,$ff,$77,$aa,$aa
+	.byte $0f,$aa,$07,$aa,$aa
 	.byte $00,$aa,$00,$aa,$aa
 
 

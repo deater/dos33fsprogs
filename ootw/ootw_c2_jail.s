@@ -9,6 +9,7 @@ ootw_jail_init:
 	sta	DUDE_OUT
 	sta	PHYSICIST_STATE
 	sta	WHICH_JAIL
+	sta	DIRECTION		; left
 
 	lda	#1
 	sta	JAIL_POWER_ON
@@ -30,13 +31,12 @@ ootw_jail_init:
 	sta	friend_y
 
 
-	lda	#29
+	lda	#28
 	sta	PHYSICIST_X
 	lda	#30
 	sta	PHYSICIST_Y
 
-	lda	#1
-	sta	DIRECTION
+
 
 	rts
 
@@ -342,7 +342,7 @@ bg_jail0:
 	lda	GUN_OUT
 	beq	c2_no_bg_action
 
-        lda     #34
+        lda     #35
         sta     XPOS
         lda     #44
         sta     YPOS
