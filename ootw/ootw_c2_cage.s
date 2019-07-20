@@ -67,10 +67,8 @@ cage_loop:
         sta     YPOS
 
 	lda	CAGE_AMPLITUDE
-	cmp	#3
-	beq	cage_amp_2
 	cmp	#2
-	beq	cage_amp_2
+	bcs	cage_amp_2		; bge
 	cmp	#1
 	beq	cage_amp_1
 
@@ -184,6 +182,9 @@ patrolling_move:
 	cmp	#3
 	beq	guard_shooting
 
+	cmp	#4
+	beq	guard_shooting
+
 	jmp	guard_move_and_draw
 
 guard_yelling:
@@ -218,35 +219,103 @@ done_cage_guard:
 
 	;===============================
 	; check keyboard
+	;===============================
 
 	lda	KEYPRESS
-        bpl	cage_continue
+        bpl	cage_done_keyboard
 
-	inc	CAGE_AMPLITUDE
+	cmp	#27+$80
+	beq	cage_escape
+
+	cmp	#'A'+$80
+	beq	cage_left_pressed
+	cmp	#8+$80
+	beq	cage_left_pressed
+
+	cmp	#'D'+$80
+	beq	cage_right_pressed
+	cmp	#$15+$80
+	beq	cage_right_pressed
+
+	jmp	cage_done_keyboard
+
+cage_escape:
+	lda	#$ff
+	sta	GAME_OVER
+	bne	cage_done_keyboard	; bra
+
+
+cage_left_pressed:
+	; if moving left ($80) inc amp
+	; if moving right ($1) dec amp
+
+	ldy	CAGE_OFFSET
+	lda	cage_direction_lookup,Y
+	beq	cage_done_amplitude
+	bmi	cage_inc_amplitude
+	bpl	cage_dec_amplitude
+
+cage_right_pressed:
+	; if moving left ($80) dec amplitude
+	; if moving right ($1) inc amplitude
+	ldy	CAGE_OFFSET
+	lda	cage_direction_lookup,Y
+	beq	cage_done_amplitude
+	bmi	cage_dec_amplitude
+	bpl	cage_inc_amplitude
+
+cage_inc_amplitude:
 	lda	CAGE_AMPLITUDE
+	cmp	#4
+	beq	cage_done_amplitude
+	inc	CAGE_AMPLITUDE
+	jmp	cage_done_amplitude
 
+cage_dec_amplitude:
+	lda	CAGE_AMPLITUDE
+	beq	cage_done_amplitude
+	dec	CAGE_AMPLITUDE
+
+cage_done_amplitude:
+
+cage_done_keyboard:
+
+
+	;=================================
+	; cage swinging behavior
+
+	lda	CAGE_AMPLITUDE
 check_amp1:
 	cmp	#1
-	bne	check_amp2
+	bne	check_amp4
 
 ;	lda	#1			; if amp=1, guard gets gun out
 	sta	alien0_gun
 	jmp	cage_continue
 
 check_amp2:
-	cmp	#2
-	bne	check_amp3
-					; if amp=2, guard shouts
-	jmp	cage_continue
+;	cmp	#2
+;	bne	check_amp3
+;					; if amp=2, guard shouts
+;	jmp	cage_continue
 
-check_amp3:
-	cmp	#3
-	bne	check_amp4		; if amp=3, guard shoots
+;check_amp3:
+;	cmp	#3
+;	bne	check_amp4		; if amp=3, guard shoots
 
 check_amp4:
 	cmp	#4			; if amp=4, cage falls
 	bne	cage_continue
 
+	; only fall if at far right position and also guard is in place
+
+	lda	CAGE_OFFSET
+	cmp	#4			; it's *2
+	bne	cage_continue
+
+	lda	alien0_x
+	cmp	#21
+	bne	cage_continue		; only if yelling
 
 
 	;===========================
@@ -283,7 +352,12 @@ cage_frame_no_oflo:
 	lda	CAGE_AMPLITUDE
 	beq	no_move_cage
 
+	; actual value is CAGE_OFFSET/2
+
 	inc	CAGE_OFFSET
+	lda	CAGE_OFFSET
+	and	#$f
+	sta	CAGE_OFFSET
 
 no_move_cage:
 
@@ -1448,3 +1522,21 @@ friend_mouth:
 	.byte $AA,$AA,$0A,$00,$00
 
 
+
+cage_direction_lookup:
+	.byte 1		; 0000 = right
+	.byte 1		; 0001 = right
+	.byte 1		; 0010 = right
+	.byte 1		; 0011 = right
+	.byte 0		; 0100 = peak
+	.byte 0		; 0101 = peak
+	.byte $80	; 0110 = left
+	.byte $80	; 0111 = left
+	.byte $80	; 1000 = left
+	.byte $80	; 1001 = left
+	.byte $80	; 1010 = left
+	.byte $80	; 1011 = left
+	.byte 0		; 1100 = peak
+	.byte 0		; 1101 = peak
+	.byte 1		; 1110 = right
+	.byte 1		; 1111 = right

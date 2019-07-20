@@ -28,6 +28,9 @@ ootw_c2:
 	;=======================
 
 	jsr	ootw_cage
+	lda	GAME_OVER
+	cmp	#$ff
+	beq	quit_level
 
 	;=======================
 	; Start Level After Cage
