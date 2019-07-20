@@ -827,9 +827,25 @@ ce_stand_cage:
 
 ce_jump:
 
-	ldx	#<phys_stand
-	ldy	#>phys_stand
+	sec
+	sbc	#70
+	and	#$fe
+	asl
+	tay
+
+	lda	ce_phys_jump,Y
+	sta	XPOS
+	lda	ce_phys_jump+1,Y
+	sta	YPOS
+
+	lda	ce_phys_jump+2,Y
+	tax
+
+	lda	ce_phys_jump+3,Y
+	tay
+
 	jmp	ce_draw_physicist_right
+
 
 
 ce_stand_right:
@@ -1300,3 +1316,27 @@ debris_list:
 	.word	debris1_rle
 	.word	debris2_rle
 	.word	debris3_rle
+
+ce_phys_jump:
+.byte	20,28		; 70
+.word jump1
+.byte	21,28		; 72
+.word jump2
+.byte	22,26		; 74
+.word jump3
+.byte	23,26		; 76
+.word jump4
+.byte	24,26		; 78
+.word jump5
+.byte	25,26		; 80
+.word jump6
+.byte	26,28		; 82
+.word jump7
+.byte	27,30		; 84
+.word jump8
+.byte	28,30		; 86
+.word crouch2
+.byte	29,30		; 88
+.word crouch1
+
+
