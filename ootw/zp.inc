@@ -149,7 +149,8 @@ PARTICLE_COUNT	= $E7		; INTRO
 MESSAGE_COUNT	= $E7		; INTRO
 
 BOULDER_X	= $E8		; C1
-CART_X		= $E8		; C2
+LITTLEGUY_OUT	= $E8		; C2 cage
+CART_X		= $E8		; C2 jail
 
 BOULDER_Y	= $E9		; C1
 SHOOTING_TOP	= $E9		; C1 cage

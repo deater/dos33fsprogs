@@ -36,6 +36,7 @@ ootw_cage:
 	sta	CAGE_GUARD
 	sta	SHOOTING_BOTTOM
 	sta	SHOOTING_TOP
+	sta	LITTLEGUY_OUT
 
         bit     KEYRESET		; clear keypress
 
@@ -56,6 +57,47 @@ cage_loop:
 	;=======================
 
 	jsr	ootw_draw_miners
+
+	;=======================
+	; draw little guy
+	;=======================
+
+	lda	LITTLEGUY_OUT
+	beq	done_bg_draw_lg
+
+	cmp	#7
+	bcc	lg_in1
+	cmp	#15
+	bcc	lg_in2
+
+	ldx	#<little_guy_in_sprite
+	ldy	#>little_guy_in_sprite
+	jmp	bg_draw_lg
+
+lg_in1:
+	ldx	#<little_guy_in1_sprite
+	ldy	#>little_guy_in1_sprite
+	jmp	bg_draw_lg_inc
+
+lg_in2:
+	ldx	#<little_guy_in2_sprite
+	ldy	#>little_guy_in2_sprite
+
+bg_draw_lg_inc:
+	inc	LITTLEGUY_OUT
+
+bg_draw_lg:
+	lda	#28
+	sta	XPOS
+	lda	#34
+	sta	YPOS
+
+	stx     INL
+	sty     INH
+	jsr     put_sprite_crop
+
+done_bg_draw_lg:
+
 
 	;======================
 	; draw cage
@@ -246,6 +288,13 @@ cage_escape:
 
 
 cage_left_pressed:
+	lda	CAGE_AMPLITUDE
+	bne	cage_left_already_moving
+	lda	#8			; *2
+	sta	CAGE_OFFSET
+	jmp	cage_inc_amplitude
+
+cage_left_already_moving:
 	; if moving left ($80) inc amp
 	; if moving right ($1) dec amp
 

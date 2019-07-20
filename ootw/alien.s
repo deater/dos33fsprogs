@@ -367,6 +367,8 @@ alien_shooting_up:
 	lda	#28
 	sta	SHOOTING_TOP
 
+	inc	LITTLEGUY_OUT
+
 ;	bne	finally_draw_alien	; bra
 
 
