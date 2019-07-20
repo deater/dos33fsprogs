@@ -819,3 +819,47 @@ draw_gun:
 	sta	INH
 
 	jmp	put_sprite_crop
+
+
+
+
+	; blank screen
+	; off	(1)
+	; 8 until green on  (2)
+	; 25 until gren off (1)
+	; 25 until green on (2)
+	; 24 until hand grab (3)
+	; 8 until next (4)
+	; 8 until next (5)
+	; 8 until next (6)
+	; 8 until next (7)
+	; 8 until next (8)
+	; 40 of blank
+
+laser_movie:
+	.word	laserg_01_rle
+
+	.word	laserg_02_rle
+	.word	laserg_02_rle
+	.word	laserg_02_rle
+
+	.word	laserg_01_rle
+	.word	laserg_01_rle
+	.word	laserg_01_rle
+
+	.word	laserg_02_rle
+	.word	laserg_02_rle
+	.word	laserg_02_rle
+
+	.word	laserg_03_rle
+	.word	laserg_04_rle
+	.word	laserg_05_rle
+	.word	laserg_06_rle
+	.word	laserg_07_rle
+	.word	laserg_08_rle
+
+	.word	laserg_blank_rle
+	.word	laserg_blank_rle
+	.word	laserg_blank_rle
+	.word	laserg_blank_rle
+	.word	laserg_blank_rle

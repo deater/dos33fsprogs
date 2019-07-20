@@ -63,7 +63,8 @@ ootw_c2.o:	ootw_c2.s \
 	ootw_graphics/sprites/sprites_friend.inc \
 	ootw_c2_cage.s ootw_c2_jail.s ootw_c2_elevator.s ootw_c2_intro.s \
 	ootw_graphics/l2cage/ootw_c2_cage.inc \
-	ootw_graphics/l2intro/ootw_l2intro.inc
+	ootw_graphics/l2intro/ootw_l2intro.inc \
+	ootw_graphics/l2laser/ootw_c2_laser.inc
 	ca65 -o ootw_c2.o ootw_c2.s -l ootw_c2.lst
 
 ####
