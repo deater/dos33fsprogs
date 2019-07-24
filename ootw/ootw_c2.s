@@ -139,7 +139,7 @@ end_message:
 ; intro
 .include "ootw_graphics/l2intro/ootw_l2intro.inc"
 ; city movie
-.include "ootw_graphics/city/city_movie.inc"
+.include "ootw_graphics/l2city/city_movie.inc"
 ; laser movie
 .include "ootw_graphics/l2laser/ootw_c2_laser.inc"
 

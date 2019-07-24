@@ -31,21 +31,21 @@ ootw_c1.o:	ootw_c1.s \
 	ootw_c1_rope.s earthquake.s ootw_c1_mesa.s \
 	ootw_c1_pool.s ootw_c1_cavern.s physicist.s random16.s \
 	ootw_cut_slug.s ootw_cut_beast.s \
-	ootw_graphics/pool/ootw_pool.inc \
-	ootw_graphics/underwater/ootw_underwater.inc \
-	ootw_graphics/caves/ootw_cavern.inc \
-	ootw_graphics/caves/ootw_cavern2.inc \
-	ootw_graphics/caves/ootw_cavern3.inc \
-	ootw_graphics/rope/ootw_rope.inc \
-	ootw_graphics/rope/ootw_swing.inc \
-	ootw_graphics/endl1/ootw_l1end.inc \
+	ootw_graphics/l1pool/ootw_pool.inc \
+	ootw_graphics/l1underwater/ootw_underwater.inc \
+	ootw_graphics/l1caves/ootw_cavern.inc \
+	ootw_graphics/l1caves/ootw_cavern2.inc \
+	ootw_graphics/l1caves/ootw_cavern3.inc \
+	ootw_graphics/l1rope/ootw_rope.inc \
+	ootw_graphics/l1rope/ootw_swing.inc \
+	ootw_graphics/l1end/ootw_l1end.inc \
 	ootw_graphics/sprites/sprites_physicist.inc \
 	ootw_graphics/sprites/sprites_slugs.inc \
 	ootw_graphics/sprites/sprites_ootw.inc \
 	ootw_graphics/sprites/sprites_beast.inc \
-	ootw_graphics/end_scenes/ootw_beast_end.inc \
-	ootw_graphics/end_scenes/ootw_beast_intro.inc \
-	ootw_graphics/end_scenes/ootw_slug_end.inc
+	ootw_graphics/l1end_scenes/ootw_beast_end.inc \
+	ootw_graphics/l1end_scenes/ootw_beast_intro.inc \
+	ootw_graphics/l1end_scenes/ootw_slug_end.inc
 	ca65 -o ootw_c1.o ootw_c1.s -l ootw_c1.lst
 
 ####
