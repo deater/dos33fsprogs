@@ -19,6 +19,26 @@ ootw:
 	sta	BEAST_OUT
 	sta	ON_ELEVATOR
 
+
+	;=======================
+	; Handle Arrival
+	;=======================
+
+	jsr	ootw_c1_arrival
+
+
+	; Initialize some variables
+
+	lda	#0
+	sta	GAME_OVER
+	sta	EQUAKE_PROGRESS
+	sta	EARTH_OFFSET
+	sta	PHYSICIST_STATE
+	sta	WHICH_CAVE
+	sta	BEAST_OUT
+	sta	ON_ELEVATOR
+
+
 	lda	#1
 	sta	BEFORE_SWING
 
@@ -91,10 +111,14 @@ end_message:
 .byte	8,10,"PRESS RETURN TO CONTINUE",0
 .byte	11,20,"ACCESS CODE: IH8S",0
 
+; rooms
+.include "ootw_c1_arrival.s"
 .include "ootw_c1_rope.s"
 .include "ootw_c1_pool.s"
 .include "ootw_c1_cavern.s"
 .include "ootw_c1_mesa.s"
+
+; movement
 .include "physicist.s"
 .include "ootw_sluggy.s"
 .include "ootw_beast.s"
