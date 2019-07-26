@@ -10,6 +10,79 @@ swim_progression:
 
 
 swimming1:
+	.byte 2,6
+	.byte $77,$AA
+	.byte $55,$55
+	.byte $00,$00
+	.byte $00,$00
+	.byte $22,$22
+	.byte $55,$77
+
+swimming2:
+	.byte 2,6
+	.byte $77,$7A
+	.byte $55,$55
+	.byte $00,$00
+	.byte $00,$00
+	.byte $52,$22
+	.byte $A5,$77
+
+swimming3:
+	.byte 2,6
+	.byte $77,$77
+	.byte $55,$55
+	.byte $00,$00
+	.byte $00,$00
+	.byte $55,$22
+	.byte $AA,$77
+
+swimming4:
+	.byte 2,6
+	.byte $7A,$77
+	.byte $55,$55
+	.byte $00,$00
+	.byte $00,$00
+	.byte $52,$22
+	.byte $A5,$77
+
+swimming5:
+	.byte 2,6
+	.byte $AA,$77
+	.byte $55,$55
+	.byte $00,$00
+	.byte $00,$00
+	.byte $22,$22
+	.byte $55,$77
+
+swimming6:
+	.byte 2,6
+	.byte $7A,$77
+	.byte $55,$55
+	.byte $00,$00
+	.byte $00,$00
+	.byte $22,$72
+	.byte $55,$A7
+
+swimming7:
+	.byte 2,6
+	.byte $77,$77
+	.byte $55,$55
+	.byte $00,$00
+	.byte $00,$00
+	.byte $22,$77
+	.byte $55,$AA
+
+swimming8:
+	.byte 2,6
+	.byte $77,$7A
+	.byte $55,$55
+	.byte $00,$00
+	.byte $00,$00
+	.byte $22,$72
+	.byte $55,$A7
+
+.if 0
+swimming1:
 	.byte 2,8
 	.byte $77,$AA
 	.byte $55,$55
@@ -97,3 +170,5 @@ swimming8:
 	.byte $22,$72
 	.byte $55,$A7
 
+
+.endif
