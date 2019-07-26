@@ -1,7 +1,6 @@
 	;=======================================
 	; Move physicist based on current state
 	;
-	; TODO: only update on even frames to slow things down?
 
 move_physicist:
 	lda	PHYSICIST_STATE

@@ -123,6 +123,7 @@ ON_ELEVATOR	= $DF		; ALL
 LEFT_LIMIT	= $E0		; ALL
 RIGHT_LIMIT	= $E1		; ALL
 
+CONSOLE_Y	= $E2		; C1 arrival
 WHICH_SLUG	= $E2		; C1
 TELEPORTING	= $E2		; C2 jail
 

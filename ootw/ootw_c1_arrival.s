@@ -38,11 +38,15 @@ ootw_c1_arrival:
 
 	lda	#0
 	sta	GAME_OVER
+	sta	GAIT
 
 	lda	#20
 	sta	BUBBLES_Y
+	sta	CONSOLE_Y
+	sta	PHYSICIST_Y
 
-
+	lda	#17
+	sta	PHYSICIST_X
 
         bit     KEYRESET		; clear keypress
 
@@ -68,22 +72,32 @@ underwater_loop:
 	; draw console
 	;======================
 
-	lda	#11
+	lda	#16
 	sta	XPOS
-	lda	#0
+	lda	CONSOLE_Y
         sta	YPOS
 
-;	lda	#<cage_center_sprite
-;	sta	INL
-;	lda	#>cage_center_sprite
-;	sta	INH
-;	jsr	put_sprite_crop
-;	jmp	done_drawing_cage
-
+	lda	#<console_sprite
+	sta	INL
+	lda	#>console_sprite
+	sta	INH
+	jsr	put_sprite_crop
 
 	;=================================
 	; draw physicist
 	;=================================
+
+	lda	PHYSICIST_X
+	sta	XPOS
+	lda	PHYSICIST_Y
+        sta	YPOS
+
+	ldy	GAIT
+	lda	swim_progression,Y
+	sta	INL
+	lda	swim_progression+1,Y
+	sta	INH
+	jsr	put_sprite_crop
 
 	;======================
 	; draw monster
@@ -123,15 +137,25 @@ no_draw_bubbles:
 	cmp	#27+$80
 	beq	underwater_escape
 
-;	cmp	#'A'+$80
-;	beq	cage_left_pressed
-;	cmp	#8+$80
-;	beq	cage_left_pressed
+	cmp	#'A'+$80
+	beq	uw_left_pressed
+	cmp	#8+$80
+	beq	uw_left_pressed
 
-;	cmp	#'D'+$80
-;	beq	cage_right_pressed
-;	cmp	#$15+$80
-;	beq	cage_right_pressed
+	cmp	#'D'+$80
+	beq	uw_right_pressed
+	cmp	#$15+$80
+	beq	uw_right_pressed
+
+	cmp	#'W'+$80
+	beq	uw_up_pressed
+	cmp	#$0B+$80
+	beq	uw_up_pressed
+
+	cmp	#'S'+$80
+	beq	uw_down_pressed
+	cmp	#$0A+$80
+	beq	uw_down_pressed
 
 	jmp	underwater_done_keyboard
 
@@ -141,15 +165,27 @@ underwater_escape:
 	bne	underwater_done_keyboard	; bra
 
 
-;cage_left_pressed:
-;	lda	CAGE_AMPLITUDE
-;	bne	cage_left_already_moving
-;	lda	#8			; *2
-;	sta	CAGE_OFFSET
-;	jmp	cage_inc_amplitude
+uw_left_pressed:
+	dec	PHYSICIST_X
+	jmp	underwater_done_keyboard
+
+uw_right_pressed:
+	inc	PHYSICIST_X
+	jmp	underwater_done_keyboard
+
+uw_up_pressed:
+	dec	PHYSICIST_Y
+	dec	PHYSICIST_Y
+	jmp	underwater_done_keyboard
+
+uw_down_pressed:
+	inc	PHYSICIST_Y
+	inc	PHYSICIST_Y
+	jmp	underwater_done_keyboard
+
 
 underwater_done_keyboard:
-
+	bit	KEYRESET
 
 	;=================================
 	; move things
@@ -171,6 +207,58 @@ underwater_done_keyboard:
 	stx	BUBBLES_Y
 
 no_move_bubbles:
+
+	;===================
+	; move console
+	;===================
+
+	lda	FRAMEL
+	and	#$1f
+	bne	no_move_console
+
+	ldx	CONSOLE_Y
+	cpx	#34
+	bcs	no_move_console	; bge
+
+	inx
+	inx
+	stx	CONSOLE_Y
+
+no_move_console:
+
+
+	;===================
+	; move physicist
+	;===================
+	; gradually pull you down
+
+	lda	FRAMEL
+	and	#$f
+	bne	no_move_swim
+
+	lda	GAIT
+	clc
+	adc	#$2
+	and	#$f
+	sta	GAIT
+
+no_move_swim:
+
+	lda	FRAMEL
+	and	#$1f
+	bne	no_move_physicist
+
+	ldx	PHYSICIST_Y
+	cpx	#34
+	bcs	no_move_console	; bge
+
+	inx
+	inx
+	stx	PHYSICIST_Y
+
+no_move_physicist:
+
+
 
 
 	;===============
@@ -197,6 +285,12 @@ underwater_frame_no_oflo:
 	beq	done_underwater
 
 
+	; check if leaving the pool
+
+	lda	PHYSICIST_Y
+	cmp	#$FE
+	beq	done_underwater
+
 
 	; loop forever
 
@@ -220,7 +314,13 @@ bubbles_sprite:
 
 
 
-
+console_sprite:
+	.byte 6,5
+	.byte $AA,$A5,$55,$5A,$AA,$AA
+	.byte $AA,$AA,$00,$05,$05,$AA
+	.byte $5A,$05,$00,$00,$00,$55
+	.byte $AA,$A5,$55,$00,$00,$55
+	.byte $AA,$AA,$A5,$A0,$A0,$A5
 
 
 

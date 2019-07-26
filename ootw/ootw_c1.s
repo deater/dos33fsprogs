@@ -152,6 +152,7 @@ end_message:
 ; sprites
 .include "ootw_graphics/sprites/sprites_ootw.inc"
 .include "ootw_graphics/sprites/sprites_physicist.inc"
+.include "ootw_graphics/sprites/physicist_swim.inc"
 .include "ootw_graphics/sprites/sprites_slugs.inc"
 .include "ootw_graphics/sprites/sprites_beast.inc"
 ; cutscene data

@@ -40,6 +40,7 @@ ootw_c1.o:	ootw_c1.s \
 	ootw_graphics/l1rope/ootw_swing.inc \
 	ootw_graphics/l1end/ootw_l1end.inc \
 	ootw_graphics/sprites/sprites_physicist.inc \
+	ootw_graphics/sprites/physicist_swim.inc \
 	ootw_graphics/sprites/sprites_slugs.inc \
 	ootw_graphics/sprites/sprites_ootw.inc \
 	ootw_graphics/sprites/sprites_beast.inc \
