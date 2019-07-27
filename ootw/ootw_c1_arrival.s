@@ -250,7 +250,7 @@ no_move_swim:
 
 	ldx	PHYSICIST_Y
 	cpx	#34
-	bcs	no_move_console	; bge
+	bcs	no_move_physicist	; bge
 
 	inx
 	inx
