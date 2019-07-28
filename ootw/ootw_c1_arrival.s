@@ -66,7 +66,7 @@ underwater_loop:
 	; draw Surface ripple
 	;=======================
 
-;	jsr	ootw_draw_miners
+	jsr	draw_surface_ripple
 
 	;======================
 	; draw console
@@ -90,7 +90,8 @@ underwater_loop:
 	lda	PHYSICIST_X
 	sta	XPOS
 	lda	PHYSICIST_Y
-        sta	YPOS
+	and	#$fe
+	sta	YPOS
 
 	ldy	GAIT
 	lda	swim_progression,Y
@@ -175,11 +176,9 @@ uw_right_pressed:
 
 uw_up_pressed:
 	dec	PHYSICIST_Y
-	dec	PHYSICIST_Y
 	jmp	underwater_done_keyboard
 
 uw_down_pressed:
-	inc	PHYSICIST_Y
 	inc	PHYSICIST_Y
 	jmp	underwater_done_keyboard
 
@@ -300,6 +299,60 @@ done_underwater:
 	rts
 
 
+	;==============================
+	; draw surface ripple
+	;==============================
+draw_surface_ripple:
+
+	lda	#8
+	sta	XPOS
+	lda	#0
+        sta	YPOS
+
+	lda	FRAMEL
+	and	#$60
+	lsr
+	lsr
+	lsr
+	lsr
+	tay
+
+	lda	ripple_progression,Y
+	sta	INL
+	lda	ripple_progression+1,Y
+	sta	INH
+	jsr	put_sprite_crop
+
+	rts
+
+
+
+ripple_progression:
+	.word ripple1_sprite
+	.word ripple2_sprite
+	.word ripple3_sprite
+	.word ripple4_sprite
+
+ripple1_sprite:
+	.byte 24,1
+	.byte $26,$22,$66,$6E,$2E,$6E,$25,$25,$66,$6E,$6E,$66
+	.byte $66,$66,$66,$5E,$2F,$2F,$6F,$66,$66,$66,$26,$26
+
+ripple2_sprite:
+	.byte 24,1
+	.byte $26,$22,$66,$6E,$2E,$6E,$25,$65,$66,$6E,$2E,$66
+	.byte $66,$66,$26,$5E,$2F,$2F,$2F,$66,$66,$26,$26,$26
+
+ripple3_sprite:
+	.byte 24,1
+	.byte $26,$22,$66,$6E,$2E,$6E,$65,$65,$66,$2E,$2E,$66
+	.byte $66,$66,$66,$5E,$2F,$2F,$2F,$26,$66,$26,$26,$26
+
+ripple4_sprite:
+	.byte 24,1
+	.byte $26,$22,$66,$6E,$6E,$6E,$65,$65,$25,$2E,$6E,$66
+	.byte $66,$66,$26,$5E,$2F,$2F,$2F,$66,$66,$26,$26,$26
+
 
 
 
@@ -397,7 +450,7 @@ check_flash_done:
 	; draw Surface ripple
 	;=======================
 
-;	jsr	ootw_draw_miners
+	jsr	draw_surface_ripple
 
 	;=======================
 	; draw Overall ripple

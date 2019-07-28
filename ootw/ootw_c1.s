@@ -26,6 +26,8 @@ ootw:
 
 	jsr	ootw_c1_arrival
 
+	lda	GAME_OVER
+	bmi	end_c1
 
 	; Initialize some variables
 
@@ -68,6 +70,7 @@ ootw:
 ;===========================
 ; quit_level
 ;===========================
+end_c1:
 	lda	GAME_OVER		; see why we quit
 	cmp	#$ff
 	beq	l1_quit_or_died
