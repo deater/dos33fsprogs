@@ -124,6 +124,7 @@ LEFT_LIMIT	= $E0		; ALL
 RIGHT_LIMIT	= $E1		; ALL
 
 CONSOLE_Y	= $E2		; C1 arrival
+EXIT_COUNT	= $E2		; C1 pool
 WHICH_SLUG	= $E2		; C1
 TELEPORTING	= $E2		; C2 jail
 

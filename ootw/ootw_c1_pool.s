@@ -40,35 +40,13 @@ ootw_pool:
 	lda	#$c			; load image off-screen $c00
 	jsr	load_rle_gr
 
-	;===================================================
-	; put beast in background if it hasn't been released
 
-	lda	BEAST_OUT
-	bne	beast_in
-
-	lda	#8
-	sta	DRAW_PAGE
-
-	lda     #<background_beast
-	sta	INL
-	lda     #>background_beast
-        sta     INH
-
-	lda	#34
-	sta	XPOS
-	lda	#8
-	sta	YPOS
-
-        jsr	put_sprite
-
-
-beast_in:
 	;=================================
 	; copy to both pages $400/$800
 
-	jsr	gr_copy_to_current
-	jsr	page_flip
-	jsr	gr_copy_to_current
+;	jsr	gr_copy_to_current
+;	jsr	page_flip
+;	jsr	gr_copy_to_current
 
 
 	;=================================
@@ -82,7 +60,11 @@ beast_in:
 	lda	#30
 	sta	TENTACLE_PROGRESS
 
+	;==================================
+	; setup beast if we're running from it
+
 	jsr	setup_beast
+
 
 	;============================
 	;============================
@@ -102,67 +84,7 @@ pool_loop:
 	;=======================
 	; draw pool ripples
 
-	lda	FRAMEL
-	and	#$30		; 0110 1100
-	lsr
-	lsr
-	lsr
-	tax
-
-	lda	pool_ripples,X
-	sta	INL
-	lda	pool_ripples+1,X
-	sta	INH
-
-	lda	#9
-	sta	XPOS
-	lda	#30
-	sta	YPOS
-
-	jsr	put_sprite
-
-
-	lda	FRAMEL
-	and	#$30		; 0110 1100
-	lsr
-	lsr
-	lsr
-	clc
-	adc	#2
-	and	#$6
-	tax
-
-	lda	pool_ripples,X
-	sta	INL
-	lda	pool_ripples+1,X
-	sta	INH
-
-
-	lda	#27
-	sta	XPOS
-	lda	#30
-	sta	YPOS
-
-	jsr	put_sprite
-
-
-	lda	FRAMEL
-	and	#$30		; 0110 1100
-	lsr
-	lsr
-	lsr
-	clc
-	adc	#4
-	and	#$6
-	tax
-
-	lda     #18
-	sta     XPOS
-	lda     #28
-	sta     YPOS
-
-	jsr	put_sprite
-
+	jsr	draw_ripples
 
 
 	;==============================
@@ -318,26 +240,7 @@ beyond_tentacles:
 	;======================
 	; draw foreground plant
 
-	lda	FRAMEL
-	and	#$c0		; 0110 1100
-	lsr
-	lsr
-	lsr
-	lsr
-	lsr
-	tax
-
-	lda	plant_wind,X
-	sta	INL
-	lda	plant_wind+1,X
-	sta	INH
-
-        lda     #4
-        sta     XPOS
-        lda     #30
-        sta     YPOS
-
-	jsr	put_sprite
+	jsr	draw_fg_plant
 
 	;===============
 	; page flip
@@ -390,3 +293,255 @@ not_done_pool:
 
 done_pool:
 	rts
+
+
+
+
+
+
+
+
+	;=======================
+	; draw pool ripples
+
+draw_ripples:
+	lda	FRAMEL
+	and	#$30		; 0110 1100
+	lsr
+	lsr
+	lsr
+	tax
+
+	lda	pool_ripples,X
+	sta	INL
+	lda	pool_ripples+1,X
+	sta	INH
+
+	lda	#9
+	sta	XPOS
+	lda	#30
+	sta	YPOS
+
+	jsr	put_sprite
+
+
+	lda	FRAMEL
+	and	#$30		; 0110 1100
+	lsr
+	lsr
+	lsr
+	clc
+	adc	#2
+	and	#$6
+	tax
+
+	lda	pool_ripples,X
+	sta	INL
+	lda	pool_ripples+1,X
+	sta	INH
+
+
+	lda	#27
+	sta	XPOS
+	lda	#30
+	sta	YPOS
+
+	jsr	put_sprite
+
+
+	lda	FRAMEL
+	and	#$30		; 0110 1100
+	lsr
+	lsr
+	lsr
+	clc
+	adc	#4
+	and	#$6
+	tax
+
+	lda     #18
+	sta     XPOS
+	lda     #28
+	sta     YPOS
+
+	jmp	put_sprite		; tail call
+	; rts
+
+
+	;======================
+	; draw foreground plant
+
+draw_fg_plant:
+	lda	FRAMEL
+	and	#$c0		; 0110 1100
+	lsr
+	lsr
+	lsr
+	lsr
+	lsr
+	tax
+
+	lda	plant_wind,X
+	sta	INL
+	lda	plant_wind+1,X
+	sta	INH
+
+        lda     #4
+        sta     XPOS
+        lda     #30
+        sta     YPOS
+
+	jmp	put_sprite
+	; rts
+
+
+	;============================
+	;============================
+	; exit pool
+	;============================
+	;============================
+
+exit_pool:
+	lda	#0
+	sta	EXIT_COUNT
+
+	;=============================
+	; Load background to $c00
+
+	lda     #>(pool_rle)
+        sta     GBASH
+	lda     #<(pool_rle)
+        sta     GBASL
+	lda	#$c			; load image off-screen $c00
+	jsr	load_rle_gr
+
+
+exit_pool_loop:
+
+	;================================
+	; copy background to current page
+
+	jsr	gr_copy_to_current
+
+
+	;=======================
+	; draw pool ripples
+
+	jsr	draw_ripples
+
+
+	;===============
+	; draw physicist
+
+	lda	EXIT_COUNT
+	and	#$fe
+	tay
+
+	lda	#20
+	sta	XPOS
+	lda	#22
+	sta	YPOS
+
+	lda	pool_exit_progression,Y
+	sta	INL
+	lda	pool_exit_progression+1,Y
+	sta	INH
+
+	jsr	put_sprite
+
+	;================
+	; handle beast
+
+;	jsr	move_beast
+
+	;================
+	; draw beast
+
+;	jsr	draw_beast
+
+
+	;=================
+	; draw foreground plant
+
+	jsr	draw_fg_plant
+
+	;===============
+	; page flip
+
+	jsr	page_flip
+
+	;================
+	; inc frame count
+
+	inc	FRAMEL
+	bne	framee_no_oflo
+	inc	FRAMEH
+
+framee_no_oflo:
+
+	; increment exit count
+
+	lda	FRAMEL
+	and	#$0f
+	bne	exit_count_same
+
+	inc	EXIT_COUNT
+
+
+exit_count_same:
+
+	; check if done
+
+	lda	EXIT_COUNT
+	cmp	#(26*2)
+	beq	done_exit_pool
+
+	jmp	exit_pool_loop
+
+done_exit_pool:
+	bit	KEYRESET
+
+	rts
+
+
+
+
+
+
+
+
+
+	;=========================
+	; draw background beast
+
+draw_bg_beast:
+	;===================================================
+	; put beast in background if it hasn't been released
+
+	lda	BEAST_OUT
+	bne	beast_in
+
+	lda	#8
+	sta	DRAW_PAGE
+
+	lda     #<background_beast
+	sta	INL
+	lda     #>background_beast
+        sta     INH
+
+	lda	#34
+	sta	XPOS
+	lda	#8
+	sta	YPOS
+
+        jsr	put_sprite
+
+
+beast_in:
+	rts
+
+
+
+
+
+

@@ -20,14 +20,22 @@ ootw:
 	sta	ON_ELEVATOR
 
 
-	;=======================
-	; Handle Arrival
-	;=======================
+	;==========================
+	; Handle Underwater Arrival
+	;==========================
 
 	jsr	ootw_c1_arrival
 
 	lda	GAME_OVER
 	bmi	end_c1
+
+
+	;==========================
+	; Exit the Pool
+	;==========================
+
+	jsr	exit_pool
+
 
 	; Initialize some variables
 
