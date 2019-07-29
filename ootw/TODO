@@ -1,3 +1,17 @@
+BEHAVIOR DIFFERENCES:
++ L1
+	- underwater there is a water-motion effect
+	- bubble motion is fancier in real thing
+	- get out of water, you face forward unless key pressed
+	  (we don't have a forward sprite as it looks weird)
+	- arrival, the beast movement seems to depend on your xpos?
+	- small things like birds flying are not implemented
+	- beast on hill and 2nd screen -- complex, only appears if
+	  you happen to leave same time beast does?  then movement
+	  depends on xposition?
+        - earthquake can happen while on rope?
+	- sometimes falling rocks can follow you to next screen
+
 KNOWN BUGS:
 + ootw: pool monster grabs you a edge of pool (glitch)
 + intro: there's still a bit of a pause when the elevator door finishes opening
@@ -28,11 +42,6 @@ General:
 
 
 * underwater:
-  + add arrival-underwater scene
-  + falling console
-  + ability to swim
-  + tentacles to grab
-  + shimmery water at top
   + ripples in water
 
 * pool:
@@ -80,7 +89,7 @@ Level/Checkpoint #2:
   + Elevator should shoot sparks every 20 frames or so
 
 * View:
-  + music play when viewing city
+  + music play when viewing city?
 
 
 

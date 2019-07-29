@@ -133,9 +133,9 @@ end_message:
 .include "ootw_graphics/l2cage/ootw_c2_cage.inc"
 .include "ootw_graphics/l2jail/ootw_c2_jail.inc"
 ; sprites
-.include "ootw_graphics/sprites/sprites_physicist.inc"
-.include "ootw_graphics/sprites/sprites_alien.inc"
-.include "ootw_graphics/sprites/sprites_friend.inc"
+.include "ootw_graphics/sprites/physicist.inc"
+.include "ootw_graphics/sprites/alien.inc"
+.include "ootw_graphics/sprites/friend.inc"
 ; intro
 .include "ootw_graphics/l2intro/ootw_l2intro.inc"
 ; city movie

@@ -153,11 +153,11 @@ end_message:
 .include "ootw_graphics/l1rope/ootw_swing.inc"
 .include "ootw_graphics/l1underwater/ootw_underwater.inc"
 ; sprites
-.include "ootw_graphics/sprites/sprites_ootw.inc"
-.include "ootw_graphics/sprites/sprites_physicist.inc"
-.include "ootw_graphics/sprites/physicist_swim.inc"
-.include "ootw_graphics/sprites/sprites_slugs.inc"
-.include "ootw_graphics/sprites/sprites_beast.inc"
+.include "ootw_graphics/sprites/l1_background.inc"
+.include "ootw_graphics/sprites/physicist.inc"
+.include "ootw_graphics/sprites/physicist_l1_swim.inc"
+.include "ootw_graphics/sprites/slugs.inc"
+.include "ootw_graphics/sprites/beast.inc"
 ; cutscene data
 .include "ootw_graphics/l1end/ootw_l1end.inc"
 .include "ootw_graphics/l1end_scenes/ootw_beast_end.inc"

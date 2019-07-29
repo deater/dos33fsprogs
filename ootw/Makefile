@@ -39,11 +39,11 @@ ootw_c1.o:	ootw_c1.s \
 	ootw_graphics/l1rope/ootw_rope.inc \
 	ootw_graphics/l1rope/ootw_swing.inc \
 	ootw_graphics/l1end/ootw_l1end.inc \
-	ootw_graphics/sprites/sprites_physicist.inc \
-	ootw_graphics/sprites/physicist_swim.inc \
-	ootw_graphics/sprites/sprites_slugs.inc \
-	ootw_graphics/sprites/sprites_ootw.inc \
-	ootw_graphics/sprites/sprites_beast.inc \
+	ootw_graphics/sprites/physicist.inc \
+	ootw_graphics/sprites/physicist_l1_swim.inc \
+	ootw_graphics/sprites/slugs.inc \
+	ootw_graphics/sprites/l1_background.inc \
+	ootw_graphics/sprites/beast.inc \
 	ootw_graphics/l1end_scenes/ootw_beast_end.inc \
 	ootw_graphics/l1end_scenes/ootw_beast_intro.inc \
 	ootw_graphics/l1end_scenes/ootw_slug_end.inc
@@ -60,9 +60,9 @@ ootw_c2.o:	ootw_c2.s \
 	keyboard.s gr_run_sequence.s audio.s \
 	physicist.s alien.s friend.s \
 	ootw_c2_miners.s \
-	ootw_graphics/sprites/sprites_physicist.inc \
-	ootw_graphics/sprites/sprites_alien.inc \
-	ootw_graphics/sprites/sprites_friend.inc \
+	ootw_graphics/sprites/physicist.inc \
+	ootw_graphics/sprites/alien.inc \
+	ootw_graphics/sprites/friend.inc \
 	ootw_c2_cage.s ootw_c2_jail.s ootw_c2_elevator.s ootw_c2_intro.s \
 	ootw_graphics/l2cage/ootw_c2_cage.inc \
 	ootw_graphics/l2intro/ootw_l2intro.inc \
@@ -78,7 +78,7 @@ ootw_c3.o:	ootw_c3.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
-	ootw_graphics/sprites/sprites_physicist.inc \
+	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l3vent/ootw_c3_vent.inc
 	ca65 -o ootw_c3.o ootw_c3.s -l ootw_c3.lst
 
