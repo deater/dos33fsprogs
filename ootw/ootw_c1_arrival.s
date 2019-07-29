@@ -216,7 +216,7 @@ no_move_bubbles:
 	bne	no_move_console
 
 	ldx	CONSOLE_Y
-	cpx	#40
+	cpx	#48
 	bcs	no_move_console	; bge
 
 	inx
@@ -354,7 +354,7 @@ ripple4_sprite:
 	.byte $66,$66,$26,$5E,$2F,$2F,$2F,$66,$66,$26,$26,$26
 
 
-tentacle_progression:
+tentacle_monster_progression:
 	.word tentacle_sprite1
 	.word tentacle_sprite2
 	.word tentacle_sprite3
@@ -436,6 +436,17 @@ tentacle_sprite7:
 	.byte $55,$AA,$AA
 	.byte $AA,$55,$AA
 	.byte $AA,$5A,$55
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+
+tentacle_sprite8:
+	.byte 3,8
+	.byte $AA,$55,$AA
+	.byte $55,$AA,$AA
+	.byte $55,$AA,$AA
+	.byte $A5,$55,$AA
 	.byte $AA,$55,$AA
 	.byte $AA,$55,$AA
 	.byte $AA,$55,$AA
