@@ -216,7 +216,7 @@ no_move_bubbles:
 	bne	no_move_console
 
 	ldx	CONSOLE_Y
-	cpx	#34
+	cpx	#40
 	bcs	no_move_console	; bge
 
 	inx
@@ -354,10 +354,92 @@ ripple4_sprite:
 	.byte $66,$66,$26,$5E,$2F,$2F,$2F,$66,$66,$26,$26,$26
 
 
+tentacle_progression:
+	.word tentacle_sprite1
+	.word tentacle_sprite2
+	.word tentacle_sprite3
+	.word tentacle_sprite4
+	.word tentacle_sprite5
+	.word tentacle_sprite6
+	.word tentacle_sprite7
+	.word tentacle_sprite8
 
+tentacle_sprite1:
+	.byte 3,8
+	.byte $55,$AA,$AA
+	.byte $55,$AA,$AA
+	.byte $55,$AA,$AA
+	.byte $A5,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
 
+tentacle_sprite2:
+	.byte 3,8
+	.byte $55,$AA,$AA
+	.byte $55,$5A,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
 
+tentacle_sprite3:
+	.byte 3,8
+	.byte $A5,$5A,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
 
+tentacle_sprite4:
+	.byte 3,8
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+
+tentacle_sprite5:
+	.byte 3,8
+	.byte $AA,$5A,$A5
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+
+tentacle_sprite6:
+	.byte 3,8
+	.byte $AA,$5A,$A5
+	.byte $AA,$55,$AA
+	.byte $AA,$AA,$55
+	.byte $AA,$AA,$55
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+
+tentacle_sprite7:
+	.byte 3,8
+	.byte $5A,$A5,$AA
+	.byte $55,$AA,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$5A,$55
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
 
 
 bubbles_sprite:
@@ -443,7 +525,7 @@ no_flash:
 
 	jsr	gr_copy_to_current
 
-check_flash_done:
+
 
 
 	;=======================
@@ -457,7 +539,7 @@ check_flash_done:
 	;=======================
 
 
-
+check_flash_done:
 	;===============
 	; page flip
 
