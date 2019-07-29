@@ -42,14 +42,6 @@ ootw_pool:
 
 
 	;=================================
-	; copy to both pages $400/$800
-
-;	jsr	gr_copy_to_current
-;	jsr	page_flip
-;	jsr	gr_copy_to_current
-
-
-	;=================================
 	; setup vars
 
 	lda	#0
@@ -79,6 +71,11 @@ pool_loop:
 	; copy background to current page
 
 	jsr	gr_copy_to_current
+
+	;================================
+	; draw bg beast, if needed
+
+	jsr	draw_bg_beast
 
 
 	;=======================
@@ -403,6 +400,7 @@ draw_fg_plant:
 
 exit_pool:
 	lda	#0
+	sta	BG_BEAST
 	sta	EXIT_COUNT
 
 	;=============================
@@ -430,6 +428,12 @@ exit_pool_loop:
 	jsr	draw_ripples
 
 
+	;================
+	; draw background beast
+
+	jsr	draw_bg_beast
+
+
 	;===============
 	; draw physicist
 
@@ -448,16 +452,6 @@ exit_pool_loop:
 	sta	INH
 
 	jsr	put_sprite
-
-	;================
-	; handle beast
-
-;	jsr	move_beast
-
-	;================
-	; draw beast
-
-;	jsr	draw_beast
 
 
 	;=================
@@ -490,6 +484,18 @@ framee_no_oflo:
 
 exit_count_same:
 
+
+	; see if start bg beast going
+
+	lda	EXIT_COUNT
+	cmp	#(14*2)
+	bne	check_done_exiting_pool
+
+	lda	#2
+	sta	BG_BEAST
+
+check_done_exiting_pool:
+
 	; check if done
 
 	lda	EXIT_COUNT
@@ -513,31 +519,78 @@ done_exit_pool:
 
 	;=========================
 	; draw background beast
+	;=========================
 
 draw_bg_beast:
-	;===================================================
-	; put beast in background if it hasn't been released
 
-	lda	BEAST_OUT
-	bne	beast_in
+	; if 0, skip altogether
+	lda	BG_BEAST
+	beq	done_draw_bg_beast
 
-	lda	#8
-	sta	DRAW_PAGE
+	cmp	#14
+	bcc	bg_beast_incoming	; blt
 
-	lda     #<background_beast
+	cmp	#$f4
+	bcs	bg_beast_outgoing	; bge
+
+bg_beast_just_standing:
+
+	; FIXME: look at you when close
+
+	lda	#<beast_bg7
 	sta	INL
-	lda     #>background_beast
+	lda     #>beast_bg7
         sta     INH
+	lda     #33
+        sta     XPOS
+	jmp	bg_beast_callsprite
 
-	lda	#34
+
+bg_beast_incoming:
+
+	lda	BG_BEAST
+	and	#$fe
+	asl
+	tay
+
+	lda     beast_incoming,Y
+	sta	INL
+	lda     beast_incoming+1,Y
+        sta     INH
+	lda     beast_incoming+2,Y
+	jmp	bg_beast_callsprite
+
+bg_beast_outgoing:
+
+	lda	BG_BEAST
+	sec
+	sbc	#$f4
+	and	#$fe
+	asl
+	tay
+
+	lda     beast_outgoing,Y
+	sta	INL
+	lda     beast_outgoing+1,Y
+        sta     INH
+	lda     beast_outgoing+2,Y
+	jmp	bg_beast_callsprite
+
+
+bg_beast_callsprite:
 	sta	XPOS
 	lda	#8
 	sta	YPOS
-
         jsr	put_sprite
 
+	lda	FRAMEL
+	and	#$7
+	bne	done_draw_bg_beast
 
-beast_in:
+	inc	BG_BEAST
+
+done_draw_bg_beast:
+
 	rts
 
 

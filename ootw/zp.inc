@@ -107,16 +107,19 @@ MB_FRAME	= $94
 MB_PATTERN	= $95
 CHUNKSIZE	= $95
 LZ4_DONE	= $96
-DECODE_ERROR	= $97
-COPY_TIME	= $98
-DECOMPRESS_TIME	= $99
-TIME_TAKEN	= $9A
-LYRICS_ACTIVE	= $9B
+;DECODE_ERROR	= $97
+;COPY_TIME	= $98
+;DECOMPRESS_TIME	= $99
+;TIME_TAKEN	= $9A
+;LYRICS_ACTIVE	= $9B
 ;FORTYCOL	= $9C
-CURSOR		= $9D
+;CURSOR		= $9D
 
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
+
+
+BG_BEAST	= $DE		; C1
 
 ON_ELEVATOR	= $DF		; ALL
 
