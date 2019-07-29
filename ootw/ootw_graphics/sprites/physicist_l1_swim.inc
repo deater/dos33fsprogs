@@ -2,9 +2,9 @@ pool_exit_progression:
 	.word	pool_exit_1	; 0
 	.word	pool_exit_2	; 1
 	.word	pool_exit_3	; 2
-	.word	pool_exit_3	; 3
-	.word	pool_exit_2	; 4
-	.word	pool_exit_1	; 5
+	.word	pool_exit_2	; 3
+	.word	pool_exit_1	; 4
+	.word	pool_exit_0	; 5
 	.word	pool_exit_0	; 6
 	.word	pool_exit_0	; 7
 	.word	pool_exit_0	; 8
