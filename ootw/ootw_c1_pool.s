@@ -530,12 +530,16 @@ draw_bg_beast:
 	cmp	#14
 	bcc	bg_beast_incoming	; blt
 
-	cmp	#$f4
+	cmp	#$44
 	bcs	bg_beast_outgoing	; bge
 
 bg_beast_just_standing:
 
 	; FIXME: look at you when close
+
+	lda	PHYSICIST_X
+	cmp	#30
+	bcs	beast_staring	; bge
 
 	lda	#<beast_bg7
 	sta	INL
@@ -544,6 +548,16 @@ bg_beast_just_standing:
 	lda     #33
         sta     XPOS
 	jmp	bg_beast_callsprite
+
+beast_staring:
+	lda	#<beast_bg8
+	sta	INL
+	lda     #>beast_bg8
+        sta     INH
+	lda     #33
+        sta     XPOS
+	jmp	bg_beast_callsprite
+
 
 
 bg_beast_incoming:
@@ -564,7 +578,7 @@ bg_beast_outgoing:
 
 	lda	BG_BEAST
 	sec
-	sbc	#$f4
+	sbc	#$44
 	and	#$fe
 	asl
 	tay
@@ -581,13 +595,22 @@ bg_beast_callsprite:
 	sta	XPOS
 	lda	#8
 	sta	YPOS
-        jsr	put_sprite
+        jsr	put_sprite_crop
 
 	lda	FRAMEL
 	and	#$7
 	bne	done_draw_bg_beast
 
 	inc	BG_BEAST
+
+	lda	BG_BEAST
+	cmp	#$50
+	bcc	done_draw_bg_beast
+
+	; disable if hit $50
+
+	lda	#0
+	sta	BG_BEAST
 
 done_draw_bg_beast:
 
