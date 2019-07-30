@@ -50,6 +50,15 @@ ootw_c1_arrival:
 
         bit     KEYRESET		; clear keypress
 
+	; reset tentacle monster
+
+	lda	#46
+	sta	tentacle_ypos
+	sta	tentacle_ypos+1
+	sta	tentacle_ypos+2
+	sta	tentacle_ypos+3
+	sta	tentacle_ypos+4
+
 	;============================
 	; Underwater Loop
 	;============================
@@ -103,6 +112,12 @@ underwater_loop:
 	;======================
 	; draw monster
 	;======================
+
+	jsr	draw_tentacle_monster
+
+	jsr	move_tentacle_monster
+
+
 
 	;======================
 	; draw bubbles
@@ -251,9 +266,11 @@ no_move_swim:
 	cpx	#34
 	bcs	no_move_physicist	; bge
 
-	inx
-	inx
-	stx	PHYSICIST_Y
+	; temporarily disable for monster debugging
+
+;	inx
+;	inx
+;	stx	PHYSICIST_Y
 
 no_move_physicist:
 
@@ -352,105 +369,6 @@ ripple4_sprite:
 	.byte 24,1
 	.byte $26,$22,$66,$6E,$6E,$6E,$65,$65,$25,$2E,$6E,$66
 	.byte $66,$66,$26,$5E,$2F,$2F,$2F,$66,$66,$26,$26,$26
-
-
-tentacle_monster_progression:
-	.word tentacle_sprite1
-	.word tentacle_sprite2
-	.word tentacle_sprite3
-	.word tentacle_sprite4
-	.word tentacle_sprite5
-	.word tentacle_sprite6
-	.word tentacle_sprite7
-	.word tentacle_sprite8
-
-tentacle_sprite1:
-	.byte 3,8
-	.byte $55,$AA,$AA
-	.byte $55,$AA,$AA
-	.byte $55,$AA,$AA
-	.byte $A5,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-
-tentacle_sprite2:
-	.byte 3,8
-	.byte $55,$AA,$AA
-	.byte $55,$5A,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-
-tentacle_sprite3:
-	.byte 3,8
-	.byte $A5,$5A,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-
-tentacle_sprite4:
-	.byte 3,8
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-
-tentacle_sprite5:
-	.byte 3,8
-	.byte $AA,$5A,$A5
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-
-tentacle_sprite6:
-	.byte 3,8
-	.byte $AA,$5A,$A5
-	.byte $AA,$55,$AA
-	.byte $AA,$AA,$55
-	.byte $AA,$AA,$55
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-
-tentacle_sprite7:
-	.byte 3,8
-	.byte $5A,$A5,$AA
-	.byte $55,$AA,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$5A,$55
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-
-tentacle_sprite8:
-	.byte 3,8
-	.byte $AA,$55,$AA
-	.byte $55,$AA,$AA
-	.byte $55,$AA,$AA
-	.byte $A5,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
-	.byte $AA,$55,$AA
 
 
 bubbles_sprite:
@@ -584,6 +502,228 @@ done_flash:
 	rts
 
 
+	;======================
+	;======================
+	; move tentacle monster
+	;======================
+	;======================
 
+move_tentacle_monster:
+
+	lda	FRAMEL
+	and	#$7
+	bne	no_move_tentacle
+
+
+	ldx	#0
+	jsr	random16
+	lda	SEEDL
+	sta	MONSTER_AI
+move_tentacle_monster_loop:
+
+	ror	MONSTER_AI
+	lda	MONSTER_AI
+	and	#$2
+	eor	#$ff
+	sec
+	adc	tentacle_ypos,X
+	sta	tentacle_ypos,X
+
+;	bne	random_not_move
+;	dec	tentacle_ypos,X
+
+
+random_not_move:
+
+
+	inc	tentacle_gait,X
+	lda	tentacle_gait,X
+	and	#$7
+	sta	tentacle_gait,X
+
+	inx
+	cpx	#5
+	bne	move_tentacle_monster_loop
+
+no_move_tentacle:
+
+
+
+	rts
+
+
+	;======================
+	;======================
+	; draw tentacle monster
+	;======================
+	;======================
+
+draw_tentacle_monster:
+
+	ldx	#0
+
+draw_tentacle_monster_loop:
+	jsr	draw_one_tentacle
+
+	inx
+	cpx	#5
+	bne	draw_tentacle_monster_loop
+
+	rts
+
+
+tentacle_xpos:
+	.byte	10,15,20,25,30
+
+tentacle_ypos:
+	.byte	46,46,46,46,46
+
+tentacle_gait:
+	.byte	0,5,2,7,4
+
+	;======================
+	;======================
+	; draw one tentacle
+	;======================
+	;======================
+
+draw_one_tentacle:
+
+	; #1
+
+	lda	tentacle_xpos,X
+	sta	XPOS
+	lda	tentacle_ypos,X
+	and	#$fe
+	sta	YPOS
+
+	ldy	tentacle_gait,X
+
+	lda	tentacle_monster_progress_lo,Y
+	sta	INL
+	lda	tentacle_monster_progress_hi,Y
+	sta	INH
+
+	txa
+	pha
+
+	jsr	put_sprite_crop
+
+	pla
+	tax
+
+	rts
+
+
+
+
+tentacle_monster_progress_lo:
+	.byte <tentacle_sprite1
+	.byte <tentacle_sprite2
+	.byte <tentacle_sprite3
+	.byte <tentacle_sprite4
+	.byte <tentacle_sprite5
+	.byte <tentacle_sprite6
+	.byte <tentacle_sprite7
+	.byte <tentacle_sprite8
+
+tentacle_monster_progress_hi:
+	.byte >tentacle_sprite1
+	.byte >tentacle_sprite2
+	.byte >tentacle_sprite3
+	.byte >tentacle_sprite4
+	.byte >tentacle_sprite5
+	.byte >tentacle_sprite6
+	.byte >tentacle_sprite7
+	.byte >tentacle_sprite8
+
+
+tentacle_sprite1:
+	.byte 3,8
+	.byte $55,$AA,$AA
+	.byte $55,$AA,$AA
+	.byte $55,$AA,$AA
+	.byte $A5,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+
+tentacle_sprite2:
+	.byte 3,8
+	.byte $55,$AA,$AA
+	.byte $55,$5A,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+
+tentacle_sprite3:
+	.byte 3,8
+	.byte $A5,$5A,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+
+tentacle_sprite4:
+	.byte 3,8
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+
+tentacle_sprite5:
+	.byte 3,8
+	.byte $AA,$5A,$A5
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+
+tentacle_sprite6:
+	.byte 3,8
+	.byte $AA,$5A,$A5
+	.byte $AA,$55,$AA
+	.byte $AA,$AA,$55
+	.byte $AA,$AA,$55
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+
+tentacle_sprite7:
+	.byte 3,8
+	.byte $5A,$A5,$AA
+	.byte $55,$AA,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$5A,$55
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+
+tentacle_sprite8:
+	.byte 3,8
+	.byte $AA,$55,$AA
+	.byte $55,$AA,$AA
+	.byte $55,$AA,$AA
+	.byte $A5,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
+	.byte $AA,$55,$AA
 
 

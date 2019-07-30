@@ -119,6 +119,8 @@ LZ4_DONE	= $96
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
 
+MONSTER_AI	= $DD		; C1 underwater
+
 BG_BEAST	= $DE		; C1
 
 ON_ELEVATOR	= $DF		; ALL
