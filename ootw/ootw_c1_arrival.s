@@ -53,7 +53,7 @@ ootw_c1_arrival:
 
 	; reset tentacle monster
 
-	lda	#46
+	lda	#60
 	sta	tentacle_ypos
 	sta	tentacle_ypos+1
 	sta	tentacle_ypos+2
@@ -121,10 +121,11 @@ underwater_loop:
 	lda	tentacle_ypos,X
 	sec
 	sbc	#10
+	and	#$fe
 	sta	YPOS
 
 	; see if game over
-	cmp	#75
+	cmp	#80
 	bcc	not_too_far_down
 
 	lda	#$ff
@@ -315,9 +316,9 @@ no_move_swim:
 
 	; temporarily disable for monster debugging
 
-;	inx
-;	inx
-;	stx	PHYSICIST_Y
+	inx
+	inx
+	stx	PHYSICIST_Y
 
 no_move_physicist:
 
@@ -571,20 +572,30 @@ move_tentacle_monster:
 	sta	MONSTER_AI
 move_tentacle_grab_loop:
 
+	cpx	MONSTER_WHICH
+	bne	tentacle_grab_random
+
+	; pull down quickly if grabbed
+
+	inc	tentacle_ypos,X
+	inc	tentacle_ypos,X
+	inc	tentacle_ypos,X
+
+	jmp	tentacle_grab_animate
 
 	;=====================
 	; randomly adjust y
-
+tentacle_grab_random:
 	ror	MONSTER_AI
 	lda	MONSTER_AI
-	and	#$2
+	and	#$3
 	clc
 	adc	tentacle_ypos,X
 	sta	tentacle_ypos,X
 
 
 	; adjust place in animation
-
+tentacle_grab_animate:
 
 	inc	tentacle_gait,X
 	lda	tentacle_gait,X
@@ -603,20 +614,9 @@ no_move_tentacle_grabbed:
 
 move_tentacle_notgrabbed:
 
-;       P   P   P   P   P
-;       T   T   T   T   T
-;NnNnYyYyNn
-; NnNnYyYyNn
-;     TTT
-;
-;  if (physicist_x < tentacle+2) && (physicist_c>=tentacle)
-;  if (tentaclex>=physicist_c) &&  (tentaclex<physicist+2)
-
-
-; if (tentacle_x+2<physicist) not collision
-;;;;;;; if (tentacle_x>physicist+2) not collision
-; it (physicist-2>tentacle_x) not collision
-
+	; if (physicist_x+1<tentacle_x)  no collision
+	; if (physicist_x>tentacle_x+2) no collision
+	; else, colllision
 
 	;=====================
 	; check for grab
@@ -625,19 +625,24 @@ move_tentacle_notgrabbed:
 tentacle_collision_loop:
 
 	lda	PHYSICIST_X
-	sec
-	sbc	#2
-	cmp	tentacle_xpos,X
-	bcs	tentacle_no_collision		; bge
-
-	lda	tentacle_xpos,X
 	clc
-	adc	#2
-	cmp	PHYSICIST_X
+	adc	#1
+	cmp	tentacle_xpos,X
 	bcc	tentacle_no_collision		; blt
+
+	lda	PHYSICIST_X
+	ldy	tentacle_xpos,X
+	iny
+	iny
+	sty	TEMPY
+	cmp	TEMPY
+	bcs	tentacle_no_collision		; bge
 
 
 tentacle_collision_x:
+
+	lda	PHYSICIST_Y
+	bmi	tentacle_no_collision	; if exiting pool, no collision
 
 	lda	tentacle_ypos,X
 	sec
@@ -765,8 +770,6 @@ tentacle_gait:
 
 draw_one_tentacle:
 
-	; #1
-
 	lda	tentacle_xpos,X
 	sta	XPOS
 	lda	tentacle_ypos,X
@@ -788,6 +791,35 @@ draw_one_tentacle:
 	pla
 	tax
 
+	lda	tentacle_ypos,X
+	cmp	#32
+	bcs	done_draw_tentacle	; bge
+
+	;==========================
+	; draw base of tentacle
+
+	lda	tentacle_xpos,X
+	sta	XPOS
+	lda	tentacle_ypos,X
+	and	#$fe
+	clc
+	adc	#16
+	sta	YPOS
+
+	lda	#<tentacle_base
+	sta	INL
+	lda	#>tentacle_base
+	sta	INH
+
+	txa
+	pha
+
+	jsr	put_sprite_crop
+
+	pla
+	tax
+
+done_draw_tentacle:
 	rts
 
 
@@ -902,4 +934,19 @@ tentacle_sprite8:
 	.byte $AA,$55,$AA
 	.byte $AA,$55,$AA
 
-
+tentacle_base:
+	.byte 1,14
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
