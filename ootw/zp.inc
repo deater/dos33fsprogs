@@ -128,7 +128,7 @@ ON_ELEVATOR	= $DF		; ALL
 LEFT_LIMIT	= $E0		; ALL
 RIGHT_LIMIT	= $E1		; ALL
 
-CONSOLE_Y	= $E2		; C1 arrival
+CONSOLE_Y	= $E2		; C1 underwater
 EXIT_COUNT	= $E2		; C1 pool
 WHICH_SLUG	= $E2		; C1
 TELEPORTING	= $E2		; C2 jail
@@ -136,6 +136,7 @@ TELEPORTING	= $E2		; C2 jail
 WHICH_CAVE	= $E3		; C1
 WHICH_JAIL	= $E3		; C2
 
+MONSTER_GRAB	= $E4		; C1 underwater
 BEAST_OUT	= $E4		; C1
 HAVE_GUN	= $E4		; C2 jail+
 
@@ -155,6 +156,7 @@ CURSOR_COUNT	= $E7		; INTRO
 PARTICLE_COUNT	= $E7		; INTRO
 MESSAGE_COUNT	= $E7		; INTRO
 
+MONSTER_WHICH	= $E8		; C1 underwater
 BOULDER_X	= $E8		; C1
 LITTLEGUY_OUT	= $E8		; C2 cage
 CART_X		= $E8		; C2 jail

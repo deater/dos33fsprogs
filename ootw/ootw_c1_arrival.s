@@ -39,6 +39,7 @@ ootw_c1_arrival:
 	lda	#0
 	sta	GAME_OVER
 	sta	GAIT
+	sta	MONSTER_GRAB
 
 	lda	#20
 	sta	BUBBLES_Y
@@ -58,6 +59,18 @@ ootw_c1_arrival:
 	sta	tentacle_ypos+2
 	sta	tentacle_ypos+3
 	sta	tentacle_ypos+4
+
+	lda	#10
+	sta	tentacle_xpos
+	lda	#15
+	sta	tentacle_xpos+1
+	lda	#20
+	sta	tentacle_xpos+2
+	lda	#25
+	sta	tentacle_xpos+3
+	lda	#30
+	sta	tentacle_xpos+4
+
 
 	;============================
 	; Underwater Loop
@@ -96,6 +109,35 @@ underwater_loop:
 	; draw physicist
 	;=================================
 
+	lda	MONSTER_GRAB
+	beq	swim_physicist_normal
+
+	; draw being pulled by tentacle
+
+	ldx	MONSTER_WHICH
+	lda	tentacle_xpos,X
+	sta	XPOS
+
+	lda	tentacle_ypos,X
+	sec
+	sbc	#10
+	sta	YPOS
+
+	; see if game over
+	cmp	#75
+	bcc	not_too_far_down
+
+	lda	#$ff
+	sta	GAME_OVER
+
+not_too_far_down:
+
+	lda	#<swimming1
+	sta	INL
+	lda	#>swimming1
+	jmp	swim_physicist_draw
+
+swim_physicist_normal:
 	lda	PHYSICIST_X
 	sta	XPOS
 	lda	PHYSICIST_Y
@@ -106,6 +148,8 @@ underwater_loop:
 	lda	swim_progression,Y
 	sta	INL
 	lda	swim_progression+1,Y
+
+swim_physicist_draw:
 	sta	INH
 	jsr	put_sprite_crop
 
@@ -146,6 +190,9 @@ no_draw_bubbles:
 	;===============================
 	; check keyboard
 	;===============================
+
+	lda	MONSTER_GRAB
+	bne	underwater_done_keyboard
 
 	lda	KEYPRESS
         bpl	underwater_done_keyboard
@@ -509,17 +556,150 @@ done_flash:
 	;======================
 
 move_tentacle_monster:
+	lda	MONSTER_GRAB
+	beq	move_tentacle_notgrabbed
+
+	;====================
+
+	lda	FRAMEL
+	and	#$7
+	bne	no_move_tentacle_grabbed
+
+	ldx	#0
+	jsr	random16
+	lda	SEEDL
+	sta	MONSTER_AI
+move_tentacle_grab_loop:
+
+
+	;=====================
+	; randomly adjust y
+
+	ror	MONSTER_AI
+	lda	MONSTER_AI
+	and	#$2
+	clc
+	adc	tentacle_ypos,X
+	sta	tentacle_ypos,X
+
+
+	; adjust place in animation
+
+
+	inc	tentacle_gait,X
+	lda	tentacle_gait,X
+	and	#$7
+	sta	tentacle_gait,X
+
+	inx
+	cpx	#5
+	bne	move_tentacle_grab_loop
+
+no_move_tentacle_grabbed:
+	rts
+
+
+
+
+move_tentacle_notgrabbed:
+
+;       P   P   P   P   P
+;       T   T   T   T   T
+;NnNnYyYyNn
+; NnNnYyYyNn
+;     TTT
+;
+;  if (physicist_x < tentacle+2) && (physicist_c>=tentacle)
+;  if (tentaclex>=physicist_c) &&  (tentaclex<physicist+2)
+
+
+; if (tentacle_x+2<physicist) not collision
+;;;;;;; if (tentacle_x>physicist+2) not collision
+; it (physicist-2>tentacle_x) not collision
+
+
+	;=====================
+	; check for grab
+
+	ldx	#0
+tentacle_collision_loop:
+
+	lda	PHYSICIST_X
+	sec
+	sbc	#2
+	cmp	tentacle_xpos,X
+	bcs	tentacle_no_collision		; bge
+
+	lda	tentacle_xpos,X
+	clc
+	adc	#2
+	cmp	PHYSICIST_X
+	bcc	tentacle_no_collision		; blt
+
+
+tentacle_collision_x:
+
+	lda	tentacle_ypos,X
+	sec
+	sbc	#10
+	cmp	PHYSICIST_Y
+	bcs	tentacle_no_collision		; bge
+
+tentacle_collision:
+
+	stx	MONSTER_WHICH
+	lda	#1
+	sta	MONSTER_GRAB
+
+	jmp	no_move_tentacle
+
+
+tentacle_no_collision:
+
+	inx
+	cpx	#5
+	bne	tentacle_collision_loop
+
+
+
+
+	;====================
+
 
 	lda	FRAMEL
 	and	#$7
 	bne	no_move_tentacle
-
 
 	ldx	#0
 	jsr	random16
 	lda	SEEDL
 	sta	MONSTER_AI
 move_tentacle_monster_loop:
+
+
+	;=====================
+	; move toward swimmer
+
+	lda	FRAMEL
+	and	#$3f
+	bne	tentacle_no_sideways
+
+	lda	tentacle_xpos,X
+	sec
+	sbc	PHYSICIST_X
+
+	bmi	tentacle_move_right
+
+	dec	tentacle_xpos,X
+	jmp	tentacle_no_sideways
+
+tentacle_move_right:
+	inc	tentacle_xpos,X
+tentacle_no_sideways:
+
+
+	;=====================
+	; randomly adjust y
 
 	ror	MONSTER_AI
 	lda	MONSTER_AI
@@ -529,11 +709,9 @@ move_tentacle_monster_loop:
 	adc	tentacle_ypos,X
 	sta	tentacle_ypos,X
 
-;	bne	random_not_move
-;	dec	tentacle_ypos,X
-
-
 random_not_move:
+
+	; adjust place in animation
 
 
 	inc	tentacle_gait,X
@@ -546,8 +724,6 @@ random_not_move:
 	bne	move_tentacle_monster_loop
 
 no_move_tentacle:
-
-
 
 	rts
 
