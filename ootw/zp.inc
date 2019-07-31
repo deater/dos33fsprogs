@@ -135,6 +135,7 @@ TELEPORTING	= $E2		; C2 jail
 
 WHICH_CAVE	= $E3		; C1
 WHICH_JAIL	= $E3		; C2
+WHICH_ROOM	= $E3		; C4
 
 MONSTER_GRAB	= $E4		; C1 underwater
 BEAST_OUT	= $E4		; C1

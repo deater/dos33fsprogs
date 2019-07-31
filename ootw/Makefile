@@ -7,21 +7,23 @@ PNG2LZ4 = ../gr-utils/png2lz4
 
 all:	ootw.dsk
 
-ootw.dsk:	HELLO LOADER INTRO OOTW OOTW_C2 OOTW_C3 AUDIO_TEST
+ootw.dsk:	HELLO LOADER INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4
+	cp empty.dsk ootw.dsk
 	$(DOS33) -y ootw.dsk SAVE A HELLO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1400 LOADER
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 INTRO
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C1
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C2
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C3
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 AUDIO_TEST
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C4
+#	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 AUDIO_TEST
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 COMPRESS-TEST
 
 
 ####
 
-OOTW:	ootw_c1.o
-	ld65 -o OOTW ootw_c1.o -C ../linker_scripts/apple2_1700.inc
+OOTW_C1:	ootw_c1.o
+	ld65 -o OOTW_C1 ootw_c1.o -C ../linker_scripts/apple2_1700.inc
 
 ootw_c1.o:	ootw_c1.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -81,6 +83,20 @@ ootw_c3.o:	ootw_c3.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l3vent/ootw_c3_vent.inc
 	ca65 -o ootw_c3.o ootw_c3.s -l ootw_c3.lst
+
+###
+
+OOTW_C4:	ootw_c4.o
+	ld65 -o OOTW_C4 ootw_c4.o -C ../linker_scripts/apple2_1700.inc
+
+ootw_c4.o:	ootw_c4.s \
+	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
+	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
+	keyboard.s gr_run_sequence.s physicist.s ootw_c4_city.s \
+	ootw_graphics/sprites/physicist.inc \
+	ootw_graphics/l4city/ootw_c4_city.inc
+	ca65 -o ootw_c4.o ootw_c4.s -l ootw_c4.lst
+
 
 ####
 
@@ -223,7 +239,8 @@ compress_test.o:	compress_test.s lz4_decode.s compress_test.inc
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lz4 HELLO OOTW OOTW_C2 INTRO LOADER \
+		rm -f *~ *.o *.lst *.lz4 HELLO \
+			OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 INTRO LOADER \
 			COMPRESS-TEST AUDIO_TEST \
 			intro_data_01 intro_data_04 intro_data_06 \
 			intro_data_08 intro_data_09
