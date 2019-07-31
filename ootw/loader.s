@@ -28,6 +28,8 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 	step	=	$fd	; state for stepper motor
 	tmptrk	=	$fe	; temporary copy of current track
 	phase	=	$ff	; current phase for /seek
+	OUTL	=	$fe	; for picking filename
+	OUTH	=	$ff
 
 	dirbuf	=	$c00
 				; note, don't put this immediately below
@@ -45,89 +47,81 @@ start:
 ;======================
 
 which_load_loop:
+	ldy	WHICH_LOAD
+	lda	filenames_low,Y
+	sta	OUTL
+	lda	filenames_high,Y
+	sta	OUTH
 
-	lda	WHICH_LOAD
-	cmp	#1
-	beq	load_ootw_cp1
-	cmp	#2
-	beq	load_ootw_cp2
-	cmp	#3
-	beq	load_ootw_cp3
+opendir_filename:
 
-	; fall through
+	; clear out the filename with $A0 (space)
 
-load_intro:
-
-	; open and read a file
-	lda	#<intro_filename
+	lda	#<filename
 	sta	namlo
-	lda	#>intro_filename
-	sta	namhi
-	jmp	load_done
-
-load_ootw_cp1:
-
-	; open and read a file
-	lda	#<ootw_filename
-	sta	namlo
-	lda	#>ootw_filename
-	sta	namhi
-	jmp	load_done
-
-load_ootw_cp2:
-
-	; open and read a file
-	lda	#<ootw_c2_filename
-	sta	namlo
-	lda	#>ootw_c2_filename
-	sta	namhi
-	jmp	load_done
-
-load_ootw_cp3:
-
-	; open and read a file
-	lda	#<ootw_c3_filename
-	sta	namlo
-	lda	#>ootw_c3_filename
+	lda	#>filename
 	sta	namhi
 
-	; fall through
+	ldy	#29
+wipe_filename_loop:
+	lda	#$A0
+	sta	(namlo),Y
+	dey
+	bpl	wipe_filename_loop
 
+	ldy	#0
+copy_filename_loop:
+	lda	(OUTL),Y
+	beq	copy_filename_done
+	ora	#$80
+	sta	(namlo),Y
+	iny
+	bne	copy_filename_loop
 
-load_done:
-
+copy_filename_done:
 	jsr	opendir		; open and read entire file into memory
 
 	jsr	$1700		; jump to common entry point
 
 	; hope they updated the WHICH_LOAD value
 
-	jmp which_load_loop
+	jmp	which_load_loop
 
-; filename to open is 30-character Apple text:
-intro_filename:	;.byte "INTRO                      "
-	.byte 'I'|$80,'N'|$80,'T'|$80,'R'|$80,'O'|$80,$A0,$A0,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0
+; filename to open is 30-character Apple text, must be padded with space ($A0)
+filename:
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 
-ootw_filename:	;.byte "OOTW                       "
-	.byte 'O'|$80,'O'|$80,'T'|$80,'W'|$80,$A0,$A0,$A0,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0
+filenames_low:
+	.byte	<intro_filename
+	.byte	<ootw_c1_filename
+	.byte	<ootw_c2_filename
+	.byte	<ootw_c3_filename
+	.byte	<ootw_c4_filename
 
-ootw_c2_filename: ;.byte "OOTW_C2                       "
-	.byte 'O'|$80,'O'|$80,'T'|$80,'W'|$80,'_'|$80,'C'|$80,'2'|$80,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0
+filenames_high:
+	.byte	>intro_filename
+	.byte	>ootw_c1_filename
+	.byte	>ootw_c2_filename
+	.byte	>ootw_c3_filename
+	.byte	>ootw_c4_filename
 
-ootw_c3_filename: ;.byte "OOTW_C3                       "
-	.byte 'O'|$80,'O'|$80,'T'|$80,'W'|$80,'_'|$80,'C'|$80,'3'|$80,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0
+intro_filename:
+	.byte "INTRO",0
+
+ootw_c1_filename:
+	.byte "OOTW_C1",0
+
+ootw_c2_filename:
+	.byte "OOTW_C2",0
+
+ootw_c3_filename:
+	.byte "OOTW_C3",0
+
+ootw_c4_filename:
+	.byte "OOTW_C4",0
+
 
 
                 ;unhook DOS and build nibble table

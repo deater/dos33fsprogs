@@ -7,11 +7,12 @@ PNG2LZ4 = ../gr-utils/png2lz4
 
 all:	ootw.dsk
 
-ootw.dsk:	HELLO LOADER INTRO OOTW OOTW_C2 OOTW_C3 OOTW_C4
+ootw.dsk:	HELLO LOADER INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4
+	cp empty.dsk ootw.dsk
 	$(DOS33) -y ootw.dsk SAVE A HELLO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1400 LOADER
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 INTRO
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C1
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C2
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C3
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C4
@@ -21,8 +22,8 @@ ootw.dsk:	HELLO LOADER INTRO OOTW OOTW_C2 OOTW_C3 OOTW_C4
 
 ####
 
-OOTW:	ootw_c1.o
-	ld65 -o OOTW ootw_c1.o -C ../linker_scripts/apple2_1700.inc
+OOTW_C1:	ootw_c1.o
+	ld65 -o OOTW_C1 ootw_c1.o -C ../linker_scripts/apple2_1700.inc
 
 ootw_c1.o:	ootw_c1.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -238,7 +239,8 @@ compress_test.o:	compress_test.s lz4_decode.s compress_test.inc
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lz4 HELLO OOTW OOTW_C2 INTRO LOADER \
+		rm -f *~ *.o *.lst *.lz4 HELLO \
+			OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 INTRO LOADER \
 			COMPRESS-TEST AUDIO_TEST \
 			intro_data_01 intro_data_04 intro_data_06 \
 			intro_data_08 intro_data_09
