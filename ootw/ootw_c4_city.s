@@ -130,20 +130,20 @@ room3:
 	sta	RIGHT_LIMIT
 
 	; set right exit
-	lda     #7
+	lda     #4
 	sta     cer_smc+1
 
 	; set left exit
 	lda     #2
 	sta     cel_smc+1
 
-	lda	#30
+	lda	#18
 	sta	PHYSICIST_Y
 
-;	; load background
-;	lda	#>(jail4_rle)
-;	sta	GBASH
-;	lda	#<(jail4_rle)
+	; load background
+	lda	#>(causeway2_rle)
+	sta	GBASH
+	lda	#<(causeway2_rle)
 
 	jmp	room_setup_done
 
