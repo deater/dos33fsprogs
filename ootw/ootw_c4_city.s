@@ -40,7 +40,7 @@ ootw_city:
 
 	; Room0 with recharger
 room0:
-	lda	#(24+128)
+	lda	#(6+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
 	sta	RIGHT_LIMIT
@@ -53,7 +53,7 @@ room0:
 	lda     #0
 	sta     cel_smc+1
 
-	lda	#30
+	lda	#28
 	sta	PHYSICIST_Y
 
 	; load background
@@ -81,7 +81,7 @@ room1:
 	lda     #0
 	sta     cel_smc+1
 
-	lda	#30
+	lda	#8
 	sta	PHYSICIST_Y
 
 	; load background
@@ -108,6 +108,9 @@ room2:
 	; set left exit
 	lda     #1
 	sta     cel_smc+1
+
+	lda	#18
+	sta	PHYSICIST_Y
 
 	; load background
 	lda	#>(causeway1_rle)
