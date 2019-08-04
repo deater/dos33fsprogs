@@ -6,6 +6,13 @@ ootw_vent:
 	; init
 
 	lda	#0
+	sta	GAIT
+
+	lda	#17
+	sta	PHYSICIST_X
+
+	lda	#2
+	sta	PHYSICIST_Y
 
 	; load background
 	lda	#>(vent_rle)
@@ -58,8 +65,50 @@ vent_loop:
 
 	;===============================
 	; check keyboard
+	;===============================
 
-	jsr	handle_keypress
+	lda	KEYPRESS
+        bpl	vent_done_keyboard
+
+	cmp	#27+$80
+	beq	vent_escape
+
+	cmp	#'A'+$80
+	beq	vent_left_pressed
+	cmp	#8+$80
+	beq	vent_left_pressed
+
+	cmp	#'D'+$80
+	beq	vent_right_pressed
+	cmp	#$15+$80
+	beq	vent_right_pressed
+
+	jmp	vent_done_keyboard
+
+vent_escape:
+	lda	#$ff
+	sta	GAME_OVER
+	bne	vent_done_keyboard	; bra
+
+
+vent_left_pressed:
+	dec	PHYSICIST_X
+	dec	GAIT
+	dec	GAIT
+	jmp	vent_adjust_gait
+
+vent_right_pressed:
+	inc	PHYSICIST_X
+	inc	GAIT
+	inc	GAIT
+
+vent_adjust_gait:
+	lda	GAIT
+	and	#$7
+	sta	GAIT
+
+vent_done_keyboard:
+	 bit	KEYRESET
 
 	;===============================
 	; move physicist
@@ -75,8 +124,21 @@ vent_loop:
 	;===============
 	; draw physicist
 
-;	jsr	draw_physicist
+	lda	PHYSICIST_X
+	sta	XPOS
+	lda	PHYSICIST_Y
+	sta	YPOS
 
+	lda	GAIT
+	and	#$fe
+	tay
+
+	lda	rolling_progression,Y
+	sta	INL
+	lda	rolling_progression+1,Y
+	sta	INH
+
+	jsr	put_sprite_crop
 
 	;===============
 	; page flip
