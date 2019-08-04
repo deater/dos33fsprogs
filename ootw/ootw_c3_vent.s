@@ -141,3 +141,46 @@ done_vent:
 	rts
 
 
+
+puff_sprite_start1:
+	.byte 3,2
+	.byte $AA,$A5,$AA
+	.byte $AA,$AA,$AA
+
+puff_sprite_start2:
+	.byte 3,2
+	.byte $AA,$55,$AA
+	.byte $AA,$AA,$AA
+
+
+puff_sprite_cycle1:
+	.byte 3,2
+	.byte $AA,$55,$AA
+	.byte $AA,$A5,$AA
+
+puff_sprite_cycle2:
+	.byte 3,2
+	.byte $AA,$55,$AA
+	.byte $A5,$A5,$A5
+
+puff_sprite_cycle3:
+	.byte 3,2
+	.byte $5A,$55,$5A
+	.byte $A5,$A5,$A5
+
+puff_sprite_cycle4:
+	.byte 3,2
+	.byte $A5,$55,$A5
+	.byte $A5,$A5,$A5
+
+
+puff_sprite_end1:
+	.byte 3,2
+	.byte $AA,$AA,$AA
+	.byte $A5,$AA,$5A
+
+puff_sprite_end2:
+	.byte 3,2
+	.byte $A5,$AA,$A5
+	.byte $AA,$AA,$AA
+

@@ -79,8 +79,9 @@ OOTW_C3:	ootw_c3.o
 ootw_c3.o:	ootw_c3.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
-	keyboard.s gr_run_sequence.s physicist.s \
-	ootw_graphics/sprites/physicist.inc \
+	keyboard.s \
+	ootw_c3_vent.s \
+	ootw_graphics/sprites/physicist_rolling.inc \
 	ootw_graphics/l3vent/ootw_c3_vent.inc
 	ca65 -o ootw_c3.o ootw_c3.s -l ootw_c3.lst
 

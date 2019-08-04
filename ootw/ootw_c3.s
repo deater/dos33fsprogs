@@ -69,7 +69,6 @@ end_message:
 .byte	11,20,"ACCESS CODE: VENT",0
 
 .include "ootw_c3_vent.s"
-;.include "physicist.s"
 .include "text_print.s"
 .include "gr_pageflip.s"
 .include "gr_unrle.s"
@@ -89,5 +88,5 @@ end_message:
 ; room backgrounds
 .include "ootw_graphics/l3vent/ootw_c3_vent.inc"
 ; sprites
-;.include "ootw_graphics/sprites/sprites_physicist.inc"
+.include "ootw_graphics/sprites/physicist_rolling.inc"
 
