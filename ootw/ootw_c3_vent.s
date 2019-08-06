@@ -7,6 +7,7 @@ ootw_vent:
 
 	lda	#0
 	sta	GAIT
+	sta	FALLING
 
 	lda	#17
 	sta	PHYSICIST_X
@@ -110,16 +111,189 @@ vent_adjust_gait:
 vent_done_keyboard:
 	 bit	KEYRESET
 
-	;===============================
-	; move physicist
 
-;	jsr	move_physicist
+	;=======================
+	; bounds_check and slope
 
-	;===============
-	; check room limits
+	; 42, can't go less than 10
+	; 42, cant go more than 38
 
-;	jsr	check_screen_limit
+	ldx	PHYSICIST_X
+	lda	PHYSICIST_Y
+	cmp	#42
+	bne	not_life_universe_everything
 
+vent_bounds_check_left:
+	cpx	#(5-2)
+	bcs	vent_bounds_check_right
+	lda	#5
+	sta	PHYSICIST_X
+	jmp	done_vent_bounds
+vent_bounds_check_right:
+	cpx	#(38-2)
+	bcc	done_vent_bounds
+	lda	#35
+	sta	PHYSICIST_X
+	jmp	done_vent_bounds
+
+not_life_universe_everything:
+
+	; 11 -> if (y==11) and (x>5) y=12
+	; 12 -> if (y==12) and (x>11) y=13
+	;	if (y==12) and (x<6) y=11
+	; 13 -> if (y==13) and (x>15) y=14
+	;	if (y==13) and (x<10) y=12
+	; 14 -> if (y==14) and (x<16) y=13
+
+	cmp	#11
+	bne	check_12
+
+	cpx	#(2-2)
+	bpl	check_11_right
+
+	lda	#(2-2)
+	sta	PHYSICIST_X
+	jmp	done_vent_bounds
+
+check_11_right:
+	cpx	#(5-2)
+	bcs	vent_inc_y		; bge
+	bcc	done_vent_bounds
+
+check_12:
+	cmp	#12
+	bne	check_13
+
+	cpx	#(11-2)
+	bcs	vent_inc_y		; bge
+	cpx	#(5-2)
+	bcc	vent_dec_y		; blt
+	bcs	done_vent_bounds	; bra
+
+check_13:
+	cmp	#13
+	bne	check_14
+
+	cpx	#(15-2)
+	bcs	vent_inc_y		; bge
+	cpx	#(10-2)
+	bcc	vent_dec_y		; blt
+	bcs	done_vent_bounds	; bra
+
+check_14:
+	cmp	#14
+	bne	done_vent_bounds
+
+	cpx	#(14-2)
+	bcc	vent_dec_y		; blt
+	bcs	done_vent_bounds	; bra
+
+
+vent_inc_y:
+	inc	PHYSICIST_Y
+	jmp	done_vent_bounds
+
+vent_dec_y:
+	dec	PHYSICIST_Y
+
+
+done_vent_bounds:
+
+	;==================
+	; check if falling
+
+	lda	FALLING
+	bne	done_vent_checky	; don't check if allready falling
+
+	ldx	PHYSICIST_X
+	lda	PHYSICIST_Y
+	cmp	#2
+	beq	vent_y2
+	cmp	#14
+	beq	vent_y14
+	cmp	#22
+	beq	vent_y22
+	cmp	#32
+	beq	vent_y32
+	cmp	#42
+	beq	vent_y42
+	jmp	done_vent_checky
+
+	; y=2    -> 2+3, 37+38
+vent_y2:
+	ldy	#11
+	cpx	#(4-2)
+	bcc	vent_falling		; blt
+	ldy	#42
+	cpx	#(37-2)
+	bcs	vent_falling		; bge
+	jmp	done_vent_checky
+
+	; y=14   -> 20+21
+vent_y14:
+	ldy	#22
+	cpx	#(20-2)
+	beq	vent_falling
+	cpx	#(21-2)
+	beq	vent_falling
+	jmp	done_vent_checky
+
+
+	jmp	done_vent_checky
+
+	; y=22	 -> 5+6 , 30+31
+vent_y22:
+	ldy	#42
+	cpx	#(7-2)
+	bcc	vent_falling		; blt
+	ldy	#32
+	cpx	#(30-2)
+	bcs	vent_falling		; bge
+	jmp	done_vent_checky
+
+
+	; y=32	-> 16+17, 37+38
+vent_y32:
+	ldy	#42
+	cpx	#(18-2)
+	bcc	vent_falling		; blt
+	cpx	#(37-2)
+	bcs	vent_falling		; bge
+	jmp	done_vent_checky
+
+
+	; y=42	-> 21+22
+vent_y42:
+	ldy	#50
+	cpx	#(21-2)
+	beq	vent_falling
+	cpx	#(22-2)
+	beq	vent_falling
+
+	bne	done_vent_checky	; bra
+
+vent_falling:
+	lda	#1
+	sta	FALLING
+	sty	FALLING_Y
+
+done_vent_checky:
+
+
+	;==================
+	; fall if falling
+
+	lda	FALLING
+	beq	done_falling
+
+	inc	PHYSICIST_Y
+	lda	PHYSICIST_Y
+	cmp	FALLING_Y
+	bne	done_falling
+
+	dec	FALLING
+
+done_falling:
 
 	;===============
 	; draw physicist
@@ -127,6 +301,7 @@ vent_done_keyboard:
 	lda	PHYSICIST_X
 	sta	XPOS
 	lda	PHYSICIST_Y
+	and	#$fe			; FIXME
 	sta	YPOS
 
 	lda	GAIT
