@@ -387,3 +387,113 @@ done_city:
 	rts
 
 
+
+
+recharge_sprite1:
+	.byte 1,10
+	.byte $eA
+	.byte $ff
+	.byte $ee
+	.byte $ff
+	.byte $e6
+	.byte $ff
+	.byte $6e
+	.byte $ff
+	.byte $fe
+	.byte $a6
+
+recharge_sprite2:
+	.byte 1,10
+	.byte $fA
+	.byte $f6
+	.byte $ef
+	.byte $fe
+	.byte $66
+	.byte $fe
+	.byte $6e
+	.byte $f6
+	.byte $6e
+	.byte $af
+
+recharge_sprite3:
+	.byte 1,10
+	.byte $eA
+	.byte $f6
+	.byte $ef
+	.byte $ef
+	.byte $6f
+	.byte $f6
+	.byte $e6
+	.byte $f6
+	.byte $6f
+	.byte $ae
+
+recharge_sprite4:
+	.byte 1,10
+	.byte $fA
+	.byte $fe
+	.byte $fe
+	.byte $6e
+	.byte $fe
+	.byte $6e
+	.byte $ee
+	.byte $f6
+	.byte $ef
+	.byte $ae
+
+
+
+recharge_bg1:
+	.byte 2,10
+	.byte $6A,$FA
+	.byte $27,$f6
+	.byte $ff,$7f
+	.byte $6f,$7f
+	.byte $ff,$5f
+	.byte $f5,$5f
+	.byte $62,$f2
+	.byte $72,$65
+	.byte $5f,$7f
+	.byte $A2,$a5
+
+recharge_bg2:
+	.byte 2,10
+	.byte $2A,$6A
+	.byte $76,$65
+	.byte $5f,$f5
+	.byte $ff,$77
+	.byte $22,$f2
+	.byte $5f,$f6
+	.byte $2f,$75
+	.byte $52,$f5
+	.byte $f2,$52
+	.byte $A6,$a2
+
+recharge_bg3:
+	.byte 2,10
+	.byte $fA,$7A
+	.byte $f5,$27
+	.byte $5f,$ff
+	.byte $2f,$5f
+	.byte $77,$ff
+	.byte $f5,$f6
+	.byte $25,$52
+	.byte $5f,$52
+	.byte $5f,$2f
+	.byte $A7,$a2
+
+recharge_bg4:
+	.byte 2,10
+	.byte $5A,$2A
+	.byte $55,$76
+	.byte $f5,$5f
+	.byte $77,$ff
+	.byte $75,$22
+	.byte $f2,$5f
+	.byte $27,$22
+	.byte $7f,$5f
+	.byte $6f,$f5
+	.byte $A7,$a2
+
+
+
