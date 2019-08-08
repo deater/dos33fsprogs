@@ -100,6 +100,8 @@ end_message:
 .include "physicist.s"
 .include "alien.s"
 
+.include "door.s"
+
 ; room backgrounds
 .include "ootw_graphics/l4city/ootw_c4_city.inc"
 ; sprites
