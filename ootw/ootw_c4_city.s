@@ -223,9 +223,49 @@ city_loop:
 bg_room0:
 	; Room #0, draw pulsing recharger
 
-;	cmp	#0
-;	bne	bg_jail6
-;	jsr	ootw_draw_miners
+	cmp	#0
+	bne	c4_no_bg_action
+
+	lda	FRAMEL
+	and	#$c
+	lsr
+	tay
+
+
+	lda	#11
+	sta	XPOS
+	lda	#24
+	sta	YPOS
+
+	lda	recharge_bg_progression,Y
+	sta	INL
+	lda	recharge_bg_progression+1,Y
+	sta	INH
+
+	jsr	put_sprite
+
+	lda	FRAMEL
+	and	#$18
+	lsr
+	lsr
+	tay
+
+	lda	#5
+	sta	XPOS
+	lda	#24
+	sta	YPOS
+
+	lda	recharge_sprite_progression,Y
+	sta	INL
+	lda	recharge_sprite_progression+1,Y
+	sta	INH
+
+
+
+	jsr	put_sprite
+
+
+
 
 c4_no_bg_action:
 
@@ -387,6 +427,11 @@ done_city:
 	rts
 
 
+recharge_sprite_progression:
+	.word recharge_sprite1
+	.word recharge_sprite2
+	.word recharge_sprite3
+	.word recharge_sprite4
 
 
 recharge_sprite1:
@@ -442,6 +487,11 @@ recharge_sprite4:
 	.byte $ae
 
 
+recharge_bg_progression:
+	.word recharge_bg1
+	.word recharge_bg2
+	.word recharge_bg3
+	.word recharge_bg4
 
 recharge_bg1:
 	.byte 2,10
