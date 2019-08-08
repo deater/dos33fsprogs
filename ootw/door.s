@@ -138,3 +138,16 @@ door_closing_sprite2:
 	.byte $00
 	.byte $00
 
+
+door_exploded_sprite:
+	.byte 1,10
+	.byte $00
+	.byte $A5
+	.byte $AA
+	.byte $AA
+	.byte $AA
+	.byte $AA
+	.byte $AA
+	.byte $AA
+	.byte $AA
+	.byte $A5

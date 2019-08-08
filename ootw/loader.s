@@ -99,6 +99,7 @@ filenames_low:
 	.byte	<ootw_c2_filename
 	.byte	<ootw_c3_filename
 	.byte	<ootw_c4_filename
+	.byte	<ootw_c5_filename
 
 filenames_high:
 	.byte	>intro_filename
@@ -106,6 +107,7 @@ filenames_high:
 	.byte	>ootw_c2_filename
 	.byte	>ootw_c3_filename
 	.byte	>ootw_c4_filename
+	.byte	>ootw_c5_filename
 
 intro_filename:
 	.byte "INTRO",0
@@ -121,6 +123,9 @@ ootw_c3_filename:
 
 ootw_c4_filename:
 	.byte "OOTW_C4",0
+
+ootw_c5_filename:
+	.byte "OOTW_C5",0
 
 
 
