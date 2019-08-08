@@ -13,6 +13,7 @@ ootw_c4_city.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm hallway.png hallway_rle >> ootw_c4_city.inc
 	$(PNG2RLE) asm causeway1.png causeway1_rle >> ootw_c4_city.inc
 	$(PNG2RLE) asm causeway2.png causeway2_rle >> ootw_c4_city.inc
+	$(PNG2RLE) asm pit.png pit_rle >> ootw_c4_city.inc
 
 #####
 
