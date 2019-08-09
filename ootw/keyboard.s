@@ -29,6 +29,8 @@ handle_keypress:
 	beq	no_keypress
 	cmp	#P_FALLING_SIDEWAYS
 	beq	no_keypress
+	cmp	#P_IMPALED
+	beq	no_keypress
 
 	lda	KEYPRESS						; 4
 	bmi	keypress						; 3

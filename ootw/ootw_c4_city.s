@@ -17,6 +17,9 @@ ootw_city_init:
 	lda	#30
 	sta	PHYSICIST_Y
 
+	lda	#$2c
+	sta	falling_stop_smc
+
 	rts
 
 
@@ -125,6 +128,10 @@ room3:
 	cmp	#3
 	bne	room4
 
+	; set falling floor
+	lda	#48
+	sta	fall_down_destination_smc+1
+
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
@@ -156,9 +163,6 @@ room3:
 	sta	GBASL
 	lda	#$BC				; load to page $BC00
 	jsr	load_rle_gr
-
-
-
 
 	; load background
 	lda	#>(causeway2_rle)
@@ -227,9 +231,10 @@ ootw_room_already_set:
 	;============================
 city_loop:
 
-	;================================
-	; copy background to current page
-	;================================
+
+	;======================================
+	; draw split screen if falling into pit
+	;======================================
 
 	lda	WHICH_ROOM
 	cmp	#3
@@ -241,32 +246,74 @@ city_loop:
 	cmp	#P_FALLING_DOWN
 	bne	nothing_fancy
 
-scroll_bg:
-	lda	FRAMEL
-        and	#$3
-        bne	no_scroll_progress
+	;======================
+	; falling
 
-	inc	BG_SCROLL
-	inc	BG_SCROLL
+scroll_bg:
+	lda	PHYSICIST_Y
+	cmp	#32
+	bcc	scroll_check		; blt
+
+	lda	#9
+	sta	PHYSICIST_X
+
+	lda	#38
+	sta	PHYSICIST_Y
+
+	lda	#0
+	sta	GAIT
+
+	lda	#P_IMPALED
+	sta	PHYSICIST_STATE
+
+scroll_check:
+	lda	BG_SCROLL		; if done scrolling, re-enable falling
+	cmp	#48
+	bne	scroll_bg_check22
+	lda	#$2c
+	sta	falling_stop_smc
+	jmp	not_far_enough
+
+scroll_bg_check22:
+
+	lda	PHYSICIST_Y		; once Y=22, stop falling (scroll bg)
+	cmp	#22
+	bcc	not_far_enough
+
+	lda	#$4c
+	sta	falling_stop_smc
+
+not_far_enough:
+
+	lda	FRAMEL			; slow down a bit
+        and	#$1
+        bne	no_scroll_progress
 
 	ldy	BG_SCROLL
 	cpy	#48
-forever:
-	beq	forever
+	beq	no_scroll_progress
+
+	inc	BG_SCROLL
+	inc	BG_SCROLL
+
+;	ldy	BG_SCROLL
+;	cpy	#44
+;	bne	no_scroll_progress
+
+;	lda	#P_IMPALED
+;	sta	PHYSICIST_STATE
 
 no_scroll_progress:
 
-	lda	#$94
-	ldy	#0
-clear1:
-	sta	$c00,Y
-	sta	$d00,Y
-	sta	$e00,Y
-	sta	$f00,Y
-	iny
-	bne	clear1
-
-;	ldy	BG_SCROLL
+;	lda	#$94
+;	ldy	#0
+;clear1:
+;	sta	$c00,Y
+;	sta	$d00,Y
+;	sta	$e00,Y
+;	sta	$f00,Y
+;	iny
+;	bne	clear1
 
 	jsr	gr_twoscreen_scroll
 
@@ -275,6 +322,11 @@ clear1:
 
 nothing_fancy:
 done_city_bg:
+
+	;================================
+	; copy background to current page
+	;================================
+
 	jsr	gr_copy_to_current
 
 
@@ -356,6 +408,10 @@ c4_no_bg_action:
 
 	lda	WHICH_ROOM
 	cmp	#3
+	bne	regular_room
+
+	lda	PHYSICIST_Y
+	cmp	#18
 	bne	regular_room
 
 	lda	PHYSICIST_X
@@ -626,10 +682,3 @@ recharge_bg4:
 
 
 
-; 9x40
-physicist_spike_sprite:
-	.byte 3,4
-	.byte $AA,$11,$AA
-	.byte $0A,$90,$0A
-	.byte $BB,$A9,$BB
-	.byte $BB,$AA,$BB

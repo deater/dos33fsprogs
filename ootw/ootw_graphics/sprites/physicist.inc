@@ -570,3 +570,18 @@ jump8:
 	.byte $aa,$44,$c4,$ca,$aa
 	.byte $fa,$f4,$5a,$5c,$aa
 
+
+;====================
+;====================
+; On Spike
+;====================
+;====================
+
+; 9x40
+physicist_spike_sprite:
+        .byte 3,4
+        .byte $AA,$11,$AA
+        .byte $0A,$90,$0A
+        .byte $BB,$A9,$BB
+        .byte $BB,$AA,$BB
+

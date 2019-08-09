@@ -74,6 +74,7 @@ pstate_table_lo:
 	.byte <physicist_standing	; 0A elevator down
 	.byte <physicist_shooting	; 0B
 	.byte <physicist_falling_down	; 0C
+	.byte <physicist_impaled	; 0D
 
 pstate_table_hi:
 	.byte >physicist_standing
@@ -89,6 +90,7 @@ pstate_table_hi:
 	.byte >physicist_standing	; 0A elevator down
 	.byte >physicist_shooting	; 0B
 	.byte >physicist_falling_down	; 0C
+	.byte >physicist_impaled	; 0D
 
 ; Urgh, make sure this doesn't end up at $FF or you hit the
 ;	NMOS 6502 bug
@@ -367,12 +369,14 @@ still_falling:
 
 physicist_falling_down:
 
+falling_stop_smc:	; $2C to fall, $4C for not
+	bit	still_falling_down
 
 	lda	FRAMEL
-	and	#$3
+	and	#$1
 	bne	no_fall_down_progress
 
-	inc	PHYSICIST_Y	; must me mul of 2
+	inc	PHYSICIST_Y	; must be mul of 2
 	inc	PHYSICIST_Y
 
 no_fall_down_progress:
@@ -398,6 +402,39 @@ still_falling_down:
 	jmp	finally_draw_him
 
 
+
+;==================================
+; IMPALED
+;==================================
+
+physicist_impaled:
+
+	lda	GAIT
+	cmp	#$f0
+	bne	impale_not_done
+
+impale_really_dead:
+	lda	#$ff
+	sta	GAME_OVER
+	jmp	finally_draw_him
+
+impale_not_done:
+
+	cmp	#2		; slide down one more
+	bne	impale_enough
+	inc	PHYSICIST_Y
+	inc	PHYSICIST_Y
+
+impale_enough:
+	inc	GAIT
+
+	lda	#<physicist_spike_sprite
+	sta	INL
+
+	lda	#>physicist_spike_sprite
+	sta	INH
+
+	jmp	finally_draw_him
 
 ;=============================
 ; Actually Draw Him

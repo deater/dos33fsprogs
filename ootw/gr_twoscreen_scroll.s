@@ -13,6 +13,8 @@ gr_twoscreen_scroll:
 	sta	TEMPY		; dest
 
 	ldy	BG_SCROLL
+	cpy	#48
+	beq	gr_twoscreen_bottom		; no top to draw
 
 gr_twoscreen_top:
 
@@ -71,9 +73,11 @@ gr_twoscreen_smc_dst:
 	lda	BG_SCROLL
 	beq	done_twoscreen_bottom		; if 0, no bottom
 
+gr_twoscreen_bottom:
+
 	ldy	#0
 
-gr_twoscreen_bottom:
+gr_twoscreen_bottom_loop:
 
 	; calculate source
 
@@ -121,6 +125,6 @@ gr_twoscreen_bottom_smc_dst:
 
 	cpy	BG_SCROLL
 
-	bne	gr_twoscreen_bottom
+	bne	gr_twoscreen_bottom_loop
 done_twoscreen_bottom:
 	rts								; 6
