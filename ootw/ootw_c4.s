@@ -17,8 +17,6 @@ ootw_c4:
 	; just us falling?
 
 ootw_c4_restart:
-;	jsr	ootw_c2_intro
-
 
 	jsr	ootw_city_init
 

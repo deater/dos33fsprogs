@@ -410,7 +410,7 @@ still_falling_down:
 physicist_impaled:
 
 	lda	GAIT
-	cmp	#$f0
+	cmp	#$80
 	bne	impale_not_done
 
 impale_really_dead:

@@ -194,11 +194,11 @@ room4:
 	sta	RIGHT_LIMIT
 
 	; set right exit
-	lda     #9
+	lda     #5
 	sta     cer_smc+1
 
-	lda	#8
-	sta	PHYSICIST_Y
+;	lda	#8
+;	sta	PHYSICIST_Y
 
 	; load background
 	lda	#>(pit_rle)
@@ -212,7 +212,7 @@ room_setup_done:
 
 	sta	GBASL
 	lda	#$c				; load to page $c00
-	jsr	load_rle_gr			; tail call
+	jsr	load_rle_gr
 
 
 ootw_room_already_set:
@@ -245,7 +245,6 @@ ootw_room_already_set:
 	;============================
 city_loop:
 
-
 	;======================================
 	; draw split screen if falling into pit
 	;======================================
@@ -253,11 +252,60 @@ city_loop:
 	; only fall in room3
 	lda	WHICH_ROOM
 	cmp	#3
-	bne	nothing_fancy
+	bne	no_scroll
 
-	;======================
-	; falling
+	lda	BG_SCROLL
+	beq	no_scroll
 
+	lda	FRAMEL			; slow down a bit
+        and	#$1
+        bne	no_scroll_progress
+
+	inc	BG_SCROLL
+	inc	BG_SCROLL
+no_scroll_progress:
+
+	ldy	BG_SCROLL
+	cpy	#48
+	bne	scroll_it
+
+	; exit to next room when done scrolling
+
+	lda	#0
+	sta	BG_SCROLL
+	lda	#4
+	sta	WHICH_ROOM
+	rts
+
+scroll_it:
+	jsr	gr_twoscreen_scroll
+no_scroll:
+
+
+	;================================
+	;================================
+	; copy background to current page
+	;================================
+	;================================
+
+	jsr	gr_copy_to_current
+
+
+	;=========================
+	;=========================
+	; Handle Falling into Pit
+	;=========================
+	;=========================
+
+	lda	WHICH_ROOM
+	cmp	#3
+	beq	check_falling
+	cmp	#4
+	beq	check_falling
+
+	jmp	not_falling
+
+check_falling:
 	; only fall if falling sideways/down
 	lda	PHYSICIST_STATE
 	cmp	#P_FALLING_SIDEWAYS
@@ -265,7 +313,7 @@ city_loop:
 	cmp	#P_FALLING_DOWN
 	beq	falling_down
 
-	jmp	nothing_fancy
+	jmp	not_falling
 
 falling_sideways:
 	; if falling sideways, and Y>=22, then crouch
@@ -283,7 +331,6 @@ falling_sideways:
 	jmp	scroll_check
 
 falling_down:
-check_done_falling_down:
 	; if falling down, and Y>=32, then impale
 	lda	PHYSICIST_Y
 	cmp	#32
@@ -301,64 +348,28 @@ check_done_falling_down:
 	lda	#P_IMPALED
 	sta	PHYSICIST_STATE
 
+	jmp	not_falling
 
 scroll_check:
 	lda	BG_SCROLL		; if done scrolling, re-enable falling
-	cmp	#48
 	bne	scroll_bg_check22
-	lda	#$2c
+
+	lda	#$2c			; re-enable falling
 	sta	falling_stop_smc
 	jmp	not_far_enough
 
 scroll_bg_check22:
 
-	lda	PHYSICIST_Y		; once Y=22, stop falling (scroll bg)
+	lda	PHYSICIST_Y		; once Y=22, stop falling (scroll instead)
 	cmp	#22
-	bcc	not_far_enough
+	bcc	not_far_enough		; blt
 
-	lda	#$4c
+	lda	#$4c			; disable yinc in falling
 	sta	falling_stop_smc
 
 not_far_enough:
 
-	lda	FRAMEL			; slow down a bit
-        and	#$1
-        bne	no_scroll_progress
-
-	ldy	BG_SCROLL
-	cpy	#48
-	beq	no_scroll_progress
-
-	inc	BG_SCROLL
-	inc	BG_SCROLL
-
-
-no_scroll_progress:
-
-;	lda	#$94
-;	ldy	#0
-;clear1:
-;	sta	$c00,Y
-;	sta	$d00,Y
-;	sta	$e00,Y
-;	sta	$f00,Y
-;	iny
-;	bne	clear1
-
-	jsr	gr_twoscreen_scroll
-
-	jmp	done_city_bg
-
-
-nothing_fancy:
-done_city_bg:
-
-	;================================
-	; copy background to current page
-	;================================
-
-	jsr	gr_copy_to_current
-
+not_falling:
 
 	;==================================
 	; draw background action
@@ -417,6 +428,7 @@ c4_no_bg_action:
 
 	;===============================
 	; check keyboard
+	;===============================
 
 	jsr	handle_keypress
 
@@ -429,21 +441,28 @@ c4_no_bg_action:
 	;===================
 	; check room limits
 	;===================
+	lda	PHYSICIST_STATE
+	cmp	#P_FALLING_DOWN
+	beq	done_room_limits
+	cmp	#P_IMPALED
+	beq	done_room_limits
 
 	jsr	check_screen_limit
 
-	;===================
-	;===================
-	; extra room limits
-	;===================
-	;===================
+done_room_limits:
+
+	;=============================
+	;=============================
+	; Detect if falling off ledge
+	;=============================
+	;=============================
 
 	; only fall in room#3
 	lda	WHICH_ROOM
 	cmp	#3
 	bne	regular_room
 
-	; don't fall if impaled or already falling
+	; don't start fall if impaled or already falling
 	lda	PHYSICIST_STATE
 	cmp	#P_IMPALED
 	beq	regular_room
@@ -467,16 +486,23 @@ c4_no_bg_action:
 	cmp	#P_JUMPING
 	beq	fall_sideways
 
-	; if not jumping then fall
+	; if not jumping then fall down
 
 	lda	#P_FALLING_DOWN
 	sta	PHYSICIST_STATE
+
+	lda	#2
+	sta	BG_SCROLL
+
 	jmp	regular_room
 
 fall_sideways:
 
 	lda	#P_FALLING_SIDEWAYS
 	sta	PHYSICIST_STATE
+
+	lda	#2
+	sta	BG_SCROLL
 
 regular_room:
 
@@ -807,3 +833,17 @@ pit_door_cover:
 	.byte $00,$00,$00,$00,$00,$00,$00,$00
 	.byte $00,$00,$00,$00,$00,$00,$00,$00
 	.byte $00,$00,$00,$00,$00,$00,$00,$00
+
+
+
+;clear_c00:
+;	lda	#$94
+;	ldy	#0
+;clear1:
+;	sta	$c00,Y
+;	sta	$d00,Y
+;	sta	$e00,Y
+;	sta	$f00,Y
+;	iny
+;	bne	clear1
+;	rts
