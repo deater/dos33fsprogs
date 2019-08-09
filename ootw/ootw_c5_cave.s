@@ -4,7 +4,6 @@
 	; call once before entering cave for first time
 ootw_cave_init:
 	lda	#0
-	sta	PHYSICIST_STATE
 	sta	WHICH_CAVE
 	; yes you fall in facing left for some reason
 	sta	DIRECTION		; left
@@ -15,8 +14,14 @@ ootw_cave_init:
 
 	lda	#0
 	sta	PHYSICIST_X
-	lda	#20
+	lda	#240
 	sta	PHYSICIST_Y
+
+	lda	#P_FALLING_DOWN
+	sta	PHYSICIST_STATE
+
+	lda	#14
+	sta	fall_down_destination_smc+1
 
 	rts
 
@@ -30,9 +35,6 @@ ootw_cave:
 	;==============================
 	; each room init
 
-;	lda	#0
-;	sta	ON_ELEVATOR
-;	sta	TELEPORTING
 
 	;==============================
 	; setup per-room variables
@@ -55,8 +57,13 @@ cave0:
 	lda     #0
 	sta     cel_smc+1
 
+	lda	PHYSICIST_STATE
+	cmp	#P_FALLING_DOWN
+	beq	falling_in
+not_falling_in:
 	lda	#14
 	sta	PHYSICIST_Y
+falling_in:
 
 	; load background
 	lda	#>(entrance_rle)
@@ -184,6 +191,10 @@ c5_no_bg_action:
 	;=================
 	; adjust floor
 
+	lda	PHYSICIST_STATE
+	cmp	#P_FALLING_DOWN
+	beq	check_floor0_done
+
 	lda	WHICH_CAVE
 	cmp	#0
 	bne	check_floor1
@@ -204,7 +215,6 @@ c5_no_bg_action:
 
 	lda	#10
 	sta	PHYSICIST_Y
-
 
 check_floor0_done:
 

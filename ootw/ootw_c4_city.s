@@ -4,7 +4,6 @@
 	; call once before entering city for first time
 ootw_city_init:
 	lda	#0
-	sta	PHYSICIST_STATE
 	sta	WHICH_ROOM
 	sta	BG_SCROLL
 	sta	DIRECTION		; left
@@ -12,10 +11,16 @@ ootw_city_init:
 	lda	#1
 	sta	HAVE_GUN
 
-	lda	#28
+	lda	#19
 	sta	PHYSICIST_X
-	lda	#30
+	lda	#240
 	sta	PHYSICIST_Y
+
+	lda	#28
+	sta	fall_down_destination_smc+1
+
+	lda	#P_FALLING_DOWN		; fall into level
+	sta	PHYSICIST_STATE
 
 	lda	#$2c
 	sta	falling_stop_smc
@@ -32,9 +37,7 @@ ootw_city:
 	;==============================
 	; each room init
 
-;	lda	#0
-;	sta	ON_ELEVATOR
-;	sta	TELEPORTING
+
 
 	;==============================
 	; setup per-room variables
@@ -57,8 +60,13 @@ room0:
 	lda     #0
 	sta     cel_smc+1
 
+	lda	PHYSICIST_STATE
+	cmp	#P_FALLING_DOWN
+	beq	room0_falling
+
 	lda	#28
 	sta	PHYSICIST_Y
+room0_falling:
 
 	; load background
 	lda	#>(recharge_rle)
