@@ -250,20 +250,41 @@ city_loop:
 	; draw split screen if falling into pit
 	;======================================
 
+	; only fall in room3
 	lda	WHICH_ROOM
 	cmp	#3
-	bne	nothing_fancy
-
-	lda	PHYSICIST_STATE
-	cmp	#P_FALLING_SIDEWAYS
-	beq	scroll_bg
-	cmp	#P_FALLING_DOWN
 	bne	nothing_fancy
 
 	;======================
 	; falling
 
-scroll_bg:
+	; only fall if falling sideways/down
+	lda	PHYSICIST_STATE
+	cmp	#P_FALLING_SIDEWAYS
+	beq	falling_sideways
+	cmp	#P_FALLING_DOWN
+	beq	falling_down
+
+	jmp	nothing_fancy
+
+falling_sideways:
+	; if falling sideways, and Y>=22, then crouch
+	lda	PHYSICIST_Y
+	cmp	#30
+	bcc	scroll_check		; blt
+
+	lda	#P_CROUCHING
+	sta	PHYSICIST_STATE
+
+	lda	#4
+	sta	WHICH_ROOM
+	sta	GAME_OVER
+
+	jmp	scroll_check
+
+falling_down:
+check_done_falling_down:
+	; if falling down, and Y>=32, then impale
 	lda	PHYSICIST_Y
 	cmp	#32
 	bcc	scroll_check		; blt
@@ -279,6 +300,7 @@ scroll_bg:
 
 	lda	#P_IMPALED
 	sta	PHYSICIST_STATE
+
 
 scroll_check:
 	lda	BG_SCROLL		; if done scrolling, re-enable falling
@@ -310,12 +332,6 @@ not_far_enough:
 	inc	BG_SCROLL
 	inc	BG_SCROLL
 
-;	ldy	BG_SCROLL
-;	cpy	#44
-;	bne	no_scroll_progress
-
-;	lda	#P_IMPALED
-;	sta	PHYSICIST_STATE
 
 no_scroll_progress:
 
@@ -417,17 +433,32 @@ c4_no_bg_action:
 	jsr	check_screen_limit
 
 	;===================
+	;===================
 	; extra room limits
 	;===================
+	;===================
 
+	; only fall in room#3
 	lda	WHICH_ROOM
 	cmp	#3
 	bne	regular_room
 
+	; don't fall if impaled or already falling
+	lda	PHYSICIST_STATE
+	cmp	#P_IMPALED
+	beq	regular_room
+	cmp	#P_FALLING_DOWN
+	beq	regular_room
+	cmp	#P_FALLING_SIDEWAYS
+	beq	regular_room
+
+
+	; only start falling if y>=18
 	lda	PHYSICIST_Y
 	cmp	#18
-	bne	regular_room		; blt
+	bcc	regular_room		; blt
 
+	; only start falling if x>=8
 	lda	PHYSICIST_X
 	cmp	#8
 	bcc	regular_room		; blt
@@ -456,13 +487,51 @@ regular_room:
 
 
 	;========================
-	; draw foreground action
+	; draw foreground cover
 
 	lda	WHICH_ROOM
 	cmp	#2
-	bne	c4_no_fg_action
+	beq	c4_room2_cover
 
-;c2_draw_cart:
+	cmp	#4
+	beq	c4_room4_cover
+
+	jmp	c4_no_fg_cover
+c4_room2_cover:
+
+	lda	#0
+	sta	XPOS
+	lda	#18
+	sta	YPOS
+
+	lda	#<causeway_door_cover
+	sta	INL
+	lda	#>causeway_door_cover
+	sta	INH
+
+	jsr	put_sprite
+
+
+	jmp	c4_no_fg_cover
+c4_room4_cover:
+
+	lda	#30
+	sta	XPOS
+	lda	#8
+	sta	YPOS
+
+	lda	#<pit_door_cover
+	sta	INL
+	lda	#>pit_door_cover
+	sta	INH
+
+	jsr	put_sprite
+
+c4_no_fg_cover:
+
+
+
+;c2_draw_doorway:
 ;
 ;	lda	CART_X
 ;	sta	XPOS
@@ -535,7 +604,7 @@ city_frame_no_oflo:
 	bne	regular_exit_check
 
 	lda	PHYSICIST_X
-	cmp	#35
+	cmp	#32
 	bcc	regular_exit_check		; blt
 
 	lda	#5
@@ -715,3 +784,26 @@ recharge_bg4:
 
 
 
+; 0x18
+causeway_door_cover:
+	.byte 8,8
+	.byte $00,$00,$00,$00,$00,$00,$22,$AA
+	.byte $00,$00,$00,$00,$00,$00,$22,$AA
+	.byte $00,$00,$00,$00,$00,$00,$22,$AA
+	.byte $00,$00,$00,$00,$00,$00,$02,$2A
+	.byte $00,$00,$00,$00,$00,$00,$00,$22
+	.byte $00,$00,$00,$00,$00,$00,$00,$22
+	.byte $00,$00,$00,$00,$00,$00,$00,$22
+	.byte $00,$00,$00,$00,$00,$00,$00,$22
+
+; 30x8
+pit_door_cover:
+	.byte 8,8
+	.byte $02,$22,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $20,$00,$00,$00,$00,$00,$00,$00
+	.byte $22,$02,$00,$00,$00,$00,$00,$00
+	.byte $22,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
