@@ -8,7 +8,7 @@ all:	ootw_c4_city.inc
 #####
 
 ootw_c4_city.inc:	$(PNG2RLE) \
-	recharge.png hallway.png causeway1.png causeway2.png
+	recharge.png hallway.png causeway1.png causeway2.png pit.png
 	$(PNG2RLE) asm recharge.png recharge_rle > ootw_c4_city.inc
 	$(PNG2RLE) asm hallway.png hallway_rle >> ootw_c4_city.inc
 	$(PNG2RLE) asm causeway1.png causeway1_rle >> ootw_c4_city.inc

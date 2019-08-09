@@ -27,7 +27,7 @@ handle_keypress:
 	beq	no_keypress
 	cmp	#P_SWINGING
 	beq	no_keypress
-	cmp	#P_FALLING
+	cmp	#P_FALLING_SIDEWAYS
 	beq	no_keypress
 
 	lda	KEYPRESS						; 4

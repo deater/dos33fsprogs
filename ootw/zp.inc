@@ -176,11 +176,12 @@ PHYSICIST_STATE	= $EA
 	P_KICKING		= $04
 	P_JUMPING		= $05	; no keypress
 	P_COLLAPSING		= $06	; no keypress
-	P_FALLING		= $07	; no keypress
+	P_FALLING_SIDEWAYS	= $07	; no keypress
 	P_SWINGING		= $08	; no keypress
 	P_ELEVATING_UP		= $09
 	P_ELEVATING_DOWN	= $0A
 	P_SHOOTING		= $0B
+	P_FALLING_DOWN		= $0C
 
 BUBBLES_Y	=	$EB	; C1 underwater
 BEFORE_SWING	=	$EB	; C1
@@ -222,6 +223,7 @@ ELEVATOR_COUNT	=	$F9	; INTRO
 TENTACLE_GRAB	=	$F9	; C1
 CAGE_AMPLITUDE	=	$F9	; C2 cage
 ELEVATOR_OFFSET	=	$F9	; C2 jail
+BG_SCROLL	=	$F9	; C4
 
 
 TEMP		=	$FA

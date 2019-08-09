@@ -329,7 +329,7 @@ check_swung_off:
 	sta	BEAST_DIRECTION
 	lda	#10
 	sta	PHYSICIST_Y
-	lda	#P_FALLING
+	lda	#P_FALLING_SIDEWAYS
 	sta	PHYSICIST_STATE
 
 	jmp	ootw_pool

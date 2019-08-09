@@ -6,6 +6,7 @@ ootw_city_init:
 	lda	#0
 	sta	PHYSICIST_STATE
 	sta	WHICH_ROOM
+	sta	BG_SCROLL
 	sta	DIRECTION		; left
 
 	lda	#1
@@ -140,6 +141,25 @@ room3:
 	lda	#18
 	sta	PHYSICIST_Y
 
+	; load top high
+	lda	#>(causeway2_rle)
+	sta	GBASH
+	lda	#<(causeway2_rle)
+	sta	GBASL
+	lda	#$10				; load to page $1000
+	jsr	load_rle_gr
+
+	; load pit background even higher
+	lda	#>(pit_rle)
+	sta	GBASH
+	lda	#<(pit_rle)
+	sta	GBASL
+	lda	#$BC				; load to page $BC00
+	jsr	load_rle_gr
+
+
+
+
 	; load background
 	lda	#>(causeway2_rle)
 	sta	GBASH
@@ -149,9 +169,6 @@ room3:
 
 	; down at the bottom
 room4:
-;	cmp	#4
-;	bne	jail5
-
 
 	lda	#(17+128)
 	sta	LEFT_LIMIT
@@ -166,9 +183,9 @@ room4:
 	sta	PHYSICIST_Y
 
 	; load background
-;	lda	#>(room_b2_rle)
-;	sta	GBASH
-;	lda	#<(room_b2_rle)
+	lda	#>(pit_rle)
+	sta	GBASH
+	lda	#<(pit_rle)
 
 	jmp	room_setup_done
 
@@ -212,11 +229,58 @@ city_loop:
 
 	;================================
 	; copy background to current page
+	;================================
 
+	lda	WHICH_ROOM
+	cmp	#3
+	bne	nothing_fancy
+
+	lda	PHYSICIST_STATE
+	cmp	#P_FALLING_SIDEWAYS
+	beq	scroll_bg
+	cmp	#P_FALLING_DOWN
+	bne	nothing_fancy
+
+scroll_bg:
+	lda	FRAMEL
+        and	#$3
+        bne	no_scroll_progress
+
+	inc	BG_SCROLL
+	inc	BG_SCROLL
+
+	ldy	BG_SCROLL
+	cpy	#48
+forever:
+	beq	forever
+
+no_scroll_progress:
+
+	lda	#$94
+	ldy	#0
+clear1:
+	sta	$c00,Y
+	sta	$d00,Y
+	sta	$e00,Y
+	sta	$f00,Y
+	iny
+	bne	clear1
+
+;	ldy	BG_SCROLL
+
+	jsr	gr_twoscreen_scroll
+
+	jmp	done_city_bg
+
+
+nothing_fancy:
+done_city_bg:
 	jsr	gr_copy_to_current
+
 
 	;==================================
 	; draw background action
+	;==================================
 
 	lda	WHICH_JAIL
 
@@ -280,30 +344,45 @@ c4_no_bg_action:
 
 	jsr	move_physicist
 
-	;===============================
-	; move friend
-	;===============================
-
-;	jsr	move_friend
-
-
-	;===============
+	;===================
 	; check room limits
+	;===================
 
 	jsr	check_screen_limit
 
+	;===================
+	; extra room limits
+	;===================
+
+	lda	WHICH_ROOM
+	cmp	#3
+	bne	regular_room
+
+	lda	PHYSICIST_X
+	cmp	#8
+	bcc	regular_room		; blt
+
+	lda	PHYSICIST_STATE
+	cmp	#P_JUMPING
+	beq	fall_sideways
+
+	; if not jumping then fall
+
+	lda	#P_FALLING_DOWN
+	sta	PHYSICIST_STATE
+	jmp	regular_room
+
+fall_sideways:
+
+	lda	#P_FALLING_SIDEWAYS
+	sta	PHYSICIST_STATE
+
+regular_room:
 
 	;===============
 	; draw physicist
 
 	jsr	draw_physicist
-
-	;===============
-	; draw friend
-
-;	jsr	draw_friend
-
-c4_done_draw_friend:
 
 
 	;========================

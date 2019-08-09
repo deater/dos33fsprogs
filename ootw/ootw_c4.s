@@ -88,12 +88,11 @@ end_message:
 .include "gr_unrle.s"
 .include "gr_fast_clear.s"
 .include "gr_copy.s"
-.include "gr_copy_offset.s"
+.include "gr_twoscreen_scroll.s"
 .include "gr_putsprite.s"
 .include "gr_putsprite_flipped.s"
 .include "gr_putsprite_crop.s"
 .include "gr_offsets.s"
-.include "gr_offsets_hl.s"
 .include "random16.s"
 .include "keyboard.s"
 
