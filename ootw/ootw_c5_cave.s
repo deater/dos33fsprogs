@@ -14,7 +14,7 @@ ootw_cave_init:
 
 	lda	#0
 	sta	PHYSICIST_X
-	lda	#240
+	lda	#230
 	sta	PHYSICIST_Y
 
 	lda	#P_FALLING_DOWN

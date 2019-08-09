@@ -13,11 +13,14 @@ ootw_city_init:
 
 	lda	#19
 	sta	PHYSICIST_X
-	lda	#240
+	lda	#230			; start offscreen
 	sta	PHYSICIST_Y
 
 	lda	#28
 	sta	fall_down_destination_smc+1
+
+	lda	#28
+	sta	fall_sideways_destination_smc+1
 
 	lda	#P_FALLING_DOWN		; fall into level
 	sta	PHYSICIST_STATE
@@ -136,9 +139,12 @@ room3:
 	cmp	#3
 	bne	room4
 
-	; set falling floor
+	; set falling floors
 	lda	#48
 	sta	fall_down_destination_smc+1
+
+	lda	#48
+	sta	fall_sideways_destination_smc+1
 
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
@@ -191,7 +197,7 @@ room4:
 	lda     #9
 	sta     cer_smc+1
 
-	lda	#20
+	lda	#8
 	sta	PHYSICIST_Y
 
 	; load background
@@ -420,7 +426,7 @@ c4_no_bg_action:
 
 	lda	PHYSICIST_Y
 	cmp	#18
-	bne	regular_room
+	bne	regular_room		; blt
 
 	lda	PHYSICIST_X
 	cmp	#8
@@ -519,6 +525,25 @@ c4_move_fg_objects:
 	bne	city_frame_no_oflo
 	inc	FRAMEH
 city_frame_no_oflo:
+
+	;=========================
+	; exit hack
+	;=========================
+
+	lda	WHICH_ROOM
+	cmp	#4
+	bne	regular_exit_check
+
+	lda	PHYSICIST_X
+	cmp	#35
+	bcc	regular_exit_check		; blt
+
+	lda	#5
+	sta	WHICH_ROOM
+	rts
+
+regular_exit_check:
+
 
 	;==========================
 	; check if done this level

@@ -38,12 +38,16 @@ c4_check_done:
 	cmp	#$ff
 	beq	quit_level
 
-	; only exit if done level
-	; FIXME: or quit pressed?
-
-	lda	WHICH_JAIL
-	cmp	#11
+	;====================
+	; go to next level
+l4_defeated:
+	lda	WHICH_ROOM
+	cmp	#5
 	bne	c4_new_room
+
+	lda	#5
+	sta	WHICH_LOAD
+	rts
 
 
 ;===========================
