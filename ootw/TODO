@@ -12,6 +12,11 @@ BEHAVIOR DIFFERENCES:
         - earthquake can happen while on rope?
 	- sometimes falling rocks can follow you to next screen
 
++ L2
+	- gun movement: gun is held by head when running
+	- separate left facing vs right facing sprites
+
+
 KNOWN BUGS:
 + ootw: pool monster grabs you a edge of pool (glitch)
 + intro: there's still a bit of a pause when the elevator door finishes opening
@@ -31,9 +36,7 @@ General:
   + physicist crouch-kicking
   + physicist run+jumping
   + physicist swimming
-  + physicist getting out of pool
   + beast tripping
-  + physicist holding gun
   + physicist shot
   + alien shot
   + alien running
@@ -113,6 +116,5 @@ Level/Checkpoint #4:
 
 Level/Checkpoint #5:
 + Falling as enter level
-+ Add rock sprites (so can walk behind them)
 + Allow falling into first pit
-+ Detect X and adjust Y so we stay on ground surface
+

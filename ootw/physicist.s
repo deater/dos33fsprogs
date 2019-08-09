@@ -72,6 +72,7 @@ pstate_table_lo:
 	.byte <physicist_standing	; 08 swinging
 	.byte <physicist_standing	; 09 elevator up
 	.byte <physicist_standing	; 0A elevator down
+	.byte <physicist_shooting	; 0B
 
 pstate_table_hi:
 	.byte >physicist_standing
@@ -85,6 +86,7 @@ pstate_table_hi:
 	.byte >physicist_standing	; 08 swinging
 	.byte >physicist_standing	; 09 elevator up
 	.byte >physicist_standing	; 0A elevator down
+	.byte >physicist_shooting	; 0B
 
 ; Urgh, make sure this doesn't end up at $FF or you hit the
 ;	NMOS 6502 bug
@@ -123,6 +125,21 @@ physicist_standing:
 	sta	INH
 
 	jmp	finally_draw_him
+
+;==================================
+; SHOOTING
+;==================================
+
+physicist_shooting:
+
+	lda	#<shooting1
+	sta	INL
+
+	lda	#>shooting1
+	sta	INH
+
+	jmp	finally_draw_him
+
 
 ;==================================
 ; KICKING

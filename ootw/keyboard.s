@@ -78,6 +78,8 @@ left_going_left:
 	lda	PHYSICIST_STATE
 	cmp	#P_STANDING
 	beq	walk_left
+	cmp	#P_SHOOTING
+	beq	walk_left
 	cmp	#P_WALKING
 	beq	run_left
 	cmp	#P_CROUCHING
@@ -95,6 +97,9 @@ left_going_right:
 	beq	stand_right
 	cmp	#P_STANDING
 	beq	stand_left
+	cmp	#P_SHOOTING
+	beq	stand_left
+
 	cmp	#P_CROUCHING
 	beq	stand_left
 
@@ -126,6 +131,8 @@ right_going_right:
 	lda	PHYSICIST_STATE
 	cmp	#P_STANDING
 	beq	walk_right
+	cmp	#P_SHOOTING
+	beq	walk_right
 	cmp	#P_WALKING
 	beq	run_right
 	cmp	#P_CROUCHING
@@ -142,6 +149,8 @@ right_going_left:
 	cmp	#P_WALKING
 	beq	stand_left
 	cmp	#P_STANDING
+	beq	stand_right
+	cmp	#P_SHOOTING
 	beq	stand_right
 	cmp	#P_CROUCHING
 	beq	stand_left
@@ -263,9 +272,18 @@ check_space:
 	bne	unknown
 
 	;======================
-	; Kick
+	; Kick or shoot
 	;======================
 space:
+	lda	HAVE_GUN
+	beq	kick
+shoot:
+	lda	#P_SHOOTING
+	sta	PHYSICIST_STATE
+
+	jmp	done_keypress
+
+kick:
 	lda	#P_KICKING
 	sta	PHYSICIST_STATE
 	lda	#15

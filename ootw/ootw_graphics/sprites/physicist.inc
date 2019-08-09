@@ -1,4 +1,14 @@
 ; note, for some reason these are all facing left
+; also note: too lazy to make separate sprites for running w/ gun
+;	don't think it would work well at this resolution anyway
+;	also technically should have separate sprites for facing left/right
+;	rather than cheating and just mirror-flipping it
+
+; TODO:
+;	crouch-kick
+;	crouch-shoot
+;	zapped by laser
+
 
 ;=====================
 ;=====================
@@ -10,7 +20,7 @@
 	; Going Left
 
 phys_stand:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -42,7 +52,7 @@ phys_walk_progression:
 
 
 phys_walk_left1:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -53,7 +63,7 @@ phys_walk_left1:
 	.byte $af,$af,$7a,$7c,$aa
 
 phys_walk_left2:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -64,7 +74,7 @@ phys_walk_left2:
 	.byte $af,$f4,$7a,$7c,$aa
 
 phys_walk_left3:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -75,7 +85,7 @@ phys_walk_left3:
 	.byte $fa,$f4,$7a,$7c,$aa
 
 phys_walk_left4:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -86,7 +96,7 @@ phys_walk_left4:
 	.byte $fa,$f4,$aa,$7c,$a7
 
 phys_walk_left5:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -97,7 +107,7 @@ phys_walk_left5:
 	.byte $aa,$f7,$f4,$aa,$aa
 
 phys_walk_left6:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -108,7 +118,7 @@ phys_walk_left6:
 	.byte $aa,$a7,$fa,$f4,$aa
 
 phys_walk_left7:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -119,7 +129,7 @@ phys_walk_left7:
 	.byte $a7,$7c,$fa,$f4,$aa
 
 phys_walk_left8:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -130,7 +140,7 @@ phys_walk_left8:
 	.byte $7a,$7c,$aa,$fa,$af
 
 phys_walk_left9:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -141,7 +151,7 @@ phys_walk_left9:
 	.byte $aa,$7a,$7c,$af,$aa
 
 phys_walk_left10:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -171,7 +181,7 @@ phys_run_progression:
 	.word	phys_run_left9
 
 phys_run_left1:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -182,7 +192,7 @@ phys_run_left1:
 	.byte $aa,$fa,$f4,$aa,$aa
 
 phys_run_left2:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -193,7 +203,7 @@ phys_run_left2:
 	.byte $aa,$aa,$fa,$f4,$aa
 
 phys_run_left3:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -204,7 +214,7 @@ phys_run_left3:
 	.byte $a7,$a7,$fa,$af,$aa
 
 phys_run_left4:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -215,7 +225,7 @@ phys_run_left4:
 	.byte $7a,$a7,$aa,$fa,$af
 
 phys_run_left5:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -226,7 +236,7 @@ phys_run_left5:
 	.byte $7a,$7c,$aa,$aa,$aa
 
 phys_run_left6:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -237,7 +247,7 @@ phys_run_left6:
 	.byte $aa,$7a,$7c,$aa,$aa
 
 phys_run_left7:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -248,7 +258,7 @@ phys_run_left7:
 	.byte $aa,$7a,$7c,$aa,$aa
 
 phys_run_left8:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -259,7 +269,7 @@ phys_run_left8:
 	.byte $af,$af,$7a,$7c,$aa
 
 phys_run_left9:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -284,7 +294,7 @@ phys_run_left9:
 
 ; note: he needs to be facing left by default
 kick1:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -296,6 +306,24 @@ kick1:
 
 ;=====================
 ;=====================
+; SHOOTING
+;=====================
+;=====================
+
+shooting1:
+	.byte 5,8
+	.byte $AA,$AA,$9A,$9A,$AA
+	.byte $AA,$AA,$bb,$99,$AA
+	.byte $0A,$0A,$AA,$0B,$AA
+	.byte $AA,$A0,$AB,$B0,$AA
+	.byte $AA,$AA,$AA,$00,$AA
+	.byte $AA,$AA,$AA,$44,$AA
+	.byte $AA,$AA,$44,$c4,$AA
+	.byte $AA,$fA,$f4,$7A,$7C
+
+
+;=====================
+;=====================
 ; FALLING
 ;=====================
 ;=====================
@@ -303,7 +331,7 @@ kick1:
 ; note: he falls into a crouch
 
 phys_falling:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$9a,$9a,$aa
 	.byte $aa,$aa,$bb,$99,$aa
@@ -326,7 +354,7 @@ crouch_progression:
 	.word	crouch2
 
 crouch1:
-	.byte $3,$8
+	.byte 3,8
 	.byte $aa,$aa,$aa
 	.byte $9a,$9a,$aa
 	.byte $bb,$99,$aa
@@ -337,7 +365,7 @@ crouch1:
 	.byte $5a,$fc,$f4
 
 crouch2:
-	.byte $3,$8
+	.byte 3,8
 	.byte $aa,$aa,$aa
 	.byte $aa,$aa,$aa
 	.byte $9a,$9a,$aa
@@ -376,16 +404,7 @@ collapse_progression:
 	.word	collapse5	; 16
 
 collapse1:
-	.byte $4,$8
-;	.byte $aa,$aa,$9a,$9a
-;	.byte $aa,$aa,$99,$ab
-;	.byte $aa,$aa,$0b,$aa
-;	.byte $aa,$aa,$bb,$aa
-;	.byte $aa,$aa,$bb,$aa
-;	.byte $aa,$aa,$44,$aa
-;	.byte $aa,$4a,$a4,$aa
-;	.byte $aa,$f4,$fa,$aa
-
+	.byte 4,8
 	.byte $9a,$9a,$aa,$aa
 	.byte $ab,$99,$aa,$aa
 	.byte $aa,$0b,$aa,$aa
@@ -397,16 +416,7 @@ collapse1:
 
 
 collapse2:
-	.byte $5,$8
-;	.byte $aa,$aa,$aa,$aa,$aa
-;	.byte $aa,$aa,$aa,$99,$b9
-;	.byte $aa,$aa,$aa,$b9,$ab
-;	.byte $aa,$aa,$aa,$b0,$aa
-;	.byte $aa,$aa,$00,$bb,$aa
-;	.byte $aa,$4a,$44,$bb,$aa
-;	.byte $4a,$a4,$aa,$ab,$aa
-;	.byte $f4,$fa,$aa,$aa,$aa
-
+	.byte 5,8
 	.byte $aa,$aa,$aa,$aa,$aa
 	.byte $b9,$99,$aa,$aa,$aa
 	.byte $ab,$b9,$aa,$aa,$aa
@@ -419,16 +429,7 @@ collapse2:
 
 
 collapse3:
-	.byte $6,$8
-;	.byte $aa,$aa,$aa,$aa,$aa,$aa
-;	.byte $aa,$aa,$aa,$aa,$aa,$aa
-;	.byte $aa,$aa,$aa,$aa,$9a,$9a
-;	.byte $aa,$aa,$aa,$aa,$99,$bb
-;	.byte $aa,$aa,$aa,$0a,$0b,$aa
-;	.byte $aa,$aa,$4a,$00,$bb,$aa
-;	.byte $fa,$44,$44,$a0,$bb,$aa
-;	.byte $ff,$a4,$aa,$aa,$ab,$aa
-
+	.byte 6,8
 	.byte $aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa
 	.byte $9a,$9a,$aa,$aa,$aa,$aa
@@ -439,16 +440,7 @@ collapse3:
 	.byte $aa,$ab,$aa,$aa,$a4,$ff
 
 collapse4:
-	.byte $7,$8
-;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
-;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
-;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
-;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
-;	.byte $aa,$aa,$aa,$aa,$aa,$9a,$9a
-;	.byte $aa,$aa,$aa,$0a,$00,$bb,$99
-;	.byte $fa,$4a,$44,$00,$bb,$aa,$aa
-;	.byte $ff,$a4,$aa,$bb,$aa,$aa,$aa
-
+	.byte 7,8
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
@@ -460,16 +452,7 @@ collapse4:
 
 
 collapse5:
-	.byte $8,$8
-;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
-;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
-;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
-;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
-;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
-;	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
-;	.byte $aa,$4a,$bb,$00,$b0,$00,$b9,$99
-;	.byte $ff,$44,$b4,$bb,$aa,$aa,$ab,$a9
-
+	.byte 8,8
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
@@ -500,7 +483,7 @@ phys_jump_progression:
 
 
 jump1:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa
@@ -511,7 +494,7 @@ jump1:
 	.byte $fa,$f4,$5c,$aa,$aa
 
 jump2:
-	.byte $5,$8
+	.byte 5,8
 	.byte $9a,$9a,$aa,$aa,$aa
 	.byte $bb,$99,$aa,$aa,$aa
 	.byte $aa,$0b,$00,$aa,$aa
@@ -522,7 +505,7 @@ jump2:
 	.byte $fa,$f4,$5c,$aa,$aa
 
 jump3:
-	.byte $5,$8
+	.byte 5,8
 	.byte $9a,$9a,$aa,$aa,$aa
 	.byte $bb,$99,$aa,$aa,$aa
 	.byte $aa,$0b,$00,$aa,$aa
@@ -533,7 +516,7 @@ jump3:
 	.byte $fa,$f4,$5a,$a5,$aa
 
 jump4:
-	.byte $5,$8
+	.byte 5,8
 	.byte $9a,$9a,$aa,$aa,$aa
 	.byte $bb,$99,$aa,$aa,$aa
 	.byte $aa,$0b,$00,$aa,$aa
@@ -544,7 +527,7 @@ jump4:
 	.byte $aa,$aa,$f4,$f4,$aa
 
 jump5:
-	.byte $5,$8
+	.byte 5,8
 	.byte $b9,$99,$aa,$aa,$aa
 	.byte $ab,$b9,$aa,$aa,$aa
 	.byte $ba,$b0,$0b,$aa,$aa
@@ -555,7 +538,7 @@ jump5:
 	.byte $aa,$aa,$aa,$aa,$af
 
 jump6:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$b9,$99,$aa,$aa
 	.byte $aa,$ab,$b9,$aa,$aa
 	.byte $ab,$ba,$b0,$aa,$aa
@@ -566,7 +549,7 @@ jump6:
 	.byte $a5,$a5,$aa,$aa,$aa
 
 jump7:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$b9,$99,$aa,$aa
 	.byte $aa,$ab,$b9,$aa,$aa
 	.byte $aa,$aa,$b0,$aa,$aa
@@ -577,7 +560,7 @@ jump7:
 	.byte $a5,$a5,$aa,$aa,$aa
 
 jump8:
-	.byte $5,$8
+	.byte 5,8
 	.byte $aa,$9a,$9a,$aa,$aa
 	.byte $aa,$bb,$99,$aa,$aa
 	.byte $aa,$aa,$0b,$aa,$aa

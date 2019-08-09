@@ -180,7 +180,7 @@ PHYSICIST_STATE	= $EA
 	P_SWINGING		= $08	; no keypress
 	P_ELEVATING_UP		= $09
 	P_ELEVATING_DOWN	= $0A
-
+	P_SHOOTING		= $0B
 
 BUBBLES_Y	=	$EB	; C1 underwater
 BEFORE_SWING	=	$EB	; C1
