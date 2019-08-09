@@ -32,7 +32,16 @@ put_sprite_crop_loop:
 	sty	TEMP		; save sprite pointer			; 3
 	ldy	TEMPY							; 3
 
-	bmi	crop_increment_y	; if < 0, skip to next
+	bpl	put_sprite_crop_pos	; if < 0, skip to next
+
+	clc				; skip line in sprite too
+	lda	TEMP
+	adc	CH
+	tay
+
+	bne	crop_increment_y
+
+put_sprite_crop_pos:
 	cpy	#48			; bge if >= 48, done sprite
 	bcs	crop_sprite_done
 
