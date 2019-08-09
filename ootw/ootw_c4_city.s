@@ -197,9 +197,19 @@ room4:
 	lda     #5
 	sta     cer_smc+1
 
-;	lda	#8
-;	sta	PHYSICIST_Y
+	lda	PHYSICIST_STATE
+	cmp	#P_IMPALED
+	beq	r4_impaled
+	cmp	#P_FALLING_DOWN
+	beq	r4_impaled
 
+	lda	#8
+	sta	PHYSICIST_Y
+
+	lda	#P_CROUCHING
+	sta	PHYSICIST_STATE
+
+r4_impaled:
 	; load background
 	lda	#>(pit_rle)
 	sta	GBASH
@@ -316,19 +326,33 @@ check_falling:
 	jmp	not_falling
 
 falling_sideways:
-	; if falling sideways, and Y>=22, then crouch
-	lda	PHYSICIST_Y
-	cmp	#30
-	bcc	scroll_check		; blt
+	; if falling sideways
 
-	lda	#P_CROUCHING
-	sta	PHYSICIST_STATE
+	lda	BG_SCROLL
+	cmp	#16
+	bcc	before		; blt
 
-	lda	#4
-	sta	WHICH_ROOM
-	sta	GAME_OVER
+	lda     FRAMEL
+        and     #$3
+        bne     no_fall_undo
 
+	dec	PHYSICIST_X
+	dec	PHYSICIST_Y
+	dec	PHYSICIST_Y
+	dec	PHYSICIST_Y
+	dec	PHYSICIST_Y
+no_fall_undo:
 	jmp	scroll_check
+before:
+
+	lda     FRAMEL
+        and     #$1
+        bne     extra_boost
+
+	inc	PHYSICIST_X
+extra_boost:
+	jmp	scroll_check
+
 
 falling_down:
 	; if falling down, and Y>=32, then impale
@@ -477,10 +501,10 @@ done_room_limits:
 	cmp	#18
 	bcc	regular_room		; blt
 
-	; only start falling if x>=8 and positive
+	; only start falling if x>=7 and positive
 	lda	PHYSICIST_X
 	bmi	regular_room
-	cmp	#8
+	cmp	#7
 	bcc	regular_room		; blt
 
 	lda	PHYSICIST_STATE
