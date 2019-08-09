@@ -477,8 +477,9 @@ done_room_limits:
 	cmp	#18
 	bcc	regular_room		; blt
 
-	; only start falling if x>=8
+	; only start falling if x>=8 and positive
 	lda	PHYSICIST_X
+	bmi	regular_room
 	cmp	#8
 	bcc	regular_room		; blt
 
