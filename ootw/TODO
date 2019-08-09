@@ -69,12 +69,13 @@ Level/Checkpoint #2:
 * general
   + If aliens catch you, they punch you
   + Shields disappear if you leave the room
+  + Alien AI
+  + Gun sprites/action
+  + Implement door
+  + Implement end scene
+  + Shoot the wire in the basement
 
 * cage room:
-  + Swing in the cage (take into account keyboard input)
-  + Ability to pick up gun, with all that entails
-  + Animation of friend?
-  + 1-bit audio recording of friend talking
   + in game, after some time the guard calms down
 
 * Jail:
@@ -91,10 +92,27 @@ Level/Checkpoint #2:
 * View:
   + music play when viewing city?
 
-
-
 Level/Checkpoint #3:
-+ Implement
+ + smoke
+ + Poisoning
+ + Falling
+ + Only show a window around us rolling
+ + End of level
+ + Fix animation speed of rolling
+
 
 Level/Checkpoint #4:
-+ Implement
++ Falling as enter level
++ Implement gun recharger
++ Implement doors
++ Implement guard
++ Add friend/shooting foreground action
++ Allow falling into pit/spike
++ Allow jumping to platform
++ Allow exiting level
+
+Level/Checkpoint #5:
++ Falling as enter level
++ Add rock sprites (so can walk behind them)
++ Allow falling into first pit
++ Detect X and adjust Y so we stay on ground surface

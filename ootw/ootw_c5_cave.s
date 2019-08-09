@@ -6,10 +6,12 @@ ootw_cave_init:
 	lda	#0
 	sta	PHYSICIST_STATE
 	sta	WHICH_CAVE
+	; yes you fall in facing left for some reason
+	sta	DIRECTION		; left
 
 	lda	#1
 	sta	HAVE_GUN
-	sta	DIRECTION		; right
+
 
 	lda	#0
 	sta	PHYSICIST_X
@@ -174,17 +176,39 @@ c5_no_bg_action:
 
 	jsr	move_physicist
 
-	;===============================
-	; move friend
-	;===============================
-
-;	jsr	move_friend
-
-
 	;===============
 	; check room limits
 
 	jsr	check_screen_limit
+
+	;=================
+	; adjust floor
+
+	lda	WHICH_CAVE
+	cmp	#0
+	bne	check_floor1
+
+	lda	#14
+	sta	PHYSICIST_Y
+
+	lda	PHYSICIST_X
+	cmp	#19
+	bcc	check_floor0_done
+
+	lda	#12
+	sta	PHYSICIST_Y
+
+	lda	PHYSICIST_X
+	cmp	#28
+	bcc	check_floor0_done
+
+	lda	#10
+	sta	PHYSICIST_Y
+
+
+check_floor0_done:
+
+check_floor1:
 
 
 	;===============
@@ -192,33 +216,44 @@ c5_no_bg_action:
 
 	jsr	draw_physicist
 
-	;===============
-	; draw friend
-
-;	jsr	draw_friend
-
-c5_done_draw_friend:
-
 
 	;========================
 	; draw foreground action
 
-;	lda	WHICH_CAVE
-;	cmp	#2
-;	bne	c4_no_fg_action
+	lda	WHICH_CAVE
+	cmp	#0
+	bne	c5_no_fg_action
 
-;c2_draw_cart:
-;
-;	lda	CART_X
-;	sta	XPOS
-;	lda	#36
-;	sta	YPOS
-;	lda	#<cart_sprite
-;	sta	INL
-;	lda	#>cart_sprite
-;	sta	INH
-;	jsr     put_sprite_crop
-;	jmp	c2_no_fg_action
+c5_draw_rocks:
+	lda	#1
+	sta	XPOS
+	lda	#26
+	sta	YPOS
+	lda	#<small_rock
+	sta	INL
+	lda	#>small_rock
+	sta	INH
+	jsr	put_sprite
+
+	lda	#10
+	sta	XPOS
+	lda	#18
+	sta	YPOS
+	lda	#<medium_rock
+	sta	INL
+	lda	#>medium_rock
+	sta	INH
+	jsr	put_sprite
+
+	lda	#31
+	sta	XPOS
+	lda	#14
+	sta	YPOS
+	lda	#<large_rock
+	sta	INL
+	lda	#>large_rock
+	sta	INH
+	jsr	put_sprite
 
 c5_no_fg_action:
 
@@ -320,5 +355,33 @@ still_in_cave:
 done_cave:
 	rts
 
+
+; at 1,26
+small_rock:
+	.byte 3,3
+	.byte $0A,$02,$20
+	.byte $00,$20,$A2
+	.byte $AA,$A2,$AA
+
+
+; at 10,18
+medium_rock:
+	.byte 5,6
+	.byte $AA,$AA,$6A,$AA,$AA
+	.byte $AA,$00,$00,$66,$AA
+	.byte $AA,$20,$20,$A6,$AA
+	.byte $0A,$00,$00,$02,$22
+	.byte $A0,$00,$00,$00,$22
+	.byte $2A,$00,$00,$02,$2A
+
+; at 31,14
+large_rock:
+	.byte 7,6
+	.byte $AA,$0A,$02,$02,$66,$6A,$AA
+	.byte $AA,$00,$00,$00,$20,$22,$AA
+	.byte $AA,$AA,$0A,$00,$62,$6A,$AA
+	.byte $2A,$22,$00,$00,$06,$66,$6A
+	.byte $00,$00,$00,$00,$22,$A2,$A6
+	.byte $AA,$A0,$00,$00,$02,$AA,$AA
 
 
