@@ -550,17 +550,20 @@ no_fire_laser:
 	lda	#0
 	sta	LASER_OUT
 
-	;================
-	; draw laser
-	;================
-
-	jsr	draw_laser
 
 	;================
 	; move laser
 	;================
 
 	jsr	move_laser
+
+
+	;================
+	; draw laser
+	;================
+
+	jsr	draw_laser
+
 
 
 	;========================

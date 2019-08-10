@@ -12,7 +12,7 @@
 
 laser0_out:		.byte $0
 laser0_start:		.byte $0
-laser0_length:		.byte $0
+laser0_end:		.byte $0
 laser0_y:		.byte $0
 laser0_direction:	.byte $0
 laser0_count:		.byte $0
@@ -54,13 +54,14 @@ fire_laser:
 
 laser_left:
 
-	lda	PHYSICIST_X
+	ldx	PHYSICIST_X
+	dex
+	stx	laser0_end
+
+	txa
 	sec
 	sbc	#10
 	sta	laser0_start
-
-	lda	#10
-	sta	laser0_length
 
 	jmp	done_fire_laser
 
@@ -71,8 +72,9 @@ laser_right:
 	adc	#5
 	sta	laser0_start
 
-	lda	#10
-	sta	laser0_length
+	clc
+	adc	#10
+	sta	laser0_end
 
 done_fire_laser:
 	rts
@@ -94,7 +96,12 @@ draw_laser:
 	sta	hlin_mask_smc+1
 
 	ldy	laser0_y
-	ldx	laser0_length
+
+	sec
+	lda	laser0_end
+	sbc	laser0_start
+	tax
+
 	lda	laser0_start
 
 	jsr	hlin
@@ -123,25 +130,36 @@ move_laser:
 move_laser_left:
 
 	lda	laser0_count
-	and	#$fe
-	beq	still_shooting_left
+	cmp	#4
+	bcc	still_starting_left
+	cmp	#8
+	bcc	still_shooting_left
 
 continue_shooting_left:
+still_shooting_left:
+
+	lda	laser0_end
+	sec
+	sbc	#10
+	sta	laser0_end
+
+still_starting_left:
+
 	lda	laser0_start
 	sec
-	sbc	#20
+	sbc	#10
 	sta	laser0_start
-
-still_shooting_left:
-	lda	#20
-	sta	laser0_length
 
 laser_edge_detect_left:
 
-	lda	laser0_start
-	clc
-	adc	laser0_length
+	lda	laser0_end
 	bmi	disable_laser
+
+	lda	laser0_start
+	bpl	no_move_laser
+
+	lda	#0
+	sta	laser0_start
 
 	jmp	no_move_laser
 
@@ -161,8 +179,10 @@ continue_shooting_right:
 	sta	laser0_start
 
 still_shooting_right:
-	lda	#20
-	sta	laser0_length
+	lda	laser0_end
+	clc
+	adc	#10
+	sta	laser0_end
 
 still_starting_right:
 
@@ -173,15 +193,12 @@ laser_edge_detect_right:
 	cmp	#40
 	bcs	disable_laser
 
-	clc
-	adc	laser0_length
+	lda	laser0_end
 	cmp	#40
 	bcc	no_move_laser
 
 	lda	#39
-	sec
-	sbc	laser0_start
-	sta	laser0_length
+	sta	laser0_end
 
 no_move_laser:
 	inc	laser0_count
