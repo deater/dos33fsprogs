@@ -7,6 +7,7 @@ ootw_city_init:
 	sta	WHICH_ROOM
 	sta	BG_SCROLL
 	sta	DIRECTION		; left
+	sta	LASER_OUT
 
 	lda	#1
 	sta	HAVE_GUN
@@ -188,7 +189,7 @@ room3:
 	; down at the bottom
 room4:
 
-	lda	#(17+128)
+	lda	#(16+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
 	sta	RIGHT_LIMIT
@@ -533,12 +534,25 @@ regular_room:
 
 	;===============
 	; draw physicist
+	;===============
 
 	jsr	draw_physicist
 
 
+
+	;================
+	; draw laser
+	;================
+
+	lda	LASER_OUT
+	beq	done_draw_laser
+	jsr	draw_laser
+done_draw_laser:
+
+
 	;========================
 	; draw foreground cover
+	;========================
 
 	lda	WHICH_ROOM
 	cmp	#2
@@ -635,6 +649,7 @@ c4_move_fg_objects:
 
 	;===============
 	; page flip
+	;===============
 
 	jsr	page_flip
 

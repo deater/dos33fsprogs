@@ -118,6 +118,7 @@ LZ4_DONE	= $96
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
+LASER_OUT	= $DB		; 2+
 
 GUN_CHARGE	= $DC		; 2+
 

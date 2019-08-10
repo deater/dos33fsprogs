@@ -282,6 +282,14 @@ space:
 	lda	HAVE_GUN
 	beq	kick
 shoot:
+	lda	PHYSICIST_STATE
+	cmp	#P_SHOOTING
+	bne	no_stance
+
+	lda	#1
+	sta	LASER_OUT
+
+no_stance:
 	lda	#P_SHOOTING
 	sta	PHYSICIST_STATE
 

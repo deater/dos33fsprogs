@@ -90,6 +90,7 @@ end_message:
 .include "gr_unrle.s"
 .include "gr_fast_clear.s"
 .include "gr_copy.s"
+.include "gr_hlin.s"
 .include "gr_twoscreen_scroll.s"
 .include "gr_putsprite.s"
 .include "gr_putsprite_flipped.s"
@@ -102,6 +103,7 @@ end_message:
 .include "alien.s"
 
 .include "door.s"
+.include "laser.s"
 
 ; room backgrounds
 .include "ootw_graphics/l4city/ootw_c4_city.inc"
