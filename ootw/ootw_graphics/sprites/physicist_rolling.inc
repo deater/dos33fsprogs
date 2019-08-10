@@ -99,6 +99,12 @@ rolling_falling4:
 .byte $9b,$90
 .byte $99,$99
 
+rolling_splat_progression:
+.word rolling_splat1
+.word rolling_splat2
+.word rolling_splat3
+
+
 rolling_splat1:
 .byte 4,4
 .byte $AA,$A5,$45,$4A

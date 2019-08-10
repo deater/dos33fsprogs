@@ -8,6 +8,8 @@ ootw_vent:
 	lda	#0
 	sta	GAIT
 	sta	FALLING
+	sta	VENT_DEATH
+	sta	VENT_END_COUNT
 
 	lda	#17
 	sta	PHYSICIST_X
@@ -41,8 +43,8 @@ ootw_vent:
 	;=================================
 	; copy to screen
 
-	jsr	gr_copy_to_current
-	jsr	page_flip
+;	jsr	gr_copy_to_current
+;	jsr	page_flip
 
 	;=================================
 	; setup vars
@@ -61,12 +63,19 @@ vent_loop:
 
 	jsr	gr_copy_to_current
 
-	;==================================
-	; draw background action
+	;================================
+	; draw background action (steam)
+	;================================
 
 	;===============================
 	; check keyboard
 	;===============================
+
+	lda	FALLING
+	bne	vent_done_keyboard	; can't move if falling
+
+	lda	VENT_DEATH
+	bne	vent_done_keyboard	; can't move if dead
 
 	lda	KEYPRESS
         bpl	vent_done_keyboard
@@ -201,6 +210,7 @@ done_vent_bounds:
 
 	;==================
 	; check if falling
+	;==================
 
 	lda	FALLING
 	bne	done_vent_checky	; don't check if allready falling
@@ -224,7 +234,7 @@ vent_y2:
 	ldy	#11
 	cpx	#(4-2)
 	bcc	vent_falling		; blt
-	ldy	#42
+	ldy	#40
 	cpx	#(37-2)
 	bcs	vent_falling		; bge
 	jmp	done_vent_checky
@@ -243,7 +253,7 @@ vent_y14:
 
 	; y=22	 -> 5+6 , 30+31
 vent_y22:
-	ldy	#42
+	ldy	#40
 	cpx	#(7-2)
 	bcc	vent_falling		; blt
 	ldy	#32
@@ -282,6 +292,7 @@ done_vent_checky:
 
 	;==================
 	; fall if falling
+	;==================
 
 	lda	FALLING
 	beq	done_falling
@@ -291,12 +302,68 @@ done_vent_checky:
 	cmp	FALLING_Y
 	bne	done_falling
 
+	; hit the ground, see if dead
+
 	dec	FALLING
+
+	; there are a few ways to do this, cheating and hard-coding
+	; the two long shafts
+
+	lda	PHYSICIST_X
+	cmp	#(37-2)			; longest fall
+	beq	fall_death
+	cmp	#(6-2)			; medium fall
+	beq	fall_death
+	bne	done_falling
+fall_death:
+
+	lda	#1
+	sta	VENT_DEATH
+
+	lda	#0
+	sta	GAIT
 
 done_falling:
 
-	;===============
+	;================
 	; draw physicist
+	;================
+
+	lda	VENT_DEATH
+	beq	draw_rolling
+	cmp	#1
+	beq	draw_fell
+	bne	draw_poisoned
+
+	; dead/fell
+draw_fell:
+	lda	GAIT
+	cmp	#10
+	bcs	draw_fell_stop	; bge
+	inc	GAIT
+draw_fell_stop:
+
+	lda	PHYSICIST_X
+	sta	XPOS
+	lda	PHYSICIST_Y
+	and	#$fe
+	sta	YPOS
+
+	lda	GAIT
+	lsr
+	and	#$fe
+	tay
+
+	lda	rolling_splat_progression,Y
+	sta	INL
+	lda	rolling_splat_progression+1,Y
+	jmp	actually_draw
+
+	; dead/poisoned
+draw_poisoned:
+
+	; rolling
+draw_rolling:
 
 	lda	PHYSICIST_X
 	sta	XPOS
@@ -311,8 +378,9 @@ done_falling:
 	lda	rolling_progression,Y
 	sta	INL
 	lda	rolling_progression+1,Y
-	sta	INH
 
+actually_draw:
+	sta	INH
 	jsr	put_sprite_crop
 
 	;===============
@@ -329,6 +397,12 @@ done_falling:
 	inc	FRAMEH
 vent_frame_no_oflo:
 
+
+	lda	VENT_DEATH
+	beq	no_death_count
+	inc	VENT_END_COUNT
+
+no_death_count:
 
 	;==========================
 	; check if done this level
@@ -347,6 +421,16 @@ vent_frame_no_oflo:
 	rts
 
 done_check_bottom:
+
+	; check if death timeout
+
+	lda	VENT_END_COUNT
+	cmp	#$A0
+	bcc	not_dead	; lt
+	lda	#$ff
+	sta	GAME_OVER
+
+not_dead:
 
 
 	lda	GAME_OVER
