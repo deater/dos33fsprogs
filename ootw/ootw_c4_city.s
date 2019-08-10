@@ -539,15 +539,28 @@ regular_room:
 	jsr	draw_physicist
 
 
+	;================
+	; fire laser
+	;================
+
+	lda	LASER_OUT
+	beq	no_fire_laser
+	jsr	fire_laser
+no_fire_laser:
+	lda	#0
+	sta	LASER_OUT
 
 	;================
 	; draw laser
 	;================
 
-	lda	LASER_OUT
-	beq	done_draw_laser
 	jsr	draw_laser
-done_draw_laser:
+
+	;================
+	; move laser
+	;================
+
+	jsr	move_laser
 
 
 	;========================
