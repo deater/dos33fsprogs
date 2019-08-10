@@ -317,20 +317,37 @@ done_falling:
 
 	;===============
 	; page flip
+	;===============
 
 	jsr	page_flip
 
 	;================
 	; inc frame count
-
+	;================
 	inc	FRAMEL
 	bne	vent_frame_no_oflo
 	inc	FRAMEH
 vent_frame_no_oflo:
 
+
 	;==========================
 	; check if done this level
 	;==========================
+
+	; first see if at end
+
+	lda	PHYSICIST_Y
+	cmp	#50
+	bcc	done_check_bottom
+
+	; we fell out the vent at the bottom!
+
+	lda	#$4
+	sta	GAME_OVER
+	rts
+
+done_check_bottom:
+
 
 	lda	GAME_OVER
 	beq	still_in_vent
@@ -338,34 +355,8 @@ vent_frame_no_oflo:
 	cmp	#$ff			; if $ff, we died
 	beq	done_vent
 
-	;===============================
-	; check if exited room to right
-;	cmp	#1
-;	beq	jail_exit_left
 
-	;=================
-	; exit to right
 
-;jail_right_yes_exit:
-
-;	lda	#0
-;	sta	PHYSICIST_X
-;jer_smc:
-;	lda	#$0			; smc+1 = exit location
-;	sta	WHICH_CAVE
-;	jmp	done_jail
-
-	;=====================
-	; exit to left
-
-;jail_exit_left:
-
-;	lda	#37
-;	sta	PHYSICIST_X
-;jel_smc:
-;	lda	#0		; smc+1
-;	sta	WHICH_CAVE
-;	jmp	done_jail
 
 	; loop forever
 still_in_vent:

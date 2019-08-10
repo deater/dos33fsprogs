@@ -33,6 +33,17 @@ ootw_c3:
 
 	jsr	ootw_vent
 
+	;====================
+	; go to next level
+	; if appropriate
+l3_defeated:
+        lda     GAME_OVER
+        cmp     #4
+        bne     quit_level
+
+        lda     #4
+        sta     WHICH_LOAD
+        rts
 
 ;===========================
 ; quit_level
