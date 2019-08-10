@@ -67,37 +67,44 @@ poisoned3:
 .byte $DA,$DA,$DA,$88,$88,$D4,$DA,$DA
 
 
+rolling_fall_progression:
+.word rolling_falling1
+.word rolling_falling2
+.word rolling_falling3
+.word rolling_falling4
+
+
 rolling_falling1:
-.byte 2,5
-.byte $9B,$9B
-.byte $99,$99
-.byte $AA,$AA
-.byte $AA,$AA
-.byte $AA,$AA
+.byte 4,5
+.byte $AA,$AA,$9B,$9B
+.byte $AA,$AA,$99,$99
+.byte $AA,$AA,$AA,$AA
+.byte $AA,$AA,$AA,$AA
+.byte $AA,$AA,$AA,$AA
 
 rolling_falling2:
-.byte 2,5
-.byte $B4,$b4
-.byte $99,$99
-.byte $A9,$A9
-.byte $AA,$AA
-.byte $AA,$AA
+.byte 4,5
+.byte $AA,$AA,$B4,$b4
+.byte $AA,$AA,$99,$99
+.byte $AA,$AA,$A9,$A9
+.byte $AA,$AA,$AA,$AA
+.byte $AA,$AA,$AA,$AA
 
 rolling_falling3:
-.byte 2,5
-.byte $44,$44
-.byte $b4,$0B
-.byte $99,$99
-.byte $A9,$A9
-.byte $AA,$AA
+.byte 4,5
+.byte $AA,$AA,$44,$44
+.byte $AA,$AA,$b4,$0B
+.byte $AA,$AA,$99,$99
+.byte $AA,$AA,$A9,$A9
+.byte $AA,$AA,$AA,$AA
 
 rolling_falling4:
-.byte 2,5
-.byte $45,$45
-.byte $44,$44
-.byte $bb,$00
-.byte $9b,$90
-.byte $99,$99
+.byte 4,5
+.byte $AA,$AA,$45,$45
+.byte $AA,$AA,$44,$44
+.byte $AA,$AA,$bb,$00
+.byte $AA,$AA,$9b,$90
+.byte $AA,$AA,$99,$99
 
 rolling_splat_progression:
 .word rolling_splat1

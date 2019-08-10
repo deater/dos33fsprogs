@@ -286,6 +286,7 @@ vent_falling:
 	lda	#1
 	sta	FALLING
 	sty	FALLING_Y
+	sta	GAIT
 
 done_vent_checky:
 
@@ -329,11 +330,41 @@ done_falling:
 	; draw physicist
 	;================
 
+	lda	FALLING
+	bne	draw_falling
+
 	lda	VENT_DEATH
 	beq	draw_rolling
 	cmp	#1
 	beq	draw_fell
 	bne	draw_poisoned
+
+	; falling
+draw_falling:
+
+	lda	GAIT
+	cmp	#31
+	bcs	no_inc_falling
+
+	inc	GAIT
+no_inc_falling:
+
+	lda	PHYSICIST_X
+	sta	XPOS
+	lda	PHYSICIST_Y
+	and	#$fe
+	sta	YPOS
+
+	lda	GAIT
+	lsr
+	lsr
+	and	#$fe
+	tay
+
+	lda	rolling_fall_progression,Y
+	sta	INL
+	lda	rolling_fall_progression+1,Y
+	jmp	actually_draw
 
 	; dead/fell
 draw_fell:
