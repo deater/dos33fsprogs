@@ -99,11 +99,9 @@ Level/Checkpoint #2:
 Level/Checkpoint #3:
  + smoke
  + Poisoning
- + Falling
  + Only show a window around us rolling
- + End of level
  + Fix animation speed of rolling
-
+ + Actual game shakes the camera when you hit the ground after falling
 
 Level/Checkpoint #4:
 + Falling as enter level

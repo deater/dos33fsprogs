@@ -11,6 +11,13 @@ ootw_vent:
 	sta	VENT_DEATH
 	sta	VENT_END_COUNT
 
+	sta	steam1_state
+	sta	steam2_state
+	sta	steam3_state
+	sta	steam4_state
+
+
+
 	lda	#17
 	sta	PHYSICIST_X
 ;	lda	#2
@@ -49,12 +56,6 @@ ootw_vent:
 	sta	DISP_PAGE
 
 	;=================================
-	; copy to screen
-
-;	jsr	gr_copy_to_current
-;	jsr	page_flip
-
-	;=================================
 	; setup vars
 
 	lda	#0
@@ -68,12 +69,22 @@ vent_loop:
 
 	;================================
 	; copy background to current page
+	;================================
 
 	jsr	gr_copy_to_current
 
 	;================================
 	; draw background action (steam)
 	;================================
+
+	jsr	handle_steam
+
+
+
+
+
+
+
 
 	;===============================
 	; check keyboard
@@ -500,6 +511,23 @@ done_vent:
 
 
 
+puff_start_progression:
+	.word puff_sprite_start1
+	.word puff_sprite_start2
+
+puff_cycle_progression:
+	.word puff_sprite_cycle1
+	.word puff_sprite_cycle2
+	.word puff_sprite_cycle3
+	.word puff_sprite_cycle4
+
+puff_end_progression:
+	.word puff_sprite_end1
+	.word puff_sprite_end2
+
+
+
+
 puff_sprite_start1:
 	.byte 3,2
 	.byte $AA,$A5,$AA
@@ -542,3 +570,147 @@ puff_sprite_end2:
 	.byte $A5,$AA,$A5
 	.byte $AA,$AA,$AA
 
+steam_state:
+steam1_state:	.byte $0
+steam2_state:	.byte $0
+steam3_state:	.byte $0
+steam4_state:	.byte $0
+
+steam_max:
+steam1_max:	.byte 176
+steam2_max:	.byte 176
+steam3_max:	.byte 176
+steam4_max:	.byte 176
+
+steam_x:
+steam1_x:	.byte 13-1
+steam2_x:	.byte 10-1
+steam3_x:	.byte 18-1
+steam4_x:	.byte 23-1
+
+
+steam_y:
+steam1_y:	.byte 2
+steam2_y:	.byte 12
+steam3_y:	.byte 22
+steam4_y:	.byte 22
+
+	;===============================
+	; steam#1 (top) -- 5s on, 2s off
+	; 0-3 -- start
+	; 4-128 -- on
+	; 128-132 -- stop
+	; 132 - 176 -- off
+steam_stop:
+steam1_stop:	.byte 128
+steam2_stop:	.byte 128
+steam3_stop:	.byte 128
+steam4_stop:	.byte 128
+
+steam_off:
+steam1_off:	.byte 132
+steam2_off:	.byte 132
+steam3_off:	.byte 132
+steam4_off:	.byte 132
+
+
+	; steam#2 (slope) -- 1s on, 3s off
+	; steam#3/#4	-- 1s on / 1s off (alternate)
+
+
+	;==============================
+	; handle steam
+	;==============================
+handle_steam:
+
+	; increment steam states
+
+	lda	FRAMEL
+	and	#$3
+	bne	no_inc_steam
+
+	ldx	#3
+inc_steam_loop:
+
+	inc	steam_state,X
+	lda	steam_state,X
+	cmp	steam_max,X
+	bcc	no_clear_steam
+	lda	#0
+	sta	steam_state,X
+no_clear_steam:
+	dex
+	bpl	inc_steam_loop
+
+no_inc_steam:
+
+
+	ldx	#3
+steam_draw_loop:
+	txa
+	pha
+
+	lda	steam_x,X
+	sta	XPOS
+	lda	steam_y,X
+	sta	YPOS
+
+	lda	steam_state,X
+
+	cmp	steam_off,X
+	bcs	draw_steam_off	; bge
+
+	cmp	#4		; always 4
+	bcc	draw_steam_start	; blt
+
+	cmp	steam_stop,X
+	bcs	draw_steam_stop	; bge
+
+	jmp	draw_steam_on
+
+
+
+	;========================
+	; draw_steam:
+
+draw_steam_start:
+	and	#$2
+	tay
+
+	lda	puff_start_progression,Y
+	sta	INL
+	lda	puff_start_progression+1,Y
+	jmp	steam_draw
+
+draw_steam_on:
+
+	and	#$6
+	tay
+
+	lda	puff_cycle_progression,Y
+	sta	INL
+	lda	puff_cycle_progression+1,Y
+	jmp	steam_draw
+
+draw_steam_stop:
+	and	#$2
+	tay
+
+	lda	puff_end_progression,Y
+	sta	INL
+	lda	puff_end_progression+1,Y
+;	jmp	steam_draw
+
+
+steam_draw:
+	sta	INH
+	jsr	put_sprite
+
+draw_steam_off:
+steam_done:
+	pla
+	tax
+	dex
+	bpl	steam_draw_loop
+
+	rts
