@@ -14,6 +14,8 @@ ootw_vent:
 	sta	steam1_state
 	sta	steam2_state
 	sta	steam3_state
+
+	lda	#32
 	sta	steam4_state
 
 
@@ -578,9 +580,9 @@ steam4_state:	.byte $0
 
 steam_max:
 steam1_max:	.byte 176
-steam2_max:	.byte 176
-steam3_max:	.byte 176
-steam4_max:	.byte 176
+steam2_max:	.byte 128
+steam3_max:	.byte 64
+steam4_max:	.byte 64
 
 steam_x:
 steam1_x:	.byte 13-1
@@ -597,25 +599,32 @@ steam4_y:	.byte 22
 
 	;===============================
 	; steam#1 (top) -- 5s on, 2s off
-	; 0-3 -- start
-	; 4-128 -- on
-	; 128-132 -- stop
-	; 132 - 176 -- off
+	; 	0-3 -- start
+	; 	4-128 -- on
+	; 	128-132 -- stop
+	; 	132 - 176 -- off
+	; steam#2 (slope) -- 1s on, 3s off
+	;	0-3 -- start
+	;	4 - 32 on
+	;	32 - 36 stop
+	;	36 - 128 off
+	; steam#3/#4	-- 1s on / 1s off (alternate)
+	;	0-3 -- start	0-3 -- start
+	;	4-32 -- on	4-32 -- on
+	;	32-36 -- stop	32-36 -- stop
+	;	36-64 -- off    36-64 -- off
+
 steam_stop:
 steam1_stop:	.byte 128
-steam2_stop:	.byte 128
-steam3_stop:	.byte 128
-steam4_stop:	.byte 128
+steam2_stop:	.byte 32
+steam3_stop:	.byte 32
+steam4_stop:	.byte 32
 
 steam_off:
 steam1_off:	.byte 132
-steam2_off:	.byte 132
-steam3_off:	.byte 132
-steam4_off:	.byte 132
-
-
-	; steam#2 (slope) -- 1s on, 3s off
-	; steam#3/#4	-- 1s on / 1s off (alternate)
+steam2_off:	.byte 36
+steam3_off:	.byte 36
+steam4_off:	.byte 36
 
 
 	;==============================
