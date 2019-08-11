@@ -326,6 +326,12 @@ done_vent_checky:
 	bne	done_falling
 fall_death:
 
+	; only die if fall is far enough?
+	; problem is two entrances to long shaft
+	lda	GAIT
+	cmp	#18
+	bcc	done_falling	; blt
+
 	lda	#1
 	sta	VENT_DEATH
 
@@ -451,7 +457,7 @@ no_death_count:
 
 	lda	PHYSICIST_Y
 	cmp	#50
-	bcc	done_check_bottom
+	bcc	done_check_bottom	; blt
 	bmi	done_check_bottom	; don't trigger if falling into level
 
 	; we fell out the vent at the bottom!
