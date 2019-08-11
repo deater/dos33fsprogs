@@ -420,6 +420,24 @@ draw_fell_stop:
 	; dead/poisoned
 draw_poisoned:
 
+	lda	PHYSICIST_X
+	sta	XPOS
+	lda	PHYSICIST_Y
+	and	#$fe
+	sta	YPOS
+
+	lda	GAIT
+	lsr
+	lsr
+	and	#$fe
+	tay
+
+	lda	rolling_poison_progression,Y
+	sta	INL
+	lda	rolling_poison_progression+1,Y
+	jmp	actually_draw
+
+
 	; rolling
 draw_rolling:
 
@@ -455,12 +473,17 @@ actually_draw:
 	inc	FRAMEH
 vent_frame_no_oflo:
 
-
 	lda	VENT_DEATH
 	beq	no_death_count
 	inc	VENT_END_COUNT
 
 no_death_count:
+
+	;==========================
+	; check if steamed
+	;==========================
+
+	jsr	steam_collide
 
 	;==========================
 	; check if done this level
@@ -626,6 +649,14 @@ steam2_off:	.byte 36
 steam3_off:	.byte 36
 steam4_off:	.byte 36
 
+steam_on:
+steam1_on:	.byte 0
+steam2_on:	.byte 0
+steam3_on:	.byte 0
+steam4_on:	.byte 0
+
+
+
 
 	;==============================
 	; handle steam
@@ -696,6 +727,9 @@ draw_steam_on:
 	and	#$6
 	tay
 
+	lda	#1
+	sta	steam_on,X
+
 	lda	puff_cycle_progression,Y
 	sta	INL
 	lda	puff_cycle_progression+1,Y
@@ -708,18 +742,78 @@ draw_steam_stop:
 	lda	puff_end_progression,Y
 	sta	INL
 	lda	puff_end_progression+1,Y
-;	jmp	steam_draw
 
+	; fallthrough
 
 steam_draw:
 	sta	INH
 	jsr	put_sprite
+	jmp	steam_done
 
 draw_steam_off:
+	lda	#0
+	sta	steam_on,X
+
 steam_done:
 	pla
 	tax
 	dex
 	bpl	steam_draw_loop
 
+	rts
+
+
+
+
+
+	;==============================
+	; steam_collide
+	;==============================
+steam_collide:
+
+	ldx	#3
+steam_collide_loop:
+
+	lda	steam_on,X		; skip if no steam out
+	beq	steam_loop_continue
+
+	lda	PHYSICIST_Y
+	cmp	steam_y,X
+	bne	steam_loop_continue
+
+	; collide if 
+	;          =
+	;       0UUU      physicist+3=X
+	;	 0UUU     physicist+2=X
+	;         0UUU    physicist+1=X
+
+	clc
+	lda	PHYSICIST_X
+	adc	#1
+
+	cmp	steam_x,X
+	beq	steamed
+
+	adc	#1
+
+	cmp	steam_x,X
+	beq	steamed
+
+	adc	#1
+
+	cmp	steam_x,X
+	beq	steamed
+
+
+steam_loop_continue:
+	dex
+	bpl	steam_collide_loop
+
+
+not_steamed:
+	rts
+
+steamed:
+	lda	#2
+	sta	VENT_DEATH
 	rts

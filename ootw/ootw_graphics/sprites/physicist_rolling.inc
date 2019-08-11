@@ -50,6 +50,10 @@ rolling8:
 .byte $AA,$AA,$99,$99,$B4
 .byte $AA,$AA,$99,$99,$BB
 
+rolling_poison_progression:
+.word poisoned1
+.word poisoned2
+.word poisoned3
 
 poisoned1:
 .byte 8,2
