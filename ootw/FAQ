@@ -1,19 +1,36 @@
 Q. Are you implementing the game just like the original (i.e. vector
 	drawing)?
 
-A. No, this is just a quick hack using all sprites.
-   I'm not doing something amazing like writing a 6502 optimized
-   vector drawing library.
+A. No, this is just a quick hack using sprites.
+   While it would be pretty amazing, I haven't written
+   a 6502 optimized vector drawing library.
 
 ---
 
+Q. Is the gameplay exactly like the game?
+
+A. No, there are a lot of things that are hard to do in 40x48 and/or
+	with only 48k of RAM.
+
+   See the TODO file for a list of things I've noticed.
+
+   The game is really amazing and subtle and some things you only notice
+        after staring at it a long time.
+
+   I haven't reverse-engineered the game code or looked at source code,
+        my version is made purely by observing game play.
+
+---
 
 Q. Why aren't the keyboard controls the same as the original game?
 
 A. The Apple II has simplistic keyboard support.
    In general it's not possible to read more than one key at a time.
+   Also on pre-IIe machines it's not really possible to get key-release events.
+
    Additionally, on older models there's no auto-repeat unless you
       hold down the REPT key, which makes running difficult.
+
    The original game really depends on being able to detect having
       multiple keys down at once.
 
@@ -21,9 +38,10 @@ A. The Apple II has simplistic keyboard support.
 
 Q.  Does this have joystick support?
 
-A.  It should not be hard to add, and in fact would give better controls
-    than the keyboard.   I don't currently have a joystick though so
-    it's hard to test properly.
+A.  It should not be hard to add, and in fact would give controls much
+	closer to the original.
+
+    I probably won't have time to implement it any time soon though.
 
 ----
 
@@ -33,7 +51,7 @@ A.  No, it's pretty much straight up "sprite" drawing.
     One unusual thing is I am using grey2 (color 10) as the transparent
     color rather than black, as there is black in the sprites.
 
-    It's actually refreshing not having to cycle count.
+    It's actually refreshing not having to cycle everything.
 
 ---
 
@@ -41,8 +59,11 @@ A.  No, it's pretty much straight up "sprite" drawing.
 Q.  How are you making the graphics?
 
 A.  Using the original for reference (currently a Windows/EGA version
-    for some reason?)  Size down to 80x40.  Manually map colors to
-    Apple II Lo-res palette.  Then manually adjust to 40x40.
+    for some reason?)  Size down to 80x48. (This isn't bad as the original
+    is roughly 320x200 which scales well).
+
+    I manually map colors to the Apple II Lo-res palette.
+
     Finally fine tune in a bit while using original for reference.
 
 
@@ -55,8 +76,9 @@ A.  Yes, but I like it anyway.  So many colors!
 	16-color graphics, and to be honest with you my art skills sort
 	of peak at that resolution.
 
-	Also Apple II graphics programming is painful and LORES is the
-	easiest of them all.
+	Also Apple II graphics programming is painful and LORES is so
+	much easier than HIRES (it's also smaller, faster, and takes
+	less valuable RAM).
 
 	Partly nostalgia too, but my family only had a monochrome monitor
 	so I never got to experience full-color lores back in the day.
