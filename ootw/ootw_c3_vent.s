@@ -7,15 +7,23 @@ ootw_vent:
 
 	lda	#0
 	sta	GAIT
-	sta	FALLING
+;	sta	FALLING
 	sta	VENT_DEATH
 	sta	VENT_END_COUNT
 
 	lda	#17
 	sta	PHYSICIST_X
+;	lda	#2
+;	sta	PHYSICIST_Y
+
+	; fall into level
+	lda	#1
+	sta	FALLING
+	lda	#250
+	sta	PHYSICIST_Y
 
 	lda	#2
-	sta	PHYSICIST_Y
+	sta	FALLING_Y
 
 	; load background
 	lda	#>(vent_rle)
@@ -444,6 +452,7 @@ no_death_count:
 	lda	PHYSICIST_Y
 	cmp	#50
 	bcc	done_check_bottom
+	bmi	done_check_bottom	; don't trigger if falling into level
 
 	; we fell out the vent at the bottom!
 

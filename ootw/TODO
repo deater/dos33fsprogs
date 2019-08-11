@@ -29,11 +29,12 @@ General:
   + running: Missing one running frame (?)
   + ability to run+jump
   + ability to kick while crouching
-  + ability to shoot
+  + ability to shoot whic crouching
   + running then crouch, you slide a bit
 
 * sprites_to_draw:
   + physicist crouch-kicking
+  + physicist crouch-shooting
   + physicist run+jumping
   + physicist swimming
   + beast tripping
