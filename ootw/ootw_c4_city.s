@@ -1,6 +1,10 @@
 ; Ootw Checkpoint4 -- Running around the City
 
-
+	;=======================
+	;=======================
+	; ootw_city_init
+	;=======================
+	;=======================
 	; call once before entering city for first time
 ootw_city_init:
 	lda	#0
@@ -8,6 +12,34 @@ ootw_city_init:
 	sta	BG_SCROLL
 	sta	DIRECTION		; left
 	sta	LASER_OUT
+	sta	ALIEN_OUT
+
+
+	;===============
+	; set up aliens
+
+	jsr	clear_aliens
+
+	lda	#1
+	sta	alien0_out
+
+	lda	#2
+	sta	alien0_room
+
+	lda	#27
+	sta	alien0_x
+
+	lda	#18
+	sta	alien0_y
+
+	lda	#A_STANDING
+	sta	alien0_state
+
+	lda	#0
+	sta	alien0_direction
+
+
+	; set up physicist
 
 	lda	#1
 	sta	HAVE_GUN
@@ -33,14 +65,34 @@ ootw_city_init:
 
 
 	;===========================
+	;===========================
 	; enter new room in jail
 	;===========================
-
+	;===========================
 ootw_city:
 
-	;==============================
-	; each room init
 
+	;==============================
+	; if alien in room, set ALIEN_OUT
+
+	lda	#0
+	sta	ALIEN_OUT
+
+	ldx	#0
+alien_room_loop:
+	lda	alien_out,X
+	beq	alien_room_continue
+
+	lda	alien_room,X
+	cmp	WHICH_ROOM
+	bne	alien_room_continue
+
+	inc	ALIEN_OUT
+
+alien_room_continue:
+	inx
+	cpx	#MAX_ALIENS
+	bne	alien_room_loop
 
 
 	;==============================
@@ -234,8 +286,9 @@ ootw_room_already_set:
 	bit	SET_GR
 	bit	FULLGR
 
-	;===========================
+	;============================================
 	; Setup pages (is this necessary?)
+	; FIXME: use code from c3 which clears better
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -538,6 +591,14 @@ regular_room:
 
 	jsr	draw_physicist
 
+	;===============
+	; draw alien
+	;===============
+
+	lda	ALIEN_OUT
+	beq	no_draw_alien
+	jsr	draw_alien
+no_draw_alien:
 
 	;================
 	; fire laser

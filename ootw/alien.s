@@ -1,39 +1,60 @@
 ; draw/move the bad guy aliens
 
-alien_state:
-alien0:
+MAX_ALIENS	= 3
+
+alien_out:
 	alien0_out:		.byte	0
-	alien0_x:		.byte	0
-	alien0_y:		.byte	0
-	alien0_state:		.byte	0
-	alien0_gait:		.byte	0
-	alien0_direction:	.byte	0
-	alien0_gun:		.byte	0
-
-alien1:
 	alien1_out:		.byte	0
+	alien2_out:		.byte	0
+
+alien_room:
+	alien0_room:		.byte	0
+	alien1_room:		.byte	0
+	alien2_room:		.byte	0
+
+alien_x:
+	alien0_x:		.byte	0
 	alien1_x:		.byte	0
+	alien2_x:		.byte	0
+
+alien_y:
+	alien0_y:		.byte	0
 	alien1_y:		.byte	0
+	alien2_y:		.byte	0
+
+alien_state:
+	alien0_state:		.byte	0
 	alien1_state:		.byte	0
+	alien2_state:		.byte	0
+
+A_STANDING		= 0
+A_WALKING		= 1
+A_RUNNING		= 2
+A_CROUCHING		= 3
+A_TURNING		= 4
+A_YELLING		= 5
+A_SHOOTING_UP		= 6
+A_DISINTEGRATING	= 7
+
+
+alien_gait:
+	alien0_gait:		.byte	0
 	alien1_gait:		.byte	0
+	alien2_gait:		.byte	0
+
+alien_direction:
+	alien0_direction:	.byte	0
 	alien1_direction:	.byte	0
+	alien2_direction:	.byte	0
+
+alien_gun:
+	alien0_gun:		.byte	0
 	alien1_gun:		.byte	0
+	alien2_gun:		.byte	0
 
-ALIEN_OUT	= 0
-ALIEN_X		= 1
-ALIEN_Y		= 2
-ALIEN_STATE	= 3
-ALIEN_GAIT	= 4
-ALIEN_DIRECTION	= 5
-ALIEN_GUN	= 6
 
-A_STANDING	= 0
-A_WALKING	= 1
-A_RUNNING	= 2
-A_CROUCHING	= 3
-A_TURNING	= 4
-A_YELLING	= 5
-A_SHOOTING_UP	= 6
+
+
 
 	;=======================================
 	; Move alien based on current state
@@ -43,10 +64,10 @@ move_alien:
 	; FIXME: loop through all alieans
 	ldx	#0
 
-	lda	alien_state+ALIEN_OUT,X
+	lda	alien_out,X
 	beq	done_move_alien
 
-	lda	alien_state+ALIEN_STATE,X
+	lda	alien_state,X
 
 	cmp	#A_WALKING
 	beq	move_alien_walking
@@ -62,47 +83,47 @@ done_move_alien:
 	;======================
 	; yelling
 move_alien_yelling:
-	inc	alien_state+ALIEN_GAIT,X	; cycle through animation
+	inc	alien_gait,X		; cycle through animation
 	rts
 
 	;======================
 	; walking
 
 move_alien_walking:
-	inc	alien_state+ALIEN_GAIT,X	; cycle through animation
+	inc	alien_gait,X		; cycle through animation
 
-	lda     alien_state+ALIEN_GAIT,X
+	lda     alien_gait,X
 	and     #$f
 	cmp     #$8			; only walk roughly 1/8 of time
 	bne     alien_no_move_walk
 
-	lda	alien_state+ALIEN_DIRECTION,X
+	lda	alien_direction,X
 	beq	a_walk_left
 
-	inc	alien_state+ALIEN_X,X		; walk right
+	inc	alien_x,X		; walk right
 	rts
 a_walk_left:
-	dec     alien_state+ALIEN_X,X		; walk left
+	dec     alien_x,X		; walk left
 alien_no_move_walk:
 	rts
 
 	;======================
 	; running
 move_alien_running:
-	inc	alien_state+ALIEN_GAIT,X	; cycle through animation
+	inc	alien_gait,X		; cycle through animation
 
-	lda     alien_state+ALIEN_GAIT,X
+	lda     alien_gait,X
 	and     #$3
 	cmp     #$2			; only run roughly 1/4 of time
 	bne     alien_no_move_run
 
-	lda	alien_state+ALIEN_DIRECTION,X
+	lda	alien_direction,X
 	beq	a_run_left
 
-	inc	alien_state+ALIEN_X,X		; run right
+	inc	alien_x,X			; run right
 	rts
 a_run_left:
-	dec	alien_state+ALIEN_X,X		; run left
+	dec	alien_x,X			; run left
 alien_no_move_run:
 	rts
 
@@ -151,10 +172,10 @@ draw_alien:
 	; FIXME
 	ldx	#0
 
-	lda	alien_state+ALIEN_OUT,X
+	lda	alien_out,X
 	beq	no_alien
 
-	lda	alien_state+ALIEN_STATE,X
+	lda	alien_state,X
 	tay
 	lda	astate_table_lo,y
 	sta	ajump
@@ -202,12 +223,12 @@ alien_crouching:
 ;================================
 
 alien_walking:
-	lda	alien_state+ALIEN_GAIT,X
+	lda	alien_gait,X
 	cmp	#64
 	bcc	alien_gait_fine	; blt
 
 	lda	#0
-	sta	alien_state+ALIEN_GAIT,X
+	sta	alien_gait,X
 
 alien_gait_fine:
 	lsr
@@ -216,7 +237,7 @@ alien_gait_fine:
 
 	tay
 
-	lda	alien_state+ALIEN_GUN,X
+	lda	alien_gun,X
 	beq	alien_walk_nogun
 
 alien_walk_gun:
@@ -243,12 +264,12 @@ alien_walk_nogun:
 ;================================
 
 alien_running:
-	lda	alien_state+ALIEN_GAIT,X
+	lda	alien_gait,X
 	cmp	#32
 	bcc	alien_run_gait_fine	; blt
 
 	lda	#0
-	sta	alien_state+ALIEN_GAIT,X
+	sta	alien_gait,X
 
 alien_run_gait_fine:
 	lsr
@@ -270,19 +291,19 @@ alien_run_gait_fine:
 
 alien_turning:
 
-	dec	alien_state+ALIEN_GAIT,X
+	dec	alien_gait,X
 	bpl	alien_draw_turning
 
 	lda	#0
-	sta	alien_state+ALIEN_GAIT,X
+	sta	alien_gait,X
 
 	; switch direction
-	lda	alien_state+ALIEN_DIRECTION,X
+	lda	alien_direction,X
 	eor	#$1
-	sta	alien_state+ALIEN_DIRECTION,X
+	sta	alien_direction,X
 
 	lda	#A_WALKING
-	sta	alien_state+ALIEN_STATE,X
+	sta	alien_state,X
 
 alien_draw_turning:
 	lda	#<alien_turning_sprite
@@ -300,7 +321,7 @@ alien_draw_turning:
 ;================================
 
 alien_yelling:
-	lda	alien_state+ALIEN_GAIT,X
+	lda	alien_gait,X
 
 	; 00
 	; 01
@@ -310,7 +331,7 @@ alien_yelling:
 	and	#$40
 	bne	alien_yelling_no_waving
 
-	lda	alien_state+ALIEN_GAIT,X
+	lda	alien_gait,X
 
 alien_yelling_no_waving:
 	and	#$10
@@ -335,7 +356,7 @@ alien_yelling_no_waving:
 ;================================
 
 alien_shooting_up:
-	lda	alien_state+ALIEN_GAIT,X
+	lda	alien_gait,X
 	and	#$30
 
 	;  000 000
@@ -358,7 +379,7 @@ alien_shooting_up:
 
 	cpy	#0
 
-	lda	alien_state+ALIEN_GAIT,X
+	lda	alien_gait,X
 ;	and	#$ff
 	bne	finally_draw_alien
 
@@ -379,13 +400,13 @@ alien_shooting_up:
 
 
 finally_draw_alien:
-	lda	alien_state+ALIEN_X,X
+	lda	alien_x,X
 	sta	XPOS
 
-	lda	alien_state+ALIEN_Y,X
+	lda	alien_y,X
 	sta	YPOS
 
-	lda	alien_state+ALIEN_DIRECTION,X
+	lda	alien_direction,X
 	bne	alien_facing_right
 
 alien_facing_left:
@@ -395,5 +416,13 @@ alien_facing_right:
 	jmp	put_sprite_flipped_crop
 
 
+	;==================
+	; clear aliens
+	;==================
+clear_aliens:
+	lda	#0
+	sta	alien0_out
+	sta	alien1_out
+	sta	alien2_out
 
-
+	rts
