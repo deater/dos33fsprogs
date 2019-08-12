@@ -849,22 +849,108 @@ only_show_window:
 
 	ldy	#0
 window_loop:
+
 	lda	gr_offsets,Y
-	sta	window_loop_smc+1
+	sta	window_left_loop_smc+1
+	sta	window_right_loop_smc+1
+	sta	window_all_loop_smc+1
 	lda	gr_offsets+1,Y
 	clc
 	adc	DRAW_PAGE
-	sta	window_loop_smc+2
+	sta	window_left_loop_smc+2
+	sta	window_right_loop_smc+2
+	sta	window_all_loop_smc+2
 
+	lda	PHYSICIST_Y
+	and	#$FE
+
+	sec
+	sbc	#2
+	sta	TEMPY
+
+	cpy	TEMPY
+	beq	clear_with_window
+
+	inc	TEMPY
+	inc	TEMPY
+
+	cpy	TEMPY
+	beq	clear_with_window
+
+	inc	TEMPY
+	inc	TEMPY
+
+	cpy	TEMPY
+	beq	clear_with_window
+
+	inc	TEMPY
+	inc	TEMPY
+
+	cpy	TEMPY
+	beq	clear_with_window
+
+
+
+
+
+clear_all_line:
+
+	ldx	#39
 	lda	#0
-	ldx	#40
-window_inner_loop:
 
-window_loop_smc:
+window_inner_all_loop:
+
+window_all_loop_smc:
 	sta	$400,X
 	dex
-	bpl	window_inner_loop
 
+	bpl	window_inner_all_loop
+
+	jmp	window_continue
+
+clear_with_window:
+	;===================
+	; clear to the left
+
+	lda	PHYSICIST_X
+	sec
+	sbc	#5
+	bpl	window_left_limit
+	lda	#0
+window_left_limit:
+	tax
+
+	lda	#0
+window_inner_left_loop:
+
+window_left_loop_smc:
+	sta	$400,X
+	dex
+
+	bpl	window_inner_left_loop
+
+
+	; clear to the right
+
+	lda	PHYSICIST_X
+	clc
+	adc	#8
+	cmp	#39
+	bcs	skip_window_right
+
+	tax
+	lda	#0
+window_inner_right_loop:
+
+window_right_loop_smc:
+	sta	$400,X
+	inx
+	cpx	#40
+	bne	window_inner_right_loop
+
+skip_window_right:
+
+window_continue:
 	iny
 	iny
 	cpy	#48
