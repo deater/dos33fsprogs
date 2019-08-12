@@ -871,29 +871,16 @@ window_loop:
 	sta	TEMPY
 
 	cpy	TEMPY
-	beq	clear_with_window
+	bcc	clear_all_line		; blt
 
-	inc	TEMPY
-	inc	TEMPY
-
-	cpy	TEMPY
-	beq	clear_with_window
-
-	inc	TEMPY
-	inc	TEMPY
+	clc
+	adc	#10
+	sta	TEMPY
 
 	cpy	TEMPY
-	beq	clear_with_window
+	bcs	clear_all_line
 
-	inc	TEMPY
-	inc	TEMPY
-
-	cpy	TEMPY
-	beq	clear_with_window
-
-
-
-
+	jmp	clear_with_window
 
 clear_all_line:
 
