@@ -7,7 +7,6 @@ ootw_vent:
 
 	lda	#0
 	sta	GAIT
-;	sta	FALLING
 	sta	VENT_DEATH
 	sta	VENT_END_COUNT
 
@@ -22,8 +21,6 @@ ootw_vent:
 
 	lda	#17
 	sta	PHYSICIST_X
-;	lda	#2
-;	sta	PHYSICIST_Y
 
 	; fall into level
 	lda	#1
@@ -34,6 +31,28 @@ ootw_vent:
 	lda	#2
 	sta	FALLING_Y
 
+	;===========================
+	; Setup and clear pages (is this necessary?)
+
+	lda	#4
+	sta	DRAW_PAGE
+	jsr	clear_all
+	lda	#0
+	sta	DRAW_PAGE
+
+	lda	#1
+	sta	DISP_PAGE
+
+	;===========================
+	; Enable graphics
+
+	bit	LORES
+	bit	SET_GR
+	bit	FULLGR
+	bit	PAGE1
+
+
+	;============================
 	; load background
 	lda	#>(vent_rle)
 	sta	GBASH
@@ -42,20 +61,7 @@ ootw_vent:
 	lda	#$c				; load to page $c00
 	jsr	load_rle_gr			; tail call
 
-	;===========================
-	; Enable graphics
 
-	bit	LORES
-	bit	SET_GR
-	bit	FULLGR
-
-	;===========================
-	; Setup pages (is this necessary?)
-
-	lda	#0
-	sta	DRAW_PAGE
-	lda	#1
-	sta	DISP_PAGE
 
 	;=================================
 	; setup vars
@@ -80,12 +86,6 @@ vent_loop:
 	;================================
 
 	jsr	handle_steam
-
-
-
-
-
-
 
 
 	;===============================
@@ -420,6 +420,13 @@ draw_fell_stop:
 	; dead/poisoned
 draw_poisoned:
 
+	lda	GAIT
+	cmp	#23
+	bcs	no_inc_poison
+
+	inc	GAIT
+no_inc_poison:
+
 	lda	PHYSICIST_X
 	sta	XPOS
 	lda	PHYSICIST_Y
@@ -458,6 +465,13 @@ draw_rolling:
 actually_draw:
 	sta	INH
 	jsr	put_sprite_crop
+
+
+	;========================
+	; only show small window
+	;========================
+
+	jsr	only_show_window
 
 	;===============
 	; page flip
@@ -771,6 +785,9 @@ steam_done:
 	;==============================
 steam_collide:
 
+	lda	VENT_DEATH		; only die if still alive
+	bne	not_steamed
+
 	ldx	#3
 steam_collide_loop:
 
@@ -816,4 +833,41 @@ not_steamed:
 steamed:
 	lda	#2
 	sta	VENT_DEATH
+
+	lda	#0
+	sta	GAIT
+	rts
+
+
+
+
+
+	;=================================
+	; only show window
+	;=================================
+only_show_window:
+
+	ldy	#0
+window_loop:
+	lda	gr_offsets,Y
+	sta	window_loop_smc+1
+	lda	gr_offsets+1,Y
+	clc
+	adc	DRAW_PAGE
+	sta	window_loop_smc+2
+
+	lda	#0
+	ldx	#40
+window_inner_loop:
+
+window_loop_smc:
+	sta	$400,X
+	dex
+	bpl	window_inner_loop
+
+	iny
+	iny
+	cpy	#48
+	bne	window_loop
+
 	rts
