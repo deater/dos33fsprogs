@@ -451,3 +451,121 @@ alien_shooting_up_sprite:
 	.byte $aa,$aa,$55,$77,$aa
 	.byte $aa,$aa,$a5,$07,$aa
 	.byte $aa,$0a,$00,$00,$aa
+
+
+
+
+;=====================
+;=====================
+; EXPLODING
+;=====================
+;=====================
+
+;alien_explode_progression:
+;	.word	alien_exploding_2
+
+
+alien_exploding_2:	; 0
+	.byte $5,$8
+	.byte $aa,$ea,$ea,$ea,$aa
+	.byte $fe,$ff,$ff,$ee,$ea
+	.byte $ef,$ff,$ff,$ff,$ee
+	.byte $aa,$ff,$ff,$ff,$ee
+	.byte $fe,$fe,$ff,$ff,$ee
+	.byte $ef,$ff,$ff,$ff,$ee
+	.byte $ee,$ff,$ff,$ff,$ff
+	.byte $fe,$ff,$ff,$ee,$ff
+
+alien_exploding_3:	; 1
+	.byte $5,$8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $fa,$ff,$ff,$aa,$aa
+	.byte $af,$af,$fa,$ff,$aa
+	.byte $af,$af,$fa,$ff,$aa
+	.byte $fa,$fa,$aa,$ff,$aa
+	.byte $af,$ff,$ff,$ff,$aa
+	.byte $aa,$ff,$ff,$fa,$fa
+	.byte $fa,$ff,$aa,$aa,$ff
+
+alien_exploding_4:	; 2
+	.byte $5,$8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $0a,$00,$00,$aa,$aa
+	.byte $a0,$a0,$0a,$00,$aa
+	.byte $a0,$a0,$0a,$00,$aa
+	.byte $0a,$0a,$aa,$00,$aa
+	.byte $a0,$00,$00,$00,$aa
+	.byte $aa,$00,$00,$0a,$0a
+	.byte $0a,$00,$aa,$aa,$00
+
+alien_exploding_9:	; 3
+	.byte $5,$8
+	.byte $aa,$aa,$aa,$fa,$aa
+	.byte $5a,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$fa,$aa,$0a
+	.byte $a7,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$af,$aa
+	.byte $aa,$7a,$aa,$aa,$7a
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $fa,$aa,$aa,$aa,$aa
+
+alien_exploding_10:	; 4
+	.byte $5,$8
+	.byte $5a,$aa,$aa,$aa,$fa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$fa,$a0
+	.byte $a7,$aa,$aa,$fa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$7a
+	.byte $a7,$aa,$aa,$aa,$a7
+	.byte $fa,$aa,$aa,$aa,$aa
+
+alien_exploding_11:	; 5
+	.byte $5,$8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$5a,$aa,$fa,$aa
+	.byte $aa,$aa,$aa,$aa,$fa
+	.byte $a7,$aa,$aa,$aa,$0a
+	.byte $a7,$aa,$aa,$aa,$fa
+	.byte $aa,$aa,$aa,$aa,$7a
+	.byte $aa,$aa,$aa,$aa,$7a
+	.byte $fa,$aa,$aa,$aa,$aa
+
+alien_exploding_12:	; 6
+	.byte $5,$8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$a5,$aa,$fa,$aa
+	.byte $aa,$aa,$aa,$0a,$aa
+	.byte $7a,$aa,$aa,$aa,$af
+	.byte $7a,$aa,$aa,$aa,$af
+	.byte $fa,$aa,$aa,$aa,$5a
+
+alien_exploding_13:	; 7
+	.byte $5,$8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$fa,$aa
+	.byte $aa,$a5,$aa,$0a,$aa
+	.byte $5a,$a7,$aa,$aa,$fa
+
+alien_exploding_14:	; 8
+	.byte $5,$8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $7a,$5a,$fa,$0a,$fa
+
+
+
+
+
+
