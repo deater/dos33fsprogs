@@ -81,11 +81,6 @@ vent_loop:
 
 	jsr	gr_copy_to_current
 
-	;================================
-	; draw background action (steam)
-	;================================
-
-	jsr	handle_steam
 
 
 	;===============================
@@ -465,6 +460,13 @@ draw_rolling:
 actually_draw:
 	sta	INH
 	jsr	put_sprite_crop
+
+
+	;================================
+	; draw background action (steam)
+	;================================
+
+	jsr	handle_steam
 
 
 	;========================
