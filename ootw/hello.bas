@@ -1,5 +1,5 @@
    5  HOME
-  10  PRINT "OOTW PROOF-OF-CONCEPT V2.3 (7/30/2019)"
+  10  PRINT "OOTW PROOF-OF-CONCEPT V2.4 (8/11/2019)"
   15  PRINT "                           BY DEATER"
   20  PRINT "                  DISK,LZ4 BY QKUMBA"
   25  PRINT "            ," 
