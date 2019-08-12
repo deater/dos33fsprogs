@@ -680,7 +680,7 @@ handle_steam:
 	; increment steam states
 
 	lda	FRAMEL
-	and	#$3
+	and	#$1
 	bne	no_inc_steam
 
 	ldx	#3
