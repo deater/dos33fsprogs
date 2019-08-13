@@ -105,6 +105,8 @@ end_message:
 .include "door.s"
 .include "laser.s"
 
+.include "ootw_c4_action.s"
+
 ; room backgrounds
 .include "ootw_graphics/l4city/ootw_c4_city.inc"
 ; sprites
