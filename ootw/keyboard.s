@@ -273,9 +273,14 @@ down_not_elevator:
 check_gun:
 	cmp	#'L'
 	bne	check_space
+
+	;======================
+	; 'L' to charge gun
+	;======================
 handle_gun:
 	lda	#1
-	sta	ACTIVATE_SHIELD
+;	sta	ACTIVATE_SHIELD
+	sta	ACTIVATE_BLAST
 
 	jmp	done_keypress
 

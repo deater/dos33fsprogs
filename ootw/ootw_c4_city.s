@@ -638,6 +638,16 @@ no_activate_shield:
 	lda	#0
 	sta	ACTIVATE_SHIELD
 
+	;================
+	; fire blast
+	;================
+
+	lda	ACTIVATE_BLAST
+	beq	no_fire_blast
+	jsr	fire_blast
+no_fire_blast:
+	lda	#0
+	sta	ACTIVATE_BLAST
 
 
 	;================
@@ -646,12 +656,23 @@ no_activate_shield:
 
 	jsr	move_laser
 
-
 	;================
 	; draw laser
 	;================
 
 	jsr	draw_laser
+
+	;================
+	; move blast
+	;================
+
+	jsr	move_blast
+
+	;================
+	; draw blast
+	;================
+
+	jsr	draw_blast
 
 	;================
 	; draw shields
