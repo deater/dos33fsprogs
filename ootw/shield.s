@@ -107,9 +107,18 @@ draw_shields_loop:
 	lda	shield_y,X
 	sta	YPOS
 
-	lda	#<shield_high1_sprite
+	ldy	shield_count,X
+
+	lda	shield_progression,Y
+	bmi	destroy_shield
+
+	tay
+
+	inc	shield_count,X
+
+	lda	shield_table_lo,Y
 	sta	INL
-	lda	#>shield_high1_sprite
+	lda	shield_table_hi,Y
 	sta	INH
 
 	txa
@@ -119,6 +128,12 @@ draw_shields_loop:
 
 	pla
 	tax
+	jmp	draw_shields_loop_continue
+
+destroy_shield:
+	lda	#0
+	sta	shield_out,X
+	dec	SHIELD_OUT
 
 draw_shields_loop_continue:
 	inx
@@ -169,7 +184,33 @@ init_shields_loop:
 
 	rts
 
+shield_progression:
+	.byte 0,1
+	.byte 2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3
+	.byte 4,5,4,5,4,5,4,5,4,5,4,5
+	.byte 6,7,6,7,6,7,6,7
+	.byte 0
+	.byte $FF
 
+shield_table_hi:
+	.byte >shield_flash_sprite	; 0
+	.byte >shield_start_sprite	; 1
+	.byte >shield_high1_sprite	; 2
+	.byte >shield_high2_sprite	; 3
+	.byte >shield_medium1_sprite	; 4
+	.byte >shield_medium2_sprite	; 5
+	.byte >shield_low1_sprite	; 6
+	.byte >shield_low2_sprite	; 7
+
+shield_table_lo:
+	.byte <shield_flash_sprite
+	.byte <shield_start_sprite
+	.byte <shield_high1_sprite
+	.byte <shield_high2_sprite
+	.byte <shield_medium1_sprite
+	.byte <shield_medium2_sprite
+	.byte <shield_low1_sprite
+	.byte <shield_low2_sprite
 
 
 
@@ -220,46 +261,46 @@ shield_high2_sprite:
 
 shield_medium1_sprite:
 	.byte 1,8
+	.byte $A1
 	.byte $AA
+	.byte $1B
 	.byte $AA
+	.byte $A3
 	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
+	.byte $3A
+	.byte $BA
 
 shield_medium2_sprite:
 	.byte 1,8
+	.byte $AB
 	.byte $AA
+	.byte $A3
+	.byte $A3
 	.byte $AA
+	.byte $B3
 	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
+	.byte $1A
 
 shield_low1_sprite:
 	.byte 1,8
+	.byte $A3
+	.byte $AB
+	.byte $AA
+	.byte $3A
 	.byte $AA
 	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
+	.byte $1A
 	.byte $AA
 
 shield_low2_sprite:
 	.byte 1,8
+	.byte $A1
 	.byte $AA
 	.byte $AA
+	.byte $A1
 	.byte $AA
 	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
+	.byte $A3
+	.byte $AB
 
 
