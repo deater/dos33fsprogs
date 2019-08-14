@@ -1,87 +1,6 @@
 ; Ootw Checkpoint4 -- Foreground Action Sequence
 
 
-	;=====================
-	; make pink (where applicable)
-	;=====================
-
-make_pink:
-
-	ldy	#0						; 2
-pink_outer:
-	lda	gr_offsets,Y					; 4+
-	sta	pi_smc1+1					; 4
-	sta	pi_smc2+1					; 4
-
-	lda	gr_offsets+1,Y					; 4+
-	clc							; 2
-	adc	DRAW_PAGE					; 3
-	sta	pi_smc1+2					; 4
-	sta	pi_smc2+2					; 4
-
-	sty	TEMPY						; 3
-
-	ldx	#39						; 2
-pink_inner:
-
-pi_smc1:
-	ldy	$400,X						; 4
-	lda	pink_lookup,Y					; 4+
-pi_smc2:
-	sta	$400,X						; 4
-	dex							; 2
-	bpl	pink_inner					; 3/2
-
-	ldy	TEMPY						; 3
-
-	iny							; 2
-	iny							; 2
-	cpy	#48						; 2
-	bne	pink_outer					; 3/2
-
-	rts							; 6
-
-
-; pink colors
-;    0->  0
-;    1->  3
-;    2->  3
-;    3->  3
-;    4->  1
-;    5->  1
-;    6->  F
-;    7->  1
-;    8->  1
-;    9->  1
-;    10-> 1
-;    11-> F?
-;    12-> F?
-;    13-> F?
-;    14-> F?
-;    15-> F?
-
-
-pink_lookup:
-;       0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
-.byte $00,$03,$03,$03,$01,$01,$0F,$01,$01,$01,$01,$0F,$0F,$0F,$0F,$0F
-.byte $30,$33,$33,$33,$31,$31,$3F,$31,$31,$31,$31,$3F,$3F,$3F,$3F,$3F
-.byte $30,$33,$33,$33,$31,$31,$3F,$31,$31,$31,$31,$3F,$3F,$3F,$3F,$3F
-.byte $30,$33,$33,$33,$31,$31,$3F,$31,$31,$31,$31,$3F,$3F,$3F,$3F,$3F
-.byte $10,$13,$13,$13,$11,$11,$1F,$11,$11,$11,$11,$1F,$1F,$1F,$1F,$1F
-.byte $10,$13,$13,$13,$11,$11,$1F,$11,$11,$11,$11,$1F,$1F,$1F,$1F,$1F
-.byte $F0,$F3,$F3,$F3,$F1,$F1,$FF,$F1,$F1,$F1,$F1,$FF,$FF,$FF,$FF,$FF
-.byte $10,$13,$13,$13,$11,$11,$1F,$11,$11,$11,$11,$1F,$1F,$1F,$1F,$1F
-.byte $10,$13,$13,$13,$11,$11,$1F,$11,$11,$11,$11,$1F,$1F,$1F,$1F,$1F
-.byte $10,$13,$13,$13,$11,$11,$1F,$11,$11,$11,$11,$1F,$1F,$1F,$1F,$1F
-.byte $10,$13,$13,$13,$11,$11,$1F,$11,$11,$11,$11,$1F,$1F,$1F,$1F,$1F
-.byte $F0,$F3,$F3,$F3,$F1,$F1,$FF,$F1,$F1,$F1,$F1,$FF,$FF,$FF,$FF,$FF
-.byte $F0,$F3,$F3,$F3,$F1,$F1,$FF,$F1,$F1,$F1,$F1,$FF,$FF,$FF,$FF,$FF
-.byte $F0,$F3,$F3,$F3,$F1,$F1,$FF,$F1,$F1,$F1,$F1,$FF,$FF,$FF,$FF,$FF
-.byte $F0,$F3,$F3,$F3,$F1,$F1,$FF,$F1,$F1,$F1,$F1,$FF,$FF,$FF,$FF,$FF
-.byte $F0,$F3,$F3,$F3,$F1,$F1,$FF,$F1,$F1,$F1,$F1,$FF,$FF,$FF,$FF,$FF
-
-;========================================================
-; blah
 
 ;=================
 ;=================
@@ -95,7 +14,7 @@ action_sequence:
 	lda	#$00
 	sta	hlin_mask_smc+1
 
-	ldx	#49
+	ldx	#65
 	lda	action_list_lo,x
 	sta	ac_jump
 	lda     action_list_hi,x
@@ -821,7 +740,7 @@ action_frame49:
 ;==============
 ; frame50: (111)
 ; 	hlin color: $1A/A1: 20,39 at 22,24
-;	alien_eye@2,28
+;	alien_eye@2,28	(-12, -4)
 action_frame50:
 	ldy	#22
 	lda	#$10
@@ -830,113 +749,226 @@ action_frame50:
 	sta	hlin_mask_smc+1
 	jsr	action_right_laser
 
+	ldx	#246
+	ldy	#24
+	jmp	action_draw_alien1
 
 ;==============
 ; frame51: (112)
-;	alien_eye@6,28
+;	alien_eye@6,28 (-12,-4)
 action_frame51:
+	ldx	#250
+	ldy	#24
+	jmp	action_draw_alien1
 
 ;==============
 ; frame52: (113)
-;	alien_eye@10,30
+;	alien_eye@10,30	(-12, -4)
 action_frame52:
+	ldx	#254
+	ldy	#24
+	jmp	action_draw_alien1
 
 ;==============
 ; frame53: (114)
-;	alien_eye@14,30
-;	alien_eye@2,28
+;	alien_eye@14,30 (-12, -4)
+;	alien_eye2@2,28 (-12, -2)
 action_frame53:
+	ldx	#2
+	ldy	#26
+	jsr	action_draw_alien1
+
+	ldx	#246
+	ldy	#26
+	jmp	action_draw_alien2
 
 ;==============
 ; frame54: (115)
-;	alien_eye@20,28
-;	alien_eye@6,28
+;	alien_eye@20,28 (-12,-4)
+;	alien_eye@6,28	(-12,-2)
 action_frame54:
+	ldx	#8
+	ldy	#24
+	jsr	action_draw_alien1
+
+	ldx	#250
+	ldy	#26
+	jmp	action_draw_alien2
 
 ;==============
 ; frame55: (116)
-;	alien_eye@24,30
-;	alien_eye@10,30
+;	alien_eye@24,30	(-12,-4)
+;	alien_eye@10,30	(-12,-2)
 action_frame55:
+	ldx	#12
+	ldy	#26
+	jsr	action_draw_alien1
+
+	ldx	#254
+	ldy	#28
+	jmp	action_draw_alien2
+
 
 ;==============
 ; frame56: (117)
-;	alien_eye@28,30
-;	alien_eye@15,30
+;	alien_eye@28,30	(-12,-4)
+;	alien_eye@15,30	(-12,-2)
 action_frame56:
+	ldx	#16
+	ldy	#26
+	jsr	action_draw_alien1
+
+	ldx	#3
+	ldy	#28
+	jmp	action_draw_alien2
 
 ;==============
 ; frame57: (118)
-;	alien_eye@32,30
-;	alien_eye@20,30
+;	alien_eye@32,30	(-12,-4)
+;	alien_eye@20,30	(-12,-2)
 action_frame57:
+	ldx	#20
+	ldy	#26
+	jsr	action_draw_alien1
+
+	ldx	#8
+	ldy	#28
+	jmp	action_draw_alien2
 
 ;==============
 ; frame58: (119)
-;	alien_eye@38,28
-;	alien_eye@25,30
-;	alien_eye@2,28
+;	alien_eye@38,28 (-12,-4)
+;	alien_eye@25,30 (-12,-2)
+;	alien_eye@2,28	(-12,-4)
 action_frame58:
+	ldx	#26
+	ldy	#24
+	jsr	action_draw_alien1
+
+	ldx	#13
+	ldy	#28
+	jsr	action_draw_alien2
+
+	ldx	#246
+	ldy	#24
+	jmp	action_draw_alien1
+
 
 ;==============
 ; frame59: (120)
-;	alien_eye@43,28
-;	alien_eye@29,30
-;	alien_eye@6,28
+;	alien_eye@43,28	(-12,-4)
+;	alien_eye@29,30	(-12,-2)
+;	alien_eye@6,28	(-12,-4)
 action_frame59:
+	ldx	#31
+	ldy	#24
+	jsr	action_draw_alien1
+
+	ldx	#17
+	ldy	#28
+	jsr	action_draw_alien2
+
+	ldx	#254
+	ldy	#24
+	jmp	action_draw_alien1
 
 ;==============
 ; frame60: (121)
-;	alien_eye@48,28
-;	alien_eye@33,30
-;	alien_eye@10,30
+;	alien_eye@48,28 (-12,-4)
+;	alien_eye@33,30 (-12,-2)
+;	alien_eye@10,30 (-12,-4)
 action_frame60:
+	ldx	#36
+	ldy	#24
+	jsr	action_draw_alien1
+
+	ldx	#21
+	ldy	#28
+	jsr	action_draw_alien2
+
+	ldx	#254
+	ldy	#26
+	jmp	action_draw_alien1
 
 ;==============
 ; frame61: (122)
-;	alien_eye@38,28
-;	alien_eye@15,30
+;	alien_eye@38,28	(-12,-2)
+;	alien_eye@15,30	(-12,-4)
 action_frame61:
+	ldx	#26
+	ldy	#26
+	jsr	action_draw_alien2
+
+	ldx	#3
+	ldy	#26
+	jmp	action_draw_alien1
 
 ;==============
 ; frame62: (123)
-;	alien_eye@43,28
-;	alien_eye@20,28
+;	alien_eye@43,28	(-12,-2)
+;	alien_eye@20,28	(-12,-4)
 action_frame62:
+	ldx	#31
+	ldy	#26
+	jsr	action_draw_alien2
+
+	ldx	#8
+	ldy	#24
+	jmp	action_draw_alien1
 
 ;==============
 ; frame63: (124)
-;	alien_eye@48,28
-;	alien_eye@24,28
+;	alien_eye@48,28	(-12,-2)
+;	alien_eye@24,28	(-12,-4)
 action_frame63:
+	ldx	#36
+	ldy	#26
+	jsr	action_draw_alien2
+
+	ldx	#12
+	ldy	#24
+	jmp	action_draw_alien1
 
 ;==============
 ; frame64: (125)
-;	alien_eye@28,30
+;	alien_eye@28,30	(-12,-4)
 action_frame64:
+	ldx	#26
+	ldy	#26
+	jmp	action_draw_alien1
+
 
 ;==============
 ; frame65: (126)
-;	alien_eye@32,30
+;	alien_eye@32,30	(-12,-4)
 action_frame65:
+	ldx	#20
+	ldy	#26
+	jmp	action_draw_alien1
 
 ;==============
 ; frame66: (127)
-;	alien_eye@38,28
+;	alien_eye@38,28	(-12,-4)
 action_frame66:
+	ldx	#26
+	ldy	#24
+	jmp	action_draw_alien1
 
 ;==============
 ; frame67: (128)
-;	alien_eye@43,28
+;	alien_eye@43,28	(-12,-4)
 action_frame67:
+	ldx	#31
+	ldy	#24
+	jmp	action_draw_alien1
 
 ;==============
 ; frame68: (129)
-;	alien_eye@48,28
+;	alien_eye@48,28	(-12,-4)
 action_frame68:
-
-
-	rts
+	ldx	#36
+	ldy	#24
+	jmp	action_draw_alien1
 
 	;================================
 	;================================
@@ -1161,7 +1193,7 @@ action_draw_friend:
 
 	;=========================
 	;=========================
-	; action_draw_alien
+	; action_draw_alien1
 	;=========================
 	;=========================
 action_draw_alien1:
@@ -1172,6 +1204,21 @@ action_draw_alien1:
 	lda	#>action_alien1_sprite
 	sta	INH
 	jmp	put_sprite_crop
+
+	;=========================
+	;=========================
+	; action_draw_alien2
+	;=========================
+	;=========================
+action_draw_alien2:
+	stx	XPOS
+	sty	YPOS
+	lda	#<action_alien2_sprite
+	sta	INL
+	lda	#>action_alien2_sprite
+	sta	INH
+	jmp	put_sprite_crop
+
 
 
 
@@ -1194,14 +1241,11 @@ action_friend_sprite:
 	.byte $00,$00,$60,$66,$66,$66,$00,$00,$00,$00,$AA,$AA
 	.byte $00,$00,$60,$66,$66,$66,$00,$00,$00,$00,$AA,$AA
 
-; technically the middle alien has squatter face
-; is slightly shorter, and has no red insignia
-
 action_alien1_sprite:
 	.byte 12,13	; eye@11,4
 	.byte $AA,$AA,$AA,$AA,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$AA
 	.byte $AA,$AA,$AA,$0A,$00,$00,$00,$00,$00,$00,$00,$60
-	.byte $AA,$AA,$AA,$00,$60,$00,$00,$00,$00,$00,$f6,$26
+	.byte $AA,$AA,$AA,$00,$00,$00,$00,$00,$00,$00,$6f,$56
 	.byte $AA,$AA,$0A,$00,$00,$00,$00,$00,$00,$66,$66,$66
 	.byte $AA,$0A,$00,$00,$10,$10,$00,$00,$60,$00,$06,$66
 	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$66,$00,$06
@@ -1212,5 +1256,106 @@ action_alien1_sprite:
 	.byte $00,$00,$66,$66,$66,$66,$06,$00,$00,$00,$AA,$AA
 	.byte $00,$00,$66,$66,$66,$66,$00,$00,$00,$00,$AA,$AA
 	.byte $00,$00,$00,$66,$66,$66,$00,$00,$00,$00,$AA,$AA
+
+; technically the middle alien has squatter face
+; is slightly shorter, and has no red insignia
+
+action_alien2_sprite:
+	.byte 12,12	; eye@11,4
+	.byte $AA,$AA,$AA,$AA,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+	.byte $AA,$AA,$AA,$0A,$00,$00,$00,$00,$00,$00,$00,$60
+	.byte $AA,$AA,$AA,$00,$00,$00,$00,$00,$00,$00,$00,$56
+	.byte $AA,$AA,$0A,$00,$00,$00,$00,$00,$00,$00,$66,$66
+	.byte $AA,$0A,$00,$00,$00,$00,$00,$00,$00,$60,$06,$66
+	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$66,$00,$06
+	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$66,$AA,$AA
+	.byte $00,$00,$00,$00,$60,$60,$00,$00,$00,$00,$AA,$AA
+	.byte $00,$00,$60,$60,$66,$66,$60,$00,$00,$00,$AA,$AA
+	.byte $00,$00,$66,$66,$66,$66,$66,$00,$00,$00,$AA,$AA
+	.byte $00,$00,$66,$66,$66,$66,$06,$00,$00,$00,$AA,$AA
+	.byte $00,$00,$66,$66,$66,$66,$00,$00,$00,$00,$AA,$AA
+
+
+
+
+
+	;=====================
+	; make pink (where applicable)
+	;=====================
+
+make_pink:
+
+	ldy	#0						; 2
+pink_outer:
+	lda	gr_offsets,Y					; 4+
+	sta	pi_smc1+1					; 4
+	sta	pi_smc2+1					; 4
+
+	lda	gr_offsets+1,Y					; 4+
+	clc							; 2
+	adc	DRAW_PAGE					; 3
+	sta	pi_smc1+2					; 4
+	sta	pi_smc2+2					; 4
+
+	sty	TEMPY						; 3
+
+	ldx	#39						; 2
+pink_inner:
+
+pi_smc1:
+	ldy	$400,X						; 4
+	lda	pink_lookup,Y					; 4+
+pi_smc2:
+	sta	$400,X						; 4
+	dex							; 2
+	bpl	pink_inner					; 3/2
+
+	ldy	TEMPY						; 3
+
+	iny							; 2
+	iny							; 2
+	cpy	#48						; 2
+	bne	pink_outer					; 3/2
+
+	rts							; 6
+
+
+; pink colors
+;    0->  0
+;    1->  3
+;    2->  3
+;    3->  3
+;    4->  1
+;    5->  1
+;    6->  F
+;    7->  1
+;    8->  1
+;    9->  1
+;    10-> 1
+;    11-> F?
+;    12-> F?
+;    13-> F?
+;    14-> F?
+;    15-> F?
+
+
+pink_lookup:
+;       0   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F
+.byte $00,$03,$03,$03,$01,$01,$0F,$01,$01,$01,$01,$0F,$0F,$0F,$0F,$0F
+.byte $30,$33,$33,$33,$31,$31,$3F,$31,$31,$31,$31,$3F,$3F,$3F,$3F,$3F
+.byte $30,$33,$33,$33,$31,$31,$3F,$31,$31,$31,$31,$3F,$3F,$3F,$3F,$3F
+.byte $30,$33,$33,$33,$31,$31,$3F,$31,$31,$31,$31,$3F,$3F,$3F,$3F,$3F
+.byte $10,$13,$13,$13,$11,$11,$1F,$11,$11,$11,$11,$1F,$1F,$1F,$1F,$1F
+.byte $10,$13,$13,$13,$11,$11,$1F,$11,$11,$11,$11,$1F,$1F,$1F,$1F,$1F
+.byte $F0,$F3,$F3,$F3,$F1,$F1,$FF,$F1,$F1,$F1,$F1,$FF,$FF,$FF,$FF,$FF
+.byte $10,$13,$13,$13,$11,$11,$1F,$11,$11,$11,$11,$1F,$1F,$1F,$1F,$1F
+.byte $10,$13,$13,$13,$11,$11,$1F,$11,$11,$11,$11,$1F,$1F,$1F,$1F,$1F
+.byte $10,$13,$13,$13,$11,$11,$1F,$11,$11,$11,$11,$1F,$1F,$1F,$1F,$1F
+.byte $10,$13,$13,$13,$11,$11,$1F,$11,$11,$11,$11,$1F,$1F,$1F,$1F,$1F
+.byte $F0,$F3,$F3,$F3,$F1,$F1,$FF,$F1,$F1,$F1,$F1,$FF,$FF,$FF,$FF,$FF
+.byte $F0,$F3,$F3,$F3,$F1,$F1,$FF,$F1,$F1,$F1,$F1,$FF,$FF,$FF,$FF,$FF
+.byte $F0,$F3,$F3,$F3,$F1,$F1,$FF,$F1,$F1,$F1,$F1,$FF,$FF,$FF,$FF,$FF
+.byte $F0,$F3,$F3,$F3,$F1,$F1,$FF,$F1,$F1,$F1,$F1,$FF,$FF,$FF,$FF,$FF
+.byte $F0,$F3,$F3,$F3,$F1,$F1,$FF,$F1,$F1,$F1,$F1,$FF,$FF,$FF,$FF,$FF
 
 
