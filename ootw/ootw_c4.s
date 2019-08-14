@@ -103,6 +103,7 @@ end_message:
 .include "alien.s"
 
 .include "door.s"
+.include "charger.s"
 .include "laser.s"
 .include "shield.s"
 .include "blast.s"
