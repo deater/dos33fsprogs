@@ -95,7 +95,7 @@ action_sequence:
 	lda	#$00
 	sta	hlin_mask_smc+1
 
-	ldx	#2
+	ldx	#49
 	lda	action_list_lo,x
 	sta	ac_jump
 	lda     action_list_hi,x
@@ -252,9 +252,7 @@ action_list_hi:
 
 ;========
 ; frame1: (76)
-; 	hlin color: $31: 0,20 at 40
-;	hlin color: $13: 0,20 at 42
-
+; 	hlin color: $31/$13: 0,20 at 40,42
 action_frame1:
 	ldy	#40
 	lda	#$31
@@ -264,9 +262,8 @@ action_frame1:
 
 ;=============
 ; frame2: (77)
-; 	hlin color: $31: 0,39 at 40
-;	hlin color: $13: 0,39 at 42
-;	pink colors!
+; 	hlin color: $31/$13: 0,39 at 40,42
+;	PINK!
 
 action_frame2:
 	ldy	#40
@@ -277,25 +274,32 @@ action_frame2:
 
 ;=============
 ; frame3: (78)
-; 	hlin color: $31: 20,39 at 40
-;	hlin color: $13: 20,39 at 42
-; 	hlin color: $1A:  0,19 at 40
-;	hlin color: $A1:  0,19 at 42
+; 	hlin color: $31/$13: 20,39 at 40,42
+; 	hlin color: $1A/$A1  0,19 at  40,42
+
 action_frame3:
 	ldy	#40
 	lda	#$31
 	sta	hlin_color_smc+1
 	jsr	action_right_laser
 	ldy	#40
-	lda	#$1A
+	lda	#$10
 	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
 	jmp	action_left_laser
 
 ;=============
 ; frame4: (79)
-; 	hlin color: $A1:  20,39 at 40
-;	hlin color: $1A:  20,39 at 42
+; 	hlin color: $1A/A1:  20,39 at 40,42
 action_frame4:
+	ldy	#40
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jmp	action_right_laser
+
 
 ;=============
 ; frame5: (80)
@@ -310,127 +314,280 @@ action_frame9:
 
 ;==============
 ; frame10: (81)
-; 	hlin color: $31: 0,20 at 22
-;	hlin color: $13: 0,20 at 24
+; 	hlin color: $31/$13: 0,20 at 22,24
 action_frame10:
+	ldy	#22
+	lda	#$31
+	sta	hlin_color_smc+1
+	jmp	action_left_laser
 
 ;=============
 ; frame11: (82)
-; 	hlin color: $31: 0,39 at 22
-;	hlin color: $13: 0,39 at 24
+; 	hlin color: $31/13: 0,39 at 22,24
 ;	pink colors!
 action_frame11:
+	ldy	#22
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_full_laser
+	jmp	make_pink
+
 
 ;=============
 ; frame12: (83)
-; 	hlin color: $31: 20,39 at 22
-;	hlin color: $13: 20,39 at 24
-; 	hlin color: $A1:  4,19 at 22
-;	hlin color: $1A:  4,19 at 24	; top
-; 	hlin color: $31:  0,20 at 30
-;	hlin color: $13:  0,20 at 32	; bottom
+; 	hlin color: $31/$13: 20,39 at 22,24
+; 	hlin color: $1A/$A1:  4,19 at 22,24	; top
+; 	hlin color: $31/$13:  0,20 at 30,32	; bottom
 action_frame12:
+	ldy	#22
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_right_laser
+
+	ldy	#30
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_left_laser
+
+	ldy	#22
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jsr	action_left_offset_laser
+
+
 
 ;=============
 ; frame13: (84)
-; 	hlin color: $A1: 20,39 at 22
-;	hlin color: $1A: 20,39 at 24	; top
-; 	hlin color: $3B:  0,39 at 30
-;	hlin color: $B3:  0,39 at 32	; bottom
+; 	hlin color: $1A/$A1: 20,39 at 22,24	; top
+; 	hlin color: $3B/$B3:  0,39 at 30,32	; bottom
 action_frame13:
+	ldy	#30
+	lda	#$3B
+	sta	hlin_color_smc+1
+	jsr	action_full_laser
+
+	ldy	#22
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jmp	action_right_laser
+
 
 ;==============
 ; frame14: (85)
-; 	hlin color: $31: 20,39 at 30
-;	hlin color: $13: 20,39 at 32
-; 	hlin color: $A1:  4,19 at 30
-;	hlin color: $1A:  4,19 at 32	; top
+; 	hlin color: $31/$13: 20,39 at 30,32
+; 	hlin color: $1A/$A1:  4,19 at 30,32
 action_frame14:
+	ldy	#30
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_right_laser
+
+	ldy	#30
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jmp	action_left_offset_laser
+
 
 ;==============
 ; frame15: (86)
-; 	hlin color: $A1:  20,39 at 30
-;	hlin color: $1A:  20,39 at 32	; top
-;	friend, eye@1,29
+; 	hlin color: $1A/A1:  20,39 at 30,32
+;	friend, eye@2,28 (-12,-4)
 action_frame15:
+	ldy	#30
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jsr	action_right_laser
+
+	ldx	#246
+	ldy	#24
+	jmp	action_draw_friend
+
 
 ;==============
 ; frame16: (87)
-;	friend, eye@8,29
+;	friend, eye@8,29 (-12,-4)
 action_frame16:
+	ldx	#252
+	ldy	#24
+	jmp	action_draw_friend
+
 
 ;==============
 ; frame17: (88)
-; 	hlin color: $31:  0,20 at 28
-;	hlin color: $13:  0,20 at 30	; bottom
-;	friend, eye@10,30
+; 	hlin color: $31,13:  0,20 at 28,30
+;	friend, eye@10,30 (-12, -4)
 action_frame17:
+	ldy	#28
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_left_laser
+
+	ldx	#254
+	ldy	#26
+	jmp	action_draw_friend
 
 ;==============
 ; frame18: (89)
-; 	hlin color: $31:  0,39 at 28
-;	hlin color: $13:  0,39 at 30	; bottom
-;	friend, eye@14,30
+; 	hlin color: $31,13:  0,39 at 28,30
+;	friend, eye@14,30	(-12, -4)
 ;	pink colors!  eyes red???
 action_frame18:
 
+	ldy	#28
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_full_laser
+
+	ldx	#2
+	ldy	#26
+	jsr	action_draw_friend
+
+	jmp	make_pink
+
 ;==============
 ; frame19: (90)
-; 	hlin color: $31: 20,39 at 28
-;	hlin color: $13: 20,39 at 30
-; 	hlin color: $A1:  4,19 at 28
-;	hlin color: $1A:  4,19 at 30	; top
-;	friend, eye@20,29
+; 	hlin color: $31/13: 20,39 at 28,30
+; 	hlin color: $1A/A1:  4,19 at 28,30
+;	friend, eye@20,28 (-12,-4)
 action_frame19:
+	ldy	#28
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_right_laser
+
+	ldy	#28
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jsr	action_left_offset_laser
+
+	ldx	#8
+	ldy	#24
+	jmp	action_draw_friend
 
 ;==============
 ; frame20: (91)
-; 	hlin color: $31:  0,20 at 32
-;	hlin color: $13:  0,20 at 34	; bottom
-;	friend, eye@24,30
+; 	hlin color: $31/13:  0,20 at 32,34
+;	friend, eye@24,30	(-12,-4)
 action_frame20:
+
+	ldy	#32
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_left_laser
+
+	ldx	#12
+	ldy	#26
+	jmp	action_draw_friend
 
 ;==============
 ; frame21: (92)
-; 	hlin color: $3B:  0,39 at 32
-;	hlin color: $B3:  0,39 at 34	; bottom
-;	friend, eye@29,30
+; 	hlin color: $3B/B3:  0,39 at 32,34
+;	friend, eye@29,30	(-12,-4)
 action_frame21:
+
+	ldy	#32
+	lda	#$3B
+	sta	hlin_color_smc+1
+	jsr	action_full_laser
+
+	ldx	#17
+	ldy	#26
+	jmp	action_draw_friend
 
 ;==============
 ; frame22: (93)
-; 	hlin color: $31: 20,39 at 32
-;	hlin color: $13: 20,39 at 34
-; 	hlin color: $A1:  4,19 at 32
-;	hlin color: $1A:  4,19 at 34	; top
-; 	hlin color: $31:  0,20 at 34
-;	hlin color: $13:  0,20 at 36	; bottom
-;	friend, eye@33,29
+; 	hlin color: $31/13: 20,39 at 32,34
+; 	hlin color: $1A/A1:  4,19 at 32,34	; top
+; 	hlin color: $31/13:  0,20 at 34,36	; bottom
+;	friend, eye@33,29	(-12,-4)
 action_frame22:
+	ldy	#32
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_right_laser
+
+	ldy	#34
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_left_laser
+
+	ldy	#32
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jsr	action_left_offset_laser
+
+	ldx	#21
+	ldy	#24
+	jmp	action_draw_friend
 
 ;==============
 ; frame23: (94)
-;	friend, eye@38,28
-; 	hlin color: $31:  0,39 at 34
-;	hlin color: $13:  0,39 at 36	; OVER FRIEND
+;	friend, eye@38,28	(-12,-4)
+; 	hlin color: $31,13:  0,39 at 34,36 ; OVER FRIEND
 ;	PINK!
 action_frame23:
 
+	ldx	#26
+	ldy	#24
+	jsr	action_draw_friend
+
+	ldy	#34
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_full_laser
+
+	jmp	make_pink
+
 ;==============
 ; frame24: (95)
-;	friend, eye@43,28
-; 	hlin color: $31: 20,39 at 34
-;	hlin color: $13: 20,39 at 36
-; 	hlin color: $A1:  4,19 at 34
-;	hlin color: $1A:  4,19 at 36	; OVER FRIEND
+;	friend, eye@43,28 (-12,-4)
+; 	hlin color: $31/13: 20,39 at 34,36
+; 	hlin color: $A1/1A:  4,19 at 34,36	;  OVER FRIEND
 action_frame24:
+	ldx	#31
+	ldy	#24
+	jsr	action_draw_friend
+
+	ldy	#34
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_right_laser
+
+	ldy	#34
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jmp	action_left_offset_laser
+
 
 ;==============
 ; frame25: (96)
-;	friend, eye@48,28
-; 	hlin color: $A1: 20,39 at 34
-;	hlin color: $1A: 20,39 at 36	; OVER FRIEND
+;	friend, eye@48,28 (-12,-4)
+; 	hlin color: $1A/A1: 20,39 at 34,36	; OVER FRIEND
 action_frame25:
+	ldx	#36
+	ldy	#24
+	jsr	action_draw_friend
+
+	ldy	#34
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jmp	action_right_laser
 
 ;=======================
 ; frame26: wait 5 frames
@@ -443,30 +600,53 @@ action_frame30:
 
 ;==============
 ; frame31: (97)
-; 	hlin color: $31:  0,20 at 24
-;	hlin color: $13:  0,20 at 26
+; 	hlin color: $31:  0,20 at 24,26
+
 action_frame31:
+	ldy	#24
+	lda	#$31
+	sta	hlin_color_smc+1
+	jmp	action_left_laser
 
 ;==============
 ; frame32: (98)
-; 	hlin color: $31:  0,39 at 24
-;	hlin color: $13:  0,39 at 26
+; 	hlin color: $31/13:  0,39 at 24,26
 ;	PINK!
 action_frame32:
+	ldy	#24
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_full_laser
+
+	jmp	make_pink
 
 ;==============
 ; frame33: (99)
-; 	hlin color: $31: 20,39 at 24
-;	hlin color: $13: 20,39 at 26
-; 	hlin color: $A1:  4,19 at 24
-;	hlin color: $1A:  4,19 at 26
+; 	hlin color: $31/13 20,39 at 24,26
+; 	hlin color: $1A/A1:  4,19 at 24,26
 action_frame33:
+	ldy	#24
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_right_laser
+
+	ldy	#24
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jmp	action_left_offset_laser
 
 ;===============
 ; frame34: (100)
-; 	hlin color: $A1: 20,39 at 24
-;	hlin color: $1A: 20,39 at 26
+; 	hlin color: $1A/A1: 20,39 at 24,26
 action_frame34:
+	ldy	#24
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jmp	action_right_laser
 
 ;=======================
 ; frame35: wait 5 frames
@@ -479,88 +659,177 @@ action_frame39:
 
 ;===============
 ; frame40: (101)
-; 	hlin color: $31:  0,20 at 26
-;	hlin color: $13:  0,20 at 28
+; 	hlin color: $31/13:  0,20 at 26,28
 action_frame40:
+	ldy	#26
+	lda	#$31
+	sta	hlin_color_smc+1
+	jmp	action_left_laser
+
 
 ;===============
 ; frame41: (102)
-; 	hlin color: $31:  0,39 at 26
-;	hlin color: $13:  0,39 at 28
+; 	hlin color: $31/13:  0,39 at 26,28
 action_frame41:
+	ldy	#26
+	lda	#$31
+	sta	hlin_color_smc+1
+	jmp	action_full_laser
 
 ;===============
 ; frame42: (103)
-; 	hlin color: $31: 20,39 at 26
-;	hlin color: $13: 20,39 at 28
-; 	hlin color: $A1:  4,19 at 26
-;	hlin color: $1A:  4,19 at 28	; top
-; 	hlin color: $31:  0,20 at 28
-;	hlin color: $13:  0,20 at 30	; bottom
+; 	hlin color: $31/13: 20,39 at 26,28
+; 	hlin color: $1A/A1:  4,19 at 26,28
+; 	hlin color: $31/13:  0,20 at 28,30	; bottom
 action_frame42:
+	ldy	#26
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_right_laser
+
+	ldy	#28
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_left_laser
+
+	ldy	#26
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jmp	action_left_offset_laser
 
 ;===============
 ; frame43: (104)
-; 	hlin color: $A1: 20,39 at 26
-;	hlin color: $1A: 20,39 at 28
-; 	hlin color: $31:  0,39 at 28
-;	hlin color: $13:  0,39 at 30
-;	PINK!
+; 	hlin color: $1A/A1: 20,39 at 26,28
+; 	hlin color: $31/13:  0,39 at 28,30
+
 action_frame43:
+	ldy	#28
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_full_laser
+
+	ldy	#26
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jsr	action_right_laser
+
+	jmp	make_pink
 
 ;==============
 ; frame44: (105)
-; 	hlin color: $31: 20,39 at 28
-;	hlin color: $13: 20,39 at 30
-; 	hlin color: $A1:  4,19 at 28
-;	hlin color: $1A:  4,19 at 30
+; 	hlin color: $31/13: 20,39 at 28,30
+; 	hlin color: $1A/A1:  4,19 at 28,30
+
 action_frame44:
+	ldy	#28
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_right_laser
+
+	ldy	#28
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jmp	action_left_offset_laser
 
 ;==============
 ; frame45: (106)
-; 	hlin color: $31:  0,20 at 32
-;	hlin color: $13:  0,20 at 34
+; 	hlin color: $31/13:  0,20 at 32,34
 action_frame45:
+	ldy	#32
+	lda	#$31
+	sta	hlin_color_smc+1
+	jmp	action_left_laser
 
 ;==============
 ; frame46: (107)
-; 	hlin color: $3B:  0,39 at 32
-;	hlin color: $B3:  0,39 at 34
+; 	hlin color: $3B/B3:  0,39 at 32,34
+
 action_frame46:
+	ldy	#32
+	lda	#$B3
+	sta	hlin_color_smc+1
+	jmp	action_full_laser
 
 ;==============
 ; frame47: (108)
-; 	hlin color: $31: 20,39 at 32
-;	hlin color: $13: 20,39 at 34
-; 	hlin color: $A1:  4,19 at 32
-;	hlin color: $1A:  4,19 at 34	; top
-; 	hlin color: $31:  0,20 at 22
-;	hlin color: $13:  0,20 at 24	; bottom
+; 	hlin color: $31/13: 20,39 at 32,34
+; 	hlin color: $1A/A1:  4,19 at 32,34
+; 	hlin color: $31/13:  0,20 at 22,24	; bottom
 action_frame47:
+	ldy	#32
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_right_laser
+
+	ldy	#22
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_left_laser
+
+	ldy	#32
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jmp	action_left_offset_laser
+
+
 
 ;==============
 ; frame48: (109)
-; 	hlin color: $A1: 20,39 at 32
-;	hlin color: $1A: 20,39 at 34
-; 	hlin color: $31:  0,39 at 22
-;	hlin color: $13:  0,39 at 24	; bottom
+; 	hlin color: $1A/A1: 20,39 at 32,34
+; 	hlin color: $31/13:  0,39 at 22,24
 ;	PINK!
 action_frame48:
+	ldy	#22
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_full_laser
+
+	ldy	#32
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jsr	action_right_laser
+
+	jmp	make_pink
 
 ;==============
 ; frame49: (110)
-; 	hlin color: $31: 20,39 at 22
-;	hlin color: $13: 20,39 at 24
-; 	hlin color: $A1:  4,19 at 22
-;	hlin color: $1A:  4,19 at 24
+; 	hlin color: $31/13: 20,39 at 22,24
+; 	hlin color: $1A/A1:  4,19 at 22,24
 action_frame49:
+	ldy	#22
+	lda	#$31
+	sta	hlin_color_smc+1
+	jsr	action_right_laser
+
+	ldy	#22
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jmp	action_left_offset_laser
 
 ;==============
 ; frame50: (111)
-; 	hlin color: $A1: 20,39 at 22
-;	hlin color: $1A: 20,39 at 24
+; 	hlin color: $1A/A1: 20,39 at 22,24
 ;	alien_eye@2,28
 action_frame50:
+	ldy	#22
+	lda	#$10
+	sta	hlin_color_smc+1
+	lda	#$0f
+	sta	hlin_mask_smc+1
+	jsr	action_right_laser
+
 
 ;==============
 ; frame51: (112)
@@ -669,18 +938,25 @@ action_frame68:
 
 	rts
 
+	;================================
+	;================================
+	; action left laser
+	;================================
+	;================================
 	; Y is ypos
 	; color in hlin_color_smc+1
+	; draw from 0 to 20
 action_left_laser:
-
-; 	hlin color: $31: 0,20 at 40
 
 	sty	TEMPY
 	ldx	#20
 	lda	#0
 	jsr	hlin
 
-;	hlin color: $13: 0,20 at 42
+	; rotate color and mask, draw Y+2 lower
+
+
+	; rotate color
 
 	lda	hlin_color_smc+1
 
@@ -694,6 +970,21 @@ action_left_laser:
 
 	sta	hlin_color_smc+1
 
+	; rotate mask
+
+	lda	hlin_mask_smc+1
+
+	; swap nybbles
+	asl
+        adc	#$80
+        rol
+        asl
+        adc	#$80
+        rol
+
+	sta	hlin_mask_smc+1
+
+
 	ldy	TEMPY
 	iny
 	iny
@@ -702,6 +993,67 @@ action_left_laser:
 
 	jmp	hlin
 
+	;================================
+	;================================
+	; action left offset laser
+	;================================
+	;================================
+	; Y is ypos
+	; color in hlin_color_smc+1
+	; draw from 4 to 20
+action_left_offset_laser:
+
+	sty	TEMPY
+	ldx	#16
+	lda	#4
+	jsr	hlin
+
+	; rotate color and mask, draw Y+2 lower
+
+
+	; rotate color
+
+	lda	hlin_color_smc+1
+
+	; swap nybbles
+	asl
+        adc	#$80
+        rol
+        asl
+        adc	#$80
+        rol
+
+	sta	hlin_color_smc+1
+
+	; rotate mask
+
+	lda	hlin_mask_smc+1
+
+	; swap nybbles
+	asl
+        adc	#$80
+        rol
+        asl
+        adc	#$80
+        rol
+
+	sta	hlin_mask_smc+1
+
+
+	ldy	TEMPY
+	iny
+	iny
+	lda	#4
+	ldx	#16
+
+	jmp	hlin
+
+
+	;================================
+	;================================
+	; action full laser
+	;================================
+	;================================
 	; Y is ypos
 	; color in hlin_color_smc+1
 action_full_laser:
@@ -736,18 +1088,25 @@ action_full_laser:
 	jmp	hlin
 
 
+
+	;================================
+	;================================
+	; action right laser
+	;================================
+	;================================
 	; Y is ypos
 	; color in hlin_color_smc+1
+	; draws from 20-39 at Y
+	; then rotates color/mask and draws at Y+2
 action_right_laser:
 
-; 	hlin color: $31: 20,39 at 40
-
+	; draw initial
 	sty	TEMPY
 	ldx	#19
 	lda	#20
 	jsr	hlin
 
-;	hlin color: $13: 0,39 at 42
+	; rotate color
 
 	lda	hlin_color_smc+1
 
@@ -761,6 +1120,21 @@ action_right_laser:
 
 	sta	hlin_color_smc+1
 
+	; rotate mask
+
+	lda	hlin_mask_smc+1
+
+	; swap nybbles
+	asl
+        adc	#$80
+        rol
+        asl
+        adc	#$80
+        rol
+
+	sta	hlin_mask_smc+1
+
+
 	ldy	TEMPY
 	iny
 	iny
@@ -771,6 +1145,33 @@ action_right_laser:
 
 
 
+	;=========================
+	;=========================
+	; action_draw_friend
+	;=========================
+	;=========================
+action_draw_friend:
+	stx	XPOS
+	sty	YPOS
+	lda	#<action_friend_sprite
+	sta	INL
+	lda	#>action_friend_sprite
+	sta	INH
+	jmp	put_sprite_crop
+
+	;=========================
+	;=========================
+	; action_draw_alien
+	;=========================
+	;=========================
+action_draw_alien1:
+	stx	XPOS
+	sty	YPOS
+	lda	#<action_alien1_sprite
+	sta	INL
+	lda	#>action_alien1_sprite
+	sta	INH
+	jmp	put_sprite_crop
 
 
 

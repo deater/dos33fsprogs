@@ -728,7 +728,7 @@ c4_move_fg_objects:
 	; make pink (where applicable)
 	;===============
 
-	jsr	make_pink
+	jsr	action_sequence
 
 	;===============
 	; page flip
