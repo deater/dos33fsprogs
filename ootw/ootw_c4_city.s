@@ -105,7 +105,7 @@ alien_room_continue:
 	lda	#0
 	sta	FRAMEL			; reset frame count for action timer
 	sta	FRAMEH
-
+	sta	ACTION_COUNT		; cancel if we leave room mid-action
 
 	;==============================
 	; setup per-room variables
