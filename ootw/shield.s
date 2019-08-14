@@ -114,7 +114,13 @@ draw_shields_loop:
 
 	tay
 
+	lda	FRAMEL
+	and	#$7
+	bne	dont_increment_shield
+
 	inc	shield_count,X
+
+dont_increment_shield:
 
 	lda	shield_table_lo,Y
 	sta	INL
@@ -144,27 +150,6 @@ done_draw_shields:
 
 	rts
 
-
-
-	;===================
-	; update shields
-	;===================
-update_shields:
-;	lda	laser0_out
-;	beq	done_move_laser
-
-	; slow down laser
-;	lda	laser0_count
-;	and	#$3
-;	bne	no_move_laser
-
-;	lda	laser0_direction
-;	bne	move_laser_right
-
-	rts
-
-
-
 	;====================
 	; init shields
 	;====================
@@ -187,7 +172,10 @@ init_shields_loop:
 shield_progression:
 	.byte 0,1
 	.byte 2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3
+	.byte 2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3
 	.byte 4,5,4,5,4,5,4,5,4,5,4,5
+	.byte 4,5,4,5,4,5,4,5,4,5,4,5
+	.byte 6,7,6,7,6,7,6,7
 	.byte 6,7,6,7,6,7,6,7
 	.byte 0
 	.byte $FF
