@@ -125,8 +125,10 @@ LASER_OUT	= $DB		; 2+
 GUN_CHARGE	= $DC		; 2+
 
 MONSTER_AI	= $DD		; C1 underwater
+ACTION_COUNT	= $DD		; C4
 
 BG_BEAST	= $DE		; C1
+ACTION_TRIGGERED= $DE		; C4
 
 ON_ELEVATOR	= $DF		; ALL
 

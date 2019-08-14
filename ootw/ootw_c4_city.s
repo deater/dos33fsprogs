@@ -14,6 +14,14 @@ ootw_city_init:
 	sta	LASER_OUT
 	sta	ALIEN_OUT
 
+	sta	ACTION_TRIGGERED
+	sta	ACTION_COUNT
+
+;	lda	#1
+;	sta	ACTION_COUNT
+
+
+
 
 	;===============
 	; set up aliens
@@ -93,6 +101,10 @@ alien_room_continue:
 	inx
 	cpx	#MAX_ALIENS
 	bne	alien_room_loop
+
+	lda	#0
+	sta	FRAMEL			; reset frame count for action timer
+	sta	FRAMEH
 
 
 	;==============================
@@ -672,63 +684,32 @@ c4_room4_cover:
 c4_no_fg_cover:
 
 
+	;========================
+	; handle cinematic action
+	;========================
 
-;c2_draw_doorway:
-;
-;	lda	CART_X
-;	sta	XPOS
-;	lda	#36
-;	sta	YPOS
-;	lda	#<cart_sprite
-;	sta	INL
-;	lda	#>cart_sprite
-;	sta	INH
-;	jsr     put_sprite_crop
-;	jmp	c2_no_fg_action
+	lda	WHICH_ROOM		; only on causeway1
+	cmp	#2
+	bne	no_action_movie
 
-c4_no_fg_action:
+	lda	FRAMEH
+	cmp	#1
+	bne	action_no_trigger
 
-	;====================
-	; activate fg objects
-	;====================
-;c2_fg_check_jail1:
-;	lda	WHICH_JAIL
-;	cmp	#1
-;	bne	c2_fg_check_jail2
-;
-;	lda	CART_OUT
-;	bne	c2_fg_check_jail2
-;
-;	inc	CART_OUT
+	lda	ACTION_TRIGGERED	; already triggered
+	bne	action_no_trigger
 
+action_trigger:
+	lda	#1
+	sta	ACTION_COUNT
+	sta	ACTION_TRIGGERED
+action_no_trigger:
 
-	;================
-	; move fg objects
-	;================
-c4_move_fg_objects:
-
-;	lda	CART_OUT
-;	cmp	#1
-;	bne	cart_not_out
-
-	; move cart
-
-;	lda	FRAMEL
-;	and	#$3
-;	bne	cart_not_out
-;
-;	inc	CART_X
-;	lda	CART_X
-;	cmp	#39
-;	bne	cart_not_out
-;	inc	CART_OUT
-
-
-	;===============
-	; make pink (where applicable)
-	;===============
+	lda	ACTION_COUNT
+	beq	no_action_movie
 
 	jsr	action_sequence
+no_action_movie:
 
 	;===============
 	; page flip

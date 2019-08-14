@@ -7,14 +7,33 @@
 ; action sequence
 ;=================
 ;=================
+; A has the sequence step+1
 
 action_sequence:
 
+	tax		; it's actually one higher
+	dex
+
+	lda	FRAMEL			; slow it down a bit
+	and	#$3
+	bne	not_done_action
+
+	inc	ACTION_COUNT
+	lda	ACTION_COUNT
+	cmp	#69
+	bne	not_done_action
+
+	lda	#0
+	sta	ACTION_COUNT
+
+	rts
+
+not_done_action:
 	; draw both lines in the hlin
 	lda	#$00
 	sta	hlin_mask_smc+1
 
-	ldx	#65
+;	ldx	#65
 	lda	action_list_lo,x
 	sta	ac_jump
 	lda     action_list_hi,x
@@ -868,7 +887,7 @@ action_frame59:
 	ldy	#28
 	jsr	action_draw_alien2
 
-	ldx	#254
+	ldx	#250
 	ldy	#24
 	jmp	action_draw_alien1
 
@@ -933,7 +952,7 @@ action_frame63:
 ; frame64: (125)
 ;	alien_eye@28,30	(-12,-4)
 action_frame64:
-	ldx	#26
+	ldx	#16
 	ldy	#26
 	jmp	action_draw_alien1
 
