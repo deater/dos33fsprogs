@@ -663,29 +663,6 @@ no_fire_laser:
 	jsr handle_gun
 
 	;================
-	; activate_shield
-	;================
-
-;	lda	ACTIVATE_SHIELD
-;	beq	no_activate_shield
-;	jsr	activate_shield
-;no_activate_shield:
-;	lda	#0
-;	sta	ACTIVATE_SHIELD
-
-	;================
-	; fire blast
-	;================
-
-;	lda	ACTIVATE_BLAST
-;	beq	no_fire_blast
-;	jsr	fire_blast
-;no_fire_blast:
-;	lda	#0
-;	sta	ACTIVATE_BLAST
-
-
-	;================
 	; draw gun effect
 	;================
 

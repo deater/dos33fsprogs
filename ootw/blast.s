@@ -79,7 +79,7 @@ draw_blast:
 	lda	blast0_out
 	beq	done_draw_blast
 
-	lda	#$f6
+	lda	#$fe
 	sta	hlin_color_smc+1
 
 	lda	#$00
@@ -95,6 +95,25 @@ draw_blast:
 	lda	blast0_start
 
 	jsr	hlin
+
+	ldy	blast0_y
+	sty	YPOS
+
+	lda	blast0_direction
+	beq	blast_going_left
+	ldy	blast0_end
+	jmp	blast_going_done
+blast_going_left:
+	ldy	blast0_start
+blast_going_done:
+	sty	XPOS
+
+	lda	#<gun_charge_sprite8
+	sta	INL
+	lda	#>gun_charge_sprite8
+	sta	INH
+
+	jsr	put_sprite_crop
 
 done_draw_blast:
 
