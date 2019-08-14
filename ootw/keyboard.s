@@ -75,6 +75,7 @@ check_left:
 	; Left Pressed
 	;====================
 left_pressed:
+	inc	GUN_FIRE
 					; left==0
 	lda	DIRECTION		; if facing right, turn to face left
 	bne	left_going_right
@@ -126,6 +127,7 @@ check_right:
 	; Right Pressed
 	;===================
 right_pressed:
+	inc	GUN_FIRE
 
 					; right==1
 	lda	DIRECTION		; if facing right, turn to face left
@@ -222,6 +224,8 @@ up:
 	; UP -- Jump
 	;========================
 
+	inc	GUN_FIRE
+
 	lda	ON_ELEVATOR
 	beq	up_not_elevator
 
@@ -277,12 +281,23 @@ check_gun:
 	;======================
 	; 'L' to charge gun
 	;======================
-handle_gun:
-	lda	#1
-;	sta	ACTIVATE_SHIELD
-	sta	ACTIVATE_BLAST
+charge_gun:
+
+	lda	GUN_STATE
+	beq	not_already_firing
+
+	inc	GUN_FIRE
 
 	jmp	done_keypress
+
+not_already_firing:
+
+	inc	GUN_STATE
+
+	lda	#P_SHOOTING
+	sta	PHYSICIST_STATE
+
+	jmp	shoot
 
 
 check_space:
@@ -297,6 +312,8 @@ check_space:
 space:
 	lda	HAVE_GUN
 	beq	kick
+
+	inc	GUN_FIRE
 shoot:
 	lda	PHYSICIST_STATE
 	cmp	#P_SHOOTING

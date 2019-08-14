@@ -17,6 +17,7 @@ BEHAVIOR DIFFERENCES:
 	- separate left facing vs right facing sprites
 
 
+
 KNOWN BUGS:
 + ootw: pool monster grabs you a edge of pool (glitch)
 + intro: there's still a bit of a pause when the elevator door finishes opening
@@ -29,7 +30,7 @@ General:
   + running: Missing one running frame (?)
   + ability to run+jump
   + ability to kick while crouching
-  + ability to shoot whic crouching
+  + ability to shoot while crouching
   + running then crouch, you slide a bit
 
 * sprites_to_draw:
@@ -39,11 +40,9 @@ General:
   + physicist swimming
   + beast tripping
   + physicist shot
-  + alien shot
   + alien running
   + friend walking
   + friend running
-
 
 * underwater:
   + ripples in water
@@ -97,23 +96,17 @@ Level/Checkpoint #2:
   + music play when viewing city?
 
 Level/Checkpoint #3:
- + smoke
- + Poisoning
- + Only show a window around us rolling
- + Fix animation speed of rolling
  + Actual game shakes the camera when you hit the ground after falling
 
 Level/Checkpoint #4:
-+ Falling as enter level
-+ Implement gun recharger
-+ Implement doors
-+ Implement guard
-+ Add friend/shooting foreground action
-+ Allow falling into pit/spike
-+ Allow jumping to platform
-+ Allow exiting level
+ + Implement doors
+ + Implement guard (shooting, taunting)
 
 Level/Checkpoint #5:
-+ Falling as enter level
-+ Allow falling into first pit
+ + Falling as enter level
+ + Allow falling into first pit
 
+Pictures/Ending
+ + Show some pictures
+ + Do ending
+ + Play music?

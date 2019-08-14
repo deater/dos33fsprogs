@@ -15,6 +15,8 @@ ootw_city_init:
 	sta	ALIEN_OUT
 	sta	BLAST_OUT
 	sta	CHARGER_COUNT
+	sta	GUN_STATE
+	sta	GUN_FIRE
 
 	lda	#100
 	sta	GUN_CHARGE
@@ -655,27 +657,39 @@ no_fire_laser:
 	sta	LASER_OUT
 
 	;================
+	; handle gun
+	;================
+
+	jsr handle_gun
+
+	;================
 	; activate_shield
 	;================
 
-	lda	ACTIVATE_SHIELD
-	beq	no_activate_shield
-	jsr	activate_shield
-no_activate_shield:
-	lda	#0
-	sta	ACTIVATE_SHIELD
+;	lda	ACTIVATE_SHIELD
+;	beq	no_activate_shield
+;	jsr	activate_shield
+;no_activate_shield:
+;	lda	#0
+;	sta	ACTIVATE_SHIELD
 
 	;================
 	; fire blast
 	;================
 
-	lda	ACTIVATE_BLAST
-	beq	no_fire_blast
-	jsr	fire_blast
-no_fire_blast:
-	lda	#0
-	sta	ACTIVATE_BLAST
+;	lda	ACTIVATE_BLAST
+;	beq	no_fire_blast
+;	jsr	fire_blast
+;no_fire_blast:
+;	lda	#0
+;	sta	ACTIVATE_BLAST
 
+
+	;================
+	; draw gun effect
+	;================
+
+	jsr	draw_gun
 
 	;================
 	; move laser

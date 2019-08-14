@@ -118,6 +118,9 @@ LZ4_DONE	= $96
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
+GUN_FIRE	= $D4		; 2+
+
+GUN_STATE	= $D5		; 2+
 
 ACTIVATE_BLAST	= $D6		; 2+
 

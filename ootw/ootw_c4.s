@@ -104,6 +104,7 @@ end_message:
 
 .include "door.s"
 .include "charger.s"
+.include "gun.s"
 .include "laser.s"
 .include "shield.s"
 .include "blast.s"
