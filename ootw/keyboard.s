@@ -7,6 +7,7 @@
 ; D or ->   : start moving right
 ; W or up   : jump or elevator/transporter up
 ; S or down : crouch or pickup or elevator/transporter down
+; L         : charge gun
 ; space     : action
 ; escape    : quit
 
@@ -244,7 +245,7 @@ check_down:
 	cmp	#'S'
 	beq	down
 	cmp	#$0A
-	bne	check_space
+	bne	check_gun
 
 	;======================
 	; DOWN -- Crouch
@@ -269,10 +270,20 @@ down_not_elevator:
 
 	jmp	done_keypress
 
+check_gun:
+	cmp	#'L'
+	bne	check_space
+handle_gun:
+	lda	#1
+	sta	ACTIVATE_SHIELD
+
+	jmp	done_keypress
+
+
 check_space:
 	cmp	#' '
 	beq	space
-	cmp	#$15
+	cmp	#$15		; ascii 21=??
 	bne	unknown
 
 	;======================

@@ -78,6 +78,10 @@ ootw_city_init:
 	;===========================
 	;===========================
 ootw_city:
+	;============================
+	; init shields
+
+	jsr	init_shields
 
 
 	;==============================
@@ -623,6 +627,18 @@ no_fire_laser:
 	lda	#0
 	sta	LASER_OUT
 
+	;================
+	; activate_shield
+	;================
+
+	lda	ACTIVATE_SHIELD
+	beq	no_activate_shield
+	jsr	activate_shield
+no_activate_shield:
+	lda	#0
+	sta	ACTIVATE_SHIELD
+
+
 
 	;================
 	; move laser
@@ -637,7 +653,11 @@ no_fire_laser:
 
 	jsr	draw_laser
 
+	;================
+	; draw shields
+	;================
 
+	jsr	draw_shields
 
 	;========================
 	; draw foreground cover

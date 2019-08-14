@@ -118,6 +118,15 @@ LZ4_DONE	= $96
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
+
+ACTIVATE_BLAST	= $D6		; 2+
+
+ACTIVATE_SHIELD	= $D7		; 2+
+
+BLAST_OUT	= $D8		; 2+
+
+SHIELD_OUT	= $D9		; 2+
+
 ALIEN_OUT	= $DA		; 2+
 
 LASER_OUT	= $DB		; 2+
