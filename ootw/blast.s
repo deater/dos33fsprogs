@@ -20,6 +20,13 @@ fire_blast:
 
 	inc	blast0_out
 
+	; reduce gun charge
+	; FIXME: don't shoot if too low
+	lda	GUN_CHARGE
+	sec
+	sbc	#10
+	sta	GUN_CHARGE
+
 	; reset count
 
 	lda	#0
