@@ -1,11 +1,17 @@
 Before release:
+
+	general -- fix laser collision detection.
+		add detection of shields
+		add detection of friend
+		properly handle when multiple collision objects
+			on screen at once
 	
 	L1 -- fix run/jumping
 	L1 -- fix beast ending
 	L1 -- fix slugs
 
 	L2 -- add doors
-	L2 -- disable door by shooting wall
+	L2 -- disable door/powerline by shooting wall
 	L2 -- add aliens
 	L2 -- add minimal friend AI
 	L2 -- add way to leave L2 to L3
@@ -13,7 +19,6 @@ Before release:
 	L4 -- genericze doors
 	L4 -- blow up door to exit to L5
 	L4 -- allow crouching w gun, up to exit crouch
-	L4 -- getting rid of alien
 
 	L5 -- add ending scenes?
 
