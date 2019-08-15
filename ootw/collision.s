@@ -6,6 +6,7 @@
 	; far left limit is LEVEL_LEFT limit
 	; far right limit is LEVEL_RIGHT limit
 	; any LOCKED doors in the way also stop things
+	; FIXME: only door collision if on same level
 recalc_walk_collision:
 
 	lda	RIGHT_LIMIT
@@ -73,3 +74,116 @@ done_recalc_walk_right_collision:
 
 
 	rts
+
+
+
+
+
+	;=============================
+	;=============================
+	; calc_gun_right_collision
+	;=============================
+	;=============================
+	; far right limit is LEVEL_RIGHT
+	; any LOCKED or CLOSED doors stop things
+	; any shield stops things
+	; our friend stops things
+	; any enemies stop things
+
+calc_gun_right_collision:
+
+	lda	RIGHT_LIMIT
+	and	#$7f
+	sta	RIGHT_SHOOT_LIMIT
+
+	lda	NUM_DOORS
+	beq	done_calc_gun_right_collision
+
+calc_gun_right_doors:
+
+
+	ldx	#0
+calc_gun_right_loop:
+
+	lda	PHYSICIST_X
+
+	cmp	door_x,X
+	bcs	calc_gun_right_continue		; bge
+
+	lda	door_status,X
+	cmp	#DOOR_STATUS_LOCKED
+	beq	calc_gun_right_door_there
+	cmp	#DOOR_STATUS_CLOSED
+	bne	calc_gun_right_continue
+
+calc_gun_right_door_there:
+	; early exit
+	lda	door_x,X
+	sta	RIGHT_SHOOT_LIMIT
+	jmp	done_calc_gun_right_collision
+
+calc_gun_right_continue:
+	inx
+	cpx	NUM_DOORS
+	bne	calc_gun_right_loop
+
+done_calc_gun_right_collision:
+
+
+	rts
+
+
+
+	;=============================
+	;=============================
+	; calc_gun_left_collision
+	;=============================
+	;=============================
+	; far right limit is LEVEL_LEFT
+	; any LOCKED or CLOSED doors stop things
+	; any shield stops things
+	; our friend stops things
+	; any enemies stop things
+
+calc_gun_left_collision:
+
+	lda	LEFT_LIMIT
+	and	#$7f
+	sta	LEFT_SHOOT_LIMIT
+
+	lda	NUM_DOORS
+	beq	done_calc_gun_left_collision
+
+calc_gun_left_doors:
+
+
+	ldx	NUM_DOORS
+	dex
+calc_gun_left_loop:
+	lda	PHYSICIST_X
+
+	cmp	door_x,X
+	bcc	calc_gun_left_continue		; blt
+
+	lda	door_status,X
+	cmp	#DOOR_STATUS_LOCKED
+	beq	calc_gun_left_door_there
+	cmp	#DOOR_STATUS_CLOSED
+	bne	calc_gun_left_continue
+
+calc_gun_left_door_there:
+	; early exit
+	lda	door_x,X
+	sta	LEFT_SHOOT_LIMIT
+	jmp	done_calc_gun_left_collision
+
+calc_gun_left_continue:
+	dex
+	bpl	calc_gun_left_loop
+
+done_calc_gun_left_collision:
+
+
+	rts
+
+

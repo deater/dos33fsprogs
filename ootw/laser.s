@@ -54,6 +54,8 @@ fire_laser:
 
 laser_left:
 
+	jsr	calc_gun_left_collision
+
 	ldx	PHYSICIST_X
 	dex
 	stx	laser0_end
@@ -66,6 +68,8 @@ laser_left:
 	jmp	done_fire_laser
 
 laser_right:
+
+	jsr	calc_gun_right_collision
 
 	lda	PHYSICIST_X
 	clc
@@ -153,12 +157,14 @@ still_starting_left:
 laser_edge_detect_left:
 
 	lda	laser0_end
+	cmp	LEFT_SHOOT_LIMIT
 	bmi	disable_laser
 
 	lda	laser0_start
+	cmp	LEFT_SHOOT_LIMIT
 	bpl	no_move_laser
 
-	lda	#0
+	lda	LEFT_SHOOT_LIMIT
 	sta	laser0_start
 
 	jmp	no_move_laser
@@ -190,14 +196,14 @@ laser_edge_detect_right:
 
 	; detect if totally off screen
 	lda	laser0_start
-	cmp	#40
+	cmp	RIGHT_SHOOT_LIMIT
 	bcs	disable_laser
 
 	lda	laser0_end
-	cmp	#40
+	cmp	RIGHT_SHOOT_LIMIT
 	bcc	no_move_laser
 
-	lda	#39
+	lda	RIGHT_SHOOT_LIMIT
 	sta	laser0_end
 
 no_move_laser:

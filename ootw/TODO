@@ -31,6 +31,9 @@ alien guard behavior:
 gun behavior:
 	+ doors/walls should explode outward away from blast
 	  *unless* there is another door/wall behind it
+	+ laser should show sparks when hits shields/walls
+	+ shield cannot be placed if room/floor wrong
+	+ shield collapse animation if blown up with blast
 
 + L1
 	- underwater there is a water-motion effect
