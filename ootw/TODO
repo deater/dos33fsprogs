@@ -135,8 +135,8 @@ Level/Checkpoint #3:
  + Actual game shakes the camera when you hit the ground after falling
 
 Level/Checkpoint #4:
- + Implement doors
  + Implement guard (shooting, taunting)
+ + Disable keyboard while in the recharger
 
 Level/Checkpoint #5:
  + Falling as enter level

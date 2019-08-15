@@ -94,11 +94,13 @@ end_message:
 .include "physicist.s"
 .include "alien.s"
 
-.include "gun.s"
-.include "blast.s"
-.include "shield.s"
+
+;.include "gun.s"
+;.include "blast.s"
+;.include "shield.s"
 
 ;.include "door.s"
+;.include "collision.s"
 
 ; room backgrounds
 .include "ootw_graphics/l5cave/ootw_c5_cave.inc"

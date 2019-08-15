@@ -50,6 +50,7 @@ fire_blast:
 	; set x
 
 blast_left:
+	jsr	calc_gun_left_collision
 
 	ldx	PHYSICIST_X
 	dex
@@ -63,6 +64,7 @@ blast_left:
 	jmp	done_fire_blast
 
 blast_right:
+	jsr	calc_gun_right_collision
 
 	lda	PHYSICIST_X
 	clc
@@ -169,12 +171,14 @@ still_starting_blast_left:
 blast_edge_detect_left:
 
 	lda	blast0_end
+	cmp	LEFT_SHOOT_LIMIT
 	bmi	disable_blast
 
 	lda	blast0_start
+	cmp	LEFT_SHOOT_LIMIT
 	bpl	no_move_blast
 
-	lda	#0
+	lda	LEFT_SHOOT_LIMIT
 	sta	blast0_start
 
 	jmp	no_move_blast
@@ -206,14 +210,14 @@ blast_edge_detect_right:
 
 	; detect if totally off screen
 	lda	blast0_start
-	cmp	#40
+	cmp	RIGHT_SHOOT_LIMIT
 	bcs	disable_blast
 
 	lda	blast0_end
-	cmp	#40
+	cmp	RIGHT_SHOOT_LIMIT
 	bcc	no_move_blast
 
-	lda	#39
+	lda	RIGHT_SHOOT_LIMIT
 	sta	blast0_end
 
 no_move_blast:
