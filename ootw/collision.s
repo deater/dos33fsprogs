@@ -107,25 +107,29 @@ calc_gun_right_collision:
 	and	#$7f
 	sta	RIGHT_SHOOT_LIMIT
 
+	;===========================
+	; stop if hit door
+
+calc_gun_right_door:
 	lda	NUM_DOORS
-	beq	done_calc_gun_right_collision
+	beq	done_calc_gun_right_door_collision
 
 calc_gun_right_doors:
 
 
 	ldx	#0
-calc_gun_right_loop:
+calc_gun_right_door_loop:
 
 	lda	PHYSICIST_X
 
 	cmp	door_x,X
-	bcs	calc_gun_right_continue		; bge
+	bcs	calc_gun_right_door_continue		; bge
 
 	lda	door_status,X
 	cmp	#DOOR_STATUS_LOCKED
 	beq	calc_gun_right_door_there
 	cmp	#DOOR_STATUS_CLOSED
-	bne	calc_gun_right_continue
+	bne	calc_gun_right_door_continue
 
 calc_gun_right_door_there:
 	; early exit
@@ -136,16 +140,56 @@ calc_gun_right_door_there:
 	ora	#TARGET_DOOR
 	sta	RIGHT_SHOOT_TARGET
 
-	jmp	done_calc_gun_right_collision
+	jmp	done_calc_gun_right_door_collision
 
-calc_gun_right_continue:
+calc_gun_right_door_continue:
 	inx
 	cpx	NUM_DOORS
-	bne	calc_gun_right_loop
+	bne	calc_gun_right_door_loop
 
-done_calc_gun_right_collision:
+done_calc_gun_right_door_collision:
 
 
+	;==========================
+	; adjust for alien
+
+calc_gun_right_alien:
+
+	lda	ALIEN_OUT
+	beq	done_calc_gun_right_alien_collision
+
+	ldx	#0
+calc_gun_right_alien_loop:
+
+	lda	alien_out,X
+	beq	calc_gun_right_alien_continue
+
+	lda	PHYSICIST_X
+
+	cmp	alien_x,X
+	bcs	calc_gun_right_alien_continue		; bge
+
+	lda	alien_state,X
+	cmp	#A_DISINTEGRATING
+	beq	calc_gun_right_alien_continue
+
+calc_gun_right_alien_there:
+	; early exit
+	lda	alien_x,X
+	sta	RIGHT_SHOOT_LIMIT
+
+	txa			; set target if hit
+	ora	#TARGET_ALIEN
+	sta	RIGHT_SHOOT_TARGET
+
+	jmp	done_calc_gun_right_alien_collision
+
+calc_gun_right_alien_continue:
+	inx
+	cpx	MAX_ALIENS
+	bne	calc_gun_right_alien_loop
+
+done_calc_gun_right_alien_collision:
 	rts
 
 
@@ -171,24 +215,24 @@ calc_gun_left_collision:
 	sta	LEFT_SHOOT_LIMIT
 
 	lda	NUM_DOORS
-	beq	done_calc_gun_left_collision
+	beq	done_calc_gun_left_door_collision
 
 calc_gun_left_doors:
 
 
 	ldx	NUM_DOORS
 	dex
-calc_gun_left_loop:
+calc_gun_left_door_loop:
 	lda	PHYSICIST_X
 
 	cmp	door_x,X
-	bcc	calc_gun_left_continue		; blt
+	bcc	calc_gun_left_door_continue		; blt
 
 	lda	door_status,X
 	cmp	#DOOR_STATUS_LOCKED
 	beq	calc_gun_left_door_there
 	cmp	#DOOR_STATUS_CLOSED
-	bne	calc_gun_left_continue
+	bne	calc_gun_left_door_continue
 
 calc_gun_left_door_there:
 	; early exit
@@ -199,13 +243,56 @@ calc_gun_left_door_there:
 	ora	#TARGET_DOOR
 	sta	LEFT_SHOOT_TARGET
 
-	jmp	done_calc_gun_left_collision
+	jmp	done_calc_gun_left_door_collision
 
-calc_gun_left_continue:
+calc_gun_left_door_continue:
 	dex
-	bpl	calc_gun_left_loop
+	bpl	calc_gun_left_door_loop
 
-done_calc_gun_left_collision:
+done_calc_gun_left_door_collision:
+
+	;==========================
+	; adjust for alien
+
+calc_gun_left_alien:
+
+	lda	ALIEN_OUT
+	beq	done_calc_gun_left_alien_collision
+
+	ldx	MAX_ALIENS
+	dex
+
+calc_gun_left_alien_loop:
+
+	lda	alien_out,X
+	beq	calc_gun_left_alien_continue
+
+	lda	PHYSICIST_X
+
+	cmp	alien_x,X
+	bcs	calc_gun_left_alien_continue		; bge
+
+	lda	alien_state,X
+	cmp	#A_DISINTEGRATING
+	beq	calc_gun_left_alien_continue
+
+calc_gun_left_alien_there:
+	; early exit
+	lda	alien_x,X
+	sta	RIGHT_SHOOT_LIMIT
+
+	txa			; set target if hit
+	ora	#TARGET_ALIEN
+	sta	RIGHT_SHOOT_TARGET
+
+	jmp	done_calc_gun_left_alien_collision
+
+calc_gun_left_alien_continue:
+	dex
+	bpl	calc_gun_left_alien_loop
+
+done_calc_gun_left_alien_collision:
+
 
 
 	rts

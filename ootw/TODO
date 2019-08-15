@@ -35,6 +35,10 @@ gun behavior:
 	+ shield cannot be placed if room/floor wrong
 	+ shield collapse animation if blown up with blast
 
+door behavior:
+	+ blasted doors, the remains appear partly in front
+
+
 + L1
 	- underwater there is a water-motion effect
 	- bubble motion is fancier in real thing
