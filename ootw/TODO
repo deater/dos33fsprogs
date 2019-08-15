@@ -5,6 +5,10 @@ alien guard behavior:
 	+ l4, if you draw gun (but not fire) guard won't shoot you,
 	  but instead will yell at you a bit
 
+gun behavior:
+	+ doors/walls should explode outward away from blast
+	  *unless* there is another door/wall behind it
+
 + L1
 	- underwater there is a water-motion effect
 	- bubble motion is fancier in real thing

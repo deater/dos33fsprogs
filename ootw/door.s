@@ -1,7 +1,6 @@
-
-DOOR_STATUS_OPEN	= $00
-DOOR_STATUS_OPENING1	= $01
-DOOR_STATUS_OPENING2	= $02
+DOOR_STATUS_OPENING1	= $00
+DOOR_STATUS_OPENING2	= $01
+DOOR_STATUS_OPEN	= $02
 DOOR_STATUS_CLOSING1	= $03
 DOOR_STATUS_CLOSING2	= $04
 DOOR_STATUS_CLOSED	= $05
@@ -56,22 +55,106 @@ done_draw_doors:
 
 
 	;==========================
+	;==========================
 	; handle doors
-
+	;==========================
+	;==========================
 handle_doors:
 
-	; if closed xpos in range and phys ypos match -> opening
-	; if open, xpos out of range, -> closing
+	lda	NUM_DOORS
+	beq	done_handle_doors
 
-	; if opening, update
+	ldx	#0
+handle_doors_loop:
 
-	; if closing, update
+	; state machine
+	lda	door_status,X
 
-	; if exploding, update
+	; if locked->do nothing
+	cmp	#DOOR_STATUS_LOCKED
+	beq	handle_doors_continue
+
+	; if exploded->do nothing
+	cmp	#DOOR_STATUS_EXPLODED
+	beq	handle_doors_continue
 
 
+	; if closed and xpos/ypos in range: open
+	; if open and xpos/ypos not ni range: close
+	cmp	#DOOR_STATUS_OPEN
+	beq	handle_doors_open
+	cmp	#DOOR_STATUS_CLOSED
+	beq	handle_doors_closed
 
+	; if exploding: continue exploding
+	; if opening, continue to open
+	; if closing, continue to close
+handle_door_inc_state:
+	inc	door_status,X
+
+handle_doors_continue:
+	inx
+	cpx	NUM_DOORS
+	bne	handle_doors_loop
+
+done_handle_doors:
 	rts
+
+handle_doors_open:
+
+	; only open/close if on same level
+	ldy	door_y,X
+	iny
+	iny
+	iny
+	iny
+	cpy	PHYSICIST_Y
+	bne	close_door
+
+	lda	PHYSICIST_X
+	cmp	door_xmax,X
+	bcs	close_door	; bge
+
+	cmp	door_xmin,X
+	bcc	close_door	; blt
+
+	; made it here, we are in bounds, stay open
+
+	jmp	handle_doors_continue
+
+close_door:
+	lda	#DOOR_STATUS_CLOSING1
+	sta	door_status,X
+	jmp	handle_doors_continue
+
+handle_doors_closed:
+
+	; only open if on same level
+
+	ldy	door_y,X
+	iny
+	iny
+	iny
+	iny
+	cpy	PHYSICIST_Y
+	bne	handle_doors_continue
+
+	lda	PHYSICIST_X
+	cmp	door_xmax,X
+	bcs	handle_doors_continue
+
+	cmp	door_xmin,X
+	bcc	handle_doors_continue
+
+open_door:
+	lda	#DOOR_STATUS_OPENING1
+	sta	door_status,X
+	jmp	handle_doors_continue
+
+
+
+
+
 
 
 
@@ -84,9 +167,9 @@ handle_doors:
 
 
 door_sprite_lookup_lo:
-	.byte <door_open_sprite		; DOOR_STATUS_OPEN
 	.byte <door_opening_sprite1	; DOOR_STATUS_OPENING1
 	.byte <door_opening_sprite2	; DOOR_STATUS_OPENING2
+	.byte <door_open_sprite		; DOOR_STATUS_OPEN
 	.byte <door_closing_sprite1	; DOOR_STATUS_CLOSING1
 	.byte <door_closing_sprite2	; DOOR_STATUS_CLOSING2
 	.byte <door_closed_sprite	; DOOR_STATUS_CLOSED
@@ -96,9 +179,9 @@ door_sprite_lookup_lo:
 
 door_sprite_lookup_hi:
 
-	.byte >door_open_sprite		; DOOR_STATUS_OPEN
 	.byte >door_opening_sprite1	; DOOR_STATUS_OPENING1
 	.byte >door_opening_sprite2	; DOOR_STATUS_OPENING2
+	.byte >door_open_sprite		; DOOR_STATUS_OPEN
 	.byte >door_closing_sprite1	; DOOR_STATUS_CLOSING1
 	.byte >door_closing_sprite2	; DOOR_STATUS_CLOSING2
 	.byte >door_closed_sprite	; DOOR_STATUS_CLOSED
