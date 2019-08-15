@@ -30,6 +30,7 @@ ootw_c1.o:	ootw_c1.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	gr_make_quake.s gr_overlay.s zp.inc keyboard.s \
+	collision.s \
 	ootw_sluggy.s ootw_beast.s \
 	ootw_c1_arrival.s ootw_c1_rope.s earthquake.s ootw_c1_mesa.s \
 	ootw_c1_pool.s ootw_c1_cavern.s physicist.s random16.s \
@@ -62,7 +63,7 @@ ootw_c2.o:	ootw_c2.s \
 	gr_hlin.s gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s audio.s \
 	physicist.s alien.s friend.s \
-	door.s laser.s shield.s blast.s gun.s \
+	collision.s door.s laser.s shield.s blast.s gun.s \
 	ootw_c2_miners.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/sprites/alien.inc \
@@ -97,6 +98,7 @@ ootw_c4.o:	ootw_c4.s \
 	gr_unrle.s gr_hlin.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
+	collision.s \
 	ootw_c4_city.s ootw_c4_action.s \
 	door.s laser.s shield.s blast.s gun.s charger.s \
 	ootw_graphics/sprites/physicist.inc \
@@ -112,7 +114,7 @@ ootw_c5.o:	ootw_c5.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s ootw_c5_cave.s \
-	door.s \
+	collision.s door.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l5cave/ootw_c5_cave.inc
 	ca65 -o ootw_c5.o ootw_c5.s -l ootw_c5.lst

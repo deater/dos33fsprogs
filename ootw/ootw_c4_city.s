@@ -165,6 +165,7 @@ room0_falling:
 
 	jmp	room_setup_done
 
+	;===========================
 	; hallway with weird ceiling
 room1:
 	cmp	#1
@@ -193,6 +194,7 @@ room1:
 
 	jmp	room_setup_done
 
+	;===================
 	; causeway part 1
 room2:
 	cmp	#2
@@ -221,7 +223,8 @@ room2:
 
 	jmp	room_setup_done
 
-	; causeway part 2
+	;=======================
+	; causeway part 2 / pit
 room3:
 	cmp	#3
 	bne	room4
@@ -272,8 +275,11 @@ room3:
 
 	jmp	room_setup_done
 
+	;======================
 	; down at the bottom
 room4:
+	lda	#1
+	sta	NUM_DOORS
 
 	lda	#(16+128)
 	sta	LEFT_LIMIT
@@ -307,10 +313,13 @@ r4_impaled:
 
 room_setup_done:
 
+	; laod bg image
 	sta	GBASL
 	lda	#$c				; load to page $c00
 	jsr	load_rle_gr
 
+	; setup walk collision
+	jsr	recalc_walk_collision
 
 ootw_room_already_set:
 	;===========================
@@ -1039,11 +1048,11 @@ door_y:
 	c4_r0_door4_y:	.byte 24
 
 door_status:
-	c4_r0_door0_status:	.byte DOOR_STATUS_OPEN
+	c4_r0_door0_status:	.byte DOOR_STATUS_CLOSED
 	c4_r0_door1_status:	.byte DOOR_STATUS_CLOSED
-	c4_r0_door2_status:	.byte DOOR_STATUS_EXPLODED
-	c4_r0_door3_status:	.byte DOOR_STATUS_OPENING1
-	c4_r0_door4_status:	.byte DOOR_STATUS_OPENING2
+	c4_r0_door2_status:	.byte DOOR_STATUS_LOCKED
+	c4_r0_door3_status:	.byte DOOR_STATUS_LOCKED
+	c4_r0_door4_status:	.byte DOOR_STATUS_LOCKED
 
 door_x:
 	c4_r0_door0_x:	.byte 7

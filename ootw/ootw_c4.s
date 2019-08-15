@@ -108,6 +108,7 @@ end_message:
 .include "laser.s"
 .include "shield.s"
 .include "blast.s"
+.include "collision.s"
 
 .include "ootw_c4_action.s"
 

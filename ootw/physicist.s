@@ -474,7 +474,7 @@ check_screen_limit:
 	clc
 	lda	PHYSICIST_X
 	adc	#$80
-	cmp	LEFT_LIMIT
+	cmp	LEFT_WALK_LIMIT
 	bcs	just_fine_left		; (bge==bcs)
 
 left_on_screen:
@@ -482,7 +482,7 @@ left_on_screen:
 	; if limit was -4, means we are off screen
 	; otherwise, stop physicist at limit
 
-	lda	LEFT_LIMIT
+	lda	LEFT_WALK_LIMIT
 	cmp	#($80 - 4)
 	beq	too_far_left
 
@@ -490,7 +490,7 @@ left_stop_at_barrier:
 	lda     #0
         sta     PHYSICIST_STATE
 
-        lda     LEFT_LIMIT
+        lda     LEFT_WALK_LIMIT
         sec
         sbc     #$7f
         sta     PHYSICIST_X
@@ -507,7 +507,7 @@ just_fine_left:
 	; Check right edge of screen
 
 ;	lda	PHYSICIST_X
-	cmp	RIGHT_LIMIT
+	cmp	RIGHT_WALK_LIMIT
 	bcc	just_fine_right		; blt
 
 
@@ -516,7 +516,7 @@ right_on_screen:
 	; if limit was 39, means we are off screen
 	; otherwise, stop physicist at limit
 
-	lda	RIGHT_LIMIT
+	lda	RIGHT_WALK_LIMIT
 	cmp	#($80 + 39)
 	beq	too_far_right
 
@@ -524,7 +524,7 @@ right_stop_at_barrier:
 	lda	#0
 	sta	PHYSICIST_STATE
 
-	lda	RIGHT_LIMIT
+	lda	RIGHT_WALK_LIMIT
 	clc
 	adc	#$7f
 	sta	PHYSICIST_X
