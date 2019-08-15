@@ -1038,5 +1038,10 @@ door_y:
 	c4_r0_door3_y:	.byte 24
 	c4_r0_door4_y:	.byte 24
 
-
+door_status:
+	c4_r0_door0_status:	.byte DOOR_STATUS_OPEN
+	c4_r0_door1_status:	.byte DOOR_STATUS_CLOSED
+	c4_r0_door2_status:	.byte DOOR_STATUS_EXPLODED
+	c4_r0_door3_status:	.byte DOOR_STATUS_OPENING1
+	c4_r0_door4_status:	.byte DOOR_STATUS_OPENING2
 
