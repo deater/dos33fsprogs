@@ -87,13 +87,18 @@ end_message:
 .include "gr_putsprite_crop.s"
 .include "gr_offsets.s"
 .include "gr_offsets_hl.s"
+.include "gr_hlin.s"
 .include "random16.s"
 .include "keyboard.s"
 
 .include "physicist.s"
 .include "alien.s"
 
-.include "door.s"
+.include "gun.s"
+.include "blast.s"
+.include "shield.s"
+
+;.include "door.s"
 
 ; room backgrounds
 .include "ootw_graphics/l5cave/ootw_c5_cave.inc"

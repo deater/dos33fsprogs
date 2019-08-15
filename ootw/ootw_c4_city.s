@@ -17,18 +17,13 @@ ootw_city_init:
 	sta	CHARGER_COUNT
 	sta	GUN_STATE
 	sta	GUN_FIRE
-
-	lda	#100
-	sta	GUN_CHARGE
+	sta	NUM_DOORS
 
 	sta	ACTION_TRIGGERED
 	sta	ACTION_COUNT
 
-;	lda	#1
-;	sta	ACTION_COUNT
-
-
-
+	lda	#100
+	sta	GUN_CHARGE
 
 	;===============
 	; set up aliens
@@ -91,6 +86,7 @@ ootw_city:
 	lda	#0
 	sta	GAIT
 	sta	GAME_OVER
+	sta	NUM_DOORS
 
 	;============================
 	; init shields
@@ -127,12 +123,20 @@ alien_room_continue:
 
 	;==============================
 	; setup per-room variables
+	;==============================
 
 	lda	WHICH_ROOM
 	bne	room1
 
+	;======================
 	; Room0 with recharger
 room0:
+
+	; set up doors
+
+	lda	#5
+	sta	NUM_DOORS
+
 	lda	#(6+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
@@ -698,6 +702,12 @@ no_fire_laser:
 
 	jsr	draw_shields
 
+	;================
+	; draw doors
+	;================
+
+	jsr	draw_doors
+
 	;========================
 	; draw foreground cover
 	;========================
@@ -1011,6 +1021,22 @@ pit_door_cover:
 ;	bne	clear1
 ;	rts
 
+
+
+
+door_x:
+	c4_r0_door0_x:	.byte 7
+	c4_r0_door1_x:	.byte 18
+	c4_r0_door2_x:	.byte 29
+	c4_r0_door3_x:	.byte 31
+	c4_r0_door4_x:	.byte 33
+
+door_y:
+	c4_r0_door0_y:	.byte 24
+	c4_r0_door1_y:	.byte 24
+	c4_r0_door2_y:	.byte 24
+	c4_r0_door3_y:	.byte 24
+	c4_r0_door4_y:	.byte 24
 
 
 
