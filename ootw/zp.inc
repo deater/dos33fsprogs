@@ -117,6 +117,11 @@ LZ4_DONE	= $96
 
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
+
+LEFT_SHOOT_TARGET = $CF		; ALL
+RIGHT_SHOOT_TARGET = $D0	; ALL
+
+
 LEFT_WALK_LIMIT	= $D1		; ALL
 RIGHT_WALK_LIMIT= $D2		; ALL
 LEFT_SHOOT_LIMIT= $D3		; ALL

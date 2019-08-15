@@ -1,3 +1,11 @@
+TARGET_NONE	= $00
+TARGET_DOOR	= $10
+TARGET_SHIELD	= $20
+TARGET_FRIEND	= $30
+TARGET_ALIEN	= $40
+
+
+
 	;=============================
 	;=============================
 	; recalc_walk_collision
@@ -92,6 +100,9 @@ done_recalc_walk_right_collision:
 
 calc_gun_right_collision:
 
+	lda	#$00
+	sta	RIGHT_SHOOT_TARGET
+
 	lda	RIGHT_LIMIT
 	and	#$7f
 	sta	RIGHT_SHOOT_LIMIT
@@ -120,6 +131,11 @@ calc_gun_right_door_there:
 	; early exit
 	lda	door_x,X
 	sta	RIGHT_SHOOT_LIMIT
+
+	txa			; set target if hit
+	ora	#TARGET_DOOR
+	sta	RIGHT_SHOOT_TARGET
+
 	jmp	done_calc_gun_right_collision
 
 calc_gun_right_continue:
@@ -146,6 +162,9 @@ done_calc_gun_right_collision:
 	; any enemies stop things
 
 calc_gun_left_collision:
+
+	lda	#0
+	sta	LEFT_SHOOT_TARGET
 
 	lda	LEFT_LIMIT
 	and	#$7f
@@ -175,6 +194,11 @@ calc_gun_left_door_there:
 	; early exit
 	lda	door_x,X
 	sta	LEFT_SHOOT_LIMIT
+
+	txa			; set target if hit
+	ora	#TARGET_DOOR
+	sta	LEFT_SHOOT_TARGET
+
 	jmp	done_calc_gun_left_collision
 
 calc_gun_left_continue:

@@ -6,7 +6,12 @@ DOOR_STATUS_CLOSING2	= $04
 DOOR_STATUS_CLOSED	= $05
 DOOR_STATUS_EXPLODED	= $06
 DOOR_STATUS_LOCKED	= $07
-DOOR_STATUS_EXPLODING	= $08
+DOOR_STATUS_EXPLODING1	= $08
+DOOR_STATUS_EXPLODING2	= $09
+DOOR_STATUS_EXPLODING3	= $0A
+DOOR_STATUS_EXPLODING4	= $0B
+DOOR_STATUS_EXPLODING5	= $0C
+DOOR_STATUS_EXPLODING6	= $0D
 
 
 	;==================================
@@ -23,8 +28,6 @@ draw_doors_loop:
 
 	ldy	door_status,X
 
-;	ldy	#1
-
 	lda	door_sprite_lookup_lo,Y
 	sta	INL
 	lda	door_sprite_lookup_hi,Y
@@ -33,13 +36,20 @@ draw_doors_loop:
 actually_draw_door:
 	lda	door_x,X
 	sta	XPOS
+
 	lda	door_y,X
 	sta	YPOS
 
 	txa
 	pha
 
+	lda	door_status,X
+	cmp	#DOOR_STATUS_EXPLODING1
+	bcs	draw_exploding_door
+
 	jsr	put_sprite
+
+after_door_put_sprite:
 
 	pla
 	tax
@@ -52,6 +62,28 @@ draw_doors_continue:
 done_draw_doors:
 
 	rts
+
+draw_exploding_door:
+
+	lda	FRAMEL
+	and	#$7
+	bne	not_done_exploding_door
+
+	inc	door_status,X
+	lda	door_status,X
+	cmp	#DOOR_STATUS_EXPLODING6
+	bcc	not_done_exploding_door
+
+	lda	#DOOR_STATUS_EXPLODED
+	sta	door_status,X
+
+not_done_exploding_door:
+	dec	XPOS
+
+	jsr	put_sprite
+
+	jmp	after_door_put_sprite
+
 
 
 	;==========================
@@ -87,6 +119,10 @@ handle_doors_loop:
 	beq	handle_doors_closed
 
 	; if exploding: continue exploding
+	; we handle the increment elsewhere
+	cmp	#DOOR_STATUS_EXPLODING1
+	bcs	handle_doors_continue	; bge
+
 	; if opening, continue to open
 	; if closing, continue to close
 handle_door_inc_state:
@@ -175,7 +211,12 @@ door_sprite_lookup_lo:
 	.byte <door_closed_sprite	; DOOR_STATUS_CLOSED
 	.byte <door_exploded_sprite	; DOOR_STATUS_EXPLODED
 	.byte <door_closed_sprite	; DOOR_STATUS_LOCKED
-	.byte <door_exploding_sprite1	; DOOR_STATUS_EXPLODING
+	.byte <door_exploding_sprite1	; DOOR_STATUS_EXPLODING1
+	.byte <door_exploding_sprite2	; DOOR_STATUS_EXPLODING2
+	.byte <door_exploding_sprite3	; DOOR_STATUS_EXPLODING3
+	.byte <door_exploding_sprite4	; DOOR_STATUS_EXPLODING4
+	.byte <door_exploding_sprite5	; DOOR_STATUS_EXPLODING5
+	.byte <door_exploding_sprite6	; DOOR_STATUS_EXPLODING6
 
 door_sprite_lookup_hi:
 
@@ -187,7 +228,12 @@ door_sprite_lookup_hi:
 	.byte >door_closed_sprite	; DOOR_STATUS_CLOSED
 	.byte >door_exploded_sprite	; DOOR_STATUS_EXPLODED
 	.byte >door_closed_sprite	; DOOR_STATUS_LOCKED
-	.byte >door_exploding_sprite1	; DOOR_STATUS_EXPLODING
+	.byte >door_exploding_sprite1	; DOOR_STATUS_EXPLODING1
+	.byte >door_exploding_sprite2	; DOOR_STATUS_EXPLODING2
+	.byte >door_exploding_sprite3	; DOOR_STATUS_EXPLODING3
+	.byte >door_exploding_sprite4	; DOOR_STATUS_EXPLODING4
+	.byte >door_exploding_sprite5	; DOOR_STATUS_EXPLODING5
+	.byte >door_exploding_sprite6	; DOOR_STATUS_EXPLODING6
 
 
 door_closed_sprite:
@@ -259,14 +305,81 @@ door_exploded_sprite:
 	.byte $A5
 
 door_exploding_sprite1:
-	.byte 1,10
-	.byte $00
-	.byte $A5
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $A5
+	.byte 3,10
+	.byte $AA,$FF,$66
+	.byte $AA,$FF,$66
+	.byte $AA,$FF,$AA
+	.byte $AA,$FF,$AA
+	.byte $AA,$FF,$AA
+	.byte $AA,$FF,$AA
+	.byte $AA,$FF,$AA
+	.byte $AA,$FF,$AA
+	.byte $AA,$FF,$66
+	.byte $AA,$FF,$66
+
+door_exploding_sprite2:
+	.byte 3,10
+	.byte $AA,$FF,$EE
+	.byte $AA,$FF,$EE
+	.byte $EE,$FF,$EE
+	.byte $FF,$FF,$EE
+	.byte $FF,$FF,$EE
+	.byte $FF,$FF,$EE
+	.byte $EE,$FF,$EE
+	.byte $AA,$FF,$EE
+	.byte $AA,$FF,$EE
+	.byte $AA,$FF,$EE
+
+door_exploding_sprite3:
+	.byte 3,10
+	.byte $AA,$00,$AA
+	.byte $AA,$A5,$AA
+	.byte $FF,$AA,$AA
+	.byte $FF,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $FF,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$A5,$AA
+
+door_exploding_sprite4:
+	.byte 3,10
+	.byte $AA,$00,$AA
+	.byte $AA,$A5,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $FF,$AA,$AA
+	.byte $FF,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $FF,$AA,$AA
+	.byte $AA,$A5,$AA
+
+door_exploding_sprite5:
+	.byte 3,10
+	.byte $AA,$00,$AA
+	.byte $AA,$A5,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $FA,$AA,$AA
+	.byte $AF,$A5,$AA
+
+door_exploding_sprite6:
+	.byte 3,10
+	.byte $AA,$00,$AA
+	.byte $AA,$A5,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $FA,$AA,$AA
+	.byte $AF,$A5,$AA
+
+

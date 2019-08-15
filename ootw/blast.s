@@ -172,7 +172,7 @@ blast_edge_detect_left:
 
 	lda	blast0_end
 	cmp	LEFT_SHOOT_LIMIT
-	bmi	disable_blast
+	bmi	disable_blast_left
 
 	lda	blast0_start
 	cmp	LEFT_SHOOT_LIMIT
@@ -211,7 +211,7 @@ blast_edge_detect_right:
 	; detect if totally off screen
 	lda	blast0_start
 	cmp	RIGHT_SHOOT_LIMIT
-	bcs	disable_blast
+	bcs	disable_blast_right
 
 	lda	blast0_end
 	cmp	RIGHT_SHOOT_LIMIT
@@ -227,8 +227,51 @@ done_move_blast:
 
 	rts
 
-disable_blast:
+disable_blast_left:
 	lda	#0
 	sta	blast0_out
+
+	lda	LEFT_SHOOT_TARGET
+	beq	done_disable_blast_left
+
+	tax
+	and	#$f0
+	cmp	#TARGET_DOOR
+	bne	done_disable_blast_left
+
+	txa
+	and	#$f
+	tax
+
+	lda	#DOOR_STATUS_EXPLODING1
+	sta	door_status,X
+
+	jsr	recalc_walk_collision
+
+done_disable_blast_left:
+	rts
+
+
+disable_blast_right:
+	lda	#0
+	sta	blast0_out
+
+	lda	RIGHT_SHOOT_TARGET
+	beq	done_disable_blast_right
+
+	tax
+	and	#$f0
+	cmp	#TARGET_DOOR
+	bne	done_disable_blast_right
+
+	txa
+	and	#$f
+	tax
+
+	lda	#DOOR_STATUS_EXPLODING1
+	sta	door_status,X
+
+	jsr	recalc_walk_collision
+done_disable_blast_right:
 	rts
 
