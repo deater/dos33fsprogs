@@ -457,15 +457,28 @@ alien_shooting_up_sprite:
 
 ;=====================
 ;=====================
-; EXPLODING
+; DISINTEGRATING
 ;=====================
 ;=====================
 
-;alien_explode_progression:
-;	.word	alien_exploding_2
+alien_disintegrating_progression:
+	.word	alien_disintegrating_2	; 0
+	.word	alien_disintegrating_3	; 1
+	.word	alien_disintegrating_4	; 2
+	.word	alien_disintegrating_4	; 3
+	.word	alien_disintegrating_4	; 4
+	.word	alien_disintegrating_4	; 5
+	.word	alien_disintegrating_3	; 6
+	.word	alien_disintegrating_9	; 7
+	.word	alien_disintegrating_10	; 8
+	.word	alien_disintegrating_11	; 9
+	.word	alien_disintegrating_12	; 10
+	.word	alien_disintegrating_13	; 11
+	.word	alien_disintegrating_14	; 12
+	.word	alien_disintegrating_14	; 13
 
 
-alien_exploding_2:	; 0
+alien_disintegrating_2:	; 0
 	.byte $5,$8
 	.byte $aa,$ea,$ea,$ea,$aa
 	.byte $fe,$ff,$ff,$ee,$ea
@@ -476,7 +489,7 @@ alien_exploding_2:	; 0
 	.byte $ee,$ff,$ff,$ff,$ff
 	.byte $fe,$ff,$ff,$ee,$ff
 
-alien_exploding_3:	; 1
+alien_disintegrating_3:	; 1
 	.byte $5,$8
 	.byte $aa,$aa,$aa,$aa,$aa
 	.byte $fa,$ff,$ff,$aa,$aa
@@ -487,7 +500,7 @@ alien_exploding_3:	; 1
 	.byte $aa,$ff,$ff,$fa,$fa
 	.byte $fa,$ff,$aa,$aa,$ff
 
-alien_exploding_4:	; 2
+alien_disintegrating_4:	; 2
 	.byte $5,$8
 	.byte $aa,$aa,$aa,$aa,$aa
 	.byte $0a,$00,$00,$aa,$aa
@@ -498,7 +511,7 @@ alien_exploding_4:	; 2
 	.byte $aa,$00,$00,$0a,$0a
 	.byte $0a,$00,$aa,$aa,$00
 
-alien_exploding_9:	; 3
+alien_disintegrating_9:	; 3
 	.byte $5,$8
 	.byte $aa,$aa,$aa,$fa,$aa
 	.byte $5a,$aa,$aa,$aa,$aa
@@ -509,7 +522,7 @@ alien_exploding_9:	; 3
 	.byte $aa,$aa,$aa,$aa,$aa
 	.byte $fa,$aa,$aa,$aa,$aa
 
-alien_exploding_10:	; 4
+alien_disintegrating_10:	; 4
 	.byte $5,$8
 	.byte $5a,$aa,$aa,$aa,$fa
 	.byte $aa,$aa,$aa,$aa,$aa
@@ -520,7 +533,7 @@ alien_exploding_10:	; 4
 	.byte $a7,$aa,$aa,$aa,$a7
 	.byte $fa,$aa,$aa,$aa,$aa
 
-alien_exploding_11:	; 5
+alien_disintegrating_11:	; 5
 	.byte $5,$8
 	.byte $aa,$aa,$aa,$aa,$aa
 	.byte $aa,$5a,$aa,$fa,$aa
@@ -531,7 +544,7 @@ alien_exploding_11:	; 5
 	.byte $aa,$aa,$aa,$aa,$7a
 	.byte $fa,$aa,$aa,$aa,$aa
 
-alien_exploding_12:	; 6
+alien_disintegrating_12:	; 6
 	.byte $5,$8
 	.byte $aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa
@@ -542,7 +555,7 @@ alien_exploding_12:	; 6
 	.byte $7a,$aa,$aa,$aa,$af
 	.byte $fa,$aa,$aa,$aa,$5a
 
-alien_exploding_13:	; 7
+alien_disintegrating_13:	; 7
 	.byte $5,$8
 	.byte $aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa
@@ -553,7 +566,7 @@ alien_exploding_13:	; 7
 	.byte $aa,$a5,$aa,$0a,$aa
 	.byte $5a,$a7,$aa,$aa,$fa
 
-alien_exploding_14:	; 8
+alien_disintegrating_14:	; 8
 	.byte $5,$8
 	.byte $aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa

@@ -98,7 +98,7 @@ ootw_c4.o:	ootw_c4.s \
 	gr_unrle.s gr_hlin.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
-	collision.s \
+	collision.s alien.s \
 	ootw_c4_city.s ootw_c4_action.s \
 	door.s laser.s shield.s blast.s gun.s charger.s \
 	ootw_graphics/sprites/physicist.inc \

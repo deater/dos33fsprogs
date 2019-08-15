@@ -4,6 +4,9 @@ TARGET_SHIELD	= $20
 TARGET_FRIEND	= $30
 TARGET_ALIEN	= $40
 
+; FIXME!!!!
+; if doors/aliens/shields then stop check if X passing them.  URGH.
+
 
 
 	;=============================
@@ -186,7 +189,7 @@ calc_gun_right_alien_there:
 
 calc_gun_right_alien_continue:
 	inx
-	cpx	MAX_ALIENS
+	cpx	#MAX_ALIENS
 	bne	calc_gun_right_alien_loop
 
 done_calc_gun_right_alien_collision:
@@ -211,7 +214,12 @@ calc_gun_left_collision:
 	sta	LEFT_SHOOT_TARGET
 
 	lda	LEFT_LIMIT
-	and	#$7f
+	sec
+	sbc	#$80
+	bpl	left_limit_ok
+	lda	#0
+
+left_limit_ok:
 	sta	LEFT_SHOOT_LIMIT
 
 	lda	NUM_DOORS
@@ -251,6 +259,7 @@ calc_gun_left_door_continue:
 
 done_calc_gun_left_door_collision:
 
+
 	;==========================
 	; adjust for alien
 
@@ -259,7 +268,7 @@ calc_gun_left_alien:
 	lda	ALIEN_OUT
 	beq	done_calc_gun_left_alien_collision
 
-	ldx	MAX_ALIENS
+	ldx	#MAX_ALIENS
 	dex
 
 calc_gun_left_alien_loop:
@@ -270,7 +279,7 @@ calc_gun_left_alien_loop:
 	lda	PHYSICIST_X
 
 	cmp	alien_x,X
-	bcs	calc_gun_left_alien_continue		; bge
+	bcc	calc_gun_left_alien_continue		; blt
 
 	lda	alien_state,X
 	cmp	#A_DISINTEGRATING
@@ -279,11 +288,11 @@ calc_gun_left_alien_loop:
 calc_gun_left_alien_there:
 	; early exit
 	lda	alien_x,X
-	sta	RIGHT_SHOOT_LIMIT
+	sta	LEFT_SHOOT_LIMIT
 
 	txa			; set target if hit
 	ora	#TARGET_ALIEN
-	sta	RIGHT_SHOOT_TARGET
+	sta	LEFT_SHOOT_TARGET
 
 	jmp	done_calc_gun_left_alien_collision
 
@@ -292,8 +301,6 @@ calc_gun_left_alien_continue:
 	bpl	calc_gun_left_alien_loop
 
 done_calc_gun_left_alien_collision:
-
-
 
 	rts
 

@@ -227,6 +227,10 @@ done_move_blast:
 
 	rts
 
+	;=====================
+	; hit something, left
+	;=====================
+
 disable_blast_left:
 	lda	#0
 	sta	blast0_out
@@ -234,6 +238,34 @@ disable_blast_left:
 	lda	LEFT_SHOOT_TARGET
 	beq	done_disable_blast_left
 
+
+	tax
+	and	#$f0
+
+	cmp	#TARGET_DOOR
+	beq	blast_door_left
+
+	cmp	#TARGET_ALIEN
+	beq	blast_alien_left
+
+	jmp	done_disable_blast_left
+
+
+blast_alien_left:
+	txa
+	and	#$f
+	tax
+
+	lda	#A_DISINTEGRATING
+	sta	alien_state,X
+
+	lda	#0
+	sta	alien_gait,X
+
+	jmp	done_blasting_left
+
+
+blast_door_left:
 	tax
 	and	#$f0
 	cmp	#TARGET_DOOR
@@ -248,10 +280,15 @@ disable_blast_left:
 
 	jsr	recalc_walk_collision
 
+done_blasting_left:
+
 done_disable_blast_left:
 	rts
 
 
+	;==================
+	; hit something, right
+	;==================
 disable_blast_right:
 	lda	#0
 	sta	blast0_out
@@ -261,9 +298,29 @@ disable_blast_right:
 
 	tax
 	and	#$f0
-	cmp	#TARGET_DOOR
-	bne	done_disable_blast_right
 
+	cmp	#TARGET_DOOR
+	beq	blast_door_right
+
+	cmp	#TARGET_ALIEN
+	beq	blast_alien_right
+
+	jmp	done_disable_blast_right
+
+blast_alien_right:
+	txa
+	and	#$f
+	tax
+
+	lda	#A_DISINTEGRATING
+	sta	alien_state,X
+
+	lda	#0
+	sta	alien_gait,X
+
+	jmp	done_blasting_right
+
+blast_door_right:
 	txa
 	and	#$f
 	tax
@@ -272,6 +329,10 @@ disable_blast_right:
 	sta	door_status,X
 
 	jsr	recalc_walk_collision
+
+done_blasting_right:
+
+
 done_disable_blast_right:
 	rts
 

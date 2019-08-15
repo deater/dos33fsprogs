@@ -144,6 +144,7 @@ astate_table_lo:
 	.byte <alien_turning	; 04
 	.byte <alien_yelling	; 05
 	.byte <alien_shooting_up; 06
+	.byte <alien_disintegrating; 07
 
 astate_table_hi:
 	.byte >alien_standing	; 00
@@ -153,6 +154,7 @@ astate_table_hi:
 	.byte >alien_turning	; 04
 	.byte >alien_yelling	; 05
 	.byte >alien_shooting_up; 06
+	.byte >alien_disintegrating; 07
 
 ; Urgh, make sure this doesn't end up at $FF or you hit the
 ;	NMOS 6502 bug
@@ -347,6 +349,44 @@ alien_yelling_no_waving:
 
 	lda	alien_yell_progression+1,Y
 	sta	INH
+
+	jmp	finally_draw_alien
+
+
+;===============================
+; Disintegrating
+;================================
+
+alien_disintegrating:
+	lda	alien_gait,X
+
+	cmp	#13
+	bne	alien_keep_disintegrating
+
+	lda	#0
+	sta	alien_out,X
+
+	dec	ALIEN_OUT
+
+	rts
+
+alien_keep_disintegrating:
+
+	asl
+	tay
+
+	lda	alien_disintegrating_progression,Y
+	sta	INL
+
+	lda	alien_disintegrating_progression+1,Y
+	sta	INH
+
+	lda	FRAMEL
+	and	#$7
+	bne	slow_disintegration
+
+	inc	alien_gait,X
+slow_disintegration:
 
 	jmp	finally_draw_alien
 

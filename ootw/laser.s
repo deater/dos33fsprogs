@@ -1,3 +1,6 @@
+
+; FIXME: merge a lot of the target code
+
 ; Handle laser
 
 ; should handle multiple at once?
@@ -158,7 +161,7 @@ laser_edge_detect_left:
 
 	lda	laser0_end
 	cmp	LEFT_SHOOT_LIMIT
-	bmi	disable_laser
+	bmi	disable_laser_left
 
 	lda	laser0_start
 	cmp	LEFT_SHOOT_LIMIT
@@ -197,7 +200,7 @@ laser_edge_detect_right:
 	; detect if totally off screen
 	lda	laser0_start
 	cmp	RIGHT_SHOOT_LIMIT
-	bcs	disable_laser
+	bcs	disable_laser_right
 
 	lda	laser0_end
 	cmp	RIGHT_SHOOT_LIMIT
@@ -213,8 +216,77 @@ done_move_laser:
 
 	rts
 
-disable_laser:
+	;===================
+	; hit somthing, left
+	;===================
+disable_laser_left:
 	lda	#0
 	sta	laser0_out
+
+	lda	LEFT_SHOOT_TARGET
+	beq	done_disable_laser_left
+
+	tax
+	and	#$f0
+
+	cmp	#TARGET_ALIEN
+	beq	laser_alien_left
+
+	jmp	done_disable_laser_left
+
+laser_alien_left:
+	txa
+	and	#$f
+	tax
+
+        lda	#A_DISINTEGRATING
+        sta	alien_state,X
+
+        lda	#0
+        sta	alien_gait,X
+
+	jmp	done_lasering_left
+
+done_lasering_left:
+done_disable_laser_left:
+
 	rts
+
+
+	;====================
+	; hit somthing, right
+	;====================
+disable_laser_right:
+	lda	#0
+	sta	laser0_out
+
+	lda	RIGHT_SHOOT_TARGET
+	beq	done_disable_laser_right
+
+	tax
+	and	#$f0
+
+	cmp	#TARGET_ALIEN
+	beq	laser_alien_right
+
+	jmp	done_disable_laser_right
+
+laser_alien_right:
+	txa
+	and	#$f
+	tax
+
+        lda	#A_DISINTEGRATING
+        sta	alien_state,X
+
+        lda	#0
+        sta	alien_gait,X
+
+	jmp	done_lasering_right
+
+done_lasering_right:
+done_disable_laser_right:
+
+	rts
+
 
