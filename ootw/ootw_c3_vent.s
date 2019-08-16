@@ -868,6 +868,12 @@ window_loop:
 
 	sec
 	sbc	#2
+	bpl	window_positive
+
+	lda	#0			; start at 0 if negative
+					; fix prob when dropping in
+
+window_positive:
 	sta	TEMPY
 
 	cpy	TEMPY
