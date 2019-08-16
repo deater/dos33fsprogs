@@ -5,8 +5,6 @@
 ;	rather than cheating and just mirror-flipping it
 
 ; TODO:
-;	crouch-kick
-;	crouch-shoot
 ;	zapped by laser
 
 
@@ -596,15 +594,15 @@ physicist_spike_sprite:
 ;=====================
 
 crouch_shooting:
-	.byte 3,8
-	.byte $aa,$aa,$aa
-	.byte $aa,$aa,$aa
-	.byte $9a,$9a,$aa
-	.byte $bb,$99,$aa
-	.byte $aa,$0b,$0a
-	.byte $aa,$bb,$00
-	.byte $ba,$4b,$aa
-	.byte $54,$f4,$f4
+	.byte 5,8
+	.byte $AA,$AA,$aa,$aa,$aa
+	.byte $AA,$AA,$aa,$aa,$aa
+	.byte $AA,$AA,$9a,$9a,$aa
+	.byte $AA,$AA,$bb,$99,$aa
+	.byte $0A,$0A,$aa,$0b,$0a
+	.byte $AA,$A0,$ba,$bb,$00
+	.byte $AA,$AA,$4a,$4b,$aa
+	.byte $AA,$AA,$54,$f4,$f4
 
 ;=====================
 ;=====================
@@ -613,15 +611,15 @@ crouch_shooting:
 ;=====================
 
 crouch_kicking:
-	.byte 3,8
-	.byte $aa,$aa,$aa
-	.byte $aa,$aa,$aa
-	.byte $9a,$9a,$aa
-	.byte $bb,$99,$aa
-	.byte $aa,$0b,$0a
-	.byte $aa,$bb,$00
-	.byte $ba,$4b,$aa
-	.byte $54,$f4,$f4
+	.byte 5,8
+	.byte $AA,$AA,$aa,$aa,$aa
+	.byte $AA,$AA,$aa,$aa,$aa
+	.byte $AA,$AA,$9a,$9a,$aa
+	.byte $AA,$AA,$bb,$99,$aa
+	.byte $AA,$AA,$aa,$0b,$0a
+	.byte $AA,$AA,$aa,$bb,$00
+	.byte $AA,$AA,$4a,$bb,$a0
+	.byte $5A,$5C,$A4,$f4,$f4
 
 
 
@@ -633,72 +631,119 @@ crouch_kicking:
 ;=====================
 
 disintegrate_progression:
-	.word	disintegrate1	; 00
-	.word	disintegrate2	; 02
-	.word	disintegrate3	; 04
-	.word	disintegrate4	; 06
-	.word	disintegrate5	; 08
-	.word	disintegrate5	; 10
-	.word	disintegrate5	; 12
-	.word	disintegrate5	; 14
-	.word	disintegrate5	; 16
+        .word   disintegrating_2  ; 0
+        .word   disintegrating_3  ; 1
+        .word   disintegrating_4  ; 2
+        .word   disintegrating_4  ; 3
+        .word   disintegrating_4  ; 4
+        .word   disintegrating_4  ; 5
+        .word   disintegrating_3  ; 6
+        .word   disintegrating_9  ; 7
+        .word   disintegrating_10 ; 8
+        .word   disintegrating_11 ; 9
+        .word   disintegrating_12 ; 10
+        .word   disintegrating_13 ; 11
+        .word   disintegrating_14 ; 12
+        .word   disintegrating_14 ; 13
 
-disintegrate1:
-	.byte 4,8
-	.byte $9a,$9a,$aa,$aa
-	.byte $ab,$99,$aa,$aa
-	.byte $aa,$0b,$aa,$aa
-	.byte $aa,$bb,$aa,$aa
-	.byte $aa,$bb,$aa,$aa
-	.byte $aa,$44,$aa,$aa
-	.byte $aa,$a4,$4a,$aa
-	.byte $aa,$fa,$f4,$aa
-
-
-disintegrate2:
+disintegrating_2:
 	.byte 5,8
 	.byte $aa,$aa,$aa,$aa,$aa
-	.byte $b9,$99,$aa,$aa,$aa
-	.byte $ab,$b9,$aa,$aa,$aa
-	.byte $aa,$b0,$aa,$aa,$aa
-	.byte $aa,$bb,$00,$aa,$aa
-	.byte $aa,$bb,$44,$4a,$aa
-	.byte $aa,$ab,$aa,$a4,$4a
-	.byte $aa,$aa,$aa,$fa,$f4
+	.byte $ee,$fe,$fe,$ee,$aa
+	.byte $ee,$ff,$ff,$ee,$aa
+	.byte $aa,$ee,$ff,$ee,$aa
+	.byte $ae,$ef,$ff,$ee,$aa
+	.byte $aa,$ee,$ff,$ee,$aa
+	.byte $aa,$ee,$ff,$ee,$aa
+	.byte $ff,$fe,$ff,$ee,$aa
+
+disintegrating_3:
+	.byte 5,8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$fa,$fa,$aa,$aa
+	.byte $aa,$ff,$ff,$aa,$aa
+	.byte $aa,$aa,$fa,$aa,$aa
+	.byte $aa,$af,$fa,$aa,$aa
+	.byte $aa,$aa,$fa,$aa,$aa
+	.byte $aa,$aa,$ff,$aa,$aa
+	.byte $aa,$fa,$ff,$aa,$aa
+
+disintegrating_4:
+	.byte 5,8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$0a,$0a,$aa,$aa
+	.byte $aa,$00,$00,$aa,$aa
+	.byte $aa,$aa,$0a,$aa,$aa
+	.byte $aa,$a0,$0a,$aa,$aa
+	.byte $aa,$aa,$0a,$aa,$aa
+	.byte $aa,$aa,$00,$aa,$aa
+	.byte $aa,$0a,$00,$aa,$aa
+
+disintegrating_9:
+	.byte 5,8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $fa,$aa,$af,$aa,$aa
+	.byte $aa,$5a,$aa,$af,$aa
+	.byte $aa,$aa,$aa,$0a,$aa
+	.byte $af,$aa,$0a,$aa,$aa
+	.byte $aa,$aa,$aa,$fa,$aa
+	.byte $af,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$fa,$aa,$aa
+
+disintegrating_10:
+	.byte 5,8
+	.byte $fa,$aa,$af,$aa,$aa
+	.byte $aa,$5a,$aa,$aa,$fa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $fa,$aa,$aa,$aa,$a0
+	.byte $aa,$aa,$aa,$0a,$aa
+	.byte $aa,$aa,$aa,$aa,$5a
+	.byte $fa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$fa,$aa,$aa
+
+disintegrating_11:
+	.byte 5,8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$fa,$aa,$aa
+	.byte $af,$aa,$aa,$aa,$af
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $fa,$aa,$aa,$aa,$a0
+	.byte $aa,$aa,$aa,$0a,$fa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $af,$aa,$fa,$aa,$aa
+
+disintegrating_12:
+	.byte 5,8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$fa,$aa,$aa
+	.byte $aa,$af,$aa,$aa,$fa
+	.byte $fa,$a5,$aa,$0a,$aa
+	.byte $aa,$aa,$aa,$aa,$a0
+	.byte $fa,$aa,$fa,$aa,$aa
+
+disintegrating_13:
+	.byte 5,8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$af,$aa,$aa
+	.byte $aa,$4a,$aa,$0a,$a0
+	.byte $fa,$aa,$5a,$aa,$af
+
+disintegrating_14:
+	.byte 5,8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $fa,$5a,$5a,$0a,$fa
 
 
-
-disintegrate3:
-	.byte 6,8
-	.byte $aa,$aa,$aa,$aa,$aa,$aa
-	.byte $aa,$aa,$aa,$aa,$aa,$aa
-	.byte $9a,$9a,$aa,$aa,$aa,$aa
-	.byte $bb,$99,$aa,$aa,$aa,$aa
-	.byte $aa,$0b,$0a,$aa,$aa,$aa
-	.byte $aa,$bb,$00,$4a,$aa,$aa
-	.byte $aa,$bb,$a0,$44,$44,$fa
-	.byte $aa,$ab,$aa,$aa,$a4,$ff
-
-disintegrate4:
-	.byte 7,8
-	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte $9a,$9a,$aa,$aa,$aa,$aa,$aa
-	.byte $99,$bb,$00,$0a,$aa,$aa,$aa
-	.byte $aa,$aa,$bb,$00,$44,$4a,$fa
-	.byte $aa,$aa,$aa,$bb,$aa,$a4,$ff
-
-
-disintegrate5:
-	.byte 8,8
-	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
-	.byte $99,$b9,$00,$b0,$00,$bb,$4a,$aa
-	.byte $a9,$ab,$aa,$aa,$bb,$b4,$44,$ff
 

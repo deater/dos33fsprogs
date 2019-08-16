@@ -219,7 +219,12 @@ up:
 	;=============================
 	;=============================
 
+	lda	PHYSICIST_STATE		; shoot if charging
+	cmp	#P_CROUCH_SHOOTING
+	beq	up_no_fire
+
 	inc	GUN_FIRE
+up_no_fire:
 
 	lda	ON_ELEVATOR
 	beq	up_not_elevator
@@ -263,6 +268,13 @@ check_down:
 	;==========================
 down:
 
+	lda	PHYSICIST_STATE		; shoot if charging
+	cmp	#P_SHOOTING
+	beq	down_no_fire
+
+	inc	GUN_FIRE
+down_no_fire:
+
 	lda	ON_ELEVATOR
 	beq	down_not_elevator
 
@@ -297,7 +309,7 @@ charge_gun:
 	lda	GUN_STATE
 	beq	not_already_firing
 
-	inc	GUN_FIRE
+	inc	GUN_FIRE		; if charging, fire
 
 	jmp	done_keypress
 
@@ -305,8 +317,15 @@ not_already_firing:
 
 	inc	GUN_STATE
 
-	lda	#P_SHOOTING
-	sta	PHYSICIST_STATE
+	lda	PHYSICIST_STATE
+	and	#STATE_CROUCHING
+	bne	crouch_charge
+	ldy	#P_CROUCH_SHOOTING
+	bne	crouch_charge_go	; bra
+crouch_charge:
+	ldy	#P_SHOOTING
+crouch_charge_go:
+	sty	PHYSICIST_STATE
 
 	jmp	shoot
 
@@ -314,8 +333,8 @@ not_already_firing:
 check_space:
 	cmp	#' '
 	beq	space
-	cmp	#$15		; ascii 21=??
-	bne	unknown
+;	cmp	#$15		; ascii 21=??
+	jmp	unknown
 
 	;======================
 	; Kick or shoot
@@ -324,16 +343,30 @@ space:
 	lda	HAVE_GUN
 	beq	kick
 
-	inc	GUN_FIRE
+	; shoot pressed
+
+	inc	GUN_FIRE			; if charging, shoot
 shoot:
-	lda	PHYSICIST_STATE
+	lda	PHYSICIST_STATE		; if in stance, then shoot
 	cmp	#P_SHOOTING
+	beq	in_position
+	cmp	#P_CROUCH_SHOOTING
 	bne	no_stance
 
+in_position:
 	lda	#1
 	sta	LASER_OUT
+	jmp	done_keypress
 
 no_stance:
+	and	#STATE_CROUCHING
+	beq	stand_stance
+
+crouch_stance:
+	lda	#P_CROUCH_SHOOTING
+	jmp	change_state_clear_gait
+
+stand_stance:
 	lda	#P_SHOOTING
 	jmp	change_state_clear_gait
 

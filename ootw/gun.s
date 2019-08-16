@@ -164,6 +164,13 @@ done_zap:
 	lda	PHYSICIST_Y
 	clc
 	adc	#4
+
+	ldy	PHYSICIST_STATE
+	cpy	#P_CROUCH_SHOOTING
+	bne	done_zap_ypos
+	adc	#2
+
+done_zap_ypos:
 	sta	YPOS
 
 	ldy	GUN_STATE
