@@ -66,7 +66,7 @@ ootw_jail_init:
 	lda     #A_STANDING
 	sta     alien0_state
 
-	lda     #1
+	lda     #0
 	sta     alien0_direction
 
 	rts

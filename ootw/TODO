@@ -62,7 +62,8 @@ door behavior:
 + L2
 	- gun movement: gun is held by head when running
 	- separate left facing vs right facing sprites
-
+	- Level end: you should fall/scroll halfway down the shaft, then roll
+		a bit before falling into L3
 
 
 KNOWN BUGS:
@@ -76,17 +77,12 @@ General:
 * Movement:
   + running: Missing one running frame (?)
   + ability to run+jump
-  + ability to kick while crouching
-  + ability to shoot while crouching
   + running then crouch, you slide a bit
 
 * sprites_to_draw:
-  + physicist crouch-kicking
-  + physicist crouch-shooting
   + physicist run+jumping
   + physicist swimming
   + beast tripping
-  + physicist shot
   + alien running
   + friend walking
   + friend running
@@ -129,7 +125,6 @@ Level/Checkpoint #2:
   + in game, after some time the guard calms down
 
 * Jail:
-  + Doors that open/blast?
   + flashes from gunfire in neighboring room
   + Implement enemies
   + death animation
@@ -150,7 +145,6 @@ Level/Checkpoint #4:
  + Disable keyboard while in the recharger
 
 Level/Checkpoint #5:
- + Falling as enter level
  + Allow falling into first pit
 
 Pictures/Ending
