@@ -410,39 +410,3 @@ large_rock:
 
 
 
-
-door_y:
-        c4_r0_door0_y:  .byte 24
-        c4_r0_door1_y:  .byte 24
-        c4_r0_door2_y:  .byte 24
-        c4_r0_door3_y:  .byte 24
-        c4_r0_door4_y:  .byte 24
-
-door_status:
-        c4_r0_door0_status:     .byte DOOR_STATUS_CLOSED
-        c4_r0_door1_status:     .byte DOOR_STATUS_CLOSED
-        c4_r0_door2_status:     .byte DOOR_STATUS_LOCKED
-        c4_r0_door3_status:     .byte DOOR_STATUS_LOCKED
-        c4_r0_door4_status:     .byte DOOR_STATUS_LOCKED
-
-door_x:
-        c4_r0_door0_x:  .byte 7
-        c4_r0_door1_x:  .byte 18
-        c4_r0_door2_x:  .byte 29
-        c4_r0_door3_x:  .byte 31
-        c4_r0_door4_x:  .byte 33
-
-door_xmin:
-        c4_r0_door0_xmin:       .byte 0         ; 7-4-5
-        c4_r0_door1_xmin:       .byte 11        ; 18-4-5
-        c4_r0_door2_xmin:       .byte 20        ; 29-4-5
-        c4_r0_door3_xmin:       .byte 22        ; 31-4-5
-        c4_r0_door4_xmin:       .byte 24        ; 33-4-5
-
-door_xmax:
-        c4_r0_door0_xmax:       .byte 11        ; 7+4
-        c4_r0_door1_xmax:       .byte 21        ; 18+4
-        c4_r0_door2_xmax:       .byte 33        ; don't care
-        c4_r0_door3_xmax:       .byte 35        ; don't care
-        c4_r0_door4_xmax:       .byte 37        ; don't care
-

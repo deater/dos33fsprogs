@@ -337,7 +337,7 @@ check_space:
 	jmp	unknown
 
 	;======================
-	; Kick or shoot
+	; SPACE -- Kick or shoot
 	;======================
 space:
 	lda	HAVE_GUN
@@ -371,7 +371,16 @@ stand_stance:
 	jmp	change_state_clear_gait
 
 kick:
+	lda	PHYSICIST_STATE
+	cmp	#P_CROUCHING
+	bne	kick_standing
+
+	lda	#P_CROUCH_KICKING
+	jmp	kick_final
+
+kick_standing:
 	lda	#P_KICKING
+kick_final:
 	sta	PHYSICIST_STATE
 	lda	#15
 	sta	GAIT

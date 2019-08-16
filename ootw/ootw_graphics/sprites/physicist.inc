@@ -363,15 +363,15 @@ crouch1:
 	.byte $5a,$fc,$f4
 
 crouch2:
-	.byte 3,8
-	.byte $aa,$aa,$aa
-	.byte $aa,$aa,$aa
-	.byte $9a,$9a,$aa
-	.byte $bb,$99,$aa
-	.byte $aa,$0b,$0a
-	.byte $aa,$bb,$00
-	.byte $ba,$4b,$aa
-	.byte $54,$f4,$f4
+	.byte 5,8
+	.byte $AA,$aa,$aa,$aa,$AA
+	.byte $AA,$aa,$aa,$aa,$AA
+	.byte $AA,$9a,$9a,$aa,$AA
+	.byte $AA,$bb,$99,$aa,$AA
+	.byte $AA,$aa,$0b,$0a,$AA
+	.byte $AA,$aa,$bb,$00,$AA
+	.byte $AA,$ba,$4b,$aa,$AA
+	.byte $AA,$54,$f4,$f4,$AA
 
 
 ;=====================

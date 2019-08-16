@@ -198,6 +198,15 @@ physicist_crouching:
 
 physicist_crouch_kicking:
 
+	dec	GAIT
+	lda	GAIT
+	bpl	still_kicking
+
+	lda	#P_CROUCHING
+	sta	PHYSICIST_STATE
+
+still_kicking:
+
 	lda	#<crouch_kicking
 	sta	INL
 

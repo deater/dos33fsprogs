@@ -5,6 +5,11 @@ Before release:
 		add detection of friend
 		properly handle when multiple collision objects
 			on screen at once
+
+	door explosions should be cropped
+
+	after teleport, re-run room boundary calcs
+	when calculating room calcs, take Y position into account
 	
 	L1 -- fix run/jumping
 	L1 -- fix beast ending
@@ -15,10 +20,6 @@ Before release:
 	L2 -- add aliens
 	L2 -- add minimal friend AI
 	L2 -- add way to leave L2 to L3
-
-	L4 -- genericze doors
-	L4 -- blow up door to exit to L5
-	L4 -- allow crouching w gun, up to exit crouch
 
 	L5 -- add ending scenes?
 

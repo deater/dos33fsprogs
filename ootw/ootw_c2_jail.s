@@ -18,7 +18,6 @@ ootw_jail_init:
 	sta	CHARGER_COUNT
 	sta	GUN_STATE
 	sta	GUN_FIRE
-	sta	NUM_DOORS
 
 	lda	#100
 	sta	GUN_CHARGE
@@ -58,7 +57,7 @@ ootw_jail_init:
 	lda     #6
 	sta     alien0_room
 
-	lda     #26
+	lda     #20
 	sta     alien0_x
 
 	lda     #20
@@ -71,6 +70,16 @@ ootw_jail_init:
 	sta     alien0_direction
 
 	rts
+
+; Map
+;
+;              DD
+;              ||
+;  R0=R1=R2=R3=E1
+;              ||
+;        R5=R4=E2
+;              ||
+;           R6=E3
 
 
 	;===========================
@@ -85,6 +94,7 @@ ootw_jail:
 	lda	#0
 	sta	ON_ELEVATOR
 	sta	TELEPORTING
+	sta	NUM_DOORS
 
 	;============================
         ; init shields
@@ -102,6 +112,9 @@ ootw_jail:
 
 	lda	WHICH_JAIL
 	bne	jail1
+
+	;===================
+	; initial room
 
 jail0:
 	lda	#(24+128)
@@ -127,6 +140,8 @@ jail0:
 
 	jmp	jail_setup_done
 
+	;===================
+	; first cellblock
 jail1:
 	cmp	#1
 	bne	jail2
@@ -154,6 +169,8 @@ jail1:
 
 	jmp	jail_setup_done
 
+	;===================
+	; second cellblock
 jail2:
 	cmp	#2
 	bne	jail3
@@ -178,9 +195,20 @@ jail2:
 
 	jmp	jail_setup_done
 
+	;===================
+	; room with doors
 jail3:
 	cmp	#3
 	bne	jail4
+
+	lda	#3
+	sta	NUM_DOORS
+
+	lda	#<door_c2_r3
+	sta	setup_door_table_loop_smc+1
+	lda	#>door_c2_r3
+	sta	setup_door_table_loop_smc+2
+	jsr	setup_door_table
 
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
@@ -205,9 +233,23 @@ jail3:
 
 	jmp	jail_setup_done
 
+
+	;===================
+	; multi-level room
 jail4:
 	cmp	#4
 	bne	jail5
+
+	lda	#<door_c2_r4
+	sta	setup_door_table_loop_smc+1
+	lda	#>door_c2_r4
+	sta	setup_door_table_loop_smc+2
+	jsr	setup_door_table
+
+	lda	#4
+	sta	NUM_DOORS
+
+
 
 	lda	PHYSICIST_Y
 	cmp	#30		; see if coming in on bottom
@@ -468,6 +510,13 @@ actively_teleporting:
         jsr     put_sprite_crop
 
 	dec	TELEPORTING
+	bne	c2_done_draw_physicist
+
+	;================
+	; recalc collision on new floor
+
+	jsr	recalc_walk_collision
+
 
 c2_done_draw_physicist:
 
@@ -1017,39 +1066,76 @@ gun_movie_loop:
 	rts
 
 
+door_c2_r3:
+	.word door_c2_r3_status
+	.word door_c2_r3_x
+	.word door_c2_r3_y
+	.word door_c2_r3_xmin
+	.word door_c2_r3_xmax
 
-door_y:
-        c4_r0_door0_y:  .byte 24
-        c4_r0_door1_y:  .byte 24
-        c4_r0_door2_y:  .byte 24
-        c4_r0_door3_y:  .byte 24
-        c4_r0_door4_y:  .byte 24
+door_c2_r3_status:
+	c2_r3_door0_status:	.byte DOOR_STATUS_CLOSED
+	c2_r3_door1_status:	.byte DOOR_STATUS_CLOSED
+	c2_r3_door2_status:	.byte DOOR_STATUS_CLOSED
 
-door_status:
-        c4_r0_door0_status:     .byte DOOR_STATUS_CLOSED
-        c4_r0_door1_status:     .byte DOOR_STATUS_CLOSED
-        c4_r0_door2_status:     .byte DOOR_STATUS_LOCKED
-        c4_r0_door3_status:     .byte DOOR_STATUS_LOCKED
-        c4_r0_door4_status:     .byte DOOR_STATUS_LOCKED
+door_c2_r3_y:
+	c2_r3_door0_y:	.byte 26
+	c2_r3_door1_y:	.byte 26
+	c2_r3_door2_y:	.byte 26
 
-door_x:
-        c4_r0_door0_x:  .byte 7
-        c4_r0_door1_x:  .byte 18
-        c4_r0_door2_x:  .byte 29
-        c4_r0_door3_x:  .byte 31
-        c4_r0_door4_x:  .byte 33
+door_c2_r3_x:
+	c2_r3_door0_x:	.byte 35
+	c2_r3_door1_x:	.byte 37
+	c2_r3_door2_x:	.byte 39
 
-door_xmin:
-        c4_r0_door0_xmin:       .byte 0         ; 7-4-5
-        c4_r0_door1_xmin:       .byte 11        ; 18-4-5
-        c4_r0_door2_xmin:       .byte 20        ; 29-4-5
-        c4_r0_door3_xmin:       .byte 22        ; 31-4-5
-        c4_r0_door4_xmin:       .byte 24        ; 33-4-5
 
-door_xmax:
-        c4_r0_door0_xmax:       .byte 11        ; 7+4
-        c4_r0_door1_xmax:       .byte 21        ; 18+4
-        c4_r0_door2_xmax:       .byte 33        ; don't care
-        c4_r0_door3_xmax:       .byte 35        ; don't care
-        c4_r0_door4_xmax:       .byte 37        ; don't care
+door_c2_r3_xmin:
+	c2_r3_door0_xmin:	.byte 26	; 35-4-5
+	c2_r3_door1_xmin:	.byte 28	; 37-4-5
+	c2_r3_door2_xmin:	.byte 30	; 39-4-5
+
+door_c2_r3_xmax:
+	c2_r3_door0_xmax:	.byte 39	; 35+4
+	c2_r3_door1_xmax:	.byte 41	; 37+4
+	c2_r3_door2_xmax:	.byte 43	; 39+4
+
+
+door_c2_r4:
+	.word door_c2_r4_status
+	.word door_c2_r4_x
+	.word door_c2_r4_y
+	.word door_c2_r4_xmin
+	.word door_c2_r4_xmax
+
+door_c2_r4_status:
+	c2_r4_door0_status:	.byte DOOR_STATUS_CLOSED
+	c2_r4_door1_status:	.byte DOOR_STATUS_CLOSED
+	c2_r4_door2_status:	.byte DOOR_STATUS_CLOSED
+	c2_r4_door3_status:	.byte DOOR_STATUS_CLOSED
+
+door_c2_r4_x:
+	c2_r4_door0_x:	.byte 18
+	c2_r4_door1_x:	.byte 20
+	c2_r4_door2_x:	.byte 22
+	c2_r4_door3_x:	.byte 32
+
+door_c2_r4_y:
+	c2_r4_door0_y:	.byte 28
+	c2_r4_door1_y:	.byte 28
+	c2_r4_door2_y:	.byte 28
+	c2_r4_door3_y:	.byte 6
+
+door_c2_r4_xmin:
+	c2_r4_door0_xmin:	.byte 9		; 18-4-5
+	c2_r4_door1_xmin:	.byte 11	; 20-4-5
+	c2_r4_door2_xmin:	.byte 13	; 22-4-5
+	c2_r4_door3_xmin:	.byte 23	; 32-4-5
+
+door_c2_r4_xmax:
+	c2_r4_door0_xmax:	.byte 22	; 18+4
+	c2_r4_door1_xmax:	.byte 24	; 20+4
+	c2_r4_door2_xmax:	.byte 26	; 22+4
+	c2_r4_door3_xmax:	.byte 36	; 32+4
+
+
 
