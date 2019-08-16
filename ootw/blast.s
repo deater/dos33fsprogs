@@ -37,6 +37,16 @@ fire_blast:
 	lda	PHYSICIST_Y
 	clc
 	adc	#4
+
+	ldx	PHYSICIST_STATE
+	cpx	#P_CROUCH_SHOOTING
+	bne	blast_ypos_done
+
+blast_crouch:
+	clc
+	adc	#4
+blast_ypos_done:
+
 	sta	blast0_y
 
 	; set direction

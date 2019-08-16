@@ -11,9 +11,9 @@
 handle_gun:
 
 	;===================
-	; ???
+	; check_gun_firing
 	;===================
-	jsr	handle_gun2
+	jsr	check_gun_firing
 
 	;=======================
 	; draw gun charge effect
@@ -54,7 +54,13 @@ handle_gun:
 ;	rts
 
 
-handle_gun2:
+	;====================
+	;====================
+	; check gun firing
+	;====================
+	;====================
+
+check_gun_firing:
 
 	lda	HAVE_GUN		; no gun, do nothing
 	beq	no_have_gun
@@ -168,7 +174,8 @@ done_zap:
 	ldy	PHYSICIST_STATE
 	cpy	#P_CROUCH_SHOOTING
 	bne	done_zap_ypos
-	adc	#2
+	clc
+	adc	#4
 
 done_zap_ypos:
 	sta	YPOS

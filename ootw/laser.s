@@ -43,6 +43,14 @@ fire_laser:
 	lda	PHYSICIST_Y
 	clc
 	adc	#4
+
+	ldx	PHYSICIST_STATE
+	cpx	#P_CROUCH_SHOOTING
+	bne	laser_crouch_done
+laser_crouch:
+	clc
+	adc	#4
+laser_crouch_done:
 	sta	laser0_y
 
 	; set direction

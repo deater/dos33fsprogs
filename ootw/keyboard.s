@@ -319,7 +319,7 @@ not_already_firing:
 
 	lda	PHYSICIST_STATE
 	and	#STATE_CROUCHING
-	bne	crouch_charge
+	beq	crouch_charge
 	ldy	#P_CROUCH_SHOOTING
 	bne	crouch_charge_go	; bra
 crouch_charge:
