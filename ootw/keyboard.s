@@ -72,10 +72,13 @@ check_left:
 
 
 	;====================
-	; Left Pressed
+	;====================
+	; Left/A Pressed
+	;====================
 	;====================
 left_pressed:
-	inc	GUN_FIRE
+	inc	GUN_FIRE		; fire gun if charging
+
 					; left==0
 	lda	DIRECTION		; if facing right, turn to face left
 	bne	left_going_right
@@ -122,15 +125,16 @@ check_right:
 	cmp	#$15
 	bne	check_up
 
-
 	;===================
-	; Right Pressed
+	;===================
+	; Right/D Pressed
+	;===================
 	;===================
 right_pressed:
-	inc	GUN_FIRE
+	inc	GUN_FIRE		; fire if charging
 
 					; right==1
-	lda	DIRECTION		; if facing right, turn to face left
+	lda	DIRECTION		; if facing left, turn to face right
 	beq	right_going_left
 
 
@@ -160,7 +164,7 @@ right_going_left:
 	cmp	#P_SHOOTING
 	beq	stand_right
 	cmp	#P_CROUCHING
-	beq	stand_left
+	beq	stand_right
 
 	;===========================
 	; otherwise?
@@ -220,9 +224,11 @@ check_up:
 	cmp	#$0B
 	bne	check_down
 up:
-	;========================
-	; UP -- Jump
-	;========================
+	;=============================
+	;=============================
+	; Up/W Pressed -- Jump, Get up
+	;=============================
+	;=============================
 
 	inc	GUN_FIRE
 
@@ -231,29 +237,41 @@ up:
 
 up_on_elevator:
 	lda	#P_ELEVATING_UP
-	sta	PHYSICIST_STATE
-	lda	#0
-	sta	GAIT
-	jmp	done_keypress
+	jmp	change_state_clear_gait
 
 up_not_elevator:
 
+	lda	PHYSICIST_STATE
+	cmp	#P_CROUCHING
+	beq	stand_up
+	cmp	#P_CROUCH_SHOOTING
+	beq	stand_up_shoot
+
+up_jump:
 	lda	#P_JUMPING
-	sta	PHYSICIST_STATE
-	lda	#0
-	sta	GAIT
+	jmp	change_state_clear_gait
 
-	jmp	done_keypress
+stand_up:
+	lda	#P_STANDING
+	jmp	change_state_clear_gait
 
+stand_up_shoot:
+	lda	#P_SHOOTING
+	jmp	change_state_clear_gait
+
+
+	;==========================
 check_down:
 	cmp	#'S'
 	beq	down
 	cmp	#$0A
 	bne	check_gun
 
-	;======================
-	; DOWN -- Crouch
-	;======================
+	;==========================
+	;==========================
+	; Down/S Pressed -- Crouch
+	;==========================
+	;==========================
 down:
 
 	lda	ON_ELEVATOR
@@ -261,18 +279,22 @@ down:
 
 down_on_elevator:
 	lda	#P_ELEVATING_DOWN
-	sta	PHYSICIST_STATE
-	lda	#0
-	sta	GAIT
-	jmp	done_keypress
+	jmp	change_state_clear_gait
 
 down_not_elevator:
-	lda	#P_CROUCHING
-	sta	PHYSICIST_STATE
-	lda	#0
-	sta	GAIT
+	lda	PHYSICIST_STATE
+	cmp	#P_SHOOTING
+	bne	start_crouch
 
-	jmp	done_keypress
+	lda	#P_CROUCH_SHOOTING
+	jmp	change_state_clear_gait
+
+start_crouch:
+	lda	#P_CROUCHING
+	jmp	change_state_clear_gait
+
+
+	;==========================
 
 check_gun:
 	cmp	#'L'
@@ -324,9 +346,7 @@ shoot:
 
 no_stance:
 	lda	#P_SHOOTING
-	sta	PHYSICIST_STATE
-
-	jmp	done_keypress
+	jmp	change_state_clear_gait
 
 kick:
 	lda	#P_KICKING
@@ -338,3 +358,10 @@ done_keypress:
 	bit	KEYRESET	; clear the keyboard strobe		; 4
 
 	rts								; 6
+
+
+change_state_clear_gait:
+	sta	PHYSICIST_STATE
+	lda	#0
+	sta	GAIT
+	jmp	done_keypress
