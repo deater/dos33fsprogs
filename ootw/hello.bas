@@ -1,5 +1,5 @@
    5  HOME
-  10  PRINT "OOTW PROOF-OF-CONCEPT V2.4 (8/11/2019)"
+  10  PRINT "OOTW PROOF-OF-CONCEPT V2.5 (8/15/2019)"
   15  PRINT "                           BY DEATER"
   20  PRINT "                  DISK,LZ4 BY QKUMBA"
   25  PRINT "            ," 
@@ -33,5 +33,6 @@
  340  PRINT "   W OR UP      : JUMP"
  345  PRINT "   S OR DOWN    : CROUCH / PICKUP"
  350  PRINT "   SPACEBAR     : KICK / SHOOT"
+ 355  PRINT "   L            : CHARGE GUN"
  360  PRINT "   ESC          : QUITS"
  365  RETURN
