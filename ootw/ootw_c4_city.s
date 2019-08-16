@@ -267,8 +267,17 @@ room3:
 	;======================
 	; down at the bottom
 room4:
+
+	; set up doors
+
 	lda	#1
 	sta	NUM_DOORS
+
+	lda	#<door_c4_r4
+	sta	setup_door_table_loop_smc+1
+	lda	#>door_c4_r4
+	sta	setup_door_table_loop_smc+2
+	jsr	setup_door_table
 
 	lda	#(16+128)
 	sta	LEFT_LIMIT
@@ -1020,4 +1029,24 @@ door_c4_r0_xmax:
 	c4_r0_door2_xmax:	.byte 33	; don't care
 	c4_r0_door3_xmax:	.byte 35	; don't care
 	c4_r0_door4_xmax:	.byte 37	; don't care
+
+
+
+door_c4_r4:
+	.word door_c4_r4_status
+	.word door_c4_r4_x
+	.word door_c4_r4_y
+	.word door_c4_r4_xmin
+	.word door_c4_r4_xmax
+
+door_c4_r4_status:
+	c4_r4_door0_status:	.byte DOOR_STATUS_LOCKED
+
+door_c4_r4_x:
+	c4_r4_door0_x:	.byte 27
+
+door_c4_r4_xmin:	; don't care (door does not open)
+door_c4_r4_xmax:	; don't care (door does not open)
+door_c4_r4_y:
+	c4_r4_door0_y:	.byte 8
 
