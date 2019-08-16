@@ -693,6 +693,11 @@ continue_parsing_catalog:
           /* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+	if (result!=BYTES_PER_SECTOR) {
+		fprintf(stderr,"Error reading at $%02X:$%02X\n",
+			catalog_track,catalog_sector);
+		return ERROR_NO_SPACE;
+	}
 
 	/* Find empty directory entry */
 	i=0;
