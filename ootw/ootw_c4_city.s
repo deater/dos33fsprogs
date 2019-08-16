@@ -25,6 +25,16 @@ ootw_city_init:
 	lda	#100
 	sta	GUN_CHARGE
 
+	;====================
+	; reset doors
+	lda	#DOOR_STATUS_CLOSED
+	sta	c4_r0_door0_status
+	sta	c4_r0_door1_status
+	lda	#DOOR_STATUS_LOCKED
+	sta	c4_r0_door2_status
+	sta	c4_r0_door3_status
+	sta	c4_r0_door4_status
+
 	;===============
 	; set up aliens
 
