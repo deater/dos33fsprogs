@@ -95,17 +95,17 @@ end_message:
 .include "alien.s"
 
 
-;.include "gun.s"
-;.include "blast.s"
-;.include "shield.s"
+.include "gun.s"
+.include "laser.s"
+.include "blast.s"
+.include "shield.s"
 
-;.include "door.s"
-;.include "collision.s"
+.include "door.s"
+.include "collision.s"
 
 ; room backgrounds
 .include "ootw_graphics/l5cave/ootw_c5_cave.inc"
 ; sprites
 .include "ootw_graphics/sprites/physicist.inc"
 .include "ootw_graphics/sprites/alien.inc"
-
 

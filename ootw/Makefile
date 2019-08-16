@@ -16,7 +16,7 @@ ootw.dsk:	HELLO LOADER INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C2
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C3
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C4
-#	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C5
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C5
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 AUDIO_TEST
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 COMPRESS-TEST
 
