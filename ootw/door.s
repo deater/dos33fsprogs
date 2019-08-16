@@ -35,10 +35,10 @@ draw_doors_loop:
 	sta	INH
 
 actually_draw_door:
-	lda	door_x,Y
+	lda	(DOOR_X),Y
 	sta	XPOS
 
-	lda	door_y,Y
+	lda	(DOOR_Y),Y
 	sta	YPOS
 
 	tya
@@ -146,17 +146,17 @@ done_handle_doors:
 handle_doors_open:
 
 	; only open/close if on same level
-	lda	door_y,Y
+	lda	(DOOR_Y),Y
 	clc
 	adc	#4
 	cmp	PHYSICIST_Y
 	bne	close_door
 
 	lda	PHYSICIST_X
-	cmp	door_xmax,Y
+	cmp	(DOOR_XMAX),Y
 	bcs	close_door	; bge
 
-	cmp	door_xmin,Y
+	cmp	(DOOR_XMIN),Y
 	bcc	close_door	; blt
 
 	; made it here, we are in bounds, stay open
@@ -172,17 +172,17 @@ handle_doors_closed:
 
 	; only open if on same level
 
-	lda	door_y,Y
+	lda	(DOOR_Y),Y
 	clc
 	adc	#4
 	cmp	PHYSICIST_Y
 	bne	handle_doors_continue
 
 	lda	PHYSICIST_X
-	cmp	door_xmax,Y
+	cmp	(DOOR_XMAX),Y
 	bcs	handle_doors_continue
 
-	cmp	door_xmin,Y
+	cmp	(DOOR_XMIN),Y
 	bcc	handle_doors_continue
 
 open_door:
@@ -191,8 +191,21 @@ open_door:
 	jmp	handle_doors_continue
 
 
+	;====================
+	;====================
+	; setup door table
+	;====================
+	;====================
+setup_door_table:
 
-
+	ldx	#9
+setup_door_table_loop:
+setup_door_table_loop_smc:
+	lda	$1000,X
+	sta	DOOR_STATUS,X
+	dex
+	bpl	setup_door_table_loop
+	rts
 
 
 

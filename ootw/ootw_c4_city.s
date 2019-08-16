@@ -118,10 +118,13 @@ room0:
 	lda	#5
 	sta	NUM_DOORS
 
-	lda	#<door_status
-	sta	DOOR_STATUS
-	lda	#>door_status
-	sta	DOOR_STATUS_H
+	lda	#<door_c4_r0
+	sta	setup_door_table_loop_smc+1
+	lda	#>door_c4_r0
+	sta	setup_door_table_loop_smc+2
+	jsr	setup_door_table
+
+	; set up room limits
 
 	lda	#(6+128)
 	sta	LEFT_LIMIT
@@ -976,39 +979,42 @@ pit_door_cover:
 ;	bne	clear1
 ;	rts
 
+door_c4_r0:
+	.word door_c4_r0_status
+	.word door_c4_r0_x
+	.word door_c4_r0_y
+	.word door_c4_r0_xmin
+	.word door_c4_r0_xmax
 
-
-
-
-door_status:
+door_c4_r0_status:
 	c4_r0_door0_status:	.byte DOOR_STATUS_CLOSED
 	c4_r0_door1_status:	.byte DOOR_STATUS_CLOSED
 	c4_r0_door2_status:	.byte DOOR_STATUS_LOCKED
 	c4_r0_door3_status:	.byte DOOR_STATUS_LOCKED
 	c4_r0_door4_status:	.byte DOOR_STATUS_LOCKED
 
-door_x:
+door_c4_r0_x:
 	c4_r0_door0_x:	.byte 7
 	c4_r0_door1_x:	.byte 18
 	c4_r0_door2_x:	.byte 29
 	c4_r0_door3_x:	.byte 31
 	c4_r0_door4_x:	.byte 33
 
-door_y:
+door_c4_r0_y:
 	c4_r0_door0_y:	.byte 24
 	c4_r0_door1_y:	.byte 24
 	c4_r0_door2_y:	.byte 24
 	c4_r0_door3_y:	.byte 24
 	c4_r0_door4_y:	.byte 24
 
-door_xmin:
+door_c4_r0_xmin:
 	c4_r0_door0_xmin:	.byte 0		; 7-4-5
 	c4_r0_door1_xmin:	.byte 11	; 18-4-5
 	c4_r0_door2_xmin:	.byte 20	; 29-4-5
 	c4_r0_door3_xmin:	.byte 22	; 31-4-5
 	c4_r0_door4_xmin:	.byte 24	; 33-4-5
 
-door_xmax:
+door_c4_r0_xmax:
 	c4_r0_door0_xmax:	.byte 11	; 7+4
 	c4_r0_door1_xmax:	.byte 21	; 18+4
 	c4_r0_door2_xmax:	.byte 33	; don't care

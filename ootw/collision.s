@@ -37,7 +37,7 @@ recalc_walk_left:
 	dey
 recalc_walk_left_loop:
 
-	cmp	door_x,Y
+	cmp	(DOOR_X),Y
 	bcc	recalc_walk_left_continue	; bcs
 
 	lda	(DOOR_STATUS),Y
@@ -45,7 +45,7 @@ recalc_walk_left_loop:
 	bne	recalc_walk_left_continue
 
 	; early exit
-	lda	door_x,Y
+	lda	(DOOR_X),Y
 	ora	#$80
 	sta	LEFT_WALK_LIMIT
 	jmp	done_recalc_walk_left_collision
@@ -61,7 +61,7 @@ done_recalc_walk_left_collision:
 	ldy	#0
 recalc_walk_right_loop:
 
-	cmp	door_x,Y
+	cmp	(DOOR_X),Y
 	bcs	recalc_walk_right_continue	; bge
 
 	lda	(DOOR_STATUS),Y
@@ -69,7 +69,7 @@ recalc_walk_right_loop:
 	bne	recalc_walk_right_continue
 
 	; early exit
-	lda	door_x,Y
+	lda	(DOOR_X),Y
 	sec
 	sbc	#4
 	ora	#$80
@@ -125,7 +125,7 @@ calc_gun_right_door_loop:
 
 	lda	PHYSICIST_X
 
-	cmp	door_x,Y
+	cmp	(DOOR_X),Y
 	bcs	calc_gun_right_door_continue		; bge
 
 	lda	(DOOR_STATUS),Y
@@ -136,7 +136,7 @@ calc_gun_right_door_loop:
 
 calc_gun_right_door_there:
 	; early exit
-	lda	door_x,Y
+	lda	(DOOR_X),Y
 	sta	RIGHT_SHOOT_LIMIT
 
 	tya			; set target if hit
@@ -233,7 +233,7 @@ calc_gun_left_doors:
 calc_gun_left_door_loop:
 	lda	PHYSICIST_X
 
-	cmp	door_x,Y
+	cmp	(DOOR_X),Y
 	bcc	calc_gun_left_door_continue		; blt
 
 	lda	(DOOR_STATUS),Y
@@ -244,7 +244,7 @@ calc_gun_left_door_loop:
 
 calc_gun_left_door_there:
 	; early exit
-	lda	door_x,Y
+	lda	(DOOR_X),Y
 	sta	LEFT_SHOOT_LIMIT
 
 	tya			; set target if hit
