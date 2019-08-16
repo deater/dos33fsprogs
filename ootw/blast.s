@@ -27,7 +27,7 @@ fire_blast:
 	sbc	#10
 	sta	GUN_CHARGE
 
-	; reset count
+	; reset blast count
 
 	lda	#0
 	sta	blast0_count
@@ -240,14 +240,12 @@ done_move_blast:
 	;=====================
 	; hit something, left
 	;=====================
-
 disable_blast_left:
 	lda	#0
 	sta	blast0_out
 
 	lda	LEFT_SHOOT_TARGET
 	beq	done_disable_blast_left
-
 
 	tax
 	and	#$f0
@@ -276,7 +274,7 @@ blast_alien_left:
 
 
 blast_door_left:
-	tax
+	txa
 	and	#$f0
 	cmp	#TARGET_DOOR
 	bne	done_disable_blast_left
