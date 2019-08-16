@@ -75,6 +75,10 @@ pstate_table_lo:
 	.byte <physicist_shooting	; 0B
 	.byte <physicist_falling_down	; 0C
 	.byte <physicist_impaled	; 0D
+	.byte <physicist_crouch_shooting; 0E
+	.byte <physicist_crouch_kicking	; 0F
+	.byte <physicist_disintegrating	; 10
+
 
 pstate_table_hi:
 	.byte >physicist_standing
@@ -91,6 +95,9 @@ pstate_table_hi:
 	.byte >physicist_shooting	; 0B
 	.byte >physicist_falling_down	; 0C
 	.byte >physicist_impaled	; 0D
+	.byte >physicist_crouch_shooting; 0E
+	.byte >physicist_crouch_kicking	; 0F
+	.byte >physicist_disintegrating	; 10
 
 ; Urgh, make sure this doesn't end up at $FF or you hit the
 ;	NMOS 6502 bug
@@ -108,7 +115,9 @@ pjump:
 
 draw_physicist:
 
-	ldx	PHYSICIST_STATE
+	lda	PHYSICIST_STATE
+	and	#$1f			; mask off high state bits
+	tax
 	lda	pstate_table_lo,x
 	sta	pjump
 	lda	pstate_table_hi,x
@@ -182,6 +191,35 @@ physicist_crouching:
 	sta	INH
 
 	jmp	finally_draw_him
+
+;===================================
+; CROUCH KICKING
+;===================================
+
+physicist_crouch_kicking:
+
+	lda	#<crouch_kicking
+	sta	INL
+
+	lda	#>crouch_kicking
+	sta	INH
+
+	jmp	finally_draw_him
+
+;===================================
+; CROUCH SHOOTING
+;===================================
+
+physicist_crouch_shooting:
+
+	lda	#<crouch_shooting
+	sta	INL
+
+	lda	#>crouch_shooting
+	sta	INH
+
+	jmp	finally_draw_him
+
 
 ;===================================
 ; JUMPING
@@ -321,6 +359,43 @@ no_collapse_progress:
 
 
 	jmp	finally_draw_him
+
+;==================================
+; DISINTEGRATING
+;==================================
+
+physicist_disintegrating:
+
+	lda	GAIT
+	cmp	#18
+	bne	disintegrate_not_done
+
+disintegrate_really_dead:
+	lda	#$ff
+	sta	GAME_OVER
+	jmp	finally_draw_him
+
+disintegrate_not_done:
+
+	ldx	GAIT
+
+	lda	disintegrate_progression,X
+	sta	INL
+	lda	disintegrate_progression+1,X
+	sta	INH
+
+	lda	FRAMEL
+	and	#$1f
+	bne	no_disintegrate_progress
+
+	inc	GAIT
+	inc	GAIT
+
+no_disintegrate_progress:
+
+
+	jmp	finally_draw_him
+
 
 
 ;==================================

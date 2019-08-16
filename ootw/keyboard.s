@@ -22,18 +22,7 @@
 handle_keypress:
 
 	lda	PHYSICIST_STATE
-	cmp	#P_COLLAPSING		; ignore keypress if dying
-	beq	no_keypress
-	cmp	#P_JUMPING		; ignore keypress if jumping
-	beq	no_keypress
-	cmp	#P_SWINGING
-	beq	no_keypress
-	cmp	#P_FALLING_SIDEWAYS
-	beq	no_keypress
-	cmp	#P_FALLING_DOWN
-	beq	no_keypress
-	cmp	#P_IMPALED
-	beq	no_keypress
+	bmi	no_keypress		; ignore keypress if dying/action
 
 	lda	KEYPRESS						; 4
 	bmi	keypress						; 3
@@ -91,8 +80,8 @@ left_going_left:
 	beq	walk_left
 	cmp	#P_WALKING
 	beq	run_left
-	cmp	#P_CROUCHING
-	beq	stand_left
+	and	#STATE_CROUCHING
+	bne	stand_left
 
 	;=============================
 	; already running, do nothing?
@@ -108,9 +97,8 @@ left_going_right:
 	beq	stand_left
 	cmp	#P_SHOOTING
 	beq	stand_left
-
-	cmp	#P_CROUCHING
-	beq	stand_left
+	and	#STATE_CROUCHING
+	bne	stand_left
 
 	;===========================
 	; otherwise?
@@ -146,8 +134,8 @@ right_going_right:
 	beq	walk_right
 	cmp	#P_WALKING
 	beq	run_right
-	cmp	#P_CROUCHING
-	beq	stand_right
+	and	#STATE_CROUCHING
+	bne	stand_right
 
 	;=============================
 	; already running, do nothing?
@@ -163,8 +151,9 @@ right_going_left:
 	beq	stand_right
 	cmp	#P_SHOOTING
 	beq	stand_right
-	cmp	#P_CROUCHING
-	beq	stand_right
+	and	#STATE_CROUCHING
+	bne	stand_right
+
 
 	;===========================
 	; otherwise?

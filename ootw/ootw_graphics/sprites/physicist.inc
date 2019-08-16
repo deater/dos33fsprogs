@@ -382,6 +382,8 @@ crouch2:
 ;=====================
 ;=====================
 
+; see physicist_l1_swim.inc
+
 ;=====================
 ;=====================
 ; COLLAPSING
@@ -584,4 +586,119 @@ physicist_spike_sprite:
         .byte $0A,$90,$0A
         .byte $BB,$A9,$BB
         .byte $BB,$AA,$BB
+
+
+
+;=====================
+;=====================
+; CROUCH SHOOTING
+;=====================
+;=====================
+
+crouch_shooting:
+	.byte 3,8
+	.byte $aa,$aa,$aa
+	.byte $aa,$aa,$aa
+	.byte $9a,$9a,$aa
+	.byte $bb,$99,$aa
+	.byte $aa,$0b,$0a
+	.byte $aa,$bb,$00
+	.byte $ba,$4b,$aa
+	.byte $54,$f4,$f4
+
+;=====================
+;=====================
+; CROUCH KICKING
+;=====================
+;=====================
+
+crouch_kicking:
+	.byte 3,8
+	.byte $aa,$aa,$aa
+	.byte $aa,$aa,$aa
+	.byte $9a,$9a,$aa
+	.byte $bb,$99,$aa
+	.byte $aa,$0b,$0a
+	.byte $aa,$bb,$00
+	.byte $ba,$4b,$aa
+	.byte $54,$f4,$f4
+
+
+
+
+;=====================
+;=====================
+; DISINTEGRATING
+;=====================
+;=====================
+
+disintegrate_progression:
+	.word	disintegrate1	; 00
+	.word	disintegrate2	; 02
+	.word	disintegrate3	; 04
+	.word	disintegrate4	; 06
+	.word	disintegrate5	; 08
+	.word	disintegrate5	; 10
+	.word	disintegrate5	; 12
+	.word	disintegrate5	; 14
+	.word	disintegrate5	; 16
+
+disintegrate1:
+	.byte 4,8
+	.byte $9a,$9a,$aa,$aa
+	.byte $ab,$99,$aa,$aa
+	.byte $aa,$0b,$aa,$aa
+	.byte $aa,$bb,$aa,$aa
+	.byte $aa,$bb,$aa,$aa
+	.byte $aa,$44,$aa,$aa
+	.byte $aa,$a4,$4a,$aa
+	.byte $aa,$fa,$f4,$aa
+
+
+disintegrate2:
+	.byte 5,8
+	.byte $aa,$aa,$aa,$aa,$aa
+	.byte $b9,$99,$aa,$aa,$aa
+	.byte $ab,$b9,$aa,$aa,$aa
+	.byte $aa,$b0,$aa,$aa,$aa
+	.byte $aa,$bb,$00,$aa,$aa
+	.byte $aa,$bb,$44,$4a,$aa
+	.byte $aa,$ab,$aa,$a4,$4a
+	.byte $aa,$aa,$aa,$fa,$f4
+
+
+
+disintegrate3:
+	.byte 6,8
+	.byte $aa,$aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa,$aa
+	.byte $9a,$9a,$aa,$aa,$aa,$aa
+	.byte $bb,$99,$aa,$aa,$aa,$aa
+	.byte $aa,$0b,$0a,$aa,$aa,$aa
+	.byte $aa,$bb,$00,$4a,$aa,$aa
+	.byte $aa,$bb,$a0,$44,$44,$fa
+	.byte $aa,$ab,$aa,$aa,$a4,$ff
+
+disintegrate4:
+	.byte 7,8
+	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte $9a,$9a,$aa,$aa,$aa,$aa,$aa
+	.byte $99,$bb,$00,$0a,$aa,$aa,$aa
+	.byte $aa,$aa,$bb,$00,$44,$4a,$fa
+	.byte $aa,$aa,$aa,$bb,$aa,$a4,$ff
+
+
+disintegrate5:
+	.byte 8,8
+	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
+	.byte $99,$b9,$00,$b0,$00,$bb,$4a,$aa
+	.byte $a9,$ab,$aa,$aa,$bb,$b4,$44,$ff
 
