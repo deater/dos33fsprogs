@@ -5,9 +5,59 @@
 ; we handle that here
 
 
+	;===================================
+	; handle/draw all gun related stuff
+	;===================================
 handle_gun:
+
+	;===================
+	; ???
+	;===================
+	jsr	handle_gun2
+
+	;=======================
+	; draw gun charge effect
+	;=======================
+
+	jsr	draw_gun_charging
+
+	;================
+	; move laser
+	;================
+
+	jsr	move_laser
+
+	;================
+	; draw laser
+	;================
+
+	jsr	draw_laser
+
+	;================
+	; move blast
+	;================
+
+	jsr	move_blast
+
+	;================
+	; draw blast
+	;================
+
+	jsr	draw_blast
+
+	;================
+	; draw shields
+	;================
+
+	jmp	draw_shields
+
+;	rts
+
+
+handle_gun2:
+
 	lda	HAVE_GUN		; no gun, do nothing
-	beq	done_gun
+	beq	no_have_gun
 
 	;================
 	; fire laser
@@ -70,20 +120,23 @@ done_firing:
 	lda	#0
 	sta	GUN_STATE
 done_gun:
+no_have_gun:
 	lda	#0
 	sta	GUN_FIRE
 
 	rts
 
 
-
-draw_gun:
+	;============================
+	; draw gun charging effect
+	;============================
+draw_gun_charging:
 
 	lda	HAVE_GUN		; no gun, do nothing
-	beq	done_draw_gun
+	beq	done_draw_gun_charging
 
 	lda	GUN_STATE		; gun not charging, do nothing
-	beq	done_draw_gun
+	beq	done_draw_gun_charging
 
 
 	; set direction
@@ -125,7 +178,7 @@ done_zap:
 
 	jsr	put_sprite
 
-done_draw_gun:
+done_draw_gun_charging:
 	rts
 
 ; progression

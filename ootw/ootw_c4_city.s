@@ -643,43 +643,7 @@ no_draw_alien:
 	; handle gun
 	;================
 
-	jsr handle_gun
-
-	;================
-	; draw gun effect
-	;================
-
-	jsr	draw_gun
-
-	;================
-	; move laser
-	;================
-
-	jsr	move_laser
-
-	;================
-	; draw laser
-	;================
-
-	jsr	draw_laser
-
-	;================
-	; move blast
-	;================
-
-	jsr	move_blast
-
-	;================
-	; draw blast
-	;================
-
-	jsr	draw_blast
-
-	;================
-	; draw shields
-	;================
-
-	jsr	draw_shields
+	jsr	handle_gun
 
 	;================
 	; handle doors

@@ -22,6 +22,7 @@ ootw_elevator:
 
 	;==============================
 	; setup per-room variables
+
 check_elevator7:
 	lda	WHICH_JAIL
 	cmp	#7
@@ -221,42 +222,6 @@ draw_elevator:
 	;================
 
 	jsr	handle_gun
-
-	;================
-	; draw gun effect
-	;================
-
-	jsr	draw_gun
-
-	;================
-        ; move laser
-        ;================
-
-        jsr     move_laser
-
-        ;================
-        ; draw laser
-        ;================
-
-        jsr     draw_laser
-
-        ;================
-        ; move blast
-        ;================
-
-        jsr     move_blast
-
-	;================
-        ; draw blast
-        ;================
-
-        jsr     draw_blast
-
-        ;================
-        ; draw shields
-        ;================
-
-        jsr     draw_shields
 
 	;===============
 	; page flip

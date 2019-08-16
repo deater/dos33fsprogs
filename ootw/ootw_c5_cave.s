@@ -7,6 +7,7 @@ ootw_cave_init:
 	sta	WHICH_CAVE
 	; yes you fall in facing left for some reason
 	sta	DIRECTION		; left
+	sta	NUM_DOORS
 
 	lda	#1
 	sta	HAVE_GUN
@@ -41,6 +42,8 @@ ootw_cave:
 
 	lda	WHICH_CAVE
 	bne	cave1
+
+	jsr	init_shields
 
 	; Room0 entrance
 cave0:
@@ -231,6 +234,11 @@ check_floor1:
 
 	jsr	draw_physicist
 
+
+	;===============
+	; handle gun
+
+	jsr	handle_gun
 
 	;========================
 	; draw foreground action
