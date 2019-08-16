@@ -33,43 +33,43 @@ recalc_walk_left:
 
 	lda	PHYSICIST_X
 
-	ldx	NUM_DOORS
-	dex
+	ldy	NUM_DOORS
+	dey
 recalc_walk_left_loop:
 
-	cmp	door_x,X
+	cmp	door_x,Y
 	bcc	recalc_walk_left_continue	; bcs
 
-	lda	door_status,X
+	lda	(DOOR_STATUS),Y
 	cmp	#DOOR_STATUS_LOCKED
 	bne	recalc_walk_left_continue
 
 	; early exit
-	lda	door_x,X
+	lda	door_x,Y
 	ora	#$80
 	sta	LEFT_WALK_LIMIT
 	jmp	done_recalc_walk_left_collision
 
 recalc_walk_left_continue:
-	dex
+	dey
 	bpl	recalc_walk_left_loop
 
 done_recalc_walk_left_collision:
 
 	lda	PHYSICIST_X
 
-	ldx	#0
+	ldy	#0
 recalc_walk_right_loop:
 
-	cmp	door_x,X
+	cmp	door_x,Y
 	bcs	recalc_walk_right_continue	; bge
 
-	lda	door_status,X
+	lda	(DOOR_STATUS),Y
 	cmp	#DOOR_STATUS_LOCKED
 	bne	recalc_walk_right_continue
 
 	; early exit
-	lda	door_x,X
+	lda	door_x,Y
 	sec
 	sbc	#4
 	ora	#$80
@@ -77,8 +77,8 @@ recalc_walk_right_loop:
 	jmp	done_recalc_walk_right_collision
 
 recalc_walk_right_continue:
-	inx
-	cpx	NUM_DOORS
+	iny
+	cpy	NUM_DOORS
 	bne	recalc_walk_right_loop
 
 done_recalc_walk_right_collision:
@@ -120,15 +120,15 @@ calc_gun_right_door:
 calc_gun_right_doors:
 
 
-	ldx	#0
+	ldy	#0
 calc_gun_right_door_loop:
 
 	lda	PHYSICIST_X
 
-	cmp	door_x,X
+	cmp	door_x,Y
 	bcs	calc_gun_right_door_continue		; bge
 
-	lda	door_status,X
+	lda	(DOOR_STATUS),Y
 	cmp	#DOOR_STATUS_LOCKED
 	beq	calc_gun_right_door_there
 	cmp	#DOOR_STATUS_CLOSED
@@ -136,18 +136,18 @@ calc_gun_right_door_loop:
 
 calc_gun_right_door_there:
 	; early exit
-	lda	door_x,X
+	lda	door_x,Y
 	sta	RIGHT_SHOOT_LIMIT
 
-	txa			; set target if hit
+	tya			; set target if hit
 	ora	#TARGET_DOOR
 	sta	RIGHT_SHOOT_TARGET
 
 	jmp	done_calc_gun_right_door_collision
 
 calc_gun_right_door_continue:
-	inx
-	cpx	NUM_DOORS
+	iny
+	cpy	NUM_DOORS
 	bne	calc_gun_right_door_loop
 
 done_calc_gun_right_door_collision:
@@ -228,15 +228,15 @@ left_limit_ok:
 calc_gun_left_doors:
 
 
-	ldx	NUM_DOORS
-	dex
+	ldy	NUM_DOORS
+	dey
 calc_gun_left_door_loop:
 	lda	PHYSICIST_X
 
-	cmp	door_x,X
+	cmp	door_x,Y
 	bcc	calc_gun_left_door_continue		; blt
 
-	lda	door_status,X
+	lda	(DOOR_STATUS),Y
 	cmp	#DOOR_STATUS_LOCKED
 	beq	calc_gun_left_door_there
 	cmp	#DOOR_STATUS_CLOSED
@@ -244,17 +244,17 @@ calc_gun_left_door_loop:
 
 calc_gun_left_door_there:
 	; early exit
-	lda	door_x,X
+	lda	door_x,Y
 	sta	LEFT_SHOOT_LIMIT
 
-	txa			; set target if hit
+	tya			; set target if hit
 	ora	#TARGET_DOOR
 	sta	LEFT_SHOOT_TARGET
 
 	jmp	done_calc_gun_left_door_collision
 
 calc_gun_left_door_continue:
-	dex
+	dey
 	bpl	calc_gun_left_door_loop
 
 done_calc_gun_left_door_collision:

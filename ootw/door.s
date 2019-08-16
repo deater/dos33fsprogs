@@ -23,27 +23,28 @@ draw_doors:
 	lda	NUM_DOORS
 	beq	done_draw_doors
 
-	ldx	#0
+	ldy	#0
 draw_doors_loop:
 
-	ldy	door_status,X
+	lda	(DOOR_STATUS),Y
+	tax
 
-	lda	door_sprite_lookup_lo,Y
+	lda	door_sprite_lookup_lo,X
 	sta	INL
-	lda	door_sprite_lookup_hi,Y
+	lda	door_sprite_lookup_hi,X
 	sta	INH
 
 actually_draw_door:
-	lda	door_x,X
+	lda	door_x,Y
 	sta	XPOS
 
-	lda	door_y,X
+	lda	door_y,Y
 	sta	YPOS
 
-	txa
+	tya
 	pha
 
-	lda	door_status,X
+	lda	(DOOR_STATUS),Y
 	cmp	#DOOR_STATUS_EXPLODING1
 	bcs	draw_exploding_door
 
@@ -52,11 +53,11 @@ actually_draw_door:
 after_door_put_sprite:
 
 	pla
-	tax
+	tay
 
 draw_doors_continue:
-	inx
-	cpx	NUM_DOORS
+	iny
+	cpy	NUM_DOORS
 	bne	draw_doors_loop
 
 done_draw_doors:
@@ -69,13 +70,16 @@ draw_exploding_door:
 	and	#$7
 	bne	not_done_exploding_door
 
-	inc	door_status,X
-	lda	door_status,X
+	lda	(DOOR_STATUS),Y
+	clc
+	adc	#1
+	sta	(DOOR_STATUS),Y
+
 	cmp	#DOOR_STATUS_EXPLODING6
 	bcc	not_done_exploding_door
 
 	lda	#DOOR_STATUS_EXPLODED
-	sta	door_status,X
+	sta	(DOOR_STATUS),Y
 
 not_done_exploding_door:
 	dec	XPOS
@@ -96,11 +100,11 @@ handle_doors:
 	lda	NUM_DOORS
 	beq	done_handle_doors
 
-	ldx	#0
+	ldy	#0
 handle_doors_loop:
 
 	; state machine
-	lda	door_status,X
+	lda	(DOOR_STATUS),Y
 
 	; if locked->do nothing
 	cmp	#DOOR_STATUS_LOCKED
@@ -126,11 +130,14 @@ handle_doors_loop:
 	; if opening, continue to open
 	; if closing, continue to close
 handle_door_inc_state:
-	inc	door_status,X
+	lda	(DOOR_STATUS),Y
+	clc
+	adc	#1
+	sta	(DOOR_STATUS),Y
 
 handle_doors_continue:
-	inx
-	cpx	NUM_DOORS
+	iny
+	cpy	NUM_DOORS
 	bne	handle_doors_loop
 
 done_handle_doors:
@@ -139,19 +146,17 @@ done_handle_doors:
 handle_doors_open:
 
 	; only open/close if on same level
-	ldy	door_y,X
-	iny
-	iny
-	iny
-	iny
-	cpy	PHYSICIST_Y
+	lda	door_y,Y
+	clc
+	adc	#4
+	cmp	PHYSICIST_Y
 	bne	close_door
 
 	lda	PHYSICIST_X
-	cmp	door_xmax,X
+	cmp	door_xmax,Y
 	bcs	close_door	; bge
 
-	cmp	door_xmin,X
+	cmp	door_xmin,Y
 	bcc	close_door	; blt
 
 	; made it here, we are in bounds, stay open
@@ -160,31 +165,29 @@ handle_doors_open:
 
 close_door:
 	lda	#DOOR_STATUS_CLOSING1
-	sta	door_status,X
+	sta	(DOOR_STATUS),Y
 	jmp	handle_doors_continue
 
 handle_doors_closed:
 
 	; only open if on same level
 
-	ldy	door_y,X
-	iny
-	iny
-	iny
-	iny
-	cpy	PHYSICIST_Y
+	lda	door_y,Y
+	clc
+	adc	#4
+	cmp	PHYSICIST_Y
 	bne	handle_doors_continue
 
 	lda	PHYSICIST_X
-	cmp	door_xmax,X
+	cmp	door_xmax,Y
 	bcs	handle_doors_continue
 
-	cmp	door_xmin,X
+	cmp	door_xmin,Y
 	bcc	handle_doors_continue
 
 open_door:
 	lda	#DOOR_STATUS_OPENING1
-	sta	door_status,X
+	sta	(DOOR_STATUS),Y
 	jmp	handle_doors_continue
 
 

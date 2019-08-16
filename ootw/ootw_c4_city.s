@@ -118,6 +118,11 @@ room0:
 	lda	#5
 	sta	NUM_DOORS
 
+	lda	#<door_status
+	sta	DOOR_STATUS
+	lda	#>door_status
+	sta	DOOR_STATUS_H
+
 	lda	#(6+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
@@ -974,12 +979,6 @@ pit_door_cover:
 
 
 
-door_y:
-	c4_r0_door0_y:	.byte 24
-	c4_r0_door1_y:	.byte 24
-	c4_r0_door2_y:	.byte 24
-	c4_r0_door3_y:	.byte 24
-	c4_r0_door4_y:	.byte 24
 
 door_status:
 	c4_r0_door0_status:	.byte DOOR_STATUS_CLOSED
@@ -994,6 +993,13 @@ door_x:
 	c4_r0_door2_x:	.byte 29
 	c4_r0_door3_x:	.byte 31
 	c4_r0_door4_x:	.byte 33
+
+door_y:
+	c4_r0_door0_y:	.byte 24
+	c4_r0_door1_y:	.byte 24
+	c4_r0_door2_y:	.byte 24
+	c4_r0_door3_y:	.byte 24
+	c4_r0_door4_y:	.byte 24
 
 door_xmin:
 	c4_r0_door0_xmin:	.byte 0		; 7-4-5

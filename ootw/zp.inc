@@ -118,6 +118,18 @@ LZ4_DONE	= $96
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
+
+DOOR_STATUS	= $C0
+DOOR_STATUS_H	= $C1
+DOOR_X		= $C2
+DOOR_X_H	= $C3
+DOOR_Y		= $C4
+DOOR_Y_H	= $C5
+DOOR_XMIN	= $C6
+DOOR_XMIN_H	= $C7
+DOOR_XMAX	= $C8
+DOOR_XMAX_H	= $C9
+
 LEFT_SHOOT_TARGET = $CF		; ALL
 RIGHT_SHOOT_TARGET = $D0	; ALL
 

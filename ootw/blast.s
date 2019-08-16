@@ -281,10 +281,10 @@ blast_door_left:
 
 	txa
 	and	#$f
-	tax
+	tay
 
 	lda	#DOOR_STATUS_EXPLODING1
-	sta	door_status,X
+	sta	(DOOR_STATUS),Y
 
 	jsr	recalc_walk_collision
 
@@ -331,10 +331,10 @@ blast_alien_right:
 blast_door_right:
 	txa
 	and	#$f
-	tax
+	tay
 
 	lda	#DOOR_STATUS_EXPLODING1
-	sta	door_status,X
+	sta	(DOOR_STATUS),Y
 
 	jsr	recalc_walk_collision
 
