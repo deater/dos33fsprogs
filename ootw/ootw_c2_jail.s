@@ -12,6 +12,17 @@ ootw_jail_init:
 	sta	DIRECTION		; left
 	sta	HAVE_GUN
 
+	sta	LASER_OUT
+	sta	ALIEN_OUT
+	sta	BLAST_OUT
+	sta	CHARGER_COUNT
+	sta	GUN_STATE
+	sta	GUN_FIRE
+	sta	NUM_DOORS
+
+	lda	#100
+	sta	GUN_CHARGE
+
 	lda	#1
 	sta	JAIL_POWER_ON
 	sta	friend_out
@@ -36,7 +47,28 @@ ootw_jail_init:
 	lda	#30
 	sta	PHYSICIST_Y
 
+	;===============
+	; set up aliens
 
+	jsr	clear_aliens
+
+	lda	#1
+	sta	alien0_out
+
+	lda     #6
+	sta     alien0_room
+
+	lda     #26
+	sta     alien0_x
+
+	lda     #20
+	sta     alien0_y
+
+	lda     #A_STANDING
+	sta     alien0_state
+
+	lda     #1
+	sta     alien0_direction
 
 	rts
 
@@ -53,6 +85,17 @@ ootw_jail:
 	lda	#0
 	sta	ON_ELEVATOR
 	sta	TELEPORTING
+
+	;============================
+        ; init shields
+
+        jsr     init_shields
+
+	;============================
+	; init alien room
+
+	jsr	alien_room_init
+
 
 	;==============================
 	; setup per-room variables
@@ -257,8 +300,8 @@ jail5:
 
 	jmp	jail_setup_done
 
+	; tiny room with power
 jail6:
-
 	lda	#(17+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
@@ -286,6 +329,10 @@ jail_setup_done:
 	jsr	load_rle_gr			; tail call
 
 
+	; setup walk collision
+	jsr	recalc_walk_collision
+
+
 ootw_jail_already_set:
 	;===========================
 	; Enable graphics
@@ -301,12 +348,6 @@ ootw_jail_already_set:
 	sta	DRAW_PAGE
 	lda	#1
 	sta	DISP_PAGE
-
-	;=================================
-	; copy to screen
-
-;	jsr	gr_copy_to_current
-;	jsr	page_flip
 
 	;=================================
 	; setup vars
@@ -346,7 +387,7 @@ bg_jail0:
         sta     XPOS
         lda     #44
         sta     YPOS
-        jsr     draw_gun
+        jsr     draw_floor_gun
 
 	jmp	c2_no_bg_action
 
@@ -430,14 +471,77 @@ actively_teleporting:
 
 c2_done_draw_physicist:
 
-
-
 	;===============
 	; draw friend
 
 	jsr	draw_friend
 
 c2_done_draw_friend:
+
+	;===============
+        ; draw alien
+        ;===============
+
+        lda     ALIEN_OUT
+        beq     no_draw_alien
+        jsr     draw_alien
+no_draw_alien:
+
+
+	;================
+	; handle gun
+	;================
+
+	jsr	handle_gun
+
+	;================
+	; draw gun effect
+	;================
+
+	jsr	draw_gun
+
+	;================
+	; move laser
+	;================
+
+	jsr	move_laser
+
+	;================
+	; draw laser
+	;================
+
+	jsr	draw_laser
+
+	;================
+	; move blast
+	;================
+
+	jsr	move_blast
+
+        ;================
+        ; draw blast
+        ;================
+
+        jsr     draw_blast
+
+        ;================
+        ; draw shields
+        ;================
+
+        jsr     draw_shields
+
+        ;================
+        ; handle doors
+        ;================
+
+        jsr     handle_doors
+
+	;================
+        ; draw doors
+        ;================
+
+        jsr     draw_doors
+
 
 
 
@@ -840,10 +944,10 @@ gun_sprite:
 
 
 	;====================
-	; draw gun
+	; draw floor_gun
 	;====================
 	; xpos/ypos already set
-draw_gun:
+draw_floor_gun:
 	lda	#<gun_sprite
 	sta	INL
 	lda	#>gun_sprite
@@ -948,3 +1052,41 @@ gun_movie_loop:
         jsr     load_rle_gr
 
 	rts
+
+
+
+door_y:
+        c4_r0_door0_y:  .byte 24
+        c4_r0_door1_y:  .byte 24
+        c4_r0_door2_y:  .byte 24
+        c4_r0_door3_y:  .byte 24
+        c4_r0_door4_y:  .byte 24
+
+door_status:
+        c4_r0_door0_status:     .byte DOOR_STATUS_CLOSED
+        c4_r0_door1_status:     .byte DOOR_STATUS_CLOSED
+        c4_r0_door2_status:     .byte DOOR_STATUS_LOCKED
+        c4_r0_door3_status:     .byte DOOR_STATUS_LOCKED
+        c4_r0_door4_status:     .byte DOOR_STATUS_LOCKED
+
+door_x:
+        c4_r0_door0_x:  .byte 7
+        c4_r0_door1_x:  .byte 18
+        c4_r0_door2_x:  .byte 29
+        c4_r0_door3_x:  .byte 31
+        c4_r0_door4_x:  .byte 33
+
+door_xmin:
+        c4_r0_door0_xmin:       .byte 0         ; 7-4-5
+        c4_r0_door1_xmin:       .byte 11        ; 18-4-5
+        c4_r0_door2_xmin:       .byte 20        ; 29-4-5
+        c4_r0_door3_xmin:       .byte 22        ; 31-4-5
+        c4_r0_door4_xmin:       .byte 24        ; 33-4-5
+
+door_xmax:
+        c4_r0_door0_xmax:       .byte 11        ; 7+4
+        c4_r0_door1_xmax:       .byte 21        ; 18+4
+        c4_r0_door2_xmax:       .byte 33        ; don't care
+        c4_r0_door3_xmax:       .byte 35        ; don't care
+        c4_r0_door4_xmax:       .byte 37        ; don't care
+

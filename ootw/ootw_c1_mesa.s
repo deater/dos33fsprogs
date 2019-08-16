@@ -26,16 +26,17 @@ ootw_mesa:
 
 	lda	#(128+39)		; aliens trigger
 	sta	RIGHT_LIMIT
+	sta	RIGHT_WALK_LIMIT
 	jmp	mesa_left
 
 beast_not_out_yet:
 	lda	#(128+20)		; beast trigger
 	sta	RIGHT_LIMIT
-
+	sta	RIGHT_WALK_LIMIT
 mesa_left:
 	lda	#(128-4)
 	sta	LEFT_LIMIT
-
+	sta	LEFT_WALK_LIMIT
 	;=============================
 	; Load background to $c00
 
@@ -235,6 +236,7 @@ trigger_beast:
 
 	lda	#(39+128)		; update right side of screen
 	sta	RIGHT_LIMIT		; this is mostly for testing
+	sta	RIGHT_WALK_LIMIT
 
 	jsr	beast_cutscene
 

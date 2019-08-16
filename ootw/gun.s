@@ -9,6 +9,18 @@ handle_gun:
 	lda	HAVE_GUN		; no gun, do nothing
 	beq	done_gun
 
+	;================
+	; fire laser
+	;================
+
+	lda     LASER_OUT
+	beq     no_fire_laser
+	jsr     fire_laser
+no_fire_laser:
+	lda     #0
+	sta     LASER_OUT
+
+
 	lda	GUN_STATE		; gun not charging, do nothing
 	beq	done_gun
 

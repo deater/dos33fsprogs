@@ -167,7 +167,9 @@ ajump:
 .align 1
 
 ;======================================
+;======================================
 ; draw alien
+;======================================
 ;======================================
 
 draw_alien:
@@ -457,12 +459,46 @@ alien_facing_right:
 
 
 	;==================
+	;==================
 	; clear aliens
+	;==================
 	;==================
 clear_aliens:
 	lda	#0
 	sta	alien0_out
 	sta	alien1_out
 	sta	alien2_out
+
+	rts
+
+
+	;==============================
+	;==============================
+	; alien room init
+	;==============================
+	;==============================
+
+alien_room_init:
+	;==============================
+        ; if alien in room, set ALIEN_OUT
+
+        lda     #0
+        sta     ALIEN_OUT
+
+        ldx     #0
+alien_room_loop:
+        lda     alien_out,X
+        beq     alien_room_continue
+
+        lda     alien_room,X
+        cmp     WHICH_ROOM
+        bne     alien_room_continue
+
+        inc     ALIEN_OUT
+
+alien_room_continue:
+        inx
+        cpx     #MAX_ALIENS
+        bne     alien_room_loop
 
 	rts

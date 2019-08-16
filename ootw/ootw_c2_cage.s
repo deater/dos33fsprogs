@@ -158,7 +158,7 @@ done_drawing_cage:
 	; draw laser
 	;======================
 
-	jsr	draw_laser
+	jsr	draw_up_laser
 
 	;======================
 	; draw guard
@@ -480,9 +480,9 @@ done_cage:
 	; Draw Laser
 	;======================
 
-draw_laser:
+draw_up_laser:
 	lda	SHOOTING_BOTTOM
-	beq	done_draw_laser
+	beq	done_draw_up_laser
 
 	; 30 - 27, 30-24, 30-21
 
@@ -510,14 +510,14 @@ shoot_up_noadj:
 
 
 	lda	SHOOTING_TOP
-	beq	done_draw_laser
+	beq	done_draw_up_laser
 
 	dec	SHOOTING_TOP
 	dec	SHOOTING_TOP
 	dec	SHOOTING_TOP
 	dec	SHOOTING_TOP
 
-done_draw_laser:
+done_draw_up_laser:
 	rts
 
 cage_amp1_sprites:
@@ -1318,7 +1318,7 @@ done_cage_draw_lg:
 	;======================
 	; continue drawing in case a shot was fired as we fell
 
-	jsr	draw_laser
+	jsr	draw_up_laser
 
 
 
@@ -1362,7 +1362,7 @@ ce_default_gun:
 	sta	YPOS
 
 ce_draw_gun:
-	jsr	draw_gun
+	jsr	draw_floor_gun
 
 ce_done_gun:
 

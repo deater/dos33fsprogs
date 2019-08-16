@@ -15,17 +15,17 @@ ootw_c2:
 	; Run the intro
 	;=======================
 
-	jsr	ootw_c2_intro
+;	jsr	ootw_c2_intro
 
 	;=======================
 	; Enter the game
 	;=======================
 ootw_c2_restart:
 
-	jsr	ootw_cage
-	lda	GAME_OVER
-	cmp	#$ff
-	beq	quit_level
+;	jsr	ootw_cage
+;	lda	GAME_OVER
+;	cmp	#$ff
+;	beq	quit_level
 
 	;=======================
 	; Start Level After Cage
@@ -119,12 +119,20 @@ end_message:
 .include "gr_run_sequence.s"
 .include "gr_overlay.s"
 .include "gr_vlin.s"
+.include "gr_hlin.s"
 .include "random16.s"
 .include "keyboard.s"
 
 .include "physicist.s"
 .include "alien.s"
 .include "friend.s"
+
+.include "gun.s"
+.include "blast.s"
+.include "laser.s"
+.include "shield.s"
+.include "door.s"
+.include "collision.s"
 
 ; background miners
 .include "ootw_c2_miners.s"

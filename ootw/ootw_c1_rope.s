@@ -21,8 +21,10 @@ ootw_rope:
 
 	lda	#(39+128)
 	sta	RIGHT_LIMIT
+	sta	RIGHT_WALK_LIMIT
 	lda	#(11+128)
 	sta	LEFT_LIMIT
+	sta	LEFT_WALK_LIMIT
 
 	lda	#0
 	sta	SWING_PROGRESS

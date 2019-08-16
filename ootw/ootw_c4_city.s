@@ -94,27 +94,8 @@ ootw_city:
 	jsr	init_shields
 
 
-	;==============================
-	; if alien in room, set ALIEN_OUT
+	jsr	alien_room_init
 
-	lda	#0
-	sta	ALIEN_OUT
-
-	ldx	#0
-alien_room_loop:
-	lda	alien_out,X
-	beq	alien_room_continue
-
-	lda	alien_room,X
-	cmp	WHICH_ROOM
-	bne	alien_room_continue
-
-	inc	ALIEN_OUT
-
-alien_room_continue:
-	inx
-	cpx	#MAX_ALIENS
-	bne	alien_room_loop
 
 	lda	#0
 	sta	FRAMEL			; reset frame count for action timer
@@ -657,17 +638,6 @@ after_draw_physicist:
 	beq	no_draw_alien
 	jsr	draw_alien
 no_draw_alien:
-
-	;================
-	; fire laser
-	;================
-
-	lda	LASER_OUT
-	beq	no_fire_laser
-	jsr	fire_laser
-no_fire_laser:
-	lda	#0
-	sta	LASER_OUT
 
 	;================
 	; handle gun

@@ -10,14 +10,14 @@ ootw_vent:
 	sta	VENT_DEATH
 	sta	VENT_END_COUNT
 
+	; init the steam puffs
 	sta	steam1_state
 	sta	steam2_state
 	sta	steam3_state
 
+	; steam4 is out of phase
 	lda	#32
 	sta	steam4_state
-
-
 
 	lda	#17
 	sta	PHYSICIST_X
@@ -32,7 +32,7 @@ ootw_vent:
 	sta	FALLING_Y
 
 	;===========================
-	; Setup and clear pages (is this necessary?)
+	; Setup and clear pages
 
 	lda	#4
 	sta	DRAW_PAGE

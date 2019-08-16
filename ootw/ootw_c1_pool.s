@@ -27,8 +27,10 @@ ootw_pool:
 
 	lda	#(39+128)
 	sta	RIGHT_LIMIT
+	sta	RIGHT_WALK_LIMIT
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
+	sta	LEFT_WALK_LIMIT
 
 	;=============================
 	; Load background to $c00

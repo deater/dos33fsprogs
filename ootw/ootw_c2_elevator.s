@@ -1,21 +1,6 @@
 ; Ootw Checkpoint2 -- Using the elevator
 
 ootw_elevator:
-	;===========================
-	; Enable graphics
-
-;	bit	LORES
-;	bit	SET_GR
-;	bit	FULLGR
-
-	;===========================
-	; Setup pages (is this necessary?)
-
-;	lda	#0
-;	sta	DRAW_PAGE
-;	lda	#1
-;	sta	DISP_PAGE
-
 
 	;===========================
 	; load dome for later
@@ -151,6 +136,18 @@ elevator_setup_done:
 	jsr	gr_copy_to_current
 ;	jsr	page_flip
 
+
+	;============================
+        ; init shields
+
+        jsr     init_shields
+
+	;=====================
+	; setup walk collision
+
+        jsr     recalc_walk_collision
+
+
 	;=================================
 	; setup vars
 
@@ -219,9 +216,47 @@ draw_elevator:
 
 	jsr	draw_physicist
 
+	;================
+	; handle gun
+	;================
+
+	jsr	handle_gun
 
 	;================
-	; draw foreground
+	; draw gun effect
+	;================
+
+	jsr	draw_gun
+
+	;================
+        ; move laser
+        ;================
+
+        jsr     move_laser
+
+        ;================
+        ; draw laser
+        ;================
+
+        jsr     draw_laser
+
+        ;================
+        ; move blast
+        ;================
+
+        jsr     move_blast
+
+	;================
+        ; draw blast
+        ;================
+
+        jsr     draw_blast
+
+        ;================
+        ; draw shields
+        ;================
+
+        jsr     draw_shields
 
 	;===============
 	; page flip
