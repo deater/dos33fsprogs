@@ -240,14 +240,18 @@ jail4:
 	cmp	#4
 	bne	jail5
 
+
+	; setup doors
+
+	lda	#4
+	sta	NUM_DOORS
+
 	lda	#<door_c2_r4
 	sta	setup_door_table_loop_smc+1
 	lda	#>door_c2_r4
 	sta	setup_door_table_loop_smc+2
 	jsr	setup_door_table
 
-	lda	#4
-	sta	NUM_DOORS
 
 
 
@@ -306,9 +310,22 @@ jail4_ok:
 
 	jmp	jail_setup_done
 
+	; room with vent shaft
 jail5:
 	cmp	#5
 	bne	jail6
+
+	; setup doors
+
+	lda	#2
+	sta	NUM_DOORS
+
+	lda	#<door_c2_r5
+	sta	setup_door_table_loop_smc+1
+	lda	#>door_c2_r5
+	sta	setup_door_table_loop_smc+2
+	jsr	setup_door_table
+
 
 	lda	#(30+128)
 	sta	LEFT_LIMIT
@@ -1120,10 +1137,10 @@ door_c2_r4_x:
 	c2_r4_door3_x:	.byte 32
 
 door_c2_r4_y:
-	c2_r4_door0_y:	.byte 28
-	c2_r4_door1_y:	.byte 28
-	c2_r4_door2_y:	.byte 28
-	c2_r4_door3_y:	.byte 6
+	c2_r4_door0_y:	.byte 26
+	c2_r4_door1_y:	.byte 26
+	c2_r4_door2_y:	.byte 26
+	c2_r4_door3_y:	.byte 4
 
 door_c2_r4_xmin:
 	c2_r4_door0_xmin:	.byte 9		; 18-4-5
@@ -1138,4 +1155,30 @@ door_c2_r4_xmax:
 	c2_r4_door3_xmax:	.byte 36	; 32+4
 
 
+door_c2_r5:
+	.word door_c2_r5_status
+	.word door_c2_r5_x
+	.word door_c2_r5_y
+	.word door_c2_r5_xmin
+	.word door_c2_r5_xmax
+
+door_c2_r5_status:
+	c2_r5_door0_status:	.byte DOOR_STATUS_CLOSED
+	c2_r5_door1_status:	.byte DOOR_STATUS_CLOSED
+
+door_c2_r5_x:
+	c2_r5_door0_x:	.byte 6
+	c2_r5_door1_x:	.byte 26
+
+door_c2_r5_y:
+	c2_r5_door0_y:	.byte 4
+	c2_r5_door1_y:	.byte 4
+
+door_c2_r5_xmin:
+	c2_r5_door0_xmin:	.byte 4		; 6-4-5
+	c2_r5_door1_xmin:	.byte 17	; 26-4-5
+
+door_c2_r5_xmax:
+	c2_r5_door0_xmax:	.byte 10	; 6+4
+	c2_r5_door1_xmax:	.byte 30	; 26+4
 
