@@ -1,15 +1,15 @@
-Q. Are you implementing the game just like the original (i.e. vector
+Q1. Are you implementing the game just like the original (i.e. vector
 	drawing)?
 
-A. No, this is just a quick hack using sprites.
+A1. No, this is just a quick hack using sprites.
    While it would be pretty amazing, I haven't written
    a 6502 optimized vector drawing library.
 
 ---
 
-Q. Is the gameplay exactly like the game?
+Q2. Is the gameplay exactly like the game?
 
-A. No, there are a lot of things that are hard to do in 40x48 and/or
+A2. No, there are a lot of things that are hard to do in 40x48 and/or
 	with only 48k of RAM.
 
    See the TODO file for a list of things I've noticed.
@@ -22,9 +22,9 @@ A. No, there are a lot of things that are hard to do in 40x48 and/or
 
 ---
 
-Q. Why aren't the keyboard controls the same as the original game?
+Q3. Why aren't the keyboard controls the same as the original game?
 
-A. The Apple II has simplistic keyboard support.
+A3. The Apple II has simplistic keyboard support.
    In general it's not possible to read more than one key at a time.
    Also on pre-IIe machines it's not really possible to get key-release events.
 
@@ -36,18 +36,18 @@ A. The Apple II has simplistic keyboard support.
 
 ---
 
-Q.  Does this have joystick support?
+Q4.  Does this have joystick support?
 
-A.  It should not be hard to add, and in fact would give controls much
+A4.  It should not be hard to add, and in fact would give controls much
 	closer to the original.
 
     I probably won't have time to implement it any time soon though.
 
 ----
 
-Q.  Is there anything impressive going on here, like with your other demos?
+Q5.  Is there anything impressive going on here, like with your other demos?
 
-A.  No, it's pretty much straight up "sprite" drawing.
+A5.  No, it's pretty much straight up "sprite" drawing.
     One unusual thing is I am using grey2 (color 10) as the transparent
     color rather than black, as there is black in the sprites.
 
@@ -55,10 +55,18 @@ A.  No, it's pretty much straight up "sprite" drawing.
 
 ---
 
+Q6.  Why are some cutscenes tiny and some large?
 
-Q.  How are you making the graphics?
+A6.  I started making the cutscenes before I had a good feel for
+	how large they'd be or how quickly they could run.  Some of the
+	earlier ones are smaller for that reason, before I decided I
+	could afford full-screen ones.
 
-A.  Using the original for reference (currently a Windows/EGA version
+---
+
+Q7.  How are you making the graphics?
+
+A7.  Using the original for reference (currently a Windows/EGA version
     for some reason?)  Size down to 80x48. (This isn't bad as the original
     is roughly 320x200 which scales well).
 
@@ -69,9 +77,9 @@ A.  Using the original for reference (currently a Windows/EGA version
 
 ---
 
-Q.  Why lores graphics?  It's so *horribly* blocky.
+Q8.  Why lores graphics?  It's so *horribly* blocky.
 
-A.  Yes, but I like it anyway.  So many colors!
+A8.  Yes, but I like it anyway.  So many colors!
 	I spent a lot of time as an ANSI artist so I am used to blocky
 	16-color graphics, and to be honest with you my art skills sort
 	of peak at that resolution.
@@ -86,19 +94,19 @@ A.  Yes, but I like it anyway.  So many colors!
 
 ---
 
-Q.  Are you going to make a version using Hi-res or Double Hi-res graphics?
+Q9.  Are you going to make a version using Hi-res or Double Hi-res graphics?
 
-A.  No, there's an official version for the Apple IIgs if you want something
+A9.  No, there's an official version for the Apple IIgs if you want something
 	like that.  Apple II hires graphics with sprites are a huge pain
 	to program, would probably be slower, and would take up a lot more
 	RAM.
 
 ---
 
-Q.  How about double-lores graphics (80x48)?  It would give you almost
+Q10.  How about double-lores graphics (80x48)?  It would give you almost
 	square pixels?
 
-A.  While not as bad as Hires, double-lores is also a pain.  It only
+A10.  While not as bad as Hires, double-lores is also a pain.  It only
 	works on the IIe with 128k or newer.  Also you now have to copy
 	things to aux memory, and your sprites have to worry about the
 	colors being shifted (I think) on the AUX page.  It will take
@@ -109,17 +117,17 @@ A.  While not as bad as Hires, double-lores is also a pain.  It only
 
 ---
 
-Q.  Why are you targeting such an old machine, an original Apple II or II+?
+Q11.  Why are you targeting such an old machine, an original Apple II or II+?
 
-A.  Well, I own one.  Also there's something about programming on a machine
+A11.  Well, I own one.  Also there's something about programming on a machine
 	from 1977, whose graphics hardware is a glorified shift register,
 	and is implemented entirely out of 7400 series logic and 555 timers.
 
 ---
 
-Q.  In the intro, why not have lowercase letters?
+Q12.  In the intro, why not have lowercase letters?
 
-A.  The Apple II/II+ only supported uppercase letters by default.
+A12.  The Apple II/II+ only supported uppercase letters by default.
     Also no "|" character, which explains why some of the ASCII art
     looks a bit odd.
 
@@ -128,9 +136,9 @@ A.  The Apple II/II+ only supported uppercase letters by default.
 
 ---
 
-Q.  Could you really use this on an original Apple II from 1977?
+Q13.  Could you really use this on an original Apple II from 1977?
 
-A.  Yes, in theory.  You would have needed a 48k model which would
+A13.  Yes, in theory.  You would have needed a 48k model which would
 	have been expensive at the time ($2638).  Also the disk image
 	will fail to auto-boot and HELLO won't run as it's in Applesoft
 	BASIC (not the Integer BASIC that came with the original II).
