@@ -97,9 +97,9 @@ cave_setup_done:
 	;=================================
 	; copy $c00 background to both pages $400/$800
 
-	jsr	gr_copy_to_current
-	jsr	page_flip
-	jsr	gr_copy_to_current
+;	jsr	gr_copy_to_current
+;	jsr	page_flip
+;	jsr	gr_copy_to_current
 
 
 	;=================================

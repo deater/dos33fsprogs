@@ -185,8 +185,11 @@ check_kicked:
 
 	lda	PHYSICIST_STATE
 	cmp	#P_KICKING
+	beq	were_kicking
+	cmp	#P_CROUCH_KICKING
 	bne	check_attack
 
+were_kicking:
 	lda	PHYSICIST_X
 	sec
 	sbc	slugg0_x,X		; -4 to +4

@@ -18,13 +18,13 @@ ootw:
 	sta	WHICH_CAVE
 	sta	BEAST_OUT
 	sta	ON_ELEVATOR
-
+	sta	HAVE_GUN
 
 	;==========================
 	; Handle Underwater Arrival
 	;==========================
 
-	jsr	ootw_c1_arrival
+;	jsr	ootw_c1_arrival
 
 	lda	GAME_OVER
 	bmi	end_c1
