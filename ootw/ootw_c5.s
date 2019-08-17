@@ -88,7 +88,7 @@ end_message:
 .include "gr_offsets.s"
 .include "gr_offsets_hl.s"
 .include "gr_hlin.s"
-.include "random16.s"
+;.include "random16.s"
 .include "keyboard.s"
 
 .include "physicist.s"

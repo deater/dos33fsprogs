@@ -120,7 +120,7 @@ end_message:
 .include "gr_overlay.s"
 .include "gr_vlin.s"
 .include "gr_hlin.s"
-.include "random16.s"
+;.include "random16.s"
 .include "keyboard.s"
 
 .include "physicist.s"

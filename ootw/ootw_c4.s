@@ -96,7 +96,7 @@ end_message:
 .include "gr_putsprite_flipped.s"
 .include "gr_putsprite_crop.s"
 .include "gr_offsets.s"
-.include "random16.s"
+;.include "random16.s"
 .include "keyboard.s"
 
 .include "physicist.s"
