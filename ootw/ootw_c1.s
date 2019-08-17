@@ -34,7 +34,7 @@ ootw:
 	; Exit the Pool
 	;==========================
 
-	jsr	exit_pool
+;	jsr	exit_pool
 
 
 	; Initialize some variables
@@ -73,7 +73,9 @@ ootw:
 	; Enter the game
 	;=======================
 
-	jsr	ootw_pool
+;	jsr	ootw_pool
+
+	jsr	ootw_mesa
 
 ;===========================
 ; quit_level
@@ -132,7 +134,7 @@ end_message:
 ; movement
 .include "physicist.s"
 .include "ootw_sluggy.s"
-.include "ootw_beast.s"
+.include "ootw_c1_beast.s"
 .include "earthquake.s"
 .include "text_print.s"
 .include "gr_pageflip.s"
@@ -150,7 +152,6 @@ end_message:
 
 ; cutscenes
 .include "ootw_cut_slug.s"
-.include "ootw_cut_beast.s"
 
 ; room backgrounds
 .include "ootw_graphics/l1pool/ootw_pool.inc"

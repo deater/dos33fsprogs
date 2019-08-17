@@ -238,7 +238,8 @@ trigger_beast:
 	sta	RIGHT_LIMIT		; this is mostly for testing
 	sta	RIGHT_WALK_LIMIT
 
-	jsr	beast_cutscene
+	; show cutscene of arrival
+	jsr	beast_arrival_cutscene
 
 	jmp	not_done_mesa
 

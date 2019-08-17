@@ -8,11 +8,11 @@ Before release:
 
 	door explosions should be cropped
 
-	after teleport, re-run room boundary calcs
 	when calculating room calcs, take Y position into account
 	
-	L1 -- fix run/jumping
 	L1 -- fix beast ending
+	L1 -- have beast death scene
+	L1 -- have beast collapse
 	L1 -- fix slugs
 
 	L2 -- add doors
@@ -76,8 +76,6 @@ General:
 
 * Movement:
   + running: Missing one running frame (?)
-  + ability to run+jump
-  + running then crouch, you slide a bit
 
 * sprites_to_draw:
   + physicist run+jumping

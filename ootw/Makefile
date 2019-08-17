@@ -31,10 +31,10 @@ ootw_c1.o:	ootw_c1.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	gr_make_quake.s gr_overlay.s zp.inc keyboard.s \
 	collision.s \
-	ootw_sluggy.s ootw_beast.s \
+	ootw_sluggy.s ootw_c1_beast.s \
 	ootw_c1_arrival.s ootw_c1_rope.s earthquake.s ootw_c1_mesa.s \
 	ootw_c1_pool.s ootw_c1_cavern.s physicist.s random16.s \
-	ootw_cut_slug.s ootw_cut_beast.s \
+	ootw_cut_slug.s \
 	ootw_graphics/l1pool/ootw_pool.inc \
 	ootw_graphics/l1underwater/ootw_underwater.inc \
 	ootw_graphics/l1caves/ootw_cavern.inc \
