@@ -184,6 +184,22 @@ physicist_crouching:
 
 	; FIXME: we have an animation?
 
+	; if we have some gait left, slide a bit
+	lda	GAIT
+	beq	crouch_done_slide
+
+	dec	GAIT
+	bne	crouch_done_slide
+
+	lda	DIRECTION
+	beq	p_slide_left
+	inc	PHYSICIST_X
+	jmp	crouch_done_slide
+p_slide_left:
+	dec	PHYSICIST_X
+
+crouch_done_slide:
+
 	lda	#<crouch2
 	sta	INL
 

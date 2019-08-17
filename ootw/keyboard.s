@@ -306,6 +306,15 @@ start_crouch_shoot:
 
 start_crouch:
 	and	#STATE_RUNNING
+	beq	start_crouch_norun
+
+	ldx	#4		; slide a bit
+	stx	GAIT
+	ora	#P_CROUCHING
+	sta	PHYSICIST_STATE
+	jmp	done_keypress
+
+start_crouch_norun:
 	ora	#P_CROUCHING
 	jmp	change_state_clear_gait
 
@@ -388,10 +397,7 @@ stand_stance:
 	jmp	change_state_clear_gait
 
 kick:
-;	lda	#STATE_CROUCHING
 	bit	PHYSICIST_STATE		; crouching state in V now
-;	lda	PHYSICIST_STATE
-;	cmp	#P_CROUCHING
 	bvc	kick_standing
 
 	lda	#P_CROUCH_KICKING
