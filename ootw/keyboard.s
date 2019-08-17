@@ -16,7 +16,13 @@
 ;          if stand right, stand left
 ;	   if stand left, walk left
 ;	   if walk left, run left
-
+; if up:   if crouching, stand up
+;	   if standing, jump
+;	   if walking, jump
+;	   if running, run-jump
+; if down: if standing, crouch
+;	   if walking, crouch
+;	   if if running, slide-crouch
 
 
 handle_keypress:
@@ -240,9 +246,15 @@ up_not_elevator:
 	beq	stand_up
 	cmp	#P_CROUCH_SHOOTING
 	beq	stand_up_shoot
+	cmp	#P_RUNNING
+	beq	run_jump
 
 up_jump:
 	lda	#P_JUMPING
+	jmp	change_state_clear_gait
+
+run_jump:
+	lda	#P_JUMPING|STATE_RUNNING
 	jmp	change_state_clear_gait
 
 stand_up:
@@ -287,11 +299,14 @@ down_not_elevator:
 	cmp	#P_SHOOTING
 	bne	start_crouch
 
-	lda	#P_CROUCH_SHOOTING
+start_crouch_shoot:
+	and	#STATE_RUNNING
+	ora	#P_CROUCH_SHOOTING
 	jmp	change_state_clear_gait
 
 start_crouch:
-	lda	#P_CROUCHING
+	and	#STATE_RUNNING
+	ora	#P_CROUCHING
 	jmp	change_state_clear_gait
 
 

@@ -240,11 +240,24 @@ physicist_jumping:
 	cmp	#32
 	bcc	still_jumping	; blt
 
+	; done juming
+	lda	#STATE_RUNNING
+	bit	PHYSICIST_STATE
+	beq	jump_to_stand
+
+jump_to_run:
+	lda	#0
+	sta	GAIT
+	lda	#P_RUNNING
+	sta	PHYSICIST_STATE
+	jmp	physicist_running
+
+jump_to_stand:
 	lda	#0
 	sta	GAIT
 	lda	#P_STANDING
 	sta	PHYSICIST_STATE
-	jmp	physicist_walking
+	jmp	physicist_standing
 
 still_jumping:
 
@@ -261,10 +274,25 @@ still_jumping:
 
 	inc	GAIT
 
+	lda	#STATE_RUNNING
+	bit	PHYSICIST_STATE
+	beq	jump_change_x_regular
+
+jump_change_x_running:
+	lda	GAIT
+					; 1/4 not enough, 1/2 too much
+					; 3/8?
+	and	#$7
+	cmp	#5
+	bcc	jump_no_move
+	jmp	jump_change_x
+
+	; only change X every 8th frame
+jump_change_x_regular:
 	lda	GAIT
 	and	#$7
 	bne	jump_no_move
-
+jump_change_x:
 	lda	DIRECTION
 	beq	jump_left
 
