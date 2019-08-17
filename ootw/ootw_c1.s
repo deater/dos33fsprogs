@@ -73,9 +73,8 @@ ootw:
 	; Enter the game
 	;=======================
 
-;	jsr	ootw_pool
+	jsr	ootw_pool
 
-	jsr	ootw_mesa
 
 ;===========================
 ; quit_level
@@ -133,7 +132,7 @@ end_message:
 
 ; movement
 .include "physicist.s"
-.include "ootw_sluggy.s"
+.include "ootw_c1_sluggy.s"
 .include "ootw_c1_beast.s"
 .include "earthquake.s"
 .include "text_print.s"
@@ -149,9 +148,6 @@ end_message:
 .include "keyboard.s"
 .include "gr_overlay.s"
 .include "gr_putsprite_crop.s"
-
-; cutscenes
-.include "ootw_cut_slug.s"
 
 ; room backgrounds
 .include "ootw_graphics/l1pool/ootw_pool.inc"
