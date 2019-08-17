@@ -388,9 +388,11 @@ stand_stance:
 	jmp	change_state_clear_gait
 
 kick:
-	lda	PHYSICIST_STATE
-	cmp	#P_CROUCHING
-	bne	kick_standing
+;	lda	#STATE_CROUCHING
+	bit	PHYSICIST_STATE		; crouching state in V now
+;	lda	PHYSICIST_STATE
+;	cmp	#P_CROUCHING
+	bvc	kick_standing
 
 	lda	#P_CROUCH_KICKING
 	jmp	kick_final
