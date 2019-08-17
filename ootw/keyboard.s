@@ -305,6 +305,8 @@ check_gun:
 	; 'L' to charge gun
 	;======================
 charge_gun:
+	lda	HAVE_GUN		; only if have gun
+	beq	done_keypress
 
 	lda	GUN_STATE
 	beq	not_already_firing
