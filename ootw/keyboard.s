@@ -91,7 +91,7 @@ left_going_left:
 
 	;=============================
 	; already running, do nothing?
-	rts
+	jmp	done_keypress
 
 left_going_right:
 	lda	PHYSICIST_STATE
@@ -108,7 +108,7 @@ left_going_right:
 
 	;===========================
 	; otherwise?
-	rts
+	jmp	done_keypress
 
 	;========================
 	; check for right pressed
@@ -145,7 +145,7 @@ right_going_right:
 
 	;=============================
 	; already running, do nothing?
-	rts
+	jmp	done_keypress
 
 right_going_left:
 	lda	PHYSICIST_STATE
@@ -163,7 +163,7 @@ right_going_left:
 
 	;===========================
 	; otherwise?
-	rts
+	jmp	done_keypress
 
 
 	;=====================
@@ -204,8 +204,7 @@ run_right:
 
 update_state:
 	sta	PHYSICIST_STATE
-	bit	KEYRESET
-	rts
+	jmp	done_keypress
 
 
 

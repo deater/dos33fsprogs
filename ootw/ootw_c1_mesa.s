@@ -37,6 +37,7 @@ mesa_left:
 	lda	#(128-4)
 	sta	LEFT_LIMIT
 	sta	LEFT_WALK_LIMIT
+
 	;=============================
 	; Load background to $c00
 
@@ -50,8 +51,8 @@ mesa_left:
 	;=================================
 	; copy to screen
 
-	jsr	gr_copy_to_current
-	jsr	page_flip
+;	jsr	gr_copy_to_current
+;	jsr	page_flip
 
 	;=================================
 	; setup vars
@@ -78,6 +79,9 @@ mesa_loop:
 
 	lda     LEVELEND_PROGRESS
 	beq	no_levelend
+
+
+	; Draw level-end animation
 
 	;=== load special background on first frame and frame 19
 
@@ -138,8 +142,9 @@ not_beginning_of_end:
 
 no_levelend:
 
-	;================================
+	;==================================
 	; copy background to current page
+	;==================================
 
 	jsr	gr_copy_to_current
 
@@ -150,21 +155,25 @@ beyond_mesa_normal:
 
 	;===============================
 	; check keyboard
+	;===============================
 
 	jsr	handle_keypress
 
 	;===============================
 	; Move physicist
+	;===============================
 
 	jsr	move_physicist
 
 	;===============================
 	; check limits
+	;===============================
 
 	jsr	check_screen_limit
 
 	;===============
 	; draw physicist
+	;===============
 
         jsr     draw_physicist
 
@@ -177,19 +186,23 @@ beyond_mesa_normal:
 
 	;================
 	; move beast
+	;=================
 
 	jsr	move_beast
 
 	;================
 	; draw beast
+	;================
 
 	jsr	draw_beast
 
 mesa_no_beast:
+
 level1_ending:
 
 	;===============
 	; page flip
+	;===============
 
 	jsr	page_flip
 
@@ -310,7 +323,7 @@ done_mesa:
 
         ;=====================
         ; long(er) wait
-        ; waits approximately 10ms * X 
+        ; waits approximately 10ms * X
 
 long_wait:
 	lda	#64
