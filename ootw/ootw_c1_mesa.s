@@ -234,6 +234,9 @@ trigger_beast:
 	lda	#1
 	sta	BEAST_OUT
 
+	lda	#26
+	sta	BEAST_Y
+
 	lda	#0
 	sta	BEAST_DIRECTION
 	sta	BEAST_GAIT

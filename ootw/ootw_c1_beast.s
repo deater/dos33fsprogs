@@ -16,6 +16,9 @@ setup_beast:
 	lda	#B_STANDING
 	sta	BEAST_STATE
 
+	lda	#26
+	sta	BEAST_Y
+
 	lda	BEAST_DIRECTION
 	beq	setup_beast_left
 
@@ -71,6 +74,11 @@ check_beast_right:
 
 check_beast_left:
 
+	; no attack if swinging
+	lda	PHYSICIST_STATE
+	cmp	#P_SWINGING
+	beq	stop_beast
+
 		; Pp^pp Bbbbbb
 		; if B=p
 	clc
@@ -85,8 +93,6 @@ stop_beast:
 	lda	#B_STANDING
 	sta	BEAST_STATE
 	rts
-
-
 
 beast_no_stop:
 	inc	BEAST_GAIT		; cycle through animation
@@ -193,7 +199,7 @@ finally_draw_beast:
 	lda	BEAST_X
 	sta	XPOS
 
-	lda	#26
+	lda	BEAST_Y		; was 26
 	sec
 	sbc	EARTH_OFFSET	; adjust for earthquakes
 	sta	YPOS

@@ -61,8 +61,8 @@ load_swing_bg:
 	;=================================
 	; copy $c00 to both pages $400/$800
 
-	jsr	gr_copy_to_current
-	jsr	page_flip
+;	jsr	gr_copy_to_current
+;	jsr	page_flip
 
 	;=================================
 	; setup vars
@@ -157,6 +157,34 @@ beyond_quake:
 	;================
 	; draw beast
 
+
+	; adjust y for slope
+
+	lda	BEAST_X
+	cmp	#26
+	bcs	beast_no_adjust_y	; bge
+
+	cmp	#17
+	bcc	beast_on_platform
+
+	sec
+	sbc	#3
+	and	#$fe			; our sprite code only draws even y
+
+	jmp	beast_done_adjust_y
+				; slope is 15 - 26 ( 28 - 36)
+				; 26 -> 22
+
+beast_on_platform:
+	lda	#14
+	bne	beast_done_adjust_y
+
+beast_no_adjust_y:
+	lda	#22
+beast_done_adjust_y:
+	sta	BEAST_Y
+
+
 	jsr	draw_beast
 
 rope_no_beast:
@@ -192,7 +220,6 @@ done_swing_check:
 	cmp	#17
 	bcc	phys_on_platform
 
-;	lda	PHYSICIST_X
 	sec
 	sbc	#3
 	and	#$fe			; our sprite code only draws even y
