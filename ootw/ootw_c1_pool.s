@@ -14,6 +14,9 @@ ootw_pool:
 	lda	#0
 	sta	EARTH_OFFSET
 
+	lda	#4
+	sta	WHICH_CAVE
+
 	;===========================
 	; Setup pages (is this necessary?)
 

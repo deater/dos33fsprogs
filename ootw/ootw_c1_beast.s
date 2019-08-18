@@ -23,7 +23,19 @@ setup_beast:
 	beq	setup_beast_left
 
 setup_beast_right:
+	; after rope scene, put beast further back so you
+	; have time to run a bit
+
+	lda	WHICH_CAVE
+	cmp	#4
+	bne	beast_left_set_normal
+
+	lda	#240
+	jmp	beast_left_set_x
+
+beast_left_set_normal:
 	lda	#248		; -8 = 248
+beast_left_set_x:
 	sta	BEAST_X
 	jmp	setup_no_beast
 
