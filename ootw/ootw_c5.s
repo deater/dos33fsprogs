@@ -109,3 +109,6 @@ end_message:
 .include "ootw_graphics/sprites/physicist.inc"
 .include "ootw_graphics/sprites/alien.inc"
 
+
+
+; "NOW GO BACK TO ANOTHER EARTH"

@@ -1,6 +1,8 @@
 	;=======================================
+	;=======================================
 	; Setup Beast Running -- for each room
-	;
+	;=======================================
+	;=======================================
 
 	; FIXME: distance for count should be related
 	;	to X distance behind on previous screen
@@ -30,9 +32,12 @@ setup_no_beast:
 	rts
 
 	;=======================================
+	;=======================================
 	; Move Beast
-	;
-	; FIXME: stop at edge of screen, or at physicist
+	;=======================================
+	;=======================================
+	; stop if catch physicist
+	; also stop if swinging
 
 move_beast:
 	lda	BEAST_STATE
@@ -53,23 +58,28 @@ move_beast_running:
 	beq	check_beast_left
 
 check_beast_right:
-
-	clc
-	lda     BEAST_X
-	adc     #$80
-
-	cmp     RIGHT_LIMIT
-        bcc	beast_no_stop          ; (blt==bcc)
-	bcs	stop_beast
+		;  Bbbb^b
+		;         Pp^pp
+		; if  (B+6)==P
+		; if  B=P-6
+	sec
+	lda     PHYSICIST_X
+	sbc	#$6
+	cmp	BEAST_X
+        bne	beast_no_stop
+	beq	beast_caught
 
 check_beast_left:
 
+		; Pp^pp Bbbbbb
+		; if B=p
 	clc
-	lda     BEAST_X
-	adc     #$80
+	lda	PHYSICIST_X
+	adc	#$2
+	cmp     BEAST_X
 
-	cmp     LEFT_LIMIT
-        bcs     beast_no_stop          ; (bge==bcs)
+	bne	beast_no_stop
+	beq	beast_caught
 
 stop_beast:
 	lda	#B_STANDING
@@ -95,6 +105,12 @@ b_run_left:
 	dec	BEAST_X			; run left
 b_no_move_run:
 	rts
+
+
+beast_caught:
+	jmp	beast_slash_cutscene
+
+
 
 	;======================
 	; standing
