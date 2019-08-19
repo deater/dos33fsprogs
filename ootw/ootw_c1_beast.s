@@ -1,5 +1,5 @@
 
-	; FIXME, if beast close on screen #2, have it fall?
+	; FIXME, if beast gets close and you pull away, it should trip
 
 	;=======================================
 	;=======================================
