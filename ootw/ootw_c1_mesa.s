@@ -78,65 +78,9 @@ mesa_loop:
 	lda     LEVELEND_PROGRESS
 	beq	no_levelend
 
+	jsr	l1_end_level
 
-	; Draw level-end animation
-
-	;=== load special background on first frame and frame 19
-
-	cmp	#(MAX_PROGRESSION-36)		; on frame 19?
-	bne	check_if_first
-
-	lda	#<deadbeast_rle
-	sta	GBASL
-	lda	#>deadbeast_rle
-	jmp	finish_first
-
-check_if_first:
-
-	cmp	#MAX_PROGRESSION	; only load background on first frame
-	bne	levelend_not_first
-
-	lda	#<cavern3_rle
-	sta	GBASL
-	lda	#>cavern3_rle
-finish_first:
-	sta	GBASH
-	lda	#$C			; load image off-screen $C00
-	jsr	load_rle_gr
-
-levelend_not_first:
-        dec     LEVELEND_PROGRESS
-        dec     LEVELEND_PROGRESS
-
-	bne	not_beginning_of_end
-beginning_of_end:
-	lda	#5
-	sta	GAME_OVER
-	jmp	l1_game_over_check
-
-not_beginning_of_end:
-
-	ldx	LEVELEND_PROGRESS
-	lda	endl1_progression,X
-	sta	GBASL
-	lda	endl1_progression+1,X
-	sta	GBASH
-	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
-
-	jsr	gr_overlay_40x40
-
-
-	;====================
-	; pause
-	lda	LEVELEND_PROGRESS
-	lsr
-	tax
-	lda	endl_pauses,X
-	tax
-	jsr	long_wait
-
-	jmp     beyond_mesa_normal
+	jmp     mesa_no_beast
 
 no_levelend:
 
@@ -146,7 +90,7 @@ no_levelend:
 
 	jsr	gr_copy_to_current
 
-beyond_mesa_normal:
+;beyond_mesa_normal:
 
 	lda	LEVELEND_PROGRESS	; only draw if not in end animation
 	bne	level1_ending
@@ -174,6 +118,9 @@ beyond_mesa_normal:
 	;===============
 
         jsr     draw_physicist
+
+mesa_no_check_levelend:
+
 
 
 	;================
@@ -360,7 +307,7 @@ endl_pauses:
 .byte	3,3,3,3,3	; 46,45,44,43,42
 .byte	3,3,3,3,3	; 41,40,39,38,37
 .byte	250		; 36
-.byte	230,80		; gun, peace
+.byte	230,80		; gun, peace	35,34
 ; raising hand
 .byte	20,150,20,20	; 33,32,31,30
 ; getting up
@@ -371,3 +318,281 @@ endl_pauses:
 .byte	3,3,3,3,3	; 14,13,12,11,10
 .byte	3,3,3,3,3	; 09,08,07,06,05
 .byte	3,3,3,3		; 04,03,02,01
+
+
+
+
+	;==========================
+	; Draw level-end animation
+	;==========================
+
+l1_end_level:
+
+
+check_if_first:
+
+	cmp	#MAX_PROGRESSION	; only load background on first frame
+	bne	levelend_not_first
+
+	lda	#<cavern3_rle
+	sta	GBASL
+	lda	#>cavern3_rle
+
+	sta	GBASH
+	lda	#$C			; load image off-screen $C00
+	jsr	load_rle_gr
+
+	lda	#0
+	sta	BEAST_DEAD
+	sta	BEAST_ZAPPING
+
+	;=============================
+
+levelend_not_first:
+
+
+make_levelend_progress:
+	lda	LEVELEND_PROGRESS	; if beast not zapped, can't go beyond19
+
+	cmp	#(MAX_PROGRESSION-38)	; always go if not to afterzap
+	bcs	levelend_dec		; bge
+
+	lda	BEAST_DEAD
+	beq	not_beginning_of_end
+
+;	jmp	not_beginning_of_end
+
+levelend_dec:
+        dec     LEVELEND_PROGRESS
+        dec     LEVELEND_PROGRESS
+
+	bne	not_beginning_of_end
+
+beginning_of_end:
+	lda	#5
+	sta	GAME_OVER
+	jmp	l1_game_over_check
+
+not_beginning_of_end:
+
+	ldx	LEVELEND_PROGRESS
+	lda	endl1_progression,X
+	sta	GBASL
+	lda	endl1_progression+1,X
+	sta	GBASH
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay_40x40
+
+
+	;=====================================
+	; see if we should start zapping beast
+
+	lda	BEAST_DEAD
+	beq	beast_notdead		; skip all if dead
+	jmp	ending_no_draw_beast
+beast_notdead:
+	lda	BEAST_ZAPPING
+	bne	already_zapping			; already zapping
+
+	; if it's greater than 18, zap away
+
+	lda	BEAST_X
+	cmp	#18
+	bcc	beast_nozapped	; blt
+
+	lda	#1
+	sta	BEAST_ZAPPING
+
+beast_nozapped:
+already_zapping:
+
+	ldx	BEAST_ZAPPING
+	beq	beast_draw_regular
+
+beast_draw_zapping:
+
+	dex	; one past
+
+	; adjust X
+	sec
+	lda	BEAST_X
+	sbc	beast_zap_xadj,X
+	sta	BEAST_X
+	sta	XPOS
+
+	; adjust y
+	clc
+	lda	BEAST_Y
+	adc	beast_zap_yadj,X
+	sta	BEAST_Y
+	sta	YPOS
+
+	; draw laser
+
+
+	lda	#$0f
+	sta 	hlin_mask_smc+1
+	lda	#$10
+	sta 	hlin_color_smc+1
+
+	ldy	#28			; at 29
+
+
+	; from left to center of beast if all but last frame
+
+	cpx	#5
+	beq	last_frame
+
+	sec
+	lda	#37
+	sbc	BEAST_X
+	tax
+	lda	BEAST_X
+	clc
+	adc	#2
+	jmp	not_last_frame
+
+last_frame:
+
+	lda	BEAST_X
+	clc
+	adc	#2
+	tax
+	lda	#0
+
+not_last_frame:
+	jsr	hlin
+
+	ldx	BEAST_ZAPPING
+	dex
+	lda	beast_zap_progression_hi,X
+	sta	INH
+	lda	beast_zap_progression_lo,X
+	sta	INL
+
+	jsr	put_sprite_crop
+
+	; adjust to next zapitude
+
+	inc	BEAST_ZAPPING
+
+	lda	BEAST_ZAPPING
+	cmp	#7
+	bne	beast_not_dead_yet
+
+	lda	#1
+	sta	BEAST_DEAD
+
+	ldx	BEAST_X
+	dex
+	dex
+	stx	BEAST_X
+
+	lda	BEAST_Y
+	clc
+	adc	#8
+	sta	BEAST_Y
+
+beast_not_dead_yet:
+	jmp	done_check_dead_beast
+
+beast_draw_regular:
+
+	; draw beast
+
+	; move a bit faster than normal due to low frame rate
+	; in cutscene
+
+	; if make it to 20, stop
+
+	lda	BEAST_X
+	cmp	#19
+	bcs	beast_full_stop		; bge
+
+	; if closer than #10, slow a bit
+
+;	lda	BEAST_X
+;	cmp	#4
+;	bcs	beast_half_speed	; bge
+;	bcc	beast_inc_speed
+;beast_half_speed:
+;	lda	LEVELEND_PROGRESS
+;	lsr
+;	and	#$1
+;	beq	beast_full_stop
+
+beast_inc_speed:
+	inc	BEAST_X
+	inc	BEAST_GAIT
+
+beast_full_stop:
+	jsr	draw_beast
+
+ending_no_draw_beast:
+
+	; draw dead beast if frame >=19
+	; but *not* frame with peace 34
+	; we count down, so we want if less than (MAX_PROGRESSION-36)
+
+	lda     LEVELEND_PROGRESS
+	cmp	#(MAX_PROGRESSION-68)		; peace
+	beq	done_check_dead_beast
+	lda	BEAST_DEAD
+	beq	done_check_dead_beast
+
+	lda	BEAST_X
+	sta	XPOS
+	lda	BEAST_Y
+	sta	YPOS
+
+	lda	#<beast_dead_sprite
+	sta	INL
+	lda	#>beast_dead_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+
+done_check_dead_beast:
+
+;looploop:
+;	lda	KEYPRESS
+;	bpl	looploop
+;	bit	KEYRESET
+
+	;====================
+	; pause
+	lda	LEVELEND_PROGRESS
+	lsr
+	tax
+	lda	endl_pauses,X
+	tax
+	jmp	long_wait
+
+
+beast_zap_progression_hi:
+	.byte >beast_blast_sprite0
+	.byte >beast_blast_sprite1
+	.byte >beast_blast_sprite2
+	.byte >beast_blast_sprite3
+	.byte >beast_blast_sprite4
+	.byte >beast_blast_sprite5
+
+beast_zap_progression_lo:
+	.byte <beast_blast_sprite0
+	.byte <beast_blast_sprite1
+	.byte <beast_blast_sprite2
+	.byte <beast_blast_sprite3
+	.byte <beast_blast_sprite4
+	.byte <beast_blast_sprite5
+
+
+beast_zap_xadj:
+	.byte	1,2,5,1,4,2
+
+beast_zap_yadj:
+	.byte	254,254,254,0,2,2
+
+

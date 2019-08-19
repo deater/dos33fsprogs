@@ -77,7 +77,7 @@ ootw_l1end.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm l1end49.png l1end49_rle >> ootw_l1end.inc
 	$(PNG2RLE) asm l1end50.png l1end50_rle >> ootw_l1end.inc
 	$(PNG2RLE) asm l1end51.png l1end51_rle >> ootw_l1end.inc
-	$(PNG2RLE) asm ootw_deadbeast.png deadbeast_rle >> ootw_l1end.inc
+#	$(PNG2RLE) asm ootw_deadbeast.png deadbeast_rle >> ootw_l1end.inc
 	$(PNG2RLE) asm ootw_gunguy.png gunguy_rle >> ootw_l1end.inc
 	$(PNG2RLE) asm ootw_peace.png peace_rle >> ootw_l1end.inc
 	$(PNG2RLE) asm black.png black_rle >> ootw_l1end.inc

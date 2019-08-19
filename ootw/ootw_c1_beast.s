@@ -37,14 +37,8 @@ setup_beast_right:
 	lda	WHICH_CAVE
 	cmp	#4
 	beq	beast_right_rope
-	cmp	#2
-	beq	beast_right_end
-	jmp	beast_right_set_normal
 
-	; give time to get zapped
-beast_right_end:
-	lda	#220
-	jmp	beast_right_set_x
+	jmp	beast_right_set_normal
 
 beast_right_rope:
 	lda	#240
@@ -52,12 +46,14 @@ beast_right_rope:
 
 	; adjust for distance
 beast_right_set_normal:
-	sec
-	lda	#40
-	sbc	BEAST_X
+	lda	BEAST_X
+	bpl	right_set_not_neg	; how fast are you?
+	lda	#0
+right_set_not_neg:
 	lsr
 	lsr
-	adc	#240		;
+	adc	#236		;
+
 beast_right_set_x:
 	sta	BEAST_X
 	jmp	setup_no_beast

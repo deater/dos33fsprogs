@@ -73,9 +73,9 @@ ootw:
 	; Enter the game
 	;=======================
 
-;	jsr	ootw_pool
+	jsr	ootw_pool
 
-	jsr	ootw_mesa
+;	jsr	ootw_mesa
 
 
 ;===========================
@@ -146,6 +146,7 @@ end_message:
 .include "gr_putsprite.s"
 .include "gr_putsprite_flipped.s"
 .include "gr_offsets.s"
+.include "gr_hlin.s"
 .include "random16.s"
 .include "keyboard.s"
 .include "gr_overlay.s"

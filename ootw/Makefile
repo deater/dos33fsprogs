@@ -29,7 +29,7 @@ OOTW_C1:	ootw_c1.o
 ootw_c1.o:	ootw_c1.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
-	gr_make_quake.s gr_overlay.s zp.inc keyboard.s \
+	gr_hlin.s gr_make_quake.s gr_overlay.s zp.inc keyboard.s \
 	collision.s \
 	ootw_c1_sluggy.s ootw_c1_beast.s \
 	ootw_c1_arrival.s ootw_c1_rope.s earthquake.s ootw_c1_mesa.s \

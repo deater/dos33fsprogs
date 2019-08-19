@@ -107,6 +107,82 @@ beast_running8:	; piskel9
 	.byte	$aa,$a0,$00,$aa,$aa,$aa,$00,$a0,$aa
 	.byte	$aa,$aa,$00,$a0,$aa,$aa,$00,$aa,$aa
 
+beast_dead_sprite:
+	.byte	8,3
+	.byte	$AA,$0A,$00,$0a,$00,$00,$0a,$AA
+	.byte	$AA,$00,$00,$00,$00,$00,$00,$00
+	.byte	$00,$A0,$00,$00,$00,$00,$00,$00
+
+; the right way to do this would be to have the pounce sprites
+; then have the zap sprites
+; start the pounce/zapping with the beast at the YPOS
+; adjust, etc.
+; then draw the laser manually
+; don't really have time/inclination to fix this properly
+
+beast_blast_sprite0:
+	.byte	6,7
+	.byte	$AA,$0A,$00,$00,$00,$0A
+	.byte	$AA,$00,$00,$00,$00,$00
+	.byte	$00,$00,$00,$00,$00,$00
+	.byte	$00,$00,$11,$00,$00,$AA
+	.byte	$00,$00,$A1,$00,$AA,$AA
+	.byte	$00,$00,$AA,$AA,$AA,$AA
+	.byte	$AA,$00,$AA,$AA,$AA,$AA
+
+beast_blast_sprite1:
+	.byte	6,8
+	.byte	$AA,$AA,$AA,$0A,$AA,$AA
+	.byte	$AA,$AA,$00,$00,$00,$0A
+	.byte	$AA,$0A,$00,$00,$00,$00
+	.byte	$AA,$00,$00,$13,$00,$1A
+	.byte	$00,$00,$00,$11,$00,$AA
+	.byte	$A0,$00,$00,$AA,$A0,$A0
+	.byte	$AA,$A0,$00,$AA,$AA,$AA
+	.byte	$AA,$AA,$A0,$AA,$AA,$AA
+
+beast_blast_sprite2:
+	.byte	6,8
+	.byte	$AA,$0A,$00,$00,$00,$AA
+	.byte	$00,$00,$00,$00,$00,$00
+	.byte	$00,$00,$00,$00,$00,$A0
+	.byte	$00,$00,$00,$33,$11,$00
+	.byte	$00,$00,$00,$33,$11,$10
+	.byte	$00,$00,$00,$11,$01,$AA
+	.byte	$A0,$00,$0A,$AA,$AA,$AA
+	.byte	$AA,$AA,$00,$AA,$AA,$AA
+
+beast_blast_sprite3:
+	.byte	7,7
+	.byte	$AA,$AA,$AA,$AA,$0A,$AA,$AA
+	.byte	$AA,$AA,$AA,$00,$00,$00,$AA
+	.byte	$AA,$AA,$0A,$00,$00,$00,$00
+	.byte	$AA,$00,$00,$00,$00,$A0,$A0
+	.byte	$00,$00,$00,$13,$00,$1A,$1A
+	.byte	$00,$00,$03,$A1,$A0,$AA,$AA
+	.byte	$AA,$A0,$00,$0A,$AA,$AA,$AA
+
+beast_blast_sprite4:
+	.byte	8,5
+	.byte	$0A,$0A,$0A,$AA,$0A,$0A,$0A,$AA
+	.byte	$00,$00,$00,$00,$00,$00,$00,$0A
+	.byte	$AA,$00,$00,$00,$00,$00,$00,$00
+	.byte	$1A,$00,$1A,$1A,$10,$1A,$00,$1A
+	.byte	$AA,$A0,$AA,$AA,$A0,$0A,$A0,$AA
+
+beast_blast_sprite5:
+	.byte	10,6
+	.byte	$AA,$AA,$00,$0A,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$00,$00,$00,$00,$0a,$0A,$0A,$AA,$AA
+	.byte	$10,$10,$1A,$10,$10,$00,$00,$00,$11,$1A
+	.byte	$AA,$AA,$AA,$AA,$AA,$00,$00,$A0,$A1,$AA
+	.byte	$AA,$AA,$AA,$AA,$AA,$00,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$AA,$AA,$AA,$A0,$AA,$AA,$AA,$AA
+
+
+
+
+
 
 ;========================
 ;========================
