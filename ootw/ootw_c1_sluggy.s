@@ -106,8 +106,7 @@ init_slug_loop:
 
 	; Mark slug as out and alive
 
-;	lda	#1
-	lda	#0
+	lda	#1
 	sta	slugg0_out,X
 
 
@@ -220,9 +219,15 @@ check_attack:
 	cmp	#30
 	bne	no_attack
 
-	lda	PHYSICIST_Y		; only attack if physicist on ground
-	cmp	#22
-	bne	no_attack
+;	lda	PHYSICIST_Y		; only attack if physicist on ground
+;	cmp	#22
+;	bne	no_attack
+
+	lda	PHYSICIST_STATE		; don't attack if jumping
+	cmp	#P_JUMPING
+	beq	no_attack
+	cmp	#P_JUMPING|STATE_RUNNING
+	beq	no_attack
 
 	lda	PHYSICIST_X
 	sec
