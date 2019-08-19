@@ -1,9 +1,11 @@
 ; Sluggy Freelance
 
 
-; slug behavior:
-;	cavern1: three slugs: 2 on ceiling
-;	cavern2: four slugs: 1 on ceiling, but 3 more will respawn on ceiling
+; slug behavior from game:
+;	cavern1: three slugs (2 on ceiling)
+;	cavern2: four slugs (1 on ceiling) but 3 more will respawn on ceiling
+;		as you kill them
+;	so 7 total to track
 
 ;	Crawl forward.  When close, attack.
 ;	Ceiling: crawl until within X of physicist
@@ -17,82 +19,82 @@
 ; draw slugs
 ;==================================
 
-SLUG_STRUCT_SIZE	=	8
+NUM_SLUGS	=	7
 
-	; TODO: use less space?  merge some of these?
-
+; 1 is out, 2 is respawn?
+slugg_out:
 slugg0_out:	.byte	1		; 0
-slugg0_attack:	.byte	0		; 1
-slugg0_dying:	.byte	0		; 2
-slugg0_x:	.byte	30		; 3
-slugg0_y:	.byte	30		; 4
-slugg0_dir:	.byte	$ff		; 5
-slugg0_gait:	.byte	0		; 6
-slugg0_falling:	.byte	0		; 7
-
-slugg1_out:	.byte	1		; 8
-slugg1_attack:	.byte	0
-slugg1_dying:	.byte	0
-slugg1_x:	.byte	30
-slugg1_y:	.byte	30
-slugg1_dir:	.byte	$ff
-slugg1_gait:	.byte	0
-slugg1_falling:	.byte	0
-
-slugg2_out:	.byte	1
-slugg2_attack:	.byte	0
-slugg2_dying:	.byte	0
-slugg2_x:	.byte	30
-slugg2_y:	.byte	2
-slugg2_dir:	.byte	$ff
-slugg2_gait:	.byte	0
-slugg2_falling:	.byte	0
-
+slugg1_out:	.byte	1		; 0
+slugg2_out:	.byte	1		; 0
 
 slugg3_out:	.byte	1		; 0
+slugg4_out:	.byte	1		; 0
+slugg5_out:	.byte	1		; 0
+slugg6_out:	.byte	1		; 0
+
+slugg_attack:
+slugg0_attack:	.byte	0		; 1
+slugg1_attack:	.byte	0
+slugg2_attack:	.byte	0
 slugg3_attack:	.byte	0		; 1
-slugg3_dying:	.byte	0		; 2
-slugg3_x:	.byte	30		; 3
-slugg3_y:	.byte	30		; 4
-slugg3_dir:	.byte	$ff		; 5
-slugg3_gait:	.byte	0		; 6
-slugg3_falling:	.byte	0		; 7
-
-slugg4_out:	.byte	1		; 6
 slugg4_attack:	.byte	0
-slugg4_dying:	.byte	0
-slugg4_x:	.byte	30
-slugg4_y:	.byte	30
-slugg4_dir:	.byte	$ff
-slugg4_gait:	.byte	0
-slugg4_falling:	.byte	0
-
-slugg5_out:	.byte	1
 slugg5_attack:	.byte	0
-slugg5_dying:	.byte	0
-slugg5_x:	.byte	30
-slugg5_y:	.byte	30
-slugg5_dir:	.byte	$ff
-slugg5_gait:	.byte	0
-slugg5_falling:	.byte	0
-
-slugg6_out:	.byte	1
 slugg6_attack:	.byte	0
+
+slugg_dying:
+slugg0_dying:	.byte	0		; 2
+slugg1_dying:	.byte	0
+slugg2_dying:	.byte	0
+slugg3_dying:	.byte	0		; 2
+slugg4_dying:	.byte	0
+slugg5_dying:	.byte	0
 slugg6_dying:	.byte	0
+
+slugg_x:
+slugg0_x:	.byte	30		; 3
+slugg1_x:	.byte	30
+slugg2_x:	.byte	30
+slugg3_x:	.byte	30		; 3
+slugg4_x:	.byte	30
+slugg5_x:	.byte	30
 slugg6_x:	.byte	30
+
+slugg_y:
+slugg0_y:	.byte	30		; 4
+slugg1_y:	.byte	30
+slugg2_y:	.byte	2
+slugg3_y:	.byte	30		; 4
+slugg4_y:	.byte	30
+slugg5_y:	.byte	30
 slugg6_y:	.byte	2
+
+slugg_dir:
+slugg0_dir:	.byte	$ff		; 5
+slugg1_dir:	.byte	$ff
+slugg2_dir:	.byte	$ff
+slugg3_dir:	.byte	$ff		; 5
+slugg4_dir:	.byte	$ff
+slugg5_dir:	.byte	$ff
 slugg6_dir:	.byte	$ff
+
+slugg_gait:
+slugg0_gait:	.byte	0		; 6
+slugg1_gait:	.byte	0
+slugg2_gait:	.byte	0
+slugg3_gait:	.byte	0		; 6
+slugg4_gait:	.byte	0
+slugg5_gait:	.byte	0
 slugg6_gait:	.byte	0
+
+slugg_falling:
+slugg0_falling:	.byte	0		; 7
+slugg1_falling:	.byte	0
+slugg2_falling:	.byte	0
+slugg3_falling:	.byte	0		; 7
+slugg4_falling:	.byte	0
+slugg5_falling:	.byte	0
 slugg6_falling:	.byte	0
 
-slugg7_out:	.byte	1
-slugg7_attack:	.byte	0
-slugg7_dying:	.byte	0
-slugg7_x:	.byte	30
-slugg7_y:	.byte	2
-slugg7_dir:	.byte	$ff
-slugg7_gait:	.byte	0
-slugg7_falling:	.byte	0
 
 
 	;========================
@@ -105,21 +107,25 @@ init_slugs:
 init_slug_loop:
 
 	; Mark slug as out and alive
+	; if slugs 4,5,6 then get 2 for respawn
 
 	lda	#1
-	sta	slugg0_out,X
-
+	cpx	#4
+	bcc	regular_slug		; blt
+	lda	#2
+regular_slug:
+	sta	slugg_out,X
 
 	; Mark slug as not attacking or dying
 
 	lda	#0
-	sta	slugg0_attack,X
-	sta	slugg0_dying,X
+	sta	slugg_attack,X
+	sta	slugg_dying,X
 
 	; Point the slug in the correct direction (left in this case)
 
 	lda	#$ff
-	sta	slugg0_dir,X
+	sta	slugg_dir,X
 
 	; Randomly pick an X value to appear at
 
@@ -133,22 +139,19 @@ init_slug_loop:
 	bcc	slugx_not_too_high		; blt
 	lsr			; div by two if too large
 slugx_not_too_high:
-	sta	slugg0_x,X
+	sta	slugg_x,X
 
 	; Make the slug movement random so they don't all move in sync
 
 	jsr	random16
 	lda	SEEDL
-	sta	slugg0_gait,X
+	sta	slugg_gait,X
 
 	; incrememnt struct pointer until all are initialized
 
-	clc
-	txa
-	adc	#SLUG_STRUCT_SIZE
-	tax
+	inx
+	cpx	#NUM_SLUGS
 
-	cpx	#(SLUG_STRUCT_SIZE*8)
 	bne	init_slug_loop
 
 	; FIXME: originally forced some spacing between them
@@ -167,16 +170,15 @@ ds_smc1:
 	stx	WHICH_SLUG
 draw_slugs_loop:
 	ldx	WHICH_SLUG
-	lda	slugg0_out,X
+	lda	slugg_out,X
 	bne	check_kicked		; don't draw if not there
 	jmp	slug_done
 
 check_kicked:
-	lda	slugg0_out,X		; only kick if normal
-	cmp	#1
+	lda	slugg_dying,X		; only kick if alive
 	bne	check_attack
 
-	lda	slugg0_y,X		; only kick if on ground
+	lda	slugg_y,X		; only kick if on ground
 	cmp	#30
 	bne	check_attack
 
@@ -192,18 +194,18 @@ check_kicked:
 were_kicking:
 	lda	PHYSICIST_X
 	sec
-	sbc	slugg0_x,X		; -4 to +4
+	sbc	slugg_x,X		; -4 to +4
 	clc
 	adc	#4
 	and	#$f8
 	bne	not_kicked
 kicked:
-	lda	#2
-	sta	slugg0_out,X
+;	lda	#2
+;	sta	slugg_out,X
 	lda	#10
-	sta	slugg0_dying,X
+	sta	slugg_dying,X
 	lda	DIRECTION
-	sta	slugg0_dir,X
+	sta	slugg_dir,X
 
 not_kicked:
 
@@ -211,11 +213,11 @@ check_attack:
 	;==================
 	; see if attack
 
-	lda	slugg0_out,X		; only attack if out
+	lda	slugg_out,X		; only attack if out
 	cmp	#1
 	bne	no_attack
 
-	lda	slugg0_y,X		; only attack if on ground
+	lda	slugg_y,X		; only attack if on ground
 	cmp	#30
 	bne	no_attack
 
@@ -231,7 +233,7 @@ check_attack:
 
 	lda	PHYSICIST_X
 	sec
-	sbc	slugg0_x,X		; -2 to +2
+	sbc	slugg_x,X		; -2 to +2
 	clc
 	adc	#2
 	and	#$fc
@@ -242,7 +244,7 @@ attack:
 	; start an attack
 
 	lda	#1
-	sta	slugg0_attack,X
+	sta	slugg_attack,X
 
 	lda	PHYSICIST_STATE		; don't re-attack if already dead
 	cmp	#P_COLLAPSING
@@ -258,18 +260,18 @@ attack:
 	ldx	WHICH_SLUG
 
 no_attack:
-	inc	slugg0_gait,X		; increment slug gait counter
+	inc	slugg_gait,X		; increment slug gait counter
 
-	lda	slugg0_gait,X		; only move every 64 frames
+	lda	slugg_gait,X		; only move every 64 frames
 	and	#$3f
 	cmp	#$00
 	bne	slug_no_move
 
 slug_move:
-	lda	slugg0_x,X
+	lda	slugg_x,X
 	clc
-	adc	slugg0_dir,X
-	sta	slugg0_x,X
+	adc	slugg_dir,X
+	sta	slugg_x,X
 
 slug_check_right:
 	cmp	#37
@@ -294,7 +296,7 @@ slug_no_move:
 	; if exploding
 	;==============
 
-	lda	slugg0_dying,X
+	lda	slugg_dying,X
 	beq	check_draw_attacking
 slug_exploding:
 	stx	WHICH_SLUG
@@ -313,8 +315,8 @@ slug_exploding:
 
 	bit	SPEAKER
 
-	dec	slugg0_dying,X
-	dec	slugg0_dying,X
+	dec	slugg_dying,X
+	dec	slugg_dying,X
 	bne	no_progress
 	jmp	remove_slug
 
@@ -327,11 +329,11 @@ no_progress:
 	; if attacking
 	;==============
 check_draw_attacking:
-	lda	slugg0_attack,X
+	lda	slugg_attack,X
 	beq	check_slug_ceiling
 slug_attacking:
 
-	lda	slugg0_gait,X
+	lda	slugg_gait,X
 	stx	WHICH_SLUG
 	and	#$70
 	lsr
@@ -353,12 +355,12 @@ slug_attacking:
 	; if on ceiling
 	;==============
 check_slug_ceiling:
-	lda	slugg0_y,X
+	lda	slugg_y,X
 	cmp	#30
 	beq	slug_normal
 slug_ceiling:
 
-	lda	slugg0_gait,X
+	lda	slugg_gait,X
 	and	#$20
 	beq	slug_ceiling_squinched
 
@@ -381,7 +383,7 @@ slug_ceiling_squinched:
 	; if normal
 	;==============
 slug_normal:
-	lda	slugg0_gait,X
+	lda	slugg_gait,X
 	and	#$20
 	beq	slug_squinched
 
@@ -404,15 +406,15 @@ slug_squinched:
 
 slug_selected:
 
-	lda	slugg0_x,X
+	lda	slugg_x,X
 	sta	XPOS
 
-	lda	slugg0_y,X
+	lda	slugg_y,X
 	sec
 	sbc	EARTH_OFFSET
 	sta	YPOS
 
-	lda	slugg0_dir,X
+	lda	slugg_dir,X
 	stx	WHICH_SLUG
 	bmi	slug_right
 
@@ -424,14 +426,12 @@ slug_right:
 	jsr	put_sprite_flipped
 
 slug_done:
-	lda	WHICH_SLUG
-	clc
-	adc	#SLUG_STRUCT_SIZE
-	tax
+	ldx	WHICH_SLUG
+	inx
 	stx	WHICH_SLUG
 
 ds_smc2:
-	cpx	#(3*SLUG_STRUCT_SIZE)
+	cpx	#3
 	beq	slug_exit
 
 	jmp	draw_slugs_loop
@@ -441,7 +441,7 @@ slug_exit:
 
 remove_slug:
 	lda	#0
-	sta	slugg0_out,X
+	sta	slugg_out,X
 	jmp	slug_done
 
 
