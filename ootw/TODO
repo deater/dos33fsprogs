@@ -11,7 +11,6 @@ Before release:
 	when calculating room calcs, take Y position into account
 	
 	L1 -- fix beast ending
-	L1 -- have beast death scene
 	L1 -- have beast collapse
 	L1 -- fix slugs
 
@@ -56,8 +55,10 @@ door behavior:
 	- beast on hill and 2nd screen -- complex, only appears if
 	  you happen to leave same time beast does?  then movement
 	  depends on xposition?
-        - earthquake can happen while on rope?
+        - earthquake should happen while on rope
 	- sometimes falling rocks can follow you to next screen
+	- beast can/should trip and fall if it gets close in the pool
+		room while running?
 
 + L2
 	- gun movement: gun is held by head when running

@@ -1,24 +1,32 @@
+
+	; FIXME, if beast close on screen #2, have it fall?
+
 	;=======================================
 	;=======================================
 	; Setup Beast Running -- for each room
 	;=======================================
 	;=======================================
 
-	; FIXME: distance for count should be related
-	;	to X distance behind on previous screen
-
 setup_beast:
+	; only move beast if out
+
 	lda	BEAST_OUT
 	beq	setup_no_beast
+
+	; have the beast wait standing offscreen a bit??
+	; what were you thinking, 6-months-ago Vince?
 
 	lda	#30
 	sta	BEAST_COUNT
 	lda	#B_STANDING
 	sta	BEAST_STATE
 
+	; set Y position
 	lda	#26
 	sta	BEAST_Y
 
+
+	; what we do is based on direction
 	lda	BEAST_DIRECTION
 	beq	setup_beast_left
 
@@ -42,14 +50,30 @@ beast_right_rope:
 	lda	#240
 	jmp	beast_right_set_x
 
+	; adjust for distance
 beast_right_set_normal:
-	lda	#246		; -8 = 248
+	sec
+	lda	#40
+	sbc	BEAST_X
+	lsr
+	lsr
+	adc	#240		;
 beast_right_set_x:
 	sta	BEAST_X
 	jmp	setup_no_beast
 
+	;==============================
+	; running left
 setup_beast_left:
-	lda	#41
+
+	; adjust for how far was on last screen
+	; /4
+	lda	BEAST_X
+	lsr
+	lsr
+
+	clc
+	adc	#40
 	sta	BEAST_X
 
 setup_no_beast:
@@ -62,6 +86,7 @@ setup_no_beast:
 	;=======================================
 	; stop if catch physicist
 	; also stop if swinging
+	; run just every slightly faster than physicist
 
 move_beast:
 	lda	BEAST_STATE
@@ -119,10 +144,13 @@ beast_no_stop:
 	inc	BEAST_GAIT		; cycle through animation
 
 	lda	BEAST_GAIT
-	and	#$3
-	cmp	#$2			; only run roughly 1/4 of time
+	and	#$7
+	cmp	#5
+	beq	b_run
+	and	#$3			; only run roughly 3/8 of time
 	bne	b_no_move_run
 
+b_run:
 	lda	BEAST_DIRECTION
 	beq	b_run_left
 

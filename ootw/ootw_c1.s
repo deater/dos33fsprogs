@@ -73,7 +73,9 @@ ootw:
 	; Enter the game
 	;=======================
 
-	jsr	ootw_pool
+;	jsr	ootw_pool
+
+	jsr	ootw_mesa
 
 
 ;===========================
