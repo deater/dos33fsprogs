@@ -106,7 +106,8 @@ init_slug_loop:
 
 	; Mark slug as out and alive
 
-	lda	#1
+;	lda	#1
+	lda	#0
 	sta	slugg0_out,X
 
 

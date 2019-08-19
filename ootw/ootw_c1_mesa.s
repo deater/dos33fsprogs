@@ -48,11 +48,6 @@ mesa_left:
 	lda	#$c			; load image off-screen $c00
 	jsr	load_rle_gr
 
-	;=================================
-	; copy to screen
-
-;	jsr	gr_copy_to_current
-;	jsr	page_flip
 
 	;=================================
 	; setup vars
@@ -61,6 +56,9 @@ mesa_left:
 	sta	GAIT
 	sta	GAME_OVER
 	sta     LEVELEND_PROGRESS
+
+	lda	#2
+	sta	WHICH_CAVE
 
 	jsr	setup_beast
 

@@ -57,6 +57,8 @@ ootw_pool:
 	lda	#30
 	sta	TENTACLE_PROGRESS
 
+lda	#1
+sta	BEAST_OUT
 	;==================================
 	; setup beast if we're running from it
 

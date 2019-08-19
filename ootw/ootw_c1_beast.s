@@ -28,14 +28,23 @@ setup_beast_right:
 
 	lda	WHICH_CAVE
 	cmp	#4
-	bne	beast_left_set_normal
+	beq	beast_right_rope
+	cmp	#2
+	beq	beast_right_end
+	jmp	beast_right_set_normal
 
+	; give time to get zapped
+beast_right_end:
+	lda	#220
+	jmp	beast_right_set_x
+
+beast_right_rope:
 	lda	#240
-	jmp	beast_left_set_x
+	jmp	beast_right_set_x
 
-beast_left_set_normal:
-	lda	#248		; -8 = 248
-beast_left_set_x:
+beast_right_set_normal:
+	lda	#246		; -8 = 248
+beast_right_set_x:
 	sta	BEAST_X
 	jmp	setup_no_beast
 
