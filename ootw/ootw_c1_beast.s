@@ -120,10 +120,29 @@ check_beast_right:
 
 check_beast_left:
 
+	; stop if in rope room and at edge
+
+	lda	WHICH_CAVE
+	cmp	#3
+	bne	beast_not_rope_room
+beast_rope_room:
+	lda	BEAST_X
+	cmp	#11
+	bcs	beast_not_rope_room	; bge
+
+	lda	#B_STANDING
+	sta	BEAST_STATE
+
+	lda	#0
+	sta	BEAST_COUNT
+	rts
+
+beast_not_rope_room:
+
 	; no attack if swinging
 	lda	PHYSICIST_STATE
 	cmp	#P_SWINGING
-	beq	stop_beast
+	beq	skip_if_swinging
 
 		; Pp^pp Bbbbbb
 		; if B=p
@@ -135,10 +154,7 @@ check_beast_left:
 	bne	beast_no_stop
 	beq	beast_caught
 
-stop_beast:
-	lda	#B_STANDING
-	sta	BEAST_STATE
-	rts
+skip_if_swinging:
 
 beast_no_stop:
 	inc	BEAST_GAIT		; cycle through animation
@@ -170,6 +186,9 @@ beast_caught:
 	;======================
 	; standing
 
+	; need to check for collision here so physicist
+	; doesn't just run past beast at arrival
+
 move_beast_standing:
 	lda	BEAST_COUNT
 	beq	beast_stand_done	; if 0, perma-stand
@@ -181,6 +200,15 @@ move_beast_standing:
 	sta	BEAST_STATE
 
 beast_stand_done:
+
+	lda	PHYSICIST_X
+	cmp	BEAST_X
+
+	bne	p_not_foolish
+
+	jmp	beast_slash_cutscene
+
+p_not_foolish:
 	rts
 
 ;======================================

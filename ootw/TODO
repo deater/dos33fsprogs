@@ -85,9 +85,9 @@ BEHAVIOR DIFFERENCES:
 		- earthquake should happen while on rope
 
 	* beast:
-		- beast can/should trip and fall if it gets close in the pool
-			room while running?
-
+		- beast can/should trip and fall if it gets too close but
+			then you pull away
+		- beast should climb hill in rope room better
 
 
 
@@ -137,6 +137,7 @@ FUTURE WORK:
   + alien running
   + friend walking
   + friend running
+  + alien punching animation
 
 * L1 pool
   + adjust tentacle to not go off edge of screen

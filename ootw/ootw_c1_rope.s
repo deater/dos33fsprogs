@@ -71,6 +71,9 @@ load_swing_bg:
 	sta	GAIT
 	sta	GAME_OVER
 
+	lda	#3
+	sta	WHICH_CAVE
+
 	jsr	setup_beast
 
 	;============================
@@ -160,27 +163,29 @@ beyond_quake:
 
 	; adjust y for slope
 
+	; shift by 2 from physicist as beast is 9 wide (vs 5)
+
 	lda	BEAST_X
-	cmp	#26
+	cmp	#24
 	bcs	beast_no_adjust_y	; bge
 
-	cmp	#17
-	bcc	beast_on_platform
+	cmp	#15
+	bcc	beast_on_platform	; blt
 
-	sec
-	sbc	#3
+	clc
+	adc	#1
 	and	#$fe			; our sprite code only draws even y
 
 	jmp	beast_done_adjust_y
-				; slope is 15 - 26 ( 28 - 36)
-				; 26 -> 22
+				; 16 maps to -> 16
+				; 24 maps to -> 24
 
 beast_on_platform:
-	lda	#14
+	lda	#16
 	bne	beast_done_adjust_y
 
 beast_no_adjust_y:
-	lda	#22
+	lda	#24
 beast_done_adjust_y:
 	sta	BEAST_Y
 
