@@ -1,6 +1,19 @@
 TODO Before release:
 ====================
 
+
+	l2 -- alien behavior
+
+		
+
+
+		room5: alien appears to left of door.  Works on panel to
+			unlock it, comes in and bothers friend after
+			we call down.
+			also I think if you wait long enough more aliens
+			appear if you try to go left.
+
+
 	general -- fix laser collision detection.
 		add detection of shields
 		add detection of friend

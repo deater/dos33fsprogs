@@ -11,6 +11,7 @@ ootw_jail_init:
 	sta	WHICH_JAIL
 	sta	DIRECTION		; left
 	sta	HAVE_GUN
+	sta	VENT_OPEN
 
 	sta	LASER_OUT
 	sta	ALIEN_OUT
@@ -19,12 +20,14 @@ ootw_jail_init:
 	sta	GUN_STATE
 	sta	GUN_FIRE
 
+	sta	friend_room
+	sta	friend_ai_state
+
 	lda	#100
 	sta	GUN_CHARGE
 
 	lda	#1
 	sta	JAIL_POWER_ON
-	sta	friend_out
 	sta	friend_direction
 
 	lda	#F_RUNNING
@@ -284,10 +287,6 @@ jail4_ok:
 	lda     #5
 	sta     jel_smc+1
 
-
-
-
-
 	; setup teleporter
 	lda	#(-4+128)
 	sta	td_left_smc1+1
@@ -310,10 +309,18 @@ jail4_ok:
 
 	jmp	jail_setup_done
 
+	;=====================
 	; room with vent shaft
 jail5:
 	cmp	#5
 	bne	jail6
+
+	; FIXME -- setup friend with open vent
+	sta	friend_room
+	lda	#F_OPEN_VENT
+	sta	friend_state
+	lda	#0
+	sta	friend_direction
 
 	; setup doors
 
@@ -346,7 +353,8 @@ jail5:
 	lda	#(39+128)
 	sta	td_right_smc1+1
 
-	lda	#(6+128)
+	; upper floor limits
+	lda	#(0+128)
 	sta	tu_left_smc1+1
 
 	lda	#(32+128)
@@ -359,6 +367,7 @@ jail5:
 
 	jmp	jail_setup_done
 
+	;======================
 	; tiny room with power
 jail6:
 	lda	#(17+128)
@@ -424,11 +433,13 @@ jail_loop:
 
 	;================================
 	; copy background to current page
+	;================================
 
 	jsr	gr_copy_to_current
 
 	;==================================
 	; draw background action
+	;==================================
 
 	lda	WHICH_JAIL
 
@@ -484,6 +495,7 @@ c2_no_bg_action:
 
 	;===============================
 	; check keyboard
+	;===============================
 
 	jsr	handle_keypress
 
@@ -500,14 +512,17 @@ c2_no_bg_action:
 	jsr	move_friend
 
 
-	;===============
+	;===================
 	; check room limits
+	;===================
+
 
 	jsr	check_screen_limit
 
 
 	;===============
 	; draw physicist
+	;================
 
 	lda	TELEPORTING
 	bne	actively_teleporting
@@ -529,8 +544,9 @@ actively_teleporting:
 	dec	TELEPORTING
 	bne	c2_done_draw_physicist
 
-	;================
+	;===============================
 	; recalc collision on new floor
+	;===============================
 
 	jsr	recalc_walk_collision
 
@@ -576,6 +592,7 @@ no_draw_alien:
 
 	;========================
 	; draw foreground action
+	;========================
 
 	lda	WHICH_JAIL
 	cmp	#1
@@ -696,11 +713,13 @@ dude_not_out:
 
 	;===============
 	; page flip
+	;===============
 
 	jsr	page_flip
 
 	;================
 	; inc frame count
+	;================
 
 	inc	FRAMEL
 	bne	jail_frame_no_oflo
@@ -710,6 +729,7 @@ jail_frame_no_oflo:
 
 	;====================
 	; handle teleporters
+	;===================
 
 	lda	WHICH_JAIL
 	cmp	#4
@@ -811,7 +831,7 @@ not_teleporting_today:
 	; see if picking up gun
 	;==========================
 
-	lda	WHICH_JAIL
+	lda	WHICH_JAIL		; only in room 0
 	bne	not_picking_up_gun
 
 	lda	HAVE_GUN
@@ -838,8 +858,55 @@ not_teleporting_today:
 not_picking_up_gun:
 
 	;==========================
+	; see if falling down vent
+	;==========================
+check_vent_falling:
+	lda	WHICH_JAIL		; only in room 5
+	cmp	#5
+	bne	not_falling_down_vent
+
+	lda	VENT_OPEN
+	beq	not_falling_down_vent
+
+	lda	PHYSICIST_STATE
+	cmp	#P_STANDING
+	bne	not_falling_down_vent
+
+	; vent at 18/19
+	lda	PHYSICIST_X
+	cmp	#17
+	beq	falling_down_vent
+	cmp	#18
+	bne	not_falling_down_vent
+
+falling_down_vent:
+	lda	#P_FALLING_DOWN
+	sta	PHYSICIST_STATE
+
+	lda     #48
+        sta     fall_down_destination_smc+1
+
+not_falling_down_vent:
+
+
+	;=====================
+	; check if fell into L3
+	;=======================
+
+	lda	PHYSICIST_Y
+	cmp	#48
+	bne	not_l3_yet
+
+	lda	#77
+	sta	GAME_OVER
+
+not_l3_yet:
+
+
+	;==========================
 	; check if done this level
 	;==========================
+
 
 	lda	GAME_OVER
 	beq	still_in_jail
@@ -1163,7 +1230,7 @@ door_c2_r5:
 	.word door_c2_r5_xmax
 
 door_c2_r5_status:
-	c2_r5_door0_status:	.byte DOOR_STATUS_CLOSED
+	c2_r5_door0_status:	.byte DOOR_STATUS_LOCKED
 	c2_r5_door1_status:	.byte DOOR_STATUS_CLOSED
 
 door_c2_r5_x:

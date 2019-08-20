@@ -1,18 +1,51 @@
 ; draw/move our friend
 
-friend_out:		.byte	0
+friend_room:		.byte	0	; $FF means not out
 friend_x:		.byte	0
 friend_y:		.byte	0
 friend_state:		.byte	0
 friend_gait:		.byte	0
 friend_direction:	.byte	0
-friend_gun:		.byte	0
+;friend_gun:		.byte	0
+friend_ai_state:	.byte	0
 
 F_STANDING	= 0
 F_WALKING	= 1
 F_RUNNING	= 2
 F_CROUCHING	= 3
 F_TURNING	= 4
+F_KEYPAD	= 5
+F_OPEN_VENT	= 6
+
+FAI_FOLLOWING		=	0
+FAI_RUNTO_PANEL		=	1
+FAI_OPENING_PANEL	=	2
+FAI_END_L2		= 	3
+
+
+	;=======================================
+	; Process friend AI
+	;
+
+friend_ai:
+
+	; FAI_END_L2
+	;    crouch, holding panel open
+
+	; FAI_FOLLOWING
+	;    if x> phys_x by more than 8, walk left
+	;    if x< phys_x by more than 8, walk right
+
+	; FAI_RUNTO_PANEL
+
+	;    otherwise, if not in ROOM#2, run right
+	;    if in room#2, run to panel
+
+	; FAI_OPENING_PANEL
+	;    if door2 unlocked -> FAI_FOLLOWING
+
+	rts
+
 
 	;=======================================
 	; Move friend based on current state
@@ -89,6 +122,8 @@ fstate_table_lo:
 	.byte <friend_running	; 02
 	.byte <friend_crouching	; 03
 	.byte <friend_turning	; 04
+	.byte <friend_standing	; 05 KEYPAD
+	.byte <friend_open_vent	; 06
 
 fstate_table_hi:
 	.byte >friend_standing	; 00
@@ -96,6 +131,8 @@ fstate_table_hi:
 	.byte >friend_running	; 02
 	.byte >friend_crouching	; 03
 	.byte >friend_turning	; 04
+	.byte >friend_standing	; 05 KEYPAD
+	.byte >friend_open_vent	; 06
 
 ; Urgh, make sure this doesn't end up at $FF or you hit the
 ;	NMOS 6502 bug
@@ -113,8 +150,9 @@ fjump:
 
 draw_friend:
 
-	lda	friend_out
-	beq	no_friend
+	lda	friend_room
+	cmp	WHICH_ROOM
+	bne	no_friend
 
 	lda	friend_state
 	tay
@@ -157,6 +195,52 @@ friend_crouching:
 	sta	INH
 
 	jmp	finally_draw_friend
+
+;===================================
+; OPEN_VENT
+;===================================
+
+friend_open_vent:
+
+	; draw vent -- HACK
+
+	lda	#1
+	sta	VENT_OPEN
+
+	lda	#$00
+	sta	COLOR
+
+	; X, V2 at Y
+        ; from x=top, v2=bottom
+
+
+	ldy	#18
+	lda	#48
+	sta	V2
+	ldx	#24
+	jsr	vlin
+
+	ldy	#19
+	lda	#48
+	sta	V2
+	ldx	#24
+	jsr	vlin
+
+
+
+	lda	#21
+	sta	friend_x
+	lda	#8
+	sta	friend_y
+
+	lda	#<friend_crouch2
+	sta	INL
+
+	lda	#>friend_crouch2
+	sta	INH
+
+	jmp	finally_draw_friend
+
 
 
 ;===============================
@@ -243,7 +327,7 @@ friend_draw_turning:
 
 
 ;=============================
-; Actually Draw Alien
+; Actually Draw Friend
 ;=============================
 
 

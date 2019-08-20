@@ -57,13 +57,15 @@ c2_check_done:
 	cmp	#$ff
 	beq	quit_level
 
-	; only exit if done level
-	; FIXME: or quit pressed?
-
-	lda	WHICH_JAIL
-	cmp	#11
+	cmp	#77
 	bne	c2_new_room
 
+;=========================
+; end of level
+;=========================
+	lda	#3
+	sta	WHICH_LOAD
+	rts
 
 ;===========================
 ; quit_level
