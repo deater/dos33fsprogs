@@ -93,7 +93,7 @@ end_message:
 
 .include "physicist.s"
 .include "alien.s"
-
+.include "dummy_friend.s"
 
 .include "gun.s"
 .include "laser.s"

@@ -843,9 +843,9 @@ not_teleporting_today:
 	bne	not_picking_up_gun
 
 	; gun at 35,36,37
-	; so we should be at 32-39
+	; so we should be at 31-39
 	lda	PHYSICIST_X
-	cmp	#32
+	cmp	#31
 	bcc	not_picking_up_gun	; blt
 
 	lda	#1

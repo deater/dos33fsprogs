@@ -8,6 +8,11 @@ friend_gait:		.byte	0
 friend_direction:	.byte	0
 friend_ai_state:	.byte	0
 
+FAI_FOLLOWING		=	0
+FAI_RUNTO_PANEL		=	1
+FAI_OPENING_PANEL	=	2
+FAI_END_L2		= 	3
+
 F_STANDING	= 0
 F_WALKING	= 1
 F_RUNNING	= 2
@@ -16,14 +21,6 @@ F_TURNING	= 4
 F_KEYPAD	= 5
 F_OPEN_VENT	= 6
 F_DISINTEGRATING= 7
-
-
-FAI_FOLLOWING		=	0
-FAI_RUNTO_PANEL		=	1
-FAI_OPENING_PANEL	=	2
-FAI_END_L2		= 	3
-
-
 
 fai_table_lo:
 	.byte <friend_ai_following	; 00
@@ -79,6 +76,10 @@ friend_ai_runto_panel:
 	lda	friend_x
 	cmp	#30
 	bcc	ai_runto_panel_done
+
+	; hack, if running stop wrong place?
+	lda	#31
+	sta	friend_x
 
 	lda	#FAI_OPENING_PANEL
 	sta	friend_ai_state

@@ -109,6 +109,7 @@ end_message:
 .include "shield.s"
 .include "blast.s"
 .include "collision.s"
+.include "dummy_friend.s"
 
 .include "ootw_c4_action.s"
 

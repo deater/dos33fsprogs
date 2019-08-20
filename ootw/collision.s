@@ -96,7 +96,7 @@ done_recalc_walk_right_collision:
 	;=============================
 	;=============================
 	; far right limit is LEVEL_RIGHT
-	; any LOCKED or CLOSED doors stop things
+	; any LOCKED or CLOSED doors with SAME_Y to left of LEVEL_RIGHT
 	; any shield stops things
 	; our friend stops things
 	; any enemies stop things
@@ -105,6 +105,9 @@ calc_gun_right_collision:
 
 	lda	#$00
 	sta	RIGHT_SHOOT_TARGET
+
+	;=====================================================================
+	; by default set it to left limit (which is often but not always a wall)
 
 	lda	RIGHT_LIMIT
 	and	#$7f
@@ -123,8 +126,14 @@ calc_gun_right_doors:
 	ldy	#0
 calc_gun_right_door_loop:
 
-	lda	PHYSICIST_X
+	; only if on same level
+	lda	(DOOR_Y),Y
+	clc
+	adc	#4
+	cmp	PHYSICIST_Y
+	bne	calc_gun_right_door_continue
 
+	lda	PHYSICIST_X
 	cmp	(DOOR_X),Y
 	bcs	calc_gun_right_door_continue		; bge
 
@@ -154,6 +163,86 @@ done_calc_gun_right_door_collision:
 
 
 	;==========================
+	; adjust for shield
+
+calc_gun_right_shield:
+
+	lda	SHIELD_OUT
+	beq	done_calc_gun_right_shield_collision
+
+	ldx	#0
+calc_gun_right_shield_loop:
+
+	; FIXME: check for on same level?
+
+	lda	shield_out,X
+	beq	calc_gun_right_shield_continue
+
+	lda	PHYSICIST_X
+	cmp	shield_x,X
+	bcs	calc_gun_right_shield_continue		; bge
+
+	; be sure closer than current max limit
+	lda	RIGHT_SHOOT_LIMIT
+	cmp	shield_x,X
+	bcc	calc_gun_right_shield_continue		; blt
+
+calc_gun_right_shield_there:
+
+	lda	shield_x,X
+	sta	RIGHT_SHOOT_LIMIT
+
+	txa			; set target if hit
+	ora	#TARGET_SHIELD
+	sta	RIGHT_SHOOT_TARGET
+
+	; can't early exit
+
+calc_gun_right_shield_continue:
+	inx
+	cpx	#MAX_SHIELDS
+	bne	calc_gun_right_shield_loop
+
+done_calc_gun_right_shield_collision:
+
+
+	;==========================
+	; adjust for friend
+
+calc_gun_right_friend:
+
+	lda	friend_room
+	cmp	WHICH_ROOM
+	bne	done_calc_gun_right_friend_collision
+
+	lda	PHYSICIST_X
+	cmp	friend_x
+	bcs	calc_gun_right_friend_continue		; bge
+
+	; only if closer than previous found
+	lda	RIGHT_SHOOT_LIMIT
+	cmp	friend_x
+	bcc	calc_gun_right_friend_continue		; blt
+
+	lda	friend_state
+	cmp	#F_DISINTEGRATING
+	beq	calc_gun_right_friend_continue
+
+calc_gun_right_friend_there:
+	; early exit
+	lda	friend_x
+	sta	RIGHT_SHOOT_LIMIT
+
+				; set target if hit
+	lda	#TARGET_FRIEND
+	sta	RIGHT_SHOOT_TARGET
+
+calc_gun_right_friend_continue:
+
+done_calc_gun_right_friend_collision:
+
+
+	;==========================
 	; adjust for alien
 
 calc_gun_right_alien:
@@ -172,12 +261,16 @@ calc_gun_right_alien_loop:
 	cmp	alien_x,X
 	bcs	calc_gun_right_alien_continue		; bge
 
+	; only if closer than previous found
+	lda	RIGHT_SHOOT_LIMIT
+	cmp	alien_x,X
+	bcc	calc_gun_right_alien_continue		; blt
+
 	lda	alien_state,X
 	cmp	#A_DISINTEGRATING
 	beq	calc_gun_right_alien_continue
 
 calc_gun_right_alien_there:
-	; early exit
 	lda	alien_x,X
 	sta	RIGHT_SHOOT_LIMIT
 
@@ -185,7 +278,7 @@ calc_gun_right_alien_there:
 	ora	#TARGET_ALIEN
 	sta	RIGHT_SHOOT_TARGET
 
-	jmp	done_calc_gun_right_alien_collision
+	; can't early exit
 
 calc_gun_right_alien_continue:
 	inx
@@ -193,6 +286,8 @@ calc_gun_right_alien_continue:
 	bne	calc_gun_right_alien_loop
 
 done_calc_gun_right_alien_collision:
+
+
 	rts
 
 
