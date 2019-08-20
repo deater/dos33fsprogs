@@ -108,6 +108,7 @@ cave_setup_done:
 	lda	#0
 	sta	GAIT
 	sta	GAME_OVER
+	sta	BG_BEAST	; in case it wasn't gone yet
 
 	; make sure in range and such
 

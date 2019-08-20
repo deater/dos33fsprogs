@@ -24,7 +24,7 @@ ootw:
 	; Handle Underwater Arrival
 	;==========================
 
-;	jsr	ootw_c1_arrival
+	jsr	ootw_c1_arrival
 
 	lda	GAME_OVER
 	bmi	end_c1
@@ -34,7 +34,7 @@ ootw:
 	; Exit the Pool
 	;==========================
 
-;	jsr	exit_pool
+	jsr	exit_pool
 
 
 	; Initialize some variables
@@ -74,8 +74,6 @@ ootw:
 	;=======================
 
 	jsr	ootw_pool
-
-;	jsr	ootw_mesa
 
 ;===========================
 ; quit_level
