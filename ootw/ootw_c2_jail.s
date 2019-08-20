@@ -599,6 +599,11 @@ no_draw_alien:
 	cmp	#1
 	bne	c2_no_cart_action
 
+	; 0 is never seen, 2 is all done
+	lda	CART_OUT
+	cmp	#1
+	bne	c2_no_cart_action
+
 c2_draw_cart:
 
 	lda	CART_X
@@ -684,7 +689,7 @@ c2_move_fg_objects:
 
 	inc	CART_X
 	lda	CART_X
-	cmp	#39
+	cmp	#40
 	bne	cart_not_out
 	inc	CART_OUT
 

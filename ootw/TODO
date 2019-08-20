@@ -4,37 +4,18 @@ TODO Before release:
 
 	l2 -- alien behavior
 
-		
-
-
 		room5: alien appears to left of door.  Works on panel to
 			unlock it, comes in and bothers friend after
 			we call down.
 			also I think if you wait long enough more aliens
 			appear if you try to go left.
 
-
-	general -- fix laser collision detection.
-		add detection of shields
-		add detection of friend
-		properly handle when multiple collision objects
-			on screen at once
-
-	door explosions should be cropped
-
 	when calculating room calcs, take Y position into account
 	
-	L1 -- fix slugs
-		+ adjust slug attack range
-		+ spawn new slugs in 2nd room
-
-	L2 -- add doors
 	L2 -- disable door/powerline by shooting wall
 	L2 -- add aliens
 	L2 -- add minimal friend AI
-	L2 -- add way to leave L2 to L3
 		-- on cart screen, cart is still there at edge of screen?
-		+ Implement end scene
 
 	L5 -- add ending scenes?
 		Show some pictures
@@ -141,6 +122,8 @@ BEHAVIOR DIFFERENCES:
 + Level/Checkpoint #4:
 	* Implement guard (shooting, taunting)
 
++ Level/Checkpoint #5
+	* Allow falling into first pit
 
 KNOWN BUGS:
 ===========
@@ -153,12 +136,7 @@ KNOWN BUGS:
 FUTURE WORK:
 ============
 
-
 * L1 pool
   + adjust tentacle to not go off edge of screen
   + adjust x position of tentacle grab
-
-Level/Checkpoint #5:
- + Allow falling into first pit
-
 
