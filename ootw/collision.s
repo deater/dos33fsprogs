@@ -308,6 +308,10 @@ calc_gun_left_collision:
 	lda	#0
 	sta	LEFT_SHOOT_TARGET
 
+	;=============================
+	; by default set to left limit
+	; tricky as LEFT_LIMIT does some hacks to put it up above $80
+
 	lda	LEFT_LIMIT
 	sec
 	sbc	#$80
@@ -317,6 +321,10 @@ calc_gun_left_collision:
 left_limit_ok:
 	sta	LEFT_SHOOT_LIMIT
 
+	;==========================
+	; stop if hit door
+
+calc_gun_left_door:
 	lda	NUM_DOORS
 	beq	done_calc_gun_left_door_collision
 
@@ -326,8 +334,15 @@ calc_gun_left_doors:
 	ldy	NUM_DOORS
 	dey
 calc_gun_left_door_loop:
-	lda	PHYSICIST_X
 
+	; only if on same level
+	lda	(DOOR_Y),Y
+	clc
+	adc	#4
+	cmp	PHYSICIST_Y
+	bne	calc_gun_left_door_continue
+
+	lda	PHYSICIST_X
 	cmp	(DOOR_X),Y
 	bcc	calc_gun_left_door_continue		; blt
 
@@ -356,6 +371,84 @@ done_calc_gun_left_door_collision:
 
 
 	;==========================
+	; adjust for shield
+
+calc_gun_left_shield:
+
+	lda	SHIELD_OUT
+	beq	done_calc_gun_left_shield_collision
+
+	ldx	#0
+
+calc_gun_left_shield_loop:
+
+	lda	shield_out,X
+	beq	calc_gun_left_shield_continue
+
+	lda	PHYSICIST_X
+	cmp	shield_x,X
+	bcc	calc_gun_left_shield_continue		; blt
+
+	; be sure closer than current max limit
+	lda	LEFT_SHOOT_LIMIT
+	cmp	shield_x,X
+	bcc	calc_gun_left_shield_continue		; blt
+
+calc_gun_left_shield_there:
+
+	lda	shield_x,X
+	sta	LEFT_SHOOT_LIMIT
+
+	txa			; set target if hit
+	ora	#TARGET_SHIELD
+	sta	LEFT_SHOOT_TARGET
+
+	; can't early exit
+
+calc_gun_left_shield_continue:
+	inx
+	cpx	#MAX_SHIELDS
+	bne	calc_gun_left_shield_loop
+
+
+done_calc_gun_left_shield_collision:
+
+
+	;==========================
+	; adjust for friend
+
+calc_gun_left_friend:
+
+	lda	friend_room
+	cmp	WHICH_ROOM
+	bne	done_calc_gun_left_friend_collision
+
+	lda	PHYSICIST_X
+	cmp	friend_x
+	bcc	calc_gun_left_friend_continue		; blt
+
+	; only if closer than previous found
+	lda	LEFT_SHOOT_LIMIT
+	cmp	friend_x
+	bcc	calc_gun_left_friend_continue		; blt
+
+	lda	friend_state
+	cmp	#F_DISINTEGRATING
+	beq	calc_gun_left_friend_continue
+
+calc_gun_left_friend_there:
+
+	lda	friend_x
+	sta	LEFT_SHOOT_LIMIT
+				; set target if hit
+	lda	#TARGET_FRIEND
+	sta	LEFT_SHOOT_TARGET
+
+calc_gun_left_friend_continue:
+done_calc_gun_left_friend_collision:
+
+
+	;==========================
 	; adjust for alien
 
 calc_gun_left_alien:
@@ -373,6 +466,11 @@ calc_gun_left_alien_loop:
 
 	lda	PHYSICIST_X
 
+	cmp	alien_x,X
+	bcc	calc_gun_left_alien_continue		; blt
+
+	; only if closer than previous found
+	lda	LEFT_SHOOT_LIMIT
 	cmp	alien_x,X
 	bcc	calc_gun_left_alien_continue		; blt
 
@@ -396,6 +494,7 @@ calc_gun_left_alien_continue:
 	bpl	calc_gun_left_alien_loop
 
 done_calc_gun_left_alien_collision:
+
 
 	rts
 
