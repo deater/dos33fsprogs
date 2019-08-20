@@ -241,81 +241,43 @@ done_move_blast:
 	; hit something, left
 	;=====================
 disable_blast_left:
-	lda	#0
-	sta	blast0_out
-
 	lda	LEFT_SHOOT_TARGET
-	beq	done_disable_blast_left
-
-	tax
-	and	#$f0
-
-	cmp	#TARGET_DOOR
-	beq	blast_door_left
-
-	cmp	#TARGET_ALIEN
-	beq	blast_alien_left
-
-	jmp	done_disable_blast_left
-
-
-blast_alien_left:
-	txa
-	and	#$f
-	tax
-
-	lda	#A_DISINTEGRATING
-	sta	alien_state,X
-
-	lda	#0
-	sta	alien_gait,X
-
-	jmp	done_blasting_left
-
-
-blast_door_left:
-	txa
-	and	#$f0
-	cmp	#TARGET_DOOR
-	bne	done_disable_blast_left
-
-	txa
-	and	#$f
-	tay
-
-	lda	#DOOR_STATUS_EXPLODING1
-	sta	(DOOR_STATUS),Y
-
-	jsr	recalc_walk_collision
-
-done_blasting_left:
-
-done_disable_blast_left:
-	rts
-
+	jmp	blast_something_common
 
 	;==================
 	; hit something, right
 	;==================
 disable_blast_right:
-	lda	#0
-	sta	blast0_out
 
 	lda	RIGHT_SHOOT_TARGET
-	beq	done_disable_blast_right
 
+
+	;=========================
+	; blash something, common
+	;=========================
+blast_something_common:
+
+	ldx	#0
+	stx	blast0_out
 	tax
 	and	#$f0
 
 	cmp	#TARGET_DOOR
-	beq	blast_door_right
+	beq	blast_door
 
 	cmp	#TARGET_ALIEN
-	beq	blast_alien_right
+	beq	blast_alien
 
-	jmp	done_disable_blast_right
+	cmp	#TARGET_FRIEND
+	beq	blast_friend
 
-blast_alien_right:
+	cmp	#TARGET_SHIELD
+	beq	blast_shield
+
+	jmp	done_blasting_common
+
+
+blast_alien:
 	txa
 	and	#$f
 	tax
@@ -326,9 +288,39 @@ blast_alien_right:
 	lda	#0
 	sta	alien_gait,X
 
-	jmp	done_blasting_right
+	jmp	done_blasting_common
 
-blast_door_right:
+blast_friend:
+
+	lda	#F_DISINTEGRATING
+	sta	friend_state
+
+	lda	#FAI_DISINTEGRATING
+	sta	friend_ai_state
+
+	lda	#0
+	sta	friend_gait
+
+	jmp	done_blasting_common
+
+blast_shield:
+
+	; FIXME: need animation for this
+
+	txa
+	and	#$f
+	tax
+
+	lda	#0
+	sta	shield_out,X
+
+	dec	SHIELD_OUT
+
+	jmp	done_blasting_common
+
+blast_door:
+
+	; FIXME: change direction based on blast
 	txa
 	and	#$f
 	tay
@@ -338,9 +330,9 @@ blast_door_right:
 
 	jsr	recalc_walk_collision
 
-done_blasting_right:
 
+done_blasting_common:
 
-done_disable_blast_right:
 	rts
+
 

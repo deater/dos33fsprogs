@@ -48,7 +48,7 @@ actually_draw_door:
 	cmp	#DOOR_STATUS_EXPLODING1
 	bcs	draw_exploding_door
 
-	jsr	put_sprite
+	jsr	put_sprite_crop
 
 after_door_put_sprite:
 
@@ -84,7 +84,7 @@ draw_exploding_door:
 not_done_exploding_door:
 	dec	XPOS
 
-	jsr	put_sprite
+	jsr	put_sprite_crop
 
 	jmp	after_door_put_sprite
 
