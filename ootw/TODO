@@ -44,6 +44,15 @@ TODO Before release:
 	intro -- add music?
 
 
+MISSING SPRITES:
+================
+  + physicist run+jumping
+  + physicist swimming
+  + beast tripping
+  + alien running
+  + friend running
+  + alien punching animation
+
 
 BEHAVIOR DIFFERENCES:
 =====================
@@ -143,14 +152,7 @@ KNOWN BUGS:
 
 FUTURE WORK:
 ============
-* sprites_to_draw:
-  + physicist run+jumping
-  + physicist swimming
-  + beast tripping
-  + alien running
-  + friend walking
-  + friend running
-  + alien punching animation
+
 
 * L1 pool
   + adjust tentacle to not go off edge of screen

@@ -21,6 +21,8 @@ ootw_jail_init:
 	sta	GUN_FIRE
 
 	sta	friend_room
+
+	lda	#FAI_RUNTO_PANEL
 	sta	friend_ai_state
 
 	lda	#100
@@ -28,7 +30,6 @@ ootw_jail_init:
 
 	lda	#1
 	sta	JAIL_POWER_ON
-	sta	friend_direction
 
 	lda	#F_RUNNING
 	sta	friend_state

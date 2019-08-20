@@ -6,7 +6,6 @@ friend_y:		.byte	0
 friend_state:		.byte	0
 friend_gait:		.byte	0
 friend_direction:	.byte	0
-;friend_gun:		.byte	0
 friend_ai_state:	.byte	0
 
 F_STANDING	= 0
@@ -16,6 +15,8 @@ F_CROUCHING	= 3
 F_TURNING	= 4
 F_KEYPAD	= 5
 F_OPEN_VENT	= 6
+F_DISINTEGRATING= 7
+
 
 FAI_FOLLOWING		=	0
 FAI_RUNTO_PANEL		=	1
@@ -23,27 +24,80 @@ FAI_OPENING_PANEL	=	2
 FAI_END_L2		= 	3
 
 
+
+fai_table_lo:
+	.byte <friend_ai_following	; 00
+	.byte <friend_ai_runto_panel	; 01
+	.byte <friend_ai_opening_panel	; 02
+
+fai_table_hi:
+	.byte >friend_ai_following	; 00
+	.byte >friend_ai_runto_panel	; 01
+	.byte >friend_ai_opening_panel	; 02
+
+
 	;=======================================
 	; Process friend AI
 	;
 
-friend_ai:
+handle_friend_ai:
 
+	lda	friend_ai_state
+	tay
+	lda	fai_table_lo,y
+	sta	fjump
+	lda	fai_table_hi,y
+	sta	fjump+1
+	jmp	(fjump)
+
+	rts
+
+friend_ai_end_l2:
 	; FAI_END_L2
 	;    crouch, holding panel open
 
+friend_ai_following:
 	; FAI_FOLLOWING
 	;    if x> phys_x by more than 8, walk left
 	;    if x< phys_x by more than 8, walk right
 
+friend_ai_runto_panel:
 	; FAI_RUNTO_PANEL
-
 	;    otherwise, if not in ROOM#2, run right
 	;    if in room#2, run to panel
 
+	lda	#1
+	sta	friend_direction
+
+	lda	#F_RUNNING
+	sta	friend_state
+
+	lda	WHICH_ROOM
+	cmp	#3
+	bne	ai_runto_panel_done
+
+	lda	friend_x
+	cmp	#30
+	bcc	ai_runto_panel_done
+
+	lda	#FAI_OPENING_PANEL
+	sta	friend_ai_state
+
+	lda	#0
+	sta	friend_direction
+
+ai_runto_panel_done:
+	jmp	friend_ai_done
+
+friend_ai_opening_panel:
 	; FAI_OPENING_PANEL
 	;    if door2 unlocked -> FAI_FOLLOWING
 
+	; FIXME: open panel for a bit, then open door and continue
+	lda	#F_KEYPAD
+	sta	friend_state
+
+friend_ai_done:
 	rts
 
 
@@ -52,6 +106,11 @@ friend_ai:
 	;
 
 move_friend:
+	lda	friend_room
+	cmp	WHICH_ROOM
+	bne	done_move_friend
+
+	jsr	handle_friend_ai
 
 	lda	friend_state
 	beq	done_move_friend
@@ -93,18 +152,31 @@ move_friend_running:
 	inc	friend_gait	; cycle through animation
 
 	lda     friend_gait
-	and     #$3
-	cmp     #$2			; only run roughly 1/4 of time
-	bne     friend_no_move_run
+	and     #$7
+	cmp	#5		; only run roughly 3/8 of time
+	bcc	friend_no_move_run
 
 	lda	friend_direction
 	beq	f_run_left
 
 	inc	friend_x		; run right
-	rts
+	jmp	friend_running_check_limits
 f_run_left:
 	dec	friend_x		; run left
 friend_no_move_run:
+
+friend_running_check_limits:
+	lda	friend_x
+	cmp	#39
+	bcc	friend_done_running	; blt
+
+	; move to next room
+	lda	#0
+	sta	friend_x
+
+	inc	friend_room
+
+friend_done_running:
 	rts
 
 	;======================
@@ -122,8 +194,9 @@ fstate_table_lo:
 	.byte <friend_running	; 02
 	.byte <friend_crouching	; 03
 	.byte <friend_turning	; 04
-	.byte <friend_standing	; 05 KEYPAD
+	.byte <friend_keypad	; 05 KEYPAD
 	.byte <friend_open_vent	; 06
+	.byte <friend_disintegrating	; 07
 
 fstate_table_hi:
 	.byte >friend_standing	; 00
@@ -131,8 +204,9 @@ fstate_table_hi:
 	.byte >friend_running	; 02
 	.byte >friend_crouching	; 03
 	.byte >friend_turning	; 04
-	.byte >friend_standing	; 05 KEYPAD
+	.byte >friend_keypad	; 05 KEYPAD
 	.byte >friend_open_vent	; 06
+	.byte >friend_disintegrating	; 07
 
 ; Urgh, make sure this doesn't end up at $FF or you hit the
 ;	NMOS 6502 bug
@@ -141,7 +215,6 @@ fstate_table_hi:
 
 fjump:
 	.word	$0000
-
 .align 1
 
 ;======================================
@@ -324,6 +397,67 @@ friend_draw_turning:
 	sta	INH
 
 	jmp	finally_draw_friend
+
+
+;===============================
+; Using Keypad
+;================================
+
+friend_keypad:
+
+	inc	friend_gait
+
+	lda	friend_gait
+	and	#$10
+	lsr
+	lsr
+	lsr
+	tay
+
+friend_draw_keypad:
+	lda	friend_keypad_progression,Y
+	sta	INL
+
+	lda	friend_keypad_progression+1,Y
+	sta	INH
+
+	jmp	finally_draw_friend
+
+;===============================
+; Disintegrating
+;================================
+
+friend_disintegrating:
+	lda	friend_gait
+	cmp	#13
+	bne	friend_keep_disintegrating
+
+	lda	#$ff
+	sta	friend_room
+
+        rts
+
+friend_keep_disintegrating:
+	asl
+	tay
+
+	; re-use alien sprites
+
+	lda	alien_disintegrating_progression,Y
+	sta	INL
+
+	lda	alien_disintegrating_progression+1,Y
+	sta	INH
+
+	lda	FRAMEL
+	and	#$7
+	bne	slow_friend_disintegration
+
+	inc	friend_gait
+slow_friend_disintegration:
+
+	jmp     finally_draw_friend
+
 
 
 ;=============================

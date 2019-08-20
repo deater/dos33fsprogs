@@ -290,3 +290,35 @@ friend_turning_sprite:
 	.byte $00,$aa,$00,$aa,$aa
 
 
+
+;=====================
+;=====================
+; KEYPAD
+;=====================
+;=====================
+
+friend_keypad_progression:
+	.word	friend_keypad1
+	.word	friend_keypad2
+
+friend_keypad1:
+        .byte $4,$8
+        .byte $aa,$7f,$7f,$aa
+        .byte $0a,$00,$00,$0a
+        .byte $77,$00,$00,$ff
+        .byte $77,$00,$00,$ff
+        .byte $aa,$00,$00,$aa
+        .byte $7a,$70,$f0,$fa
+        .byte $07,$aa,$00,$0f
+        .byte $00,$aa,$00,$00
+
+friend_keypad2:
+        .byte $5,$8
+        .byte $aa,$7f,$7f,$aa,$AA
+        .byte $0a,$00,$00,$0a,$AA
+        .byte $77,$00,$00,$ff,$FA
+        .byte $77,$00,$00,$af,$AA
+        .byte $aa,$00,$00,$aa,$AA
+        .byte $7a,$70,$f0,$fa,$AA
+        .byte $07,$aa,$00,$0f,$AA
+        .byte $00,$aa,$00,$00,$AA
