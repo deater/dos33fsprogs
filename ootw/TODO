@@ -88,7 +88,8 @@ BEHAVIOR DIFFERENCES:
 
 	* slugs:
 		- slugs possibly can fall due to earthquake?
-		- they should explode away from kick (what's it doing now)
+		- they should explode away from kick
+			currently always explode right
 
 + Level/Checkpoint 2
 

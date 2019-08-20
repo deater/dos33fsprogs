@@ -196,6 +196,43 @@ slugx_not_too_high:
 	; any off-screen slugs, respawn
 refresh_slugs:
 
+	ldx	#0
+refresh_slug_loop:
+
+	; put falling slugs on ground
+	lda	#0
+	sta	slugg_falling,X
+
+	lda	slugg_y,X
+	cmp	#2
+	beq	refresh_y_ok
+
+	lda	#30
+	sta	slugg_y,X
+
+refresh_y_ok:
+
+	; if X out of range, redo
+
+	lda	slugg_x,X
+	bmi	refresh_x
+	cmp	#38
+	bcs	refresh_x
+
+	jmp	refresh_x_fine
+refresh_x:
+	jsr	init_slug_x
+
+refresh_x_fine:
+
+	; should also do something about attack/destroy
+	; but that only an issue if they leave the room
+	; really suddenly somehow
+
+	inx
+	cpx	#NUM_SLUGS
+	bne	refresh_slug_loop
+
 	rts
 
 
@@ -351,16 +388,19 @@ slug_move:
 	clc
 	adc	slugg_dir,X
 	sta	slugg_x,X
+;
+; we let slugs go off the end, we catch it on room re-init
+; though in theory if we wait long enough the slug will wrap
 
-slug_check_right:
-	cmp	#39
-	bne	slug_check_left
-	jmp	remove_slug
+;slug_check_right:
+;	cmp	#39
+;	bne	slug_check_left
+;	jmp	remove_slug
 
-slug_check_left:
-	cmp	#0
-	bne	slug_no_move
-	jmp	remove_slug
+;slug_check_left:
+;	cmp	#0
+;	bne	slug_no_move
+;	jmp	remove_slug
 
 slug_no_move:
 

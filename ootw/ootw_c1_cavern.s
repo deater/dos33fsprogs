@@ -109,6 +109,9 @@ cave_setup_done:
 	sta	GAIT
 	sta	GAME_OVER
 
+	; make sure in range and such
+
+	jsr	refresh_slugs
 
 	jsr	setup_beast
 
