@@ -105,6 +105,21 @@ slugg6_falling:	.byte	0
 
 init_slugs:
 
+	; outside loop, init ceiling-ness
+
+	; ground slugs
+	lda	#30
+	sta	slugg0_y
+	sta	slugg3_y
+	sta	slugg4_y
+	sta	slugg5_y
+
+	; ceiling slugs
+	lda	#2
+	sta	slugg1_y
+	sta	slugg2_y
+	sta	slugg6_y
+
 	ldx	#0
 init_slug_loop:
 
@@ -302,8 +317,8 @@ no_attack:
 	sec
 	sbc	PHYSICIST_X
 	clc
-	adc	#5
-	cmp	#10
+	adc	#8			; fall if within 8 of physicist
+	cmp	#16
 	bcs	no_falling		; bge
 
 	lda	#1
@@ -391,6 +406,10 @@ check_draw_falling:
 
 	tay
 	dey
+
+	lda	FRAMEL			; slow things down
+	and	#$f
+	bne	done_falling_slugs
 
 	; actually fall
 	cpy	#7

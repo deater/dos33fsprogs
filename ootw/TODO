@@ -11,13 +11,9 @@ TODO Before release:
 
 	when calculating room calcs, take Y position into account
 	
-	L1 -- fix beast ending
-	L1 -- have beast collapse
 	L1 -- fix slugs
-		+ slugs on ceiling drop
 		+ adjust slug attack range
 		+ spawn new slugs in 2nd room
-		+ be sure can jump over slugs
 
 	L2 -- add doors
 	L2 -- disable door/powerline by shooting wall
@@ -76,7 +72,6 @@ BEHAVIOR DIFFERENCES:
 		- small things like birds flying are not implemented
 
 	* caverns:
-		- slugs possibly can fall due to earthquake?
 		- beast on hill and 2nd screen -- complex, only appears if
 		  you happen to leave same time beast does?  then movement
 		  depends on xposition?
@@ -91,6 +86,9 @@ BEHAVIOR DIFFERENCES:
 		- beast should climb hill in rope room better
 		- beast has shadow when standing
 
+	* slugs:
+		- slugs possibly can fall due to earthquake?
+		- they should explode away from kick (what's it doing now)
 
 + Level/Checkpoint 2
 

@@ -48,7 +48,7 @@ slug_falling_progression_hi:
 	.byte >slug_falling8	; 9
 	.byte >slug_falling9	; 10
 	.byte >slug_falling10	; 11
-	.byte >slug_falling11	; 12
+	.byte >slug_falling7	; 12
 
 slug_falling_progression_lo:
 	.byte <slug_falling1
@@ -64,7 +64,7 @@ slug_falling_progression_lo:
 	.byte <slug_falling8
 	.byte <slug_falling9
 	.byte <slug_falling10
-	.byte <slug_falling11
+	.byte <slug_falling7
 
 
 	
@@ -86,62 +86,55 @@ slug_falling3:
 	.byte	$AA,$AA,$00
 
 slug_falling4:
-	.byte	2,2
+	.byte	3,2
 	.byte	$AA,$00,$AA
 	.byte	$AA,$00,$AA
 
 slug_falling5:
-	.byte	2,2
+	.byte	3,2
 	.byte	$AA,$00,$AA
 	.byte	$0A,$A0,$AA
 
 slug_falling6:
-	.byte	2,2
+	.byte	3,2
 	.byte	$AA,$00,$AA
 	.byte	$AA,$A0,$0A
 
+slug_falling12:
+	.byte 2,4
+	.byte $AA,$00
+	.byte $AA,$00
+	.byte $AA,$00
+	.byte $AA,$00
+
 
 slug_falling7:
-	.byte 4,4
-	.byte $AA,$AA,$AA,$AA
-	.byte $AA,$AA,$AA,$AA
-	.byte $AA,$AA,$AA,$AA
-	.byte $AA,$0A,$00,$0A
+	.byte 3,4
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $0A,$00,$0A
 
 slug_falling8:
-	.byte 4,4
-	.byte $AA,$AA,$AA,$AA
-	.byte $AA,$AA,$AA,$AA
-	.byte $AA,$0A,$AA,$AA
-	.byte $AA,$aA,$A0,$0A
+	.byte 3,4
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $0A,$AA,$AA
+	.byte $aA,$A0,$0A
 
 slug_falling9:
-	.byte 4,4
-	.byte $AA,$AA,$AA,$AA
-	.byte $AA,$AA,$AA,$AA
-	.byte $0A,$AA,$AA,$AA
-	.byte $AA,$a0,$0A,$AA
+	.byte 3,4
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $0A,$AA,$AA
+	.byte $00,$a0,$0A
 
 slug_falling10:
-	.byte 4,4
-	.byte $AA,$AA,$AA,$AA
-	.byte $AA,$AA,$AA,$AA
-	.byte $0A,$AA,$AA,$AA
-	.byte $00,$0A,$0A,$AA
-
-slug_falling11:
-	.byte 4,4
-	.byte $AA,$AA,$AA,$AA
-	.byte $AA,$AA,$AA,$AA
-	.byte $AA,$AA,$AA,$AA
-	.byte $0A,$00,$00,$0A
-
-slug_falling12:
-	.byte 4,4
-	.byte $AA,$00,$AA,$AA
-	.byte $AA,$00,$AA,$AA
-	.byte $AA,$00,$AA,$AA
-	.byte $AA,$00,$AA,$AA
+	.byte 3,4
+	.byte $AA,$AA,$AA
+	.byte $AA,$AA,$AA
+	.byte $0A,$AA,$AA
+	.byte $00,$0A,$0A
 
 
 
