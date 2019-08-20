@@ -147,19 +147,10 @@ regular_slug:
 	lda	#$ff
 	sta	slugg_dir,X
 
-	; Randomly pick an X value to appear at
+	; pick X
 
-	jsr	random16
-	lda	SEEDL
-	and	#$1f
-	clc
-	adc	#8		; appear from x = 8..32
+	jsr	init_slug_x
 
-	cmp	#32
-	bcc	slugx_not_too_high		; blt
-	lsr			; div by two if too large
-slugx_not_too_high:
-	sta	slugg_x,X
 
 	; Make the slug movement random so they don't all move in sync
 
@@ -178,6 +169,22 @@ slugx_not_too_high:
 
 	rts
 
+init_slug_x:
+	; Randomly pick an X value to appear at
+
+	jsr	random16
+	lda	SEEDL
+	and	#$1f
+	clc
+	adc	#8		; appear from x = 8..32
+
+	cmp	#32
+	bcc	slugx_not_too_high		; blt
+	lsr			; div by two if too large
+slugx_not_too_high:
+	sta	slugg_x,X
+
+	rts
 
 
 
@@ -408,7 +415,7 @@ check_draw_falling:
 	dey
 
 	lda	FRAMEL			; slow things down
-	and	#$f
+	and	#$7
 	bne	done_falling_slugs
 
 	; actually fall
@@ -584,8 +591,24 @@ slug_exit:
 
 
 remove_slug:
-	lda	#0
-	sta	slugg_out,X
+
+	dec	slugg_out,X
+	beq	slug_removed
+
+	; was higher, so re-spawn
+
+	; respawn on ceiling
+	lda	#2
+	sta	slugg_y,X
+
+	; direction=left
+	lda	#$ff
+	sta	slugg_dir,X
+
+	; put in random spot
+	jsr	init_slug_x
+
+slug_removed:
 	jmp	slug_done
 
 
