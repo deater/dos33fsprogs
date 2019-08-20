@@ -392,7 +392,7 @@ calc_gun_left_shield_loop:
 	; be sure closer than current max limit
 	lda	LEFT_SHOOT_LIMIT
 	cmp	shield_x,X
-	bcc	calc_gun_left_shield_continue		; blt
+	bcs	calc_gun_left_shield_continue		; bge
 
 calc_gun_left_shield_there:
 
@@ -430,7 +430,7 @@ calc_gun_left_friend:
 	; only if closer than previous found
 	lda	LEFT_SHOOT_LIMIT
 	cmp	friend_x
-	bcc	calc_gun_left_friend_continue		; blt
+	bcs	calc_gun_left_friend_continue		; bge
 
 	lda	friend_state
 	cmp	#F_DISINTEGRATING
@@ -472,7 +472,7 @@ calc_gun_left_alien_loop:
 	; only if closer than previous found
 	lda	LEFT_SHOOT_LIMIT
 	cmp	alien_x,X
-	bcc	calc_gun_left_alien_continue		; blt
+	bcs	calc_gun_left_alien_continue		; bge
 
 	lda	alien_state,X
 	cmp	#A_DISINTEGRATING
