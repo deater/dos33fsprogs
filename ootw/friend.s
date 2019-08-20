@@ -11,7 +11,9 @@ friend_ai_state:	.byte	0
 FAI_FOLLOWING		=	0
 FAI_RUNTO_PANEL		=	1
 FAI_OPENING_PANEL	=	2
-FAI_END_L2		= 	3
+FAI_DISINTEGRATING	=	3
+FAI_END_L2		= 	4
+
 
 F_STANDING	= 0
 F_WALKING	= 1
@@ -26,11 +28,13 @@ fai_table_lo:
 	.byte <friend_ai_following	; 00
 	.byte <friend_ai_runto_panel	; 01
 	.byte <friend_ai_opening_panel	; 02
+	.byte <friend_ai_disintegrating	; 03
 
 fai_table_hi:
 	.byte >friend_ai_following	; 00
 	.byte >friend_ai_runto_panel	; 01
 	.byte >friend_ai_opening_panel	; 02
+	.byte >friend_ai_disintegrating	; 03
 
 
 	;=======================================
@@ -98,6 +102,7 @@ friend_ai_opening_panel:
 	lda	#F_KEYPAD
 	sta	friend_state
 
+friend_ai_disintegrating:
 friend_ai_done:
 	rts
 

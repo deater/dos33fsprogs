@@ -225,61 +225,44 @@ done_move_laser:
 	rts
 
 	;===================
-	; hit somthing, left
+	; hit something, left
 	;===================
 disable_laser_left:
-	lda	#0
-	sta	laser0_out
-
 	lda	LEFT_SHOOT_TARGET
-	beq	done_disable_laser_left
-
-	tax
-	and	#$f0
-
-	cmp	#TARGET_ALIEN
-	beq	laser_alien_left
-
-	jmp	done_disable_laser_left
-
-laser_alien_left:
-	txa
-	and	#$f
-	tax
-
-        lda	#A_DISINTEGRATING
-        sta	alien_state,X
-
-        lda	#0
-        sta	alien_gait,X
-
-	jmp	done_lasering_left
-
-done_lasering_left:
-done_disable_laser_left:
-
-	rts
-
+	jmp	hit_something_common
 
 	;====================
-	; hit somthing, right
+	; hit something, right
 	;====================
 disable_laser_right:
-	lda	#0
-	sta	laser0_out
 
 	lda	RIGHT_SHOOT_TARGET
-	beq	done_disable_laser_right
+
+
+	;======================
+	; hit something, common
+	;======================
+hit_something_common:
+
+	; disable laser
+	ldx	#0
+	stx	laser0_out
 
 	tax
 	and	#$f0
 
 	cmp	#TARGET_ALIEN
-	beq	laser_alien_right
+	beq	laser_hit_alien
 
-	jmp	done_disable_laser_right
+	cmp	#TARGET_FRIEND
+	beq	laser_hit_friend
 
-laser_alien_right:
+	; FIXME: reduce shields if hit them?
+
+	jmp	done_hit_something
+
+laser_hit_alien:
+
 	txa
 	and	#$f
 	tax
@@ -290,11 +273,27 @@ laser_alien_right:
         lda	#0
         sta	alien_gait,X
 
-	jmp	done_lasering_right
+	jmp	done_hit_something
 
-done_lasering_right:
-done_disable_laser_right:
+laser_hit_friend:
+
+        lda	#F_DISINTEGRATING
+        sta	friend_state
+
+	lda	#FAI_DISINTEGRATING
+	sta	friend_ai_state
+
+        lda	#0
+        sta	friend_gait
+
+
+
+;	jmp	done_hit_something
+
+done_hit_something:
 
 	rts
+
+
 
 
