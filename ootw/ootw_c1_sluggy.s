@@ -14,6 +14,8 @@
 ;	Attacks: only attack if on ground and physicist is on ground
 ;		will attempt to attack if you jump over
 ;	Off edge of screen: will disappear but will respawn if leave/re-enter
+;	Fall from ceiling when get too close, also earthquakes?
+;		algorithm unclear
 
 ;==================================
 ; draw slugs
@@ -116,11 +118,14 @@ init_slug_loop:
 regular_slug:
 	sta	slugg_out,X
 
-	; Mark slug as not attacking or dying
+	; Put 1st slug on floor, rest on ceiling
+
+	; Mark slug as not attacking, dying, or falling
 
 	lda	#0
 	sta	slugg_attack,X
 	sta	slugg_dying,X
+	sta	slugg_falling,X
 
 	; Point the slug in the correct direction (left in this case)
 
@@ -159,8 +164,25 @@ slugx_not_too_high:
 	rts
 
 
+
+
+	;========================
+	; Refresh slugs
+	;========================
+	; call when re-enter room
+	; any falling slugs put on ground
+	; any off-screen slugs, respawn
+refresh_slugs:
+
+	rts
+
+
+
+
+	;========================
 	;========================
 	; Draw the slug creatures
+	;========================
 	;========================
 
 draw_slugs:
@@ -214,11 +236,16 @@ check_attack:
 	; see if attack
 
 	lda	slugg_out,X		; only attack if out
-	cmp	#1
-	bne	no_attack
+	beq	no_attack
 
 	lda	slugg_y,X		; only attack if on ground
 	cmp	#30
+	bne	no_attack
+
+	lda	slugg_dying,X		; only attack if not exploding
+	bne	no_attack
+
+	lda	slugg_falling,X		; only attack if not falling
 	bne	no_attack
 
 ;	lda	PHYSICIST_Y		; only attack if physicist on ground
@@ -260,12 +287,42 @@ attack:
 	ldx	WHICH_SLUG
 
 no_attack:
+
+	;====================
+	; see if should fall
+
+	lda	slugg_y,X		; first see if on ceiling
+	cmp	#30
+	beq	no_falling
+
+	lda	slugg_falling,X
+	bne	no_falling
+
+	lda	slugg_x,X		; see if near physicist
+	sec
+	sbc	PHYSICIST_X
+	clc
+	adc	#5
+	cmp	#10
+	bcs	no_falling		; bge
+
+	lda	#1
+	sta	slugg_falling,X
+
+	lda	#0
+	sta	slugg_gait,X
+
+no_falling:
+
 	inc	slugg_gait,X		; increment slug gait counter
 
 	lda	slugg_gait,X		; only move every 64 frames
 	and	#$3f
 	cmp	#$00
 	bne	slug_no_move
+
+	lda	slugg_falling,X		; don't move X if falling
+	bne	slug_no_move		; move Y instead in some cases
 
 slug_move:
 	lda	slugg_x,X
@@ -274,7 +331,7 @@ slug_move:
 	sta	slugg_x,X
 
 slug_check_right:
-	cmp	#37
+	cmp	#39
 	bne	slug_check_left
 	jmp	remove_slug
 
@@ -297,7 +354,7 @@ slug_no_move:
 	;==============
 
 	lda	slugg_dying,X
-	beq	check_draw_attacking
+	beq	check_draw_falling
 slug_exploding:
 	stx	WHICH_SLUG
 	tax					; urgh can't forget tax
@@ -324,6 +381,65 @@ no_progress:
 
 	jmp	slug_selected
 
+
+	;===============
+	; if falling
+	;===============
+check_draw_falling:
+	lda	slugg_falling,X
+	beq	check_draw_attacking
+
+	tay
+	dey
+
+	; actually fall
+	cpy	#7
+	beq	falling_slugs
+
+falling_slug_inc:
+
+	inc	slugg_falling,X
+
+	lda	slugg_falling,X
+	cmp	#13
+	bne	done_falling_slugs
+
+	; transition to ground slug
+	lda	#0
+	sta	slugg_falling,X
+
+	; set direction
+	lda	slugg_x,X
+	cmp	PHYSICIST_X
+	bpl	slug_transition_left
+
+	lda	#1
+	bne	slug_transition_store
+
+slug_transition_left:
+	lda	#$ff
+slug_transition_store:
+	sta	slugg_dir,X
+
+	jmp	done_falling_slugs
+falling_slugs:
+
+	lda	slugg_y,X
+	cmp	#30
+	beq	falling_slug_inc
+
+	clc
+	adc	#2
+	sta	slugg_y,X
+
+done_falling_slugs:
+
+	lda	slug_falling_progression_lo,Y
+	sta	INL
+	lda	slug_falling_progression_hi,Y
+	sta	INH
+
+	jmp	slug_selected
 
 	;==============
 	; if attacking
@@ -358,6 +474,11 @@ check_slug_ceiling:
 	lda	slugg_y,X
 	cmp	#30
 	beq	slug_normal
+
+
+	;=====================
+	; ceiling slug
+	;=====================
 slug_ceiling:
 
 	lda	slugg_gait,X
@@ -378,6 +499,9 @@ slug_ceiling_squinched:
 	sta	INH
 
 	jmp	slug_selected
+
+
+
 
 	;==============
 	; if normal
@@ -419,11 +543,11 @@ slug_selected:
 	bmi	slug_right
 
 slug_left:
-        jsr	put_sprite
+        jsr	put_sprite_crop
 	jmp	slug_done
 
 slug_right:
-	jsr	put_sprite_flipped
+	jsr	put_sprite_flipped_crop
 
 slug_done:
 	ldx	WHICH_SLUG
@@ -439,6 +563,7 @@ ds_smc2:
 slug_exit:
 	rts
 
+
 remove_slug:
 	lda	#0
 	sta	slugg_out,X
@@ -447,8 +572,11 @@ remove_slug:
 
 
 
-
-
+	;===========================
+	;===========================
+	; slug cutscene
+	;===========================
+	;===========================
 
 slug_cutscene:
 

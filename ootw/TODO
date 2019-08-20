@@ -76,6 +76,7 @@ BEHAVIOR DIFFERENCES:
 		- small things like birds flying are not implemented
 
 	* caverns:
+		- slugs possibly can fall due to earthquake?
 		- beast on hill and 2nd screen -- complex, only appears if
 		  you happen to leave same time beast does?  then movement
 		  depends on xposition?

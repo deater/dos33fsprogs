@@ -34,6 +34,124 @@ slug_ceiling2:
 ; slug on roof
 ;   swings a bit, then falls
 
+slug_falling_progression_hi:
+	.byte >slug_falling1	; 0
+	.byte >slug_falling2	; 1
+	.byte >slug_falling3	; 2
+	.byte >slug_falling4	; 3
+	.byte >slug_falling5	; 4
+	.byte >slug_falling4	; 5
+	.byte >slug_falling6	; 6
+	.byte >slug_falling12	; 7
+	; falls
+	.byte >slug_falling7	; 8
+	.byte >slug_falling8	; 9
+	.byte >slug_falling9	; 10
+	.byte >slug_falling10	; 11
+	.byte >slug_falling11	; 12
+
+slug_falling_progression_lo:
+	.byte <slug_falling1
+	.byte <slug_falling2
+	.byte <slug_falling3
+	.byte <slug_falling4
+	.byte <slug_falling5
+	.byte <slug_falling4
+	.byte <slug_falling6
+	.byte <slug_falling12
+	; falls
+	.byte <slug_falling7
+	.byte <slug_falling8
+	.byte <slug_falling9
+	.byte <slug_falling10
+	.byte <slug_falling11
+
+
+	
+
+slug_falling1:
+	.byte	4,1
+	.byte	$AA,$A0,$A0,$A0
+
+
+slug_falling2:
+	.byte	4,2
+	.byte	$AA,$A0,$0A,$AA
+	.byte	$AA,$AA,$AA,$A0
+
+
+slug_falling3:
+	.byte	3,2
+	.byte	$AA,$00,$AA
+	.byte	$AA,$AA,$00
+
+slug_falling4:
+	.byte	2,2
+	.byte	$AA,$00,$AA
+	.byte	$AA,$00,$AA
+
+slug_falling5:
+	.byte	2,2
+	.byte	$AA,$00,$AA
+	.byte	$0A,$A0,$AA
+
+slug_falling6:
+	.byte	2,2
+	.byte	$AA,$00,$AA
+	.byte	$AA,$A0,$0A
+
+
+slug_falling7:
+	.byte 4,4
+	.byte $AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA
+	.byte $AA,$0A,$00,$0A
+
+slug_falling8:
+	.byte 4,4
+	.byte $AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA
+	.byte $AA,$0A,$AA,$AA
+	.byte $AA,$aA,$A0,$0A
+
+slug_falling9:
+	.byte 4,4
+	.byte $AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA
+	.byte $0A,$AA,$AA,$AA
+	.byte $AA,$a0,$0A,$AA
+
+slug_falling10:
+	.byte 4,4
+	.byte $AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA
+	.byte $0A,$AA,$AA,$AA
+	.byte $00,$0A,$0A,$AA
+
+slug_falling11:
+	.byte 4,4
+	.byte $AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA
+	.byte $0A,$00,$00,$0A
+
+slug_falling12:
+	.byte 4,4
+	.byte $AA,$00,$AA,$AA
+	.byte $AA,$00,$AA,$AA
+	.byte $AA,$00,$AA,$AA
+	.byte $AA,$00,$AA,$AA
+
+
+
+
+slug_dropping:
+	.byte	3,4
+	.byte	$AA,$AA,$AA
+	.byte	$AA,$AA,$AA
+	.byte	$AA,$AA,$AA
+	.byte	$AA,$AA,$AA
 
 
 ;=======================
