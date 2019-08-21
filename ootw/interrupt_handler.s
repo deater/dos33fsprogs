@@ -18,6 +18,7 @@
 	;	to be sure status flag and accumulator set properly
 
 interrupt_handler:
+
 	php			; save status flags
 	pha			; save A				; 3
 				; A is saved in $45 by firmware

@@ -216,5 +216,5 @@ PT3_LOC = song
 ; must be page aligned
 .align 256
 song:
-.incbin "ootw_audio/ootw_intro.pt3"
+.incbin "ootw_audio/ootw_outro.pt3"
 

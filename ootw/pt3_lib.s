@@ -295,7 +295,7 @@ load_ornament0:
 
 load_ornament:
 
-	sty	TEMP		; save Y value				; 3
+	sty	PT3_TEMP		; save Y value			; 3
 
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
@@ -340,7 +340,7 @@ load_ornament:
 	adc	#$0							; 2
 	sta	note_a+NOTE_ORNAMENT_POINTER_H,X			; 5
 
-	ldy	TEMP		; restore Y value			; 3
+	ldy	PT3_TEMP		; restore Y value		; 3
 
 	rts								; 6
 
@@ -369,7 +369,7 @@ load_sample1:
 
 load_sample:
 
-	sty	TEMP							; 3
+	sty	PT3_TEMP						; 3
 
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0x6a+(i*2)]<<8)|pt3->data[0x69+(i*2)];
@@ -412,7 +412,7 @@ load_sample:
 	adc	#$0							; 2
 	sta	note_a+NOTE_SAMPLE_POINTER_H,X				; 5
 
-	ldy	TEMP							; 3
+	ldy	PT3_TEMP						; 3
 
 	rts								; 6
 								;============
@@ -2205,7 +2205,7 @@ done_do_frame:
 	; FIXME: self modify code
 GetNoteFreq:
 
-	sty	TEMP							; 3
+	sty	PT3_TEMP						; 3
 
 	tay								; 2
 	lda	PT3_LOC+PT3_HEADER_FREQUENCY				; 4
@@ -2217,7 +2217,7 @@ GetNoteFreq:
 	lda	PT3NoteTable_ST_low,Y					; 4+
 	sta	freq_l							; 4
 
-	ldy	TEMP							; 3
+	ldy	PT3_TEMP						; 3
 	rts								; 6
 								;===========
 								;	40
@@ -2229,7 +2229,7 @@ freq_table_2:
 	lda	PT3NoteTable_ASM_34_35_low,Y				; 4+
 	sta	freq_l							; 4
 
-	ldy	TEMP							; 3
+	ldy	PT3_TEMP						; 3
         rts								; 6
 								;===========
 								;	41
