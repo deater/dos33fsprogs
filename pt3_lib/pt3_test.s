@@ -213,3 +213,4 @@ found_message:		.asciiz "FOUND"
 			; to be made throughout the player code
 song:
 .incbin "../pt3_player/music/EA.PT3"
+;.incbin "../ootw/ootw_audio/ootw_outro.pt3"

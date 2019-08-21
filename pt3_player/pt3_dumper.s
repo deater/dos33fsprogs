@@ -424,12 +424,14 @@ song_list:
 
 ;	.asciiz "CR.PT3"
 ;	.asciiz "EA.PT3"
-	.asciiz "RI.PT3"
+;	.asciiz "RI.PT3"
+	.asciiz "OO.PT3"
 
 ;=========
 ;routines
 ;=========
 .include	"qkumba_rts.s"
+;.include	"../pt3_lib/pt3_lib.s"
 .include	"pt3_lib.s"
 
 ;============

@@ -31,6 +31,7 @@ pt3_player.dsk:	PT3_PLAYER HELLO
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/CH.PT3
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/BH.PT3
 	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/ND.PT3
+	$(DOS33) -y pt3_player.dsk BSAVE -a 0x4000 ./music/OO.PT3
 
 
 pt3_debug.dsk:	PT3_DUMPER PT3_TIMER PT3_TABLE_TEST HELLO_DEBUG DUMP
@@ -59,6 +60,7 @@ pt3_debug.dsk:	PT3_DUMPER PT3_TIMER PT3_TABLE_TEST HELLO_DEBUG DUMP
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/CH.PT3
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/BH.PT3
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/ND.PT3
+	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/OO.PT3
 
 HELLO:	hello.bas
 	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO

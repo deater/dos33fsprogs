@@ -144,11 +144,11 @@ mb_detect_loop:	; self-modifying
 mb_check_cycle_loop:
 	lda	(MB_ADDRL),Y		; timer 6522 (Low Order Counter)
 					; count down
-	sta	TEMP			; 3 cycles
+	sta	PT3_TEMP		; 3 cycles
 	lda	(MB_ADDRL),Y		; + 5 cycles = 8 cycles
 					; between the two accesses to the timer
 	sec
-	sbc	TEMP			; subtract to see if we had 8 cycles
+	sbc	PT3_TEMP		; subtract to see if we had 8 cycles
 	cmp	#$f8			; -8
 	bne	mb_not_in_this_slot
 	dex				; decrement, try one more time
@@ -222,11 +222,11 @@ mb4_detect_loop:	; self-modifying
 mb4_check_cycle_loop:
 	lda	(MB_ADDRL),Y		; timer 6522 (Low Order Counter)
 					; count down
-	sta	TEMP			; 3 cycles
+	sta	PT3_TEMP		; 3 cycles
 	lda	(MB_ADDRL),Y		; + 5 cycles = 8 cycles
 					; between the two accesses to the timer
 	sec
-	sbc	TEMP			; subtract to see if we had 8 cycles
+	sbc	PT3_TEMP		; subtract to see if we had 8 cycles
 	cmp	#$f8			; -8
 	bne	mb4_not_in_this_slot
 	dex				; decrement, try one more time

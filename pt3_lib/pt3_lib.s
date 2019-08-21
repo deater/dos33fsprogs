@@ -19,6 +19,9 @@
 ; + 2832 bytes -- combine $D0 and $E0 decode
 ; + 2816 bytes -- eliminate "decode_done" variable (2.75k)
 ; + 2817 bytes -- eliminate pt3_version.  Slighly faster but also bigger
+; + 2828 bytes -- fix some correctness issues
+; + 2776 bytes -- init vars with loop (slower, but more correct and smaller)
+
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?
@@ -86,16 +89,16 @@ NOTE_STRUCT_SIZE=40
 
 begin_vars:
 
-note_a:
-	.byte	$0	; NOTE_VOLUME				; 0
-	.byte	$0	; NOTE_TONE_SLIDING_L			; 1
-	.byte	$0	; NOTE_TONE_SLIDING_H			; 2
-	.byte	$0	; NOTE_ENABLED				; 3
-	.byte	$0	; NOTE_ENVELOPE_ENABLED			; 4
-	.byte	$0	; NOTE_SAMPLE_POINTER_L			; 5
-	.byte	$0	; NOTE_SAMPLE_POINTER_H			; 6
-	.byte	$0	; NOTE_SAMPLE_LOOP			; 7
-	.byte	$0	; NOTE_SAMPLE_LENGTH			; 8
+note_a:									; reset?
+	.byte	$0	; NOTE_VOLUME				; 0	; Y
+	.byte	$0	; NOTE_TONE_SLIDING_L			; 1	; Y
+	.byte	$0	; NOTE_TONE_SLIDING_H			; 2	; Y
+	.byte	$0	; NOTE_ENABLED				; 3	; Y
+	.byte	$0	; NOTE_ENVELOPE_ENABLED			; 4	; Y
+	.byte	$0	; NOTE_SAMPLE_POINTER_L			; 5	; Y
+	.byte	$0	; NOTE_SAMPLE_POINTER_H			; 6	; Y
+	.byte	$0	; NOTE_SAMPLE_LOOP			; 7	; Y
+	.byte	$0	; NOTE_SAMPLE_LENGTH			; 8	; Y
 	.byte	$0	; NOTE_TONE_L				; 9
 	.byte	$0	; NOTE_TONE_H				; 10
 	.byte	$0	; NOTE_AMPLITUDE			; 11
@@ -104,16 +107,16 @@ note_a:
 	.byte	$0	; NOTE_LEN_COUNT			; 14
 	.byte	$0	; NOTE_ADDR_L				; 15
 	.byte	$0	; NOTE_ADDR_H				; 16
-	.byte	$0	; NOTE_ORNAMENT_POINTER_L		; 17
-	.byte	$0	; NOTE_ORNAMENT_POINTER_H		; 18
-	.byte	$0	; NOTE_ORNAMENT_LOOP			; 19
-	.byte	$0	; NOTE_ORNAMENT_LENGTH			; 20
+	.byte	$0	; NOTE_ORNAMENT_POINTER_L		; 17	; Y
+	.byte	$0	; NOTE_ORNAMENT_POINTER_H		; 18	; Y
+	.byte	$0	; NOTE_ORNAMENT_LOOP			; 19	; Y
+	.byte	$0	; NOTE_ORNAMENT_LENGTH			; 20	; Y
 	.byte	$0	; NOTE_ONOFF				; 21
 	.byte	$0	; NOTE_TONE_ACCUMULATOR_L		; 22
 	.byte	$0	; NOTE_TONE_ACCUMULATOR_H		; 23
 	.byte	$0	; NOTE_TONE_SLIDE_COUNT			; 24
-	.byte	$0	; NOTE_ORNAMENT_POSITION		; 25
-	.byte	$0	; NOTE_SAMPLE_POSITION			; 26
+	.byte	$0	; NOTE_ORNAMENT_POSITION		; 25	; Y
+	.byte	$0	; NOTE_SAMPLE_POSITION			; 26	; Y
 	.byte	$0	; NOTE_ENVELOPE_SLIDING			; 27
 	.byte	$0	; NOTE_NOISE_SLIDING			; 28
 	.byte	$0	; NOTE_AMPLITUDE_SLIDING		; 29
@@ -221,17 +224,17 @@ current_line:		.byte	$0
 current_pattern:	.byte	$0
 pt3_pattern_done:	.byte	$0
 
-pt3_noise_period:	.byte	$0
-pt3_noise_add:		.byte	$0
+pt3_noise_period:	.byte	$0					; Y
+pt3_noise_add:		.byte	$0					; Y
 
-pt3_envelope_period_l:	.byte	$0
-pt3_envelope_period_h:	.byte	$0
+pt3_envelope_period_l:	.byte	$0					; Y
+pt3_envelope_period_h:	.byte	$0					; Y
 pt3_envelope_slide_l:	.byte	$0
 pt3_envelope_slide_h:	.byte	$0
 pt3_envelope_slide_add_l:.byte	$0
 pt3_envelope_slide_add_h:.byte	$0
 pt3_envelope_add:	.byte	$0
-pt3_envelope_type:	.byte	$0
+pt3_envelope_type:	.byte	$0					; Y
 pt3_envelope_type_old:	.byte	$0
 pt3_envelope_delay:	.byte	$0
 pt3_envelope_delay_orig:.byte	$0
@@ -295,7 +298,7 @@ load_ornament0:
 
 load_ornament:
 
-	sty	TEMP		; save Y value				; 3
+	sty	PT3_TEMP	; save Y value				; 3
 
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
@@ -340,7 +343,7 @@ load_ornament:
 	adc	#$0							; 2
 	sta	note_a+NOTE_ORNAMENT_POINTER_H,X			; 5
 
-	ldy	TEMP		; restore Y value			; 3
+	ldy	PT3_TEMP	; restore Y value			; 3
 
 	rts								; 6
 
@@ -369,7 +372,7 @@ load_sample1:
 
 load_sample:
 
-	sty	TEMP							; 3
+	sty	PT3_TEMP						; 3
 
 	;pt3->ornament_patterns[i]=
         ;               (pt3->data[0x6a+(i*2)]<<8)|pt3->data[0x69+(i*2)];
@@ -412,7 +415,7 @@ load_sample:
 	adc	#$0							; 2
 	sta	note_a+NOTE_SAMPLE_POINTER_H,X				; 5
 
-	ldy	TEMP							; 3
+	ldy	PT3_TEMP						; 3
 
 	rts								; 6
 								;============
@@ -426,7 +429,8 @@ load_sample:
 pt3_init_song:
 
 	lda     #$0
-	sta	DONE_SONG						; 3
+	sta	DONE_SONG
+						; 3
 	ldx	#(end_vars-begin_vars)
 zero_song_structs_loop:
 	dex
@@ -438,9 +442,9 @@ zero_song_structs_loop:
 	sta	note_a+NOTE_VOLUME					; 4
 	sta	note_b+NOTE_VOLUME					; 4
 	sta	note_c+NOTE_VOLUME					; 4
+
 .if 0
 	lda	#$0							; 2
-	sta	DONE_SONG						; 3
 	sta	note_a+NOTE_TONE_SLIDING_L				; 4
 	sta	note_b+NOTE_TONE_SLIDING_L				; 4
 	sta	note_c+NOTE_TONE_SLIDING_L				; 4
@@ -453,6 +457,9 @@ zero_song_structs_loop:
 	sta	note_a+NOTE_ENVELOPE_ENABLED				; 4
 	sta	note_b+NOTE_ENVELOPE_ENABLED				; 4
 	sta	note_c+NOTE_ENVELOPE_ENABLED				; 4
+	sta	note_a+NOTE_SAMPLE_POSITION				; 4
+	sta	note_b+NOTE_SAMPLE_POSITION				; 4
+	sta	note_c+NOTE_SAMPLE_POSITION				; 4
 
 	sta	pt3_noise_period					; 4
 	sta	pt3_noise_add						; 4
@@ -460,6 +467,7 @@ zero_song_structs_loop:
 	sta	pt3_envelope_period_h					; 4
 	sta	pt3_envelope_type					; 4
 .endif
+	lda	#0
 	; default ornament/sample in A
 	ldx	#(NOTE_STRUCT_SIZE*0)					; 2
 	jsr	load_ornament						; 6+93
@@ -2205,7 +2213,7 @@ done_do_frame:
 	; FIXME: self modify code
 GetNoteFreq:
 
-	sty	TEMP							; 3
+	sty	PT3_TEMP						; 3
 
 	tay								; 2
 	lda	PT3_LOC+PT3_HEADER_FREQUENCY				; 4
@@ -2217,7 +2225,7 @@ GetNoteFreq:
 	lda	PT3NoteTable_ST_low,Y					; 4+
 	sta	freq_l							; 4
 
-	ldy	TEMP							; 3
+	ldy	PT3_TEMP						; 3
 	rts								; 6
 								;===========
 								;	40
@@ -2229,7 +2237,7 @@ freq_table_2:
 	lda	PT3NoteTable_ASM_34_35_low,Y				; 4+
 	sta	freq_l							; 4
 
-	ldy	TEMP							; 3
+	ldy	PT3_TEMP						; 3
         rts								; 6
 								;===========
 								;	41
