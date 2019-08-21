@@ -5,7 +5,7 @@ PNG2RLE = ../gr-utils/png2rle
 PNG2LZ4 = ../gr-utils/png2lz4
 
 
-all:	ootw.dsk
+all:	ootw.dsk ootw_side2.dsk
 
 ootw.dsk:	HELLO LOADER INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
 	cp empty.dsk ootw.dsk
@@ -19,6 +19,13 @@ ootw.dsk:	HELLO LOADER INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C5
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 AUDIO_TEST
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 COMPRESS-TEST
+
+ootw_side2.dsk:	HELLO2 LOADER2 ENDING
+	cp empty.dsk ootw_side2.dsk
+	$(DOS33) -y ootw_side2.dsk SAVE A HELLO2 HELLO
+	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1400 LOADER2 LOADER
+	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 ENDING
+
 
 
 ####
@@ -241,10 +248,35 @@ loader.o:	loader.s
 
 ####
 
+LOADER2:	loader2.o
+	ld65 -o LOADER2 loader2.o -C ../linker_scripts/apple2_1400.inc
+
+loader2.o:	loader2.s
+	ca65 -o loader2.o loader2.s -l loader2.lst
+
+
+####
+
 
 HELLO:  hello.bas
 	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
 
+####
+
+
+HELLO2:  hello2.bas
+	../asoft_basic-utils/tokenize_asoft < hello2.bas > HELLO2
+
+
+#####
+
+ENDING:	ending.o
+	ld65 -o ENDING ending.o -C ../linker_scripts/apple2_1700.inc
+
+ending.o:	ending.s \
+	ootw_graphics/l15final/ootw_c15_final.inc \
+	ootw_graphics/l16end/ootw_c16_end.inc
+	ca65 -o ending.o ending.s -l ending.lst
 #####
 
 compress_test.inc:	intro_graphics/07_soda/drinking01.png
