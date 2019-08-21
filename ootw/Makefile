@@ -276,7 +276,8 @@ ENDING:	ending.o
 ending.o:	ending.s \
 	pt3_lib.s mockingboard_a.s pt3_setup.s interrupt_handler.s \
 	ootw_graphics/l15final/ootw_c15_final.inc \
-	ootw_graphics/l16end/ootw_c16_end.inc
+	ootw_graphics/l16end/ootw_c16_end.inc \
+	ootw_audio/ootw_outro.pt3
 	ca65 -o ending.o ending.s -l ending.lst
 #####
 
