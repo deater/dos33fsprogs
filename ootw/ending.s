@@ -90,6 +90,20 @@ ending:
 	; ending sequence
 	;============================
 
+
+	;=========================
+	; set up sound
+	;=========================
+
+	jsr	pt3_setup
+
+	cli	; enable interrupts
+
+
+	;=========================
+	; set up bg
+	;=========================
+
 	lda	#>(sky_bg_rle)
 	sta	GBASH
 	lda	#<(sky_bg_rle)
@@ -185,17 +199,22 @@ wait_until_keypressed:
 .include "gr_unrle.s"
 .include "gr_fast_clear.s"
 .include "gr_copy.s"
-;.include "gr_copy_offset.s"
-;.include "gr_putsprite.s"
-;.include "gr_putsprite_flipped.s"
-;.include "gr_putsprite_crop.s"
 .include "gr_offsets.s"
-;.include "gr_offsets_hl.s"
-;.include "gr_hlin.s"
-;.include "keyboard.s"
 .include "gr_overlay.s"
+
+.include "pt3_setup.s"
+.include "pt3_lib.s"
+.include "interrupt_handler.s"
+.include "mockingboard_a.s"
 
 ; backgrounds
 .include "ootw_graphics/l15final/ootw_c15_final.inc"
 .include "ootw_graphics/l16end/ootw_c16_end.inc"
+
+PT3_LOC = song
+
+; must be page aligned
+.align 256
+song:
+.incbin "ootw_audio/ootw_intro.pt3"
 
