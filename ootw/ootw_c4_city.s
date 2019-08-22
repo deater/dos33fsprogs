@@ -316,7 +316,7 @@ r4_impaled:
 
 room_setup_done:
 
-	; laod bg image
+	; load bg image
 	sta	GBASL
 	lda	#$c				; load to page $c00
 	jsr	load_rle_gr
@@ -1055,5 +1055,5 @@ door_c4_r4_x:
 door_c4_r4_xmin:	; don't care (door does not open)
 door_c4_r4_xmax:	; don't care (door does not open)
 door_c4_r4_y:
-	c4_r4_door0_y:	.byte 8
+	c4_r4_door0_y:	.byte 4
 
