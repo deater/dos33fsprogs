@@ -180,8 +180,9 @@ done_move_alien_standing:
 
 move_alien_shooting:
 
+	; only fire occasionally
 	lda	FRAMEL
-	and	#$3f
+	and	#$7f
 	bne	done_alien_shooting_now
 
 	jsr	fire_alien_laser
