@@ -1,14 +1,8 @@
 TODO Before release:
 ====================
 
-
-	l2/l4 -- let physicist get show
 	l2/l4 -- balance alien shooting behavior
 	
-	l2 -- move doors to final behavior (break room one needs to
-		be locked)
-	l2 -- re-activate opening cutscene
-	l2 -- initial shield up in alien hallway
 
 KNOWN BUGS:
 ===========
@@ -20,8 +14,6 @@ KNOWN BUGS:
 + L2 vent -- we fall behind the vent
   No easy way to fix that unless we split if off from
   the friend drawing code, or change the Z order of the friend
-
-
 
 
 MISSING SPRITES:

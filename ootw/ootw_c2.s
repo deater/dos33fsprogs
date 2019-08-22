@@ -15,17 +15,17 @@ ootw_c2:
 	; Run the intro
 	;=======================
 
-;	jsr	ootw_c2_intro
+	jsr	ootw_c2_intro
 
 	;=======================
 	; Enter the game
 	;=======================
 ootw_c2_restart:
 
-;	jsr	ootw_cage
-;	lda	GAME_OVER
-;	cmp	#$ff
-;	beq	quit_level
+	jsr	ootw_cage
+	lda	GAME_OVER
+	cmp	#$ff
+	beq	quit_level
 
 	;=======================
 	; Start Level After Cage
