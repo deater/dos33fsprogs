@@ -1,35 +1,13 @@
 TODO Before release:
 ====================
 
-	l2 -- picking up gun collision box isn't quite right
-		when coming in from the right
-
-	l2 -- fix collision with alien on same level
-	l2 -- adjust door trigger in break room
-	l2 -- move doors to final behavior (break room one needs to
-		be locked)
 
 	l2/l4 -- have aliens shoot
-
-	L2 vent -- we fall behind the vent
-		No easy way to fix that unless we split if off from
-		the friend drawing code, or change the Z order of the friend
-
-
-	l2 -- alien behavior
-
-		room5: alien appears to left of door.  Works on panel to
-			unlock it, comes in and bothers friend after
-			we call down.
-			also I think if you wait long enough more aliens
-			appear if you try to go left.
-
-	when calculating room calcs, take Y position into account
 	
 	L2 -- disable door/powerline by shooting wall
-	L2 -- add aliens
 
-	intro -- add music?
+	l2 -- move doors to final behavior (break room one needs to
+		be locked)
 
 
 MISSING SPRITES:
@@ -58,6 +36,15 @@ BEHAVIOR DIFFERENCES:
 		- become alert if they hear an explosion
 		- l4, if you draw gun (but not fire) guard won't shoot you,
 		  but instead will yell at you a bit
+		- l2 first battle has very elaborate behavior with an
+			ofscreen battle and your friend running back,
+			and eventually more waves of aliens will come
+			after you
+		- l2/room5: alien appears to left of door.  Works on panel to
+			unlock it, comes in and bothers friend after
+			we call down.
+			also I think if you wait long enough more aliens
+			appear if you try to go left.
 
 	* gun behavior:
 		- doors/walls should explode outward away from blast
@@ -139,12 +126,20 @@ KNOWN BUGS:
 + ootw: pool monster grabs you a edge of pool (glitch)
 + intro: there's still a bit of a pause when the elevator door finishes opening
 + running: Missing one running frame (?)
-
++ L2 vent -- we fall behind the vent
+  No easy way to fix that unless we split if off from
+  the friend drawing code, or change the Z order of the friend
 
 FUTURE WORK:
 ============
 
+* Intro
+  + add Mockingboard music
+
 * L1 pool
   + adjust tentacle to not go off edge of screen
   + adjust x position of tentacle grab
+
+* l2 vent room
+  + Make guard appear
 

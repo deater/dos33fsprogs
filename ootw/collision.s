@@ -38,7 +38,12 @@ recalc_walk_left:
 recalc_walk_left_loop:
 
 	cmp	(DOOR_X),Y
-	bcc	recalc_walk_left_continue	; bcs
+	bcc	recalc_walk_left_continue	; blt
+
+	; only if closer than previous found
+	lda	LEFT_WALK_LIMIT
+	cmp	(DOOR_X),Y
+	bcs	recalc_walk_left_continue	; bge
 
 	lda	(DOOR_STATUS),Y
 	cmp	#DOOR_STATUS_LOCKED
@@ -63,6 +68,11 @@ recalc_walk_right_loop:
 
 	cmp	(DOOR_X),Y
 	bcs	recalc_walk_right_continue	; bge
+
+	; only if closer than previous found
+	lda	RIGHT_WALK_LIMIT
+	cmp	(DOOR_X),Y
+	bcc	recalc_walk_right_continue	; blt
 
 	lda	(DOOR_STATUS),Y
 	cmp	#DOOR_STATUS_LOCKED
