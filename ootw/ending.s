@@ -30,6 +30,8 @@ ending:
 	sta	DISP_PAGE
 
 
+repeat_ending:
+
 	;===========================
 	; show some pictures
 	;============================
@@ -100,7 +102,7 @@ ending:
 	lda	#1
 	sta	LOOP
 
-	cli	; enable interrupts
+
 
 
 	;=========================
@@ -129,6 +131,14 @@ ending:
 
 	jsr	wait_until_keypressed
 
+
+	; start music
+
+	cli	; enable interrupts
+
+	ldx	#240
+	jsr	long_wait
+
 	;===================
 	; rooftop01
 
@@ -142,8 +152,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
+	ldx	#60
+	jsr	long_wait
 
 	;===================
 	; rooftop02
@@ -158,7 +170,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#60
+	jsr	long_wait
 
 	;===================
 	; rooftop03
@@ -173,8 +188,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
+	ldx	#50
+	jsr	long_wait
 
 	;===================
 	; onboard
@@ -189,9 +206,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
-
+	ldx	#50
+	jsr	long_wait
 
 
 
@@ -219,8 +237,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
+	ldx	#40
+	jsr	long_wait
 
 	;===================
 	; left wing 2
@@ -235,7 +255,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; right wing 1
@@ -250,8 +273,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
+	ldx	#40
+	jsr	long_wait
 
 	;===================
 	; right wing 2
@@ -266,7 +291,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#30
+	jsr	long_wait
 
 	;=========================
 	; re-set up sky bg
@@ -292,7 +320,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; flying03
@@ -307,7 +338,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; flying05
@@ -322,7 +356,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; flying07
@@ -337,8 +374,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; flying09
@@ -353,8 +392,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; flying11
@@ -369,8 +410,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; the end01
@@ -385,7 +428,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; the end02
@@ -400,7 +446,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; the end03
@@ -415,7 +464,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; the end04
@@ -430,7 +482,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; the end05
@@ -445,7 +500,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; the end06
@@ -460,7 +518,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; the end07
@@ -475,7 +536,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#200
+	jsr	long_wait
 
 	;===================
 	; the end08
@@ -490,7 +554,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; the end09
@@ -505,7 +572,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
+
+	ldx	#25
+	jsr	long_wait
 
 	;===================
 	; the end10
@@ -520,8 +590,10 @@ ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
+	ldx	#25
+	jsr	long_wait
 
 
 
@@ -544,8 +616,13 @@ quit_level:
 
 	jsr	move_and_print
 
-wait_loop:
-	jmp	wait_loop
+
+	; wait wait wait
+
+	jsr	wait_until_keypressed
+
+	jmp	repeat_ending
+
 
 end_message:
 .byte 6,10,"NOW GO BACK TO ANOTHER EARTH",0
@@ -558,6 +635,21 @@ wait_until_keypressed:
 	bpl	wait_until_keypressed
 	bit	KEYRESET
 	rts
+
+
+
+        ;=====================
+        ; long(er) wait
+        ; waits approximately ?? ms
+
+long_wait:
+        lda     #100
+        jsr     WAIT                    ; delay
+        dex
+        bne     long_wait
+        rts
+
+
 
 .include "text_print.s"
 .include "gr_pageflip.s"
@@ -582,4 +674,8 @@ PT3_LOC = song
 .align 256
 song:
 .incbin "ootw_audio/ootw_outro.pt3"
+
+
+
+
 
