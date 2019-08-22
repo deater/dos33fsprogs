@@ -67,7 +67,6 @@ alien_laser_left:
 	sbc	#2
 	sta	laser1_end
 
-;	txa
 	sec
 	sbc	#10
 	sta	laser1_start

@@ -607,6 +607,33 @@ no_draw_alien:
 
 	jsr	handle_gun
 
+	;========================
+	; hack to turn off power!
+
+	lda	WHICH_ROOM
+	cmp	#6
+	bne	no_turn_off_power
+
+	lda	JAIL_POWER_ON
+	beq	no_turn_off_power
+
+	lda	laser0_out
+	beq	no_turn_off_power
+
+	lda	laser0_start
+	cmp	#20
+	bcs	no_turn_off_power
+
+turn_off_power:
+	lda	#0
+	sta	JAIL_POWER_ON
+	lda	#DOOR_STATUS_LOCKED
+	sta	c2_r4_door0_status
+	sta	c2_r4_door1_status
+	sta	c2_r4_door2_status
+
+no_turn_off_power:
+
         ;================
         ; handle doors
         ;================

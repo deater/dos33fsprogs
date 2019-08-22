@@ -3,7 +3,7 @@ TARGET_DOOR	= $10
 TARGET_SHIELD	= $20
 TARGET_FRIEND	= $30
 TARGET_ALIEN	= $40
-
+TARGET_PHYSICIST= $80
 
 	;=============================
 	;=============================

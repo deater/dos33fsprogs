@@ -4,16 +4,24 @@ TODO Before release:
 
 	l2/l4 -- have aliens shoot
 	
-	L2 -- disable door/powerline by shooting wall
-
 	l2 -- move doors to final behavior (break room one needs to
 		be locked)
-
 	l2 -- re-activate opening cutscene
+	l2 -- initial shield up in alien hallway
 
-	l2 -- shield up in alien hallway
+KNOWN BUGS:
+===========
++ shooting through shield is broken (it's worse when facing right)
+	need a +2 in the collision code somewhere probably
++ ootw: pool monster grabs you a edge of pool (glitch)
++ intro: there's still a bit of a pause when the elevator door finishes opening
++ running: Missing one running frame (?)
++ L2 vent -- we fall behind the vent
+  No easy way to fix that unless we split if off from
+  the friend drawing code, or change the Z order of the friend
 
-	shooting through shield is broken
+
+
 
 MISSING SPRITES:
 ================
@@ -127,15 +135,6 @@ BEHAVIOR DIFFERENCES:
 + Level/Checkpoint #5
 	* Allow falling into first pit
 
-KNOWN BUGS:
-===========
-
-+ ootw: pool monster grabs you a edge of pool (glitch)
-+ intro: there's still a bit of a pause when the elevator door finishes opening
-+ running: Missing one running frame (?)
-+ L2 vent -- we fall behind the vent
-  No easy way to fix that unless we split if off from
-  the friend drawing code, or change the Z order of the friend
 
 FUTURE WORK:
 ============

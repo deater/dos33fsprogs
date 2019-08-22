@@ -324,18 +324,24 @@ laser_hit_alien:
 
 laser_hit_friend:
 
-        lda	#F_DISINTEGRATING
-        sta	friend_state
+	lda	#F_DISINTEGRATING
+	sta	friend_state
 
 	lda	#FAI_DISINTEGRATING
 	sta	friend_ai_state
 
+	lda	#0
+	sta	friend_gait
+
+	jmp	done_hit_something
+
+laser_hit_physicist:
+
+        lda	#P_DISINTEGRATING
+        sta	PHYSICIST_STATE
+
         lda	#0
-        sta	friend_gait
-
-
-
-;	jmp	done_hit_something
+        sta	GAIT
 
 done_hit_something:
 	jmp	done_move_laser
