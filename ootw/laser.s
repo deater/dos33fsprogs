@@ -35,7 +35,7 @@ laser_direction:
 laser0_direction:	.byte $0
 laser1_direction:	.byte $0
 
-laser_cout:
+laser_count:
 laser0_count:		.byte $0
 laser1_count:		.byte $0
 
@@ -169,20 +169,23 @@ done_draw_laser:
 	; move laser
 	;===================
 move_laser:
-	lda	laser0_out
+	ldx	#0
+
+move_laser_loop:
+	lda	laser_out,X
 	beq	done_move_laser
 
 	; slow down laser
-	lda	laser0_count
+	lda	laser_count,X
 	and	#$3
 	bne	no_move_laser
 
-	lda	laser0_direction
+	lda	laser_direction,X
 	bne	move_laser_right
 
 move_laser_left:
 
-	lda	laser0_count
+	lda	laser_count,X
 	cmp	#4
 	bcc	still_starting_left
 	cmp	#8
@@ -191,72 +194,72 @@ move_laser_left:
 continue_shooting_left:
 still_shooting_left:
 
-	lda	laser0_end
+	lda	laser_end,X
 	sec
 	sbc	#10
-	sta	laser0_end
+	sta	laser_end,X
 
 still_starting_left:
 
-	lda	laser0_start
+	lda	laser_start,X
 	sec
 	sbc	#10
-	sta	laser0_start
+	sta	laser_start,X
 
 laser_edge_detect_left:
 
-	lda	laser0_end
+	lda	laser_end,X
 	cmp	LEFT_SHOOT_LIMIT
 	bmi	disable_laser_left
 
-	lda	laser0_start
+	lda	laser_start,X
 	cmp	LEFT_SHOOT_LIMIT
 	bpl	no_move_laser
 
 	lda	LEFT_SHOOT_LIMIT
-	sta	laser0_start
+	sta	laser_start,X
 
 	jmp	no_move_laser
 
 
 move_laser_right:
 
-	lda	laser0_count
+	lda	laser_count,X
 	cmp	#4
 	bcc	still_starting_right
 	cmp	#8
 	bcc	still_shooting_right
 
 continue_shooting_right:
-	lda	laser0_start
+	lda	laser_start,X
 	clc
 	adc	#10
-	sta	laser0_start
+	sta	laser_start,X
 
 still_shooting_right:
-	lda	laser0_end
+	lda	laser_end,X
 	clc
 	adc	#10
-	sta	laser0_end
+	sta	laser_end,X
 
 still_starting_right:
 
 laser_edge_detect_right:
 
 	; detect if totally off screen
-	lda	laser0_start
+	lda	laser_start,X
 	cmp	RIGHT_SHOOT_LIMIT
 	bcs	disable_laser_right
 
-	lda	laser0_end
+	lda	laser_end,X
 	cmp	RIGHT_SHOOT_LIMIT
 	bcc	no_move_laser
 
 	lda	RIGHT_SHOOT_LIMIT
-	sta	laser0_end
+	sta	laser_end,X
 
 no_move_laser:
-	inc	laser0_count
+	inc	laser_count,X
 
 done_move_laser:
 
@@ -281,12 +284,15 @@ disable_laser_right:
 	; hit something, common
 	;======================
 hit_something_common:
+	pha
 
 	; disable laser
-	ldx	#0
-	stx	laser0_out
+	lda	#0
+	sta	laser_out,X
 
-	tax
+	pla
+
+	tay
 	and	#$f0
 
 	cmp	#TARGET_ALIEN
@@ -301,15 +307,15 @@ hit_something_common:
 
 laser_hit_alien:
 
-	txa
+	tya
 	and	#$f
-	tax
+	tay
 
         lda	#A_DISINTEGRATING
-        sta	alien_state,X
+        sta	alien_state,Y
 
         lda	#0
-        sta	alien_gait,X
+        sta	alien_gait,Y
 
 	jmp	done_hit_something
 
