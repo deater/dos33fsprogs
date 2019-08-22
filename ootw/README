@@ -34,6 +34,7 @@ Game controls:
 	W up		- jump
 	S down		- crouch / pickup
 	space		- kick / gun
+	L		- charge weapon
 
   During the intro, you can press R to make it repeat forever.
 
