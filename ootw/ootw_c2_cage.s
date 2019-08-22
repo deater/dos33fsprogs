@@ -39,6 +39,11 @@ ootw_cage:
 	sta	LITTLEGUY_OUT
 	sta	WHICH_ROOM
 
+	; disable other aliens
+	lda	#$ff
+	sta	alien1_room
+	sta	alien2_room
+
         bit     KEYRESET		; clear keypress
 
 	;============================
