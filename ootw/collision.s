@@ -249,6 +249,38 @@ done_calc_gun_right_friend_collision:
 
 
 	;==========================
+	; adjust for physicist
+
+calc_gun_right_physicist:
+
+	lda	COLLISION_X
+	cmp	PHYSICIST_X
+	bcs	calc_gun_right_physicist_continue	; bge
+
+	; only if closer than previous found
+	lda	RIGHT_SHOOT_LIMIT
+	cmp	PHYSICIST_X
+	bcc	calc_gun_right_physicist_continue	; blt
+
+	lda	PHYSICIST_STATE
+	cmp	#P_DISINTEGRATING
+	beq	calc_gun_right_physicist_continue
+
+calc_gun_right_physicist_there:
+
+	lda	PHYSICIST_X
+	sta	RIGHT_SHOOT_LIMIT
+
+				; set target if hit
+	lda	#TARGET_PHYSICIST
+	sta	RIGHT_SHOOT_TARGET
+
+calc_gun_right_physicist_continue:
+done_calc_gun_right_physicist_collision:
+
+
+
+	;==========================
 	; adjust for alien
 
 calc_gun_right_alien:
@@ -457,6 +489,40 @@ calc_gun_left_friend_there:
 
 calc_gun_left_friend_continue:
 done_calc_gun_left_friend_collision:
+
+
+
+	;==========================
+	; adjust for physicist
+
+calc_gun_left_physicist:
+
+	lda	COLLISION_X
+	cmp	PHYSICIST_X
+	beq	calc_gun_left_physicist_continue	; ble (not w self)
+	bcc	calc_gun_left_physicist_continue	; blt
+
+	; only if closer than previous found
+	lda	LEFT_SHOOT_LIMIT
+	cmp	PHYSICIST_X
+	bcs	calc_gun_left_physicist_continue	; bge
+
+	lda	PHYSICIST_STATE
+	cmp	#P_DISINTEGRATING
+	beq	calc_gun_left_physicist_continue
+
+calc_gun_left_physicist_there:
+
+	lda	PHYSICIST_X
+	sta	LEFT_SHOOT_LIMIT
+				; set target if hit
+	lda	#TARGET_PHYSICIST
+	sta	LEFT_SHOOT_TARGET
+
+calc_gun_left_physicist_continue:
+done_calc_gun_left_physicist_collision:
+
+
 
 
 	;==========================

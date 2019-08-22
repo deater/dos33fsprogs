@@ -420,7 +420,7 @@ no_collapse_progress:
 physicist_disintegrating:
 
 	lda	GAIT
-	cmp	#18
+	cmp	#28
 	bne	disintegrate_not_done
 
 disintegrate_really_dead:
@@ -438,7 +438,7 @@ disintegrate_not_done:
 	sta	INH
 
 	lda	FRAMEL
-	and	#$1f
+	and	#$7
 	bne	no_disintegrate_progress
 
 	inc	GAIT

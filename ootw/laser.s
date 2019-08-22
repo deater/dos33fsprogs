@@ -304,6 +304,9 @@ hit_something_common:
 	cmp	#TARGET_FRIEND
 	beq	laser_hit_friend
 
+	cmp	#TARGET_PHYSICIST
+	beq	laser_hit_physicist
+
 	; FIXME: reduce shields if hit them?
 
 	jmp	done_hit_something
