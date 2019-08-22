@@ -91,6 +91,7 @@ PT3_TEMP	= $8A
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
+FIRST_SHIELD	= $BD
 COLLISION_X	= $BE
 COLLISION_Y	= $BF
 
@@ -109,6 +110,7 @@ BEAST_ZAPPING	= $CA		; 1
 BEAST_DEAD	= $CB		; 1
 VENT_OPEN	= $CC		; 2
 INTRO_REPEAT	= $CD		; INTRO
+
 
 LASER_TEMP	= $CE		; 2+
 LEFT_SHOOT_TARGET = $CF		; ALL

@@ -29,6 +29,7 @@ ootw_jail_init:
 
 	lda	#1
 	sta	JAIL_POWER_ON
+	sta	FIRST_SHIELD
 
 	lda	#F_RUNNING
 	sta	friend_state
@@ -201,6 +202,28 @@ jail1:
 jail2:
 	cmp	#2
 	bne	jail3
+
+
+	lda	FIRST_SHIELD
+	beq	not_first_shield
+
+	; pretend a battle was underway
+first_shield:
+	lda	#0
+	sta	FIRST_SHIELD
+	sta	shield_count
+
+	lda	#1
+	sta	shield_out
+	lda	#18
+	sta	shield_x
+
+	lda	#28
+	sta	shield_y
+
+	inc	SHIELD_OUT
+
+not_first_shield:
 
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
