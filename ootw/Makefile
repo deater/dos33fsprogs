@@ -68,6 +68,7 @@ ootw_c2.o:	ootw_c2.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_hlin.s gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s audio.s \
+	alien_laser.s \
 	physicist.s alien.s friend.s \
 	collision.s door.s laser.s shield.s blast.s gun.s \
 	ootw_c2_miners.s \
@@ -105,7 +106,7 @@ ootw_c4.o:	ootw_c4.s \
 	gr_unrle.s gr_hlin.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
-	collision.s alien.s \
+	collision.s alien.s alien_laser.s \
 	ootw_c4_city.s ootw_c4_action.s \
 	door.s laser.s shield.s blast.s gun.s charger.s \
 	ootw_graphics/sprites/physicist.inc \

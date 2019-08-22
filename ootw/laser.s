@@ -13,12 +13,29 @@
 
 ; should handle shooting while crouching
 
+laser_out:
 laser0_out:		.byte $0
+laser1_out:		.byte $0
+
+laser_start:
 laser0_start:		.byte $0
+laser1_start:		.byte $0
+
+laser_end:
 laser0_end:		.byte $0
+laser1_end:		.byte $0
+
+laser_y:
 laser0_y:		.byte $0
+laser1_y:		.byte $0
+
+laser_direction:
 laser0_direction:	.byte $0
+laser1_direction:	.byte $0
+
+laser_cout:
 laser0_count:		.byte $0
+laser1_count:		.byte $0
 
 	;=========================
 	; fire laser

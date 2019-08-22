@@ -132,6 +132,7 @@ end_message:
 .include "gun.s"
 .include "blast.s"
 .include "laser.s"
+.include "alien_laser.s"
 .include "shield.s"
 .include "door.s"
 .include "collision.s"

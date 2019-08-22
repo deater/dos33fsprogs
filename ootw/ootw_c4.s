@@ -110,6 +110,7 @@ end_message:
 .include "blast.s"
 .include "collision.s"
 .include "dummy_friend.s"
+.include "alien_laser.s"
 
 .include "ootw_c4_action.s"
 

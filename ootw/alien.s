@@ -144,6 +144,13 @@ move_alien_standing:
 	cmp	alien_y,X
 	bne	done_move_alien_standing
 
+	;=================
+	; delay a bit so it doesn't happen instantaneously
+
+	lda	FRAMEL
+	and	#$3f
+	bne	done_move_alien_standing
+
 	lda	PHYSICIST_X
 	cmp	alien_x,X
 	bcs	alien_face_right
@@ -157,14 +164,23 @@ alien_face_right:
 alien_done_facing:
 	sta	alien_direction,X
 
+	; change to shooting
+
+	lda	#A_SHOOTING
+	sta	alien_state,X
+
 
 done_move_alien_standing:
+
+
 	jmp	done_move_alien
 
 	;======================
 	; shooting
 
 move_alien_shooting:
+	
+
 	jmp	done_move_alien
 
 
@@ -177,6 +193,7 @@ astate_table_lo:
 	.byte <alien_yelling	; 05
 	.byte <alien_shooting_up; 06
 	.byte <alien_disintegrating; 07
+	.byte <alien_shooting	; 08
 
 astate_table_hi:
 	.byte >alien_standing	; 00
@@ -187,6 +204,7 @@ astate_table_hi:
 	.byte >alien_yelling	; 05
 	.byte >alien_shooting_up; 06
 	.byte >alien_disintegrating; 07
+	.byte >alien_shooting	; 08
 
 ; Urgh, make sure this doesn't end up at $FF or you hit the
 ;	NMOS 6502 bug
@@ -243,6 +261,20 @@ alien_standing:
 	sta	INL
 
 	lda	#>alien_stand
+	sta	INH
+
+	jmp	finally_draw_alien
+
+;==================================
+; SHOOTING
+;==================================
+
+alien_shooting:
+
+	lda	#<alien_shoot_sprite
+	sta	INL
+
+	lda	#>alien_shoot_sprite
 	sta	INH
 
 	jmp	finally_draw_alien
