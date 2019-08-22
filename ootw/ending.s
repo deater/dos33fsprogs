@@ -97,6 +97,9 @@ ending:
 
 	jsr	pt3_setup
 
+	lda	#1
+	sta	LOOP
+
 	cli	; enable interrupts
 
 
@@ -112,11 +115,26 @@ ending:
 	jsr	load_rle_gr
 
 	;===================
-	; rooftop
+	; rooftop00
 
-	lda	#>(rooftop_rle)
+	lda	#>(rooftop0_rle)
 	sta	GBASH
-	lda	#<(rooftop_rle)
+	lda	#<(rooftop0_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; rooftop01
+
+	lda	#>(rooftop1_rle)
+	sta	GBASH
+	lda	#<(rooftop1_rle)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
 	jsr	load_rle_gr
@@ -128,11 +146,26 @@ ending:
 
 
 	;===================
-	; flying
+	; rooftop02
 
-	lda	#>(flying_rle)
+	lda	#>(rooftop2_rle)
 	sta	GBASH
-	lda	#<(flying_rle)
+	lda	#<(rooftop2_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; rooftop03
+
+	lda	#>(rooftop3_rle)
+	sta	GBASH
+	lda	#<(rooftop3_rle)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
 	jsr	load_rle_gr
@@ -144,11 +177,11 @@ ending:
 
 
 	;===================
-	; the end
+	; onboard
 
-	lda	#>(the_end_rle)
+	lda	#>(onboard_rle)
 	sta	GBASH
-	lda	#<(the_end_rle)
+	lda	#<(onboard_rle)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
 	jsr	load_rle_gr
@@ -157,6 +190,338 @@ ending:
 	jsr	page_flip
 
 	jsr	wait_until_keypressed
+
+
+
+
+
+	;=========================
+	; set up wing bg
+	;=========================
+
+	lda	#>(wing_bg_rle)
+	sta	GBASH
+	lda	#<(wing_bg_rle)
+	sta	GBASL
+	lda	#$0c			; load image off-screen $c00
+	jsr	load_rle_gr
+
+	;===================
+	; left wing 1
+
+	lda	#>(left_unfurl1_rle)
+	sta	GBASH
+	lda	#<(left_unfurl1_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+
+	;===================
+	; left wing 2
+
+	lda	#>(left_unfurl2_rle)
+	sta	GBASH
+	lda	#<(left_unfurl2_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; right wing 1
+
+	lda	#>(right_unfurl1_rle)
+	sta	GBASH
+	lda	#<(right_unfurl1_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+
+	;===================
+	; right wing 2
+
+	lda	#>(right_unfurl2_rle)
+	sta	GBASH
+	lda	#<(right_unfurl2_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;=========================
+	; re-set up sky bg
+	;=========================
+
+	lda	#>(sky_bg_rle)
+	sta	GBASH
+	lda	#<(sky_bg_rle)
+	sta	GBASL
+	lda	#$0c			; load image off-screen $c00
+	jsr	load_rle_gr
+
+	;===================
+	; flying01
+
+	lda	#>(flying01_rle)
+	sta	GBASH
+	lda	#<(flying01_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; flying03
+
+	lda	#>(flying03_rle)
+	sta	GBASH
+	lda	#<(flying03_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; flying05
+
+	lda	#>(flying05_rle)
+	sta	GBASH
+	lda	#<(flying05_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; flying07
+
+	lda	#>(flying07_rle)
+	sta	GBASH
+	lda	#<(flying07_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+
+	;===================
+	; flying09
+
+	lda	#>(flying09_rle)
+	sta	GBASH
+	lda	#<(flying09_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+
+	;===================
+	; flying11
+
+	lda	#>(flying11_rle)
+	sta	GBASH
+	lda	#<(flying11_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+
+	;===================
+	; the end01
+
+	lda	#>(the_end01_rle)
+	sta	GBASH
+	lda	#<(the_end01_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; the end02
+
+	lda	#>(the_end02_rle)
+	sta	GBASH
+	lda	#<(the_end02_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; the end03
+
+	lda	#>(the_end03_rle)
+	sta	GBASH
+	lda	#<(the_end03_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; the end04
+
+	lda	#>(the_end04_rle)
+	sta	GBASH
+	lda	#<(the_end04_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; the end05
+
+	lda	#>(the_end05_rle)
+	sta	GBASH
+	lda	#<(the_end05_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; the end06
+
+	lda	#>(the_end06_rle)
+	sta	GBASH
+	lda	#<(the_end06_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; the end07
+
+	lda	#>(the_end07_rle)
+	sta	GBASH
+	lda	#<(the_end07_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; the end08
+
+	lda	#>(the_end08_rle)
+	sta	GBASH
+	lda	#<(the_end08_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; the end09
+
+	lda	#>(the_end09_rle)
+	sta	GBASH
+	lda	#<(the_end09_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	;===================
+	; the end10
+
+	lda	#>(the_end10_rle)
+	sta	GBASH
+	lda	#<(the_end10_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
 
 
 
