@@ -727,7 +727,7 @@ credits10:.byte "",0
 credits11:.byte "             APPLE II+ PORT",0
 credits12:.byte "              VINCE WEAVER",0
 credits13:.byte "",0
-credits14:.byte "             APPLE ][ FOREVER",0
+credits14:.byte "            APPLE ][ FOREVER",0
 
 credit_list:
 	.word credits0	; 0
