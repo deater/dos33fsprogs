@@ -87,9 +87,9 @@ ootw_jail_init:
 
 	lda     #4
 	sta     alien2_room
-	lda     #20
+	lda     #25
 	sta     alien2_x
-	lda     #20
+	lda     #30
 	sta     alien2_y
 	lda     #A_STANDING
 	sta     alien2_state
@@ -288,7 +288,7 @@ jail4:
 jail4_bottom:
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
-	lda	#(28+128)
+	lda	#(30+128)
 	sta	RIGHT_LIMIT
 
 	jmp	jail4_ok
@@ -315,7 +315,7 @@ jail4_ok:
 	lda	#(-4+128)
 	sta	td_left_smc1+1
 
-	lda	#(28+128)
+	lda	#(30+128)
 	sta	td_right_smc1+1
 
 	lda	#(10+128)
@@ -593,9 +593,9 @@ c2_done_draw_friend:
         ; draw alien
         ;===============
 
-        lda     ALIEN_OUT
-        beq     no_draw_alien
-        jsr     draw_alien
+	lda	ALIEN_OUT
+	beq	no_draw_alien
+	jsr	draw_alien
 no_draw_alien:
 
 	;================
@@ -1247,8 +1247,8 @@ door_c2_r4_y:
 
 door_c2_r4_xmin:
 	c2_r4_door0_xmin:	.byte 9		; 18-4-5
-	c2_r4_door1_xmin:	.byte 11	; 20-4-5
-	c2_r4_door2_xmin:	.byte 13	; 22-4-5
+	c2_r4_door1_xmin:	.byte 9		; 20-4-5
+	c2_r4_door2_xmin:	.byte 9		; 22-4-5
 	c2_r4_door3_xmin:	.byte 23	; 32-4-5
 
 door_c2_r4_xmax:

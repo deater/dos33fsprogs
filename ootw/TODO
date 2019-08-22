@@ -1,6 +1,20 @@
 TODO Before release:
 ====================
 
+	l2 -- picking up gun collision box isn't quite right
+		when coming in from the right
+
+	l2 -- fix collision with alien on same level
+	l2 -- adjust door trigger in break room
+	l2 -- move doors to final behavior (break room one needs to
+		be locked)
+
+	l2/l4 -- have aliens shoot
+
+	L2 vent -- we fall behind the vent
+		No easy way to fix that unless we split if off from
+		the friend drawing code, or change the Z order of the friend
+
 
 	l2 -- alien behavior
 
@@ -14,13 +28,6 @@ TODO Before release:
 	
 	L2 -- disable door/powerline by shooting wall
 	L2 -- add aliens
-	L2 -- add minimal friend AI
-		-- on cart screen, cart is still there at edge of screen?
-
-	L5 -- add ending scenes?
-		Show some pictures
-		Do ending
-		Play music?
 
 	intro -- add music?
 
@@ -48,6 +55,7 @@ BEHAVIOR DIFFERENCES:
 
 	* alien guard behavior:
 		- will punch you if you get too close
+		- become alert if they hear an explosion
 		- l4, if you draw gun (but not fire) guard won't shoot you,
 		  but instead will yell at you a bit
 

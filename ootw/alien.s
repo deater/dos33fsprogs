@@ -59,6 +59,7 @@ move_alien:
 	; FIXME: loop through all alieans
 	ldx	#0
 
+move_alien_loop:
 	lda	alien_room,X
 	cmp	WHICH_ROOM
 	bne	done_move_alien
@@ -73,14 +74,20 @@ move_alien:
 	beq	move_alien_yelling
 	cmp	#A_SHOOTING_UP
 	beq	move_alien_yelling
+
 done_move_alien:
+
+	inx
+	cpx	#MAX_ALIENS
+	bne	move_alien_loop
+
 	rts
 
 	;======================
 	; yelling
 move_alien_yelling:
 	inc	alien_gait,X		; cycle through animation
-	rts
+	jmp	done_move_alien
 
 	;======================
 	; walking
@@ -97,11 +104,11 @@ move_alien_walking:
 	beq	a_walk_left
 
 	inc	alien_x,X		; walk right
-	rts
+	jmp	done_move_alien
 a_walk_left:
 	dec     alien_x,X		; walk left
 alien_no_move_walk:
-	rts
+	jmp	done_move_alien
 
 	;======================
 	; running
@@ -117,11 +124,11 @@ move_alien_running:
 	beq	a_run_left
 
 	inc	alien_x,X			; run right
-	rts
+	jmp	done_move_alien
 a_run_left:
 	dec	alien_x,X			; run left
 alien_no_move_run:
-	rts
+	jmp	done_move_alien
 
 	;======================
 	; standing
@@ -169,12 +176,15 @@ ajump:
 ;======================================
 
 draw_alien:
-	; FIXME
-	ldx	#0
 
+	ldx	#0
+draw_alien_loop:
 	lda	alien_room,X
 	cmp	WHICH_ROOM
 	bne	no_alien
+
+	txa
+	pha
 
 	lda	alien_state,X
 	tay
@@ -183,8 +193,15 @@ draw_alien:
 	lda	astate_table_hi,y
 	sta	ajump+1
 	jmp	(ajump)
+done_draw_alien_loop:
+	pla
+	tax
 
 no_alien:
+	inx
+	cpx	#MAX_ALIENS
+	bne	draw_alien_loop
+
 	rts
 
 ;==================================
@@ -367,7 +384,7 @@ alien_disintegrating:
 
 	dec	ALIEN_OUT
 
-	rts
+	jmp	done_draw_alien_loop
 
 alien_keep_disintegrating:
 
@@ -449,11 +466,12 @@ finally_draw_alien:
 	bne	alien_facing_right
 
 alien_facing_left:
-        jmp	put_sprite_crop
+        jsr	put_sprite_crop
+	jmp	done_draw_alien_loop
 
 alien_facing_right:
-	jmp	put_sprite_flipped_crop
-
+	jsr	put_sprite_flipped_crop
+	jmp	done_draw_alien_loop
 
 	;==================
 	;==================
