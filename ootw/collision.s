@@ -257,8 +257,12 @@ calc_gun_right_alien_loop:
 	cmp	WHICH_ROOM
 	bne	calc_gun_right_alien_continue
 
-	lda	PHYSICIST_X
+	; only if on same level
+	lda	alien_y,X
+	cmp	PHYSICIST_Y
+	bne	calc_gun_right_alien_continue
 
+	lda	PHYSICIST_X
 	cmp	alien_x,X
 	bcs	calc_gun_right_alien_continue		; bge
 
@@ -466,8 +470,12 @@ calc_gun_left_alien_loop:
 	cmp	WHICH_ROOM
 	bne	calc_gun_left_alien_continue
 
-	lda	PHYSICIST_X
+	; only if on same level
+	lda	alien_y,X
+	cmp	PHYSICIST_Y
+	bne	calc_gun_left_alien_continue
 
+	lda	PHYSICIST_X
 	cmp	alien_x,X
 	bcc	calc_gun_left_alien_continue		; blt
 
