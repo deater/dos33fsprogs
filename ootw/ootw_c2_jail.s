@@ -1261,7 +1261,7 @@ door_c2_r4_status:
 	c2_r4_door0_status:	.byte DOOR_STATUS_CLOSED
 	c2_r4_door1_status:	.byte DOOR_STATUS_CLOSED
 	c2_r4_door2_status:	.byte DOOR_STATUS_CLOSED
-	c2_r4_door3_status:	.byte DOOR_STATUS_CLOSED
+	c2_r4_door3_status:	.byte DOOR_STATUS_LOCKED
 
 door_c2_r4_x:
 	c2_r4_door0_x:	.byte 18
