@@ -30,7 +30,7 @@ A_TURNING		= 4
 A_YELLING		= 5
 A_SHOOTING_UP		= 6
 A_DISINTEGRATING	= 7
-
+A_SHOOTING		= 8
 
 alien_gait:
 	alien0_gait:		.byte	0
@@ -56,7 +56,7 @@ alien_gun:
 	;
 
 move_alien:
-	; FIXME: loop through all alieans
+
 	ldx	#0
 
 move_alien_loop:
@@ -74,6 +74,10 @@ move_alien_loop:
 	beq	move_alien_yelling
 	cmp	#A_SHOOTING_UP
 	beq	move_alien_yelling
+	cmp	#A_STANDING
+	beq	move_alien_standing
+	cmp	#A_SHOOTING
+	beq	move_alien_shooting
 
 done_move_alien:
 
@@ -135,8 +139,33 @@ alien_no_move_run:
 
 move_alien_standing:
 
+	; turn to face physicist if on same level
+	lda	PHYSICIST_Y
+	cmp	alien_y,X
+	bne	done_move_alien_standing
+
+	lda	PHYSICIST_X
+	cmp	alien_x,X
+	bcs	alien_face_right
+
+alien_face_left:
+	lda	#0
+	beq	alien_done_facing
+alien_face_right:
+	lda	#1
+
+alien_done_facing:
+	sta	alien_direction,X
 
 
+done_move_alien_standing:
+	jmp	done_move_alien
+
+	;======================
+	; shooting
+
+move_alien_shooting:
+	jmp	done_move_alien
 
 
 astate_table_lo:

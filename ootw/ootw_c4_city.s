@@ -658,6 +658,8 @@ after_draw_physicist:
 
 	lda	ALIEN_OUT
 	beq	no_draw_alien
+
+	jsr	move_alien
 	jsr	draw_alien
 no_draw_alien:
 
