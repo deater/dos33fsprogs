@@ -872,8 +872,8 @@ not_teleporting_today:
 	bne	not_picking_up_gun
 
 	lda	PHYSICIST_STATE
-	cmp	#P_CROUCHING
-	bne	not_picking_up_gun
+	and	#STATE_CROUCHING
+	beq	not_picking_up_gun
 
 	; gun at 35,36,37
 	; so we should be at 31-39
@@ -1265,6 +1265,7 @@ door_c2_r5:
 	.word door_c2_r5_xmin
 	.word door_c2_r5_xmax
 
+
 door_c2_r5_status:
 	c2_r5_door0_status:	.byte DOOR_STATUS_LOCKED
 	c2_r5_door1_status:	.byte DOOR_STATUS_CLOSED
@@ -1284,4 +1285,6 @@ door_c2_r5_xmin:
 door_c2_r5_xmax:
 	c2_r5_door0_xmax:	.byte 10	; 6+4
 	c2_r5_door1_xmax:	.byte 30	; 26+4
+
+
 
