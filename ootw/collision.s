@@ -253,8 +253,9 @@ calc_gun_right_alien:
 	ldx	#0
 calc_gun_right_alien_loop:
 
-	lda	alien_out,X
-	beq	calc_gun_right_alien_continue
+	lda	alien_room,X
+	cmp	WHICH_ROOM
+	bne	calc_gun_right_alien_continue
 
 	lda	PHYSICIST_X
 
@@ -461,8 +462,9 @@ calc_gun_left_alien:
 
 calc_gun_left_alien_loop:
 
-	lda	alien_out,X
-	beq	calc_gun_left_alien_continue
+	lda	alien_room,X
+	cmp	WHICH_ROOM
+	bne	calc_gun_left_alien_continue
 
 	lda	PHYSICIST_X
 

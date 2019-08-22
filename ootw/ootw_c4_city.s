@@ -12,7 +12,6 @@ ootw_city_init:
 	sta	BG_SCROLL
 	sta	DIRECTION		; left
 	sta	LASER_OUT
-	sta	ALIEN_OUT
 	sta	BLAST_OUT
 	sta	CHARGER_COUNT
 	sta	GUN_STATE
@@ -41,20 +40,16 @@ ootw_city_init:
 	jsr	clear_aliens
 
 	lda	#1
-	sta	alien0_out
+	sta	ALIEN_OUT
 
 	lda	#2
 	sta	alien0_room
-
 	lda	#27
 	sta	alien0_x
-
 	lda	#18
 	sta	alien0_y
-
 	lda	#A_STANDING
 	sta	alien0_state
-
 	lda	#0
 	sta	alien0_direction
 
@@ -104,7 +99,7 @@ ootw_city:
 	jsr	init_shields
 
 
-	jsr	alien_room_init
+;	jsr	alien_room_init
 
 
 	lda	#0

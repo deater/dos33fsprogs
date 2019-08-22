@@ -37,6 +37,7 @@ ootw_cage:
 	sta	SHOOTING_BOTTOM
 	sta	SHOOTING_TOP
 	sta	LITTLEGUY_OUT
+	sta	WHICH_ROOM
 
         bit     KEYRESET		; clear keypress
 
@@ -436,8 +437,8 @@ guard_done_change:
 
 	; start patrol
 
-	lda	#1
-	sta	alien0_out
+	lda	#0
+	sta	alien0_room
 
 	lda	#33
 	sta	alien0_x

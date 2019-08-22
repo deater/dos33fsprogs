@@ -2,11 +2,6 @@
 
 MAX_ALIENS	= 3
 
-alien_out:
-	alien0_out:		.byte	0
-	alien1_out:		.byte	0
-	alien2_out:		.byte	0
-
 alien_room:
 	alien0_room:		.byte	0
 	alien1_room:		.byte	0
@@ -64,8 +59,9 @@ move_alien:
 	; FIXME: loop through all alieans
 	ldx	#0
 
-	lda	alien_out,X
-	beq	done_move_alien
+	lda	alien_room,X
+	cmp	WHICH_ROOM
+	bne	done_move_alien
 
 	lda	alien_state,X
 
@@ -176,8 +172,9 @@ draw_alien:
 	; FIXME
 	ldx	#0
 
-	lda	alien_out,X
-	beq	no_alien
+	lda	alien_room,X
+	cmp	WHICH_ROOM
+	bne	no_alien
 
 	lda	alien_state,X
 	tay
@@ -365,8 +362,8 @@ alien_disintegrating:
 	cmp	#13
 	bne	alien_keep_disintegrating
 
-	lda	#0
-	sta	alien_out,X
+	lda	#$ff
+	sta	alien_room,X
 
 	dec	ALIEN_OUT
 
@@ -464,41 +461,11 @@ alien_facing_right:
 	;==================
 	;==================
 clear_aliens:
-	lda	#0
-	sta	alien0_out
-	sta	alien1_out
-	sta	alien2_out
+	lda	#$ff
+	sta	alien0_room
+	sta	alien1_room
+	sta	alien2_room
 
 	rts
 
 
-	;==============================
-	;==============================
-	; alien room init
-	;==============================
-	;==============================
-
-alien_room_init:
-	;==============================
-        ; if alien in room, set ALIEN_OUT
-
-        lda     #0
-        sta     ALIEN_OUT
-
-        ldx     #0
-alien_room_loop:
-        lda     alien_out,X
-        beq     alien_room_continue
-
-        lda     alien_room,X
-        cmp     WHICH_ROOM
-        bne     alien_room_continue
-
-        inc     ALIEN_OUT
-
-alien_room_continue:
-        inx
-        cpx     #MAX_ALIENS
-        bne     alien_room_loop
-
-	rts

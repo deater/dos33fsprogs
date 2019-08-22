@@ -29,12 +29,14 @@ fai_table_lo:
 	.byte <friend_ai_runto_panel	; 01
 	.byte <friend_ai_opening_panel	; 02
 	.byte <friend_ai_disintegrating	; 03
+	.byte <friend_ai_end_l2		; 04
 
 fai_table_hi:
 	.byte >friend_ai_following	; 00
 	.byte >friend_ai_runto_panel	; 01
 	.byte >friend_ai_opening_panel	; 02
 	.byte >friend_ai_disintegrating	; 03
+	.byte >friend_ai_end_l2		; 04
 
 
 	;=======================================
@@ -56,6 +58,7 @@ handle_friend_ai:
 friend_ai_end_l2:
 	; FAI_END_L2
 	;    crouch, holding panel open
+	rts
 
 friend_ai_following:
 	; FAI_FOLLOWING

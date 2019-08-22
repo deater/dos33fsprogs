@@ -14,7 +14,6 @@ ootw_jail_init:
 	sta	VENT_OPEN
 
 	sta	LASER_OUT
-	sta	ALIEN_OUT
 	sta	BLAST_OUT
 	sta	CHARGER_COUNT
 	sta	GUN_STATE
@@ -55,23 +54,47 @@ ootw_jail_init:
 
 	jsr	clear_aliens
 
-	lda	#1
-	sta	alien0_out
+	lda	#3
+	sta	ALIEN_OUT
 
-	lda     #6
+	; alien in hallway
+
+	lda     #2
 	sta     alien0_room
-
-	lda     #20
+	lda     #22
 	sta     alien0_x
-
-	lda     #20
+	lda     #30
 	sta     alien0_y
-
 	lda     #A_STANDING
 	sta     alien0_state
-
-	lda     #0
+	lda     #0			; facing left
 	sta     alien0_direction
+
+	; alien in basement
+
+	lda     #6
+	sta     alien1_room
+	lda     #20
+	sta     alien1_x
+	lda     #20
+	sta     alien1_y
+	lda     #A_STANDING
+	sta     alien1_state
+	lda     #0
+	sta     alien1_direction
+
+	; alien in break room
+
+	lda     #4
+	sta     alien2_room
+	lda     #20
+	sta     alien2_x
+	lda     #20
+	sta     alien2_y
+	lda     #A_STANDING
+	sta     alien2_state
+	lda     #0
+	sta     alien2_direction
 
 	rts
 
@@ -108,7 +131,7 @@ ootw_jail:
 	;============================
 	; init alien room
 
-	jsr	alien_room_init
+;	jsr	alien_room_init
 
 
 	;==============================
@@ -317,11 +340,16 @@ jail5:
 	bne	jail6
 
 	; FIXME -- setup friend with open vent
+	; for now just always have him with it open
 	sta	friend_room
 	lda	#F_OPEN_VENT
 	sta	friend_state
 	lda	#0
 	sta	friend_direction
+	lda	#5
+	sta	friend_room
+	lda	#FAI_END_L2
+	sta	friend_ai_state
 
 	; setup doors
 
@@ -878,8 +906,10 @@ check_vent_falling:
 	cmp	#P_STANDING
 	bne	not_falling_down_vent
 
-	; vent at 18/19
+	; vent at 17/18/19
 	lda	PHYSICIST_X
+	cmp	#16
+	beq	falling_down_vent
 	cmp	#17
 	beq	falling_down_vent
 	cmp	#18
