@@ -483,6 +483,8 @@ calc_gun_left_alien_loop:
 
 	lda	COLLISION_X
 	cmp	alien_x,X
+	beq	calc_gun_left_alien_continue		; if exact equal
+							; might be ourselves
 	bcc	calc_gun_left_alien_continue		; blt
 
 	; only if closer than previous found

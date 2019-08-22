@@ -63,7 +63,8 @@ alien_laser_left:
 	ldx	LASER_TEMP
 
 	lda	alien_x,X
-;	dex
+	sec
+	sbc	#2
 	sta	laser1_end
 
 ;	txa

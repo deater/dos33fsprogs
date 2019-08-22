@@ -262,6 +262,9 @@ no_move_laser:
 	inc	laser_count,X
 
 done_move_laser:
+	inx
+	cpx	#MAX_LASERS
+	bne	move_laser_loop
 
 	rts
 
@@ -335,8 +338,8 @@ laser_hit_friend:
 ;	jmp	done_hit_something
 
 done_hit_something:
-
-	rts
+	jmp	done_move_laser
+;	rts
 
 
 
