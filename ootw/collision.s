@@ -16,6 +16,8 @@ TARGET_PHYSICIST= $80
 	; FIXME: only door collision if on same level
 recalc_walk_collision:
 
+	; note the limits have $80 added to them :(
+
 	lda	RIGHT_LIMIT
 	sta	RIGHT_WALK_LIMIT
 
@@ -27,19 +29,27 @@ recalc_walk_collision:
 
 recalc_walk_left:
 
-	lda	PHYSICIST_X
-
 	ldy	NUM_DOORS
 	dey
 recalc_walk_left_loop:
 
+	lda	PHYSICIST_X
 	cmp	(DOOR_X),Y
 	bcc	recalc_walk_left_continue	; blt
 
+	; only if on same level
+	lda	(DOOR_Y),Y
+	clc
+	adc	#4
+	cmp	PHYSICIST_Y
+	bne	recalc_walk_left_continue
+
 	; only if closer than previous found
-	lda	LEFT_WALK_LIMIT
-	cmp	(DOOR_X),Y
-	bcs	recalc_walk_left_continue	; bge
+	lda	(DOOR_X),Y
+	ora	#$80
+	cmp	LEFT_WALK_LIMIT
+
+	bcc	recalc_walk_left_continue	; blt
 
 	lda	(DOOR_STATUS),Y
 	cmp	#DOOR_STATUS_LOCKED
@@ -49,7 +59,7 @@ recalc_walk_left_loop:
 	lda	(DOOR_X),Y
 	ora	#$80
 	sta	LEFT_WALK_LIMIT
-	jmp	done_recalc_walk_left_collision
+;	jmp	done_recalc_walk_left_collision
 
 recalc_walk_left_continue:
 	dey
@@ -57,18 +67,27 @@ recalc_walk_left_continue:
 
 done_recalc_walk_left_collision:
 
-	lda	PHYSICIST_X
 
 	ldy	#0
 recalc_walk_right_loop:
 
+	; only if on same level
+	lda	(DOOR_Y),Y
+	clc
+	adc	#4
+	cmp	PHYSICIST_Y
+	bne	recalc_walk_right_continue
+
+	lda	PHYSICIST_X
 	cmp	(DOOR_X),Y
 	bcs	recalc_walk_right_continue	; bge
 
 	; only if closer than previous found
-	lda	RIGHT_WALK_LIMIT
-	cmp	(DOOR_X),Y
-	bcc	recalc_walk_right_continue	; blt
+	lda	(DOOR_X),Y
+	ora	#$80
+	cmp	RIGHT_WALK_LIMIT
+
+	bcs	recalc_walk_right_continue	; bge
 
 	lda	(DOOR_STATUS),Y
 	cmp	#DOOR_STATUS_LOCKED
