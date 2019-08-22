@@ -4,10 +4,6 @@ TARGET_SHIELD	= $20
 TARGET_FRIEND	= $30
 TARGET_ALIEN	= $40
 
-; FIXME!!!!
-; if doors/aliens/shields then stop check if X passing them.  URGH.
-
-
 
 	;=============================
 	;=============================
@@ -140,10 +136,10 @@ calc_gun_right_door_loop:
 	lda	(DOOR_Y),Y
 	clc
 	adc	#4
-	cmp	PHYSICIST_Y
+	cmp	COLLISION_Y
 	bne	calc_gun_right_door_continue
 
-	lda	PHYSICIST_X
+	lda	COLLISION_X
 	cmp	(DOOR_X),Y
 	bcs	calc_gun_right_door_continue		; bge
 
@@ -188,7 +184,7 @@ calc_gun_right_shield_loop:
 	lda	shield_out,X
 	beq	calc_gun_right_shield_continue
 
-	lda	PHYSICIST_X
+	lda	COLLISION_X
 	cmp	shield_x,X
 	bcs	calc_gun_right_shield_continue		; bge
 
@@ -225,7 +221,7 @@ calc_gun_right_friend:
 	cmp	WHICH_ROOM
 	bne	done_calc_gun_right_friend_collision
 
-	lda	PHYSICIST_X
+	lda	COLLISION_X
 	cmp	friend_x
 	bcs	calc_gun_right_friend_continue		; bge
 
@@ -269,10 +265,10 @@ calc_gun_right_alien_loop:
 
 	; only if on same level
 	lda	alien_y,X
-	cmp	PHYSICIST_Y
+	cmp	COLLISION_Y
 	bne	calc_gun_right_alien_continue
 
-	lda	PHYSICIST_X
+	lda	COLLISION_X
 	cmp	alien_x,X
 	bcs	calc_gun_right_alien_continue		; bge
 
@@ -354,10 +350,10 @@ calc_gun_left_door_loop:
 	lda	(DOOR_Y),Y
 	clc
 	adc	#4
-	cmp	PHYSICIST_Y
+	cmp	COLLISION_Y
 	bne	calc_gun_left_door_continue
 
-	lda	PHYSICIST_X
+	lda	COLLISION_X
 	cmp	(DOOR_X),Y
 	bcc	calc_gun_left_door_continue		; blt
 
@@ -400,7 +396,7 @@ calc_gun_left_shield_loop:
 	lda	shield_out,X
 	beq	calc_gun_left_shield_continue
 
-	lda	PHYSICIST_X
+	lda	COLLISION_X
 	cmp	shield_x,X
 	bcc	calc_gun_left_shield_continue		; blt
 
@@ -438,7 +434,7 @@ calc_gun_left_friend:
 	cmp	WHICH_ROOM
 	bne	done_calc_gun_left_friend_collision
 
-	lda	PHYSICIST_X
+	lda	COLLISION_X
 	cmp	friend_x
 	bcc	calc_gun_left_friend_continue		; blt
 
@@ -482,10 +478,10 @@ calc_gun_left_alien_loop:
 
 	; only if on same level
 	lda	alien_y,X
-	cmp	PHYSICIST_Y
+	cmp	COLLISION_Y
 	bne	calc_gun_left_alien_continue
 
-	lda	PHYSICIST_X
+	lda	COLLISION_X
 	cmp	alien_x,X
 	bcc	calc_gun_left_alien_continue		; blt
 

@@ -581,4 +581,20 @@ alien_disintegrating_14:	; 8
 
 
 
+;=====================
+;=====================
+; SHOOTING
+;=====================
+;=====================
+
+alien_shoot_sprite:
+	.byte $5,$8
+	.byte $aa,$7a,$f7,$7f,$aa
+	.byte $aa,$77,$07,$00,$aa
+	.byte $0a,$aa,$00,$77,$aa
+	.byte $aa,$a7,$17,$10,$aa
+	.byte $aa,$aa,$00,$00,$aa
+	.byte $aa,$aa,$77,$a5,$5a
+	.byte $aa,$aa,$07,$aa,$05
+	.byte $aa,$0a,$00,$0a,$00
 

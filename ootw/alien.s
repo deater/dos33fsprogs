@@ -179,8 +179,14 @@ done_move_alien_standing:
 	; shooting
 
 move_alien_shooting:
-	
 
+	lda	FRAMEL
+	and	#$3f
+	bne	done_alien_shooting_now
+
+	jsr	fire_alien_laser
+
+done_alien_shooting_now:
 	jmp	done_move_alien
 
 

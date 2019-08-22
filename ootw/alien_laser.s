@@ -22,6 +22,11 @@ fire_alien_laser:
 	lda	laser1_out
 	bne	done_fire_alien_laser
 
+	lda	alien_x,X
+	sta	COLLISION_X
+	lda	alien_y,X
+	sta	COLLISION_Y
+
 	; activate laser slot
 
 	inc	laser1_out
@@ -51,8 +56,11 @@ fire_alien_laser:
 	; set x
 
 alien_laser_left:
+	stx	LASER_TEMP
 
 	jsr	calc_gun_left_collision
+
+	ldx	LASER_TEMP
 
 	lda	alien_x,X
 ;	dex
@@ -67,7 +75,11 @@ alien_laser_left:
 
 alien_laser_right:
 
+	stx	LASER_TEMP
+
 	jsr	calc_gun_right_collision
+
+	ldx	LASER_TEMP
 
 	lda	alien_x,X
 	clc

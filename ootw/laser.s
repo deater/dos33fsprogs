@@ -13,6 +13,8 @@
 
 ; should handle shooting while crouching
 
+MAX_LASERS	=	2
+
 laser_out:
 laser0_out:		.byte $0
 laser1_out:		.byte $0
@@ -42,6 +44,10 @@ laser1_count:		.byte $0
 	;=========================
 
 fire_laser:
+	lda	PHYSICIST_X
+	sta	COLLISION_X
+	lda	PHYSICIST_Y
+	sta	COLLISION_Y
 
 	lda	laser0_out
 	bne	done_fire_laser
@@ -112,14 +118,21 @@ done_fire_laser:
 	rts
 
 
+
+
 	;====================
 	; draw laser
 	;====================
 
 draw_laser:
 
-	lda	laser0_out
+	ldx	#0
+draw_laser_loop:
+	lda	laser_out,X
 	beq	done_draw_laser
+
+	txa
+	pha				; save X on stack
 
 	lda	#$10
 	sta	hlin_color_smc+1
@@ -127,18 +140,26 @@ draw_laser:
 	lda	#$0f
 	sta	hlin_mask_smc+1
 
-	ldy	laser0_y
+	ldy	laser_y,X
 
 	sec
-	lda	laser0_end
-	sbc	laser0_start
-	tax
+	lda	laser_end,X
+	sbc	laser_start,X
+	sta	LASER_TEMP
 
-	lda	laser0_start
+	lda	laser_start,X
+
+	ldx	LASER_TEMP
 
 	jsr	hlin
 
+	pla				; restore X from stack
+	tax
+
 done_draw_laser:
+	inx
+	cpx	#MAX_LASERS
+	bne	draw_laser_loop
 
 	rts
 

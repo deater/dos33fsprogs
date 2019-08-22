@@ -16,6 +16,11 @@ fire_blast:
 	lda	blast0_out
 	bne	done_fire_blast
 
+	lda	PHYSICIST_X
+	sta	COLLISION_X
+	lda	PHYSICIST_Y
+	sta	COLLISION_Y
+
 	; activate blast slot
 
 	inc	blast0_out

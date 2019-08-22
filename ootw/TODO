@@ -9,6 +9,11 @@ TODO Before release:
 	l2 -- move doors to final behavior (break room one needs to
 		be locked)
 
+	l2 -- re-activate opening cutscene
+
+	l2 -- shield up in alien hallway
+
+	shooting through shield is broken
 
 MISSING SPRITES:
 ================
@@ -45,6 +50,8 @@ BEHAVIOR DIFFERENCES:
 			we call down.
 			also I think if you wait long enough more aliens
 			appear if you try to go left.
+		- should be able to crouch/shoot
+		- should be able to blast/shield
 
 	* gun behavior:
 		- doors/walls should explode outward away from blast
