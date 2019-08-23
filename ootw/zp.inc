@@ -91,6 +91,8 @@ PT3_TEMP	= $8A
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
+HAVE_GUN	= $BC		; C2 jail+
+
 FIRST_SHIELD	= $BD
 COLLISION_X	= $BE
 COLLISION_Y	= $BF
@@ -160,7 +162,6 @@ WHICH_ROOM	= $E3		; C4
 
 MONSTER_GRAB	= $E4		; C1 underwater
 BEAST_OUT	= $E4		; C1
-HAVE_GUN	= $E4		; C2 jail+
 
 GAME_OVER	= $E5		; ALL
 DNA_OUT		= $E5		; INTRO
