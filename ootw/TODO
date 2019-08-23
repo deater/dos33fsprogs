@@ -7,6 +7,8 @@ KNOWN BUGS:
 ===========
 + Kicking slugs will kill slugs behind you too, need to check DIRECTION
 
++ Ledge in L4 it's possible to end up standing off edge of cliff
+
 + shooting through shield is broken (it's worse when facing right)
 	need a +2 in the collision code somewhere probably
 + ootw: pool monster grabs you a edge of pool (glitch)
