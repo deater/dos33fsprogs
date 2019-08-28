@@ -13,48 +13,61 @@
 #define pi 3.14159265358979323846264338327950
 
 
-unsigned char colors[]={15,13,9,1,8,5,0,0};
+#if 0
+static unsigned char color_lookup[]={0x0, 0x0, 0x5, 0x5,
+				     0x7, 0x7, 0xf, 0xf,
+				     0x7, 0x7, 0x6, 0x6,
+				     0x2, 0x2, 0x5, 0x5};
+#endif
+
+static unsigned char color_lookup[]={0x0, 0x5, 0x7, 0xf,
+				     0x7, 0x6, 0x2, 0x5,
+				     0x0, 0x5, 0x7, 0xf,
+				     0x7, 0x6, 0x2, 0x5};
+
 
 
 int main(int argc, char **argv) {
 
-	int ch,xx,yy,sec=128;
-	double dx,dy,dv,r;
+	int ch,xx,yy,col;
+//	double dx,dy,dv;
+	double r;
+	double sec=0.0;
 
 	grsim_init();
 
 	gr();
-	clear_screens();
+	soft_switch(MIXCLR);
 
-	color_equals(15);
-	hlin(0,0,40,39);
+	clear_screens();
 
 	ram[DRAW_PAGE]=0x0;
 
 	while(1) {
 
-		sec++;
+//		sec+=0.00625;
+		sec+=0.000625;
 
-		for(yy=0;yy<40;yy++) {
+		for(yy=0;yy<48;yy++) {
 			for(xx=0;xx<40;xx++) {
 
-//				dx = xx + .5 * sin(sec/5.0);
-				dx = sin(xx+sec);
-				dy = yy + .5 * cos(sec/3.0);
-				dv = sin(xx*10 + sec) +
-					sin(10*(xx*sin(sec/2.0) +
-					yy*cos(sec/3.0)) + sec) +
-					sin(sqrt(100*(dx*dx + dy*dy)+1) + sec);
-				r=fabs(sin(dv*pi))*16;
-			printf("%d %d %f %f %f %f\n",xx,yy,dx,dy,dv,r);
+//			r=sin(8*((xx*2)*sin(sec/2)+(yy*2)*cos(sec/4))+sec/8);
+
+			r=sin(8*((xx*2)*sin(sec/2)+(yy*4)*cos(sec/4))+sec/128);
+
+
+
+
+//			printf("%d %d %f %f %f %f\n",xx,yy,dx,dy,dv,r);
 //			setcolor(COLOR(255*fabs(sin(dv*pi)),255*fabs(sin(dv*pi + 2*pi/3)),255*fabs(sin(dv*pi + 4*pi/3))));
 
 
-
-				color_equals(fabs(dx)*16);
+				col=(int)((r+1)*8);
+				if ((col<0) || (col>15)) {
+					printf("Invalid color %d\n",col);
+				}
+				color_equals(color_lookup[col]);
 				plot(xx,yy);
-				//plot(xx-r+2,yy);
-//				printf("plot %d,%d = %d\n",xx,yy,colors[col]);
 			}
 
 		}
@@ -62,6 +75,13 @@ int main(int argc, char **argv) {
 		grsim_update();
 		ch=grsim_input();
 		if (ch=='q') exit(0);
+
+		if (ch==' ') {
+			while(1) {
+				ch=grsim_input();
+				if (ch) break;
+			}
+		}
 		usleep(20000);
 
 	}

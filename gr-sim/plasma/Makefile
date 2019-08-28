@@ -10,8 +10,8 @@ all:	plasma
 
 
 plasma:	plasma.o $(GR_SIM)
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o plasma plasma.o \
-		$(GR_SIM)
+	$(CC) -o plasma plasma.o \
+		$(GR_SIM) $(LFLAGS) $(SDL_LIBS)
 
 plasma.o:	plasma.c
 	$(CC) $(CFLAGS) -c plasma.c
