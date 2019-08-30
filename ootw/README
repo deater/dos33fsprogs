@@ -21,13 +21,9 @@ Another / Out-of-This World Demake for Apple II+
 ==================
 Game controls:
 ==================
-  Keyboard:
-	Note, Apple II has simplistic keyboard support.
-	In general it's not possible to read more than one key at a time.
-	Additionally, on older models there's no auto-repeat unless you
-		hold down the REPT key, which makes running difficult.
-	This means it's really not possible to use the keyboard the
-		same way as the original game.
+
+  This info appears while loading too, but if you are in an emulator with
+	fast disk access it might not be on the screen long enough to see.
 
 	D ->		- move right (twice to run)
 	A <-		- move left (twice to run)
@@ -38,8 +34,44 @@ Game controls:
 
   During the intro, you can press R to make it repeat forever.
 
-  Joystick support: none yet?
+  Hints for those who have never actually played the original game:
 
+	+ At initial arrival, hit up a bunch of times to escape the
+		tentacle monster.  On an original II w/o autorepeat
+		you might have to bang on the keyboard a lot.
+	+ You can kick some enemies.  Crouch-kicking is sometimes
+		a bit easier than stand-kicking.
+	+ When running (i.e. after pressing left or right twice)
+		you can press "up" to run-jump which is faster than
+		plain running.  That might be useful if you need
+		to out-run something.
+	+ When you get the gun, use space to fire the laser.
+		You can use "L" to charge your gun for special actions.
+		Charge a little bit then press "L" (or any key)
+		to create a shield.
+		Charge a longer time (a few seconds, when the charge
+		ball gets bigger) and it will make a giant blast capable
+		of destroying doors and shields.
+
+
+  Note: the original Apple II had no up/down buttons, which is why
+	you can also use WASD for movement.  Different emulators handle
+	this differently, but if for some reason up/down is not working
+	try using W/S instead.
+
+  Joystick support: none yet?
+	It should be possible, I just haven't had time to implement yet.
+
+  Keyboard Limitations:
+	Note, Apple II has simplistic keyboard support.
+	In general it's not possible to read more than one key at a time.
+	Additionally, on older models there's no auto-repeat unless you
+		hold down the REPT key, which makes running difficult.
+	This means it's really not possible to use the keyboard the
+		same way as the original game (which had you do things
+		like holding down spacebar to charge the gun and then
+		firing when you release it.  Same for running faster
+		by holding left/right and space at the same time).
 
 ==================
 Development notes:
@@ -127,3 +159,22 @@ ootw memory squeeze:
 ootw2 memory squeeze:
 	before intro			3872
 	after intro			9234
+
+
+
+
+L2 Memory map:
+	00	zero page
+	01	stack
+	02	????
+	03	nibble table/disk data
+	04-07	GR page0
+	08-0b	GR page1
+	0c-0f	offscreen data  ($c00 = disk load buffer)
+	10-13	offscreen data2
+	14-16	loader
+	
+
+	c0-cf	I/O
+	d0-ff	ROM
+

@@ -142,8 +142,10 @@ A13.  Yes, in theory.  You would have needed a 48k model which would
 	have been expensive at the time ($2638).  Also the disk image
 	will fail to auto-boot and HELLO won't run as it's in Applesoft
 	BASIC (not the Integer BASIC that came with the original II).
-	You'll have to manually type C600G and then POKE 0,1 or 2
-	to address 5 (to select intro, level1 or level2) and then 
-	BRUN LOADER
+	You'll have to manually type C600G and then POKE the level you
+	want to address 5  (0 for intro, 1 for LEVEL 1, etc)
+		POKE 5,2
+	then
+		BRUN LOADER
 
 
