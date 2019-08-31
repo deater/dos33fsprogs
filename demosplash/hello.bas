@@ -1,0 +1,3 @@
+   5  HOME
+ 200  PRINT  CHR$ (4)"BRUN DEMOSPLASH"
+
