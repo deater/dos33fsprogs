@@ -22,7 +22,8 @@
 ; + 2828 bytes -- fix some correctness issues
 ; + 2776 bytes -- init vars with loop (slower, but more correct and smaller)
 ; + 2739 bytes -- qkumba's crazy SMC everywhere patch
-; + 2430+120 = 2650 bytes -- move NOTE structs to page0
+; + 2418+143 = 2561 bytes -- move NOTE structs to page0
+; + 2423+143 = 2566 bytes -- fix vibrato code
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?
@@ -1034,13 +1035,13 @@ handle_onoff:
 
 	bne	put_offon		;   if (a->onoff==0) {
 	lda	note_a+NOTE_ENABLED,X
-	eor	#$1			; toggle
+	eor	#$1			; toggle note_enabled
 	sta	note_a+NOTE_ENABLED,X
 
-	.byte	$a9 ;mask do_onoff
+	beq	do_offon
 do_onoff:
-	dex				; select ONOFF
-	;lda	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
+	ldy	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
+	jmp	put_offon
 do_offon:
 	ldy	note_a+NOTE_OFFON_DELAY,X ;      else a->onoff=a->offon_delay;
 put_offon:

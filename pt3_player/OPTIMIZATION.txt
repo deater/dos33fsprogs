@@ -29,6 +29,7 @@ Code Optimization
 	Qkumba-SuperSMC	2739	??	1B.15	27s	171s	15.8%
 	MoveNoteToZP	2650	??	1A.23	26s	171s	15.2%
 	MinorFixes	2418 + 143	1A.1F	26s	171s	15.2%
+	FixVibrato	2423 + 143
 
 Times:							Validated
 	BH.PT3:	10.0B	16	1:33	 93	17.2%	

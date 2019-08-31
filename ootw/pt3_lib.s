@@ -21,7 +21,7 @@
 ; + 2817 bytes -- eliminate pt3_version.  Slighly faster but also bigger
 ; + 2828 bytes -- fix some correctness issues
 ; + 2776 bytes -- init vars with loop (slower, but more correct and smaller)
-
+; + 2783 bytes -- fix vibrato code to work again
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?
@@ -1064,23 +1064,24 @@ done_note:
 	lsr	pt3_mixer_value
 
 handle_onoff:
-	lda	note_a+NOTE_ONOFF,X	;if (a->onoff>0) {
+	ldy	note_a+NOTE_ONOFF,X	;if (a->onoff>0) {
 	beq	done_onoff
 
-	dec	note_a+NOTE_ONOFF,X	; a->onoff--;
+	dey				; a->onoff--;
 
-	bne	done_onoff		;   if (a->onoff==0) {
+	bne	put_offon		;   if (a->onoff==0) {
 	lda	note_a+NOTE_ENABLED,X
 	eor	#$1			; toggle
 	sta	note_a+NOTE_ENABLED,X
 
-	.byte	$a9 ;mask do_onoff
+	beq	do_offon
 do_onoff:
-	dex				; select ONOFF
-	;lda	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
+	ldy	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
+	jmp	put_offon
 do_offon:
-	lda	note_a+NOTE_OFFON_DELAY,X ;      else a->onoff=a->offon_delay;
+	ldy	note_a+NOTE_OFFON_DELAY,X ;      else a->onoff=a->offon_delay;
 put_offon:
+	tya
 	sta	note_a+NOTE_ONOFF,X
 
 done_onoff:
