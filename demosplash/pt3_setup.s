@@ -111,7 +111,7 @@ mockingboard_found:
 	sta	$03ff
 
 	;============================
-	; Enable 50Hz clock on 6522
+	; Enable 60Hz clock on 6522
 	;============================
 
 	sei			; disable interrupts just in case
@@ -125,15 +125,15 @@ mockingboard_found:
 	sta	$C40D		; IFR: 1100, enable interrupt on timer one oflow
 	sta	$C40E		; IER: 1100, enable timer one interrupt
 
-	lda	#$E7
+	lda	#$1b
 	sta	$C404		; write into low-order latch
-	lda	#$4f
+	lda	#$41
 	sta	$C405		; write into high-order latch,
 				; load both values into counter
 				; clear interrupt and start counting
 
 	; 4fe7 / 1e6 = .020s, 50Hz
-
+	; 411b / 1e6 = .0166s, 60Hz
 
 	;==================
 	; init song
@@ -143,7 +143,7 @@ mockingboard_found:
 
 	rts
 
-;==============================-=========
+;========================================
 ;========================================
 
 ; Helper routines below
