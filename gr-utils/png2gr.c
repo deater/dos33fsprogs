@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 		exit(-1);
 	}
 
-	if (loadpng(argv[1],&image,&xsize,&ysize)<0) {
+	if (loadpng(argv[1],&image,&xsize,&ysize,PNG_WHOLETHING)<0) {
 		fprintf(stderr,"Error loading png!\n");
 		exit(-1);
 	}

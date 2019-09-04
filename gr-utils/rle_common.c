@@ -215,6 +215,7 @@ int rle_smaller(int out_type, char *varname,
 	return size;
 }
 
+#if 0
 
 /* Converts a PNG to RLE compressed data */
 
@@ -335,3 +336,5 @@ int rle_original(int out_type, char *varname,
 
 	return size;
 }
+
+#endif

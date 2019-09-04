@@ -1,4 +1,4 @@
-/* Loads a 80x48 PNG image into a 40x48 Apple II layout */
+/* Loads a 80x48 (or 40x48) PNG image into a 40x48 Apple II layout */
 /* It's not interleaved like an actual Apple II */
 /* But the top/bottom are pre-packed into a naive 40x24 array */
 
@@ -13,7 +13,7 @@
 #include <stdarg.h>
 
 #include <png.h>
-
+#include "loadpng.h"
 
 static int convert_color(int color) {
 
@@ -44,10 +44,16 @@ static int convert_color(int color) {
 	return c;
 }
 
-/* expects a PNG where the xsize is *2 */
-int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
+/* expects a PNG where the xsize is either 40 or 80 */
+/* if it is 80, it skips every other */
 
-	int x,y;
+/* why do that?  when editing an image the aspect ratio looks better if */
+/* it is an 80 wide picture */
+
+int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
+	int png_type) {
+
+	int x,y,ystart,yadd,xadd;
 	int color;
 	FILE *infile;
 	int debug=0;
@@ -60,7 +66,6 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 	png_infop info_ptr;
 	png_bytep *row_pointers;
 	png_byte color_type;
-//	int number_of_passes;
 
 	unsigned char header[8];
 
@@ -98,19 +103,49 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 
 	width = png_get_image_width(png_ptr, info_ptr);
 	height = png_get_image_height(png_ptr, info_ptr);
-	*xsize=width/2;
-	*ysize=height;
+
+	if (width==40) {
+		*xsize=40;
+		xadd=1;
+	}
+	else if (width==80) {
+		*xsize=40;
+		xadd=2;
+	}
+	else {
+		fprintf(stderr,"Unsupported width %d\n",width);
+		return -1;
+	}
+
+	if (png_type==PNG_WHOLETHING) {
+		*ysize=height;
+		ystart=0;
+		yadd=2;
+	}
+	else if (png_type==PNG_ODDLINES) {
+		*ysize=height/2;
+		ystart=1;
+		yadd=4;
+	}
+	else if (png_type==PNG_EVENLINES) {
+		*ysize=height/2;
+		ystart=0;
+		yadd=4;
+	}
+	else {
+		fprintf(stderr,"Unknown PNG type\n");
+		return -1;
+	}
 
 	color_type = png_get_color_type(png_ptr, info_ptr);
 	bit_depth = png_get_bit_depth(png_ptr, info_ptr);
-
-
 
 	if (debug) {
 		printf("PNG: width=%d height=%d depth=%d\n",width,height,bit_depth);
 		if (color_type==PNG_COLOR_TYPE_RGB) printf("Type RGB\n");
 		else if (color_type==PNG_COLOR_TYPE_RGB_ALPHA) printf("Type RGBA\n");
 		else if (color_type==PNG_COLOR_TYPE_PALETTE) printf("Type palette\n");
+		printf("Generating output size %d x %d\n",*xsize,*ysize);
 	}
 
 //        number_of_passes = png_set_interlace_handling(png_ptr);
@@ -118,6 +153,7 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 
 	row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
 	for (y=0; y<height; y++) {
+		/* FIXME: do we ever free these? */
 		row_pointers[y] = (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
 	}
 
@@ -125,7 +161,8 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 
 	fclose(infile);
 
-	image=calloc(width*height/2,sizeof(unsigned char));
+	/* FIXME: this should be 40x24 max??? */
+	image=calloc(width*height,sizeof(unsigned char));
 	if (image==NULL) {
 		fprintf(stderr,"Memory error!\n");
 		return -1;
@@ -133,13 +170,13 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 	out_ptr=image;
 
 	if (color_type==PNG_COLOR_TYPE_RGB_ALPHA) {
-		for(y=0;y<height;y+=2) {
-			for(x=0;x<width/2;x++) {
+		for(y=ystart;y<height;y+=yadd) {
+			for(x=0;x<width;x+=xadd) {
 
 				/* top color */
-				color=	(row_pointers[y][x*2*4]<<16)+
-					(row_pointers[y][x*2*4+1]<<8)+
-					(row_pointers[y][x*2*4+2]);
+				color=	(row_pointers[y][x*xadd*4]<<16)+
+					(row_pointers[y][x*xadd*4+1]<<8)+
+					(row_pointers[y][x*xadd*4+2]);
 				if (debug) {
 					printf("%x ",color);
 				}
@@ -147,9 +184,9 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 				a2_color=convert_color(color);
 
 				/* bottom color */
-				color=	(row_pointers[y+1][x*2*4]<<16)+
-					(row_pointers[y+1][x*2*4+1]<<8)+
-					(row_pointers[y+1][x*2*4+2]);
+				color=	(row_pointers[y+1][x*xadd*4]<<16)+
+					(row_pointers[y+1][x*xadd*4+1]<<8)+
+					(row_pointers[y+1][x*xadd*4+2]);
 				if (debug) {
 					printf("%x ",color);
 				}
@@ -163,15 +200,15 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 		}
 	}
 	else if (color_type==PNG_COLOR_TYPE_PALETTE) {
-		for(y=0;y<height;y+=2) {
-			for(x=0;x<width/2;x++) {
+		for(y=ystart;y<height;y+=yadd) {
+			for(x=0;x<width;x+=xadd) {
 
 				if (bit_depth==8) {
 					/* top color */
-					a2_color=row_pointers[y][x*2];
+					a2_color=row_pointers[y][x];
 
 					/* bottom color */
-					color=row_pointers[y+1][x*2];
+					color=row_pointers[y+(yadd/2)][x];
 
 					a2_color|=(color<<4);
 
@@ -184,10 +221,18 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize) {
 				}
 				else if (bit_depth==4) {
 					/* top color */
-					a2_color=(row_pointers[y][x])&0xf;
+					a2_color=row_pointers[y][x/2];
+					if (x%2) {
+						a2_color=(a2_color>>4);
+					}
+					a2_color&=0xf;
 
 					/* bottom color */
-					color=(row_pointers[y+1][x])&0xf;
+					color=row_pointers[y+(yadd/2)][x/2];
+					if (x%2) {
+						color=(color>>4);
+					}
+					color&=0xf;
 
 					a2_color|=(color<<4);
 

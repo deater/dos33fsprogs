@@ -152,7 +152,7 @@ int main(int argc, char **argv) {
 		out_type=OUTPUT_RAW;
 	}
 
-	if (loadpng(argv[2],&image,&xsize,&ysize)<0) {
+	if (loadpng(argv[2],&image,&xsize,&ysize,PNG_WHOLETHING)<0) {
 		fprintf(stderr,"Error loading png!\n");
 		exit(-1);
 	}
