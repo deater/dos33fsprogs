@@ -6,16 +6,19 @@
 
 ending:
 
+
+	jsr	appleII_intro
+
 	;=========================
 	; set up sound
 	;=========================
 
-	jsr	pt3_setup
+;	jsr	pt3_setup
 
-	lda	#1
-	sta	LOOP
+;	lda	#1
+;	sta	LOOP
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
 
 	;===========================
@@ -46,7 +49,7 @@ ending:
 
 	; start music
 
-	cli	; enable interrupts
+;	cli	; enable interrupts
 
 	; wait wait wait
 
@@ -66,12 +69,18 @@ wait_until_keypressed:
 	rts
 
 
+; Apple II intro
+.include "appleII_intro.s"
+.include "appleII_40_96.inc"
+.include "vapor_lock.s"
+.include "delay_a.s"
+.include "gr_unrle.s"
+.include "gr_offsets.s"
+.include "gr_copy.s"
+
 ;.include "text_print.s"
 ;.include "gr_pageflip.s"
-;.include "gr_unrle.s"
 ;.include "gr_fast_clear.s"
-;.include "gr_copy.s"
-;.include "gr_offsets.s"
 ;.include "gr_overlay.s"
 
 .include "pt3_setup.s"
@@ -89,8 +98,3 @@ PT3_LOC = song
 .align 256
 song:
 .incbin "dya_space_demo.pt3"
-
-
-
-
-

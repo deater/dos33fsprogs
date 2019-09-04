@@ -3,6 +3,7 @@ include ../Makefile.inc
 DOS33 = ../dos33fs-utils/dos33
 PNG2RLE = ../gr-utils/png2rle
 PNG2LZ4 = ../gr-utils/png2lz4
+PNG_TO_40x96 = ../gr-utils/png_to_40x96
 
 
 all:	demosplash.dsk
@@ -27,9 +28,16 @@ DEMOSPLASH:	demosplash.o
 
 demosplash.o:	demosplash.s \
 	zp.inc hardware.inc \
+	appleII_intro.s vapor_lock.s delay_a.s \
 	pt3_lib.s mockingboard_a.s pt3_setup.s interrupt_handler.s \
-	dya_space_demo.pt3
+	dya_space_demo.pt3 appleII_40_96.inc
 	ca65 -o demosplash.o demosplash.s -l demosplash.lst
+
+#####
+
+appleII_40_96.inc:	appleII_40_96.png
+	$(PNG_TO_40x96)	asm appleII_40_96.png appleII > appleII_40_96.inc
+
 
 #####
 
