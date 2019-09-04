@@ -50,10 +50,10 @@ png2lz4.o:		png2lz4.c loadpng.h
 
 ###
 
-png_to_40x48d:		png_to_40x48d.o
-	$(CC) $(LFLAGS) -o png_to_40x48d png_to_40x48d.o -lpng
+png_to_40x48d:		png_to_40x48d.o rle_common.o
+	$(CC) $(LFLAGS) -o png_to_40x48d png_to_40x48d.o rle_common.o -lpng
 
-png_to_40x48d.o:		png_to_40x48d.c
+png_to_40x48d.o:		png_to_40x48d.c rle_common.h
 	$(CC) $(CFLAGS) -c png_to_40x48d.c
 
 ###
