@@ -58,10 +58,10 @@ png_to_40x48d.o:		png_to_40x48d.c
 
 ###
 
-png_to_40x96:		png_to_40x96.o loadpng.o
-	$(CC) $(LFLAGS) -o png_to_40x96 png_to_40x96.o loadpng.o -lpng
+png_to_40x96:		png_to_40x96.o loadpng.o rle_common.o
+	$(CC) $(LFLAGS) -o png_to_40x96 png_to_40x96.o loadpng.o rle_common.o -lpng
 
-png_to_40x96.o:		png_to_40x96.c loadpng.h
+png_to_40x96.o:		png_to_40x96.c loadpng.h rle_common.h
 	$(CC) $(CFLAGS) -c png_to_40x96.c
 
 

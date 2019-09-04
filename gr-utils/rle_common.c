@@ -7,13 +7,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-//#include "loadpng.h"
-
-#define OUTPUT_C	0
-#define OUTPUT_ASM	1
-#define OUTPUT_RAW	2
-
-
+#include "rle_common.h"
 
 /*****************************************/
 /* \/                                 \/ */

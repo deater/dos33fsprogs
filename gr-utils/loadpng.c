@@ -222,14 +222,14 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 				else if (bit_depth==4) {
 					/* top color */
 					a2_color=row_pointers[y][x/2];
-					if (x%2) {
+					if (x%2==0) {
 						a2_color=(a2_color>>4);
 					}
 					a2_color&=0xf;
 
 					/* bottom color */
 					color=row_pointers[y+(yadd/2)][x/2];
-					if (x%2) {
+					if (x%2==0) {
 						color=(color>>4);
 					}
 					color&=0xf;
