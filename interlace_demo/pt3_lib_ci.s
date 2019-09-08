@@ -1994,6 +1994,9 @@ done_do_frame:
 	; return in freq_l/freq_h
 
 	; FIXME: self modify code
+
+	; TOTAL = 14 + 14 + 13 = 41
+
 GetNoteFreq:
 
 	sty	TEMP							; 3
@@ -2001,32 +2004,45 @@ GetNoteFreq:
 	tay								; 2
 	lda	PT3_LOC+PT3_HEADER_FREQUENCY				; 4
 	cmp	#1							; 2
-	bne	freq_table_2						; 2/3
+	bne	freq_table_2						; 3
+									;====
+									; 14
 
-	lda	PT3NoteTable_ST_high,Y					; 4+
+									; -1
+	lda	PT3NoteTable_ST_high,Y					; 4
 	sta	freq_h_smc+1						; 4
-	lda	PT3NoteTable_ST_low,Y					; 4+
-	sta	freq_l_smc+1						; 4
+	lda	PT3NoteTable_ST_low,Y					; 4
+	jmp	freq_table_end						; 3
 
-	ldy	TEMP							; 3
-	rts								; 6
 								;===========
-								;	40
+								;	14
 
 
 freq_table_2:
-	lda	PT3NoteTable_ASM_34_35_high,Y				; 4+
+	lda	PT3NoteTable_ASM_34_35_high,Y				; 4
 	sta	freq_h_smc+1						; 4
-	lda	PT3NoteTable_ASM_34_35_low,Y				; 4+
-	sta	freq_l_smc+1						; 4
+	lda	PT3NoteTable_ASM_34_35_low,Y				; 4
+	nop								; 2
+								;===========
+								;	14
 
+freq_table_end:
+	sta	freq_l_smc+1						; 4
 	ldy	TEMP							; 3
         rts								; 6
 								;===========
-								;	41
+								;	13
 
+
+;================================================
+; these must be aligned for deterministic access
+; can't let a load cross a page boundary
 
 ; Table #1 of Pro Tracker 3.3x - 3.5x
+; 8x12x2 bytes = 192 bytes
+
+.align $100
+
 PT3NoteTable_ST_high:
 ; 2*E, 1*D, 1*C, 2*B, 1*A, 2*9, 2*8, 3*7, 2*6, 3*5, 4*4, 5*3, 7*2, 11*1, 49*0
 .byte $0E,$0E,$0D,$0C,$0B,$0B,$0A,$09
@@ -2056,6 +2072,7 @@ PT3NoteTable_ST_low:
 .byte $25,$23,$21,$1F,$1D,$1C,$1A,$19
 .byte $17,$16,$15,$13,$12,$11,$10,$0F
 
+.align $100
 
 ; Table #2 of Pro Tracker 3.4x - 3.5x
 PT3NoteTable_ASM_34_35_high:
