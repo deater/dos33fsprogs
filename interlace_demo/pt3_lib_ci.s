@@ -919,13 +919,15 @@ handle_onoff:
 	eor	#$1			; toggle
 	sta	note_a+NOTE_ENABLED,X
 
-	.byte	$a9 ;mask do_onoff
+	beq	do_offon
 do_onoff:
-	dex				; select ONOFF
-	;lda	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
+	ldy	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
+off_delay:
+	jmp	put_offon
 do_offon:
 	ldy	note_a+NOTE_OFFON_DELAY,X ;      else a->onoff=a->offon_delay;
 put_offon:
+	; tya
 	sty	note_a+NOTE_ONOFF,X
 
 .endif
