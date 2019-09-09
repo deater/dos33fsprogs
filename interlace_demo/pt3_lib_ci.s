@@ -1995,7 +1995,7 @@ done_do_frame:
 
 	; FIXME: self modify code
 
-	; TOTAL = 14 + 14 + 13 = 41
+	; TOTAL = 14 + 14 + 13 = 41 cycles
 
 GetNoteFreq:
 

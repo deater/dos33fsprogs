@@ -447,6 +447,36 @@ zero_song_structs_loop:
 	sta	pt3_loop_smc+1						; 4
 
 
+	;========================
+	; set up note table
+
+	lda	PT3_LOC+PT3_HEADER_FREQUENCY				; 4
+	cmp	#1							; 2
+	bne	use_freq_table_2					; 2/3
+
+use_freq_table_1:
+	lda	#>PT3NoteTable_ST_high					; 4+
+	sta	get_note_smc1+2
+	lda	#<PT3NoteTable_ST_high					; 4+
+	sta	get_note_smc1+1
+
+	lda	#>PT3NoteTable_ST_low					; 4+
+	sta	get_note_smc2+2
+	lda	#<PT3NoteTable_ST_low					; 4+
+	jmp	done_set_freq_table
+
+use_freq_table_2:
+	lda	#>PT3NoteTable_ASM_34_35_high				; 4+
+	sta	get_note_smc1+2
+	lda	#<PT3NoteTable_ASM_34_35_high				; 4+
+	sta	get_note_smc1+1
+
+	lda	#>PT3NoteTable_ASM_34_35_low				; 4+
+	sta	get_note_smc2+2
+	lda	#<PT3NoteTable_ASM_34_35_low				; 4+
+done_set_freq_table:
+	sta	get_note_smc2+1
+
 	;======================
 	; calculate version
 	ldx	#6							; 2
@@ -2197,14 +2227,16 @@ done_do_frame:
 GetNoteFreq:
 
 	sty	PT3_TEMP						; 3
-
 	tay								; 2
-	lda	PT3_LOC+PT3_HEADER_FREQUENCY				; 4
-	cmp	#1							; 2
-	bne	freq_table_2						; 2/3
 
+;	lda	PT3_LOC+PT3_HEADER_FREQUENCY				; 4
+;	cmp	#1							; 2
+;	bne	freq_table_2						; 2/3
+
+get_note_smc1:
 	lda	PT3NoteTable_ST_high,Y					; 4+
 	sta	freq_h_smc+1						; 4
+get_note_smc2:
 	lda	PT3NoteTable_ST_low,Y					; 4+
 	sta	freq_l_smc+1						; 4
 
@@ -2214,14 +2246,14 @@ GetNoteFreq:
 								;	40
 
 
-freq_table_2:
-	lda	PT3NoteTable_ASM_34_35_high,Y				; 4+
-	sta	freq_h_smc+1						; 4
-	lda	PT3NoteTable_ASM_34_35_low,Y				; 4+
-	sta	freq_l_smc+1						; 4
+;freq_table_2:
+;	lda	PT3NoteTable_ASM_34_35_high,Y				; 4+
+;	sta	freq_h_smc+1						; 4
+;	lda	PT3NoteTable_ASM_34_35_low,Y				; 4+
+;	sta	freq_l_smc+1						; 4
 
-	ldy	PT3_TEMP						; 3
-        rts								; 6
+;	ldy	PT3_TEMP						; 3
+;	rts								; 6
 								;===========
 								;	41
 

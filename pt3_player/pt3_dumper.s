@@ -423,10 +423,10 @@ FRAMEH:	.byte	$00
 song_list:
 
 ;	.asciiz "CR.PT3"
-;	.asciiz "EA.PT3"
+	.asciiz "EA.PT3"
 ;	.asciiz "RI.PT3"
 ;	.asciiz "OO.PT3"
-	.asciiz "DY.PT3"
+;	.asciiz "DY.PT3"
 
 ;=========
 ;routines
