@@ -45,6 +45,7 @@ static unsigned short PT3NoteTable_REAL_34r[] = {
   0x0014,0x0013,0x0012,0x0011,0x0010,0x000F,0x000E,0x000D,
 };
 
+#if 0
 
 
 nt_data:
@@ -79,6 +80,8 @@ TCNEW_0	DB #1C+1,#20+1,#22+1,#26+1,#2A+1,#2C+1,#30+1,#54+1
 TCNEW_1 EQU TCOLD_1
 TCNEW_2	DB #1A+1,#20+1,#24+1,#28+1,#2A+1,#3A+1,#4C+1,#5E+1
 	DB #BA+1,#BC+1,#BE+1,0
+
+#endif
 
 /* first 12 values of tone tables (packed) */
 static unsigned char t_pack[]={
