@@ -448,44 +448,94 @@ zero_song_structs_loop:
 
 
 	;========================
-	; set up note table
+	;========================
+	; set up note/freq table
+	; this saves some space and makes things marginally faster longrun
+	;========================
+	;========================
+	; note (heh) that there are separate tables if version 3.3
+	; but we are going to assume we are only going to be playing
+	; newer 3.4+ version files so only need the newer tables
 
-	lda	PT3_LOC+PT3_HEADER_FREQUENCY				; 4
-	cmp	#1							; 2
-	bne	use_freq_table_2					; 2/3
+	ldx	PT3_LOC+PT3_HEADER_FREQUENCY				; 4
+	beq	use_freq_table_0
+	dex
+	beq	use_freq_table_1
+	dex
+	beq	use_freq_table_2
+	; fallthrough (freq table 3)
 
-	;==================================
-	; Assume PTVERSION > 3
-	; HEADER_FREQ==1 implies  = PT3NoteTable_ST
+use_freq_table_3:
+	;=================================================
+	;  Create Table #3, v4+, "PT3NoteTable_REAL_34_35"
+	;=================================================
+
+	ldy	#11			; !2
+freq_table_3_copy_loop:
+	; note, high lookup almost same as 2v4, just need to adjust one value
+
+	lda	base2_v4_high,Y		; !3
+	sta	NoteTable_high,Y	; !3
+	lda	base3_low,Y		; !3
+	sta	NoteTable_low,Y		; !3
+	dey				; !1
+	bpl	freq_table_3_copy_loop	; !2
+
+	dec	NoteTable_high			; adjust to right value
+
+	jsr	NoteTablePropogate	; !3
+
+	lda	#<table3_v4_adjust
+	sta	note_table_adjust_smc+1
+	lda	#>table3_v4_adjust
+	sta	note_table_adjust_smc+2
+
+	jsr	NoteTableAdjust
+
+	jmp	done_set_freq_table
+
+
+
+use_freq_table_2:
+	;=================================================
+	;  Create Table #2, v4+, "PT3NoteTable_ASM_34_35"
+	;=================================================
+
+	ldy	#11
+freq_table_2_copy_loop:
+	lda	base2_v4_high,Y
+	sta	NoteTable_high,Y
+	lda	base2_v4_low,Y
+	sta	NoteTable_low,Y
+	dey
+	bpl	freq_table_2_copy_loop
+
+	jsr	NoteTablePropogate	; !3
+
+	lda	#<table2_v4_adjust
+	sta	note_table_adjust_smc+1
+	lda	#>table2_v4_adjust
+	sta	note_table_adjust_smc+2
+
+	jsr	NoteTableAdjust
+
+	jmp	done_set_freq_table
 
 use_freq_table_1:
-	; create PT3NoteTable_ST[]
+	;=================================================
+	;  Create Table #1, "PT3NoteTable_ST"
+	;=================================================
 
 	ldy	#11
 freq_table_1_copy_loop:
-	lda	NoteBase2_high,Y
+	lda	base1_high,Y
 	sta	NoteTable_high,Y
-	lda	NoteBase2_low,Y
+	lda	base1_low,Y
 	sta	NoteTable_low,Y
 	dey
 	bpl	freq_table_1_copy_loop
 
-	; for(x=0;x<84;x++) Tone[x+12]=Tone[x]>>1;
-
-	ldy	#0
-freq_table_1_adjust_loop:
-	clc
-	lda	NoteTable_high,Y
-	ror
-	sta	NoteTable_high+12,Y
-
-	lda	NoteTable_low,Y
-	ror
-	sta	NoteTable_low+12,Y
-
-	iny
-	cpy	#84
-	bne	freq_table_1_adjust_loop
+	jsr	NoteTablePropogate	; !3
 
 	; last adjustments
 	lda	#$FD				; Tone[23]=$3FD
@@ -495,76 +545,29 @@ freq_table_1_adjust_loop:
 
 	jmp	done_set_freq_table
 
-	;==================================
-	; Assume PTVERSION > 3
-	; HEADER_FREQ!=1 implies  = PT3NoteTable_ASM_34_35
 
-use_freq_table_2:
-	; create PT3NoteTable_ASM_34_35
+use_freq_table_0:
+	;=================================================
+	;  Create Table #0, "PT3NoteTable_PT_34_35"
+	;=================================================
+
 	ldy	#11
-freq_table_2_copy_loop:
-	lda	NoteBase1_high,Y
+freq_table_0_copy_loop:
+	lda	base0_v4_high,Y
 	sta	NoteTable_high,Y
-	lda	NoteBase1_low,Y
+	lda	base0_v4_low,Y
 	sta	NoteTable_low,Y
 	dey
-	bpl	freq_table_2_copy_loop
+	bpl	freq_table_0_copy_loop
 
-	ldy	#0
-freq_table_2_adjust_loop:
-	clc
-	lda	NoteTable_high,Y
-	ror
-	sta	NoteTable_high+12,Y
+	jsr	NoteTablePropogate	; !3
 
-	lda	NoteTable_low,Y
-	ror
-	sta	NoteTable_low+12,Y
+	lda	#<table0_v4_adjust
+	sta	note_table_adjust_smc+1
+	lda	#>table0_v4_adjust
+	sta	note_table_adjust_smc+2
 
-	iny
-	cpy	#84
-	bne	freq_table_2_adjust_loop
-
-	; adjust
-
-
-	ldx	#0
-adjust_freq2_outer:
-
-	lda	Table1_Adjust,X
-	sta	TEMP
-
-	; reset smc
-	lda	#<NoteTable_low
-	sta	ntl_smc+1
-	lda	#>NoteTable_low
-	sta	ntl_smc+2
-
-
-	ldy	#7
-adjust_freq2_inner:
-	ror	TEMP
-	bcc	skip_adjust
-
-ntl_smc:
-	inc	NoteTable_low,X
-
-skip_adjust:
-	clc
-	lda	#12
-	adc	ntl_smc+1
-	sta	ntl_smc+1
-	lda	#0
-	adc	ntl_smc+2	; unnecessary if aligned
-	sta	ntl_smc+2
-
-skip_adjust_done:
-	dey
-	bpl	adjust_freq2_inner
-
-	inx
-	cpx	#12
-	bne	adjust_freq2_outer
+	jsr	NoteTableAdjust
 
 
 done_set_freq_table:
@@ -713,8 +716,96 @@ vol_done:
 	rts
 
 
+	;=========================================
+	; copy note table seed to proper location
+	;=========================================
+
+; faster inlined
+
+;NoteTableCopy:
+
+;	ldy	#11			; !2
+;note_table_copy_loop:
+;ntc_smc1:
+;	lda	base1_high,Y		; !3
+;	sta	NoteTable_high,Y	; !3
+;ntc_smc2:
+;	lda	base1_low,Y		; !3
+;	sta	NoteTable_low,Y		; !3
+;	dey				; !1
+;	bpl	note_table_copy_loop	; !2
+;	rts				; !1
 
 
+	;==========================================
+	; propogate the freq down, dividing by two
+	;==========================================
+NoteTablePropogate:
+
+	ldy	#0
+note_table_propogate_loop:
+	clc
+	lda	NoteTable_high,Y
+	ror
+	sta	NoteTable_high+12,Y
+
+	lda	NoteTable_low,Y
+	ror
+	sta	NoteTable_low+12,Y
+
+	iny
+	cpy	#84
+	bne	note_table_propogate_loop
+
+	rts
+
+
+	;================================================
+	; propogation isn't enough, various values
+	; are ofte off by one, so adjust using a bitmask
+	;================================================
+NoteTableAdjust:
+
+	ldx	#0
+note_table_adjust_outer:
+
+note_table_adjust_smc:
+	lda	table0_v4_adjust,X
+	sta	TEMP
+
+	; reset smc
+	lda	#<NoteTable_low
+	sta	ntl_smc+1
+	lda	#>NoteTable_low
+	sta	ntl_smc+2
+
+
+	ldy	#7
+note_table_adjust_inner:
+	ror	TEMP
+	bcc	note_table_skip_adjust
+
+ntl_smc:
+	inc	NoteTable_low,X
+
+note_table_skip_adjust:
+	clc
+	lda	#12
+	adc	ntl_smc+1
+	sta	ntl_smc+1
+	lda	#0
+	adc	ntl_smc+2	; unnecessary if aligned
+	sta	ntl_smc+2
+
+skip_adjust_done:
+	dey
+	bpl	note_table_adjust_inner
+
+	inx
+	cpx	#12
+	bne	note_table_adjust_outer
+
+	rts
 
 
 
@@ -2329,7 +2420,63 @@ GetNoteFreq:
 	ldy	PT3_TEMP						; 3
 	rts								; 6
 								;===========
-								;	30
+
+
+;base0_v3_high:
+;.byte	$0C,$0B,$0A,$0A,$09,$09,$08,$08,$07,$07,$06,$06
+;base0_v3_low:
+;.byte	$21,$73,$CE,$33,$A0,$16,$93,$18,$A4,$36,$CE,$6D
+
+; note: same as base0_v3_high
+base0_v4_high:
+.byte	$0C,$0B,$0A,$0A,$09,$09,$08,$08,$07,$07,$06,$06
+base0_v4_low:
+.byte	$22,$73,$CF,$33,$A1,$17,$94,$19,$A4,$37,$CF,$6D
+
+base1_high:
+.byte	$0E,$0E,$0D,$0C,$0B,$0B,$0A,$09,$09,$08,$08,$07
+base1_low:
+.byte	$F8,$10,$60,$80,$D8,$28,$88,$F0,$60,$E0,$58,$E0
+
+;base2_v3_high:
+;.byte	$0D,$0C,$0B,$0B,$0A,$09,$09,$08,$08,$07,$07,$07
+;base2_v3_low:
+;.byte	$3E,$80,$CC,$22,$82,$EC,$5C,$D6,$58,$E0,$6E,$04
+
+; note almost same as above
+base2_v4_high:
+.byte	$0D,$0C,$0B,$0A,$0A,$09,$09,$08,$08,$07,$07,$06
+base2_v4_low:
+.byte	$10,$55,$A4,$FC,$5F,$CA,$3D,$B8,$3B,$C5,$55,$EC
+
+; note almost same as above
+;base3_high:
+;.byte	$0C,$0C,$0B,$0A,$0A,$09,$09,$08,$08,$07,$07,$06
+base3_low:
+.byte	$DA,$22,$73,$CF,$33,$A1,$17,$94,$19,$A4,$37,$CF
+
+
+; Adjustment factors
+table0_v4_adjust:
+.byte	$40,$e6,$9c,$66,$40,$2c,$20,$30,$48,$6c,$1c,$5a
+
+table2_v4_adjust:
+.byte	$20,$a8,$40,$f8,$bc,$90,$78,$70,$74,$08,$2a,$50
+
+table3_v4_adjust:
+.byte	$B4,$40,$e6,$9c,$66,$40,$2c,$20,$30,$48,$6c,$1c
+
+
+NoteTable_high:
+	.res 96,0
+NoteTable_low:
+	.res 96,0
+
+VolumeTable:
+	.res 256,0
+
+
+pt3_lib_end:
 
 
 
@@ -2428,29 +2575,3 @@ GetNoteFreq:
 ;.byte $0,$1,$2,$3,$3,$4,$5,$6,$7,$8,$9,$A,$A,$B,$C,$D
 ;.byte $0,$1,$2,$3,$4,$5,$6,$7,$7,$8,$9,$A,$B,$C,$D,$E
 ;.byte $0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E,$F
-
-; FIXME: merge both highs?
-
-NoteBase1_high:
-.byte $0D,$0C,$0B,$0A,$0A,$09,$09,$08,$08,$07,$07,$06
-NoteBase1_low:
-.byte $10,$55,$A4,$FC,$5F,$CA,$3D,$B8,$3B,$C5,$55,$EC
-
-NoteBase2_high:
-.byte $0E,$0E,$0D,$0C,$0B,$0B,$0A,$09,$09,$08,$08,$07
-NoteBase2_low:
-.byte $F8,$10,$60,$80,$D8,$28,$88,$F0,$60,$E0,$58,$E0
-
-Table1_Adjust:
-.byte $20,$a8,$40,$f8,$bc,$90,$78,$70,$74,$08,$2a,$50
-
-NoteTable_high:
-	.res 96,0
-NoteTable_low:
-	.res 96,0
-
-VolumeTable:
-	.res 256,0
-
-
-pt3_lib_end:
