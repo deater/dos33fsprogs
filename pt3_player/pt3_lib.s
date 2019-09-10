@@ -454,28 +454,121 @@ zero_song_structs_loop:
 	cmp	#1							; 2
 	bne	use_freq_table_2					; 2/3
 
-use_freq_table_1:
-	lda	#>PT3NoteTable_ST_high					; 4+
-	sta	get_note_smc1+2
-	lda	#<PT3NoteTable_ST_high					; 4+
-	sta	get_note_smc1+1
+	;==================================
+	; Assume PTVERSION > 3
+	; HEADER_FREQ==1 implies  = PT3NoteTable_ST
 
-	lda	#>PT3NoteTable_ST_low					; 4+
-	sta	get_note_smc2+2
-	lda	#<PT3NoteTable_ST_low					; 4+
+use_freq_table_1:
+	; create PT3NoteTable_ST[]
+
+	ldy	#11
+freq_table_1_copy_loop:
+	lda	NoteBase2_high,Y
+	sta	NoteTable_high,Y
+	lda	NoteBase2_low,Y
+	sta	NoteTable_low,Y
+	dey
+	bpl	freq_table_1_copy_loop
+
+	; for(x=0;x<84;x++) Tone[x+12]=Tone[x]>>1;
+
+	ldy	#0
+freq_table_1_adjust_loop:
+	clc
+	lda	NoteTable_high,Y
+	ror
+	sta	NoteTable_high+12,Y
+
+	lda	NoteTable_low,Y
+	ror
+	sta	NoteTable_low+12,Y
+
+	iny
+	cpy	#84
+	bne	freq_table_1_adjust_loop
+
+	; last adjustments
+	lda	#$FD				; Tone[23]=$3FD
+	sta	NoteTable_low+23
+	dec	NoteTable_low+46		; Tone[46]-=1;
+
+
 	jmp	done_set_freq_table
 
-use_freq_table_2:
-	lda	#>PT3NoteTable_ASM_34_35_high				; 4+
-	sta	get_note_smc1+2
-	lda	#<PT3NoteTable_ASM_34_35_high				; 4+
-	sta	get_note_smc1+1
+	;==================================
+	; Assume PTVERSION > 3
+	; HEADER_FREQ!=1 implies  = PT3NoteTable_ASM_34_35
 
-	lda	#>PT3NoteTable_ASM_34_35_low				; 4+
-	sta	get_note_smc2+2
-	lda	#<PT3NoteTable_ASM_34_35_low				; 4+
+use_freq_table_2:
+	; create PT3NoteTable_ASM_34_35
+	ldy	#11
+freq_table_2_copy_loop:
+	lda	NoteBase1_high,Y
+	sta	NoteTable_high,Y
+	lda	NoteBase1_low,Y
+	sta	NoteTable_low,Y
+	dey
+	bpl	freq_table_2_copy_loop
+
+	ldy	#0
+freq_table_2_adjust_loop:
+	clc
+	lda	NoteTable_high,Y
+	ror
+	sta	NoteTable_high+12,Y
+
+	lda	NoteTable_low,Y
+	ror
+	sta	NoteTable_low+12,Y
+
+	iny
+	cpy	#84
+	bne	freq_table_2_adjust_loop
+
+	; adjust
+
+
+	ldx	#0
+adjust_freq2_outer:
+
+	lda	Table1_Adjust,X
+	sta	TEMP
+
+	; reset smc
+	lda	#<NoteTable_low
+	sta	ntl_smc+1
+	lda	#>NoteTable_low
+	sta	ntl_smc+2
+
+
+	ldy	#7
+adjust_freq2_inner:
+	ror	TEMP
+	bcc	skip_adjust
+
+ntl_smc:
+	inc	NoteTable_low,X
+
+skip_adjust:
+	clc
+	lda	#12
+	adc	ntl_smc+1
+	sta	ntl_smc+1
+	lda	#0
+	adc	ntl_smc+2	; unnecessary if aligned
+	sta	ntl_smc+2
+
+skip_adjust_done:
+	dey
+	bpl	adjust_freq2_inner
+
+	inx
+	cpx	#12
+	bne	adjust_freq2_outer
+
+
 done_set_freq_table:
-	sta	get_note_smc2+1
+
 
 	;======================
 	; calculate version
@@ -2223,99 +2316,81 @@ done_do_frame:
 	; Which note is in A
 	; return in freq_l/freq_h
 
-	; FIXME: self modify code
 GetNoteFreq:
 
 	sty	PT3_TEMP						; 3
 	tay								; 2
 
-;	lda	PT3_LOC+PT3_HEADER_FREQUENCY				; 4
-;	cmp	#1							; 2
-;	bne	freq_table_2						; 2/3
-
-get_note_smc1:
-	lda	PT3NoteTable_ST_high,Y					; 4+
+	lda	NoteTable_high,Y					; 4+
 	sta	freq_h_smc+1						; 4
-get_note_smc2:
-	lda	PT3NoteTable_ST_low,Y					; 4+
+	lda	NoteTable_low,Y						; 4+
 	sta	freq_l_smc+1						; 4
 
 	ldy	PT3_TEMP						; 3
 	rts								; 6
 								;===========
-								;	40
+								;	30
 
-
-;freq_table_2:
-;	lda	PT3NoteTable_ASM_34_35_high,Y				; 4+
-;	sta	freq_h_smc+1						; 4
-;	lda	PT3NoteTable_ASM_34_35_low,Y				; 4+
-;	sta	freq_l_smc+1						; 4
-
-;	ldy	PT3_TEMP						; 3
-;	rts								; 6
-								;===========
-								;	41
 
 
 ; Table #1 of Pro Tracker 3.3x - 3.5x
-PT3NoteTable_ST_high:
-.byte $0E,$0E,$0D,$0C,$0B,$0B,$0A,$09
-.byte $09,$08,$08,$07,$07,$07,$06,$06
-.byte $05,$05,$05,$04,$04,$04,$04,$03
-.byte $03,$03,$03,$03,$02,$02,$02,$02
-.byte $02,$02,$02,$01,$01,$01,$01,$01
-.byte $01,$01,$01,$01,$01,$01,$01,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
+;PT3NoteTable_ST_high:
+;.byte $0E,$0E,$0D,$0C,$0B,$0B,$0A,$09
+;.byte $09,$08,$08,$07,$07,$07,$06,$06
+;.byte $05,$05,$05,$04,$04,$04,$04,$03
+;.byte $03,$03,$03,$03,$02,$02,$02,$02
+;.byte $02,$02,$02,$01,$01,$01,$01,$01
+;.byte $01,$01,$01,$01,$01,$01,$01,$00
+;.byte $00,$00,$00,$00,$00,$00,$00,$00
+;.byte $00,$00,$00,$00,$00,$00,$00,$00
+;.byte $00,$00,$00,$00,$00,$00,$00,$00
+;.byte $00,$00,$00,$00,$00,$00,$00,$00
+;.byte $00,$00,$00,$00,$00,$00,$00,$00
+;.byte $00,$00,$00,$00,$00,$00,$00,$00
 
-PT3NoteTable_ST_low:
-.byte $F8,$10,$60,$80,$D8,$28,$88,$F0
-.byte $60,$E0,$58,$E0,$7C,$08,$B0,$40
-.byte $EC,$94,$44,$F8,$B0,$70,$2C,$FD
-.byte $BE,$84,$58,$20,$F6,$CA,$A2,$7C
-.byte $58,$38,$16,$F8,$DF,$C2,$AC,$90
-.byte $7B,$65,$51,$3E,$2C,$1C,$0A,$FC
-.byte $EF,$E1,$D6,$C8,$BD,$B2,$A8,$9F
-.byte $96,$8E,$85,$7E,$77,$70,$6B,$64
-.byte $5E,$59,$54,$4F,$4B,$47,$42,$3F
-.byte $3B,$38,$35,$32,$2F,$2C,$2A,$27
-.byte $25,$23,$21,$1F,$1D,$1C,$1A,$19
-.byte $17,$16,$15,$13,$12,$11,$10,$0F
+;PT3NoteTable_ST_low:
+;.byte $F8,$10,$60,$80,$D8,$28,$88,$F0
+;.byte $60,$E0,$58,$E0,$7C,$08,$B0,$40
+;.byte $EC,$94,$44,$F8,$B0,$70,$2C,$FD
+;.byte $BE,$84,$58,$20,$F6,$CA,$A2,$7C
+;.byte $58,$38,$16,$F8,$DF,$C2,$AC,$90
+;.byte $7B,$65,$51,$3E,$2C,$1C,$0A,$FC
+;.byte $EF,$E1,$D6,$C8,$BD,$B2,$A8,$9F
+;.byte $96,$8E,$85,$7E,$77,$70,$6B,$64
+;.byte $5E,$59,$54,$4F,$4B,$47,$42,$3F
+;.byte $3B,$38,$35,$32,$2F,$2C,$2A,$27
+;.byte $25,$23,$21,$1F,$1D,$1C,$1A,$19
+;.byte $17,$16,$15,$13,$12,$11,$10,$0F
 
 
 ; Table #2 of Pro Tracker 3.4x - 3.5x
-PT3NoteTable_ASM_34_35_high:
-.byte $0D,$0C,$0B,$0A,$0A,$09,$09,$08
-.byte $08,$07,$07,$06,$06,$06,$05,$05
-.byte $05,$04,$04,$04,$04,$03,$03,$03
-.byte $03,$03,$02,$02,$02,$02,$02,$02
-.byte $02,$01,$01,$01,$01,$01,$01,$01
-.byte $01,$01,$01,$01,$01,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
+;PT3NoteTable_ASM_34_35_high:
+;.byte $0D,$0C,$0B,$0A,$0A,$09,$09,$08
+;.byte $08,$07,$07,$06,$06,$06,$05,$05
+;.byte $05,$04,$04,$04,$04,$03,$03,$03
+;.byte $03,$03,$02,$02,$02,$02,$02,$02
+;.byte $02,$01,$01,$01,$01,$01,$01,$01
+;.byte $01,$01,$01,$01,$01,$00,$00,$00
+;.byte $00,$00,$00,$00,$00,$00,$00,$00
+;.byte $00,$00,$00,$00,$00,$00,$00,$00
+;.byte $00,$00,$00,$00,$00,$00,$00,$00
+;.byte $00,$00,$00,$00,$00,$00,$00,$00
+;.byte $00,$00,$00,$00,$00,$00,$00,$00
+;.byte $00,$00,$00,$00,$00,$00,$00,$00
 
-PT3NoteTable_ASM_34_35_low:
-.byte $10,$55,$A4,$FC,$5F,$CA,$3D,$B8
-.byte $3B,$C5,$55,$EC,$88,$2A,$D2,$7E
-.byte $2F,$E5,$9E,$5C,$1D,$E2,$AB,$76
-.byte $44,$15,$E9,$BF,$98,$72,$4F,$2E
-.byte $0F,$F1,$D5,$BB,$A2,$8B,$74,$60
-.byte $4C,$39,$28,$17,$07,$F9,$EB,$DD
-.byte $D1,$C5,$BA,$B0,$A6,$9D,$94,$8C
-.byte $84,$7C,$75,$6F,$69,$63,$5D,$58
-.byte $53,$4E,$4A,$46,$42,$3E,$3B,$37
-.byte $34,$31,$2F,$2C,$29,$27,$25,$23
-.byte $21,$1F,$1D,$1C,$1A,$19,$17,$16
-.byte $15,$14,$12,$11,$10,$0F,$0E,$0D
+;PT3NoteTable_ASM_34_35_low:
+;.byte $10,$55,$A4,$FC,$5F,$CA,$3D,$B8
+;.byte $3B,$C5,$55,$EC,$88,$2A,$D2,$7E
+;.byte $2F,$E5,$9E,$5C,$1D,$E2,$AB,$76
+;.byte $44,$15,$E9,$BF,$98,$72,$4F,$2E
+;.byte $0F,$F1,$D5,$BB,$A2,$8B,$74,$60
+;.byte $4C,$39,$28,$17,$07,$F9,$EB,$DD
+;.byte $D1,$C5,$BA,$B0,$A6,$9D,$94,$8C
+;.byte $84,$7C,$75,$6F,$69,$63,$5D,$58
+;.byte $53,$4E,$4A,$46,$42,$3E,$3B,$37
+;.byte $34,$31,$2F,$2C,$29,$27,$25,$23
+;.byte $21,$1F,$1D,$1C,$1A,$19,$17,$16
+;.byte $15,$14,$12,$11,$10,$0F,$0E,$0D
 
 
 ;PT3VolumeTable_33_34:
@@ -2354,9 +2429,25 @@ PT3NoteTable_ASM_34_35_low:
 ;.byte $0,$1,$2,$3,$4,$5,$6,$7,$7,$8,$9,$A,$B,$C,$D,$E
 ;.byte $0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E,$F
 
+; FIXME: merge both highs?
 
+NoteBase1_high:
+.byte $0D,$0C,$0B,$0A,$0A,$09,$09,$08,$08,$07,$07,$06
+NoteBase1_low:
+.byte $10,$55,$A4,$FC,$5F,$CA,$3D,$B8,$3B,$C5,$55,$EC
 
+NoteBase2_high:
+.byte $0E,$0E,$0D,$0C,$0B,$0B,$0A,$09,$09,$08,$08,$07
+NoteBase2_low:
+.byte $F8,$10,$60,$80,$D8,$28,$88,$F0,$60,$E0,$58,$E0
 
+Table1_Adjust:
+.byte $20,$a8,$40,$f8,$bc,$90,$78,$70,$74,$08,$2a,$50
+
+NoteTable_high:
+	.res 96,0
+NoteTable_low:
+	.res 96,0
 
 VolumeTable:
 	.res 256,0

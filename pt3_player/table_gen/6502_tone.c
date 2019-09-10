@@ -26,6 +26,8 @@ static unsigned short PT3NoteTable_ASM_34_35[] = {
 };
 
 static unsigned short Tone[256];
+//static unsigned char ToneHigh[256];
+//static unsigned char ToneLow[256];
 
 
 // NoteTableCreator (c) Ivan Roshin
@@ -53,7 +55,11 @@ void NoteTableCreate0(void) {
 
 	int x,y;
 
-	for(y=0;y<12;y++) Tone[y]=base2[y];
+	for(y=0;y<12;y++) {
+		Tone[y]=base2[y];
+		//ToneHigh[y]=base2[y]>>8;
+		//ToneLow[y]=base2[y]&0xff;
+	}
 
 	for(x=0;x<84;x++) {
 		Tone[x+12]=Tone[x]>>1;
@@ -67,16 +73,16 @@ void NoteTableCreate0(void) {
 0  0  0  0  0  0  0  0  0  0  0  0
 0  0  0  0  0  0  0  0  0  0  1  0
 0  0  0  0  1  0  0  0  1  0  0  0
-0  1  0  1  0  0  1  0  0  1  1  0
+0  1  0  1  1  0  1  0  0  1  1  0
 
-0  0  0  0  0  1  0  1  1  0  0  1
-1  1  0  0  0  0  0  0  0  0  1  0
-0  0  1  0  0  0  0  0  0  0  0  1
-0  1  0  0  1  1  0  0  0  0  0  0
+0  0  0  1  1  1  1  1  1  0  0  1
+1  1  0  1  1  0  1  1  1  0  1  0
+0  0  1  1  0  0  1  1  1  0  0  1
+0  1  0  1  1  1  0  0  0  0  0  0
 */
 
 static unsigned char table1_adjust[]={
-0x20, 0xa8, 0x40, 0x08, 0x84, 0x90, 0x08, 0x10, 0x14, 0x08, 0x2a, 0x50
+0x20, 0xa8, 0x40, 0xf8, 0xbc, 0x90, 0x78, 0x70, 0x74, 0x08, 0x2a, 0x50
 };
 
 
@@ -88,15 +94,27 @@ void NoteTableCreate1(void) {
 	for(y=0;y<12;y++) Tone[y]=base[y];
 
 	for(x=0;x<84;x++) {
-		extra=(table1_adjust[x%12]>>((x+12)/12))&1;
-
-		printf("%d ",extra);
-		if (x%12==11) printf("\n");
-
 		Tone[x+12]=Tone[x]>>1;
-		Tone[x+12]+=extra;
 	}
-	Tone[95]--;
+
+	int blah;
+	int offset=0;
+	for(y=0;y<12;y++) {
+		offset=y;
+		blah=table1_adjust[y];
+		for(x=0;x<8;x++) {
+			extra=blah&1;
+			blah>>=1;
+
+//			printf("%d ",extra);
+//			if (x%12==11) printf("\n");
+
+			Tone[offset]+=extra;
+			offset+=12;
+		}
+	}
+
+//	Tone[95]--;
 
 }
 

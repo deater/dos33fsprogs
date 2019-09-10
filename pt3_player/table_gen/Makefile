@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -O2 -Wall
 LFLASG =
 
-all: 6502_table table_gen z80_volume c_tone
+all: 6502_table table_gen z80_volume c_tone 6502_tone
 
 ###
 
@@ -11,6 +11,14 @@ all: 6502_table table_gen z80_volume c_tone
 
 6502_table.o:	6502_table.c
 	$(CC) $(CFLAGS) -c 6502_table.c
+
+###
+
+6502_tone:	6502_tone.o
+	$(CC) $(LFLASG) -o 6502_tone 6502_tone.o
+
+6502_tone.o:	6502_tone.c
+	$(CC) $(CFLAGS) -c 6502_tone.c
 
 ###
 
@@ -48,4 +56,4 @@ c_tone.o:	c_tone.c
 ###
 
 clean:	
-	rm -f *~ *.o z80_volume z80_tone table_gen 6502_table c_tone
+	rm -f *~ *.o z80_volume z80_tone table_gen 6502_table c_tone 6502_tone
