@@ -104,33 +104,72 @@ unsigned short base1[]={
   0xEF8,0xE10,0xD60,0xC80,0xBD8,0xB28,0xA88,0x9F0,0x960,0x8E0,0x858,0x7E0,
 };
 
+unsigned short base2_v3[]={
+  0xD3E,0xC80,0xBCC,0xB22,0xA82,0x9EC,0x95C,0x8D6,0x858,0x7E0,0x76E,0x704,
+};
+
 unsigned short base2_v4[]={
   0xD10,0xC55,0xBA4,0xAFC,0xA5F,0x9CA,0x93D,0x8B8,0x83B,0x7C5,0x755,0x6EC,
 };
 
+/* note: same for both versions */
+unsigned short base3[]={
+  0xCDA,0xC22,0xB73,0xACF,0xA33,0x9A1,0x917,0x894,0x819,0x7A4,0x737,0x6CF,
+};
 
-/* create table #0 v3.3 "PT3NoteTable_PT_33_34r" */
-void NoteTableCreate_0_v3(void) {
+
+static void NoteTablePropogate(unsigned short *base_table) {
 
 	int x,y;
 
-	for(y=0;y<12;y++) Tone[y]=base0_v3[y];
+	for(y=0;y<12;y++) Tone[y]=base_table[y];
 
 	for(x=0;x<84;x++) {
 		Tone[x+12]=Tone[x]>>1;
 	}
+
 }
 
-/* create table #0 v3.4 "PT3NoteTable_PT_34_35" */
-void NoteTableCreate_0_v4(void) {
+static void NoteTableAdjust(unsigned char *adjust_table) {
 
+	int blah,extra;
+	int offset=0;
 	int x,y;
 
-	for(y=0;y<12;y++) Tone[y]=base0_v4[y];
+	for(y=0;y<12;y++) {
+		offset=y;
+		blah=adjust_table[y];
+		for(x=0;x<8;x++) {
+			extra=blah&1;
+			blah>>=1;
 
-	for(x=0;x<84;x++) {
-		Tone[x+12]=Tone[x]>>1;
+//			printf("%d ",extra);
+//			if (x%12==11) printf("\n");
+
+			Tone[offset]+=extra;
+			offset+=12;
+		}
 	}
+
+	return;
+}
+
+
+/* create table #0 v3.3 "PT3NoteTable_PT_33_34r" */
+static void NoteTableCreate_0_v3(void) {
+
+	NoteTablePropogate(base0_v3);
+}
+
+static unsigned char table0_v4_adjust[]={
+  0x40, 0xe6, 0x9c, 0x66, 0x40, 0x2c, 0x20, 0x30, 0x48, 0x6c, 0x1c, 0x5a,
+};
+
+/* create table #0 v3.4 "PT3NoteTable_PT_34_35" */
+static void NoteTableCreate_0_v4(void) {
+
+	NoteTablePropogate(base0_v4);
+	NoteTableAdjust(table0_v4_adjust);
 }
 
 
@@ -138,55 +177,61 @@ void NoteTableCreate_0_v4(void) {
 /* create table #1 "PT3NoteTable_ST" */
 void NoteTableCreate_1_vX(void) {
 
-	int x,y;
-
-	for(y=0;y<12;y++) Tone[y]=base1[y];
-
-	for(x=0;x<84;x++) {
-		Tone[x+12]=Tone[x]>>1;
-	}
+	NoteTablePropogate(base1);
 
 	Tone[23]+=13;
 	Tone[46]-=1;
 }
 
-/*
-0  0  0  0  0  0  0  0  0  0  0  0
-0  0  0  0  0  0  0  0  0  0  1  0
-0  0  0  0  1  0  0  0  1  0  0  0
-0  1  0  1  0  0  1  0  0  1  1  0
+static unsigned char table2_v3_adjust[]={
+  0xf8, 0x80, 0x90, 0xc0, 0x04, 0xf0, 0xf8, 0xec, 0xe0, 0xc0, 0xfc, 0x40,
+};
 
-0  0  0  0  0  1  0  1  1  0  0  1
-1  1  0  0  0  0  0  0  0  0  1  0
-0  0  1  0  0  0  0  0  0  0  0  1
-0  1  0  0  1  1  0  0  0  0  0  0
-*/
+/* Create Table #2, v3, "PT3NoteTable_ASM_34r" */
+void NoteTableCreate_2_v3(void) {
 
-static unsigned char table2_adjust[]={
-0x20, 0xa8, 0x40, 0x08, 0x84, 0x90, 0x08, 0x10, 0x14, 0x08, 0x2a, 0x50
+	NoteTablePropogate(base2_v3);
+	NoteTableAdjust(table2_v3_adjust);
+	Tone[86]+=1;
+	Tone[87]+=1;
+}
+
+static unsigned char table2_v4_adjust[]={
+  0x20, 0xa8, 0x40, 0xf8, 0xbc, 0x90, 0x78, 0x70, 0x74, 0x08, 0x2a, 0x50,
 };
 
 
 /* Create Table #2, v4+, "PT3NoteTable_ASM_34_35" */
 void NoteTableCreate_2_v4(void) {
 
-	int x,y;
-	int extra;
-
-	for(y=0;y<12;y++) Tone[y]=base2_v4[y];
-
-	for(x=0;x<84;x++) {
-		extra=(table2_adjust[x%12]>>((x+12)/12))&1;
-
-		printf("%d ",extra);
-		if (x%12==11) printf("\n");
-
-		Tone[x+12]=Tone[x]>>1;
-		Tone[x+12]+=extra;
-	}
-	Tone[95]--;
-
+	NoteTablePropogate(base2_v4);
+	NoteTableAdjust(table2_v4_adjust);
 }
+
+static unsigned char table3_v4_adjust[]={
+  0xB4, 0x40, 0xe6, 0x9c, 0x66, 0x40, 0x2c, 0x20, 0x30, 0x48, 0x6c, 0x1c,
+};
+
+/* Create Table #3, v3, "PT3NoteTable_REAL_34r" */
+void NoteTableCreate_3_v3(void) {
+
+	NoteTablePropogate(base3);
+	NoteTableAdjust(table3_v4_adjust);
+	Tone[43]++;
+}
+
+
+
+/* Create Table #3, v4+, "PT3NoteTable_REAL_34_35" */
+void NoteTableCreate_3_v4(void) {
+
+//	int x,y;
+//	int extra;
+
+	NoteTablePropogate(base3);
+	NoteTableAdjust(table3_v4_adjust);
+}
+
 
 
 
@@ -284,6 +329,8 @@ int main(int argc, char **argv) {
 	printf("Test Table 1\n");
 	printf("*********************\n");
 
+	nomatch=0;
+
 	NoteTableCreate_1_vX();
 
 
@@ -292,6 +339,7 @@ int main(int argc, char **argv) {
 		printf(" %03X",Tone[i]);
 		if (Tone[i]-PT3NoteTable_ST[i]) {
 			printf("+%d",Tone[i]-PT3NoteTable_ST[i]);
+			nomatch++;
 		}
 		else {
 			printf("  ");
@@ -306,6 +354,44 @@ int main(int argc, char **argv) {
 		printf("NO MATCH Table 1\n");
 	}
 
+	printf("Nomatch count=%d\n",nomatch);
+
+	/***********************************/
+	/* Test table #2 Version 3.4r      */
+	/* ASM_34r                         */
+	/***********************************/
+
+	printf("\n");
+	printf("*********************\n");
+	printf("Test Table 2 v3.4r\n");
+	printf("*********************\n");
+
+	NoteTableCreate_2_v3();
+
+	nomatch=0;
+
+	for(i=0;i<8*12;i++) {
+		if (i%12==0) printf("\n");
+		printf("%03X",Tone[i]);
+		if (Tone[i]-PT3NoteTable_ASM_34r[i]) {
+			printf("+%d/",Tone[i]-PT3NoteTable_ASM_34r[i]);
+			nomatch++;
+		}
+		else {
+			printf("   ");
+		}
+	}
+	printf("\n");
+
+	if (!memcmp(Tone,PT3NoteTable_ASM_34r,8*12*sizeof(short))) {
+		printf("MATCH Table 2 v3.4r\n");
+	}
+	else {
+		printf("NO MATCH\n");
+	}
+
+	printf("Nomatch count=%d\n",nomatch);
+
 
 	/***********************************/
 	/* Test table #2 Version 3.4 - 3.5 */
@@ -314,7 +400,7 @@ int main(int argc, char **argv) {
 
 	printf("\n");
 	printf("*********************\n");
-	printf("Test Table 2 v4\n");
+	printf("Test Table 2 v3.4+\n");
 	printf("*********************\n");
 
 	NoteTableCreate_2_v4();
@@ -343,6 +429,80 @@ int main(int argc, char **argv) {
 	}
 
 	printf("Nomatch count=%d\n",nomatch);
+
+	/***********************************/
+	/* Test table #3 Version 3.4r      */
+	/* ASM_34r                         */
+	/***********************************/
+
+	printf("\n");
+	printf("*********************\n");
+	printf("Test Table 3 v3.4r\n");
+	printf("*********************\n");
+
+	NoteTableCreate_3_v3();
+
+	nomatch=0;
+
+	for(i=0;i<8*12;i++) {
+		if (i%12==0) printf("\n");
+		printf("%03X",Tone[i]);
+		if (Tone[i]-PT3NoteTable_REAL_34r[i]) {
+			printf("+%d/",Tone[i]-PT3NoteTable_REAL_34r[i]);
+			nomatch++;
+		}
+		else {
+			printf("   ");
+		}
+	}
+	printf("\n");
+
+	if (!memcmp(Tone,PT3NoteTable_REAL_34r,8*12*sizeof(short))) {
+		printf("MATCH Table 3 v3.4r\n");
+	}
+	else {
+		printf("NO MATCH\n");
+	}
+
+	printf("Nomatch count=%d\n",nomatch);
+
+
+	/***********************************/
+	/* Test table #3 Version 3.4 - 3.5 */
+	/* REAL_34_35                       */
+	/***********************************/
+
+	printf("\n");
+	printf("*********************\n");
+	printf("Test Table 3 v3.4+\n");
+	printf("*********************\n");
+
+	NoteTableCreate_3_v4();
+
+	nomatch=0;
+
+	for(i=0;i<8*12;i++) {
+		if (i%12==0) printf("\n");
+		printf("%03X",Tone[i]);
+		if (Tone[i]-PT3NoteTable_REAL_34_35[i]) {
+			printf("+%d/",Tone[i]-PT3NoteTable_REAL_34_35[i]);
+			nomatch++;
+		}
+		else {
+			printf("   ");
+		}
+	}
+	printf("\n");
+
+	if (!memcmp(Tone,PT3NoteTable_REAL_34_35,8*12*sizeof(short))) {
+		printf("MATCH Table 3 v3.4+\n");
+	}
+	else {
+		printf("NO MATCH\n");
+	}
+
+	printf("Nomatch count=%d\n",nomatch);
+
 
 }
 
