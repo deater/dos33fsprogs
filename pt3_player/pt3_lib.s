@@ -904,8 +904,7 @@ note_not_too_high:
 
 	;  w = GetNoteFreq(j,pt3->frequency_table);
 
-	tay	; for GetNoteFreq
-;	jsr	GetNoteFreq
+	tay	; for GetNoteFreq later
 
 	;  a->tone = (a->tone + a->tone_sliding + w) & 0xfff;
 
@@ -921,15 +920,11 @@ note_not_too_high:
 	clc	;;can be removed if ADC SLIDING_H cannot overflow
 temp_word_l1_smc:
 	lda	#$d1
-;freq_l_smc:
-;	adc	#$d1			; GetNoteFreq
 	adc	NoteTable_low,Y		; GetNoteFreq
 	sta	note_a+NOTE_TONE_L,X
 temp_word_h1_smc:
 	lda	#$d1
-;freq_h_smc:
-;	adc	#$d1			; GetNoteFreq
-	adc	NoteTable_high,Y
+	adc	NoteTable_high,Y	; GetNoteFreq
 	and	#$0f
 	sta	note_a+NOTE_TONE_H,X
 
@@ -1709,23 +1704,18 @@ skip_step_inc1:
 	sty	TEMP			; save Y
 prev_note_smc:
 	ldy	#$d1
-;	jsr	GetNoteFreq
-;	lda	freq_l_smc+1
 	lda	NoteTable_low,Y		; GetNoteFreq
 	sta	temp_word_l2_smc+1
 	lda	NoteTable_high,Y	; GetNoteFreq
-;	lda	freq_h_smc+1
 	sta	temp_word_h2_smc+1
 
 	ldy	note_a+NOTE_NOTE,X
-;	jsr	GetNoteFreq
 	lda	NoteTable_low,Y		; GetNoteFreq
 
 	sec
 temp_word_l2_smc:
 	sbc	#$d1
 	sta	note_a+NOTE_TONE_DELTA_L,X
-;	lda	freq_h_smc+1
 	lda	NoteTable_high,Y	; GetNoteFreq
 temp_word_h2_smc:
 	sbc	#$d1
@@ -2412,26 +2402,6 @@ done_do_frame:
 
 	rts								; 6
 
-	;======================================
-	; GetNoteFreq
-	;======================================
-	; Return frequency from lookup table
-	; Which note is in A
-	; return in freq_l/freq_h
-
-;GetNoteFreq:
-
-;	sty	PT3_TEMP						; 3
-;	tay								; 2
-
-;	lda	NoteTable_high,Y					; 4+
-;	sta	freq_h_smc+1						; 4
-;	lda	NoteTable_low,Y						; 4+
-;	sta	freq_l_smc+1						; 4
-
-;	ldy	PT3_TEMP						; 3
-;	rts								; 6
-								;===========
 
 
 ;base0_v3_high:
