@@ -10,6 +10,8 @@
 ; If you change this, you need to update the Makefile
 PT3_LOC = $4000
 
+PT3_USE_ZERO_PAGE = 1
+
 ; Number of files.  Should probably detect this automatically
 NUM_FILES	=	19
 
@@ -724,8 +726,14 @@ song_list:
 .include	"gr_setpage.s"
 .include	"qkumba_rts.s"
 .include	"keypress_minimal.s"
+
+
+; pt3_lib stuff
+.include	"pt3_lib_core.s"
+.include	"pt3_lib_init.s"
 .include	"interrupt_handler.s"
-.include	"pt3_lib.s"
+
+; visualization
 .include	"fire.s"
 .include	"random16.s"
 .include	"gr_putsprite.s"

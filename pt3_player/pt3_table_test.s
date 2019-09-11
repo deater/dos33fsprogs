@@ -136,7 +136,8 @@ error:
 ;routines
 ;=========
 
-.include	"pt3_lib.s"
+.include	"pt3_lib_core.s"
+.include	"pt3_lib_init.s"
 
 
 

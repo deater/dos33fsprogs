@@ -5,7 +5,7 @@
 
 PT3_LOC = $4000
 
-NUM_FILES = 15
+PT3_USE_ZERO_PAGE = 1
 
 	;=============================
 	; Setup
@@ -240,31 +240,6 @@ filename_found:
 
 	rts
 
-	;===============================
-	; Increment file we want to load
-	;===============================
-increment_file:
-	inc	WHICH_FILE
-	lda	WHICH_FILE
-	cmp	#NUM_FILES
-	bne	done_increment
-	lda	#0
-	sta	WHICH_FILE
-done_increment:
-	rts
-
-	;===============================
-	; Decrement file we want to load
-	;===============================
-decrement_file:
-	dec	WHICH_FILE
-	bpl	done_decrement
-	lda	#(NUM_FILES-1)
-	sta	WHICH_FILE
-done_decrement:
-	rts
-
-
 ;==========
 ; filenames
 ;==========
@@ -278,7 +253,9 @@ song_list:
 ;=========
 .include	"mockingboard_a.s"
 .include	"qkumba_rts.s"
-.include	"pt3_lib.s"
+
+.include	"pt3_lib_core.s"
+.include	"pt3_lib_init.s"
 
 
 

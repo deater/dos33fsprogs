@@ -78,8 +78,9 @@ PT3_PLAYER:	pt3_player.o
 	ld65 -o PT3_PLAYER pt3_player.o -C ../linker_scripts/apple2_1000.inc
 
 pt3_player.o:	pt3_player.s \
-	gr_fast_clear.s pt3_lib.s interrupt_handler.s random16.s fire.s \
-	gr_putsprite.s put_letters.s zp.inc
+	gr_fast_clear.s random16.s fire.s \
+	gr_putsprite.s put_letters.s zp.inc \
+	pt3_lib_init.s pt3_lib_core.s interrupt_handler.s
 	ca65 -o pt3_player.o pt3_player.s -l pt3_player.lst
 
 #
@@ -88,7 +89,8 @@ PT3_TIMER:	pt3_timer.o
 	ld65 -o PT3_TIMER pt3_timer.o -C ../linker_scripts/apple2_1000.inc
 
 pt3_timer.o:	pt3_timer.s \
-	gr_fast_clear.s pt3_lib.s interrupt_handler.s zp.inc
+	gr_fast_clear.s zp.inc \
+	pt3_lib_init.s pt3_lib_core.s
 	ca65 -o pt3_timer.o pt3_timer.s -l pt3_timer.lst
 
 #
@@ -97,7 +99,8 @@ PT3_DUMPER:	pt3_dumper.o
 	ld65 -o PT3_DUMPER pt3_dumper.o -C ../linker_scripts/apple2_1000.inc
 
 pt3_dumper.o:	pt3_dumper.s \
-	gr_fast_clear.s pt3_lib.s interrupt_handler.s zp.inc
+	gr_fast_clear.s zp.inc \
+	pt3_lib_init.s pt3_lib_core.s
 	ca65 -o pt3_dumper.o pt3_dumper.s -l pt3_dumper.lst
 
 #
@@ -106,7 +109,7 @@ PT3_TABLE_TEST:	pt3_table_test.o
 	ld65 -o PT3_TABLE_TEST pt3_table_test.o -C ../linker_scripts/apple2_1000.inc
 
 pt3_table_test.o:	pt3_table_test.s \
-	gr_fast_clear.s pt3_lib.s interrupt_handler.s zp.inc
+	gr_fast_clear.s pt3_lib_core.s pt3_lib_init.s zp.inc
 	ca65 -o pt3_table_test.o pt3_table_test.s -l pt3_table_test.lst
 
 #

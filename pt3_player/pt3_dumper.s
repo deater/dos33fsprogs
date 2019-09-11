@@ -8,8 +8,7 @@
 
 PT3_LOC = $4000
 
-NUM_FILES	=	15
-
+PT3_USE_ZERO_PAGE = 1
 
 	;=============================
 	; Setup
@@ -231,20 +230,6 @@ new_song:
 	; Init Variables
 	;=========================
 
-	; ?
-
-
-	;===========================
-	; Print loading message
-	;===========================
-
-;	lda	#<loading_message
-;	sta	OUTL
-;	lda	#>loading_message
-;	sta	OUTH
-;	jsr     print_cout
-
-
 	;===========================
 	; Load in PT3 file
 	;===========================
@@ -365,30 +350,6 @@ filename_found:
 
 	rts
 
-	;===============================
-	; Increment file we want to load
-	;===============================
-increment_file:
-	inc	WHICH_FILE
-	lda	WHICH_FILE
-	cmp	#NUM_FILES
-	bne	done_increment
-	lda	#0
-	sta	WHICH_FILE
-done_increment:
-	rts
-
-	;===============================
-	; Decrement file we want to load
-	;===============================
-decrement_file:
-	dec	WHICH_FILE
-	bpl	done_decrement
-	lda	#(NUM_FILES-1)
-	sta	WHICH_FILE
-done_decrement:
-	rts
-
 
 	;===============
 	; print cout
@@ -422,21 +383,26 @@ FRAMEH:	.byte	$00
 
 song_list:
 
-;	.asciiz "IT.PT3"	; ST
+	.asciiz "IT.PT3"	; ST
 ;	.asciiz "CR.PT3"	; ST
 ;	.asciiz "EA.PT3"	; ST
 ;	.asciiz "RI.PT3"	; ST
 ;	.asciiz "OO.PT3"	; ASM_34_35
 ;	.asciiz "DY.PT3"	; ASM_34_35
 ;	.asciiz "BH.PT3"	; PT_34_35
-	.asciiz "CH.PT3"	; REAL_34_35
+;	.asciiz "CH.PT3"	; REAL_34_35
 
 ;=========
 ;routines
 ;=========
 .include	"qkumba_rts.s"
 ;.include	"../pt3_lib/pt3_lib.s"
-.include	"pt3_lib.s"
+
+.include	"pt3_lib_core.s"
+.include	"pt3_lib_init.s"
+
+
+
 
 ;============
 ; dummy vars

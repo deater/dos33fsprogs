@@ -21,7 +21,11 @@
 ; + 2817 bytes -- eliminate pt3_version.  Slighly faster but also bigger
 ; + 2828 bytes -- fix some correctness issues
 ; + 2776 bytes -- init vars with loop (slower, but more correct and smaller)
-; + 2783 bytes -- fix vibrato code to work again
+; + 2739 bytes -- qkumba's crazy SMC everywhere patch
+; + 2418+143 = 2561 bytes -- move NOTE structs to page0
+; + 2423+143 = 2566 bytes -- fix vibrato code
+; + 2554+143 = 2697 bytes -- generate all four tone tables
+; + 2537+143 = 2680 bytes -- inline GetNoteFreq
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?
@@ -87,9 +91,20 @@ NOTE_TONE_SLIDE_TO_STEP	=39
 
 NOTE_STRUCT_SIZE=40
 
+.ifdef PT3_USE_ZERO_PAGE
+note_a	=	$80
+note_b	=	$80+(NOTE_STRUCT_SIZE*1)
+note_c	=	$80+(NOTE_STRUCT_SIZE*2)
+
+begin_vars=$80
+end_vars=$80+(NOTE_STRUCT_SIZE*3)
+
+
+.else	; !PT3_USE_ZERO_PAGE
 begin_vars:
 
 note_a:									; reset?
+
 	.byte	$0	; NOTE_VOLUME				; 0	; Y
 	.byte	$0	; NOTE_TONE_SLIDING_L			; 1	; Y
 	.byte	$0	; NOTE_TONE_SLIDING_H			; 2	; Y
@@ -214,141 +229,13 @@ note_c:
 	.byte	$0	; NOTE_TONE_DELTA_L
 	.byte	$0	; NOTE_TONE_DELTA_H
 	.byte	$0	; NOTE_TONE_SLIDE_TO_STEP
-
-
-;====================================
-; Global vars that must be preserved
-
-current_subframe:	.byte	$0
-current_line:		.byte	$0
-current_pattern:	.byte	$0
-pt3_pattern_done:	.byte	$0
-
-pt3_noise_period:	.byte	$0					; Y
-pt3_noise_add:		.byte	$0					; Y
-
-pt3_envelope_period_l:	.byte	$0					; Y
-pt3_envelope_period_h:	.byte	$0					; Y
-pt3_envelope_slide_l:	.byte	$0
-pt3_envelope_slide_h:	.byte	$0
-pt3_envelope_slide_add_l:.byte	$0
-pt3_envelope_slide_add_h:.byte	$0
-pt3_envelope_add:	.byte	$0
-pt3_envelope_type:	.byte	$0					; Y
-pt3_envelope_type_old:	.byte	$0
-pt3_envelope_delay:	.byte	$0
-pt3_envelope_delay_orig:.byte	$0
-
-pt3_mixer_value:	.byte	$0
-
 end_vars:
+.endif
 
-;==========================
-; local variables
-
-note_command:		; shared space with sample_b0
-sample_b0:		.byte	$0
-note_command_bottom:	; shared space with sample_b1
-sample_b1:		.byte	$0
-
-temp_word_l:		.byte	$0
-temp_word_h:		.byte	$0
-
-spec_command:		.byte	$0
-
-freq_l:	.byte	$00
-freq_h:	.byte	$00
-
-e_slide_amount:	.byte	$0
-
-prev_note:	.byte $0
-prev_sliding_l:	.byte $0
-prev_sliding_h:	.byte $0
-
-z80_h:	.byte $0
-z80_l:	.byte $0
-z80_d:	.byte $0
-z80_e:	.byte $0
-
-
-
-
-	;===========================
-	; Load Ornament
-	;===========================
-	; ornament value in A
-	; note offset in X
-
-	; Ornament table pointers are 16-bits little endian
-	; There are 16 of these pointers starting at $aa:$a9
-	; Our ornament starts at address (A*2)+that pointer
-	; We point ORNAMENT_H:ORNAMENT_L to this
-	; then we load the length/data values
-	; and then leave ORNAMENT_H:ORNAMENT_L pointing to begnning of
-	; the ornament data
-
-	; Optimization:
-	;	Loop and length only used once, can be located negative
-	;	from the pointer, but 6502 doesn't make addressing like that
-	;	easy.  Can't self modify as channels A/B/C have own copies
-	; 	of the var.
-
-load_ornament0:
+load_ornament0_sample1:
 	lda	#0							; 2
-
-load_ornament:
-
-	sty	PT3_TEMP	; save Y value				; 3
-
-	;pt3->ornament_patterns[i]=
-        ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
-
-	asl			; A*2					; 2
-	tay								; 2
-
-	; a->ornament_pointer=pt3->ornament_patterns[a->ornament];
-
-	lda	PT3_LOC+PT3_ORNAMENT_LOC_L,Y				; 4+
-	sta	ORNAMENT_L						; 3
-
-	lda	PT3_LOC+PT3_ORNAMENT_LOC_L+1,Y				; 4+
-
-	; we're assuming PT3 is loaded to a page boundary
-
-	adc	#>PT3_LOC						; 2
-	sta	ORNAMENT_H						; 3
-
-	lda	#0							; 2
-	sta	note_a+NOTE_ORNAMENT_POSITION,X				; 5
-
-	tay								; 2
-
-	; Set the loop value
-	;     a->ornament_loop=pt3->data[a->ornament_pointer];
-	lda	(ORNAMENT_L),Y						; 5+
-	sta	note_a+NOTE_ORNAMENT_LOOP,X				; 5
-
-	; Set the length value
-	;     a->ornament_length=pt3->data[a->ornament_pointer];
-	iny								; 2
-	lda	(ORNAMENT_L),Y						; 5+
-	sta	note_a+NOTE_ORNAMENT_LENGTH,X				; 5
-
-	; Set the pointer to the value past the length
-
-	lda	ORNAMENT_L						; 3
-	adc	#$2							; 2
-	sta	note_a+NOTE_ORNAMENT_POINTER_L,X			; 5
-	lda	ORNAMENT_H						; 3
-	adc	#$0							; 2
-	sta	note_a+NOTE_ORNAMENT_POINTER_H,X			; 5
-
-	ldy	PT3_TEMP	; restore Y value			; 3
-
-	rts								; 6
-
-								;============
-								;	83
+	jsr	load_ornament						; 6
+	; fall through
 
 	;===========================
 	; Load Sample
@@ -421,225 +308,80 @@ load_sample:
 								;============
 								;	 76
 
-	;====================================
-	; pt3_init_song
-	;====================================
-	;
 
-pt3_init_song:
+	;===========================
+	; Load Ornament
+	;===========================
+	; ornament value in A
+	; note offset in X
 
-	lda     #$0
-	sta	DONE_SONG
-						; 3
-	ldx	#(end_vars-begin_vars)
-zero_song_structs_loop:
-	dex
-	sta	note_a,X
-	bne	zero_song_structs_loop
+	; Ornament table pointers are 16-bits little endian
+	; There are 16 of these pointers starting at $aa:$a9
+	; Our ornament starts at address (A*2)+that pointer
+	; We point ORNAMENT_H:ORNAMENT_L to this
+	; then we load the length/data values
+	; and then leave ORNAMENT_H:ORNAMENT_L pointing to begnning of
+	; the ornament data
 
+	; Optimization:
+	;	Loop and length only used once, can be located negative
+	;	from the pointer, but 6502 doesn't make addressing like that
+	;	easy.  Can't self modify as channels A/B/C have own copies
+	; 	of the var.
 
-	lda	#$f							; 2
-	sta	note_a+NOTE_VOLUME					; 4
-	sta	note_b+NOTE_VOLUME					; 4
-	sta	note_c+NOTE_VOLUME					; 4
+load_ornament:
 
-.if 0
-	lda	#$0							; 2
-	sta	note_a+NOTE_TONE_SLIDING_L				; 4
-	sta	note_b+NOTE_TONE_SLIDING_L				; 4
-	sta	note_c+NOTE_TONE_SLIDING_L				; 4
-	sta	note_a+NOTE_TONE_SLIDING_H				; 4
-	sta	note_b+NOTE_TONE_SLIDING_H				; 4
-	sta	note_c+NOTE_TONE_SLIDING_H				; 4
-	sta	note_a+NOTE_ENABLED					; 4
-	sta	note_b+NOTE_ENABLED					; 4
-	sta	note_c+NOTE_ENABLED					; 4
-	sta	note_a+NOTE_ENVELOPE_ENABLED				; 4
-	sta	note_b+NOTE_ENVELOPE_ENABLED				; 4
-	sta	note_c+NOTE_ENVELOPE_ENABLED				; 4
-	sta	note_a+NOTE_SAMPLE_POSITION				; 4
-	sta	note_b+NOTE_SAMPLE_POSITION				; 4
-	sta	note_c+NOTE_SAMPLE_POSITION				; 4
+	sty	PT3_TEMP	; save Y value				; 3
 
-	sta	pt3_noise_period					; 4
-	sta	pt3_noise_add						; 4
-	sta	pt3_envelope_period_l					; 4
-	sta	pt3_envelope_period_h					; 4
-	sta	pt3_envelope_type					; 4
-.endif
-	lda	#0
-	; default ornament/sample in A
-	ldx	#(NOTE_STRUCT_SIZE*0)					; 2
-	jsr	load_ornament						; 6+93
-	jsr	load_sample1						; 6+86
+	;pt3->ornament_patterns[i]=
+        ;               (pt3->data[0xaa+(i*2)]<<8)|pt3->data[0xa9+(i*2)];
 
-	; default ornament/sample in B
-	ldx	#(NOTE_STRUCT_SIZE*1)					; 2
-	jsr	load_ornament0						; 6+93
-	jsr	load_sample1						; 6+86
+	asl			; A*2					; 2
+	tay								; 2
 
-	; default ornament/sample in C
-	ldx	#(NOTE_STRUCT_SIZE*2)					; 2
-	jsr	load_ornament0						; 6+93
-	jsr	load_sample1						; 6+86
+	; a->ornament_pointer=pt3->ornament_patterns[a->ornament];
 
-	;=======================
-	; load default speed
+	lda	PT3_LOC+PT3_ORNAMENT_LOC_L,Y				; 4+
+	sta	ORNAMENT_L						; 3
 
-	lda	PT3_LOC+PT3_SPEED					; 4
-	sta	pt3_speed_smc+1						; 4
+	lda	PT3_LOC+PT3_ORNAMENT_LOC_L+1,Y				; 4+
 
-	;=======================
-	; load loop
+	; we're assuming PT3 is loaded to a page boundary
 
-	lda	PT3_LOC+PT3_LOOP					; 4
-	sta	pt3_loop_smc+1						; 4
+	adc	#>PT3_LOC						; 2
+	sta	ORNAMENT_H						; 3
 
+	lda	#0							; 2
+	sta	note_a+NOTE_ORNAMENT_POSITION,X				; 5
 
-	;======================
-	; calculate version
-	ldx	#6							; 2
-	lda	PT3_LOC+PT3_VERSION					; 4
-	sec								; 2
-	sbc	#'0'							; 2
-	cmp	#9							; 2
-	bcs	not_ascii_number	; bge				; 2/3
-	tax								; 2
+	tay								; 2
 
-not_ascii_number:
+	; Set the loop value
+	;     a->ornament_loop=pt3->data[a->ornament_pointer];
+	lda	(ORNAMENT_L),Y						; 5+
+	sta	note_a+NOTE_ORNAMENT_LOOP,X				; 5
 
-	; adjust version<6 SMC code in the slide code
+	; Set the length value
+	;     a->ornament_length=pt3->data[a->ornament_pointer];
+	iny								; 2
+	lda	(ORNAMENT_L),Y						; 5+
+	sta	note_a+NOTE_ORNAMENT_LENGTH,X				; 5
 
-	; FIXME: I am sure there's a more clever way to do this
+	; Set the pointer to the value past the length
 
-	lda	#$2C		; BIT					; 2
-	cpx	#$6							; 2
-	bcc	version_less_than_6		; blt			; 3
-	; carry is set
-	adc	#$1F		; BIT->JMP  2C->4C			; 2
-version_less_than_6:
-	sta	version_smc						; 4
+	lda	ORNAMENT_L						; 3
+	adc	#$2							; 2
+	sta	note_a+NOTE_ORNAMENT_POINTER_L,X			; 5
+	lda	ORNAMENT_H						; 3
+	adc	#$0							; 2
+	sta	note_a+NOTE_ORNAMENT_POINTER_H,X			; 5
 
-pick_volume_table:
+	ldy	PT3_TEMP	; restore Y value			; 3
 
-	;=======================
-	; Pick which volume number, based on version
+	rts								; 6
 
-	; if (PlParams.PT3.PT3_Version <= 4)
-
-	cpx	#5							; 2
-
-	; carry clear = 3.3/3.4 table
-	; carry set = 3.5 table
-
-	;==========================
-	; VolTableCreator
-	;==========================
-	; Creates the appropriate volume table
-	; based on z80 code by Ivan Roshin ZXAYHOBETA/VTII10bG.asm
-	;
-
-	; Called with carry==0 for 3.3/3.4 table
-	; Called with carry==1 for 3.5 table
-
-	; 177f-1932 = 435 bytes, not that much better than 512 of lookup
-
-
-VolTableCreator:
-
-	; Init initial variables
-	lda	#$0
-	sta	z80_d
-	ldy	#$11
-
-	; Set up self modify
-
-	ldx	#$2A		; ROL for self-modify
-	bcs	vol_type_35
-
-vol_type_33:
-
-	; For older table, we set initial conditions a bit
-	; different
-
-	dey
-	tya
-
-	ldx	#$ea		; NOP for self modify
-
-vol_type_35:
-	sty	z80_l		; l=16 or 17
-	sta	z80_e		; e=16 or 0
-	stx	vol_smc		; set the self-modify code
-
-	ldy	#16		; skip first row, all zeros
-	ldx	#16		; c=16
-vol_outer:
-	clc			; add HL,DE
-	lda	z80_l
-	adc	z80_e
-	sta	z80_e
-	lda	#0
-	adc	z80_d
-	sta	z80_d		; carry is important
-
-			; sbc hl,hl
-	lda	#0
-	adc	#$ff
-	eor	#$ff
-
-vol_write:
-	sta	z80_h
-	pha
-
-vol_inner:
-	pla
-	pha
-
-vol_smc:
-	nop			; nop or ROL depending
-
-	lda	z80_h
-
-	adc	#$0		; a=a+carry;
-
-	sta	VolumeTable,Y
-	iny
-
-	pla			; add HL,DE
-	adc	z80_e
-	pha
-	lda	z80_h
-	adc	z80_d
-	sta	z80_h
-
-	inx		; inc C
-	txa		; a=c
-	and	#$f
-	bne	vol_inner
-
-
-	pla
-
-	lda	z80_e	; a=e
-	cmp	#$77
-	bne	vol_m3
-
-	inc	z80_e
-
-vol_m3:
-	txa			; a=c
-	bne	vol_outer
-
-vol_done:
-	rts
-
-
-
-
-
-
-
+								;============
+								;	83
 
 
 
@@ -676,12 +418,12 @@ note_enabled:
 
 	;  b0 = pt3->data[a->sample_pointer + a->sample_position * 4];
 	lda	(SAMPLE_L),Y						; 5+
-	sta	sample_b0						; 4
+	sta	sample_b0_smc+1						; 4
 
 	;  b1 = pt3->data[a->sample_pointer + a->sample_position * 4 + 1];
 	iny								; 2
 	lda	(SAMPLE_L),Y						; 5+
-	sta	sample_b1						; 4
+	sta	sample_b1_smc+1						; 4
 
 	;  a->tone = pt3->data[a->sample_pointer + a->sample_position*4+2];
 	;  a->tone+=(pt3->data[a->sample_pointer + a->sample_position*4+3])<<8;
@@ -700,7 +442,7 @@ note_enabled:
 	; Accumulate tone if set
 	;	(if sample_b1 & $40)
 
-	bit	sample_b1
+	bit	sample_b1_smc+1
 	bvc	no_accum	;     (so, if b1&0x40 is zero, skip it)
 
 	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X
@@ -732,25 +474,27 @@ note_not_too_high:
 
 	;  w = GetNoteFreq(j,pt3->frequency_table);
 
-	jsr	GetNoteFreq
+	tay	; for GetNoteFreq later
 
 	;  a->tone = (a->tone + a->tone_sliding + w) & 0xfff;
 
 	clc
-	ldy	note_a+NOTE_TONE_SLIDING_L,X
-	tya
+	lda	note_a+NOTE_TONE_SLIDING_L,X
 	adc	note_a+NOTE_TONE_L,X
-	sta	note_a+NOTE_TONE_L,X
+	sta	temp_word_l1_smc+1
+
 	lda	note_a+NOTE_TONE_H,X
 	adc	note_a+NOTE_TONE_SLIDING_H,X
-	sta	note_a+NOTE_TONE_H,X
+	sta	temp_word_h1_smc+1
 
 	clc	;;can be removed if ADC SLIDING_H cannot overflow
-	lda	note_a+NOTE_TONE_L,X
-	adc	freq_l
+temp_word_l1_smc:
+	lda	#$d1
+	adc	NoteTable_low,Y		; GetNoteFreq
 	sta	note_a+NOTE_TONE_L,X
-	lda	note_a+NOTE_TONE_H,X
-	adc	freq_h
+temp_word_h1_smc:
+	lda	#$d1
+	adc	NoteTable_high,Y	; GetNoteFreq
 	and	#$0f
 	sta	note_a+NOTE_TONE_H,X
 
@@ -767,10 +511,10 @@ note_not_too_high:
 
 	; a->tone_sliding+=a->tone_slide_step
 	clc	;;can be removed if ADC freq_h cannot overflow
-	tya
+	lda	note_a+NOTE_TONE_SLIDING_L,X
 	adc	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	sta	note_a+NOTE_TONE_SLIDING_L,X
-	tay
+	tay					; save NOTE_TONE_SLIDING_L in y
 	lda	note_a+NOTE_TONE_SLIDING_H,X
 	adc	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	sta	note_a+NOTE_TONE_SLIDING_H,X
@@ -791,8 +535,8 @@ check1:
 	;				(a->tone_sliding <= a->tone_delta) ||
 
 	; 16 bit signed compare
-	tya					; NUM1-NUM2
-	cmp	note_a+NOTE_TONE_DELTA_L,X	;
+	tya					; y has NOTE_TONE_SLIDING_L
+	cmp	note_a+NOTE_TONE_DELTA_L,X	; NUM1-NUM2
 	lda	note_a+NOTE_TONE_SLIDING_H,X
 	sbc	note_a+NOTE_TONE_DELTA_H,X
 	bvc	sc_loser1			; N eor V
@@ -801,7 +545,7 @@ sc_loser1:
 	bmi	slide_to_note	; then A (signed) < NUM (signed) and BMI will branch
 
 	; equals case
-	tya
+	tya					; y has NOTE_TONE_SLIDING_L
 	cmp	note_a+NOTE_TONE_DELTA_L,X
 	bne	check2
 	lda	note_a+NOTE_TONE_SLIDING_H,X
@@ -815,8 +559,8 @@ check2:
 	;				(a->tone_sliding >= a->tone_delta)
 
 	; 16 bit signed compare
-	tya					; NUM1-NUM2
-	cmp	note_a+NOTE_TONE_DELTA_L,X	;
+	tya					; y has NOTE_TONE_SLIDING_L
+	cmp	note_a+NOTE_TONE_DELTA_L,X	; num1-num2
 	lda	note_a+NOTE_TONE_SLIDING_H,X
 	sbc	note_a+NOTE_TONE_DELTA_H,X
 	bvc	sc_loser2			; N eor V
@@ -842,7 +586,8 @@ no_tone_sliding:
 calc_amplitude:
 	; get base value from the sample (bottom 4 bits of sample_b1)
 
-	lda	sample_b1		;  a->amplitude= (b1 & 0xf);
+sample_b1_smc:
+	lda	#$d1			;  a->amplitude= (b1 & 0xf);
 	and	#$f
 
 	;========================================
@@ -850,7 +595,7 @@ calc_amplitude:
 
 	; adjust amplitude sliding
 
-	bit	sample_b0		;  if ((b0 & 0x80)!=0) {
+	bit	sample_b0_smc+1		;  if ((b0 & 0x80)!=0) {
 	bpl	done_amp_sliding	; so if top bit not set, skip
 	tay
 
@@ -922,7 +667,7 @@ done_clamp_amplitude:
 	asl								; 2
 	asl								; 2
 note_amp_smc:
-	ora	#0							; 4+
+	ora	#$d1							; 4+
 
 	tay								; 2
 	lda	VolumeTable,Y						; 4+
@@ -937,7 +682,8 @@ check_envelope_enable:
 
 
 	;  if (((b0 & 0x1) == 0) && ( a->envelope_enabled)) {
-	lda	sample_b0
+sample_b0_smc:
+	lda	#$d1
 	lsr
 	tay
 	bcs	envelope_slide
@@ -959,12 +705,12 @@ envelope_slide:
 	; Envelope slide
 	; If b1 top bits are 10 or 11
 
-	lda	sample_b0
+	lda	sample_b0_smc+1
 	asl
 	asl
 	asl				; b0 bit 5 to carry flag
 	lda	#$20
-	bit	sample_b1		; b1 bit 7 to sign flag, bit 5 to zero flag
+	bit	sample_b1_smc+1		; b1 bit 7 to sign flag, bit 5 to zero flag
 	php
 	bpl	else_noise_slide	; if ((b1 & 0x80) != 0) {
 	tya
@@ -980,7 +726,7 @@ envelope_slide_down:
 
 	; j = ((b0>>1)|0xF0) + a->envelope_sliding
 	adc	note_a+NOTE_ENVELOPE_SLIDING,X
-	sta	e_slide_amount				; j
+	sta	e_slide_amount_smc+1			; j
 
 envelope_slide_done:
 
@@ -995,9 +741,10 @@ last_envelope:
 	; pt3->envelope_add+=j;
 
 	clc
-	lda	e_slide_amount
-	adc	pt3_envelope_add
-	sta	pt3_envelope_add
+e_slide_amount_smc:
+	lda	#$d1
+	adc	pt3_envelope_add_smc+1
+	sta	pt3_envelope_add_smc+1
 
 	jmp	noise_slide_done	; skip else
 
@@ -1009,7 +756,7 @@ else_noise_slide:
 	tya
 	clc
 	adc	note_a+NOTE_NOISE_SLIDING,X
-	sta	pt3_noise_add
+	sta	pt3_noise_add_smc+1
 
 	plp
 	beq	noise_slide_done	;     if ((b1 & 0x20) != 0) {
@@ -1021,11 +768,12 @@ noise_slide_done:
 	;======================
 	; set mixer
 
-	lda	sample_b1	;  pt3->mixer_value = ((b1 >>1) & 0x48) | pt3->mixer_value;
+	lda	sample_b1_smc+1	;  pt3->mixer_value = ((b1 >>1) & 0x48) | pt3->mixer_value;
 	lsr
 	and	#$48
-	ora	pt3_mixer_value
-	sta	pt3_mixer_value
+
+	ora	PT3_MIXER_VAL					; 3
+	sta	PT3_MIXER_VAL					; 3
 
 
 	;========================
@@ -1061,7 +809,7 @@ done_note:
 	; set mixer value
 	; this is a bit complex (from original code)
 	; after 3 calls it is set up properly
-	lsr	pt3_mixer_value
+	lsr	PT3_MIXER_VAL
 
 handle_onoff:
 	ldy	note_a+NOTE_ONOFF,X	;if (a->onoff>0) {
@@ -1071,7 +819,7 @@ handle_onoff:
 
 	bne	put_offon		;   if (a->onoff==0) {
 	lda	note_a+NOTE_ENABLED,X
-	eor	#$1			; toggle
+	eor	#$1			; toggle note_enabled
 	sta	note_a+NOTE_ENABLED,X
 
 	beq	do_offon
@@ -1081,8 +829,12 @@ do_onoff:
 do_offon:
 	ldy	note_a+NOTE_OFFON_DELAY,X ;      else a->onoff=a->offon_delay;
 put_offon:
-	tya
-	sta	note_a+NOTE_ONOFF,X
+.ifdef PT3_USE_ZERO_PAGE
+	sty	note_a+NOTE_ONOFF,X
+.else
+	lda	note_a+NOTE_ONOFF,X
+	tay
+.endif
 
 done_onoff:
 
@@ -1143,7 +895,7 @@ decode_note:
 	; Init vars
 
 	ldy	#0							; 2
-	sty	spec_command						; 4
+	sty	spec_command_smc+1					; 4
 
 	; Skip decode if note still running
 	lda	note_a+NOTE_LEN_COUNT,X					; 4+
@@ -1153,12 +905,12 @@ decode_note:
 keep_decoding:
 
 	lda	note_a+NOTE_NOTE,X		; store prev note	; 4+
-	sta	prev_note						; 4
+	sta	prev_note_smc+1						; 4
 
 	lda	note_a+NOTE_TONE_SLIDING_H,X	; store prev sliding	; 4+
-	sta	prev_sliding_h						; 4
+	sta	prev_sliding_h_smc+1					; 4
 	lda	note_a+NOTE_TONE_SLIDING_L,X				; 4+
-	sta	prev_sliding_l						; 4
+	sta	prev_sliding_l_smc+1					; 4
 
 
 								;============
@@ -1175,10 +927,12 @@ note_decode_loop:
 ;===>
 	; get next value
 	lda	(PATTERN_L),Y						; 5+
-	sta	note_command		; save termporarily		; 4
+	sta	note_command_smc+1	; save termporarily		; 4
 	and	#$0f							; 2
-	sta	note_command_bottom					; 4
-	lda	note_command						; 4
+	sta	note_command_bottom_smc+1				; 4
+
+note_command_smc:
+	lda	#$d1							; 2
 
 	; FIXME: use a jump table??
 	;  further reflection, that would require 32-bytes of addresses
@@ -1196,7 +950,8 @@ decode_case_0X:
 	; $0X set special effect
 	;==============================
 									; -1
-	lda	note_command_bottom					; 4
+note_command_bottom_smc:
+	lda	#$d1							; 2
 
 	; we can always store spec as 0 means no spec
 
@@ -1204,24 +959,19 @@ decode_case_0X:
 	; Doesn't seem to happen in practice
 	; But AY_emul has code to handle it
 
-	sta	spec_command						; 4
+	sta	spec_command_smc+1					; 4
 
 	bne	decode_case_0X_not_zero					; 2/3
 								;=============
-								;	12
+								;	8
 	; 00 case
 	; means end of pattern
 									; -1
 	sta	note_a+NOTE_LEN_COUNT,X	; len_count=0;			; 5
 
-	dec	pt3_pattern_done					; 6
+	dec	pt3_pattern_done_smc+1					; 6
 
 	jmp	note_done_decoding					; 3
-
-decode_case_0X_not_zero:
-
-	jmp	done_decode_loop					; 3
-
 
 decode_case_1X:
 	;==============================
@@ -1234,7 +984,7 @@ decode_case_1X:
 								;         5
 
 									; -1
-	lda	note_command_bottom					; 4
+	lda	note_command_bottom_smc+1				; 4
 	bne	decode_case_not_10					; 3
 
 decode_case_10:
@@ -1256,6 +1006,8 @@ decode_case_1x_common:
 	lda	#0							; 2
 	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0	; 5
 
+decode_case_0X_not_zero:
+
 	jmp	done_decode_loop					; 3
 
 decode_case_2X:
@@ -1267,13 +1019,13 @@ decode_case_3X:
 	cmp	#$40							; 2
 	bcs	decode_case_4X		; branch greater/equal		; 3
 									; -1
-	lda	note_command						; 3
+	lda	note_command_smc+1					; 4
 	adc	#$e0			; same as subtract $20		; 2
-	sta	pt3_noise_period					; 3
+	sta	pt3_noise_period_smc+1					; 3
 
 	jmp	done_decode_loop					; 3
 								;===========
-								;	15
+								;	16
 
 decode_case_4X:
 	;==============================
@@ -1282,7 +1034,7 @@ decode_case_4X:
 ;	cmp	#$40		; already set				;
 	bne	decode_case_5X						; 3
 									; -1
-	lda	note_command_bottom	; set ornament to bottom nibble	; 4
+	lda	note_command_bottom_smc+1; set ornament to bottom nibble; 4
 	jsr	load_ornament						; 6+93
 
 	jmp	done_decode_loop					; 3
@@ -1297,7 +1049,7 @@ decode_case_5X:
 	bcs	decode_case_bX		 ; branch greater/equal		; 3
 
 									; -1
-	lda	note_command						; 4
+	lda	note_command_smc+1					; 4
 	adc	#$b0							; 2
 	sta	note_a+NOTE_NOTE,X	; note=(current_val-0x50);	; 5
 
@@ -1316,7 +1068,7 @@ decode_case_bX:
 ;	cmp	#$b0		; already set from before
 	bne	decode_case_cX						; 3
 									; -1
-	lda	note_command_bottom					; 4
+	lda	note_command_bottom_smc+1				; 4
 	beq	decode_case_b0						; 3
 									; -1
 	sbc	#1		; envelope_type=(current_val&0xf)-1;	; 2
@@ -1353,7 +1105,7 @@ decode_case_cX:
 	cmp	#$c0			; check top nibble $C		; 2
 	bne	decode_case_dX						; 3
 									; -1
-	lda	note_command_bottom					; 4
+	lda	note_command_bottom_smc+1				; 4
 	bne	decode_case_cx_not_c0					; 3
 									; -1
 decode_case_c0:
@@ -1380,7 +1132,7 @@ decode_case_dX:
 	beq	decode_case_fX						; 3
 									; -1
 
-	lda	note_command						; 4
+	lda	note_command_smc+1					; 4
 	sec								; 2
 	sbc	#$d0							; 2
 	beq	note_done_decoding					; 3
@@ -1407,7 +1159,7 @@ decode_case_fX:
 	sta	note_a+NOTE_ENVELOPE_ENABLED,X				; 5
 
 	; Set ornament to low byte of command
-	lda	note_command_bottom					; 4
+	lda	note_command_bottom_smc+1				; 4
 	jsr	load_ornament		; ornament to load in A		; 6+?
 
 	; Get next byte
@@ -1437,7 +1189,8 @@ note_done_decoding:
 	; In the same order they appear.  We don't bother?
 handle_effects:
 
-	lda	spec_command						; 4
+spec_command_smc:
+	lda	#$d1							; 2
 
 	;==============================
 	; Effect #1 -- Tone Down
@@ -1523,30 +1276,34 @@ skip_step_inc1:
 ;	a->tone_delta=GetNoteFreq(a->note,pt3)-
 ;		GetNoteFreq(prev_note,pt3);
 
-	lda	note_a+NOTE_NOTE,X
-	jsr	GetNoteFreq
-	lda	freq_l
-	sta	temp_word_l
-	lda	freq_h
-	sta	temp_word_h
+	sty	PT3_TEMP		; save Y
+prev_note_smc:
+	ldy	#$d1
+	lda	NoteTable_low,Y		; GetNoteFreq
+	sta	temp_word_l2_smc+1
+	lda	NoteTable_high,Y	; GetNoteFreq
+	sta	temp_word_h2_smc+1
 
-	lda	prev_note
-	jsr	GetNoteFreq
+	ldy	note_a+NOTE_NOTE,X
+	lda	NoteTable_low,Y		; GetNoteFreq
 
 	sec
-	lda	temp_word_l
-	sbc	freq_l
+temp_word_l2_smc:
+	sbc	#$d1
 	sta	note_a+NOTE_TONE_DELTA_L,X
-	lda	temp_word_h
-	sbc	freq_h
+	lda	NoteTable_high,Y	; GetNoteFreq
+temp_word_h2_smc:
+	sbc	#$d1
 	sta	note_a+NOTE_TONE_DELTA_H,X
 
 	; a->slide_to_note=a->note;
 	lda	note_a+NOTE_NOTE,X
 	sta	note_a+NOTE_SLIDE_TO_NOTE,X
 
+	ldy	PT3_TEMP		; restore Y
+
 	; a->note=prev_note;
-	lda	prev_note
+	lda	prev_note_smc+1
 	sta	note_a+NOTE_NOTE,X
 
 	; implement file version 6 and above slide behavior
@@ -1554,9 +1311,11 @@ skip_step_inc1:
 version_smc:
 	jmp	weird_version	; (JMP to BIT via smc)		; 3
 
-	lda	prev_sliding_l
+prev_sliding_l_smc:
+	lda	#$d1
 	sta	note_a+NOTE_TONE_SLIDING_L,X
-	lda	prev_sliding_h
+prev_sliding_h_smc:
+	lda	#$d1
 	sta	note_a+NOTE_TONE_SLIDING_H,X
 
 weird_version:
@@ -1568,7 +1327,7 @@ weird_version:
 	sbc	note_a+NOTE_TONE_SLIDING_L,X
 	lda	note_a+NOTE_TONE_DELTA_H,X
 	sbc	note_a+NOTE_TONE_SLIDING_H,X
-	bpl	no_need
+	bpl	no_effect
 
 	; a->tone_slide_step = -a->tone_slide_step;
 
@@ -1581,8 +1340,6 @@ weird_version:
 	eor	#$ff
 	adc	#$0
 	sta	note_a+NOTE_TONE_SLIDE_STEP_H,X
-
-no_need:
 
 	jmp	no_effect
 
@@ -1645,18 +1402,18 @@ effect_8:
 	; delay
 	lda	(PATTERN_L),Y	; load byte, set as speed
 	iny
-	sta	pt3_envelope_delay
-	sta	pt3_envelope_delay_orig
+	sta	pt3_envelope_delay_smc+1
+	sta	pt3_envelope_delay_orig_smc+1
 
 	; low value
 	lda	(PATTERN_L),Y	; load byte, set as low
 	iny
-	sta	pt3_envelope_slide_add_l
+	sta	pt3_envelope_slide_add_l_smc+1
 
 	; high value
 	lda	(PATTERN_L),Y	; load byte, set as high
 	iny
-	sta	pt3_envelope_slide_add_h
+	sta	pt3_envelope_slide_add_h_smc+1
 
 	bne	no_effect	; branch always
 
@@ -1698,30 +1455,30 @@ no_effect:
 
 set_envelope:
 
-	sta	pt3_envelope_type					; 4
+	sta	pt3_envelope_type_smc+1					; 4
 
 ;	give fake old to force update?  maybe only needed if printing?
 ;	pt3->envelope_type_old=0x78;
 
 	lda	#$78							; 2
-	sta	pt3_envelope_type_old					; 4
+	sta	pt3_envelope_type_old_smc+1				; 4
 
 	; get next byte
 	iny								; 2
 	lda	(PATTERN_L),Y						; 5+
-	sta	pt3_envelope_period_h					; 4
+	sta	pt3_envelope_period_h_smc+1				; 4
 
 	iny								; 2
 	lda	(PATTERN_L),Y						; 5+
-	sta	pt3_envelope_period_l					; 4
+	sta	pt3_envelope_period_l_smc+1				; 4
 
 	lda	#1							; 2
 	sta	note_a+NOTE_ENVELOPE_ENABLED,X	; envelope_enabled=1	; 5
 	lsr								; 2
 	sta	note_a+NOTE_ORNAMENT_POSITION,X	; ornament_position=0	; 5
-	sta	pt3_envelope_delay		; envelope_delay=0	; 4
-	sta	pt3_envelope_slide_l		; envelope_slide=0	; 4
-	sta	pt3_envelope_slide_h					; 4
+	sta	pt3_envelope_delay_smc+1	; envelope_delay=0	; 4
+	sta	pt3_envelope_slide_l_smc+1	; envelope_slide=0	; 4
+	sta	pt3_envelope_slide_h_smc+1				; 4
 
 	rts								; 6
 								;===========
@@ -1769,7 +1526,8 @@ is_done:
 pt3_set_pattern:
 
 	; Lookup current pattern in pattern table
-	ldy	current_pattern						; 4
+current_pattern_smc:
+	ldy	#$d1							; 2
 	lda	PT3_LOC+PT3_PATTERN_TABLE,Y				; 4+
 
 	; if value is $FF we are at the end of the song
@@ -1777,7 +1535,7 @@ pt3_set_pattern:
 	beq	is_done							; 2/3
 
 								;============
-								;   22 if end
+								;   20 if end
 
 not_done:
 
@@ -1823,12 +1581,12 @@ not_done:
 
 	; clear out the noise channel
 	lda	#0							; 2
-	sta	pt3_noise_period					; 4
+	sta	pt3_noise_period_smc+1					; 4
 
 	; Set all three channels as active
 	; FIXME: num_channels, may need to be 6 if doing 6-channel pt3?
 	lda	#3							; 2
-	sta	pt3_pattern_done					; 4
+	sta	pt3_pattern_done_smc+1					; 4
 
 	rts								; 6
 
@@ -1844,12 +1602,12 @@ not_done:
 	; pattern done early!
 
 early_end:
-	inc	current_pattern		; increment pattern		; 6
-	sta	current_line						; 4
-	sta	current_subframe					; 4
+	inc	current_pattern_smc+1	; increment pattern		; 6
+	sta	current_line_smc+1					; 4
+	sta	current_subframe_smc+1					; 4
 
 check_subframe:
-	lda	current_subframe					; 4
+	lda	current_subframe_smc+1					; 4
 	bne	pattern_good						; 2/3
 
 	; load a new pattern in
@@ -1864,48 +1622,51 @@ pt3_make_frame:
 	; see if we need a new pattern
 	; we do if line==0 and subframe==0
 	; allow fallthrough where possible
-	lda	current_line						; 4
+current_line_smc:
+	lda	#$d1							; 2
 	beq	check_subframe						; 2/3
 
 pattern_good:
 
 	; see if we need a new line
 
-	lda	current_subframe					; 4
+current_subframe_smc:
+	lda	#$d1							; 2
 	bne	line_good						; 2/3
 
 	; decode a new line
 	jsr	pt3_decode_line						; 6+?
 
 	; check if pattern done early
-	lda	pt3_pattern_done					; 4
+pt3_pattern_done_smc:
+	lda	#$d1							; 2
 	beq	early_end						; 2/3
 
 line_good:
 
 	; Increment everything
 
-	inc	current_subframe	; subframe++			; 6
-	lda	current_subframe					; 4
+	inc	current_subframe_smc+1	; subframe++			; 6
+	lda	current_subframe_smc+1					; 4
 
 	; if we hit pt3_speed, move to next
 pt3_speed_smc:
-	eor	#0							; 2
+	eor	#$d1							; 2
 	bne	do_frame						; 2/3
 
 next_line:
-	sta	current_subframe	; reset subframe to 0		; 4
+	sta	current_subframe_smc+1	; reset subframe to 0		; 4
 
-	inc	current_line		; and increment line		; 6
-	lda	current_line						; 4
+	inc	current_line_smc+1	; and increment line		; 6
+	lda	current_line_smc+1					; 4
 
 	eor	#64			; always end at 64.		; 2
 	bne	do_frame		; is this always needed?	; 2/3
 
 next_pattern:
-	sta	current_line		; reset line to 0		; 4
+	sta	current_line_smc+1	; reset line to 0		; 4
 
-	inc	current_pattern		; increment pattern		; 6
+	inc	current_pattern_smc+1	; increment pattern		; 6
 
 do_frame:
 	; AY-3-8910 register summary
@@ -1920,11 +1681,11 @@ do_frame:
 	; R13 = Envelope Shape, 0xff means don't write
 	; R14/R15 = I/O (ignored)
 
-	lda	#0			; needed			; 2
-	sta	pt3_mixer_value						; 4
-	sta	pt3_envelope_add					; 4
+	ldx	#0			; needed			; 2
+	stx	PT3_MIXER_VAL						; 3
+	stx	pt3_envelope_add_smc+1					; 4
 
-	ldx	#(NOTE_STRUCT_SIZE*0)	; Note A			; 2
+	;;ldx	#(NOTE_STRUCT_SIZE*0)	; Note A			; 2
 	jsr	calculate_note						; 6+?
 	ldx	#(NOTE_STRUCT_SIZE*1)	; Note B			; 2
 	jsr	calculate_note						; 6+?
@@ -2064,8 +1825,10 @@ no_scale_c:
 	; Noise
 	; frame[6]= (pt3->noise_period+pt3->noise_add)&0x1f;
 	clc								; 2
-	lda	pt3_noise_period					; 4
-	adc	pt3_noise_add						; 4
+pt3_noise_period_smc:
+	lda	#$d1							; 2
+pt3_noise_add_smc:
+	adc	#$d1							; 2
 	and	#$1f							; 2
 	sta	AY_REGISTERS+6						; 3
 
@@ -2096,36 +1859,40 @@ no_scale_n:
 	;=======================
 	; Mixer
 
-	lda	pt3_mixer_value						; 4
-	sta	AY_REGISTERS+7						; 3
+	; PT3_MIXER_VAL is already in AY_REGISTERS+7
 
 	;=======================
 	; Amplitudes
 
-	lda	note_a+NOTE_AMPLITUDE					; 4
+	lda	note_a+NOTE_AMPLITUDE					; 3
 	sta	AY_REGISTERS+8						; 3
-	lda	note_b+NOTE_AMPLITUDE					; 4
+	lda	note_b+NOTE_AMPLITUDE					; 3
 	sta	AY_REGISTERS+9						; 3
-	lda	note_c+NOTE_AMPLITUDE					; 4
+	lda	note_c+NOTE_AMPLITUDE					; 3
 	sta	AY_REGISTERS+10						; 3
 
 	;======================================
 	; Envelope period
 	; result=period+add+slide (16-bits)
 	clc								; 2
-	lda	pt3_envelope_period_l					; 4
-	adc	pt3_envelope_add					; 4
+pt3_envelope_period_l_smc:
+	lda	#$d1							; 2
+pt3_envelope_add_smc:
+	adc	#$d1							; 2
 	tay								; 2
-	lda	pt3_envelope_period_h					; 4
+pt3_envelope_period_h_smc:
+	lda	#$d1							; 2
 	adc	#0							; 2
-	sta	temp_word_h						; 4
+	tax								; 2
 
 	clc								; 2
 	tya								; 2
-	adc	pt3_envelope_slide_l					; 4
+pt3_envelope_slide_l_smc:
+	adc	#$d1							; 2
 	sta	AY_REGISTERS+11						; 3
-	lda	temp_word_h						; 4
-	adc	pt3_envelope_slide_h					; 4
+	txa								; 2
+pt3_envelope_slide_h_smc:
+	adc	#$d1							; 2
 	sta	AY_REGISTERS+12						; 3
 
 convert_177_smc5:
@@ -2168,9 +1935,11 @@ no_scale_e:
 	;========================
 	; Envelope shape
 
-	lda	pt3_envelope_type					; 4
-	cmp	pt3_envelope_type_old					; 4
-	sta	pt3_envelope_type_old	; copy old to new		; 4
+pt3_envelope_type_smc:
+	lda	#$d1							; 2
+pt3_envelope_type_old_smc:
+	cmp	#$d1							; 2
+	sta	pt3_envelope_type_old_smc+1; copy old to new		; 4
 	bne	envelope_diff						; 2/3
 envelope_same:
 	lda	#$ff			; if same, store $ff		; 2
@@ -2183,166 +1952,39 @@ envelope_diff:
 	; end-of-frame envelope update
 	;==============================
 
-	lda	pt3_envelope_delay					; 4
+pt3_envelope_delay_smc:
+	lda	#$d1							; 2
 	beq	done_do_frame		; assume can't be negative?	; 2/3
 					; do this if envelope_delay>0
-	dec	pt3_envelope_delay					; 6
+	dec	pt3_envelope_delay_smc+1				; 6
 	bne	done_do_frame						; 2/3
 					; only do if we hit 0
-	lda	pt3_envelope_delay_orig	; reset envelope delay		; 4
-	sta	pt3_envelope_delay					; 4
+pt3_envelope_delay_orig_smc:
+	lda	#$d1			; reset envelope delay		; 2
+	sta	pt3_envelope_delay_smc+1				; 4
 
 	clc				; 16-bit add			; 2
-	lda	pt3_envelope_slide_l					; 4
-	adc	pt3_envelope_slide_add_l				; 4
-	sta	pt3_envelope_slide_l					; 4
-	lda	pt3_envelope_slide_h					; 4
-	adc	pt3_envelope_slide_add_h				; 4
-	sta	pt3_envelope_slide_h					; 4
+	lda	pt3_envelope_slide_l_smc+1				; 4
+pt3_envelope_slide_add_l_smc:
+	adc	#$d1							; 2
+	sta	pt3_envelope_slide_l_smc+1				; 4
+	lda	pt3_envelope_slide_h_smc+1				; 4
+pt3_envelope_slide_add_h_smc:
+	adc	#$d1							; 2
+	sta	pt3_envelope_slide_h_smc+1				; 4
 
 done_do_frame:
 
 	rts								; 6
 
-	;======================================
-	; GetNoteFreq
-	;======================================
-	; Return frequency from lookup table
-	; Which note is in A
-	; return in freq_l/freq_h
 
-	; FIXME: self modify code
-GetNoteFreq:
+; note, you might have slightly better performance if these are aligned
+; so that loads don't have to cross page boundaries
 
-	sty	PT3_TEMP						; 3
-
-	tay								; 2
-	lda	PT3_LOC+PT3_HEADER_FREQUENCY				; 4
-	cmp	#1							; 2
-	bne	freq_table_2						; 2/3
-
-	lda	PT3NoteTable_ST_high,Y					; 4+
-	sta	freq_h							; 4
-	lda	PT3NoteTable_ST_low,Y					; 4+
-	sta	freq_l							; 4
-
-	ldy	PT3_TEMP						; 3
-	rts								; 6
-								;===========
-								;	40
-
-
-freq_table_2:
-	lda	PT3NoteTable_ASM_34_35_high,Y				; 4+
-	sta	freq_h							; 4
-	lda	PT3NoteTable_ASM_34_35_low,Y				; 4+
-	sta	freq_l							; 4
-
-	ldy	PT3_TEMP						; 3
-        rts								; 6
-								;===========
-								;	41
-
-
-; Table #1 of Pro Tracker 3.3x - 3.5x
-PT3NoteTable_ST_high:
-.byte $0E,$0E,$0D,$0C,$0B,$0B,$0A,$09
-.byte $09,$08,$08,$07,$07,$07,$06,$06
-.byte $05,$05,$05,$04,$04,$04,$04,$03
-.byte $03,$03,$03,$03,$02,$02,$02,$02
-.byte $02,$02,$02,$01,$01,$01,$01,$01
-.byte $01,$01,$01,$01,$01,$01,$01,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-
-PT3NoteTable_ST_low:
-.byte $F8,$10,$60,$80,$D8,$28,$88,$F0
-.byte $60,$E0,$58,$E0,$7C,$08,$B0,$40
-.byte $EC,$94,$44,$F8,$B0,$70,$2C,$FD
-.byte $BE,$84,$58,$20,$F6,$CA,$A2,$7C
-.byte $58,$38,$16,$F8,$DF,$C2,$AC,$90
-.byte $7B,$65,$51,$3E,$2C,$1C,$0A,$FC
-.byte $EF,$E1,$D6,$C8,$BD,$B2,$A8,$9F
-.byte $96,$8E,$85,$7E,$77,$70,$6B,$64
-.byte $5E,$59,$54,$4F,$4B,$47,$42,$3F
-.byte $3B,$38,$35,$32,$2F,$2C,$2A,$27
-.byte $25,$23,$21,$1F,$1D,$1C,$1A,$19
-.byte $17,$16,$15,$13,$12,$11,$10,$0F
-
-
-; Table #2 of Pro Tracker 3.4x - 3.5x
-PT3NoteTable_ASM_34_35_high:
-.byte $0D,$0C,$0B,$0A,$0A,$09,$09,$08
-.byte $08,$07,$07,$06,$06,$06,$05,$05
-.byte $05,$04,$04,$04,$04,$03,$03,$03
-.byte $03,$03,$02,$02,$02,$02,$02,$02
-.byte $02,$01,$01,$01,$01,$01,$01,$01
-.byte $01,$01,$01,$01,$01,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00
-
-PT3NoteTable_ASM_34_35_low:
-.byte $10,$55,$A4,$FC,$5F,$CA,$3D,$B8
-.byte $3B,$C5,$55,$EC,$88,$2A,$D2,$7E
-.byte $2F,$E5,$9E,$5C,$1D,$E2,$AB,$76
-.byte $44,$15,$E9,$BF,$98,$72,$4F,$2E
-.byte $0F,$F1,$D5,$BB,$A2,$8B,$74,$60
-.byte $4C,$39,$28,$17,$07,$F9,$EB,$DD
-.byte $D1,$C5,$BA,$B0,$A6,$9D,$94,$8C
-.byte $84,$7C,$75,$6F,$69,$63,$5D,$58
-.byte $53,$4E,$4A,$46,$42,$3E,$3B,$37
-.byte $34,$31,$2F,$2C,$29,$27,$25,$23
-.byte $21,$1F,$1D,$1C,$1A,$19,$17,$16
-.byte $15,$14,$12,$11,$10,$0F,$0E,$0D
-
-
-;PT3VolumeTable_33_34:
-;.byte $0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0
-;.byte $0,$0,$0,$0,$0,$0,$0,$0,$1,$1,$1,$1,$1,$1,$1,$1
-;.byte $0,$0,$0,$0,$0,$0,$1,$1,$1,$1,$1,$2,$2,$2,$2,$2
-;.byte $0,$0,$0,$0,$1,$1,$1,$1,$2,$2,$2,$2,$3,$3,$3,$3
-;.byte $0,$0,$0,$0,$1,$1,$1,$2,$2,$2,$3,$3,$3,$4,$4,$4
-;.byte $0,$0,$0,$1,$1,$1,$2,$2,$3,$3,$3,$4,$4,$4,$5,$5
-;.byte $0,$0,$0,$1,$1,$2,$2,$3,$3,$3,$4,$4,$5,$5,$6,$6
-;.byte $0,$0,$1,$1,$2,$2,$3,$3,$4,$4,$5,$5,$6,$6,$7,$7
-;.byte $0,$0,$1,$1,$2,$2,$3,$3,$4,$5,$5,$6,$6,$7,$7,$8
-;.byte $0,$0,$1,$1,$2,$3,$3,$4,$5,$5,$6,$6,$7,$8,$8,$9
-;.byte $0,$0,$1,$2,$2,$3,$4,$4,$5,$6,$6,$7,$8,$8,$9,$A
-;.byte $0,$0,$1,$2,$3,$3,$4,$5,$6,$6,$7,$8,$9,$9,$A,$B
-;.byte $0,$0,$1,$2,$3,$4,$4,$5,$6,$7,$8,$8,$9,$A,$B,$C
-;.byte $0,$0,$1,$2,$3,$4,$5,$6,$7,$7,$8,$9,$A,$B,$C,$D
-;.byte $0,$0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E
-;.byte $0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E,$F
-
-;PT3VolumeTable_35:
-;.byte $0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0,$0
-;.byte $0,$0,$0,$0,$0,$0,$0,$0,$1,$1,$1,$1,$1,$1,$1,$1
-;.byte $0,$0,$0,$0,$1,$1,$1,$1,$1,$1,$1,$1,$2,$2,$2,$2
-;.byte $0,$0,$0,$1,$1,$1,$1,$1,$2,$2,$2,$2,$2,$3,$3,$3
-;.byte $0,$0,$1,$1,$1,$1,$2,$2,$2,$2,$3,$3,$3,$3,$4,$4
-;.byte $0,$0,$1,$1,$1,$2,$2,$2,$3,$3,$3,$4,$4,$4,$5,$5
-;.byte $0,$0,$1,$1,$2,$2,$2,$3,$3,$4,$4,$4,$5,$5,$6,$6
-;.byte $0,$0,$1,$1,$2,$2,$3,$3,$4,$4,$5,$5,$6,$6,$7,$7
-;.byte $0,$1,$1,$2,$2,$3,$3,$4,$4,$5,$5,$6,$6,$7,$7,$8
-;.byte $0,$1,$1,$2,$2,$3,$4,$4,$5,$5,$6,$7,$7,$8,$8,$9
-;.byte $0,$1,$1,$2,$3,$3,$4,$5,$5,$6,$7,$7,$8,$9,$9,$A
-;.byte $0,$1,$1,$2,$3,$4,$4,$5,$6,$7,$7,$8,$9,$A,$A,$B
-;.byte $0,$1,$2,$2,$3,$4,$5,$6,$6,$7,$8,$9,$A,$A,$B,$C
-;.byte $0,$1,$2,$3,$3,$4,$5,$6,$7,$8,$9,$A,$A,$B,$C,$D
-;.byte $0,$1,$2,$3,$4,$5,$6,$7,$7,$8,$9,$A,$B,$C,$D,$E
-;.byte $0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$A,$B,$C,$D,$E,$F
-
-
-
-
+NoteTable_high:
+	.res 96,0
+NoteTable_low:
+	.res 96,0
 
 VolumeTable:
 	.res 256,0

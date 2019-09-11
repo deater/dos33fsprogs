@@ -32,8 +32,8 @@ pt3_setup:
 	cmp	#6
 	beq	apple_iie_or_newer
 
-	lda	#1		; set if older than a IIe
-	sta	apple_ii
+	;lda	#$d0		; set if older than a IIe
+	;sta	apple_ii_smc
 	jmp	done_apple_detect
 apple_iie_or_newer:
 	lda	$FBC0		; 0 on a IIc
@@ -69,8 +69,10 @@ done_apple_detect:
 	;===============
 
 	lda	#0
+	sta	DRAW_PAGE
 	sta	DONE_PLAYING
 	sta	LOOP
+
 
 	;=======================
 	; Detect mockingboard
@@ -83,32 +85,32 @@ done_apple_detect:
 
 	; print detection message
 
-;	lda	#<mocking_message		; load loading message
-;	sta	OUTL
-;	lda	#>mocking_message
-;	sta	OUTH
-;	jsr	move_and_print			; print it
+	lda	#<mocking_message		; load loading message
+	sta	OUTL
+	lda	#>mocking_message
+	sta	OUTH
+	jsr	move_and_print			; print it
 
 	jsr	mockingboard_detect_slot4	; call detection routine
 	cpx	#$1
 	beq	mockingboard_found
 
-;	lda	#<not_message			; if not found, print that
-;	sta	OUTL
-;	lda	#>not_message
-;	sta	OUTH
-;	inc	CV
-;	jsr	move_and_print
+	lda	#<not_message			; if not found, print that
+	sta	OUTL
+	lda	#>not_message
+	sta	OUTH
+	inc	CV
+	jsr	move_and_print
 
-;	jmp	forever_loop			; and wait forever
+	jmp	forever_loop			; and wait forever
 
 mockingboard_found:
-;	lda     #<found_message			; print found message
-;	sta     OUTL
-;	lda     #>found_message
-;	sta     OUTH
-;	inc     CV
-;	jsr     move_and_print
+	lda     #<found_message			; print found message
+	sta     OUTL
+	lda     #>found_message
+	sta     OUTH
+	inc     CV
+	jsr     move_and_print
 
 	;============================
 	; Init the Mockingboard
@@ -170,8 +172,8 @@ start_interrupts:
 	;============================
 	; Loop forever
 	;============================
+forever_loop:
 main_loop:
-
 	jmp	main_loop
 
 
@@ -187,23 +189,26 @@ main_loop:
 ; vars
 ;=========
 
-time_frame:	.byte	$0
-apple_ii:	.byte	$0
-
 ;=========
 ;routines
 ;=========
 .include	"mockingboard_a.s"
 .include	"interrupt_handler.s"
-.include	"pt3_lib.s"
+.include	"pt3_lib_core.s"
+.include	"pt3_lib_init.s"
+
+.include	"text_print.s"
+.include	"gr_offsets.s"
 
 ;=========
 ; strings
 ;=========
-;mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
-not_message:		.byte   "NOT "
-found_message:		.asciiz "FOUND"
-;done_message:		.asciiz "DONE PLAYING"
+mocking_message:	.byte $0,$0
+			.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
+not_message:		.byte $0,$1
+			.asciiz "+ NOT FOUND"
+found_message:		.byte $0,$1
+			.asciiz "+ FOUND"
 
 ;=============
 ; include song

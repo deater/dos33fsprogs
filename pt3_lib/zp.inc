@@ -34,6 +34,10 @@ SEEDH	=	$4F
 ; dos33 zero page = 26-2f, 35-38, 3e 3f 40-4d 
 ; overlap applesoft  67-6a,6f,70,af,b0,ca-cd,d8 
 
+DRAW_PAGE	= $6D
+OUTL		= $6E
+OUTH		= $6F
+
 AY_REGISTERS	= $70
 A_FINE_TONE	= $70
 A_COARSE_TONE	= $71
@@ -43,6 +47,7 @@ C_FINE_TONE	= $74
 C_COARSE_TONE	= $75
 NOISE		= $76
 ENABLE		= $77
+PT3_MIXER_VAL	= $77
 A_VOLUME	= $78
 B_VOLUME	= $79
 C_VOLUME	= $7A
