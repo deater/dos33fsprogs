@@ -24,6 +24,7 @@
 ; + 2739 bytes -- qkumba's crazy SMC everywhere patch
 ; + 2418+143 = 2561 bytes -- move NOTE structs to page0
 ; + 2423+143 = 2566 bytes -- fix vibrato code
+; + 2554+143 = 2697 bytes -- generate all four tone tables
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?
@@ -901,13 +902,13 @@ note_not_too_high:
 
 	;  w = GetNoteFreq(j,pt3->frequency_table);
 
-	jsr	GetNoteFreq
+	tay	; for GetNoteFreq
+;	jsr	GetNoteFreq
 
 	;  a->tone = (a->tone + a->tone_sliding + w) & 0xfff;
 
 	clc
-	ldy	note_a+NOTE_TONE_SLIDING_L,X
-	tya
+	lda	note_a+NOTE_TONE_SLIDING_L,X
 	adc	note_a+NOTE_TONE_L,X
 
 	sta	temp_word_l1_smc+1
@@ -915,16 +916,20 @@ note_not_too_high:
 	adc	note_a+NOTE_TONE_SLIDING_H,X
 	sta	temp_word_h1_smc+1
 
+
+
 	clc	;;can be removed if ADC SLIDING_H cannot overflow
 temp_word_l1_smc:
 	lda	#$d1
 freq_l_smc:
-	adc	#$d1
+;	adc	#$d1			; GetNoteFreq
+	adc	NoteTable_low,Y		; GetNoteFreq
 	sta	note_a+NOTE_TONE_L,X
 temp_word_h1_smc:
 	lda	#$d1
 freq_h_smc:
-	adc	#$d1
+;	adc	#$d1			; GetNoteFreq
+	adc	NoteTable_high,Y
 	and	#$0f
 	sta	note_a+NOTE_TONE_H,X
 
@@ -941,7 +946,7 @@ freq_h_smc:
 
 	; a->tone_sliding+=a->tone_slide_step
 	clc	;;can be removed if ADC freq_h cannot overflow
-	tya
+	lda	note_a+NOTE_TONE_SLIDING_L,X
 	adc	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	sta	note_a+NOTE_TONE_SLIDING_L,X
 	tay
@@ -1701,22 +1706,27 @@ skip_step_inc1:
 ;	a->tone_delta=GetNoteFreq(a->note,pt3)-
 ;		GetNoteFreq(prev_note,pt3);
 
+	sty	TEMP			; save Y
 prev_note_smc:
-	lda	#$d1
-	jsr	GetNoteFreq
-	lda	freq_l_smc+1
+	ldy	#$d1
+;	jsr	GetNoteFreq
+;	lda	freq_l_smc+1
+	lda	NoteTable_low,Y		; GetNoteFreq
 	sta	temp_word_l2_smc+1
-	lda	freq_h_smc+1
+	lda	NoteTable_high,Y	; GetNoteFreq
+;	lda	freq_h_smc+1
 	sta	temp_word_h2_smc+1
 
-	lda	note_a+NOTE_NOTE,X
-	jsr	GetNoteFreq
+	ldy	note_a+NOTE_NOTE,X
+;	jsr	GetNoteFreq
+	lda	NoteTable_low,Y		; GetNoteFreq
 
 	sec
 temp_word_l2_smc:
 	sbc	#$d1
 	sta	note_a+NOTE_TONE_DELTA_L,X
-	lda	freq_h_smc+1
+;	lda	freq_h_smc+1
+	lda	NoteTable_high,Y	; GetNoteFreq
 temp_word_h2_smc:
 	sbc	#$d1
 	sta	note_a+NOTE_TONE_DELTA_H,X
@@ -1724,6 +1734,8 @@ temp_word_h2_smc:
 	; a->slide_to_note=a->note;
 	lda	note_a+NOTE_NOTE,X
 	sta	note_a+NOTE_SLIDE_TO_NOTE,X
+
+	ldy	TEMP			; restore Y
 
 	; a->note=prev_note;
 	lda	prev_note_smc+1
@@ -2407,18 +2419,18 @@ done_do_frame:
 	; Which note is in A
 	; return in freq_l/freq_h
 
-GetNoteFreq:
+;GetNoteFreq:
 
-	sty	PT3_TEMP						; 3
-	tay								; 2
+;	sty	PT3_TEMP						; 3
+;	tay								; 2
 
-	lda	NoteTable_high,Y					; 4+
-	sta	freq_h_smc+1						; 4
-	lda	NoteTable_low,Y						; 4+
-	sta	freq_l_smc+1						; 4
+;	lda	NoteTable_high,Y					; 4+
+;	sta	freq_h_smc+1						; 4
+;	lda	NoteTable_low,Y						; 4+
+;	sta	freq_l_smc+1						; 4
 
-	ldy	PT3_TEMP						; 3
-	rts								; 6
+;	ldy	PT3_TEMP						; 3
+;	rts								; 6
 								;===========
 
 

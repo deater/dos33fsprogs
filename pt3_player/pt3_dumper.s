@@ -422,11 +422,14 @@ FRAMEH:	.byte	$00
 
 song_list:
 
-;	.asciiz "CR.PT3"
-	.asciiz "EA.PT3"
-;	.asciiz "RI.PT3"
-;	.asciiz "OO.PT3"
-;	.asciiz "DY.PT3"
+;	.asciiz "IT.PT3"	; ST
+;	.asciiz "CR.PT3"	; ST
+;	.asciiz "EA.PT3"	; ST
+;	.asciiz "RI.PT3"	; ST
+;	.asciiz "OO.PT3"	; ASM_34_35
+;	.asciiz "DY.PT3"	; ASM_34_35
+;	.asciiz "BH.PT3"	; PT_34_35
+	.asciiz "CH.PT3"	; REAL_34_35
 
 ;=========
 ;routines
