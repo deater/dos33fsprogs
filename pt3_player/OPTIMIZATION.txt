@@ -32,6 +32,7 @@ Code Optimization
 	FixVibrato	2423 + 143	1A.1F	26s	171s	15.2%
 	GetNoteSMC	2448 + 143	1A.16	26s	171s	15.2%
 	NoteTableGen	2554 + 143	1A.1C	26s	171s	15.2%
+	InlineGetNote	2537 + 143	19.27	25s	171s	14.6%
 
 Times:							Validated
 	BH.PT3:	10.0B	16	1:33	 93	17.2%	

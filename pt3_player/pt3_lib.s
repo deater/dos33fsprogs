@@ -25,6 +25,7 @@
 ; + 2418+143 = 2561 bytes -- move NOTE structs to page0
 ; + 2423+143 = 2566 bytes -- fix vibrato code
 ; + 2554+143 = 2697 bytes -- generate all four tone tables
+; + 2537+143 = 2680 bytes -- inline GetNoteFreq
 
 ; TODO
 ;   move some of these flags to be bits rather than bytes?
