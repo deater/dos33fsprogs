@@ -592,10 +592,11 @@ not_ascii_number:
 
 	lda	#$2C		; BIT					; 2
 	cpx	#$6							; 2
-	bcc	version_less_than_6		; blt			; 3
-	; carry is set
-	adc	#$1F		; BIT->JMP  2C->4C			; 2
-version_less_than_6:
+	bcs	version_greater_than_or_equal_6	; bgt			; 3
+	; less than 6, jump
+	; also carry is known to be clear
+	adc	#$20		; BIT->JMP  2C->4C			; 2
+version_greater_than_or_equal_6:
 	sta	version_smc						; 4
 
 pick_volume_table:
@@ -910,24 +911,22 @@ note_not_too_high:
 	clc
 	lda	note_a+NOTE_TONE_SLIDING_L,X
 	adc	note_a+NOTE_TONE_L,X
-
 	sta	temp_word_l1_smc+1
+
 	lda	note_a+NOTE_TONE_H,X
 	adc	note_a+NOTE_TONE_SLIDING_H,X
 	sta	temp_word_h1_smc+1
 
-
-
 	clc	;;can be removed if ADC SLIDING_H cannot overflow
 temp_word_l1_smc:
 	lda	#$d1
-freq_l_smc:
+;freq_l_smc:
 ;	adc	#$d1			; GetNoteFreq
 	adc	NoteTable_low,Y		; GetNoteFreq
 	sta	note_a+NOTE_TONE_L,X
 temp_word_h1_smc:
 	lda	#$d1
-freq_h_smc:
+;freq_h_smc:
 ;	adc	#$d1			; GetNoteFreq
 	adc	NoteTable_high,Y
 	and	#$0f
@@ -949,7 +948,7 @@ freq_h_smc:
 	lda	note_a+NOTE_TONE_SLIDING_L,X
 	adc	note_a+NOTE_TONE_SLIDE_STEP_L,X
 	sta	note_a+NOTE_TONE_SLIDING_L,X
-	tay
+	tay					; save NOTE_TONE_SLIDING_L in y
 	lda	note_a+NOTE_TONE_SLIDING_H,X
 	adc	note_a+NOTE_TONE_SLIDE_STEP_H,X
 	sta	note_a+NOTE_TONE_SLIDING_H,X
@@ -970,8 +969,8 @@ check1:
 	;				(a->tone_sliding <= a->tone_delta) ||
 
 	; 16 bit signed compare
-	tya					; NUM1-NUM2
-	cmp	note_a+NOTE_TONE_DELTA_L,X	;
+	tya					; y has NOTE_TONE_SLIDING_L
+	cmp	note_a+NOTE_TONE_DELTA_L,X	; NUM1-NUM2
 	lda	note_a+NOTE_TONE_SLIDING_H,X
 	sbc	note_a+NOTE_TONE_DELTA_H,X
 	bvc	sc_loser1			; N eor V
@@ -980,7 +979,7 @@ sc_loser1:
 	bmi	slide_to_note	; then A (signed) < NUM (signed) and BMI will branch
 
 	; equals case
-	tya
+	tya					; y has NOTE_TONE_SLIDING_L
 	cmp	note_a+NOTE_TONE_DELTA_L,X
 	bne	check2
 	lda	note_a+NOTE_TONE_SLIDING_H,X
@@ -994,8 +993,8 @@ check2:
 	;				(a->tone_sliding >= a->tone_delta)
 
 	; 16 bit signed compare
-	tya					; NUM1-NUM2
-	cmp	note_a+NOTE_TONE_DELTA_L,X	;
+	tya					; y has NOTE_TONE_SLIDING_L
+	cmp	note_a+NOTE_TONE_DELTA_L,X	; num1-num2
 	lda	note_a+NOTE_TONE_SLIDING_H,X
 	sbc	note_a+NOTE_TONE_DELTA_H,X
 	bvc	sc_loser2			; N eor V
