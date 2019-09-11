@@ -3,7 +3,6 @@
 ;=================
 ; template for using the pt3_lib
 
-
 ; zero page definitions
 .include	"zp.inc"
 
@@ -15,6 +14,12 @@
 
 PT3_LOC = song
 
+; the below will make for more compact code, at the expense
+; of using $80 - $ff by our routines.  You'll also need to
+; grab the zp.inc file from the pt3_player code
+
+; PT3_USE_ZERO_PAGE = 1
+
 
 	;=============================
 	; Setup
@@ -24,16 +29,14 @@ pt3_setup:
 	jsr     TEXT
 
 	;===========================
-	; Check for Apple II/II+/IIc
+	; Check for Apple IIc
 	;===========================
-	; this is used to see if we have lowecase support
+	; it does interrupts differently
 
 	lda	$FBB3           ; IIe and newer is $06
 	cmp	#6
 	beq	apple_iie_or_newer
 
-	;lda	#$d0		; set if older than a IIe
-	;sta	apple_ii_smc
 	jmp	done_apple_detect
 apple_iie_or_newer:
 	lda	$FBC0		; 0 on a IIc
@@ -69,7 +72,6 @@ done_apple_detect:
 	;===============
 
 	lda	#0
-	sta	DRAW_PAGE
 	sta	DONE_PLAYING
 	sta	LOOP
 
@@ -78,39 +80,42 @@ done_apple_detect:
 	; Detect mockingboard
 	;========================
 
-	; Note, we do this, but then ignore it, as sometimes
-	; the test fails and then you don't get music.
-	; In theory this could do bad things if you had something
-	; easily confused in slot4, but that's probably not an issue.
-
 	; print detection message
-
-	lda	#<mocking_message		; load loading message
-	sta	OUTL
-	lda	#>mocking_message
-	sta	OUTH
-	jsr	move_and_print			; print it
+	ldy	#0
+print_mocking_message:
+	lda	mocking_message,Y		; load loading message
+	beq	done_mocking_message
+	ora	#$80
+	jsr	COUT
+	iny
+	jmp	print_mocking_message
+done_mocking_message:
+	jsr	CROUT1
 
 	jsr	mockingboard_detect_slot4	; call detection routine
 	cpx	#$1
 	beq	mockingboard_found
 
-	lda	#<not_message			; if not found, print that
-	sta	OUTL
-	lda	#>not_message
-	sta	OUTH
-	inc	CV
-	jsr	move_and_print
+	ldy	#0
+print_not_message:
+	lda	not_message,Y		; load loading message
+	beq	forever_loop
+	ora	#$80
+	jsr	COUT
+	iny
+	jmp	print_not_message
 
-	jmp	forever_loop			; and wait forever
 
 mockingboard_found:
-	lda     #<found_message			; print found message
-	sta     OUTL
-	lda     #>found_message
-	sta     OUTH
-	inc     CV
-	jsr     move_and_print
+	ldy	#0
+print_found_message:
+	lda	found_message,Y		; load loading message
+	beq	done_found_message
+	ora	#$80
+	jsr	COUT
+	iny
+	jmp	print_found_message
+done_found_message:
 
 	;============================
 	; Init the Mockingboard
@@ -173,11 +178,10 @@ start_interrupts:
 	; Loop forever
 	;============================
 forever_loop:
-main_loop:
-	jmp	main_loop
+	jmp	forever_loop
 
 
-;==============================-=========
+;========================================
 ;========================================
 
 ; Helper routines below
@@ -197,18 +201,12 @@ main_loop:
 .include	"pt3_lib_core.s"
 .include	"pt3_lib_init.s"
 
-.include	"text_print.s"
-.include	"gr_offsets.s"
-
 ;=========
 ; strings
 ;=========
-mocking_message:	.byte $0,$0
-			.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
-not_message:		.byte $0,$1
-			.asciiz "+ NOT FOUND"
-found_message:		.byte $0,$1
-			.asciiz "+ FOUND"
+mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
+not_message:		.byte "NOT "
+found_message:		.asciiz "FOUND"
 
 ;=============
 ; include song

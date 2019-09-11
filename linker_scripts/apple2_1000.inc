@@ -4,7 +4,7 @@ MEMORY {
 }
 
 SEGMENTS {
-CODE: load = RAM, type = ro;
+CODE: load = RAM, type = ro, align=$100;
 RODATA: load = RAM, type = ro;
 DATA: load = RAM, type = rw;
 BSS: load = RAM, type = bss, define = yes;
