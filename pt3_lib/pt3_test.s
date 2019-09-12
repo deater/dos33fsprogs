@@ -60,13 +60,13 @@ setup_interrupt:
 	; Set up 50Hz interrupt
 	;========================
 
+	jsr	mockingboard_init
 	jsr	pt3_setup_interrupt
 
 	;============================
 	; Init the Mockingboard
 	;============================
 
-	jsr	mockingboard_init
 	jsr	reset_ay_both
 	jsr	clear_ay_both
 

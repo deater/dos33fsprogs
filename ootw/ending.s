@@ -798,10 +798,14 @@ long_wait:
 .include "gr_offsets.s"
 .include "gr_overlay.s"
 
-.include "pt3_setup.s"
-.include "pt3_lib.s"
+.include "pt3_lib_core.s"
+.include "pt3_lib_init.s"
 .include "interrupt_handler.s"
-.include "mockingboard_a.s"
+.include "pt3_lib_mockingboard.s"
+
+.include "pt3_setup.s"
+
+
 
 ; backgrounds
 .include "ootw_graphics/l15final/ootw_c15_final.inc"

@@ -275,7 +275,8 @@ ENDING:	ending.o
 	ld65 -o ENDING ending.o -C ../linker_scripts/apple2_1700.inc
 
 ending.o:	ending.s \
-	pt3_lib.s mockingboard_a.s pt3_setup.s interrupt_handler.s \
+	pt3_lib_core.s pt3_lib_init.s pt3_lib_mockingboard.s \
+	pt3_setup.s pt3_lib_irq_handler.s interrupt_handler.s \
 	ootw_graphics/l15final/ootw_c15_final.inc \
 	ootw_graphics/l16end/ootw_c16_end.inc \
 	ootw_audio/ootw_outro.pt3
