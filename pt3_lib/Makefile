@@ -22,8 +22,9 @@ PT3_TEST:	pt3_test.o
 	ld65 -o PT3_TEST pt3_test.o -C ../linker_scripts/apple2_1000.inc
 
 pt3_test.o:	pt3_test.s \
-	pt3_lib_init.s pt3_lib_core.s interrupt_handler.s \
-	zp.inc
+	pt3_lib_init.s pt3_lib_core.s pt3_lib_irq_handler.s \
+	pt3_lib_mockingboard.s \
+	interrupt_handler.s zp.inc
 	ca65 -o pt3_test.o pt3_test.s -l pt3_test.lst
 #
 

@@ -239,3 +239,144 @@ mb4_not_in_this_slot:
 	ldx	#00
 	beq	done_mb4_detect
 
+
+	;=============================
+	; Setup
+	;=============================
+pt3_setup_interrupt:
+
+	;===========================
+	; Check for Apple IIc
+	;===========================
+	; it does interrupts differently
+
+	lda	$FBB3           ; IIe and newer is $06
+	cmp	#6
+	beq	apple_iie_or_newer
+
+	jmp	done_apple_detect
+apple_iie_or_newer:
+	lda	$FBC0		; 0 on a IIc
+	bne	done_apple_detect
+apple_iic:
+	; activate IIc mockingboard?
+	; this might only be necessary to allow detection
+	; I get the impression the Mockingboard 4c activates
+	; when you access any of the 6522 ports in Slot 4
+	lda	#$ff
+	sta	$C403
+	sta	$C404
+
+	; bypass the firmware interrupt handler
+	; should we do this on IIe too? probably faster
+
+	sei				; disable interrupts
+	lda	$c08b			; disable ROM (enable language card)
+	lda	$c08b
+	lda	#<interrupt_handler
+	sta	$fffe
+	lda	#>interrupt_handler
+	sta	$ffff
+
+	lda	#$EA			; nop out the "lda $45" in the irq hand
+	sta	interrupt_smc
+	sta	interrupt_smc+1
+
+done_apple_detect:
+
+
+	;=========================
+	; Setup Interrupt Handler
+	;=========================
+	; Vector address goes to 0x3fe/0x3ff
+	; FIXME: should chain any existing handler
+
+	lda	#<interrupt_handler
+	sta	$03fe
+	lda	#>interrupt_handler
+	sta	$03ff
+
+	;============================
+	; Enable 50Hz clock on 6522
+	;============================
+
+	sei			; disable interrupts just in case
+
+	lda	#$40		; Continuous interrupts, don't touch PB7
+	sta	$C40B		; ACR register
+	lda	#$7F		; clear all interrupt flags
+	sta	$C40E		; IER register (interrupt enable)
+
+	lda	#$C0
+	sta	$C40D		; IFR: 1100, enable interrupt on timer one oflow
+	sta	$C40E		; IER: 1100, enable timer one interrupt
+
+	lda	#$E7
+	sta	$C404		; write into low-order latch
+	lda	#$4f
+	sta	$C405		; write into high-order latch,
+				; load both values into counter
+				; clear interrupt and start counting
+
+	; 4fe7 / 1e6 = .020s, 50Hz
+
+	rts
+
+
+
+	;==================================
+	; Print mockingboard detect message
+	;==================================
+	; note: on IIc must do this before enabling interrupt
+	;	as we disable ROM (COUT won't work?)
+
+print_mockingboard_detect:
+
+	; print detection message
+	ldy	#0
+print_mocking_message:
+	lda	mocking_message,Y		; load loading message
+	beq	done_mocking_message
+	ora	#$80
+	jsr	COUT
+	iny
+	jmp	print_mocking_message
+done_mocking_message:
+	jsr	CROUT1
+
+	rts
+
+print_mocking_notfound:
+
+	ldy	#0
+print_not_message:
+	lda	not_message,Y		; load loading message
+	beq	print_not_message_done
+	ora	#$80
+	jsr	COUT
+	iny
+	jmp	print_not_message
+print_not_message_done:
+	rts
+
+print_mocking_found:
+	ldy	#0
+print_found_message:
+	lda	found_message,Y		; load loading message
+	beq	done_found_message
+	ora	#$80
+	jsr	COUT
+	iny
+	jmp	print_found_message
+done_found_message:
+
+	rts
+
+;=========
+; strings
+;=========
+mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
+not_message:		.byte "NOT "
+found_message:		.asciiz "FOUND"
+
+
