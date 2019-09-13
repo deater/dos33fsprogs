@@ -11,6 +11,8 @@
 
 PT3_LOC = song
 
+PT3_USE_ZERO_PAGE = 1
+
 start_rasterbars:
 
 	;===================
@@ -30,72 +32,12 @@ start_rasterbars:
 	lda	#1
 	sta	LOOP
 
-	;=================
-	; Configure mockingboard
-
-	;============================
-	; Check for Apple II/II+/IIc
-	;============================
-
-	lda	$FBB3		; IIe and newer is $06
-	cmp	#6
-	beq	apple_iie_or_newer
-
-	; Apple II/II+
-
-	bne	done_apple_detect
-
-apple_iie_or_newer:
-	lda	$FBC0           ; 0 on a IIc
-	bne	done_apple_detect
-apple_iic:
-	; activate IIc mockingboard?
-	; this might only be necessary to allow detection
-	; I get the impression the Mockingboard 4c activates
-	; when you access any of the 6522 ports in Slot 4
-	lda	#$ff
-	sta	$C403
-	sta	$C404
-
-done_apple_detect:
 
 	;=======================
         ; Detect mockingboard
         ;========================
 
-        ; Note, we do this, but then ignore it, as sometimes
-        ; the test fails and then you don't get music.
-        ; In theory this could do bad things if you had something
-        ; easily confused in slot4, but that's probably not an issue.
-
-        ; print detection message
-
-;       lda     #<mocking_message               ; load loading message
-;       sta     OUTL
-;       lda     #>mocking_message
-;       sta     OUTH
-;       jsr     move_and_print                  ; print it
-
-        jsr     mockingboard_detect_slot4       ; call detection routine
-        cpx     #$1
-        beq     mockingboard_found
-
-;       lda     #<not_message                   ; if not found, print that
-;       sta     OUTL
-;       lda     #>not_message
-;       sta     OUTH
-;       inc     CV
-;       jsr     move_and_print
-
-;       jmp     forever_loop                    ; and wait forever
-
-mockingboard_found:
-;       lda     #<found_message                 ; print found message
-;       sta     OUTL
-;       lda     #>found_message
-;       sta     OUTH
-;       inc     CV
-;       jsr     move_and_print
+	jsr	mockingboard_detect_slot4
 
         ;============================
         ; Init the Mockingboard
@@ -110,7 +52,6 @@ mockingboard_found:
         ;==================
 
         jsr     pt3_init_song
-
 
 	;=============================
 	; Load graphic page0
@@ -515,10 +456,13 @@ smc_raster_color1_2:
 
 
 
-
 .include "gr_simple_clear.s"
 .include "gr_offsets.s"
 .include "gr_unrle.s"
+
+; dummy value for pt3 routines
+pt3_loop_smc:
+.byte	$00,$00
 
 .align $100
 .include "rasterbars_table.s"
@@ -537,8 +481,9 @@ yellow_x:	.byte $20
 green_x:	.byte $30
 blue_x:		.byte $40
 
-.include "pt3_lib_ci.s"
-.include "mockingboard_a.s"
+.include "pt3_lib_core.s"
+.include "pt3_lib_init.s"
+.include "pt3_lib_mockingboard.s"
 
 ;=============
 ; include song

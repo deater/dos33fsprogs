@@ -74,15 +74,6 @@ reset_ay_both:
 	rts
 
 
-	;=======================================
-	; clear ay -- clear all 14 AY registers
-	; should silence the card
-	;=======================================
-clear_ay_both:
-	ldx	#14
-	lda	#0
-	sta	MB_VALUE_smc+1
-clear_ay_left_loop:
 ;	Write sequence
 ;	Inactive -> Latch Address -> Inactive -> Write Data -> Inactive
 
@@ -104,8 +95,7 @@ write_ay_both:
 	sty	MOCK_6522_ORB2						; 3
 
 	; value
-MB_VALUE_smc:
-	lda	#$d1							; 2
+	lda	MB_VALUE						; 3
 	sta	MOCK_6522_ORA1		; put value on PA1		; 3
 	sta	MOCK_6522_ORA2		; put value on PA2		; 3
 	lda	#MOCK_AY_WRITE		;				; 2
@@ -114,8 +104,19 @@ MB_VALUE_smc:
 	sty	MOCK_6522_ORB1						; 3
 	sty	MOCK_6522_ORB2						; 3
 
+	rts								; 6
 								;===========
-								;       44
+								;       51
+	;=======================================
+	; clear ay -- clear all 14 AY registers
+	; should silence the card
+	;=======================================
+clear_ay_both:
+	ldx	#14
+	lda	#0
+	sta	MB_VALUE
+clear_ay_left_loop:
+	jsr	write_ay_both
 	dex
 	bpl	clear_ay_left_loop
 	rts
@@ -143,11 +144,11 @@ mb_detect_loop:	; self-modifying
 mb_check_cycle_loop:
 	lda	(MB_ADDRL),Y		; timer 6522 (Low Order Counter)
 					; count down
-	sta	TEMP			; 3 cycles
+	sta	PT3_TEMP		; 3 cycles
 	lda	(MB_ADDRL),Y		; + 5 cycles = 8 cycles
 					; between the two accesses to the timer
 	sec
-	sbc	TEMP			; subtract to see if we had 8 cycles
+	sbc	PT3_TEMP		; subtract to see if we had 8 cycles
 	cmp	#$f8			; -8
 	bne	mb_not_in_this_slot
 	dex				; decrement, try one more time
@@ -221,11 +222,11 @@ mb4_detect_loop:	; self-modifying
 mb4_check_cycle_loop:
 	lda	(MB_ADDRL),Y		; timer 6522 (Low Order Counter)
 					; count down
-	sta	TEMP			; 3 cycles
+	sta	PT3_TEMP		; 3 cycles
 	lda	(MB_ADDRL),Y		; + 5 cycles = 8 cycles
 					; between the two accesses to the timer
 	sec
-	sbc	TEMP			; subtract to see if we had 8 cycles
+	sbc	PT3_TEMP		; subtract to see if we had 8 cycles
 	cmp	#$f8			; -8
 	bne	mb4_not_in_this_slot
 	dex				; decrement, try one more time
@@ -238,103 +239,144 @@ mb4_not_in_this_slot:
 	ldx	#00
 	beq	done_mb4_detect
 
-
-
-
-
-.align	$100
-
-
-
-
-	;====================================
-	; mb_write_frame
-	;====================================
-	; cycle counted
-
-	; 2 + 13*(70) + 74 + 5  = 991
-
-mb_write_frame:
-
-	ldx	#0		; set up reg count			; 2
-								;============
-								;	  2
-
-	;==================================
-	; loop through the 14 registers
-	; reading the value, then write out
-	;==================================
-
-mb_write_loop:
+.if 0
 	;=============================
-	; not r13 	-- 4+5+28+26+7		= 70
-	; r13, not ff	-- 4+5+ 4 +28+26+7	= 74
-	; r13 is ff 	-- 4+5+3+1=[61] 	= 74
+	; Setup
+	;=============================
+pt3_setup_interrupt:
+
+	;===========================
+	; Check for Apple IIc
+	;===========================
+	; it does interrupts differently
+
+	lda	$FBB3           ; IIe and newer is $06
+	cmp	#6
+	beq	apple_iie_or_newer
+
+	jmp	done_apple_detect
+apple_iie_or_newer:
+	lda	$FBC0		; 0 on a IIc
+	bne	done_apple_detect
+apple_iic:
+	; activate IIc mockingboard?
+	; this might only be necessary to allow detection
+	; I get the impression the Mockingboard 4c activates
+	; when you access any of the 6522 ports in Slot 4
+	lda	#$ff
+	sta	$C403
+	sta	$C404
+
+	; bypass the firmware interrupt handler
+	; should we do this on IIe too? probably faster
+
+	sei				; disable interrupts
+	lda	$c08b			; disable ROM (enable language card)
+	lda	$c08b
+	lda	#<interrupt_handler
+	sta	$fffe
+	lda	#>interrupt_handler
+	sta	$ffff
+
+	lda	#$EA			; nop out the "lda $45" in the irq hand
+	sta	interrupt_smc
+	sta	interrupt_smc+1
+
+done_apple_detect:
 
 
-	lda	AY_REGISTERS,X	; load register value			; 4
+	;=========================
+	; Setup Interrupt Handler
+	;=========================
+	; Vector address goes to 0x3fe/0x3ff
+	; FIXME: should chain any existing handler
 
-	; special case R13.  If it is 0xff, then don't update
-	; otherwise might spuriously reset the envelope settings
+	lda	#<interrupt_handler
+	sta	$03fe
+	lda	#>interrupt_handler
+	sta	$03ff
 
-	cpx	#13							; 2
-	bne	mb_not_13						; 3
+	;============================
+	; Enable 50Hz clock on 6522
+	;============================
 
-									; -1
-	cmp	#$ff							; 2
-	bne	mb_not_13						; 3
-									; -1
+	sei			; disable interrupts just in case
 
+	lda	#$40		; Continuous interrupts, don't touch PB7
+	sta	$C40B		; ACR register
+	lda	#$7F		; clear all interrupt flags
+	sta	$C40E		; IER register (interrupt enable)
 
-	; delay 61
-	inc	TEMP		; 5
-	inc	TEMP		; 5
-	inc	TEMP		; 5
-	inc	TEMP		; 5
-	inc	TEMP		; 5
-	inc	TEMP		; 5
-	inc	TEMP		; 5
-	inc	TEMP		; 5
-	inc	TEMP		; 5
-	inc	TEMP		; 5
-	inc	TEMP		; 5
-	lda	TEMP		; 3
-	jmp	mb_skip_13	; 3
+	lda	#$C0
+	sta	$C40D		; IFR: 1100, enable interrupt on timer one oflow
+	sta	$C40E		; IER: 1100, enable timer one interrupt
 
-mb_not_13:
+	lda	#$E7
+	sta	$C404		; write into low-order latch
+	lda	#$4f
+	sta	$C405		; write into high-order latch,
+				; load both values into counter
+				; clear interrupt and start counting
 
+	; 4fe7 / 1e6 = .020s, 50Hz
 
-	; address
-	stx	MOCK_6522_ORA1		; put address on PA1		; 4
-	stx	MOCK_6522_ORA2		; put address on PA2		; 4
-	ldy	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
-	sty	MOCK_6522_ORB1		; latch_address on PB1          ; 4
-	sty	MOCK_6522_ORB2		; latch_address on PB2		; 4
-	ldy	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sty	MOCK_6522_ORB1						; 4
-	sty	MOCK_6522_ORB2						; 4
-								;==========
-								;	28
-        ; value
-	sta	MOCK_6522_ORA1		; put value on PA1		; 4
-	sta	MOCK_6522_ORA2		; put value on PA2		; 4
-	lda	#MOCK_AY_WRITE		;				; 2
-	sta	MOCK_6522_ORB1		; write on PB1			; 4
-	sta	MOCK_6522_ORB2		; write on PB2			; 4
-	sty	MOCK_6522_ORB1						; 4
-	sty	MOCK_6522_ORB2						; 4
-								;===========
-								; 	26
-mb_no_write:
-	inx				; point to next register	; 2
-	cpx	#14			; if 14 we're done		; 2
-	bmi	mb_write_loop		; otherwise, loop		; 3
-								;============
-								; 	7
-mb_skip_13:
-									; -1
-	rts								; 6
+	rts
+.endif
 
 
-pt3_loop_smc:
-	.byte $0,$0
+	;==================================
+	; Print mockingboard detect message
+	;==================================
+	; note: on IIc must do this before enabling interrupt
+	;	as we disable ROM (COUT won't work?)
+
+print_mockingboard_detect:
+
+	; print detection message
+	ldy	#0
+print_mocking_message:
+	lda	mocking_message,Y		; load loading message
+	beq	done_mocking_message
+	ora	#$80
+	jsr	COUT
+	iny
+	jmp	print_mocking_message
+done_mocking_message:
+	jsr	CROUT1
+
+	rts
+
+print_mocking_notfound:
+
+	ldy	#0
+print_not_message:
+	lda	not_message,Y		; load loading message
+	beq	print_not_message_done
+	ora	#$80
+	jsr	COUT
+	iny
+	jmp	print_not_message
+print_not_message_done:
+	rts
+
+print_mocking_found:
+	ldy	#0
+print_found_message:
+	lda	found_message,Y		; load loading message
+	beq	done_found_message
+	ora	#$80
+	jsr	COUT
+	iny
+	jmp	print_found_message
+done_found_message:
+
+	rts
+
+;=========
+; strings
+;=========
+mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
+not_message:		.byte "NOT "
+found_message:		.asciiz "FOUND"
+
+
