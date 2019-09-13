@@ -178,10 +178,10 @@ display_loop:
 	; -582	-- erase     22+4*(8+6+126) = 582
 	; -696  -- move+draw 4*(16+26+6+126) = 696
 	;  -10  -- keypress
-	; -381	-- calc values
+	; -381(382)	-- calc values
 	; -997  -- mockingboard out
 	;=======
-	; 1884	2881 2265
+	; 1883	2881 2265
 
 pad_time:
 
@@ -362,13 +362,13 @@ pad_time:
 	; WAIT for VBLANK to finish
 	;============================
 
-	; Try X=124 Y=3 cycles=1879R5
+	; Try X=124 Y=3 cycles=1879R4
 
-	lda	TEMP
+	nop
 	nop
 
-	; Try X=2 Y=180 cycles=2881
-	; Try X=112 Y=4 cycles=2265
+	;; Try X=2 Y=180 cycles=2881
+	;; Try X=112 Y=4 cycles=2265
 
 	ldy	#3							; 2
 loop1:	ldx	#124							; 2
