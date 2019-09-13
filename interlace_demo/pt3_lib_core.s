@@ -1466,7 +1466,7 @@ not_done:
 	; update pattern or line if necessary
 	; then calculate the values for the next frame
 
-	; 8+355=363
+	; 8+367=375
 
 	;==========================
 	; pattern done early!
@@ -1558,13 +1558,15 @@ next_pattern:
 
 .endif
 
+
+
 	;======================================
 	; do frame
 	;======================================
 	; ????? FIXME/calculate note
 	;
 
-	; 9+ 184 +    36+11+18+30+18+49 = 355
+	; 9+ 196 +    36+11+18+30+18+49 = 367
 
 do_frame:
 	; AY-3-8910 register summary
@@ -1586,13 +1588,13 @@ do_frame:
 								;	9
 
 	;;ldx	#(NOTE_STRUCT_SIZE*0)	; Note A
-	jsr	calculate_note						; 6+54
+	jsr	calculate_note						; 6+58
 	ldx	#(NOTE_STRUCT_SIZE*1)	; Note B			; 2
-	jsr	calculate_note						; 6+54
+	jsr	calculate_note						; 6+58
 	ldx	#(NOTE_STRUCT_SIZE*2)	; Note C			; 2
-	jsr	calculate_note						; 6+54
+	jsr	calculate_note						; 6+58
 								;=============
-								; FIXME 184
+								; FIXME 196
 
 	; Note, we assume 1MHz timings, adjust pt3 as needed
 
@@ -1675,8 +1677,8 @@ pt3_envelope_slide_h_smc:
 
 	;========================
 	; Envelope shape
-	; same=18
-	; diff=14+[4]
+	; same=11 + 7 = 18
+	; diff=11 + [4] + 3 = 18
 
 pt3_envelope_type_smc:
 	lda	#$d1							; 2
@@ -1684,6 +1686,8 @@ pt3_envelope_type_old_smc:
 	cmp	#$d1							; 2
 	sta	pt3_envelope_type_old_smc+1; copy old to new		; 4
 	bne	envelope_diff_waste					; 3
+								;============
+								;        11
 envelope_same:
 									;-1
 	lda	#$ff			; if same, store $ff		; 2
@@ -1702,9 +1706,9 @@ envelope_diff:
 	;==============================
 
 	; if envelope delay 0, skip
-	;	= 5+6 + [38] = 49
+	;	= 5+ [38]  + 6 = 49
 	; else if envelope delay 1, skip
-	;	= 5+8+6 + [30] = 49
+	;	= 5+8+[30] + 6 = 49
 	; else
 	;	= 5+8+30+6 = 49
 
@@ -1712,6 +1716,9 @@ pt3_envelope_delay_smc:
 	lda	#$d1							; 2
 	beq	done_do_frame_x		; assume can't be negative?	; 3
 					; do this if envelope_delay>0
+									;====
+									; 5
+
 									; -1
 	dec	pt3_envelope_delay_smc+1				; 6
 	bne	done_do_frame_y						; 3

@@ -178,10 +178,10 @@ display_loop:
 	; -582	-- erase     22+4*(8+6+126) = 582
 	; -696  -- move+draw 4*(16+26+6+126) = 696
 	;  -10  -- keypress
-	; -369	-- calc values
+	; -381	-- calc values
 	; -997  -- mockingboard out
 	;=======
-	; 1896
+	; 1884	2881 2265
 
 pad_time:
 
@@ -211,7 +211,7 @@ pad_time:
 
 	; erase yellow
 
-	lda	yellow_x				; 4
+	lda	yellow_x			; 4
 	and	#$7f				; 2
 	tax					; 2
 
@@ -354,7 +354,7 @@ pad_time:
 	;============================
 
 
-	jsr	pt3_make_frame		; 6+363	= 369
+	jsr	pt3_make_frame		; 6+375	= 381
 	jsr	mb_write_frame		; 6+991 = 997
 
 
@@ -362,12 +362,16 @@ pad_time:
 	; WAIT for VBLANK to finish
 	;============================
 
-	; Try X=125 Y=3 cycles=1894R2
+	; Try X=124 Y=3 cycles=1879R5
 
+	lda	TEMP
 	nop
 
+	; Try X=2 Y=180 cycles=2881
+	; Try X=112 Y=4 cycles=2265
+
 	ldy	#3							; 2
-loop1:	ldx	#125							; 2
+loop1:	ldx	#124							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -460,10 +464,6 @@ smc_raster_color1_2:
 .include "gr_offsets.s"
 .include "gr_unrle.s"
 
-; dummy value for pt3 routines
-pt3_loop_smc:
-.byte	$00,$00
-
 .align $100
 .include "rasterbars_table.s"
 .include "movement_table.s"
@@ -484,6 +484,7 @@ blue_x:		.byte $40
 .include "pt3_lib_core.s"
 .include "pt3_lib_init.s"
 .include "pt3_lib_mockingboard.s"
+.include "pt3_write_frame.s"
 
 ;=============
 ; include song

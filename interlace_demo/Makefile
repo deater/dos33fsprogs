@@ -7,11 +7,11 @@ PNG_TO_40x48D = ../gr-utils/png_to_40x48d
 
 all:	interlace.dsk
 
-interlace.dsk:	INTERLACE RASTERBARS SPRITES HELLO RASTERBARS_SOUND
+interlace.dsk:	INTERLACE RASTERBARS HELLO RASTERBARS_SOUND #SPRITES
 	$(DOS33) -y interlace.dsk SAVE A HELLO
 	$(DOS33) -y interlace.dsk BSAVE -a 0x1000 INTERLACE
 	$(DOS33) -y interlace.dsk BSAVE -a 0x1000 RASTERBARS
-	$(DOS33) -y interlace.dsk BSAVE -a 0x1000 SPRITES
+#	$(DOS33) -y interlace.dsk BSAVE -a 0x1000 SPRITES
 	$(DOS33) -y interlace.dsk BSAVE -a 0x1000 RASTERBARS_SOUND
 
 ####
@@ -45,7 +45,7 @@ RASTERBARS_SOUND:	rasterbars_sound.o
 
 rasterbars_sound.o:	rasterbars_sound.s gr_copy.s \
 	rasterbars_screen.s rasterbars_table.s movement_table.s rb_bg.inc \
-	pt3_lib_ci.s pt3_lib_init.s pt3_lib_mockingboard.s
+	pt3_lib_core.s pt3_lib_init.s pt3_lib_mockingboard.s pt3_write_frame.s
 	ca65 -o rasterbars_sound.o rasterbars_sound.s -l rasterbars_sound.lst
 
 
