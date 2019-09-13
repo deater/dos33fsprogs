@@ -251,16 +251,17 @@ load_ornament:
 	; Calculate Note
 	;=====================================
 	; note offset in X
+	;	6+2+52 = 60
 
-	;	6+52 = 58
+	; 7 + 6 + [???] =   note disabled
 
 calculate_note:
-
 .if 0
-	lda	note_a+NOTE_ENABLED,X					; 4+
-	bne	note_enabled						; 2/3
+	lda	note_a+NOTE_ENABLED,X					; 4
+	bne	note_enabled						; 3
 
-	sta	note_a+NOTE_AMPLITUDE,X					; 5
+									;-1
+	sta	note_a+NOTE_AMPLITUDE,X					; 4
 	jmp	done_note						; 3
 
 note_enabled:
@@ -333,8 +334,9 @@ note_not_negative:
 	cmp	#96
 	bcc	note_not_too_high	; blt
 
-	lda	#95
 .endif
+
+	lda	#95							; 2
 
 note_not_too_high:
 
@@ -672,41 +674,75 @@ sample_pos_ok:
 	lda	note_a+NOTE_ORNAMENT_LOOP,X
 	sta	note_a+NOTE_ORNAMENT_POSITION,X
 ornament_pos_ok:
-
+.endif
 
 done_note:
 	; set mixer value
 	; this is a bit complex (from original code)
 	; after 3 calls it is set up properly
-	lsr	PT3_MIXER_VAL
+	lsr	PT3_MIXER_VAL						; 5
+
+	;=============================
+	; 7+ [26] + 6	         = 39 // onoff==0
+	; 7+ 4 + 12 + 6 + 4 + 6  = 39 // onoff counted down to 0, do_onoff
+	; 7+ 4 + 12 + 6 + 4 + 6  = 39 // onoff counted down to 0, do_offon
+	; 7+ 4 + [18] + 4 + 6    = 39 // otherwise
 
 handle_onoff:
-	ldy	note_a+NOTE_ONOFF,X	;if (a->onoff>0) {
-	beq	done_onoff
+	ldy	note_a+NOTE_ONOFF,X	;if (a->onoff>0) {		; 4
+	beq	done_onoff_kill_26					; 3
+								;============
+								;         7
 
-	dey				; a->onoff--;
+									; -1
 
-	bne	put_offon		;   if (a->onoff==0) {
-	lda	note_a+NOTE_ENABLED,X
-	eor	#$1			; toggle note_enabled
-	sta	note_a+NOTE_ENABLED,X
+	dey				; a->onoff--;			; 2
+	bne	put_offon_kill_18	;   if (a->onoff==0) {		; 3
+								;============
+								;	  4
 
-	beq	do_offon
+									; -1
+	lda	note_a+NOTE_ENABLED,X					; 4
+	eor	#$1			; toggle note_enabled		; 2
+	sta	note_a+NOTE_ENABLED,X					; 4
+	beq	do_offon						; 3
+								;============
+								;        12
 do_onoff:
-	ldy	note_a+NOTE_ONOFF_DELAY,X	; if (a->enabled) a->onoff=a->onoff_delay;
-	jmp	put_offon
+									; -1
+	; if (a->enabled) a->onoff=a->onoff_delay;
+	ldy	note_a+NOTE_ONOFF_DELAY,X				; 4
+	jmp	put_offon						; 3
+								;============
+								;         6
 do_offon:
-	ldy	note_a+NOTE_OFFON_DELAY,X ;      else a->onoff=a->offon_delay;
-put_offon:
-	sty	note_a+NOTE_ONOFF,X
-.endif
+	;      else a->onoff=a->offon_delay;
+	ldy	note_a+NOTE_OFFON_DELAY,X				; 4
+	nop					; make things match	; 2
+								;============
+								;         6
 
+put_offon:
+	sty	note_a+NOTE_ONOFF,X					; 4
+								;============
+								;	  4
 done_onoff:
 
 	rts								; 6
 
+done_onoff_kill_26:
+	inc	CYCLE_WASTE						; 5
+	lda	CYCLE_WASTE						; 3
+	inc	CYCLE_WASTE						; 5
+	inc	CYCLE_WASTE						; 5
+	inc	CYCLE_WASTE						; 5
+	jmp	done_onoff						; 3
 
-
+put_offon_kill_18:
+	inc	CYCLE_WASTE						; 5
+	inc	CYCLE_WASTE						; 5
+	inc	CYCLE_WASTE						; 5
+	jmp	put_offon						; 3
 
 
 
@@ -1466,7 +1502,7 @@ not_done:
 	; update pattern or line if necessary
 	; then calculate the values for the next frame
 
-	; 8+367=375
+	; 8+373=381
 
 	;==========================
 	; pattern done early!
@@ -1565,8 +1601,7 @@ next_pattern:
 	;======================================
 	; ????? FIXME/calculate note
 	;
-
-	; 9+ 196 +    36+11+18+30+18+49 = 367
+	; 9+ 202 +    36+11+18+30+18+49 = 373
 
 do_frame:
 	; AY-3-8910 register summary
@@ -1588,13 +1623,13 @@ do_frame:
 								;	9
 
 	;;ldx	#(NOTE_STRUCT_SIZE*0)	; Note A
-	jsr	calculate_note						; 6+58
+	jsr	calculate_note						; 6+60
 	ldx	#(NOTE_STRUCT_SIZE*1)	; Note B			; 2
-	jsr	calculate_note						; 6+58
+	jsr	calculate_note						; 6+60
 	ldx	#(NOTE_STRUCT_SIZE*2)	; Note C			; 2
-	jsr	calculate_note						; 6+58
+	jsr	calculate_note						; 6+60
 								;=============
-								; FIXME 196
+								; 	202
 
 	; Note, we assume 1MHz timings, adjust pt3 as needed
 
@@ -1716,12 +1751,14 @@ pt3_envelope_delay_smc:
 	lda	#$d1							; 2
 	beq	done_do_frame_x		; assume can't be negative?	; 3
 					; do this if envelope_delay>0
-									;====
-									; 5
+								;==========
+								;	  5
 
 									; -1
 	dec	pt3_envelope_delay_smc+1				; 6
 	bne	done_do_frame_y						; 3
+								;==========
+								;	  8
 					; only do if we hit 0
 
 
