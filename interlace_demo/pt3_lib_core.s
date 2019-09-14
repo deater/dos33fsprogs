@@ -251,12 +251,25 @@ load_ornament:
 	; Calculate Note
 	;=====================================
 	; note offset in X
-	;	6+2+52 = 60
 
-	; 7 + 6 + [???] =   note disabled
+	; FIXME: samples shouldn't cross page boundary
+
+	;   7   -- first check
+	;  38   -- note enabled
+	;  20   -- sample1
+	;  30   -- sample2
+	;  21   -- accumulate
+	;  15   -- calc tone
+	;  12	-- note bounds
+	;  50   -- more tone
+
+	;  44	-- done note
+	;=====
+	;
+
+	; note disabled = 7 + 6 + [????] + 44 = 57
 
 calculate_note:
-.if 0
 	lda	note_a+NOTE_ENABLED,X					; 4
 	bne	note_enabled						; 3
 
@@ -266,21 +279,23 @@ calculate_note:
 
 note_enabled:
 
-	lda	note_a+NOTE_SAMPLE_POINTER_H,X				; 4+
+	lda	note_a+NOTE_SAMPLE_POINTER_H,X				; 4
 	sta	SAMPLE_H						; 3
-	lda	note_a+NOTE_SAMPLE_POINTER_L,X				; 4+
+	lda	note_a+NOTE_SAMPLE_POINTER_L,X				; 4
 	sta	SAMPLE_L						; 3
 
-	lda	note_a+NOTE_ORNAMENT_POINTER_H,X			; 4+
+	lda	note_a+NOTE_ORNAMENT_POINTER_H,X			; 4
 	sta	ORNAMENT_H						; 3
-	lda	note_a+NOTE_ORNAMENT_POINTER_L,X			; 4+
+	lda	note_a+NOTE_ORNAMENT_POINTER_L,X			; 4
 	sta	ORNAMENT_L						; 3
 
 
-	lda	note_a+NOTE_SAMPLE_POSITION,X				; 4+
+	lda	note_a+NOTE_SAMPLE_POSITION,X				; 4
 	asl								; 2
 	asl								; 2
 	tay								; 2
+								;===========
+								;	38
 
 	;  b0 = pt3->data[a->sample_pointer + a->sample_position * 4];
 	lda	(SAMPLE_L),Y						; 5+
@@ -290,55 +305,87 @@ note_enabled:
 	iny								; 2
 	lda	(SAMPLE_L),Y						; 5+
 	sta	sample_b1_smc+1						; 4
+								;=============
+								;	20
 
 	;  a->tone = pt3->data[a->sample_pointer + a->sample_position*4+2];
 	;  a->tone+=(pt3->data[a->sample_pointer + a->sample_position*4+3])<<8;
 	;  a->tone += a->tone_accumulator;
 	iny								; 2
 	lda	(SAMPLE_L),Y						; 5+
-	adc	note_a+NOTE_TONE_ACCUMULATOR_L,X			; 4+
+	adc	note_a+NOTE_TONE_ACCUMULATOR_L,X			; 4
 	sta	note_a+NOTE_TONE_L,X					; 4
 
 	iny								; 2
 	lda	(SAMPLE_L),Y						; 5+
-	adc	note_a+NOTE_TONE_ACCUMULATOR_H,X			; 4+
+	adc	note_a+NOTE_TONE_ACCUMULATOR_H,X			; 4
 	sta	note_a+NOTE_TONE_H,X					; 4
+								;============
+								;        30
 
 	;=============================
 	; Accumulate tone if set
 	;	(if sample_b1 & $40)
+	; set    = 7+14 = 21
+	; no-set = 7+[14] = 21
+	bit	sample_b1_smc+1						; 4
+	bvc	no_accum_waste	;     (so, if b1&0x40 is zero, skip it)	; 3
 
-	bit	sample_b1_smc+1
-	bvc	no_accum	;     (so, if b1&0x40 is zero, skip it)
+									; -1
 
-	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X
-	lda	note_a+NOTE_TONE_L,X	; tone_accumulator=tone
-	sta	note_a+NOTE_TONE_ACCUMULATOR_L,X
+	sta	note_a+NOTE_TONE_ACCUMULATOR_H,X			; 4
+	lda	note_a+NOTE_TONE_L,X	; tone_accumulator=tone		; 4
+	sta	note_a+NOTE_TONE_ACCUMULATOR_L,X			; 4
+	jmp	no_accum_real						; 3
+no_accum_waste:
+	inc	CYCLE_WASTE	; 5
+	inc	CYCLE_WASTE	; 5
+	nop			; 2
+	nop			; 2
 
-no_accum:
-
+no_accum_real:
+								;============
+								;	  21
 	;============================
 	; Calculate tone
 	;  j = a->note + (pt3->data[a->ornament_pointer + a->ornament_position]
-	clc	;;can be removed if ADC ACCUMULATOR_H cannot overflow
-	ldy	note_a+NOTE_ORNAMENT_POSITION,X
-	lda	(ORNAMENT_L),Y
-	adc	note_a+NOTE_NOTE,X
+
+
+	clc	;;can be removed if ADC ACCUMULATOR_H cannot overflow	; 2
+	ldy	note_a+NOTE_ORNAMENT_POSITION,X				; 4
+	lda	(ORNAMENT_L),Y						; 5+
+	adc	note_a+NOTE_NOTE,X					; 4
+								;============
+								;         15
+
+	; <0  --	3+4+[5] = 12
+	; >95 --	3+5+4 = 12
+	; just right  --3+5+[4] = 12
 
 	;  if (j < 0) j = 0;
-	bpl	note_not_negative
-	lda	#0
+	bpl	note_not_negative					; 3
+									; -1
+	lda	#0							; 2
+	jmp	note_just_right_waste5					; 3
 
 	; if (j > 95) j = 95;
 note_not_negative:
-	cmp	#96
-	bcc	note_not_too_high	; blt
-
-.endif
-
+	cmp	#96							; 2
+	bcc	note_not_too_high	; blt				; 3
+									; -1
 	lda	#95							; 2
-
+	jmp	note_just_right_waste4					; 3
 note_not_too_high:
+
+note_just_right_waste5:
+	nop				; 2
+	jmp	note_just_right		; 3
+note_just_right_waste4:
+	nop				; 2
+	nop				; 2
+								;===========
+								;        12
+note_just_right:
 
 	;  w = GetNoteFreq(j,pt3->frequency_table);
 
@@ -367,8 +414,8 @@ temp_word_h1_smc:
 	sta	note_a+NOTE_TONE_H,X					; 4
 
 								;===========
-								;	52
-.if 0
+								;	50
+
 	;=====================
 	; handle tone sliding
 
@@ -674,7 +721,7 @@ sample_pos_ok:
 	lda	note_a+NOTE_ORNAMENT_LOOP,X
 	sta	note_a+NOTE_ORNAMENT_POSITION,X
 ornament_pos_ok:
-.endif
+
 
 done_note:
 	; set mixer value
