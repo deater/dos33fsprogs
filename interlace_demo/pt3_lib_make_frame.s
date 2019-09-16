@@ -5,13 +5,6 @@
 	;=====================================
 	; Set Pattern
 	;=====================================
-	; FIXME: inline this?  we do call it from outside
-	;	in the player note length code
-
-is_done:
-	; done with song, set it to non-zero
-	sta	DONE_SONG						; 3
-	rts								; 6
 
 pt3_set_pattern:
 
@@ -22,7 +15,12 @@ current_pattern_smc:
 
 	; if value is $FF we are at the end of the song
 	cmp	#$ff							; 2
-	beq	is_done							; 2/3
+	bne	not_done						; 3
+
+is_done:
+	; done with song, set it to non-zero
+	sta	DONE_SONG						; 3
+	rts								; 6
 
 								;============
 								;   20 if end
@@ -81,18 +79,6 @@ not_done:
 	rts								; 6
 
 
-
-
-
-
-	;=====================================
-	; pt3 make frame
-	;=====================================
-	; update pattern or line if necessary
-	; then calculate the values for the next frame
-
-	; 8+373=381
-
 	;==========================
 	; pattern done early!
 
@@ -122,22 +108,41 @@ set_pattern:
 	;==========================================
 	; real entry point
 
+
+
+	;=====================================
+	;=====================================
+	;=====================================
+	; pt3 make frame
+	;=====================================
+	;=====================================
+	;=====================================
+
+	; update pattern or line if necessary
+	; then calculate the values for the next frame
+
+	; 8+373=381
+
+
+	; Paths
+	;
+	; current_line=0
+	; current_line=1
+
 pt3_make_frame:
 	; see if we need a new pattern
 	; we do if line==0 and subframe==0
 	; allow fallthrough where possible
 current_line_smc:
 	lda	#$d1							; 2
-
-	beq	check_subframe						; 2/3
+	beq	check_subframe						; 3
+									; -1
 
 pattern_good:
-
 	; see if we need a new line
 
 current_subframe_smc:
 	lda	#$d1							; 2
-
 	bne	line_good						; 2/3
 
 pt3_new_line:
@@ -182,4 +187,5 @@ next_pattern:
 
 
 
-
+;==============================================
+; falls through to do_frame
