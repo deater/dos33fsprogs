@@ -94,6 +94,7 @@ end_vars=$80+(NOTE_STRUCT_SIZE*3)
 .include "pt3_lib_sample_ornament.s"
 .include "pt3_lib_calculate_note.s"
 .include "pt3_lib_decode_note.s"
+.include "pt3_lib_set_pattern.s"
 .include "pt3_lib_make_frame.s"
 .include "pt3_lib_do_frame.s"
 
