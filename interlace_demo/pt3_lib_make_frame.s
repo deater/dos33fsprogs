@@ -56,8 +56,30 @@ pt3_new_line:
 pt3_pattern_done_smc:
 	lda	#$d1							; 2
 
-	beq	early_end						; 2/3
+	bne	line_good						; 2/3
 
+	;==========================
+	; pattern done early!
+
+early_end:
+	; A is pattern_done which is zero at this point
+	inc	current_pattern_smc+1   ; increment pattern		; 6
+	sta	current_line_smc+1					; 4
+	sta	current_subframe_smc+1					; 4
+
+	; always goes to set_pattern here?
+
+	jmp	set_pattern						; 3
+
+check_subframe:
+	lda	current_subframe_smc+1					; 4
+	bne	pattern_good						; 2/3
+
+set_pattern:
+	; load a new pattern in
+	jsr	pt3_set_pattern						;6+?
+
+	jmp	pt3_new_line						; 3
 
 	;=============================
 	; State D

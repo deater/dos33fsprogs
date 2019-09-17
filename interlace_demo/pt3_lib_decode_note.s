@@ -119,10 +119,12 @@ note_command_smc:
 
 
 decode_jump_table:
-	.word decode_case_0X,decode_case_1X,decode_case_2X,decode_case_3X
-	.word decode_case_4X,decode_case_5X,decode_case_6X,decode_case_7X
-	.word decode_case_8X,decode_case_9X,decode_case_AX,decode_case_BX
-	.word decode_case_CX,decode_case_DX,decode_case_EX,decode_case_FX
+	.word decode_case_0X-1,decode_case_1X-1,decode_case_2X-1
+	.word decode_case_3X-1,decode_case_4X-1,decode_case_5X-1
+	.word decode_case_6X-1,decode_case_7X-1,decode_case_8X-1
+	.word decode_case_9X-1,decode_case_AX-1,decode_case_BX-1
+	.word decode_case_CX-1,decode_case_DX-1,decode_case_EX-1
+	.word decode_case_FX-1
 
 decode_case_0X:
 	;==============================
@@ -241,6 +243,7 @@ decode_case_BX:
 	lda	note_command_bottom_smc+1				; 4
 	beq	decode_case_b0						; 3
 									; -1
+	sec
 	sbc	#1		; envelope_type=(current_val&0xf)-1;	; 2
 	bne	decode_case_bx_higher					; 3
 

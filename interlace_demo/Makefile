@@ -47,7 +47,8 @@ rasterbars_sound.o:	rasterbars_sound.s gr_copy.s \
 	rasterbars_screen.s rasterbars_table.s movement_table.s rb_bg.inc \
 	pt3_lib_core.s pt3_lib_init.s pt3_lib_mockingboard.s \
 	pt3_lib_sample_ornament.s pt3_write_frame.s pt3_lib_calculate_note.s \
-	pt3_lib_decode_note.s pt3_lib_make_frame.s pt3_lib_do_frame.s
+	pt3_lib_decode_note.s pt3_lib_make_frame.s pt3_lib_do_frame.s \
+	pt3_lib_set_pattern.s
 	ca65 -o rasterbars_sound.o rasterbars_sound.s -l rasterbars_sound.lst
 
 
