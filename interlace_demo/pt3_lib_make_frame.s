@@ -2,6 +2,31 @@
 ; EVERYTHING IS CYCLE COUNTED
 ;========================================================================
 
+; Note, can save cycles if we don't have early-exit (check)
+; also if we don't have to convert from 1.77
+
+; the logic here:
+;
+; if (current_line==0) && (subframe==0) {
+;	set_pattern();
+;; }
+; if (subframe==0) {
+;	decode_line();
+; }
+; else {
+; }
+; if (pattern_done) {
+;    
+; }
+; subframe++;
+; if (subframe==speed) {
+;	subframe=0;
+;	current_line++;
+;	if (current_line==64) {
+;		pattern++;
+;		current_line=0;
+;	}
+; }
 
 	;=====================================
 	;=====================================
@@ -19,9 +44,21 @@
 
 	; Paths
 	;
-	; current_line=0
-	; current_line=1
+	;	A (current_line)
+	;
+	;	B (current subframe)
+	;
+	;	C (pattern_done)
+	;
+	;	D (always)
+	;
+	;	F
+	;
+	;	C
 
+	;=============================
+	; State A
+	;=============================
 pt3_make_frame:
 	; see if we need a new pattern
 	; we do if line==0 and subframe==0
@@ -34,7 +71,7 @@ current_line_smc:
 	;=============================
 	; State B
 	;=============================
-	; 
+	;
 pattern_good:
 	; see if we need a new line
 
@@ -46,7 +83,7 @@ current_subframe_smc:
 	;=============================
 	; State C
 	;=============================
-	; 
+	;
 pt3_new_line:
 	; decode a new line
 	jsr	pt3_decode_line						; 6+?
@@ -57,6 +94,10 @@ pt3_pattern_done_smc:
 	lda	#$d1							; 2
 
 	bne	line_good						; 2/3
+
+	;=============================
+	; State D
+	;=============================
 
 	;==========================
 	; pattern done early!
@@ -71,10 +112,17 @@ early_end:
 
 	jmp	set_pattern						; 3
 
+	;=============================
+	; State E
+	;=============================
 check_subframe:
 	lda	current_subframe_smc+1					; 4
 	bne	pattern_good						; 2/3
 
+
+	;=============================
+	; State F
+	;=============================
 set_pattern:
 	; load a new pattern in
 	jsr	pt3_set_pattern						;6+?
