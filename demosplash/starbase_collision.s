@@ -3,7 +3,7 @@ TARGET_DOOR	= $10
 TARGET_SHIELD	= $20
 TARGET_FRIEND	= $30
 TARGET_ALIEN	= $40
-TARGET_PHYSICIST= $80
+TARGET_ASTRONAUT= $80
 
 	;=============================
 	;=============================
@@ -33,7 +33,7 @@ recalc_walk_left:
 	dey
 recalc_walk_left_loop:
 
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	cmp	(DOOR_X),Y
 	bcc	recalc_walk_left_continue	; blt
 
@@ -41,7 +41,7 @@ recalc_walk_left_loop:
 	lda	(DOOR_Y),Y
 	clc
 	adc	#4
-	cmp	PHYSICIST_Y
+	cmp	ASTRONAUT_Y
 	bne	recalc_walk_left_continue
 
 	; only if closer than previous found
@@ -75,10 +75,10 @@ recalc_walk_right_loop:
 	lda	(DOOR_Y),Y
 	clc
 	adc	#4
-	cmp	PHYSICIST_Y
+	cmp	ASTRONAUT_Y
 	bne	recalc_walk_right_continue
 
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	cmp	(DOOR_X),Y
 	bcs	recalc_walk_right_continue	; bge
 
@@ -273,25 +273,25 @@ done_calc_gun_right_friend_collision:
 calc_gun_right_physicist:
 
 	lda	COLLISION_X
-	cmp	PHYSICIST_X
+	cmp	ASTRONAUT_X
 	bcs	calc_gun_right_physicist_continue	; bge
 
 	; only if closer than previous found
 	lda	RIGHT_SHOOT_LIMIT
-	cmp	PHYSICIST_X
+	cmp	ASTRONAUT_X
 	bcc	calc_gun_right_physicist_continue	; blt
 
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	cmp	#P_DISINTEGRATING
 	beq	calc_gun_right_physicist_continue
 
 calc_gun_right_physicist_there:
 
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	sta	RIGHT_SHOOT_LIMIT
 
 				; set target if hit
-	lda	#TARGET_PHYSICIST
+	lda	#TARGET_ASTRONAUT
 	sta	RIGHT_SHOOT_TARGET
 
 calc_gun_right_physicist_continue:
@@ -517,25 +517,25 @@ done_calc_gun_left_friend_collision:
 calc_gun_left_physicist:
 
 	lda	COLLISION_X
-	cmp	PHYSICIST_X
+	cmp	ASTRONAUT_X
 	beq	calc_gun_left_physicist_continue	; ble (not w self)
 	bcc	calc_gun_left_physicist_continue	; blt
 
 	; only if closer than previous found
 	lda	LEFT_SHOOT_LIMIT
-	cmp	PHYSICIST_X
+	cmp	ASTRONAUT_X
 	bcs	calc_gun_left_physicist_continue	; bge
 
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	cmp	#P_DISINTEGRATING
 	beq	calc_gun_left_physicist_continue
 
 calc_gun_left_physicist_there:
 
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	sta	LEFT_SHOOT_LIMIT
 				; set target if hit
-	lda	#TARGET_PHYSICIST
+	lda	#TARGET_ASTRONAUT
 	sta	LEFT_SHOOT_TARGET
 
 calc_gun_left_physicist_continue:

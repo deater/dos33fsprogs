@@ -59,7 +59,7 @@ found_shield_slot:
 
 	; set y
 
-	lda	PHYSICIST_Y
+	lda	ASTRONAUT_Y
 	sta	shield_y,X
 
 	; set x
@@ -68,7 +68,7 @@ found_shield_slot:
 
 shield_left:
 
-	ldy	PHYSICIST_X
+	ldy	ASTRONAUT_X
 	dey
 	tya
 	sta	shield_x,X
@@ -77,7 +77,7 @@ shield_left:
 
 shield_right:
 
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	clc
 	adc	#5
 	sta	shield_x,X

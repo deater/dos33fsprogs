@@ -27,7 +27,7 @@
 
 handle_keypress:
 
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	bmi	no_keypress		; ignore keypress if dying/action
 
 	lda	KEYPRESS						; 4
@@ -79,7 +79,7 @@ left_pressed:
 	bne	left_going_right
 
 left_going_left:
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	cmp	#P_STANDING
 	beq	walk_left
 	cmp	#P_SHOOTING
@@ -94,7 +94,7 @@ left_going_left:
 	jmp	done_keypress
 
 left_going_right:
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	cmp	#P_RUNNING
 	beq	walk_right
 	cmp	#P_WALKING
@@ -133,7 +133,7 @@ right_pressed:
 
 
 right_going_right:
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	cmp	#P_STANDING
 	beq	walk_right
 	cmp	#P_SHOOTING
@@ -148,7 +148,7 @@ right_going_right:
 	jmp	done_keypress
 
 right_going_left:
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	cmp	#P_RUNNING
 	beq	walk_left
 	cmp	#P_WALKING
@@ -203,7 +203,7 @@ run_right:
 	bne	update_state
 
 update_state:
-	sta	PHYSICIST_STATE
+	sta	ASTRONAUT_STATE
 	jmp	done_keypress
 
 
@@ -224,7 +224,7 @@ up:
 	;=============================
 	;=============================
 
-	lda	PHYSICIST_STATE		; shoot if charging
+	lda	ASTRONAUT_STATE		; shoot if charging
 	cmp	#P_CROUCH_SHOOTING
 	beq	up_no_fire
 
@@ -240,7 +240,7 @@ up_on_elevator:
 
 up_not_elevator:
 
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	cmp	#P_CROUCHING
 	beq	stand_up
 	cmp	#P_CROUCH_SHOOTING
@@ -279,7 +279,7 @@ check_down:
 	;==========================
 down:
 
-	lda	PHYSICIST_STATE		; shoot if charging
+	lda	ASTRONAUT_STATE		; shoot if charging
 	cmp	#P_SHOOTING
 	beq	down_no_fire
 
@@ -294,7 +294,7 @@ down_on_elevator:
 	jmp	change_state_clear_gait
 
 down_not_elevator:
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	cmp	#P_SHOOTING
 	bne	start_crouch
 
@@ -310,7 +310,7 @@ start_crouch:
 	ldx	#4		; slide a bit
 	stx	GAIT
 	ora	#P_CROUCHING
-	sta	PHYSICIST_STATE
+	sta	ASTRONAUT_STATE
 	jmp	done_keypress
 
 start_crouch_norun:
@@ -342,7 +342,7 @@ not_already_firing:
 
 	inc	GUN_STATE
 
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	and	#STATE_CROUCHING
 	beq	crouch_charge
 	ldy	#P_CROUCH_SHOOTING
@@ -350,7 +350,7 @@ not_already_firing:
 crouch_charge:
 	ldy	#P_SHOOTING
 crouch_charge_go:
-	sty	PHYSICIST_STATE
+	sty	ASTRONAUT_STATE
 
 	jmp	shoot
 
@@ -372,7 +372,7 @@ space:
 
 	inc	GUN_FIRE			; if charging, shoot
 shoot:
-	lda	PHYSICIST_STATE		; if in stance, then shoot
+	lda	ASTRONAUT_STATE		; if in stance, then shoot
 	cmp	#P_SHOOTING
 	beq	in_position
 	cmp	#P_CROUCH_SHOOTING
@@ -396,7 +396,7 @@ stand_stance:
 	jmp	change_state_clear_gait
 
 kick:
-	bit	PHYSICIST_STATE		; crouching state in V now
+	bit	ASTRONAUT_STATE		; crouching state in V now
 	bvc	kick_standing
 
 	lda	#P_CROUCH_KICKING
@@ -405,7 +405,7 @@ kick:
 kick_standing:
 	lda	#P_KICKING
 kick_final:
-	sta	PHYSICIST_STATE
+	sta	ASTRONAUT_STATE
 	lda	#15
 	sta	GAIT
 unknown:
@@ -416,7 +416,7 @@ done_keypress:
 
 
 change_state_clear_gait:
-	sta	PHYSICIST_STATE
+	sta	ASTRONAUT_STATE
 	lda	#0
 	sta	GAIT
 	jmp	done_keypress

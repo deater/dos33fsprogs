@@ -140,7 +140,7 @@ alien_no_move_run:
 move_alien_standing:
 
 	; turn to face physicist if on same level
-	lda	PHYSICIST_Y
+	lda	ASTRONAUT_Y
 	cmp	alien_y,X
 	bne	done_move_alien_standing
 
@@ -151,7 +151,7 @@ move_alien_standing:
 	and	#$3f
 	bne	done_move_alien_standing
 
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	cmp	alien_x,X
 	bcs	alien_face_right
 

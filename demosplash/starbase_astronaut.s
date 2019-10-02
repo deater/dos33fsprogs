@@ -1,19 +1,19 @@
 	;=======================================
-	; Move physicist based on current state
+	; Move astronaut based on current state
 	;
 
-move_physicist:
-	lda	PHYSICIST_STATE
+move_astronaut:
+	lda	ASTRONAUT_STATE
 	cmp	#P_WALKING
-	beq	move_physicist_walking
+	beq	move_astronaut_walking
 	cmp	#P_RUNNING
-	beq	move_physicist_running
+	beq	move_astronaut_running
 	rts
 
 	;======================
 	; walking
 
-move_physicist_walking:
+move_astronaut_walking:
 	inc     GAIT			; cycle through animation
 
 	lda     GAIT
@@ -24,16 +24,16 @@ move_physicist_walking:
 	lda	DIRECTION
 	beq	p_walk_left
 
-	inc	PHYSICIST_X		; walk right
+	inc	ASTRONAUT_X		; walk right
 	rts
 p_walk_left:
-	dec     PHYSICIST_X		; walk left
+	dec     ASTRONAUT_X		; walk left
 no_move_walk:
 	rts
 
 	;======================
 	; running
-move_physicist_running:
+move_astronaut_running:
 ;	inc	GAIT			; cycle through animation
 	inc	GAIT			; cycle through animation
 
@@ -45,59 +45,59 @@ move_physicist_running:
 	lda	DIRECTION
 	beq	p_run_left
 
-	inc	PHYSICIST_X		; run right
+	inc	ASTRONAUT_X		; run right
 	rts
 p_run_left:
-	dec	PHYSICIST_X		; run left
+	dec	ASTRONAUT_X		; run left
 no_move_run:
 	rts
 	;======================
 	; standing
 
-move_physicist_standing:
+move_astronaut_standing:
 
 
 
 
 
 pstate_table_lo:
-	.byte <physicist_standing	; 00
-	.byte <physicist_walking	; 01
-	.byte <physicist_running	; 02
-	.byte <physicist_crouching	; 03
-	.byte <physicist_kicking	; 04
-	.byte <physicist_jumping	; 05
-	.byte <physicist_collapsing	; 06
-	.byte <physicist_falling_sideways; 07
-	.byte <physicist_standing	; 08 swinging
-	.byte <physicist_standing	; 09 elevator up
-	.byte <physicist_standing	; 0A elevator down
-	.byte <physicist_shooting	; 0B
-	.byte <physicist_falling_down	; 0C
-	.byte <physicist_impaled	; 0D
-	.byte <physicist_crouch_shooting; 0E
-	.byte <physicist_crouch_kicking	; 0F
-	.byte <physicist_disintegrating	; 10
+	.byte <astronaut_standing	; 00
+	.byte <astronaut_walking	; 01
+	.byte <astronaut_running	; 02
+	.byte <astronaut_crouching	; 03
+	.byte <astronaut_kicking	; 04
+	.byte <astronaut_jumping	; 05
+	.byte <astronaut_collapsing	; 06
+	.byte <astronaut_falling_sideways; 07
+	.byte <astronaut_standing	; 08 swinging
+	.byte <astronaut_standing	; 09 elevator up
+	.byte <astronaut_standing	; 0A elevator down
+	.byte <astronaut_shooting	; 0B
+	.byte <astronaut_falling_down	; 0C
+	.byte <astronaut_impaled	; 0D
+	.byte <astronaut_crouch_shooting; 0E
+	.byte <astronaut_crouch_kicking	; 0F
+	.byte <astronaut_disintegrating	; 10
 
 
 pstate_table_hi:
-	.byte >physicist_standing
-	.byte >physicist_walking
-	.byte >physicist_running
-	.byte >physicist_crouching
-	.byte >physicist_kicking
-	.byte >physicist_jumping
-	.byte >physicist_collapsing
-	.byte >physicist_falling_sideways
-	.byte >physicist_standing	; 08 swinging
-	.byte >physicist_standing	; 09 elevator up
-	.byte >physicist_standing	; 0A elevator down
-	.byte >physicist_shooting	; 0B
-	.byte >physicist_falling_down	; 0C
-	.byte >physicist_impaled	; 0D
-	.byte >physicist_crouch_shooting; 0E
-	.byte >physicist_crouch_kicking	; 0F
-	.byte >physicist_disintegrating	; 10
+	.byte >astronaut_standing
+	.byte >astronaut_walking
+	.byte >astronaut_running
+	.byte >astronaut_crouching
+	.byte >astronaut_kicking
+	.byte >astronaut_jumping
+	.byte >astronaut_collapsing
+	.byte >astronaut_falling_sideways
+	.byte >astronaut_standing	; 08 swinging
+	.byte >astronaut_standing	; 09 elevator up
+	.byte >astronaut_standing	; 0A elevator down
+	.byte >astronaut_shooting	; 0B
+	.byte >astronaut_falling_down	; 0C
+	.byte >astronaut_impaled	; 0D
+	.byte >astronaut_crouch_shooting; 0E
+	.byte >astronaut_crouch_kicking	; 0F
+	.byte >astronaut_disintegrating	; 10
 
 ; Urgh, make sure this doesn't end up at $FF or you hit the
 ;	NMOS 6502 bug
@@ -110,12 +110,12 @@ pjump:
 .align 1
 
 ;======================================
-; draw physicist
+; draw astronaut
 ;======================================
 
-draw_physicist:
+draw_astronaut:
 
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	and	#$1f			; mask off high state bits
 	tax
 	lda	pstate_table_lo,x
@@ -129,12 +129,12 @@ draw_physicist:
 ; STANDING
 ;==================================
 
-physicist_standing:
+astronaut_standing:
 
-	lda	#<phys_stand
+	lda	#<astro_stand
 	sta	INL
 
-	lda	#>phys_stand
+	lda	#>astro_stand
 	sta	INH
 
 	jmp	finally_draw_him
@@ -143,7 +143,7 @@ physicist_standing:
 ; SHOOTING
 ;==================================
 
-physicist_shooting:
+astronaut_shooting:
 
 	lda	#<shooting1
 	sta	INL
@@ -158,7 +158,7 @@ physicist_shooting:
 ; KICKING
 ;==================================
 
-physicist_kicking:
+astronaut_kicking:
 	lda	#<kick1
 	sta	INL
 
@@ -171,7 +171,7 @@ physicist_kicking:
 	bne	short_draw
 
 	lda	#P_STANDING
-	sta	PHYSICIST_STATE
+	sta	ASTRONAUT_STATE
 
 short_draw:
 	jmp	finally_draw_him
@@ -180,7 +180,7 @@ short_draw:
 ; CROUCHING
 ;===================================
 
-physicist_crouching:
+astronaut_crouching:
 
 	; FIXME: we have an animation?
 
@@ -193,10 +193,10 @@ physicist_crouching:
 
 	lda	DIRECTION
 	beq	p_slide_left
-	inc	PHYSICIST_X
+	inc	ASTRONAUT_X
 	jmp	crouch_done_slide
 p_slide_left:
-	dec	PHYSICIST_X
+	dec	ASTRONAUT_X
 
 crouch_done_slide:
 
@@ -212,14 +212,14 @@ crouch_done_slide:
 ; CROUCH KICKING
 ;===================================
 
-physicist_crouch_kicking:
+astronaut_crouch_kicking:
 
 	dec	GAIT
 	lda	GAIT
 	bpl	still_kicking
 
 	lda	#P_CROUCHING
-	sta	PHYSICIST_STATE
+	sta	ASTRONAUT_STATE
 
 still_kicking:
 
@@ -235,7 +235,7 @@ still_kicking:
 ; CROUCH SHOOTING
 ;===================================
 
-physicist_crouch_shooting:
+astronaut_crouch_shooting:
 
 	lda	#<crouch_shooting
 	sta	INL
@@ -250,7 +250,7 @@ physicist_crouch_shooting:
 ; JUMPING
 ;===================================
 
-physicist_jumping:
+astronaut_jumping:
 
 	lda	GAIT
 	cmp	#32
@@ -258,22 +258,22 @@ physicist_jumping:
 
 	; done juming
 	lda	#STATE_RUNNING
-	bit	PHYSICIST_STATE
+	bit	ASTRONAUT_STATE
 	beq	jump_to_stand
 
 jump_to_run:
 	lda	#0
 	sta	GAIT
 	lda	#P_RUNNING
-	sta	PHYSICIST_STATE
-	jmp	physicist_running
+	sta	ASTRONAUT_STATE
+	jmp	astronaut_running
 
 jump_to_stand:
 	lda	#0
 	sta	GAIT
 	lda	#P_STANDING
-	sta	PHYSICIST_STATE
-	jmp	physicist_standing
+	sta	ASTRONAUT_STATE
+	jmp	astronaut_standing
 
 still_jumping:
 
@@ -282,16 +282,16 @@ still_jumping:
 
 	tax
 
-	lda	phys_jump_progression,X
+	lda	astro_jump_progression,X
 	sta	INL
 
-	lda	phys_jump_progression+1,X
+	lda	astro_jump_progression+1,X
 	sta	INH
 
 	inc	GAIT
 
 	lda	#STATE_RUNNING
-	bit	PHYSICIST_STATE
+	bit	ASTRONAUT_STATE
 	beq	jump_change_x_regular
 
 jump_change_x_running:
@@ -313,11 +313,11 @@ jump_change_x:
 	beq	jump_left
 
 jump_right:
-	inc	PHYSICIST_X
+	inc	ASTRONAUT_X
 	jmp	finally_draw_him
 
 jump_left:
-	dec	PHYSICIST_X
+	dec	ASTRONAUT_X
 
 jump_no_move:
 	jmp	finally_draw_him
@@ -328,7 +328,7 @@ jump_no_move:
 ; Walking
 ;================================
 
-physicist_walking:
+astronaut_walking:
 	lda	GAIT
 	cmp	#40
 	bcc	gait_fine	; blt
@@ -342,10 +342,10 @@ gait_fine:
 
 	tax
 
-	lda	phys_walk_progression,X
+	lda	astro_walk_progression,X
 	sta	INL
 
-	lda	phys_walk_progression+1,X
+	lda	astro_walk_progression+1,X
 	sta	INH
 
 	jmp	finally_draw_him
@@ -354,7 +354,7 @@ gait_fine:
 ; Running
 ;================================
 
-physicist_running:
+astronaut_running:
 	lda	GAIT
 	cmp	#40
 	bcc	run_gait_fine	; blt
@@ -368,10 +368,10 @@ run_gait_fine:
 
 	tax
 
-	lda	phys_run_progression,X
+	lda	astro_run_progression,X
 	sta	INL
 
-	lda	phys_run_progression+1,X
+	lda	astro_run_progression+1,X
 	sta	INH
 
 	jmp	finally_draw_him
@@ -381,7 +381,7 @@ run_gait_fine:
 ; COLLAPSING
 ;==================================
 
-physicist_collapsing:
+astronaut_collapsing:
 
 	lda	GAIT
 	cmp	#18
@@ -417,7 +417,7 @@ no_collapse_progress:
 ; DISINTEGRATING
 ;==================================
 
-physicist_disintegrating:
+astronaut_disintegrating:
 
 	lda	GAIT
 	cmp	#28
@@ -455,20 +455,20 @@ no_disintegrate_progress:
 ; FALLING SIDEWAYS
 ;==================================
 
-physicist_falling_sideways:
+astronaut_falling_sideways:
 
 
 	lda	FRAMEL
 	and	#$3
 	bne	no_fall_progress
 
-	inc	PHYSICIST_X
-	inc	PHYSICIST_Y	; must me mul of 2
-	inc	PHYSICIST_Y
+	inc	ASTRONAUT_X
+	inc	ASTRONAUT_Y	; must me mul of 2
+	inc	ASTRONAUT_Y
 
 no_fall_progress:
 
-	lda	PHYSICIST_Y
+	lda	ASTRONAUT_Y
 fall_sideways_destination_smc:
 	cmp	#22
 	bne	still_falling
@@ -477,15 +477,15 @@ done_falling:
 ;	sta	GAIT
 
 	lda	#P_CROUCHING
-	sta	PHYSICIST_STATE
-	jmp	physicist_crouching
+	sta	ASTRONAUT_STATE
+	jmp	astronaut_crouching
 
 still_falling:
 
-	lda	#<phys_falling
+	lda	#<astro_falling
 	sta	INL
 
-	lda	#>phys_falling
+	lda	#>astro_falling
 	sta	INH
 
 	jmp	finally_draw_him
@@ -495,7 +495,7 @@ still_falling:
 ; FALLING DOWN
 ;==================================
 
-physicist_falling_down:
+astronaut_falling_down:
 
 falling_stop_smc:	; $2C to fall, $4C for not
 	bit	still_falling_down
@@ -504,27 +504,27 @@ falling_stop_smc:	; $2C to fall, $4C for not
 	and	#$1
 	bne	no_fall_down_progress
 
-	inc	PHYSICIST_Y	; must be mul of 2
-	inc	PHYSICIST_Y
+	inc	ASTRONAUT_Y	; must be mul of 2
+	inc	ASTRONAUT_Y
 
 no_fall_down_progress:
 
-	lda	PHYSICIST_Y
+	lda	ASTRONAUT_Y
 fall_down_destination_smc:
 	cmp	#22
 	bne	still_falling_down
 done_falling_down:
 
 	lda	#P_CROUCHING
-	sta	PHYSICIST_STATE
-	jmp	physicist_crouching
+	sta	ASTRONAUT_STATE
+	jmp	astronaut_crouching
 
 still_falling_down:
 
-	lda	#<phys_stand
+	lda	#<astro_stand
 	sta	INL
 
-	lda	#>phys_stand
+	lda	#>astro_stand
 	sta	INH
 
 	jmp	finally_draw_him
@@ -535,7 +535,7 @@ still_falling_down:
 ; IMPALED
 ;==================================
 
-physicist_impaled:
+astronaut_impaled:
 
 	lda	GAIT
 	cmp	#$80
@@ -550,16 +550,16 @@ impale_not_done:
 
 	cmp	#2		; slide down one more
 	bne	impale_enough
-	inc	PHYSICIST_Y
-	inc	PHYSICIST_Y
+	inc	ASTRONAUT_Y
+	inc	ASTRONAUT_Y
 
 impale_enough:
 	inc	GAIT
 
-	lda	#<physicist_spike_sprite
+	lda	#<astronaut_spike_sprite
 	sta	INL
 
-	lda	#>physicist_spike_sprite
+	lda	#>astronaut_spike_sprite
 	sta	INH
 
 	jmp	finally_draw_him
@@ -570,10 +570,10 @@ impale_enough:
 
 
 finally_draw_him:
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	sta	XPOS
 
-	lda	PHYSICIST_Y
+	lda	ASTRONAUT_Y
 	sec
 	sbc	EARTH_OFFSET	; adjust for earthquakes
 	sta	YPOS
@@ -600,7 +600,7 @@ facing_right:
 check_screen_limit:
 
 	clc
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	adc	#$80
 	cmp	LEFT_WALK_LIMIT
 	bcs	just_fine_left		; (bge==bcs)
@@ -608,7 +608,7 @@ check_screen_limit:
 left_on_screen:
 
 	; if limit was -4, means we are off screen
-	; otherwise, stop physicist at limit
+	; otherwise, stop astronaut at limit
 
 	lda	LEFT_WALK_LIMIT
 	cmp	#($80 - 4)
@@ -616,12 +616,12 @@ left_on_screen:
 
 left_stop_at_barrier:
 	lda     #0
-        sta     PHYSICIST_STATE
+        sta     ASTRONAUT_STATE
 
         lda     LEFT_WALK_LIMIT
         sec
         sbc     #$7f
-        sta     PHYSICIST_X
+        sta     ASTRONAUT_X
 
 	rts
 
@@ -634,7 +634,7 @@ just_fine_left:
 
 	; Check right edge of screen
 
-;	lda	PHYSICIST_X
+;	lda	ASTRONAUT_X
 	cmp	RIGHT_WALK_LIMIT
 	bcc	just_fine_right		; blt
 
@@ -642,7 +642,7 @@ just_fine_left:
 right_on_screen:
 
 	; if limit was 39, means we are off screen
-	; otherwise, stop physicist at limit
+	; otherwise, stop astronaut at limit
 
 	lda	RIGHT_WALK_LIMIT
 	cmp	#($80 + 39)
@@ -650,12 +650,12 @@ right_on_screen:
 
 right_stop_at_barrier:
 	lda	#0
-	sta	PHYSICIST_STATE
+	sta	ASTRONAUT_STATE
 
 	lda	RIGHT_WALK_LIMIT
 	clc
 	adc	#$7f
-	sta	PHYSICIST_X
+	sta	ASTRONAUT_X
 	rts
 
 too_far_right:

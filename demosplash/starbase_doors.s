@@ -149,10 +149,10 @@ handle_doors_open:
 	lda	(DOOR_Y),Y
 	clc
 	adc	#4
-	cmp	PHYSICIST_Y
+	cmp	ASTRONAUT_Y
 	bne	close_door
 
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	cmp	(DOOR_XMAX),Y
 	bcs	close_door	; bge
 
@@ -175,10 +175,10 @@ handle_doors_closed:
 	lda	(DOOR_Y),Y
 	clc
 	adc	#4
-	cmp	PHYSICIST_Y
+	cmp	ASTRONAUT_Y
 	bne	handle_doors_continue
 
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	cmp	(DOOR_XMAX),Y
 	bcs	handle_doors_continue
 

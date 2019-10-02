@@ -70,7 +70,7 @@ wait_loop:
 ;.include "gr_offsets.s"
 .include "keyboard.s"
 
-.include "starbase_physicist.s"
+.include "starbase_astronaut.s"
 .include "starbase_alien.s"
 
 .include "starbase_doors.s"
@@ -83,12 +83,10 @@ wait_loop:
 .include "starbase_friend.s"
 .include "starbase_alien_laser.s"
 
-;.include "ootw_c4_action.s"
-
 ; room backgrounds
 .include "graphics/starbase/ootw_c4_city.inc"
 ; sprites
-.include "graphics/sprites/physicist.inc"
+.include "graphics/sprites/astronaut.inc"
 .include "graphics/sprites/alien.inc"
 
 

@@ -44,9 +44,9 @@ laser1_count:		.byte $0
 	;=========================
 
 fire_laser:
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	sta	COLLISION_X
-	lda	PHYSICIST_Y
+	lda	ASTRONAUT_Y
 	sta	COLLISION_Y
 
 	lda	laser0_out
@@ -63,11 +63,11 @@ fire_laser:
 
 	; set y
 
-	lda	PHYSICIST_Y
+	lda	ASTRONAUT_Y
 	clc
 	adc	#4
 
-	ldx	PHYSICIST_STATE
+	ldx	ASTRONAUT_STATE
 	cpx	#P_CROUCH_SHOOTING
 	bne	laser_crouch_done
 laser_crouch:
@@ -90,7 +90,7 @@ laser_left:
 
 	jsr	calc_gun_left_collision
 
-	ldx	PHYSICIST_X
+	ldx	ASTRONAUT_X
 	dex
 	stx	laser0_end
 
@@ -105,7 +105,7 @@ laser_right:
 
 	jsr	calc_gun_right_collision
 
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	clc
 	adc	#5
 	sta	laser0_start
@@ -304,7 +304,7 @@ hit_something_common:
 	cmp	#TARGET_FRIEND
 	beq	laser_hit_friend
 
-	cmp	#TARGET_PHYSICIST
+	cmp	#TARGET_ASTRONAUT
 	beq	laser_hit_physicist
 
 	; FIXME: reduce shields if hit them?
@@ -341,7 +341,7 @@ laser_hit_friend:
 laser_hit_physicist:
 
         lda	#P_DISINTEGRATING
-        sta	PHYSICIST_STATE
+        sta	ASTRONAUT_STATE
 
         lda	#0
         sta	GAIT

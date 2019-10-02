@@ -59,9 +59,9 @@ starbase_init:
 	sta	HAVE_GUN
 
 	lda	#19
-	sta	PHYSICIST_X
+	sta	ASTRONAUT_X
 	lda	#230			; start offscreen
-	sta	PHYSICIST_Y
+	sta	ASTRONAUT_Y
 
 	lda	#28
 	sta	fall_down_destination_smc+1
@@ -70,7 +70,7 @@ starbase_init:
 	sta	fall_sideways_destination_smc+1
 
 	lda	#P_FALLING_DOWN		; fall into level
-	sta	PHYSICIST_STATE
+	sta	ASTRONAUT_STATE
 
 	lda	#$2c
 	sta	falling_stop_smc
@@ -143,12 +143,12 @@ room0:
 	lda     #0
 	sta     cel_smc+1
 
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	cmp	#P_FALLING_DOWN
 	beq	room0_falling
 
 	lda	#28
-	sta	PHYSICIST_Y
+	sta	ASTRONAUT_Y
 room0_falling:
 
 	; load background
@@ -178,7 +178,7 @@ room1:
 	sta     cel_smc+1
 
 	lda	#8
-	sta	PHYSICIST_Y
+	sta	ASTRONAUT_Y
 
 	; load background
 	lda	#>(hallway_rle)
@@ -207,7 +207,7 @@ room2:
 	sta     cel_smc+1
 
 	lda	#18
-	sta	PHYSICIST_Y
+	sta	ASTRONAUT_Y
 
 	; load background
 	lda	#>(causeway1_rle)
@@ -243,7 +243,7 @@ room3:
 	sta     cel_smc+1
 
 	lda	#18
-	sta	PHYSICIST_Y
+	sta	ASTRONAUT_Y
 
 	; load top high
 	lda	#>(causeway2_rle)
@@ -292,17 +292,17 @@ room4:
 	lda     #5
 	sta     cer_smc+1
 
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	cmp	#P_IMPALED
 	beq	r4_impaled
 	cmp	#P_FALLING_DOWN
 	beq	r4_impaled
 
 	lda	#8
-	sta	PHYSICIST_Y
+	sta	ASTRONAUT_Y
 
 	lda	#P_CROUCHING
-	sta	PHYSICIST_STATE
+	sta	ASTRONAUT_STATE
 
 r4_impaled:
 	; load background
@@ -410,7 +410,7 @@ no_scroll:
 
 check_falling:
 	; only fall if falling sideways/down
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	cmp	#P_FALLING_SIDEWAYS
 	beq	falling_sideways
 	cmp	#P_FALLING_DOWN
@@ -429,11 +429,11 @@ falling_sideways:
         and     #$3
         bne     no_fall_undo
 
-	dec	PHYSICIST_X
-	dec	PHYSICIST_Y
-	dec	PHYSICIST_Y
-	dec	PHYSICIST_Y
-	dec	PHYSICIST_Y
+	dec	ASTRONAUT_X
+	dec	ASTRONAUT_Y
+	dec	ASTRONAUT_Y
+	dec	ASTRONAUT_Y
+	dec	ASTRONAUT_Y
 no_fall_undo:
 	jmp	scroll_check
 before:
@@ -442,28 +442,28 @@ before:
         and     #$1
         bne     extra_boost
 
-	inc	PHYSICIST_X
+	inc	ASTRONAUT_X
 extra_boost:
 	jmp	scroll_check
 
 
 falling_down:
 	; if falling down, and Y>=32, then impale
-	lda	PHYSICIST_Y
+	lda	ASTRONAUT_Y
 	cmp	#32
 	bcc	scroll_check		; blt
 
 	lda	#9
-	sta	PHYSICIST_X
+	sta	ASTRONAUT_X
 
 	lda	#38
-	sta	PHYSICIST_Y
+	sta	ASTRONAUT_Y
 
 	lda	#0
 	sta	GAIT
 
 	lda	#P_IMPALED
-	sta	PHYSICIST_STATE
+	sta	ASTRONAUT_STATE
 
 	jmp	not_falling
 
@@ -477,7 +477,7 @@ scroll_check:
 
 scroll_bg_check22:
 
-	lda	PHYSICIST_Y		; once Y=22, stop falling (scroll instead)
+	lda	ASTRONAUT_Y		; once Y=22, stop falling (scroll instead)
 	cmp	#22
 	bcc	not_far_enough		; blt
 
@@ -553,12 +553,12 @@ c4_no_bg_action:
 	; move physicist
 	;===============================
 
-	jsr	move_physicist
+	jsr	move_astronaut
 
 	;===================
 	; check room limits
 	;===================
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	cmp	#P_FALLING_DOWN
 	beq	done_room_limits
 	cmp	#P_IMPALED
@@ -580,7 +580,7 @@ done_room_limits:
 	bne	regular_room
 
 	; don't start fall if impaled or already falling
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	cmp	#P_IMPALED
 	beq	regular_room
 	cmp	#P_FALLING_DOWN
@@ -590,24 +590,24 @@ done_room_limits:
 
 
 	; only start falling if y>=18
-	lda	PHYSICIST_Y
+	lda	ASTRONAUT_Y
 	cmp	#18
 	bcc	regular_room		; blt
 
 	; only start falling if x>=7 and positive
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	bmi	regular_room
 	cmp	#7
 	bcc	regular_room		; blt
 
-	lda	PHYSICIST_STATE
+	lda	ASTRONAUT_STATE
 	cmp	#P_JUMPING
 	beq	fall_sideways
 
 	; if not jumping then fall down
 
 	lda	#P_FALLING_DOWN
-	sta	PHYSICIST_STATE
+	sta	ASTRONAUT_STATE
 
 	lda	#2
 	sta	BG_SCROLL
@@ -617,7 +617,7 @@ done_room_limits:
 fall_sideways:
 
 	lda	#P_FALLING_SIDEWAYS
-	sta	PHYSICIST_STATE
+	sta	ASTRONAUT_STATE
 
 	lda	#2
 	sta	BG_SCROLL
@@ -630,26 +630,26 @@ regular_room:
 
 	; if in charger, draw that
 	lda	WHICH_ROOM		; charger only room0
-	bne	just_draw_physicist
+	bne	just_draw_astronaut
 
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	cmp	#10
-	bne	just_draw_physicist
+	bne	just_draw_astronaut
 
 	lda	GUN_CHARGE
 	cmp	#200
-	bcs	just_draw_physicist	; bge
+	bcs	just_draw_astronaut	; bge
 
 	lda	#P_STANDING
-	sta	PHYSICIST_STATE
+	sta	ASTRONAUT_STATE
 
 	jsr	draw_charger
 
-	jmp	after_draw_physicist
+	jmp	after_draw_astronaut
 
-just_draw_physicist:
-	jsr	draw_physicist
-after_draw_physicist:
+just_draw_astronaut:
+	jsr	draw_astronaut
+after_draw_astronaut:
 
 	;===============
 	; draw alien
@@ -775,7 +775,7 @@ city_frame_no_oflo:
 	cmp	#4
 	bne	regular_exit_check
 
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	cmp	#32
 	bcc	regular_exit_check		; blt
 
@@ -807,7 +807,7 @@ regular_exit_check:
 city_right_yes_exit:
 
 	lda	#0
-	sta	PHYSICIST_X
+	sta	ASTRONAUT_X
 cer_smc:
 	lda	#$0			; smc+1 = exit location
 	sta	WHICH_CAVE
@@ -819,7 +819,7 @@ cer_smc:
 city_exit_left:
 
 	lda	#37
-	sta	PHYSICIST_X
+	sta	ASTRONAUT_X
 cel_smc:
 	lda	#0		; smc+1
 	sta	WHICH_CAVE

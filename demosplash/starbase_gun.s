@@ -152,7 +152,7 @@ draw_gun_charging:
 
 zap_left:
 
-	ldx	PHYSICIST_X
+	ldx	ASTRONAUT_X
 	dex
 	dex
 	stx	XPOS
@@ -161,17 +161,17 @@ zap_left:
 
 zap_right:
 
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	clc
 	adc	#5
 	sta	XPOS
 done_zap:
 
-	lda	PHYSICIST_Y
+	lda	ASTRONAUT_Y
 	clc
 	adc	#4
 
-	ldy	PHYSICIST_STATE
+	ldy	ASTRONAUT_STATE
 	cpy	#P_CROUCH_SHOOTING
 	bne	done_zap_ypos
 	clc

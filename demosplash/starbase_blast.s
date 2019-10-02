@@ -16,9 +16,9 @@ fire_blast:
 	lda	blast0_out
 	bne	done_fire_blast
 
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	sta	COLLISION_X
-	lda	PHYSICIST_Y
+	lda	ASTRONAUT_Y
 	sta	COLLISION_Y
 
 	; activate blast slot
@@ -39,11 +39,11 @@ fire_blast:
 
 	; set y
 
-	lda	PHYSICIST_Y
+	lda	ASTRONAUT_Y
 	clc
 	adc	#4
 
-	ldx	PHYSICIST_STATE
+	ldx	ASTRONAUT_STATE
 	cpx	#P_CROUCH_SHOOTING
 	bne	blast_ypos_done
 
@@ -67,7 +67,7 @@ blast_ypos_done:
 blast_left:
 	jsr	calc_gun_left_collision
 
-	ldx	PHYSICIST_X
+	ldx	ASTRONAUT_X
 	dex
 	stx	blast0_end
 
@@ -81,7 +81,7 @@ blast_left:
 blast_right:
 	jsr	calc_gun_right_collision
 
-	lda	PHYSICIST_X
+	lda	ASTRONAUT_X
 	clc
 	adc	#5
 	sta	blast0_start
