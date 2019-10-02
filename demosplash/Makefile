@@ -29,7 +29,9 @@ DEMOSPLASH:	demosplash.o
 demosplash.o:	demosplash.s \
 	zp.inc hardware.inc \
 	appleII_intro.s vapor_lock.s delay_a.s \
-	pt3_lib.s mockingboard_a.s pt3_setup.s interrupt_handler.s \
+	pt3_lib_init.s pt3_lib_core.s pt3_lib_mockingboard.s \
+	interrupt_handler.s \
+	starbase.s starbase_action.s \
 	dya_space_demo.pt3 appleII_40_96.inc
 	ca65 -o demosplash.o demosplash.s -l demosplash.lst
 

@@ -7,18 +7,22 @@
 ending:
 
 
-;	jsr	appleII_intro
+
 
 	;=========================
 	; set up sound
 	;=========================
+	lda	#0
+	sta	DONE_PLAYING
 
-;	jsr	pt3_setup
+	jsr	mockingboard_init
+	jsr	pt3_setup_interrupt
+	jsr	reset_ay_both
+	jsr	clear_ay_both
+	jsr	pt3_init_song
 
 ;	lda	#1
 ;	sta	LOOP
-
-;	jsr	wait_until_keypressed
 
 
 	;===========================
@@ -40,7 +44,11 @@ ending:
 	sta	DISP_PAGE
 
 
+	;===========================
+	; apple II intro
+	;============================
 
+;	jsr	appleII_intro
 
 	;===========================
 	; show some pictures
@@ -49,7 +57,7 @@ ending:
 
 	; start music
 
-;	cli	; enable interrupts
+	cli	; enable interrupts
 
 	jsr	starbase
 
@@ -89,14 +97,12 @@ wait_until_keypressed:
 ; Starbase
 .include "starbase.s"
 
-.include "pt3_setup.s"
-.include "pt3_lib.s"
+; Music player
+.include "pt3_lib_core.s"
+.include "pt3_lib_init.s"
+.include "pt3_lib_mockingboard.s"
 .include "interrupt_handler.s"
-.include "mockingboard_a.s"
 
-; backgrounds
-;.include "ootw_graphics/l15final/ootw_c15_final.inc"
-;.include "ootw_graphics/l16end/ootw_c16_end.inc"
 
 PT3_LOC = song
 
