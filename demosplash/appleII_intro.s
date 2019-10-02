@@ -148,9 +148,9 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	jsr	do_nothing				; 6
 
 	lda	KEYPRESS				; 4
-	bpl	no_keypress				; 3
+	bpl	no_keypress2				; 3
 	jmp	appleii_done
-no_keypress:
+no_keypress2:
 
 	jmp	display_loop				; 3
 

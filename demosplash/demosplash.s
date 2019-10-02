@@ -7,7 +7,7 @@
 ending:
 
 
-	jsr	appleII_intro
+;	jsr	appleII_intro
 
 	;=========================
 	; set up sound
@@ -51,11 +51,14 @@ ending:
 
 ;	cli	; enable interrupts
 
+	jsr	starbase
+
+
 	; wait wait wait
 
-	jsr	wait_until_keypressed
-repeat_ending:
-	jmp	repeat_ending
+;	jsr	wait_until_keypressed
+;repeat_ending:
+;	jmp	repeat_ending
 
 
 
@@ -79,9 +82,12 @@ wait_until_keypressed:
 .include "gr_copy.s"
 
 ;.include "text_print.s"
-;.include "gr_pageflip.s"
+.include "gr_pageflip.s"
 ;.include "gr_fast_clear.s"
 ;.include "gr_overlay.s"
+
+; Starbase
+.include "starbase.s"
 
 .include "pt3_setup.s"
 .include "pt3_lib.s"
