@@ -8,10 +8,10 @@ PNG_TO_40x96 = ../gr-utils/png_to_40x96
 
 all:	demosplash.dsk
 
-demosplash.dsk:	HELLO DEMOSPLASH
+demosplash.dsk:	HELLO DEMOSPLASH LOADER
 	cp empty.dsk demosplash.dsk
 	$(DOS33) -y demosplash.dsk SAVE A HELLO
-#	$(DOS33) -y demosplash.dsk BSAVE -a 0x1400 LOADER2 LOADER
+	$(DOS33) -y demosplash.dsk BSAVE -a 0x1400 LOADER
 	$(DOS33) -y demosplash.dsk BSAVE -a 0x1700 DEMOSPLASH
 
 ####
@@ -35,6 +35,15 @@ demosplash.o:	demosplash.s \
 	graphics/sprites/alien.inc graphics/sprites/astronaut.inc \
 	dya_space_demo.pt3 appleII_40_96.inc
 	ca65 -o demosplash.o demosplash.s -l demosplash.lst
+
+#####
+
+LOADER:	loader.o
+	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1400.inc
+
+loader.o:	loader.s
+	ca65 -o loader.o loader.s -l loader.lst
+
 
 #####
 
