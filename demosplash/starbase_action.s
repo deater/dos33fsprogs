@@ -152,9 +152,9 @@ room0:
 room0_falling:
 
 	; load background
-	lda	#>(recharge_rle)
+	lda	#>(jail_rle)
 	sta	GBASH
-	lda	#<(recharge_rle)
+	lda	#<(jail_rle)
 
 	jmp	room_setup_done
 
@@ -210,9 +210,9 @@ room2:
 	sta	ASTRONAUT_Y
 
 	; load background
-	lda	#>(causeway1_rle)
+	lda	#>(window_rle)
 	sta	GBASH
-	lda	#<(causeway1_rle)
+	lda	#<(window_rle)
 
 	jmp	room_setup_done
 
@@ -246,25 +246,25 @@ room3:
 	sta	ASTRONAUT_Y
 
 	; load top high
-	lda	#>(causeway2_rle)
+	lda	#>(ship_rle)
 	sta	GBASH
-	lda	#<(causeway2_rle)
+	lda	#<(ship_rle)
 	sta	GBASL
 	lda	#$10				; load to page $1000
 	jsr	load_rle_gr
 
 	; load pit background even higher
-	lda	#>(pit_rle)
+	lda	#>(ship_rle)
 	sta	GBASH
-	lda	#<(pit_rle)
+	lda	#<(ship_rle)
 	sta	GBASL
 	lda	#$BC				; load to page $BC00
 	jsr	load_rle_gr
 
 	; load background
-	lda	#>(causeway2_rle)
+	lda	#>(ship_rle)
 	sta	GBASH
-	lda	#<(causeway2_rle)
+	lda	#<(ship_rle)
 
 	jmp	room_setup_done
 
@@ -306,9 +306,9 @@ room4:
 
 r4_impaled:
 	; load background
-	lda	#>(pit_rle)
+	lda	#>(ship_rle)
 	sta	GBASH
-	lda	#<(pit_rle)
+	lda	#<(ship_rle)
 
 	jmp	room_setup_done
 

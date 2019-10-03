@@ -84,7 +84,7 @@ wait_loop:
 .include "starbase_alien_laser.s"
 
 ; room backgrounds
-.include "graphics/starbase/ootw_c4_city.inc"
+.include "graphics/starbase/starbase.inc"
 ; sprites
 .include "graphics/sprites/astronaut.inc"
 .include "graphics/sprites/alien.inc"

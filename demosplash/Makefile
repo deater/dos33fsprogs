@@ -32,6 +32,7 @@ demosplash.o:	demosplash.s \
 	pt3_lib_init.s pt3_lib_core.s pt3_lib_mockingboard.s \
 	interrupt_handler.s \
 	starbase.s starbase_action.s \
+	graphics/starbase/starbase.inc \
 	graphics/sprites/alien.inc graphics/sprites/astronaut.inc \
 	dya_space_demo.pt3 appleII_40_96.inc
 	ca65 -o demosplash.o demosplash.s -l demosplash.lst
