@@ -4,11 +4,12 @@ DOS33 = ../dos33fs-utils/dos33
 PNG2RLE = ../gr-utils/png2rle
 PNG2LZ4 = ../gr-utils/png2lz4
 PNG_TO_40x96 = ../gr-utils/png_to_40x96
-
+PNG_TO_40x48D = ../gr-utils/png_to_40x48d
+B2D = ../bmp2dhr/b2d
 
 all:	demosplash.dsk
 
-demosplash.dsk:	HELLO DEMOSPLASH LOADER
+demosplash.dsk:	HELLO DEMOSPLASH LOADER BOOK_HGR2C.BIN
 	cp empty.dsk demosplash.dsk
 	$(DOS33) -y demosplash.dsk SAVE A HELLO
 	$(DOS33) -y demosplash.dsk BSAVE -a 0x1400 LOADER
@@ -34,7 +35,8 @@ demosplash.o:	demosplash.s \
 	starbase.s starbase_action.s \
 	graphics/starbase/starbase.inc \
 	graphics/sprites/alien.inc graphics/sprites/astronaut.inc \
-	dya_space_demo.pt3 appleII_40_96.inc
+	dya_space_demo.pt3 appleII_40_96.inc \
+	book.s book_40_48d.inc
 	ca65 -o demosplash.o demosplash.s -l demosplash.lst
 
 #####
@@ -51,6 +53,22 @@ loader.o:	loader.s
 appleII_40_96.inc:	appleII_40_96.png
 	$(PNG_TO_40x96)	asm appleII_40_96.png appleII > appleII_40_96.inc
 
+#####
+
+
+#ball.img.lz4:	ball.img
+#	lz4 -f -16 ball.img
+
+#ball.img:	BALLC.BIN
+#	cp BALLC.BIN ball.img
+
+BOOK_HGR2C.BIN:	book_hgr2.bmp
+	$(B2D) book_hgr2.bmp HGR -d
+
+#####
+
+book_40_48d.inc:   book_40_48d.png
+	$(PNG_TO_40x48D) asm book_40_48d.png book > book_40_48d.inc
 
 #####
 

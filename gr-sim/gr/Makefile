@@ -11,7 +11,7 @@ all:	gr_view
 ###
 
 gr_view:	gr_view.o $(GR_SIM)
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o gr_view gr_view.o $(GR_SIM)
+	$(CC) -o gr_view gr_view.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
 
 gr_view.o:	gr_view.c
 	$(CC) $(CFLAGS) -c gr_view.c

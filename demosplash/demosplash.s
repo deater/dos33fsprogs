@@ -57,9 +57,15 @@ ending:
 
 	; start music
 
-	cli	; enable interrupts
+;	cli	; enable interrupts
 
-	jsr	starbase
+;	jsr	starbase
+
+	;===========================
+	; book scene
+	;===========================
+
+	jsr	book
 
 
 	; wait wait wait
@@ -96,6 +102,9 @@ wait_until_keypressed:
 
 ; Starbase
 .include "starbase.s"
+
+; book
+.include "book.s"
 
 ; Music player
 .include "pt3_lib_core.s"
