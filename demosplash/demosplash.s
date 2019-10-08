@@ -100,6 +100,9 @@ wait_until_keypressed:
 ;.include "gr_fast_clear.s"
 ;.include "gr_overlay.s"
 
+; missing
+.include "missing.s"
+
 ; Starbase
 .include "starbase.s"
 
