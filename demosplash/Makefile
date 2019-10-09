@@ -37,7 +37,8 @@ demosplash.o:	demosplash.s \
 	graphics/sprites/alien.inc graphics/sprites/astronaut.inc \
 	dya_space_demo.pt3 appleII_40_96.inc \
 	book.s book_40_48d.inc \
-	missing.s
+	missing.s \
+	escape.s
 	ca65 -o demosplash.o demosplash.s -l demosplash.lst
 
 #####

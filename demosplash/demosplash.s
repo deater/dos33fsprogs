@@ -60,13 +60,19 @@ demosplash2019:
 	; missing scene
 	;===========================
 
-	jsr	missing_intro
+;	jsr	missing_intro
 
 	;===========================
 	; starbase scene
 	;===========================
 
 ;	jsr	starbase
+
+	;===========================
+	; escape scene
+	;===========================
+
+	jsr	escape
 
 	;===========================
 	; book scene
@@ -112,6 +118,9 @@ wait_until_keypressed:
 
 ; Starbase
 .include "starbase.s"
+
+; escape
+.include "escape.s"
 
 ; book
 .include "book.s"
