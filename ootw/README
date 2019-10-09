@@ -178,3 +178,61 @@ L2 Memory map:
 	c0-cf	I/O
 	d0-ff	ROM
 
+
+
+since there seems to be vague interest in this, reasons to use the
+various graphics modes.
+
+lores benefits:
++ 40x48, 15 colors (two greys) (which is fine, as I use one for sprite transparency)
++ hardware page flipping
++ each display only 1kB (leaving lots of room for code) (also fast to clear screen)
++ (software) sprites and animations are relatively small
+
+lores downsides:
++ blocky
++ pixels are rectangular
++ framebuffer is non-linear (to get to next line requires a lookup table, not a simple add)
++ odd/even lines are high/low nibble in a byte, so to draw sprites properly need a lot of shifting an masking (I cheat and only allow sprites on even lines)
++ framebuffer has "memory holes" between lines.  These are areas of memory reserved for expansion card use, so you can't just load a 1kB image straight to the framebuffer as it could break things.
++ NTSC artifact fringing between colors
++ lores PAGE2 is not frequently used so is broken in some emulators and on some early IIgs models
+
+
+hires benefits:
++ 140x192 6 colors
++ hardware page flipping
+
+hires downsides:
++ non-linear framebuffer even worse than lo-res
++ 8kB per page.  two pages of hires takes 1/3 of total RAM in an Apple II+
++ NTSC artifact color.  If the bit patterns in adjacent pixels is 00 it makes black, 11 makes white, so if you join two different colors you get lines between them
++ you get 7 pixels per 2-bytes.  Which means a lot of dividing by 7, slow on 6502
++ each 3.5 pixels has a bit indicating palette (black,white,green,purple) or (black,white,orange,blue).  You get zx-spectrum like color clash if you try to mix colors too close together
++ to get fast software sprites usually you make a set of 7 pre-shifted versions of the sprites, which takes up a lot of room
+
+
+
+double-lores
++ 80x48, 15 colors
++ requires IIe or newer (80 column card)
++ requires drawing extra 1kB of data to bank-switched AUX RAM
++ AUX ram colors are shifted one bit to left from main bank colors
++ while it's possible to get hardware page flipping, it's really complex
+
+double-hires
++ 140x192, 15 colors!
++ requires IIe or newer and 128k of RAM
++ requires drawing 8k of additional data to bank-switched AUX RAM
++ again, page flipping is complex
+
+
+In any case, I chose lo-res for the Another World conversion for 3 reasons
+1. Another World traditionally has 16 colors (and I like the lo-res colors)
+2. I wanted to fit levels in 48k, and as many as possible on a 140k disk
+3. I am too lazy to implement a full hi-res sprite library
+
+
+The recent C64 Another World conversion looks much more impressive and hi-res,
+but I think they use a 1MB cartridge just for the intro movie alone
+(which is possible larger than the size of the original game for the Amiga).

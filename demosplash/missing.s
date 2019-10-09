@@ -21,20 +21,11 @@ missing_intro:
 	;=============================
 	; Load graphic page0
 
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image to $c00
-
-	lda	#0
-	asl
-	asl				; which*4
-	tay
-
-	lda	k_picture,Y
+	lda	#<k_low
 	sta	GBASL
-	lda	k_picture+1,Y
+	lda	#>k_low
 	sta	GBASH
+	lda	#$c			; load to $c00
 	jsr	load_rle_gr
 
 	lda	#4
@@ -54,20 +45,13 @@ missing_intro:
 	;=============================
 	; Load graphic page1
 
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image to $c00
-
-	lda	#0
-	asl
-	asl				; which*4
-	tay
-
-	lda	k_picture+2,Y
+	lda	#<k_high
 	sta	GBASL
-	lda	k_picture+3,Y
+	lda	#>k_high
 	sta	GBASH
+
+	lda	#$c
+
 	jsr	load_rle_gr
 
 	lda	#0
@@ -3526,7 +3510,7 @@ missing_no_keypress:
 
 	jmp	missing_display_loop			; 3
 
-
+.align $100
 
 	;=================================
 	; do nothing
@@ -3565,9 +3549,6 @@ gloop2:	dex								; 2
 	rts							; 6
 
 
-
-k_picture:
-	.word k_low,k_high
 
 .include "k_40_48d.inc"
 

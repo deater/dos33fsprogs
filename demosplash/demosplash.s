@@ -4,10 +4,7 @@
 .include "zp.inc"
 .include "hardware.inc"
 
-ending:
-
-
-
+demosplash2019:
 
 	;=========================
 	; set up sound
@@ -59,13 +56,23 @@ ending:
 
 ;	cli	; enable interrupts
 
+	;===========================
+	; missing scene
+	;===========================
+
+	jsr	missing_intro
+
+	;===========================
+	; starbase scene
+	;===========================
+
 ;	jsr	starbase
 
 	;===========================
 	; book scene
 	;===========================
 
-	jsr	book
+;	jsr	book
 
 
 	; wait wait wait
