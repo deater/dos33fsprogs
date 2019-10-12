@@ -27,18 +27,18 @@ appleII_intro:
 	lda	#$c
 	jsr	load_rle_gr
 
-	lda	#4
-	sta	DRAW_PAGE
+;	lda	#$4
+;	sta	DRAW_PAGE
 
-	jsr	gr_copy_to_current	; copy to page1
+;	jsr	gr_copy_to_current	; copy to page1
 
 	; GR part
-	bit	PAGE1
-	bit	LORES							; 4
-	bit	SET_GR							; 4
-	bit	FULLGR							; 4
+;	bit	PAGE1
+;	bit	LORES							; 4
+;	bit	SET_GR							; 4
+;	bit	FULLGR							; 4
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
 
 	;=============================
@@ -48,18 +48,18 @@ appleII_intro:
 	sta	GBASL
 	lda	#>appleII_high
 	sta	GBASH
-	lda	#$c
+	lda	#$10
 	jsr	load_rle_gr
 
-	lda	#0
-	sta	DRAW_PAGE
+;	lda	#$0
+;	sta	DRAW_PAGE
 
-	jsr	gr_copy_to_current
+;	jsr	gr_copy_to_current
 
 	; GR part
 	bit	PAGE0
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
 
 	;==============================
@@ -71,22 +71,33 @@ appleII_intro:
 	; vapor lock returns with us at beginning of hsync in line
 	; 114 (7410 cycles), so with 5070 lines to go
 
+	; 5070+17030=22100
+
 	; GR part
 	bit	LORES							; 4
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
 
-	jsr	gr_copy_to_current			; 6+ 9292
+	lda	#0				; 2
+	sta	DRAW_PAGE			; 3
+	jsr	gr_clear_all			; 6+ 5454
 
-	; now we have 322 left
+	lda	#4				; 2
+	sta	DRAW_PAGE			; 3
+	jsr	gr_clear_all			; 6+ 5454
 
-	; 322 - 12 = 310
-	; - 3 for jmp
-	; 307
+	; 22100
+	;   -12
+	; -5465
+	; -5465
+	;    -3 (jmp)
+	;==========
+	;  11155
 
-	; Try X=9 Y=6 cycles=307
-	ldy	#6							; 2
-loopA:	ldx	#9							; 2
+	; Try X=56 Y=39 cycles=11155
+
+	ldy	#39							; 2
+loopA:	ldx	#56							; 2
 loopB:	dex								; 2
 	bne	loopB							; 2nt/3
 	dey								; 2
@@ -144,8 +155,54 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 	; do_nothing should be      4550+1 -2-9 -7= 4533
+	;		4550
+	;		  +1 (fallthrough)
+	;		  -2 initial conditions
+	;	       -1107
+	;		  -7 (keypress)
+	;		  -3 (jump)
+	;		=====
+	;		3432
 
 	jsr	do_nothing				; 6
+
+	;=====================
+	;=====================
+	; 4+ 24*(30+16)-1 = 1107
+
+	; page0 -- copy from $c00
+	ldx	#4					; 2
+	ldy	#0					; 2
+							;=====
+							; 4
+page0_loopy:
+	lda	gr_offsets,Y				; 4+
+	sta	page0_store_smc+1			; 4
+	sta	page0_load_smc+1			; 4
+	lda	gr_offsets+1,Y				; 4+
+	clc						; 2
+	adc	#$4					; 2
+	sta	page0_store_smc+2			; 4
+	adc	#$4					; 2
+	sta	page0_load_smc+2			; 4
+							;=====
+							; 30
+
+page0_load_smc:
+	lda	$1000,X					; 4+
+page0_store_smc:
+	sta	$1000,X					; 5
+
+	iny						; 2
+	cpy	#24					; 2
+	bne	page0_loopy				; 3
+						;================
+						; 	16
+
+							; -1
+
+	;==========================
+	;==========================
 
 	lda	KEYPRESS				; 4
 	bpl	no_keypress2				; 3
@@ -161,25 +218,21 @@ appleii_done:
 	;=================================
 	; do nothing
 	;=================================
-	; and take 4533-6 = 4527 cycles to do it
+	; and take 3432-12 = 3420 cycles to do it
 do_nothing:
 
-	; Try X=4 Y=174 cycles=4525 R2
+	; Try X=39 Y=17 cycles=3418 R2
 
 	nop	; 2
 
-	ldy	#174							; 2
-loop1:
-	ldx	#4							; 2
-loop2:
-	dex								; 2
+	ldy	#17							; 2
+loop1:	ldx	#39							; 2
+loop2:	dex								; 2
 	bne	loop2							; 2nt/3
-
 	dey								; 2
 	bne	loop1							; 2nt/3
 
-
-	rts							; 6
+	rts								; 6
 
 
 

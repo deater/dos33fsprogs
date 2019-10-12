@@ -45,7 +45,7 @@ demosplash2019:
 	; apple II intro
 	;============================
 
-;	jsr	appleII_intro
+	jsr	appleII_intro
 
 	;===========================
 	; show some pictures
@@ -72,7 +72,7 @@ demosplash2019:
 	; escape scene
 	;===========================
 
-	jsr	escape
+;	jsr	escape
 
 	;===========================
 	; book scene
@@ -109,21 +109,21 @@ wait_until_keypressed:
 .include "gr_copy.s"
 
 ;.include "text_print.s"
-.include "gr_pageflip.s"
+;.include "gr_pageflip.s"
 .include "gr_fast_clear.s"
 ;.include "gr_overlay.s"
 
 ; missing
-.include "missing.s"
+;.include "missing.s"
 
 ; Starbase
-.include "starbase.s"
+;.include "starbase.s"
 
 ; escape
-.include "escape.s"
+;.include "escape.s"
 
 ; book
-.include "book.s"
+;.include "book.s"
 
 ; Music player
 .include "pt3_lib_core.s"
@@ -137,4 +137,4 @@ PT3_LOC = song
 ; must be page aligned
 .align 256
 song:
-.incbin "dya_space_demo.pt3"
+.incbin "dya_space_demo2.pt3"

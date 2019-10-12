@@ -1693,7 +1693,7 @@ do_frame:
 	jsr	calculate_note						; 6+?
 
 convert_177_smc1:
-	sec								; 2
+	clc								; 2
 
 	; Load up the Frequency Registers
 
@@ -1739,7 +1739,7 @@ convert_177_smc1:
 no_scale_a:
 
 convert_177_smc2:
-	sec								; 2
+	clc								; 2
 
 	lda	note_b+NOTE_TONE_L	; Note B Period L		; 4
 	sta	AY_REGISTERS+2		; into R2			; 3
@@ -1781,7 +1781,7 @@ convert_177_smc2:
 no_scale_b:
 
 convert_177_smc3:
-	sec								; 2
+	clc								; 2
 
 	lda	note_c+NOTE_TONE_L	; Note C Period L		; 4
 	sta	AY_REGISTERS+4		; into R4			; 3
@@ -1833,7 +1833,7 @@ pt3_noise_add_smc:
 	sta	AY_REGISTERS+6						; 3
 
 convert_177_smc4:
-	sec								; 2
+	clc								; 2
 	bcc	no_scale_n						; 2/3
 
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
@@ -1896,7 +1896,7 @@ pt3_envelope_slide_h_smc:
 	sta	AY_REGISTERS+12						; 3
 
 convert_177_smc5:
-	sec
+	clc
 	bcc	no_scale_e						; 2/3
 
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
