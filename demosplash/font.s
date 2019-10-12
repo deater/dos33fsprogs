@@ -1,6 +1,10 @@
 ; 12 bytes per char
 ; 0x20 - 0x5F = 32 - 96 = 64*12 = 768 bytes
 
+; FIXME: if only 32 chars then we can make the code a lot simpler/smaller
+;	+ only 2 pages of data (instead of 4)
+;	+ calculations, no need for high bit in multiply
+
 
 colors_hi:	.byte $C4,$CF
 colors_lo:	.byte $FC,$4C
@@ -13,7 +17,7 @@ colors_lo:	.byte $FC,$4C
 
 	;	waste 256 bytes to avoid crossing pages and muly by 6
 
-	; 39+30+37+(41*3)+3+34+(43*3)+5 = 400
+	; 4+24+37+(43*3)+3+34+(43*3)+5 = 365
 
 put_char:
 		; point to font location
@@ -21,24 +25,22 @@ put_char:
 		sbc	#'A'					; 2
 		; multiply by 8... 0..63 -> 0..511  1 1111
 		; shift left by 4
-		pha						; 3
-		lsr						; 2
-		lsr						; 2
-		lsr						; 2
-		lsr						; 2
-		clc						; 2
-		adc	#>font_high				; 2
-		sta	fh1_smc+2				; 4
-		sta	fh2_smc+2				; 4
-		clc						; 2
-		adc	#2					; 2
-		sta	fl1_smc+2				; 4
-		sta	fl2_smc+2				; 4
+;		pha						; 3
+;		lsr						; 2
+;		lsr						; 2
+;		lsr						; 2
+;		clc						; 2
+;		adc	#>font_high				; 2
+;		sta	fh1_smc+2				; 4
+;		sta	fh2_smc+2				; 4
+;		clc						; 2
+;		adc	#1					; 2
+;		sta	fl1_smc+2				; 4
+;		sta	fl2_smc+2				; 4
 							;============
-							;	39
+							;	4
 
-		pla						; 4
-		asl						; 2
+;		pla						; 4
 		asl						; 2
 		asl						; 2
 		asl						; 2
@@ -48,7 +50,7 @@ put_char:
 		sta	fl1_smc+1				; 4
 		sta	fl2_smc+1				; 4
 							;============
-							;	30
+							;	24
 
 		; calculate output
 		txa						; 2
@@ -63,7 +65,7 @@ put_char:
 		adc	#$4					; 2
 		sta	page0_put_char1+2			; 4
 
-		ldx	#2					; 2
+		ldx	#0					; 2
 							;============
 							;	 37
 put_char_inner_loop1:
@@ -82,10 +84,11 @@ page1_put_char1:
 		inc	page0_put_char1+1			; 6
 		inc	page1_put_char1+1			; 6
 
-		dex						; 2
-		bpl	put_char_inner_loop1			; 3
+		inx						; 2
+		cpx	#3					; 2
+		bne	put_char_inner_loop1			; 3
 							;============
-							;	41 * 3
+							;	43 * 3
 
 								; -1
 		iny						; 2
@@ -93,6 +96,7 @@ page1_put_char1:
 							;============
 							;	  3
 		; unrolled
+		clc						; 2
 		pla				; restore X pos	; 4
 		adc	gr_offsets,y				; 4+
 		sta	page0_put_char2+1			; 4
@@ -103,7 +107,6 @@ page1_put_char1:
 		adc	#$4					; 2
 		sta	page0_put_char2+2			; 4
 
-		ldx	#5					; 2
 							;==============
 							;	34
 put_char_inner_loop2:
@@ -121,8 +124,8 @@ page1_put_char2:
 		inc	page0_put_char2+1			; 6
 		inc	page1_put_char2+1			; 6
 
-		dex						; 2
-		cpx	#2					; 2
+		inx						; 2
+		cpx	#6					; 2
 		bne	put_char_inner_loop2			; 3
 							;============
 							;	43*3
@@ -133,28 +136,33 @@ page1_put_char2:
 							;	  5
 
 
-		;H0H    **
-		;L0H **    **
-		;H0L **    **
-		;L0L ** ** **
-		;H1H **    **
-		;L1H **    **
-		;H1L **    **
-		;L1L **    **
+;H0H    **       ******        ** **    ** **      ** ** **    ** ** **
+;L0H **    **    **    **   **          **    **   ** ** **    ** ** **
+;H0L **    **    **    **   **          **    **   **          **
+;L0L ** ** **    ** **      **          **    **   ** **       ** **
+;H1H ** ** **    ** ** **   **          **    **   ** **       ** **
+;L1H **    **    **    **   **          **    **   **          **
+;H1L **    **    **    **   **          **    **   ** ** **    **
+;L1L **    **    ** ** **      ** **    ** **      ** ** **    **
+
 .align $100
 font_high:
-.byte	$f0,$0f,$f0
-.byte	$ff,$00,$ff
-.byte	$00,$00
-.align $100
-.byte 0
+.byte	$f0,$0f,$f0,$ff,$0f,$ff,$00,$00		; A
+.byte	$ff,$0f,$f0,$ff,$0f,$ff,$00,$00		; B
+.byte	$f0,$0f,$0f,$ff,$00,$00,$00,$00		; C
+.byte	$ff,$0f,$f0,$ff,$00,$ff,$00,$00		; D
+.byte	$ff,$0f,$0f,$ff,$ff,$f0,$00,$00		; E
+.byte	$ff,$0f,$0f,$0f,$ff,$0f,$00,$00		; F
+
+;.align $100
+;.byte 0
 
 .align $100
-
 
 font_low:	; 2 pages later
-.byte	$ff,$f0,$ff
-.byte	$ff,$00,$ff
-.byte	$00,$00
-
-
+.byte	$ff,$f0,$ff,$ff,$00,$ff,$00,$00		; A
+.byte	$ff,$f0,$0f,$ff,$f0,$ff,$00,$00		; B
+.byte	$ff,$00,$00,$0f,$f0,$f0,$00,$00		; C
+.byte	$ff,$00,$ff,$ff,$f0,$0f,$00,$00		; D
+.byte	$ff,$ff,$0f,$ff,$f0,$f0,$00,$00		; E
+.byte	$ff,$ff,$0f,$ff,$00,$00,$00,$00		; F

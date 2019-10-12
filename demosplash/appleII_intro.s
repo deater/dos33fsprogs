@@ -195,7 +195,7 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	cpx	#80					; 2
 	bcc	wipe_left	; blt			; 3
 							; -1
-	cpx	#128					; 2
+	cpx	#152					; 2
 	bcc	forever		; blt			; 3
 							; -1
 
@@ -224,24 +224,34 @@ loop21:	dex								; 2
 
 	;=========================
 	; FOREVER
+	;==========================
+	; ' '@80
+	; ' '@88
+	; F@96, 11,32
+	; O@104
+	; R@112
+	; E@120
+	; V@128
+	; E@136
+	; R@144
 
 forever:
 							; -1
 	;===========================
-	; delay 1174-16-3-406-6=743
+	; delay 1174-16-3-371-6=778
 
-	ldx	#20					; 2
-	ldy	#10					; 2
-	lda	#'A'					; 2
+	ldx	#11					; 2
+	ldy	#32					; 2
+	lda	#'B'					; 2
 
-	jsr	put_char				; 6+400
+	jsr	put_char				; 6+365
 
 	; delay
 
-	; Try X=20 Y=7 cycles=743
+	; Try X=21 Y=7 cycles=778
 
 	ldy	#7							; 2
-loop19:	ldx	#20							; 2
+loop19:	ldx	#21							; 2
 loop29:	dex								; 2
 	bne	loop29							; 2nt/3
 	dey								; 2
