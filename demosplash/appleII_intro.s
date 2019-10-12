@@ -195,7 +195,7 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	cpx	#80					; 2
 	bcc	wipe_left	; blt			; 3
 							; -1
-	cpx	#152					; 2
+	cpx	#192					; 2
 	bcc	forever		; blt			; 3
 							; -1
 
@@ -205,14 +205,14 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 done_done:
 							; -1
 	;===========================
-	; delay 1174-11-3=1160
+	; delay 1174-15-3=1156
 
 	; delay
 
-	; Try X=11 Y=19 cycles=1160
+	; Try X=45 Y=5 cycles=1156
 
-	ldy	#19							; 2
-loop11:	ldx	#11							; 2
+	ldy	#5							; 2
+loop11:	ldx	#45							; 2
 loop21:	dex								; 2
 	bne	loop21							; 2nt/3
 	dey								; 2
@@ -225,40 +225,71 @@ loop21:	dex								; 2
 	;=========================
 	; FOREVER
 	;==========================
-	; ' '@80
-	; ' '@88
-	; F@96, 11,32
-	; O@104
+	; F@80, 11,32
+	; O@96
 	; R@112
-	; E@120
-	; V@128
-	; E@136
-	; R@144
+	; E@128
+	; V@144
+	; E@160
+	; R@176
 
 forever:
 							; -1
 	;===========================
-	; delay 1174-16-3-371-6=778
+	; forever:
+	;	1174 base
+	;	 -16 previous if/else
+	;	  -7 check
+	;	 -12 new_forever
+	;	 -12 putchar prep
+	;	-365 putchar
+	;	  -8 end
+	;=====================
+	;	754
 
-	ldx	#11					; 2
+	txa						; 2
+	and	#$f					; 2
+	beq	new_forever				; 3
+
+							; -1
+	nop
+	nop
+	nop
+	nop
+	nop
+	jmp	write_forever				; 3
+
+new_forever:
+	lda	forever_x_smc+1				; 4
+	clc						; 2
+	adc	#4					; 2
+	sta	forever_x_smc+1				; 4
+							;=======
+							; 12
+write_forever:
+
+forever_x_smc:
+	ldx	#7					; 2
 	ldy	#32					; 2
 	lda	#'B'					; 2
 
 	jsr	put_char				; 6+365
 
+	;=======
 	; delay
 
-	; Try X=21 Y=7 cycles=778
+	; Try X=49 Y=3 cycles=754
 
-	ldy	#7							; 2
-loop19:	ldx	#21							; 2
+	ldy	#3							; 2
+loop19:	ldx	#49							; 2
 loop29:	dex								; 2
 	bne	loop29							; 2nt/3
 	dey								; 2
 	bne	loop19							; 2nt/3
 
 
-	jmp	intro_wipe_done				;  3
+	inc	DUDE_X					; 5
+	jmp	intro_wipe_done				; 3
 
 
 

@@ -22,7 +22,7 @@ colors_lo:	.byte $FC,$4C
 put_char:
 		; point to font location
 		sec						; 2
-		sbc	#'A'					; 2
+		sbc	#'@'					; 2
 		; multiply by 8... 0..63 -> 0..511  1 1111
 		; shift left by 4
 ;		pha						; 3
@@ -147,6 +147,7 @@ page1_put_char2:
 
 .align $100
 font_high:
+.byte	$00,$00,$00,$00,$00,$00,$00,$00		; ' '
 .byte	$f0,$0f,$f0,$ff,$0f,$ff,$00,$00		; A
 .byte	$ff,$0f,$f0,$ff,$0f,$ff,$00,$00		; B
 .byte	$f0,$0f,$0f,$ff,$00,$00,$00,$00		; C
@@ -160,6 +161,7 @@ font_high:
 .align $100
 
 font_low:	; 2 pages later
+.byte	$00,$00,$00,$00,$00,$00,$00,$00		; ' '
 .byte	$ff,$f0,$ff,$ff,$00,$ff,$00,$00		; A
 .byte	$ff,$f0,$0f,$ff,$f0,$ff,$00,$00		; B
 .byte	$ff,$00,$00,$0f,$f0,$f0,$00,$00		; C
