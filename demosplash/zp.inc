@@ -56,7 +56,7 @@ FIRE_X		= $6D
 LEVEL_DONE	= $6E
 YADD		= $6F
 ZERO		= $B0
-
+WASTE_CYCLES	= $B1
 
 
 FRAMEL		= $60

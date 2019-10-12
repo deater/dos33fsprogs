@@ -110,8 +110,12 @@ wait_until_keypressed:
 
 ;.include "text_print.s"
 ;.include "gr_pageflip.s"
+.align	$100
 .include "gr_fast_clear.s"
 ;.include "gr_overlay.s"
+.align $100
+.include "font.s"
+
 
 ; missing
 ;.include "missing.s"

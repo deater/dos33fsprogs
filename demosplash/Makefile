@@ -9,11 +9,11 @@ B2D = ../bmp2dhr/b2d
 
 all:	demosplash.dsk
 
-demosplash.dsk:	HELLO DEMOSPLASH LOADER BOOK_HGR2C.BIN MUSICTEST
+demosplash.dsk:	HELLO LOADER BOOK_HGR2C.BIN MUSICTEST	# DEMOSPLASH
 	cp empty.dsk demosplash.dsk
 	$(DOS33) -y demosplash.dsk SAVE A HELLO
 	$(DOS33) -y demosplash.dsk BSAVE -a 0x1400 LOADER
-	$(DOS33) -y demosplash.dsk BSAVE -a 0x1700 DEMOSPLASH
+#	$(DOS33) -y demosplash.dsk BSAVE -a 0x1700 DEMOSPLASH
 	$(DOS33) -y demosplash.dsk BSAVE -a 0x1700 MUSICTEST
 
 ####
@@ -49,7 +49,7 @@ MUSICTEST:	musictest.o
 
 musictest.o:	musictest.s \
 	zp.inc hardware.inc \
-	appleII_intro.s \
+	appleII_intro.s font.s \
 	pt3_lib_init.s pt3_lib_core.s pt3_lib_mockingboard.s \
 	interrupt_handler.s \
 	dya_space_demo2.pt3

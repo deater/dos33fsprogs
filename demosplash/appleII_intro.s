@@ -170,36 +170,49 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
-	; do_nothing should be      4550+1 -2-9 -7= 4533
+	; do_nothing should be:
 	;		4550
 	;		  +1 (fallthrough)
 	;		  -2 initial conditions
-	;		  -8 check if done
-	;	       -1161
+	;	       -1174
 	;		  -7 (keypress)
 	;		  -3 (jump)
 	;		=====
-	;		3370
+	;		3365
 
 	jsr	do_nothing				; 6
 
+	;========================
+	; Add 8 to wipe_right
+	; Add 12 to wipe_left
+	; Add 16 to forever
+	; Add 15 to donothing
+
 	ldx	DUDE_X					; 3
 	cpx	#40					; 2
-	bne	wipe_right				; 3
-
-done_done:
-	;===========================
-	; delay 1161+1-3=1159
-
-	; delay
-	; Try X=3 Y=55 cycles=1156R3
-
-	lda	DUDE_X		; 3
-
+	bcc	wipe_right	; blt			; 3
+							; -1
+	cpx	#80					; 2
+	bcc	wipe_left	; blt			; 3
+							; -1
+	cpx	#128					; 2
+	bcc	forever		; blt			; 3
 							; -1
 
-	ldy	#55							; 2
-loop11:	ldx	#3							; 2
+	;=========================
+	; hold steady
+
+done_done:
+							; -1
+	;===========================
+	; delay 1174-11-3=1160
+
+	; delay
+
+	; Try X=11 Y=19 cycles=1160
+
+	ldy	#19							; 2
+loop11:	ldx	#11							; 2
 loop21:	dex								; 2
 	bne	loop21							; 2nt/3
 	dey								; 2
@@ -209,18 +222,51 @@ loop21:	dex								; 2
 	jmp	intro_wipe_done				;  3
 
 
+	;=========================
+	; FOREVER
+
+forever:
+							; -1
+	;===========================
+	; delay 1174-16-3-406-6=743
+
+	ldx	#20					; 2
+	ldy	#10					; 2
+	lda	#'A'					; 2
+
+	jsr	put_char				; 6+400
+
+	; delay
+
+	; Try X=20 Y=7 cycles=743
+
+	ldy	#7							; 2
+loop19:	ldx	#20							; 2
+loop29:	dex								; 2
+	bne	loop29							; 2nt/3
+	dey								; 2
+	bne	loop19							; 2nt/3
+
+
+	jmp	intro_wipe_done				;  3
+
+
+
 	;=====================
 	;=====================
 	; wipe right
 	;=====================
 	;=====================
-	; 2+ 24*(30+18)-1 +5+3 = 1161
+	; 24*(30+18)-1 +5+3 = 1159
+	; 1174-1159-8=7
 
 	; page0 -- copy from $c00
 wipe_right:
-	ldy	#0					; 2
+	nop						; 2
+	nop						; 2
+	lda	DUDE_X					; 3
 							;=====
-							; 2
+							; 7
 page0_loopy:
 	lda	gr_offsets,Y				; 4+
 	sta	page0_store_smc+1			; 4
@@ -229,7 +275,7 @@ page0_loopy:
 	clc						; 2
 	adc	#$4					; 2
 	sta	page0_store_smc+2			; 4
-	adc	#$4					; 2
+	adc	#$8					; 2
 	sta	page0_load_smc+2			; 4
 							;=====
 							; 30
@@ -250,6 +296,66 @@ page0_store_smc:
 	inc	DUDE_X					; 5
 	jmp	intro_wipe_done				; 3
 
+	;=====================
+	;=====================
+	; wipe left
+	;=====================
+	;=====================
+	; 11+ 24*(28+18)-1 +5+3 = 1170
+	; 1174-1122-12=40
+
+	; page0 -- copy from $c00
+wipe_left:
+	inc	WASTE_CYCLES	; 5
+	inc	WASTE_CYCLES	; 5
+	inc	WASTE_CYCLES	; 5
+	inc	WASTE_CYCLES	; 5
+	inc	WASTE_CYCLES	; 5
+	inc	WASTE_CYCLES	; 5
+	inc	WASTE_CYCLES	; 5
+	inc	WASTE_CYCLES	; 5
+
+
+
+
+	; 40 -> 79 map to 39->0 = 39 - (X-40) = 79-X
+	lda	#79					; 2
+	sec						; 2
+	sbc	DUDE_X					; 3
+	tax						; 2
+	ldy	#0					; 2
+							;=====
+							; 11
+page1_loopy:
+	lda	gr_offsets,Y				; 4+
+	sta	page1_store_smc+1			; 4
+	sta	page1_load_smc+1			; 4
+	lda	gr_offsets+1,Y				; 4+
+	clc						; 2
+	sta	page1_store_smc+2			; 4
+	adc	#$8					; 2
+	sta	page1_load_smc+2			; 4
+							;=====
+							; 28
+
+page1_load_smc:
+	lda	$1000,X					; 4+
+page1_store_smc:
+	sta	$1000,X					; 5
+
+	iny						; 2
+	iny						; 2
+	cpy	#48					; 2
+	bne	page1_loopy				; 3
+						;================
+						; 	18
+
+							; -1
+	inc	DUDE_X					; 5
+	jmp	intro_wipe_done				; 3
+
+
+
 
 	;==========================
 	;==========================
@@ -268,15 +374,16 @@ appleii_done:
 	;=================================
 	; do nothing
 	;=================================
-	; and take 3370-12 = 3358 cycles to do it
+	; and take 3365-12 = 3353 cycles to do it
 do_nothing:
 
-	; Try X=11 Y=55 cycles=3356R2
+	; Try X=6 Y=93 cycles=3349R4
 
 	nop
+	nop
 
-	ldy	#55							; 2
-loop1:	ldx	#11							; 2
+	ldy	#93							; 2
+loop1:	ldx	#6							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
