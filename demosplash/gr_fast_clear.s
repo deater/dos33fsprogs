@@ -27,7 +27,7 @@ gr_clear_all:
 
 	ldy	#120							; 2
 clear_all_color:
-	lda	#0							; 2
+	lda	#$00							; 2
 								;============
 								;	  4
 clear_all_fast_loop:
@@ -49,3 +49,7 @@ __caf2:
 
 									; -1
 	rts								; 6
+
+gr_clear_all_end:
+
+.assert >gr_clear_all = >gr_clear_all_end, error, "gr_clear_all crosses page"

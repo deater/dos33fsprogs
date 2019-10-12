@@ -16,6 +16,7 @@ appleII_intro:
 
 	lda	#0
 	sta	DRAW_PAGE
+	sta	DUDE_X
 
 	;=============================
 	; Load graphic page0
@@ -69,9 +70,9 @@ appleII_intro:
 	jsr	vapor_lock						; 6+
 
 	; vapor lock returns with us at beginning of hsync in line
-	; 114 (7410 cycles), so with 5070 lines to go
+	; 114 (7410 cycles), so with 5070 lines to go to vblank
 
-	; 5070+17030=22100
+	; 5070+17030+4550=26650
 
 	; GR part
 	bit	LORES							; 4
@@ -86,18 +87,33 @@ appleII_intro:
 	sta	DRAW_PAGE			; 3
 	jsr	gr_clear_all			; 6+ 5454
 
-	; 22100
+	; 26650
 	;   -12
 	; -5465
 	; -5465
 	;    -3 (jmp)
 	;==========
-	;  11155
+	;  15705
 
-	; Try X=56 Y=39 cycles=11155
+	; FIXME: delay extra 33?
+	; have no idea why this is needed
+	lda	DRAW_PAGE
+	lda	DRAW_PAGE
+	lda	DRAW_PAGE
+	lda	DRAW_PAGE
+	lda	DRAW_PAGE
+	lda	DRAW_PAGE
+	lda	DRAW_PAGE
+	lda	DRAW_PAGE
+	lda	DRAW_PAGE
+	lda	DRAW_PAGE
+	lda	DRAW_PAGE
 
-	ldy	#39							; 2
-loopA:	ldx	#56							; 2
+
+	; Try X=29 Y=104 cycles=15705
+
+	ldy	#104							; 2
+loopA:	ldx	#29							; 2
 loopB:	dex								; 2
 	bne	loopB							; 2nt/3
 	dey								; 2
@@ -158,23 +174,53 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;		4550
 	;		  +1 (fallthrough)
 	;		  -2 initial conditions
-	;	       -1107
+	;		  -8 check if done
+	;	       -1161
 	;		  -7 (keypress)
 	;		  -3 (jump)
 	;		=====
-	;		3432
+	;		3370
 
 	jsr	do_nothing				; 6
 
+	ldx	DUDE_X					; 3
+	cpx	#40					; 2
+	bne	wipe_right				; 3
+
+done_done:
+	;===========================
+	; delay 1161+1-3=1159
+
+	; delay
+	; Try X=3 Y=55 cycles=1156R3
+
+	lda	DUDE_X		; 3
+
+							; -1
+
+	ldy	#55							; 2
+loop11:	ldx	#3							; 2
+loop21:	dex								; 2
+	bne	loop21							; 2nt/3
+	dey								; 2
+	bne	loop11							; 2nt/3
+
+
+	jmp	intro_wipe_done				;  3
+
+
 	;=====================
 	;=====================
-	; 4+ 24*(30+16)-1 = 1107
+	; wipe right
+	;=====================
+	;=====================
+	; 2+ 24*(30+18)-1 +5+3 = 1161
 
 	; page0 -- copy from $c00
-	ldx	#4					; 2
+wipe_right:
 	ldy	#0					; 2
 							;=====
-							; 4
+							; 2
 page0_loopy:
 	lda	gr_offsets,Y				; 4+
 	sta	page0_store_smc+1			; 4
@@ -194,16 +240,20 @@ page0_store_smc:
 	sta	$1000,X					; 5
 
 	iny						; 2
-	cpy	#24					; 2
+	iny						; 2
+	cpy	#48					; 2
 	bne	page0_loopy				; 3
 						;================
-						; 	16
+						; 	18
 
 							; -1
+	inc	DUDE_X					; 5
+	jmp	intro_wipe_done				; 3
+
 
 	;==========================
 	;==========================
-
+intro_wipe_done:
 	lda	KEYPRESS				; 4
 	bpl	no_keypress2				; 3
 	jmp	appleii_done
@@ -218,15 +268,15 @@ appleii_done:
 	;=================================
 	; do nothing
 	;=================================
-	; and take 3432-12 = 3420 cycles to do it
+	; and take 3370-12 = 3358 cycles to do it
 do_nothing:
 
-	; Try X=39 Y=17 cycles=3418 R2
+	; Try X=11 Y=55 cycles=3356R2
 
-	nop	; 2
+	nop
 
-	ldy	#17							; 2
-loop1:	ldx	#39							; 2
+	ldy	#55							; 2
+loop1:	ldx	#11							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
