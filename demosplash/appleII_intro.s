@@ -29,20 +29,6 @@ appleII_intro:
 	lda	#$c
 	jsr	load_rle_gr
 
-;	lda	#$4
-;	sta	DRAW_PAGE
-
-;	jsr	gr_copy_to_current	; copy to page1
-
-	; GR part
-;	bit	PAGE1
-;	bit	LORES							; 4
-;	bit	SET_GR							; 4
-;	bit	FULLGR							; 4
-
-;	jsr	wait_until_keypressed
-
-
 	;=============================
 	; Load graphic page1
 
@@ -52,11 +38,6 @@ appleII_intro:
 	sta	GBASH
 	lda	#$10
 	jsr	load_rle_gr
-
-;	lda	#$0
-;	sta	DRAW_PAGE
-
-;	jsr	gr_copy_to_current
 
 	; GR part
 	bit	PAGE0
@@ -223,84 +204,6 @@ loop21:	dex								; 2
 	jmp	intro_wipe_done				;  3
 
 
-	;=========================
-	; FOREVER
-	;==========================
-	; F@80, 11,32
-	; O@96
-	; R@112
-	; E@128
-	; V@144
-	; E@160
-	; R@176
-
-forever:
-							; -1
-	;===========================
-	; forever:
-	;	1174 base
-	;	 -16 previous if/else
-	;	  -7 check
-	;	 -18 new_forever
-	;	 -14 putchar prep
-	;	-365 putchar
-	;	  -8 end
-	;=====================
-	;	746
-
-	txa						; 2
-	and	#$f					; 2
-	beq	new_forever				; 3
-
-							; -1
-	nop						; 2
-	nop						; 2
-	nop						; 2
-	nop						; 2
-	nop						; 2
-	nop						; 2
-	nop						; 2
-	nop						; 2
-	jmp	write_forever				; 3
-
-new_forever:
-	inc	forever_string_smc+1			; 6
-	lda	forever_x_smc+1				; 4
-	clc						; 2
-	adc	#4					; 2
-	sta	forever_x_smc+1				; 4
-							;=======
-							; 18
-write_forever:
-
-forever_string_smc:
-	lda	forever_string				; 4+
-forever_x_smc:
-	ldx	#7					; 2
-	ldy	#32					; 2
-
-	jsr	put_char				; 6+365
-
-	;=======
-	; delay
-
-	; Try X=147 Y=1 cycles=742R4
-
-	nop
-	nop
-
-	ldy	#1							; 2
-loop19:	ldx	#147							; 2
-loop29:	dex								; 2
-	bne	loop29							; 2nt/3
-	dey								; 2
-	bne	loop19							; 2nt/3
-
-
-	inc	DUDE_X					; 5
-	jmp	intro_wipe_done				; 3
-
-
 
 	;=====================
 	;=====================
@@ -314,7 +217,7 @@ loop29:	dex								; 2
 wipe_right:
 	nop						; 2
 	nop						; 2
-	lda	DUDE_X					; 3
+	lda	WASTE_CYCLES				; 3
 							;=====
 							; 7
 page0_loopy:
@@ -365,9 +268,6 @@ wipe_left:
 	inc	WASTE_CYCLES	; 5
 	inc	WASTE_CYCLES	; 5
 
-
-
-
 	; 40 -> 79 map to 39->0 = 39 - (X-40) = 79-X
 	lda	#79					; 2
 	sec						; 2
@@ -405,6 +305,103 @@ page1_store_smc:
 	jmp	intro_wipe_done				; 3
 
 
+	;=========================
+	; FOREVER
+	;==========================
+	; F@80, 11,32
+	; O@96
+	; R@112
+	; E@128
+	; V@144
+	; E@160
+	; R@176
+
+forever:
+							; -1
+	;===========================
+	; forever:
+	;	1174 base
+	;	 -16 previous if/else
+	;	  -7 check
+	;	 -18 new_forever
+	;	 -38 colors
+	;	 -14 putchar prep
+	;	-365 putchar
+	;	  -8 end
+	;=====================
+	;	708
+
+	txa						; 2
+	and	#$f					; 2
+	beq	new_forever				; 3
+
+							; -1
+	nop						; 2
+	nop						; 2
+	nop						; 2
+	nop						; 2
+	nop						; 2
+
+	nop						; 2
+	nop						; 2
+	nop						; 2
+	jmp	write_forever				; 3
+
+new_forever:
+	inc	forever_string_smc+1			; 6
+	lda	forever_x_smc+1				; 4
+	clc						; 2
+	adc	#4					; 2
+	sta	forever_x_smc+1				; 4
+							;=======
+							; 18
+write_forever:
+
+	txa						; 2
+	and	#$0c					; 2
+	tax						; 2
+
+	lda	colors_first,X				; 4+
+	sta	colors_hi				; 4
+	lda	colors_first+1,X			; 4+
+	sta	colors_hi+1				; 4
+	lda	colors_first+2,X			; 4+
+	sta	colors_hi+2				; 4
+	lda	colors_first+3,X			; 4+
+	sta	colors_hi+3				; 4
+							;======
+							; 38
+	; Colors
+	;	0 	0	0	4
+	;	0	0	4	C
+	;	0	4	C	F
+
+forever_string_smc:
+	lda	forever_string				; 4+
+forever_x_smc:
+	ldx	#7					; 2
+	ldy	#32					; 2
+
+	jsr	put_char				; 6+365
+
+	;=======
+	; delay
+
+	; Try X=19 Y=7 cycles=708
+
+	ldy	#7							; 2
+loop19:	ldx	#19							; 2
+loop29:	dex								; 2
+	bne	loop29							; 2nt/3
+	dey								; 2
+	bne	loop19							; 2nt/3
+
+
+	inc	DUDE_X					; 5
+	jmp	intro_wipe_done				; 3
+
+
+
 
 
 	;==========================
@@ -420,6 +417,7 @@ no_keypress2:
 appleii_done:
 	rts
 
+.align $100
 
 	;=================================
 	; do nothing
@@ -445,3 +443,9 @@ loop2:	dex								; 2
 
 forever_string:
 .byte	' ','F','O','R','E','V','E','R'
+
+
+colors_first:	.byte $00,$00,$00,$00
+colors_second:	.byte $00,$04,$40,$00
+colors_third:	.byte $40,$4C,$C4,$04
+colors_fourth:	.byte $C4,$CF,$FC,$4C

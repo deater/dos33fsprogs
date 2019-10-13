@@ -105,8 +105,8 @@ wait_until_keypressed:
 .include "vapor_lock.s"
 .include "delay_a.s"
 .include "gr_unrle.s"
-.include "gr_offsets.s"
 .include "gr_copy.s"
+.include "gr_offsets.s"
 
 ;.include "text_print.s"
 ;.include "gr_pageflip.s"
