@@ -17,6 +17,7 @@ appleII_intro:
 	lda	#0
 	sta	DRAW_PAGE
 	sta	DUDE_X
+	sta	FOREVER_OFFSET
 
 	;=============================
 	; Load graphic page0
@@ -240,48 +241,56 @@ forever:
 	;	1174 base
 	;	 -16 previous if/else
 	;	  -7 check
-	;	 -12 new_forever
-	;	 -12 putchar prep
+	;	 -18 new_forever
+	;	 -14 putchar prep
 	;	-365 putchar
 	;	  -8 end
 	;=====================
-	;	754
+	;	746
 
 	txa						; 2
 	and	#$f					; 2
 	beq	new_forever				; 3
 
 							; -1
-	nop
-	nop
-	nop
-	nop
-	nop
+	nop						; 2
+	nop						; 2
+	nop						; 2
+	nop						; 2
+	nop						; 2
+	nop						; 2
+	nop						; 2
+	nop						; 2
 	jmp	write_forever				; 3
 
 new_forever:
+	inc	forever_string_smc+1			; 6
 	lda	forever_x_smc+1				; 4
 	clc						; 2
 	adc	#4					; 2
 	sta	forever_x_smc+1				; 4
 							;=======
-							; 12
+							; 18
 write_forever:
 
+forever_string_smc:
+	lda	forever_string				; 4+
 forever_x_smc:
 	ldx	#7					; 2
 	ldy	#32					; 2
-	lda	#'B'					; 2
 
 	jsr	put_char				; 6+365
 
 	;=======
 	; delay
 
-	; Try X=49 Y=3 cycles=754
+	; Try X=147 Y=1 cycles=742R4
 
-	ldy	#3							; 2
-loop19:	ldx	#49							; 2
+	nop
+	nop
+
+	ldy	#1							; 2
+loop19:	ldx	#147							; 2
 loop29:	dex								; 2
 	bne	loop29							; 2nt/3
 	dey								; 2
@@ -434,3 +443,5 @@ loop2:	dex								; 2
 
 
 
+forever_string:
+.byte	' ','F','O','R','E','V','E','R'
