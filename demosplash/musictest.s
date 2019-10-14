@@ -18,6 +18,13 @@ demosplash2019:
 	jsr	clear_ay_both
 	jsr	pt3_init_song
 
+
+	;====================================
+	; generate 4 patterns worth of music
+	; at address $9000
+
+	
+
 ;	lda	#1
 ;	sta	LOOP
 
@@ -134,7 +141,7 @@ wait_until_keypressed:
 .include "pt3_lib_init.s"
 .include "pt3_lib_mockingboard.s"
 .include "interrupt_handler.s"
-
+.include "pt3_lib_play_frame.s"
 
 PT3_LOC = song
 
