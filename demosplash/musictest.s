@@ -37,10 +37,29 @@ frame_decode_loop:
 	inc	FRAME_OFFSET
 	bne	frame_decode_loop
 
+	inc     r0_wrsmc+2        ; 6
+        inc     r1_wrsmc+2        ; 6
+        inc     r2_wrsmc+2        ; 6
+        inc     r4_wrsmc+2        ; 6
+        inc     r13_wrsmc+2       ; 6
+	inc     r6_wrsmc+2        ; 6
+	inc     r7_wrsmc+2        ; 6
+	inc     r8_wrsmc+2        ; 6
+        inc     r9_wrsmc+2        ; 6
+        inc     r11_wrsmc+2       ; 6
+        inc     r12_wrsmc+2       ; 6
+
+
 	inc	FRAME_PAGE
 	lda	FRAME_PAGE
-	cmp	#5
+
+
+
+	cmp	#3
 	bne	frame_decode_loop
+
+	lda	#0
+	sta	FRAME_OFFSET
 
 
 

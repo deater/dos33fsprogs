@@ -222,17 +222,19 @@ done_frame_wrap:
 	;========================
 	; 28+26+6= 60
 
+	; trashes A,X
+
 play_mb_write:
 
 	; address
 	stx	MOCK_6522_ORA1		; put address on PA1		; 4
 	stx	MOCK_6522_ORA2		; put address on PA2		; 4
-	ldy	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
-	sty	MOCK_6522_ORB1		; latch_address on PB1          ; 4
-	sty	MOCK_6522_ORB2		; latch_address on PB2		; 4
-	ldy	#MOCK_AY_INACTIVE	; go inactive			; 2
-	sty	MOCK_6522_ORB1						; 4
-	sty	MOCK_6522_ORB2						; 4
+	ldx	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+	stx	MOCK_6522_ORB1		; latch_address on PB1          ; 4
+	stx	MOCK_6522_ORB2		; latch_address on PB2		; 4
+	ldx	#MOCK_AY_INACTIVE	; go inactive			; 2
+	stx	MOCK_6522_ORB1						; 4
+	stx	MOCK_6522_ORB2						; 4
 								;===========
 								;	28
 
@@ -242,8 +244,8 @@ play_mb_write:
 	lda	#MOCK_AY_WRITE		;				; 2
 	sta	MOCK_6522_ORB1		; write on PB1			; 4
 	sta	MOCK_6522_ORB2		; write on PB2			; 4
-	sty	MOCK_6522_ORB1						; 4
-	sty	MOCK_6522_ORB2						; 4
+	stx	MOCK_6522_ORB1						; 4
+	stx	MOCK_6522_ORB2						; 4
 								;===========
 								; 	26
 

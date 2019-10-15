@@ -89,13 +89,13 @@ r13_wrsmc:
 	lda	NOISE
 	and	#$1f
 	ora	ENVELOPE_SHAPE
-r6_smcwr:
+r6_wrsmc:
 	sta	$9F00,Y
 
 	;=====================
 	; Register 7: Enable
 	lda	ENABLE
-r7_smcwr:
+r7_wrsmc:
 	sta	$A200,Y
 
 	;=====================
