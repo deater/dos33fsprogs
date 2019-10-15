@@ -51,7 +51,7 @@ musictest.o:	musictest.s \
 	zp.inc hardware.inc \
 	appleII_intro.s font.s \
 	pt3_lib_init.s pt3_lib_core.s pt3_lib_mockingboard.s \
-	pt3_lib_play_frame.s \
+	pt3_lib_play_frame.s pt3_lib_write_frame.s \
 	interrupt_handler.s \
 	dya_space_demo2.pt3
 	ca65 -o musictest.o musictest.s -l musictest.lst

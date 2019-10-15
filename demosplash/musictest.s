@@ -23,7 +23,26 @@ demosplash2019:
 	; generate 4 patterns worth of music
 	; at address $9000
 
-	
+	lda	#0
+	sta	FRAME_PAGE
+
+	lda	#0
+	sta	FRAME_OFFSET
+
+frame_decode_loop:
+	jsr	pt3_make_frame
+
+	jsr	pt3_write_frame
+
+	inc	FRAME_OFFSET
+	bne	frame_decode_loop
+
+	inc	FRAME_PAGE
+	lda	FRAME_PAGE
+	cmp	#5
+	bne	frame_decode_loop
+
+
 
 ;	lda	#1
 ;	sta	LOOP
@@ -142,6 +161,7 @@ wait_until_keypressed:
 .include "pt3_lib_mockingboard.s"
 .include "interrupt_handler.s"
 .include "pt3_lib_play_frame.s"
+.include "pt3_lib_write_frame.s"
 
 PT3_LOC = song
 
