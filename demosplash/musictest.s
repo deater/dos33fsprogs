@@ -90,7 +90,19 @@ frame_decode_loop:
 	; apple II intro
 	;============================
 
-	jsr	appleII_intro
+	nop
+	nop
+	nop
+
+
+;	jsr	appleII_intro
+
+
+	;===========================
+	; missing scene
+	;===========================
+
+	jsr	missing_intro
 
 	;===========================
 	; show some pictures
@@ -101,11 +113,7 @@ frame_decode_loop:
 
 ;	cli	; enable interrupts
 
-	;===========================
-	; missing scene
-	;===========================
 
-;	jsr	missing_intro
 
 	;===========================
 	; starbase scene
@@ -147,6 +155,8 @@ wait_until_keypressed:
 ; Apple II intro
 .include "appleII_intro.s"
 .include "appleII_40_96.inc"
+
+.align $100
 .include "vapor_lock.s"
 .include "delay_a.s"
 .include "gr_unrle.s"
@@ -163,7 +173,7 @@ wait_until_keypressed:
 
 
 ; missing
-;.include "missing.s"
+.include "missing.s"
 
 ; Starbase
 ;.include "starbase.s"

@@ -53,6 +53,8 @@ gr_copy_line:
 
 	dey			; decrement pointer			; 2
 	bpl	gr_copy_line	;					; 2nt/3
-
+gr_copy_line_end:
 	rts								; 6
 
+
+.assert >gr_copy_line = >gr_copy_line_end, error, "gr_copy_to_current crosses page"
