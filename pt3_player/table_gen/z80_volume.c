@@ -44,6 +44,7 @@ static unsigned char PT3VolumeTable_35[]={
 
 static unsigned char VT[256];
 
+#if 0
 //VolTableCreator (c) Ivan Roshin
 //A - VersionForVolumeTable (0..4 - 3.xx..3.4x;
 //5.. - 3.5x..3.6x..VTII1.0)
@@ -151,12 +152,68 @@ m3:
 	if (a!=0) goto pt3_initv2; //	jr nz,pt3_initv2
 }
 
+#endif
+
+
+	/*  PT3VolumeTable_35 = 1 */
+	/*  PT3VolumeTable_33334 = 0 */
+void pt3_setup_volume_table(int which) {
+	//based on VolTableCreator by Ivan Roshin
+	// originally in z80 assembly language
+	//A - VersionForVolumeTable (0..4 - 3.xx..3.4x;
+	//5.. - 3.5x..3.6x..VTII1.0)
+
+	unsigned int carry,a,hl,de,temp1,temp2,c,ix;
+
+	/* 0x00 or 0x10 */
+	de=(which<<4);
+
+	for(ix=1;ix<16;ix++) {
+
+		/* 0x10 or 0x11 */
+		hl=(0x11-which);
+
+		hl=hl+de;
+
+		carry=(hl>>16);
+		hl&=0xffff;
+
+		/* swap hl and de */
+		temp1=hl;
+		temp2=de;
+		hl=temp2;
+		de=temp1;
+
+		/* 0 or 0xffff */
+		hl=(0-carry)&0xffff;
+
+		for(c=0;c<16;c++) {
+
+			if (!which) {
+				carry=!!(hl&0x80);
+			}
+
+			a=(hl>>8)&0xff;
+			a=a+carry;
+
+			VT[ix*16+c]=a;
+
+			hl=hl+de;
+
+		}
+
+		if ((de&0xff)==0x77) {
+			de++;
+		}
+
+	}
+}
 
 int main(int argc, char **argv) {
 
 	int i;
 
-	VolTableCreator(0);
+	pt3_setup_volume_table(0);
 
 	for(i=0;i<256;i++) {
 		if (i%16==0) printf("\n");
@@ -180,8 +237,7 @@ int main(int argc, char **argv) {
 
 
 
-
-	VolTableCreator(1);
+	pt3_setup_volume_table(1);
 
 	for(i=0;i<256;i++) {
 		if (i%16==0) printf("\n");
