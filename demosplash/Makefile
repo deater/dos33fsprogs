@@ -53,7 +53,7 @@ musictest.o:	musictest.s \
 	pt3_lib_init.s pt3_lib_core.s pt3_lib_mockingboard.s \
 	pt3_lib_play_frame.s pt3_lib_write_frame.s \
 	interrupt_handler.s \
-	missing.s missing_screen_update.s \
+	missing.s k_40_48d.inc missing_screen_update.s \
 	dya_space_demo2.pt3
 	ca65 -o musictest.o musictest.s -l musictest.lst
 
@@ -88,6 +88,9 @@ BOOK_HGR2C.BIN:	book_hgr2.bmp
 
 book_40_48d.inc:   book_40_48d.png
 	$(PNG_TO_40x48D) asm book_40_48d.png book > book_40_48d.inc
+
+k_40_48d.inc:   k_40_48d.png
+	$(PNG_TO_40x48D) asm k_40_48d.png k > k_40_48d.inc
 
 #####
 

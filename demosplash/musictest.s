@@ -102,16 +102,24 @@ frame_decode_loop:
 	; missing scene
 	;===========================
 
+;	nop
+;	nop
+;	nop
+
 	jsr	missing_intro
 
+
+	;========================
+	; start irq music
+	;========================
+
+	cli	; enable interrupts
+
 	;===========================
-	; show some pictures
+	; book scene
 	;============================
 
 
-	; start music
-
-;	cli	; enable interrupts
 
 
 
@@ -119,7 +127,7 @@ frame_decode_loop:
 	; starbase scene
 	;===========================
 
-;	jsr	starbase
+	jsr	starbase
 
 	;===========================
 	; escape scene
@@ -164,7 +172,7 @@ wait_until_keypressed:
 .include "gr_offsets.s"
 
 ;.include "text_print.s"
-;.include "gr_pageflip.s"
+.include "gr_pageflip.s"
 .align	$100
 .include "gr_fast_clear.s"
 ;.include "gr_overlay.s"
@@ -176,7 +184,7 @@ wait_until_keypressed:
 .include "missing.s"
 
 ; Starbase
-;.include "starbase.s"
+.include "starbase.s"
 
 ; escape
 ;.include "escape.s"
