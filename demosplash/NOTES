@@ -75,7 +75,7 @@ Memory Map
 0c00-0fff		(used as page3)
 
 1400-16ff		Loader
-1700-????		executable
+1700-????		executable	(30976 bytes)
 
 9000-bfff		audio buffer
 

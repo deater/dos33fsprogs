@@ -23,7 +23,7 @@ create_update_inner_loop:
 	cpy	#49
 	bne	create_update_inner_loop
 
-	; toggl PAGE0/PAGE1
+	; toggle PAGE0/PAGE1
 	txa
 	and	#$1	; ror?
 	clc
@@ -45,6 +45,63 @@ create_update_inner_loop:
 	ldy	#0
 	lda	#$60
 	sta	(OUTL),Y
+
+	rts
+
+	;===========================
+	; from 32 to 160?
+setup_rasterbars:
+
+	lda	#4		; which page
+	sta	TEMP
+
+	ldx	#32
+	lda	#<(UPDATE_START+(32*49))
+	sta	OUTL
+	lda	#>(UPDATE_START+(32*49))
+	sta	OUTH
+setup_rasterbars_outer_loop:
+	ldy	#6
+setup_rasterbars_inner_loop:
+	txa
+	pha
+	inx
+	txa				; start one earlier
+	lsr
+	lsr
+	and	#$fe
+	tax
+	lda	gr_offsets,X
+	sta	(OUTL),Y
+	iny
+	clc
+	lda	gr_offsets+1,X
+	adc	TEMP
+	sta	(OUTL),Y
+	iny
+	iny
+	pla
+	tax
+
+	cpy	#48
+	bne	setup_rasterbars_inner_loop
+
+	clc
+	lda	#49
+	adc	OUTL
+	sta	OUTL
+	lda	OUTH
+	adc	#0
+	sta	OUTH
+
+
+	lda	TEMP
+	eor	#$04
+	sta	TEMP
+
+	inx
+	cpx	#160
+	bne	setup_rasterbars_outer_loop
 
 	rts
 

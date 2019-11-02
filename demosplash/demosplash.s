@@ -132,6 +132,9 @@ wait_until_keypressed:
 .include "pt3_lib_mockingboard.s"
 .include "interrupt_handler.s"
 
+; Images (no need to align)
+.include "credits_bg.inc"
+
 
 PT3_LOC = song
 

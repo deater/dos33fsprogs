@@ -139,8 +139,16 @@ frame_decode_loop:
 	; book scene
 	;===========================
 
-	jsr	end_book
+	nop
+	nop
+	nop
+;	jsr	end_book
 
+	;===========================
+	; credits
+	;===========================
+
+	jsr	credits
 
 	; wait wait wait
 
@@ -177,8 +185,10 @@ wait_until_keypressed:
 .include "gr_fast_clear.s"
 ;.include "gr_overlay.s"
 .align $100
+.include "movement_table.s"
 .include "font.s"
-
+.align $100
+.include "offsets_table.s"
 
 ; missing
 .include "missing.s"
@@ -192,6 +202,9 @@ wait_until_keypressed:
 ; book
 .include "book.s"
 
+; credits
+.include "credits.s"
+
 ; Music player
 .include "pt3_lib_core.s"
 .include "pt3_lib_init.s"
@@ -200,6 +213,10 @@ wait_until_keypressed:
 .include "pt3_lib_play_frame.s"
 .include "pt3_lib_write_frame.s"
 .include "create_update_type1.s"
+
+; Pictures (no need to align)
+.include "credits_bg.inc"
+
 
 PT3_LOC = song
 
