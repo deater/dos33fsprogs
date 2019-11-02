@@ -4,6 +4,8 @@
 
 UPDATE_START = $9000
 
+DEFAULT_COLOR	= $0
+
 create_update_type1:
 	ldx	#192
 	lda	#<UPDATE_START
@@ -48,20 +50,24 @@ create_update_inner_loop:
 
 	rts
 
+BARS_START = 38
+
 	;===========================
 	; from 32 to 160?
 setup_rasterbars:
 
 	lda	#4		; which page
-	sta	TEMP
+	sta	RASTER_PAGE
 
-	ldx	#32
-	lda	#<(UPDATE_START+(32*49))
+	ldx	#BARS_START
+	lda	#<(UPDATE_START+(BARS_START*49))
 	sta	OUTL
-	lda	#>(UPDATE_START+(32*49))
+	lda	#>(UPDATE_START+(BARS_START*49))
 	sta	OUTH
 setup_rasterbars_outer_loop:
 	ldy	#6
+	lda	#13
+	sta	RASTER_X
 setup_rasterbars_inner_loop:
 	txa
 	pha
@@ -71,12 +77,15 @@ setup_rasterbars_inner_loop:
 	lsr
 	and	#$fe
 	tax
+	clc
 	lda	gr_offsets,X
+	adc	RASTER_X
+	inc	RASTER_X
 	sta	(OUTL),Y
 	iny
 	clc
 	lda	gr_offsets+1,X
-	adc	TEMP
+	adc	RASTER_PAGE
 	sta	(OUTL),Y
 	iny
 	iny
@@ -95,19 +104,19 @@ setup_rasterbars_inner_loop:
 	sta	OUTH
 
 
-	lda	TEMP
+	lda	RASTER_PAGE
 	eor	#$04
-	sta	TEMP
+	sta	RASTER_PAGE
 
 	inx
-	cpx	#160
+	cpx	#168
 	bne	setup_rasterbars_outer_loop
 
 	rts
 
 one_scanline:
 .byte	$2C,$54,$C0	; bit	PAGE0	; 4
-.byte	$A9,$0B		; lda	#$0b	; 2
+.byte	$A9,DEFAULT_COLOR		; lda	#$0b	; 2
 .byte	$8D,$00,$02	; sta	$200	; 4
 .byte	$8D,$00,$02	; sta	$200	; 4
 .byte	$8D,$00,$02	; sta	$200	; 4

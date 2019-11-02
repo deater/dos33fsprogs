@@ -152,8 +152,10 @@ BLAST_OUT	= $D8		; 2+
 SHIELD_OUT	= $D9		; 2+
 
 ALIEN_OUT	= $DA		; 2+
+RASTER_PAGE	= $DA		; rasters
 
 LASER_OUT	= $DB		; 2+
+RASTER_X	= $DB		; rasters
 
 GUN_CHARGE	= $DC		; 2+
 
