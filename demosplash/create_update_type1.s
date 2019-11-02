@@ -109,7 +109,7 @@ setup_rasterbars_inner_loop:
 	sta	RASTER_PAGE
 
 	inx
-	cpx	#168
+	cpx	#176
 	bne	setup_rasterbars_outer_loop
 
 	rts
