@@ -144,13 +144,29 @@ missing_display_loop:
 	; do_nothing should be
 	;	4550
 	;	 -12 jsr/ret to update_type1
-	;	  -6 jsr do_nothing_missing
 	;        - 7 check keypress
 	;	 - 3 jmp loop
 	;=============
-	;       4522
+	;       4528
 
-	jsr	do_nothing_missing			; 6
+
+	; blah, current code the tight loops are right at a page boundary
+
+do_nothing_missing:
+
+	; want 4528
+
+	; Try X=4 Y=174 cycles=4525 R3
+
+	lda	TEMP	; nop 3
+
+	ldy	#174							; 2
+gloop1:	ldx	#4							; 2
+gloop2:	dex								; 2
+	bne	gloop2							; 2nt/3
+	dey								; 2
+	bne	gloop1							; 2nt/3
+
 
 	lda	KEYPRESS				; 4
 	bpl	missing_no_keypress			; 3
@@ -163,36 +179,7 @@ missing_no_keypress:
 
 .align $100
 
-	;=================================
-	; do nothing
-	;=================================
-	; and take 4522 cycles to do it
-
-
-	; blah, current code the tight loops are right at a page boundary
-
-do_nothing_missing:
-
-	; want 4522-6 (return)=4516
-
-	;Try X=99 Y=9 cycles=4510 R6
-
-	nop
-	nop
-	nop
-
-	ldy	#9							; 2
-gloop1:	ldx	#99							; 2
-gloop2:	dex								; 2
-	bne	gloop2							; 2nt/3
-	dey								; 2
-	bne	gloop1							; 2nt/3
-
-	rts							; 6
-
-
 
 .include "k_40_48d.inc"
 
-krg:
-	.byte $0
+

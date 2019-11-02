@@ -49,9 +49,6 @@ end_book:
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
 
-	jsr	wait_until_keypressed
-
-
 	;=============================
 	; Load graphic page1
 
@@ -69,9 +66,6 @@ end_book:
 
 	; GR part
 	bit	PAGE0
-
-	jsr	wait_until_keypressed
-
 
 	;==============================
 	; setup graphics for vapor lock

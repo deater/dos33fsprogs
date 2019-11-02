@@ -53,7 +53,7 @@ musictest.o:	musictest.s \
 	pt3_lib_init.s pt3_lib_core.s pt3_lib_mockingboard.s \
 	pt3_lib_play_frame.s pt3_lib_write_frame.s \
 	interrupt_handler.s \
-	missing.s k_40_48d.inc missing_screen_update.s \
+	missing.s k_40_48d.inc \
 	create_update_type1.s \
 	book.s \
 	dya_space_demo2.pt3
