@@ -67,7 +67,8 @@ Memory Map
 ~~~~~~~~~~
 0000-00ff		zero page
 0100-01ff		stack
-0200-02ff		?????
+0200			fake store for graphics update
+0201-02ff		?????
 0300-03ff		nibble table, irq vectors
 0400-07FF		lores page1
 0800-0bff		lores page2

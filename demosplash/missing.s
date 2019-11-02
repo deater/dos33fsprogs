@@ -19,6 +19,11 @@ missing_intro:
 	sta	DRAW_PAGE
 
 	;=============================
+	; setup graphics code
+
+	jsr	create_update_type1
+
+	;=============================
 	; Load graphic page0
 
 	lda	#<k_low
@@ -130,17 +135,20 @@ mloopB:	dex								; 2
 
 missing_display_loop:
 
-.include "missing_screen_update.s"
+	jsr	$9000		; update_type1
+;.include "missing_screen_update.s"
 
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 	; do_nothing should be
 	;	4550
-	;	  -6
-	;        -10
+	;	 -12 jsr/ret to update_type1
+	;	  -6 jsr do_nothing_missing
+	;        - 7 check keypress
+	;	 - 3 jmp loop
 	;=============
-	;       4534
+	;       4522
 
 	jsr	do_nothing_missing			; 6
 
@@ -158,32 +166,23 @@ missing_no_keypress:
 	;=================================
 	; do nothing
 	;=================================
-	; and take 4534-6 = 4528 cycles to do it
+	; and take 4522 cycles to do it
 
 
 	; blah, current code the tight loops are right at a page boundary
 
 do_nothing_missing:
 
-	; want 4528-12=4516
+	; want 4522-6 (return)=4516
 
-	; Try X=4 Y=174 cycles=4525 R3 -3 X loops
+	;Try X=99 Y=9 cycles=4510 R6
 
-	; Try X=3 Y=215 cycles=4516
+	nop
+	nop
+	nop
 
-	nop		; 2
-	nop		; 2
-
-	nop		; 2
-	nop		; 2
-
-	nop		; 2
-	nop		; 2
-
-
-
-	ldy	#215							; 2
-gloop1:	ldx	#3							; 2
+	ldy	#9							; 2
+gloop1:	ldx	#99							; 2
 gloop2:	dex								; 2
 	bne	gloop2							; 2nt/3
 	dey								; 2

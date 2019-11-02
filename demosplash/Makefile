@@ -54,6 +54,7 @@ musictest.o:	musictest.s \
 	pt3_lib_play_frame.s pt3_lib_write_frame.s \
 	interrupt_handler.s \
 	missing.s k_40_48d.inc missing_screen_update.s \
+	create_update_type1.s \
 	dya_space_demo2.pt3
 	ca65 -o musictest.o musictest.s -l musictest.lst
 

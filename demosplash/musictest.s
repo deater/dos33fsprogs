@@ -199,6 +199,7 @@ wait_until_keypressed:
 .include "interrupt_handler.s"
 .include "pt3_lib_play_frame.s"
 .include "pt3_lib_write_frame.s"
+.include "create_update_type1.s"
 
 PT3_LOC = song
 
