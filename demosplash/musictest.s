@@ -113,21 +113,21 @@ frame_decode_loop:
 	; start irq music
 	;========================
 
-	cli	; enable interrupts
+;	cli	; enable interrupts
 
 	;===========================
 	; book scene
 	;============================
 
 
-
+;	jsr	open_book
 
 
 	;===========================
 	; starbase scene
 	;===========================
 
-	jsr	starbase
+;	jsr	starbase
 
 	;===========================
 	; escape scene
@@ -139,7 +139,7 @@ frame_decode_loop:
 	; book scene
 	;===========================
 
-;	jsr	book
+	jsr	end_book
 
 
 	; wait wait wait
@@ -190,7 +190,7 @@ wait_until_keypressed:
 ;.include "escape.s"
 
 ; book
-;.include "book.s"
+.include "book.s"
 
 ; Music player
 .include "pt3_lib_core.s"

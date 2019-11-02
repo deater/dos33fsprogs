@@ -55,6 +55,7 @@ musictest.o:	musictest.s \
 	interrupt_handler.s \
 	missing.s k_40_48d.inc missing_screen_update.s \
 	create_update_type1.s \
+	book.s \
 	dya_space_demo2.pt3
 	ca65 -o musictest.o musictest.s -l musictest.lst
 
