@@ -9,12 +9,12 @@ B2D = ../bmp2dhr/b2d
 
 all:	demosplash.dsk
 
-demosplash.dsk:	HELLO LOADER BOOK_HGR2C.BIN MUSICTEST	# DEMOSPLASH
+demosplash.dsk:	HELLO LOADER DEMOSPLASH
 	cp empty.dsk demosplash.dsk
 	$(DOS33) -y demosplash.dsk SAVE A HELLO
 	$(DOS33) -y demosplash.dsk BSAVE -a 0x1400 LOADER
-#	$(DOS33) -y demosplash.dsk BSAVE -a 0x1700 DEMOSPLASH
-	$(DOS33) -y demosplash.dsk BSAVE -a 0x1700 MUSICTEST
+	$(DOS33) -y demosplash.dsk BSAVE -a 0x1700 DEMOSPLASH
+#	$(DOS33) -y demosplash.dsk BSAVE -a 0x1700 MUSICTEST
 
 ####
 
@@ -25,29 +25,29 @@ HELLO:  hello.bas
 
 #####
 
+#DEMOSPLASH:	demosplash.o
+#	ld65 -o DEMOSPLASH demosplash.o -C ../linker_scripts/apple2_1700.inc
+
+#demosplash.o:	demosplash.s \
+#	zp.inc hardware.inc \
+#	appleII_intro.s vapor_lock.s delay_a.s \
+#	pt3_lib_init.s pt3_lib_core.s pt3_lib_mockingboard.s \
+#	interrupt_handler.s \
+#	starbase.s starbase_action.s \
+#	graphics/starbase/starbase.inc \
+#	graphics/sprites/alien.inc graphics/sprites/astronaut.inc \
+#	dya_space_demo.pt3 appleII_40_96.inc \
+#	book.s book_40_48d.inc \
+#	missing.s \
+#	escape.s
+#	ca65 -o demosplash.o demosplash.s -l demosplash.lst
+
+#####
+
 DEMOSPLASH:	demosplash.o
 	ld65 -o DEMOSPLASH demosplash.o -C ../linker_scripts/apple2_1700.inc
 
 demosplash.o:	demosplash.s \
-	zp.inc hardware.inc \
-	appleII_intro.s vapor_lock.s delay_a.s \
-	pt3_lib_init.s pt3_lib_core.s pt3_lib_mockingboard.s \
-	interrupt_handler.s \
-	starbase.s starbase_action.s \
-	graphics/starbase/starbase.inc \
-	graphics/sprites/alien.inc graphics/sprites/astronaut.inc \
-	dya_space_demo.pt3 appleII_40_96.inc \
-	book.s book_40_48d.inc \
-	missing.s \
-	escape.s
-	ca65 -o demosplash.o demosplash.s -l demosplash.lst
-
-#####
-
-MUSICTEST:	musictest.o
-	ld65 -o MUSICTEST musictest.o -C ../linker_scripts/apple2_1700.inc
-
-musictest.o:	musictest.s \
 	zp.inc hardware.inc \
 	appleII_intro.s font.s \
 	pt3_lib_init.s pt3_lib_core.s pt3_lib_mockingboard.s \
@@ -58,7 +58,7 @@ musictest.o:	musictest.s \
 	book.s book_40_48d.inc \
 	credits.s credits_bg.inc offsets_table.s \
 	dya_space_demo2.pt3
-	ca65 -o musictest.o musictest.s -l musictest.lst
+	ca65 -o demosplash.o demosplash.s -l demosplash.lst
 
 
 #####
