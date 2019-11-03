@@ -17,6 +17,12 @@ credits:
 
 	lda	#0
 	sta	DRAW_PAGE
+	sta	FRAME
+
+	lda	#<credits_text
+	sta	CREDITS_POINTERL
+	lda	#>credits_text
+	sta	CREDITS_POINTERH
 
 	;==================
 	; setup graphics
@@ -136,13 +142,20 @@ credits_loop:
 	; -696  -- move+draw 4*(16+26+6+126) = 696
 	;  -10  -- keypress
 	;  -12  -- call/return of draw code
+	; -377  -- do_words
 	;=======
-	; 3250
+	; 2873
 
 pad_time:
 
 	; we erase, then draw
 	; doing a blanket erase of all 128 lines would cost 3459 cycles!
+
+	;=========================
+	; do words
+	;=========================
+
+	jsr	draw_credits
 
 	;=========================
 	; ERASE
@@ -311,10 +324,12 @@ pad_time:
 	; WAIT for VBLANK to finish
 	;============================
 
-	; Try X=71 Y=9 cycles=3250
+	; Try X=7 Y=70 cycles=2871 R2
 
-	ldy	#9							; 2
-tloop1:	ldx	#71							; 2
+	nop
+
+	ldy	#70							; 2
+tloop1:	ldx	#7							; 2
 tloop2:	dex								; 2
 	bne	tloop2							; 2nt/3
 	dey								; 2
@@ -400,3 +415,97 @@ red_x:		.byte $10
 yellow_x:	.byte $20
 green_x:	.byte $30
 blue_x:		.byte $40
+
+	;=================================
+	; draw credits
+	;=================================
+	; credits pointer
+draw_credits:
+	inc	FRAME				; 5
+	lda	FRAME				; 3
+	and	#$f				; 2
+	beq	credits_handle_next		; 3
+credits_long_delay:
+						; -1
+credits_skip:
+
+credits_short_delay:
+
+	rts
+
+
+credits_handle_next:
+	ldy	#0				; 2
+	lda	(CREDITS_POINTERL),Y		; 5+
+	cmp	#$ff				; 2
+	beq	credits_skip			; 3
+						; -1
+	cmp	#'@'				; 2
+	bcs	credits_put_char	; bge	; 3
+
+credits_check_xy:
+						; -1
+	sta	CREDITS_Y
+	iny
+	lda	(CREDITS_POINTERL),Y
+	sta	CREDITS_X
+	iny
+	lda	(CREDITS_POINTERL),Y
+	sta	colors_hi
+	iny
+	lda	(CREDITS_POINTERL),Y
+	sta	colors_hi+1
+	iny
+	lda	(CREDITS_POINTERL),Y
+	sta	colors_lo
+	iny
+	lda	(CREDITS_POINTERL),Y
+	sta	colors_lo+1
+
+	iny
+	clc
+	tya
+	adc	CREDITS_POINTERL
+	sta	CREDITS_POINTERL
+	lda	#0
+	adc	CREDITS_POINTERH
+	sta	CREDITS_POINTERH
+
+	jmp	credits_short_delay
+
+credits_put_char:
+	ldx	CREDITS_X			; 2
+	ldy	CREDITS_Y			; 3
+	jsr	put_char			; 6+365
+
+	clc
+	lda	CREDITS_X
+	adc	#4
+	sta	CREDITS_X
+
+	clc
+	lda	#1
+	adc	CREDITS_POINTERL
+	sta	CREDITS_POINTERL
+	lda	#0
+	adc	CREDITS_POINTERH
+	sta	CREDITS_POINTERH
+
+draw_credits_end:
+	rts					; 6
+
+credits_text:
+.byte 0,10, $C4,$CF,$FC,$4C, 'C','O','D','E','[' 	; "CODE:"
+.byte 4,8, $C4,$CF,$FC,$4C, 'D','E','A','T','E','R'	; "DEATER"
+.byte '@','@'						; time pad
+.byte 0,10, $00,$00,$00,$00, 'C','O','D','E','[' 	; "CODE:"
+.byte 4,8, $00,$00,$00,$00, 'D','E','A','T','E','R'	; "DEATER"
+
+.byte 0,8, $C4,$CF,$FC,$4C, 'M','U','S','I','C','[' 	; "MUSIC:"
+.byte 4,14, $C4,$CF,$FC,$4C, 'D','Y','A'		; "DYA"
+.byte '@','@'						; time pad
+.byte 0,8, $00,$00,$00,$00, 'M','U','S','I','C','[' 	; "MUSIC:"
+.byte 4,14, $00,$00,$00,$00, 'D','Y','A'		; "DYA"
+
+
+.byte 255	; done
