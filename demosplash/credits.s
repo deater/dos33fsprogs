@@ -30,6 +30,33 @@ credits:
 	jsr	create_update_type1
 	jsr	setup_rasterbars
 
+	; change to page0/page0/page1/page1 for first 32 lines
+	; 0101010101010101010101010101010101010101
+	; 1100110011001100110011001100110011001100
+	; |  *|  *|  *|  *--------|  *|  *|  *|  *
+	; 0  34  78  12  5        4  78  12  56  9
+	;            11  1        2  22  33  33  3
+	lda	#$54
+	sta	$9001+(49*3)
+	sta	$9001+(49*7)
+	sta	$9001+(49*11)
+	sta	$9001+(49*15)
+	sta	$9001+(49*27)
+	sta	$9001+(49*31)
+	sta	$9001+(49*35)
+	sta	$9001+(49*39)
+
+	lda	#$55
+	sta	$9001+(49*0)
+	sta	$9001+(49*4)
+	sta	$9001+(49*8)
+	sta	$9001+(49*12)
+	sta	$9001+(49*24)
+	sta	$9001+(49*28)
+	sta	$9001+(49*32)
+	sta	$9001+(49*36)
+
+
 	;=============================
 	; Load graphic page0
 
@@ -71,7 +98,7 @@ credits:
 
 	jsr	gr_copy_to_current
 
-;	; GR part
+	; GR part
 	bit	PAGE0
 
 ;	jsr	wait_until_keypressed
@@ -541,32 +568,32 @@ draw_credits_end:
 .align $100
 credits_text:
 .byte 0,10, $C4,$CF,$FC,$4C, 'C','O','D','E','[' 	; "CODE:"
-.byte 4,8, $C4,$CF,$FC,$4C, 'D','E','A','T','E','R'	; "DEATER"
+.byte 6,8, $C4,$CF,$FC,$4C, 'D','E','A','T','E','R'	; "DEATER"
 .byte '@','@'						; time pad
 .byte 0,10, $00,$00,$00,$00, 'C','O','D','E','[' 	; "CODE:"
-.byte 4,8, $00,$00,$00,$00, 'D','E','A','T','E','R'	; "DEATER"
+.byte 6,8, $00,$00,$00,$00, 'D','E','A','T','E','R'	; "DEATER"
 
 .byte 0,8, $C4,$CF,$FC,$4C, 'M','U','S','I','C','[' 	; "MUSIC:"
-.byte 4,14, $C4,$CF,$FC,$4C, 'D','Y','A'		; "DYA"
+.byte 6,14, $C4,$CF,$FC,$4C, 'D','Y','A'		; "DYA"
 .byte '@','@'						; time pad
 .byte 0,8, $00,$00,$00,$00, 'M','U','S','I','C','[' 	; "MUSIC:"
-.byte 4,14, $00,$00,$00,$00, 'D','Y','A'		; "DYA"
+.byte 6,14, $00,$00,$00,$00, 'D','Y','A'		; "DYA"
 
 .byte 0,8, $C4,$CF,$FC,$4C, 'M','A','G','I','C','[' 	; "MAGIC:"
-.byte 4,8, $C4,$CF,$FC,$4C, 'Q','K','U','M','B','A'	; "QKUMBA"
+.byte 6,8, $C4,$CF,$FC,$4C, 'Q','K','U','M','B','A'	; "QKUMBA"
 .byte '@','@'						; time pad
 .byte 0,8, $00,$00,$00,$00, 'M','A','G','I','C','[' 	; "MAGIC:"
-.byte 4,8, $00,$00,$00,$00, 'Q','K','U','M','B','A'	; "QKUMBA"
+.byte 6,8, $00,$00,$00,$00, 'Q','K','U','M','B','A'	; "QKUMBA"
 
 .byte 0,8, $C4,$CF,$FC,$4C, 'T','H','A','N','K','S' 	; "THANKS"
-.byte 4,4, $C4,$CF,$FC,$4C, 'F','R','O','G','Y','S','U','E'	; "FROGYSUE"
+.byte 6,4, $C4,$CF,$FC,$4C, 'F','R','O','G','Y','S','U','E'	; "FROGYSUE"
 .byte '@'						; time pad
 .byte 0,8, $00,$00,$00,$00, 'T','H','A','N','K','S' 	; "THANKS"
-.byte 4,4, $00,$00,$00,$00, 'F','R','O','G','Y','S','U','E'	; "FROGYSUE"
+.byte 6,4, $00,$00,$00,$00, 'F','R','O','G','Y','S','U','E'	; "FROGYSUE"
 
 
 .byte 0,10, $C4,$CF,$FC,$4C, 'A','@','V','M','W' 	; "A VMW"
-.byte 4,0, $C4,$CF,$FC,$4C, 'P','R','O','D','U','C','T','I','O','N'
+.byte 6,0, $C4,$CF,$FC,$4C, 'P','R','O','D','U','C','T','I','O','N'
 							; "PRODUCTION"
 .byte 255	; done
 credits_text_end:
