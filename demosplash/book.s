@@ -155,6 +155,3 @@ book_no_keypress:
 
 
 
-.include "book_40_48d.inc"
-
-

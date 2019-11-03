@@ -5,11 +5,6 @@
 ; by deater (Vince Weaver) <vince@deater.net>
 
 
-; TODO:
-;	end level after a certain number of points
-;	track score properly
-
-
 escape:
 
 	;===================
@@ -59,6 +54,13 @@ escape:
 	sta	ASTEROID_SPEED
 	sta	XPOS
 
+	;==================
+	; setup graphics
+
+	jsr     create_update_type2
+;	jsr     setup_rasterbars
+
+
 	;=============================
 	; Load graphic page0
 
@@ -107,8 +109,7 @@ escape:
 
 	jsr     move_and_print
 
-
-;	; GR part
+	; GR part
 	bit	PAGE0
 
 	;==============================
@@ -165,13 +166,15 @@ loopRR:	dex								; 2
 
 sprites_display_loop:
 
-.include "sprites_screen.s"
+	jsr	$9000
+;.include "sprites_screen.s"
 
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
 
 	; 4550	-- VBLANK
+	;  -12  -- call to graphics code
 	;-1835	-- draw ship (131*14)+1
 	; -829	-- erase ship (100*8)+(14*2)+1
 	; -167	-- erase fire
@@ -883,7 +886,7 @@ done_sparkle:
 
 
 
-pad_time:
+pad_time2:
 
 
 	;============================
@@ -1150,9 +1153,9 @@ keypress_done:
 sprite_line:
 	sty	TEMPY			; 3
 
-	lda	y_lookup_l,Y		; 4
+	lda	y_lookup2_l,Y		; 4
 	sta	OUTL			; 3
-	lda	y_lookup_h,Y		; 4
+	lda	y_lookup2_h,Y		; 4
 	sta	OUTH			; 3
 					;=======
 					; 17
@@ -1224,9 +1227,9 @@ sprite_line:
 erase_line:
 	sty	TEMPY			; 3
 
-	lda	y_lookup_l,Y		; 4
+	lda	y_lookup2_l,Y		; 4
 	sta	OUTL			; 3
-	lda	y_lookup_h,Y		; 4
+	lda	y_lookup2_h,Y		; 4
 	sta	OUTH			; 3
 					;=======
 					; 17
@@ -1274,9 +1277,9 @@ erase_line:
 fire_line:
 	sty	TEMPY			; 3
 
-	lda	y_lookup_l,Y		; 4
+	lda	y_lookup2_l,Y		; 4
 	sta	OUTL			; 3
-	lda	y_lookup_h,Y		; 4
+	lda	y_lookup2_h,Y		; 4
 	sta	OUTH			; 3
 					;=======
 					; 17
@@ -1365,15 +1368,13 @@ erase_fire:
 .align $100
 random_values:
 .incbin	"random.data"
-.include "sprites_table.s"
+.include "offsets_table2.s"
 .include "text_print.s"
 .align $100
 .include "gr_putsprite_fast.s"
 
 ;.assert >gr_offsets = >gr_offsets_done, error, "gr_offsets crosses page"
 .assert >escape_wait_loop = >(escape_wait_loop_end-1), error, "escape_wait_loop crosses page"
-
-.include "earth.inc"
 
 .align $100
 

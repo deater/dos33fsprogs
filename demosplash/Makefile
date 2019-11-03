@@ -53,8 +53,8 @@ demosplash.o:	demosplash.s \
 	pt3_lib_init.s pt3_lib_core.s pt3_lib_mockingboard.s \
 	pt3_lib_play_frame.s pt3_lib_write_frame.s \
 	interrupt_handler.s \
-	missing.s k_40_48d.inc \
-	create_update_type1.s \
+	missing.s k_40_48d.inc create_update_type1.s \
+	escape.s create_update_type2.s offsets_table2.s \
 	book.s book_40_48d.inc \
 	credits.s credits_bg.inc offsets_table.s \
 	dya_space_demo2.pt3

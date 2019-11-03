@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -O2
 LFLAGS =
 
-all:	creator offsets
+all:	creator offsets offsets2
 
 creator:	creator.o
 	$(CC) -o creator creator.o $(LFLAGS)
@@ -16,5 +16,11 @@ offsets:	offsets.o
 offsets.o:	offsets.c
 	$(CC) $(CFLAGS) -c offsets.c
 
+offsets2:	offsets2.o
+	$(CC) -o offsets2 offsets2.o $(LFLAGS)
+
+offsets2.o:	offsets2.c
+	$(CC) $(CFLAGS) -c offsets2.c
+
 clean:
-	rm -f *.o creator offsets
+	rm -f *.o creator offsets offsets2

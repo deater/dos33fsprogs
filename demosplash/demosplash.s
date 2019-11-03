@@ -133,7 +133,7 @@ frame_decode_loop:
 	; escape scene
 	;===========================
 
-;	jsr	escape
+	jsr	escape
 
 	;===========================
 	; book scene
@@ -197,7 +197,7 @@ wait_until_keypressed:
 .include "starbase.s"
 
 ; escape
-;.include "escape.s"
+.include "escape.s"
 
 ; book
 .include "book.s"
@@ -212,9 +212,13 @@ wait_until_keypressed:
 .include "interrupt_handler.s"
 .include "pt3_lib_play_frame.s"
 .include "pt3_lib_write_frame.s"
+
 .include "create_update_type1.s"
+.include "create_update_type2.s"
 
 ; Pictures (no need to align)
+.include "earth.inc"
+.include "book_40_48d.inc"
 .include "credits_bg.inc"
 
 
