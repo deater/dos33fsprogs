@@ -3,7 +3,8 @@
 #define NUMBER 128
 
 //#define START	32
-#define START	40
+//#define START	40
+#define START	48
 
 int main(int argc, char **argv) {
 

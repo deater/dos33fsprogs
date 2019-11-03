@@ -50,10 +50,10 @@ create_update_inner_loop:
 
 	rts
 
-BARS_START = 38
+BARS_START = 46
 
 	;===========================
-	; from 32 to 160?
+	; from 40 to 168?
 setup_rasterbars:
 
 	lda	#4		; which page
@@ -109,7 +109,7 @@ setup_rasterbars_inner_loop:
 	sta	RASTER_PAGE
 
 	inx
-	cpx	#176
+	cpx	#184
 	bne	setup_rasterbars_outer_loop
 
 	rts
