@@ -567,20 +567,20 @@ draw_credits_end:
 
 .align $100
 credits_text:
-.byte 0,10, $C4,$CF,$FC,$4C, 'C','O','D','E','[' 	; "CODE:"
-.byte 6,8, $C4,$CF,$FC,$4C, 'D','E','A','T','E','R'	; "DEATER"
+.byte 0,10, $B1,$3F,$F3,$1B, 'C','O','D','E','[' 	; "CODE:"
+.byte 6,8,  $B1,$3F,$F3,$1B, 'D','E','A','T','E','R'	; "DEATER"
 .byte '@','@'						; time pad
 .byte 0,10, $00,$00,$00,$00, 'C','O','D','E','[' 	; "CODE:"
-.byte 6,8, $00,$00,$00,$00, 'D','E','A','T','E','R'	; "DEATER"
+.byte 6,8,  $00,$00,$00,$00, 'D','E','A','T','E','R'	; "DEATER"
 
-.byte 0,8, $C4,$CF,$FC,$4C, 'M','U','S','I','C','[' 	; "MUSIC:"
-.byte 6,14, $C4,$CF,$FC,$4C, 'D','Y','A'		; "DYA"
+.byte 0,8,  $D8,$9F,$F9,$8D, 'M','U','S','I','C','[' 	; "MUSIC:"
+.byte 6,14, $D8,$9F,$F9,$8D, 'D','Y','A'		; "DYA"
 .byte '@','@'						; time pad
-.byte 0,8, $00,$00,$00,$00, 'M','U','S','I','C','[' 	; "MUSIC:"
+.byte 0,8,  $00,$00,$00,$00, 'M','U','S','I','C','[' 	; "MUSIC:"
 .byte 6,14, $00,$00,$00,$00, 'D','Y','A'		; "DYA"
 
-.byte 0,8, $C4,$CF,$FC,$4C, 'M','A','G','I','C','[' 	; "MAGIC:"
-.byte 6,8, $C4,$CF,$FC,$4C, 'Q','K','U','M','B','A'	; "QKUMBA"
+.byte 0,8, $72,$6F,$F6,$27, 'M','A','G','I','C','[' 	; "MAGIC:"
+.byte 6,8, $72,$6F,$F6,$27, 'Q','K','U','M','B','A'	; "QKUMBA"
 .byte '@','@'						; time pad
 .byte 0,8, $00,$00,$00,$00, 'M','A','G','I','C','[' 	; "MAGIC:"
 .byte 6,8, $00,$00,$00,$00, 'Q','K','U','M','B','A'	; "QKUMBA"
@@ -592,8 +592,8 @@ credits_text:
 .byte 6,4, $00,$00,$00,$00, 'F','R','O','G','Y','S','U','E'	; "FROGYSUE"
 
 
-.byte 0,10, $C4,$CF,$FC,$4C, 'A','@','V','M','W' 	; "A VMW"
-.byte 6,0, $C4,$CF,$FC,$4C, 'P','R','O','D','U','C','T','I','O','N'
+.byte 0,10, $75,$5F,$F5,$57, 'A','@','V','M','W' 	; "A VMW"
+.byte 6,0,  $75,$5F,$F5,$57, 'P','R','O','D','U','C','T','I','O','N'
 							; "PRODUCTION"
 .byte 255	; done
 credits_text_end:
