@@ -365,7 +365,8 @@ tloop2:	dex								; 2
 
 	lda	KEYPRESS				; 4
 	bpl	cno_keypress				; 3
-	jmp	credits_loop
+	rts
+
 cno_keypress:
 
 	jmp	credits_loop				; 3
