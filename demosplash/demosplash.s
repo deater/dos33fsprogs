@@ -127,13 +127,16 @@ frame_decode_loop:
 	; starbase scene
 	;===========================
 
-;	jsr	starbase
+	jsr	starbase
 
 	;===========================
 	; escape scene
 	;===========================
 
-	jsr	escape
+	nop
+	nop
+	nop
+;	jsr	escape
 
 	;===========================
 	; book scene
@@ -170,7 +173,6 @@ wait_until_keypressed:
 
 ; Apple II intro
 .include "appleII_intro.s"
-.include "appleII_40_96.inc"
 
 .align $100
 .include "vapor_lock.s"
@@ -197,7 +199,7 @@ wait_until_keypressed:
 .include "starbase.s"
 
 ; escape
-.include "escape.s"
+;.include "escape.s"
 
 ; book
 .include "book.s"
@@ -217,6 +219,7 @@ wait_until_keypressed:
 .include "create_update_type2.s"
 
 ; Pictures (no need to align)
+.include "appleII_40_96.inc"
 .include "earth.inc"
 .include "book_40_48d.inc"
 .include "credits_bg.inc"

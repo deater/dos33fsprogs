@@ -12,8 +12,8 @@
 astro_stand:
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
-	.byte $aa,$bb,$88,$aa,$aa
-	.byte $aa,$aa,$2b,$aa,$aa
+	.byte $aa,$bb,$88,$8a,$aa
+	.byte $aa,$aa,$2b,$88,$aa
 	.byte $aa,$aa,$bb,$aa,$aa
 	.byte $aa,$aa,$bb,$aa,$aa
 	.byte $aa,$aa,$22,$aa,$aa
@@ -44,8 +44,8 @@ astro_walk_progression:
 astro_walk_left1:
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
-	.byte $aa,$bb,$88,$aa,$aa
-	.byte $aa,$aa,$2b,$aa,$aa
+	.byte $aa,$bb,$88,$8a,$aa
+	.byte $aa,$aa,$2b,$88,$aa
 	.byte $aa,$aa,$bb,$aa,$aa
 	.byte $aa,$ab,$bb,$aa,$aa
 	.byte $aa,$aa,$22,$aa,$aa
@@ -55,8 +55,8 @@ astro_walk_left1:
 astro_walk_left2:
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
-	.byte $aa,$bb,$88,$aa,$aa
-	.byte $aa,$aa,$2b,$aa,$aa
+	.byte $aa,$bb,$88,$8a,$aa
+	.byte $aa,$aa,$2b,$88,$aa
 	.byte $aa,$aa,$bb,$aa,$aa
 	.byte $aa,$ba,$bb,$aa,$aa
 	.byte $aa,$aa,$22,$aa,$aa
@@ -66,8 +66,8 @@ astro_walk_left2:
 astro_walk_left3:
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
-	.byte $aa,$bb,$88,$aa,$aa
-	.byte $aa,$aa,$2b,$aa,$aa
+	.byte $aa,$bb,$88,$8a,$aa
+	.byte $aa,$aa,$2b,$88,$aa
 	.byte $aa,$aa,$bb,$aa,$aa
 	.byte $aa,$ba,$2b,$aa,$aa
 	.byte $aa,$aa,$22,$aa,$aa
@@ -77,8 +77,8 @@ astro_walk_left3:
 astro_walk_left4:
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
-	.byte $aa,$bb,$88,$aa,$aa
-	.byte $aa,$aa,$2b,$aa,$aa
+	.byte $aa,$bb,$88,$8a,$aa
+	.byte $aa,$aa,$2b,$88,$aa
 	.byte $aa,$aa,$bb,$aa,$aa
 	.byte $aa,$ba,$2b,$aa,$aa
 	.byte $aa,$aa,$22,$aa,$aa
@@ -88,8 +88,8 @@ astro_walk_left4:
 astro_walk_left5:
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
-	.byte $aa,$bb,$88,$aa,$aa
-	.byte $aa,$aa,$2b,$aa,$aa
+	.byte $aa,$bb,$88,$8a,$aa
+	.byte $aa,$aa,$2b,$88,$aa
 	.byte $aa,$aa,$bb,$aa,$aa
 	.byte $aa,$bb,$22,$aa,$aa
 	.byte $fa,$aa,$22,$aa,$aa
@@ -99,8 +99,8 @@ astro_walk_left5:
 astro_walk_left6:
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
-	.byte $aa,$bb,$88,$aa,$aa
-	.byte $aa,$aa,$2b,$aa,$aa
+	.byte $aa,$bb,$88,$8a,$aa
+	.byte $aa,$aa,$2b,$88,$aa
 	.byte $aa,$aa,$bb,$aa,$aa
 	.byte $aa,$ba,$2b,$aa,$aa
 	.byte $aa,$6a,$22,$aa,$aa
@@ -110,8 +110,8 @@ astro_walk_left6:
 astro_walk_left7:
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
-	.byte $aa,$bb,$88,$aa,$aa
-	.byte $aa,$aa,$2b,$aa,$aa
+	.byte $aa,$bb,$88,$8a,$aa
+	.byte $aa,$aa,$2b,$88,$aa
 	.byte $aa,$aa,$bb,$aa,$aa
 	.byte $aa,$aa,$2b,$aa,$aa
 	.byte $aa,$6a,$22,$aa,$aa
@@ -121,8 +121,8 @@ astro_walk_left7:
 astro_walk_left8:
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
-	.byte $aa,$bb,$88,$aa,$aa
-	.byte $aa,$aa,$2b,$aa,$aa
+	.byte $aa,$bb,$88,$8a,$aa
+	.byte $aa,$aa,$2b,$88,$aa
 	.byte $aa,$aa,$bb,$aa,$aa
 	.byte $aa,$ba,$2b,$aa,$aa
 	.byte $aa,$6a,$22,$aa,$aa
@@ -132,8 +132,8 @@ astro_walk_left8:
 astro_walk_left9:
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
-	.byte $aa,$bb,$88,$aa,$aa
-	.byte $aa,$aa,$2b,$aa,$aa
+	.byte $aa,$bb,$88,$8a,$aa
+	.byte $aa,$aa,$2b,$88,$aa
 	.byte $aa,$aa,$bb,$aa,$aa
 	.byte $aa,$aa,$bb,$aa,$aa
 	.byte $aa,$aa,$22,$aa,$aa
@@ -143,8 +143,8 @@ astro_walk_left9:
 astro_walk_left10:
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
-	.byte $aa,$bb,$88,$aa,$aa
-	.byte $aa,$aa,$2b,$aa,$aa
+	.byte $aa,$bb,$88,$8a,$aa
+	.byte $aa,$aa,$2b,$88,$aa
 	.byte $aa,$aa,$bb,$aa,$aa
 	.byte $aa,$ba,$bb,$aa,$aa
 	.byte $aa,$aa,$22,$aa,$aa
@@ -286,8 +286,8 @@ astro_run_left9:
 kick1:
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
-	.byte $aa,$bb,$88,$aa,$aa
-	.byte $aa,$aa,$2b,$aa,$aa
+	.byte $aa,$bb,$88,$8a,$aa
+	.byte $aa,$aa,$2b,$88,$aa
 	.byte $aa,$ba,$2b,$aa,$aa
 	.byte $bb,$ab,$22,$ba,$aa
 	.byte $aa,$aa,$22,$aa,$aa
@@ -303,8 +303,8 @@ kick1:
 shooting1:
 	.byte 5,8
 	.byte $AA,$AA,$8A,$8A,$AA
-	.byte $AA,$AA,$bb,$88,$AA
-	.byte $0A,$0A,$AA,$2B,$AA
+	.byte $AA,$AA,$bb,$88,$8A
+	.byte $0A,$0A,$AA,$2B,$88
 	.byte $AA,$A0,$AB,$B2,$AA
 	.byte $AA,$AA,$AA,$22,$AA
 	.byte $AA,$AA,$AA,$22,$AA
@@ -347,8 +347,8 @@ crouch1:
 	.byte 3,8
 	.byte $aa,$aa,$aa
 	.byte $8a,$8a,$aa
-	.byte $bb,$88,$aa
-	.byte $aa,$2b,$aa
+	.byte $bb,$88,$8a
+	.byte $aa,$2b,$88
 	.byte $aa,$bb,$aa
 	.byte $aa,$bb,$aa
 	.byte $22,$22,$aa
@@ -359,8 +359,8 @@ crouch2:
 	.byte $AA,$aa,$aa,$aa,$AA
 	.byte $AA,$aa,$aa,$aa,$AA
 	.byte $AA,$8a,$8a,$aa,$AA
-	.byte $AA,$bb,$88,$aa,$AA
-	.byte $AA,$aa,$2b,$2a,$AA
+	.byte $AA,$bb,$88,$8a,$AA
+	.byte $AA,$aa,$2b,$28,$AA
 	.byte $AA,$aa,$bb,$22,$AA
 	.byte $AA,$ba,$2b,$aa,$AA
 	.byte $AA,$52,$f2,$f2,$AA
@@ -477,8 +477,8 @@ astro_jump_progression:
 jump1:
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
-	.byte $aa,$bb,$88,$aa,$aa
-	.byte $aa,$aa,$2b,$aa,$aa
+	.byte $aa,$bb,$88,$8a,$aa
+	.byte $aa,$aa,$2b,$88,$aa
 	.byte $aa,$aa,$bb,$aa,$aa
 	.byte $aa,$ba,$2b,$aa,$aa
 	.byte $aa,$aa,$22,$aa,$aa
@@ -488,7 +488,7 @@ jump1:
 jump2:
 	.byte 5,8
 	.byte $8a,$8a,$aa,$aa,$aa
-	.byte $bb,$88,$aa,$aa,$aa
+	.byte $bb,$88,$8a,$8a,$aa
 	.byte $aa,$2b,$22,$aa,$aa
 	.byte $aa,$22,$bb,$aa,$aa
 	.byte $aa,$a2,$bb,$aa,$aa
@@ -499,7 +499,7 @@ jump2:
 jump3:
 	.byte 5,8
 	.byte $8a,$8a,$aa,$aa,$aa
-	.byte $bb,$88,$aa,$aa,$aa
+	.byte $bb,$88,$8a,$8a,$aa
 	.byte $aa,$2b,$22,$aa,$aa
 	.byte $aa,$22,$bb,$aa,$aa
 	.byte $aa,$a2,$bb,$aa,$aa
@@ -510,7 +510,7 @@ jump3:
 jump4:
 	.byte 5,8
 	.byte $8a,$8a,$aa,$aa,$aa
-	.byte $bb,$88,$aa,$aa,$aa
+	.byte $bb,$88,$8a,$8a,$aa
 	.byte $aa,$2b,$22,$aa,$aa
 	.byte $aa,$22,$bb,$aa,$aa
 	.byte $aa,$a2,$bb,$aa,$aa
@@ -521,7 +521,7 @@ jump4:
 jump5:
 	.byte 5,8
 	.byte $b8,$88,$aa,$aa,$aa
-	.byte $ab,$b8,$aa,$aa,$aa
+	.byte $ab,$b8,$8a,$8a,$aa
 	.byte $ba,$b2,$2b,$aa,$aa
 	.byte $aa,$aa,$22,$aa,$aa
 	.byte $aa,$aa,$22,$aa,$aa
@@ -532,8 +532,8 @@ jump5:
 jump6:
 	.byte 5,8
 	.byte $aa,$b8,$88,$aa,$aa
-	.byte $aa,$ab,$b8,$aa,$aa
-	.byte $ab,$ba,$b2,$aa,$aa
+	.byte $aa,$ab,$b8,$8a,$aa
+	.byte $ab,$ba,$b2,$aa,$a8
 	.byte $aa,$aa,$22,$aa,$aa
 	.byte $aa,$aa,$22,$aa,$aa
 	.byte $aa,$66,$22,$2a,$fa
@@ -543,8 +543,8 @@ jump6:
 jump7:
 	.byte 5,8
 	.byte $aa,$b8,$88,$aa,$aa
-	.byte $aa,$ab,$b8,$aa,$aa
-	.byte $aa,$aa,$b2,$aa,$aa
+	.byte $aa,$ab,$b8,$8a,$aa
+	.byte $aa,$aa,$b2,$a8,$aa
 	.byte $ab,$ab,$22,$aa,$aa
 	.byte $aa,$aa,$22,$aa,$aa
 	.byte $aa,$66,$22,$2a,$fa
@@ -554,8 +554,8 @@ jump7:
 jump8:
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
-	.byte $aa,$bb,$88,$aa,$aa
-	.byte $aa,$aa,$2b,$aa,$aa
+	.byte $aa,$bb,$88,$8a,$aa
+	.byte $aa,$aa,$2b,$88,$aa
 	.byte $aa,$b2,$bb,$aa,$aa
 	.byte $aa,$aa,$22,$aa,$aa
 	.byte $aa,$2a,$22,$aa,$aa
@@ -590,8 +590,8 @@ crouch_shooting:
 	.byte $AA,$AA,$aa,$aa,$aa
 	.byte $AA,$AA,$aa,$aa,$aa
 	.byte $AA,$AA,$8a,$8a,$aa
-	.byte $AA,$AA,$bb,$88,$aa
-	.byte $0A,$0A,$aa,$2b,$2a
+	.byte $AA,$AA,$bb,$88,$8a
+	.byte $0A,$0A,$aa,$2b,$28
 	.byte $AA,$A0,$ba,$bb,$22
 	.byte $AA,$AA,$2a,$2b,$aa
 	.byte $AA,$AA,$52,$f2,$f2
@@ -607,8 +607,8 @@ crouch_kicking:
 	.byte $AA,$AA,$aa,$aa,$aa
 	.byte $AA,$AA,$aa,$aa,$aa
 	.byte $AA,$AA,$8a,$8a,$aa
-	.byte $AA,$AA,$bb,$88,$aa
-	.byte $AA,$AA,$aa,$2b,$2a
+	.byte $AA,$AA,$bb,$88,$8a
+	.byte $AA,$AA,$aa,$2b,$28
 	.byte $AA,$AA,$aa,$bb,$22
 	.byte $AA,$AA,$2a,$bb,$a2
 	.byte $5A,$56,$A2,$f2,$f2

@@ -9,7 +9,7 @@ all:	starbase.inc
 
 starbase.inc:	$(PNG2RLE) \
 	jail.png hallway.png window.png ship.png
-	$(PNG2RLE) asm jail.png jail_rle >> starbase.inc
+	$(PNG2RLE) asm jail.png jail_rle > starbase.inc
 	$(PNG2RLE) asm hallway.png hallway_rle >> starbase.inc
 	$(PNG2RLE) asm window.png window_rle >> starbase.inc
 	$(PNG2RLE) asm ship.png ship_rle >> starbase.inc

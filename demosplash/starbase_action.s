@@ -4,7 +4,8 @@
 	; starbase_init
 	;=======================
 	;=======================
-	; call once before entering city for first time
+	; call once before entering starbase for first time
+
 starbase_init:
 	lda	#0
 	sta	WHICH_ROOM
@@ -58,22 +59,22 @@ starbase_init:
 	lda	#1
 	sta	HAVE_GUN
 
-	lda	#19
+	lda	#0
 	sta	ASTRONAUT_X
-	lda	#230			; start offscreen
+	lda	#20			; start offscreen
 	sta	ASTRONAUT_Y
 
-	lda	#28
-	sta	fall_down_destination_smc+1
+;	lda	#28
+;	sta	fall_down_destination_smc+1
 
-	lda	#28
-	sta	fall_sideways_destination_smc+1
+;	lda	#28
+;	sta	fall_sideways_destination_smc+1
 
-	lda	#P_FALLING_DOWN		; fall into level
+	lda	#P_STANDING		; fall into level
 	sta	ASTRONAUT_STATE
 
-	lda	#$2c
-	sta	falling_stop_smc
+;	lda	#$2c
+;	sta	falling_stop_smc
 
 	rts
 
@@ -83,7 +84,7 @@ starbase_init:
 	; enter new room in jail
 	;===========================
 	;===========================
-ootw_city:
+starbase_setup_room:
 	;=================================
 	; setup vars
 

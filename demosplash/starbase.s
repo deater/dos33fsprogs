@@ -20,7 +20,7 @@ starbase_new_room:
 	lda	#0
 	sta	GAME_OVER
 
-	jsr	ootw_city
+	jsr	starbase_setup_room
 
 c4_check_done:
 	lda	GAME_OVER
