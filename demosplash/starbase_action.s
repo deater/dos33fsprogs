@@ -149,6 +149,17 @@ room1:
 	cmp	#1
 	bne	room2
 
+	; set up doors
+
+	lda	#3
+	sta	NUM_DOORS
+
+	lda	#<door_c4_r1
+	sta	setup_door_table_loop_smc+1
+	lda	#>door_c4_r1
+	sta	setup_door_table_loop_smc+2
+	jsr	setup_door_table
+
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
@@ -162,7 +173,7 @@ room1:
 	lda     #0
 	sta     cel_smc+1
 
-	lda	#8
+	lda	#30
 	sta	ASTRONAUT_Y
 
 	; load background
@@ -172,8 +183,8 @@ room1:
 
 	jmp	room_setup_done
 
-	;===================
-	; causeway part 1
+	;=====================
+	; room with big window
 room2:
 	cmp	#2
 	bne	room3
@@ -191,7 +202,7 @@ room2:
 	lda     #1
 	sta     cel_smc+1
 
-	lda	#18
+	lda	#30
 	sta	ASTRONAUT_Y
 
 	; load background
@@ -202,17 +213,19 @@ room2:
 	jmp	room_setup_done
 
 	;=======================
-	; causeway part 2 / pit
+	;room with ship
 room3:
 	cmp	#3
-	bne	room4
+	bne	room_setup_done
 
-	; set falling floors
-	lda	#48
-	sta	fall_down_destination_smc+1
+	lda	#1
+	sta	NUM_DOORS
 
-	lda	#48
-	sta	fall_sideways_destination_smc+1
+	lda	#<door_c4_r3
+	sta	setup_door_table_loop_smc+1
+	lda	#>door_c4_r3
+	sta	setup_door_table_loop_smc+2
+	jsr	setup_door_table
 
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
@@ -227,75 +240,15 @@ room3:
 	lda     #2
 	sta     cel_smc+1
 
-	lda	#18
+	lda	#30
 	sta	ASTRONAUT_Y
-
-	; load top high
-	lda	#>(ship_rle)
-	sta	GBASH
-	lda	#<(ship_rle)
-	sta	GBASL
-	lda	#$10				; load to page $1000
-	jsr	load_rle_gr
-
-	; load pit background even higher
-	lda	#>(ship_rle)
-	sta	GBASH
-	lda	#<(ship_rle)
-	sta	GBASL
-	lda	#$BC				; load to page $BC00
-	jsr	load_rle_gr
 
 	; load background
 	lda	#>(ship_rle)
 	sta	GBASH
 	lda	#<(ship_rle)
 
-	jmp	room_setup_done
-
-	;======================
-	; down at the bottom
-room4:
-
-	; set up doors
-
-	lda	#1
-	sta	NUM_DOORS
-
-	lda	#<door_c4_r4
-	sta	setup_door_table_loop_smc+1
-	lda	#>door_c4_r4
-	sta	setup_door_table_loop_smc+2
-	jsr	setup_door_table
-
-	lda	#(16+128)
-	sta	LEFT_LIMIT
-	lda	#(39+128)
-	sta	RIGHT_LIMIT
-
-	; set right exit
-	lda     #5
-	sta     cer_smc+1
-
-	lda	ASTRONAUT_STATE
-	cmp	#P_IMPALED
-	beq	r4_impaled
-	cmp	#P_FALLING_DOWN
-	beq	r4_impaled
-
-	lda	#8
-	sta	ASTRONAUT_Y
-
-	lda	#P_CROUCHING
-	sta	ASTRONAUT_STATE
-
-r4_impaled:
-	; load background
-	lda	#>(ship_rle)
-	sta	GBASH
-	lda	#<(ship_rle)
-
-	jmp	room_setup_done
+	; fall through
 
 
 room_setup_done:
@@ -346,12 +299,14 @@ starbase_loop:
 	;==================================
 
 	lda	WHICH_JAIL
+	beq	bg_room0
+	cmp	#3
+	beq	bg_room3
+
+	bne	c4_no_bg_action
 
 bg_room0:
 	; Room #0, draw pulsing recharger
-
-	cmp	#0
-	bne	c4_no_bg_action
 
 	lda	FRAMEL
 	and	#$c
@@ -377,7 +332,45 @@ bg_room0:
 	lsr
 	tay
 
+	jmp	c4_no_bg_action
 
+bg_room3:
+	; Room #3, draw clamp if applicable
+
+	lda	c4_r3_door0_status	; door status
+	cmp	#DOOR_STATUS_EXPLODED
+	beq	bg3_blink
+
+	; draw clamp at 22,5
+
+	lda	#22
+	sta	XPOS
+	lda	#4
+	sta	YPOS
+	lda	#<clamp_sprite
+	sta	INL
+	lda	#>clamp_sprite
+	sta	INH
+	jsr	put_sprite
+
+	jmp	c4_no_bg_action
+
+bg3_blink:
+
+	lda	FRAMEL
+	and	#$08
+	beq	bg3_blink_off
+
+
+	; 9x16
+bg3_blink_on:
+	lda	#$56
+	bne	bg3_blink_done
+bg3_blink_off:
+	lda	#$52
+bg3_blink_done:
+
+	sta	$c28+9
 
 c4_no_bg_action:
 
@@ -483,8 +476,8 @@ no_draw_alien:
 	lda	WHICH_ROOM
 	beq	c4_room0_cover
 
-	cmp	#4
-	beq	c4_room4_cover
+;	cmp	#4
+;	beq	c4_room4_cover
 
 	jmp	c4_no_fg_cover
 
@@ -502,21 +495,7 @@ c4_room0_cover:
 
 	jsr	put_sprite
 
-
-	jmp	c4_no_fg_cover
-c4_room4_cover:
-
-	lda	#30
-	sta	XPOS
-	lda	#8
-	sta	YPOS
-
-	lda	#<pit_door_cover
-	sta	INL
-	lda	#>pit_door_cover
-	sta	INH
-
-	jsr	put_sprite
+;	jmp	c4_no_fg_cover
 
 c4_no_fg_cover:
 
@@ -704,31 +683,16 @@ causeway_door_cover:
 	.byte $00,$00,$00,$00,$00,$00
 	.byte $00,$00,$00,$00,$00,$00
 
-; 30x8
-pit_door_cover:
-	.byte 8,8
-	.byte $02,$22,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $20,$00,$00,$00,$00,$00,$00,$00
-	.byte $22,$02,$00,$00,$00,$00,$00,$00
-	.byte $22,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
+; 3x3
+
+clamp_sprite:
+	.byte 3,3
+	.byte $AA,$1A,$9A
+	.byte $00,$00,$00
+	.byte $AA,$A9,$A1
 
 
-
-;clear_c00:
-;	lda	#$94
-;	ldy	#0
-;clear1:
-;	sta	$c00,Y
-;	sta	$d00,Y
-;	sta	$e00,Y
-;	sta	$f00,Y
-;	iny
-;	bne	clear1
-;	rts
+; Room 0 doors
 
 door_c4_r0:
 	.word door_c4_r0_status
@@ -758,24 +722,59 @@ door_c4_r0_xmax:
 	c4_r0_door0_xmax:	.byte 4		; ??
 	c4_r0_door1_xmax:	.byte 39	; ??
 
+; Room 1 doors
+
+door_c4_r1:
+	.word door_c4_r1_status
+	.word door_c4_r1_x
+	.word door_c4_r1_y
+	.word door_c4_r1_xmin
+	.word door_c4_r1_xmax
+
+door_c4_r1_status:
+	c4_r1_door0_status:	.byte DOOR_STATUS_CLOSED
+	c4_r1_door1_status:	.byte DOOR_STATUS_CLOSED
+	c4_r1_door2_status:	.byte DOOR_STATUS_CLOSED
+
+door_c4_r1_x:
+	c4_r1_door0_x:	.byte 31
+	c4_r1_door1_x:	.byte 34
+	c4_r1_door2_x:	.byte 37
+
+door_c4_r1_y:
+	c4_r1_door0_y:	.byte 26
+	c4_r1_door1_y:	.byte 26
+	c4_r1_door2_y:	.byte 26
+
+door_c4_r1_xmin:
+	c4_r1_door0_xmin:	.byte 22	; 31-4-5
+	c4_r1_door1_xmin:	.byte 25	; 34-4-5
+	c4_r1_door2_xmin:	.byte 28	; 37-4-5
+
+door_c4_r1_xmax:
+	c4_r1_door0_xmax:	.byte 39	; ??
+	c4_r1_door1_xmax:	.byte 39	; ??
+	c4_r1_door2_xmax:	.byte 39	; ??
 
 
 
-door_c4_r4:
-	.word door_c4_r4_status
-	.word door_c4_r4_x
-	.word door_c4_r4_y
-	.word door_c4_r4_xmin
-	.word door_c4_r4_xmax
 
-door_c4_r4_status:
-	c4_r4_door0_status:	.byte DOOR_STATUS_LOCKED
 
-door_c4_r4_x:
-	c4_r4_door0_x:	.byte 27
+door_c4_r3:
+	.word door_c4_r3_status
+	.word door_c4_r3_x
+	.word door_c4_r3_y
+	.word door_c4_r3_xmin
+	.word door_c4_r3_xmax
 
-door_c4_r4_xmin:	; don't care (door does not open)
-door_c4_r4_xmax:	; don't care (door does not open)
-door_c4_r4_y:
-	c4_r4_door0_y:	.byte 4
+door_c4_r3_status:
+	c4_r3_door0_status:	.byte DOOR_STATUS_CLOSED
+
+door_c4_r3_x:
+	c4_r3_door0_x:	.byte 12
+
+door_c4_r3_xmin:	.byte 39
+door_c4_r3_xmax:	.byte 39
+door_c4_r3_y:
+	c4_r3_door0_y:	.byte 26
 
