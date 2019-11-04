@@ -20,7 +20,7 @@ starbase_new_room:
 	lda	#0
 	sta	GAME_OVER
 
-	jsr	ootw_city
+	jsr	starbase_setup_room
 
 c4_check_done:
 	lda	GAME_OVER
@@ -57,17 +57,9 @@ wait_loop:
 	rts
 
 .include "starbase_action.s"
-;.include "text_print.s"
-;.include "gr_pageflip.s"
-;.include "gr_unrle.s"
-;.include "gr_fast_clear.s"
-;.include "gr_copy.s"
 .include "gr_hlin.s"
-.include "gr_twoscreen_scroll.s"
 .include "gr_putsprite.s"
-;.include "gr_putsprite_flipped.s"
 .include "gr_putsprite_crop.s"
-;.include "gr_offsets.s"
 .include "keyboard.s"
 
 .include "starbase_astronaut.s"

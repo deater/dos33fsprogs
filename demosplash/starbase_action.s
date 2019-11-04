@@ -4,12 +4,12 @@
 	; starbase_init
 	;=======================
 	;=======================
-	; call once before entering city for first time
+	; call once before entering starbase for first time
+
 starbase_init:
 	lda	#0
 	sta	WHICH_ROOM
 	sta	BG_SCROLL
-	sta	DIRECTION		; left
 	sta	LASER_OUT
 	sta	BLAST_OUT
 	sta	CHARGER_COUNT
@@ -20,18 +20,16 @@ starbase_init:
 	sta	ACTION_TRIGGERED
 	sta	ACTION_COUNT
 
+	lda	#1
+	sta	DIRECTION		; right
+
 	lda	#100
 	sta	GUN_CHARGE
 
 	;====================
 	; reset doors
-	lda	#DOOR_STATUS_CLOSED
-	sta	c4_r0_door0_status
-	sta	c4_r0_door1_status
 	lda	#DOOR_STATUS_LOCKED
-	sta	c4_r0_door2_status
-	sta	c4_r0_door3_status
-	sta	c4_r0_door4_status
+	sta	c4_r0_door0_status
 
 	;===============
 	; set up aliens
@@ -58,22 +56,13 @@ starbase_init:
 	lda	#1
 	sta	HAVE_GUN
 
-	lda	#19
+	lda	#0
 	sta	ASTRONAUT_X
-	lda	#230			; start offscreen
+	lda	#10
 	sta	ASTRONAUT_Y
 
-	lda	#28
-	sta	fall_down_destination_smc+1
-
-	lda	#28
-	sta	fall_sideways_destination_smc+1
-
-	lda	#P_FALLING_DOWN		; fall into level
+	lda	#P_STANDING
 	sta	ASTRONAUT_STATE
-
-	lda	#$2c
-	sta	falling_stop_smc
 
 	rts
 
@@ -83,7 +72,7 @@ starbase_init:
 	; enter new room in jail
 	;===========================
 	;===========================
-ootw_city:
+starbase_setup_room:
 	;=================================
 	; setup vars
 
@@ -114,12 +103,12 @@ ootw_city:
 	bne	room1
 
 	;======================
-	; Room0 with recharger
+	; Room0 with ramp
 room0:
 
 	; set up doors
 
-	lda	#5
+	lda	#2
 	sta	NUM_DOORS
 
 	lda	#<door_c4_r0
@@ -130,26 +119,22 @@ room0:
 
 	; set up room limits
 
-	lda	#(6+128)
+	lda	#(-3+128)	; stop at wall
 	sta	LEFT_LIMIT
 	lda	#(39+128)
 	sta	RIGHT_LIMIT
-
-	; set right exit
-	lda     #1
-	sta     cer_smc+1
 
 	; set left exit
 	lda     #0
 	sta     cel_smc+1
 
-	lda	ASTRONAUT_STATE
-	cmp	#P_FALLING_DOWN
-	beq	room0_falling
+	; set right exit
+	lda     #1
+	sta     cer_smc+1
 
-	lda	#28
+	lda	#10
 	sta	ASTRONAUT_Y
-room0_falling:
+
 
 	; load background
 	lda	#>(jail_rle)
@@ -343,47 +328,10 @@ ootw_room_already_set:
 
 	;============================
 	;============================
-	; City Loop
+	; starbase Loop
 	;============================
 	;============================
-city_loop:
-
-	;======================================
-	; draw split screen if falling into pit
-	;======================================
-
-	; only fall in room3
-	lda	WHICH_ROOM
-	cmp	#3
-	bne	no_scroll
-
-	lda	BG_SCROLL
-	beq	no_scroll
-
-	lda	FRAMEL			; slow down a bit
-        and	#$1
-        bne	no_scroll_progress
-
-	inc	BG_SCROLL
-	inc	BG_SCROLL
-no_scroll_progress:
-
-	ldy	BG_SCROLL
-	cpy	#48
-	bne	scroll_it
-
-	; exit to next room when done scrolling
-
-	lda	#0
-	sta	BG_SCROLL
-	lda	#4
-	sta	WHICH_ROOM
-	rts
-
-scroll_it:
-	jsr	gr_twoscreen_scroll
-no_scroll:
-
+starbase_loop:
 
 	;================================
 	;================================
@@ -392,101 +340,6 @@ no_scroll:
 	;================================
 
 	jsr	gr_copy_to_current
-
-
-	;=========================
-	;=========================
-	; Handle Falling into Pit
-	;=========================
-	;=========================
-
-	lda	WHICH_ROOM
-	cmp	#3
-	beq	check_falling
-	cmp	#4
-	beq	check_falling
-
-	jmp	not_falling
-
-check_falling:
-	; only fall if falling sideways/down
-	lda	ASTRONAUT_STATE
-	cmp	#P_FALLING_SIDEWAYS
-	beq	falling_sideways
-	cmp	#P_FALLING_DOWN
-	beq	falling_down
-
-	jmp	not_falling
-
-falling_sideways:
-	; if falling sideways
-
-	lda	BG_SCROLL
-	cmp	#16
-	bcc	before		; blt
-
-	lda     FRAMEL
-        and     #$3
-        bne     no_fall_undo
-
-	dec	ASTRONAUT_X
-	dec	ASTRONAUT_Y
-	dec	ASTRONAUT_Y
-	dec	ASTRONAUT_Y
-	dec	ASTRONAUT_Y
-no_fall_undo:
-	jmp	scroll_check
-before:
-
-	lda     FRAMEL
-        and     #$1
-        bne     extra_boost
-
-	inc	ASTRONAUT_X
-extra_boost:
-	jmp	scroll_check
-
-
-falling_down:
-	; if falling down, and Y>=32, then impale
-	lda	ASTRONAUT_Y
-	cmp	#32
-	bcc	scroll_check		; blt
-
-	lda	#9
-	sta	ASTRONAUT_X
-
-	lda	#38
-	sta	ASTRONAUT_Y
-
-	lda	#0
-	sta	GAIT
-
-	lda	#P_IMPALED
-	sta	ASTRONAUT_STATE
-
-	jmp	not_falling
-
-scroll_check:
-	lda	BG_SCROLL		; if done scrolling, re-enable falling
-	bne	scroll_bg_check22
-
-	lda	#$2c			; re-enable falling
-	sta	falling_stop_smc
-	jmp	not_far_enough
-
-scroll_bg_check22:
-
-	lda	ASTRONAUT_Y		; once Y=22, stop falling (scroll instead)
-	cmp	#22
-	bcc	not_far_enough		; blt
-
-	lda	#$4c			; disable yinc in falling
-	sta	falling_stop_smc
-
-not_far_enough:
-
-not_falling:
 
 	;==================================
 	; draw background action
@@ -506,9 +359,9 @@ bg_room0:
 	tay
 
 
-	lda	#11
+	lda	#0
 	sta	XPOS
-	lda	#24
+	lda	#26
 	sta	YPOS
 
 	lda	recharge_bg_progression,Y
@@ -524,21 +377,6 @@ bg_room0:
 	lsr
 	tay
 
-	lda	#5
-	sta	XPOS
-	lda	#24
-	sta	YPOS
-
-	lda	recharge_sprite_progression,Y
-	sta	INL
-	lda	recharge_sprite_progression+1,Y
-	sta	INH
-
-
-
-	jsr	put_sprite
-
-
 
 
 c4_no_bg_action:
@@ -550,7 +388,7 @@ c4_no_bg_action:
 	jsr	handle_keypress
 
 	;===============================
-	; move physicist
+	; move astronaut
 	;===============================
 
 	jsr	move_astronaut
@@ -568,84 +406,41 @@ c4_no_bg_action:
 
 done_room_limits:
 
-	;=============================
-	;=============================
-	; Detect if falling off ledge
-	;=============================
-	;=============================
+	;===============
+	; draw astronaut
+	;===============
 
-	; only fall in room#3
+	; only have slope in room0
 	lda	WHICH_ROOM
-	cmp	#3
-	bne	regular_room
-
-	; don't start fall if impaled or already falling
-	lda	ASTRONAUT_STATE
-	cmp	#P_IMPALED
-	beq	regular_room
-	cmp	#P_FALLING_DOWN
-	beq	regular_room
-	cmp	#P_FALLING_SIDEWAYS
-	beq	regular_room
-
-
-	; only start falling if y>=18
-	lda	ASTRONAUT_Y
-	cmp	#18
-	bcc	regular_room		; blt
-
-	; only start falling if x>=7 and positive
-	lda	ASTRONAUT_X
-	bmi	regular_room
-	cmp	#7
-	bcc	regular_room		; blt
-
-	lda	ASTRONAUT_STATE
-	cmp	#P_JUMPING
-	beq	fall_sideways
-
-	; if not jumping then fall down
-
-	lda	#P_FALLING_DOWN
-	sta	ASTRONAUT_STATE
-
-	lda	#2
-	sta	BG_SCROLL
-
-	jmp	regular_room
-
-fall_sideways:
-
-	lda	#P_FALLING_SIDEWAYS
-	sta	ASTRONAUT_STATE
-
-	lda	#2
-	sta	BG_SCROLL
-
-regular_room:
-
-	;===============
-	; draw physicist
-	;===============
-
-	; if in charger, draw that
-	lda	WHICH_ROOM		; charger only room0
 	bne	just_draw_astronaut
 
+	; adjust y for slope
+
 	lda	ASTRONAUT_X
-	cmp	#10
-	bne	just_draw_astronaut
+	cmp	#11
+	bcc	asstr_above		; blt
 
-	lda	GUN_CHARGE
-	cmp	#200
-	bcs	just_draw_astronaut	; bge
+        cmp	#22
+        bcs	asstr_below		; bge
 
-	lda	#P_STANDING
-	sta	ASTRONAUT_STATE
+        sec
+        sbc     #11
+        and     #$fe			; our sprite code only draws even y
+	adc	#11
 
-	jsr	draw_charger
+	jmp	asstr_adjust_y
 
-	jmp	after_draw_astronaut
+asstr_below:
+	lda	#22
+	jmp	asstr_adjust_y
+
+asstr_above:
+	lda	#10
+
+asstr_adjust_y:
+	sta	ASTRONAUT_Y
+
+	jsr	recalc_walk_collision
 
 just_draw_astronaut:
 	jsr	draw_astronaut
@@ -686,18 +481,18 @@ no_draw_alien:
 	;========================
 
 	lda	WHICH_ROOM
-	cmp	#2
-	beq	c4_room2_cover
+	beq	c4_room0_cover
 
 	cmp	#4
 	beq	c4_room4_cover
 
 	jmp	c4_no_fg_cover
-c4_room2_cover:
+
+c4_room0_cover:
 
 	lda	#0
 	sta	XPOS
-	lda	#18
+	lda	#6
 	sta	YPOS
 
 	lda	#<causeway_door_cover
@@ -830,71 +625,10 @@ still_in_city:
 	lda	#0
 	sta	GAME_OVER
 
-	jmp	city_loop
+	jmp	starbase_loop
 
 done_city:
 	rts
-
-
-recharge_sprite_progression:
-	.word recharge_sprite1
-	.word recharge_sprite2
-	.word recharge_sprite3
-	.word recharge_sprite4
-
-
-recharge_sprite1:
-	.byte 1,10
-	.byte $eA
-	.byte $ff
-	.byte $ee
-	.byte $ff
-	.byte $e6
-	.byte $ff
-	.byte $6e
-	.byte $ff
-	.byte $fe
-	.byte $a6
-
-recharge_sprite2:
-	.byte 1,10
-	.byte $fA
-	.byte $f6
-	.byte $ef
-	.byte $fe
-	.byte $66
-	.byte $fe
-	.byte $6e
-	.byte $f6
-	.byte $6e
-	.byte $af
-
-recharge_sprite3:
-	.byte 1,10
-	.byte $eA
-	.byte $f6
-	.byte $ef
-	.byte $ef
-	.byte $6f
-	.byte $f6
-	.byte $e6
-	.byte $f6
-	.byte $6f
-	.byte $ae
-
-recharge_sprite4:
-	.byte 1,10
-	.byte $fA
-	.byte $fe
-	.byte $fe
-	.byte $6e
-	.byte $fe
-	.byte $6e
-	.byte $ee
-	.byte $f6
-	.byte $ef
-	.byte $ae
-
 
 recharge_bg_progression:
 	.word recharge_bg1
@@ -958,15 +692,17 @@ recharge_bg4:
 
 ; 0x18
 causeway_door_cover:
-	.byte 8,8
-	.byte $00,$00,$00,$00,$00,$00,$22,$AA
-	.byte $00,$00,$00,$00,$00,$00,$22,$AA
-	.byte $00,$00,$00,$00,$00,$00,$22,$AA
-	.byte $00,$00,$00,$00,$00,$00,$02,$2A
-	.byte $00,$00,$00,$00,$00,$00,$00,$22
-	.byte $00,$00,$00,$00,$00,$00,$00,$22
-	.byte $00,$00,$00,$00,$00,$00,$00,$22
-	.byte $00,$00,$00,$00,$00,$00,$00,$22
+	.byte 6,10
+	.byte $00,$00,$00,$00,$00,$00
+	.byte $00,$00,$11,$00,$00,$00
+	.byte $00,$00,$11,$11,$00,$00
+	.byte $00,$00,$00,$11,$00,$00
+	.byte $00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00
 
 ; 30x8
 pit_door_cover:
@@ -1002,39 +738,26 @@ door_c4_r0:
 	.word door_c4_r0_xmax
 
 door_c4_r0_status:
-	c4_r0_door0_status:	.byte DOOR_STATUS_CLOSED
-	c4_r0_door1_status:	.byte DOOR_STATUS_CLOSED
-	c4_r0_door2_status:	.byte DOOR_STATUS_LOCKED
-	c4_r0_door3_status:	.byte DOOR_STATUS_LOCKED
-	c4_r0_door4_status:	.byte DOOR_STATUS_LOCKED
+	c4_r0_door0_status:	.byte DOOR_STATUS_LOCKED
+	c4_r0_door1_status:	.byte DOOR_STATUS_LOCKED
 
 door_c4_r0_x:
-	c4_r0_door0_x:	.byte 7
-	c4_r0_door1_x:	.byte 18
-	c4_r0_door2_x:	.byte 29
-	c4_r0_door3_x:	.byte 31
-	c4_r0_door4_x:	.byte 33
+	c4_r0_door0_x:	.byte 6
+	c4_r0_door1_x:	.byte 37
 
 door_c4_r0_y:
-	c4_r0_door0_y:	.byte 24
-	c4_r0_door1_y:	.byte 24
-	c4_r0_door2_y:	.byte 24
-	c4_r0_door3_y:	.byte 24
-	c4_r0_door4_y:	.byte 24
+	c4_r0_door0_y:	.byte 6
+	c4_r0_door1_y:	.byte 18
 
 door_c4_r0_xmin:
-	c4_r0_door0_xmin:	.byte 0		; 7-4-5
-	c4_r0_door1_xmin:	.byte 11	; 18-4-5
-	c4_r0_door2_xmin:	.byte 20	; 29-4-5
-	c4_r0_door3_xmin:	.byte 22	; 31-4-5
-	c4_r0_door4_xmin:	.byte 24	; 33-4-5
+	c4_r0_door0_xmin:	.byte 0			; 37-4-5
+	c4_r0_door1_xmin:	.byte 28		; 37-4-5
+
 
 door_c4_r0_xmax:
-	c4_r0_door0_xmax:	.byte 11	; 7+4
-	c4_r0_door1_xmax:	.byte 21	; 18+4
-	c4_r0_door2_xmax:	.byte 33	; don't care
-	c4_r0_door3_xmax:	.byte 35	; don't care
-	c4_r0_door4_xmax:	.byte 37	; don't care
+	c4_r0_door0_xmax:	.byte 4		; ??
+	c4_r0_door1_xmax:	.byte 39	; ??
+
 
 
 

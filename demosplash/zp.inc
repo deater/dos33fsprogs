@@ -152,18 +152,24 @@ BLAST_OUT	= $D8		; 2+
 SHIELD_OUT	= $D9		; 2+
 
 ALIEN_OUT	= $DA		; 2+
+RASTER_PAGE	= $DA		; rasters
 
 LASER_OUT	= $DB		; 2+
+RASTER_X	= $DB		; rasters
 
 GUN_CHARGE	= $DC		; 2+
+CREDITS_POINTERL= $DC		; credits
 
 MONSTER_AI	= $DD		; C1 underwater
 ACTION_COUNT	= $DD		; C4
+CREDITS_POINTERH= $DD		; credits
 
 BG_BEAST	= $DE		; C1
 ACTION_TRIGGERED= $DE		; C4
+CREDITS_X	= $DE		; credits
 
 ON_ELEVATOR	= $DF		; ALL
+CREDITS_Y	= $DF		; credits
 
 LEFT_LIMIT	= $E0		; ALL
 RIGHT_LIMIT	= $E1		; ALL
