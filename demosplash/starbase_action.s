@@ -358,7 +358,7 @@ bg_room3:
 bg3_blink:
 
 	lda	FRAMEL
-	and	#$08
+	and	#$20
 	beq	bg3_blink_off
 
 
