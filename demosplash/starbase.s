@@ -57,17 +57,9 @@ wait_loop:
 	rts
 
 .include "starbase_action.s"
-;.include "text_print.s"
-;.include "gr_pageflip.s"
-;.include "gr_unrle.s"
-;.include "gr_fast_clear.s"
-;.include "gr_copy.s"
 .include "gr_hlin.s"
-.include "gr_twoscreen_scroll.s"
 .include "gr_putsprite.s"
-;.include "gr_putsprite_flipped.s"
 .include "gr_putsprite_crop.s"
-;.include "gr_offsets.s"
 .include "keyboard.s"
 
 .include "starbase_astronaut.s"

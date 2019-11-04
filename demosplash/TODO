@@ -15,6 +15,30 @@ STARBASE:
 	+ Fix sprites
 	+ Keyboard emulation
 
+	+ change colors of shield? laser? blast?
+
+	+ room0
+		- open with wall blasting open
+		- run down steps
+		- blast open door
+		- run through
+	+ room1
+		- columns
+		- run in
+		- duck, start shield
+		- blash shield, alien
+		- run through doors
+
+	+ room2 (planet)
+		- shoot another alien?
+		- foreground animation (robot?)
+
+	+ room3 (ship)
+		- blast control / free ship/
+		- run to ship
+		- engines start
+		- some sort of fade-to-white transition
+
 ESCAPE:
 	+ Get working
 	+ Keyboard emulation

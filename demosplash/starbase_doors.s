@@ -398,4 +398,3 @@ door_exploding_sprite6:
 	.byte $FA,$AA,$AA
 	.byte $AF,$A5,$AA
 
-
