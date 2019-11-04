@@ -90,6 +90,7 @@ Memory Map
 ~~~~~~~~~~
 0000-00ff		zero page
 0100-01ff		stack
+0200			fake store for graphics update
 0200-02ff		?????
 0300-03ff		nibble table, irq vectors
 0400-07FF		lores page1
@@ -97,7 +98,7 @@ Memory Map
 0c00-0fff		(used as page3)
 
 1400-16ff		Loader
-1700-????		executable
+1700-????		executable	(30976 bytes)
 
 9000-bfff		audio buffer
 
