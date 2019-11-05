@@ -1,7 +1,9 @@
 TODO if time:
-	+ better star animation
+	+ when engines start, have only part of screen go lighter
+	+ memcpy() last frame in before star frame
+	+ better star animation (more frames?)
 	+ star fade in to book?
-
+	+ Add colored bars for accent on Missing screen?
 
 General:
 + get music working
