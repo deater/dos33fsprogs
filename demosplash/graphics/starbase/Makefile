@@ -25,12 +25,13 @@ ship_flames.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm ship_flame5.png ship_flame5_rle >> ship_flames.inc
 
 star_wipe.inc:	$(PNG2RLE) \
-	star1.png star2.png star3.png star4.png star5.png
+	star1.png star2.png star3.png star4.png star5.png empty.png
 	$(PNG2RLE) asm star1.png star_wipe1_rle > star_wipe.inc
 	$(PNG2RLE) asm star2.png star_wipe2_rle >> star_wipe.inc
 	$(PNG2RLE) asm star3.png star_wipe3_rle >> star_wipe.inc
 	$(PNG2RLE) asm star4.png star_wipe4_rle >> star_wipe.inc
 	$(PNG2RLE) asm star5.png star_wipe5_rle >> star_wipe.inc
+	$(PNG2RLE) asm empty.png empty_rle >> star_wipe.inc
 
 
 #####

@@ -34,11 +34,6 @@ l4_defeated:
 	cmp	#5
 	bne	starbase_new_room
 
-	lda	#5
-	sta	WHICH_LOAD
-	rts
-
-
 ;===========================
 ; quit_starbase
 ;===========================
@@ -46,13 +41,10 @@ l4_defeated:
 quit_starbase:
 
 wait_loop:
-	lda	KEYPRESS
-	bpl	wait_loop
+;	lda	KEYPRESS
+;	bpl	wait_loop
 
-	lda	KEYRESET		; clear strobe
-
-	lda	#0
-	sta	GAME_OVER
+	bit	KEYRESET		; clear strobe
 
 	rts
 
@@ -75,8 +67,6 @@ wait_loop:
 .include "starbase_friend.s"
 .include "starbase_alien_laser.s"
 
-; room backgrounds
-.include "graphics/starbase/starbase.inc"
 ; sprites
 .include "graphics/sprites/astronaut.inc"
 .include "graphics/sprites/alien.inc"

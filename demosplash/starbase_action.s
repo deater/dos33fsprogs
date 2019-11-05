@@ -214,10 +214,14 @@ room2:
 
 	;=======================
 	;room with ship
+
 room3:
 	cmp	#3
-	bne	room_setup_done
+	beq	do_room3
 
+	jmp	end_sequence
+
+do_room3:
 	lda	#1
 	sta	NUM_DOORS
 
@@ -778,3 +782,113 @@ door_c4_r3_xmax:	.byte 39
 door_c4_r3_y:
 	c4_r3_door0_y:	.byte 26
 
+
+	;============================
+	; end_sequence
+	;============================
+	;
+	; fire engines, star-wipe
+end_sequence:
+
+	;=========================
+        ; set up bg
+
+;	lda	#>(ship_rle)
+;	sta	GBASH
+;	lda	#<(ship_rle)
+;	sta	GBASL
+;	lda	#$0c                    ; load image off-screen $c00
+;	jsr	load_rle_gr
+
+
+	lda	#<flame_sequence
+        sta	INTRO_LOOPL
+        lda	#>flame_sequence
+        sta	INTRO_LOOPH
+
+        jsr	run_sequence
+
+	lda	#<star_sequence
+        sta	INTRO_LOOPL
+        lda	#>star_sequence
+        sta	INTRO_LOOPH
+
+        jsr	run_sequence
+
+
+;	bit	KEYRESET
+
+;	jsr	wait_until_keypressed
+
+	; trigger end
+	lda	#5
+	sta	WHICH_ROOM
+
+	rts
+
+FLAME_FRAMERATE = 10
+
+flame_sequence:
+	.byte   255
+	.word   ship_rle
+	.byte	1
+	.word   ship_rle
+	.byte	50
+        .word   ship_flame0_rle
+	.byte	40
+	.word	ship_flame1_rle
+	.byte	40
+	.word	ship_flame2_rle
+
+	.byte	FLAME_FRAMERATE
+	.word	ship_flame3_rle
+	.byte	FLAME_FRAMERATE
+	.word	ship_flame4_rle
+	.byte	FLAME_FRAMERATE
+	.word	ship_flame5_rle
+
+	.byte	FLAME_FRAMERATE
+	.word	ship_flame3_rle
+	.byte	FLAME_FRAMERATE
+	.word	ship_flame4_rle
+	.byte	FLAME_FRAMERATE
+	.word	ship_flame5_rle
+
+	.byte	FLAME_FRAMERATE
+	.word	ship_flame3_rle
+	.byte	FLAME_FRAMERATE
+	.word	ship_flame4_rle
+	.byte	FLAME_FRAMERATE
+	.word	ship_flame5_rle
+
+	.byte	FLAME_FRAMERATE
+	.word	ship_flame3_rle
+	.byte	FLAME_FRAMERATE
+	.word	ship_flame4_rle
+	.byte	FLAME_FRAMERATE
+	.word	ship_flame5_rle
+
+	.byte	FLAME_FRAMERATE
+	.word	ship_flame3_rle
+	.byte	FLAME_FRAMERATE
+	.word	ship_flame4_rle
+	.byte	255
+	.word	ship_flame5_rle
+
+        .byte   0
+
+star_sequence:
+	.byte	20
+        .word   star_wipe1_rle
+	.byte	20
+        .word   star_wipe2_rle
+	.byte	20
+        .word   star_wipe3_rle
+	.byte	20
+        .word   star_wipe4_rle
+	.byte	20
+        .word   star_wipe5_rle
+	.byte	20
+        .word   empty_rle
+
+	.byte 0

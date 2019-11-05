@@ -185,7 +185,8 @@ wait_until_keypressed:
 .include "gr_pageflip.s"
 .align	$100
 .include "gr_fast_clear.s"
-;.include "gr_overlay.s"
+.include "gr_overlay.s"
+.include "gr_run_sequence.s"
 .align $100
 .include "movement_table.s"
 .include "font.s"
@@ -220,6 +221,9 @@ wait_until_keypressed:
 
 ; Pictures (no need to align)
 .include "appleII_40_96.inc"
+.include "graphics/starbase/starbase.inc"
+.include "graphics/starbase/ship_flames.inc"
+.include "graphics/starbase/star_wipe.inc"
 .include "earth.inc"
 .include "book_40_48d.inc"
 .include "credits_bg.inc"

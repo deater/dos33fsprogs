@@ -53,10 +53,13 @@ demosplash.o:	demosplash.s \
 	pt3_lib_init.s pt3_lib_core.s pt3_lib_mockingboard.s \
 	pt3_lib_play_frame.s pt3_lib_write_frame.s \
 	interrupt_handler.s \
+	missing.s k_40_48d.inc create_update_type1.s \
 	starbase.s \
 	starbase_action.s \
-	missing.s k_40_48d.inc create_update_type1.s \
+	gr_run_sequence.s \
 	graphics/starbase/starbase.inc \
+	graphics/starbase/ship_flames.inc \
+	graphics/starbase/star_wipe.inc \
 	graphics/sprites/alien.inc graphics/sprites/astronaut.inc \
 	escape.s create_update_type2.s offsets_table2.s \
 	book.s book_40_48d.inc \
