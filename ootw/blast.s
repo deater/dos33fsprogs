@@ -17,6 +17,10 @@ fire_blast:
 	bne	done_fire_blast
 
 	lda	PHYSICIST_X
+
+	; FIXME: if facing right, add 5 to this value
+	;	to allow shooting through shield
+
 	sta	COLLISION_X
 	lda	PHYSICIST_Y
 	sta	COLLISION_Y

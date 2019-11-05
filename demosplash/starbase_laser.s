@@ -45,6 +45,9 @@ laser1_count:		.byte $0
 
 fire_laser:
 	lda	ASTRONAUT_X
+	clc
+	; FIXME: only add 5 if facing right
+	adc	#5
 	sta	COLLISION_X
 	lda	ASTRONAUT_Y
 	sta	COLLISION_Y

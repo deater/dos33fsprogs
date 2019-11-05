@@ -165,6 +165,22 @@ room1:
 	lda	#(39+128)
 	sta	RIGHT_LIMIT
 
+	; pretend a battle was underway
+first_shield:
+	lda     #0
+;	sta	FIRST_SHIELD
+	sta	shield_count
+
+	lda	#1
+	sta	shield_out
+	lda	#16
+	sta	shield_x
+
+	lda	#30
+	sta	shield_y
+
+	inc	SHIELD_OUT
+
 	; set right exit
 	lda     #2
 	sta     cer_smc+1

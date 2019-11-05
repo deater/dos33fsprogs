@@ -17,6 +17,9 @@ fire_blast:
 	bne	done_fire_blast
 
 	lda	ASTRONAUT_X
+	; FIXME: only when facing right
+	clc
+	adc	#5
 	sta	COLLISION_X
 	lda	ASTRONAUT_Y
 	sta	COLLISION_Y

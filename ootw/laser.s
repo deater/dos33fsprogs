@@ -45,6 +45,10 @@ laser1_count:		.byte $0
 
 fire_laser:
 	lda	PHYSICIST_X
+
+	; FIXME: if facing right, add 5 to this value
+	;	to allow shooting through shield
+
 	sta	COLLISION_X
 	lda	PHYSICIST_Y
 	sta	COLLISION_Y
