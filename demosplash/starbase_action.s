@@ -10,9 +10,9 @@ starbase_init:
 	lda	#0
 	sta	WHICH_ROOM
 	sta	BG_SCROLL
+	sta	CART_OUT
 	sta	LASER_OUT
 	sta	BLAST_OUT
-	sta	CHARGER_COUNT
 	sta	GUN_STATE
 	sta	GUN_FIRE
 	sta	NUM_DOORS
@@ -25,6 +25,9 @@ starbase_init:
 
 	lda	#100
 	sta	GUN_CHARGE
+
+	lda	#$40
+	sta	CART_X
 
 	;====================
 	; reset doors
@@ -496,8 +499,8 @@ no_draw_alien:
 	lda	WHICH_ROOM
 	beq	c4_room0_cover
 
-;	cmp	#4
-;	beq	c4_room4_cover
+	cmp	#2
+	beq	room2_robot
 
 	jmp	c4_no_fg_cover
 
@@ -513,38 +516,72 @@ c4_room0_cover:
 	lda	#>causeway_door_cover
 	sta	INH
 
-;	jsr	put_sprite
+	jsr	put_sprite
 
+	jmp	c4_no_fg_cover
+
+room2_robot:
+
+	; 0 is never seen, 2 is all done
+	lda	CART_OUT
+	cmp	#1
+	bne	c4_no_fg_cover
+
+c2_draw_cart:
+
+	lda	CART_X
+	sta	XPOS
+	lda	#42
+	sta	YPOS
+	lda	#<robot_sprite
+	sta	INL
+	lda     #>robot_sprite
+	sta     INH
+	jsr	put_sprite_crop
 
 c4_no_fg_cover:
 
 
 	;========================
-	; handle cinematic action
+	; activate fg actions
 	;========================
 
-	lda	WHICH_ROOM		; only on causeway1
-	cmp	#2
-	bne	no_action_movie
+        lda     WHICH_ROOM
+        cmp     #2
+        bne     no_fg_action
 
-	lda	FRAMEH
+	lda	CART_OUT
+	bne	no_fg_action		; if 0 activate
+
+	inc	CART_OUT
+
+no_fg_action:
+
+	;================
+	; move fg objects
+	;================
+move_fg_objects:
+
+	lda	CART_OUT
 	cmp	#1
-	bne	action_no_trigger
+	bne	cart_not_out
 
-	lda	ACTION_TRIGGERED	; already triggered
-	bne	action_no_trigger
+	; move cart
 
-action_trigger:
-	lda	#1
-	sta	ACTION_COUNT
-	sta	ACTION_TRIGGERED
-action_no_trigger:
+	lda	FRAMEL
+	and	#$3
+	bne	cart_not_out
 
-	lda	ACTION_COUNT
-	beq	no_action_movie
+	dec	CART_X
+	dec	CART_X
+	lda	CART_X
+	cmp	#$fc
+	bne	cart_not_out
+	inc	CART_OUT
 
-;	jsr	action_sequence
-no_action_movie:
+
+cart_not_out:
+
 
 	;===============
 	; page flip
@@ -892,21 +929,27 @@ flame_sequence:
 
         .byte   0
 
+STAR_SPEED = 16
+
 star_sequence:
-	.byte	20
+	.byte	STAR_SPEED
         .word   star_wipe1_rle
-	.byte	20
+	.byte	STAR_SPEED
         .word   star_wipe2_rle
-	.byte	20
+	.byte	STAR_SPEED
         .word   star_wipe3_rle
-	.byte	20
+	.byte	STAR_SPEED
         .word   star_wipe4_rle
-	.byte	20
+	.byte	STAR_SPEED
         .word   star_wipe5_rle
-	.byte	20
+	.byte	STAR_SPEED
         .word   empty_rle
-	.byte	20
+	.byte	STAR_SPEED
         .word   empty_rle
 	.byte 0
 
-
+robot_sprite:
+	.byte 5,3
+	.byte $aa,$0a,$00,$0a,$aa
+	.byte $0a,$90,$00,$00,$aa
+	.byte $00,$00,$00,$00,$00
