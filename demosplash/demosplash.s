@@ -113,7 +113,7 @@ frame_decode_loop:
 	; start irq music
 	;========================
 
-;	cli	; enable interrupts
+	cli	; enable interrupts
 
 	;===========================
 	; book scene
@@ -128,6 +128,12 @@ frame_decode_loop:
 	;===========================
 
 	jsr	starbase
+
+	;============================
+	; disable irq music
+
+	sei
+
 
 	;===========================
 	; escape scene
