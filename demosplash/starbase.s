@@ -4,6 +4,13 @@ starbase:
 
 	; Initialize some variables
 
+	lda	#<starbase_keypresses
+	sta	KEYPTRL
+	lda	#>starbase_keypresses
+	sta	KEYPTRH
+	lda	#1
+	sta	KEY_COUNTDOWN
+
 	;=======================
 	; Run the "intro"
 	;=======================

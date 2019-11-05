@@ -282,8 +282,9 @@ astro_run_left9:
 ;=====================
 ;=====================
 
-; note: he needs to be facing left by default
+; note: she needs to be facing left by default
 kick1:
+.if 0
 	.byte 5,8
 	.byte $aa,$8a,$8a,$aa,$aa
 	.byte $aa,$bb,$88,$8a,$aa
@@ -293,6 +294,7 @@ kick1:
 	.byte $aa,$aa,$22,$aa,$aa
 	.byte $aa,$22,$a2,$6a,$aa
 	.byte $af,$f2,$5a,$56,$aa
+.endif
 
 ;=====================
 ;=====================
@@ -318,9 +320,10 @@ shooting1:
 ;=====================
 ;=====================
 
-; note: he falls into a crouch
+; note: she falls into a crouch
 
 astro_falling:
+.if 0
 	.byte 5,8
 	.byte $aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$8a,$8a,$aa
@@ -330,7 +333,7 @@ astro_falling:
 	.byte $aa,$aa,$aa,$22,$22
 	.byte $6a,$26,$22,$a2,$aa
 	.byte $f5,$f2,$aa,$aa,$aa
-
+.endif
 
 
 ;=====================
@@ -396,6 +399,7 @@ collapse_progression:
 	.word	collapse5	; 16
 
 collapse1:
+.if 0
 	.byte 4,8
 	.byte $8a,$8a,$aa,$aa
 	.byte $ab,$88,$aa,$aa
@@ -405,9 +409,10 @@ collapse1:
 	.byte $aa,$22,$aa,$aa
 	.byte $aa,$a2,$2a,$aa
 	.byte $aa,$fa,$f2,$aa
-
+.endif
 
 collapse2:
+.if 0
 	.byte 5,8
 	.byte $aa,$aa,$aa,$aa,$aa
 	.byte $b8,$88,$aa,$aa,$aa
@@ -417,10 +422,11 @@ collapse2:
 	.byte $aa,$bb,$22,$2a,$aa
 	.byte $aa,$ab,$aa,$a2,$2a
 	.byte $aa,$aa,$aa,$fa,$f2
-
+.endif
 
 
 collapse3:
+.if 0
 	.byte 6,8
 	.byte $aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa
@@ -430,8 +436,10 @@ collapse3:
 	.byte $aa,$bb,$22,$2a,$aa,$aa
 	.byte $aa,$bb,$a2,$22,$22,$fa
 	.byte $aa,$ab,$aa,$aa,$a2,$ff
+.endif
 
 collapse4:
+.if 0
 	.byte 7,8
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa
@@ -441,9 +449,10 @@ collapse4:
 	.byte $88,$bb,$22,$2a,$aa,$aa,$aa
 	.byte $aa,$aa,$bb,$22,$22,$2a,$fa
 	.byte $aa,$aa,$aa,$bb,$aa,$a2,$ff
-
+.endif
 
 collapse5:
+.if 0
 	.byte 8,8
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
@@ -453,7 +462,7 @@ collapse5:
 	.byte $aa,$aa,$aa,$aa,$aa,$aa,$aa,$aa
 	.byte $88,$b8,$22,$b2,$22,$bb,$2a,$aa
 	.byte $a8,$ab,$aa,$aa,$bb,$b2,$22,$ff
-
+.endif
 
 
 ;=====================
@@ -571,12 +580,13 @@ jump8:
 
 ; 9x40
 astronaut_spike_sprite:
+.if 0
         .byte 3,4
         .byte $AA,$11,$AA
         .byte $2A,$82,$2A
         .byte $BB,$A8,$BB
         .byte $BB,$AA,$BB
-
+.endif
 
 
 ;=====================
@@ -603,6 +613,7 @@ crouch_shooting:
 ;=====================
 
 crouch_kicking:
+.if 0
 	.byte 5,8
 	.byte $AA,$AA,$aa,$aa,$aa
 	.byte $AA,$AA,$aa,$aa,$aa
@@ -612,7 +623,7 @@ crouch_kicking:
 	.byte $AA,$AA,$aa,$bb,$22
 	.byte $AA,$AA,$2a,$bb,$a2
 	.byte $5A,$56,$A2,$f2,$f2
-
+.endif
 
 
 

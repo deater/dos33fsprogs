@@ -1,3 +1,8 @@
+TODO if time:
+	+ better star animation
+	+ star fade in to book?
+
+
 General:
 + get music working
 
@@ -8,17 +13,14 @@ OPENER:
 MISSING:
 	+ Add colored bars for accent?
 
-PACKAGE:
-	+ Implement
+PACKAGE:   01234567890123456789012345678901234567
+	+ "MEANWHILE AT A DISTANT STARBASE PRISON"
+	  "AN INTERESTING PACKAGE IS RECEIVED"
 
 STARBASE:
 	+ Keyboard emulation
-
 	+ change colors of shield? laser? blast?
-
 	+ room0	-- done
-
-
 	+ room1	- run in
 		- duck, start shield
 		- blash shield, alien
@@ -39,7 +41,7 @@ ESCAPE:
 	+ Keyboard emulation
 
 READING:
-	+ Add message of some sort?
+	+ "FINALLY I CAN READ SOME BOOKS IN PEACE"
 
 CREDITS:
 	+ implement text

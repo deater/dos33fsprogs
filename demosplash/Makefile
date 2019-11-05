@@ -54,7 +54,7 @@ demosplash.o:	demosplash.s \
 	pt3_lib_play_frame.s pt3_lib_write_frame.s \
 	interrupt_handler.s \
 	missing.s k_40_48d.inc create_update_type1.s \
-	starbase.s \
+	starbase.s keyboard.s \
 	starbase_action.s starbase_laser.s starbase_blast.s \
 	gr_run_sequence.s \
 	graphics/starbase/starbase.inc \

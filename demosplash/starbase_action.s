@@ -513,9 +513,8 @@ c4_room0_cover:
 	lda	#>causeway_door_cover
 	sta	INH
 
-	jsr	put_sprite
+;	jsr	put_sprite
 
-;	jmp	c4_no_fg_cover
 
 c4_no_fg_cover:
 
@@ -906,5 +905,8 @@ star_sequence:
         .word   star_wipe5_rle
 	.byte	20
         .word   empty_rle
-
+	.byte	20
+        .word   empty_rle
 	.byte 0
+
+

@@ -30,11 +30,37 @@ handle_keypress:
 	lda	ASTRONAUT_STATE
 	bmi	no_keypress		; ignore keypress if dying/action
 
+	dec	KEY_COUNTDOWN
+	lda	KEY_COUNTDOWN
+	bne	done_keycount
+
+	ldy	#0
+	lda	(KEYPTRL),Y
+	pha
+	iny
+	lda	(KEYPTRL),Y
+	sta	KEY_COUNTDOWN
+
+	clc
+	lda	KEYPTRL
+	adc	#2
+	sta	KEYPTRL
+	lda	#0
+	adc	KEYPTRH
+	sta	KEYPTRH
+
+	pla				; restore keypress
+	jmp	keypress
+
+.if 0
 	lda	KEYPRESS						; 4
 	bmi	keypress						; 3
+.endif
+
 no_keypress:
 	bit	KEYRESET			; clear
 						; avoid keeping old keys around
+done_keycount:
 	rts	; nothing pressed, return
 
 keypress:
@@ -420,3 +446,23 @@ change_state_clear_gait:
 	lda	#0
 	sta	GAIT
 	jmp	done_keypress
+
+
+
+starbase_keypresses:
+	.byte	'L',180		; start charging laser
+	.byte	'L',1		; release, blasting door
+	.byte	'D',200		; walk right
+	.byte	'D',50		; walk right	; into door
+	.byte	'A',1		; walk right	; turn
+	.byte	'A',50		; walk right	; walk left
+	.byte	'D',1		; stop
+	.byte	'D',1		; turn right
+	.byte	'S',20		; duck
+	.byte	'L',180		; start charging
+	.byte	'L',20		; shoot
+	.byte	'D',1		; stand
+	.byte	'D',150		; walk right
+	.byte	'S',20		; duck
+	.byte	27,5		; quit
+
