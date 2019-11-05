@@ -39,11 +39,11 @@ starbase_init:
 	lda	#1
 	sta	ALIEN_OUT
 
-	lda	#2
+	lda	#1
 	sta	alien0_room
-	lda	#27
+	lda	#20
 	sta	alien0_x
-	lda	#18
+	lda	#30
 	sta	alien0_y
 	lda	#A_STANDING
 	sta	alien0_state
