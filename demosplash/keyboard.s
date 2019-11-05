@@ -450,6 +450,7 @@ change_state_clear_gait:
 
 
 starbase_keypresses:
+	; in room 0
 	.byte	'L',180		; start charging laser
 	.byte	'L',1		; release, blasting door
 	.byte	'D',200		; walk right
@@ -460,9 +461,32 @@ starbase_keypresses:
 	.byte	'D',1		; turn right
 	.byte	'S',20		; duck
 	.byte	'L',180		; start charging
-	.byte	'L',20		; shoot
+	.byte	'L',20		; shoot		;blow up door
 	.byte	'D',1		; stand
+	; in room 1
 	.byte	'D',150		; walk right
 	.byte	'S',20		; duck
+	.byte	'L',50		; start charging
+	.byte	'L',20		; make shield
+	.byte	'L',180		; start charging
+	.byte	'L',20		; shoot
+	.byte	' ',50		; shoot	; alien dead
+	.byte	'D',50		; stand
+	.byte	'D',5		; walk right
+	.byte	'D',20		; run right
+	.byte	'W',50		; run/jump right
+	; in room 2
+	.byte	'W',50		; run/jump right
+	.byte	'D',70		; continue right
+	; in room3
+	.byte	'S',50		; duck
+	.byte	'D',50		; stand
+	.byte	'L',180		; start charging
+	.byte	'L',20		; shoot clamp holder
+
+	.byte	'D',5		; walk right
+	.byte	'D',100		; run right
+	.byte	'W',100		; run/jump right
+
 	.byte	27,5		; quit
 
