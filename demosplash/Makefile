@@ -54,6 +54,7 @@ demosplash.o:	demosplash.s \
 	pt3_lib_play_frame.s pt3_lib_write_frame.s \
 	interrupt_handler.s \
 	missing.s k_40_48d.inc create_update_type1.s \
+	open_book.s \
 	starbase.s keyboard.s \
 	starbase_action.s starbase_laser.s starbase_blast.s \
 	gr_run_sequence.s \
@@ -62,7 +63,7 @@ demosplash.o:	demosplash.s \
 	graphics/starbase/star_wipe.inc \
 	graphics/sprites/alien.inc graphics/sprites/astronaut.inc \
 	escape.s create_update_type2.s offsets_table2.s \
-	book.s book_40_48d.inc \
+	reading.s book_40_48d.inc \
 	credits.s credits_bg.inc offsets_table.s \
 	dya_space_demo2.pt3
 	ca65 -o demosplash.o demosplash.s -l demosplash.lst

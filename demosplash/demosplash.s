@@ -116,12 +116,10 @@ frame_decode_loop:
 	cli	; enable interrupts
 
 	;===========================
-	; book scene
+	; opening book scene
 	;============================
 
-
-;	jsr	open_book
-
+	jsr	open_book
 
 	;===========================
 	; starbase scene
@@ -202,14 +200,17 @@ wait_until_keypressed:
 ; missing
 .include "missing.s"
 
+; missing
+.include "open_book.s"
+
 ; Starbase
 .include "starbase.s"
 
 ; escape
 ;.include "escape.s"
 
-; book
-.include "book.s"
+; reading
+.include "reading.s"
 
 ; credits
 .include "credits.s"
@@ -227,6 +228,7 @@ wait_until_keypressed:
 
 ; Pictures (no need to align)
 .include "appleII_40_96.inc"
+.include "graphics/book_open/book_open.inc"
 .include "graphics/starbase/starbase.inc"
 .include "graphics/starbase/ship_flames.inc"
 .include "graphics/starbase/star_wipe.inc"
