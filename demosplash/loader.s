@@ -78,7 +78,7 @@ copy_filename_loop:
 copy_filename_done:
 	jsr	opendir		; open and read entire file into memory
 
-	jsr	$1700		; jump to common entry point
+	jsr	$1400		; jump to common entry point
 
 	; hope they updated the WHICH_LOAD value
 

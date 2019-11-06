@@ -12,8 +12,8 @@ all:	demosplash.dsk
 demosplash.dsk:	HELLO LOADER DEMOSPLASH
 	cp empty.dsk demosplash.dsk
 	$(DOS33) -y demosplash.dsk SAVE A HELLO
-	$(DOS33) -y demosplash.dsk BSAVE -a 0x1400 LOADER
-	$(DOS33) -y demosplash.dsk BSAVE -a 0x1700 DEMOSPLASH
+	$(DOS33) -y demosplash.dsk BSAVE -a 0x1000 LOADER
+	$(DOS33) -y demosplash.dsk BSAVE -a 0x1400 DEMOSPLASH
 #	$(DOS33) -y demosplash.dsk BSAVE -a 0x1700 MUSICTEST
 
 ####
@@ -45,7 +45,7 @@ HELLO:  hello.bas
 #####
 
 DEMOSPLASH:	demosplash.o
-	ld65 -o DEMOSPLASH demosplash.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o DEMOSPLASH demosplash.o -C ../linker_scripts/apple2_1400.inc
 
 demosplash.o:	demosplash.s \
 	zp.inc hardware.inc \
@@ -54,7 +54,7 @@ demosplash.o:	demosplash.s \
 	pt3_lib_play_frame.s pt3_lib_write_frame.s \
 	interrupt_handler.s \
 	missing.s k_40_48d.inc create_update_type1.s \
-	open_book.s \
+	open_book.s graphics/book_open/book_open.inc \
 	starbase.s keyboard.s \
 	starbase_action.s starbase_laser.s starbase_blast.s \
 	gr_run_sequence.s \
@@ -72,7 +72,7 @@ demosplash.o:	demosplash.s \
 #####
 
 LOADER:	loader.o
-	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1400.inc
+	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1000.inc
 
 loader.o:	loader.s
 	ca65 -o loader.o loader.s -l loader.lst
