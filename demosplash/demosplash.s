@@ -125,7 +125,11 @@ frame_decode_loop:
 	; starbase scene
 	;===========================
 
-	jsr	starbase
+	nop
+	nop
+	nop
+
+;	jsr	starbase
 
 	;============================
 	; disable irq music
@@ -149,7 +153,7 @@ frame_decode_loop:
 	nop
 	nop
 	nop
-;	jsr	end_book
+	jsr	end_book
 
 	;===========================
 	; credits

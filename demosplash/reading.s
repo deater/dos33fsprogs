@@ -18,11 +18,34 @@ end_book:
 
 	lda	#0
 	sta	DRAW_PAGE
+	lda	#255
+	sta	FRAMEL
 
 	;===================
 	; setup grahics
 
 	jsr	create_update_type1
+
+
+	;======================
+	; print message
+
+	lda	#<read_book_text
+	sta	OUTL
+
+	lda	#>read_book_text
+	sta	OUTH
+
+	jsr	move_and_print
+	jsr	move_and_print
+
+	lda	#200
+	jsr	long_wait
+	lda	#200
+	jsr	long_wait
+
+
+
 
 	;=============================
 	; Load graphic page0
@@ -144,14 +167,19 @@ bloop2:
 	dey								; 2
 	bne	bloop1							; 2nt/3
 
+	dec	FRAMEL					; 5
+	nop						; 2
+	bne	book_loop				; 3
 
+;	lda	TEMP					; 3
+;	lda	KEYPRESS				; 4
+;	bpl	book_loop				; 3
 
-	lda	KEYPRESS				; 4
-	bpl	book_no_keypress			; 3
 	rts						; 6
-book_no_keypress:
-
-	jmp	book_loop				; 3
 
 
 
+
+read_book_text:
+.byte	2,11,"QUIET AT LAST",0
+.byte	2,12,"FINALLY I CAN READ MY BOOK IN PEACE",0
