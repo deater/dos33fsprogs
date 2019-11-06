@@ -2,7 +2,7 @@ TODO if time:
 	+ when engines start, have only part of screen go lighter
 	+ memcpy() last frame in before star frame
 	+ better star animation (more frames?)
-	+ star fade in to book?
+	+ minor glitches in the book animation
 	+ Add colored bars for accent on Missing screen?
 
 General:
@@ -20,7 +20,6 @@ PACKAGE:   01234567890123456789012345678901234567
 	  "AN INTERESTING PACKAGE IS RECEIVED"
 
 STARBASE:
-	+ Keyboard emulation
 	+ change colors of shield? laser? blast?
 	+ room0	-- done
 	+ room1	- run in

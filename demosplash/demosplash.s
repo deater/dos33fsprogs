@@ -118,8 +118,10 @@ frame_decode_loop:
 	;===========================
 	; opening book scene
 	;============================
-
-	jsr	open_book
+	nop
+	nop
+	nop
+;	jsr	open_book
 
 	;===========================
 	; starbase scene
@@ -141,18 +143,18 @@ frame_decode_loop:
 	; escape scene
 	;===========================
 
-	nop
-	nop
-	nop
-;	jsr	escape
+;	nop
+;	nop
+;	nop
+	jsr	escape
 
 	;===========================
 	; book scene
 	;===========================
 
-	nop
-	nop
-	nop
+;	nop
+;	nop
+;	nop
 	jsr	end_book
 
 	;===========================
@@ -176,8 +178,8 @@ wait_until_keypressed:
 	lda	KEYPRESS
 	bpl	wait_until_keypressed
 	bit	KEYRESET
-	rts
-
+;	rts
+	jmp	demosplash2019
 
 ; Apple II intro
 .include "appleII_intro.s"
@@ -189,7 +191,7 @@ wait_until_keypressed:
 .include "gr_copy.s"
 .include "gr_offsets.s"
 
-.include "text_print.s"
+;.include "text_print.s"
 .include "gr_pageflip.s"
 .include "gr_clear_bottom.s"
 
@@ -213,7 +215,7 @@ wait_until_keypressed:
 .include "starbase.s"
 
 ; escape
-;.include "escape.s"
+.include "escape.s"
 
 ; reading
 .include "reading.s"
