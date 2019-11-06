@@ -151,7 +151,24 @@ setup_escape_inner_loop:
 	tax
 
 	cpy	#43
+	bne	no_fixup
+
+	iny			; special case last one
+	iny
+
+no_fixup:
+	cpy	#50
 	bne	setup_escape_inner_loop
+
+	; fix the one at the end
+	dey
+	dey
+	dey
+	dey
+	dey
+	lda	(OUTL),Y
+	and	#$f8
+	sta	(OUTL),Y
 
 	clc
 	lda	#47
