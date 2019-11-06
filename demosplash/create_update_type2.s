@@ -52,7 +52,7 @@ create_update2_inner_loop:
 
 	rts
 
-;BARS_START = 46
+ESCAPE_START = 30
 
 
 	;===========================
@@ -107,23 +107,22 @@ setup_update_type2:
 	lda	#$01
 	sta	$91b0
 
-
-	rts
-.if 0
+	;====================
+	;====================
 
 	lda	#4		; which page
 	sta	RASTER_PAGE
 
-	ldx	#BARS_START
-	lda	#<(UPDATE_START+(BARS_START*49))
+	ldx	#ESCAPE_START
+	lda	#<(UPDATE_START+(ESCAPE_START*47))
 	sta	OUTL
-	lda	#>(UPDATE_START+(BARS_START*49))
+	lda	#>(UPDATE_START+(ESCAPE_START*47))
 	sta	OUTH
-setup_rasterbars_outer_loop:
-	ldy	#6
-	lda	#13
+setup_escape_outer_loop:
+	ldy	#8
+	lda	#0
 	sta	RASTER_X
-setup_rasterbars_inner_loop:
+setup_escape_inner_loop:
 	txa
 	pha
 	inx
@@ -143,15 +142,19 @@ setup_rasterbars_inner_loop:
 	adc	RASTER_PAGE
 	sta	(OUTL),Y
 	iny
+
 	iny
+	iny
+	iny
+
 	pla
 	tax
 
-	cpy	#48
-	bne	setup_rasterbars_inner_loop
+	cpy	#43
+	bne	setup_escape_inner_loop
 
 	clc
-	lda	#49
+	lda	#47
 	adc	OUTL
 	sta	OUTL
 	lda	OUTH
@@ -164,11 +167,11 @@ setup_rasterbars_inner_loop:
 	sta	RASTER_PAGE
 
 	inx
-	cpx	#184
-	bne	setup_rasterbars_outer_loop
+	cpx	#(128+ESCAPE_START)
+	bne	setup_escape_outer_loop
 
 	rts
-.endif
+
 
 another_scanline:
 .byte	$2C,$54,$C0		; bit	PAGE0   ; 4
