@@ -1303,7 +1303,7 @@ fire_line:
 	; COL0
 	ldy	#39			; 2
 	txa				; 2
-	ora	#$80			; 2
+	ora	#$C0			; 2		; GREEN0 must live at C0
 	tax				; 2
 	sta	(OUTL),Y		; 6
 					;=======

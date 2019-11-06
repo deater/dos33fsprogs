@@ -208,7 +208,7 @@ another_scanline:
 .byte	$A9,$00			; lda	#$00    ; 2
 .byte	$9D,$00,$02		; sta	$c00,X  ; 5
 .byte	$A2,$00			; ldx	#$00    ; 2
-.byte	$A5,$85			; lda	ZERO    ; 3
+.byte	$A5,$C5			; lda	ZERO    ; 3
 .byte	$9D,$00,$02		; sta	$c00,X  ; 5
 	;==========				;===
 	; 47???					; 65
