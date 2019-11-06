@@ -185,8 +185,10 @@ wait_until_keypressed:
 .include "gr_copy.s"
 .include "gr_offsets.s"
 
-;.include "text_print.s"
+.include "text_print.s"
 .include "gr_pageflip.s"
+.include "gr_clear_bottom.s"
+
 .align	$100
 .include "gr_fast_clear.s"
 .include "gr_overlay.s"

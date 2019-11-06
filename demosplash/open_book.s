@@ -8,10 +8,7 @@ open_book:
 
 	;===================
 	; init screen
-;	jsr	TEXT
-;	jsr	HOME
-	bit	KEYRESET
-	jsr	gr_clear_all
+;	jsr	gr_clear_all
 
 	;===================
 	; init vars
@@ -21,19 +18,44 @@ open_book:
 
 	; GR part
 	bit	PAGE0
-	bit	FULLGR							; 4
+	bit	FULLGR
 
-	;================================================
-	; Display Loop
-	;================================================
+	lda	#<book00_rle
+	sta	GBASL
+	lda	#>book00_rle
+	sta	GBASH
+	lda	#$4
+	jsr	load_rle_gr
 
-book_open_loop:
+	jsr	clear_bottom
+	bit	TEXTGR
+
+	lda	#<open_book_text
+	sta	OUTL
+
+	lda	#>open_book_text
+	sta	OUTH
+
+	jsr	move_and_print
+	jsr	move_and_print
+
+
+	lda	#200
+	jsr	long_wait
+	lda	#200
+	jsr	long_wait
+
+
+	; continue with animation
+
 
 
 	lda	#<open_book_sequence
 	sta	INTRO_LOOPL
 	lda	#>open_book_sequence
 	sta	INTRO_LOOPH
+
+	bit	FULLGR							; 4
 
 	jsr	run_sequence
 
@@ -73,3 +95,6 @@ open_book_sequence:
         .byte 0
 	.word	book10_rle
 
+open_book_text:
+	.byte 1,21,"MEANWHILE AT A DISTANT STARBASE PRISON",0
+	.byte 3,22,"AN INTERESTING PACKAGE IS RECEIVED",0
