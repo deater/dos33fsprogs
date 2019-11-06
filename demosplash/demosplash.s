@@ -240,7 +240,7 @@ wait_until_keypressed:
 .include "graphics/starbase/starbase.inc"
 .include "graphics/starbase/ship_flames.inc"
 .include "graphics/starbase/star_wipe.inc"
-.include "earth.inc"
+;.include "earth.inc"
 .include "book_40_48d.inc"
 .include "credits_bg.inc"
 

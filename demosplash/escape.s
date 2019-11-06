@@ -58,25 +58,28 @@ escape:
 	; setup graphics
 
 	jsr     create_update_type2
-;	jsr     setup_rasterbars
+	jsr     setup_update_type2
 
 
 	;=============================
 	; Load graphic page0
 
-	lda	#<earth_low
-	sta	GBASL
-	lda	#>earth_low
-	sta	GBASH
+;	lda	#<earth_low
+;	sta	GBASL
+;	lda	#>earth_low
+;	sta	GBASH
 
-	lda	#$c			; load to $c00
-	jsr	load_rle_gr
+;	lda	#$c			; load to $c00
+;	jsr	load_rle_gr
 
 
 	lda	#4
 	sta	DRAW_PAGE
+	jsr	gr_clear_all
 
-	jsr	gr_copy_to_current	; copy to page1
+;	jsr	gr_copy_to_current	; copy to page1
+
+
 
 	; GR part
 	bit	PAGE1
@@ -87,20 +90,22 @@ escape:
 	;=============================
 	; Load graphic page1
 
-	lda	#<earth_high
-	sta	GBASL
-	lda	#>earth_high
-	sta	GBASH
-	lda	#$c			; load to $c00
-	jsr	load_rle_gr
+;	lda	#<earth_high
+;	sta	GBASL
+;	lda	#>earth_high
+;	sta	GBASH
+;	lda	#$c			; load to $c00
+;	jsr	load_rle_gr
 
 	lda	#0
 	sta	DRAW_PAGE
+	jsr	gr_clear_all
 
-	jsr	gr_copy_to_current
+;	jsr	gr_copy_to_current
 
 	lda	#8
 	sta	DRAW_PAGE
+	jsr	gr_clear_all
 
 	lda     #<score_text2
 	sta     OUTL
@@ -1424,7 +1429,7 @@ asteroid_inc_after:
 
 score_text2:
 .byte 0,0
-.asciiz "LEVEL:3 LIVES:1 SCORE:000000 HI:001978"
+.asciiz "LEVEL:3 LIVES:1 SCORE:000000 HI:001978  "
 
 score_before:
 .assert >score_before = >score_after, error, "score crosses page"

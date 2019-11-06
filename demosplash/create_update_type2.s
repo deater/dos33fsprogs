@@ -54,10 +54,62 @@ create_update2_inner_loop:
 
 ;BARS_START = 46
 
-.if 0
+
 	;===========================
-	; from 40 to 168?
-setup_rasterbars:
+
+setup_update_type2:
+
+	; add call to TEXT
+
+	lda	#$2c		; bit C051	; 4
+	sta	$9003
+	lda	#$51
+	sta	$9004
+	lda	#$c0
+	sta	$9005
+
+	lda	#$A5		; lda ZERO	; 3
+	sta	$9006
+	lda	#$FA
+	sta	$9007
+
+	lda	#$A2		; ldx, 1	; 3
+	sta	$9008
+	lda	#$01
+	sta	$9009
+
+	; set first 9 lines to PAGE0
+
+	lda	#$54
+	sta	$9030
+	sta	$908E
+	sta	$90EC
+	sta	$914A
+
+
+	; add call to GRAPHICS
+	; line 9 (91a7)
+
+	lda	#$2c		; bit C051	; 4
+	sta	$91aa
+	lda	#$50
+	sta	$91ab
+	lda	#$c0
+	sta	$91ac
+
+	lda	#$A5		; lda ZERO	; 3
+	sta	$91ad
+	lda	#$FA
+	sta	$91ae
+
+	lda	#$A2		; ldx, 1	; 3
+	sta	$91af
+	lda	#$01
+	sta	$91b0
+
+
+	rts
+.if 0
 
 	lda	#4		; which page
 	sta	RASTER_PAGE
