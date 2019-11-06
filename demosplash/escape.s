@@ -194,9 +194,10 @@ sprites_display_loop:
 	;  -25  -- loop
 	;  -3	-- alignment
 	;=======
-	;  163
-	; -40 nop sled
-
+	;  151
+	; -46 nop sled
+	;===========
+	;  105
 
 	;================
 	; erase old ship
@@ -411,6 +412,9 @@ nop_sled:
 	nop
 	nop
 
+	nop
+	nop
+	nop
 	nop
 	nop
 	nop
@@ -767,9 +771,9 @@ draw_asteroid:
 	lda	ASTEROID_EXPLODE	; 3
 	and	#$fe			; 2
 	tax				; 2
-	lda	asteroid_lookup,X	; 4
+	lda	asteroid_lookup,X	; 4+
 	sta	INL			; 3
-	lda	asteroid_lookup+1,X	; 4
+	lda	asteroid_lookup+1,X	; 4+
 	sta	INH			; 3
 	lda	ASTEROID_X		; 3
 	sta	SPRITE_XPOS		; 3
@@ -895,10 +899,10 @@ pad_time2:
 
 escape_wait_loop:
 
-	; Try X=11 Y=2 cycles=123
+	; Try X=4 Y=4 cycles=105
 
-	ldy	#2							; 2
-loopY:	ldx	#11							; 2
+	ldy	#4							; 2
+loopY:	ldx	#4							; 2
 loopZ:	dex								; 2
 	bne	loopZ							; 2nt/3
 	dey								; 2
@@ -1412,10 +1416,16 @@ ship_sprite_l10:
 	.byte	$00,$00,$00,$ff,$ff,$77,$ff
 
 
+asteroid_inc_before:
 .include	"asteroid.inc"
+asteroid_inc_after:
 
+.assert >asteroid_inc_before = >asteroid_inc_after, error, "asteroid_inc crosses page"
 
 score_text2:
 .byte 0,0
-.asciiz "LEVEL:3  LIVES:1  SCORE:000000 HI:001978"
+.asciiz "LEVEL:3 LIVES:1 SCORE:000000 HI:001978"
 
+score_before:
+.assert >score_before = >score_after, error, "score crosses page"
+score_after:
