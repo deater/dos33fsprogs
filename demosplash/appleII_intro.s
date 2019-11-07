@@ -7,8 +7,8 @@ appleII_intro:
 
 	;===================
 	; init screen
-	jsr	TEXT
-	jsr	HOME
+;	jsr	TEXT
+;	jsr	HOME
 	bit	KEYRESET
 
 	;===================

@@ -9,8 +9,8 @@ end_book:
 
 	;===================
 	; init screen
-	jsr	TEXT
-	jsr	HOME
+;	jsr	TEXT
+;	jsr	HOME
 	bit	KEYRESET
 
 	;===================
@@ -133,7 +133,7 @@ loopR:	dex								; 2
 
 book_loop:
 
-	jsr	$9000	; cycle-counted page0/page1 flip code
+	jsr	$9800	; cycle-counted page0/page1 flip code
 
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely

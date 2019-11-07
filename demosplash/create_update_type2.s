@@ -2,9 +2,9 @@
 	; Autogenerates code for Type2 (escape)
 
 	; First 9 (?) lines = text mode
-	; 
+	;
 
-UPDATE2_START = $9000
+UPDATE2_START = $9800
 
 ;DEFAULT_COLOR	= $0
 
@@ -62,50 +62,50 @@ setup_update_type2:
 	; add call to TEXT
 
 	lda	#$2c		; bit C051	; 4
-	sta	$9003
+	sta	UPDATE2_START+3			; $9003
 	lda	#$51
-	sta	$9004
+	sta	UPDATE2_START+4			; $9004
 	lda	#$c0
-	sta	$9005
+	sta	UPDATE2_START+5			; $9005
 
 	lda	#$A5		; lda ZERO	; 3
-	sta	$9006
+	sta	UPDATE2_START+6			; $9006
 	lda	#$FA
-	sta	$9007
+	sta	UPDATE2_START+7			; $9007
 
 	lda	#$A2		; ldx, 1	; 3
-	sta	$9008
+	sta	UPDATE2_START+8			; $9008
 	lda	#$01
-	sta	$9009
+	sta	UPDATE2_START+9			; $9009
 
 	; set first 9 lines to PAGE0
 
 	lda	#$54
-	sta	$9030
-	sta	$908E
-	sta	$90EC
-	sta	$914A
+	sta	UPDATE2_START+$30		; $9030
+	sta	UPDATE2_START+$8E		; $908E
+	sta	UPDATE2_START+$EC		; $90EC
+	sta	UPDATE2_START+$14A		; $914A
 
 
 	; add call to GRAPHICS
 	; line 9 (91a7)
 
 	lda	#$2c		; bit C051	; 4
-	sta	$91aa
+	sta	UPDATE2_START+$1aa		; $91aa
 	lda	#$50
-	sta	$91ab
+	sta	UPDATE2_START+$1ab		; $91ab
 	lda	#$c0
-	sta	$91ac
+	sta	UPDATE2_START+$1ac		; $91ac
 
 	lda	#$A5		; lda ZERO	; 3
-	sta	$91ad
+	sta	UPDATE2_START+$1ad		; $91ad
 	lda	#$FA
-	sta	$91ae
+	sta	UPDATE2_START+$1ae		; $91ae
 
 	lda	#$A2		; ldx, 1	; 3
-	sta	$91af
+	sta	UPDATE2_START+$1af		; $91af
 	lda	#$01
-	sta	$91b0
+	sta	UPDATE2_START+$1b0		; $91b0
 
 	;====================
 	;====================

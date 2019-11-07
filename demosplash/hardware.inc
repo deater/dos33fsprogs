@@ -23,28 +23,32 @@ PADDLE_BUTTON0	=	$C061
 PADDL0		=	$C064
 PTRIG		=	$C070
 
+; Language card
+; C080
+; C08B
+
 ;; BASIC ROUTINES
 
-NORMAL	=	$F273
+;NORMAL	=	$F273
 
 ;; MONITOR ROUTINES
 
-HLINE	= $F819			;; HLINE Y,$2C at A
-VLINE	= $F828			;; VLINE A,$2D at Y
-CLRSCR	= $F832			;; Clear low-res screen
-CLRTOP	= $F836			;; clear only top of low-res screen
-SETCOL	= $F864			;; COLOR=A
-TEXT	= $FB36
-TABV	= $FB5B			;; VTAB to A
-BELL	= $FBDD			;; ring the bell
-BASCALC	= $FBC1			;;
-VTAB	= $FC22			;; VTAB to CV
-HOME	= $FC58			;; Clear the text screen
-WAIT	= $FCA8			;; delay 1/2(26+27A+5A^2) us
-SETINV	= $FE80			;; INVERSE
-SETNORM	= $FE84			;; NORMAL
-COUT	= $FDED			;; output A to screen
-COUT1	= $FDF0			;; output A to screen
+;HLINE	= $F819			;; HLINE Y,$2C at A
+;VLINE	= $F828			;; VLINE A,$2D at Y
+;CLRSCR	= $F832			;; Clear low-res screen
+;CLRTOP	= $F836			;; clear only top of low-res screen
+;SETCOL	= $F864			;; COLOR=A
+;TEXT	= $FB36
+;TABV	= $FB5B			;; VTAB to A
+;BELL	= $FBDD			;; ring the bell
+;BASCALC= $FBC1			;;
+;VTAB	= $FC22			;; VTAB to CV
+;HOME	= $FC58			;; Clear the text screen
+;WAIT	= $FCA8			;; delay 1/2(26+27A+5A^2) us
+;SETINV	= $FE80			;; INVERSE
+;SETNORM= $FE84			;; NORMAL
+;COUT	= $FDED			;; output A to screen
+;COUT1	= $FDF0			;; output A to screen
 
 
 

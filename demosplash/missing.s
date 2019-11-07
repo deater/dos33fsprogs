@@ -8,8 +8,8 @@ missing_intro:
 
 	;===================
 	; init screen
-	jsr	TEXT
-	jsr	HOME
+;	jsr	TEXT
+;	jsr	HOME
 	bit	KEYRESET
 
 	;===================
@@ -135,7 +135,7 @@ mloopB:	dex								; 2
 
 missing_display_loop:
 
-	jsr	$9000		; update_type1
+	jsr	$9800		; update_type1
 ;.include "missing_screen_update.s"
 
 	;======================================================

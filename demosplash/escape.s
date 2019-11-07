@@ -9,8 +9,8 @@ escape:
 
 	;===================
 	; init screen
-	jsr	TEXT
-	jsr	HOME
+;	jsr	TEXT
+;	jsr	HOME
 	bit	KEYRESET
 
 	;===================
@@ -173,7 +173,7 @@ loopRR:	dex								; 2
 
 sprites_display_loop:
 
-	jsr	$9000
+	jsr	$9800
 ;.include "sprites_screen.s"
 
 	;======================================================
@@ -1539,8 +1539,6 @@ escape_keys:
 	.byte 'Z',25		; faster
 	.byte ' '+$80,30
 	.byte 27+$80,2
-
-
 
 escape_keys_after:
 

@@ -2,7 +2,7 @@
 	; Autogenerates code that does interleaved Page0/Page1 lores mode
 	; but leaving room for 14 pixels/line of per-scanline color
 
-UPDATE_START = $9000
+UPDATE_START = $9800
 
 DEFAULT_COLOR	= $0
 

@@ -6,6 +6,8 @@
 //#define START	40
 #define START	48
 
+#define OFFSET	0x9800
+
 int main(int argc, char **argv) {
 
 	int i;
@@ -15,7 +17,7 @@ int main(int argc, char **argv) {
 	for(i=0;i<NUMBER;i++) {
 		if (i%8==0) printf(".byte\t");
 		//printf(">(smc%3d+1)",i+START);
-		printf(">($%4X)",0x9000+(i+START)*49+4);
+		printf(">($%4X)",OFFSET+(i+START)*49+4);
 		if (i%8!=7) printf(",");
 		else printf("\n");
 	}
@@ -23,7 +25,7 @@ int main(int argc, char **argv) {
 	for(i=0;i<NUMBER;i++) {
 		if (i%8==0) printf(".byte\t");
 		//printf("<(smc%3d+1)",i+START);
-		printf("<($%4X)",0x9000+(i+START)*49+4);
+		printf("<($%4X)",OFFSET+(i+START)*49+4);
 		if (i%8!=7) printf(",");
 		else printf("\n");
 	}

@@ -18,14 +18,21 @@ demosplash2019:
 	jsr	clear_ay_both
 	jsr	pt3_init_song
 
+	;====================================
+	; turn on language card
+	; enable read/write, use 1st 4k bank
+;	lda	$C08B
+;	lda	$C08B
 
 	;====================================
 	; generate 4 patterns worth of music
-	; at address $9000
+	; at address $D000-$FC00
 
+	; page offset
 	lda	#0
 	sta	FRAME_PAGE
 
+	; offset within page
 	lda	#0
 	sta	FRAME_OFFSET
 
@@ -35,27 +42,64 @@ frame_decode_loop:
 	jsr	pt3_write_frame
 
 	inc	FRAME_OFFSET
+
+	lda	FRAME_OFFSET
+	cmp	#59			; FIXME: make this depend on song
+					; hardcoding for 59 for our song
 	bne	frame_decode_loop
 
-	inc     r0_wrsmc+2        ; 6
-        inc     r1_wrsmc+2        ; 6
-        inc     r2_wrsmc+2        ; 6
-        inc     r4_wrsmc+2        ; 6
-        inc     r13_wrsmc+2       ; 6
-	inc     r6_wrsmc+2        ; 6
-	inc     r7_wrsmc+2        ; 6
-	inc     r8_wrsmc+2        ; 6
-        inc     r9_wrsmc+2        ; 6
-        inc     r11_wrsmc+2       ; 6
-        inc     r12_wrsmc+2       ; 6
+	; add 11 to all of the output pointers
+.if 0
+	clc
+	lda	r0_wrsmc+2
+	adc	#$b
+	sta	r0_wrsmc+2
 
+	lda	r1_wrsmc+2
+	adc	#$b
+	sta	r1_wrsmc+2
+
+	lda	r2_wrsmc+2
+	adc	#$b
+	sta	r2_wrsmc+2
+
+	lda	r4_wrsmc+2
+	adc	#$b
+	sta	r4_wrsmc+2
+
+	lda	r13_wrsmc+2
+	adc	#$b
+	sta	r13_wrsmc+2
+
+	lda	r6_wrsmc+2
+	adc	#$b
+	sta	r6_wrsmc+2
+
+	lda	r7_wrsmc+2
+	adc	#$b
+	sta	r7_wrsmc+2
+
+	lda	r8_wrsmc+2
+	adc	#$b
+	sta	r8_wrsmc+2
+
+	lda	r9_wrsmc+2
+	adc	#$b
+	sta	r9_wrsmc+2
+
+	lda	r11_wrsmc+2
+	adc	#$b
+	sta	r11_wrsmc+2
+
+	lda	r12_wrsmc+2
+	adc	#$b
+	sta	r12_wrsmc+2
+.endif
 
 	inc	FRAME_PAGE
 	lda	FRAME_PAGE
 
-
-
-	cmp	#3
+	cmp	#4
 	bne	frame_decode_loop
 
 	lda	#0
@@ -113,7 +157,8 @@ frame_decode_loop:
 	; start irq music
 	;========================
 
-	cli	; enable interrupts
+nop
+;	cli	; enable interrupts
 
 	;===========================
 	; opening book scene

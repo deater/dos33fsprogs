@@ -8,8 +8,8 @@ credits:
 
 	;===================
 	; init screen
-	jsr	TEXT
-	jsr	HOME
+;	jsr	TEXT
+;	jsr	HOME
 	bit	KEYRESET
 
 	;===================
@@ -37,24 +37,24 @@ credits:
 	; 0  34  78  12  5        4  78  12  56  9
 	;            11  1        2  22  33  33  3
 	lda	#$54
-	sta	$9001+(49*3)
-	sta	$9001+(49*7)
-	sta	$9001+(49*11)
-	sta	$9001+(49*15)
-	sta	$9001+(49*27)
-	sta	$9001+(49*31)
-	sta	$9001+(49*35)
-	sta	$9001+(49*39)
+	sta	UPDATE_START+1+(49*3)
+	sta	UPDATE_START+1+(49*7)
+	sta	UPDATE_START+1+(49*11)
+	sta	UPDATE_START+1+(49*15)
+	sta	UPDATE_START+1+(49*27)
+	sta	UPDATE_START+1+(49*31)
+	sta	UPDATE_START+1+(49*35)
+	sta	UPDATE_START+1+(49*39)
 
 	lda	#$55
-	sta	$9001+(49*0)
-	sta	$9001+(49*4)
-	sta	$9001+(49*8)
-	sta	$9001+(49*12)
-	sta	$9001+(49*24)
-	sta	$9001+(49*28)
-	sta	$9001+(49*32)
-	sta	$9001+(49*36)
+	sta	UPDATE_START+1+(49*0)
+	sta	UPDATE_START+1+(49*4)
+	sta	UPDATE_START+1+(49*8)
+	sta	UPDATE_START+1+(49*12)
+	sta	UPDATE_START+1+(49*24)
+	sta	UPDATE_START+1+(49*28)
+	sta	UPDATE_START+1+(49*32)
+	sta	UPDATE_START+1+(49*36)
 
 
 	;=============================
@@ -158,7 +158,7 @@ tloopB:	dex								; 2
 
 credits_loop:
 
-	jsr	$9000
+	jsr	$9800
 
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely

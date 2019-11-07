@@ -1,17 +1,17 @@
 	; ZZ points to offset from pointer
 
 
-	;0 $9000,$9100,$9200 = A Low (reg0)
-	;1 $9300,$9400,$9500 = A high (reg1) [top], B high (reg3) [bottom]
-	;2 $9600,$9700,$9800 = B Low (reg2)
-	;3 $9900,$9A00,$9B00 = C Low (reg4)
-	;4 $9C00,$9D00,$9E00 = Envelope Shape (r13) [top], C high (reg5) [bot]
-	;5 $9F00,$A000,$A100 = Noise (r6), bit7 = don't change envelope
-	;6 $A200,$A300,$A400 = Enable (r7)
-	;7 $A500,$A600,$A700 = A amp (r8), bit 5 of r8,r9,r10
-	;8 $A800,$A900,$AA00 = C amp (r10) [top], B amp (r9) [bottom]
-	;9 $AB00,$AC00,$AD00 = ENV low  (r11)
-	;a $AE00,$AF00,$B000 = ENV high (r12)
+;D000	;0 $9000,$9100,$9200 = A Low (reg0)
+;D100	;1 $9300,$9400,$9500 = A high (reg1) [top], B high (reg3) [bottom]
+;D200	;2 $9600,$9700,$9800 = B Low (reg2)
+;D300	;3 $9900,$9A00,$9B00 = C Low (reg4)
+;D400	;4 $9C00,$9D00,$9E00 = Envelope Shape (r13) [top], C high (reg5) [bot]
+;D500	;5 $9F00,$A000,$A100 = Noise (r6), bit7 = don't change envelope
+;D600	;6 $A200,$A300,$A400 = Enable (r7)
+;D700	;7 $A500,$A600,$A700 = A amp (r8), bit 5 of r8,r9,r10
+;D800	;8 $A800,$A900,$AA00 = C amp (r10) [top], B amp (r9) [bottom]
+;D900	;9 $AB00,$AC00,$AD00 = ENV low  (r11)
+;DA00	;a $AE00,$AF00,$B000 = ENV high (r12)
 
 	; 3+ 72 + 72 + 83 + 74 + 72 + 77 + 19 + 70 + 74 + 72 +
 	;	77 + 18 + 82 + 85 + 72 + 72 + 8 + 72 + 6 = 1180
@@ -23,7 +23,7 @@ play_frame_compressed:
 	; Register 0: A fine
 	ldx	#0						; 2
 r0_smc:
-	lda	$9000,Y						; 4+
+	lda	$D000,Y						; 4+
 	jsr	play_mb_write					; 6+60
 								;======
 								; 72
@@ -31,7 +31,7 @@ r0_smc:
 	; Register 2: B fine
 	ldx	#2						; 2
 r2_smc:
-	lda	$9600,Y						; 4+
+	lda	$9200,Y						; 4+
 	jsr	play_mb_write					; 6+60
 								;======
 								; 72
@@ -39,7 +39,7 @@ r2_smc:
 	; Register 1: A coarse
 	ldx	#1						; 2
 r1_smc:
-	lda	$9300,Y						; 4+
+	lda	$9100,Y						; 4+
 	pha							; 3
 	lsr							; 2
 	lsr							; 2
@@ -59,7 +59,7 @@ r1_smc:
 	; Register 4: C fine
 	ldx	#4						; 2
 r4_smc:
-	lda	$9900,Y						; 4+
+	lda	$D300,Y						; 4+
 	jsr	play_mb_write					; 6+60
 								;=======
 								; 72
@@ -67,7 +67,7 @@ r4_smc:
 	; Register 5: C coarse
 	ldx	#5						; 2
 r5_smc:
-	lda	$9C00,Y						; 4+
+	lda	$9400,Y						; 4+
 	pha							; 3
 	and	#$f						; 2
 	jsr	play_mb_write					; 6+60
@@ -82,7 +82,7 @@ r5_smc:
 	lsr							; 2
 
 r13_smc:
-	ldx	$9F00,Y		; check for env update		; 4
+	ldx	$D500,Y		; check for env update		; 4
 	bmi	skip_envelope_write				; 3
 							;============
 							;	19
@@ -107,7 +107,7 @@ done_envelope_write:
 	; Register 6: Noise
 	ldx	#6						; 2
 r6_smc:
-	lda	$9F00,Y						; 4+
+	lda	$D500,Y						; 4+
 	and	#$1f						; 2
 	jsr	play_mb_write					; 6+60
 								;=======
@@ -116,7 +116,7 @@ r6_smc:
 	; Register 7: Enable
 	ldx	#7						; 2
 r7_smc:
-	lda	$A200,Y						; 4+
+	lda	$D600,Y						; 4+
 	jsr	play_mb_write					; 6+60
 								;========
 								; 72
@@ -124,7 +124,7 @@ r7_smc:
 	; Register 8: a-amp
 	ldx	#8						; 2
 r8_smc:
-	lda	$A500,Y						; 4+
+	lda	$D700,Y						; 4+
 	pha							; 3
 	and	#$1f						; 2
 	jsr	play_mb_write					; 6+60
@@ -144,7 +144,7 @@ r8_smc:
 	; Register 9: b-amp (bottom)
 	ldx	#9						; 2
 r9_smc:
-	lda	$A800,Y						; 4+
+	lda	$D800,Y						; 4+
 	pha							; 3
 	and	#$f						; 2
 	ora	AY_REGISTERS					; 3
@@ -169,7 +169,7 @@ r9_smc:
 	; Register 11: E fine
 	ldx	#11						; 2
 r11_smc:
-	lda	$AB00,Y						; 4+
+	lda	$D900,Y						; 4+
 	jsr	play_mb_write					; 6+60
 								;======
 								; 72
@@ -177,7 +177,7 @@ r11_smc:
 	; Register 12: E coarse
 	ldx	#12						; 2
 r12_smc:
-	lda	$AE00,Y						; 4+
+	lda	$DA00,Y						; 4+
 	jsr	play_mb_write					; 6+60
 								;======
 								; 72
