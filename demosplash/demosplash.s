@@ -95,7 +95,7 @@ frame_decode_loop:
 	nop
 
 
-;	jsr	appleII_intro
+	jsr	appleII_intro
 
 
 	;===========================
@@ -121,17 +121,17 @@ frame_decode_loop:
 	nop
 	nop
 	nop
-;	jsr	open_book
+	jsr	open_book
 
 	;===========================
 	; starbase scene
 	;===========================
 
-	nop
-	nop
-	nop
+;	nop
+;	nop
+;	nop
 
-;	jsr	starbase
+	jsr	starbase
 
 	;============================
 	; disable irq music
