@@ -1429,7 +1429,7 @@ asteroid_inc_after:
 
 score_text2:
 .byte 0,0
-.asciiz "LEVEL:3 LIVES:1 SCORE:000000 HI:001978  "
+.asciiz "LEVEL:3  LIVES:1  SCORE:000000 HI:001978"
 
 score_before:
 .assert >score_before = >score_after, error, "score crosses page"
