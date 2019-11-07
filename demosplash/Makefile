@@ -55,7 +55,7 @@ demosplash.o:	demosplash.s \
 	interrupt_handler.s \
 	missing.s k_40_48d.inc create_update_type1.s \
 	open_book.s graphics/book_open/book_open.inc \
-	starbase.s keyboard.s \
+	starbase.s starbase_keyboard.s \
 	starbase_action.s starbase_laser.s starbase_blast.s \
 	gr_run_sequence.s \
 	graphics/starbase/starbase.inc \

@@ -31,6 +31,7 @@ escape:
 	sta	SPRITE_XPOS
 	sta	SPRITE_YPOS
 	sta	FIRE_Y
+	sta	KEYPTR
 
 	lda	#$44
 	sta	GREEN0
@@ -53,6 +54,7 @@ escape:
 	lda	#1
 	sta	ASTEROID_SPEED
 	sta	XPOS
+	sta	KEY_COUNTDOWN
 
 	;==================
 	; setup graphics
@@ -191,7 +193,7 @@ sprites_display_loop:
 	;  -35	-- move asteroid
 	; -436	-- draw fire
 	; -337	-- draw asteroid
-	;  -61  -- keypress
+	;  -82	-- -61  -- keypress
 	;  -33	-- handle fire press
 	;  -51	-- exploding asteroid
 	;  -47	-- sparkle
@@ -199,10 +201,10 @@ sprites_display_loop:
 	;  -25  -- loop
 	;  -3	-- alignment
 	;=======
-	;  151
+	;  130	151
 	; -46 nop sled
 	;===========
-	;  105
+	;  84	105
 
 	;================
 	; erase old ship
@@ -904,10 +906,13 @@ pad_time2:
 
 escape_wait_loop:
 
+	; Try X=15 Y=1 cycles=82R2
 	; Try X=4 Y=4 cycles=105
 
-	ldy	#4							; 2
-loopY:	ldx	#4							; 2
+	nop
+
+	ldy	#1							; 2
+loopY:	ldx	#15							; 2
 loopZ:	dex								; 2
 	bne	loopZ							; 2nt/3
 	dey								; 2
@@ -1058,6 +1063,8 @@ done_level:
 	; separate function so we an align to avoid branches
 	; crossing page boundaries
 	;
+.if 0
+	; OLD
 	; NONE = 6+7			= 13	[42]
 	; ESC  = doesn't matter
 	; ' '  = 6+6+9+5+7		= 33	[22] [[20]]
@@ -1066,12 +1073,50 @@ done_level:
 	; 'A'  = 6+6+9+5+5+5+7+7	= 50	[5]  [[7]]
 	; 'Z'  = 6+6+9+5+5+5+7+5+7	= 55	[0]  [[5]]
 	; unkno= 6+6+9+5+5+5+7+5+3+[4]	= 55	[0]
+.endif
+
+	; NEW
+	; NONE = 6+11			= 17	[59]
+	; ESC  = doesn't matter
+	; ' '  = 6+11+25+5+7		= 54	[22] [[20]]
+	; '.'  = 6+11+25+5+5+7		= 69	[17] [[5]]
+	; ','  = 6+11+25+5+5+5+7	= 64	[12] [[5]]
+	; 'A'  = 6+11+25+5+5+5+7+7	= 71	[5]  [[7]]
+	; 'Z'  = 6+11+25+5+5+5+7+5+7	= 76	[0]  [[5]]
+	; unkno= 6+11+25+5+5+5+7+5+3+[4]= 76	[0]
+
 escape_handle_keypress:
+
+	; read from mem instead of keyboard
+	; none 11+
+	; yes: 11+20 = 31
+
+	dec     KEY_COUNTDOWN		; 5
+        lda     KEY_COUNTDOWN		; 3
+        bne     key_delay_59		; 3
+					;====
+					; 11
+
+					; -1
+	ldy	KEYPTR			; 3
+	lda	escape_keys+1,Y		; 4+
+        sta     KEY_COUNTDOWN		; 3
+	lda	escape_keys,Y		; 4+
+	iny				; 2
+	iny				; 2
+	sty	KEYPTR			; 3
+					;====
+					; 20
+					;  5 (from below) instead of 9
+
+
+.if 0
 	lda	KEYPRESS				; 4
 	bpl	key_delay_42				; 3
 							; -1
 
 	bit	KEYRESET	; clear strobe		; 4
+.endif
 
 	cmp	#27+$80					; 2
 	bne	key_not_escape				; 3
@@ -1127,11 +1172,15 @@ key_not_z:
 	nop						; 2
 	jmp	keypress_done				; 3
 
-key_delay_42:
+key_delay_59:
 	inc	TEMP					; 5
 	dec	TEMP					; 5
 	inc	TEMP					; 5
 	dec	TEMP					; 5
+	inc	TEMP					; 5
+	dec	TEMP					; 5
+	inc	TEMP					; 5
+	nop						; 2
 
 key_delay_22:
 	nop						; 2
@@ -1427,10 +1476,26 @@ asteroid_inc_after:
 
 .assert >asteroid_inc_before = >asteroid_inc_after, error, "asteroid_inc crosses page"
 
+score_before:
 score_text2:
 .byte 0,0
 .asciiz "LEVEL:3  LIVES:1  SCORE:000000 HI:001978"
-
-score_before:
-.assert >score_before = >score_after, error, "score crosses page"
 score_after:
+
+.assert >score_before = >score_after, error, "score crosses page"
+
+
+
+escape_keys_before:
+escape_keys:
+	.byte 'A',20
+	.byte 'A',20
+	.byte 'Z',2
+	.byte 'Z',2
+	.byte ' ',5
+	.byte '.',200
+	.byte '.',200
+	.byte 27,2
+escape_keys_after:
+
+.assert >escape_keys_before = >escape_keys_after, error, "keys crosses page"

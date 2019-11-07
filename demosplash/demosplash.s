@@ -251,3 +251,5 @@ PT3_LOC = song
 .align 256
 song:
 .incbin "dya_space_demo2.pt3"
+
+end_of_line:

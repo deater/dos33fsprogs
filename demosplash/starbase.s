@@ -59,7 +59,8 @@ wait_loop:
 .include "gr_hlin.s"
 .include "gr_putsprite.s"
 .include "gr_putsprite_crop.s"
-.include "keyboard.s"
+
+.include "starbase_keyboard.s"
 
 .include "starbase_astronaut.s"
 .include "starbase_alien.s"

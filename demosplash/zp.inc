@@ -107,6 +107,7 @@ PT3_TEMP	= $8A
 KEYPTRL		= $90
 KEYPTRH		= $91
 KEY_COUNTDOWN	= $92
+KEYPTR		= $93
 
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
