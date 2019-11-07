@@ -44,7 +44,7 @@ frame_decode_loop:
 	inc	FRAME_OFFSET
 
 	lda	FRAME_OFFSET
-	cmp	#59			; FIXME: make this depend on song
+	cmp	#59*3			; FIXME: make this depend on song
 					; hardcoding for 59 for our song
 	bne	frame_decode_loop
 
