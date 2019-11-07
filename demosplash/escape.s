@@ -1484,18 +1484,64 @@ score_after:
 
 .assert >score_before = >score_after, error, "score crosses page"
 
-
+.align $100
 
 escape_keys_before:
 escape_keys:
-	.byte 'A',20
-	.byte 'A',20
-	.byte 'Z',2
-	.byte 'Z',2
-	.byte ' ',5
-	.byte '.',200
-	.byte '.',200
-	.byte 27,2
+	.byte 'A',5		; up
+	.byte 'A',20		; faster
+	.byte 'Z',5		; slower
+	.byte 'Z',5		; stop
+	.byte ' '+$80,20	; shoot first asteroid
+	.byte 'Z',5		; down
+	.byte 'Z',5		; faster
+	.byte 'A',5		; slower
+	.byte 'A',20		; stop
+	.byte ' '+$80,20	; shoot second asteroid
+	.byte 'Z',30		; down
+	.byte '.'+$80,10
+	.byte 'A',5		; up
+	.byte 'A',30		; up
+	.byte '.'+$80,20
+	.byte 'Z',25		; down
+	.byte 'Z',25		; faster
+	.byte 'A',25		; slower
+	.byte 'A',25		; stop
+	.byte 'Z',5		; down
+	.byte 'Z',10		; faster
+	.byte 'Z',40		; faster
+	.byte 'A',25		; slower
+	.byte 'A',25		; stop
+	.byte ','+$80,30
+	.byte 'A',5		; down
+	.byte 'A',10		; faster
+	.byte 'A',40		; faster
+	.byte 'Z',25		; slower
+	.byte 'Z',25		; stop
+	.byte ' '+$80,30	; shoot
+	.byte 'A',5		; down
+	.byte 'A',10		; faster
+	.byte 'A',40		; faster
+	.byte 'Z',25		; slower
+	.byte 'Z',25		; stop
+	.byte 'Z',25		; slower
+	.byte 'Z',45		; stop
+	.byte 'A',5		; down
+	.byte 'A',10		; faster
+	.byte 'A',40		; faster
+	.byte ','+$80,50
+	.byte 'Z',25		; slower
+	.byte 'Z',25		; stop
+	.byte 'Z',40		; slower
+	.byte 'A',25		; down
+	.byte 'A',10		; faster
+	.byte 'A',25		; faster
+	.byte 'Z',25		; faster
+	.byte ' '+$80,30
+	.byte 27+$80,2
+
+
+
 escape_keys_after:
 
 .assert >escape_keys_before = >escape_keys_after, error, "keys crosses page"
