@@ -28,84 +28,7 @@ demosplash2019:
 	; generate 4 patterns worth of music
 	; at address $D000-$FC00
 
-	; page offset
-	lda	#0
-	sta	FRAME_PAGE
-
-	; offset within page
-	lda	#0
-	sta	FRAME_OFFSET
-
-frame_decode_loop:
-	jsr	pt3_make_frame
-
-	jsr	pt3_write_frame
-
-	inc	FRAME_OFFSET
-
-	lda	FRAME_OFFSET
-	cmp	#59*3			; FIXME: make this depend on song
-					; hardcoding for 59 for our song
-	bne	frame_decode_loop
-
-	; add 11 to all of the output pointers
-
-	clc
-	lda	r0_wrsmc+2
-	adc	#$b
-	sta	r0_wrsmc+2
-
-	lda	r1_wrsmc+2
-	adc	#$b
-	sta	r1_wrsmc+2
-
-	lda	r2_wrsmc+2
-	adc	#$b
-	sta	r2_wrsmc+2
-
-	lda	r4_wrsmc+2
-	adc	#$b
-	sta	r4_wrsmc+2
-
-	lda	r13_wrsmc+2
-	adc	#$b
-	sta	r13_wrsmc+2
-
-	lda	r6_wrsmc+2
-	adc	#$b
-	sta	r6_wrsmc+2
-
-	lda	r7_wrsmc+2
-	adc	#$b
-	sta	r7_wrsmc+2
-
-	lda	r8_wrsmc+2
-	adc	#$b
-	sta	r8_wrsmc+2
-
-	lda	r9_wrsmc+2
-	adc	#$b
-	sta	r9_wrsmc+2
-
-	lda	r11_wrsmc+2
-	adc	#$b
-	sta	r11_wrsmc+2
-
-	lda	r12_wrsmc+2
-	adc	#$b
-	sta	r12_wrsmc+2
-
-
-	inc	FRAME_PAGE
-	lda	FRAME_PAGE
-
-	cmp	#4
-	bne	frame_decode_loop
-
-	lda	#0
-	sta	FRAME_OFFSET
-
-
+	jsr	pt3_write_lc_4
 
 ;	lda	#1
 ;	sta	LOOP
@@ -275,6 +198,7 @@ wait_until_keypressed:
 .include "interrupt_handler.s"
 .include "pt3_lib_play_frame.s"
 .include "pt3_lib_write_frame.s"
+.include "pt3_lib_write_lc.s"
 
 .include "create_update_type1.s"
 .include "create_update_type2.s"
