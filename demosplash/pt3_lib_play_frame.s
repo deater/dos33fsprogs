@@ -31,7 +31,7 @@ r0_smc:
 	; Register 2: B fine
 	ldx	#2						; 2
 r2_smc:
-	lda	$9200,Y						; 4+
+	lda	$D200,Y						; 4+
 	jsr	play_mb_write					; 6+60
 								;======
 								; 72
@@ -39,7 +39,7 @@ r2_smc:
 	; Register 1: A coarse
 	ldx	#1						; 2
 r1_smc:
-	lda	$9100,Y						; 4+
+	lda	$D100,Y						; 4+
 	pha							; 3
 	lsr							; 2
 	lsr							; 2
@@ -67,7 +67,7 @@ r4_smc:
 	; Register 5: C coarse
 	ldx	#5						; 2
 r5_smc:
-	lda	$9400,Y						; 4+
+	lda	$D400,Y						; 4+
 	pha							; 3
 	and	#$f						; 2
 	jsr	play_mb_write					; 6+60
@@ -134,10 +134,10 @@ r8_smc:
 	pla							; 4
 	and	#$e0						; 2
 	lsr							; 2
-	sta	AY_REGISTERS					; 3
+	sta	AY_WRITE_TEMP					; 3
 	lsr							; 2
 	and	#$10						; 2
-	sta	AY_REGISTERS+1					; 3
+	sta	AY_WRITE_TEMP2					; 3
 								;====
 								; 18
 
@@ -147,7 +147,7 @@ r9_smc:
 	lda	$D800,Y						; 4+
 	pha							; 3
 	and	#$f						; 2
-	ora	AY_REGISTERS					; 3
+	ora	AY_WRITE_TEMP					; 3
 	and	#$1f						; 2
 	jsr	play_mb_write					; 6+60
 								;=======
@@ -160,7 +160,7 @@ r9_smc:
 	lsr							; 2
 	lsr							; 2
 	lsr							; 2
-	ora	AY_REGISTERS+1					; 3
+	ora	AY_WRITE_TEMP2					; 3
 	and	#$1f						; 2
 	jsr	play_mb_write					; 6+60
 								;======

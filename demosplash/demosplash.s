@@ -21,8 +21,8 @@ demosplash2019:
 	;====================================
 	; turn on language card
 	; enable read/write, use 1st 4k bank
-;	lda	$C08B
-;	lda	$C08B
+	lda	$C08B
+	lda	$C08B
 
 	;====================================
 	; generate 4 patterns worth of music
@@ -49,7 +49,7 @@ frame_decode_loop:
 	bne	frame_decode_loop
 
 	; add 11 to all of the output pointers
-.if 0
+
 	clc
 	lda	r0_wrsmc+2
 	adc	#$b
@@ -94,7 +94,7 @@ frame_decode_loop:
 	lda	r12_wrsmc+2
 	adc	#$b
 	sta	r12_wrsmc+2
-.endif
+
 
 	inc	FRAME_PAGE
 	lda	FRAME_PAGE
