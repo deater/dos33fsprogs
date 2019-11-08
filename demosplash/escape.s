@@ -20,6 +20,9 @@ escape:
 	; setup 4 frames
 	jsr	pt3_write_lc_4
 
+	; FIXME
+	jsr     clear_ay_both
+
 	;===================
 	; init vars
 

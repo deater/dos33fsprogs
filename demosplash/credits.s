@@ -465,7 +465,7 @@ blue_x:		.byte $40
 draw_credits:
 	inc	FRAME				; 5
 	lda	FRAME				; 3
-	and	#$f				; 2
+	and	#$7				; 2
 	beq	credits_handle_next		; 3
 						;====
 						; 13
