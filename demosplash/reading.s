@@ -156,24 +156,24 @@ book_loop:
 	;     4550
 	;      -12   -- enter/leave flip code
 	;      -10   -- keypress code
-	;    -1239
+	;    -1243
 	;   =======
-	;     3289 cycles
+	;     3285 cycles
 
-	jsr	play_frame_compressed			; 6+1233
+	jsr	play_frame_compressed			; 6+1237
 
 	;=================================
 	; do nothing
 	;=================================
-	; and take 3289
+	; and take 3285
 
 book_do_nothing:
 
-	; Try X=81 Y=8 cycles=3289
+	; Try X=163 Y=4 cycles=3285
 
-	ldy	#8							; 2
+	ldy	#4							; 2
 bloop1:
-	ldx	#81							; 2
+	ldx	#163							; 2
 bloop2:
 	dex								; 2
 	bne	bloop2							; 2nt/3

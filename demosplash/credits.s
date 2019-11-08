@@ -167,15 +167,15 @@ credits_loop:
 	;  -10  -- keypress
 	;  -12  -- call/return of draw code
 	; -446  -- do_words
-	;-1239  -- play music
+	;-1243  -- play music
 	;  -8   -- wrap
 	;=======
-	; 1557		//2804
+	; 1553		//2804
 
 	lda	FRAME_PLAY_PAGE		; 3
 	and	#$3			; 2
 	sta	FRAME_PLAY_PAGE		; 3
-	jsr	play_frame_compressed	; 6+1233
+	jsr	play_frame_compressed	; 6+1237
 
 
 pad_time:
@@ -356,14 +356,13 @@ pad_time:
 	; WAIT for VBLANK to finish
 	;============================
 
-	; want 1557
+	; want 1553
 
-	; Try X=3 Y=74 cycles=1555R2
+	; Try X=2 Y=97 cycles=1553
 
-	nop
 
-	ldy	#74							; 2
-tloop1:	ldx	#3							; 2
+	ldy	#97							; 2
+tloop1:	ldx	#2							; 2
 tloop2:	dex								; 2
 	bne	tloop2							; 2nt/3
 	dey								; 2
