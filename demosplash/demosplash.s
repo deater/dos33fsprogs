@@ -47,20 +47,10 @@ demosplash2019:
 	bit	KEYRESET
 
 	;===========================
-	; Setup pages (is this necessary?)
-	;===========================
-
-;	lda	#0
-;	sta	DRAW_PAGE
-;	lda	#1
-;	sta	DISP_PAGE
-
-	;===========================
 	; apple II intro
 	;============================
 
 	jsr	appleII_intro
-
 
 	;===========================
 	; missing scene

@@ -11,7 +11,13 @@ end_book:
 	; init screen
 ;	jsr	TEXT
 ;	jsr	HOME
-	bit	KEYRESET
+;	bit	KEYRESET
+
+	bit	PAGE0
+	bit	SET_TEXT
+	lda	#' '+$80
+	sta	clear_all_color+1
+	jsr	gr_clear_all
 
 	;===================
 	; init vars

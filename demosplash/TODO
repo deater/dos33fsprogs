@@ -1,4 +1,7 @@
 TODO if time:
+	+ Don't re-vapor lock between first two scenes.
+		Avoid glitch in audio
+
 	+ when engines start, have only part of screen go lighter
 	+ memcpy() last frame in before star frame
 	+ better star animation (more frames?)
