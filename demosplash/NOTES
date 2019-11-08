@@ -97,9 +97,9 @@ Memory Map
 0800-0bff		lores page2
 0c00-0fff		(used as page3)             (also loader  200 )
 1000-13ff		(used for background masks) (also loader 1000-12ff)
-1400-????		executable	(31744 bytes)
+1400-????		executable	(33792 bytes)
 
-9000-bfff		graphics lookup / audio buffer
+9800-bfff		graphics lookup / audio buffer
 
 c000-cfff		I/O
 d000-ffff		ROM	(language card: music)

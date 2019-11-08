@@ -7,16 +7,10 @@
 missing_intro:
 
 	;===================
-	; init screen
-;	jsr	TEXT
-;	jsr	HOME
-	bit	KEYRESET
-
-	;===================
 	; init vars
 
-	lda	#0
-	sta	DRAW_PAGE
+;	lda	#0
+;	sta	DRAW_PAGE
 
 	;=============================
 	; setup graphics code
@@ -136,7 +130,6 @@ mloopB:	dex								; 2
 missing_display_loop:
 
 	jsr	$9800		; update_type1
-;.include "missing_screen_update.s"
 
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
@@ -180,7 +173,6 @@ gloop2:	dex								; 2
 
 	rts
 
-;.align $100
-;.include "k_40_48d.inc"
+
 
 
