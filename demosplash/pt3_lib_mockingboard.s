@@ -270,6 +270,8 @@ apple_iic:
 	; bypass the firmware interrupt handler
 	; should we do this on IIe too? probably faster
 
+done_apple_detect:
+
 	sei				; disable interrupts
 	lda	$c08b			; disable ROM (enable language card)
 	lda	$c08b
@@ -282,7 +284,7 @@ apple_iic:
 	sta	interrupt_smc
 	sta	interrupt_smc+1
 
-done_apple_detect:
+
 
 
 	;=========================

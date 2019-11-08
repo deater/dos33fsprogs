@@ -7,17 +7,14 @@
 credits:
 
 	;===================
-	; init screen
-;	jsr	TEXT
-;	jsr	HOME
-	bit	KEYRESET
-
-	;===================
 	; init vars
 
 	lda	#0
 	sta	DRAW_PAGE
 	sta	FRAME
+	sta	FRAME_PLAY_OFFSET
+	sta	FRAME_PLAY_PAGE
+	jsr	update_pt3_play
 
 	lda	#<credits_text
 	sta	CREDITS_POINTERL
@@ -170,8 +167,16 @@ credits_loop:
 	;  -10  -- keypress
 	;  -12  -- call/return of draw code
 	; -446  -- do_words
+	;-1239  -- play music
+	;  -8   -- wrap
 	;=======
-	; 2804
+	; 1557		//2804
+
+	lda	FRAME_PLAY_PAGE		; 3
+	and	#$3			; 2
+	sta	FRAME_PLAY_PAGE		; 3
+	jsr	play_frame_compressed	; 6+1233
+
 
 pad_time:
 
@@ -351,12 +356,14 @@ pad_time:
 	; WAIT for VBLANK to finish
 	;============================
 
-	; Try X=61 Y=9 cycles=2800 R4
-	nop
+	; want 1557
+
+	; Try X=3 Y=74 cycles=1555R2
+
 	nop
 
-	ldy	#9							; 2
-tloop1:	ldx	#61							; 2
+	ldy	#74							; 2
+tloop1:	ldx	#3							; 2
 tloop2:	dex								; 2
 	bne	tloop2							; 2nt/3
 	dey								; 2

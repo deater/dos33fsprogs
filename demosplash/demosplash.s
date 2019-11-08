@@ -63,23 +63,17 @@ demosplash2019:
 	; start irq music
 	;========================
 
-;	cli	; enable interrupts
+	cli	; enable interrupts
 
 	;===========================
 	; opening book scene
 	;============================
-	nop
-	nop
-	nop
+
 	jsr	open_book
 
 	;===========================
 	; starbase scene
 	;===========================
-
-;	nop
-;	nop
-;	nop
 
 	jsr	starbase
 
@@ -93,18 +87,12 @@ demosplash2019:
 	; escape scene
 	;===========================
 
-;	nop
-;	nop
-;	nop
 	jsr	escape
 
 	;===========================
 	; book scene
 	;===========================
 
-;	nop
-;	nop
-;	nop
 	jsr	end_book
 
 	;===========================
@@ -116,8 +104,8 @@ demosplash2019:
 	; wait wait wait
 
 ;	jsr	wait_until_keypressed
-;repeat_ending:
-;	jmp	repeat_ending
+repeat_ending:
+	jmp	repeat_ending
 
 
 
@@ -128,8 +116,8 @@ wait_until_keypressed:
 	lda	KEYPRESS
 	bpl	wait_until_keypressed
 	bit	KEYRESET
-;	rts
-	jmp	demosplash2019
+	rts
+
 
 ; Apple II intro
 .include "appleII_intro.s"

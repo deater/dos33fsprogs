@@ -61,6 +61,8 @@ lc_frame_decode_loop:
 
 	rts
 
+	;========================
+	;
 pt3_set_pages:
 	lda	FRAME_PAGE
 	asl

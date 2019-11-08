@@ -7,11 +7,18 @@
 
 escape:
 
-	;===================
-	; init screen
-;	jsr	TEXT
-;	jsr	HOME
-	bit	KEYRESET
+	;==================
+	; setup music
+
+	; we are roughly at the beginning of pattern 0x19
+
+	lda	#19
+	sta	current_pattern_smc+1
+	lda	#0
+	sta	current_line_smc+1
+
+	; setup 4 frames
+	jsr	pt3_write_lc_4
 
 	;===================
 	; init vars
@@ -62,6 +69,11 @@ escape:
 	jsr     create_update_type2
 	jsr     setup_update_type2
 
+	;==========================================
+	; replace bottom with call to music player
+
+;	lda	#20
+;	sta	$9800+
 
 	;=============================
 	; Load graphic page0
