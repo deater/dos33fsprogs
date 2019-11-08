@@ -263,36 +263,37 @@ update_pt3_play:
 							; 13
 
         lda     music_addr_table+0,Y			; 4
-        sta     r0_smc+2				; 4
+        sta     r0_smc+2				; 4	; D0
 
         lda     music_addr_table+1,Y			; 4
-        sta     r1_smc+2				; 4
+        sta     r1_smc+2				; 4	; D1
 
         lda     music_addr_table+2,Y			; 4
-        sta     r2_smc+2				; 4
+        sta     r2_smc+2				; 4	; D2
 
         lda     music_addr_table+3,Y			; 4
-        sta     r4_smc+2				; 4
-
-        lda     music_addr_table+4,Y			; 4
-        sta     r13_smc+2				; 4
+        sta     r4_smc+2				; 4	; D3
 
 	lda     music_addr_table+5,Y			; 4
-	sta     r6_smc+2				; 4
+	sta     r5_smc+2				; 4	; D4
 
-	lda     music_addr_table+6,Y			; 4
+        lda     music_addr_table+4,Y			; 4	; D5
+	sta     r6_smc+2				; 4
+	sta	r13_smc+2				; 4	; D5
+
+	lda     music_addr_table+6,Y			; 4	; D6
 	sta     r7_smc+2				; 4
 
-	lda	music_addr_table+7,Y			; 4
+	lda	music_addr_table+7,Y			; 4	; D7
 	sta	r8_smc+2				; 4
 
-        lda     music_addr_table+8,Y			; 4
+        lda     music_addr_table+8,Y			; 4	; D8
         sta     r9_smc+2				; 4
 
-        lda     music_addr_table+9,Y			; 4
+        lda     music_addr_table+9,Y			; 4	; D9
         sta     r11_smc+2				; 4
 
-        lda     music_addr_table+10,Y			; 4
+        lda     music_addr_table+10,Y			; 4	; DA
         sta     r12_smc+2				; 4
 						;==========
 						; 11*8 = 88

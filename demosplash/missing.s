@@ -17,6 +17,8 @@ missing_intro:
 
 	jsr	create_update_type1
 
+	jsr	play_frame_compressed
+
 	;=============================
 	; Load graphic page0
 

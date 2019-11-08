@@ -83,7 +83,7 @@ pt3_set_pages:
 	lda	music_addr_table+3,Y
 	sta	r4_wrsmc+2
 
-	lda	music_addr_table+4,Y
+	lda	music_addr_table+4,Y		;5+13=D4
 	sta	r13_wrsmc+2
 
 	lda	music_addr_table+5,Y
