@@ -13,7 +13,10 @@ demosplash2019:
 	sta	DONE_PLAYING
 	sta	FRAME_PLAY_OFFSET
 	sta	FRAME_PLAY_PAGE
+	sta	FRAME_OFFSET
+	sta	FRAME_PAGE
 	jsr	update_pt3_play
+	jsr	pt3_set_pages
 
 	jsr	mockingboard_init
 	jsr	pt3_setup_interrupt

@@ -7,11 +7,9 @@
 
 end_book:
 
+cli
 	;===================
 	; init screen
-;	jsr	TEXT
-;	jsr	HOME
-;	bit	KEYRESET
 
 	bit	PAGE0
 	bit	SET_TEXT
@@ -28,7 +26,7 @@ end_book:
 	sta	FRAMEL
 
 	;===================
-	; setup grahics
+	; setup graphics
 
 	jsr	create_update_type1
 
@@ -50,7 +48,17 @@ end_book:
 	lda	#200
 	jsr	long_wait
 
+sei
 
+	lda     #0
+	sta     FRAME_PLAY_OFFSET
+	sta     FRAME_PLAY_PAGE
+	sta     FRAME_OFFSET
+	sta     FRAME_PAGE
+	jsr     update_pt3_play
+
+	; setup 4 frames
+	jsr     pt3_write_lc_4
 
 
 	;=============================
@@ -148,24 +156,24 @@ book_loop:
 	;     4550
 	;      -12   -- enter/leave flip code
 	;      -10   -- keypress code
+	;    -1239
 	;   =======
-	;    4528 cycles
+	;     3289 cycles
 
+	jsr	play_frame_compressed			; 6+1233
 
 	;=================================
 	; do nothing
 	;=================================
-	; and take 4528
+	; and take 3289
 
 book_do_nothing:
 
-	; Try X=4 Y=174 cycles=4525 R3
+	; Try X=81 Y=8 cycles=3289
 
-	lda	TEMP	; 3
-
-	ldy	#174							; 2
+	ldy	#8							; 2
 bloop1:
-	ldx	#4							; 2
+	ldx	#81							; 2
 bloop2:
 	dex								; 2
 	bne	bloop2							; 2nt/3

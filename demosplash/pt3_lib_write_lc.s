@@ -106,6 +106,7 @@ pt3_set_pages:
 
 	rts
 
+.align $100
 music_table_begin:
 
 music_addr_table:
@@ -113,7 +114,7 @@ music_addr_table:
 .byte $e6,$e7,$e8,$e9,$ea,$eb,$ec,$ed,$ee,$ef,$f0,$BB,$CC,$DD,$EE,$FF
 .byte $db,$dc,$dd,$de,$df,$e0,$e1,$e2,$e3,$e4,$e5,$BB,$CC,$DD,$EE,$FF
 .byte $d0,$d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$da,$BB,$CC,$DD,$EE,$FF
-
+.byte $d0,$d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$da,$BB,$CC,$DD,$EE,$FF
 music_table_end:
 
 .assert >music_table_begin = >music_table_end, error, "music_table crosses page"
