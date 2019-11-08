@@ -121,6 +121,17 @@ wait_until_keypressed:
 	bit	KEYRESET
 	rts
 
+; Pictures (no need to align)
+.include "appleII_40_96.inc"
+.include "k_40_48d.inc"
+.include "graphics/book_open/book_open.inc"
+.include "graphics/starbase/starbase.inc"
+.include "graphics/starbase/ship_flames.inc"
+.include "graphics/starbase/star_wipe.inc"
+;.include "earth.inc"
+.include "book_40_48d.inc"
+.include "credits_bg.inc"
+
 
 ; Apple II intro
 .include "appleII_intro.s"
@@ -176,16 +187,7 @@ wait_until_keypressed:
 .include "create_update_type1.s"
 .include "create_update_type2.s"
 
-; Pictures (no need to align)
-.include "appleII_40_96.inc"
-.include "k_40_48d.inc"
-.include "graphics/book_open/book_open.inc"
-.include "graphics/starbase/starbase.inc"
-.include "graphics/starbase/ship_flames.inc"
-.include "graphics/starbase/star_wipe.inc"
-;.include "earth.inc"
-.include "book_40_48d.inc"
-.include "credits_bg.inc"
+
 
 
 PT3_LOC = song
