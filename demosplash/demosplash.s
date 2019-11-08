@@ -50,20 +50,14 @@ demosplash2019:
 	; Setup pages (is this necessary?)
 	;===========================
 
-	lda	#0
-	sta	DRAW_PAGE
-	lda	#1
-	sta	DISP_PAGE
-
+;	lda	#0
+;	sta	DRAW_PAGE
+;	lda	#1
+;	sta	DISP_PAGE
 
 	;===========================
 	; apple II intro
 	;============================
-
-	nop
-	nop
-	nop
-
 
 	jsr	appleII_intro
 
@@ -72,10 +66,6 @@ demosplash2019:
 	; missing scene
 	;===========================
 
-;	nop
-;	nop
-;	nop
-
 	jsr	missing_intro
 
 
@@ -83,7 +73,6 @@ demosplash2019:
 	; start irq music
 	;========================
 
-nop
 ;	cli	; enable interrupts
 
 	;===========================
@@ -208,6 +197,7 @@ wait_until_keypressed:
 
 ; Pictures (no need to align)
 .include "appleII_40_96.inc"
+.include "k_40_48d.inc"
 .include "graphics/book_open/book_open.inc"
 .include "graphics/starbase/starbase.inc"
 .include "graphics/starbase/ship_flames.inc"

@@ -144,42 +144,43 @@ missing_display_loop:
 	; do_nothing should be
 	;	4550
 	;	 -12 jsr/ret to update_type1
-	;        - 7 check keypress
-	;	 - 3 jmp loop
+	;        - 8 check keypress
+	;      -1239
 	;=============
-	;       4528
+	;       3291
 
 
 	; blah, current code the tight loops are right at a page boundary
 
+	jsr	play_frame_compressed		; 6+1233
+
 do_nothing_missing:
 
-	; want 4528
+	; want 3291
 
-	; Try X=4 Y=174 cycles=4525 R3
+	; Try X=163 Y=4 cycles=3285R6
 
-	lda	TEMP	; nop 3
+	lda	TEMP
+	lda	TEMP
 
-	ldy	#174							; 2
-gloop1:	ldx	#4							; 2
+	ldy	#4							; 2
+gloop1:	ldx	#163							; 2
 gloop2:	dex								; 2
 	bne	gloop2							; 2nt/3
 	dey								; 2
 	bne	gloop1							; 2nt/3
 
 
-	lda	KEYPRESS				; 4
-	bpl	missing_no_keypress			; 3
+	lda	FRAME_PLAY_PAGE			; 3
+	cmp	#4				; 2
+	bne	missing_display_loop		; 3
+
+;	lda	KEYPRESS				; 4
+;	bpl	missing_no_keypress			; 3
 
 	rts
 
-missing_no_keypress:
-
-	jmp	missing_display_loop			; 3
-
-.align $100
-
-
-.include "k_40_48d.inc"
+;.align $100
+;.include "k_40_48d.inc"
 
 
