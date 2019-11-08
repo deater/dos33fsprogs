@@ -11,6 +11,9 @@ demosplash2019:
 	;=========================
 	lda	#0
 	sta	DONE_PLAYING
+	sta	FRAME_PLAY_OFFSET
+	sta	FRAME_PLAY_PAGE
+	jsr	update_pt3_play
 
 	jsr	mockingboard_init
 	jsr	pt3_setup_interrupt

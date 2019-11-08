@@ -14,11 +14,11 @@
 ;DA00	;a $AE00,$AF00,$B000 = ENV high (r12)
 
 	; 3+ 72 + 72 + 83 + 74 + 72 + 77 + 19 + 70 + 74 + 72 +
-	;	77 + 18 + 82 + 85 + 72 + 72 + 8 + 72 + 6 = 1180
+	;	77 + 18 + 82 + 85 + 72 + 72 + 10 + 123 + 6 = 1233 /////1180
 
 play_frame_compressed:
 
-	ldy	FRAME_OFFSET					; 3
+	ldy	FRAME_PLAY_OFFSET				; 3
 
 	; Register 0: A fine
 	ldx	#0						; 2
@@ -186,33 +186,27 @@ r12_smc:
 	; wrap to next
 
 	iny						; 2
-	sty	FRAME_OFFSET				; 3
+	sty	FRAME_PLAY_OFFSET			; 3
+	cpy	#59*3	; FIXME: song specific		; 2
 	beq	frame_wrap				; 3
 						;==========
-						;	  8
+						;	  10
 
 no_frame_wrap:
 							; -1
-	; delay 72+1-3=70
-	lda	#43		; 70-2-25=43
-	jsr	delay_a
+	; delay 123+1-3=121
+	lda	#94		; 2
+	jsr	delay_a		; 121-2-25=94
 
 	jmp	done_frame_wrap				; 3
 frame_wrap:
-	inc	r0_smc+2	; 6
-	inc	r1_smc+2	; 6
-	inc	r2_smc+2	; 6
-	inc	r4_smc+2	; 6
-	inc	r5_smc+2	; 6
-	inc	r13_smc+2	; 6
-	inc	r6_smc+2	; 6
-	inc	r7_smc+2	; 6
-	inc	r8_smc+2	; 6
-	inc	r9_smc+2	; 6
-	inc	r11_smc+2	; 6
-	inc	r12_smc+2	; 6
-				;=====
-				; 72
+	lda	#0					; 2
+	sta	FRAME_PLAY_OFFSET			; 3
+
+	inc	FRAME_PLAY_PAGE				; 5
+	jsr	update_pt3_play				; 6+107
+							;=====
+							; 123
 done_frame_wrap:
 
 
@@ -253,3 +247,54 @@ play_mb_write:
 
 
 
+	;===========================
+	; update the SMC counters
+
+	; 13+88+6=107
+
+update_pt3_play:
+	lda     FRAME_PLAY_PAGE				; 3
+        asl						; 2
+        asl						; 2
+        asl						; 2
+        asl						; 2
+        tay						; 2
+							;===
+							; 13
+
+        lda     music_addr_table+0,Y			; 4
+        sta     r0_smc+2				; 4
+
+        lda     music_addr_table+1,Y			; 4
+        sta     r1_smc+2				; 4
+
+        lda     music_addr_table+2,Y			; 4
+        sta     r2_smc+2				; 4
+
+        lda     music_addr_table+3,Y			; 4
+        sta     r4_smc+2				; 4
+
+        lda     music_addr_table+4,Y			; 4
+        sta     r13_smc+2				; 4
+
+	lda     music_addr_table+5,Y			; 4
+	sta     r6_smc+2				; 4
+
+	lda     music_addr_table+6,Y			; 4
+	sta     r7_smc+2				; 4
+
+	lda	music_addr_table+7,Y			; 4
+	sta	r8_smc+2				; 4
+
+        lda     music_addr_table+8,Y			; 4
+        sta     r9_smc+2				; 4
+
+        lda     music_addr_table+9,Y			; 4
+        sta     r11_smc+2				; 4
+
+        lda     music_addr_table+10,Y			; 4
+        sta     r12_smc+2				; 4
+						;==========
+						; 11*8 = 88
+
+	rts						; 6

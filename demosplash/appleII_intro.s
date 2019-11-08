@@ -9,7 +9,7 @@ appleII_intro:
 	; init screen
 ;	jsr	TEXT
 ;	jsr	HOME
-	bit	KEYRESET
+;	bit	KEYRESET
 
 	;===================
 	; init vars
@@ -159,9 +159,9 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;	       -1174
 	;		  -7 (keypress)
 	;		  -3 (jump)
-	;	       -1186 (play_music)
+	;	       -1239 (play_music)
 	;		=====
-	;		2179
+	;		2126		2179
 
 	jsr	do_nothing				; 6
 
@@ -408,13 +408,18 @@ loop29:	dex								; 2
 	;==========================
 	;==========================
 intro_wipe_done:
-	lda	KEYPRESS				; 4
-	bpl	no_keypress2				; 3
-	jmp	appleii_done
+	lda	FRAME_PLAY_PAGE		; 3
+	cmp	#2			; 2
+	beq	appleii_done		; 3
+					; -1
+
+;	lda	KEYPRESS				; 4
+;	bpl	no_keypress2				; 3
+;	jmp	appleii_done
 no_keypress2:
 
 
-	jsr	play_frame_compressed			; 6+1180
+	jsr	play_frame_compressed			; 6+1233
 
 	jmp	display_loop				; 3
 
@@ -426,13 +431,15 @@ appleii_done:
 	;=================================
 	; do nothing
 	;=================================
-	; and take 2179-12 = 2167 cycles to do it
+	; and take 2126-12 = 2114 cycles to do it
 do_nothing:
+	; Try X=21 Y=19 cycles=2110R4
 
-	; Try X=71 Y=6 cycles=2167
+	nop
+	nop
 
-	ldy	#6							; 2
-loop1:	ldx	#71							; 2
+	ldy	#19							; 2
+loop1:	ldx	#21							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
