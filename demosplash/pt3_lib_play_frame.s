@@ -14,7 +14,7 @@
 ;DA00	;a $AE00,$AF00,$B000 = ENV high (r12)
 
 	; 3+ 72 + 72 + 83 + 74 + 72 + 77 + 19 + 70 + 74 + 72 +
-	;	77 + 18 + 82 + 85 + 72 + 72 + 10 + 123 + 6 = 1233 /////1180
+	;	77 + 18 + 82 + 85 + 72 + 72 + 10 + 127 + 6 = 1237 /////1180
 
 play_frame_compressed:
 
@@ -194,9 +194,9 @@ r12_smc:
 
 no_frame_wrap:
 							; -1
-	; delay 123+1-3=121
-	lda	#94		; 2
-	jsr	delay_a		; 121-2-25=94
+	; delay 127+1-3=125
+	lda	#98		; 2
+	jsr	delay_a		; 125-2-25=98
 
 	jmp	done_frame_wrap				; 3
 frame_wrap:
@@ -204,9 +204,9 @@ frame_wrap:
 	sta	FRAME_PLAY_OFFSET			; 3
 
 	inc	FRAME_PLAY_PAGE				; 5
-	jsr	update_pt3_play				; 6+107
+	jsr	update_pt3_play				; 6+111
 							;=====
-							; 123
+							; 127
 done_frame_wrap:
 
 
@@ -250,7 +250,7 @@ play_mb_write:
 	;===========================
 	; update the SMC counters
 
-	; 13+88+6=107
+	; 13+92+6=111
 
 update_pt3_play:
 	lda     FRAME_PLAY_PAGE				; 3
@@ -296,6 +296,6 @@ update_pt3_play:
         lda     music_addr_table+10,Y			; 4	; DA
         sta     r12_smc+2				; 4
 						;==========
-						; 11*8 = 88
+						; 11*8+4 = 92
 
 	rts						; 6

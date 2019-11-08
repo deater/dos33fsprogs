@@ -159,9 +159,9 @@ page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	;	       -1174
 	;		  -7 (keypress)
 	;		  -3 (jump)
-	;	       -1239 (play_music)
+	;	       -1243 (play_music)
 	;		=====
-	;		2126		2179
+	;		2122		2179
 
 	jsr	do_nothing				; 6
 
@@ -419,7 +419,7 @@ intro_wipe_done:
 no_keypress2:
 
 
-	jsr	play_frame_compressed			; 6+1233
+	jsr	play_frame_compressed			; 6+1237
 
 	jmp	display_loop				; 3
 
@@ -431,12 +431,9 @@ appleii_done:
 	;=================================
 	; do nothing
 	;=================================
-	; and take 2126-12 = 2114 cycles to do it
+	; and take 2122-12 = 2110 cycles to do it
 do_nothing:
-	; Try X=21 Y=19 cycles=2110R4
-
-	nop
-	nop
+	; Try X=21 Y=19 cycles=2110
 
 	ldy	#19							; 2
 loop1:	ldx	#21							; 2
