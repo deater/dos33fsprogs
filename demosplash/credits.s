@@ -23,6 +23,8 @@ credits:
 	lda	#>credits_text
 	sta	CREDITS_POINTERH
 
+	jsr	play_frame_compressed	; 6+1237
+
 	;==================
 	; setup graphics
 
@@ -55,6 +57,7 @@ credits:
 	sta	UPDATE_START+1+(49*32)
 	sta	UPDATE_START+1+(49*36)
 
+	jsr	play_frame_compressed	; 6+1237
 
 	;=============================
 	; Load graphic page0
@@ -183,10 +186,10 @@ credits_loop:
 	beq	play_fake		; 3
 					; -1
 play_actual:
-	jsr	play_frame_compressed	; 6+1237
-	jmp	pad_time		; 3
+	jsr	play_frame_compressed	; 6+1237 \
+	jmp	pad_time		; 3      / 1245
 play_fake:
-	jsr	fake_music_play		; 3+6+1236
+	jsr	fake_music_play		; 6+1239
 
 
 pad_time:
@@ -623,13 +626,17 @@ credits_text_end:
 
 fake_music_play:
 
-	; 1237-6 = 1231-1 - 3 = 1227
+	; 1239 - 6 = 1233
 
-	; Try X=60 Y=4 cycles=1225R2
+	; Try X=60 Y=4 cycles=1225R8
 
 ;	jsr	clear_ay_both
 
 	nop
+	nop
+	nop
+	nop
+
 
 	ldy	#4							; 2
 uloop1:	ldx	#60							; 2
