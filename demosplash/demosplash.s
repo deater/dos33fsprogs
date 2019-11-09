@@ -62,45 +62,45 @@ demosplash2019:
 	; missing scene
 	;===========================
 
-	nop
-	nop
-	nop
-;	jsr	missing_intro
+;	nop
+;	nop
+;	nop
+	jsr	missing_intro
 
 
 	;========================
 	; start irq music
 	;========================
 
-	nop
+;	nop
 
-;	cli	; enable interrupts
+	cli	; enable interrupts
 
 	;===========================
 	; opening book scene
 	;============================
 
-	nop
-	nop
-	nop
+;	nop
+;	nop
+;	nop
 
-;	jsr	open_book
+	jsr	open_book
 
 	;===========================
 	; starbase scene
 	;===========================
 
-	nop
-	nop
-	nop
+;	nop
+;	nop
+;	nop
 
-;	jsr	starbase
+	jsr	starbase
 
 	;============================
 	; disable irq music
 
-	nop
-;	sei
+;	nop
+	sei
 
 
 	;===========================
