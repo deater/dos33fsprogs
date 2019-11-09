@@ -120,7 +120,7 @@ write_ay_both_end:
 	;=======================================
 	; 7+(74*14)+5=1048
 clear_ay_both:
-	ldx	#14				; 2
+	ldx	#13				; 2
 	lda	#0				; 2
 	sta	MB_VALUE			; 3
 clear_ay_left_loop:

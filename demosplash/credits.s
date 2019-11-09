@@ -182,7 +182,7 @@ credits_loop:
 	; 3+2+3+6+1237 play fake (-1)
 
 	lda	FRAME_PLAY_PAGE		; 3
-	cmp	#$5			; 2
+	cmp	#$3			; 2
 	beq	play_fake		; 3
 					; -1
 play_actual:

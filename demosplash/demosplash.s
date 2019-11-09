@@ -36,8 +36,8 @@ demosplash2019:
 
 	jsr	pt3_write_lc_4
 
-;	lda	#1
-;	sta	LOOP
+	lda	#1
+	sta	LOOP
 
 
 	;===========================
