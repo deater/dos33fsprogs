@@ -7,7 +7,8 @@
 
 end_book:
 
-cli
+	cli
+
 	;===================
 	; init screen
 
@@ -48,7 +49,7 @@ cli
 	lda	#200
 	jsr	long_wait
 
-sei
+	sei
 
 	lda     #0
 	sta     FRAME_PLAY_OFFSET
@@ -57,8 +58,8 @@ sei
 	sta     FRAME_PAGE
 	jsr     update_pt3_play
 
-	; setup 4 frames
-	jsr     pt3_write_lc_4
+	; setup 1 frame
+	jsr     pt3_write_lc_1
 
 
 	;=============================
@@ -181,9 +182,14 @@ bloop2:
 	dey								; 2
 	bne	bloop1							; 2nt/3
 
-	dec	FRAMEL					; 5
-	nop						; 2
-	bne	book_loop				; 3
+	lda	FRAME_PLAY_PAGE		; 3
+	nop
+	nop
+	beq	book_loop		; 3
+
+;	dec	FRAMEL					; 5
+;	nop						; 2
+;	bne	book_loop				; 3
 
 ;	lda	TEMP					; 3
 ;	lda	KEYPRESS				; 4

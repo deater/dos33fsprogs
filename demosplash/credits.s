@@ -16,6 +16,8 @@ credits:
 	sta	FRAME_PLAY_PAGE
 	jsr	update_pt3_play
 
+	jsr     pt3_write_lc_4
+
 	lda	#<credits_text
 	sta	CREDITS_POINTERL
 	lda	#>credits_text

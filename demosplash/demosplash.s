@@ -53,37 +53,54 @@ demosplash2019:
 	; apple II intro
 	;============================
 
+;	nop
+;	nop
+;	nop
 	jsr	appleII_intro
 
 	;===========================
 	; missing scene
 	;===========================
 
-	jsr	missing_intro
+	nop
+	nop
+	nop
+;	jsr	missing_intro
 
 
 	;========================
 	; start irq music
 	;========================
 
-	cli	; enable interrupts
+	nop
+
+;	cli	; enable interrupts
 
 	;===========================
 	; opening book scene
 	;============================
 
-	jsr	open_book
+	nop
+	nop
+	nop
+
+;	jsr	open_book
 
 	;===========================
 	; starbase scene
 	;===========================
 
-	jsr	starbase
+	nop
+	nop
+	nop
+
+;	jsr	starbase
 
 	;============================
 	; disable irq music
 
-	sei
+	nop
+;	sei
 
 
 	;===========================
