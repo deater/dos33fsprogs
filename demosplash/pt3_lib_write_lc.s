@@ -20,6 +20,25 @@ lc4_frame_decode_loop:
 
 	rts
 
+pt3_write_lc_5:
+
+	; page offset
+	lda	#0
+	sta	FRAME_PAGE
+
+lc5_frame_decode_loop:
+
+	jsr	pt3_set_pages
+
+	jsr	pt3_write_lc
+
+	lda	FRAME_PAGE
+	cmp	#5
+	bne	lc5_frame_decode_loop
+
+	rts
+
+
 	;==============================
 	; write one page of frame data
 pt3_write_lc_1:
@@ -114,7 +133,8 @@ music_addr_table:
 .byte $e6,$e7,$e8,$e9,$ea,$eb,$ec,$ed,$ee,$ef,$f0,$BB,$CC,$DD,$EE,$FF
 .byte $db,$dc,$dd,$de,$df,$e0,$e1,$e2,$e3,$e4,$e5,$BB,$CC,$DD,$EE,$FF
 .byte $d0,$d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$da,$BB,$CC,$DD,$EE,$FF
-.byte $d0,$d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$da,$BB,$CC,$DD,$EE,$FF
+;.byte $d0,$d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$da,$BB,$CC,$DD,$EE,$FF
+.byte $14,$15,$16,$17,$18,$19,$1A,$1B,$1C,$1D,$1E,$BB,$CC,$DD,$EE,$FF
 music_table_end:
 
 .assert >music_table_begin = >music_table_end, error, "music_table crosses page"

@@ -16,7 +16,7 @@ credits:
 	sta	FRAME_PLAY_PAGE
 	jsr	update_pt3_play
 
-	jsr     pt3_write_lc_4
+	jsr     pt3_write_lc_5
 
 	lda	#<credits_text
 	sta	CREDITS_POINTERL
@@ -169,15 +169,24 @@ credits_loop:
 	;  -10  -- keypress
 	;  -12  -- call/return of draw code
 	; -446  -- do_words
-	;-1243  -- play music
-	;  -8   -- wrap
+	;-1246  -- play music
+	;  -7   -- wrap
 	;=======
-	; 1553		//2804
+	; 1551		//2804
+
+
+	; 3+2+2+6+1237 play music
+	; 3+2+3+6+1237 play fake (-1)
 
 	lda	FRAME_PLAY_PAGE		; 3
-	and	#$3			; 2
-	sta	FRAME_PLAY_PAGE		; 3
+	cmp	#$5			; 2
+	beq	play_fake		; 3
+					; -1
+play_actual:
 	jsr	play_frame_compressed	; 6+1237
+	jmp	pad_time		; 3
+play_fake:
+	jsr	fake_music_play		; 3+6+1236
 
 
 pad_time:
@@ -358,13 +367,14 @@ pad_time:
 	; WAIT for VBLANK to finish
 	;============================
 
-	; want 1553
+	; want 1551
 
-	; Try X=2 Y=97 cycles=1553
+	; Try X=102 Y=3 cycles=1549R2
 
+	nop
 
-	ldy	#97							; 2
-tloop1:	ldx	#2							; 2
+	ldy	#3							; 2
+tloop1:	ldx	#102							; 2
 tloop2:	dex								; 2
 	bne	tloop2							; 2nt/3
 	dey								; 2
@@ -608,3 +618,24 @@ credits_text:
 credits_text_end:
 
 .assert >credits_text = >(credits_text_end-1), error, "credits_text crosses page"
+
+
+
+fake_music_play:
+
+	; 1237-6 = 1231-1 - 3 = 1227
+
+	; Try X=60 Y=4 cycles=1225R2
+
+;	jsr	clear_ay_both
+
+	nop
+
+	ldy	#4							; 2
+uloop1:	ldx	#60							; 2
+uloop2:	dex								; 2
+	bne	uloop2							; 2nt/3
+	dey								; 2
+	bne	uloop1							; 2nt/3
+
+	rts

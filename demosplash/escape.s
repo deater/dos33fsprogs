@@ -1580,18 +1580,16 @@ escape_keys:
 	.byte 'A',25		; slower
 	.byte 'A',25		; stop
 
-
-
-
 	.byte 'A',5		; down
 	.byte 'A',10		; faster
 	.byte 'A',40		; faster
 	.byte 'Z',25		; slower
 	.byte 'Z',25		; stop
 	.byte ' '+$80,30	; shoot
-	.byte 'A',5		; down
+	.byte 'Z',5		; down
+	.byte 'Z',10		; faster
+	.byte 'A',30		; faster
 	.byte 'A',10		; faster
-	.byte 'A',40		; faster
 
 	.byte 27+$80,2
 
