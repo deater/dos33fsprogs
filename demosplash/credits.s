@@ -626,23 +626,27 @@ credits_text_end:
 
 fake_music_play:
 
-	; 1239 - 6 = 1233
+	; 1239 - 6 (ret) = 1233
 
-	; Try X=60 Y=4 cycles=1225R8
 
-;	jsr	clear_ay_both
+
+	jsr	clear_ay_both	; 6+1048
+
+	; 1233-1054=179
+
+	; Try X=2 Y=11 cycles=177R2
 
 	nop
-	nop
-	nop
-	nop
 
-
-	ldy	#4							; 2
-uloop1:	ldx	#60							; 2
+	ldy	#11							; 2
+uloop1:	ldx	#2							; 2
 uloop2:	dex								; 2
 	bne	uloop2							; 2nt/3
 	dey								; 2
 	bne	uloop1							; 2nt/3
 
 	rts
+
+fake_music_play_end:
+
+.assert >fake_music_play = >fake_music_play_end, error, "fake_musis_play crosses page"
