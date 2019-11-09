@@ -17,6 +17,14 @@ escape:
 ;	lda	#0
 ;	sta	current_line_smc+1
 
+
+	lda     #0
+        sta     FRAME_PLAY_OFFSET
+        sta     FRAME_PLAY_PAGE
+        sta     FRAME_OFFSET
+        sta     FRAME_PAGE
+        jsr     update_pt3_play
+
 	; setup 4 frames
 	jsr	pt3_write_lc_4
 
@@ -1542,7 +1550,7 @@ score_after:
 
 .assert >score_before = >score_after, error, "score crosses page"
 
-.align $100
+;.align $100
 
 escape_keys_before:
 escape_keys:
@@ -1572,7 +1580,7 @@ escape_keys:
 	.byte 'A',25		; slower
 	.byte 'A',25		; stop
 
-	.byte 27+$80,2
+
 
 
 	.byte 'A',5		; down
@@ -1584,11 +1592,16 @@ escape_keys:
 	.byte 'A',5		; down
 	.byte 'A',10		; faster
 	.byte 'A',40		; faster
+
+	.byte 27+$80,2
+
+.if 0
 	.byte 'Z',25		; slower
 	.byte 'Z',25		; stop
 	.byte 'Z',25		; slower
 	.byte 'Z',45		; stop
 	.byte 'A',5		; down
+	.byte ' '+$80,30	; shoot
 	.byte 'A',10		; faster
 	.byte 'A',40		; faster
 	.byte ','+$80,50
@@ -1601,6 +1614,7 @@ escape_keys:
 	.byte 'Z',25		; faster
 	.byte ' '+$80,30
 	.byte 27+$80,2
+.endif
 
 escape_keys_after:
 
