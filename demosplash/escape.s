@@ -12,16 +12,16 @@ escape:
 
 	; we are roughly at the beginning of pattern 0x19
 
-	lda	#19
-	sta	current_pattern_smc+1
-	lda	#0
-	sta	current_line_smc+1
+;	lda	#19
+;	sta	current_pattern_smc+1
+;	lda	#0
+;	sta	current_line_smc+1
 
 	; setup 4 frames
 	jsr	pt3_write_lc_4
 
 	; FIXME
-	jsr     clear_ay_both
+;	jsr     clear_ay_both
 
 	;===================
 	; init vars
@@ -72,11 +72,52 @@ escape:
 	jsr     create_update_type2
 	jsr     setup_update_type2
 
+	jsr	play_frame_compressed		; catch up some music
+
 	;==========================================
 	; replace bottom with call to music player
 
-;	lda	#20
-;	sta	$9800+
+	; after 172 lines*65 = 11180+1237+6=12427 (want 12480) remain 57
+	; 172 lines*47=8084 = $9800+b794
+
+	; add "jsr play_frame_compressed" 6+1237 = 1243 -6 = 1237cycles
+	; add "rts" 6 cycles
+				; lda #30
+				; jsr delay_a	30+25+2=
+
+
+	; take off 6 as code we are skipping has the 6 jsr
+ROOT = $B794
+;ROOT = $200
+
+	lda	#$a9
+	sta	ROOT+0
+	lda	#30
+	sta	ROOT+1
+
+	lda	#$20
+	sta	ROOT+2
+	lda	#<delay_a
+	sta	ROOT+3
+	lda	#>delay_a
+	sta	ROOT+4
+
+	lda	#$20
+	sta	ROOT+5
+	lda	#<play_frame_compressed
+	sta	ROOT+6
+	lda	#>play_frame_compressed
+	sta	ROOT+7
+
+	lda	#$60
+	sta	ROOT+8
+
+;	lda	#$4c
+;	sta	ROOT+8
+;	lda	#<after_sprites_display
+;	sta	ROOT+9
+;	lda	#>after_sprites_display
+;	sta	ROOT+10
 
 	;=============================
 	; Load graphic page0
@@ -190,6 +231,8 @@ sprites_display_loop:
 
 	jsr	$9800
 ;.include "sprites_screen.s"
+
+after_sprites_display:
 
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
@@ -1514,20 +1557,24 @@ escape_keys:
 	.byte 'A',20		; stop
 	.byte ' '+$80,20	; shoot second asteroid
 	.byte 'Z',30		; down
-	.byte '.'+$80,10
+	.byte '.'+$80,10				; color1
 	.byte 'A',5		; up
 	.byte 'A',30		; up
-	.byte '.'+$80,20
+	.byte '.'+$80,20				; color2
 	.byte 'Z',25		; down
 	.byte 'Z',25		; faster
 	.byte 'A',25		; slower
 	.byte 'A',25		; stop
 	.byte 'Z',5		; down
 	.byte 'Z',10		; faster
+	.byte ','+$80,30
 	.byte 'Z',40		; faster
 	.byte 'A',25		; slower
 	.byte 'A',25		; stop
-	.byte ','+$80,30
+
+	.byte 27+$80,2
+
+
 	.byte 'A',5		; down
 	.byte 'A',10		; faster
 	.byte 'A',40		; faster
