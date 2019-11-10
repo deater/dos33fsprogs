@@ -574,8 +574,9 @@ finally_draw_him:
 	sta	XPOS
 
 	lda	ASTRONAUT_Y
-	sec
-	sbc	EARTH_OFFSET	; adjust for earthquakes
+	and	#$fe
+;	sec
+;	sbc	EARTH_OFFSET	; adjust for earthquakes
 	sta	YPOS
 
 	lda	DIRECTION

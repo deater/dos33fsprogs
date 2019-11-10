@@ -7,6 +7,16 @@
 demosplash2019:
 
 	;=========================
+	; clear zp
+	;=========================
+	lda	#0
+	ldy	#128
+zp_clear_loop:
+	sta	$0,y
+	iny
+	bne	zp_clear_loop
+
+	;=========================
 	; set up sound
 	;=========================
 	lda	#0

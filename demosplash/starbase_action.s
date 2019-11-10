@@ -454,6 +454,7 @@ asstr_above:
 	lda	#10
 
 asstr_adjust_y:
+	and	#$fe
 	sta	ASTRONAUT_Y
 
 	jsr	recalc_walk_collision
