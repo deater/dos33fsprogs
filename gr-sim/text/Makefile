@@ -12,7 +12,7 @@ all:	text
 ####
 
 text:	text.o $(GR_SIM)
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o text text.o $(GR_SIM)
+	$(CC) -o text text.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
 
 text.o:	text.c
 	$(CC) $(CFLAGS) -c text.c

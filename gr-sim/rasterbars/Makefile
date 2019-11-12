@@ -10,15 +10,14 @@ all:	rasterbars rasterbars_fixed
 
 
 rasterbars:	rasterbars.o $(GR_SIM)
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o rasterbars rasterbars.o \
-		$(GR_SIM)
+	$(CC) -o rasterbars rasterbars.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
 
 rasterbars.o:	rasterbars.c
 	$(CC) $(CFLAGS) -c rasterbars.c
 
 rasterbars_fixed:	rasterbars_fixed.o $(GR_SIM)
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o rasterbars_fixed rasterbars_fixed.o \
-		$(GR_SIM)
+	$(CC) -o rasterbars_fixed rasterbars_fixed.o $(GR_SIM) \
+		$(LFLAGS) $(SDL_LIBS)
 
 rasterbars_fixed.o:	rasterbars_fixed.c
 	$(CC) $(CFLAGS) -c rasterbars_fixed.c

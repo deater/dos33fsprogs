@@ -17,7 +17,7 @@ all:	fade
 ####
 
 fade:	fade.o $(GR_SIM)
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o fade fade.o $(GR_SIM)
+	$(CC) -o fade fade.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
 
 fade.o:	fade.c demo_title.c
 	$(CC) $(CFLAGS) -c fade.c

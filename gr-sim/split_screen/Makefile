@@ -11,7 +11,7 @@ all:	split_screen KATC.BIN
 ###
 
 split_screen:	split_screen.o $(GR_SIM)
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o split_screen split_screen.o $(GR_SIM)
+	$(CC) -o split_screen split_screen.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
 
 split_screen.o:	split_screen.c
 	$(CC) $(CFLAGS) -c split_screen.c
