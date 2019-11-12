@@ -131,7 +131,7 @@ tfv_multiply.o:	tfv_multiply.c
 	$(CC) $(CFLAGS) -c tfv_multiply.c
 
 tfv_multiply:	tfv_multiply.o
-	$(CC) $(LFLAGS) -o tfv_multiply tfv_multiply.o
+	$(CC) -o tfv_multiply tfv_multiply.o $(LFLAGS)
 
 
 tfv.o:	tfv.c ../gr-sim.h tfv_backgrounds.h tfv_sprites.h
@@ -144,14 +144,14 @@ tfv:	tfv.o tfv_backgrounds.o tfv_battle.o tfv_credits.o tfv_dialog.o \
 		tfv_random.o tfv_sprites.o tfv_textentry.o \
 		tfv_title.o tfv_worldmap.o tfv_mapinfo.h \
 		$(GR_SIM)
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o tfv tfv.o \
+	$(CC) -o tfv tfv.o \
 		tfv_backgrounds.o tfv_battle.o tfv_credits.o tfv_dialog.o \
 		tfv_ending.o tfv_flying.o \
 		tfv_game_over.o tfv_help.o tfv_info.o tfv_map.o \
 		tfv_opener.o tfv_player_select.o \
 		tfv_random.o  tfv_sprites.o tfv_textentry.o \
 		tfv_title.o tfv_worldmap.o \
-		$(GR_SIM)
+		$(GR_SIM) $(LFLAGS) $(SDL_LIBS)
 
 clean:	
 	rm -f *~ *.o tfv

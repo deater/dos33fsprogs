@@ -15,7 +15,7 @@
 #include <png.h>
 #include "loadpng.h"
 
-static int convert_color(int color) {
+static int convert_color(int color, char *filename) {
 
 	int c=0;
 
@@ -37,7 +37,9 @@ static int convert_color(int color) {
 		case 0x72ffd0:	c=14; break;	/* aqua */
 		case 0xffffff:	c=15; break;	/* white */
 		default:
-			printf("Unknown color %x\n",color);
+			fprintf(stderr,"Unknown color %x, file %s\n",
+				color,filename);
+			exit(-1);
 			break;
 	}
 
@@ -181,7 +183,7 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 					printf("%x ",color);
 				}
 
-				a2_color=convert_color(color);
+				a2_color=convert_color(color,filename);
 
 				/* bottom color */
 				color=	(row_pointers[y+1][x*xadd*4]<<16)+
@@ -191,7 +193,7 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 					printf("%x ",color);
 				}
 
-				a2_color|=(convert_color(color)<<4);
+				a2_color|=(convert_color(color,filename)<<4);
 
 				*out_ptr=a2_color;
 				out_ptr++;
