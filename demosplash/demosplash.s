@@ -50,7 +50,6 @@ zp_clear_loop:
 	lda	#1
 	sta	LOOP
 
-
 	;===========================
 	; Enable graphics
 	;===========================

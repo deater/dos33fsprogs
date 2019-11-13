@@ -2,53 +2,67 @@
 	; Autogenerates code that does interleaved Page0/Page1 lores mode
 	; but leaving room for 14 pixels/line of per-scanline color
 
+	; originally 183,589
+	; takes roughly 12 + 192*((49*16)+2+38)	+ 15 = 158,235!!!!
+	; want to play sound every 15787 cycles (10.0)
+
+	; so every 19.2 times through loop?  is 16 close enough?
+
+	; 11 times should update???
+
 UPDATE_START = $9800
 
 DEFAULT_COLOR	= $0
 
 create_update_type1:
-	ldx	#192
-	lda	#<UPDATE_START
-	sta	OUTL
-	lda	#>UPDATE_START
-	sta	OUTH
-	lda	#<one_scanline
-	sta	INL
-	lda	#>one_scanline
-	sta	INH
+	ldx	#192						; 2
+	lda	#<UPDATE_START					; 2
+	sta	OUTL						; 3
+	lda	#>UPDATE_START					; 2
+	sta	OUTH						; 3
+							;===========
+							;        12
 create_update_outer_loop:
-	ldy	#0
+	ldy	#48						; 2
+
 create_update_inner_loop:
-	lda	(INL),Y
-	sta	(OUTL),Y
-	iny
-	cpy	#49
-	bne	create_update_inner_loop
+	lda	one_scanline,Y					; 4+
+	sta	(OUTL),Y					; 6
+	dey							; 2
+	bpl	create_update_inner_loop			; 3
+							;============
+							;        16
 
+								; -1
 	; toggle PAGE0/PAGE1
-	txa
-	and	#$1	; ror?
-	clc
-	adc	#$54
-	ldy	#1
-	sta	(OUTL),Y
+	txa							; 2
+	and	#$1	; ror?					; 2
+	clc							; 2
+	adc	#$54						; 2
+	ldy	#1						; 2
+	sta	(OUTL),Y					; 6
 
-	clc
-	lda	#49
-	adc	OUTL
-	sta	OUTL
-	lda	OUTH
-	adc	#0
-	sta	OUTH
+	clc							; 2
+	lda	#49						; 2
+	adc	OUTL						; 3
+	sta	OUTL						; 3
+	lda	OUTH						; 3
+	adc	#0						; 2
+	sta	OUTH						; 3
 
-	dex
-	bne	create_update_outer_loop
+	dex							; 2
+	bne	create_update_outer_loop			; 3
+							;===========
+							;	38
 
-	ldy	#0
-	lda	#$60
-	sta	(OUTL),Y
+								; -1
+	ldy	#0						; 2
+	lda	#$60						; 2
+	sta	(OUTL),Y					; 6
 
-	rts
+	rts							; 6
+							;=============
+							;         15
 
 BARS_START = 46
 

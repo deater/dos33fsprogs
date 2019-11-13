@@ -6,6 +6,10 @@
 
 missing_intro:
 
+	; we come into this at the very end of vblank
+	; we should be playing a frame of music every
+	; 17030 - 1243 = 15787 cycles or so
+
 	;===================
 	; init vars
 
@@ -15,7 +19,7 @@ missing_intro:
 	;=============================
 	; setup graphics code
 
-	jsr	create_update_type1
+	jsr	create_update_type1		; 
 
 	jsr	play_frame_compressed
 

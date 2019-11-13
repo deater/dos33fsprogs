@@ -445,8 +445,6 @@ loop2:	dex								; 2
 	rts								; 6
 do_nothing_end:
 
-.assert >do_nothing = >do_nothing_end, error, "do_nothing crosses page"
-
 forever_string:
 .byte	' ','F','O','R','E','V','E','R'
 
@@ -455,3 +453,7 @@ colors_first:	.byte $00,$00,$00,$00
 colors_second:	.byte $00,$04,$40,$00
 colors_third:	.byte $40,$4C,$C4,$04
 colors_fourth:	.byte $C4,$CF,$FC,$4C
+
+.assert >do_nothing = >do_nothing_end, error, "do_nothing crosses page"
+
+
