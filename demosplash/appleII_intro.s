@@ -103,7 +103,7 @@ loopB:	dex								; 2
 
         jmp     display_loop						; 3
 
-.align  $100
+;.align  $100
 
 
 	;================================================
@@ -426,7 +426,7 @@ no_keypress2:
 appleii_done:
 	rts
 
-.align $100
+;.align $100
 
 	;=================================
 	; do nothing
@@ -443,8 +443,9 @@ loop2:	dex								; 2
 	bne	loop1							; 2nt/3
 
 	rts								; 6
+do_nothing_end:
 
-
+.assert >do_nothing = >do_nothing_end, error, "do_nothing crosses page"
 
 forever_string:
 .byte	' ','F','O','R','E','V','E','R'
