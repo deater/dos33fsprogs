@@ -21,6 +21,7 @@ missing_intro:
 
 	jsr	create_update_type1		; now calls play_frame_compressed
 
+	jsr	make_bars
 
 	;=============================
 	; Load graphic page0
@@ -168,15 +169,56 @@ gloop2:	dex								; 2
 	bne	gloop1							; 2nt/3
 
 
-	lda	FRAME_PLAY_PAGE			; 3
-	cmp	#4				; 2
-	bne	missing_display_loop		; 3
+;	lda	FRAME_PLAY_PAGE			; 3
+;	cmp	#4				; 2
+;	bne	missing_display_loop		; 3
 
-;	lda	KEYPRESS				; 4
-;	bpl	missing_no_keypress			; 3
+;	lda	KEYPRESS			; 4
+;	bpl	missing_display_loop		; 3
+
+	lda	TEMP			; 3
+	nop				; 2
+	jmp	missing_display_loop	; 3
 
 	rts
 
+BAR_START = 2*8
 
+; $9800 + (49*18) + 4 = $9800+886 = $9800+$376=$9b76
+
+make_bars:
+	lda	#<(UPDATE_START+49*(BAR_START+2)+4)
+	sta	OUTL
+	lda	#>(UPDATE_START+49*(BAR_START+2)+4)
+	sta	OUTH
+
+	lda	#<bar_colors_top
+	sta	INL
+	lda	#>bar_colors_top
+	sta	INL
+
+	ldx	#4
+	ldy	#0
+make_bars_loop:
+
+	lda	(INL),Y
+	sta	(OUTL),Y
+
+	dex
+	bpl	make_bars_loop
+
+	rts
+
+bar_colors_top:
+	.byte $03,$0b,$0f,$0b,$30
+	.byte $02,$06,$0f,$06,$20
+	.byte $04,$0c,$0f,$0c,$40
+	.byte $05,$07,$0f,$07,$50
+
+bar_colors_bottom:
+	.byte $01,$03,$0f,$03,$10
+	.byte $08,$0d,$0f,$0d,$80
+	.byte $0c,$0e,$0f,$0e,$c0
+	.byte $09,$0d,$0f,$0d,$90
 
 
