@@ -20,6 +20,8 @@ create_update_type1:
 	sta	OUTL						; 3
 	lda	#>UPDATE_START					; 2
 	sta	OUTH						; 3
+	lda	#19
+	sta	FORCE_MUSIC
 							;===========
 							;        12
 create_update_outer_loop:
@@ -49,6 +51,21 @@ create_update_inner_loop:
 	lda	OUTH						; 3
 	adc	#0						; 2
 	sta	OUTH						; 3
+
+	dec	FORCE_MUSIC
+	bne	no_force_music
+	lda	#19
+	sta	FORCE_MUSIC
+
+	txa
+	pha
+
+	jsr     play_frame_compressed
+
+	pla
+	tax
+
+no_force_music:
 
 	dex							; 2
 	bne	create_update_outer_loop			; 3

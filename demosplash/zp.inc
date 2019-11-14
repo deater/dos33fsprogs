@@ -11,17 +11,17 @@ DELTA		= $08
 
 ;; Zero page monitor routines addresses
 
-WNDLFT	= $20
-WNDWDTH	= $21
-WNDTOP	= $22
-WNDBTM	= $23
-CH	= $24
-CV	= $25
-GBASL	= $26
-GBASH	= $27
-BASL	= $28
-BASH	= $29
-H2	= $2C
+WNDLFT		= $20
+WNDWDTH		= $21
+WNDTOP		= $22
+WNDBTM		= $23
+CH		= $24
+CV		= $25
+GBASL		= $26
+GBASH		= $27
+BASL		= $28
+BASH		= $29
+H2		= $2C
 V2		= $2D
 MASK		= $2E
 COLOR_MASK	= $2F
@@ -101,6 +101,7 @@ KEYPTRL		= $90
 KEYPTRH		= $91
 KEY_COUNTDOWN	= $92
 KEYPTR		= $93
+FORCE_MUSIC	= $94
 
 ; have to be consecutive
 DOOR_STATUS	= $B0
