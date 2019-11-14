@@ -19,9 +19,8 @@ missing_intro:
 	;=============================
 	; setup graphics code
 
-	jsr	create_update_type1		; 
+	jsr	create_update_type1		; now calls play_frame_compressed
 
-	jsr	play_frame_compressed
 
 	;=============================
 	; Load graphic page0
