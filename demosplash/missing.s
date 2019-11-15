@@ -153,7 +153,7 @@ mloopB:	dex								; 2
 
 	jmp	missing_display_loop					; 3
 
-.align  $100
+;.align  $100
 
 	;================================================
 	; Display Loop

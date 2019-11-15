@@ -25,7 +25,8 @@ open_book:
 	lda	#>book00_rle
 	sta	GBASH
 	lda	#$4
-	jsr	load_rle_gr
+	jsr	load_rle_gr		; load book to PAGE0
+
 
 	jsr	clear_bottom
 	bit	TEXTGR
@@ -39,16 +40,20 @@ open_book:
 	jsr	move_and_print
 	jsr	move_and_print
 
+	lda	#<book00_rle
+	sta	GBASL
+	lda	#>book00_rle
+	sta	GBASH
+	lda	#$8
+	jsr	load_rle_gr		; load book to PAGE1
+
 
 	lda	#200
 	jsr	long_wait
 	lda	#200
 	jsr	long_wait
-
 
 	; continue with animation
-
-
 
 	lda	#<open_book_sequence
 	sta	INTRO_LOOPL
@@ -56,6 +61,7 @@ open_book:
 	sta	INTRO_LOOPH
 
 	bit	FULLGR							; 4
+	bit	PAGE1
 
 	jsr	run_sequence
 
