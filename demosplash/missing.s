@@ -74,12 +74,12 @@ missing_intro:
 	lda	#>k_low
 	sta	GBASH
 	lda	#$c			; load to $c00
-	jsr	load_rle_gr
+	jsr	load_rle_gr					; 2000
 
 	lda	#4
 	sta	DRAW_PAGE
 
-	jsr	gr_copy_to_current	; copy to page1
+	jsr	gr_copy_to_current	; copy to page1		; 9292
 
 	; GR part
 	bit	PAGE1
@@ -89,6 +89,7 @@ missing_intro:
 
 ;	jsr	wait_until_keypressed
 
+	jsr	play_frame_compressed
 
 	;=============================
 	; Load graphic page1
@@ -100,18 +101,20 @@ missing_intro:
 
 	lda	#$c
 
-	jsr	load_rle_gr
+	jsr	load_rle_gr					; 2000
 
 	lda	#0
 	sta	DRAW_PAGE
 
-	jsr	gr_copy_to_current
+	jsr	gr_copy_to_current				; 9292
 
 	; GR part
 	bit	PAGE0
 
 ;	jsr	wait_until_keypressed
 
+
+	jsr	play_frame_compressed
 
 	;==============================
 	; setup graphics for vapor lock
@@ -297,5 +300,3 @@ bar_colors_bottom:
 	.byte $00,$08,$0d,$0f,$0d,$80,$00,$00
 	.byte $00,$0c,$0e,$0f,$0e,$c0,$00,$00
 	.byte $00,$09,$0d,$0f,$0d,$90,$00,$00,$00,$00,$00
-
-

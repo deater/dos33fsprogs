@@ -14,6 +14,7 @@
 /* Converts a PNG to RLE compressed data */
 /*****************************************/
 
+static int cycles=0;
 
 static int print_run(int count, int out_type, int run, int last) {
 
@@ -47,6 +48,7 @@ static int print_run(int count, int out_type, int run, int last) {
 				printf("%c%c%c",0xa0,1,last);
 			}
 			size+=3;
+			cycles+=38+7+   27+ 27*1 +5+2;
 		}
 		else {
 			if (out_type==OUTPUT_C) {
@@ -59,6 +61,7 @@ static int print_run(int count, int out_type, int run, int last) {
 				printf("%c",last);
 			}
 			size++;
+			cycles+=38+6+ 19*1 +5+2;
 		}
 	}
 	if (run==2) {
@@ -73,6 +76,7 @@ static int print_run(int count, int out_type, int run, int last) {
 				printf("%c%c%c",0xa0,2,last);
 			}
 			size+=3;
+			cycles+=38+7+   27+ 27*2 +5+2;
 		}
 		else {
 
@@ -87,6 +91,8 @@ static int print_run(int count, int out_type, int run, int last) {
 				printf("%c",last);
 			}
 			size+=2;
+			cycles+=38+7+   27+ 27*1 +5+2;
+			cycles+=38+7+   27+ 27*1 +5+2;
 		}
 	}
 
@@ -102,6 +108,7 @@ static int print_run(int count, int out_type, int run, int last) {
 			printf("%c",last);
 		}
 		size+=2;
+		cycles+=38+7+   27+ 27*run +5+2;
 	}
 
 	if (run>=16) {
@@ -117,6 +124,8 @@ static int print_run(int count, int out_type, int run, int last) {
 			printf("%c",last);
 		}
 		size+=3;
+		cycles=38+7+24+27+ 27*run +5+2;
+
 	}
 
 	return size;
@@ -200,6 +209,7 @@ int rle_smaller(int out_type, char *varname,
 		fprintf(stdout,"\t};\n");
 	} else if (out_type==OUTPUT_ASM) {
 		fprintf(stdout,"\n\t.byte $A1\n");
+		fprintf(stdout,"; cycles=%d\n",cycles);
 	} else {
 		fprintf(stdout,"%c",0xA1);
 	}

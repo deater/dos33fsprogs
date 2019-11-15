@@ -46,6 +46,7 @@ k_low:	.byte $28 ; ysize=48
 	.byte $01,$01, $A4,$00, $50, $A3,$55, $A0,$1E,$00, $01,$01, $A4,$00
 	.byte $55,$55, $05, $AB,$00
 	.byte $A1
+; cycles=1970
 k_high:	.byte $28 ; ysize=48
 	.byte $A0,$1A,$00, $C0, $A7,$CC, $22,$22, $CC,$CC, $C2, $2C
 	.byte $A0,$19,$00, $20, $CC,$CC, $A0,$01,$AC, $A0,$01,$AA, $0A,$0A, $A0,$01,$AA
@@ -110,3 +111,4 @@ k_high:	.byte $28 ; ysize=48
 	.byte $A0,$1D,$00, $C2,$C2, $CC,$CC, $00,$00, $90, $A3,$99, $A0,$1E,$00
 	.byte $C2,$C2, $CC, $0C, $00,$00, $99,$99, $09, $AB,$00
 	.byte $A1
+; cycles=2135
