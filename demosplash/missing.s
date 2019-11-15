@@ -126,9 +126,9 @@ missing_intro:
 	; 114 (7410 cycles), so with 5070 lines to go
 
 	; GR part
-	bit	LORES							; 4
+;	bit	LORES							; 4
 	bit	SET_GR							; 4
-	bit	FULLGR							; 4
+;	bit	FULLGR							; 4
 
 	jsr	gr_copy_to_current			; 6+ 9292
 
@@ -139,10 +139,9 @@ missing_intro:
 	;		====
 	;		 310
 
-	; - 3 for jmp
-	; 307
+	; Try X=9 Y=6 cycles=307R3
 
-	; Try X=9 Y=6 cycles=307
+	lda	TEMP
 
 	ldy	#6							; 2
 mloopA:	ldx	#9							; 2
@@ -151,7 +150,7 @@ mloopB:	dex								; 2
 	dey								; 2
 	bne	mloopA							; 2nt/3
 
-	jmp	missing_display_loop					; 3
+;	jmp	missing_display_loop					; 3
 
 ;.align  $100
 
