@@ -9,16 +9,13 @@
 starbase_init:
 	lda	#0
 	sta	WHICH_ROOM
-	sta	BG_SCROLL
 	sta	CART_OUT
 	sta	LASER_OUT
 	sta	BLAST_OUT
 	sta	GUN_STATE
 	sta	GUN_FIRE
 	sta	NUM_DOORS
-
-	sta	ACTION_TRIGGERED
-	sta	ACTION_COUNT
+	sta	ON_ELEVATOR
 
 	lda	#1
 	sta	DIRECTION		; right
@@ -96,7 +93,6 @@ starbase_setup_room:
 	lda	#0
 	sta	FRAMEL			; reset frame count for action timer
 	sta	FRAMEH
-	sta	ACTION_COUNT		; cancel if we leave room mid-action
 
 	;==============================
 	; setup per-room variables
@@ -321,7 +317,7 @@ starbase_loop:
 	; draw background action
 	;==================================
 
-	lda	WHICH_JAIL
+	lda	WHICH_ROOM
 	beq	bg_room0
 	cmp	#3
 	beq	bg_room3
@@ -641,7 +637,7 @@ city_right_yes_exit:
 	sta	ASTRONAUT_X
 cer_smc:
 	lda	#$0			; smc+1 = exit location
-	sta	WHICH_CAVE
+	sta	WHICH_ROOM
 	jmp	done_city
 
 	;=====================
@@ -653,7 +649,7 @@ city_exit_left:
 	sta	ASTRONAUT_X
 cel_smc:
 	lda	#0		; smc+1
-	sta	WHICH_CAVE
+	sta	WHICH_ROOM
 	jmp	done_city
 
 	; loop forever
