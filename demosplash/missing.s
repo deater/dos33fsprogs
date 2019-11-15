@@ -212,16 +212,16 @@ gloop2:	dex								; 2
 	bne	gloop1							; 2nt/3
 
 
-;	lda	FRAME_PLAY_PAGE			; 3
-;	cmp	#4				; 2
-;	bne	missing_display_loop		; 3
+	lda	FRAME_PLAY_PAGE			; 3
+	cmp	#4				; 2
+	bne	missing_display_loop		; 3
 
 ;	lda	KEYPRESS			; 4
 ;	bpl	missing_display_loop		; 3
 
-	lda	TEMP			; 3
-	nop				; 2
-	jmp	missing_display_loop	; 3
+;	lda	TEMP			; 3
+;	nop				; 2
+;	jmp	missing_display_loop	; 3
 
 	rts
 
