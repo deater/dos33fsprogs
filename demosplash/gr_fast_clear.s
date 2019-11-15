@@ -25,7 +25,7 @@ gr_clear_all:
 								;===========
 								;	45
 
-	ldy	#120							; 2
+	ldy	#119							; 2
 clear_all_color:
 	lda	#$00							; 2
 								;============

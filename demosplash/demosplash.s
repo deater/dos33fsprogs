@@ -155,13 +155,27 @@ wait_until_keypressed:
 .include "graphics/starbase/starbase.inc"
 .include "graphics/starbase/ship_flames.inc"
 .include "graphics/starbase/star_wipe.inc"
+
+; Apple II intro
+.include "appleII_intro.s"
+
+; missing
+.include "missing.s"
+
+; missing
+.include "open_book.s"
+
+; Starbase
+.include "starbase.s"
+
+; UP UNTIL THIS POINT CAN BE WIPED BY SOUND AT END
+
+; FIXME: put at end after music?
 ;.include "earth.inc"
 .include "book_40_48d.inc"
 .include "credits_bg.inc"
 
 
-; Apple II intro
-.include "appleII_intro.s"
 
 ; things that are exactly 1 page in size
 .align $100
@@ -180,15 +194,6 @@ wait_until_keypressed:
 .include "gr_overlay.s"		; not critical
 .include "gr_fast_clear.s"
 .include "gr_run_sequence.s"	; not critical
-
-; missing
-.include "missing.s"
-
-; missing
-.include "open_book.s"
-
-; Starbase
-.include "starbase.s"
 
 ; escape
 .include "escape.s"
@@ -210,8 +215,6 @@ wait_until_keypressed:
 
 .include "create_update_type1.s"
 .include "create_update_type2.s"
-
-
 
 
 PT3_LOC = song

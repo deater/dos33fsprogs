@@ -70,29 +70,15 @@ appleII_intro:
 	jsr	gr_clear_all			; 6+ 5454
 
 	; 26650
-	;   -12
-	; -5465
-	; -5465
-	;    -3 (jmp)
+	;   -12 GR init
+	; -5465 clear page0
+	; -5465 clear page1
 	;==========
-	;  15705
+	;  15708
 
-	; FIXME: delay extra 33?
-	; have no idea why this is needed
-	lda	DRAW_PAGE
-	lda	DRAW_PAGE
-	lda	DRAW_PAGE
-	lda	DRAW_PAGE
-	lda	DRAW_PAGE
-	lda	DRAW_PAGE
-	lda	DRAW_PAGE
-	lda	DRAW_PAGE
-	lda	DRAW_PAGE
-	lda	DRAW_PAGE
-	lda	DRAW_PAGE
+	; Try X=29 Y=104 cycles=15705R3
 
-
-	; Try X=29 Y=104 cycles=15705
+	lda	TEMP
 
 	ldy	#104							; 2
 loopA:	ldx	#29							; 2
@@ -101,7 +87,7 @@ loopB:	dex								; 2
 	dey								; 2
 	bne	loopA							; 2nt/3
 
-        jmp     display_loop						; 3
+;        jmp     display_loop						; 3
 
 ;.align  $100
 
@@ -128,14 +114,14 @@ display_loop:
 
 outer_loop:
 
-	bit	PAGE0						; 4
+	bit	PAGE1						; 4
 	ldx	#25		; 130 cycles with PAGE0		; 2
 page0_loop:			; delay 126+bit
 	dex							; 2
 	bne	page0_loop					; 2/3
 
 
-	bit	PAGE1						; 4
+	bit	PAGE0						; 4
 	ldx	#23		; 130 cycles with PAGE1		; 2
 page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	dex							; 2
@@ -448,11 +434,18 @@ do_nothing_end:
 forever_string:
 .byte	' ','F','O','R','E','V','E','R'
 
-
 colors_first:	.byte $00,$00,$00,$00
 colors_second:	.byte $00,$04,$40,$00
 colors_third:	.byte $40,$4C,$C4,$04
 colors_fourth:	.byte $C4,$CF,$FC,$4C
+
+
+.if 0
+colors_first:	.byte $00,$00,$00,$00
+colors_second:	.byte $00,$40,$04,$00
+colors_third:	.byte $04,$C4,$4C,$40
+colors_fourth:	.byte $4C,$FC,$CF,$C4
+.endif
 
 .assert >do_nothing = >do_nothing_end, error, "do_nothing crosses page"
 
