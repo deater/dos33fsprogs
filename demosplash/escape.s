@@ -7,16 +7,19 @@
 
 escape:
 
+;	jmp	escape
+
 	;==================
 	; setup music
 
 	; we are roughly at the beginning of pattern 0x19
+	; pattern $19
+	; line   $10
 
-;	lda	#19
-;	sta	current_pattern_smc+1
-;	lda	#0
-;	sta	current_line_smc+1
-
+	lda	#$19
+	sta	current_pattern_smc+1
+	lda	#0
+	sta	current_line_smc+1
 
 	lda     #0
         sta     FRAME_PLAY_OFFSET
@@ -26,10 +29,10 @@ escape:
         jsr     update_pt3_play
 
 	; setup 4 frames
-	jsr	pt3_write_lc_4
+	jsr	pt3_write_lc_4 ; FIXME
 
-	; FIXME
-;	jsr     clear_ay_both
+	lda	#$30		; assume on line $10, speed=3
+	sta	FRAME_PLAY_OFFSET
 
 	;===================
 	; init vars
@@ -80,7 +83,7 @@ escape:
 	jsr     create_update_type2
 	jsr     setup_update_type2
 
-	jsr	play_frame_compressed		; catch up some music
+	;jsr	play_frame_compressed		; catch up some music
 
 	;==========================================
 	; replace bottom with call to music player
@@ -238,7 +241,6 @@ loopRR:	dex								; 2
 sprites_display_loop:
 
 	jsr	$9800
-;.include "sprites_screen.s"
 
 after_sprites_display:
 
