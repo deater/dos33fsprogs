@@ -163,26 +163,23 @@ wait_until_keypressed:
 ; Apple II intro
 .include "appleII_intro.s"
 
+; things that are exactly 1 page in size
 .align $100
+.include "offsets_table.s"
+.include "movement_table.s"
+.include "font.s"
+; things that need to not cross pages
 .include "vapor_lock.s"
 .include "delay_a.s"
 .include "gr_unrle.s"
 .include "gr_copy.s"
 .include "gr_offsets.s"
-
-;.include "text_print.s"
 .include "gr_pageflip.s"
 .include "gr_clear_bottom.s"
-
-.align	$100
+;.align	$100
+.include "gr_overlay.s"		; not critical
 .include "gr_fast_clear.s"
-.include "gr_overlay.s"
-.include "gr_run_sequence.s"
-.align $100
-.include "movement_table.s"
-.include "font.s"
-.align $100
-.include "offsets_table.s"
+.include "gr_run_sequence.s"	; not critical
 
 ; missing
 .include "missing.s"
