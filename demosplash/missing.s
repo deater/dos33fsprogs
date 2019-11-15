@@ -21,6 +21,49 @@ missing_intro:
 
 	jsr	create_update_type1		; now calls play_frame_compressed
 
+	; setup_rasterbars_page_smc=4
+;	lda	#0
+;	sta	setup_rasterbars_page_smc+1
+	; setup_rasterbars_offset_smc=2
+	lda	#2
+	sta	setup_rasterbars_offset_smc+1
+	; setup_rasterbars_bars_start_smc=16
+	lda	#13
+	sta	setup_rasterbars_bars_start_smc+1
+	; setup_rasterbars_bars_end_smc=48
+	lda	#48
+	sta	setup_rasterbars_bars_end_smc+1
+	; setup_rasterbars_start_addr1_smc:=#<(UPDATE_START+(13*49))
+	lda	#<(UPDATE_START+(12*49))
+	sta	setup_rasterbars_start_addr1_smc+1
+	; setup_rasterbars_start_addr2_smc:=#<(UPDATE_START+(13*49))
+	lda	#>(UPDATE_START+(12*49))
+	sta	setup_rasterbars_start_addr2_smc+1
+
+	jsr	setup_rasterbars
+
+	; setup_rasterbars_page_smc=4
+;	lda	#0
+;	sta	setup_rasterbars_page_smc+1
+	; setup_rasterbars_offset_smc=2
+	lda	#2
+	sta	setup_rasterbars_offset_smc+1
+	; setup_rasterbars_bars_start_smc=16
+	lda	#149
+	sta	setup_rasterbars_bars_start_smc+1
+	; setup_rasterbars_bars_end_smc=48
+	lda	#187
+	sta	setup_rasterbars_bars_end_smc+1
+	; setup_rasterbars_start_addr1_smc:=#<(UPDATE_START+(149*49))
+	lda	#<(UPDATE_START+(148*49))
+	sta	setup_rasterbars_start_addr1_smc+1
+	; setup_rasterbars_start_addr2_smc:=#<(UPDATE_START+(149*49))
+	lda	#>(UPDATE_START+(148*49))
+	sta	setup_rasterbars_start_addr2_smc+1
+
+	jsr	setup_rasterbars
+
+
 	jsr	make_bars
 
 	;=============================
@@ -182,43 +225,77 @@ gloop2:	dex								; 2
 
 	rts
 
-BAR_START = 2*8
+;BAR_START = 2*8
+BAR_START = (2*8)-3	; 13
+BAR_START2 = 152-3
 
-; $9800 + (49*18) + 4 = $9800+886 = $9800+$376=$9b76
+; $9800 + (49*18) + 4 = $9800+886 = $9800+$376=$9b76 (9b72)
+; $9800 + (49*152) = $9800+7448 = $9800+$1d18=$b518
 
 make_bars:
+
+	lda	#<bar_colors_top
+	sta	INL
+	lda	#>bar_colors_top
+	sta	INH
+
 	lda	#<(UPDATE_START+49*(BAR_START+2)+4)
 	sta	OUTL
 	lda	#>(UPDATE_START+49*(BAR_START+2)+4)
 	sta	OUTH
 
-	lda	#<bar_colors_top
-	sta	INL
-	lda	#>bar_colors_top
-	sta	INL
 
-	ldx	#4
+
+	jsr	make_bars_entry
+
+	lda	#<bar_colors_bottom
+	sta	INL
+	lda	#>bar_colors_bottom
+	sta	INH
+
+	lda	#<(UPDATE_START+49*(BAR_START2+2)+4)
+	sta	OUTL
+	lda	#>(UPDATE_START+49*(BAR_START2+2)+4)
+	sta	OUTH
+
+	jsr	make_bars_entry
+
+	rts
+
+make_bars_entry:
+
 	ldy	#0
-make_bars_loop:
 
+make_bars_loop:
 	lda	(INL),Y
 	sta	(OUTL),Y
 
-	dex
-	bpl	make_bars_loop
+	iny
+	lda	OUTL
+	clc
+	adc	#48	; because y++
+	sta	OUTL
+	lda	OUTH
+	adc	#0
+	sta	OUTH
+
+;	cpy	#32
+	tya
+	and	#$1f
+	bne	make_bars_loop
 
 	rts
 
 bar_colors_top:
-	.byte $03,$0b,$0f,$0b,$30
-	.byte $02,$06,$0f,$06,$20
-	.byte $04,$0c,$0f,$0c,$40
-	.byte $05,$07,$0f,$07,$50
+	.byte $03,$0b,$0f,$0b,$30,$00,$00
+	.byte $00,$02,$06,$0f,$06,$20,$00,$00
+	.byte $00,$04,$0c,$0f,$0c,$40,$00,$00
+	.byte $00,$05,$07,$0f,$07,$50,$00,$00,$00,$00,$00
 
 bar_colors_bottom:
-	.byte $01,$03,$0f,$03,$10
-	.byte $08,$0d,$0f,$0d,$80
-	.byte $0c,$0e,$0f,$0e,$c0
-	.byte $09,$0d,$0f,$0d,$90
+	.byte $01,$03,$0f,$03,$10,$00,$00
+	.byte $00,$08,$0d,$0f,$0d,$80,$00,$00
+	.byte $00,$0c,$0e,$0f,$0e,$c0,$00,$00
+	.byte $00,$09,$0d,$0f,$0d,$90,$00,$00,$00,$00,$00
 
 
