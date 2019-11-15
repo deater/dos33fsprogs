@@ -451,7 +451,8 @@ change_state_clear_gait:
 
 starbase_keypresses:
 	; in room 0
-	.byte	'L',180		; start charging laser, wait 180
+	; already charging, so do nothing
+	.byte	'.',80		; start charging laser, wait 180
 	.byte	'L',10		; release, blasting door, wait 2
 	.byte	'D',20		; walk right
 	.byte	'D',180		; run right

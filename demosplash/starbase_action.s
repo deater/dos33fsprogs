@@ -12,13 +12,15 @@ starbase_init:
 	sta	CART_OUT
 	sta	LASER_OUT
 	sta	BLAST_OUT
-	sta	GUN_STATE
 	sta	GUN_FIRE
 	sta	NUM_DOORS
 	sta	ON_ELEVATOR
 
 	lda	#1
 	sta	DIRECTION		; right
+
+	lda	#20			; start already charging
+	sta	GUN_STATE
 
 	lda	#100
 	sta	GUN_CHARGE

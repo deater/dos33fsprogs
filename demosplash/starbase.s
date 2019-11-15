@@ -14,7 +14,6 @@ starbase:
 	;=======================
 	; Run the "intro"
 	;=======================
-	; just us falling?
 
 	jsr	starbase_init
 

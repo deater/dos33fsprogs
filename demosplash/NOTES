@@ -1,33 +1,24 @@
 
 TODO:
-	+ red underline on missing
-	+ glitch prevention finish
-	+ clear screen at begin on missing
 
 Music glitching:
-+ Demosplash
-	gen 4 pages
-+ Apple II intro
-	plays for 2 pages
-	(MILD GLITCH)
-+ Missing notice
-
-
-
-
-
++ Demosplash -- generates 4 pages of music
++ Apple II intro -- plays 2 pages
++ Missing notice -- plays 2 pages
++ opening_book   -- irq driven
++ Starbase       -- irq driven (up to page $19)
++ Escape         -- plays 4 pages  (depends on playback)
++ reading/end_book-- text (irq driven?)
+                    book plays 1 page 
++ credits	 -- plays 5 pages (could use more)
 
 
 TODO:
 	CYCLE:	Apple II intro
-		+ Remove keyboard pause
 	CYCLE:	MISSING notice
-		+ Add missing text
-		+ Autogen the active background code
 	PLAIN:	Hollowed out book
 		+ Meanwhile on a distant starbase, a prisoner
 			receives a mysterious package...
-		+ Draw this sequence
 	PLAIN:	STARBASE OOTW sequence
 		+ Update graphics
 		+ Update backgrounds
