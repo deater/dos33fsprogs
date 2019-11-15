@@ -29,6 +29,24 @@ credits:
 	; setup graphics
 
 	jsr	create_update_type1
+
+	; setup_rasterbars_page_smc=4
+        ; setup_rasterbars_offset_smc=13
+	lda	#13
+	sta	setup_rasterbars_offset_smc+1
+        ; setup_rasterbars_bars_start_smc=46
+	lda	#46
+	sta	setup_rasterbars_bars_start_smc+1
+        ; setup_rasterbars_bars_end_smc=184
+	lda	#184
+	sta	setup_rasterbars_bars_end_smc+1
+        ; setup_rasterbars_start_addr1_smc:=#<(UPDATE_START+(BARS_START*49))
+	lda	#<(UPDATE_START+(BARS_START*49))
+	sta	setup_rasterbars_start_addr1_smc+1
+        ; setup_rasterbars_start_addr2_smc:=#>(UPDATE_START+(BARS_START*49))
+	lda	#>(UPDATE_START+(BARS_START*49))
+	sta	setup_rasterbars_start_addr2_smc+1
+
 	jsr	setup_rasterbars
 
 	; change to page0/page0/page1/page1 for first 32 lines
@@ -57,7 +75,7 @@ credits:
 	sta	UPDATE_START+1+(49*32)
 	sta	UPDATE_START+1+(49*36)
 
-	jsr	play_frame_compressed	; 6+1237
+;	jsr	play_frame_compressed	; 6+1237
 
 	;=============================
 	; Load graphic page0
@@ -75,6 +93,8 @@ credits:
 	sta	DRAW_PAGE
 
 	jsr	gr_copy_to_current	; copy to page1
+
+	jsr	play_frame_compressed	; 6+1237
 
 	; GR part
 	bit	PAGE1
@@ -99,6 +119,8 @@ credits:
 	sta	DRAW_PAGE
 
 	jsr	gr_copy_to_current
+
+	jsr	play_frame_compressed	; 6+1237
 
 	; GR part
 	bit	PAGE0
@@ -182,7 +204,7 @@ credits_loop:
 	; 3+2+3+6+1237 play fake (-1)
 
 	lda	FRAME_PLAY_PAGE		; 3
-	cmp	#$2			; 2
+	cmp	#$5			; 2		; FIXME
 	beq	play_fake		; 3
 					; -1
 play_actual:
