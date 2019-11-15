@@ -20,21 +20,21 @@ lc4_frame_decode_loop:
 
 	rts
 
-pt3_write_lc_5:
+pt3_write_lc_6:
 
 	; page offset
 	lda	#0
 	sta	FRAME_PAGE
 
-lc5_frame_decode_loop:
+lc6_frame_decode_loop:
 
 	jsr	pt3_set_pages
 
 	jsr	pt3_write_lc
 
 	lda	FRAME_PAGE
-	cmp	#5
-	bne	lc5_frame_decode_loop
+	cmp	#6
+	bne	lc6_frame_decode_loop
 
 	rts
 
@@ -71,6 +71,16 @@ lc_frame_decode_loop:
 
 	inc	FRAME_OFFSET
 
+	lda	SOUND_WHILE_DECODE
+	beq	no_play_music
+
+	lda	FRAME_OFFSET
+	and	#$7
+	bne	no_play_music
+
+	jsr	play_frame_compressed
+
+no_play_music:
 	lda	FRAME_OFFSET
 	cmp	#59*3			; FIXME: make this depend on song
 					; hardcoding for 59 for our song
@@ -129,12 +139,14 @@ pt3_set_pages:
 music_table_begin:
 
 music_addr_table:
-.byte $f1,$f2,$f3,$f4,$f5,$f6,$f7,$f8,$f9,$fa,$fb,$BB,$CC,$DD,$EE,$FF
-.byte $e6,$e7,$e8,$e9,$ea,$eb,$ec,$ed,$ee,$ef,$f0,$BB,$CC,$DD,$EE,$FF
-.byte $db,$dc,$dd,$de,$df,$e0,$e1,$e2,$e3,$e4,$e5,$BB,$CC,$DD,$EE,$FF
-.byte $d0,$d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$da,$BB,$CC,$DD,$EE,$FF
+.byte $f1,$f2,$f3,$f4,$f5,$f6,$f7,$f8,$f9,$fa,$fb,$BB,$CC,$DD,$EE,$FF	;0
+.byte $e6,$e7,$e8,$e9,$ea,$eb,$ec,$ed,$ee,$ef,$f0,$BB,$CC,$DD,$EE,$FF	;1
+.byte $db,$dc,$dd,$de,$df,$e0,$e1,$e2,$e3,$e4,$e5,$BB,$CC,$DD,$EE,$FF	;2
+.byte $d0,$d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$da,$BB,$CC,$DD,$EE,$FF	;3
+.byte $14,$15,$16,$17,$18,$19,$1A,$1B,$1C,$1D,$1E,$BB,$CC,$DD,$EE,$FF	;4
+.byte $1F,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$BB,$CC,$DD,$EE,$FF	;5
+.byte $2A,$2B,$2C,$2D,$2E,$2F,$30,$31,$32,$33,$34,$BB,$CC,$DD,$EE,$FF	;6
 ;.byte $d0,$d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$da,$BB,$CC,$DD,$EE,$FF
-.byte $14,$15,$16,$17,$18,$19,$1A,$1B,$1C,$1D,$1E,$BB,$CC,$DD,$EE,$FF
 music_table_end:
 
 .assert >music_table_begin = >music_table_end, error, "music_table crosses page"

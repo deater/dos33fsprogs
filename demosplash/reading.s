@@ -7,7 +7,7 @@
 
 end_book:
 
-	cli
+	; cli
 
 	;===================
 	; init screen
@@ -44,12 +44,12 @@ end_book:
 	jsr	move_and_print
 	jsr	move_and_print
 
-	lda	#200
-	jsr	long_wait
-	lda	#200
-	jsr	long_wait
+;	lda	#200
+;	jsr	long_wait
+;	lda	#200
+;	jsr	long_wait
 
-	sei
+;	sei
 
 	lda     #0
 	sta     FRAME_PLAY_OFFSET
@@ -58,8 +58,8 @@ end_book:
 	sta     FRAME_PAGE
 	jsr     update_pt3_play
 
-	; setup 1 frame
-	jsr     pt3_write_lc_1
+	; setup 5 frames
+	jsr     pt3_write_lc_6
 
 
 	;=============================

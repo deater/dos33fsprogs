@@ -7,32 +7,32 @@
 
 escape:
 
-;	jmp	escape
-
 	;==================
 	; setup music
 
-	; we are roughly at the beginning of pattern 0x19
-	; pattern $19
-	; line   $10
+	; we are roughly at the beginning of pattern 0x18
+	; pattern $18
+	; line   $15
 
-	lda	#$19
+	lda	#$18
 	sta	current_pattern_smc+1
 	lda	#0
 	sta	current_line_smc+1
 
 	lda     #0
-        sta     FRAME_PLAY_OFFSET
         sta     FRAME_PLAY_PAGE
         sta     FRAME_OFFSET
         sta     FRAME_PAGE
         jsr     update_pt3_play
 
-	; setup 4 frames
-	jsr	pt3_write_lc_4 ; FIXME
-
-	lda	#$30		; assume on line $10, speed=3
+	lda	#$3F		; assume on line $15, speed=3
 	sta	FRAME_PLAY_OFFSET
+
+	lda	#1
+	sta	SOUND_WHILE_DECODE
+
+	; setup 4 frames
+	jsr	pt3_write_lc_4
 
 	;===================
 	; init vars

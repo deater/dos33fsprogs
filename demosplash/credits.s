@@ -12,18 +12,19 @@ credits:
 	lda	#0
 	sta	DRAW_PAGE
 	sta	FRAME
+
 	sta	FRAME_PLAY_OFFSET
 	sta	FRAME_PLAY_PAGE
 	jsr	update_pt3_play
 
-	jsr     pt3_write_lc_5
+;	jsr     pt3_write_lc_5
 
 	lda	#<credits_text
 	sta	CREDITS_POINTERL
 	lda	#>credits_text
 	sta	CREDITS_POINTERH
 
-	jsr	play_frame_compressed	; 6+1237
+;	jsr	play_frame_compressed	; 6+1237
 
 	;==================
 	; setup graphics
@@ -671,4 +672,4 @@ uloop2:	dex								; 2
 
 fake_music_play_end:
 
-.assert >fake_music_play = >fake_music_play_end, error, "fake_musis_play crosses page"
+.assert >fake_music_play = >fake_music_play_end, error, "fake_music_play crosses page"
