@@ -69,7 +69,7 @@ zero_song_structs_loop:
 
 	lda	PT3_LOC+PT3_LOOP					; 4
 	sta	pt3_loop_smc+1						; 4
-
+	sta	sp_pt3_loop_smc+1
 
 	;========================
 	;========================

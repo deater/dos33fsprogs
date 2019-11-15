@@ -1519,7 +1519,24 @@ reset_note:
 	;	in the player note length code
 
 is_done:
+	lda	LOOP			; see if looping
+	beq	really_done
+
+sp_pt3_loop_smc:
+	lda	#$d1			; looping, move to loop location
+					; non-zero to avoid the temptation
+					; to merge with following lda #$0
+	sta	current_pattern_smc+1
+	lda	#$0
+	sta	current_line_smc+1
+	sta	current_subframe_smc+1
+	sta	DONE_SONG               ; undo the next song
+
+	jmp	pt3_set_pattern
+
+really_done:
 	; done with song, set it to non-zero
+	lda	#1
 	sta	DONE_SONG						; 3
 	rts								; 6
 
