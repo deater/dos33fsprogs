@@ -15,98 +15,122 @@
 	; TEMP = page
 	; TEMPY= current X
 
+	; 82 + 10 +
+	; special short:   38+7+   27+ 27*run +5+2
+	; special long:    38+7+24+27+ 27*run +5+2
+	; nospecial: 38+6+19+(cross line*58)+5+2
+
 
 load_rle_gr:
-	sec
-	sbc	#4			; adjust page to write to
+	sec								; 2
+	sbc	#4			; adjust page to write to	; 2
 					; to match gr_offsets
-	sta	TEMP
+	sta	TEMP							; 3
 
-	ldy	#$0			; init Y to 0
-	sty	CV
+	ldy	#$0			; init Y to 0			; 2
+	sty	CV							; 3
 
-	jsr	load_and_increment	; load xsize
-	sta	CH
+	jsr	load_and_increment	; load xsize			; 6+19
+	sta	CH							; 3
 
-	jsr	unrle_new_y
-
+	jsr	unrle_new_y						; 6+36
+								;============
+								;      82
 
 rle_loop:
-	jsr	load_and_increment
+	jsr	load_and_increment					; 6+19
 
-	tax
+	tax								; 2
 
-	cmp	#$A1			; if 0xa1
-	beq	rle_done		; we are done
+	cmp	#$A1			; if 0xa1			; 2
+	beq	rle_done		; we are done			; 3
+									; -1
+	and	#$f0			; mask				; 2
+	cmp	#$a0			; see if special AX		; 2
+	beq	decompress_special					; 3
+								;===========
+								;	38
 
-	and	#$f0			; mask
-	cmp	#$a0			; see if special AX
-	beq	decompress_special
-
+									; -1
 	; not special, just color
 
-	txa				; put color back in A
-	ldx	#$1			; only want to print 1
-	bne	decompress_run
+	txa				; put color back in A		; 2
+	ldx	#$1			; only want to print 1		; 2
+	bne	decompress_run		; bra				; 3
 
 decompress_special:
-	txa				; put read value back in A
+	txa				; put read value back in A	; 2
+	and	#$0f			; check if was A0		; 2
+	bne	decompress_color	; if A0 need to read run, color	; 3
+									;===
+									; 7
 
-	and	#$0f			; check if was A0
-
-	bne	decompress_color	; if A0 need to read run, color
-
-decompress_large:
-	jsr	load_and_increment	; run length now in A
+decompress_large:							; -1
+	jsr	load_and_increment	; run length now in A		; 6+19
 
 decompress_color:
-	tax				; put runlen into X
-	jsr	load_and_increment	; get color into A
+	tax				; put runlen into X		; 2
+	jsr	load_and_increment	; get color into A		; 6+19
 
 decompress_run:
 rle_run_loop:
-	sta	(BASL),y		; write out the value
-	inc	BASL
-	dec	TEMPY
-	bne	rle_not_eol		; if less then keep going
+	sta	(BASL),y		; write out the value		; 6
+	inc	BASL							; 5
+	dec	TEMPY							; 5
+	bne	rle_not_eol		; if less then keep going	; 3
+									;====
+									; 19
 
+									; -1
 	; if here, we are > max_X
 
-	inc	CV
-	inc	CV
-	pha
-	jsr	unrle_new_y
-	pla
-
+	inc	CV							; 5
+	inc	CV							; 5
+	pha								; 3
+	jsr	unrle_new_y						; 6+36
+	pla								; 4
+									;===
+									;58
 rle_not_eol:
-	dex
-	bne	rle_run_loop		; if not zero, keep looping
+	dex								; 2
+	bne	rle_run_loop		; if not zero, keep looping	; 3
+									;==
+									; 5
 
-	beq	rle_loop		; and branch always
+									; -1
+	beq	rle_loop		; and branch always		; 3
 
 rle_done:
-	lda	#$15			; move the cursor somewhere sane
-	sta	CV
-	rts
+	lda	#$15			; move cursor somewhere sane	; 2
+	sta	CV							; 3
+	rts								; 6
 
+	;========================
+	; common case = 19
 
 load_and_increment:
-	lda	(GBASL),Y
-	inc	GBASL
-	bne	lai_no_oflo
-	inc	GBASH
+	lda	(GBASL),Y						; 5+
+	inc	GBASL							; 5
+	bne	lai_no_oflo						; 3
+									; -1
+	inc	GBASH							; 5
 lai_no_oflo:
-	rts
+	rts								; 6
+
+	;========================
+	; common case = 36
 
 unrle_new_y:
-	ldy	CV
-	lda	gr_offsets,Y
-	sta	BASL
-	lda	gr_offsets+1,Y
-	clc
-	adc	TEMP			; adjust for page
-	sta	BASH
-	lda	CH
-	sta	TEMPY
-	ldy	#0
-	rts
+	ldy	CV							; 3
+	lda	gr_offsets,Y						; 4+
+	sta	BASL							; 3
+	lda	gr_offsets+1,Y						; 4+
+	clc								; 2
+	adc	TEMP			; adjust for page		; 3
+	sta	BASH							; 3
+	lda	CH							; 3
+	sta	TEMPY							; 3
+	ldy	#0							; 2
+	rts								; 6
+								;===========
+								;	36

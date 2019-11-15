@@ -58,7 +58,7 @@ demosplash.o:	demosplash.s \
 	open_book.s graphics/book_open/book_open.inc \
 	starbase.s starbase_keyboard.s \
 	starbase_action.s starbase_laser.s starbase_blast.s \
-	gr_run_sequence.s \
+	gr_run_sequence.s gr_unrle.s \
 	graphics/starbase/starbase.inc \
 	graphics/starbase/ship_flames.inc \
 	graphics/starbase/star_wipe.inc \
