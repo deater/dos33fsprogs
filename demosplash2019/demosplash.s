@@ -182,17 +182,20 @@ repeat_ending:
 .include "credits_bg.inc"
 
 
+.include "delay_a.s"	; critical
 
 ; things that are exactly 1 page in size
 .align $100
 .include "offsets_table.s"
 .include "movement_table.s"
+random_values:
+.incbin "random.data"
+.include "offsets_table2.s"
 .include "font.s"
 ; things that need to not cross pages
 .include "vapor_lock.s"
-.include "delay_a.s"
-.include "gr_unrle.s"
 .include "gr_copy.s"
+.include "gr_unrle.s"
 .include "gr_offsets.s"
 .include "gr_pageflip.s"
 .include "gr_clear_bottom.s"

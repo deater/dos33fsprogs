@@ -1490,15 +1490,9 @@ erase_fire:
 					; 11
 
 
-.align $100
-random_values:
-.incbin	"random.data"
-.include "offsets_table2.s"
 .include "text_print.s"
-.align $100
 .include "gr_putsprite_fast.s"
 
-;.assert >gr_offsets = >gr_offsets_done, error, "gr_offsets crosses page"
 .assert >escape_wait_loop = >(escape_wait_loop_end-1), error, "escape_wait_loop crosses page"
 
 .align $100

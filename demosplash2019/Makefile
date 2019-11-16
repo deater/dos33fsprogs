@@ -7,14 +7,14 @@ PNG_TO_40x96 = ../gr-utils/png_to_40x96
 PNG_TO_40x48D = ../gr-utils/png_to_40x48d
 B2D = ../bmp2dhr/b2d
 
-all:	demosplash.dsk
+all:	demosplash2019.dsk
 
-demosplash.dsk:	HELLO LOADER DEMOSPLASH
-	cp empty.dsk demosplash.dsk
-	$(DOS33) -y demosplash.dsk SAVE A HELLO
-	$(DOS33) -y demosplash.dsk BSAVE -a 0x1000 LOADER
-	$(DOS33) -y demosplash.dsk BSAVE -a 0x1400 DEMOSPLASH
-#	$(DOS33) -y demosplash.dsk BSAVE -a 0x1700 MUSICTEST
+demosplash2019.dsk:	HELLO LOADER DEMOSPLASH
+	cp empty.dsk demosplash2019.dsk
+	$(DOS33) -y demosplash2019.dsk SAVE A HELLO
+	$(DOS33) -y demosplash2019.dsk BSAVE -a 0x1000 LOADER
+	$(DOS33) -y demosplash2019.dsk BSAVE -a 0x1400 DEMOSPLASH
+#	$(DOS33) -y demosplash2019.dsk BSAVE -a 0x1700 MUSICTEST
 
 ####
 

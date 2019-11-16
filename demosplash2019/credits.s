@@ -211,7 +211,7 @@ credits_loop:
 	; 3+2+3+6+1237 play fake (-1)
 
 	lda	FRAME_PLAY_PAGE		; 3
-	cmp	#$8			; 2		; FIXME
+	cmp	#$A			; 2		; FIXME
 	beq	play_fake		; 3
 					; -1
 play_actual:
