@@ -58,8 +58,8 @@ end_book:
 	sta     FRAME_PAGE
 	jsr     update_pt3_play
 
-	; setup 8 frames
-	jsr     pt3_write_lc_8
+	; setup 9 frames
+	jsr     pt3_write_lc_9
 
 	;=============================
 	; Load graphic page0

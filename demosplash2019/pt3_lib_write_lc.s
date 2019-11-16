@@ -20,21 +20,21 @@ lc4_frame_decode_loop:
 
 	rts
 
-pt3_write_lc_8:
+pt3_write_lc_9:
 
 	; page offset
 	lda	#0
 	sta	FRAME_PAGE
 
-lc8_frame_decode_loop:
+lc9_frame_decode_loop:
 
 	jsr	pt3_set_pages
 
 	jsr	pt3_write_lc
 
 	lda	FRAME_PAGE
-	cmp	#8
-	bne	lc8_frame_decode_loop
+	cmp	#9
+	bne	lc9_frame_decode_loop
 
 	rts
 
@@ -147,8 +147,8 @@ music_addr_table:
 .byte $1F,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$BB,$CC,$DD,$EE,$FF	;5
 .byte $2A,$2B,$2C,$2D,$2E,$2F,$30,$31,$32,$33,$34,$BB,$CC,$DD,$EE,$FF	;6
 .byte $35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F,$BB,$CC,$DD,$EE,$FF	;7
-.byte $2A,$2B,$2C,$2D,$2E,$2F,$30,$31,$32,$33,$34,$BB,$CC,$DD,$EE,$FF	;6
-.byte $35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F,$BB,$CC,$DD,$EE,$FF	;7
+.byte $40,$41,$42,$43,$44,$45,$46,$47,$48,$49,$4A,$BB,$CC,$DD,$EE,$FF	;8
+.byte $35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F,$BB,$CC,$DD,$EE,$FF	;9
 ;.byte $d0,$d1,$d2,$d3,$d4,$d5,$d6,$d7,$d8,$d9,$da,$BB,$CC,$DD,$EE,$FF
 music_table_end:
 
