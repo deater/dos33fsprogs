@@ -13,19 +13,21 @@ escape:
 	; we are roughly at the beginning of pattern 0x18
 	; pattern $18, line   $00
 
-	lda	#$18
-	sta	current_pattern_smc+1
-	lda	#0
-	sta	current_line_smc+1
+;	lda	#$18
+;	sta	current_pattern_smc+1
+;	lda	#0
+;	sta	current_line_smc+1
+;	lda	#1
+;	sta	current_subframe_smc+1
 
 	lda     #0
-        sta     FRAME_PLAY_PAGE
         sta     FRAME_OFFSET
         sta     FRAME_PAGE
+	sta	FRAME_PLAY_PAGE
+	sta	FRAME_PLAY_OFFSET
         jsr     update_pt3_play
 
-	lda	#$0		; assume on line $15, speed=3
-	sta	FRAME_PLAY_OFFSET
+;	lda	#$0		; assume on line $15, speed=3
 
 	lda	#1
 	sta	SOUND_WHILE_DECODE
@@ -52,6 +54,8 @@ escape:
 	sta	SPRITE_YPOS
 	sta	FIRE_Y
 	sta	KEYPTR
+	sta	FRAME
+	sta	RANDOM_PTR
 
 	lda	#$44
 	sta	GREEN0

@@ -49,14 +49,6 @@ BLAST2		= $5F
 
 FRAMEL		= $60
 FRAMEH		= $61
-WAITING         = $62
-LETTERL         = $63
-LETTERH         = $64
-LETTERX         = $65
-LETTERY         = $66
-LETTERD         = $67
-LETTER          = $68
-BLARGH          = $69
 
 FIRE		= $6A
 ASTEROID_EXPLODE = $6B

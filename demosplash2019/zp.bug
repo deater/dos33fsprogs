@@ -1,0 +1,78 @@
+glitchy:
+	pattern -> 625E -> 765E -> 18
+	line    -> 62C0 -> 76c0 -> 0
+	subf	-> 62c4 -> 76c4 -> 02
+
+
+
+stop at beginning
+	4e/4f
+	0228	0268
+	0a28	0a68
+	0e28	0e68
+	9428	9468
+	9828	9868
+
+stop after song int
+	0228/0229, 0268/0269
+	0A28       0A68
+	0E28       0E68
+	9428	   9468
+	9828	   9868
+
+
+
+stop at escape
+diff: 38 vs ff
+75,76,77,7B
+
+stack
+
+0260?
+
+1401 has zp address? (oh, loader for what to write to it)
+7130 =
+	5d30 = NOTE SAMPLE POSITION
+
+9428 = 8028
+
+/////////
+
+replace with 3, escape fails
+$20 bad
+$48 bad
+$50 bad  was RANDOM_PTR
+$60 good
+$80 good
+
+
+
+
+
+ZP at escape, ZP init to $ff
+
+00: 4c 3c d4 4c 3a db 00 00 ff ff 4c 99 e1 22 22 00
+10: ff ff 00 00 00 ff 00 00 ff ff 00 00 ff ff 00 00
+20: ff ff ff ff 28 fe e5 2c a5 f9 ff ff ff ff 0f ff
+30: 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+40: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+50: 0d ff ff ff ff ff 00 04 ff ff ff ff ff ff ff ff
+60: 00 00 ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+70: 52 04 9d 00 a2 03 0e 30 00 1f 0e 28 00 ff b1 89
+80: 30 93>da<91 01 00 ff ff 00 00 01 ff ff ff ff ff
+90: 4c 38 64 ff 26 ff ff ff ff ff ff ff ff ff ff ff
+a0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+b0: f5 33>f6<33 f9 33 f7 33 f8 33 ff ff 01 ff 09 1e
+c0: ff ff ff ff ff ff>3f<00 b1 04 10 00 00 1e 03 20
+d0: 10 7c a7 10 0c 00 00 00 00 00 00 00 3c ff ff 00
+e0: 7c a7 ff 05 ff 00 ff ff fc c0 a5 02 ff 00 04 ff
+f0: 52 34 ff 0c 1a 01 00 15 ff ff 0c 28 00 10 00 04
+
+82 = SAMPLE_L	DA on FF
+B2 = DOOR_X			(maybe this one is OK)
+C6 = WASTE_CYCLES (OK)
+
+B3/B2 -- first room, 33CA (-1400 = 1FCA = door c4_r0_x)
+	 second room 33DF (-1400 = 1FDF = door c4_r1_x)
+	 third room 33DF
+	 fourth room 33F6 (-1400 = 1FF6 = door_c4_r3_x)

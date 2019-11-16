@@ -10,7 +10,8 @@ demosplash2019:
 	; clear zp
 	; shouldn't have to do this, but uninit memory bugs
 	;==================================================
-	lda	#0
+
+	lda	#$38
 	ldy	#$20
 zp_clear_loop:
 	sta	$0,y
@@ -26,6 +27,7 @@ zp_clear_loop:
 	sta	FRAME_PLAY_PAGE
 	sta	FRAME_OFFSET
 	sta	FRAME_PAGE
+	sta	SOUND_WHILE_DECODE
 	jsr	update_pt3_play
 	jsr	pt3_set_pages
 
@@ -34,6 +36,8 @@ zp_clear_loop:
 	jsr	reset_ay_both
 	jsr	clear_ay_both
 	jsr	pt3_init_song
+
+
 
 	;====================================
 	; turn on language card
