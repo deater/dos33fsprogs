@@ -2,34 +2,34 @@
 
 ;; LZ4 addresses
 
-LZ4_SRC		= $00
-LZ4_DST		= $02
-LZ4_END		= $04
-WHICH_LOAD	= $05
-COUNT		= $06
-DELTA		= $08
+;LZ4_SRC		= $00
+;LZ4_DST		= $02
+;LZ4_END		= $04
+;WHICH_LOAD	= $05
+;COUNT		= $06
+;DELTA		= $08
 
 ;; Zero page monitor routines addresses
 
-WNDLFT		= $20
-WNDWDTH		= $21
-WNDTOP		= $22
-WNDBTM		= $23
+;WNDLFT		= $20
+;WNDWDTH		= $21
+;WNDTOP		= $22
+;WNDBTM		= $23
 CH		= $24
 CV		= $25
 GBASL		= $26
 GBASH		= $27
 BASL		= $28
 BASH		= $29
-H2		= $2C
-V2		= $2D
+;H2		= $2C
+;V2		= $2D
 MASK		= $2E
-COLOR_MASK	= $2F
+;COLOR_MASK	= $2F
 COLOR		= $30
 
 
-SEEDL		= $4e
-SEEDH		= $4f
+;SEEDL		= $4e
+;SEEDH		= $4f
 XMAX		= $50
 
 ; escape

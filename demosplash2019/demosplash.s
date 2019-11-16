@@ -11,7 +11,7 @@ demosplash2019:
 	; shouldn't have to do this, but uninit memory bugs
 	;==================================================
 	lda	#0
-	ldy	#128
+	ldy	#$20
 zp_clear_loop:
 	sta	$0,y
 	iny
