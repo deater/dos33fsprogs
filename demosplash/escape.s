@@ -1577,8 +1577,8 @@ escape_keys:
 	.byte 'Z',5		; down
 	.byte 'Z',10		; faster
 	.byte ','+$80,30
-	.byte 'Z',40		; faster
-	.byte 'A',25		; slower
+;	.byte 'Z',40		; faster
+;	.byte 'A',25		; slower
 	.byte 'A',25		; stop
 
 	.byte 'A',5		; down
