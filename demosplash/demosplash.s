@@ -59,6 +59,32 @@ zp_clear_loop:
 	bit	FULLGR
 	bit	KEYRESET
 
+	jmp	main_body
+
+
+; Pictures (no need to align)
+.include "appleII_40_96.inc"
+.include "k_40_48d.inc"
+.include "graphics/book_open/book_open.inc"
+.include "graphics/starbase/starbase.inc"
+.include "graphics/starbase/ship_flames.inc"
+.include "graphics/starbase/star_wipe.inc"
+
+; Apple II intro
+.include "appleII_intro.s"
+
+; missing
+.include "missing.s"
+
+; missing
+.include "open_book.s"
+
+; Starbase
+.include "starbase.s"
+
+; UP UNTIL THIS POINT CAN BE WIPED BY SOUND AT END
+
+main_body:
 	;===========================
 	; apple II intro
 	;============================
@@ -148,27 +174,7 @@ wait_until_keypressed:
 	bit	KEYRESET
 	rts
 
-; Pictures (no need to align)
-.include "appleII_40_96.inc"
-.include "k_40_48d.inc"
-.include "graphics/book_open/book_open.inc"
-.include "graphics/starbase/starbase.inc"
-.include "graphics/starbase/ship_flames.inc"
-.include "graphics/starbase/star_wipe.inc"
 
-; Apple II intro
-.include "appleII_intro.s"
-
-; missing
-.include "missing.s"
-
-; missing
-.include "open_book.s"
-
-; Starbase
-.include "starbase.s"
-
-; UP UNTIL THIS POINT CAN BE WIPED BY SOUND AT END
 
 ; FIXME: put at end after music?
 ;.include "earth.inc"
