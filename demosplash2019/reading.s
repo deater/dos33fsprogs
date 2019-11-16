@@ -138,7 +138,7 @@ loopR:	dex								; 2
 	bne	loopQ							; 2nt/3
 
 	jmp	book_loop						; 3
-.align  $100
+;.align  $100
 
 
 	;================================================
