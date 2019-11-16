@@ -20,21 +20,21 @@ lc4_frame_decode_loop:
 
 	rts
 
-pt3_write_lc_7:
+pt3_write_lc_8:
 
 	; page offset
 	lda	#0
 	sta	FRAME_PAGE
 
-lc7_frame_decode_loop:
+lc8_frame_decode_loop:
 
 	jsr	pt3_set_pages
 
 	jsr	pt3_write_lc
 
 	lda	FRAME_PAGE
-	cmp	#7
-	bne	lc7_frame_decode_loop
+	cmp	#8
+	bne	lc8_frame_decode_loop
 
 	rts
 

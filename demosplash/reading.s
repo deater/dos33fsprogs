@@ -58,8 +58,8 @@ end_book:
 	sta     FRAME_PAGE
 	jsr     update_pt3_play
 
-	; setup 7 frames
-	jsr     pt3_write_lc_7
+	; setup 8 frames
+	jsr     pt3_write_lc_8
 
 	;=============================
 	; Load graphic page0
@@ -76,9 +76,9 @@ end_book:
 	lda	#4
 	sta	DRAW_PAGE
 
-
-
 	jsr	gr_copy_to_current	; copy to page1
+
+	jsr     play_frame_compressed   ; 6+1237
 
 	; GR part
 	bit	PAGE1
@@ -100,6 +100,8 @@ end_book:
 	sta	DRAW_PAGE
 
 	jsr	gr_copy_to_current
+
+	jsr     play_frame_compressed   ; 6+1237
 
 	; GR part
 	bit	PAGE0
