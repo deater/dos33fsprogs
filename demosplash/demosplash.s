@@ -168,11 +168,11 @@ repeat_ending:
 	;======================
 	; wait until keypressed
 	;======================
-wait_until_keypressed:
-	lda	KEYPRESS
-	bpl	wait_until_keypressed
-	bit	KEYRESET
-	rts
+;wait_until_keypressed:
+;	lda	KEYPRESS
+;	bpl	wait_until_keypressed
+;	bit	KEYRESET
+;	rts
 
 
 

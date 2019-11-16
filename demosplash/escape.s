@@ -11,8 +11,7 @@ escape:
 	; setup music
 
 	; we are roughly at the beginning of pattern 0x18
-	; pattern $18
-	; line   $15
+	; pattern $18, line   $00
 
 	lda	#$18
 	sta	current_pattern_smc+1
@@ -25,7 +24,7 @@ escape:
         sta     FRAME_PAGE
         jsr     update_pt3_play
 
-	lda	#$3F		; assume on line $15, speed=3
+	lda	#$0		; assume on line $15, speed=3
 	sta	FRAME_PLAY_OFFSET
 
 	lda	#1

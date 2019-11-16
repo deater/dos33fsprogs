@@ -455,7 +455,7 @@ starbase_keypresses:
 	.byte	'.',80		; start charging laser, wait 180
 	.byte	'L',10		; release, blasting door, wait 2
 	.byte	'D',20		; walk right
-	.byte	'D',180		; run right
+	.byte	'D',135		; run right until we hit door
 	.byte	'A',2		; walk left	; turn
 	.byte	'A',50		; walk left	; walk left
 	.byte	'D',2		; stop
