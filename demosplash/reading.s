@@ -58,9 +58,8 @@ end_book:
 	sta     FRAME_PAGE
 	jsr     update_pt3_play
 
-	; setup 5 frames
-	jsr     pt3_write_lc_6
-
+	; setup 7 frames
+	jsr     pt3_write_lc_7
 
 	;=============================
 	; Load graphic page0
@@ -184,8 +183,8 @@ bloop2:
 
 	lda	FRAME_PLAY_PAGE		; 3
 	nop
-	nop
-	beq	book_loop		; 3
+	cmp	#2			; 2 (decoding takes most of a page)
+	bne	book_loop		; 3
 
 ;	dec	FRAMEL					; 5
 ;	nop						; 2

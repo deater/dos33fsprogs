@@ -13,18 +13,24 @@ credits:
 	sta	DRAW_PAGE
 	sta	FRAME
 
-	sta	FRAME_PLAY_OFFSET
-	sta	FRAME_PLAY_PAGE
-	jsr	update_pt3_play
-
+;	sta	FRAME_PLAY_OFFSET
+;	sta	FRAME_PLAY_PAGE
+;	jsr	update_pt3_play
 ;	jsr     pt3_write_lc_5
+
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 
 	lda	#<credits_text
 	sta	CREDITS_POINTERL
 	lda	#>credits_text
 	sta	CREDITS_POINTERH
 
-;	jsr	play_frame_compressed	; 6+1237
+
 
 	;==================
 	; setup graphics
@@ -205,7 +211,7 @@ credits_loop:
 	; 3+2+3+6+1237 play fake (-1)
 
 	lda	FRAME_PLAY_PAGE		; 3
-	cmp	#$5			; 2		; FIXME
+	cmp	#$7			; 2		; FIXME
 	beq	play_fake		; 3
 					; -1
 play_actual:
