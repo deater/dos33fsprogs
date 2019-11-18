@@ -41,6 +41,26 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 start:
 	jsr	init	; unhook DOS, init nibble table
 
+
+
+clear_out_ram:
+	ldx	#$14
+	stx	OUTH
+	ldy	#0
+	sty	OUTL
+	lda	#$77
+clear_ram_outer:
+	ldy	#0
+clear_ram_inner:
+	dey
+	sta	(OUTL),Y
+	bne	clear_ram_inner
+
+	inx
+	stx	OUTH
+	cpx	#$c0
+	bne	clear_ram_outer
+
 ;======================
 
 which_load_loop:

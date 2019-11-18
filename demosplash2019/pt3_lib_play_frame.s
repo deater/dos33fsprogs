@@ -66,7 +66,7 @@ r4_smc:
 
 	; Register 5: C coarse
 	ldx	#5						; 2
-r5_smc:
+r13_smc:
 	lda	$D400,Y						; 4+
 	pha							; 3
 	and	#$f						; 2
@@ -81,7 +81,7 @@ r5_smc:
 	lsr							; 2
 	lsr							; 2
 
-r13_smc:
+r5_smc:
 	ldx	$D500,Y		; check for env update		; 4
 	bmi	skip_envelope_write				; 3
 							;============
@@ -274,12 +274,12 @@ update_pt3_play:
         lda     music_addr_table+3,Y			; 4
         sta     r4_smc+2				; 4	; D3
 
-	lda     music_addr_table+5,Y			; 4
-	sta     r5_smc+2				; 4	; D4
+        lda     music_addr_table+4,Y			; 4
+	sta     r13_smc+2				; 4	; D4
 
-        lda     music_addr_table+4,Y			; 4	; D5
-	sta     r6_smc+2				; 4
-	sta	r13_smc+2				; 4	; D5
+	lda     music_addr_table+5,Y			; 4
+	sta	r5_smc+2				; 4	; D5
+	sta     r6_smc+2				; 4	; D5
 
 	lda     music_addr_table+6,Y			; 4	; D6
 	sta     r7_smc+2				; 4
