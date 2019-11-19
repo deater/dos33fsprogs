@@ -37,7 +37,8 @@ zp_clear_loop:
 	jsr	clear_ay_both
 	jsr	pt3_init_song
 
-
+	lda	#1
+	sta	LOOP
 
 	;====================================
 	; turn on language card
@@ -50,9 +51,6 @@ zp_clear_loop:
 	; at address $D000-$FC00
 
 	jsr	pt3_write_lc_4
-
-	lda	#1
-	sta	LOOP
 
 	;===========================
 	; Enable graphics
@@ -101,6 +99,8 @@ main_body:
 	;===========================
 	; missing scene
 	;===========================
+
+;blarh:	jmp	blarh
 
 ;	nop
 ;	nop
