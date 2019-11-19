@@ -30,7 +30,7 @@ zero_song_structs_loop:
 	sta	pt3_envelope_slide_add_h_smc+1				; 4
 	sta	pt3_envelope_add_smc+1					; 4
 	sta	pt3_envelope_type_smc+1					; 4
-	sta	pt3_envelope_type_old_smc+1				; 4
+	sta	pt3_envelope_type_old_smc+1	; ok as set_env always	; 4
 	sta	pt3_envelope_delay_smc+1				; 4
 	sta	pt3_envelope_delay_orig_smc+1				; 4
 
@@ -44,6 +44,8 @@ zero_song_structs_loop:
 	sta	note_a+NOTE_VOLUME					; 4
 	sta	note_b+NOTE_VOLUME					; 4
 	sta	note_c+NOTE_VOLUME					; 4
+
+
 
 	; default ornament/sample in A
 	; 	X is zero coming in here

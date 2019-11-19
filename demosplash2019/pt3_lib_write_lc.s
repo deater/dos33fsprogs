@@ -139,6 +139,9 @@ pt3_set_pages:
 music_table_begin:
 
 music_addr_table:
+;.byte $a0,$a1,$a2,$a3,$a4,$a5,$a6,$a7,$a8,$a9,$aa,$BB,$CC,$DD,$EE,$FF	;0
+;.byte $b0,$b1,$b2,$b3,$b4,$b5,$b6,$b7,$b8,$b9,$ba,$BB,$CC,$DD,$EE,$FF	;0
+
 .byte $f1,$f2,$f3,$f4,$f5,$f6,$f7,$f8,$f9,$fa,$fb,$BB,$CC,$DD,$EE,$FF	;0
 .byte $e6,$e7,$e8,$e9,$ea,$eb,$ec,$ed,$ee,$ef,$f0,$BB,$CC,$DD,$EE,$FF	;1
 .byte $db,$dc,$dd,$de,$df,$e0,$e1,$e2,$e3,$e4,$e5,$BB,$CC,$DD,$EE,$FF	;2

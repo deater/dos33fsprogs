@@ -55,7 +55,7 @@ r4_wrsmc:
 	; Register 5: Envelope Shape [top] / C coarse [bottom]
 	lda	C_COARSE_TONE
 	and	#$f
-	sta	C_COARSE_TONE
+	sta	C_COARSE_TEMP
 
 	lda	ENVELOPE_SHAPE
 	cmp	#$ff
@@ -67,19 +67,17 @@ yes_envelope:
 	asl
 	asl
 	asl
-	ora	C_COARSE_TONE
-	sta	C_COARSE_TONE
+	ora	C_COARSE_TEMP
+	sta	C_COARSE_TEMP
 
 	lda	#0
-	sta	ENVELOPE_SHAPE
 	jmp	done_envelope
 no_envelope:
 	lda	#$80
-	sta	ENVELOPE_SHAPE
-
 done_envelope:
+	sta	ENV_SHAPE_TEMP
 
-	lda	C_COARSE_TONE
+	lda	C_COARSE_TEMP
 r13_wrsmc:
 	sta	$D400,Y
 
@@ -88,7 +86,7 @@ r13_wrsmc:
 	; Register 6: Noise
 	lda	NOISE
 	and	#$1f
-	ora	ENVELOPE_SHAPE
+	ora	ENV_SHAPE_TEMP
 r6_wrsmc:
 	sta	$D500,Y
 
@@ -103,19 +101,19 @@ r7_wrsmc:
 
 	lda	A_VOLUME
 	and	#$1f
-	sta	A_VOLUME
+	sta	A_VOL_TEMP
 
 	lda	B_VOLUME
 	and	#$10
 	asl
-	ora	A_VOLUME
-	sta	A_VOLUME
+	ora	A_VOL_TEMP
+	sta	A_VOL_TEMP
 
 	lda	C_VOLUME
 	and	#$10
 	asl
 	asl
-	ora	A_VOLUME
+	ora	A_VOL_TEMP
 r8_wrsmc:
 	sta	$D700,Y
 
@@ -124,14 +122,14 @@ r8_wrsmc:
 
 	lda	B_VOLUME
 	and	#$f
-	sta	B_VOLUME
+	sta	A_VOL_TEMP
 
 	lda	C_VOLUME
 	asl
 	asl
 	asl
 	asl
-	ora	B_VOLUME
+	ora	A_VOL_TEMP
 r9_wrsmc:
 	sta	$D800,Y
 
