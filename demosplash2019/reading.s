@@ -51,6 +51,8 @@ end_book:
 
 ;	sei
 
+;urgh:	jmp urgh
+
 	lda     #0
 	sta     FRAME_PLAY_OFFSET
 	sta     FRAME_PLAY_PAGE

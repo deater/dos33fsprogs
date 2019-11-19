@@ -1587,9 +1587,8 @@ escape_keys:
 	.byte ' '+$80,30	; shoot
 	.byte 'Z',5		; down
 	.byte 'Z',10		; faster
-	.byte 'A',30		; faster
+	.byte 'A',28		; faster
 	.byte 'A',10		; faster
-
 	.byte 27+$80,2
 
 .if 0
