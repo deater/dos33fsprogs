@@ -17,4 +17,5 @@
 	.asciiz	"BH.PT3"
 	.asciiz "ND.PT3"
 	.asciiz "OO.PT3"
+	.asciiz "DY.PT3"
 

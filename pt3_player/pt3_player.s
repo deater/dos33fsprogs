@@ -13,7 +13,7 @@ PT3_LOC = $4000
 PT3_USE_ZERO_PAGE = 1
 
 ; Number of files.  Should probably detect this automatically
-NUM_FILES	=	19
+NUM_FILES	=	20
 
 
 	;=============================
