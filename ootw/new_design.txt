@@ -1,0 +1,36 @@
+ //:: ::==: ::==: ::   ::== ]][[ ]][[                       ::\\
+//=:: ::==: ::==: ::   ::==  ][   ][
+:: :: ::    ::    ::== ::== ]][[ ]][[
+   :: ::      // //=:: ::==: ::   :: \\
+   :: ::     // //  :: ::==: ::   :: //
+   :: :://\\// //===:: :: \\ ::== :://
+
+OOTW PROOF-OF-CONCEPT V2.8 (11/25/2019)
+CODE: DEATER           DISK,LZ4: QKUMBA        
+            ,        
+ORIGINAL BY ERIC CHAHI
+INSPIRED BY PAUL NICHOLAS PICO-8 VERSION
+           ______
+         A \/\/\/ PRODUCTION
+
+           APPLE ][ FOREVER
+
+	INTRO                /\
+	CHECKPOINT  1 (IH8S) ::		; LDKD
+	CHECKPOINT  2 (RAGE) ::		; HTDC
+	CHECKPOINT  3 (VENT) \/		; CLLD
+	CHECKPOINT  4 (RCHG)		; LBKG
+	CHECKPOINT  5 (CAVE)		; XDDJ
+	CHECKPOINT  6 (CEIL)		; FXLC
+	CHECKPOINT  7 (RUNC)		; KRFK
+	CHECKPOINT  8 (ROLL)		; KLFB
+	CHECKPOINT  9 (SWIM)		; TTCT
+	CHECKPOINT 10 (GRND)		; HRTB
+	CHECKPOINT 11 (ABVE)		; BRTD
+	CHECKPOINT 12 (THRW)		; TFBB
+	CHECKPOINT 13 (ARMS)		; TXHF
+	CHECKPOINT 14 (TANK)		; CKJL
+	CHECKPOINT 15 (ANKD)		; LFCK
+	ENDING
+
+
