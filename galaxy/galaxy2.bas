@@ -1,0 +1,38 @@
+' cls()
+10 GR
+' ::_::
+'for i=0,1600 do
+20 FOR I=0 TO 400
+'if(i<15)pal(i,({0,128,130,2,136,8,142,137,9,10,135,7})[i+1],1)
+30 REM
+'x=rnd(128)
+40 X=RND(1)*128
+'y=rnd(128)
+50 Y=RND(1)*128
+'a=atan2(x-64,y-64)+.17
+'60 A=ATN(X-20,Y-20)+.17
+60 IF X-64>0 THEN A=ATN(Y-64/X-64):GOTO 68
+61 IF X-64=0 THEN A=1.57*SGN(Y-64):GOTO 68
+62 A=ATN(X-64/Y-64)+3.14*SGN(Y-64)
+68 A=A+1
+'d=rnd(7)
+70 D=RND(1)*7
+'pset(x+cos(a)*d,y+sin(a)*d/3-cos(a)*d/4,max(0,pget(x,y)+.87-rnd()))
+80 C=SCRN(X/3.3,Y/3.3)+0.87-RND(1)
+81 IF C<0 THEN C=0
+82 COLOR=C
+85 XX=(X+COS(A)*D)/3.3
+87 YY=(Y+SIN(A)*D/3-COS(A)*D/4)/3.3
+88 IF XX<0 OR XX>39 GOTO 100
+89 IF YY<0 OR YY>39 GOTO 100
+90 PLOT XX,YY
+'end
+100 NEXT I
+' circfill(64,64,5,11)
+110 COLOR=15
+115 PLOT 20,20:PLOT 19,20:PLOT 21,20
+117 PLOT 19,19:PLOT 20,19:PLOT 21,19
+119 PLOT 19,21:PLOT 20,21:PLOT 21,21
+'120 INPUT A$
+130 GOTO 20
+'flip()goto _
