@@ -38,7 +38,7 @@ char applesoft_tokens[][8]={
 /* B8 */ "DEF FN","POKE","PRINT","CONT","LIST","CLEAR","GET","NEW",
 /* C0 */ "TAB(","TO","FN","SPC(","THEN","AT","NOT","STEP",
 /* C8 */ "+","-","*","/","^","AND","OR",">",
-/* D0 */ "=","<","SGN","INT","ABS","USR","FRE","SCRN (",
+/* D0 */ "=","<","SGN","INT","ABS","USR","FRE","SCRN(",
 /* D8 */ "PDL","POS","SQR","RND","LOG","EXP","COS","SIN",
 /* E0 */ "TAN","ATN","PEEK","LEN","STR$","VAL","ASC","CHR$",
 /* E8 */ "LEFT$","RIGHT$","MID$","","","","","",
