@@ -6,10 +6,10 @@ PNG_TO_40x48D = ../gr-utils/png_to_40x48d
 
 all:	xmas2019.dsk
 
-xmas2019.dsk:	SNOW
+xmas2019.dsk:	SNOW HELLO
 	cp empty.dsk xmas2019.dsk
 	$(DOS33) -y xmas2019.dsk BSAVE -a 0x1000 SNOW
-	$(DOS33) -y xmas2019.dsk SAVE A HELLO.BAS
+	$(DOS33) -y xmas2019.dsk SAVE A HELLO
 
 
 ####
@@ -35,8 +35,8 @@ FIREWORKS.BAS:	fireworks.bas
 
 ####
 
-HELLO.BAS:	hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO.BAS
+HELLO:	hello.bas
+	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
 
 
 clean:		
