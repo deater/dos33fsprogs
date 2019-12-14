@@ -6,11 +6,22 @@ PNG_TO_40x48D = ../gr-utils/png_to_40x48d
 
 all:	xmas2019.dsk
 
-xmas2019.dsk:	SNOW HELLO
+xmas2019.dsk:	SNOW TREE HELLO
 	cp empty.dsk xmas2019.dsk
 	$(DOS33) -y xmas2019.dsk BSAVE -a 0x1000 SNOW
+	$(DOS33) -y xmas2019.dsk BSAVE -a 0x1000 TREE
 	$(DOS33) -y xmas2019.dsk SAVE A HELLO
 
+####
+
+TREE:	tree.o
+	ld65 -o TREE tree.o -C ../linker_scripts/apple2_1000.inc
+
+tree.o:	tree.s
+#gr_copy.s random16.s fw.s hgr.s delay_a.s \
+#		vapor_lock.s gr_hline.s state_machine.s move_letters.s \
+#		background_final.inc
+	ca65 -o tree.o tree.s -l tree.lst
 
 ####
 
