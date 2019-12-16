@@ -60,4 +60,4 @@ sine_table.o:	sine_table.c
 ####
 
 clean:		
-		rm -f *~ *.o *.lst *.inc FIREWORKS.BAS
+		rm -f *~ *.o *.lst FIREWORKS.BAS

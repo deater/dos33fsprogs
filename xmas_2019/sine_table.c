@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 		for(i=0;i<128;i++) {
 			if (i%16==0) printf("\n.byte\t");
 			printf("%2d",s+8+(15-s)+
-				(int)(s*sin(i*2*3.14159265/128.0)));
+				(int)round(s*sin(i*2*3.14159265/128.0)));
 			if (i%16!=15) printf(",");
 		}
 		printf("\n");
