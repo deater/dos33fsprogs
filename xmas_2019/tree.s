@@ -51,11 +51,6 @@ display_loop:
 	ldx	#0
 draw_line_loop:
 
-	ldy	which_line_y
-sine_table_smc:
-	lda	sine_table5,Y
-	tay
-
 	jsr	draw_line
 
 	inx
@@ -77,7 +72,19 @@ sine_table_smc:
 	; X = which
 
 draw_line:
-	tya
+
+	; set up proper sine table
+
+	lda	sine_table_l,X
+	sta	sine_table_smc+1
+	lda	sine_table_h,X
+	sta	sine_table_smc+2
+
+	ldy	which_line_y
+sine_table_smc:
+	lda	sine_table5,Y
+	tay
+
 	and	#$1
 	bne	draw_line_odd
 
@@ -101,18 +108,23 @@ draw_line_actual:
 	lda	gr_offsets,Y
 
 	clc
-	adc	#10
+	adc	tree_start,X
 	sta	GBASL
 
 	lda	gr_offsets+1,Y
 	sta	GBASH
 
-	ldy	#0
 
-	lda	#$CC
+	ldy	#0
+	lda	tree_len,X
+	sta	ll_smc3+1
+
+	lda	tree_color,X
+
 ll_smc1:
 	and	#$0f
 	sta	COLOR
+
 line_loop:
 	lda	(GBASL),Y
 ll_smc2:
@@ -120,7 +132,8 @@ ll_smc2:
 	ora	COLOR
 	sta	(GBASL),Y
 	iny
-	cpy	#20
+ll_smc3:
+	cpy	#2
 	bne	line_loop
 
 	rts
@@ -171,16 +184,20 @@ clear_lores_loop:
 
 tree:
 	;	color	start	stop		; 01234567890123456789
-	.byte	$DD,	19,	20,	$00	;          YY
-	.byte	$44,	17,	22,	$00	;        DDDDDD
-	.byte	$CC,	16,	23,	$00	;       LLLLLLLL
-	.byte	$44,	15,	24,	$00	;      DDDDDDDDDD
-	.byte	$CC,	14,	25,	$00	;     LLLLLLLLLLLL
-	.byte	$44,	13,	26,	$00	;    DDDDDDDDDDDDDD
-	.byte	$CC,	12,	27,	$00	;   LLLLLLLLLLLLLLLL
-	.byte	$44,	11,	28,	$00	;  DDDDDDDDDDDDDDDDDD
-	.byte	$CC,	10,	29,	$00	; LLLLLLLLLLLLLLLLLLLL
-	.byte	$88,	19,	20,	$00	;          BB
+;	.byte	$DD,	19,	20,	$00	;          YY
+;	.byte	$44,	17,	22,	$00	;        DDDDDD
+;	.byte	$CC,	16,	23,	$00	;       LLLLLLLL
+;	.byte	$44,	15,	24,	$00	;      DDDDDDDDDD
+;	.byte	$CC,	14,	25,	$00	;     LLLLLLLLLLLL
+;	.byte	$44,	13,	26,	$00	;    DDDDDDDDDDDDDD
+;	.byte	$CC,	12,	27,	$00	;   LLLLLLLLLLLLLLLL
+;	.byte	$44,	11,	28,	$00	;  DDDDDDDDDDDDDDDDDD
+;	.byte	$CC,	10,	29,	$00	; LLLLLLLLLLLLLLLLLLLL
+;	.byte	$88,	19,	20,	$00	;          BB
+
+tree_color:	.byte	$DD,$44,$CC,$44,$CC,$44,$CC,$44,$CC,$88
+tree_start:	.byte	19, 17, 16, 15, 14, 13, 12, 11, 10, 19
+tree_len:	.byte	2,  6,   8, 10, 12, 14, 16, 18, 20, 2
 
 gr_offsets:
 	.word	$400,$480,$500,$580,$600,$680,$700,$780
@@ -189,5 +206,17 @@ gr_offsets:
 
 which_line_y:
 	.byte 0
+
+
+sine_table_l:
+	.byte	<sine_table5, <sine_table6, <sine_table7, <sine_table8
+	.byte	<sine_table9, <sine_table10,<sine_table11,<sine_table12
+	.byte	<sine_table13,<sine_table14,<sine_table15
+
+sine_table_h:
+	.byte	>sine_table5, >sine_table6, >sine_table7, >sine_table8
+	.byte	>sine_table9, >sine_table10,>sine_table11,>sine_table12
+	.byte	>sine_table13,>sine_table14,>sine_table15
+
 
 .include "sines.inc"
