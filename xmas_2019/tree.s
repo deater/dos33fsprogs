@@ -34,7 +34,21 @@ display_loop:
 
 	ldx	#0
 	ldy	which_line_y,X
-	lda	sine_table,Y
+	lda	sine_table15,Y
+	tay
+	ldx	#0
+	jsr	draw_line
+
+	ldx	#0
+	ldy	which_line_y,X
+	lda	sine_table14,Y
+	tay
+	ldx	#0
+	jsr	draw_line
+
+	ldx	#0
+	ldy	which_line_y,X
+	lda	sine_table13,Y
 	tay
 	ldx	#0
 	jsr	draw_line
@@ -51,12 +65,33 @@ display_loop:
 	;=========================
 	; draw new line
 
+	; draw line 3
 	ldx	#0
 	ldy	which_line_y,X
-	lda	sine_table,Y
+	lda	sine_table13,Y
 	tay
 	ldx	#$44
 	jsr	draw_line
+
+	; draw line 2
+	ldx	#0
+	ldy	which_line_y,X
+	lda	sine_table14,Y
+	tay
+	ldx	#$cc
+	jsr	draw_line
+
+	; draw line 1
+	ldx	#0
+	ldy	which_line_y,X
+	lda	sine_table15,Y
+	tay
+	ldx	#$44
+	jsr	draw_line
+
+
+
+
 
 	lda	#100
 	jsr	WAIT
@@ -133,12 +168,4 @@ gr_offsets:
 which_line_y:
 	.byte 0
 
-sine_table:
-	.byte 23,23,24,25,25,26,27,28,28,29,30,30,31,31,32,33
-	.byte 33,34,34,35,35,35,36,36,36,37,37,37,37,37,37,37
-	.byte 37,37,37,37,37,37,37,37,36,36,36,35,35,35,34,34
-	.byte 33,33,32,31,31,30,30,29,28,28,27,26,25,25,24,23
-	.byte 23,23,22,21,21,20,19,18,18,17,16,16,15,15,14,13
-	.byte 13,12,12,11,11,11,10,10,10, 9, 9, 9, 9, 9, 9, 9
-	.byte  9, 9, 9, 9, 9, 9, 9, 9,10,10,10,11,11,11,12,12
-	.byte 13,13,14,15,15,16,16,17,18,18,19,20,21,21,22,23
+.include "sines.inc"

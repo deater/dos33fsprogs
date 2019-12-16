@@ -4,7 +4,7 @@ DOS33 = ../dos33fs-utils/dos33
 B2D = ../bmp2dhr/b2d
 PNG_TO_40x48D = ../gr-utils/png_to_40x48d
 
-all:	xmas2019.dsk
+all:	xmas2019.dsk sine_table
 
 xmas2019.dsk:	SNOW TREE HELLO
 	cp empty.dsk xmas2019.dsk
@@ -49,6 +49,15 @@ FIREWORKS.BAS:	fireworks.bas
 HELLO:	hello.bas
 	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
 
+####
+
+sine_table:	sine_table.o
+	$(CC) -o sine_table sine_table.o -lm
+
+sine_table.o:	sine_table.c
+	$(CC) -c sine_table.c
+
+####
 
 clean:		
 		rm -f *~ *.o *.lst *.inc FIREWORKS.BAS
