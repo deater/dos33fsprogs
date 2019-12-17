@@ -14,6 +14,7 @@ SNOWX		= $F0
 COLOR		= $F1
 CMASK1		= $F2
 CMASK2		= $F3
+WHICH_Y		= $F4
 
 .include	"hardware.inc"
 
@@ -37,12 +38,12 @@ display_loop:
 	;==========================
 	; move line
 
-	inc	which_line_y				; 6
-	lda	which_line_y				; 4
+	inc	WHICH_Y					; 5
+	lda	WHICH_Y					; 3
 	and	#$7f					; 2
-	sta	which_line_y				; 4
+	sta	WHICH_Y					; 3
 							;=====
-							; 16
+							; 13
 
 
 	;=========================
@@ -68,75 +69,81 @@ draw_line_loop:
 	; draw line
 	;=================================
 	;=================================
-	; Y = y position
 	; X = which
+
+	; original:	31 + 14 + 26 + 20 + 23*len + 5 = 96+(23*len)
+	; optimized:	30 + 18 + 34 +      18*len + 5 = 87+(18*len)
 
 draw_line:
 
 	; set up proper sine table
 
-	lda	sine_table_l,X
-	sta	sine_table_smc+1
-	lda	sine_table_h,X
-	sta	sine_table_smc+2
+	lda	sine_table_l,X					; 4+
+	sta	sine_table_smc+1				; 4
+	lda	sine_table_h,X					; 4+
+	sta	sine_table_smc+2				; 4
 
-	ldy	which_line_y
+	ldy	WHICH_Y						; 3
 sine_table_smc:
-	lda	sine_table5,Y
-	tay
-
-	and	#$1
-	bne	draw_line_odd
-
+	lda	sine_table5,Y					; 4+
+	lsr							; 2
+	tay							; 2
+	bcs	draw_line_odd					; 3
+								;======
+								; 30
 draw_line_even:
-	lda	#$0f
-	sta	ll_smc1+1
-	lda	#$f0
-	sta	ll_smc2+1
-	jmp	draw_line_actual
+								; -1
+	lda	tree_color,X					; 4+
+	and	#$0f						; 2
+	sta	ll_smc1+1					; 4
+	lda	#$f0						; 2
+	sta	ll_smc2+1					; 4
+	jmp	draw_line_actual				; 3
+								;====
+								; 18
 
 draw_line_odd:
-	lda	#$f0
-	sta	ll_smc1+1
-	lda	#$0f
-	sta	ll_smc2+1
+	lda	tree_color,X					; 4+
+	and	#$f0						; 2
+	sta	ll_smc1+1					; 4
+	lda	#$0f						; 2
+	sta	ll_smc2+1					; 4
+	nop							; 2
+								;====
+								; 18
 
 draw_line_actual:
-	tya
-	and	#$fe
-	tay
-	lda	gr_offsets,Y
+	lda	gr_offsets_l,Y					; 4+
+	clc							; 2
+	adc	tree_start,X					; 4+
+	sta	ll_smc3+1					; 4
+	sta	ll_smc4+1					; 4
 
-	clc
-	adc	tree_start,X
-	sta	GBASL
+	lda	gr_offsets_h,Y					; 4+
+	sta	ll_smc3+2					; 4
+	sta	ll_smc4+2					; 4
 
-	lda	gr_offsets+1,Y
-	sta	GBASH
-
-
-	ldy	#0
-	lda	tree_len,X
-	sta	ll_smc3+1
-
-	lda	tree_color,X
-
-ll_smc1:
-	and	#$0f
-	sta	COLOR
+	ldy	tree_len,X					; 4+
+								;=====
+								; 34
 
 line_loop:
-	lda	(GBASL),Y
-ll_smc2:
-	and	#$f0
-	ora	COLOR
-	sta	(GBASL),Y
-	iny
 ll_smc3:
-	cpy	#2
-	bne	line_loop
+	lda	$400,Y						; 4+
+ll_smc2:
+	and	#$f0						; 2
+ll_smc1:
+	ora	#$0f						; 2
+ll_smc4:
+	sta	$400,Y						; 5
+	dey							; 2
+	bpl	line_loop					; 3
+								;=====
+								; 18
 
-	rts
+								; -1
+
+	rts							; 6
 
 
 	;=====================================
@@ -197,16 +204,17 @@ tree:
 
 tree_color:	.byte	$DD,$44,$CC,$44,$CC,$44,$CC,$44,$CC,$88
 tree_start:	.byte	19, 17, 16, 15, 14, 13, 12, 11, 10, 19
-tree_len:	.byte	2,  6,   8, 10, 12, 14, 16, 18, 20, 2
+tree_len:	.byte	2-1,  6-1,   8-1, 10-1, 12-1, 14-1, 16-1, 18-1, 20-1, 2-1
 
-gr_offsets:
-	.word	$400,$480,$500,$580,$600,$680,$700,$780
-	.word	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
-	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
+gr_offsets_l:
+	.byte	<$400,<$480,<$500,<$580,<$600,<$680,<$700,<$780
+	.byte	<$428,<$4a8,<$528,<$5a8,<$628,<$6a8,<$728,<$7a8
+	.byte	<$450,<$4d0,<$550,<$5d0,<$650,<$6d0,<$750,<$7d0
 
-which_line_y:
-	.byte 0
-
+gr_offsets_h:
+	.byte	>$400,>$480,>$500,>$580,>$600,>$680,>$700,>$780
+	.byte	>$428,>$4a8,>$528,>$5a8,>$628,>$6a8,>$728,>$7a8
+	.byte	>$450,>$4d0,>$550,>$5d0,>$650,>$6d0,>$750,>$7d0
 
 sine_table_l:
 	.byte	<sine_table5, <sine_table6, <sine_table7, <sine_table8
