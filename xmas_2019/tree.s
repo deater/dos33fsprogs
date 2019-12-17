@@ -33,7 +33,7 @@ display_loop:
 	;=========================
 	; erase old lines
 
-	jsr	clear_lores				; 6+1749
+	jsr	clear_lores				; 6+1709
 
 	;==========================
 	; move line
@@ -49,14 +49,23 @@ display_loop:
 	;=========================
 	; draw new line
 
-	ldx	#0
+	; 2+10*(100) + 18*(2+6+8+10+12+14+16+18+20+2) = 
+	; 1002+18*108=1002+1944=2946
+
+	;2,6,8,10,12,14,16,18,20,2
+
+
+	ldx	#0					; 2
 draw_line_loop:
 
-	jsr	draw_line
+	jsr	draw_line				; 6+87+(18*len)
 
-	inx
-	cpx	#10
-	bne	draw_line_loop
+	inx						; 2
+	cpx	#10					; 2
+	bne	draw_line_loop				; 3
+
+
+							; -1
 
 	lda	#100
 	jsr	WAIT
@@ -152,38 +161,37 @@ ll_smc4:
 	; clear the top 4 lines (eventually)
 	; clear 10-30 on lines 8-38
 
-	; 4+(80+7)*20+5 = 1749 cycles
+	; 4+(80+5)*20+5 = 1709 cycles
 clear_lores:
 
 	lda	#$0						; 2
-	ldx	#10						; 2
+	ldx	#19						; 2
 							;===========
 							;	  4
 clear_lores_loop:
-	sta	$600,X		; 8				; 5
-	sta	$680,X		; 10				; 5
-	sta	$700,X		; 12				; 5
-	sta	$780,X		; 14				; 5
-	sta	$428,X		; 16				; 5
-	sta	$4A8,X		; 18				; 5
-	sta	$528,X		; 20				; 5
-	sta	$5A8,X		; 22				; 5
-	sta	$628,X		; 24				; 5
-	sta	$6A8,X		; 26				; 5
-	sta	$728,X		; 28				; 5
-	sta	$7A8,X		; 30				; 5
-	sta	$450,X		; 32				; 5
-	sta	$4D0,X		; 34				; 5
-	sta	$550,X		; 36				; 5
-	sta	$5D0,X		; 38				; 5
+	sta	$600+10,X	; 8				; 5
+	sta	$680+10,X	; 10				; 5
+	sta	$700+10,X	; 12				; 5
+	sta	$780+10,X	; 14				; 5
+	sta	$428+10,X	; 16				; 5
+	sta	$4A8+10,X	; 18				; 5
+	sta	$528+10,X	; 20				; 5
+	sta	$5A8+10,X	; 22				; 5
+	sta	$628+10,X	; 24				; 5
+	sta	$6A8+10,X	; 26				; 5
+	sta	$728+10,X	; 28				; 5
+	sta	$7A8+10,X	; 30				; 5
+	sta	$450+10,X	; 32				; 5
+	sta	$4D0+10,X	; 34				; 5
+	sta	$550+10,X	; 36				; 5
+	sta	$5D0+10,X	; 38				; 5
 							;===========
 							;	80
 
-	inx							; 2
-	cpx	#30						; 2
-	bne	clear_lores_loop				; 3
+	dex							; 2
+	bpl	clear_lores_loop				; 3
 							;===========
-							;	  7
+							;	  5
 
 								; -1
 	rts							; 6
