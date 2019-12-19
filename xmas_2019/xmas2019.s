@@ -39,7 +39,94 @@ TREESIZE	= 12
 
 	jsr	vapor_lock
 
+	; vapor lock returns with us at beginning of hsync in line
+	; 114 (7410 cycles), so with 5070 lines to go to vblank
+	; then we want another 4050 cycles to end, so 9120
+
+	;=================================
+	; do nothing
+	;=================================
+	; and take 9120 cycles to do it
+do_nothing:
+	; Try X=139 Y=13 cycles=9114R6
+
+	nop
+	nop
+	nop
+
+	ldy     #13							; 2
+loop1:	ldx	#139							; 2
+loop2:	dex								; 2
+	bne	loop2							; 2nt/3
+	dey								; 2
+	bne	loop1							; 2nt/3
+
+
+
+
+
+
+
 display_loop:
+
+	;==========================
+	; First 8*4 = 32 lines GR??
+	; 2080 cycles
+
+	bit	SET_GR	; 4
+	bit	LORES	; 4
+
+	; Try X=1 Y=188 cycles=2069 R3
+
+	lda	COLOR	; 3
+
+	ldy     #188							; 2
+bloop1:	ldx	#1							; 2
+bloop2:	dex								; 2
+	bne	bloop2							; 2nt/3
+	dey								; 2
+	bne	bloop1							; 2nt/3
+
+
+	;=====================================
+	; Next 32*4 = 128 lines  HGR2/GR1/HGR2
+	; 8320 - 8 = 8312
+	bit	SET_GR	; 4
+	bit	LORES	; 4
+
+	; Try X=13 Y=117 cycles=8308 R4
+
+	nop
+	nop
+
+	ldy     #117							; 2
+dloop1:	ldx	#13							; 2
+dloop2:	dex								; 2
+	bne	dloop2							; 2nt/3
+	dey								; 2
+	bne	dloop1							; 2nt/3
+
+
+	;==========================
+	; Next 8*4 = 32 lines GR ??
+	; 2080 cycles
+
+	bit	SET_GR	; 4
+	bit	LORES	; 4
+
+	; Try X=1 Y=188 cycles=2069 R3
+
+	lda	COLOR	; 3
+
+	ldy     #188							; 2
+cloop1:	ldx	#1							; 2
+cloop2:	dex								; 2
+	bne	cloop2							; 2nt/3
+	dey								; 2
+	bne	cloop1							; 2nt/3
+
+vblank_start:
+
 
 	;==========================================================
 	;==========================================================
