@@ -40,10 +40,9 @@ snow.o:	snow.s
 XMAS2019:	xmas2019.o
 	ld65 -o XMAS2019 xmas2019.o -C ../linker_scripts/apple2_1000.inc
 
-xmas2019.o:	xmas2019.s
-#gr_copy.s random16.s fw.s hgr.s delay_a.s \
-#		vapor_lock.s gr_hline.s state_machine.s move_letters.s \
-#		background_final.inc
+xmas2019.o:	xmas2019.s \
+	delay_a.s vapor_lock.s
+#gr_hline.s state_machine.s move_letters.s
 	ca65 -o xmas2019.o xmas2019.s -l xmas2019.lst
 
 

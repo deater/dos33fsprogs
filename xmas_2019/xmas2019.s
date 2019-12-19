@@ -10,6 +10,7 @@ GBASH		= $27
 BASL		= $28
 BASH		= $29
 HGR_COLOR	= $E4
+DRAW_PAGE	= $EE
 SNOWX		= $F0
 COLOR		= $F1
 CMASK1		= $F2
@@ -29,6 +30,14 @@ TREESIZE	= 12
 	bit	LORES
 	bit	PAGE0
 
+
+	;==========================================================
+	;==========================================================
+	; Vapor Lock
+	;==========================================================
+	;==========================================================
+
+	jsr	vapor_lock
 
 display_loop:
 
@@ -243,3 +252,5 @@ sine_table_h:
 
 .align	$100
 .include "sines.inc"
+.include "vapor_lock.s"
+.include "delay_a.s"
