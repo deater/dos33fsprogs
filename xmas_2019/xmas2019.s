@@ -89,34 +89,53 @@ bloop2:	dex								; 2
 
 
 	;=====================================
-	; Next 32*4 = 128 lines  HGR2/GR1/HGR2
-	; 8320 - 8 = 8312
-	bit	SET_GR	; 4
-	bit	LORES	; 4
+	; Next 32*4 = 128 lines  HGR1/GR1 for 20 cycles/HGR1
 
-	; Try X=13 Y=117 cycles=8308 R4
+	ldx	#127	; 2
+middle_loop:
+	bit	HIRES			; 4
+					; 27
+	lda	COLOR	; 3
 
+	bit	LORES			; 4
+					; 16
 	nop
 	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	HIRES			; 4
+					; 5cycles
+	nop
+	lda	COLOR
 
-	ldy     #117							; 2
-dloop1:	ldx	#13							; 2
-dloop2:	dex								; 2
-	bne	dloop2							; 2nt/3
-	dey								; 2
-	bne	dloop1							; 2nt/3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
 
+
+	dex				; 2
+	bpl	middle_loop		; 3
+					; -1
 
 	;==========================
 	; Next 8*4 = 32 lines GR ??
-	; 2080 cycles
+	; 2080 cycles -8 -2 +1=2071
 
 	bit	SET_GR	; 4
 	bit	LORES	; 4
 
-	; Try X=1 Y=188 cycles=2069 R3
+	; Try X=1 Y=188 cycles=2069 R2
 
-	lda	COLOR	; 3
+	nop
 
 	ldy     #188							; 2
 cloop1:	ldx	#1							; 2
@@ -127,6 +146,21 @@ cloop2:	dex								; 2
 
 vblank_start:
 
+
+	; 4550 cycles - 3 = 4547
+
+	; Try X=13 Y=64 cycles=4545 R2
+
+	nop
+
+	ldy     #64							; 2
+dloop1:	ldx	#13							; 2
+dloop2:	dex								; 2
+	bne	dloop2							; 2nt/3
+	dey								; 2
+	bne	dloop1							; 2nt/3
+
+	jmp	display_loop
 
 	;==========================================================
 	;==========================================================
