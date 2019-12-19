@@ -1,3 +1,4 @@
 + Make SINE twice as fast (64 instead of 128 entries?)
++ rmove sine4
 + Add snow
 + Add music
