@@ -21,6 +21,7 @@ COLOR		= $F1
 CMASK1		= $F2
 CMASK2		= $F3
 WHICH_Y		= $F4
+FRAME		= $F5
 
 TREESIZE	= 12
 
@@ -29,6 +30,10 @@ TREESIZE	= 12
 
 	;==================================
 	;==================================
+	; Init
+
+	lda	#0
+	sta	FRAME
 
 	bit	SET_GR
 	bit	FULLGR
@@ -152,24 +157,34 @@ cloop2:	dex								; 2
 vblank_start:
 
 
-	; 4550 cycles - 3 = 4547
-	; Try X=13 Y=64 cycles=4545 R2
+	;===========================
+	; alternate between tree and snow/music
+	; every other frame
+	;===========================
 
-;	nop
+	lda	#1		; 2
+	eor	FRAME		; 3
+	sta	FRAME		; 3
+	beq	tree_half	; 3
+				;====
+				; 11
 
-;	ldy     #64							; 2
-;dloop1:	ldx	#13							; 2
-;dloop2:	dex								; 2
-;	bne	dloop2							; 2nt/3
-;	dey								; 2
-;	bne	dloop1							; 2nt/3
+				; -1
+	jmp	music_snow	; 3
+				;=====
+				; 2
 
-;	jmp	display_loop
-
+tree_half:
 	;==========================================================
+	;==========================================================
+	; TREE at 30Hz
+	;==========================================================
+	;==========================================================
+
+
+
 	;==========================================================
 	; erase old lines
-	;==========================================================
 	;==========================================================
 	; clear 10-30 on lines 8-38
 
@@ -331,22 +346,21 @@ ll_smc4:
 	;==============================================================
 
 	; 4550 cycles
+	;  -11		alternate frame
 	;-1703		erase lores
 	;  -13		move tree
 	;   -3		jmp (alignment)
 	;-2797		draw tree
 	;   -3		jmp at end
 	;========
-	;   31
+	;   20
 
-	; Try X=4 Y=1 cycles=27 R4
+	; Try X=2 Y=1 cycles=17R3
 
-	nop
-	nop
-
+	lda	COLOR
 
 	ldy     #1							; 2
-eloop1:	ldx	#4							; 2
+eloop1:	ldx	#2							; 2
 eloop2:	dex								; 2
 	bne	eloop2							; 2nt/3
 	dey								; 2
@@ -355,7 +369,31 @@ eloop2:	dex								; 2
 	jmp	display_loop				; 3
 
 
+	;=======================================================
+	;=======================================================
+	; music/snow
+	;=======================================================
+	;=======================================================
+music_snow:
+	; 4550 cycles
+	;  -11 even/odd
+	;   -2 even/odd jump
+	;   -3 jump at end
+	;======
+	; 4534
 
+	; Try X=29 Y=30 cycles=4531R3
+
+	lda	COLOR
+
+	ldy     #30							; 2
+dloop1:	ldx	#29							; 2
+dloop2:	dex								; 2
+	bne	dloop2							; 2nt/3
+	dey								; 2
+	bne	dloop1							; 2nt/3
+
+	jmp	display_loop			; 3
 
 
 
