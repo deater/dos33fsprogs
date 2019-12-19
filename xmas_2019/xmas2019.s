@@ -1,4 +1,9 @@
-; Display awesome tree
+; XMAS2019 Demo
+
+; + Display awesome tree
+; + Starfield
+; + Music
+; + Snow
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -148,7 +153,6 @@ vblank_start:
 
 
 	; 4550 cycles - 3 = 4547
-
 	; Try X=13 Y=64 cycles=4545 R2
 
 ;	nop
@@ -169,7 +173,7 @@ vblank_start:
 	;==========================================================
 	; clear 10-30 on lines 8-38
 
-	; 4+(80+5)*20+5-1 = 1708 cycles
+	; 4+(80+5)*20-1 = 1703 cycles
 clear_lores:
 
 	lda	#$0						; 2
@@ -201,6 +205,24 @@ clear_lores_loop:
 							;===========
 							;	  5
 								; -1
+
+
+
+
+	; 4550 cycles - 3 -1703 = 2844
+	; Try X=12 Y=43 cycles=2839R5
+
+	nop
+	lda	COLOR
+
+	ldy     #43							; 2
+dloop1:	ldx	#12							; 2
+dloop2:	dex								; 2
+	bne	dloop2							; 2nt/3
+	dey								; 2
+	bne	dloop1							; 2nt/3
+
+	jmp	display_loop
 
 
 	;============================================================
