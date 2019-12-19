@@ -151,16 +151,16 @@ vblank_start:
 
 	; Try X=13 Y=64 cycles=4545 R2
 
-	nop
+;	nop
 
-	ldy     #64							; 2
-dloop1:	ldx	#13							; 2
-dloop2:	dex								; 2
-	bne	dloop2							; 2nt/3
-	dey								; 2
-	bne	dloop1							; 2nt/3
+;	ldy     #64							; 2
+;dloop1:	ldx	#13							; 2
+;dloop2:	dex								; 2
+;	bne	dloop2							; 2nt/3
+;	dey								; 2
+;	bne	dloop1							; 2nt/3
 
-	jmp	display_loop
+;	jmp	display_loop
 
 	;==========================================================
 	;==========================================================
@@ -321,8 +321,25 @@ ll_smc4:
 	;==============================================================
 	;==============================================================
 
-;	lda	#100
-;	jsr	WAIT
+	; 4550 cycles
+	;-1708
+	;  -13
+	;-2761
+	;   +1
+	;   -3
+	;========
+	;   66
+
+	; Try X=3 Y=3 cycles=64R2
+
+	nop
+
+	ldy     #3							; 2
+eloop1:	ldx	#3							; 2
+eloop2:	dex								; 2
+	bne	eloop2							; 2nt/3
+	dey								; 2
+	bne	eloop1							; 2nt/3
 
 	jmp	display_loop				; 3
 
