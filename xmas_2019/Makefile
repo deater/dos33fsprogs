@@ -3,6 +3,7 @@ include ../Makefile.inc
 DOS33 = ../dos33fs-utils/dos33
 B2D = ../bmp2dhr/b2d
 PNG_TO_40x48D = ../gr-utils/png_to_40x48d
+PNG_TO_40x96 = ../gr-utils/png_to_40x96
 
 all:	xmas2019.dsk sine_table
 
@@ -41,20 +42,15 @@ XMAS2019:	xmas2019.o
 	ld65 -o XMAS2019 xmas2019.o -C ../linker_scripts/apple2_4000.inc
 
 xmas2019.o:	xmas2019.s \
-	delay_a.s vapor_lock.s
-#gr_hline.s state_machine.s move_letters.s
+	delay_a.s vapor_lock.s message.inc gr_unrle.s
 	ca65 -o xmas2019.o xmas2019.s -l xmas2019.lst
 
 
+#####
 
-#background_final.inc:	background_final.png
-#	$(PNG_TO_40x48D) asm background_final.png bg_final > background_final.inc
+message.inc:      message.png
+	$(PNG_TO_40x96) asm message.png message > message.inc
 
-
-####
-
-FIREWORKS.BAS:	fireworks.bas
-	../asoft_basic-utils/tokenize_asoft < fireworks.bas > FIREWORKS.BAS
 
 ####
 

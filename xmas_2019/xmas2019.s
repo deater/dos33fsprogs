@@ -27,6 +27,7 @@ CMASK2		= $F3
 WHICH_Y		= $F4
 FRAME		= $F5
 TEMPY		= $F6
+TEMP		= $F7
 
 HGR		= $F3E2
 
@@ -72,6 +73,28 @@ snow_init_loop:
 	bpl	snow_init_loop
 
 
+	;=============================
+	; Load graphic page0
+
+	lda	#<message_low
+	sta	GBASL
+	lda	#>message_low
+	sta	GBASH
+	lda	#$c
+	jsr	load_rle_gr
+
+	;=============================
+	; Load graphic page1
+
+	lda	#<message_high
+	sta	GBASL
+	lda	#>message_high
+	sta	GBASH
+	lda	#$10
+	jsr	load_rle_gr
+
+
+
 	;==========================================================
 	;==========================================================
 	; Vapor Lock
@@ -82,21 +105,26 @@ snow_init_loop:
 
 	; vapor lock returns with us at beginning of hsync in line
 	; 114 (7410 cycles), so with 5070 lines to go to vblank
-	; then we want another 4050 cycles to end, so 9120
+	; then we want another 4550 cycles to end, so 9620
+
+	;  9620
+	; -9298
+	;=======
+	;  322
+
+	jsr	gr_copy_to_current		; 6+ 9292
 
 	;=================================
 	; do nothing
 	;=================================
-	; and take 9120 cycles to do it
+	; and take 322 cycles to do it
 do_nothing:
-	; Try X=139 Y=13 cycles=9114R6
+	; Try X=1 Y=29 cycles=320 R2
 
 	nop
-	nop
-	nop
 
-	ldy     #13							; 2
-loop1:	ldx	#139							; 2
+	ldy     #29							; 2
+loop1:	ldx	#1							; 2
 loop2:	dex								; 2
 	bne	loop2							; 2nt/3
 	dey								; 2
@@ -105,8 +133,9 @@ loop2:	dex								; 2
 
 
 
-
-
+	;=============================================
+	;=============================================
+	;=============================================
 
 display_loop:
 
@@ -134,8 +163,19 @@ bloop2:	dex								; 2
 
 	ldx	#127	; 2
 middle_loop:
+
+
+
 	bit	HIRES			; 4
 					; 27
+
+	lda	COLOR	; 3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
 	lda	COLOR	; 3
 
 	bit	LORES			; 4
@@ -153,13 +193,6 @@ middle_loop:
 	nop
 	lda	COLOR
 
-	lda	COLOR	; 3
-	lda	COLOR	; 3
-	lda	COLOR	; 3
-	lda	COLOR	; 3
-	lda	COLOR	; 3
-	lda	COLOR	; 3
-	lda	COLOR	; 3
 	lda	COLOR	; 3
 
 
@@ -734,3 +767,12 @@ pixel_lookup:
 .include "vapor_lock.s"
 .include "delay_a.s"
 .include "random16.s"
+.include "message.inc"
+
+.include "gr_unrle.s"
+.include "gr_copy.s"
+
+; include music
+
+.align $100
+.incbin "./music/jingle.pt3"
