@@ -8,7 +8,7 @@ all:	xmas2019.dsk sine_table
 
 xmas2019.dsk:	SNOW TREE XMAS2019 HELLO
 	cp empty.dsk xmas2019.dsk
-	$(DOS33) -y xmas2019.dsk BSAVE -a 0x1000 XMAS2019
+	$(DOS33) -y xmas2019.dsk BSAVE -a 0x4000 XMAS2019
 	$(DOS33) -y xmas2019.dsk BSAVE -a 0x1000 SNOW
 	$(DOS33) -y xmas2019.dsk BSAVE -a 0x1000 TREE
 	$(DOS33) -y xmas2019.dsk SAVE A HELLO
@@ -38,7 +38,7 @@ snow.o:	snow.s
 ####
 
 XMAS2019:	xmas2019.o
-	ld65 -o XMAS2019 xmas2019.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o XMAS2019 xmas2019.o -C ../linker_scripts/apple2_4000.inc
 
 xmas2019.o:	xmas2019.s \
 	delay_a.s vapor_lock.s
