@@ -143,20 +143,27 @@ display_loop:
 	; First 8*4 = 32 lines GR??
 	; 2080 cycles
 
-	bit	SET_GR	; 4
-	bit	LORES	; 4
+	ldx	#15		; 2
+top_loop:
+	; even lines PAGE1
+	bit	SET_TEXT	; 4
+	bit	LORES		; 4
+	bit	PAGE1		; 4
+	; 65-12 = 53 - 25 - 2 = 26
+	lda	#26		; 2
+	jsr	delay_a		; 51
 
-	; Try X=1 Y=188 cycles=2069 R3
+	; odd lines PAGE0
+	bit	SET_TEXT	; 4
+	bit	LORES		; 4
+	bit	PAGE0		; 4
+	; 65-12 = 53 - 25 - 2 -2 -3 =21
+	lda	#21		; 2
+	jsr	delay_a		; 46
+	dex			; 2
+	bpl	top_loop	; 3
 
-	lda	COLOR	; 3
-
-	ldy     #188							; 2
-bloop1:	ldx	#1							; 2
-bloop2:	dex								; 2
-	bne	bloop2							; 2nt/3
-	dey								; 2
-	bne	bloop1							; 2nt/3
-
+				; -1
 
 	;=====================================
 	; Next 32*4 = 128 lines  HGR1/GR1 for 20 cycles/HGR1
@@ -165,9 +172,9 @@ bloop2:	dex								; 2
 middle_loop:
 
 
-
+	bit	SET_GR			; 4
 	bit	HIRES			; 4
-					; 27
+					; 23
 
 	lda	COLOR	; 3
 	lda	COLOR	; 3
@@ -175,8 +182,8 @@ middle_loop:
 	lda	COLOR	; 3
 	lda	COLOR	; 3
 	lda	COLOR	; 3
-	lda	COLOR	; 3
-	lda	COLOR	; 3
+	nop
+
 
 	bit	LORES			; 4
 					; 16
@@ -195,7 +202,6 @@ middle_loop:
 
 	lda	COLOR	; 3
 
-
 	dex				; 2
 	bpl	middle_loop		; 3
 					; -1
@@ -204,20 +210,34 @@ middle_loop:
 	; Next 8*4 = 32 lines GR ??
 	; 2080 cycles -8 -2 +1=2071
 
-	bit	SET_GR	; 4
-	bit	LORES	; 4
+	; we have extraneous 1 (from us)
+	; extraneous 1 (from above)
 
-	; Try X=1 Y=188 cycles=2069 R2
+	ldx	#7			; 2
+bottom_loop:
+	; top two lines PAGE1
+	bit	SET_GR			; 4
+	bit	LORES			; 4
+	bit	PAGE1			; 4
+	; 65+65-12 = 118 - 25 - 2 = 91
+	lda	#91			; 2
+	jsr	delay_a			; 116
 
-	nop
+	; nottom two lines PAGE0
+	bit	SET_GR			; 4
+	bit	LORES			; 4
+	bit	PAGE0			; 4
+	; 65+65-12 = 118 - 25 - 2 -2 -3 =86
+	lda	#86			; 2
+	jsr	delay_a			; 111
+	dex				; 2
+	bpl	bottom_loop		; 3
 
-	ldy     #188							; 2
-cloop1:	ldx	#1							; 2
-cloop2:	dex								; 2
-	bne	cloop2							; 2nt/3
-	dey								; 2
-	bne	cloop1							; 2nt/3
+					; -1
 
+	jmp	vblank_start		; 3 (so total extra = 3+1+1+1=6)
+
+.align	$100
 vblank_start:
 
 
@@ -225,13 +245,14 @@ vblank_start:
 	; alternate between tree and snow/music
 	; every other frame
 	;===========================
+				; 6 leftover from above
 
 	lda	#1		; 2
 	eor	FRAME		; 3
 	sta	FRAME		; 3
 	beq	tree_half	; 3
 				;====
-				; 11
+				; 17
 
 				; -1
 	jmp	music_snow	; 3
@@ -410,25 +431,32 @@ ll_smc4:
 	;==============================================================
 
 	; 4550 cycles
-	;  -11		alternate frame
+	;  -17		alternate frame
 	;-1703		erase lores
 	;  -13		move tree
 	;   -3		jmp (alignment)
 	;-2797		draw tree
 	;   -3		jmp at end
 	;========
-	;   20
+	;   14
 
-	; Try X=2 Y=1 cycles=17R3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
+	lda	COLOR	; 3
+	nop		; 2
 
-	lda	COLOR
 
-	ldy     #1							; 2
-eloop1:	ldx	#2							; 2
-eloop2:	dex								; 2
-	bne	eloop2							; 2nt/3
-	dey								; 2
-	bne	eloop1							; 2nt/3
+	; Try X=2 Y=1 cycles=17
+
+;	lda	COLOR
+
+;	ldy     #1							; 2
+;eloop1:	ldx	#2							; 2
+;eloop2:	dex								; 2
+;	bne	eloop2							; 2nt/3
+;	dey								; 2
+;	bne	eloop1							; 2nt/3
 
 	jmp	display_loop				; 3
 
@@ -448,6 +476,7 @@ eloop2:	dex								; 2
 	;=======================================================
 	;=======================================================
 	; Display falling snow
+.align $100
 music_snow:
 
 
@@ -653,19 +682,21 @@ draw_loop:
 							; -1
 
 	; 4550 cycles
-	;  -11 even/odd
+	;  -17 even/odd
 	;   -2 even/odd jump
 	; -851 erase
 	;-1161 move
 	; -971 draw
 	;   -3 jump at end
 	;======
-	; 1551
+	; 1545
 
-	; Try X=5 Y=50 cycles=1551
+	; Try X=153 Y=2 cycles=1543R2
 
-	ldy     #50							; 2
-dloop1:	ldx	#5							; 2
+	nop
+
+	ldy     #2							; 2
+dloop1:	ldx	#153							; 2
 dloop2:	dex								; 2
 	bne	dloop2							; 2nt/3
 	dey								; 2
