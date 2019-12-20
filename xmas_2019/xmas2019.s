@@ -18,6 +18,51 @@ BASH		= $29
 SEEDL		= $4E
 SEEDH		= $4F
 
+FRAME_PLAY_OFFSET=$56
+FRAME_PLAY_PAGE = $57
+
+AY_REGISTERS    = $70
+A_FINE_TONE     = $70
+A_COARSE_TONE   = $71
+B_FINE_TONE     = $72
+B_COARSE_TONE   = $73
+C_FINE_TONE     = $74
+C_COARSE_TONE   = $75
+NOISE           = $76
+ENABLE          = $77
+PT3_MIXER_VAL   = $77
+A_VOLUME        = $78
+B_VOLUME        = $79
+C_VOLUME        = $7A
+ENVELOPE_FINE   = $7B
+ENVELOPE_COARSE = $7C
+ENVELOPE_SHAPE  = $7D
+
+PATTERN_L	= $7E
+PATTERN_H	= $7F
+ORNAMENT_L	= $80
+ORNAMENT_H	= $81
+SAMPLE_L	= $82
+SAMPLE_H	= $83
+LOOP            = $84
+MB_VALUE        = $85
+MB_ADDRL        = $86
+MB_ADDRH        = $87
+DONE_PLAYING    = $88
+DONE_SONG       = $89
+PT3_TEMP        = $8A
+ENV_SHAPE_TEMP  = $8B
+C_COARSE_TEMP   = $8C
+A_VOL_TEMP      = $8D
+
+WASTE_CYCLES    = $C6
+FOREVER_OFFSET  = $C7
+FRAME_OFFSET    = $C8
+FRAME_PAGE      = $C9
+AY_WRITE_TEMP   = $CA
+AY_WRITE_TEMP2  = $CB
+
+
 HGR_COLOR	= $E4
 DRAW_PAGE	= $EE
 SNOWX		= $F0
@@ -28,6 +73,8 @@ WHICH_Y		= $F4
 FRAME		= $F5
 TEMPY		= $F6
 TEMP		= $F7
+SOUND_WHILE_DECODE =    $F8
+
 
 HGR		= $F3E2
 
@@ -51,6 +98,34 @@ TREESIZE	= 12
 	bit	FULLGR
 	bit	LORES
 	bit	PAGE0
+
+	;=========================
+        ; set up sound
+        ;=========================
+        lda	#0
+        sta	DONE_PLAYING
+        sta	FRAME_PLAY_OFFSET
+        sta	FRAME_PLAY_PAGE
+        sta	FRAME_OFFSET
+        sta	FRAME_PAGE
+        sta	SOUND_WHILE_DECODE
+        jsr	update_pt3_play
+        jsr	pt3_set_pages
+
+	jsr	mockingboard_init
+	jsr	reset_ay_both
+	jsr	clear_ay_both
+	jsr	pt3_init_song
+
+        lda     #1
+        sta     LOOP
+
+	;====================================
+	; generate 4 patterns worth of music
+	; at address $7000-$9C00
+
+	jsr     pt3_write_lc_4
+
 
 	;==================================
 	; init snow
@@ -480,6 +555,36 @@ ll_smc4:
 music_snow:
 
 
+	; play music
+	jsr	play_frame_compressed			; 6+1237
+
+;	lda	#107
+;	jsr	delay_a
+
+	lda	FRAME_PLAY_PAGE				; 3
+	cmp	#8					; 2
+	beq	wrap_play				; 3
+						;===========
+						;	  8
+
+							; -1
+	lda	#98					; 2
+	jsr	delay_a					; 123
+	jmp	no_problem				; 3
+						;=============
+						;	 127
+
+wrap_play:
+	lda	#0					; 2
+	sta	FRAME_PLAY_OFFSET			; 3
+	lda	#3					; 2
+	sta	FRAME_PLAY_PAGE				; 3
+	jsr	update_pt3_play				; 6+111
+							;=======
+							; 127
+
+no_problem:
+
 
 	; 0 4 8 c 10 14 18 1c
 	; 0 1 2 3 4  5  6  7
@@ -688,15 +793,15 @@ draw_loop:
 	;-1161 move
 	; -971 draw
 	;   -3 jump at end
+	;-1243 music
+	; -135 wrap
 	;======
-	; 1545
+	;  167
 
-	; Try X=153 Y=2 cycles=1543R2
+	; Try X=32 Y=1 cycles=167
 
-	nop
-
-	ldy     #2							; 2
-dloop1:	ldx	#153							; 2
+	ldy     #1							; 2
+dloop1:	ldx	#32							; 2
 dloop2:	dex								; 2
 	bne	dloop2							; 2nt/3
 	dey								; 2
@@ -805,5 +910,16 @@ pixel_lookup:
 
 ; include music
 
+; Music player
+.include "pt3_lib_core.s"
+.include "pt3_lib_init.s"
+.include "pt3_lib_mockingboard.s"
+.include "pt3_lib_play_frame.s"
+.include "pt3_lib_write_frame.s"
+.include "pt3_lib_write_lc.s"
+
+
 .align $100
-.incbin "./music/jingle.pt3"
+PT3_LOC = song
+song:
+.incbin "./music/jingle_fast.pt3"
