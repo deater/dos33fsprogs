@@ -21,6 +21,15 @@ SEEDH		= $4F
 FRAME_PLAY_OFFSET=$56
 FRAME_PLAY_PAGE = $57
 
+WAITING         = $62
+LETTERL         = $63
+LETTERH         = $64
+LETTERX         = $65
+LETTERY         = $66
+LETTERD         = $67
+LETTER          = $68
+BLARGH          = $69
+
 AY_REGISTERS    = $70
 A_FINE_TONE     = $70
 A_COARSE_TONE   = $71
@@ -146,6 +155,17 @@ snow_init_loop:
 
 	dex
 	bpl	snow_init_loop
+
+	lda     #<letters_bm
+        sta     LETTERL
+        lda     #>letters_bm
+        sta     LETTERH
+        lda     #39
+        sta     LETTERX
+        lda     #1
+        sta     LETTERY
+        lda     #16
+        sta     LETTERD
 
 
 	;=============================
@@ -554,6 +574,9 @@ ll_smc4:
 .align $100
 music_snow:
 
+	; do letters
+
+	jsr	move_letters				; 6+126
 
 	; play music
 	jsr	play_frame_compressed			; 6+1237
@@ -795,13 +818,16 @@ draw_loop:
 	;   -3 jump at end
 	;-1243 music
 	; -135 wrap
+	; -132 letters
 	;======
-	;  167
+	;  35
 
-	; Try X=32 Y=1 cycles=167
+	; Try X=2 Y=2 cycles=33R2
 
-	ldy     #1							; 2
-dloop1:	ldx	#32							; 2
+	nop
+
+	ldy     #2							; 2
+dloop1:	ldx	#2							; 2
 dloop2:	dex								; 2
 	bne	dloop2							; 2nt/3
 	dey								; 2
@@ -918,6 +944,9 @@ pixel_lookup:
 .include "pt3_lib_write_frame.s"
 .include "pt3_lib_write_lc.s"
 
+.align $100
+.include "move_letters.s"
+.include "letters.s"
 
 .align $100
 PT3_LOC = song

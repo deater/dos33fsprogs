@@ -42,7 +42,7 @@ XMAS2019:	xmas2019.o
 	ld65 -o XMAS2019 xmas2019.o -C ../linker_scripts/apple2_4000.inc
 
 xmas2019.o:	xmas2019.s \
-	delay_a.s vapor_lock.s message.inc gr_unrle.s
+	delay_a.s vapor_lock.s message.inc gr_unrle.s move_letters.s letters.s
 	ca65 -o xmas2019.o xmas2019.s -l xmas2019.lst
 
 
