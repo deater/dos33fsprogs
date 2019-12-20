@@ -15,6 +15,7 @@ SEEDH		= $4F
 
 HGR_COLOR	= $E4
 SNOWX		= $F0
+TEMPY		= $F1
 
 HGR		= $F3E2
 
@@ -31,6 +32,28 @@ NUMFLAKES	= 10
 	jsr	HGR
 	bit	FULLGR
 
+
+	;==================================
+	; init snow
+	;==================================
+
+	ldx	#NUMFLAKES-1
+snow_init_loop:
+
+	jsr	random16
+
+	lda	SEEDL
+	and	#$3f
+	sta	snow_x,X
+
+	lda	SEEDH
+	and	#$7f
+	sta	snow_y,X
+
+	dex
+	bpl	snow_init_loop
+
+
 display_loop:
 
 	; 0 4 8 c 10 14 18 1c
@@ -38,35 +61,47 @@ display_loop:
 
 	;=========================
 	; erase old snow
+	;=========================
+	; 2 + (35+29+7)*NUMFLAKES - 1
+	; 1 +71*NUMFLAKES = 711
 
-	ldx	#0
+	ldx	#0					; 2
 erase_loop:
-	lda	snow_y,X			; get Y
-	lsr
-	lsr
-	lsr					; divide by 8
-	tay
+	lda	snow_y,X	; get Y			; 4+
+	lsr						; 2
+	lsr						; 2
+	lsr			; divide by 8		; 2
+	sta	TEMPY					; 3
+	lda	snow_x,X				; 4+
+	tay						; 2
+	lda	div_7_q,Y				; 4+
+	ldy	TEMPY					; 3
+	clc						; 2
+	adc	hgr_offsets_l,Y				; 4+
+	sta	GBASL					; 3
+						;=============
+						;         35
 
-	clc
-	lda	hgr_offsets_l,Y
-	adc	snow_x,X
-	sta	GBASL				; point GBASL to right location
+	lda	snow_y,X				; 4+
+	asl						; 2
+	asl						; 2
+	and	#$1f					; 2
+	clc						; 2
+	adc	hgr_offsets_h,Y				; 4
+	sta	GBASH					; 3
+	lda	#0					; 2
+	tay						; 2
+	sta	(GBASL),Y				; 6
+						;============
+						;        29
 
-	lda	snow_y,X
-	asl
-	asl
-	and	#$1f
-	clc
-	adc	hgr_offsets_h,Y
-	sta	GBASH
+	inx						; 2
+	cpx	#NUMFLAKES				; 2
+	bne	erase_loop				; 3
+						;============
+						;	  7
 
-	ldy	#0
-	lda	#0
-	sta	(GBASL),Y
-
-	inx
-	cpx	#NUMFLAKES
-	bne	erase_loop
+							; -1
 
 	;==========================
 	; move snow
@@ -97,11 +132,11 @@ just_inc:
 	jmp	snow_no
 
 snow_right:
-	inc	snow_offset,X
+	inc	snow_x,X
 	jmp	snow_no
 
 snow_left:
-	dec	snow_offset,X
+	dec	snow_x,X
 snow_no:
 
 done_inc:
@@ -112,35 +147,54 @@ done_inc:
 
 	;=========================
 	; draw new snow
+	;=========================
+	; 2+ (35+22+19+7)*NUMFLAKES -1
+	; 1+83*NUMFLAKES = 831
 
-	ldx	#0
+	ldx	#0					; 2
 draw_loop:
-	lda	snow_y,X
-	lsr
-	lsr
-	lsr
-	tay
-	clc
-	lda	hgr_offsets_l,Y
-	adc	snow_x,X
-	sta	GBASL
+	lda	snow_y,X				; 4+
+	lsr						; 2
+	lsr						; 2
+	lsr						; 2
+	sta	TEMPY					; 3
+	lda	snow_x,X				; 4+
+	tay						; 2
+	lda	div_7_q,Y				; 4+
+	ldy	TEMPY					; 3
+	clc						; 2
+	adc	hgr_offsets_l,Y				; 4+
+	sta	GBASL					; 3
+						;===========
+						;	35
 
-	lda	snow_y,X
-	asl
-	asl
-	and	#$1f
-	clc
-	adc	hgr_offsets_h,Y
-	sta	GBASH
+	lda	snow_y,X				; 4+
+	asl						; 2
+	asl						; 2
+	and	#$1f					; 2
+	clc						; 2
+	adc	hgr_offsets_h,Y				; 4+
+	sta	GBASH					; 3
+						;=============
+						;	19
 
-	ldy	#0
-	lda	#1
-	sta	(GBASL),Y
+	ldy	snow_x,X				; 4+
+	lda	div_7_r,Y				; 4+
+	tay						; 2
+	lda	pixel_lookup,Y				; 4+
 
-	inx
-	cpx	#NUMFLAKES
-	bne	draw_loop
+	ldy	#0					; 2
+	sta	(GBASL),Y				; 6
+						;=============
+						;	22
 
+	inx						; 2
+	cpx	#NUMFLAKES				; 2
+	bne	draw_loop				; 3
+						;=============
+						;	  7
+
+							; -1
 	lda	#100
 	jsr	WAIT
 
@@ -148,10 +202,7 @@ draw_loop:
 
 
 snow_x:
-	.byte 2,4,6,8,10,12,14,16,18,20
-
-snow_offset:
-	.byte 0,1,2,3,4,5,6,7,0,1
+	.byte 0,0,0,0,0,0,0,0,0,0
 
 snow_y:
 	.byte 0,0,0,0,0,0,0,0,0,0
@@ -191,11 +242,7 @@ div_7_r:
 	.byte 0,1,2,3,4,5,6		; 56..62
 	.byte 0				; 63
 
-
-
-
-
-
-
+pixel_lookup:
+	.byte $01,$02,$04,$08,$10,$20,$40
 
 .include "random16.s"
