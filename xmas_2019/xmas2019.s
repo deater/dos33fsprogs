@@ -90,7 +90,7 @@ snow_init_loop:
 	sta	GBASL
 	lda	#>message_high
 	sta	GBASH
-	lda	#$10
+	lda	#$8
 	jsr	load_rle_gr
 
 
@@ -182,7 +182,6 @@ middle_loop:
 	lda	COLOR	; 3
 	lda	COLOR	; 3
 	lda	COLOR	; 3
-	nop
 
 
 	bit	LORES			; 4
@@ -201,6 +200,7 @@ middle_loop:
 	lda	COLOR
 
 	lda	COLOR	; 3
+	nop
 
 	dex				; 2
 	bpl	middle_loop		; 3
