@@ -14,6 +14,10 @@ GBASL		= $26
 GBASH		= $27
 BASL		= $28
 BASH		= $29
+
+SEEDL		= $4E
+SEEDH		= $4F
+
 HGR_COLOR	= $E4
 DRAW_PAGE	= $EE
 SNOWX		= $F0
@@ -22,6 +26,11 @@ CMASK1		= $F2
 CMASK2		= $F3
 WHICH_Y		= $F4
 FRAME		= $F5
+TEMPY		= $F6
+
+HGR		= $F3E2
+
+NUMFLAKES	= 10
 
 TREESIZE	= 12
 
@@ -35,10 +44,32 @@ TREESIZE	= 12
 	lda	#0
 	sta	FRAME
 
+	jsr	HGR
+
 	bit	SET_GR
 	bit	FULLGR
 	bit	LORES
 	bit	PAGE0
+
+	;==================================
+	; init snow
+	;==================================
+
+	ldx	#NUMFLAKES-1
+snow_init_loop:
+
+	jsr	random16
+
+	lda	SEEDL
+	and	#$3f
+	sta	snow_x,X
+
+	lda	SEEDH
+	and	#$7f
+	sta	snow_y,X
+
+	dex
+	bpl	snow_init_loop
 
 
 	;==========================================================
@@ -369,25 +400,239 @@ eloop2:	dex								; 2
 	jmp	display_loop				; 3
 
 
+
+
+
+
+
+
+
+	;=======================================================
 	;=======================================================
 	;=======================================================
 	; music/snow
 	;=======================================================
 	;=======================================================
+	;=======================================================
+	; Display falling snow
 music_snow:
+
+
+
+	; 0 4 8 c 10 14 18 1c
+	; 0 1 2 3 4  5  6  7
+
+	;=========================
+	; erase old snow
+	;=========================
+	; 2 + (40+38+7)*NUMFLAKES - 1
+	; 1 + 85*NUMFLAKES = 851
+
+	ldx	#0					; 2
+erase_loop:
+	lda	snow_y,X	; get Y			; 4+
+	lsr						; 2
+	lsr						; 2
+	lsr			; divide by 8		; 2
+	sta	TEMPY					; 3
+	lda	snow_x,X				; 4+
+	tay						; 2
+	lda	div_7_q,Y				; 4+
+
+	ldy	TEMPY					; 3
+	clc						; 2
+	adc	hgr_offsets_l,Y				; 4+
+	sta	GBASL					; 3
+	adc	#30					; 2
+	sta	BASL					; 3
+						;=============
+						;         40
+
+	lda	snow_y,X				; 4+
+	asl						; 2
+	asl						; 2
+	and	#$1f					; 2
+	clc						; 2
+	adc	hgr_offsets_h,Y				; 4
+	sta	GBASH					; 3
+	sta	BASH					; 3
+	lda	#0					; 2
+	tay						; 2
+	sta	(GBASL),Y				; 6
+	sta	(BASL),Y				; 6
+						;============
+						;        38
+
+	inx						; 2
+	cpx	#NUMFLAKES				; 2
+	bne	erase_loop				; 3
+						;============
+						;	  7
+
+							; -1
+
+	;==========================
+	; move snow
+	;
+	; 2 + NUM_FLAKES*(9+17+56+16+11+7) -1
+	; 1 + NUM_FLAKES*116      = 1161
+
+	ldx	#0					; 2
+move_snow:
+	; Check if off edge of screen
+
+	lda	snow_y,X				; 4+
+	cmp	#160					; 2
+	beq	snow_new_y				; 3
+						;==========
+						;	  9
+no_new_y:
+							; -1
+	lda	SEEDH					; 3
+	lda	SEEDH					; 3
+	lda	SEEDH					; 3
+	lda	SEEDH					; 3
+	lda	SEEDH					; 3
+	jmp	just_inc				; 3
+						;============
+						;        17
+
+snow_new_y:
+	; out of bounds, get new
+	lda	#32					; 2
+	sta	snow_y,X				; 5
+	lda	SEEDH					; 3
+	and	#$3f					; 2
+	sta	snow_x,X				; 5
+						;============
+						;	 17
+just_inc:
+
+	jsr	random16				; 6+42
+	lda	SEEDL					; 3
+	and	#$f					; 2
+	beq	snow_left				; 3
+						;===============
+						;        56
+
+; if left  = 7    = 7  + (9) = 16
+; if right = 4+10 = 14 + (2) = 16
+; else     = 4+9  = 13 + (3) = 16
+							; -1
+	cmp	#$1					; 2
+	beq	snow_right				; 3
+						;===============
+						;         4
+
+snow_else:
+	lda	SEEDL	; nop				; 3
+							; -1
+	inc	snow_y,X				; 7
+	jmp	snow_no					; 3
+						;===============
+						;         9+3
+
+snow_right:
+	nop						; 2
+	inc	snow_x,X				; 7
+	jmp	snow_no					; 3
+						;============
+						; 	10+2
+
+snow_left:
+	dec	snow_x,X				; 7
+	lda	SEEDL		; nop
+	lda	SEEDL		; nop
+	lda	SEEDL		; nop
+
+
+
+
+snow_no:
+	lda	snow_x,X				; 4+
+	and	#$3f					; 2
+	sta	snow_x,X				; 5
+							;====
+							; 11
+
+done_inc:
+	inx						; 2
+	cpx	#NUMFLAKES				; 2
+	bne	move_snow				; 3
+						;===========
+						;	  7
+
+							; -1
+
+	;=========================
+	; draw new snow
+	;=========================
+	; 2+ (40+22+28+7)*NUMFLAKES -1
+	; 1+97*NUMFLAKES = 971
+
+	ldx	#0					; 2
+draw_loop:
+	lda	snow_y,X				; 4+
+	lsr						; 2
+	lsr						; 2
+	lsr						; 2
+	sta	TEMPY					; 3
+	lda	snow_x,X				; 4+
+	tay						; 2
+	lda	div_7_q,Y				; 4+
+	ldy	TEMPY					; 3
+	clc						; 2
+	adc	hgr_offsets_l,Y				; 4+
+	sta	GBASL					; 3
+	adc	#30					; 2
+	sta	BASL					; 3
+						;===========
+						;	 40
+
+	lda	snow_y,X				; 4+
+	asl						; 2
+	asl						; 2
+	and	#$1f					; 2
+	clc						; 2
+	adc	hgr_offsets_h,Y				; 4+
+	sta	GBASH					; 3
+	sta	BASH					; 3
+						;=============
+						;	 22
+
+	ldy	snow_x,X				; 4+
+	lda	div_7_r,Y				; 4+
+	tay						; 2
+	lda	pixel_lookup,Y				; 4+
+
+	ldy	#0					; 2
+	sta	(GBASL),Y				; 6
+	sta	(BASL),Y				; 6
+						;=============
+						;	 28
+
+	inx						; 2
+	cpx	#NUMFLAKES				; 2
+	bne	draw_loop				; 3
+						;=============
+						;	  7
+
+							; -1
+
 	; 4550 cycles
 	;  -11 even/odd
 	;   -2 even/odd jump
+	; -851 erase
+	;-1161 move
+	; -971 draw
 	;   -3 jump at end
 	;======
-	; 4534
+	; 1551
 
-	; Try X=29 Y=30 cycles=4531R3
+	; Try X=5 Y=50 cycles=1551
 
-	lda	COLOR
-
-	ldy     #30							; 2
-dloop1:	ldx	#29							; 2
+	ldy     #50							; 2
+dloop1:	ldx	#5							; 2
 dloop2:	dex								; 2
 	bne	dloop2							; 2nt/3
 	dey								; 2
@@ -411,6 +656,7 @@ tree:
 ;	.byte	$CC,	10,	29,	$00	;  LLLLLLLLLLLLLLLLLL
 ;	.byte	$88,	19,	20,	$00	;          BB
 
+.align $100
 tree_color:	.byte	$DD,$44,$CC,$44, $CC,$11, $44, $CC, $44,$11, $CC, $88
 tree_line:	.byte	  0,  1,  2,  3,   4,  4,   5,   6,   7,  7,   8,   9
 tree_start:	.byte	 19, 18, 17, 16,  15, 20,  14,  13,  12, 16,  11,  19
@@ -437,7 +683,54 @@ sine_table_h:
 	.byte	>sine_table13,>sine_table14,>sine_table15
 
 
+snow_x:
+	.byte 0,0,0,0,0,0,0,0,0,0
+
+snow_y:
+	.byte 0,0,0,0,0,0,0,0,0,0
+
+hgr_offsets_h:
+.byte	>$2000,>$2080,>$2100,>$2180,>$2200,>$2280,>$2300,>$2380
+.byte	>$2028,>$20A8,>$2128,>$21A8,>$2228,>$22A8,>$2328,>$23A8
+.byte	>$2050,>$20D0,>$2150,>$21D0,>$2250,>$22D0,>$2350,>$23D0
+
+hgr_offsets_l:
+.byte	<$2000,<$2080,<$2100,<$2180,<$2200,<$2280,<$2300,<$2380
+.byte	<$2028,<$20A8,<$2128,<$21A8,<$2228,<$22A8,<$2328,<$23A8
+.byte	<$2050,<$20D0,<$2150,<$21D0,<$2250,<$22D0,<$2350,<$23D0
+
+
+div_7_q:
+	.byte 0,0,0,0,0,0,0		; 0..6
+	.byte 1,1,1,1,1,1,1		; 7..13
+	.byte 2,2,2,2,2,2,2		; 14..20
+	.byte 3,3,3,3,3,3,3		; 21..27
+	.byte 4,4,4,4,4,4,4		; 28..34
+	.byte 5,5,5,5,5,5,5		; 35..41
+	.byte 6,6,6,6,6,6,6		; 42..48
+	.byte 7,7,7,7,7,7,7		; 49..55
+	.byte 8,8,8,8,8,8,8		; 56..62
+	.byte 9				; 63
+
+.align	$100
+div_7_r:
+	.byte 0,1,2,3,4,5,6		; 0..6
+	.byte 0,1,2,3,4,5,6		; 7..13
+	.byte 0,1,2,3,4,5,6		; 14..20
+	.byte 0,1,2,3,4,5,6		; 21..27
+	.byte 0,1,2,3,4,5,6		; 28..34
+	.byte 0,1,2,3,4,5,6		; 35..41
+	.byte 0,1,2,3,4,5,6		; 42..48
+	.byte 0,1,2,3,4,5,6		; 49..55
+	.byte 0,1,2,3,4,5,6		; 56..62
+	.byte 0				; 63
+
+pixel_lookup:
+	.byte $01,$02,$04,$08,$10,$20,$40
+
+
 .align	$100
 .include "sines.inc"
 .include "vapor_lock.s"
 .include "delay_a.s"
+.include "random16.s"

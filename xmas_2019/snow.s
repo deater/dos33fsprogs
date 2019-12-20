@@ -112,8 +112,8 @@ erase_loop:
 	;==========================
 	; move snow
 	;
-	; 2 + NUM_FLAKES*(9+17+56+15+11+7) -1
-	; 1 + NUM_FLAKES*115      = 1151
+	; 2 + NUM_FLAKES*(9+17+56+16+11+7) -1
+	; 1 + NUM_FLAKES*116      = 1161
 
 	ldx	#0					; 2
 move_snow:
@@ -156,9 +156,9 @@ just_inc:
 						;===============
 						;        56
 
-; if left  = 6   = 6  + (9) = 15
-; if right = 4+9 = 13 + (2) = 15
-; else     = 4+8 = 12 + (3) = 15
+; if left  = 7    = 6  + (9) = 16
+; if right = 4+10 = 13 + (2) = 16
+; else     = 4+9  = 12 + (3) = 16
 							; -1
 	cmp	#$1					; 2
 	beq	snow_right				; 3
@@ -168,20 +168,20 @@ just_inc:
 snow_else:
 	lda	SEEDL	; nop				; 3
 							; -1
-	inc	snow_y,X				; 6
+	inc	snow_y,X				; 7
 	jmp	snow_no					; 3
 						;===============
 						;         8+3
 
 snow_right:
 	nop						; 2
-	inc	snow_x,X				; 6
+	inc	snow_x,X				; 7
 	jmp	snow_no					; 3
 						;============
 						; 	9+2
 
 snow_left:
-	dec	snow_x,X				; 6
+	dec	snow_x,X				; 7
 	lda	SEEDL		; nop
 	lda	SEEDL		; nop
 	lda	SEEDL		; nop
