@@ -62,8 +62,8 @@ display_loop:
 	;=========================
 	; erase old snow
 	;=========================
-	; 2 + (35+29+7)*NUMFLAKES - 1
-	; 1 +71*NUMFLAKES = 711
+	; 2 + (40+38+7)*NUMFLAKES - 1
+	; 1 + 85*NUMFLAKES = 851
 
 	ldx	#0					; 2
 erase_loop:
@@ -75,12 +75,15 @@ erase_loop:
 	lda	snow_x,X				; 4+
 	tay						; 2
 	lda	div_7_q,Y				; 4+
+
 	ldy	TEMPY					; 3
 	clc						; 2
 	adc	hgr_offsets_l,Y				; 4+
 	sta	GBASL					; 3
+	adc	#30					; 2
+	sta	BASL					; 3
 						;=============
-						;         35
+						;         40
 
 	lda	snow_y,X				; 4+
 	asl						; 2
@@ -89,11 +92,14 @@ erase_loop:
 	clc						; 2
 	adc	hgr_offsets_h,Y				; 4
 	sta	GBASH					; 3
+	sta	BASH					; 3
 	lda	#0					; 2
 	tay						; 2
 	sta	(GBASL),Y				; 6
+	sta	(BASL),Y				; 6
+
 						;============
-						;        29
+						;        38
 
 	inx						; 2
 	cpx	#NUMFLAKES				; 2
@@ -105,51 +111,105 @@ erase_loop:
 
 	;==========================
 	; move snow
+	;
+	; 2 + NUM_FLAKES*(9+17+56+15+11+7) -1
+	; 1 + NUM_FLAKES*115      = 1151
 
-	ldx	#0
+	ldx	#0					; 2
 move_snow:
-	lda	snow_y,X		; inc to next line
-	cmp	#191
-	bne	just_inc
 
-	lda	#0
-	sta	snow_y,X
-	jmp	done_inc
+	; Check if off edge of screen
+
+	lda	snow_y,X				; 4+
+	cmp	#160					; 2
+	beq	snow_new_y				; 3
+						;==========
+						;	  9
 
 
+no_new_y:
+							; -1
+	lda	SEEDH					; 3
+	lda	SEEDH					; 3
+	lda	SEEDH					; 3
+	lda	SEEDH					; 3
+	lda	SEEDH					; 3
+	jmp	just_inc				; 3
+						;============
+						;        17
+
+snow_new_y:
+	; out of bounds, get new
+	lda	#32					; 2
+	sta	snow_y,X				; 5
+	lda	SEEDH					; 3
+	and	#$3f					; 2
+	sta	snow_x,X				; 5
+						;============
+						;	 17
 just_inc:
 
-	jsr	random16
-	lda	SEEDL
-	and	#$f
+	jsr	random16				; 6+42
+	lda	SEEDL					; 3
+	and	#$f					; 2
+	beq	snow_left				; 3
+						;===============
+						;        56
 
-	beq	snow_left
-	cmp	#$1
-	beq	snow_right
+; if left  = 6   = 6  + (9) = 15
+; if right = 4+9 = 13 + (2) = 15
+; else     = 4+8 = 12 + (3) = 15
+							; -1
+	cmp	#$1					; 2
+	beq	snow_right				; 3
+						;===============
+						;         4
 
-	inc	snow_y,X
-
-	jmp	snow_no
+snow_else:
+	lda	SEEDL	; nop				; 3
+							; -1
+	inc	snow_y,X				; 6
+	jmp	snow_no					; 3
+						;===============
+						;         8+3
 
 snow_right:
-	inc	snow_x,X
-	jmp	snow_no
+	nop						; 2
+	inc	snow_x,X				; 6
+	jmp	snow_no					; 3
+						;============
+						; 	9+2
 
 snow_left:
-	dec	snow_x,X
+	dec	snow_x,X				; 6
+	lda	SEEDL		; nop
+	lda	SEEDL		; nop
+	lda	SEEDL		; nop
+
+
+
+
 snow_no:
+	lda	snow_x,X				; 4+
+	and	#$3f					; 2
+	sta	snow_x,X				; 5
+							;====
+							; 11
 
 done_inc:
-	inx
-	cpx	#NUMFLAKES
-	bne	move_snow
+	inx						; 2
+	cpx	#NUMFLAKES				; 2
+	bne	move_snow				; 3
+						;===========
+						;	  7
 
+							; -1
 
 	;=========================
 	; draw new snow
 	;=========================
-	; 2+ (35+22+19+7)*NUMFLAKES -1
-	; 1+83*NUMFLAKES = 831
+	; 2+ (40+22+28+7)*NUMFLAKES -1
+	; 1+97*NUMFLAKES = 971
 
 	ldx	#0					; 2
 draw_loop:
@@ -165,8 +225,10 @@ draw_loop:
 	clc						; 2
 	adc	hgr_offsets_l,Y				; 4+
 	sta	GBASL					; 3
+	adc	#30					; 2
+	sta	BASL					; 3
 						;===========
-						;	35
+						;	 40
 
 	lda	snow_y,X				; 4+
 	asl						; 2
@@ -175,8 +237,9 @@ draw_loop:
 	clc						; 2
 	adc	hgr_offsets_h,Y				; 4+
 	sta	GBASH					; 3
+	sta	BASH					; 3
 						;=============
-						;	19
+						;	 22
 
 	ldy	snow_x,X				; 4+
 	lda	div_7_r,Y				; 4+
@@ -185,8 +248,9 @@ draw_loop:
 
 	ldy	#0					; 2
 	sta	(GBASL),Y				; 6
+	sta	(BASL),Y				; 6
 						;=============
-						;	22
+						;	 28
 
 	inx						; 2
 	cpx	#NUMFLAKES				; 2
