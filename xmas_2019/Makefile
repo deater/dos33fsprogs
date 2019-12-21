@@ -7,12 +7,13 @@ PNG_TO_40x96 = ../gr-utils/png_to_40x96
 
 all:	xmas2019.dsk sine_table
 
-xmas2019.dsk:	SNOW TREE XMAS2019 HELLO
+xmas2019.dsk:	SNOW TREE XMAS2019 LOADER HELLO
 	cp empty.dsk xmas2019.dsk
+	$(DOS33) -y xmas2019.dsk SAVE A HELLO
 	$(DOS33) -y xmas2019.dsk BSAVE -a 0x4000 XMAS2019
 	$(DOS33) -y xmas2019.dsk BSAVE -a 0x1000 SNOW
 	$(DOS33) -y xmas2019.dsk BSAVE -a 0x1000 TREE
-	$(DOS33) -y xmas2019.dsk SAVE A HELLO
+	$(DOS33) -y xmas2019.dsk BSAVE -a 0x800 LOADER
 
 ####
 
@@ -38,11 +39,21 @@ snow.o:	snow.s
 
 ####
 
+LOADER:	loader.o
+	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_800.inc
+
+loader.o:	loader.s
+	ca65 -o loader.o loader.s -l loader.lst
+
+
+####
+
 XMAS2019:	xmas2019.o
 	ld65 -o XMAS2019 xmas2019.o -C ../linker_scripts/apple2_4000.inc
 
 xmas2019.o:	xmas2019.s \
-	delay_a.s vapor_lock.s message.inc gr_unrle.s move_letters.s letters.s
+	delay_a.s vapor_lock.s message.inc gr_unrle.s sines.inc \
+	move_letters.s letters.s
 	ca65 -o xmas2019.o xmas2019.s -l xmas2019.lst
 
 
@@ -68,4 +79,4 @@ sine_table.o:	sine_table.c
 ####
 
 clean:		
-		rm -f *~ *.o *.lst
+		rm -f *~ *.o *.lst XMAS2019 LOADER
