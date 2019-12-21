@@ -404,9 +404,11 @@ L7:
 	lda	#>($2000+11)
 	sta	LZ4_SRC+1
 
-	lda	#<($2000+6241+11-8)
+	; should automate this somehow
+
+	lda	#<($2000+6247+11-8)
 	sta	LZ4_END
-	lda	#>($2000+6241+11-8)
+	lda	#>($2000+6247+11-8)
 	sta	LZ4_END+1
 
 	lda	#$40            ; load to $4000

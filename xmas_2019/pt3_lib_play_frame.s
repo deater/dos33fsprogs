@@ -238,8 +238,8 @@ play_mb_write:
 	sta	MOCK_6522_ORA2		; put value on PA2		; 4
 	lda	#MOCK_AY_WRITE		;				; 2
 	sta	MOCK_6522_ORB1		; write on PB1			; 4
-	sta	MOCK_6522_ORB2		; write on PB2			; 4
 	stx	MOCK_6522_ORB1						; 4
+	sta	MOCK_6522_ORB2		; write on PB2			; 4
 	stx	MOCK_6522_ORB2						; 4
 								;===========
 								; 	26

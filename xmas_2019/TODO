@@ -2,7 +2,7 @@
 	Load to HGR
 	Decompress to HGR2
 
-+ LZ4 Decompression (fit in 4k)
++ LZ4 Decompression (fit in 8k)
 + Re-arrange sound playing to try to avoid glitch
 
 
