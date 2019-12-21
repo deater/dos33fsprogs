@@ -59,7 +59,7 @@ letter_page0:								; -1
 
 letter_page1:
 ;	asl			; map to memory address			; 2
-	nop
+	and	#$7f
 	tay								; 2
 	lda	gr_offsets_l,Y	; lookup low-res memory address		; 4
 	sta	BASL		; store out low byte of addy		; 3

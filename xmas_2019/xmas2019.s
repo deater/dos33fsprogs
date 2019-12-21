@@ -164,7 +164,7 @@ snow_init_loop:
         sta     LETTERX
         lda     #1
         sta     LETTERY
-        lda     #16
+        lda     #15
         sta     LETTERD
 
 
