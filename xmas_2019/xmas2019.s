@@ -108,6 +108,25 @@ TREESIZE	= 12
 	bit	LORES
 	bit	PAGE0
 
+
+	;===========================
+	; Check for Apple IIe
+	;===========================
+	; fonts are offset so patch to make scroll effect same on II+
+
+	lda	$FBB3	; IIe and newer is $06
+	cmp	#6
+	bne	apple_ii_regular
+
+	lda	#$54
+	sta	tl_smc1+1
+	lda	#$55
+	sta	tl_smc2+1
+
+apple_ii_regular:
+
+
+
 	;=========================
         ; set up sound
         ;=========================
@@ -188,7 +207,10 @@ snow_init_loop:
 	lda	#$8
 	jsr	load_rle_gr
 
+	jmp	blah_align
 
+.align	$100
+blah_align:
 
 	;==========================================================
 	;==========================================================
@@ -243,6 +265,7 @@ top_loop:
 	; even lines PAGE1
 	bit	SET_TEXT	; 4
 	bit	LORES		; 4
+tl_smc1:
 	bit	PAGE1		; 4
 	; 65-12 = 53 - 25 - 2 = 26
 	lda	#26		; 2
@@ -251,6 +274,7 @@ top_loop:
 	; odd lines PAGE0
 	bit	SET_TEXT	; 4
 	bit	LORES		; 4
+tl_smc2:
 	bit	PAGE0		; 4
 	; 65-12 = 53 - 25 - 2 -2 -3 =21
 	lda	#21		; 2
@@ -267,12 +291,12 @@ top_loop:
 middle_loop:
 
 
+	bit	PAGE0			; 4
 	bit	SET_GR			; 4
 	bit	HIRES			; 4
-					; 23
+					; 19
 
-	lda	COLOR	; 3
-	lda	COLOR	; 3
+	nop
 	lda	COLOR	; 3
 	lda	COLOR	; 3
 	lda	COLOR	; 3
@@ -288,11 +312,12 @@ middle_loop:
 	nop
 	nop
 	nop
-	nop
+	lda	COLOR
 	bit	HIRES			; 4
 					; 5cycles
 	nop
-	lda	COLOR
+	;lda	COLOR
+	nop
 
 	lda	COLOR	; 3
 	nop
