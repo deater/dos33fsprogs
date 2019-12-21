@@ -12,6 +12,14 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 ; added code to patch it to run from current disk slot -- vmw
 
 
+.include "hardware.inc"
+LZ4_SRC         = $00
+LZ4_DST         = $02
+LZ4_END         = $04
+COUNT           = $06
+DELTA           = $08
+
+
 	adrlo	=	$26	; constant from boot prom
 	adrhi	=	$27	; constant from boot prom
 	tmpsec	=	$3c	; constant from boot prom
@@ -41,7 +49,10 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 start:
 	jsr	init	; unhook DOS, init nibble table
 
-
+	bit	SET_GR
+	bit	HIRES
+	bit	FULLGR
+	bit	PAGE0
 
 clear_out_ram:
 	ldx	#$14
@@ -117,7 +128,7 @@ filenames_high:
 	.byte	>demosplash_filename
 
 demosplash_filename:
-	.byte "XMAS2019",0
+	.byte "XMAS2019_LZ4",0
 
                 ;unhook DOS and build nibble table
 
@@ -379,7 +390,33 @@ L7:
 	iny
 	dex
 	bpl	L7
-	rts
+
+	;=======================================
+	;=======================================
+	; go to our entry point
+	;=======================================
+	;=======================================
+
+	bit	PAGE1		; display as we decode
+
+	lda	#<($2000+11)
+	sta	LZ4_SRC
+	lda	#>($2000+11)
+	sta	LZ4_SRC+1
+
+	lda	#<($2000+6241+11-8)
+	sta	LZ4_END
+	lda	#>($2000+6241+11-8)
+	sta	LZ4_END+1
+
+	lda	#$40            ; load to $4000
+
+        jsr     lz4_decode
+
+	jmp	$4000
+
+
+;	rts
 
 
 	;======================
@@ -780,3 +817,4 @@ sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
 ;filbuf:		.res 4			;	= bit2tbl+86
 					;dataend         = filbuf+4
 
+.include "lz4_decode.s"

@@ -1,4 +1,11 @@
++ FAST LOADER
+	Load to HGR
+	Decompress to HGR2
+
++ LZ4 Decompression (fit in 4k)
++ Re-arrange sound playing to try to avoid glitch
+
+
 + Make SINE twice as fast (64 instead of 128 entries?)
-+ rmove sine4
-+ Add snow
-+ Add music
+
+

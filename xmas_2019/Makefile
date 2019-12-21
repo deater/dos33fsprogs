@@ -7,10 +7,11 @@ PNG_TO_40x96 = ../gr-utils/png_to_40x96
 
 all:	xmas2019.dsk sine_table
 
-xmas2019.dsk:	SNOW TREE XMAS2019 LOADER HELLO
+xmas2019.dsk:	SNOW TREE XMAS2019 XMAS2019_LZ4 LOADER HELLO
 	cp empty.dsk xmas2019.dsk
 	$(DOS33) -y xmas2019.dsk SAVE A HELLO
 	$(DOS33) -y xmas2019.dsk BSAVE -a 0x4000 XMAS2019
+	$(DOS33) -y xmas2019.dsk BSAVE -a 0x2000 XMAS2019_LZ4
 	$(DOS33) -y xmas2019.dsk BSAVE -a 0x1000 SNOW
 	$(DOS33) -y xmas2019.dsk BSAVE -a 0x1000 TREE
 	$(DOS33) -y xmas2019.dsk BSAVE -a 0x800 LOADER
@@ -56,6 +57,10 @@ xmas2019.o:	xmas2019.s \
 	move_letters.s letters.s
 	ca65 -o xmas2019.o xmas2019.s -l xmas2019.lst
 
+####
+
+XMAS2019_LZ4:	XMAS2019
+	lz4 -f -16 XMAS2019 XMAS2019_LZ4
 
 #####
 
