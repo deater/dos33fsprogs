@@ -103,7 +103,7 @@ TREESIZE	= 12
 
 	jsr	HGR
 
-	bit	SET_GR
+	bit	SET_TEXT
 	bit	FULLGR
 	bit	LORES
 	bit	PAGE0

@@ -188,7 +188,7 @@ r12_smc:
 
 	iny						; 2
 	sty	FRAME_PLAY_OFFSET			; 3
-	cpy	#63*4	; FIXME: song specific		; 2
+	cpy	#0 ;64*4	; FIXME: song specific		; 2
 	beq	frame_wrap				; 3
 						;==========
 						;	  10

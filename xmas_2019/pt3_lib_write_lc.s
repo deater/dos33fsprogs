@@ -82,8 +82,8 @@ lc_frame_decode_loop:
 
 no_play_music:
 	lda	FRAME_OFFSET
-	cmp	#63*4			; FIXME: make this depend on song
-					; hardcoding for 63 for our song
+	cmp	#0 ;64*4		; FIXME: make this depend on song
+					; hardcoding for 64 for our song
 	bne	lc_frame_decode_loop
 
 	inc	FRAME_PAGE
