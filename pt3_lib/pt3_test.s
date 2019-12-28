@@ -42,9 +42,8 @@ pt3_setup:
 
 	jsr	print_mockingboard_detect
 
-	jsr	mockingboard_detect_slot4	; call detection routine
-	cpx	#$1
-	beq	mockingboard_found
+	jsr	mockingboard_detect		; call detection routine
+	bcs	mockingboard_found
 
 	jsr	print_mocking_notfound
 	;jmp	forever_loop
@@ -52,6 +51,11 @@ pt3_setup:
 	jmp	setup_interrupt
 
 mockingboard_found:
+
+	lda	MB_ADDR_H
+	sec
+	sbc	#$10
+	sta	found_message+11
 
 	jsr	print_mocking_found
 
@@ -61,7 +65,7 @@ setup_interrupt:
 	;========================
 
 	jsr	mockingboard_init
-	jsr	pt3_setup_interrupt
+	jsr	mockingboard_setup_interrupt
 
 	;============================
 	; Init the Mockingboard
@@ -149,9 +153,9 @@ done_found_message:
 ;=========
 ; strings
 ;=========
-mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
+mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD: "
 not_message:		.byte "NOT "
-found_message:		.asciiz "FOUND"
+found_message:		.asciiz "FOUND SLOT#4"
 
 
 
@@ -165,8 +169,10 @@ found_message:		.asciiz "FOUND"
 
 .include	"pt3_lib_core.s"
 .include	"pt3_lib_init.s"
-.include	"pt3_lib_mockingboard.s"
+.include	"pt3_lib_mockingboard_setup.s"
+.include	"pt3_lib_mockingboard_detect.s"
 .include	"interrupt_handler.s"
+
 
 ;=============
 ; include song

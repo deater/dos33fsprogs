@@ -121,129 +121,11 @@ clear_ay_left_loop:
 	bpl	clear_ay_left_loop
 	rts
 
-	;=======================================
-	; Detect a Mockingboard card
-	;=======================================
-	; Based on code from the French Touch "Pure Noise" Demo
-	; Attempts to time an instruction sequence with a 6522
-	;
-	; If found, puts in  bMB
-	; MB_ADDRL:MB_ADDRH has address of Mockingboard
-	; returns X=0 if not found, X=1 if found
-
-mockingboard_detect:
-	lda	#0
-	sta	MB_ADDRL
-
-mb_detect_loop:	; self-modifying
-	lda	#$07	; we start in slot 7 ($C7) and go down to 0 ($C0)
-	ora	#$C0	; make it start with C
-	sta	MB_ADDRH
-	ldy	#04	; $CX04
-	ldx	#02	; 2 tries?
-mb_check_cycle_loop:
-	lda	(MB_ADDRL),Y		; timer 6522 (Low Order Counter)
-					; count down
-	sta	PT3_TEMP		; 3 cycles
-	lda	(MB_ADDRL),Y		; + 5 cycles = 8 cycles
-					; between the two accesses to the timer
-	sec
-	sbc	PT3_TEMP		; subtract to see if we had 8 cycles
-	cmp	#$f8			; -8
-	bne	mb_not_in_this_slot
-	dex				; decrement, try one more time
-	bne	mb_check_cycle_loop	; loop detection
-	inx				; Mockingboard found (X=1)
-done_mb_detect:
-	;stx	bMB			; store result to bMB
-	rts				; return
-
-mb_not_in_this_slot:
-	dec	mb_detect_loop+1	; decrement the "slot" (self_modify)
-	bne	mb_detect_loop		; loop down to one
-	ldx	#00
-	beq	done_mb_detect
-
-;alternative MB detection from Nox Archaist
-;	lda	#$04
-;	sta	MB_ADDRL
-;	ldx	#$c7
-;
-;find_mb:
-;	stx	MB_ADDRH
-;
-;	;detect sound I
-;
-;	sec
-;	ldy	#$00
-;	lda	(MB_ADDRL), y
-;	sbc	(MB_ADDRL), y
-;	cmp	#$05
-;	beq	found_mb
-;	dex
-;	cpx	#$c0
-;	bne	find_mb
-;	ldx	#$00 ;no mockingboard found
-;	rts
-;
-;found_mb:
-;	ldx	#$01 ;mockingboard found
-;	rts
-;
-;	;optionally detect sound II
-;
-;	sec
-;	ldy	#$80
-;	lda	(MB_ADDRL), y
-;	sbc	(MB_ADDRL), y
-;	cmp	#$05
-;	beq	found_mb
-
-
-	;=======================================
-	; Detect a Mockingboard card in Slot4
-	;=======================================
-	; Based on code from the French Touch "Pure Noise" Demo
-	; Attempts to time an instruction sequence with a 6522
-	;
-	; MB_ADDRL:MB_ADDRH has address of Mockingboard
-	; returns X=0 if not found, X=1 if found
-
-mockingboard_detect_slot4:
-	lda	#0
-	sta	MB_ADDRL
-
-mb4_detect_loop:	; self-modifying
-	lda	#$04	; we're only looking in Slot 4
-	ora	#$C0	; make it start with C
-	sta	MB_ADDRH
-	ldy	#04	; $CX04
-	ldx	#02	; 2 tries?
-mb4_check_cycle_loop:
-	lda	(MB_ADDRL),Y		; timer 6522 (Low Order Counter)
-					; count down
-	sta	PT3_TEMP		; 3 cycles
-	lda	(MB_ADDRL),Y		; + 5 cycles = 8 cycles
-					; between the two accesses to the timer
-	sec
-	sbc	PT3_TEMP		; subtract to see if we had 8 cycles
-	cmp	#$f8			; -8
-	bne	mb4_not_in_this_slot
-	dex				; decrement, try one more time
-	bne	mb4_check_cycle_loop	; loop detection
-	inx				; Mockingboard found (X=1)
-done_mb4_detect:
-	rts				; return
-
-mb4_not_in_this_slot:
-	ldx	#00
-	beq	done_mb4_detect
-
 
 	;=============================
 	; Setup
 	;=============================
-pt3_setup_interrupt:
+mockingboard_setup_interrupt:
 
 	;===========================
 	; Check for Apple IIc
@@ -300,6 +182,11 @@ done_apple_detect:
 	; Enable 50Hz clock on 6522
 	;============================
 
+	; 4fe7 / 1e6 = .020s, 50Hz
+
+	; 9c40 / 1e6 = .040s, 25Hz
+	; 411a / 1e6 = .016s, 60Hz
+
 	sei			; disable interrupts just in case
 
 	lda	#$40		; Continuous interrupts, don't touch PB7
@@ -318,9 +205,4 @@ done_apple_detect:
 				; load both values into counter
 				; clear interrupt and start counting
 
-	; 4fe7 / 1e6 = .020s, 50Hz
-
 	rts
-
-
-
