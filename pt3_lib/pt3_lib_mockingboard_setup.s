@@ -60,19 +60,30 @@ MOCK_AY_LATCH_ADDR	=	$7	;	1	1	1
 
 mockingboard_init:
 	lda	#$ff		; all output (1)
+
+mock_init_smc1:
 	sta	MOCK_6522_DDRB1
 	sta	MOCK_6522_DDRA1
+mock_init_smc2:
 	sta	MOCK_6522_DDRB2
 	sta	MOCK_6522_DDRA2
 	rts
+
+	;===================================
+	;===================================
+	; Reset Both AY-3-8910s
+	;===================================
+	;===================================
 
 	;======================
 	; Reset Left AY-3-8910
 	;======================
 reset_ay_both:
 	lda	#MOCK_AY_RESET
+reset_ay_smc1:
 	sta	MOCK_6522_ORB1
 	lda	#MOCK_AY_INACTIVE
+reset_ay_smc2:
 	sta	MOCK_6522_ORB1
 
 	;======================
@@ -81,8 +92,10 @@ reset_ay_both:
 ;reset_ay_right:
 ;could be merged with both
 	lda	#MOCK_AY_RESET
+reset_ay_smc3:
 	sta	MOCK_6522_ORB2
 	lda	#MOCK_AY_INACTIVE
+reset_ay_smc4:
 	sta	MOCK_6522_ORB2
 	rts
 
@@ -98,22 +111,29 @@ reset_ay_both:
 
 write_ay_both:
 	; address
+
+write_ay_smc1:
 	stx	MOCK_6522_ORA1		; put address on PA1		; 3
 	stx	MOCK_6522_ORA2		; put address on PA2		; 3
 	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
+write_ay_smc2:
 	sta	MOCK_6522_ORB1		; latch_address on PB1		; 3
 	sta	MOCK_6522_ORB2		; latch_address on PB2		; 3
 	ldy	#MOCK_AY_INACTIVE	; go inactive			; 2
+write_ay_smc3:
 	sty	MOCK_6522_ORB1						; 3
 	sty	MOCK_6522_ORB2						; 3
 
 	; value
 	lda	MB_VALUE						; 3
+write_ay_smc4:
 	sta	MOCK_6522_ORA1		; put value on PA1		; 3
 	sta	MOCK_6522_ORA2		; put value on PA2		; 3
 	lda	#MOCK_AY_WRITE		;				; 2
+write_ay_smc5:
 	sta	MOCK_6522_ORB1		; write on PB1			; 3
 	sta	MOCK_6522_ORB2		; write on PB2			; 3
+write_ay_smc6:
 	sty	MOCK_6522_ORB1						; 3
 	sty	MOCK_6522_ORB2						; 3
 
@@ -206,17 +226,23 @@ done_apple_detect:
 	sei			; disable interrupts just in case
 
 	lda	#$40		; Continuous interrupts, don't touch PB7
+setup_irq_smc1:
 	sta	MOCK_6522_ACR	; ACR register
 	lda	#$7F		; clear all interrupt flags
+setup_irq_smc2:
 	sta	MOCK_6522_IER	; IER register (interrupt enable)
 
 	lda	#$C0
+setup_irq_smc3:
 	sta	MOCK_6522_IFR	; IFR: 1100, enable interrupt on timer one oflow
+setup_irq_smc4:
 	sta	MOCK_6522_IER	; IER: 1100, enable timer one interrupt
 
 	lda	#$E7
+setup_irq_smc5:
 	sta	MOCK_6522_T1CL	; write into low-order latch
 	lda	#$4f
+setup_irq_smc6:
 	sta	MOCK_6522_T1CH	; write into high-order latch,
 				; load both values into counter
 				; clear interrupt and start counting

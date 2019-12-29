@@ -15,8 +15,7 @@
 PT3_LOC = song
 
 ; the below will make for more compact code, at the expense
-; of using $80 - $ff by our routines.  You'll also need to
-; grab the zp.inc file from the pt3_player code
+; of using $80 - $ff zero page addresses by the decoder.
 
 ; PT3_USE_ZERO_PAGE = 1
 
@@ -34,23 +33,31 @@ pt3_setup:
 
 	lda	#0
 	sta	DONE_PLAYING
-	sta	LOOP
+	sta	LOOP		; change to 1 to loop forever
 
 	;=======================
 	; Detect mockingboard
 	;========================
 
-	jsr	print_mockingboard_detect
+	jsr	print_mockingboard_detect	; print message
 
 	jsr	mockingboard_detect		; call detection routine
+
 	bcs	mockingboard_found
 
 	jsr	print_mocking_notfound
-	;jmp	forever_loop
-	; can't detect on IIc so just run with it anyway
+
+	; possibly can't detect on IIc so just try with slot#4 anyway
+	; even if not detected
+
 	jmp	setup_interrupt
 
 mockingboard_found:
+
+	; print found message
+
+
+	; modify message to print slot value
 
 	lda	MB_ADDR_H
 	sec
@@ -60,6 +67,13 @@ mockingboard_found:
 	jsr	print_mocking_found
 
 setup_interrupt:
+
+	;==================================================
+	; patch the playing code with the proper slot value
+	;==================================================
+
+	jsr	mockingboard_patch
+
 	;=======================
 	; Set up 50Hz interrupt
 	;========================
@@ -170,9 +184,9 @@ found_message:		.asciiz "FOUND SLOT#4"
 .include	"pt3_lib_core.s"
 .include	"pt3_lib_init.s"
 .include	"pt3_lib_mockingboard_setup.s"
-.include	"pt3_lib_mockingboard_detect.s"
 .include	"interrupt_handler.s"
-
+; if you're self patching, detect has to be after interrupt_handler.s
+.include	"pt3_lib_mockingboard_detect.s"
 
 ;=============
 ; include song
