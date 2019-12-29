@@ -71,6 +71,27 @@ mb_timer_check_done:
 
 
 .if 0
+mockingboard_patch:
+
+	lda	MB_ADDR_H
+
+	sta	pt3_irq_smc1+2
+
+	sta	pt3_irq_smc2+2
+	sta	pt3_irq_smc2+5
+
+	sta	pt3_irq_smc3+2
+	sta	pt3_irq_smc3+5
+
+	sta	pt3_irq_smc4+2
+	sta	pt3_irq_smc4+5
+
+
+	rts
+
+.endif
+
+.if 0
 
 
 	;=======================================

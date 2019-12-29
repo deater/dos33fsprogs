@@ -23,6 +23,19 @@ MOCK_6522_ORB1	=	$C400	; 6522 #1 port b data
 MOCK_6522_ORA1	=	$C401	; 6522 #1 port a data
 MOCK_6522_DDRB1	=	$C402	; 6522 #1 data direction port B
 MOCK_6522_DDRA1	=	$C403	; 6522 #1 data direction port A
+MOCK_6522_T1CL	=	$C404	; 6522 #1 t1 low order latches
+MOCK_6522_T1CH	=	$C405	; 6522 #1 t1 high order counter
+MOCK_6522_T1LL	=	$C406	; 6522 #1 t1 low order latches
+MOCK_6522_T1LH	=	$C407	; 6522 #1 t1 high order latches
+MOCK_6522_T2CL	=	$C408	; 6522 #1 t2 low order latches
+MOCK_6522_T2CH	=	$C409	; 6522 #1 t2 high order counters
+MOCK_6522_SR	=	$C40A	; 6522 #1 shift register
+MOCK_6522_ACR	=	$C40B	; 6522 #1 auxilliary control register
+MOCK_6522_PCR	=	$C40C	; 6522 #1 peripheral control register
+MOCK_6522_IFR	=	$C40D	; 6522 #1 interrupt flag register
+MOCK_6522_IER	=	$C40E	; 6522 #1 interrupt enable register
+MOCK_6522_ORANH	=	$C40F	; 6522 #1 port a data no handshake
+
 
 ; right speaker
 MOCK_6522_ORB2	=	$C480	; 6522 #2 port b data
@@ -146,8 +159,11 @@ apple_iic:
 	; I get the impression the Mockingboard 4c activates
 	; when you access any of the 6522 ports in Slot 4
 	lda	#$ff
-	sta	$C403
-	sta	$C404
+
+	; don't bother patching these, IIc mockingboard always slot 4?
+
+	sta	MOCK_6522_DDRA1
+	sta	MOCK_6522_T1CL
 
 	; bypass the firmware interrupt handler
 	; should we do this on IIe too? probably faster
@@ -190,18 +206,18 @@ done_apple_detect:
 	sei			; disable interrupts just in case
 
 	lda	#$40		; Continuous interrupts, don't touch PB7
-	sta	$C40B		; ACR register
+	sta	MOCK_6522_ACR	; ACR register
 	lda	#$7F		; clear all interrupt flags
-	sta	$C40E		; IER register (interrupt enable)
+	sta	MOCK_6522_IER	; IER register (interrupt enable)
 
 	lda	#$C0
-	sta	$C40D		; IFR: 1100, enable interrupt on timer one oflow
-	sta	$C40E		; IER: 1100, enable timer one interrupt
+	sta	MOCK_6522_IFR	; IFR: 1100, enable interrupt on timer one oflow
+	sta	MOCK_6522_IER	; IER: 1100, enable timer one interrupt
 
 	lda	#$E7
-	sta	$C404		; write into low-order latch
+	sta	MOCK_6522_T1CL	; write into low-order latch
 	lda	#$4f
-	sta	$C405		; write into high-order latch,
+	sta	MOCK_6522_T1CH	; write into high-order latch,
 				; load both values into counter
 				; clear interrupt and start counting
 
