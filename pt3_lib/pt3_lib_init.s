@@ -387,7 +387,7 @@ note_table_propogate_loop:
 
 	;================================================
 	; propogation isn't enough, various values
-	; are ofte off by one, so adjust using a bitmask
+	; are often off by one, so adjust using a bitmask
 	;================================================
 NoteTableAdjust:
 
