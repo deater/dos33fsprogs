@@ -113,47 +113,57 @@ write_ay_both:
 	; address
 
 write_ay_smc1:
-	stx	MOCK_6522_ORA1		; put address on PA1		; 3
-	stx	MOCK_6522_ORA2		; put address on PA2		; 3
+	stx	MOCK_6522_ORA1		; put address on PA1		; 4
+	stx	MOCK_6522_ORA2		; put address on PA2		; 4
 	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
 write_ay_smc2:
-	sta	MOCK_6522_ORB1		; latch_address on PB1		; 3
-	sta	MOCK_6522_ORB2		; latch_address on PB2		; 3
+	sta	MOCK_6522_ORB1		; latch_address on PB1		; 4
+	sta	MOCK_6522_ORB2		; latch_address on PB2		; 4
 	ldy	#MOCK_AY_INACTIVE	; go inactive			; 2
 write_ay_smc3:
-	sty	MOCK_6522_ORB1						; 3
-	sty	MOCK_6522_ORB2						; 3
-
+	sty	MOCK_6522_ORB1						; 4
+	sty	MOCK_6522_ORB2						; 4
+								;===========
+								;        28
 	; value
 	lda	MB_VALUE						; 3
 write_ay_smc4:
-	sta	MOCK_6522_ORA1		; put value on PA1		; 3
-	sta	MOCK_6522_ORA2		; put value on PA2		; 3
+	sta	MOCK_6522_ORA1		; put value on PA1		; 4
+	sta	MOCK_6522_ORA2		; put value on PA2		; 4
 	lda	#MOCK_AY_WRITE		;				; 2
 write_ay_smc5:
-	sta	MOCK_6522_ORB1		; write on PB1			; 3
-	sta	MOCK_6522_ORB2		; write on PB2			; 3
+	sta	MOCK_6522_ORB1		; write on PB1			; 4
+	sta	MOCK_6522_ORB2		; write on PB2			; 4
 write_ay_smc6:
-	sty	MOCK_6522_ORB1						; 3
-	sty	MOCK_6522_ORB2						; 3
+	sty	MOCK_6522_ORB1						; 4
+	sty	MOCK_6522_ORB2						; 4
+								;===========
+								;        29
 
 	rts								; 6
 								;===========
-								;       51
+								;       63
+write_ay_both_end:
+;.assert >write_ay_both = >write_ay_both_end, error, "write_ay_both crosses page"
+
 	;=======================================
 	; clear ay -- clear all 14 AY registers
 	; should silence the card
 	;=======================================
+	; 7+(74*14)+5=1048
 clear_ay_both:
-	ldx	#14
-	lda	#0
-	sta	MB_VALUE
+	ldx	#13				; 2
+	lda	#0				; 2
+	sta	MB_VALUE			; 3
 clear_ay_left_loop:
-	jsr	write_ay_both
-	dex
-	bpl	clear_ay_left_loop
-	rts
+	jsr	write_ay_both			; 6+63
+	dex					; 2
+	bpl	clear_ay_left_loop		; 3
+						; -1
+	rts					; 6
 
+clear_ay_end:
+;.assert >clear_ay_both = >clear_ay_end, error, "clear_ay_both crosses page"
 
 	;=============================
 	; Setup
