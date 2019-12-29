@@ -829,7 +829,7 @@ do_onoff:
 do_offon:
 	ldy	note_a+NOTE_OFFON_DELAY,X ;      else a->onoff=a->offon_delay;
 put_offon:
-.ifdef USE_ZERO_PAGE
+.ifdef PT3_USE_ZERO_PAGE
 	sty	note_a+NOTE_ONOFF,X
 .else
 	lda	note_a+NOTE_ONOFF,X

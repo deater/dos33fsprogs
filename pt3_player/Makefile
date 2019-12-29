@@ -81,7 +81,9 @@ PT3_PLAYER:	pt3_player.o
 pt3_player.o:	pt3_player.s \
 	gr_fast_clear.s random16.s fire.s \
 	gr_putsprite.s put_letters.s zp.inc \
-	pt3_lib_init.s pt3_lib_core.s interrupt_handler.s
+	pt3_lib_init.s pt3_lib_core.s interrupt_handler.s \
+	pt3_lib_irq_handler.s \
+	pt3_lib_mockingboard_setup.s pt3_lib_mockingboard_detect.s
 	ca65 -o pt3_player.o pt3_player.s -l pt3_player.lst
 
 #

@@ -66,13 +66,13 @@ mockingboard_found:
 
 	jsr	print_mocking_found
 
-setup_interrupt:
-
 	;==================================================
 	; patch the playing code with the proper slot value
 	;==================================================
 
 	jsr	mockingboard_patch
+
+setup_interrupt:
 
 	;=======================
 	; Set up 50Hz interrupt

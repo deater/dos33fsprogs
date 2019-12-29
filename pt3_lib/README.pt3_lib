@@ -14,10 +14,6 @@ Background:
 This code is meant as a relatively simple, reasonably optimized version
 of the PT3 Vortex-Tracker player for use in other programs.
 
-A much more optimized version can be found in ../pt3_player/
-That codebase has been *extremely* optimized to the point it's no longer
-very straightforward to reuse the code.
-
 For some more background on this you can watch the talk I gave
 at Demosplash 2019 on this topic.
 

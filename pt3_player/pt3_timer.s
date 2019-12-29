@@ -25,9 +25,8 @@ pt3_setup:
 	sta	DONE_PLAYING
 	sta	WHICH_FILE
 
-	jsr	mockingboard_detect_slot4	; call detection routine
-	cpx	#$1
-	beq	mockingboard_found
+;	jsr	mockingboard_detect	; call detection routine
+;	bcs	mockingboard_found
 
 
 mockingboard_found:
@@ -37,43 +36,10 @@ mockingboard_found:
 	;============================
 
 	jsr	mockingboard_init
+	jsr	mockingboard_setup_interrupt
 	jsr	reset_ay_both
 	jsr	clear_ay_both
 
-	;=========================
-	; Setup Interrupt Handler
-	;=========================
-	; Vector address goes to 0x3fe/0x3ff
-	; FIXME: should chain any existing handler
-
-	lda	#<interrupt_handler
-	sta	$03fe
-	lda	#>interrupt_handler
-	sta	$03ff
-
-	;============================
-	; Enable 50Hz clock on 6522
-	;============================
-
-	sei			; disable interrupts just in case
-
-	lda	#$40		; Continuous interrupts, don't touch PB7
-	sta	$C40B		; ACR register
-	lda	#$7F		; clear all interrupt flags
-	sta	$C40E		; IER register (interrupt enable)
-
-	lda	#$C0
-	sta	$C40D		; IFR: 1100, enable interrupt on timer one oflow
-	sta	$C40E		; IER: 1100, enable timer one interrupt
-
-	lda	#$E7
-	sta	$C404		; write into low-order latch
-	lda	#$4f
-	sta	$C405		; write into high-order latch,
-				; load both values into counter
-				; clear interrupt and start counting
-
-	; 4fe7 / 1e6 = .020s, 50Hz
 
 	;==================
 	; load first song
@@ -251,7 +217,7 @@ song_list:
 ;=========
 ;routines
 ;=========
-.include	"mockingboard_a.s"
+.include	"pt3_lib_mockingboard_setup.s"
 .include	"qkumba_rts.s"
 
 .include	"pt3_lib_core.s"
@@ -434,6 +400,7 @@ exit_interrupt:
 	tay			; restore Y
 	pla
 	tax			; restore X
+interrupt_smc:
 	lda	$45		; restore A
 
 

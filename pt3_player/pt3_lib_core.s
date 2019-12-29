@@ -232,19 +232,13 @@ note_c:
 end_vars:
 .endif
 
-	; this is only called by lib_init
 load_ornament0_sample1:
 	lda	#0							; 2
 	jsr	load_ornament						; 6
 	; fall through
-load_sample1:
-	lda	#1							; 2
 
-
-	;===========================
 	;===========================
 	; Load Sample
-	;===========================
 	;===========================
 	; sample in A
 	; which note offset in X
@@ -260,6 +254,8 @@ load_sample1:
 	; Optimization:
 	;	see comments on ornament setting
 
+load_sample1:
+	lda	#1							; 2
 
 load_sample:
 
