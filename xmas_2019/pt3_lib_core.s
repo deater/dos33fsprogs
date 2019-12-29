@@ -91,7 +91,7 @@ NOTE_TONE_SLIDE_TO_STEP	=39
 
 NOTE_STRUCT_SIZE=40
 
-.ifdef USE_ZERO_PAGE
+.ifdef PT3_USE_ZERO_PAGE
 note_a	=	$80
 note_b	=	$80+(NOTE_STRUCT_SIZE*1)
 note_c	=	$80+(NOTE_STRUCT_SIZE*2)
@@ -100,7 +100,7 @@ begin_vars=$80
 end_vars=$80+(NOTE_STRUCT_SIZE*3)
 
 
-.else	; !USE_ZERO_PAGE
+.else	; !PT3_USE_ZERO_PAGE
 begin_vars:
 
 note_a:									; reset?
@@ -829,7 +829,7 @@ do_onoff:
 do_offon:
 	ldy	note_a+NOTE_OFFON_DELAY,X ;      else a->onoff=a->offon_delay;
 put_offon:
-.ifdef USE_ZERO_PAGE
+.ifdef PT3_USE_ZERO_PAGE
 	sty	note_a+NOTE_ONOFF,X
 .else
 	lda	note_a+NOTE_ONOFF,X
@@ -1519,24 +1519,7 @@ reset_note:
 	;	in the player note length code
 
 is_done:
-	lda	LOOP			; see if looping
-	beq	really_done
-
-sp_pt3_loop_smc:
-	lda	#$d1			; looping, move to loop location
-					; non-zero to avoid the temptation
-					; to merge with following lda #$0
-	sta	current_pattern_smc+1
-	lda	#$0
-	sta	current_line_smc+1
-	sta	current_subframe_smc+1
-	sta	DONE_SONG               ; undo the next song
-
-	jmp	pt3_set_pattern
-
-really_done:
 	; done with song, set it to non-zero
-	lda	#1
 	sta	DONE_SONG						; 3
 	rts								; 6
 
@@ -1710,7 +1693,7 @@ do_frame:
 	jsr	calculate_note						; 6+?
 
 convert_177_smc1:
-	clc								; 2
+	sec								; 2
 
 	; Load up the Frequency Registers
 
@@ -1756,7 +1739,7 @@ convert_177_smc1:
 no_scale_a:
 
 convert_177_smc2:
-	clc								; 2
+	sec								; 2
 
 	lda	note_b+NOTE_TONE_L	; Note B Period L		; 4
 	sta	AY_REGISTERS+2		; into R2			; 3
@@ -1798,7 +1781,7 @@ convert_177_smc2:
 no_scale_b:
 
 convert_177_smc3:
-	clc								; 2
+	sec								; 2
 
 	lda	note_c+NOTE_TONE_L	; Note C Period L		; 4
 	sta	AY_REGISTERS+4		; into R4			; 3
@@ -1850,7 +1833,7 @@ pt3_noise_add_smc:
 	sta	AY_REGISTERS+6						; 3
 
 convert_177_smc4:
-	clc								; 2
+	sec								; 2
 	bcc	no_scale_n						; 2/3
 
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
@@ -1913,7 +1896,7 @@ pt3_envelope_slide_h_smc:
 	sta	AY_REGISTERS+12						; 3
 
 convert_177_smc5:
-	clc
+	sec
 	bcc	no_scale_e						; 2/3
 
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16

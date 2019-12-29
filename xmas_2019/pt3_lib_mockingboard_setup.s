@@ -23,6 +23,19 @@ MOCK_6522_ORB1	=	$C400	; 6522 #1 port b data
 MOCK_6522_ORA1	=	$C401	; 6522 #1 port a data
 MOCK_6522_DDRB1	=	$C402	; 6522 #1 data direction port B
 MOCK_6522_DDRA1	=	$C403	; 6522 #1 data direction port A
+MOCK_6522_T1CL	=	$C404	; 6522 #1 t1 low order latches
+MOCK_6522_T1CH	=	$C405	; 6522 #1 t1 high order counter
+MOCK_6522_T1LL	=	$C406	; 6522 #1 t1 low order latches
+MOCK_6522_T1LH	=	$C407	; 6522 #1 t1 high order latches
+MOCK_6522_T2CL	=	$C408	; 6522 #1 t2 low order latches
+MOCK_6522_T2CH	=	$C409	; 6522 #1 t2 high order counters
+MOCK_6522_SR	=	$C40A	; 6522 #1 shift register
+MOCK_6522_ACR	=	$C40B	; 6522 #1 auxilliary control register
+MOCK_6522_PCR	=	$C40C	; 6522 #1 peripheral control register
+MOCK_6522_IFR	=	$C40D	; 6522 #1 interrupt flag register
+MOCK_6522_IER	=	$C40E	; 6522 #1 interrupt enable register
+MOCK_6522_ORANH	=	$C40F	; 6522 #1 port a data no handshake
+
 
 ; right speaker
 MOCK_6522_ORB2	=	$C480	; 6522 #2 port b data
@@ -47,19 +60,30 @@ MOCK_AY_LATCH_ADDR	=	$7	;	1	1	1
 
 mockingboard_init:
 	lda	#$ff		; all output (1)
+
+mock_init_smc1:
 	sta	MOCK_6522_DDRB1
 	sta	MOCK_6522_DDRA1
+mock_init_smc2:
 	sta	MOCK_6522_DDRB2
 	sta	MOCK_6522_DDRA2
 	rts
+
+	;===================================
+	;===================================
+	; Reset Both AY-3-8910s
+	;===================================
+	;===================================
 
 	;======================
 	; Reset Left AY-3-8910
 	;======================
 reset_ay_both:
 	lda	#MOCK_AY_RESET
+reset_ay_smc1:
 	sta	MOCK_6522_ORB1
 	lda	#MOCK_AY_INACTIVE
+reset_ay_smc2:
 	sta	MOCK_6522_ORB1
 
 	;======================
@@ -68,8 +92,10 @@ reset_ay_both:
 ;reset_ay_right:
 ;could be merged with both
 	lda	#MOCK_AY_RESET
+reset_ay_smc3:
 	sta	MOCK_6522_ORB2
 	lda	#MOCK_AY_INACTIVE
+reset_ay_smc4:
 	sta	MOCK_6522_ORB2
 	rts
 
@@ -85,23 +111,30 @@ reset_ay_both:
 
 write_ay_both:
 	; address
+
+write_ay_smc1:
 	stx	MOCK_6522_ORA1		; put address on PA1		; 4
 	stx	MOCK_6522_ORA2		; put address on PA2		; 4
 	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
+write_ay_smc2:
 	sta	MOCK_6522_ORB1		; latch_address on PB1		; 4
 	sta	MOCK_6522_ORB2		; latch_address on PB2		; 4
 	ldy	#MOCK_AY_INACTIVE	; go inactive			; 2
+write_ay_smc3:
 	sty	MOCK_6522_ORB1						; 4
 	sty	MOCK_6522_ORB2						; 4
 								;===========
 								;        28
 	; value
 	lda	MB_VALUE						; 3
+write_ay_smc4:
 	sta	MOCK_6522_ORA1		; put value on PA1		; 4
 	sta	MOCK_6522_ORA2		; put value on PA2		; 4
 	lda	#MOCK_AY_WRITE		;				; 2
+write_ay_smc5:
 	sta	MOCK_6522_ORB1		; write on PB1			; 4
 	sta	MOCK_6522_ORB2		; write on PB2			; 4
+write_ay_smc6:
 	sty	MOCK_6522_ORB1						; 4
 	sty	MOCK_6522_ORB2						; 4
 								;===========
@@ -132,132 +165,13 @@ clear_ay_left_loop:
 
 clear_ay_end:
 
-.assert >clear_ay_both = >clear_ay_end, error, "clea_ay_both crosses page"
-
-	;=======================================
-	; Detect a Mockingboard card
-	;=======================================
-	; Based on code from the French Touch "Pure Noise" Demo
-	; Attempts to time an instruction sequence with a 6522
-	;
-	; If found, puts in  bMB
-	; MB_ADDRL:MB_ADDRH has address of Mockingboard
-	; returns X=0 if not found, X=1 if found
-
-mockingboard_detect:
-	lda	#0
-	sta	MB_ADDRL
-
-mb_detect_loop:	; self-modifying
-	lda	#$07	; we start in slot 7 ($C7) and go down to 0 ($C0)
-	ora	#$C0	; make it start with C
-	sta	MB_ADDRH
-	ldy	#04	; $CX04
-	ldx	#02	; 2 tries?
-mb_check_cycle_loop:
-	lda	(MB_ADDRL),Y		; timer 6522 (Low Order Counter)
-					; count down
-	sta	PT3_TEMP		; 3 cycles
-	lda	(MB_ADDRL),Y		; + 5 cycles = 8 cycles
-					; between the two accesses to the timer
-	sec
-	sbc	PT3_TEMP		; subtract to see if we had 8 cycles
-	cmp	#$f8			; -8
-	bne	mb_not_in_this_slot
-	dex				; decrement, try one more time
-	bne	mb_check_cycle_loop	; loop detection
-	inx				; Mockingboard found (X=1)
-done_mb_detect:
-	;stx	bMB			; store result to bMB
-	rts				; return
-
-mb_not_in_this_slot:
-	dec	mb_detect_loop+1	; decrement the "slot" (self_modify)
-	bne	mb_detect_loop		; loop down to one
-	ldx	#00
-	beq	done_mb_detect
-
-;alternative MB detection from Nox Archaist
-;	lda	#$04
-;	sta	MB_ADDRL
-;	ldx	#$c7
-;
-;find_mb:
-;	stx	MB_ADDRH
-;
-;	;detect sound I
-;
-;	sec
-;	ldy	#$00
-;	lda	(MB_ADDRL), y
-;	sbc	(MB_ADDRL), y
-;	cmp	#$05
-;	beq	found_mb
-;	dex
-;	cpx	#$c0
-;	bne	find_mb
-;	ldx	#$00 ;no mockingboard found
-;	rts
-;
-;found_mb:
-;	ldx	#$01 ;mockingboard found
-;	rts
-;
-;	;optionally detect sound II
-;
-;	sec
-;	ldy	#$80
-;	lda	(MB_ADDRL), y
-;	sbc	(MB_ADDRL), y
-;	cmp	#$05
-;	beq	found_mb
-
-
-	;=======================================
-	; Detect a Mockingboard card in Slot4
-	;=======================================
-	; Based on code from the French Touch "Pure Noise" Demo
-	; Attempts to time an instruction sequence with a 6522
-	;
-	; MB_ADDRL:MB_ADDRH has address of Mockingboard
-	; returns X=0 if not found, X=1 if found
-
-mockingboard_detect_slot4:
-	lda	#0
-	sta	MB_ADDRL
-
-mb4_detect_loop:	; self-modifying
-	lda	#$04	; we're only looking in Slot 4
-	ora	#$C0	; make it start with C
-	sta	MB_ADDRH
-	ldy	#04	; $CX04
-	ldx	#02	; 2 tries?
-mb4_check_cycle_loop:
-	lda	(MB_ADDRL),Y		; timer 6522 (Low Order Counter)
-					; count down
-	sta	PT3_TEMP		; 3 cycles
-	lda	(MB_ADDRL),Y		; + 5 cycles = 8 cycles
-					; between the two accesses to the timer
-	sec
-	sbc	PT3_TEMP		; subtract to see if we had 8 cycles
-	cmp	#$f8			; -8
-	bne	mb4_not_in_this_slot
-	dex				; decrement, try one more time
-	bne	mb4_check_cycle_loop	; loop detection
-	inx				; Mockingboard found (X=1)
-done_mb4_detect:
-	rts				; return
-
-mb4_not_in_this_slot:
-	ldx	#00
-	beq	done_mb4_detect
-
+.assert >clear_ay_both = >clear_ay_end, error, "clear_ay_both crosses page"
 
 	;=============================
 	; Setup
 	;=============================
 .if 0
-pt3_setup_interrupt:
+mockingboard_setup_interrupt:
 
 	;===========================
 	; Check for Apple IIc
@@ -278,13 +192,14 @@ apple_iic:
 	; I get the impression the Mockingboard 4c activates
 	; when you access any of the 6522 ports in Slot 4
 	lda	#$ff
-	sta	$C403
-	sta	$C404
+
+	; don't bother patching these, IIc mockingboard always slot 4?
+
+	sta	MOCK_6522_DDRA1
+	sta	MOCK_6522_T1CL
 
 	; bypass the firmware interrupt handler
 	; should we do this on IIe too? probably faster
-
-done_apple_detect:
 
 	sei				; disable interrupts
 	lda	$c08b			; disable ROM (enable language card)
@@ -298,7 +213,7 @@ done_apple_detect:
 	sta	interrupt_smc
 	sta	interrupt_smc+1
 
-
+done_apple_detect:
 
 
 	;=========================
@@ -313,91 +228,38 @@ done_apple_detect:
 	sta	$03ff
 
 	;============================
-	; Enable 60Hz clock on 6522
+	; Enable 50Hz clock on 6522
 	;============================
-	; yes this is horrible for PT3 files
-	; but in our case we are matching the screen refresh
+
+	; 4fe7 / 1e6 = .020s, 50Hz
+
+	; 9c40 / 1e6 = .040s, 25Hz
+	; 411a / 1e6 = .016s, 60Hz
 
 	sei			; disable interrupts just in case
 
 	lda	#$40		; Continuous interrupts, don't touch PB7
-	sta	$C40B		; ACR register
+setup_irq_smc1:
+	sta	MOCK_6522_ACR	; ACR register
 	lda	#$7F		; clear all interrupt flags
-	sta	$C40E		; IER register (interrupt enable)
+setup_irq_smc2:
+	sta	MOCK_6522_IER	; IER register (interrupt enable)
 
 	lda	#$C0
-	sta	$C40D		; IFR: 1100, enable interrupt on timer one oflow
-	sta	$C40E		; IER: 1100, enable timer one interrupt
+setup_irq_smc3:
+	sta	MOCK_6522_IFR	; IFR: 1100, enable interrupt on timer one oflow
+setup_irq_smc4:
+	sta	MOCK_6522_IER	; IER: 1100, enable timer one interrupt
 
-	lda	#$1A
-	sta	$C404		; write into low-order latch
-	lda	#$41
-	sta	$C405		; write into high-order latch,
+	lda	#$E7
+setup_irq_smc5:
+	sta	MOCK_6522_T1CL	; write into low-order latch
+	lda	#$4f
+setup_irq_smc6:
+	sta	MOCK_6522_T1CH	; write into high-order latch,
 				; load both values into counter
 				; clear interrupt and start counting
 
-
-	; 9c40 / 1e6 = .040s, 25Hz
-        ; 4fe7 / 1e6 = .020s, 50Hz
-        ; 411a / 1e6 = .016s, 60Hz
-
 	rts
+
 .endif
-
-
-	;==================================
-	; Print mockingboard detect message
-	;==================================
-	; note: on IIc must do this before enabling interrupt
-	;	as we disable ROM (COUT won't work?)
-
-print_mockingboard_detect:
-
-	; print detection message
-;	ldy	#0
-;print_mocking_message:
-;	lda	mocking_message,Y		; load loading message
-;	beq	done_mocking_message
-;	ora	#$80
-;	jsr	COUT
-;	iny
-;	jmp	print_mocking_message
-;done_mocking_message:
-;	jsr	CROUT1
-
-	rts
-
-print_mocking_notfound:
-
-;	ldy	#0
-;print_not_message:
-;	lda	not_message,Y		; load loading message
-;	beq	print_not_message_done
-;	ora	#$80
-;	jsr	COUT
-;	iny
-;	jmp	print_not_message
-;print_not_message_done:
-	rts
-
-print_mocking_found:
-;	ldy	#0
-;print_found_message:
-;	lda	found_message,Y		; load loading message
-;	beq	done_found_message
-;	ora	#$80
-;	jsr	COUT
-;	iny
-;	jmp	print_found_message
-done_found_message:
-
-	rts
-
-;=========
-; strings
-;=========
-;mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD IN SLOT #4"
-;not_message:		.byte "NOT "
-;found_message:		.asciiz "FOUND"
-
-

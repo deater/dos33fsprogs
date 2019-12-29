@@ -54,7 +54,8 @@ XMAS2019:	xmas2019.o
 
 xmas2019.o:	xmas2019.s \
 	delay_a.s vapor_lock.s message.inc gr_unrle.s sines.inc \
-	move_letters.s letters.s
+	move_letters.s letters.s \
+	pt3_lib_mockingboard_setup.s pt3_lib_core.s pt3_lib_init.s
 	ca65 -o xmas2019.o xmas2019.s -l xmas2019.lst
 
 ####

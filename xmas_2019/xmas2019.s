@@ -53,16 +53,16 @@ ORNAMENT_L	= $80
 ORNAMENT_H	= $81
 SAMPLE_L	= $82
 SAMPLE_H	= $83
-LOOP            = $84
-MB_VALUE        = $85
-MB_ADDRL        = $86
-MB_ADDRH        = $87
-DONE_PLAYING    = $88
-DONE_SONG       = $89
-PT3_TEMP        = $8A
-ENV_SHAPE_TEMP  = $8B
-C_COARSE_TEMP   = $8C
-A_VOL_TEMP      = $8D
+LOOP		= $84
+MB_VALUE	= $85
+MB_ADDR_L	= $86
+MB_ADDR_H	= $87
+DONE_PLAYING	= $88
+DONE_SONG	= $89
+PT3_TEMP	= $8A
+ENV_SHAPE_TEMP	= $8B
+C_COARSE_TEMP	= $8C
+A_VOL_TEMP	= $8D
 
 WASTE_CYCLES    = $C6
 FOREVER_OFFSET  = $C7
@@ -139,6 +139,9 @@ apple_ii_regular:
         sta	SOUND_WHILE_DECODE
         jsr	update_pt3_play
         jsr	pt3_set_pages
+
+	jsr	mockingboard_detect
+	jsr	mockingboard_patch
 
 	jsr	mockingboard_init
 	jsr	reset_ay_both
@@ -964,10 +967,12 @@ pixel_lookup:
 ; Music player
 .include "pt3_lib_core.s"
 .include "pt3_lib_init.s"
-.include "pt3_lib_mockingboard.s"
+.include "pt3_lib_mockingboard_setup.s"
+.align $100
 .include "pt3_lib_play_frame.s"
 .include "pt3_lib_write_frame.s"
 .include "pt3_lib_write_lc.s"
+.include "pt3_lib_mockingboard_detect.s"
 
 .align $100
 .include "move_letters.s"
