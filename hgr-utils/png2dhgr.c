@@ -1,11 +1,6 @@
-/* Converts 280x192 8-bit PNG file with correct palette to Apple II HGR */
+/* Converts 140x192 8-bit PNG file with correct palette to Apple II DHGR */
 
-
-
-
-
-
-
+/* http://www.battlestations.zone/2017/04/apple-ii-double-hi-res-from-ground-up_12.html */
 
 #define VERSION "0.0.1"
 
@@ -39,7 +34,6 @@ static int convert_color(int color) {
 	int c=0;
 
 	switch(color) {
-#if 0
 		case 0x000000:	c=0; break;	/* black */
 		case 0xe31e60:	c=1; break;	/* magenta */
 		case 0x604ebd:	c=2; break;	/* dark blue */
@@ -56,21 +50,6 @@ static int convert_color(int color) {
 		case 0xd0dd8d:	c=13; break;	/* yellow */
 		case 0x72ffd0:	c=14; break;	/* aqua */
 		case 0xffffff:	c=15; break;	/* white */
-#endif
-
-		/* These use the questionable palette my older code used */
-		/* Also handle the newer one */
-		/* Bitflipped because HGR is backwards, woz is crazy */
-		case 0x000000:	c=0; break;	/* black */
-		case 0x1bcb01:	c=2; break;	/* bright green */
-		case 0x14f53c:	c=2; break;	/* bright green */
-		case 0xe434fe:	c=1; break;	/* magenta */
-		case 0xe31e60:	c=1; break;	/* magenta */
-		case 0xffffff:	c=3; break;	/* white */
-		case 0xcd5b01:	c=6; break;	/* orange */
-		case 0xff6a3c:	c=6; break;	/* orange */
-		case 0x1b9afe:	c=5; break;	/* medium blue */
-		case 0x14cffd:	c=5; break;	/* medium blue */
 
 		default:
 			fprintf(stderr,"Unknown color %x\n",color);
@@ -82,7 +61,7 @@ static int convert_color(int color) {
 
 
 
-/* expects a PNG where the xsize is *2 */
+/* expects a PNG */
 int loadpng(char *filename,
 		unsigned char **image_ptr, int *xsize, int *ysize) {
 
@@ -142,7 +121,7 @@ int loadpng(char *filename,
 	color_type = png_get_color_type(png_ptr, info_ptr);
 	bit_depth = png_get_bit_depth(png_ptr, info_ptr);
 
-	if (width!=280) {
+	if (width!=140) {
 		fprintf(stderr,"Unknown width %d\n",width);
 		return -1;
 	}
@@ -241,11 +220,11 @@ int loadpng(char *filename,
 
 static void print_help(char *name,int version) {
 
-	printf("\npng2hgr version %s\n",VERSION);
+	printf("\npng2dhgr version %s\n",VERSION);
 
 	if (version) exit(1);
 
-	printf("\nUsage: %s [-r] [-s] PNGFILE\n\n",name);
+	printf("\nUsage: %s [-r] [-s] PNGFILE OUTBASE\n\n",name);
 	printf("\t[-r] raw, don't prepend with BLOAD addr/size\n");
 	printf("\t[-s] short, leave off bottom text area\n");
 	printf("\n");
@@ -257,6 +236,38 @@ static int hgr_offset_table[48]={
 	0x0000,0x0080,0x0100,0x0180,0x0200,0x0280,0x0300,0x0380,
 	0x0028,0x00A8,0x0128,0x01A8,0x0228,0x02A8,0x0328,0x03A8,
 	0x0050,0x00D0,0x0150,0x01D0,0x0250,0x02D0,0x0350,0x03D0,
+};
+
+static char aux1_colors[16]={
+	0x00,0x08,0x44,0x4c,0x22,0x2a,0x66,0x6e,
+	0x11,0x19,0x55,0x5d,0x33,0x3b,0x77,0x7f};
+static char main1_colors[16]={
+	0x00,0x11,0x08,0x19,0x44,0x55,0x4c,0x5d,
+	0x22,0x33,0x2a,0x3b,0x66,0x77,0x6e,0x7f};
+static char aux2_colors[16]={
+	0x00,0x22,0x11,0x33,0x08,0x2a,0x19,0x3b,
+	0x44,0x66,0x55,0x77,0x4c,0x6e,0x5d,0x7f};
+static char main2_colors[16]={
+	0x00,0x44,0x22,0x66,0x11,0x55,0x33,0x77,
+	0x08,0x4c,0x2a,0x6e,0x19,0x5d,0x3b,0x7f};
+
+static char flipped_colors[16]={
+/* black */	0x00,
+/* magenta */	0x08,
+/* dark blue */	0x01,
+/* purple */	0x09,
+/* dark green */0x02,
+/* grey 1 */	0x0a,
+/* med blue */	0x03,
+/* lt blue */	0x0b,
+/* brown */	0x04,
+/* orange */	0x0c,
+/* grey2 */	0x05,
+/* pink */	0x0d,
+/* br green */	0x06,
+/* yellow */	0x0e,
+/* aqua */	0x07,
+/* white */	0x0f,
 };
 
 static int hgr_offset(int y) {
@@ -272,124 +283,18 @@ static int hgr_offset(int y) {
 	return address;
 }
 
-/* Count both black/white variants */
-static int color_high(int color) {
-	if ((color>2) || (color==0)) return 1;
-	return 0;
-}
-
-static int color_low(int color) {
-	if ((color<4) || (color==7)) return 1;
-	return 0;
-}
-
-
-static int colors_to_bytes(unsigned char colors[14],
-			unsigned char *byte1,
-			unsigned char *byte2) {
-
-	int highbit1=0,highbit2=0,lowbit1=0,lowbit2=0;
-	int hb1,hb2;
-	int error=0;
-
-	*byte1=0;
-	*byte2=0;
-
-	highbit1+=color_high(colors[0]);
-	highbit1+=color_high(colors[1]);
-	highbit1+=color_high(colors[2]);
-	highbit1+=color_high(colors[3]);
-	highbit1+=color_high(colors[4]);
-	highbit1+=color_high(colors[5]);
-	highbit1+=color_high(colors[6]);
-
-	highbit2+=color_high(colors[7]);
-	highbit2+=color_high(colors[8]);
-	highbit2+=color_high(colors[9]);
-	highbit2+=color_high(colors[10]);
-	highbit2+=color_high(colors[11]);
-	highbit2+=color_high(colors[12]);
-	highbit2+=color_high(colors[13]);
-
-	lowbit1+=color_low(colors[0]);
-	lowbit1+=color_low(colors[1]);
-	lowbit1+=color_low(colors[2]);
-	lowbit1+=color_low(colors[3]);
-	lowbit1+=color_low(colors[4]);
-	lowbit1+=color_low(colors[5]);
-	lowbit1+=color_low(colors[6]);
-
-	lowbit2+=color_low(colors[7]);
-	lowbit2+=color_low(colors[8]);
-	lowbit2+=color_low(colors[9]);
-	lowbit2+=color_low(colors[10]);
-	lowbit2+=color_low(colors[11]);
-	lowbit2+=color_low(colors[12]);
-	lowbit2+=color_low(colors[13]);
-
-
-
-	if (highbit1==7) hb1=1;
-	else if (lowbit1==7) hb1=0;
-	else {
-		error=1;
-		if (highbit1>lowbit1) hb1=1;
-		else hb1=0;
-	}
-
-	if (highbit2==7) hb2=1;
-	else if (lowbit2==7) hb2=0;
-	else {
-		error=2;
-		if (highbit2>lowbit2) hb2=1;
-		else hb2=0;
-	}
-
-/*
- 0 0 0 0 -> 00 00
- 1 1 1 1 -> 01 01
- 2 2 2 2 -> 10 10
- 3 3 3 3 -> 11 11
- 1 3 3 1 -> 01 11
-
- 1 1 2 2 3 3 0 -> 0 11 10 01
-
-*/
-
-
-
-	*byte1|=(colors[0]&1)<<0;
-	*byte1|=(colors[1]&2)<<0;
-	*byte1|=(colors[2]&1)<<2;
-	*byte1|=(colors[3]&2)<<2;
-	*byte1|=(colors[4]&1)<<4;
-	*byte1|=(colors[5]&2)<<4;
-	*byte1|=(colors[6]&1)<<6;
-	*byte1|=hb1<<7;
-
-	*byte2|=(colors[7]&2)>>1;
-	*byte2|=(colors[8]&1)<<1;
-	*byte2|=(colors[9]&2)<<1;
-	*byte2|=(colors[10]&1)<<3;
-	*byte2|=(colors[11]&2)<<3;
-	*byte2|=(colors[12]&1)<<5;
-	*byte2|=(colors[13]&2)<<5;
-	*byte2|=hb2<<7;
-
-	return error;
-}
-
-
-static unsigned char apple2_image[8192];
+static unsigned char apple2_aux[8192],apple2_bin[8192];
 
 int main(int argc, char **argv) {
 
-	int xsize=0,ysize=0,error;
-	int c,x,y,z,color1;
+	int xsize=0,ysize=0;
+	int c,x,y,color1;
 	unsigned char *image;
-	unsigned char byte1,byte2,colors[14];
+	unsigned char colors[7];
 
-	char *filename;
+	char *filename,*base;
+	char outfile[BUFSIZ];
+	FILE *aux,*bin;
 
 	/* Parse command line arguments */
 
@@ -416,10 +321,17 @@ int main(int argc, char **argv) {
 		printf("ERROR: Was expecting filename!\n");
 		exit(1);
 	}
-
 	filename=strdup(argv[optind]);
 
-	memset(apple2_image,0,8192);
+	if (optind+1>=argc) {
+		base=strdup("OUT");
+	}
+	else {
+		base=strdup(argv[optind+1]);
+	}
+
+	memset(apple2_aux,0,8192);
+	memset(apple2_bin,0,8192);
 
 	if (loadpng(filename,&image,&xsize,&ysize)<0) {
 		fprintf(stderr,"Error loading png!\n");
@@ -430,28 +342,107 @@ int main(int argc, char **argv) {
 
 	for(y=0;y<192;y++) {
 		for(x=0;x<20;x++) {
-			for(z=0;z<14;z++) {
-				color1=image[y*280+x*14+z];
-//				if (color1!=color2) {
-//					fprintf(stderr,"Warning: color at %d x %d doesn't match\n",
-//							x*14+z*2,y);
-//
-//				}
-				colors[z]=color1;
-			}
-			error=colors_to_bytes(colors,&byte1,&byte2);
-			if (error!=0) {
-				fprintf(stderr,"Warning: mixing colors at %d x %d\n",
-					x*14+error*7,y);
-			}
+			colors[0]=image[y*140+x*7+0];
+			colors[1]=image[y*140+x*7+1];
+			colors[2]=image[y*140+x*7+2];
+			colors[3]=image[y*140+x*7+3];
+			colors[4]=image[y*140+x*7+4];
+			colors[5]=image[y*140+x*7+5];
+			colors[6]=image[y*140+x*7+6];
 
-			apple2_image[hgr_offset(y)+(x*2)+0]=byte1;
-			apple2_image[hgr_offset(y)+(x*2)+1]=byte2;
+#if 0
+			color1=aux1_colors[colors[0]]&0xf;
+			color1|=(aux1_colors[colors[1]]<<4)&0x7f;
+			apple2_aux[hgr_offset(y)+(x*2)+0]=color1;
+
+			color1=(main1_colors[colors[1]]>>3)&0x1;
+			color1|=(main1_colors[colors[2]]<<1)&0x1e;
+			color1|=(main1_colors[colors[3]]<<5)&0x60;
+			apple2_bin[hgr_offset(y)+(x*2)+0]=color1;
+
+			color1=(aux2_colors[colors[3]]>>2)&0x3;
+			color1|=(aux2_colors[colors[4]]<<2)&0x3c;
+			color1|=(aux2_colors[colors[5]]<<6)&0x40;
+			apple2_aux[hgr_offset(y)+(x*2)+1]=color1;
+
+			color1=(main2_colors[colors[5]]>>1)&0x7;
+			color1|=(main2_colors[colors[6]]<<3)&0x78;
+			apple2_bin[hgr_offset(y)+(x*2)+1]=color1;
+#endif
+
+#if 0
+
+			color1=colors[0]&0xf;
+			color1|=(colors[1]<<4)&0x7f;
+			apple2_aux[hgr_offset(y)+(x*2)+0]=color1;
+
+			color1=(colors[1]>>3)&0x1;
+			color1|=(colors[2]<<1)&0x1e;
+			color1|=(colors[3]<<5)&0x60;
+			apple2_bin[hgr_offset(y)+(x*2)+0]=color1;
+
+			color1=(colors[3]>>2)&0x3;
+			color1|=(colors[4]<<2)&0x3c;
+			color1|=(colors[5]<<6)&0x40;
+			apple2_aux[hgr_offset(y)+(x*2)+1]=color1;
+
+			color1=(colors[5]>>1)&0x7;
+			color1|=(colors[6]<<3)&0x78;
+			apple2_bin[hgr_offset(y)+(x*2)+1]=color1;
+#endif
+
+#if 1
+// 33 4c
+// 0011 0011 0100 1100
+// PDDC CCCB PGGG GFFF
+// B=1XXX
+// C=1001
+// D=XX01
+// F=100X
+// G=1001
+			color1=flipped_colors[colors[0]]&0xf;
+			color1|=(flipped_colors[colors[1]]<<4)&0x7f;
+			apple2_aux[hgr_offset(y)+(x*2)+0]=color1;
+
+			color1=(flipped_colors[colors[1]]>>3)&0x1;
+			color1|=(flipped_colors[colors[2]]<<1)&0x1e;
+			color1|=(flipped_colors[colors[3]]<<5)&0x60;
+			apple2_bin[hgr_offset(y)+(x*2)+0]=color1;
+
+			color1=(flipped_colors[colors[3]]>>2)&0x3;
+			color1|=(flipped_colors[colors[4]]<<2)&0x3c;
+			color1|=(flipped_colors[colors[5]]<<6)&0x40;
+			apple2_aux[hgr_offset(y)+(x*2)+1]=color1;
+
+			color1=(flipped_colors[colors[5]]>>1)&0x7;
+			color1|=(flipped_colors[colors[6]]<<3)&0x78;
+			apple2_bin[hgr_offset(y)+(x*2)+1]=color1;
+#endif
+
 		}
+
+
 
 	}
 
-	fwrite(apple2_image,8192,sizeof(unsigned char),stdout);
+	sprintf(outfile,"%s.AUX",base);
+	aux=fopen(outfile,"w");
+	if (aux==NULL) {
+		fprintf(stderr,"Error opening %s\n",outfile);
+		exit(1);
+	}
+	fwrite(apple2_aux,8192,sizeof(unsigned char),aux);
+	fclose(aux);
+
+	sprintf(outfile,"%s.BIN",base);
+	bin=fopen(outfile,"w");
+	if (bin==NULL) {
+		fprintf(stderr,"Error opening %s\n",outfile);
+		exit(1);
+	}
+	fwrite(apple2_bin,8192,sizeof(unsigned char),bin);
+	fclose(bin);
 
 	return 0;
+
 }
