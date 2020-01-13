@@ -9,7 +9,8 @@ all:	gr_viewer.dsk
 gr_viewer.dsk:	HELLO LOADER
 	$(DOS33) -y gr_viewer.dsk SAVE A HELLO
 	$(DOS33) -y gr_viewer.dsk BSAVE -a 0x1000 LOADER
-#	$(DOS33) -y gr_viewer.dsk BSAVE -a 0x800 F02.GR
+#	$(DOS33) -y gr_viewer.dsk BSAVE -a 0x800 F05.GR
+
 
 ###
 
@@ -28,4 +29,4 @@ loader.o:	loader.s
 
 
 clean:	
-	rm -f *~ *.o LOADER HELLO
+	rm -f *~ *.o LOADER HELLO *.lst

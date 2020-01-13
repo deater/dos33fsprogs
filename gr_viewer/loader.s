@@ -122,6 +122,8 @@ loop_forever:
 
 	; wait until keypressed
 
+	bit	KEYRESET
+
 wait_until_keypress:
 	lda	KEYPRESS                        ; check if keypressed
 	bpl	wait_until_keypress		; if not, loop
@@ -129,7 +131,7 @@ wait_until_keypress:
 
 	inc	WHICH
 	lda	WHICH
-	cmp	#4
+	cmp	#8
 	bne	no_new
 	lda	#1
 	sta	WHICH
