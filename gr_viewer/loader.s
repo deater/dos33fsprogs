@@ -131,7 +131,7 @@ wait_until_keypress:
 
 	inc	WHICH
 	lda	WHICH
-	cmp	#8
+	cmp	#10
 	bne	no_new
 	lda	#1
 	sta	WHICH
