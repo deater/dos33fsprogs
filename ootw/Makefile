@@ -276,7 +276,7 @@ loader2.o:	loader2.s
 TITLE:	title.o
 	ld65 -o TITLE title.o -C ../linker_scripts/apple2_d00.inc
 
-title.o:	title.s
+title.o:	title.s loader.s
 	ca65 -o title.o title.s -l title.lst
 
 

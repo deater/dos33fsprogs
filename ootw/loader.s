@@ -1,7 +1,11 @@
 ; Loader for OOTW
 
-; the BASIC program sets $05 with which thing to load
+; Used to be standalone, now loaded as part of TITLE
+; But still loads at $1400
 
+; the TITLE program sets $05 with which thing to load
+; this part of the program stays resident, so when a level ends
+; it changes $05 (WHICH_LOAD) and this code loads the proper executable
 
 nibtbl =  $300	; nothing uses the bottom 128 bytes of $300, do they?
 bit2tbl = $380 	; bit2tbl:	.res 86			;	= nibtbl+128
@@ -10,7 +14,7 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 ; read any file slot 6 version
 ; based on FASTLD6 and RTS copyright (c) Peter Ferrie 2011-2013,2018
 
-; modified to assembled with ca64 -- vmw
+; modified to assembled with ca65 -- vmw
 ; added code to patch it to run from current disk slot -- vmw
 
 
@@ -38,20 +42,73 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 				;   process
 
 
-	; note also, can't load file bigger than $8000 (32k) in size?
-	; seems to break things?
+
+	;===================================================
+	;===================================================
+	; START / INIT
+	;===================================================
+	;===================================================
 
 start:
 	jsr	init	; unhook DOS, init nibble table
 
-;======================
+
+	;===================================================
+	;===================================================
+	; SETUP THE FILENAME
+	;===================================================
+	;===================================================
 
 which_load_loop:
-	ldy	WHICH_LOAD
-	lda	filenames_low,Y
+	ldx	WHICH_LOAD
+	beq	load_intro
+	cpx	#16
+	beq	load_ending
+
+	lda	#<ootw_filename
 	sta	OUTL
-	lda	filenames_high,Y
+	lda	#>ootw_filename
 	sta	OUTH
+
+	ldy	#6
+	cpx	#10
+	bcc	load_less_than_10	; blt
+
+	txa
+	sec
+	sbc	#10
+	tax
+
+	lda	#'1'			; assume it's 10-15
+	sta	(OUTL),Y
+	iny
+
+load_less_than_10:
+	txa
+	clc
+	adc	#48
+	sta	(OUTL),Y
+	iny
+	lda	#0
+	sta	(OUTL),Y		; be sure NUL terminated
+					; might be issue if load >10 level
+					; then back to lower?  that possible?
+
+	jmp	opendir_filename
+
+load_intro:
+	lda	#<intro_filename
+	sta	OUTL
+	lda	#>intro_filename
+	sta	OUTH
+	bne	opendir_filename	; branch always
+
+load_ending:
+	lda	#<ending_filename
+	sta	OUTL
+	lda	#>ending_filename
+	sta	OUTH
+	; fallthrough
 
 opendir_filename:
 
@@ -93,40 +150,14 @@ filename:
 	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 
-filenames_low:
-	.byte	<intro_filename
-	.byte	<ootw_c1_filename
-	.byte	<ootw_c2_filename
-	.byte	<ootw_c3_filename
-	.byte	<ootw_c4_filename
-	.byte	<ootw_c5_filename
-
-filenames_high:
-	.byte	>intro_filename
-	.byte	>ootw_c1_filename
-	.byte	>ootw_c2_filename
-	.byte	>ootw_c3_filename
-	.byte	>ootw_c4_filename
-	.byte	>ootw_c5_filename
-
 intro_filename:
 	.byte "INTRO",0
 
-ootw_c1_filename:
-	.byte "OOTW_C1",0
+ending_filename:
+	.byte "ENDING",0
 
-ootw_c2_filename:
-	.byte "OOTW_C2",0
-
-ootw_c3_filename:
-	.byte "OOTW_C3",0
-
-ootw_c4_filename:
-	.byte "OOTW_C4",0
-
-ootw_c5_filename:
-	.byte "OOTW_C5",0
-
+ootw_filename:
+	.byte "OOTW_C",0,0,0
 
 
                 ;unhook DOS and build nibble table
