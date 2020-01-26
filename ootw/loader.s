@@ -14,7 +14,7 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 ; added code to patch it to run from current disk slot -- vmw
 
 
-	WHICH_LOAD =	$05	; thing to load
+;	WHICH_LOAD =	$05	; thing to load
 	adrlo	=	$26	; constant from boot prom
 	adrhi	=	$27	; constant from boot prom
 	tmpsec	=	$3c	; constant from boot prom
@@ -22,14 +22,14 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 	sizelo	=	$44
 	sizehi	=	$45
 	secsize	=	$46
-	TEMPY	=	$fa
-	namlo	=	$fb
-	namhi	=	$fc
+	namlo	=	$f8
+	namhi	=	$f9
+;	TEMPY	=	$fa
 	step	=	$fd	; state for stepper motor
 	tmptrk	=	$fe	; temporary copy of current track
 	phase	=	$ff	; current phase for /seek
-	OUTL	=	$fe	; for picking filename
-	OUTH	=	$ff
+;	OUTL	=	$fe	; for picking filename
+;	OUTH	=	$ff
 
 	dirbuf	=	$c00
 				; note, don't put this immediately below

@@ -162,6 +162,9 @@ ootw2 memory squeeze:
 
 
 
+LOADER=1400		TITLE=1.75k = 7 pages = load at $D00
+
+
 
 L2 Memory map:
 	00	zero page

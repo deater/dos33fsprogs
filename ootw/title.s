@@ -10,6 +10,7 @@ title:
 
 	bit	TEXT
 	bit	PAGE0
+	jsr	HOME
 
 	lda	#<title_text
 	sta	OUTL
@@ -76,8 +77,18 @@ up_offset:
 	jmp	title_loop
 
 all_done:
-	jmp	all_done
 
+print_help_and_go:
+	jsr	HOME
+
+	lda	#<directions_text
+	sta	OUTL
+	lda	#>directions_text
+	sta	OUTH
+	jsr	move_and_print_list
+
+ready_to_load:
+	jmp	$1400			; LOADER starts here
 
 .include "text_print.s"
 .include "gr_offsets.s"
@@ -280,17 +291,18 @@ menu_items:	; 23 wide
 .byte 8,0,"ENDING              ",0
 
 
-; 160  POKE 5,A
+directions_text:
+.byte 8, 0,"LOADING (BE PATIENT...)",0
+.byte 0, 5,"CONTROLS:",0
+.byte 3, 6,   "A OR <-      : MOVE LEFT",0
+.byte 3, 7,   "D OR ->      : MOVE RIGHT",0
+.byte 3, 8,   "W OR UP      : JUMP",0
+.byte 3, 9,   "S OR DOWN    : CROUCH / PICKUP",0
+.byte 3,10,   "SPACEBAR     : KICK / SHOOT",0
+.byte 3,11,   "L            : CHARGE GUN",0
+.byte 3,12,   "ESC          : QUITS",0
+.byte 255
 
+.align $100
 
-; 305  HTAB 8:PRINT "LOADING (BE PATIENT...)"
-; 310  PRINT:PRINT:PRINT:PRINT
-; 315  PRINT "CONTROLS:"
-; 320  PRINT "   A OR <-      : MOVE LEFT"
-; 325  PRINT "   D OR ->      : MOVE RIGHT"
-; 340  PRINT "   W OR UP      : JUMP"
-; 345  PRINT "   S OR DOWN    : CROUCH / PICKUP"
-; 350  PRINT "   SPACEBAR     : KICK / SHOOT"
-; 355  PRINT "   L            : CHARGE GUN"
-; 360  PRINT "   ESC          : QUITS"
-
+.include "loader.s"

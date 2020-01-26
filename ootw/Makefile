@@ -7,10 +7,10 @@ PNG2LZ4 = ../gr-utils/png2lz4
 
 all:	ootw.dsk ootw_side2.dsk
 
-ootw.dsk:	HELLO LOADER INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
+ootw.dsk:	HELLO TITLE INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
 	cp empty.dsk ootw.dsk
 	$(DOS33) -y ootw.dsk SAVE A HELLO
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1400 LOADER
+	$(DOS33) -y ootw.dsk BSAVE -a 0xd00 TITLE
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 INTRO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C1
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C2
@@ -20,11 +20,10 @@ ootw.dsk:	HELLO LOADER INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 AUDIO_TEST
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 COMPRESS-TEST
 
-ootw_side2.dsk:	HELLO TITLE LOADER2 ENDING OOTW_C15
+ootw_side2.dsk:	HELLO TITLE ENDING OOTW_C15
 	cp empty.dsk ootw_side2.dsk
 	$(DOS33) -y ootw_side2.dsk SAVE A HELLO HELLO
-	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1000 TITLE
-	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1400 LOADER2 LOADER
+	$(DOS33) -y ootw_side2.dsk BSAVE -a 0xd00 TITLE
 	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C15
 	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 ENDING
 
@@ -275,7 +274,7 @@ loader2.o:	loader2.s
 ####
 
 TITLE:	title.o
-	ld65 -o TITLE title.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o TITLE title.o -C ../linker_scripts/apple2_d00.inc
 
 title.o:	title.s
 	ca65 -o title.o title.s -l title.lst
@@ -323,7 +322,7 @@ compress_test.o:	compress_test.s lz4_decode.s compress_test.inc
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lz4 HELLO \
+		rm -f *~ *.o *.lst *.lz4 HELLO TITLE \
 			OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 INTRO LOADER \
 			COMPRESS-TEST AUDIO_TEST \
 			intro_data_01 intro_data_04 intro_data_06 \
