@@ -20,10 +20,12 @@ ootw.dsk:	HELLO LOADER INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 AUDIO_TEST
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 COMPRESS-TEST
 
-ootw_side2.dsk:	HELLO2 LOADER2 ENDING
+ootw_side2.dsk:	HELLO TITLE LOADER2 ENDING OOTW_C15
 	cp empty.dsk ootw_side2.dsk
-	$(DOS33) -y ootw_side2.dsk SAVE A HELLO2 HELLO
+	$(DOS33) -y ootw_side2.dsk SAVE A HELLO HELLO
+	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1000 TITLE
 	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1400 LOADER2 LOADER
+	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C15
 	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 ENDING
 
 
@@ -126,6 +128,21 @@ ootw_c5.o:	ootw_c5.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l5cave/ootw_c5_cave.inc
 	ca65 -o ootw_c5.o ootw_c5.s -l ootw_c5.lst
+
+###
+
+OOTW_C15:	ootw_c15.o
+	ld65 -o OOTW_C15 ootw_c15.o -C ../linker_scripts/apple2_1700.inc
+
+ootw_c15.o:	ootw_c15.s \
+	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
+	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
+	keyboard.s gr_run_sequence.s physicist.s \
+	collision.s door.s gun.s blast.s shield.s \
+	ootw_graphics/sprites/physicist.inc \
+	ootw_graphics/l5cave/ootw_c5_cave.inc
+	ca65 -o ootw_c15.o ootw_c15.s -l ootw_c15.lst
+
 
 
 ####
@@ -254,6 +271,15 @@ LOADER2:	loader2.o
 
 loader2.o:	loader2.s
 	ca65 -o loader2.o loader2.s -l loader2.lst
+
+####
+
+TITLE:	title.o
+	ld65 -o TITLE title.o -C ../linker_scripts/apple2_1000.inc
+
+title.o:	title.s
+	ca65 -o title.o title.s -l title.lst
+
 
 
 ####

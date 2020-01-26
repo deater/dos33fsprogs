@@ -100,6 +100,17 @@ filenames_low:
 	.byte	<ootw_c3_filename
 	.byte	<ootw_c4_filename
 	.byte	<ootw_c5_filename
+	.byte	<ootw_c6_filename
+	.byte	<ootw_c7_filename
+	.byte	<ootw_c8_filename
+	.byte	<ootw_c9_filename
+	.byte	<ootw_c10_filename
+	.byte	<ootw_c11_filename
+	.byte	<ootw_c12_filename
+	.byte	<ootw_c13_filename
+	.byte	<ootw_c14_filename
+	.byte	<ootw_c15_filename
+	.byte	<ending_filename
 
 filenames_high:
 	.byte	>intro_filename
@@ -108,24 +119,68 @@ filenames_high:
 	.byte	>ootw_c3_filename
 	.byte	>ootw_c4_filename
 	.byte	>ootw_c5_filename
+	.byte	>ootw_c6_filename
+	.byte	>ootw_c7_filename
+	.byte	>ootw_c8_filename
+	.byte	>ootw_c9_filename
+	.byte	>ootw_c10_filename
+	.byte	>ootw_c11_filename
+	.byte	>ootw_c12_filename
+	.byte	>ootw_c13_filename
+	.byte	>ootw_c14_filename
+	.byte	>ootw_c15_filename
+	.byte	>ending_filename
 
 intro_filename:
-	.byte "ENDING",0
+	.byte 0
 
 ootw_c1_filename:
-	.byte "OOTW_C1",0
+	.byte 0
 
 ootw_c2_filename:
-	.byte "OOTW_C2",0
+	.byte 0
 
 ootw_c3_filename:
-	.byte "OOTW_C3",0
+	.byte 0
 
 ootw_c4_filename:
-	.byte "OOTW_C4",0
+	.byte 0
 
 ootw_c5_filename:
-	.byte "OOTW_C5",0
+	.byte 0
+
+ootw_c6_filename:
+	.byte "OOTW_C6",0
+
+ootw_c7_filename:
+	.byte "OOTW_C7",0
+
+ootw_c8_filename:
+	.byte "OOTW_C8",0
+
+ootw_c9_filename:
+	.byte "OOTW_9",0
+
+ootw_c10_filename:
+	.byte "OOTW_C10",0
+
+ootw_c11_filename:
+	.byte "OOTW_C11",0
+
+ootw_c12_filename:
+	.byte "OOTW_C12",0
+
+ootw_c13_filename:
+	.byte "OOTW_C13",0
+
+ootw_c14_filename:
+	.byte "OOTW_C14",0
+
+ootw_c15_filename:
+	.byte "OOTW_C15",0
+
+ending_filename:
+	.byte "ENDING",0
 
 
 

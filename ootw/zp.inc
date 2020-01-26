@@ -7,7 +7,10 @@ LZ4_DST		= $02
 LZ4_END		= $04
 WHICH_LOAD	= $05
 COUNT		= $06
+MENU_BASE	= $06
+MENU_HIGHLIGHT	= $07
 DELTA		= $08
+
 
 ;; Zero page monitor routines addresses
 

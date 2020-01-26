@@ -43,6 +43,7 @@ print_string:
 print_string_loop:
 	lda	(OUTL),Y
 	beq	done_print_string
+ps_smc1:
 	eor	#$80			; flip from ASCII to text char
 	sta	(BASL),Y
 	iny
