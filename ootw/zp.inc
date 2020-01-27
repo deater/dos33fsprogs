@@ -85,8 +85,8 @@ SAMPLE_H        = $83
 
 LOOP            = $84
 MB_VALUE        = $85
-MB_ADDRL        = $86
-MB_ADDRH        = $87
+MB_ADDR_L	= $86
+MB_ADDR_H	= $87
 DONE_PLAYING    = $88
 DONE_SONG       = $89
 PT3_TEMP	= $8A

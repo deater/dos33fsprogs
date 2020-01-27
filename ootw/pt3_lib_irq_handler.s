@@ -2,7 +2,8 @@
 
 pt3_irq_handler:
 
-	bit	$C404		; clear 6522 interrupt by reading T1C-L	; 4
+pt3_irq_smc1:
+	bit	MOCK_6522_T1CL	; clear 6522 interrupt by reading T1C-L	; 4
 
 	lda	DONE_PLAYING						; 3
 	beq	pt3_play_music	; if song done, don't play music	; 3/2nt
@@ -74,22 +75,28 @@ mb_not_13:
 
 
 	; address
+pt3_irq_smc2:
 	stx	MOCK_6522_ORA1		; put address on PA1		; 4
 	stx	MOCK_6522_ORA2		; put address on PA2		; 4
 	ldy	#MOCK_AY_LATCH_ADDR	; latch_address for PB1		; 2
+pt3_irq_smc3:
 	sty	MOCK_6522_ORB1		; latch_address on PB1          ; 4
 	sty	MOCK_6522_ORB2		; latch_address on PB2		; 4
 	ldy	#MOCK_AY_INACTIVE	; go inactive			; 2
+pt3_irq_smc4:
 	sty	MOCK_6522_ORB1						; 4
 	sty	MOCK_6522_ORB2						; 4
 
         ; value
+pt3_irq_smc5:
 	sta	MOCK_6522_ORA1		; put value on PA1		; 4
 	sta	MOCK_6522_ORA2		; put value on PA2		; 4
 	lda	#MOCK_AY_WRITE		;				; 2
+pt3_irq_smc6:
 	sta	MOCK_6522_ORB1		; write on PB1			; 4
-	sta	MOCK_6522_ORB2		; write on PB2			; 4
 	sty	MOCK_6522_ORB1						; 4
+pt3_irq_smc7:
+	sta	MOCK_6522_ORB2		; write on PB2			; 4
 	sty	MOCK_6522_ORB2						; 4
 								;===========
 								; 	56

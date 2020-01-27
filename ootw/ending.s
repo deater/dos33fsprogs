@@ -1,5 +1,6 @@
-; ootw
-; quick demo of what the ending might be like
+; ootw -- It's the End of the Game as We Know It
+
+; TODO: missing a bunch of frames
 
 
 ; by Vince "Deater" Weaver	<vince@deater.net>
@@ -12,16 +13,54 @@ ending:
 	;=========================
 	; set up sound
 	;=========================
-
-	jsr	pt3_setup
+	lda	#0
+	sta	DONE_PLAYING
 
 	lda	#1
 	sta	LOOP
 
+	; detect mockingboard
 
-;	jmp	quit_level
+	jsr	mockingboard_detect
 
-;	jsr	wait_until_keypressed
+	bcc	mockingboard_notfound
+
+mockingboard_found:
+
+;	jsr	mockingboard_patch	; patch to work in slots other than 4?
+
+	;=======================
+	; Set up 50Hz interrupt
+	;========================
+
+	jsr	mockingboard_init
+	jsr	mockingboard_setup_interrupt
+
+	;============================
+	; Init the Mockingboard
+	;============================
+
+	jsr	reset_ay_both
+	jsr	clear_ay_both
+
+	;==================
+	; init song
+	;==================
+
+	jsr	pt3_init_song
+
+
+	jmp	done_setup_sound
+
+mockingboard_notfound:
+	; patch out cli/sei calls
+
+	lda	#$EA
+	sta	cli_smc
+	sta	sei_smc
+
+
+done_setup_sound:
 
 repeat_ending:
 
@@ -132,11 +171,12 @@ repeat_ending:
 	jsr	gr_overlay
 	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
 
 	; start music
 
+cli_smc:
 	cli	; enable interrupts
 
 	ldx	#240
@@ -691,7 +731,19 @@ print_loop:
 
 	jsr	wait_until_keypressed
 
-	jmp	repeat_ending
+	; disable music
+
+	jsr	clear_ay_both
+sei_smc:
+	sei
+
+	; reboot to title
+
+	lda	#$ff			; force cold reboot
+	sta	$03F4
+	jmp	($FFFC)
+
+;	jmp	repeat_ending
 
 
 ; 0123456789012345678901234567890123456789
@@ -798,9 +850,8 @@ long_wait:
 .include "pt3_lib_core.s"
 .include "pt3_lib_init.s"
 .include "interrupt_handler.s"
-.include "pt3_lib_mockingboard.s"
-
-.include "pt3_setup.s"
+.include "pt3_lib_mockingboard_detect.s"
+.include "pt3_lib_mockingboard_setup.s"
 
 
 
