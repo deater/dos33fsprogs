@@ -21,7 +21,7 @@ ending:
 
 ;	jmp	quit_level
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
 repeat_ending:
 
@@ -43,9 +43,6 @@ repeat_ending:
 	lda	#1
 	sta	DISP_PAGE
 
-
-
-
 	;===========================
 	; show some pictures
 	;============================
@@ -55,52 +52,52 @@ repeat_ending:
 	; bath
 	;==================
 
-	lda	#>(bath_rle)
-	sta	GBASH
-	lda	#<(bath_rle)
-	sta	GBASL
-	lda	#$c			; load image off-screen $c00
-	jsr	load_rle_gr
+;	lda	#>(bath_rle)
+;	sta	GBASH
+;	lda	#<(bath_rle)
+;	sta	GBASL
+;	lda	#$c			; load image off-screen $c00
+;	jsr	load_rle_gr
 
 
-	jsr	gr_copy_to_current
-	jsr	page_flip
+;	jsr	gr_copy_to_current
+;	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
 	;==================
 	; battle
 	;==================
 
-	lda	#>(battle_rle)
-	sta	GBASH
-	lda	#<(battle_rle)
-	sta	GBASL
-	lda	#$c			; load image off-screen $c00
-	jsr	load_rle_gr
+;	lda	#>(battle_rle)
+;	sta	GBASH
+;	lda	#<(battle_rle)
+;	sta	GBASL
+;	lda	#$c			; load image off-screen $c00
+;	jsr	load_rle_gr
 
 
-	jsr	gr_copy_to_current
-	jsr	page_flip
+;	jsr	gr_copy_to_current
+;	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
 	;==================
 	; grabbed
 	;==================
 
-	lda	#>(grabbed_rle)
-	sta	GBASH
-	lda	#<(grabbed_rle)
-	sta	GBASL
-	lda	#$c			; load image off-screen $c00
-	jsr	load_rle_gr
+;	lda	#>(grabbed_rle)
+;	sta	GBASH
+;	lda	#<(grabbed_rle)
+;	sta	GBASL
+;	lda	#$c			; load image off-screen $c00
+;	jsr	load_rle_gr
 
 
-	jsr	gr_copy_to_current
-	jsr	page_flip
+;	jsr	gr_copy_to_current
+;	jsr	page_flip
 
-	jsr	wait_until_keypressed
+;	jsr	wait_until_keypressed
 
 	;===========================
 	; ending sequence
@@ -808,7 +805,7 @@ long_wait:
 
 
 ; backgrounds
-.include "ootw_graphics/l15final/ootw_c15_final.inc"
+;.include "ootw_graphics/l15final/ootw_c15_final.inc"
 .include "ootw_graphics/l16end/ootw_c16_end.inc"
 
 PT3_LOC = song
@@ -817,8 +814,3 @@ PT3_LOC = song
 .align 256
 song:
 .incbin "ootw_audio/ootw_outro.pt3"
-
-
-
-
-
