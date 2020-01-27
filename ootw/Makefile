@@ -190,7 +190,7 @@ ootw_c9.o:	ootw_c9.s \
 	keyboard.s gr_run_sequence.s physicist.s \
 	collision.s door.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
-	ootw_graphics/l14arena/ootw_c14_arena.inc
+	ootw_graphics/l9swim/ootw_c9_swim.inc
 	ca65 -o ootw_c9.o ootw_c9.s -l ootw_c9.lst
 
 ###
@@ -204,7 +204,7 @@ ootw_c10.o:	ootw_c10.s \
 	keyboard.s gr_run_sequence.s physicist.s \
 	collision.s door.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
-	ootw_graphics/l14arena/ootw_c14_arena.inc
+	ootw_graphics/l9swim/ootw_c9_swim.inc
 	ca65 -o ootw_c10.o ootw_c10.s -l ootw_c10.lst
 
 ###
