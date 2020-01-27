@@ -1,42 +1,71 @@
 ; Ootw for Apple II Lores
-; Checkpoint-15 (it's the end of the game as we know it)
+; Checkpoint-15 (arrival at the baths)
 
-; by Vince "Deater" Weaver	<vince@deater.net>
+; by Vince "DEATER" Weaver	<vince@deater.net>
 
 .include "zp.inc"
 .include "hardware.inc"
 
 
-ootw_c15:
+	;============================
+	; ENTRY POINT FOR LEVEL
+	;============================
 
-	; Initialize some variables
+ootw_c15:
+	; Initializing when entering level for first time
+
+
+	;========================================================
+	; RESTART: called when restarting level (after game over)
+	;========================================================
 
 ootw_c15_restart:
 
+	;===================================
+	; re-initialize level state
+	;===================================
+
 	jsr	ootw_c15_level_init
 
-	;=========================
-	; c15_new_cave
-	;=========================
-	; enter new cave on level 15
+	;===========================
+	; c15_new_room
+	;===========================
+	; enter new room on level 15
 
-c15_new_cave:
+c15_new_room:
 	lda	#0
 	sta	GAME_OVER
 
-	jsr	ootw_c15_level
+	;====================================
+	; Initialize room based on WHICH_ROOM
+	; and then play until we exit
+	;====================================
 
+	jsr	ootw_c15_setup_room_and_play
+
+
+	;====================================
+	; we exited the room
+	;====================================
 c15_check_done:
-	lda	GAME_OVER
+
+	lda	GAME_OVER		; if died or quit, jump to quit level
 	cmp	#$ff
 	beq	quit_level
 
-	; only exit if done level
-	; FIXME: or quit pressed?
+	;=====================================================
+	; Check to see which room to enter next
+	; If it's a special value, means we succesfully beat the level
+c15_defeated:
+	lda     WHICH_ROOM
+	cmp	#$ff
+	bne	c15_new_room
 
-	lda	WHICH_JAIL
-	cmp	#11
-	bne	c15_new_cave
+	; point to next level
+	; and exit to the level loader
+	lda	#16
+	sta	WHICH_LOAD
+	rts
 
 
 ;===========================
@@ -44,14 +73,14 @@ c15_check_done:
 ;===========================
 
 quit_level:
-	jsr	TEXT
-	jsr	HOME
-	lda	KEYRESET		; clear strobe
+	jsr	TEXT			; text mode
+	jsr	HOME			; clear screen
+	lda	KEYRESET		; clear keyboard state
 
-	lda	#0
+	lda	#0			; set to PAGE0
 	sta	DRAW_PAGE
 
-	lda	#<end_message
+	lda	#<end_message		; print the end message
 	sta	OUTL
 	lda	#>end_message
 	sta	OUTH
@@ -60,7 +89,7 @@ quit_level:
 	jsr	move_and_print
 
 wait_loop:
-	lda	KEYPRESS
+	lda	KEYPRESS		; wait for keypress
 	bpl	wait_loop
 
 	lda	KEYRESET		; clear strobe
@@ -68,7 +97,7 @@ wait_loop:
 	lda	#0
 	sta	GAME_OVER
 
-	jmp	ootw_c15_restart
+	jmp	ootw_c15_restart	; restart level
 
 
 ;=========================================
@@ -104,7 +133,7 @@ ootw_c15_level_init:
 	;===========================
 	;===========================
 
-ootw_c15_level:
+ootw_c15_setup_room_and_play:
 
 	;==============================
 	; each room init
@@ -124,18 +153,18 @@ ootw_c15_level:
 room:
 	lda	#(20+128)
 	sta	LEFT_LIMIT
-	lda	#(38+128)
+	lda	#(39+128)
 	sta	RIGHT_LIMIT
 
 	; set right exit
-	lda     #1
+	lda     #$ff			; exit level if exit this way
 	sta     cer_smc+1
 
 	; set left exit
 	lda     #0
 	sta     cel_smc+1
 
-	lda	#14
+	lda	#20
 	sta	PHYSICIST_Y
 
 	; load background
