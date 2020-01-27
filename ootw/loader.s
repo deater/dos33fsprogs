@@ -42,6 +42,7 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 				;   process
 
 
+	FILENAME = $280
 
 	;===================================================
 	;===================================================
@@ -110,13 +111,20 @@ load_ending:
 	sta	OUTH
 	; fallthrough
 
+
+	;===================================================
+	;===================================================
+	; SET UP DOS3.3 FILENAME
+	;===================================================
+	;===================================================
+
 opendir_filename:
 
 	; clear out the filename with $A0 (space)
 
-	lda	#<filename
+	lda	#<FILENAME
 	sta	namlo
-	lda	#>filename
+	lda	#>FILENAME
 	sta	namhi
 
 	ldy	#29
@@ -145,10 +153,10 @@ copy_filename_done:
 	jmp	which_load_loop
 
 ; filename to open is 30-character Apple text, must be padded with space ($A0)
-filename:
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+;filename:
+;	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+;	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+;	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
 
 intro_filename:
 	.byte "INTRO",0
@@ -159,6 +167,13 @@ ending_filename:
 ootw_filename:
 	.byte "OOTW_C",0,0,0
 
+
+
+	;===================================================
+	;===================================================
+	; INIT (build nibble table)
+	;===================================================
+	;===================================================
 
                 ;unhook DOS and build nibble table
 
@@ -185,6 +200,7 @@ init:
 	clc
 	adc	#8
 	sta	mlsmc02+1
+	sta	mlsmc07+1
 
 	; c0e9
 	clc
@@ -230,9 +246,57 @@ L3:	inx			; increment x	x=4, a=0f
 
 	rts
 
-	;===========================
-	; opendir
-	;===========================
+
+	;===================================================
+	;===================================================
+	; file not found
+	;===================================================
+	;===================================================
+
+file_not_found:
+
+mlsmc07:lda	$c0e8		; turn off drive motor?
+
+	jsr	HOME
+
+	ldy	#0
+
+	lda	#<disk_string
+	sta	OUTL
+	lda	#>disk_string
+	sta	OUTH
+
+quick_print:
+	lda	(OUTL),Y
+	beq	quick_print_done
+	jsr	COUT1
+	iny
+	jmp	quick_print
+
+quick_print_done:
+;	rts
+
+;	jsr	quick_print
+
+fnf_keypress:
+	lda	KEYPRESS
+	bpl	fnf_keypress
+	bit	KEYRESET
+
+	jmp	which_load_loop
+
+disk_string:
+.byte "INSERT OTHER DISK, PRESS RETURN",0
+
+
+
+
+
+	;===================================================
+	;===================================================
+	; OPENDIR: actually load the file
+	;===================================================
+	;===================================================
 
 	; turn on drive and read volume table of contents
 opendir:
@@ -248,7 +312,7 @@ firstent:
 
 	; lock if entry not found
 entry_not_found:
-	beq	entry_not_found
+	beq	file_not_found
 
 	; read directory sector
 
@@ -401,8 +465,6 @@ L6:
 	; restore current address
 readdone:
 	pla
-;	sta	adrhi
-;	pla
 	sta	adrlo			; code originally had this backwards
 	pla
 	sta	adrhi
@@ -612,183 +674,6 @@ L26:
 	inc	step
 	bne	copy_cur
 
-
-.if 0
-	;==============================
-	; old code
-
-
-	; [re-]read sector
-
-re_read_addr:
-	jsr	readadr
-
-repeat_until_right_sector:
-	cmp	reqsec
-	bne	re_read_addr
-
-	;==========================
-	; read sector data
-	;==========================
-	;
-
-readdata:
-mlsmc07:
-	ldy	$c0ec		; read data until valid
-	bpl	readdata
-find_D5:
-	cpy	#$d5		; if not D5, repeat
-	bne	readdata
-find_AA:
-mlsmc08:
-	ldy	$c0ec		; read data until valid, should be AA
-	bpl	find_AA
-	cpy	#$aa		; we need Y=#$AA later
-	bne	find_D5
-find_AD:
-mlsmc09:lda	$c0ec		; read data until high bit set (valid)
-	bpl	find_AD
-	eor	#$ad		; should match $ad
-	bne	*		; lock if didn't find $ad (failure)
-L12:
-mlsmc0A:ldx	$c0ec		; read data until high bit set (valid)
-	bpl	L12
-	eor	nibtbl-$80, x
-	sta	bit2tbl-$aa, y
-	iny
-	bne	L12
-L13:
-mlsmc0B:ldx	$c0ec		; read data until high bit set (valid)
-	bpl	L13
-	eor	nibtbl-$80, x
-	sta	(adrlo), y	; the real address
-	iny
-	cpy	secsize
-	bne 	L13
-	ldy	#0
-L14:
-	ldx	#$a9
-L15:
-	inx
-	beq	L14
-	lda	(adrlo), y
-	lsr	bit2tbl-$aa, x
-	rol
-	lsr	bit2tbl-$aa, x
-	rol
-	sta	(adrlo), y
-	iny
-	cpy	secsize
-	bne	L15
-	rts
-
-	; no tricks here, just the regular stuff
-
-	;=================
-	; readadr -- read address field
-	;=================
-	; Find address field, put track in cutrk, sector in tmpsec
-readadr:
-mlsmc0C:lda	$c0ec		; read data until we find a $D5
-	bpl	readadr
-adr_d5:
-	cmp	#$d5
-	bne	readadr
-
-adr_aa:
-mlsmc0D:lda	$c0ec		; read data until we find a $AA
-	bpl	adr_aa
-	cmp	#$aa
-	bne	adr_d5
-
-adr_96:
-mlsmc0E:lda	$c0ec		; read data until we find a $96
-	bpl	adr_96
-	cmp	#$96
-	bne	adr_d5
-
-	ldy	#3		; three?
-				; first read volume/volume
-				; then track/track
-				; then sector/sector?
-adr_read_two_bytes:
-	sta	curtrk		; store out current track
-	tax
-L20:
-mlsmc0F:lda	$c0ec		; read until full value
-	bpl	L20
-	rol
-	sta	tmpsec
-L21:
-mlsmc10:lda	$c0ec		; read until full value
-	bpl	L21		; sector value is (v1<<1)&v2????
-	and	tmpsec
-	dey			; loop 3 times
-	bne	adr_read_two_bytes
-
-seekret:
-	rts			; return
-
-	;================
-	; SEEK
-	;================
-	; current track in curtrk
-	; desired track in phase
-
-seek:
-	asl	curtrk		; multiply by 2
-	asl	phase		; multiply by 2
-	lda	#0
-	sta	step
-copy_cur:
-	lda	curtrk		; load current track
-	sta	tmptrk		; store as temptrk
-	sec			; calc current-desired
-	sbc	phase
-	beq	seekret		; if they match, we are done!
-
-	bcs	seek_neg	; if negative, skip ahead
-	eor	#$ff		; ones-complement the distance
-	inc	curtrk		; increment current (make it 2s comp?)
-	bcc	L114		; skip ahead
-seek_neg:
-	adc	#$fe
-	dec	curtrk
-L114:
-	cmp	step
-	bcc	L115
-	lda	step
-L115:
-	cmp	#8
-	bcs	L116
-	tay
-	sec
-L116:
-	lda	curtrk
-	ldx	step1, y
-	bne	L118
-L117:
-	clc
-	lda	tmptrk
-	ldx	step2, y
-L118:
-	stx	tmpsec
-	and	#3
-	rol
-	tax
-mlsmc11:sta	$c0e0, x
-L119:
-	ldx	#$13
-L120:
-	dex
-	bne	L120
-	dec	tmpsec
-	bne	L119
-	lsr
-	bcs	L117
-	inc	step
-	bne	copy_cur
-.endif
 
 
 step1:	.byte $01, $30, $28, $24, $20, $1e, $1d, $1c

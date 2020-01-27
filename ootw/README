@@ -80,7 +80,7 @@ Development notes:
 Ootw Memory map:
 	00	zero page
 	01	stack
-	02	????
+	02	disk-filename (30 bytes)
 	03	nibble table/disk data
 	04-07	GR page0
 	08-0b	GR page1
@@ -96,7 +96,7 @@ Ootw Memory map:
 Intro Memory map:
 	00	zero page
 	01	stack
-	02	????
+	02	disk filename (30 bytes)
 	03	nibble table/disk data
 	04-07	GR page0
 	08-0b	GR page1
@@ -163,20 +163,21 @@ ootw2 memory squeeze:
 
 
 LOADER=1400		TITLE=1.75k = 7 pages = load at $D00
-
+	2560 max size allowed
 
 
 L2 Memory map:
 	00	zero page
 	01	stack
-	02	????
+	02	disk-filename
 	03	nibble table/disk data
 	04-07	GR page0
 	08-0b	GR page1
 	0c-0f	offscreen data  ($c00 = disk load buffer)
 	10-13	offscreen data2
 	14-16	loader
-	
+
+	17+	game	
 
 	c0-cf	I/O
 	d0-ff	ROM
