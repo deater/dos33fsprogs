@@ -49,11 +49,11 @@ ootw_cave:
 cave0:
 	lda	#(0+128)
 	sta	LEFT_LIMIT
-	lda	#(38+128)
+	lda	#(39+128)
 	sta	RIGHT_LIMIT
 
 	; set right exit
-	lda     #1
+	lda     #$ff
 	sta     cer_smc+1
 
 	; set left exit

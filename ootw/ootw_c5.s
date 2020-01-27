@@ -31,12 +31,16 @@ c5_check_done:
 	cmp	#$ff
 	beq	quit_level
 
-	; only exit if done level
-	; FIXME: or quit pressed?
-
 	lda	WHICH_JAIL
-	cmp	#11
+	cmp	#$ff
 	bne	c5_new_cave
+
+	; point to next level
+	; and exit to the level loader
+	lda	#6
+	sta	WHICH_LOAD
+	rts
+
 
 
 ;===========================
