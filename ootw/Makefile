@@ -150,7 +150,7 @@ ootw_c6.o:	ootw_c6.s \
 	keyboard.s gr_run_sequence.s physicist.s \
 	collision.s door.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
-	ootw_graphics/l14arena/ootw_c14_arena.inc
+	ootw_graphics/l6cave/ootw_c6_cave.inc
 	ca65 -o ootw_c6.o ootw_c6.s -l ootw_c6.lst
 ###
 
@@ -232,7 +232,7 @@ ootw_c12.o:	ootw_c12.s \
 	keyboard.s gr_run_sequence.s physicist.s \
 	collision.s door.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
-	ootw_graphics/l14arena/ootw_c14_arena.inc
+	ootw_graphics/l12room/ootw_c12_room.inc
 	ca65 -o ootw_c12.o ootw_c12.s -l ootw_c12.lst
 
 ###
@@ -246,7 +246,7 @@ ootw_c13.o:	ootw_c13.s \
 	keyboard.s gr_run_sequence.s physicist.s \
 	collision.s door.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
-	ootw_graphics/l14arena/ootw_c14_arena.inc
+	ootw_graphics/l13room/ootw_c13_room.inc
 	ca65 -o ootw_c13.o ootw_c13.s -l ootw_c13.lst
 
 
