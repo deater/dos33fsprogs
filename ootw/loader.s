@@ -50,7 +50,7 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 	;===================================================
 	;===================================================
 
-start:
+loader_start:
 	jsr	init	; unhook DOS, init nibble table
 
 
@@ -706,3 +706,6 @@ sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
 ;filbuf:		.res 4			;	= bit2tbl+86
 					;dataend         = filbuf+4
 
+loader_end:
+
+.assert (<loader_end - <loader_start)>3, error, "loader too big"
