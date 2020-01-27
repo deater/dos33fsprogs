@@ -488,7 +488,7 @@ done_room:
 
 end_message:
 .byte	8,10,"PRESS RETURN TO CONTINUE",0
-.byte	11,20,"ACCESS CODE: ANKD",0
+.byte	11,20,"ACCESS CODE: TANK",0
 
 .include "text_print.s"
 .include "gr_pageflip.s"
