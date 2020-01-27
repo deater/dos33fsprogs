@@ -218,7 +218,7 @@ ootw_c11.o:	ootw_c11.s \
 	keyboard.s gr_run_sequence.s physicist.s \
 	collision.s door.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
-	ootw_graphics/l14arena/ootw_c14_arena.inc
+	ootw_graphics/l11above/ootw_c11_room.inc
 	ca65 -o ootw_c11.o ootw_c11.s -l ootw_c11.lst
 
 ###
