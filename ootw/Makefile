@@ -20,10 +20,12 @@ ootw.dsk:	HELLO TITLE INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 AUDIO_TEST
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 COMPRESS-TEST
 
-ootw_side2.dsk:	HELLO TITLE ENDING OOTW_C15
+ootw_side2.dsk:	HELLO TITLE ENDING \
+	OOTW_C14 OOTW_C15
 	cp empty.dsk ootw_side2.dsk
 	$(DOS33) -y ootw_side2.dsk SAVE A HELLO HELLO
 	$(DOS33) -y ootw_side2.dsk BSAVE -a 0xd00 TITLE
+	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C14
 	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C15
 	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 ENDING
 
@@ -130,6 +132,20 @@ ootw_c5.o:	ootw_c5.s \
 
 ###
 
+OOTW_C14:	ootw_c14.o
+	ld65 -o OOTW_C14 ootw_c14.o -C ../linker_scripts/apple2_1700.inc
+
+ootw_c14.o:	ootw_c14.s \
+	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
+	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
+	keyboard.s gr_run_sequence.s physicist.s \
+	collision.s door.s gun.s blast.s shield.s \
+	ootw_graphics/sprites/physicist.inc \
+	ootw_graphics/l14arena/ootw_c14_arena.inc
+	ca65 -o ootw_c14.o ootw_c14.s -l ootw_c14.lst
+
+###
+
 OOTW_C15:	ootw_c15.o
 	ld65 -o OOTW_C15 ootw_c15.o -C ../linker_scripts/apple2_1700.inc
 
@@ -139,7 +155,7 @@ ootw_c15.o:	ootw_c15.s \
 	keyboard.s gr_run_sequence.s physicist.s \
 	collision.s door.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
-	ootw_graphics/l5cave/ootw_c5_cave.inc
+	ootw_graphics/l15final/ootw_c15_final.inc
 	ca65 -o ootw_c15.o ootw_c15.s -l ootw_c15.lst
 
 
