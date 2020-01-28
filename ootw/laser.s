@@ -1,4 +1,3 @@
-
 ; FIXME: merge a lot of the target code
 
 ; Handle laser
@@ -46,10 +45,22 @@ laser1_count:		.byte $0
 fire_laser:
 	lda	PHYSICIST_X
 
-	; FIXME: if facing right, add 5 to this value
-	;	to allow shooting through shield
+	; adjust so laser pokes out from shield
 
+	ldx	DIRECTION	; 0=left, 1=right
+	beq	laser_facing_left
+
+	clc
+	adc	#5	; only add 5 if facing right
+	jmp	laser_done_adjust
+
+laser_facing_left:
+	sec
+	sbc	#2	; decrement 2 if facing left
+
+laser_done_adjust:
 	sta	COLLISION_X
+
 	lda	PHYSICIST_Y
 	sta	COLLISION_Y
 

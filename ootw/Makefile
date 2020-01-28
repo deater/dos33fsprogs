@@ -134,7 +134,7 @@ ootw_c5.o:	ootw_c5.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s ootw_c5_cave.s \
-	collision.s door.s gun.s blast.s shield.s \
+	collision.s door.s laser.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l5cave/ootw_c5_cave.inc
 	ca65 -o ootw_c5.o ootw_c5.s -l ootw_c5.lst
@@ -148,7 +148,7 @@ ootw_c6.o:	ootw_c6.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
-	collision.s door.s gun.s blast.s shield.s \
+	collision.s door.s laser.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l6cave/ootw_c6_cave.inc
 	ca65 -o ootw_c6.o ootw_c6.s -l ootw_c6.lst
@@ -161,7 +161,7 @@ ootw_c7.o:	ootw_c7.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
-	collision.s door.s gun.s blast.s shield.s \
+	collision.s door.s laser.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l7cave/ootw_c7_cave.inc
 	ca65 -o ootw_c7.o ootw_c7.s -l ootw_c7.lst
@@ -174,7 +174,7 @@ ootw_c8.o:	ootw_c8.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
-	collision.s door.s gun.s blast.s shield.s \
+	collision.s door.s laser.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l8crawl/ootw_c8_crawl.inc
 	ca65 -o ootw_c8.o ootw_c8.s -l ootw_c8.lst
@@ -188,7 +188,7 @@ ootw_c9.o:	ootw_c9.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
-	collision.s door.s gun.s blast.s shield.s \
+	collision.s door.s laser.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l9swim/ootw_c9_swim.inc
 	ca65 -o ootw_c9.o ootw_c9.s -l ootw_c9.lst
@@ -202,7 +202,7 @@ ootw_c10.o:	ootw_c10.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
-	collision.s door.s gun.s blast.s shield.s \
+	collision.s door.s laser.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l9swim/ootw_c9_swim.inc
 	ca65 -o ootw_c10.o ootw_c10.s -l ootw_c10.lst
@@ -216,7 +216,7 @@ ootw_c11.o:	ootw_c11.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
-	collision.s door.s gun.s blast.s shield.s \
+	collision.s door.s laser.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l11above/ootw_c11_room.inc
 	ca65 -o ootw_c11.o ootw_c11.s -l ootw_c11.lst
@@ -230,7 +230,7 @@ ootw_c12.o:	ootw_c12.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
-	collision.s door.s gun.s blast.s shield.s \
+	collision.s door.s laser.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l12room/ootw_c12_room.inc
 	ca65 -o ootw_c12.o ootw_c12.s -l ootw_c12.lst
@@ -244,7 +244,7 @@ ootw_c13.o:	ootw_c13.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
-	collision.s door.s gun.s blast.s shield.s \
+	collision.s door.s laser.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l13room/ootw_c13_room.inc
 	ca65 -o ootw_c13.o ootw_c13.s -l ootw_c13.lst
@@ -261,7 +261,7 @@ ootw_c14.o:	ootw_c14.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
-	collision.s door.s gun.s blast.s shield.s \
+	collision.s door.s laser.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l14arena/ootw_c14_arena.inc
 	ca65 -o ootw_c14.o ootw_c14.s -l ootw_c14.lst
@@ -275,7 +275,7 @@ ootw_c15.o:	ootw_c15.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
 	keyboard.s gr_run_sequence.s physicist.s \
-	collision.s door.s gun.s blast.s shield.s \
+	collision.s door.s laser.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l15final/ootw_c15_final.inc
 	ca65 -o ootw_c15.o ootw_c15.s -l ootw_c15.lst
