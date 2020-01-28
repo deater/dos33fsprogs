@@ -176,7 +176,7 @@ ootw_c8.o:	ootw_c8.s \
 	keyboard.s gr_run_sequence.s physicist.s \
 	collision.s door.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
-	ootw_graphics/l14arena/ootw_c14_arena.inc
+	ootw_graphics/l8crawl/ootw_c8_crawl.inc
 	ca65 -o ootw_c8.o ootw_c8.s -l ootw_c8.lst
 
 ###
