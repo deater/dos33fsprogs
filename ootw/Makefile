@@ -163,7 +163,7 @@ ootw_c7.o:	ootw_c7.s \
 	keyboard.s gr_run_sequence.s physicist.s \
 	collision.s door.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
-	ootw_graphics/l14arena/ootw_c14_arena.inc
+	ootw_graphics/l7cave/ootw_c7_cave.inc
 	ca65 -o ootw_c7.o ootw_c7.s -l ootw_c7.lst
 ###
 

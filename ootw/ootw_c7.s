@@ -169,9 +169,9 @@ room:
 	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(arena_rle)
+	lda	#>(cave_rle)
 	sta	GBASH
-	lda	#<(arena_rle)
+	lda	#<(cave_rle)
 
 	jmp	room_setup_done
 
@@ -518,7 +518,7 @@ end_message:
 .include "collision.s"
 
 ; room backgrounds
-.include "ootw_graphics/l14arena/ootw_c14_arena.inc"
+.include "ootw_graphics/l7cave/ootw_c7_cave.inc"
 ; sprites
 .include "ootw_graphics/sprites/physicist.inc"
 .include "ootw_graphics/sprites/alien.inc"
