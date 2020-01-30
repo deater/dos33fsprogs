@@ -257,6 +257,7 @@ file_not_found:
 
 mlsmc07:lda	$c0e8		; turn off drive motor?
 
+	jsr	TEXT
 	jsr	HOME
 
 	ldy	#0
