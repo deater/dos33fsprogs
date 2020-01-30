@@ -515,6 +515,8 @@ fall_down_destination_smc:
 	bne	still_falling_down
 done_falling_down:
 
+	jsr	recalc_walk_collision
+
 	lda	#P_CROUCHING
 	sta	PHYSICIST_STATE
 	jmp	physicist_crouching

@@ -118,6 +118,10 @@ wait_loop:
 	jmp	ootw
 
 
+	; hack, we don't have doors in l1
+recalc_walk_collision:
+	rts
+
 end_message:
 .byte	8,10,"PRESS RETURN TO CONTINUE",0
 .byte	11,20,"ACCESS CODE: IH8S",0
