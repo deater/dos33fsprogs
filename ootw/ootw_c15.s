@@ -157,7 +157,7 @@ room:
 	sta	RIGHT_LIMIT
 
 	; set right exit
-	lda     #$ff			; exit level if exit this way
+	lda     #1
 	sta     cer_smc+1
 
 	; set left exit
@@ -174,33 +174,161 @@ room:
 
 	jmp	room_setup_done
 
-	; ????
+	;===============================
+	; Room1 -- first walkway
+	;===============================
 room1:
-;	cmp	#1
-;	bne	room2
+	cmp	#1
+	bne	room2
 
-;	lda	#(-4+128)
-;	sta	LEFT_LIMIT
-;	lda	#(39+128)
-;	sta	RIGHT_LIMIT
+	lda	#(-4+128)
+	sta	LEFT_LIMIT
+	lda	#(39+128)
+	sta	RIGHT_LIMIT
 
 	; set right exit
-;	lda     #2
-;	sta     cer_smc+1
+	lda     #2
+	sta     cer_smc+1
 
 	; set left exit
-;	lda     #0
-;	sta     cel_smc+1
+	lda     #0
+	sta     cel_smc+1
 
-;	lda	#8
-;	sta	PHYSICIST_Y
+	lda	#8
+	sta	PHYSICIST_Y
 
 	; load background
-;	lda	#>(hallway_rle)
-;	sta	GBASH
-;	lda	#<(hallway_rle)
+	lda	#>(walkway1_rle)
+	sta	GBASH
+	lda	#<(walkway1_rle)
 
 	jmp	room_setup_done
+
+	;===============================
+	; Room2 -- second walkway
+	;===============================
+room2:
+	cmp	#2
+	bne	room3
+
+	lda	#(-4+128)
+	sta	LEFT_LIMIT
+	lda	#(39+128)
+	sta	RIGHT_LIMIT
+
+	; set right exit
+	lda     #3
+	sta     cer_smc+1
+
+	; set left exit
+	lda     #1
+	sta     cel_smc+1
+
+	lda	#8
+	sta	PHYSICIST_Y
+
+	; load background
+	lda	#>(walkway2_rle)
+	sta	GBASH
+	lda	#<(walkway2_rle)
+
+	jmp	room_setup_done
+
+	;===============================
+	; Room3 -- third walkway
+	;===============================
+room3:
+	cmp	#3
+	bne	room4
+
+	lda	#(-4+128)
+	sta	LEFT_LIMIT
+	lda	#(39+128)
+	sta	RIGHT_LIMIT
+
+	; set right exit
+	lda     #4
+	sta     cer_smc+1
+
+	; set left exit
+	lda     #2
+	sta     cel_smc+1
+
+	lda	#8
+	sta	PHYSICIST_Y
+
+	; load background
+	lda	#>(walkway3_rle)
+	sta	GBASH
+	lda	#<(walkway3_rle)
+
+	jmp	room_setup_done
+
+	;===============================
+	; Room4 -- above pit
+	;===============================
+room4:
+	cmp	#4
+	bne	room5
+
+	lda	#(-4+128)
+	sta	LEFT_LIMIT
+	lda	#(39+128)
+	sta	RIGHT_LIMIT
+
+	; set right exit
+	lda     #5
+	sta     cer_smc+1
+
+	; set left exit
+	lda     #3
+	sta     cel_smc+1
+
+	lda	#24
+	sta	PHYSICIST_Y
+
+	; load background
+	lda	#>(above_pit_rle)
+	sta	GBASH
+	lda	#<(above_pit_rle)
+
+	jmp	room_setup_done
+
+	;===============================
+	; Room5 -- final scene
+	;===============================
+room5:
+;	cmp	#4
+;	bne	room5
+
+	lda	#(-4+128)
+	sta	LEFT_LIMIT
+	lda	#(39+128)
+	sta	RIGHT_LIMIT
+
+	; set right exit
+	lda     #$ff		; exit level when done
+	sta     cer_smc+1
+
+	; set left exit
+	lda     #4
+	sta     cel_smc+1
+
+	lda	#24
+	sta	PHYSICIST_Y
+
+	; load background
+	lda	#>(final_rle)
+	sta	GBASH
+	lda	#<(final_rle)
+
+;	jmp	room_setup_done
+
+
+
+
+
+
 
 room_setup_done:
 
