@@ -152,7 +152,7 @@ ootw_c8_setup_room_and_play:
 	; Room0 -- the arena
 	;===============================
 room:
-	lda	#(2+128)
+	lda	#(0+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
 	sta	RIGHT_LIMIT
