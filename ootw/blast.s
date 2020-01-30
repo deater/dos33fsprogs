@@ -18,8 +18,19 @@ fire_blast:
 
 	lda	PHYSICIST_X
 
-	; FIXME: if facing right, add 5 to this value
-	;	to allow shooting through shield
+	ldx	DIRECTION	; 0=left, 1=right
+	beq	blast_facing_left
+
+	clc
+	adc	#5
+	jmp	blast_done_adjust
+
+
+blast_facing_left:
+	sec
+	sbc	#2
+
+blast_done_adjust:
 
 	sta	COLLISION_X
 	lda	PHYSICIST_Y
