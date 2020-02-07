@@ -393,12 +393,12 @@ room_loop:
 	;==================================
 	; draw background action
 
-	lda	WHICH_CAVE
+;	lda	WHICH_ROOM
 
 bg_room0:
 
 ;	cmp	#0
-;	bne	c4_no_bg_action
+;	bne	c15_no_bg_action
 
 ;	lda	FRAMEL
 ;	and	#$c
@@ -418,7 +418,7 @@ bg_room0:
 
 ;	jsr	put_sprite
 
-c5_no_bg_action:
+c15_no_bg_action:
 
 	;===============================
 	; check keyboard
@@ -439,38 +439,9 @@ c5_no_bg_action:
 	jsr	check_screen_limit
 
 	;===============================
-	; adjust floor
+	; adjust floor if necessary
 	;===============================
-
-;	lda	PHYSICIST_STATE
-;	cmp	#P_FALLING_DOWN
-;	beq	check_floor0_done
-
-;	lda	WHICH_CAVE
-;	cmp	#0
-;	bne	check_floor1
-
-;	lda	#14
-;	sta	PHYSICIST_Y
-
-;	lda	PHYSICIST_X
-;	cmp	#19
-;	bcc	check_floor0_done
-
-;	lda	#12
-;	sta	PHYSICIST_Y
-
-;	lda	PHYSICIST_X
-;	cmp	#28
-;	bcc	check_floor0_done
-
-;	lda	#10
-;	sta	PHYSICIST_Y
-
-check_floor0_done:
-
-check_floor1:
-
+	; no sloped floors in c15
 
 	;=====================================
 	; draw physicist
@@ -489,42 +460,66 @@ check_floor1:
 	; draw foreground action
 	;=====================================
 
-;	lda	WHICH_CAVE
-;	cmp	#0
-;	bne	c5_no_fg_action
+	lda	WHICH_ROOM
+	cmp	#0
+	bne	c15_no_fg_action
 
-c5_draw_rocks:
-;	lda	#1
-;	sta	XPOS
-;	lda	#26
-;	sta	YPOS
-;	lda	#<small_rock
-;	sta	INL
-;	lda	#>small_rock
-;	sta	INH
-;	jsr	put_sprite
+	; Room 0 draw guard
+c15_draw_fg_guard:
 
-;	lda	#10
-;	sta	XPOS
-;	lda	#18
-;	sta	YPOS
-;	lda	#<medium_rock
-;	sta	INL
-;	lda	#>medium_rock
-;	sta	INH
-;	jsr	put_sprite
+	; real game it's not quite so regular, double shot eventually
 
-;	lda	#31
-;	sta	XPOS
-;	lda	#14
-;	sta	YPOS
-;	lda	#<large_rock
-;	sta	INL
-;	lda	#>large_rock
-;	sta	INH
-;	jsr	put_sprite
+	; every so often, shoots
+	; for frames 0 and 1 every 32 ($1F)
 
-c5_no_fg_action:
+	lda	FRAMEL
+	and	#$1f
+	cmp	#3
+	bcs	fg_guard_noshoot	; bgt
+
+fg_guard_shoot:
+	lda	#$ff
+	bne	fg_guard_draw
+
+fg_guard_noshoot:
+	lda	#$00
+
+fg_guard_draw:
+	sta	XPOS
+	lda	#22
+	sta	YPOS
+	lda	#<guard_sprite
+	sta	INL
+	lda	#>guard_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+
+	; draw laser
+
+	lda	FRAMEL
+	and	#$1f
+	cmp	#3
+	bcs	fg_guard_no_laser		; bge
+
+	lda	#9
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	lda	#<guard_laser
+	sta	INL
+	lda	#>guard_laser
+	sta	INH
+	jsr	put_sprite
+
+fg_guard_no_laser:
+
+	jmp	c15_no_fg_action
+
+	; Room 5 friend slowly working to left
+c15_draw_friend_cliff:
+
+c15_no_fg_action:
 
 	;====================
 	; activate fg objects
@@ -543,7 +538,7 @@ c5_no_fg_action:
 	;================
 	; move fg objects
 	;================
-c4_move_fg_objects:
+c15_move_fg_objects:
 
 ;	lda	CART_OUT
 ;	cmp	#1
@@ -775,5 +770,39 @@ bath_arrival_sequence:
 	.byte 25
 	.word bath_35_rle
 	.byte 0
+
+
+;=======================
+; guard sprite
+guard_sprite:
+	.byte 10,13
+	.byte $7A,$7A,$7A,$7A,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $77,$77,$77,$77,$77,$AA,$AA,$AA,$AA,$AA
+	.byte $77,$77,$77,$77,$77,$AA,$AA,$AA,$0A,$00
+	.byte $00,$00,$00,$77,$A7,$AA,$AA,$7A,$70,$AA
+	.byte $00,$00,$00,$00,$AA,$7A,$77,$77,$77,$7A
+	.byte $00,$00,$00,$70,$77,$77,$77,$77,$77,$77
+	.byte $00,$00,$70,$77,$77,$77,$77,$77,$AA,$AA
+	.byte $00,$00,$07,$77,$77,$77,$A7,$AA,$AA,$AA
+	.byte $00,$00,$00,$07,$A7,$A7,$AA,$AA,$AA,$AA
+	.byte $00,$00,$00,$00,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $00,$00,$00,$00,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $00,$00,$00,$00,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $00,$00,$00,$00,$AA,$AA,$AA,$AA,$AA,$AA
+
+;=======================
+; guard laser
+guard_laser:
+;	.byte 15,4
+;	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$1A,$1A,$A1
+;	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$1A,$1A,$A1,$A1,$AA,$AA,$AA
+;	.byte $AA,$AA,$AA,$AA,$1A,$1A,$11,$A1,$A1,$AA,$AA,$AA,$AA,$AA,$AA
+;	.byte $1A,$1A,$11,$A1,$A1,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+
+	.byte 15,3
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$1A,$1A,$1A
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$1A,$1A,$1A,$11,$A1,$A1,$A1,$AA,$AA
+	.byte $1A,$1A,$1A,$11,$A1,$A1,$A1,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+
 
 

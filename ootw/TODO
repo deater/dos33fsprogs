@@ -131,6 +131,12 @@ BEHAVIOR DIFFERENCES:
 + Level/Checkpoint #5
 	* Allow falling into first pit
 
++ Level/Checkpoint #15
+	* Bath: shooting guard isn't quite so regular, every other shot is
+		a double one?
+	* Bath: one guard repeatedly re-arrives but that seems to be a bug
+		in the original
+	* Bath: guards shooting eventually wear away the column
 
 FUTURE WORK:
 ============
