@@ -277,6 +277,7 @@ ootw_c15.o:	ootw_c15.s \
 	keyboard.s gr_run_sequence.s physicist.s \
 	collision.s door.s laser.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
+	ootw_graphics/l15final/ootw_c15_bath.inc \
 	ootw_graphics/l15final/ootw_c15_final.inc
 	ca65 -o ootw_c15.o ootw_c15.s -l ootw_c15.lst
 
@@ -456,6 +457,11 @@ COMPRESS-TEST:	compress_test.o
 compress_test.o:	compress_test.s lz4_decode.s compress_test.inc
 	ca65 -o compress_test.o compress_test.s -l compress_test.lst
 
+
+#####
+
+zip:	ootw.dsk ootw_side2.dsk
+	zip ootw.zip ootw.dsk ootw_side2.dsk
 
 #####
 

@@ -6,6 +6,13 @@
 .include "zp.inc"
 .include "hardware.inc"
 
+; bath:
+;  after crash, hop out of sphere.  move quickly as you can get lasered
+;   right near the pod, but if you walk by the column you can stand
+;   forever and not get shot
+; walkway1:
+;   does not appear you can re-enter bath?  lasers from behind come in
+;   but don't hurt you unless you try to walk back in
 
 	;============================
 	; ENTRY POINT FOR LEVEL
@@ -20,6 +27,12 @@ ootw_c15:
 	;========================================================
 
 ootw_c15_restart:
+
+	;===================================
+	; run bath intro
+	;===================================
+
+	jsr	bath_intro
 
 	;===================================
 	; re-initialize level state
@@ -116,7 +129,7 @@ ootw_c15_level_init:
 	sta	HAVE_GUN
 	sta	DIRECTION		; right
 
-	lda	#0
+	lda	#22
 	sta	PHYSICIST_X
 	lda	#10
 	sta	PHYSICIST_Y
@@ -168,9 +181,9 @@ room:
 	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(bath_rle)
+	lda	#>(bath_end_rle)
 	sta	GBASH
-	lda	#<(bath_rle)
+	lda	#<(bath_end_rle)
 
 	jmp	room_setup_done
 
@@ -630,6 +643,8 @@ end_message:
 ;.include "gr_offsets_hl.s"
 .include "gr_hlin.s"
 .include "keyboard.s"
+.include "gr_overlay.s"
+.include "gr_run_sequence.s"
 
 .include "physicist.s"
 .include "alien.s"
@@ -645,8 +660,120 @@ end_message:
 .include "collision.s"
 
 ; room backgrounds
+.include "ootw_graphics/l15final/ootw_c15_bath.inc"
 .include "ootw_graphics/l15final/ootw_c15_final.inc"
 ; sprites
 .include "ootw_graphics/sprites/physicist.inc"
 .include "ootw_graphics/sprites/alien.inc"
+
+;=======================
+; Bath intro
+
+bath_intro:
+	;===========================
+	; Enable graphics
+
+	bit	LORES
+	bit	SET_GR
+	bit	FULLGR
+
+	bit	KEYRESET
+
+	;===========================
+	; Setup pages (is this necessary?)
+
+	lda	#0
+	sta	DRAW_PAGE
+	lda	#1
+	sta	DISP_PAGE
+
+	lda	#<bath_arrival_sequence
+	sta	INTRO_LOOPL
+	lda	#>bath_arrival_sequence
+	sta	INTRO_LOOPH
+
+        jmp	run_sequence
+
+;	rts
+
+;=======================
+; Bath Arrival Sequence
+
+bath_arrival_sequence:
+	.byte 255
+	.word bath_00_rle
+	.byte 25
+	.word bath_01_rle
+	.byte 25
+	.word bath_02_rle
+	.byte 25
+	.word bath_03_rle
+	.byte 25
+	.word bath_04_rle
+	.byte 25
+	.word bath_05_rle
+	.byte 25
+	.word bath_06_rle
+	.byte 25
+	.word bath_07_rle
+	.byte 25
+	.word bath_08_rle
+	.byte 25
+	.word bath_09_rle
+	.byte 25
+	.word bath_10_rle
+	.byte 25
+	.word bath_11_rle
+	.byte 25
+	.word bath_12_rle
+	.byte 25
+	.word bath_13_rle
+	.byte 25
+	.word bath_14_rle
+	.byte 25
+	.word bath_15_rle
+	.byte 25
+	.word bath_16_rle
+	.byte 25
+	.word bath_17_rle
+	.byte 25
+	.word bath_18_rle
+	.byte 25
+	.word bath_19_rle
+	.byte 25
+	.word bath_20_rle
+	.byte 25
+	.word bath_21_rle
+	.byte 25
+	.word bath_22_rle
+	.byte 25
+	.word bath_23_rle
+	.byte 25
+	.word bath_24_rle
+	.byte 25
+	.word bath_25_rle
+	.byte 25
+	.word bath_26_rle
+	.byte 25
+	.word bath_27_rle
+	.byte 25
+	.word bath_28_rle
+	.byte 25
+	.word bath_29_rle
+	.byte 25
+	.word bath_30_rle
+	.byte 25
+	.word bath_31_rle
+	.byte 25
+	.word bath_32_rle
+	.byte 25
+	.word bath_33_rle
+	.byte 25
+	.word bath_34_rle
+	.byte 25
+	.word bath_35_rle
+	.byte 25
+	.word bath_35_rle
+	.byte 0
+
 
