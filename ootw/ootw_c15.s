@@ -559,31 +559,47 @@ c15_room1_foreground:
 	cmp	#1
 	bne	c15_draw_friend_cliff
 
-	lda	#$11
-	sta	trapezoid_color_smc+1
 
-	ldy	#46
-	lda	#36
-	sta	trapezoid_endy_smc+1
+	; test shots
 
-	lda	#0
-	sta	trapezoid_x_start+1
-	sta	trapezoid_x_end+1
+	lda	FRAMEL
+	and	#$0c
+	lsr
+	tay
 
-	lda	#2
-	sta	trapezoid_x_start
-	lda	#15
-	sta	trapezoid_x_end
+	lda	shot_lookup,Y
+	sta	INL
+	lda	shot_lookup+1,Y
+	sta	INH
 
-	lda	#2
-	sta	trapezoid_left_slope
-	lda	#128
-	sta	trapezoid_left_slope+1
+;	lda	#<shot1_frame1
+;	sta	INL
+;	lda	#>shot1_frame1
+;	sta	INH
 
-	lda	#0
-	sta	trapezoid_right_slope
-	lda	#128
-	sta	trapezoid_right_slope+1
+
+;	ldy	#46
+;	lda	#36
+;	sta	trapezoid_endy_smc+1
+
+;	lda	#0
+;	sta	trapezoid_x_start+1
+;	sta	trapezoid_x_end+1
+
+;	lda	#2
+;	sta	trapezoid_x_start
+;	lda	#15
+;	sta	trapezoid_x_end
+
+;	lda	#2
+;	sta	trapezoid_left_slope
+;	lda	#128
+;	sta	trapezoid_left_slope+1
+
+;	lda	#0
+;	sta	trapezoid_right_slope
+;	lda	#128
+;	sta	trapezoid_right_slope+1
 
 
 
@@ -897,7 +913,31 @@ guard_laser:
 	.byte $1A,$1A,$1A,$11,$A1,$A1,$A1,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
 
 
+shot_lookup:
+	.word shot1_frame1
+	.word shot1_frame2
+	.word shot1_frame3
+	.word shot1_frame3
 
+
+shot1_frame1:
+	.byte	2,128	; LEFT SLOPE H/L
+	.byte	0,128	; RIGHT SLOPE H/L
+	.byte	2,0	; STARTX H/L
+	.byte	15,0	; ENDX H/L
+	.byte	36,46	; ENDY/STARTY
+shot1_frame2:
+	.byte	2,0	; LEFT SLOPE H/L
+	.byte	0,$60	; RIGHT SLOPE H/L
+	.byte	3,0	; STARTX H/L
+	.byte	14,128	; ENDX H/L
+	.byte	32,46	; ENDY/STARTY
+shot1_frame3:
+	.byte	2,0	; LEFT SLOPE H/L
+	.byte	2,0	; RIGHT SLOPE H/L
+	.byte	17,0	; STARTX H/L
+	.byte	19,9	; ENDX H/L
+	.byte	28,32	; ENDY/STARTY
 
 
 
