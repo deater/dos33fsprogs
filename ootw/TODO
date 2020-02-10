@@ -9,8 +9,6 @@ KNOWN BUGS:
 
 + Ledge in L4 it's possible to end up standing off edge of cliff
 
-+ shooting through shield is broken (it's worse when facing right)
-	need a +2 in the collision code somewhere probably
 + ootw: pool monster grabs you a edge of pool (glitch)
 + intro: there's still a bit of a pause when the elevator door finishes opening
 + running: Missing one running frame (?)
@@ -21,7 +19,6 @@ KNOWN BUGS:
 
 MISSING SPRITES:
 ================
-  + physicist run+jumping
   + physicist swimming
   + beast tripping
   + alien running
@@ -137,6 +134,7 @@ BEHAVIOR DIFFERENCES:
 	* Bath: one guard repeatedly re-arrives but that seems to be a bug
 		in the original
 	* Bath: guards shooting eventually wear away the column
+	* shots: wall damage not remembered if you return?
 
 FUTURE WORK:
 ============
