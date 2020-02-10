@@ -563,7 +563,8 @@ c15_room1_foreground:
 	; test shots
 
 	lda	FRAMEL
-	and	#$0c
+	and	#$18
+	lsr
 	lsr
 	tay
 
@@ -572,54 +573,8 @@ c15_room1_foreground:
 	lda	shot_lookup+1,Y
 	sta	INH
 
-;	lda	#<shot1_frame1
-;	sta	INL
-;	lda	#>shot1_frame1
-;	sta	INH
-
-
-;	ldy	#46
-;	lda	#36
-;	sta	trapezoid_endy_smc+1
-
-;	lda	#0
-;	sta	trapezoid_x_start+1
-;	sta	trapezoid_x_end+1
-
-;	lda	#2
-;	sta	trapezoid_x_start
-;	lda	#15
-;	sta	trapezoid_x_end
-
-;	lda	#2
-;	sta	trapezoid_left_slope
-;	lda	#128
-;	sta	trapezoid_left_slope+1
-
-;	lda	#0
-;	sta	trapezoid_right_slope
-;	lda	#128
-;	sta	trapezoid_right_slope+1
-
-
-
 	jsr	draw_trapezoid
 
-; shot2
-;	startx = 3
-;	endx = 14.5
-;	left_slope = 2.0        0   1    0   0   1
-;	right_slope = 0.33  0.66 1.00 1.33 1.66 1.99
-;	starty=46, endy=30
-
-;                  1/2 1/4 1/8
-; 0.33 in binary = .0  1   1      .25+.125=.375
-
-; shot3
-;	startx = 17, endx=19
-;	left_slope=2
-;	right_slope=2
-;	starty=32, endy=28
 
 
 	; Room 5 friend slowly working to left
@@ -917,7 +872,7 @@ shot_lookup:
 	.word shot1_frame1
 	.word shot1_frame2
 	.word shot1_frame3
-	.word shot1_frame3
+	.word shot1_hole
 
 
 shot1_frame1:
@@ -928,17 +883,20 @@ shot1_frame1:
 	.byte	36,46	; ENDY/STARTY
 shot1_frame2:
 	.byte	2,0	; LEFT SLOPE H/L
-	.byte	0,$60	; RIGHT SLOPE H/L
+;	.byte	0,$60	; RIGHT SLOPE H/L	; approximately 1/3?
+	.byte	0,$80	; RIGHT SLOPE H/L	; approximately 1/3?
 	.byte	3,0	; STARTX H/L
 	.byte	14,128	; ENDX H/L
-	.byte	32,46	; ENDY/STARTY
+	.byte	30,46	; ENDY/STARTY
 shot1_frame3:
 	.byte	2,0	; LEFT SLOPE H/L
 	.byte	2,0	; RIGHT SLOPE H/L
 	.byte	17,0	; STARTX H/L
 	.byte	19,9	; ENDX H/L
 	.byte	28,32	; ENDY/STARTY
-
-
-
-
+shot1_hole:
+	.byte	18,28	; LEFT SLOPE H/L
+	.byte	0,0	; RIGHT SLOPE H/L
+	.byte	0,0	; STARTX H/L
+	.byte	0,0	; ENDX H/L
+	.byte	0,$ff	; ENDY/STARTY
