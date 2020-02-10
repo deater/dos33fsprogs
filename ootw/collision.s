@@ -444,9 +444,11 @@ calc_gun_left_shield:
 
 calc_gun_left_shield_loop:
 
+	; if shield not out, skip
 	lda	shield_out,X
 	beq	calc_gun_left_shield_continue
 
+	; if current wall is closer, skip
 	lda	COLLISION_X
 	cmp	shield_x,X
 	bcc	calc_gun_left_shield_continue		; blt
