@@ -274,6 +274,7 @@ OOTW_C15:	ootw_c15.o
 ootw_c15.o:	ootw_c15.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
 	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
+	gr_trapezoid.s \
 	keyboard.s gr_run_sequence.s physicist.s \
 	collision.s door.s laser.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \

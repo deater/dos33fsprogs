@@ -559,8 +559,51 @@ c15_room1_foreground:
 	cmp	#1
 	bne	c15_draw_friend_cliff
 
+	lda	#$11
+	sta	trapezoid_color_smc+1
+
+	ldy	#46
+	lda	#36
+	sta	trapezoid_endy_smc+1
+
+	lda	#0
+	sta	trapezoid_x_start+1
+	sta	trapezoid_x_end+1
+
+	lda	#2
+	sta	trapezoid_x_start
+	lda	#15
+	sta	trapezoid_x_end
+
+	lda	#2
+	sta	trapezoid_left_slope
+	lda	#128
+	sta	trapezoid_left_slope+1
+
+	lda	#0
+	sta	trapezoid_right_slope
+	lda	#128
+	sta	trapezoid_right_slope+1
+
+
 
 	jsr	draw_trapezoid
+
+; shot2
+;	startx = 3
+;	endx = 14.5
+;	left_slope = 2.0        0   1    0   0   1
+;	right_slope = 0.33  0.66 1.00 1.33 1.66 1.99
+;	starty=46, endy=30
+
+;                  1/2 1/4 1/8
+; 0.33 in binary = .0  1   1      .25+.125=.375
+
+; shot3
+;	startx = 17, endx=19
+;	left_slope=2
+;	right_slope=2
+;	starty=32, endy=28
 
 
 	; Room 5 friend slowly working to left
