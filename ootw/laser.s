@@ -12,31 +12,46 @@
 
 ; should handle shooting while crouching
 
-MAX_LASERS	=	2
+; in general, 0 for physicist, 1/2 for alien
 
+MAX_LASERS	=	3
+
+; 0=not out, else out. ff=can't hurt
 laser_out:
 laser0_out:		.byte $0
 laser1_out:		.byte $0
+laser2_out:		.byte $0
+laser3_out:		.byte $0
 
 laser_start:
 laser0_start:		.byte $0
 laser1_start:		.byte $0
+laser2_start:		.byte $0
+laser3_start:		.byte $0
 
 laser_end:
 laser0_end:		.byte $0
 laser1_end:		.byte $0
+laser2_end:		.byte $0
+laser3_end:		.byte $0
 
 laser_y:
 laser0_y:		.byte $0
 laser1_y:		.byte $0
+laser2_y:		.byte $0
+laser3_y:		.byte $0
 
 laser_direction:
 laser0_direction:	.byte $0
 laser1_direction:	.byte $0
+laser2_direction:	.byte $0
+laser3_direction:	.byte $0
 
 laser_count:
 laser0_count:		.byte $0
 laser1_count:		.byte $0
+laser2_count:		.byte $0
+laser3_count:		.byte $0
 
 	;=========================
 	; fire laser

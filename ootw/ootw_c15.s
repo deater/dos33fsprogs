@@ -151,6 +151,10 @@ ootw_c15_setup_room_and_play:
 	;==============================
 	; each room init
 
+	lda	#0
+	sta	LEFT_SHOOT_LIMIT
+	lda	#39
+	sta	RIGHT_SHOOT_LIMIT
 
 	;==============================
 	; setup per-room variables
@@ -462,7 +466,41 @@ c15_no_bg_action:
 
 	lda	WHICH_ROOM
 	cmp	#0
-	bne	c15_no_fg_action
+	bne	c15_room1_foreground
+
+c15_room0_foreground:
+	; Room 0 laser fire
+
+	lda	laser1_out
+	bne	handle_laser2
+
+handle_laser1:
+	jsr	random16
+	lda	SEEDL
+	and	#$7			; 0..7 (+1 carry)
+	adc	#20			; make random
+	sta	laser1_y
+
+	lda	#1			; right
+	sta	laser1_direction
+
+	lda	#0
+	sta	laser1_start
+	sta	laser1_count
+
+	lda	#10
+	sta	laser1_end
+
+	lda	#$ff
+	sta	laser1_out
+
+	jmp	done_handle_laser
+
+handle_laser2:
+	lda	laser2_out
+	bne	done_handle_laser
+
+done_handle_laser:
 
 	; Room 0 draw guard
 c15_draw_fg_guard:
@@ -495,7 +533,7 @@ fg_guard_draw:
 	jsr	put_sprite_crop
 
 
-	; draw laser
+	; draw forground lasers
 
 	lda	FRAMEL
 	and	#$1f
@@ -515,6 +553,15 @@ fg_guard_draw:
 fg_guard_no_laser:
 
 	jmp	c15_no_fg_action
+
+
+c15_room1_foreground:
+	cmp	#1
+	bne	c15_draw_friend_cliff
+
+
+	jsr	draw_trapezoid
+
 
 	; Room 5 friend slowly working to left
 c15_draw_friend_cliff:
@@ -640,6 +687,8 @@ end_message:
 .include "keyboard.s"
 .include "gr_overlay.s"
 .include "gr_run_sequence.s"
+.include "random16.s"
+.include "gr_trapezoid.s"
 
 .include "physicist.s"
 .include "alien.s"
@@ -803,6 +852,10 @@ guard_laser:
 	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$1A,$1A,$1A
 	.byte $AA,$AA,$AA,$AA,$AA,$AA,$1A,$1A,$1A,$11,$A1,$A1,$A1,$AA,$AA
 	.byte $1A,$1A,$1A,$11,$A1,$A1,$A1,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+
+
+
+
 
 
 
