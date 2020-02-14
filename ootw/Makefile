@@ -279,6 +279,7 @@ ootw_c15.o:	ootw_c15.s \
 	collision.s door.s laser.s gun.s blast.s shield.s \
 	ootw_graphics/sprites/physicist.inc \
 	ootw_graphics/l15final/ootw_c15_bath.inc \
+	ootw_graphics/l15final/ootw_c15_walk.inc \
 	ootw_graphics/l15final/ootw_c15_final.inc
 	ca65 -o ootw_c15.o ootw_c15.s -l ootw_c15.lst
 

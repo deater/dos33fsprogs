@@ -723,6 +723,9 @@ end_message:
 ; sprites
 .include "ootw_graphics/sprites/physicist.inc"
 .include "ootw_graphics/sprites/alien.inc"
+; animations
+.include "ootw_graphics/l15final/ootw_c15_walk.inc"
+
 
 ;=======================
 ; Bath intro
@@ -900,3 +903,15 @@ shot1_hole:
 	.byte	0,0	; STARTX H/L
 	.byte	0,0	; ENDX H/L
 	.byte	0,$ff	; ENDY/STARTY
+
+
+
+; shot notes
+; + from bottom-right to mid-left
+; + from top-center to mid-right
+; + from mid-right to mid-left
+; + straight across bottom
+; + from top-left to mid-right
+; + from center-right to mid-left
+;    
+
