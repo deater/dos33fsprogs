@@ -57,7 +57,7 @@ ootw_c15_bath.inc:	$(PNG2RLE) \
 ootw_c15_walk.inc:	$(PNG2RLE) \
 	walk_00.png walk_01.png walk_02.png walk_03.png walk_04.png \
 	walk_05.png walk_06.png walk_07.png walk_08.png walk_09.png \
-	walk_10.png
+	walk_10.png bigshot_01.png bigshot_02.png bigshot_03.png bigshot_04.png
 	$(PNG2RLE) asm walk_00.png walk00_rle > ootw_c15_walk.inc
 	$(PNG2RLE) asm walk_01.png walk01_rle >> ootw_c15_walk.inc
 	$(PNG2RLE) asm walk_02.png walk02_rle >> ootw_c15_walk.inc
@@ -69,6 +69,10 @@ ootw_c15_walk.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm walk_08.png walk08_rle >> ootw_c15_walk.inc
 	$(PNG2RLE) asm walk_09.png walk09_rle >> ootw_c15_walk.inc
 	$(PNG2RLE) asm walk_10.png walk10_rle >> ootw_c15_walk.inc
+	$(PNG2RLE) asm bigshot_01.png bigshot01_rle >> ootw_c15_walk.inc
+	$(PNG2RLE) asm bigshot_02.png bigshot02_rle >> ootw_c15_walk.inc
+	$(PNG2RLE) asm bigshot_03.png bigshot03_rle >> ootw_c15_walk.inc
+	$(PNG2RLE) asm bigshot_04.png bigshot04_rle >> ootw_c15_walk.inc
 
 
 ootw_c15_final.inc:	$(PNG2RLE) \

@@ -111,3 +111,22 @@ walk10_rle:	.byte $28 ; ysize=48
 	.byte $A3,$00, $77,$77, $A0,$23,$AA, $A3,$00, $77,$77
 	.byte $A1
 ; cycles=1420
+bigshot01_rle:	.byte $28 ; ysize=48
+	.byte $A0,$FF,$AA, $A0,$FF,$AA, $A0,$FA,$AA, $A0,$15,$9A, $1A, $A0,$12,$AA, $A0,$15,$99
+	.byte $11, $A0,$12,$AA, $A0,$15,$A9, $A0,$01,$A1, $A0,$62,$AA
+	.byte $A1
+; cycles=2749
+bigshot02_rle:	.byte $28 ; ysize=48
+	.byte $A0,$FF,$AA, $A0,$FF,$AA, $A0,$FA,$AA, $A0,$28,$9A, $A0,$50,$99, $A0,$50,$AA
+	.byte $A1
+; cycles=2263
+bigshot03_rle:	.byte $28 ; ysize=48
+	.byte $A0,$FF,$AA, $A0,$FF,$AA, $A0,$FF,$AA, $AF,$AA, $A0,$14,$9A, $A0,$02,$AA, $A6,$11
+	.byte $AC,$19, $A0,$14,$99, $A0,$02,$AA, $A0,$20,$A1, $A0,$56,$AA
+	.byte $A1
+; cycles=2425
+bigshot04_rle:	.byte $28 ; ysize=48
+	.byte $A0,$FF,$AA, $A0,$FF,$AA, $A0,$FF,$AA, $A0,$3D,$AA, $AA,$1A, $A0,$18,$AA, $A8,$A1
+	.byte $A8,$19, $A4,$A9, $A0,$50,$AA
+	.byte $A1
+; cycles=2263
