@@ -6,6 +6,10 @@
 .include "zp.inc"
 .include "hardware.inc"
 
+; TODO:
+;  die if not move and get shot by column (first screen)
+;  die it try to go back into original room
+
 ; bath:
 ;  after crash, hop out of sphere.  move quickly as you can get lasered
 ;   right near the pod, but if you walk by the column you can stand
@@ -472,7 +476,8 @@ c15_no_bg_action:
 
 	lda	WHICH_ROOM
 	cmp	#0
-	bne	c15_room1_foreground
+	beq	c15_room0_foreground
+	jmp	c15_room1_foreground
 
 c15_room0_foreground:
 	; Room 0 laser fire
@@ -557,6 +562,27 @@ fg_guard_draw:
 	jsr	put_sprite
 
 fg_guard_no_laser:
+
+	; draw from-bottom-laser
+
+
+	lda	FRAMEL
+	and	#$20
+	beq	skip_this
+
+	lda	FRAMEL
+	and	#$18
+	lsr
+	lsr
+	tay
+
+	lda	shot_lookup,Y
+	sta	INL
+	lda	shot_lookup+1,Y
+	sta	INH
+
+	jsr	draw_trapezoid
+skip_this:
 
 	jmp	c15_no_fg_action
 
@@ -958,24 +984,24 @@ shot_lookup:
 shot1_frame1:
 	.byte	2,128	; LEFT SLOPE H/L
 	.byte	0,128	; RIGHT SLOPE H/L
-	.byte	2,0	; STARTX H/L
-	.byte	15,0	; ENDX H/L
+	.byte	4,0	; STARTX H/L
+	.byte	17,0	; ENDX H/L
 	.byte	36,46	; ENDY/STARTY
 shot1_frame2:
 	.byte	2,0	; LEFT SLOPE H/L
 ;	.byte	0,$60	; RIGHT SLOPE H/L	; approximately 1/3?
 	.byte	0,$80	; RIGHT SLOPE H/L	; approximately 1/3?
-	.byte	3,0	; STARTX H/L
-	.byte	14,128	; ENDX H/L
+	.byte	5,0	; STARTX H/L
+	.byte	16,128	; ENDX H/L
 	.byte	30,46	; ENDY/STARTY
 shot1_frame3:
 	.byte	2,0	; LEFT SLOPE H/L
 	.byte	2,0	; RIGHT SLOPE H/L
-	.byte	17,0	; STARTX H/L
-	.byte	19,9	; ENDX H/L
+	.byte	19,0	; STARTX H/L
+	.byte	21,9	; ENDX H/L
 	.byte	28,32	; ENDY/STARTY
 shot1_hole:
-	.byte	18,28	; LEFT SLOPE H/L
+	.byte	21,28	; LEFT SLOPE H/L
 	.byte	0,0	; RIGHT SLOPE H/L
 	.byte	0,0	; STARTX H/L
 	.byte	0,0	; ENDX H/L
