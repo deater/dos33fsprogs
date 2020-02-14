@@ -570,14 +570,27 @@ c15_room1_foreground:
 
 	; run soldier/laser in the front
 
-	; 10 steps of soldier
-	; 4 steps of laser
+	; every 256 frames start a laser
+	; if 1024 start a soldier
 
 	lda	FRAMEL
 	bne	not_new_walk
 
+	lda	FRAMEH
+	and	#$3
+	beq	start_soldier
+
+start_blast:
+
+	ldy	#26
+	sty	FOREGROUND_COUNT
+	bne	not_new_walk
+
+start_soldier:
+
 	ldy	#2
 	sty	FOREGROUND_COUNT
+
 
 not_new_walk:
 
@@ -585,8 +598,13 @@ not_new_walk:
 	beq	skip_enemy_walk
 
 	cpy	#24
+	beq	reset_walk
+	cpy	#34
+	beq	reset_walk
+
 	bne	do_enemy_walk
 
+reset_walk:
 	ldy	#0
 	sty	FOREGROUND_COUNT
 	beq	skip_enemy_walk
@@ -611,7 +629,11 @@ do_enemy_walk:
 
 no_update_enemy_walk:
 
+	; can we only overlay bottom half of screen?
+	; current overlay code starts at CV and counts to zero :(
+
 	jsr	gr_overlay_noload
+
 
 skip_enemy_walk:
 
@@ -983,6 +1005,7 @@ enemy_walking_sequence:
 	.word walk08_rle
 	.word walk09_rle
 	.word walk10_rle
+	.word 0
 bigshot_sequence:
 	.word bigshot01_rle
 	.word bigshot02_rle
