@@ -167,7 +167,7 @@ ootw_c15_setup_room_and_play:
 	;===============================
 	; Room0 -- with the bathers
 	;===============================
-room:
+room0:
 	lda	#(20+128)
 	sta	LEFT_LIMIT
 	lda	#(39+128)
@@ -197,6 +197,12 @@ room:
 room1:
 	cmp	#1
 	bne	room2
+
+	; reset for animation
+	lda	#0
+	sta	FOREGROUND_COUNT
+	sta	FRAMEL
+	sta	FRAMEH
 
 	lda	#(-4+128)
 	sta	LEFT_LIMIT
@@ -554,11 +560,60 @@ fg_guard_no_laser:
 
 	jmp	c15_no_fg_action
 
+	;=====================================
+	; Room 1 foreground
+	;=====================================
 
 c15_room1_foreground:
 	cmp	#1
 	bne	c15_draw_friend_cliff
 
+	; run soldier/laser in the front
+
+	; 10 steps of soldier
+	; 4 steps of laser
+
+	lda	FRAMEL
+	bne	not_new_walk
+
+	ldy	#2
+	sty	FOREGROUND_COUNT
+
+not_new_walk:
+
+	ldy	FOREGROUND_COUNT
+	beq	skip_enemy_walk
+
+	cpy	#24
+	bne	do_enemy_walk
+
+	ldy	#0
+	sty	FOREGROUND_COUNT
+	beq	skip_enemy_walk
+
+do_enemy_walk:
+
+	lda	FRAMEL
+	and	#$3
+	bne	no_update_enemy_walk
+
+	lda     enemy_walking_sequence,y
+        sta     GBASL
+        lda     enemy_walking_sequence+1,y
+        sta     GBASH
+
+	iny
+	iny
+	sty	FOREGROUND_COUNT
+
+	lda     #$10                    ; load to $1000
+        jsr     load_rle_gr
+
+no_update_enemy_walk:
+
+	jsr	gr_overlay_noload
+
+skip_enemy_walk:
 
 	; test shots
 
@@ -915,3 +970,21 @@ shot1_hole:
 ; + from center-right to mid-left
 ;    
 
+enemy_walking_sequence:
+	.word 0			; makes code easier
+	.word walk00_rle
+	.word walk01_rle
+	.word walk02_rle
+	.word walk03_rle
+	.word walk04_rle
+	.word walk05_rle
+	.word walk06_rle
+	.word walk07_rle
+	.word walk08_rle
+	.word walk09_rle
+	.word walk10_rle
+bigshot_sequence:
+	.word bigshot01_rle
+	.word bigshot02_rle
+	.word bigshot03_rle
+	.word bigshot04_rle
