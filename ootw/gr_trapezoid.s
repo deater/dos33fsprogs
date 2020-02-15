@@ -46,7 +46,19 @@ draw_trapezoid_loop:
 
 trapezoid_color_smc:
 	lda	#$11
+
 	ldx	trapezoid_x_start
+
+	bmi	trap_clamp0
+	cpx	#40
+	bcc	trapezoid_draw_loop		; blt
+
+	ldx	#39
+	jmp	trapezoid_draw_loop
+
+trap_clamp0:
+	ldx	#0
+	jmp	trapezoid_draw_loop
 
 trapezoid_draw_loop:
 trapezoid_draw_loop_smc:

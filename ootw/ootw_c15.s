@@ -576,9 +576,9 @@ fg_guard_no_laser:
 	lsr
 	tay
 
-	lda	shot_lookup,Y
+	lda	shot_lookup1,Y
 	sta	INL
-	lda	shot_lookup+1,Y
+	lda	shot_lookup1+1,Y
 	sta	INH
 
 	jsr	draw_trapezoid
@@ -592,7 +592,10 @@ skip_this:
 
 c15_room1_foreground:
 	cmp	#1
-	bne	c15_draw_friend_cliff
+	beq	actual_room1_foreground
+	jmp	c15_draw_friend_cliff
+
+actual_room1_foreground:
 
 	; run soldier/laser in the front
 
@@ -663,7 +666,12 @@ no_update_enemy_walk:
 
 skip_enemy_walk:
 
-	; test shots
+	; occasional laser
+
+	; FRAMEL: every 8th frame (111) update, draw 4-long animation
+
+	; cycle through 4 possible shots
+	; FIXME: we could randomly adjust some of the parameters?
 
 	lda	FRAMEL
 	and	#$18
@@ -671,11 +679,39 @@ skip_enemy_walk:
 	lsr
 	tay
 
-	lda	shot_lookup,Y
-	sta	INL
-	lda	shot_lookup+1,Y
-	sta	INH
+	lda	FRAMEL
+	and	#$60
+	beq	shot4_base
+	cmp	#$20
+	beq	shot3_base
+	cmp	#$40
+	beq	shot2_base
 
+shot1_base:
+	lda	shot_lookup1,Y
+	sta	INL
+	lda	shot_lookup1+1,Y
+	jmp	draw_shot
+
+shot2_base:
+	lda	shot_lookup2,Y
+	sta	INL
+	lda	shot_lookup2+1,Y
+	jmp	draw_shot
+
+shot3_base:
+	lda	shot_lookup3,Y
+	sta	INL
+	lda	shot_lookup3+1,Y
+	jmp	draw_shot
+
+shot4_base:
+	lda	shot_lookup4,Y
+	sta	INL
+	lda	shot_lookup4+1,Y
+
+draw_shot:
+	sta	INH
 	jsr	draw_trapezoid
 
 
@@ -974,11 +1010,29 @@ guard_laser:
 	.byte $1A,$1A,$1A,$11,$A1,$A1,$A1,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
 
 
-shot_lookup:
+shot_lookup1:
 	.word shot1_frame1
 	.word shot1_frame2
 	.word shot1_frame3
 	.word shot1_hole
+
+shot_lookup2:
+	.word shot2_frame1
+	.word shot2_frame2
+	.word shot2_frame3
+	.word shot2_hole
+
+shot_lookup3:
+	.word shot3_frame1
+	.word shot3_frame2
+	.word shot3_frame3
+	.word shot3_hole
+
+shot_lookup4:
+	.word shot4_frame1
+	.word shot4_frame2
+	.word shot4_frame3
+	.word shot4_hole
 
 
 shot1_frame1:
@@ -989,8 +1043,7 @@ shot1_frame1:
 	.byte	36,46	; ENDY/STARTY
 shot1_frame2:
 	.byte	2,0	; LEFT SLOPE H/L
-;	.byte	0,$60	; RIGHT SLOPE H/L	; approximately 1/3?
-	.byte	0,$80	; RIGHT SLOPE H/L	; approximately 1/3?
+	.byte	0,$80	; RIGHT SLOPE H/L
 	.byte	5,0	; STARTX H/L
 	.byte	16,128	; ENDX H/L
 	.byte	30,46	; ENDY/STARTY
@@ -1006,6 +1059,89 @@ shot1_hole:
 	.byte	0,0	; STARTX H/L
 	.byte	0,0	; ENDX H/L
 	.byte	0,$ff	; ENDY/STARTY
+
+	; shot 2
+
+shot2_frame1:
+	.byte	$ff,00	; LEFT SLOPE H/L
+	.byte	$fe,00	; RIGHT SLOPE H/L
+	.byte	19,0	; STARTX H/L
+	.byte	32,0	; ENDX H/L
+	.byte	28,46	; ENDY/STARTY
+shot2_frame2:
+	.byte	$ff,00	; LEFT SLOPE H/L
+	.byte	$fe,$80	; RIGHT SLOPE H/L	; approximately 1/3?
+	.byte	17,0	; STARTX H/L
+	.byte	23,0	; ENDX H/L
+	.byte	18,36	; ENDY/STARTY
+
+shot2_frame3:
+	.byte	0,0	; LEFT SLOPE H/L
+	.byte	0,0	; RIGHT SLOPE H/L
+	.byte	7,0	; STARTX H/L
+	.byte	9,0	; ENDX H/L
+	.byte	18,20	; ENDY/STARTY
+shot2_hole:
+	.byte	6,20	; LEFT SLOPE H/L
+	.byte	0,0	; RIGHT SLOPE H/L
+	.byte	0,0	; STARTX H/L
+	.byte	0,0	; ENDX H/L
+	.byte	0,$ff	; ENDY/STARTY
+
+	; shot3
+shot3_frame1:
+	.byte	$FE,0	; LEFT SLOPE H/L
+	.byte	$FE,$80	; RIGHT SLOPE H/L
+	.byte	37,0	; STARTX H/L
+	.byte	40,0	; ENDX H/L
+	.byte	18,24	; ENDY/STARTY
+shot3_frame2:
+	.byte	$FD,0	; LEFT SLOPE H/L
+	.byte	$FD,0	; RIGHT SLOPE H/L
+	.byte	19,0	; STARTX H/L
+	.byte	23,0	; ENDX H/L
+	.byte	12,16	; ENDY/STARTY
+shot3_frame3:
+	.byte	0,0	; LEFT SLOPE H/L
+	.byte	0,0	; RIGHT SLOPE H/L
+	.byte	9,0	; STARTX H/L
+	.byte	10,0	; ENDX H/L
+	.byte	10,12	; ENDY/STARTY
+shot3_hole:
+	.byte	7,12	; LEFT SLOPE H/L
+	.byte	0,0	; RIGHT SLOPE H/L
+	.byte	0,0	; STARTX H/L
+	.byte	0,0	; ENDX H/L
+	.byte	0,$ff	; ENDY/STARTY
+
+
+	; shot4
+
+shot4_frame1:
+	.byte	$FD,$00	; LEFT SLOPE H/L
+	.byte	$FF,$80	; RIGHT SLOPE H/L
+	.byte	13,0	; STARTX H/L
+	.byte	18,0	; ENDX H/L
+	.byte	$FE,6	; ENDY/STARTY
+shot4_frame2:
+	.byte	$FD,$00	; LEFT SLOPE H/L
+	.byte	$FF,$00	; RIGHT SLOPE H/L
+	.byte	22,0	; STARTX H/L
+	.byte	24,0	; ENDX H/L
+	.byte	0,10	; ENDY/STARTY
+shot4_frame3:
+	.byte	0,0	; LEFT SLOPE H/L
+	.byte	0,0	; RIGHT SLOPE H/L
+	.byte	24,0	; STARTX H/L
+	.byte	25,9	; ENDX H/L
+	.byte	10,12	; ENDY/STARTY
+shot4_hole:
+	.byte	23,12	; LEFT SLOPE H/L
+	.byte	0,0	; RIGHT SLOPE H/L
+	.byte	0,0	; STARTX H/L
+	.byte	0,0	; ENDX H/L
+	.byte	0,$ff	; ENDY/STARTY
+
 
 
 
