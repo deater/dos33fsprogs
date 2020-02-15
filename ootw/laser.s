@@ -381,5 +381,15 @@ done_hit_something:
 ;	rts
 
 
+	;===============
+	; clear lasers
+	;===============
+clear_lasers:
+	ldx	#MAX_LASERS
+	lda	#0
+clear_laser_loop:
+	sta	laser_out,X
+	dex
+	bne	clear_laser_loop
 
-
+	rts

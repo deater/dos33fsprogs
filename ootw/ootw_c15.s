@@ -141,6 +141,24 @@ ootw_c15_level_init:
 	lda	#P_STANDING
 	sta	PHYSICIST_STATE
 
+	; set up aliens
+
+	jsr	clear_aliens
+
+	lda	#1
+	sta	ALIEN_OUT
+
+	lda	#1
+	sta	alien0_room
+	lda	#36
+	sta	alien0_x
+	lda	#8
+	sta	alien0_y
+	lda	#A_STANDING
+	sta	alien0_state
+	lda	#0
+	sta	alien0_direction
+
 	rts
 
 
@@ -154,6 +172,8 @@ ootw_c15_setup_room_and_play:
 
 	;==============================
 	; each room init
+
+	jsr	clear_lasers
 
 	lda	#0
 	sta	LEFT_SHOOT_LIMIT
@@ -201,6 +221,24 @@ room0:
 room1:
 	cmp	#1
 	bne	room2
+
+
+	;
+first_shield:
+        lda     #0
+        sta     FIRST_SHIELD
+        sta     shield_count
+
+        lda     #1
+        sta     shield_out
+        lda     #34
+        sta     shield_x
+
+        lda     #8
+        sta     shield_y
+
+        inc     SHIELD_OUT
+
 
 	; reset for animation
 	lda	#0
@@ -463,6 +501,15 @@ c15_no_bg_action:
 
 	jsr	draw_physicist
 
+	;=====================================
+	; draw alien
+	;=====================================
+	lda	ALIEN_OUT
+	beq	no_draw_alien
+
+	jsr	move_alien
+	jsr	draw_alien
+no_draw_alien:
 
 	;=====================================
 	; handle gun
