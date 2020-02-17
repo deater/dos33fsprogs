@@ -70,15 +70,53 @@
 	lda	#$a0
 	jsr	load_rle_large
 
-	jsr	gr_copy_to_current_large	; copy to page1
 
+rescroll:
+
+	lda	#0
+	sta	SCROLL_COUNT
+
+	lda	#<$A000
+	sta	OUTL
+	sta	INL
+	lda	#>$A000
+	sta	OUTH
+	sta	INH
+
+	; delay
+	lda	#200
+	jsr	WAIT
+
+scroll_loop:
+
+	jsr	gr_copy_to_current_large	; copy to page1
 	jsr	page_flip
+
+
+sl2:
+	lda	INL			; inc to next line
+	clc
+	adc	#$28
+	sta	INL
+	sta	OUTL
+	lda	INH
+	adc	#$0
+	sta	INH
+	sta	OUTH
+
+	lda	#100
+	jsr	WAIT
+
+	inc	SCROLL_COUNT
+	lda	SCROLL_COUNT
+
+	cmp	#72
+	bne	scroll_loop
+
 
 	jsr	wait_until_keypress
 
-
-
-
+	jmp	rescroll
 
 forever:
 	jmp	forever

@@ -1,7 +1,8 @@
 	;=========================================================
 	; gr_copy_to_current, large, 40x48 version
+	; for scrolling
 	;=========================================================
-	; copy A000 to DRAW_PAGE
+	; copy linear image at A000 to DRAW_PAGE
 	;
 
 gr_copy_to_current_large:
@@ -39,6 +40,36 @@ gr_copy_to_current_large:
 							;===========
 							;	45
 
+	; self modify source address
+
+	ldx	#0
+smc_loop:
+	; line 0
+	lda	OUTH
+	sta	gr_copy_line_large+2,X
+	lda	OUTL
+	sta	gr_copy_line_large+1,X
+
+	; line 1
+	clc
+	adc	#$28	; 16 bit add
+	sta	OUTL
+	lda	OUTH
+	adc	#$0
+	sta	OUTH
+
+	inx
+	inx
+	inx
+	inx
+	inx
+	inx
+
+	cpx	#48
+	bne	smc_loop
+
+
+
 	ldy	#39		; for early ones, copy 120 bytes	; 2
 
 gr_copy_line_large:
@@ -71,6 +102,36 @@ gr_copy_line_large:
 
 
 
+
+	; self modify source address
+
+	ldx	#0
+smc_loop2:
+	; line 0
+	lda	OUTH
+	sta	gr_copy_line_large2+2,X
+	lda	OUTL
+	sta	gr_copy_line_large2+1,X
+
+	; line 1
+	clc
+	adc	#$28	; 16 bit add
+	sta	OUTL
+	lda	OUTH
+	adc	#$0
+	sta	OUTH
+
+	inx
+	inx
+	inx
+	inx
+	inx
+	inx
+
+	cpx	#48
+	bne	smc_loop2
+
+
 	ldy	#39		; for early ones, copy 120 bytes	; 2
 
 gr_copy_line_large2:
@@ -100,6 +161,38 @@ gr_copy_line_large2:
 
 	dey			; decrement pointer			; 2
 	bpl	gr_copy_line_large2	;				; 2nt/3
+
+
+
+
+	; self modify source address
+
+	ldx	#0
+smc_loop3:
+	; line 0
+	lda	OUTH
+	sta	gr_copy_line_large3+2,X
+	lda	OUTL
+	sta	gr_copy_line_large3+1,X
+
+	; line 1
+	clc
+	adc	#$28	; 16 bit add
+	sta	OUTL
+	lda	OUTH
+	adc	#$0
+	sta	OUTH
+
+	inx
+	inx
+	inx
+	inx
+	inx
+	inx
+
+	cpx	#48
+	bne	smc_loop3
+
 
 
 	ldy	#39		; for early ones, copy 120 bytes	; 2
