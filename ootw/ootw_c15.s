@@ -501,6 +501,13 @@ c15_no_bg_action:
 	jsr	move_physicist
 
 	;===============================
+	; move friend
+	;===============================
+
+	jsr	move_friend
+
+
+	;===============================
 	; check room limits
 	;===============================
 
@@ -516,6 +523,13 @@ c15_no_bg_action:
 	;=====================================
 
 	jsr	draw_physicist
+
+	;=====================================
+	; draw friend
+	;=====================================
+
+	jsr	draw_friend
+
 
 	;=====================================
 	; draw alien
@@ -845,6 +859,19 @@ no_inc_break_glass:
 	lda	#$c		; load to $c00
 	jsr	load_rle_gr
 
+	; activate friend
+	lda	#2
+	sta	friend_room
+	lda	#FAI_RUNTO_PANEL
+	sta	friend_ai_state
+	lda	#F_RUNNING
+	sta	friend_state
+	lda     #16
+        sta     friend_x
+        lda     #8
+        sta     friend_y
+	lda	#1
+	sta	friend_direction
 
 
 no_update_break_glass:
@@ -962,6 +989,7 @@ end_message:
 .include "text_print.s"
 .include "gr_pageflip.s"
 .include "gr_unrle.s"
+.include "gr_vlin.s"
 ;.include "gr_fast_clear.s"
 .include "gr_copy.s"
 ;.include "gr_copy_offset.s"
@@ -979,7 +1007,7 @@ end_message:
 
 .include "physicist.s"
 .include "alien.s"
-.include "dummy_friend.s"
+.include "friend.s"
 
 .include "gun.s"
 .include "laser.s"
@@ -996,6 +1024,7 @@ end_message:
 ; sprites
 .include "ootw_graphics/sprites/physicist.inc"
 .include "ootw_graphics/sprites/alien.inc"
+.include "ootw_graphics/sprites/friend.inc"
 ; animations
 .include "ootw_graphics/l15final/ootw_c15_walk.inc"
 .include "ootw_graphics/l15final/ootw_c15_walkway.inc"
