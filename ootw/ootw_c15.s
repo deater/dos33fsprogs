@@ -911,6 +911,7 @@ end_message:
 .include "ootw_graphics/sprites/alien.inc"
 ; animations
 .include "ootw_graphics/l15final/ootw_c15_walk.inc"
+.include "ootw_graphics/l15final/ootw_c15_walkway.inc"
 
 
 ;=======================
