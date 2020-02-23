@@ -83,10 +83,11 @@ ootw_c15_final.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm final.png final_rle >> ootw_c15_final.inc
 
 ootw_c15_walkway.inc:	$(PNG2RLE) \
-	walkway2.png walkway2_after.png \
+	walkway2.png walkway2_after.png crash1.png \
 	crash2.png crash3.png crash4.png crash5.png crash6.png crash7.png
 	$(PNG2RLE) asm walkway2.png walkway2_rle > ootw_c15_walkway.inc
 	$(PNG2RLE) asm walkway2_after.png walkway2_after_rle >> ootw_c15_walkway.inc
+	$(PNG2RLE) asm crash1.png crash1_rle >> ootw_c15_walkway.inc
 	$(PNG2RLE) asm crash2.png crash2_rle >> ootw_c15_walkway.inc
 	$(PNG2RLE) asm crash3.png crash3_rle >> ootw_c15_walkway.inc
 	$(PNG2RLE) asm crash4.png crash4_rle >> ootw_c15_walkway.inc

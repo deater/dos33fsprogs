@@ -5,7 +5,7 @@ PNG2RLE = ../gr-utils/png2rle
 PNG2LZ4 = ../gr-utils/png2lz4
 
 
-all:	ootw.dsk ootw_side2.dsk
+all:	ootw.dsk ootw_side2.dsk ootw_side3.dsk
 
 ootw.dsk:	HELLO TITLE INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
 	cp empty.dsk ootw.dsk
@@ -20,9 +20,8 @@ ootw.dsk:	HELLO TITLE INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 AUDIO_TEST
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 COMPRESS-TEST
 
-ootw_side2.dsk:	HELLO TITLE ENDING \
-	OOTW_C6 OOTW_C7 OOTW_C8 OOTW_C9 \
-	OOTW_C10 OOTW_C11 OOTW_C12 OOTW_C13 OOTW_C14 OOTW_C15
+ootw_side2.dsk:	HELLO TITLE \
+	OOTW_C6 OOTW_C7 OOTW_C8 OOTW_C9 OOTW_C10
 	cp empty.dsk ootw_side2.dsk
 	$(DOS33) -y ootw_side2.dsk SAVE A HELLO HELLO
 	$(DOS33) -y ootw_side2.dsk BSAVE -a 0xd00 TITLE
@@ -31,12 +30,18 @@ ootw_side2.dsk:	HELLO TITLE ENDING \
 	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C8
 	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C9
 	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C10
-	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C11
-	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C12
-	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C13
-	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C14
-	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C15
-	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 ENDING
+
+ootw_side3.dsk:	HELLO TITLE ENDING \
+	OOTW_C11 OOTW_C12 OOTW_C13 OOTW_C14 OOTW_C15
+	cp empty.dsk ootw_side3.dsk
+	$(DOS33) -y ootw_side3.dsk SAVE A HELLO HELLO
+	$(DOS33) -y ootw_side3.dsk BSAVE -a 0xd00 TITLE
+	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 OOTW_C11
+	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 OOTW_C12
+	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 OOTW_C13
+	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 OOTW_C14
+	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 OOTW_C15
+	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 ENDING
 
 
 
@@ -463,8 +468,8 @@ compress_test.o:	compress_test.s lz4_decode.s compress_test.inc
 
 #####
 
-zip:	ootw.dsk ootw_side2.dsk
-	zip ootw.zip ootw.dsk ootw_side2.dsk
+zip:	ootw.dsk ootw_side2.dsk side3.dsk
+	zip ootw.zip ootw.dsk ootw_side2.dsk ootw_side3.dsk
 
 #####
 

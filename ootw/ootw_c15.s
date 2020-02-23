@@ -36,7 +36,7 @@ ootw_c15_restart:
 	; run bath intro
 	;===================================
 
-	jsr	bath_intro
+;	jsr	bath_intro
 
 	;===================================
 	; re-initialize level state
@@ -126,14 +126,19 @@ wait_loop:
 	; call once before entering for first time
 ootw_c15_level_init:
 	lda	#0
-	sta	WHICH_ROOM
 	sta	NUM_DOORS
+	sta	BROKEN_GLASS
+
+	lda	#2			; REMOVE
+	sta	WHICH_ROOM
+
 
 	lda	#1
 	sta	HAVE_GUN
 	sta	DIRECTION		; right
 
-	lda	#22
+	lda	#2			; REMOVE
+;	lda	#22
 	sta	PHYSICIST_X
 	lda	#10
 	sta	PHYSICIST_Y
@@ -292,6 +297,17 @@ room2:
 	lda	#8
 	sta	PHYSICIST_Y
 
+	lda	BROKEN_GLASS
+	beq	unbroken_background
+
+	; load background
+	lda	#>(walkway2_after_rle)
+	sta	GBASH
+	lda	#<(walkway2_after_rle)
+
+	jmp	room_setup_done
+
+unbroken_background:
 	; load background
 	lda	#>(walkway2_rle)
 	sta	GBASH
@@ -640,7 +656,7 @@ skip_this:
 c15_room1_foreground:
 	cmp	#1
 	beq	actual_room1_foreground
-	jmp	c15_draw_friend_cliff
+	jmp	c15_room2_foreground
 
 actual_room1_foreground:
 
@@ -762,9 +778,80 @@ draw_shot:
 	jsr	draw_trapezoid
 
 
+	jmp	c15_no_fg_action
+
+
+
+	;=====================================
+	; Room 2 foreground
+	;=====================================
+
+c15_room2_foreground:
+	cmp	#2
+	beq	actual_room2_foreground
+	jmp	c15_draw_friend_cliff
+
+actual_room2_foreground:
+
+	; after trigger, have some shooting
+
+	; if already triggered, skip
+	lda	BROKEN_GLASS
+	cmp	#14
+	beq	c15_no_fg_action
+
+	cmp	#0
+	bne	break_glass
+
+	; once physicist past 5, start breakout
+
+	lda	PHYSICIST_X
+	cmp	#5
+	bcc	c15_no_fg_action
+
+break_glass:
+
+	ldy	BROKEN_GLASS
+	lda     glass_breaking_sequence,y
+        sta     GBASL
+        lda     glass_breaking_sequence+1,y
+        sta     GBASH
+
+
+	lda	FRAMEL
+	and	#$3
+	bne	no_inc_break_glass
+
+	iny
+	iny
+	sty	BROKEN_GLASS
+no_inc_break_glass:
+
+	lda	#$10		; load to $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay_noload
+
+	ldy	BROKEN_GLASS
+	cpy	#14
+	bne	no_update_break_glass
+
+	; load new background at end
+
+	lda	#>(walkway2_after_rle)
+	sta	GBASH
+	lda	#<(walkway2_after_rle)
+	sta	GBASL
+	lda	#$c		; load to $c00
+	jsr	load_rle_gr
+
+
+
+no_update_break_glass:
 
 	; Room 5 friend slowly working to left
 c15_draw_friend_cliff:
+
 
 c15_no_fg_action:
 
@@ -1221,3 +1308,13 @@ bigshot_sequence:
 	.word bigshot02_rle
 	.word bigshot03_rle
 	.word bigshot04_rle
+
+glass_breaking_sequence:
+	.word crash1_rle	; 2
+	.word crash2_rle	; 2
+	.word crash3_rle	; 4
+	.word crash4_rle	; 6
+	.word crash5_rle	; 8
+	.word crash6_rle	; 10
+	.word crash7_rle	; 12
+
