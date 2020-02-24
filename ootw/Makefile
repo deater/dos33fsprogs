@@ -286,7 +286,8 @@ ootw_c15.o:	ootw_c15.s \
 	ootw_graphics/l15final/ootw_c15_bath.inc \
 	ootw_graphics/l15final/ootw_c15_walk.inc \
 	ootw_graphics/l15final/ootw_c15_final.inc \
-	ootw_graphics/l15final/ootw_c15_walkway.inc
+	ootw_graphics/l15final/ootw_c15_walkway.inc \
+	ootw_graphics/l15final/ootw_c15_bridge.inc
 	ca65 -o ootw_c15.o ootw_c15.s -l ootw_c15.lst
 
 

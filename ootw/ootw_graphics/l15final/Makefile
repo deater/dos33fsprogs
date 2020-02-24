@@ -3,7 +3,8 @@ include ../../../Makefile.inc
 PNG2RLE = ../../../gr-utils/png2rle
 PNG2LZ4 = ../../../gr-utils/png2lz4
 
-all:	ootw_c15_bath.inc ootw_c15_walk.inc ootw_c15_final.inc ootw_c15_walkway.inc
+all:	ootw_c15_bath.inc ootw_c15_walk.inc ootw_c15_final.inc \
+	ootw_c15_walkway.inc ootw_c15_bridge.inc
 
 #####
 
@@ -76,9 +77,8 @@ ootw_c15_walk.inc:	$(PNG2RLE) \
 
 
 ootw_c15_final.inc:	$(PNG2RLE) \
-	walkway1.png walkway3.png above_pit.png final.png
+	walkway1.png above_pit.png final.png
 	$(PNG2RLE) asm walkway1.png walkway1_rle > ootw_c15_final.inc
-	$(PNG2RLE) asm walkway3.png walkway3_rle >> ootw_c15_final.inc
 	$(PNG2RLE) asm above_pit.png above_pit_rle >> ootw_c15_final.inc
 	$(PNG2RLE) asm final.png final_rle >> ootw_c15_final.inc
 
@@ -95,6 +95,17 @@ ootw_c15_walkway.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm crash6.png crash6_rle >> ootw_c15_walkway.inc
 	$(PNG2RLE) asm crash7.png crash7_rle >> ootw_c15_walkway.inc
 
+
+ootw_c15_bridge.inc:	$(PNG2RLE) \
+	walkway3.png \
+	lshot1.png lshot2.png lshot3.png lshot4.png lshot5.png lshot6.png
+	$(PNG2RLE) asm walkway3.png walkway3_rle > ootw_c15_bridge.inc
+	$(PNG2RLE) asm lshot1.png lshot1_rle >> ootw_c15_bridge.inc
+	$(PNG2RLE) asm lshot2.png lshot2_rle >> ootw_c15_bridge.inc
+	$(PNG2RLE) asm lshot3.png lshot3_rle >> ootw_c15_bridge.inc
+	$(PNG2RLE) asm lshot4.png lshot4_rle >> ootw_c15_bridge.inc
+	$(PNG2RLE) asm lshot5.png lshot5_rle >> ootw_c15_bridge.inc
+	$(PNG2RLE) asm lshot6.png lshot6_rle >> ootw_c15_bridge.inc
 
 
 #####

@@ -1028,6 +1028,7 @@ end_message:
 ; animations
 .include "ootw_graphics/l15final/ootw_c15_walk.inc"
 .include "ootw_graphics/l15final/ootw_c15_walkway.inc"
+.include "ootw_graphics/l15final/ootw_c15_bridge.inc"
 
 
 ;=======================
