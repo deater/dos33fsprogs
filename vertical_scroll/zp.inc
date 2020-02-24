@@ -67,8 +67,16 @@ DONE_SONG       = $89
 PT3_TEMP	= $8A
 
 
+
 DISP_PAGE	=	$ED	; ALL
 DRAW_PAGE	=	$EE	; ALL
+
+
+TINL		=	$F0
+TINH		=	$F1
+BINL		=	$F2
+BINH		=	$F3
+
 
 SCROLL_COUNT	=	$F9
 TEMP		=	$FA

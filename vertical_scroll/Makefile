@@ -24,7 +24,7 @@ SCROLLER:	scroller.o
 
 scroller.o:	scroller.s gr_copy.s gr_unrle.s gr_unrle_large.s \
 	gr_copy_large.s \
-	zp.inc hardware.inc desire.inc spaceman.inc
+	zp.inc hardware.inc desire.inc spaceman.inc spaceman2.inc
 	ca65 -o scroller.o scroller.s -l scroller.lst
 
 ####
@@ -35,6 +35,9 @@ desire.inc:	desire.png desire2.png
 
 spaceman.inc:	spaceman_big.png
 	$(PNG2RLE) asm spaceman_big.png spaceman_rle > spaceman.inc
+
+spaceman2.inc:	spaceman_big2.png
+	$(PNG2RLE) asm spaceman_big2.png spaceman2_rle > spaceman2.inc
 
 
 ####
