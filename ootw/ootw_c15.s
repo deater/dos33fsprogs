@@ -128,6 +128,7 @@ ootw_c15_level_init:
 	lda	#0
 	sta	NUM_DOORS
 	sta	BROKEN_GLASS
+	sta	BRIDGE_COLLAPSE
 
 	lda	#2			; REMOVE
 	sta	WHICH_ROOM
@@ -795,7 +796,6 @@ draw_shot:
 	jmp	c15_no_fg_action
 
 
-
 	;=====================================
 	; Room 2 foreground
 	;=====================================
@@ -803,7 +803,7 @@ draw_shot:
 c15_room2_foreground:
 	cmp	#2
 	beq	actual_room2_foreground
-	jmp	c15_draw_friend_cliff
+	jmp	c15_room3_foreground
 
 actual_room2_foreground:
 
@@ -812,8 +812,10 @@ actual_room2_foreground:
 	; if already triggered, skip
 	lda	BROKEN_GLASS
 	cmp	#14
-	beq	c15_no_fg_action
+	bne	not_broken
+	jmp	c15_no_fg_action
 
+not_broken:
 	cmp	#0
 	bne	break_glass
 
@@ -821,7 +823,8 @@ actual_room2_foreground:
 
 	lda	PHYSICIST_X
 	cmp	#5
-	bcc	c15_no_fg_action
+	bcs	break_glass
+	jmp	c15_no_fg_action
 
 break_glass:
 
@@ -875,6 +878,73 @@ no_inc_break_glass:
 
 
 no_update_break_glass:
+
+
+	;=====================================
+	; Room 3 foreground
+	;=====================================
+
+c15_room3_foreground:
+	cmp	#3
+	beq	actual_room3_foreground
+	jmp	c15_draw_friend_cliff
+
+actual_room3_foreground:
+
+	; after trigger, have some shooting
+
+	; if already triggered, skip
+	lda	BRIDGE_COLLAPSE
+	cmp	#12
+	bcs	draw_bridge			; bge
+
+	cmp	#0
+	bne	collapse_bridge
+
+	; once physicist past 20, start breakout
+
+	lda	PHYSICIST_X
+	cmp	#16
+	bcc	c15_no_fg_action		; blt
+
+collapse_bridge:
+
+	ldy	BRIDGE_COLLAPSE
+	lda     bridge_sequence,y
+        sta     GBASL
+        lda     bridge_sequence+1,y
+        sta     GBASH
+
+
+	lda	FRAMEL
+	and	#$3
+	bne	no_inc_bridge_collapse
+
+	iny
+	iny
+	sty	BRIDGE_COLLAPSE
+no_inc_bridge_collapse:
+
+	lda	#$10		; load to $1000
+	jsr	load_rle_gr
+
+draw_bridge:
+	jsr	gr_overlay_noload
+
+	ldy	BRIDGE_COLLAPSE
+	cpy	#12
+	bne	no_update_bridge_collapse
+
+	lda	#P_FALLING_DOWN
+	sta	PHYSICIST_STATE
+
+	lda	#48
+	sta	fall_down_destination_smc+1
+
+	iny
+	sty	BRIDGE_COLLAPSE
+
+no_update_bridge_collapse:
 
 	; Room 5 friend slowly working to left
 c15_draw_friend_cliff:
@@ -1341,10 +1411,18 @@ bigshot_sequence:
 
 glass_breaking_sequence:
 	.word crash1_rle	; 2
-	.word crash2_rle	; 2
-	.word crash3_rle	; 4
-	.word crash4_rle	; 6
-	.word crash5_rle	; 8
-	.word crash6_rle	; 10
-	.word crash7_rle	; 12
+	.word crash2_rle	; 4
+	.word crash3_rle	; 6
+	.word crash4_rle	; 8
+	.word crash5_rle	; 10
+	.word crash6_rle	; 12
+	.word crash7_rle	; 14
+
+bridge_sequence:
+	.word lshot1_rle	; 2
+	.word lshot2_rle	; 4
+	.word lshot3_rle	; 6
+	.word lshot4_rle	; 8
+	.word lshot5_rle	; 10
+	.word lshot6_rle	; 12
 
