@@ -4,7 +4,7 @@ PNG2RLE = ../../../gr-utils/png2rle
 PNG2LZ4 = ../../../gr-utils/png2lz4
 
 all:	ootw_c15_bath.inc ootw_c15_walk.inc ootw_c15_final.inc \
-	ootw_c15_walkway.inc ootw_c15_bridge.inc
+	ootw_c15_walkway.inc ootw_c15_bridge.inc ootw_c15_fall.inc
 
 #####
 
@@ -107,6 +107,37 @@ ootw_c15_bridge.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm lshot5.png lshot5_rle >> ootw_c15_bridge.inc
 	$(PNG2RLE) asm lshot6.png lshot6_rle >> ootw_c15_bridge.inc
 
+ootw_c15_fall.inc:	$(PNG2RLE) \
+	fall_bg.png \
+	fall01.png fall02.png fall03.png fall04.png fall05.png \
+	fall06.png fall07.png fall08.png fall09.png fall10.png \
+	fall11.png fall12.png fall13.png fall14.png fall15.png \
+	fall16.png fall17.png fall18.png fall19.png fall20.png \
+	fall21.png fall22.png fall23.png
+	$(PNG2RLE) asm fall_bg.png fall_bg_rle > ootw_c15_fall.inc
+	$(PNG2RLE) asm fall01.png fall01_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall02.png fall02_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall03.png fall03_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall04.png fall04_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall05.png fall05_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall06.png fall06_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall07.png fall07_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall08.png fall08_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall09.png fall09_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall10.png fall10_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall11.png fall11_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall12.png fall12_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall13.png fall13_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall14.png fall14_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall15.png fall15_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall16.png fall16_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall17.png fall17_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall18.png fall18_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall19.png fall19_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall20.png fall20_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall21.png fall21_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall22.png fall22_rle >> ootw_c15_fall.inc
+	$(PNG2RLE) asm fall23.png fall23_rle >> ootw_c15_fall.inc
 
 #####
 

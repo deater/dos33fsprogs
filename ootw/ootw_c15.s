@@ -915,7 +915,6 @@ collapse_bridge:
         lda     bridge_sequence+1,y
         sta     GBASH
 
-
 	lda	FRAMEL
 	and	#$3
 	bne	no_inc_bridge_collapse
@@ -1099,6 +1098,7 @@ end_message:
 .include "ootw_graphics/l15final/ootw_c15_walk.inc"
 .include "ootw_graphics/l15final/ootw_c15_walkway.inc"
 .include "ootw_graphics/l15final/ootw_c15_bridge.inc"
+.include "ootw_graphics/l15final/ootw_c15_fall.inc"
 
 
 ;=======================
