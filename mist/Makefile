@@ -1,0 +1,44 @@
+include ../Makefile.inc
+
+DOS33 = ../dos33fs-utils/dos33
+PNG_TO_40x96 = ../gr-utils/png_to_40x96
+PNG_TO_40x48D = ../gr-utils/png_to_40x48d
+PNG2RLE = ../gr-utils/png2rle
+B2D = ../bmp2dhr/b2d
+
+all:	mist.dsk
+
+mist.dsk:	HELLO MIST MIST_TITLE.LZ4
+	cp empty.dsk mist.dsk
+	$(DOS33) -y mist.dsk SAVE A HELLO
+	$(DOS33) -y mist.dsk BSAVE -a 0x1000 MIST
+	$(DOS33) -y mist.dsk BSAVE -a 0xa000 MIST_TITLE.LZ4
+
+###
+
+HELLO:	hello.bas
+	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+
+####
+
+MIST:	mist.o
+	ld65 -o MIST mist.o -C ../linker_scripts/apple2_1000.inc
+
+mist.o:	mist.s zp.inc hardware.inc
+#gr_copy.s gr_unrle.s gr_unrle_large.s gr_copy_large.s
+	ca65 -o mist.o mist.s -l mist.lst
+
+####
+
+MIST_TITLE.LZ4:	MIST_TITLEC.BIN
+	lz4 -f -16 MIST_TITLEC.BIN
+	dd if=MIST_TITLEC.BIN.lz4 of=MIST_TITLE.LZ4 bs=1 skip=11
+	truncate MIST_TITLE.LZ4 -s -8
+
+MIST_TITLEC.BIN:	mist_title.bmp
+	$(B2D) mist_title.bmp HGR -d
+
+####
+
+clean:		
+		rm -f *~ *.o *.lst MIST_TITLEC.BIN MIST
