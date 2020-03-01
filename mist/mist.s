@@ -42,6 +42,10 @@ mist_start:
 
 	jsr	change_location
 
+	lda	#1
+	sta	CURSOR_VISIBLE		; visible at first
+
+
 
 game_loop:
 	;=================
@@ -60,7 +64,14 @@ game_loop:
 	;====================================
 	; draw pointer
 	;====================================
+
+	lda	CURSOR_VISIBLE
+	bne	draw_pointer
+	jmp	no_draw_pointer
+
 draw_pointer:
+
+
 	lda	CURSOR_X
 	sta	XPOS
         lda     CURSOR_Y
@@ -128,6 +139,8 @@ finger_right:
 finger_draw:
 	sta	INH
 	jsr	put_sprite_crop
+
+no_draw_pointer:
 
 	;====================================
 	; page flip
@@ -221,9 +234,14 @@ return_pressed:
 
 not_special_return:
 
-	jmp	done_keypress
+	; special case, don't make cursor visible
+
+	jmp	no_keypress
 
 done_keypress:
+	lda	#1			; make cursor visible
+	sta	CURSOR_VISIBLE
+
 no_keypress:
 	bit	KEYRESET
 	rts
@@ -236,6 +254,7 @@ no_keypress:
 handle_special:
 	ldy	#LOCATION_SPECIAL_FUNC+1
 	lda	(LOCATION_STRUCT_L),Y
+	pha
 	dey
 	lda	(LOCATION_STRUCT_L),Y
 	pha
@@ -281,6 +300,13 @@ change_direction:
 	; change location
 	;=============================
 change_location:
+
+	; reset pointer to not visible, centered
+	lda	#0
+	sta	CURSOR_VISIBLE
+	lda	#20
+	sta	CURSOR_X
+	sta	CURSOR_Y
 
 	lda	LOCATION
 	asl
