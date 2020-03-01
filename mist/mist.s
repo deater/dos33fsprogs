@@ -25,9 +25,23 @@ mist_start:
 	lda	#0
 	sta	DRAW_PAGE
 
+	; init cursor
+
 	lda	#20
 	sta	CURSOR_X
 	sta	CURSOR_Y
+
+	; init location
+
+	lda	#0
+	sta	LOCATION
+	lda	#0
+	sta	DIRECTION
+
+	lda	#<location0
+	sta	LOCATION_STRUCT_L
+	lda	#>location0
+	sta	LOCATION_STRUCT_H
 
 
 setup_room:
@@ -52,14 +66,69 @@ game_loop:
 	;====================================
 	; draw pointer
 	;====================================
-
+draw_pointer:
 	lda	CURSOR_X
 	sta	XPOS
         lda     CURSOR_Y
 	sta	YPOS
+
+	; see if inside special region
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	(LOCATION_STRUCT_L),Y
+	bmi	finger_not_special
+
+	; see if X1 < X < X2
+	lda	CURSOR_X
+	ldy	#LOCATION_SPECIAL_X1
+	cmp	(LOCATION_STRUCT_L),Y
+	bcc	finger_not_special	; blt
+
+	ldy	#LOCATION_SPECIAL_X2
+	cmp	(LOCATION_STRUCT_L),Y
+	bcs	finger_not_special	; bge
+
+	; see if Y1 < Y < Y2
+	lda	CURSOR_Y
+	ldy	#LOCATION_SPECIAL_Y1
+	cmp	(LOCATION_STRUCT_L),Y
+	bcc	finger_not_special	; blt
+
+	ldy	#LOCATION_SPECIAL_Y2
+	cmp	(LOCATION_STRUCT_L),Y
+	bcs	finger_not_special	; bge
+
+	; we made it this far, we are special
+
+finger_grab:
+	lda     #<finger_grab_sprite
+	sta	INL
+	lda     #>finger_grab_sprite
+	jmp	finger_draw
+
+finger_not_special:
+
+
+finger_point:
 	lda     #<finger_point_sprite
 	sta	INL
 	lda     #>finger_point_sprite
+	jmp	finger_draw
+
+finger_left:
+	lda     #<finger_left_sprite
+	sta	INL
+	lda     #>finger_left_sprite
+	jmp	finger_draw
+
+finger_right:
+	lda     #<finger_right_sprite
+	sta	INL
+	lda     #>finger_right_sprite
+	jmp	finger_draw
+
+
+
+finger_draw:
 	sta	INH
 	jsr	put_sprite_crop
 
@@ -199,4 +268,59 @@ finger_right_sprite:
 
 
 
+;===============================================
+; location data
+;===============================================
+; 19 bytes
+
+LOCATION_NORTH_EXIT=0
+LOCATION_SOUTH_EXIT=1
+LOCATION_EAST_EXIT=2
+LOCATION_WEST_EXIT=3
+LOCATION_SPECIAL_EXIT=4
+LOCATION_NORTH_BG=5
+LOCATION_SOUTH_BG=7
+LOCATION_EAST_BG=9
+LOCATION_WEST_BG=11
+LOCATION_SPECIAL_X1=13
+LOCATION_SPECIAL_X2=14
+LOCATION_SPECIAL_Y1=15
+LOCATION_SPECIAL_Y2=16
+LOCATION_SPECIAL_FUNC=17
+
+
+
+
+locations:
+	.word location0,location1
+
+; myst linking book
+location0:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$00		; special exit
+	.word	$0000		; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	21,31		; special x
+	.byte	10,24		; special y
+	.word	$0000		; special function
+
+; dock
+location1:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; special exit
+	.word	dock_n_rle	; north bg
+	.word	dock_s_rle	; south bg
+	.word	dock_e_rle	; east bg
+	.word	dock_w_rle	; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
 
