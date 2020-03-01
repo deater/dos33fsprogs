@@ -19,82 +19,184 @@ mist_start:
 
 	bit	SET_GR
 	bit	PAGE0
-	bit	HIRES
+;	bit	HIRES
 	bit	FULLGR
 
+	lda	#0
+	sta	DRAW_PAGE
 
-	;===================
-	; Init RTS disk code
-	;===================
-
-	jsr	rts_init
-
-	;===================
-	; Load graphics
-	;===================
-reload_everything:
-	; load MIST_TITLE.LZ4 to $a000
-	; then decompress it to $2000 (HGR PAGE0)
-
-	lda	#<mist_title_filename
-	sta	OUTL
-	lda	#>mist_title_filename
-	sta	OUTH
-	jsr	opendir_filename	; open and read entire file into memory
-
-	; size in ldsizeh:ldsizel (f1/f0)
-
-	clc
-	lda     #<($a000)
-	sta     LZ4_SRC
-	adc	ldsizel
-	sta	LZ4_END
-
-	lda     #>($a000)
-	sta     LZ4_SRC+1
-	adc	ldsizeh
-	sta	LZ4_END+1
-
-;	lda	#<($a000+4103-8)	; skip checksum at end
-;	sta	LZ4_END
-;	lda	#>($a000+4103-8)	; skip checksum at end
-;	sta	LZ4_END+1
-
-	lda	#<$2000
-	sta	LZ4_DST
-	lda	#>$2000
-	sta	LZ4_DST+1
-
-	jsr	lz4_decode
+	lda	#20
+	sta	CURSOR_X
+	sta	CURSOR_Y
 
 
-	;===================
-	; set graphics mode
-	;===================
-	jsr	HOME
+setup_room:
+
+	; load background
+	lda	#>(link_book_rle)
+	sta	GBASH
+	lda	#<(link_book_rle)
+	sta	GBASL
+	lda	#$c			; load to page $c00
+	jsr	load_rle_gr
 
 
-	bit	PAGE0
+game_loop:
 
-blah:
-	jmp	blah
+	;====================================
+	; copy background to current page
+	;====================================
+
+	jsr	gr_copy_to_current
+
+	;====================================
+	; draw pointer
+	;====================================
+
+	lda	CURSOR_X
+	sta	XPOS
+        lda     CURSOR_Y
+	sta	YPOS
+	lda     #<finger_point_sprite
+	sta	INL
+	lda     #>finger_point_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+	;====================================
+	; page flip
+	;====================================
+
+	jsr	page_flip
+
+	;====================================
+	; handle keypress/joystick
+	;====================================
+
+	jsr	handle_keypress
+
+
+	;====================================
+	; inc frame count
+	;====================================
+
+	inc	FRAMEL
+	bne	room_frame_no_oflo
+	inc	FRAMEH
+room_frame_no_oflo:
+
+	jmp	game_loop
+
+
+	;==============================
+	; Handle Keypress
+	;==============================
+handle_keypress:
+
+	lda	KEYPRESS
+	bmi	keypress
+
+	jmp	no_keypress
+
+keypress:
+	and	#$7f			; clear high bit
+
+check_left:
+	cmp	#'A'
+	beq	left_pressed
+	cmp	#8			; left key
+	bne	check_right
+left_pressed:
+	dec	CURSOR_X
+	jmp	done_keypress
+
+check_right:
+	cmp	#'D'
+	beq	right_pressed
+	cmp	#$15			; right key
+	bne	check_up
+right_pressed:
+	inc	CURSOR_X
+	jmp	done_keypress
+
+check_up:
+	cmp	#'W'
+	beq	up_pressed
+	cmp	#$0B			; up key
+	bne	check_down
+up_pressed:
+	dec	CURSOR_Y
+	dec	CURSOR_Y
+	jmp	done_keypress
+
+check_down:
+	cmp	#'S'
+	beq	down_pressed
+	cmp	#$0A
+	bne	check_return
+down_pressed:
+	inc	CURSOR_Y
+	inc	CURSOR_Y
+	jmp	done_keypress
+
+check_return:
+	cmp	#' '
+	beq	return_pressed
+	cmp	#13
+	bne	done_keypress
+
+return_pressed:
+
+	jmp	done_keypress
 
 
 
+done_keypress:
+no_keypress:
+	bit	KEYRESET
+	rts
 
 
-;	.include	"gr_putsprite.s"
-;	.include	"gr_offsets.s"
-;	.include	"gr_fast_clear.s"
-;	.include	"gr_hline.s"
-;	.include	"wait_keypress.s"
-	.include	"lz4_decode.s"
-	.include	"rts.s"
+	.include	"gr_copy.s"
+	.include	"gr_unrle.s"
+	.include	"gr_offsets.s"
+	.include	"gr_pageflip.s"
+	.include	"gr_putsprite_crop.s"
+
+	.include	"mist_graphics.inc"
 
 
-; filename to open is 30-character Apple text:
-mist_title_filename:	; .byte "MIST_TITLE.LZ4",0
-	.byte 'M'|$80,'I'|$80,'S'|$80,'T'|$80,'_'|$80,'T'|$80,'I'|$80,'T'|$80
-	.byte 'L'|$80,'E'|$80,'.'|$80,'L'|$80,'Z'|$80,'4'|$80,$00
+finger_point_sprite:
+	.byte 5,5
+	.byte $AA,$BB,$AA,$AA,$AA
+	.byte $AA,$BB,$AA,$AA,$AA
+	.byte $BA,$BB,$BB,$BB,$BB
+	.byte $AB,$BB,$BB,$BB,$BB
+	.byte $AA,$BB,$BB,$BB,$AA
+
+finger_grab_sprite:
+	.byte 5,5
+	.byte $AA,$AA,$BB,$AA,$AA
+	.byte $BB,$AA,$BB,$AA,$BB
+	.byte $BB,$BA,$BB,$BA,$BB
+	.byte $AB,$BB,$BB,$BB,$BB
+	.byte $AA,$BB,$BB,$BB,$AA
+
+finger_left_sprite:
+	.byte 6,4
+	.byte $AA,$AA,$AA,$AB,$BA,$AA
+	.byte $BB,$BB,$BB,$BB,$BB,$BB
+	.byte $AA,$AA,$BB,$BB,$BB,$BB
+	.byte $AA,$AA,$AB,$BB,$BB,$AB
+
+finger_right_sprite:
+	.byte 6,4
+	.byte $AA,$BA,$AB,$AA,$AA,$AA
+	.byte $BB,$BB,$BB,$BB,$BB,$BB
+	.byte $BA,$BB,$BB,$BB,$AA,$AA
+	.byte $AB,$BB,$BB,$AB,$AA,$AA
+
+
+
 
 

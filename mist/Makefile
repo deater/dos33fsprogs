@@ -8,10 +8,11 @@ B2D = ../bmp2dhr/b2d
 
 all:	mist.dsk
 
-mist.dsk:	HELLO MIST MIST_TITLE.LZ4
+mist.dsk:	HELLO MIST MIST_TITLE MIST_TITLE.LZ4
 	cp empty.dsk mist.dsk
 	$(DOS33) -y mist.dsk SAVE A HELLO
 	$(DOS33) -y mist.dsk BSAVE -a 0x1000 MIST
+	$(DOS33) -y mist.dsk BSAVE -a 0x1000 MIST_TITLE
 	$(DOS33) -y mist.dsk BSAVE -a 0xa000 MIST_TITLE.LZ4
 
 ###
@@ -21,12 +22,28 @@ HELLO:	hello.bas
 
 ####
 
+MIST_TITLE:	mist_title.o
+	ld65 -o MIST_TITLE mist_title.o -C ../linker_scripts/apple2_1000.inc
+
+mist_title.o:	mist_title.s zp.inc hardware.inc
+#gr_copy.s gr_unrle.s gr_unrle_large.s gr_copy_large.s
+	ca65 -o mist_title.o mist_title.s -l mist_title.lst
+
+####
+
 MIST:	mist.o
 	ld65 -o MIST mist.o -C ../linker_scripts/apple2_1000.inc
 
-mist.o:	mist.s zp.inc hardware.inc
+mist.o:	mist.s zp.inc hardware.inc \
+	mist_graphics.inc
 #gr_copy.s gr_unrle.s gr_unrle_large.s gr_copy_large.s
 	ca65 -o mist.o mist.s -l mist.lst
+
+####
+
+mist_graphics.inc:	\
+	m_link_book.png
+	$(PNG2RLE) asm m_link_book.png link_book_rle > mist_graphics.inc
 
 ####
 
@@ -41,4 +58,4 @@ MIST_TITLEC.BIN:	mist_title.bmp
 ####
 
 clean:		
-		rm -f *~ *.o *.lst MIST_TITLEC.BIN MIST
+		rm -f *~ *.o *.lst MIST_TITLEC.BIN MIST MIST_TITLE
