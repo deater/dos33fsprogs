@@ -38,24 +38,18 @@ mist_start:
 	lda	#0
 	sta	DIRECTION
 
-	lda	#<location0
-	sta	LOCATION_STRUCT_L
-	lda	#>location0
-	sta	LOCATION_STRUCT_H
+	; set up initial location
 
-
-setup_room:
-
-	; load background
-	lda	#>(link_book_rle)
-	sta	GBASH
-	lda	#<(link_book_rle)
-	sta	GBASL
-	lda	#$c			; load to page $c00
-	jsr	load_rle_gr
+	jsr	change_location
 
 
 game_loop:
+	;=================
+	; reset things
+	;=================
+
+	lda	#0
+	sta	IN_SPECIAL
 
 	;====================================
 	; copy background to current page
@@ -100,6 +94,9 @@ draw_pointer:
 	; we made it this far, we are special
 
 finger_grab:
+	lda	#1
+	sta	IN_SPECIAL
+
 	lda     #<finger_grab_sprite
 	sta	INL
 	lda     #>finger_grab_sprite
@@ -216,15 +213,91 @@ check_return:
 
 return_pressed:
 
+	lda	IN_SPECIAL
+	beq	not_special_return
+
+	jsr	handle_special
+
+
+not_special_return:
+
 	jmp	done_keypress
-
-
 
 done_keypress:
 no_keypress:
 	bit	KEYRESET
 	rts
 
+	;============================
+	; handle_special
+	;===========================
+
+	; set up jump table fakery
+handle_special:
+	ldy	#LOCATION_SPECIAL_FUNC+1
+	lda	(LOCATION_STRUCT_L),Y
+	dey
+	lda	(LOCATION_STRUCT_L),Y
+	pha
+	rts
+
+	;=============================
+	; myst_link_book
+	;=============================
+myst_link_book:
+
+	; play sound effect?
+
+	lda	#1
+	sta	LOCATION
+	jsr	change_location
+	rts
+
+
+	;=============================
+	; change direction
+	;=============================
+change_direction:
+
+	; load background
+	lda	DIRECTION
+	asl
+	clc
+	adc	#LOCATION_NORTH_BG
+	tay
+
+	lda	(LOCATION_STRUCT_L),Y
+	sta	GBASL
+	iny
+	lda	(LOCATION_STRUCT_L),Y
+	sta	GBASH
+	lda	#$c			; load to page $c00
+	jsr	load_rle_gr
+
+	rts
+
+
+	;=============================
+	; change location
+	;=============================
+change_location:
+
+	lda	LOCATION
+	asl
+	tay
+
+	lda	locations,Y
+	sta	LOCATION_STRUCT_L
+	lda	locations+1,Y
+	sta	LOCATION_STRUCT_H
+
+	jsr	change_direction
+
+	rts
+
+	;==========================
+	; includes
+	;==========================
 
 	.include	"gr_copy.s"
 	.include	"gr_unrle.s"
@@ -301,13 +374,13 @@ location0:
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
 	.byte	$00		; special exit
-	.word	$0000		; north bg
+	.word	link_book_rle	; north bg
 	.word	$0000		; south bg
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	21,31		; special x
 	.byte	10,24		; special y
-	.word	$0000		; special function
+	.word	myst_link_book-1		; special function
 
 ; dock
 location1:
