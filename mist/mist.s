@@ -451,6 +451,8 @@ change_location:
 	;===========================
 go_forward:
 
+	; update new location
+
 	lda	DIRECTION
 	clc
 	adc	#LOCATION_NORTH_EXIT
@@ -461,6 +463,16 @@ go_forward:
 	beq	cant_go_forward
 
 	sta	LOCATION
+
+	; update new direction
+
+	lda	DIRECTION
+	clc
+	adc	#LOCATION_NORTH_EXIT_DIR
+	tay
+	lda	(LOCATION_STRUCT_L),Y
+	sta	DIRECTION
+
 	jsr	change_location
 cant_go_forward:
 	rts
@@ -562,23 +574,27 @@ finger_right_sprite:
 ;===============================================
 ; location data
 ;===============================================
-; 19 bytes
+; 24 bytes each location
 
 LOCATION_NORTH_EXIT=0
 LOCATION_SOUTH_EXIT=1
 LOCATION_EAST_EXIT=2
 LOCATION_WEST_EXIT=3
-LOCATION_SPECIAL_EXIT=4
-LOCATION_NORTH_BG=5
-LOCATION_SOUTH_BG=7
-LOCATION_EAST_BG=9
-LOCATION_WEST_BG=11
-LOCATION_SPECIAL_X1=13
-LOCATION_SPECIAL_X2=14
-LOCATION_SPECIAL_Y1=15
-LOCATION_SPECIAL_Y2=16
-LOCATION_SPECIAL_FUNC=17
-LOCATION_BGS	= 19
+LOCATION_NORTH_EXIT_DIR=4
+LOCATION_SOUTH_EXIT_DIR=5
+LOCATION_EAST_EXIT_DIR=6
+LOCATION_WEST_EXIT_DIR=7
+LOCATION_SPECIAL_EXIT=8
+LOCATION_NORTH_BG=9
+LOCATION_SOUTH_BG=11
+LOCATION_EAST_BG=13
+LOCATION_WEST_BG=15
+LOCATION_SPECIAL_X1=17
+LOCATION_SPECIAL_X2=18
+LOCATION_SPECIAL_Y1=19
+LOCATION_SPECIAL_Y2=20
+LOCATION_SPECIAL_FUNC=21
+LOCATION_BGS	= 23
 	BG_NORTH = 1
 	BG_SOUTH = 2
 	BG_EAST = 4
@@ -586,7 +602,7 @@ LOCATION_BGS	= 19
 
 
 locations:
-	.word location0,location1,location2
+	.word location0,location1,location2,location3
 
 ; myst linking book
 location0:
@@ -594,6 +610,10 @@ location0:
 	.byte	$ff		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
 	.byte	$00		; special exit
 	.word	link_book_rle	; north bg
 	.word	$0000		; south bg
@@ -610,6 +630,10 @@ location1:
 	.byte	$ff		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
 	.word	dock_n_rle	; north bg
 	.word	dock_s_rle	; south bg
@@ -622,10 +646,14 @@ location1:
 
 ; by dock switch
 location2:
-	.byte	$ff		; north exit
-	.byte	$1		; south exit
+	.byte	3		; north exit
+	.byte	1		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
+	.byte	DIRECTION_W	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
 	.word	dock_switch_n_rle	; north bg
 	.word	$0000		; south bg
@@ -635,6 +663,28 @@ location2:
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
 	.byte	$1		; only north
+
+
+; dock steps
+location3:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	2		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	$0000		; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	dock_steps_w_rle		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	$C		; only east+west
+
 
 ; Looking North, click enter, go to north exit
 ; Looking South, click enter, go to south exit
