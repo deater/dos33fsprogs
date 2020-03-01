@@ -43,12 +43,14 @@ mist.o:	mist.s zp.inc hardware.inc \
 
 mist_graphics.inc:	\
 	m_link_book.png \
-	dock_n.png dock_s.png dock_e.png dock_w.png
+	dock_n.png dock_s.png dock_e.png dock_w.png \
+	dock_switch_n.png
 	$(PNG2RLE) asm m_link_book.png link_book_rle > mist_graphics.inc
 	$(PNG2RLE) asm dock_n.png dock_n_rle >> mist_graphics.inc
 	$(PNG2RLE) asm dock_s.png dock_s_rle >> mist_graphics.inc
 	$(PNG2RLE) asm dock_e.png dock_e_rle >> mist_graphics.inc
 	$(PNG2RLE) asm dock_w.png dock_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm dock_switch_n.png dock_switch_n_rle >> mist_graphics.inc
 
 ####
 

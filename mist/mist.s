@@ -54,6 +54,8 @@ game_loop:
 
 	lda	#0
 	sta	IN_SPECIAL
+	sta	IN_RIGHT
+	sta	IN_LEFT
 
 	;====================================
 	; copy background to current page
@@ -115,6 +117,16 @@ finger_grab:
 
 finger_not_special:
 
+	; check for left/right
+
+	lda	CURSOR_X
+	cmp	#7
+	bcc	check_cursor_left			; blt
+
+	cmp	#33
+	bcs	check_cursor_right			; bge
+
+	; otherwise, finger_point
 
 finger_point:
 	lda     #<finger_point_sprite
@@ -122,13 +134,106 @@ finger_point:
 	lda     #>finger_point_sprite
 	jmp	finger_draw
 
+check_cursor_left:
+	ldy	#LOCATION_BGS
+	lda	(LOCATION_STRUCT_L),Y
+
+check_left_north:
+	ldy	DIRECTION
+	cpy	#DIRECTION_N
+	bne	check_left_south
+
+handle_left_north:
+	; check if west exists
+	and	#BG_WEST
+	beq	finger_point
+	bne	finger_left
+
+check_left_south:
+	cpy	#DIRECTION_S
+	bne	check_left_east
+
+handle_left_south:
+	; check if east exists
+	and	#BG_EAST
+	beq	finger_point
+	bne	finger_left
+
+check_left_east:
+	cpy	#DIRECTION_E
+	bne	check_left_west
+handle_left_east:
+	; check if north exists
+	and	#BG_NORTH
+	beq	finger_point
+	bne	finger_left
+
+check_left_west:
+	; we should be only option left
+handle_left_west:
+	; check if south exists
+	and	#BG_SOUTH
+	beq	finger_point
+	bne	finger_left
+
+
+check_cursor_right:
+
+	ldy	#LOCATION_BGS
+	lda	(LOCATION_STRUCT_L),Y
+
+check_right_north:
+	ldy	DIRECTION
+	cpy	#DIRECTION_N
+	bne	check_right_south
+
+handle_right_north:
+	; check if east exists
+	and	#BG_EAST
+	beq	finger_point
+	bne	finger_right
+
+check_right_south:
+	cpy	#DIRECTION_S
+	bne	check_right_east
+
+handle_right_south:
+	; check if west exists
+	and	#BG_WEST
+	beq	finger_point
+	bne	finger_right
+
+check_right_east:
+	cpy	#DIRECTION_E
+	bne	check_right_west
+handle_right_east:
+	; check if south exists
+	and	#BG_SOUTH
+	beq	finger_point
+	bne	finger_right
+
+check_right_west:
+	; we should be only option left
+handle_right_west:
+	; check if north exists
+	and	#BG_NORTH
+	beq	finger_point
+	bne	finger_right
+
+
+
 finger_left:
+	lda	#1
+	sta	IN_LEFT
+
 	lda     #<finger_left_sprite
 	sta	INL
 	lda     #>finger_left_sprite
 	jmp	finger_draw
 
 finger_right:
+	lda	#1
+	sta	IN_RIGHT
 	lda     #<finger_right_sprite
 	sta	INL
 	lda     #>finger_right_sprite
@@ -229,13 +334,33 @@ return_pressed:
 	lda	IN_SPECIAL
 	beq	not_special_return
 
+special_return:
 	jsr	handle_special
 
+	; special case, don't make cursor visible
+	jmp	no_keypress
 
 not_special_return:
 
-	; special case, don't make cursor visible
+	lda	IN_RIGHT
+	beq	not_right_return
+right_return:
 
+	jsr	turn_right
+	jmp	no_keypress
+
+not_right_return:
+
+	lda	IN_LEFT
+	beq	not_left_return
+left_return:
+
+	jsr	turn_left
+	jmp	no_keypress
+
+not_left_return:
+
+	jsr	go_forward
 	jmp	no_keypress
 
 done_keypress:
@@ -322,6 +447,60 @@ change_location:
 	rts
 
 	;==========================
+	; go forward
+	;===========================
+go_forward:
+	rts
+
+	;==========================
+	; turn left
+	;===========================
+turn_left:
+
+	lda	DIRECTION
+	cmp	#DIRECTION_N
+	beq	go_west
+	cmp	#DIRECTION_W
+	beq	go_south
+	cmp	#DIRECTION_S
+	beq	go_east
+	bne	go_north
+
+	;==========================
+	; turn right
+	;===========================
+turn_right:
+	lda	DIRECTION
+	cmp	#DIRECTION_N
+	beq	go_east
+	cmp	#DIRECTION_E
+	beq	go_south
+	cmp	#DIRECTION_S
+	beq	go_west
+	bne	go_north
+
+
+go_north:
+	lda	#DIRECTION_N
+	jmp	done_turning
+go_east:
+	lda	#DIRECTION_E
+	jmp	done_turning
+go_south:
+	lda	#DIRECTION_S
+	jmp	done_turning
+go_west:
+	lda	#DIRECTION_W
+	jmp	done_turning
+
+
+done_turning:
+	sta	DIRECTION
+	jsr	change_direction
+
+	rts
+
+	;==========================
 	; includes
 	;==========================
 
@@ -386,12 +565,15 @@ LOCATION_SPECIAL_X2=14
 LOCATION_SPECIAL_Y1=15
 LOCATION_SPECIAL_Y2=16
 LOCATION_SPECIAL_FUNC=17
-
-
+LOCATION_BGS	= 19
+	BG_NORTH = 1
+	BG_SOUTH = 2
+	BG_EAST = 4
+	BG_WEST = 8
 
 
 locations:
-	.word location0,location1
+	.word location0,location1,location2
 
 ; myst linking book
 location0:
@@ -407,10 +589,11 @@ location0:
 	.byte	21,31		; special x
 	.byte	10,24		; special y
 	.word	myst_link_book-1		; special function
+	.byte	$1		; only north bg
 
 ; dock
 location1:
-	.byte	$ff		; north exit
+	.byte	$2		; north exit
 	.byte	$ff		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
@@ -422,4 +605,28 @@ location1:
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
+	.byte	$f		; all bgs
+
+; by dock switch
+location2:
+	.byte	$ff		; north exit
+	.byte	$1		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; special exit
+	.word	dock_switch_n_rle	; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	$1		; only north
+
+; Looking North, click enter, go to north exit
+; Looking South, click enter, go to south exit
+; Looking East, click enter, go to east exit
+
+; Looking North, if east_bg then show left arrow
+
 
