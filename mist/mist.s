@@ -450,6 +450,19 @@ change_location:
 	; go forward
 	;===========================
 go_forward:
+
+	lda	DIRECTION
+	clc
+	adc	#LOCATION_NORTH_EXIT
+	tay
+	lda	(LOCATION_STRUCT_L),Y
+
+	cmp	#$ff
+	beq	cant_go_forward
+
+	sta	LOCATION
+	jsr	change_location
+cant_go_forward:
 	rts
 
 	;==========================
