@@ -37,7 +37,7 @@ MIST:	mist.o
 
 mist.o:	mist.s zp.inc hardware.inc \
 	mist_graphics.inc \
-	gr_copy.s gr_unrle.s audio.s
+	gr_copy.s gr_unrle.s audio.s text_print.s
 	ca65 -o mist.o mist.s -l mist.lst
 
 ####
