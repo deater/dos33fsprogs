@@ -53,8 +53,8 @@ mist_graphics.inc:	\
 	step_land2_w.png \
 	step_dentist_w.png \
 	step_land3_w.png \
-	step_top_w.png step_top_n.png \
-	temple_door_n.png \
+	step_top_e.png step_top_w.png step_top_n.png step_top_s.png \
+	temple_door_n.png temple_door_s.png \
 	temple_center_n.png temple_center_w.png \
 	red_book_shelf.png
 	$(PNG2RLE) asm m_link_book.png link_book_rle > mist_graphics.inc
@@ -70,10 +70,15 @@ mist_graphics.inc:	\
 	$(PNG2RLE) asm step_land2_w.png step_land2_w_rle >> mist_graphics.inc
 	$(PNG2RLE) asm step_dentist_w.png step_dentist_w_rle >> mist_graphics.inc
 	$(PNG2RLE) asm step_land3_w.png step_land3_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm step_top_e.png step_top_e_rle >> mist_graphics.inc
 	$(PNG2RLE) asm step_top_w.png step_top_w_rle >> mist_graphics.inc
 	$(PNG2RLE) asm step_top_n.png step_top_n_rle >> mist_graphics.inc
+	$(PNG2RLE) asm step_top_s.png step_top_s_rle >> mist_graphics.inc
 	$(PNG2RLE) asm temple_door_n.png temple_door_n_rle >> mist_graphics.inc
+	$(PNG2RLE) asm temple_door_s.png temple_door_s_rle >> mist_graphics.inc
 	$(PNG2RLE) asm temple_center_n.png temple_center_n_rle >> mist_graphics.inc
+	$(PNG2RLE) asm temple_center_s.png temple_center_s_rle >> mist_graphics.inc
+	$(PNG2RLE) asm temple_center_e.png temple_center_e_rle >> mist_graphics.inc
 	$(PNG2RLE) asm temple_center_w.png temple_center_w_rle >> mist_graphics.inc
 	$(PNG2RLE) asm red_book_shelf.png red_book_shelf_rle >> mist_graphics.inc
 

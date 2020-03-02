@@ -822,13 +822,13 @@ location10:
 	.byte	DIRECTION_W	; west exit_dir
 	.byte	$ff		; special exit
 	.word	step_top_n_rle	; north bg
-	.word	$0000		; south bg
-	.word	$0000		; east bg
+	.word	step_top_s_rle	; south bg
+	.word	step_top_e_rle	; east bg
 	.word	step_top_w_rle	; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
-	.byte	BG_WEST|BG_NORTH		; west and north
+	.byte	BG_EAST|BG_WEST|BG_NORTH|BG_SOUTH	; all dirs
 
 ; temple doorway
 location11:
@@ -842,44 +842,44 @@ location11:
 	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
 	.word	temple_door_n_rle	; north bg
-	.word	$0000		; south bg
+	.word	temple_door_s_rle	; south bg
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
-	.byte	BG_NORTH	; north
+	.byte	BG_NORTH|BG_SOUTH	; north and south
 
 ; temple inside
 location12:
 	.byte	$ff		; north exit
-	.byte	$11		; south exit
+	.byte	11		; south exit
 	.byte	$ff		; east exit
 	.byte	13		; west exit
 	.byte	$ff		; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.byte	$ff		; special exit
 	.word	temple_center_n_rle	; north bg
-	.word	$0000		; south bg
-	.word	$0000		; east bg
+	.word	temple_center_s_rle	; south bg
+	.word	temple_center_e_rle	; east bg
 	.word	temple_center_w_rle	; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
-	.byte	BG_NORTH|BG_WEST	; north and west
+	.byte	BG_NORTH|BG_WEST|BG_SOUTH|BG_EAST	; all directions
 
 ; red book shelf
 location13:
 	.byte	$ff		; north exit
 	.byte	$ff		; south exit
-	.byte	$12		; east exit
-	.byte	$ff		; west exit
+	.byte	$ff		; east exit
+	.byte	12		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
-	.byte	$ff		; west exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
 	.byte	$ff		; special exit
 	.word	$0000		; north bg
 	.word	$0000		; south bg
