@@ -621,11 +621,11 @@ LOCATION_BGS	= 23
 
 
 locations:
-	.word location0,location1,location2,location3
-	.word location4,location5,location6,location7
-	.word location8,location9,location10,location11
-	.word location12,location13
-
+	.word location0, location1, location2, location3
+	.word location4, location5, location6, location7
+	.word location8, location9, location10,location11
+	.word location12,location13,location14,location15
+	.word location16
 
 ; myst linking book
 location0:
@@ -832,13 +832,13 @@ location9:
 ; at the top outside temple
 location10:
 	.byte	11		; north exit
-	.byte	$ff		; south exit
+	.byte	14		; south exit
 	.byte	9		; east exit
-	.byte	$ff		; west exit
+	.byte	16		; west exit
 	.byte	DIRECTION_N	; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
-	.byte	$ff		; west exit_dir
+	.byte	DIRECTION_N	; west exit_dir
 	.byte	$ff		; special exit
 	.word	step_top_n_rle	; north bg
 	.word	step_top_s_rle	; south bg
@@ -908,6 +908,70 @@ location13:
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
 	.byte	BG_WEST		; west
+
+; pool
+location14:
+	.byte	$ff		; north exit
+	.byte	15		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	$0000		; north bg
+	.word	pool_s_rle	; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_SOUTH
+
+; clock
+location15:
+	.byte	$ff		; north exit
+	.byte	10		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	$0000		; north bg
+	.word	clock_s_rle	; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_SOUTH
+
+
+; spaceship far
+location16:
+	.byte	10		; north exit
+	.byte	$ff		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_E	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	ss_far_n_rle	; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_NORTH
+
+
+
 
 
 
