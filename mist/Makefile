@@ -36,8 +36,8 @@ MIST:	mist.o
 	ld65 -o MIST mist.o -C ../linker_scripts/apple2_1000.inc
 
 mist.o:	mist.s zp.inc hardware.inc \
-	mist_graphics.inc
-#gr_copy.s gr_unrle.s gr_unrle_large.s gr_copy_large.s
+	mist_graphics.inc \
+	gr_copy.s gr_unrle.s audio.s
 	ca65 -o mist.o mist.s -l mist.lst
 
 ####

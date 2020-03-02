@@ -392,6 +392,23 @@ myst_link_book:
 
 	; play sound effect?
 
+;	lda	#<audio_link_noise
+;	sta	BTC_L
+;	lda	#>audio_link_noise
+;	sta	BTC_H
+;	ldx	#43		; 45 pages long???
+;	jsr	play_audio
+
+;	lda	#<audio_red_page
+;	sta	BTC_L
+;	lda	#>audio_red_page
+;	sta	BTC_H
+;	ldx	#21		; 21 pages long???
+;	jsr	play_audio
+
+
+
+
 	lda	#1
 	sta	LOCATION
 	jsr	change_location
@@ -534,6 +551,8 @@ done_turning:
 	.include	"gr_offsets.s"
 	.include	"gr_pageflip.s"
 	.include	"gr_putsprite_crop.s"
+
+	.include "audio.s"
 
 	.include	"mist_graphics.inc"
 
@@ -918,3 +937,12 @@ location13:
 ; to retrieve the message.
 ;             Yours,
 ;                 Atrus
+
+
+
+;.align $100
+;audio_red_page:
+;.incbin "audio/red_page.btc"
+;audio_link_noise:
+;.incbin "audio/link_noise.btc"
+
