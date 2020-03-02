@@ -1426,3 +1426,25 @@ bridge_sequence:
 	.word lshot5_rle	; 10
 	.word lshot6_rle	; 12
 
+
+
+; grab sequence
+; note, in the actual game both the background and the falling is not
+; 100% the same as the fall sequence, but it's close enough to not
+; really be worth the trouble/space to do them separately
+
+				; grab52 -> fall01
+				; grab53 -> fall02 shifted right by 2?
+				; grab54 -> fall03 shifted right by 4?
+				; grab55 -> fall04 shifted right by 4?
+				; grab56 -> fall05 shifted right by 4?
+				; grab57 -> fall06 shifted right by 4?
+				; grab58 -> fall07 shifted right by 4?
+				; grab59 -> fall08 shifted right by 4?
+				; grab60 -> fall09 shifted right by 4?
+				; grab61 -> fall10 shifted right by 4?
+				; grab62 -> fall11 shifted right by 4?
+				; grab63 -> fall12 shifted right by 4?
+				; grab64 -> fall13 shifted right by 4?
+				; grab65 -> fall14 shifted right by 4?
+				; grab66 -> fall15 shifted right by 4?

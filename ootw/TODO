@@ -135,6 +135,11 @@ BEHAVIOR DIFFERENCES:
 		in the original
 	* Bath: guards shooting eventually wear away the column
 	* shots: wall damage not remembered if you return?
+	* falling/grab: the falling after being kicked off the edge
+	  is actually slightly different than the fall/grab animation
+	  (both background and the animation).  We reuse stuff to
+	  save space
+
 
 FUTURE WORK:
 ============
