@@ -1,6 +1,6 @@
 MEMORY {
        ZP: start = $00, size = $1A, type = rw;
-       RAM: start = $1000, size = $8E00, file = %O;
+       RAM: start = $1000, size = $B000, file = %O;
 }
 
 SEGMENTS {

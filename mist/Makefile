@@ -8,13 +8,23 @@ B2D = ../bmp2dhr/b2d
 
 all:	mist.dsk
 
-mist.dsk:	HELLO MIST MIST_TITLE MIST_TITLE.LZ4
+mist.dsk:	HELLO LOADER MIST MIST_TITLE MIST_TITLE.LZ4
 	cp empty.dsk mist.dsk
 	$(DOS33) -y mist.dsk SAVE A HELLO
+	$(DOS33) -y mist.dsk BSAVE -a 0x800 LOADER
 	$(DOS33) -y mist.dsk BSAVE -a 0x1000 MIST
-	$(DOS33) -y mist.dsk BSAVE -a 0x1000 MIST_TITLE
+	$(DOS33) -y mist.dsk BSAVE -a 0x4000 MIST_TITLE
 	$(DOS33) -y mist.dsk BSAVE -a 0xa000 MIST_TITLE.LZ4
 #	$(DOS33) -y mist.dsk BSAVE -a 0x4000 STEPS_HGRC.BIN
+
+###
+
+LOADER: loader.o
+	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_800.inc
+
+loader.o:	loader.s
+	ca65 -o loader.o loader.s -l loader.lst
+
 
 ###
 
@@ -24,7 +34,7 @@ HELLO:	hello.bas
 ####
 
 MIST_TITLE:	mist_title.o
-	ld65 -o MIST_TITLE mist_title.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o MIST_TITLE mist_title.o -C ../linker_scripts/apple2_4000.inc
 
 mist_title.o:	mist_title.s zp.inc hardware.inc
 #gr_copy.s gr_unrle.s gr_unrle_large.s gr_copy_large.s
@@ -59,7 +69,8 @@ mist_graphics.inc:	\
 	red_book_shelf.png \
 	pool_s.png \
 	clock_s.png \
-	spaceship_far_n.png
+	spaceship_far_n.png \
+	red_book_open.png red_book_static.png red_book_static2.png
 	$(PNG2RLE) asm m_link_book.png link_book_rle > mist_graphics.inc
 	$(PNG2RLE) asm dock_n.png dock_n_rle >> mist_graphics.inc
 	$(PNG2RLE) asm dock_s.png dock_s_rle >> mist_graphics.inc
@@ -95,6 +106,10 @@ mist_graphics.inc:	\
 	$(PNG2RLE) asm pool_s.png pool_s_rle >> mist_graphics.inc
 	$(PNG2RLE) asm clock_s.png clock_s_rle >> mist_graphics.inc
 	$(PNG2RLE) asm spaceship_far_n.png ss_far_n_rle >> mist_graphics.inc
+	$(PNG2RLE) asm red_book_open.png red_book_open_rle >> mist_graphics.inc
+	$(PNG2RLE) asm red_book_static.png red_book_static_rle >> mist_graphics.inc
+	$(PNG2RLE) asm red_book_static2.png red_book_static2_rle >> mist_graphics.inc
+
 
 
 ####

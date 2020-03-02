@@ -19,7 +19,7 @@ mist_start:
 
 	bit	SET_GR
 	bit	PAGE0
-;	bit	HIRES
+	bit	LORES
 	bit	FULLGR
 
 	lda	#0
@@ -392,19 +392,13 @@ myst_link_book:
 
 	; play sound effect?
 
-;	lda	#<audio_link_noise
-;	sta	BTC_L
-;	lda	#>audio_link_noise
-;	sta	BTC_H
-;	ldx	#43		; 45 pages long???
-;	jsr	play_audio
+	lda	#<audio_link_noise
+	sta	BTC_L
+	lda	#>audio_link_noise
+	sta	BTC_H
+	ldx	#43		; 45 pages long???
+	jsr	play_audio
 
-;	lda	#<audio_red_page
-;	sta	BTC_L
-;	lda	#>audio_red_page
-;	sta	BTC_H
-;	ldx	#21		; 21 pages long???
-;	jsr	play_audio
 
 
 
@@ -637,8 +631,102 @@ click_switch:
 	bit	$C030
 	bit	$C030
 
+	rts
+
+
+	;===========================
+	; open the red book
+	;===========================
+red_book:
+
+	bit	KEYRESET
+	lda	#0
+	sta	FRAMEL
+
+red_book_loop:
+
+	lda	#<red_book_static_rle
+	sta	GBASL
+	lda	#>red_book_static_rle
+	sta	GBASH
+	lda	#$c			; load to page $c00
+	jsr	load_rle_gr
+
+	jsr	gr_copy_to_current
+
+	jsr	page_flip
+
+	lda	#120
+	jsr	WAIT
+
+	lda	#<red_book_static2_rle
+	sta	GBASL
+	lda	#>red_book_static2_rle
+	sta	GBASH
+	lda	#$c			; load to page $c00
+	jsr	load_rle_gr
+
+	jsr	gr_copy_to_current
+
+	jsr	page_flip
+
+	lda	#120
+	jsr	WAIT
+
+
+	inc	FRAMEL
+	lda	FRAMEL
+	cmp	#5
+	bne	done_sir
+
+	;; annoying brother
+
+
+	lda	#<red_book_open_rle
+	sta	GBASL
+	lda	#>red_book_open_rle
+	sta	GBASH
+	lda	#$c			; load to page $c00
+	jsr	load_rle_gr
+
+	jsr	gr_copy_to_current
+
+	jsr	page_flip
+
+	lda	#<audio_red_page
+	sta	BTC_L
+	lda	#>audio_red_page
+	sta	BTC_H
+	ldx	#21		; 21 pages long???
+	jsr	play_audio
+
+
+;	lda	#100
+;	jsr	WAIT
+
+
+done_sir:
+
+	lda	KEYPRESS
+	bpl	red_book_loop
+
+red_book_done:
+
+	bit	KEYRESET
+
+	; restore bg
+
+	lda	#<red_book_shelf_rle
+	sta	GBASL
+	lda	#>red_book_shelf_rle
+	sta	GBASH
+	lda	#$c			; load to page $c00
+	jsr	load_rle_gr
+
 
 	rts
+
+
 
 
 
@@ -1001,14 +1089,14 @@ location13:
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
-	.byte	$ff		; special exit
+	.byte	$00		; special exit
 	.word	$0000		; north bg
 	.word	$0000		; south bg
 	.word	$0000		; east bg
 	.word	red_book_shelf_rle	; west bg
-	.byte	$ff,$ff		; special x
-	.byte	$ff,$ff		; special y
-	.word	$0000		; special function
+	.byte	16,25		; special x
+	.byte	16,32		; special y
+	.word	red_book-1	; special function
 	.byte	BG_WEST		; west
 
 ; pool
@@ -1097,8 +1185,8 @@ location16:
 
 
 ;.align $100
-;audio_red_page:
-;.incbin "audio/red_page.btc"
-;audio_link_noise:
-;.incbin "audio/link_noise.btc"
+audio_red_page:
+.incbin "audio/red_page.btc"
+audio_link_noise:
+.incbin "audio/link_noise.btc"
 

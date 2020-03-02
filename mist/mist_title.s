@@ -26,7 +26,7 @@ mist_start:
 	; Init RTS disk code
 	;===================
 
-	jsr	rts_init
+;	jsr	rts_init
 
 	;===================
 	; Load graphics
@@ -35,29 +35,29 @@ reload_everything:
 	; load MIST_TITLE.LZ4 to $a000
 	; then decompress it to $2000 (HGR PAGE0)
 
-	lda	#<mist_title_filename
-	sta	OUTL
-	lda	#>mist_title_filename
-	sta	OUTH
-	jsr	opendir_filename	; open and read entire file into memory
+;	lda	#<mist_title_filename
+;	sta	OUTL
+;	lda	#>mist_title_filename
+;	sta	OUTH
+;	jsr	opendir_filename	; open and read entire file into memory
 
 	; size in ldsizeh:ldsizel (f1/f0)
 
-	clc
-	lda     #<($a000)
+;	clc
+	lda     #<file
 	sta     LZ4_SRC
-	adc	ldsizel
-	sta	LZ4_END
-
-	lda     #>($a000)
-	sta     LZ4_SRC+1
-	adc	ldsizeh
-	sta	LZ4_END+1
-
-;	lda	#<($a000+4103-8)	; skip checksum at end
+;	adc	ldsizel
 ;	sta	LZ4_END
-;	lda	#>($a000+4103-8)	; skip checksum at end
+
+	lda     #>file
+	sta     LZ4_SRC+1
+;	adc	ldsizeh
 ;	sta	LZ4_END+1
+
+	lda	#<file_end
+	sta	LZ4_END
+	lda	#>file_end
+	sta	LZ4_END+1
 
 	lda	#<$2000
 	sta	LZ4_DST
@@ -67,16 +67,18 @@ reload_everything:
 	jsr	lz4_decode
 
 
-	;===================
-	; set graphics mode
-	;===================
-	jsr	HOME
 
+	bit	KEYRESET
 
-	bit	PAGE0
+keyloop:
+	lda	KEYPRESS
+	bpl	keyloop
 
-blah:
-	jmp	blah
+	bit	KEYRESET
+
+	lda	#16
+	sta	5
+	rts
 
 
 
@@ -88,12 +90,14 @@ blah:
 ;	.include	"gr_hline.s"
 ;	.include	"wait_keypress.s"
 	.include	"lz4_decode.s"
-	.include	"rts.s"
+;	.include	"rts.s"
 
 
 ; filename to open is 30-character Apple text:
-mist_title_filename:	; .byte "MIST_TITLE.LZ4",0
-	.byte 'M'|$80,'I'|$80,'S'|$80,'T'|$80,'_'|$80,'T'|$80,'I'|$80,'T'|$80
-	.byte 'L'|$80,'E'|$80,'.'|$80,'L'|$80,'Z'|$80,'4'|$80,$00
+;mist_title_filename:	; .byte "MIST_TITLE.LZ4",0
+;	.byte 'M'|$80,'I'|$80,'S'|$80,'T'|$80,'_'|$80,'T'|$80,'I'|$80,'T'|$80
+;	.byte 'L'|$80,'E'|$80,'.'|$80,'L'|$80,'Z'|$80,'4'|$80,$00
 
-
+file:
+.incbin "MIST_TITLE.LZ4"
+file_end:
