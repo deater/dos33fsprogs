@@ -630,6 +630,18 @@ wait_done_letter:
 	rts
 
 
+click_switch:
+
+	; click
+
+	bit	$C030
+	bit	$C030
+
+
+	rts
+
+
+
 	;==========================
 	; includes
 	;==========================
@@ -767,14 +779,14 @@ location2:
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.byte	$ff		; special exit
+	.byte	$00		; special exit
 	.word	dock_switch_n_rle	; north bg
 	.word	dock_switch_s_rle	; south bg
 	.word	$0000		; east bg
 	.word	$0000		; west bg
-	.byte	$ff,$ff		; special x
-	.byte	$ff,$ff		; special y
-	.word	$0000		; special function
+	.byte	23,30		; special x
+	.byte	25,32		; special y
+	.word	click_switch-1	; special function
 	.byte	BG_NORTH|BG_SOUTH
 
 
