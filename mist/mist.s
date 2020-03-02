@@ -603,6 +603,10 @@ LOCATION_BGS	= 23
 
 locations:
 	.word location0,location1,location2,location3
+	.word location4,location5,location6,location7
+	.word location8,location9,location10,location11
+	.word location12,location13
+
 
 ; myst linking book
 location0:
@@ -662,7 +666,7 @@ location2:
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
-	.byte	$1		; only north
+	.byte	BG_NORTH	; only north
 
 
 ; dock steps
@@ -670,11 +674,11 @@ location3:
 	.byte	$ff		; north exit
 	.byte	$ff		; south exit
 	.byte	2		; east exit
-	.byte	$ff		; west exit
+	.byte	4		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
+	.byte	DIRECTION_S	; east exit_dir
+	.byte	DIRECTION_S	; west exit_dir
 	.byte	$ff		; special exit
 	.word	$0000		; north bg
 	.word	$0000		; south bg
@@ -683,7 +687,217 @@ location3:
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
-	.byte	$C		; only east+west
+	.byte	BG_WEST		; only west
+
+; above dock path
+location4:
+	.byte	3		; north exit
+	.byte	5		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	$0000		; north bg
+	.word	above_dock_s_rle		; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_SOUTH	; only south
+
+; base of steps
+location5:
+	.byte	4		; north exit
+	.byte	6		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_W	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	$0000		; north bg
+	.word	step_base_s_rle	; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_SOUTH	; only south
+
+; steps 1st landing
+location6:
+	.byte	5		; north exit
+	.byte	$ff		; south exit
+	.byte	$ff		; east exit
+	.byte	7		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.byte	$ff		; special exit
+	.word	$0000		; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	step_land1_w_rle	; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_WEST		; only west
+
+; steps 2nd landing
+location7:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	6		; east exit
+	.byte	8		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.byte	$ff		; special exit
+	.word	$0000		; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	step_land2_w_rle	; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_WEST		; only west
+
+; steps outside dentist chair branch
+location8:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	7		; east exit
+	.byte	9		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.byte	$ff		; special exit
+	.word	$0000		; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	step_dentist_w_rle	; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_WEST		; only west
+
+; steps one more time up
+location9:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	8		; east exit
+	.byte	10		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.byte	$ff		; special exit
+	.word	$0000		; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	step_land3_w_rle	; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_WEST		; only west
+
+
+; at the top outside temple
+location10:
+	.byte	11		; north exit
+	.byte	$ff		; south exit
+	.byte	9		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.byte	$ff		; special exit
+	.word	step_top_n_rle	; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	step_top_w_rle	; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_WEST|BG_NORTH		; west and north
+
+; temple doorway
+location11:
+	.byte	12		; north exit
+	.byte	10		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	temple_door_n_rle	; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_NORTH	; north
+
+; temple inside
+location12:
+	.byte	$ff		; north exit
+	.byte	$11		; south exit
+	.byte	$ff		; east exit
+	.byte	13		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.byte	$ff		; special exit
+	.word	temple_center_n_rle	; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	temple_center_w_rle	; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_NORTH|BG_WEST	; north and west
+
+; red book shelf
+location13:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	$12		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	$0000		; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	red_book_shelf_rle	; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_WEST		; west
+
+
+
+
+
+
+
+
+
 
 
 ; Looking North, click enter, go to north exit
@@ -693,3 +907,14 @@ location3:
 ; Looking North, if east_bg then show left arrow
 
 
+
+; Catherine,
+; I've left for you a message
+; of utmost importance in
+; our fore-chamber beside
+; the dock.  Enter the number
+; of Marker Switches on
+; this island into the imager
+; to retrieve the message.
+;             Yours,
+;                 Atrus

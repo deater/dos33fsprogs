@@ -14,6 +14,7 @@ mist.dsk:	HELLO MIST MIST_TITLE MIST_TITLE.LZ4
 	$(DOS33) -y mist.dsk BSAVE -a 0x1000 MIST
 	$(DOS33) -y mist.dsk BSAVE -a 0x1000 MIST_TITLE
 	$(DOS33) -y mist.dsk BSAVE -a 0xa000 MIST_TITLE.LZ4
+#	$(DOS33) -y mist.dsk BSAVE -a 0x4000 STEPS_HGRC.BIN
 
 ###
 
@@ -45,7 +46,17 @@ mist_graphics.inc:	\
 	m_link_book.png \
 	dock_n.png dock_s.png dock_e.png dock_w.png \
 	dock_switch_n.png \
-	dock_steps_w.png
+	dock_steps_w.png \
+	above_dock_s.png \
+	step_base_s.png \
+	step_land1_w.png \
+	step_land2_w.png \
+	step_dentist_w.png \
+	step_land3_w.png \
+	step_top_w.png step_top_n.png \
+	temple_door_n.png \
+	temple_center_n.png temple_center_w.png \
+	red_book_shelf.png
 	$(PNG2RLE) asm m_link_book.png link_book_rle > mist_graphics.inc
 	$(PNG2RLE) asm dock_n.png dock_n_rle >> mist_graphics.inc
 	$(PNG2RLE) asm dock_s.png dock_s_rle >> mist_graphics.inc
@@ -53,6 +64,19 @@ mist_graphics.inc:	\
 	$(PNG2RLE) asm dock_w.png dock_w_rle >> mist_graphics.inc
 	$(PNG2RLE) asm dock_switch_n.png dock_switch_n_rle >> mist_graphics.inc
 	$(PNG2RLE) asm dock_steps_w.png dock_steps_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm above_dock_s.png above_dock_s_rle >> mist_graphics.inc
+	$(PNG2RLE) asm step_base_s.png step_base_s_rle >> mist_graphics.inc
+	$(PNG2RLE) asm step_land1_w.png step_land1_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm step_land2_w.png step_land2_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm step_dentist_w.png step_dentist_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm step_land3_w.png step_land3_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm step_top_w.png step_top_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm step_top_n.png step_top_n_rle >> mist_graphics.inc
+	$(PNG2RLE) asm temple_door_n.png temple_door_n_rle >> mist_graphics.inc
+	$(PNG2RLE) asm temple_center_n.png temple_center_n_rle >> mist_graphics.inc
+	$(PNG2RLE) asm temple_center_w.png temple_center_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm red_book_shelf.png red_book_shelf_rle >> mist_graphics.inc
+
 
 ####
 
