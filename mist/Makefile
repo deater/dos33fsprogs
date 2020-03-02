@@ -47,12 +47,12 @@ mist_graphics.inc:	\
 	dock_n.png dock_s.png dock_e.png dock_w.png \
 	dock_switch_n.png \
 	dock_steps_w.png \
-	above_dock_s.png \
-	step_base_s.png \
-	step_land1_w.png \
-	step_land2_w.png \
-	step_dentist_w.png \
-	step_land3_w.png \
+	above_dock_e.png above_dock_n.png above_dock_s.png \
+	step_base_s.png step_base_n.png \
+	step_land1_w.png step_land1_e.png \
+	step_land2_e.png step_land2_w.png \
+	step_dentist_e.png step_dentist_w.png \
+	step_land3_w.png step_land3_e.png \
 	step_top_e.png step_top_w.png step_top_n.png step_top_s.png \
 	temple_door_n.png temple_door_s.png \
 	temple_center_n.png temple_center_w.png \
@@ -63,13 +63,21 @@ mist_graphics.inc:	\
 	$(PNG2RLE) asm dock_e.png dock_e_rle >> mist_graphics.inc
 	$(PNG2RLE) asm dock_w.png dock_w_rle >> mist_graphics.inc
 	$(PNG2RLE) asm dock_switch_n.png dock_switch_n_rle >> mist_graphics.inc
+	$(PNG2RLE) asm dock_switch_s.png dock_switch_s_rle >> mist_graphics.inc
 	$(PNG2RLE) asm dock_steps_w.png dock_steps_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm above_dock_e.png above_dock_e_rle >> mist_graphics.inc
 	$(PNG2RLE) asm above_dock_s.png above_dock_s_rle >> mist_graphics.inc
+	$(PNG2RLE) asm above_dock_n.png above_dock_n_rle >> mist_graphics.inc
+	$(PNG2RLE) asm step_base_n.png step_base_n_rle >> mist_graphics.inc
 	$(PNG2RLE) asm step_base_s.png step_base_s_rle >> mist_graphics.inc
 	$(PNG2RLE) asm step_land1_w.png step_land1_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm step_land1_e.png step_land1_e_rle >> mist_graphics.inc
 	$(PNG2RLE) asm step_land2_w.png step_land2_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm step_land2_e.png step_land2_e_rle >> mist_graphics.inc
 	$(PNG2RLE) asm step_dentist_w.png step_dentist_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm step_dentist_e.png step_dentist_e_rle >> mist_graphics.inc
 	$(PNG2RLE) asm step_land3_w.png step_land3_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm step_land3_e.png step_land3_e_rle >> mist_graphics.inc
 	$(PNG2RLE) asm step_top_e.png step_top_e_rle >> mist_graphics.inc
 	$(PNG2RLE) asm step_top_w.png step_top_w_rle >> mist_graphics.inc
 	$(PNG2RLE) asm step_top_n.png step_top_n_rle >> mist_graphics.inc
