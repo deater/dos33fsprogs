@@ -815,7 +815,7 @@ locations:
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
-	.word location16
+	.word location16,location17
 
 ; myst linking book
 location0:
@@ -1122,7 +1122,7 @@ location14:
 ; clock
 location15:
 	.byte	$ff		; north exit
-	.byte	10		; south exit
+	.byte	17		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
 	.byte	$ff		; north exit_dir
@@ -1142,22 +1142,43 @@ location15:
 
 ; spaceship far
 location16:
-	.byte	10		; north exit
+	.byte	16		; north exit
 	.byte	$ff		; south exit
-	.byte	$ff		; east exit
+	.byte	10		; east exit
 	.byte	$ff		; west exit
 	.byte	DIRECTION_E	; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
 	.word	ss_far_n_rle	; north bg
 	.word	$0000		; south bg
-	.word	$0000		; east bg
+	.word	ss_far_e_rle	; east bg
 	.word	$0000		; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
+	.byte	BG_NORTH|BG_EAST
+
+
+; tree corridor #2
+location17:
+	.byte	10		; north exit
+	.byte	$ff		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$00		; special exit
+	.word	tree2_n_rle	; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	25,31		; special x
+	.byte	19,23		; special y
+	.word	click_switch-1	; special function
 	.byte	BG_NORTH
 
 

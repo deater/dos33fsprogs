@@ -69,8 +69,9 @@ mist_graphics.inc:	\
 	red_book_shelf.png \
 	pool_s.png \
 	clock_s.png \
-	spaceship_far_n.png \
-	red_book_open.png red_book_static.png red_book_static2.png
+	spaceship_far_e.png spaceship_far_n.png \
+	red_book_open.png red_book_static.png red_book_static2.png \
+	tree2_n.png
 	$(PNG2RLE) asm m_link_book.png link_book_rle > mist_graphics.inc
 	$(PNG2RLE) asm dock_n.png dock_n_rle >> mist_graphics.inc
 	$(PNG2RLE) asm dock_s.png dock_s_rle >> mist_graphics.inc
@@ -106,9 +107,11 @@ mist_graphics.inc:	\
 	$(PNG2RLE) asm pool_s.png pool_s_rle >> mist_graphics.inc
 	$(PNG2RLE) asm clock_s.png clock_s_rle >> mist_graphics.inc
 	$(PNG2RLE) asm spaceship_far_n.png ss_far_n_rle >> mist_graphics.inc
+	$(PNG2RLE) asm spaceship_far_e.png ss_far_e_rle >> mist_graphics.inc
 	$(PNG2RLE) asm red_book_open.png red_book_open_rle >> mist_graphics.inc
 	$(PNG2RLE) asm red_book_static.png red_book_static_rle >> mist_graphics.inc
 	$(PNG2RLE) asm red_book_static2.png red_book_static2_rle >> mist_graphics.inc
+	$(PNG2RLE) asm tree2_n.png tree2_n_rle >> mist_graphics.inc
 
 
 
