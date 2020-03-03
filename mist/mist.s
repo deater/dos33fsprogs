@@ -815,7 +815,8 @@ locations:
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
-	.word location16,location17,location18
+	.word location16,location17,location18,location19
+	.word location20
 
 ; myst linking book
 location0:
@@ -880,31 +881,31 @@ location2:
 
 ; dock steps
 location3:
-	.byte	$ff		; north exit
+	.byte	19		; north exit
 	.byte	$ff		; south exit
 	.byte	2		; east exit
 	.byte	4		; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_S	; east exit_dir
 	.byte	DIRECTION_S	; west exit_dir
 	.byte	$ff		; special exit
-	.word	$0000		; north bg
+	.word	gear_base_n_rle		; north bg
 	.word	$0000		; south bg
 	.word	$0000		; east bg
 	.word	dock_steps_w_rle		; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
-	.byte	BG_WEST		; only west
+	.byte	BG_WEST|BG_NORTH
 
 ; above dock path
 location4:
-	.byte	$ff		; north exit
+	.byte	20		; north exit
 	.byte	5		; south exit
 	.byte	2		; east exit
 	.byte	$ff		; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	DIRECTION_S	; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -1201,6 +1202,47 @@ location18:
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
 	.byte	BG_NORTH | BG_EAST
+
+; gear
+location19:
+	.byte	$ff		; north exit
+	.byte	4		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_E	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$00		; special exit
+	.word	gear_n_rle	; north bg
+	.word	gear_s_rle	; south bg
+	.word	$0000		; east bg
+	.word	gear_w_rle	; west bg
+	.byte	5,10		; special x
+	.byte	29,35		; special y
+	.word	click_switch-1	; special function
+	.byte	BG_NORTH | BG_SOUTH | BG_WEST
+
+; gear base
+location20:
+	.byte	19		; north exit
+	.byte	$ff		; south exit
+	.byte	3		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	gear_base_n_rle	; north bg
+	.word	$0000		; south bg
+	.word	above_dock_e_rle	; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_NORTH | BG_EAST
+
 
 
 

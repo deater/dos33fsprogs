@@ -72,7 +72,9 @@ mist_graphics.inc:	\
 	spaceship_far_e.png spaceship_far_n.png \
 	red_book_open.png red_book_static.png red_book_static2.png \
 	tree2_n.png \
-	tree5_n.png tree5_e.png
+	tree5_n.png tree5_e.png \
+	gear_n.png gear_w.png gear_s.png \
+	gear_base_n.png
 	$(PNG2RLE) asm m_link_book.png link_book_rle > mist_graphics.inc
 	$(PNG2RLE) asm dock_n.png dock_n_rle >> mist_graphics.inc
 	$(PNG2RLE) asm dock_s.png dock_s_rle >> mist_graphics.inc
@@ -115,6 +117,11 @@ mist_graphics.inc:	\
 	$(PNG2RLE) asm tree2_n.png tree2_n_rle >> mist_graphics.inc
 	$(PNG2RLE) asm tree5_n.png tree5_n_rle >> mist_graphics.inc
 	$(PNG2RLE) asm tree5_e.png tree5_e_rle >> mist_graphics.inc
+	$(PNG2RLE) asm gear_n.png gear_n_rle >> mist_graphics.inc
+	$(PNG2RLE) asm gear_s.png gear_s_rle >> mist_graphics.inc
+	$(PNG2RLE) asm gear_w.png gear_w_rle >> mist_graphics.inc
+	$(PNG2RLE) asm gear_base_n.png gear_base_n_rle >> mist_graphics.inc
+
 
 
 
