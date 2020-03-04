@@ -1,3 +1,18 @@
 + Insert floppy #100 joke?
 + double link noise (once when leave, once when get there?)
+
+Make game winnable:
++ Allow access to all marker switches
++ Track state of marker switches (draw them properly?)
++ Allow looking at green book on shelf
 + allow getting in the fireplace
++ allow entering code
+
+Add one of the other ages/puzzles:
++ ??
+
+Make graphics use lzsa compression
+
+Move sound to language card (meaning no sound on II+ w/o language card)
+
+
