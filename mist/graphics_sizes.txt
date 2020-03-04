@@ -1,0 +1,57 @@
+			RLE	lz4 -16		lzsa
+
+above_dock_e.png	379	400		318	
+above_dock_n.png	467	516		435
+above_dock_s.png	455	437		353
+clock_s.png		529	479		400
+dock_e.png		294	339		270
+dock_n.png		502	556		467
+dock_s.png		489	444		344
+dock_steps_w.png	450	480		383
+dock_switch_n.png	566	623		530
+dock_switch_s.png	494	512		424
+dock_w.png		469	486		396
+gear_base_n.png		391	448		359
+gear_n.png		396	401		322
+gear_s.png		399	457		371
+gear_w.png		483	498		396
+m_link_book.png		370	227		178
+pool_s.png		726	730		614
+red_book_closed.png	556	270		199
+red_book_open.png	514	255		204
+red_book_shelf.png	460	245		181
+red_book_static2.png	514	270		219
+red_book_static.png	514	263		207
+spaceship_far_e.png	606	612		511
+spaceship_far_n.png	277	323		257
+step_base_n.png		466	502		407
+step_base_s.png		735	630		504
+step_dentist_e.png	315	336		264
+step_dentist_w.png	575	631		530
+step_land1_e.png	212	245		190
+step_land1_w.png	505	520		429
+step_land2_e.png	360	437		352
+step_land2_w.png	672	681		565
+step_land3_e.png	419	437		350
+step_land3_w.png	542	514		416
+step_top_e.png		552	562		461
+step_top_n.png		580	505		408
+step_top_s.png		654	577		473
+step_top_w.png		524	540		447
+temple_center_e.png	579	481		381
+temple_center_n.png	595	501		391
+temple_center_s.png	640	541		427
+temple_center_w.png	621	511		411
+temple_door_n.png	616	547		435
+temple_door_s.png	432	339		274
+tree2_n.png		622	660		564
+tree5_e.png		654	564		464
+tree5_n.png		704	649		546
+		======================================
+		23,874		22,181		18,027
+
+48,128 uncompressed
+
+sound:				
+	red_page.btc	5386	4366	4209
+	link_noise.btc	11656	7878	7371

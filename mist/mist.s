@@ -744,7 +744,7 @@ red_book_done:
 
 	.include	"audio.s"
 
-	.include	"mist_graphics.inc"
+	.include	"graphics_island/mist_graphics.inc"
 
 
 finger_point_sprite:

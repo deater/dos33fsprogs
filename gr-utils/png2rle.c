@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
 		exit(-1);
 	}
 
-	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
+	fprintf(stderr,"Loaded image %s,%d by %d\n",argv[2],xsize,ysize);
 
 //	size=rle_original(out_type,argv[3],
 //		xsize,ysize,image);

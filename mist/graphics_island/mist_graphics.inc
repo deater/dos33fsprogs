@@ -41,6 +41,7 @@ link_book_rle:	.byte $28 ; ysize=48
 	.byte $A4,$85, $A3,$8F, $A3,$0F, $08, $05, $AB,$0F, $00
 	.byte $77, $A9,$00, $A0,$1F,$07, $A5,$00
 	.byte $A1
+; cycles=1154
 dock_n_rle:	.byte $28 ; ysize=48
 	.byte $A3,$77, $55, $77, $A3,$52, $22, $A0,$1F,$FF, $A3,$77
 	.byte $55, $77, $55, $77, $55, $A0,$20,$FF, $A3,$77
@@ -94,6 +95,7 @@ dock_n_rle:	.byte $28 ; ysize=48
 	.byte $0D, $DD, $44, $A0,$10,$88, $8D, $DD, $EE
 	.byte $00, $05, $57, $07, $A3,$00, $88, $EE,$EE
 	.byte $A1
+; cycles=1467
 dock_s_rle:	.byte $28 ; ysize=48
 	.byte $AE,$FF, $44,$44, $FF, $44,$44, $FF, $44, $FF
 	.byte $44,$44, $00, $FF, $44, $FF, $00, $44
@@ -149,6 +151,7 @@ dock_s_rle:	.byte $28 ; ysize=48
 	.byte $DD,$DD, $AE,$84, $AD,$44, $6E, $E6, $EE, $66
 	.byte $E6, $EE, $A3,$55, $99,$99, $8D, $A0,$10,$88, $AC,$44
 	.byte $A1
+; cycles=938
 dock_e_rle:	.byte $28 ; ysize=48
 	.byte $A7,$FF, $90, $88, $A0,$26,$FF, $09, $88, $A0,$26,$FF
 	.byte $99, $88, $A0,$26,$FF, $09, $88, $8F, $A0,$24,$FF
@@ -180,6 +183,7 @@ dock_e_rle:	.byte $28 ; ysize=48
 	.byte $99, $DD, $A4,$EE, $66, $A8,$EE, $A6,$66, $6E
 	.byte $AC,$EE, $A3,$00, $99, $A0,$22,$8D, $80, $A5,$00
 	.byte $A1
+; cycles=1305
 dock_w_rle:	.byte $28 ; ysize=48
 	.byte $4F, $94, $F4, $A4,$44, $FF,$FF, $44, $A5,$FF
 	.byte $44, $AD,$FF, $0F, $50, $55, $05,$05, $00,$00
@@ -231,6 +235,7 @@ dock_w_rle:	.byte $28 ; ysize=48
 	.byte $A0,$10,$44, $55, $A6,$50, $55, $44,$44, $84, $AD,$80
 	.byte $AA,$44, $84, $A0,$1D,$88
 	.byte $A1
+; cycles=886
 dock_switch_n_rle:	.byte $28 ; ysize=48
 	.byte $A0,$11,$FF, $5F, $0F, $A0,$15,$FF, $55, $5F, $AD,$FF
 	.byte $5F, $0F, $55, $50, $55, $0F, $A0,$13,$FF
@@ -289,6 +294,7 @@ dock_switch_n_rle:	.byte $28 ; ysize=48
 	.byte $50, $05, $A5,$EE, $A8,$22, $55, $AF,$00, $A4,$55
 	.byte $05, $A4,$00, $55, $00, $A5,$EE
 	.byte $A1
+; cycles=50295
 dock_switch_s_rle:	.byte $28 ; ysize=48
 	.byte $FF, $88, $99, $AC,$FF, $4F,$4F, $A0,$12,$44, $88
 	.byte $44, $F4, $A3,$FF, $88, $99, $AC,$FF, $A5,$44
@@ -340,6 +346,7 @@ dock_switch_s_rle:	.byte $28 ; ysize=48
 	.byte $07, $08, $A5,$77, $DD, $A0,$12,$88, $84, $AA,$44
 	.byte $A7,$00, $77,$77, $8D,$8D, $A0,$13,$88, $84, $A9,$44
 	.byte $A1
+; cycles=1008
 dock_steps_w_rle:	.byte $28 ; ysize=48
 	.byte $A9,$FF, $55, $22, $55, $22, $A4,$55, $22
 	.byte $A4,$55, $22, $55, $22, $F2, $A9,$FF, $99
@@ -386,6 +393,7 @@ dock_steps_w_rle:	.byte $28 ; ysize=48
 	.byte $55, $A4,$00, $A3,$07, $A4,$77, $A5,$7F, $55, $A4,$77
 	.byte $DD, $88,$88
 	.byte $A1
+; cycles=13549
 above_dock_e_rle:	.byte $28 ; ysize=48
 	.byte $A9,$FF, $8F, $A0,$10,$FF, $88, $AC,$FF, $5F, $A9,$FF
 	.byte $88, $A0,$10,$FF, $88, $A9,$FF, $5F,$5F, $55,$55, $AA,$FF
@@ -423,6 +431,7 @@ above_dock_e_rle:	.byte $28 ; ysize=48
 	.byte $A3,$55, $99,$99, $79,$79, $A0,$1E,$77, $A3,$22, $25, $55,$55
 	.byte $79, $A0,$21,$77
 	.byte $A1
+; cycles=994
 above_dock_s_rle:	.byte $28 ; ysize=48
 	.byte $A0,$12,$FF, $44, $A3,$FF, $4F, $AE,$FF, $A3,$55, $A0,$12,$FF
 	.byte $44, $A3,$FF, $44, $A5,$FF, $44, $FF, $4F
@@ -472,6 +481,7 @@ above_dock_s_rle:	.byte $28 ; ysize=48
 	.byte $AD,$22, $A3,$EE, $DD, $A8,$88, $48, $A4,$44, $A7,$77
 	.byte $57, $55,$55, $AD,$22
 	.byte $A1
+; cycles=41432
 above_dock_n_rle:	.byte $28 ; ysize=48
 	.byte $A0,$60,$FF, $55, $00, $FF, $5F,$5F, $A0,$20,$FF, $5F
 	.byte $0F, $5F, $55,$55, $5F, $05, $F0, $A0,$1D,$FF
@@ -519,6 +529,7 @@ above_dock_n_rle:	.byte $28 ; ysize=48
 	.byte $79, $A4,$77, $A4,$00, $A0,$15,$55, $57, $A3,$77, $A5,$75
 	.byte $58,$58, $88, $A3,$77
 	.byte $A1
+; cycles=1556
 step_base_n_rle:	.byte $28 ; ysize=48
 	.byte $55, $00, $A3,$55, $00, $A6,$22, $AB,$FF, $5F
 	.byte $0F, $AF,$FF, $55, $00, $A3,$55, $00, $52,$52
@@ -564,6 +575,7 @@ step_base_n_rle:	.byte $28 ; ysize=48
 	.byte $AB,$44, $A8,$55, $A8,$77, $A5,$44, $A7,$88, $DD, $AB,$44
 	.byte $A8,$55, $A9,$77, $A4,$44, $48, $A7,$88
 	.byte $A1
+; cycles=26737
 step_base_s_rle:	.byte $28 ; ysize=48
 	.byte $A8,$FF, $44, $A3,$FF, $44, $FF,$FF, $44,$44, $FF
 	.byte $44, $FF, $44, $FF, $4F, $FF, $4F
@@ -649,6 +661,7 @@ step_base_s_rle:	.byte $28 ; ysize=48
 	.byte $20, $A4,$22, $A0,$11,$44, $55,$55, $A5,$44, $A5,$FF, $00
 	.byte $05, $55,$55, $A6,$22, $AC,$44
 	.byte $A1
+; cycles=2198
 step_land1_w_rle:	.byte $28 ; ysize=48
 	.byte $44,$44, $4F, $FF,$FF, $A8,$44, $A0,$16,$FF, $77,$77, $55
 	.byte $00,$00, $A3,$44, $FF,$FF, $A5,$44, $84, $44,$44, $FF,$FF
@@ -704,6 +717,7 @@ step_land1_w_rle:	.byte $28 ; ysize=48
 	.byte $A0,$19,$00, $50, $AE,$55, $50, $A0,$17,$00, $A5,$25, $2F
 	.byte $AC,$25, $AC,$00, $A4,$44, $A6,$00, $A0,$12,$22, $AC,$00
 	.byte $A1
+; cycles=992
 step_land1_e_rle:	.byte $28 ; ysize=48
 	.byte $A0,$12,$FF, $88, $A0,$27,$FF, $88, $A0,$27,$FF, $88, $A0,$27,$FF
 	.byte $88, $A0,$27,$FF, $88, $A0,$27,$FF, $88, $A0,$27,$FF, $88
@@ -725,6 +739,7 @@ step_land1_e_rle:	.byte $28 ; ysize=48
 	.byte $A0,$25,$88, $A3,$44, $A0,$26,$88, $84, $44, $A0,$27,$88, $84
 	.byte $A0,$78,$88
 	.byte $A1
+; cycles=3343
 step_land2_w_rle:	.byte $28 ; ysize=48
 	.byte $A4,$44, $FF, $A3,$44, $A6,$FF, $4F, $A0,$13,$FF, $50
 	.byte $00,$00, $77, $00, $22, $04, $44,$44, $F4
@@ -799,6 +814,7 @@ step_land2_w_rle:	.byte $28 ; ysize=48
 	.byte $A3,$4C, $4F, $CF,$CF, $A8,$CC, $A4,$44, $A5,$CC, $44,$44
 	.byte $A9,$00, $09, $A3,$99, $A0,$10,$CC
 	.byte $A1
+; cycles=535
 step_land2_e_rle:	.byte $28 ; ysize=48
 	.byte $A0,$16,$FF, $8F, $A0,$19,$FF, $88, $AD,$FF, $88, $A0,$14,$FF
 	.byte $99,$99, $A3,$FF, $F8, $8F, $AC,$FF, $88, $A0,$11,$FF
@@ -832,6 +848,7 @@ step_land2_e_rle:	.byte $28 ; ysize=48
 	.byte $AC,$DD, $AA,$CC, $5C, $AC,$55, $50,$50, $05,$05, $AD,$DD
 	.byte $A9,$CC, $5C, $A0,$10,$55, $50, $D0, $AC,$DD
 	.byte $A1
+; cycles=1078
 step_dentist_w_rle:	.byte $28 ; ysize=48
 	.byte $A0,$27,$FF, $88, $A0,$16,$FF, $7F, $2F,$2F, $AD,$FF, $88
 	.byte $55, $A0,$15,$FF, $77,$77, $A4,$22, $2F,$2F, $A8,$FF, $8F
@@ -891,6 +908,7 @@ step_dentist_w_rle:	.byte $28 ; ysize=48
 	.byte $00, $90, $A5,$99, $89, $A3,$09, $A3,$CC, $C5
 	.byte $A3,$C0, $A4,$CC, $A5,$44
 	.byte $A1
+; cycles=38730
 step_dentist_e_rle:	.byte $28 ; ysize=48
 	.byte $A0,$3C,$FF, $8F, $AF,$FF, $4F,$4F, $A0,$16,$FF, $88, $AF,$FF
 	.byte $A3,$44, $4F, $A0,$14,$FF, $88, $AE,$FF, $A5,$44, $A0,$14,$FF
@@ -921,6 +939,7 @@ step_dentist_e_rle:	.byte $28 ; ysize=48
 	.byte $A0,$11,$CC, $A3,$CF, $A3,$CC, $8C, $A8,$88, $A3,$44, $A4,$55
 	.byte $A0,$18,$CC, $A9,$88, $A3,$44
 	.byte $A1
+; cycles=1233
 step_land3_w_rle:	.byte $28 ; ysize=48
 	.byte $A0,$21,$FF, $0F,$0F, $A5,$00, $A0,$1D,$FF, $0F,$0F, $00, $A3,$50
 	.byte $55, $A4,$00, $A0,$1D,$FF, $00, $55, $05,$05, $50
@@ -979,6 +998,7 @@ step_land3_w_rle:	.byte $28 ; ysize=48
 	.byte $08, $40, $AE,$44, $40, $AC,$44, $28, $82
 	.byte $A9,$80, $00, $A0,$10,$44
 	.byte $A1
+; cycles=535
 step_land3_e_rle:	.byte $28 ; ysize=48
 	.byte $AF,$AA, $55,$55, $AE,$FF, $8F, $A8,$FF, $0A, $AC,$A0
 	.byte $0A,$0A, $55,$55, $5F, $AD,$FF, $88, $A8,$FF, $A6,$AA
@@ -1018,6 +1038,7 @@ step_land3_e_rle:	.byte $28 ; ysize=48
 	.byte $C8, $A0,$1C,$CC, $CD, $A9,$88, $C8, $A0,$1E,$CC, $A9,$88
 	.byte $A0,$1F,$CC, $A9,$88, $A0,$1F,$CC, $A9,$88, $A0,$10,$CC
 	.byte $A1
+; cycles=535
 step_top_e_rle:	.byte $28 ; ysize=48
 	.byte $A4,$00, $A3,$55, $00, $A0,$20,$FF, $A5,$00, $05, $55,$55
 	.byte $00, $A0,$1B,$FF, $44, $FF, $44, $FF, $A7,$00
@@ -1080,6 +1101,7 @@ step_top_e_rle:	.byte $28 ; ysize=48
 	.byte $CC, $C4,$C4, $A5,$CC, $C4, $00,$00, $50, $AD,$55
 	.byte $D5, $A0,$10,$DD, $A8,$CC, $C0
 	.byte $A1
+; cycles=900
 step_top_w_rle:	.byte $28 ; ysize=48
 	.byte $A0,$20,$FF, $70, $07, $70, $07, $A4,$00, $A0,$1F,$FF
 	.byte $70, $77, $07, $A6,$00, $A9,$FF, $44, $A0,$14,$FF
@@ -1138,6 +1160,7 @@ step_top_w_rle:	.byte $28 ; ysize=48
 	.byte $57, $A6,$77, $A4,$55, $A8,$CC, $A6,$44, $AB,$CC, $A6,$55
 	.byte $A4,$07, $A3,$77, $55,$55
 	.byte $A1
+; cycles=31998
 step_top_n_rle:	.byte $28 ; ysize=48
 	.byte $A3,$FF, $0F, $50,$50, $55,$55, $05,$05, $50, $55
 	.byte $05, $00, $50,$50, $55, $05,$05, $A4,$00, $05
@@ -1199,6 +1222,7 @@ step_top_n_rle:	.byte $28 ; ysize=48
 	.byte $AA,$50, $88,$88, $A6,$44, $A8,$88, $08, $A3,$00, $A6,$55
 	.byte $A4,$50, $AA,$55, $A3,$88, $84, $A4,$44
 	.byte $A1
+; cycles=4700
 step_top_s_rle:	.byte $28 ; ysize=48
 	.byte $FF, $4F, $44, $A0,$26,$FF, $44,$44, $A0,$26,$FF, $44,$44
 	.byte $A0,$26,$FF, $44,$44, $A5,$FF, $44, $AE,$FF, $4F, $A0,$10,$FF
@@ -1274,6 +1298,7 @@ step_top_s_rle:	.byte $28 ; ysize=48
 	.byte $C4,$C4, $CC, $77, $CC, $A6,$DD, $77, $A9,$CC
 	.byte $4C, $A3,$44, $00, $44, $00, $05, $00
 	.byte $A1
+; cycles=52105
 temple_door_n_rle:	.byte $28 ; ysize=48
 	.byte $00,$00, $08, $80, $A3,$00, $88, $A4,$00, $A3,$08
 	.byte $88,$88, $80,$80, $8F, $DF, $8F, $A3,$80, $88
@@ -1339,6 +1364,7 @@ temple_door_n_rle:	.byte $28 ; ysize=48
 	.byte $08, $99, $A3,$89, $A0,$14,$88, $A4,$89, $08, $A3,$88
 	.byte $08,$08, $80, $88, $A3,$80, $A0,$1D,$88, $A6,$80, $A0,$78,$88
 	.byte $A1
+; cycles=3343
 temple_door_s_rle:	.byte $28 ; ysize=48
 	.byte $AF,$00, $80,$80, $A5,$88, $A3,$80, $A0,$1C,$00, $80, $A3,$88
 	.byte $A5,$08, $A3,$88, $A0,$1C,$00, $88,$88, $08,$08, $00, $A3,$F0
@@ -1382,6 +1408,7 @@ temple_door_s_rle:	.byte $28 ; ysize=48
 	.byte $99,$99, $A3,$00, $90, $A4,$00, $80, $88, $A0,$13,$00
 	.byte $88, $80, $A4,$00, $90,$90, $00, $09,$09
 	.byte $A1
+; cycles=1437
 temple_center_n_rle:	.byte $28 ; ysize=48
 	.byte $00,$00, $08,$08, $A3,$88, $80, $00, $08,$08, $88
 	.byte $A0,$10,$80, $08,$08, $00,$00, $80,$80, $88, $08,$08, $A9,$00
@@ -1447,6 +1474,7 @@ temple_center_n_rle:	.byte $28 ; ysize=48
 	.byte $89, $A0,$16,$88, $89, $A3,$99, $A3,$98, $88,$88, $A5,$99
 	.byte $89, $A0,$1C,$88, $89,$89, $A4,$99
 	.byte $A1
+; cycles=1258
 temple_center_s_rle:	.byte $28 ; ysize=48
 	.byte $08, $80,$80, $AA,$00, $AF,$80, $A8,$00, $80,$80, $08,$08
 	.byte $A3,$00, $08,$08, $A0,$1E,$00, $08, $A7,$00, $0F,$0F, $A0,$1E,$00
@@ -1516,6 +1544,7 @@ temple_center_s_rle:	.byte $28 ; ysize=48
 	.byte $89,$89, $A0,$18,$88, $89,$89, $99,$99, $98,$98, $A3,$88, $A4,$99
 	.byte $A0,$20,$88, $89, $A3,$99
 	.byte $A1
+; cycles=1197
 temple_center_e_rle:	.byte $28 ; ysize=48
 	.byte $AB,$00, $AF,$80, $A0,$39,$00, $0F,$0F, $A0,$1E,$00, $0F,$0F, $A3,$00
 	.byte $A4,$80, $A6,$00, $A3,$80, $AD,$00, $A3,$80, $AE,$00, $08,$08
@@ -1577,6 +1606,7 @@ temple_center_e_rle:	.byte $28 ; ysize=48
 	.byte $98,$98, $A4,$99, $89,$89, $A0,$16,$88, $89,$89, $A3,$99, $98,$98
 	.byte $88,$88, $A4,$99, $89, $A0,$1E,$88, $89,$89, $A3,$99
 	.byte $A1
+; cycles=1285
 temple_center_w_rle:	.byte $28 ; ysize=48
 	.byte $08, $80,$80, $A9,$00, $A5,$80, $DD, $80, $DD,$DD
 	.byte $80, $DD, $A5,$80, $08, $A6,$88, $08,$08, $A3,$80
@@ -1642,6 +1672,63 @@ temple_center_w_rle:	.byte $28 ; ysize=48
 	.byte $A0,$18,$88, $89,$89, $99,$99, $98,$98, $88,$88, $99, $98
 	.byte $99,$99, $89, $A0,$1E,$88, $89, $A4,$99
 	.byte $A1
+; cycles=1170
+red_book_closed_rle:	.byte $28 ; ysize=48
+	.byte $00,$00, $A4,$88, $00,$00, $88, $A3,$00, $80, $A0,$10,$88
+	.byte $80, $00, $88, $00, $88, $00,$00, $88,$88
+	.byte $A4,$00, $A4,$88, $00,$00, $88, $00,$00, $80, $88,$88
+	.byte $DD, $0D,$0D, $A9,$11, $A3,$00, $88, $80, $08
+	.byte $88, $08, $88, $00, $88,$88, $A4,$00, $A4,$88
+	.byte $00, $80, $88, $00,$00, $A3,$88, $DD, $00,$00
+	.byte $AA,$11, $00,$00, $88,$88, $00, $88, $80, $88
+	.byte $00, $88,$88, $A4,$00, $A3,$88, $00,$00, $88,$88, $00
+	.byte $A4,$88, $DD, $00,$00, $AB,$11, $00, $A3,$88, $00
+	.byte $88,$88, $00, $88,$88, $A4,$00, $A3,$88, $00,$00, $88
+	.byte $08, $00, $A4,$88, $DD, $00,$00, $AC,$11, $A3,$88
+	.byte $00, $88, $08, $80, $00, $88, $A4,$00
+	.byte $A3,$88, $00,$00, $88, $00,$00, $A4,$88, $DD, $00,$00
+	.byte $AC,$11, $A3,$88, $80, $88, $00, $88, $00
+	.byte $88, $A4,$00, $A3,$88, $00, $80, $88, $00,$00
+	.byte $A4,$88, $DD, $00,$00, $AC,$11, $A5,$88, $00, $88
+	.byte $00, $88, $A4,$00, $A3,$88, $00, $88,$88, $00,$00
+	.byte $A4,$08, $DD, $00,$00, $AC,$11, $A4,$08, $88, $00
+	.byte $88, $00, $88, $A4,$00, $A3,$88, $00, $88,$88
+	.byte $A6,$00, $DD, $00,$00, $AC,$11, $A4,$00, $88, $00
+	.byte $88, $00, $88, $A4,$00, $08, $88,$88, $00
+	.byte $88,$88, $A6,$00, $DD, $00,$00, $AC,$11, $A4,$00, $88
+	.byte $00, $88, $00, $88, $A5,$00, $88,$88, $00
+	.byte $88,$88, $00,$00, $A4,$80, $DD, $00,$00, $AC,$11, $80,$80
+	.byte $00,$00, $88, $00, $88, $00, $88, $A5,$00
+	.byte $88,$88, $00, $88,$88, $00,$00, $A4,$08, $DD, $00,$00
+	.byte $AC,$11, $08,$08, $00,$00, $88, $00, $88, $00
+	.byte $88, $A5,$00, $88,$88, $00, $88,$88, $00,$00, $A4,$88
+	.byte $DD, $00,$00, $AC,$11, $A3,$88, $00, $88, $00
+	.byte $88, $00, $88, $A5,$00, $88,$88, $00, $88,$88
+	.byte $00,$00, $A4,$88, $DD, $00,$00, $AC,$11, $A3,$88, $00
+	.byte $88, $00, $88, $00, $88, $A5,$00, $88,$88
+	.byte $00, $88,$88, $00, $A5,$88, $DD, $00,$00, $AC,$11
+	.byte $A3,$88, $00, $88, $00, $88, $00, $88
+	.byte $A5,$00, $88,$88, $00, $88,$88, $00, $A5,$88, $DD
+	.byte $00,$00, $AC,$11, $A3,$88, $00, $88, $00, $88
+	.byte $00, $88, $A5,$00, $88,$88, $00, $88,$88, $00
+	.byte $A5,$88, $DD, $00,$00, $AC,$11, $A3,$88, $80, $88
+	.byte $00, $88, $00, $88, $A5,$00, $88,$88, $00
+	.byte $88,$88, $00, $A5,$08, $DD, $00,$00, $AC,$11, $A4,$08
+	.byte $88, $00, $88, $00, $88, $A5,$00, $88,$88
+	.byte $00, $88,$88, $A6,$08, $DD, $00,$00, $AC,$11, $A4,$08
+	.byte $88, $00, $88, $00, $88, $A5,$00, $88,$88
+	.byte $00, $88,$88, $00, $A5,$88, $DD, $00,$00, $AC,$11
+	.byte $A5,$88, $00, $88, $00, $88, $A5,$00, $88,$88
+	.byte $00, $88,$88, $00, $A5,$88, $DD, $00,$00, $AB,$11
+	.byte $00, $A5,$88, $00, $88, $00, $88, $A5,$00
+	.byte $88,$88, $00, $88,$88, $00, $A5,$88, $DD, $00,$00
+	.byte $AA,$11, $00,$00, $A5,$88, $00, $88, $00, $88
+	.byte $A5,$00, $88,$88, $00, $88,$88, $00, $A5,$88, $DD
+	.byte $D0,$D0, $A9,$11, $A3,$00, $A5,$88, $00, $88, $00
+	.byte $88, $A5,$00, $88,$88, $00, $88,$88, $00, $A0,$19,$88
+	.byte $00, $88, $00, $88, $00,$00
+	.byte $A1
+; cycles=1270
 red_book_shelf_rle:	.byte $28 ; ysize=48
 	.byte $00,$00, $A3,$88, $00,$00, $88, $A5,$00, $80, $AE,$88
 	.byte $A5,$00, $88, $00,$00, $88,$88, $A4,$00, $A3,$88, $00,$00
@@ -1686,6 +1773,7 @@ red_book_shelf_rle:	.byte $28 ; ysize=48
 	.byte $88, $00, $A0,$19,$88, $00, $88,$88, $00, $88
 	.byte $00,$00
 	.byte $A1
+; cycles=1412
 pool_s_rle:	.byte $28 ; ysize=48
 	.byte $FF,$FF, $44, $F4, $FF,$FF, $F4, $44,$44, $FF
 	.byte $F4, $48, $AA,$FF, $44,$44, $FF, $44, $A3,$FF
@@ -1768,6 +1856,7 @@ pool_s_rle:	.byte $28 ; ysize=48
 	.byte $A5,$CC, $A8,$77, $75, $AE,$55, $75, $A7,$77, $7C
 	.byte $A3,$CC
 	.byte $A1
+; cycles=2750
 clock_s_rle:	.byte $28 ; ysize=48
 	.byte $88, $99, $05, $A0,$01,$AA, $44,$44, $45, $4A
 	.byte $A0,$02,$AF, $A4,$44, $4F, $A7,$FF, $5F, $A5,$55, $5A,$5A
@@ -1823,6 +1912,7 @@ clock_s_rle:	.byte $28 ; ysize=48
 	.byte $66,$66, $E6, $AB,$EE, $CC, $88, $99,$99, $CC
 	.byte $C4, $A5,$CC, $99, $A0,$12,$CC, $A5,$CE, $A5,$EE
 	.byte $A1
+; cycles=1017
 ss_far_n_rle:	.byte $28 ; ysize=48
 	.byte $A0,$FF,$FF, $AF,$FF, $A7,$5F, $A3,$F5, $A0,$1B,$FF, $5F, $05,$05
 	.byte $A4,$00, $0F,$0F, $A0,$1C,$FF, $50, $5F, $05, $A5,$00
@@ -1849,6 +1939,7 @@ ss_far_n_rle:	.byte $28 ; ysize=48
 	.byte $A3,$77, $A3,$00, $A6,$88, $AC,$77, $A3,$44, $AA,$55, $A3,$00
 	.byte $77,$77, $57, $A3,$00, $A6,$88
 	.byte $A1
+; cycles=7669
 ss_far_e_rle:	.byte $28 ; ysize=48
 	.byte $A0,$7A,$FF, $5F,$5F, $A0,$1D,$FF, $4F, $A8,$FF, $22, $52
 	.byte $A3,$25, $5F,$5F, $A0,$17,$FF, $44,$44, $A8,$FF, $22, $A4,$55
@@ -1914,6 +2005,7 @@ ss_far_e_rle:	.byte $28 ; ysize=48
 	.byte $44, $22, $A7,$99, $94, $44, $DD, $99,$99
 	.byte $88, $99,$99, $88, $99,$99
 	.byte $A1
+; cycles=28384
 red_book_open_rle:	.byte $28 ; ysize=48
 	.byte $00,$00, $88,$88, $55, $A4,$88, $55, $A3,$88, $55
 	.byte $AD,$88, $85, $58, $A4,$88, $85, $58, $A3,$88
@@ -1973,6 +2065,7 @@ red_book_open_rle:	.byte $28 ; ysize=48
 	.byte $A4,$88, $55, $A3,$88, $55, $AE,$88, $55, $A5,$88
 	.byte $55, $88, $00,$00
 	.byte $A1
+; cycles=50198
 red_book_static_rle:	.byte $28 ; ysize=48
 	.byte $00,$00, $88,$88, $55, $A4,$88, $55, $A3,$88, $55
 	.byte $AD,$88, $85, $58, $A4,$88, $85, $58, $A3,$88
@@ -2033,6 +2126,7 @@ red_book_static_rle:	.byte $28 ; ysize=48
 	.byte $A3,$88, $55, $AE,$88, $55, $A5,$88, $55, $88
 	.byte $00,$00
 	.byte $A1
+; cycles=50154
 red_book_static2_rle:	.byte $28 ; ysize=48
 	.byte $00,$00, $88,$88, $55, $A4,$88, $55, $A3,$88, $55
 	.byte $AD,$88, $85, $58, $A4,$88, $85, $58, $A3,$88
@@ -2092,6 +2186,7 @@ red_book_static2_rle:	.byte $28 ; ysize=48
 	.byte $88, $55, $88,$88, $55, $A4,$88, $55, $A3,$88
 	.byte $55, $AE,$88, $55, $A5,$88, $55, $88, $00,$00
 	.byte $A1
+; cycles=49910
 tree2_n_rle:	.byte $28 ; ysize=48
 	.byte $A0,$24,$FF, $A4,$44, $A0,$24,$FF, $F4, $44, $FF, $44
 	.byte $A0,$14,$FF, $7F, $55, $00, $AD,$FF, $44,$44, $4F
@@ -2162,6 +2257,7 @@ tree2_n_rle:	.byte $28 ; ysize=48
 	.byte $55, $C5, $AB,$CC, $44, $C4, $AB,$CC, $55
 	.byte $99, $88, $D8, $A8,$DD, $55, $AE,$CC
 	.byte $A1
+; cycles=53573
 tree5_n_rle:	.byte $28 ; ysize=48
 	.byte $FF,$FF, $44,$44, $00, $44, $A7,$FF, $94, $4F
 	.byte $FF,$FF, $A9,$44, $A7,$FF, $44,$44, $00, $88, $44
@@ -2240,6 +2336,7 @@ tree5_n_rle:	.byte $28 ; ysize=48
 	.byte $8C, $C8, $A6,$CC, $88, $A4,$80, $88, $A6,$00
 	.byte $99, $88, $A3,$00, $99
 	.byte $A1
+; cycles=60899
 tree5_e_rle:	.byte $28 ; ysize=48
 	.byte $AA,$44, $FF,$FF, $84, $94, $44, $FF, $44
 	.byte $FF,$FF, $44, $A3,$FF, $44, $FF, $44, $F4
@@ -2318,6 +2415,7 @@ tree5_e_rle:	.byte $28 ; ysize=48
 	.byte $C4, $A5,$44, $99, $00, $A4,$44, $CC, $44,$44
 	.byte $A9,$CC, $C4, $AA,$44, $88, $99, $44,$44, $CC,$CC
 	.byte $A1
+; cycles=45610
 gear_n_rle:	.byte $28 ; ysize=48
 	.byte $A0,$23,$FF, $A4,$5F, $A0,$1F,$FF, $0F, $A8,$55, $A0,$1F,$FF, $00
 	.byte $A8,$55, $A0,$1F,$FF, $00, $A8,$55, $A0,$17,$FF, $5F, $55
@@ -2357,6 +2455,7 @@ gear_n_rle:	.byte $28 ; ysize=48
 	.byte $00,$00, $70, $77,$77, $72,$72, $20, $25,$25, $00
 	.byte $55,$55, $A3,$88, $A4,$55, $A3,$88, $55,$55
 	.byte $A1
+; cycles=28697
 gear_s_rle:	.byte $28 ; ysize=48
 	.byte $A0,$72,$FF, $55, $FF, $55, $FF, $55, $A0,$1D,$FF
 	.byte $8F, $A5,$FF, $55, $5F, $55, $5F, $55
@@ -2398,6 +2497,7 @@ gear_s_rle:	.byte $28 ; ysize=48
 	.byte $99,$99, $9C, $CC, $C9, $99, $A3,$CC, $CA
 	.byte $CC, $A6,$00, $07, $70, $00,$00, $04, $55,$55
 	.byte $A1
+; cycles=20770
 gear_w_rle:	.byte $28 ; ysize=48
 	.byte $A0,$1A,$FF, $08, $A9,$88, $99, $A0,$1D,$FF, $88, $00
 	.byte $08, $A7,$88, $99, $A0,$1D,$FF, $88,$88, $00, $A7,$88
@@ -2446,6 +2546,7 @@ gear_w_rle:	.byte $28 ; ysize=48
 	.byte $A3,$88, $D8, $DD, $A8,$88, $D8, $DD, $88
 	.byte $DD, $A4,$00
 	.byte $A1
+; cycles=8290
 gear_base_n_rle:	.byte $28 ; ysize=48
 	.byte $A0,$60,$FF, $5F,$5F, $A0,$23,$FF, $5F, $FF,$FF, $55,$55, $00
 	.byte $FF, $5F, $55, $A0,$18,$FF, $8F, $A5,$FF, $55,$55
@@ -2485,3 +2586,4 @@ gear_base_n_rle:	.byte $28 ; ysize=48
 	.byte $A5,$99, $09,$09, $A0,$1C,$00, $A3,$99, $98, $A4,$99, $09
 	.byte $A0,$1F,$00, $A3,$99
 	.byte $A1
+; cycles=1100

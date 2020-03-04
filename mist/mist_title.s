@@ -99,5 +99,5 @@ keyloop:
 ;	.byte 'L'|$80,'E'|$80,'.'|$80,'L'|$80,'Z'|$80,'4'|$80,$00
 
 file:
-.incbin "MIST_TITLE.LZ4"
+.incbin "graphics_title/MIST_TITLE.LZ4"
 file_end:
