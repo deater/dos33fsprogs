@@ -47,7 +47,7 @@ MIST:	mist.o
 
 mist.o:	mist.s zp.inc hardware.inc \
 	graphics_island/mist_graphics.inc \
-	gr_copy.s gr_unrle.s audio.s text_print.s decompress_small_v2.s
+	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o mist.o mist.s -l mist.lst
 
 ####

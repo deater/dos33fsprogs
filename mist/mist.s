@@ -427,7 +427,7 @@ change_direction:
 	lda	(LOCATION_STRUCT_L),Y
 	sta	LZSA_SRC_HI
 	lda	#$c			; load to page $c00
-	jsr	decompress_lzsa2
+	jsr	decompress_lzsa2_fast
 
 	rts
 
@@ -650,7 +650,7 @@ red_book_loop:
 	lda	#>red_book_static_lzsa
 	sta	LZSA_SRC_HI
 	lda	#$c			; load to page $c00
-	jsr	decompress_lzsa2
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_copy_to_current
 
@@ -664,7 +664,7 @@ red_book_loop:
 	lda	#>red_book_static2_lzsa
 	sta	LZSA_SRC_HI
 	lda	#$c			; load to page $c00
-	jsr	decompress_lzsa2
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_copy_to_current
 
@@ -687,7 +687,7 @@ red_book_loop:
 	lda	#>red_book_open_lzsa
 	sta	LZSA_SRC_HI
 	lda	#$c			; load to page $c00
-	jsr	decompress_lzsa2
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_copy_to_current
 
@@ -721,7 +721,7 @@ red_book_done:
 	lda	#>red_book_shelf_lzsa
 	sta	LZSA_SRC_HI
 	lda	#$c			; load to page $c00
-	jsr	decompress_lzsa2
+	jsr	decompress_lzsa2_fast
 
 
 	rts
@@ -735,13 +735,12 @@ red_book_done:
 	;==========================
 
 	.include	"gr_copy.s"
-;	.include	"gr_unrle.s"
 	.include	"gr_offsets.s"
 	.include	"gr_pageflip.s"
 	.include	"gr_putsprite_crop.s"
 	.include	"text_print.s"
 	.include	"gr_fast_clear.s"
-	.include	"decompress_small_v2.s"
+	.include	"decompress_fast_v2.s"
 
 	.include	"audio.s"
 

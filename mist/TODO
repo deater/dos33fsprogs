@@ -2,6 +2,9 @@
 + double link noise (once when leave, once when get there?)
 
 + allow turning around
++ adjust grab window on letter
++ only grab when facing object
++ add missing red book step
 
 Make game winnable:
 + Allow access to all marker switches
