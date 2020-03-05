@@ -30,7 +30,7 @@ Marker Switches (8):
 + * Spaceship
 + Clock
 + Cabin
-+ Generator
++ * Generator
 
 Fireplace:
 + 8x6 grid
@@ -39,7 +39,7 @@ Fireplace:
 
 16 more pictures?
 + cabin switch
-+ generator switch
++ * generator switch
 + close-in clock
 + clock with gears up
 + clock switch

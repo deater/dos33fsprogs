@@ -816,7 +816,7 @@ locations:
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
-	.word location20,location21,location22
+	.word location20,location21,location22,location23
 
 ; myst linking book
 location0:
@@ -1103,7 +1103,7 @@ location13:
 ; pool
 location14:
 	.byte	$ff		; north exit
-	.byte	15		; south exit
+	.byte	23		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
 	.byte	$ff		; north exit_dir
@@ -1185,7 +1185,7 @@ location17:
 
 ; tree corridor #5
 location18:
-	.byte	17		; north exit
+	.byte	23		; north exit
 	.byte	$ff		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
@@ -1282,6 +1282,27 @@ location22:
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
 	.byte	BG_NORTH
+
+
+; tree corridor4 (with generator switch)
+location23:
+	.byte	17		; north exit
+	.byte	15		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	tree4_n_lzsa	; north bg
+	.word	tree4_s_lzsa	; south bg
+	.word	$0000		; east bg
+	.word	tree4_w_lzsa	; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_NORTH|BG_SOUTH|BG_WEST
 
 
 
