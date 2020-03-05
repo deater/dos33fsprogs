@@ -55,3 +55,10 @@ tree5_n.png		704	649		546
 sound:				
 	red_page.btc	5386	4366	4209
 	link_noise.btc	11656	7878	7371
+
+original rle version:
+	43,866
+lzsa2 version
+	36,324
+
+

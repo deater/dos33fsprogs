@@ -16,3 +16,16 @@ Make graphics use lzsa compression
 Move sound to language card (meaning no sound on II+ w/o language card)
 
 
+
+Marker Switches (8):
++ * Dock
++ * Gears
++ Dentist
++ * Pool
++ Spaceship
++ Clock
++ Cabin
+
+Fireplace:
++ 8x6 grid
+

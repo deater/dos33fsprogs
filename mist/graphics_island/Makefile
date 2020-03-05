@@ -1,85 +1,94 @@
 #include ../Makefile.inc
 
 PNG2RLE = ../../gr-utils/png2rle
+PNG2GR = ../../gr-utils/png2gr
+LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	mist_graphics.inc
+
 
 ####
 
 mist_graphics.inc:	\
-	m_link_book.png \
-	dock_n.png dock_s.png dock_e.png dock_w.png \
-	dock_switch_n.png \
-	dock_steps_w.png \
-	above_dock_e.png above_dock_n.png above_dock_s.png \
-	step_base_s.png step_base_n.png \
-	step_land1_w.png step_land1_e.png \
-	step_land2_e.png step_land2_w.png \
-	step_dentist_e.png step_dentist_w.png \
-	step_land3_w.png step_land3_e.png \
-	step_top_e.png step_top_w.png step_top_n.png step_top_s.png \
-	temple_door_n.png temple_door_s.png \
-	temple_center_n.png temple_center_w.png \
-	red_book_shelf.png \
-	red_book_closed.png \
-	pool_s.png \
-	clock_s.png \
-	spaceship_far_e.png spaceship_far_n.png \
-	red_book_open.png red_book_static.png red_book_static2.png \
-	tree2_n.png \
-	tree5_n.png tree5_e.png \
-	gear_n.png gear_w.png gear_s.png \
-	gear_base_n.png
-	$(PNG2RLE) asm m_link_book.png link_book_rle > mist_graphics.inc
-	$(PNG2RLE) asm dock_n.png dock_n_rle >> mist_graphics.inc
-	$(PNG2RLE) asm dock_s.png dock_s_rle >> mist_graphics.inc
-	$(PNG2RLE) asm dock_e.png dock_e_rle >> mist_graphics.inc
-	$(PNG2RLE) asm dock_w.png dock_w_rle >> mist_graphics.inc
-	$(PNG2RLE) asm dock_switch_n.png dock_switch_n_rle >> mist_graphics.inc
-	$(PNG2RLE) asm dock_switch_s.png dock_switch_s_rle >> mist_graphics.inc
-	$(PNG2RLE) asm dock_steps_w.png dock_steps_w_rle >> mist_graphics.inc
-	$(PNG2RLE) asm above_dock_e.png above_dock_e_rle >> mist_graphics.inc
-	$(PNG2RLE) asm above_dock_s.png above_dock_s_rle >> mist_graphics.inc
-	$(PNG2RLE) asm above_dock_n.png above_dock_n_rle >> mist_graphics.inc
-	$(PNG2RLE) asm step_base_n.png step_base_n_rle >> mist_graphics.inc
-	$(PNG2RLE) asm step_base_s.png step_base_s_rle >> mist_graphics.inc
-	$(PNG2RLE) asm step_land1_w.png step_land1_w_rle >> mist_graphics.inc
-	$(PNG2RLE) asm step_land1_e.png step_land1_e_rle >> mist_graphics.inc
-	$(PNG2RLE) asm step_land2_w.png step_land2_w_rle >> mist_graphics.inc
-	$(PNG2RLE) asm step_land2_e.png step_land2_e_rle >> mist_graphics.inc
-	$(PNG2RLE) asm step_dentist_w.png step_dentist_w_rle >> mist_graphics.inc
-	$(PNG2RLE) asm step_dentist_e.png step_dentist_e_rle >> mist_graphics.inc
-	$(PNG2RLE) asm step_land3_w.png step_land3_w_rle >> mist_graphics.inc
-	$(PNG2RLE) asm step_land3_e.png step_land3_e_rle >> mist_graphics.inc
-	$(PNG2RLE) asm step_top_e.png step_top_e_rle >> mist_graphics.inc
-	$(PNG2RLE) asm step_top_w.png step_top_w_rle >> mist_graphics.inc
-	$(PNG2RLE) asm step_top_n.png step_top_n_rle >> mist_graphics.inc
-	$(PNG2RLE) asm step_top_s.png step_top_s_rle >> mist_graphics.inc
-	$(PNG2RLE) asm temple_door_n.png temple_door_n_rle >> mist_graphics.inc
-	$(PNG2RLE) asm temple_door_s.png temple_door_s_rle >> mist_graphics.inc
-	$(PNG2RLE) asm temple_center_n.png temple_center_n_rle >> mist_graphics.inc
-	$(PNG2RLE) asm temple_center_s.png temple_center_s_rle >> mist_graphics.inc
-	$(PNG2RLE) asm temple_center_e.png temple_center_e_rle >> mist_graphics.inc
-	$(PNG2RLE) asm temple_center_w.png temple_center_w_rle >> mist_graphics.inc
-	$(PNG2RLE) asm red_book_closed.png red_book_closed_rle >> mist_graphics.inc
-	$(PNG2RLE) asm red_book_shelf.png red_book_shelf_rle >> mist_graphics.inc
-	$(PNG2RLE) asm pool_s.png pool_s_rle >> mist_graphics.inc
-	$(PNG2RLE) asm clock_s.png clock_s_rle >> mist_graphics.inc
-	$(PNG2RLE) asm spaceship_far_n.png ss_far_n_rle >> mist_graphics.inc
-	$(PNG2RLE) asm spaceship_far_e.png ss_far_e_rle >> mist_graphics.inc
-	$(PNG2RLE) asm red_book_open.png red_book_open_rle >> mist_graphics.inc
-	$(PNG2RLE) asm red_book_static.png red_book_static_rle >> mist_graphics.inc
-	$(PNG2RLE) asm red_book_static2.png red_book_static2_rle >> mist_graphics.inc
-	$(PNG2RLE) asm tree2_n.png tree2_n_rle >> mist_graphics.inc
-	$(PNG2RLE) asm tree5_n.png tree5_n_rle >> mist_graphics.inc
-	$(PNG2RLE) asm tree5_e.png tree5_e_rle >> mist_graphics.inc
-	$(PNG2RLE) asm gear_n.png gear_n_rle >> mist_graphics.inc
-	$(PNG2RLE) asm gear_s.png gear_s_rle >> mist_graphics.inc
-	$(PNG2RLE) asm gear_w.png gear_w_rle >> mist_graphics.inc
-	$(PNG2RLE) asm gear_base_n.png gear_base_n_rle >> mist_graphics.inc
+	m_link_book.lzsa \
+	dock_n.lzsa dock_s.lzsa dock_e.lzsa dock_w.lzsa \
+	dock_switch_n.lzsa dock_switch_s.lzsa \
+	dock_steps_w.lzsa \
+	above_dock_e.lzsa above_dock_n.lzsa above_dock_s.lzsa \
+	step_base_s.lzsa step_base_n.lzsa \
+	step_land1_w.lzsa step_land1_e.lzsa \
+	step_land2_e.lzsa step_land2_w.lzsa \
+	step_dentist_e.lzsa step_dentist_w.lzsa \
+	step_land3_w.lzsa step_land3_e.lzsa \
+	step_top_e.lzsa step_top_w.lzsa step_top_n.lzsa step_top_s.lzsa \
+	temple_door_n.lzsa temple_door_s.lzsa \
+	temple_center_n.lzsa temple_center_s.lzsa temple_center_e.lzsa temple_center_w.lzsa \
+	red_book_shelf.lzsa \
+	red_book_closed.lzsa \
+	pool_s.lzsa \
+	clock_s.lzsa \
+	spaceship_far_e.lzsa spaceship_far_n.lzsa \
+	red_book_open.lzsa red_book_static.lzsa red_book_static2.lzsa \
+	tree2_n.lzsa \
+	tree5_n.lzsa tree5_e.lzsa \
+	gear_n.lzsa gear_w.lzsa gear_s.lzsa \
+	gear_base_n.lzsa
+	echo "m_link_book_lzsa: .incbin \"m_link_book.lzsa\"" > mist_graphics.inc
+	echo "dock_n_lzsa: .incbin \"dock_n.lzsa\"" >> mist_graphics.inc
+	echo "dock_s_lzsa: .incbin \"dock_s.lzsa\"" >> mist_graphics.inc
+	echo "dock_e_lzsa: .incbin \"dock_e.lzsa\"" >> mist_graphics.inc
+	echo "dock_w_lzsa: .incbin \"dock_w.lzsa\"" >> mist_graphics.inc
+	echo "dock_switch_n_lzsa: .incbin \"dock_switch_n.lzsa\"" >> mist_graphics.inc
+	echo "dock_switch_s_lzsa: .incbin \"dock_switch_s.lzsa\"" >> mist_graphics.inc
+	echo "dock_steps_w_lzsa: .incbin \"dock_steps_w.lzsa\"" >> mist_graphics.inc
+	echo "above_dock_e_lzsa: .incbin \"above_dock_e.lzsa\"" >> mist_graphics.inc
+	echo "above_dock_s_lzsa: .incbin \"above_dock_s.lzsa\"" >> mist_graphics.inc
+	echo "above_dock_n_lzsa: .incbin \"above_dock_n.lzsa\"" >> mist_graphics.inc
+	echo "step_base_n_lzsa: .incbin \"step_base_n.lzsa\"" >> mist_graphics.inc
+	echo "step_base_s_lzsa: .incbin \"step_base_s.lzsa\"" >> mist_graphics.inc
+	echo "step_land1_w_lzsa: .incbin \"step_land1_w.lzsa\"" >> mist_graphics.inc
+	echo "step_land1_e_lzsa: .incbin \"step_land1_e.lzsa\"" >> mist_graphics.inc
+	echo "step_land2_w_lzsa: .incbin \"step_land2_w.lzsa\"" >> mist_graphics.inc
+	echo "step_land2_e_lzsa: .incbin \"step_land2_e.lzsa\"" >> mist_graphics.inc
+	echo "step_dentist_w_lzsa: .incbin \"step_dentist_w.lzsa\"" >> mist_graphics.inc
+	echo "step_dentist_e_lzsa: .incbin \"step_dentist_e.lzsa\"" >> mist_graphics.inc
+	echo "step_land3_w_lzsa: .incbin \"step_land3_w.lzsa\"" >> mist_graphics.inc
+	echo "step_land3_e_lzsa: .incbin \"step_land3_e.lzsa\"" >> mist_graphics.inc
+	echo "step_top_e_lzsa: .incbin \"step_top_e.lzsa\"" >> mist_graphics.inc
+	echo "step_top_w_lzsa: .incbin \"step_top_w.lzsa\"" >> mist_graphics.inc
+	echo "step_top_n_lzsa: .incbin \"step_top_n.lzsa\"" >> mist_graphics.inc
+	echo "step_top_s_lzsa: .incbin \"step_top_s.lzsa\"" >> mist_graphics.inc
+	echo "temple_door_n_lzsa: .incbin \"temple_door_n.lzsa\"" >> mist_graphics.inc
+	echo "temple_door_s_lzsa: .incbin \"temple_door_s.lzsa\"" >> mist_graphics.inc
+	echo "temple_center_n_lzsa: .incbin \"temple_center_n.lzsa\"" >> mist_graphics.inc
+	echo "temple_center_s_lzsa: .incbin \"temple_center_s.lzsa\"" >> mist_graphics.inc
+	echo "temple_center_e_lzsa: .incbin \"temple_center_e.lzsa\"" >> mist_graphics.inc
+	echo "temple_center_w_lzsa: .incbin \"temple_center_w.lzsa\"" >> mist_graphics.inc
+	echo "red_book_closed_lzsa: .incbin \"red_book_closed.lzsa\"" >> mist_graphics.inc
+	echo "red_book_shelf_lzsa: .incbin \"red_book_shelf.lzsa\"" >> mist_graphics.inc
+	echo "pool_s_lzsa: .incbin \"pool_s.lzsa\"" >> mist_graphics.inc
+	echo "clock_s_lzsa: .incbin \"clock_s.lzsa\"" >> mist_graphics.inc
+	echo "spaceship_far_n_lzsa: .incbin \"spaceship_far_n.lzsa\"" >> mist_graphics.inc
+	echo "spaceship_far_e_lzsa: .incbin \"spaceship_far_e.lzsa\"" >> mist_graphics.inc
+	echo "red_book_open_lzsa: .incbin \"red_book_open.lzsa\"" >> mist_graphics.inc
+	echo "red_book_static_lzsa: .incbin \"red_book_static.lzsa\"" >> mist_graphics.inc
+	echo "red_book_static2_lzsa: .incbin \"red_book_static2.lzsa\"" >> mist_graphics.inc
+	echo "tree2_n_lzsa: .incbin \"tree2_n.lzsa\"" >> mist_graphics.inc
+	echo "tree5_n_lzsa: .incbin \"tree5_n.lzsa\"" >> mist_graphics.inc
+	echo "tree5_e_lzsa: .incbin \"tree5_e.lzsa\"" >> mist_graphics.inc
+	echo "gear_n_lzsa: .incbin \"gear_n.lzsa\"" >> mist_graphics.inc
+	echo "gear_s_lzsa: .incbin \"gear_s.lzsa\"" >> mist_graphics.inc
+	echo "gear_w_lzsa: .incbin \"gear_w.lzsa\"" >> mist_graphics.inc
+	echo "gear_base_n_lzsa: .incbin \"gear_base_n.lzsa\"" >> mist_graphics.inc
 
+
+%.gr: %.png
+	$(PNG2GR) $< $@
+
+%.lzsa: %.gr
+	$(LZSA) -r -f2 $< $@
 
 ####
 
 clean:		
-		rm -f *~ *.o *.lst mist_graphics.inc
+		rm -f *~ *.o *.lst *.gr mist_graphics.inc

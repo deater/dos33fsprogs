@@ -44,7 +44,12 @@
 ;NIBCOUNT = $FC                          ; zero-page location for temp offset
 
 decompress_lzsa2:
+
+	; page to decompress to in a
+
+	sta	LZSA_DST_HI
 	ldy	#$00
+	sty	LZSA_DST_LO
 	sty	NIBCOUNT
 
 decode_token:

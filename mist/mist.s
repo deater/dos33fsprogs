@@ -422,12 +422,12 @@ change_direction:
 	tay
 
 	lda	(LOCATION_STRUCT_L),Y
-	sta	GBASL
+	sta	LZSA_SRC_LO
 	iny
 	lda	(LOCATION_STRUCT_L),Y
-	sta	GBASH
+	sta	LZSA_SRC_HI
 	lda	#$c			; load to page $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2
 
 	rts
 
@@ -645,12 +645,12 @@ red_book:
 
 red_book_loop:
 
-	lda	#<red_book_static_rle
-	sta	GBASL
-	lda	#>red_book_static_rle
-	sta	GBASH
+	lda	#<red_book_static_lzsa
+	sta	LZSA_SRC_LO
+	lda	#>red_book_static_lzsa
+	sta	LZSA_SRC_HI
 	lda	#$c			; load to page $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2
 
 	jsr	gr_copy_to_current
 
@@ -659,12 +659,12 @@ red_book_loop:
 	lda	#120
 	jsr	WAIT
 
-	lda	#<red_book_static2_rle
-	sta	GBASL
-	lda	#>red_book_static2_rle
-	sta	GBASH
+	lda	#<red_book_static2_lzsa
+	sta	LZSA_SRC_LO
+	lda	#>red_book_static2_lzsa
+	sta	LZSA_SRC_HI
 	lda	#$c			; load to page $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2
 
 	jsr	gr_copy_to_current
 
@@ -682,12 +682,12 @@ red_book_loop:
 	;; annoying brother
 
 
-	lda	#<red_book_open_rle
-	sta	GBASL
-	lda	#>red_book_open_rle
-	sta	GBASH
+	lda	#<red_book_open_lzsa
+	sta	LZSA_SRC_LO
+	lda	#>red_book_open_lzsa
+	sta	LZSA_SRC_HI
 	lda	#$c			; load to page $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2
 
 	jsr	gr_copy_to_current
 
@@ -716,12 +716,12 @@ red_book_done:
 
 	; restore bg
 
-	lda	#<red_book_shelf_rle
-	sta	GBASL
-	lda	#>red_book_shelf_rle
-	sta	GBASH
+	lda	#<red_book_shelf_lzsa
+	sta	LZSA_SRC_LO
+	lda	#>red_book_shelf_lzsa
+	sta	LZSA_SRC_HI
 	lda	#$c			; load to page $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2
 
 
 	rts
@@ -735,12 +735,13 @@ red_book_done:
 	;==========================
 
 	.include	"gr_copy.s"
-	.include	"gr_unrle.s"
+;	.include	"gr_unrle.s"
 	.include	"gr_offsets.s"
 	.include	"gr_pageflip.s"
 	.include	"gr_putsprite_crop.s"
 	.include	"text_print.s"
 	.include	"gr_fast_clear.s"
+	.include	"decompress_small_v2.s"
 
 	.include	"audio.s"
 
@@ -829,7 +830,7 @@ location0:
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.byte	$00		; special exit
-	.word	link_book_rle	; north bg
+	.word	m_link_book_lzsa	; north bg
 	.word	$0000		; south bg
 	.word	$0000		; east bg
 	.word	$0000		; west bg
@@ -849,10 +850,10 @@ location1:
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
-	.word	dock_n_rle	; north bg
-	.word	dock_s_rle	; south bg
-	.word	dock_e_rle	; east bg
-	.word	dock_w_rle	; west bg
+	.word	dock_n_lzsa	; north bg
+	.word	dock_s_lzsa	; south bg
+	.word	dock_e_lzsa	; east bg
+	.word	dock_w_lzsa	; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
@@ -869,8 +870,8 @@ location2:
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.byte	$00		; special exit
-	.word	dock_switch_n_rle	; north bg
-	.word	dock_switch_s_rle	; south bg
+	.word	dock_switch_n_lzsa	; north bg
+	.word	dock_switch_s_lzsa	; south bg
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	23,30		; special x
@@ -890,10 +891,10 @@ location3:
 	.byte	DIRECTION_S	; east exit_dir
 	.byte	DIRECTION_S	; west exit_dir
 	.byte	$ff		; special exit
-	.word	gear_base_n_rle		; north bg
+	.word	gear_base_n_lzsa		; north bg
 	.word	$0000		; south bg
 	.word	$0000		; east bg
-	.word	dock_steps_w_rle		; west bg
+	.word	dock_steps_w_lzsa		; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
@@ -910,9 +911,9 @@ location4:
 	.byte	DIRECTION_S	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
-	.word	above_dock_n_rle	; north bg
-	.word	above_dock_s_rle	; south bg
-	.word	above_dock_e_rle	; east bg
+	.word	above_dock_n_lzsa	; north bg
+	.word	above_dock_s_lzsa	; south bg
+	.word	above_dock_e_lzsa	; east bg
 	.word	$0000		; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
@@ -930,8 +931,8 @@ location5:
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
-	.word	step_base_n_rle	; north bg
-	.word	step_base_s_rle	; south bg
+	.word	step_base_n_lzsa	; north bg
+	.word	step_base_s_lzsa	; south bg
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	$ff,$ff		; special x
@@ -952,8 +953,8 @@ location6:
 	.byte	$ff		; special exit
 	.word	$0000		; north bg
 	.word	$0000		; south bg
-	.word	step_land1_e_rle	; east bg
-	.word	step_land1_w_rle	; west bg
+	.word	step_land1_e_lzsa	; east bg
+	.word	step_land1_w_lzsa	; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
@@ -972,8 +973,8 @@ location7:
 	.byte	$00		; special exit
 	.word	$0000		; north bg
 	.word	$0000		; south bg
-	.word	step_land2_e_rle	; east bg
-	.word	step_land2_w_rle	; west bg
+	.word	step_land2_e_lzsa	; east bg
+	.word	step_land2_w_lzsa	; west bg
 	.byte	29,32		; special x
 	.byte	38,45		; special y
 	.word	read_letter-1
@@ -992,8 +993,8 @@ location8:
 	.byte	$ff		; special exit
 	.word	$0000		; north bg
 	.word	$0000		; south bg
-	.word	step_dentist_e_rle	; east bg
-	.word	step_dentist_w_rle	; west bg
+	.word	step_dentist_e_lzsa	; east bg
+	.word	step_dentist_w_lzsa	; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
@@ -1012,8 +1013,8 @@ location9:
 	.byte	$ff		; special exit
 	.word	$0000		; north bg
 	.word	$0000		; south bg
-	.word	step_land3_e_rle	; east bg
-	.word	step_land3_w_rle	; west bg
+	.word	step_land3_e_lzsa	; east bg
+	.word	step_land3_w_lzsa	; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
@@ -1031,10 +1032,10 @@ location10:
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_N	; west exit_dir
 	.byte	$ff		; special exit
-	.word	step_top_n_rle	; north bg
-	.word	step_top_s_rle	; south bg
-	.word	step_top_e_rle	; east bg
-	.word	step_top_w_rle	; west bg
+	.word	step_top_n_lzsa	; north bg
+	.word	step_top_s_lzsa	; south bg
+	.word	step_top_e_lzsa	; east bg
+	.word	step_top_w_lzsa	; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
@@ -1051,8 +1052,8 @@ location11:
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
-	.word	temple_door_n_rle	; north bg
-	.word	temple_door_s_rle	; south bg
+	.word	temple_door_n_lzsa	; north bg
+	.word	temple_door_s_lzsa	; south bg
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	$ff,$ff		; special x
@@ -1071,10 +1072,10 @@ location12:
 	.byte	$ff		; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.byte	$ff		; special exit
-	.word	temple_center_n_rle	; north bg
-	.word	temple_center_s_rle	; south bg
-	.word	temple_center_e_rle	; east bg
-	.word	temple_center_w_rle	; west bg
+	.word	temple_center_n_lzsa	; north bg
+	.word	temple_center_s_lzsa	; south bg
+	.word	temple_center_e_lzsa	; east bg
+	.word	temple_center_w_lzsa	; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
@@ -1094,7 +1095,7 @@ location13:
 	.word	$0000		; north bg
 	.word	$0000		; south bg
 	.word	$0000		; east bg
-	.word	red_book_shelf_rle	; west bg
+	.word	red_book_shelf_lzsa	; west bg
 	.byte	16,25		; special x
 	.byte	16,32		; special y
 	.word	red_book-1	; special function
@@ -1112,7 +1113,7 @@ location14:
 	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
 	.word	$0000		; north bg
-	.word	pool_s_rle	; south bg
+	.word	pool_s_lzsa	; south bg
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	$ff,$ff		; special x
@@ -1132,7 +1133,7 @@ location15:
 	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
 	.word	$0000		; north bg
-	.word	clock_s_rle	; south bg
+	.word	clock_s_lzsa	; south bg
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	$ff,$ff		; special x
@@ -1152,9 +1153,9 @@ location16:
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
-	.word	ss_far_n_rle	; north bg
+	.word	spaceship_far_n_lzsa	; north bg
 	.word	$0000		; south bg
-	.word	ss_far_e_rle	; east bg
+	.word	spaceship_far_e_lzsa	; east bg
 	.word	$0000		; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
@@ -1173,7 +1174,7 @@ location17:
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.byte	$00		; special exit
-	.word	tree2_n_rle	; north bg
+	.word	tree2_n_lzsa	; north bg
 	.word	$0000		; south bg
 	.word	$0000		; east bg
 	.word	$0000		; west bg
@@ -1194,9 +1195,9 @@ location18:
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
-	.word	tree5_n_rle	; north bg
+	.word	tree5_n_lzsa	; north bg
 	.word	$0000		; south bg
-	.word	tree5_e_rle	; east bg
+	.word	tree5_e_lzsa	; east bg
 	.word	$0000		; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
@@ -1214,10 +1215,10 @@ location19:
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.byte	$00		; special exit
-	.word	gear_n_rle	; north bg
-	.word	gear_s_rle	; south bg
+	.word	gear_n_lzsa	; north bg
+	.word	gear_s_lzsa	; south bg
 	.word	$0000		; east bg
-	.word	gear_w_rle	; west bg
+	.word	gear_w_lzsa	; west bg
 	.byte	5,10		; special x
 	.byte	29,35		; special y
 	.word	click_switch-1	; special function
@@ -1234,9 +1235,9 @@ location20:
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
-	.word	gear_base_n_rle	; north bg
+	.word	gear_base_n_lzsa	; north bg
 	.word	$0000		; south bg
-	.word	above_dock_e_rle	; east bg
+	.word	above_dock_e_lzsa	; east bg
 	.word	$0000		; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y

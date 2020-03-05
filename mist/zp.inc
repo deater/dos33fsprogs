@@ -1,6 +1,7 @@
 ;; Zero Page
 
 ;; LZ4 addresses
+NIBCOUNT	= $00
 
 LZ4_SRC		= $00
 LZ4_DST		= $02
