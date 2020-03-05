@@ -5,3 +5,10 @@ lz4						323
 
 lzsa -r -f1 		-- small_v1	--	252 bytes
 lzsa -r -f2 		-- small_v2	--	228 bytes
+
+
+speed:
+	rle:		 8AE7	cycles	687 byte exe
+	lzsa_small_v2:	 E8EF	cycles	782 byte exe
+	lzsa_fast_v2:	 DFBF	cycles	793 byte exe
+	lz4:		1170A	cycles	767 byte exe

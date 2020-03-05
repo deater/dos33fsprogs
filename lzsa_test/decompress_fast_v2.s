@@ -1,4 +1,4 @@
-; Note: modifed by Vince Weaver to assemble with ca65
+; note -- modified by Vince Weaver to assemble with ca65
 
 ; -----------------------------------------------------------------------------
 ; Decompress raw LZSA2 block.
@@ -24,7 +24,7 @@
 ;
 ; -----------------------------------------------------------------------------
 ;
-;  Copyright (C) 2019 Emmanuel Marty
+;  Copyright (C) 2019 Emmanuel Marty, Peter Ferrie
 ;
 ;  This software is provided 'as-is', without any express or implied
 ;  warranty.  In no event will the authors be held liable for any damages
@@ -45,11 +45,10 @@
 
 ;NIBCOUNT = $FC                          ; zero-page location for temp offset
 
-decompress_lzsa2:
-
-	; page to decompress to in a
+decompress_lzsa2_fast:
 
 	sta	LZSA_DST_HI
+
 	ldy	#$00
 	sty	LZSA_DST_LO
 	sty	NIBCOUNT
@@ -60,31 +59,36 @@ decode_token:
 
 	and	#$18			; isolate literals count (LL)
 	beq	no_literals		; skip if no literals to copy
-	lsr				; shift literals count into place
-	lsr
-	lsr
-	cmp	#$03			; LITERALS_RUN_LEN_V2?
+	cmp	#$18			; LITERALS_RUN_LEN_V2?
 	bcc	prepare_copy_literals	; if less, count is directly embedded in token
 
 	jsr	getnibble		; get extra literals length nibble
 					; add nibble to len from token
 	adc	#$02			; (LITERALS_RUN_LEN_V2) minus carry
 	cmp	#$12			; LITERALS_RUN_LEN_V2 + 15 ?
-	bcc	prepare_copy_literals	; if less, literals count is complete
+	bcc	prepare_copy_literals_direct	; if less, literals count is complete
 
 	jsr	getsrc			; get extra byte of variable literals count
 					; the carry is always set by the CMP above
 					; GETSRC doesn't change it
 	sbc	#$EE			; overflow?
+	jmp	prepare_copy_literals_direct
 
-prepare_copy_literals:
-	tax
-	bcc prepare_copy_literals_high	; if not, literals count is complete
-
+prepare_copy_literals_large:
 					; handle 16 bits literals count
 					; literals count = directly these 16 bits
 	jsr	getlargesrc		; grab low 8 bits in X, high 8 bits in A
 	tay				; put high 8 bits in Y
+	bcs	prepare_copy_literals_high	; (*same as JMP PREPARE_COPY_LITERALS_HIGH but shorter)
+
+prepare_copy_literals:
+	lsr				; shift literals count into place
+	lsr
+	lsr
+
+prepare_copy_literals_direct:
+	tax
+	bcs	prepare_copy_literals_large	; if so, literals count is large
 
 prepare_copy_literals_high:
 	txa
@@ -104,7 +108,7 @@ no_literals:
 	asl
 	bcs	repmatch_or_large_offset	; 1YZ: rep-match or 13/16 bit offset
 
-	asl				; 0YZ: 5 or 9 bit offset
+	asl					; 0YZ: 5 or 9 bit offset
 	bcs	offset_9_bit
 
 					; 00Z: 5 bit offset
@@ -126,7 +130,7 @@ offset_9_bit:				; 01Z: 9 bit offset
 
 repmatch_or_large_offset:
 	asl				; 13 bit offset?
-	bcs	repmatch_or_16_bit	; handle rep-match or 16-bit offset if not
+	bcs	repmatch_or_16bit	; handle rep-match or 16-bit offset if not
 
 					; 10Z: 13 bit offset
 
@@ -135,8 +139,8 @@ repmatch_or_large_offset:
 	bne	got_offset_hi		; go store high byte, read low byte of match offset and prepare match
 					; (*same as JMP GOT_OFFSET_HI but shorter)
 
-repmatch_or_16_bit:			; rep-match or 16 bit offset
-	;;asl				; XYZ=111?
+repmatch_or_16bit:			; rep-match or 16 bit offset
+	;;ASL				; XYZ=111?
 	bmi	rep_match		; reuse previous offset if so (rep-match)
 
 					; 110: handle 16 bit offset
@@ -145,22 +149,21 @@ got_offset_hi:
 	tax
 	jsr	getsrc			; grab low 8 bits
 got_offset_lo:
-	sta	offslo			; store low byte of match offset
-	stx	offshi			; store high byte of match offset
+	sta	OFFSLO			; store low byte of match offset
+	stx	OFFSHI			; store high byte of match offset
 
 rep_match:
-
 .ifdef BACKWARD_DECOMPRESS
 
 	; Backward decompression - substract match offset
 
 	sec				; add dest + match offset
 	lda	putdst+1		; low 8 bits
-offslo = *+1
+OFFSLO = *+1
 	sbc	#$AA
 	sta	copy_match_loop+1	; store back reference address
 	lda	putdst+2
-offshi = *+1
+OFFSHI = *+1
 	sbc	#$AA			; high 8 bits
 	sta	copy_match_loop+2	; store high 8 bits of address
 	sec
@@ -171,10 +174,10 @@ offshi = *+1
 
 	clc				; add dest + match offset
 	lda	putdst+1		; low 8 bits
-offslo = *+1
+OFFSLO = *+1
 	adc	#$AA
 	sta	copy_match_loop+1	; store back reference address
-offshi = *+1
+OFFSHI = *+1
 	lda	#$AA			; high 8 bits
 	adc	putdst+2
 	sta	copy_match_loop+2	; store high 8 bits of address
@@ -217,11 +220,10 @@ copy_match_loop:
 
 .ifdef BACKWARD_DECOMPRESS
 
-   ; Backward decompression -- put backreference bytes backward
+	; Backward decompression -- put backreference bytes backward
 
 	lda	copy_match_loop+1
-	bne	getmatch_done
-	dec	copy_match_loop+2
+	beq	getmatch_adj_hi
 getmatch_done:
 	dec	copy_match_loop+1
 
@@ -230,9 +232,7 @@ getmatch_done:
 	; Forward decompression -- put backreference bytes forward
 
 	inc	copy_match_loop+1
-	bne	getmatch_done
-	inc	copy_match_loop+2
-
+	beq	getmatch_adj_hi
 getmatch_done:
 
 .endif
@@ -242,6 +242,19 @@ getmatch_done:
 	dey
 	bne	copy_match_loop
 	jmp	decode_token
+
+.ifdef BACKWARD_DECOMPRESS
+
+getmatch_adj_hi:
+	dec	copy_match_loop+2
+	jmp	getmatch_done
+
+.else
+
+getmatch_adj_hi:
+	inc	copy_match_loop+2
+	jmp	getmatch_done
+.endif
 
 getcombinedbits:
 	eor	#$80
@@ -256,27 +269,27 @@ decompression_done:
 	rts
 
 getnibble:
-nibbles = *+1
+NIBBLES = *+1
 	lda	#$AA
 	lsr	NIBCOUNT
-	bcs	has_nibbles
+	bcc	need_nibbles
+	and	#$0F			; isolate low 4 bits of nibble
+	rts
 
+need_nibbles:
 	inc	NIBCOUNT
 	jsr	getsrc			; get 2 nibbles
-	sta	nibbles
+	sta	NIBBLES
 	lsr
 	lsr
 	lsr
 	lsr
 	sec
-
-has_nibbles:
-	and	#$0F			; isolate low 4 bits of nibble
 	rts
 
 .ifdef BACKWARD_DECOMPRESS
 
-   ; Backward decompression -- get and put bytes backward
+	; Backward decompression -- get and put bytes backward
 
 getput:
 	jsr	getsrc
@@ -285,9 +298,12 @@ LZSA_DST_LO = *+1
 LZSA_DST_HI = *+2
 	sta	$AAAA
 	lda	putdst+1
-	bne	putdst_done
+	beq	putdst_adj_hi
+	dec	putdst+1
+	rts
+
+putdst_adj_hi:
 	dec	putdst+2
-putdst_done:
 	dec	putdst+1
 	rts
 
@@ -302,28 +318,33 @@ LZSA_SRC_HI = *+2
 	lda	$AAAA
 	pha
 	lda	getsrc+1
-	bne	getsrc_done
+	beq	getsrc_adj_hi
+	dec	getsrc+1
+	pla
+	rts
+
+getsrc_adj_hi:
 	dec	getsrc+2
-getsrc_done:
 	dec	getsrc+1
 	pla
 	rts
 
 .else
 
-   ; Forward decompression -- get and put bytes forward
+	; Forward decompression -- get and put bytes forward
 
 getput:
 	jsr	getsrc
-
 putdst:
 LZSA_DST_LO = *+1
 LZSA_DST_HI = *+2
 	sta	$AAAA
 	inc	putdst+1
-	bne	putdst_done
+	beq	putdst_adj_hi
+	rts
+
+putdst_adj_hi:
 	inc	putdst+2
-putdst_done:
 	rts
 
 getlargesrc:
@@ -336,10 +357,11 @@ LZSA_SRC_LO = *+1
 LZSA_SRC_HI = *+2
 	lda	$AAAA
 	inc	getsrc+1
-	bne	getsrc_done
-	inc	getsrc+2
-getsrc_done:
+	beq	getsrc_adj_hi
 	rts
 
+getsrc_adj_hi:
+	inc	getsrc+2
+	rts
 .endif
 
