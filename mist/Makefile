@@ -37,7 +37,7 @@ MIST_TITLE:	mist_title.o
 	ld65 -o MIST_TITLE mist_title.o -C ../linker_scripts/apple2_4000.inc
 
 mist_title.o:	mist_title.s zp.inc hardware.inc \
-	graphics_title/MIST_TITLE.LZ4
+	graphics_title/mist_title.lzsa
 	ca65 -o mist_title.o mist_title.s -l mist_title.lst
 
 ####
