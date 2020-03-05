@@ -816,7 +816,7 @@ locations:
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
-	.word location20,location21
+	.word location20,location21,location22
 
 ; myst linking book
 location0:
@@ -1143,11 +1143,11 @@ location15:
 
 ; spaceship far
 location16:
-	.byte	16		; north exit
+	.byte	22		; north exit
 	.byte	$ff		; south exit
 	.byte	10		; east exit
 	.byte	$ff		; west exit
-	.byte	DIRECTION_E	; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -1262,6 +1262,26 @@ location21:
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
 	.byte	BG_NORTH | BG_SOUTH
+
+; spaceship switch
+location22:
+	.byte	16		; north exit
+	.byte	$ff		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_E	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	spaceship_switch_n_lzsa	; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_NORTH
 
 
 

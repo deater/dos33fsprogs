@@ -33,7 +33,8 @@ mist_graphics.inc:	\
 	tree5_n.lzsa tree5_e.lzsa \
 	gear_n.lzsa gear_w.lzsa gear_s.lzsa \
 	gear_base_n.lzsa \
-	dentist_door_n.lzsa dentist_door_s.lzsa
+	dentist_door_n.lzsa dentist_door_s.lzsa \
+	spaceship_switch_n.lzsa
 	echo "m_link_book_lzsa: .incbin \"m_link_book.lzsa\"" > mist_graphics.inc
 	echo "dock_n_lzsa: .incbin \"dock_n.lzsa\"" >> mist_graphics.inc
 	echo "dock_s_lzsa: .incbin \"dock_s.lzsa\"" >> mist_graphics.inc
@@ -84,7 +85,7 @@ mist_graphics.inc:	\
 	echo "gear_base_n_lzsa: .incbin \"gear_base_n.lzsa\"" >> mist_graphics.inc
 	echo "dentist_door_n_lzsa: .incbin \"dentist_door_n.lzsa\"" >> mist_graphics.inc
 	echo "dentist_door_s_lzsa: .incbin \"dentist_door_s.lzsa\"" >> mist_graphics.inc
-
+	echo "spaceship_switch_n_lzsa: .incbin \"spaceship_switch_n.lzsa\"" >> mist_graphics.inc
 
 
 %.gr: %.png

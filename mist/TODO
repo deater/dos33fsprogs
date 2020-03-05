@@ -25,11 +25,12 @@ Move sound to language card (meaning no sound on II+ w/o language card)
 Marker Switches (8):
 + * Dock
 + * Gears
-+ Dentist
++ * Dentist
 + * Pool
-+ Spaceship
++ * Spaceship
 + Clock
 + Cabin
++ Generator
 
 Fireplace:
 + 8x6 grid
@@ -42,9 +43,9 @@ Fireplace:
 + close-in clock
 + clock with gears up
 + clock switch
-+ dentist switch
-+ looking back from dentist switch
-+ spaceship switch
++ * dentist switch
++ * looking back from dentist switch
++ * spaceship switch
 + open gear
 + gear linking book
 + fireplace close
