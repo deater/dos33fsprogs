@@ -816,7 +816,7 @@ locations:
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
-	.word location20
+	.word location20,location21
 
 ; myst linking book
 location0:
@@ -981,23 +981,23 @@ location7:
 
 ; steps outside dentist chair branch
 location8:
-	.byte	$ff		; north exit
+	.byte	21		; north exit
 	.byte	$ff		; south exit
 	.byte	7		; east exit
 	.byte	9		; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.byte	$ff		; special exit
-	.word	$0000		; north bg
-	.word	$0000		; south bg
+	.word	step_dentist_n_lzsa	; north bg
+	.word	$0000			; south bg
 	.word	step_dentist_e_lzsa	; east bg
 	.word	step_dentist_w_lzsa	; west bg
 	.byte	$ff,$ff		; special x
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
-	.byte	BG_EAST|BG_WEST	;
+	.byte	BG_EAST|BG_WEST|BG_NORTH
 
 ; steps one more time up
 location9:
@@ -1242,6 +1242,26 @@ location20:
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
 	.byte	BG_NORTH | BG_EAST
+
+; dentist door
+location21:
+	.byte	21		; north exit
+	.byte	9		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_S	; north exit_dir
+	.byte	DIRECTION_W	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	dentist_door_n_lzsa	; north bg
+	.word	dentist_door_s_lzsa	; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_NORTH | BG_SOUTH
 
 
 

@@ -18,7 +18,7 @@ mist_graphics.inc:	\
 	step_base_s.lzsa step_base_n.lzsa \
 	step_land1_w.lzsa step_land1_e.lzsa \
 	step_land2_e.lzsa step_land2_w.lzsa \
-	step_dentist_e.lzsa step_dentist_w.lzsa \
+	step_dentist_n.lzsa step_dentist_e.lzsa step_dentist_w.lzsa \
 	step_land3_w.lzsa step_land3_e.lzsa \
 	step_top_e.lzsa step_top_w.lzsa step_top_n.lzsa step_top_s.lzsa \
 	temple_door_n.lzsa temple_door_s.lzsa \
@@ -32,7 +32,8 @@ mist_graphics.inc:	\
 	tree2_n.lzsa \
 	tree5_n.lzsa tree5_e.lzsa \
 	gear_n.lzsa gear_w.lzsa gear_s.lzsa \
-	gear_base_n.lzsa
+	gear_base_n.lzsa \
+	dentist_door_n.lzsa dentist_door_s.lzsa
 	echo "m_link_book_lzsa: .incbin \"m_link_book.lzsa\"" > mist_graphics.inc
 	echo "dock_n_lzsa: .incbin \"dock_n.lzsa\"" >> mist_graphics.inc
 	echo "dock_s_lzsa: .incbin \"dock_s.lzsa\"" >> mist_graphics.inc
@@ -50,6 +51,7 @@ mist_graphics.inc:	\
 	echo "step_land1_e_lzsa: .incbin \"step_land1_e.lzsa\"" >> mist_graphics.inc
 	echo "step_land2_w_lzsa: .incbin \"step_land2_w.lzsa\"" >> mist_graphics.inc
 	echo "step_land2_e_lzsa: .incbin \"step_land2_e.lzsa\"" >> mist_graphics.inc
+	echo "step_dentist_n_lzsa: .incbin \"step_dentist_n.lzsa\"" >> mist_graphics.inc
 	echo "step_dentist_w_lzsa: .incbin \"step_dentist_w.lzsa\"" >> mist_graphics.inc
 	echo "step_dentist_e_lzsa: .incbin \"step_dentist_e.lzsa\"" >> mist_graphics.inc
 	echo "step_land3_w_lzsa: .incbin \"step_land3_w.lzsa\"" >> mist_graphics.inc
@@ -80,6 +82,9 @@ mist_graphics.inc:	\
 	echo "gear_s_lzsa: .incbin \"gear_s.lzsa\"" >> mist_graphics.inc
 	echo "gear_w_lzsa: .incbin \"gear_w.lzsa\"" >> mist_graphics.inc
 	echo "gear_base_n_lzsa: .incbin \"gear_base_n.lzsa\"" >> mist_graphics.inc
+	echo "dentist_door_n_lzsa: .incbin \"dentist_door_n.lzsa\"" >> mist_graphics.inc
+	echo "dentist_door_s_lzsa: .incbin \"dentist_door_s.lzsa\"" >> mist_graphics.inc
+
 
 
 %.gr: %.png
