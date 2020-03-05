@@ -817,6 +817,7 @@ locations:
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
+	.word location24
 
 ; myst linking book
 location0:
@@ -1187,11 +1188,11 @@ location17:
 location18:
 	.byte	23		; north exit
 	.byte	$ff		; south exit
-	.byte	$ff		; east exit
+	.byte	24		; east exit
 	.byte	$ff		; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
 	.word	tree5_n_lzsa	; north bg
@@ -1303,6 +1304,27 @@ location23:
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
 	.byte	BG_NORTH|BG_SOUTH|BG_WEST
+
+
+; tree cabin
+location24:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	18		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	$0000		; north bg
+	.word	$0000		; south bg
+	.word	tree_cabin_e_lzsa		; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_EAST
 
 
 

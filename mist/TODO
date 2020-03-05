@@ -29,7 +29,7 @@ Marker Switches (8):
 + * Pool
 + * Spaceship
 + Clock
-+ Cabin
++ * Cabin
 + * Generator
 
 Fireplace:
@@ -38,7 +38,7 @@ Fireplace:
 
 
 16 more pictures?
-+ cabin switch
++ * cabin switch
 + * generator switch
 + close-in clock
 + clock with gears up
