@@ -12,11 +12,11 @@ Make game winnable:
 + Allow looking at green book on shelf
 + allow getting in the fireplace
 + allow entering code
++ Atrus at end -- hires?
+
 
 Add one of the other ages/puzzles:
 + ??
-
-Make graphics use lzsa compression
 
 Move sound to language card (meaning no sound on II+ w/o language card)
 
@@ -28,7 +28,7 @@ Marker Switches (8):
 + * Dentist
 + * Pool
 + * Spaceship
-+ Clock
++ * Clock
 + * Cabin
 + * Generator
 
@@ -37,15 +37,7 @@ Fireplace:
 
 
 
-16 more pictures?
-+ * cabin switch
-+ * generator switch
-+ close-in clock
-+ clock with gears up
-+ clock switch
-+ * dentist switch
-+ * looking back from dentist switch
-+ * spaceship switch
+more pictures?
 + open gear
 + gear linking book
 + fireplace close

@@ -817,7 +817,7 @@ locations:
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
-	.word location24
+	.word location24,location25,location26,location27
 
 ; myst linking book
 location0:
@@ -1124,11 +1124,11 @@ location14:
 ; clock
 location15:
 	.byte	$ff		; north exit
-	.byte	18		; south exit
+	.byte	25		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
 	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_N	; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.byte	$ff		; special exit
@@ -1325,6 +1325,66 @@ location24:
 	.byte	$ff,$ff		; special y
 	.word	$0000		; special function
 	.byte	BG_EAST
+
+; clock puzzle
+location25:
+	.byte	$ff		; north exit
+	.byte	26		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	$0000		; north bg
+	.word	clock_puzzle_s_lzsa		; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_SOUTH
+
+; clock island
+location26:
+	.byte	18		; north exit
+	.byte	27		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	clock_island_n_lzsa		; north bg
+	.word	clock_island_s_lzsa		; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_SOUTH|BG_NORTH
+
+; clock inside
+location27:
+	.byte	$ff		; north exit
+	.byte	26		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	$0000		; north bg
+	.word	clock_inside_s_lzsa		; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_SOUTH
 
 
 
