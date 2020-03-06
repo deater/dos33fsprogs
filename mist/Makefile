@@ -48,6 +48,7 @@ MIST:	mist.o
 mist.o:	mist.s zp.inc hardware.inc \
 	graphics_island/mist_graphics.inc \
 	common_sprites.inc \
+	leveldata_island.inc \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o mist.o mist.s -l mist.lst
 
