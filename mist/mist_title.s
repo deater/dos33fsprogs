@@ -29,7 +29,6 @@ reload_everything:
 	lda     #<file
 	sta     LZSA_SRC_LO
 	lda     #>file
-	sta     LZ4_SRC+1
 	sta     LZSA_SRC_HI
 
 	lda	#$20
