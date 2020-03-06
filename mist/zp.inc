@@ -1,17 +1,7 @@
 ;; Zero Page
 
-;; LZ4 addresses
+;; LZSA addresses
 NIBCOUNT	= $00
-
-LZ4_SRC		= $00
-LZ4_DST		= $02
-LZ4_END		= $04
-WHICH_LOAD	= $05
-COUNT		= $06
-MENU_BASE	= $06
-MENU_HIGHLIGHT	= $07
-DELTA		= $08
-
 
 ;; Zero page monitor routines addresses
 
@@ -36,6 +26,8 @@ SEEDL	= $4e
 SEEDH	= $4f
 XMAX	= $50
 
+; MIST zero page addresses
+
 FRAMEL	= $60
 FRAMEH	= $61
 CURSOR_X= $62
@@ -56,6 +48,23 @@ IN_LEFT		=	$6C
 IN_RIGHT	=	$6D
 BTC_L		=	$6E
 BTC_H		=	$6F
+
+HOLDING_PAGE	=	$70
+CLOCK_BRIDGE	=	$71
+GEAR_OPEN	=	$72
+MARKER_SWITCHES	=	$73
+CLOCK_H		=	$74
+CLOCK_M		=	$75
+GENERATOR_ON	=	$76
+TREE_FURNACE_ON	=	$77
+FIREPLACE_GRID0	=	$78
+FIREPLACE_GRID1	=	$79
+FIREPLACE_GRID2	=	$7A
+FIREPLACE_GRID3	=	$7B
+FIREPLACE_GRID4	=	$7C
+FIREPLACE_GRID5	=	$7D
+	
+
 
 DISP_PAGE	=	$ED	; ALL
 DRAW_PAGE	=	$EE	; ALL
