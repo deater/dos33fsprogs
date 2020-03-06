@@ -39,7 +39,9 @@ mist_graphics.inc:	\
 	tree_cabin_e.lzsa \
 	clock_island_s.lzsa clock_island_n.lzsa \
 	clock_puzzle_s.lzsa \
-	clock_inside_s.lzsa
+	clock_inside_s.lzsa \
+	fireplace_e.lzsa \
+	in_fireplace_w.lzsa in_fireplace_door.lzsa
 	echo "m_link_book_lzsa: .incbin \"m_link_book.lzsa\"" > mist_graphics.inc
 	echo "dock_n_lzsa: .incbin \"dock_n.lzsa\"" >> mist_graphics.inc
 	echo "dock_s_lzsa: .incbin \"dock_s.lzsa\"" >> mist_graphics.inc
@@ -99,7 +101,9 @@ mist_graphics.inc:	\
 	echo "clock_island_n_lzsa: .incbin \"clock_island_n.lzsa\"" >> mist_graphics.inc
 	echo "clock_puzzle_s_lzsa: .incbin \"clock_puzzle_s.lzsa\"" >> mist_graphics.inc
 	echo "clock_inside_s_lzsa: .incbin \"clock_inside_s.lzsa\"" >> mist_graphics.inc
-
+	echo "fireplace_e_lzsa: .incbin \"fireplace_e.lzsa\"" >> mist_graphics.inc
+	echo "in_fireplace_w_lzsa: .incbin \"in_fireplace_w.lzsa\"" >> mist_graphics.inc
+	echo "in_fireplace_door_lzsa: .incbin \"in_fireplace_door.lzsa\"" >> mist_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@

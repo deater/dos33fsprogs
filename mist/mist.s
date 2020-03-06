@@ -818,6 +818,7 @@ locations:
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
+	.word location28,location29
 
 ; myst linking book
 location0:
@@ -1065,11 +1066,11 @@ location11:
 location12:
 	.byte	$ff		; north exit
 	.byte	11		; south exit
-	.byte	$ff		; east exit
+	.byte	28		; east exit
 	.byte	13		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.byte	$ff		; special exit
 	.word	temple_center_n_lzsa	; north bg
@@ -1386,6 +1387,45 @@ location27:
 	.word	$0000		; special function
 	.byte	BG_SOUTH
 
+; fireplace
+location28:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	29		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_W	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.byte	$ff		; special exit
+	.word	$0000		; north bg
+	.word	$0000		; south bg
+	.word	fireplace_e_lzsa	; east bg
+	.word	$0000		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_EAST
+
+; in fireplace
+location29:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	$ff		; east exit
+	.byte	12		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.byte	$00		; special exit
+	.word	$0000		; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	in_fireplace_w_lzsa		; west bg
+	.byte	$ff,$ff		; special x
+	.byte	$ff,$ff		; special y
+	.word	$0000		; special function
+	.byte	BG_WEST		; west
 
 
 
