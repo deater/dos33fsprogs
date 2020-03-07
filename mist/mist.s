@@ -79,6 +79,19 @@ game_loop:
 	jsr	gr_copy_to_current
 
 	;====================================
+	; handle special-case forground logic
+	;====================================
+
+	lda	LOCATION
+	cmp	#25	; clock puzzle
+	bne	nothing_special
+
+	jsr	draw_clock_face
+
+
+
+nothing_special:
+	;====================================
 	; draw pointer
 	;====================================
 

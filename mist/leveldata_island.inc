@@ -508,7 +508,10 @@ location25:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_SOUTH
-	.byte	$ff		; special exit
+	.byte	DIRECTION_S	; special exit
+	.byte	12,30		; special x
+	.byte	38,48		; special y
+	.word	clock_puzzle-1	; special function
 
 ; clock island
 location26:
