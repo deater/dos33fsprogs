@@ -187,7 +187,7 @@ location7:
 	.word	step_land2_e_lzsa	; east bg
 	.word	step_land2_w_lzsa	; west bg
 	.byte	BG_WEST	| BG_EAST
-	.byte	DIRECTION_N	; special exit
+	.byte	DIRECTION_W	; special exit (letter)
 	.byte	29,32		; special x
 	.byte	38,45		; special y
 	.word	read_letter-1
@@ -412,11 +412,11 @@ location19:
 location20:
 	.byte	19		; north exit
 	.byte	$ff		; south exit
-	.byte	3		; east exit
+	.byte	2		; east exit
 	.byte	$ff		; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_S	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	gear_base_n_lzsa	; north bg
 	.word	$0000			; south bg
@@ -545,7 +545,10 @@ location27:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_SOUTH
-	.byte	$ff		; special exit
+	.byte	DIRECTION_S	; special exit
+	.byte	12,30		; special x
+	.byte	8,42		; special y
+	.word	clock_inside_puzzle-1	; special function
 
 ; fireplace
 location28:

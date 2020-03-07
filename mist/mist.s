@@ -49,6 +49,7 @@ mist_start:
 	lda	#0
 	sta	CLOCK_MINUTE
 	sta	CLOCK_HOUR
+	jsr	clock_inside_reset
 
 not_first_time:
 
@@ -84,10 +85,16 @@ game_loop:
 
 	lda	LOCATION
 	cmp	#25	; clock puzzle
+	beq	location_clock
+	cmp	#27
+	beq	location_inside_clock
 	bne	nothing_special
 
+location_clock:
 	jsr	draw_clock_face
-
+	jmp	nothing_special
+location_inside_clock:
+	jsr	draw_clock_inside
 
 
 nothing_special:

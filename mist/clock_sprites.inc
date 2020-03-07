@@ -1,3 +1,28 @@
+clock_gear_sprites:
+	.word clock_gear_3_sprite,clock_gear_1_sprite,clock_gear_2_sprite
+
+clock_gear_3_sprite:
+	.byte 5,2
+	.byte $11,$22,$11,$22,$11
+	.byte $A1,$A2,$A1,$A2,$A1
+
+clock_gear_2_sprite:
+	.byte 5,2
+	.byte $22,$11,$22,$11,$22
+	.byte $A2,$A1,$A2,$A1,$A2
+
+clock_gear_1_sprite:
+	.byte 5,2
+	.byte $22,$22,$11,$22,$22
+	.byte $A2,$A2,$A1,$A2,$A2
+
+clock_weight_sprite:
+	.byte 1,3
+	.byte $22
+	.byte $22
+	.byte $22
+
+
 
 clock_hour_sprites:
 	.word hour12_sprite, hour1_sprite, hour2_sprite
@@ -100,8 +125,8 @@ minute10_sprite:
 
 minute11_sprite:
 	.byte 3,5
-	.byte $00,$aa,$aa
-	.byte $aa,$0a,$aa
+	.byte $0a,$aa,$aa
+	.byte $a0,$0a,$aa
 	.byte $aa,$00,$aa
 	.byte $aa,$aa,$aa
 	.byte $aa,$aa,$aa
@@ -199,8 +224,8 @@ hour10_sprite:
 
 hour11_sprite:
 	.byte 3,5
-	.byte $5d,$fd,$fd
-	.byte $ff,$5f,$ff
+	.byte $fd,$fd,$fd
+	.byte $f5,$5f,$ff
 	.byte $ff,$55,$ff
 	.byte $ff,$ff,$ff
 	.byte $ff,$ff,$ff
