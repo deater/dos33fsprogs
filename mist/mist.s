@@ -31,12 +31,27 @@ mist_start:
 	sta	CURSOR_X
 	sta	CURSOR_Y
 
-	; init location
+	;=================
+	; init vars
+	;	FIXME: we could be re-called from other books
+	;	so don't set location here
 
 	lda	#0
 	sta	LOCATION
 	lda	#0
 	sta	DIRECTION
+
+
+	lda	LOCATION
+	bne	not_first_time
+
+	; first time init
+	lda	#0
+	sta	CLOCK_MINUTE
+	sta	CLOCK_HOUR
+
+not_first_time:
+
 
 	; set up initial location
 
@@ -746,6 +761,10 @@ red_book_done:
 
 	.include	"graphics_island/mist_graphics.inc"
 
+
+	; puzzles
+
+	.include	"clock_bridge_puzzle.s"
 
 	.include	"common_sprites.inc"
 
