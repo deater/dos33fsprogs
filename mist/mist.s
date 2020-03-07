@@ -51,6 +51,10 @@ mist_start:
 	sta	CLOCK_HOUR
 	jsr	clock_inside_reset
 
+	lda	#0
+	sta	GEAR_OPEN
+
+
 not_first_time:
 
 
@@ -83,8 +87,14 @@ game_loop:
 	; handle special-case forground logic
 	;====================================
 
+	lda	GEAR_OPEN
+	beq	not_gear_related
+
+	jsr	check_gear_delete
+not_gear_related:
+
 	lda	LOCATION
-	cmp	#25	; clock puzzle
+	cmp	#25     ; clock puzzle
 	beq	location_clock
 	cmp	#27
 	beq	location_inside_clock
@@ -95,6 +105,7 @@ location_clock:
 	jmp	nothing_special
 location_inside_clock:
 	jsr	draw_clock_inside
+	jmp	nothing_special
 
 
 nothing_special:
@@ -551,6 +562,8 @@ done_turning:
 	rts
 
 
+exit_level:
+	rts
 
 	;==========================
 	; includes
@@ -597,4 +610,5 @@ audio_red_page:
 .incbin "audio/red_page.btc"
 audio_link_noise:
 .incbin "audio/link_noise.btc"
+
 

@@ -83,6 +83,33 @@ no_wrap:
 	cpx	#3
 	bne	wrap_wheels_loop
 
+	; see if done!
+	; note 0->3, 1->1, 2->2 so want 2/2/1 -> 2/2/1
+	lda	CLOCK_TOP
+	cmp	#2
+	bne	no_open_gear
+	lda	CLOCK_MIDDLE
+	cmp	#2
+	bne	no_open_gear
+	lda	CLOCK_BOTTOM
+	cmp	#1
+	bne	no_open_gear
+
+	lda	#1
+change_gear:
+	sta	GEAR_OPEN
+
+	jsr	open_the_gear
+	jmp	inside_done
+
+no_open_gear:
+	lda	GEAR_OPEN
+	beq	inside_done
+
+	; change if it was open
+	lda	#0
+	jmp	change_gear
+
 inside_done:
 	rts
 
@@ -161,12 +188,58 @@ draw_clock_inside:
 
 open_the_gear:
 
-	; FIXME
+	lda	GEAR_OPEN
+	beq	no_gear_open
 
-	; replace gear bg 1
-	; re-route click to MECHE age
-	; replace gear bg 2
-	; replace gear sprite inside clock
+yes_gear_open:
+	ldy	#LOCATION_NORTH_EXIT
+	lda	#30
+	sta	location19,Y
+
+	ldy	#LOCATION_NORTH_EXIT_DIR
+	lda	#DIRECTION_E
+	sta	location19,Y
+
+	ldy	#LOCATION_NORTH_BG
+	lda	#<gear_open_n_lzsa
+	sta	location19,Y
+	lda	#>gear_open_n_lzsa
+	sta	location19+1,Y
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<clock_inside_open_lzsa
+	sta	location27,Y
+	lda	#>clock_inside_open_lzsa
+	sta	location27+1,Y
+
+	jmp	done_open_the_gear
+
+
+no_gear_open:
+
+	ldy	#LOCATION_NORTH_EXIT
+	lda	#$FF
+	sta	location19,Y
+
+;	ldy	#LOCATION_NORTH_EXIT_DIR
+;	lda	#DIRECTION_E
+;	sta	location19,Y
+
+	ldy	#LOCATION_NORTH_BG
+	lda	#<gear_n_lzsa
+	sta	location19,Y
+	lda	#>gear_n_lzsa
+	sta	location19+1,Y
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<clock_inside_s_lzsa
+	sta	location27,Y
+	lda	#>clock_inside_s_lzsa
+	sta	location27+1,Y
+
+done_open_the_gear:
+
+	jsr	change_location
 
 	rts
 
@@ -327,3 +400,76 @@ clock_puzzle_done:
 
 
 .include "clock_sprites.inc"
+
+
+; put at 12,6 on screen 4 N
+gear_block_sprite1:
+	.byte 4,3
+	.byte $ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$0f
+
+; put at 9,6 on screen 20 N
+gear_block_sprite2:
+	.byte 7,4
+	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff
+	.byte $fd,$fd,$dd,$ff,$dd,$fd,$df
+	.byte $ff,$ff,$dd,$ff,$dd,$ff,$0f
+
+; put at 21,4 on screen 5 N
+gear_block_sprite3:
+	.byte 2,2
+	.byte $ff,$ff
+	.byte $ff,$ff
+
+
+check_gear_delete:
+	lda	DIRECTION
+	cmp	#DIRECTION_N
+	bne	done_gear_delete
+
+	lda	LOCATION
+	cmp	#4
+	beq	gear_look1
+	cmp	#20
+	beq	gear_look2
+	cmp	#5
+	beq	gear_look3
+	bne	done_gear_delete
+
+gear_look1:
+	lda	#<gear_block_sprite1
+	sta	INL
+	lda	#>gear_block_sprite1
+	sta	INH
+	lda	#12
+	sta	XPOS
+	lda	#6
+	jmp	draw_gear_delete
+
+gear_look2:
+	lda	#<gear_block_sprite2
+	sta	INL
+	lda	#>gear_block_sprite2
+	sta	INH
+	lda	#9
+	sta	XPOS
+	lda	#6
+	jmp	draw_gear_delete
+
+gear_look3:
+	lda	#<gear_block_sprite3
+	sta	INL
+	lda	#>gear_block_sprite3
+	sta	INH
+	lda	#21
+	sta	XPOS
+	lda	#4
+
+draw_gear_delete:
+	sta	YPOS
+	jsr	put_sprite_crop
+
+done_gear_delete:
+	rts

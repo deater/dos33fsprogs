@@ -31,7 +31,7 @@ mist_graphics.inc:	\
 	red_book_open.lzsa red_book_static.lzsa red_book_static2.lzsa \
 	tree2_n.lzsa \
 	tree5_n.lzsa tree5_e.lzsa \
-	gear_n.lzsa gear_w.lzsa gear_s.lzsa \
+	gear_n.lzsa gear_w.lzsa gear_s.lzsa gear_open_n.lzsa\
 	gear_base_n.lzsa \
 	dentist_door_n.lzsa dentist_door_s.lzsa \
 	spaceship_switch_n.lzsa \
@@ -39,9 +39,10 @@ mist_graphics.inc:	\
 	tree_cabin_e.lzsa \
 	clock_island_s.lzsa clock_island_n.lzsa \
 	clock_puzzle_s.lzsa clock_puzzle_bridge.lzsa \
-	clock_inside_s.lzsa \
+	clock_inside_s.lzsa clock_inside_open.lzsa \
 	fireplace_e.lzsa \
-	in_fireplace_w.lzsa in_fireplace_door.lzsa
+	in_fireplace_w.lzsa in_fireplace_door.lzsa \
+	gear_open_e.lzsa
 	echo "m_link_book_lzsa: .incbin \"m_link_book.lzsa\"" > mist_graphics.inc
 	echo "dock_n_lzsa: .incbin \"dock_n.lzsa\"" >> mist_graphics.inc
 	echo "dock_s_lzsa: .incbin \"dock_s.lzsa\"" >> mist_graphics.inc
@@ -90,6 +91,7 @@ mist_graphics.inc:	\
 	echo "gear_n_lzsa: .incbin \"gear_n.lzsa\"" >> mist_graphics.inc
 	echo "gear_s_lzsa: .incbin \"gear_s.lzsa\"" >> mist_graphics.inc
 	echo "gear_w_lzsa: .incbin \"gear_w.lzsa\"" >> mist_graphics.inc
+	echo "gear_open_n_lzsa: .incbin \"gear_open_n.lzsa\"" >> mist_graphics.inc
 	echo "gear_base_n_lzsa: .incbin \"gear_base_n.lzsa\"" >> mist_graphics.inc
 	echo "dentist_door_n_lzsa: .incbin \"dentist_door_n.lzsa\"" >> mist_graphics.inc
 	echo "dentist_door_s_lzsa: .incbin \"dentist_door_s.lzsa\"" >> mist_graphics.inc
@@ -103,9 +105,11 @@ mist_graphics.inc:	\
 	echo "clock_puzzle_s_lzsa: .incbin \"clock_puzzle_s.lzsa\"" >> mist_graphics.inc
 	echo "clock_puzzle_bridge_lzsa: .incbin \"clock_puzzle_bridge.lzsa\"" >> mist_graphics.inc
 	echo "clock_inside_s_lzsa: .incbin \"clock_inside_s.lzsa\"" >> mist_graphics.inc
+	echo "clock_inside_open_lzsa: .incbin \"clock_inside_open.lzsa\"" >> mist_graphics.inc
 	echo "fireplace_e_lzsa: .incbin \"fireplace_e.lzsa\"" >> mist_graphics.inc
 	echo "in_fireplace_w_lzsa: .incbin \"in_fireplace_w.lzsa\"" >> mist_graphics.inc
 	echo "in_fireplace_door_lzsa: .incbin \"in_fireplace_door.lzsa\"" >> mist_graphics.inc
+	echo "gear_open_e_lzsa: .incbin \"gear_open_e.lzsa\"" >> mist_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@

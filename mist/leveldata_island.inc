@@ -40,7 +40,7 @@ locations:
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
-	.word location28,location29
+	.word location28,location29,location30
 
 ; myst linking book
 location0:
@@ -583,4 +583,24 @@ location29:
 	.word	in_fireplace_w_lzsa	; west bg
 	.byte	BG_WEST		; west
 	.byte	$ff		; special exit
+
+; open_gear
+location30:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	19		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_N	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	gear_open_e_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_EAST
+	.byte	DIRECTION_E	; special exit
+	.byte	17,23		; special x
+	.byte	14,24		; special y
+	.word	exit_level-1	; special function
 
