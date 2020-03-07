@@ -26,7 +26,7 @@ mist_graphics.inc:	\
 	red_book_shelf.lzsa \
 	red_book_closed.lzsa \
 	pool_s.lzsa \
-	clock_s.lzsa \
+	clock_s.lzsa clock_bridge.lzsa \
 	spaceship_far_e.lzsa spaceship_far_n.lzsa \
 	red_book_open.lzsa red_book_static.lzsa red_book_static2.lzsa \
 	tree2_n.lzsa \
@@ -78,6 +78,7 @@ mist_graphics.inc:	\
 	echo "red_book_shelf_lzsa: .incbin \"red_book_shelf.lzsa\"" >> mist_graphics.inc
 	echo "pool_s_lzsa: .incbin \"pool_s.lzsa\"" >> mist_graphics.inc
 	echo "clock_s_lzsa: .incbin \"clock_s.lzsa\"" >> mist_graphics.inc
+	echo "clock_bridge_lzsa: .incbin \"clock_bridge.lzsa\"" >> mist_graphics.inc
 	echo "spaceship_far_n_lzsa: .incbin \"spaceship_far_n.lzsa\"" >> mist_graphics.inc
 	echo "spaceship_far_e_lzsa: .incbin \"spaceship_far_e.lzsa\"" >> mist_graphics.inc
 	echo "red_book_open_lzsa: .incbin \"red_book_open.lzsa\"" >> mist_graphics.inc

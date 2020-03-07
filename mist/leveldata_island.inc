@@ -547,7 +547,7 @@ location27:
 	.byte	BG_SOUTH
 	.byte	DIRECTION_S	; special exit
 	.byte	12,30		; special x
-	.byte	8,42		; special y
+	.byte	8,32		; special y
 	.word	clock_inside_puzzle-1	; special function
 
 ; fireplace

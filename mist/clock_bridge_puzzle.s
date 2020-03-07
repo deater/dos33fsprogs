@@ -8,6 +8,7 @@ clock_inside_reset:
 	sta	CLOCK_MIDDLE
 	sta	CLOCK_BOTTOM
 	sta	CLOCK_COUNT
+	sta	CLOCK_LAST
 	rts
 
 
@@ -36,16 +37,39 @@ inside_not_reset:
 
 inside_left:
 	inc	CLOCK_MIDDLE
+
+	lda	CLOCK_LAST
+	cmp	#1
+	bne	left_spin_bottom
+	lda	YPOS
+	cmp	#24
+	bcs	left_nospin_bottom
+
+left_spin_bottom:
 	inc	CLOCK_BOTTOM
-	inc	CLOCK_COUNT
+
+left_nospin_bottom:
+	lda	#1
 	jmp	wrap_wheels
 
 inside_right:
 	inc	CLOCK_MIDDLE
+
+	lda	CLOCK_LAST
+	cmp	#2
+	bne	right_spin_top
+	lda	YPOS
+	cmp	#24
+	bcs	right_nospin_top
+
+right_spin_top:
 	inc	CLOCK_TOP
-	inc	CLOCK_COUNT
+right_nospin_top:
+	lda	#2
 
 wrap_wheels:
+	sta	CLOCK_LAST
+	inc	CLOCK_COUNT
 
 	ldx	#0
 wrap_wheels_loop:
@@ -83,7 +107,7 @@ draw_clock_inside:
 	asl
 	asl
 	clc
-	adc	#6
+	adc	#4
 	sta	YPOS
 	jsr	put_sprite_crop
 
@@ -170,6 +194,12 @@ raise_bridge:
 	lda	#>clock_puzzle_bridge_lzsa
 	sta	location25+1,Y
 
+	; draw it on other too
+	lda	#<clock_bridge_lzsa
+	sta	location15,Y
+	lda	#>clock_bridge_lzsa
+	sta	location15+1,Y
+
 	jmp	done_clock_bridge
 
 lower_bridge:
@@ -188,6 +218,12 @@ lower_bridge:
 	lda	#>clock_puzzle_s_lzsa
 	sta	location25+1,Y
 
+	; lower on other too
+
+	lda	#<clock_s_lzsa
+	sta	location15,Y
+	lda	#>clock_s_lzsa
+	sta	location15+1,Y
 
 done_clock_bridge:
 	jsr	change_location
