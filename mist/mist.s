@@ -400,29 +400,6 @@ handle_special:
 	pha
 	rts
 
-	;=============================
-	; myst_link_book
-	;=============================
-myst_link_book:
-
-	; play sound effect?
-
-	lda	#<audio_link_noise
-	sta	BTC_L
-	lda	#>audio_link_noise
-	sta	BTC_H
-	ldx	#43		; 45 pages long???
-	jsr	play_audio
-
-
-
-
-
-	lda	#1
-	sta	LOCATION
-	jsr	change_location
-	rts
-
 
 	;=============================
 	; change direction
@@ -553,198 +530,6 @@ done_turning:
 
 
 
-; Catherine,
-; I've left for you a message
-; of utmost importance in
-; our fore-chamber beside
-; the dock.  Enter the number
-; of Marker Switches on
-; this island into the imager
-; to retrieve the message.
-;             Yours,
-;                 Atrus
-
-letter:
-;        01234567890123456789
-.byte  9,1,"  CATHERINE,          ",0
-.byte  9,3,"  I THINK SOME WEIRD  ",0
-.byte  9,5,"  GUY IS OUT ROAMING  ",0
-.byte  9,7,"  AROUND OUR ISLAND!  ",0
-.byte  9,9,"  MAYBE HE CAN SOLVE  ",0
-.byte 9,11,"  ALL OF OUR DEEP     ",0
-.byte 9,13,"  FAMILY PROBLEMS     ",0
-.byte 9,15,"  WHILE I MESS        ",0
-.byte 9,17,"  WITH MY BOOKS.      ",0
-.byte 9,19,"         YOURS,       ",0
-.byte 9,21,"             ATRUS    ",0
-
-clear_line:
-.byte 9,0, "                      ",0
-
-	;================
-	; read the letter
-
-read_letter:
-;	jsr	TEXT
-;	jsr	HOME
-	bit	KEYRESET
-
-	bit	SET_TEXT
-
-	jsr	clear_all
-
-	; clear
-
-	ldx	#0
-clear_line_loop:
-	lda	#<clear_line
-	sta	OUTL
-	lda	#>clear_line
-	sta	OUTH
-
-
-	stx	clear_line+1
-	jsr	move_and_print
-	inx
-	cpx	#24
-	bne	clear_line_loop
-
-
-	lda	#<letter
-	sta	OUTL
-	lda	#>letter
-	sta	OUTH
-
-	ldx	#0
-letter_loop:
-	jsr	move_and_print
-
-	inx
-	cpx	#12
-	bne	letter_loop
-
-	jsr	page_flip
-
-wait_done_letter:
-	lda	KEYPRESS
-	bpl	wait_done_letter
-	bit	KEYRESET
-
-	; turn graphics back on
-
-	bit	SET_GR
-;	bit	PAGE0
-;	bit	FULLGR
-
-	rts
-
-
-click_switch:
-
-	; click
-
-	bit	$C030
-	bit	$C030
-
-	rts
-
-
-	;===========================
-	; open the red book
-	;===========================
-red_book:
-
-	bit	KEYRESET
-	lda	#0
-	sta	FRAMEL
-
-red_book_loop:
-
-	lda	#<red_book_static_lzsa
-	sta	LZSA_SRC_LO
-	lda	#>red_book_static_lzsa
-	sta	LZSA_SRC_HI
-	lda	#$c			; load to page $c00
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_copy_to_current
-
-	jsr	page_flip
-
-	lda	#120
-	jsr	WAIT
-
-	lda	#<red_book_static2_lzsa
-	sta	LZSA_SRC_LO
-	lda	#>red_book_static2_lzsa
-	sta	LZSA_SRC_HI
-	lda	#$c			; load to page $c00
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_copy_to_current
-
-	jsr	page_flip
-
-	lda	#120
-	jsr	WAIT
-
-
-	inc	FRAMEL
-	lda	FRAMEL
-	cmp	#5
-	bne	done_sir
-
-	;; annoying brother
-
-
-	lda	#<red_book_open_lzsa
-	sta	LZSA_SRC_LO
-	lda	#>red_book_open_lzsa
-	sta	LZSA_SRC_HI
-	lda	#$c			; load to page $c00
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_copy_to_current
-
-	jsr	page_flip
-
-	lda	#<audio_red_page
-	sta	BTC_L
-	lda	#>audio_red_page
-	sta	BTC_H
-	ldx	#21		; 21 pages long???
-	jsr	play_audio
-
-
-;	lda	#100
-;	jsr	WAIT
-
-
-done_sir:
-
-	lda	KEYPRESS
-	bpl	red_book_loop
-
-red_book_done:
-
-	bit	KEYRESET
-
-	; restore bg
-
-	lda	#<red_book_shelf_lzsa
-	sta	LZSA_SRC_LO
-	lda	#>red_book_shelf_lzsa
-	sta	LZSA_SRC_HI
-	lda	#$c			; load to page $c00
-	jsr	decompress_lzsa2_fast
-
-
-	rts
-
-
-
-
-
 	;==========================
 	; includes
 	;==========================
@@ -765,10 +550,23 @@ red_book_done:
 	; puzzles
 
 	.include	"clock_bridge_puzzle.s"
+	.include	"marker_switch.s"
+	.include	"brother_books.s"
+
+	; linking books
+
+	.include	"link_book_mist.s"
+
+	; letters
+
+	.include	"letter_cat.s"
+
 
 	.include	"common_sprites.inc"
 
 	.include	"leveldata_island.inc"
+
+
 
 
 

@@ -60,7 +60,7 @@ location0:
 	.byte	DIRECTION_N	; special exit
 	.byte	21,31		; special x
 	.byte	10,24		; special y
-	.word	myst_link_book-1		; special function
+	.word	mist_link_book-1		; special function
 
 
 ; dock
