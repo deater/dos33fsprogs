@@ -38,7 +38,7 @@ mist_graphics.inc:	\
 	tree4_n.lzsa tree4_s.lzsa tree4_w.lzsa \
 	tree_cabin_e.lzsa \
 	clock_island_s.lzsa clock_island_n.lzsa \
-	clock_puzzle_s.lzsa \
+	clock_puzzle_s.lzsa clock_puzzle_bridge.lzsa \
 	clock_inside_s.lzsa \
 	fireplace_e.lzsa \
 	in_fireplace_w.lzsa in_fireplace_door.lzsa
@@ -100,6 +100,7 @@ mist_graphics.inc:	\
 	echo "clock_island_s_lzsa: .incbin \"clock_island_s.lzsa\"" >> mist_graphics.inc
 	echo "clock_island_n_lzsa: .incbin \"clock_island_n.lzsa\"" >> mist_graphics.inc
 	echo "clock_puzzle_s_lzsa: .incbin \"clock_puzzle_s.lzsa\"" >> mist_graphics.inc
+	echo "clock_puzzle_bridge_lzsa: .incbin \"clock_puzzle_bridge.lzsa\"" >> mist_graphics.inc
 	echo "clock_inside_s_lzsa: .incbin \"clock_inside_s.lzsa\"" >> mist_graphics.inc
 	echo "fireplace_e_lzsa: .incbin \"fireplace_e.lzsa\"" >> mist_graphics.inc
 	echo "in_fireplace_w_lzsa: .incbin \"in_fireplace_w.lzsa\"" >> mist_graphics.inc

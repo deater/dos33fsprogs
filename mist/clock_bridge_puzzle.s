@@ -1,4 +1,25 @@
+;======================
+; raise bridge
 
+raise_bridge:
+
+	ldy	#LOCATION_SOUTH_EXIT
+	lda	#26
+	sta	location25,Y
+
+	ldy	#LOCATION_SOUTH_EXIT_DIR
+	lda	#DIRECTION_S
+	sta	location25,Y
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<clock_puzzle_bridge_lzsa
+	sta	location25,Y
+	lda	#>clock_puzzle_bridge_lzsa
+	sta	location25+1,Y
+
+	jsr	change_location
+
+	rts
 
 ;======================
 ; draw the clock face
@@ -88,6 +109,8 @@ bridge_adjust:
 	sta	CLOCK_BRIDGE
 
 	bit	$C030		; click speaker
+
+	jsr	raise_bridge
 
 clock_puzzle_done:
 

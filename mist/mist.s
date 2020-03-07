@@ -110,7 +110,9 @@ draw_pointer:
 	; see if inside special region
 	ldy	#LOCATION_SPECIAL_EXIT
 	lda	(LOCATION_STRUCT_L),Y
-	bmi	finger_not_special
+	bmi	finger_not_special	; if $ff not special
+	cmp	DIRECTION
+	bne	finger_not_special	; only special if facing right way
 
 	; see if X1 < X < X2
 	lda	CURSOR_X

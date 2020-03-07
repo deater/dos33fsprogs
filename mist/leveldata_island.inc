@@ -496,11 +496,11 @@ location24:
 ; clock puzzle
 location25:
 	.byte	$ff		; north exit
-	.byte	26		; south exit
+	.byte	18		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
 	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
+	.byte	DIRECTION_N	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	$0000			; north bg
