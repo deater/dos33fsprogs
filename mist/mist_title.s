@@ -44,7 +44,7 @@ keyloop:
 
 	bit	KEYRESET
 
-	lda	#16
+	lda	#1		; load mist
 	sta	5
 	rts
 

@@ -65,66 +65,32 @@ loader_start:
 	;===================================================
 
 which_load_loop:
-	ldx	WHICH_LOAD
-	beq	load_intro
-	cpx	#16
-	beq	load_ending
+	lda	WHICH_LOAD
+	asl
 
-	lda	#<ootw_filename
+	tay
+	lda	filenames,Y
 	sta	OUTL
-	lda	#>ootw_filename
+	lda	filenames+1,Y
 	sta	OUTH
 
-	ldy	#6
-	cpx	#10
-	bcc	load_less_than_10	; blt
-
-	txa
-	sec
-	sbc	#10
-	tax
-
-	lda	#'1'			; assume it's 10-15
-	sta	(OUTL),Y
-	iny
-
-load_less_than_10:
-	txa
-	clc
-	adc	#48
-	sta	(OUTL),Y
-	iny
-	lda	#0
-	sta	(OUTL),Y		; be sure NUL terminated
-					; might be issue if load >10 level
-					; then back to lower?  that possible?
-
-	jmp	opendir_filename
+	lda	WHICH_LOAD
+	bne	load_other
 
 load_intro:
 	lda	#<$4000
 	sta	entry_smc+1
 	lda	#>$4000
 	sta	entry_smc+2
+	jmp	actual_load
 
-	lda	#<intro_filename
-	sta	OUTL
-	lda	#>intro_filename
-	sta	OUTH
-	bne	opendir_filename	; branch always
-
-load_ending:
+load_other:
 	lda	#<$1000
 	sta	entry_smc+1
 	lda	#>$1000
 	sta	entry_smc+2
 
-	lda	#<ending_filename
-	sta	OUTL
-	lda	#>ending_filename
-	sta	OUTH
-	; fallthrough
-
+actual_load:
 
 	;===================================================
 	;===================================================
@@ -167,21 +133,20 @@ entry_smc:
 
 	jmp	which_load_loop
 
-; filename to open is 30-character Apple text, must be padded with space ($A0)
-;filename:
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-;	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+
+filenames:
+	.word intro_filename
+	.word mist_filename,meche_filename
+	.word ending_filename
 
 intro_filename:
 	.byte "MIST_TITLE",0
-
-ending_filename:
+mist_filename:
 	.byte "MIST",0
-
-ootw_filename:
-	.byte "OOTW_C",0,0,0
-
+meche_filename:
+	.byte "MECHE",0
+ending_filename:
+	.byte "ENDING",0
 
 
 	;===================================================
