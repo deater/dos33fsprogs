@@ -1,0 +1,8 @@
+departure_e_lzsa: .incbin "departure_e.lzsa"
+arrival_w_lzsa: .incbin "arrival_w.lzsa"
+entrance_e_lzsa: .incbin "entrance_e.lzsa"
+entrance_s_lzsa: .incbin "entrance_s.lzsa"
+entrance_n_lzsa: .incbin "entrance_n.lzsa"
+entrance_w_lzsa: .incbin "entrance_w.lzsa"
+meche_book_closed_lzsa: .incbin "meche_book_closed.lzsa"
+meche_book_open_lzsa: .incbin "meche_book_open.lzsa"
