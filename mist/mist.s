@@ -52,12 +52,13 @@ mist_start:
 	sta	CLOCK_HOUR
 	jsr	clock_inside_reset
 
-;	lda	#0
-;	sta	GEAR_OPEN
-
-	lda	#1
+	lda	#0
 	sta	GEAR_OPEN
-	jsr	open_the_gear
+
+; debug
+;	lda	#1
+;	sta	GEAR_OPEN
+;	jsr	open_the_gear
 
 not_first_time:
 

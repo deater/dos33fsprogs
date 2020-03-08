@@ -432,6 +432,8 @@ check_gear_delete:
 	lda	LOCATION
 	cmp	#4
 	beq	gear_look1
+	cmp	#3
+	beq	gear_look2
 	cmp	#20
 	beq	gear_look2
 	cmp	#5
