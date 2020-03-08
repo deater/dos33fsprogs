@@ -8,14 +8,13 @@ B2D = ../bmp2dhr/b2d
 
 all:	mist.dsk
 
-mist.dsk:	HELLO LOADER MIST MIST_TITLE
+mist.dsk:	HELLO LOADER MIST_TITLE MIST MECHE
 	cp empty.dsk mist.dsk
 	$(DOS33) -y mist.dsk SAVE A HELLO
 	$(DOS33) -y mist.dsk BSAVE -a 0x800 LOADER
-	$(DOS33) -y mist.dsk BSAVE -a 0x1000 MIST
 	$(DOS33) -y mist.dsk BSAVE -a 0x4000 MIST_TITLE
-#	$(DOS33) -y mist.dsk BSAVE -a 0xa000 MIST_TITLE.LZ4
-#	$(DOS33) -y mist.dsk BSAVE -a 0x4000 STEPS_HGRC.BIN
+	$(DOS33) -y mist.dsk BSAVE -a 0x1000 MIST
+	$(DOS33) -y mist.dsk BSAVE -a 0x1000 MECHE
 
 ###
 
@@ -61,6 +60,21 @@ mist.o:	mist.s zp.inc hardware.inc \
 
 ####
 
+MECHE:	meche.o
+	ld65 -o MECHE meche.o -C ../linker_scripts/apple2_1000.inc
+
+meche.o:	meche.s zp.inc hardware.inc \
+	graphics_meche/meche_graphics.inc \
+	common_sprites.inc \
+	leveldata_meche.inc \
+	keyboard.s \
+	draw_pointer.s \
+	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	ca65 -o meche.o meche.s -l meche.lst
+
+
+####
+
 graphics_island/mist_graphics.inc:
 	cd graphics_island && make
 
@@ -68,4 +82,4 @@ graphics_island/mist_graphics.inc:
 ####
 
 clean:		
-		rm -f *~ *.o *.lst HELLO LOADER MIST MIST_TITLE
+		rm -f *~ *.o *.lst HELLO LOADER MIST_TITLE MIST MECHE
