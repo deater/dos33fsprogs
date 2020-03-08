@@ -54,6 +54,8 @@ mist.o:	mist.s zp.inc hardware.inc \
 	letter_cat.s \
 	marker_switch.s \
 	brother_books.s \
+	keyboard.s \
+	draw_pointer.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o mist.o mist.s -l mist.lst
 
