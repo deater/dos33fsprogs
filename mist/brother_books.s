@@ -58,13 +58,15 @@ red_book_loop:
 
 	jsr	page_flip
 
+	; FIXME
+.if 0
 	lda	#<audio_red_page
 	sta	BTC_L
 	lda	#>audio_red_page
 	sta	BTC_H
 	ldx	#21		; 21 pages long???
 	jsr	play_audio
-
+.endif
 
 ;	lda	#100
 ;	jsr	WAIT

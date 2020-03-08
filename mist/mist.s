@@ -24,6 +24,7 @@ mist_start:
 
 	lda	#0
 	sta	DRAW_PAGE
+	sta	LEVEL_OVER
 
 	; init cursor
 
@@ -51,9 +52,12 @@ mist_start:
 	sta	CLOCK_HOUR
 	jsr	clock_inside_reset
 
-	lda	#0
-	sta	GEAR_OPEN
+;	lda	#0
+;	sta	GEAR_OPEN
 
+	lda	#1
+	sta	GEAR_OPEN
+	jsr	open_the_gear
 
 not_first_time:
 
@@ -138,7 +142,27 @@ nothing_special:
 	inc	FRAMEH
 room_frame_no_oflo:
 
+	;====================================
+	; check level over
+	;====================================
+
+	lda	LEVEL_OVER
+	bne	really_exit
 	jmp	game_loop
+
+really_exit:
+	jmp	end_level
+
+
+
+exit_level:
+	lda	#2
+	sta	WHICH_LOAD
+
+	lda	#$ff
+	sta	LEVEL_OVER
+
+        rts
 
 
 	;==========================
@@ -159,6 +183,7 @@ room_frame_no_oflo:
 
 	.include	"graphics_island/mist_graphics.inc"
 
+	.include	"end_level.s"
 
 	; puzzles
 
@@ -184,8 +209,8 @@ room_frame_no_oflo:
 
 
 ;.align $100
-audio_red_page:
-.incbin "audio/red_page.btc"
+;audio_red_page:
+;.incbin "audio/red_page.btc"
 audio_link_noise:
 .incbin "audio/link_noise.btc"
 

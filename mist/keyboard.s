@@ -241,8 +241,6 @@ done_turning:
 	rts
 
 
-exit_level:
-	rts
 
 
 

@@ -85,9 +85,9 @@ load_intro:
 	jmp	actual_load
 
 load_other:
-	lda	#<$1000
+	lda	#<$1400
 	sta	entry_smc+1
-	lda	#>$1000
+	lda	#>$1400
 	sta	entry_smc+2
 
 actual_load:
