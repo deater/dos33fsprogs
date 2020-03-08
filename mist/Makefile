@@ -67,6 +67,7 @@ meche.o:	meche.s zp.inc hardware.inc \
 	graphics_meche/meche_graphics.inc \
 	common_sprites.inc \
 	leveldata_meche.inc \
+	link_book_meche.s \
 	keyboard.s \
 	draw_pointer.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s

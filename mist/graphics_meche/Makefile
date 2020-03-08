@@ -13,7 +13,8 @@ meche_graphics.inc:	\
 	departure_e.lzsa \
 	arrival_w.lzsa \
 	entrance_e.lzsa entrance_s.lzsa entrance_n.lzsa entrance_w.lzsa \
-	meche_book_closed.lzsa meche_book_open.lzsa
+	meche_book_closed.lzsa meche_book_open.lzsa \
+	fort_view_n.lzsa fort_view_s.lzsa
 	echo "departure_e_lzsa: .incbin \"departure_e.lzsa\"" > meche_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> meche_graphics.inc
 	echo "entrance_e_lzsa: .incbin \"entrance_e.lzsa\"" >> meche_graphics.inc
@@ -22,6 +23,8 @@ meche_graphics.inc:	\
 	echo "entrance_w_lzsa: .incbin \"entrance_w.lzsa\"" >> meche_graphics.inc
 	echo "meche_book_closed_lzsa: .incbin \"meche_book_closed.lzsa\"" >> meche_graphics.inc
 	echo "meche_book_open_lzsa: .incbin \"meche_book_open.lzsa\"" >> meche_graphics.inc
+	echo "fort_view_n_lzsa: .incbin \"fort_view_n.lzsa\"" >> meche_graphics.inc
+	echo "fort_view_s_lzsa: .incbin \"fort_view_s.lzsa\"" >> meche_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@

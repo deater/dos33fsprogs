@@ -52,6 +52,8 @@ not_first_time:
 	lda	#1
 	sta	CURSOR_VISIBLE		; visible at first
 
+	lda	#0
+	sta	ANIMATE_FRAME
 
 
 game_loop:
@@ -74,6 +76,39 @@ game_loop:
 	; handle special-case forground logic
 	;====================================
 
+	lda	LOCATION
+	cmp	#2
+	bne	nothing_special
+
+	; handle animated linking book
+
+	lda	ANIMATE_FRAME
+	asl
+	tay
+	lda	meche_movie,Y
+	sta	INL
+	lda	meche_movie+1,Y
+	sta	INH
+
+	lda	#22
+	sta	XPOS
+	lda	#12
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$f
+	bne	done_animate_book
+
+	inc	ANIMATE_FRAME
+	lda	ANIMATE_FRAME
+	cmp	#11
+	bne	done_animate_book
+	lda	#0
+	sta	ANIMATE_FRAME
+
+done_animate_book:
 
 nothing_special:
 
@@ -131,7 +166,7 @@ room_frame_no_oflo:
 
 	; linking books
 
-;	.include	"link_book_mist.s"
+	.include	"link_book_meche.s"
 
 	.include	"common_sprites.inc"
 
@@ -142,8 +177,6 @@ room_frame_no_oflo:
 
 
 ;.align $100
-audio_red_page:
-.incbin "audio/red_page.btc"
 audio_link_noise:
 .incbin "audio/link_noise.btc"
 
