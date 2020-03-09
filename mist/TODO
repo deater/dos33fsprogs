@@ -1,11 +1,10 @@
+General:
 + Insert floppy #100 joke?
 + double link noise (once when leave, once when get there?)
-
 + allow turning around
 + adjust grab window on letter
 + add missing red book step
-
-+ LOADING screen
++ Move sound to language card (meaning no sound on II+ w/o language card)
 
 Make game winnable:
 + Allow access to all marker switches
@@ -13,26 +12,33 @@ Make game winnable:
 + Allow grabbing white page
 + allow entering code
 
-
-Ending:
-+ Turning
-+ Allow looking at green book on shelf
-+ Atrus at end -- hires?
-
-
 MIST island:
-+ Tunnel to generator
++ Scenery
+	- Projector room, with message
+	- Tunnel to generator
+	- Climb towers with circuit breakers (2)
+	- Dentist chair
+	- Raised ship
+	- fireplace close/open
++ fireplace puzzle
++ bookshelf close?
++ book?
++ atrus at end
 + Generator puzzle
 + Dentist chair
 + Raise ship
++ Fireplace: 8x6 grid
++ Readable books
++ Tower rotation
 
 MECHE age:
-+ Linking book animation
-+ Implement
++ Everything in age
 
 SPACESHIP age:
-+ Keyboard
++ Keyboard/music
 + Linking book
++ Complicated age with sounds
++ That whole rediculous underground cart sequence
 
 Tree age:
 + Tree puzzle
@@ -40,30 +46,17 @@ Tree age:
 Stoneship age:
 + ?
 
-Move sound to language card (meaning no sound on II+ w/o language card)
-
-
-
-Marker Switches (8):
-+ * Dock
-+ * Gears
-+ * Dentist
-+ * Pool
-+ * Spaceship
-+ * Clock
-+ * Cabin
-+ * Generator
-
-Fireplace:
-+ 8x6 grid
-
-more pictures?
-+ open gear
-+ gear linking book
-+ fireplace close
-+ inside fireplace
-+ fireplace puzzle
-+ bookshelf close?
-+ book?
-+ atrus at end
+Ending:
++ Turning
++ Allow looking at green book on shelf
++ Atrus at end -- hires?
++ Marker Switches (8):
+	* Dock
+	* Gears
+	* Dentist
+	* Pool
+	* Spaceship
+	* Clock
+	* Cabin
+	* Generator
 

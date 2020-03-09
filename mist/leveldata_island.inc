@@ -40,7 +40,7 @@ locations:
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
-	.word location28,location29,location30
+	.word location28,location29,location30,location31
 
 ; myst linking book
 location0:
@@ -427,11 +427,11 @@ location20:
 
 ; dentist door
 location21:
-	.byte	21		; north exit
+	.byte	31		; north exit
 	.byte	9		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
-	.byte	DIRECTION_S	; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_W	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -603,4 +603,23 @@ location30:
 	.byte	17,23		; special x
 	.byte	14,24		; special y
 	.word	exit_level-1	; special function
+
+; chair view
+location31:
+	.byte	31		; north exit
+	.byte	21		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_S	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	chair_view_n_lzsa	; north bg
+	.word	chair_view_s_lzsa	; south bg
+	.word	gear_open_e_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH | BG_SOUTH
+	.byte	$ff		; TODO: lightswitch
+
+
 

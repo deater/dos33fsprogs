@@ -42,7 +42,8 @@ mist_graphics.inc:	\
 	clock_inside_s.lzsa clock_inside_open.lzsa \
 	fireplace_e.lzsa \
 	in_fireplace_w.lzsa in_fireplace_door.lzsa \
-	gear_open_e.lzsa
+	gear_open_e.lzsa \
+	chair_view_s.lzsa chair_view_n.lzsa
 	echo "m_link_book_lzsa: .incbin \"m_link_book.lzsa\"" > mist_graphics.inc
 	echo "dock_n_lzsa: .incbin \"dock_n.lzsa\"" >> mist_graphics.inc
 	echo "dock_s_lzsa: .incbin \"dock_s.lzsa\"" >> mist_graphics.inc
@@ -110,6 +111,8 @@ mist_graphics.inc:	\
 	echo "in_fireplace_w_lzsa: .incbin \"in_fireplace_w.lzsa\"" >> mist_graphics.inc
 	echo "in_fireplace_door_lzsa: .incbin \"in_fireplace_door.lzsa\"" >> mist_graphics.inc
 	echo "gear_open_e_lzsa: .incbin \"gear_open_e.lzsa\"" >> mist_graphics.inc
+	echo "chair_view_s_lzsa: .incbin \"chair_view_s.lzsa\"" >> mist_graphics.inc
+	echo "chair_view_n_lzsa: .incbin \"chair_view_n.lzsa\"" >> mist_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
