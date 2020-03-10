@@ -41,6 +41,8 @@ locations:
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
+	.word location32,location33,location34,location35
+	.word location36
 
 ; myst linking book
 location0:
@@ -464,11 +466,11 @@ location23:
 	.byte	17		; north exit
 	.byte	15		; south exit
 	.byte	$ff		; east exit
-	.byte	$ff		; west exit
+	.byte	32		; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
+	.byte	DIRECTION_W	; west exit_dir
 	.word	tree4_n_lzsa	; north bg
 	.word	tree4_s_lzsa	; south bg
 	.word	$0000		; east bg
@@ -620,6 +622,101 @@ location31:
 	.word	$0000			; west bg
 	.byte	BG_NORTH | BG_SOUTH
 	.byte	$ff		; TODO: lightswitch
+
+; green shack
+location32:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	23		; east exit
+	.byte	33		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_N	; east exit_dir
+	.byte	DIRECTION_N	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	green_house_e_lzsa	; east bg
+	.word	green_house_w_lzsa	; west bg
+	.byte	BG_EAST | BG_WEST
+	.byte	$ff
+
+; green shack steps 1
+location33:
+	.byte	34		; north exit
+	.byte	32		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_E	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff			; west exit_dir
+	.word	green_steps1_n_lzsa	; north bg
+	.word	green_steps1_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH | BG_SOUTH
+	.byte	$ff
+
+; green shack steps 6
+location34:
+	.byte	35		; north exit
+	.byte	$ff		; south exit
+	.byte	$ff		; east exit
+	.byte	33		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_S	; west exit_dir
+	.word	green_steps6_n_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	green_steps6_w_lzsa	; west bg
+	.byte	BG_NORTH | BG_WEST
+	.byte	$ff
+
+; generator room door
+location35:
+	.byte	35		; north exit
+	.byte	34		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_S	; north exit_dir
+	.byte	DIRECTION_W	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	gen_door_closed_n_lzsa	; north bg
+	.word	gen_door_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH | BG_SOUTH
+	.byte	DIRECTION_N	; special exit
+	.byte	27,32		; special x
+	.byte	26,32		; special y
+	.word	open_gen_door-1	; special function
+
+
+; generator room
+location36:
+	.byte	36		; north exit
+	.byte	35		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_S	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	generator_n_lzsa	; north bg
+	.word	generator_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH | BG_SOUTH
+	.byte	$ff
+
+
+
+
+
+
 
 
 

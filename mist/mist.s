@@ -191,6 +191,7 @@ exit_level:
 	.include	"clock_bridge_puzzle.s"
 	.include	"marker_switch.s"
 	.include	"brother_books.s"
+	.include	"generator_puzzle.s"
 
 	; linking books
 

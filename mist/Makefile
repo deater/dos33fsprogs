@@ -56,6 +56,7 @@ mist.o:	mist.s zp.inc hardware.inc \
 	keyboard.s \
 	draw_pointer.s \
 	end_level.s \
+	generator_puzzle.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o mist.o mist.s -l mist.lst
 
