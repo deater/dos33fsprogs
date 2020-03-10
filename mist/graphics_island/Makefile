@@ -44,7 +44,11 @@ mist_graphics.inc:	\
 	in_fireplace_w.lzsa in_fireplace_door.lzsa \
 	gear_open_e.lzsa \
 	chair_view_s.lzsa chair_view_n.lzsa \
-	generator_n.lzsa
+	generator_n.lzsa generator_s.lzsa \
+	green_house_w.lzsa green_house_e.lzsa \
+	green_steps1_n.lzsa green_steps1_s.lzsa \
+	gen_door_closed_n.lzsa gen_door_open_n.lzsa gen_door_s.lzsa \
+	green_steps6_n.lzsa green_steps6_w.lzsa
 	echo "m_link_book_lzsa: .incbin \"m_link_book.lzsa\"" > mist_graphics.inc
 	echo "dock_n_lzsa: .incbin \"dock_n.lzsa\"" >> mist_graphics.inc
 	echo "dock_s_lzsa: .incbin \"dock_s.lzsa\"" >> mist_graphics.inc
@@ -115,6 +119,17 @@ mist_graphics.inc:	\
 	echo "chair_view_s_lzsa: .incbin \"chair_view_s.lzsa\"" >> mist_graphics.inc
 	echo "chair_view_n_lzsa: .incbin \"chair_view_n.lzsa\"" >> mist_graphics.inc
 	echo "generator_n_lzsa: .incbin \"generator_n.lzsa\"" >> mist_graphics.inc
+	echo "generator_s_lzsa: .incbin \"generator_s.lzsa\"" >> mist_graphics.inc
+	echo "green_house_w_lzsa: .incbin \"green_house_w.lzsa\"" >> mist_graphics.inc
+	echo "green_house_e_lzsa: .incbin \"green_house_e.lzsa\"" >> mist_graphics.inc
+	echo "green_steps1_n_lzsa: .incbin \"green_steps1_n.lzsa\"" >> mist_graphics.inc
+	echo "green_steps1_s_lzsa: .incbin \"green_steps1_s.lzsa\"" >> mist_graphics.inc
+	echo "gen_door_closed_n_lzsa: .incbin \"gen_door_closed_n.lzsa\"" >> mist_graphics.inc
+	echo "gen_door_open_n_lzsa: .incbin \"gen_door_open_n.lzsa\"" >> mist_graphics.inc
+	echo "gen_door_s_lzsa: .incbin \"gen_door_s.lzsa\"" >> mist_graphics.inc
+	echo "green_steps6_n_lzsa: .incbin \"green_steps6_n.lzsa\"" >> mist_graphics.inc
+	echo "green_steps6_w_lzsa: .incbin \"green_steps6_w.lzsa\"" >> mist_graphics.inc
+
 
 %.gr: %.png
 	$(PNG2GR) $< $@
