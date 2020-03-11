@@ -25,32 +25,146 @@ open_gen_door:
 button_lookup:
 .byte $10,$8,$4,$2,$1
 
+button_values_top:
+.byte	$01,$02,$22,$19,$09	; BCD
+button_values_bottom:
+.byte	$10,$07,$08,$16,$05	; BCD
+
+needle_strings:
+	.byte '\'|$80,' '|$80,' '|$80,' '|$80
+	.byte ' '|$80,':'|$80,' '|$80,' '|$80
+	.byte ' '|$80,' '|$80,':'|$80,' '|$80
+	.byte ' '|$80,' '|$80,' '|$80,'/'|$80
+
+;============================
+; handle button presses
+;============================
+
 generator_button_press:
 
+	lda	YPOS
+	cmp	#38
+	bcs	button_bottom_row		; bge
+
+button_top_row:
+
+	lda	XPOS
+	sec
+	sbc	#25
+	lsr
+	bmi	done_press
+	cmp	#5
+	bcs	done_press		; bge
+
+	tax
 	lda	SWITCH_TOP_ROW
-	ora	#$10
+	eor	button_lookup,X		; toggle switch
 	sta	SWITCH_TOP_ROW
 
-	sed			; use BCD mode
-	inc	GENERATOR_VOLTS
-	cld			; turn off BCD mode
+	jmp	done_press
+
+button_bottom_row:
+
+	lda	XPOS
+	sec
+	sbc	#26
+	lsr
+	bmi	done_press
+	cmp	#5
+	bcs	done_press		; bge
+
+	tax
+	lda	SWITCH_BOTTOM_ROW
+	eor	button_lookup,X		; toggle switch
+	sta	SWITCH_BOTTOM_ROW
+no_bottom_press:
+
+done_press:
+
+
+calculate_button_totals:
+
+	lda	#0
+	sta	ROCKET_VOLTS
+	sta	GENERATOR_VOLTS
+	tax
+
+calc_buttons_loop:
+
+	; top button
+
+	lda	SWITCH_TOP_ROW
+	and	button_lookup,X
+	beq	ctop_button_off
+
+ctop_button_on:
+	sed
+	clc
+	lda	GENERATOR_VOLTS
+	adc	button_values_top,X
+	sta	GENERATOR_VOLTS
+	cld
+
+ctop_button_off:
+
+	lda	SWITCH_BOTTOM_ROW
+	and	button_lookup,X
+	beq	cbottom_button_off
+
+cbottom_button_on:
+	sed
+	clc
+	lda	GENERATOR_VOLTS
+	adc	button_values_bottom,X
+	sta	GENERATOR_VOLTS
+	cld
+
+cbottom_button_off:
+
+	inx
+	cpx	#5
+	bne	calc_buttons_loop
+
+	; calculate rocket volts
+	lda	BREAKER_TRIPPED
+	bne	done_rocket_volts
+
+	lda	GENERATOR_VOLTS
+	cmp	#$59
+	bcs	oops_flipped
+
+	sta	ROCKET_VOLTS
+	jmp	done_rocket_volts
+
+oops_flipped:
+	lda	#$3
+	sta	BREAKER_TRIPPED
+
+done_rocket_volts:
 
 	rts
 
+;===========================
+; draw the voltage displays
+;===========================
 
 generator_update_volts:
 
 	lda	DRAW_PAGE
 	clc
 	adc	#$6
-	sta	volt_ones_smc+2
-	sta	volt_tens_smc+2
+	sta	gen_volt_ones_smc+2
+	sta	gen_volt_tens_smc+2
+	sta	rocket_volt_ones_smc+2
+	sta	rocket_volt_tens_smc+2
+	sta	gen_put_needle_smc+2
+	sta	rocket_put_needle_smc+2
 
 	lda	GENERATOR_VOLTS
 	and	#$f
 	clc
 	adc	#$b0
-volt_ones_smc:
+gen_volt_ones_smc:
 	sta	$6d0+14			; 14,21
 
 	lda	GENERATOR_VOLTS
@@ -61,13 +175,90 @@ volt_ones_smc:
 	and	#$f
 	clc
 	adc	#$b0
-volt_tens_smc:
+gen_volt_tens_smc:
 	sta	$6d0+13			; 13,21
 
+	; draw gen needle
+	lda	GENERATOR_VOLTS
+	ldx	#0
+	cmp	#$25
+	bcc	gen_put_needle
+	inx
+	cmp	#$50
+	bcc	gen_put_needle
+	inx
+	cmp	#$75
+	bcc	gen_put_needle
+	inx
+gen_put_needle:
+	txa
+	asl
+	asl
+	tax
+	ldy	#0
+gen_put_needle_loop:
 
+	lda	needle_strings,X
+gen_put_needle_smc:
+	sta	$650+12,Y
+	iny
+	inx
+	cpy	#4
+	bne	gen_put_needle_loop
+
+
+	lda	ROCKET_VOLTS
+	and	#$f
+	clc
+	adc	#$b0
+rocket_volt_ones_smc:
+	sta	$6d0+21			; 21,21
+
+	lda	ROCKET_VOLTS
+	lsr
+	lsr
+	lsr
+	lsr
+	and	#$f
+	clc
+	adc	#$b0
+rocket_volt_tens_smc:
+	sta	$6d0+20			; 20,21
+
+
+	; draw rocket needle
+	lda	ROCKET_VOLTS
+	ldx	#0
+	cmp	#$25
+	bcc	rocket_put_needle
+	inx
+	cmp	#$50
+	bcc	rocket_put_needle
+	inx
+	cmp	#$75
+	bcc	rocket_put_needle
+	inx
+rocket_put_needle:
+	txa
+	asl
+	asl
+	tax
+	ldy	#0
+rocket_put_needle_loop:
+
+	lda	needle_strings,X
+rocket_put_needle_smc:
+	sta	$650+19,Y
+	iny
+	inx
+	cpy	#4
+	bne	rocket_put_needle_loop
 
 	rts
 
+	;=========================
+	; draw the buttons
+	;=========================
 
 generator_draw_buttons:
 
@@ -111,7 +302,7 @@ top_button_draw_smc:
 	beq	bottom_button_off
 
 bottom_button_on:
-	ldy	#$93
+	ldy	#$19
 	bne	bottom_button_draw_smc
 
 bottom_button_off:
