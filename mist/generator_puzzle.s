@@ -150,6 +150,44 @@ done_rocket_volts:
 
 generator_update_volts:
 
+	; gradually adjust generator voltage
+	sed
+	lda	GENERATOR_VOLTS_DISP
+	cmp	GENERATOR_VOLTS
+	beq	no_adjust_gen_volts
+	bcs	gen_volts_dec
+
+	clc
+	adc	#1
+	jmp	done_adjust_gen_volts
+gen_volts_dec:
+	sec
+	sbc	#1
+done_adjust_gen_volts:
+	sta	GENERATOR_VOLTS_DISP
+
+no_adjust_gen_volts:
+
+
+	; gradually adjust rocket voltage
+	lda	ROCKET_VOLTS_DISP
+	cmp	ROCKET_VOLTS
+	beq	no_adjust_rocket_volts
+	bcs	rocket_volts_dec
+
+	clc
+	adc	#1
+	jmp	done_adjust_rocket_volts
+rocket_volts_dec:
+	sec
+	sbc	#1
+done_adjust_rocket_volts:
+	sta	ROCKET_VOLTS_DISP
+
+no_adjust_rocket_volts:
+	cld
+
+
 	lda	DRAW_PAGE
 	clc
 	adc	#$6
@@ -160,14 +198,14 @@ generator_update_volts:
 	sta	gen_put_needle_smc+2
 	sta	rocket_put_needle_smc+2
 
-	lda	GENERATOR_VOLTS
+	lda	GENERATOR_VOLTS_DISP
 	and	#$f
 	clc
 	adc	#$b0
 gen_volt_ones_smc:
 	sta	$6d0+14			; 14,21
 
-	lda	GENERATOR_VOLTS
+	lda	GENERATOR_VOLTS_DISP
 	lsr
 	lsr
 	lsr
@@ -179,7 +217,7 @@ gen_volt_tens_smc:
 	sta	$6d0+13			; 13,21
 
 	; draw gen needle
-	lda	GENERATOR_VOLTS
+	lda	GENERATOR_VOLTS_DISP
 	ldx	#0
 	cmp	#$25
 	bcc	gen_put_needle
@@ -207,14 +245,14 @@ gen_put_needle_smc:
 	bne	gen_put_needle_loop
 
 
-	lda	ROCKET_VOLTS
+	lda	ROCKET_VOLTS_DISP
 	and	#$f
 	clc
 	adc	#$b0
 rocket_volt_ones_smc:
 	sta	$6d0+21			; 21,21
 
-	lda	ROCKET_VOLTS
+	lda	ROCKET_VOLTS_DISP
 	lsr
 	lsr
 	lsr
@@ -227,7 +265,7 @@ rocket_volt_tens_smc:
 
 
 	; draw rocket needle
-	lda	ROCKET_VOLTS
+	lda	ROCKET_VOLTS_DISP
 	ldx	#0
 	cmp	#$25
 	bcc	rocket_put_needle
