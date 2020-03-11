@@ -42,6 +42,8 @@ put_sprite_crop_loop:
 	bne	crop_increment_y
 
 put_sprite_crop_pos:
+
+psc_smc1:
 	cpy	#48			; bge if >= 48, done sprite
 	bcs	crop_sprite_done
 
@@ -222,6 +224,7 @@ put_spritefc_loop:
 	ldy	TEMPY							; 3
 
 	bmi	fcrop_increment_y	; if < 0, skip to next
+psc_smc2:
 	cpy	#48			; bge if >= 48, done sprite
 	bcs	fcrop_sprite_done
 

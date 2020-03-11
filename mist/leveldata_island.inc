@@ -710,8 +710,10 @@ location36:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH | BG_SOUTH
-	.byte	$ff	; DIRECTION_N|DIRECTION_SPLIT|DIRECTION_ONLY_POINT
-
+	.byte	DIRECTION_N|DIRECTION_SPLIT|DIRECTION_ONLY_POINT
+	.byte	24,36		; special x
+	.byte	34,40		; special y
+	.word	generator_button_press-1	; special function
 
 
 
