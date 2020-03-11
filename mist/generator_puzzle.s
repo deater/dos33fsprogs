@@ -50,7 +50,7 @@ button_top_row:
 
 	lda	XPOS
 	sec
-	sbc	#25
+	sbc	#24
 	lsr
 	bmi	done_press
 	cmp	#5
@@ -67,7 +67,7 @@ button_bottom_row:
 
 	lda	XPOS
 	sec
-	sbc	#26
+	sbc	#25
 	lsr
 	bmi	done_press
 	cmp	#5

@@ -48,10 +48,17 @@ finger_grab:
 	lda	#1
 	sta	IN_SPECIAL
 
+	lda	DIRECTION
+	and	#DIRECTION_ONLY_POINT
+	bne	special_but_point
+
 	lda     #<finger_grab_sprite
 	sta	INL
 	lda     #>finger_grab_sprite
 	jmp	finger_draw
+
+special_but_point:
+	jmp	finger_point
 
 finger_not_special:
 
