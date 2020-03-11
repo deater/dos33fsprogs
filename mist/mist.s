@@ -55,6 +55,12 @@ mist_start:
 	lda	#0
 	sta	GEAR_OPEN
 
+	sta	BREAKER_TRIPPED
+	sta	GENERATOR_VOLTS
+	sta	ROCKET_VOLTS
+	sta	SWITCH_TOP_ROW
+	sta	SWITCH_BOTTOM_ROW
+
 ; debug
 ;	lda	#1
 ;	sta	GEAR_OPEN
@@ -92,18 +98,22 @@ game_loop:
 	; handle special-case forground logic
 	;====================================
 
+	; handle gear opening
+
 	lda	GEAR_OPEN
 	beq	not_gear_related
 
 	jsr	check_gear_delete
 not_gear_related:
 
+	; handle clock puzzles
+
 	lda	LOCATION
 	cmp	#25     ; clock puzzle
 	beq	location_clock
 	cmp	#27
 	beq	location_inside_clock
-	bne	nothing_special
+	bne	location_generator
 
 location_clock:
 	jsr	draw_clock_face
@@ -112,6 +122,18 @@ location_inside_clock:
 	jsr	draw_clock_inside
 	jmp	nothing_special
 
+	; handle generator puzzle
+location_generator:
+	cmp	#36
+	bne	nothing_special
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_N
+	bne	nothing_special
+
+	jsr	generator_update_volts
+	jsr	generator_draw_buttons
+	jmp	nothing_special
 
 nothing_special:
 
@@ -213,7 +235,7 @@ exit_level:
 ;.align $100
 ;audio_red_page:
 ;.incbin "audio/red_page.btc"
-audio_link_noise:
-.incbin "audio/link_noise.btc"
+;audio_link_noise:
+;.incbin "audio/link_noise.btc"
 
 
