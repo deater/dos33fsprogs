@@ -8,7 +8,7 @@ open_gen_door:
 	sta	location35,Y
 
 	ldy	#LOCATION_NORTH_EXIT_DIR
-	lda	#DIRECTION_N
+	lda	#(DIRECTION_N | DIRECTION_SPLIT)
 	sta	location35,Y
 
 	ldy	#LOCATION_NORTH_BG

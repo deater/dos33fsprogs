@@ -120,6 +120,13 @@ change_direction:
 
 	; load background
 	lda	DIRECTION
+	bpl	no_split
+	bit	TEXTGR
+	jmp	done_split
+no_split:
+	bit	FULLGR
+done_split:
+	and	#$f			; mask off special flags
 	asl
 	clc
 	adc	#LOCATION_NORTH_BG
@@ -169,6 +176,7 @@ go_forward:
 	; update new location
 
 	lda	DIRECTION
+	and	#$f
 	clc
 	adc	#LOCATION_NORTH_EXIT
 	tay
@@ -182,6 +190,7 @@ go_forward:
 	; update new direction
 
 	lda	DIRECTION
+	and	#$f
 	clc
 	adc	#LOCATION_NORTH_EXIT_DIR
 	tay

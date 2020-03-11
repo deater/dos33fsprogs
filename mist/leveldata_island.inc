@@ -710,7 +710,7 @@ location36:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH | BG_SOUTH
-	.byte	$ff
+	.byte	$ff	; DIRECTION_N|DIRECTION_SPLIT|DIRECTION_ONLY_POINT
 
 
 
