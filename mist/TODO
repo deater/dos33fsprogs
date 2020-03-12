@@ -1,3 +1,45 @@
+Images left:
++ tree4_e
++ ladder1_path_n
++ ladder1_w
++ ladder1_top
++ ladder1_e
++ ladder2_path
++ ladder2_w
++ ladder2_top
++ pool_n
++ pool_e
++ pool_w
++ tree1_n
++ tree1_s
++ tree1_e
++ tree1_w
++ imager_room1
++ imager_room2
+
+ship_raised:
+
+
+octagon_room:
++ door open
++ door closed
++ tower rotation
++ blue book
++ bookshelf
++ books
++ corridor
++ elevator
++ view from top, 4 directions?
++ door closed/library open
+
+
+
+
+
+
+
+
+
 General:
 + Insert floppy #100 joke?
 + double link noise (once when leave, once when get there?)
