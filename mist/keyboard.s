@@ -120,6 +120,27 @@ change_direction:
 
 	; load background
 	lda	DIRECTION
+	bpl	no_split
+
+	; split text/graphics
+	bit	TEXTGR
+
+	; also change sprite cutoff
+	ldx	#40
+	stx	psc_smc1+1
+	stx	psc_smc2+1
+
+	jmp	done_split
+no_split:
+	bit	FULLGR
+
+	; also change sprite cutoff
+	ldx	#40
+	stx	psc_smc1+1
+	stx	psc_smc2+1
+
+done_split:
+	and	#$f			; mask off special flags
 	asl
 	clc
 	adc	#LOCATION_NORTH_BG
@@ -169,6 +190,7 @@ go_forward:
 	; update new location
 
 	lda	DIRECTION
+	and	#$f
 	clc
 	adc	#LOCATION_NORTH_EXIT
 	tay
@@ -182,6 +204,7 @@ go_forward:
 	; update new direction
 
 	lda	DIRECTION
+	and	#$f
 	clc
 	adc	#LOCATION_NORTH_EXIT_DIR
 	tay

@@ -27,7 +27,7 @@ finger_right_sprite:
 	.byte 6,4
 	.byte $AA,$BA,$AB,$AA,$AA,$AA
 	.byte $BB,$BB,$BB,$BB,$BB,$BB
-	.byte $BA,$BB,$BB,$BB,$AA,$AA
+	.byte $BB,$BB,$BB,$BB,$AA,$AA
 	.byte $AB,$BB,$BB,$AB,$AA,$AA
 
 

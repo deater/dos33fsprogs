@@ -2,9 +2,10 @@ General:
 + Insert floppy #100 joke?
 + double link noise (once when leave, once when get there?)
 + allow turning around
++ allow going 45 degree angles
 + adjust grab window on letter
 + add missing red book step
-+ Move sound to language card (meaning no sound on II+ w/o language card)
++ move link sound to be loaded from disk
 
 Make game winnable:
 + Allow access to all marker switches
@@ -15,16 +16,16 @@ Make game winnable:
 MIST island:
 + Scenery
 	- Projector room, with message
-	- Tunnel to generator
 	- Climb towers with circuit breakers (2)
 	- Dentist chair
 	- Raised ship
 	- fireplace close/open
+	- constellation panels
+	- roof of temple for return
 + fireplace puzzle
 + bookshelf close?
 + book?
 + atrus at end
-+ Generator puzzle
 + Dentist chair
 + Raise ship
 + Fireplace: 8x6 grid
