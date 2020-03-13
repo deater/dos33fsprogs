@@ -473,9 +473,9 @@ location23:
 	.byte	DIRECTION_W	; west exit_dir
 	.word	tree4_n_lzsa	; north bg
 	.word	tree4_s_lzsa	; south bg
-	.word	$0000		; east bg
+	.word	tree4_e_lzsa	; east bg
 	.word	tree4_w_lzsa	; west bg
-	.byte	BG_NORTH|BG_SOUTH|BG_WEST
+	.byte	BG_NORTH|BG_SOUTH|BG_WEST|BG_EAST
 	.byte	$ff		; special exit
 
 ; tree cabin
@@ -631,7 +631,7 @@ location32:
 	.byte	33		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_N	; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_N	; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg

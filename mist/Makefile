@@ -8,13 +8,14 @@ B2D = ../bmp2dhr/b2d
 
 all:	mist.dsk
 
-mist.dsk:	HELLO LOADER MIST_TITLE MIST MECHE
+mist.dsk:	HELLO LOADER MIST_TITLE MIST MECHE SELENA
 	cp empty.dsk mist.dsk
 	$(DOS33) -y mist.dsk SAVE A HELLO
 	$(DOS33) -y mist.dsk BSAVE -a 0x1000 LOADER
 	$(DOS33) -y mist.dsk BSAVE -a 0x4000 MIST_TITLE
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MIST
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MECHE
+	$(DOS33) -y mist.dsk BSAVE -a 0x1400 SELENA
 
 ###
 
@@ -75,6 +76,21 @@ meche.o:	meche.s zp.inc hardware.inc \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o meche.o meche.s -l meche.lst
 
+####
+
+SELENA:	selena.o
+	ld65 -o SELENA selena.o -C ../linker_scripts/apple2_1400.inc
+
+selena.o:	selena.s zp.inc hardware.inc \
+	graphics_selena/selena_graphics.inc \
+	common_sprites.inc \
+	leveldata_selena.inc \
+	link_book_selena.s \
+	keyboard.s \
+	draw_pointer.s \
+	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	ca65 -o selena.o selena.s -l selena.lst
+
 
 ####
 
@@ -85,4 +101,4 @@ graphics_island/mist_graphics.inc:
 ####
 
 clean:		
-		rm -f *~ *.o *.lst HELLO LOADER MIST_TITLE MIST MECHE
+		rm -f *~ *.o *.lst HELLO LOADER MIST_TITLE MIST MECHE SELENA
