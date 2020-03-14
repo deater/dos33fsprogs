@@ -178,57 +178,64 @@ ss_buttons_smc:
 rocket_notes:
 	.byte $00,$00,$1,$00,$5,$00,$0a,$00
 
-.if 0
 
-draw_buttons_loop:
+controls_pressed:
 
-	; top button
+	lda	XPOS
+	cmp	#21
+	bcs	handle_pulled			; bge
 
-	lda	SWITCH_TOP_ROW
-	and	button_lookup,X
-	beq	top_button_off
+sliders_pressed:
 
-top_button_on:
-	ldy	#$95
-	bne	top_button_draw_smc
+	sec
+	sbc	#12
 
-top_button_off:
-	ldy	#$35
+	tax
 
-top_button_draw_smc:
-	sty	$4d0+25
+	; if YPOS-28 > rocket_notes, increment
+	; if YPOS-28 < rocket_notes, decrement
+	; 0..14
 
-	inc	top_button_draw_smc+1
-	inc	top_button_draw_smc+1
+	; rocket ypos  ypos-28 15-(ypos-28)
+	; 0 = 42	14  0
+	; 1 = 42	14  0
+	; 2 = 40	12  2
+	; 3 = 40	12  2
+	; 4 = 38	10  4
+	; 5 = 38	10  4
+	; ...
+	; 13 = 28	0  14
+	; 14 = 28	0  14
 
-	; bottom button
+	lda	YPOS
+	sec
+	sbc	#28
+	sta	TEMP
+	lda	#15
+	sec
+	sbc	TEMP
 
-	lda	SWITCH_BOTTOM_ROW
-	and	button_lookup,X
-	beq	bottom_button_off
+	cmp	rocket_notes,X
+	beq	slider_play_note
+	bpl	slider_decrement
 
-bottom_button_on:
-	ldy	#$19
-	bne	bottom_button_draw_smc
+slider_increment:
+	lda	rocket_notes,X
+	beq	slider_play_note	; don't make smaller than 0
+	dec	rocket_notes,X
+	jmp	slider_play_note
+slider_decrement:
+	lda	rocket_notes,X
+	cmp	#15
+	bcs	slider_play_note	; done make larger than 14
+	inc	rocket_notes,X
 
-bottom_button_off:
-	ldy	#$13
+slider_play_note:
 
-bottom_button_draw_smc:
-	sty	$5d0+26
 
-	inc	bottom_button_draw_smc+1
-	inc	bottom_button_draw_smc+1
-
-	inx
-	cpx	#5
-	bne	draw_buttons_loop
+handle_pulled:
 
 	rts
-.endif
-
-
-
 
 .if 0
 

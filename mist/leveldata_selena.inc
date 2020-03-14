@@ -44,8 +44,7 @@ location0:
 	.byte	2		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
-;	.byte	DIRECTION_W
+	.byte	(DIRECTION_E|DIRECTION_ONLY_POINT)	; east exit_dir
 	.byte	(DIRECTION_W|DIRECTION_ONLY_POINT)	; west exit_dir
 	.word	spaceship_inside_mist_n_lzsa	; north bg
 	.word	$0000				; south bg
@@ -70,7 +69,11 @@ location1:
 	.word	controls_e_lzsa		; east bg
 	.word	$0000			; west bg
 	.byte	BG_EAST
-	.byte	$ff		; special exit
+	.byte	DIRECTION_E	; special exit
+	.byte	12,25		; special x
+	.byte	26,46		; special y
+	.word	controls_pressed-1		; special function
+
 
 ; electric organ
 location2:
