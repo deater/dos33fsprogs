@@ -5,7 +5,7 @@
 
 organ_pressed:
 	ldy	#0
-	lda	YPOS
+	lda	CURSOR_Y
 	cmp	#27
 	bcs	organ_regular		; bge
 
@@ -14,7 +14,7 @@ organ_sharps:
 
 	; FIXME: if actually on a white key, then jump and check regular?
 
-	lda	XPOS
+	lda	CURSOR_X
 
 	cmp	#11-1
 	bcc	done_organ_sharps
@@ -47,7 +47,7 @@ done_organ_sharps:
 
 organ_regular:
 	; urgh nonsymmetric, this is way cheating
-	lda	XPOS
+	lda	CURSOR_X
 	cmp	#10-1
 	bcc	done_organ_regular
 	iny
@@ -150,18 +150,41 @@ draw_ss_buttons_loop:
 	sec
 	sbc	TEMP
 	sta	TEMP
+
+	; see if draw or not
+
 	cpy	TEMP
 	bne	ss_button_none
+
+	; we are drawing
+
+	cpx	ROCKET_HANDLE_STEP
+	bcc	ss_button_green
+
+ss_button_grey:
 	lda	rocket_notes,X
 	and	#$1
-	beq	ss_button_bottom
+	beq	ss_button_grey_bottom
 
-ss_button_top:
+ss_button_grey_top:
 	lda	#$05
 	bne	ss_buttons_smc
 
-ss_button_bottom:
+ss_button_grey_bottom:
 	lda	#$50
+	bne	ss_buttons_smc
+
+ss_button_green:
+	lda	rocket_notes,X
+	and	#$1
+	beq	ss_button_green_bottom
+
+ss_button_green_top:
+	lda	#$0C
+	bne	ss_buttons_smc
+
+ss_button_green_bottom:
+	lda	#$C0
 	bne	ss_buttons_smc
 
 ss_button_none:
@@ -175,7 +198,7 @@ ss_buttons_smc:
 
 	inx
 	inx
-	cpx	#10
+	cpx	#8
 	bne	draw_ss_buttons_outer_loop
 
 	rts
@@ -187,7 +210,7 @@ rocket_notes:
 
 controls_pressed:
 
-	lda	XPOS
+	lda	CURSOR_X
 	cmp	#21
 	bcs	handle_pulled			; bge
 
@@ -198,8 +221,8 @@ sliders_pressed:
 
 	tax
 
-	; if YPOS-28 > rocket_notes, increment
-	; if YPOS-28 < rocket_notes, decrement
+	; if CURSOR_Y-28 > rocket_notes, increment
+	; if CURSOR_Y-28 < rocket_notes, decrement
 	; 0..14
 
 	; rocket ypos  ypos-28 15-(ypos-28)
@@ -213,7 +236,7 @@ sliders_pressed:
 	; 13 = 28	0  14
 	; 14 = 28	0  14
 
-	lda	YPOS
+	lda	CURSOR_Y
 	sec
 	sbc	#28
 	sta	TEMP
@@ -246,7 +269,93 @@ slider_play_note:
         sta     speaker_duration
         jsr     speaker_tone
 
+        rts
+
+        ; 22,30
+handle_pull_sprite:
+        .byte 3,6
+        .byte $dd,$0d,$dd
+        .byte $dd,$00,$dd
+        .byte $99,$00,$dd
+        .byte $99,$00,$dd
+        .byte $d9,$00,$dd
+        .byte $26,$26,$26
+
 handle_pulled:
+
+        ;==================================
+        ; turn buttons green one at a time
+
+	lda	#1
+	sta	ROCKET_HANDLE_STEP
+
+handle_pull_draw_buttons:
+
+	jsr	gr_copy_to_current
+
+	lda	#<handle_pull_sprite
+	sta	INL
+	lda	#>handle_pull_sprite
+	sta	INH
+
+	lda	#22
+	sta	XPOS
+	lda	#30
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	jsr	page_flip
+
+	lda	DRAW_PAGE		; draw to visible screen
+	eor	#$4
+	sta	DRAW_PAGE
+
+	ldx	#0
+draw_handle_buttons_outer_loop:
+
+;	tya
+;	pha
+
+	txa
+	pha
+
+	jsr	spaceship_draw_buttons
+
+	pla
+	tax
+	pha
+
+	lda	rocket_notes,X
+	tax
+	lda	all_notes,X
+        sta     speaker_frequency
+
+        lda     #100
+        sta     speaker_duration
+
+        jsr     speaker_tone
+
+	pla
+	tax
+
+;	pla
+;	tay
+
+	inc	ROCKET_HANDLE_STEP
+	inc	ROCKET_HANDLE_STEP
+
+	inx
+	inx
+	cpx	#8
+	bne	draw_handle_buttons_outer_loop
+
+	lda	DRAW_PAGE		; flip back to way it was
+	eor	#$4
+	sta	DRAW_PAGE
+
+	lda	#0
+	sta	ROCKET_HANDLE_STEP
 
 	rts
 
@@ -293,13 +402,13 @@ needle_strings:
 
 generator_button_press:
 
-	lda	YPOS
+	lda	CURSOR_Y
 	cmp	#38
 	bcs	button_bottom_row		; bge
 
 button_top_row:
 
-	lda	XPOS
+	lda	CURSOR_X
 	sec
 	sbc	#24
 	lsr
@@ -316,7 +425,7 @@ button_top_row:
 
 button_bottom_row:
 
-	lda	XPOS
+	lda	CURSOR_X
 	sec
 	sbc	#25
 	lsr

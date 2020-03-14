@@ -62,6 +62,7 @@ mist_start:
 	sta	ROCKET_VOLTS_DISP
 	sta	SWITCH_TOP_ROW
 	sta	SWITCH_BOTTOM_ROW
+	sta	ROCKET_HANDLE_STEP
 
 ; debug
 ;	lda	#1
