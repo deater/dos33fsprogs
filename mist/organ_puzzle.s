@@ -100,6 +100,12 @@ sharp_notes:
 	.byte NOTE_CSHARP4,NOTE_DSHARP4,NOTE_FSHARP4,NOTE_GSHARP4,NOTE_ASHARP4
 	.byte NOTE_CSHARP5,NOTE_DSHARP5
 
+all_notes:
+	.byte NOTE_C4,NOTE_CSHARP4,NOTE_D4,NOTE_DSHARP4,NOTE_E4,NOTE_F4
+        .byte NOTE_FSHARP4,NOTE_G4,NOTE_GSHARP4,NOTE_A4,NOTE_ASHARP4,NOTE_B4
+	.byte NOTE_C5,NOTE_CSHARP5,NOTE_D5,NOTE_DSHARP5,NOTE_E5
+
+
 
 
 	;=========================
@@ -232,6 +238,13 @@ slider_decrement:
 
 slider_play_note:
 
+        lda     rocket_notes,X
+        tax
+        lda     all_notes,X
+        sta     speaker_frequency
+        lda     #25
+        sta     speaker_duration
+        jsr     speaker_tone
 
 handle_pulled:
 
