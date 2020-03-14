@@ -163,6 +163,8 @@ room_frame_no_oflo:
 
 
 	; puzzles
+	.include	"organ_puzzle.s"
+
 
 	; linking books
 
@@ -172,7 +174,7 @@ room_frame_no_oflo:
 
 	.include	"leveldata_selena.inc"
 
-
+	.include	"speaker_beeps.s"
 
 
 

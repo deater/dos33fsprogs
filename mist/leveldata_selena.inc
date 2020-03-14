@@ -45,7 +45,8 @@ location0:
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
-	.byte	DIRECTION_W	; west exit_dir
+;	.byte	DIRECTION_W
+	.byte	(DIRECTION_W|DIRECTION_ONLY_POINT)	; west exit_dir
 	.word	spaceship_inside_mist_n_lzsa	; north bg
 	.word	$0000				; south bg
 	.word	spaceship_inside_e_lzsa		; east bg
@@ -86,11 +87,10 @@ location2:
 	.word	$0000			; east bg
 	.word	organ_w_lzsa		; west bg
 	.byte	BG_WEST
-	.byte	$ff
-;DIRECTION_E	; special exit
-;	.byte	21,31		; special x
-;	.byte	10,24		; special y
-;	.word	meche_link_book-1		; special function
+	.byte	DIRECTION_W	; special exit
+	.byte	7,31		; special x
+	.byte	24,34		; special y
+	.word	organ_pressed-1		; special function
 
 
 
