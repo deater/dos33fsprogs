@@ -46,11 +46,11 @@ location0:
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
-	.word	$0000			; north bg
-	.word	$0000			; south bg
-	.word	$0000			; east bg
-	.word	spaceship_inside_w_lzsa	; west bg
-	.byte	BG_WEST
+	.word	spaceship_inside_mist_n_lzsa	; north bg
+	.word	$0000				; south bg
+	.word	spaceship_inside_e_lzsa		; east bg
+	.word	spaceship_inside_w_lzsa		; west bg
+	.byte	BG_WEST | BG_EAST | BG_NORTH
 	.byte	$ff		; special exit
 
 

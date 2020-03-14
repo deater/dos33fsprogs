@@ -52,7 +52,7 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 	;===================================================
 
 loader_start:
-	lda	#0
+	lda	#3
 	sta	WHICH_LOAD
 
 	jsr	init	; unhook DOS, init nibble table
@@ -136,7 +136,7 @@ entry_smc:
 
 filenames:
 	.word intro_filename
-	.word mist_filename,meche_filename
+	.word mist_filename,meche_filename,selena_filename
 	.word ending_filename
 
 intro_filename:
@@ -145,6 +145,8 @@ mist_filename:
 	.byte "MIST",0
 meche_filename:
 	.byte "MECHE",0
+selena_filename:
+	.byte "SELENA",0
 ending_filename:
 	.byte "ENDING",0
 

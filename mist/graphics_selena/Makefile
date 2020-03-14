@@ -12,13 +12,15 @@ all:	selena_graphics.inc
 selena_graphics.inc:	\
 	controls_e.lzsa \
 	organ_w.lzsa \
-	spaceship_inside_w.lzsa \
-	spaceship_inside_selena_n.lzsa \
+	spaceship_inside_w.lzsa spaceship_inside_e.lzsa \
+	spaceship_inside_selena_n.lzsa spaceship_inside_mist_n.lzsa \
 	walkway1_n.lzsa
 	echo "controls_e_lzsa: .incbin \"controls_e.lzsa\"" > selena_graphics.inc
 	echo "organ_w_lzsa: .incbin \"organ_w.lzsa\"" >> selena_graphics.inc
 	echo "spaceship_inside_w_lzsa: .incbin \"spaceship_inside_w.lzsa\"" >> selena_graphics.inc
+	echo "spaceship_inside_e_lzsa: .incbin \"spaceship_inside_e.lzsa\"" >> selena_graphics.inc
 	echo "spaceship_inside_selena_n_lzsa: .incbin \"spaceship_inside_selena_n.lzsa\"" >> selena_graphics.inc
+	echo "spaceship_inside_mist_n_lzsa: .incbin \"spaceship_inside_mist_n.lzsa\"" >> selena_graphics.inc
 	echo "walkway1_n_lzsa: .incbin \"walkway1_n.lzsa\"" >> selena_graphics.inc
 
 

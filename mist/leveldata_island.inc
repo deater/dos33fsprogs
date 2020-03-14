@@ -42,7 +42,7 @@ locations:
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
-	.word location36
+	.word location36,location37
 
 ; myst linking book
 location0:
@@ -234,7 +234,7 @@ location10:
 	.byte	11		; north exit
 	.byte	14		; south exit
 	.byte	9		; east exit
-	.byte	16		; west exit
+	.byte	37		; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
@@ -339,7 +339,7 @@ location15:
 location16:
 	.byte	22		; north exit
 	.byte	$ff		; south exit
-	.byte	10		; east exit
+	.byte	37		; east exit
 	.byte	$ff		; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
@@ -715,6 +715,22 @@ location36:
 	.byte	34,40		; special y
 	.word	generator_button_press-1	; special function
 
+; pad on way to rocket
+location37:
+	.byte	16		; north exit
+	.byte	$ff		; south exit
+	.byte	10		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	pad_n_lzsa	; north bg
+	.word	$0000		; south bg
+	.word	pad_e_lzsa	; east bg
+	.word	$0000		; west bg
+	.byte	BG_NORTH | BG_EAST
+	.byte	$ff
 
 
 
