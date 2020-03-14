@@ -76,9 +76,12 @@ game_loop:
 	; handle special-case forground logic
 	;====================================
 
-;	lda	LOCATION
-;	cmp	#2
-;	bne	nothing_special
+	lda	LOCATION
+	cmp	#1
+	bne	nothing_special
+
+	; draw the buttons
+	jsr	spaceship_draw_buttons
 
 	; handle animated linking book
 
