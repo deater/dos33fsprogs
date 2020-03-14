@@ -135,7 +135,7 @@ no_split:
 	bit	FULLGR
 
 	; also change sprite cutoff
-	ldx	#40
+	ldx	#48
 	stx	psc_smc1+1
 	stx	psc_smc2+1
 
