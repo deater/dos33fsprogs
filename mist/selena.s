@@ -108,6 +108,15 @@ game_loop:
 
 	inc	ANIMATE_FRAME
 	lda	ANIMATE_FRAME
+
+animate_check_high:
+	cmp	#23
+	bne	animate_check_low
+	lda	#13
+	sta	ANIMATE_FRAME
+	bne	done_animate_book		; bra
+
+animate_check_low:
 	cmp	#13
 	bne	done_animate_book
 	lda	#9

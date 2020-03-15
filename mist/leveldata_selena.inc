@@ -33,7 +33,7 @@ LOCATION_SPECIAL_FUNC=22		; pointer-1 of function to call on click
 
 
 locations:
-	.word location0, location1, location2
+	.word location0, location1, location2, location3
 
 
 ; Inside Ship
@@ -95,5 +95,22 @@ location2:
 	.byte	24,34		; special y
 	.word	organ_pressed-1		; special function
 
+
+; walkway1
+location3:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	walkway1_n_lzsa		; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	$ff
 
 

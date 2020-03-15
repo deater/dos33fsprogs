@@ -4,14 +4,63 @@
 
 dome_pressed:
 
+	lda	ANIMATE_FRAME
+	cmp	#13
+	bcs	dome_press_second	; bge
+
 dome_press_first:
+
+	; open book and look at flyover
+
+	lda	#13
+	sta	ANIMATE_FRAME
 
 	rts
 
 dome_press_second:
 
+	; link through!
+
 	lda	#0
 	sta	ANIMATE_FRAME
+
+	; disable the organ and controls
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#$ff
+	sta	location1,Y
+	sta	location2,Y
+
+	; re-route door to selena
+	ldy	#LOCATION_NORTH_EXIT
+	lda	#3
+	sta	location0,Y
+	ldy	#LOCATION_NORTH_EXIT_DIR
+	lda	#DIRECTION_N
+	sta	location0,Y
+
+	ldy	#LOCATION_NORTH_BG
+	lda	#<spaceship_inside_selena_n_lzsa
+	sta	location0,Y
+	lda	#>spaceship_inside_selena_n_lzsa
+	sta	location0+1,Y
+
+
+	; clear screen
+	lda	#0
+	sta	clear_all_color+1
+
+	jsr	clear_all
+	jsr	page_flip
+
+	; play sound effect?
+
+	lda	#<audio_link_noise
+	sta	BTC_L
+	lda	#>audio_link_noise
+	sta	BTC_H
+	ldx	#43             ; 45 pages long???
+	jsr	play_audio
+
 
 	rts
 
@@ -402,11 +451,38 @@ draw_handle_buttons_outer_loop:
 	bne	done_checking_code
 
 correct_code:
+
+	; start animation
+
 	lda	#1
 	sta	ANIMATE_FRAME
 
-	; FIXME: remap special to be dome
-	;        also switch to not point?
+	; move action to dome
+
+	ldy	#LOCATION_SPECIAL_X1
+	lda	#15
+	sta	location1+0,Y
+	lda	#24
+	sta	location1+1,Y
+	lda	#2
+	sta	location1+2,Y
+	lda	#18
+	sta	location1+3,Y
+
+	; also switch to not point
+
+	ldy	#LOCATION_EAST_EXIT_DIR
+	lda	#DIRECTION_E
+	sta	location0,Y
+	sta	DIRECTION
+
+	; change action
+	ldy	#LOCATION_SPECIAL_FUNC
+	lda	#<(dome_pressed-1)
+	sta	location1,Y
+	lda	#>(dome_pressed-1)
+	sta	location1+1,Y
+
 	; yes, I think in real life you can mess with sliders after
 	; you activate book, but not sure it's worth trouble of doing
 	; that in our version
@@ -414,156 +490,6 @@ correct_code:
 done_checking_code:
 
 	rts
-
-.if 0
-
-open_gen_door:
-
-	ldy	#LOCATION_NORTH_EXIT
-	lda	#36
-	sta	location35,Y
-
-	ldy	#LOCATION_NORTH_EXIT_DIR
-	lda	#(DIRECTION_N | DIRECTION_SPLIT | DIRECTION_ONLY_POINT)
-	sta	location35,Y
-
-	ldy	#LOCATION_NORTH_BG
-	lda	#<gen_door_open_n_lzsa
-	sta	location35,Y
-	lda	#>gen_door_open_n_lzsa
-	sta	location35+1,Y
-
-	jsr	change_location
-
-	rts
-
-
-button_lookup:
-.byte $10,$8,$4,$2,$1
-
-button_values_top:
-.byte	$01,$02,$22,$19,$09	; BCD
-button_values_bottom:
-.byte	$10,$07,$08,$16,$05	; BCD
-
-needle_strings:
-	.byte '\'|$80,' '|$80,' '|$80,' '|$80
-	.byte ' '|$80,':'|$80,' '|$80,' '|$80
-	.byte ' '|$80,' '|$80,':'|$80,' '|$80
-	.byte ' '|$80,' '|$80,' '|$80,'/'|$80
-
-;============================
-; handle button presses
-;============================
-
-generator_button_press:
-
-	lda	CURSOR_Y
-	cmp	#38
-	bcs	button_bottom_row		; bge
-
-button_top_row:
-
-	lda	CURSOR_X
-	sec
-	sbc	#24
-	lsr
-	bmi	done_press
-	cmp	#5
-	bcs	done_press		; bge
-
-	tax
-	lda	SWITCH_TOP_ROW
-	eor	button_lookup,X		; toggle switch
-	sta	SWITCH_TOP_ROW
-
-	jmp	done_press
-
-button_bottom_row:
-
-	lda	CURSOR_X
-	sec
-	sbc	#25
-	lsr
-	bmi	done_press
-	cmp	#5
-	bcs	done_press		; bge
-
-	tax
-	lda	SWITCH_BOTTOM_ROW
-	eor	button_lookup,X		; toggle switch
-	sta	SWITCH_BOTTOM_ROW
-no_bottom_press:
-
-done_press:
-
-
-calculate_button_totals:
-
-	lda	#0
-	sta	ROCKET_VOLTS
-	sta	GENERATOR_VOLTS
-	tax
-
-calc_buttons_loop:
-
-	; top button
-
-	lda	SWITCH_TOP_ROW
-	and	button_lookup,X
-	beq	ctop_button_off
-
-ctop_button_on:
-	sed
-	clc
-	lda	GENERATOR_VOLTS
-	adc	button_values_top,X
-	sta	GENERATOR_VOLTS
-	cld
-
-ctop_button_off:
-
-	lda	SWITCH_BOTTOM_ROW
-	and	button_lookup,X
-	beq	cbottom_button_off
-
-cbottom_button_on:
-	sed
-	clc
-	lda	GENERATOR_VOLTS
-	adc	button_values_bottom,X
-	sta	GENERATOR_VOLTS
-	cld
-
-cbottom_button_off:
-
-	inx
-	cpx	#5
-	bne	calc_buttons_loop
-
-	; calculate rocket volts
-	lda	BREAKER_TRIPPED
-	bne	done_rocket_volts
-
-	lda	GENERATOR_VOLTS
-	cmp	#$59
-	bcs	oops_flipped
-
-	sta	ROCKET_VOLTS
-	jmp	done_rocket_volts
-
-oops_flipped:
-	lda	#$3
-	sta	BREAKER_TRIPPED
-
-done_rocket_volts:
-
-	rts
-
-
-
-.endif
-
 
 
 selena_movie:
@@ -574,7 +500,11 @@ selena_movie:
 	; book
 	.word	book1_sprite,book2_sprite,book3_sprite,book4_sprite
 	; flyover
-
+	.word	static3_sprite
+	.word	flyover1_sprite,flyover2_sprite,flyover3_sprite
+	.word	flyover4_sprite,flyover5_sprite,flyover6_sprite
+	.word	flyover7_sprite,flyover8_sprite,flyover9_sprite
+	.word	flyover10_sprite
 
 static1_sprite:
 	.byte 6,8
@@ -653,4 +583,115 @@ book4_sprite:
 	.byte $66,$00,$11,$11,$ff,$77
 	.byte $00,$66,$61,$70,$0f,$00
 	.byte $80,$00,$06,$07,$00,$88
+
+flyover1_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$E0,$EE,$EE,$E0,$00
+	.byte $50,$55,$5E,$EE,$EE,$E0
+	.byte $55,$55,$55,$EE,$EE,$EE
+	.byte $85,$85,$85,$85,$6e,$6e
+	.byte $88,$88,$88,$88,$88,$66
+	.byte $00,$68,$66,$66,$08,$00
+	.byte $80,$00,$06,$06,$00,$88
+
+flyover2_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$E0,$EE,$EE,$E0,$00
+	.byte $50,$ee,$ee,$EE,$EE,$E0
+	.byte $55,$5e,$55,$EE,$EE,$EE
+	.byte $85,$65,$65,$6e,$6e,$6e
+	.byte $88,$86,$66,$66,$66,$66
+	.byte $00,$68,$66,$66,$06,$00
+	.byte $80,$00,$06,$06,$00,$88
+
+flyover3_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$E0,$EE,$EE,$E0,$00
+	.byte $e0,$ee,$ee,$EE,$EE,$E0
+	.byte $55,$5e,$ee,$EE,$EE,$EE
+	.byte $85,$65,$6e,$6e,$6e,$6e
+	.byte $68,$66,$66,$66,$66,$66
+	.byte $00,$66,$66,$66,$06,$00
+	.byte $80,$00,$06,$06,$00,$88
+
+flyover4_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$E0,$EE,$EE,$E0,$00
+	.byte $e0,$ee,$ee,$EE,$88,$E0
+	.byte $ee,$ee,$ee,$EE,$88,$EE
+	.byte $85,$6e,$6e,$6e,$68,$6e
+	.byte $66,$66,$66,$66,$66,$66
+	.byte $00,$66,$66,$66,$06,$00
+	.byte $80,$00,$06,$06,$00,$88
+
+flyover5_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$E0,$EE,$EE,$E0,$00
+	.byte $e0,$ee,$8e,$EE,$55,$E0
+	.byte $ee,$8e,$88,$5e,$55,$88
+	.byte $6e,$68,$68,$6e,$65,$68
+	.byte $66,$66,$66,$66,$66,$66
+	.byte $00,$66,$66,$66,$06,$00
+	.byte $80,$00,$06,$06,$00,$88
+
+flyover6_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$E0,$8E,$EE,$E0,$00
+	.byte $e0,$ee,$88,$55,$88,$E0
+	.byte $ee,$88,$88,$55,$88,$05
+	.byte $66,$88,$66,$65,$68,$66
+	.byte $66,$66,$66,$66,$66,$66
+	.byte $00,$66,$66,$66,$06,$00
+	.byte $80,$00,$06,$06,$00,$88
+
+flyover7_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$E0,$eE,$98,$E0,$00
+	.byte $90,$ee,$ee,$89,$ee,$E0
+	.byte $98,$88,$ee,$99,$ee,$8e
+	.byte $98,$88,$65,$99,$8e,$88
+	.byte $66,$68,$66,$99,$66,$68
+	.byte $00,$66,$66,$89,$06,$00
+	.byte $80,$00,$06,$06,$00,$88
+
+flyover8_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$80,$8E,$8e,$90,$00
+	.byte $e0,$e8,$88,$99,$99,$E0
+	.byte $88,$ee,$99,$99,$9e,$ee
+	.byte $88,$55,$89,$99,$99,$8e
+	.byte $88,$55,$88,$89,$99,$88
+	.byte $00,$55,$88,$88,$09,$00
+	.byte $80,$00,$08,$08,$00,$88
+
+flyover9_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$e0,$ee,$ee,$e0,$00
+	.byte $e0,$ee,$ee,$ee,$8e,$E0
+	.byte $ee,$ee,$ee,$ee,$88,$ee
+	.byte $ee,$ee,$ee,$ee,$88,$ee
+	.byte $55,$5e,$88,$55,$88,$88
+	.byte $00,$55,$55,$66,$06,$00
+	.byte $80,$00,$05,$05,$00,$88
+
+flyover10_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$e0,$ee,$ee,$e0,$00
+	.byte $e0,$ee,$ee,$ee,$ee,$E0
+	.byte $ee,$ee,$ee,$ee,$ee,$ee
+	.byte $ee,$ee,$ee,$ee,$ee,$ee
+	.byte $66,$6e,$6e,$ee,$8e,$ee
+	.byte $00,$11,$11,$66,$08,$00
+	.byte $80,$00,$06,$06,$00,$88
+
 
