@@ -80,8 +80,15 @@ game_loop:
 	cmp	#1
 	bne	nothing_special
 
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	location1,Y
+	cmp	#$ff
+	beq	no_draw_buttons
+
 	; draw the buttons
 	jsr	spaceship_draw_buttons
+
+no_draw_buttons:
 
 	; handle animated linking book
 
