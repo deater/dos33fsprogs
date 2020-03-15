@@ -189,8 +189,6 @@ room_frame_no_oflo:
 
 	; linking books
 
-	.include	"link_book_selena.s"
-
 	.include	"common_sprites.inc"
 
 	.include	"leveldata_selena.inc"

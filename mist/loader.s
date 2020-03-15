@@ -52,7 +52,7 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 	;===================================================
 
 loader_start:
-	lda	#3
+	lda	#0
 	sta	WHICH_LOAD
 
 	jsr	init	; unhook DOS, init nibble table

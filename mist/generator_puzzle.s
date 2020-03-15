@@ -1,4 +1,47 @@
 ;======================
+; open the spaeshipt door
+
+open_ss_door:
+
+	; check if voltage is 59
+
+
+	; change to open door image
+	ldy	#LOCATION_NORTH_BG
+	lda	#<spaceship_door_open_n_lzsa
+	sta	location38,Y
+	lda	#>spaceship_door_open_n_lzsa
+	sta	location38+1,Y
+
+	; change to load new level if through
+	ldy	#LOCATION_SPECIAL_FUNC
+	lda	#<(go_to_selena-1)
+	sta	location38,Y
+	lda	#>(go_to_selena-1)
+	sta	location38+1,Y
+
+	jsr	change_location
+
+done_ss_door:
+	rts
+
+
+;======================
+; go to selena
+
+go_to_selena:
+
+	lda	#3		; Selena
+	sta	WHICH_LOAD
+
+	lda	#$ff
+	sta	LEVEL_OVER
+
+	rts
+
+
+
+;======================
 ; open the generator_door
 
 open_gen_door:

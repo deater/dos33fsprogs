@@ -42,7 +42,7 @@ locations:
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
-	.word location36,location37
+	.word location36,location37,location38
 
 ; myst linking book
 location0:
@@ -446,11 +446,11 @@ location21:
 
 ; spaceship switch
 location22:
-	.byte	16		; north exit
+	.byte	38		; north exit
 	.byte	$ff		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
-	.byte	DIRECTION_E	; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -604,7 +604,7 @@ location30:
 	.byte	DIRECTION_E	; special exit
 	.byte	17,23		; special x
 	.byte	14,24		; special y
-	.word	exit_level-1	; special function
+	.word	go_to_meche-1	; special function
 
 ; chair view
 location31:
@@ -732,9 +732,23 @@ location37:
 	.byte	BG_NORTH | BG_EAST
 	.byte	$ff
 
-
-
-
-
-
+; rocket close in
+location38:
+	.byte	16		; north exit
+	.byte	$ff		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_E	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	spaceship_door_n_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	DIRECTION_N	; special exit
+	.byte	15,25		; special x
+	.byte	8,46		; special y
+	.word	open_ss_door-1	; special function
 

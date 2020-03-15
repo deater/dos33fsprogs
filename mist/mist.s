@@ -181,7 +181,7 @@ really_exit:
 
 
 
-exit_level:
+go_to_meche:
 	lda	#2
 	sta	WHICH_LOAD
 
@@ -229,7 +229,7 @@ exit_level:
 
 	.include	"common_sprites.inc"
 
-	.include	"leveldata_island.inc"
+	.include	"leveldata_mist.inc"
 
 
 

@@ -49,7 +49,8 @@ mist_graphics.inc:	\
 	green_steps1_n.lzsa green_steps1_s.lzsa \
 	gen_door_closed_n.lzsa gen_door_open_n.lzsa gen_door_s.lzsa \
 	green_steps6_n.lzsa green_steps6_w.lzsa \
-	pad_n.lzsa pad_e.lzsa
+	pad_n.lzsa pad_e.lzsa \
+	spaceship_door_n.lzsa spaceship_door_open_n.lzsa
 	echo "m_link_book_lzsa: .incbin \"m_link_book.lzsa\"" > mist_graphics.inc
 	echo "dock_n_lzsa: .incbin \"dock_n.lzsa\"" >> mist_graphics.inc
 	echo "dock_s_lzsa: .incbin \"dock_s.lzsa\"" >> mist_graphics.inc
@@ -133,6 +134,8 @@ mist_graphics.inc:	\
 	echo "green_steps6_w_lzsa: .incbin \"green_steps6_w.lzsa\"" >> mist_graphics.inc
 	echo "pad_n_lzsa: .incbin \"pad_n.lzsa\"" >> mist_graphics.inc
 	echo "pad_e_lzsa: .incbin \"pad_e.lzsa\"" >> mist_graphics.inc
+	echo "spaceship_door_n_lzsa: .incbin \"spaceship_door_n.lzsa\"" >> mist_graphics.inc
+	echo "spaceship_door_open_n_lzsa: .incbin \"spaceship_door_open_n.lzsa\"" >> mist_graphics.inc
 
 
 %.gr: %.png

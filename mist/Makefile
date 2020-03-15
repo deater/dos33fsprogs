@@ -48,7 +48,7 @@ MIST:	mist.o
 mist.o:	mist.s zp.inc hardware.inc \
 	graphics_island/mist_graphics.inc \
 	common_sprites.inc \
-	leveldata_island.inc \
+	leveldata_mist.inc \
 	clock_bridge_puzzle.s clock_sprites.inc \
 	link_book_mist.s \
 	letter_cat.s \
@@ -85,7 +85,6 @@ selena.o:	selena.s zp.inc hardware.inc \
 	graphics_selena/selena_graphics.inc \
 	common_sprites.inc \
 	leveldata_selena.inc \
-	link_book_selena.s \
 	keyboard.s \
 	draw_pointer.s \
 	speaker_beeps.s \
