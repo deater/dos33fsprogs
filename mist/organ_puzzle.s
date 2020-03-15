@@ -1,3 +1,22 @@
+	; first time changes from book to fly animation
+	; second time switches us to selenetic, plays sound
+	;	disables organ and display
+
+dome_pressed:
+
+dome_press_first:
+
+	rts
+
+dome_press_second:
+
+	lda	#0
+	sta	ANIMATE_FRAME
+
+	rts
+
+
+
 	;==========================
 	; o/` Standing in my yard
 	;	where they tore down the garage
@@ -203,10 +222,17 @@ ss_buttons_smc:
 
 	rts
 
+
+ROCKET_SOLUTION_0 = $00
+ROCKET_SOLUTION_1 = $01
+ROCKET_SOLUTION_2 = $05
+ROCKET_SOLUTION_3 = $0a
+
+
 	; twice as many as necessary as X increments by two
 rocket_notes:
-	.byte $00,$00,$1,$00,$5,$00,$0a,$00
-
+	.byte ROCKET_SOLUTION_0,$00,ROCKET_SOLUTION_1,$00
+	.byte ROCKET_SOLUTION_2,$00,ROCKET_SOLUTION_3,$00
 
 controls_pressed:
 
@@ -356,6 +382,36 @@ draw_handle_buttons_outer_loop:
 
 	lda	#0
 	sta	ROCKET_HANDLE_STEP
+
+	; check to see if right code
+
+	lda	rocket_notes
+	cmp	#ROCKET_SOLUTION_0
+	bne	done_checking_code
+
+	lda	rocket_notes+2
+	cmp	#ROCKET_SOLUTION_1
+	bne	done_checking_code
+
+	lda	rocket_notes+4
+	cmp	#ROCKET_SOLUTION_2
+	bne	done_checking_code
+
+	lda	rocket_notes+6
+	cmp	#ROCKET_SOLUTION_3
+	bne	done_checking_code
+
+correct_code:
+	lda	#1
+	sta	ANIMATE_FRAME
+
+	; FIXME: remap special to be dome
+	;        also switch to not point?
+	; yes, I think in real life you can mess with sliders after
+	; you activate book, but not sure it's worth trouble of doing
+	; that in our version
+
+done_checking_code:
 
 	rts
 
@@ -507,3 +563,94 @@ done_rocket_volts:
 
 
 .endif
+
+
+
+selena_movie:
+	; static
+	.word	static1_sprite,static1_sprite,static2_sprite,static3_sprite
+	.word	static2_sprite,static3_sprite,static2_sprite,static3_sprite
+	.word	static1_sprite
+	; book
+	.word	book1_sprite,book2_sprite,book3_sprite,book4_sprite
+	; flyover
+
+
+static1_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$60,$26,$62,$20,$00
+	.byte $20,$67,$26,$62,$20,$60
+	.byte $26,$62,$20,$72,$26,$62
+	.byte $20,$72,$26,$62,$26,$67
+	.byte $26,$62,$26,$67,$06,$62
+	.byte $00,$67,$06,$67,$06,$00
+	.byte $80,$00,$06,$02,$00,$88
+
+static2_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$70,$72,$72,$70,$00
+	.byte $60,$26,$66,$66,$62,$60
+	.byte $72,$02,$72,$72,$02,$72
+	.byte $20,$20,$20,$00,$20,$20
+	.byte $62,$60,$62,$62,$62,$62
+	.byte $00,$72,$76,$72,$06,$00
+	.byte $80,$00,$02,$02,$00,$88
+
+static3_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$20,$72,$26,$70,$00
+	.byte $20,$70,$20,$70,$20,$70
+	.byte $72,$26,$72,$26,$72,$26
+	.byte $20,$70,$20,$70,$20,$70
+	.byte $76,$22,$76,$22,$76,$22
+	.byte $00,$20,$70,$20,$00,$00
+	.byte $80,$00,$02,$06,$00,$88
+
+
+book1_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$50,$55,$55,$50,$00
+	.byte $60,$05,$15,$15,$05,$50
+	.byte $66,$00,$11,$11,$11,$55
+	.byte $66,$00,$11,$11,$11,$75
+	.byte $66,$00,$11,$11,$01,$77
+	.byte $00,$66,$67,$77,$07,$00
+	.byte $80,$00,$06,$07,$00,$88
+
+book2_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$50,$55,$55,$10,$00
+	.byte $60,$05,$11,$11,$11,$50
+	.byte $66,$00,$11,$11,$11,$15
+	.byte $66,$60,$01,$11,$11,$f0
+	.byte $66,$66,$00,$f1,$7f,$77
+	.byte $00,$66,$60,$77,$07,$00
+	.byte $80,$00,$06,$07,$00,$88
+
+book3_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$50,$55,$55,$50,$00
+	.byte $60,$05,$15,$05,$f5,$50
+	.byte $66,$00,$11,$11,$ff,$55
+	.byte $66,$00,$11,$11,$ff,$55
+	.byte $66,$00,$11,$01,$ff,$77
+	.byte $00,$66,$67,$77,$07,$00
+	.byte $80,$00,$06,$07,$00,$88
+
+book4_sprite:
+	.byte 6,8
+	.byte $08,$00,$00,$00,$08,$88
+	.byte $00,$50,$55,$55,$50,$00
+	.byte $60,$65,$05,$15,$15,$50
+	.byte $66,$66,$00,$11,$11,$ff
+	.byte $66,$00,$11,$11,$f1,$7f
+	.byte $66,$00,$11,$11,$ff,$77
+	.byte $00,$66,$61,$70,$0f,$00
+	.byte $80,$00,$06,$07,$00,$88
+

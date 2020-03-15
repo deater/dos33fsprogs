@@ -85,33 +85,35 @@ game_loop:
 
 	; handle animated linking book
 
-;	lda	ANIMATE_FRAME
-;	asl
-;	tay
-;	lda	meche_movie,Y
-;	sta	INL
-;	lda	meche_movie+1,Y
-;	sta	INH
+	lda	ANIMATE_FRAME
+	beq	nothing_special
 
-;	lda	#22
-;	sta	XPOS
-;	lda	#12
-;	sta	YPOS
+	asl
+	tay
+	lda	selena_movie,Y
+	sta	INL
+	lda	selena_movie+1,Y
+	sta	INH
 
-;	jsr	put_sprite_crop
+	lda	#17
+	sta	XPOS
+	lda	#4
+	sta	YPOS
 
-;	lda	FRAMEL
-;	and	#$f
-;	bne	done_animate_book
+	jsr	put_sprite_crop
 
-;	inc	ANIMATE_FRAME
-;	lda	ANIMATE_FRAME
-;	cmp	#11
-;	bne	done_animate_book
-;	lda	#0
-;	sta	ANIMATE_FRAME
+	lda	FRAMEL
+	and	#$f
+	bne	done_animate_book
 
-;done_animate_book:
+	inc	ANIMATE_FRAME
+	lda	ANIMATE_FRAME
+	cmp	#13
+	bne	done_animate_book
+	lda	#9
+	sta	ANIMATE_FRAME
+
+done_animate_book:
 
 nothing_special:
 
