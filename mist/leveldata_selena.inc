@@ -34,7 +34,7 @@ LOCATION_SPECIAL_FUNC=22		; pointer-1 of function to call on click
 
 locations:
 	.word location0, location1, location2, location3
-
+	.word location4, location5, location6
 
 ; Inside Ship
 location0:
@@ -98,19 +98,70 @@ location2:
 
 ; walkway1
 location3:
-	.byte	$ff		; north exit
-	.byte	$ff		; south exit
+	.byte	5		; north exit
+	.byte	4		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
-	.byte	$ff		; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	walkway1_n_lzsa		; north bg
-	.word	$0000			; south bg
+	.word	walkway1_s_lzsa		; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH
+	.byte	$ff
+
+; spaceship door
+location4:
+	.byte	$ff		; north exit
+	.byte	3		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	spaceship_door_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH
+	.byte	$ff
+
+; walkway4
+location5:
+	.byte	6		; north exit
+	.byte	3		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	walkway4_n_lzsa		; north bg
+	.word	walkway4_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; bunker
+location6:
+	.byte	$ff		; north exit
+	.byte	5		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	bunker_n_lzsa		; north bg
+	.word	bunker_s_lzsa		; south bg
+	.word	bunker_e_lzsa		; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST
 	.byte	$ff
 
 
