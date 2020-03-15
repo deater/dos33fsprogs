@@ -1,10 +1,12 @@
 ;======================
-; open the spaeshipt door
+; open the spaceship door
 
 open_ss_door:
 
 	; check if voltage is 59
-
+	lda	ROCKET_VOLTS
+	cmp	#$59
+	bne	done_ss_door
 
 	; change to open door image
 	ldy	#LOCATION_NORTH_BG
@@ -91,7 +93,7 @@ generator_button_press:
 
 button_top_row:
 
-	lda	XPOS
+	lda	CURSOR_X
 	sec
 	sbc	#24
 	lsr
@@ -108,7 +110,7 @@ button_top_row:
 
 button_bottom_row:
 
-	lda	XPOS
+	lda	CURSOR_X
 	sec
 	sbc	#25
 	lsr
@@ -173,8 +175,8 @@ cbottom_button_off:
 	bne	done_rocket_volts
 
 	lda	GENERATOR_VOLTS
-	cmp	#$59
-	bcs	oops_flipped
+	cmp	#$60
+	bcs	oops_flipped		; bge
 
 	sta	ROCKET_VOLTS
 	jmp	done_rocket_volts

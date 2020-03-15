@@ -9,6 +9,8 @@
 draw_pointer:
 
 
+	; point sprite to right location
+
 	lda	CURSOR_X
 	sta	XPOS
         lda     CURSOR_Y
@@ -84,34 +86,37 @@ finger_point:
 
 check_cursor_left:
 	ldy	#LOCATION_BGS
-	lda	(LOCATION_STRUCT_L),Y
 
 check_left_north:
-	ldy	DIRECTION
-	cpy	#DIRECTION_N
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_N
 	bne	check_left_south
 
 handle_left_north:
 	; check if west exists
+	lda	(LOCATION_STRUCT_L),Y
 	and	#BG_WEST
 	beq	finger_point
 	bne	finger_left
 
 check_left_south:
-	cpy	#DIRECTION_S
+	cmp	#DIRECTION_S
 	bne	check_left_east
 
 handle_left_south:
 	; check if east exists
+	lda	(LOCATION_STRUCT_L),Y
 	and	#BG_EAST
 	beq	finger_point
 	bne	finger_left
 
 check_left_east:
-	cpy	#DIRECTION_E
+	cmp	#DIRECTION_E
 	bne	check_left_west
 handle_left_east:
 	; check if north exists
+	lda	(LOCATION_STRUCT_L),Y
 	and	#BG_NORTH
 	beq	finger_point
 	bne	finger_left
@@ -120,6 +125,7 @@ check_left_west:
 	; we should be only option left
 handle_left_west:
 	; check if south exists
+	lda	(LOCATION_STRUCT_L),Y
 	and	#BG_SOUTH
 	beq	finger_point
 	bne	finger_left
@@ -128,34 +134,37 @@ handle_left_west:
 check_cursor_right:
 
 	ldy	#LOCATION_BGS
-	lda	(LOCATION_STRUCT_L),Y
 
 check_right_north:
-	ldy	DIRECTION
-	cpy	#DIRECTION_N
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_N
 	bne	check_right_south
 
 handle_right_north:
 	; check if east exists
+	lda	(LOCATION_STRUCT_L),Y
 	and	#BG_EAST
 	beq	finger_point
 	bne	finger_right
 
 check_right_south:
-	cpy	#DIRECTION_S
+	cmp	#DIRECTION_S
 	bne	check_right_east
 
 handle_right_south:
 	; check if west exists
+	lda	(LOCATION_STRUCT_L),Y
 	and	#BG_WEST
 	beq	finger_point
 	bne	finger_right
 
 check_right_east:
-	cpy	#DIRECTION_E
+	cmp	#DIRECTION_E
 	bne	check_right_west
 handle_right_east:
 	; check if south exists
+	lda	(LOCATION_STRUCT_L),Y
 	and	#BG_SOUTH
 	beq	finger_point
 	bne	finger_right
@@ -164,6 +173,7 @@ check_right_west:
 	; we should be only option left
 handle_right_west:
 	; check if north exists
+	lda	(LOCATION_STRUCT_L),Y
 	and	#BG_NORTH
 	beq	finger_point
 	bne	finger_right
