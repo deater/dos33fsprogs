@@ -56,6 +56,12 @@ mist_start:
 	sta	SWITCH_BOTTOM_ROW
 	sta	ROCKET_HANDLE_STEP
 
+	sta	ROCKET_NOTE1
+	sta	ROCKET_NOTE2
+	sta	ROCKET_NOTE3
+	sta	ROCKET_NOTE4
+
+
 ; debug
 ;	lda	#1
 ;	sta	GEAR_OPEN

@@ -52,8 +52,10 @@ location0:
 	.word	spaceship_inside_e_lzsa		; east bg
 	.word	spaceship_inside_w_lzsa		; west bg
 	.byte	BG_WEST | BG_EAST | BG_NORTH
-	.byte	$ff		; special exit
-
+	.byte	DIRECTION_N		; special exit
+	.byte	9,29		; special x
+	.byte	2,46		; special y
+	.word	back_to_mist-1	; special function
 
 ; controls
 location1:

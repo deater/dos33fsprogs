@@ -1,7 +1,7 @@
 Selena:
 + turn around?
-+ re-try scenery
 + whole way to tower thing
++ save/restore rocket switch positions to zero page on entry/exit?
 
 main:
 + leave at angle
@@ -90,7 +90,6 @@ MECHE age:
 
 SELENA age:
 + optional mockingboard sound for keyboard?
-+ Linking book
 + Complicated age with sounds
 + That whole rediculous underground cart sequence
 

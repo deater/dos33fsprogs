@@ -10,6 +10,9 @@ mist_link_book:
 	jsr	clear_all
 	jsr	page_flip
 
+	jsr	clear_all
+	jsr	page_flip
+
 	; play sound effect?
 
 	lda	#<audio_link_noise

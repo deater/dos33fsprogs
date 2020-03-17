@@ -30,8 +30,27 @@ selena_start:
 
 	;=================
 	; init vars
-	;	FIXME: we could be re-called from other books
-	;	so don't set location here
+
+	; copy in rocket note puzzle state
+	lda	ROCKET_NOTE1
+	sta	rocket_notes
+	lda	ROCKET_NOTE2
+	sta	rocket_notes+2
+	lda	ROCKET_NOTE3
+	sta	rocket_notes+4
+	lda	ROCKET_NOTE4
+	sta	rocket_notes+6
+
+	; hook up the special functions
+	; these might be disabled if we've been here before
+
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#DIRECTION_E
+	sta	location1,Y	; enable controls
+	lda	#DIRECTION_W
+	sta	location2,Y     ; enable organ
+	lda	#DIRECTION_N
+	sta	location0,Y     ; enable mist exit
 
 	lda	#0
 	sta	LOCATION
@@ -215,6 +234,33 @@ room_frame_no_oflo:
 
 really_exit:
 	jmp	end_level
+
+
+back_to_mist:
+	lda	#$ff
+	sta	LEVEL_OVER
+
+	lda	#16		; pathway outside rocket
+	sta	LOCATION
+	lda	#DIRECTION_E
+	sta	DIRECTION
+
+	lda	#LOAD_MIST
+	sta	WHICH_LOAD
+
+	; save rocket state
+
+	lda	rocket_notes
+	sta	ROCKET_NOTE1
+	lda	rocket_notes+2
+	sta	ROCKET_NOTE2
+	lda	rocket_notes+4
+	sta	ROCKET_NOTE3
+	lda	rocket_notes+6
+	sta	ROCKET_NOTE4
+
+	rts
+
 
 
 	;==========================

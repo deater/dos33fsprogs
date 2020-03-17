@@ -27,8 +27,9 @@ dome_press_second:
 	; disable the organ and controls
 	ldy	#LOCATION_SPECIAL_EXIT
 	lda	#$ff
-	sta	location1,Y
-	sta	location2,Y
+	sta	location1,Y	; disable controls
+	sta	location2,Y	; disable organ
+	sta	location0,Y	; disable mist exit
 
 	; re-route door to selena
 	ldy	#LOCATION_NORTH_EXIT
@@ -43,7 +44,6 @@ dome_press_second:
 	sta	location0,Y
 	lda	#>spaceship_inside_selena_n_lzsa
 	sta	location0+1,Y
-
 
 	; clear screen
 	lda	#0
