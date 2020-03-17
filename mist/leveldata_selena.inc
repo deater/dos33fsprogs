@@ -34,7 +34,8 @@ LOCATION_SPECIAL_FUNC=22		; pointer-1 of function to call on click
 
 locations:
 	.word location0, location1, location2, location3
-	.word location4, location5, location6
+	.word location4, location5, location6, location7
+	.word location8, location9, location10
 
 ; Inside Ship
 location0:
@@ -151,11 +152,11 @@ location5:
 location6:
 	.byte	$ff		; north exit
 	.byte	5		; south exit
-	.byte	$ff		; east exit
+	.byte	7		; east exit
 	.byte	$ff		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_S	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	bunker_n_lzsa		; north bg
 	.word	bunker_s_lzsa		; south bg
@@ -164,4 +165,74 @@ location6:
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST
 	.byte	$ff
 
+; sub room
+location7:
+	.byte	$ff		; north exit
+	.byte	8		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000		; north bg
+	.word	subroom_s_lzsa	; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	BG_SOUTH
+	.byte	$ff
+
+; book room
+location8:
+	.byte	$ff		; north exit
+	.byte	9		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	book_table_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH
+	.byte	$ff
+
+; book
+location9:
+	.byte	$ff		; north exit
+	.byte	10		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	book_mist_closed_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH
+	.byte	$ff
+
+; mist book open
+location10:
+	.byte	$ff		; north exit
+	.byte	8		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	book_mist_open_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH
+	.byte	DIRECTION_S
+	.byte	24,32		; special x
+	.byte	12,22		; special y
+	.word	mist_link_book-1		; special function
 

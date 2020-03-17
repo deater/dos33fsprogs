@@ -22,7 +22,8 @@ mist_graphics.inc:	\
 	step_land3_w.lzsa step_land3_e.lzsa \
 	step_top_e.lzsa step_top_w.lzsa step_top_n.lzsa step_top_s.lzsa \
 	temple_door_n.lzsa temple_door_s.lzsa \
-	temple_center_n.lzsa temple_center_s.lzsa temple_center_e.lzsa temple_center_w.lzsa \
+	temple_center_n.lzsa temple_center_s.lzsa temple_center_e.lzsa \
+	temple_center_w.lzsa temple_center_up.lzsa \
 	red_book_shelf.lzsa \
 	red_book_closed.lzsa \
 	pool_s.lzsa \
@@ -83,6 +84,7 @@ mist_graphics.inc:	\
 	echo "temple_center_s_lzsa: .incbin \"temple_center_s.lzsa\"" >> mist_graphics.inc
 	echo "temple_center_e_lzsa: .incbin \"temple_center_e.lzsa\"" >> mist_graphics.inc
 	echo "temple_center_w_lzsa: .incbin \"temple_center_w.lzsa\"" >> mist_graphics.inc
+	echo "temple_center_up_lzsa: .incbin \"temple_center_up.lzsa\"" >> mist_graphics.inc
 	echo "red_book_closed_lzsa: .incbin \"red_book_closed.lzsa\"" >> mist_graphics.inc
 	echo "red_book_shelf_lzsa: .incbin \"red_book_shelf.lzsa\"" >> mist_graphics.inc
 	echo "pool_s_lzsa: .incbin \"pool_s.lzsa\"" >> mist_graphics.inc

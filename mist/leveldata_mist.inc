@@ -42,7 +42,7 @@ locations:
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
-	.word location36,location37,location38
+	.word location36,location37,location38,location39
 
 ; myst linking book
 location0:
@@ -751,4 +751,21 @@ location38:
 	.byte	15,25		; special x
 	.byte	8,46		; special y
 	.word	open_ss_door-1	; special function
+
+; ceiling of temple
+location39:
+	.byte	12		; north exit
+	.byte	$ff		; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	temple_center_up_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	$ff
 

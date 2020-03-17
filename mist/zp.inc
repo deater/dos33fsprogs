@@ -4,6 +4,11 @@
 NIBCOUNT	= $00
 WHICH_LOAD	= $05
 
+	LOAD_TITLE	= $0
+	LOAD_MIST	= $1
+	LOAD_MECHE	= $2
+	LOAD_SELENA	= $3
+
 ;; Zero page monitor routines addresses
 
 WNDLFT	= $20

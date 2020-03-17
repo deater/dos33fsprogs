@@ -32,27 +32,19 @@ mist_start:
 	sta	CURSOR_X
 	sta	CURSOR_Y
 
-	;=================
-	; init vars
-	;	FIXME: we could be re-called from other books
-	;	so don't set location here
-
-	lda	#0
-	sta	LOCATION
-	lda	#0
-	sta	DIRECTION
-
-
 	lda	LOCATION
 	bne	not_first_time
 
 	; first time init
 	lda	#0
+
 	sta	CLOCK_MINUTE
 	sta	CLOCK_HOUR
 	jsr	clock_inside_reset
 
 	lda	#0
+	sta	DIRECTION
+
 	sta	GEAR_OPEN
 
 	sta	BREAKER_TRIPPED
@@ -182,7 +174,7 @@ really_exit:
 
 
 go_to_meche:
-	lda	#2
+	lda	#LOAD_MECHE
 	sta	WHICH_LOAD
 
 	lda	#$ff
@@ -220,7 +212,7 @@ go_to_meche:
 
 	; linking books
 
-	.include	"link_book_mist.s"
+	.include	"link_book_mist_dock.s"
 
 	; letters
 

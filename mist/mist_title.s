@@ -44,8 +44,10 @@ keyloop:
 
 	bit	KEYRESET
 
-	lda	#1		; load mist
-	sta	5
+	lda	#0
+	sta	LOCATION		; start at first room
+	lda	#LOAD_MIST		; load mist
+	sta	WHICH_LOAD
 	rts
 
 

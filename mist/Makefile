@@ -50,7 +50,7 @@ mist.o:	mist.s zp.inc hardware.inc \
 	common_sprites.inc \
 	leveldata_mist.inc \
 	clock_bridge_puzzle.s clock_sprites.inc \
-	link_book_mist.s \
+	link_book_mist_dock.s \
 	letter_cat.s \
 	marker_switch.s \
 	brother_books.s \
@@ -71,6 +71,7 @@ meche.o:	meche.s zp.inc hardware.inc \
 	common_sprites.inc \
 	leveldata_meche.inc \
 	link_book_meche.s \
+	link_book_mist.s \
 	keyboard.s \
 	draw_pointer.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
@@ -85,6 +86,8 @@ selena.o:	selena.s zp.inc hardware.inc \
 	graphics_selena/selena_graphics.inc \
 	common_sprites.inc \
 	leveldata_selena.inc \
+	link_book_mist.s \
+	end_level.s \
 	keyboard.s \
 	draw_pointer.s \
 	speaker_beeps.s \

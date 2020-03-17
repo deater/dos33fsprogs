@@ -35,6 +35,8 @@ selena_start:
 
 	lda	#0
 	sta	LOCATION
+	sta	LEVEL_OVER
+
 	lda	#DIRECTION_E
 	sta	DIRECTION
 
@@ -78,7 +80,49 @@ game_loop:
 
 	lda	LOCATION
 	cmp	#1
-	bne	nothing_special
+	beq	controls_animation
+	cmp	#10
+	beq	mist_book_animation
+	jmp	nothing_special
+
+mist_book_animation:
+
+	; handle animated linking book
+
+	lda	ANIMATE_FRAME
+	cmp	#6
+	bcc	mist_book_good			; blt
+
+	lda	#0
+	sta	ANIMATE_FRAME
+
+mist_book_good:
+
+	asl
+	tay
+	lda	mist_movie,Y
+	sta	INL
+	lda	mist_movie+1,Y
+	sta	INH
+
+	lda	#24
+	sta	XPOS
+	lda	#12
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$f
+	bne	done_animate_mist_book
+
+	inc	ANIMATE_FRAME
+
+done_animate_mist_book:
+	jmp	nothing_special
+
+
+controls_animation:
 
 	ldy	#LOCATION_SPECIAL_EXIT
 	lda	location1,Y
@@ -161,7 +205,16 @@ nothing_special:
 	inc	FRAMEH
 room_frame_no_oflo:
 
+	;====================================
+	; check level over
+	;====================================
+
+	lda	LEVEL_OVER
+	bne	really_exit
 	jmp	game_loop
+
+really_exit:
+	jmp	end_level
 
 
 	;==========================
@@ -177,6 +230,7 @@ room_frame_no_oflo:
 	.include	"decompress_fast_v2.s"
 	.include	"keyboard.s"
 	.include	"draw_pointer.s"
+	.include	"end_level.s"
 
 	.include	"audio.s"
 
@@ -188,6 +242,8 @@ room_frame_no_oflo:
 
 
 	; linking books
+
+	.include	"link_book_mist.s"
 
 	.include	"common_sprites.inc"
 
