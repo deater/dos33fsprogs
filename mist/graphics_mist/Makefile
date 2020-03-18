@@ -51,7 +51,9 @@ mist_graphics.inc:	\
 	gen_door_closed_n.lzsa gen_door_open_n.lzsa gen_door_s.lzsa \
 	green_steps6_n.lzsa green_steps6_w.lzsa \
 	pad_n.lzsa pad_e.lzsa \
-	spaceship_door_n.lzsa spaceship_door_open_n.lzsa
+	spaceship_door_n.lzsa spaceship_door_open_n.lzsa \
+	tower2_base_w.lzsa tower2_top_w.lzsa \
+	tower2_path_e.lzsa tower2_path_n.lzsa
 	echo "m_link_book_lzsa: .incbin \"m_link_book.lzsa\"" > mist_graphics.inc
 	echo "dock_n_lzsa: .incbin \"dock_n.lzsa\"" >> mist_graphics.inc
 	echo "dock_s_lzsa: .incbin \"dock_s.lzsa\"" >> mist_graphics.inc
@@ -138,6 +140,10 @@ mist_graphics.inc:	\
 	echo "pad_e_lzsa: .incbin \"pad_e.lzsa\"" >> mist_graphics.inc
 	echo "spaceship_door_n_lzsa: .incbin \"spaceship_door_n.lzsa\"" >> mist_graphics.inc
 	echo "spaceship_door_open_n_lzsa: .incbin \"spaceship_door_open_n.lzsa\"" >> mist_graphics.inc
+	echo "tower2_base_w_lzsa: .incbin \"tower2_base_w.lzsa\"" >> mist_graphics.inc
+	echo "tower2_top_w_lzsa: .incbin \"tower2_top_w.lzsa\"" >> mist_graphics.inc
+	echo "tower2_path_e_lzsa: .incbin \"tower2_path_e.lzsa\"" >> mist_graphics.inc
+	echo "tower2_path_n_lzsa: .incbin \"tower2_path_n.lzsa\"" >> mist_graphics.inc
 
 
 %.gr: %.png

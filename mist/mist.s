@@ -205,7 +205,7 @@ go_to_meche:
 
 	.include	"audio.s"
 
-	.include	"graphics_island/mist_graphics.inc"
+	.include	"graphics_mist/mist_graphics.inc"
 
 	.include	"end_level.s"
 

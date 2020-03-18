@@ -1,3 +1,28 @@
+;=======================
+; flip circuit breaker
+
+; if room==42, and with #$fe
+; if room==??, and with #$fd
+
+circuit_breaker:
+
+	lda	LOCATION
+	cmp	#42
+	bne	other_circuit_breaker
+
+	lda	BREAKER_TRIPPED
+	and	#$fe
+	jmp	done_circuit_breaker
+
+other_circuit_breaker:
+	lda	BREAKER_TRIPPED
+	and	#$fd
+
+done_circuit_breaker:
+	sta	BREAKER_TRIPPED
+	rts
+
+
 ;======================
 ; open the spaceship door
 

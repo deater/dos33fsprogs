@@ -46,7 +46,7 @@ MIST:	mist.o
 	ld65 -o MIST mist.o -C ../linker_scripts/apple2_1400.inc
 
 mist.o:	mist.s zp.inc hardware.inc \
-	graphics_island/mist_graphics.inc \
+	graphics_mist/mist_graphics.inc \
 	common_sprites.inc \
 	leveldata_mist.inc \
 	clock_bridge_puzzle.s clock_sprites.inc \

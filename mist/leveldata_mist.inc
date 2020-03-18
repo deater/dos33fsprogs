@@ -43,6 +43,7 @@ locations:
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
+	.word location40,location41,location42
 
 ; myst linking book
 location0:
@@ -768,4 +769,59 @@ location39:
 	.word	$0000			; west bg
 	.byte	BG_NORTH
 	.byte	$ff
+
+; tower2 path
+location40:
+	.byte	41		; north exit
+	.byte	$ff		; south exit
+	.byte	37		; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_W	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	tower2_path_n_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	tower2_path_e_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_EAST
+	.byte	$ff
+
+; tower2 base
+location41:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	$ff		; east exit
+	.byte	42		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	tower2_base_w_lzsa	; west bg
+	.byte	BG_WEST
+	.byte	$ff
+
+; tower2 top
+location42:
+	.byte	$ff		; north exit
+	.byte	$ff		; south exit
+	.byte	$ff		; east exit
+	.byte	41		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	tower2_top_w_lzsa	; west bg
+	.byte	BG_WEST
+	.byte	DIRECTION_W	; special exit
+	.byte	17,22		; special x
+	.byte	12,18		; special y
+	.word	circuit_breaker-1	; special function
+
 
