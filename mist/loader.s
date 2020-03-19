@@ -98,6 +98,21 @@ actual_load:
 	;===================================================
 	;===================================================
 
+load_file_and_execute:
+
+	jsr	opendir_filename
+
+entry_smc:
+	jsr	$1000		; jump to common entry point
+
+	; hope they updated the WHICH_LOAD value
+
+	jmp	which_load_loop
+
+
+	;==============================
+	; setup filename then open/load
+
 opendir_filename:
 
 	; clear out the filename with $A0 (space)
@@ -126,13 +141,7 @@ copy_filename_loop:
 copy_filename_done:
 	jsr	opendir		; open and read entire file into memory
 
-entry_smc:
-	jsr	$1000		; jump to common entry point
-
-	; hope they updated the WHICH_LOAD value
-
-	jmp	which_load_loop
-
+	rts
 
 filenames:
 	.word intro_filename

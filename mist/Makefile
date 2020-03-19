@@ -16,6 +16,7 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST MECHE SELENA
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MIST
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MECHE
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 SELENA
+	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
 ###
 
@@ -36,8 +37,12 @@ HELLO:	hello.bas
 MIST_TITLE:	mist_title.o
 	ld65 -o MIST_TITLE mist_title.o -C ../linker_scripts/apple2_4000.inc
 
-mist_title.o:	mist_title.s zp.inc hardware.inc \
-	graphics_title/mist_title.lzsa
+mist_title.o:	mist_title.s zp.inc hardware.inc common_defines.inc \
+	graphics_title/mist_title.lzsa graphics_title/title_graphics.inc \
+	gr_copy.s gr_offsets.s gr_pageflip.s gr_putsprite_crop.s \
+	text_print.s gr_fast_clear.s decompress_fast_v2.s \
+	keyboard.s draw_pointer.s end_level.s audio.s \
+	link_book_mist_dock.s common_sprites.inc leveldata_title.inc
 	ca65 -o mist_title.o mist_title.s -l mist_title.lst
 
 ####
