@@ -200,9 +200,37 @@ pad_special:
 leave_tower2:
 	lda	#42
 	sta	LOCATION
+
+	lda	#DIRECTION_W
+	sta	DIRECTION
+
 	jsr	change_location
 
 	rts
+
+leave_tower1:
+	lda	#46
+	sta	LOCATION
+
+	lda	#DIRECTION_E
+	sta	DIRECTION
+
+	jsr	change_location
+
+	rts
+
+
+green_house:
+
+	; FIXME: handle switch separately
+
+	lda	#32
+	sta	LOCATION
+
+	jsr	change_location
+
+	rts
+
 
 
 	;==========================

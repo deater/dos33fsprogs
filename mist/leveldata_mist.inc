@@ -468,7 +468,7 @@ location23:
 	.byte	17		; north exit
 	.byte	15		; south exit
 	.byte	$ff		; east exit
-	.byte	32		; west exit
+	.byte	43		; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
@@ -478,7 +478,10 @@ location23:
 	.word	tree4_e_lzsa	; east bg
 	.word	tree4_w_lzsa	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_WEST|BG_EAST
-	.byte	$ff		; special exit
+	.byte	DIRECTION_W	; special exit
+	.byte	6,28		; special x
+	.byte	0,46		; special y
+	.word	green_house-1	; special function
 
 ; tree cabin
 location24:
@@ -854,7 +857,7 @@ location44:
 	.byte	43		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
-	.byte	DIRECTION_E	; north exit_dir
+	.byte	DIRECTION_E|DIRECTION_ONLY_POINT	; north exit_dir
 	.byte	DIRECTION_E	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -869,18 +872,22 @@ location44:
 location45:
 	.byte	$ff		; north exit
 	.byte	$ff		; south exit
-	.byte	46		; east exit
+	.byte	44		; east exit
 	.byte	$ff		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_N	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
 	.word	tower1_base_e_lzsa	; east bg
 	.word	$0000			; west bg
 	.byte	BG_EAST
-	.byte	$ff
+	.byte	DIRECTION_E	; special exit
+	.byte	10,26		; special x
+	.byte	0,46		; special y
+	.word	leave_tower1-1	; special function
+
 
 ; tower1 top
 location46:
@@ -890,11 +897,16 @@ location46:
 	.byte	$ff		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_E|DIRECTION_ONLY_POINT	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
 	.word	tower1_top_e_lzsa	; east bg
 	.word	$0000			; west bg
 	.byte	BG_EAST
-	.byte	$ff
+	.byte	DIRECTION_E	; special exit
+	.byte	16,22		; special x
+	.byte	10,18		; special y
+	.word	circuit_breaker-1	; special function
+
+

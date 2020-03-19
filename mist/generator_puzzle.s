@@ -22,6 +22,21 @@ other_circuit_breaker:
 
 done_circuit_breaker:
 	sta	BREAKER_TRIPPED
+
+	bne	done_turn_on_breaker
+
+turn_on_breaker:
+
+	lda	GENERATOR_VOLTS
+	cmp	#$60
+	bcs	done_turn_on_breaker
+
+	sta	ROCKET_VOLTS
+	sta	ROCKET_VOLTS_DISP
+
+
+done_turn_on_breaker:
+
 	rts
 
 
