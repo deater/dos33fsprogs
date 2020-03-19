@@ -33,6 +33,7 @@ mist_start:
 	sta	CURSOR_Y
 
 	lda	LOCATION
+	cmp	#1		; FIXME
 	bne	not_first_time
 
 	; first time init

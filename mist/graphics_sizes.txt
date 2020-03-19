@@ -62,3 +62,22 @@ lzsa2 version
 	36,324
 
 
+
+
+
+
+Other:  before loading link noise from disk
+
+DISK VOLUME 254
+
+ A 003 HELLO
+ B 004 LOADER
+ B 035 MIST_TITLE
+ B 156 MIST
+ B 071 MECHE
+ B 088 SELENA
+ B 047 LINK_NOISE.BTC
+
+	101k
+
+

@@ -10,13 +10,27 @@ meche_link_book:
 	jsr	clear_all
 	jsr	page_flip
 
+	jsr	clear_all
+	jsr	page_flip
+
+	;====================================
+	; load linking audio (12k) to $9000
+
+	lda	#<linking_filename
+	sta	OUTL
+	lda	#>linking_filename
+	sta	OUTH
+
+        jsr	opendir_filename
+
+
 	; play sound effect?
 
-	lda	#<audio_link_noise
+	lda	#<linking_noise
 	sta	BTC_L
-	lda	#>audio_link_noise
+	lda	#>linking_noise
 	sta	BTC_H
-	ldx	#43		; 45 pages long???
+	ldx	#LINKING_NOISE_LENGTH		; 45 pages long???
 	jsr	play_audio
 
 	lda	#3
@@ -136,4 +150,5 @@ meche_sprite10:
 
 
 
-
+linking_filename:
+	.byte "LINK_NOISE.BTC",0

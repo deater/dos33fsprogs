@@ -189,7 +189,7 @@ really_exit:
 
 
 ;.align $100
-audio_link_noise:
-.incbin "audio/link_noise.btc"
+;audio_link_noise:
+;.incbin "audio/link_noise.btc"
 
 
