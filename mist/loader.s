@@ -145,7 +145,7 @@ copy_filename_done:
 
 filenames:
 	.word intro_filename
-	.word mist_filename,meche_filename,selena_filename
+	.word mist_filename,meche_filename,selena_filename,octagon_filename
 	.word ending_filename
 
 intro_filename:
@@ -156,6 +156,8 @@ meche_filename:
 	.byte "MECHE",0
 selena_filename:
 	.byte "SELENA",0
+octagon_filename:
+	.byte "OCTAGON",0
 ending_filename:
 	.byte "ENDING",0
 

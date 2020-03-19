@@ -1,15 +1,15 @@
 ;=======================
 ; flip circuit breaker
 
-; if room==42, and with #$fe
-; if room==??, and with #$fd
+; if room==MIST_TOWER2_TOP, and with #$fe
+; if room==MIST_TOWER1_TOP, and with #$fd
 
 circuit_breaker:
 
 	bit	$C030		; click speaker
 
 	lda	LOCATION
-	cmp	#42
+	cmp	#MIST_TOWER2_TOP
 	bne	other_circuit_breaker
 
 	lda	BREAKER_TRIPPED
@@ -53,16 +53,16 @@ open_ss_door:
 	; change to open door image
 	ldy	#LOCATION_NORTH_BG
 	lda	#<spaceship_door_open_n_lzsa
-	sta	location38,Y
+	sta	location32,Y				; MIST_ROCKET_CLOSE
 	lda	#>spaceship_door_open_n_lzsa
-	sta	location38+1,Y
+	sta	location32+1,Y				; MIST_ROCKET_CLOSE
 
 	; change to load new level if through
 	ldy	#LOCATION_SPECIAL_FUNC
 	lda	#<(go_to_selena-1)
-	sta	location38,Y
+	sta	location32,Y				; MIST_ROCKET_CLOSE
 	lda	#>(go_to_selena-1)
-	sta	location38+1,Y
+	sta	location32+1,Y				; MIST_ROCKET_CLOSE
 
 	jsr	change_location
 
@@ -91,18 +91,18 @@ go_to_selena:
 open_gen_door:
 
 	ldy	#LOCATION_NORTH_EXIT
-	lda	#36
-	sta	location35,Y
+	lda	#MIST_GENERATOR_ROOM
+	sta	location29,Y			; MIST_GENERATOR_DOOR
 
 	ldy	#LOCATION_NORTH_EXIT_DIR
 	lda	#(DIRECTION_N | DIRECTION_SPLIT | DIRECTION_ONLY_POINT)
-	sta	location35,Y
+	sta	location29,Y			; MIST_GENERATOR_DOOR
 
 	ldy	#LOCATION_NORTH_BG
 	lda	#<gen_door_open_n_lzsa
-	sta	location35,Y
+	sta	location29,Y			; MIST_GENERATOR_DOOR
 	lda	#>gen_door_open_n_lzsa
-	sta	location35+1,Y
+	sta	location29+1,Y			; MIST_GENERATOR_DOOR
 
 	jsr	change_location
 
@@ -129,7 +129,7 @@ needle_strings:
 
 generator_button_press:
 
-	lda	YPOS
+	lda	CURSOR_Y
 	cmp	#38
 	bcs	button_bottom_row		; bge
 

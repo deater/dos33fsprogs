@@ -53,19 +53,14 @@ selena_start:
 	lda	#DIRECTION_N
 	sta	location0,Y     ; enable mist exit
 
-	lda	#0
+	lda	#SELENA_INSIDE_SHIP
 	sta	LOCATION
+
+	lda	#0
 	sta	LEVEL_OVER
 
 	lda	#DIRECTION_E
 	sta	DIRECTION
-
-
-	lda	LOCATION
-	bne	not_first_time
-
-not_first_time:
-
 
 	; set up initial location
 
@@ -99,9 +94,9 @@ game_loop:
 	;====================================
 
 	lda	LOCATION
-	cmp	#1
+	cmp	#SELENA_CONTROLS
 	beq	controls_animation
-	cmp	#10
+	cmp	#SELENA_BOOK_OPEN
 	beq	mist_book_animation
 	jmp	nothing_special
 
@@ -241,7 +236,7 @@ back_to_mist:
 	lda	#$ff
 	sta	LEVEL_OVER
 
-	lda	#16		; pathway outside rocket
+	lda	#MIST_SPACESHIP_FAR		; pathway outside rocket
 	sta	LOCATION
 	lda	#DIRECTION_E
 	sta	DIRECTION

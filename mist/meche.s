@@ -29,23 +29,6 @@ meche_start:
 	sta	CURSOR_X
 	sta	CURSOR_Y
 
-	;=================
-	; init vars
-	;	FIXME: we could be re-called from other books
-	;	so don't set location here
-
-	lda	#0
-	sta	LOCATION
-	lda	#DIRECTION_E
-	sta	DIRECTION
-
-
-	lda	LOCATION
-	bne	not_first_time
-
-not_first_time:
-
-
 	; set up initial location
 
 	jsr	change_location
@@ -78,7 +61,7 @@ game_loop:
 	;====================================
 
 	lda	LOCATION
-	cmp	#2
+	cmp	#MECHE_OPEN_BOOK
 	bne	nothing_special
 
 	; handle animated linking book

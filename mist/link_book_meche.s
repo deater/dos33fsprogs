@@ -33,7 +33,7 @@ meche_link_book:
 	ldx	#LINKING_NOISE_LENGTH		; 45 pages long???
 	jsr	play_audio
 
-	lda	#3
+	lda	#MECHE_ARRIVAL
 	sta	LOCATION
 	lda	#DIRECTION_W
 	sta	DIRECTION

@@ -8,12 +8,13 @@ B2D = ../bmp2dhr/b2d
 
 all:	mist.dsk
 
-mist.dsk:	HELLO LOADER MIST_TITLE MIST MECHE SELENA
+mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON MECHE SELENA
 	cp empty.dsk mist.dsk
 	$(DOS33) -y mist.dsk SAVE A HELLO
 	$(DOS33) -y mist.dsk BSAVE -a 0x1000 LOADER
 	$(DOS33) -y mist.dsk BSAVE -a 0x4000 MIST_TITLE
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MIST
+	$(DOS33) -y mist.dsk BSAVE -a 0x1400 OCTAGON
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MECHE
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 SELENA
 	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
@@ -55,16 +56,33 @@ mist.o:	mist.s zp.inc hardware.inc common_defines.inc \
 	common_sprites.inc \
 	leveldata_mist.inc \
 	clock_bridge_puzzle.s clock_sprites.inc \
-	link_book_mist_dock.s \
 	letter_cat.s \
 	marker_switch.s \
-	brother_books.s \
 	keyboard.s \
 	draw_pointer.s \
 	end_level.s \
 	generator_puzzle.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o mist.o mist.s -l mist.lst
+
+####
+
+OCTAGON:	octagon.o
+	ld65 -o OCTAGON octagon.o -C ../linker_scripts/apple2_1400.inc
+
+octagon.o:	octagon.s zp.inc hardware.inc common_defines.inc \
+	graphics_octagon/octagon_graphics.inc \
+	common_sprites.inc \
+	leveldata_octagon.inc \
+	letter_cat.s \
+	marker_switch.s \
+	brother_books.s \
+	keyboard.s \
+	draw_pointer.s \
+	end_level.s \
+	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	ca65 -o octagon.o octagon.s -l octagon.lst
+
 
 ####
 
@@ -110,4 +128,4 @@ graphics_island/mist_graphics.inc:
 ####
 
 clean:		
-		rm -f *~ *.o *.lst HELLO LOADER MIST_TITLE MIST MECHE SELENA
+		rm -f *~ *.o *.lst HELLO LOADER MIST_TITLE MIST OCTAGON MECHE SELENA

@@ -8,12 +8,12 @@ locations:
 	.word location4, location5, location6, location7
 	.word location8, location9, location10
 
-; Inside Ship
+; SELENA_INSIDE_SHIP		-- Inside Ship
 location0:
-	.byte	$ff		; north exit
-	.byte	$ff		; south exit
-	.byte	1		; east exit
-	.byte	2		; west exit
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SELENA_CONTROLS		; east exit
+	.byte	SELENA_ELECTRIC_ORGAN	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	(DIRECTION_E|DIRECTION_ONLY_POINT)	; east exit_dir
@@ -28,12 +28,12 @@ location0:
 	.byte	2,46		; special y
 	.word	back_to_mist-1	; special function
 
-; controls
+; SELENA_CONTROLS		-- controls
 location1:
-	.byte	$ff		; north exit
-	.byte	$ff		; south exit
-	.byte	0		; east exit
-	.byte	$ff		; west exit
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SELENA_INSIDE_SHIP	; east exit
+	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
@@ -49,12 +49,12 @@ location1:
 	.word	controls_pressed-1		; special function
 
 
-; electric organ
+; SELENA_ELECTRIC_ORGAN		-- electric organ
 location2:
-	.byte	$ff		; north exit
-	.byte	$ff		; south exit
-	.byte	$ff		; east exit
-	.byte	0		; west exit
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	SELENA_INSIDE_SHIP	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
@@ -70,12 +70,12 @@ location2:
 	.word	organ_pressed-1		; special function
 
 
-; walkway1
+; SELENA_WALKWAY1		-- walkway1
 location3:
-	.byte	5		; north exit
-	.byte	4		; south exit
-	.byte	$ff		; east exit
-	.byte	$ff		; west exit
+	.byte	SELENA_WALKWAY4		; north exit
+	.byte	SELENA_SPACESHIP_DOOR	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
@@ -87,12 +87,12 @@ location3:
 	.byte	BG_NORTH
 	.byte	$ff
 
-; spaceship door
+; SELENA_SPACESHIP_DOOR		-- spaceship door
 location4:
-	.byte	$ff		; north exit
-	.byte	3		; south exit
-	.byte	$ff		; east exit
-	.byte	$ff		; west exit
+	.byte	$ff			; north exit
+	.byte	SELENA_WALKWAY1		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_N	; south exit_dir
 	.byte	$ff		; east exit_dir
@@ -104,12 +104,12 @@ location4:
 	.byte	BG_SOUTH
 	.byte	$ff
 
-; walkway4
+; SELENA_WALKWAY4		-- walkway4
 location5:
-	.byte	6		; north exit
-	.byte	3		; south exit
-	.byte	$ff		; east exit
-	.byte	$ff		; west exit
+	.byte	SELENA_BUNKER		; north exit
+	.byte	SELENA_WALKWAY1		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
@@ -121,12 +121,12 @@ location5:
 	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff
 
-; bunker
+; SELENA_BUNKER			-- bunker
 location6:
-	.byte	$ff		; north exit
-	.byte	5		; south exit
-	.byte	7		; east exit
-	.byte	$ff		; west exit
+	.byte	$ff			; north exit
+	.byte	SELENA_WALKWAY4		; south exit
+	.byte	SELENA_SUB_ROOM		; east exit
+	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	DIRECTION_S	; east exit_dir
@@ -138,12 +138,12 @@ location6:
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST
 	.byte	$ff
 
-; sub room
+; SELENA_SUB_ROOM		-- sub room
 location7:
-	.byte	$ff		; north exit
-	.byte	8		; south exit
-	.byte	$ff		; east exit
-	.byte	$ff		; west exit
+	.byte	$ff			; north exit
+	.byte	SELENA_BOOK_ROOM	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
@@ -155,12 +155,12 @@ location7:
 	.byte	BG_SOUTH
 	.byte	$ff
 
-; book room
+; SELENA_BOOK_ROOM		-- book room
 location8:
-	.byte	$ff		; north exit
-	.byte	9		; south exit
-	.byte	$ff		; east exit
-	.byte	$ff		; west exit
+	.byte	$ff			; north exit
+	.byte	SELENA_BOOK_CLOSED	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
@@ -172,12 +172,12 @@ location8:
 	.byte	BG_SOUTH
 	.byte	$ff
 
-; book
+; SELENA_BOOK_CLOSED		-- book
 location9:
-	.byte	$ff		; north exit
-	.byte	10		; south exit
-	.byte	$ff		; east exit
-	.byte	$ff		; west exit
+	.byte	$ff			; north exit
+	.byte	SELENA_BOOK_OPEN	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
@@ -189,12 +189,12 @@ location9:
 	.byte	BG_SOUTH
 	.byte	$ff
 
-; mist book open
+; SELENA_BOOK_OPEN		-- mist book open
 location10:
-	.byte	$ff		; north exit
-	.byte	8		; south exit
-	.byte	$ff		; east exit
-	.byte	$ff		; west exit
+	.byte	$ff			; north exit
+	.byte	SELENA_BOOK_ROOM	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir

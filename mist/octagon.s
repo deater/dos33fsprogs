@@ -1,7 +1,4 @@
-; Mist
-
-; a version of Myst?
-; (yes there's a subtle German joke here)
+; Octagon -- inside the Octagon Temple
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -10,7 +7,7 @@
 	.include "hardware.inc"
 	.include "common_defines.inc"
 
-mist_start:
+octagon_start:
 	;===================
 	; init screen
 	jsr	TEXT
@@ -31,44 +28,6 @@ mist_start:
 	lda	#20
 	sta	CURSOR_X
 	sta	CURSOR_Y
-
-	lda	LOCATION
-	cmp	#MIST_ARRIVAL_DOCK
-	bne	not_first_time
-
-	; first time init
-	lda	#0
-
-	sta	CLOCK_MINUTE
-	sta	CLOCK_HOUR
-	jsr	clock_inside_reset
-
-	lda	#0
-	sta	DIRECTION
-
-	sta	GEAR_OPEN
-
-	sta	BREAKER_TRIPPED
-	sta	GENERATOR_VOLTS
-	sta	ROCKET_VOLTS
-	sta	GENERATOR_VOLTS_DISP
-	sta	ROCKET_VOLTS_DISP
-	sta	SWITCH_TOP_ROW
-	sta	SWITCH_BOTTOM_ROW
-	sta	ROCKET_HANDLE_STEP
-
-	sta	ROCKET_NOTE1
-	sta	ROCKET_NOTE2
-	sta	ROCKET_NOTE3
-	sta	ROCKET_NOTE4
-
-
-; debug
-;	lda	#1
-;	sta	GEAR_OPEN
-;	jsr	open_the_gear
-
-not_first_time:
 
 
 	; set up initial location
@@ -99,43 +58,6 @@ game_loop:
 	;====================================
 	; handle special-case forground logic
 	;====================================
-
-	; handle gear opening
-
-	lda	GEAR_OPEN
-	beq	not_gear_related
-
-	jsr	check_gear_delete
-not_gear_related:
-
-	; handle clock puzzles
-
-	lda	LOCATION
-	cmp	#MIST_CLOCK_PUZZLE	; clock puzzle
-	beq	location_clock
-	cmp	#MIST_CLOCK_INSIDE
-	beq	location_inside_clock
-	bne	location_generator
-
-location_clock:
-	jsr	draw_clock_face
-	jmp	nothing_special
-location_inside_clock:
-	jsr	draw_clock_inside
-	jmp	nothing_special
-
-	; handle generator puzzle
-location_generator:
-	cmp	#MIST_GENERATOR_ROOM
-	bne	nothing_special
-	lda	DIRECTION
-	and	#$f
-	cmp	#DIRECTION_N
-	bne	nothing_special
-
-	jsr	generator_update_volts
-	jsr	generator_draw_buttons
-	jmp	nothing_special
 
 nothing_special:
 
@@ -178,61 +100,6 @@ room_frame_no_oflo:
 really_exit:
 	jmp	end_level
 
-;=================
-; special exits
-
-go_to_meche:
-	lda	#LOAD_MECHE
-	sta	WHICH_LOAD
-
-	lda	#$ff
-	sta	LEVEL_OVER
-
-        rts
-
-
-pad_special:
-	lda	#MIST_TOWER2_PATH
-	sta	LOCATION
-	jsr	change_location
-
-	rts
-
-leave_tower2:
-	lda	#MIST_TOWER2_TOP
-	sta	LOCATION
-
-	lda	#DIRECTION_W
-	sta	DIRECTION
-
-	jsr	change_location
-
-	rts
-
-leave_tower1:
-	lda	#MIST_TOWER1_TOP
-	sta	LOCATION
-
-	lda	#DIRECTION_E
-	sta	DIRECTION
-
-	jsr	change_location
-
-	rts
-
-
-green_house:
-
-	; FIXME: handle switch separately
-
-	lda	#MIST_GREEN_SHACK
-	sta	LOCATION
-
-	jsr	change_location
-
-	rts
-
-
 
 	;==========================
 	; includes
@@ -250,26 +117,21 @@ green_house:
 
 	.include	"audio.s"
 
-	.include	"graphics_mist/mist_graphics.inc"
+	.include	"graphics_octagon/octagon_graphics.inc"
 
 	.include	"end_level.s"
 
 	; puzzles
 
-	.include	"clock_bridge_puzzle.s"
-	.include	"marker_switch.s"
-	.include	"generator_puzzle.s"
+	.include	"brother_books.s"
 
 	; linking books
 
 	; letters
 
-	.include	"letter_cat.s"
-
-
 	.include	"common_sprites.inc"
 
-	.include	"leveldata_mist.inc"
+	.include	"leveldata_octagon.inc"
 
 
 
@@ -278,6 +140,3 @@ green_house:
 ;.align $100
 ;audio_red_page:
 ;.incbin "audio/red_page.btc"
-
-
-

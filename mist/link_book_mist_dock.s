@@ -23,7 +23,7 @@ mist_link_book:
 	ldx	#LINKING_NOISE_LENGTH		; 45 pages long???
 	jsr	play_audio
 
-	lda	#1
+	lda	#MIST_ARRIVAL_DOCK
 	sta	LOCATION
 
 	lda	#LOAD_MIST			; start at Mist

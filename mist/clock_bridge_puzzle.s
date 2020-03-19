@@ -193,24 +193,24 @@ open_the_gear:
 
 yes_gear_open:
 	ldy	#LOCATION_NORTH_EXIT
-	lda	#30
-	sta	location19,Y
+	lda	#MIST_OPEN_GEAR
+	sta	location15,Y			; MIST_GEAR
 
 	ldy	#LOCATION_NORTH_EXIT_DIR
 	lda	#DIRECTION_E
-	sta	location19,Y
+	sta	location15,Y			; MIST_GEAR
 
 	ldy	#LOCATION_NORTH_BG
 	lda	#<gear_open_n_lzsa
-	sta	location19,Y
+	sta	location15,Y			; MIST_GEAR
 	lda	#>gear_open_n_lzsa
-	sta	location19+1,Y
+	sta	location15+1,Y			; MIST_GEAR
 
 	ldy	#LOCATION_SOUTH_BG
 	lda	#<clock_inside_open_lzsa
-	sta	location27,Y
+	sta	location23,Y			; MIST_CLOCK_INSIDE
 	lda	#>clock_inside_open_lzsa
-	sta	location27+1,Y
+	sta	location23+1,Y			; MIST_CLOCK_INSIDE
 
 	jmp	done_open_the_gear
 
@@ -219,23 +219,23 @@ no_gear_open:
 
 	ldy	#LOCATION_NORTH_EXIT
 	lda	#$FF
-	sta	location19,Y
+	sta	location15,Y			; MIST_GEAR
 
 ;	ldy	#LOCATION_NORTH_EXIT_DIR
 ;	lda	#DIRECTION_E
-;	sta	location19,Y
+;	sta	location15,Y
 
 	ldy	#LOCATION_NORTH_BG
 	lda	#<gear_n_lzsa
-	sta	location19,Y
+	sta	location15,Y			; MIST_GEAR
 	lda	#>gear_n_lzsa
-	sta	location19+1,Y
+	sta	location15+1,Y			; MIST_GEAR
 
 	ldy	#LOCATION_SOUTH_BG
-	lda	#<clock_inside_s_lzsa
-	sta	location27,Y
+	lda	#<clock_inside_s_lzsa		; MIST_CLOCK_INSIDE
+	sta	location23,Y
 	lda	#>clock_inside_s_lzsa
-	sta	location27+1,Y
+	sta	location23+1,Y
 
 done_open_the_gear:
 
@@ -254,49 +254,49 @@ raise_bridge:
 	beq	lower_bridge
 
 	ldy	#LOCATION_SOUTH_EXIT
-	lda	#26
-	sta	location25,Y
+	lda	#MIST_CLOCK_ISLAND
+	sta	location21,Y			; MIST_CLOCK_PUZZLE
 
 	ldy	#LOCATION_SOUTH_EXIT_DIR
 	lda	#DIRECTION_S
-	sta	location25,Y
+	sta	location21,Y			; MIST_CLOCK_PUZZLE
 
 	ldy	#LOCATION_SOUTH_BG
 	lda	#<clock_puzzle_bridge_lzsa
-	sta	location25,Y
+	sta	location21,Y			; MIST_CLOCK_PUZZLE
 	lda	#>clock_puzzle_bridge_lzsa
-	sta	location25+1,Y
+	sta	location21+1,Y			; MIST_CLOCK_PUZZLE
 
 	; draw it on other too
 	lda	#<clock_bridge_lzsa
-	sta	location15,Y
+	sta	location11,Y			; MIST_CLOCK
 	lda	#>clock_bridge_lzsa
-	sta	location15+1,Y
+	sta	location11+1,Y			; MIST_CLOCK
 
 	jmp	done_clock_bridge
 
 lower_bridge:
 
 	ldy	#LOCATION_SOUTH_EXIT
-	lda	#18
-	sta	location25,Y
+	lda	#MIST_TREE_CORRIDOR_5
+	sta	location21,Y			; MIST_CLOCK_PUZZLE
 
 	ldy	#LOCATION_SOUTH_EXIT_DIR
 	lda	#DIRECTION_N
-	sta	location25,Y
+	sta	location21,Y			; MIST_CLOCK_PUZZLE
 
 	ldy	#LOCATION_SOUTH_BG
 	lda	#<clock_puzzle_s_lzsa
-	sta	location25,Y
+	sta	location21,Y			; MIST_CLOCK_PUZZLE
 	lda	#>clock_puzzle_s_lzsa
-	sta	location25+1,Y
+	sta	location21+1,Y			; MIST_CLOCK_PUZZLE
 
 	; lower on other too
 
 	lda	#<clock_s_lzsa
-	sta	location15,Y
+	sta	location11,Y			; MIST_CLOCK
 	lda	#>clock_s_lzsa
-	sta	location15+1,Y
+	sta	location11+1,Y			; MIST_CLOCK
 
 done_clock_bridge:
 	jsr	change_location
@@ -430,13 +430,13 @@ check_gear_delete:
 	bne	done_gear_delete
 
 	lda	LOCATION
-	cmp	#4
+	cmp	#MIST_ABOVE_DOCK
 	beq	gear_look1
-	cmp	#3
+	cmp	#MIST_DOCK_STEPS
 	beq	gear_look2
-	cmp	#20
+	cmp	#MIST_GEAR_BASE
 	beq	gear_look2
-	cmp	#5
+	cmp	#MIST_BASE_STEPS
 	beq	gear_look3
 	bne	done_gear_delete
 

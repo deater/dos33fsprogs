@@ -22,12 +22,12 @@ mist_link_book:
 	ldx	#LINKING_NOISE_LENGTH		; 45 pages long???
 	jsr	play_audio
 
-	lda	#39
+	lda	#OCTAGON_CEILING
 	sta	LOCATION
 	lda	#DIRECTION_N
 	sta	DIRECTION
 
-	lda	#LOAD_MIST		; return to MIST
+	lda	#LOAD_OCTAGON		; return to OCTAGON on MIST
 	sta	WHICH_LOAD
 
 	lda	#$ff

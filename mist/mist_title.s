@@ -70,10 +70,6 @@ done_keyloop:
 
 	bit	KEYRESET
 
-	lda	#0
-	sta	LOCATION		; start at first room
-	lda	#LOAD_MIST		; load mist
-	sta	WHICH_LOAD
 
 
 	;===================
@@ -97,12 +93,19 @@ done_keyloop:
 	sta	CURSOR_Y
 
 	lda	#0
-	sta	LOCATION
 	sta	LEVEL_OVER
+
+	; set up initial location
+
+	lda	#TITLE_MIST_LINKING_DOCK
+	sta	LOCATION		; start at first room
+
 	lda	#DIRECTION_N
 	sta	DIRECTION
 
-	; set up initial location
+	lda	#LOAD_MIST		; load mist
+	sta	WHICH_LOAD
+
 
 	jsr	change_location
 
@@ -133,39 +136,9 @@ game_loop:
 	; handle special-case forground logic
 	;====================================
 
-	lda	LOCATION
-	cmp	#2
-	bne	nothing_special
-
 	; handle animated linking book
 
-;	lda	ANIMATE_FRAME
-;	asl
-;	tay
-;	lda	meche_movie,Y
-;	sta	INL
-;	lda	meche_movie+1,Y
-;	sta	INH
-
-;	lda	#22
-;	sta	XPOS
-;	lda	#12
-;	sta	YPOS
-
-;	jsr	put_sprite_crop
-
-;	lda	FRAMEL
-;	and	#$f
-;	bne	done_animate_book
-
-;	inc	ANIMATE_FRAME
-;	lda	ANIMATE_FRAME
-;	cmp	#11
-;	bne	done_animate_book
-;	lda	#0
-;	sta	ANIMATE_FRAME
-
-;done_animate_book:
+	; note: the linking book to the dock doesn't have much action
 
 nothing_special:
 

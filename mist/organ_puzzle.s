@@ -33,7 +33,7 @@ dome_press_second:
 
 	; re-route door to selena
 	ldy	#LOCATION_NORTH_EXIT
-	lda	#3
+	lda	#SELENA_WALKWAY1
 	sta	location0,Y
 	ldy	#LOCATION_NORTH_EXIT_DIR
 	lda	#DIRECTION_N
