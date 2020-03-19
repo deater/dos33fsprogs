@@ -6,6 +6,8 @@
 
 circuit_breaker:
 
+	bit	$C030		; click speaker
+
 	lda	LOCATION
 	cmp	#42
 	bne	other_circuit_breaker

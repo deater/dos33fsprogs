@@ -2,12 +2,14 @@
 	; draw pointer
 	;====================================
 
-	lda	CURSOR_VISIBLE
-	bne	draw_pointer
-	jmp	no_draw_pointer
 
 draw_pointer:
 
+	lda	CURSOR_VISIBLE
+	bne	really_draw_pointer
+	jmp	no_draw_pointer
+
+really_draw_pointer:
 
 	; point sprite to right location
 

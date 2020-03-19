@@ -177,7 +177,8 @@ room_frame_no_oflo:
 really_exit:
 	jmp	end_level
 
-
+;=================
+; special exits
 
 go_to_meche:
 	lda	#LOAD_MECHE
@@ -187,6 +188,21 @@ go_to_meche:
 	sta	LEVEL_OVER
 
         rts
+
+
+pad_special:
+	lda	#40
+	sta	LOCATION
+	jsr	change_location
+
+	rts
+
+leave_tower2:
+	lda	#42
+	sta	LOCATION
+	jsr	change_location
+
+	rts
 
 
 	;==========================
