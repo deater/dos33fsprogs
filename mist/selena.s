@@ -249,8 +249,12 @@ back_to_mist:
 	lda	#LOAD_MIST
 	sta	WHICH_LOAD
 
-	; save rocket state
+	jsr	save_rocket_state
 
+	rts
+
+	; save rocket state
+save_rocket_state:
 	lda	rocket_notes
 	sta	ROCKET_NOTE1
 	lda	rocket_notes+2
@@ -261,7 +265,6 @@ back_to_mist:
 	sta	ROCKET_NOTE4
 
 	rts
-
 
 
 	;==========================
@@ -301,7 +304,7 @@ back_to_mist:
 
 
 ;.align $100
-audio_link_noise:
-.incbin "audio/link_noise.btc"
+;audio_link_noise:
+;.incbin "audio/link_noise.btc"
 
 

@@ -52,18 +52,43 @@ dome_press_second:
 	jsr	clear_all
 	jsr	page_flip
 
-	; play sound effect?
+	jsr	clear_all
+	jsr	page_flip
 
-	lda	#<audio_link_noise
+	;====================================
+	; load linking audio (12k) to $9000
+
+	lda	#<linking_filename
+	sta	OUTL
+	lda	#>linking_filename
+	sta	OUTH
+
+	jsr	opendir_filename
+
+
+	; play sound effect
+
+	lda	#<linking_noise
 	sta	BTC_L
-	lda	#>audio_link_noise
+	lda	#>linking_noise
 	sta	BTC_H
-	ldx	#43             ; 45 pages long???
+	ldx	#LINKING_NOISE_LENGTH	; 45 pages long???
 	jsr	play_audio
 
+	; be sure rocket settings are same if we come back
+
+	jsr	save_rocket_state
+
+	; hack, why is this needed?  screen at $c00 corrupted?
+	; oh... maybe the load from disk over-writes $c00
+
+	jsr	change_location
 
 	rts
 
+
+linking_filename:
+	.byte "LINK_NOISE.BTC",0
 
 
 	;==========================
