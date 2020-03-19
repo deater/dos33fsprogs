@@ -5,6 +5,7 @@
 ; Zero Page
 	.include "zp.inc"
 	.include "hardware.inc"
+	.include "common_defines.inc"
 
 
 selena_start:

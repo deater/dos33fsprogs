@@ -50,7 +50,7 @@ mist_title.o:	mist_title.s zp.inc hardware.inc common_defines.inc \
 MIST:	mist.o
 	ld65 -o MIST mist.o -C ../linker_scripts/apple2_1400.inc
 
-mist.o:	mist.s zp.inc hardware.inc \
+mist.o:	mist.s zp.inc hardware.inc common_defines.inc \
 	graphics_mist/mist_graphics.inc \
 	common_sprites.inc \
 	leveldata_mist.inc \
@@ -71,7 +71,7 @@ mist.o:	mist.s zp.inc hardware.inc \
 MECHE:	meche.o
 	ld65 -o MECHE meche.o -C ../linker_scripts/apple2_1400.inc
 
-meche.o:	meche.s zp.inc hardware.inc \
+meche.o:	meche.s zp.inc hardware.inc common_defines.inc \
 	graphics_meche/meche_graphics.inc \
 	common_sprites.inc \
 	leveldata_meche.inc \
@@ -87,7 +87,7 @@ meche.o:	meche.s zp.inc hardware.inc \
 SELENA:	selena.o
 	ld65 -o SELENA selena.o -C ../linker_scripts/apple2_1400.inc
 
-selena.o:	selena.s zp.inc hardware.inc \
+selena.o:	selena.s zp.inc hardware.inc common_defines.inc \
 	graphics_selena/selena_graphics.inc \
 	common_sprites.inc \
 	leveldata_selena.inc \

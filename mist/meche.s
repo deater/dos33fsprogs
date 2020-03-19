@@ -5,7 +5,7 @@
 ; Zero Page
 	.include "zp.inc"
 	.include "hardware.inc"
-
+	.include "common_defines.inc"
 
 meche_start:
 	;===================
@@ -21,6 +21,7 @@ meche_start:
 
 	lda	#0
 	sta	DRAW_PAGE
+	sta	LEVEL_OVER
 
 	; init cursor
 
@@ -140,7 +141,17 @@ nothing_special:
 	inc	FRAMEH
 room_frame_no_oflo:
 
+	;====================================
+	; check level over
+	;====================================
+
+	lda	LEVEL_OVER
+	bne	really_exit
 	jmp	game_loop
+
+really_exit:
+	jmp	end_level
+
 
 
 	;==========================
@@ -156,6 +167,7 @@ room_frame_no_oflo:
 	.include	"decompress_fast_v2.s"
 	.include	"keyboard.s"
 	.include	"draw_pointer.s"
+	.include	"end_level.s"
 
 	.include	"audio.s"
 

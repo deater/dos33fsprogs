@@ -1,4 +1,3 @@
-m_link_book_lzsa: .incbin "m_link_book.lzsa"
 dock_n_lzsa: .incbin "dock_n.lzsa"
 dock_s_lzsa: .incbin "dock_s.lzsa"
 dock_e_lzsa: .incbin "dock_e.lzsa"

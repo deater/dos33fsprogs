@@ -10,7 +10,6 @@ all:	mist_graphics.inc
 ####
 
 mist_graphics.inc:	\
-	m_link_book.lzsa \
 	dock_n.lzsa dock_s.lzsa dock_e.lzsa dock_w.lzsa \
 	dock_switch_n.lzsa dock_switch_s.lzsa \
 	dock_steps_w.lzsa \
@@ -58,8 +57,7 @@ mist_graphics.inc:	\
 	tower1_trail2_n.lzsa tower1_trail2_w.lzsa tower1_trail2_s.lzsa \
 	tower1_base_e.lzsa \
 	tower1_top_e.lzsa
-	echo "m_link_book_lzsa: .incbin \"m_link_book.lzsa\"" > mist_graphics.inc
-	echo "dock_n_lzsa: .incbin \"dock_n.lzsa\"" >> mist_graphics.inc
+	echo "dock_n_lzsa: .incbin \"dock_n.lzsa\"" > mist_graphics.inc
 	echo "dock_s_lzsa: .incbin \"dock_s.lzsa\"" >> mist_graphics.inc
 	echo "dock_e_lzsa: .incbin \"dock_e.lzsa\"" >> mist_graphics.inc
 	echo "dock_w_lzsa: .incbin \"dock_w.lzsa\"" >> mist_graphics.inc

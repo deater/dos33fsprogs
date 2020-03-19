@@ -262,8 +262,6 @@ green_house:
 
 	; linking books
 
-	.include	"link_book_mist_dock.s"
-
 	; letters
 
 	.include	"letter_cat.s"
@@ -280,7 +278,6 @@ green_house:
 ;.align $100
 ;audio_red_page:
 ;.incbin "audio/red_page.btc"
-;audio_link_noise:
-;.incbin "audio/link_noise.btc"
+
 
 
