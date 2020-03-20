@@ -6,6 +6,7 @@
 locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
+	.word location8
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -134,7 +135,7 @@ location6:
 
 ; MECHE_FORT_DOOR			-- fort door
 location7:
-	.byte	$ff			; north exit
+	.byte	MECHE_FORT_ENTRY		; north exit
 	.byte	MECHE_BRIDGE2		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -147,5 +148,22 @@ location7:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH
+	.byte	$ff		; special exit
+
+; MECHE_FORT_ENTRY			-- fort entryway
+location8:
+	.byte	$ff			; north exit
+	.byte	MECHE_BRIDGE2		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	fort_entry_n_lzsa	; north bg
+	.word	fort_entry_s_lzsa	; south bg
+	.word	fort_entry_e_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST
 	.byte	$ff		; special exit
 

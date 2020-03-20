@@ -16,7 +16,8 @@ meche_graphics.inc:	\
 	meche_book_closed.lzsa meche_book_open.lzsa \
 	fort_view_n.lzsa fort_view_s.lzsa \
 	bridge2_n.lzsa bridge2_s.lzsa bridge2_e.lzsa bridge2_w.lzsa \
-	fort_door_n.lzsa
+	fort_door_n.lzsa \
+	fort_entry_n.lzsa fort_entry_s.lzsa fort_entry_e.lzsa
 	echo "departure_e_lzsa: .incbin \"departure_e.lzsa\"" > meche_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> meche_graphics.inc
 	echo "entrance_e_lzsa: .incbin \"entrance_e.lzsa\"" >> meche_graphics.inc
@@ -32,6 +33,9 @@ meche_graphics.inc:	\
 	echo "bridge2_e_lzsa: .incbin \"bridge2_e.lzsa\"" >> meche_graphics.inc
 	echo "bridge2_w_lzsa: .incbin \"bridge2_w.lzsa\"" >> meche_graphics.inc
 	echo "fort_door_n_lzsa: .incbin \"fort_door_n.lzsa\"" >> meche_graphics.inc
+	echo "fort_entry_n_lzsa: .incbin \"fort_entry_n.lzsa\"" >> meche_graphics.inc
+	echo "fort_entry_s_lzsa: .incbin \"fort_entry_s.lzsa\"" >> meche_graphics.inc
+	echo "fort_entry_e_lzsa: .incbin \"fort_entry_e.lzsa\"" >> meche_graphics.inc
 
 
 %.gr: %.png
