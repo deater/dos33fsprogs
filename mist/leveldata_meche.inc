@@ -5,7 +5,7 @@
 
 locations:
 	.word location0, location1, location2, location3
-	.word location4, location5
+	.word location4, location5, location6, location7
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -99,11 +99,11 @@ location4:
 
 ; MECHE_FORT_VIEW		-- fort view
 location5:
-	.byte	MECHE_FORT_VIEW		; north exit
+	.byte	MECHE_BRIDGE2		; north exit
 	.byte	MECHE_ENTRANCE		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	DIRECTION_S	; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -112,5 +112,40 @@ location5:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff		; special exit
+
+; MECHE_BRIDGE2				-- bridge2
+location6:
+	.byte	MECHE_FORT_DOOR		; north exit
+	.byte	MECHE_FORT_VIEW		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	bridge2_n_lzsa		; north bg
+	.word	bridge2_s_lzsa		; south bg
+	.word	bridge2_e_lzsa		; east bg
+	.word	bridge2_w_lzsa		; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
+	.byte	$ff		; special exit
+
+
+; MECHE_FORT_DOOR			-- fort door
+location7:
+	.byte	$ff			; north exit
+	.byte	MECHE_BRIDGE2		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	fort_door_n_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
 	.byte	$ff		; special exit
 
