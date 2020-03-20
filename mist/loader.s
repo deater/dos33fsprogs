@@ -51,8 +51,18 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 	;===================================================
 	;===================================================
 
+LOAD_TITLE      = $0
+LOAD_MIST       = $1
+LOAD_MECHE      = $2
+LOAD_SELENA     = $3
+LOAD_OCTAGON    = $4
+LOAD_STONEDSHIP = $5
+LOAD_CHANNEL    = $6
+LOAD_ENDING     = $7
+
+
 loader_start:
-	lda	#0
+	lda	#LOAD_TITLE
 	sta	WHICH_LOAD
 
 	jsr	init	; unhook DOS, init nibble table

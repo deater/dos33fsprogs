@@ -17,7 +17,12 @@ meche_graphics.inc:	\
 	fort_view_n.lzsa fort_view_s.lzsa \
 	bridge2_n.lzsa bridge2_s.lzsa bridge2_e.lzsa bridge2_w.lzsa \
 	fort_door_n.lzsa \
-	fort_entry_n.lzsa fort_entry_s.lzsa fort_entry_e.lzsa
+	fort_entry_n.lzsa fort_entry_s.lzsa fort_entry_e.lzsa \
+	westturn_s.lzsa westturn_n.lzsa westturn_w.lzsa westturn_e.lzsa \
+	north_hint_n.lzsa \
+	north_top_n.lzsa north_top_s.lzsa \
+	north_dip_n.lzsa north_dip_s.lzsa \
+	northturn_s.lzsa northturn_n.lzsa northturn_w.lzsa northturn_e.lzsa
 	echo "departure_e_lzsa: .incbin \"departure_e.lzsa\"" > meche_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> meche_graphics.inc
 	echo "entrance_e_lzsa: .incbin \"entrance_e.lzsa\"" >> meche_graphics.inc
@@ -36,6 +41,19 @@ meche_graphics.inc:	\
 	echo "fort_entry_n_lzsa: .incbin \"fort_entry_n.lzsa\"" >> meche_graphics.inc
 	echo "fort_entry_s_lzsa: .incbin \"fort_entry_s.lzsa\"" >> meche_graphics.inc
 	echo "fort_entry_e_lzsa: .incbin \"fort_entry_e.lzsa\"" >> meche_graphics.inc
+	echo "westturn_n_lzsa: .incbin \"westturn_n.lzsa\"" >> meche_graphics.inc
+	echo "westturn_s_lzsa: .incbin \"westturn_s.lzsa\"" >> meche_graphics.inc
+	echo "westturn_e_lzsa: .incbin \"westturn_e.lzsa\"" >> meche_graphics.inc
+	echo "westturn_w_lzsa: .incbin \"westturn_w.lzsa\"" >> meche_graphics.inc
+	echo "north_hint_n_lzsa: .incbin \"north_hint_n.lzsa\"" >> meche_graphics.inc
+	echo "north_top_n_lzsa: .incbin \"north_top_n.lzsa\"" >> meche_graphics.inc
+	echo "north_top_s_lzsa: .incbin \"north_top_s.lzsa\"" >> meche_graphics.inc
+	echo "north_dip_n_lzsa: .incbin \"north_dip_n.lzsa\"" >> meche_graphics.inc
+	echo "north_dip_s_lzsa: .incbin \"north_dip_s.lzsa\"" >> meche_graphics.inc
+	echo "northturn_n_lzsa: .incbin \"northturn_n.lzsa\"" >> meche_graphics.inc
+	echo "northturn_s_lzsa: .incbin \"northturn_s.lzsa\"" >> meche_graphics.inc
+	echo "northturn_e_lzsa: .incbin \"northturn_e.lzsa\"" >> meche_graphics.inc
+	echo "northturn_w_lzsa: .incbin \"northturn_w.lzsa\"" >> meche_graphics.inc
 
 
 %.gr: %.png

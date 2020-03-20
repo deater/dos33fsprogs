@@ -32,45 +32,6 @@ mist_start:
 	sta	CURSOR_X
 	sta	CURSOR_Y
 
-	lda	LOCATION
-	cmp	#MIST_ARRIVAL_DOCK
-	bne	not_first_time
-
-	; first time init
-	lda	#0
-
-	sta	CLOCK_MINUTE
-	sta	CLOCK_HOUR
-	jsr	clock_inside_reset
-
-	lda	#0
-	sta	DIRECTION
-
-	sta	GEAR_OPEN
-
-	sta	BREAKER_TRIPPED
-	sta	GENERATOR_VOLTS
-	sta	ROCKET_VOLTS
-	sta	GENERATOR_VOLTS_DISP
-	sta	ROCKET_VOLTS_DISP
-	sta	SWITCH_TOP_ROW
-	sta	SWITCH_BOTTOM_ROW
-	sta	ROCKET_HANDLE_STEP
-
-	sta	ROCKET_NOTE1
-	sta	ROCKET_NOTE2
-	sta	ROCKET_NOTE3
-	sta	ROCKET_NOTE4
-
-
-; debug
-;	lda	#1
-;	sta	GEAR_OPEN
-;	jsr	open_the_gear
-
-not_first_time:
-
-
 	; set up initial location
 
 	jsr	change_location

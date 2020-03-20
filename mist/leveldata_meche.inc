@@ -6,7 +6,8 @@
 locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
-	.word location8
+	.word location8, location9, location10,location11
+	.word location12,location13
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -166,4 +167,91 @@ location8:
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST
 	.byte	$ff		; special exit
+
+; MECHE_WEST_PLATFORM			-- rotated to west platform
+location9:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_FORT_ENTRY	; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	westturn_n_lzsa	; north bg
+	.word	westturn_s_lzsa	; south bg
+	.word	westturn_e_lzsa	; east bg
+	.word	westturn_w_lzsa	; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
+	.byte	$ff		; special exit
+
+
+; MECHE_NORTH_PLATFORM			-- rotated to north platform
+location10:
+	.byte	$ff			; north exit
+	.byte	MECHE_FORT_ENTRY	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	northturn_n_lzsa	; north bg
+	.word	northturn_s_lzsa	; south bg
+	.word	northturn_e_lzsa	; east bg
+	.word	northturn_w_lzsa	; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
+	.byte	$ff		; special exit
+
+; MECHE_NORTH_HINT			-- hint plate
+location11:
+	.byte	MECHE_NORTH_TOP		; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N		; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	$ff			; west exit_dir
+	.word	north_hint_n_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	$ff		; special exit
+
+; MECHE_NORTH_TOP			-- north top
+location12:
+	.byte	MECHE_NORTH_HINT	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N		; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	$ff			; west exit_dir
+	.word	north_top_n_lzsa	; north bg
+	.word	north_top_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff		; special exit
+
+; MECHE_NORTH_DIP			-- north dip
+location13:
+	.byte	MECHE_NORTH_TOP		; north exit
+	.byte	MECHE_NORTH_PLATFORM	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N		; north exit_dir
+	.byte	DIRECTION_S		; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	$ff			; west exit_dir
+	.word	north_dip_n_lzsa	; north bg
+	.word	north_dip_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff		; special exit
+
 

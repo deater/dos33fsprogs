@@ -95,6 +95,12 @@ done_keyloop:
 	lda	#0
 	sta	LEVEL_OVER
 
+	;============================
+	; init vars
+
+	jsr	init_state
+
+	;============================
 	; set up initial location
 
 	lda	#TITLE_MIST_LINKING_DOCK
@@ -111,9 +117,6 @@ done_keyloop:
 
 	lda	#1
 	sta	CURSOR_VISIBLE		; visible at first
-
-;	lda	#0
-;	sta	ANIMATE_FRAME
 
 
 game_loop:
@@ -201,6 +204,8 @@ really_exit:
 	.include	"end_level.s"
 
 	.include	"audio.s"
+
+	.include	"init_state.s"
 
 	.include	"graphics_title/title_graphics.inc"
 
