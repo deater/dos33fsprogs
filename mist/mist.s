@@ -233,6 +233,20 @@ green_house:
 	rts
 
 
+enter_octagon:
+
+	lda	#OCTAGON_TEMPLE_DOORWAY
+	sta	LOCATION
+
+	lda	#LOAD_OCTAGON
+	sta	WHICH_LOAD
+
+	lda	#$ff
+	sta	LEVEL_OVER
+
+	rts
+
+
 
 	;==========================
 	; includes

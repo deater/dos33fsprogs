@@ -88,7 +88,7 @@ location3:
 	.byte	BG_SOUTH|BG_NORTH|BG_EAST
 	.byte	$ff		; special exit
 
-; base of steps
+; MIST_BASE_STEPS			-- base of steps
 location4:
 	.byte	MIST_ABOVE_DOCK		; north exit
 	.byte	MIST_STEPS_1ST_LANDING	; south exit
@@ -179,7 +179,6 @@ location8:
 
 ; MIST_OUTSIDE_TEMPLE		-- at the top outside temple
 location9:
-;	.byte	10			; north exit
 	.byte	$ff			; north exit
 	.byte	MIST_POOL		; south exit
 	.byte	MIST_STEPS_4TH_LANDING	; east exit
@@ -193,7 +192,10 @@ location9:
 	.word	step_top_e_lzsa	; east bg
 	.word	step_top_w_lzsa	; west bg
 	.byte	BG_EAST|BG_WEST|BG_NORTH|BG_SOUTH	; all dirs
-	.byte	$ff		; special exit
+	.byte	DIRECTION_N		; special exit
+	.byte	10,30		; special x
+	.byte	0,46		; special y
+	.word	enter_octagon-1
 
 
 ; MIST_POOL			-- pool
@@ -253,7 +255,7 @@ location13:
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_N|DIRECTION_ONLY_POINT	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir

@@ -101,6 +101,20 @@ really_exit:
 	jmp	end_level
 
 
+leave_octagon:
+
+        lda     #MIST_OUTSIDE_TEMPLE
+        sta     LOCATION
+
+        lda     #LOAD_MIST
+        sta     WHICH_LOAD
+
+        lda     #$ff
+        sta     LEVEL_OVER
+
+        rts
+
+
 	;==========================
 	; includes
 	;==========================
@@ -138,5 +152,5 @@ really_exit:
 
 
 ;.align $100
-;audio_red_page:
-;.incbin "audio/red_page.btc"
+audio_red_page:
+.incbin "audio/red_page.btc"

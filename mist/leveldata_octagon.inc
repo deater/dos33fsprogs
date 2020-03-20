@@ -23,7 +23,10 @@ location0:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH	; north and south
-	.byte	$ff		; special exit
+	.byte	DIRECTION_S	; special exit
+	.byte	10,30		; special x
+	.byte	0,46		; special y
+	.word	leave_octagon-1	; special function
 
 
 ; OCTAGON_TEMPLE_CENTER		-- temple inside
@@ -33,7 +36,7 @@ location1:
 	.byte	OCTAGON_FIREPLACE	; east exit
 	.byte	OCTAGON_RED_BOOKSHELF	; west exit
 	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
+	.byte	DIRECTION_S|DIRECTION_ONLY_POINT	; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	temple_center_n_lzsa	; north bg
