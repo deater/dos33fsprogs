@@ -31,7 +31,7 @@ meche_graphics.inc:	\
 	red_button_of_oe_w.lzsa red_button_of_ce_w.lzsa \
 	red_button_cf_oe_w.lzsa red_button_cf_ce_w.lzsa \
 	basement_controls_w.lzsa \
-	elevator_basement_w.lzsa \
+	elevator_basement_e.lzsa elevator_basement_w.lzsa \
 	right_hall2_s.lzsa \
 	right_hall_corner_n.lzsa right_hall_corner_w.lzsa \
 	blue_room_center_n.lzsa blue_room_center_s.lzsa \
@@ -85,6 +85,7 @@ meche_graphics.inc:	\
 	echo "red_button_cf_ce_w_lzsa: .incbin \"red_button_cf_ce_w.lzsa\"" >> meche_graphics.inc
 	echo "basement_controls_w_lzsa: .incbin \"basement_controls_w.lzsa\"" >> meche_graphics.inc
 	echo "elevator_basement_w_lzsa: .incbin \"elevator_basement_w.lzsa\"" >> meche_graphics.inc
+	echo "elevator_basement_e_lzsa: .incbin \"elevator_basement_e.lzsa\"" >> meche_graphics.inc
 	echo "right_hall2_s_lzsa: .incbin \"right_hall2_s.lzsa\"" >> meche_graphics.inc
 	echo "right_hall_corner_n_lzsa: .incbin \"right_hall_corner_n.lzsa\"" >> meche_graphics.inc
 	echo "right_hall_corner_w_lzsa: .incbin \"right_hall_corner_w.lzsa\"" >> meche_graphics.inc

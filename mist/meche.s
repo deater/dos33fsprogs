@@ -39,6 +39,7 @@ meche_start:
 	lda	#0
 	sta	ANIMATE_FRAME
 
+	jsr	adjust_basement_door
 
 game_loop:
 	;=================
@@ -136,6 +137,77 @@ really_exit:
 	jmp	end_level
 
 
+	;==================================
+	; elevator stuff
+	;==================================
+
+basement_button:
+
+	; flip switch
+
+	lda	#$80
+	eor	MECHE_ELEVATOR
+	sta	MECHE_ELEVATOR
+
+	jsr	adjust_basement_door
+
+	jsr	change_location
+
+	rts
+
+
+adjust_basement_door:
+
+	lda	MECHE_ELEVATOR
+	bmi	floor_open
+
+
+floor_closed:
+	jmp	floor_closed_elevator_off
+
+floor_open:
+	jmp	floor_open_elevator_off
+
+floor_open_elevator_on:
+
+floor_open_elevator_off:
+
+	ldy	#LOCATION_WEST_EXIT
+	lda	#MECHE_BASEMENT
+	sta	location18,Y
+
+	ldy	#LOCATION_WEST_BG
+
+	lda	#<red_button_of_ce_w_lzsa
+	sta	location18,Y
+	lda	#>red_button_of_ce_w_lzsa
+	jmp	adjust_basement_door_done
+
+floor_closed_elevator_on:
+
+floor_closed_elevator_off:
+
+	ldy	#LOCATION_WEST_EXIT
+	lda	#$ff
+	sta	location18,Y
+
+	ldy	#LOCATION_WEST_BG
+
+	lda	#<red_button_cf_ce_w_lzsa
+	sta	location18,Y
+	lda	#>red_button_cf_ce_w_lzsa
+	jmp	adjust_basement_door_done
+
+
+adjust_basement_door_done:
+	sta	location18+1,Y
+	rts
+
+adjust_fortress_rotation:
+
+	rts
+
+
 
 	;==========================
 	; includes
@@ -162,6 +234,7 @@ really_exit:
 	; linking books
 
 	.include	"link_book_meche.s"
+	.include	"link_book_mist.s"
 
 	.include	"common_sprites.inc"
 

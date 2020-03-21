@@ -33,4 +33,8 @@ init_state:
 	sta	ROCKET_NOTE3
 	sta	ROCKET_NOTE4
 
+	; meche elevator
+	sta	MECHE_ELEVATOR
+	sta	MECHE_ROTATION
+
 	rts

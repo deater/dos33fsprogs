@@ -334,13 +334,17 @@ location18:
 	.byte	DIRECTION_W		; north exit_dir
 	.byte	DIRECTION_S		; south exit_dir
 	.byte	$ff			; east exit_dir
-	.byte	$ff			; west exit_dir
+	.byte	DIRECTION_W		; west exit_dir
 	.word	red_button_n_lzsa	; north bg
 	.word	red_button_s_lzsa	; south bg
 	.word	red_button_e_lzsa	; east bg
 	.word	red_button_cf_ce_w_lzsa	; west bg
 	.byte	BG_WEST|BG_EAST|BG_SOUTH|BG_NORTH
-	.byte	$ff		; special exit
+	.byte	DIRECTION_W	; special exit
+	.byte	28,33		; special x
+	.byte	14,24		; special y
+	.word	basement_button-1		; special function
+
 
 ; MECHE_BASEMENT			-- Basement
 location19:
@@ -354,9 +358,9 @@ location19:
 	.byte	DIRECTION_W		; west exit_dir
 	.word	$0000				; north bg
 	.word	$0000				; south bg
-	.word	$0000				; east bg
+	.word	elevator_basement_e_lzsa	; east bg
 	.word	elevator_basement_w_lzsa	; west bg
-	.byte	BG_WEST
+	.byte	BG_WEST|BG_EAST
 	.byte	$ff		; special exit
 
 ; MECHE_ELEVATOR_ROTATE			-- elevator rotate mechanism
