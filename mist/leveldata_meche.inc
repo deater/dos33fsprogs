@@ -9,7 +9,8 @@ locations:
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
-	.word location20
+	.word location20,location21,location22,location23
+	.word location24
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -157,11 +158,11 @@ location7:
 location8:
 	.byte	MECHE_LEFT_HALL2	; north exit
 	.byte	MECHE_BRIDGE2		; south exit
-	.byte	$ff			; east exit
+	.byte	MECHE_RIGHT_HALL2	; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	fort_entry_n_lzsa	; north bg
 	.word	fort_entry_s_lzsa	; south bg
@@ -327,7 +328,7 @@ location17:
 ; MECHE_RED_BUTTON			-- Button on wall
 location18:
 	.byte	MECHE_CENTER_HALL	; north exit
-	.byte	$ff			; south exit
+	.byte	MECHE_CENTER_HALL2	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_W		; north exit_dir
@@ -375,5 +376,74 @@ location20:
 	.byte	BG_WEST
 	.byte	$ff		; special exit
 
+; MECHE_RIGHT_HALL2			-- looks a lot like left hall2
+location21:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_RIGHT_HALL_CORNER	; east exit
+	.byte	MECHE_FORT_ENTRY	; west exit
+	.byte	$ff			; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	DIRECTION_N		; east exit_dir
+	.byte	DIRECTION_S		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	left_hall2_n_lzsa	; east bg
+	.word	right_hall2_s_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff		; special exit
 
+; MECHE_RIGHT_HALL_CORNER		-- looks a lot like left hall corner
+location22:
+	.byte	MECHE_BLUE_ROOM_CENTER	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	MECHE_RIGHT_HALL2	; west exit
+	.byte	DIRECTION_N		; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	DIRECTION_W		; west exit_dir
+	.word	right_hall_corner_n_lzsa	; north bg
+	.word	$0000				; south bg
+	.word	$0000				; east bg
+	.word	right_hall_corner_w_lzsa	; west bg
+	.byte	BG_NORTH|BG_WEST
+	.byte	$ff		; special exit
+
+
+
+; MECHE_BLUE_ROOM_CENTER		-- center of blue room
+location23:
+	.byte	MECHE_CENTER_HALL2		; north exit
+	.byte	MECHE_RIGHT_HALL2		; south exit
+	.byte	$ff				; east exit
+	.byte	MECHE_RIGHT_HALL_CORNER		; west exit
+	.byte	DIRECTION_N		; north exit_dir
+	.byte	DIRECTION_W		; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	$ff			; west exit_dir
+	.word	blue_room_center_n_lzsa		; north bg
+	.word	blue_room_center_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff		; special exit
+
+
+; MECHE_CENTER_HALL2		-- center hall 2
+location24:
+	.byte	$ff			; north exit
+	.byte	MECHE_BLUE_ROOM_CENTER	; south exit
+	.byte	$ff			; east exit
+	.byte	MECHE_RED_BUTTON	; west exit
+	.byte	DIRECTION_N		; north exit_dir
+	.byte	DIRECTION_S		; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	DIRECTION_N		; west exit_dir
+	.word	center_hall2_n_lzsa	; north bg
+	.word	center_hall2_s_lzsa	; south bg
+	.word	$ff			; east bg
+	.word	center_hall2_w_lzsa	; west bg
+	.byte	BG_WEST|BG_NORTH|BG_SOUTH
+	.byte	$ff		; special exit
 
