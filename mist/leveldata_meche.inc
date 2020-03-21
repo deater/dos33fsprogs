@@ -7,7 +7,9 @@ locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
-	.word location12,location13
+	.word location12,location13,location14,location15
+	.word location16,location17,location18,location19
+	.word location20
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -153,7 +155,7 @@ location7:
 
 ; MECHE_FORT_ENTRY			-- fort entryway
 location8:
-	.byte	$ff			; north exit
+	.byte	MECHE_LEFT_HALL2	; north exit
 	.byte	MECHE_BRIDGE2		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -253,5 +255,125 @@ location13:
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff		; special exit
+
+; MECHE_LEFT_HALL2			-- left hallway
+location14:
+	.byte	MECHE_LEFT_HALL_CORNER	; north exit
+	.byte	MECHE_FORT_ENTRY	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_E		; north exit_dir
+	.byte	DIRECTION_S		; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	$ff			; west exit_dir
+	.word	left_hall2_n_lzsa	; north bg
+	.word	left_hall2_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff		; special exit
+
+; MECHE_LEFT_HALL_CORNER		-- left hallway corner
+location15:
+	.byte	$ff			; north exit
+	.byte	MECHE_LEFT_HALL2	; south exit
+	.byte	MECHE_RED_ROOM_CENTER	; east exit
+	.byte	$ff			; west exit
+	.byte	$ff			; north exit_dir
+	.byte	DIRECTION_S		; south exit_dir
+	.byte	DIRECTION_E		; east exit_dir
+	.byte	$ff			; west exit_dir
+	.word	$0000			; north bg
+	.word	left_hall_corner_s_lzsa	; south bg
+	.word	left_hall_corner_e_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH|BG_EAST
+	.byte	$ff		; special exit
+
+; MECHE_RED_ROOM_CENTER		-- center of red room
+location16:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_CENTER_HALL	; east exit
+	.byte	MECHE_LEFT_HALL_CORNER	; west exit
+	.byte	$ff			; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	DIRECTION_E		; east exit_dir
+	.byte	DIRECTION_S		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	red_room_center_e_lzsa	; east bg
+	.word	red_room_center_w_lzsa	; west bg
+	.byte	BG_WEST|BG_EAST
+	.byte	$ff		; special exit
+
+; MECHE_CENTER_HALL		-- center hall 1
+location17:
+	.byte	$ff			; north exit
+	.byte	MECHE_RED_BUTTON	; south exit
+	.byte	$ff			; east exit
+	.byte	MECHE_RED_ROOM_CENTER	; west exit
+	.byte	$ff			; north exit_dir
+	.byte	DIRECTION_S		; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	DIRECTION_W		; west exit_dir
+	.word	$0000			; north bg
+	.word	center_hall_s_lzsa	; south bg
+	.word	center_hall_e_lzsa	; east bg
+	.word	center_hall_w_lzsa	; west bg
+	.byte	BG_WEST|BG_EAST|BG_SOUTH
+	.byte	$ff		; special exit
+
+; MECHE_RED_BUTTON			-- Button on wall
+location18:
+	.byte	MECHE_CENTER_HALL	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_W		; north exit_dir
+	.byte	DIRECTION_S		; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	$ff			; west exit_dir
+	.word	red_button_n_lzsa	; north bg
+	.word	red_button_s_lzsa	; south bg
+	.word	red_button_e_lzsa	; east bg
+	.word	red_button_cf_ce_w_lzsa	; west bg
+	.byte	BG_WEST|BG_EAST|BG_SOUTH|BG_NORTH
+	.byte	$ff		; special exit
+
+; MECHE_BASEMENT			-- Basement
+location19:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_RED_BUTTON	; east exit
+	.byte	MECHE_ELEVATOR_ROTATE	; west exit
+	.byte	$ff			; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	DIRECTION_E		; east exit_dir
+	.byte	DIRECTION_W		; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	$0000				; east bg
+	.word	elevator_basement_w_lzsa	; west bg
+	.byte	BG_WEST
+	.byte	$ff		; special exit
+
+; MECHE_ELEVATOR_ROTATE			-- elevator rotate mechanism
+location20:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	MECHE_BASEMENT		; west exit
+	.byte	$ff			; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	DIRECTION_E		; west exit_dir
+	.word	$ff				; north bg
+	.word	$ff				; south bg
+	.word	$ff				; east bg
+	.word	basement_controls_w_lzsa	; west bg
+	.byte	BG_WEST
+	.byte	$ff		; special exit
+
 
 

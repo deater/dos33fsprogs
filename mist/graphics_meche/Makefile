@@ -22,7 +22,16 @@ meche_graphics.inc:	\
 	north_hint_n.lzsa \
 	north_top_n.lzsa north_top_s.lzsa \
 	north_dip_n.lzsa north_dip_s.lzsa \
-	northturn_s.lzsa northturn_n.lzsa northturn_w.lzsa northturn_e.lzsa
+	northturn_s.lzsa northturn_n.lzsa northturn_w.lzsa northturn_e.lzsa \
+	left_hall2_n.lzsa left_hall2_s.lzsa \
+	left_hall_corner_s.lzsa left_hall_corner_e.lzsa \
+	red_room_center_e.lzsa red_room_center_w.lzsa \
+	center_hall_e.lzsa center_hall_w.lzsa center_hall_s.lzsa \
+	red_button_n.lzsa red_button_s.lzsa red_button_e.lzsa \
+	red_button_of_oe_w.lzsa red_button_of_ce_w.lzsa \
+	red_button_cf_oe_w.lzsa red_button_cf_ce_w.lzsa \
+	basement_controls_w.lzsa \
+	elevator_basement_w.lzsa
 	echo "departure_e_lzsa: .incbin \"departure_e.lzsa\"" > meche_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> meche_graphics.inc
 	echo "entrance_e_lzsa: .incbin \"entrance_e.lzsa\"" >> meche_graphics.inc
@@ -54,7 +63,24 @@ meche_graphics.inc:	\
 	echo "northturn_s_lzsa: .incbin \"northturn_s.lzsa\"" >> meche_graphics.inc
 	echo "northturn_e_lzsa: .incbin \"northturn_e.lzsa\"" >> meche_graphics.inc
 	echo "northturn_w_lzsa: .incbin \"northturn_w.lzsa\"" >> meche_graphics.inc
-
+	echo "left_hall2_n_lzsa: .incbin \"left_hall2_n.lzsa\"" >> meche_graphics.inc
+	echo "left_hall2_s_lzsa: .incbin \"left_hall2_s.lzsa\"" >> meche_graphics.inc
+	echo "left_hall_corner_s_lzsa: .incbin \"left_hall_corner_s.lzsa\"" >> meche_graphics.inc
+	echo "left_hall_corner_e_lzsa: .incbin \"left_hall_corner_e.lzsa\"" >> meche_graphics.inc
+	echo "red_room_center_e_lzsa: .incbin \"red_room_center_e.lzsa\"" >> meche_graphics.inc
+	echo "red_room_center_w_lzsa: .incbin \"red_room_center_w.lzsa\"" >> meche_graphics.inc
+	echo "center_hall_e_lzsa: .incbin \"center_hall_e.lzsa\"" >> meche_graphics.inc
+	echo "center_hall_w_lzsa: .incbin \"center_hall_w.lzsa\"" >> meche_graphics.inc
+	echo "center_hall_s_lzsa: .incbin \"center_hall_s.lzsa\"" >> meche_graphics.inc
+	echo "red_button_n_lzsa: .incbin \"red_button_n.lzsa\"" >> meche_graphics.inc
+	echo "red_button_s_lzsa: .incbin \"red_button_s.lzsa\"" >> meche_graphics.inc
+	echo "red_button_e_lzsa: .incbin \"red_button_e.lzsa\"" >> meche_graphics.inc
+	echo "red_button_of_oe_w_lzsa: .incbin \"red_button_of_oe_w.lzsa\"" >> meche_graphics.inc
+	echo "red_button_cf_oe_w_lzsa: .incbin \"red_button_cf_oe_w.lzsa\"" >> meche_graphics.inc
+	echo "red_button_of_ce_w_lzsa: .incbin \"red_button_of_ce_w.lzsa\"" >> meche_graphics.inc
+	echo "red_button_cf_ce_w_lzsa: .incbin \"red_button_cf_ce_w.lzsa\"" >> meche_graphics.inc
+	echo "basement_controls_w_lzsa: .incbin \"basement_controls_w.lzsa\"" >> meche_graphics.inc
+	echo "elevator_basement_w_lzsa: .incbin \"elevator_basement_w.lzsa\"" >> meche_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
