@@ -35,7 +35,9 @@ meche_graphics.inc:	\
 	right_hall2_s.lzsa \
 	right_hall_corner_n.lzsa right_hall_corner_w.lzsa \
 	blue_room_center_n.lzsa blue_room_center_s.lzsa \
-	center_hall2_n.lzsa center_hall2_s.lzsa center_hall2_w.lzsa
+	center_hall2_n.lzsa center_hall2_s.lzsa center_hall2_w.lzsa \
+	elevator_path_e.lzsa elevator_path_w.lzsa \
+	elevator_ground_e.lzsa
 	echo "departure_e_lzsa: .incbin \"departure_e.lzsa\"" > meche_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> meche_graphics.inc
 	echo "entrance_e_lzsa: .incbin \"entrance_e.lzsa\"" >> meche_graphics.inc
@@ -94,7 +96,9 @@ meche_graphics.inc:	\
 	echo "center_hall2_n_lzsa: .incbin \"center_hall2_n.lzsa\"" >> meche_graphics.inc
 	echo "center_hall2_s_lzsa: .incbin \"center_hall2_s.lzsa\"" >> meche_graphics.inc
 	echo "center_hall2_w_lzsa: .incbin \"center_hall2_w.lzsa\"" >> meche_graphics.inc
-
+	echo "elevator_path_w_lzsa: .incbin \"elevator_path_w.lzsa\"" >> meche_graphics.inc
+	echo "elevator_path_e_lzsa: .incbin \"elevator_path_e.lzsa\"" >> meche_graphics.inc
+	echo "elevator_ground_e_lzsa: .incbin \"elevator_ground_e.lzsa\"" >> meche_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@

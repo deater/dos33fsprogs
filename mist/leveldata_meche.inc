@@ -10,7 +10,8 @@ locations:
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
-	.word location24
+	.word location24,location25,location26,location27
+	.word location28
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -378,7 +379,10 @@ location20:
 	.word	$ff				; east bg
 	.word	basement_controls_w_lzsa	; west bg
 	.byte	BG_WEST
-	.byte	$ff		; special exit
+	.byte	DIRECTION_W	; special exit
+	.byte	21,29		; special x
+	.byte	14,36		; special y
+	.word	elevator_panel_clicked-1	; special function
 
 ; MECHE_RIGHT_HALL2			-- looks a lot like left hall2
 location21:
@@ -449,5 +453,73 @@ location24:
 	.word	$ff			; east bg
 	.word	center_hall2_w_lzsa	; west bg
 	.byte	BG_WEST|BG_NORTH|BG_SOUTH
+	.byte	$ff		; special exit
+
+; MECHE_ELEVATOR_PATH		-- path to elevator
+location25:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_RED_BUTTON	; east exit
+	.byte	MECHE_ELEVATOR_GROUND	; west exit
+	.byte	$ff			; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	DIRECTION_E		; east exit_dir
+	.byte	DIRECTION_E		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	elevator_path_e_lzsa	; east bg
+	.word	elevator_path_w_lzsa	; west bg
+	.byte	BG_WEST|BG_EAST
+	.byte	$ff		; special exit
+
+; MECHE_ELEVATOR_GROUND		-- elevator ground floor
+location26:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_ELEVATOR_PATH	; east exit
+	.byte	$ff			; west exit
+	.byte	$ff			; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	DIRECTION_E		; east exit_dir
+	.byte	$0000			; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	elevator_ground_e_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_EAST
+	.byte	$ff		; special exit
+
+; MECHE_ELEVATOR_HALF			-- elevator halfway
+location27:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff			; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	DIRECTION_E		; east exit_dir
+	.byte	$0000			; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	elevator_ground_e_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_EAST
+	.byte	$ff		; special exit
+
+; MECHE_ELEVATOR_TOP			-- elevator top
+location28:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff			; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	$0000			; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	elevator_ground_e_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_EAST
 	.byte	$ff		; special exit
 

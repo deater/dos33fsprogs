@@ -63,7 +63,12 @@ game_loop:
 
 	lda	LOCATION
 	cmp	#MECHE_OPEN_BOOK
-	bne	nothing_special
+	beq	animate_meche_book
+	cmp	#MECHE_ELEVATOR_ROTATE
+	beq	animate_elevator_rotate
+
+	jmp	nothing_special
+animate_meche_book:
 
 	; handle animated linking book
 
@@ -92,8 +97,12 @@ game_loop:
 	bne	done_animate_book
 	lda	#0
 	sta	ANIMATE_FRAME
-
 done_animate_book:
+	jmp	nothing_special
+
+
+animate_elevator_rotate:
+	jsr	draw_elevator_panel
 
 nothing_special:
 
@@ -137,78 +146,6 @@ really_exit:
 	jmp	end_level
 
 
-	;==================================
-	; elevator stuff
-	;==================================
-
-basement_button:
-
-	; flip switch
-
-	lda	#$80
-	eor	MECHE_ELEVATOR
-	sta	MECHE_ELEVATOR
-
-	jsr	adjust_basement_door
-
-	jsr	change_location
-
-	rts
-
-
-adjust_basement_door:
-
-	lda	MECHE_ELEVATOR
-	bmi	floor_open
-
-
-floor_closed:
-	jmp	floor_closed_elevator_off
-
-floor_open:
-	jmp	floor_open_elevator_off
-
-floor_open_elevator_on:
-
-floor_open_elevator_off:
-
-	ldy	#LOCATION_WEST_EXIT
-	lda	#MECHE_BASEMENT
-	sta	location18,Y
-
-	ldy	#LOCATION_WEST_BG
-
-	lda	#<red_button_of_ce_w_lzsa
-	sta	location18,Y
-	lda	#>red_button_of_ce_w_lzsa
-	jmp	adjust_basement_door_done
-
-floor_closed_elevator_on:
-
-floor_closed_elevator_off:
-
-	ldy	#LOCATION_WEST_EXIT
-	lda	#$ff
-	sta	location18,Y
-
-	ldy	#LOCATION_WEST_BG
-
-	lda	#<red_button_cf_ce_w_lzsa
-	sta	location18,Y
-	lda	#>red_button_cf_ce_w_lzsa
-	jmp	adjust_basement_door_done
-
-
-adjust_basement_door_done:
-	sta	location18+1,Y
-	rts
-
-adjust_fortress_rotation:
-
-	rts
-
-
-
 	;==========================
 	; includes
 	;==========================
@@ -223,6 +160,8 @@ adjust_fortress_rotation:
 	.include	"keyboard.s"
 	.include	"draw_pointer.s"
 	.include	"end_level.s"
+
+	.include	"meche_rotation.s"
 
 	.include	"audio.s"
 

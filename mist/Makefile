@@ -95,6 +95,7 @@ meche.o:	meche.s zp.inc hardware.inc common_defines.inc \
 	leveldata_meche.inc \
 	link_book_meche.s \
 	link_book_mist.s \
+	meche_rotation.s \
 	keyboard.s \
 	draw_pointer.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
