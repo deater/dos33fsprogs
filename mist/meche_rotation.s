@@ -4,6 +4,87 @@
 	;==================================
 
 
+	;==============================
+	; handle elevator button pushes
+
+elevator_button:
+	lda	CURSOR_Y
+	cmp	#24
+	bcs	elevator_goto_ground
+	cmp	#20
+	bcs	elevator_goto_half
+
+elevator_goto_top:
+
+	; set exit to top floor
+
+	ldy	#LOCATION_EAST_EXIT
+	lda	#MECHE_TOP_FLOOR
+	sta	location26,Y
+
+	; set bg to top-floor backround
+
+	ldy	#LOCATION_EAST_BG
+
+	lda	#<elevator_top_e_lzsa
+	sta	location26,Y
+	lda	#>elevator_top_e_lzsa
+
+	jmp	elevator_button_done
+
+
+elevator_goto_ground:
+
+	; set exit to top floor
+
+	ldy	#LOCATION_EAST_EXIT
+	lda	#MECHE_ELEVATOR_PATH
+	sta	location26,Y
+
+	; set bg to top-floor backround
+
+	ldy	#LOCATION_EAST_BG
+
+	lda	#<elevator_ground_e_lzsa
+	sta	location26,Y
+	lda	#>elevator_ground_e_lzsa
+
+	jmp	elevator_button_done
+
+
+
+
+elevator_goto_half:
+
+	; set exit to top floor
+
+	ldy	#LOCATION_EAST_EXIT
+	lda	#$ff
+	sta	location26,Y
+
+	; set bg to half-floor backround
+
+	ldy	#LOCATION_EAST_BG
+
+	lda	#<elevator_half_e_lzsa
+	sta	location26,Y
+	lda	#>elevator_half_e_lzsa
+
+	jmp	elevator_button_done
+
+
+
+elevator_goto_controls:
+
+elevator_button_done:
+
+	sta	location26+1,Y
+
+	jsr	change_location		; tail call?
+
+	rts
+
+
 	;=================
 	; elevator panel clicked
 
