@@ -11,7 +11,8 @@ locations:
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
-	.word location28
+	.word location28,location29,location30,location31
+	.word location32,location33,location34
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -277,11 +278,11 @@ location14:
 
 ; MECHE_LEFT_HALL_CORNER		-- left hallway corner
 location15:
-	.byte	$ff			; north exit
+	.byte	MECHE_LEFT_HALL_CORNER	; north exit
 	.byte	MECHE_LEFT_HALL2	; south exit
 	.byte	MECHE_RED_ROOM_CENTER	; east exit
 	.byte	$ff			; west exit
-	.byte	$ff			; north exit_dir
+	.byte	DIRECTION_E		; north exit_dir
 	.byte	DIRECTION_S		; south exit_dir
 	.byte	DIRECTION_E		; east exit_dir
 	.byte	$ff			; west exit_dir
@@ -404,11 +405,11 @@ location21:
 ; MECHE_RIGHT_HALL_CORNER		-- looks a lot like left hall corner
 location22:
 	.byte	MECHE_BLUE_ROOM_CENTER	; north exit
-	.byte	$ff			; south exit
+	.byte	MECHE_RIGHT_HALL_CORNER	; south exit
 	.byte	$ff			; east exit
 	.byte	MECHE_RIGHT_HALL2	; west exit
 	.byte	DIRECTION_N		; north exit_dir
-	.byte	$ff			; south exit_dir
+	.byte	DIRECTION_W		; south exit_dir
 	.byte	$ff			; east exit_dir
 	.byte	DIRECTION_W		; west exit_dir
 	.word	right_hall_corner_n_lzsa	; north bg
@@ -501,7 +502,7 @@ location27:
 	.byte	$0000			; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
-	.word	elevator_ground_e_lzsa	; east bg
+	.word	elevator_half_e_lzsa	; east bg
 	.word	$0000			; west bg
 	.byte	BG_EAST
 	.byte	$ff		; special exit
@@ -510,16 +511,120 @@ location27:
 location28:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
-	.byte	$ff			; east exit
+	.byte	MECHE_TOP_FLOOR		; east exit
 	.byte	$ff			; west exit
 	.byte	$ff			; north exit_dir
 	.byte	$ff			; south exit_dir
-	.byte	$ff			; east exit_dir
+	.byte	DIRECTION_E		; east exit_dir
 	.byte	$0000			; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
-	.word	elevator_ground_e_lzsa	; east bg
+	.word	elevator_top_e_lzsa	; east bg
 	.word	$0000			; west bg
 	.byte	BG_EAST
 	.byte	$ff		; special exit
+
+; MECHE_TOP_FLOOR			-- elevator top floor
+location29:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_TOP_FLOOR		; east exit
+	.byte	MECHE_ELEVATOR_TOP	; west exit
+	.byte	$ff			; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	DIRECTION_W		; east exit_dir
+	.byte	DIRECTION_E		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	top_floor_e_lzsa	; east bg
+	.word	top_floor_ye_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff		; special exit
+
+; MECHE_ROTATE_CONTROLS			-- elevator rotate controls
+location30:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_TOP_FLOOR		; east exit
+	.byte	MECHE_ELEVATOR_TOP	; west exit
+	.byte	$ff			; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	DIRECTION_W		; east exit_dir
+	.byte	DIRECTION_E		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	rotate_controls_e_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff		; special exit
+
+
+; MECHE EAST_PLATFORM			-- rotated to east platform
+location31:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_EAST_ARCH		; east exit
+	.byte	MECHE_FORT_ENTRY	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; east exit_dir
+	.byte	DIRECTION_N	; west exit_dir
+	.word	$0000		; north bg
+	.word	$0000		; south bg
+	.word	eastturn_e_lzsa	; east bg
+	.word	eastturn_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff		; special exit
+
+; MECHE EAST_ARCH			-- cool archway
+location32:
+	.byte	$ff			; north exit
+	.byte	MECHE_EAST_TOP		; south exit
+	.byte	$ff			; east exit
+	.byte	MECHE_EAST_PLATFORM	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_E	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	east_arch_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	east_arch_w_lzsa	; west bg
+	.byte	BG_SOUTH|BG_WEST
+	.byte	$ff		; special exit
+
+; MECHE EAST_TOP			-- top of the world
+location33:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_EAST_HINT		; east exit
+	.byte	MECHE_EAST_ARCH		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	east_top_e_lzsa		; east bg
+	.word	east_top_w_lzsa		; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff		; special exit
+
+; MECHE EAST_HINT			-- final hint
+location34:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_EAST_TOP		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_W	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	east_hint_e_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_EAST
+	.byte	$ff		; special exit
+
 

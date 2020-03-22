@@ -37,7 +37,16 @@ meche_graphics.inc:	\
 	blue_room_center_n.lzsa blue_room_center_s.lzsa \
 	center_hall2_n.lzsa center_hall2_s.lzsa center_hall2_w.lzsa \
 	elevator_path_e.lzsa elevator_path_w.lzsa \
-	elevator_ground_e.lzsa
+	elevator_ground_e.lzsa \
+	elevator_top_e.lzsa \
+	elevator_half_e.lzsa \
+	top_floor_e.lzsa \
+	top_floor_ye_w.lzsa top_floor_ne_w.lzsa \
+	rotate_controls_e.lzsa \
+	eastturn_e.lzsa eastturn_w.lzsa \
+	east_arch_w.lzsa east_arch_s.lzsa \
+	east_hint_e.lzsa \
+	east_top_e.lzsa east_top_w.lzsa
 	echo "departure_e_lzsa: .incbin \"departure_e.lzsa\"" > meche_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> meche_graphics.inc
 	echo "entrance_e_lzsa: .incbin \"entrance_e.lzsa\"" >> meche_graphics.inc
@@ -99,6 +108,23 @@ meche_graphics.inc:	\
 	echo "elevator_path_w_lzsa: .incbin \"elevator_path_w.lzsa\"" >> meche_graphics.inc
 	echo "elevator_path_e_lzsa: .incbin \"elevator_path_e.lzsa\"" >> meche_graphics.inc
 	echo "elevator_ground_e_lzsa: .incbin \"elevator_ground_e.lzsa\"" >> meche_graphics.inc
+	echo "elevator_half_e_lzsa: .incbin \"elevator_half_e.lzsa\"" >> meche_graphics.inc
+	echo "elevator_top_e_lzsa: .incbin \"elevator_top_e.lzsa\"" >> meche_graphics.inc
+	echo "top_floor_e_lzsa: .incbin \"top_floor_e.lzsa\"" >> meche_graphics.inc
+	echo "top_floor_ye_w_lzsa: .incbin \"top_floor_ye_w.lzsa\"" >> meche_graphics.inc
+	echo "top_floor_ne_w_lzsa: .incbin \"top_floor_ne_w.lzsa\"" >> meche_graphics.inc
+	echo "rotate_controls_e_lzsa: .incbin \"rotate_controls_e.lzsa\"" >> meche_graphics.inc
+	echo "eastturn_e_lzsa: .incbin \"eastturn_e.lzsa\"" >> meche_graphics.inc
+	echo "eastturn_w_lzsa: .incbin \"eastturn_w.lzsa\"" >> meche_graphics.inc
+	echo "east_arch_w_lzsa: .incbin \"east_arch_w.lzsa\"" >> meche_graphics.inc
+	echo "east_arch_s_lzsa: .incbin \"east_arch_s.lzsa\"" >> meche_graphics.inc
+	echo "east_hint_e_lzsa: .incbin \"east_hint_e.lzsa\"" >> meche_graphics.inc
+	echo "east_top_e_lzsa: .incbin \"east_top_e.lzsa\"" >> meche_graphics.inc
+	echo "east_top_w_lzsa: .incbin \"east_top_w.lzsa\"" >> meche_graphics.inc
+
+
+
+
 
 %.gr: %.png
 	$(PNG2GR) $< $@
