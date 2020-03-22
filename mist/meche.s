@@ -66,6 +66,8 @@ game_loop:
 	beq	animate_meche_book
 	cmp	#MECHE_ELEVATOR_ROTATE
 	beq	animate_elevator_rotate
+	cmp	#MECHE_ROTATE_CONTROLS
+	beq	animate_rotate_controls
 
 	jmp	nothing_special
 animate_meche_book:
@@ -103,6 +105,10 @@ done_animate_book:
 
 animate_elevator_rotate:
 	jsr	draw_elevator_panel
+	jmp	nothing_special
+
+animate_rotate_controls:
+	jsr	draw_rotation_controls
 
 nothing_special:
 

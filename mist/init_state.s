@@ -36,5 +36,9 @@ init_state:
 	; meche elevator
 	sta	MECHE_ELEVATOR
 	sta	MECHE_ROTATION
+	sta	MECHE_LOCK1
+	sta	MECHE_LOCK2
+	sta	MECHE_LOCK3
+	sta	MECHE_LOCK4
 
 	rts

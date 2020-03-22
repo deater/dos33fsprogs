@@ -46,7 +46,8 @@ meche_graphics.inc:	\
 	eastturn_e.lzsa eastturn_w.lzsa \
 	east_arch_w.lzsa east_arch_s.lzsa \
 	east_hint_e.lzsa \
-	east_top_e.lzsa east_top_w.lzsa
+	east_top_e.lzsa east_top_w.lzsa \
+	fort_exit_n.lzsa fort_exit_w.lzsa fort_exit_e.lzsa
 	echo "departure_e_lzsa: .incbin \"departure_e.lzsa\"" > meche_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> meche_graphics.inc
 	echo "entrance_e_lzsa: .incbin \"entrance_e.lzsa\"" >> meche_graphics.inc
@@ -121,10 +122,9 @@ meche_graphics.inc:	\
 	echo "east_hint_e_lzsa: .incbin \"east_hint_e.lzsa\"" >> meche_graphics.inc
 	echo "east_top_e_lzsa: .incbin \"east_top_e.lzsa\"" >> meche_graphics.inc
 	echo "east_top_w_lzsa: .incbin \"east_top_w.lzsa\"" >> meche_graphics.inc
-
-
-
-
+	echo "fort_exit_n_lzsa: .incbin \"fort_exit_n.lzsa\"" >> meche_graphics.inc
+	echo "fort_exit_w_lzsa: .incbin \"fort_exit_w.lzsa\"" >> meche_graphics.inc
+	echo "fort_exit_e_lzsa: .incbin \"fort_exit_e.lzsa\"" >> meche_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
@@ -135,4 +135,4 @@ meche_graphics.inc:	\
 ####
 
 clean:		
-		rm -f *~ *.o *.lst *.gr meche_graphics.inc
+		rm -f *~ *.o *.lst *.gr *.lzsa meche_graphics.inc

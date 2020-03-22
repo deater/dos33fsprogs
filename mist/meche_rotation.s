@@ -1,3 +1,301 @@
+	;=================================
+	;=================================
+	; rotation stuff
+	;=================================
+	;=================================
+
+handle_rotation_controls:
+
+	lda	CURSOR_Y
+
+	cmp	#34
+	bcs	rot_button_press
+
+	lda	CURSOR_X
+	cmp	#19
+	bcc	handle_left	; blt
+
+handle_right:
+
+	lda	MECHE_LEVERS
+	eor	#RIGHT_LEVER
+	sta	MECHE_LEVERS
+
+	rts
+
+handle_left:
+	lda	MECHE_LEVERS
+	eor	#LEFT_LEVER
+	sta	MECHE_LEVERS
+
+	; if flip to 0, then update rotation
+
+	and	#LEFT_LEVER
+	bne	done_handle_left
+
+	jsr	rotate_fortress
+
+done_handle_left:
+	rts
+
+
+rot_button_press:
+
+	; get outside and face elevator
+	lda	#MECHE_TOP_FLOOR
+	sta	LOCATION
+	lda	#DIRECTION_W
+	sta	DIRECTION
+
+	; change to plain elevator
+	ldy	#LOCATION_WEST_BG
+	lda	#<top_floor_ye_w_lzsa
+	sta	location27,Y
+	lda	#>top_floor_ye_w_lzsa
+	sta	location27+1,Y
+
+	; change destination to controls
+	ldy	#LOCATION_WEST_EXIT
+	lda	#MECHE_IN_ELEVATOR
+	sta	location27,Y
+
+	jmp	change_location		; tail call
+
+
+
+
+	;=================================
+	; draw rotation controls
+	;=================================
+
+draw_rotation_controls:
+
+	;==========================
+	; rotate, where applicable
+
+	lda	MECHE_LEVERS
+	and	#LEFT_LEVER
+	beq	draw_rotation
+
+	lda	MECHE_LEVERS
+	and	#RIGHT_LEVER
+	beq	draw_rotation
+
+	lda	FRAMEL
+	and	#$f
+	bne	draw_rotation
+
+	inc	MECHE_ROTATION
+	lda	MECHE_ROTATION
+	and	#$f
+	sta	MECHE_ROTATION
+
+draw_rotation:
+
+	; draw rotation
+	lda	MECHE_ROTATION
+	lsr
+	lsr
+	; 0 -> $C1 at 19,8
+	; 1 -> $10 at 21,4
+	; 2 -> $01 at 19,2
+	; 3 -> $10 at 17,4
+
+	beq	rot0
+	cmp	#1
+	beq	rot1
+	cmp	#2
+	beq	rot2
+	bne	rot3
+
+rot0:
+	lda	#$C1
+	sta	$613
+	sta	$A13
+	jmp	draw_levers
+rot1:
+	lda	#$10
+	sta	$515
+	sta	$915
+	jmp	draw_levers
+rot2:
+	lda	#$01
+	sta	$493
+	sta	$893
+	jmp	draw_levers
+rot3:
+	lda	#$10
+	sta	$511
+	sta	$911
+	jmp	draw_levers
+
+draw_levers:
+	; draw left lever
+	lda	#<lever_sprite
+	sta	INL
+	lda	#>lever_sprite
+	sta	INH
+
+	lda	#15
+	sta	XPOS
+
+	lda	MECHE_LEVERS
+	and	#LEFT_LEVER
+	eor	#LEFT_LEVER
+	asl
+	asl
+	asl
+	clc
+	adc	#20
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	; draw right lever
+
+	lda	#<lever_sprite
+	sta	INL
+	lda	#>lever_sprite
+	sta	INH
+
+	lda	#21
+	sta	XPOS
+
+	lda	MECHE_LEVERS
+	and	#RIGHT_LEVER
+	eor	#RIGHT_LEVER
+	asl
+	asl
+	clc
+	adc	#20
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	rts
+
+lever_sprite:
+	.byte 4,3
+	.byte $0A,$00,$00,$0A
+	.byte $00,$00,$05,$00
+	.byte $A0,$00,$00,$A0
+
+
+
+
+
+	;========================
+	; rotate fortress
+
+rotate_fortress:
+
+	lda	MECHE_ROTATION
+	lsr
+	lsr
+	beq	fortress_south
+	cmp	#1
+	beq	fortress_east
+	cmp	#2
+	beq	fortress_north
+	bne	fortress_west
+
+fortress_south:
+
+	; point exit south (original entry point)
+
+	ldy	#LOCATION_SOUTH_EXIT
+	lda	#MECHE_BRIDGE2
+	sta	location8,Y			; MECH_FORT_ENTRY
+
+	ldy	#LOCATION_SOUTH_EXIT_DIR
+	lda	#DIRECTION_S
+	sta	location8,Y			; MECH_FORT_ENTRY
+
+	; set bg to orig entry background
+
+	ldy	#LOCATION_SOUTH_BG
+
+	lda	#<fort_entry_s_lzsa
+	sta	location8,Y
+	lda	#>fort_entry_s_lzsa
+
+	jmp	rotate_fortress_done
+
+fortress_west:
+
+	; point exit south (original entry point)
+
+	ldy	#LOCATION_SOUTH_EXIT
+	lda	#MECHE_WEST_PLATFORM
+	sta	location8,Y			; MECH_FORT_ENTRY
+
+	ldy	#LOCATION_SOUTH_EXIT_DIR
+	lda	#DIRECTION_W
+	sta	location8,Y			; MECH_FORT_ENTRY
+
+	; set bg to orig entry background
+
+	ldy	#LOCATION_SOUTH_BG
+
+	lda	#<fort_exit_w_lzsa
+	sta	location8,Y
+	lda	#>fort_exit_w_lzsa
+
+	jmp	rotate_fortress_done
+
+fortress_east:
+
+	; point exit south (original entry point)
+
+	ldy	#LOCATION_SOUTH_EXIT
+	lda	#MECHE_EAST_PLATFORM
+	sta	location8,Y			; MECH_FORT_ENTRY
+
+	ldy	#LOCATION_SOUTH_EXIT_DIR
+	lda	#DIRECTION_E
+	sta	location8,Y			; MECH_FORT_ENTRY
+
+	; set bg to orig entry background
+
+	ldy	#LOCATION_SOUTH_BG
+
+	lda	#<fort_exit_e_lzsa
+	sta	location8,Y
+	lda	#>fort_exit_e_lzsa
+
+	jmp	rotate_fortress_done
+
+fortress_north:
+
+	; point exit south (original entry point)
+
+	ldy	#LOCATION_SOUTH_EXIT
+	lda	#MECHE_NORTH_PLATFORM
+	sta	location8,Y			; MECH_FORT_ENTRY
+
+	ldy	#LOCATION_SOUTH_EXIT_DIR
+	lda	#DIRECTION_N
+	sta	location8,Y			; MECH_FORT_ENTRY
+
+	; set bg to orig entry background
+
+	ldy	#LOCATION_SOUTH_BG
+
+	lda	#<fort_exit_n_lzsa
+	sta	location8,Y
+	lda	#>fort_exit_n_lzsa
+
+	jmp	rotate_fortress_done
+
+
+
+rotate_fortress_done:
+
+	sta	location8+1,Y
+
+	rts
+
+
 
 	;==================================
 	; elevator stuff
@@ -56,6 +354,38 @@ elevator_goto_ground:
 
 elevator_goto_half:
 
+	;  if at top kick outside and lower
+	; TODO: animation?
+
+	ldy	#LOCATION_EAST_EXIT
+	cpy	#MECHE_TOP_FLOOR
+	beq	regular_half
+
+half_and_controls:
+	;=============================
+	; kick us out, lower controls
+
+	; get outside and face elevator
+	lda	#MECHE_TOP_FLOOR
+	sta	LOCATION
+	lda	#DIRECTION_W
+	sta	DIRECTION
+
+	; change to elevator roof
+	ldy	#LOCATION_WEST_BG
+	lda	#<top_floor_ne_w_lzsa
+	sta	location27,Y
+	lda	#>top_floor_ne_w_lzsa
+	sta	location27+1,Y
+
+	; change destination to controls
+	ldy	#LOCATION_WEST_EXIT
+	lda	#MECHE_ROTATE_CONTROLS
+	sta	location27,Y
+
+	jmp	elevator_button_done_no_update
+
+regular_half:
 	; set exit to top floor
 
 	ldy	#LOCATION_EAST_EXIT
@@ -79,6 +409,8 @@ elevator_goto_controls:
 elevator_button_done:
 
 	sta	location26+1,Y
+
+elevator_button_done_no_update:
 
 	jsr	change_location		; tail call?
 
