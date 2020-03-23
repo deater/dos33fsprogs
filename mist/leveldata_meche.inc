@@ -12,7 +12,8 @@ locations:
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
-	.word location32
+	.word location32,location33,location34,location35
+	.word location36,location37
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -102,7 +103,11 @@ location4:
 	.word	entrance_e_lzsa		; east bg
 	.word	entrance_w_lzsa		; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
-	.byte	$ff		; special exit
+	.byte	DIRECTION_N	; special exit
+	.byte	6,22		; special x
+	.byte	30,46		; special y
+	.word	try_exit_puzzle-1	; special function
+
 
 ; MECHE_FORT_VIEW		-- fort view
 location5:
@@ -597,5 +602,96 @@ location32:
 	.word	$0000			; west bg
 	.byte	BG_EAST
 	.byte	$ff		; special exit
+
+; MECHE EXIT_PUZZLE			-- exit puzzle
+location33:
+	.byte	MECHE_ENTRANCE		; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_EAST_TOP		; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	exit_puzzle_n_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	DIRECTION_N	; special exit
+	.byte	2,38		; special x
+	.byte	26,48		; special y
+	.word	exit_puzzle_button_press-1	; special function
+
+; MECHE_BOOK_STAIRS			-- stairs down to book
+location34:
+	.byte	MECHE_MIST_BOOK		; north exit
+	.byte	MECHE_ENTRANCE		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	book_stairs_n_lzsa	; north bg
+	.word	book_stairs_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; MECHE_MIST_BOOK			-- book in room
+location35:
+	.byte	MECHE_MIST_CLOSED	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	book_room_n_lzsa	; north bg
+	.word	$ff			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	$ff
+
+; MECHE_MIST_CLOSED			-- book in room
+location36:
+	.byte	MECHE_MIST_OPEN		; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	book_closed_n_lzsa	; north bg
+	.word	$ff			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	$ff
+
+; MECHE_MIST_OPEN			-- book in room
+location37:
+	.byte	MECHE_BOOK_STAIRS	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_S	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	book_open_n_lzsa	; north bg
+	.word	$ff			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte   DIRECTION_N
+	.byte	24,32		; special x
+	.byte	12,22		; special y
+	.word	mist_link_book-1	; special function
 
 

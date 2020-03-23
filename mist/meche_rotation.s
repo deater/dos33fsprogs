@@ -1,3 +1,225 @@
+	;===============================
+	;===============================
+	; exit puzzle stuff
+	;===============================
+	;===============================
+
+exit_puzzle_button_press:
+
+	lda	CURSOR_Y
+	cmp	#40
+	bcs	check_valid	; bge
+
+; handle 4 chars
+	lda	CURSOR_X
+	cmp	#10
+	bcc	handle_char1
+	cmp	#20
+	bcc	handle_char2
+	cmp	#30
+	bcc	handle_char3
+	bcs	handle_char4
+
+handle_char1:
+	inc	MECHE_LOCK1
+	lda	MECHE_LOCK1
+	cmp	#10
+	bne	wrap_lock1
+	lda	#0
+	sta	MECHE_LOCK1
+wrap_lock1:
+	rts
+
+handle_char2:
+	inc	MECHE_LOCK2
+	lda	MECHE_LOCK2
+	cmp	#10
+	bne	wrap_lock2
+	lda	#0
+	sta	MECHE_LOCK2
+wrap_lock2:
+	rts
+
+handle_char3:
+	inc	MECHE_LOCK3
+	lda	MECHE_LOCK3
+	cmp	#10
+	bne	wrap_lock3
+	lda	#0
+	sta	MECHE_LOCK3
+wrap_lock3:
+	rts
+
+handle_char4:
+	inc	MECHE_LOCK4
+	lda	MECHE_LOCK4
+	cmp	#10
+	bne	wrap_lock4
+	lda	#0
+	sta	MECHE_LOCK4
+wrap_lock4:
+	rts
+
+check_valid:
+
+	jsr	check_puzzle_solved
+	bcs	proper_code
+	bcc	not_valid
+
+proper_code:
+
+	; move to in front of open door
+
+	lda	#MECHE_BOOK_STAIRS
+	sta	LOCATION
+	jsr	change_location
+
+not_valid:
+
+	rts
+
+
+	;=======================
+	; check if puzzle solved
+	;=======================
+check_puzzle_solved:
+	lda	MECHE_LOCK1
+	cmp	#2
+	bne	keep_door_closed
+	lda	MECHE_LOCK2
+	cmp	#8
+	bne	keep_door_closed
+	lda	MECHE_LOCK3
+	cmp	#5
+	bne	keep_door_closed
+	lda	MECHE_LOCK4
+	cmp	#1
+	bne	keep_door_closed
+keep_door_open:
+
+	; change to open stairwell
+	ldy	#LOCATION_NORTH_BG
+	lda	#<entrance_open_n_lzsa
+	sta	location4,Y
+	lda	#>entrance_open_n_lzsa
+	sta	location4+1,Y
+
+	; path to stairs handled elsewhere
+
+	; set carry to indicate open
+
+	sec
+
+	rts
+keep_door_closed:
+
+	; change to closed stairwell
+	ldy	#LOCATION_NORTH_BG
+	lda	#<entrance_n_lzsa
+	sta	location4,Y
+	lda	#>entrance_n_lzsa
+	sta	location4+1,Y
+
+	; path to stairs handled elsewhere
+
+	; clear carry to indicate closed
+
+	clc
+
+	rts
+
+
+	;========================
+	; draw sprites
+
+draw_exit_puzzle_sprites:
+
+	lda	MECHE_LOCK1
+	asl
+	tay
+	lda	exit_puzzle_sprites,Y
+	sta	INL
+	lda	exit_puzzle_sprites+1,Y
+	sta	INH
+	lda	#5
+	sta	XPOS
+	lda	#8
+	sta	YPOS
+	jsr	put_sprite_crop
+
+	lda	MECHE_LOCK2
+	asl
+	tay
+	lda	exit_puzzle_sprites,Y
+	sta	INL
+	lda	exit_puzzle_sprites+1,Y
+	sta	INH
+	lda	#14
+	sta	XPOS
+	lda	#8
+	sta	YPOS
+	jsr	put_sprite_crop
+
+	lda	MECHE_LOCK3
+	asl
+	tay
+	lda	exit_puzzle_sprites,Y
+	sta	INL
+	lda	exit_puzzle_sprites+1,Y
+	sta	INH
+	lda	#23
+	sta	XPOS
+	lda	#8
+	sta	YPOS
+	jsr	put_sprite_crop
+
+	lda	MECHE_LOCK4
+	asl
+	tay
+	lda	exit_puzzle_sprites,Y
+	sta	INL
+	lda	exit_puzzle_sprites+1,Y
+	sta	INH
+	lda	#32
+	sta	XPOS
+	lda	#8
+	sta	YPOS
+	jsr	put_sprite_crop
+
+
+	rts
+
+
+	;=========================================
+	; exit puzzle first
+	; we really have two entrance points but on same node
+	; so can't have both??
+
+	; also handle path to book
+
+try_exit_puzzle:
+
+	lda	CURSOR_X
+	cmp	#14
+	bcc	do_puzzle
+
+	; not puzzle, instead go down steps if available
+
+	jsr	check_puzzle_solved
+	bcc	cant_go_there
+
+	lda	#MECHE_BOOK_STAIRS
+	sta	LOCATION
+	jsr	change_location
+cant_go_there:
+	rts
+
+do_puzzle:
+	lda	#MECHE_EXIT_PUZZLE
+	sta	LOCATION
+	jsr	change_location
+	rts
+
 	;=================================
 	;=================================
 	; rotation stuff
@@ -596,3 +818,96 @@ elevator3:
 	.byte 3,2
 	.byte $f0,$f0,$0f
 	.byte $0f,$0f,$f0
+
+
+
+exit_puzzle_sprites:
+	.word	exit_char0,exit_char1,exit_char2,exit_char3,exit_char4
+	.word	exit_char5,exit_char6,exit_char7,exit_char8,exit_char9
+
+exit_char0: ; +
+	.byte 4,5
+	.byte $ff,$4f,$4f,$ff
+	.byte $ff,$44,$44,$ff
+	.byte $44,$44,$44,$44
+	.byte $ff,$44,$44,$ff
+	.byte $ff,$f4,$f4,$ff
+
+exit_char1: ; half circle
+	.byte 4,5
+	.byte $ff,$4f,$44,$ff
+	.byte $4f,$44,$44,$ff
+	.byte $44,$44,$44,$ff
+	.byte $ff,$44,$44,$ff
+	.byte $ff,$ff,$f4,$ff
+
+exit_char2: ; Cyan Logo
+	.byte 4,5
+	.byte $4f,$f4,$f4,$4f
+	.byte $44,$ff,$ff,$44
+	.byte $44,$ff,$ff,$44
+	.byte $44,$ff,$ff,$44
+	.byte $f4,$ff,$ff,$f4
+
+exit_char3: ; Right Triangle
+	.byte 4,5
+	.byte $44,$44,$44,$44
+	.byte $44,$44,$44,$ff
+	.byte $44,$44,$f4,$ff
+	.byte $44,$f4,$ff,$ff
+	.byte $f4,$ff,$ff,$ff
+
+exit_char4: ; split square
+	.byte 4,5
+	.byte $44,$f4,$ff,$44
+	.byte $44,$ff,$ff,$44
+	.byte $44,$ff,$ff,$44
+	.byte $44,$ff,$ff,$44
+	.byte $f4,$ff,$f4,$f4
+
+exit_char5: ; spikes with ball
+	.byte 4,5
+	.byte $ff,$44,$44,$ff
+	.byte $ff,$f4,$f4,$ff
+	.byte $44,$ff,$ff,$44
+	.byte $44,$ff,$ff,$44
+	.byte $f4,$ff,$ff,$f4
+
+exit_char6: ; ping pong
+	.byte 4,5
+	.byte $44,$ff,$44,$44
+	.byte $f4,$4f,$ff,$ff
+	.byte $ff,$f4,$4f,$ff
+	.byte $ff,$ff,$f4,$4f
+	.byte $ff,$ff,$ff,$f4
+
+exit_char7: ; zig-zag
+	.byte 4,5
+	.byte $f4,$44,$4f,$ff
+	.byte $ff,$4f,$44,$f4
+	.byte $f4,$44,$4f,$ff
+	.byte $ff,$4f,$44,$f4
+	.byte $f4,$f4,$ff,$ff
+
+exit_char8: ; triangles alternating
+	.byte 4,5
+	.byte $44,$44,$ff,$44
+	.byte $44,$44,$ff,$44
+	.byte $44,$ff,$4f,$44
+	.byte $44,$ff,$44,$44
+	.byte $f4,$ff,$f4,$f4
+
+exit_char9: ; circle with square
+	.byte 4,5
+	.byte $4f,$f4,$f4,$4f
+	.byte $44,$4f,$4f,$44
+	.byte $44,$44,$44,$44
+	.byte $44,$ff,$ff,$44
+	.byte $ff,$f4,$f4,$ff
+
+
+
+
+
+
+

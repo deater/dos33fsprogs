@@ -41,6 +41,8 @@ meche_start:
 
 	jsr	adjust_basement_door
 
+	jsr	check_puzzle_solved
+
 game_loop:
 	;=================
 	; reset things
@@ -68,6 +70,10 @@ game_loop:
 	beq	animate_elevator_rotate
 	cmp	#MECHE_ROTATE_CONTROLS
 	beq	animate_rotate_controls
+	cmp	#MECHE_EXIT_PUZZLE
+	beq	animate_meche_puzzle
+	cmp	#MECHE_MIST_OPEN
+	beq	animate_mist_book
 
 	jmp	nothing_special
 animate_meche_book:
@@ -109,6 +115,43 @@ animate_elevator_rotate:
 
 animate_rotate_controls:
 	jsr	draw_rotation_controls
+	jmp	nothing_special
+
+animate_meche_puzzle:
+	jsr	draw_exit_puzzle_sprites
+	jmp	nothing_special
+
+animate_mist_book:
+	lda	ANIMATE_FRAME
+	cmp	#6
+	bcc	mist_book_good			; blt
+
+	lda	#0
+	sta	ANIMATE_FRAME
+
+mist_book_good:
+
+	asl
+	tay
+	lda	mist_movie,Y
+	sta	INL
+	lda	mist_movie+1,Y
+	sta	INH
+
+	lda	#24
+	sta	XPOS
+	lda	#12
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$f
+	bne	done_animate_mist_book
+
+	inc	ANIMATE_FRAME
+
+done_animate_mist_book:
 
 nothing_special:
 
