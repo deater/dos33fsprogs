@@ -13,7 +13,7 @@ mist_link_book:
 
 	jsr	clear_all
 	jsr	page_flip
-
+;.if 0
 	; play sound effect?
 
 	lda	#<linking_noise
@@ -28,6 +28,26 @@ mist_link_book:
 
 	lda	#LOAD_MIST			; start at Mist
 	sta	WHICH_LOAD
+;.endif
+
+.if 0
+	lda	#MECHE_INSIDE_GEAR
+	sta	LOCATION
+	lda	#LOAD_MECHE
+	sta	WHICH_LOAD
+	lda	#DIRECTION_E
+	sta	DIRECTION
+.endif
+
+.if 0
+	lda	#MECHE_ROTATE_CONTROLS
+	sta	LOCATION
+	lda	#LOAD_MECHE
+	sta	WHICH_LOAD
+	lda	#DIRECTION_E
+	sta	DIRECTION
+.endif
+
 
 	lda	#$ff
 	sta	LEVEL_OVER

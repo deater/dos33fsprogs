@@ -146,6 +146,13 @@ go_to_meche:
 	lda	#LOAD_MECHE
 	sta	WHICH_LOAD
 
+	lda     #MECHE_INSIDE_GEAR
+        sta     LOCATION
+
+        lda     #DIRECTION_E
+        sta     DIRECTION
+
+
 	lda	#$ff
 	sta	LEVEL_OVER
 
