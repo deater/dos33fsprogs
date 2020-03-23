@@ -5,6 +5,11 @@
 init_state:
 	lda	#0
 
+	; book pages
+	sta	RED_PAGES_TAKEN
+	sta	BLUE_PAGES_TAKEN
+	sta	HOLDING_PAGE
+
 	; init clock puzzles
 	sta	CLOCK_MINUTE
 	sta	CLOCK_HOUR

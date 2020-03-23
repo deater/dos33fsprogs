@@ -92,6 +92,7 @@ MECHE:	meche.o
 meche.o:	meche.s zp.inc hardware.inc common_defines.inc \
 	graphics_meche/meche_graphics.inc \
 	common_sprites.inc \
+	page_sprites.inc \
 	leveldata_meche.inc \
 	link_book_meche.s \
 	link_book_mist.s \

@@ -81,6 +81,32 @@ finger_not_special:
 	; otherwise, finger_point
 
 finger_point:
+	lda	HOLDING_PAGE
+	beq	real_finger_point
+	cmp	#HOLDING_BLUE_PAGE
+	beq	blue_finger
+	cmp	#HOLDING_WHITE_PAGE
+	beq	white_finger
+
+red_finger:
+	lda     #<finger_red_page_sprite
+	sta	INL
+	lda     #>finger_red_page_sprite
+	jmp	finger_draw
+
+blue_finger:
+	lda     #<finger_blue_page_sprite
+	sta	INL
+	lda     #>finger_blue_page_sprite
+	jmp	finger_draw
+
+white_finger:
+	lda     #<finger_white_page_sprite
+	sta	INL
+	lda     #>finger_white_page_sprite
+	jmp	finger_draw
+
+real_finger_point:
 	lda     #<finger_point_sprite
 	sta	INL
 	lda     #>finger_point_sprite
@@ -168,8 +194,9 @@ handle_right_east:
 	; check if south exists
 	lda	(LOCATION_STRUCT_L),Y
 	and	#BG_SOUTH
-	beq	finger_point
 	bne	finger_right
+;	beq	finger_point
+	jmp	finger_point
 
 check_right_west:
 	; we should be only option left
@@ -177,9 +204,9 @@ handle_right_west:
 	; check if north exists
 	lda	(LOCATION_STRUCT_L),Y
 	and	#BG_NORTH
-	beq	finger_point
 	bne	finger_right
-
+;	beq	finger_point
+	jmp	finger_point
 
 
 finger_left:

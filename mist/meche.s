@@ -74,6 +74,10 @@ game_loop:
 	beq	animate_meche_puzzle
 	cmp	#MECHE_MIST_OPEN
 	beq	animate_mist_book
+	cmp	#MECHE_BLUE_SECRET_ROOM
+	beq	fg_draw_blue_page
+	cmp	#MECHE_RED_SECRET_ROOM
+	beq	fg_draw_red_page
 
 	jmp	nothing_special
 animate_meche_book:
@@ -152,6 +156,16 @@ mist_book_good:
 	inc	ANIMATE_FRAME
 
 done_animate_mist_book:
+	jmp	nothing_special
+
+
+fg_draw_red_page:
+	jsr	draw_red_page
+	jmp	nothing_special
+
+fg_draw_blue_page:
+	jsr	draw_blue_page
+	jmp	nothing_special
 
 nothing_special:
 
@@ -195,6 +209,49 @@ really_exit:
 	jmp	end_level
 
 
+	;=============================
+draw_red_page:
+
+	lda	RED_PAGES_TAKEN
+	and	#MECHE_PAGE
+	bne	no_draw_page
+
+	lda	#22
+	sta	XPOS
+	lda	#14
+	sta	YPOS
+
+	lda	#<red_page_sprite
+	sta	INL
+	lda	#>red_page_sprite
+	sta	INH
+
+	jmp	put_sprite_crop		; tail call
+
+
+draw_blue_page:
+
+	lda	BLUE_PAGES_TAKEN
+	and	#MECHE_PAGE
+	bne	no_draw_page
+
+	lda	#15
+	sta	XPOS
+	lda	#34
+	sta	YPOS
+
+	lda	#<blue_page_sprite
+	sta	INL
+	lda	#>blue_page_sprite
+	sta	INH
+
+	jmp	put_sprite_crop		; tail call
+
+no_draw_page:
+	rts
+
+
+
 	;==========================
 	; includes
 	;==========================
@@ -225,15 +282,11 @@ really_exit:
 	.include	"link_book_mist.s"
 
 	.include	"common_sprites.inc"
+	.include	"page_sprites.inc"
 
 	.include	"leveldata_meche.inc"
 
 
 
-
-
-;.align $100
-;audio_link_noise:
-;.incbin "audio/link_noise.btc"
 
 

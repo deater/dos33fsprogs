@@ -1,3 +1,59 @@
+
+	;==============================
+	; book page stuff
+	;==============================
+
+take_blue_page:
+
+	; FIXME: if we came back we could return page
+	;	should check to see if carrying first
+	;	also what if holding red, click blu
+
+	lda	BLUE_PAGES_TAKEN
+	eor	#MECHE_PAGE
+	sta	BLUE_PAGES_TAKEN
+
+	; FIXME: if holding another page, put it down?
+
+	lda	#HOLDING_BLUE_PAGE
+	sta	HOLDING_PAGE
+
+	rts
+
+enter_blue_secret:
+
+	lda	#MECHE_BLUE_SECRET_DOOR
+	sta	LOCATION
+	jsr	change_location
+
+	rts
+
+take_red_page:
+
+	; FIXME: if we came back we could return page
+	;	should check to see if carrying first
+	;	also what if holding red, click blu
+
+	lda	RED_PAGES_TAKEN
+	eor	#MECHE_PAGE
+	sta	RED_PAGES_TAKEN
+
+	; FIXME: if holding another page, put it down?
+
+	lda	#HOLDING_RED_PAGE
+	sta	HOLDING_PAGE
+
+	rts
+
+enter_red_secret:
+
+	lda	#MECHE_RED_SECRET_DOOR
+	sta	LOCATION
+	jsr	change_location
+
+	rts
+
+
 	;===============================
 	;===============================
 	; exit puzzle stuff

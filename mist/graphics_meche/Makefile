@@ -26,7 +26,7 @@ meche_graphics.inc:	\
 	northturn_s.lzsa northturn_n.lzsa northturn_w.lzsa northturn_e.lzsa \
 	left_hall2_n.lzsa left_hall2_s.lzsa \
 	left_hall_corner_s.lzsa left_hall_corner_e.lzsa \
-	red_room_center_e.lzsa red_room_center_w.lzsa \
+	red_room_center_n.lzsa red_room_center_s.lzsa red_room_center_e.lzsa red_room_center_w.lzsa \
 	center_hall_e.lzsa center_hall_w.lzsa center_hall_s.lzsa \
 	red_button_n.lzsa red_button_s.lzsa red_button_e.lzsa \
 	red_button_of_oe_w.lzsa red_button_of_ce_w.lzsa \
@@ -36,6 +36,7 @@ meche_graphics.inc:	\
 	right_hall2_s.lzsa \
 	right_hall_corner_n.lzsa right_hall_corner_w.lzsa \
 	blue_room_center_n.lzsa blue_room_center_s.lzsa \
+	blue_room_center_e.lzsa blue_room_center_w.lzsa \
 	center_hall2_n.lzsa center_hall2_s.lzsa center_hall2_w.lzsa \
 	elevator_path_e.lzsa elevator_path_w.lzsa \
 	elevator_ground_e.lzsa \
@@ -52,7 +53,9 @@ meche_graphics.inc:	\
 	exit_puzzle_n.lzsa \
 	book_stairs_n.lzsa book_stairs_s.lzsa \
 	book_room_n.lzsa \
-	book_open_n.lzsa book_closed_n.lzsa
+	book_open_n.lzsa book_closed_n.lzsa \
+	blue_secret_door_w.lzsa blue_secret_room_w.lzsa \
+	red_secret_door_s.lzsa red_secret_room_s.lzsa
 	echo "departure_e_lzsa: .incbin \"departure_e.lzsa\"" > meche_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> meche_graphics.inc
 	echo "entrance_e_lzsa: .incbin \"entrance_e.lzsa\"" >> meche_graphics.inc
@@ -91,6 +94,8 @@ meche_graphics.inc:	\
 	echo "left_hall_corner_e_lzsa: .incbin \"left_hall_corner_e.lzsa\"" >> meche_graphics.inc
 	echo "red_room_center_e_lzsa: .incbin \"red_room_center_e.lzsa\"" >> meche_graphics.inc
 	echo "red_room_center_w_lzsa: .incbin \"red_room_center_w.lzsa\"" >> meche_graphics.inc
+	echo "red_room_center_n_lzsa: .incbin \"red_room_center_n.lzsa\"" >> meche_graphics.inc
+	echo "red_room_center_s_lzsa: .incbin \"red_room_center_s.lzsa\"" >> meche_graphics.inc
 	echo "center_hall_e_lzsa: .incbin \"center_hall_e.lzsa\"" >> meche_graphics.inc
 	echo "center_hall_w_lzsa: .incbin \"center_hall_w.lzsa\"" >> meche_graphics.inc
 	echo "center_hall_s_lzsa: .incbin \"center_hall_s.lzsa\"" >> meche_graphics.inc
@@ -109,6 +114,8 @@ meche_graphics.inc:	\
 	echo "right_hall_corner_w_lzsa: .incbin \"right_hall_corner_w.lzsa\"" >> meche_graphics.inc
 	echo "blue_room_center_n_lzsa: .incbin \"blue_room_center_n.lzsa\"" >> meche_graphics.inc
 	echo "blue_room_center_s_lzsa: .incbin \"blue_room_center_s.lzsa\"" >> meche_graphics.inc
+	echo "blue_room_center_e_lzsa: .incbin \"blue_room_center_e.lzsa\"" >> meche_graphics.inc
+	echo "blue_room_center_w_lzsa: .incbin \"blue_room_center_w.lzsa\"" >> meche_graphics.inc
 	echo "center_hall2_n_lzsa: .incbin \"center_hall2_n.lzsa\"" >> meche_graphics.inc
 	echo "center_hall2_s_lzsa: .incbin \"center_hall2_s.lzsa\"" >> meche_graphics.inc
 	echo "center_hall2_w_lzsa: .incbin \"center_hall2_w.lzsa\"" >> meche_graphics.inc
@@ -137,6 +144,13 @@ meche_graphics.inc:	\
 	echo "book_room_n_lzsa: .incbin \"book_room_n.lzsa\"" >> meche_graphics.inc
 	echo "book_open_n_lzsa: .incbin \"book_open_n.lzsa\"" >> meche_graphics.inc
 	echo "book_closed_n_lzsa: .incbin \"book_closed_n.lzsa\"" >> meche_graphics.inc
+	echo "blue_secret_door_w_lzsa: .incbin \"blue_secret_door_w.lzsa\"" >> meche_graphics.inc
+	echo "blue_secret_room_w_lzsa: .incbin \"blue_secret_room_w.lzsa\"" >> meche_graphics.inc
+	echo "red_secret_door_s_lzsa: .incbin \"red_secret_door_s.lzsa\"" >> meche_graphics.inc
+	echo "red_secret_room_s_lzsa: .incbin \"red_secret_room_s.lzsa\"" >> meche_graphics.inc
+
+
+
 
 %.gr: %.png
 	$(PNG2GR) $< $@
