@@ -61,7 +61,7 @@ location2:
 	.word	$0000			; east bg
 	.word	red_book_shelf_lzsa	; west bg
 	.byte	BG_WEST		; west
-	.byte	DIRECTION_N	; special exit
+	.byte	DIRECTION_W	; special exit
 	.byte	16,25		; special x
 	.byte	16,32		; special y
 	.word	red_book-1	; special function

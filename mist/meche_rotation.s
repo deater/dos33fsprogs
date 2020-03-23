@@ -15,7 +15,15 @@ take_blue_page:
 
 	; FIXME: if holding another page, put it down?
 
+	and	#MECHE_PAGE
+	beq	dropped_blue_page
+
 	lda	#HOLDING_BLUE_PAGE
+	sta	HOLDING_PAGE
+	rts
+
+dropped_blue_page:
+	lda	#0
 	sta	HOLDING_PAGE
 
 	rts
@@ -40,7 +48,15 @@ take_red_page:
 
 	; FIXME: if holding another page, put it down?
 
+	and	#MECHE_PAGE
+	beq	dropped_red_page
+
 	lda	#HOLDING_RED_PAGE
+	sta	HOLDING_PAGE
+	rts
+
+dropped_red_page:
+	lda	#0
 	sta	HOLDING_PAGE
 
 	rts
@@ -61,6 +77,8 @@ enter_red_secret:
 	;===============================
 
 exit_puzzle_button_press:
+
+	bit	$c030		; click speaker
 
 	lda	CURSOR_Y
 	cmp	#40
@@ -636,8 +654,9 @@ elevator_goto_half:
 	; TODO: animation?
 
 	ldy	#LOCATION_EAST_EXIT
-	cpy	#MECHE_TOP_FLOOR
-	beq	regular_half
+	lda	location26,Y
+	cmp	#MECHE_TOP_FLOOR
+	bne	regular_half
 
 half_and_controls:
 	;=============================
