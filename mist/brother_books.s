@@ -4,6 +4,20 @@
 	;===========================
 red_book:
 
+	; if have a red page, take it and increment count
+
+	lda	HOLDING_PAGE
+	cmp	#HOLDING_RED_PAGE
+	bne	not_red_page
+
+	lda	#0		; put down page
+	sta	HOLDING_PAGE
+
+	inc	RED_PAGE_COUNT	; increment page count
+
+not_red_page:
+
+
 	bit	KEYRESET
 	lda	#0
 	sta	FRAMEL

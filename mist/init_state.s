@@ -9,6 +9,8 @@ init_state:
 	sta	RED_PAGES_TAKEN
 	sta	BLUE_PAGES_TAKEN
 	sta	HOLDING_PAGE
+	sta	RED_PAGE_COUNT
+	sta	BLUE_PAGE_COUNT
 
 	; init clock puzzles
 	sta	CLOCK_MINUTE
