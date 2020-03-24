@@ -428,6 +428,9 @@ gear_block_sprite3:
 
 
 check_gear_delete:
+
+	; all views of gear are when looking north?
+
 	lda	DIRECTION
 	cmp	#DIRECTION_N
 	bne	done_gear_delete

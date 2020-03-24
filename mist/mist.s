@@ -42,6 +42,10 @@ mist_start:
 	; init the clock bridge
 	jsr	raise_bridge
 
+	; init the gear
+	jsr	open_the_gear
+
+
 game_loop:
 	;=================
 	; reset things
