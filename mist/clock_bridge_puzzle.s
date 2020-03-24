@@ -13,7 +13,7 @@ clock_inside_reset:
 
 
 ;======================
-; handle the clock iside puzzle
+; handle the clock inside puzzle
 
 clock_inside_puzzle:
 
@@ -299,7 +299,6 @@ lower_bridge:
 	sta	location11+1,Y			; MIST_CLOCK
 
 done_clock_bridge:
-	jsr	change_location
 
 	rts
 
@@ -393,6 +392,10 @@ bridge_adjust:
 	bit	$C030		; click speaker
 
 	jsr	raise_bridge
+
+	; update the background
+
+	jsr	change_location
 
 clock_puzzle_done:
 

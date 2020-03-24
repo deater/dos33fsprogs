@@ -39,7 +39,8 @@ mist_start:
 	lda	#1
 	sta	CURSOR_VISIBLE		; visible at first
 
-
+	; init the clock bridge
+	jsr	raise_bridge
 
 game_loop:
 	;=================
