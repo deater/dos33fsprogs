@@ -35,7 +35,7 @@ location0:
 ; MIST_DOCK_SWITCH	-- by dock switch
 location1:
 	.byte	MIST_DOCK_STEPS		; north exit
-	.byte	MIST_DOCK_SWITCH	; south exit
+	.byte	MIST_ARRIVAL_DOCK	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_W	; north exit_dir
