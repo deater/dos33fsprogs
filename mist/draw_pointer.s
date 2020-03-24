@@ -5,9 +5,6 @@
 
 draw_pointer:
 
-	lda	CURSOR_VISIBLE
-	bne	really_draw_pointer
-	jmp	no_draw_pointer
 
 really_draw_pointer:
 
@@ -55,6 +52,13 @@ finger_grab:
 	lda	#1
 	sta	IN_SPECIAL
 
+	lda	CURSOR_VISIBLE		; if not visible skip
+	bne	really_draw_grab
+
+	rts
+
+really_draw_grab:
+
 	lda	DIRECTION
 	and	#DIRECTION_ONLY_POINT
 	bne	special_but_point
@@ -68,6 +72,12 @@ special_but_point:
 	jmp	finger_point
 
 finger_not_special:
+
+	lda	CURSOR_VISIBLE		; if not visible skip
+	bne	really_not_special
+
+	rts
+really_not_special:
 
 	; check for left/right
 

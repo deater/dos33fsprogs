@@ -221,6 +221,7 @@ cant_go_forward:
 turn_left:
 
 	lda	DIRECTION
+	and	#$f
 	cmp	#DIRECTION_N
 	beq	go_west
 	cmp	#DIRECTION_W
@@ -234,6 +235,7 @@ turn_left:
 	;===========================
 turn_right:
 	lda	DIRECTION
+	and	#$f
 	cmp	#DIRECTION_N
 	beq	go_east
 	cmp	#DIRECTION_E
