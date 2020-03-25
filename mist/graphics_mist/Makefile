@@ -10,7 +10,7 @@ all:	mist_graphics.inc
 ####
 
 mist_graphics.inc:	\
-	dock_n.lzsa dock_s.lzsa dock_e.lzsa dock_w.lzsa \
+	dock_n.lzsa dock_s.lzsa dock_e.lzsa dock_w.lzsa dock_w_open.lzsa \
 	dock_switch_n.lzsa dock_switch_s.lzsa \
 	dock_steps_w.lzsa \
 	above_dock_e.lzsa above_dock_n.lzsa above_dock_s.lzsa \
@@ -53,6 +53,7 @@ mist_graphics.inc:	\
 	echo "dock_s_lzsa: .incbin \"dock_s.lzsa\"" >> mist_graphics.inc
 	echo "dock_e_lzsa: .incbin \"dock_e.lzsa\"" >> mist_graphics.inc
 	echo "dock_w_lzsa: .incbin \"dock_w.lzsa\"" >> mist_graphics.inc
+	echo "dock_w_open_lzsa: .incbin \"dock_w_open.lzsa\"" >> mist_graphics.inc
 	echo "dock_switch_n_lzsa: .incbin \"dock_switch_n.lzsa\"" >> mist_graphics.inc
 	echo "dock_switch_s_lzsa: .incbin \"dock_switch_s.lzsa\"" >> mist_graphics.inc
 	echo "dock_steps_w_lzsa: .incbin \"dock_steps_w.lzsa\"" >> mist_graphics.inc

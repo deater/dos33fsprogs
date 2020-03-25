@@ -56,9 +56,10 @@ LOAD_MIST       = $1
 LOAD_MECHE      = $2
 LOAD_SELENA     = $3
 LOAD_OCTAGON    = $4
-LOAD_STONEDSHIP = $5
-LOAD_CHANNEL    = $6
-LOAD_ENDING     = $7
+LOAD_VIEWER	= $5
+LOAD_STONEDSHIP = $6
+LOAD_CHANNEL    = $7
+LOAD_ENDING     = $8
 
 
 loader_start:
@@ -156,7 +157,7 @@ copy_filename_done:
 filenames:
 	.word intro_filename
 	.word mist_filename,meche_filename,selena_filename,octagon_filename
-	.word ending_filename
+	.word viewer_filename,ending_filename
 
 intro_filename:
 	.byte "MIST_TITLE",0
@@ -168,6 +169,8 @@ selena_filename:
 	.byte "SELENA",0
 octagon_filename:
 	.byte "OCTAGON",0
+viewer_filename:
+	.byte "VIEWER",0
 ending_filename:
 	.byte "ENDING",0
 

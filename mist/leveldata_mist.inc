@@ -14,17 +14,18 @@ locations:
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
+	.word location40
 
 ; MIST_ARRIVAL_DOCK	-- dock
 location0:
 	.byte	MIST_DOCK_SWITCH	; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
-	.byte	$ff			; west exit
+	.byte	MIST_VIEWER_DOOR	; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
+	.byte	DIRECTION_W	; west exit_dir
 	.word	dock_n_lzsa	; north bg
 	.word	dock_s_lzsa	; south bg
 	.word	dock_e_lzsa	; east bg
@@ -754,4 +755,24 @@ location39:
 	.byte	16,22		; special x
 	.byte	10,18		; special y
 	.word	circuit_breaker-1	; special function
+
+; MIST_VIEWER_DOOR	-- viewer door
+location40:
+	.byte	MIST_DOCK_SWITCH	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	dock_n_lzsa	; north bg
+	.word	dock_s_lzsa	; south bg
+	.word	dock_e_lzsa	; east bg
+	.word	dock_w_open_lzsa	; west bg
+	.byte	BG_EAST|BG_NORTH|BG_SOUTH|BG_WEST	; all bgs
+	.byte	DIRECTION_W	; special exit
+	.byte	9,29		; special x
+	.byte	2,46		; special y
+	.word	enter_viewer-1	; special function
 

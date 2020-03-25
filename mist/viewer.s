@@ -1,7 +1,4 @@
-; Mist
-
-; a version of Myst?
-; (yes there's a subtle German joke here)
+; Viewer in the room by the dock
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -10,7 +7,7 @@
 	.include "hardware.inc"
 	.include "common_defines.inc"
 
-mist_start:
+viewer_start:
 	;===================
 	; init screen
 	jsr	TEXT
@@ -39,12 +36,8 @@ mist_start:
 	lda	#1
 	sta	CURSOR_VISIBLE		; visible at first
 
-	; init the clock bridge
-	jsr	raise_bridge
-
-	; init the gear
-	jsr	open_the_gear
-
+	lda	#0
+	sta	ANIMATE_FRAME
 
 game_loop:
 	;=================
@@ -66,42 +59,8 @@ game_loop:
 	; handle special-case forground logic
 	;====================================
 
-	; handle gear opening
-
-	lda	GEAR_OPEN
-	beq	not_gear_related
-
-	jsr	check_gear_delete
-not_gear_related:
-
-	; handle clock puzzles
-
 	lda	LOCATION
-	cmp	#MIST_CLOCK_PUZZLE	; clock puzzle
-	beq	location_clock
-	cmp	#MIST_CLOCK_INSIDE
-	beq	location_inside_clock
-	bne	location_generator
-
-location_clock:
-	jsr	draw_clock_face
-	jmp	nothing_special
-location_inside_clock:
-	jsr	draw_clock_inside
-	jmp	nothing_special
-
-	; handle generator puzzle
-location_generator:
-	cmp	#MIST_GENERATOR_ROOM
-	bne	nothing_special
-	lda	DIRECTION
-	and	#$f
-	cmp	#DIRECTION_N
-	bne	nothing_special
-
-	jsr	generator_update_volts
-	jsr	generator_draw_buttons
-	jmp	nothing_special
+;	cmp	#MECHE_OPEN_BOOK
 
 nothing_special:
 
@@ -144,95 +103,25 @@ room_frame_no_oflo:
 really_exit:
 	jmp	end_level
 
-;=================
-; special exits
 
-go_to_meche:
-	lda	#LOAD_MECHE
-	sta	WHICH_LOAD
 
-	lda     #MECHE_INSIDE_GEAR
-        sta     LOCATION
-
-        lda     #DIRECTION_E
-        sta     DIRECTION
-
+back_to_mist:
 
 	lda	#$ff
 	sta	LEVEL_OVER
 
-        rts
-
-
-pad_special:
-	lda	#MIST_TOWER2_PATH
+	lda     #MIST_ARRIVAL_DOCK		; the dock
 	sta	LOCATION
-	jsr	change_location
-
-	rts
-
-leave_tower2:
-	lda	#MIST_TOWER2_TOP
-	sta	LOCATION
-
-	lda	#DIRECTION_W
-	sta	DIRECTION
-
-	jsr	change_location
-
-	rts
-
-leave_tower1:
-	lda	#MIST_TOWER1_TOP
-	sta	LOCATION
-
 	lda	#DIRECTION_E
 	sta	DIRECTION
 
-	jsr	change_location
-
-	rts
-
-
-green_house:
-
-	; FIXME: handle switch separately
-
-	lda	#MIST_GREEN_SHACK
-	sta	LOCATION
-
-	jsr	change_location
-
-	rts
-
-
-enter_octagon:
-
-	lda	#OCTAGON_TEMPLE_DOORWAY
-	sta	LOCATION
-
-	lda	#LOAD_OCTAGON
+	lda	#LOAD_MIST
 	sta	WHICH_LOAD
 
-	lda	#$ff
-	sta	LEVEL_OVER
-
-	rts
-
-enter_viewer:
-
-	lda	#VIEWER_STEPS
-	sta	LOCATION
-
-	lda	#LOAD_VIEWER
-	sta	WHICH_LOAD
-
-	lda	#$ff
-	sta	LEVEL_OVER
-
 	rts
 
 
+	rts
 
 
 	;==========================
@@ -248,37 +137,15 @@ enter_viewer:
 	.include	"decompress_fast_v2.s"
 	.include	"keyboard.s"
 	.include	"draw_pointer.s"
-
-	.include	"audio.s"
-
-	.include	"graphics_mist/mist_graphics.inc"
-
 	.include	"end_level.s"
+
+	.include	"graphics_viewer/viewer_graphics.inc"
+
 
 	; puzzles
 
-	.include	"clock_bridge_puzzle.s"
-	.include	"marker_switch.s"
-	.include	"generator_puzzle.s"
-
-	; linking books
-
-	; letters
-
-	.include	"letter_cat.s"
-
-
 	.include	"common_sprites.inc"
 
-	.include	"leveldata_mist.inc"
+	.include	"page_sprites.inc"
 
-
-
-
-
-;.align $100
-;audio_red_page:
-;.incbin "audio/red_page.btc"
-
-
-
+	.include	"leveldata_viewer.inc"
