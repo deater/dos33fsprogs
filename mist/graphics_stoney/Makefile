@@ -1,0 +1,33 @@
+#include ../Makefile.inc
+
+PNG2RLE = ../../gr-utils/png2rle
+PNG2GR = ../../gr-utils/png2gr
+LZSA = ~/research/lzsa/lzsa/lzsa
+
+all:	stoney_graphics.inc
+
+####
+
+stoney_graphics.inc:	\
+	ship_entry_n.lzsa ship_entry_s.lzsa \
+	ship_bow_s.lzsa ship_bow_go_n.lzsa \
+	book_chair_s.lzsa
+	echo "ship_entry_n_lzsa: .incbin \"ship_entry_n.lzsa\"" > stoney_graphics.inc
+	echo "ship_entry_s_lzsa: .incbin \"ship_entry_s.lzsa\"" >> stoney_graphics.inc
+	echo "ship_bow_s_lzsa: .incbin \"ship_bow_s.lzsa\"" >> stoney_graphics.inc
+	echo "ship_bow_go_n_lzsa: .incbin \"ship_bow_go_n.lzsa\"" >> stoney_graphics.inc
+	echo "book_chair_s_lzsa: .incbin \"book_chair_s.lzsa\"" >> stoney_graphics.inc
+
+
+
+
+%.gr: %.png
+	$(PNG2GR) $< $@
+
+%.lzsa: %.gr
+	$(LZSA) -r -f2 $< $@
+
+####
+
+clean:		
+		rm -f *~ *.o *.lst *.gr *.lzsa viewer_graphics.inc

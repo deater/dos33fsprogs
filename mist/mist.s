@@ -157,12 +157,7 @@ go_to_meche:
         lda     #DIRECTION_E
         sta     DIRECTION
 
-
-	lda	#$ff
-	sta	LEVEL_OVER
-
-        rts
-
+	jmp	set_level_over
 
 pad_special:
 	lda	#MIST_TOWER2_PATH
@@ -214,10 +209,7 @@ enter_octagon:
 	lda	#LOAD_OCTAGON
 	sta	WHICH_LOAD
 
-	lda	#$ff
-	sta	LEVEL_OVER
-
-	rts
+	jmp	set_level_over
 
 enter_viewer:
 
@@ -227,12 +219,23 @@ enter_viewer:
 	lda	#LOAD_VIEWER
 	sta	WHICH_LOAD
 
+	jmp	set_level_over
+
+enter_stoneyship:
+	lda	#STONEY_SHIP_STERN
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+
+	lda	#LOAD_STONEY
+	sta	WHICH_LOAD
+
+set_level_over:
 	lda	#$ff
 	sta	LEVEL_OVER
 
 	rts
-
-
 
 
 	;==========================

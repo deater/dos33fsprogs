@@ -41,6 +41,7 @@ location1:
 	.word	viewer_e_lzsa		; east bg
 	.word	viewer_w_lzsa		; west bg
 	.byte	BG_EAST|BG_WEST
+	.byte	$ff
 ;	.byte	DIRECTION_E	; special exit
 ;	.byte	12,25		; special x
 ;	.byte	26,46		; special y

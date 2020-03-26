@@ -31,7 +31,11 @@ location0:
 	.word	dock_e_lzsa	; east bg
 	.word	dock_w_lzsa	; west bg
 	.byte	BG_EAST|BG_NORTH|BG_SOUTH|BG_WEST	; all bgs
-	.byte	$ff		; special exit
+	.byte	DIRECTION_E	; special exit
+	.byte	9,29		; special x
+	.byte	2,46		; special y
+	.word	enter_stoneyship-1	; special function
+
 
 ; MIST_DOCK_SWITCH	-- by dock switch
 location1:

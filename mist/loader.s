@@ -157,7 +157,7 @@ copy_filename_done:
 filenames:
 	.word intro_filename
 	.word mist_filename,meche_filename,selena_filename,octagon_filename
-	.word viewer_filename,ending_filename
+	.word viewer_filename,stoney_filename,channel_filename,ending_filename
 
 intro_filename:
 	.byte "MIST_TITLE",0
@@ -171,6 +171,10 @@ octagon_filename:
 	.byte "OCTAGON",0
 viewer_filename:
 	.byte "VIEWER",0
+stoney_filename:
+	.byte "STONEY",0
+channel_filename:
+	.byte "CHANNEL",0
 ending_filename:
 	.byte "ENDING",0
 

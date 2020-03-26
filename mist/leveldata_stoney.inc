@@ -1,0 +1,49 @@
+
+;===============================================
+; level data for Viewer Room
+;===============================================
+
+locations:
+	.word location0, location1
+
+
+; STONEY_SHIP_STERN		-- back of the ship
+location0:
+	.byte	STONEY_SHIP_BOW		; north exit
+	.byte	STONEY_SHIP_DOOR_OPEN	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	ship_entry_n_lzsa	; north bg
+	.word	ship_entry_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+;	.byte	DIRECTION_E	; special exit
+;	.byte	12,25		; special x
+;	.byte	26,46		; special y
+;	.word	controls_pressed-1		; special function
+
+; Ship Bow		-- bow of the ship
+location1:
+	.byte	$ff			; north exit
+	.byte	STONEY_SHIP_STERN	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	ship_bow_go_n_lzsa		; north bg
+	.word	ship_bow_s_lzsa			; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH | BG_SOUTH
+	.byte	DIRECTION_N		; special exit
+	.byte	9,29		; special x
+	.byte	2,46		; special y
+	.word	back_to_mist-1	; special function

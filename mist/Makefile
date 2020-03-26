@@ -8,7 +8,7 @@ B2D = ../bmp2dhr/b2d
 
 all:	mist.dsk
 
-mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON MECHE SELENA VIEWER
+mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON MECHE SELENA VIEWER STONEY
 	cp empty.dsk mist.dsk
 	$(DOS33) -y mist.dsk SAVE A HELLO
 	$(DOS33) -y mist.dsk BSAVE -a 0x1000 LOADER
@@ -18,6 +18,7 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON MECHE SELENA VIEWER
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MECHE
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 SELENA
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 VIEWER
+	$(DOS33) -y mist.dsk BSAVE -a 0x1400 STONEY
 	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
 ###
@@ -136,6 +137,22 @@ viewer.o:	viewer.s zp.inc hardware.inc common_defines.inc \
 	draw_pointer.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o viewer.o viewer.s -l viewer.lst
+
+####
+
+STONEY:	stoney.o
+	ld65 -o STONEY stoney.o -C ../linker_scripts/apple2_1400.inc
+
+stoney.o:	stoney.s zp.inc hardware.inc common_defines.inc \
+	graphics_stoney/stoney_graphics.inc \
+	common_sprites.inc \
+	page_sprites.inc \
+	leveldata_stoney.inc \
+	keyboard.s \
+	draw_pointer.s \
+	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	ca65 -o stoney.o stoney.s -l stoney.lst
+
 
 
 ####
