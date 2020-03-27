@@ -61,11 +61,10 @@ location2:
 	.word	$0000			; east bg
 	.word	viewer_w_lzsa		; west bg
 	.byte	BG_WEST
-	.byte	$ff
-;	.byte	DIRECTION_E	; special exit
-;	.byte	12,25		; special x
-;	.byte	26,46		; special y
-;	.word	controls_pressed-1		; special function
+	.byte	DIRECTION_W	; special exit
+	.byte	18,23		; special x
+	.byte	34,42		; special y
+	.word	enter_viewer-1		; special function
 
 
 

@@ -1,4 +1,48 @@
-;
+display_viewer:
+
+
+display_nothing:
+	lda	ANIMATE_FRAME
+	beq	done_animation
+
+
+	lda	ANIMATE_FRAME
+	asl
+	tay
+	lda	nothing_animation,Y
+	sta	INL
+	lda	nothing_animation+1,Y
+	sta	INH
+
+	lda	#12
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$1f
+	bne	done_animation
+
+	inc	ANIMATE_FRAME
+	lda	ANIMATE_FRAME
+	cmp	#6
+	bne	done_animation
+done_nothing:
+	lda	#0
+	sta	ANIMATE_FRAME
+
+done_animation:
+	rts
+
+
+enter_viewer:
+
+	lda	#1
+	sta	ANIMATE_FRAME
+
+	rts
 
 enter_control_panel:
 
@@ -258,3 +302,28 @@ sprite_9:
 	.byte	$AA,$A0,$00
 	.byte	$0A,$0A,$A0
 
+
+
+nothing_animation:
+	.word empty,empty,na_frame0,na_frame1,na_frame0,empty
+
+empty:
+	.byte 16,4
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+
+na_frame0:
+	.byte 16,4
+	.byte $FA,$7f,$5f,$57,$57,$57,$57,$57,$57,$57,$57,$57,$57,$7f,$7f,$fA
+	.byte $57,$55,$55,$55,$77,$55,$55,$55,$55,$55,$55,$77,$55,$55,$55,$57
+	.byte $55,$55,$55,$55,$77,$55,$5d,$57,$57,$5d,$55,$77,$55,$55,$55,$55
+	.byte $7f,$f5,$fd,$55,$77,$55,$5d,$57,$57,$5d,$55,$77,$55,$5d,$f5,$7f
+
+na_frame1:
+	.byte 16,4
+	.byte $fA,$7f,$ff,$f7,$f7,$f7,$f7,$f7,$f7,$f7,$f7,$f7,$f7,$7f,$7f,$fa
+	.byte $f7,$ff,$ff,$ff,$77,$ff,$ff,$ff,$ff,$ff,$ff,$77,$ff,$ff,$ff,$f7
+	.byte $ff,$ff,$ff,$ff,$77,$ff,$fd,$f7,$f7,$fd,$ff,$77,$ff,$ff,$ff,$ff
+	.byte $7f,$ff,$fd,$ff,$77,$ff,$fd,$f7,$f7,$fd,$ff,$77,$ff,$fd,$ff,$7f

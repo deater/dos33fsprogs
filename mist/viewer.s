@@ -62,15 +62,27 @@ game_loop:
 	lda	LOCATION
 	cmp	#VIEWER_CONTROL_PANEL
 	beq	control_panel
+	cmp	#VIEWER_POOL_CLOSE
+	beq	look_at_pool
+	jmp	reset_animation
+
+look_at_pool:
+	jsr	display_viewer
 
 	jmp	nothing_special
 
 control_panel:
 	jsr	display_panel_code
 
-	jmp	nothing_special
+	jmp	reset_animation
+
+reset_animation:
+	lda	#0
+	sta	ANIMATE_FRAME
 
 nothing_special:
+
+
 
 	;====================================
 	; draw pointer
