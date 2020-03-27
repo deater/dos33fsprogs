@@ -74,6 +74,7 @@ finger_not_special:
 	bne	really_not_special
 
 	rts
+
 really_not_special:
 
 	; check for left/right
@@ -120,44 +121,40 @@ real_finger_point:
 	jmp	finger_draw
 
 check_cursor_left:
-	lda	DIRECTION
-	and	#$f
-	asl
-	asl
-	asl
-	asl
-	clc
-	ldy	#LOCATION_BGS
-	adc	(LOCATION_STRUCT_L),Y
-	tay
+	jsr	lookup_direction
 
-	lda	direction_lookup,Y
 	and	#$f
 	beq	finger_point
-	cmp	#1
+	cmp	#$1
 	beq	finger_left
 	bne	finger_uturn_left
 
 check_cursor_right:
 
-	lda	DIRECTION
-	and	#$f
-	asl
-	asl
-	asl
-	asl
-	clc
-	ldy	#LOCATION_BGS
-	adc	(LOCATION_STRUCT_L),Y
-	tay
+	jsr	lookup_direction
 
-	lda	direction_lookup,Y
 	and	#$f0
 
 	beq	finger_point
 	cmp	#$10
 	beq	finger_right
 	bne	finger_uturn_right
+
+lookup_direction:
+	lda	DIRECTION
+	and	#$f
+	asl
+	asl
+	asl
+	asl
+	clc
+	ldy	#LOCATION_BGS
+	adc	(LOCATION_STRUCT_L),Y
+	tay
+
+	lda	direction_lookup,Y
+
+	rts
 
 finger_left:
 	lda	#1
