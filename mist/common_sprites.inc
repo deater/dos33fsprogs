@@ -28,6 +28,20 @@ finger_right_sprite:
 	.byte $BB,$BB,$BB,$BB,$AA,$AA
 	.byte $AB,$BB,$BB,$AB,$AA,$AA
 
+finger_turn_left_sprite:
+	.byte 6,4
+	.byte $aa,$aa,$ba,$bb,$aa,$aa
+	.byte $ba,$bb,$bb,$bb,$bb,$ba
+	.byte $aa,$ab,$bb,$bb,$ab,$bb
+	.byte $aa,$aa,$aa,$ab,$aa,$ab
+
+finger_turn_right_sprite:
+	.byte 6,4
+	.byte $aa,$aa,$bb,$ba,$aa,$aa
+	.byte $ba,$bb,$bb,$bb,$bb,$ba
+	.byte $bb,$ab,$bb,$bb,$ab,$aa
+	.byte $ab,$aa,$ab,$aa,$aa,$aa
+
 finger_red_page_sprite:
 	.byte 5,5
 	.byte $3a,$33,$33,$aa,$aa

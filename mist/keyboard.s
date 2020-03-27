@@ -71,8 +71,15 @@ not_special_return:
 
 	lda	IN_RIGHT
 	beq	not_right_return
-right_return:
 
+	cmp	#1
+	beq	right_return
+
+right_uturn:
+	jsr	uturn
+	jmp	no_keypress
+
+right_return:
 	jsr	turn_right
 	jmp	no_keypress
 
@@ -80,8 +87,14 @@ not_right_return:
 
 	lda	IN_LEFT
 	beq	not_left_return
-left_return:
 
+	cmp	#1
+	beq	left_return
+left_uturn:
+	jsr	uturn
+	jmp	no_keypress
+
+left_return:
 	jsr	turn_left
 	jmp	no_keypress
 
@@ -244,6 +257,20 @@ turn_right:
 	beq	go_west
 	bne	go_north
 
+	;==========================
+	; uturn
+	;===========================
+uturn:
+
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_N
+	beq	go_south
+	cmp	#DIRECTION_W
+	beq	go_east
+	cmp	#DIRECTION_S
+	beq	go_north
+	bne	go_west
 
 go_north:
 	lda	#DIRECTION_N

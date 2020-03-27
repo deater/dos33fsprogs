@@ -32,8 +32,8 @@ LOCATION_WEST_BG=14			; pointer to west background image
 LOCATION_BGS	= 16			; bitmap saying which backgrounds valid
 	BG_NORTH = 1
 	BG_SOUTH = 2
-	BG_EAST = 4
-	BG_WEST = 8
+	BG_WEST = 4
+	BG_EAST = 8
 LOCATION_SPECIAL_EXIT=17		; if we have something clickable
 					; $FF if not, direction if so
 LOCATION_SPECIAL_X1=18			; collision box for the thing to click

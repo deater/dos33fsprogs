@@ -5,10 +5,7 @@
 
 draw_pointer:
 
-
-really_draw_pointer:
-
-	; point sprite to right location
+	; point sprite to right location (X,Y)
 
 	lda	CURSOR_X
 	sta	XPOS
@@ -123,101 +120,44 @@ real_finger_point:
 	jmp	finger_draw
 
 check_cursor_left:
-	ldy	#LOCATION_BGS
-
-check_left_north:
 	lda	DIRECTION
 	and	#$f
-	cmp	#DIRECTION_N
-	bne	check_left_south
+	asl
+	asl
+	asl
+	asl
+	clc
+	ldy	#LOCATION_BGS
+	adc	(LOCATION_STRUCT_L),Y
+	tay
 
-handle_left_north:
-	; check if west exists
-	lda	(LOCATION_STRUCT_L),Y
-	and	#BG_WEST
+	lda	direction_lookup,Y
+	and	#$f
 	beq	finger_point
-	bne	finger_left
-
-check_left_south:
-	cmp	#DIRECTION_S
-	bne	check_left_east
-
-handle_left_south:
-	; check if east exists
-	lda	(LOCATION_STRUCT_L),Y
-	and	#BG_EAST
-	beq	finger_point
-	bne	finger_left
-
-check_left_east:
-	cmp	#DIRECTION_E
-	bne	check_left_west
-handle_left_east:
-	; check if north exists
-	lda	(LOCATION_STRUCT_L),Y
-	and	#BG_NORTH
-	beq	finger_point
-	bne	finger_left
-
-check_left_west:
-	; we should be only option left
-handle_left_west:
-	; check if south exists
-	lda	(LOCATION_STRUCT_L),Y
-	and	#BG_SOUTH
-	beq	finger_point
-	bne	finger_left
-
+	cmp	#1
+	beq	finger_left
+	bne	finger_uturn_left
 
 check_cursor_right:
 
-	ldy	#LOCATION_BGS
-
-check_right_north:
 	lda	DIRECTION
 	and	#$f
-	cmp	#DIRECTION_N
-	bne	check_right_south
+	asl
+	asl
+	asl
+	asl
+	clc
+	ldy	#LOCATION_BGS
+	adc	(LOCATION_STRUCT_L),Y
+	tay
 
-handle_right_north:
-	; check if east exists
-	lda	(LOCATION_STRUCT_L),Y
-	and	#BG_EAST
+	lda	direction_lookup,Y
+	and	#$f0
+
 	beq	finger_point
-	bne	finger_right
-
-check_right_south:
-	cmp	#DIRECTION_S
-	bne	check_right_east
-
-handle_right_south:
-	; check if west exists
-	lda	(LOCATION_STRUCT_L),Y
-	and	#BG_WEST
-	beq	finger_point
-	bne	finger_right
-
-check_right_east:
-	cmp	#DIRECTION_E
-	bne	check_right_west
-handle_right_east:
-	; check if south exists
-	lda	(LOCATION_STRUCT_L),Y
-	and	#BG_SOUTH
-	bne	finger_right
-;	beq	finger_point
-	jmp	finger_point
-
-check_right_west:
-	; we should be only option left
-handle_right_west:
-	; check if north exists
-	lda	(LOCATION_STRUCT_L),Y
-	and	#BG_NORTH
-	bne	finger_right
-;	beq	finger_point
-	jmp	finger_point
-
+	cmp	#$10
+	beq	finger_right
+	bne	finger_uturn_right
 
 finger_left:
 	lda	#1
@@ -236,7 +176,25 @@ finger_right:
 	lda     #>finger_right_sprite
 	jmp	finger_draw
 
+finger_uturn_left:
 
+	lda	#2
+	sta	IN_LEFT
+
+	lda     #<finger_turn_left_sprite
+	sta	INL
+	lda     #>finger_turn_left_sprite
+	jmp	finger_draw
+
+finger_uturn_right:
+
+	lda	#2
+	sta	IN_RIGHT
+
+	lda     #<finger_turn_right_sprite
+	sta	INL
+	lda     #>finger_turn_right_sprite
+	jmp	finger_draw
 
 finger_draw:
 	sta	INH
@@ -244,4 +202,18 @@ finger_draw:
 
 no_draw_pointer:
 	rts
+
+; 0 = point
+; 1 = left
+; 2 = left u-turn
+
+direction_lookup:
+direction_lookup_n:
+	.byte $00,$00,$22,$22,$01,$01,$21,$21,$10,$10,$12,$12,$11,$11,$11,$11
+direction_lookup_s:
+	.byte $00,$02,$20,$22,$10,$12,$10,$12,$01,$01,$21,$21,$11,$11,$11,$11
+direction_lookup_e:
+	.byte $00,$01,$10,$11,$22,$21,$12,$11,$00,$01,$10,$11,$22,$21,$12,$11
+direction_lookup_w:
+	.byte $00,$10,$01,$11,$00,$10,$01,$11,$22,$12,$21,$11,$22,$12,$21,$11
 
