@@ -26,6 +26,9 @@ panel_latch:
 	lda	VIEWER_CHANNEL
 	sta	VIEWER_LATCHED	; latch value into pool state
 
+	lda	#VIEWER_POOL
+	sta	LOCATION
+
 	lda	#DIRECTION_W
 	sta	DIRECTION
 	jmp	change_location
