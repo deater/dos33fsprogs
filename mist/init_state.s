@@ -48,4 +48,7 @@ init_state:
 	sta	MECHE_LOCK3
 	sta	MECHE_LOCK4
 
+	sta	VIEWER_CHANNEL
+	sta	VIEWER_LATCHED
+
 	rts

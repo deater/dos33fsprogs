@@ -133,6 +133,7 @@ viewer.o:	viewer.s zp.inc hardware.inc common_defines.inc \
 	common_sprites.inc \
 	page_sprites.inc \
 	leveldata_viewer.inc \
+	viewer_controls.s \
 	keyboard.s \
 	draw_pointer.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s

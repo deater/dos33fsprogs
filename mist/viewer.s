@@ -60,7 +60,15 @@ game_loop:
 	;====================================
 
 	lda	LOCATION
-;	cmp	#MECHE_OPEN_BOOK
+	cmp	#VIEWER_CONTROL_PANEL
+	beq	control_panel
+
+	jmp	nothing_special
+
+control_panel:
+	jsr	display_panel_code
+
+	jmp	nothing_special
 
 nothing_special:
 
@@ -121,7 +129,19 @@ back_to_mist:
 	rts
 
 
-	rts
+atrus_message:
+;      0123456789012345678901234567890123456789
+.byte "CATHERINE, SOMETHING IS UP WITH OUR SONS",0
+.byte "THEY'VE BEEN MESSING WITH MY BOOKS",0
+.byte "I'VE HIDDEN THE REMAINING LINKING BOOKS",0
+.byte "HINT: REMEMBER THE TOWER ROTATION",0
+
+wall_text:
+.byte "*** SETTINGS -- DIMENSIONAL IMAGER ***",0
+.byte "TOPOGRAPHICAL EXTRUSION TEST -- 40",0
+.byte "WATER TURBULENT POOL         -- 67",0
+.byte "MARKER SWITCH DIAGRAM        -- 47",0
+
 
 
 	;==========================
@@ -149,3 +169,5 @@ back_to_mist:
 	.include	"page_sprites.inc"
 
 	.include	"leveldata_viewer.inc"
+
+	.include	"viewer_controls.s"
