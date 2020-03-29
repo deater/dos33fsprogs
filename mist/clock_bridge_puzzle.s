@@ -278,7 +278,8 @@ raise_bridge:
 lower_bridge:
 
 	ldy	#LOCATION_SOUTH_EXIT
-	lda	#MIST_TREE_CORRIDOR_5
+;	lda	#MIST_TREE_CORRIDOR_5
+	lda	#$ff
 	sta	location21,Y			; MIST_CLOCK_PUZZLE
 
 	ldy	#LOCATION_SOUTH_EXIT_DIR

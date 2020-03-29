@@ -402,19 +402,19 @@ location20:
 
 ; MIST_CLOCK_PUZZLE		-- clock puzzle
 location21:
-	.byte	$ff			; north exit
-	.byte	MIST_TREE_CORRIDOR_5	; south exit
+	.byte	MIST_TREE_CORRIDOR_4	; north exit
+	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_N	; south exit_dir
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	$0000			; north bg
-	.word	clock_puzzle_s_lzsa		; south bg
+	.word	tree5_n_lzsa		; north bg
+	.word	clock_puzzle_s_lzsa	; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
-	.byte	BG_SOUTH
+	.byte	BG_SOUTH|BG_NORTH
 	.byte	DIRECTION_S	; special exit
 	.byte	12,30		; special x
 	.byte	38,48		; special y
@@ -569,11 +569,11 @@ location29:
 
 ; MIST_GENERATOR_ROOM		-- generator room
 location30:
-	.byte	MIST_GENERATOR_ROOM	; north exit
+	.byte	$ff			; north exit
 	.byte	MIST_GENERATOR_DOOR	; south exit
-	.byte	$ff		; east exit
-	.byte	$ff		; west exit
-	.byte	DIRECTION_S	; north exit_dir
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
