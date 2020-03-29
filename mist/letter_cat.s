@@ -9,19 +9,34 @@
 ;             Yours,
 ;                 Atrus
 
+
 letter:
 ;        01234567890123456789
-.byte  9,1,"  CATHERINE,          ",0
-.byte  9,3,"  I THINK SOME WEIRD  ",0
-.byte  9,5,"  GUY IS OUT ROAMING  ",0
-.byte  9,7,"  AROUND OUR ISLAND!  ",0
-.byte  9,9,"  MAYBE HE CAN SOLVE  ",0
-.byte 9,11,"  ALL OF OUR DEEP     ",0
-.byte 9,13,"  FAMILY PROBLEMS     ",0
-.byte 9,15,"  WHILE I MESS        ",0
-.byte 9,17,"  WITH MY BOOKS.      ",0
+.byte  9,1," CATHERINE,           ",0
+.byte  9,3," I'VE LEFT A MESSAGE  ",0
+.byte  9,5," OF UTMOST IMPORTANCE ",0
+.byte  9,7," IN OUR FORE-CHAMBER  ",0
+.byte  9,9," BESIDE THE DOCK.     ",0
+.byte 9,11," ENTER THE NUMBER OF  ",0
+.byte 9,13," MARKER SWITCHES ON   ",0
+.byte 9,15," THIS ISLAND INTO THE ",0
+.byte 9,17," IMAGER.              ",0
 .byte 9,19,"         YOURS,       ",0
 .byte 9,21,"             ATRUS    ",0
+
+;sarcastic_letter:
+;        01234567890123456789
+;.byte  9,1,"  CATHERINE,          ",0
+;.byte  9,3,"  I THINK SOME WEIRD  ",0
+;.byte  9,5,"  GUY IS OUT ROAMING  ",0
+;.byte  9,7,"  AROUND OUR ISLAND!  ",0
+;.byte  9,9,"  MAYBE HE CAN SOLVE  ",0
+;.byte 9,11,"  ALL OF OUR DEEP     ",0
+;.byte 9,13,"  FAMILY PROBLEMS     ",0
+;.byte 9,15,"  WHILE I MESS        ",0
+;.byte 9,17,"  WITH MY BOOKS.      ",0
+;.byte 9,19,"         YOURS,       ",0
+;.byte 9,21,"             ATRUS    ",0
 
 clear_line:
 .byte 9,0, "                      ",0
