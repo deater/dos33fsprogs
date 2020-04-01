@@ -18,10 +18,17 @@ draw_pointer:
 	cmp	#$ff
 	beq	finger_not_special	; if $ff not special
 
+	lda	(LOCATION_STRUCT_L),Y
+	cmp	#$4
+	beq	was_any
+
 	lda	DIRECTION
 	and	#$f
+
 	cmp	(LOCATION_STRUCT_L),Y
 	bne	finger_not_special	; only special if facing right way
+
+was_any:
 
 	; see if X1 < X < X2
 	lda	CURSOR_X

@@ -114,6 +114,97 @@ leave_octagon:
 
         rts
 
+handle_octagon:
+
+	ldx	CURSOR_X
+
+	lda	DIRECTION
+	and	#$f
+
+	cmp	#DIRECTION_W
+	beq	octagon_w
+
+	cmp	#DIRECTION_E
+	beq	octagon_e
+
+	cmp	#DIRECTION_S
+	beq	octagon_s
+
+octagon_n:
+	cpx	#10
+	bcc	goto_shelf_frame
+	cpx	#29
+	bcs	goto_door_frame
+	bcc	goto_bookshelf
+
+octagon_e:
+	cpx	#10
+	bcc	goto_door_frame
+	cpx	#29
+	bcs	goto_fireplace
+	bcc	goto_blue_book
+
+octagon_w:
+	cpx	#10
+	bcc	goto_map
+	cpx	#29
+	bcs	goto_shelf_frame
+	bcc	goto_red_book
+
+octagon_s:
+	cpx	#10
+	bcc	goto_fireplace
+	cpx	#29
+	bcs	goto_map
+	bcc	goto_door
+
+goto_map:
+	ldy	#OCTAGON_MAP
+	lda	#DIRECTION_W
+	jmp	done_goto
+
+goto_red_book:
+	ldy	#OCTAGON_RED_BOOKSHELF
+	lda	#DIRECTION_W
+	jmp	done_goto
+
+goto_shelf_frame:
+	ldy	#OCTAGON_FRAME_SHELF
+	lda	#DIRECTION_N
+	jmp	done_goto
+
+goto_bookshelf:
+	ldy	#OCTAGON_BOOKSHELF
+	lda	#DIRECTION_N
+	jmp	done_goto
+
+goto_door_frame:
+	ldy	#OCTAGON_FRAME_DOOR
+	lda	#DIRECTION_N
+	jmp	done_goto
+
+goto_blue_book:
+	ldy	#OCTAGON_BLUE_BOOKSHELF
+	lda	#DIRECTION_E
+	jmp	done_goto
+
+goto_fireplace:
+	ldy	#OCTAGON_FIREPLACE
+	lda	#DIRECTION_E
+	jmp	done_goto
+
+goto_door:
+	ldy	#OCTAGON_TEMPLE_DOORWAY
+	lda	#DIRECTION_S
+	jmp	done_goto
+
+done_goto:
+	sty	LOCATION
+	sta	DIRECTION
+	jmp	change_location
+
+
+
 
 	;==========================
 	; includes

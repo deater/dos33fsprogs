@@ -40,6 +40,7 @@ DIRECTION = $66
 	DIRECTION_S = $1
 	DIRECTION_E = $2
 	DIRECTION_W = $3
+	DIRECTION_ANY=$4
 	DIRECTION_ONLY_POINT = $40	; do not change pointer to grab
 	DIRECTION_SPLIT = $80		; split text/graphics
 LOCATION = $67
