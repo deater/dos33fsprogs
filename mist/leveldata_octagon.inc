@@ -6,7 +6,8 @@
 locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
-	.word location8, location9, location10
+	.word location8, location9, location10,location11
+	.word location12
 
 ; OCTAGON_TEMPLE_DOORWAY	-- temple doorway
 location0:
@@ -126,11 +127,11 @@ location6:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
-	.byte	OCTAGON_TEMPLE_CENTER	; west exit
+	.byte	OCTAGON_TOWER_ROTATION	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
-	.byte	DIRECTION_W|DIRECTION_ONLY_POINT	; west exit_dir
+	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
 	.word	$0000			; east bg
@@ -158,11 +159,11 @@ location7:
 
 ; OCTAGON_BOOKSHELF		-- the bookcase
 location8:
-	.byte	OCTAGON_TEMPLE_CENTER	; north exit
+	.byte	OCTAGON_BOOKSHELF_CLOSE	; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	DIRECTION_N|DIRECTION_ONLY_POINT	; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -207,4 +208,36 @@ location10:
 	.byte	BG_EAST
 	.byte	$ff
 
+; OCTAGON_TOWER_ROTATION		-- looking at tower rotation
+location11:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	OCTAGON_TEMPLE_CENTER	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W|DIRECTION_ONLY_POINT	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	tower_rotation_lzsa	; west bg
+	.byte	BG_WEST
+	.byte	$ff
 
+; OCTAGON_BOOKSHELF_CLOSE		-- the bookcase close in
+location12:
+	.byte	OCTAGON_TEMPLE_CENTER	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N|DIRECTION_ONLY_POINT	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	bookshelf_close_n_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	$ff

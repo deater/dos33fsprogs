@@ -21,8 +21,8 @@ octagon_graphics.inc:	\
 	frame_door_open.lzsa \
 	frame_bookcase_open.lzsa \
 	blue_book_shelf.lzsa \
-	bookshelf_n.lzsa \
-	map.lzsa
+	bookshelf_n.lzsa bookshelf_close_n.lzsa \
+	map.lzsa tower_rotation.lzsa
 	echo "temple_door_n_lzsa: .incbin \"temple_door_n.lzsa\"" > octagon_graphics.inc
 	echo "temple_door_s_lzsa: .incbin \"temple_door_s.lzsa\"" >> octagon_graphics.inc
 	echo "temple_center_n_lzsa: .incbin \"temple_center_n.lzsa\"" >> octagon_graphics.inc
@@ -42,7 +42,9 @@ octagon_graphics.inc:	\
 	echo "frame_bookcase_open_lzsa: .incbin \"frame_bookcase_open.lzsa\"" >> octagon_graphics.inc
 	echo "blue_book_shelf_lzsa: .incbin \"blue_book_shelf.lzsa\"" >> octagon_graphics.inc
 	echo "bookshelf_n_lzsa: .incbin \"bookshelf_n.lzsa\"" >> octagon_graphics.inc
+	echo "bookshelf_close_n_lzsa: .incbin \"bookshelf_close_n.lzsa\"" >> octagon_graphics.inc
 	echo "map_lzsa: .incbin \"map.lzsa\"" >> octagon_graphics.inc
+	echo "tower_rotation_lzsa: .incbin \"tower_rotation.lzsa\"" >> octagon_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
