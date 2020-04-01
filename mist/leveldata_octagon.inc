@@ -7,7 +7,7 @@ locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
-	.word location12
+	.word location12,location13,location14
 
 ; OCTAGON_TEMPLE_DOORWAY	-- temple doorway
 location0:
@@ -154,7 +154,10 @@ location7:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH
-	.byte	$ff
+	.byte	DIRECTION_N	; special exit
+	.byte	15,25		; special x
+	.byte	12,28		; special y
+	.word	open_bookshelf-1	; special function
 
 
 ; OCTAGON_BOOKSHELF		-- the bookcase
@@ -189,7 +192,11 @@ location9:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH
-	.byte	$ff
+	.byte	DIRECTION_N	; special exit
+	.byte	15,25		; special x
+	.byte	12,28		; special y
+	.word	close_bookshelf-1	; special function
+
 
 ; OCTAGON_BLUE_BOOKSHELF		-- the blue bookshelf
 location10:
@@ -241,3 +248,38 @@ location12:
 	.word	$0000			; west bg
 	.byte	BG_NORTH
 	.byte	$ff
+
+; OCTAGON_TOWER_HALL1		-- hallway to tower
+location13:
+	.byte	OCTAGON_TOWER_HALL2	; north exit
+	.byte	OCTAGON_TEMPLE_CENTER	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	tower_hall1_n_lzsa	; north bg
+	.word	tower_hall1_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; OCTAGON_TOWER_HALL2		-- hallway to tower
+location14:
+	.byte	$ff			; north exit
+	.byte	OCTAGON_TOWER_HALL1	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	tower_hall2_n_lzsa	; north bg
+	.word	tower_hall2_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+

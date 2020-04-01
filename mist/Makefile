@@ -82,6 +82,7 @@ octagon.o:	octagon.s zp.inc hardware.inc common_defines.inc \
 	keyboard.s \
 	draw_pointer.s \
 	end_level.s \
+	octagon_bookshelf.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o octagon.o octagon.s -l octagon.lst
 

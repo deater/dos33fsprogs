@@ -230,6 +230,8 @@ done_goto:
 
 	.include	"brother_books.s"
 
+	.include	"octagon_bookshelf.s"
+
 	; linking books
 
 	; letters
