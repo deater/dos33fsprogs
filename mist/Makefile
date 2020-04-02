@@ -6,7 +6,7 @@ PNG_TO_40x48D = ../gr-utils/png_to_40x48d
 PNG2RLE = ../gr-utils/png2rle
 B2D = ../bmp2dhr/b2d
 
-all:	mist.dsk
+all:	mist.dsk mist_side2.dsk
 
 mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON MECHE SELENA VIEWER STONEY
 	cp empty.dsk mist.dsk
@@ -15,10 +15,15 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON MECHE SELENA VIEWER STONEY
 	$(DOS33) -y mist.dsk BSAVE -a 0x4000 MIST_TITLE
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MIST
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 OCTAGON
-	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MECHE
+#	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MECHE
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 SELENA
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 VIEWER
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 STONEY
+	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
+
+mist_side2.dsk:	MECHE
+	cp empty.dsk mist_side2.dsk
+	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MECHE
 	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
 ###

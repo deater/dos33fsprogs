@@ -7,7 +7,8 @@ locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
-	.word location12,location13,location14
+	.word location12,location13,location14,location15
+	.word location16,location17,location18
 
 ; OCTAGON_TEMPLE_DOORWAY	-- temple doorway
 location0:
@@ -268,11 +269,11 @@ location13:
 
 ; OCTAGON_TOWER_HALL2		-- hallway to tower
 location14:
-	.byte	$ff			; north exit
+	.byte	OCTAGON_ELEVATOR_VIEW	; north exit
 	.byte	OCTAGON_TOWER_HALL1	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -281,5 +282,73 @@ location14:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; OCTAGON_ELEVATOR_VIEW		-- elevator in sight
+location15:
+	.byte	OCTAGON_ELEVATOR_OUT	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	elevator_far_n_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	$ff
+
+; OCTAGON_ELEVATOR_OUT		-- standing outside elevator
+location16:
+	.byte	OCTAGON_ELEVATOR_OPEN	; north exit
+	.byte	OCTAGON_TOWER_HALL2	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	elevator_n_lzsa		; north bg
+	.word	elevator_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; OCTAGON_ELEVATOR_OPEN		-- standing outside elevator, door open
+location17:
+	.byte	OCTAGON_ELEVATOR_IN	; north exit
+	.byte	OCTAGON_ELEVATOR_OUT	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_S	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	elevator_open_n_lzsa	; north bg
+	.word	elevator_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; OCTAGON_ELEVATOR_IN		-- standing in elevator
+location18:
+	.byte	$ff			; north exit
+	.byte	OCTAGON_ELEVATOR_OUT	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	elevator_lib_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH
 	.byte	$ff
 

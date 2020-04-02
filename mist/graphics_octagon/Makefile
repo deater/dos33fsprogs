@@ -27,7 +27,10 @@ octagon_graphics.inc:	\
 	bookshelf_close_n.lzsa \
 	map.lzsa tower_rotation.lzsa \
 	tower_hall1_n.lzsa tower_hall1_s.lzsa \
-	tower_hall2_n.lzsa tower_hall2_s.lzsa
+	tower_hall2_n.lzsa tower_hall2_s.lzsa \
+	elevator_far_n.lzsa \
+	elevator_n.lzsa elevator_s.lzsa elevator_open_n.lzsa \
+	elevator_lib_s.lzsa
 	echo "temple_door_n_lzsa: .incbin \"temple_door_n.lzsa\"" > octagon_graphics.inc
 	echo "temple_door_s_lzsa: .incbin \"temple_door_s.lzsa\"" >> octagon_graphics.inc
 	echo "temple_door_closed_s_lzsa: .incbin \"temple_door_closed_s.lzsa\"" >> octagon_graphics.inc
@@ -59,8 +62,11 @@ octagon_graphics.inc:	\
 	echo "tower_hall1_s_lzsa: .incbin \"tower_hall1_s.lzsa\"" >> octagon_graphics.inc
 	echo "tower_hall2_n_lzsa: .incbin \"tower_hall2_n.lzsa\"" >> octagon_graphics.inc
 	echo "tower_hall2_s_lzsa: .incbin \"tower_hall2_s.lzsa\"" >> octagon_graphics.inc
-
-
+	echo "elevator_far_n_lzsa: .incbin \"elevator_far_n.lzsa\"" >> octagon_graphics.inc
+	echo "elevator_n_lzsa: .incbin \"elevator_n.lzsa\"" >> octagon_graphics.inc
+	echo "elevator_s_lzsa: .incbin \"elevator_s.lzsa\"" >> octagon_graphics.inc
+	echo "elevator_open_n_lzsa: .incbin \"elevator_open_n.lzsa\"" >> octagon_graphics.inc
+	echo "elevator_lib_s_lzsa: .incbin \"elevator_lib_s.lzsa\"" >> octagon_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
