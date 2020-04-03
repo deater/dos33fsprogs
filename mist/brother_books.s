@@ -108,3 +108,27 @@ red_book_done:
 
 
 
+
+; comment summary
+
+; red 0
+; only static
+
+; red 1
+; who are you, bring me a red page, I can't see you
+; I am sirrus
+
+; blue 0
+; only static
+
+; blue 1
+; sirrus is that you?  who are you? help me.  bring blue pages
+; I must have the blue page
+
+; blue 2
+; you've returned,  I'm Achenar.  don't listen to my brother.
+; egotistical fool and liar, bring the blue pages, not the red ones
+; I've been wrongly imprisoned.   I will have my retribution.
+
+
+

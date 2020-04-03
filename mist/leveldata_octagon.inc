@@ -8,7 +8,8 @@ locations:
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
-	.word location16,location17,location18
+	.word location16,location17,location18,location19
+	.word location20,location21
 
 ; OCTAGON_TEMPLE_DOORWAY	-- temple doorway
 location0:
@@ -352,3 +353,54 @@ location18:
 	.byte	BG_SOUTH
 	.byte	$ff
 
+
+; OCTAGON_TOWER_BOOK		-- tower, bookside
+location19:
+	.byte	OCTAGON_ELEVATOR_IN	; north exit
+	.byte	OCTAGON_BOOK_LADDER	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_S	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	tower_book_n_lzsa	; north bg
+	.word	tower_book_s_lzsa	; south bg
+	.word	tower_book_e_lzsa	; east bg
+	.word	tower_book_w_lzsa	; west bg
+	.byte	BG_SOUTH|BG_NORTH|BG_EAST|BG_WEST
+	.byte	$ff
+
+; OCTAGON_BOOK_LADDER		-- ladder, bookside
+location20:
+	.byte	OCTAGON_TOWER_BOOK	; north exit
+	.byte	OCTAGON_BOOK_VIEW	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	tower_book_ladder_n_lzsa	; north bg
+	.word	tower_book_ladder_s_lzsa	; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_SOUTH|BG_NORTH
+	.byte	$ff
+
+; OCTAGON_BOOK_VIEW		-- ladder, view outside
+location21:
+	.byte	$ff			; north exit
+	.byte	OCTAGON_BOOK_LADDER	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	tower_book_view_n_lzsa		; north bg
+	.word	tower_book_view_blank_s_lzsa	; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_SOUTH|BG_NORTH
+	.byte	$ff
