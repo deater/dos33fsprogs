@@ -351,8 +351,10 @@ location18:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_SOUTH
-	.byte	$ff
-
+	.byte	DIRECTION_S	; special exit
+	.byte	29,35		; special x
+	.byte	34,40		; special y
+	.word	elevator_button-1	; special function
 
 ; OCTAGON_TOWER_BOOK		-- tower, bookside
 location19:
@@ -390,12 +392,12 @@ location20:
 
 ; OCTAGON_BOOK_VIEW		-- ladder, view outside
 location21:
-	.byte	$ff			; north exit
-	.byte	OCTAGON_BOOK_LADDER	; south exit
+	.byte	OCTAGON_BOOK_LADDER	; north exit
+	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	tower_book_view_n_lzsa		; north bg

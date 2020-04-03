@@ -1,4 +1,49 @@
 
+	; elevator button pressed
+
+elevator_button:
+
+	; see which floor we are on
+
+	ldy	#LOCATION_SOUTH_EXIT
+	lda	location18,Y
+	cmp	#OCTAGON_ELEVATOR_OUT
+	bne	elevator_goto_library_level
+
+elevator_goto_tower_level:
+	; we want to go up the tower
+
+	; change exit
+	lda	#OCTAGON_TOWER_BOOK
+	sta	location18,Y
+
+	; change bg image
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<elevator_tower_s_lzsa
+	sta	location18,Y
+	lda	#>elevator_tower_s_lzsa
+	sta	location18+1,Y
+
+	jmp	change_location
+
+elevator_goto_library_level:
+	; we want to move back to the library
+
+	; change exit
+	lda	#OCTAGON_ELEVATOR_OUT
+	sta	location18,Y
+
+	; change south bg image
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<elevator_lib_s_lzsa
+	sta	location18,Y
+	lda	#>elevator_lib_s_lzsa
+	sta	location18+1,Y
+
+	jmp	change_location
+
+
 open_bookshelf:
 
 	; change background of center room N
