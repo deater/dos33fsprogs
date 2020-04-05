@@ -9,7 +9,8 @@ locations:
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
-	.word location20,location21
+	.word location20,location21,location22,location23
+	.word location24
 
 ; OCTAGON_TEMPLE_DOORWAY	-- temple doorway
 location0:
@@ -360,12 +361,12 @@ location18:
 location19:
 	.byte	OCTAGON_ELEVATOR_IN	; north exit
 	.byte	OCTAGON_BOOK_LADDER	; south exit
-	.byte	$ff			; east exit
-	.byte	$ff			; west exit
+	.byte	OCTAGON_TOWER_RIGHT	; east exit
+	.byte	OCTAGON_TOWER_LEFT	; west exit
 	.byte	DIRECTION_S	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
+	.byte	DIRECTION_N	; east exit_dir
+	.byte	DIRECTION_N	; west exit_dir
 	.word	tower_book_n_lzsa	; north bg
 	.word	tower_book_s_lzsa	; south bg
 	.word	tower_book_e_lzsa	; east bg
@@ -406,3 +407,57 @@ location21:
 	.word	$0000				; west bg
 	.byte	BG_SOUTH|BG_NORTH
 	.byte	$ff
+
+; OCTAGON_TOWER_KEY		-- base of key ladder
+location22:
+	.byte	OCTAGON_KEY_LADDER	; north exit
+	.byte	$ff			; south exit
+	.byte	OCTAGON_TOWER_LEFT	; east exit
+	.byte	OCTAGON_TOWER_RIGHT	; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; east exit_dir
+	.byte	DIRECTION_S	; west exit_dir
+	.word	tower_key_n_lzsa	; north bg
+	.word	tower_key_s_lzsa	; south bg
+	.word	tower_key_e_lzsa	; east bg
+	.word	tower_key_w_lzsa	; west bg
+	.byte	BG_SOUTH|BG_NORTH|BG_EAST|BG_WEST
+	.byte	$ff
+
+; OCTAGON_TOWER_LEFT		-- left out of elevator
+location23:
+	.byte	OCTAGON_TOWER_KEY	; north exit
+	.byte	OCTAGON_TOWER_BOOK	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	tower_left_n_lzsa	; north bg
+	.word	tower_left_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH|BG_NORTH
+	.byte	$ff
+
+; OCTAGON_TOWER_RIGHT		-- right out of elevator
+location24:
+	.byte	OCTAGON_TOWER_KEY	; north exit
+	.byte	OCTAGON_TOWER_BOOK	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	tower_right_n_lzsa	; north bg
+	.word	tower_right_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH|BG_NORTH
+	.byte	$ff
+
+
+

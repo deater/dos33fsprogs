@@ -23,8 +23,8 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON MECHE SELENA VIEWER STONEY
 
 mist_side2.dsk:	MECHE
 	cp empty.dsk mist_side2.dsk
-	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MECHE
-	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
+	$(DOS33) -y mist_side2.dsk BSAVE -a 0x1400 MECHE
+	$(DOS33) -y mist_side2.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
 ###
 

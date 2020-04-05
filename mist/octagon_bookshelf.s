@@ -154,3 +154,12 @@ close_bookshelf:
 
 	rts
 
+
+
+
+
+; TOWER ROTATION HINTS
+; DOCK
+; OCTOBER 11, 1984 10:04 AM
+; JANUARY 17, 1207 5:46 AM
+; NOVEMBER 23, 9791 6:57 PM
