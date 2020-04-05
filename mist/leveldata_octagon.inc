@@ -10,7 +10,7 @@ locations:
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
-	.word location24
+	.word location24,location25,location26
 
 ; OCTAGON_TEMPLE_DOORWAY	-- temple doorway
 location0:
@@ -459,5 +459,37 @@ location24:
 	.byte	BG_SOUTH|BG_NORTH
 	.byte	$ff
 
+; OCTAGON_KEY_LADDER		-- ladder, key side
+location25:
+	.byte	OCTAGON_KEY_VIEW	; north exit
+	.byte	OCTAGON_TOWER_KEY	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	tower_key_ladder_n_lzsa		; north bg
+	.word	tower_key_ladder_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_SOUTH|BG_NORTH
+	.byte	$ff
 
+; OCTAGON_KEY_VIEW		-- key ladder, view hint
+location26:
+	.byte	$ff			; north exit
+	.byte	OCTAGON_KEY_LADDER	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	tower_key_view_blank_n_lzsa	; north bg
+	.word	tower_key_view_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_SOUTH|BG_NORTH
+	.byte	$ff
 
