@@ -1,5 +1,8 @@
-
+	;=========================
+	;=========================
 	; elevator button pressed
+	;=========================
+	;=========================
 
 elevator_button:
 
@@ -44,6 +47,12 @@ elevator_goto_library_level:
 	jmp	change_location
 
 
+	;===================================
+	;===================================
+	; open bookshelf (by touching frame)
+	;===================================
+	;===================================
+
 open_bookshelf:
 
 	; if already open, make noise
@@ -51,21 +60,21 @@ open_bookshelf:
 	ldy	#LOCATION_NORTH_EXIT
 	lda	location8,Y
 	cmp	#OCTAGON_BOOKSHELF_CLOSE
-	beq	actually_open
+	beq	actually_open_shelf
 
 	jsr	cant_noise
 
 	rts
 
-actually_open:
+actually_open_shelf:
 
 	; change background of center room N
 
 	ldy	#LOCATION_NORTH_BG
-	lda	#<temple_center_open_n_lzsa
-	sta	location1,Y
-	lda	#>temple_center_open_n_lzsa
-	sta	location1+1,Y
+;	lda	#<temple_center_open_n_lzsa
+;	sta	location1,Y
+;	lda	#>temple_center_open_n_lzsa
+;	sta	location1+1,Y
 
 	; change background of bookshelf N
 
@@ -114,6 +123,11 @@ actually_open:
 
 	rts
 
+	;===================================
+	;===================================
+	; close bookshelf (by touching frame)
+	;===================================
+	;===================================
 
 
 close_bookshelf:
@@ -123,21 +137,21 @@ close_bookshelf:
 	ldy	#LOCATION_NORTH_EXIT
 	lda	location8,Y
 	cmp	#OCTAGON_BOOKSHELF_CLOSE
-	bne	actually_close
+	bne	actually_close_shelf
 
 	jsr	cant_noise
 
 	rts
 
-actually_close:
+actually_close_shelf:
 
 	; change background of center room N
 
 	ldy	#LOCATION_NORTH_BG
-	lda	#<temple_center_n_lzsa
-	sta	location1,Y
-	lda	#>temple_center_n_lzsa
-	sta	location1+1,Y
+;	lda	#<temple_center_n_lzsa
+;	sta	location1,Y
+;	lda	#>temple_center_n_lzsa
+;	sta	location1+1,Y
 
 	; change background of bookshelf N
 
@@ -198,7 +212,7 @@ actually_close:
 
 
 	;=============================
-	; swirl the picture frame
+	; swirl the shelf picture frame
 	;=============================
 shelf_swirl:
 
@@ -232,8 +246,25 @@ advance_swirl:
 	cmp	#6
 	bne	shelf_swirl_no_inc
 
-	lda	#0
+	; reset animation, switch to bookshelf animation
+
+	lda	LOCATION
+	cmp	#OCTAGON_FRAME_SHELF
+	bne	not_shelf
+
+	lda	#1
+	bne	done_shelf
+
+not_shelf:
+	lda	#10
+done_shelf:
+
 	sta	ANIMATE_FRAME
+
+	lda	#OCTAGON_TEMPLE_CENTER
+	sta	LOCATION
+
+	jsr	change_location
 
 shelf_swirl_no_inc:
 
@@ -242,7 +273,7 @@ shelf_swirl_no_inc:
 
 
 	;=============================
-	; swirl the picture frame
+	; swirl the door picture frame
 	;=============================
 door_swirl:
 
@@ -271,7 +302,138 @@ cant_noise_loop:
 	rts
 
 
+
+	;=============================
+	; animate_shelf_open
+	;=============================
+animate_shelf_open:
+
+	lda	ANIMATE_FRAME
+	cmp	#5
+	bcs	animate_shelf_close
+
+	asl
+	tay
+
+	lda	shelf_open_sprites,Y
+	sta	INL
+	lda	shelf_open_sprites+1,Y
+	sta	INH
+
+	lda	#15
+
+advance_shelf_open:
+	sta	XPOS
+	lda	#14
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+
+	lda	FRAMEL
+	and	#$f
+
+	bne	shelf_open_no_inc
+
+	inc	ANIMATE_FRAME
+
+	lda	ANIMATE_FRAME
+	cmp	#4
+	beq	update_final_shelf_bg
+	cmp	#5
+	bne	shelf_open_no_inc
+
+	; reset animation/bg
+
+	lda	#0
+	sta	ANIMATE_FRAME
+
+shelf_open_no_inc:
+
+	rts
+
+
+	; 0 1 2 3 4 5 open
+	;10 9 8 7 6 5 close
+
+animate_shelf_close:
+
+	lda	ANIMATE_FRAME
+	sec
+	sbc	#5
+
+	asl
+	tay
+
+	lda	shelf_open_sprites,Y
+	sta	INL
+	lda	shelf_open_sprites+1,Y
+	sta	INH
+
+	lda	#15
+	sta	XPOS
+	lda	#14
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+
+	lda	FRAMEL
+	and	#$f
+
+	bne	shelf_close_no_dec
+
+	dec	ANIMATE_FRAME
+
+	lda	ANIMATE_FRAME
+	cmp	#6
+	beq	update_final_shelf_bg
+	cmp	#5
+	bne	shelf_close_no_dec
+
+	; reset animation
+
+	lda	#0
+	sta	ANIMATE_FRAME
+
+shelf_close_no_dec:
+
+	rts
+
+
+update_final_shelf_bg:
+
+	ldy	#LOCATION_NORTH_EXIT
+	lda	location8,Y
+	cmp	#OCTAGON_BOOKSHELF_CLOSE
+	bne	finally_open_shelf
+
+	ldy	#LOCATION_NORTH_BG
+	lda	#<temple_center_n_lzsa
+	sta	location1,Y
+	lda	#>temple_center_n_lzsa
+	jmp	all_done_open_shelf
+
+finally_open_shelf:
+	ldy	#LOCATION_NORTH_BG
+	lda	#<temple_center_open_n_lzsa
+	sta	location1,Y
+	lda	#>temple_center_open_n_lzsa
+
+all_done_open_shelf:
+	sta	location1+1,Y
+	jsr	change_location
+
+	rts
+
+
+
+
+;===================================================
+;===================================================
 ; sprites
+;===================================================
+;===================================================
 
 shelf_swirl_sprites:
 	.word empty_swirl
@@ -283,10 +445,20 @@ door_swirl_sprites:
 	.word door_swirl1,door_swirl2,door_swirl3,door_swirl4
 	.word empty_swirl
 
+shelf_open_sprites:
+	.word empty_swirl
+	.word shelf_open1,shelf_open2,shelf_open3
+	.word empty_swirl
+
+shelf_close_sprites:
+	.word empty_swirl
+	.word shelf_open3,shelf_open2,shelf_open1
+	.word empty_swirl
+
+
 empty_swirl:
 	.byte 1,1
 	.byte	$AA
-
 
 shelf_swirl1:
 	.byte 7,6
@@ -356,4 +528,51 @@ door_swirl4:
 	.byte $00,$47,$77,$44,$00,$00,$00
 	.byte $00,$00,$44,$44,$d4,$00,$00
 	.byte $00,$00,$d0,$dd,$dd,$00,$00
+
+shelf_open1:
+	.byte 10,12
+	.byte $88,$00,$00,$80,$88,$88,$80,$00,$00,$88
+	.byte $08,$00,$88,$88,$88,$88,$88,$88,$00,$08
+	.byte $00,$80,$88,$88,$88,$88,$88,$88,$88,$00
+	.byte $08,$88,$98,$88,$98,$98,$08,$98,$98,$08
+	.byte $00,$99,$99,$88,$99,$99,$00,$99,$99,$00
+	.byte $58,$08,$58,$48,$08,$08,$08,$08,$28,$d8
+	.byte $55,$dd,$55,$41,$30,$30,$00,$00,$11,$dd
+	.byte $08,$08,$08,$68,$08,$08,$08,$08,$08,$48
+	.byte $41,$41,$40,$6d,$11,$33,$11,$00,$11,$44
+	.byte $58,$08,$d8,$08,$08,$08,$08,$08,$08,$08
+	.byte $55,$44,$88,$30,$30,$00,$00,$60,$60,$00
+	.byte $95,$94,$9d,$92,$92,$92,$90,$91,$91,$91
+
+shelf_open2:
+	.byte 10,12
+	.byte $88,$00,$00,$80,$88,$88,$80,$00,$00,$88
+	.byte $08,$00,$88,$88,$88,$88,$88,$88,$00,$08
+	.byte $00,$80,$88,$88,$88,$88,$88,$88,$88,$00
+	.byte $08,$88,$98,$88,$98,$98,$08,$98,$98,$08
+	.byte $00,$99,$99,$88,$99,$99,$00,$99,$99,$00
+	.byte $00,$99,$99,$88,$99,$99,$00,$99,$99,$00
+	.byte $00,$99,$99,$77,$77,$77,$77,$79,$99,$00
+	.byte $58,$08,$58,$48,$08,$08,$08,$08,$28,$d8
+	.byte $85,$8d,$85,$81,$80,$80,$80,$80,$81,$8d
+	.byte $10,$10,$00,$d6,$20,$30,$20,$00,$20,$44
+	.byte $58,$08,$d8,$08,$08,$08,$08,$08,$08,$08
+	.byte $95,$94,$98,$90,$90,$90,$90,$90,$90,$90
+
+shelf_open3:
+	.byte 10,12
+	.byte $88,$00,$00,$80,$88,$88,$80,$00,$00,$88
+	.byte $08,$00,$88,$88,$88,$88,$88,$88,$00,$08
+	.byte $00,$80,$88,$88,$88,$88,$88,$88,$88,$00
+	.byte $08,$88,$98,$88,$98,$98,$08,$98,$98,$08
+	.byte $00,$99,$99,$88,$99,$99,$00,$99,$99,$00
+	.byte $00,$99,$99,$88,$99,$99,$00,$99,$99,$00
+	.byte $00,$99,$99,$77,$77,$77,$77,$79,$99,$00
+	.byte $00,$58,$08,$58,$48,$08,$08,$28,$d8,$00
+	.byte $80,$85,$8d,$85,$81,$80,$80,$81,$8d,$80
+	.byte $10,$10,$00,$d6,$20,$30,$20,$00,$20,$44
+	.byte $58,$08,$d8,$08,$08,$08,$08,$08,$08,$08
+	.byte $95,$94,$98,$90,$90,$90,$90,$90,$90,$90
+
+
 

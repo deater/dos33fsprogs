@@ -68,6 +68,8 @@ game_loop:
 	beq	animate_frame_shelf
 	cmp	#OCTAGON_FRAME_DOOR
 	beq	animate_frame_door
+	cmp	#OCTAGON_TEMPLE_CENTER
+	beq	animate_shelf
 
 	bne	nothing_special
 
@@ -77,6 +79,10 @@ animate_frame_shelf:
 
 animate_frame_door:
 	jsr	door_swirl
+	jmp	nothing_special
+
+animate_shelf:
+	jsr	animate_shelf_open
 	jmp	nothing_special
 
 nothing_special:
