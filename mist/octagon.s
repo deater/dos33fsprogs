@@ -22,6 +22,7 @@ octagon_start:
 	lda	#0
 	sta	DRAW_PAGE
 	sta	LEVEL_OVER
+	sta	ANIMATE_FRAME
 
 	; init cursor
 
@@ -58,6 +59,25 @@ game_loop:
 	;====================================
 	; handle special-case forground logic
 	;====================================
+
+	lda	ANIMATE_FRAME
+	beq	nothing_special
+
+	lda	LOCATION
+	cmp	#OCTAGON_FRAME_SHELF
+	beq	animate_frame_shelf
+	cmp	#OCTAGON_FRAME_DOOR
+	beq	animate_frame_door
+
+	bne	nothing_special
+
+animate_frame_shelf:
+	jsr	shelf_swirl
+	jmp	nothing_special
+
+animate_frame_door:
+	jsr	door_swirl
+	jmp	nothing_special
 
 nothing_special:
 
