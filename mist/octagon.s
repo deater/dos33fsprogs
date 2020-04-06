@@ -70,6 +70,8 @@ game_loop:
 	beq	animate_frame_door
 	cmp	#OCTAGON_TEMPLE_CENTER
 	beq	animate_shelf
+	cmp	#OCTAGON_ELEVATOR_IN
+	beq	animate_elevator
 
 	bne	nothing_special
 
@@ -83,6 +85,10 @@ animate_frame_door:
 
 animate_shelf:
 	jsr	animate_shelf_open
+	jmp	nothing_special
+
+animate_elevator:
+	jsr	animate_elevator_ride
 	jmp	nothing_special
 
 nothing_special:

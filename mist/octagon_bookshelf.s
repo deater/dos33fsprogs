@@ -6,6 +6,12 @@
 
 elevator_button:
 
+	; disable button temporarily
+
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#$ff
+	sta	location18,Y
+
 	; see which floor we are on
 
 	ldy	#LOCATION_SOUTH_EXIT
@@ -14,35 +20,29 @@ elevator_button:
 	bne	elevator_goto_library_level
 
 elevator_goto_tower_level:
+
+	; disable exit so we can't get off while running
+	lda	#$ff
+	sta	location18,Y
+
 	; we want to go up the tower
 
-	; change exit
-	lda	#OCTAGON_TOWER_BOOK
-	sta	location18,Y
+	; animation starts at frame 5
 
-	; change bg image
+	lda	#5
+	sta	ANIMATE_FRAME
 
-	ldy	#LOCATION_SOUTH_BG
-	lda	#<elevator_tower_s_lzsa
-	sta	location18,Y
-	lda	#>elevator_tower_s_lzsa
-	sta	location18+1,Y
-
-	jmp	change_location
+	rts
 
 elevator_goto_library_level:
 	; we want to move back to the library
 
-	; change exit
-	lda	#OCTAGON_ELEVATOR_OUT
+	; disable exit so we can't get off while running
+	lda	#$ff
 	sta	location18,Y
 
-	; change south bg image
-	ldy	#LOCATION_SOUTH_BG
-	lda	#<elevator_lib_s_lzsa
-	sta	location18,Y
-	lda	#>elevator_lib_s_lzsa
-	sta	location18+1,Y
+	lda	#(5|128)
+	sta	ANIMATE_FRAME
 
 	jmp	change_location
 
@@ -68,16 +68,16 @@ open_bookshelf:
 
 actually_open_shelf:
 
-	; change background of center room N
+	; disable entering tunnel until complete
+	; otherwise animate left still running
 
-	ldy	#LOCATION_NORTH_BG
-;	lda	#<temple_center_open_n_lzsa
-;	sta	location1,Y
-;	lda	#>temple_center_open_n_lzsa
-;	sta	location1+1,Y
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#$ff
+	sta	location1,Y
 
 	; change background of bookshelf N
 
+	ldy	#LOCATION_NORTH_BG
 	lda	#<bookshelf_open_n_lzsa
 	sta	location8,Y
 	lda	#>bookshelf_open_n_lzsa
@@ -145,16 +145,15 @@ close_bookshelf:
 
 actually_close_shelf:
 
-	; change background of center room N
+	; disable special until animation done
 
-	ldy	#LOCATION_NORTH_BG
-;	lda	#<temple_center_n_lzsa
-;	sta	location1,Y
-;	lda	#>temple_center_n_lzsa
-;	sta	location1+1,Y
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#$ff
+	sta	location1,Y
 
 	; change background of bookshelf N
 
+	ldy	#LOCATION_NORTH_BG
 	lda	#<bookshelf_n_lzsa
 	sta	location8,Y
 	lda	#>bookshelf_n_lzsa
@@ -348,6 +347,12 @@ advance_shelf_open:
 	lda	#0
 	sta	ANIMATE_FRAME
 
+	; re-enable clicking
+
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#DIRECTION_ANY
+	sta	location1,Y
+
 shelf_open_no_inc:
 
 	rts
@@ -396,6 +401,10 @@ animate_shelf_close:
 	lda	#0
 	sta	ANIMATE_FRAME
 
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#DIRECTION_ANY
+	sta	location1,Y
+
 shelf_close_no_dec:
 
 	rts
@@ -426,8 +435,337 @@ all_done_open_shelf:
 
 	rts
 
+;===============================================
+;===============================================
+; animate elevator ride
+;===============================================
+;===============================================
+
+animate_elevator_ride:
+
+	lda	ANIMATE_FRAME
+	bpl	elevator_going_up
+
+	jmp	elevator_going_down
+
+;===============================================
+; elevator going up
+;===============================================
+
+elevator_going_up:
+	; we are going up the tower
+
+	; close door				5
+	; draw lib through slats 		6
+	; darkness				7
+	; 1 cycle of up				 8, 9,10,11,12,13,14,15
+	; 1 cycle of right			16,17,18,19,20,21,22,23
+	; 1 cycle of up				24,25,26,27,28,29,30,31
+	; close door, tower background		32,33
+	; open door, tower
+	; done
+
+	ldy	#LOCATION_SOUTH_BG
+
+	cmp	#5
+	beq	up_close_door
+	cmp	#7
+	bcc	up_draw_lib			; blt
+	beq	up_light_off
+	cmp	#16
+	bcc	up_animate_up
+	cmp	#24
+	bcc	up_animate_right
+	cmp	#32
+	bcc	up_animate_up
+	cmp	#34
+	bcc	up_light_on
+	bcs	up_open_door_tower
 
 
+up_close_door:
+	; Y already LOCATION_SOUTH_BG
+	lda	#<elevator_door_closed_s_lzsa
+	sta	location18,Y
+	lda	#>elevator_door_closed_s_lzsa
+	sta	location18+1,Y
+
+	jsr	change_location
+
+	jsr	gr_copy_to_current
+
+	jmp	up_draw_lib
+
+up_light_off:
+	; Y already LOCATION_SOUTH_BG
+	lda	#<elevator_dark_s_lzsa
+	sta	location18,Y
+	lda	#>elevator_dark_s_lzsa
+	sta	location18+1,Y
+
+	jsr	change_location
+
+up_draw_lib:
+	jsr	draw_elevator_window_lib
+
+	jmp	up_increment
+
+up_animate_up:
+	lda	ANIMATE_FRAME
+	and	#$7
+	asl
+	tay
+
+	lda	elevator_window_up_sprites,Y
+	sta	INL
+	lda	elevator_window_up_sprites+1,Y
+	sta	INH
+
+	lda	#17
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	jmp	up_increment
+
+up_animate_right:
+
+	lda	ANIMATE_FRAME
+	and	#$7
+	asl
+	tay
+
+	lda	elevator_window_left_sprites,Y
+	sta	INL
+	lda	elevator_window_left_sprites+1,Y
+	sta	INH
+
+	lda	#17
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	jmp	up_increment
+
+up_light_on:
+	; Y already LOCATION_SOUTH_BG
+
+	lda	#<elevator_door_closed_s_lzsa
+	sta	location18,Y
+	lda	#>elevator_door_closed_s_lzsa
+	sta	location18+1,Y
+
+	jsr	change_location
+
+	jsr	draw_elevator_window_tower
+
+	jmp	up_increment
+
+up_increment:
+	lda	FRAMEL
+	and	#$f
+	bne	done_up_increment
+
+	inc	ANIMATE_FRAME
+
+done_up_increment:
+	rts
+
+up_open_door_tower:
+
+	; change bg image
+
+	; Y already LOCATION_SOUTH_BG
+
+	lda	#<elevator_tower_s_lzsa
+	sta	location18,Y
+	lda	#>elevator_tower_s_lzsa
+	sta	location18+1,Y
+
+	; change exit
+
+	lda	#OCTAGON_TOWER_BOOK
+
+common_open_door:
+
+	ldy	#LOCATION_SOUTH_EXIT
+	sta	location18,Y
+
+	; re-enable button
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#DIRECTION_S
+	sta	location18,Y
+
+	lda	#0
+	sta	ANIMATE_FRAME
+
+	jmp	change_location
+
+
+;===============================================
+; elevator going down
+;===============================================
+
+elevator_going_down:
+	; we want to move back to the library
+
+	ldy	#LOCATION_SOUTH_BG
+
+	and	#$7f
+
+	cmp	#5
+	beq	down_close_door
+	cmp	#7
+	bcc	down_draw_tower			; blt
+	beq	down_light_off
+	cmp	#16
+	bcc	down_animate_down
+	cmp	#24
+	bcc	down_animate_left
+	cmp	#32
+	bcc	down_animate_down
+	cmp	#34
+	bcc	down_light_on
+	bcs	down_open_door_tower
+
+
+down_close_door:
+	; Y already LOCATION_SOUTH_BG
+	lda	#<elevator_door_closed_s_lzsa
+	sta	location18,Y
+	lda	#>elevator_door_closed_s_lzsa
+	sta	location18+1,Y
+
+	jsr	change_location
+
+	jsr	gr_copy_to_current
+
+	jmp	down_draw_tower
+
+down_light_off:
+	; Y already LOCATION_SOUTH_BG
+	lda	#<elevator_dark_s_lzsa
+	sta	location18,Y
+	lda	#>elevator_dark_s_lzsa
+	sta	location18+1,Y
+
+	jsr	change_location
+
+down_draw_tower:
+	jsr	draw_elevator_window_tower
+
+	jmp	down_increment
+
+down_animate_down:
+	lda	ANIMATE_FRAME
+	and	#$7
+	asl
+	tay
+
+	lda	elevator_window_down_sprites,Y
+	sta	INL
+	lda	elevator_window_down_sprites+1,Y
+	sta	INH
+
+	lda	#17
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	jmp	down_increment
+
+down_animate_left:
+
+	lda	ANIMATE_FRAME
+	and	#$7
+	asl
+	tay
+
+	lda	elevator_window_right_sprites,Y
+	sta	INL
+	lda	elevator_window_right_sprites+1,Y
+	sta	INH
+
+	lda	#17
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	jmp	down_increment
+
+down_light_on:
+	; Y already LOCATION_SOUTH_BG
+
+	lda	#<elevator_door_closed_s_lzsa
+	sta	location18,Y
+	lda	#>elevator_door_closed_s_lzsa
+	sta	location18+1,Y
+
+	jsr	change_location
+
+	jsr	draw_elevator_window_lib
+
+	jmp	down_increment
+
+down_increment:
+	lda	FRAMEL
+	and	#$f
+	bne	done_down_increment
+
+	inc	ANIMATE_FRAME
+
+done_down_increment:
+	rts
+
+down_open_door_tower:
+	; change south bg image
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<elevator_lib_s_lzsa
+	sta	location18,Y
+	lda	#>elevator_lib_s_lzsa
+	sta	location18+1,Y
+
+	; change exit
+	lda	#OCTAGON_ELEVATOR_OUT
+
+	jmp	common_open_door
+
+
+
+draw_elevator_window_lib:
+
+	lda	#<elevator_window_lib_sprite
+	sta	INL
+	lda	#>elevator_window_lib_sprite
+
+draw_window_common:
+
+	sta	INH
+
+	lda	#17
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	rts
+
+draw_elevator_window_tower:
+
+	lda	#<elevator_window_tower_sprite
+	sta	INL
+	lda	#>elevator_window_tower_sprite
+
+	jmp	draw_window_common
 
 ;===================================================
 ;===================================================
@@ -574,5 +912,143 @@ shelf_open3:
 	.byte $58,$08,$d8,$08,$08,$08,$08,$08,$08,$08
 	.byte $95,$94,$98,$90,$90,$90,$90,$90,$90,$90
 
+
+
+elevator_window_lib_sprite:
+	.byte 5,7
+	.byte $dd,$dd,$00,$dd,$dd
+	.byte $0d,$00,$00,$8d,$dd
+	.byte $00,$80,$00,$00,$08
+	.byte $80,$08,$00,$f0,$00
+	.byte $88,$90,$00,$00,$00
+	.byte $88,$99,$00,$00,$00
+	.byte $88,$99,$00,$00,$00
+
+elevator_window_tower_sprite:
+	.byte 5,7
+	.byte $00,$88,$00,$00,$00
+	.byte $00,$88,$00,$80,$80
+	.byte $00,$88,$00,$dd,$00
+	.byte $dd,$88,$00,$dd,$dd
+	.byte $dd,$88,$00,$d8,$d8
+	.byte $dd,$88,$00,$00,$5d
+	.byte $dd,$88,$00,$d0,$d0
+
+elevator_window_up_sprites:
+	.word elevator_window_up1_sprite,elevator_window_up1_sprite
+	.word elevator_window_up1_sprite,elevator_window_up2_sprite
+	.word elevator_window_up3_sprite,elevator_window_up4_sprite
+	.word elevator_window_up5_sprite,elevator_window_up5_sprite
+
+elevator_window_down_sprites:
+	.word elevator_window_up5_sprite,elevator_window_up5_sprite
+	.word elevator_window_up5_sprite,elevator_window_up4_sprite
+	.word elevator_window_up3_sprite,elevator_window_up2_sprite
+	.word elevator_window_up1_sprite,elevator_window_up1_sprite
+
+elevator_window_right_sprites:
+	.word elevator_window_right1_sprite,elevator_window_right1_sprite
+	.word elevator_window_right1_sprite,elevator_window_right2_sprite
+	.word elevator_window_right3_sprite,elevator_window_right4_sprite
+	.word elevator_window_right5_sprite,elevator_window_right5_sprite
+
+elevator_window_left_sprites:
+	.word elevator_window_right5_sprite,elevator_window_right5_sprite
+	.word elevator_window_right5_sprite,elevator_window_right4_sprite
+	.word elevator_window_right3_sprite,elevator_window_right2_sprite
+	.word elevator_window_right1_sprite,elevator_window_right1_sprite
+
+
+
+elevator_window_right1_sprite:
+elevator_window_up1_sprite:
+	.byte 5,7
+	.byte $57,$57,$00,$57,$57
+	.byte $55,$55,$00,$55,$55
+	.byte $75,$75,$00,$75,$75
+	.byte $55,$55,$00,$77,$55
+	.byte $55,$55,$00,$77,$55
+	.byte $57,$57,$00,$57,$57
+	.byte $55,$55,$00,$55,$55
+
+elevator_window_up2_sprite:
+	.byte 5,7
+	.byte $55,$55,$00,$77,$55
+	.byte $57,$57,$00,$57,$57
+	.byte $55,$55,$00,$55,$55
+	.byte $75,$75,$00,$75,$75
+	.byte $55,$55,$00,$77,$55
+	.byte $55,$55,$00,$77,$55
+	.byte $57,$57,$00,$57,$57
+
+elevator_window_up3_sprite:
+	.byte 5,7
+	.byte $55,$55,$00,$77,$55
+	.byte $55,$55,$00,$77,$55
+	.byte $57,$57,$00,$57,$57
+	.byte $55,$55,$00,$55,$55
+	.byte $75,$75,$00,$75,$75
+	.byte $55,$55,$00,$77,$55
+	.byte $55,$55,$00,$77,$55
+
+elevator_window_up4_sprite:
+	.byte 5,7
+	.byte $75,$75,$00,$75,$75
+	.byte $55,$55,$00,$77,$55
+	.byte $55,$55,$00,$77,$55
+	.byte $57,$57,$00,$57,$57
+	.byte $55,$55,$00,$55,$55
+	.byte $75,$75,$00,$75,$75
+	.byte $55,$55,$00,$77,$55
+
+elevator_window_up5_sprite:
+	.byte 5,7
+	.byte $55,$55,$00,$55,$55
+	.byte $75,$75,$00,$75,$75
+	.byte $55,$55,$00,$77,$55
+	.byte $55,$55,$00,$77,$55
+	.byte $57,$57,$00,$57,$57
+	.byte $55,$55,$00,$55,$55
+	.byte $75,$75,$00,$75,$75
+
+elevator_window_right2_sprite:
+	.byte 5,7
+	.byte $57,$57,$00,$57,$57
+	.byte $55,$55,$00,$55,$55
+	.byte $75,$75,$00,$75,$75
+	.byte $55,$77,$00,$55,$55
+	.byte $55,$77,$00,$55,$55
+	.byte $57,$57,$00,$57,$57
+	.byte $55,$55,$00,$55,$55
+
+elevator_window_right3_sprite:
+	.byte 5,7
+	.byte $57,$57,$00,$57,$77
+	.byte $55,$55,$00,$55,$77
+	.byte $75,$75,$00,$75,$77
+	.byte $55,$55,$00,$55,$55
+	.byte $55,$55,$00,$55,$55
+	.byte $57,$57,$00,$57,$77
+	.byte $55,$55,$00,$55,$77
+
+elevator_window_right4_sprite:
+	.byte 5,7
+	.byte $57,$57,$00,$57,$57
+	.byte $55,$55,$00,$55,$55
+	.byte $75,$75,$00,$75,$75
+	.byte $55,$55,$00,$55,$55
+	.byte $55,$55,$00,$55,$55
+	.byte $57,$57,$00,$57,$57
+	.byte $55,$55,$00,$55,$55
+
+elevator_window_right5_sprite:
+	.byte 5,7
+	.byte $77,$57,$00,$57,$57
+	.byte $77,$55,$00,$55,$55
+	.byte $77,$75,$00,$75,$75
+	.byte $55,$55,$00,$55,$55
+	.byte $55,$55,$00,$55,$55
+	.byte $77,$57,$00,$57,$57
+	.byte $77,$55,$00,$55,$55
 
 

@@ -465,7 +465,7 @@ location25:
 	.byte	OCTAGON_TOWER_KEY	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_N|DIRECTION_SPLIT	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
