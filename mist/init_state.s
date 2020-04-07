@@ -51,4 +51,9 @@ init_state:
 	sta	VIEWER_CHANNEL
 	sta	VIEWER_LATCHED
 
+	sta	TOWER_ROTATION
+
+	lda	#$ff		; for debugging
+	sta	MARKER_SWITCHES
+
 	rts

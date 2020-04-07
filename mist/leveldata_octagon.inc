@@ -134,7 +134,7 @@ location6:
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
-	.byte	DIRECTION_W	; west exit_dir
+	.byte	DIRECTION_W|DIRECTION_SPLIT	; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
 	.word	$0000			; east bg
@@ -233,7 +233,10 @@ location11:
 	.word	$0000			; east bg
 	.word	tower_rotation_lzsa	; west bg
 	.byte	BG_WEST
-	.byte	$ff
+	.byte	DIRECTION_W
+	.byte	28,33		; special x
+	.byte	14,22		; special y
+	.word	rotate_tower-1	; special function
 
 ; OCTAGON_BOOKSHELF_CLOSE		-- the bookcase close in
 location12:

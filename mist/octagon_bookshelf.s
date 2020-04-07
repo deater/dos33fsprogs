@@ -290,8 +290,12 @@ door_swirl:
 
 
 cant_noise:
-	ldx	#$50
+	ldx	#$ff
 cant_noise_loop:
+	bit	$c030
+	nop
+	nop
+	nop
 	bit	$c030
 	nop
 	nop

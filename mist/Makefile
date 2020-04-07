@@ -50,6 +50,7 @@ mist_title.o:	mist_title.s zp.inc hardware.inc common_defines.inc \
 	gr_copy.s gr_offsets.s gr_pageflip.s gr_putsprite_crop.s \
 	text_print.s gr_fast_clear.s decompress_fast_v2.s \
 	keyboard.s draw_pointer.s end_level.s audio.s \
+	init_state.s \
 	link_book_mist_dock.s common_sprites.inc leveldata_title.inc
 	ca65 -o mist_title.o mist_title.s -l mist_title.lst
 
@@ -88,6 +89,7 @@ octagon.o:	octagon.s zp.inc hardware.inc common_defines.inc \
 	draw_pointer.s \
 	end_level.s \
 	octagon_bookshelf.s \
+	octagon_rotation.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o octagon.o octagon.s -l octagon.lst
 

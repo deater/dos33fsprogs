@@ -60,6 +60,13 @@ game_loop:
 	; handle special-case forground logic
 	;====================================
 
+	; things always happening
+	lda	LOCATION
+	cmp	#OCTAGON_TOWER_ROTATION
+	beq	animate_tower_rotation
+
+	; things only happening when animating
+
 	lda	ANIMATE_FRAME
 	beq	nothing_special
 
@@ -89,6 +96,10 @@ animate_shelf:
 
 animate_elevator:
 	jsr	animate_elevator_ride
+	jmp	nothing_special
+
+animate_tower_rotation:
+	jsr	handle_tower_rotation
 	jmp	nothing_special
 
 nothing_special:
@@ -263,6 +274,8 @@ done_goto:
 	.include	"brother_books.s"
 
 	.include	"octagon_bookshelf.s"
+
+	.include	"octagon_rotation.s"
 
 	; linking books
 
