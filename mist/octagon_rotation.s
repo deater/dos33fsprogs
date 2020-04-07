@@ -1,4 +1,6 @@
-	; clickd on map, rotate the tower
+	;=================================
+	; clicked on map, rotate the tower
+	;=================================
 rotate_tower:
 
 	ldy	TOWER_ROTATION
@@ -19,7 +21,61 @@ handle_tower_rotation:
 	; draw sprites based on background
 	; only needs to be done once?
 
+	ldy	#0
+	lda	#1
+	sta	mask_smc+1
+tower_sprite_loop:
+
+	lda	MARKER_SWITCHES
+mask_smc:
+	and	#1
+	beq	skip_sprite
+
+	lda	map_sprites,Y
+	sta	INL
+	lda	map_sprites+1,Y
+	sta	INH
+	lda	map_sprites_coords,Y
+	sta	XPOS
+	lda	map_sprites_coords+1,Y
+	sta	YPOS
+
+	tya
+	pha
+	jsr	put_sprite_crop
+	pla
+	tay
+
+skip_sprite:
+	rol	mask_smc+1
+
+	iny
+	iny
+	cpy	#16
+	bne	tower_sprite_loop
+
+
+	; draw the tower line
 	jsr	draw_tower_line
+
+	; draw the blinking_tower
+
+	lda	FRAMEL
+	and	#$20
+	beq	tower_blink_off
+
+	lda	#<tower_sprite
+	sta	INL
+	lda	#>tower_sprite
+	sta	INH
+
+	lda	#29
+	sta	XPOS
+	lda	#18
+	sta	YPOS
+
+	jsr	put_sprite_crop
+tower_blink_off:
 
 	rts
 
@@ -212,3 +268,77 @@ yslopes:
 
 
 .endif
+
+
+;=======================
+; map sprites
+;=======================
+
+tower_sprite:	; at 29x16
+	.byte 2,2
+	.byte $FA,$FA
+	.byte $FF,$FF
+
+map_sprites:
+	.word dock_sprite,gears_sprite,spaceship_sprite,generator_sprite
+	.word clock_sprite,tree_sprite,pool_sprite,dentist_sprite
+
+map_sprites_coords:
+	.byte 21,28, 27,30, 27,6,  17,14
+	.byte 9,20, 17,26, 18,16, 24,22
+
+
+dock_sprite:	; at 21x28
+	.byte 5,3
+	.byte $FA,$FA,$FA,$FA,$FA
+	.byte $AF,$AF,$AF,$AF,$AF
+	.byte $AA,$FF,$AA,$AA,$AA
+
+gears_sprite:	; at 27x30
+	.byte 4,2
+	.byte $FA,$AF,$FA,$FA
+	.byte $AA,$AA,$FF,$FF
+
+spaceship_sprite:	; at 27,6
+	.byte 3,3
+	.byte $AA,$FF,$AA
+	.byte $A5,$FF,$AA
+	.byte $FA,$FF,$FA
+
+generator_sprite:	; at 17x14
+	.byte 2,2
+	.byte $FF,$AF
+	.byte $AF,$AA
+
+clock_sprite:	; at 9x20
+	.byte 4,2
+	.byte $FA,$FA,$AA,$AA
+	.byte $FF,$FF,$AA,$AF
+
+
+tree_sprite:	; at 17x26
+	.byte 3,3
+	.byte $AA,$FA,$AA
+	.byte $FF,$AA,$FF
+	.byte $AA,$AF,$AA
+
+pool_sprite:		; at 18x16
+	.byte 5,4
+	.byte $AA,$AA,$FA,$AA,$FA
+	.byte $AF,$AA,$FA,$AA,$AA
+	.byte $AA,$AA,$FA,$AA,$AF
+	.byte $AF,$AA,$AA,$AA,$AA
+
+dentist_sprite:	; at 24x22
+	.byte 4,3
+	.byte $AA,$FA,$FA,$AA
+	.byte $FF,$AA,$AA,$FF
+	.byte $AF,$FA,$FA,$AF
+
+
+
+
+; 10->
+; AA04F752 2F4149FE
+; AAADCDCD DCDCDCCC
+; ** TOWER ROTATION **
