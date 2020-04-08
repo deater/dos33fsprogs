@@ -8,6 +8,9 @@ B2D = ../bmp2dhr/b2d
 
 all:	mist.dsk mist_side2.dsk
 
+zip:	mist.dsk mist_side2.dsk
+	zip mist.zip mist.dsk mist_side2.dsk
+
 mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON MECHE SELENA VIEWER STONEY
 	cp empty.dsk mist.dsk
 	$(DOS33) -y mist.dsk SAVE A HELLO
