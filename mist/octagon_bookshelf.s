@@ -1,3 +1,107 @@
+
+	;================================
+	; read a book on the shelf
+	;================================
+
+read_book:
+
+	bit	KEYRESET
+	bit	SET_TEXT
+
+	ldx	XPOS
+	ldy	YPOS
+	cpy	#18
+	bcc	top_shelf
+	cpy	#32
+	bcc	middle_shelf
+	bcs	bottom_shelf
+
+top_shelf:
+	cpx	#12
+	bcc	read_burnt_book
+	cpx	#20
+	bcc	read_channelwood
+	cpx	#28
+	bcc	read_burnt_book
+	bcs	read_stoneship
+
+middle_shelf:
+	cpx	#13
+	bcc	read_burnt_book
+	cpx	#18
+	bcc	read_selenitic
+	cpx	#30
+	bcc	read_burnt_book
+	bcs	read_fireplace
+
+bottom_shelf:
+	cpx	#8
+	bcc	read_burnt_book
+	cpx	#15
+	bcc	read_mechanical
+	bcs	read_burnt_book
+
+read_burnt_book:
+	jmp	all_done_book
+
+read_fireplace:
+	; FIXME
+	jmp	all_done_book
+
+read_selenitic:
+	lda     #<selenitic_book_lzsa
+        sta     LZSA_SRC_LO
+        iny
+        lda     #>selenitic_book_lzsa
+	jmp	load_the_book
+
+read_stoneship:
+	lda     #<stoneship_book_lzsa
+        sta     LZSA_SRC_LO
+        iny
+        lda     #>stoneship_book_lzsa
+	jmp	load_the_book
+
+read_mechanical:
+	lda     #<mechanical_book_lzsa
+        sta     LZSA_SRC_LO
+        iny
+        lda     #>mechanical_book_lzsa
+	jmp	load_the_book
+
+read_channelwood:
+	lda     #<channelwood_book_lzsa
+        sta     LZSA_SRC_LO
+        iny
+        lda     #>channelwood_book_lzsa
+
+load_the_book:
+
+        sta     LZSA_SRC_HI
+
+        lda     #$c                     ; load to page $c00
+        jsr     decompress_lzsa2_fast
+
+	jsr	gr_copy_to_current
+
+	jsr	page_flip
+
+wait_done_book:
+
+	lda	KEYPRESS
+	bpl	wait_done_book
+	bit	KEYRESET
+
+all_done_book:
+
+	bit	SET_GR
+
+	jsr	change_location
+
+	rts
+
+
+
 	;=========================
 	; change rotation
 	;=========================

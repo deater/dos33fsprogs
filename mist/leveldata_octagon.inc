@@ -253,7 +253,10 @@ location12:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH
-	.byte	$ff
+	.byte	DIRECTION_N	; special exit
+	.byte	6,34		; special x
+	.byte	2,46		; special y
+	.word	read_book-1	; special function
 
 ; OCTAGON_TOWER_HALL1		-- hallway to tower
 location13:

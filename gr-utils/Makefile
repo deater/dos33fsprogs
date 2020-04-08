@@ -2,7 +2,7 @@ include ../Makefile.inc
 
 CFLAGS = -g -Wall -O2
 
-all:	png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96
+all:	text2gr png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96
 
 
 ###
@@ -12,6 +12,13 @@ loadpng.o:	loadpng.c loadpng.h
 
 rle_common.o:	rle_common.c rle_common.h
 	$(CC) $(CFLAGS) -c rle_common.c
+###
+
+text2gr:	text2gr.o
+	$(CC) $(LFLAGS) -o text2gr text2gr.o
+
+text2gr.o:		text2gr.c
+	$(CC) $(CFLAGS) -c text2gr.c
 
 ###
 

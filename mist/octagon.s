@@ -279,7 +279,9 @@ done_goto:
 
 	; linking books
 
-	; letters
+	; books
+
+	.include	"books/octagon_books.inc"
 
 	.include	"common_sprites.inc"
 
