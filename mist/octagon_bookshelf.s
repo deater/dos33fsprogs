@@ -1,4 +1,126 @@
 	;=========================
+	; change rotation
+	;=========================
+	; in theory should use a lighter/darker background
+	; in some of the far views depending if view is outside
+
+change_rotation:
+	ldx	#LOCATION_NORTH_BG
+	ldy	#LOCATION_SOUTH_BG
+
+	lda	TOWER_ROTATION
+	cmp	#ROTATION_GEARS
+	beq	rotate_gears
+	cmp	#ROTATION_DOCK
+	beq	rotate_dock
+	cmp	#ROTATION_TREE
+	beq	rotate_tree
+	cmp	#ROTATION_SPACESHIP
+	beq	rotate_spaceship
+
+rotate_blank:
+
+	; change key view
+	lda	#<tower_key_view_blank_n_lzsa
+	sta	location26,X
+	lda	#>tower_key_view_blank_n_lzsa
+	sta	location26+1,X
+
+	; change outside view
+	lda	#<tower_book_view_blank_s_lzsa
+	sta	location21,Y
+	lda	#>tower_book_view_blank_s_lzsa
+	sta	location21+1,Y
+	rts
+
+rotate_gears:
+
+	; change key view
+	lda	#<tower_key_view_gears_hint_n_lzsa
+	sta	location26,X
+	lda	#>tower_key_view_gears_hint_n_lzsa
+	sta	location26+1,X
+
+	lda	GEAR_OPEN
+	bne	rotate_gear_open
+
+rotate_gear_closed:
+
+	; change outside view
+	lda	#<tower_book_view_gears_closed_s_lzsa
+	sta	location21,Y
+	lda	#>tower_book_view_gears_closed_s_lzsa
+	sta	location21+1,Y
+	rts
+
+rotate_gear_open:
+
+	; change outside view
+	lda	#<tower_book_view_gears_open_s_lzsa
+	sta	location21,Y
+	lda	#>tower_book_view_gears_open_s_lzsa
+	sta	location21+1,Y
+	rts
+
+rotate_dock:
+
+	; change key view
+	lda	#<tower_key_view_dock_hint_n_lzsa
+	sta	location26,X
+	lda	#>tower_key_view_dock_hint_n_lzsa
+	sta	location26+1,X
+
+	lda	SHIP_RAISED
+	beq	rotate_ship_down
+
+rotate_ship_up:
+	; change outside view
+	lda	#<tower_book_view_ship_up_s_lzsa
+	sta	location21,Y
+	lda	#>tower_book_view_ship_up_s_lzsa
+	sta	location21+1,Y
+	rts
+
+rotate_ship_down:
+	; change outside view
+	lda	#<tower_book_view_ship_down_s_lzsa
+	sta	location21,Y
+	lda	#>tower_book_view_ship_down_s_lzsa
+	sta	location21+1,Y
+	rts
+
+rotate_tree:
+
+	; change key view
+	lda	#<tower_key_view_tree_hint_n_lzsa
+	sta	location26,X
+	lda	#>tower_key_view_tree_hint_n_lzsa
+	sta	location26+1,X
+
+	; change outside view
+	lda	#<tower_book_view_tree_s_lzsa
+	sta	location21,Y
+	lda	#>tower_book_view_tree_s_lzsa
+	sta	location21+1,Y
+	rts
+
+rotate_spaceship:
+
+	; change key view
+	lda	#<tower_key_view_rocket_hint_n_lzsa
+	sta	location26,X
+	lda	#>tower_key_view_rocket_hint_n_lzsa
+	sta	location26+1,X
+
+	; change outside view
+	lda	#<tower_book_view_rocket_s_lzsa
+	sta	location21,Y
+	lda	#>tower_book_view_rocket_s_lzsa
+	sta	location21+1,Y
+	rts
+
+
+	;=========================
 	;=========================
 	; elevator button pressed
 	;=========================
@@ -198,16 +320,6 @@ actually_close_shelf:
 	sta	ANIMATE_FRAME
 
 	rts
-
-
-
-
-
-; TOWER ROTATION HINTS
-; DOCK
-; OCTOBER 11, 1984 10:04 AM
-; JANUARY 17, 1207 5:46 AM
-; NOVEMBER 23, 9791 6:57 PM
 
 
 	;=============================
@@ -1056,3 +1168,45 @@ elevator_window_right5_sprite:
 	.byte $77,$55,$00,$55,$55
 
 
+
+
+; TOWER ROTATION HINTS
+
+; ROCKET
+;       59
+;	BB
+;19->	59
+;      6FC43
+;      DCCDD
+;18->  VOLTS
+
+; TREE
+;       7C2C4
+;       BABAB
+;17-> 	7,2,4
+
+; GEARS
+;         2A40
+;         BBBB
+; 18->    2:40
+;         2C2C1
+;         BABAB
+; 18->    2,2,1
+;      429 81E4C5 2F44FD
+;      DDD CCCCCC CCDDCC
+; 11-> TRY HANDLE BOTTOM
+
+
+
+; DOCK
+;       F34F252  11C 1984 10A04 1D
+;       CCDCCCD  BBA BBBB BBBBB CC
+; 7->	OCTOBER  11, 1984 10:04 AM
+;
+;       A1E5129  17C 1207  5A46 1D
+;       CCCDCDD  BBA BBBB  BBBB CC
+; 	JANUARY  17, 1207  5:46 AM
+;
+;       EF65D252 23C 9791  6A57 0D
+;       CCDCCCCD BBA BBBB  BBBB DC
+; 	NOVEMBER 23, 9791  6:57 PM

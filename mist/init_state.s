@@ -53,6 +53,8 @@ init_state:
 
 	sta	TOWER_ROTATION
 
+	sta	SHIP_RAISED
+
 	lda	#$ff		; for debugging
 	sta	MARKER_SWITCHES
 

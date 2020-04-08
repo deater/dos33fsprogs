@@ -13,6 +13,8 @@ rotate_tower:
 done_rotate_tower:
 	sty	TOWER_ROTATION
 
+	jsr	change_rotation
+
 	rts
 
 
@@ -124,9 +126,9 @@ white_line:
 color_good:
 	stx	plot_color+1
 
-	; get initial position (30 x 20)
+	; get initial position (29 x 20)
 
-	ldy	#(30*2)
+	ldy	#(29*2)
 	sty	CH
 
 	lda	#(20*4)
