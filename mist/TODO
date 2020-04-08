@@ -12,6 +12,8 @@ octagon_room:
 + in tower could have extra window open/closed far backgrounds
 + turning when looking at hint loses the text mode
 + final puzzle in fireplace
++ line drawing on map isn't optimal
++ should hints be black on white text?
 
 General:
 + Insert floppy #100 joke?
