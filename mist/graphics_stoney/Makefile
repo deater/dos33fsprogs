@@ -31,4 +31,4 @@ stoney_graphics.inc:	\
 ####
 
 clean:		
-		rm -f *~ *.o *.lst *.gr *.lzsa viewer_graphics.inc
+		rm -f *~ *.o *.lst *.gr *.lzsa stoney_graphics.inc

@@ -1,4 +1,4 @@
-; The Stone Ship level
+; The Channely Wood level
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -7,7 +7,7 @@
 	.include "hardware.inc"
 	.include "common_defines.inc"
 
-stoney_start:
+channel_start:
 	;===================
 	; init screen
 	jsr	TEXT
@@ -140,7 +140,7 @@ back_to_mist:
 	.include	"draw_pointer.s"
 	.include	"end_level.s"
 
-	.include	"graphics_stoney/stoney_graphics.inc"
+	.include	"graphics_channel/channel_graphics.inc"
 
 
 	; puzzles
@@ -149,4 +149,4 @@ back_to_mist:
 
 	.include	"page_sprites.inc"
 
-	.include	"leveldata_stoney.inc"
+	.include	"leveldata_channel.inc"

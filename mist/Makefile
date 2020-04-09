@@ -11,7 +11,8 @@ all:	mist.dsk mist_side2.dsk
 zip:	mist.dsk mist_side2.dsk
 	zip mist.zip mist.dsk mist_side2.dsk
 
-mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON MECHE SELENA VIEWER STONEY
+mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
+		MECHE SELENA CHANNEL STONEY
 	cp empty.dsk mist.dsk
 	$(DOS33) -y mist.dsk SAVE A HELLO
 	$(DOS33) -y mist.dsk BSAVE -a 0x1000 LOADER
@@ -20,6 +21,7 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON MECHE SELENA VIEWER STONEY
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 OCTAGON
 #	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MECHE
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 SELENA
+	$(DOS33) -y mist.dsk BSAVE -a 0x1400 CHANNEL
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 VIEWER
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 STONEY
 	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
@@ -166,6 +168,22 @@ stoney.o:	stoney.s zp.inc hardware.inc common_defines.inc \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o stoney.o stoney.s -l stoney.lst
 
+####
+
+CHANNEL:	channel.o
+	ld65 -o CHANNEL channel.o -C ../linker_scripts/apple2_1400.inc
+
+channel.o:	channel.s zp.inc hardware.inc common_defines.inc \
+	graphics_channel/channel_graphics.inc \
+	common_sprites.inc \
+	page_sprites.inc \
+	leveldata_channel.inc \
+	keyboard.s \
+	draw_pointer.s \
+	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	ca65 -o channel.o channel.s -l channel.lst
+
+
 
 
 ####
@@ -177,4 +195,6 @@ graphics_island/mist_graphics.inc:
 ####
 
 clean:		
-		rm -f *~ *.o *.lst HELLO LOADER MIST_TITLE MIST OCTAGON MECHE SELENA
+		rm -f *~ *.o *.lst HELLO LOADER MIST_TITLE \
+			MIST OCTAGON \
+			MECHE SELENA STONEY CHANNEL

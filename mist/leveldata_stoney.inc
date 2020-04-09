@@ -1,6 +1,6 @@
 
 ;===============================================
-; level data for Viewer Room
+; level data for Stoney Ship
 ;===============================================
 
 locations:
