@@ -277,19 +277,22 @@ location13:
 ; MIST_TREE_CORRIDOR_5		-- tree corridor #5
 location14:
 	.byte	MIST_TREE_CORRIDOR_4	; north exit
-	.byte	$ff			; south exit
-	.byte	MIST_TREE_CABIN		; east exit
+	.byte	MIST_CLOCK		; south exit
+	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	tree5_n_lzsa	; north bg
-	.word	$0000		; south bg
+	.word	tree5_s_lzsa	; south bg
 	.word	tree5_e_lzsa	; east bg
 	.word	$0000		; west bg
-	.byte	BG_NORTH | BG_EAST
-	.byte	$ff		; special exit
+	.byte	BG_NORTH | BG_EAST | BG_SOUTH
+	.byte	DIRECTION_E	; special exit
+	.byte	9,29		; special x
+	.byte	2,46		; special y
+	.word	enter_channel_main-1	; special function
 
 ; MIST_GEAR			-- gear
 location15:
@@ -366,7 +369,7 @@ location18:
 ; MIST_TREE_CORRIDOR_4		-- tree corridor4 (with generator switch)
 location19:
 	.byte	MIST_TREE_CORRIDOR_2	; north exit
-	.byte	MIST_CLOCK		; south exit
+	.byte	MIST_TREE_CORRIDOR_5	; south exit
 	.byte	$ff			; east exit
 	.byte	MIST_TOWER1_TRAIL	; west exit
 	.byte	DIRECTION_N	; north exit_dir
@@ -383,7 +386,7 @@ location19:
 	.byte	0,46		; special y
 	.word	green_house-1	; special function
 
-; MIST_TREE_CABIN		-- tree cabin
+; UNUSED (was MIST_TREE_CABIN)
 location20:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
@@ -395,7 +398,7 @@ location20:
 	.byte	$ff		; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
-	.word	tree_cabin_e_lzsa		; east bg
+	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_EAST
 	.byte	$ff		; special exit

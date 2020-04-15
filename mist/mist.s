@@ -221,6 +221,32 @@ enter_viewer:
 
 	jmp	set_level_over
 
+enter_channel_main:
+
+	lda	#CHANNEL_OUTSIDE_CABIN
+	sta	LOCATION
+
+	lda	#LOAD_CHANNEL
+	sta	WHICH_LOAD
+
+	lda	#DIRECTION_E
+	sta	DIRECTION
+
+	jmp	set_level_over
+
+enter_channel_clock:
+
+	lda	#CHANNEL_CLOCK_PATH
+	sta	LOCATION
+
+	lda	#LOAD_CHANNEL
+	sta	WHICH_LOAD
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+
+	jmp	set_level_over
+
 enter_stoneyship:
 	lda	#STONEY_SHIP_STERN
 	sta	LOCATION

@@ -123,6 +123,38 @@ back_to_mist:
 
 	rts
 
+enter_path:
+
+	lda	#$ff
+	sta	LEVEL_OVER
+
+	lda     #MIST_TREE_CORRIDOR_5
+	sta	LOCATION
+	lda	#DIRECTION_N
+	sta	DIRECTION
+
+	lda	#LOAD_MIST
+	sta	WHICH_LOAD
+
+	rts
+
+
+enter_clock:
+
+	lda	#$ff
+	sta	LEVEL_OVER
+
+	lda     #MIST_CLOCK
+	sta	LOCATION
+	lda	#DIRECTION_S
+	sta	DIRECTION
+
+	lda	#LOAD_MIST
+	sta	WHICH_LOAD
+
+	rts
+
+
 
 
 	;==========================
