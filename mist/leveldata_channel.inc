@@ -25,11 +25,10 @@ location0:
 	.word	clearing_e_lzsa		; east bg
 	.word	clearing_w_lzsa		; west bg
 	.byte	BG_SOUTH|BG_EAST|BG_WEST
-	.byte	$ff
-;	.byte	DIRECTION_E	; special exit
-;	.byte	12,25		; special x
-;	.byte	26,46		; special y
-;	.word	controls_pressed-1		; special function
+	.byte	DIRECTION_E|DIRECTION_W	; special exit
+	.byte	7,33		; special x
+	.byte	2,46		; special y
+	.word	handle_clearing-1		; special function
 
 ; CHANNEL_CABIN_OPEN		-- outside, door open
 location1:
@@ -46,7 +45,10 @@ location1:
 	.word	clearing_e_open_lzsa	; east bg
 	.word	clearing_w_lzsa		; west bg
 	.byte	BG_SOUTH|BG_EAST|BG_WEST
-	.byte	$ff
+	.byte	DIRECTION_E|DIRECTION_W	; special exit
+	.byte	7,33		; special x
+	.byte	2,46		; special y
+	.word	handle_clearing-1		; special function
 
 ; CHANNEL_CABIN_ENTRANCE	-- entering the cabin
 location2:
@@ -129,7 +131,7 @@ location6:
 	.byte	CHANNEL_OUTSIDE_CABIN	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_N	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
@@ -145,7 +147,7 @@ location7:
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_S	; north exit_dir
-	.byte	DIRECTION_E	; south exit_dir
+	.byte	DIRECTION_W	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	tree_base_n_lzsa	; north bg
@@ -174,19 +176,19 @@ location8:
 
 ; CHANNEL_TREE_BASEMENT		-- in the tree basement
 location9:
-	.byte	$ff			; north exit
+	.byte	CHANNEL_BIG_TREE	; north exit
 	.byte	CHANNEL_TREE_BOOK	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	$0000			; north bg
-	.word	tree_basement_book_s_lzsa	; south bg
+	.word	tree_basement_n_lzsa	; north bg
+	.word	tree_basement_s_lzsa	; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
-	.byte	BG_SOUTH
+	.byte	BG_SOUTH|BG_NORTH
 	.byte	$ff
 
 ; CHANNEL_TREE_BOOK		-- tree basement book
@@ -226,7 +228,7 @@ location11:
 ; CHANNEL_TREE_BOOK_OPEN		-- tree basement book open
 location12:
 	.byte	$ff			; north exit
-	.byte	CHANNEL_TREE_BOOK_OPEN	; south exit
+	.byte	CHANNEL_TREE_BASEMENT	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
@@ -256,14 +258,3 @@ location13:
 	.word	$0000			; west bg
 	.byte	BG_SOUTH|BG_NORTH
 	.byte	$ff
-
-
-
-
-
-
-
-
-
-
-

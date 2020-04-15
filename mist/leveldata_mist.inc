@@ -236,7 +236,7 @@ location11:
 	.word	$0000		; west bg
 	.byte	BG_SOUTH|BG_EAST
 	.byte	DIRECTION_E	; special exit
-	.byte	9,29		; special x
+	.byte	5,30		; special x
 	.byte	2,46		; special y
 	.word	enter_channel_clock-1	; special function
 
