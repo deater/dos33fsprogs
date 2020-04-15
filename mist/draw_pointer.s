@@ -18,15 +18,15 @@ draw_pointer:
 	cmp	#$ff
 	beq	finger_not_special	; if $ff not special
 
-	lda	(LOCATION_STRUCT_L),Y
-	cmp	#$4
-	beq	was_any
+;	lda	(LOCATION_STRUCT_L),Y
+;	cmp	#DIRECTION_ANY
+;	beq	was_any
 
 	lda	DIRECTION
 	and	#$f
 
-	cmp	(LOCATION_STRUCT_L),Y
-	bne	finger_not_special	; only special if facing right way
+	and	(LOCATION_STRUCT_L),Y
+	beq	finger_not_special	; only special if facing right way
 
 was_any:
 
@@ -147,9 +147,15 @@ check_cursor_right:
 	beq	finger_right
 	bne	finger_uturn_right
 
+log2_table:
+	;     0 1 2 3 4 5 6 7 8
+	.byte 0,0,1,1,2,2,2,2,3
+
 lookup_direction:
 	lda	DIRECTION
 	and	#$f
+	tay
+	lda	log2_table,Y
 	asl
 	asl
 	asl

@@ -154,6 +154,8 @@ no_split:
 
 done_split:
 	and	#$f			; mask off special flags
+	tay
+	lda	log2_table,Y
 	asl
 	clc
 	adc	#LOCATION_NORTH_BG
@@ -204,6 +206,8 @@ go_forward:
 
 	lda	DIRECTION
 	and	#$f
+	tay
+	lda	log2_table,Y
 	clc
 	adc	#LOCATION_NORTH_EXIT
 	tay
@@ -218,6 +222,8 @@ go_forward:
 
 	lda	DIRECTION
 	and	#$f
+	tay
+	lda	log2_table,Y
 	clc
 	adc	#LOCATION_NORTH_EXIT_DIR
 	tay
