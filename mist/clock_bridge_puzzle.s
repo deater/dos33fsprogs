@@ -308,6 +308,10 @@ done_clock_bridge:
 
 draw_clock_face:
 
+	lda	DIRECTION
+	cmp	#DIRECTION_S
+	bne	done_draw_clock_face
+
 	lda	CLOCK_HOUR
 	asl
 	tay
@@ -335,6 +339,7 @@ draw_clock_face:
 	lda	#6
 	sta	YPOS
 	jsr	put_sprite_crop
+done_draw_clock_face:
 
 	rts
 

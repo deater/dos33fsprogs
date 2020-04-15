@@ -232,10 +232,13 @@ location11:
 	.byte	$ff		; west exit_dir
 	.word	$0000		; north bg
 	.word	clock_s_lzsa	; south bg
-	.word	$0000		; east bg
+	.word	clock_e_lzsa	; east bg
 	.word	$0000		; west bg
-	.byte	BG_SOUTH
-	.byte	$ff		; special exit
+	.byte	BG_SOUTH|BG_EAST
+	.byte	DIRECTION_E	; special exit
+	.byte	9,29		; special x
+	.byte	2,46		; special y
+	.word	enter_channel_clock-1	; special function
 
 ; MIST_SPACESHIP_FAR		-- spaceship far
 location12:
