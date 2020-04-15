@@ -20,6 +20,8 @@ channel_graphics.inc:	\
 	tree_base_n.lzsa tree_base_s.lzsa \
 	tree_basement_n.lzsa tree_basement_s.lzsa \
 	tree_basement_book_s.lzsa \
+	tree_basement_book_open_s.lzsa \
+	tree_basement_book_closed_s.lzsa \
 	tree_elevator_basement_s.lzsa
 	echo "arrival_n_lzsa: .incbin \"arrival_n.lzsa\"" > channel_graphics.inc
 	echo "arrival_s_lzsa: .incbin \"arrival_s.lzsa\"" >> channel_graphics.inc
@@ -41,6 +43,8 @@ channel_graphics.inc:	\
 	echo "tree_basement_s_lzsa: .incbin \"tree_basement_s.lzsa\"" >> channel_graphics.inc
 	echo "tree_basement_n_lzsa: .incbin \"tree_basement_n.lzsa\"" >> channel_graphics.inc
 	echo "tree_basement_book_s_lzsa: .incbin \"tree_basement_book_s.lzsa\"" >> channel_graphics.inc
+	echo "tree_basement_book_open_s_lzsa: .incbin \"tree_basement_book_open_s.lzsa\"" >> channel_graphics.inc
+	echo "tree_basement_book_closed_s_lzsa: .incbin \"tree_basement_book_closed_s.lzsa\"" >> channel_graphics.inc
 	echo "tree_elevator_basement_s_lzsa: .incbin \"tree_elevator_basement_s.lzsa\"" >> channel_graphics.inc
 
 %.gr: %.png

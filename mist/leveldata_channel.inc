@@ -219,7 +219,7 @@ location11:
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	$0000			; north bg
-	.word	tree_basement_book_s_lzsa	; south bg
+	.word	tree_basement_book_closed_s_lzsa	; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_SOUTH
@@ -236,11 +236,15 @@ location12:
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	$0000			; north bg
-	.word	tree_basement_book_s_lzsa	; south bg
+	.word	tree_basement_book_open_s_lzsa	; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_SOUTH
-	.byte	$ff
+	.byte   DIRECTION_S	; special exit
+	.byte	21,31	; special x
+	.byte	10,24	; special y
+	.word	channel_link_book-1
+
 
 ; CHANNEL_ARRIVAL		-- arrival in channelwood
 location13:

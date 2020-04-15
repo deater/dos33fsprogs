@@ -196,6 +196,8 @@ exit_to_mist:
 	.include	"draw_pointer.s"
 	.include	"end_level.s"
 
+	.include	"audio.s"
+
 	.include	"graphics_channel/channel_graphics.inc"
 
 
@@ -206,3 +208,7 @@ exit_to_mist:
 	.include	"page_sprites.inc"
 
 	.include	"leveldata_channel.inc"
+
+	; linking books
+
+	.include	"link_book_channel.s"

@@ -28,7 +28,7 @@ draw_pointer:
 	and	(LOCATION_STRUCT_L),Y
 	beq	finger_not_special	; only special if facing right way
 
-was_any:
+;was_any:
 
 	; see if X1 < X < X2
 	lda	CURSOR_X
