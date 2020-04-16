@@ -63,7 +63,42 @@ game_loop:
 	;====================================
 
 	lda	LOCATION
-;	cmp	#MECHE_OPEN_BOOK
+	cmp	#CHANNEL_TREE_BOOK_OPEN
+	beq	animate_channel_book
+
+	jmp	nothing_special
+
+animate_channel_book:
+
+	; handle animated linking book
+
+	lda	ANIMATE_FRAME
+	asl
+	tay
+	lda	channel_movie,Y
+	sta	INL
+	lda	channel_movie+1,Y
+	sta	INH
+
+	lda	#22
+	sta	XPOS
+	lda	#12
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$f
+	bne	done_animate_book
+
+	inc	ANIMATE_FRAME
+	lda	ANIMATE_FRAME
+	cmp	#11
+	bne	done_animate_book
+	lda	#0
+	sta	ANIMATE_FRAME
+done_animate_book:
+	jmp	nothing_special
 
 nothing_special:
 
@@ -212,3 +247,4 @@ exit_to_mist:
 	; linking books
 
 	.include	"link_book_channel.s"
+
