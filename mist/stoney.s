@@ -91,7 +91,7 @@ animate_stoney_book:
 
 	inc	ANIMATE_FRAME
 	lda	ANIMATE_FRAME
-	cmp	#11
+	cmp	#16
 	bne	done_animate_book
 	lda	#0
 	sta	ANIMATE_FRAME

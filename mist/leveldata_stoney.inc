@@ -142,11 +142,11 @@ location7:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
-	.byte	$ff			; west exit
+	.byte	STONEY_UMBRELLA_PATH	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
+	.byte	DIRECTION_W	; west exit_dir
 	.word	arrival_n_lzsa			; north bg
 	.word	arrival_s_lzsa			; south bg
 	.word	arrival_e_lzsa			; east bg
