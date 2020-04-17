@@ -6,7 +6,8 @@
 locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
-	.word location8, location9
+	.word location8, location9, location10,location11
+	.word location12,location13,location14,location15
 
 ; STONEY_SHIP_STERN		-- back of the ship
 location0:
@@ -141,11 +142,11 @@ location6:
 location7:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
-	.byte	$ff			; east exit
+	.byte	STONEY_LIGHTHOUSE_PATH	; east exit
 	.byte	STONEY_UMBRELLA_PATH	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	arrival_n_lzsa			; north bg
 	.word	arrival_s_lzsa			; south bg
@@ -187,5 +188,114 @@ location9:
 	.word	umbrella_w_lzsa		; west bg
 	.byte	BG_EAST|BG_WEST
 	.byte	$ff
+
+; STONEY_LIGHTHOUSE_PATH			-- lighthouse path
+location10:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	STONEY_LIGHTHOUSE_DOOR	; east exit
+	.byte	STONEY_ARRIVAL		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	lighthouse_path_e_lzsa	; east bg
+	.word	lighthouse_path_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; STONEY_LIGHTHOUSE_DOOR			-- lighthouse door
+location11:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	STONEY_LIGHTHOUSE_INSIDE; east exit
+	.byte	STONEY_LIGHTHOUSE_PATH	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	lighthouse_door_e_lzsa	; east bg
+	.word	lighthouse_door_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; STONEY_LIGHTHOUSE_INSIDE		-- lighthouse inside
+location12:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	STONEY_LIGHTHOUSE_UPSTAIRS; east exit
+	.byte	STONEY_LIGHTHOUSE_DOOR	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	lighthouse_inside_n_lzsa	; north bg
+	.word	$0000				; south bg
+	.word	lighthouse_inside_e_lzsa	; east bg
+	.word	lighthouse_inside_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST|BG_NORTH
+	.byte	$ff
+
+; STONEY_LIGHTHOUSE_UPSTAIRS		-- lighthouse upstairs
+location13:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	STONEY_LIGHTHOUSE_DOWNLADDER	; east exit
+	.byte	STONEY_LIGHTHOUSE_BATTERY	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	lighthouse_upstairs_e_lzsa	; east bg
+	.word	lighthouse_upstairs_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; STONEY_LIGHTHOUSE_BATTERY		-- lighthouse battery
+location14:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	$ff				; east exit
+	.byte	STONEY_LIGHTHOUSE_UPSTAIRS	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	$0000				; east bg
+	.word	lighthouse_battery_w_lzsa	; west bg
+	.byte	BG_WEST
+	.byte	$ff
+
+; STONEY_LIGHTHOUSE_DOWNLADDER		-- lighthouse down the ladder
+location15:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	STONEY_LIGHTHOUSE_INSIDE	; east exit
+	.byte	$ff				; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	lighthouse_downladder_e_lzsa	; east bg
+	.word	$0000				; west bg
+	.byte	BG_EAST
+	.byte	$ff
+
+
+
+
+
+
+
 
 
