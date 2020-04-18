@@ -22,7 +22,11 @@ stoney_graphics.inc:	\
 	lighthouse_inside_e.lzsa lighthouse_inside_w.lzsa lighthouse_inside_n.lzsa \
 	lighthouse_upstairs_e.lzsa lighthouse_upstairs_w.lzsa \
 	lighthouse_battery_w.lzsa \
-	lighthouse_downladder_e.lzsa
+	lighthouse_downladder_e.lzsa \
+	doorway1_n.lzsa doorway1_s.lzsa doorway1_e.lzsa doorway1_w.lzsa \
+	bridge_e.lzsa bridge_w.lzsa \
+	exit_tunnel_n.lzsa exit_tunnel_s.lzsa \
+	exit_airlock_n.lzsa exit_airlock_s.lzsa
 	echo "ship_entry_n_lzsa: .incbin \"ship_entry_n.lzsa\"" > stoney_graphics.inc
 	echo "ship_entry_s_lzsa: .incbin \"ship_entry_s.lzsa\"" >> stoney_graphics.inc
 	echo "ship_bow_s_lzsa: .incbin \"ship_bow_s.lzsa\"" >> stoney_graphics.inc
@@ -52,6 +56,16 @@ stoney_graphics.inc:	\
 	echo "lighthouse_upstairs_w_lzsa: .incbin \"lighthouse_upstairs_w.lzsa\"" >> stoney_graphics.inc
 	echo "lighthouse_battery_w_lzsa: .incbin \"lighthouse_battery_w.lzsa\"" >> stoney_graphics.inc
 	echo "lighthouse_downladder_e_lzsa: .incbin \"lighthouse_downladder_e.lzsa\"" >> stoney_graphics.inc
+	echo "doorway1_n_lzsa: .incbin \"doorway1_n.lzsa\"" >> stoney_graphics.inc
+	echo "doorway1_s_lzsa: .incbin \"doorway1_s.lzsa\"" >> stoney_graphics.inc
+	echo "doorway1_e_lzsa: .incbin \"doorway1_e.lzsa\"" >> stoney_graphics.inc
+	echo "doorway1_w_lzsa: .incbin \"doorway1_w.lzsa\"" >> stoney_graphics.inc
+	echo "bridge_e_lzsa: .incbin \"bridge_e.lzsa\"" >> stoney_graphics.inc
+	echo "bridge_w_lzsa: .incbin \"bridge_w.lzsa\"" >> stoney_graphics.inc
+	echo "exit_tunnel_n_lzsa: .incbin \"exit_tunnel_n.lzsa\"" >> stoney_graphics.inc
+	echo "exit_tunnel_s_lzsa: .incbin \"exit_tunnel_s.lzsa\"" >> stoney_graphics.inc
+	echo "exit_airlock_n_lzsa: .incbin \"exit_airlock_n.lzsa\"" >> stoney_graphics.inc
+	echo "exit_airlock_s_lzsa: .incbin \"exit_airlock_s.lzsa\"" >> stoney_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
