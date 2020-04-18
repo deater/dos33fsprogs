@@ -20,7 +20,6 @@ General:
 + double link noise (once when leave, once when get there?)
 + adjust grab window on letter
 + add missing red book step
-+ move link sound to be loaded from disk
 
 dentist office:
 + implement
@@ -40,12 +39,23 @@ SELENA age:
 + whole way to tower thing
 + implement enough to get pages
 
-
-Tree age:
-+ Tree puzzle
+Channelwood:
++ Implement safe
++ Implement tree
++ Implement boiler
++ Implement water tank
++ Implement water valves
++ Implement elevators
++ Enable linking back to Myst
 
 Stoneship age:
-+ ?
++ Implement floating chest puzzle
++ Implement compass rose light puzzle
++ Implement raising/lowering water
++ Implement spinning generator/battery level
++ Implement telescope
++ Enable linking back to Myst
+
 
 Ending:
 + Turning
