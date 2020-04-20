@@ -9,6 +9,11 @@ locations:
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
+	.word location20,location21,location22,location23
+	.word location24,location25,location26,location27
+	.word location28,location29,location30,location31
+	.word location32
+
 
 ; STONEY_SHIP_STERN		-- back of the ship
 location0:
@@ -313,7 +318,7 @@ location16:
 location17:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
-	.byte	$ff				; east exit
+	.byte	STONEY_DOORWAY2			; east exit
 	.byte	STONEY_DOORWAY1			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
@@ -346,7 +351,7 @@ location18:
 ; STONEY_EXIT_AIRLOCK		-- exit door airlock
 location19:
 	.byte	STONEY_EXIT			; north exit
-	.byte	$ff				; south exit
+	.byte	STONEY_EXIT_AIRLOCK_OPEN	; south exit
 	.byte	$ff				; east exit
 	.byte	$ff				; west exit
 	.byte	DIRECTION_N	; north exit_dir
@@ -358,4 +363,226 @@ location19:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; STONEY_EXIT_AIRLOCK_OPEN	-- exit door airlock open
+location20:
+	.byte	$ff				; north exit
+	.byte	STONEY_BOOK_STAIRS1		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000				; north bg
+	.word	exit_airlock_open_s_lzsa	; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_SOUTH
+	.byte	$ff
+
+; STONEY_BOOK_STAIRS1		-- exit door top of stairs
+location21:
+	.byte	STONEY_EXIT_AIRLOCK		; north exit
+	.byte	STONEY_BOOK_STAIRS2		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_N	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	book_stairs1_n_lzsa	; north bg
+	.word	book_stairs1_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH|BG_NORTH
+	.byte	$ff
+
+; STONEY_BOOK_STAIRS2		-- stairs landing
+location22:
+	.byte	STONEY_BOOK_ROOM		; north exit
+	.byte	STONEY_BOOK_STAIRS1		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_N	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	book_stairs2_n_lzsa	; north bg
+	.word	book_stairs2_w_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH|BG_NORTH
+	.byte	$ff
+
+; STONEY_BOOK_ROOM		-- table book room
+location23:
+	.byte	STONEY_BOOK_TABLE		; north exit
+	.byte	STONEY_BOOK_STAIRS2		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	book_room_n_lzsa	; north bg
+	.word	book_room_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; STONEY_BOOK_TABLE		-- table book
+location24:
+	.byte	STONEY_BOOK_TABLE_CLOSED	; north exit
+	.byte	$ff				; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff			; west exit_dir
+	.word	book_table_n_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	$ff
+
+
+; STONEY_BOOK_TABLE_CLOSED		-- table book closed
+location25:
+	.byte	STONEY_BOOK_TABLE_OPEN		; north exit
+	.byte	$ff				; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff			; west exit_dir
+	.word	book_table_n_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	$ff
+
+; STONEY_BOOK_TABLE_OPEN		-- table book open
+location26:
+	.byte	STONEY_BOOK_ROOM		; north exit
+	.byte	$ff				; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff			; west exit_dir
+	.word	book_table_n_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	$ff
+
+; STONEY_DOORWAY2		-- doorway on other half of ship
+location27:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	STONEY_TELESCOPE_PATH1		; east exit
+	.byte	STONEY_BRIDGE			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	doorway2_n_lzsa		; north bg
+	.word	doorway2_s_lzsa		; south bg
+	.word	doorway2_e_lzsa		; east bg
+	.word	doorway2_w_lzsa		; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
+	.byte	$ff
+
+; STONEY_TELSCOPE_PATH1		-- path to telescope
+location28:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	STONEY_TELESCOPE_PATH2		; east exit
+	.byte	STONEY_DOORWAY2			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	telescope_path1_e_lzsa	; east bg
+	.word	telescope_path1_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; STONEY_TELESCOPE_PATH2		-- path to telescope
+location29:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	STONEY_TELESCOPE_PATH3		; east exit
+	.byte	STONEY_TELESCOPE_PATH1		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	telescope_path2_e_lzsa	; east bg
+	.word	telescope_path2_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; STONEY_TELESCOPE_PATH3		-- path to telescope
+location30:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	STONEY_TELESCOPE		; east exit
+	.byte	STONEY_TELESCOPE_PATH2		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	telescope_path3_w_lzsa	; east bg
+	.word	telescope_path3_e_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; STONEY_TELESCOPE		-- telescope
+location31:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	STONEY_TELESCOPE_VIEW		; east exit
+	.byte	STONEY_TELESCOPE_PATH3		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E|DIRECTION_SPLIT	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	telescope_e_lzsa	; east bg
+	.word	telescope_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; STONEY_TELESCOPE_VIEW		-- telescope
+location32:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	STONEY_TELESCOPE		; east exit
+	.byte	$ff				; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	telescope_view_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_EAST
 	.byte	$ff

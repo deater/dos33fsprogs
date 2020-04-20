@@ -26,7 +26,18 @@ stoney_graphics.inc:	\
 	doorway1_n.lzsa doorway1_s.lzsa doorway1_e.lzsa doorway1_w.lzsa \
 	bridge_e.lzsa bridge_w.lzsa \
 	exit_tunnel_n.lzsa exit_tunnel_s.lzsa \
-	exit_airlock_n.lzsa exit_airlock_s.lzsa
+	exit_airlock_n.lzsa exit_airlock_s.lzsa \
+	exit_airlock_open_s.lzsa \
+	book_stairs1_n.lzsa book_stairs1_s.lzsa \
+	book_stairs2_n.lzsa book_stairs2_w.lzsa \
+	book_room_n.lzsa book_room_s.lzsa \
+	book_table_n.lzsa \
+	doorway2_n.lzsa doorway2_s.lzsa doorway2_e.lzsa doorway2_w.lzsa \
+	telescope_path1_e.lzsa telescope_path1_w.lzsa \
+	telescope_path2_e.lzsa telescope_path2_w.lzsa \
+	telescope_path3_e.lzsa telescope_path3_w.lzsa \
+	telescope_e.lzsa telescope_w.lzsa \
+	telescope_view.lzsa
 	echo "ship_entry_n_lzsa: .incbin \"ship_entry_n.lzsa\"" > stoney_graphics.inc
 	echo "ship_entry_s_lzsa: .incbin \"ship_entry_s.lzsa\"" >> stoney_graphics.inc
 	echo "ship_bow_s_lzsa: .incbin \"ship_bow_s.lzsa\"" >> stoney_graphics.inc
@@ -66,6 +77,28 @@ stoney_graphics.inc:	\
 	echo "exit_tunnel_s_lzsa: .incbin \"exit_tunnel_s.lzsa\"" >> stoney_graphics.inc
 	echo "exit_airlock_n_lzsa: .incbin \"exit_airlock_n.lzsa\"" >> stoney_graphics.inc
 	echo "exit_airlock_s_lzsa: .incbin \"exit_airlock_s.lzsa\"" >> stoney_graphics.inc
+	echo "exit_airlock_open_s_lzsa: .incbin \"exit_airlock_open_s.lzsa\"" >> stoney_graphics.inc
+	echo "book_stairs1_n_lzsa: .incbin \"book_stairs1_n.lzsa\"" >> stoney_graphics.inc
+	echo "book_stairs1_s_lzsa: .incbin \"book_stairs1_s.lzsa\"" >> stoney_graphics.inc
+	echo "book_stairs2_n_lzsa: .incbin \"book_stairs2_n.lzsa\"" >> stoney_graphics.inc
+	echo "book_stairs2_w_lzsa: .incbin \"book_stairs2_w.lzsa\"" >> stoney_graphics.inc
+	echo "book_room_n_lzsa: .incbin \"book_room_n.lzsa\"" >> stoney_graphics.inc
+	echo "book_room_s_lzsa: .incbin \"book_room_s.lzsa\"" >> stoney_graphics.inc
+	echo "book_table_n_lzsa: .incbin \"book_table_n.lzsa\"" >> stoney_graphics.inc
+	echo "doorway2_n_lzsa: .incbin \"doorway2_n.lzsa\"" >> stoney_graphics.inc
+	echo "doorway2_s_lzsa: .incbin \"doorway2_s.lzsa\"" >> stoney_graphics.inc
+	echo "doorway2_e_lzsa: .incbin \"doorway2_e.lzsa\"" >> stoney_graphics.inc
+	echo "doorway2_w_lzsa: .incbin \"doorway2_w.lzsa\"" >> stoney_graphics.inc
+	echo "telescope_path1_e_lzsa: .incbin \"telescope_path1_e.lzsa\"" >> stoney_graphics.inc
+	echo "telescope_path1_w_lzsa: .incbin \"telescope_path1_w.lzsa\"" >> stoney_graphics.inc
+	echo "telescope_path2_e_lzsa: .incbin \"telescope_path2_e.lzsa\"" >> stoney_graphics.inc
+	echo "telescope_path2_w_lzsa: .incbin \"telescope_path2_w.lzsa\"" >> stoney_graphics.inc
+	echo "telescope_path3_e_lzsa: .incbin \"telescope_path3_e.lzsa\"" >> stoney_graphics.inc
+	echo "telescope_path3_w_lzsa: .incbin \"telescope_path3_w.lzsa\"" >> stoney_graphics.inc
+	echo "telescope_e_lzsa: .incbin \"telescope_e.lzsa\"" >> stoney_graphics.inc
+	echo "telescope_w_lzsa: .incbin \"telescope_w.lzsa\"" >> stoney_graphics.inc
+	echo "telescope_view_lzsa: .incbin \"telescope_view.lzsa\"" >> stoney_graphics.inc
+
 
 %.gr: %.png
 	$(PNG2GR) $< $@
