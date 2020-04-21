@@ -55,8 +55,8 @@ Stoneship age:
 + Implement raising/lowering water
 + Implement spinning generator/battery level
 + Implement telescope
-+ Enable linking back to Myst
-+ Implement book pages
++ Hook up the blue room
++ Animate mist book rising from table
 
 Ending:
 + Turning

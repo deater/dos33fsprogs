@@ -195,7 +195,11 @@ location9:
 	.word	umbrella_e_lzsa		; east bg
 	.word	umbrella_w_lzsa		; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte	$ff
+	.byte   DIRECTION_W     ; special exit
+	.byte	13,26   ; special x
+	.byte	18,24   ; special y
+	.word	umbrella_buttons-1
+
 
 ; STONEY_LIGHTHOUSE_PATH			-- lighthouse path
 location10:
@@ -263,7 +267,11 @@ location13:
 	.word	lighthouse_upstairs_e_lzsa	; east bg
 	.word	lighthouse_upstairs_w_lzsa	; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte	$ff
+	.byte   DIRECTION_W     ; special exit
+	.byte	15,24   ; special x
+	.byte	27,42   ; special y
+	.word	handle_crank-1
+
 
 ; STONEY_LIGHTHOUSE_BATTERY		-- lighthouse battery
 location14:

@@ -22,15 +22,16 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
 #	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MECHE
 #	$(DOS33) -y mist.dsk BSAVE -a 0x1400 SELENA
 #	$(DOS33) -y mist.dsk BSAVE -a 0x1400 CHANNEL
-	$(DOS33) -y mist.dsk BSAVE -a 0x1400 VIEWER
+#	$(DOS33) -y mist.dsk BSAVE -a 0x1400 VIEWER
 	$(DOS33) -y mist.dsk BSAVE -a 0x1400 STONEY
 	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
-mist_side2.dsk:	MECHE SELENA CHANNEL
+mist_side2.dsk:	MECHE SELENA CHANNEL VIEWER
 	cp empty.dsk mist_side2.dsk
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x1400 MECHE
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x1400 SELENA
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x1400 CHANNEL
+	$(DOS33) -y mist_side2.dsk BSAVE -a 0x1400 VIEWER
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
 ###

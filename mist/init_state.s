@@ -55,6 +55,11 @@ init_state:
 
 	sta	SHIP_RAISED
 
+	sta	PUMP_STATE
+	sta	BATTERY_CHARGE
+	sta	COMPASS_ANGLE
+	sta	CRANK_ANGLE
+
 	lda	#$ff		; for debugging
 	sta	MARKER_SWITCHES
 
