@@ -182,6 +182,7 @@ back_to_mist:
 	; linking books
 
 	.include	"link_book_stoney.s"
+	.include	"link_book_mist.s"
 
 	; puzzles
 

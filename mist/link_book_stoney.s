@@ -16,6 +16,7 @@ stoney_link_book:
 	;====================================
 	; load linking audio (12k) to $9000
 
+.if 0
 	lda	#<linking_filename
 	sta	OUTL
 	lda	#>linking_filename
@@ -32,6 +33,7 @@ stoney_link_book:
 	sta	BTC_H
 	ldx	#LINKING_NOISE_LENGTH		; 45 pages long???
 	jsr	play_audio
+.endif
 
 	lda	#STONEY_ARRIVAL
 	sta	LOCATION

@@ -12,7 +12,9 @@ locations:
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
-	.word location32
+	.word location32,location33,location34,location35
+	.word location36,location37,location38,location39
+	.word location40,location41,location42
 
 
 ; STONEY_SHIP_STERN		-- back of the ship
@@ -299,11 +301,11 @@ location15:
 
 ; STONEY_DOORWAY1		-- doorway1
 location16:
-	.byte	$ff				; north exit
+	.byte	STONEY_LEFT_TUNNEL1		; north exit
 	.byte	STONEY_ARRIVAL			; south exit
 	.byte	STONEY_BRIDGE			; east exit
 	.byte	STONEY_ARRIVAL			; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
@@ -585,4 +587,174 @@ location32:
 	.word	telescope_view_lzsa	; east bg
 	.word	$0000			; west bg
 	.byte	BG_EAST
+	.byte	$ff
+
+; STONEY_LEFT_TUNNEL1		-- left tunnel to red room
+location33:
+	.byte	STONEY_LEFT_TUNNEL2		; north exit
+	.byte	STONEY_DOORWAY1			; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	left_tunnel1_n_lzsa	; north bg
+	.word	left_tunnel1_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; STONEY_LEFT_TUNNEL2		-- left tunnel to red room, with side
+location34:
+	.byte	STONEY_LEFT_AIRLOCK		; north exit
+	.byte	STONEY_LEFT_TUNNEL1		; south exit
+	.byte	$ff				; east exit
+	.byte	STONEY_CRAWLWAY_LEFT		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	left_tunnel2_n_lzsa	; north bg
+	.word	left_tunnel2_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	left_tunnel2_w_lzsa	; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_WEST
+	.byte	$ff
+
+; STONEY_LEFT_AIRLOCK		-- airlock to red room
+location35:
+	.byte	STONEY_LEFT_AIRLOCK_OPEN	; north exit
+	.byte	STONEY_LEFT_TUNNEL2		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	left_airlock_n_lzsa	; north bg
+	.word	left_airlock_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; STONEY_LEFT_AIRLOCK_OPEN	-- airlock to red room, open
+location36:
+	.byte	STONEY_RED_ROOM			; north exit
+	.byte	STONEY_LEFT_TUNNEL2		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	left_airlock_open_n_lzsa	; north bg
+	.word	left_airlock_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; STONEY_RED_ROOM	-- red room
+location37:
+	.byte	$ff				; north exit
+	.byte	STONEY_LEFT_AIRLOCK		; south exit
+	.byte	$ff				; east exit
+	.byte	STONEY_RED_ROOM_DRESSER		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	red_room_n_lzsa		; north bg
+	.word	red_room_s_lzsa		; south bg
+	.word	red_room_e_lzsa		; east bg
+	.word	red_room_w_lzsa		; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
+	.byte	$ff
+
+; STONEY_RED_ROOM_DRESSER	-- red room dresser
+location38:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	$ff				; east exit
+	.byte	STONEY_RED_DRESSER_OPEN		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	dresser_e_lzsa		; west bg
+	.byte	BG_WEST
+	.byte	$ff
+
+; STONEY_RED_DRESSER_OPEN	-- red room dresser open
+location39:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	$ff				; east exit
+	.byte	STONEY_RED_ROOM			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	dresser_open_e_lzsa	; west bg
+	.byte	BG_WEST
+	.byte	$ff
+
+; STONEY_CRAWLWAY_LEFT	-- left crawlway
+location40:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	STONEY_LEFT_TUNNEL2		; east exit
+	.byte	STONEY_COMPASS_ROOM		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_N	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	crawlway_e_lzsa		; east bg
+	.word	crawlway_w_lzsa		; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; STONEY_COMPASS_ROOM	-- compass room
+location41:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	STONEY_CRAWLWAY_LEFT		; east exit
+	.byte	STONEY_COMPASS_ROSE		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	compass_room_e_lzsa	; east bg
+	.word	compass_room_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; STONEY_COMPASS_ROSE	-- compass rose
+location42:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	$ff				; east exit
+	.byte	STONEY_COMPASS_ROOM		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	compass_rose_w_lzsa	; west bg
+	.byte	BG_WEST
 	.byte	$ff

@@ -30,6 +30,7 @@ ending:
 
 MECHE age:
 + can poke around more stuff in their rooms
++ reduce size by using flipped-background attribute
 
 SELENA age:
 + optional mockingboard sound for keyboard?
@@ -55,7 +56,7 @@ Stoneship age:
 + Implement spinning generator/battery level
 + Implement telescope
 + Enable linking back to Myst
-
++ Implement book pages
 
 Ending:
 + Turning

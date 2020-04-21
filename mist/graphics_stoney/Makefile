@@ -37,7 +37,15 @@ stoney_graphics.inc:	\
 	telescope_path2_e.lzsa telescope_path2_w.lzsa \
 	telescope_path3_e.lzsa telescope_path3_w.lzsa \
 	telescope_e.lzsa telescope_w.lzsa \
-	telescope_view.lzsa
+	telescope_view.lzsa \
+	left_tunnel1_n.lzsa left_tunnel1_s.lzsa \
+	left_tunnel2_n.lzsa left_tunnel2_s.lzsa left_tunnel2_w.lzsa \
+	left_airlock_n.lzsa left_airlock_s.lzsa left_airlock_open_n.lzsa \
+	red_room_n.lzsa red_room_s.lzsa red_room_e.lzsa red_room_w.lzsa \
+	dresser_e.lzsa dresser_open_e.lzsa \
+	compass_room_w.lzsa compass_room_e.lzsa \
+	compass_rose_w.lzsa \
+	crawlway_e.lzsa crawlway_w.lzsa
 	echo "ship_entry_n_lzsa: .incbin \"ship_entry_n.lzsa\"" > stoney_graphics.inc
 	echo "ship_entry_s_lzsa: .incbin \"ship_entry_s.lzsa\"" >> stoney_graphics.inc
 	echo "ship_bow_s_lzsa: .incbin \"ship_bow_s.lzsa\"" >> stoney_graphics.inc
@@ -98,6 +106,25 @@ stoney_graphics.inc:	\
 	echo "telescope_e_lzsa: .incbin \"telescope_e.lzsa\"" >> stoney_graphics.inc
 	echo "telescope_w_lzsa: .incbin \"telescope_w.lzsa\"" >> stoney_graphics.inc
 	echo "telescope_view_lzsa: .incbin \"telescope_view.lzsa\"" >> stoney_graphics.inc
+	echo "left_tunnel1_n_lzsa: .incbin \"left_tunnel1_n.lzsa\"" >> stoney_graphics.inc
+	echo "left_tunnel1_s_lzsa: .incbin \"left_tunnel1_s.lzsa\"" >> stoney_graphics.inc
+	echo "left_tunnel2_n_lzsa: .incbin \"left_tunnel2_n.lzsa\"" >> stoney_graphics.inc
+	echo "left_tunnel2_s_lzsa: .incbin \"left_tunnel2_s.lzsa\"" >> stoney_graphics.inc
+	echo "left_tunnel2_w_lzsa: .incbin \"left_tunnel2_w.lzsa\"" >> stoney_graphics.inc
+	echo "left_airlock_n_lzsa: .incbin \"left_airlock_n.lzsa\"" >> stoney_graphics.inc
+	echo "left_airlock_s_lzsa: .incbin \"left_airlock_s.lzsa\"" >> stoney_graphics.inc
+	echo "left_airlock_open_n_lzsa: .incbin \"left_airlock_open_n.lzsa\"" >> stoney_graphics.inc
+	echo "red_room_n_lzsa: .incbin \"red_room_n.lzsa\"" >> stoney_graphics.inc
+	echo "red_room_s_lzsa: .incbin \"red_room_s.lzsa\"" >> stoney_graphics.inc
+	echo "red_room_e_lzsa: .incbin \"red_room_e.lzsa\"" >> stoney_graphics.inc
+	echo "red_room_w_lzsa: .incbin \"red_room_w.lzsa\"" >> stoney_graphics.inc
+	echo "dresser_e_lzsa: .incbin \"dresser_e.lzsa\"" >> stoney_graphics.inc
+	echo "dresser_open_e_lzsa: .incbin \"dresser_open_e.lzsa\"" >> stoney_graphics.inc
+	echo "compass_room_e_lzsa: .incbin \"compass_room_e.lzsa\"" >> stoney_graphics.inc
+	echo "compass_room_w_lzsa: .incbin \"compass_room_w.lzsa\"" >> stoney_graphics.inc
+	echo "compass_rose_w_lzsa: .incbin \"compass_rose_w.lzsa\"" >> stoney_graphics.inc
+	echo "crawlway_e_lzsa: .incbin \"crawlway_e.lzsa\"" >> stoney_graphics.inc
+	echo "crawlway_w_lzsa: .incbin \"crawlway_w.lzsa\"" >> stoney_graphics.inc
 
 
 %.gr: %.png
