@@ -462,11 +462,11 @@ location25:
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
-	.byte	$ff			; west exit_dir
-	.word	book_table_n_lzsa	; north bg
-	.word	$0000			; south bg
-	.word	$0000			; east bg
-	.word	$0000			; west bg
+	.byte	$ff				; west exit_dir
+	.word	book_table_closed_n_lzsa	; north bg
+	.word	$0000				; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
 	.byte	BG_NORTH
 	.byte	$ff
 
@@ -480,12 +480,15 @@ location26:
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff			; west exit_dir
-	.word	book_table_n_lzsa	; north bg
+	.word	book_table_open_n_lzsa	; north bg
 	.word	$0000			; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH
-	.byte	$ff
+	.byte   DIRECTION_N
+	.byte	24,32		; special x
+	.byte	12,22		; special y
+	.word	mist_link_book-1	; special function
 
 ; STONEY_DOORWAY2		-- doorway on other half of ship
 location27:

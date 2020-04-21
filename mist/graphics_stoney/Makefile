@@ -32,6 +32,7 @@ stoney_graphics.inc:	\
 	book_stairs2_n.lzsa book_stairs2_w.lzsa \
 	book_room_n.lzsa book_room_s.lzsa \
 	book_table_n.lzsa \
+	book_table_open_n.lzsa book_table_closed_n.lzsa \
 	doorway2_n.lzsa doorway2_s.lzsa doorway2_e.lzsa doorway2_w.lzsa \
 	telescope_path1_e.lzsa telescope_path1_w.lzsa \
 	telescope_path2_e.lzsa telescope_path2_w.lzsa \
@@ -93,6 +94,8 @@ stoney_graphics.inc:	\
 	echo "book_room_n_lzsa: .incbin \"book_room_n.lzsa\"" >> stoney_graphics.inc
 	echo "book_room_s_lzsa: .incbin \"book_room_s.lzsa\"" >> stoney_graphics.inc
 	echo "book_table_n_lzsa: .incbin \"book_table_n.lzsa\"" >> stoney_graphics.inc
+	echo "book_table_open_n_lzsa: .incbin \"book_table_open_n.lzsa\"" >> stoney_graphics.inc
+	echo "book_table_closed_n_lzsa: .incbin \"book_table_closed_n.lzsa\"" >> stoney_graphics.inc
 	echo "doorway2_n_lzsa: .incbin \"doorway2_n.lzsa\"" >> stoney_graphics.inc
 	echo "doorway2_s_lzsa: .incbin \"doorway2_s.lzsa\"" >> stoney_graphics.inc
 	echo "doorway2_e_lzsa: .incbin \"doorway2_e.lzsa\"" >> stoney_graphics.inc

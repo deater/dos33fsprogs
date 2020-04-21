@@ -65,6 +65,13 @@ game_loop:
 	lda	LOCATION
 	cmp	#STONEY_SHIP_BOOK_OPEN
 	beq	animate_stoney_book
+	cmp	#STONEY_BOOK_TABLE_OPEN
+	beq	animate_mist_book
+	cmp	#STONEY_RED_DRESSER_OPEN
+	beq	fg_draw_red_page
+	cmp	#STONEY_BLUE_ROOM_BED
+	beq	fg_draw_blue_page
+
 	jmp	nothing_special
 
 animate_stoney_book:
@@ -98,6 +105,46 @@ animate_stoney_book:
 done_animate_book:
 	jmp	nothing_special
 
+animate_mist_book:
+	lda     ANIMATE_FRAME
+	cmp	#6
+	bcc	mist_book_good			; blt
+
+	lda	#0
+	sta	ANIMATE_FRAME
+
+mist_book_good:
+
+	asl
+	tay
+	lda	mist_movie,Y
+	sta	INL
+	lda	mist_movie+1,Y
+	sta	INH
+
+	lda	#24
+	sta	XPOS
+	lda	#12
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$f
+	bne	done_animate_mist_book
+
+	inc	ANIMATE_FRAME
+
+done_animate_mist_book:
+	jmp	nothing_special
+
+fg_draw_red_page:
+	jsr	draw_red_page
+	jmp	nothing_special
+
+fg_draw_blue_page:
+	jsr     draw_blue_page
+	jmp     nothing_special
 
 nothing_special:
 
@@ -156,6 +203,47 @@ back_to_mist:
 	sta	WHICH_LOAD
 
 	rts
+
+	;=============================
+draw_red_page:
+
+	lda     RED_PAGES_TAKEN
+	and	#STONEY_PAGE
+	bne	no_draw_page
+
+	lda	#14
+	sta	XPOS
+	lda	#36
+	sta	YPOS
+
+	lda	#<red_page_sprite
+	sta	INL
+	lda	#>red_page_sprite
+	sta	INH
+
+	jmp	put_sprite_crop		; tail call
+
+draw_blue_page:
+
+	lda	BLUE_PAGES_TAKEN
+	and	#STONEY_PAGE
+	bne	no_draw_page
+
+	lda	#15
+	sta	XPOS
+	lda	#34
+	sta	YPOS
+
+	lda	#<blue_page_sprite
+	sta	INL
+	lda	#>blue_page_sprite
+	sta	INH
+
+	jmp	put_sprite_crop         ; tail call
+
+no_draw_page:
+	rts
+
 
 
 
