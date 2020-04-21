@@ -115,6 +115,7 @@ meche.o:	meche.s zp.inc hardware.inc common_defines.inc \
 	link_book_meche.s \
 	link_book_mist.s \
 	meche_rotation.s \
+	handle_pages.s \
 	keyboard.s \
 	draw_pointer.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
@@ -168,6 +169,8 @@ stoney.o:	stoney.s zp.inc hardware.inc common_defines.inc \
 	keyboard.s \
 	draw_pointer.s \
 	link_book_stoney.s \
+	link_book_mist.s \
+	handle_pages.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o stoney.o stoney.s -l stoney.lst
 

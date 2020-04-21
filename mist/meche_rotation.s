@@ -28,14 +28,6 @@ dropped_blue_page:
 
 	rts
 
-enter_blue_secret:
-
-	lda	#MECHE_BLUE_SECRET_DOOR
-	sta	LOCATION
-	jsr	change_location
-
-	rts
-
 take_red_page:
 
 	; FIXME: if we came back we could return page
@@ -58,6 +50,17 @@ take_red_page:
 dropped_red_page:
 	lda	#0
 	sta	HOLDING_PAGE
+
+	rts
+
+
+
+
+enter_blue_secret:
+
+	lda	#MECHE_BLUE_SECRET_DOOR
+	sta	LOCATION
+	jsr	change_location
 
 	rts
 

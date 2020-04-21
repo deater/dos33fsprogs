@@ -204,6 +204,16 @@ back_to_mist:
 
 	rts
 
+
+stoney_take_red_page:
+	lda	#STONEY_PAGE
+	jmp	take_red_page
+
+stoney_take_blue_page:
+	lda	#STONEY_PAGE
+	jmp	take_blue_page
+
+
 	;=============================
 draw_red_page:
 
@@ -273,6 +283,8 @@ no_draw_page:
 	.include	"link_book_mist.s"
 
 	; puzzles
+
+	.include	"handle_pages.s"
 
 	.include	"common_sprites.inc"
 

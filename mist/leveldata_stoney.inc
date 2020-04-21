@@ -709,7 +709,10 @@ location39:
 	.word	$0000			; east bg
 	.word	dresser_open_e_lzsa	; west bg
 	.byte	BG_WEST
-	.byte	$ff
+	.byte   DIRECTION_W
+        .byte   14,21		; special x
+        .byte   36,46		; special y
+        .word   stoney_take_red_page-1 ; special function
 
 ; STONEY_CRAWLWAY_LEFT	-- left crawlway
 location40:
