@@ -400,7 +400,7 @@ do_animate_stoney_book:
 	lda	#0
 	sta	ANIMATE_FRAME
 done_animate_book:
-	jmp	nothing_special
+	rts
 
 
 

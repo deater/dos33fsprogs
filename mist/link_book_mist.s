@@ -19,8 +19,15 @@ mist_link_book:
 	sta	BTC_L
 	lda	#>linking_noise
 	sta	BTC_H
+
+	ldy	#0
+	lda	(BTC_L),Y
+	cmp	#$55			; hack
+	bne	skip_audio
+
 	ldx	#LINKING_NOISE_LENGTH		; 45 pages long???
 	jsr	play_audio
+skip_audio:
 
 	lda	#OCTAGON_CEILING
 	sta	LOCATION
