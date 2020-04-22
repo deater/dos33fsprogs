@@ -80,39 +80,19 @@ game_loop:
 	beq	draw_crank_handle
 	cmp	#STONEY_LIGHTHOUSE_BATTERY
 	beq	draw_battery_level
-
+	cmp	#STONEY_BOOK_TABLE
+	beq	animate_magic_table
 
 	jmp	nothing_special
 
 animate_stoney_book:
-	; handle animated linking book
 
-	lda	ANIMATE_FRAME
-	asl
-	tay
-	lda	stoney_movie,Y
-	sta	INL
-	lda	stoney_movie+1,Y
-	sta	INH
+	jsr	do_animate_stoney_book
+	jmp	nothing_special
 
-	lda	#22
-	sta	XPOS
-	lda	#12
-	sta	YPOS
+animate_magic_table:
 
-	jsr	put_sprite_crop
-
-	lda	FRAMEL
-	and	#$f
-	bne	done_animate_book
-
-	inc	ANIMATE_FRAME
-	lda	ANIMATE_FRAME
-	cmp	#16
-	bne	done_animate_book
-	lda	#0
-	sta	ANIMATE_FRAME
-done_animate_book:
+	jsr	do_animate_magic_table
 	jmp	nothing_special
 
 animate_mist_book:
@@ -380,7 +360,7 @@ do_draw_battery_level:
 
 	lda	#16
 	sta	XPOS
-	lda	#22
+	lda	#20
 ;	bne	draw_it
 
 draw_it:
@@ -390,6 +370,73 @@ done_draw_it:
 	rts
 
 
+do_animate_stoney_book:
+
+	; handle animated linking book
+
+	lda	ANIMATE_FRAME
+	asl
+	tay
+	lda	stoney_movie,Y
+	sta	INL
+	lda	stoney_movie+1,Y
+	sta	INH
+
+	lda	#22
+	sta	XPOS
+	lda	#12
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$f
+	bne	done_animate_book
+
+	inc	ANIMATE_FRAME
+	lda	ANIMATE_FRAME
+	cmp	#16
+	bne	done_animate_book
+	lda	#0
+	sta	ANIMATE_FRAME
+done_animate_book:
+	jmp	nothing_special
+
+
+
+do_animate_magic_table:
+
+	; handle book rising from table
+
+	lda	ANIMATE_FRAME
+	asl
+	tay
+	lda	table_movie,Y
+	sta	INL
+	lda	table_movie+1,Y
+	sta	INH
+
+	lda	#18
+	sta	XPOS
+	lda	#14
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$1f
+	bne	done_animate_table
+
+	lda	ANIMATE_FRAME
+	cmp	#4
+	beq	done_animate_table
+
+	inc	ANIMATE_FRAME
+done_animate_table:
+	rts
+
+
+
 
 crank_sprites:
 	.word crank_sprite0,crank_sprite1,crank_sprite2,crank_sprite3
@@ -397,6 +444,52 @@ crank_sprites:
 battery_sprites:
 	.word battery_sprite0,battery_sprite1,battery_sprite2,battery_sprite3
 	.word battery_sprite4,battery_sprite5,battery_sprite6,battery_sprite7
+
+table_movie:
+	.word	table_frame0,table_frame1,table_frame2,table_frame3
+	.word	table_frame4
+
+table_frame0:
+	.byte 5,5
+	.byte $AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$AA
+	.byte $AA,$dA,$dA,$dA,$dA
+
+table_frame1:
+	.byte 5,5
+	.byte $AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$AA
+	.byte $dA,$Ad,$dA,$dA,$dA
+	.byte $dd,$Ad,$Ad,$Ad,$Ad
+
+table_frame2:
+	.byte 5,5
+	.byte $AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$AA
+	.byte $Ad,$dd,$dd,$dd,$dd
+	.byte $da,$dd,$77,$7d,$da
+	.byte $dd,$dd,$77,$dd,$Ad
+
+table_frame3:
+	.byte 5,5
+	.byte $AA,$dA,$dA,$da,$da
+	.byte $AA,$dd,$dd,$dd,$dd
+	.byte $AA,$dd,$dd,$dd,$dd
+	.byte $AA,$dd,$dd,$dd,$dd
+	.byte $AA,$dd,$dd,$dd,$dd
+
+table_frame4:
+	.byte 5,5
+	.byte $AA,$07,$d7,$d7,$07
+	.byte $AA,$00,$dd,$dd,$dd
+	.byte $AA,$00,$d5,$d5,$dd
+	.byte $AA,$00,$dd,$dd,$dd
+	.byte $AA,$00,$dd,$dd,$0d
+
+
 
 crank_sprite0:
 	.byte 5,5
@@ -432,35 +525,35 @@ crank_sprite3:
 
 battery_sprite0:
 	.byte 1,7
-	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $15,$AA,$AA,$AA,$AA,$AA,$AA
 
 battery_sprite1:
 	.byte 1,7
-	.byte $AA,$AA,$AA,$AA,$AA,$AA,$FF
+	.byte $15,$AA,$AA,$AA,$AA,$AA,$FF
 
 battery_sprite2:
 	.byte 1,7
-	.byte $AA,$AA,$AA,$AA,$AA,$FF,$FF
+	.byte $15,$AA,$AA,$AA,$AA,$FF,$FF
 
 battery_sprite3:
 	.byte 1,7
-	.byte $AA,$AA,$AA,$AA,$FF,$FF,$FF
+	.byte $15,$AA,$AA,$AA,$FF,$FF,$FF
 
 battery_sprite4:
 	.byte 1,7
-	.byte $AA,$AA,$AA,$FF,$FF,$FF,$FF
+	.byte $15,$AA,$AA,$FF,$FF,$FF,$FF
 
 battery_sprite5:
 	.byte 1,7
-	.byte $AA,$AA,$FF,$FF,$FF,$FF,$FF
+	.byte $15,$AA,$FF,$FF,$FF,$FF,$FF
 
 battery_sprite6:
 	.byte 1,7
-	.byte $AA,$FF,$FF,$FF,$FF,$FF,$FF
+	.byte $15,$FF,$FF,$FF,$FF,$FF,$FF
 
 battery_sprite7:
 	.byte 1,7
-	.byte $FF,$FF,$FF,$FF,$FF,$FF,$FF
+	.byte $c5,$FF,$FF,$FF,$FF,$FF,$FF
 
 
 
