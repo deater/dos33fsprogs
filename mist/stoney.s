@@ -525,35 +525,35 @@ crank_sprite3:
 
 battery_sprite0:
 	.byte 1,7
-	.byte $15,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $51,$AA,$AA,$AA,$AA,$AA,$AA
 
 battery_sprite1:
 	.byte 1,7
-	.byte $15,$AA,$AA,$AA,$AA,$AA,$FF
+	.byte $51,$AA,$AA,$AA,$AA,$AA,$FF
 
 battery_sprite2:
 	.byte 1,7
-	.byte $15,$AA,$AA,$AA,$AA,$FF,$FF
+	.byte $51,$AA,$AA,$AA,$AA,$FF,$FF
 
 battery_sprite3:
 	.byte 1,7
-	.byte $15,$AA,$AA,$AA,$FF,$FF,$FF
+	.byte $51,$AA,$AA,$AA,$FF,$FF,$FF
 
 battery_sprite4:
 	.byte 1,7
-	.byte $15,$AA,$AA,$FF,$FF,$FF,$FF
+	.byte $51,$AA,$AA,$FF,$FF,$FF,$FF
 
 battery_sprite5:
 	.byte 1,7
-	.byte $15,$AA,$FF,$FF,$FF,$FF,$FF
+	.byte $51,$AA,$FF,$FF,$FF,$FF,$FF
 
 battery_sprite6:
 	.byte 1,7
-	.byte $15,$FF,$FF,$FF,$FF,$FF,$FF
+	.byte $51,$FF,$FF,$FF,$FF,$FF,$FF
 
 battery_sprite7:
 	.byte 1,7
-	.byte $c5,$FF,$FF,$FF,$FF,$FF,$FF
+	.byte $5c,$FF,$FF,$FF,$FF,$FF,$FF
 
 
 
