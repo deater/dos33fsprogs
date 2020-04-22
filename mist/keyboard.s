@@ -179,6 +179,7 @@ change_location:
 
 	; reset pointer to not visible, centered
 	lda	#0
+	sta	ANIMATE_FRAME
 	sta	CURSOR_VISIBLE
 	lda	#20
 	sta	CURSOR_X
