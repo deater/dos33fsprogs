@@ -72,7 +72,7 @@ game_loop:
 	beq	animate_mist_book
 	cmp	#STONEY_RED_DRESSER_OPEN
 	beq	fg_draw_red_page
-	cmp	#STONEY_BLUE_ROOM_BED
+	cmp	#STONEY_BLUE_ROOM
 	beq	fg_draw_blue_page
 	cmp	#STONEY_UMBRELLA
 	beq	draw_umbrella_light
@@ -238,13 +238,17 @@ draw_red_page:
 
 draw_blue_page:
 
+	lda	DIRECTION
+	cmp	#DIRECTION_W
+	bne	no_draw_page
+
 	lda	BLUE_PAGES_TAKEN
 	and	#STONEY_PAGE
 	bne	no_draw_page
 
-	lda	#15
+	lda	#18
 	sta	XPOS
-	lda	#34
+	lda	#30
 	sta	YPOS
 
 	lda	#<blue_page_sprite
@@ -256,6 +260,15 @@ draw_blue_page:
 
 no_draw_page:
 	rts
+
+	;======================
+	; handle half message
+stoney_half_message:
+
+	lda	#STONEY_BLUE_HALFMESSAGE
+	sta	LOCATION
+
+	jmp	change_location
 
 
 	;======================

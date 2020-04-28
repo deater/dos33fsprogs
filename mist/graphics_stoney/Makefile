@@ -46,7 +46,9 @@ stoney_graphics.inc:	\
 	dresser_e.lzsa dresser_open_e.lzsa \
 	compass_room_w.lzsa compass_room_e.lzsa \
 	compass_rose_w.lzsa \
-	crawlway_e.lzsa crawlway_w.lzsa
+	crawlway_e.lzsa crawlway_w.lzsa \
+	blue_room_n.lzsa blue_room_s.lzsa blue_room_e.lzsa blue_room_w.lzsa \
+	map_case_open_e.lzsa map_case_closed_e.lzsa
 	echo "ship_entry_n_lzsa: .incbin \"ship_entry_n.lzsa\"" > stoney_graphics.inc
 	echo "ship_entry_s_lzsa: .incbin \"ship_entry_s.lzsa\"" >> stoney_graphics.inc
 	echo "ship_bow_s_lzsa: .incbin \"ship_bow_s.lzsa\"" >> stoney_graphics.inc
@@ -128,6 +130,13 @@ stoney_graphics.inc:	\
 	echo "compass_rose_w_lzsa: .incbin \"compass_rose_w.lzsa\"" >> stoney_graphics.inc
 	echo "crawlway_e_lzsa: .incbin \"crawlway_e.lzsa\"" >> stoney_graphics.inc
 	echo "crawlway_w_lzsa: .incbin \"crawlway_w.lzsa\"" >> stoney_graphics.inc
+	echo "blue_room_n_lzsa: .incbin \"blue_room_n.lzsa\"" >> stoney_graphics.inc
+	echo "blue_room_s_lzsa: .incbin \"blue_room_s.lzsa\"" >> stoney_graphics.inc
+	echo "blue_room_e_lzsa: .incbin \"blue_room_e.lzsa\"" >> stoney_graphics.inc
+	echo "blue_room_w_lzsa: .incbin \"blue_room_w.lzsa\"" >> stoney_graphics.inc
+	echo "map_case_open_e_lzsa: .incbin \"map_case_open_e.lzsa\"" >> stoney_graphics.inc
+	echo "map_case_closed_e_lzsa: .incbin \"map_case_closed_e.lzsa\"" >> stoney_graphics.inc
+
 
 
 %.gr: %.png
