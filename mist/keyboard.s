@@ -176,6 +176,8 @@ done_split:
 	; change location
 	;=============================
 change_location:
+	; reset graphics
+	bit	SET_GR
 
 	; reset pointer to not visible, centered
 	lda	#0

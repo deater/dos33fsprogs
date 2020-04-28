@@ -53,10 +53,9 @@ Stoneship age:
 + Implement floating chest puzzle
 + Implement compass rose light puzzle
 + Implement raising/lowering water
-+ Implement spinning generator/battery level
 + Implement telescope
-+ Hook up the blue room
-+ Animate mist book rising from table
++ Implement the half-letter
++ Hook up tunnels into compass room properly
 
 Ending:
 + Turning

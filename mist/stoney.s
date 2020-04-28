@@ -268,8 +268,11 @@ stoney_half_message:
 	lda	#STONEY_BLUE_HALFMESSAGE
 	sta	LOCATION
 
-	jmp	change_location
+	jsr	change_location
 
+	bit	SET_TEXT		; set text mode
+
+	rts
 
 	;======================
 	; handle umbrella pump buttons

@@ -837,7 +837,7 @@ location46:
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	left_airlock_open_n_lzsa	; north bg
+	.word	right_airlock_open_n_lzsa	; north bg
 	.word	left_airlock_s_lzsa		; south bg
 	.word	$0000				; east bg
 	.word	$0000				; west bg
@@ -861,7 +861,7 @@ location47:
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
 	.byte   DIRECTION_W
         .byte   17,24		; special x
-        .byte   32,42		; special y
+        .byte   34,44		; special y
         .word   stoney_take_blue_page-1 ; special function
 
 ; STONEY_BLUE_MAPCASE	-- blue room mapcase
@@ -898,7 +898,7 @@ location49:
 	.byte	BG_EAST
 	.byte   DIRECTION_E
         .byte   14,21		; special x
-        .byte   36,46		; special y
+        .byte   32,42		; special y
         .word   stoney_half_message-1 ; special function
 
 ; STONEY_BLUE_HALFMESSAGE	-- blue room halfmessag
@@ -913,7 +913,7 @@ location50:
 	.byte	$ff		; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
-	.word	map_case_open_e_lzsa	; east bg
+	.word	left_letter_lzsa	; east bg
 	.word	$0000			; west bg
 	.byte	BG_EAST
 	.byte	$ff
