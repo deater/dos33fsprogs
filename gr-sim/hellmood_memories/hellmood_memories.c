@@ -451,16 +451,20 @@ static void fx1(void) {
 	ax=ax|al;
 		// imul al	; AL=Y*Y
 	imul_8(al);
+
 		// xchg dx,ax	; Y*Y/256 in DH, X in AL
 	temp=ax;
 	ax=dx;
 	dx=temp;
+
 		// imul al	; AL=X*X
 	imul_8(ax&0xff);
+
 		// add dh,ah	; DH=X*X+Y*Y/256
 	dh=(dx>>8)&0xff;
 	ah=(ax>>8)&0xff;
 	dh=dh+ah;
+
 		// mov al,dh	; AL = X*X+Y*Y/256
 	al=dh;
 
@@ -471,7 +475,8 @@ static void fx1(void) {
 		// add ax,bp	; offset color by time
 	ax=ax+bp;
 		// and al,8+16	; select special rings
-	ax=ax&0xff18;
+	ax=ax&0x18;
+
 }
 
 /* checkers */

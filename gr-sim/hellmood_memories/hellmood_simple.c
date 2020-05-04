@@ -23,8 +23,10 @@
 
 #include <SDL.h>
 
+static unsigned short frame;
+
 static unsigned short stack[128];
-static unsigned short ax,bx,cx,dx,di,bp,es;
+static unsigned short ax,bx,cx,dx,es;
 static int cf=0,of=0,zf=0,sf=0;
 static int sp=0;
 static unsigned char framebuffer[320*200];
@@ -403,7 +405,7 @@ static short pop(void) {
 }
 	/* tilted plane */
 	/* DH=Y, DL=X */
-static void fx0(void) {
+static int fx0(int xx, int yy, int xprime) {
 
 	char ah,al,dh,dl;
 	unsigned short temp;
@@ -411,7 +413,7 @@ static void fx0(void) {
 	ax=0x1329;	// mov ax,0x1329	init
 
 	al=ax&0xff; ah=(ax>>8)&0xff;
-	dl=dx&0xff; dh=(dx>>8)&0xff;
+	dl=xprime; dh=yy;
 
 
 	dh=dh+al;	// add dh,al	; prevent divide overflow
@@ -425,7 +427,7 @@ static void fx0(void) {
 	dl=dx&0xff; dh=(dx>>8)&0xff;
 
 	imul_8(dl);	// imul dl
-	dx=dx-bp;	// sub dx,bp
+	dx=dx-frame;	// sub dx,bp
 	dl=dx&0xff;
 
 	ah=(ax>>8)&0xff;
@@ -434,74 +436,56 @@ static void fx0(void) {
 	ax=((ah&0xff)<<8)|(al&0xff);
 
 	ax&=0xff1c;	// and al,4+8+16
+
+	return ax;
 }
 
 /* circles? */
 /* DH=Y, DL=X */
-static void fx1(void) {
+static int fx1(int xx, int yy, int xprime) {
 
-	int temp;
-	char al,dh,ah;
+	signed short yyy,xxx;
+	signed short color;
 
-		// mov al,dh	; get Y in AL
-	al=(dx>>8)&0xff;
-		// sub al,100	; align Y vertically
-	al=al-100;
-	ax=ax&0xff00;
-	ax=ax|al;
-		// imul al	; AL=Y*Y
-	imul_8(al);
-		// xchg dx,ax	; Y*Y/256 in DH, X in AL
-	temp=ax;
-	ax=dx;
-	dx=temp;
-		// imul al	; AL=X*X
-	imul_8(ax&0xff);
-		// add dh,ah	; DH=X*X+Y*Y/256
-	dh=(dx>>8)&0xff;
-	ah=(ax>>8)&0xff;
-	dh=dh+ah;
-		// mov al,dh	; AL = X*X+Y*Y/256
-	al=dh;
+	yyy=yy-100;		/* align Y vertically */
 
-	dx=dx&0xff;
-	dx|=(dh<<8);
-	ax=(ah<<8)|(al&0xff);
+	yyy=yyy*yyy;
+	color=((yyy/256)&0xff);
 
-		// add ax,bp	; offset color by time
-	ax=ax+bp;
-		// and al,8+16	; select special rings
-	ax=ax&0xff18;
+	/* signed 8-bit multiply */
+	xxx=(char)xprime*(char)xprime;
+	color+=((xxx/256)&0xff);
+
+	color+=frame;		/* offset color by time */
+	color&=0x18;		/* select special rings */
+
+	return color;
 }
 
 /* checkers */
-static void fx2(void) {
-	int temp;
-	unsigned char al;
+static int fx2(int xx, int yy, int xprime) {
+	int color;
 
-	temp=ax;
-	ax=dx; dx=temp;	// xchg dx,ax
-	ax=ax-bp;	// sub ax,bp
-	temp=((ax>>8)&0xff)^(ax&0xff);
-	ax=ax&0xff00;
-	ax|=temp;	// xor al,ah
-	ax|=0xdb;	// or al,0xdb
-	al=ax&0xff;
-	al=al+0x13;
-	ax=ax&0xff00;
-	ax=ax|al;	// add al,13h
-			// ret
+	color=((yy&0xff)<<8) | (xprime&0xff);
+	color=color-frame;		/* adjust with frame */
+	color=((color>>8)&0xff)^(color&0xff); /* xor x and y */
+	color|=0xdb;	/* or result with 0xdb */
+	color+=0x13;	/* Map to yellow/grey */
+
+	return color;
 
 }
 
 
-/* parallax checkrboard */
-static void fx3(void) {
+/* parallax checkerboard */
+static int fx3(int xx,int yy,int xprime) {
 
-	cx=bp;		// mov cx,bp ; set init point to time
+	dx=((yy&0xff)<<8) | (xprime&0xff);
+
+	cx=frame;		// mov cx,bp ; set init point to time
 	bx=-16;		// mov bx,-16 ; limit to 16 iterations
 fx3L:
-	cx=cx+di;	// add cx, di ; offset by screenpointer
+	cx=cx+(yy*320)+xx;	// add cx, di ; offset by screenpointer
 	ax=819;		// mov ax,819 ; magic, related to Rrrola
 	imul_16(cx);	// imul cx ; get X',Y' in DX
 	cf=dx&1;	// ror dx,1 ; set carry flag on "hit"
@@ -522,15 +506,20 @@ fx3L:
 
 	ax=bx+31;	// lea ax,[bx+32] ; map value to standard gray scale
 	//printf("%d %d\n",ax,bx);
+
+	return ax;
 }
 
 /* sierpinski rotozoomer */
-static void fx4(void) {
+static int fx4(int xx, int yy, int xprime) {
 
 	unsigned char dl,dh,bh,al;
+
+	dx=((yy&0xff)<<8) | (xprime&0xff);
+
 	dl=dx&0xff;	dh=(dx>>8)&0xff;
 
-	cx=bp-2048;	// lea cx,[bp-2048] ; center time to pass zero
+	cx=frame-2048;	// lea cx,[bp-2048] ; center time to pass zero
 	cx=cx<<3;	// sal cx,3 ; speed up by factor of 8!
 	ax=(dh&0xff);	// movzx ax,dh ; get X into AL
 			// movsx dx,dl ; get Y into DL
@@ -576,14 +565,17 @@ static void fx4(void) {
 	ax|=0x2a;
 fx4q:
 	;
+	return ax;
 }
 
 
 /* raycast bent tunnel */
-static void fx5(void) {
+static int fx5(int xx, int yy, int xprime) {
 
 	unsigned char al,cl;
 	unsigned short temp;
+
+	dx=((yy&0xff)<<8) | (xprime&0xff);
 
 	cx=cx&0xff00;
 	cx|=(-9&0xff);	// mov cl,-9	; start with depth 9 (moves backwards)
@@ -626,20 +618,24 @@ fx5L:
 	if ((cx!=0) && (zf==1)) goto fx5L;
 			// loopz fx5L (repeat until "hit" or "iter=max"
 
-	cx=cx-bp;	// sub cx,bp ; offset depth by time
+	cx=cx-frame;	// sub cx,bp ; offset depth by time
 	al^=(cx&0xff);	// xor al,cl ; XOR pattern for texture
 //	ah=al/6;
 	al=al%6;	// aam 6	; irregular pattern with MOD 6
 	al+=20;		// add al,20	; offset into grayscale pattern
 	ax=al&0xff;
+
+	return ax;
 }
 
 /* ocean night */
-static void fx6(void) {
+static int fx6(int xx, int yy, int xprime) {
 	char dh;
 	double f;
 	int edx;
 	char scratch[64];
+
+	dx=((yy&0xff)<<8) | (xprime&0xff);
 
 	// bx coming in is the address of the effect
 	// this is a guess, too lazy to hexdump
@@ -675,72 +671,61 @@ static void fx6(void) {
 
 
 
-	ax+=bp;		// add ax,bp ; modify color by time
+	ax+=frame;		// add ax,bp ; modify color by time
 	ax&=0xff80;	// and al,128 ; threshold into two bands
 	ax--;		// dec ax ; beautify colors to blue/black
 fx6q:	;
+	return ax;
 }
 
 
 int main(int argc, char **argv) {
 
-	int temp;
+	int color=0,which,xx,yy,xprime;
 
 	set_vga_pal();
 
 	mode13h_graphics_init();
 
-	di=0;
-	bp=0x13;		// xchg bp,ax ; set bp to 0x13
+	frame=0x13;
 	es=0xa000-10;
 
 	while(1) {
+		for(yy=0;yy<200;yy++) {
+		for(xx=0;xx<320;xx++) {
 
-		ax=0xcccd;		// load rrrola constant 
-		mul_16(di);		// multiply
-		temp=(ax&0xff)+((ax>>8)&0xff);	// add al,ah
-		ax=ax&0xff00;
-		ax|=(temp&0xff);
-		ax=ax&0xff;		// xor ah,ah
-		ax=ax+bp;		// add ax,bp
-		ax=ax>>9;		// shr	ax,9
-		ax=ax&0xff0f;		// and al,15
-		temp=ax;		// xchg bx,ax
-		ax=bx;
-		bx=temp;
-		bx=bx&0xff;		// mov bh,1
-		bx|=1<<8;
+			xprime=xx*256/320;
+			/* rrolla multiply by 0xcccd trick */
 
-		switch (bx&0xff) {
-			case 0:	fx2(); break;
-			case 1:	fx1(); break;
-			case 2: fx0(); break;
-			case 3: fx3(); break;
-			case 4: fx4(); break;
-			case 5: fx5(); break;
-			case 6: fx6(); break;
-			case 7: goto end;
-			default: printf("Trying effect %d\n",bx&0xff);
+			which=frame/512;
+			switch (which&0xff) {
+				case 0:	color=fx2(xx,yy,xprime); break;
+				case 1:	color=fx1(xx,yy,xprime); break;
+				case 2: color=fx0(xx,yy,xprime); break;
+				case 3: color=fx3(xx,yy,xprime); break;
+				case 4: color=fx4(xx,yy,xprime); break;
+				case 5: color=fx5(xx,yy,xprime); break;
+				case 6: color=fx6(xx,yy,xprime); break;
+				case 7: return 0;
+				default: printf("Trying effect %d\n",which);
+			}
+			write_framebuffer((es<<4)+((yy*320)+xx), color);
+
+			/* 320*200=64000; / 3 = 21,333R1 */
+			/* 65536 / 3 = 21845 R 1 */
+			/* so wraps 3 times before updating screen? */
 		}
-				// stosb
-		write_framebuffer((es<<4)+di, ax&0xff);
-		di++;
-
-		di++;			// inc di
-		di++;			// inc di
-		if (di!=0) continue;
+		}
 
 		mode13h_graphics_update(framebuffer,&pal);
 
 		usleep(10000);
-		bp=bp+1;
+		frame++;
 
 		if (graphics_input()) {
 			return 0;
 		}
 	}
-
-end:
 
 	return 0;
 }
