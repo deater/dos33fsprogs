@@ -409,10 +409,10 @@ static int fx0(int xx, int yy, int xprime) {
 
 	char ah,al,dh,dl;
 	unsigned short temp;
+	int color;
 
 	ax=0x1329;	// mov ax,0x1329	init
-
-	al=ax&0xff; ah=(ax>>8)&0xff;
+	al=0x29; ah=0x13;
 	dl=xprime; dh=yy;
 
 
@@ -433,11 +433,11 @@ static int fx0(int xx, int yy, int xprime) {
 	ah=(ax>>8)&0xff;
 	ah=ah^dl;	// xor ah,dl
 	al=ah;		// mov al,ah
-	ax=((ah&0xff)<<8)|(al&0xff);
+	color=((ah&0xff)<<8)|(al&0xff);
 
-	ax&=0xff1c;	// and al,4+8+16
+	color&=0x1c;	// and al,4+8+16
 
-	return ax;
+	return color;
 }
 
 /* circles? */
