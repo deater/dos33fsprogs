@@ -61,7 +61,7 @@ autumn_forever:
 	asl	COLORL			; 2	; shl %ax
 	rol	COLORH			; 2
 
-	; put old X value to X/Y
+	; save old Xcoord value to X/Y for later
 	; push/pop is 1 byte each but have to get
 	; value into accumulator first
 	ldx	XCOORDL			; 2
@@ -80,21 +80,21 @@ autumn_forever:
 	; 16-bit arithmatic shift right of X
 	; 6502 has no asr instruction
 	; cmp #$80 sets carry if high bit set
-	cmp	#$80			; 2
+	cmp	#$80			; 2	; XCOORDH still in A from before
 	ror	XCOORDH			; 2
 	ror	XCOORDL			; 2
 
-	; 16-bit add, y=y+oldx
+	; 16-bit add, ycoord=ycoord+oldx
 	clc				; 1
 	txa				; 1
 	adc	YCOORDL			; 2
 	sta	YCOORDL			; 2
-	tya				; 2
+	tya				; 1
 	adc	YCOORDH			; 2
 	sta	YCOORDH			; 2
 
 	; 16-bit arithmatic shift right of y-coord
-	cmp	#$80			; 2
+	cmp	#$80			; 2	; YCOORDH still in A from before
 	ror	YCOORDH			; 2
 	ror	YCOORDL			; 2
 
@@ -108,8 +108,6 @@ autumn_forever:
 	bcs	label_11f		; 2
 
 	; 16-bit increment of color
-	; no need to clear carry as we wouldn't be
-	; here if it wasn't
 	inc	COLORL			; 2
 	bne	no_oflo			; 2
 	inc	COLORH			; 2
@@ -152,11 +150,11 @@ label_11f:
 
 put_pixel:
 	; get color mapping
-	; using lookup table for now whil trying to find best
+	; using lookup table for now while trying to find best combo
 	lda	COLORL			; 2
 	and	#$7			; 2
 	tay				; 1
-	ldx	color_lookup,Y		; 3 (could be 2 if we had in zero page)
+	ldx	color_lookup,Y		; 3 (could be 2 if we run in zero page)
 
 	; actually set the color
 	jsr	HCOLOR			; 3
@@ -181,8 +179,8 @@ exit_to_prompt:
 
 ; Apple II Hi-Res Colors
 ;   It's all NTSC artifacting and complex
-;   There can be color-class at a 3.5 pixel level
-;   And adjacent on pixels make white, adjacent off make black
+;   There can be color-clash at a 3.5 pixel level
+;   Adjacent on pixels make white, adjacent off make black
 ; Simplistic summary, you can have these 8 colors (6 unique)
 ;	0	= Black0
 ;	1	= Green
@@ -199,9 +197,12 @@ color_lookup:
 ;	.byte $01,$01,$02,$03, $05,$05,$06,$07
 
 
-	; orange and gren palette
+	; blue and purple palette
+;	.byte $02,$02,$03,$06, $06,$06,$02,$07
+
+	; orange and green palette
 	.byte $01,$01,$03,$05, $05,$05,$01,$07
 
 
-; "Leaves"
+; "Leaf" Locations
 ;  TOP-LEFT    ??   CENTER-TOP  TOP-RIGHT        LEFT   ??   CENTER-BOTTOM    ??
