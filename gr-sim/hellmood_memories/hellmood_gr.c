@@ -28,9 +28,9 @@ static unsigned short frame;
 
 #if 0
 static unsigned short stack[128];
+static int sp=0;
 static unsigned short ax,bx,cx,dx,es;
 static int cf=0,of=0,zf=0,sf=0;
-static int sp=0;
 
 /* unsigned multiply */
 static void mul_16(unsigned short value) {
@@ -71,7 +71,6 @@ static void imul(short value) {
 
 }
 */
-
 
 
 /* signed multiply */
@@ -204,8 +203,9 @@ static void div_8(unsigned char value) {
 
 }
 
+#endif
 
-
+#if 0
 static void push(int value) {
 	//printf("Pushing %x\n",value);
 	stack[sp]=value;
@@ -408,40 +408,45 @@ fx4q:
 #endif
 /* raycast bent tunnel */
 static int fx5(int xx, int yy, int xprime) {
-	return 0;
-}
-#if 0
-	unsigned char al,cl;
-	unsigned short temp;
 
-	dx=((yy&0xff)<<8) | (xprime&0xff);
+	unsigned char al;
+	unsigned short xcoord,ycoord;
+	signed short color,yproj,xproj,depth,ax=0;
+	int zf=0;
+	signed char m1,m2;
 
-	cx=cx&0xff00;
-	cx|=(-9&0xff);	// mov cl,-9	; start with depth 9 (moves backwards)
+	/* adjust to be centered */
+	xcoord=(xprime-10)*4;
+	ycoord=(yy-10)*4;
+
+	/* set depth to -9 (move backwards) */
+	depth=(-9&0xff);
+
 fx5L:
-	cl=cx&0xff;
+	/* put Ycoord into AL */
+	al=ycoord&0xff;
+	/* center Y.  Necessary? */
+	al-=24;
 
-	push(dx);	// push dx ; save DX, destroyed inside loop
-	al=(dx>>8)&0xff;// mov al,dh ; get Y into AL
-	al-=100;	// sub al,100 ; centering Y manually
 
-	ax=ax&0xff00;
-	ax|=(al&0xff);
+	/* 8x8 signed multiply Ycoord*depth to get projection */
+	m1=al;
+	m2=depth&0xff;
+	yproj=m1*m2;
+	/* only top used? */
 
-	imul_8(cl);	// imul cl	; multiply AL=Y by current distance to get projection
-			// xchg ax,dx ; gt X into AL while saving DX
-	temp=ax;
-	ax=dx;
-	dx=temp;
+	/* Get X paramater */
+	al=xcoord;
+	/* add distance to projection (bend right) */
+	al+=depth&0xff;
 
-	al=ax&0xff;
-	al+=cl;		// add al,cl  ; add distance to projection (bend right)
+	/* 8x8 signed multiply Ycoord*depth to get projection */
+	m1=al;
+	m2=depth&0xff;
+	xproj=m1*m2;
 
-	ax=ax&0xff00;
-	ax|=(al&0xff);
-	imul_8(cl);	// imul cl	; multiply AL=X by the current projection
-	al=(dx>>8)&0xff;// mov al,dh  ; get projection(1) in AL
-	al^=(ax>>8);	// xor al,ah ; combine with projection(2)
+	al=(yproj>>8)&0xff;// mov al,dh  ; get projection(1) in AL
+	al^=(xproj>>8);	// xor al,ah ; combine with projection(2)
 	al+=4;		// add al,4  ; center the walls around 0
 	if (al&-8) {	// test al,-8 ; test if the wall is hit
 		zf=0;
@@ -450,23 +455,22 @@ fx5L:
 		zf=1;
 	}
 
-	dx=pop();	// pop dx (restore dx)
-	cx&=0xff00;
-	cx|=(cl&0xff);
-	cx--;
-	if ((cx!=0) && (zf==1)) goto fx5L;
+	depth--;
+	if ((depth!=0) && (zf==1)) goto fx5L;
 			// loopz fx5L (repeat until "hit" or "iter=max"
 
-	cx=cx-frame;	// sub cx,bp ; offset depth by time
-	al^=(cx&0xff);	// xor al,cl ; XOR pattern for texture
+	depth=depth-frame;	// sub cx,bp ; offset depth by time
+//	color=ax;
+	al^=(depth&0xff);	// xor al,cl ; XOR pattern for texture
+
 //	ah=al/6;
-	al=al%6;	// aam 6	; irregular pattern with MOD 6
+	color=color;	// aam 6	; irregular pattern with MOD 6
 	al+=20;		// add al,20	; offset into grayscale pattern
 	ax=al&0xff;
 
 	return ax;
 }
-#endif
+
 
 /* ocean night */
 static int fx6(int xx, int yy, int xprime) {
@@ -547,12 +551,12 @@ int main(int argc, char **argv) {
 
 			which=frame/512;
 			switch (which&0xff) {
-				case 0:	color=fx2(xx,yy,xprime); break;
+				case 0:	color=fx5(xx,yy,xprime); break;
 				case 1:	color=fx1(xx,yy,xprime); break;
 				case 2: color=fx0(xx,yy,xprime); break;
 				case 3: color=fx3(xx,yy,xprime); break;
 				case 4: color=fx4(xx,yy,xprime); break;
-				case 5: color=fx5(xx,yy,xprime); break;
+				case 5: color=fx2(xx,yy,xprime); break;
 				case 6: color=fx6(xx,yy,xprime); break;
 				case 7: return 0;
 				default: printf("Trying effect %d\n",which);
@@ -567,6 +571,7 @@ int main(int argc, char **argv) {
 			/* so wraps 3 times before updating screen? */
 		}
 		}
+	if (frame%128==0) printf("frame: %d\n",frame);
 
 		grsim_update();
 
