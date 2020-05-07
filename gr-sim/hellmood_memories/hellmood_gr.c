@@ -26,6 +26,9 @@
 
 static unsigned short frame;
 
+
+//int m1s[256],m2s[256];
+
 #if 0
 static unsigned short stack[128];
 static int sp=0;
@@ -409,18 +412,18 @@ fx4q:
 /* raycast bent tunnel */
 static int fx5(int xx, int yy, int xprime) {
 
-	unsigned char al;
 	unsigned short xcoord,ycoord;
-	signed short color,yproj,xproj,depth,ax=0;
+	signed short yproj,xproj;
+	signed char depth;
 	int zf=0;
-	signed char m1,m2;
+	signed char m1,m2,color,al;
 
 	/* adjust to be centered */
 	xcoord=(xprime-10)*4;
 	ycoord=(yy-10)*4;
 
 	/* set depth to -9 (move backwards) */
-	depth=(-9&0xff);
+	depth=-9;
 
 fx5L:
 	/* put Ycoord into AL */
@@ -430,9 +433,12 @@ fx5L:
 
 
 	/* 8x8 signed multiply Ycoord*depth to get projection */
-	m1=al;
-	m2=depth&0xff;
+	m1=al;		//m1s[m1&0xff]++;
+	m2=depth;	//m2s[m2&0xff]++;
 	yproj=m1*m2;
+
+//	printf("%d %d = %x\n",m1,m2,yproj);
+
 	/* only top used? */
 
 	/* Get X paramater */
@@ -441,9 +447,14 @@ fx5L:
 	al+=depth&0xff;
 
 	/* 8x8 signed multiply Ycoord*depth to get projection */
-	m1=al;
-	m2=depth&0xff;
+	m1=al;		//m1s[m1&0xff]++;
+	m2=depth;	//m2s[m2&0xff]++;
 	xproj=m1*m2;
+
+//	printf("%d %d = %x\n",m1,m2,xproj);
+
+	depth--;
+	if (depth==0) goto putpixel;
 
 	al=(yproj>>8)&0xff;// mov al,dh  ; get projection(1) in AL
 	al^=(xproj>>8);	// xor al,ah ; combine with projection(2)
@@ -455,20 +466,26 @@ fx5L:
 		zf=1;
 	}
 
-	depth--;
-	if ((depth!=0) && (zf==1)) goto fx5L;
+	if (zf==1) goto fx5L;
+
+putpixel:
+
+//	if ((depth!=0) && (zf==1)) goto fx5L;
+
+	color=al;
 			// loopz fx5L (repeat until "hit" or "iter=max"
 
 	depth=depth-frame;	// sub cx,bp ; offset depth by time
-//	color=ax;
-	al^=(depth&0xff);	// xor al,cl ; XOR pattern for texture
 
-//	ah=al/6;
-	color=color;	// aam 6	; irregular pattern with MOD 6
-	al+=20;		// add al,20	; offset into grayscale pattern
-	ax=al&0xff;
+	color^=depth;	// xor al,cl ; XOR pattern for texture
 
-	return ax;
+	color&=0x7;
+	/* aam 6	; irregular pattern with MOD 6 */
+
+	/* add al,20	; offset into grayscale pattern */
+	//color+=20;
+
+	return color;
 }
 
 
@@ -531,6 +548,9 @@ int main(int argc, char **argv) {
 	int color=0,which,xx,yy,xprime;
 	int ch;
 
+//	int i;
+//	for(i=0;i<256;i++) { m1s[i]=0; m2s[i]=0;}
+
 	grsim_init();
 
 	gr();
@@ -571,7 +591,15 @@ int main(int argc, char **argv) {
 			/* so wraps 3 times before updating screen? */
 		}
 		}
-	if (frame%128==0) printf("frame: %d\n",frame);
+	if (frame%128==0) {
+		printf("frame: %d\n",frame);
+//		printf("m1: ");
+//		for(i=0;i<256;i++) printf("%d ",m1s[i]);
+//		printf("\n");
+//		printf("m2: ");
+//		for(i=0;i<256;i++) printf("%d ",m2s[i]);
+//		printf("\n");
+	}
 
 		grsim_update();
 
