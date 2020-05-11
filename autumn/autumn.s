@@ -1,6 +1,11 @@
 ; Autumn, based on the code in Hellmood's Autumn
 ; by deater (Vince Weaver) <vince@deater.net>
 
+; DOS version is 64 bytes
+; original Apple II 6502 port was 167 bytes
+; I got it down to 126 bytes
+; qkumba got it down to 116
+
 ; Zero Page Addresses
 
 XCOORDL		= $F0
@@ -13,10 +18,12 @@ EBP3		= $F6
 EBP4		= $F7
 COLORL		= $F8
 COLORH		= $F9
+SOUND		= $FA
 
 ; Soft Switches
 KEYPRESS= $C000
 KEYRESET= $C010
+SPEAKER = $C030
 
 ; ROM routines
 ; Some of these are in the Applesoft ROMs so need at least an Apple II+
@@ -28,6 +35,7 @@ HGR2	= $F3D8		; Set full-screen hi-res mode using page 2 ($4000)
 HPLOT0	= $F457		; Plot point, (Y,X) = Horizontal, (A=Vertical)
 HCOLOR  = $F6EC		; Set color in X, must be 0..7
 
+XDRAW1	= $F661
 
 autumn:
 
@@ -36,30 +44,22 @@ autumn:
 	jsr	HGR2			; 3
 
 	; init vars to zero.  Apple II doesn't clear RAM
-	; some of these might not be necessary
-	; should make this a loop
-	ldx	#0			; 2
-	stx	XCOORDL			; 2
-	stx	YCOORDL			; 2
-	stx	XCOORDH			; 2
-	stx	YCOORDH			; 2
-	stx	EBP1			; 2
-	stx	EBP2			; 2
-	stx	EBP3			; 2
-	stx	EBP4			; 2
-	stx	COLORH			; 2
+	; some of these might be necessary?
+	; should we make this a loop?
 
-	; not necessary? on x86 is probably the
-	; result of the VESA BIOS call
-;	lda	#$4f
-;	sta	COLORL
+;	ldx	#0			; 2
+;	stx	XCOORDL			; 2
+;	stx	YCOORDL			; 2
+;	stx	XCOORDH			; 2
+;	stx	YCOORDH			; 2
+;	stx	EBP1			; 2
+;	stx	EBP2			; 2
+;	stx	EBP3			; 2
+;	stx	EBP4			; 2
+;	stx	COLORH			; 2
+
 
 autumn_forever:
-
-	; 16-bit shift of color
-	; 2nd is a rotate as asl doesn't shift in cary
-	asl	COLORL			; 2	; shl %ax
-	rol	COLORH			; 2
 
 	; save old Xcoord value to X/Y for later
 	; push/pop is 1 byte each but have to get
@@ -69,19 +69,19 @@ autumn_forever:
 
 	; 16-bit subtraction  x=x-y
 	; need to set carry before subtraction on 6502
+	txa				; 1	(xcoordl in X)
 	sec				; 1
-	lda	XCOORDL			; 2
 	sbc	YCOORDL			; 2
 	sta	XCOORDL			; 2
-	lda	XCOORDH			; 2
+	tya				; 1	(xcoordh in Y)
 	sbc	YCOORDH			; 2
-	sta	XCOORDH			; 2
 
 	; 16-bit arithmatic shift right of X
 	; 6502 has no asr instruction
 	; cmp #$80 sets carry if high bit set
 	cmp	#$80			; 2	; XCOORDH still in A from before
-	ror	XCOORDH			; 2
+	ror				; 1
+	sta	XCOORDH			; 2
 	ror	XCOORDL			; 2
 
 	; 16-bit add, ycoord=ycoord+oldx
@@ -91,11 +91,11 @@ autumn_forever:
 	sta	YCOORDL			; 2
 	tya				; 1
 	adc	YCOORDH			; 2
-	sta	YCOORDH			; 2
 
 	; 16-bit arithmatic shift right of y-coord
 	cmp	#$80			; 2	; YCOORDH still in A from before
-	ror	YCOORDH			; 2
+	ror				; 1
+	sta	YCOORDH			; 2
 	ror	YCOORDL			; 2
 
 	; 32 bit rotate of low bit shifted out of Y-coordinate
@@ -119,24 +119,46 @@ no_oflo:
 	lda	XCOORDL			; 2
 	adc	#$80			; 2
 	sta	XCOORDL			; 2
-	lda	XCOORDH			; 2
-	adc	#$0			; 2
-	sta	XCOORDH			; 2
+	bcc	no_oflo2		; 2
+	inc	XCOORDH			; 2
+no_oflo2:
 
 	; 16-bit negate of Y-coord
 	sec				; 1
-	lda	YCOORDL			; 2
-	eor	#$FF			; 2
-	adc	#$0			; 2
+	lda	#0			; 2
+	sbc	YCOORDL			; 2
 	sta	YCOORDL			; 2
-	lda	YCOORDH			; 2
-	eor	#$FF			; 2
-	adc	#$0			; 2
+	lda	#0			; 2
+	sbc	YCOORDH			; 2
 	sta	YCOORDH			; 2
 
 label_11f:
 
 	; skipping the color manipulation done here by original
+
+	; mix colors a bit?
+
+	; 16-bit shift of color
+	; 2nd is a rotate as asl doesn't shift in cary
+
+	lda	COLORL			; 2
+	asl				; 1	; shl %ax
+	rol	COLORH			; 2
+	eor	COLORH			; 2
+	sta	COLORL			; 2
+
+	; get color mapping
+	; using a color lookup table looks best but too many bytes
+	; you can approximate something close to the lookup with
+	; two extra instructions
+
+	and	#$7			; 2
+	ora	#$2			; 2
+	tax				; 1
+
+	; if using color lookup table
+;	tay				; 1
+;	ldx	color_lookup,Y		; 3 (could be 2 if we run in zero page)
 
 	; if ycoord negative, loop
 	lda	YCOORDH			; 2
@@ -147,14 +169,7 @@ label_11f:
 	and	#$f0			; 2
 	bne	autumn_forever		; 2
 
-
 put_pixel:
-	; get color mapping
-	; using lookup table for now while trying to find best combo
-	lda	COLORL			; 2
-	and	#$7			; 2
-	tay				; 1
-	ldx	color_lookup,Y		; 3 (could be 2 if we run in zero page)
 
 	; actually set the color
 	jsr	HCOLOR			; 3
@@ -165,16 +180,18 @@ put_pixel:
 	lda	YCOORDL			; 2
 	jsr	HPLOT0			; 3
 
-	lda	KEYPRESS		; 3	; see if key pressed
-;	bpl	autumn_forever			; loop if not
+;	lda	KEYPRESS		; 3	; see if key pressed
+;	bpl	autumn_forever		; 2	; loop if not
 
-	bmi	exit_to_prompt		; 2	; jump target too far away
-	jmp	autumn_forever		; 3	; if we get under 128 bytes
-						; can use the smaller jump
+	bvc	autumn_forever		; 2	; smaller than jump
+						; V flag clear because
+						; the adc/sbc in HPOSN
+						; never overflows?
+
 
 exit_to_prompt:
-	jsr	TEXT			; 3	; return to text mode
-	jmp	$3D0			; 3	; return to Applesoft prompt
+;	jsr	TEXT			; 3	; return to text mode
+;	jmp	$3D0			; 3	; return to Applesoft prompt
 
 
 ; Apple II Hi-Res Colors
@@ -196,12 +213,31 @@ color_lookup:
 	; my default, colorful palette
 ;	.byte $01,$01,$02,$03, $05,$05,$06,$07
 
+;      or 10 
+; 0000 0010  2 2
+; 0001 0011  3 2
+; 0010 0010  2 3
+; 0011 0011  3 6
+; 0100 0110  6 6
+; 0101 0111  7 6
+; 0110 0110  6 2
+; 0111 0111  7 7
+
+;      want eor1
+; 0000 0010 0001
+; 0001 0010 0000
+; 0010 0011 0011
+; 0011 0110 0010
+; 0100 0110 0101
+; 0101 0110 0100
+; 0110 0010 0111
+; 0111 0111 0110
 
 	; blue and purple palette
 ;	.byte $02,$02,$03,$06, $06,$06,$02,$07
 
 	; orange and green palette
-	.byte $01,$01,$03,$05, $05,$05,$01,$07
+;	.byte $01,$01,$03,$05, $05,$05,$01,$07
 
 
 ; "Leaf" Locations
