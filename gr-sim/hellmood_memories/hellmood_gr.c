@@ -233,43 +233,25 @@ static short pop(void) {
 	/* tilted plane */
 	/* DH=Y, DL=X */
 static int fx0(int xx, int yy, int xprime) {
-	return 0;
-}
-#if 0
-	char ah,al,dh,dl;
-	unsigned short temp;
+	unsigned short scaled;
+	int color;
 
-	ax=0x1329;	// mov ax,0x1329	init
+	// 0x1329 = 4905?  200*24.5  40*24.5=981=3d5
 
-	al=ax&0xff; ah=(ax>>8)&0xff;
-	dl=xprime; dh=yy;
+	yy=yy+0x10;//0x29;     // add dh,al    ; prevent divide overflow
+	scaled=((0x3d5/yy)&0xff);      // div dh       ; reverse divide AL=C/Y'
 
+	color=((signed char)((xprime-20)&0xff))*((signed char)(scaled&0xff));
 
-	dh=dh+al;	// add dh,al	; prevent divide overflow
-	div_8(dh);	// div dh	; reverse divide AL=C/Y'
+	scaled-=frame;
 
-	dx=((dh&0xff)<<8)|dl;
+	color=(color>>6)&0xff;
+	color^=(scaled&0xff);
+	color&=0x1c;                    // map colors
 
-	temp=ax;
-	ax=dx; dx=temp;	// xchg dx,ax	; DL=C/Y' AL=X
-
-	dl=dx&0xff; dh=(dx>>8)&0xff;
-
-	imul_8(dl);	// imul dl
-	dx=dx-frame;	// sub dx,bp
-	dl=dx&0xff;
-
-	ah=(ax>>8)&0xff;
-	ah=ah^dl;	// xor ah,dl
-	al=ah;		// mov al,ah
-	ax=((ah&0xff)<<8)|(al&0xff);
-
-	ax&=0xff1c;	// and al,4+8+16
-
-	return ax;
+	return color;
 }
 
-#endif
 /* circles? */
 /* DH=Y, DL=X */
 static int fx1(int xx, int yy, int xprime) {
@@ -559,7 +541,9 @@ int main(int argc, char **argv) {
 
 	ram[DRAW_PAGE]=0;
 
-	frame=0x13;
+//	frame=0x13;
+
+	frame=2*512;
 
 	while(1) {
 		for(yy=0;yy<48;yy++) {
@@ -571,12 +555,12 @@ int main(int argc, char **argv) {
 
 			which=frame/512;
 			switch (which&0xff) {
-				case 0:	color=fx5(xx,yy,xprime); break;
+				case 0:	color=fx2(xx,yy,xprime); break;
 				case 1:	color=fx1(xx,yy,xprime); break;
 				case 2: color=fx0(xx,yy,xprime); break;
 				case 3: color=fx3(xx,yy,xprime); break;
 				case 4: color=fx4(xx,yy,xprime); break;
-				case 5: color=fx2(xx,yy,xprime); break;
+				case 5: color=fx5(xx,yy,xprime); break;
 				case 6: color=fx6(xx,yy,xprime); break;
 				case 7: return 0;
 				default: printf("Trying effect %d\n",which);

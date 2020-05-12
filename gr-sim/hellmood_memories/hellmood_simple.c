@@ -210,6 +210,8 @@ static void write_framebuffer(int address, int value) {
 
 }
 
+#if 0
+
 /* unsigned multiply */
 static void mul_16(unsigned short value) {
 	unsigned int result;
@@ -238,7 +240,9 @@ static void mul_16(unsigned short value) {
 
 }
 
-/* 
+#endif
+
+/*
 static void imul(short value) {
 	int result;
 
@@ -355,7 +359,7 @@ static void imul_16_dx(short value) {
 
 
 
-
+#if 0
 
 /* unsigned divide */
 static void div_8(unsigned char value) {
@@ -382,7 +386,7 @@ static void div_8(unsigned char value) {
 
 }
 
-
+#endif
 
 static void push(int value) {
 	//printf("Pushing %x\n",value);
@@ -407,35 +411,19 @@ static short pop(void) {
 	/* DH=Y, DL=X */
 static int fx0(int xx, int yy, int xprime) {
 
-	char ah,al,dh,dl;
-	unsigned short temp;
+	unsigned short scaled;
 	int color;
 
-	ax=0x1329;	// mov ax,0x1329	init
-	al=0x29; ah=0x13;
-	dl=xprime; dh=yy;
+	yy=yy+0x29;	// add dh,al	; prevent divide overflow
+	scaled=((0x1329/yy)&0xff);	// div dh	; reverse divide AL=C/Y'
 
+	color=((signed char)(xprime&0xff))*((signed char)(scaled&0xff));
 
-	dh=dh+al;	// add dh,al	; prevent divide overflow
-	div_8(dh);	// div dh	; reverse divide AL=C/Y'
+	scaled-=frame;
 
-	dx=((dh&0xff)<<8)|dl;
-
-	temp=ax;
-	ax=dx; dx=temp;	// xchg dx,ax	; DL=C/Y' AL=X
-
-	dl=dx&0xff; dh=(dx>>8)&0xff;
-
-	imul_8(dl);	// imul dl
-	dx=dx-frame;	// sub dx,bp
-	dl=dx&0xff;
-
-	ah=(ax>>8)&0xff;
-	ah=ah^dl;	// xor ah,dl
-	al=ah;		// mov al,ah
-	color=((ah&0xff)<<8)|(al&0xff);
-
-	color&=0x1c;	// and al,4+8+16
+	color=(color>>8)&0xff;
+	color^=(scaled&0xff);
+	color&=0x1c;			// map colors
 
 	return color;
 }
@@ -679,6 +667,68 @@ fx6q:	;
 }
 
 
+
+
+/* raycast bent tunnel */
+/* no multiply */
+static int fx7(int xx, int yy, int xprime) {
+
+#if 0
+	unsigned char al,ah,bl,bh,cl,dl,dh,tb=0;
+	unsigned short bp;
+
+//	dx=((yy&0xff)<<8) | (xprime&0xff);
+
+	// dx=y
+	// bp=x
+
+	dh=0;
+	dl=yy;		// xor dx,dx
+	bp=xprime;
+
+	cl=80;		// mov cl,80
+	ch=0;		// mov ch,0
+	ah=0;		// xor ax,ax
+	al=0;
+	bh=0;		// xor bx,bx
+	bx=0;
+
+L:
+	ch=ch-dh;	// sub ch,dh 		ah/ch = x
+	ah=ah-0-cf;	// sbb ah,0
+	ch=ch+cl;	// add ch,cl		bend with depth
+	ah=ah+0+cf;	// adc ah,0
+
+	bl=bl-dl;	// sub bl,dl		bh/bl=y
+	bh=bh-0-cf;	// sbb bh,0
+	bl=bl+cl;	// add bl,cl		bend with depth
+	bh=bh+0+cf;	// adc bh,0
+	bl=bl+cl;	// add bl,cl		bend with depth
+	bh=bh+0+cf;	// adc bh,0
+
+	al=bh;		// mov al,bh		leave ah,bh untouched
+	al=al^ah;	// xor al,ah		geometry check
+	al+=4;		// add al,4		geometry check
+			// test al,8		geometry check
+			// jnz Q
+	if (al&8!=0) goto Q;
+
+	cl--;		// dec cl
+	if (cl!=0) goto L;
+
+	if ((cl!=0) && (zf==1)) goto L; // loopz L
+
+Q:
+	cl=cl-frame;	// probably the timer sub cl,[0x46c]
+	al=al^cl;	// xor al,cl
+			// aam 6
+	al=al+20;	// add al,20
+			// stosb
+#endif
+
+	return ax;
+}
+
 int main(int argc, char **argv) {
 
 	int color=0,which,xx,yy,xprime;
@@ -687,8 +737,10 @@ int main(int argc, char **argv) {
 
 	mode13h_graphics_init();
 
-	frame=0x13;
+//	frame=0x13;
 	es=0xa000-10;
+
+	frame=2*512;
 
 	while(1) {
 		for(yy=0;yy<200;yy++) {
@@ -698,7 +750,7 @@ int main(int argc, char **argv) {
 			/* rrolla multiply by 0xcccd trick */
 
 			which=frame/512;
-			switch (which&0xff) {
+			switch (which&0x7) {
 				case 0:	color=fx2(xx,yy,xprime); break;
 				case 1:	color=fx1(xx,yy,xprime); break;
 				case 2: color=fx0(xx,yy,xprime); break;
@@ -706,7 +758,7 @@ int main(int argc, char **argv) {
 				case 4: color=fx4(xx,yy,xprime); break;
 				case 5: color=fx5(xx,yy,xprime); break;
 				case 6: color=fx6(xx,yy,xprime); break;
-				case 7: return 0;
+				case 7: color=fx7(xx,yy,xprime); break;
 				default: printf("Trying effect %d\n",which);
 			}
 			write_framebuffer((es<<4)+((yy*320)+xx), color);

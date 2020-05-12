@@ -2,6 +2,10 @@
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
+
+; first try (shift/add multiply) = 160 bytes, 14 seconds/frame
+; second    (lookup table mul)    = 251 bytes,  9 seconds/frame
+
 ; Zero Page
 COLOR		= $30
 
@@ -31,6 +35,8 @@ tunnel:
 	; init screen
 	jsr	SETGR				; 3
 	bit	FULLGR				; 3
+
+	jsr	init_multiply_tables		; 3
 
 tunnel_forever:
 
@@ -71,8 +77,8 @@ fx5_loop:
 	;sta	M1				; 2
 	jsr	imul				; 3
 
-	lda	M2				; 2
-	sta	VALUE				; 2
+;	lda	M2				; 2
+	sta	VALUE	; high result in A	; 2
 
 	; get xcoord
 	lda	XCOORD				; 2
@@ -129,70 +135,15 @@ putpixel:
 	; A = M1
 	; DEPTH (preserve) is M2
 imul:
-	stx	TEMP		; save as we trash it
-
 	sta	M1		; get values in right place
 	lda	DEPTH
 	sta	M2
 
-	eor	M1		; calc if we need to adjust at end
-				; (++ vs +- vs -+ vs --)
-	php			; save status on stack
+	jsr	multiply_s8x8
 
-	; if M1 negative, negate it
-	lda	M1
-	bpl	m1_positive
-	eor	#$ff
-	clc
-	adc	#0
-m1_positive:
-	sta	M1
-
-	; if M2 negative, naegate it
-	lda	M2
-	bpl	m2_positive
-	eor	#$ff
-	clc
-	adc	#0
-m2_positive:
-	sta	M2
-
-	;==================
-	; unsigned multiply
-
-	; factors in M1 and M2
-	lda	#0
-	ldx	#$8
-	lsr	M1
-	clc
-imul_loop:
-	bcc	no_add
-	clc
-	adc	M2
-no_add:
-	ror
-	ror	M1
-	dex
-	bne	imul_loop
-
-	sta	M2
-	; done, high result in factor2, low result in factor1
-
-	; adjust to be signed
-	; if m1 and m2 positive, good
-	; if m1 and m2 negative, good
-	; otherwise, negate result
-
-	plp			; restore saved pos/neg value
-	bpl	done_result
-negate_result:
-	sec
-	lda	#0
-	sbc	M1
-	lda	#0
-	sbc	M2
-done_result:
-	sta	M2
-
-	ldx	TEMP
 	rts
+
+
+.include "multiply_tables.s"
+.include "multiply_s8x8.s"
+.include "multiply_u8x8.s"
