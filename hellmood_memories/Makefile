@@ -9,7 +9,7 @@ B2D = ../bmp2dhr/b2d
 all:	memories.dsk
 
 memories.dsk:	HELLO CIRCLES.BAS CIRCLES CHECKERS CHECKERS_SMALL PLANE \
-		TUNNEL TNM
+		SIER TUNNEL TNM
 	cp empty.dsk memories.dsk
 	$(DOS33) -y memories.dsk SAVE A HELLO
 	$(DOS33) -y memories.dsk SAVE A CIRCLES.BAS
@@ -17,6 +17,7 @@ memories.dsk:	HELLO CIRCLES.BAS CIRCLES CHECKERS CHECKERS_SMALL PLANE \
 	$(DOS33) -y memories.dsk BSAVE -a 0x070 CHECKERS
 	$(DOS33) -y memories.dsk BSAVE -a 0x070 CHECKERS_SMALL
 	$(DOS33) -y memories.dsk BSAVE -a 0x1000 PLANE
+	$(DOS33) -y memories.dsk BSAVE -a 0x1000 SIER
 	$(DOS33) -y memories.dsk BSAVE -a 0x1000 TUNNEL
 	$(DOS33) -y memories.dsk BSAVE -a 0x1000 TNM
 
@@ -41,6 +42,14 @@ PLANE: plane.o
 
 plane.o:	plane.s
 	ca65 -o plane.o plane.s -l plane.lst
+
+###
+
+SIER: sier.o
+	ld65 -o SIER sier.o -C ../linker_scripts/apple2_1000.inc
+
+sier.o:	sier.s
+	ca65 -o sier.o sier.s -l sier.lst
 
 ###
 
@@ -82,5 +91,5 @@ CIRCLES.BAS:	zooming_circles.bas
 
 clean:		
 		rm -f *~ *.o *.lst HELLO CIRCLES.BAS CIRCLES CHECKERS \
-			CHECKERS_SMALL PLANE TUNNEL TNM
+			CHECKERS_SMALL PLANE SIER TUNNEL TNM
 
