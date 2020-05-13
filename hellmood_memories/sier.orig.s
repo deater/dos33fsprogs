@@ -51,11 +51,6 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 HLINE	= $F819
 
 
-sierpx	=	$3000
-sierpy	=	$3100
-scaledx	=	$3200
-scaledy	=	$3300
-
 
 sierpinksi:
 
@@ -74,17 +69,11 @@ sierpinksi:
 
 sierpinski_forever:
 
-
-	inc	FRAMEL				; 2
-	bne	done_frame_inc
-	inc	FRAMEH
-done_frame_inc:
-
-	; pre-generate the multiplications
-	jsr	sierpinski_generate
-
 	ldx	#47		; yy		; 2
 
+	inc	FRAMEL				; 2
+	bne	yloop
+	inc	FRAMEH
 
 yloop:
 	ldy	#39		; xx		; 2
@@ -92,39 +81,39 @@ xloop:
 
 	; t=frame-2048 (assuming we are effect #4?)
 
-;	lda	FRAMEL
-;	sta	NUM1L
+	lda	FRAMEL
+	sta	NUM1L
 
 ;	sec
-;	lda	FRAMEH
+	lda	FRAMEH
 ;	sbc	#>(2048)
 
-;	rol	NUM1L		; time<<=3, speed up by factor of 8
-;	rol
-;	rol	NUM1L
-;	rol
-;	rol	NUM1L
-;	rol
-;	sta	NUM1H
+	rol	NUM1L		; time<<=3, speed up by factor of 8
+	rol
+	rol	NUM1L
+	rol
+	rol	NUM1L
+	rol
+	sta	NUM1H
 
-;	txa			; yy*=4
-;	asl
-;	asl
-;	sta	NUM2L
-;	sta	Y1
-;	lda	#0
-;	sta	NUM2H
+	txa			; yy*=4
+	asl
+	asl
+	sta	NUM2L
+	sta	Y1
+	lda	#0
+	sta	NUM2H
 
-;	jsr	multiply_u16x16		; result = Y*T
+	jsr	multiply_u16x16		; result = Y*T
 
-;	tya
-;	asl
-;	asl
-;	sta	NUM2L
-;	lda	#0
-;	rol	NUM2L
-;	rol
-;	sta	NUM2H			; NUM2 = X*8
+	tya
+	asl
+	asl
+	sta	NUM2L
+	lda	#0
+	rol	NUM2L
+	rol
+	sta	NUM2H			; NUM2 = X*8
 
 	; sign extend X
 
@@ -133,11 +122,11 @@ xloop:
       ;  else xsext&=0x00ff*8;
 
 	clc
-	lda	sierpy,X		; RESULT1
-	adc	scaledx,Y		; NUM2L
+	lda	RESULT1
+	adc	NUM2L
 	sta	BH			; bh=((y*t)/256)+X
 
-;	jsr	multiply_u16x16_same_num1		; result = X*T
+	jsr	multiply_u16x16_same_num1		; result = X*T
 					; dh=RESULT1
 
     ;    dh=(temp>>8)&0xff;              // dh=(X*T/256)
@@ -147,8 +136,8 @@ xloop:
 
 	sec
 	txa
-	lda	scaledy,X		; Y1
-	sbc	sierpx,Y		; RESULT1
+	lda	Y1
+	sbc	RESULT1
 	and	BH
 
 	and	#$f8			; thicker sierpinksi
@@ -176,102 +165,12 @@ color_done:
 	bmi	sierpinski_forever		; 2
 
 
-
-
-
-
-
-sierpinski_generate:
-
-	; t=frame-2048 (assuming we are effect #4?)
-
-	lda	FRAMEL
-	sta	NUM1L
-
-;	sec
-	lda	FRAMEH
-;	sbc	#>(2048)
-
-	rol	NUM1L		; time<<=3, speed up by factor of 8
-	rol
-	rol	NUM1L
-	rol
-	rol	NUM1L
-	rol
-	sta	NUM1H
-
-	jsr	multiply_u16x16		; setup NUM1H/NUM1L
-
-	;========================
-
-	ldx	#47		; yy		; 2
-genyloop:
-
-
-	txa			; yy*=4
-	asl
-	asl
-	sta	NUM2L
-	sta	scaledy,X
-	lda	#0
-	sta	NUM2H
-
-	jsr	multiply_u16x16_same_num1		; result = Y*T
-
-	lda	RESULT1
-	sta	sierpy,X
-
-	dex					; 1
-	bpl	genyloop				; 2
-
-	;====================
-	;====================
-	;====================
-
-	ldy	#39		; xx		; 2
-genxloop:
-
-	tya
-	asl
-	asl
-	sta	NUM2L
-	lda	#0
-	rol	NUM2L
-	rol
-	sta	NUM2H			; NUM2 = X*8
-	lda	NUM2L
-	sta	scaledx,Y
-
-	; sign extend X
-
-    ;    xsext=xprime*8;   // get X into DL
-     ;   if (xsext&0x80*8) xsext|=0xff00*8;
-      ;  else xsext&=0x00ff*8;
-
-	jsr	multiply_u16x16_same_num1		; result = X*T
-
-	lda	RESULT1
-	sta	sierpx,Y
-
-	dey					; 1
-	bpl	genxloop			; 2
-
-	rts
-
-
-
-
 .include "multiply_tables.s"
 ;.include "multiply_s16x16.s"
 .include "multiply_u16x16_mod.s"
 
-; original
-; + plot is $57 cycles (87), so 167040 to draw screen
-; + $169 (361) to calculate
-; + 693120+167040 = 860k to draw screen (~1fps)
+; plot is 57 cycles, so 109440 to draw screen
+; 169 to cal
+; 433k to draw screen (2fps?)
 
-; with lookup table:
-; + plot is $57 cycles (87), so 167040 to draw screen
-; + $3a (58) to calculate
-; + $2e5c (11,868) to setup tables
-; + 111360+167040+11868=290k (~3fps)
+
