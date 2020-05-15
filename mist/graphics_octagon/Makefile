@@ -17,6 +17,7 @@ octagon_graphics.inc:	\
 	temple_center_open_n.lzsa temple_center_closed_s.lzsa \
 	red_book_shelf.lzsa \
 	red_book_open.lzsa red_book_closed.lzsa \
+	blue_book_open.lzsa blue_book_closed.lzsa \
 	red_book_static.lzsa red_book_static2.lzsa \
 	fireplace_e.lzsa \
 	in_fireplace_w.lzsa in_fireplace_door.lzsa \
@@ -71,6 +72,8 @@ octagon_graphics.inc:	\
 	echo "frame_door_open_lzsa: .incbin \"frame_door_open.lzsa\"" >> octagon_graphics.inc
 	echo "frame_bookcase_open_lzsa: .incbin \"frame_bookcase_open.lzsa\"" >> octagon_graphics.inc
 	echo "blue_book_shelf_lzsa: .incbin \"blue_book_shelf.lzsa\"" >> octagon_graphics.inc
+	echo "blue_book_open_lzsa: .incbin \"blue_book_open.lzsa\"" >> octagon_graphics.inc
+	echo "blue_book_closed_lzsa: .incbin \"blue_book_closed.lzsa\"" >> octagon_graphics.inc
 	echo "bookshelf_n_lzsa: .incbin \"bookshelf_n.lzsa\"" >> octagon_graphics.inc
 	echo "bookshelf_open_n_lzsa: .incbin \"bookshelf_open_n.lzsa\"" >> octagon_graphics.inc
 	echo "bookshelf_close_n_lzsa: .incbin \"bookshelf_close_n.lzsa\"" >> octagon_graphics.inc

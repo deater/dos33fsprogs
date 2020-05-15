@@ -1,8 +1,7 @@
-
 	;===========================
-	; open the red book
+	; Touch the red book
 	;===========================
-red_book:
+touch_red_book:
 
 	; if have a red page, take it and increment count
 
@@ -17,10 +16,51 @@ red_book:
 
 not_red_page:
 
-
-	bit	KEYRESET
 	lda	#0
 	sta	FRAMEL
+
+	lda	#OCTAGON_RED_BOOK_CLOSED
+	sta	LOCATION
+
+	jsr	change_location
+
+	rts
+
+
+	;===========================
+	; Touch the blue book
+	;===========================
+touch_blue_book:
+
+	; if have a blue page, take it and increment count
+
+	lda	HOLDING_PAGE
+	cmp	#HOLDING_BLUE_PAGE
+	bne	not_blue_page
+
+	lda	#0		; put down page
+	sta	HOLDING_PAGE
+
+	inc	BLUE_PAGE_COUNT	; increment page count
+
+not_blue_page:
+
+	lda	#0
+	sta	FRAMEL
+
+	lda	#OCTAGON_BLUE_BOOK_CLOSED
+	sta	LOCATION
+
+	jsr	change_location
+
+	rts
+
+
+
+
+
+
+
 
 red_book_loop:
 
@@ -108,8 +148,12 @@ red_book_done:
 
 
 
+;==========================
+; books dialog
+;==========================
 
-; comment summary
+;==========================
+; red/sirrus
 
 ; red 0
 ; only static
@@ -117,6 +161,9 @@ red_book_done:
 ; red 1
 ; who are you, bring me a red page, I can't see you
 ; I am sirrus
+
+;==========================
+; blue/Achenar
 
 ; blue 0
 ; only static

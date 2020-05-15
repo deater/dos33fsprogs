@@ -10,7 +10,9 @@ locations:
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
-	.word location24,location25,location26
+	.word location24,location25,location26,location27
+	.word location28,location29,location30
+
 
 ; OCTAGON_TEMPLE_DOORWAY	-- temple doorway
 location0:
@@ -72,7 +74,7 @@ location2:
 	.byte	DIRECTION_W	; special exit
 	.byte	16,25		; special x
 	.byte	16,32		; special y
-	.word	red_book-1	; special function
+	.word	touch_red_book-1	; special function
 
 ; OCTAGON_FIREPLACE		-- fireplace
 location3:
@@ -216,7 +218,10 @@ location10:
 	.word	blue_book_shelf_lzsa	; east bg
 	.word	$0000			; west bg
 	.byte	BG_EAST
-	.byte	$ff
+	.byte	DIRECTION_E	; special exit
+	.byte	16,25		; special x
+	.byte	16,32		; special y
+	.word	touch_blue_book-1	; special function
 
 ; OCTAGON_TOWER_ROTATION		-- looking at tower rotation
 location11:
@@ -499,3 +504,70 @@ location26:
 	.byte	BG_SOUTH|BG_NORTH
 	.byte	$ff
 
+; OCTAGON_RED_BOOK_CLOSED	-- red book, but closed
+location27:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	OCTAGON_RED_BOOK_OPEN	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W|DIRECTION_ONLY_POINT	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	red_book_closed_lzsa	; west bg
+	.byte	BG_WEST		; west
+	.byte	$ff
+
+; OCTAGON_RED_BOOK_OPEN		-- red book, but closed
+location28:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	OCTAGON_TEMPLE_CENTER	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W|DIRECTION_ONLY_POINT	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	red_book_open_lzsa	; west bg
+	.byte	BG_WEST		; west
+	.byte	$ff
+
+; OCTAGON_BLUE_BOOK_CLOSED	-- blue book, but closed
+location29:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	OCTAGON_BLUE_BOOK_OPEN	; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	blue_book_closed_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_EAST		; east
+	.byte	$ff
+
+; OCTAGON_BLUE_BOOK_OPEN		-- blue book, but open
+location30:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	OCTAGON_TEMPLE_CENTER	; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E|DIRECTION_ONLY_POINT	; east exit_dir
+	.byte	$ff			; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	blue_book_open_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_EAST		; east
+	.byte	$ff
