@@ -513,7 +513,7 @@ location27:
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
-	.byte	DIRECTION_W|DIRECTION_ONLY_POINT	; west exit_dir
+	.byte	DIRECTION_W|DIRECTION_SPLIT	; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
 	.word	$0000			; east bg
@@ -546,7 +546,7 @@ location29:
 	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_E|DIRECTION_SPLIT	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
