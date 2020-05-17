@@ -19,6 +19,8 @@ EBP4		= $F7
 COLORL		= $F8
 COLORH		= $F9
 SOUND		= $FA
+FRAMEL		= $FB
+FRAMEH		= $FC
 
 ; Soft Switches
 KEYPRESS= $C000
@@ -153,7 +155,8 @@ label_11f:
 	; two extra instructions
 
 	and	#$7			; 2
-	ora	#$2			; 2
+smc:
+	ora	#$1			; 2
 	tax				; 1
 
 	; if using color lookup table
@@ -179,6 +182,14 @@ put_pixel:
 	ldy	XCOORDH			; 2
 	lda	YCOORDL			; 2
 	jsr	HPLOT0			; 3
+
+;	inc	FRAMEL			; 2
+;	bne	no_frame		; 2
+;	inc	FRAMEH			; 2
+;no_frame:
+;	lda	smc
+;	eor	#$3
+;	sta	smc
 
 ;	lda	KEYPRESS		; 3	; see if key pressed
 ;	bpl	autumn_forever		; 2	; loop if not
@@ -236,9 +247,28 @@ color_lookup:
 	; blue and purple palette
 ;	.byte $02,$02,$03,$06, $06,$06,$02,$07
 
+	; qkumba ora2 white/blue/purple
+;	.byte $02,$03,$02,$03, $06,$07,$06,$07
+
 	; orange and green palette
 ;	.byte $01,$01,$03,$05, $05,$05,$01,$07
+
+;	.byte $01,$03,$01,$03, $05,$07,$05,$07
+;	.byte $01,$01,$03,$03, $05,$05,$07,$07
 
 
 ; "Leaf" Locations
 ;  TOP-LEFT    ??   CENTER-TOP  TOP-RIGHT        LEFT   ??   CENTER-BOTTOM    ??
+
+
+
+; FANCY OPENER
+
+; SET ADDRESS in 1a/Ab
+; lda	#xx	; 2
+; sta	1a	; 2
+; lda	#xx	; 2
+; sta	1b	; 2
+; lda	angle	; 2
+; jsr	xdraw1	; 3
+
