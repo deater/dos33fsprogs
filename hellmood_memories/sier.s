@@ -3,9 +3,10 @@
 ; by deater (Vince Weaver) <vince@deater.net>
 
 ; Zero Page
-BASL		= $28
-BASH		= $29
+GBASL		= $26
+GBASH		= $27
 H2		= $2C
+MASK		= $2F
 COLOR		= $30
 
 BH		= $EF
@@ -165,7 +166,8 @@ color_done:
 	sta	COLOR
 
 	txa		; A==Y1			; 1
-	jsr	PLOT	; (X2,Y1)		; 3
+;	jsr	PLOT	; (X2,Y1)		; 3
+	jsr	fast_plot
 
 	dey					; 1
 	bpl	xloop				; 2
@@ -174,6 +176,13 @@ color_done:
 	bpl	yloop				; 2
 
 	bmi	sierpinski_forever		; 2
+
+
+; for grabbing screenshot
+;check_key:
+;	bit	KEYPRESS
+;	bpl	check_key
+;	jmp	sierpinski_forever		; 2
 
 
 
@@ -260,18 +269,26 @@ genxloop:
 
 
 
+.include "fast_plot.s"
 
 .include "multiply_tables.s"
 ;.include "multiply_s16x16.s"
 .include "multiply_u16x16_mod.s"
 
 ; original
-; + plot is $57 cycles (87), so 167040 to draw screen
+; + plot is $5d cycles (93), so 178560 to draw screen
 ; + $169 (361) to calculate
-; + 693120+167040 = 860k to draw screen (~1fps)
+; + 693120+178560 = 872k to draw screen (~1fps)
 
 ; with lookup table:
-; + plot is $57 cycles (87), so 167040 to draw screen
+; + plot is $5d cycles (93), so 178560 to draw screen
 ; + $3a (58) to calculate
 ; + $2e5c (11,868) to setup tables
-; + 111360+167040+11868=290k (~3fps)
+; + 111360+178560+11868=290k (~3fps)
+
+; with lookup table+inline fast_plot
+; + plot is $31 cycles (49), so 94080 to draw screen
+; + $3a (58) to calculate
+; + $2e5c (11,868) to setup tables
+; + 111360+94080+11868=217k (~4fps)
+

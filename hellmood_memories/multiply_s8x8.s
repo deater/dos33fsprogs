@@ -1,7 +1,6 @@
 	;=================================================
 	; M1 * M2
 multiply_s8x8:
-	stx	TEMP		; save as we trash it
 
 	lda	M2
 	eor	M1		; calc if we need to adjust at end
@@ -50,6 +49,5 @@ negate_result:
 done_result:
 	sta	M2
 
-	ldx	TEMP
 	rts
 

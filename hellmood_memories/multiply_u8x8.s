@@ -33,6 +33,8 @@
 ; Result: M2:M1
 ;
 multiply_u8x8:
+	stx	TEMP
+
 	lda     M1
         sta     sm1a+1                                                  ; 3
         sta     sm3a+1                                                  ; 3
@@ -53,4 +55,5 @@ sm4a:
 	sbc	square2_hi,X
 	sta	M2
 
+	ldx	TEMP
 	rts

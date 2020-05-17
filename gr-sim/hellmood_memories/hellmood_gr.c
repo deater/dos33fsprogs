@@ -295,18 +295,37 @@ static int fx2(int xx, int yy, int xprime) {
 
 /* parallax checkerboard */
 static int fx3(int xx,int yy,int xprime) {
-	return 0;
-}
 
-#if 0
-	dx=((yy&0xff)<<8) | (xprime&0xff);
+	unsigned short ax,bx,cx,dx;
+	int cf=0,zf=0,result;
 
 	cx=frame;		// mov cx,bp ; set init point to time
 	bx=-16;		// mov bx,-16 ; limit to 16 iterations
 fx3L:
-	cx=cx+(yy*320)+xx;	// add cx, di ; offset by screenpointer
-	ax=819;		// mov ax,819 ; magic, related to Rrrola
-	imul_16(cx);	// imul cx ; get X',Y' in DX
+	cx=cx+(yy*40)+xx;
+//	cx=cx+(yy*320)+xx;	// add cx, di ; offset by screenpointer
+//	ax=819;		// mov ax,819 ; magic, related to Rrrola
+			// 819 * 320 = 0x3ffc0
+			// 819 * 1   = 0x333
+			// want Z*1 = 0x40
+			// 0x333 = cccd/40  (/64)
+
+			// 40=$28  48= $30
+			// 1 = $0001
+			// 39 =$0027
+			// 40= $0100		6.4
+ 
+			// 65536/40 = 1638.4 / 40 = 
+			// 28f5
+
+	ax=0x28f5;
+
+	result=ax*cx;
+//	ax=result&0xffff;
+	//dx=(result>>16);
+	dx=(result>>24);
+
+	//imul_16(cx);	// imul cx ; get X',Y' in DX
 	cf=dx&1;	// ror dx,1 ; set carry flag on "hit"
 	dx=dx>>1;
 	if (cf) {
@@ -328,69 +347,46 @@ fx3L:
 
 	return ax;
 }
-#endif
+
 
 /* sierpinski rotozoomer */
 static int fx4(int xx, int yy, int xprime) {
-	return 0;
-}
-#if 0
-	unsigned char dl,dh,bh,al;
 
-	dx=((yy&0xff)<<8) | (xprime&0xff);
+	unsigned char dh,bh;
+        unsigned short color,t,xsext;
+        int temp;
 
-	dl=dx&0xff;	dh=(dx>>8)&0xff;
+        t=frame-2048;   // lea cx,[bp-2048] ; center time to pass zero
+        t=t<<3; // sal cx,3 ; speed up by factor of 8!
 
-	cx=frame-2048;	// lea cx,[bp-2048] ; center time to pass zero
-	cx=cx<<3;	// sal cx,3 ; speed up by factor of 8!
-	ax=(dh&0xff);	// movzx ax,dh ; get X into AL
-			// movsx dx,dl ; get Y into DL
-	if (dl&0x80) {
-		dx|=0xff00;
-	}
-	else {
-		dx&=0x00ff;
-	}
+	yy*=4;
 
-	bx=ax;		// mov bx,ax   ; save X in BX
-	imul_16_bx(cx);	// imul bx,cx  ; BX=X*T
+        /* sign extend X */
+        xsext=xprime*8;   // get X into DL
+        if (xsext&0x80*8) xsext|=0xff00*8;
+        else xsext&=0x00ff*8;
 
-	/* bl=bx&0xff;	*/ bh=(bx>>8)&0xff;
-	dl=dx&0xff;	dh=(dx>>8)&0xff;
+        temp=yy*t;                      // temp=Y*T
+        bh=(temp>>8)+xsext;             // bh=((y*t)/256)+X
 
-	bh=bh+dl;	// add bh,dl   ; bh=x*t/256+Y
+        temp=xsext*t;                   // temp=X*T
+        dh=(temp>>8)&0xff;              // dh=(X*T/256)
 
-	imul_16_dx(cx);	// imul dx,cx  ; dx=Y*T
+        color=(yy-dh)&bh;               // color=(Y-(X*T/256))&(Y*T/256+X)
 
-	dl=dx&0xff;	dh=(dx>>8)&0xff;
+                        // and al,252  ; thicker sierpinksi
 
-			// sub al,dh   ; al=X-Y*T/256
-	al=ax&0xff;	// ah=(ax>>8)&0xff;
-	al=al-dh;
+	if ((color&252)==0) {
+                color=0x9;     // otherwise: a nice orange
+        }
+        else {
+                color=0;        //  leave black if not sierpinksi
+        }
 
-			// and al,bh   ; AL=(X-Y*T/256)&(x*T/256+Y)
-	al=al&bh;
-	al=al&252;	// and al,252  ; thicker sierpinksi
-	if (al==0) zf=1;
-	else zf=0;
-	cf=0; of=0;
-			// salc	       ; set pixel value to black
-	if (cf==0) al=0;
-	else al=0xff;
+        return color;
 
-/* NOTE: remove the line below and the background becomes a rainbow */
-	ax=al;
-			// jnz fx4q    ; leave black if not sierpinksi
-	if (zf==0) goto fx4q;
-
-	ax=ax&0xff00;	// mov al,0x2a ; otherwise: a nice orange
-	ax|=0x2a;
-fx4q:
-	;
-	return ax;
 }
 
-#endif
 /* raycast bent tunnel */
 static int fx5(int xx, int yy, int xprime) {
 
@@ -543,7 +539,7 @@ int main(int argc, char **argv) {
 
 //	frame=0x13;
 
-	frame=2*512;
+	frame=3*512;
 
 	while(1) {
 		for(yy=0;yy<48;yy++) {

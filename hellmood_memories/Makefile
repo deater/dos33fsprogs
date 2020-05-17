@@ -48,7 +48,7 @@ plane.o:	plane.s
 SIER: sier.o
 	ld65 -o SIER sier.o -C ../linker_scripts/apple2_1000.inc
 
-sier.o:	sier.s
+sier.o:	sier.s fast_plot.s
 	ca65 -o sier.o sier.s -l sier.lst
 
 ###

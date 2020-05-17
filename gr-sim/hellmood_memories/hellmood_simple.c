@@ -307,87 +307,6 @@ static void imul_16(short value) {
 
 }
 
-/* signed multiply */
-static void imul_16_bx(short value) {
-
-	int result;
-	short src;
-
-	src=bx;
-
-	result=src*value;
-
-//	printf("imul: %d*%d=%d ",src,value,result);
-
-	bx=(result&0xffff);
-
-	if (bx==result) {
-		cf=0;
-		of=0;
-	}
-	else {
-		cf=1;
-		of=1;
-	}
-
-}
-
-/* signed multiply */
-static void imul_16_dx(short value) {
-
-	int result;
-	short src;
-
-	src=dx;
-
-	result=src*value;
-
-//	printf("imul: %d*%d=%d ",src,value,result);
-
-	dx=(result&0xffff);
-
-	if (dx==result) {
-		cf=0;
-		of=0;
-	}
-	else {
-		cf=1;
-		of=1;
-	}
-
-}
-
-
-
-#if 0
-
-/* unsigned divide */
-static void div_8(unsigned char value) {
-
-	unsigned char r,q;
-	unsigned int result,remainder;
-
-//	printf("Dividing %d (%x) by %d (%x): ",ax,ax,value,value);
-
-	if (value==0) {
-		printf("Divide by zero!\n");
-		return;
-	}
-
-	result=ax/value;
-	remainder=ax%value;
-
-	q=result;
-	r=remainder;
-
-//	printf("Result: q=%d r=%d\n",q,r);
-
-	ax=(r<<8)|(q&0xff);
-
-}
-
-#endif
-
 static void push(int value) {
 	//printf("Pushing %x\n",value);
 	stack[sp]=value;
@@ -468,92 +387,62 @@ static int fx2(int xx, int yy, int xprime) {
 /* parallax checkerboard */
 static int fx3(int xx,int yy,int xprime) {
 
-	dx=((yy&0xff)<<8) | (xprime&0xff);
+	unsigned short color;
 
 	cx=frame;		// mov cx,bp ; set init point to time
 	bx=-16;		// mov bx,-16 ; limit to 16 iterations
 fx3L:
 	cx=cx+(yy*320)+xx;	// add cx, di ; offset by screenpointer
-	ax=819;		// mov ax,819 ; magic, related to Rrrola
+//	ax=0x333;		// mov ax,819 ; magic, related to Rrrola
+	ax=0xcccd/64;
 	imul_16(cx);	// imul cx ; get X',Y' in DX
-	cf=dx&1;	// ror dx,1 ; set carry flag on "hit"
-	dx=dx>>1;
-	if (cf) {
-		dx|=0x8000;
-	}
-	else {
-		dx&=0x7fff;
-	}
 
 	bx++;		// inc bx ; increment iteration count
-	if (bx==0) zf=1;// does not affect carry flag
-	else zf=0;
+
+			// check bottom bit of top word of multiply
 			// ja fx3L ; loop until "hit" or "iter=max"
 			// jump above, if cf==0 and zf==0
-	if ((cf==0) && (zf==0)) goto fx3L;
 
-	ax=bx+31;	// lea ax,[bx+32] ; map value to standard gray scale
+	if ((bx!=0) && ((dx&1)==0)) goto fx3L;
+
+	color=bx+31;	// lea ax,[bx+32] ; map value to standard gray scale
 	//printf("%d %d\n",ax,bx);
 
-	return ax;
+	return color;
 }
 
 /* sierpinski rotozoomer */
 static int fx4(int xx, int yy, int xprime) {
 
-	unsigned char dl,dh,bh,al;
+	unsigned char dh,bh;
+	unsigned short color,t,xsext;
+	int temp;
 
-	dx=((yy&0xff)<<8) | (xprime&0xff);
+	t=frame-2048;	// lea cx,[bp-2048] ; center time to pass zero
+	t=t<<3;	// sal cx,3 ; speed up by factor of 8!
 
-	dl=dx&0xff;	dh=(dx>>8)&0xff;
+	/* sign extend X */
+	xsext=xprime;	// get X into DL
+	if (xsext&0x80) xsext|=0xff00;
+	else xsext&=0x00ff;
 
-	cx=frame-2048;	// lea cx,[bp-2048] ; center time to pass zero
-	cx=cx<<3;	// sal cx,3 ; speed up by factor of 8!
-	ax=(dh&0xff);	// movzx ax,dh ; get X into AL
-			// movsx dx,dl ; get Y into DL
-	if (dl&0x80) {
-		dx|=0xff00;
+	temp=yy*t;			// temp=Y*T
+	bh=(temp>>8)+xsext;		// bh=((y*t)/256)+X
+
+	temp=xsext*t;			// temp=X*T
+	dh=(temp>>8)&0xff;		// dh=(X*T/256)
+
+	color=(yy-dh)&bh;		// color=(Y-(X*T/256))&(Y*T/256+X)
+
+			// and al,252  ; thicker sierpinksi
+	if ((color&252)==0) {
+		color=0x2a;	// otherwise: a nice orange
 	}
 	else {
-		dx&=0x00ff;
+		color=0;	//  leave black if not sierpinksi
 	}
 
-	bx=ax;		// mov bx,ax   ; save X in BX
-	imul_16_bx(cx);	// imul bx,cx  ; BX=X*T
-
-	/* bl=bx&0xff;	*/ bh=(bx>>8)&0xff;
-	dl=dx&0xff;	dh=(dx>>8)&0xff;
-
-	bh=bh+dl;	// add bh,dl   ; bh=x*t/256+Y
-
-	imul_16_dx(cx);	// imul dx,cx  ; dx=Y*T
-
-	dl=dx&0xff;	dh=(dx>>8)&0xff;
-
-			// sub al,dh   ; al=X-Y*T/256
-	al=ax&0xff;	// ah=(ax>>8)&0xff;
-	al=al-dh;
-
-			// and al,bh   ; AL=(X-Y*T/256)&(x*T/256+Y)
-	al=al&bh;
-	al=al&252;	// and al,252  ; thicker sierpinksi
-	if (al==0) zf=1;
-	else zf=0;
-	cf=0; of=0;
-			// salc	       ; set pixel value to black
-	if (cf==0) al=0;
-	else al=0xff;
-
-/* NOTE: remove the line below and the background becomes a rainbow */
-	ax=al;
-			// jnz fx4q    ; leave black if not sierpinksi
-	if (zf==0) goto fx4q;
-
-	ax=ax&0xff00;	// mov al,0x2a ; otherwise: a nice orange
-	ax|=0x2a;
-fx4q:
-	;
-	return ax;
+	return color;
 }
 
 
@@ -740,7 +629,7 @@ int main(int argc, char **argv) {
 //	frame=0x13;
 	es=0xa000-10;
 
-	frame=2*512;
+	frame=3*512;
 
 	while(1) {
 		for(yy=0;yy<200;yy++) {
