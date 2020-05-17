@@ -8,11 +8,23 @@ B2D = ../bmp2dhr/b2d
 
 all:	polly.dsk
 
-polly.dsk:	HELLO POLLY
+polly.dsk:	HELLO POLLY BOOP
 	cp empty.dsk polly.dsk
 	$(DOS33) -y polly.dsk SAVE A HELLO
 	$(DOS33) -y polly.dsk BSAVE -a 0x1000 POLLY
+	$(DOS33) -y polly.dsk BSAVE -a 0x1000 BOOP
 
+
+
+
+
+BOOP: boop.o
+	ld65 -o BOOP boop.o -C ../linker_scripts/apple2_1000.inc
+
+boop.o:	boop.s
+	ca65 -o boop.o boop.s -l boop.lst
+
+###
 
 POLLY: polly.o
 	ld65 -o POLLY polly.o -C ../linker_scripts/apple2_1000.inc
@@ -29,6 +41,6 @@ HELLO:	hello.bas
 ####
 
 clean:	
-		rm -f *~ *.o *.lst HELLO POLLY
+		rm -f *~ *.o *.lst HELLO POLLY BOOP
 
 
