@@ -1,26 +1,31 @@
-; Autumn, based on the code in Hellmood's Autumn
+; Apple II Seasons -=DESiRE=- 128B Demo for Outline 2020
+; based on the code in Hellmood's 64B x86 demo "Autumn"
 ; by deater (Vince Weaver) <vince@deater.net>
 
 ; DOS version is 64 bytes
 ; original Apple II 6502 port was 167 bytes
 ; I got it down to 126 bytes
 ; qkumba got it down to 116
+; color-cycling brought it back up to 127 bytes
+
+; To save space, runs from the zero page starting at $50
+;	need to avoid $E0-$E5 used by the hgr/hplot routines
 
 ; Zero Page Addresses
 
-XCOORDL		= $F0
-XCOORDH		= $F1
-YCOORDL		= $F2
-YCOORDH		= $F3
-EBP1		= $F4
-EBP2		= $F5
-EBP3		= $F6
-EBP4		= $F7
-COLORL		= $F8
-COLORH		= $F9
-SOUND		= $FA
-FRAMEL		= $FB
-FRAMEH		= $FC
+XCOORDL		= $F3
+XCOORDH		= $F4
+YCOORDL		= $F5
+YCOORDH		= $F6
+EBP1		= $F7
+EBP2		= $F8
+EBP3		= $F9
+EBP4		= $FA
+COLORL		= $FB
+COLORH		= $FC
+SOUND		= $FD
+FRAMEL		= $FE
+FRAMEH		= $FF
 
 ; Soft Switches
 KEYPRESS= $C000
@@ -37,9 +42,10 @@ HGR2	= $F3D8		; Set full-screen hi-res mode using page 2 ($4000)
 HPLOT0	= $F457		; Plot point, (Y,X) = Horizontal, (A=Vertical)
 HCOLOR  = $F6EC		; Set color in X, must be 0..7
 
-XDRAW1	= $F661
+; use zero-page addressing to save space
+.zeropage
 
-autumn:
+seasons:
 
 	;===================
 	; init screen			; Instruction Length
@@ -61,7 +67,7 @@ autumn:
 ;	stx	COLORH			; 2
 
 
-autumn_forever:
+seasons_forever:
 
 	; save old Xcoord value to X/Y for later
 	; push/pop is 1 byte each but have to get
@@ -156,7 +162,7 @@ label_11f:
 
 	and	#$7			; 2
 smc:
-	ora	#$1			; 2
+	ora	#$2			; 2
 	tax				; 1
 
 	; if using color lookup table
@@ -165,44 +171,60 @@ smc:
 
 	; if ycoord negative, loop
 	lda	YCOORDH			; 2
-	bmi	autumn_forever		; 2
+	bmi	seasons_forever		; 2
 
 	; if top bits of xcoord, loop
 	lda	XCOORDH			; 2
 	and	#$f0			; 2
-	bne	autumn_forever		; 2
+	bne	seasons_forever		; 2
 
 put_pixel:
 
 	; actually set the color
-	jsr	HCOLOR			; 3
+	jsr	HCOLOR			; 3	; color is in X
 
-	; set up paramaters for HPLOT call
-	ldx	XCOORDL			; 2
+	; set up paramaters for HPLOT ROM call
+	ldx	XCOORDL			; 2	; x coord in (y:x)
 	ldy	XCOORDH			; 2
-	lda	YCOORDL			; 2
+	lda	YCOORDL			; 2	; y coord in A
 	jsr	HPLOT0			; 3
 
-;	inc	FRAMEL			; 2
-;	bne	no_frame		; 2
-;	inc	FRAMEH			; 2
-;no_frame:
-;	lda	smc
-;	eor	#$3
-;	sta	smc
+	; flip palettes when color at $4200 (roughly 0,32 on screen)
+	; changes.  This is sort of arbitrary, but having a 16-bit counter
+	; takes too many instructions and Apple II doesn't have a
+	; programmable timer
 
+	lda	$4200			; 3	; check colors at 0,32
+	bmi	seasons_forever		; 2
+
+	; flip between blue/purple and orange/green palettes
+	; with self-modifying code.  2 bytes are saved when
+	; we execute in the zero page
+	lda	smc+1			; 2
+	eor	#$3			; 2
+	sta	smc+1			; 2
+
+	; the adc/sbc in HPLOT0 leave the V flag clear
+	; so we can save a byte (over jump) by using bvc
+	bvc	seasons_forever		; 2
+
+
+
+
+	; Thankfully not necessary for a 128B demo?
 ;	lda	KEYPRESS		; 3	; see if key pressed
-;	bpl	autumn_forever		; 2	; loop if not
-
-	bvc	autumn_forever		; 2	; smaller than jump
-						; V flag clear because
-						; the adc/sbc in HPOSN
-						; never overflows?
-
-
+;	bpl	seasons_forever		; 2	; loop if not
+;	bit	KEYRESET
 exit_to_prompt:
 ;	jsr	TEXT			; 3	; return to text mode
 ;	jmp	$3D0			; 3	; return to Applesoft prompt
+
+
+;========================================================
+;========================================================
+; color lookup tables used when testing
+;  some of them look better, but make the executable bigger
+;  than the AND/OR version of setting colors
 
 
 ; Apple II Hi-Res Colors
@@ -221,28 +243,8 @@ exit_to_prompt:
 
 color_lookup:
 
-	; my default, colorful palette
+	; colorful palette
 ;	.byte $01,$01,$02,$03, $05,$05,$06,$07
-
-;      or 10 
-; 0000 0010  2 2
-; 0001 0011  3 2
-; 0010 0010  2 3
-; 0011 0011  3 6
-; 0100 0110  6 6
-; 0101 0111  7 6
-; 0110 0110  6 2
-; 0111 0111  7 7
-
-;      want eor1
-; 0000 0010 0001
-; 0001 0010 0000
-; 0010 0011 0011
-; 0011 0110 0010
-; 0100 0110 0101
-; 0101 0110 0100
-; 0110 0010 0111
-; 0111 0111 0110
 
 	; blue and purple palette
 ;	.byte $02,$02,$03,$06, $06,$06,$02,$07
@@ -250,25 +252,18 @@ color_lookup:
 	; qkumba ora2 white/blue/purple
 ;	.byte $02,$03,$02,$03, $06,$07,$06,$07
 
+	; ora1 white/orange/green
+;	.byte $01,$01,$03,$03, $05,$05,$07,$07
+
+	; better mixed orange/green/white
+;	.byte $01,$03,$03,$03, $05,$05,$07,$07
+
 	; orange and green palette
 ;	.byte $01,$01,$03,$05, $05,$05,$01,$07
 
-;	.byte $01,$03,$01,$03, $05,$07,$05,$07
-;	.byte $01,$01,$03,$03, $05,$05,$07,$07
-
+;	.byte $01,$00,$01,$00, $05,$00,$05,$00
 
 ; "Leaf" Locations
 ;  TOP-LEFT    ??   CENTER-TOP  TOP-RIGHT        LEFT   ??   CENTER-BOTTOM    ??
 
-
-
-; FANCY OPENER
-
-; SET ADDRESS in 1a/Ab
-; lda	#xx	; 2
-; sta	1a	; 2
-; lda	#xx	; 2
-; sta	1b	; 2
-; lda	angle	; 2
-; jsr	xdraw1	; 3
 
