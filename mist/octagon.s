@@ -65,6 +65,26 @@ game_loop:
 	cmp	#OCTAGON_TOWER_ROTATION
 	beq	animate_tower_rotation
 
+	cmp	#OCTAGON_TEMPLE_CENTER
+	bne	check_page_close_red
+	jsr	draw_octagon_page_far
+	jmp	done_foreground
+
+check_page_close_red:
+	cmp	#OCTAGON_RED_BOOKSHELF
+	bne	check_page_close_blue
+	jsr	draw_octagon_page_close_red
+	jmp	done_foreground
+
+check_page_close_blue:
+	cmp	#OCTAGON_BLUE_BOOKSHELF
+	jsr	draw_octagon_page_close_blue
+
+done_foreground:
+	;====================================
+	; handle animations
+	;====================================
+
 	; things only happening when animating
 
 	lda	ANIMATE_FRAME
@@ -208,7 +228,7 @@ goto_map:
 
 goto_red_book:
 	ldy	#OCTAGON_RED_BOOKSHELF
-	lda	#DIRECTION_W
+	lda	#DIRECTION_W|DIRECTION_ONLY_POINT
 	jmp	done_goto
 
 goto_shelf_frame:
@@ -228,7 +248,7 @@ goto_door_frame:
 
 goto_blue_book:
 	ldy	#OCTAGON_BLUE_BOOKSHELF
-	lda	#DIRECTION_E
+	lda	#DIRECTION_E|DIRECTION_ONLY_POINT
 	jmp	done_goto
 
 goto_fireplace:
@@ -245,6 +265,102 @@ done_goto:
 	sty	LOCATION
 	sta	DIRECTION
 	jmp	change_location
+
+
+	;======================================
+	; draw pages if in octagon center (far)
+draw_octagon_page_far:
+	lda	DIRECTION
+	and	#$f
+
+	cmp	#DIRECTION_W
+	beq	draw_octagon_red
+	cmp	#DIRECTION_E
+	beq	draw_octagon_blue
+no_draw_page_far:
+	rts
+
+draw_octagon_red:
+	lda	RED_PAGES_TAKEN
+	and	#OCTAGON_PAGE
+	bne	no_draw_page_far
+
+	lda	#<red_page_small_sprite
+	sta	INL
+	lda	#>red_page_small_sprite
+	sta	INH
+
+	jmp	draw_small_page
+
+draw_octagon_blue:
+	lda	BLUE_PAGES_TAKEN
+	and	#OCTAGON_PAGE
+	bne	no_draw_page_far
+
+	lda	#<blue_page_small_sprite
+	sta	INL
+	lda	#>blue_page_small_sprite
+	sta	INH
+
+draw_small_page:
+	lda	#21
+	sta	XPOS
+	lda	#24
+	sta	YPOS
+
+	jmp	put_sprite_crop         ; tail call
+
+	;======================================
+	; draw pages if in octagon center (close)
+draw_octagon_page_close_red:
+	lda	DIRECTION
+	and	#$f
+
+	cmp	#DIRECTION_W
+	beq	draw_octagon_close_red
+
+no_draw_page_close:
+	rts
+
+draw_octagon_close_red:
+	lda	RED_PAGES_TAKEN
+	and	#OCTAGON_PAGE
+	bne	no_draw_page_close
+
+	lda	#<red_page_sprite
+	sta	INL
+	lda	#>red_page_sprite
+	sta	INH
+
+	jmp	draw_page_close
+
+draw_octagon_page_close_blue:
+	lda	DIRECTION
+	and	#$f
+
+	cmp	#DIRECTION_E
+	beq	draw_octagon_close_blue
+	rts
+
+draw_octagon_close_blue:
+
+	lda	BLUE_PAGES_TAKEN
+	and	#OCTAGON_PAGE
+	bne	no_draw_page_close
+
+	lda	#<blue_page_sprite
+	sta	INL
+	lda	#>blue_page_sprite
+	sta	INH
+
+draw_page_close:
+	lda	#24
+	sta	XPOS
+	lda	#24
+	sta	YPOS
+
+	jmp	put_sprite_crop         ; tail call
+
 
 
 
@@ -278,12 +394,14 @@ done_goto:
 	.include	"octagon_rotation.s"
 
 	; linking books
+	.include	"handle_pages.s"
 
 	; books
 
 	.include	"books/octagon_books.inc"
 
 	.include	"common_sprites.inc"
+	.include	"page_sprites.inc"
 
 	.include	"leveldata_octagon.inc"
 

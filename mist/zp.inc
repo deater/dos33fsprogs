@@ -58,7 +58,7 @@ BTC_H		=	$6F
 ; the following values
 
 RED_PAGES_TAKEN	=	$80
-	OCTOGON_PAGE = 1
+	OCTAGON_PAGE = 1
 	MECHE_PAGE   = 2
 	SELENA_PAGE  = 4
 	STONEY_PAGE  = 8

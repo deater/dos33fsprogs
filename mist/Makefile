@@ -89,7 +89,7 @@ OCTAGON:	octagon.o
 octagon.o:	octagon.s zp.inc hardware.inc common_defines.inc \
 	graphics_octagon/octagon_graphics.inc \
 	books/octagon_books.inc \
-	common_sprites.inc \
+	common_sprites.inc page_sprites.inc \
 	leveldata_octagon.inc \
 	letter_cat.s \
 	marker_switch.s \

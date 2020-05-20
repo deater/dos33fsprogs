@@ -72,7 +72,7 @@ location2:
 	.word	red_book_shelf_lzsa	; west bg
 	.byte	BG_WEST		; west
 	.byte	DIRECTION_W	; special exit
-	.byte	16,25		; special x
+	.byte	16,28		; special x
 	.byte	16,32		; special y
 	.word	touch_red_book-1	; special function
 
@@ -219,7 +219,7 @@ location10:
 	.word	$0000			; west bg
 	.byte	BG_EAST
 	.byte	DIRECTION_E	; special exit
-	.byte	16,25		; special x
+	.byte	16,28		; special x
 	.byte	16,32		; special y
 	.word	touch_blue_book-1	; special function
 

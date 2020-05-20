@@ -3,6 +3,22 @@
 	;===========================
 touch_red_book:
 
+	; first see if picking up the page
+	lda	CURSOR_X
+	cmp	#24
+	bcc	yes_touching_red_book		; blt
+
+	lda	RED_PAGES_TAKEN
+	and	#OCTAGON_PAGE
+	bne	no_touch_red_page
+
+	lda	#OCTAGON_PAGE
+	jsr	take_red_page
+no_touch_red_page:
+	rts
+
+
+yes_touching_red_book:
 	; if have a red page, take it and increment count
 
 	lda	HOLDING_PAGE
@@ -31,6 +47,22 @@ not_red_page:
 	; Touch the blue book
 	;===========================
 touch_blue_book:
+
+	; first see if picking up the page
+	lda	CURSOR_X
+	cmp	#24
+	bcc	yes_touching_blue_book		; blt
+
+	lda	BLUE_PAGES_TAKEN
+	and	#OCTAGON_PAGE
+	bne	no_touch_blue_page
+
+	lda	#OCTAGON_PAGE
+	jsr	take_blue_page
+no_touch_blue_page:
+	rts
+
+yes_touching_blue_book:
 
 	; if have a blue page, take it and increment count
 
