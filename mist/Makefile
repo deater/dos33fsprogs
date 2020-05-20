@@ -97,6 +97,7 @@ octagon.o:	octagon.s zp.inc hardware.inc common_defines.inc \
 	keyboard.s \
 	draw_pointer.s \
 	end_level.s \
+	handle_pages.s \
 	octagon_bookshelf.s \
 	octagon_rotation.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s

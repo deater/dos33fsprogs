@@ -22,6 +22,7 @@ yes_touching_red_book:
 	; if have a red page, take it and increment count
 
 	lda	HOLDING_PAGE
+	and	#$c0
 	cmp	#HOLDING_RED_PAGE
 	bne	not_red_page
 
@@ -29,6 +30,10 @@ yes_touching_red_book:
 	sta	HOLDING_PAGE
 
 	inc	RED_PAGE_COUNT	; increment page count
+
+	; in actual game plays sound effect here
+
+	rts
 
 not_red_page:
 
@@ -67,6 +72,7 @@ yes_touching_blue_book:
 	; if have a blue page, take it and increment count
 
 	lda	HOLDING_PAGE
+	and	#$c0
 	cmp	#HOLDING_BLUE_PAGE
 	bne	not_blue_page
 
@@ -74,6 +80,10 @@ yes_touching_blue_book:
 	sta	HOLDING_PAGE
 
 	inc	BLUE_PAGE_COUNT	; increment page count
+
+	; in actual game plays sound effect here
+
+	rts
 
 not_blue_page:
 

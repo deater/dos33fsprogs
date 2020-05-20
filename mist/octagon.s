@@ -78,6 +78,7 @@ check_page_close_red:
 
 check_page_close_blue:
 	cmp	#OCTAGON_BLUE_BOOKSHELF
+	bne	done_foreground
 	jsr	draw_octagon_page_close_blue
 
 done_foreground:
