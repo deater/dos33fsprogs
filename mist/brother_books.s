@@ -37,13 +37,27 @@ yes_touching_red_book:
 
 not_red_page:
 
-	lda	#0
-	sta	FRAMEL
-
 	lda	#OCTAGON_RED_BOOK_CLOSED
 	sta	LOCATION
 
 	jsr	change_location
+
+	rts
+
+
+open_red_book:
+
+	lda	#OCTAGON_RED_BOOK_OPEN
+	sta	LOCATION
+
+	lda	#DIRECTION_W|DIRECTION_SPLIT
+open_book:
+	sta	DIRECTION
+
+	jsr	change_location
+
+	lda	#1
+	sta	ANIMATE_FRAME
 
 	rts
 
@@ -87,9 +101,6 @@ yes_touching_blue_book:
 
 not_blue_page:
 
-	lda	#0
-	sta	FRAMEL
-
 	lda	#OCTAGON_BLUE_BOOK_CLOSED
 	sta	LOCATION
 
@@ -97,6 +108,13 @@ not_blue_page:
 
 	rts
 
+open_blue_book:
+
+	lda	#OCTAGON_BLUE_BOOK_OPEN
+	sta	LOCATION
+
+	lda	#DIRECTION_E|DIRECTION_SPLIT
+	jmp	open_book
 
 
 
@@ -106,45 +124,32 @@ not_blue_page:
 
 red_book_animation:
 
+	lda	ANIMATE_FRAME
+	asl
+	tay
 
-	jsr	gr_copy_to_current
+	lda	red_book_sprite_sequence0,Y
+	sta	INL
+	lda	red_book_sprite_sequence0+1,Y
+	sta	INH
 
-	jsr	page_flip
+        lda     #23
 
-	lda	#120
-	jsr	WAIT
+advance_red_book:
+	sta	XPOS
+	lda	#14
+	sta	YPOS
 
+	jsr	put_sprite_crop
 
-	jsr	page_flip
+	; Play the "bring red pages" audio
 
-	lda	#120
-	jsr	WAIT
-
-
-	inc	FRAMEL
-	lda	FRAMEL
-	cmp	#5
-	bne	done_sir
-
-	;; annoying brother
-
-	jsr	gr_copy_to_current
-
-	jsr	page_flip
-
-	; FIXME
-	lda	#<audio_red_page
-	sta	BTC_L
-	lda	#>audio_red_page
-	sta	BTC_H
-	ldx	#21		; 21 pages long???
-	jsr	play_audio
-
-;	lda	#100
-;	jsr	WAIT
-
-
-done_sir:
+;	lda	#<audio_red_page
+;	sta	BTC_L
+;	lda	#>audio_red_page
+;	sta	BTC_H
+;	ldx	#21		; 21 pages long???
+;	jsr	play_audio
 
 red_book_done:
 
@@ -208,28 +213,68 @@ red_book_static2_sprite:
 ;==========================
 ; red/sirrus
 
+sirrus_dialog:
+	.word red_dialog0,red_dialog1,red_dialog2,red_dialog3
+	.word red_dialog4,red_dialog5,red_dialog6
+
 ; red 0
 ; only static
+red_dialog0:
+	.byte 15,22
+	.byte "**STATIC**",0
 
-; 0123456789012345678901234567890123456789
 ; red 1
 ; who are you, bring me a red page, I can't see you
 ; I am Sirrus
+
+             ; 0123456789012345678901234567890123456789
+red_dialog1:
+	.byte 0,21
+	.byte "WHO ARE YOU? I CAN'T SEE YOU",0
+	.byte 0,22
+	.byte "BRING ME A RED PAGE. I AM SIRRUS.",0
 
 ; red 2
 ; You've returned.  Thank you for the red page.
 ; I beg you to find the remaining red pages.
 ; Don't waste time on my brother, he is guilty.
 
+             ; 0123456789012345678901234567890123456789
+red_dialog2:
+	.byte 0,21
+	.byte "YOU'VE RETURNED. THANK YOU FOR THE PAGE",0
+	.byte 0,22
+	.byte "I BEG YOU TO FIND REMAINING RED PAGES",0
+	.byte 0,23
+	.byte "DON'T WASTE TIME ON MY GUILTY BROTHER",0
+
 ; red 3
 ; Free me from my prison.  I am called Sirrus.
 ; I need two more pages.  Don't touch the blue
 ; Don not help my wicked brother Achenar.
 
+             ; 0123456789012345678901234567890123456789
+red_dialog3:
+	.byte 0,21
+	.byte "FREE ME FROM MY PRISON.  I AM SIRRUS.",0
+	.byte 0,22
+	.byte "I NEED MORE PAGES, DON'T TOUCH BLUE ONES",0
+	.byte 0,23
+	.byte "DO NOT HELP MY WICKED BROTHER ACHENAR",0
+
 ; red 4
 ; With each page I can see you more clearly.
 ; Achenar is guilty of conquest.  He took
 ; advantage of father.  Free me and I will reward you
+
+             ; 0123456789012345678901234567890123456789
+red_dialog4:
+	.byte 0,21
+	.byte "WITH EACH PAGE I CAN SEE MORE CLEARLY",0
+	.byte 0,22
+	.byte "ACHENAR IS GUILTY OF CONQUEST",0
+	.byte 0,23
+	.byte "FREE ME AND I WILL REWARD YOU",0
 
 ; red 5
 ; You've finally returned.  You must think Achenar is guilty.
@@ -239,13 +284,38 @@ red_book_static2_sprite:
 ; Achenar became disturbed, conquest.
 ; Father must be lost
 
+
+             ; 0123456789012345678901234567890123456789
+red_dialog5:
+	.byte 0,21
+	.byte "YOU FINALLY RETURNED.",0
+	.byte 0,22
+	.byte "YOU MUST THINK ACHENAR IS GUILTY",0
+	.byte 0,23
+	.byte "USE PAGE 158 IN PATTERN BOOK",0
+	.byte 0,24
+	.byte "DO NOT TOUCH THE GREEN BOOK",0
+
 ; ending
 ; I am free!  Thank you!  You've done the right thing.
 ; Stupid fool.  Let me rip some pages out.
 ; I hope you're into books.  Goodbye!
 
+             ; 0123456789012345678901234567890123456789
+red_dialog6:
+	.byte 0,21
+	.byte "I AM FREE! THANK YOU, YOU STUPID FOOL!",0
+	.byte 0,22
+	.byte "LET ME RIP SOME PAGES OUT!",0
+	.byte 0,23
+	.byte "I HOPE YOU'RE INTO BOOKS!  GOODBYE!",0
+
 ;==========================
 ; blue/Achenar
+
+achenar_dialog:
+	.word red_dialog0,blue_dialog1,blue_dialog2,blue_dialog3
+	.word blue_dialog4,blue_dialog5,blue_dialog6
 
 ; blue 0
 ; only static
@@ -254,28 +324,82 @@ red_book_static2_sprite:
 ; sirrus is that you?  who are you? help me.  bring blue pages
 ; I must have the blue page
 
+             ; 0123456789012345678901234567890123456789
+blue_dialog1:
+	.byte 0,21
+	.byte "SIRRUS IS THAT YOU?  WHO ARE YOU?",0
+	.byte 0,22
+	.byte "BRING BLUE PAGES. MUST HAVE BLUE PAGES",0
+
 ; blue 2
 ; you've returned,  I'm Achenar.  don't listen to my brother.
 ; egotistical fool and liar, bring the blue pages, not the red ones
 ; I've been wrongly imprisoned.   I will have my retribution.
+
+             ; 0123456789012345678901234567890123456789
+blue_dialog2:
+	.byte 0,21
+	.byte "YOU'VE RETURNED.  I'M ACHENAR.",0
+	.byte 0,22
+	.byte "DON'T LISTEN TO MY LIAR BROTHER",0
+	.byte 0,23
+	.byte "BRING BLUE PAGES, NOT RED",0
+	.byte 0,24
+	.byte "I WILL HAVE MY RETRIBUTION",0
 
 ; blue 3
 ; you've returned, good.  bring blue pages.
 ; sirrus trapped me here.  He is greedy.
 ; don't touch the red pages.
 
+             ; 0123456789012345678901234567890123456789
+blue_dialog3:
+	.byte 0,21
+	.byte "YOU'VE RETURNED, GOOD.",0
+	.byte 0,22
+	.byte "GREEDY SIRRUS TRAPPED ME HERE",0
+	.byte 0,23
+	.byte "BRING BLUE PAGES, DON'T TOUCH THE RED",0
+
 ; blue 4
 ; my friend, I see you think Sirrus is guilty.
 ; Have you observed his lust for riches.
 ; Please bring more blue pages.
+
+             ; 0123456789012345678901234567890123456789
+blue_dialog4:
+	.byte 0,21
+	.byte "FRIEND, I SEE YOU THINK SIRRUS IS WRONG",0
+	.byte 0,22
+	.byte "HAVE YOU OBSERVED HIS LUST FOR RICHES",0
+	.byte 0,23
+	.byte "PLEASE BRING MORE BLUE PAGES",0
 
 ; blue 5
 ; Sirrus is guilty, lied to father and killed him
 ; Find pattern 158 and use it in the fireplace.
 ; Don't touch the green book!
 
+             ; 0123456789012345678901234567890123456789
+blue_dialog5:
+	.byte 0,21
+	.byte "SIRRUS IS GUILTY, HE LIED TO FATHER",0
+	.byte 0,22
+	.byte "FIND PATTERN 158 AND USE THE FIREPLACE",0
+	.byte 0,23
+	.byte "DON'T TOUCH THE GREEN BOOK!",0
+
 ; after
-; Haha I am free!  I fel so alive!
+; Haha I am free!  I feel so alive!
 ; These pages you worked so hard to find
 ; what happens if I pull them out?
 ; Maybe someone will rescue you.
+
+             ; 0123456789012345678901234567890123456789
+blue_dialog6:
+	.byte 0,21
+	.byte "HAHA I AM FREE!  I FEEL SO ALIVE!",0
+	.byte 0,22
+	.byte "WHAT HAPPENS IF I RIP THESE PAGES OUT?",0
+	.byte 0,23
+	.byte "MAYBE SOMEONE WILL RESCUE YOU",0

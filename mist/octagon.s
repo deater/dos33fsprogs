@@ -100,6 +100,10 @@ done_foreground:
 	beq	animate_shelf
 	cmp	#OCTAGON_ELEVATOR_IN
 	beq	animate_elevator
+	cmp	#OCTAGON_RED_BOOK_OPEN
+	beq	animate_red_book
+	cmp	#OCTAGON_BLUE_BOOK_OPEN
+	beq	animate_blue_book
 
 	bne	nothing_special
 
@@ -121,6 +125,14 @@ animate_elevator:
 
 animate_tower_rotation:
 	jsr	handle_tower_rotation
+	jmp	nothing_special
+
+animate_red_book:
+	jsr	red_book_animation
+	jmp	nothing_special
+
+animate_blue_book:
+	jsr	red_book_animation
 	jmp	nothing_special
 
 nothing_special:
