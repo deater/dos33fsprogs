@@ -20,7 +20,10 @@ selena_graphics.inc:	\
 	bunker_n.lzsa bunker_s.lzsa bunker_e.lzsa \
 	subroom_s.lzsa \
 	book_table_s.lzsa \
-	book_mist_open_s.lzsa book_mist_closed_s.lzsa
+	book_mist_open_s.lzsa book_mist_closed_s.lzsa \
+	water_turn_n.lzsa water_turn_s.lzsa water_turn_w.lzsa \
+	water_path_e.lzsa water_path_w.lzsa \
+	water_note_e.lzsa water_note_w.lzsa water_note_s.lzsa
 	echo "controls_e_lzsa: .incbin \"controls_e.lzsa\"" > selena_graphics.inc
 	echo "organ_w_lzsa: .incbin \"organ_w.lzsa\"" >> selena_graphics.inc
 	echo "spaceship_inside_w_lzsa: .incbin \"spaceship_inside_w.lzsa\"" >> selena_graphics.inc
@@ -39,7 +42,14 @@ selena_graphics.inc:	\
 	echo "book_table_s_lzsa: .incbin \"book_table_s.lzsa\"" >> selena_graphics.inc
 	echo "book_mist_open_s_lzsa: .incbin \"book_mist_open_s.lzsa\"" >> selena_graphics.inc
 	echo "book_mist_closed_s_lzsa: .incbin \"book_mist_closed_s.lzsa\"" >> selena_graphics.inc
-
+	echo "water_turn_n_lzsa: .incbin \"water_turn_n.lzsa\"" >> selena_graphics.inc
+	echo "water_turn_s_lzsa: .incbin \"water_turn_s.lzsa\"" >> selena_graphics.inc
+	echo "water_turn_w_lzsa: .incbin \"water_turn_w.lzsa\"" >> selena_graphics.inc
+	echo "water_path_w_lzsa: .incbin \"water_path_w.lzsa\"" >> selena_graphics.inc
+	echo "water_path_e_lzsa: .incbin \"water_path_e.lzsa\"" >> selena_graphics.inc
+	echo "water_note_e_lzsa: .incbin \"water_note_e.lzsa\"" >> selena_graphics.inc
+	echo "water_note_w_lzsa: .incbin \"water_note_w.lzsa\"" >> selena_graphics.inc
+	echo "water_note_s_lzsa: .incbin \"water_note_s.lzsa\"" >> selena_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@

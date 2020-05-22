@@ -53,14 +53,24 @@ selena_start:
 	lda	#DIRECTION_N
 	sta	location0,Y     ; enable mist exit
 
-	lda	#SELENA_INSIDE_SHIP
-	sta	LOCATION
-
 	lda	#0
 	sta	LEVEL_OVER
 
+.if 0
+	lda	#SELENA_INSIDE_SHIP
+	sta	LOCATION
+
 	lda	#DIRECTION_E
 	sta	DIRECTION
+.else
+
+	lda	#SELENA_WALKWAY1
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+
+.endif
 
 	; set up initial location
 
@@ -98,6 +108,9 @@ game_loop:
 	beq	controls_animation
 	cmp	#SELENA_BOOK_OPEN
 	beq	mist_book_animation
+	cmp	#SELENA_WATER
+	beq	fg_draw_blue_page
+
 	jmp	nothing_special
 
 mist_book_animation:
@@ -189,6 +202,11 @@ animate_check_low:
 	sta	ANIMATE_FRAME
 
 done_animate_book:
+	jmp	nothing_special
+
+fg_draw_blue_page:
+        jsr     draw_blue_page
+        jmp     nothing_special
 
 nothing_special:
 
@@ -262,6 +280,62 @@ save_rocket_state:
 	rts
 
 
+selena_take_red_page:
+	lda	#SELENA_PAGE
+	jmp	take_red_page
+
+selena_take_blue_page:
+	lda	#SELENA_PAGE
+	jmp	take_blue_page
+
+
+	;=============================
+draw_red_page:
+
+	lda	RED_PAGES_TAKEN
+	and	#SELENA_PAGE
+	bne	no_draw_page
+
+	lda	#14
+	sta     XPOS
+	lda	#36
+	sta	YPOS
+
+	lda	#<red_page_sprite
+	sta	INL
+	lda	#>red_page_sprite
+	sta	INH
+
+	jmp	put_sprite_crop         ; tail call
+
+
+draw_blue_page:
+
+	lda	DIRECTION
+	cmp	#DIRECTION_S
+	bne	no_draw_page
+
+	lda	BLUE_PAGES_TAKEN
+	and	#SELENA_PAGE
+        bne     no_draw_page
+
+	lda	#20
+	sta	XPOS
+	lda	#26
+	sta	YPOS
+
+	lda	#<blue_page_sprite
+	sta	INL
+	lda	#>blue_page_sprite
+	sta	INH
+
+	jmp	put_sprite_crop         ; tail call
+
+no_draw_page:
+        rts
+
+
+
 	;==========================
 	; includes
 	;==========================
@@ -290,7 +364,10 @@ save_rocket_state:
 
 	.include	"link_book_mist.s"
 
+	.include	"handle_pages.s"
+
 	.include	"common_sprites.inc"
+	.include	"page_sprites.inc"
 
 	.include	"leveldata_selena.inc"
 
