@@ -69,6 +69,9 @@ open_book:
 	rts
 
 red_ending:
+	lda	#0
+	sta	RED_PAGE_COUNT
+
 	lda	#OCTAGON_RED_END
 	sta	LOCATION
 
@@ -137,6 +140,9 @@ open_blue_book:
 	jmp	open_book
 
 blue_ending:
+	lda	#0
+	sta	RED_PAGE_COUNT
+
 	lda	#OCTAGON_BLUE_END
 	sta	LOCATION
 
@@ -174,18 +180,19 @@ repeat_sirrus_string:
 	tay
 
 	lda	RED_PAGE_COUNT
-	bne	red_show_face
+	cmp	ANIMATE_FRAME
+	bcs	red_show_face
 
 red_only_static:
-	lda	red_book_sprite_sequence0,Y
+	lda	red_book_sprite_sequence,Y
 	sta	INL
-	lda	red_book_sprite_sequence0+1,Y
+	lda	red_book_sprite_sequence+1,Y
 	jmp	common_book_proper
 
 red_show_face:
-	lda	red_book_sprite_sequence1,Y
+	lda	#<red_book_face_sprite
 	sta	INL
-	lda	red_book_sprite_sequence1+1,Y
+	lda	#>red_book_face_sprite
 
 common_book_proper:
 	sta	INH
@@ -203,7 +210,7 @@ common_book_proper:
 
 	inc	ANIMATE_FRAME
 	lda	ANIMATE_FRAME
-	cmp     #5
+	cmp     #7
 	bne	done_animate_red_book
 	lda	#1
 	sta	ANIMATE_FRAME
@@ -255,41 +262,107 @@ repeat_achenar_string:
 	tay
 
 	lda	BLUE_PAGE_COUNT
-	bne	blue_show_face
+	cmp	ANIMATE_FRAME
+	bcs	blue_show_face
 
 blue_only_static:
-	lda	blue_book_sprite_sequence0,Y
+	lda	blue_book_sprite_sequence,Y
 	sta	INL
-	lda	blue_book_sprite_sequence0+1,Y
+	lda	blue_book_sprite_sequence+1,Y
 	jmp	common_book_proper
 
 blue_show_face:
-	lda	blue_book_sprite_sequence1,Y
+	lda	#<blue_book_face_sprite
 	sta	INL
-	lda	blue_book_sprite_sequence1+1,Y
+	lda	#>blue_book_face_sprite
 
 	jmp	common_book_proper
 
 
+	;===========================
+	; end static animation
+	;===========================
+end_static_animation:
 
+	; pick which animation to use
+
+	lda	ANIMATE_FRAME
+	asl
+	tay
+
+	lda	RED_PAGE_COUNT
+	cmp	ANIMATE_FRAME
+	bcc	end_show_face
+
+end_only_static:
+	lda	LOCATION
+	cmp	#OCTAGON_BLUE_END
+	beq	end_blue_static
+
+end_red_static:
+	lda	red_book_sprite_sequence,Y
+	sta	INL
+	lda	red_book_sprite_sequence+1,Y
+	jmp	end_end_static
+
+end_blue_static:
+	lda	blue_book_sprite_sequence,Y
+	sta	INL
+	lda	blue_book_sprite_sequence+1,Y
+end_end_static:
+
+	sta	INH
+
+        lda     #15
+	sta	XPOS
+	lda	#14
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+end_show_face:
+
+	lda	FRAMEL
+	and	#$1f
+	bne	done_animate_end
+
+	inc	ANIMATE_FRAME
+	lda	ANIMATE_FRAME
+	cmp     #7
+	bne	done_animate_end
+	lda	#1
+	sta	ANIMATE_FRAME
+	lda	RED_PAGE_COUNT
+	cmp	#50
+	bcs	done_animate_end
+	inc	RED_PAGE_COUNT
+done_animate_end:
+
+	rts
 
 ;==========================
 ; books sprites
 ;==========================
 
-red_book_sprite_sequence0:
-	.word red_book_static1_sprite
-	.word red_book_static2_sprite
-	.word red_book_static1_sprite
-	.word red_book_static2_sprite
-	.word red_book_static1_sprite
+red_book_sprite_sequence:
+	.word red_book_static1_sprite	; skipped
+	.word red_book_static2_sprite	; 1
+	.word red_book_static1_sprite	; 2
+	.word red_book_static2_sprite	; 3
+	.word red_book_static1_sprite	; 4
+	.word red_book_static2_sprite	; 5
+	.word red_book_static1_sprite	; 6
 
-red_book_sprite_sequence1:
-	.word red_book_static1_sprite
-	.word red_book_static1_sprite
-	.word red_book_face_sprite
-	.word red_book_face_sprite
-	.word red_book_static2_sprite
+
+; 0 pages, all static
+; 1 pages, replace 1 with face
+; 2 pages, replace 2 with face
+; 3 pages, replace 3 with face
+; 4 pages, replace 4 with face
+; 5 pages, replace 5 with face
+
+
+
 
 red_book_face_sprite:
 	.byte 9,7
@@ -322,20 +395,14 @@ red_book_static2_sprite:
 	.byte $A1,$Af,$A1,$A3,$A1,$A1,$A1,$A1,$A1
 
 
-blue_book_sprite_sequence0:
+blue_book_sprite_sequence:
 	.word blue_book_static1_sprite
 	.word blue_book_static2_sprite
 	.word blue_book_static1_sprite
 	.word blue_book_static2_sprite
 	.word blue_book_static1_sprite
-
-blue_book_sprite_sequence1:
-	.word blue_book_static1_sprite
-	.word blue_book_static1_sprite
-	.word blue_book_face_sprite
-	.word blue_book_face_sprite
 	.word blue_book_static2_sprite
-
+	.word blue_book_static1_sprite
 
 blue_book_face_sprite:
 	.byte 9,7

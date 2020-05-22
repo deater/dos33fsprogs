@@ -104,7 +104,10 @@ done_foreground:
 	beq	animate_red_book
 	cmp	#OCTAGON_BLUE_BOOK_OPEN
 	beq	animate_blue_book
-
+	cmp	#OCTAGON_RED_END
+	beq	animate_end
+	cmp	#OCTAGON_BLUE_END
+	beq	animate_end
 	bne	nothing_special
 
 animate_frame_shelf:
@@ -133,6 +136,10 @@ animate_red_book:
 
 animate_blue_book:
 	jsr	blue_book_animation
+	jmp	nothing_special
+
+animate_end:
+	jsr	end_static_animation
 	jmp	nothing_special
 
 nothing_special:
