@@ -132,7 +132,7 @@ animate_red_book:
 	jmp	nothing_special
 
 animate_blue_book:
-	jsr	red_book_animation
+	jsr	blue_book_animation
 	jmp	nothing_special
 
 nothing_special:
@@ -423,5 +423,5 @@ draw_page_close:
 
 
 ;.align $100
-audio_red_page:
-.incbin "audio/red_page.btc"
+;audio_red_page:
+;.incbin "audio/red_page.btc"

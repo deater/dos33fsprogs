@@ -47,6 +47,13 @@ not_red_page:
 
 open_red_book:
 
+	; DEBUG
+	inc	RED_PAGE_COUNT
+
+	lda	RED_PAGE_COUNT
+	cmp	#6
+	beq	red_ending
+
 	lda	#OCTAGON_RED_BOOK_OPEN
 	sta	LOCATION
 
@@ -61,6 +68,12 @@ open_book:
 
 	rts
 
+red_ending:
+	lda	#OCTAGON_RED_END
+	sta	LOCATION
+
+	lda	#DIRECTION_W|DIRECTION_SPLIT
+	jmp	open_book
 
 	;===========================
 	; Touch the blue book
@@ -110,12 +123,25 @@ not_blue_page:
 
 open_blue_book:
 
+	; DEBUG
+	inc	BLUE_PAGE_COUNT
+
+	lda	BLUE_PAGE_COUNT
+	cmp	#6
+	beq	blue_ending
+
 	lda	#OCTAGON_BLUE_BOOK_OPEN
 	sta	LOCATION
 
 	lda	#DIRECTION_E|DIRECTION_SPLIT
 	jmp	open_book
 
+blue_ending:
+	lda	#OCTAGON_BLUE_END
+	sta	LOCATION
+
+	lda	#DIRECTION_E|DIRECTION_SPLIT
+	jmp	open_book
 
 
 	;===========================
@@ -141,18 +167,30 @@ repeat_sirrus_string:
 	lda	(OUTL),Y
 	bpl	repeat_sirrus_string
 
+	; pick which animation to use
+
 	lda	ANIMATE_FRAME
 	asl
 	tay
 
+	lda	RED_PAGE_COUNT
+	bne	red_show_face
+
+red_only_static:
 	lda	red_book_sprite_sequence0,Y
 	sta	INL
 	lda	red_book_sprite_sequence0+1,Y
+	jmp	common_book_proper
+
+red_show_face:
+	lda	red_book_sprite_sequence1,Y
+	sta	INL
+	lda	red_book_sprite_sequence1+1,Y
+
+common_book_proper:
 	sta	INH
 
         lda     #23
-
-advance_red_book:
 	sta	XPOS
 	lda	#14
 	sta	YPOS
@@ -165,7 +203,7 @@ advance_red_book:
 
 	inc	ANIMATE_FRAME
 	lda	ANIMATE_FRAME
-	cmp     #4
+	cmp     #5
 	bne	done_animate_red_book
 	lda	#1
 	sta	ANIMATE_FRAME
@@ -186,6 +224,55 @@ red_book_done:
 	rts
 
 
+
+	;===========================
+	; Blue book animation
+	;===========================
+
+blue_book_animation:
+
+	; draw the text
+	lda	BLUE_PAGE_COUNT
+	asl
+	tay
+
+	lda	achenar_dialog,Y
+	sta	OUTL
+	lda	achenar_dialog+1,Y
+	sta	OUTH
+
+repeat_achenar_string:
+	jsr	move_and_print
+
+	ldy	#0
+	lda	(OUTL),Y
+	bpl	repeat_achenar_string
+
+	; pick which animation to use
+
+	lda	ANIMATE_FRAME
+	asl
+	tay
+
+	lda	BLUE_PAGE_COUNT
+	bne	blue_show_face
+
+blue_only_static:
+	lda	blue_book_sprite_sequence0,Y
+	sta	INL
+	lda	blue_book_sprite_sequence0+1,Y
+	jmp	common_book_proper
+
+blue_show_face:
+	lda	blue_book_sprite_sequence1,Y
+	sta	INL
+	lda	blue_book_sprite_sequence1+1,Y
+
+	jmp	common_book_proper
+
+
+
+
 ;==========================
 ; books sprites
 ;==========================
@@ -199,10 +286,10 @@ red_book_sprite_sequence0:
 
 red_book_sprite_sequence1:
 	.word red_book_static1_sprite
-	.word red_book_static2_sprite
+	.word red_book_static1_sprite
+	.word red_book_face_sprite
 	.word red_book_face_sprite
 	.word red_book_static2_sprite
-
 
 red_book_face_sprite:
 	.byte 9,7
@@ -244,7 +331,8 @@ blue_book_sprite_sequence0:
 
 blue_book_sprite_sequence1:
 	.word blue_book_static1_sprite
-	.word blue_book_static2_sprite
+	.word blue_book_static1_sprite
+	.word blue_book_face_sprite
 	.word blue_book_face_sprite
 	.word blue_book_static2_sprite
 
@@ -291,7 +379,7 @@ blue_book_static2_sprite:
 
 sirrus_dialog:
 	.word red_dialog0,red_dialog1,red_dialog2,red_dialog3
-	.word red_dialog4,red_dialog5,red_dialog6
+	.word red_dialog4,red_dialog5
 
 ; red 0
 ; only static
@@ -306,9 +394,9 @@ red_dialog0:
 
              ; 0123456789012345678901234567890123456789
 red_dialog1:
-	.byte 0,21
+	.byte 6,21
 	.byte "WHO ARE YOU? I CAN'T SEE YOU",0
-	.byte 0,22
+	.byte 4,22
 	.byte "BRING ME A RED PAGE. I AM SIRRUS.",0
 	.byte $80
 
@@ -321,9 +409,9 @@ red_dialog1:
 red_dialog2:
 	.byte 0,21
 	.byte "YOU'VE RETURNED. THANK YOU FOR THE PAGE",0
-	.byte 0,22
+	.byte 1,22
 	.byte "I BEG YOU TO FIND REMAINING RED PAGES",0
-	.byte 0,23
+	.byte 1,23
 	.byte "DON'T WASTE TIME ON MY GUILTY BROTHER",0
 	.byte $80
 
@@ -334,11 +422,11 @@ red_dialog2:
 
              ; 0123456789012345678901234567890123456789
 red_dialog3:
-	.byte 0,21
+	.byte 2,21
 	.byte "FREE ME FROM MY PRISON.  I AM SIRRUS.",0
 	.byte 0,22
 	.byte "I NEED MORE PAGES, DON'T TOUCH BLUE ONES",0
-	.byte 0,23
+	.byte 1,23
 	.byte "DO NOT HELP MY WICKED BROTHER ACHENAR",0
 	.byte $80
 
@@ -349,11 +437,11 @@ red_dialog3:
 
              ; 0123456789012345678901234567890123456789
 red_dialog4:
-	.byte 0,21
+	.byte 2,21
 	.byte "WITH EACH PAGE I CAN SEE MORE CLEARLY",0
-	.byte 0,22
+	.byte 6,22
 	.byte "ACHENAR IS GUILTY OF CONQUEST",0
-	.byte 0,23
+	.byte 6,23
 	.byte "FREE ME AND I WILL REWARD YOU",0
 	.byte $80
 
@@ -368,13 +456,13 @@ red_dialog4:
 
              ; 0123456789012345678901234567890123456789
 red_dialog5:
-	.byte 0,21
+	.byte 10,20
 	.byte "YOU FINALLY RETURNED.",0
-	.byte 0,22
+	.byte 4,21
 	.byte "YOU MUST THINK ACHENAR IS GUILTY",0
-	.byte 0,23
-	.byte "USE PAGE 158 IN PATTERN BOOK",0
-	.byte 0,24
+	.byte 4,22
+	.byte "USE PAGE 158 IN THE PATTERN BOOK",0
+	.byte 6,24
 	.byte "DO NOT TOUCH THE GREEN BOOK",0
 	.byte $80
 
@@ -384,21 +472,21 @@ red_dialog5:
 ; I hope you're into books.  Goodbye!
 
              ; 0123456789012345678901234567890123456789
-red_dialog6:
-	.byte 0,21
-	.byte "I AM FREE! THANK YOU, YOU STUPID FOOL!",0
-	.byte 0,22
-	.byte "LET ME RIP SOME PAGES OUT!",0
-	.byte 0,23
-	.byte "I HOPE YOU'RE INTO BOOKS!  GOODBYE!",0
-	.byte $80
+;red_dialog6:
+;	.byte 0,21
+;	.byte "I AM FREE! THANK YOU, YOU STUPID FOOL!",0
+;	.byte 0,22
+;	.byte "LET ME RIP SOME PAGES OUT!",0
+;	.byte 0,23
+;	.byte "I HOPE YOU'RE INTO BOOKS!  GOODBYE!",0
+;	.byte $80
 
 ;==========================
 ; blue/Achenar
 
 achenar_dialog:
 	.word red_dialog0,blue_dialog1,blue_dialog2,blue_dialog3
-	.word blue_dialog4,blue_dialog5,blue_dialog6
+	.word blue_dialog4,blue_dialog5
 
 ; blue 0
 ; only static
@@ -409,9 +497,9 @@ achenar_dialog:
 
              ; 0123456789012345678901234567890123456789
 blue_dialog1:
-	.byte 0,21
+	.byte 4,21
 	.byte "SIRRUS IS THAT YOU?  WHO ARE YOU?",0
-	.byte 0,22
+	.byte 1,22
 	.byte "BRING BLUE PAGES. MUST HAVE BLUE PAGES",0
 	.byte $80
 
@@ -422,13 +510,13 @@ blue_dialog1:
 
              ; 0123456789012345678901234567890123456789
 blue_dialog2:
-	.byte 0,21
+	.byte 5,20
 	.byte "YOU'VE RETURNED.  I'M ACHENAR.",0
-	.byte 0,22
+	.byte 4,21
 	.byte "DON'T LISTEN TO MY LIAR BROTHER",0
-	.byte 0,23
+	.byte 7,22
 	.byte "BRING BLUE PAGES, NOT RED",0
-	.byte 0,24
+	.byte 7,23
 	.byte "I WILL HAVE MY RETRIBUTION",0
 	.byte $80
 
@@ -439,11 +527,11 @@ blue_dialog2:
 
              ; 0123456789012345678901234567890123456789
 blue_dialog3:
-	.byte 0,21
+	.byte 9,21
 	.byte "YOU'VE RETURNED, GOOD.",0
-	.byte 0,22
+	.byte 6,22
 	.byte "GREEDY SIRRUS TRAPPED ME HERE",0
-	.byte 0,23
+	.byte 1,23
 	.byte "BRING BLUE PAGES, DON'T TOUCH THE RED",0
 	.byte $80
 
@@ -456,9 +544,9 @@ blue_dialog3:
 blue_dialog4:
 	.byte 0,21
 	.byte "FRIEND, I SEE YOU THINK SIRRUS IS WRONG",0
-	.byte 0,22
+	.byte 2,22
 	.byte "HAVE YOU OBSERVED HIS LUST FOR RICHES",0
-	.byte 0,23
+	.byte 6,23
 	.byte "PLEASE BRING MORE BLUE PAGES",0
 	.byte $80
 
@@ -469,11 +557,11 @@ blue_dialog4:
 
              ; 0123456789012345678901234567890123456789
 blue_dialog5:
-	.byte 0,21
+	.byte 3,21
 	.byte "SIRRUS IS GUILTY, HE LIED TO FATHER",0
-	.byte 0,22
+	.byte 1,22
 	.byte "FIND PATTERN 158 AND USE THE FIREPLACE",0
-	.byte 0,23
+	.byte 7,23
 	.byte "DON'T TOUCH THE GREEN BOOK!",0
 	.byte $80
 
@@ -484,11 +572,11 @@ blue_dialog5:
 ; Maybe someone will rescue you.
 
              ; 0123456789012345678901234567890123456789
-blue_dialog6:
-	.byte 0,21
-	.byte "HAHA I AM FREE!  I FEEL SO ALIVE!",0
-	.byte 0,22
-	.byte "WHAT HAPPENS IF I RIP THESE PAGES OUT?",0
-	.byte 0,23
-	.byte "MAYBE SOMEONE WILL RESCUE YOU",0
-	.byte $80
+;blue_dialog6:
+;	.byte 0,21
+;	.byte "HAHA I AM FREE!  I FEEL SO ALIVE!",0
+;	.byte 0,22
+;	.byte "WHAT HAPPENS IF I RIP THESE PAGES OUT?",0
+;	.byte 0,23
+;	.byte "MAYBE SOMEONE WILL RESCUE YOU",0
+;	.byte $80

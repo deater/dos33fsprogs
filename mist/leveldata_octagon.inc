@@ -11,8 +11,8 @@ locations:
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
-	.word location28,location29,location30
-
+	.word location28,location29,location30,location31
+	.word location32
 
 ; OCTAGON_TEMPLE_DOORWAY	-- temple doorway
 location0:
@@ -576,4 +576,38 @@ location30:
 	.word	blue_book_open_lzsa	; east bg
 	.word	$0000			; west bg
 	.byte	BG_EAST		; east
+	.byte	$ff
+
+; OCTAGON_RED_END		-- red ending
+location31:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	red_book_ending_lzsa	; west bg
+	.byte	BG_WEST
+	.byte	$ff
+
+; OCTAGON_BLUE_END		-- blue ending
+location32:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	blue_book_ending_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_EAST
 	.byte	$ff
