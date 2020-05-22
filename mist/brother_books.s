@@ -48,7 +48,7 @@ not_red_page:
 open_red_book:
 
 	; DEBUG
-	inc	RED_PAGE_COUNT
+	;inc	RED_PAGE_COUNT
 
 	lda	RED_PAGE_COUNT
 	cmp	#6
@@ -127,7 +127,7 @@ not_blue_page:
 open_blue_book:
 
 	; DEBUG
-	inc	BLUE_PAGE_COUNT
+	;inc	BLUE_PAGE_COUNT
 
 	lda	BLUE_PAGE_COUNT
 	cmp	#6
