@@ -321,7 +321,7 @@ draw_blue_page:
 
 	lda	#20
 	sta	XPOS
-	lda	#26
+	lda	#24
 	sta	YPOS
 
 	lda	#<blue_page_sprite

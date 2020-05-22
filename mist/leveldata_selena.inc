@@ -261,7 +261,7 @@ location13:
 	.byte	BG_SOUTH|BG_EAST|BG_WEST
 	.byte	DIRECTION_S		; special exit
 	.byte	20,27		; special x
-	.byte	26,36		; special y
+	.byte	24,34		; special y
 	.word	selena_take_blue_page-1	; special function
 
 
