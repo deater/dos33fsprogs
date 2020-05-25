@@ -7,7 +7,8 @@ locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
-	.word location12,location13
+	.word location12,location13,location14,location15
+	.word location16
 
 ; SELENA_INSIDE_SHIP		-- Inside Ship
 location0:
@@ -212,11 +213,11 @@ location10:
 
 ; SELENA_WATER_TURN		-- turnoff for water
 location11:
-	.byte	$ff			; north exit
+	.byte	SELENA_TOWER_VIEW		; north exit
 	.byte	SELENA_BUNKER		; south exit
 	.byte	$ff			; east exit
 	.byte	SELENA_WATER_PATH	; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
@@ -263,6 +264,60 @@ location13:
 	.byte	20,27		; special x
 	.byte	24,34		; special y
 	.word	selena_take_blue_page-1	; special function
+
+; SELENA_TOWER_VIEW		-- tower view
+location14:
+	.byte	$ff			; north exit
+	.byte	SELENA_WATER_TURN	; south exit
+	.byte	$ff			; east exit
+	.byte	SELENA_CHASM_PATH	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	tower_view_n_lzsa		; north bg
+	.word	tower_view_s_lzsa		; south bg
+	.word	tower_view_e_lzsa		; east bg
+	.word	tower_view_w_lzsa		; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
+	.byte	$ff
+
+; SELENA_CHASM_PATH		-- path to chasm
+location15:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SELENA_TOWER_VIEW	; east exit
+	.byte	SELENA_CHASM		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_S	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	chasm_path_e_lzsa		; east bg
+	.word	chasm_path_w_lzsa		; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; SELENA_CHASM			-- chasm
+location16:
+	.byte	SELENA_CHASM_PATH	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_E	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	chasm_n_lzsa			; north bg
+	.word	chasm_s_lzsa			; south bg
+	.word	chasm_e_lzsa			; east bg
+	.word	$0000				; west bg
+	.byte	BG_SOUTH|BG_EAST|BG_NORTH
+	.byte	$ff
+
+
+
 
 
 
