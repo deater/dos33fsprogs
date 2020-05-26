@@ -8,7 +8,7 @@ locations:
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
-	.word location16
+	.word location16,location17,location18,location19
 
 ; SELENA_INSIDE_SHIP		-- Inside Ship
 location0:
@@ -269,11 +269,11 @@ location13:
 location14:
 	.byte	$ff			; north exit
 	.byte	SELENA_WATER_TURN	; south exit
-	.byte	$ff			; east exit
+	.byte	SELENA_CLOCK_PATH	; east exit
 	.byte	SELENA_CHASM_PATH	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	tower_view_n_lzsa		; north bg
 	.word	tower_view_s_lzsa		; south bg
@@ -316,8 +316,54 @@ location16:
 	.byte	BG_SOUTH|BG_EAST|BG_NORTH
 	.byte	$ff
 
+; SELENA_CLOCK_PATH			-- path on way to clock
+location17:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SELENA_CLOCK		; east exit
+	.byte	SELENA_TOWER_VIEW	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	clock_path_e_lzsa		; east bg
+	.word	clock_path_w_lzsa		; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
 
+; SELENA_CLOCK			-- clocks
+location18:
+	.byte	$ff			; north exit
+	.byte	SELENA_CLOCK_CLOSE	; south exit
+	.byte	$ff			; east exit
+	.byte	SELENA_CLOCK_PATH	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	clock_n_lzsa			; north bg
+	.word	clock_s_lzsa			; south bg
+	.word	clock_e_lzsa			; east bg
+	.word	clock_w_lzsa			; west bg
+	.byte	BG_SOUTH|BG_EAST|BG_WEST|BG_NORTH
+	.byte	$ff
 
-
-
+; SELENA_CLOCK_CLOSE		-- clock device
+location19:
+	.byte	$ff			; north exit
+	.byte	SELENA_CLOCK		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000				; north bg
+	.word	clock_note_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_SOUTH
+	.byte	$ff
 
