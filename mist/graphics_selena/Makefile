@@ -29,7 +29,13 @@ selena_graphics.inc:	\
 	chasm_e.lzsa chasm_s.lzsa chasm_n.lzsa \
 	clock_path_e.lzsa clock_path_w.lzsa \
 	clock_n.lzsa clock_s.lzsa clock_e.lzsa clock_w.lzsa \
-	clock_note_s.lzsa
+	clock_note_s.lzsa \
+	clock_before_e.lzsa clock_before_w.lzsa \
+	crystal_turn_n.lzsa crystal_turn_s.lzsa crystal_turn_e.lzsa crystal_turn_w.lzsa \
+	crystal_steps_s.lzsa \
+	crystal_path_n.lzsa \
+	crystals_s.lzsa crystals_n.lzsa \
+	crystals_note_e.lzsa
 	echo "controls_e_lzsa: .incbin \"controls_e.lzsa\"" > selena_graphics.inc
 	echo "organ_w_lzsa: .incbin \"organ_w.lzsa\"" >> selena_graphics.inc
 	echo "spaceship_inside_w_lzsa: .incbin \"spaceship_inside_w.lzsa\"" >> selena_graphics.inc
@@ -72,6 +78,19 @@ selena_graphics.inc:	\
 	echo "clock_e_lzsa: .incbin \"clock_e.lzsa\"" >> selena_graphics.inc
 	echo "clock_w_lzsa: .incbin \"clock_w.lzsa\"" >> selena_graphics.inc
 	echo "clock_note_s_lzsa: .incbin \"clock_note_s.lzsa\"" >> selena_graphics.inc
+	echo "clock_before_e_lzsa: .incbin \"clock_before_e.lzsa\"" >> selena_graphics.inc
+	echo "clock_before_w_lzsa: .incbin \"clock_before_w.lzsa\"" >> selena_graphics.inc
+	echo "crystal_turn_n_lzsa: .incbin \"crystal_turn_n.lzsa\"" >> selena_graphics.inc
+	echo "crystal_turn_s_lzsa: .incbin \"crystal_turn_s.lzsa\"" >> selena_graphics.inc
+	echo "crystal_turn_e_lzsa: .incbin \"crystal_turn_e.lzsa\"" >> selena_graphics.inc
+	echo "crystal_turn_w_lzsa: .incbin \"crystal_turn_w.lzsa\"" >> selena_graphics.inc
+	echo "crystal_steps_s_lzsa: .incbin \"crystal_steps_s.lzsa\"" >> selena_graphics.inc
+	echo "crystal_path_n_lzsa: .incbin \"crystal_path_n.lzsa\"" >> selena_graphics.inc
+	echo "crystals_s_lzsa: .incbin \"crystals_s.lzsa\"" >> selena_graphics.inc
+	echo "crystals_n_lzsa: .incbin \"crystals_n.lzsa\"" >> selena_graphics.inc
+	echo "crystals_note_e_lzsa: .incbin \"crystals_note_e.lzsa\"" >> selena_graphics.inc
+
+
 
 
 %.gr: %.png

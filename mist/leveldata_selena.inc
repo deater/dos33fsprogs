@@ -9,6 +9,9 @@ locations:
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
+	.word location20,location21,location22,location23
+	.word location24,location25
+
 
 ; SELENA_INSIDE_SHIP		-- Inside Ship
 location0:
@@ -337,11 +340,11 @@ location17:
 location18:
 	.byte	$ff			; north exit
 	.byte	SELENA_CLOCK_CLOSE	; south exit
-	.byte	$ff			; east exit
+	.byte	SELENA_CLOCK_BEFORE	; east exit
 	.byte	SELENA_CLOCK_PATH	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	clock_n_lzsa			; north bg
 	.word	clock_s_lzsa			; south bg
@@ -365,5 +368,107 @@ location19:
 	.word	$0000				; east bg
 	.word	$0000				; west bg
 	.byte	BG_SOUTH
+	.byte	$ff
+
+; SELENA_CLOCK_BEFORE	-- path before clocks, when coming from crystals
+location20:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SELENA_CRYSTAL_TURN	; east exit
+	.byte	SELENA_CLOCK		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	clock_before_e_lzsa		; east bg
+	.word	clock_before_w_lzsa		; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; SELENA_CRYSTAL_TURN	-- crystal turnoff
+location21:
+	.byte	$ff			; north exit
+	.byte	SELENA_CRYSTAL_STEPS	; south exit
+	.byte	$ff			; east exit
+	.byte	SELENA_CLOCK_BEFORE	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	crystal_turn_n_lzsa		; north bg
+	.word	crystal_turn_s_lzsa		; south bg
+	.word	crystal_turn_e_lzsa		; east bg
+	.word	crystal_turn_w_lzsa		; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
+	.byte	$ff
+
+; SELENA_CRYSTAL_STEPS	-- top of steps
+location22:
+	.byte	$ff			; north exit
+	.byte	SELENA_CRYSTALS		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000				; north bg
+	.word	crystal_steps_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_SOUTH
+	.byte	$ff
+
+; SELENA_CRYSTAL_PATH	-- bottom of steps
+location23:
+	.byte	SELENA_CRYSTAL_TURN	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	crystal_path_n_lzsa		; north bg
+	.word	$0000				; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH
+	.byte	$ff
+
+; SELENA_CRYSTALS		-- down by the crystals
+location24:
+	.byte	SELENA_CRYSTAL_PATH	; north exit
+	.byte	SELENA_CRYSTAL_CLOSE	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_E	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	crystals_n_lzsa			; north bg
+	.word	crystals_s_lzsa			; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; SELENA_CRYSTAL_CLOSE		-- at the crystal device
+location25:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SELENA_CRYSTALS		; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	crystals_note_e_lzsa		; east bg
+	.word	$0000				; west bg
+	.byte	BG_EAST
 	.byte	$ff
 
