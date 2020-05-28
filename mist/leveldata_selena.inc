@@ -10,7 +10,7 @@ locations:
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
-	.word location24,location25
+	.word location24,location25,location26
 
 
 ; SELENA_INSIDE_SHIP		-- Inside Ship
@@ -77,7 +77,7 @@ location2:
 
 ; SELENA_WALKWAY1		-- walkway1
 location3:
-	.byte	SELENA_WALKWAY4		; north exit
+	.byte	SELENA_SPACESHIP_PATH	; north exit
 	.byte	SELENA_SPACESHIP_DOOR	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -112,7 +112,7 @@ location4:
 ; SELENA_WALKWAY4		-- walkway4
 location5:
 	.byte	SELENA_BUNKER		; north exit
-	.byte	SELENA_WALKWAY1		; south exit
+	.byte	SELENA_SPACESHIP_PATH	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
@@ -471,4 +471,22 @@ location25:
 	.word	$0000				; west bg
 	.byte	BG_EAST
 	.byte	$ff
+
+; SELENA_SPACESHIP_PATH		-- spaceship path/ walkway3?
+location26:
+	.byte	SELENA_WALKWAY4		; north exit
+	.byte	SELENA_WALKWAY1		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	spaceship_path_n_lzsa		; north bg
+	.word	spaceship_path_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
 

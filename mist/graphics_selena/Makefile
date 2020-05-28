@@ -35,7 +35,8 @@ selena_graphics.inc:	\
 	crystal_steps_s.lzsa \
 	crystal_path_n.lzsa \
 	crystals_s.lzsa crystals_n.lzsa \
-	crystals_note_e.lzsa
+	crystals_note_e.lzsa \
+	spaceship_path_n.lzsa spaceship_path_s.lzsa
 	echo "controls_e_lzsa: .incbin \"controls_e.lzsa\"" > selena_graphics.inc
 	echo "organ_w_lzsa: .incbin \"organ_w.lzsa\"" >> selena_graphics.inc
 	echo "spaceship_inside_w_lzsa: .incbin \"spaceship_inside_w.lzsa\"" >> selena_graphics.inc
@@ -89,9 +90,8 @@ selena_graphics.inc:	\
 	echo "crystals_s_lzsa: .incbin \"crystals_s.lzsa\"" >> selena_graphics.inc
 	echo "crystals_n_lzsa: .incbin \"crystals_n.lzsa\"" >> selena_graphics.inc
 	echo "crystals_note_e_lzsa: .incbin \"crystals_note_e.lzsa\"" >> selena_graphics.inc
-
-
-
+	echo "spaceship_path_n_lzsa: .incbin \"spaceship_path_n.lzsa\"" >> selena_graphics.inc
+	echo "spaceship_path_s_lzsa: .incbin \"spaceship_path_s.lzsa\"" >> selena_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
