@@ -110,6 +110,8 @@ game_loop:
 	beq	mist_book_animation
 	cmp	#SELENA_WATER
 	beq	fg_draw_blue_page
+	cmp	#SELENA_CRYSTAL_CLOSE
+	beq	fg_draw_red_page
 
 	jmp	nothing_special
 
@@ -208,6 +210,10 @@ fg_draw_blue_page:
         jsr     draw_blue_page
         jmp     nothing_special
 
+fg_draw_red_page:
+        jsr     draw_red_page
+        jmp     nothing_special
+
 nothing_special:
 
 	;====================================
@@ -296,9 +302,9 @@ draw_red_page:
 	and	#SELENA_PAGE
 	bne	no_draw_page
 
-	lda	#14
+	lda	#20
 	sta     XPOS
-	lda	#36
+	lda	#2
 	sta	YPOS
 
 	lda	#<red_page_sprite

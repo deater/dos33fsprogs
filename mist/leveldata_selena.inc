@@ -10,8 +10,8 @@ locations:
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
-	.word location24,location25,location26
-
+	.word location24,location25,location26,location27
+	.word location28,location29
 
 ; SELENA_INSIDE_SHIP		-- Inside Ship
 location0:
@@ -391,7 +391,7 @@ location20:
 location21:
 	.byte	$ff			; north exit
 	.byte	SELENA_CRYSTAL_STEPS	; south exit
-	.byte	$ff			; east exit
+	.byte	SELENA_BEFORE_CRYSTALS	; east exit
 	.byte	SELENA_CLOCK_BEFORE	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
@@ -470,7 +470,11 @@ location25:
 	.word	crystals_note_e_lzsa		; east bg
 	.word	$0000				; west bg
 	.byte	BG_EAST
-	.byte	$ff
+	.byte	DIRECTION_E		; special exit
+	.byte	22,29		; special x
+	.byte	0,10		; special y
+	.word	selena_take_red_page-1	; special function
+
 
 ; SELENA_SPACESHIP_PATH		-- spaceship path/ walkway3?
 location26:
@@ -489,4 +493,53 @@ location26:
 	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff
 
+; SELENA_BEFORE_CRYSTALS	-- before crystals, if coming from tunnel
+location27:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SELENA_TUNNEL_STEPS	; east exit
+	.byte	SELENA_CRYSTAL_TURN	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	before_crystals_e_lzsa		; east bg
+	.word	before_crystals_w_lzsa		; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
 
+; SELENA_TUNNEL_STEPS	-- steps on way to tunnel
+location28:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SELENA_TUNNEL_PATH	; east exit
+	.byte	SELENA_BEFORE_CRYSTALS	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_N	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	tunnel_steps_e_lzsa		; east bg
+	.word	tunnel_steps_w_lzsa		; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; SELENA_TUNNEL_PATH	-- path near tunnel
+location29:
+	.byte	$ff			; north exit
+	.byte	SELENA_TUNNEL_STEPS	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_W	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	tunnel_path_n_lzsa		; north bg
+	.word	tunnel_path_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	tunnel_path_w_lzsa		; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_WEST
+	.byte	$ff
