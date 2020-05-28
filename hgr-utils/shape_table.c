@@ -91,6 +91,10 @@ static int get_token(char *token, FILE *fff) {
 
 }
 
+#define OUTPUT_BASIC	0
+#define OUTPUT_BINARY	1
+#define OUTPUT_HEX	2
+
 int main(int argc, char **argv) {
 
 	char string[BUFSIZ];
@@ -102,10 +106,10 @@ int main(int argc, char **argv) {
 
 	int command=0,sub_pointer;
 
-	int output_binary=0;
+	int output_type=OUTPUT_BASIC;
 
 	if (argc<2) {
-		output_binary=0;
+		output_type=OUTPUT_BASIC;
 	}
 	else {
 		if (argv[1][0]=='-') {
@@ -116,10 +120,13 @@ int main(int argc, char **argv) {
 					print_usage(argv[0]);
 					break;
 				case 'b':
-					output_binary=1;
+					output_type=OUTPUT_BINARY;
 					break;
 				case 'a':
-					output_binary=0;
+					output_type=OUTPUT_BASIC;
+					break;
+				case 'x':
+					output_type=OUTPUT_HEX;
 					break;
 				case 'd':
 					debug=1;
@@ -267,7 +274,7 @@ int main(int argc, char **argv) {
 
 	table_size=current_offset;
 
-	if (output_binary) {
+	if (output_type==OUTPUT_BINARY) {
 		unsigned char header[4];
 		int offset=0x6000;
 
@@ -284,7 +291,7 @@ int main(int argc, char **argv) {
 
 		fwrite(table,sizeof(unsigned char),table_size,stdout);
 	}
-	else {
+	else if (output_type==OUTPUT_BASIC) {
 
 		/* put near highmem */
 		int address=0x1ff0-table_size;
@@ -305,6 +312,20 @@ int main(int argc, char **argv) {
 			else printf(",");
 		}
 
+	}
+	else if (output_type==OUTPUT_HEX) {
+
+		for(i=0;i<current_offset;i++) {
+			if(i%8==0) printf(".byte\t");
+			printf("$%02x",table[i]);
+			if ((i%8==7)||(i==current_offset-1)) printf("\n");
+			else printf(",");
+		}
+
+	}
+	else {
+		fprintf(stderr,"Error, unknown output type %d\n",
+			output_type);
 	}
 
 	return 0;
