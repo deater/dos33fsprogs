@@ -6,9 +6,7 @@ main:
 + allow opening/grabbing white page
 
 octagon_room:
-+ blue book
-+ full text on brothers
-+ books
++ fireplace book
 + in tower could have extra window open/closed far backgrounds
 + turning when looking at hint loses the text mode
 + final puzzle in fireplace
@@ -36,9 +34,10 @@ SELENA age:
 + optional mockingboard sound for keyboard?
 + Complicated age with sounds
 + That whole rediculous underground cart sequence
-+ turn around and look back in tunnel
-+ whole way to tower thing
-+ implement enough to get pages
++ turn around and look back inside bunker
++ light switch in tunnel
++ antenna compartment should open/close when you click on it
++ better colors
 
 Channelwood:
 + Implement safe

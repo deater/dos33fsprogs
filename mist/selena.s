@@ -341,6 +341,33 @@ no_draw_page:
         rts
 
 
+	;==============================
+	; tunnel actions
+tunnel_main_down:
+	lda	#SELENA_TUNNEL_MAIN_TOP
+	bne	update_tunnel_e
+tunnel_main_top_down:
+	lda	#SELENA_TUNNEL_MAIN_MID
+	bne	update_tunnel_e
+tunnel_main_mid_down:
+	lda	#SELENA_TUNNEL_BASEMENT
+;	bne	update_tunnel_e
+update_tunnel_e:
+	sta	LOCATION
+	lda	#DIRECTION_E
+	sta	DIRECTION
+	jmp	change_location
+
+antenna_down:
+	lda	#SELENA_ANTENNA_TOP
+	bne	update_tunnel_e
+antenna_top_down:
+	lda	#SELENA_ANTENNA_MID
+	bne	update_tunnel_e
+antenna_mid_down:
+	lda	#SELENA_ANTENNA_BASEMENT
+	bne	update_tunnel_e
+
 
 	;==========================
 	; includes

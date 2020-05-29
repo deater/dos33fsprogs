@@ -39,7 +39,15 @@ selena_graphics.inc:	\
 	spaceship_path_n.lzsa spaceship_path_s.lzsa \
 	before_crystals_w.lzsa before_crystals_e.lzsa \
 	tunnel_steps_e.lzsa tunnel_steps_w.lzsa \
-	tunnel_path_s.lzsa tunnel_path_n.lzsa tunnel_path_w.lzsa
+	tunnel_path_s.lzsa tunnel_path_n.lzsa tunnel_path_w.lzsa \
+	antenna_close_w.lzsa antenna_open_w.lzsa \
+	antenna_w.lzsa antenna_e.lzsa \
+	antenna_steps_n.lzsa antenna_steps_s.lzsa \
+	antenna_tunnel_w.lzsa antenna_tunnel_e.lzsa \
+	ladder_top.lzsa ladder_middle.lzsa ladder_bottom.lzsa \
+	tunnel_e.lzsa tunnel_w.lzsa tunnel_basement.lzsa \
+	tunnel_note_n.lzsa \
+	tunnel_main_n.lzsa tunnel_main_s.lzsa
 	echo "controls_e_lzsa: .incbin \"controls_e.lzsa\"" > selena_graphics.inc
 	echo "organ_w_lzsa: .incbin \"organ_w.lzsa\"" >> selena_graphics.inc
 	echo "spaceship_inside_w_lzsa: .incbin \"spaceship_inside_w.lzsa\"" >> selena_graphics.inc
@@ -102,6 +110,23 @@ selena_graphics.inc:	\
 	echo "tunnel_path_n_lzsa: .incbin \"tunnel_path_n.lzsa\"" >> selena_graphics.inc
 	echo "tunnel_path_s_lzsa: .incbin \"tunnel_path_s.lzsa\"" >> selena_graphics.inc
 	echo "tunnel_path_w_lzsa: .incbin \"tunnel_path_w.lzsa\"" >> selena_graphics.inc
+	echo "antenna_open_w_lzsa: .incbin \"antenna_open_w.lzsa\"" >> selena_graphics.inc
+	echo "antenna_close_w_lzsa: .incbin \"antenna_close_w.lzsa\"" >> selena_graphics.inc
+	echo "antenna_w_lzsa: .incbin \"antenna_w.lzsa\"" >> selena_graphics.inc
+	echo "antenna_e_lzsa: .incbin \"antenna_e.lzsa\"" >> selena_graphics.inc
+	echo "antenna_steps_n_lzsa: .incbin \"antenna_steps_n.lzsa\"" >> selena_graphics.inc
+	echo "antenna_steps_s_lzsa: .incbin \"antenna_steps_s.lzsa\"" >> selena_graphics.inc
+	echo "antenna_tunnel_w_lzsa: .incbin \"antenna_tunnel_w.lzsa\"" >> selena_graphics.inc
+	echo "antenna_tunnel_e_lzsa: .incbin \"antenna_tunnel_e.lzsa\"" >> selena_graphics.inc
+	echo "ladder_middle_lzsa: .incbin \"ladder_middle.lzsa\"" >> selena_graphics.inc
+	echo "ladder_top_lzsa: .incbin \"ladder_top.lzsa\"" >> selena_graphics.inc
+	echo "ladder_bottom_lzsa: .incbin \"ladder_bottom.lzsa\"" >> selena_graphics.inc
+	echo "tunnel_e_lzsa: .incbin \"tunnel_e.lzsa\"" >> selena_graphics.inc
+	echo "tunnel_w_lzsa: .incbin \"tunnel_w.lzsa\"" >> selena_graphics.inc
+	echo "tunnel_basement_lzsa: .incbin \"tunnel_basement.lzsa\"" >> selena_graphics.inc
+	echo "tunnel_note_n_lzsa: .incbin \"tunnel_note_n.lzsa\"" >> selena_graphics.inc
+	echo "tunnel_main_n_lzsa: .incbin \"tunnel_main_n.lzsa\"" >> selena_graphics.inc
+	echo "tunnel_main_s_lzsa: .incbin \"tunnel_main_s.lzsa\"" >> selena_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
@@ -112,4 +137,4 @@ selena_graphics.inc:	\
 ####
 
 clean:		
-		rm -f *~ *.o *.lst *.gr selena_graphics.inc
+		rm -f *~ *.o *.lst *.gr *.lzsa selena_graphics.inc
