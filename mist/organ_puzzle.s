@@ -57,7 +57,7 @@ dome_press_second:
 
 	;====================================
 	; load linking audio (12k) to $9000
-
+.if 0
 	lda	#<linking_filename
 	sta	OUTL
 	lda	#>linking_filename
@@ -74,7 +74,7 @@ dome_press_second:
 	sta	BTC_H
 	ldx	#LINKING_NOISE_LENGTH	; 45 pages long???
 	jsr	play_audio
-
+.endif
 	; be sure rocket settings are same if we come back
 
 	jsr	save_rocket_state

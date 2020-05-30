@@ -13,7 +13,7 @@ mist_link_book:
 
 	jsr	clear_all
 	jsr	page_flip
-;.if 0
+.if 0
 	; play sound effect?
 
 	lda	#<linking_noise
@@ -28,7 +28,7 @@ mist_link_book:
 
 	lda	#LOAD_MIST			; start at Mist
 	sta	WHICH_LOAD
-;.endif
+.endif
 
 .if 0
 	lda	#MECHE_INSIDE_GEAR
@@ -47,6 +47,16 @@ mist_link_book:
 	lda	#DIRECTION_E
 	sta	DIRECTION
 .endif
+
+.if 0
+	lda	#SELENA_WALKWAY1
+	sta	LOCATION
+	lda	#LOAD_SELENA
+	sta	WHICH_LOAD
+	lda	#DIRECTION_N
+	sta	DIRECTION
+.endif
+
 
 
 	lda	#$ff

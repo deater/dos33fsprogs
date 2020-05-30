@@ -56,7 +56,7 @@ selena_start:
 	lda	#0
 	sta	LEVEL_OVER
 
-.if 0
+.if 1
 	lda	#SELENA_INSIDE_SHIP
 	sta	LOCATION
 
