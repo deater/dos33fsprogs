@@ -18,8 +18,8 @@ selena_graphics.inc:	\
 	spaceship_door_s.lzsa \
 	walkway4_n.lzsa walkway4_s.lzsa \
 	bunker_n.lzsa bunker_s.lzsa bunker_e.lzsa \
-	subroom_s.lzsa \
-	book_table_s.lzsa \
+	subroom_s.lzsa subroom_n.lzsa \
+	book_table_n.lzsa book_table_s.lzsa \
 	book_mist_open_s.lzsa book_mist_closed_s.lzsa \
 	water_turn_n.lzsa water_turn_s.lzsa water_turn_w.lzsa \
 	water_path_e.lzsa water_path_w.lzsa \
@@ -47,7 +47,13 @@ selena_graphics.inc:	\
 	ladder_top.lzsa ladder_middle.lzsa ladder_bottom.lzsa \
 	tunnel_e.lzsa tunnel_w.lzsa tunnel_basement.lzsa \
 	tunnel_note_n.lzsa \
-	tunnel_main_n.lzsa tunnel_main_s.lzsa
+	tunnel_main_n.lzsa tunnel_main_s.lzsa \
+	book_hallway_n.lzsa book_hallway_s.lzsa \
+	inside_sub_e.lzsa inside_sub_w.lzsa \
+	bunker_keypad_e.lzsa \
+	bunker_open_e.lzsa \
+	bunker_entry_e.lzsa bunker_entry_w.lzsa \
+	sub_hallway_e.lzsa sub_hallway_w.lzsa
 	echo "controls_e_lzsa: .incbin \"controls_e.lzsa\"" > selena_graphics.inc
 	echo "organ_w_lzsa: .incbin \"organ_w.lzsa\"" >> selena_graphics.inc
 	echo "spaceship_inside_w_lzsa: .incbin \"spaceship_inside_w.lzsa\"" >> selena_graphics.inc
@@ -63,7 +69,9 @@ selena_graphics.inc:	\
 	echo "bunker_s_lzsa: .incbin \"bunker_s.lzsa\"" >> selena_graphics.inc
 	echo "bunker_e_lzsa: .incbin \"bunker_e.lzsa\"" >> selena_graphics.inc
 	echo "subroom_s_lzsa: .incbin \"subroom_s.lzsa\"" >> selena_graphics.inc
+	echo "subroom_n_lzsa: .incbin \"subroom_n.lzsa\"" >> selena_graphics.inc
 	echo "book_table_s_lzsa: .incbin \"book_table_s.lzsa\"" >> selena_graphics.inc
+	echo "book_table_n_lzsa: .incbin \"book_table_n.lzsa\"" >> selena_graphics.inc
 	echo "book_mist_open_s_lzsa: .incbin \"book_mist_open_s.lzsa\"" >> selena_graphics.inc
 	echo "book_mist_closed_s_lzsa: .incbin \"book_mist_closed_s.lzsa\"" >> selena_graphics.inc
 	echo "water_turn_n_lzsa: .incbin \"water_turn_n.lzsa\"" >> selena_graphics.inc
@@ -127,6 +135,17 @@ selena_graphics.inc:	\
 	echo "tunnel_note_n_lzsa: .incbin \"tunnel_note_n.lzsa\"" >> selena_graphics.inc
 	echo "tunnel_main_n_lzsa: .incbin \"tunnel_main_n.lzsa\"" >> selena_graphics.inc
 	echo "tunnel_main_s_lzsa: .incbin \"tunnel_main_s.lzsa\"" >> selena_graphics.inc
+	echo "book_hallway_n_lzsa: .incbin \"book_hallway_n.lzsa\"" >> selena_graphics.inc
+	echo "book_hallway_s_lzsa: .incbin \"book_hallway_s.lzsa\"" >> selena_graphics.inc
+	echo "inside_sub_e_lzsa: .incbin \"inside_sub_e.lzsa\"" >> selena_graphics.inc
+	echo "inside_sub_w_lzsa: .incbin \"inside_sub_w.lzsa\"" >> selena_graphics.inc
+	echo "bunker_keypad_e_lzsa: .incbin \"bunker_keypad_e.lzsa\"" >> selena_graphics.inc
+	echo "bunker_open_e_lzsa: .incbin \"bunker_open_e.lzsa\"" >> selena_graphics.inc
+	echo "bunker_entry_e_lzsa: .incbin \"bunker_entry_e.lzsa\"" >> selena_graphics.inc
+	echo "bunker_entry_w_lzsa: .incbin \"bunker_entry_w.lzsa\"" >> selena_graphics.inc
+	echo "sub_hallway_e_lzsa: .incbin \"sub_hallway_e.lzsa\"" >> selena_graphics.inc
+	echo "sub_hallway_w_lzsa: .incbin \"sub_hallway_w.lzsa\"" >> selena_graphics.inc
+
 
 %.gr: %.png
 	$(PNG2GR) $< $@

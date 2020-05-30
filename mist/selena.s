@@ -369,6 +369,13 @@ antenna_mid_down:
 	bne	update_tunnel_e
 
 
+	;==============================
+	; keypad actions
+keypad_press:
+	lda	#SELENA_BUNKER_OPEN
+	sta	LOCATION
+	jmp	change_location
+
 	;==========================
 	; includes
 	;==========================
