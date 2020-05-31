@@ -3,11 +3,11 @@
 ;===============================================
 
 locations:
-	.word location0,location1,location2,location3
-	.word location4,location5,location6,location7
-	.word location8,location9,location10,location11
-	.word location12,location13	
-
+	.word location0, location1, location2, location3
+	.word location4, location5, location6, location7
+	.word location8, location9, location10,location11
+	.word location12,location13,location14,location15
+	.word location16
 
 
 ; CHANNEL_OUTSIDE_CABIN		-- outside in clearing
@@ -248,11 +248,11 @@ location12:
 
 ; CHANNEL_ARRIVAL		-- arrival in channelwood
 location13:
-	.byte	$ff			; north exit
+	.byte	CHANNEL_PATH2		; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -262,3 +262,57 @@ location13:
 	.word	$0000			; west bg
 	.byte	BG_SOUTH|BG_NORTH
 	.byte	$ff
+
+; CHANNEL_PATH2		-- twisty maze of passages all alike
+location14:
+	.byte	$ff			; north exit
+	.byte	CHANNEL_ARRIVAL		; south exit
+	.byte	CHANNEL_PATH3		; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	path2_n_lzsa		; north bg
+	.word	path2_s_lzsa		; south bg
+	.word	path2_e_lzsa		; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH|BG_NORTH|BG_EAST
+	.byte	$ff
+
+; CHANNEL_PATH3		-- twisty maze of passages all alike
+location15:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	CHANNEL_BRIDGE		; east exit
+	.byte	CHANNEL_PATH2		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_S	; west exit_dir
+	.word	path3_n_lzsa		; north bg
+	.word	$0000			; south bg
+	.word	path3_e_lzsa		; east bg
+	.word	path3_w_lzsa		; west bg
+	.byte	BG_NORTH|BG_WEST|BG_EAST
+	.byte	$ff
+
+; CHANNEL_BRIDGE	-- raisable bridge
+location16:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	CHANNEL_PATH3		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	bridge_down_e_lzsa	; east bg
+	.word	bridge_w_lzsa		; west bg
+	.byte	BG_WEST|BG_EAST
+	.byte	$ff
+
+
+

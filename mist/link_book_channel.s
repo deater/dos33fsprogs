@@ -35,7 +35,7 @@ channel_link_book:
 
 	lda	#CHANNEL_ARRIVAL
 	sta	LOCATION
-	lda	#DIRECTION_N
+	lda	#DIRECTION_S
 	sta	DIRECTION
 
 	jsr	change_location
