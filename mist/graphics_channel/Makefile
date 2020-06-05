@@ -25,7 +25,10 @@ channel_graphics.inc:	\
 	tree_elevator_basement_s.lzsa \
 	bridge_w.lzsa bridge_down_e.lzsa \
 	path2_e.lzsa path2_s.lzsa path2_n.lzsa \
-	path3_w.lzsa path3_e.lzsa path3_n.lzsa
+	path3_w.lzsa path3_e.lzsa path3_n.lzsa \
+	path4_e.lzsa path4_w.lzsa path4_s.lzsa \
+	path5_e.lzsa path5_s.lzsa path5_n.lzsa \
+	path6_s.lzsa path6_w.lzsa path6_n.lzsa
 	echo "arrival_n_lzsa: .incbin \"arrival_n.lzsa\"" > channel_graphics.inc
 	echo "arrival_s_lzsa: .incbin \"arrival_s.lzsa\"" >> channel_graphics.inc
 	echo "clearing_e_lzsa: .incbin \"clearing_e.lzsa\"" >> channel_graphics.inc
@@ -57,7 +60,15 @@ channel_graphics.inc:	\
 	echo "path3_w_lzsa: .incbin \"path3_w.lzsa\"" >> channel_graphics.inc
 	echo "path3_e_lzsa: .incbin \"path3_e.lzsa\"" >> channel_graphics.inc
 	echo "path3_n_lzsa: .incbin \"path3_n.lzsa\"" >> channel_graphics.inc
-
+	echo "path4_e_lzsa: .incbin \"path4_e.lzsa\"" >> channel_graphics.inc
+	echo "path4_w_lzsa: .incbin \"path4_w.lzsa\"" >> channel_graphics.inc
+	echo "path4_s_lzsa: .incbin \"path4_s.lzsa\"" >> channel_graphics.inc
+	echo "path5_e_lzsa: .incbin \"path5_e.lzsa\"" >> channel_graphics.inc
+	echo "path5_s_lzsa: .incbin \"path5_s.lzsa\"" >> channel_graphics.inc
+	echo "path5_n_lzsa: .incbin \"path5_n.lzsa\"" >> channel_graphics.inc
+	echo "path6_s_lzsa: .incbin \"path6_s.lzsa\"" >> channel_graphics.inc
+	echo "path6_w_lzsa: .incbin \"path6_w.lzsa\"" >> channel_graphics.inc
+	echo "path6_n_lzsa: .incbin \"path6_n.lzsa\"" >> channel_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@

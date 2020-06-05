@@ -32,9 +32,12 @@ MECHE age:
 
 SELENA age:
 + optional mockingboard sound for keyboard?
-+ Complicated age with sounds
-+ That whole rediculous underground cart sequence
-+ turn around and look back inside bunker
++ sound
+	5 sound effects (not digital samples)
+	maybe not bother with aiming antennas, but sum button plays
+	if switch been pushed
+	filler sounds for others?
++ That whole rediculous underground sub sequence
 + light switch in tunnel
 + antenna compartment should open/close when you click on it
 + better colors

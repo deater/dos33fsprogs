@@ -7,7 +7,7 @@ locations:
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
-	.word location16
+	.word location16,location17,location18,location19
 
 
 ; CHANNEL_OUTSIDE_CABIN		-- outside in clearing
@@ -265,11 +265,11 @@ location13:
 
 ; CHANNEL_PATH2		-- twisty maze of passages all alike
 location14:
-	.byte	$ff			; north exit
+	.byte	CHANNEL_PATH6		; north exit
 	.byte	CHANNEL_ARRIVAL		; south exit
 	.byte	CHANNEL_PATH3		; east exit
 	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -282,11 +282,11 @@ location14:
 
 ; CHANNEL_PATH3		-- twisty maze of passages all alike
 location15:
-	.byte	$ff			; north exit
+	.byte	CHANNEL_PATH4		; north exit
 	.byte	$ff			; south exit
 	.byte	CHANNEL_BRIDGE		; east exit
 	.byte	CHANNEL_PATH2		; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_W	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_S	; west exit_dir
@@ -314,5 +314,54 @@ location16:
 	.byte	BG_WEST|BG_EAST
 	.byte	$ff
 
+; CHANNEL_PATH4		-- twisty maze of passages all alike
+location17:
+	.byte	$ff			; north exit
+	.byte	CHANNEL_PATH3		; south exit
+	.byte	$ff			; east exit
+	.byte	CHANNEL_PATH5		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_E	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_N	; west exit_dir
+	.word	$0000			; north bg
+	.word	path4_s_lzsa		; south bg
+	.word	path4_e_lzsa		; east bg
+	.word	path4_w_lzsa		; west bg
+	.byte	BG_SOUTH|BG_WEST|BG_EAST
+	.byte	$ff
 
+; CHANNEL_PATH5		-- twisty maze of passages all alike
+location18:
+	.byte	$ff			; north exit
+	.byte	CHANNEL_PATH6		; south exit
+	.byte	CHANNEL_PATH4		; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	path5_n_lzsa		; north bg
+	.word	path5_s_lzsa		; south bg
+	.word	path5_e_lzsa		; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST
+	.byte	$ff
+
+; CHANNEL_PATH6		-- twisty maze of passages all alike
+location19:
+	.byte	CHANNEL_PATH5		; north exit
+	.byte	CHANNEL_PATH2		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	path6_n_lzsa		; north bg
+	.word	path6_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	path6_w_lzsa		; west bg
+	.byte	BG_NORTH|BG_WEST|BG_SOUTH
+	.byte	$ff
 
