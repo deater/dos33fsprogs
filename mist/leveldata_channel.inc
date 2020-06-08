@@ -9,6 +9,8 @@ locations:
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
+	.word location24,location25,location26,location27
+
 
 ; CHANNEL_OUTSIDE_CABIN		-- outside in clearing
 location0:
@@ -333,11 +335,11 @@ location17:
 
 ; CHANNEL_PATH5		-- twisty maze of passages all alike
 location18:
-	.byte	$ff			; north exit
+	.byte	CHANNEL_STEPS_FORK	; north exit
 	.byte	CHANNEL_PATH6		; south exit
 	.byte	CHANNEL_PATH4		; east exit
 	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -432,5 +434,74 @@ location23:
 	.word	pipe_bridge2_w_lzsa	; west bg
 	.byte	BG_EAST|BG_WEST
 	.byte	$ff
+
+; CHANNEL_STEPS_FORK		-- fork going to steps
+location24:
+	.byte	CHANNEL_WIND_PATH	; north exit
+	.byte	CHANNEL_PATH5		; south exit
+	.byte	$ff			; east exit
+	.byte	CHANNEL_STEPS_PATH	; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	steps_fork_n_lzsa	; north bg
+	.word	steps_fork_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	steps_fork_w_lzsa	; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_WEST
+	.byte	$ff
+
+; CHANNEL_STEPS_PATH		-- path going to steps
+location25:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	CHANNEL_STEPS_FORK	; east exit
+	.byte	CHANNEL_STEPS_DOOR	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_N	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	steps_path_e_lzsa	; east bg
+	.word	steps_path_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; CHANNEL_STEPS_DOOR		-- door to the steps
+location26:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	CHANNEL_STEPS_PATH	; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	steps_door_e_lzsa	; east bg
+	.word	steps_door_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; CHANNEL_WIND_PATH		-- path to windmill
+location27:
+	.byte	$ff			; north exit
+	.byte	CHANNEL_STEPS_FORK	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	wind_path_n_lzsa	; north bg
+	.word	wind_path_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
 
 
