@@ -10,6 +10,7 @@ locations:
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
+	.word location28,location29,location30,location31
 
 
 ; CHANNEL_OUTSIDE_CABIN		-- outside in clearing
@@ -488,7 +489,7 @@ location26:
 
 ; CHANNEL_WIND_PATH		-- path to windmill
 location27:
-	.byte	$ff			; north exit
+	.byte	CHANNEL_WIND_PATH2	; north exit
 	.byte	CHANNEL_STEPS_FORK	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -498,6 +499,74 @@ location27:
 	.byte	$ff		; west exit_dir
 	.word	wind_path_n_lzsa	; north bg
 	.word	wind_path_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; CHANNEL_WIND_PATH2		-- path to windmill too
+location28:
+	.byte	CHANNEL_ISLAND1		; north exit
+	.byte	CHANNEL_WIND_PATH	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	wind_path2_n_lzsa	; north bg
+	.word	wind_path2_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; CHANNEL_ISLAND1		-- island part1
+location29:
+	.byte	CHANNEL_ISLAND2		; north exit
+	.byte	CHANNEL_WIND_PATH2	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	island1_n_lzsa		; north bg
+	.word	island1_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; CHANNEL_ISLAND2		-- island part2
+location30:
+	.byte	CHANNEL_ISLAND3		; north exit
+	.byte	CHANNEL_ISLAND1		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	island2_n_lzsa		; north bg
+	.word	island2_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; CHANNEL_ISLAND3		-- island part3
+location31:
+	.byte	$ff			; north exit
+	.byte	CHANNEL_ISLAND2		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	island3_n_lzsa		; north bg
+	.word	island3_s_lzsa		; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH

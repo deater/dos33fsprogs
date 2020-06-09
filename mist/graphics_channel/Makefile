@@ -36,7 +36,11 @@ channel_graphics.inc:	\
 	steps_fork_n.lzsa steps_fork_s.lzsa steps_fork_w.lzsa \
 	steps_path_e.lzsa steps_path_w.lzsa \
 	steps_door_e.lzsa steps_door_w.lzsa \
-	wind_path_n.lzsa wind_path_s.lzsa
+	wind_path_n.lzsa wind_path_s.lzsa \
+	wind_path2_n.lzsa wind_path2_s.lzsa \
+	island1_n.lzsa island1_s.lzsa \
+	island2_n.lzsa island2_s.lzsa \
+	island3_n.lzsa island3_s.lzsa
 	echo "arrival_n_lzsa: .incbin \"arrival_n.lzsa\"" > channel_graphics.inc
 	echo "arrival_s_lzsa: .incbin \"arrival_s.lzsa\"" >> channel_graphics.inc
 	echo "clearing_e_lzsa: .incbin \"clearing_e.lzsa\"" >> channel_graphics.inc
@@ -94,6 +98,15 @@ channel_graphics.inc:	\
 	echo "steps_door_w_lzsa: .incbin \"steps_door_w.lzsa\"" >> channel_graphics.inc
 	echo "wind_path_n_lzsa: .incbin \"wind_path_n.lzsa\"" >> channel_graphics.inc
 	echo "wind_path_s_lzsa: .incbin \"wind_path_s.lzsa\"" >> channel_graphics.inc
+	echo "wind_path2_n_lzsa: .incbin \"wind_path2_n.lzsa\"" >> channel_graphics.inc
+	echo "wind_path2_s_lzsa: .incbin \"wind_path2_s.lzsa\"" >> channel_graphics.inc
+	echo "island1_n_lzsa: .incbin \"island1_n.lzsa\"" >> channel_graphics.inc
+	echo "island1_s_lzsa: .incbin \"island1_s.lzsa\"" >> channel_graphics.inc
+	echo "island2_n_lzsa: .incbin \"island2_n.lzsa\"" >> channel_graphics.inc
+	echo "island2_s_lzsa: .incbin \"island2_s.lzsa\"" >> channel_graphics.inc
+	echo "island3_n_lzsa: .incbin \"island3_n.lzsa\"" >> channel_graphics.inc
+	echo "island3_s_lzsa: .incbin \"island3_s.lzsa\"" >> channel_graphics.inc
+
 
 %.gr: %.png
 	$(PNG2GR) $< $@
