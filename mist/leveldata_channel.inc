@@ -11,6 +11,8 @@ locations:
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
+	.word location32,location33,location34,location35
+	.word location36
 
 
 ; CHANNEL_OUTSIDE_CABIN		-- outside in clearing
@@ -557,7 +559,7 @@ location30:
 
 ; CHANNEL_ISLAND3		-- island part3
 location31:
-	.byte	$ff			; north exit
+	.byte	CHANNEL_SHACK		; north exit
 	.byte	CHANNEL_ISLAND2		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -572,5 +574,87 @@ location31:
 	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff
 
+; CHANNEL_SHACK			-- island shack
+location32:
+	.byte	CHANNEL_TANK		; north exit
+	.byte	CHANNEL_ISLAND3		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	shack_n_lzsa		; north bg
+	.word	shack_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
 
+; CHANNEL_TANK			-- inside shack
+location33:
+	.byte	CHANNEL_WINDMILL	; north exit
+	.byte	CHANNEL_SHACK		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	tank_n_lzsa		; north bg
+	.word	tank_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
 
+; CHANNEL_TANK_CLOSE		-- the faucet
+location34:
+	.byte	CHANNEL_TANK		; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	tank_close_lzsa		; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	$ff
+
+; CHANNEL_WINDMILL		-- windmill machinery
+location35:
+	.byte	CHANNEL_OUT_BACK	; north exit
+	.byte	CHANNEL_TANK		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	windmill_n_lzsa		; north bg
+	.word	windmill_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; CHANNEL_OUT_BACK		-- back door of windmill
+location36:
+	.byte	$ff			; north exit
+	.byte	CHANNEL_WINDMILL	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	outback_n_lzsa		; north bg
+	.word	outback_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff

@@ -40,7 +40,11 @@ channel_graphics.inc:	\
 	wind_path2_n.lzsa wind_path2_s.lzsa \
 	island1_n.lzsa island1_s.lzsa \
 	island2_n.lzsa island2_s.lzsa \
-	island3_n.lzsa island3_s.lzsa
+	island3_n.lzsa island3_s.lzsa \
+	shack_n.lzsa shack_s.lzsa \
+	tank_n.lzsa tank_s.lzsa tank_close.lzsa \
+	windmill_n.lzsa windmill_s.lzsa \
+	outback_n.lzsa outback_s.lzsa
 	echo "arrival_n_lzsa: .incbin \"arrival_n.lzsa\"" > channel_graphics.inc
 	echo "arrival_s_lzsa: .incbin \"arrival_s.lzsa\"" >> channel_graphics.inc
 	echo "clearing_e_lzsa: .incbin \"clearing_e.lzsa\"" >> channel_graphics.inc
@@ -106,6 +110,15 @@ channel_graphics.inc:	\
 	echo "island2_s_lzsa: .incbin \"island2_s.lzsa\"" >> channel_graphics.inc
 	echo "island3_n_lzsa: .incbin \"island3_n.lzsa\"" >> channel_graphics.inc
 	echo "island3_s_lzsa: .incbin \"island3_s.lzsa\"" >> channel_graphics.inc
+	echo "shack_n_lzsa: .incbin \"shack_n.lzsa\"" >> channel_graphics.inc
+	echo "shack_s_lzsa: .incbin \"shack_s.lzsa\"" >> channel_graphics.inc
+	echo "tank_n_lzsa: .incbin \"tank_n.lzsa\"" >> channel_graphics.inc
+	echo "tank_s_lzsa: .incbin \"tank_s.lzsa\"" >> channel_graphics.inc
+	echo "tank_close_lzsa: .incbin \"tank_close.lzsa\"" >> channel_graphics.inc
+	echo "windmill_n_lzsa: .incbin \"windmill_n.lzsa\"" >> channel_graphics.inc
+	echo "windmill_s_lzsa: .incbin \"windmill_s.lzsa\"" >> channel_graphics.inc
+	echo "outback_n_lzsa: .incbin \"outback_n.lzsa\"" >> channel_graphics.inc
+	echo "outback_s_lzsa: .incbin \"outback_s.lzsa\"" >> channel_graphics.inc
 
 
 %.gr: %.png
