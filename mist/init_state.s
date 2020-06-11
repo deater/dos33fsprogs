@@ -59,6 +59,7 @@ init_state:
 	sta	BATTERY_CHARGE
 	sta	COMPASS_ANGLE
 	sta	CRANK_ANGLE
+	sta	CHANNEL_SWITCHES
 
 	lda	#$ff		; for debugging
 	sta	MARKER_SWITCHES

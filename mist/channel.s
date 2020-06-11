@@ -142,6 +142,23 @@ really_exit:
 	jmp	end_level
 
 
+look_at_faucet:
+	lda	#CHANNEL_TANK_CLOSE
+	sta	LOCATION
+	jmp	change_location
+
+toggle_windmill:
+	lda	CHANNEL_SWITCHES
+	eor	#CHANNEL_SW_WINDMILL
+	sta	CHANNEL_SWITCHES
+	rts
+
+toggle_faucet:
+	lda	CHANNEL_SWITCHES
+	eor	#CHANNEL_SW_FAUCET
+	sta	CHANNEL_SWITCHES
+	rts
+
 
 back_to_mist:
 

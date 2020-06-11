@@ -606,7 +606,10 @@ location33:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH
-	.byte	$ff
+	.byte	DIRECTION_N	; special exit
+	.byte	25,32		; special x
+	.byte	40,46		; special y
+	.word	look_at_faucet-1		; special function
 
 ; CHANNEL_TANK_CLOSE		-- the faucet
 location34:
@@ -623,7 +626,10 @@ location34:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH
-	.byte	$ff
+	.byte	DIRECTION_N	; special exit
+	.byte	15,25		; special x
+	.byte	18,32		; special y
+	.word	toggle_faucet-1	; special function
 
 ; CHANNEL_WINDMILL		-- windmill machinery
 location35:
@@ -640,7 +646,10 @@ location35:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH
-	.byte	$ff
+	.byte	DIRECTION_N	; special exit
+	.byte	10,15		; special x
+	.byte	30,38		; special y
+	.word	toggle_windmill-1	; special function
 
 ; CHANNEL_OUT_BACK		-- back door of windmill
 location36:
