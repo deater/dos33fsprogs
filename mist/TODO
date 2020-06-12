@@ -1,3 +1,38 @@
+For release 1.0
++ LOADER 
+	-- better loader
+	-- save/load games
+	-- sound loader
++ MIST (split off ship-up/ship-down?)
+	-- constellation puzzle/ship raising
+	-- marker switches
++ OBSERVATORY
+	-- all of it
++ CABIN (split off?)
+	-- safe puzzle
+	-- boiler
+	-- up/down in tree
++ OCTAGON
+	-- code book
+	-- ending
++ SELENA
+	-- sounds/door puzzle
++ STONEY
+	-- hook up compass rose
+	-- hook up pump 
+	-- hook up telescope
+	-- hook up key/trunk puzzle
++ CHANNEL
+	-- 2nd floor
+	-- 3rd floor
+
+Done:
++ MECHE
++ MIST_TITLE
++ VIEWER
+
+================================
+
 main:
 + some sort of switch animation on circuit breakers?
 + marker switches
@@ -46,10 +81,18 @@ Channelwood:
 + Implement safe
 + Implement tree
 + Implement boiler
-+ Implement water tank
 + Implement water valves
-+ Implement elevators
 + Enable linking back to Myst
++ Windmill animation
++ Switch flip animation
++ Open faucet animation
++ Animation for bridge rising
++ Animation for pipe extending
++ Animation for book elevator
++ Animation for level1 elevator
++ Animation for level2 elevator
++ Background soud effects
+
 
 Stoneship age:
 + Implement floating chest puzzle

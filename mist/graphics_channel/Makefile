@@ -44,7 +44,10 @@ channel_graphics.inc:	\
 	shack_n.lzsa shack_s.lzsa \
 	tank_n.lzsa tank_s.lzsa tank_close.lzsa \
 	windmill_n.lzsa windmill_s.lzsa \
-	outback_n.lzsa outback_s.lzsa
+	outback_n.lzsa outback_s.lzsa \
+	after_bridge1_e.lzsa after_bridge1_w.lzsa \
+	after_bridge2_e.lzsa after_bridge2_w.lzsa \
+	book_fork_n.lzsa book_fork_s.lzsa book_fork_w.lzsa
 	echo "arrival_n_lzsa: .incbin \"arrival_n.lzsa\"" > channel_graphics.inc
 	echo "arrival_s_lzsa: .incbin \"arrival_s.lzsa\"" >> channel_graphics.inc
 	echo "clearing_e_lzsa: .incbin \"clearing_e.lzsa\"" >> channel_graphics.inc
@@ -119,6 +122,13 @@ channel_graphics.inc:	\
 	echo "windmill_s_lzsa: .incbin \"windmill_s.lzsa\"" >> channel_graphics.inc
 	echo "outback_n_lzsa: .incbin \"outback_n.lzsa\"" >> channel_graphics.inc
 	echo "outback_s_lzsa: .incbin \"outback_s.lzsa\"" >> channel_graphics.inc
+	echo "after_bridge1_e_lzsa: .incbin \"after_bridge1_e.lzsa\"" >> channel_graphics.inc
+	echo "after_bridge1_w_lzsa: .incbin \"after_bridge1_w.lzsa\"" >> channel_graphics.inc
+	echo "after_bridge2_e_lzsa: .incbin \"after_bridge2_e.lzsa\"" >> channel_graphics.inc
+	echo "after_bridge2_w_lzsa: .incbin \"after_bridge2_w.lzsa\"" >> channel_graphics.inc
+	echo "book_fork_n_lzsa: .incbin \"book_fork_n.lzsa\"" >> channel_graphics.inc
+	echo "book_fork_s_lzsa: .incbin \"book_fork_s.lzsa\"" >> channel_graphics.inc
+	echo "book_fork_w_lzsa: .incbin \"book_fork_w.lzsa\"" >> channel_graphics.inc
 
 
 %.gr: %.png

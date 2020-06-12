@@ -12,7 +12,7 @@ locations:
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
-	.word location36
+	.word location36,location37,location38,location39
 
 
 ; CHANNEL_OUTSIDE_CABIN		-- outside in clearing
@@ -667,3 +667,55 @@ location36:
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff
+
+; CHANNEL_AFTER_BRIDGE1		-- after lift bridge
+location37:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	CHANNEL_AFTER_BRIDGE2	; east exit
+	.byte	CHANNEL_BRIDGE		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_E	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	after_bridge1_e_lzsa	; east bg
+	.word	after_bridge1_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; CHANNEL_AFTER_BRIDGE2		-- next after lift bridge
+location38:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	CHANNEL_AFTER_BRIDGE1	; east exit
+	.byte	CHANNEL_BOOK_FORK	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_N	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	after_bridge2_e_lzsa	; east bg
+	.word	after_bridge2_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; CHANNEL_BOOK_FORK		-- fork to book elevator
+location39:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	CHANNEL_AFTER_BRIDGE2	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	book_fork_n_lzsa	; north bg
+	.word	book_fork_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_WEST
+	.byte	$ff
+
