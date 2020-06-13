@@ -253,11 +253,14 @@ exit_to_mist:
 	.include	"graphics_channel/channel_graphics.inc"
 
 
-	; puzzles
+	; sprites
 
 	.include	"common_sprites.inc"
-
 	.include	"page_sprites.inc"
+
+	; puzzles
+
+	.include	"channel_switches.s"
 
 	.include	"leveldata_channel.inc"
 

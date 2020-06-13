@@ -16,22 +16,22 @@ channel_link_book:
 	;====================================
 	; load linking audio (12k) to $9000
 
-	lda	#<linking_filename
-	sta	OUTL
-	lda	#>linking_filename
-	sta	OUTH
+;	lda	#<linking_filename
+;	sta	OUTL
+;	lda	#>linking_filename
+;	sta	OUTH
 
-        jsr	opendir_filename
+;	jsr	opendir_filename
 
 
 	; play sound effect?
 
-	lda	#<linking_noise
-	sta	BTC_L
-	lda	#>linking_noise
-	sta	BTC_H
-	ldx	#LINKING_NOISE_LENGTH		; 45 pages long???
-	jsr	play_audio
+;	lda	#<linking_noise
+;	sta	BTC_L
+;	lda	#>linking_noise
+;	sta	BTC_H
+;	ldx	#LINKING_NOISE_LENGTH		; 45 pages long???
+;	jsr	play_audio
 
 	lda	#CHANNEL_ARRIVAL
 	sta	LOCATION

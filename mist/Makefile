@@ -186,6 +186,7 @@ channel.o:	channel.s zp.inc hardware.inc common_defines.inc \
 	common_sprites.inc \
 	page_sprites.inc \
 	leveldata_channel.inc \
+	channel_switches.s \
 	keyboard.s \
 	draw_pointer.s \
 	link_book_channel.s \

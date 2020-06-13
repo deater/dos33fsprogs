@@ -317,7 +317,10 @@ location16:
 	.word	bridge_down_e_lzsa	; east bg
 	.word	bridge_w_lzsa		; west bg
 	.byte	BG_WEST|BG_EAST
-	.byte	$ff
+	.byte   DIRECTION_E	; special exit
+	.byte	14,20	; special x
+	.byte	28,36	; special y
+	.word	raise_bridge-1
 
 ; CHANNEL_PATH4		-- twisty maze of passages all alike
 location17:
@@ -677,7 +680,7 @@ location37:
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
-	.byte	DIRECTION_E	; west exit_dir
+	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
 	.word	after_bridge1_e_lzsa	; east bg
@@ -689,8 +692,8 @@ location37:
 location38:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
-	.byte	CHANNEL_AFTER_BRIDGE1	; east exit
-	.byte	CHANNEL_BOOK_FORK	; west exit
+	.byte	CHANNEL_BOOK_FORK	; east exit
+	.byte	CHANNEL_AFTER_BRIDGE1	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_N	; east exit_dir
@@ -715,7 +718,7 @@ location39:
 	.word	book_fork_n_lzsa	; north bg
 	.word	book_fork_s_lzsa	; south bg
 	.word	$0000			; east bg
-	.word	$0000			; west bg
+	.word	book_fork_w_lzsa	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_WEST
 	.byte	$ff
 

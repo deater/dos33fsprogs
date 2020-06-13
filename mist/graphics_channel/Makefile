@@ -23,7 +23,7 @@ channel_graphics.inc:	\
 	tree_basement_book_open_s.lzsa \
 	tree_basement_book_closed_s.lzsa \
 	tree_elevator_basement_s.lzsa \
-	bridge_w.lzsa bridge_down_e.lzsa \
+	bridge_w.lzsa bridge_down_e.lzsa bridge_up_e.lzsa \
 	path2_e.lzsa path2_s.lzsa path2_n.lzsa \
 	path3_w.lzsa path3_e.lzsa path3_n.lzsa \
 	path4_e.lzsa path4_w.lzsa path4_s.lzsa \
@@ -73,6 +73,7 @@ channel_graphics.inc:	\
 	echo "tree_elevator_basement_s_lzsa: .incbin \"tree_elevator_basement_s.lzsa\"" >> channel_graphics.inc
 	echo "bridge_w_lzsa: .incbin \"bridge_w.lzsa\"" >> channel_graphics.inc
 	echo "bridge_down_e_lzsa: .incbin \"bridge_down_e.lzsa\"" >> channel_graphics.inc
+	echo "bridge_up_e_lzsa: .incbin \"bridge_up_e.lzsa\"" >> channel_graphics.inc
 	echo "path2_n_lzsa: .incbin \"path2_n.lzsa\"" >> channel_graphics.inc
 	echo "path2_s_lzsa: .incbin \"path2_s.lzsa\"" >> channel_graphics.inc
 	echo "path2_e_lzsa: .incbin \"path2_e.lzsa\"" >> channel_graphics.inc
