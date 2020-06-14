@@ -2,7 +2,7 @@
 ; by Deater for -=dSr=-
 ; @party 2020
 
-; trying to beat 254 bytes
+; trying to beat 251 bytes
 
 ; zero page locations
 HGR_SHAPE	=	$1A
@@ -129,21 +129,22 @@ done_frame:
 	; move dSr
 	;========================
 
-	inc	YPOS	; 2
-	inc	YPOS	; 2
-	inc	YPOS	; 2
+	inc	YPOS		; 2
+	inc	YPOS		; 2
+	inc	YPOS		; 2
 
-	lda	XPOS	; 2
-	adc	#5	; 2
-	sta	XPOS	; 2
+	lda	XPOS		; 2
+	adc	#5		; 2
+	sta	XPOS		; 2
 
-	cmp	#250
-	bcs	reset_loop
-	bcc	main_loop
+	cmp	#250		; 2
+	bcs	reset_loop	; 2
+	bcc	main_loop	; 2
 
 
 shape_person:
 ; Person, shoulders up
+; thanks to Beagle Bros
 
 ;.byte	$01,$00,$04,$00,
 .byte	$2d,$25,$3c,$24
@@ -183,10 +184,11 @@ draw_arm:
 	sty	HGR_SCALE	; 2
 
 	; setup X and Y co-ords
-	lda	FRAME
-	and	#$f0			; 32, 64, 96, 128, 160, 192, 224, 256
+	ldx	FRAME
+	; no need to and, only called on multipl of 32s
+;	and	#$f0			; 32, 64, 96, 128, 160, 192, 224, 256
 	beq	skip_arm
-	tax				; XPOS
+;	tax				; XPOS
 	dey				; XPOSH=0
 	lda	#180
 	jsr	HPOSN		; X= (y,x) Y=(a)
@@ -297,8 +299,8 @@ check_finished:
 wait_until_keypress:
 	lda     KEYPRESS		; 3	; see if key pressed
 	bpl     wait_until_keypress	; 2	; loop if not
-;	bit     KEYRESET			; clear keyboard buffer
 exit_to_prompt:
+;	bit     KEYRESET			; clear keyboard buffer
 	jsr     TEXT			; 3     ; return to text mode
 	jmp     $3D0			; 3     ; return to Applesoft prompt
 
