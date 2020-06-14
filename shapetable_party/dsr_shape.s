@@ -2,6 +2,8 @@
 ; by Deater for -=dSr=-
 ; @party 2020
 
+; 252 bytes
+
 ; zero page locations
 HGR_SHAPE	=	$1A
 SEEDL		=	$4E
@@ -118,7 +120,7 @@ main_loop:
 	and	#$1f		; 2
 	beq	long_frame	; 2
 
-	ldy	#15		; 2
+	lda	#15		; 2
 	jsr	draw_and_beep	; 3
 
 done_frame:
@@ -127,16 +129,36 @@ done_frame:
 	; move dSr
 	;========================
 
-	lda	YPOS
-	adc	#2
-	sta	YPOS
+	inc	YPOS	; 2
+	inc	YPOS	; 2
+	inc	YPOS	; 2
 
-	lda	XPOS
-	adc	#5
-	sta	XPOS
+	lda	XPOS	; 2
+	adc	#5	; 2
+	sta	XPOS	; 2
+
 	cmp	#250
 	bcs	reset_loop
 	bcc	main_loop
+
+
+shape_person:
+; Person, shoulders up
+
+;.byte	$01,$00,$04,$00,
+.byte	$2d,$25,$3c,$24
+.byte	$2c,$2c,$35,$37,$6f,$25,$16,$3f
+.byte	$77,$2d,$1e,$37,$2d,$2d,$15,$3f
+.byte	$3f,$3f,$3f,$3f,$07,$00
+
+shape_arm:
+.byte	$49,$49,$49,$24
+.byte	$24,$24,$ac,$36,$36,$36,$00
+
+shape_dsr:
+.byte	$2d,$36,$ff,$3f
+.byte	$24,$ad,$22,$24,$94,$21,$2c,$4d
+.byte	$91,$3f,$36,$00
 
 
 	;===========================
@@ -177,7 +199,7 @@ skip_arm:
 	asl			; 1	; make twice as big
 	sta	HGR_SCALE	; 2
 
-	ldy	#85		; 2	; long tone
+	lda	#85		; 2	; long tone
 	jsr	draw_and_beep	; 3	; draw and beep
 
 	bit	PAGE1		; 3	; display page back to page1
@@ -187,8 +209,7 @@ skip_arm:
 	asl	HGR_PAGE	; 2	; switch draw page to page1
 
 
-	bpl	done_frame	; 2	; return (can make 2 if can guarantee)
-					; a flag value?
+	bpl	done_frame	; 2	; return
 
 
 	;=======================
@@ -216,60 +237,50 @@ rot_smc:
 
 
 
-shape_person:
-; Person, shoulders up
 
-;.byte	$01,$00,$04,$00,
-.byte	$2d,$25,$3c,$24
-.byte	$2c,$2c,$35,$37,$6f,$25,$16,$3f
-.byte	$77,$2d,$1e,$37,$2d,$2d,$15,$3f
-.byte	$3f,$3f,$3f,$3f,$07,$00
-
-shape_arm:
-.byte	$49,$49,$49,$24
-.byte	$24,$24,$ac,$36,$36,$36,$00
-
-shape_dsr:
-.byte	$2d,$36,$ff,$3f
-.byte	$24,$ad,$22,$24,$94,$21,$2c,$4d
-.byte	$91,$3f,$36,$00
 
 	;==========================
 	; draw/beep/undraw
 	;==========================
 draw_and_beep:
 
-	sty	tone_smc+1	; 3
+	pha
+
+;	sty	tone_smc+1	; 3
 
 	jsr	xdraw		; 3
+
+	; check for keypress
+	lda	KEYPRESS		; 3	; see if key pressed
+	bmi	exit_to_prompt		; 2	; loop if not
 
 	;===========================
 	; BEEP (inlined)
 	;===========================
 beep:
-	lda	FRAME		; 2	; only play tone every 4th frame
-	and	#$3		; 2
-	beq	actual_beep	; 2
-
-nobeep:
-	lda	#100		; 2
-	jsr	WAIT		; 3
-	beq	check_finished	; 2 (A always 0 after WAIT)
 
 actual_beep:
 	; BEEP
 	; repeat 30 times
 	ldx	#30		; 2
+	pla
+	tay
+
 tone1_loop:
 
 tone_smc:
 
-	lda	#15
+;	lda	#15
+	tya
 	jsr	WAIT		; 3	; not as accurate as the cycle count
 					; method before, but saves a few bytes
 
-	bit	SPEAKER		; 3	; click speaker
+	lda	FRAME		; 2	; only play tone every 4th frame
+	and	#$3		; 2
+	bne	no_click	; 2
 
+	bit	SPEAKER		; 3	; click speaker
+no_click:
 	dex			; 1
 	bne	tone1_loop	; 2
 
@@ -283,14 +294,14 @@ tone_smc:
 
 check_finished:
 	lda	FRAME		; 2	; end with big dSr
-	bne	xdraw		; 2	; draw
+	bne	xdraw		; 2	; xdraw
 
 	;==================================
 	; exit to basic
 wait_until_keypress:
 	lda     KEYPRESS		; 3	; see if key pressed
 	bpl     wait_until_keypress	; 2	; loop if not
-;	bit     KEYRESET
+;	bit     KEYRESET			; clear keyboard buffer
 exit_to_prompt:
 	jsr     TEXT			; 3     ; return to text mode
 	jmp     $3D0			; 3     ; return to Applesoft prompt
