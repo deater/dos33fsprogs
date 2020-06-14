@@ -21,6 +21,9 @@ int main(int argc, char **argv) {
 	int h,l;
 	int num_shapes=0,offset;
 	int a,b,c;
+	short offsets[256];
+	/* applesoft indexes from 1 not 0 */
+	int shape_num=1;
 
 	l=fgetc(stdin);
 	h=fgetc(stdin);
@@ -39,9 +42,20 @@ int main(int argc, char **argv) {
 	for(i=0;i<num_shapes;i++) {
 		l=fgetc(stdin);
 		h=fgetc(stdin);
-		printf("SHAPE %d offset = %d\n",i,(h*256)+l);
+		printf("SHAPE %d offset = %d ($%02X%02X)\n",i,
+			(h*256)+l,h,l);
+		offsets[i]=(h*256)+l;
 		offset+=2;
 	}
+
+	/* skip to proper offset */
+	while(offset<offsets[0]) {
+		offset++;
+		ch=fgetc(stdin);
+		if (ch<0) return -1;
+	}
+
+	printf("Shape %d\n",shape_num);
 
 	while(1) {
 		ch=fgetc(stdin);
@@ -51,9 +65,13 @@ int main(int argc, char **argv) {
 		b=(ch>>3)&0x7;
 		c=(ch>>6)&0x3;
 
-		printf("%d:\t%x ",offset,ch);
+		printf("$%X:\t%x ",offset,ch);
 		if ((c==0) && (b==0) && (a==0)) {
 			printf("END!\n");
+			shape_num++;
+			if (shape_num<num_shapes) {
+				printf("\nShape %d\n",shape_num);
+			}
 		} else{
 			printf("\tA: %s ",name[a]);
 		}
