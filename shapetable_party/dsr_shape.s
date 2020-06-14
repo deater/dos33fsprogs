@@ -116,7 +116,8 @@ main_loop:
 	and	#$1f		; 2
 	beq	long_frame	; 2
 
-	jsr	draw_beep	; 3
+	ldy	#24		; 2
+	jsr	draw_and_beep	; 3
 
 done_frame:
 
@@ -149,10 +150,8 @@ long_frame:
 
 	asl	HGR_SCALE	; 2	; make twice as big
 
-	ldy	#235		; 2	; smc on tone
-	sty	tone_smc+1	; 3
-
-	jsr	draw_beep	; 3	; draw and beep
+	ldy	#235		; 2	; long tone
+	jsr	draw_and_beep	; 3	; draw and beep
 
 	bit	PAGE1		; 3	; display page back to page1
 
@@ -189,21 +188,7 @@ rot_smc:
 				; Both A and X are 0 at exit
 
 
-	;==========================
-	; draw/beep/undraw
-	;==========================
-draw_beep:
-	jsr	xdraw		; draw
-	jsr	beep		; make noise/delay
 
-	ldy	#24
-	sty	tone_smc+1
-
-done_forever:
-	lda	FRAME
-	beq	done_forever
-
-	jmp	xdraw		; draw
 
 
 shape_person:
@@ -252,50 +237,40 @@ skip_arm:
 
 	rts
 
+
+
+
+	;==========================
+	; draw/beep/undraw
+	;==========================
+draw_and_beep:
+
+	sty	tone_smc+1
+
+	jsr	xdraw
+
 	;===========================
-	; BEEP
+	; BEEP (inlined)
 	;===========================
 beep:
-	lda	FRAME
-
-	and	#$1f
-	cmp	#$1f
-	beq	nobeep
-
+	lda	FRAME		; 2
 	and	#$3
 	beq	actual_beep
 
 nobeep:
 	lda	#100
-	jmp	WAIT
+	jsr	WAIT
+	jmp	done_forever
 
 actual_beep:
 	; BEEP
 	; repeat 30 times
 	lda	#30			; 2
 tone1_loop:
-;	ldy	#21			; 2
-;	jsr	delay_tone		; 3
-
-;	ldy	#24			; 2
-;	jsr	delay_tone		; 3
 
 tone_smc:
-	ldy	#21			; 2
-	jsr	delay_tone		; 3
 
-	sec				; 1
-	sbc	#1			; 2
-	bne	tone1_loop		; 2
-
-	rts				; 1
-
-
-	; Try X=6 Y=21 cycles=757
-	; Try X=6 Y=24 cycles=865
-	; Try X=7 Y=235 cycles=9636
-
-delay_tone:
+	ldy	#24			; 2
 loopC:	ldx	#6			; 2
 loopD:	dex				; 1
 	bne	loopD			; 2
@@ -304,5 +279,24 @@ loopD:	dex				; 1
 
 	bit	SPEAKER			; 3	; click speaker
 
-	rts				; 1
+	sec				; 1
+	sbc	#1			; 2
+	bne	tone1_loop		; 2
+
+	; Try X=6 Y=21 cycles=757
+	; Try X=6 Y=24 cycles=865
+	; Try X=7 Y=235 cycles=9636
+
+;	ldy	#24
+;	sty	tone_smc+1
+
+done_forever:
+	lda	FRAME
+	beq	done_forever
+
+	jmp	xdraw		; draw
+
+
+
+
 
