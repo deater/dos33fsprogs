@@ -1,4 +1,6 @@
-; 263 bytes
+; shapetable party
+; by Deater for -=dSr=-
+; @party 2020
 
 ; zero page locations
 HGR_SHAPE	=	$1A
@@ -13,7 +15,6 @@ SCALE		=	$FC
 XPOS		=	$FD
 YPOS		=	$FF
 
-; soft switches
 ; Soft Switches
 KEYPRESS	=	$C000
 KEYRESET	=	$C010
@@ -28,7 +29,9 @@ HCLR		=	$F3F2
 HCLR_COLOR	=	$F3F4
 HPOSN		=	$F411
 XDRAW0		=	$F65D
+TEXT		=	$FB36	; Set text mode
 WAIT		=	$FCA8	; delay 1/2(26+27A+5A^2) us
+
 
 dsr_demo:
 
@@ -115,7 +118,7 @@ main_loop:
 	and	#$1f		; 2
 	beq	long_frame	; 2
 
-	ldy	#24		; 2
+	ldy	#15		; 2
 	jsr	draw_and_beep	; 3
 
 done_frame:
@@ -151,11 +154,11 @@ long_frame:
 	;=====================
 draw_arm:
 
-	lda	HGR_SCALE
-	pha
+	lda	HGR_SCALE	; 2
+	pha			; 1
 
-	ldy	#1
-	sty	HGR_SCALE
+	ldy	#1		; 2
+	sty	HGR_SCALE	; 2
 
 	; setup X and Y co-ords
 	lda	FRAME
@@ -170,11 +173,11 @@ draw_arm:
 	jsr	xdraw_custom_shape
 
 skip_arm:
-	pla
-	asl				; 2	; make twice as big
-	sta	HGR_SCALE
+	pla			; 1
+	asl			; 1	; make twice as big
+	sta	HGR_SCALE	; 2
 
-	ldy	#235		; 2	; long tone
+	ldy	#85		; 2	; long tone
 	jsr	draw_and_beep	; 3	; draw and beep
 
 	bit	PAGE1		; 3	; display page back to page1
@@ -231,61 +234,64 @@ shape_dsr:
 .byte	$24,$ad,$22,$24,$94,$21,$2c,$4d
 .byte	$91,$3f,$36,$00
 
-
-
-
-
-
 	;==========================
 	; draw/beep/undraw
 	;==========================
 draw_and_beep:
 
-	sty	tone_smc+1
+	sty	tone_smc+1	; 3
 
-	jsr	xdraw
+	jsr	xdraw		; 3
 
 	;===========================
 	; BEEP (inlined)
 	;===========================
 beep:
-	lda	FRAME		; 2
-	and	#$3
-	beq	actual_beep
+	lda	FRAME		; 2	; only play tone every 4th frame
+	and	#$3		; 2
+	beq	actual_beep	; 2
 
 nobeep:
-	lda	#100			; 2
-	jsr	WAIT			; 3
-	beq	done_forever		; 2 (A always 0 after WAIT)
+	lda	#100		; 2
+	jsr	WAIT		; 3
+	beq	check_finished	; 2 (A always 0 after WAIT)
 
 actual_beep:
 	; BEEP
 	; repeat 30 times
-	lda	#30			; 2
+	ldx	#30		; 2
 tone1_loop:
 
 tone_smc:
 
-	ldy	#24			; 2
-loopC:	ldx	#6			; 2
-loopD:	dex				; 1
-	bne	loopD			; 2
-	dey				; 1
-	bne	loopC			; 2
+	lda	#15
+	jsr	WAIT		; 3	; not as accurate as the cycle count
+					; method before, but saves a few bytes
 
-	bit	SPEAKER			; 3	; click speaker
+	bit	SPEAKER		; 3	; click speaker
 
-	sec				; 1
-	sbc	#1			; 2
-	bne	tone1_loop		; 2
+	dex			; 1
+	bne	tone1_loop	; 2
 
-	; Try X=6 Y=21 cycles=757
-	; Try X=6 Y=24 cycles=865
-	; Try X=7 Y=235 cycles=9636
+	; WAIT equiv: delay 1/2(26+27A+5A^2) us
+	; A=2.5 B=13.5 C=13
+	; Try X=6 Y=21 cycles=757	C=-744  ; WAIT A=14.76
+	; Try X=6 Y=24 cycles=865	C=-852 ; WAIT A=15.95
+	; Try X=7 Y=235 cycles=9636	C=-19259 ; WAIT A=85.111
 
-done_forever:
-	lda	FRAME			; end with big dSr
-	beq	done_forever
 
-	jmp	xdraw		; draw
+
+check_finished:
+	lda	FRAME		; 2	; end with big dSr
+	bne	xdraw		; 2	; draw
+
+	;==================================
+	; exit to basic
+wait_until_keypress:
+	lda     KEYPRESS		; 3	; see if key pressed
+	bpl     wait_until_keypress	; 2	; loop if not
+;	bit     KEYRESET
+exit_to_prompt:
+	jsr     TEXT			; 3     ; return to text mode
+	jmp     $3D0			; 3     ; return to Applesoft prompt
 
