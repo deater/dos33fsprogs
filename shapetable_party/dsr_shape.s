@@ -36,62 +36,65 @@ dsr_demo:
 	;=========================================
 
 
-	lda	#$20		; clear HGR page0 to white
-	sta	HGR_PAGE
+	lda	#$20		; 2	; set HGR page0
+	sta	HGR_PAGE	; 2
+	sta	XPOS		; 2	; setup XPOS for future
 
-	lda	#$ff
-	jsr	HCLR_COLOR
+	lda	#$ff		; 2
+	jsr	HCLR_COLOR	; 3	; clear HGR page0 to white
 
-	jsr	HGR2		; clear HGR page1 to black
-				; Hi-res graphics, no text at bottom
-				; Y=0, A=$60 after this call
+	jsr	HGR2		; 3	; set/clear HGR page1 to black
+					; Hi-res graphics, no text at bottom
+					; Y=0, A=$60 after this call
 
-	ldx	#1
-	stx	HGR_SCALE
+	sty	XPOSH		; 2
+	sty	FRAME		; 2
 
-	ldx	#30
-	stx	XPOS
-	lda	#0
-	sta	XPOSH
-	sta	FRAME
-	lda	#180
-	sta	YPOS
+	iny			; 1	; set shape table scale to 1
+	sty	HGR_SCALE	; 2
+
+	;=========================
+	; draw crowd
+	;=========================
+
+	; XPOS already 32 from earlier
+
+	lda	#180		; 2
+	sta	YPOS		; 2
 
 crowd_loop:
 
-	jsr	xdraw		; draw
+	jsr	xdraw		; 3	; xdraw on page1
 
-	lsr	HGR_PAGE	; $40 -> $20
+	lsr	HGR_PAGE	; 2	; switch to page0 ($40 -> $20)
 
-	jsr	xdraw		; draw
+	jsr	xdraw		; 3	; xdraw on page 0
 
-	asl	HGR_PAGE	; $20 -> $40
+	asl	HGR_PAGE	; 2	; switch back to page1 $20 -> $40
 
-	clc
-	lda	XPOS
-	adc	#20
-	sta	XPOS
-	cmp	#250
-	bne	crowd_loop
+	;	clc	; carry should always be 0 from asl
+	lda	XPOS		; 2
+	adc	#16		; 2
+	sta	XPOS		; 2
+	cmp	#240		; 2
+	bcc	crowd_loop	; 2
 
 	; get ready for DSR loop
 
-	ldx	#<shape_dsr	; point to our shape
-	stx	shape_smc+1
+	ldx	#<shape_dsr	; 2	; point to dSr shape
+	stx	shape_smc+1	; 3	; update self-modify code
 
 
 	;=========================================
 	; OFFSCREEN RESET
 	;=========================================
 
-
 reset_loop:
-	lda	#10
-	sta	XPOS
-	sta	YPOS
+	lda	#10		; 2	; set initial x,y
+	sta	XPOS		; 2
+	sta	YPOS		; 2
 
-	lda	#2
-	sta	HGR_SCALE
+	inc	HGR_SCALE	; 2	; increment scale to 2
 
 	;=========================================
 	; MAIN LOOP
@@ -99,19 +102,22 @@ reset_loop:
 
 main_loop:
 
+	inc	rot_smc+1	; 3
+	inc	rot_smc+1	; 3
+
 	; increment FRAME
 
-	inc	FRAME
-	lda	FRAME
+	inc	FRAME		; 2
+	lda	FRAME		; 2
 
-	and	#$f
-	beq	long_frame
+	and	#$1f		; 2
+	beq	long_frame	; 2
 
-	jsr	draw_beep
+	jsr	draw_beep	; 3
 
 done_frame:
 
-	inc	rot_smc+1
+
 
 	;========================
 	; move dSr
@@ -183,10 +189,6 @@ draw_beep:
 
 	jmp	xdraw		; draw
 
-
-
-scale_lookup:
-;.byte 1,2,3,4,5,4,3,2
 
 shape_person:
 ; Person, shoulders up
