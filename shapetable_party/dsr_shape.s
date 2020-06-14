@@ -1,15 +1,16 @@
+; 248 bytes
 
 ; zero page locations
 HGR_SHAPE	=	$1A
 SEEDL		=	$4E
 FRAME		=	$A4
+OUR_ROT		=	$A5
 RND_EXP		=	$C9
 HGR_PAGE	=	$E6
 HGR_SCALE	=	$E7
 HGR_ROTATION	=	$F9
 SCALE		=	$FC
 XPOS		=	$FD
-XPOSH		=	$FE
 YPOS		=	$FF
 
 ; soft switches
@@ -47,8 +48,8 @@ dsr_demo:
 					; Hi-res graphics, no text at bottom
 					; Y=0, A=$60 after this call
 
-	sty	XPOSH		; 2
 	sty	FRAME		; 2
+	sty	OUR_ROT		; 2
 
 	iny			; 1	; set shape table scale to 1
 	sty	HGR_SCALE	; 2
@@ -84,6 +85,8 @@ crowd_loop:
 	ldx	#<shape_dsr	; 2	; point to dSr shape
 	stx	shape_smc+1	; 3	; update self-modify code
 
+			;====================================
+			;	52 bytes to init/draw crowd
 
 	;=========================================
 	; OFFSCREEN RESET
@@ -94,7 +97,7 @@ reset_loop:
 	sta	XPOS		; 2
 	sta	YPOS		; 2
 
-	inc	HGR_SCALE	; 2	; increment scale to 2
+	inc	HGR_SCALE	; 2	; increment scale
 
 	;=========================================
 	; MAIN LOOP
@@ -102,8 +105,8 @@ reset_loop:
 
 main_loop:
 
-	inc	rot_smc+1	; 3
-	inc	rot_smc+1	; 3
+	inc	OUR_ROT		; 2
+	inc	OUR_ROT		; 2
 
 	; increment FRAME
 
@@ -116,8 +119,6 @@ main_loop:
 	jsr	draw_beep	; 3
 
 done_frame:
-
-
 
 	;========================
 	; move dSr
@@ -141,37 +142,48 @@ done_frame:
 
 long_frame:
 
-	bit	PAGE0
-	lsr	HGR_PAGE
+	bit	PAGE0		; 3	; switch to page0
+	lsr	HGR_PAGE	; 2	; switch draw target to page0
 
-	asl	HGR_SCALE
+	jsr	draw_arm	; 3
 
-	ldy	#235
-	sty	tone_smc+1
+	asl	HGR_SCALE	; 2	; make twice as big
 
-	jsr	draw_beep
+	ldy	#235		; 2	; smc on tone
+	sty	tone_smc+1	; 3
 
-	asl	HGR_PAGE
-	lsr	HGR_SCALE
+	jsr	draw_beep	; 3	; draw and beep
 
-	bit	PAGE1
+	bit	PAGE1		; 3	; display page back to page1
 
-	jmp	done_frame
+	lsr	HGR_SCALE	; 2	; switch scale back
 
+	asl	HGR_PAGE	; 2	; switch draw page to page1
+
+
+	bpl	done_frame	; 2	; return (can make 2 if can guarantee)
+					; a flag value?
+
+
+	;=======================
+	; xdraw
+	;=======================
 
 xdraw:
-	ldy	XPOSH		; setup X and Y co-ords
+	; setup X and Y co-ords
+
+	ldy	#0		; XPOSH always 0 for us
 	ldx	XPOS
 	lda	YPOS
 	jsr	HPOSN		; X= (y,x) Y=(a)
 
 shape_smc:
 	ldx	#<shape_person	; point to our shape
+xdraw_custom_shape:
 	ldy	#>shape_person
 
 rot_smc:
-	lda	#0		; ROT=0
-
+	lda	OUR_ROT		; set rotation
 
 	jmp	XDRAW0		; XDRAW 1 AT X,Y
 				; Both A and X are 0 at exit
@@ -187,6 +199,10 @@ draw_beep:
 	ldy	#24
 	sty	tone_smc+1
 
+done_forever:
+	lda	FRAME
+	beq	done_forever
+
 	jmp	xdraw		; draw
 
 
@@ -200,36 +216,69 @@ shape_person:
 .byte	$3f,$3f,$3f,$3f,$07,$00
 
 shape_arm:
-;.byte	$49,$49,$49,$24
-;.byte	$24,$24,$ac,$36,$36,$36,$00
+.byte	$49,$49,$49,$24
+.byte	$24,$24,$ac,$36,$36,$36,$00
 
 shape_dsr:
 .byte	$2d,$36,$ff,$3f
 .byte	$24,$ad,$22,$24,$94,$21,$2c,$4d
 .byte	$91,$3f,$36,$00
 
+	;====================
+	; draw arm
+	;=====================
+draw_arm:
+
+	lda	HGR_SCALE
+	pha
+
+	lda	#1
+	sta	HGR_SCALE
+
+	lda	FRAME
+	and	#$f0			; 32, 64, 96, 128, 160, 192, 224, 256
+	beq	skip_arm
+	tax
+	ldy	#0		; setup X and Y co-ords
+	lda	#180
+	jsr	HPOSN		; X= (y,x) Y=(a)
+
+	ldx	#<shape_arm	; 2	; point to arm shape
+	jsr	xdraw_custom_shape
+
+skip_arm:
+	pla
+	sta	HGR_SCALE
+
+	rts
 
 	;===========================
 	; BEEP
 	;===========================
 beep:
 	lda	FRAME
+
+	and	#$1f
+	cmp	#$1f
+	beq	nobeep
+
 	and	#$3
 	beq	actual_beep
 
+nobeep:
 	lda	#100
 	jmp	WAIT
 
 actual_beep:
 	; BEEP
-	; repeat 34 times
+	; repeat 30 times
 	lda	#30			; 2
 tone1_loop:
-	ldy	#21			; 2
-	jsr	delay_tone		; 3
+;	ldy	#21			; 2
+;	jsr	delay_tone		; 3
 
-	ldy	#24			; 2
-	jsr	delay_tone		; 3
+;	ldy	#24			; 2
+;	jsr	delay_tone		; 3
 
 tone_smc:
 	ldy	#21			; 2
