@@ -1,4 +1,4 @@
-; 248 bytes
+; 263 bytes
 
 ; zero page locations
 HGR_SHAPE	=	$1A
@@ -77,8 +77,7 @@ crowd_loop:
 	lda	XPOS		; 2
 	adc	#16		; 2
 	sta	XPOS		; 2
-	cmp	#240		; 2
-	bcc	crowd_loop	; 2
+	bne	crowd_loop	; 2
 
 	; get ready for DSR loop
 
@@ -86,7 +85,7 @@ crowd_loop:
 	stx	shape_smc+1	; 3	; update self-modify code
 
 			;====================================
-			;	52 bytes to init/draw crowd
+			;	50 bytes to init/draw crowd
 
 	;=========================================
 	; OFFSCREEN RESET
@@ -146,9 +145,34 @@ long_frame:
 	bit	PAGE0		; 3	; switch to page0
 	lsr	HGR_PAGE	; 2	; switch draw target to page0
 
-	jsr	draw_arm	; 3
 
-	asl	HGR_SCALE	; 2	; make twice as big
+	;====================
+	; draw arm (inlined)
+	;=====================
+draw_arm:
+
+	lda	HGR_SCALE
+	pha
+
+	ldy	#1
+	sty	HGR_SCALE
+
+	; setup X and Y co-ords
+	lda	FRAME
+	and	#$f0			; 32, 64, 96, 128, 160, 192, 224, 256
+	beq	skip_arm
+	tax				; XPOS
+	dey				; XPOSH=0
+	lda	#180
+	jsr	HPOSN		; X= (y,x) Y=(a)
+
+	ldx	#<shape_arm	; 2	; point to arm shape
+	jsr	xdraw_custom_shape
+
+skip_arm:
+	pla
+	asl				; 2	; make twice as big
+	sta	HGR_SCALE
 
 	ldy	#235		; 2	; long tone
 	jsr	draw_and_beep	; 3	; draw and beep
@@ -179,15 +203,13 @@ xdraw:
 shape_smc:
 	ldx	#<shape_person	; point to our shape
 xdraw_custom_shape:
-	ldy	#>shape_person
+	ldy	#>shape_person	; code fits in one page so this doesn't change
 
 rot_smc:
 	lda	OUR_ROT		; set rotation
 
 	jmp	XDRAW0		; XDRAW 1 AT X,Y
 				; Both A and X are 0 at exit
-
-
 
 
 
@@ -209,33 +231,7 @@ shape_dsr:
 .byte	$24,$ad,$22,$24,$94,$21,$2c,$4d
 .byte	$91,$3f,$36,$00
 
-	;====================
-	; draw arm
-	;=====================
-draw_arm:
 
-	lda	HGR_SCALE
-	pha
-
-	lda	#1
-	sta	HGR_SCALE
-
-	lda	FRAME
-	and	#$f0			; 32, 64, 96, 128, 160, 192, 224, 256
-	beq	skip_arm
-	tax
-	ldy	#0		; setup X and Y co-ords
-	lda	#180
-	jsr	HPOSN		; X= (y,x) Y=(a)
-
-	ldx	#<shape_arm	; 2	; point to arm shape
-	jsr	xdraw_custom_shape
-
-skip_arm:
-	pla
-	sta	HGR_SCALE
-
-	rts
 
 
 
@@ -258,9 +254,9 @@ beep:
 	beq	actual_beep
 
 nobeep:
-	lda	#100
-	jsr	WAIT
-	jmp	done_forever
+	lda	#100			; 2
+	jsr	WAIT			; 3
+	beq	done_forever		; 2 (A always 0 after WAIT)
 
 actual_beep:
 	; BEEP
@@ -287,16 +283,9 @@ loopD:	dex				; 1
 	; Try X=6 Y=24 cycles=865
 	; Try X=7 Y=235 cycles=9636
 
-;	ldy	#24
-;	sty	tone_smc+1
-
 done_forever:
-	lda	FRAME
+	lda	FRAME			; end with big dSr
 	beq	done_forever
 
 	jmp	xdraw		; draw
-
-
-
-
 
