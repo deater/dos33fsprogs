@@ -1,0 +1,42 @@
+Apple II dSr Shapetable Party
+-=DESiRE=-  / @party 2020
+
+The Apple II does not have fancy graphics hardware, but it does have
+software scalable vector routines in ROM.
+
+Platform: Apple II
+	Requires Apple II+ (1979) or later
+
+Code:	deater
+
+Website/video/more info:
+	http://www.deater.net/weave/vmwprod/shapetable_party/
+
+	Special thanks to Will Winter for recording this for me
+	as my Apple II hardware is still under lockdown
+
+Files:
+	DSRSHAPE  -- 251 byte executable
+	dsr_shape.s -- source code, can assemble with ca65 assembler
+	dsr_shape.dsk -- 140k Apple DOS33 disk image for use in emulator
+
+Running:
+	Type:
+		BRUN DSRSHAPE
+	at the basic prompt
+
+Emulator:
+	If you want to run in an emulator, I recommend AppleWin
+	It runs fine under wine on Linux too.
+
+Notes:
+	+ 251 Byte demo for the Apple II (1MHz 6502)
+	+ Written in 6502 assembly language
+	+ Uses "high-resolution" graphics mode which is 280x192 in 6 colors.
+	+ Depends on the Applesoft BASIC ROM for "HGR" and "XDRAW" routines
+		which means it requires at least an Apple II+ (released in
+		1979) or later machine.
+		Should work on a II+/IIe/IIc/IIgs, and even an original
+		Apple II (1977) if you have an Applesoft language card
+		ROM expansion
+	+ Can press any key at any time to exit
