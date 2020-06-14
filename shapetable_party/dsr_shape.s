@@ -2,7 +2,7 @@
 ; by Deater for -=dSr=-
 ; @party 2020
 
-; 252 bytes
+; trying to beat 254 bytes
 
 ; zero page locations
 HGR_SHAPE	=	$1A
@@ -244,34 +244,25 @@ rot_smc:
 	;==========================
 draw_and_beep:
 
-	pha
+	pha			; 1	; save delay for later
 
-;	sty	tone_smc+1	; 3
+	jsr	xdraw		; 3	; xdraw
 
-	jsr	xdraw		; 3
-
-	; check for keypress
-	lda	KEYPRESS		; 3	; see if key pressed
-	bmi	exit_to_prompt		; 2	; loop if not
 
 	;===========================
 	; BEEP (inlined)
 	;===========================
 beep:
 
-actual_beep:
 	; BEEP
 	; repeat 30 times
+
 	ldx	#30		; 2
-	pla
-	tay
+	pla			; 1	; restore delay
+	tay			; 1	; move to Y
 
 tone1_loop:
-
-tone_smc:
-
-;	lda	#15
-	tya
+	tya			; 1	; load delay
 	jsr	WAIT		; 3	; not as accurate as the cycle count
 					; method before, but saves a few bytes
 
@@ -293,6 +284,11 @@ no_click:
 
 
 check_finished:
+
+	; check for keypress
+	lda	KEYPRESS		; 3	; see if key pressed
+	bmi	exit_to_prompt		; 2	; loop if not
+
 	lda	FRAME		; 2	; end with big dSr
 	bne	xdraw		; 2	; xdraw
 
@@ -305,4 +301,5 @@ wait_until_keypress:
 exit_to_prompt:
 	jsr     TEXT			; 3     ; return to text mode
 	jmp     $3D0			; 3     ; return to Applesoft prompt
+
 
