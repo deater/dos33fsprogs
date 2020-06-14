@@ -29,7 +29,12 @@ HPOSN		=	$F411
 XDRAW0		=	$F65D
 WAIT		=	$FCA8	; delay 1/2(26+27A+5A^2) us
 
-dsr_person:
+dsr_demo:
+
+	;=========================================
+	; SETUP
+	;=========================================
+
 
 	lda	#$20		; clear HGR page0 to white
 	sta	HGR_PAGE
@@ -74,6 +79,12 @@ crowd_loop:
 	ldx	#<shape_dsr	; point to our shape
 	stx	shape_smc+1
 
+
+	;=========================================
+	; OFFSCREEN RESET
+	;=========================================
+
+
 reset_loop:
 	lda	#10
 	sta	XPOS
@@ -82,6 +93,10 @@ reset_loop:
 	lda	#2
 	sta	HGR_SCALE
 
+	;=========================================
+	; MAIN LOOP
+	;=========================================
+
 main_loop:
 
 	; increment FRAME
@@ -89,18 +104,18 @@ main_loop:
 	inc	FRAME
 	lda	FRAME
 
-	and	#$7
+	and	#$f
 	beq	long_frame
+
+	jsr	draw_beep
 
 done_frame:
 
+	inc	rot_smc+1
 
-	jsr	xdraw		; draw
-
-	lda	#200
-	jsr	WAIT
-
-	jsr	xdraw		; draw
+	;========================
+	; move dSr
+	;========================
 
 	lda	YPOS
 	adc	#2
@@ -114,6 +129,9 @@ done_frame:
 	bcc	main_loop
 
 
+	;===========================
+	; long frame
+	;===========================
 
 long_frame:
 
@@ -122,11 +140,10 @@ long_frame:
 
 	asl	HGR_SCALE
 
-	jsr	xdraw		; draw
+	ldy	#235
+	sty	tone_smc+1
 
-	jsr	beep
-
-	jsr	xdraw		; draw
+	jsr	draw_beep
 
 	asl	HGR_PAGE
 	lsr	HGR_SCALE
@@ -152,6 +169,20 @@ rot_smc:
 
 	jmp	XDRAW0		; XDRAW 1 AT X,Y
 				; Both A and X are 0 at exit
+
+
+	;==========================
+	; draw/beep/undraw
+	;==========================
+draw_beep:
+	jsr	xdraw		; draw
+	jsr	beep		; make noise/delay
+
+	ldy	#24
+	sty	tone_smc+1
+
+	jmp	xdraw		; draw
+
 
 
 scale_lookup:
@@ -180,9 +211,17 @@ shape_dsr:
 	; BEEP
 	;===========================
 beep:
+	lda	FRAME
+	and	#$3
+	beq	actual_beep
+
+	lda	#100
+	jmp	WAIT
+
+actual_beep:
 	; BEEP
 	; repeat 34 times
-	lda	#34			; 2
+	lda	#30			; 2
 tone1_loop:
 	ldy	#21			; 2
 	jsr	delay_tone		; 3
@@ -190,7 +229,8 @@ tone1_loop:
 	ldy	#24			; 2
 	jsr	delay_tone		; 3
 
-	ldy	#235			; 2
+tone_smc:
+	ldy	#21			; 2
 	jsr	delay_tone		; 3
 
 	sec				; 1
