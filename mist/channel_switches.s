@@ -4,11 +4,13 @@
 ; if CHANNEL_SWITCHES CHANNEL_SW_WINDMILL and CHANNEL_SW_FAUCET
 ; TODO: also if various valves in correct pattern
 
+; verified: can raise and lower bridge if powered with water
+
 raise_bridge:
 
 	bit	$C030		; click speaker
 
-	; only raise it if water is flowing
+	; only raise/lower if water is flowing
 
 	lda	CHANNEL_SWITCHES
 	and	#CHANNEL_SW_WINDMILL|CHANNEL_SW_FAUCET
@@ -16,10 +18,10 @@ raise_bridge:
 ;	bne	no_raise_bridge
 
 
-	; only raise the bridge, don't think you can lower it
+	; toggle bridge state
 
 	lda	CHANNEL_SWITCHES
-	ora	#CHANNEL_BRIDGE_UP
+	eor	#CHANNEL_BRIDGE_UP
 	sta	CHANNEL_SWITCHES
 
 	jsr	adjust_after_changes
@@ -35,17 +37,16 @@ no_raise_bridge:
 ;=======================
 ; extend_pipe
 
-; TODO: can you unextend in game?
-; TODO: can you unextend if water flowing?
+; verified: can open/shut even if water is flowing
 
 extend_pipe:
 
 	bit	$C030		; click speaker
 
-	; only extend pipe
+	; toggle state
 
 	lda	CHANNEL_SWITCHES
-	ora	#CHANNEL_PIPE_EXTENDED
+	eor	#CHANNEL_PIPE_EXTENDED
 	sta	CHANNEL_SWITCHES
 
 	jsr	adjust_after_changes
