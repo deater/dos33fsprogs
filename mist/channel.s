@@ -39,8 +39,10 @@ channel_start:
 	lda	#0
 	sta	ANIMATE_FRAME
 
-	; FIXME
-	; handle gear visibility
+	; set up bridges
+
+	jsr	adjust_after_changes
+
 
 game_loop:
 	;=================

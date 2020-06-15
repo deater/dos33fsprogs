@@ -13,7 +13,7 @@ locations:
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
-
+	.word location40
 
 ; CHANNEL_OUTSIDE_CABIN		-- outside in clearing
 location0:
@@ -708,11 +708,11 @@ location38:
 ; CHANNEL_BOOK_FORK		-- fork to book elevator
 location39:
 	.byte	$ff			; north exit
-	.byte	$ff			; south exit
+	.byte	CHANNEL_PIPE_EXTEND	; south exit
 	.byte	$ff			; east exit
 	.byte	CHANNEL_AFTER_BRIDGE2	; west exit
 	.byte	$ff		; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	book_fork_n_lzsa	; north bg
@@ -721,4 +721,25 @@ location39:
 	.word	book_fork_w_lzsa	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_WEST
 	.byte	$ff
+
+; CHANNEL_PIPE_EXTEND		-- pipe extender
+location40:
+	.byte	CHANNEL_BOOK_FORK	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	pipe_extend_n_lzsa	; north bg
+	.word	pipe_extend_down_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	DIRECTION_S	; special exit
+	.byte	17,24		; special x
+	.byte	34,40		; special y
+	.word	extend_pipe-1	; special function
+
 

@@ -31,6 +31,36 @@ no_raise_bridge:
 
 
 
+
+;=======================
+; extend_pipe
+
+; TODO: can you unextend in game?
+; TODO: can you unextend if water flowing?
+
+extend_pipe:
+
+	bit	$C030		; click speaker
+
+	; only extend pipe
+
+	lda	CHANNEL_SWITCHES
+	ora	#CHANNEL_PIPE_EXTENDED
+	sta	CHANNEL_SWITCHES
+
+	jsr	adjust_after_changes
+
+	jsr	change_location
+
+no_extend_pipe:
+	rts
+
+
+
+	;======================================
+	; adjust after changes
+	;======================================
+
 	; should call this when entering level
 adjust_after_changes:
 
@@ -74,8 +104,53 @@ bridge_is_down:
 	sta	location16,Y				; CHANNEL_BRIDGE
 
 adjust_pipe:
+
 	;=======================
 	; extend pipe or not
 
+	lda	CHANNEL_SWITCHES
+	and	#CHANNEL_PIPE_EXTENDED
+	beq	pipe_stowed
+
+pipe_extended:
+	; change to pipe_extend bg
+	ldy	#LOCATION_SOUTH_BG
+
+	lda	#<pipe_extend_up_s_lzsa
+	sta	location40,Y				; CHANNEL_PIPE_EXTEND
+	lda	#>pipe_extend_up_s_lzsa
+	sta	location40+1,Y				; CHANNEL_PIPE_EXTEND
+
+	; also change for other side of bridge
+
+	ldy	#LOCATION_WEST_BG
+
+	lda	#<pipe_bridge2_up_w_lzsa
+	sta	location23,Y				; CHANNEL_PIPE_BRIDGE2
+	lda	#>pipe_bridge2_up_w_lzsa
+	sta	location23+1,Y				; CHANNEL_PIPE_BRIDGE2
+
+	jmp	done_adjust_changes
+
+pipe_stowed:
+
+	; change to pipe_extend bg
+	ldy	#LOCATION_SOUTH_BG
+
+	lda	#<pipe_extend_down_s_lzsa
+	sta	location40,Y				; CHANNEL_PIPE_EXTEND
+	lda	#>pipe_extend_down_s_lzsa
+	sta	location40+1,Y				; CHANNEL_PIPE_EXTEND
+
+	; also change for other side of bridge
+
+	ldy	#LOCATION_WEST_BG
+
+	lda	#<pipe_bridge2_w_lzsa
+	sta	location23,Y				; CHANNEL_PIPE_BRIDGE2
+	lda	#>pipe_bridge2_w_lzsa
+	sta	location23+1,Y				; CHANNEL_PIPE_BRIDGE2
+
+done_adjust_changes:
 
 	rts
