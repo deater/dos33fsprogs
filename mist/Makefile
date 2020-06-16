@@ -26,8 +26,9 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 STONEY
 	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
-mist_side2.dsk:	MECHE SELENA CHANNEL VIEWER
+mist_side2.dsk:	HELLO_DISK2 MECHE SELENA CHANNEL VIEWER
 	cp empty.dsk mist_side2.dsk
+	$(DOS33) -y mist_side2.dsk SAVE A HELLO_DISK2 HELLO
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 MECHE
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 SELENA
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 CHANNEL
@@ -47,6 +48,10 @@ loader.o:	loader.s
 
 HELLO:	hello.bas
 	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+
+HELLO_DISK2:	hello_disk2.bas
+	../asoft_basic-utils/tokenize_asoft < hello_disk2.bas > HELLO_DISK2
+
 
 ####
 
@@ -213,6 +218,7 @@ graphics_island/mist_graphics.inc:
 ####
 
 clean:		
-		rm -f *~ *.o *.lst HELLO LOADER MIST_TITLE \
+		rm -f *~ *.o *.lst HELLO HELLO_DISK2 \
+			LOADER MIST_TITLE \
 			MIST OCTAGON \
 			MECHE SELENA STONEY CHANNEL
