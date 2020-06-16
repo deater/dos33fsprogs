@@ -53,18 +53,6 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 	;===================================================
 	;===================================================
 
-.if 0
-LOAD_TITLE      = $0
-LOAD_MIST       = $1
-LOAD_MECHE      = $2
-LOAD_SELENA     = $3
-LOAD_OCTAGON    = $4
-LOAD_VIEWER	= $5
-LOAD_STONEDSHIP = $6
-LOAD_CHANNEL    = $7
-LOAD_ENDING     = $8
-.endif
-
 loader_start:
 	lda	#LOAD_TITLE
 	sta	WHICH_LOAD
@@ -160,7 +148,8 @@ copy_filename_done:
 filenames:
 	.word intro_filename
 	.word mist_filename,meche_filename,selena_filename,octagon_filename
-	.word viewer_filename,stoney_filename,channel_filename,ending_filename
+	.word viewer_filename,stoney_filename,channel_filename,cabin_filename
+	.word dentist_filename,arbor_filename,shipup_filename,ending_filename
 
 intro_filename:
 	.byte "MIST_TITLE",0
@@ -178,6 +167,14 @@ stoney_filename:
 	.byte "STONEY",0
 channel_filename:
 	.byte "CHANNEL",0
+cabin_filename:
+	.byte "CABIN",0
+dentist_filename:
+	.byte "DENTIST",0
+arbor_filename:
+	.byte "ARBOR",0
+shipup_filename:
+	.byte "SHIPUP",0
 ending_filename:
 	.byte "ENDING",0
 

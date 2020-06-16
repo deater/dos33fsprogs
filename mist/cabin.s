@@ -192,7 +192,7 @@ enter_tree_path:
 	lda	#DIRECTION_E
 	sta	DIRECTION
 
-	lda	#CHANNEL_TREE_PATH
+	lda	#CABIN_TREE_PATH
 	sta	LOCATION
 
 	jmp	change_location
@@ -201,7 +201,7 @@ enter_tree_path:
 enter_cabin:
 	lda	#DIRECTION_E
 	sta	DIRECTION
-	lda	#CHANNEL_CABIN_OPEN
+	lda	#CABIN_OPEN
 	sta	LOCATION
 	jmp	change_location
 

@@ -83,35 +83,10 @@ game_loop:
 	;====================================
 
 	lda	LOCATION
-	cmp	#CHANNEL_TREE_BOOK_OPEN
-	beq	animate_channel_book
 	cmp	#CHANNEL_BOOK_OPEN
 	beq	animate_mist_book
 
 	jmp	nothing_special
-
-animate_channel_book:
-
-	lda	ANIMATE_FRAME
-	cmp	#11
-	bcc	channel_book_good
-	lda	#0
-	sta	ANIMATE_FRAME
-
-channel_book_good:
-	; handle animated linking book
-
-	lda	ANIMATE_FRAME
-	asl
-	tay
-	lda	channel_movie,Y
-	sta	INL
-	lda	channel_movie+1,Y
-	sta	INH
-
-	lda	#22
-
-	jmp	draw_book
 
 animate_mist_book:
 	lda	DIRECTION
@@ -135,7 +110,6 @@ mist_book_good:
         sta     INH
 
         lda     #24
-draw_book:
         sta     XPOS
 
         lda     #12
@@ -211,79 +185,6 @@ toggle_faucet:
 	sta	CHANNEL_SWITCHES
 	rts
 
-
-back_to_mist:
-
-	lda	#DIRECTION_N
-	sta	DIRECTION
-
-	lda     #MIST_ARRIVAL_DOCK		; the dock
-
-	jmp	exit_to_mist
-
-
-
-enter_clock:
-
-	lda	#DIRECTION_S
-	sta	DIRECTION
-
-	lda     #MIST_CLOCK
-
-	jmp	exit_to_mist
-
-
-
-handle_clearing:
-
-	lda	DIRECTION
-	cmp	#DIRECTION_W
-	beq	enter_path
-
-	; else going east
-
-	lda	CURSOR_X
-	cmp	#23
-	bcc	enter_cabin
-
-enter_tree_path:
-	lda	#DIRECTION_E
-	sta	DIRECTION
-
-	lda	#CHANNEL_TREE_PATH
-	sta	LOCATION
-
-	jmp	change_location
-
-
-enter_cabin:
-	lda	#DIRECTION_E
-	sta	DIRECTION
-	lda	#CHANNEL_CABIN_OPEN
-	sta	LOCATION
-	jmp	change_location
-
-
-enter_path:
-
-	lda	#DIRECTION_N
-	sta	DIRECTION
-
-	lda	#MIST_TREE_CORRIDOR_5
-
-	jmp	exit_to_mist
-
-
-exit_to_mist:
-
-	sta	LOCATION
-	lda	#$ff
-	sta	LEVEL_OVER
-
-	lda	#LOAD_MIST
-	sta	WHICH_LOAD
-
-	rts
 
 	;==========================
 	; includes

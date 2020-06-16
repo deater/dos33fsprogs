@@ -235,10 +235,10 @@ enter_viewer:
 
 enter_channel_main:
 
-	lda	#CHANNEL_OUTSIDE_CABIN
+	lda	#CABIN_OUTSIDE
 	sta	LOCATION
 
-	lda	#LOAD_CHANNEL
+	lda	#LOAD_CABIN
 	sta	WHICH_LOAD
 
 	lda	#DIRECTION_E
@@ -248,10 +248,10 @@ enter_channel_main:
 
 enter_channel_clock:
 
-	lda	#CHANNEL_CLOCK_PATH
+	lda	#CABIN_CLOCK_PATH
 	sta	LOCATION
 
-	lda	#LOAD_CHANNEL
+	lda	#LOAD_CABIN
 	sta	WHICH_LOAD
 
 	lda	#DIRECTION_N

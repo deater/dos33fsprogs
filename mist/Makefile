@@ -40,9 +40,11 @@ mist_side2.dsk:	HELLO_DISK2 MECHE SELENA CHANNEL VIEWER
 LOADER: loader.o
 	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1000.inc
 
-loader.o:	loader.s
+loader.o:	loader.s \
+	gr_copy.s gr_offsets.s gr_pageflip.s gr_putsprite_crop.s \
+	text_print.s gr_fast_clear.s decompress_fast_v2.s \
+	keyboard.s draw_pointer.s end_level.s audio.s
 	ca65 -o loader.o loader.s -l loader.lst
-
 
 ###
 
@@ -52,6 +54,17 @@ HELLO:	hello.bas
 HELLO_DISK2:	hello_disk2.bas
 	../asoft_basic-utils/tokenize_asoft < hello_disk2.bas > HELLO_DISK2
 
+####
+
+generate_common:	generate_common.o
+	$(CC) $(LFLAGS) -o generate_common generate_common.o
+
+generate_common.o:	generate_common.c
+	$(CC) $(CFLAGS) -c generate_common.c
+
+####
+common_routines.inc:	loader.lst generate_common
+	./generate_common > common_routines.inc
 
 ####
 

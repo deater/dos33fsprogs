@@ -194,7 +194,7 @@ change_location:
 	lda	(LOCATIONS_L),Y
 	sta	LOCATION_STRUCT_L
 	iny
-	lda	(LOCATIONS_H),Y
+	lda	(LOCATIONS_L),Y
 	sta	LOCATION_STRUCT_H
 
 	jsr	change_direction

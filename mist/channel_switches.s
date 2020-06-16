@@ -35,14 +35,14 @@ book_elevator_floor1:
 	ldy	#LOCATION_SOUTH_BG
 
 	lda	#<book_elevator_inside_gnd_closed_lzsa
-	sta	location44,Y		; CHANNEL_BOOK_E_IN_CLOSED
+	sta	location31,Y		; CHANNEL_BOOK_E_IN_CLOSED
 	lda	#>book_elevator_inside_gnd_closed_lzsa
-	sta	location44+1,Y		; CHANNEL_BOOK_E_IN_CLOSED
+	sta	location31+1,Y		; CHANNEL_BOOK_E_IN_CLOSED
 
 	; change exit
 	ldy	#LOCATION_SOUTH_EXIT
 	lda	#CHANNEL_BOOK_E_INSIDE_GND
-	sta	location44,Y		; CHANNEL_BOOK_E_IN_CLOSED
+	sta	location31,Y		; CHANNEL_BOOK_E_IN_CLOSED
 
 	jmp	book_elevator_handle_done
 book_elevator_floor2:
@@ -51,14 +51,14 @@ book_elevator_floor2:
 	ldy	#LOCATION_SOUTH_BG
 
 	lda	#<book_elevator_inside_top_closed_lzsa
-	sta	location44,Y		; CHANNEL_BOOK_E_IN_CLOSED
+	sta	location31,Y		; CHANNEL_BOOK_E_IN_CLOSED
 	lda	#>book_elevator_inside_top_closed_lzsa
-	sta	location44+1,Y		; CHANNEL_BOOK_E_IN_CLOSED
+	sta	location31+1,Y		; CHANNEL_BOOK_E_IN_CLOSED
 
 	; change exit
 	ldy	#LOCATION_SOUTH_EXIT
 	lda	#CHANNEL_BOOK_E_INSIDE_TOP
-	sta	location44,Y		; CHANNEL_BOOK_E_IN_CLOSED
+	sta	location31,Y		; CHANNEL_BOOK_E_IN_CLOSED
 
 book_elevator_handle_done:
 
@@ -156,14 +156,14 @@ bridge_is_up:
 	ldy	#LOCATION_EAST_BG
 
 	lda	#<bridge_up_e_lzsa
-	sta	location16,Y				; CHANNEL_BRIDGE
+	sta	location3,Y				; CHANNEL_BRIDGE
 	lda	#>bridge_up_e_lzsa
-	sta	location16+1,Y				; CHANNEL_BRIDGE
+	sta	location3+1,Y				; CHANNEL_BRIDGE
 
 	; change to allow crossing bridge
 	ldy	#LOCATION_EAST_EXIT
 	lda	#CHANNEL_AFTER_BRIDGE1
-	sta	location16,Y				; CHANNEL_BRIDGE
+	sta	location3,Y				; CHANNEL_BRIDGE
 	jmp	adjust_pipe
 
 bridge_is_down:
@@ -172,14 +172,14 @@ bridge_is_down:
 	ldy	#LOCATION_EAST_BG
 
 	lda	#<bridge_down_e_lzsa
-	sta	location16,Y				; CHANNEL_BRIDGE
+	sta	location3,Y				; CHANNEL_BRIDGE
 	lda	#>bridge_down_e_lzsa
-	sta	location16+1,Y				; CHANNEL_BRIDGE
+	sta	location3+1,Y				; CHANNEL_BRIDGE
 
 	; change to allow crossing bridge
 	ldy	#LOCATION_EAST_EXIT
 	lda	#$ff
-	sta	location16,Y				; CHANNEL_BRIDGE
+	sta	location3,Y				; CHANNEL_BRIDGE
 
 adjust_pipe:
 
@@ -195,18 +195,18 @@ pipe_extended:
 	ldy	#LOCATION_SOUTH_BG
 
 	lda	#<pipe_extend_up_s_lzsa
-	sta	location40,Y				; CHANNEL_PIPE_EXTEND
+	sta	location27,Y				; CHANNEL_PIPE_EXTEND
 	lda	#>pipe_extend_up_s_lzsa
-	sta	location40+1,Y				; CHANNEL_PIPE_EXTEND
+	sta	location27+1,Y				; CHANNEL_PIPE_EXTEND
 
 	; also change for other side of bridge
 
 	ldy	#LOCATION_WEST_BG
 
 	lda	#<pipe_bridge2_up_w_lzsa
-	sta	location23,Y				; CHANNEL_PIPE_BRIDGE2
+	sta	location10,Y				; CHANNEL_PIPE_BRIDGE2
 	lda	#>pipe_bridge2_up_w_lzsa
-	sta	location23+1,Y				; CHANNEL_PIPE_BRIDGE2
+	sta	location10+1,Y				; CHANNEL_PIPE_BRIDGE2
 
 	jmp	done_adjust_changes
 
@@ -216,18 +216,18 @@ pipe_stowed:
 	ldy	#LOCATION_SOUTH_BG
 
 	lda	#<pipe_extend_down_s_lzsa
-	sta	location40,Y				; CHANNEL_PIPE_EXTEND
+	sta	location27,Y				; CHANNEL_PIPE_EXTEND
 	lda	#>pipe_extend_down_s_lzsa
-	sta	location40+1,Y				; CHANNEL_PIPE_EXTEND
+	sta	location27+1,Y				; CHANNEL_PIPE_EXTEND
 
 	; also change for other side of bridge
 
 	ldy	#LOCATION_WEST_BG
 
 	lda	#<pipe_bridge2_w_lzsa
-	sta	location23,Y				; CHANNEL_PIPE_BRIDGE2
+	sta	location10,Y				; CHANNEL_PIPE_BRIDGE2
 	lda	#>pipe_bridge2_w_lzsa
-	sta	location23+1,Y				; CHANNEL_PIPE_BRIDGE2
+	sta	location10+1,Y				; CHANNEL_PIPE_BRIDGE2
 
 done_adjust_changes:
 
