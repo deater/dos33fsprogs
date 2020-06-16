@@ -50,34 +50,34 @@ read_fireplace:
 
 read_selenitic:
 	lda     #<selenitic_book_lzsa
-        sta     LZSA_SRC_LO
+        sta     getsrc_smc+1			; LZSA_SRC_LO
         iny
         lda     #>selenitic_book_lzsa
 	jmp	load_the_book
 
 read_stoneship:
 	lda     #<stoneship_book_lzsa
-        sta     LZSA_SRC_LO
+        sta     getsrc_smc+1			; LZSA_SRC_LO
         iny
         lda     #>stoneship_book_lzsa
 	jmp	load_the_book
 
 read_mechanical:
 	lda     #<mechanical_book_lzsa
-        sta     LZSA_SRC_LO
+        sta     getsrc_smc+1			; LZSA_SRC_LO
         iny
         lda     #>mechanical_book_lzsa
 	jmp	load_the_book
 
 read_channelwood:
 	lda     #<channelwood_book_lzsa
-        sta     LZSA_SRC_LO
+        sta     getsrc_smc+1			; LZSA_SRC_LO
         iny
         lda     #>channelwood_book_lzsa
 
 load_the_book:
 
-        sta     LZSA_SRC_HI
+        sta     getsrc_smc+2			; LZSA_SRC_HI
 
         lda     #$c                     ; load to page $c00
         jsr     decompress_lzsa2_fast

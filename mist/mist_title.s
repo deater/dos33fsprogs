@@ -9,10 +9,13 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 	.include "common_defines.inc"
+	.include "common_routines.inc"
 
 mist_start:
 	;===================
 	; init screen
+	;===================
+
 	jsr	TEXT
 	jsr	HOME
 	bit	KEYRESET
@@ -23,14 +26,23 @@ mist_start:
 	bit	FULLGR
 
 	;===================
+	; setup location
+	;===================
+
+	lda	#<locations
+	sta	LOCATIONS_L
+	lda	#>locations
+	sta	LOCATIONS_H
+
+	;===================
 	; Load graphics
 	;===================
 reload_everything:
 
 	lda     #<file
-	sta     LZSA_SRC_LO
+	sta     getsrc_smc+1	; LZSA_SRC_LO
 	lda     #>file
-	sta     LZSA_SRC_HI
+	sta     getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$20
 
@@ -190,7 +202,7 @@ really_exit:
 	;==========================
 	; includes
 	;==========================
-
+.if 0
 	.include	"gr_copy.s"
 	.include	"gr_offsets.s"
 	.include	"gr_pageflip.s"
@@ -200,10 +212,9 @@ really_exit:
 	.include	"decompress_fast_v2.s"
 	.include	"keyboard.s"
 	.include	"draw_pointer.s"
-
 	.include	"end_level.s"
-
 	.include	"audio.s"
+.endif
 
 	.include	"init_state.s"
 

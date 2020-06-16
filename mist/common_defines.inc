@@ -1,15 +1,5 @@
 ;=============================
-; other common stuff
-
-; external routines
-
-opendir_filename = $1039
-
-; audio files
-
-linking_noise	= $9000
-LINKING_NOISE_LENGTH = 43
-
+; common stuff
 
 ;===============================================
 ; level data structure definitions

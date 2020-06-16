@@ -191,9 +191,10 @@ change_location:
 	asl
 	tay
 
-	lda	locations,Y
+	lda	(LOCATIONS_L),Y
 	sta	LOCATION_STRUCT_L
-	lda	locations+1,Y
+	iny
+	lda	(LOCATIONS_H),Y
 	sta	LOCATION_STRUCT_H
 
 	jsr	change_direction

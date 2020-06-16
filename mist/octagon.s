@@ -6,6 +6,7 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 	.include "common_defines.inc"
+	.include "common_routines.inc"
 
 octagon_start:
 	;===================
@@ -18,6 +19,15 @@ octagon_start:
 	bit	PAGE0
 	bit	LORES
 	bit	FULLGR
+
+	;=================
+	; set up location
+	;=================
+
+	lda	#<locations
+	sta	LOCATIONS_L
+	lda	#>locations
+	sta	LOCATIONS_H
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -389,6 +399,7 @@ draw_page_close:
 	; includes
 	;==========================
 
+.if 0
 	.include	"gr_copy.s"
 	.include	"gr_offsets.s"
 	.include	"gr_pageflip.s"
@@ -398,35 +409,28 @@ draw_page_close:
 	.include	"decompress_fast_v2.s"
 	.include	"keyboard.s"
 	.include	"draw_pointer.s"
-
 	.include	"audio.s"
+	.include	"end_level.s"
+	.include	"common_sprites.inc"
+	.include	"page_sprites.inc"
+.endif
 
+	; level graphics
 	.include	"graphics_octagon/octagon_graphics.inc"
 
-	.include	"end_level.s"
-
 	; puzzles
-
 	.include	"brother_books.s"
-
 	.include	"octagon_bookshelf.s"
-
 	.include	"octagon_rotation.s"
 
 	; linking books
 	.include	"handle_pages.s"
 
 	; books
-
 	.include	"books/octagon_books.inc"
 
-	.include	"common_sprites.inc"
-	.include	"page_sprites.inc"
-
+	; level data
 	.include	"leveldata_octagon.inc"
-
-
-
 
 
 ;.align $100

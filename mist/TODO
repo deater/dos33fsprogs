@@ -6,7 +6,7 @@ For release 1.0
 + MIST (split off ship-up/ship-down?)
 	-- constellation puzzle/ship raising
 	-- marker switches
-+ OBSERVATORY
++ DENTIST
 	-- all of it
 + CABIN (split off?)
 	-- safe puzzle
@@ -17,14 +17,20 @@ For release 1.0
 	-- ending
 + SELENA
 	-- sounds/door puzzle
+	-- have sub background change
+
 + STONEY
 	-- hook up compass rose
 	-- hook up pump 
 	-- hook up telescope
 	-- hook up key/trunk puzzle
+
 + CHANNEL
-	-- 2nd floor
-	-- 3rd floor
+	-- hook up water valves at least
+	-- hook up stairway and elevator1
+
++ ARBOR
+	-- all of it
 
 Done:
 + MECHE

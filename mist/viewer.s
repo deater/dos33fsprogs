@@ -6,6 +6,7 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 	.include "common_defines.inc"
+	.include "common_routines.inc"
 
 viewer_start:
 	;===================
@@ -18,6 +19,16 @@ viewer_start:
 	bit	PAGE0
 	bit	LORES
 	bit	FULLGR
+
+	;=================
+	; set up location
+	;=================
+
+	lda	#<locations
+	sta	LOCATIONS_L
+	lda	#>locations
+	sta	LOCATIONS_H
+
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -145,6 +156,7 @@ back_to_mist:
 	; includes
 	;==========================
 
+.if 0
 	.include	"gr_copy.s"
 	.include	"gr_offsets.s"
 	.include	"gr_pageflip.s"
@@ -155,16 +167,18 @@ back_to_mist:
 	.include	"keyboard.s"
 	.include	"draw_pointer.s"
 	.include	"end_level.s"
-
-	.include	"graphics_viewer/viewer_graphics.inc"
-
-
-	; puzzles
-
 	.include	"common_sprites.inc"
-
 	.include	"page_sprites.inc"
 
+.endif
+
+	; graphics
+	.include	"graphics_viewer/viewer_graphics.inc"
+
+	; puzzles
+	.include	"viewer_controls.s"
+
+	; leveldata
 	.include	"leveldata_viewer.inc"
 
-	.include	"viewer_controls.s"
+

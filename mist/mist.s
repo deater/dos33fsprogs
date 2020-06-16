@@ -9,10 +9,13 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 	.include "common_defines.inc"
+	.include "common_routines.inc"
 
 mist_start:
 	;===================
 	; init screen
+	;===================
+
 	jsr	TEXT
 	jsr	HOME
 	bit	KEYRESET
@@ -21,6 +24,15 @@ mist_start:
 	bit	PAGE0
 	bit	LORES
 	bit	FULLGR
+
+	;=================
+	; set up location
+	;=================
+
+	lda	#<locations
+	sta	LOCATIONS_L
+	lda	#>locations
+	sta	LOCATIONS_H
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -268,6 +280,7 @@ set_level_over:
 	; includes
 	;==========================
 
+.if 0
 	.include	"gr_copy.s"
 	.include	"gr_offsets.s"
 	.include	"gr_pageflip.s"
@@ -277,15 +290,17 @@ set_level_over:
 	.include	"decompress_fast_v2.s"
 	.include	"keyboard.s"
 	.include	"draw_pointer.s"
-
 	.include	"audio.s"
-
-	.include	"graphics_mist/mist_graphics.inc"
-
 	.include	"end_level.s"
 
-	; puzzles
+	.include	"common_sprites.inc"
+.endif
 
+
+	; graphics data
+	.include	"graphics_mist/mist_graphics.inc"
+
+	; puzzles
 	.include	"clock_bridge_puzzle.s"
 	.include	"marker_switch.s"
 	.include	"generator_puzzle.s"
@@ -293,17 +308,10 @@ set_level_over:
 	; linking books
 
 	; letters
-
 	.include	"letter_cat.s"
 
-
-	.include	"common_sprites.inc"
-
+	; level data
 	.include	"leveldata_mist.inc"
-
-
-
-
 
 ;.align $100
 ;audio_red_page:

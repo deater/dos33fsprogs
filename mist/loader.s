@@ -4,6 +4,8 @@
 .include "zp.inc"
 .include "hardware.inc"
 
+.include "common_defines.inc"
+
 ; the TITLE program sets $05 with which thing to load
 ; this part of the program stays resident, so when a level ends
 ; it changes $05 (WHICH_LOAD) and this code loads the proper executable
@@ -51,6 +53,7 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 	;===================================================
 	;===================================================
 
+.if 0
 LOAD_TITLE      = $0
 LOAD_MIST       = $1
 LOAD_MECHE      = $2
@@ -60,7 +63,7 @@ LOAD_VIEWER	= $5
 LOAD_STONEDSHIP = $6
 LOAD_CHANNEL    = $7
 LOAD_ENDING     = $8
-
+.endif
 
 loader_start:
 	lda	#LOAD_TITLE
@@ -96,9 +99,9 @@ load_intro:
 	jmp	actual_load
 
 load_other:
-	lda	#<$1400
+	lda	#<$2000
 	sta	entry_smc+1
-	lda	#>$1400
+	lda	#>$2000
 	sta	entry_smc+2
 
 actual_load:
@@ -717,6 +720,24 @@ sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
 ;filbuf:		.res 4			;	= bit2tbl+86
 					;dataend         = filbuf+4
 
+
+
+
+        .include        "audio.s"
+        .include        "decompress_fast_v2.s"
+        .include        "draw_pointer.s"
+        .include        "end_level.s"
+	.include        "gr_copy.s"
+        .include        "gr_fast_clear.s"
+        .include        "gr_offsets.s"
+        .include        "gr_pageflip.s"
+        .include        "gr_putsprite_crop.s"
+        .include        "keyboard.s"
+        .include        "text_print.s"
+
+	.include        "common_sprites.inc"
+        .include        "page_sprites.inc"
+
 loader_end:
 
-.assert (<loader_end - <loader_start)>3, error, "loader too big"
+.assert (<loader_end - <loader_start)>16, error, "loader too big"

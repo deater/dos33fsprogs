@@ -17,21 +17,21 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
 	$(DOS33) -y mist.dsk SAVE A HELLO
 	$(DOS33) -y mist.dsk BSAVE -a 0x1000 LOADER
 	$(DOS33) -y mist.dsk BSAVE -a 0x4000 MIST_TITLE
-	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MIST
-	$(DOS33) -y mist.dsk BSAVE -a 0x1400 OCTAGON
-#	$(DOS33) -y mist.dsk BSAVE -a 0x1400 MECHE
-#	$(DOS33) -y mist.dsk BSAVE -a 0x1400 SELENA
-#	$(DOS33) -y mist.dsk BSAVE -a 0x1400 CHANNEL
-#	$(DOS33) -y mist.dsk BSAVE -a 0x1400 VIEWER
-	$(DOS33) -y mist.dsk BSAVE -a 0x1400 STONEY
+	$(DOS33) -y mist.dsk BSAVE -a 0x2000 MIST
+	$(DOS33) -y mist.dsk BSAVE -a 0x2000 OCTAGON
+#	$(DOS33) -y mist.dsk BSAVE -a 0x2000 MECHE
+#	$(DOS33) -y mist.dsk BSAVE -a 0x2000 SELENA
+#	$(DOS33) -y mist.dsk BSAVE -a 0x2000 CHANNEL
+#	$(DOS33) -y mist.dsk BSAVE -a 0x2000 VIEWER
+	$(DOS33) -y mist.dsk BSAVE -a 0x2000 STONEY
 	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
 mist_side2.dsk:	MECHE SELENA CHANNEL VIEWER
 	cp empty.dsk mist_side2.dsk
-	$(DOS33) -y mist_side2.dsk BSAVE -a 0x1400 MECHE
-	$(DOS33) -y mist_side2.dsk BSAVE -a 0x1400 SELENA
-	$(DOS33) -y mist_side2.dsk BSAVE -a 0x1400 CHANNEL
-	$(DOS33) -y mist_side2.dsk BSAVE -a 0x1400 VIEWER
+	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 MECHE
+	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 SELENA
+	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 CHANNEL
+	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 VIEWER
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
 ###
@@ -54,6 +54,7 @@ MIST_TITLE:	mist_title.o
 	ld65 -o MIST_TITLE mist_title.o -C ../linker_scripts/apple2_4000.inc
 
 mist_title.o:	mist_title.s zp.inc hardware.inc common_defines.inc \
+	common_routines.inc \
 	graphics_title/mist_title.lzsa graphics_title/title_graphics.inc \
 	gr_copy.s gr_offsets.s gr_pageflip.s gr_putsprite_crop.s \
 	text_print.s gr_fast_clear.s decompress_fast_v2.s \
@@ -65,9 +66,9 @@ mist_title.o:	mist_title.s zp.inc hardware.inc common_defines.inc \
 ####
 
 MIST:	mist.o
-	ld65 -o MIST mist.o -C ../linker_scripts/apple2_1400.inc
+	ld65 -o MIST mist.o -C ../linker_scripts/apple2_2000.inc
 
-mist.o:	mist.s zp.inc hardware.inc common_defines.inc \
+mist.o:	mist.s zp.inc hardware.inc common_defines.inc common_routines.inc \
 	graphics_mist/mist_graphics.inc \
 	common_sprites.inc \
 	leveldata_mist.inc \
@@ -84,9 +85,10 @@ mist.o:	mist.s zp.inc hardware.inc common_defines.inc \
 ####
 
 OCTAGON:	octagon.o
-	ld65 -o OCTAGON octagon.o -C ../linker_scripts/apple2_1400.inc
+	ld65 -o OCTAGON octagon.o -C ../linker_scripts/apple2_2000.inc
 
 octagon.o:	octagon.s zp.inc hardware.inc common_defines.inc \
+	common_routines.inc \
 	graphics_octagon/octagon_graphics.inc \
 	books/octagon_books.inc \
 	common_sprites.inc page_sprites.inc \
@@ -107,9 +109,10 @@ octagon.o:	octagon.s zp.inc hardware.inc common_defines.inc \
 ####
 
 MECHE:	meche.o
-	ld65 -o MECHE meche.o -C ../linker_scripts/apple2_1400.inc
+	ld65 -o MECHE meche.o -C ../linker_scripts/apple2_2000.inc
 
 meche.o:	meche.s zp.inc hardware.inc common_defines.inc \
+	common_routines.inc \
 	graphics_meche/meche_graphics.inc \
 	common_sprites.inc \
 	page_sprites.inc \
@@ -126,9 +129,10 @@ meche.o:	meche.s zp.inc hardware.inc common_defines.inc \
 ####
 
 SELENA:	selena.o
-	ld65 -o SELENA selena.o -C ../linker_scripts/apple2_1400.inc
+	ld65 -o SELENA selena.o -C ../linker_scripts/apple2_2000.inc
 
 selena.o:	selena.s zp.inc hardware.inc common_defines.inc \
+	common_routines.inc \
 	graphics_selena/selena_graphics.inc \
 	common_sprites.inc \
 	leveldata_selena.inc \
@@ -145,10 +149,11 @@ selena.o:	selena.s zp.inc hardware.inc common_defines.inc \
 ####
 
 VIEWER:	viewer.o
-	ld65 -o VIEWER viewer.o -C ../linker_scripts/apple2_1400.inc
+	ld65 -o VIEWER viewer.o -C ../linker_scripts/apple2_2000.inc
 
 viewer.o:	viewer.s zp.inc hardware.inc common_defines.inc \
 	graphics_viewer/viewer_graphics.inc \
+	common_routines.inc \
 	common_sprites.inc \
 	page_sprites.inc \
 	leveldata_viewer.inc \
@@ -161,10 +166,11 @@ viewer.o:	viewer.s zp.inc hardware.inc common_defines.inc \
 ####
 
 STONEY:	stoney.o
-	ld65 -o STONEY stoney.o -C ../linker_scripts/apple2_1400.inc
+	ld65 -o STONEY stoney.o -C ../linker_scripts/apple2_2000.inc
 
 stoney.o:	stoney.s zp.inc hardware.inc common_defines.inc \
 	graphics_stoney/stoney_graphics.inc \
+	common_routines.inc \
 	common_sprites.inc \
 	page_sprites.inc \
 	leveldata_stoney.inc \
@@ -179,9 +185,10 @@ stoney.o:	stoney.s zp.inc hardware.inc common_defines.inc \
 ####
 
 CHANNEL:	channel.o
-	ld65 -o CHANNEL channel.o -C ../linker_scripts/apple2_1400.inc
+	ld65 -o CHANNEL channel.o -C ../linker_scripts/apple2_2000.inc
 
 channel.o:	channel.s zp.inc hardware.inc common_defines.inc \
+	common_routines.inc \
 	graphics_channel/channel_graphics.inc \
 	common_sprites.inc \
 	page_sprites.inc \

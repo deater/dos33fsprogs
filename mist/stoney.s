@@ -6,6 +6,7 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 	.include "common_defines.inc"
+	.include "common_routines.inc"
 
 stoney_start:
 	;===================
@@ -18,6 +19,16 @@ stoney_start:
 	bit	PAGE0
 	bit	LORES
 	bit	FULLGR
+
+	;=================
+	; set up location
+	;=================
+
+	lda	#<locations
+	sta	LOCATIONS_L
+	lda	#>locations
+	sta	LOCATIONS_H
+
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -576,7 +587,7 @@ battery_sprite7:
 	;==========================
 	; includes
 	;==========================
-
+.if 0
 	.include	"gr_copy.s"
 	.include	"gr_offsets.s"
 	.include	"gr_pageflip.s"
@@ -587,23 +598,21 @@ battery_sprite7:
 	.include	"keyboard.s"
 	.include	"draw_pointer.s"
 	.include	"end_level.s"
-
 	.include	"audio.s"
+	.include	"common_sprites.inc"
+	.include	"page_sprites.inc"
 
+.endif
+
+	; level graphics
 	.include	"graphics_stoney/stoney_graphics.inc"
 
-
 	; linking books
-
 	.include	"link_book_stoney.s"
 	.include	"link_book_mist.s"
 
 	; puzzles
-
 	.include	"handle_pages.s"
 
-	.include	"common_sprites.inc"
-
-	.include	"page_sprites.inc"
-
+	; level data
 	.include	"leveldata_stoney.inc"
