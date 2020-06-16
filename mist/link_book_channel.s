@@ -35,12 +35,18 @@ channel_link_book:
 
 	lda	#CHANNEL_ARRIVAL
 	sta	LOCATION
+
 	lda	#DIRECTION_S
 	sta	DIRECTION
 
-	jsr	change_location
-	rts
+	lda	#LOAD_CHANNEL
+	sta	WHICH_LOAD
 
+set_level_over:
+        lda     #$ff
+        sta     LEVEL_OVER
+
+        rts
 
 channel_movie:
 	.word channel_sprite0,channel_sprite1,channel_sprite2
