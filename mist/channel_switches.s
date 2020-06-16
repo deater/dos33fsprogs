@@ -1,3 +1,80 @@
+
+;===========================
+; pick up myst linking book
+book_room_grab_book:
+
+	lda	#CHANNEL_BOOK_CLOSED
+	sta	LOCATION
+	jmp	change_location
+
+	rts
+
+;=============================
+; book elevator handle pulled
+
+; FIXME: check for water power
+; FIXME: animate
+book_elevator_handle:
+
+	; click speaker
+	bit	SPEAKER
+
+	; check for water power
+
+	; toggle floor
+
+	lda	CHANNEL_SWITCHES
+	eor	#CHANNEL_BOOK_ELEVATOR_UP
+	sta	CHANNEL_SWITCHES
+	and	#CHANNEL_BOOK_ELEVATOR_UP
+	bne	book_elevator_floor2
+
+book_elevator_floor1:
+
+	; change to ground floor
+	ldy	#LOCATION_SOUTH_BG
+
+	lda	#<book_elevator_inside_gnd_closed_lzsa
+	sta	location44,Y		; CHANNEL_BOOK_E_IN_CLOSED
+	lda	#>book_elevator_inside_gnd_closed_lzsa
+	sta	location44+1,Y		; CHANNEL_BOOK_E_IN_CLOSED
+
+	; change exit
+	ldy	#LOCATION_SOUTH_EXIT
+	lda	#CHANNEL_BOOK_E_INSIDE_GND
+	sta	location44,Y		; CHANNEL_BOOK_E_IN_CLOSED
+
+	jmp	book_elevator_handle_done
+book_elevator_floor2:
+
+	; change to 2nd floor
+	ldy	#LOCATION_SOUTH_BG
+
+	lda	#<book_elevator_inside_top_closed_lzsa
+	sta	location44,Y		; CHANNEL_BOOK_E_IN_CLOSED
+	lda	#>book_elevator_inside_top_closed_lzsa
+	sta	location44+1,Y		; CHANNEL_BOOK_E_IN_CLOSED
+
+	; change exit
+	ldy	#LOCATION_SOUTH_EXIT
+	lda	#CHANNEL_BOOK_E_INSIDE_TOP
+	sta	location44,Y		; CHANNEL_BOOK_E_IN_CLOSED
+
+book_elevator_handle_done:
+
+	jsr	change_location
+
+	rts
+
+	;=========================
+	; close door
+book_elevator_close_door:
+
+	lda	#CHANNEL_BOOK_E_IN_CLOSED
+	sta	LOCATION
+	jmp	change_location
+
+
 ;=======================
 ; raise bridge
 

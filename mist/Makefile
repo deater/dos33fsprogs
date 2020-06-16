@@ -190,6 +190,7 @@ channel.o:	channel.s zp.inc hardware.inc common_defines.inc \
 	keyboard.s \
 	draw_pointer.s \
 	link_book_channel.s \
+	link_book_mist.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o channel.o channel.s -l channel.lst
 

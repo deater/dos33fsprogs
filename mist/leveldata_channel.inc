@@ -13,7 +13,9 @@ locations:
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
-	.word location40
+	.word location40,location41,location42,location43
+	.word location44,location45,location46,location47
+	.word location48
 
 ; CHANNEL_OUTSIDE_CABIN		-- outside in clearing
 location0:
@@ -707,11 +709,11 @@ location38:
 
 ; CHANNEL_BOOK_FORK		-- fork to book elevator
 location39:
-	.byte	$ff			; north exit
+	.byte	CHANNEL_BOOK_ELEVATOR	; north exit
 	.byte	CHANNEL_PIPE_EXTEND	; south exit
 	.byte	$ff			; east exit
 	.byte	CHANNEL_AFTER_BRIDGE2	; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
@@ -742,4 +744,154 @@ location40:
 	.byte	34,40		; special y
 	.word	extend_pipe-1	; special function
 
+; CHANNEL_BOOK_ELEVATOR		-- outside book elevator, door closed
+location41:
+	.byte	CHANNEL_BOOK_E_OPEN	; north exit
+	.byte	CHANNEL_BOOK_FORK	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	book_elevator_closed_n_lzsa	; north bg
+	.word	book_elevator_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff		; special exit
+
+; CHANNEL_E_OPEN		-- outside book elevator, door open
+location42:
+	.byte	CHANNEL_BOOK_E_INSIDE_GND	; north exit
+	.byte	CHANNEL_BOOK_FORK	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_S	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	book_elevator_open_n_lzsa	; north bg
+	.word	book_elevator_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff		; special exit
+
+; CHANNEL_BOOK_E_INSIDE_GND		-- inside book elevator, gnd, door open
+location43:
+	.byte	$ff			; north exit
+	.byte	CHANNEL_BOOK_ELEVATOR	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$ff		; north bg
+	.word	book_elevator_inside_gnd_open_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH
+	.byte	DIRECTION_S	; special exit
+	.byte	10,17		; special x
+	.byte	6,46		; special y
+	.word	book_elevator_close_door-1	; special function
+
+; CHANNEL_BOOK_E_IN_CLOSED		-- inside book elevator, door closed
+location44:
+	.byte	$ff			; north exit
+	.byte	CHANNEL_BOOK_E_INSIDE_GND	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$ff		; north bg
+	.word	book_elevator_inside_gnd_closed_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH
+	.byte	DIRECTION_S	; special exit
+	.byte	28,34		; special x
+	.byte	28,36		; special y
+	.word	book_elevator_handle-1	; special function
+
+; CHANNEL_BOOK_E_INSIDE_TOP		-- inside book elevator, top, door open
+location45:
+	.byte	$ff			; north exit
+	.byte	CHANNEL_BOOK_ROOM	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$ff		; north bg
+	.word	book_elevator_inside_top_open_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH
+	.byte	DIRECTION_S	; special exit
+	.byte	10,17		; special x
+	.byte	6,46		; special y
+	.word	book_elevator_close_door-1	; special function
+
+; CHANNEL_BOOK_ROOM		-- the room with the myst book
+location46:
+	.byte	CHANNEL_BOOK_E_INSIDE_TOP	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_S	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	book_room_n_lzsa	; north bg
+	.word	book_room_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH|BG_NORTH
+	.byte	DIRECTION_S	; special function
+	.byte	15,23		; special x
+	.byte	30,44		; special y
+	.word	book_room_grab_book-1	; special function
+
+; CHANNEL_BOOK_CLOSED		-- myst book closed
+location47:
+	.byte	CHANNEL_BOOK_E_INSIDE_TOP	; north exit
+	.byte	CHANNEL_BOOK_OPEN	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_S	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	book_room_n_lzsa	; north bg
+	.word	book_mist_closed_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH|BG_NORTH
+	.byte	$ff		; special function
+
+; CHANNEL_BOOK_OPEN		-- myst book open
+location48:
+	.byte	CHANNEL_BOOK_E_INSIDE_TOP	; north exit
+	.byte	CHANNEL_BOOK_ROOM	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_S	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	book_room_n_lzsa	; north bg
+	.word	book_mist_open_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH|BG_NORTH
+	.byte   DIRECTION_S
+	.byte	24,32		; special x
+	.byte	12,22		; special y
+	.word	mist_link_book-1	; special function
 

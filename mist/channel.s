@@ -39,6 +39,13 @@ channel_start:
 	lda	#0
 	sta	ANIMATE_FRAME
 
+	; reset elevators and bridges at start
+	; actual game does this too?
+
+	lda	CHANNEL_SWITCHES
+	and	#~(CHANNEL_BRIDGE_UP|CHANNEL_PIPE_EXTENDED|CHANNEL_BOOK_ELEVATOR_UP)
+	sta	CHANNEL_SWITCHES
+
 	; set up bridges
 
 	jsr	adjust_after_changes
@@ -67,11 +74,20 @@ game_loop:
 	lda	LOCATION
 	cmp	#CHANNEL_TREE_BOOK_OPEN
 	beq	animate_channel_book
+	cmp	#CHANNEL_BOOK_OPEN
+	beq	animate_mist_book
 
 	jmp	nothing_special
 
 animate_channel_book:
 
+	lda	ANIMATE_FRAME
+	cmp	#11
+	bcc	channel_book_good
+	lda	#0
+	sta	ANIMATE_FRAME
+
+channel_book_good:
 	; handle animated linking book
 
 	lda	ANIMATE_FRAME
@@ -83,24 +99,47 @@ animate_channel_book:
 	sta	INH
 
 	lda	#22
-	sta	XPOS
-	lda	#12
-	sta	YPOS
 
-	jsr	put_sprite_crop
+	jmp	draw_book
 
-	lda	FRAMEL
-	and	#$f
+animate_mist_book:
+	lda	DIRECTION
+	cmp	#DIRECTION_S
 	bne	done_animate_book
 
-	inc	ANIMATE_FRAME
 	lda	ANIMATE_FRAME
-	cmp	#11
-	bne	done_animate_book
-	lda	#0
-	sta	ANIMATE_FRAME
+	cmp     #6
+        bcc     mist_book_good                  ; blt
+
+        lda     #0
+        sta     ANIMATE_FRAME
+
+mist_book_good:
+
+        asl
+        tay
+        lda     mist_movie,Y
+        sta     INL
+        lda     mist_movie+1,Y
+        sta     INH
+
+        lda     #24
+draw_book:
+        sta     XPOS
+
+        lda     #12
+        sta     YPOS
+
+        jsr     put_sprite_crop
+
+        lda     FRAMEL
+        and     #$f
+	bne     done_animate_book
+
+        inc     ANIMATE_FRAME
+
 done_animate_book:
-	jmp	nothing_special
+        jmp     nothing_special
 
 nothing_special:
 
@@ -268,5 +307,6 @@ exit_to_mist:
 
 	; linking books
 
+	.include	"link_book_mist.s"
 	.include	"link_book_channel.s"
 

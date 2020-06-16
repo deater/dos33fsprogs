@@ -48,7 +48,13 @@ channel_graphics.inc:	\
 	after_bridge1_e.lzsa after_bridge1_w.lzsa \
 	after_bridge2_e.lzsa after_bridge2_w.lzsa \
 	book_fork_n.lzsa book_fork_s.lzsa book_fork_w.lzsa \
-	pipe_extend_n.lzsa pipe_extend_down_s.lzsa pipe_extend_up_s.lzsa
+	pipe_extend_n.lzsa pipe_extend_down_s.lzsa pipe_extend_up_s.lzsa \
+	book_room_n.lzsa book_room_s.lzsa \
+	book_elevator_s.lzsa \
+	book_elevator_open_n.lzsa book_elevator_closed_n.lzsa \
+	book_elevator_inside_gnd_open.lzsa book_elevator_inside_gnd_closed.lzsa \
+	book_elevator_inside_top_open.lzsa book_elevator_inside_top_closed.lzsa \
+	book_mist_closed_s.lzsa book_mist_open_s.lzsa
 	echo "arrival_n_lzsa: .incbin \"arrival_n.lzsa\"" > channel_graphics.inc
 	echo "arrival_s_lzsa: .incbin \"arrival_s.lzsa\"" >> channel_graphics.inc
 	echo "clearing_e_lzsa: .incbin \"clearing_e.lzsa\"" >> channel_graphics.inc
@@ -135,6 +141,17 @@ channel_graphics.inc:	\
 	echo "pipe_extend_n_lzsa: .incbin \"pipe_extend_n.lzsa\"" >> channel_graphics.inc
 	echo "pipe_extend_up_s_lzsa: .incbin \"pipe_extend_up_s.lzsa\"" >> channel_graphics.inc
 	echo "pipe_extend_down_s_lzsa: .incbin \"pipe_extend_down_s.lzsa\"" >> channel_graphics.inc
+	echo "book_room_n_lzsa: .incbin \"book_room_n.lzsa\"" >> channel_graphics.inc
+	echo "book_room_s_lzsa: .incbin \"book_room_s.lzsa\"" >> channel_graphics.inc
+	echo "book_elevator_s_lzsa: .incbin \"book_elevator_s.lzsa\"" >> channel_graphics.inc
+	echo "book_elevator_open_n_lzsa: .incbin \"book_elevator_open_n.lzsa\"" >> channel_graphics.inc
+	echo "book_elevator_closed_n_lzsa: .incbin \"book_elevator_closed_n.lzsa\"" >> channel_graphics.inc
+	echo "book_elevator_inside_gnd_open_lzsa: .incbin \"book_elevator_inside_gnd_open.lzsa\"" >> channel_graphics.inc
+	echo "book_elevator_inside_gnd_closed_lzsa: .incbin \"book_elevator_inside_gnd_closed.lzsa\"" >> channel_graphics.inc
+	echo "book_elevator_inside_top_open_lzsa: .incbin \"book_elevator_inside_top_open.lzsa\"" >> channel_graphics.inc
+	echo "book_elevator_inside_top_closed_lzsa: .incbin \"book_elevator_inside_top_closed.lzsa\"" >> channel_graphics.inc
+	echo "book_mist_closed_s_lzsa: .incbin \"book_mist_closed_s.lzsa\"" >> channel_graphics.inc
+	echo "book_mist_open_s_lzsa: .incbin \"book_mist_open_s.lzsa\"" >> channel_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
