@@ -12,7 +12,7 @@ locations:
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
-
+	.word location36,location37
 
 ; CHANNEL_ARRIVAL		-- arrival in channelwood
 location0:
@@ -158,11 +158,11 @@ location8:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	CHANNEL_FORK		; east exit
-	.byte	CHANNEL_IN_ELEVATOR1	; west exit
+	.byte	CHANNEL_ELEV1_OPEN	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_N	; east exit_dir
-	.byte	DIRECTION_E	; west exit_dir
+	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
 	.word	before_elev1_e_lzsa	; east bg
@@ -170,7 +170,7 @@ location8:
 	.byte	BG_EAST|BG_WEST
 	.byte	$ff
 
-; CHANNEL_IN_ELEVATOR1		-- inside elevator1
+; CHANNEL_IN_ELEV1_OPEN		-- inside elevator1, door open
 location9:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
@@ -185,7 +185,11 @@ location9:
 	.word	elevator1_open_lzsa	; east bg
 	.word	$0000			; west bg
 	.byte	BG_EAST
-	.byte	$ff
+	.byte	DIRECTION_E	; special exit
+	.byte	10,17		; special x
+	.byte	6,46		; special y
+	.word	elev1_close_door-1	; special function
+
 
 ; CHANNEL_PIPE_BRIDGE2		-- east side of pipe bridge
 location10:
@@ -655,4 +659,41 @@ location35:
 	.byte	24,32		; special x
 	.byte	12,22		; special y
 	.word	mist_link_book-1	; special function
+
+; CHANNEL_ELEV1_OPEN		-- outside elevator1, open
+location36:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	CHANNEL_FORK		; east exit
+	.byte	CHANNEL_IN_ELEV1_OPEN	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_N	; east exit_dir
+	.byte	DIRECTION_E	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	before_elev1_e_lzsa		; east bg
+	.word	before_elev1_open_w_lzsa	; west bg
+	.byte	BG_WEST|BG_EAST
+	.byte	$ff
+
+; CHANNEL_IN_ELEV1_CLOSED	-- inside elevator1, closed
+location37:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	CHANNEL_IN_ELEV1_OPEN	; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	elevator1_closed_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_EAST
+	.byte	DIRECTION_E	; special exit
+	.byte	26,34		; special x
+	.byte	28,36		; special y
+	.word	elev1_handle-1	; special function
 

@@ -66,13 +66,52 @@ book_elevator_handle_done:
 
 	rts
 
+
+;=============================
+; elevator1 handle pulled
+
+; FIXME: check for water power
+; FIXME: animate
+elev1_handle:
+
+	; click speaker
+	bit	SPEAKER
+
+	; check for water power
+
+	; go to next floor, which involves moving to ARBOR level
+
+	lda	#ARBOR_INSIDE_ELEV1
+	sta	LOCATION
+
+	lda	#DIRECTION_W
+	sta	DIRECTION
+
+	lda	#LOAD_ARBOR
+	sta	WHICH_LOAD
+
+	lda	#$ff
+	sta	LEVEL_OVER
+
+	rts
+
+
 	;=========================
-	; close door
+	; close book elevator door
 book_elevator_close_door:
 
 	lda	#CHANNEL_BOOK_E_IN_CLOSED
 	sta	LOCATION
 	jmp	change_location
+
+	;=========================
+	; close elevator1 door
+elev1_close_door:
+
+	lda	#CHANNEL_IN_ELEV1_CLOSED
+	sta	LOCATION
+	jmp	change_location
+
 
 
 ;=======================

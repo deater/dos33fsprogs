@@ -17,9 +17,9 @@ channel_graphics.inc:	\
 	path5_e.lzsa path5_s.lzsa path5_n.lzsa \
 	path6_s.lzsa path6_w.lzsa path6_n.lzsa \
 	fork_n.lzsa fork_s.lzsa fork_w.lzsa \
-	before_elev1_e.lzsa before_elev1_w.lzsa \
+	before_elev1_e.lzsa before_elev1_w.lzsa before_elev1_open_w.lzsa \
 	pipe_bridge2_up_w.lzsa pipe_bridge2_w.lzsa pipe_bridge2_e.lzsa \
-	elevator1_open.lzsa \
+	elevator1_open.lzsa elevator1_closed.lzsa \
 	steps_fork_n.lzsa steps_fork_s.lzsa steps_fork_w.lzsa \
 	steps_path_e.lzsa steps_path_w.lzsa \
 	steps_door_e.lzsa steps_door_w.lzsa \
@@ -67,10 +67,12 @@ channel_graphics.inc:	\
 	echo "fork_w_lzsa: .incbin \"fork_w.lzsa\"" >> channel_graphics.inc
 	echo "before_elev1_e_lzsa: .incbin \"before_elev1_e.lzsa\"" >> channel_graphics.inc
 	echo "before_elev1_w_lzsa: .incbin \"before_elev1_w.lzsa\"" >> channel_graphics.inc
+	echo "before_elev1_open_w_lzsa: .incbin \"before_elev1_open_w.lzsa\"" >> channel_graphics.inc
 	echo "pipe_bridge2_e_lzsa: .incbin \"pipe_bridge2_e.lzsa\"" >> channel_graphics.inc
 	echo "pipe_bridge2_w_lzsa: .incbin \"pipe_bridge2_w.lzsa\"" >> channel_graphics.inc
 	echo "pipe_bridge2_up_w_lzsa: .incbin \"pipe_bridge2_up_w.lzsa\"" >> channel_graphics.inc
 	echo "elevator1_open_lzsa: .incbin \"elevator1_open.lzsa\"" >> channel_graphics.inc
+	echo "elevator1_closed_lzsa: .incbin \"elevator1_closed.lzsa\"" >> channel_graphics.inc
 	echo "steps_fork_n_lzsa: .incbin \"steps_fork_n.lzsa\"" >> channel_graphics.inc
 	echo "steps_fork_s_lzsa: .incbin \"steps_fork_s.lzsa\"" >> channel_graphics.inc
 	echo "steps_fork_w_lzsa: .incbin \"steps_fork_w.lzsa\"" >> channel_graphics.inc
