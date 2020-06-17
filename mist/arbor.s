@@ -1,4 +1,7 @@
-; The Channely Wood level
+; The second level of Channely Wood
+
+; The ardor of arboreality is an adventure we've spurned, we've spurned
+; It's a new leaf overturned -- TMBG
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -8,7 +11,7 @@
 	.include "common_defines.inc"
 	.include "common_routines.inc"
 
-channel_start:
+arbor_start:
 	;===================
 	; init screen
 	jsr	TEXT
@@ -50,17 +53,6 @@ channel_start:
 	lda	#0
 	sta	ANIMATE_FRAME
 
-	; reset elevators and bridges at start
-	; actual game does this too?
-
-	lda	CHANNEL_SWITCHES
-	and	#~(CHANNEL_BRIDGE_UP|CHANNEL_PIPE_EXTENDED|CHANNEL_BOOK_ELEVATOR_UP)
-	sta	CHANNEL_SWITCHES
-
-	; set up bridges
-
-	jsr	adjust_after_changes
-
 
 game_loop:
 	;=================
@@ -82,49 +74,11 @@ game_loop:
 	; handle special-case forground logic
 	;====================================
 
-	lda	LOCATION
-	cmp	#CHANNEL_BOOK_OPEN
-	beq	animate_mist_book
+;	lda	LOCATION
+;	cmp	#CHANNEL_BOOK_OPEN
+;	beq	animate_mist_book
 
-	jmp	nothing_special
-
-animate_mist_book:
-	lda	DIRECTION
-	cmp	#DIRECTION_S
-	bne	done_animate_book
-
-	lda	ANIMATE_FRAME
-	cmp     #6
-        bcc     mist_book_good                  ; blt
-
-        lda     #0
-        sta     ANIMATE_FRAME
-
-mist_book_good:
-
-        asl
-        tay
-        lda     mist_movie,Y
-        sta     INL
-        lda     mist_movie+1,Y
-        sta     INH
-
-        lda     #24
-        sta     XPOS
-
-        lda     #12
-        sta     YPOS
-
-        jsr     put_sprite_crop
-
-        lda     FRAMEL
-        and     #$f
-	bne     done_animate_book
-
-        inc     ANIMATE_FRAME
-
-done_animate_book:
-        jmp     nothing_special
+;	jmp	nothing_special
 
 nothing_special:
 
@@ -167,57 +121,17 @@ room_frame_no_oflo:
 really_exit:
 	jmp	end_level
 
-
-look_at_faucet:
-	lda	#CHANNEL_TANK_CLOSE
-	sta	LOCATION
-	jmp	change_location
-
-toggle_windmill:
-	lda	CHANNEL_SWITCHES
-	eor	#CHANNEL_SW_WINDMILL
-	sta	CHANNEL_SWITCHES
-	rts
-
-toggle_faucet:
-	lda	CHANNEL_SWITCHES
-	eor	#CHANNEL_SW_FAUCET
-	sta	CHANNEL_SWITCHES
-	rts
-
-
 	;==========================
 	; includes
 	;==========================
-.if 0
-	.include	"gr_copy.s"
-	.include	"gr_offsets.s"
-	.include	"gr_pageflip.s"
-	.include	"gr_putsprite_crop.s"
-	.include	"text_print.s"
-	.include	"gr_fast_clear.s"
-	.include	"decompress_fast_v2.s"
-	.include	"keyboard.s"
-	.include	"draw_pointer.s"
-	.include	"end_level.s"
-	.include	"audio.s"
-	.include	"common_sprites.inc"
-	.include	"page_sprites.inc"
-
-
-.endif
 
 	; level graphics
-	.include	"graphics_channel/channel_graphics.inc"
+	.include	"graphics_arbor/arbor_graphics.inc"
 
 
 	; puzzles
-	.include	"channel_switches.s"
 
 	; level data
-	.include	"leveldata_channel.inc"
+	.include	"leveldata_arbor.inc"
 
-	; linking books
-	.include	"link_book_mist.s"
-;	.include	"link_book_channel.s"
 

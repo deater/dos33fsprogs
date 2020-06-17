@@ -154,16 +154,6 @@ really_exit:
 	jmp	end_level
 
 
-back_to_mist:
-
-	lda	#DIRECTION_N
-	sta	DIRECTION
-
-	lda     #MIST_ARRIVAL_DOCK		; the dock
-
-	jmp	exit_to_mist
-
-
 
 enter_clock:
 

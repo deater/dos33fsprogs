@@ -26,14 +26,15 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 STONEY
 	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
-mist_side2.dsk:	HELLO_DISK2 MECHE SELENA CHANNEL VIEWER
+mist_side2.dsk:	HELLO_DISK2 MECHE SELENA CHANNEL VIEWER ARBOR
 	cp empty.dsk mist_side2.dsk
 	$(DOS33) -y mist_side2.dsk SAVE A HELLO_DISK2 HELLO
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 MECHE
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 SELENA
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 CHANNEL
+	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 ARBOR
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 VIEWER
-	$(DOS33) -y mist_side2.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
+#	$(DOS33) -y mist_side2.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
 ###
 
@@ -238,9 +239,17 @@ channel.o:	channel.s zp.inc hardware.inc common_defines.inc \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o channel.o channel.s -l channel.lst
 
+####
 
+ARBOR:	arbor.o
+	ld65 -o ARBOR arbor.o -C ../linker_scripts/apple2_2000.inc
 
-
+arbor.o:	arbor.s zp.inc hardware.inc common_defines.inc \
+	common_routines.inc \
+	graphics_arbor/arbor_graphics.inc \
+	leveldata_arbor.inc \
+	channel_switches.s
+	ca65 -o arbor.o arbor.s -l arbor.lst
 ####
 
 graphics_island/mist_graphics.inc:
@@ -253,4 +262,4 @@ clean:
 		rm -f *~ *.o *.lst HELLO HELLO_DISK2 \
 			LOADER MIST_TITLE \
 			MIST OCTAGON \
-			MECHE SELENA STONEY CHANNEL
+			MECHE SELENA STONEY CHANNEL ARBOR
