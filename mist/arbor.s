@@ -128,8 +128,8 @@ really_exit:
 	; level graphics
 	.include	"graphics_arbor/arbor_graphics.inc"
 
-
 	; puzzles
+	.include	"arbor_switches.s"
 
 	; level data
 	.include	"leveldata_arbor.inc"

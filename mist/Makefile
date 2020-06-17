@@ -248,7 +248,7 @@ arbor.o:	arbor.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
 	graphics_arbor/arbor_graphics.inc \
 	leveldata_arbor.inc \
-	channel_switches.s
+	arbor_switches.s
 	ca65 -o arbor.o arbor.s -l arbor.lst
 ####
 

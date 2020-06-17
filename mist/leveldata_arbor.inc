@@ -3,7 +3,7 @@
 ;===============================================
 
 locations:
-	.word location0, location1
+	.word location0, location1, location2, location3
 
 ; ARBOR_INSIDE_ELEV1		-- arrival in elevator1
 location0:
@@ -20,7 +20,10 @@ location0:
 	.word	$0000				; east bg
 	.word	inside_elevator1_closed_w_lzsa	; west bg
 	.byte	BG_WEST
-	.byte	$ff
+	.byte	DIRECTION_W	; special exit
+	.byte	26,34		; special x
+	.byte	28,36		; special y
+	.word	elev1_handle-1	; special function
 
 ; ARBOR_INSIDE_ELEV1_OPEN	-- arrival in elevator1, door open
 location1:
@@ -37,7 +40,10 @@ location1:
 	.word	$0000				; east bg
 	.word	inside_elevator1_open_w_lzsa	; west bg
 	.byte	BG_WEST
-	.byte	$ff
+	.byte	DIRECTION_W	; special exit
+	.byte	10,17		; special x
+	.byte	6,46		; special y
+	.word	elev1_close_door-1	; special function
 
 ; ARBOR_ARRIVAL_CLOSED		-- just outside elevator, closed
 location2:
