@@ -4,6 +4,7 @@
 
 locations:
 	.word location0, location1, location2, location3
+	.word location4, location5, location6
 
 ; ARBOR_INSIDE_ELEV1		-- arrival in elevator1
 location0:
@@ -50,7 +51,7 @@ location2:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	ARBOR_ARRIVAL_OPEN	; east exit
-	.byte	$ff			; west exit
+	.byte	ARBOR_BRIDGE1		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
@@ -67,7 +68,7 @@ location3:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	ARBOR_INSIDE_ELEV1_OPEN	; east exit
-	.byte	$ff			; west exit
+	.byte	ARBOR_BRIDGE1		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_W	; east exit_dir
@@ -79,4 +80,53 @@ location3:
 	.byte	BG_WEST|BG_EAST
 	.byte	$ff
 
+; ARBOR_BRIDGE1		-- first bridge
+location4:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	ARBOR_ARRIVAL_CLOSED	; east exit
+	.byte	ARBOR_HUT1		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	bridge1_e_lzsa		; east bg
+	.word	bridge1_w_lzsa		; west bg
+	.byte	BG_WEST|BG_EAST
+	.byte	$ff
 
+; ARBOR_HUT1		-- first hut
+location5:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	ARBOR_BRIDGE1	; east exit
+	.byte	ARBOR_BRIDGE2	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_N	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	hut1_e_lzsa		; east bg
+	.word	hut1_w_lzsa		; west bg
+	.byte	BG_WEST|BG_EAST
+	.byte	$ff
+
+; ARBOR_BRIDGE2		-- second bridge
+location6:
+	.byte	$ff		; north exit
+	.byte	ARBOR_HUT1	; south exit
+	.byte	$ff		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_E	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	bridge2_n_lzsa		; north bg
+	.word	bridge2_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
