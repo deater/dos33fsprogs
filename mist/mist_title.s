@@ -95,15 +95,6 @@ done_keyloop:
 	bit	LORES
 	bit	FULLGR
 
-	;=================
-	; set up location
-	;=================
-
-	lda	#<locations
-	sta	LOCATIONS_L
-	lda	#>locations
-	sta	LOCATIONS_H
-
 	lda	#0
 	sta	DRAW_PAGE
 

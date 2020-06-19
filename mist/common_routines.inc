@@ -35,17 +35,17 @@ put_sprite_crop	=$18a8
 
 ; keyboard.s
 handle_keypress	=$19e4
-change_location	=$1ab1
+change_location	=$1ac5
 
 ; text_print.s
-move_and_print	=$1b49
+move_and_print	=$1b5d
 
 ; page_sprites.inc
-blue_page_sprite	=$1c44
-red_page_sprite	=$1c90
-white_page_sprite	=$1ca6
-blue_page_small_sprite	=$1cbc
-red_page_small_sprite	=$1cc4
+blue_page_sprite	=$1cf4
+red_page_sprite	=$1d40
+white_page_sprite	=$1d56
+blue_page_small_sprite	=$1d6c
+red_page_small_sprite	=$1d74
 
 ; audio files
 linking_noise	= $9000

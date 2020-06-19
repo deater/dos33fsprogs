@@ -731,6 +731,7 @@ sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
         .include        "gr_putsprite_crop.s"
         .include        "keyboard.s"
         .include        "text_print.s"
+	.include	"loadstore.s"
 
 	.include        "common_sprites.inc"
         .include        "page_sprites.inc"

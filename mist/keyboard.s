@@ -12,6 +12,20 @@ handle_keypress:
 keypress:
 	and	#$7f			; clear high bit
 
+check_load:
+	cmp	#$C			; control-L
+	bne	check_save
+
+	jsr	load_game
+	jmp	done_keypress
+
+check_save:
+	cmp	#$13			; control-S
+	bne	check_left
+
+	jsr	save_game
+	jmp	done_keypress
+
 check_left:
 	cmp	#'A'
 	beq	left_pressed
