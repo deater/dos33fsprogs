@@ -6,10 +6,6 @@
 
 .include "common_defines.inc"
 
-; the TITLE program sets $05 with which thing to load
-; this part of the program stays resident, so when a level ends
-; it changes $05 (WHICH_LOAD) and this code loads the proper executable
-
 nibtbl =  $300	; nothing uses the bottom 128 bytes of $300, do they?
 bit2tbl = $380 	; bit2tbl:	.res 86			;	= nibtbl+128
 filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
@@ -20,8 +16,7 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 ; modified to assembled with ca65 -- vmw
 ; added code to patch it to run from current disk slot -- vmw
 
-
-;	WHICH_LOAD =	$05	; thing to load
+;	WHICH_LOAD =	$7E	; thing to load
 ;	adrlo	=	$26	; constant from boot prom
 ;	adrhi	=	$27	; constant from boot prom
 ;	tmpsec	=	$3c	; constant from boot prom

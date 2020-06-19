@@ -12,7 +12,7 @@ zip:	mist.dsk mist_side2.dsk
 	zip mist.zip mist.dsk mist_side2.dsk
 
 mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
-		MECHE SELENA CABIN CHANNEL STONEY
+		MECHE SELENA CABIN CHANNEL STONEY SAVE0
 	cp empty.dsk mist.dsk
 	$(DOS33) -y mist.dsk SAVE A HELLO
 	$(DOS33) -y mist.dsk BSAVE -a 0x1000 LOADER
@@ -24,6 +24,7 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 CABIN
 #	$(DOS33) -y mist.dsk BSAVE -a 0x2000 VIEWER
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 STONEY
+	$(DOS33) -y mist.dsk BSAVE -a 0xe00 SAVE0
 	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
 mist_side2.dsk:	HELLO_DISK2 MECHE SELENA CHANNEL VIEWER ARBOR
@@ -46,6 +47,15 @@ loader.o:	loader.s \
 	text_print.s gr_fast_clear.s decompress_fast_v2.s \
 	keyboard.s draw_pointer.s end_level.s audio.s loadstore.s
 	ca65 -o loader.o loader.s -l loader.lst
+
+###
+
+SAVE0: default_save.o
+	ld65 -o SAVE0 default_save.o -C ../linker_scripts/apple2_e00.inc
+
+default_save.o:	default_save.s
+	ca65 -o default_save.o default_save.s -l default_save.lst
+
 
 ###
 
