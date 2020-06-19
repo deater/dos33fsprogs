@@ -41,11 +41,11 @@ change_location	=$1ac5
 move_and_print	=$1b5d
 
 ; page_sprites.inc
-blue_page_sprite	=$1d21
-red_page_sprite	=$1d6d
-white_page_sprite	=$1d83
-blue_page_small_sprite	=$1d99
-red_page_small_sprite	=$1da1
+blue_page_sprite	=$1d2b
+red_page_sprite	=$1d77
+white_page_sprite	=$1d8d
+blue_page_small_sprite	=$1da3
+red_page_small_sprite	=$1dab
 
 ; audio files
 linking_noise	= $9000

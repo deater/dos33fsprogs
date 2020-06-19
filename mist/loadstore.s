@@ -10,6 +10,8 @@ load_game:
 
 	bit	SET_TEXT	; set text mode
 
+	lda     #' '|$80
+	sta	clear_all_color+1
 	jsr	clear_all	; clear screen
 
 	lda	#<load_message
@@ -77,6 +79,8 @@ save_game:
 
 	bit	SET_TEXT	; set text mode
 
+	lda     #' '|$80
+	sta	clear_all_color+1
 	jsr	clear_all	; clear screen
 
 	lda	#<save_message

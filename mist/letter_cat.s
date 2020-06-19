@@ -51,6 +51,8 @@ read_letter:
 
 	bit	SET_TEXT
 
+	lda     #' '|$80
+	sta	clear_all_color+1
 	jsr	clear_all
 
 	; clear
