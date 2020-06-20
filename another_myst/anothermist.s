@@ -10,6 +10,11 @@
 .include "zp.inc"
 .include "hardware.inc"
 
+
+another_mist:
+
+
+
 ending:
 
 	;=========================
@@ -89,73 +94,17 @@ repeat_ending:
 	;============================
 
 
-	;==================
-	; bath
-	;==================
-
-;	lda	#>(bath_rle)
-;	sta	GBASH
-;	lda	#<(bath_rle)
-;	sta	GBASL
-;	lda	#$c			; load image off-screen $c00
-;	jsr	load_rle_gr
-
-
-;	jsr	gr_copy_to_current
-;	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	;==================
-	; battle
-	;==================
-
-;	lda	#>(battle_rle)
-;	sta	GBASH
-;	lda	#<(battle_rle)
-;	sta	GBASL
-;	lda	#$c			; load image off-screen $c00
-;	jsr	load_rle_gr
-
-
-;	jsr	gr_copy_to_current
-;	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	;==================
-	; grabbed
-	;==================
-
-;	lda	#>(grabbed_rle)
-;	sta	GBASH
-;	lda	#<(grabbed_rle)
-;	sta	GBASL
-;	lda	#$c			; load image off-screen $c00
-;	jsr	load_rle_gr
-
-
-;	jsr	gr_copy_to_current
-;	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
 	;===========================
 	; ending sequence
 	;============================
 
-
-
-
-
-
 	;=========================
-	; set up bg
+	; set up myst bg
 	;=========================
 
-	lda	#>(sky_bg_rle)
+	lda	#>(east_top_w_rle)
 	sta	GBASH
-	lda	#<(sky_bg_rle)
+	lda	#<(east_top_w_rle)
 	sta	GBASL
 	lda	#$0c			; load image off-screen $c00
 	jsr	load_rle_gr
@@ -237,6 +186,18 @@ cli_smc:
 
 	ldx	#50
 	jsr	long_wait
+
+	;=========================
+	; set up sky bg
+	;=========================
+
+	lda	#>(sky_bg_rle)
+	sta	GBASH
+	lda	#<(sky_bg_rle)
+	sta	GBASL
+	lda	#$0c			; load image off-screen $c00
+	jsr	load_rle_gr
+
 
 	;===================
 	; onboard
@@ -583,8 +544,46 @@ cli_smc:
 
 ;	jsr	wait_until_keypressed
 
+	;==================================
+	; switch to mixed text mode
+	; print message
+
+	bit	TEXTGR
+
+	lda	DRAW_PAGE
+	pha
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	jsr	clear_bottom
+
+	lda	#<written_message
+	sta	OUTL
+	lda	#>written_message
+	sta	OUTH
+
+	lda	#4
+	sta	DRAW_PAGE
+
+	jsr	clear_bottom
+
+	lda	#<written_message
+	sta	OUTL
+	lda	#>written_message
+	sta	OUTH
+
+
+	jsr	move_and_print
+
+	pla
+	sta	DRAW_PAGE
+
 	ldx	#200
 	jsr	long_wait
+
+	; switch back to full graphics
+	bit	FULLGR
 
 	;===================
 	; the end08
@@ -752,7 +751,7 @@ sei_smc:
 ; 0123456789012345678901234567890123456789
 ;        DESIGNED BY ..... ERIC CHAHI
 ;
-;        ARTWORK ......... ERIC CHAHI
+;                    ..... CYAN INC
 ;
 ; MUSIC BY ........ JEAN-FRANCOIS FREITAS
 ;
@@ -768,7 +767,7 @@ sei_smc:
 credits0:.byte "",0
 credits1:.byte "        DESIGNED BY ..... ERIC CHAHI",0
 credits2:.byte "",0
-credits3:.byte "        ARTWORK ......... ERIC CHAHI",0
+credits3:.byte "                    ..... CYAN INC",0
 credits4:.byte "",0
 credits5:.byte " MUSIC BY ........ JEAN-FRANCOIS FREITAS",0
 credits6:.byte "",0
@@ -809,6 +808,9 @@ credit_list:
 end_message:
 .byte 6,10,"NOW GO BACK TO ANOTHER EARTH",0
 .byte 5,12,"ASSUMING ATRUS FIGURES OUT HOW",0
+
+written_message:
+.byte 8,21,"HAS NOT YET BEEN WRITTEN",0
 
 	;============================
 	; set BASL/BASH to offset w Y
