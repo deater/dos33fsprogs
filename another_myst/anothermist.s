@@ -13,8 +13,6 @@
 
 another_mist:
 
-
-
 ending:
 
 	;=========================
@@ -90,8 +88,11 @@ repeat_ending:
 	sta	DISP_PAGE
 
 	;===========================
-	; show some pictures
+	; do the shooting part
 	;============================
+
+	jsr	ootw_cave_init
+	jsr	ootw_cave
 
 
 	;===========================
@@ -859,6 +860,27 @@ long_wait:
 .include "pt3_lib_mockingboard_detect.s"
 .include "pt3_lib_mockingboard_setup.s"
 
+
+.include "keyboard.s"
+.include "gr_putsprite.s"
+.include "gr_putsprite_crop.s"
+.include "laser.s"
+.include "gr_hlin.s"
+.include "blast.s"
+.include "shield.s"
+.include "collision.s"
+.include "dummy_friend.s"
+.include "alien.s"
+.include "physicist.s"
+.include "gun.s"
+.include "ootw_c5_cave.s"
+.include "door.s"
+.include "alien_laser.s"
+
+; sprites
+
+.include "sprites/physicist.inc"
+.include "sprites/alien.inc"
 
 
 ; backgrounds
