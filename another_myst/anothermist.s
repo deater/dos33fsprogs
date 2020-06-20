@@ -1,4 +1,6 @@
-; ootw -- It's the End of the Game as We Know It
+; another_mist -- a silly demo
+
+; apologies to Cyan and Eric Chahi
 
 ; TODO: missing a bunch of frames
 
@@ -725,6 +727,7 @@ print_loop:
 	sta	OUTH
 
 	jsr	move_and_print
+	jsr	move_and_print
 
 
 	; wait wait wait
@@ -805,6 +808,7 @@ credit_list:
 
 end_message:
 .byte 6,10,"NOW GO BACK TO ANOTHER EARTH",0
+.byte 5,12,"ASSUMING ATRUS FIGURES OUT HOW",0
 
 	;============================
 	; set BASL/BASH to offset w Y
@@ -856,8 +860,8 @@ long_wait:
 
 
 ; backgrounds
-;.include "ootw_graphics/l15final/ootw_c15_final.inc"
-.include "ootw_graphics/l16end/ootw_c16_end.inc"
+
+.include "ootw_graphics/ootw_c16_end.inc"
 
 PT3_LOC = song
 
