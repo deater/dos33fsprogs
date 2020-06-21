@@ -7,11 +7,11 @@ ootw_cave_init:
 	sta	WHICH_CAVE
 	sta	BLASTED_WALL
 	; yes you fall in facing left for some reason
-	sta	DIRECTION		; left
 	sta	NUM_DOORS
 
 	lda	#1
 	sta	HAVE_GUN
+	sta	DIRECTION		; right
 
 	lda	#0
 	sta	PHYSICIST_X

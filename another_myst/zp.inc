@@ -95,6 +95,8 @@ PT3_TEMP	= $8A
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
+BLASTED_WALL	= $BB
+
 HAVE_GUN	= $BC		; C2 jail+
 
 FIRST_SHIELD	= $BD

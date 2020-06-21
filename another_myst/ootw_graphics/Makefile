@@ -17,7 +17,8 @@ ootw_c16_end.inc:	$(PNG2RLE) \
 	flying11.png \
 	the_end01.png the_end02.png the_end03.png the_end04.png the_end05.png \
 	the_end06.png the_end07.png the_end08.png the_end09.png the_end10.png \
-	east_top_w.png
+	east_top_w.png temple_center_w.png temple_center_ex.png \
+	generator_n.png approach07.png blank.png
 	$(PNG2RLE) asm wing_bg.png wing_bg_rle > ootw_c16_end.inc
 	$(PNG2RLE) asm left_unfurl1.png left_unfurl1_rle >> ootw_c16_end.inc
 	$(PNG2RLE) asm left_unfurl2.png left_unfurl2_rle >> ootw_c16_end.inc
@@ -46,7 +47,11 @@ ootw_c16_end.inc:	$(PNG2RLE) \
 	$(PNG2RLE) asm the_end09.png the_end09_rle >> ootw_c16_end.inc
 	$(PNG2RLE) asm the_end10.png the_end10_rle >> ootw_c16_end.inc
 	$(PNG2RLE) asm east_top_w.png east_top_w_rle >> ootw_c16_end.inc
-
+	$(PNG2RLE) asm temple_center_w.png temple_center_w_rle >> ootw_c16_end.inc
+	$(PNG2RLE) asm temple_center_ex.png temple_center_ex_rle >> ootw_c16_end.inc
+	$(PNG2RLE) asm generator_n.png generator_n_rle >> ootw_c16_end.inc
+	$(PNG2RLE) asm approach07.png approach07_rle >> ootw_c16_end.inc
+	$(PNG2RLE) asm blank.png blank_rle >> ootw_c16_end.inc
 
 #####
 

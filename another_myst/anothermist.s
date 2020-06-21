@@ -88,6 +88,113 @@ repeat_ending:
 	sta	DISP_PAGE
 
 	;===========================
+	; display the title screen
+	;============================
+
+	;===========================
+	; escape from the monster
+	;============================
+
+
+	;===========================
+	; do the puzzle part
+	;============================
+
+	lda	#>(generator_n_rle)
+	sta	GBASH
+	lda	#<(generator_n_rle)
+	sta	GBASL
+	lda	#$0c			; load image off-screen $c00
+	jsr	load_rle_gr
+
+	lda	#>(blank_rle)
+	sta	GBASH
+	lda	#<(blank_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	bit	TEXTGR
+
+	jsr	wait_until_keypressed
+
+	lda	DRAW_PAGE
+	pha
+
+	lda	#$8
+	sta	DRAW_PAGE
+	jsr	clear_bottom
+
+	pla
+	sta	DRAW_PAGE
+
+	lda	#>(approach07_rle)
+	sta	GBASH
+	lda	#<(approach07_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+
+	ldx	#2
+	stx	ELEVATOR_COUNT
+button_loop:
+
+	lda	#>(approach07_rle)
+	sta	GBASH
+	lda	#<(approach07_rle)
+	sta	GBASL
+	lda	#$10			; load image off-screen $1000
+	jsr	load_rle_gr
+
+	jsr	gr_overlay
+
+
+
+
+	ldx	ELEVATOR_COUNT
+	lda	finger_x,X
+	sta	XPOS
+	tay
+
+	lda	#$d5
+	sta	$cd0,Y
+
+	lda	#34
+	sta	YPOS
+
+	lda	#<finger_sprite
+	sta	INL
+	lda	#>finger_sprite
+	sta	INH
+
+	jsr	put_sprite
+
+	jsr	page_flip
+
+	ldx	#18
+	jsr	long_wait
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	jsr	wait_until_keypressed
+
+	dec	ELEVATOR_COUNT
+	bpl	button_loop
+
+
+	bit	FULLGR
+
+	;===========================
 	; do the shooting part
 	;============================
 
@@ -882,6 +989,14 @@ long_wait:
 .include "sprites/physicist.inc"
 .include "sprites/alien.inc"
 
+finger_sprite:
+	.byte 3,3
+	.byte $bA,$AA,$AA
+	.byte $bb,$AA,$AA
+	.byte $bb,$bA,$bA
+
+finger_x:
+	.byte 29,33,31
 
 ; backgrounds
 
