@@ -3,9 +3,13 @@ include ../../Makefile.inc
 PNG2RLE = ../../gr-utils/png2rle
 PNG2LZ4 = ../../gr-utils/png2lz4
 
-all:	ootw_c16_end.inc
+all:	ootw_c16_end.inc logo.inc
 
 #####
+
+logo.inc:	$(PNG2RLE) \
+	logo.png
+	$(PNG2RLE) asm logo.png logo_rle > logo.inc
 
 ootw_c16_end.inc:	$(PNG2RLE) \
 	wing_bg.png \

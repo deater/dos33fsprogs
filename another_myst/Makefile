@@ -7,12 +7,12 @@ PNG2LZ4 = ../gr-utils/png2lz4
 
 all:	am.dsk
 
-am.dsk:	HELLO ANOTHERMIST
+am.dsk:	HELLO ANOTHERMIST INTRO TITLE
 	cp empty.dsk am.dsk
 	$(DOS33) -y am.dsk SAVE A HELLO
 	$(DOS33) -y am.dsk BSAVE -a 0x1700 ANOTHERMIST
-
-
+	$(DOS33) -y am.dsk BSAVE -a 0x1700 INTRO
+	$(DOS33) -y am.dsk BSAVE -a 0xd00 TITLE
 
 ####
 
@@ -23,33 +23,6 @@ intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
 	gr_overlay.s gr_run_sequence.s \
 	keyboard.s random16.s text_print.s zp.inc \
-	intro_graphics/01_building/intro_car.inc \
-	intro_graphics/01_building/intro_building_car.inc \
-	intro_graphics/01_building/intro_building.inc \
-	intro_graphics/02_outer_door/outer_door.inc \
-	intro_graphics/02_outer_door/feet.inc \
-	intro_graphics/03_elevator/intro_elevator.inc \
-	intro_graphics/03_elevator/intro_off_elevator.inc \
-	intro_graphics/03_elevator/intro_walking.inc \
-	intro_graphics/04_keypad/intro_scanner_door.inc \
-	intro_graphics/04_keypad/intro_approach.inc \
-	intro_graphics/04_keypad/intro_keypad_bg.inc \
-	intro_graphics/04_keypad/intro_hands.inc \
-	intro_graphics/04_keypad/intro_opening.inc \
-	intro_graphics/05_scanner/intro_scanner.inc \
-	intro_graphics/05_scanner/intro_scanning.inc \
-	intro_graphics/05_scanner/intro_ai_bg.inc \
-	intro_graphics/05_scanner/intro_ai.inc \
-	intro_graphics/06_console/intro_desktop.inc \
-	intro_graphics/06_console/intro_cursor.inc \
-	intro_graphics/06_console/intro_collider.inc \
-	intro_graphics/07_soda/intro_open_soda.inc \
-	intro_graphics/07_soda/intro_drinking.inc \
-	intro_graphics/08_lightning/lightning.inc \
-	intro_graphics/09_tunnel/intro_tunnel1.inc \
-	intro_graphics/09_tunnel/intro_tunnel2.inc \
-	intro_graphics/10_gone/intro_zappo.inc \
-	intro_graphics/10_gone/intro_gone.inc \
 	intro_data_01.lz4 \
 	intro_data_04.lz4 \
 	intro_data_06.lz4 \
