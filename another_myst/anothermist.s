@@ -95,6 +95,7 @@ repeat_ending:
 	; escape from the monster
 	;============================
 
+	jsr	ootw
 
 	;===========================
 	; do the puzzle part
@@ -983,6 +984,8 @@ long_wait:
 .include "ootw_c5_cave.s"
 .include "door.s"
 .include "alien_laser.s"
+.include "random16.s"
+.include "ootw_c1.s"
 
 ; sprites
 
