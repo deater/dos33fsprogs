@@ -53,6 +53,8 @@ arbor_start:
 	lda	#0
 	sta	ANIMATE_FRAME
 
+	; update state of switch-related stuff
+	jsr	update_arbor_state
 
 game_loop:
 	;=================

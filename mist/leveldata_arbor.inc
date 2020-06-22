@@ -5,7 +5,8 @@
 locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
-	.word location8, location9, location10
+	.word location8, location9, location10,location11
+	.word location12,location13,location14
 
 
 ; ARBOR_INSIDE_ELEV1		-- arrival in elevator1
@@ -187,11 +188,11 @@ location9:
 ; ARBOR_LONGSHACK2		-- extra long shack part 2
 location10:
 	.byte	$ff			; north exit
-	.byte	$ff			; south exit
+	.byte	ARBOR_SWITCH_BRIDGE1	; south exit
 	.byte	$ff			; east exit
 	.byte	ARBOR_LONGSHACK1	; west exit
 	.byte	$ff		; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	longshack2_n_lzsa	; north bg
@@ -200,4 +201,75 @@ location10:
 	.word	longshack2_w_lzsa	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
 	.byte	$ff
+
+; ARBOR_SWITCH_BRIDGE1		-- first bridge leading to switch
+location11:
+	.byte	ARBOR_LONGSHACK2	; north exit
+	.byte	ARBOR_SWITCH_HUT1	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_E	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	switch_bridge1_n_lzsa	; north bg
+	.word	switch_bridge1_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; ARBOR_SWITCH_HUT1		-- first hut on way to switch
+location12:
+	.byte	ARBOR_SWITCH_BRIDGE1	; north exit
+	.byte	$ff			; south exit
+	.byte	ARBOR_SWITCH_BRIDGE2	; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	switch_hut1_n_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	switch_hut1_e_lzsa	; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_EAST
+	.byte	$ff
+
+; ARBOR_SWITCH_BRIDGE2		-- second bridge on way to switch
+location13:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	ARBOR_SWITCH_HUT	; east exit
+	.byte	ARBOR_SWITCH_HUT1	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; east exit_dir
+	.byte	DIRECTION_N	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	switch_bridge2_e_lzsa	; east bg
+	.word	switch_bridge2_w_lzsa	; west bg
+	.byte	BG_WEST|BG_EAST
+	.byte	$ff
+
+; ARBOR_SWITCH_HUT		-- hut with hard-to-find switch
+location14:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	ARBOR_SWITCH_BRIDGE2	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	switch_hut_closed_s_lzsa; south bg
+	.word	$0000			; east bg
+	.word	switch_hut_w_lzsa	; west bg
+	.byte	BG_WEST|BG_SOUTH
+	.byte	DIRECTION_S	; special exit
+	.byte	16,22		; special x
+	.byte	28,40		; special y
+	.word	hut_handle-1	; special function
 

@@ -3,9 +3,9 @@
 
 ; want to load this to address $80
 
-.byte LOAD_OCTAGON	; WHICH_LOAD		= 	$80
-.byte DIRECTION_S	; DIRECTION		= 	$81
-.byte OCTAGON_TEMPLE_CENTER	; LOCATION	=	$82
+.byte LOAD_ARBOR	; WHICH_LOAD		= 	$80
+.byte DIRECTION_W	; DIRECTION		= 	$81
+.byte ARBOR_ARRIVAL_CLOSED	; LOCATION	=	$82
 .byte $00	; RED_PAGES_TAKEN	=	$83
 .byte $00	; BLUE_PAGES_TAKEN	=	$84
 .byte $00	; CLOCK_BRIDGE		=	$85

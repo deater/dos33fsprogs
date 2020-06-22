@@ -36,3 +36,66 @@ elev1_close_door:
 	jmp	change_location
 
 
+	;==================================
+	; hut handle, toggle top stair gate
+hut_handle:
+	lda	CHANNEL_SWITCHES
+	eor	#CHANNEL_SW_GATE_TOP
+	sta	CHANNEL_SWITCHES
+	jsr	update_arbor_state
+	jmp	change_location
+
+
+	;===============================================
+	; update all backgrounds based on switch states
+
+update_arbor_state:
+
+	lda	CHANNEL_SWITCHES
+	and	#CHANNEL_SW_GATE_TOP
+	beq	top_gate_closed
+
+top_gate_open:
+
+	; change top gate to open
+	ldy	#LOCATION_SOUTH_BG
+
+        lda	#<switch_hut_open_s_lzsa
+        sta	location14,Y				; ARBOR_SWITCH_HUT
+        lda	#>switch_hut_open_s_lzsa
+        sta	location14+1,Y				; ARBOR_SWITCH_HUT
+
+	; FIXME: change gate graphic close
+	; FIXME: change gate exit
+	; change to allow crossing bridge
+;	ldy	#LOCATION_EAST_EXIT
+;	lda	#CHANNEL_AFTER_BRIDGE1
+;	sta	location3,Y                             ; CHANNEL_BRIDGE
+
+	jmp	top_gate_done
+top_gate_closed:
+
+	; change top gate to open
+	ldy	#LOCATION_SOUTH_BG
+
+        lda	#<switch_hut_closed_s_lzsa
+        sta	location14,Y				; ARBOR_SWITCH_HUT
+        lda	#>switch_hut_closed_s_lzsa
+        sta	location14+1,Y				; ARBOR_SWITCH_HUT
+
+	; FIXME: change gate graphic close
+	; FIXME: change gate exit
+	; change to allow crossing bridge
+;	ldy	#LOCATION_EAST_EXIT
+;	lda	#CHANNEL_AFTER_BRIDGE1
+;	sta	location3,Y                             ; CHANNEL_BRIDGE
+
+
+top_gate_done:
+
+done_update_arbor_state:
+
+	rts
+
+
+
