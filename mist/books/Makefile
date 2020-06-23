@@ -11,11 +11,14 @@ all:	octagon_books.inc
 ####
 
 octagon_books.inc:	\
-	channelwood.lzsa stoneship.lzsa mechanical.lzsa selenitic.lzsa
+	channelwood.lzsa stoneship.lzsa mechanical.lzsa selenitic.lzsa \
+	fireplace.lzsa
 	echo "channelwood_book_lzsa: .incbin \"channelwood.lzsa\"" > octagon_books.inc
 	echo "stoneship_book_lzsa: .incbin \"stoneship.lzsa\"" >> octagon_books.inc
 	echo "mechanical_book_lzsa: .incbin \"mechanical.lzsa\"" >> octagon_books.inc
 	echo "selenitic_book_lzsa: .incbin \"selenitic.lzsa\"" >> octagon_books.inc
+	echo "fireplace_book_lzsa: .incbin \"fireplace.lzsa\"" >> octagon_books.inc
+
 
 
 %.gr: %.book

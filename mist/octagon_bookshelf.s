@@ -27,11 +27,11 @@ top_shelf:
 
 middle_shelf:
 	cpx	#13
-	bcc	read_burnt_book
+	bcc	read_burnt_book		; blt
 	cpx	#18
-	bcc	read_selenitic
-	cpx	#30
-	bcc	read_burnt_book
+	bcc	read_selenitic		; blt
+	cpx	#28
+	bcc	read_burnt_book		; blt
 	bcs	read_fireplace
 
 bottom_shelf:
@@ -42,10 +42,6 @@ bottom_shelf:
 	bcs	read_burnt_book
 
 read_burnt_book:
-	jmp	all_done_book
-
-read_fireplace:
-	; FIXME
 	jmp	all_done_book
 
 read_selenitic:
@@ -100,6 +96,73 @@ all_done_book:
 
 	rts
 
+
+
+	; draw random patterns
+	; base them on memory starting at $2000?
+	; 15 30 45 60 75 90 105 120 135 150 165 180 195 210 225 240 255
+	; 14 
+
+read_fireplace:
+	lda     #<fireplace_book_lzsa
+        sta     getsrc_smc+1			; LZSA_SRC_LO
+        iny
+        lda     #>fireplace_book_lzsa
+        sta     getsrc_smc+2			; LZSA_SRC_HI
+
+        lda     #$c                     ; load to page $c00
+        jsr     decompress_lzsa2_fast
+
+	jsr	gr_copy_to_current
+
+
+	ldy	#8
+fp_book_outer_loop:
+
+	lda	gr_offsets,Y
+	sta	fp_book_smc+1
+	lda	gr_offsets+1,Y
+	clc
+	adc	DRAW_PAGE
+	sta	fp_book_smc+2
+
+	lda	$2000,Y
+	sta	TEMPY
+
+	ldx	#5
+fp_book_inner_loop:
+
+	ror	TEMPY
+	bcc	fp_space
+	lda	#' '|$80
+	jmp	fp_book_smc
+fp_space:
+	lda	#' '&$3f
+
+fp_book_smc:
+	sta	$400,X
+
+	inx
+	inx
+	cpx	#17
+	bne	fp_book_inner_loop
+
+	iny
+	iny
+	iny
+	iny
+	cpy	#32
+	bne	fp_book_outer_loop
+
+	jsr	page_flip
+
+wait_fireplace_book:
+	lda	KEYPRESS
+	bpl	wait_fireplace_book
+	bit	KEYRESET
+
+
+	jmp	all_done_book
 
 
 	;=========================

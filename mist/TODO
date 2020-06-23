@@ -1,15 +1,15 @@
 For release 1.0
 + LOADER 
-	-- better loader
-	-- save/load games
-	-- sound loader
+	-- save game
+	-- sound loader (into language card?)
 + MIST (split off ship-up/ship-down?)
 	-- fix catherine letter (bg, grab from other side)
+		also make it a location/graphic like half messages
 	-- constellation puzzle/ship raising
 	-- marker switches
 + DENTIST
 	-- all of it
-+ CABIN (split off?)
++ CABIN
 	-- safe puzzle
 	-- boiler
 	-- up/down in tree
@@ -28,10 +28,10 @@ For release 1.0
 
 + CHANNEL
 	-- hook up water valves at least
-	-- hook up stairway and elevator1
+	-- hook up stairway
 
 + ARBOR
-	-- all of it
+	-- finish level
 
 Done:
 + MECHE
