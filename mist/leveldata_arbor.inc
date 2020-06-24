@@ -7,7 +7,7 @@ locations:
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
-	.word location16
+	.word location16,location17,location18,location19
 
 ; ARBOR_INSIDE_ELEV1		-- arrival in elevator1
 location0:
@@ -294,7 +294,7 @@ location15:
 location16:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
-.byte $ff ;	.byte	ARBOR_HUT2_INSIDE	; east exit
+	.byte	ARBOR_HUT2_INSIDE	; east exit
 	.byte	ARBOR_BRIDGE4		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
@@ -306,3 +306,55 @@ location16:
 	.word	hut2_w_lzsa		; west bg
 	.byte	BG_WEST|BG_EAST
 	.byte	$ff
+
+; ARBOR_HUT2_INSIDE		-- inside next hut
+location17:
+	.byte	$ff			; north exit
+	.byte	ARBOR_BRIDGE5		; south exit
+	.byte	$ff			; east exit
+	.byte	ARBOR_HUT2		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	hut2_inside_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	hut2_inside_w_lzsa	; west bg
+	.byte	BG_WEST|BG_SOUTH
+	.byte	$ff
+
+; ARBOR_BRIDGE5			-- next bridge
+location18:
+	.byte	ARBOR_HUT2_INSIDE	; north exit
+	.byte	ARBOR_LONGSHACK3	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_W	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	bridge5_n_lzsa		; north bg
+	.word	bridge5_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; ARBOR_LONGSHACK3		-- next longshack
+location19:
+	.byte	ARBOR_BRIDGE5		; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	longshack3_n_lzsa	; north bg
+	.word	longshack3_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+

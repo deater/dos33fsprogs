@@ -23,7 +23,10 @@ arbor_graphics.inc:	\
 	switch_bridge2_e.lzsa switch_bridge2_w.lzsa \
 	switch_hut_w.lzsa switch_hut_closed_s.lzsa switch_hut_open_s.lzsa \
 	bridge4_e.lzsa bridge4_w.lzsa \
-	hut2_e.lzsa hut2_w.lzsa
+	hut2_e.lzsa hut2_w.lzsa \
+	hut2_inside_w.lzsa hut2_inside_s.lzsa \
+	bridge5_n.lzsa bridge5_s.lzsa \
+	longshack3_n.lzsa longshack3_s.lzsa
 	echo "arrival_e_lzsa: .incbin \"arrival_e.lzsa\"" > arbor_graphics.inc
 	echo "arrival_open_e_lzsa: .incbin \"arrival_open_e.lzsa\"" >> arbor_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> arbor_graphics.inc
@@ -60,6 +63,12 @@ arbor_graphics.inc:	\
 	echo "bridge4_w_lzsa: .incbin \"bridge4_w.lzsa\"" >> arbor_graphics.inc
 	echo "hut2_e_lzsa: .incbin \"hut2_e.lzsa\"" >> arbor_graphics.inc
 	echo "hut2_w_lzsa: .incbin \"hut2_w.lzsa\"" >> arbor_graphics.inc
+	echo "hut2_inside_w_lzsa: .incbin \"hut2_inside_w.lzsa\"" >> arbor_graphics.inc
+	echo "hut2_inside_s_lzsa: .incbin \"hut2_inside_s.lzsa\"" >> arbor_graphics.inc
+	echo "bridge5_n_lzsa: .incbin \"bridge5_n.lzsa\"" >> arbor_graphics.inc
+	echo "bridge5_s_lzsa: .incbin \"bridge5_s.lzsa\"" >> arbor_graphics.inc
+	echo "longshack3_n_lzsa: .incbin \"longshack3_n.lzsa\"" >> arbor_graphics.inc
+	echo "longshack3_s_lzsa: .incbin \"longshack3_s.lzsa\"" >> arbor_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
