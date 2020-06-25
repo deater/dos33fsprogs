@@ -24,6 +24,11 @@ elev1_handle:
 	lda	#$ff
 	sta	LEVEL_OVER
 
+	lda	CHANNEL_SWITCHES		; make elevator down
+	and	#~CHANNEL_ELEVATOR1_UP
+	sta	CHANNEL_SWITCHES
+
+
 	rts
 
 

@@ -16,13 +16,14 @@ channel_graphics.inc:	\
 	path4_e.lzsa path4_w.lzsa path4_s.lzsa \
 	path5_e.lzsa path5_s.lzsa path5_n.lzsa \
 	path6_s.lzsa path6_w.lzsa path6_n.lzsa \
-	fork_n.lzsa fork_s.lzsa fork_w.lzsa \
+	fork_n.lzsa fork_s.lzsa fork_w.lzsa fork_gone_w.lzsa \
 	before_elev1_e.lzsa before_elev1_w.lzsa before_elev1_open_w.lzsa \
+	before_elev1_gone_w.lzsa \
 	pipe_bridge2_up_w.lzsa pipe_bridge2_w.lzsa pipe_bridge2_e.lzsa \
 	elevator1_open.lzsa elevator1_closed.lzsa \
 	steps_fork_n.lzsa steps_fork_s.lzsa steps_fork_w.lzsa \
-	steps_path_e.lzsa steps_path_w.lzsa \
-	steps_door_e.lzsa steps_door_w.lzsa \
+	steps_path_e.lzsa steps_path_w.lzsa steps_path_open_w.lzsa \
+	steps_door_e.lzsa steps_door_w.lzsa steps_door_open_w.lzsa \
 	wind_path_n.lzsa wind_path_s.lzsa \
 	wind_path2_n.lzsa wind_path2_s.lzsa \
 	island1_n.lzsa island1_s.lzsa \
@@ -65,8 +66,10 @@ channel_graphics.inc:	\
 	echo "fork_n_lzsa: .incbin \"fork_n.lzsa\"" >> channel_graphics.inc
 	echo "fork_s_lzsa: .incbin \"fork_s.lzsa\"" >> channel_graphics.inc
 	echo "fork_w_lzsa: .incbin \"fork_w.lzsa\"" >> channel_graphics.inc
+	echo "fork_gone_w_lzsa: .incbin \"fork_gone_w.lzsa\"" >> channel_graphics.inc
 	echo "before_elev1_e_lzsa: .incbin \"before_elev1_e.lzsa\"" >> channel_graphics.inc
 	echo "before_elev1_w_lzsa: .incbin \"before_elev1_w.lzsa\"" >> channel_graphics.inc
+	echo "before_elev1_gone_w_lzsa: .incbin \"before_elev1_gone_w.lzsa\"" >> channel_graphics.inc
 	echo "before_elev1_open_w_lzsa: .incbin \"before_elev1_open_w.lzsa\"" >> channel_graphics.inc
 	echo "pipe_bridge2_e_lzsa: .incbin \"pipe_bridge2_e.lzsa\"" >> channel_graphics.inc
 	echo "pipe_bridge2_w_lzsa: .incbin \"pipe_bridge2_w.lzsa\"" >> channel_graphics.inc
@@ -78,8 +81,10 @@ channel_graphics.inc:	\
 	echo "steps_fork_w_lzsa: .incbin \"steps_fork_w.lzsa\"" >> channel_graphics.inc
 	echo "steps_path_e_lzsa: .incbin \"steps_path_e.lzsa\"" >> channel_graphics.inc
 	echo "steps_path_w_lzsa: .incbin \"steps_path_w.lzsa\"" >> channel_graphics.inc
+	echo "steps_path_open_w_lzsa: .incbin \"steps_path_open_w.lzsa\"" >> channel_graphics.inc
 	echo "steps_door_e_lzsa: .incbin \"steps_door_e.lzsa\"" >> channel_graphics.inc
 	echo "steps_door_w_lzsa: .incbin \"steps_door_w.lzsa\"" >> channel_graphics.inc
+	echo "steps_door_open_w_lzsa: .incbin \"steps_door_open_w.lzsa\"" >> channel_graphics.inc
 	echo "wind_path_n_lzsa: .incbin \"wind_path_n.lzsa\"" >> channel_graphics.inc
 	echo "wind_path_s_lzsa: .incbin \"wind_path_s.lzsa\"" >> channel_graphics.inc
 	echo "wind_path2_n_lzsa: .incbin \"wind_path2_n.lzsa\"" >> channel_graphics.inc

@@ -1,6 +1,8 @@
-
+;===========================
 ;===========================
 ; pick up myst linking book
+;===========================
+;===========================
 book_room_grab_book:
 
 	lda	#CHANNEL_BOOK_CLOSED
@@ -10,7 +12,10 @@ book_room_grab_book:
 	rts
 
 ;=============================
+;=============================
 ; book elevator handle pulled
+;=============================
+;=============================
 
 ; FIXME: check for water power
 ; FIXME: animate
@@ -68,7 +73,11 @@ book_elevator_handle_done:
 
 
 ;=============================
+;=============================
+;=============================
 ; elevator1 handle pulled
+;=============================
+;=============================
 
 ; FIXME: check for water power
 ; FIXME: animate
@@ -90,14 +99,49 @@ elev1_handle:
 	lda	#LOAD_ARBOR
 	sta	WHICH_LOAD
 
+	lda	CHANNEL_SWITCHES		; make elevator up
+	ora	#CHANNEL_ELEVATOR1_UP
+	sta	CHANNEL_SWITCHES
+
 	lda	#$ff
 	sta	LEVEL_OVER
 
 	rts
 
 
-	;=========================
-	; close book elevator door
+;=============================
+;=============================
+;=============================
+; climb steps
+;=============================
+;=============================
+
+climb_steps:
+
+	; enter steps, which is in ARBOR level
+
+	lda	#ARBOR_STEPS_BOTTOM
+	sta	LOCATION
+
+	lda	#DIRECTION_E
+	sta	DIRECTION
+
+	lda	#LOAD_ARBOR
+	sta	WHICH_LOAD
+
+	lda	#$ff
+	sta	LEVEL_OVER
+
+	rts
+
+
+
+;=========================
+;=========================
+; close book elevator door
+;=========================
+;=========================
+
 book_elevator_close_door:
 
 	lda	#CHANNEL_BOOK_E_IN_CLOSED
@@ -115,7 +159,10 @@ elev1_close_door:
 
 
 ;=======================
+;=======================
 ; raise bridge
+;=======================
+;=======================
 
 ; if CHANNEL_SWITCHES CHANNEL_SW_WINDMILL and CHANNEL_SW_FAUCET
 ; TODO: also if various valves in correct pattern
@@ -151,7 +198,10 @@ no_raise_bridge:
 
 
 ;=======================
+;=======================
 ; extend_pipe
+;=======================
+;=======================
 
 ; verified: can open/shut even if water is flowing
 
@@ -174,9 +224,11 @@ no_extend_pipe:
 
 
 
-	;======================================
-	; adjust after changes
-	;======================================
+;======================================
+;======================================
+; adjust after changes
+;======================================
+;======================================
 
 	; should call this when entering level
 adjust_after_changes:
@@ -247,7 +299,7 @@ pipe_extended:
 	lda	#>pipe_bridge2_up_w_lzsa
 	sta	location10+1,Y				; CHANNEL_PIPE_BRIDGE2
 
-	jmp	done_adjust_changes
+	jmp	hide_elevator1
 
 pipe_stowed:
 
@@ -267,6 +319,102 @@ pipe_stowed:
 	sta	location10,Y				; CHANNEL_PIPE_BRIDGE2
 	lda	#>pipe_bridge2_w_lzsa
 	sta	location10+1,Y				; CHANNEL_PIPE_BRIDGE2
+
+hide_elevator1:
+
+	lda	CHANNEL_SWITCHES
+	and	#CHANNEL_ELEVATOR1_UP
+	beq	elevator1_down
+
+elevator1_up:
+
+	; change bgs so elevator up, can't board
+	ldy	#LOCATION_WEST_BG
+
+	lda	#<before_elev1_gone_w_lzsa
+	sta	location8,Y				; CHANNEL_BEFORE_ELEV1
+	lda	#>before_elev1_gone_w_lzsa
+	sta	location8+1,Y				; CHANNEL_BEFORE_ELEV1
+
+	lda	#<fork_gone_w_lzsa
+	sta	location7,Y				; CHANNEL_FORK
+	lda	#>fork_gone_w_lzsa
+	sta	location7+1,Y				; CHANNEL_FORK
+
+	; make so can't board
+	ldy	#LOCATION_WEST_EXIT
+	lda	#$ff
+	sta	location8,Y				; CHANNEL_BEFORE_ELEV1
+
+	jmp	open_gate
+
+elevator1_down:
+	; change bgs so elevator down
+	ldy	#LOCATION_WEST_BG
+
+	lda	#<before_elev1_w_lzsa
+	sta	location8,Y				; CHANNEL_BEFORE_ELEV1
+	lda	#>before_elev1_w_lzsa
+	sta	location8+1,Y				; CHANNEL_BEFORE_ELEV1
+
+	lda	#<fork_w_lzsa
+	sta	location7,Y				; CHANNEL_FORK
+	lda	#>fork_w_lzsa
+	sta	location7+1,Y				; CHANNEL_FORK
+
+	; make so can board
+	ldy	#LOCATION_WEST_EXIT
+	lda	#CHANNEL_ELEV1_OPEN
+	sta	location8,Y				; CHANNEL_BEFORE_ELEV1
+
+open_gate:
+	lda	CHANNEL_SWITCHES
+	and	#CHANNEL_SW_GATE_BOTTOM
+	beq	gate_closed
+
+gate_open:
+
+	; change bgs so gate open
+
+	ldy	#LOCATION_WEST_BG
+
+	lda	#<steps_path_open_w_lzsa
+	sta	location12,Y				; CHANNEL_STEPS_PATH
+	lda	#>steps_path_open_w_lzsa
+	sta	location12+1,Y				; CHANNEL_STEPS_PATH
+
+	lda	#<steps_door_open_w_lzsa
+	sta	location13,Y				; CHANNEL_STEPS_DOOR
+	lda	#>steps_door_open_w_lzsa
+	sta	location13+1,Y				; CHANNEL_STEPS_DOOR
+
+	; make so can climb steps
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#DIRECTION_W
+	sta	location13,Y				; CHANNEL_STEPS_DOOR
+
+	jmp	done_adjust_changes
+
+gate_closed:
+
+	; change bgs so gate closed
+
+	ldy	#LOCATION_WEST_BG
+
+	lda	#<steps_path_w_lzsa
+	sta	location12,Y				; CHANNEL_STEPS_PATH
+	lda	#>steps_path_w_lzsa
+	sta	location12+1,Y				; CHANNEL_STEPS_PATH
+
+	lda	#<steps_door_w_lzsa
+	sta	location13,Y				; CHANNEL_STEPS_DOOR
+	lda	#>steps_door_w_lzsa
+	sta	location13+1,Y				; CHANNEL_STEPS_DOOR
+
+	; make so can't climb steps
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#$ff
+	sta	location13,Y				; CHANNEL_STEPS_DOOR
 
 done_adjust_changes:
 

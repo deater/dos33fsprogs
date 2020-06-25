@@ -257,7 +257,10 @@ location13:
 	.word	steps_door_e_lzsa	; east bg
 	.word	steps_door_w_lzsa	; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte	$ff
+	.byte	DIRECTION_W	; special exit
+	.byte	13,27		; special x
+	.byte	4,42		; special y
+	.word	climb_steps-1		; special function
 
 ; CHANNEL_WIND_PATH		-- path to windmill
 location14:
