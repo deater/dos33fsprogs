@@ -44,6 +44,29 @@ bottom_shelf:
 read_burnt_book:
 	jmp	all_done_book
 
+read_fireplace:
+	lda	#OCTAGON_GRID_BOOK
+	sta	LOCATION
+	jsr	change_location
+	bit	SET_TEXT
+
+	; reset which page we are on
+
+	lda	#127
+	sta	GRID_PAGE
+	lda	#'1'
+	sta	grid_left_h
+	sta	grid_right_h
+	lda	#'2'
+	sta	grid_left_t
+	sta	grid_right_t
+	lda	#'7'
+	sta	grid_left_o
+	lda	#'8'
+	sta	grid_right_o
+
+	rts
+
 read_selenitic:
 	lda     #<selenitic_book_lzsa
         sta     getsrc_smc+1			; LZSA_SRC_LO
@@ -98,23 +121,14 @@ all_done_book:
 
 
 
+
+
 	; draw random patterns
 	; base them on memory starting at $2000?
 	; 15 30 45 60 75 90 105 120 135 150 165 180 195 210 225 240 255
 	; 14 
 
-read_fireplace:
-	lda     #<fireplace_book_lzsa
-        sta     getsrc_smc+1			; LZSA_SRC_LO
-        iny
-        lda     #>fireplace_book_lzsa
-        sta     getsrc_smc+2			; LZSA_SRC_HI
-
-        lda     #$c                     ; load to page $c00
-        jsr     decompress_lzsa2_fast
-
-	jsr	gr_copy_to_current
-
+draw_book_grid:
 
 	ldy	#8
 fp_book_outer_loop:
@@ -154,15 +168,95 @@ fp_book_smc:
 	cpy	#32
 	bne	fp_book_outer_loop
 
-	jsr	page_flip
+	; draw page number
 
-wait_fireplace_book:
-	lda	KEYPRESS
-	bpl	wait_fireplace_book
-	bit	KEYRESET
+	; line 34? $4d0?
+
+	lda	#$50
+	sta	OUTL
+	lda	#$4
+	clc
+	adc	DRAW_PAGE
+	sta	OUTH
+
+	ldy	#4
+
+	lda	grid_left_h
+	beq	glhz
+	sta	(OUTL),Y
+	iny
+glhz:
+	lda	grid_left_t
+	beq	gltz
+	sta	(OUTL),Y
+	iny
+gltz:
+	lda	grid_left_o
+	sta	(OUTL),Y
+	iny
+	lda	#' '
+	sta	(OUTL),Y
+	iny
+	sta	(OUTL),Y
+
+	rts
 
 
-	jmp	all_done_book
+	;==========================
+	; turn the grid book page
+
+turn_page:
+
+	lda	CURSOR_X
+	cmp	#20
+	bcs	increment_page
+
+decrement_page:
+	ldx	GRID_PAGE
+	cmp	#1
+	beq	done_decrement_page	; don't go lower than 1
+
+	dex
+	dex
+	stx	GRID_PAGE
+
+	dec	grid_left_o
+	dec	grid_left_o
+
+	dec	grid_right_o
+	dec	grid_right_o
+
+
+done_decrement_page:
+	rts
+
+
+increment_page:
+	ldx	GRID_PAGE
+	cmp	#253			; don't go above 253/254
+	beq	done_increment_page
+
+	inx
+	inx
+	stx	GRID_PAGE
+
+	inc	grid_left_o
+	inc	grid_left_o
+
+	inc	grid_right_o
+	inc	grid_right_o
+
+done_increment_page:
+	rts
+
+
+grid_left_h:	.byte	'1'
+grid_left_t:	.byte	'2'
+grid_left_o:	.byte	'7'
+grid_right_h:	.byte	'1'
+grid_right_t:	.byte	'2'
+grid_right_o:	.byte	'8'
+
 
 
 	;=========================

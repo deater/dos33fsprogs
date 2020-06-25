@@ -75,6 +75,9 @@ game_loop:
 	cmp	#OCTAGON_TOWER_ROTATION
 	beq	animate_tower_rotation
 
+	cmp	#OCTAGON_GRID_BOOK
+	beq	looking_at_grid_book
+
 	cmp	#OCTAGON_TEMPLE_CENTER
 	bne	check_page_close_red
 	jsr	draw_octagon_page_far
@@ -138,6 +141,10 @@ animate_elevator:
 
 animate_tower_rotation:
 	jsr	handle_tower_rotation
+	jmp	nothing_special
+
+looking_at_grid_book:
+	jsr	draw_book_grid
 	jmp	nothing_special
 
 animate_red_book:

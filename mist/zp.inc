@@ -156,6 +156,7 @@ END_OF_SAVE	=	$B7
 ; done game puzzle state
 
 
+GRID_PAGE	=	$DF
 ANIMATE_FRAME	=	$E0
 LEVEL_OVER	=	$E1
 LOCATIONS_L	=	$E2

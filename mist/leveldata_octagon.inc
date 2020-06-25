@@ -12,7 +12,7 @@ locations:
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
-	.word location32
+	.word location32,location33
 
 ; OCTAGON_TEMPLE_DOORWAY	-- temple doorway
 location0:
@@ -611,3 +611,23 @@ location32:
 	.word	$0000			; west bg
 	.byte	BG_EAST
 	.byte	$ff
+
+; OCTAGON_GRID_BOOK		-- the bookcase close in
+location33:
+	.byte	OCTAGON_BOOKSHELF_CLOSE	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N|DIRECTION_ONLY_POINT; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	fireplace_book_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	DIRECTION_N	; special exit
+	.byte	6,34		; special x
+	.byte	5,35		; special y
+	.word	turn_page-1	; special function
