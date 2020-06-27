@@ -6,10 +6,10 @@ PNG_TO_40x48D = ../gr-utils/png_to_40x48d
 PNG2RLE = ../gr-utils/png2rle
 B2D = ../bmp2dhr/b2d
 
-all:	mist.dsk mist_side2.dsk
+all:	mist.dsk mist_side2.dsk mist_side3.dsk
 
-zip:	mist.dsk mist_side2.dsk
-	zip mist.zip mist.dsk mist_side2.dsk
+zip:	mist.dsk mist_side2.dsk mist_side3.dsk
+	zip mist.zip mist.dsk mist_side2.dsk mist_side3.dsk
 
 mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
 		MECHE SELENA CABIN CHANNEL STONEY SAVE0
@@ -30,12 +30,23 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
 mist_side2.dsk:	HELLO_DISK2 MECHE SELENA CHANNEL VIEWER ARBOR
 	cp empty.dsk mist_side2.dsk
 	$(DOS33) -y mist_side2.dsk SAVE A HELLO_DISK2 HELLO
-	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 MECHE
-	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 SELENA
+#	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 MECHE
+#	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 SELENA
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 CHANNEL
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 ARBOR
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 VIEWER
 #	$(DOS33) -y mist_side2.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
+
+
+mist_side3.dsk:	HELLO_DISK2 MECHE SELENA
+	cp empty.dsk mist_side3.dsk
+	$(DOS33) -y mist_side3.dsk SAVE A HELLO_DISK2 HELLO
+	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 MECHE
+	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 SELENA
+#	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 CHANNEL
+#	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 ARBOR
+#	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 VIEWER
+
 
 ###
 

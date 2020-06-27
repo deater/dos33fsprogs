@@ -1,4 +1,7 @@
 For release 1.0
+
++ split rocket puzzle off of selenetic?
+
 + LOADER 
 	-- save game
 	-- sound loader (into language card?)
@@ -29,10 +32,10 @@ For release 1.0
 + CHANNEL
 	-- hook up water valves at least
 	-- show water in pipe (because no sound clue for water running?)
-	-- hook up stairway
-	-- hook up pages and half letter
+	-- from path can still see down elev1 even if up
 
 + ARBOR
+	-- hook up pages and half letter
 	-- finish level
 
 Done:
