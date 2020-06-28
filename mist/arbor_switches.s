@@ -76,20 +76,16 @@ elevator2_handle:
 
 	; check for water power
 
-	lda	LOCATION
-	cmp	#ARBOR_INSIDE_ELEV2_CLOSED
-	beq	elev2_goto_top
-
-elev2_goto_bottom:
-	lda	#ARBOR_INSIDE_ELEV2_CLOSED
-	bne	done_elev2_handle
-
-elev2_goto_top:
-	lda	#ARBOR_IN_ELEV2_TOP_CLOSED
-
-done_elev2_handle:
+	lda	#NIBEL_IN_ELEV2_TOP_CLOSED
 	sta	LOCATION
-	jmp	change_location
+
+	lda	#LOAD_NIBEL
+	sta	WHICH_LOAD
+
+	lda	#$ff
+	sta	LEVEL_OVER
+
+	rts
 
 
 ;=========================
@@ -100,18 +96,7 @@ done_elev2_handle:
 
 elevator2_close_door:
 
-	lda	LOCATION
-	cmp	#ARBOR_INSIDE_ELEV2_OPEN
-	bne	elev2_close_top
-
-elev2_close_bottom:
 	lda	#ARBOR_INSIDE_ELEV2_CLOSED
-	bne	done_elev2_close_door
-
-elev2_close_top:
-	lda	#ARBOR_IN_ELEV2_TOP_CLOSED
-
-done_elev2_close_door:
 	sta	LOCATION
 	jmp	change_location
 
@@ -306,9 +291,9 @@ bottom_gate_open:
 
 	ldy	#LOCATION_WEST_BG
 	lda	#<steps_bottom_open_w_lzsa
-	sta	location32,Y				; ARBOR_STEPS_BOTTOM
+	sta	location30,Y				; ARBOR_STEPS_BOTTOM
 	lda	#>steps_bottom_open_w_lzsa
-	sta	location32+1,Y				; ARBOR_STEPS_BOTTOM
+	sta	location30+1,Y				; ARBOR_STEPS_BOTTOM
 
 	jmp	bottom_gate_done
 
@@ -316,9 +301,9 @@ bottom_gate_closed:
 
 	ldy	#LOCATION_WEST_BG
 	lda	#<steps_bottom_closed_w_lzsa
-	sta	location32,Y				; ARBOR_STEPS_BOTTOM
+	sta	location30,Y				; ARBOR_STEPS_BOTTOM
 	lda	#>steps_bottom_closed_w_lzsa
-	sta	location32+1,Y				; ARBOR_STEPS_BOTTOM
+	sta	location30+1,Y				; ARBOR_STEPS_BOTTOM
 
 
 bottom_gate_done:

@@ -10,9 +10,7 @@ locations:
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
-	.word location28,location29,location30,location31
-	.word location32,location33,location34
-
+	.word location28,location29,location30
 
 ; ARBOR_INSIDE_ELEV1		-- arrival in elevator1
 location0:
@@ -497,49 +495,8 @@ location26:
 	.byte	28,36		; special y
 	.word	elevator2_handle-1	; special function
 
-
-; ARBOR_IN_ELEV2_TOP_CLOSED	-- inside elevator2 at top, door closed
-location27:
-	.byte	$ff			; north exit
-	.byte	$ff			; south exit
-	.byte	ARBOR_IN_ELEV2_TOP_OPEN	; east exit
-	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
-	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
-	.byte	$ff		; west exit_dir
-	.word	$0000				; north bg
-	.word	$0000				; south bg
-	.word	elevator2_closed_top_lzsa	; east bg
-	.word	$0000				; west bg
-	.byte	BG_EAST
-	.byte	DIRECTION_E	; special exit
-	.byte	28,34		; special x
-	.byte	28,36		; special y
-	.word	elevator2_handle-1	; special function
-
-; ARBOR_IN_ELEV2_TOP_OPEN	-- inside elevator2 at top, door open
-location28:
-	.byte	$ff				; north exit
-	.byte	$ff				; south exit
-	.byte	ARBOR_OUTSIDE_ELEV2_CLOSED	; east exit
-	.byte	$ff				; west exit
-	.byte	$ff		; north exit_dir
-	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
-	.byte	$ff		; west exit_dir
-	.word	$0000				; north bg
-	.word	$0000				; south bg
-	.word	elevator2_open_top_lzsa		; east bg
-	.word	$0000				; west bg
-	.byte	BG_EAST
-	.byte	DIRECTION_E	; special exit
-	.byte	10,17		; special x
-	.byte	6,46		; special y
-	.word	elevator2_close_door-1	; special function
-
 ; ARBOR_STEPS_TOP	-- top of steps
-location29:
+location27:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	ARBOR_DOORS		; east exit
@@ -556,7 +513,7 @@ location29:
 	.byte	$ff
 
 ; ARBOR_STEPS2	-- down steps
-location30:
+location28:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	ARBOR_STEPS_TOP		; east exit
@@ -573,7 +530,7 @@ location30:
 	.byte	$ff
 
 ; ARBOR_STEPS1	-- down steps further
-location31:
+location29:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	ARBOR_STEPS2		; east exit
@@ -590,7 +547,7 @@ location31:
 	.byte	$ff
 
 ; ARBOR_STEPS_BOTTOM	-- bottom of steps
-location32:
+location30:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	ARBOR_STEPS1		; east exit
@@ -609,38 +566,4 @@ location32:
 	.byte	6,46		; special y
 	.word	stair_gate-1	; special function
 
-
-; ARBOR_OUTSIDE_ELEV2_OPEN	-- outside of elevator2 at top, door open
-location33:
-	.byte	$ff			; north exit
-	.byte	$ff			; south exit
-	.byte	$ff			; east exit
-	.byte	ARBOR_IN_ELEV2_TOP_OPEN	; west exit
-	.byte	$ff		; north exit_dir
-	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
-	.byte	DIRECTION_E	; west exit_dir
-	.word	$0000				; north bg
-	.word	$0000				; south bg
-	.word	outside_elevator2_e_lzsa	; east bg
-	.word	outside_elevator2_open_w_lzsa	; west bg
-	.byte	BG_EAST|BG_WEST
-	.byte	$ff
-
-; ARBOR_OUTSIDE_ELEV2_CLOSED	-- outside of elevator2 at top, door closed
-location34:
-	.byte	$ff				; north exit
-	.byte	$ff				; south exit
-	.byte	$ff				; east exit
-	.byte	ARBOR_OUTSIDE_ELEV2_OPEN	; west exit
-	.byte	$ff		; north exit_dir
-	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
-	.byte	DIRECTION_W	; west exit_dir
-	.word	$0000				; north bg
-	.word	$0000				; south bg
-	.word	outside_elevator2_e_lzsa	; east bg
-	.word	outside_elevator2_closed_w_lzsa	; west bg
-	.byte	BG_EAST|BG_WEST
-	.byte	$ff
 

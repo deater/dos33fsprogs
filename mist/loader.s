@@ -144,7 +144,8 @@ filenames:
 	.word intro_filename
 	.word mist_filename,meche_filename,selena_filename,octagon_filename
 	.word viewer_filename,stoney_filename,channel_filename,cabin_filename
-	.word dentist_filename,arbor_filename,shipup_filename,ending_filename
+	.word dentist_filename,arbor_filename,shipup_filename,nibel_filename
+	.word ending_filename
 
 intro_filename:
 	.byte "MIST_TITLE",0
@@ -170,6 +171,8 @@ arbor_filename:
 	.byte "ARBOR",0
 shipup_filename:
 	.byte "SHIPUP",0
+nibel_filename:
+	.byte "NIBEL",0
 ending_filename:
 	.byte "ENDING",0
 

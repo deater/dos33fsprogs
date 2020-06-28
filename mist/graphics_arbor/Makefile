@@ -33,8 +33,6 @@ arbor_graphics.inc:	\
 	doors_e.lzsa doors_closed_w.lzsa doors_open_w.lzsa \
 	doors_elev2_open_w.lzsa doors_open_elev2_closed_w.lzsa \
 	inside_elevator2_open.lzsa inside_elevator2_closed.lzsa \
-	elevator2_open_top.lzsa elevator2_closed_top.lzsa \
-	outside_elevator2_e.lzsa outside_elevator2_open_w.lzsa outside_elevator2_closed_w.lzsa \
 	steps_top_e.lzsa steps_top_w.lzsa \
 	steps1_e.lzsa steps1_w.lzsa \
 	steps2_e.lzsa steps2_w.lzsa \
@@ -97,11 +95,6 @@ arbor_graphics.inc:	\
 	echo "doors_open_elev2_closed_w_lzsa: .incbin \"doors_open_elev2_closed_w.lzsa\"" >> arbor_graphics.inc
 	echo "inside_elevator2_open_lzsa: .incbin \"inside_elevator2_open.lzsa\"" >> arbor_graphics.inc
 	echo "inside_elevator2_closed_lzsa: .incbin \"inside_elevator2_closed.lzsa\"" >> arbor_graphics.inc
-	echo "elevator2_open_top_lzsa: .incbin \"elevator2_open_top.lzsa\"" >> arbor_graphics.inc
-	echo "elevator2_closed_top_lzsa: .incbin \"elevator2_closed_top.lzsa\"" >> arbor_graphics.inc
-	echo "outside_elevator2_e_lzsa: .incbin \"outside_elevator2_e.lzsa\"" >> arbor_graphics.inc
-	echo "outside_elevator2_open_w_lzsa: .incbin \"outside_elevator2_open_w.lzsa\"" >> arbor_graphics.inc
-	echo "outside_elevator2_closed_w_lzsa: .incbin \"outside_elevator2_closed_w.lzsa\"" >> arbor_graphics.inc
 	echo "steps_top_e_lzsa: .incbin \"steps_top_e.lzsa\"" >> arbor_graphics.inc
 	echo "steps_top_w_lzsa: .incbin \"steps_top_w.lzsa\"" >> arbor_graphics.inc
 	echo "steps1_w_lzsa: .incbin \"steps1_w.lzsa\"" >> arbor_graphics.inc
@@ -121,4 +114,4 @@ arbor_graphics.inc:	\
 ####
 
 clean:		
-		rm -f *~ *.o *.lst *.gr *.lzsa channel_graphics.inc
+		rm -f *~ *.o *.lst *.gr *.lzsa arbor_graphics.inc

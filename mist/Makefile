@@ -27,13 +27,14 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
 	$(DOS33) -y mist.dsk BSAVE -a 0xe00 SAVE0
 	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
-mist_side2.dsk:	HELLO_DISK2 MECHE SELENA CHANNEL VIEWER ARBOR
+mist_side2.dsk:	HELLO_DISK2 MECHE SELENA CHANNEL VIEWER ARBOR NIBEL
 	cp empty.dsk mist_side2.dsk
 	$(DOS33) -y mist_side2.dsk SAVE A HELLO_DISK2 HELLO
 #	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 MECHE
 #	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 SELENA
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 CHANNEL
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 ARBOR
+	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 NIBEL
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 VIEWER
 #	$(DOS33) -y mist_side2.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
@@ -271,6 +272,19 @@ arbor.o:	arbor.s zp.inc hardware.inc common_defines.inc \
 	leveldata_arbor.inc \
 	arbor_switches.s
 	ca65 -o arbor.o arbor.s -l arbor.lst
+
+####
+
+NIBEL:	nibel.o
+	ld65 -o NIBEL nibel.o -C ../linker_scripts/apple2_2000.inc
+
+nibel.o:	nibel.s zp.inc hardware.inc common_defines.inc \
+	common_routines.inc \
+	graphics_nibel/nibel_graphics.inc \
+	leveldata_nibel.inc \
+	nibel_switches.s
+	ca65 -o nibel.o nibel.s -l nibel.lst
+
 ####
 
 graphics_island/mist_graphics.inc:
@@ -283,4 +297,4 @@ clean:
 		rm -f *~ *.o *.lst HELLO HELLO_DISK2 \
 			LOADER MIST_TITLE \
 			MIST OCTAGON \
-			MECHE SELENA STONEY CHANNEL ARBOR
+			MECHE SELENA STONEY CHANNEL ARBOR NIBEL
