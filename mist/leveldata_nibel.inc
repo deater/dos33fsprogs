@@ -4,6 +4,7 @@
 
 locations:
 	.word location0, location1, location2, location3
+	.word location4, location5
 
 ; NIBEL_IN_ELEV2_TOP_CLOSED	-- inside elevator2 at top, door closed
 location0:
@@ -49,11 +50,11 @@ location1:
 location2:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
-	.byte	$ff			; east exit
+	.byte	NIBEL_BLUE_PATH1	; east exit
 	.byte	NIBEL_IN_ELEV2_TOP_OPEN	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_S	; east exit_dir
 	.byte	DIRECTION_E	; west exit_dir
 	.word	$0000				; north bg
 	.word	$0000				; south bg
@@ -66,11 +67,11 @@ location2:
 location3:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
-	.byte	$ff				; east exit
+	.byte	NIBEL_BLUE_PATH1		; east exit
 	.byte	NIBEL_OUTSIDE_ELEV2_OPEN	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_S	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000				; north bg
 	.word	$0000				; south bg
@@ -78,4 +79,40 @@ location3:
 	.word	outside_elevator2_closed_w_lzsa	; west bg
 	.byte	BG_EAST|BG_WEST
 	.byte	$ff
+
+; NIBEL_BLUE_PATH1	-- path 1 to blue house
+location4:
+	.byte	NIBEL_OUTSIDE_ELEV2_CLOSED	; north exit
+	.byte	NIBEL_BLUE_PATH2		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_W	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	blue_path1_n_lzsa		; north bg
+	.word	blue_path1_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; NIBEL_BLUE_PATH2	-- path 2 to blue house
+location5:
+	.byte	NIBEL_BLUE_PATH1		; north exit
+	.byte	$ff				; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	blue_path2_n_lzsa		; north bg
+	.word	blue_path2_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+
 
