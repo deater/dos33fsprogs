@@ -75,6 +75,110 @@ no_draw_page:
 	rts
 
 
+projector_button:
+
+	lda	DRAW_PAGE
+	pha
+
+	; mixed text and graphics
+	bit	TEXTGR
+
+	lda	#$8
+	sta	DRAW_PAGE
+
+	jsr	clear_bottom
+
+	; reset button colors
+	lda	#$44
+	sta	$D50+16
+	sta	$D50+18
+	sta	$D50+20
+	sta	$D50+22
+
+	lda	#$cc
+
+	ldy	CURSOR_X
+	cpy	#19
+	bcs	button3
+	cpy	#17
+	bcs	button2
+	cpy	#15
+	bcs	button1
+button0:
+
+	sta	$D50+16
+
+	lda	#<button0_and_2_animation
+	sta	current_button_animation
+	lda	#>button0_and_2_animation
+	sta	current_button_animation+1
+
+	lda	#<viewer1_text
+	sta	OUTL
+	lda	#>viewer1_text
+	sta	OUTH
+
+	jmp	done_buttons
+
+button1:
+
+	sta	$D50+18
+
+	lda	#<button1_animation
+	sta	current_button_animation
+	lda	#>button1_animation
+	sta	current_button_animation+1
+
+	lda	#<viewer2_text
+	sta	OUTL
+	lda	#>viewer2_text
+	sta	OUTH
+
+	jmp	done_buttons
+
+button2:
+	sta	$D50+20
+
+	lda	#<button0_and_2_animation
+	sta	current_button_animation
+	lda	#>button0_and_2_animation
+	sta	current_button_animation+1
+
+	lda	#<viewer3_text
+	sta	OUTL
+	lda	#>viewer3_text
+	sta	OUTH
+
+	jmp	done_buttons
+
+button3:
+	sta	$D50+22
+
+	lda	#<button3_animation
+	sta	current_button_animation
+	lda	#>button3_animation
+	sta	current_button_animation+1
+
+	lda	#<viewer4_text
+	sta	OUTL
+	lda	#>viewer4_text
+	sta	OUTH
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+
+
+done_buttons:
+	jsr	move_and_print
+	pla
+	sta	DRAW_PAGE
+
+	lda	#1
+	sta	ANIMATE_FRAME
+
+	rts
+
+
 
 
 ; viewer
@@ -83,18 +187,18 @@ no_draw_page:
 ; [talking in another language]
 
 viewer1_text:
-.byte "[WORDS IN ANOTHER LANGUAGE]"
+.byte 5,22,"[ WORDS IN ANOTHER LANGUAGE ]",0
 
 ; position 2
 ; [scary talking in another language]
 viewer2_text:
-.byte "[OMINIOUS WORDS IN ANOTHER LANGUAGE]"
+.byte 1,22,"[ OMINOUS WORDS IN ANOTHER LANGUAGE ]",0
 
 ; position 3
 ; [ more talking in another language]
 
 viewer3_text:
-.byte "[MORE OMINIOUS WORDS IN ANOTHER LANGUAGE]"
+.byte 9,22,"[ MORE OMINOUS WORDS ]",0
 
 ; position 4
 ; Sirrus: I hope I pushed the right button
@@ -104,9 +208,96 @@ viewer3_text:
 ; brother
 
 viewer4_text:
-;                1         2         3
-;      0123456789012345678901234567890123456789
-.byte "I HOPE I PUSHED THE RIGHT BUTTON."
-.byte "WHAT AN INTERESTING DEVICE YOU HAVE HERE"
-.byte "NOT ERASING ANYTHING IMPORTANT, AM I?"
-.byte "TAKE ONLY ONE PAGE MY DEAR BROTHER."
+;                     1         2         3
+;           0123456789012345678901234567890123456789
+.byte 4,20,"I HOPE I PUSHED THE RIGHT BUTTON.",0
+.byte 0,21,"WHAT AN INTERESTING DEVICE YOU HAVE HERE",0
+.byte 1,22,"NOT ERASING ANYTHING IMPORTANT, AM I?",0
+.byte 3,23,"TAKE ONLY ONE PAGE MY DEAR BROTHER.",0
+
+current_button_animation:
+	.word button0_and_2_animation
+
+button0_and_2_animation:
+	.word viewer_static1_sprite
+	.word viewer_static2_sprite
+	.word viewer_static1_sprite
+	.word viewer_static2_sprite
+	.word viewer_ach_sprite
+
+button1_animation:
+	.word viewer_static1_sprite
+	.word viewer_static2_sprite
+	.word viewer_static1_sprite
+	.word viewer_static2_sprite
+	.word viewer_ach_zoom_sprite
+
+button3_animation:
+	.word viewer_static1_sprite
+	.word viewer_static2_sprite
+	.word viewer_static1_sprite
+	.word viewer_static2_sprite
+	.word viewer_sir_sprite
+
+
+
+viewer_static1_sprite:
+.byte 12,8
+.byte $55,$fd,$2f,$62,$26,$65,$f0,$6f,$26,$65,$5d,$ff
+.byte $ff,$65,$56,$62,$26,$ff,$55,$52,$26,$62,$ff,$65
+.byte $26,$62,$26,$55,$2f,$62,$26,$65,$f6,$6f,$26,$62
+.byte $26,$62,$f6,$6f,$55,$62,$26,$ff,$26,$55,$26,$62
+.byte $26,$ff,$26,$62,$26,$f5,$5f,$62,$26,$62,$55,$52
+.byte $2f,$62,$26,$62,$f6,$6f,$25,$52,$26,$62,$26,$65
+.byte $dd,$62,$26,$f2,$2f,$62,$26,$65,$56,$62,$26,$d2
+.byte $dd,$d2,$f6,$6f,$26,$02,$26,$62,$26,$55,$dd,$dd
+
+viewer_static2_sprite:
+.byte 12,8
+.byte $55,$fd,$6f,$26,$62,$25,$f0,$2f,$62,$25,$5d,$ff
+.byte $ff,$25,$52,$26,$62,$ff,$55,$62,$62,$26,$ff,$25
+.byte $02,$06,$02,$55,$0f,$06,$02,$05,$f2,$0f,$02,$06
+.byte $00,$00,$f0,$0f,$55,$00,$00,$ff,$00,$55,$00,$00
+.byte $60,$ff,$60,$20,$60,$f5,$5f,$20,$60,$20,$55,$50
+.byte $6f,$26,$62,$26,$f2,$2f,$65,$56,$62,$26,$62,$25
+.byte $dd,$26,$62,$f6,$6f,$26,$62,$25,$52,$26,$62,$d6
+.byte $dd,$d6,$f2,$2f,$62,$06,$62,$26,$62,$55,$dd,$dd
+
+viewer_ach_sprite:
+.byte 12,8
+.byte $55,$fd,$0f,$00,$00,$05,$f0,$0f,$00,$05,$5d,$ff
+.byte $ff,$05,$50,$20,$62,$ff,$55,$50,$00,$00,$ff,$05
+.byte $00,$00,$00,$55,$2f,$66,$26,$25,$f0,$0f,$00,$00
+.byte $00,$00,$f0,$6f,$55,$66,$62,$ff,$00,$55,$00,$00
+.byte $00,$ff,$00,$66,$66,$f5,$5f,$66,$00,$00,$55,$50
+.byte $0f,$00,$e0,$26,$f2,$2f,$25,$56,$00,$00,$00,$05
+.byte $dd,$0e,$e6,$f2,$6f,$62,$62,$05,$50,$00,$00,$d0
+.byte $dd,$d0,$f0,$0f,$02,$06,$02,$00,$00,$55,$dd,$dd
+
+viewer_ach_zoom_sprite:
+.byte 12,8
+.byte $55,$fd,$6f,$66,$66,$05,$f0,$0f,$00,$65,$5d,$ff
+.byte $ff,$e5,$5e,$66,$66,$ff,$55,$56,$66,$66,$ff,$05
+.byte $66,$e6,$6e,$55,$0f,$06,$06,$05,$f6,$6f,$66,$00
+.byte $66,$e6,$f6,$0f,$55,$00,$00,$ff,$00,$55,$66,$00
+.byte $66,$ff,$66,$68,$86,$f5,$5f,$68,$66,$6e,$55,$50
+.byte $6f,$e6,$6e,$66,$f6,$6f,$65,$56,$68,$86,$66,$05
+.byte $dd,$e6,$6e,$f6,$6f,$00,$00,$05,$50,$00,$00,$d0
+.byte $dd,$d6,$f6,$0f,$06,$00,$00,$00,$00,$55,$dd,$dd
+
+viewer_sir_sprite:
+.byte 12,8
+.byte $55,$fd,$0f,$00,$00,$e5,$fe,$ef,$c0,$05,$5d,$ff
+.byte $ff,$05,$50,$00,$ee,$ff,$55,$54,$ee,$44,$ff,$05
+.byte $00,$00,$00,$55,$4f,$ee,$44,$45,$fe,$4f,$00,$00
+.byte $00,$00,$f0,$0f,$55,$ce,$44,$ff,$ee,$55,$00,$00
+.byte $00,$ff,$00,$00,$4c,$f5,$5f,$44,$ee,$44,$55,$50
+.byte $2f,$32,$23,$00,$fe,$4f,$c5,$5e,$cc,$32,$23,$35
+.byte $dd,$32,$23,$f2,$2f,$34,$c4,$85,$5c,$32,$23,$d2
+.byte $dd,$d2,$f3,$3f,$23,$02,$2e,$8c,$c8,$55,$dd,$dd
+
+
+
+
+
+

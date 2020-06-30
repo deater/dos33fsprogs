@@ -19,31 +19,6 @@
 ;
 ;	rts
 
-clear_bottoms:
-
-	lda	DRAW_PAGE
-	pha
-
-	;===================================
-	; Clear bottom of page 0
-	;===================================
-
-	lda	#$0
-	sta	DRAW_PAGE
-	jsr	clear_bottom
-
-	;===================================
-	; Clear bottom of page 1
-	;===================================
-
-	lda	#$4
-	sta	DRAW_PAGE
-	jsr	clear_bottom
-
-	pla
-	sta	DRAW_PAGE
-
-        rts
 
 
 
@@ -153,6 +128,33 @@ __cbf2:
 ;	jsr	clear_all
 
 ;	rts
+
+
+clear_bottoms:
+
+	lda	DRAW_PAGE
+	pha
+
+	;===================================
+	; Clear bottom of page 0
+	;===================================
+
+	lda	#$0
+	sta	DRAW_PAGE
+	jsr	clear_bottom
+
+	;===================================
+	; Clear bottom of page 1
+	;===================================
+
+	lda	#$4
+	sta	DRAW_PAGE
+	jsr	clear_bottom
+
+	pla
+	sta	DRAW_PAGE
+
+        rts
 
 
 	;=========================================================

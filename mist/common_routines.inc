@@ -21,6 +21,7 @@ end_level	=$169d
 gr_copy_to_current	=$16bf
 
 ; gr_fast_clear.s
+clear_bottom	=$17e5
 clear_all	=$1823
 clear_all_color	=$1848
 

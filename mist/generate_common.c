@@ -68,6 +68,7 @@ int main(int argc, char **argv) {
 	printf("\n");
 
 	printf("; gr_fast_clear.s\n");
+	find_address("clear_bottom");
 	find_address("clear_all");
 	find_address("clear_all_color");
 	printf("\n");

@@ -75,7 +75,8 @@ game_loop:
 	lda	LOCATION
 	cmp	#NIBEL_BLUE_ROOM
 	beq	fg_draw_blue_page
-;	beq	animate_mist_book
+	cmp	#NIBEL_BLUE_HOUSE_VIEWER
+	beq	animate_viewer
 
 	jmp	nothing_special
 
@@ -83,6 +84,59 @@ fg_draw_blue_page:
 	jsr	draw_blue_page
 	jmp	nothing_special
 
+animate_viewer:
+	lda	ANIMATE_FRAME
+	beq	nothing_special
+	cmp	#6
+	beq	viewer_done
+
+	sec
+	sbc	#1
+	asl
+	tay
+
+	lda	current_button_animation
+	sta	OUTL
+	lda	current_button_animation+1
+	sta	OUTH
+	lda	(OUTL),Y
+	sta	INL
+	iny
+	lda	(OUTL),Y
+	sta	INH
+
+	lda	#14
+	sta	XPOS
+
+	lda	#10
+	sta	YPOS
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$f
+	bne	nothing_special
+
+	lda	ANIMATE_FRAME
+	cmp	#5
+	bne	short_frame
+
+long_frame:
+	inc	LONG_FRAME
+	lda	LONG_FRAME
+	cmp	#30
+	bne	nothing_special
+
+short_frame:
+	inc	ANIMATE_FRAME
+
+	lda	#0
+	sta	LONG_FRAME
+	jmp	nothing_special
+
+
+viewer_done:
+	lda	#0
+	sta	ANIMATE_FRAME
 
 nothing_special:
 
@@ -140,3 +194,4 @@ really_exit:
 
 	; book pages
 	.include	"handle_pages.s"
+

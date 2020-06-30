@@ -169,5 +169,8 @@ location8:
 	.word	projector_e_lzsa		; east bg
 	.word	$0000				; west bg
 	.byte	BG_EAST
-	.byte	$ff
+	.byte	DIRECTION_E		; special exit
+	.byte	14,24			; special x
+	.byte	34,40			; special y
+	.word	projector_button-1	; special function
 
