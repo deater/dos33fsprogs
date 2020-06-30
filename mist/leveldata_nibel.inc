@@ -147,7 +147,12 @@ location7:
 	.word	blue_house_e_lzsa		; east bg
 	.word	blue_house_w_lzsa		; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
-	.byte	$ff
+	.byte	DIRECTION_E		; special exit
+	.byte	5,11			; special x
+	.byte	40,46			; special y
+	.word	nibel_take_blue_page-1	; special function
+
+
 
 ; NIBEL_BLUE_HOUSE_VIEWER	-- blue house viewer machine
 location8:

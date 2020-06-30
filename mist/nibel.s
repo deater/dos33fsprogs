@@ -72,11 +72,17 @@ game_loop:
 	; handle special-case forground logic
 	;====================================
 
-;	lda	LOCATION
-;	cmp	#CHANNEL_BOOK_OPEN
+	lda	LOCATION
+	cmp	#NIBEL_BLUE_ROOM
+	beq	fg_draw_blue_page
 ;	beq	animate_mist_book
 
-;	jmp	nothing_special
+	jmp	nothing_special
+
+fg_draw_blue_page:
+	jsr	draw_blue_page
+	jmp	nothing_special
+
 
 nothing_special:
 
@@ -132,4 +138,5 @@ really_exit:
 	; level data
 	.include	"leveldata_nibel.inc"
 
-
+	; book pages
+	.include	"handle_pages.s"

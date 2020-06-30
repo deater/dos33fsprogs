@@ -282,7 +282,7 @@ nibel.o:	nibel.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
 	graphics_nibel/nibel_graphics.inc \
 	leveldata_nibel.inc \
-	nibel_switches.s
+	handle_pages.s nibel_switches.s
 	ca65 -o nibel.o nibel.s -l nibel.lst
 
 ####
