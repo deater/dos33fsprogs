@@ -75,6 +75,29 @@ no_draw_page:
 	rts
 
 
+
+draw_red_page:
+	lda	DIRECTION
+	cmp	#DIRECTION_S
+	bne	no_draw_page
+
+	lda	RED_PAGES_TAKEN
+	and	#CHANNEL_PAGE
+	bne	no_draw_page
+
+	lda	#13
+	sta	XPOS
+	lda	#36
+	sta	YPOS
+
+	lda	#<red_page_sprite
+	sta	INL
+	lda	#>red_page_sprite
+	sta	INH
+
+	jmp	put_sprite_crop		; tail call
+
+
 projector_button:
 
 	lda	DRAW_PAGE
@@ -178,6 +201,41 @@ done_buttons:
 
 	rts
 
+
+	;=============================
+	; open the elevator door
+	;=============================
+nibel_open_elevator:
+
+	lda	#NIBEL_OUTSIDE_ELEV2_OPEN
+	sta	LOCATION
+
+	jmp	change_location
+
+	;=============================
+	; get into the elevator
+	;=============================
+nibel_getin_elevator:
+
+	lda	#NIBEL_IN_ELEV2_TOP_OPEN
+	sta	LOCATION
+
+	lda	#DIRECTION_E
+	sta	DIRECTION
+
+	jmp	change_location
+
+
+
+	;=============================
+	; open the drawer in red room
+	;=============================
+nibel_open_drawer:
+
+	lda	#NIBEL_RED_TABLE_OPEN
+	sta	LOCATION
+
+	jmp	change_location
 
 
 

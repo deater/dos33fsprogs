@@ -75,6 +75,8 @@ game_loop:
 	lda	LOCATION
 	cmp	#NIBEL_BLUE_ROOM
 	beq	fg_draw_blue_page
+	cmp	#NIBEL_RED_TABLE_OPEN
+	beq	fg_draw_red_page
 	cmp	#NIBEL_BLUE_HOUSE_VIEWER
 	beq	animate_viewer
 
@@ -83,6 +85,11 @@ game_loop:
 fg_draw_blue_page:
 	jsr	draw_blue_page
 	jmp	nothing_special
+
+fg_draw_red_page:
+	jsr	draw_red_page
+	jmp	nothing_special
+
 
 animate_viewer:
 	lda	ANIMATE_FRAME
