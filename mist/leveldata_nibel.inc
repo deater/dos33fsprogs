@@ -6,7 +6,8 @@ locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
-	.word location12,location13,location14
+	.word location12,location13,location14,location15
+	.word location16,location17
 
 ; NIBEL_IN_ELEV2_TOP_CLOSED	-- inside elevator2 at top, door closed
 location0:
@@ -236,11 +237,11 @@ location12:
 	.byte	$ff				; north exit
 	.byte	NIBEL_RED_TABLE			; south exit
 	.byte	NIBEL_RED_DOOR_CLOSED		; east exit
-	.byte	$ff				; west exit
+	.byte	NIBEL_RED_BED			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
-	.byte	$ff		; west exit_dir
+	.byte	DIRECTION_W	; west exit_dir
 	.word	red_room_n_lzsa			; north bg
 	.word	red_room_s_lzsa			; south bg
 	.word	red_room_e_lzsa			; east bg
@@ -288,3 +289,61 @@ location14:
 	.byte	12,20			; special x
 	.byte	36,46			; special y
 	.word	nibel_take_red_page-1	; special function
+
+; NIBEL_RED_BED	-- close up of bed
+location15:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	$ff				; east exit
+	.byte	NIBEL_RED_BED_OPEN		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	$0000				; east bg
+	.word	red_room_bed_w_lzsa		; west bg
+	.byte	BG_WEST
+	.byte	$ff			; special exit
+
+; NIBEL_RED_BED_OPEN	-- bed drawer open
+location16:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	$ff				; east exit
+	.byte	NIBEL_RED_ROOM			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	$0000				; east bg
+	.word	red_room_bed_open_w_lzsa	; west bg
+	.byte	BG_WEST
+	.byte	DIRECTION_W		; special exit
+	.byte	17,24			; special x
+	.byte	24,40			; special y
+	.word	nibel_view_torn_page-1	; special function
+
+; NIBEL_HALF_LETTER	-- right half of letter
+location17:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	$ff				; east exit
+	.byte	NIBEL_RED_ROOM			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	$0000				; east bg
+	.word	right_letter_lzsa		; west bg
+	.byte	BG_WEST
+	.byte	$ff			; special exit
+
+
+
+

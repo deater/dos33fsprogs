@@ -202,6 +202,17 @@ done_buttons:
 	rts
 
 
+nibel_view_torn_page:
+
+	lda	#NIBEL_HALF_LETTER
+	sta	LOCATION
+
+	jsr	change_location
+
+	bit	SET_TEXT		; set text mode
+
+	rts
+
 	;=============================
 	; open the elevator door
 	;=============================

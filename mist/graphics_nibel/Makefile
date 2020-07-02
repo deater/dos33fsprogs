@@ -19,7 +19,9 @@ nibel_graphics.inc:	\
 	red_path1_e.lzsa red_path1_w.lzsa \
 	red_room_n.lzsa red_room_s.lzsa red_room_e.lzsa red_room_w.lzsa \
 	red_door_e.lzsa red_door_closed_w.lzsa red_door_open_w.lzsa \
-	red_room_table_s.lzsa red_room_table_open_s.lzsa
+	red_room_table_s.lzsa red_room_table_open_s.lzsa \
+	red_room_bed_w.lzsa red_room_bed_open_w.lzsa \
+	right_letter.lzsa
 	echo "elevator2_open_top_lzsa: .incbin \"elevator2_open_top.lzsa\"" > nibel_graphics.inc
 	echo "elevator2_closed_top_lzsa: .incbin \"elevator2_closed_top.lzsa\"" >> nibel_graphics.inc
 	echo "outside_elevator2_e_lzsa: .incbin \"outside_elevator2_e.lzsa\"" >> nibel_graphics.inc
@@ -47,6 +49,10 @@ nibel_graphics.inc:	\
 	echo "red_door_closed_w_lzsa: .incbin \"red_door_closed_w.lzsa\"" >> nibel_graphics.inc
 	echo "red_room_table_s_lzsa: .incbin \"red_room_table_s.lzsa\"" >> nibel_graphics.inc
 	echo "red_room_table_open_s_lzsa: .incbin \"red_room_table_open_s.lzsa\"" >> nibel_graphics.inc
+	echo "red_room_bed_w_lzsa: .incbin \"red_room_bed_w.lzsa\"" >> nibel_graphics.inc
+	echo "red_room_bed_open_w_lzsa: .incbin \"red_room_bed_open_w.lzsa\"" >> nibel_graphics.inc
+	echo "right_letter_lzsa: .incbin \"right_letter.lzsa\"" >> nibel_graphics.inc
+
 
 
 %.gr: %.png
