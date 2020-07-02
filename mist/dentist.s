@@ -122,6 +122,45 @@ room_frame_no_oflo:
 really_exit:
 	jmp	end_level
 
+
+	;===========================
+	;===========================
+	; back to mist
+	;===========================
+	;===========================
+
+back_to_mist:
+	lda	#MIST_STEPS_4TH_LANDING
+	sta	LOCATION
+
+	lda	#DIRECTION_W
+	sta	DIRECTION
+
+	lda	#LOAD_MIST
+	sta	WHICH_LOAD
+
+set_level_over:
+	lda	#$ff
+	sta	LEVEL_OVER
+
+	rts
+
+	;===========================
+	;===========================
+	; pull down panel
+	;===========================
+	;===========================
+
+pull_down_panel:
+	lda	#DENTIST_PANEL
+	sta	LOCATION
+
+	jmp	change_location
+
+
+
+
+
 	;==========================
 	; includes
 	;==========================

@@ -27,14 +27,12 @@ mist_graphics.inc:	\
 	tree5_n.lzsa tree5_e.lzsa tree5_s.lzsa \
 	gear_n.lzsa gear_w.lzsa gear_s.lzsa gear_open_n.lzsa\
 	gear_base_n.lzsa \
-	dentist_door_n.lzsa dentist_door_s.lzsa \
 	spaceship_switch_n.lzsa \
 	tree4_n.lzsa tree4_s.lzsa tree4_w.lzsa tree4_e.lzsa \
 	clock_island_s.lzsa clock_island_n.lzsa \
 	clock_puzzle_s.lzsa clock_puzzle_bridge.lzsa \
 	clock_inside_s.lzsa clock_inside_open.lzsa \
 	gear_open_e.lzsa \
-	chair_view_s.lzsa chair_view_n.lzsa \
 	generator_n.lzsa generator_s.lzsa \
 	green_house_w.lzsa green_house_e.lzsa \
 	green_steps1_n.lzsa green_steps1_s.lzsa \
@@ -89,8 +87,6 @@ mist_graphics.inc:	\
 	echo "gear_w_lzsa: .incbin \"gear_w.lzsa\"" >> mist_graphics.inc
 	echo "gear_open_n_lzsa: .incbin \"gear_open_n.lzsa\"" >> mist_graphics.inc
 	echo "gear_base_n_lzsa: .incbin \"gear_base_n.lzsa\"" >> mist_graphics.inc
-	echo "dentist_door_n_lzsa: .incbin \"dentist_door_n.lzsa\"" >> mist_graphics.inc
-	echo "dentist_door_s_lzsa: .incbin \"dentist_door_s.lzsa\"" >> mist_graphics.inc
 	echo "spaceship_switch_n_lzsa: .incbin \"spaceship_switch_n.lzsa\"" >> mist_graphics.inc
 	echo "tree4_n_lzsa: .incbin \"tree4_n.lzsa\"" >> mist_graphics.inc
 	echo "tree4_s_lzsa: .incbin \"tree4_s.lzsa\"" >> mist_graphics.inc
@@ -103,8 +99,6 @@ mist_graphics.inc:	\
 	echo "clock_inside_s_lzsa: .incbin \"clock_inside_s.lzsa\"" >> mist_graphics.inc
 	echo "clock_inside_open_lzsa: .incbin \"clock_inside_open.lzsa\"" >> mist_graphics.inc
 	echo "gear_open_e_lzsa: .incbin \"gear_open_e.lzsa\"" >> mist_graphics.inc
-	echo "chair_view_s_lzsa: .incbin \"chair_view_s.lzsa\"" >> mist_graphics.inc
-	echo "chair_view_n_lzsa: .incbin \"chair_view_n.lzsa\"" >> mist_graphics.inc
 	echo "generator_n_lzsa: .incbin \"generator_n.lzsa\"" >> mist_graphics.inc
 	echo "generator_s_lzsa: .incbin \"generator_s.lzsa\"" >> mist_graphics.inc
 	echo "green_house_w_lzsa: .incbin \"green_house_w.lzsa\"" >> mist_graphics.inc

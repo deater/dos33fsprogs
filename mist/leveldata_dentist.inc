@@ -21,7 +21,10 @@ location0:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH | BG_SOUTH
-	.byte	$ff		; special exit
+	.byte	DIRECTION_S	; special exit
+	.byte	10,30		; special x
+	.byte	0,46		; special y
+	.word	back_to_mist-1
 
 ; DENTIST_OUTSIDE_OPEN		-- outside dentist door, which is open
 location1:
@@ -38,7 +41,10 @@ location1:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH | BG_SOUTH
-	.byte	$ff		; special exit
+	.byte	DIRECTION_S	; special exit
+	.byte	10,30		; special x
+	.byte	0,46		; special y
+	.word	back_to_mist-1
 
 ; DENTIST_INSIDE_DOOR		-- chair view
 location2:
@@ -76,20 +82,24 @@ location3:
 
 ; DENTIST_PANEL_UP		-- sitting in chair
 location4:
-	.byte	DENTIST_PANEL		; north exit
+	.byte	DENTIST_CHAIR_CLOSE	; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	DIRECTION_N	; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
+	.byte	DIRECTION_S	; north exit_dir
+	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	chair_view_n_lzsa	; north bg
-	.word	chair_view_s_lzsa	; south bg
+	.word	panel_up_lzsa		; north bg
+	.word	$0000			; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
-	.byte	BG_NORTH | BG_SOUTH
-	.byte	$ff		; TODO: lightswitch
+	.byte	BG_NORTH
+	.byte	DIRECTION_N	; special exit
+	.byte	10,30		; special x
+	.byte	0,20		; special y
+	.word	pull_down_panel-1
+
 
 ; DENTIST_PANEL			-- looking at panel
 location5:
@@ -107,7 +117,3 @@ location5:
 	.word	$0000			; west bg
 	.byte	BG_NORTH
 	.byte	$ff		; special
-
-
-
-
