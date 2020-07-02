@@ -73,8 +73,8 @@ location3:
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	chair_view_n_lzsa	; north bg
-	.word	chair_view_s_lzsa	; south bg
+	.word	chair_close_n_lzsa	; north bg
+	.word	chair_close_s_lzsa	; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH | BG_SOUTH
