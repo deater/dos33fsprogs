@@ -1,3 +1,10 @@
+
+; MIST alt backgrounds
+;	+ due to gears being open:
+;	+ due to bridge being up:
+;	+ due to ship being up:
+;	+ due to light switch on: 1
+
 For release 1.0
 
 + split rocket puzzle off of selenetic?
@@ -34,13 +41,15 @@ For release 1.0
 	-- show water in pipe (because no sound clue for water running?)
 	-- from path can still see down elev1 even if up
 
++ NIBEL
+	-- turn on sprite crop in the viewer part
 
 Done:
 + MECHE
 + MIST_TITLE
 + VIEWER
 + ARBOR
-+ NIBEL
+
 
 ================================
 

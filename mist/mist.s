@@ -223,6 +223,17 @@ enter_octagon:
 
 	jmp	set_level_over
 
+goto_dentist:
+
+	lda	#DENTIST_OUTSIDE
+	sta	LOCATION
+
+	lda	#LOAD_DENTIST
+	sta	WHICH_LOAD
+
+	jmp	set_level_over
+
+
 enter_viewer:
 
 	lda	#VIEWER_STEPS

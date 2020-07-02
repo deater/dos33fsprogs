@@ -150,11 +150,11 @@ location6:
 
 ; MIST_STEPS_DENTIST		-- steps outside dentist chair branch
 location7:
-	.byte	MIST_DENTIST_DOOR		; north exit
+	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	MIST_STEPS_2ND_LANDING		; east exit
-	.byte	8				; west exit
-	.byte	DIRECTION_N	; north exit_dir
+	.byte	MIST_STEPS_4TH_LANDING		; west exit
+	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
@@ -163,7 +163,11 @@ location7:
 	.word	step_dentist_e_lzsa	; east bg
 	.word	step_dentist_w_lzsa	; west bg
 	.byte	BG_EAST|BG_WEST|BG_NORTH
-	.byte	$ff		; special exit
+	.byte	DIRECTION_N	; special exit (letter)
+	.byte	10,30		; special x
+	.byte	0,46		; special y
+	.word	goto_dentist-1
+
 
 ; MIST_STEPS_4TH_LANDING	-- steps one more time up
 location8:
@@ -335,9 +339,9 @@ location16:
 	.byte	BG_NORTH | BG_EAST
 	.byte	$ff		; special exit
 
-; MIST_DENTIST_DOOR		-- dentist door
+; MIST_DENTIST_DOOR (unused)	-- dentist door
 location17:
-	.byte	MIST_CHAIR_VIEW		; north exit
+	.byte	$ff			; north exit
 	.byte	MIST_STEPS_4TH_LANDING	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -345,8 +349,8 @@ location17:
 	.byte	DIRECTION_W	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	dentist_door_n_lzsa	; north bg
-	.word	dentist_door_s_lzsa	; south bg
+	.word	$0000			; north bg
+	.word	$0000			; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH | BG_SOUTH
@@ -484,19 +488,19 @@ location24:
 	.byte	14,24		; special y
 	.word	go_to_meche-1	; special function
 
-; MIST_CHAIR_VIEW		-- chair view
+; MIST_CHAIR_VIEW	(unused)	-- chair view
 location25:
-	.byte	MIST_CHAIR_VIEW		; north exit
-	.byte	MIST_DENTIST_DOOR	; south exit
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	DIRECTION_S	; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	chair_view_n_lzsa	; north bg
-	.word	chair_view_s_lzsa	; south bg
-	.word	gear_open_e_lzsa	; east bg
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH | BG_SOUTH
 	.byte	$ff		; TODO: lightswitch

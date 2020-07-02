@@ -12,7 +12,7 @@ zip:	mist.dsk mist_side2.dsk mist_side3.dsk
 	zip mist.zip mist.dsk mist_side2.dsk mist_side3.dsk
 
 mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
-		MECHE SELENA CABIN CHANNEL STONEY SAVE0
+		MECHE SELENA CABIN CHANNEL STONEY DENTIST SAVE0
 	cp empty.dsk mist.dsk
 	$(DOS33) -y mist.dsk SAVE A HELLO
 	$(DOS33) -y mist.dsk BSAVE -a 0x1000 LOADER
@@ -24,6 +24,7 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 CABIN
 #	$(DOS33) -y mist.dsk BSAVE -a 0x2000 VIEWER
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 STONEY
+	$(DOS33) -y mist.dsk BSAVE -a 0x2000 DENTIST
 	$(DOS33) -y mist.dsk BSAVE -a 0xe00 SAVE0
 	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
@@ -287,6 +288,19 @@ nibel.o:	nibel.s zp.inc hardware.inc common_defines.inc \
 
 ####
 
+DENTIST:	dentist.o
+	ld65 -o DENTIST dentist.o -C ../linker_scripts/apple2_2000.inc
+
+dentist.o:	dentist.s zp.inc hardware.inc common_defines.inc \
+	common_routines.inc \
+	graphics_dentist/dentist_graphics.inc \
+	leveldata_dentist.inc \
+	dentist_panel.s
+	ca65 -o dentist.o dentist.s -l dentist.lst
+
+
+####
+
 graphics_island/mist_graphics.inc:
 	cd graphics_island && make
 
@@ -296,5 +310,5 @@ graphics_island/mist_graphics.inc:
 clean:		
 		rm -f *~ *.o *.lst HELLO HELLO_DISK2 \
 			LOADER MIST_TITLE \
-			MIST OCTAGON \
+			MIST OCTAGON VIEWER DENTIST \
 			MECHE SELENA STONEY CHANNEL ARBOR NIBEL
