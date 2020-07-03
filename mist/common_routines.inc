@@ -33,6 +33,8 @@ page_flip	=$1896
 
 ; gr_putsprite_crop.s
 put_sprite_crop	=$18b0
+psc_smc1	=$18d3
+psc_smc2	=$196b
 
 ; keyboard.s
 handle_keypress	=$19ec
@@ -40,6 +42,7 @@ change_location	=$1acd
 
 ; text_print.s
 move_and_print	=$1b65
+ps_smc1	=$1b92
 
 ; page_sprites.inc
 blue_page_sprite	=$1c7a

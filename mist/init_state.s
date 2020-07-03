@@ -1,10 +1,19 @@
 ; init state
 
-; in future we might load from disk
+; initial state at start of game is for all vars to be 0
 
 init_state:
-	lda	#0
+.if 1
+	lda	#$0
+	ldy	#WHICH_LOAD
+init_state_loop:
+	sta	0,Y
+	iny
+	cpy	#END_OF_SAVE
+	bne	init_state_loop
+	rts
 
+.else
 	; book pages
 	sta	RED_PAGES_TAKEN
 	sta	BLUE_PAGES_TAKEN
@@ -63,5 +72,6 @@ init_state:
 
 	lda	#$ff		; for debugging
 	sta	MARKER_SWITCHES
+.endif
 
 	rts

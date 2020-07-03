@@ -83,6 +83,8 @@ int main(int argc, char **argv) {
 
 	printf("; gr_putsprite_crop.s\n");
 	find_address("put_sprite_crop");
+	find_address("psc_smc1");
+	find_address("psc_smc2");
 	printf("\n");
 
 	printf("; keyboard.s\n");
@@ -92,6 +94,7 @@ int main(int argc, char **argv) {
 
 	printf("; text_print.s\n");
 	find_address("move_and_print");
+	find_address("ps_smc1");
 	printf("\n");
 
 	printf("; page_sprites.inc\n");

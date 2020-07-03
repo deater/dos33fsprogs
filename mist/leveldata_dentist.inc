@@ -36,10 +36,10 @@ location1:
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	dentist_door_n_lzsa	; north bg
-	.word	dentist_door_s_lzsa	; south bg
-	.word	$0000			; east bg
-	.word	$0000			; west bg
+	.word	dentist_door_open_n_lzsa	; north bg
+	.word	dentist_door_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
 	.byte	BG_NORTH | BG_SOUTH
 	.byte	DIRECTION_S	; special exit
 	.byte	10,30		; special x

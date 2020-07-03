@@ -71,8 +71,8 @@ game_loop:
 	;====================================
 
 	lda	LOCATION
-;	cmp	#NIBEL_BLUE_ROOM
-;	beq	fg_draw_blue_page
+	cmp	#DENTIST_PANEL
+	beq	fg_draw_panel
 ;	cmp	#NIBEL_RED_TABLE_OPEN
 ;	beq	fg_draw_red_page
 ;	cmp	#NIBEL_BLUE_HOUSE_VIEWER
@@ -80,6 +80,9 @@ game_loop:
 
 	jmp	nothing_special
 
+fg_draw_panel:
+	jsr	draw_date
+	jmp	nothing_special
 
 nothing_special:
 
@@ -155,6 +158,9 @@ pull_down_panel:
 	lda	#DENTIST_PANEL
 	sta	LOCATION
 
+	lda	#DIRECTION_N|DIRECTION_SPLIT
+	sta	DIRECTION
+
 	jmp	change_location
 
 
@@ -164,6 +170,8 @@ pull_down_panel:
 	;==========================
 	; includes
 	;==========================
+
+	.include	"gr_putsprite_raw.s"
 
 	; level graphics
 	.include	"graphics_dentist/dentist_graphics.inc"
