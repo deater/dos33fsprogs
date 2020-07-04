@@ -141,8 +141,65 @@ skip_tens:
 	;=================
 	; year
 
-	lda	#$ff
+	lda	#$ff		; draw in normal text
 	sta	ps_smc1+1
+
+	ldx	#0		; nonzero (for leading zero suppression)
+
+	lda	DENTIST_CENTURY
+	lsr
+	lsr
+	lsr
+	lsr
+	and	#$f
+	bne	century_top_not_zero
+	lda	#$a0
+	bne	store_century_top
+century_top_not_zero:
+	inx
+	ora	#$B0
+store_century_top:
+	sta	year_string+2
+
+	lda	DENTIST_CENTURY
+	and	#$f
+	bne	century_bottom_not_zero
+
+	cpx	#0
+	bne	century_bottom_not_zero
+
+	lda	#$a0
+	bne	store_century_bottom
+
+century_bottom_not_zero:
+	inx
+	ora	#$B0
+store_century_bottom:
+	sta	year_string+3
+
+	lda	DENTIST_YEAR
+	lsr
+	lsr
+	lsr
+	lsr
+	and	#$f
+	bne	year_top_not_zero
+
+	cpx	#0
+	bne	year_top_not_zero
+
+	lda	#$a0
+	bne	store_year_top
+
+year_top_not_zero:
+	ora	#$B0
+store_year_top:
+	sta	year_string+4
+
+	lda	DENTIST_YEAR
+	and	#$f
+	ora	#$B0
+	sta	year_string+5
 
 	lda	#<year_string
 	sta	OUTL
@@ -162,13 +219,13 @@ skip_tens:
 
 	jsr	move_and_print
 
-	lda	#$3f
+	lda	#$3f			; restore to drawing inverse text
 	sta	ps_smc1+1
 
 	rts
 
 year_string:
-	.byte 28,21,'1'+$80,'9'+$80,'5'+$80,'5'+$80,0
+	.byte 28,21,'0'+$80,'0'+$80,'0'+$80,'0'+$80,0
 
 time_string:
 	.byte 28,23,' '+$80,'6'+$80,'0'+$80,'0'+$80,'A'+$80,'M'+$80,0
@@ -492,27 +549,103 @@ panel_button:
 
 panel_month:
 	lda	CURSOR_Y
+check_month_dec:
 	cmp	#8
-	bcc	dec_dentist_month
+	bcs	check_month_inc
+	jmp	dec_dentist_month
+check_month_inc:
 	cmp	#26
-	bcs	inc_dentist_month
-
+	bcc	check_month_bar
+	jmp	inc_dentist_month
+check_month_bar:
 	rts
+
 panel_day:
 	lda	CURSOR_Y
+check_day_dec:
 	cmp	#8
-	bcc	dec_dentist_day
+	bcs	check_day_inc
+	jmp	dec_dentist_day
+check_day_inc:
 	cmp	#26
-	bcs	inc_dentist_day
+	bcc	check_day_bar
+	jmp	inc_dentist_day
+check_day_bar:
 
 	rts
 
 panel_year:
+	lda	CURSOR_Y
+	cmp	#8
+	bcc	dec_dentist_year
+	cmp	#26
+	bcs	inc_dentist_year
+
 	rts
 panel_time:
+	lda	CURSOR_Y
+	cmp	#8
+	bcc	dec_dentist_time
+	cmp	#26
+	bcs	inc_dentist_time
+
 	rts
 
-	jmp	inc_dentist_month
+inc_dentist_time:
+
+	lda	DENTIST_MONTH
+	cmp	#11
+	beq	done_pressed
+	inc	DENTIST_MONTH
+	jmp	done_pressed
+
+dec_dentist_time:
+
+	lda	DENTIST_MONTH
+	beq	done_pressed
+	dec	DENTIST_MONTH
+	jmp	done_pressed
+
+
+inc_dentist_year:
+
+	lda	DENTIST_CENTURY
+	cmp	#$99
+	bne	actually_inc_year
+
+	lda	DENTIST_YEAR
+	cmp	#$99
+	beq	done_pressed
+
+actually_inc_year:
+	sed
+	clc
+	lda	DENTIST_YEAR
+	adc	#1
+	sta	DENTIST_YEAR
+	lda	DENTIST_CENTURY
+	adc	#0
+	sta	DENTIST_CENTURY
+	jmp	done_pressed
+
+dec_dentist_year:
+
+	lda	DENTIST_CENTURY
+	bne	actually_dec_year
+
+	lda	DENTIST_YEAR
+	beq	done_pressed
+
+actually_dec_year:
+	sed
+	sec
+	lda	DENTIST_YEAR
+	sbc	#1
+	sta	DENTIST_YEAR
+	lda	DENTIST_CENTURY
+	sbc	#0
+	sta	DENTIST_CENTURY
+	jmp	done_pressed
 
 inc_dentist_month:
 
