@@ -1,3 +1,10 @@
+; cat letter transition
+; before: MIST = 32255
+; after:         32106 (now is a location with compressed background)
+
+
+
+
 Stoneship:
 + Never have to draw a wooden ship again it would be too soon
 

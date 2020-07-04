@@ -296,27 +296,26 @@ set_level_over:
 
 	rts
 
+	;===========================
+	; read letter from catherine
+
+read_letter:
+
+	lda	#MIST_CAT_LETTER
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+
+	jsr	change_location
+
+	bit	SET_TEXT
+
+	rts
 
 	;==========================
 	; includes
 	;==========================
-
-.if 0
-	.include	"gr_copy.s"
-	.include	"gr_offsets.s"
-	.include	"gr_pageflip.s"
-	.include	"gr_putsprite_crop.s"
-	.include	"text_print.s"
-	.include	"gr_fast_clear.s"
-	.include	"decompress_fast_v2.s"
-	.include	"keyboard.s"
-	.include	"draw_pointer.s"
-	.include	"audio.s"
-	.include	"end_level.s"
-
-	.include	"common_sprites.inc"
-.endif
-
 
 	; graphics data
 	.include	"graphics_mist/mist_graphics.inc"
@@ -329,14 +328,7 @@ set_level_over:
 	; linking books
 
 	; letters
-	.include	"letter_cat.s"
+;	.include	"letter_cat.s"
 
 	; level data
 	.include	"leveldata_mist.inc"
-
-;.align $100
-;audio_red_page:
-;.incbin "audio/red_page.btc"
-
-
-

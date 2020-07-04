@@ -13,6 +13,7 @@ mist_graphics.inc:	\
 	dock_n.lzsa dock_s.lzsa dock_e.lzsa dock_w.lzsa dock_w_open.lzsa \
 	dock_switch_n.lzsa dock_switch_s.lzsa \
 	dock_steps_w.lzsa \
+	cat_letter.lzsa \
 	above_dock_e.lzsa above_dock_n.lzsa above_dock_s.lzsa \
 	step_base_s.lzsa step_base_n.lzsa \
 	step_land1_w.lzsa step_land1_e.lzsa \
@@ -54,6 +55,7 @@ mist_graphics.inc:	\
 	echo "dock_switch_n_lzsa: .incbin \"dock_switch_n.lzsa\"" >> mist_graphics.inc
 	echo "dock_switch_s_lzsa: .incbin \"dock_switch_s.lzsa\"" >> mist_graphics.inc
 	echo "dock_steps_w_lzsa: .incbin \"dock_steps_w.lzsa\"" >> mist_graphics.inc
+	echo "cat_letter_lzsa: .incbin \"cat_letter.lzsa\"" >> mist_graphics.inc
 	echo "above_dock_e_lzsa: .incbin \"above_dock_e.lzsa\"" >> mist_graphics.inc
 	echo "above_dock_s_lzsa: .incbin \"above_dock_s.lzsa\"" >> mist_graphics.inc
 	echo "above_dock_n_lzsa: .incbin \"above_dock_n.lzsa\"" >> mist_graphics.inc

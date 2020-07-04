@@ -143,8 +143,8 @@ location6:
 	.word	step_land2_w_lzsa	; west bg
 	.byte	BG_WEST	| BG_EAST
 	.byte	DIRECTION_W	; special exit (letter)
-	.byte	29,32		; special x
-	.byte	38,45		; special y
+	.byte	27,32		; special x
+	.byte	36,45		; special y
 	.word	read_letter-1
 
 
@@ -163,7 +163,7 @@ location7:
 	.word	step_dentist_e_lzsa	; east bg
 	.word	step_dentist_w_lzsa	; west bg
 	.byte	BG_EAST|BG_WEST|BG_NORTH
-	.byte	DIRECTION_N	; special exit (letter)
+	.byte	DIRECTION_N	; special exit
 	.byte	10,30		; special x
 	.byte	0,46		; special y
 	.word	goto_dentist-1
@@ -342,21 +342,21 @@ location16:
 	.byte	BG_NORTH | BG_EAST
 	.byte	$ff		; special exit
 
-; MIST_DENTIST_DOOR (unused)	-- dentist door
+; MIST_CAT_LETTER	-- catherine letter
 location17:
-	.byte	$ff			; north exit
-	.byte	MIST_STEPS_4TH_LANDING	; south exit
+	.byte	MIST_STEPS_2ND_LANDING	; north exit
+	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	DIRECTION_N	; north exit_dir
-	.byte	DIRECTION_W	; south exit_dir
+	.byte	DIRECTION_W	; north exit_dir
+	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	$0000			; north bg
+	.word	cat_letter_lzsa		; north bg
 	.word	$0000			; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
-	.byte	BG_NORTH | BG_SOUTH
+	.byte	BG_NORTH
 	.byte	$ff		; special exit
 
 ; MIST_SPACESHIP_SWITCH		-- spaceship switch

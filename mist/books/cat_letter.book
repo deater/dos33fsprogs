@@ -1,0 +1,49 @@
+#0         1         2        3
+#12345678901234567890123457890123456789
+          CATHERINE,
+
+          I'VE LEFT A MESSAGE
+
+          OF UTMOST IMPORTANCE
+
+          IN OUR FORE-CHAMBER
+
+          BESIDE THE DOCK.
+
+          ENTER THE NUMBER OF
+
+          MARKER SWITCHES ON
+
+          THIS ISLAND INTO THE
+
+          IMAGER.
+
+                  YOURS,
+
+                      ATRUS
+
+# Catherine,
+# I've left for you a message
+# of utmost importance in
+# our fore-chamber beside
+# the dock.  Enter the number
+# of Marker Switches on
+# this island into the imager
+# to retrieve the message.
+#             Yours,
+#                 Atrus
+
+#sarcastic_letter:
+#        01234567890123456789
+#.byte  9,1,"  CATHERINE,          ",0
+#.byte  9,3,"  I THINK SOME WEIRD  ",0
+#.byte  9,5,"  GUY IS OUT ROAMING  ",0
+#.byte  9,7,"  AROUND OUR ISLAND!  ",0
+#.byte  9,9,"  MAYBE HE CAN SOLVE  ",0
+#.byte 9,11,"  ALL OF OUR DEEP     ",0
+#.byte 9,13,"  FAMILY PROBLEMS     ",0
+#.byte 9,15,"  WHILE I MESS        ",0
+#.byte 9,17,"  WITH MY BOOKS.      ",0
+#.byte 9,19,"         YOURS,       ",0
+#.byte 9,21,"             ATRUS    ",0
+
