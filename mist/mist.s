@@ -208,9 +208,19 @@ green_house:
 	lda	#MIST_GREEN_SHACK
 	sta	LOCATION
 
-	jsr	change_location
+	jmp	change_location
 
-	rts
+
+
+goto_dentist_steps:
+
+	lda	#MIST_STEPS_DENTIST
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+
+	jmp	change_location
 
 
 enter_octagon:

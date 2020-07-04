@@ -184,7 +184,10 @@ location8:
 	.word	step_land3_e_lzsa	; east bg
 	.word	step_land3_w_lzsa	; west bg
 	.byte	BG_WEST	| BG_EAST	; west and eastl
-	.byte	$ff		; special exit
+	.byte	DIRECTION_E	; special exit
+	.byte	0,16		; special x
+	.byte	0,32		; special y
+	.word	goto_dentist_steps-1
 
 ; MIST_OUTSIDE_TEMPLE		-- at the top outside temple
 location9:
