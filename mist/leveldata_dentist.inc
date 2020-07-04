@@ -61,7 +61,10 @@ location2:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH | BG_SOUTH
-	.byte	$ff		; TODO: lightswitch
+	.byte	DIRECTION_S	; special exit
+	.byte	29,34		; special x
+	.byte	18,30		; special y
+	.word	light_switch-1
 
 ; DENTIST_CHAIR_CLOSE		-- chair view
 location3:

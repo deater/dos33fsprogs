@@ -61,3 +61,10 @@
 .byte $00	; CHANNEL_SWITCHES	=	$B5
 .byte $00	; CHANNEL_VALVES	=	$B6
 
+.byte $00	; DENTIST_LIGHT		=	$B7
+.byte $00	; DENTIST_MONTH		=	$B8
+.byte $00	; DENTIST_DAY		=	$B9
+.byte $00	; DENTIST_CENTURY	=	$BA
+.byte $00	; DENTIST_YEAR		=	$BB
+.byte $00	; DENTIST_HOURS		=	$BC
+.byte $00	; DENTIST_MINUTES	=	$BD

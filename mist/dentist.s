@@ -40,6 +40,10 @@ dentist_start:
 	sta	CURSOR_X
 	sta	CURSOR_Y
 
+	; handle light switch
+
+	jsr	setup_backgrounds
+
 	; set up initial location
 
 	jsr	change_location
@@ -165,6 +169,98 @@ pull_down_panel:
 
 
 
+
+light_switch:
+
+	lda	DENTIST_LIGHT
+	eor	#$1
+	sta	DENTIST_LIGHT
+
+	jsr	setup_backgrounds
+
+	jmp	change_location
+
+
+	; setup backgrounds based on light switch being on or off
+setup_backgrounds:
+
+	lda	DENTIST_LIGHT
+	bne	lights_are_off
+
+	; lights are on
+lights_are_on:
+	ldy	#LOCATION_NORTH_BG
+	lda	#<dentist_door_open_n_lzsa
+	sta	location1,Y
+	lda	#>dentist_door_open_n_lzsa
+	sta	location1+1,Y			; DENTIST_OUTSIDE_OPEN
+
+	lda	#<chair_view_n_lzsa
+	sta	location2,Y
+	lda	#>chair_view_n_lzsa
+	sta	location2+1,Y			; DENTIST_INSIDE_DOOR
+
+	lda	#<chair_close_n_lzsa
+	sta	location3,Y
+	lda	#>chair_close_n_lzsa
+	sta	location3+1,Y			; DENTIST_CHAIR_CLOSE
+
+	lda	#<panel_up_lzsa
+	sta	location4,Y
+	lda	#>panel_up_lzsa
+	sta	location4+1,Y			; DENTIST_PANEL_UP
+
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<chair_view_s_lzsa
+	sta	location2,Y
+	lda	#>chair_view_s_lzsa
+	sta	location2+1,Y			; DENTIST_INSIDE_DOOR
+
+	lda	#<chair_close_s_lzsa
+	sta	location3,Y
+	lda	#>chair_close_s_lzsa
+	sta	location3+1,Y			; DENTIST_CHAIR_CLOSE
+
+	rts
+
+	; lights are off
+lights_are_off:
+	ldy	#LOCATION_NORTH_BG
+	lda	#<dentist_door_open_dark_n_lzsa
+	sta	location1,Y
+	lda	#>dentist_door_open_dark_n_lzsa
+	sta	location1+1,Y			; DENTIST_OUTSIDE_OPEN
+
+	lda	#<chair_view_dark_n_lzsa
+	sta	location2,Y
+	lda	#>chair_view_dark_n_lzsa
+	sta	location2+1,Y			; DENTIST_INSIDE_DOOR
+
+	lda	#<chair_close_dark_n_lzsa
+	sta	location3,Y
+	lda	#>chair_close_dark_n_lzsa
+	sta	location3+1,Y			; DENTIST_CHAIR_CLOSE
+
+	lda	#<panel_up_dark_lzsa
+	sta	location4,Y
+	lda	#>panel_up_dark_lzsa
+	sta	location4+1,Y			; DENTIST_PANEL_UP
+
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<chair_view_dark_s_lzsa
+	sta	location2,Y
+	lda	#>chair_view_dark_s_lzsa
+	sta	location2+1,Y			; DENTIST_INSIDE_DOOR
+
+	lda	#<chair_close_dark_s_lzsa
+	sta	location3,Y
+	lda	#>chair_close_dark_s_lzsa
+	sta	location3+1,Y			; DENTIST_CHAIR_CLOSE
+
+
+	rts
 
 
 	;==========================
