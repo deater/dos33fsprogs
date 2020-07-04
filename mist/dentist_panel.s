@@ -13,11 +13,6 @@ draw_date:
 	;=================
 	; month
 
-	lda	#10
-	sta	DENTIST_MONTH
-	lda	#4
-	sta	DENTIST_DAY
-
 	lda	DENTIST_MONTH		; get month
 	asl
 	asl
@@ -204,29 +199,29 @@ big_font:
 	.word big_font_space	; @
 	.word big_font_a	; A
 	.word big_font_b	; B
-	.word big_font_space	; C
-	.word big_font_space	; D
+	.word big_font_c	; C
+	.word big_font_d	; D
 	.word big_font_e	; E
 	.word big_font_f	; F
-	.word big_font_space	; G
+	.word big_font_g	; G
 	.word big_font_space	; H
 	.word big_font_space	; I
 	.word big_font_j	; J
 	.word big_font_space	; K
-	.word big_font_space	; L
-	.word big_font_space	; M
+	.word big_font_l	; L
+	.word big_font_m	; M
 	.word big_font_n	; N
 	.word big_font_o	; O
-	.word big_font_space	; P
+	.word big_font_p	; P
 	.word big_font_space	; Q
-	.word big_font_space	; R
-	.word big_font_space	; S
-	.word big_font_space	; T
-	.word big_font_space	; U
+	.word big_font_r	; R
+	.word big_font_s	; S
+	.word big_font_t	; T
+	.word big_font_u	; U
 	.word big_font_v	; V
 	.word big_font_space	; W
 	.word big_font_space	; X
-	.word big_font_space	; Y
+	.word big_font_y	; Y
 	.word big_font_space	; Z
 
 big_font_space:
@@ -250,6 +245,20 @@ big_font_b:
 	.byte $BA,$AD,$a0	; :-
 	.byte $BA,$DF,$AF	; :_/
 
+big_font_c:
+	.byte 3,4
+	.byte $a0,$DF,$DF	;  __
+	.byte $BA,$a0,$a0	; :
+	.byte $BA,$A0,$a0	; :
+	.byte $BA,$DF,$DF	; :__
+
+big_font_d:
+	.byte 3,4
+	.byte $a0,$DF,$a0	;  _
+	.byte $BA,$a0,$DC	; : \
+	.byte $BA,$a0,$BA	; : :
+	.byte $BA,$DF,$AD	; :_/
+
 big_font_e:
 	.byte 3,4
 	.byte $a0,$DF,$DF	;  __
@@ -264,12 +273,33 @@ big_font_f:
 	.byte $BA,$AD,$a0	; :-
 	.byte $BA,$a0,$a0	; :
 
+big_font_g:
+	.byte 3,4
+	.byte $a0,$DF,$DF	;  __
+	.byte $BA,$a0,$a0	; :
+	.byte $BA,$a0,$AD	; : -
+	.byte $BA,$DF,$BA	; :_:
+
 big_font_j:
 	.byte 3,4
 	.byte $a0,$a0,$a0	;
 	.byte $a0,$a0,$BA	;   :
 	.byte $a0,$a0,$BA	;   :
 	.byte $BA,$DF,$BA	; :_:
+
+big_font_l:
+	.byte 3,4
+	.byte $a0,$a0,$a0	;
+	.byte $BA,$a0,$a0	; :
+	.byte $BA,$a0,$a0	; :
+	.byte $BA,$DF,$DF	; :__
+
+big_font_m:
+	.byte 3,4
+	.byte $a0,$a0,$a0	;
+	.byte $BA,$a0,$BA	; : :
+	.byte $BA,$D6,$BA	; :V:
+	.byte $BA,$a0,$BA	; : :
 
 big_font_n:
 	.byte 3,4
@@ -285,6 +315,41 @@ big_font_o:
 	.byte $BA,$a0,$BA	; : :
 	.byte $BA,$DF,$BA	; :_:
 
+big_font_p:
+	.byte 3,4
+	.byte $a0,$DF,$a0	;  _
+	.byte $BA,$a0,$BA	; : :
+	.byte $BA,$AD,$A7	; :-'
+	.byte $BA,$a0,$a0	; :
+
+big_font_r:
+	.byte 3,4
+	.byte $a0,$DF,$a0	;  _
+	.byte $BA,$a0,$BA	; : :
+	.byte $BA,$AD,$A7	; :-'
+	.byte $BA,$DC,$a0	; :\
+
+big_font_s:
+	.byte 3,4
+	.byte $a0,$DF,$DF	;  __
+	.byte $BA,$a0,$a0	; :
+	.byte $a0,$AD,$a0	;  -
+	.byte $DF,$DF,$BA	; __:
+
+big_font_t:
+	.byte 3,4
+	.byte $DF,$DF,$DF	; ___
+	.byte $a0,$BA,$a0	;  :
+	.byte $a0,$BA,$a0	;  :
+	.byte $a0,$BA,$a0	;  :
+
+big_font_u:
+	.byte 3,4
+	.byte $a0,$a0,$a0	;
+	.byte $BA,$a0,$BA	; : :
+	.byte $BA,$a0,$BA	; : :
+	.byte $BA,$DF,$BA	; :_:
+
 big_font_v:
 	.byte 3,4
 	.byte $a0,$a0,$a0	;
@@ -292,7 +357,12 @@ big_font_v:
 	.byte $BA,$a0,$AF	; : /
 	.byte $BA,$AF,$a0	; :/
 
-
+big_font_y:
+	.byte 3,4
+	.byte $a0,$a0,$a0	;
+	.byte $BA,$a0,$BA	; : :
+	.byte $A7,$AE,$A7	; '.'
+	.byte $a0,$BA,$a0	;  :
 
 big_font_num:
 	.word big_font_0	; 0
@@ -338,7 +408,7 @@ big_font_4:
 	.byte 3,4
 	.byte $a0,$a0,$a0	;
 	.byte $BA,$a0,$BA	; : :
-	.byte $BA,$AD,$BA	; :-:
+	.byte $A7,$AD,$BA	; '-:
 	.byte $A0,$A0,$BA	;   :
 
 big_font_5:
@@ -400,6 +470,89 @@ big_font_9:
 ;     _   _ __             _   _
 ;    | | |  :    :  :   | | | | | | |
 ;    | | |  :    :  :   |  -| |-| |_|
-;     -   - : .  :  :   |  _| |_|   |  
+;     -   - : .  :  :   |  _| |_|   |
 
 
+
+
+panel_pressed:
+
+	lda	CURSOR_X
+	cmp	#32
+	bcs	panel_time
+	cmp	#28
+	bcs	panel_year
+	cmp	#24
+	bcs	panel_day
+	cmp	#20
+	bcs	panel_month
+panel_button:
+	; FIXME
+	rts
+
+panel_month:
+	lda	CURSOR_Y
+	cmp	#8
+	bcc	dec_dentist_month
+	cmp	#26
+	bcs	inc_dentist_month
+
+	rts
+panel_day:
+	lda	CURSOR_Y
+	cmp	#8
+	bcc	dec_dentist_day
+	cmp	#26
+	bcs	inc_dentist_day
+
+	rts
+
+panel_year:
+	rts
+panel_time:
+	rts
+
+	jmp	inc_dentist_month
+
+inc_dentist_month:
+
+	lda	DENTIST_MONTH
+	cmp	#11
+	beq	done_pressed
+	inc	DENTIST_MONTH
+	jmp	done_pressed
+
+dec_dentist_month:
+
+	lda	DENTIST_MONTH
+	cmp	#0
+	beq	done_pressed
+	dec	DENTIST_MONTH
+	jmp	done_pressed
+
+inc_dentist_day:
+
+	lda	DENTIST_DAY
+	cmp	#$30
+	beq	done_pressed
+
+	sed
+	clc
+	adc	#1
+	sta	DENTIST_DAY
+	jmp	done_pressed
+
+dec_dentist_day:
+
+	lda	DENTIST_DAY
+	cmp	#0
+	beq	done_pressed
+	sed
+	sec
+	sbc	#1
+	sta	DENTIST_DAY
+	jmp	done_pressed
+
+done_pressed:
+	cld
+	rts

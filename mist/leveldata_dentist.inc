@@ -119,4 +119,7 @@ location5:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH
-	.byte	$ff		; special
+	.byte	DIRECTION_N	; special exit
+	.byte	16,38		; special x
+	.byte	0,32		; special y
+	.word	panel_pressed-1
