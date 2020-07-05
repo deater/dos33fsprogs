@@ -211,6 +211,81 @@ store_year_top:
 
 	;=================
 	; time
+	;=================
+
+	lda	DENTIST_HOURS
+	beq	is_0dark30
+
+	cmp	#$13
+	bcc	update_hour
+
+	sed
+	sec
+	sbc	#$12
+	cld
+	jmp	update_hour
+
+is_0dark30:
+	lda	#$12
+	bne	update_hour
+
+update_hour:
+	sta	TEMP
+
+
+	lda	TEMP
+
+	lsr
+	lsr
+	lsr
+	lsr
+	and	#$f
+	bne	hour_top_not_zero
+	lda	#$a0
+	bne	store_hours_top
+hour_top_not_zero:
+	ora	#$B0
+store_hours_top:
+	sta	time_string+2
+
+	lda	TEMP
+	and	#$f
+	ora	#$B0
+store_hours_bottom:
+	sta	time_string+3
+
+	lda	DENTIST_MINUTES
+	lsr
+	lsr
+	lsr
+	lsr
+	and	#$f
+
+	ora	#$B0
+store_minutes_top:
+	sta	time_string+4
+
+	lda	DENTIST_MINUTES
+	and	#$f
+	ora	#$B0
+	sta	time_string+5
+
+	; calculate AM/PM
+	; AM if 0..11
+
+	lda	DENTIST_HOURS
+	cmp	#$12
+	bcc	time_am
+
+time_pm:
+	lda	#'P'+$80
+	jmp	write_am_pm
+
+time_am:
+	lda	#'A'+$80
+
+write_am_pm:
+	sta	time_string+6
 
 	lda	#<time_string
 	sta	OUTL
@@ -228,7 +303,7 @@ year_string:
 	.byte 28,21,'0'+$80,'0'+$80,'0'+$80,'0'+$80,0
 
 time_string:
-	.byte 28,23,' '+$80,'6'+$80,'0'+$80,'0'+$80,'A'+$80,'M'+$80,0
+	.byte 28,23,'1'+$80,'2'+$80,'0'+$80,'0'+$80,'A'+$80,'M'+$80,0
 
 saved_month_ptr:
 	.byte	$00
@@ -593,19 +668,62 @@ panel_time:
 
 inc_dentist_time:
 
-	lda	DENTIST_MONTH
-	cmp	#11
-	beq	done_pressed
-	inc	DENTIST_MONTH
-	jmp	done_pressed
+	lda	DENTIST_HOURS
+	cmp	#$23
+	bne	actually_inc_time
+
+	lda	DENTIST_MINUTES
+	cmp	#$59
+	beq	done_pressed2
+
+actually_inc_time:
+	sed
+	clc
+	lda	DENTIST_MINUTES
+	adc	#1
+	sta	DENTIST_MINUTES
+
+	cmp	#$60
+	bne	done_pressed2
+
+	lda	#$00
+	sta	DENTIST_MINUTES
+	clc
+	lda	DENTIST_HOURS
+	adc	#1
+	sta	DENTIST_HOURS
+	jmp	done_pressed2
+
 
 dec_dentist_time:
 
-	lda	DENTIST_MONTH
-	beq	done_pressed
-	dec	DENTIST_MONTH
-	jmp	done_pressed
+	lda	DENTIST_HOURS
+	bne	actually_dec_time
 
+	lda	DENTIST_MINUTES
+	beq	done_pressed2
+
+actually_dec_time:
+	sed
+	sec
+	lda	DENTIST_MINUTES
+	sbc	#1
+	sta	DENTIST_MINUTES
+
+	cmp	#$99
+	bne	done_pressed2
+
+	lda	#$59
+	sta	DENTIST_MINUTES
+
+	lda	DENTIST_HOURS
+	sec
+	sbc	#1
+	sta	DENTIST_HOURS
+
+done_pressed2:
+	cld
+	rts
 
 inc_dentist_year:
 
