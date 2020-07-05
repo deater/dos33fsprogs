@@ -3,12 +3,24 @@
 ; animates to screen
 ; remembers light switch and date settings even when leave room
 
-; day of month is 1-31 (even on months w/o)
+; day of month is 1-31 (even on months w/o 31 days)
 ; year 0-9999, leading 0 suppression
-; time 1200AM - 1159PM
+; time 1200AM - 1159PM, leading 0 suppression
 
+; slider lights up when you adjust
+
+; the actual constellation does seem to be based on a massive background,
+; and a fore-shortened version appears on the panel when up
 
 draw_date:
+	;=================
+	; draw the bars
+
+	jsr	draw_month_bar
+	jsr	draw_date_bar
+	jsr	draw_year_bar
+	jsr	draw_time_bar
+	jsr	draw_button
 
 	;=================
 	; month
@@ -605,6 +617,142 @@ big_font_9:
 ;     -   - : .  :  :   |  _| |_|   |
 
 
+; sliders
+;  8 -> 25 (18)
+; if 16
+;							24*60=1440
+;    0*12/8 = 0		0*31/8=0	0*9999/8=0	0
+;    1*12/8 = 1.5	1*31/8=3.9	1250		180 3:00
+;    2*12/8 = 3		2*31/8=7.8	2500		360 6:00
+;    3*12/8 = 4.5	11.6		3750		540 9:00
+;    4*12/8 = 6		15.5		5000		720 12:00
+;    5*12/8 = 7.5	19.4		6250		900 15:00
+;    6*12/8 = 9		23.25		7500		1080 18:00
+;    7*12/8 = 10.5	27.12		8750		1260 21:00
+;    8*12/8 = 12	31		9999		1440 24:00
+
+month_limits:
+	.byte 0,1,3,4,6,7,9,10,12
+date_limits:
+	.byte $00,$04,$08,$12,$16,$20,$24,$28,$31
+century_limits:
+	.byte $00,$12,$25,$37,$50,$62,$75,$87,$99
+hour_limits:
+	.byte $00,$03,$06,$09,$12,$15,$18,$21,$23
+
+
+draw_month_bar:
+	lda	DENTIST_MONTH
+	ldx	#0
+find_month_yval:
+	cmp	month_limits,X
+	beq	found_month_yval
+	bcc	found_month_yval
+	inx
+	cpx	#8
+	bne	find_month_yval
+found_month_yval:
+	lda	#22
+	jmp	draw_bar
+
+draw_date_bar:
+	lda	DENTIST_DAY
+	ldx	#0
+find_date_yval:
+	cmp	date_limits,X
+	beq	found_date_yval
+	bcc	found_date_yval
+	inx
+	cpx	#8
+	bne	find_date_yval
+found_date_yval:
+	lda	#26
+	jmp	draw_bar
+
+draw_year_bar:
+	lda	DENTIST_CENTURY
+	ldx	#0
+find_year_yval:
+	cmp	century_limits,X
+	beq	found_year_yval
+	bcc	found_year_yval
+	inx
+	cpx	#8
+	bne	find_year_yval
+found_year_yval:
+	lda	#30
+	jmp	draw_bar
+
+draw_time_bar:
+	lda	DENTIST_HOURS
+	ldx	#0
+find_time_yval:
+	cmp	hour_limits,X
+	beq	found_time_yval
+	bcc	found_time_yval
+	inx
+	cpx	#8
+	bne	find_time_yval
+found_time_yval:
+	lda	#34
+;	jmp	draw_bar
+
+
+draw_bar:
+	sta	XPOS
+	txa
+	asl
+	clc
+	adc	#8
+	sta	YPOS
+
+	lda	#<panel_bar_sprite
+	sta	INL
+	lda	#>panel_bar_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	rts
+
+draw_button:
+
+button_smc:
+	lda	#0
+	beq	done_button
+
+	lda	FRAMEL
+	and	#$20
+	beq	done_button
+
+	lda	#<button_on_sprite
+	sta	INL
+	lda	#>button_on_sprite
+	sta	INH
+
+	lda	#20
+	sta	XPOS
+
+	lda	#16
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+done_button:
+	rts
+
+panel_bar_sprite:
+	.byte 3,1
+	.byte $00,$00,$00
+
+panel_bar_lit_sprite:
+	.byte 3,1
+	.byte $00,$dd,$00
+
+button_on_sprite:
+	.byte 1,1
+	.byte $dd
+
 
 
 panel_pressed:
@@ -692,7 +840,7 @@ actually_inc_time:
 	lda	DENTIST_HOURS
 	adc	#1
 	sta	DENTIST_HOURS
-	jmp	done_pressed2
+	jmp	done_pressed_changed
 
 
 dec_dentist_time:
@@ -720,6 +868,7 @@ actually_dec_time:
 	sec
 	sbc	#1
 	sta	DENTIST_HOURS
+	jmp	done_pressed_changed
 
 done_pressed2:
 	cld
@@ -744,7 +893,7 @@ actually_inc_year:
 	lda	DENTIST_CENTURY
 	adc	#0
 	sta	DENTIST_CENTURY
-	jmp	done_pressed
+	jmp	done_pressed_changed
 
 dec_dentist_year:
 
@@ -763,7 +912,7 @@ actually_dec_year:
 	lda	DENTIST_CENTURY
 	sbc	#0
 	sta	DENTIST_CENTURY
-	jmp	done_pressed
+	jmp	done_pressed_changed
 
 inc_dentist_month:
 
@@ -771,7 +920,7 @@ inc_dentist_month:
 	cmp	#11
 	beq	done_pressed
 	inc	DENTIST_MONTH
-	jmp	done_pressed
+	jmp	done_pressed_changed
 
 dec_dentist_month:
 
@@ -779,7 +928,7 @@ dec_dentist_month:
 	cmp	#0
 	beq	done_pressed
 	dec	DENTIST_MONTH
-	jmp	done_pressed
+	jmp	done_pressed_changed
 
 inc_dentist_day:
 
@@ -791,7 +940,7 @@ inc_dentist_day:
 	clc
 	adc	#1
 	sta	DENTIST_DAY
-	jmp	done_pressed
+	jmp	done_pressed_changed
 
 dec_dentist_day:
 
@@ -802,8 +951,16 @@ dec_dentist_day:
 	sec
 	sbc	#1
 	sta	DENTIST_DAY
-	jmp	done_pressed
+	jmp	done_pressed_changed
 
 done_pressed:
 	cld
 	rts
+
+done_pressed_changed:
+	cld
+	lda	#1
+	sta	button_smc+1
+	rts
+
+
