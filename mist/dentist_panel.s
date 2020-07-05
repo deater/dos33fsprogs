@@ -1,3 +1,6 @@
+; See the constellations, right across the sky
+; No cigar no lady on his arm, just a guy made of dots and lines
+
 ; Power up, blinks switches yellow
 ; Change state, change button blinks
 ; animates to screen
@@ -12,6 +15,10 @@
 ; the actual constellation does seem to be based on a massive background,
 ; and a fore-shortened version appears on the panel when up
 
+; but in original myst code?  lower panel while light blinking (change)
+; and come back, not blinking, but press button and nothing happens
+; and light sticks on?
+
 draw_date:
 	;=================
 	; draw the bars
@@ -21,6 +28,7 @@ draw_date:
 	jsr	draw_year_bar
 	jsr	draw_time_bar
 	jsr	draw_button
+	jsr	draw_stars
 
 	;=================
 	; month
@@ -641,6 +649,13 @@ hour_limits:
 	.byte $00,$03,$06,$09,$12,$15,$18,$21,$23
 
 
+	;===============================
+	;===============================
+	; draw the slider bars
+	;===============================
+	;===============================
+
+
 draw_month_bar:
 	lda	DENTIST_MONTH
 	ldx	#0
@@ -653,7 +668,11 @@ find_month_yval:
 	bne	find_month_yval
 found_month_yval:
 	lda	#22
-	jmp	draw_bar
+month_lit_smc:
+	ldy	#0
+	beq	draw_bar
+	dec	month_lit_smc+1
+	jmp	draw_lit_bar
 
 draw_date_bar:
 	lda	DENTIST_DAY
@@ -667,7 +686,11 @@ find_date_yval:
 	bne	find_date_yval
 found_date_yval:
 	lda	#26
-	jmp	draw_bar
+date_lit_smc:
+	ldy	#0
+	beq	draw_bar
+	dec	date_lit_smc+1
+	jmp	draw_lit_bar
 
 draw_year_bar:
 	lda	DENTIST_CENTURY
@@ -681,7 +704,11 @@ find_year_yval:
 	bne	find_year_yval
 found_year_yval:
 	lda	#30
-	jmp	draw_bar
+year_lit_smc:
+	ldy	#0
+	beq	draw_bar
+	dec	year_lit_smc+1
+	jmp	draw_lit_bar
 
 draw_time_bar:
 	lda	DENTIST_HOURS
@@ -695,8 +722,12 @@ find_time_yval:
 	bne	find_time_yval
 found_time_yval:
 	lda	#34
-;	jmp	draw_bar
 
+time_lit_smc:
+	ldy	#0
+	beq	draw_bar
+	dec	time_lit_smc+1
+	jmp	draw_lit_bar
 
 draw_bar:
 	sta	XPOS
@@ -714,6 +745,29 @@ draw_bar:
 	jsr	put_sprite_crop
 
 	rts
+
+draw_lit_bar:
+	sta	XPOS
+	txa
+	asl
+	clc
+	adc	#8
+	sta	YPOS
+
+	lda	#<panel_bar_lit_sprite
+	sta	INL
+	lda	#>panel_bar_lit_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	rts
+
+	;==============================
+	;==============================
+	; draw the button
+	;==============================
+	;==============================
 
 draw_button:
 
@@ -767,10 +821,35 @@ panel_pressed:
 	cmp	#20
 	bcs	panel_month
 panel_button:
-	; FIXME
+
+	lda	CURSOR_Y
+	cmp	#12
+	bcc	done_panel_button
+	cmp	#24
+	bcs	done_panel_button
+
+	lda	#0
+	sta	button_smc+1
+	lda	DENTIST_MONTH
+	sta	saved_month
+	lda	DENTIST_DAY
+	sta	saved_day
+	lda	DENTIST_CENTURY
+	sta	saved_century
+	lda	DENTIST_YEAR
+	sta	saved_year
+	lda	DENTIST_HOURS
+	sta	saved_hour
+	lda	DENTIST_MINUTES
+	sta	saved_minutes
+
+done_panel_button:
 	rts
 
 panel_month:
+	lda	#5
+	sta	month_lit_smc+1
+
 	lda	CURSOR_Y
 check_month_dec:
 	cmp	#8
@@ -784,6 +863,10 @@ check_month_bar:
 	rts
 
 panel_day:
+
+	lda	#5
+	sta	date_lit_smc+1
+
 	lda	CURSOR_Y
 check_day_dec:
 	cmp	#8
@@ -798,6 +881,10 @@ check_day_bar:
 	rts
 
 panel_year:
+
+	lda	#5
+	sta	year_lit_smc+1
+
 	lda	CURSOR_Y
 	cmp	#8
 	bcc	dec_dentist_year
@@ -805,7 +892,13 @@ panel_year:
 	bcs	inc_dentist_year
 
 	rts
+
+
 panel_time:
+
+	lda	#5
+	sta	time_lit_smc+1
+
 	lda	CURSOR_Y
 	cmp	#8
 	bcc	dec_dentist_time
@@ -963,4 +1056,256 @@ done_pressed_changed:
 	sta	button_smc+1
 	rts
 
+
+	;===========================
+	;===========================
+	; draw stars
+	;===========================
+	;===========================
+draw_stars:
+
+	jmp	stars_lights_off
+
+	; if lights on
+	lda	#6
+	sta	XPOS
+	lda	#6
+	sta	YPOS
+	lda	#<lights_on_sprite
+	sta	INL
+	lda	#>lights_on_sprite
+	sta	INH
+	jmp	put_sprite_crop
+
+stars_lights_off:
+
+	lda	saved_month
+	cmp	#9		; OCTOBER
+	beq	draw_leaf
+	cmp	#0
+	beq	draw_snake
+	cmp	#10
+	beq	draw_bug
+	bne	not_special
+
+; OCT 11 1984 10:04AM (leaf)
+draw_leaf:
+	lda	saved_day
+	cmp	#$11
+	bne	not_special
+	lda	saved_century
+	cmp	#$19
+	bne	not_special
+	lda	saved_hour
+	cmp	#$10
+	bne	not_special
+
+	lda	#7
+	sta	XPOS
+	lda	#8
+	sta	YPOS
+	lda	#<october_sprite
+	sta	INL
+	lda	#>october_sprite
+	sta	INH
+	jmp	put_sprite_crop
+
+; JAN 17 1207 5:46AM (snake)
+draw_snake:
+	lda	saved_day
+	cmp	#$17
+	bne	not_special
+	lda	saved_century
+	cmp	#$12
+	bne	not_special
+	lda	saved_hour
+	cmp	#$5
+	bne	not_special
+
+	lda	#7
+	sta	XPOS
+	lda	#8
+	sta	YPOS
+	lda	#<january_sprite
+	sta	INL
+	lda	#>january_sprite
+	sta	INH
+	jmp	put_sprite_crop
+
+; NOV 23 9791 6:57PM (bug)
+draw_bug:
+	lda	saved_day
+	cmp	#$23
+	bne	not_special
+	lda	saved_century
+	cmp	#$97
+	bne	not_special
+	lda	saved_hour
+	cmp	#$18
+	bne	not_special
+	lda	#7
+	sta	XPOS
+	lda	#8
+	sta	YPOS
+	lda	#<november_sprite
+	sta	INL
+	lda	#>november_sprite
+	sta	INH
+	jmp	put_sprite_crop
+
+not_special:
+	; plot 4 stars, somewhat randomly based on settings
+
+	; plot 1st
+	lda	#$0f
+	sta	plot_color+1
+	lda	saved_year
+	eor	saved_month
+	tax
+	ldy	saved_minutes
+	jsr	special_plot_point
+
+	; plot 2nd
+	lda	#$ff
+	sta	plot_color+1
+	lda	saved_month
+	eor	saved_year
+	tax
+	lda	saved_hour
+	sbc	saved_minutes
+	tay
+	jsr	special_plot_point
+
+	; plot 3rd
+	lda	#$f0
+	sta	plot_color+1
+	lda	saved_hour
+	adc	saved_minutes
+	tax
+	lda	saved_year
+	sbc	saved_day
+	tay
+	jsr	special_plot_point
+
+	; plot 4th
+	lda	#$50
+	sta	plot_color+1
+	lda	saved_minutes
+	eor	saved_day
+	tax
+	lda	saved_year
+	adc	saved_day
+	tay
+
+	jsr	special_plot_point
+
+	rts
+
+special_plot_point:
+
+	txa
+	and	#$7
+	clc
+	adc	#$7
+	sta	CH
+
+	tya
+	and	#$7
+	clc
+	adc	#$4
+	sta	CV
+
+	jmp	plot_point
+
+saved_month:
+	.byte $00
+
+saved_day:
+	.byte $00
+
+saved_century:
+	.byte $00
+
+saved_year:
+	.byte $00
+
+saved_hour:
+	.byte $00
+
+saved_minutes:
+	.byte $00
+
+
+; constellations
+
+; 6x6
+lights_on_sprite:
+	.byte 9,10
+	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+
+; OCT 11 1984 10:04AM (leaf)
+october_sprite:
+	.byte 7,7
+	.byte $00,$00,$00,$00,$00,$f0,$00
+	.byte $00,$f0,$00,$00,$00,$0f,$00
+	.byte $00,$0f,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$f0,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$ff
+	.byte $f0,$0f,$00,$0f,$00,$00,$00
+
+; JAN 17 1207 5:46AM (snake)
+january_sprite:
+	.byte 7,7
+	.byte $00,$0f,$00,$00,$00,$ff,$00
+	.byte $00,$ff,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$0f
+	.byte $00,$00,$00,$f0,$00,$00,$0f
+	.byte $00,$00,$ff,$00,$00,$00,$00
+
+; NOV 23 9791 6:57PM (bug)
+november_sprite:
+	.byte 7,7
+	.byte $f0,$00,$00,$ff,$00,$00,$f0
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$ff,$00,$00,$0f,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$f0,$00,$00,$00,$f0,$00
+	.byte $00,$00,$00,$00,$00,$0f,$00
+	.byte $00,$00,$00,$0f,$00,$00,$00
+
+
+
+	; turn on double high point at CH,CV
+plot_point:
+	lda	CV		; y
+	asl
+	tax
+	lda	gr_offsets,X
+	sta	OUTL
+
+	lda	gr_offsets+1,X
+	clc
+	adc	DRAW_PAGE
+	sta	OUTH
+
+	lda	CH		; x
+	tay
+
+plot_color:
+	lda	#$77
+	sta	(OUTL),Y
+
+	rts
 

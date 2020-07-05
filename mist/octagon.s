@@ -406,21 +406,7 @@ draw_page_close:
 	; includes
 	;==========================
 
-.if 0
-	.include	"gr_copy.s"
-	.include	"gr_offsets.s"
-	.include	"gr_pageflip.s"
-	.include	"gr_putsprite_crop.s"
-	.include	"text_print.s"
-	.include	"gr_fast_clear.s"
-	.include	"decompress_fast_v2.s"
-	.include	"keyboard.s"
-	.include	"draw_pointer.s"
-	.include	"audio.s"
-	.include	"end_level.s"
-	.include	"common_sprites.inc"
-	.include	"page_sprites.inc"
-.endif
+	.include "gr_plotpoint.s"
 
 	; level graphics
 	.include	"graphics_octagon/octagon_graphics.inc"
