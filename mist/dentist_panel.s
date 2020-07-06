@@ -23,6 +23,40 @@ draw_date:
 	;=================
 	; draw the bars
 
+startup_animate_smc:
+	lda	#0
+	beq	done_startup
+
+	dec	startup_animate_smc+1
+
+		;	0001 1111
+
+	cmp	#31
+	bne	animate2
+animate1:
+	lda	#8
+	sta	month_lit_smc+1
+	bne	done_startup
+
+animate2:
+	cmp	#23
+	bne	animate3
+	lda	#8
+	sta	date_lit_smc+1
+	bne	done_startup
+animate3:
+	cmp	#15
+	bne	animate4
+	lda	#8
+	sta	year_lit_smc+1
+	bne	done_startup
+animate4:
+	cmp	#7
+	bne	done_startup
+	lda	#8
+	sta	time_lit_smc+1
+
+done_startup:
 	jsr	draw_month_bar
 	jsr	draw_date_bar
 	jsr	draw_year_bar
@@ -1123,7 +1157,8 @@ done_pressed_changed:
 	;===========================
 draw_stars:
 
-	jmp	stars_lights_off
+	lda	DENTIST_LIGHT
+	bne	stars_lights_off
 
 	; if lights on
 	lda	#6

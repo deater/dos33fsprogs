@@ -159,6 +159,12 @@ set_level_over:
 	;===========================
 
 pull_down_panel:
+	lda	#0
+	sta	button_smc+1		; turn off blink
+
+	lda	#31
+	sta	startup_animate_smc+1	; start startup animation
+
 	lda	#DENTIST_PANEL
 	sta	LOCATION
 
