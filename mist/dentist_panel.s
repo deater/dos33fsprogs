@@ -640,9 +640,9 @@ big_font_9:
 ;    8*12/8 = 12	31		9999		1440 24:00
 
 month_limits:
-	.byte 0,1,3,4,6,7,9,10,12
+	.byte 0,1,3,4,6,7,9,10,11
 date_limits:
-	.byte $00,$04,$08,$12,$16,$20,$24,$28,$31
+	.byte $00,$04,$08,$12,$16,$20,$24,$28,$30
 century_limits:
 	.byte $00,$12,$25,$37,$50,$62,$75,$87,$99
 hour_limits:
@@ -809,17 +809,6 @@ button_on_sprite:
 
 
 
-panel_pressed:
-
-	lda	CURSOR_X
-	cmp	#32
-	bcs	panel_time
-	cmp	#28
-	bcs	panel_year
-	cmp	#24
-	bcs	panel_day
-	cmp	#20
-	bcs	panel_month
 panel_button:
 
 	lda	CURSOR_Y
@@ -846,6 +835,27 @@ panel_button:
 done_panel_button:
 	rts
 
+
+	;===========================
+	;===========================
+	; panel pressed
+	;===========================
+	;===========================
+
+
+panel_pressed:
+
+	lda	CURSOR_X
+	cmp	#32
+	bcs	panel_time
+	cmp	#28
+	bcs	panel_year
+	cmp	#24
+	bcs	panel_day
+	cmp	#20
+	bcs	panel_month
+	bcc	panel_button
+
 panel_month:
 	lda	#5
 	sta	month_lit_smc+1
@@ -860,7 +870,14 @@ check_month_inc:
 	bcc	check_month_bar
 	jmp	inc_dentist_month
 check_month_bar:
-	rts
+	sec
+	sbc	#8
+	lsr
+	tax
+	lda	month_limits,X
+	sta	DENTIST_MONTH
+
+	jmp	done_pressed_changed
 
 panel_day:
 
@@ -877,8 +894,15 @@ check_day_inc:
 	bcc	check_day_bar
 	jmp	inc_dentist_day
 check_day_bar:
+	sec
+	sbc	#8
+	lsr
+	tax
+	lda	date_limits,X
+	sta	DENTIST_DAY
 
-	rts
+	jmp	done_pressed_changed
+
 
 panel_year:
 
@@ -886,12 +910,26 @@ panel_year:
 	sta	year_lit_smc+1
 
 	lda	CURSOR_Y
+check_year_dec:
 	cmp	#8
-	bcc	dec_dentist_year
+	bcs	check_year_inc
+	jmp	dec_dentist_year
+check_year_inc:
 	cmp	#26
-	bcs	inc_dentist_year
+	bcc	check_year_bar
+	jmp	inc_dentist_year
+check_year_bar:
+	sec
+	sbc	#8
+	lsr
+	tax
+	lda	century_limits,X
+	sta	DENTIST_CENTURY
+	lda	#0
+	sta	DENTIST_YEAR
 
-	rts
+	jmp	done_pressed_changed
+
 
 
 panel_time:
@@ -904,6 +942,18 @@ panel_time:
 	bcc	dec_dentist_time
 	cmp	#26
 	bcs	inc_dentist_time
+
+check_time_bar:
+	sec
+	sbc	#8
+	lsr
+	tax
+	lda	hour_limits,X
+	sta	DENTIST_HOURS
+	lda	#0
+	sta	DENTIST_MINUTES
+
+	jmp	done_pressed_changed
 
 	rts
 

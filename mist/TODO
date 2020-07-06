@@ -18,7 +18,10 @@ For release 1.0
 	-- constellation puzzle/ship raising
 	-- marker switches
 + DENTIST
-	-- all of it
+	-- lights dazzle when display comes down
+	-- animation on button press
+	-- slide parts of switch
+
 + CABIN
 	-- safe puzzle
 	-- boiler
