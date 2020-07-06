@@ -218,11 +218,17 @@ no_draw_pointer:
 ; 1 = left
 ; 2 = left u-turn
 ; R/L   EWSN    0010
+
+; 1010
+
 direction_lookup:
 direction_lookup_n:
 	.byte $00,$00,$22,$22,$01,$01,$21,$21,$10,$10,$12,$12,$11,$11,$11,$11
 direction_lookup_s:
-	.byte $00,$22,$00,$22,$10,$12,$10,$12,$01,$01,$21,$21,$11,$11,$11,$11
+	;           N   S   SN  W   WN  WS WSN
+	.byte $00, $22,$00,$22,$10,$12,$10,$12
+	;      E   EN  ES ESN  EW  EWN EWS EWSN
+	.byte $01,$02,$01,$21,$11,$11,$11,$11
 direction_lookup_e:
 	.byte $00,$01,$10,$11,$22,$21,$12,$11,$00,$01,$10,$11,$22,$21,$12,$11
 direction_lookup_w:
