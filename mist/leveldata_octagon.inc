@@ -12,7 +12,7 @@ locations:
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
-	.word location32,location33
+	.word location32,location33,location34
 
 ; OCTAGON_TEMPLE_DOORWAY	-- temple doorway
 location0:
@@ -108,7 +108,11 @@ location4:
 	.word	$0000			; east bg
 	.word	in_fireplace_w_lzsa	; west bg
 	.byte	BG_WEST		; west
-	.byte	$ff		; special exit
+	.byte	DIRECTION_W		; special exit
+	.byte	3,8		; special x
+	.byte	22,32		; special y
+	.word	close_fireplace-1	; special function
+
 
 ; OCTAGON_CEILING		-- ceiling of temple
 location5:
@@ -631,3 +635,24 @@ location33:
 	.byte	6,34		; special x
 	.byte	5,35		; special y
 	.word	turn_page-1	; special function
+
+; OCTAGON_IN_FIREPLACE_CLOSED		-- in fireplace, closed
+location34:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W|DIRECTION_ONLY_POINT	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	$0000				; east bg
+	.word	in_fireplace_door_lzsa		; west bg
+	.byte	BG_WEST		; west
+	.byte	DIRECTION_W		; special exit
+	.byte	3,8		; special x
+	.byte	22,32		; special y
+	.word	open_fireplace-1	; special function
+

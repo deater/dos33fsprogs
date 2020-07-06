@@ -415,6 +415,7 @@ draw_page_close:
 	.include	"brother_books.s"
 	.include	"octagon_bookshelf.s"
 	.include	"octagon_rotation.s"
+	.include	"octagon_fireplace.s"
 
 	; linking books
 	.include	"handle_pages.s"

@@ -137,6 +137,7 @@ octagon.o:	octagon.s zp.inc hardware.inc common_defines.inc \
 	handle_pages.s \
 	octagon_bookshelf.s \
 	octagon_rotation.s \
+	octagon_fireplace.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o octagon.o octagon.s -l octagon.lst
 
