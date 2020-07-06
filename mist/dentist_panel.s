@@ -643,11 +643,11 @@ month_limits:
 	.byte 0,1,3,4,6,7,9,10,11
 date_limits:
 	.byte $00,$04,$08,$12,$16,$20,$24,$28,$30
-century_limits:
-	.byte $00,$12,$25,$37,$50,$62,$75,$87,$99
-hour_limits:
+century_limits:						; 21 is wrong
+	.byte $00,$12,$21,$37,$50,$62,$75,$87,$99	; makes scroll to 1984
+hour_limits:						; faster
 	.byte $00,$03,$06,$09,$12,$15,$18,$21,$23
-
+arbitrary:
 
 	;===============================
 	;===============================
@@ -809,6 +809,12 @@ button_on_sprite:
 
 
 
+	;========================
+	;========================
+	; button pressed
+	;========================
+	;========================
+
 panel_button:
 
 	lda	CURSOR_Y
@@ -816,6 +822,9 @@ panel_button:
 	bcc	done_panel_button
 	cmp	#24
 	bcs	done_panel_button
+
+	lda	#32
+	sta	ANIMATE_FRAME
 
 	lda	#0
 	sta	button_smc+1
@@ -1129,6 +1138,64 @@ draw_stars:
 
 stars_lights_off:
 
+	lda	ANIMATE_FRAME
+	beq	regular_stars
+
+	dec	ANIMATE_FRAME
+
+	tay
+
+	; plot 1st
+	lda	#$0f
+	sta	plot_color+1
+	lda	saved_year,Y
+	eor	arbitrary,Y
+	tax
+	ldy	saved_minutes
+	jsr	special_plot_point
+
+	; plot 2nd
+	ldy	ANIMATE_FRAME
+	lda	#$ff
+	sta	plot_color+1
+	lda	saved_month,Y
+	eor	arbitrary,Y
+	tax
+	lda	saved_hour,Y
+	sbc	arbitrary,Y
+	tay
+	jsr	special_plot_point
+
+	; plot 3rd
+	ldy	ANIMATE_FRAME
+	lda	#$f0
+	sta	plot_color+1
+	lda	saved_hour,Y
+	adc	arbitrary,Y
+	tax
+	lda	saved_year,Y
+	sbc	arbitrary,Y
+	tay
+	jsr	special_plot_point
+
+	; plot 4th
+	ldy	ANIMATE_FRAME
+	lda	#$50
+	sta	plot_color+1
+	lda	saved_minutes,Y
+	eor	arbitrary,Y
+	tax
+	lda	saved_year,Y
+	adc	arbitrary,Y
+	tay
+
+	jsr	special_plot_point
+
+	rts
+
+
+regular_stars:
+
 	lda	saved_month
 	cmp	#9		; OCTOBER
 	beq	draw_leaf
@@ -1141,7 +1208,7 @@ stars_lights_off:
 ; OCT 11 1984 10:04AM (leaf)
 draw_leaf:
 	lda	saved_day
-	cmp	#$11
+	cmp	#$10
 	bne	not_special
 	lda	saved_century
 	cmp	#$19
@@ -1163,7 +1230,7 @@ draw_leaf:
 ; JAN 17 1207 5:46AM (snake)
 draw_snake:
 	lda	saved_day
-	cmp	#$17
+	cmp	#$16
 	bne	not_special
 	lda	saved_century
 	cmp	#$12
@@ -1185,7 +1252,7 @@ draw_snake:
 ; NOV 23 9791 6:57PM (bug)
 draw_bug:
 	lda	saved_day
-	cmp	#$23
+	cmp	#$22
 	bne	not_special
 	lda	saved_century
 	cmp	#$97
