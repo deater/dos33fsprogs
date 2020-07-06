@@ -12,7 +12,8 @@ locations:
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
-	.word location32,location33,location34
+	.word location32,location33,location34,location35
+	.word location36,location37
 
 ; OCTAGON_TEMPLE_DOORWAY	-- temple doorway
 location0:
@@ -641,11 +642,11 @@ location34:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
-	.byte	$ff			; west exit
+	.byte	OCTAGON_FIREPLACE_SHELF	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
-	.byte	DIRECTION_W|DIRECTION_ONLY_POINT	; west exit_dir
+	.byte	DIRECTION_E			; west exit_dir
 	.word	$0000				; north bg
 	.word	$0000				; south bg
 	.word	$0000				; east bg
@@ -655,4 +656,63 @@ location34:
 	.byte	3,8		; special x
 	.byte	22,32		; special y
 	.word	open_fireplace-1	; special function
+
+; OCTAGON_FIREPLACE_SHELF	-- in fireplace, rotated shelf
+location35:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	fireplace_shelf_lzsa		; east bg
+	.word	$0000				; west bg
+	.byte	BG_EAST
+	.byte	DIRECTION_E		; special exit
+	.byte	3,30		; special x
+	.byte	6,44		; special y
+	.word	fireplace_shelf_action-1	; special function
+
+; OCTAGON_GREEN_BOOK	-- looking at green book
+location36:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	OCTAGON_GREEN_BOOK_OPEN	; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	green_book_lzsa		; east bg
+	.word	$0000				; west bg
+	.byte	BG_EAST
+	.byte	$ff			; special exit
+
+; OCTAGON_GREEN_BOOK_OPEN	-- green book is open
+location37:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	OCTAGON_FIREPLACE_SHELF	; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	green_book_open_lzsa		; east bg
+	.word	$0000				; west bg
+	.byte	BG_EAST
+	.byte	$ff		; special exit
+	.byte	3,8		; special x
+	.byte	22,32		; special y
+	.word	return_fireplace-1	; special function
+
+
 

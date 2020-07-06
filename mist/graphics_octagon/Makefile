@@ -49,7 +49,9 @@ octagon_graphics.inc:	\
 	tower_key_view_gears_hint_n.lzsa tower_key_view_tree_hint_n.lzsa \
 	elevator_door_closed_s.lzsa \
 	elevator_dark_s.lzsa \
-	red_book_ending.lzsa blue_book_ending.lzsa
+	red_book_ending.lzsa blue_book_ending.lzsa \
+	fireplace_shelf.lzsa \
+	green_book.lzsa green_book_open.lzsa
 	echo "temple_door_n_lzsa: .incbin \"temple_door_n.lzsa\"" > octagon_graphics.inc
 	echo "temple_door_s_lzsa: .incbin \"temple_door_s.lzsa\"" >> octagon_graphics.inc
 	echo "temple_door_closed_s_lzsa: .incbin \"temple_door_closed_s.lzsa\"" >> octagon_graphics.inc
@@ -121,6 +123,11 @@ octagon_graphics.inc:	\
 	echo "elevator_dark_s_lzsa: .incbin \"elevator_dark_s.lzsa\"" >> octagon_graphics.inc
 	echo "red_book_ending_lzsa: .incbin \"red_book_ending.lzsa\"" >> octagon_graphics.inc
 	echo "blue_book_ending_lzsa: .incbin \"blue_book_ending.lzsa\"" >> octagon_graphics.inc
+	echo "fireplace_shelf_lzsa: .incbin \"fireplace_shelf.lzsa\"" >> octagon_graphics.inc
+	echo "green_book_lzsa: .incbin \"green_book.lzsa\"" >> octagon_graphics.inc
+	echo "green_book_open_lzsa: .incbin \"green_book_open.lzsa\"" >> octagon_graphics.inc
+
+
 
 %.gr: %.png
 	$(PNG2GR) $< $@

@@ -78,6 +78,13 @@ game_loop:
 	cmp	#OCTAGON_GRID_BOOK
 	beq	looking_at_grid_book
 
+	cmp	#OCTAGON_FIREPLACE_SHELF
+	bne	check_temple_center
+	jsr	draw_fireplace_shelf_pages
+	jmp	done_foreground
+
+check_temple_center:
+
 	cmp	#OCTAGON_TEMPLE_CENTER
 	bne	check_page_close_red
 	jsr	draw_octagon_page_far
@@ -397,6 +404,54 @@ draw_page_close:
 	sta	YPOS
 
 	jmp	put_sprite_crop         ; tail call
+
+
+
+
+	;======================================
+	; draw pages on fireplace shelf
+
+draw_fireplace_shelf_pages:
+
+draw_fireplace_red:
+	lda	RED_PAGES_TAKEN
+	and	#FINAL_PAGE
+	bne	draw_fireplace_blue
+
+	lda	#<red_page_sprite
+	sta	INL
+	lda	#>red_page_sprite
+	sta	INH
+
+	lda	#21
+	sta	XPOS
+
+	lda	#30
+	sta	YPOS
+
+	jsr	put_sprite_crop         ; tail call
+
+draw_fireplace_blue:
+
+	lda	BLUE_PAGES_TAKEN
+	and	#FINAL_PAGE
+	bne	done_fireplace_page
+
+	lda	#<blue_page_sprite
+	sta	INL
+	lda	#>blue_page_sprite
+	sta	INH
+
+	lda	#15
+	sta	XPOS
+
+	lda	#30
+	sta	YPOS
+
+	jsr	put_sprite_crop         ; tail call
+
+done_fireplace_page:
+	rts
 
 
 
