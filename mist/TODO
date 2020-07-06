@@ -3,7 +3,6 @@
 ;	+ due to gears being open:
 ;	+ due to bridge being up:
 ;	+ due to ship being up:
-;	+ due to light switch on: 1
 
 For release 1.0
 
@@ -12,15 +11,9 @@ For release 1.0
 + LOADER 
 	-- save game
 	-- sound loader (into language card?)
-+ MIST (split off ship-up/ship-down?)
-	-- fix catherine letter (bg, grab from other side)
-		also make it a location/graphic like half messages
++ MIST (split off ship-up/ship-down?) (split off generator shack?)
 	-- constellation puzzle/ship raising
 	-- marker switches
-+ DENTIST
-	-- lights dazzle when display comes down
-	-- animation on button press
-	-- slide parts of switch
 
 + CABIN
 	-- safe puzzle
@@ -52,7 +45,7 @@ Done:
 + MIST_TITLE
 + VIEWER
 + ARBOR
-
++ DENTIST
 
 ================================
 
