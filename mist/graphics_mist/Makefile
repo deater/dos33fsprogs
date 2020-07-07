@@ -22,7 +22,7 @@ mist_graphics.inc:	\
 	step_land3_w.lzsa step_land3_e.lzsa \
 	step_top_e.lzsa step_top_w.lzsa step_top_n.lzsa step_top_s.lzsa \
 	pool_s.lzsa \
-	clock_e.lzsa clock_s.lzsa clock_bridge.lzsa \
+	clock_e.lzsa clock_n.lzsa clock_s.lzsa clock_bridge.lzsa \
 	spaceship_far_e.lzsa spaceship_far_n.lzsa \
 	tree2_n.lzsa \
 	tree5_n.lzsa tree5_e.lzsa tree5_s.lzsa \
@@ -76,6 +76,7 @@ mist_graphics.inc:	\
 	echo "step_top_s_lzsa: .incbin \"step_top_s.lzsa\"" >> mist_graphics.inc
 	echo "pool_s_lzsa: .incbin \"pool_s.lzsa\"" >> mist_graphics.inc
 	echo "clock_s_lzsa: .incbin \"clock_s.lzsa\"" >> mist_graphics.inc
+	echo "clock_n_lzsa: .incbin \"clock_n.lzsa\"" >> mist_graphics.inc
 	echo "clock_e_lzsa: .incbin \"clock_e.lzsa\"" >> mist_graphics.inc
 	echo "clock_bridge_lzsa: .incbin \"clock_bridge.lzsa\"" >> mist_graphics.inc
 	echo "spaceship_far_n_lzsa: .incbin \"spaceship_far_n.lzsa\"" >> mist_graphics.inc
