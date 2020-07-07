@@ -716,11 +716,11 @@ location37:
 
 ; OCTAGON_DNI	-- deep underneath New Mexico
 location38:
-	.byte	$ff			; north exit
+	.byte	OCTAGON_DNI_DESK	; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -734,16 +734,16 @@ location38:
 ; OCTAGON_DNI_DESK	-- Atrus' desk
 location39:
 	.byte	$ff			; north exit
-	.byte	$ff			; south exit
+	.byte	OCTAGON_DNI		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	dni_n_lzsa			; north bg
-	.word	dni_s_lzsa			; south bg
-	.word	dni_e_lzsa			; east bg
-	.word	dni_w_lzsa			; west bg
-	.byte	BG_EAST|BG_WEST|BG_SOUTH|BG_NORTH
+	.word	dni_desk_n_lzsa			; north bg
+	.word	dni_desk_s_lzsa			; south bg
+	.word	$0000				; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH|BG_NORTH
 	.byte	$ff		; special exit

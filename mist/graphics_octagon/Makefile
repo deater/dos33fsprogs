@@ -52,7 +52,8 @@ octagon_graphics.inc:	\
 	red_book_ending.lzsa blue_book_ending.lzsa \
 	fireplace_shelf.lzsa \
 	green_book.lzsa green_book_open.lzsa \
-	dni_n.lzsa dni_s.lzsa dni_e.lzsa dni_w.lzsa
+	dni_n.lzsa dni_s.lzsa dni_e.lzsa dni_w.lzsa \
+	dni_desk_n.lzsa dni_desk_s.lzsa
 	echo "temple_door_n_lzsa: .incbin \"temple_door_n.lzsa\"" > octagon_graphics.inc
 	echo "temple_door_s_lzsa: .incbin \"temple_door_s.lzsa\"" >> octagon_graphics.inc
 	echo "temple_door_closed_s_lzsa: .incbin \"temple_door_closed_s.lzsa\"" >> octagon_graphics.inc
@@ -131,6 +132,8 @@ octagon_graphics.inc:	\
 	echo "dni_s_lzsa: .incbin \"dni_s.lzsa\"" >> octagon_graphics.inc
 	echo "dni_e_lzsa: .incbin \"dni_e.lzsa\"" >> octagon_graphics.inc
 	echo "dni_w_lzsa: .incbin \"dni_w.lzsa\"" >> octagon_graphics.inc
+	echo "dni_desk_n_lzsa: .incbin \"dni_desk_n.lzsa\"" >> octagon_graphics.inc
+	echo "dni_desk_s_lzsa: .incbin \"dni_desk_s.lzsa\"" >> octagon_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
