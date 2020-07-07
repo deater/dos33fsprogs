@@ -98,3 +98,12 @@ fireplace_grab_blue_page:
 	lda	#FINAL_PAGE
 	jmp	take_blue_page
 
+
+goto_dni:
+	lda	#OCTAGON_DNI
+	sta	LOCATION
+
+	lda	#DIRECTION_E
+	sta	DIRECTION
+
+	jmp	change_location
