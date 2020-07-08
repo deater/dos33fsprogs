@@ -81,6 +81,7 @@ generate_common.o:	generate_common.c
 	$(CC) $(CFLAGS) -c generate_common.c
 
 ####
+
 common_routines.inc:	loader.lst generate_common
 	./generate_common > common_routines.inc
 
@@ -124,7 +125,7 @@ GENERATOR:	generator.o
 
 generator.o:	generator.s zp.inc hardware.inc \
 	common_defines.inc common_routines.inc \
-	graphics_mist/mist_graphics.inc \
+	graphics_generator/generator_graphics.inc \
 	leveldata_generator.inc \
 	generator_puzzle.s
 	ca65 -o generator.o generator.s -l generator.lst
@@ -308,8 +309,47 @@ dentist.o:	dentist.s zp.inc hardware.inc common_defines.inc \
 
 ####
 
-graphics_island/mist_graphics.inc:
-	cd graphics_island && make
+graphics_title/title_graphics.inc:
+	cd graphics_title && make
+
+graphics_mist/mist_graphics.inc:
+	cd graphics_mist && make
+
+graphics_octagon/octagon_graphics.inc:
+	cd graphics_octagon && make
+
+books/octagon_books.inc:
+	cd books && make
+
+graphics_viewer/viewer_graphics.inc:
+	cd graphics_viewer && make
+
+graphics_meche/meche_graphics.inc:
+	cd graphics_meche && make
+
+graphics_selena/selena_graphics.inc:
+	cd graphics_selena && make
+
+graphics_cabin/cabin_graphics.inc:
+	cd graphics_cabin && make
+
+graphics_channel/channel_graphics.inc:
+	cd graphics_channel && make
+
+graphics_stoney/stoney_graphics.inc:
+	cd graphics_stoney && make
+
+graphics_dentist/dentist_graphics.inc:
+	cd graphics_dentist && make
+
+graphics_generator/generator_graphics.inc:
+	cd graphics_generator && make
+
+graphics_arbor/arbor_graphics.inc:
+	cd graphics_arbor && make
+
+graphics_nibel/nibel_graphics.inc:
+	cd graphics_nibel && make
 
 
 ####
@@ -318,4 +358,5 @@ clean:
 		rm -f *~ *.o *.lst HELLO HELLO_DISK2 \
 			LOADER MIST_TITLE \
 			MIST OCTAGON VIEWER DENTIST \
-			MECHE SELENA STONEY CHANNEL ARBOR NIBEL
+			MECHE SELENA STONEY CHANNEL ARBOR NIBEL \
+			GENERATOR

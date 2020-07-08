@@ -5,7 +5,7 @@ PNG2GR = ../../gr-utils/png2gr
 LZSA = ~/research/lzsa/lzsa/lzsa
 
 
-all:	mist_title.lzsa title_graphics.inc
+all:	title_graphics.inc
 
 ####
 

@@ -25,7 +25,7 @@ elev1_handle:
 	sta	LEVEL_OVER
 
 	lda	CHANNEL_SWITCHES		; make elevator down
-	and	#~CHANNEL_ELEVATOR1_UP
+	and	#<(~CHANNEL_ELEVATOR1_UP)
 	sta	CHANNEL_SWITCHES
 
 
@@ -167,7 +167,7 @@ close_stair_gate:
 	; open the gate
 
 	lda	CHANNEL_SWITCHES
-	and	#~CHANNEL_SW_GATE_BOTTOM
+	and	#<(~CHANNEL_SW_GATE_BOTTOM)
 	jmp	update_stair_gate
 
 

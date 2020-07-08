@@ -54,7 +54,8 @@ channel_start:
 	; actual game does this too?
 
 	lda	CHANNEL_SWITCHES
-	and	#~(CHANNEL_BRIDGE_UP|CHANNEL_PIPE_EXTENDED|CHANNEL_BOOK_ELEVATOR_UP)
+	; hack to avoid "RANGE ERROR" on some versions of ca65
+	and	#<(~(CHANNEL_BRIDGE_UP|CHANNEL_PIPE_EXTENDED|CHANNEL_BOOK_ELEVATOR_UP))
 	sta	CHANNEL_SWITCHES
 
 	; set up bridges
