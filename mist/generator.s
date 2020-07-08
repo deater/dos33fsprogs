@@ -69,6 +69,7 @@ game_loop:
 	;====================================
 
 	; handle generator puzzle
+	lda	LOCATION
 location_generator:
 	cmp	#GEN_GENERATOR_ROOM
 	bne	nothing_special

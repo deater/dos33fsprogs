@@ -177,17 +177,6 @@ leave_tower2:
 	rts
 
 
-green_house:
-
-	; FIXME: handle switch separately
-
-;	lda	#MIST_GREEN_SHACK
-;	sta	LOCATION
-
-	jmp	change_location
-
-
-
 goto_dentist_steps:
 
 	lda	#MIST_STEPS_DENTIST

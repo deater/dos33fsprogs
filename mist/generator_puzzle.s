@@ -1,3 +1,7 @@
+;====================================
+; Routines for the generator puzzles
+;====================================
+
 leave_tower1:
         lda     #GEN_TOWER1_TOP
         sta     LOCATION
@@ -9,7 +13,20 @@ leave_tower1:
 
         rts
 
+back_to_mist:
+	lda	#MIST_TREE_CORRIDOR_4
+	sta	LOCATION
 
+	lda	#DIRECTION_E
+	sta	DIRECTION
+
+	lda	#LOAD_MIST
+	sta	WHICH_LOAD
+
+	lda	#$ff
+	sta	LEVEL_OVER
+
+	rts
 
 
 ;=======================

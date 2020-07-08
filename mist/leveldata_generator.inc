@@ -23,7 +23,11 @@ location0:
 	.word	green_house_e_lzsa	; east bg
 	.word	green_house_w_lzsa	; west bg
 	.byte	BG_EAST | BG_WEST
-	.byte	$ff
+	.byte	DIRECTION_E	; special exit
+	.byte	9,29		; special x
+	.byte	2,46		; special y
+	.word	back_to_mist-1	; special function
+
 
 ; GEN_GREEN_STEPS1		-- green shack steps 1
 location1:
@@ -61,11 +65,11 @@ location2:
 
 ; GEN_GENERATOR_DOOR		-- generator room door
 location3:
-	.byte	GEN_GENERATOR_DOOR	; north exit
+	.byte	$ff			; north exit
 	.byte	GEN_GREEN_STEPS6	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	DIRECTION_S	; north exit_dir
+	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_W	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -115,7 +119,10 @@ location5:
 	.word	tower1_trail_e_lzsa	; east bg
 	.word	tower1_trail_w_lzsa	; west bg
 	.byte	BG_WEST|BG_EAST
-	.byte	$ff
+	.byte	DIRECTION_E	; special exit
+	.byte	9,29		; special x
+	.byte	2,46		; special y
+	.word	back_to_mist-1	; special function
 
 ; GEN_TOWER1_TRAIL2		-- tower1 trail2
 location6:

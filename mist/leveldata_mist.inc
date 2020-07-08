@@ -384,9 +384,9 @@ location19:
 	.word	tree4_w_lzsa	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_WEST|BG_EAST
 	.byte	DIRECTION_W	; special exit
-	.byte	6,28		; special x
+	.byte	6,34		; special x
 	.byte	0,46		; special y
-	.word	green_house-1	; special function
+	.word	go_to_generator-1	; special function
 
 ; MIST_TREE_CORRIDOR_1
 location20:

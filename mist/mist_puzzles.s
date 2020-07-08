@@ -72,16 +72,53 @@ done_ss_door:
 
 ;======================
 ; go to selena
+;======================
 
 go_to_selena:
 
-	lda	#3		; Selena
+	lda	#LOAD_SELENA		; Selena
 	sta	WHICH_LOAD
 
 	lda	#$ff
 	sta	LEVEL_OVER
 
 	rts
+
+;======================
+; go to generator
+;======================
+
+go_to_generator:
+
+	lda	CURSOR_X
+	cmp	#27
+	bcs	goto_tower
+
+	cmp	#13
+	bcs	goto_shack
+
+marker_switch:
+	; FIXME
+	rts
+
+goto_shack:
+	lda	#GEN_GREEN_SHACK
+	jmp	into_generator
+
+goto_tower:
+	lda	#GEN_TOWER1_TRAIL
+
+into_generator:
+	sta	LOCATION
+
+	lda	#LOAD_GENERATOR		; Selena
+	sta	WHICH_LOAD
+
+	lda	#$ff
+	sta	LEVEL_OVER
+
+	rts
+
 
 
 
