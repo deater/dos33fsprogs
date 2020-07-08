@@ -213,7 +213,7 @@ location9:
 ; MIST_POOL			-- pool
 location10:
 	.byte	MIST_OUTSIDE_TEMPLE	; north exit
-	.byte	MIST_TREE_CORRIDOR_2	; south exit
+	.byte	MIST_TREE_CORRIDOR_1	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
@@ -266,7 +266,7 @@ location12:
 
 ; MIST_TREE_CORRIDOR_2		-- tree corridor #2
 location13:
-	.byte	MIST_POOL		; north exit
+	.byte	MIST_TREE_CORRIDOR_1	; north exit
 	.byte	MIST_TREE_CORRIDOR_4	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -276,9 +276,9 @@ location13:
 	.byte	$ff		; west exit_dir
 	.word	tree2_n_lzsa	; north bg
 	.word	tree2_s_lzsa	; south bg
-	.word	$0000		; east bg
-	.word	$0000		; west bg
-	.byte	BG_NORTH|BG_SOUTH
+	.word	tree2_e_lzsa	; east bg
+	.word	tree2_w_lzsa	; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
 	.byte	DIRECTION_N	; special exit
 	.byte	25,31		; special x
 	.byte	19,23		; special y
@@ -396,21 +396,21 @@ location19:
 	.byte	0,46		; special y
 	.word	green_house-1	; special function
 
-; UNUSED (was MIST_TREE_CABIN)
+; MIST_TREE_CORRIDOR_1
 location20:
-	.byte	$ff			; north exit
-	.byte	$ff			; south exit
-	.byte	MIST_TREE_CORRIDOR_5	; east exit
+	.byte	MIST_POOL		; north exit
+	.byte	MIST_TREE_CORRIDOR_2	; south exit
+	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
-	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	$0000			; north bg
-	.word	$0000			; south bg
+	.word	tree1_n_lzsa		; north bg
+	.word	tree1_s_lzsa		; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
-	.byte	BG_EAST
+	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff		; special exit
 
 ; MIST_CLOCK_PUZZLE		-- clock puzzle
