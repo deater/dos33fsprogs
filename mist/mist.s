@@ -57,6 +57,9 @@ mist_start:
 	; init the gear
 	jsr	open_the_gear
 
+	; make the ship right
+	jsr	adjust_ship
+
 
 game_loop:
 	;=================

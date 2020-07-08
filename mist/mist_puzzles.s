@@ -1,3 +1,62 @@
+	;==========================
+	; adjust ship up/down
+	;==========================
+adjust_ship:
+
+	lda	SHIP_RAISED
+	beq	make_ship_down
+make_ship_up:
+
+	; update backgrounds
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<pool_shipup_s_lzsa
+	sta	location10,Y				; MIST_POOL
+	lda	#>pool_shipup_s_lzsa
+	sta	location10+1,Y				; MIST_POOL
+
+	ldy	#LOCATION_NORTH_BG
+	lda	#<tree1_shipup_n_lzsa
+	sta	location20,Y				; MIST_TREE_CORRIDOR_1
+	lda	#>tree1_shipup_n_lzsa
+	sta	location20+1,Y				; MIST_TREE_CORRIDOR_1
+
+
+
+	; hook up exit on dock to ship
+
+
+	rts
+
+make_ship_down:
+
+	; update backgrounds
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<pool_s_lzsa
+	sta	location10,Y				; MIST_POOL
+	lda	#>pool_s_lzsa
+	sta	location10+1,Y				; MIST_POOL
+
+	ldy	#LOCATION_NORTH_BG
+	lda	#<tree1_n_lzsa
+	sta	location20,Y				; MIST_TREE_CORRIDOR_1
+	lda	#>tree1_n_lzsa
+	sta	location20+1,Y				; MIST_TREE_CORRIDOR_1
+
+
+
+	; remove exit on dock to ship
+
+
+
+	rts
+
+
+
+	;==========================
+	; draw green if on
+	;==========================
 draw_pillar:
 	lda	LOCATION
 	sec
@@ -31,9 +90,11 @@ done_draw_pillar:
 	rts
 
 
+	;=========================
+	; pillar was touched
+	;=========================
+
 touch_pillar:
-	lda	PILLAR_ON
-	tax			; save to see if toggle ship state
 
 	lda	LOCATION
 	sec
@@ -46,7 +107,81 @@ touch_pillar:
 
 	; check to see if we need to raise/lower ship
 
+	lda	SHIP_RAISED
+	beq	ship_is_down
+
+ship_is_up:
+	lda	PILLAR_ON
+	cmp	#(PILLAR_SNAKE|PILLAR_BUG|PILLAR_LEAF)
+	beq	done_adjusting_ship
+
+	; lower ship
+	lda	#0
+	jmp	move_the_ship
+
+ship_is_down:
+
+	lda	PILLAR_ON
+	cmp	#(PILLAR_SNAKE|PILLAR_BUG|PILLAR_LEAF)
+	bne	done_adjusting_ship
+
+	; raise ship
+	lda	#1
+	jmp	move_the_ship
+
+done_adjusting_ship:
 	rts
+
+
+move_the_ship:
+	sta	SHIP_RAISED
+
+	; play noise
+
+	jsr	beep
+
+	; adjust the backgrounds
+
+	jsr	adjust_ship
+
+	rts
+
+
+	;===========================
+	; BEEP (inlined)
+	;===========================
+beep:
+	ldy     #235
+	sty	tone_smc+1
+
+	; BEEP
+	; repeat 30 times
+	lda	#30			; 2
+tone1_loop:
+
+tone_smc:
+
+	ldy	#24			; 2
+loopC:	ldx	#6			; 2
+loopD:	dex				; 1
+	bne	loopD			; 2
+	dey				; 1
+	bne	loopC			; 2
+
+	bit	SPEAKER			; 3	; click speaker
+
+	sec				; 1
+	sbc	#1			; 2
+	bne	tone1_loop		; 2
+
+	; Try X=6 Y=21 cycles=757
+	; Try X=6 Y=24 cycles=865
+	; Try X=7 Y=235 cycles=9636
+
+	rts
+
+
+
 
 powersoftwo:
 	.byte $01,$02,$04,$08,$10,$20,$40,$80
@@ -331,9 +466,3 @@ into_generator:
 	sta	LEVEL_OVER
 
 	rts
-
-
-
-
-
-
