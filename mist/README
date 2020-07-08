@@ -1,0 +1,14 @@
+MIST -- a reimplementation of MYST from scratch for Apple II computers
+
+
+
+Compiling:
+	This is a bit tricky
+	First you'll need to install the cc65 package
+		https://github.com/cc65/cc65
+	You'll need to install lzsa
+		https://github.com/emmanuel-marty/lzsa
+	You might need to install lz4-dev for some of the helper
+		utils to compile
+
+	Then run "make" and hope for the best
