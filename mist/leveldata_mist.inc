@@ -623,7 +623,7 @@ location31:
 	.byte	DIRECTION_W	; special exit
 	.byte	14,27		; special x
 	.byte	12,30		; special y
-	.word	touch_pillar_eye-1	; special function
+	.word	touch_pillar-1	; special function
 
 ; MIST_PILLAR_SNAKE	-- pillar with snake
 location32:
@@ -643,7 +643,7 @@ location32:
 	.byte	DIRECTION_W	; special exit
 	.byte	14,27		; special x
 	.byte	12,30		; special y
-	.word	touch_pillar_snake-1	; special function
+	.word	touch_pillar-1	; special function
 
 ; MIST_PILLAR_BUG	-- pillar with bug
 location33:
@@ -663,7 +663,7 @@ location33:
 	.byte	DIRECTION_W	; special exit
 	.byte	14,27		; special x
 	.byte	12,30		; special y
-	.word	touch_pillar_bug-1	; special function
+	.word	touch_pillar-1	; special function
 
 ; MIST_PILLAR_ANCHOR	-- pillar with anchor
 location34:
@@ -683,7 +683,7 @@ location34:
 	.byte	DIRECTION_W	; special exit
 	.byte	14,27		; special x
 	.byte	12,30		; special y
-	.word	touch_pillar_anchor-1	; special function
+	.word	touch_pillar-1	; special function
 
 ; MIST_PILLAR_ARROW	-- pillar with arrow
 location35:
@@ -703,7 +703,7 @@ location35:
 	.byte	DIRECTION_E	; special exit
 	.byte	14,27		; special x
 	.byte	12,30		; special y
-	.word	touch_pillar_arrow-1	; special function
+	.word	touch_pillar-1	; special function
 
 ; MIST_PILLAR_LEAF	-- pillar with leaf
 location36:
@@ -723,7 +723,7 @@ location36:
 	.byte	DIRECTION_E	; special exit
 	.byte	14,27		; special x
 	.byte	12,30		; special y
-	.word	touch_pillar_leaf-1	; special function
+	.word	touch_pillar-1	; special function
 
 ; MIST_PILLAR_CROSS	-- pillar with cross
 location37:
@@ -743,7 +743,7 @@ location37:
 	.byte	DIRECTION_E	; special exit
 	.byte	14,27		; special x
 	.byte	12,30		; special y
-	.word	touch_pillar_cross-1	; special function
+	.word	touch_pillar-1	; special function
 
 ; MIST_PILLAR_EMU	-- pillar with emu
 location38:
@@ -763,7 +763,7 @@ location38:
 	.byte	DIRECTION_E	; special exit
 	.byte	14,27		; special x
 	.byte	12,30		; special y
-	.word	touch_pillar_emu-1	; special function
+	.word	touch_pillar-1	; special function
 
 
 

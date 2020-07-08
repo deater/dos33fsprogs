@@ -85,9 +85,15 @@ game_loop:
 
 	jsr	check_gear_delete
 not_gear_related:
+	; handl pillars
+	lda	LOCATION
+	cmp	#MIST_PILLAR_EYE
+	bcc	check_if_clock
+
+	jsr	draw_pillar
 
 	; handle clock puzzles
-
+check_if_clock:
 	lda	LOCATION
 	cmp	#MIST_CLOCK_PUZZLE	; clock puzzle
 	beq	location_clock

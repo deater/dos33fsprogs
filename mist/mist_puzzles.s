@@ -1,13 +1,135 @@
+draw_pillar:
+	lda	LOCATION
+	sec
+	sbc	#MIST_PILLAR_EYE	; find which one we are on
+	tay
+	tax
 
-touch_pillar_eye:
-touch_pillar_snake:
-touch_pillar_bug:
-touch_pillar_anchor:
-touch_pillar_arrow:
-touch_pillar_leaf:
-touch_pillar_cross:
-touch_pillar_emu:
+	lda	PILLAR_ON
+	and	powersoftwo,Y
+
+	beq	done_draw_pillar
+
+	; is on, so draw it green
+	txa
+	asl
+	tay
+
+	lda	pillar_sprites,Y
+	sta	INL
+	lda	pillar_sprites+1,Y
+	sta	INH
+
+	lda	#17
+	sta	XPOS
+	lda	#16
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+done_draw_pillar:
 	rts
+
+
+touch_pillar:
+	lda	PILLAR_ON
+	tax			; save to see if toggle ship state
+
+	lda	LOCATION
+	sec
+	sbc	#MIST_PILLAR_EYE	; find which on we touched
+	tay
+
+	lda	PILLAR_ON
+	eor	powersoftwo,Y
+	sta	PILLAR_ON
+
+	; check to see if we need to raise/lower ship
+
+	rts
+
+powersoftwo:
+	.byte $01,$02,$04,$08,$10,$20,$40,$80
+
+pillar_sprites:
+	.word	eye_sprite,snake_sprite,bug_sprite,anchor_sprite
+	.word	arrow_sprite,leaf_sprite,cross_sprite,emu_sprite
+
+eye_sprite:	; @17,16
+	.byte 7,6
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$4A,$4A,$4A,$AA,$AA
+	.byte $4A,$A4,$44,$A4,$44,$A4,$4A
+	.byte $A4,$4A,$44,$4A,$44,$4A,$A4
+	.byte $AA,$AA,$A4,$A4,$A4,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA
+
+snake_sprite:	; @17,16
+	.byte 6,6
+	.byte $AA,$4A,$4A,$AA,$AA,$AA
+	.byte $AA,$44,$AA,$4A,$A4,$4A
+	.byte $AA,$44,$AA,$44,$AA,$44
+	.byte $AA,$44,$AA,$44,$AA,$44
+	.byte $AA,$44,$AA,$44,$AA,$44
+	.byte $AA,$AA,$A4,$AA,$AA,$A4
+
+bug_sprite:	; @17,16
+	.byte 6,5
+	.byte $AA,$AA,$AA,$AA,$AA,$AA
+	.byte $AA,$44,$AA,$44,$AA,$44
+	.byte $AA,$4A,$44,$44,$44,$4A
+	.byte $AA,$AA,$44,$44,$44,$AA
+	.byte $AA,$44,$AA,$A4,$AA,$44
+
+
+anchor_sprite:	; @17,16
+	.byte 6,6
+	.byte $AA,$AA,$AA,$4A,$AA,$AA
+	.byte $AA,$AA,$AA,$44,$AA,$AA
+	.byte $AA,$AA,$A4,$44,$A4,$AA
+	.byte $AA,$AA,$AA,$44,$AA,$AA
+	.byte $AA,$A4,$4A,$44,$4A,$A4
+	.byte $AA,$AA,$AA,$A4,$AA,$AA
+
+arrow_sprite:	; @17,16
+	.byte 7,6
+	.byte $AA,$AA,$AA,$AA,$4A,$4A,$4A
+	.byte $AA,$AA,$AA,$AA,$AA,$44,$44
+	.byte $AA,$AA,$AA,$4A,$A4,$AA,$A4
+	.byte $AA,$AA,$44,$AA,$AA,$AA,$AA
+	.byte $A4,$44,$AA,$AA,$AA,$AA,$AA
+	.byte $AA,$A4,$AA,$AA,$AA,$AA,$AA
+
+leaf_sprite:	; @17,16
+	.byte 6,6
+	.byte $AA,$4A,$AA,$AA,$AA,$4A
+	.byte $AA,$44,$44,$4A,$44,$44
+	.byte $AA,$44,$44,$44,$44,$AA
+	.byte $AA,$A4,$44,$44,$44,$4A
+	.byte $AA,$4A,$AA,$44,$44,$44
+	.byte $AA,$A4,$AA,$AA,$AA,$AA
+
+cross_sprite:	; @17,16
+	.byte 6,6
+	.byte $AA,$AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$A4,$44,$A4,$AA
+	.byte $AA,$4A,$AA,$44,$AA,$4A
+	.byte $AA,$44,$A4,$44,$A4,$44
+	.byte $AA,$AA,$AA,$44,$AA,$AA
+	.byte $AA,$AA,$A4,$A4,$A4,$AA
+
+emu_sprite:	; @17,16
+	.byte 7,6
+	.byte $AA,$AA,$AA,$AA,$AA,$4A,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$44,$A4
+	.byte $AA,$4A,$44,$44,$44,$44,$AA
+	.byte $AA,$44,$44,$44,$44,$A4,$AA
+	.byte $AA,$44,$AA,$44,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$A4,$A4,$AA,$AA
+
+
+
+
 
 tree2_pillars:
 	lda	DIRECTION

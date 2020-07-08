@@ -68,3 +68,4 @@
 .byte $00	; DENTIST_YEAR		=	$BB
 .byte $00	; DENTIST_HOURS		=	$BC
 .byte $00	; DENTIST_MINUTES	=	$BD
+.byte $00	; PILLAR_ON		=	$BE
