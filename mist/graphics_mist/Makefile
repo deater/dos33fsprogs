@@ -21,10 +21,10 @@ mist_graphics.inc:	\
 	step_dentist_n.lzsa step_dentist_e.lzsa step_dentist_w.lzsa \
 	step_land3_w.lzsa step_land3_e.lzsa \
 	step_top_e.lzsa step_top_w.lzsa step_top_n.lzsa step_top_s.lzsa \
-	pool_s.lzsa \
+	pool_n.lzsa pool_s.lzsa pool_e.lzsa pool_w.lzsa \
 	clock_e.lzsa clock_n.lzsa clock_s.lzsa clock_bridge.lzsa \
 	spaceship_far_e.lzsa spaceship_far_n.lzsa \
-	tree2_n.lzsa \
+	tree2_n.lzsa tree2_s.lzsa \
 	tree5_n.lzsa tree5_e.lzsa tree5_s.lzsa \
 	gear_n.lzsa gear_w.lzsa gear_s.lzsa gear_open_n.lzsa\
 	gear_base_n.lzsa \
@@ -74,7 +74,10 @@ mist_graphics.inc:	\
 	echo "step_top_w_lzsa: .incbin \"step_top_w.lzsa\"" >> mist_graphics.inc
 	echo "step_top_n_lzsa: .incbin \"step_top_n.lzsa\"" >> mist_graphics.inc
 	echo "step_top_s_lzsa: .incbin \"step_top_s.lzsa\"" >> mist_graphics.inc
+	echo "pool_n_lzsa: .incbin \"pool_n.lzsa\"" >> mist_graphics.inc
 	echo "pool_s_lzsa: .incbin \"pool_s.lzsa\"" >> mist_graphics.inc
+	echo "pool_e_lzsa: .incbin \"pool_e.lzsa\"" >> mist_graphics.inc
+	echo "pool_w_lzsa: .incbin \"pool_w.lzsa\"" >> mist_graphics.inc
 	echo "clock_s_lzsa: .incbin \"clock_s.lzsa\"" >> mist_graphics.inc
 	echo "clock_n_lzsa: .incbin \"clock_n.lzsa\"" >> mist_graphics.inc
 	echo "clock_e_lzsa: .incbin \"clock_e.lzsa\"" >> mist_graphics.inc
@@ -82,6 +85,7 @@ mist_graphics.inc:	\
 	echo "spaceship_far_n_lzsa: .incbin \"spaceship_far_n.lzsa\"" >> mist_graphics.inc
 	echo "spaceship_far_e_lzsa: .incbin \"spaceship_far_e.lzsa\"" >> mist_graphics.inc
 	echo "tree2_n_lzsa: .incbin \"tree2_n.lzsa\"" >> mist_graphics.inc
+	echo "tree2_s_lzsa: .incbin \"tree2_s.lzsa\"" >> mist_graphics.inc
 	echo "tree5_n_lzsa: .incbin \"tree5_n.lzsa\"" >> mist_graphics.inc
 	echo "tree5_s_lzsa: .incbin \"tree5_s.lzsa\"" >> mist_graphics.inc
 	echo "tree5_e_lzsa: .incbin \"tree5_e.lzsa\"" >> mist_graphics.inc

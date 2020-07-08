@@ -212,19 +212,19 @@ location9:
 
 ; MIST_POOL			-- pool
 location10:
-	.byte	$ff			; north exit
-	.byte	MIST_TREE_CORRIDOR_4	; south exit
+	.byte	MIST_OUTSIDE_TEMPLE	; north exit
+	.byte	MIST_TREE_CORRIDOR_2	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	$0000		; north bg
+	.word	pool_n_lzsa	; north bg
 	.word	pool_s_lzsa	; south bg
-	.word	$0000		; east bg
-	.word	$0000		; west bg
-	.byte	BG_SOUTH
+	.word	pool_e_lzsa	; east bg
+	.word	pool_w_lzsa	; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
 	.byte	$ff		; special exit
 
 ; MIST_CLOCK			-- clock
@@ -266,19 +266,19 @@ location12:
 
 ; MIST_TREE_CORRIDOR_2		-- tree corridor #2
 location13:
-	.byte	MIST_OUTSIDE_TEMPLE	; north exit
-	.byte	$ff			; south exit
+	.byte	MIST_POOL		; north exit
+	.byte	MIST_TREE_CORRIDOR_4	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N|DIRECTION_ONLY_POINT	; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	tree2_n_lzsa	; north bg
-	.word	$0000		; south bg
+	.word	tree2_s_lzsa	; south bg
 	.word	$0000		; east bg
 	.word	$0000		; west bg
-	.byte	BG_NORTH
+	.byte	BG_NORTH|BG_SOUTH
 	.byte	DIRECTION_N	; special exit
 	.byte	25,31		; special x
 	.byte	19,23		; special y
