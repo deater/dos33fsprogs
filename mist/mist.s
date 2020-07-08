@@ -93,26 +93,13 @@ not_gear_related:
 	beq	location_clock
 	cmp	#MIST_CLOCK_INSIDE
 	beq	location_inside_clock
-	bne	location_generator
+	bne	nothing_special
 
 location_clock:
 	jsr	draw_clock_face
 	jmp	nothing_special
 location_inside_clock:
 	jsr	draw_clock_inside
-	jmp	nothing_special
-
-	; handle generator puzzle
-location_generator:
-	cmp	#MIST_GENERATOR_ROOM
-	bne	nothing_special
-	lda	DIRECTION
-	and	#$f
-	cmp	#DIRECTION_N
-	bne	nothing_special
-
-	jsr	generator_update_volts
-	jsr	generator_draw_buttons
 	jmp	nothing_special
 
 nothing_special:
@@ -189,24 +176,13 @@ leave_tower2:
 
 	rts
 
-leave_tower1:
-	lda	#MIST_TOWER1_TOP
-	sta	LOCATION
-
-	lda	#DIRECTION_E
-	sta	DIRECTION
-
-	jsr	change_location
-
-	rts
-
 
 green_house:
 
 	; FIXME: handle switch separately
 
-	lda	#MIST_GREEN_SHACK
-	sta	LOCATION
+;	lda	#MIST_GREEN_SHACK
+;	sta	LOCATION
 
 	jmp	change_location
 
@@ -323,12 +299,7 @@ read_letter:
 	; puzzles
 	.include	"clock_bridge_puzzle.s"
 	.include	"marker_switch.s"
-	.include	"generator_puzzle.s"
-
-	; linking books
-
-	; letters
-;	.include	"letter_cat.s"
+	.include	"mist_puzzles.s"
 
 	; level data
 	.include	"leveldata_mist.inc"

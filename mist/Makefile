@@ -12,7 +12,7 @@ zip:	mist.dsk mist_side2.dsk mist_side3.dsk
 	zip mist.zip mist.dsk mist_side2.dsk mist_side3.dsk
 
 mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
-		MECHE SELENA CABIN CHANNEL STONEY DENTIST SAVE0
+		MECHE SELENA CABIN CHANNEL STONEY DENTIST GENERATOR SAVE0
 	cp empty.dsk mist.dsk
 	$(DOS33) -y mist.dsk SAVE A HELLO
 	$(DOS33) -y mist.dsk BSAVE -a 0x1000 LOADER
@@ -21,6 +21,7 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 OCTAGON
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 CABIN
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 DENTIST
+	$(DOS33) -y mist.dsk BSAVE -a 0x2000 GENERATOR
 	$(DOS33) -y mist.dsk BSAVE -a 0xe00 SAVE0
 	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
@@ -108,14 +109,26 @@ mist.o:	mist.s zp.inc hardware.inc common_defines.inc common_routines.inc \
 	common_sprites.inc \
 	leveldata_mist.inc \
 	clock_bridge_puzzle.s clock_sprites.inc \
-	letter_cat.s \
 	marker_switch.s \
 	keyboard.s \
 	draw_pointer.s \
 	end_level.s \
-	generator_puzzle.s \
+	mist_puzzles.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o mist.o mist.s -l mist.lst
+
+####
+
+GENERATOR:	generator.o
+	ld65 -o GENERATOR generator.o -C ../linker_scripts/apple2_2000.inc
+
+generator.o:	generator.s zp.inc hardware.inc \
+	common_defines.inc common_routines.inc \
+	graphics_mist/mist_graphics.inc \
+	leveldata_generator.inc \
+	generator_puzzle.s
+	ca65 -o generator.o generator.s -l generator.lst
+
 
 ####
 

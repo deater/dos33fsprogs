@@ -35,19 +35,12 @@ mist_graphics.inc:	\
 	clock_puzzle_s.lzsa clock_puzzle_bridge.lzsa \
 	clock_inside_s.lzsa clock_inside_open.lzsa \
 	gear_open_e.lzsa \
-	generator_n.lzsa generator_s.lzsa \
-	green_house_w.lzsa green_house_e.lzsa \
-	green_steps1_n.lzsa green_steps1_s.lzsa \
-	gen_door_closed_n.lzsa gen_door_open_n.lzsa gen_door_s.lzsa \
-	green_steps6_n.lzsa green_steps6_w.lzsa \
 	pad_n.lzsa pad_e.lzsa \
 	spaceship_door_n.lzsa spaceship_door_open_n.lzsa \
 	tower2_base_w.lzsa tower2_top_w.lzsa \
 	tower2_path_e.lzsa tower2_path_n.lzsa \
-	tower1_trail_w.lzsa tower1_trail_e.lzsa \
-	tower1_trail2_n.lzsa tower1_trail2_w.lzsa tower1_trail2_s.lzsa \
-	tower1_base_e.lzsa \
-	tower1_top_e.lzsa
+	pillar_cross.lzsa pillar_eye.lzsa pillar_snake.lzsa pillar_emu.lzsa \
+	pillar_bug.lzsa pillar_anchor.lzsa pillar_arrow.lzsa pillar_leaf.lzsa
 	echo "dock_n_lzsa: .incbin \"dock_n.lzsa\"" > mist_graphics.inc
 	echo "dock_s_lzsa: .incbin \"dock_s.lzsa\"" >> mist_graphics.inc
 	echo "dock_e_lzsa: .incbin \"dock_e.lzsa\"" >> mist_graphics.inc
@@ -111,17 +104,6 @@ mist_graphics.inc:	\
 	echo "clock_inside_s_lzsa: .incbin \"clock_inside_s.lzsa\"" >> mist_graphics.inc
 	echo "clock_inside_open_lzsa: .incbin \"clock_inside_open.lzsa\"" >> mist_graphics.inc
 	echo "gear_open_e_lzsa: .incbin \"gear_open_e.lzsa\"" >> mist_graphics.inc
-	echo "generator_n_lzsa: .incbin \"generator_n.lzsa\"" >> mist_graphics.inc
-	echo "generator_s_lzsa: .incbin \"generator_s.lzsa\"" >> mist_graphics.inc
-	echo "green_house_w_lzsa: .incbin \"green_house_w.lzsa\"" >> mist_graphics.inc
-	echo "green_house_e_lzsa: .incbin \"green_house_e.lzsa\"" >> mist_graphics.inc
-	echo "green_steps1_n_lzsa: .incbin \"green_steps1_n.lzsa\"" >> mist_graphics.inc
-	echo "green_steps1_s_lzsa: .incbin \"green_steps1_s.lzsa\"" >> mist_graphics.inc
-	echo "gen_door_closed_n_lzsa: .incbin \"gen_door_closed_n.lzsa\"" >> mist_graphics.inc
-	echo "gen_door_open_n_lzsa: .incbin \"gen_door_open_n.lzsa\"" >> mist_graphics.inc
-	echo "gen_door_s_lzsa: .incbin \"gen_door_s.lzsa\"" >> mist_graphics.inc
-	echo "green_steps6_n_lzsa: .incbin \"green_steps6_n.lzsa\"" >> mist_graphics.inc
-	echo "green_steps6_w_lzsa: .incbin \"green_steps6_w.lzsa\"" >> mist_graphics.inc
 	echo "pad_n_lzsa: .incbin \"pad_n.lzsa\"" >> mist_graphics.inc
 	echo "pad_e_lzsa: .incbin \"pad_e.lzsa\"" >> mist_graphics.inc
 	echo "spaceship_door_n_lzsa: .incbin \"spaceship_door_n.lzsa\"" >> mist_graphics.inc
@@ -130,14 +112,14 @@ mist_graphics.inc:	\
 	echo "tower2_top_w_lzsa: .incbin \"tower2_top_w.lzsa\"" >> mist_graphics.inc
 	echo "tower2_path_e_lzsa: .incbin \"tower2_path_e.lzsa\"" >> mist_graphics.inc
 	echo "tower2_path_n_lzsa: .incbin \"tower2_path_n.lzsa\"" >> mist_graphics.inc
-	echo "tower1_trail_w_lzsa: .incbin \"tower1_trail_w.lzsa\"" >> mist_graphics.inc
-	echo "tower1_trail_e_lzsa: .incbin \"tower1_trail_e.lzsa\"" >> mist_graphics.inc
-	echo "tower1_trail2_n_lzsa: .incbin \"tower1_trail2_n.lzsa\"" >> mist_graphics.inc
-	echo "tower1_trail2_w_lzsa: .incbin \"tower1_trail2_w.lzsa\"" >> mist_graphics.inc
-	echo "tower1_trail2_s_lzsa: .incbin \"tower1_trail2_s.lzsa\"" >> mist_graphics.inc
-	echo "tower1_base_e_lzsa: .incbin \"tower1_base_e.lzsa\"" >> mist_graphics.inc
-	echo "tower1_top_e_lzsa: .incbin \"tower1_top_e.lzsa\"" >> mist_graphics.inc
-
+	echo "pillar_cross_lzsa: .incbin \"pillar_cross.lzsa\"" >> mist_graphics.inc
+	echo "pillar_eye_lzsa: .incbin \"pillar_eye.lzsa\"" >> mist_graphics.inc
+	echo "pillar_snake_lzsa: .incbin \"pillar_snake.lzsa\"" >> mist_graphics.inc
+	echo "pillar_emu_lzsa: .incbin \"pillar_emu.lzsa\"" >> mist_graphics.inc
+	echo "pillar_bug_lzsa: .incbin \"pillar_bug.lzsa\"" >> mist_graphics.inc
+	echo "pillar_anchor_lzsa: .incbin \"pillar_anchor.lzsa\"" >> mist_graphics.inc
+	echo "pillar_arrow_lzsa: .incbin \"pillar_arrow.lzsa\"" >> mist_graphics.inc
+	echo "pillar_leaf_lzsa: .incbin \"pillar_leaf.lzsa\"" >> mist_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@

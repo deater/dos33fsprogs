@@ -1,8 +1,22 @@
+leave_tower1:
+        lda     #GEN_TOWER1_TOP
+        sta     LOCATION
+
+        lda     #DIRECTION_E
+        sta     DIRECTION
+
+        jsr     change_location
+
+        rts
+
+
+
+
 ;=======================
 ; flip circuit breaker
 
 ; if room==MIST_TOWER2_TOP, and with #$fe
-; if room==MIST_TOWER1_TOP, and with #$fd
+; if room==GEN_TOWER1_TOP, and with #$fd
 
 circuit_breaker:
 
@@ -41,68 +55,23 @@ done_turn_on_breaker:
 
 
 ;======================
-; open the spaceship door
-
-open_ss_door:
-
-	; check if voltage is 59
-	lda	ROCKET_VOLTS
-	cmp	#$59
-	bne	done_ss_door
-
-	; change to open door image
-	ldy	#LOCATION_NORTH_BG
-	lda	#<spaceship_door_open_n_lzsa
-	sta	location32,Y				; MIST_ROCKET_CLOSE
-	lda	#>spaceship_door_open_n_lzsa
-	sta	location32+1,Y				; MIST_ROCKET_CLOSE
-
-	; change to load new level if through
-	ldy	#LOCATION_SPECIAL_FUNC
-	lda	#<(go_to_selena-1)
-	sta	location32,Y				; MIST_ROCKET_CLOSE
-	lda	#>(go_to_selena-1)
-	sta	location32+1,Y				; MIST_ROCKET_CLOSE
-
-	jsr	change_location
-
-done_ss_door:
-	rts
-
-
-;======================
-; go to selena
-
-go_to_selena:
-
-	lda	#3		; Selena
-	sta	WHICH_LOAD
-
-	lda	#$ff
-	sta	LEVEL_OVER
-
-	rts
-
-
-
-;======================
 ; open the generator_door
 
 open_gen_door:
 
 	ldy	#LOCATION_NORTH_EXIT
-	lda	#MIST_GENERATOR_ROOM
-	sta	location29,Y			; MIST_GENERATOR_DOOR
+	lda	#GEN_GENERATOR_ROOM
+	sta	location3,Y			; GEN_GENERATOR_DOOR
 
 	ldy	#LOCATION_NORTH_EXIT_DIR
 	lda	#(DIRECTION_N | DIRECTION_SPLIT | DIRECTION_ONLY_POINT)
-	sta	location29,Y			; MIST_GENERATOR_DOOR
+	sta	location3,Y			; GEN_GENERATOR_DOOR
 
 	ldy	#LOCATION_NORTH_BG
 	lda	#<gen_door_open_n_lzsa
-	sta	location29,Y			; MIST_GENERATOR_DOOR
+	sta	location3,Y			; GEN_GENERATOR_DOOR
 	lda	#>gen_door_open_n_lzsa
-	sta	location29+1,Y			; MIST_GENERATOR_DOOR
+	sta	location3+1,Y			; GEN_GENERATOR_DOOR
 
 	jsr	change_location
 
