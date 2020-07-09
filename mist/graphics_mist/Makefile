@@ -11,16 +11,24 @@ all:	mist_graphics.inc
 
 mist_graphics.inc:	\
 	dock_n.lzsa dock_s.lzsa dock_e.lzsa dock_w.lzsa dock_w_open.lzsa \
+	dock_shipup_e.lzsa dock_shipup_n.lzsa \
 	dock_switch_n.lzsa dock_switch_s.lzsa \
+	dock_switch_shipup_s.lzsa \
 	dock_steps_w.lzsa \
 	cat_letter.lzsa \
 	above_dock_e.lzsa above_dock_n.lzsa above_dock_s.lzsa \
+	above_dock_shipup_s.lzsa above_dock_shipup_e.lzsa \
 	step_base_s.lzsa step_base_n.lzsa \
 	step_land1_w.lzsa step_land1_e.lzsa \
+	step_land1_shipup_e.lzsa \
 	step_land2_e.lzsa step_land2_w.lzsa \
+	step_land2_shipup_e.lzsa \
 	step_dentist_n.lzsa step_dentist_e.lzsa step_dentist_w.lzsa \
+	step_dentist_shipup_e.lzsa \
 	step_land3_w.lzsa step_land3_e.lzsa \
+	step_land3_shipup_e.lzsa \
 	step_top_e.lzsa step_top_w.lzsa step_top_n.lzsa step_top_s.lzsa \
+	step_top_shipup_e.lzsa \
 	pool_n.lzsa pool_s.lzsa pool_e.lzsa pool_w.lzsa \
 	pool_shipup_s.lzsa \
 	clock_e.lzsa clock_n.lzsa clock_s.lzsa clock_bridge.lzsa \
@@ -30,6 +38,7 @@ mist_graphics.inc:	\
 	tree2_n.lzsa tree2_s.lzsa tree2_e.lzsa tree2_w.lzsa \
 	tree5_n.lzsa tree5_e.lzsa tree5_s.lzsa \
 	gear_n.lzsa gear_w.lzsa gear_s.lzsa gear_open_n.lzsa\
+	gear_shipup_s.lzsa \
 	gear_base_n.lzsa \
 	spaceship_switch_n.lzsa \
 	tree4_n.lzsa tree4_s.lzsa tree4_w.lzsa tree4_e.lzsa \
@@ -47,29 +56,39 @@ mist_graphics.inc:	\
 	echo "dock_s_lzsa: .incbin \"dock_s.lzsa\"" >> mist_graphics.inc
 	echo "dock_e_lzsa: .incbin \"dock_e.lzsa\"" >> mist_graphics.inc
 	echo "dock_w_lzsa: .incbin \"dock_w.lzsa\"" >> mist_graphics.inc
+	echo "dock_shipup_e_lzsa: .incbin \"dock_shipup_e.lzsa\"" >> mist_graphics.inc
+	echo "dock_shipup_n_lzsa: .incbin \"dock_shipup_n.lzsa\"" >> mist_graphics.inc
 	echo "dock_w_open_lzsa: .incbin \"dock_w_open.lzsa\"" >> mist_graphics.inc
 	echo "dock_switch_n_lzsa: .incbin \"dock_switch_n.lzsa\"" >> mist_graphics.inc
 	echo "dock_switch_s_lzsa: .incbin \"dock_switch_s.lzsa\"" >> mist_graphics.inc
+	echo "dock_switch_shipup_s_lzsa: .incbin \"dock_switch_shipup_s.lzsa\"" >> mist_graphics.inc
 	echo "dock_steps_w_lzsa: .incbin \"dock_steps_w.lzsa\"" >> mist_graphics.inc
 	echo "cat_letter_lzsa: .incbin \"cat_letter.lzsa\"" >> mist_graphics.inc
 	echo "above_dock_e_lzsa: .incbin \"above_dock_e.lzsa\"" >> mist_graphics.inc
 	echo "above_dock_s_lzsa: .incbin \"above_dock_s.lzsa\"" >> mist_graphics.inc
 	echo "above_dock_n_lzsa: .incbin \"above_dock_n.lzsa\"" >> mist_graphics.inc
+	echo "above_dock_shipup_s_lzsa: .incbin \"above_dock_shipup_s.lzsa\"" >> mist_graphics.inc
+	echo "above_dock_shipup_e_lzsa: .incbin \"above_dock_shipup_e.lzsa\"" >> mist_graphics.inc
 	echo "step_base_n_lzsa: .incbin \"step_base_n.lzsa\"" >> mist_graphics.inc
 	echo "step_base_s_lzsa: .incbin \"step_base_s.lzsa\"" >> mist_graphics.inc
 	echo "step_land1_w_lzsa: .incbin \"step_land1_w.lzsa\"" >> mist_graphics.inc
 	echo "step_land1_e_lzsa: .incbin \"step_land1_e.lzsa\"" >> mist_graphics.inc
+	echo "step_land1_shipup_e_lzsa: .incbin \"step_land1_shipup_e.lzsa\"" >> mist_graphics.inc
 	echo "step_land2_w_lzsa: .incbin \"step_land2_w.lzsa\"" >> mist_graphics.inc
 	echo "step_land2_e_lzsa: .incbin \"step_land2_e.lzsa\"" >> mist_graphics.inc
+	echo "step_land2_shipup_e_lzsa: .incbin \"step_land2_shipup_e.lzsa\"" >> mist_graphics.inc
 	echo "step_dentist_n_lzsa: .incbin \"step_dentist_n.lzsa\"" >> mist_graphics.inc
 	echo "step_dentist_w_lzsa: .incbin \"step_dentist_w.lzsa\"" >> mist_graphics.inc
 	echo "step_dentist_e_lzsa: .incbin \"step_dentist_e.lzsa\"" >> mist_graphics.inc
+	echo "step_dentist_shipup_e_lzsa: .incbin \"step_dentist_shipup_e.lzsa\"" >> mist_graphics.inc
 	echo "step_land3_w_lzsa: .incbin \"step_land3_w.lzsa\"" >> mist_graphics.inc
 	echo "step_land3_e_lzsa: .incbin \"step_land3_e.lzsa\"" >> mist_graphics.inc
+	echo "step_land3_shipup_e_lzsa: .incbin \"step_land3_shipup_e.lzsa\"" >> mist_graphics.inc
 	echo "step_top_e_lzsa: .incbin \"step_top_e.lzsa\"" >> mist_graphics.inc
 	echo "step_top_w_lzsa: .incbin \"step_top_w.lzsa\"" >> mist_graphics.inc
 	echo "step_top_n_lzsa: .incbin \"step_top_n.lzsa\"" >> mist_graphics.inc
 	echo "step_top_s_lzsa: .incbin \"step_top_s.lzsa\"" >> mist_graphics.inc
+	echo "step_top_shipup_e_lzsa: .incbin \"step_top_shipup_e.lzsa\"" >> mist_graphics.inc
 	echo "pool_n_lzsa: .incbin \"pool_n.lzsa\"" >> mist_graphics.inc
 	echo "pool_s_lzsa: .incbin \"pool_s.lzsa\"" >> mist_graphics.inc
 	echo "pool_e_lzsa: .incbin \"pool_e.lzsa\"" >> mist_graphics.inc
@@ -94,6 +113,7 @@ mist_graphics.inc:	\
 	echo "gear_n_lzsa: .incbin \"gear_n.lzsa\"" >> mist_graphics.inc
 	echo "gear_s_lzsa: .incbin \"gear_s.lzsa\"" >> mist_graphics.inc
 	echo "gear_w_lzsa: .incbin \"gear_w.lzsa\"" >> mist_graphics.inc
+	echo "gear_shipup_s_lzsa: .incbin \"gear_shipup_s.lzsa\"" >> mist_graphics.inc
 	echo "gear_open_n_lzsa: .incbin \"gear_open_n.lzsa\"" >> mist_graphics.inc
 	echo "gear_base_n_lzsa: .incbin \"gear_base_n.lzsa\"" >> mist_graphics.inc
 	echo "spaceship_switch_n_lzsa: .incbin \"spaceship_switch_n.lzsa\"" >> mist_graphics.inc

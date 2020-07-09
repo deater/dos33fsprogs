@@ -125,6 +125,14 @@ nothing_special:
 
 	jsr	page_flip
 
+
+	;=================
+	; do this here (which is inefficient) because
+	; it lets the switch turn green before the noise
+
+	jsr	check_change_ship
+
+
 	;====================================
 	; handle keypress/joystick
 	;====================================
@@ -147,6 +155,7 @@ room_frame_no_oflo:
 
 	lda	LEVEL_OVER
 	bne	really_exit
+
 	jmp	game_loop
 
 really_exit:

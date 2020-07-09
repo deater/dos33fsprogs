@@ -4,33 +4,101 @@
 adjust_ship:
 
 	lda	SHIP_RAISED
-	beq	make_ship_down
+	bne	make_ship_up
+	jmp	make_ship_down
+
 make_ship_up:
 
-	; update backgrounds
+	; update backgrounds south
 
 	ldy	#LOCATION_SOUTH_BG
+
 	lda	#<pool_shipup_s_lzsa
 	sta	location10,Y				; MIST_POOL
 	lda	#>pool_shipup_s_lzsa
 	sta	location10+1,Y				; MIST_POOL
 
+	lda	#<gear_shipup_s_lzsa
+	sta	location15,Y				; MIST_GEAR
+	lda	#>gear_shipup_s_lzsa
+	sta	location15+1,Y				; MIST_GEAR
+
+	lda	#<dock_switch_shipup_s_lzsa
+	sta	location1,Y				; MIST_DOCK_SWITCH
+	lda	#>dock_switch_shipup_s_lzsa
+	sta	location1+1,Y				; MIST_DOCK_SWITCH
+
+	lda	#<above_dock_shipup_s_lzsa
+	sta	location3,Y				; MIST_ABOVE_DOCK
+	lda	#>above_dock_shipup_s_lzsa
+	sta	location3+1,Y				; MIST_ABOVE_DOCK
+
+
+
+	; update backgrounds north
+
 	ldy	#LOCATION_NORTH_BG
+
 	lda	#<tree1_shipup_n_lzsa
 	sta	location20,Y				; MIST_TREE_CORRIDOR_1
 	lda	#>tree1_shipup_n_lzsa
 	sta	location20+1,Y				; MIST_TREE_CORRIDOR_1
 
+	lda	#<dock_shipup_n_lzsa
+	sta	location0,Y				; MIST_ARRIVAL_DOCK
+	lda	#>dock_shipup_n_lzsa
+	sta	location0+1,Y				; MIST_ARRIVAL_DOCK
+
+	; update backgrounds east
+
+	ldy	#LOCATION_EAST_BG
+	lda	#<step_top_shipup_e_lzsa
+	sta	location9,Y				; MIST_OUTSIDE_TEMPLE
+	lda	#>step_top_shipup_e_lzsa
+	sta	location9+1,Y				; MIST_OUTSIDE_TEMPLE
+
+	lda	#<step_land3_shipup_e_lzsa
+	sta	location8,Y				; MIST_STEPS_4TH_LANDING
+	lda	#>step_land3_shipup_e_lzsa
+	sta	location8+1,Y				; MIST_STEPS_4TH_LANDING
+
+	lda	#<step_dentist_shipup_e_lzsa
+	sta	location7,Y				; MIST_STEPS_DENTIST
+	lda	#>step_dentist_shipup_e_lzsa
+	sta	location7+1,Y				; MIST_STEPS_DENTIST
+
+	lda	#<step_land2_shipup_e_lzsa
+	sta	location6,Y				; MIST_STEPS_2ND_LANDING
+	lda	#>step_land2_shipup_e_lzsa
+	sta	location6+1,Y				; MIST_STEPS_2ND_LANDING
+
+	lda	#<step_land1_shipup_e_lzsa
+	sta	location5,Y				; MIST_STEPS_1ST_LANDING
+	lda	#>step_land1_shipup_e_lzsa
+	sta	location5+1,Y				; MIST_STEPS_1ST_LANDING
+
+	lda	#<above_dock_shipup_e_lzsa
+	sta	location3,Y				; MIST_ABOVE_DOCK
+	sta	location16,Y				; MIST_GEAR_BASE
+	lda	#>above_dock_shipup_e_lzsa
+	sta	location3+1,Y				; MIST_ABOVE_DOCK
+	sta	location16+1,Y				; MIST_GEAR_BASE
+
+	lda	#<dock_shipup_e_lzsa
+	sta	location0,Y				; MIST_ARRIVAL_DOCK
+	lda	#>dock_shipup_e_lzsa
+	sta	location0+1,Y				; MIST_ARRIVAL_DOCK
 
 
-	; hook up exit on dock to ship
+
+	; FIXME: hook up exit on dock to ship
 
 
 	rts
 
 make_ship_down:
 
-	; update backgrounds
+	; update backgrounds south
 
 	ldy	#LOCATION_SOUTH_BG
 	lda	#<pool_s_lzsa
@@ -38,15 +106,75 @@ make_ship_down:
 	lda	#>pool_s_lzsa
 	sta	location10+1,Y				; MIST_POOL
 
+	lda	#<gear_s_lzsa
+	sta	location15,Y				; MIST_GEAR
+	lda	#>gear_s_lzsa
+	sta	location15+1,Y				; MIST_GEAR
+
+	lda	#<dock_switch_s_lzsa
+	sta	location1,Y				; MIST_DOCK_SWITCH
+	lda	#>dock_switch_s_lzsa
+	sta	location1+1,Y				; MIST_DOCK_SWITCH
+
+	lda	#<above_dock_s_lzsa
+	sta	location3,Y				; MIST_ABOVE_DOCK
+	lda	#>above_dock_s_lzsa
+	sta	location3+1,Y				; MIST_ABOVE_DOCK
+
+	; update backgrounds north
+
 	ldy	#LOCATION_NORTH_BG
 	lda	#<tree1_n_lzsa
 	sta	location20,Y				; MIST_TREE_CORRIDOR_1
 	lda	#>tree1_n_lzsa
 	sta	location20+1,Y				; MIST_TREE_CORRIDOR_1
 
+	lda	#<dock_n_lzsa
+	sta	location0,Y				; MIST_ARRIVAL_DOCK
+	lda	#>dock_n_lzsa
+	sta	location0+1,Y				; MIST_ARRIVAL_DOCK
 
+	; update backgrounds east
 
-	; remove exit on dock to ship
+	ldy	#LOCATION_EAST_BG
+	lda	#<step_top_e_lzsa
+	sta	location9,Y				; MIST_OUTSIDE_TEMPLE
+	lda	#>step_top_e_lzsa
+	sta	location9+1,Y				; MIST_OUTSIDE_TEMPLE
+
+	lda	#<step_land3_e_lzsa
+	sta	location8,Y				; MIST_STEPS_4TH_LANDING
+	lda	#>step_land3_e_lzsa
+	sta	location8+1,Y				; MIST_STEPS_4TH_LANDING
+
+	lda	#<step_dentist_e_lzsa
+	sta	location7,Y				; MIST_STEPS_DENTIST
+	lda	#>step_dentist_e_lzsa
+	sta	location7+1,Y				; MIST_STEPS_DENTIST
+
+	lda	#<step_land2_e_lzsa
+	sta	location6,Y				; MIST_STEPS_2ND_LANDING
+	lda	#>step_land2_e_lzsa
+	sta	location6+1,Y				; MIST_STEPS_2ND_LANDING
+
+	lda	#<step_land1_e_lzsa
+	sta	location5,Y				; MIST_STEPS_1ST_LANDING
+	lda	#>step_land1_e_lzsa
+	sta	location5+1,Y				; MIST_STEPS_1ST_LANDING
+
+	lda	#<above_dock_e_lzsa
+	sta	location3,Y				; MIST_ABOVE_DOCK
+	sta	location16,Y				; MIST_GEAR_BASE
+	lda	#>above_dock_e_lzsa
+	sta	location3+1,Y				; MIST_ABOVE_DOCK
+	sta	location16+1,Y				; MIST_GEAR_BASE
+
+	lda	#<dock_e_lzsa
+	sta	location0,Y				; MIST_ARRIVAL_DOCK
+	lda	#>dock_e_lzsa
+	sta	location0+1,Y				; MIST_ARRIVAL_DOCK
+
+	; FIXME: remove exit on dock to ship
 
 
 
@@ -104,6 +232,14 @@ touch_pillar:
 	lda	PILLAR_ON
 	eor	powersoftwo,Y
 	sta	PILLAR_ON
+
+	rts
+
+	;=====================================
+	; check to see if ship needs to change
+	;=====================================
+
+check_change_ship:
 
 	; check to see if we need to raise/lower ship
 
