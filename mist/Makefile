@@ -12,7 +12,8 @@ zip:	mist.dsk mist_side2.dsk mist_side3.dsk
 	zip mist.zip mist.dsk mist_side2.dsk mist_side3.dsk
 
 mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
-		MECHE SELENA CABIN CHANNEL STONEY DENTIST GENERATOR SAVE0
+		MECHE SELENA CABIN CHANNEL STONEY DENTIST GENERATOR \
+		D\'NI SAVE0
 	cp empty.dsk mist.dsk
 	$(DOS33) -y mist.dsk SAVE A HELLO
 	$(DOS33) -y mist.dsk BSAVE -a 0x1000 LOADER
@@ -22,6 +23,7 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 CABIN
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 DENTIST
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 GENERATOR
+	$(DOS33) -y mist.dsk BSAVE -a 0x2000 D\'NI
 	$(DOS33) -y mist.dsk BSAVE -a 0xe00 SAVE0
 	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
@@ -142,18 +144,24 @@ octagon.o:	octagon.s zp.inc hardware.inc common_defines.inc \
 	books/octagon_books.inc \
 	common_sprites.inc page_sprites.inc \
 	leveldata_octagon.inc \
-	letter_cat.s \
-	marker_switch.s \
 	brother_books.s \
-	keyboard.s \
-	draw_pointer.s \
-	end_level.s \
 	handle_pages.s \
 	octagon_bookshelf.s \
 	octagon_rotation.s \
-	octagon_fireplace.s \
-	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	octagon_fireplace.s
 	ca65 -o octagon.o octagon.s -l octagon.lst
+
+####
+
+D\'NI:	dni.o
+	ld65 -o D\'NI dni.o -C ../linker_scripts/apple2_2000.inc
+
+dni.o:	dni.s zp.inc hardware.inc common_defines.inc \
+	common_routines.inc \
+	graphics_dni/dni_graphics.inc \
+	leveldata_dni.inc
+	ca65 -o dni.o dni.s -l dni.lst
+
 
 
 ####
@@ -350,6 +358,9 @@ graphics_arbor/arbor_graphics.inc:
 
 graphics_nibel/nibel_graphics.inc:
 	cd graphics_nibel && make
+
+graphics_dni/dni_graphics.inc:
+	cd graphics_dni && make
 
 
 ####

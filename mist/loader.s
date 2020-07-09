@@ -145,7 +145,7 @@ filenames:
 	.word mist_filename,meche_filename,selena_filename,octagon_filename
 	.word viewer_filename,stoney_filename,channel_filename,cabin_filename
 	.word dentist_filename,arbor_filename,nibel_filename,ship_filename
-	.word generator_filename,ending_filename
+	.word generator_filename,dni_filename
 
 intro_filename:
 	.byte "MIST_TITLE",0
@@ -175,8 +175,8 @@ ship_filename:
 	.byte "SHIP",0
 generator_filename:
 	.byte "GENERATOR",0
-ending_filename:
-	.byte "ENDING",0
+dni_filename:
+	.byte "D'NI",0
 
 
 	;===================================================

@@ -1,0 +1,40 @@
+;===============================================
+; level data for D'NI
+;===============================================
+
+locations:
+	.word location0, location1
+
+; DNI_ARRIVAL	-- deep underneath New Mexico
+location0:
+	.byte	DNI_DESK		; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	dni_n_lzsa			; north bg
+	.word	dni_s_lzsa			; south bg
+	.word	dni_e_lzsa			; east bg
+	.word	dni_w_lzsa			; west bg
+	.byte	BG_EAST|BG_WEST|BG_SOUTH|BG_NORTH
+	.byte	$ff		; special exit
+
+; DNI_DESK	-- Atrus' desk
+location1:
+	.byte	$ff			; north exit
+	.byte	DNI_ARRIVAL		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_E	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	dni_desk_n_lzsa			; north bg
+	.word	dni_desk_s_lzsa			; south bg
+	.word	$0000				; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH|BG_NORTH
+	.byte	$ff		; special exit

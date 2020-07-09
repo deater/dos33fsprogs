@@ -98,14 +98,19 @@ fireplace_grab_blue_page:
 
 
 goto_dni:
-	lda	#OCTAGON_DNI
+	lda	#DNI_ARRIVAL
 	sta	LOCATION
 
 	lda	#DIRECTION_E
 	sta	DIRECTION
 
-	jmp	change_location
+	lda	#LOAD_DNI
+	sta	WHICH_LOAD
 
+	lda	#$ff
+	sta	LEVEL_OVER
+
+	rts
 
 ; talking to atrus
 

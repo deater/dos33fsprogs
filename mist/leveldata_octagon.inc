@@ -13,7 +13,7 @@ locations:
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
-	.word location36,location37,location38,location39
+	.word location36,location37
 
 ; OCTAGON_TEMPLE_DOORWAY	-- temple doorway
 location0:
@@ -714,36 +714,3 @@ location37:
 	.byte	10,24	; special y
 	.word	goto_dni-1	; special function
 
-; OCTAGON_DNI	-- deep underneath New Mexico
-location38:
-	.byte	OCTAGON_DNI_DESK	; north exit
-	.byte	$ff			; south exit
-	.byte	$ff			; east exit
-	.byte	$ff			; west exit
-	.byte	DIRECTION_N	; north exit_dir
-	.byte	$ff		; south exit_dir
-	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
-	.word	dni_n_lzsa			; north bg
-	.word	dni_s_lzsa			; south bg
-	.word	dni_e_lzsa			; east bg
-	.word	dni_w_lzsa			; west bg
-	.byte	BG_EAST|BG_WEST|BG_SOUTH|BG_NORTH
-	.byte	$ff		; special exit
-
-; OCTAGON_DNI_DESK	-- Atrus' desk
-location39:
-	.byte	$ff			; north exit
-	.byte	OCTAGON_DNI		; south exit
-	.byte	$ff			; east exit
-	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_E	; south exit_dir
-	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
-	.word	dni_desk_n_lzsa			; north bg
-	.word	dni_desk_s_lzsa			; south bg
-	.word	$0000				; east bg
-	.word	$0000			; west bg
-	.byte	BG_SOUTH|BG_NORTH
-	.byte	$ff		; special exit
