@@ -681,7 +681,7 @@ location35:
 location36:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
-	.byte	OCTAGON_GREEN_BOOK_OPEN	; east exit
+	.byte	OCTAGON_FIREPLACE_SHELF	; east exit
 	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
@@ -692,7 +692,11 @@ location36:
 	.word	green_book_lzsa		; east bg
 	.word	$0000				; west bg
 	.byte	BG_EAST
-	.byte	$ff			; special exit
+	.byte	DIRECTION_E		; special exit
+	.byte	12,30	; special x
+	.byte	2,46	; special y
+	.word	open_green_book-1	; special function
+
 
 ; OCTAGON_GREEN_BOOK_OPEN	-- green book is open
 location37:
@@ -710,7 +714,7 @@ location37:
 	.word	$0000				; west bg
 	.byte	BG_EAST
 	.byte	DIRECTION_E	; special exit
-	.byte	21,31	; special x
-	.byte	10,24	; special y
-	.word	goto_dni-1	; special function
+	.byte	6,34	; special x
+	.byte	2,46	; special y
+	.word	touch_green_book-1	; special function
 

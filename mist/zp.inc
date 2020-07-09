@@ -167,9 +167,9 @@ PILLAR_ON	=	$BE
 	PILLAR_LEAF		= $20
 	PILLAR_CROSS		= $40
 	PILLAR_EMU		= $80
+GREEN_BOOK_PROGRESS	= $BF
 
-
-END_OF_SAVE	=	$BF
+END_OF_SAVE	=	$C0
 
 
 ; done game puzzle state

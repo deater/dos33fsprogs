@@ -78,6 +78,9 @@ game_loop:
 	cmp	#OCTAGON_GRID_BOOK
 	beq	looking_at_grid_book
 
+	cmp	#OCTAGON_GREEN_BOOK_OPEN
+	beq	looking_at_green_book
+
 	cmp	#OCTAGON_FIREPLACE_SHELF
 	bne	check_temple_center
 	jsr	draw_fireplace_shelf_pages
@@ -152,6 +155,10 @@ animate_tower_rotation:
 
 looking_at_grid_book:
 	jsr	draw_book_grid
+	jmp	nothing_special
+
+looking_at_green_book:
+	jsr	draw_atrus_book
 	jmp	nothing_special
 
 animate_red_book:
