@@ -1,32 +1,25 @@
-
-; MIST alt backgrounds
-;	+ due to gears being open:
-;	+ due to bridge being up:
-;	+ due to ship being up:
-
 For release 1.0
-
-+ split rocket puzzle off of selenetic?
 
 + LOADER 
 	-- save game
 	-- sound loader (into language card?)
-+ MIST (split off ship-up/ship-down?) (split off generator shack?)
-	-- constellation puzzle/ship raising
+
++ SHIP  -- split off of STONEY
+
++ MIST
 	-- marker switches
 
 + CABIN
 	-- safe puzzle
 	-- boiler
 	-- up/down in tree
+
 + OCTAGON
 	-- code book
 	-- red book seen when in fireplace
-	-- pages in fireplace
-	-- green book Atrus animation (first)
-	-- link to DNI
-	-- DNI
 	-- books destroyed at end
+	-- pages removed at end
+	-- green book no talking at end?
 
 + SELENA
 	-- sounds/door puzzle
@@ -45,6 +38,12 @@ For release 1.0
 
 + NIBEL
 	-- turn on sprite crop in the viewer part
+
++ DNI
+	-- issue when turn when talking then back, grey stripes.
+		turn back on split in code?
+	-- add good ending
+		linking book to MYST
 
 Done:
 + MECHE

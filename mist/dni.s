@@ -72,6 +72,10 @@ game_loop:
 
 	; things always happening
 	lda	LOCATION
+	cmp	#DNI_DESK
+	bne	done_foreground
+
+	jsr	draw_atrus
 
 done_foreground:
 	;====================================
@@ -136,6 +140,7 @@ really_exit:
 	.include	"graphics_dni/dni_graphics.inc"
 
 	; puzzles
+	.include	"dni_ending.s"
 
 	; linking books
 

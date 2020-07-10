@@ -159,7 +159,8 @@ D\'NI:	dni.o
 dni.o:	dni.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
 	graphics_dni/dni_graphics.inc \
-	leveldata_dni.inc
+	leveldata_dni.inc \
+	dni_ending.s
 	ca65 -o dni.o dni.s -l dni.lst
 
 
