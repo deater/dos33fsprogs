@@ -256,7 +256,7 @@ cabin.o:	cabin.s zp.inc hardware.inc common_defines.inc \
 	keyboard.s \
 	draw_pointer.s \
 	link_book_channel.s \
-	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	marker_switch.s
 	ca65 -o cabin.o cabin.s -l cabin.lst
 
 

@@ -70,6 +70,8 @@ game_loop:
 	; handle special-case forground logic
 	;====================================
 
+	jsr	draw_marker_switch
+
 	lda	LOCATION
 	cmp	#CABIN_TREE_BOOK_OPEN
 	beq	animate_channel_book
@@ -175,8 +177,11 @@ handle_clearing:
 	; else going east
 
 	lda	CURSOR_X
-	cmp	#23
+	cmp	#22
 	bcc	enter_cabin
+
+	cmp	#27
+	bcc	marker_switch
 
 enter_tree_path:
 	lda	#DIRECTION_E
@@ -187,6 +192,9 @@ enter_tree_path:
 
 	jmp	change_location
 
+marker_switch:
+	lda	#MARKER_TREE
+	jmp	click_marker_switch
 
 enter_cabin:
 	lda	#DIRECTION_E
@@ -224,9 +232,8 @@ exit_to_mist:
 	; level graphics
 	.include	"graphics_cabin/cabin_graphics.inc"
 
-
 	; puzzles
-;	.include	"channel_switches.s"
+	.include	"marker_switch.s"
 
 	; level data
 	.include	"leveldata_cabin.inc"

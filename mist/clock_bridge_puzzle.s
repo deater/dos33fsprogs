@@ -1,3 +1,7 @@
+; note, the clock is a bit different in the real game
+; can't see face when pressing buttons
+; and the way the hands move is a bit more complex
+
 ;======================
 ; reset the puzzle inside the clock
 

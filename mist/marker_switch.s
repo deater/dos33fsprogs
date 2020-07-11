@@ -5,11 +5,29 @@
 ; 19	MARKER_GENERATOR= $08	MIST_TREE_CORRIDOR_4	W	3
 ; 22	MARKER_CLOCK	= $10	MIST_CLOCK_ISLAND	S	4
 ; cab/0	MARKER_TREE	= $20	CABIN_OUTSIDE		E	5
+; cab/1	MARKER_TREE	= $20	CABIN_OPEN		E	5
 ; 13	MARKER_POOL	= $40	MIST_TREE_CORRIDOR_2	N	6
 ; den/0 MARKER_DENTIST	= $80	DENTIST_OUTSIDE		N	7
 ; den/1 MARKER_DENTIST	= $80	DENTIST_OUTSIDE_OPEN	N	7
 
 ; up is on
+
+
+; game starts with
+; map -> library on (always?)
+; DOCK = off, draws dock
+; DENTIST=off, draws round dentist building
+; POOL=off, draws pool and pillars
+; SPACESHIP=off, draws spaceship
+; geneator=off, draws generator building
+; cabin= off, draws shack and tree ring
+; clock, off, draws island and box on shore
+; gears,, off, draws gears
+
+; note on actual if you open white page but walk away, the door will
+; shut and the switch will flip back
+
+
 
 	; which switch in A
 click_marker_switch:
@@ -81,7 +99,7 @@ marker_sprites_xy:
 	.byte 23,22	; spaceship
 	.byte 8,28	; generator
 	.byte 5,28	; clock
-	.byte 10,10	; tree
+	.byte 24,24	; cabin
 	.byte 28,18	; pool
 	.byte 5,32	; dentist
 
@@ -100,7 +118,8 @@ draw_marker_switch:
 	cmp	#LOAD_CABIN
 	beq	marker_check_cabin
 	cmp	#LOAD_MIST
-	bne	done_draw_marker
+	beq	marker_check_myst
+	rts
 
 marker_check_myst:
 	lda	LOCATION
@@ -144,11 +163,14 @@ marker_check_dentist:
 dentist_marker:
 	ldy	#7
 	bne	draw_marker		; bra
+
 marker_check_cabin:
 	lda	LOCATION
 	cmp	#CABIN_OUTSIDE
+	beq	cabin_marker
+	cmp	#CABIN_OPEN
 	bne	done_draw_marker
-
+cabin_marker:
 	ldy	#5
 
 draw_marker:
