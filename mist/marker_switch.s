@@ -7,6 +7,7 @@
 ; cab/0	MARKER_TREE	= $20	CABIN_OUTSIDE		E	5
 ; 13	MARKER_POOL	= $40	MIST_TREE_CORRIDOR_2	N	6
 ; den/0 MARKER_DENTIST	= $80	DENTIST_OUTSIDE		N	7
+; den/1 MARKER_DENTIST	= $80	DENTIST_OUTSIDE_OPEN	N	7
 
 ; up is on
 
@@ -33,6 +34,17 @@ marker_sprite_on:
 	.byte $6A,$6A
 	.byte $AA,$AA
 
+marker_wide_sprite_off:
+	.byte 3,2
+	.byte $AA,$AA,$AA
+	.byte $6A,$6A,$6A
+
+marker_wide_sprite_on:
+	.byte 3,2
+	.byte $96,$A6,$96
+	.byte $AA,$55,$AA
+
+
 marker_sprites_on:
 	.word marker_sprite_on	; dock
 	.word marker_sprite_on	; gears
@@ -41,7 +53,7 @@ marker_sprites_on:
 	.word marker_sprite_on	; clock
 	.word marker_sprite_on	; tree
 	.word marker_sprite_on	; pool
-	.word marker_sprite_on	; dentist
+	.word marker_wide_sprite_on	; dentist
 
 marker_sprites_off:
 	.word marker_sprite_off	; dock
@@ -51,7 +63,7 @@ marker_sprites_off:
 	.word marker_sprite_off	; clock
 	.word marker_sprite_off	; tree
 	.word marker_sprite_off	; pool
-	.word marker_sprite_off	; dentist
+	.word marker_wide_sprite_off	; dentist
 
 marker_sprites_direction:
 	.byte DIRECTION_N	; dock
@@ -71,7 +83,7 @@ marker_sprites_xy:
 	.byte 5,28	; clock
 	.byte 10,10	; tree
 	.byte 28,18	; pool
-	.byte 10,10	; dentist
+	.byte 5,32	; dentist
 
 ; FIXME: use generic log2 table somewhere
 marker_which:
@@ -122,10 +134,14 @@ check_ms_pool:
 	bne	done_draw_marker
 	ldy	#6
 	bne	draw_marker
+
 marker_check_dentist:
 	lda	LOCATION
 	cmp	#DENTIST_OUTSIDE
+	beq	dentist_marker
+	cmp	#DENTIST_OUTSIDE_OPEN
 	bne	done_draw_marker
+dentist_marker:
 	ldy	#7
 	bne	draw_marker		; bra
 marker_check_cabin:

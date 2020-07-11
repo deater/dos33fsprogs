@@ -21,8 +21,8 @@ location0:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH | BG_SOUTH
-	.byte	DIRECTION_S	; special exit
-	.byte	10,30		; special x
+	.byte	DIRECTION_S|DIRECTION_N	; special exit
+	.byte	4,30		; special x
 	.byte	0,46		; special y
 	.word	back_to_mist-1
 
@@ -41,8 +41,8 @@ location1:
 	.word	$0000				; east bg
 	.word	$0000				; west bg
 	.byte	BG_NORTH | BG_SOUTH
-	.byte	DIRECTION_S	; special exit
-	.byte	10,30		; special x
+	.byte	DIRECTION_S|DIRECTION_N	; special exit
+	.byte	4,30		; special x
 	.byte	0,46		; special y
 	.word	back_to_mist-1
 

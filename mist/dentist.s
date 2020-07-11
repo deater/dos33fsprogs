@@ -74,13 +74,11 @@ game_loop:
 	; handle special-case forground logic
 	;====================================
 
+	jsr	draw_marker_switch
+
 	lda	LOCATION
 	cmp	#DENTIST_PANEL
 	beq	fg_draw_panel
-;	cmp	#NIBEL_RED_TABLE_OPEN
-;	beq	fg_draw_red_page
-;	cmp	#NIBEL_BLUE_HOUSE_VIEWER
-;	beq	animate_viewer
 
 	jmp	nothing_special
 
@@ -137,10 +135,52 @@ really_exit:
 	;===========================
 
 back_to_mist:
+	lda	DIRECTION
+	cmp	#DIRECTION_S
+	beq	go_back_to_mist
+oh_its_the_marker_switch:
+
+	lda	CURSOR_X
+	cmp	#10
+	bcs	use_door
+	lda	CURSOR_Y
+	cmp	#28
+	bcc	use_door
+	cmp	#40
+	bcs	use_door
+
+	lda	#MARKER_DENTIST
+	jmp	click_marker_switch
+use_door:
+	lda	LOCATION
+	cmp	#DENTIST_OUTSIDE
+	bne	go_inside
+
+open_door:
+	lda	#DENTIST_OUTSIDE_OPEN
+	sta	LOCATION
+	jmp	change_location
+
+go_inside:
+	lda	#DENTIST_INSIDE_DOOR
+	sta	LOCATION
+	jmp	change_location
+
+go_back_to_mist:
 	lda	#MIST_STEPS_4TH_LANDING
 	sta	LOCATION
 
+	lda	CURSOR_X
+	cmp	#20
+	bcs	go_west_young_man
+
+	lda	#DIRECTION_E
+	jmp	steps_direction
+
+go_west_young_man:
 	lda	#DIRECTION_W
+
+steps_direction:
 	sta	DIRECTION
 
 	lda	#LOAD_MIST
@@ -150,6 +190,7 @@ set_level_over:
 	lda	#$ff
 	sta	LEVEL_OVER
 
+done_door:
 	rts
 
 	;===========================
@@ -280,6 +321,7 @@ lights_are_off:
 
 	; puzzles
 	.include	"dentist_panel.s"
+	.include	"marker_switch.s"
 
 	; level data
 	.include	"leveldata_dentist.inc"

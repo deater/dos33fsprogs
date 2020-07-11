@@ -312,7 +312,8 @@ dentist.o:	dentist.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
 	graphics_dentist/dentist_graphics.inc \
 	leveldata_dentist.inc \
-	dentist_panel.s
+	dentist_panel.s \
+	marker_switch.s
 	ca65 -o dentist.o dentist.s -l dentist.lst
 
 
