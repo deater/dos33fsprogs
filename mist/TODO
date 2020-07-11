@@ -7,7 +7,9 @@ For release 1.0
 + SHIP  -- split off of STONEY
 
 + MIST
-	-- marker switches
+	-- white page appears
+	-- view back from clock puzzle
+	-- open door to clock puzzle
 
 + CABIN
 	-- safe puzzle
@@ -15,6 +17,7 @@ For release 1.0
 	-- up/down in tree
 
 + OCTAGON
+	-- marker switches update map
 	-- code book
 	-- red book seen when in fireplace
 	-- books destroyed at end
@@ -40,17 +43,19 @@ For release 1.0
 	-- turn on sprite crop in the viewer part
 
 + DNI
-	-- issue when turn when talking then back, grey stripes.
-		turn back on split in code?
 	-- add good ending
 		linking book to MYST
+
++ DENTIST
+	-- marker switch
+	-- can go both directions when leaving
 
 Done:
 + MECHE
 + MIST_TITLE
 + VIEWER
 + ARBOR
-+ DENTIST
+
 
 ================================
 

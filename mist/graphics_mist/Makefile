@@ -44,7 +44,7 @@ mist_graphics.inc:	\
 	tree4_n.lzsa tree4_s.lzsa tree4_w.lzsa tree4_e.lzsa \
 	clock_island_s.lzsa clock_island_n.lzsa \
 	clock_puzzle_s.lzsa clock_puzzle_bridge.lzsa \
-	clock_inside_s.lzsa clock_inside_open.lzsa \
+	clock_inside_n.lzsa clock_inside_s.lzsa clock_inside_open.lzsa \
 	gear_open_e.lzsa \
 	pad_n.lzsa pad_e.lzsa \
 	spaceship_door_n.lzsa spaceship_door_open_n.lzsa \
@@ -126,6 +126,7 @@ mist_graphics.inc:	\
 	echo "clock_puzzle_s_lzsa: .incbin \"clock_puzzle_s.lzsa\"" >> mist_graphics.inc
 	echo "clock_puzzle_bridge_lzsa: .incbin \"clock_puzzle_bridge.lzsa\"" >> mist_graphics.inc
 	echo "clock_inside_s_lzsa: .incbin \"clock_inside_s.lzsa\"" >> mist_graphics.inc
+	echo "clock_inside_n_lzsa: .incbin \"clock_inside_n.lzsa\"" >> mist_graphics.inc
 	echo "clock_inside_open_lzsa: .incbin \"clock_inside_open.lzsa\"" >> mist_graphics.inc
 	echo "gear_open_e_lzsa: .incbin \"gear_open_e.lzsa\"" >> mist_graphics.inc
 	echo "pad_n_lzsa: .incbin \"pad_n.lzsa\"" >> mist_graphics.inc

@@ -120,6 +120,10 @@ inside_done:
 
 draw_clock_inside:
 
+	lda	DIRECTION
+	cmp	#DIRECTION_S
+	bne	done_draw_clock_puzzle
+
 	; draw weight
 
 	lda	#<clock_weight_sprite
@@ -179,7 +183,7 @@ draw_clock_inside:
 	lda	#16
 	sta	YPOS
 	jsr	put_sprite_crop
-
+done_draw_clock_puzzle:
 	rts
 
 
