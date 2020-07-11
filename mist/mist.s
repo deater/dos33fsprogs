@@ -81,6 +81,10 @@ game_loop:
 	; handle special-case forground logic
 	;====================================
 
+
+	; handle marker switch drawing
+	jsr	draw_marker_switch
+
 	; handle gear opening
 
 	lda	GEAR_OPEN
@@ -295,6 +299,21 @@ read_letter:
 	bit	SET_TEXT
 
 	rts
+
+	;===========================
+	; marker switch clicks
+click_switch_dock:
+	lda	#MARKER_DOCK
+	jmp	click_marker_switch
+click_switch_gear:
+	lda	#MARKER_GEARS
+	jmp	click_marker_switch
+click_switch_spaceship:
+	lda	#MARKER_SPACESHIP
+	jmp	click_marker_switch
+click_switch_clock:
+	lda	#MARKER_CLOCK
+	jmp	click_marker_switch
 
 	;==========================
 	; includes

@@ -400,13 +400,35 @@ emu_sprite:	; @17,16
 
 
 
-
-
 tree2_pillars:
 	lda	DIRECTION
 	cmp	#DIRECTION_E
 	beq	tree2_east
-	bne	tree2_west
+	cmp	#DIRECTION_W
+	beq	tree2_west
+
+	; handle the pool marker switch
+tree2_north:
+	lda	CURSOR_X
+	cmp	#25
+	bcc	tree2_not_switch
+	cmp	#32
+	bcs	tree2_not_switch
+
+	lda	CURSOR_Y
+	cmp	#16
+	bcc	tree2_not_switch
+	cmp	#24
+	bcs	tree2_not_switch
+
+	lda	#MARKER_POOL
+	jmp	click_marker_switch
+
+tree2_not_switch:
+	; we have to fake going north
+	lda	#MIST_TREE_CORRIDOR_1
+	sta	LOCATION
+	jmp	change_location
 
 tree2_west:
 	lda	CURSOR_X
@@ -582,7 +604,18 @@ go_to_generator:
 	bcs	goto_shack
 
 marker_switch:
-	; FIXME
+	lda	CURSOR_Y
+	cmp	#24
+	bcc	missed_switch
+
+	cmp	#38
+	bcs	missed_switch
+
+	lda	#MARKER_GENERATOR
+	jmp	click_marker_switch
+
+missed_switch:
+
 	rts
 
 goto_shack:

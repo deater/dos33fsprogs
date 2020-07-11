@@ -54,7 +54,7 @@ location1:
 	.byte	DIRECTION_N	; special exit
 	.byte	23,30		; special x
 	.byte	25,32		; special y
-	.word	click_switch-1	; special function
+	.word	click_switch_dock-1	; special function
 
 ; MIST_DOCK_STEPS	-- dock steps
 location2:
@@ -277,7 +277,7 @@ location13:
 	.word	tree2_e_lzsa	; east bg
 	.word	tree2_w_lzsa	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
-	.byte	DIRECTION_E|DIRECTION_W
+	.byte	DIRECTION_E|DIRECTION_W|DIRECTION_N
 	.byte	6,33		; special x
 	.byte	10,38		; special y
 	.word	tree2_pillars-1
@@ -319,9 +319,9 @@ location15:
 	.word	gear_w_lzsa	; west bg
 	.byte	BG_NORTH | BG_SOUTH | BG_WEST
 	.byte	DIRECTION_N	; special exit
-	.byte	5,10		; special x
-	.byte	29,35		; special y
-	.word	click_switch-1	; special function
+	.byte	4,10		; special x
+	.byte	28,35		; special y
+	.word	click_switch_gear-1	; special function
 
 ; MIST_GEAR_BASE		-- gear base
 location16:
@@ -372,7 +372,10 @@ location18:
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	BG_NORTH
-	.byte	$ff		; special exit
+	.byte	DIRECTION_N	; special exit
+	.byte	22,27		; special x
+	.byte	20,28		; special y
+	.word	click_switch_spaceship-1	; special function
 
 ; MIST_TREE_CORRIDOR_4		-- tree corridor4 (with generator switch)
 location19:
@@ -446,7 +449,11 @@ location22:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_SOUTH|BG_NORTH
-	.byte	$ff		; special exit
+	.byte	DIRECTION_S	; special exit
+	.byte	3,9		; special x
+	.byte	26,36		; special y
+	.word	click_switch_clock-1	; special function
+
 
 ; MYST_CLOCK_INSIDE		-- clock inside
 location23:

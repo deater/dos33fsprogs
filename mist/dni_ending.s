@@ -1,3 +1,21 @@
+; Ending with page steps
+;
+; DNI_PROGRESS
+;	5		say text both
+;	6		say give me page (until you do)
+;	7		takes page
+;	8		puts in book / says staement about sons
+;	9		zaps into book
+;	10		pause
+;	11		zaps out of book
+;	12		page3/it is done
+;	13		page4/reward
+;	14		page5/stick around
+;		effect of clicking is now myst linking book
+;		red/blue book in myst replaced and no longer can click on
+;		all red/blue/white pages cleared out
+;		atrus no longer talks in green book
+
 
 atrus_text:
 	.word atrus_text_nothing	; 0
