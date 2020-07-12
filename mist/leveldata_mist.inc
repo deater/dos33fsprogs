@@ -53,7 +53,7 @@ location1:
 	.byte	BG_NORTH|BG_SOUTH
 	.byte	DIRECTION_N	; special exit
 	.byte	23,30		; special x
-	.byte	25,32		; special y
+	.byte	25,44		; special y
 	.word	click_switch_dock-1	; special function
 
 ; MIST_DOCK_STEPS	-- dock steps

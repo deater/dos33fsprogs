@@ -85,6 +85,7 @@ game_loop:
 	; handle marker switch drawing
 	jsr	draw_marker_switch
 
+
 	; handle gear opening
 
 	lda	GEAR_OPEN
@@ -92,16 +93,26 @@ game_loop:
 
 	jsr	check_gear_delete
 not_gear_related:
-	; handl pillars
+	; handle pillars
 	lda	LOCATION
 	cmp	#MIST_PILLAR_EYE
-	bcc	check_if_clock
+	bcc	check_if_compartment_open
 
 	jsr	draw_pillar
 
+	jmp	nothing_special
+
+	; handle white page
+check_if_compartment_open:
+	cmp	#MIST_DOCK_SWITCH
+	bne	check_if_clock
+
+	jsr	draw_white_page
+
+	jmp	nothing_special
+
 	; handle clock puzzles
 check_if_clock:
-	lda	LOCATION
 	cmp	#MIST_CLOCK_PUZZLE	; clock puzzle
 	beq	location_clock
 	cmp	#MIST_CLOCK_INSIDE
@@ -302,9 +313,6 @@ read_letter:
 
 	;===========================
 	; marker switch clicks
-click_switch_dock:
-	lda	#MARKER_DOCK
-	jmp	click_marker_switch
 click_switch_gear:
 	lda	#MARKER_GEARS
 	jmp	click_marker_switch
@@ -314,6 +322,30 @@ click_switch_spaceship:
 click_switch_clock:
 	lda	#MARKER_CLOCK
 	jmp	click_marker_switch
+
+	; also handle white page
+click_switch_dock:
+
+	lda	CURSOR_Y
+	cmp	#33
+	bcc	flip_dock_switch
+
+	; pick up white page
+
+	lda	COMPARTMENT_OPEN
+	bne	grab_it
+
+	rts
+
+grab_it:
+
+	jmp	grab_white_page
+
+
+flip_dock_switch:
+	lda	#MARKER_DOCK
+	jmp	click_marker_switch
+
 
 	;==========================
 	; includes
@@ -326,6 +358,8 @@ click_switch_clock:
 	.include	"clock_bridge_puzzle.s"
 	.include	"marker_switch.s"
 	.include	"mist_puzzles.s"
+
+	.include	"handle_pages.s"
 
 	; level data
 	.include	"leveldata_mist.inc"

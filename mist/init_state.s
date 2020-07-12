@@ -11,6 +11,13 @@ init_state_loop:
 	iny
 	cpy	#END_OF_SAVE
 	bne	init_state_loop
+
+
+	; FIXME: testing
+
+	lda	#$ff
+	sta	MARKER_SWITCHES
+
 	rts
 
 .else

@@ -18,7 +18,6 @@ locations:
 ; OCTAGON_TEMPLE_DOORWAY	-- temple doorway
 location0:
 	.byte	OCTAGON_TEMPLE_CENTER	; north exit
-;	.byte	9		; south exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit

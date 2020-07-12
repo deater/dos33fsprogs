@@ -635,3 +635,47 @@ into_generator:
 	sta	LEVEL_OVER
 
 	rts
+
+
+
+	;=================================
+	; marker switch compartment stuff
+	;=================================
+
+draw_white_page:
+
+	lda	DIRECTION
+	cmp	#DIRECTION_N
+	bne	no_white_page
+
+	lda	COMPARTMENT_OPEN
+	beq	no_white_page
+
+	lda	WHITE_PAGE_TAKEN
+	bne	no_white_page
+
+	lda	#<white_page_sprite
+	sta	INL
+	lda	#>white_page_sprite
+	sta	INH
+
+	lda	#25
+	sta	XPOS
+	lda	#34
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+no_white_page:
+	rts
+
+
+grab_white_page:
+	lda	WHITE_PAGE_TAKEN
+	bne	missing_page
+
+	jmp	take_white_page
+
+missing_page:
+	rts
+

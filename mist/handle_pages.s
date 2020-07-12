@@ -1,8 +1,3 @@
-; FIXME
-; handle dropping pages
-; handle white page
-
-
 	;==============================
 	; Take Blue Page
 	;==============================
@@ -22,6 +17,12 @@ take_blue_page:
 	sta	HOLDING_PAGE
 	rts
 
+
+	;==============================
+	; Take Red Page
+	;==============================
+	; A should be page to take (i.e. MECHE_PAGE or similar)
+
 take_red_page:
 	pha
 	jsr	drop_current_page
@@ -35,6 +36,10 @@ take_red_page:
 	ora	#HOLDING_RED_PAGE
 	sta	HOLDING_PAGE
 	rts
+
+	;==============================
+	; Take White Page
+	;==============================
 
 take_white_page:
 	pha
@@ -50,7 +55,9 @@ take_white_page:
 	sta	HOLDING_PAGE
 	rts
 
-
+	;==============================
+	; Drop current page
+	;==============================
 	; clicked on a page while holding another
 drop_current_page:
 	lda	HOLDING_PAGE

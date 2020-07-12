@@ -117,7 +117,7 @@ mist.o:	mist.s zp.inc hardware.inc common_defines.inc common_routines.inc \
 	draw_pointer.s \
 	end_level.s \
 	mist_puzzles.s \
-	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	handle_pages.s
 	ca65 -o mist.o mist.s -l mist.lst
 
 ####

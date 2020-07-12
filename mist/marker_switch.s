@@ -40,6 +40,19 @@ click_marker_switch:
 	eor	MARKER_SWITCHES		; toggle switch
 	sta	MARKER_SWITCHES
 
+	cmp	#$FE			; all but dock
+	bne	dont_open_secret
+
+	lda	#1
+	bne	done_handle_secret
+
+dont_open_secret:
+	lda	#0
+
+done_handle_secret:
+	sta	COMPARTMENT_OPEN
+
+
 	rts
 
 marker_sprite_off:
@@ -212,3 +225,5 @@ actually_draw_marker:
 
 done_draw_marker:
 	rts
+
+
