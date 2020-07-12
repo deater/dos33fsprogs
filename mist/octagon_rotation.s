@@ -49,7 +49,7 @@ mask_smc:
 	tay
 
 skip_sprite:
-	rol	mask_smc+1
+	asl	mask_smc+1
 
 	iny
 	iny
@@ -87,8 +87,9 @@ draw_tower_line:
 
 	; set color
 	ldy	TOWER_ROTATION
-	ldx	line_colors,Y
 
+	; only 4 hint rotations, so only change line color if one of those
+	ldx	line_colors,Y
 	cpx	#$77
 	beq	color_good
 
