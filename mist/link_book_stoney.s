@@ -37,10 +37,17 @@ stoney_link_book:
 
 	lda	#STONEY_ARRIVAL
 	sta	LOCATION
+
+	lda	#LOAD_STONEY
+	sta	WHICH_LOAD
+
 	lda	#DIRECTION_N
 	sta	DIRECTION
 
-	jsr	change_location
+	lda	#$ff
+	sta	LEVEL_OVER
+
+;	jsr	change_location
 	rts
 
 

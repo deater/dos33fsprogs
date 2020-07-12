@@ -15,142 +15,10 @@ locations:
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
 	.word location40,location41,location42,location43
-	.word location44,location45,location46,location47
-	.word location48,location49,location50,location51
-
-
-
-; STONEY_SHIP_STERN		-- back of the ship
-location0:
-	.byte	STONEY_SHIP_BOW		; north exit
-	.byte	STONEY_SHIP_DOOR_CLOSED	; south exit
-	.byte	$ff			; east exit
-	.byte	$ff			; west exit
-	.byte	DIRECTION_N	; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
-	.word	ship_entry_n_lzsa	; north bg
-	.word	ship_entry_s_lzsa	; south bg
-	.word	$0000			; east bg
-	.word	$0000			; west bg
-	.byte	BG_NORTH|BG_SOUTH
-	.byte	$ff
-;	.byte	DIRECTION_E	; special exit
-;	.byte	12,25		; special x
-;	.byte	26,46		; special y
-;	.word	controls_pressed-1		; special function
-
-; STONY_SHIP_BOW		-- bow of the ship
-location1:
-	.byte	$ff			; north exit
-	.byte	STONEY_SHIP_STERN	; south exit
-	.byte	$ff			; east exit
-	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
-	.word	ship_bow_go_n_lzsa		; north bg
-	.word	ship_bow_s_lzsa			; south bg
-	.word	$0000				; east bg
-	.word	$0000				; west bg
-	.byte	BG_NORTH | BG_SOUTH
-	.byte	DIRECTION_N		; special exit
-	.byte	9,29		; special x
-	.byte	2,46		; special y
-	.word	back_to_mist-1	; special function
-
-; STONEY_SHIP_DOOR_CLOSED		-- ship cabin door
-location2:
-	.byte	STONEY_SHIP_BOW		; north exit
-	.byte	STONEY_SHIP_DOOR_OPEN	; south exit
-	.byte	$ff			; east exit
-	.byte	$ff			; west exit
-	.byte	DIRECTION_N	; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
-	.word	ship_entry_n_lzsa		; north bg
-	.word	ship_door_closed_s_lzsa		; south bg
-	.word	$0000				; east bg
-	.word	$0000				; west bg
-	.byte	BG_SOUTH|BG_NORTH
-	.byte	$ff		; special exit
-
-; STONEY_SHIP_DOOR_OPEN			-- ship cabin door open
-location3:
-	.byte	STONEY_SHIP_BOW		; north exit
-	.byte	STONEY_SHIP_CHAIR	; south exit
-	.byte	$ff			; east exit
-	.byte	$ff			; west exit
-	.byte	DIRECTION_N	; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
-	.word	ship_entry_n_lzsa		; north bg
-	.word	ship_door_open_s_lzsa		; south bg
-	.word	$0000				; east bg
-	.word	$0000				; west bg
-	.byte	BG_SOUTH|BG_NORTH
-	.byte	$ff		; special exit
-
-; STONEY_SHIP_CHAIR			-- chair in the cabin
-location4:
-	.byte	STONEY_SHIP_STERN	; north exit
-	.byte	STONEY_SHIP_BOOK_CLOSED	; south exit
-	.byte	$ff			; east exit
-	.byte	$ff			; west exit
-	.byte	DIRECTION_N	; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
-	.word	book_chair_n_lzsa		; north bg
-	.word	book_chair_s_lzsa		; south bg
-	.word	$0000				; east bg
-	.word	$0000				; west bg
-	.byte	BG_SOUTH|BG_NORTH
-	.byte	$ff		; special exit
-
-; STONEY_SHIP_BOOK_CLOSED		-- stoney linking book, closed
-location5:
-	.byte	$ff			; north exit
-	.byte	STONEY_SHIP_BOOK_OPEN	; south exit
-	.byte	$ff			; east exit
-	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
-	.word	$0000			; north bg
-	.word	book_chair_closed_s_lzsa	; south bg
-	.word	$0000				; east bg
-	.word	$0000				; west bg
-	.byte	BG_SOUTH
-	.byte	$ff		; special exit
-
-; STONEY_SHIP_BOOK_OPEN			-- stoney linking book, open
-location6:
-	.byte	$ff			; north exit
-	.byte	STONEY_SHIP_CHAIR	; south exit
-	.byte	$ff			; east exit
-	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
-	.word	$0000				; north bg
-	.word	book_chair_open_s_lzsa		; south bg
-	.word	$0000				; east bg
-	.word	$0000				; west bg
-	.byte	BG_SOUTH
-	.byte   DIRECTION_S     ; special exit
-	.byte	21,31   ; special x
-	.byte	10,24   ; special y
-	.word	stoney_link_book-1
+	.word location44
 
 ; STONEY_ARRIVAL			-- arrival at stoneship
-location7:
+location0:
 	.byte	STONEY_DOORWAY1		; north exit
 	.byte	STONEY_EXIT		; south exit
 	.byte	STONEY_LIGHTHOUSE_PATH	; east exit
@@ -167,7 +35,7 @@ location7:
 	.byte	$ff
 
 ; STONEY_UMBRELLA_PATH			-- umbrella path
-location8:
+location1:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	STONEY_ARRIVAL		; east exit
@@ -184,7 +52,7 @@ location8:
 	.byte	$ff
 
 ; STONEY_UMBRELLA			-- umbrella switch
-location9:
+location2:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	STONEY_UMBRELLA_PATH	; east exit
@@ -205,7 +73,7 @@ location9:
 
 
 ; STONEY_LIGHTHOUSE_PATH			-- lighthouse path
-location10:
+location3:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	STONEY_LIGHTHOUSE_DOOR	; east exit
@@ -222,7 +90,7 @@ location10:
 	.byte	$ff
 
 ; STONEY_LIGHTHOUSE_DOOR			-- lighthouse door
-location11:
+location4:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	STONEY_LIGHTHOUSE_INSIDE; east exit
@@ -239,7 +107,7 @@ location11:
 	.byte	$ff
 
 ; STONEY_LIGHTHOUSE_INSIDE		-- lighthouse inside
-location12:
+location5:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	STONEY_LIGHTHOUSE_UPSTAIRS; east exit
@@ -256,7 +124,7 @@ location12:
 	.byte	$ff
 
 ; STONEY_LIGHTHOUSE_UPSTAIRS		-- lighthouse upstairs
-location13:
+location6:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_LIGHTHOUSE_DOWNLADDER	; east exit
@@ -277,7 +145,7 @@ location13:
 
 
 ; STONEY_LIGHTHOUSE_BATTERY		-- lighthouse battery
-location14:
+location7:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	$ff				; east exit
@@ -294,7 +162,7 @@ location14:
 	.byte	$ff
 
 ; STONEY_LIGHTHOUSE_DOWNLADDER		-- lighthouse down the ladder
-location15:
+location8:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_LIGHTHOUSE_INSIDE	; east exit
@@ -311,7 +179,7 @@ location15:
 	.byte	$ff
 
 ; STONEY_DOORWAY1		-- doorway1
-location16:
+location9:
 	.byte	STONEY_LEFT_TUNNEL1		; north exit
 	.byte	STONEY_ARRIVAL			; south exit
 	.byte	STONEY_BRIDGE			; east exit
@@ -328,7 +196,7 @@ location16:
 	.byte	$ff
 
 ; STONEY_BRIDGE		-- bridge between sections
-location17:
+location10:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_DOORWAY2			; east exit
@@ -345,7 +213,7 @@ location17:
 	.byte	$ff
 
 ; STONEY_EXIT		-- exit door
-location18:
+location11:
 	.byte	STONEY_ARRIVAL			; north exit
 	.byte	STONEY_EXIT_AIRLOCK		; south exit
 	.byte	$ff				; east exit
@@ -362,7 +230,7 @@ location18:
 	.byte	$ff
 
 ; STONEY_EXIT_AIRLOCK		-- exit door airlock
-location19:
+location12:
 	.byte	STONEY_EXIT			; north exit
 	.byte	STONEY_EXIT_AIRLOCK_OPEN	; south exit
 	.byte	$ff				; east exit
@@ -379,7 +247,7 @@ location19:
 	.byte	$ff
 
 ; STONEY_EXIT_AIRLOCK_OPEN	-- exit door airlock open
-location20:
+location13:
 	.byte	$ff				; north exit
 	.byte	STONEY_BOOK_STAIRS1		; south exit
 	.byte	$ff				; east exit
@@ -396,7 +264,7 @@ location20:
 	.byte	$ff
 
 ; STONEY_BOOK_STAIRS1		-- exit door top of stairs
-location21:
+location14:
 	.byte	STONEY_EXIT_AIRLOCK		; north exit
 	.byte	STONEY_BOOK_STAIRS2		; south exit
 	.byte	$ff				; east exit
@@ -413,7 +281,7 @@ location21:
 	.byte	$ff
 
 ; STONEY_BOOK_STAIRS2		-- stairs landing
-location22:
+location15:
 	.byte	STONEY_BOOK_ROOM		; north exit
 	.byte	STONEY_BOOK_STAIRS1		; south exit
 	.byte	$ff				; east exit
@@ -430,7 +298,7 @@ location22:
 	.byte	$ff
 
 ; STONEY_BOOK_ROOM		-- table book room
-location23:
+location16:
 	.byte	STONEY_BOOK_TABLE		; north exit
 	.byte	STONEY_BOOK_STAIRS2		; south exit
 	.byte	$ff				; east exit
@@ -447,7 +315,7 @@ location23:
 	.byte	$ff
 
 ; STONEY_BOOK_TABLE		-- table book
-location24:
+location17:
 	.byte	STONEY_BOOK_TABLE_CLOSED	; north exit
 	.byte	$ff				; south exit
 	.byte	$ff				; east exit
@@ -465,7 +333,7 @@ location24:
 
 
 ; STONEY_BOOK_TABLE_CLOSED		-- table book closed
-location25:
+location18:
 	.byte	STONEY_BOOK_TABLE_OPEN		; north exit
 	.byte	$ff				; south exit
 	.byte	$ff				; east exit
@@ -482,7 +350,7 @@ location25:
 	.byte	$ff
 
 ; STONEY_BOOK_TABLE_OPEN		-- table book open
-location26:
+location19:
 	.byte	STONEY_BOOK_ROOM		; north exit
 	.byte	$ff				; south exit
 	.byte	$ff				; east exit
@@ -502,7 +370,7 @@ location26:
 	.word	mist_link_book-1	; special function
 
 ; STONEY_DOORWAY2		-- doorway on other half of ship
-location27:
+location20:
 	.byte	STONEY_RIGHT_TUNNEL1		; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_TELESCOPE_PATH1		; east exit
@@ -519,7 +387,7 @@ location27:
 	.byte	$ff
 
 ; STONEY_TELSCOPE_PATH1		-- path to telescope
-location28:
+location21:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_TELESCOPE_PATH2		; east exit
@@ -536,7 +404,7 @@ location28:
 	.byte	$ff
 
 ; STONEY_TELESCOPE_PATH2		-- path to telescope
-location29:
+location22:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_TELESCOPE_PATH3		; east exit
@@ -553,7 +421,7 @@ location29:
 	.byte	$ff
 
 ; STONEY_TELESCOPE_PATH3		-- path to telescope
-location30:
+location23:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_TELESCOPE		; east exit
@@ -570,7 +438,7 @@ location30:
 	.byte	$ff
 
 ; STONEY_TELESCOPE		-- telescope
-location31:
+location24:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_TELESCOPE_VIEW		; east exit
@@ -587,7 +455,7 @@ location31:
 	.byte	$ff
 
 ; STONEY_TELESCOPE_VIEW		-- telescope
-location32:
+location25:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_TELESCOPE		; east exit
@@ -604,7 +472,7 @@ location32:
 	.byte	$ff
 
 ; STONEY_LEFT_TUNNEL1		-- left tunnel to red room
-location33:
+location26:
 	.byte	STONEY_LEFT_TUNNEL2		; north exit
 	.byte	STONEY_DOORWAY1			; south exit
 	.byte	$ff				; east exit
@@ -621,7 +489,7 @@ location33:
 	.byte	$ff
 
 ; STONEY_LEFT_TUNNEL2		-- left tunnel to red room, with side
-location34:
+location27:
 	.byte	STONEY_LEFT_AIRLOCK		; north exit
 	.byte	STONEY_LEFT_TUNNEL1		; south exit
 	.byte	$ff				; east exit
@@ -638,7 +506,7 @@ location34:
 	.byte	$ff
 
 ; STONEY_LEFT_AIRLOCK		-- airlock to red room
-location35:
+location28:
 	.byte	STONEY_LEFT_AIRLOCK_OPEN	; north exit
 	.byte	STONEY_LEFT_TUNNEL2		; south exit
 	.byte	$ff				; east exit
@@ -655,7 +523,7 @@ location35:
 	.byte	$ff
 
 ; STONEY_LEFT_AIRLOCK_OPEN	-- airlock to red room, open
-location36:
+location29:
 	.byte	STONEY_RED_ROOM			; north exit
 	.byte	STONEY_LEFT_TUNNEL2		; south exit
 	.byte	$ff				; east exit
@@ -672,7 +540,7 @@ location36:
 	.byte	$ff
 
 ; STONEY_RED_ROOM	-- red room
-location37:
+location30:
 	.byte	$ff				; north exit
 	.byte	STONEY_LEFT_AIRLOCK		; south exit
 	.byte	$ff				; east exit
@@ -689,7 +557,7 @@ location37:
 	.byte	$ff
 
 ; STONEY_RED_ROOM_DRESSER	-- red room dresser
-location38:
+location31:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	$ff				; east exit
@@ -706,7 +574,7 @@ location38:
 	.byte	$ff
 
 ; STONEY_RED_DRESSER_OPEN	-- red room dresser open
-location39:
+location32:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	$ff				; east exit
@@ -726,7 +594,7 @@ location39:
         .word   stoney_take_red_page-1 ; special function
 
 ; STONEY_CRAWLWAY_LEFT	-- left crawlway
-location40:
+location33:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_LEFT_TUNNEL2		; east exit
@@ -743,7 +611,7 @@ location40:
 	.byte	$ff
 
 ; STONEY_COMPASS_ROOM	-- compass room
-location41:
+location34:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_CRAWLWAY_LEFT		; east exit
@@ -760,7 +628,7 @@ location41:
 	.byte	$ff
 
 ; STONEY_COMPASS_ROSE	-- compass rose
-location42:
+location35:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	$ff				; east exit
@@ -777,7 +645,7 @@ location42:
 	.byte	$ff
 
 ; STONEY_RIGHT_TUNNEL1		-- right tunnel to blue room
-location43:
+location36:
 	.byte	STONEY_RIGHT_TUNNEL2		; north exit
 	.byte	STONEY_DOORWAY2			; south exit
 	.byte	$ff				; east exit
@@ -794,7 +662,7 @@ location43:
 	.byte	$ff
 
 ; STONEY_RIGHT_TUNNEL2		-- right tunnel to blue room, with side
-location44:
+location37:
 	.byte	STONEY_RIGHT_AIRLOCK		; north exit
 	.byte	STONEY_RIGHT_TUNNEL1		; south exit
 	.byte	STONEY_CRAWLWAY_RIGHT		; east exit
@@ -811,7 +679,7 @@ location44:
 	.byte	$ff
 
 ; STONEY_RIGHT_AIRLOCK		-- airlock to blue room
-location45:
+location38:
 	.byte	STONEY_RIGHT_AIRLOCK_OPEN	; north exit
 	.byte	STONEY_RIGHT_TUNNEL2		; south exit
 	.byte	$ff				; east exit
@@ -828,7 +696,7 @@ location45:
 	.byte	$ff
 
 ; STONEY_RIGHT_AIRLOCK_OPEN	-- airlock to blue room, open
-location46:
+location39:
 	.byte	STONEY_BLUE_ROOM		; north exit
 	.byte	STONEY_RIGHT_TUNNEL2		; south exit
 	.byte	$ff				; east exit
@@ -845,7 +713,7 @@ location46:
 	.byte	$ff
 
 ; STONEY_BLUE_ROOM	-- blue room
-location47:
+location40:
 	.byte	$ff				; north exit
 	.byte	STONEY_RIGHT_AIRLOCK		; south exit
 	.byte	STONEY_BLUE_MAPCASE		; east exit
@@ -865,7 +733,7 @@ location47:
         .word   stoney_take_blue_page-1 ; special function
 
 ; STONEY_BLUE_MAPCASE	-- blue room mapcase
-location48:
+location41:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_BLUE_MAPCASE_OPEN	; east exit
@@ -882,7 +750,7 @@ location48:
 	.byte	$ff
 
 ; STONEY_BLUE_MAPCASE_OPEN	-- blue room mapcase open
-location49:
+location42:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_BLUE_ROOM		; east exit
@@ -902,7 +770,7 @@ location49:
         .word   stoney_half_message-1 ; special function
 
 ; STONEY_BLUE_HALFMESSAGE	-- blue room halfmessag
-location50:
+location43:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_BLUE_MAPCASE_OPEN	; east exit
@@ -919,7 +787,7 @@ location50:
 	.byte	$ff
 
 ; STONEY_CRAWLWAY_RIGHT	-- right crawlway
-location51:
+location44:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_COMPASS_ROOM		; east exit

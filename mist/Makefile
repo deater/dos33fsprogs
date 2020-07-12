@@ -37,12 +37,13 @@ mist_side2.dsk:	HELLO_DISK2 CHANNEL VIEWER ARBOR NIBEL
 #	$(DOS33) -y mist_side2.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
 
-mist_side3.dsk:	HELLO_DISK2 MECHE SELENA STONEY
+mist_side3.dsk:	HELLO_DISK2 MECHE SELENA STONEY SHIP
 	cp empty.dsk mist_side3.dsk
 	$(DOS33) -y mist_side3.dsk SAVE A HELLO_DISK2 HELLO
 	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 MECHE
 	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 SELENA
 	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 STONEY
+	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 SHIP
 
 
 
@@ -241,6 +242,24 @@ stoney.o:	stoney.s zp.inc hardware.inc common_defines.inc \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o stoney.o stoney.s -l stoney.lst
 
+####
+
+SHIP:	ship.o
+	ld65 -o SHIP ship.o -C ../linker_scripts/apple2_2000.inc
+
+ship.o:	ship.s zp.inc hardware.inc common_defines.inc \
+	graphics_ship/ship_graphics.inc \
+	common_routines.inc \
+	common_sprites.inc \
+	page_sprites.inc \
+	leveldata_ship.inc \
+	keyboard.s \
+	draw_pointer.s \
+	link_book_stoney.s \
+	link_book_mist.s \
+	handle_pages.s \
+	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	ca65 -o ship.o ship.s -l ship.lst
 
 ####
 
@@ -364,6 +383,9 @@ graphics_nibel/nibel_graphics.inc:
 graphics_dni/dni_graphics.inc:
 	cd graphics_dni && make
 
+graphics_ship/ship_graphics.inc:
+	cd graphics_ship && make
+
 
 ####
 
@@ -371,5 +393,5 @@ clean:
 		rm -f *~ *.o *.lst HELLO HELLO_DISK2 \
 			LOADER MIST_TITLE \
 			MIST OCTAGON VIEWER DENTIST \
-			MECHE SELENA STONEY CHANNEL ARBOR NIBEL \
+			MECHE SELENA SHIP STONEY CHANNEL ARBOR NIBEL \
 			GENERATOR

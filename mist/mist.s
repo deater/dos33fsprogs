@@ -279,13 +279,13 @@ enter_channel_clock:
 	jmp	set_level_over
 
 enter_stoneyship:
-	lda	#STONEY_SHIP_STERN
+	lda	#SHIP_STERN
 	sta	LOCATION
 
 	lda	#DIRECTION_N
 	sta	DIRECTION
 
-	lda	#LOAD_STONEY
+	lda	#LOAD_SHIP
 	sta	WHICH_LOAD
 
 set_level_over:

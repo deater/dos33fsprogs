@@ -29,7 +29,6 @@ stoney_start:
 	lda	#>locations
 	sta	LOCATIONS_H
 
-
 	lda	#0
 	sta	DRAW_PAGE
 	sta	LEVEL_OVER
@@ -53,9 +52,6 @@ stoney_start:
 	lda	#0
 	sta	ANIMATE_FRAME
 
-	; FIXME
-	; handle gear visibility
-
 game_loop:
 	;=================
 	; reset things
@@ -77,8 +73,6 @@ game_loop:
 	;====================================
 
 	lda	LOCATION
-	cmp	#STONEY_SHIP_BOOK_OPEN
-	beq	animate_stoney_book
 	cmp	#STONEY_BOOK_TABLE_OPEN
 	beq	animate_mist_book
 	cmp	#STONEY_RED_DRESSER_OPEN
@@ -94,11 +88,6 @@ game_loop:
 	cmp	#STONEY_BOOK_TABLE
 	beq	animate_magic_table
 
-	jmp	nothing_special
-
-animate_stoney_book:
-
-	jsr	do_animate_stoney_book
 	jmp	nothing_special
 
 animate_magic_table:
@@ -200,24 +189,6 @@ room_frame_no_oflo:
 
 really_exit:
 	jmp	end_level
-
-
-
-back_to_mist:
-
-	lda	#$ff
-	sta	LEVEL_OVER
-
-	lda     #MIST_ARRIVAL_DOCK		; the dock
-	sta	LOCATION
-	lda	#DIRECTION_N
-	sta	DIRECTION
-
-	lda	#LOAD_MIST
-	sta	WHICH_LOAD
-
-	rts
-
 
 stoney_take_red_page:
 	lda	#STONEY_PAGE
@@ -396,41 +367,6 @@ draw_it:
 done_draw_it:
 	rts
 
-
-do_animate_stoney_book:
-
-	; handle animated linking book
-
-	lda	ANIMATE_FRAME
-	asl
-	tay
-	lda	stoney_movie,Y
-	sta	INL
-	lda	stoney_movie+1,Y
-	sta	INH
-
-	lda	#22
-	sta	XPOS
-	lda	#12
-	sta	YPOS
-
-	jsr	put_sprite_crop
-
-	lda	FRAMEL
-	and	#$f
-	bne	done_animate_book
-
-	inc	ANIMATE_FRAME
-	lda	ANIMATE_FRAME
-	cmp	#16
-	bne	done_animate_book
-	lda	#0
-	sta	ANIMATE_FRAME
-done_animate_book:
-	rts
-
-
-
 do_animate_magic_table:
 
 	; handle book rising from table
@@ -587,28 +523,11 @@ battery_sprite7:
 	;==========================
 	; includes
 	;==========================
-.if 0
-	.include	"gr_copy.s"
-	.include	"gr_offsets.s"
-	.include	"gr_pageflip.s"
-	.include	"gr_putsprite_crop.s"
-	.include	"text_print.s"
-	.include	"gr_fast_clear.s"
-	.include	"decompress_fast_v2.s"
-	.include	"keyboard.s"
-	.include	"draw_pointer.s"
-	.include	"end_level.s"
-	.include	"audio.s"
-	.include	"common_sprites.inc"
-	.include	"page_sprites.inc"
-
-.endif
 
 	; level graphics
 	.include	"graphics_stoney/stoney_graphics.inc"
 
 	; linking books
-	.include	"link_book_stoney.s"
 	.include	"link_book_mist.s"
 
 	; puzzles
