@@ -3,6 +3,8 @@ For release 1.0
 + LOADER 
 	-- save game
 	-- sound loader (into language card?)
+	-- joystick support
+	-- ^T to toggle sound
 
 + SHIP  -- split off of STONEY
 
@@ -58,38 +60,26 @@ Done:
 
 
 ================================
+TODO Maybe future:
 
-main:
+MIST:
 + some sort of switch animation on circuit breakers?
-+ marker switches
-+ ship raise/lower
 + look at catherine's letter from other side of path
-+ allow opening/grabbing white page
++ Make clock puzzle more similar to actual game
 
-octagon_room:
-+ fireplace book
+OCTAGON:
 + in tower could have extra window open/closed far backgrounds
 + turning when looking at hint loses the text mode
-+ final puzzle in fireplace
 + line drawing on map isn't optimal
 + should hints be black on white text?
 
 General:
 + Insert floppy #100 joke?
 + double link noise (once when leave, once when get there?)
-+ adjust grab window on letter
-+ add missing red book step
-
-dentist office:
-+ implement
-
-ending:
-+ all endings
-+ Fireplace: 8x6 grid
 
 MECHE age:
 + can poke around more stuff in their rooms
-+ reduce size by using flipped-background attribute
++ reduce size by using flipped-background attribute(?)
 
 SELENA age:
 + optional mockingboard sound for keyboard?
@@ -104,11 +94,7 @@ SELENA age:
 + better colors
 
 Channelwood:
-+ Implement safe
-+ Implement tree
-+ Implement boiler
 + Implement water valves
-+ Enable linking back to Myst
 + Windmill animation
 + Switch flip animation
 + Open faucet animation
@@ -125,12 +111,10 @@ Stoneship age:
 + Implement compass rose light puzzle
 + Implement raising/lowering water
 + Implement telescope
-+ Implement the half-letter
 + Hook up tunnels into compass room properly
 
 Ending:
-+ Turning
-+ Allow looking at green book on shelf
 + Atrus at end -- hires?
-+ Marker Switches (8):
 
+VIEWER
++ Add alternate top-of-steps backgrouns if ship is up

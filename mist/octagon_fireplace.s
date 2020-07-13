@@ -382,10 +382,44 @@ update_game_over:
 	beq	done_update
 
 	; update background for red
-	; update background for blue
+	ldy	#LOCATION_WEST_BG
 
-	; update exit of red
-	; update exit of blue
+	lda	#<temple_center_exploded_w_lzsa
+	sta	location1,Y				; OCTAGON_TEMPLE_CENTER
+	lda	#>temple_center_exploded_w_lzsa
+	sta	location1+1,Y				; OCTAGON_TEMPLE_CENTER
+
+	lda	#<in_fireplace_exploded_w_lzsa
+	sta	location4,Y				; OCTAGON_IN_FIREPLACE
+	lda	#>in_fireplace_exploded_w_lzsa
+	sta	location4+1,Y				; OCTAGON_IN_FIREPLACE
+
+	lda	#<red_book_shelf_exploded_lzsa
+	sta	location2,Y				; OCTAGON_RED_BOOK_SHELF
+	lda	#>red_book_shelf_exploded_lzsa
+	sta	location2+1,Y				; OCTAGON_RED_BOOK_SHELF
+
+
+	; update background for blue
+	ldy	#LOCATION_EAST_BG
+
+	lda	#<temple_center_exploded_e_lzsa
+	sta	location1,Y				; OCTAGON_TEMPLE_CENTER
+	lda	#>temple_center_exploded_e_lzsa
+	sta	location1+1,Y				; OCTAGON_TEMPLE_CENTER
+
+	lda	#<blue_book_shelf_exploded_lzsa
+	sta	location10,Y				; OCTAGON_BLUE_BOOKSHELF
+	lda	#>blue_book_shelf_exploded_lzsa
+	sta	location10+1,Y				; OCTAGON_BLUE_BOOKSHELF
+
+	; disable touching red book
+	; disable touching blue book
+
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#$ff
+	sta	location2,Y				; OCTAGON_RED_BOOK_SHELF
+	sta	location10,Y				; OCTAGON_BLUE_BOOKSHELF
 
 	; clear red pages
 	lda	#$ff
