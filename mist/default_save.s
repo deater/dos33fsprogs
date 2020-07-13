@@ -72,3 +72,5 @@
 .byte $00	; GREEN_BOOK_PROGRESS	=	$BF
 .byte $00	; DNI_PROGRESS		=	$C0
 .byte $00	; COMPARTMENT_OPEN	=	$C1
+.byte $00	; GAME_COMPLETED	=	$C2
+

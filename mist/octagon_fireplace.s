@@ -375,3 +375,28 @@ actually_open_book:
 	jmp	change_location
 
 
+
+update_game_over:
+
+	lda	GAME_COMPLETE
+	beq	done_update
+
+	; update background for red
+	; update background for blue
+
+	; update exit of red
+	; update exit of blue
+
+	; clear red pages
+	lda	#$ff
+	sta	RED_PAGES_TAKEN
+	sta	BLUE_PAGES_TAKEN
+
+	; clear blue pages
+
+	; update green book so atrus doesn't talk
+	lda	#8
+	sta	GREEN_BOOK_PROGRESS
+
+done_update:
+	rts

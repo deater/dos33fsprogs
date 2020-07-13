@@ -41,6 +41,10 @@ octagon_start:
 	sta	CURSOR_Y
 
 
+	; set up game over status
+
+	jsr	update_game_over
+
 	; set up initial location
 
 	jsr	change_location

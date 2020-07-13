@@ -187,7 +187,9 @@ DNI_PROGRESS		= $C0		; dni: atrus status
 
 COMPARTMENT_OPEN	= $C1		; dock marker switch compartment
 
-END_OF_SAVE	=	$C2
+GAME_COMPLETE		= $C2		; game has been completed
+
+END_OF_SAVE	=	$C3
 
 
 ; done game puzzle state
