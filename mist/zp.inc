@@ -189,7 +189,14 @@ COMPARTMENT_OPEN	= $C1		; dock marker switch compartment
 
 GAME_COMPLETE		= $C2		; game has been completed
 
-END_OF_SAVE	=	$C3
+SAFE_HUNDREDS		= $C3		; safe combination, hundreds
+SAFE_TENS		= $C4		; safe combination, tens
+SAFE_ONES		= $C5		; safe combination, ones
+
+SAFE_OPEN		= $C6
+
+
+END_OF_SAVE	=	$C7
 
 
 ; done game puzzle state

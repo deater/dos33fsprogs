@@ -1,92 +1,114 @@
 	; this is a painful one
+	; mostly because the tree puzzle is sort of obscure in the original
 
+
+
+	;====================
+	; safe was clicked
+	;====================
 goto_safe:
 	lda	#CABIN_SAFE
 	sta	LOCATION
 	jmp	change_location
 
-
-
-control_panel_pressed:
+	;====================
+	; safe was touched
+	;====================
+touch_safe:
 
 	lda	CURSOR_Y
+
+	; check if buttons
 	cmp	#26		; blt
-	bcc	panel_inc
-	cmp	#30		; blt
-	bcc	panel_dec
+	bcc	safe_buttons
 
-panel_latch:
+	; check if handle
+	cmp	#34
+	bcs	pull_handle	; bge
 
-	lda	VIEWER_CHANNEL
-	sta	VIEWER_LATCHED	; latch value into pool state
+	; else do nothing
+	rts
 
-	lda	#VIEWER_POOL
-	sta	LOCATION
 
-	lda	#DIRECTION_W
-	sta	DIRECTION
-	jmp	change_location
+pull_handle:
+	; FIXME
+	rts
 
-panel_inc:
+safe_buttons:
 	lda	CURSOR_X
-	cmp	#18
-	bcs	right_arrow_pressed
+	cmp	#13		; not a button
+	bcc	no_button
+	cmp	#19
+	bcc	hundreds_inc
+	cmp	#25
+	bcc	tens_inc
+	bcs	ones_inc
 
-	; 19-23 left arrow
+no_button:
+	rts
 
-	lda	VIEWER_CHANNEL
-	and	#$f0
-	cmp	#$90
-	bcs	done_panel_press	; bge
-	lda	VIEWER_CHANNEL
+hundreds_inc:
+	sed
+	lda	SAFE_HUNDREDS
 	clc
-	adc	#$10
-	sta	VIEWER_CHANNEL
-	rts
-
-right_arrow_pressed:
-	; 13-17 right arrow
-
-	lda	VIEWER_CHANNEL
+	adc	#$1
+	cld
 	and	#$f
-	cmp	#9
-	bcs	done_panel_press	; bge
-	inc	VIEWER_CHANNEL
+	sta	SAFE_HUNDREDS
+
 	rts
 
-panel_dec:
-	lda	CURSOR_X
-	cmp	#18
-	bcs	right_arrow_pressed_dec
-
-	; 19-23 left arrow
-
-	lda	VIEWER_CHANNEL
-	and	#$f0
-	beq	done_panel_press
-	lda	VIEWER_CHANNEL
-	sec
-	sbc	#$10
-	sta	VIEWER_CHANNEL
-	rts
-
-right_arrow_pressed_dec:
-	; 13-17 right arrow
-
-	lda	VIEWER_CHANNEL
+tens_inc:
+	sed
+	lda	SAFE_TENS
+	clc
+	adc	#$1
+	cld
 	and	#$f
-	beq	done_panel_press
-	dec	VIEWER_CHANNEL
+	sta	SAFE_TENS
 
-done_panel_press:
+	rts
+
+ones_inc:
+	sed
+	lda	SAFE_ONES
+	clc
+	adc	#$1
+	cld
+	and	#$f
+	sta	SAFE_ONES
+
 	rts
 
 
-display_panel_code:
 
-	; ones digit
+	;==============================
+	; draw the numbers on the safe
+	;==============================
+draw_safe_combination:
 
-	lda	VIEWER_CHANNEL
+	; hundreds digit
+
+	lda	SAFE_HUNDREDS
+	and	#$f
+	asl
+	tay
+
+	lda	number_sprites,Y
+	sta	INL
+	lda	number_sprites+1,Y
+	sta	INH
+
+	lda	#15
+	sta	XPOS
+	lda	#8
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	; tens digit
+
+	lda	SAFE_TENS
 	and	#$f
 	asl
 	tay
@@ -103,13 +125,11 @@ display_panel_code:
 
 	jsr	put_sprite_crop
 
-	; tens digit
+	; ones digit
 
-	lda	VIEWER_CHANNEL
-	and	#$f0
-	lsr
-	lsr
-	lsr
+	lda	SAFE_ONES
+	and	#$f
+	asl
 	tay
 
 	lda	number_sprites,Y
@@ -117,7 +137,7 @@ display_panel_code:
 	lda	number_sprites+1,Y
 	sta	INH
 
-	lda	#15
+	lda	#27
 	sta	XPOS
 	lda	#8
 	sta	YPOS

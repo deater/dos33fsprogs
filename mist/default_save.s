@@ -74,3 +74,7 @@
 .byte $00	; COMPARTMENT_OPEN	=	$C1
 .byte $00	; GAME_COMPLETED	=	$C2
 
+.byte $00	; SAFE_HUNDREDS		=	$C3
+.byte $00	; SAFE_TENS		=	$C4
+.byte $00	; SAFE_ONES		=	$C5
+.byte $00	; SAFE_OPEN		=	$C6

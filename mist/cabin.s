@@ -76,6 +76,13 @@ game_loop:
 	cmp	#CABIN_TREE_BOOK_OPEN
 	beq	animate_channel_book
 
+	cmp	#CABIN_SAFE
+	bne	check_next
+	jsr	draw_safe_combination
+	jmp	nothing_special
+
+check_next:
+
 	jmp	nothing_special
 
 animate_channel_book:

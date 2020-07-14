@@ -105,7 +105,10 @@ location4:
 	.word	$000			; east bg
 	.word	safe_w_lzsa		; west bg
 	.byte	BG_WEST
-	.byte	$ff
+	.byte   DIRECTION_W	; special exit
+	.byte	3,31	; special x
+	.byte	16,44	; special y
+	.word	touch_safe-1
 
 ; CABIN_CLOCK_PATH		-- path to clock
 location5:
