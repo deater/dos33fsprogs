@@ -397,7 +397,8 @@ clean:
 			LOADER MIST_TITLE \
 			MIST OCTAGON VIEWER DENTIST \
 			MECHE SELENA SHIP STONEY CHANNEL ARBOR NIBEL \
-			GENERATOR
+			GENERATOR \
+			generate_common
 	cd graphics_title && make clean
 	cd graphics_mist && make clean
 	cd graphics_octagon && make clean

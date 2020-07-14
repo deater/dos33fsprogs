@@ -3,56 +3,30 @@
 	; book page stuff
 	;==============================
 
-take_blue_page:
+grab_blue_page:
 
 	; FIXME: if we came back we could return page
 	;	should check to see if carrying first
 	;	also what if holding red, click blu
 
 	lda	BLUE_PAGES_TAKEN
-	eor	#MECHE_PAGE
-	sta	BLUE_PAGES_TAKEN
-
-	; FIXME: if holding another page, put it down?
-
 	and	#MECHE_PAGE
-	beq	dropped_blue_page
+	bne	missing_page
 
-	lda	#HOLDING_BLUE_PAGE
-	sta	HOLDING_PAGE
-	rts
+	lda	#MECHE_PAGE
+	jmp	take_blue_page
 
-dropped_blue_page:
-	lda	#0
-	sta	HOLDING_PAGE
-
-	rts
-
-take_red_page:
-
-	; FIXME: if we came back we could return page
-	;	should check to see if carrying first
-	;	also what if holding red, click blu
+grab_red_page:
 
 	lda	RED_PAGES_TAKEN
-	eor	#MECHE_PAGE
-	sta	RED_PAGES_TAKEN
-
-	; FIXME: if holding another page, put it down?
-
 	and	#MECHE_PAGE
-	beq	dropped_red_page
+	bne	missing_page
 
-	lda	#HOLDING_RED_PAGE
-	sta	HOLDING_PAGE
+	lda	#MECHE_PAGE
+	jmp	take_red_page
+
+missing_page:
 	rts
-
-dropped_red_page:
-	lda	#0
-	sta	HOLDING_PAGE
-
-	rts
-
 
 
 
