@@ -240,7 +240,7 @@ stoney.o:	stoney.s zp.inc hardware.inc common_defines.inc \
 	link_book_stoney.s \
 	link_book_mist.s \
 	handle_pages.s \
-	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	stoney_puzzles.s
 	ca65 -o stoney.o stoney.s -l stoney.lst
 
 ####

@@ -1,6 +1,15 @@
 	; this is a painful one
 	; mostly because the tree puzzle is sort of obscure in the original
 
+	; in original you get a match, then light it
+	;	also the match will burn out eventually
+
+	;===================================
+	; update backgrounds based on state
+	;===================================
+cabin_update_state:
+
+	rts
 
 
 	;====================
@@ -31,7 +40,23 @@ touch_safe:
 
 
 pull_handle:
-	; FIXME
+
+	lda	SAFE_HUNDREDS
+	cmp	#7
+	bne	wrong_combination
+	lda	SAFE_TENS
+	cmp	#2
+	bne	wrong_combination
+	lda	SAFE_ONES
+	cmp	#4
+	bne	wrong_combination
+
+	lda	#CABIN_OPEN_SAFE
+	sta	LOCATION
+
+	jmp	change_location
+
+wrong_combination:
 	rts
 
 safe_buttons:

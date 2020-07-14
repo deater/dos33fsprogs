@@ -193,7 +193,7 @@ SAFE_HUNDREDS		= $C3		; safe combination, hundreds
 SAFE_TENS		= $C4		; safe combination, tens
 SAFE_ONES		= $C5		; safe combination, ones
 
-SAFE_OPEN		= $C6
+TREE_LEVEL		= $C6		; how high is the tree hole
 
 
 END_OF_SAVE	=	$C7

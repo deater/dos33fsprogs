@@ -6,7 +6,7 @@ locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
-	.word location12
+	.word location12,location13
 
 ; CABIN_OUTSIDE		-- outside in clearing
 location0:
@@ -253,3 +253,22 @@ location12:
 	.byte	10,24	; special y
 	.word	channel_link_book-1
 
+; CABIN_OPEN_SAFE		-- looking at open safe
+location13:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	CABIN_INSIDE		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$000			; east bg
+	.word	safe_open_w_lzsa	; west bg
+	.byte	BG_WEST
+	.byte   DIRECTION_W	; special exit
+	.byte	3,31	; special x
+	.byte	16,44	; special y
+	.word	touch_safe-1
