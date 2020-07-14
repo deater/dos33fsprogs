@@ -76,6 +76,8 @@ OCTAGON:
 General:
 + Insert floppy #100 joke?
 + double link noise (once when leave, once when get there?)
++ can drop pages back where we picked them up
+	not too hard to implement?
 
 MECHE age:
 + can poke around more stuff in their rooms
@@ -112,6 +114,7 @@ Stoneship age:
 + Implement raising/lowering water
 + Implement telescope
 + Hook up tunnels into compass room properly
++ Spheres in red room play animations
 
 Ending:
 + Atrus at end -- hires?

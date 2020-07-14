@@ -121,9 +121,13 @@ MECHE_LOCK3	=	$A7		; meche lock symbol3
 MECHE_LOCK4	=	$A8		; meche lock symbol4
 
 HOLDING_PAGE	=	$A9		; which page in hand
-	HOLDING_RED_PAGE = $80
-	HOLDING_BLUE_PAGE = $40
-	HOLDING_WHITE_PAGE = $C0
+	HOLDING_RED_PAGE	= $80
+	HOLDING_BLUE_PAGE	= $40
+	HOLDING_WHITE_PAGE	= $C0
+	HOLDING_KEY		= $04
+	HOLDING_LIT_MATCH	= $02
+	HOLDING_MATCH		= $01
+
 RED_PAGE_COUNT	=	$AA		; # of red pages in book
 BLUE_PAGE_COUNT	=	$AB		; # of blue pages in book
 

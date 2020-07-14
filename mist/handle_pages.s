@@ -1,3 +1,5 @@
+	; FIXME: should be able to drop pages back where we picked them up
+
 	;==============================
 	; Take Blue Page
 	;==============================

@@ -97,12 +97,36 @@ really_not_special:
 
 finger_point:
 	lda	HOLDING_PAGE
-	and	#$c0
 	beq	real_finger_point
 	cmp	#HOLDING_BLUE_PAGE
 	beq	blue_finger
+	cmp	#HOLDING_RED_PAGE
+	beq	red_finger
 	cmp	#HOLDING_WHITE_PAGE
 	beq	white_finger
+	cmp	#HOLDING_MATCH
+	beq	match_finger
+	cmp	#HOLDING_LIT_MATCH
+	beq	match_lit_finger
+
+	; all that's left is key
+key_finger:
+	lda     #<finger_key_sprite
+	sta	INL
+	lda     #>finger_key_sprite
+	jmp	finger_draw
+
+match_finger:
+	lda     #<finger_match_sprite
+	sta	INL
+	lda     #>finger_match_sprite
+	jmp	finger_draw
+
+match_lit_finger:
+	lda     #<finger_match_lit_sprite
+	sta	INL
+	lda     #>finger_match_lit_sprite
+	jmp	finger_draw
 
 red_finger:
 	lda     #<finger_red_page_sprite

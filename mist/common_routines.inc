@@ -15,41 +15,41 @@ getsrc_smc	=$1555
 draw_pointer	=$1562
 
 ; end_level.s
-end_level	=$16a5
+end_level	=$16ca
 
 ; gr_copy.s
-gr_copy_to_current	=$16c7
+gr_copy_to_current	=$16ec
 
 ; gr_fast_clear.s
-clear_bottom	=$17ed
-clear_all	=$182b
-clear_all_color	=$1850
+clear_bottom	=$1812
+clear_all	=$1850
+clear_all_color	=$1875
 
 ; gr_offsets.s
-gr_offsets	=$186e
+gr_offsets	=$1893
 
 ; gr_page_flip.s
-page_flip	=$189e
+page_flip	=$18c3
 
 ; gr_putsprite_crop.s
-put_sprite_crop	=$18b8
-psc_smc1	=$18db
-psc_smc2	=$1973
+put_sprite_crop	=$18dd
+psc_smc1	=$1900
+psc_smc2	=$1998
 
 ; keyboard.s
-handle_keypress	=$19f4
-change_location	=$1ad5
+handle_keypress	=$1a19
+change_location	=$1afa
 
 ; text_print.s
-move_and_print	=$1b6d
-ps_smc1	=$1b9a
+move_and_print	=$1b92
+ps_smc1	=$1bbf
 
 ; page_sprites.inc
-blue_page_sprite	=$1c82
-red_page_sprite	=$1c98
-white_page_sprite	=$1cae
-blue_page_small_sprite	=$1cc4
-red_page_small_sprite	=$1ccc
+blue_page_sprite	=$1ca7
+red_page_sprite	=$1cbd
+white_page_sprite	=$1cd3
+blue_page_small_sprite	=$1ce9
+red_page_small_sprite	=$1cf1
 
 ; audio files
 linking_noise	= $9000

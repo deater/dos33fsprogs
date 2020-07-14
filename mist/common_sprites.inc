@@ -42,6 +42,27 @@ finger_turn_right_sprite:
 	.byte $bb,$ab,$bb,$bb,$ab,$aa
 	.byte $ab,$aa,$ab,$aa,$aa,$aa
 
+finger_match_sprite:
+	.byte 6,4
+	.byte $aa,$aa,$aa,$aa,$ba,$ba
+	.byte $1a,$da,$da,$db,$db,$db
+	.byte $a1,$ad,$ad,$bd,$bd,$ad
+	.byte $aa,$aa,$aa,$aa,$ab,$bb
+
+finger_match_lit_sprite:
+	.byte 6,4
+	.byte $9a,$a9,$aa,$aa,$ba,$ba
+	.byte $19,$da,$da,$db,$db,$db
+	.byte $a9,$ad,$ad,$bd,$bd,$ad
+	.byte $aa,$aa,$aa,$aa,$ab,$bb
+
+finger_key_sprite:
+	.byte 6,4
+	.byte $aa,$aa,$aa,$aa,$aa,$ba
+	.byte $dd,$dd,$dd,$dd,$db,$bb
+	.byte $aa,$ad,$aa,$ab,$bd,$bb
+	.byte $aa,$aa,$aa,$aa,$ab,$ab
+
 finger_red_page_sprite:
 	.byte 5,5
 	.byte $3a,$33,$33,$aa,$aa

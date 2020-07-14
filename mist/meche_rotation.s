@@ -5,10 +5,6 @@
 
 grab_blue_page:
 
-	; FIXME: if we came back we could return page
-	;	should check to see if carrying first
-	;	also what if holding red, click blu
-
 	lda	BLUE_PAGES_TAKEN
 	and	#MECHE_PAGE
 	bne	missing_page
