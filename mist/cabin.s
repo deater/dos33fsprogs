@@ -199,7 +199,18 @@ marker_switch:
 enter_cabin:
 	lda	#DIRECTION_E
 	sta	DIRECTION
+
+	lda	LOCATION
+	cmp	#CABIN_OPEN
+	bne	open_the_door
+
+	lda	#CABIN_ENTRANCE
+	bne	done_enter_cabin	; bra
+
+open_the_door:
 	lda	#CABIN_OPEN
+
+done_enter_cabin:
 	sta	LOCATION
 	jmp	change_location
 
@@ -234,6 +245,7 @@ exit_to_mist:
 
 	; puzzles
 	.include	"marker_switch.s"
+	.include	"cabin_boiler_puzzle.s"
 
 	; level data
 	.include	"leveldata_cabin.inc"

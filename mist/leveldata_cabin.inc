@@ -53,17 +53,20 @@ location2:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	CABIN_INSIDE		; east exit
-	.byte	$ff			; west exit
+	.byte	CABIN_OUTSIDE		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
-	.byte	$ff		; west exit_dir
+	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
 	.word	boiler_room_e_lzsa	; east bg
-	.word	$0000			; west bg
-	.byte	BG_EAST
-	.byte	$ff
+	.word	boiler_w_lzsa		; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte   DIRECTION_W	; special exit
+	.byte	28,36	; special x
+	.byte	16,32	; special y
+	.word	goto_safe-1
 
 
 ; CABIN_INSIDE		-- inside the cabin
@@ -81,7 +84,11 @@ location3:
 	.word	boiler_e_lzsa		; east bg
 	.word	boiler_w_lzsa		; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte	$ff
+	.byte   DIRECTION_W	; special exit
+	.byte	28,36	; special x
+	.byte	16,32	; special y
+	.word	goto_safe-1
+
 
 ; CABIN_SAFE		-- looking at safe
 location4:

@@ -275,7 +275,8 @@ cabin.o:	cabin.s zp.inc hardware.inc common_defines.inc \
 	keyboard.s \
 	draw_pointer.s \
 	link_book_channel.s \
-	marker_switch.s
+	marker_switch.s \
+	cabin_boiler_puzzle.s
 	ca65 -o cabin.o cabin.s -l cabin.lst
 
 
