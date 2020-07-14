@@ -216,6 +216,7 @@ viewer.o:	viewer.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
 	common_sprites.inc \
 	page_sprites.inc \
+	number_sprites.inc \
 	leveldata_viewer.inc \
 	viewer_controls.s \
 	keyboard.s \
@@ -276,7 +277,8 @@ cabin.o:	cabin.s zp.inc hardware.inc common_defines.inc \
 	draw_pointer.s \
 	link_book_channel.s \
 	marker_switch.s \
-	cabin_boiler_puzzle.s
+	cabin_boiler_puzzle.s \
+	number_sprites.inc
 	ca65 -o cabin.o cabin.s -l cabin.lst
 
 
@@ -391,8 +393,25 @@ graphics_ship/ship_graphics.inc:
 ####
 
 clean:		
-		rm -f *~ *.o *.lst HELLO HELLO_DISK2 \
+	rm -f *~ *.o *.lst HELLO HELLO_DISK2 \
 			LOADER MIST_TITLE \
 			MIST OCTAGON VIEWER DENTIST \
 			MECHE SELENA SHIP STONEY CHANNEL ARBOR NIBEL \
 			GENERATOR
+	cd graphics_title && make clean
+	cd graphics_mist && make clean
+	cd graphics_octagon && make clean
+	cd books && make clean
+	cd graphics_viewer && make clean
+	cd graphics_meche && make clean
+	cd graphics_selena && make clean
+	cd graphics_cabin && make clean
+	cd graphics_channel && make clean
+	cd graphics_stoney && make clean
+	cd graphics_dentist && make clean
+	cd graphics_generator && make clean
+	cd graphics_arbor && make clean
+	cd graphics_nibel && make clean
+	cd graphics_dni && make clean
+	cd graphics_ship && make clean
+

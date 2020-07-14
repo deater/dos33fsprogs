@@ -242,6 +242,7 @@ exit_to_mist:
 
 	; level graphics
 	.include	"graphics_cabin/cabin_graphics.inc"
+	.include	"number_sprites.inc"
 
 	; puzzles
 	.include	"marker_switch.s"
