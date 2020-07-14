@@ -9,11 +9,6 @@ all:	stoney_graphics.inc
 ####
 
 stoney_graphics.inc:	\
-	ship_entry_n.lzsa ship_entry_s.lzsa \
-	ship_bow_s.lzsa ship_bow_go_n.lzsa \
-	ship_door_open_s.lzsa ship_door_closed_s.lzsa \
-	book_chair_s.lzsa book_chair_n.lzsa \
-	book_chair_open_s.lzsa book_chair_closed_s.lzsa \
 	arrival_n.lzsa arrival_s.lzsa arrival_e.lzsa arrival_w.lzsa \
 	umbrella_e.lzsa umbrella_w.lzsa \
 	umbrella_path_e.lzsa umbrella_path_w.lzsa \
@@ -51,16 +46,6 @@ stoney_graphics.inc:	\
 	map_case_open_e.lzsa map_case_closed_e.lzsa \
 	right_airlock_open_n.lzsa \
 	left_letter.lzsa
-	echo "ship_entry_n_lzsa: .incbin \"ship_entry_n.lzsa\"" > stoney_graphics.inc
-	echo "ship_entry_s_lzsa: .incbin \"ship_entry_s.lzsa\"" >> stoney_graphics.inc
-	echo "ship_bow_s_lzsa: .incbin \"ship_bow_s.lzsa\"" >> stoney_graphics.inc
-	echo "ship_bow_go_n_lzsa: .incbin \"ship_bow_go_n.lzsa\"" >> stoney_graphics.inc
-	echo "ship_door_open_s_lzsa: .incbin \"ship_door_open_s.lzsa\"" >> stoney_graphics.inc
-	echo "ship_door_closed_s_lzsa: .incbin \"ship_door_closed_s.lzsa\"" >> stoney_graphics.inc
-	echo "book_chair_s_lzsa: .incbin \"book_chair_s.lzsa\"" >> stoney_graphics.inc
-	echo "book_chair_n_lzsa: .incbin \"book_chair_n.lzsa\"" >> stoney_graphics.inc
-	echo "book_chair_open_s_lzsa: .incbin \"book_chair_open_s.lzsa\"" >> stoney_graphics.inc
-	echo "book_chair_closed_s_lzsa: .incbin \"book_chair_closed_s.lzsa\"" >> stoney_graphics.inc
 	echo "arrival_n_lzsa: .incbin \"arrival_n.lzsa\"" >> stoney_graphics.inc
 	echo "arrival_s_lzsa: .incbin \"arrival_s.lzsa\"" >> stoney_graphics.inc
 	echo "arrival_e_lzsa: .incbin \"arrival_e.lzsa\"" >> stoney_graphics.inc
