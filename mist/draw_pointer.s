@@ -96,18 +96,29 @@ really_not_special:
 	; otherwise, finger_point
 
 finger_point:
-	lda	HOLDING_PAGE
-	beq	real_finger_point
-	cmp	#HOLDING_BLUE_PAGE
-	beq	blue_finger
-	cmp	#HOLDING_RED_PAGE
-	beq	red_finger
-	cmp	#HOLDING_WHITE_PAGE
-	beq	white_finger
+	; holding item takes precednce
+	lda	HOLDING_ITEM
 	cmp	#HOLDING_MATCH
 	beq	match_finger
 	cmp	#HOLDING_LIT_MATCH
 	beq	match_lit_finger
+	cmp	#HOLDING_KEY
+	beq	key_finger
+
+	lda	HOLDING_PAGE
+	beq	real_finger_point
+	cmp	#HOLDING_BLUE_PAGE
+	beq	blue_finger
+	cmp	#HOLDING_WHITE_PAGE
+	beq	white_finger
+	cmp	#HOLDING_RED_PAGE
+;	beq	red_finger
+
+red_finger:
+	lda     #<finger_red_page_sprite
+	sta	INL
+	lda     #>finger_red_page_sprite
+	jmp	finger_draw
 
 	; all that's left is key
 key_finger:
@@ -128,11 +139,7 @@ match_lit_finger:
 	lda     #>finger_match_lit_sprite
 	jmp	finger_draw
 
-red_finger:
-	lda     #<finger_red_page_sprite
-	sta	INL
-	lda     #>finger_red_page_sprite
-	jmp	finger_draw
+
 
 blue_finger:
 	lda     #<finger_blue_page_sprite

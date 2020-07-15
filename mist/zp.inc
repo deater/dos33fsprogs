@@ -61,12 +61,12 @@ DIRECTION		= $81		; direction we are pointing
 LOCATION		= $82		; location on the map
 
 RED_PAGES_TAKEN		= $83		; red pages that have been picked up
-	OCTAGON_PAGE = 1
-	MECHE_PAGE   = 2
-	SELENA_PAGE  = 4
-	STONEY_PAGE  = 8
-	CHANNEL_PAGE = 16
-	FINAL_PAGE   = 32
+	OCTAGON_PAGE = $01
+	MECHE_PAGE   = $02
+	SELENA_PAGE  = $04
+	STONEY_PAGE  = $08
+	CHANNEL_PAGE = $10
+	FINAL_PAGE   = $20
 BLUE_PAGES_TAKEN=	$84		; blue pages that have been picked up
 CLOCK_BRIDGE	=	$85		; is the clock island bridge raised
 GEAR_OPEN	=	$86		; is the big gear open
@@ -124,9 +124,12 @@ HOLDING_PAGE	=	$A9		; which page in hand
 	HOLDING_RED_PAGE	= $80
 	HOLDING_BLUE_PAGE	= $40
 	HOLDING_WHITE_PAGE	= $C0
-	HOLDING_KEY		= $04
-	HOLDING_LIT_MATCH	= $02
-	HOLDING_MATCH		= $01
+	;FINAL_PAGE   = $20
+	;CHANNEL_PAGE = $10
+	;STONEY_PAGE  = $08
+	;SELENA_PAGE  = $04
+	;MECHE_PAGE   = $02
+	;OCTAGON_PAGE = $01
 
 RED_PAGE_COUNT	=	$AA		; # of red pages in book
 BLUE_PAGE_COUNT	=	$AB		; # of blue pages in book
@@ -200,7 +203,12 @@ SAFE_ONES		= $C5		; safe combination, ones
 TREE_LEVEL		= $C6		; how high is the tree hole
 
 
-END_OF_SAVE	=	$C7
+HOLDING_ITEM		= $C7
+	HOLDING_KEY		= $04
+	HOLDING_LIT_MATCH	= $02
+	HOLDING_MATCH		= $01
+
+END_OF_SAVE	=	$C8
 
 
 ; done game puzzle state

@@ -2,7 +2,37 @@
 	; mostly because the tree puzzle is sort of obscure in the original
 
 	; in original you get a match, then light it
-	;	also the match will burn out eventually
+	;	the match will flicker and burn out if you go outside
+
+	; light the pilot, it will turn red
+	; PSI starts at zero
+	;	turn once clockwise, fire starts, nothing else?
+	;	turn once counter-clockwise fire turns off
+	;	turn twice CW -> ?
+	;	turn 3 CW -> ?
+	;	turn 4, 5, 6, 7, 8, 9, 10, 11, 12,  CW -> ? 
+	;		can turn up to 25
+	;	at 12 starts gradually going up
+	;		(needle swings hits end, waits like 5s, goes up)
+	;	0 - basement
+	;	1 - down 1/2
+	;	2 - down 1
+	;	3 - half out
+	;	4 - all out (can get on)    *
+	;	5 -
+	;	6 - *
+	;	7 -
+	;	8 - *
+	;	9 -
+	;	10 - *
+	;	11 -
+	;	12 - * (top)  (can look down at all spots)
+	; button takes you down a level, but only to ground floor
+	;	will actually  bump you back to Level 3 if you press on ground
+	; button does nothing in basement
+	; dial in basement does same as one upstairs
+
+
 
 	;===================================
 	; update backgrounds based on state
@@ -19,6 +49,54 @@ goto_safe:
 	lda	#CABIN_SAFE
 	sta	LOCATION
 	jmp	change_location
+
+
+	;====================
+	; open safe was touched
+	;====================
+	; close safe or take/light match
+
+	; how does this interact with holding a page?
+
+touch_open_safe:
+
+	lda	CURSOR_X
+	cmp	#21
+	bcc	handle_matches
+
+	; touching door
+touching_safe_door:
+	lda	#CABIN_SAFE
+	sta	LOCATION
+	jmp	change_location
+
+handle_matches:
+	lda	CURSOR_Y
+	cmp	#32
+	bcc	not_matches
+	cmp	#41
+	bcs	not_matches
+
+	lda	HOLDING_ITEM
+	cmp	#HOLDING_LIT_MATCH
+	beq	not_matches
+	cmp	#HOLDING_MATCH
+	beq	light_match
+
+	; not a match yet
+take_match:
+	lda	#HOLDING_MATCH
+	sta	HOLDING_ITEM
+	bne	not_matches	; bra
+
+light_match:
+	lda	#HOLDING_LIT_MATCH
+	sta	HOLDING_ITEM
+
+not_matches:
+	rts
+
+
 
 	;====================
 	; safe was touched
@@ -53,6 +131,9 @@ pull_handle:
 
 	lda	#CABIN_OPEN_SAFE
 	sta	LOCATION
+
+	lda	#DIRECTION_W|DIRECTION_ONLY_POINT
+	sta	DIRECTION
 
 	jmp	change_location
 

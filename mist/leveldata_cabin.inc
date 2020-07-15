@@ -269,6 +269,6 @@ location13:
 	.word	safe_open_w_lzsa	; west bg
 	.byte	BG_WEST
 	.byte   DIRECTION_W	; special exit
-	.byte	3,31	; special x
-	.byte	16,44	; special y
-	.word	touch_safe-1
+	.byte	14,34	; special x
+	.byte	0,44	; special y
+	.word	touch_open_safe-1

@@ -21,7 +21,10 @@ cabin_graphics.inc:	\
 	tree_basement_book_s.lzsa \
 	tree_basement_book_open_s.lzsa \
 	tree_basement_book_closed_s.lzsa \
-	tree_elevator_basement_s.lzsa
+	tree_elevator_basement_s.lzsa \
+	tree_elevator_l2.lzsa tree_elevator_l4.lzsa tree_elevator_l6.lzsa \
+	tree_elevator_l8.lzsa tree_elevator_l10.lzsa tree_elevator_l12.lzsa \
+	tree_elevator_top_down.lzsa
 	echo "clearing_e_lzsa: .incbin \"clearing_e.lzsa\"" > cabin_graphics.inc
 	echo "clearing_s_lzsa: .incbin \"clearing_s.lzsa\"" >> cabin_graphics.inc
 	echo "clearing_w_lzsa: .incbin \"clearing_w.lzsa\"" >> cabin_graphics.inc
@@ -43,6 +46,13 @@ cabin_graphics.inc:	\
 	echo "tree_basement_book_open_s_lzsa: .incbin \"tree_basement_book_open_s.lzsa\"" >> cabin_graphics.inc
 	echo "tree_basement_book_closed_s_lzsa: .incbin \"tree_basement_book_closed_s.lzsa\"" >> cabin_graphics.inc
 	echo "tree_elevator_basement_s_lzsa: .incbin \"tree_elevator_basement_s.lzsa\"" >> cabin_graphics.inc
+	echo "tree_elevator_l2_lzsa: .incbin \"tree_elevator_l2.lzsa\"" >> cabin_graphics.inc
+	echo "tree_elevator_l4_lzsa: .incbin \"tree_elevator_l4.lzsa\"" >> cabin_graphics.inc
+	echo "tree_elevator_l6_lzsa: .incbin \"tree_elevator_l6.lzsa\"" >> cabin_graphics.inc
+	echo "tree_elevator_l8_lzsa: .incbin \"tree_elevator_l8.lzsa\"" >> cabin_graphics.inc
+	echo "tree_elevator_l10_lzsa: .incbin \"tree_elevator_l10.lzsa\"" >> cabin_graphics.inc
+	echo "tree_elevator_l12_lzsa: .incbin \"tree_elevator_l12.lzsa\"" >> cabin_graphics.inc
+	echo "tree_elevator_top_down_lzsa: .incbin \"tree_elevator_top_down.lzsa\"" >> cabin_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
