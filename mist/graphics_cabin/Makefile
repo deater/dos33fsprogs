@@ -18,6 +18,7 @@ cabin_graphics.inc:	\
 	tree_path_e.lzsa tree_path_w.lzsa \
 	tree_base_n.lzsa tree_base_s.lzsa \
 	tree_basement_n.lzsa tree_basement_s.lzsa \
+	tree_basement_noelev_n.lzsa \
 	tree_basement_book_s.lzsa \
 	tree_basement_book_open_s.lzsa \
 	tree_basement_book_closed_s.lzsa \
@@ -46,6 +47,7 @@ cabin_graphics.inc:	\
 	echo "tree_base_s_lzsa: .incbin \"tree_base_s.lzsa\"" >> cabin_graphics.inc
 	echo "tree_basement_s_lzsa: .incbin \"tree_basement_s.lzsa\"" >> cabin_graphics.inc
 	echo "tree_basement_n_lzsa: .incbin \"tree_basement_n.lzsa\"" >> cabin_graphics.inc
+	echo "tree_basement_noelev_n_lzsa: .incbin \"tree_basement_noelev_n.lzsa\"" >> cabin_graphics.inc
 	echo "tree_basement_book_s_lzsa: .incbin \"tree_basement_book_s.lzsa\"" >> cabin_graphics.inc
 	echo "tree_basement_book_open_s_lzsa: .incbin \"tree_basement_book_open_s.lzsa\"" >> cabin_graphics.inc
 	echo "tree_basement_book_closed_s_lzsa: .incbin \"tree_basement_book_closed_s.lzsa\"" >> cabin_graphics.inc

@@ -57,13 +57,23 @@ tree_base_up_backgrounds:
 	.word	tree_base_up_l12_lzsa	; 6 TOP
 
 tree_elevator_backgrounds:
-	.word	tree_base_n_lzsa	; 0 basement
-	.word	tree_base_n_lzsa	; 1 underground
-	.word	tree_base_n_lzsa	; 2 ground
-	.word	tree_base_n_lzsa	; 3 L6
-	.word	tree_base_n_lzsa	; 4 L8
-	.word	tree_base_n_lzsa	; 5 L10
-	.word	tree_base_n_lzsa	; 6 TOP
+	.word	tree_elevator_basement_s_lzsa	; 0 basement
+	.word	tree_elevator_l2_lzsa	; 1 underground
+	.word	tree_elevator_l4_lzsa	; 2 ground
+	.word	tree_elevator_l6_lzsa	; 3 L6
+	.word	tree_elevator_l8_lzsa	; 4 L8
+	.word	tree_elevator_l10_lzsa	; 5 L10
+	.word	tree_elevator_l12_lzsa	; 6 TOP
+
+tree_basement_backgrounds:
+	.word	tree_basement_n_lzsa	; 0 basement
+	.word	tree_basement_n_lzsa	; 1 underground
+	.word	tree_basement_noelev_n_lzsa	; 2 ground
+	.word	tree_basement_noelev_n_lzsa	; 3 L6
+	.word	tree_basement_noelev_n_lzsa	; 4 L8
+	.word	tree_basement_noelev_n_lzsa	; 5 L10
+	.word	tree_basement_noelev_n_lzsa	; 6 TOP
+
 
 tree_elevator_exits:
 	.byte	CABIN_TREE_BASEMENT	; 0 basement
@@ -92,6 +102,15 @@ tree_entrance_dir:
 	.byte	DIRECTION_N		; 5 L10
 	.byte	DIRECTION_N		; 6 TOP
 
+tree_basement_exit:
+	.byte	CABIN_TREE_ELEVATOR	; 0 basement
+	.byte	$ff			; 1 underground
+	.byte	$ff			; 2 ground
+	.byte	$ff			; 3 L6
+	.byte	$ff			; 4 L8
+	.byte	$ff			; 5 L10
+	.byte	$ff			; 6 TOP
+
 
 
 	;===================================
@@ -116,6 +135,12 @@ cabin_update_state:
 	lda	tree_base_up_backgrounds+1,X
 	sta	location14+1,Y				; CABIN_TREE_LOOK_UP
 
+	; update basement background
+	lda	tree_basement_backgrounds,X
+	sta	location9,Y				; CABIN_TREE_BASEMENT
+	lda	tree_basement_backgrounds+1,X
+	sta	location9+1,Y				; CABIN_TREE_BASEMENT
+
 	; update tree elevator background
 
 	ldy	#LOCATION_SOUTH_BG
@@ -139,6 +164,12 @@ cabin_update_state:
 	ldy	#LOCATION_SOUTH_EXIT
 	lda	tree_elevator_exits,X
 	sta	location8,Y				; CABIN_TREE_ELEVATOR
+
+	; update basement exit
+
+	ldy	#LOCATION_NORTH_EXIT
+	lda	tree_basement_exit,X
+	sta	location9,Y				; CABIN_TREE_BASEMENT
 
 	rts
 
