@@ -6,7 +6,7 @@ locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
-	.word location12,location13
+	.word location12,location13,location14,location15
 
 ; CABIN_OUTSIDE		-- outside in clearing
 location0:
@@ -172,7 +172,7 @@ location8:
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
+	.byte	DIRECTION_N	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	$0000			; north bg
@@ -272,3 +272,39 @@ location13:
 	.byte	14,34	; special x
 	.byte	0,44	; special y
 	.word	touch_open_safe-1
+
+; CABIN_TREE_LOOK_UP		-- looking up from base of tree
+location14:
+	.byte	CABIN_BIG_TREE		; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	tree_base_up_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte   $ff		; special exit
+
+; CABIN_TREE_LOOK_DOWN		-- looking down from top of tree
+location15:
+	.byte	$ff			; north exit
+	.byte	CABIN_TREE_ELEVATOR	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000				; north bg
+	.word	tree_elevator_top_down_lzsa	; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_SOUTH
+	.byte   $ff		; special exit
+
+

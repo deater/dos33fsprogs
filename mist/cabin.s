@@ -42,6 +42,8 @@ cabin_start:
 
 	; set up initial location
 
+	jsr	cabin_update_state
+
 	jsr	change_location
 
 	lda	#1

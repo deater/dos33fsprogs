@@ -5,7 +5,8 @@
 	;	the match will flicker and burn out if you go outside
 
 	; light the pilot, it will turn red
-	; PSI starts at zero
+
+	; boiler PSI starts at zero
 	;	turn once clockwise, fire starts, nothing else?
 	;	turn once counter-clockwise fire turns off
 	;	turn twice CW -> ?
@@ -31,6 +32,10 @@
 	;	will actually  bump you back to Level 3 if you press on ground
 	; button does nothing in basement
 	; dial in basement does same as one upstairs
+
+;	\ \ \ \ \ : / / / / /
+;	        P S I
+;        \
 
 
 tree_base_backgrounds:
@@ -60,16 +65,80 @@ tree_elevator_backgrounds:
 	.word	tree_base_n_lzsa	; 5 L10
 	.word	tree_base_n_lzsa	; 6 TOP
 
+tree_elevator_exits:
+	.byte	CABIN_TREE_BASEMENT	; 0 basement
+	.byte	$ff			; 1 underground
+	.byte	CABIN_BIG_TREE		; 2 ground
+	.byte	$ff			; 3 L6
+	.byte	$ff			; 4 L8
+	.byte	$ff			; 5 L10
+	.byte	CABIN_TREE_LOOK_DOWN	; 6 TOP
+
+tree_entrance:
+	.byte	CABIN_TREE_LOOK_UP	; 0 basement
+	.byte	CABIN_TREE_LOOK_UP	; 1 underground
+	.byte	CABIN_TREE_ELEVATOR	; 2 ground
+	.byte	CABIN_TREE_LOOK_UP	; 3 L6
+	.byte	CABIN_TREE_LOOK_UP	; 4 L8
+	.byte	CABIN_TREE_LOOK_UP	; 5 L10
+	.byte	CABIN_TREE_LOOK_UP	; 6 TOP
+
+tree_entrance_dir:
+	.byte	DIRECTION_N		; 0 basement
+	.byte	DIRECTION_N		; 1 underground
+	.byte	DIRECTION_S		; 2 ground
+	.byte	DIRECTION_N		; 3 L6
+	.byte	DIRECTION_N		; 4 L8
+	.byte	DIRECTION_N		; 5 L10
+	.byte	DIRECTION_N		; 6 TOP
 
 
-;	\ \ \ \ \ : / / / / /
-;	        P S I
-;        \
 
 	;===================================
 	; update backgrounds based on state
 	;===================================
 cabin_update_state:
+
+	; update tree base background
+
+	ldy	#LOCATION_NORTH_BG
+	lda	TREE_LEVEL
+	asl
+	tax
+	lda	tree_base_backgrounds,X
+	sta	location7,Y				; CABIN_BIG_TREE
+	lda	tree_base_backgrounds+1,X
+	sta	location7+1,Y				; CABIN_BIG_TREE
+
+	; update tree up background
+	lda	tree_base_up_backgrounds,X
+	sta	location14,Y				; CABIN_TREE_LOOK_UP
+	lda	tree_base_up_backgrounds+1,X
+	sta	location14+1,Y				; CABIN_TREE_LOOK_UP
+
+	; update tree elevator background
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	tree_elevator_backgrounds,X
+	sta	location8,Y				; CABIN_TREE_ELEVATOR
+	lda	tree_elevator_backgrounds+1,X
+	sta	location8+1,Y				; CABIN_TREE_ELEVATOR
+
+	; update if you can get into tree
+	lda	TREE_LEVEL
+	tax
+	ldy	#LOCATION_NORTH_EXIT
+	lda	tree_entrance,X
+	sta	location7,Y				; CABIN_BIG_TREE
+	ldy	#LOCATION_NORTH_EXIT_DIR
+	lda	tree_entrance_dir,X
+	sta	location7,Y				; CABIN_BIG_TREE
+
+	; update elevator exit
+
+	ldy	#LOCATION_SOUTH_EXIT
+	lda	tree_elevator_exits,X
+	sta	location8,Y				; CABIN_TREE_ELEVATOR
 
 	rts
 

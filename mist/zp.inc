@@ -82,7 +82,9 @@ MARKER_SWITCHES	=	$87		; state of the marker switches
 	
 CLOCK_HOUR	=	$88		; hour on the mist clock
 CLOCK_MINUTE	=	$89		; minute on the mist clock
-TREE_FURNACE_ON	=	$8A		; furnace in the cabin on
+
+BOILER_LEVEL	=	$8A		; furnace in the cabin level
+
 FIREPLACE_GRID0	=	$8B		; fireplace grid puzzle state
 FIREPLACE_GRID1	=	$8C
 FIREPLACE_GRID2	=	$8D
@@ -202,13 +204,14 @@ SAFE_ONES		= $C5		; safe combination, ones
 
 TREE_LEVEL		= $C6		; how high is the tree hole
 
-
 HOLDING_ITEM		= $C7
 	HOLDING_KEY		= $04
 	HOLDING_LIT_MATCH	= $02
 	HOLDING_MATCH		= $01
 
-END_OF_SAVE	=	$C8
+BOILER_VALVE		= $C8		; how many turns of the boiler valve
+
+END_OF_SAVE	=	$C9
 
 
 ; done game puzzle state

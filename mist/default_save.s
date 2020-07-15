@@ -78,3 +78,5 @@
 .byte $00	; SAFE_TENS		=	$C4
 .byte $00	; SAFE_ONES		=	$C5
 .byte $00	; TREE_LEVEL		=	$C6
+.byte $00	; HOLDING_ITEM		=	$C7
+.byte $00	; BOILER_VALVE		=	$C8
