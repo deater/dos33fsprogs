@@ -63,6 +63,13 @@ loader_start:
 
 which_load_loop:
 	lda	WHICH_LOAD
+
+	; update the which-file error message
+	tay
+	lda	which_disk,Y
+	sta	error_string+19
+
+	lda	WHICH_LOAD
 	asl
 
 	tay
@@ -146,6 +153,23 @@ filenames:
 	.word viewer_filename,stoney_filename,channel_filename,cabin_filename
 	.word dentist_filename,arbor_filename,nibel_filename,ship_filename
 	.word generator_filename,dni_filename
+
+which_disk:
+	.byte '1'		; MIST_TITLE
+	.byte '1'		; MIST
+	.byte '3'		; MECHE
+	.byte '3'		; SELENA
+	.byte '1'		; OCTAGON
+	.byte '2'		; VIEWER
+	.byte '3'		; STONEY
+	.byte '2'		; CHANNEL
+	.byte '1'		; CABIN
+	.byte '1'		; DENTIST
+	.byte '2'		; ARBOR
+	.byte '2'		; NIBEL
+	.byte '3'		; SHIP
+	.byte '1'		; GENERATOR
+	.byte '1'		; D'NI
 
 intro_filename:
 	.byte "MIST_TITLE",0
@@ -272,9 +296,9 @@ mlsmc07:lda	$c0e8		; turn off drive motor?
 
 	ldy	#0
 
-	lda	#<disk_string
+	lda	#<error_string
 	sta	OUTL
-	lda	#>disk_string
+	lda	#>error_string
 	sta	OUTH
 
 quick_print:
@@ -296,8 +320,9 @@ fnf_keypress:
 
 	jmp	which_load_loop
 
-disk_string:
-.byte "INSERT OTHER DISK, PRESS RETURN",0
+; offset for disk number is 19
+error_string:
+.byte "PLEASE INSERT DISK 1, PRESS RETURN",0
 
 
 
