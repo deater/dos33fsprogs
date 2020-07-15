@@ -33,6 +33,38 @@
 	; dial in basement does same as one upstairs
 
 
+tree_base_backgrounds:
+	.word	tree_base_n_lzsa	; 0 basement
+	.word	tree_base_n_lzsa	; 1 underground
+	.word	tree_base_l4_n_lzsa	; 2 ground
+	.word	tree_base_l6_n_lzsa	; 3 L6
+	.word	tree_base_n_lzsa	; 4 L8
+	.word	tree_base_n_lzsa	; 5 L10
+	.word	tree_base_n_lzsa	; 6 TOP
+
+tree_base_up_backgrounds:
+	.word	tree_base_up_lzsa	; 0 basement
+	.word	tree_base_up_l2_lzsa	; 1 underground
+	.word	tree_base_up_l4_lzsa	; 2 ground
+	.word	tree_base_up_l6_lzsa	; 3 L6
+	.word	tree_base_up_l8_lzsa	; 4 L8
+	.word	tree_base_up_l10_lzsa	; 5 L10
+	.word	tree_base_up_l12_lzsa	; 6 TOP
+
+tree_elevator_backgrounds:
+	.word	tree_base_n_lzsa	; 0 basement
+	.word	tree_base_n_lzsa	; 1 underground
+	.word	tree_base_n_lzsa	; 2 ground
+	.word	tree_base_n_lzsa	; 3 L6
+	.word	tree_base_n_lzsa	; 4 L8
+	.word	tree_base_n_lzsa	; 5 L10
+	.word	tree_base_n_lzsa	; 6 TOP
+
+
+
+;	\ \ \ \ \ : / / / / /
+;	        P S I
+;        \
 
 	;===================================
 	; update backgrounds based on state
