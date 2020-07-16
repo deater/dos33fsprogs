@@ -172,7 +172,7 @@ location8:
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_N	; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	$0000			; north bg
@@ -201,7 +201,10 @@ location9:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_SOUTH|BG_NORTH
-	.byte	$ff
+	.byte   DIRECTION_N	; special exit
+	.byte	3,10	; special x
+	.byte	20,30	; special y
+	.word	valve_clicked_basement-1
 
 ; CABIN_TREE_BOOK		-- tree basement book
 location10:

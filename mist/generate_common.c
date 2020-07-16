@@ -89,6 +89,7 @@ int main(int argc, char **argv) {
 
 	printf("; keyboard.s\n");
 	find_address("handle_keypress");
+	find_address("change_direction");
 	find_address("change_location");
 	printf("\n");
 

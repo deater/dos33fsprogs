@@ -34,9 +34,121 @@
 	; button does nothing in basement
 	; dial in basement does same as one upstairs
 
+;     0123456789012345678901234
 ;	\ \ \ \ \ : / / / / /
 ;	        P S I
-;        \
+;      \
+
+; BOILER_VALVE
+; BOILER_LEVEL: high bit is if pilot lit, low bits are PSI
+; BOILER_TOTAL:
+;	0...128 warming up
+;	then if valve>12 inc level, when hit 15 inc tree
+;		if valve<12 dec level, when hit 0 dec tree
+;	rate of adding is (valve-12)  0..12 / 4 = 0..3
+;		0 = FRAMEL&1f==0
+;		1 = FRAMEL&f==0
+;		2 = FRAMEL&7==0
+;		3 = FRAMEL&3==0
+; Make noise when change tree level
+
+update_boiler_state:
+
+	; if pilot not lit, nothing to do
+	lda	BOILER_LEVEL
+	bpl	done_boiler_state
+
+	lda	BOILER_VALVE
+	beq	done_boiler_state
+	sec
+	sbc	#12
+
+	bpl	skip_abs
+
+	eor	#$ff
+	clc
+	adc	#$1
+skip_abs:
+
+	; div by 4
+	lsr
+	lsr
+
+	lda	FRAMEL
+	and	#$1f
+	beq	actually_adjust_boiler
+
+	rts
+
+actually_adjust_boiler:
+	lda	BOILER_VALVE
+	cmp	#12
+	bcs	valve_positive
+	bcc	valve_negative
+
+valve_positive:
+	jsr	inc_boiler
+	jmp	done_boiler_state
+
+valve_negative:
+	jsr	dec_boiler
+done_boiler_state:
+
+	rts
+
+inc_boiler:
+	lda	BOILER_LEVEL
+	and	#$7f
+	cmp	#25
+	beq	inc_boiler_overflow
+	inc	BOILER_LEVEL
+	rts
+
+inc_boiler_overflow:
+	lda	TREE_LEVEL
+	cmp	#6
+	beq	tree_at_top
+
+	lda	BOILER_LEVEL
+	and	#$80
+	sta	BOILER_LEVEL
+
+	inc	TREE_LEVEL
+	jsr	change_tree_level
+
+tree_at_top:
+	rts
+
+dec_boiler:
+	lda	BOILER_LEVEL
+	and	#$1f
+	cmp	#0
+	beq	dec_boiler_overflow
+	dec	BOILER_LEVEL
+	rts
+
+dec_boiler_overflow:
+	lda	TREE_LEVEL
+	beq	tree_at_bottom
+
+	lda	#$80|24
+	sta	BOILER_LEVEL
+
+	dec	TREE_LEVEL
+	jsr	change_tree_level
+
+tree_at_bottom:
+	rts
+
+
+change_tree_level:
+	jsr	cabin_update_state
+
+	jsr	change_direction
+
+	jsr	beep
+
+	rts
 
 
 tree_base_backgrounds:
@@ -68,7 +180,7 @@ tree_elevator_backgrounds:
 
 tree_basement_backgrounds:
 	.word	tree_basement_n_lzsa	; 0 basement
-	.word	tree_basement_n_lzsa	; 1 underground
+	.word	tree_basement_noelev_n_lzsa	; 1 underground
 	.word	tree_basement_noelev_n_lzsa	; 2 ground
 	.word	tree_basement_noelev_n_lzsa	; 3 L6
 	.word	tree_basement_noelev_n_lzsa	; 4 L8
@@ -94,6 +206,8 @@ tree_entrance:
 	.byte	CABIN_TREE_LOOK_UP	; 5 L10
 	.byte	CABIN_TREE_LOOK_UP	; 6 TOP
 
+	; south if getting on elevator
+	; north if looking up
 tree_entrance_dir:
 	.byte	DIRECTION_N		; 0 basement
 	.byte	DIRECTION_N		; 1 underground
@@ -174,6 +288,17 @@ cabin_update_state:
 
 	rts
 
+	;==========================
+	; valve clicked in basement
+
+valve_clicked_basement:
+	lda	CURSOR_X
+	cmp	#8
+	bcc	valve_dec
+	bcs	valve_inc
+
+	;==================================
+	; goto safe or valve (cabin boiler)
 
 goto_safe_or_valve:
 	lda	DIRECTION
@@ -532,7 +657,41 @@ pilot_smc:
 
 skip_pilot:
 
+
+draw_psi:
+
 	bit	TEXTGR	; bit of a hack
+
+	; adjust to correct page
+	lda	DRAW_PAGE
+	clc
+	adc	#$7
+	sta	psi_smc+2
+
+	lda	BOILER_LEVEL
+	and	#$1f
+	tay
+
+	cpy	#13
+	beq	want_colon
+	bcc	want_backslash
+want_slash:
+	lda	#'/'|$80
+	bne	put_psi		; bra
+
+want_backslash:
+	lda	#'\'|$80
+	bne	put_psi		; bra
+want_colon:
+	lda	#':'|$80
+
+put_psi:
+
+	; 7,44  = $757
+psi_smc:
+	sta	$757,Y
+
+
 
 	lda	#31
 	sta	XPOS
@@ -580,11 +739,18 @@ press_elevator_button:
 	bcc	button_ineffective
 
 	dec	TREE_LEVEL		; drops you a floor
+	lda	#$80
+	sta	BOILER_LEVEL		; give some time before hitting again
+
+	jsr	change_tree_level
 
 button_ineffective:
 	rts
 
 bump_up:
 	inc	TREE_LEVEL		; if on ground floor it bumps you up
+
+	jsr	change_tree_level
+
 	jmp	button_ineffective
 

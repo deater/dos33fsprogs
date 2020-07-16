@@ -123,6 +123,8 @@ done_match_handler:
 	; handle special-case forground logic
 	;====================================
 
+	jsr	update_boiler_state
+
 	jsr	draw_marker_switch
 
 	lda	LOCATION
@@ -327,3 +329,4 @@ exit_to_mist:
 	; linking books
 	.include	"link_book_channel.s"
 
+	.include	"simple_sounds.s"

@@ -361,5 +361,7 @@ flip_dock_switch:
 
 	.include	"handle_pages.s"
 
+	.include	"simple_sounds.s"
+
 	; level data
 	.include	"leveldata_mist.inc"

@@ -38,6 +38,7 @@ psc_smc2	=$19b7
 
 ; keyboard.s
 handle_keypress	=$1a38
+change_direction	=$1ae0
 change_location	=$1b19
 
 ; text_print.s
