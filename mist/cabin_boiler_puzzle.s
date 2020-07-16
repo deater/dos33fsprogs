@@ -11,7 +11,7 @@
 	;	turn once counter-clockwise fire turns off
 	;	turn twice CW -> ?
 	;	turn 3 CW -> ?
-	;	turn 4, 5, 6, 7, 8, 9, 10, 11, 12,  CW -> ? 
+	;	turn 4, 5, 6, 7, 8, 9, 10, 11, 12,  CW -> ?
 	;		can turn up to 25
 	;	at 12 starts gradually going up
 	;		(needle swings hits end, waits like 5s, goes up)
@@ -46,10 +46,10 @@
 ;	then if valve>12 inc level, when hit 15 inc tree
 ;		if valve<12 dec level, when hit 0 dec tree
 ;	rate of adding is (valve-12)  0..12 / 4 = 0..3
-;		0 = FRAMEL&1f==0
-;		1 = FRAMEL&f==0
-;		2 = FRAMEL&7==0
-;		3 = FRAMEL&3==0
+;		0 = FRAMEL&7f==0
+;		1 = FRAMEL&3f==0
+;		2 = FRAMEL&1f==0
+;		3 = FRAMEL&7==0
 ; Make noise when change tree level
 
 update_boiler_state:
@@ -59,7 +59,7 @@ update_boiler_state:
 	bpl	done_boiler_state
 
 	lda	BOILER_VALVE
-	beq	done_boiler_state
+;	beq	done_boiler_state
 	sec
 	sbc	#12
 
@@ -70,12 +70,28 @@ update_boiler_state:
 	adc	#$1
 skip_abs:
 
+	; adjust speed based on valve position
+
 	; div by 4
 	lsr
 	lsr
-
+	tay
 	lda	FRAMEL
+	cpy	#0
+	beq	speed_slowest
+	cpy	#1
+	beq	speed_slow
+	cpy	#2
+	beq	speed_fast
+speed_fastest:
+	and	#$f
+speed_fast:
 	and	#$1f
+speed_slow:
+	and	#$3f
+speed_slowest:
+	and	#$7f
+
 	beq	actually_adjust_boiler
 
 	rts
@@ -320,7 +336,7 @@ valve_dec:
 
 valve_inc:
 	lda	BOILER_VALVE
-	cmp	#24
+	cmp	#25
 	bcs	done_valve
 	inc	BOILER_VALVE
 
