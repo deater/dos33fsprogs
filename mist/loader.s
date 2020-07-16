@@ -160,15 +160,15 @@ which_disk:
 	.byte '3'		; MECHE
 	.byte '3'		; SELENA
 	.byte '1'		; OCTAGON
-	.byte '2'		; VIEWER
+	.byte '1'		; VIEWER
 	.byte '3'		; STONEY
 	.byte '2'		; CHANNEL
-	.byte '1'		; CABIN
+	.byte '2'		; CABIN
 	.byte '1'		; DENTIST
 	.byte '2'		; ARBOR
 	.byte '2'		; NIBEL
-	.byte '3'		; SHIP
-	.byte '1'		; GENERATOR
+	.byte '1'		; SHIP
+	.byte '3'		; GENERATOR
 	.byte '1'		; D'NI
 
 intro_filename:
