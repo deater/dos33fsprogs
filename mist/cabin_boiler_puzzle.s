@@ -174,6 +174,34 @@ cabin_update_state:
 	rts
 
 
+goto_safe_or_valve:
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_W
+	beq	goto_safe
+
+valve_clicked_cabin:
+	lda	CURSOR_X
+	cmp	#33
+	bcc	valve_dec
+	bcs	valve_inc
+
+valve_dec:
+	lda	BOILER_VALVE
+	beq	done_valve
+	dec	BOILER_VALVE
+	jmp	done_valve
+
+valve_inc:
+	lda	BOILER_VALVE
+	cmp	#24
+	bcs	done_valve
+	inc	BOILER_VALVE
+
+done_valve:
+	rts
+
+
 	;====================
 	; safe was clicked
 	;====================
@@ -384,3 +412,91 @@ draw_safe_combination:
 
 	rts
 
+
+
+	; valve sprites
+valve_sprites:
+	.word valve0_sprite
+	.word valve1_sprite
+	.word valve2_sprite
+	.word valve3_sprite
+
+valve0_sprite:
+	.byte 6,6
+	.byte $AA,$1A,$11,$11,$1A,$AA
+	.byte $1A,$A1,$11,$AA,$A1,$11
+	.byte $11,$AA,$d1,$1A,$1A,$11
+	.byte $11,$A1,$A1,$1A,$AA,$11
+	.byte $A1,$11,$AA,$11,$1A,$A1
+	.byte $AA,$A1,$A1,$A1,$A1,$AA
+
+valve1_sprite:
+	.byte 6,6
+	.byte $AA,$1A,$A1,$11,$1A,$AA
+	.byte $11,$A1,$AA,$11,$AA,$11
+	.byte $11,$A1,$dA,$a1,$AA,$11
+	.byte $11,$AA,$11,$A1,$A1,$11
+	.byte $A1,$11,$11,$AA,$1A,$A1
+	.byte $AA,$AA,$A1,$A1,$A1,$AA
+
+valve2_sprite:
+	.byte 6,6
+	.byte $AA,$1A,$A1,$A1,$1A,$AA
+	.byte $11,$11,$AA,$AA,$11,$11
+	.byte $11,$AA,$d1,$A1,$AA,$11
+	.byte $11,$AA,$11,$A1,$1A,$11
+	.byte $A1,$11,$AA,$AA,$11,$A1
+	.byte $AA,$AA,$A1,$A1,$A1,$AA
+
+valve3_sprite:
+	.byte 6,6
+	.byte $AA,$1A,$A1,$A1,$1A,$AA
+	.byte $11,$A1,$1A,$AA,$AA,$11
+	.byte $11,$AA,$d1,$1A,$A1,$11
+	.byte $11,$1A,$A1,$11,$AA,$11
+	.byte $AA,$11,$AA,$A1,$11,$A1
+	.byte $AA,$AA,$A1,$A1,$A1,$AA
+
+
+
+draw_valve_cabin:
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_E
+	bne	done_draw_valve
+
+	bit	TEXTGR	; bit of a hack
+
+	lda	#31
+	sta	XPOS
+	lda	#14
+	bne	really_draw_valve	; bra
+
+draw_valve_basement:
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_N
+	bne	done_draw_valve
+
+	lda	#5
+	sta	XPOS
+	lda	#24
+
+really_draw_valve:
+	sta	YPOS
+
+	lda	BOILER_VALVE
+	and	#$3
+	asl
+	tay
+	lda	valve_sprites,Y
+	sta	INL
+	lda	valve_sprites+1,Y
+	sta	INH
+
+	jmp	put_sprite_crop
+
+
+
+done_draw_valve:
+	rts

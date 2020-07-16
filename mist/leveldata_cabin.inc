@@ -56,7 +56,7 @@ location2:
 	.byte	CABIN_OUTSIDE		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_E|DIRECTION_SPLIT	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
@@ -84,10 +84,10 @@ location3:
 	.word	boiler_e_lzsa		; east bg
 	.word	boiler_w_lzsa		; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte   DIRECTION_W	; special exit
-	.byte	28,36	; special x
-	.byte	16,32	; special y
-	.word	goto_safe-1
+	.byte   DIRECTION_W|DIRECTION_E	; special exit
+	.byte	28,38	; special x
+	.byte	12,32	; special y
+	.word	goto_safe_or_valve-1
 
 
 ; CABIN_SAFE		-- looking at safe
@@ -184,7 +184,7 @@ location8:
 
 ; CABIN_TREE_BASEMENT		-- in the tree basement
 location9:
-	.byte	CABIN_BIG_TREE		; north exit
+	.byte	CABIN_TREE_ELEVATOR	; north exit
 	.byte	CABIN_TREE_BOOK		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit

@@ -22,19 +22,18 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 OCTAGON
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 CABIN
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 DENTIST
-	$(DOS33) -y mist.dsk BSAVE -a 0x2000 GENERATOR
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 D\'NI
 	$(DOS33) -y mist.dsk BSAVE -a 0xe00 SAVE0
 	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
-mist_side2.dsk:	HELLO_DISK2 CHANNEL VIEWER ARBOR NIBEL
+mist_side2.dsk:	HELLO_DISK2 CHANNEL VIEWER ARBOR NIBEL GENERATOR
 	cp empty.dsk mist_side2.dsk
 	$(DOS33) -y mist_side2.dsk SAVE A HELLO_DISK2 HELLO
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 CHANNEL
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 ARBOR
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 NIBEL
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 VIEWER
-#	$(DOS33) -y mist_side2.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
+	$(DOS33) -y mist.dsk BSAVE -a 0x2000 GENERATOR
 
 
 mist_side3.dsk:	HELLO_DISK2 MECHE SELENA STONEY SHIP

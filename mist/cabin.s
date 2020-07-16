@@ -79,11 +79,23 @@ game_loop:
 	beq	animate_channel_book
 
 	cmp	#CABIN_SAFE
-	bne	check_next
+	bne	check_boiler
 	jsr	draw_safe_combination
 	jmp	nothing_special
 
-check_next:
+check_boiler:
+	cmp	#CABIN_INSIDE
+	bne	check_basement
+
+	jsr	draw_valve_cabin
+
+	jmp	nothing_special
+
+check_basement:
+	cmp	#CABIN_TREE_BASEMENT
+	bne	nothing_special
+
+	jsr	draw_valve_basement
 
 	jmp	nothing_special
 
