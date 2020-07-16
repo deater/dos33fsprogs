@@ -14,26 +14,10 @@ stoney_link_book:
 	jsr	page_flip
 
 	;====================================
-	; load linking audio (12k) to $9000
+	; play link noise
 
-.if 0
-	lda	#<linking_filename
-	sta	OUTL
-	lda	#>linking_filename
-	sta	OUTH
+	jsr	play_link_noise
 
-        jsr	opendir_filename
-
-
-	; play sound effect?
-
-	lda	#<linking_noise
-	sta	BTC_L
-	lda	#>linking_noise
-	sta	BTC_H
-	ldx	#LINKING_NOISE_LENGTH		; 45 pages long???
-	jsr	play_audio
-.endif
 
 	lda	#STONEY_ARRIVAL
 	sta	LOCATION

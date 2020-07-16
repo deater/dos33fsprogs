@@ -46,8 +46,12 @@ int main(int argc, char **argv) {
 	find_address("opendir_filename");
 	printf("\n");
 
-	printf("; audio.c\n");
-	find_address("play_audio");
+//	printf("; audio.s\n");
+//	find_address("play_audio");
+//	printf("\n");
+
+	printf("; linking_noise.s\n");
+	find_address("play_link_noise");
 	printf("\n");
 
 	printf("; decompress_fast_v2.s\n");
@@ -106,9 +110,9 @@ int main(int argc, char **argv) {
 	find_address("red_page_small_sprite");
 	printf("\n");
 
-	printf("; audio files\n");
-	printf("linking_noise	= $9000\n");
-	printf("LINKING_NOISE_LENGTH = 43\n");
+//	printf("; audio files\n");
+//	printf("linking_noise	= $9000\n");
+//	printf("LINKING_NOISE_LENGTH = 43\n");
 
 	fclose(fff);
 

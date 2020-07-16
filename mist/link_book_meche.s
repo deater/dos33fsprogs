@@ -13,25 +13,9 @@ meche_link_book:
 	jsr	clear_all
 	jsr	page_flip
 
-	;====================================
-	; load linking audio (12k) to $9000
+	; play sound effect
 
-	lda	#<linking_filename
-	sta	OUTL
-	lda	#>linking_filename
-	sta	OUTH
-
-        jsr	opendir_filename
-
-
-	; play sound effect?
-
-	lda	#<linking_noise
-	sta	BTC_L
-	lda	#>linking_noise
-	sta	BTC_H
-	ldx	#LINKING_NOISE_LENGTH		; 45 pages long???
-	jsr	play_audio
+	jsr	play_link_noise
 
 	lda	#MECHE_ARRIVAL
 	sta	LOCATION

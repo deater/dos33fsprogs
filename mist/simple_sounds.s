@@ -1,8 +1,12 @@
 
+	;============================
+	; click the speaker
+	;============================
+	; FIXME: make it last longer?
 
 click_speaker:
-	lda	SOUND_DISABLED
-	bne	done_click
+	lda	SOUND_STATUS
+	bmi	done_click
 	bit	$c030
 done_click:
 	rts
@@ -11,8 +15,8 @@ done_click:
 	; BEEP (inlined)
 	;===========================
 beep:
-	lda	SOUND_DISABLED
-	bne	done_beep
+	lda	SOUND_STATUS
+	bmi	done_beep
 
 	ldy     #235
 	sty	tone_smc+1

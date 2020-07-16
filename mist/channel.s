@@ -190,23 +190,6 @@ toggle_faucet:
 	;==========================
 	; includes
 	;==========================
-.if 0
-	.include	"gr_copy.s"
-	.include	"gr_offsets.s"
-	.include	"gr_pageflip.s"
-	.include	"gr_putsprite_crop.s"
-	.include	"text_print.s"
-	.include	"gr_fast_clear.s"
-	.include	"decompress_fast_v2.s"
-	.include	"keyboard.s"
-	.include	"draw_pointer.s"
-	.include	"end_level.s"
-	.include	"audio.s"
-	.include	"common_sprites.inc"
-	.include	"page_sprites.inc"
-
-
-.endif
 
 	; level graphics
 	.include	"graphics_channel/channel_graphics.inc"

@@ -6,20 +6,11 @@ For release 1.0
 	-- joystick support
 	-- ^T to toggle sound
 
-+ SHIP  -- split off of STONEY
-
 + MIST
-	-- white page appears
-	-- view back from clock puzzle
-	-- open door to clock puzzle
-
-+ CABIN
-	-- safe puzzle
-	-- boiler
-	-- up/down in tree
+	-- make sure gear opening looks OK with new art
+	-- open door to clock puzzle?
 
 + OCTAGON
-	-- marker switches update map
 	-- code book
 	-- red book seen when in fireplace
 	-- books destroyed at end
@@ -48,16 +39,14 @@ For release 1.0
 	-- add good ending
 		linking book to MYST
 
-+ DENTIST
-	-- marker switch
-	-- can go both directions when leaving
-
 Done:
++ CABIN
++ DENTIST
 + MECHE
 + MIST_TITLE
 + VIEWER
 + ARBOR
-
++ SHIP
 
 ================================
 TODO Maybe future:
@@ -120,4 +109,11 @@ Ending:
 + Atrus at end -- hires?
 
 VIEWER
-+ Add alternate top-of-steps backgrouns if ship is up
++ Add alternate top-of-steps backgrounds if ship is up
+
+CABIN
++ Make match go out gradually when leav
++ Make boiler puzzle a bit closer to actual (it has a warm up
+	time in the real game)
++ Allow looking down from whole ride up the tree, not just at top
+

@@ -746,6 +746,7 @@ sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
 
 
         .include        "audio.s"
+	.include	"linking_noise.s"
         .include        "decompress_fast_v2.s"
         .include        "draw_pointer.s"
         .include        "end_level.s"

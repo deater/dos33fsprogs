@@ -6,7 +6,6 @@ init_state:
 
 	; global game state
 	lda	#0
-	sta	SOUND_DISABLED
 	sta	JOYSTICK_ENABLED
 
 	; game state in saves init

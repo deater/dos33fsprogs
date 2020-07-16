@@ -56,25 +56,11 @@ dome_press_second:
 	jsr	page_flip
 
 	;====================================
-	; load linking audio (12k) to $9000
-.if 0
-	lda	#<linking_filename
-	sta	OUTL
-	lda	#>linking_filename
-	sta	OUTH
+	; play link noise
 
-	jsr	opendir_filename
+	jsr	play_link_noise
 
 
-	; play sound effect
-
-	lda	#<linking_noise
-	sta	BTC_L
-	lda	#>linking_noise
-	sta	BTC_H
-	ldx	#LINKING_NOISE_LENGTH	; 45 pages long???
-	jsr	play_audio
-.endif
 	; be sure rocket settings are same if we come back
 
 	jsr	save_rocket_state

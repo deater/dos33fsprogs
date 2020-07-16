@@ -1,4 +1,6 @@
 ; note -- modified by Vince Weaver to assemble with ca65
+;		in this case, A = page to decompress to
+;		getsrc_smc+1, getsrc_smc+2 is src location
 
 ; -----------------------------------------------------------------------------
 ; Decompress raw LZSA2 block.

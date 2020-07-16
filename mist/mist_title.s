@@ -48,17 +48,43 @@ reload_everything:
 
 	jsr	decompress_lzsa2_fast
 
+	;===================================
+	; detect if we have a language card
+	; and load sound into it if possible
+	;===================================
 
-	;====================================
-	; load linking audio (12k) to $9000
+	lda	#0
+	sta	SOUND_STATUS		; clear out, sound enabled
 
-	lda	#<linking_filename
-	sta	OUTL
-	lda	#>linking_filename
-	sta	OUTH
+	jsr	detect_language_card
+	bcs	no_language_card
 
-	jsr	opendir_filename
+	; update sound status
+	lda	SOUND_STATUS
+	ora	#SOUND_IN_LC
+	sta	SOUND_STATUS
 
+	; load sounds into LC
+
+	; read ram, write ram, use $d000 bank1
+	bit	$C08B
+	bit	$C08B
+
+	lda	#<linking_noise_compressed
+	sta	getsrc_smc+1
+	lda	#>linking_noise_compressed
+	sta	getsrc_smc+2
+
+	lda	#$D0	; decompress to $D000
+
+	jsr	decompress_lzsa2_fast
+
+blah:
+
+	; read rom, nowrite, use $d000 bank1
+	bit	$C08A
+
+no_language_card:
 
 	;====================================
 	; wait for keypress or a few seconds
@@ -202,24 +228,13 @@ really_exit:
 	;==========================
 	; includes
 	;==========================
-.if 0
-	.include	"gr_copy.s"
-	.include	"gr_offsets.s"
-	.include	"gr_pageflip.s"
-	.include	"gr_putsprite_crop.s"
-	.include	"text_print.s"
-	.include	"gr_fast_clear.s"
-	.include	"decompress_fast_v2.s"
-	.include	"keyboard.s"
-	.include	"draw_pointer.s"
-	.include	"end_level.s"
-	.include	"audio.s"
-.endif
+
 
 	.include	"init_state.s"
 
 	.include	"graphics_title/title_graphics.inc"
 
+	.include	"lc_detect.s"
 
 	; puzzles
 
@@ -231,9 +246,9 @@ really_exit:
 
 	.include	"leveldata_title.inc"
 
-linking_filename:
-	.byte "LINK_NOISE.BTC",0
-
 
 file:
 .incbin "graphics_title/mist_title.lzsa"
+
+linking_noise_compressed:
+.incbin "audio/link_noise.btc.lzsa"
