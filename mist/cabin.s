@@ -69,6 +69,57 @@ game_loop:
 	jsr	gr_copy_to_current
 
 	;====================================
+	; handle matches
+	;====================================
+
+check_match_lit_outside:
+	lda	LOCATION
+	cmp	#CABIN_OUTSIDE
+	bne	check_match_on_pilot
+
+	; FIXME: actual game match sputters a bit before going out
+	lda	HOLDING_ITEM
+	cmp	#HOLDING_MATCH
+	beq	put_out_match
+	cmp	#HOLDING_LIT_MATCH
+	bne	check_match_on_pilot
+put_out_match:
+	lda	#0
+	sta	HOLDING_ITEM
+
+check_match_on_pilot:
+	lda	LOCATION
+	cmp	#CABIN_INSIDE
+	bne	done_match_handler
+
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_E
+	bne	done_match_handler
+
+	lda	HOLDING_ITEM
+	cmp	#HOLDING_LIT_MATCH
+	bne	done_match_handler
+
+	lda	CURSOR_Y
+	cmp	#34
+	bcc	done_match_handler
+
+	lda	CURSOR_X
+	cmp	#13
+	bcc	done_match_handler
+	cmp	#17
+	bcs	done_match_handler
+
+	lda	#$80		; light pilot
+	sta	BOILER_LEVEL
+
+	lda	#$0		; drop match
+	sta	HOLDING_ITEM
+
+done_match_handler:
+
+	;====================================
 	; handle special-case forground logic
 	;====================================
 
@@ -177,6 +228,7 @@ really_exit:
 	jmp	end_level
 
 
+	; exit back to mist by the clock path
 
 enter_clock:
 

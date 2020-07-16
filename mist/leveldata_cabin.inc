@@ -180,7 +180,11 @@ location8:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_SOUTH
-	.byte	$ff
+	.byte   DIRECTION_S		; special exit
+	.byte	7,12	; special x
+	.byte	8,18	; special y
+	.word	press_elevator_button-1
+
 
 ; CABIN_TREE_BASEMENT		-- in the tree basement
 location9:

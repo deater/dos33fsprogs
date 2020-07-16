@@ -15,6 +15,7 @@
 	;		can turn up to 25
 	;	at 12 starts gradually going up
 	;		(needle swings hits end, waits like 5s, goes up)
+	; PSI counts 0 to 24?
 	;	0 - basement
 	;	1 - down 1/2
 	;	2 - down 1
@@ -458,12 +459,78 @@ valve3_sprite:
 	.byte $AA,$AA,$A1,$A1,$A1,$AA
 
 
+	;==============
+	; flame sprites
 
+flame_sprites:
+	.word flame1_sprite
+	.word flame2_sprite
+
+flame1_sprite:
+	.byte 6,3
+	.byte $f5,$d5,$d5,$95,$95,$95
+	.byte $ff,$ff,$df,$dd,$9d,$9d
+	.byte $59,$59,$59,$59,$58,$58
+
+flame2_sprite:
+	.byte 6,3
+	.byte $f5,$d5,$d5,$95,$95,$95
+	.byte $ff,$ff,$df,$dd,$9d,$ff
+	.byte $5d,$5d,$59,$59,$59,$59
+
+
+	;=============================
+	; draw valve and other things
+	; involving the boiler
+	;=============================
 draw_valve_cabin:
+
+	; make sure facing right direction
+
 	lda	DIRECTION
 	and	#$f
 	cmp	#DIRECTION_E
 	bne	done_draw_valve
+
+	; see if we need to draw pilot
+
+	lda	BOILER_LEVEL
+	bpl	skip_pilot
+
+	; put $91 at 15,36, $55f
+
+	lda	#$5
+	clc
+	adc	DRAW_PAGE
+	sta	pilot_smc+2
+
+	lda	#$91
+pilot_smc:
+	sta	$55f
+
+	; see if need to draw flame
+	lda	BOILER_VALVE
+	beq	skip_pilot
+
+	; draw flame
+	lda	FRAMEL
+	and	#$8
+	lsr
+	lsr
+	tay
+
+	lda	flame_sprites,Y
+	sta	INL
+	lda	flame_sprites+1,Y
+	sta	INH
+
+	lda	#18
+	sta	XPOS
+	lda	#32
+	sta	YPOS
+	jsr	put_sprite_crop
+
+skip_pilot:
 
 	bit	TEXTGR	; bit of a hack
 
@@ -500,3 +567,24 @@ really_draw_valve:
 
 done_draw_valve:
 	rts
+
+
+	;==============================
+	; press elevator button
+	;==============================
+press_elevator_button:
+
+	lda	TREE_LEVEL
+	cmp	#2
+	beq	bump_up
+	bcc	button_ineffective
+
+	dec	TREE_LEVEL		; drops you a floor
+
+button_ineffective:
+	rts
+
+bump_up:
+	inc	TREE_LEVEL		; if on ground floor it bumps you up
+	jmp	button_ineffective
+
