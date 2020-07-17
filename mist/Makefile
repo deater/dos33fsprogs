@@ -99,7 +99,9 @@ mist_title.o:	mist_title.s zp.inc hardware.inc common_defines.inc \
 	text_print.s gr_fast_clear.s decompress_fast_v2.s \
 	keyboard.s draw_pointer.s end_level.s audio.s \
 	init_state.s \
-	link_book_mist_dock.s common_sprites.inc leveldata_title.inc
+	link_book_mist_dock.s common_sprites.inc leveldata_title.inc \
+	pt3_lib_core.s pt3_lib_init.s pt3_lib_mockingboard_detect.s \
+	pt3_lib_mockingboard_setup.s pt3_lib_irq_handler.s interrupt_handler.s
 	ca65 -o mist_title.o mist_title.s -l mist_title.lst
 
 ####

@@ -3,6 +3,13 @@
 	;=============================
 mist_link_book:
 
+	; turn off music
+sei_smc:
+	sei
+
+	jsr	clear_ay_both
+
+
 	; clear screen
 
 	lda	#0

@@ -45,6 +45,38 @@ BTC_L			= $6C
 BTC_H			= $6D
 
 
+AY_REGISTERS    = $70
+A_FINE_TONE     = $70
+A_COARSE_TONE   = $71
+B_FINE_TONE     = $72
+B_COARSE_TONE   = $73
+C_FINE_TONE     = $74
+C_COARSE_TONE   = $75
+NOISE           = $76
+ENABLE          = $77
+PT3_MIXER_VAL   = $77
+A_VOLUME        = $78
+B_VOLUME        = $79
+C_VOLUME        = $7A
+ENVELOPE_FINE   = $7B
+ENVELOPE_COARSE = $7C
+ENVELOPE_SHAPE  = $7D
+PATTERN_L       = $7E
+PATTERN_H       = $7F
+
+ORNAMENT_L      = $D0
+ORNAMENT_H      = $D1
+SAMPLE_L        = $D2
+SAMPLE_H        = $D3
+LOOP            = $D4
+MB_VALUE        = $D5
+MB_ADDR_L       = $D6
+MB_ADDR_H       = $D7
+DONE_PLAYING    = $D8
+DONE_SONG       = $D9
+PT3_TEMP        = $DA
+
+
 ; We have to save/restore the following values
 ; when loading/storing from disk
 

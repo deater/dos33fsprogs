@@ -89,6 +89,57 @@ no_language_card:
 	lda	#8
 	jsr	wait_a_bit
 
+
+	;===================================
+	; Setup Mockingboard
+	;===================================
+	lda	#0
+	sta	DONE_PLAYING
+	sta	LOOP
+
+	; detect mockingboard
+	jsr	mockingboard_detect
+
+	bcc	mockingboard_notfound
+
+mockingboard_found:
+;       jsr     mockingboard_patch      ; patch to work in slots other than 4?
+
+	;=======================
+	; Set up 50Hz interrupt
+	;========================
+
+	jsr	mockingboard_init
+	jsr	mockingboard_setup_interrupt
+
+	;============================
+	; Init the Mockingboard
+	;============================
+
+	jsr	reset_ay_both
+	jsr	clear_ay_both
+
+	;==================
+	; init song
+	;==================
+
+	jsr     pt3_init_song
+
+	jmp     done_setup_sound
+
+
+mockingboard_notfound:
+	; patch out cli/sei calls
+
+	lda     #$EA
+	sta	cli_smc
+	sta	sei_smc
+
+
+done_setup_sound:
+
+
+
 	;===================================
 	; Do Intro Sequence
 	;===================================
@@ -404,6 +455,15 @@ really_exit:
 	.include	"leveldata_title.inc"
 
 
+	; pt3 player
+	.include "pt3_lib_core.s"
+	.include "pt3_lib_init.s"
+	.include "interrupt_handler.s"
+	.include "pt3_lib_mockingboard_detect.s"
+	.include "pt3_lib_mockingboard_setup.s"
+
+
+
 file:
 .incbin "graphics_title_hgr/mist_title.lzsa"
 
@@ -459,11 +519,16 @@ done_keyloop:
 
 
 get_mist_book:
+
+cli_smc:
+	cli
+
 	lda	#TITLE_BOOK_CLOSED
 	sta	LOCATION
 	jmp	change_location
 
 
+PT3_LOC = theme_music
 
 .align $100
 theme_music:
