@@ -27,23 +27,21 @@ location0:
 
 ; TITLE_BOOK_CLOSED -- myst linking book closed
 location1:
-	.byte	$ff		; north exit
+	.byte	TITLE_BOOK_OPEN	; north exit
 	.byte	$ff		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	m_link_book_lzsa	; north bg
+	.word	book_closed_n_lzsa	; north bg
 	.word	$0000		; south bg
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	BG_NORTH	; only north bg
-	.byte	DIRECTION_N	; special exit
-	.byte	21,31		; special x
-	.byte	10,24		; special y
-	.word	mist_link_book-1		; special function
+	.byte	$ff	; special exit
+
 
 ; TITLE_BOOK_OPEN -- myst linking book
 location2:
@@ -61,6 +59,6 @@ location2:
 	.word	$0000		; west bg
 	.byte	BG_NORTH	; only north bg
 	.byte	DIRECTION_N	; special exit
-	.byte	21,31		; special x
-	.byte	10,24		; special y
+	.byte	22,33		; special x
+	.byte	12,26		; special y
 	.word	mist_link_book-1		; special function

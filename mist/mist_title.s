@@ -225,22 +225,10 @@ no_language_card:
 
 	ldx	#<book_ground_lzsa
 	ldy	#>book_ground_lzsa
-	lda	#15
+	lda	#50
 	jsr	draw_and_wait
 
-	;===================
-	; init screen
-;	jsr	TEXT
-;	jsr	HOME
-;	bit	KEYRESET
-
-;	bit	SET_GR
-;	bit	PAGE0
-;	bit	LORES
-	bit	FULLGR
-
-;	lda	#0
-;	sta	DRAW_PAGE
+	; restore to full screen (no text)
 
 	bit	FULLGR
 
@@ -266,9 +254,6 @@ no_language_card:
 
 	lda	#DIRECTION_N
 	sta	DIRECTION
-
-;	lda	#LOAD_MIST		; load mist
-;	sta	WHICH_LOAD
 
 	jsr	change_location
 
