@@ -281,8 +281,64 @@ game_loop:
 	;====================================
 
 	; handle animated linking book
+	lda	LOCATION
+	cmp	#TITLE_BOOK_OPEN
+	bne	nothing_special
 
-	; note: the linking book to the dock doesn't have much action
+	lda	ANIMATE_FRAME
+	cmp	#32		; if done animating, skip
+	bcs	nothing_special
+
+animate_ocean:
+	cmp	#26
+	bcs	animate_actual
+
+	and	#1
+	beq	even_ocean
+
+odd_ocean:
+	lda	#<dock_animate_sprite1
+	sta	INL
+	lda	#>dock_animate_sprite1
+	jmp	draw_animation
+even_ocean:
+	lda	#<dock_animate_sprite2
+	sta	INL
+	lda	#>dock_animate_sprite2
+	jmp	draw_animation
+
+animate_actual:
+	sec
+	sbc	#26
+	asl
+	tay
+
+	; slow down animation
+	lda	#$3f
+	sta	if_smc+1
+
+	lda	dock_animation_sprites,Y
+	sta	INL
+	lda	dock_animation_sprites+1,Y
+
+draw_animation:
+
+	sta	INH
+	lda	#24
+	sta	XPOS
+	lda	#12
+	sta	YPOS
+	jsr	put_sprite_crop
+
+inc_frame:
+	lda	FRAMEL
+if_smc:
+	and	#$f
+	bne	done_inc_frame
+
+	inc	ANIMATE_FRAME
+
+done_inc_frame:
 
 nothing_special:
 
@@ -326,8 +382,6 @@ really_exit:
 	jmp	end_level
 
 
-
-
 	;==========================
 	; includes
 	;==========================
@@ -355,10 +409,6 @@ file:
 
 linking_noise_compressed:
 .incbin "audio/link_noise.btc.lzsa"
-
-.align $100
-theme_music:
-.incbin "audio/theme.pt3"
 
 
 	;====================================
@@ -412,6 +462,13 @@ get_mist_book:
 	lda	#TITLE_BOOK_CLOSED
 	sta	LOCATION
 	jmp	change_location
+
+
+
+.align $100
+theme_music:
+.incbin "audio/theme.pt3"
+
 
 
 
