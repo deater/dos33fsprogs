@@ -35,7 +35,7 @@ mist_start:
 	sta	LOCATIONS_H
 
 	;===================
-	; Load graphics
+	; Load hires graphics
 	;===================
 reload_everything:
 
@@ -86,32 +86,21 @@ blah:
 
 no_language_card:
 
-	;====================================
-	; wait for keypress or a few seconds
+	lda	#8
+	jsr	wait_a_bit
 
-	bit	KEYRESET
-	lda	#0
-	sta	FRAMEL
+	;===================================
+	; Do Intro Sequence
+	;===================================
 
-keyloop:
-	lda	#64			; delay a bit
-	jsr	WAIT
-	inc	FRAMEL
-	lda	FRAMEL			; time out eventually
-	beq	done_keyloop
-
-	lda	KEYPRESS
-	bpl	keyloop
-
-done_keyloop:
-
-
-	bit	KEYRESET
-
+	; SKIP: broderbund logo (w music)
+	; SKIP: cyan logo (with cyan theme)
 
 
 	;===================
 	; init screen
+	;===================
+
 	jsr	TEXT
 	jsr	HOME
 	bit	KEYRESET
@@ -123,6 +112,137 @@ done_keyloop:
 
 	lda	#0
 	sta	DRAW_PAGE
+
+	;===================================
+	; M Y S T letters
+	;===================================
+	; missing the dramatic music
+	; they should spin in, and letters are made of fire
+
+	; M
+	ldx	#<m_title_m_lzsa
+	ldy	#>m_title_m_lzsa
+	lda	#4
+	jsr	draw_and_wait
+
+	; Y
+	ldx	#<m_title_y_lzsa
+	ldy	#>m_title_y_lzsa
+	lda	#4
+	jsr	draw_and_wait
+
+	; S
+	ldx	#<m_title_s_lzsa
+	ldy	#>m_title_s_lzsa
+	lda	#4
+	jsr	draw_and_wait
+
+	; T
+	ldx	#<m_title_t_lzsa
+	ldy	#>m_title_t_lzsa
+	lda	#25
+	jsr	draw_and_wait
+
+	;===================================
+	; FISSURE: I realized the moment...
+	;===================================
+	; touch linking book as fissure pulses
+
+	bit	TEXTGR			; split text/gr
+
+	ldx	#<fissure_lzsa
+	ldy	#>fissure_lzsa
+	lda	#50
+	jsr	draw_and_wait
+
+
+	;===================================
+	; FISSURE_BOOK_SMALL: starry expanse...
+	;===================================
+
+	ldx	#<fissure_book_small_lzsa
+	ldy	#>fissure_book_small_lzsa
+	lda	#50
+	jsr	draw_and_wait
+
+	;===================================
+	; FISSURE_BOOK_BIG: I have tried to speculate...
+	;===================================
+
+	ldx	#<fissure_book_big_lzsa
+	ldy	#>fissure_book_big_lzsa
+	lda	#50
+	jsr	draw_and_wait
+
+	;===================================
+	; FALLING_LEFT: Still, the question...
+	;===================================
+
+	ldx	#<falling_left_lzsa
+	ldy	#>falling_left_lzsa
+	lda	#50
+	jsr	draw_and_wait
+
+	;===================================
+	; FALLING_RIGHT: I know my aprehensions...
+	;===================================
+
+	ldx	#<falling_right_lzsa
+	ldy	#>falling_right_lzsa
+	lda	#50
+	jsr	draw_and_wait
+
+	;===================================
+	; BOOK_AIR : The ending...
+	;===================================
+
+	ldx	#<book_air_lzsa
+	ldy	#>book_air_lzsa
+	lda	#15
+	jsr	draw_and_wait
+
+	;===================================
+	; BOOK_SPARKS : has not yet...
+	;===================================
+
+	ldx	#<book_sparks_lzsa
+	ldy	#>book_sparks_lzsa
+	lda	#15
+	jsr	draw_and_wait
+
+	;===================================
+	; BOOK_GLOW : been written...
+	;===================================
+
+	ldx	#<book_glow_lzsa
+	ldy	#>book_glow_lzsa
+	lda	#15
+	jsr	draw_and_wait
+
+	;===================================
+	; BOOK_GROUND :
+	;===================================
+
+	ldx	#<book_ground_lzsa
+	ldy	#>book_ground_lzsa
+	lda	#15
+	jsr	draw_and_wait
+
+	;===================
+	; init screen
+;	jsr	TEXT
+;	jsr	HOME
+;	bit	KEYRESET
+
+;	bit	SET_GR
+;	bit	PAGE0
+;	bit	LORES
+	bit	FULLGR
+
+;	lda	#0
+;	sta	DRAW_PAGE
+
+	bit	FULLGR
 
 	; init cursor
 
@@ -141,21 +261,19 @@ done_keyloop:
 	;============================
 	; set up initial location
 
-	lda	#TITLE_MIST_LINKING_DOCK
+	lda	#TITLE_BOOK_GROUND
 	sta	LOCATION		; start at first room
 
 	lda	#DIRECTION_N
 	sta	DIRECTION
 
-	lda	#LOAD_MIST		; load mist
-	sta	WHICH_LOAD
-
+;	lda	#LOAD_MIST		; load mist
+;	sta	WHICH_LOAD
 
 	jsr	change_location
 
 	lda	#1
 	sta	CURSOR_VISIBLE		; visible at first
-
 
 game_loop:
 	;=================
@@ -257,17 +375,71 @@ linking_noise_compressed:
 theme_music:
 .incbin "audio/theme.pt3"
 
-; broderbund logo (w music)
-; cyan logo (with cyan theme)
-; myst letters appear (dramatic music)
 
-; fissure: I realized the momemnt
-; starry expanse (book big)
-; falling by starscape (I have tried to speculate)
-; falling again (still) /(left)
-; I know my aprehensions (right)
-; the ending has not yet been written (falls, blue sparks)
+	;====================================
+	; draw a screen and wait
+	;====================================
+	; X = low of lzsa
+	; Y = high of lzsa
+	; A = pause delay
+
+draw_and_wait:
+	pha
+	stx	getsrc_smc+1
+	sty	getsrc_smc+2
+	lda	#$c			; load to page $c00
+	jsr	decompress_lzsa2_fast
+
+	jsr	gr_copy_to_current
+
+	jsr	page_flip
+	pla
+	jsr	wait_a_bit
+	rts
+
+	;====================================
+	; wait for keypress or a few seconds
+	;====================================
+
+wait_a_bit:
+
+	bit	KEYRESET
+	tax
+
+keyloop:
+	lda	#200			; delay a bit
+	jsr	WAIT
+
+	lda	KEYPRESS
+	bmi	done_keyloop
+
+	dex
+	bne	keyloop
+
+done_keyloop:
+
+	bit	KEYRESET
+
+	rts
+
+
+get_mist_book:
+	lda	#TITLE_BOOK_CLOSED
+	sta	LOCATION
+	jmp	change_location
+
+
+
+.if 0
+
+
 ; click on book, plays theme
+
+
+
+
+
+; FISSURE: I realized the momemnt
 
 ;                1         2         3
 ;      0123456789012345678901234567890123456789
@@ -275,26 +447,35 @@ theme_music:
 .byte "  FISSURE, THAT THE BOOK WOULD NOT BE"
 .byte "       DESTROYED AS I HAD PLANNED."
 
+; FISSURE_BOOK: _starry expanse (book tiny)
+
 ;      0123456789012345678901234567890123456789
 .byte " IT CONTINUED FALLING INTO THAT STARRY"
 .byte "     EXPANSE OF WHICH I HAD ONLY A"
 .byte "            FLEETING GLIMPSE."
+
+; FALLING_BOOK: (book big) falling by starscape (I have tried to speculate)
 
 ;      0123456789012345678901234567890123456789
 .byte "I HAVE TRIED TO SPECULATE WHERE IT MIGHT"
 .byte "     HAVE LANDED, BUT I MUST ADMIT,"
 .byte "  HOWEVER-- SUCH CONJECTURE IS FUTILE."
 
+; FALLING_LEFT (still, the question) /(left)
 ;      0123456789012345678901234567890123456789
 .byte " STILL, THE QUESTION ABOUT WHOSE HANDS"
 .byte "  MIGHT SOMEDAY HOLD MY MYST BOOK ARE"
 .byte "            UNSETTLING TO ME."
 
+; FALLING_RIGHT I know my aprehensions (right)
 ;      0123456789012345678901234567890123456789
 .byte "   I KNOW THAT MY APPREHENSIONS MIGHT"
 .byte "    NEVER BE ALLAYED, AND SO I CLOSE,"
 .byte "          REALIZING THAT PERHAPS,"
 
+; BOOK_GROUND the ending has not yet been written (falls, blue sparks)
 ;      0123456789012345678901234567890123456789
 .byte "  THE ENDING HAS NOT YET BEEN WRITTEN"
 
+
+.endif

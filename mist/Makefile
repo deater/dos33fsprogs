@@ -94,7 +94,7 @@ MIST_TITLE:	mist_title.o
 
 mist_title.o:	mist_title.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
-	graphics_title/mist_title.lzsa graphics_title/title_graphics.inc \
+	graphics_title_hgr/mist_title.lzsa graphics_title/title_graphics.inc \
 	gr_copy.s gr_offsets.s gr_pageflip.s gr_putsprite_crop.s \
 	text_print.s gr_fast_clear.s decompress_fast_v2.s \
 	keyboard.s draw_pointer.s end_level.s audio.s \
