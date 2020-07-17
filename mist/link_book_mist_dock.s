@@ -4,11 +4,13 @@
 mist_link_book:
 
 	; turn off music
-sei_smc:
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	skip_turn_off_music
+
 	sei
-
 	jsr	clear_ay_both
-
+skip_turn_off_music:
 
 	; clear screen
 

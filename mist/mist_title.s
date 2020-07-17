@@ -105,6 +105,10 @@ no_language_card:
 mockingboard_found:
 ;       jsr     mockingboard_patch      ; patch to work in slots other than 4?
 
+	lda	SOUND_STATUS
+	ora	#SOUND_MOCKINGBOARD
+	sta	SOUND_STATUS
+
 	;=======================
 	; Set up 50Hz interrupt
 	;========================
@@ -129,11 +133,6 @@ mockingboard_found:
 
 
 mockingboard_notfound:
-	; patch out cli/sei calls
-
-	lda     #$EA
-	sta	cli_smc
-	sta	sei_smc
 
 
 done_setup_sound:
@@ -520,8 +519,13 @@ done_keyloop:
 
 get_mist_book:
 
-cli_smc:
+	; play music if mockingboard
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	skip_start_music
 	cli
+skip_start_music:
 
 	lda	#TITLE_BOOK_CLOSED
 	sta	LOCATION

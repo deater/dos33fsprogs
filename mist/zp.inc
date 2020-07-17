@@ -64,17 +64,7 @@ ENVELOPE_SHAPE  = $7D
 PATTERN_L       = $7E
 PATTERN_H       = $7F
 
-ORNAMENT_L      = $D0
-ORNAMENT_H      = $D1
-SAMPLE_L        = $D2
-SAMPLE_H        = $D3
-LOOP            = $D4
-MB_VALUE        = $D5
-MB_ADDR_L       = $D6
-MB_ADDR_H       = $D7
-DONE_PLAYING    = $D8
-DONE_SONG       = $D9
-PT3_TEMP        = $DA
+; note: rest are up at $d0
 
 
 ; We have to save/restore the following values
@@ -248,11 +238,25 @@ END_OF_SAVE	=	$C9
 
 ; done game puzzle state
 
+; rest of pt3_player
+ORNAMENT_L      = $D0
+ORNAMENT_H      = $D1
+SAMPLE_L        = $D2
+SAMPLE_H        = $D3
+LOOP            = $D4
+MB_VALUE        = $D5
+MB_ADDR_L       = $D6
+MB_ADDR_H       = $D7
+DONE_PLAYING    = $D8
+DONE_SONG       = $D9
+PT3_TEMP        = $DA
+
 
 JOYSTICK_ENABLED=	$DD
 SOUND_STATUS	=	$DE
 	SOUND_DISABLED	= $80
 	SOUND_IN_LC	= $01 ; $01 sound effects in language card
+	SOUND_MOCKINGBOARD = $02 ; mockingboard detected
 
 GRID_PAGE	=	$DF
 ANIMATE_FRAME	=	$E0
