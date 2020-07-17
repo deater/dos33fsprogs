@@ -248,7 +248,53 @@ really_exit:
 
 
 file:
-.incbin "graphics_title/mist_title.lzsa"
+.incbin "graphics_title_hgr/mist_title.lzsa"
 
 linking_noise_compressed:
 .incbin "audio/link_noise.btc.lzsa"
+
+.align $100
+theme_music:
+.incbin "audio/theme.pt3"
+
+; broderbund logo (w music)
+; cyan logo (with cyan theme)
+; myst letters appear (dramatic music)
+
+; fissure: I realized the momemnt
+; starry expanse (book big)
+; falling by starscape (I have tried to speculate)
+; falling again (still) /(left)
+; I know my aprehensions (right)
+; the ending has not yet been written (falls, blue sparks)
+; click on book, plays theme
+
+;                1         2         3
+;      0123456789012345678901234567890123456789
+.byte " I REALIZED, THE MOMENT I FELL INTO THE"
+.byte "  FISSURE, THAT THE BOOK WOULD NOT BE"
+.byte "       DESTROYED AS I HAD PLANNED."
+
+;      0123456789012345678901234567890123456789
+.byte " IT CONTINUED FALLING INTO THAT STARRY"
+.byte "     EXPANSE OF WHICH I HAD ONLY A"
+.byte "            FLEETING GLIMPSE."
+
+;      0123456789012345678901234567890123456789
+.byte "I HAVE TRIED TO SPECULATE WHERE IT MIGHT"
+.byte "     HAVE LANDED, BUT I MUST ADMIT,"
+.byte "  HOWEVER-- SUCH CONJECTURE IS FUTILE."
+
+;      0123456789012345678901234567890123456789
+.byte " STILL, THE QUESTION ABOUT WHOSE HANDS"
+.byte "  MIGHT SOMEDAY HOLD MY MYST BOOK ARE"
+.byte "            UNSETTLING TO ME."
+
+;      0123456789012345678901234567890123456789
+.byte "   I KNOW THAT MY APPREHENSIONS MIGHT"
+.byte "    NEVER BE ALLAYED, AND SO I CLOSE,"
+.byte "          REALIZING THAT PERHAPS,"
+
+;      0123456789012345678901234567890123456789
+.byte "  THE ENDING HAS NOT YET BEEN WRITTEN"
+

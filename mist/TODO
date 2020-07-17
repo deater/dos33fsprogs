@@ -2,7 +2,6 @@ For release 1.0
 
 + LOADER 
 	-- save game
-	-- sound loader (into language card?)
 	-- joystick support
 	-- ^T to toggle sound
 
@@ -16,9 +15,11 @@ For release 1.0
 	-- books destroyed at end
 	-- pages removed at end
 	-- green book no talking at end?
+	-- load "red page" sound into LC and play it?
 
 + SELENA
 	-- sounds/door puzzle
+	-- load 1s clip of sounds (4k each) into language card?
 	-- have sub background change
 
 + STONEY
