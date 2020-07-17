@@ -37,7 +37,7 @@ back_to_mist:
 
 circuit_breaker:
 
-	bit	$C030		; click speaker
+	jsr	click_speaker		; click speaker
 
 	lda	LOCATION
 	cmp	#MIST_TOWER2_TOP

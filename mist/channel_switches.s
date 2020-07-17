@@ -171,7 +171,7 @@ elev1_close_door:
 
 raise_bridge:
 
-	bit	$C030		; click speaker
+	jsr	click_speaker	; click speaker
 
 	; only raise/lower if water is flowing
 
@@ -207,7 +207,7 @@ no_raise_bridge:
 
 extend_pipe:
 
-	bit	$C030		; click speaker
+	jsr	click_speaker		; click speaker
 
 	; toggle state
 

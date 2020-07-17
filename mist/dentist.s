@@ -326,4 +326,5 @@ lights_are_off:
 	; level data
 	.include	"leveldata_dentist.inc"
 
-
+	; sound
+	.include	"simple_sounds.s"

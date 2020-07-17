@@ -403,7 +403,7 @@ bridge_down:
 bridge_adjust:
 	sta	CLOCK_BRIDGE
 
-	bit	$C030		; click speaker
+	jsr	click_speaker		; click speaker
 
 	jsr	raise_bridge
 

@@ -445,7 +445,7 @@ open_bookshelf:
 	cmp	#OCTAGON_BOOKSHELF_CLOSE
 	beq	actually_open_shelf
 
-	jsr	cant_noise
+	jsr	short_beep
 
 	rts
 
@@ -522,7 +522,7 @@ close_bookshelf:
 	cmp	#OCTAGON_BOOKSHELF_CLOSE
 	bne	actually_close_shelf
 
-	jsr	cant_noise
+	jsr	short_beep
 
 	rts
 
@@ -660,23 +660,6 @@ door_swirl:
 
 	lda	#16
 	jmp	advance_swirl
-
-
-cant_noise:
-	ldx	#$ff
-cant_noise_loop:
-	bit	$c030
-	nop
-	nop
-	nop
-	bit	$c030
-	nop
-	nop
-	nop
-	dex
-	bne	cant_noise_loop
-	rts
-
 
 
 	;=============================

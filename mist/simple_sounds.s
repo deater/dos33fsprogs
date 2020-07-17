@@ -11,14 +11,22 @@ click_speaker:
 done_click:
 	rts
 
+
+long_beep:
+	ldy	#235
+	bne	do_beep
+
+short_beep:
+	ldy	#40
+	bne	do_beep
+
 	;===========================
 	; BEEP (inlined)
 	;===========================
-beep:
+do_beep:
 	lda	SOUND_STATUS
 	bmi	done_beep
 
-	ldy     #235
 	sty	tone_smc+1
 
 	; BEEP

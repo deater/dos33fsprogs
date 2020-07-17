@@ -477,6 +477,9 @@ done_fireplace_page:
 	; level graphics
 	.include	"graphics_octagon/octagon_graphics.inc"
 
+	; sound
+	.include	"simple_sounds.s"
+
 	; puzzles
 	.include	"brother_books.s"
 	.include	"octagon_bookshelf.s"

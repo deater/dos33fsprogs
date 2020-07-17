@@ -136,3 +136,6 @@ really_exit:
 
 	; level data
 	.include	"leveldata_generator.inc"
+
+	; sound
+	.include	"simple_sounds.s"

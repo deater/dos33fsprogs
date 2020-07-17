@@ -194,6 +194,8 @@ toggle_faucet:
 	; level graphics
 	.include	"graphics_channel/channel_graphics.inc"
 
+	; sound
+	.include	"simple_sounds.s"
 
 	; puzzles
 	.include	"channel_switches.s"
@@ -203,5 +205,4 @@ toggle_faucet:
 
 	; linking books
 	.include	"link_book_mist.s"
-;	.include	"link_book_channel.s"
 

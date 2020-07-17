@@ -162,7 +162,7 @@ change_tree_level:
 
 	jsr	change_direction
 
-	jsr	beep
+	jsr	long_beep
 
 	rts
 
@@ -443,6 +443,8 @@ wrong_combination:
 	rts
 
 safe_buttons:
+	jsr	click_speaker
+
 	lda	CURSOR_X
 	cmp	#13		; not a button
 	bcc	no_button

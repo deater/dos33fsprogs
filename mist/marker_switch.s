@@ -34,8 +34,8 @@ click_marker_switch:
 
 	; click
 
-	bit	$C030
-	bit	$C030
+	jsr	click_speaker
+	jsr	click_speaker
 
 	eor	MARKER_SWITCHES		; toggle switch
 	sta	MARKER_SWITCHES

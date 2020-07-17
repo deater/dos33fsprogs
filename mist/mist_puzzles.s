@@ -274,7 +274,7 @@ move_the_ship:
 
 	; play noise
 
-	jsr	beep
+	jsr	long_beep
 
 	; adjust the backgrounds
 
@@ -475,7 +475,7 @@ done_pillar:
 
 circuit_breaker:
 
-	bit	$C030		; click speaker
+	jsr	click_speaker	; click speaker
 
 	lda	LOCATION
 	cmp	#MIST_TOWER2_TOP

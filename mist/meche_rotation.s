@@ -51,7 +51,7 @@ enter_red_secret:
 
 exit_puzzle_button_press:
 
-	bit	$c030		; click speaker
+	jsr	click_speaker	; click speaker
 
 	lda	CURSOR_Y
 	cmp	#40

@@ -274,6 +274,9 @@ no_draw_page:
 
 	.include	"graphics_meche/meche_graphics.inc"
 
+	; sound
+	.include	"simple_sounds.s"
+
 	; linking books
 
 	.include	"link_book_meche.s"
