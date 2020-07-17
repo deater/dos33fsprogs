@@ -38,17 +38,17 @@ psc_smc2	=$19d3
 
 ; keyboard.s
 handle_keypress	=$1a54
-change_direction	=$1afc
-change_location	=$1b35
+change_direction	=$1b16
+change_location	=$1b4f
 
 ; text_print.s
-move_and_print	=$1bcd
-ps_smc1	=$1bfa
+move_and_print	=$1be7
+ps_smc1	=$1c14
 
 ; page_sprites.inc
-blue_page_sprite	=$1ce2
-red_page_sprite	=$1cf8
-white_page_sprite	=$1d0e
-blue_page_small_sprite	=$1d24
-red_page_small_sprite	=$1d2c
+blue_page_sprite	=$1cfc
+red_page_sprite	=$1d12
+white_page_sprite	=$1d28
+blue_page_small_sprite	=$1d3e
+red_page_small_sprite	=$1d46
 

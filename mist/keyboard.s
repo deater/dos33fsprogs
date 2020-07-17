@@ -12,6 +12,24 @@ handle_keypress:
 keypress:
 	and	#$7f			; clear high bit
 
+check_sound:
+	cmp	#$14			; control-T
+	bne	check_joystick
+
+	lda	SOUND_STATUS
+	eor	#SOUND_DISABLED
+	sta	SOUND_STATUS
+	jmp	done_keypress
+
+check_joystick:
+	cmp	#$A			; control-J
+	bne	check_load
+
+	lda	JOYSTICK_ENABLED
+	eor	#1
+	sta	JOYSTICK_ENABLED
+	jmp	done_keypress
+
 check_load:
 	cmp	#$C			; control-L
 	bne	check_save
