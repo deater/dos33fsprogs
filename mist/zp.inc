@@ -44,7 +44,7 @@ IN_RIGHT		= $6B
 BTC_L			= $6C
 BTC_H			= $6D
 
-
+; pt3 player registers
 AY_REGISTERS    = $70
 A_FINE_TONE     = $70
 A_COARSE_TONE   = $71
@@ -65,7 +65,6 @@ PATTERN_L       = $7E
 PATTERN_H       = $7F
 
 ; note: rest are up at $d0
-
 
 ; We have to save/restore the following values
 ; when loading/storing from disk
@@ -233,7 +232,13 @@ HOLDING_ITEM		= $C7
 
 BOILER_VALVE		= $C8		; how many turns of the boiler valve
 
-END_OF_SAVE	=	$C9
+TRUNK_STATE		= $C9		; trunk state in stonsehip
+	TRUNK_VALVE_OPEN    = $01
+	TRUNK_WATER_DRAINED = $02
+	TRUNK_KEY_TAKEN	    = $04
+	TRUNK_HATCH_OPEN    = $08
+
+END_OF_SAVE	=	$CA
 
 
 ; done game puzzle state

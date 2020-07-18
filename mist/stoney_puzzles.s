@@ -38,6 +38,21 @@
 	;	press right one, lights in the cabin go on
 
 
+
+	; lighthouse backgrounds
+	;    water, no trunk, hatch closed
+	;    water, no trunk, hatch open
+	;    water, trunk, hatch closed
+	;    water, trunk, hatch open
+	;		prev two, trunk open/closed
+	;    nowater, hatch closed
+	;    nowater, hatch open
+
+	; idea: baseline with water trunk, water no trunk, nowater
+	;	draw hatch as sprite
+
+
+
 	;======================
 	; handle umbrella pump buttons
 

@@ -54,16 +54,13 @@ read_fireplace:
 
 	lda	#127
 	sta	GRID_PAGE
-	lda	#'1'
+	lda	#$1
 	sta	grid_left_h
 	sta	grid_right_h
-	lda	#'2'
-	sta	grid_left_t
-	sta	grid_right_t
-	lda	#'7'
-	sta	grid_left_o
-	lda	#'8'
-	sta	grid_right_o
+	lda	#$27
+	sta	grid_left_to
+	lda	#$28
+	sta	grid_right_to
 
 	rts
 
@@ -121,16 +118,24 @@ all_done_book:
 
 
 
-
+	;===============================
+	; draw fireplace grid pattern
+	;===============================
 
 	; draw random patterns
 	; base them on memory starting at $2000?
 	; 15 30 45 60 75 90 105 120 135 150 165 180 195 210 225 240 255
-	; 14 
+	; 14
 
 draw_book_grid:
 
-	ldy	#8
+	lda	GRID_PAGE
+	cmp	#157
+	beq	draw_page_num
+
+draw_book_grid_left:
+
+	ldy	#8		; Y is VTAB of current line
 fp_book_outer_loop:
 
 	lda	gr_offsets,Y
@@ -138,65 +143,170 @@ fp_book_outer_loop:
 	lda	gr_offsets+1,Y
 	clc
 	adc	DRAW_PAGE
-	sta	fp_book_smc+2
+	sta	fp_book_smc+2	; point to begin of line
 
-	lda	$2000,Y
+	lda	GRID_PAGE
+	asl
+	asl
+	asl
+	sta	fp_book_lookup_smc+1
+
+fp_book_lookup_smc:
+	lda	$F000,Y		; use random part of memory?
 	sta	TEMPY
 
 	ldx	#5
 fp_book_inner_loop:
 
-	ror	TEMPY
+	ror	TEMPY		; rotate value out through carry
 	bcc	fp_space
-	lda	#' '|$80
+	lda	#' '|$80	; draw black space
 	jmp	fp_book_smc
 fp_space:
-	lda	#' '&$3f
+	lda	#' '&$3f	; draw white space
 
 fp_book_smc:
-	sta	$400,X
+	sta	$400,X		; store char
 
 	inx
-	inx
+	inx			; skip to next
+
 	cpx	#17
 	bne	fp_book_inner_loop
 
-	iny
+	iny			; skip to next line
 	iny
 	iny
 	iny
 	cpy	#32
 	bne	fp_book_outer_loop
 
-	; draw page number
 
-	; line 34? $4d0?
+draw_book_grid_right:
+
+	ldy	#8		; Y is VTAB of current line
+fp_book_outer_loopr:
+
+	lda	gr_offsets,Y
+	sta	fp_book_smcr+1
+	lda	gr_offsets+1,Y
+	clc
+	adc	DRAW_PAGE
+	sta	fp_book_smcr+2	; point to begin of line
+
+	lda	GRID_PAGE
+	asl
+	asl
+	asl
+	sta	fp_book_lookup_smcr+1
+
+fp_book_lookup_smcr:
+	lda	$F100,Y		; use random part of memory?
+	sta	TEMPY
+
+	ldx	#25
+fp_book_inner_loopr:
+
+	ror	TEMPY		; rotate value out through carry
+	bcc	fp_spacer
+	lda	#' '|$80	; draw black space
+	jmp	fp_book_smcr
+fp_spacer:
+	lda	#' '&$3f	; draw white space
+
+fp_book_smcr:
+	sta	$400,X		; store char
+
+	inx
+	inx			; skip to next
+
+	cpx	#37
+	bne	fp_book_inner_loopr
+
+	iny			; skip to next line
+	iny
+	iny
+	iny
+	cpy	#32
+	bne	fp_book_outer_loopr
+
+
+
+	; draw page number
+draw_page_num:
+	; line 32? $450?
 
 	lda	#$50
 	sta	OUTL
 	lda	#$4
 	clc
 	adc	DRAW_PAGE
-	sta	OUTH
+	sta	OUTH		; point OUTL:OUTH to hundreds place
 
+print_left_page:
 	ldy	#4
 
-	lda	grid_left_h
+	lda	grid_left_h	; store hundreds, skipping if 0
 	beq	glhz
+	ora	#$30
 	sta	(OUTL),Y
 	iny
 glhz:
-	lda	grid_left_t
+	lda	grid_left_to	; store tens, skipping if 0
+	lsr
+	lsr
+	lsr
+	lsr
+	cpy	#4		; if still 4, need leading 0 check
+	bne	glhzy
+	cmp	#0
 	beq	gltz
+glhzy:
+	ora	#$30
 	sta	(OUTL),Y
 	iny
 gltz:
-	lda	grid_left_o
+	lda	grid_left_to	; store ones
+	and	#$f
+	ora	#$30
 	sta	(OUTL),Y
 	iny
 	lda	#' '
+	sta	(OUTL),Y	; write some blanks to erase any
+	iny			; trailing values
+	sta	(OUTL),Y
+
+print_right_page:
+	ldy	#24
+
+	lda	grid_right_h	; store hundreds, skipping if 0
+	beq	glhzr
+	ora	#$30
 	sta	(OUTL),Y
 	iny
+glhzr:
+	lda	grid_right_to	; store tens, skipping if 0
+	lsr
+	lsr
+	lsr
+	lsr
+	cpy	#24		; if still 20, need leading 0 check
+	bne	glhzyr
+	cmp	#0
+	beq	gltzr
+glhzyr:
+	ora	#$30
+	sta	(OUTL),Y
+	iny
+gltzr:
+	lda	grid_right_to	; store ones
+	and	#$f
+	ora	#$30
+	sta	(OUTL),Y
+	iny
+	lda	#' '
+	sta	(OUTL),Y	; write some blanks to erase any
+	iny			; trailing values
 	sta	(OUTL),Y
 
 	rts
@@ -213,19 +323,31 @@ turn_page:
 
 decrement_page:
 	ldx	GRID_PAGE
-	cmp	#1
+	cpx	#1
 	beq	done_decrement_page	; don't go lower than 1
 
 	dex
 	dex
 	stx	GRID_PAGE
 
-	dec	grid_left_o
-	dec	grid_left_o
+	; use decimal mode to decrement
+	sed
+	sec
+	lda	grid_left_to
+	sbc	#$2
+	sta	grid_left_to
+	lda	grid_left_h
+	sbc	#$0
+	sta	grid_left_h
 
-	dec	grid_right_o
-	dec	grid_right_o
-
+	sec
+	lda	grid_right_to
+	sbc	#$2
+	sta	grid_right_to
+	lda	grid_right_h
+	sbc	#$0
+	sta	grid_right_h
+	cld
 
 done_decrement_page:
 	rts
@@ -233,29 +355,40 @@ done_decrement_page:
 
 increment_page:
 	ldx	GRID_PAGE
-	cmp	#253			; don't go above 253/254
+	cpx	#253			; don't go above 253/254
 	beq	done_increment_page
 
 	inx
 	inx
 	stx	GRID_PAGE
 
-	inc	grid_left_o
-	inc	grid_left_o
+	; use decimal mode to increment
+	sed
+	clc
+	lda	grid_left_to
+	adc	#$2
+	sta	grid_left_to
+	lda	grid_left_h
+	adc	#$0
+	sta	grid_left_h
 
-	inc	grid_right_o
-	inc	grid_right_o
+	clc
+	lda	grid_right_to
+	adc	#$2
+	sta	grid_right_to
+	lda	grid_right_h
+	adc	#$0
+	sta	grid_right_h
+	cld
 
 done_increment_page:
 	rts
 
 
-grid_left_h:	.byte	'1'
-grid_left_t:	.byte	'2'
-grid_left_o:	.byte	'7'
-grid_right_h:	.byte	'1'
-grid_right_t:	.byte	'2'
-grid_right_o:	.byte	'8'
+grid_left_h:	.byte	$1
+grid_left_to:	.byte	$27
+grid_right_h:	.byte	$1
+grid_right_to:	.byte	$28
 
 
 

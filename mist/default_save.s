@@ -80,3 +80,4 @@
 .byte $00	; TREE_LEVEL		=	$C6
 .byte $00	; HOLDING_ITEM		=	$C7
 .byte $00	; BOILER_VALVE		=	$C8
+.byte $00	; TRUNK_STATE		=	$C9
