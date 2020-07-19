@@ -21,6 +21,33 @@ close_fireplace:
 	jmp	change_location
 
 
+	;====================================
+	; draw tiny red page if in fireplace
+	;====================================
+
+draw_in_fireplace_red_page:
+
+	; only draw if out
+	lda	RED_PAGES_TAKEN
+	and	#OCTAGON_PAGE
+	bne	done_ifrp
+
+	; draw it at 11,22
+
+	lda	DRAW_PAGE
+	clc
+	adc	#$5
+	sta	ifrp_smc+2
+
+	lda	#$bb
+ifrp_smc:
+	sta	$5a8+11
+
+done_ifrp:
+	rts
+
+
+
 fireplace_shelf_action:
 
 	; see if button

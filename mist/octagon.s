@@ -82,6 +82,9 @@ game_loop:
 	cmp	#OCTAGON_GRID_BOOK
 	beq	looking_at_grid_book
 
+	cmp	#OCTAGON_IN_FIREPLACE
+	beq	in_fireplace_red_page
+
 	cmp	#OCTAGON_GREEN_BOOK_OPEN
 	beq	looking_at_green_book
 
@@ -163,6 +166,10 @@ looking_at_grid_book:
 
 looking_at_green_book:
 	jsr	draw_atrus_book
+	jmp	nothing_special
+
+in_fireplace_red_page:
+	jsr	draw_in_fireplace_red_page
 	jmp	nothing_special
 
 animate_red_book:
