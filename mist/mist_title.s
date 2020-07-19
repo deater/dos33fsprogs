@@ -278,9 +278,13 @@ done_setup_sound:
 	lda	#50
 	jsr	draw_and_wait
 
+
+done_intro:
+
 	; restore to full screen (no text)
 
 	bit	FULLGR
+	bit	LORES
 
 	; init cursor
 
@@ -507,6 +511,8 @@ keyloop:
 	lda	KEYPRESS
 	bmi	done_keyloop
 
+;	bmi	keypress_exit
+
 	dex
 	bne	keyloop
 
@@ -515,6 +521,19 @@ done_keyloop:
 	bit	KEYRESET
 
 	rts
+
+	; just skip whole intro, not just current scene
+
+;keypress_exit:
+
+;	bit	KEYRESET
+
+;	pla			; pop two addresses off the stack
+;	pla
+;	pla
+;	pla
+;	jmp	done_intro
+
 
 
 get_mist_book:

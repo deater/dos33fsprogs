@@ -17,6 +17,23 @@
 ;		atrus no longer talks in green book
 
 
+; graphics needed:
+;	hand out asking for page
+;	page in hand
+;	pick up myst book
+;	put page in
+;	look down sadly
+;	zap away
+;	gone
+;		zap back (same as away?)
+;	place book
+;	back to writing
+
+; says variations of "give me the page" while holding out hand
+; click on him with 
+
+ATRUS_WRITING = 10
+
 atrus_text:
 	.word atrus_text_nothing	; 0
 	.word atrus_text_both		; 1
@@ -77,6 +94,7 @@ atrus_sprite_facepalm:
 	.byte	$bd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$ff
 	.byte	$bb,$bb,$7d,$7d,$7d,$7d,$7d,$7d,$dd,$df
 	.byte	$77,$77,$77,$07,$57,$55,$55,$55,$55,$5d
+
 atrus_sprite_talking:
 	.byte 8,11
 	.byte	$00,$55,$77,$77,$77,$77,$77,$77
@@ -96,6 +114,153 @@ atrus_sprite_talking:
 atrus_sprite_nothing:
 	.byte 1,1
 	.byte	$AA
+
+
+; good ending
+
+atrus_sprite_reaching:	; at 14,6
+	.byte 10,14
+	.byte $00,$00,$00,$55,$77,$77,$77,$77,$77,$77
+	.byte $77,$00,$00,$77,$77,$77,$88,$88,$88,$87
+	.byte $77,$70,$00,$77,$77,$88,$bb,$bb,$b8,$88
+	.byte $77,$77,$00,$77,$77,$bb,$0b,$3b,$0b,$bb
+	.byte $77,$77,$00,$f7,$df,$bb,$bb,$33,$bb,$bb
+	.byte $77,$77,$ff,$df,$dd,$8b,$88,$88,$88,$8b
+	.byte $77,$f7,$ff,$dd,$dd,$88,$88,$80,$88,$88
+	.byte $f7,$ff,$ff,$dd,$dd,$df,$f8,$f8,$f8,$dd
+	.byte $ff,$ff,$dd,$dd,$dd,$dd,$ff,$ff,$ff,$dd
+	.byte $ff,$fd,$fd,$fd,$dd,$dd,$dd,$dd,$dd,$bd
+	.byte $ff,$bb,$bb,$bb,$ff,$7d,$7d,$7d,$bb,$bb
+	.byte $ff,$55,$bb,$bb,$ff,$07,$57,$55,$55,$5b
+	.byte $ff,$55,$bb,$5b,$ff,$85,$50,$50,$50,$50
+	.byte $8f,$f5,$f5,$f5,$8f,$80,$80,$80,$80,$80
+
+atrus_sprite_hold_page:	; at 15,6
+	.byte 9,11
+	.byte $00,$00,$55,$77,$77,$77,$77,$77,$77
+	.byte $00,$00,$77,$77,$77,$88,$88,$88,$87
+	.byte $70,$00,$77,$77,$88,$bb,$bb,$b8,$88
+	.byte $77,$00,$77,$77,$bb,$0b,$3b,$0b,$bb
+	.byte $77,$00,$f7,$df,$bb,$bb,$33,$bb,$bb
+	.byte $77,$ff,$df,$dd,$8b,$88,$88,$88,$8b
+	.byte $f7,$ff,$dd,$dd,$88,$88,$80,$88,$88
+	.byte $ff,$ff,$dd,$dd,$df,$f8,$f8,$f8,$dd
+	.byte $ff,$dd,$dd,$dd,$dd,$ff,$ff,$dd,$dd
+	.byte $fd,$bd,$bd,$bd,$fd,$fd,$fd,$fd,$bd
+	.byte $bb,$bb,$bb,$fb,$ff,$ff,$ff,$bb,$bb
+
+atrus_sprite_hold_book:	; at 15,6
+	.byte 9,12
+	.byte $00,$00,$55,$77,$87,$87,$87,$77,$77
+	.byte $00,$00,$77,$87,$b8,$b8,$88,$88,$77
+	.byte $70,$00,$77,$b8,$bb,$bb,$bb,$b8,$77
+	.byte $77,$00,$77,$bb,$b0,$33,$b0,$bb,$77
+	.byte $77,$00,$f7,$bb,$8b,$83,$8b,$bb,$d7
+	.byte $77,$ff,$df,$88,$88,$08,$88,$88,$dd
+	.byte $f7,$ff,$dd,$f8,$88,$88,$88,$d8,$dd
+	.byte $ff,$ff,$dd,$dd,$df,$ff,$ff,$fd,$dd
+	.byte $ff,$dd,$dd,$88,$88,$88,$88,$88,$dd
+	.byte $fd,$bd,$bd,$b8,$88,$88,$88,$88,$bd
+	.byte $bb,$bb,$bb,$8b,$88,$88,$88,$bb,$bb
+	.byte $77,$77,$77,$78,$08,$58,$58,$58,$5b
+
+atrus_sprite_place_page:	; at 15,6
+	.byte 10,12
+	.byte $00,$00,$55,$77,$87,$87,$87,$77,$77,$77
+	.byte $00,$00,$77,$87,$b8,$b8,$88,$88,$77,$77
+	.byte $70,$00,$77,$b8,$bb,$bb,$bb,$b8,$77,$77
+	.byte $77,$00,$77,$bb,$b0,$33,$b0,$bb,$77,$77
+	.byte $77,$00,$f7,$bb,$8b,$83,$8b,$bb,$d7,$d7
+	.byte $77,$ff,$df,$88,$88,$08,$88,$88,$dd,$dd
+	.byte $f7,$ff,$dd,$f8,$88,$88,$88,$d8,$dd,$dd
+	.byte $ff,$ff,$dd,$dd,$df,$ff,$ff,$fd,$dd,$dd
+	.byte $ff,$77,$7d,$dd,$dd,$ff,$ff,$dd,$dd,$dd
+	.byte $ff,$bd,$77,$7d,$dd,$dd,$dd,$bd,$bd,$fd
+	.byte $bb,$bb,$bb,$77,$7d,$7d,$7b,$7b,$bb,$ff
+	.byte $87,$87,$87,$87,$08,$58,$58,$58,$5b,$5f
+
+atrus_sprite_sad:	; at 14,14
+	.byte 11,8
+	.byte $77,$77,$00,$f7,$f7,$b0,$33,$b3,$b8,$88,$d7
+	.byte $77,$77,$ff,$df,$df,$8b,$33,$bb,$bb,$ff,$dd
+	.byte $77,$f7,$ff,$dd,$fd,$88,$80,$88,$fb,$ff,$fd
+	.byte $f7,$ff,$ff,$dd,$dd,$df,$f8,$f8,$ff,$ff,$ff
+	.byte $ff,$ff,$df,$dd,$dd,$dd,$ff,$dd,$ff,$ff,$ff
+	.byte $ff,$ff,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$ff,$ff
+	.byte $bb,$bb,$dd,$dd,$7d,$7d,$7d,$7d,$7d,$df,$ff
+	.byte $ff,$57,$57,$57,$57,$08,$58,$58,$58,$58,$8f
+
+atrus_sprite_link:	; at 15,6
+	.byte 10,12
+	.byte $00,$00,$55,$77,$87,$87,$87,$77,$77,$77
+	.byte $00,$00,$77,$87,$b8,$b8,$88,$88,$77,$77
+	.byte $70,$00,$77,$b8,$bb,$bb,$bb,$b8,$77,$77
+	.byte $77,$00,$77,$bb,$b0,$33,$b0,$bb,$77,$77
+	.byte $77,$00,$f7,$bb,$8b,$83,$8b,$bb,$d7,$d7
+	.byte $77,$ff,$df,$88,$88,$08,$88,$88,$dd,$dd
+	.byte $f7,$ff,$dd,$f8,$88,$88,$88,$d8,$dd,$dd
+	.byte $ff,$ff,$dd,$dd,$df,$ff,$ff,$fd,$dd,$dd
+	.byte $ff,$df,$dd,$dd,$dd,$ff,$ff,$dd,$dd,$dd
+	.byte $ff,$dd,$dd,$dd,$dd,$dd,$dd,$bd,$bd,$fd
+	.byte $bb,$bb,$bd,$bd,$7d,$7d,$7b,$7b,$bb,$ff
+	.byte $87,$87,$57,$57,$08,$58,$58,$58,$58,$5f
+
+atrus_sprite_going:	; at 13,6
+	.byte 14,12
+	.byte $77,$00,$00,$00,$55,$77,$77,$87,$77,$77,$77,$77,$07,$00
+	.byte $77,$77,$00,$00,$77,$77,$78,$b7,$78,$77,$77,$77,$00,$00
+	.byte $77,$77,$70,$00,$77,$77,$7b,$b7,$7b,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$77,$70,$37,$70,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$77,$7b,$87,$7b,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$77,$78,$07,$78,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$f7,$78,$87,$78,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$d7,$7f,$f7,$7f,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$50,$7d,$d7,$7d,$f7,$7f,$77,$77,$77,$00,$00
+	.byte $77,$77,$f7,$55,$7d,$d7,$7d,$d7,$77,$b7,$b7,$77,$00,$00
+	.byte $77,$ff,$bb,$bb,$bd,$bd,$7d,$f7,$fb,$fb,$bb,$77,$00,$00
+	.byte $22,$ff,$8f,$8f,$8f,$8f,$08,$58,$58,$58,$58,$87,$40,$00
+
+atrus_sprite_gone:	; at 13,6
+	.byte 15,13
+	.byte $77,$00,$00,$00,$55,$77,$77,$77,$77,$77,$77,$77,$77,$07,$00
+	.byte $77,$77,$00,$00,$77,$77,$77,$77,$77,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$70,$00,$77,$77,$77,$77,$77,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$77,$77,$77,$77,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$77,$77,$77,$77,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$77,$77,$77,$77,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$77,$77,$77,$77,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$77,$77,$77,$77,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$50,$77,$77,$77,$77,$77,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$f7,$55,$77,$77,$77,$77,$77,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$55,$77,$77,$f7,$f7,$f7,$f7,$77,$77,$77,$00,$00
+	.byte $22,$87,$8f,$8f,$8f,$8f,$08,$58,$58,$58,$58,$87,$87,$40,$00
+	.byte $22,$25,$85,$85,$85,$85,$85,$50,$50,$50,$50,$40,$44,$04,$80
+
+
+
+atrus_sprite_book_down:	; at 15,6
+	.byte 12,12
+	.byte $00,$00,$55,$77,$87,$87,$87,$77,$77,$77,$77,$07
+	.byte $00,$00,$77,$87,$b8,$b8,$88,$88,$77,$77,$77,$00
+	.byte $70,$00,$77,$b8,$bb,$bb,$bb,$b8,$77,$77,$77,$00
+	.byte $77,$00,$77,$bb,$b0,$33,$b0,$bb,$77,$77,$77,$00
+	.byte $77,$00,$f7,$bb,$8b,$83,$8b,$bb,$d7,$d7,$77,$00
+	.byte $77,$ff,$df,$88,$88,$08,$88,$88,$dd,$dd,$dd,$00
+	.byte $f7,$ff,$dd,$f8,$88,$88,$88,$d8,$dd,$dd,$ff,$f0
+	.byte $ff,$ff,$dd,$dd,$df,$ff,$ff,$fd,$dd,$dd,$ff,$ff
+	.byte $ff,$ff,$dd,$dd,$dd,$ff,$dd,$dd,$dd,$dd,$ff,$ff
+	.byte $ff,$bd,$dd,$dd,$dd,$88,$88,$88,$88,$b8,$bb,$bb
+	.byte $bb,$bb,$bb,$db,$dd,$d8,$d8,$d8,$d8,$d8,$5b,$55
+	.byte $7b,$7b,$7b,$7d,$0d,$5d,$5d,$5d,$5d,$5d,$5f,$4f
+
+
+
+
+
+
+
+
+
 
 
 
@@ -132,12 +297,12 @@ atrus_text_page1:
 .byte 0,21,"GIVE IT TO ME... GIVE ME THE PAGE",0
 .byte 0,22,"PLEASE GIVE THE PAGE...",0
 .byte 0,23," ",0
-
+           ;0123456789012345678901234567890123456789
 atrus_text_page2:
-.byte 0,20,"YOU'VE DONE THE RIGHT THING.",0
-.byte 0,21,"I HAVE A DIFFICULT CHOIC TO MAKE",0
-.byte 0,22,"MY SONS BETRAYED ME, I KNOW",0
-.byte 0,23,"WHAT I MUST DO.  I SHALL RETURN SHORTLY",0
+.byte 6,20,"YOU'VE DONE THE RIGHT THING.",0
+.byte 3,21,"I HAVE A DIFFICULT CHOICE TO MAKE.",0
+.byte 4,22,"MY SONS BETRAYED ME: I KNOW WHAT",0
+.byte 3,23,"I MUST DO.  I SHALL RETURN SHORTLY",0
 
 ; [links away]
 
@@ -172,8 +337,11 @@ atrus_text_nothing:
 	; just speed up talking
 skip_text:
 	lda	DNI_PROGRESS
-	cmp	#10
-	bcs	no_speedup
+	cmp	#ATRUS_WRITING
+	bcs	no_speedup	; bge
+
+	cmp	#3		; don't skip too far in no page case
+	bcs	no_speedup	; blt
 
 	; skip to next
 	inc	DNI_PROGRESS
@@ -193,7 +361,7 @@ draw_atrus:
 	; handle writing separately
 
 	lda	DNI_PROGRESS
-	cmp	#10
+	cmp	#ATRUS_WRITING
 	bcc	not_writing		; blt
 
 atrus_is_writing:
@@ -207,6 +375,11 @@ atrus_is_writing:
 	sta	DNI_PROGRESS
 
 	jmp	no_increment
+
+
+	;======================
+	; not writing
+	;======================
 
 not_writing:
 
@@ -226,7 +399,7 @@ do_increment:
 	cmp	#4
 	bne	no_increment
 
-	lda	#10		; if not have it, end of text, skip to end
+	lda	#ATRUS_WRITING		; if not have it, end of text, skip to end
 	sta	DNI_PROGRESS
 
 no_increment:
@@ -308,7 +481,7 @@ visit_atrus:
 	beq	actually_talk_with_atrus
 
 	; skip to just writing if not
-	lda	#10
+	lda	#ATRUS_WRITING
 	sta	DNI_PROGRESS
 
 actually_talk_with_atrus:
