@@ -109,7 +109,7 @@ location4:
 	.word	in_fireplace_w_lzsa	; west bg
 	.byte	BG_WEST		; west
 	.byte	DIRECTION_W		; special exit
-	.byte	3,8		; special x
+	.byte	3,9		; special x
 	.byte	22,32		; special y
 	.word	close_fireplace-1	; special function
 
@@ -641,20 +641,20 @@ location34:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
-	.byte	OCTAGON_FIREPLACE_SHELF	; west exit
+	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
-	.byte	DIRECTION_E			; west exit_dir
+	.byte	$ff		; west exit_dir
 	.word	$0000				; north bg
 	.word	$0000				; south bg
 	.word	$0000				; east bg
 	.word	in_fireplace_door_lzsa		; west bg
 	.byte	BG_WEST		; west
 	.byte	DIRECTION_W		; special exit
-	.byte	3,8		; special x
-	.byte	22,32		; special y
-	.word	open_fireplace-1	; special function
+	.byte	3,30		; special x
+	.byte	20,46		; special y
+	.word	in_fireplace-1	; special function
 
 ; OCTAGON_FIREPLACE_SHELF	-- in fireplace, rotated shelf
 location35:

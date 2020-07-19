@@ -88,6 +88,9 @@ game_loop:
 	cmp	#OCTAGON_GREEN_BOOK_OPEN
 	beq	looking_at_green_book
 
+	cmp	#OCTAGON_IN_FIREPLACE_CLOSED
+	beq	handle_fireplace_puzzle
+
 	cmp	#OCTAGON_FIREPLACE_SHELF
 	bne	check_temple_center
 	jsr	draw_fireplace_shelf_pages
@@ -170,6 +173,10 @@ looking_at_green_book:
 
 in_fireplace_red_page:
 	jsr	draw_in_fireplace_red_page
+	jmp	nothing_special
+
+handle_fireplace_puzzle:
+	jsr	draw_fireplace_puzzle
 	jmp	nothing_special
 
 animate_red_book:

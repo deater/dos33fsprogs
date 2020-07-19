@@ -6,17 +6,163 @@
 
 ; atrus writing, looks up says something, back down to writing
 
-open_fireplace:
 
-	lda	#OCTAGON_IN_FIREPLACE
-	sta	LOCATION
+	;============================
+	; in_fireplace
+	;============================
+	; called when touch inside fireplace
+	; if button:
+	;	if at shelf, start animate back to entry
+	;	if at entry, check puzzle
+	;		if puzzle right, start animate to shelf
+	;		if puzzle wrong, open door
+	;	if not button, do the puzzle
 
-	jmp	change_location
+in_fireplace:
+
+	; first check if it's the button
+
+	lda	CURSOR_X
+	cmp	#9
+	bcs	fireplace_grid
+
+	lda	CURSOR_Y		; if too high, nothing
+	cmp	#30
+	bcs	done_in_fireplace
+
+
+done_in_fireplace:
+	rts
+
+;	lda	#OCTAGON_IN_FIREPLACE
+;	sta	LOCATION
+
+;	jmp	change_location
+
+fireplace_grid:
+	lda	CURSOR_Y
+	sec
+	sbc	#22
+	lsr
+	lsr
+	tay			; get Y inded
+
+	ldx	CURSOR_X
+
+	lda	#$80
+	cpx	#14
+	bcc	done_grid_a
+
+	lda	#$40
+	cpx	#17
+	bcc	done_grid_a
+
+	lda	#$20
+	cpx	#20
+	bcc	done_grid_a
+
+	lda	#$10
+	cpx	#23
+	bcc	done_grid_a
+
+	lda	#$08
+	cpx	#26
+	bcc	done_grid_a
+
+	lda	#$04
+done_grid_a:
+	eor	FIREPLACE_GRID0,Y
+	sta	FIREPLACE_GRID0,Y
+
+	jsr	click_speaker
+
+	rts
+
+grid_sprite:
+	.byte 2,2
+	.byte $00,$00
+	.byte $50,$50
+
+	;============================
+	; draw the fireplace puzzle
+	;============================
+draw_fireplace_puzzle:
+
+	; draw animated background, if appropriate
+
+	; adjust animated background, if appropriate
+
+	; draw the grid
+
+	lda	#22
+	sta	grid_ypos_smc+1
+	lda	#FIREPLACE_GRID0
+	sta	which_grid_smc+1
+
+grid_loop_y:
+	lda	#12
+	sta	grid_xpos_smc+1
+which_grid_smc:
+	lda	FIREPLACE_GRID0
+	sta	current_grid_val
+
+grid_loop_x:
+	lda	current_grid_val
+	bpl	skip_draw_grid
+
+grid_xpos_smc:
+	lda	#12
+	sta	XPOS
+grid_ypos_smc:
+	lda	#22
+	sta	YPOS
+
+	lda	#<grid_sprite
+	sta	INL
+	lda	#>grid_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+skip_draw_grid:
+	asl	current_grid_val	; move to next bit
+
+	lda	grid_xpos_smc+1		; increment x by 3
+	clc
+	adc	#3
+	sta	grid_xpos_smc+1
+
+	cmp	#30			; stop after 6 bytes
+	bne	grid_loop_x
+
+	;
+
+	inc	which_grid_smc+1	; point to next grid
+
+	lda	grid_ypos_smc+1		; increment y by 4
+	clc
+	adc	#4
+	sta	grid_ypos_smc+1
+
+	cmp	#46			; stop after 6 bytes
+	bne	grid_loop_y
+
+	rts
+
+current_grid_val:	.byte $00
+
+	;============================
+	; close_fireplace
+	;============================
+	; called when we get in and press it to close the door
 
 close_fireplace:
 
 	lda	#OCTAGON_IN_FIREPLACE_CLOSED
 	sta	LOCATION
+
+	lda	#DIRECTION_W|DIRECTION_ONLY_POINT
+	sta	DIRECTION
 
 	jmp	change_location
 
