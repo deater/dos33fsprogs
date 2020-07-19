@@ -34,6 +34,10 @@ octagon_start:
 	sta	LEVEL_OVER
 	sta	ANIMATE_FRAME
 
+	; reset fireplace rotation
+	lda	#$ff
+	sta	animate_direction
+
 	; init cursor
 
 	lda	#20

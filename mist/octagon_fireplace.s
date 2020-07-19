@@ -32,20 +32,16 @@ in_fireplace:
 
 	; it's the button
 
-	lda	animate_direction
-	bpl	animate_back
+;	lda	animate_direction
+;	bpl	animate_back
 
 animate_there:
 	lda	#1
 	sta	ANIMATE_FRAME
 	sta	animate_direction
-	bne	done_in_fireplace
+;	bne	done_in_fireplace
 
-animate_back:
-	lda	#$ff
-	sta	animate_direction
-	lda	#11
-	sta	ANIMATE_FRAME
+
 
 done_in_fireplace:
 
@@ -57,10 +53,6 @@ done_in_fireplace:
 animate_direction:
 	.byte $ff
 
-;	lda	#OCTAGON_IN_FIREPLACE
-;	sta	LOCATION
-
-;	jmp	change_location
 
 fireplace_grid:
 	lda	CURSOR_Y
@@ -106,6 +98,21 @@ grid_sprite:
 	.byte $00,$00
 	.byte $50,$50
 
+exit_fireplace:
+	lda	#OCTAGON_IN_FIREPLACE
+	sta	LOCATION
+
+	jmp	change_location
+
+at_shelf:
+	lda	#OCTAGON_FIREPLACE_SHELF
+	sta	LOCATION
+
+	lda	#DIRECTION_E
+	sta	DIRECTION
+
+	jmp	change_location
+
 	;============================
 	; draw the fireplace puzzle
 	;============================
@@ -136,18 +143,23 @@ draw_fireplace_puzzle:
 	and	#$f
 	bne	not_animating_fireplace
 
-	lda	ANIMATE_FRAME
-	cmp	#11
-	bne	yes_animate
-	lda	animate_direction
-	bpl	not_animating_fireplace
-
 yes_animate:
 	; inc/dec frame
 	lda	ANIMATE_FRAME
 	clc
 	adc	animate_direction
 	sta	ANIMATE_FRAME
+
+	cmp	#13
+	beq	at_shelf
+
+	cmp	#0
+	bne	not_animating_fireplace
+	lda	animate_direction
+	bpl	not_animating_fireplace
+
+	; hit end, open door
+	jmp	exit_fireplace
 
 not_animating_fireplace:
 
@@ -296,13 +308,24 @@ fireplace_nil:
 	rts
 
 return_fireplace:
-	lda	#OCTAGON_IN_FIREPLACE
+
+	lda	#$ff
+	sta	animate_direction
+
+	lda	#OCTAGON_IN_FIREPLACE_CLOSED
 	sta	LOCATION
 
 	lda	#DIRECTION_W
 	sta	DIRECTION
 
-	jmp	change_location
+	jsr	change_location
+
+	; has to be after as change_location zeros it
+
+	lda	#11
+	sta	ANIMATE_FRAME
+
+	rts
 
 grab_green_book:
 	lda	#OCTAGON_GREEN_BOOK
@@ -670,6 +693,7 @@ done_update:
 
 fireplace_rotate_sprites:
 	.word	rotate0_sprite
+	.word	rotate0_sprite
 	.word	rotate1_sprite
 	.word	rotate2_sprite
 	.word	rotate3_sprite
@@ -800,13 +824,13 @@ rotate10_sprite:
 
 rotate11_sprite:
 	.byte 15,8
-	.byte $00,$00,$99,$00,$88,$00,$00,$00,$00,$00,$88,$00,$99,$00,$00
-	.byte $00,$00,$99,$25,$88,$25,$25,$22,$25,$25,$88,$25,$99,$00,$00
-	.byte $00,$00,$99,$22,$88,$22,$22,$22,$22,$22,$88,$22,$99,$00,$00
-	.byte $00,$00,$99,$52,$88,$52,$52,$22,$52,$52,$88,$52,$99,$00,$00
-	.byte $00,$00,$99,$22,$88,$00,$44,$44,$44,$40,$88,$22,$99,$00,$00
-	.byte $00,$00,$99,$22,$88,$00,$44,$44,$44,$44,$88,$22,$99,$00,$00
-	.byte $80,$00,$99,$25,$88,$00,$44,$44,$44,$44,$88,$25,$99,$00,$80
-	.byte $88,$00,$99,$22,$88,$00,$44,$44,$44,$44,$88,$22,$99,$00,$88
+	.byte $00,$00,$88,$00,$88,$00,$00,$00,$00,$00,$88,$00,$88,$00,$00
+	.byte $00,$00,$88,$25,$88,$25,$25,$22,$25,$25,$88,$25,$88,$00,$00
+	.byte $00,$00,$88,$22,$88,$22,$22,$22,$22,$22,$88,$22,$88,$00,$00
+	.byte $00,$00,$88,$52,$88,$52,$52,$22,$52,$52,$88,$52,$88,$00,$00
+	.byte $00,$00,$88,$22,$88,$00,$44,$44,$44,$40,$88,$22,$88,$00,$00
+	.byte $00,$00,$88,$22,$88,$00,$44,$44,$44,$44,$88,$22,$88,$00,$00
+	.byte $80,$00,$88,$25,$88,$00,$44,$44,$44,$44,$88,$25,$88,$00,$80
+	.byte $88,$00,$88,$22,$88,$00,$44,$44,$44,$44,$88,$22,$88,$00,$88
 
 
