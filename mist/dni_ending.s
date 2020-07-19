@@ -30,8 +30,9 @@
 ;	back to writing
 
 ; says variations of "give me the page" while holding out hand
-; click on him with 
+; click on him with
 
+HAVE_PAGE_START = 5
 ATRUS_WRITING = 10
 
 atrus_text:
@@ -473,9 +474,6 @@ visit_atrus:
 	lda	#$80
 	sta	FRAMEL		; want consistent timers
 
-
-	; FIXME: check for white page or not
-
 	; see if it's the first time we've opened book
 	lda	DNI_PROGRESS
 	beq	actually_talk_with_atrus
@@ -485,6 +483,16 @@ visit_atrus:
 	sta	DNI_PROGRESS
 
 actually_talk_with_atrus:
+
+	lda	HOLDING_PAGE
+	and	#$c0
+	cmp	#HOLDING_WHITE_PAGE
+	bne	not_holding_page
+
+	lda	#HAVE_PAGE_START
+	sta	DNI_PROGRESS
+
+not_holding_page:
 
 	lda	#DIRECTION_N|DIRECTION_SPLIT
 	sta	DIRECTION

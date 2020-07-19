@@ -34,9 +34,6 @@ click_marker_switch:
 
 	; click
 
-	jsr	click_speaker
-	jsr	click_speaker
-
 	eor	MARKER_SWITCHES		; toggle switch
 	sta	MARKER_SWITCHES
 
@@ -52,6 +49,8 @@ dont_open_secret:
 done_handle_secret:
 	sta	COMPARTMENT_OPEN
 
+	jsr	click_speaker
+	jsr	click_speaker
 
 	rts
 
