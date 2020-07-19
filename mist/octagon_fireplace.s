@@ -32,23 +32,57 @@ in_fireplace:
 
 	; it's the button
 
-;	lda	animate_direction
-;	bpl	animate_back
+	; check if pattern is right
+	; it not, open door
+	; if so, animate there
+
+	lda	FIREPLACE_GRID0
+	cmp	#$c0
+	bne	wrong_combination
+	lda	FIREPLACE_GRID1
+	cmp	#$68
+	bne	wrong_combination
+	lda	FIREPLACE_GRID2
+	cmp	#$a0
+	bne	wrong_combination
+	lda	FIREPLACE_GRID3
+	cmp	#$90
+	bne	wrong_combination
+	lda	FIREPLACE_GRID4
+	cmp	#$cc
+	bne	wrong_combination
+	lda	FIREPLACE_GRID5
+	cmp	#$f8
+	bne	wrong_combination
 
 animate_there:
 	lda	#1
 	sta	ANIMATE_FRAME
 	sta	animate_direction
-;	bne	done_in_fireplace
-
-
-
-done_in_fireplace:
-
 	lda	#0			; reset frame count
 	sta	FRAMEL
 
+done_in_fireplace:
 	rts
+
+clear_fireplace:
+
+	; clear it out
+	lda	#$0
+	sta	FIREPLACE_GRID0
+	sta	FIREPLACE_GRID1
+	sta	FIREPLACE_GRID2
+	sta	FIREPLACE_GRID3
+	sta	FIREPLACE_GRID4
+	sta	FIREPLACE_GRID5
+
+	rts
+
+wrong_combination:
+
+	jsr	clear_fireplace
+	jmp	exit_fireplace
+
 
 animate_direction:
 	.byte $ff
@@ -110,6 +144,8 @@ at_shelf:
 
 	lda	#DIRECTION_E
 	sta	DIRECTION
+
+	jsr	clear_fireplace
 
 	jmp	change_location
 
