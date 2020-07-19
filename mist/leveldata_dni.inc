@@ -43,16 +43,16 @@ location1:
 	.byte	DIRECTION_N	; special exit
 	.byte	13,27	; special x
 	.byte	6,40	; special y
-	.word   skip_text-1      ; special function
+	.word   poke_atrus-1	; special function
 
 ; DNI_MIST_BOOK	-- mist book closed
 location2:
-	.byte	$ff			; north exit
-	.byte	DNI_ARRIVAL		; south exit
+	.byte	DNI_MIST_BOOK_OPEN	; north exit
+	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_E	; south exit_dir
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	dni_desk_book_closed_n_lzsa	; north bg
@@ -60,18 +60,15 @@ location2:
 	.word	$0000				; east bg
 	.word	$0000			; west bg
 	.byte	BG_SOUTH|BG_NORTH
-	.byte	DIRECTION_N	; special exit
-	.byte	13,27	; special x
-	.byte	6,40	; special y
-;	.word   skip_text-1      ; special function
+	.byte	$ff		; special exit
 
 ; DNI_MIST_BOOK_OPEN	-- mist book open
 location3:
-	.byte	$ff			; north exit
+	.byte	DNI_DESK		; north exit
 	.byte	DNI_ARRIVAL		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_E	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -81,7 +78,7 @@ location3:
 	.word	$0000			; west bg
 	.byte	BG_SOUTH|BG_NORTH
 	.byte	DIRECTION_N	; special exit
-	.byte	13,27	; special x
-	.byte	6,40	; special y
-;	.word   skip_text-1      ; special function
+	.byte	21,31	; special x
+	.byte	10,24	; special y
+	.word   mist_link_book-1	; special function
 

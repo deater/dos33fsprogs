@@ -43,6 +43,8 @@ dni_start:
 
 	; set up initial location
 
+	jsr	update_game_complete
+
 	jsr	change_location
 
 	lda	#1
@@ -78,16 +80,54 @@ game_loop:
 	jsr	draw_atrus
 
 done_foreground:
+
 	;====================================
 	; handle animations
 	;====================================
 
 	; things only happening when animating
 
-	lda	ANIMATE_FRAME
-	beq	nothing_special
-
 	lda	LOCATION
+	cmp	#DNI_MIST_BOOK_OPEN
+	bne	nothing_special
+
+animate_mist_book:
+	lda	DIRECTION
+	cmp	#DIRECTION_N
+	bne	done_animate_book
+
+	lda	ANIMATE_FRAME
+	cmp	#6
+	bcc	mist_book_good			; blt
+
+	lda	#0
+	sta	ANIMATE_FRAME
+
+mist_book_good:
+
+	asl
+	tay
+	lda	mist_movie,Y
+	sta	INL
+	lda	mist_movie+1,Y
+	sta	INH
+
+	lda	#24
+	sta	XPOS
+
+	lda	#12
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$f
+	bne	done_animate_book
+
+	inc	ANIMATE_FRAME
+
+done_animate_book:
+
 
 nothing_special:
 
@@ -143,6 +183,7 @@ really_exit:
 	.include	"dni_ending.s"
 
 	; linking books
+	.include	"link_book_mist.s"
 
 	; books
 

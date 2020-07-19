@@ -1,39 +1,33 @@
 ; Ending with page steps
 ;
 ; DNI_PROGRESS
-;	5		say text both
-;	6		say give me page (until you do)
-;	7		takes page
-;	8		puts in book / says staement about sons
-;	9		zaps into book
-;	10		pause
-;	11		zaps out of book
-;	12		page3/it is done
-;	13		page4/reward
-;	14		page5/stick around
+;	5		writing
+;	6		say text both
+;	7		say give me page (until you do)
+;	8		say other give me page
+
+;	9		takes page
+;	10		hold book
+;	11		puts page in book (right thing)
+;	12		looks sad  (sons)
+;	13		touches link
+;	14		zaps into book
+;	15		pause
+;	16		zaps out of book
+;	17		(link again) page3/it is done
+;	18		(holds book) page4/reward
+;	19		(places book) page5/stick around
+
+;       20		writing loop 1
+;       21		writing loop 2
+;
 ;		effect of clicking is now myst linking book
 ;		red/blue book in myst replaced and no longer can click on
 ;		all red/blue/white pages cleared out
 ;		atrus no longer talks in green book
 
-
-; graphics needed:
-;	hand out asking for page
-;	page in hand
-;	pick up myst book
-;	put page in
-;	look down sadly
-;	zap away
-;	gone
-;		zap back (same as away?)
-;	place book
-;	back to writing
-
-; says variations of "give me the page" while holding out hand
-; click on him with
-
 HAVE_PAGE_START = 5
-ATRUS_WRITING = 10
+ATRUS_WRITING = 20	; must be even
 
 atrus_text:
 	.word atrus_text_nothing	; 0
@@ -41,13 +35,28 @@ atrus_text:
 	.word atrus_text_nopage1	; 2
 	.word atrus_text_nopage2	; 3
 	.word atrus_text_nothing	; 4
-	.word atrus_text_page1		; 5
-	.word atrus_text_page2		; 6
-	.word atrus_text_page3		; 7
-	.word atrus_text_page4		; 8
-	.word atrus_text_page5		; 9
-	.word atrus_text_nothing	; 10
-	.word atrus_text_nothing	; 11
+
+	.word atrus_text_nothing	; 5
+	.word atrus_text_both		; 6
+	.word atrus_gimme_page1		; 7
+	.word atrus_gimme_page2		; 8
+
+	.word atrus_text_nothing	; 9
+	.word atrus_text_right		; 10
+	.word atrus_text_right		; 11
+
+	.word atrus_text_sons		; 12
+	.word atrus_text_nothing	; 13
+	.word atrus_text_nothing	; 14
+	.word atrus_text_nothing	; 15
+	.word atrus_text_nothing	; 16
+
+	.word atrus_text_itisdone	; 17
+	.word atrus_text_reward		; 18
+	.word atrus_text_foe		; 19
+
+	.word atrus_text_nothing	; 20
+	.word atrus_text_nothing	; 21
 
 
 atrus_sprites:
@@ -56,21 +65,55 @@ atrus_sprites:
 	.word	atrus_sprite_facepalm	; 2
 	.word	atrus_sprite_talking	; 3
 	.word	atrus_sprite_writing1	; 4
-	.word	atrus_sprite_talking	; 5
+
+	.word	atrus_sprite_writing1	; 5
 	.word	atrus_sprite_talking	; 6
-	.word	atrus_sprite_talking	; 7
-	.word	atrus_sprite_talking	; 8
-	.word	atrus_sprite_talking	; 9
-	.word	atrus_sprite_writing1	; 10
-	.word	atrus_sprite_writing2	; 11
+
+	.word	atrus_sprite_reaching	; 7
+	.word	atrus_sprite_reaching	; 8
+
+	.word	atrus_sprite_hold_page	; 9
+	.word	atrus_sprite_hold_book	; 10
+	.word	atrus_sprite_place_page	; 11
+	.word	atrus_sprite_sad	; 12
+	.word	atrus_sprite_link	; 13
+	.word	atrus_sprite_going	; 14
+
+	.word	atrus_sprite_gone	; 15
+	.word	atrus_sprite_going	; 16
+
+	.word	atrus_sprite_link	; 17
+	.word	atrus_sprite_hold_book	; 18
+	.word	atrus_sprite_book_down	; 19
+
+	.word	atrus_sprite_writing1	; 20
+	.word	atrus_sprite_writing2	; 21
 
 atrus_xy:
-	.byte	13,6,  16,6,  16,6
-	.byte	16,6,  13,6,  16,6
-	.byte	16,6,  16,6,  16,6
-	.byte	16,6,  13,6,  15,22
+	.byte	13,6,  16,6,  16,6	; 0 1 2
+	.byte	16,6,  13,6		; 3 4
+	.byte	13,6,  16,6		; 5 6
+	.byte	14,6,  14,6		; 7 8
+	.byte	15,6,  15,6,  15,6	; 9 10 11
+	.byte	14,14, 15,6,  13,6	; 12 13 14
+	.byte	13,6,  13,6,  15,6	; 15 16 17
+	.byte	15,6,  15,6		; 18 19
+	.byte	15,22,  15,22		; 20 21
 
-atrus_sprite_writing1:
+atrus_delay:
+	.byte	$1,$80,  $0,$00,  $0,$00	; 0 1 2
+	.byte	$0,$00,  $0,$00			; 3 4
+
+	.byte	$1,$80,  $0,$00			; 5 6
+	.byte	$1,$00,  $1,$00			; 7 8
+	.byte	$1,$80,  $1,$00,  $1,$00	; 9 10 11
+	.byte	$0,$00,  $1,$c0,  $1,$c0	; 12 13 14
+	.byte	$0,$00,  $1,$c0,  $0,$00	; 15 16 17
+	.byte	$0,$00,  $0,$00			; 18 19
+	.byte	$0,$00,  $0,$00			; 20 21
+
+
+atrus_sprite_writing1:	; 15,22
 	.byte 1,1
 	.byte	$AA
 
@@ -207,19 +250,19 @@ atrus_sprite_link:	; at 15,6
 	.byte $87,$87,$57,$57,$08,$58,$58,$58,$58,$5f
 
 atrus_sprite_going:	; at 13,6
-	.byte 14,12
-	.byte $77,$00,$00,$00,$55,$77,$77,$87,$77,$77,$77,$77,$07,$00
-	.byte $77,$77,$00,$00,$77,$77,$78,$b7,$78,$77,$77,$77,$00,$00
-	.byte $77,$77,$70,$00,$77,$77,$7b,$b7,$7b,$77,$77,$77,$00,$00
-	.byte $77,$77,$77,$00,$77,$77,$70,$37,$70,$77,$77,$77,$00,$00
-	.byte $77,$77,$77,$00,$77,$77,$7b,$87,$7b,$77,$77,$77,$00,$00
-	.byte $77,$77,$77,$00,$77,$77,$78,$07,$78,$77,$77,$77,$00,$00
-	.byte $77,$77,$77,$00,$77,$f7,$78,$87,$78,$77,$77,$77,$00,$00
-	.byte $77,$77,$77,$00,$77,$d7,$7f,$f7,$7f,$77,$77,$77,$00,$00
-	.byte $77,$77,$77,$50,$7d,$d7,$7d,$f7,$7f,$77,$77,$77,$00,$00
-	.byte $77,$77,$f7,$55,$7d,$d7,$7d,$d7,$77,$b7,$b7,$77,$00,$00
-	.byte $77,$ff,$bb,$bb,$bd,$bd,$7d,$f7,$fb,$fb,$bb,$77,$00,$00
-	.byte $22,$ff,$8f,$8f,$8f,$8f,$08,$58,$58,$58,$58,$87,$40,$00
+	.byte 15,12
+	.byte $77,$00,$00,$00,$55,$77,$77,$87,$77,$77,$77,$77,$77,$07,$00
+	.byte $77,$77,$00,$00,$77,$77,$78,$b7,$78,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$70,$00,$77,$77,$7b,$b7,$7b,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$77,$70,$37,$70,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$77,$7b,$87,$7b,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$77,$78,$07,$78,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$f7,$78,$87,$78,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$00,$77,$d7,$7f,$f7,$7f,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$50,$7d,$d7,$7d,$f7,$7f,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$f7,$55,$7d,$d7,$7d,$d7,$77,$b7,$b7,$f7,$77,$00,$00
+	.byte $77,$ff,$bb,$bb,$bd,$bd,$7d,$f7,$fb,$fb,$bb,$ff,$77,$00,$00
+	.byte $22,$ff,$8f,$8f,$8f,$8f,$08,$58,$58,$58,$58,$8f,$87,$40,$00
 
 atrus_sprite_gone:	; at 13,6
 	.byte 15,13
@@ -232,12 +275,10 @@ atrus_sprite_gone:	; at 13,6
 	.byte $77,$77,$77,$00,$77,$77,$77,$77,$77,$77,$77,$77,$77,$00,$00
 	.byte $77,$77,$77,$00,$77,$77,$77,$77,$77,$77,$77,$77,$77,$00,$00
 	.byte $77,$77,$77,$50,$77,$77,$77,$77,$77,$77,$77,$77,$77,$00,$00
-	.byte $77,$77,$f7,$55,$77,$77,$77,$77,$77,$77,$77,$77,$77,$00,$00
+	.byte $77,$77,$77,$55,$77,$77,$77,$77,$77,$77,$77,$77,$77,$00,$00
 	.byte $77,$77,$77,$55,$77,$77,$f7,$f7,$f7,$f7,$77,$77,$77,$00,$00
 	.byte $22,$87,$8f,$8f,$8f,$8f,$08,$58,$58,$58,$58,$87,$87,$40,$00
 	.byte $22,$25,$85,$85,$85,$85,$85,$50,$50,$50,$50,$40,$44,$04,$80
-
-
 
 atrus_sprite_book_down:	; at 15,6
 	.byte 12,12
@@ -253,16 +294,6 @@ atrus_sprite_book_down:	; at 15,6
 	.byte $ff,$bd,$dd,$dd,$dd,$88,$88,$88,$88,$b8,$bb,$bb
 	.byte $bb,$bb,$bb,$db,$dd,$d8,$d8,$d8,$d8,$d8,$5b,$55
 	.byte $7b,$7b,$7b,$7d,$0d,$5d,$5d,$5d,$5d,$5d,$5f,$4f
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -293,40 +324,56 @@ atrus_text_nopage2:
 
 ; ending, with white page
 
-atrus_text_page1:
+atrus_gimme_page1:
 .byte 0,20," ",0
-.byte 0,21,"GIVE IT TO ME... GIVE ME THE PAGE",0
-.byte 0,22,"PLEASE GIVE THE PAGE...",0
+.byte 3,21,"GIVE IT TO ME... GIVE ME THE PAGE",0
+.byte 0,22," ",0
 .byte 0,23," ",0
+
+atrus_gimme_page2:
+.byte 0,20," ",0
+.byte 8,21,"PLEASE GIVE THE PAGE...",0
+.byte 0,22," ",0
+.byte 0,23," ",0
+
+
            ;0123456789012345678901234567890123456789
-atrus_text_page2:
-.byte 6,20,"YOU'VE DONE THE RIGHT THING.",0
-.byte 3,21,"I HAVE A DIFFICULT CHOICE TO MAKE.",0
-.byte 4,22,"MY SONS BETRAYED ME: I KNOW WHAT",0
-.byte 3,23,"I MUST DO.  I SHALL RETURN SHORTLY",0
+atrus_text_right:
+.byte 0,20," ",0
+.byte 6,21,"YOU'VE DONE THE RIGHT THING.",0
+.byte 3,22,"I HAVE A DIFFICULT CHOICE TO MAKE.",0
+.byte 0,23," ",0
+
+atrus_text_sons:
+.byte 0,20," ",0
+.byte 10,21,"MY SONS BETRAYED ME.",0
+.byte 9,22,"I KNOW WHAT I MUST DO.",0
+.byte 9,23,"I SHALL RETURN SHORTLY",0
 
 ; [links away]
 
 ; [links in]
 
-atrus_text_page3:
-.byte 0,20,"IT IS DONE.  I HAVE MANY QUESTIONS,",0
-.byte 0,21,"BUT MY WRITING CANNOT WAIT.  MY DELAY",0
-.byte 0,22,"MAY HAVE HAD A CATASTROPHIC IMPACT ON",0
-.byte 0,23,"THE WORLD WHERE MY WIFE IS HELD HOSTAGE",0
+atrus_text_itisdone:
+           ;01234567890123456789012345678901234567890
+.byte 3,20,"IT IS DONE.  I HAVE MANY QUESTIONS,",0
+.byte 2,21,"BUT MY WRITING CANNOT WAIT.  MY DELAY",0
+.byte 2,22,"MAY HAVE HAD A CATASTROPHIC IMPACT ON",0
+.byte 1,23,"THE WORLD WHERE MY WIFE IS HELD HOSTAGE",0
 
-atrus_text_page4:
-.byte 0,20,"A REWARD? I'M SORRY BUT ALL I HAVE TO",0
-.byte 0,21,"OFFER IS THE LIBRARY ON MYST AND THE",0
-.byte 0,22,"BOOKS CONTAINED THERE.  FEEL FREE TO",0
-.byte 0,23,"EXPLORE AT YOUR LEISURE.",0
+atrus_text_reward:
+            ;01234567890123456789012345678901234567890
+.byte  2,20,"A REWARD? I'M SORRY BUT ALL I HAVE TO",0
+.byte  2,21,"OFFER IS THE LIBRARY ON MYST AND THE",0
+.byte 10,22,"BOOKS CONTAINED THERE.",0
+.byte  2,23,"FEEL FREE TO EXPLORE AT YOUR LEISURE.",0
 
-atrus_text_page5:
-.byte 0,20,"ALSO, I AM FIGHTING A FOE MUCH",0
-.byte 0,21,"GREATER THAN MY SONS CAN IMAGINE.",0
-.byte 0,22,"I MIGHT REQUEST YOUR ASSISTANCE.",0
-.byte 0,23,"UNTIL THEN, HAVE FUN ON MYST",0
-
+atrus_text_foe:
+           ;01234567890123456789012345678901234567890
+.byte 1,20,"ALSO: I AM FIGHTING A FOE MUCH GREATER",0
+.byte 8,21,"THAN MY SONS CAN IMAGINE.",0
+.byte 5,22,"I MIGHT REQUEST YOUR ASSISTANCE.",0
+.byte 6,23,"UNTIL THEN, HAVE FUN ON MYST",0
 
 atrus_text_nothing:
 .byte 0,20," ",0
@@ -336,21 +383,70 @@ atrus_text_nothing:
 
 
 	; just speed up talking
-skip_text:
+	; also, bump past giving page
+
+	; so 0,1,2 -> increment
+	;    3,4 -> no increment
+	;    7,8 -> 9
+	;    9..ATRUS_WRITING -> increment
+
+	;   ATRUS_WRITING+ -> nothing
+
+poke_atrus:
 	lda	DNI_PROGRESS
 	cmp	#ATRUS_WRITING
 	bcs	no_speedup	; bge
 
 	cmp	#3		; don't skip too far in no page case
-	bcs	no_speedup	; blt
+	beq	no_speedup
+	cmp	#4
+	beq	no_speedup
 
-	; skip to next
-	inc	DNI_PROGRESS
+	cmp	#7
+	beq	give_atrus_page
+	cmp	#8
+	bne	no_extra_skip
+give_atrus_page:
+	lda	#8
+	sta	DNI_PROGRESS
 	lda	#0
-	sta	FRAMEL
-	sta	FRAMEH
+	sta	HOLDING_PAGE
+
+no_extra_skip:
+
+	jsr	skip_to_next_stage
 
 no_speedup:
+	rts
+
+
+
+	;==================================
+	; skip_to_next_stage
+	;==================================
+skip_to_next_stage:
+
+	inc	DNI_PROGRESS
+
+	lda	DNI_PROGRESS
+	asl
+	tay
+
+	lda	atrus_delay,Y
+	sta	FRAMEH
+	lda	atrus_delay+1,Y
+	sta	FRAMEL
+
+	lda	DNI_PROGRESS
+	cmp	#19
+	bne	all_done_inc
+
+	; update state now that game is over
+	lda	#1
+	sta	GAME_COMPLETE
+	jsr	update_game_complete
+
+all_done_inc:
 	rts
 
 
@@ -369,13 +465,13 @@ atrus_is_writing:
 
 	lda	FRAMEL
 	and	#$3f
-	bne	no_increment
+	bne	done_increment
 
 	lda	DNI_PROGRESS
 	eor	#$1
 	sta	DNI_PROGRESS
 
-	jmp	no_increment
+	jmp	done_increment
 
 
 	;======================
@@ -387,23 +483,29 @@ not_writing:
 	; calc next frame
 	lda	FRAMEH
 	cmp	#$2
-	bne	no_increment
+	bne	done_increment	; only increment occasionally
 
 do_increment:
-	inc	DNI_PROGRESS
 
-	lda	#0
-	sta	FRAMEH
-	sta	FRAMEL
+	jsr	skip_to_next_stage
 
-	lda	DNI_PROGRESS
-	cmp	#4
-	bne	no_increment
+	lda	DNI_PROGRESS		; special cases
+	cmp	#4			; if 4, done nopage case
+	bne	next_case
 
 	lda	#ATRUS_WRITING		; if not have it, end of text, skip to end
 	sta	DNI_PROGRESS
+	jmp	done_increment
 
-no_increment:
+next_case:
+	; have him ask until you give page
+	cmp	#9
+	bne	done_increment
+
+	lda	#7
+	sta	DNI_PROGRESS
+
+done_increment:
 
 	; only draw the words if looking at atrus
 	lda	DIRECTION
@@ -494,7 +596,7 @@ actually_talk_with_atrus:
 
 not_holding_page:
 
-	lda	#DIRECTION_N|DIRECTION_SPLIT
+	lda	#DIRECTION_N|DIRECTION_SPLIT|DIRECTION_ONLY_POINT
 	sta	DIRECTION
 
 	lda	#DNI_DESK
@@ -502,3 +604,27 @@ not_holding_page:
 	jmp	change_location
 
 
+
+	;==========================
+	; update game complete
+	;==========================
+	; hook up linking books
+	; disable poking of atrus
+update_game_complete:
+	lda	GAME_COMPLETE
+	beq	done_update_game_complete ; do nothing if not
+
+	ldy	#LOCATION_NORTH_EXIT
+	lda	#DNI_MIST_BOOK
+	sta	location1,Y				; DNI_DESK
+
+	ldy	#LOCATION_NORTH_EXIT_DIR
+	lda	#DIRECTION_N
+	sta	location1,Y				; DNI_DESK
+
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#$ff
+	sta	location1,Y				; DNI_DESK
+
+done_update_game_complete:
+	rts
