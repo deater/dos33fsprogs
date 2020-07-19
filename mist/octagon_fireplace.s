@@ -30,9 +30,32 @@ in_fireplace:
 	cmp	#30
 	bcs	done_in_fireplace
 
+	; it's the button
+
+	lda	animate_direction
+	bpl	animate_back
+
+animate_there:
+	lda	#1
+	sta	ANIMATE_FRAME
+	sta	animate_direction
+	bne	done_in_fireplace
+
+animate_back:
+	lda	#$ff
+	sta	animate_direction
+	lda	#11
+	sta	ANIMATE_FRAME
 
 done_in_fireplace:
+
+	lda	#0			; reset frame count
+	sta	FRAMEL
+
 	rts
+
+animate_direction:
+	.byte $ff
 
 ;	lda	#OCTAGON_IN_FIREPLACE
 ;	sta	LOCATION
@@ -90,7 +113,43 @@ draw_fireplace_puzzle:
 
 	; draw animated background, if appropriate
 
+	lda	ANIMATE_FRAME
+	beq	not_animating_fireplace
+
+	asl
+	tay
+	lda	fireplace_rotate_sprites,Y
+	sta	INL
+	lda	fireplace_rotate_sprites+1,Y
+	sta	INH
+
+	lda	#13
+	sta	XPOS
+	lda	#0
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
 	; adjust animated background, if appropriate
+
+	lda	FRAMEL
+	and	#$f
+	bne	not_animating_fireplace
+
+	lda	ANIMATE_FRAME
+	cmp	#11
+	bne	yes_animate
+	lda	animate_direction
+	bpl	not_animating_fireplace
+
+yes_animate:
+	; inc/dec frame
+	lda	ANIMATE_FRAME
+	clc
+	adc	animate_direction
+	sta	ANIMATE_FRAME
+
+not_animating_fireplace:
 
 	; draw the grid
 
