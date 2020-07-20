@@ -1,5 +1,10 @@
 For release 1.0
 
++ real harware
+	- down button doesn't work?
+	- myst title doesn't display long enough
+	- can't access right-hand rooms in octagon?
+
 + LOADER 
 	-- save game
 	-- joystick support
@@ -10,11 +15,6 @@ For release 1.0
 	-- open door to clock puzzle?
 
 + OCTAGON
-	-- code book
-	-- red book seen when in fireplace
-	-- books destroyed at end
-	-- pages removed at end
-	-- green book no talking at end?
 	-- load "red page" sound into LC and play it?
 
 + SELENA

@@ -21,8 +21,9 @@ check_sound:
 	sta	SOUND_STATUS
 	jmp	done_keypress
 
+	; can't be ^J as that's the same as down
 check_joystick:
-	cmp	#$A			; control-J
+	cmp	#$10			; control-P
 	bne	check_load
 
 	lda	JOYSTICK_ENABLED
