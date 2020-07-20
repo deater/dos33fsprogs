@@ -578,6 +578,9 @@ open_bookshelf:
 	cmp	#OCTAGON_BOOKSHELF_CLOSE
 	beq	actually_open_shelf
 
+
+	; already open, so beep in protest
+
 	jsr	short_beep
 
 	rts
@@ -589,48 +592,48 @@ actually_open_shelf:
 
 	ldy	#LOCATION_SPECIAL_EXIT
 	lda	#$ff
-	sta	location1,Y
+	sta	location1,Y				; OCTAGON_TEMPLE_CENTER
 
 	; change background of bookshelf N
 
 	ldy	#LOCATION_NORTH_BG
 	lda	#<bookshelf_open_n_lzsa
-	sta	location8,Y
+	sta	location8,Y				; OCTAGON_BOOKSHELF
 	lda	#>bookshelf_open_n_lzsa
-	sta	location8+1,Y
+	sta	location8+1,Y				; OCTAGON_BOOKSHELF
 
 	; change background of door N
 
 	lda	#<temple_door_closed_n_lzsa
-	sta	location0,Y
+	sta	location0,Y				; OCTAGON_TEMPLE_DOORWAY
 	lda	#>temple_door_closed_n_lzsa
-	sta	location0+1,Y
+	sta	location0+1,Y				; OCTAGON_TEMPLE_DOORWAY
 
 	; change background of center room S
 
 	ldy	#LOCATION_SOUTH_BG
 	lda	#<temple_center_closed_s_lzsa
-	sta	location1,Y
+	sta	location1,Y				; OCTAGON_TEMPLE_CENTER
 	lda	#>temple_center_closed_s_lzsa
-	sta	location1+1,Y
+	sta	location1+1,Y				; OCTAGON_TEMPLE_CENTER
 
 	; change background of door S
 
 	lda	#<temple_door_closed_s_lzsa
-	sta	location0,Y
+	sta	location0,Y				; OCTAGON_TEMPLE_DOORWAY
 	lda	#>temple_door_closed_s_lzsa
-	sta	location0+1,Y
+	sta	location0+1,Y				; OCTAGON_TEMPLE_DOORWAY
 
 	; disable exit to S
 	ldy	#LOCATION_SPECIAL_EXIT
 	lda	#$ff
-	sta	location0,Y
+	sta	location0,Y				; OCTAGON_TEMPLE_DOORWAY
 
 	; enable exit to N
 
 	ldy	#LOCATION_NORTH_EXIT
 	lda	#OCTAGON_TOWER_HALL1
-	sta	location8,Y
+	sta	location8,Y				; OCTAGON_BOOKSHELF
 
 	; start animation
 
@@ -764,12 +767,18 @@ not_shelf:
 	lda	#10
 done_shelf:
 
-	sta	ANIMATE_FRAME
+	pha
 
 	lda	#OCTAGON_TEMPLE_CENTER
 	sta	LOCATION
 
 	jsr	change_location
+
+	pla
+
+	; change location trashes animate frame
+
+	sta	ANIMATE_FRAME
 
 shelf_swirl_no_inc:
 
@@ -802,7 +811,7 @@ animate_shelf_open:
 
 	lda	ANIMATE_FRAME
 	cmp	#5
-	bcs	animate_shelf_close
+	bcs	animate_shelf_close	; bge
 
 	asl
 	tay
@@ -836,7 +845,7 @@ advance_shelf_open:
 	bne	shelf_open_no_inc
 
 	; reset animation/bg
-
+disable_shelf_animate:
 	lda	#0
 	sta	ANIMATE_FRAME
 
@@ -844,7 +853,7 @@ advance_shelf_open:
 
 	ldy	#LOCATION_SPECIAL_EXIT
 	lda	#DIRECTION_ANY
-	sta	location1,Y
+	sta	location1,Y				; OCTAGON_TEMPLE_CENTER
 
 shelf_open_no_inc:
 
@@ -906,25 +915,33 @@ shelf_close_no_dec:
 update_final_shelf_bg:
 
 	ldy	#LOCATION_NORTH_EXIT
-	lda	location8,Y
+	lda	location8,Y			; OCTAGON_BOOKSHELF
 	cmp	#OCTAGON_BOOKSHELF_CLOSE
 	bne	finally_open_shelf
 
 	ldy	#LOCATION_NORTH_BG
 	lda	#<temple_center_n_lzsa
-	sta	location1,Y
+	sta	location1,Y			; OCTAGON_CENTER
 	lda	#>temple_center_n_lzsa
 	jmp	all_done_open_shelf
 
 finally_open_shelf:
 	ldy	#LOCATION_NORTH_BG
 	lda	#<temple_center_open_n_lzsa
-	sta	location1,Y
+	sta	location1,Y			; OCTAGON_CENTER
 	lda	#>temple_center_open_n_lzsa
 
 all_done_open_shelf:
 	sta	location1+1,Y
+
+	lda	ANIMATE_FRAME
+	pha
+
+	; change location trashes ANIMATE_FRAME
 	jsr	change_location
+
+	pla
+	sta	ANIMATE_FRAME
 
 	rts
 
