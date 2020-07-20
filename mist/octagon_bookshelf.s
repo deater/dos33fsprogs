@@ -557,11 +557,12 @@ elevator_goto_library_level:
 	lda	#$ff
 	sta	location18,Y
 
+	jsr	change_location
+
 	lda	#(5|128)
 	sta	ANIMATE_FRAME
 
-	jmp	change_location
-
+	rts
 
 	;===================================
 	;===================================
@@ -767,18 +768,16 @@ not_shelf:
 	lda	#10
 done_shelf:
 
-	pha
+	sta	ANIMATE_FRAME
 
 	lda	#OCTAGON_TEMPLE_CENTER
 	sta	LOCATION
 
-	jsr	change_location
-
-	pla
+	jsr	change_location_save_animate
 
 	; change location trashes animate frame
 
-	sta	ANIMATE_FRAME
+
 
 shelf_swirl_no_inc:
 
@@ -934,16 +933,8 @@ finally_open_shelf:
 all_done_open_shelf:
 	sta	location1+1,Y
 
-	lda	ANIMATE_FRAME
-	pha
+	jmp	change_location_save_animate
 
-	; change location trashes ANIMATE_FRAME
-	jsr	change_location
-
-	pla
-	sta	ANIMATE_FRAME
-
-	rts
 
 ;===============================================
 ;===============================================
@@ -957,6 +948,15 @@ animate_elevator_ride:
 	bpl	elevator_going_up
 
 	jmp	elevator_going_down
+
+
+change_location_save_animate:
+	lda	ANIMATE_FRAME
+	pha
+	jsr	change_location
+	pla
+	sta	ANIMATE_FRAME
+	rts
 
 ;===============================================
 ; elevator going up
@@ -1000,7 +1000,7 @@ up_close_door:
 	lda	#>elevator_door_closed_s_lzsa
 	sta	location18+1,Y
 
-	jsr	change_location
+	jsr	change_location_save_animate
 
 	jsr	gr_copy_to_current
 
@@ -1013,7 +1013,7 @@ up_light_off:
 	lda	#>elevator_dark_s_lzsa
 	sta	location18+1,Y
 
-	jsr	change_location
+	jsr	change_location_save_animate
 
 up_draw_lib:
 	jsr	draw_elevator_window_lib
@@ -1069,7 +1069,7 @@ up_light_on:
 	lda	#>elevator_door_closed_s_lzsa
 	sta	location18+1,Y
 
-	jsr	change_location
+	jsr	change_location_save_animate
 
 	jsr	draw_elevator_window_tower
 
@@ -1150,7 +1150,7 @@ down_close_door:
 	lda	#>elevator_door_closed_s_lzsa
 	sta	location18+1,Y
 
-	jsr	change_location
+	jsr	change_location_save_animate
 
 	jsr	gr_copy_to_current
 
@@ -1163,7 +1163,7 @@ down_light_off:
 	lda	#>elevator_dark_s_lzsa
 	sta	location18+1,Y
 
-	jsr	change_location
+	jsr	change_location_save_animate
 
 down_draw_tower:
 	jsr	draw_elevator_window_tower
@@ -1219,7 +1219,7 @@ down_light_on:
 	lda	#>elevator_door_closed_s_lzsa
 	sta	location18+1,Y
 
-	jsr	change_location
+	jsr	change_location_save_animate
 
 	jsr	draw_elevator_window_lib
 
