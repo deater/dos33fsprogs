@@ -736,7 +736,7 @@ location39:
 	.byte   DIRECTION_W
 	.byte	14,18		; special x
 	.byte	32,40		; special y
-	.word	take_blue_page-1	; special function
+	.word	meche_take_blue_page-1	; special function
 
 ; MECHE_RED_SECRET_DOOR		-- red room secret door
 location40:
@@ -773,5 +773,5 @@ location41:
 	.byte   DIRECTION_S
 	.byte	22,29		; special x
 	.byte	14,24		; special y
-	.word	take_red_page-1	; special function
+	.word	meche_take_red_page-1	; special function
 

@@ -106,6 +106,7 @@ finger_point:
 	beq	key_finger
 
 	lda	HOLDING_PAGE
+	and	#$c0
 	beq	real_finger_point
 	cmp	#HOLDING_BLUE_PAGE
 	beq	blue_finger

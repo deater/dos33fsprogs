@@ -260,7 +260,13 @@ draw_blue_page:
 no_draw_page:
 	rts
 
+meche_take_red_page:
+	lda	#MECHE_PAGE
+	jmp	take_red_page
 
+meche_take_blue_page:
+	lda	#MECHE_PAGE
+	jmp	take_blue_page
 
 	;==========================
 	; includes

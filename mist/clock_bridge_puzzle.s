@@ -423,8 +423,8 @@ clock_puzzle_done:
 gear_block_sprite1:
 	.byte 4,3
 	.byte $ff,$ff,$ff,$ff
-	.byte $ff,$ff,$ff,$ff
-	.byte $ff,$ff,$ff,$0f
+	.byte $df,$df,$df,$df
+	.byte $ff,$dd,$ff,$0f
 
 ; put at 9,6 on screen 20 N
 gear_block_sprite2:
