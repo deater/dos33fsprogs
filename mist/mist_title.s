@@ -86,10 +86,6 @@ blah:
 
 no_language_card:
 
-	lda	#8
-	jsr	wait_a_bit
-
-
 	;===================================
 	; Setup Mockingboard
 	;===================================
@@ -145,6 +141,13 @@ done_setup_sound:
 
 	; SKIP: broderbund logo (w music)
 	; SKIP: cyan logo (with cyan theme)
+
+
+	; wait a bit at MYST screen
+
+	lda	#50
+	jsr	wait_a_bit
+
 
 
 	;===================
