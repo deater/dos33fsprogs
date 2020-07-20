@@ -19,10 +19,10 @@ init_state_loop:
 	bne	init_state_loop
 
 
-	; FIXME: testing
+	; testing
 
-	lda	#$ff
-	sta	MARKER_SWITCHES
+;	lda	#$ff
+;	sta	MARKER_SWITCHES
 
 	rts
 
