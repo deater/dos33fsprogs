@@ -3,11 +3,10 @@ For release 1.0
 + LOADER 
 	-- save game
 	-- joystick support
-	-- ^T to toggle sound
 
 + MIST
-	-- make sure gear opening looks OK with new art
 	-- open door to clock puzzle?
+	-- only allow entering ship if it's up
 
 + OCTAGON
 	-- load "red page" sound into LC and play it?
@@ -31,16 +30,16 @@ For release 1.0
 + NIBEL
 	-- turn on sprite crop in the viewer part
 
-+ DNI
-	-- add good ending
-		linking book to MYST
++ VIEWER
+	-- have ship up background if ship up
+
 
 Done:
 + CABIN
 + DENTIST
++ DNI
 + MECHE
 + MIST_TITLE
-+ VIEWER
 + ARBOR
 + SHIP
 

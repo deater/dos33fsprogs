@@ -40,6 +40,9 @@ viewer_start:
 	sta	CURSOR_X
 	sta	CURSOR_Y
 
+	; set up ship backgrounds
+	jsr	setup_backgrounds
+
 	; set up initial location
 
 	jsr	change_location
@@ -149,6 +152,28 @@ back_to_mist:
 	lda	#LOAD_MIST
 	sta	WHICH_LOAD
 
+	rts
+
+
+	; handle ship up or down
+setup_backgrounds:
+
+	lda	SHIP_RAISED
+	beq	done_raised
+
+	ldy	#LOCATION_EAST_BG
+
+	lda	#<viewer_entrance_ship_e_lzsa
+	sta	location0,Y			; VIEWER_ENTRANCE
+	lda	#>viewer_entrance_ship_e_lzsa
+	sta	location0+1,Y			; VIEWER_ENTRANCE
+
+	lda	#<viewer_stairs_ship_e_lzsa
+	sta	location1,Y			; VIEWER_SHIP
+	lda	#>viewer_stairs_ship_e_lzsa
+	sta	location1+1,Y			; VIEWER_SHIP
+
+done_raised:
 	rts
 
 

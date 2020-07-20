@@ -44,13 +44,6 @@ mist_start:
 	sta	CURSOR_X
 	sta	CURSOR_Y
 
-	; set up initial location
-
-	jsr	change_location
-
-	lda	#1
-	sta	CURSOR_VISIBLE		; visible at first
-
 	; init the clock bridge
 	jsr	raise_bridge
 
@@ -58,8 +51,15 @@ mist_start:
 	jsr	open_the_gear
 
 	; make the ship right
+
 	jsr	adjust_ship
 
+	; set up initial location
+
+	jsr	change_location
+
+	lda	#1
+	sta	CURSOR_VISIBLE		; visible at first
 
 game_loop:
 	;=================
@@ -244,7 +244,7 @@ goto_dentist:
 
 enter_viewer:
 
-	lda	#VIEWER_STEPS
+	lda	#VIEWER_ENTRANCE
 	sta	LOCATION
 
 	lda	#LOAD_VIEWER

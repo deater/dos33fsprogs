@@ -86,9 +86,10 @@ make_ship_up:
 
 	lda	#<dock_shipup_e_lzsa
 	sta	location0,Y				; MIST_ARRIVAL_DOCK
+	sta	location30,Y				; MIST_VIEWER_DOOR
 	lda	#>dock_shipup_e_lzsa
 	sta	location0+1,Y				; MIST_ARRIVAL_DOCK
-
+	sta	location30+1,Y				; MIST_VIEWER_DOOR
 
 
 	; FIXME: hook up exit on dock to ship
@@ -171,8 +172,10 @@ make_ship_down:
 
 	lda	#<dock_e_lzsa
 	sta	location0,Y				; MIST_ARRIVAL_DOCK
+	sta	location30,Y				; MIST_VIEWER_DOOR
 	lda	#>dock_e_lzsa
 	sta	location0+1,Y				; MIST_ARRIVAL_DOCK
+	sta	location30+1,Y				; MIST_VIEWER_DOOR
 
 	; FIXME: remove exit on dock to ship
 

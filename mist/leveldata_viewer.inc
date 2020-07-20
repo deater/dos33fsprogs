@@ -5,12 +5,33 @@
 
 locations:
 	.word location0, location1, location2, location3
+	.word location4
 
-; VIEWER_STEPS		-- steps
+; VIEWER_ENTRANCE		-- top of steps
 location0:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	$ff		; east exit
+	.byte	VIEWER_STEPS	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	viewer_entrance_e_lzsa		; east bg
+	.word	viewer_entrance_w_lzsa		; west bg
+	.byte	BG_WEST | BG_EAST
+	.byte	DIRECTION_E		; special exit
+	.byte	9,29		; special x
+	.byte	2,46		; special y
+	.word	back_to_mist-1	; special function
+
+; VIEWER_STEPS		-- steps
+location1:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	VIEWER_ENTRANCE	; east exit
 	.byte	VIEWER_POOL	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
@@ -21,13 +42,10 @@ location0:
 	.word	viewer_stairs_e_lzsa		; east bg
 	.word	viewer_stairs_w_lzsa		; west bg
 	.byte	BG_WEST | BG_EAST
-	.byte	DIRECTION_E		; special exit
-	.byte	9,29		; special x
-	.byte	2,46		; special y
-	.word	back_to_mist-1	; special function
+	.byte	$ff		; special exit
 
 ; VIEWER_POOL		-- the viewer far
-location1:
+location2:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	VIEWER_STEPS		; east exit
@@ -47,7 +65,7 @@ location1:
 	.word	enter_control_panel-1		; special function
 
 ; VIEWER_POOL_CLOSE		-- the viewer close
-location2:
+location3:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
@@ -69,7 +87,7 @@ location2:
 
 
 ; VIEWER_CONTROL_PANEL		-- the viewer control panel
-location3:
+location4:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	VIEWER_POOL		; east exit
