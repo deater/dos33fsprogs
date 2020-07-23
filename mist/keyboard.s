@@ -11,6 +11,7 @@ handle_keypress:
 
 keypress:
 	and	#$7f			; clear high bit
+	and	#$df			; convert uppercase to lower case
 
 check_sound:
 	cmp	#$14			; control-T
