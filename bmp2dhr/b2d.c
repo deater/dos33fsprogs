@@ -2070,6 +2070,7 @@ int savelofragment()
 			sprintf(outfile,"%s.SL2",hgrwork);
 		else
 			sprintf(outfile,"%s.DL2",hgrwork);
+
 		if (tags == 1) {
 			strcat(outfile,"#060400");
 		}
@@ -2080,7 +2081,13 @@ int savelofragment()
 		for (y = 0; y< 48; y++) {
 			y2 = y;
 			for (x = 0; x < 40; x++) {
-				x2 = (x*2) + 1;
+				// VMW
+				if (lores==1) {
+					x2 = x;
+				}
+				else {
+					x2 = (x*2) + 1;
+				}
 				temp = dhrgetpixel(x2,y2);
 				setlopixel(temp,x,y,0);
 			}
