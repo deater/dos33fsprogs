@@ -1,5 +1,9 @@
 For release 1.0
 
+general
+	-- change background color to black on GS
+	-- handle lowercase keyboard input
+
 + LOADER 
 	-- save game
 	-- joystick support
