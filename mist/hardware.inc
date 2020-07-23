@@ -8,7 +8,10 @@ CLR80COL	=	$C000	; PAGE0/PAGE1 normal
 SET80COL	=	$C001	; PAGE0/PAGE1 switches PAGE0 in Aux instead
 EIGHTYCOLOFF	=	$C00C
 EIGHTYCOLON	=	$C00D
+TBCOLOR		=	$C022	; IIgs text foreground / background colors
+NEWVIDEO	=	$C029	; IIgs graphics modes
 SPEAKER		=	$C030
+CLOCKCTL	=	$C034	; bits 0-3 are IIgs border color
 SET_GR		=	$C050
 SET_TEXT	=	$C051
 FULLGR		=	$C052
@@ -18,6 +21,12 @@ PAGE1		=	$C055
 LORES		=	$C056	; Enable LORES graphics
 HIRES		=	$C057	; Enable HIRES graphics
 AN3		=	$C05E	; Annunciator 3
+
+
+
+
+
+
 
 PADDLE_BUTTON0	=	$C061
 PADDL0		=	$C064
@@ -34,8 +43,10 @@ VLINE	= $F828			;; VLINE A,$2D at Y
 CLRSCR	= $F832			;; Clear low-res screen
 CLRTOP	= $F836			;; clear only top of low-res screen
 SETCOL	= $F864			;; COLOR=A
+ROM_TEXT2COPY = $F962		;; iigs
 TEXT	= $FB36
 TABV	= $FB5B			;; VTAB to A
+ROM_MACHINEID = $FBB3		;; iigs
 BELL	= $FBDD			;; ring the bell
 BASCALC	= $FBC1			;;
 VTAB	= $FC22			;; VTAB to CV
@@ -46,6 +57,7 @@ SETINV	= $FE80			;; INVERSE
 SETNORM	= $FE84			;; NORMAL
 COUT	= $FDED			;; output A to screen
 COUT1	= $FDF0			;; output A to screen
+
 
 
 
