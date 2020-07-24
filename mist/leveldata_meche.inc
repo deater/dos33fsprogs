@@ -104,9 +104,9 @@ location4:
 	.word	entrance_e_lzsa		; east bg
 	.word	entrance_w_lzsa		; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
-	.byte	DIRECTION_N	; special exit
-	.byte	6,22		; special x
-	.byte	30,46		; special y
+	.byte	DIRECTION_N|DIRECTION_W	; special exit
+	.byte	6,36		; special x
+	.byte	26,46		; special y
 	.word	try_exit_puzzle-1	; special function
 
 

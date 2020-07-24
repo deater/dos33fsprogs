@@ -17,7 +17,6 @@ mist_link_book:
 
 	jsr	play_link_noise
 
-
 	lda	#OCTAGON_CEILING
 	sta	LOCATION
 	lda	#DIRECTION_N

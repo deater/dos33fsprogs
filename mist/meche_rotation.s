@@ -239,17 +239,45 @@ draw_exit_puzzle_sprites:
 
 	;=========================================
 	; exit puzzle first
-	; we really have two entrance points but on same node
-	; so can't have both??
+	;
+	; we have two exits to puzzle, one N and W, try to handle both
+	;	not really opitmal
 
 	; also handle path to book
 
 try_exit_puzzle:
 
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_N
+	beq	exit_facing_north
+
+exit_facing_west:
+	lda	CURSOR_X
+	cmp	#29
+	bcs	go_to_puzzle		 ; bge
+
+	; didn't click on the puzzle so instead go to MECHE_ARRIVAL
+
+	lda	#MECHE_ARRIVAL
+	sta	LOCATION
+	jmp	change_location
+
+go_to_puzzle:
+	lda	#DIRECTION_N
+	sta	DIRECTION
+	jmp	do_puzzle
+
+
+exit_facing_north:
+
 	lda	CURSOR_X
 	cmp	#14
-	bcc	do_puzzle
+	bcc	do_puzzle		; if less than 14 go to puzzle
+	cmp	#23			; if greater than 22 go to MECHE_FORT_VIEW
+	bcs	cant_go_there
 
+exit_check_for_tunnel:
 	; not puzzle, instead go down steps if available
 
 	jsr	check_puzzle_solved
@@ -257,9 +285,12 @@ try_exit_puzzle:
 
 	lda	#MECHE_BOOK_STAIRS
 	sta	LOCATION
-	jsr	change_location
+	jmp	change_location
+
 cant_go_there:
-	rts
+	lda	#MECHE_FORT_VIEW
+	sta	LOCATION
+	jmp	change_location
 
 do_puzzle:
 	lda	#MECHE_EXIT_PUZZLE

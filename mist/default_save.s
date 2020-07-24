@@ -1,11 +1,25 @@
 .include "zp.inc"
 .include "common_defines.inc"
 
+
 ; want to load this to address $80
 
+.if 0
+; ARBOR
 .byte LOAD_ARBOR	; WHICH_LOAD		= 	$80
 .byte DIRECTION_W	; DIRECTION		= 	$81
 .byte ARBOR_ARRIVAL_CLOSED	; LOCATION	=	$82
+.endif
+
+.if 1
+; MECHE
+.byte LOAD_MECHE	; WHICH_LOAD		= 	$80
+.byte DIRECTION_W	; DIRECTION		= 	$81
+.byte MECHE_ARRIVAL	; LOCATION	=	$82
+.endif
+
+
+
 .byte $00	; RED_PAGES_TAKEN	=	$83
 .byte $00	; BLUE_PAGES_TAKEN	=	$84
 .byte $00	; CLOCK_BRIDGE		=	$85
@@ -81,3 +95,4 @@
 .byte $00	; HOLDING_ITEM		=	$C7
 .byte $00	; BOILER_VALVE		=	$C8
 .byte $00	; TRUNK_STATE		=	$C9
+
