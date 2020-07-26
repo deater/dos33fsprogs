@@ -54,7 +54,8 @@ LOADER: loader.o
 loader.o:	loader.s \
 	gr_copy.s gr_offsets.s gr_pageflip.s gr_putsprite_crop.s \
 	text_print.s gr_fast_clear.s decompress_fast_v2.s \
-	keyboard.s draw_pointer.s end_level.s audio.s loadstore.s
+	keyboard.s draw_pointer.s end_level.s audio.s loadstore.s \
+	qkumba_popwr.s
 	ca65 -o loader.o loader.s -l loader.lst
 
 ###

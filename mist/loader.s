@@ -49,6 +49,7 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 	;===================================================
 
 loader_start:
+
 	lda	#LOAD_TITLE
 	sta	WHICH_LOAD
 
@@ -742,6 +743,7 @@ sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
 ;filbuf:		.res 4			;	= bit2tbl+86
 					;dataend         = filbuf+4
 
+	.include	"qkumba_popwr.s"
 
 
 
