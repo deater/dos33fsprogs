@@ -12,7 +12,9 @@ locations:
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
-	.word location36,location37,location38
+	.word location36,location37,location38,location39
+	.word location40,location41,location42,location43
+	.word location44
 
 ; CHANNEL_ARRIVAL		-- arrival in channelwood
 location0:
@@ -104,7 +106,7 @@ location4:
 
 ; CHANNEL_PATH5		-- twisty maze of passages all alike
 location5:
-	.byte	CHANNEL_STEPS_FORK	; north exit
+	.byte	CHANNEL_PATH7		; north exit
 	.byte	CHANNEL_PATH6		; south exit
 	.byte	CHANNEL_PATH4		; east exit
 	.byte	$ff			; west exit
@@ -211,7 +213,7 @@ location10:
 ; CHANNEL_STEPS_FORK		-- fork going to steps
 location11:
 	.byte	CHANNEL_WIND_PATH	; north exit
-	.byte	CHANNEL_PATH5		; south exit
+	.byte	CHANNEL_PATH7		; south exit
 	.byte	$ff			; east exit
 	.byte	CHANNEL_STEPS_PATH	; west exit
 	.byte	DIRECTION_N	; north exit_dir
@@ -727,4 +729,119 @@ location38:
 	.byte	14,34		; special y
 	.word	handle_valve1-1	; special function
 
+; CHANNEL_VALVE2_TREE		-- valve by the big tree
+location39:
+	.byte	CHANNEL_STEPS_FORK	; north exit
+	.byte	CHANNEL_WIND_PATH	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	valve_bottom_off_lzsa	; north bg
+	.word	valve_top_off_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	DIRECTION_N|DIRECTION_S	; special exit
+	.byte	15,25		; special x
+	.byte	14,34		; special y
+	.word	handle_valve2-1	; special function
 
+; CHANNEL_VALVE3_BROKEN	-- valve to broken pipe
+location40:
+	.byte	CHANNEL_STEPS_FORK	; north exit
+	.byte	CHANNEL_WIND_PATH	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	valve_bottom_off_lzsa	; north bg
+	.word	valve_top_off_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	DIRECTION_N|DIRECTION_S	; special exit
+	.byte	15,25		; special x
+	.byte	14,34		; special y
+	.word	handle_valve3-1	; special function
+
+; CHANNEL_VALVE4_ELEVATOR1	-- valve for elevator1/pipe bridge
+location41:
+	.byte	CHANNEL_STEPS_FORK	; north exit
+	.byte	CHANNEL_WIND_PATH	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	valve_bottom_off_lzsa	; north bg
+	.word	valve_top_off_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	DIRECTION_N|DIRECTION_S	; special exit
+	.byte	15,25		; special x
+	.byte	14,34		; special y
+	.word	handle_valve4-1	; special function
+
+; CHANNEL_VALVE5_ENTRY	-- valve that goes to entry tree for some reason
+location42:
+	.byte	CHANNEL_STEPS_FORK	; north exit
+	.byte	CHANNEL_WIND_PATH	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	valve_bottom_off_lzsa	; north bg
+	.word	valve_top_off_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	DIRECTION_N|DIRECTION_S	; special exit
+	.byte	15,25		; special x
+	.byte	14,34		; special y
+	.word	handle_valve5-1	; special function
+
+; CHANNEL_VALVE6_BRIDGE	-- valve for bridge extender
+location43:
+	.byte	CHANNEL_STEPS_FORK	; north exit
+	.byte	CHANNEL_WIND_PATH	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	valve_bottom_off_lzsa	; north bg
+	.word	valve_top_off_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	DIRECTION_N|DIRECTION_S	; special exit
+	.byte	15,25		; special x
+	.byte	14,34		; special y
+	.word	handle_valve6-1	; special function
+
+; CHANNEL_PATH7		-- filling in a gap
+location44:
+	.byte	CHANNEL_STEPS_FORK	; north exit
+	.byte	CHANNEL_PATH5		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	path7_n_lzsa		; north bg
+	.word	path7_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff

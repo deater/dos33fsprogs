@@ -16,6 +16,7 @@ channel_graphics.inc:	\
 	path4_e.lzsa path4_w.lzsa path4_s.lzsa \
 	path5_e.lzsa path5_s.lzsa path5_n.lzsa \
 	path6_s.lzsa path6_w.lzsa path6_n.lzsa \
+	path7_s.lzsa path7_n.lzsa \
 	fork_n.lzsa fork_s.lzsa fork_w.lzsa fork_gone_w.lzsa \
 	before_elev1_e.lzsa before_elev1_w.lzsa before_elev1_open_w.lzsa \
 	before_elev1_gone_w.lzsa \
@@ -65,6 +66,8 @@ channel_graphics.inc:	\
 	echo "path6_s_lzsa: .incbin \"path6_s.lzsa\"" >> channel_graphics.inc
 	echo "path6_w_lzsa: .incbin \"path6_w.lzsa\"" >> channel_graphics.inc
 	echo "path6_n_lzsa: .incbin \"path6_n.lzsa\"" >> channel_graphics.inc
+	echo "path7_n_lzsa: .incbin \"path7_n.lzsa\"" >> channel_graphics.inc
+	echo "path7_s_lzsa: .incbin \"path7_s.lzsa\"" >> channel_graphics.inc
 	echo "fork_n_lzsa: .incbin \"fork_n.lzsa\"" >> channel_graphics.inc
 	echo "fork_s_lzsa: .incbin \"fork_s.lzsa\"" >> channel_graphics.inc
 	echo "fork_w_lzsa: .incbin \"fork_w.lzsa\"" >> channel_graphics.inc

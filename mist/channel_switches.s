@@ -1,30 +1,64 @@
 ;===========================
 ;===========================
-; handle valve 1 (elevator2)
+; handle valve 1-6
 ;===========================
 ;===========================
 handle_valve1:
-
 	lda	CHANNEL_VALVES
 	eor	#CHANNEL_VALVE1
+	jmp	common_handle_valves
+handle_valve2:
+	lda	CHANNEL_VALVES
+	eor	#CHANNEL_VALVE2
+	jmp	common_handle_valves
+handle_valve3:
+	lda	CHANNEL_VALVES
+	eor	#CHANNEL_VALVE3
+	jmp	common_handle_valves
+handle_valve4:
+	lda	CHANNEL_VALVES
+	eor	#CHANNEL_VALVE4
+	jmp	common_handle_valves
+handle_valve5:
+	lda	CHANNEL_VALVES
+	eor	#CHANNEL_VALVE5
+	jmp	common_handle_valves
+handle_valve6:
+	lda	CHANNEL_VALVES
+	eor	#CHANNEL_VALVE6
+
+common_handle_valves:
 	sta	CHANNEL_VALVES
-
 	jsr	adjust_valve_backgrounds
+	jmp	change_direction	; update background
 
-	jsr	change_direction	; update background
 
-	rts
 
 ;===========================
 ;===========================
-; goto valve1
+; goto valves
 ;===========================
 ;===========================
 goto_valve1:
-
 	lda	#CHANNEL_VALVE1_ELEVATOR2
+	bne	common_goto_valve		; bra
+goto_valve2:
+	lda	#CHANNEL_VALVE2_TREE
+	bne	common_goto_valve		; bra
+goto_valve3:
+	lda	#CHANNEL_VALVE3_BROKEN
+	bne	common_goto_valve		; bra
+goto_valve4:
+	lda	#CHANNEL_VALVE4_ELEVATOR1
+	bne	common_goto_valve		; bra
+goto_valve5:
+	lda	#CHANNEL_VALVE5_ENTRY
+	bne	common_goto_valve		; bra
+goto_valve6:
+	lda	#CHANNEL_VALVE6_BRIDGE
+	bne	common_goto_valve		; bra
+common_goto_valve:
 	sta	LOCATION
-
 	jmp	change_location
 
 
