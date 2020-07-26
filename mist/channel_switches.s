@@ -1,5 +1,85 @@
 ;===========================
 ;===========================
+; handle valve 1 (elevator2)
+;===========================
+;===========================
+handle_valve1:
+
+	lda	CHANNEL_VALVES
+	eor	#CHANNEL_VALVE1
+	sta	CHANNEL_VALVES
+
+	jsr	adjust_valve_backgrounds
+
+	jsr	change_direction	; update background
+
+	rts
+
+;===========================
+;===========================
+; goto valve1
+;===========================
+;===========================
+goto_valve1:
+
+	lda	#CHANNEL_VALVE1_ELEVATOR2
+	sta	LOCATION
+
+	jmp	change_location
+
+
+;===========================
+;===========================
+; adjust valve backgrounds
+;===========================
+;===========================
+adjust_valve_backgrounds:
+
+	;=======================
+	; for valve1
+
+check_valve1:
+	lda	CHANNEL_VALVES
+	and	#CHANNEL_VALVE1
+	beq	valve1_is_off
+
+valve1_is_on:
+	ldy	#LOCATION_NORTH_BG
+	lda	#<valve_bottom_on_lzsa
+	sta	location38,Y				; CHANNEL_VALVE1_ELEVATOR2
+	lda	#>valve_bottom_on_lzsa
+	sta	location38+1,Y				; CHANNEL_VALVE1_ELEVATOR2
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<valve_top_on_lzsa
+	sta	location38,Y				; CHANNEL_VALVE1_ELEVATOR2
+	lda	#>valve_top_on_lzsa
+	sta	location38+1,Y				; CHANNEL_VALVE1_ELEVATOR2
+
+	jmp	check_valve2
+
+valve1_is_off:
+	ldy	#LOCATION_NORTH_BG
+	lda	#<valve_bottom_off_lzsa
+	sta	location38,Y				; CHANNEL_VALVE1_ELEVATOR2
+	lda	#>valve_bottom_off_lzsa
+	sta	location38+1,Y				; CHANNEL_VALVE1_ELEVATOR2
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<valve_top_off_lzsa
+	sta	location38,Y				; CHANNEL_VALVE1_ELEVATOR2
+	lda	#>valve_top_off_lzsa
+	sta	location38+1,Y				; CHANNEL_VALVE1_ELEVATOR2
+
+
+check_valve2:
+
+
+	rts
+
+
+;===========================
+;===========================
 ; pick up myst linking book
 ;===========================
 ;===========================
@@ -233,6 +313,7 @@ no_extend_pipe:
 	; should call this when entering level
 adjust_after_changes:
 
+	jsr	adjust_valve_backgrounds
 
 adjust_bridge:
 	;=======================

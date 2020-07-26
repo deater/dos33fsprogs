@@ -186,12 +186,12 @@ CHANNEL_SWITCHES=	$B5		; channelwood switches
 	CHANNEL_SW_FAUCET	= $80
 
 CHANNEL_VALVES	=	$B6		; channelwood valves
-	CHANNEL_VALVE1		= $01
-	CHANNEL_VALVE2		= $02
-	CHANNEL_VALVE3		= $04
-	CHANNEL_VALVE4		= $08
-	CHANNEL_VALVE5		= $10
-	CHANNEL_VALVE6		= $20
+	CHANNEL_VALVE1		= $01		; elevator2
+	CHANNEL_VALVE2		= $02		; big tree
+	CHANNEL_VALVE3		= $04		; broken
+	CHANNEL_VALVE4		= $08		; elevator1
+	CHANNEL_VALVE5		= $10		; entry
+	CHANNEL_VALVE6		= $20		; bridge
 
 DENTIST_LIGHT	=	$B7		; dentist lightswitch
 DENTIST_MONTH	=	$B8		; dentist panel: month

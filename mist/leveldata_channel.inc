@@ -12,7 +12,7 @@ locations:
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
-	.word location36,location37
+	.word location36,location37,location38
 
 ; CHANNEL_ARRIVAL		-- arrival in channelwood
 location0:
@@ -223,7 +223,10 @@ location11:
 	.word	$0000			; east bg
 	.word	steps_fork_w_lzsa	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_WEST
-	.byte	$ff
+	.byte	DIRECTION_N	; special exit
+	.byte	18,25		; special x
+	.byte	38,46		; special y
+	.word	goto_valve1-1	; special function
 
 ; CHANNEL_STEPS_PATH		-- path going to steps
 location12:
@@ -277,7 +280,11 @@ location14:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH
-	.byte	$ff
+	.byte	DIRECTION_S	; special exit
+	.byte	25,31		; special x
+	.byte	24,32		; special y
+	.word	goto_valve1-1	; special function
+
 
 ; CHANNEL_WIND_PATH2		-- path to windmill too
 location15:
@@ -699,4 +706,25 @@ location37:
 	.byte	26,34		; special x
 	.byte	28,36		; special y
 	.word	elev1_handle-1	; special function
+
+; CHANNEL_VALVE1_ELEVATOR2	-- valve for elevator2
+location38:
+	.byte	CHANNEL_STEPS_FORK	; north exit
+	.byte	CHANNEL_WIND_PATH	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	valve_bottom_off_lzsa	; north bg
+	.word	valve_top_off_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	DIRECTION_N|DIRECTION_S	; special exit
+	.byte	15,25		; special x
+	.byte	14,34		; special y
+	.word	handle_valve1-1	; special function
+
 

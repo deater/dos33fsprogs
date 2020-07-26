@@ -11,12 +11,20 @@
 .byte ARBOR_ARRIVAL_CLOSED	; LOCATION	=	$82
 .endif
 
-.if 1
+.if 0
 ; MECHE
 .byte LOAD_MECHE	; WHICH_LOAD		= 	$80
 .byte DIRECTION_W	; DIRECTION		= 	$81
 .byte MECHE_ARRIVAL	; LOCATION	=	$82
 .endif
+
+.if 1
+; CHANNEL
+.byte LOAD_CHANNEL	; WHICH_LOAD		= 	$80
+.byte DIRECTION_S	; DIRECTION		= 	$81
+.byte CHANNEL_ARRIVAL	; LOCATION	=	$82
+.endif
+
 
 
 
