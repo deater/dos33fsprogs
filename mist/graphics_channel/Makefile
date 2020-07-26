@@ -42,7 +42,9 @@ channel_graphics.inc:	\
 	book_elevator_open_n.lzsa book_elevator_closed_n.lzsa \
 	book_elevator_inside_gnd_open.lzsa book_elevator_inside_gnd_closed.lzsa \
 	book_elevator_inside_top_open.lzsa book_elevator_inside_top_closed.lzsa \
-	book_mist_closed_s.lzsa book_mist_open_s.lzsa
+	book_mist_closed_s.lzsa book_mist_open_s.lzsa \
+	valve_bottom_on.lzsa valve_bottom_off.lzsa \
+	valve_top_on.lzsa valve_top_off.lzsa
 	echo "arrival_n_lzsa: .incbin \"arrival_n.lzsa\"" > channel_graphics.inc
 	echo "arrival_s_lzsa: .incbin \"arrival_s.lzsa\"" >> channel_graphics.inc
 	echo "bridge_w_lzsa: .incbin \"bridge_w.lzsa\"" >> channel_graphics.inc
@@ -125,6 +127,10 @@ channel_graphics.inc:	\
 	echo "book_elevator_inside_top_closed_lzsa: .incbin \"book_elevator_inside_top_closed.lzsa\"" >> channel_graphics.inc
 	echo "book_mist_closed_s_lzsa: .incbin \"book_mist_closed_s.lzsa\"" >> channel_graphics.inc
 	echo "book_mist_open_s_lzsa: .incbin \"book_mist_open_s.lzsa\"" >> channel_graphics.inc
+	echo "valve_top_on_lzsa: .incbin \"valve_top_on.lzsa\"" >> channel_graphics.inc
+	echo "valve_top_off_lzsa: .incbin \"valve_top_off.lzsa\"" >> channel_graphics.inc
+	echo "valve_bottom_on_lzsa: .incbin \"valve_bottom_on.lzsa\"" >> channel_graphics.inc
+	echo "valve_bottom_off_lzsa: .incbin \"valve_bottom_off.lzsa\"" >> channel_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
