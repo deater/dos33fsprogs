@@ -84,9 +84,16 @@ game_loop:
 	;====================================
 
 	lda	LOCATION
+	cmp	#CHANNEL_TANK_CLOSE
+	beq	fg_draw_faucet
+
 	cmp	#CHANNEL_BOOK_OPEN
 	beq	animate_mist_book
 
+	jmp	nothing_special
+
+fg_draw_faucet:
+	jsr	draw_water_faucet
 	jmp	nothing_special
 
 animate_mist_book:

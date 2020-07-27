@@ -1,4 +1,39 @@
 ;===========================
+; draw water valve
+;===========================
+
+draw_water_faucet:
+	lda	CHANNEL_SWITCHES
+	and	#CHANNEL_SW_FAUCET
+	beq	no_draw_faucet
+
+	lda	#17
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	lda	#<faucet_open_sprite
+	sta	INL
+	lda	#>faucet_open_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+no_draw_faucet:
+	rts
+
+
+faucet_open_sprite:
+	.byte 6,6
+	.byte $77,$77,$ff,$ff,$ff,$ff
+	.byte $f9,$97,$77,$9f,$f9,$ff
+	.byte $ff,$97,$d0,$9f,$ff,$ff
+	.byte $f9,$dd,$dd,$dd,$f9,$ff
+	.byte $ff,$ff,$dd,$77,$67,$27
+	.byte $ff,$ff,$fd,$77,$82,$96
+
+
+
+
+;===========================
 ;===========================
 ; handle valve 1-6
 ;===========================
