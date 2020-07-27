@@ -30,9 +30,90 @@ handle_valve6:
 common_handle_valves:
 	sta	CHANNEL_VALVES
 	jsr	adjust_valve_backgrounds
+
+	jsr	click_speaker
+
 	jmp	change_direction	; update background
 
+;===========================
+;===========================
+; goto valves multiple case
+;===========================
+;===========================
 
+; path5
+
+goto_path5_valve:
+	lda	DIRECTION
+	cmp	#DIRECTION_N
+	bne	path5_south
+
+path5_north:
+	lda	CURSOR_Y
+	cmp	#38
+	bcc	path5_go_north	; blt
+	jmp	goto_valve2
+path5_go_north:
+	lda	#CHANNEL_PATH7	; didn't hit valve, move instead
+	sta	LOCATION
+	jmp	change_location
+
+path5_south:
+	lda	CURSOR_Y
+	cmp	#32
+	bcs	path5_go_south
+	jmp	goto_valve4
+
+path5_go_south:
+	lda	#CHANNEL_PATH6	; didn't hit valve, move instead
+	sta	LOCATION
+	jmp	change_location
+
+
+
+; path6
+; 6S goes to valve6
+; 6W goes to valve5
+; 6N goes to valve4
+
+goto_path6_valve:
+	lda	DIRECTION
+	cmp	#DIRECTION_S
+	beq	path6_south
+	cmp	#DIRECTION_W
+	beq	path6_west
+
+path6_north:
+	lda	CURSOR_Y
+	cmp	#38
+	bcc	path6_go_north	; blt
+	jmp	goto_valve5
+path6_go_north:
+	lda	#CHANNEL_PATH5	; didn't hit valve, move instead
+	sta	LOCATION
+	jmp	change_location
+
+path6_south:
+	lda	CURSOR_Y
+	cmp	#32
+	bcs	path6_go_south	; bge
+	jmp	goto_valve6
+
+path6_go_south:
+	lda	#CHANNEL_PATH2	; didn't hit valve, move instead
+	sta	LOCATION
+	jmp	change_location
+
+path6_west:
+	lda	CURSOR_Y
+	cmp	#32
+	bcs	path6_go_west	; bge
+	jmp	goto_valve4
+
+path6_go_west:
+	lda	#CHANNEL_FORK	; didn't hit valve, move instead
+	sta	LOCATION
+	jmp	change_location
 
 ;===========================
 ;===========================
@@ -108,7 +189,163 @@ valve1_is_off:
 
 check_valve2:
 
+	lda	CHANNEL_VALVES
+	and	#CHANNEL_VALVE2
+	beq	valve2_is_off
 
+valve2_is_on:
+	ldy	#LOCATION_NORTH_BG
+	lda	#<valve_bottom_on_lzsa
+	sta	location39,Y				; CHANNEL_VALVE2
+	lda	#>valve_bottom_on_lzsa
+	sta	location39+1,Y				; CHANNEL_VALVE2
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<valve_top_on_lzsa
+	sta	location39,Y				; CHANNEL_VALVE2
+	lda	#>valve_top_on_lzsa
+	sta	location39+1,Y				; CHANNEL_VALVE2
+
+	jmp	check_valve3
+
+valve2_is_off:
+	ldy	#LOCATION_NORTH_BG
+	lda	#<valve_bottom_off_lzsa
+	sta	location39,Y				; CHANNEL_VALVE2
+	lda	#>valve_bottom_off_lzsa
+	sta	location39+1,Y				; CHANNEL_VALVE2
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<valve_top_off_lzsa
+	sta	location39,Y				; CHANNEL_VALVE2
+	lda	#>valve_top_off_lzsa
+	sta	location39+1,Y				; CHANNEL_VALVE2
+
+check_valve3:
+
+	lda	CHANNEL_VALVES
+	and	#CHANNEL_VALVE3
+	beq	valve3_is_off
+
+valve3_is_on:
+	ldy	#LOCATION_WEST_BG
+	lda	#<valve_bottom_on_lzsa
+	sta	location40,Y				; CHANNEL_VALVE3
+	lda	#>valve_bottom_on_lzsa
+	sta	location40+1,Y				; CHANNEL_VALVE3
+
+	jmp	check_valve4
+
+valve3_is_off:
+	ldy	#LOCATION_WEST_BG
+	lda	#<valve_bottom_off_lzsa
+	sta	location40,Y				; CHANNEL_VALVE3
+	lda	#>valve_bottom_off_lzsa
+	sta	location40+1,Y				; CHANNEL_VALVE3
+
+check_valve4:
+
+	lda	CHANNEL_VALVES
+	and	#CHANNEL_VALVE4
+	beq	valve4_is_off
+
+valve4_is_on:
+	ldy	#LOCATION_NORTH_BG
+	lda	#<valve_bottom_on_lzsa
+	sta	location41,Y				; CHANNEL_VALVE4
+	lda	#>valve_bottom_on_lzsa
+	sta	location41+1,Y				; CHANNEL_VALVE4
+
+	ldy	#LOCATION_WEST_BG
+	lda	#<valve_top_on_lzsa
+	sta	location41,Y				; CHANNEL_VALVE4
+	lda	#>valve_top_on_lzsa
+	sta	location41+1,Y				; CHANNEL_VALVE4
+
+	jmp	check_valve5
+
+valve4_is_off:
+	ldy	#LOCATION_NORTH_BG
+	lda	#<valve_bottom_off_lzsa
+	sta	location41,Y				; CHANNEL_VALVE4
+	lda	#>valve_bottom_off_lzsa
+	sta	location41+1,Y				; CHANNEL_VALVE4
+
+	ldy	#LOCATION_WEST_BG
+	lda	#<valve_top_off_lzsa
+	sta	location41,Y				; CHANNEL_VALVE4
+	lda	#>valve_top_off_lzsa
+	sta	location41+1,Y				; CHANNEL_VALVE4
+
+check_valve5:
+
+	lda	CHANNEL_VALVES
+	and	#CHANNEL_VALVE5
+	beq	valve5_is_off
+
+valve5_is_on:
+	ldy	#LOCATION_NORTH_BG
+	lda	#<valve_bottom_on_lzsa
+	sta	location42,Y				; CHANNEL_VALVE5
+	lda	#>valve_bottom_on_lzsa
+	sta	location42+1,Y				; CHANNEL_VALVE5
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<valve_top_on_lzsa
+	sta	location42,Y				; CHANNEL_VALVE5
+	lda	#>valve_top_on_lzsa
+	sta	location42+1,Y				; CHANNEL_VALVE5
+
+	jmp	check_valve6
+
+valve5_is_off:
+	ldy	#LOCATION_NORTH_BG
+	lda	#<valve_bottom_off_lzsa
+	sta	location42,Y				; CHANNEL_VALVE5
+	lda	#>valve_bottom_off_lzsa
+	sta	location42+1,Y				; CHANNEL_VALVE5
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<valve_top_off_lzsa
+	sta	location42,Y				; CHANNEL_VALVE5
+	lda	#>valve_top_off_lzsa
+	sta	location42+1,Y				; CHANNEL_VALVE5
+
+check_valve6:
+
+	lda	CHANNEL_VALVES
+	and	#CHANNEL_VALVE6
+	beq	valve6_is_off
+
+valve6_is_on:
+	ldy	#LOCATION_NORTH_BG
+	lda	#<valve_bottom_on_lzsa
+	sta	location43,Y				; CHANNEL_VALVE6
+	lda	#>valve_bottom_on_lzsa
+	sta	location43+1,Y				; CHANNEL_VALVE6
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<valve_top_on_lzsa
+	sta	location43,Y				; CHANNEL_VALVE6
+	lda	#>valve_top_on_lzsa
+	sta	location43+1,Y				; CHANNEL_VALVE6
+
+	jmp	check_valve_done
+
+valve6_is_off:
+	ldy	#LOCATION_NORTH_BG
+	lda	#<valve_bottom_off_lzsa
+	sta	location43,Y				; CHANNEL_VALVE6
+	lda	#>valve_bottom_off_lzsa
+	sta	location43+1,Y				; CHANNEL_VALVE6
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<valve_top_off_lzsa
+	sta	location43,Y				; CHANNEL_VALVE6
+	lda	#>valve_top_off_lzsa
+	sta	location43+1,Y				; CHANNEL_VALVE6
+
+check_valve_done:
 	rts
 
 
