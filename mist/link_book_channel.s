@@ -14,6 +14,19 @@ channel_link_book:
 	jsr	page_flip
 
 	;====================================
+	; reset parts of level
+	;
+	; actual game does this?  turns off water
+	;	make sure elevator1 is at ground level
+	;	book elevator at ground level
+
+	lda	CHANNEL_SWITCHES
+	and	#$6b			; reset water faucet, elev1 down
+					; book elevator down
+	sta	CHANNEL_SWITCHES
+
+
+	;====================================
 	; play link noise
 
 	jsr	play_link_noise

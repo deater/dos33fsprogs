@@ -5,7 +5,7 @@
 draw_windmill_handle:
 	lda	DIRECTION
 	and	#$f
-	cmp	DIRECTION_N
+	cmp	#DIRECTION_N
 	bne	no_draw_windmill_handle
 
 	lda	CHANNEL_SWITCHES

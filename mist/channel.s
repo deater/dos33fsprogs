@@ -52,11 +52,13 @@ channel_start:
 
 	; reset elevators and bridges at start
 	; actual game does this too?
+	; do this in the linking book otherwise this happens
+	; when we take the elevator back down
 
-	lda	CHANNEL_SWITCHES
-	; hack to avoid "RANGE ERROR" on some versions of ca65
-	and	#<(~(CHANNEL_BRIDGE_UP|CHANNEL_PIPE_EXTENDED|CHANNEL_BOOK_ELEVATOR_UP))
-	sta	CHANNEL_SWITCHES
+;	lda	CHANNEL_SWITCHES
+;	; hack to avoid "RANGE ERROR" on some versions of ca65
+;	and	#<(~(CHANNEL_BRIDGE_UP|CHANNEL_PIPE_EXTENDED|CHANNEL_BOOK_ELEVATOR_UP))
+;	sta	CHANNEL_SWITCHES
 
 	; set up bridges
 
