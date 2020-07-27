@@ -16,7 +16,7 @@
 			; MARKER_SWITCHES	=	$87
 .byte $2
 			; CLOCK_HOUR		=	$88
-.byte $40
+.byte $8
 			; CLOCK_MINUTE		=	$89
 
 .byte $00	; TREE_FURNACE_ON	=	$8A

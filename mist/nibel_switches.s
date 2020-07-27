@@ -106,6 +106,10 @@ projector_button:
 	; mixed text and graphics
 	bit	TEXTGR
 
+;	lda	DIRECTION
+;	ora	#DIRECTION_SPLIT
+;	sta	DIRECTION
+
 	lda	#$8
 	sta	DRAW_PAGE
 

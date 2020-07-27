@@ -149,7 +149,7 @@ location7:
 	.byte	$ff				; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_E|DIRECTION_SPLIT	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	blue_house_n_lzsa		; north bg
 	.word	blue_house_s_lzsa		; south bg
