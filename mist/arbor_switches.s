@@ -1,14 +1,27 @@
 ;=============================
 ; elevator1 handle pulled
+;=============================
+; TODO: animate
 
-; FIXME: check for water power
-; FIXME: animate
 elev1_handle:
 
 	; click speaker
 	bit	SPEAKER
 
 	; check for water power
+	lda	CHANNEL_SWITCHES
+	bpl	no_elev1_water_power	; water on is high bit
+
+	; check for proper valves
+	lda	CHANNEL_VALVES
+	and	#$0b	; check V1,V2,V4,V5
+	cmp	#$01	; want V1 on, V2,V4,V5 off
+	beq	elev1_water_power_good
+
+no_elev1_water_power:
+	rts
+
+elev1_water_power_good:
 
 	; go to bottom floor, which involves moving to CHANNEL level
 
@@ -65,16 +78,28 @@ hut_handle:
 ; elevator2 handle pulled
 ;=============================
 ;=============================
+; TODO: animate
 
-
-; FIXME: check for water power
-; FIXME: animate
 elevator2_handle:
 
 	; click speaker
 	bit	SPEAKER
 
 	; check for water power
+
+	lda	CHANNEL_SWITCHES
+	bpl	no_elev2_water_power	; water on is high bit
+
+	; check for proper valves
+
+	lda	CHANNEL_VALVES
+	and	#$1	; check V1
+	beq	elev2_water_power_good	; want V1 off
+
+no_elev2_water_power:
+	rts
+
+elev2_water_power_good:
 
 	lda	#NIBEL_IN_ELEV2_TOP_CLOSED
 	sta	LOCATION

@@ -434,16 +434,29 @@ book_room_grab_book:
 ; book elevator handle pulled
 ;=============================
 ;=============================
+; TODO: animate
 
-; FIXME: check for water power
-; FIXME: animate
 book_elevator_handle:
 
 	; click speaker
 	bit	SPEAKER
 
 	; check for water power
+	lda	CHANNEL_SWITCHES
+	and	#<(CHANNEL_SW_FAUCET|CHANNEL_PIPE_EXTENDED)
+	cmp	#<(CHANNEL_SW_FAUCET|CHANNEL_PIPE_EXTENDED)
+	bne	no_book_water_power
 
+	; check for proper valves
+	lda	CHANNEL_VALVES
+	and	#$0b	; check V1,V2,V4,V5
+	cmp	#$09	; want V1 V4 on, V2,V5 off
+	beq	book_water_power_good
+
+no_book_water_power:
+	rts
+
+book_water_power_good:
 	; toggle floor
 
 	lda	CHANNEL_SWITCHES
@@ -496,15 +509,27 @@ book_elevator_handle_done:
 ; elevator1 handle pulled
 ;=============================
 ;=============================
+; TODO: animate
 
-; FIXME: check for water power
-; FIXME: animate
 elev1_handle:
 
 	; click speaker
 	bit	SPEAKER
 
 	; check for water power
+	lda	CHANNEL_SWITCHES
+	bpl	no_elev1_water_power	; water on is high bit
+
+	; check for proper valves
+	lda	CHANNEL_VALVES
+	and	#$0b	; check V1,V2,V4,V5
+	cmp	#$01	; want V1 on, V2,V4,V5 off
+	beq	elev1_water_power_good
+
+no_elev1_water_power:
+	rts
+
+elev1_water_power_good:
 
 	; go to next floor, which involves moving to ARBOR level
 
@@ -581,11 +606,7 @@ elev1_close_door:
 ; raise bridge
 ;=======================
 ;=======================
-
-; if CHANNEL_SWITCHES CHANNEL_SW_WINDMILL and CHANNEL_SW_FAUCET
-; TODO: also if various valves in correct pattern
-
-; verified: can raise and lower bridge if powered with water
+; verified real game behavior: can raise and lower bridge if powered with water
 
 raise_bridge:
 
@@ -593,11 +614,27 @@ raise_bridge:
 
 	; only raise/lower if water is flowing
 
+	; check for water power
 	lda	CHANNEL_SWITCHES
-	and	#CHANNEL_SW_WINDMILL|CHANNEL_SW_FAUCET
-	cmp	#CHANNEL_SW_WINDMILL|CHANNEL_SW_FAUCET
-;	bne	no_raise_bridge
+	bpl	no_bridge_water_power	; water on is high bit
 
+	; check for proper valves
+	; there are actually two solutions
+
+	lda	CHANNEL_VALVES
+	and	#$33	; check V1,V2,V5,V6
+	cmp	#$31	; want V1,V5,V6 on, V2 off
+	beq	bridge_water_power_good
+
+	lda	CHANNEL_VALVES
+	and	#$07	; check V1,V2,V3
+	cmp	#$03	; want V1,V2 on, V3 off
+	beq	bridge_water_power_good
+
+no_bridge_water_power:
+	rts
+
+bridge_water_power_good:
 
 	; toggle bridge state
 
