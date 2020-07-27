@@ -1,50 +1,24 @@
-.include "zp.inc"
-.include "common_defines.inc"
 
-
-.if 0
-; if doing playthrough
-.include "playthrough_save.inc"
-.endif
-
-; want to load this to address $80
-
-.if 0
-; ARBOR
-.byte LOAD_ARBOR	; WHICH_LOAD		= 	$80
-.byte DIRECTION_W	; DIRECTION		= 	$81
-.byte ARBOR_ARRIVAL_CLOSED	; LOCATION	=	$82
-.endif
-
-.if 0
-; MECHE
-.byte LOAD_MECHE	; WHICH_LOAD		= 	$80
-.byte DIRECTION_W	; DIRECTION		= 	$81
-.byte MECHE_ARRIVAL	; LOCATION	=	$82
-.endif
-
-.if 1
-; CHANNEL
-.byte LOAD_CHANNEL	; WHICH_LOAD		= 	$80
-.byte DIRECTION_S	; DIRECTION		= 	$81
-.byte CHANNEL_ARRIVAL	; LOCATION	=	$82
-.endif
-
-.if 0
 ; Octagon (for playthrough)
 .byte LOAD_OCTAGON	; WHICH_LOAD		= 	$80
 .byte DIRECTION_S	; DIRECTION		= 	$81
-.byte OCTAGON_CENTER	; LOCATION	=	$82
-.endif
+.byte OCTAGON_TEMPLE_CENTER	; LOCATION	=	$82
 
-.if 1
-.byte $00	; RED_PAGES_TAKEN	=	$83
-.byte $00	; BLUE_PAGES_TAKEN	=	$84
-.byte $00	; CLOCK_BRIDGE		=	$85
-.byte $00	; GEAR_OPEN		=	$86
-.byte $ff	; MARKER_SWITCHES	=	$87
-.byte $00	; CLOCK_HOUR		=	$88
-.byte $00	; CLOCK_MINUTE		=	$89
+.byte (OCTAGON_PAGE|MECHE_PAGE)
+			; RED_PAGES_TAKEN	=	$83
+.byte (OCTAGON_PAGE|MECHE_PAGE)
+			; BLUE_PAGES_TAKEN	=	$84
+.byte $1
+			; CLOCK_BRIDGE		=	$85
+.byte $1
+			; GEAR_OPEN		=	$86
+.byte (MARKER_DOCK|MARKER_GEARS|MARKER_SPACESHIP|MARKER_CLOCK|MARKER_POOL)
+			; MARKER_SWITCHES	=	$87
+.byte $2
+			; CLOCK_HOUR		=	$88
+.byte $40
+			; CLOCK_MINUTE		=	$89
+
 .byte $00	; TREE_FURNACE_ON	=	$8A
 .byte $00	; FIREPLACE_GRID0	=	$8B
 .byte $00	; FIREPLACE_GRID1	=	$8C
@@ -78,11 +52,17 @@
 .byte $00	; MECHE_LOCK3		=	$A7
 .byte $00	; MECHE_LOCK4		=	$A8
 .byte $00	; HOLDING_PAGE		=	$A9
-.byte $00	; RED_PAGE_COUNT	=	$AA
-.byte $00	; BLUE_PAGE_COUNT	=	$AB
+
+.byte $2
+		; RED_PAGE_COUNT	=	$AA
+.byte $2
+		; BLUE_PAGE_COUNT	=	$AB
+
+
 .byte $00	; VIEWER_CHANNEL	=	$AC
 .byte $00	; VIEWER_LATCHED	=	$AD
-.byte $00	; TOWER_ROTATION	=	$AE
+.byte $2
+		; TOWER_ROTATION	=	$AE
 .byte $00	; SHIP_RAISED		=	$AF
 		; stoneship
 .byte $00	; PUMP_STATE		=	$B0
@@ -114,4 +94,3 @@
 .byte $00	; BOILER_VALVE		=	$C8
 .byte $00	; TRUNK_STATE		=	$C9
 
-.endif

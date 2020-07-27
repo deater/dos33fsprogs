@@ -63,7 +63,7 @@ loader.o:	loader.s \
 SAVE0: default_save.o
 	ld65 -o SAVE0 default_save.o -C ../linker_scripts/apple2_e00.inc
 
-default_save.o:	default_save.s
+default_save.o:	default_save.s playthrough_save.inc
 	ca65 -o default_save.o default_save.s -l default_save.lst
 
 

@@ -23,9 +23,11 @@ For release 1.0
 	-- hook up key/trunk puzzle
 
 + CHANNEL
-	-- hook up water valves at least
-	-- show water in pipe (because no sound clue for water running?)
 	-- from path can still see down elev1 even if up
+	-- rotate windmill if enabled?
+
++ ARBOR
+	-- rotate windmill if enabled?
 
 + NIBEL
 	-- turn on sprite crop in the viewer part
@@ -43,7 +45,6 @@ Done:
 + DENTIST
 + DNI
 + MIST_TITLE
-+ ARBOR
 + SHIP
 
 ================================
