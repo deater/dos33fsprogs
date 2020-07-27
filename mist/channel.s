@@ -84,12 +84,20 @@ game_loop:
 	;====================================
 
 	lda	LOCATION
+
 	cmp	#CHANNEL_TANK_CLOSE
 	beq	fg_draw_faucet
+
+	cmp	#CHANNEL_WINDMILL
+	beq	fg_draw_windmill_handle
 
 	cmp	#CHANNEL_BOOK_OPEN
 	beq	animate_mist_book
 
+	jmp	nothing_special
+
+fg_draw_windmill_handle:
+	jsr	draw_windmill_handle
 	jmp	nothing_special
 
 fg_draw_faucet:

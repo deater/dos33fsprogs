@@ -1,4 +1,36 @@
 ;===========================
+; draw windmill handle
+;===========================
+
+draw_windmill_handle:
+	lda	DIRECTION
+	and	#$f
+	cmp	DIRECTION_N
+	bne	no_draw_windmill_handle
+
+	lda	CHANNEL_SWITCHES
+	and	#CHANNEL_SW_WINDMILL
+	beq	no_draw_windmill_handle
+
+	lda	#11
+	sta	XPOS
+	lda	#32
+	sta	YPOS
+	lda	#<windmill_handle_sprite
+	sta	INL
+	lda	#>windmill_handle_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+no_draw_windmill_handle:
+	rts
+
+windmill_handle_sprite:
+	.byte 3,2
+	.byte $04,$ff,$44
+	.byte $21,$41,$41
+
+;===========================
 ; draw water valve
 ;===========================
 
@@ -97,7 +129,7 @@ path5_south:
 	lda	CURSOR_Y
 	cmp	#32
 	bcs	path5_go_south
-	jmp	goto_valve4
+	jmp	goto_valve5
 
 path5_go_south:
 	lda	#CHANNEL_PATH6	; didn't hit valve, move instead
@@ -168,10 +200,10 @@ goto_valve4:
 	lda	#CHANNEL_VALVE4_ELEVATOR1
 	bne	common_goto_valve		; bra
 goto_valve5:
-	lda	#CHANNEL_VALVE5_ENTRY
+	lda	#CHANNEL_VALVE5_FORK
 	bne	common_goto_valve		; bra
 goto_valve6:
-	lda	#CHANNEL_VALVE6_BRIDGE
+	lda	#CHANNEL_VALVE6_ENTRY
 	bne	common_goto_valve		; bra
 common_goto_valve:
 	sta	LOCATION

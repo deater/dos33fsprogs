@@ -806,7 +806,7 @@ location41:
 	.byte	14,34		; special y
 	.word	handle_valve4-1	; special function
 
-; CHANNEL_VALVE5_ENTRY	-- valve vaguely near entry
+; CHANNEL_VALVE5_FORK	-- valve at major fork
 location42:
 	.byte	CHANNEL_PATH6		; north exit
 	.byte	CHANNEL_PATH5		; south exit
@@ -826,7 +826,7 @@ location42:
 	.byte	14,34		; special y
 	.word	handle_valve5-1	; special function
 
-; CHANNEL_VALVE6_BRIDGE	-- valve for bridge extender
+; CHANNEL_VALVE6_ENTRY	-- valve at entry
 location43:
 	.byte	CHANNEL_PATH2		; north exit
 	.byte	CHANNEL_PATH6		; south exit
@@ -865,7 +865,3 @@ location44:
 	.byte	17,21		; special x
 	.byte	26,30		; special y
 	.word	goto_valve2-1	; special function
-
-
-
-
