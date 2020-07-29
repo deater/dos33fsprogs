@@ -35,6 +35,107 @@
 ;	SELENA_SUB ????
 
 
+;=======================================
+;=======================================
+; handle touching antenna panel
+;=======================================
+;=======================================
+
+touch_antenna_panel:
+
+	lda	CURSOR_Y
+	cmp	#32
+	bcs	antenna_bottom_row	; bge
+
+	lda	CURSOR_X
+	cmp	#9
+	bcc	antenna_nothing
+	cmp	#13
+	bcc	decrement_angle
+	cmp	#18
+	bcc	increment_angle
+	cmp	#22
+	bcc	antenna_nothing		; gap
+	cmp	#27
+	bcc	summation
+
+antenna_nothing:
+	rts
+
+
+antenna_bottom_row:
+
+	lda	CURSOR_X
+	cmp	#11
+	bcc	antenna_0
+
+	cmp	#16
+	bcc	antenna_1
+
+	cmp	#21
+	bcc	antenna_2
+
+	cmp	#25
+	bcc	antenna_3
+
+	lda	#4
+	bne	done_bottom_row		; bra
+
+antenna_0:
+	lda	#0
+	beq	done_bottom_row		; bra
+antenna_1:
+	lda	#1
+	bne	done_bottom_row		; bra
+antenna_2:
+	lda	#2
+	bne	done_bottom_row		; bra
+antenna_3:
+	lda	#3
+
+done_bottom_row:
+	sta	SELENA_ANTENNA_ACTIVE
+
+	rts
+
+increment_angle:
+	lda	SELENA_ANTENNA_ACTIVE
+	tay
+	lda	SELENA_ANTENNA1,Y
+	clc
+	adc	#1
+	cmp	#12
+	bne	done_increment_angle
+	lda	#0
+
+done_increment_angle:
+	sta	SELENA_ANTENNA1,Y
+	rts
+
+decrement_angle:
+	lda	SELENA_ANTENNA_ACTIVE
+	tay
+	lda	SELENA_ANTENNA1,Y
+	sec
+	sbc	#1
+	bpl	done_decrement_angle
+	lda	#11
+
+done_decrement_angle:
+	sta	SELENA_ANTENNA1,Y
+	rts
+
+summation:
+	rts
+
+
+
+;=======================================
+;=======================================
+; draw the antenna panel
+;=======================================
+;=======================================
+
 draw_antenna_panel:
 
 	; draw lit button
@@ -89,12 +190,17 @@ draw_antenna_panel:
 	clc
 	adc	DRAW_PAGE
 	sta	OUTH
-	ldy	#17
 
 	lda	SELENA_ANTENNA_ACTIVE
+	tay
+	lda	SELENA_ANTENNA1,Y
+	tay
+
 	asl
 	asl				; multiply by 4
 	tax
+
+	ldy	#17
 
 	lda	antenna_angles,X
 	ora	#$80

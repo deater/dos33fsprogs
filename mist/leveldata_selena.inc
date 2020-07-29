@@ -804,7 +804,10 @@ location43:
 	.word	$0000				; east bg
 	.word	antenna_close_w_lzsa		; west bg
 	.byte	BG_WEST
-	.byte	$ff
+	.byte	DIRECTION_W		; special exit
+	.byte	6,32		; special x
+	.byte	24,40		; special y
+	.word	touch_antenna_panel-1	; special function
 
 ; SELENA_BOOK_HALLWAY	-- hallway to the book room
 location44:
