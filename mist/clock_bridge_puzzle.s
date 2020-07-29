@@ -328,9 +328,21 @@ draw_clock_face:
 	lda	clock_hour_sprites+1,Y
 	sta	INH
 
+	lda	LOCATION
+	cmp	#MIST_CLOCK
+	bne	old_clock_face
+
+new_clock_face:
+	lda	#24
+	sta	XPOS
+	lda	#8
+	bne	done_clock_face		; bra
+
+old_clock_face:
 	lda	#20
 	sta	XPOS
 	lda	#6
+done_clock_face:
 	sta	YPOS
 	jsr	put_sprite_crop
 
@@ -342,9 +354,22 @@ draw_clock_face:
 	lda	clock_minute_sprites+1,Y
 	sta	INH
 
+	lda	LOCATION
+	cmp	#MIST_CLOCK
+	bne	old_clock_face2
+
+new_clock_face2:
+	lda	#24
+	sta	XPOS
+	lda	#8
+	bne	done_clock_face2	; bra
+
+old_clock_face2:
 	lda	#20
 	sta	XPOS
 	lda	#6
+done_clock_face2:
+
 	sta	YPOS
 	jsr	put_sprite_crop
 done_draw_clock_face:

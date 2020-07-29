@@ -115,6 +115,9 @@ check_if_compartment_open:
 check_if_clock:
 	cmp	#MIST_CLOCK_PUZZLE	; clock puzzle
 	beq	location_clock
+	cmp	#MIST_CLOCK
+	beq	location_clock
+
 	cmp	#MIST_CLOCK_INSIDE
 	beq	location_inside_clock
 	bne	nothing_special
