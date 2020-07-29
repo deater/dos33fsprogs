@@ -97,53 +97,28 @@ game_loop:
 	;====================================
 
 	lda	LOCATION
+
 	cmp	#SELENA_CONTROLS
 	beq	controls_animation
+
 	cmp	#SELENA_BOOK_OPEN
 	beq	mist_book_animation
+
 	cmp	#SELENA_WATER
 	beq	fg_draw_blue_page
+
 	cmp	#SELENA_CRYSTAL_CLOSE
 	beq	fg_draw_red_page
+
+	cmp	#SELENA_ANTENNA_CLOSE
+	beq	fg_draw_antenna_panel
 
 	jmp	nothing_special
 
 mist_book_animation:
 
-	; handle animated linking book
-
-	lda	ANIMATE_FRAME
-	cmp	#6
-	bcc	mist_book_good			; blt
-
-	lda	#0
-	sta	ANIMATE_FRAME
-
-mist_book_good:
-
-	asl
-	tay
-	lda	mist_movie,Y
-	sta	INL
-	lda	mist_movie+1,Y
-	sta	INH
-
-	lda	#24
-	sta	XPOS
-	lda	#12
-	sta	YPOS
-
-	jsr	put_sprite_crop
-
-	lda	FRAMEL
-	and	#$f
-	bne	done_animate_mist_book
-
-	inc	ANIMATE_FRAME
-
-done_animate_mist_book:
+	jsr	draw_mist_animation
 	jmp	nothing_special
-
 
 controls_animation:
 
@@ -206,6 +181,12 @@ fg_draw_blue_page:
 fg_draw_red_page:
         jsr     draw_red_page
         jmp     nothing_special
+
+fg_draw_antenna_panel:
+	jsr	draw_antenna_panel
+
+	jmp	nothing_special
+
 
 nothing_special:
 
@@ -334,6 +315,47 @@ no_draw_page:
         rts
 
 
+	;===============================
+	; draw mist book animation
+	;===============================
+
+draw_mist_animation:
+	; handle animated linking book
+
+	lda	ANIMATE_FRAME
+	cmp	#6
+	bcc	mist_book_good			; blt
+
+	lda	#0
+	sta	ANIMATE_FRAME
+
+mist_book_good:
+
+	asl
+	tay
+	lda	mist_movie,Y
+	sta	INL
+	lda	mist_movie+1,Y
+	sta	INH
+
+	lda	#24
+	sta	XPOS
+	lda	#12
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$f
+	bne	done_animate_mist_book
+
+	inc	ANIMATE_FRAME
+
+done_animate_mist_book:
+	jmp	nothing_special
+
+
+
 	;==============================
 	; tunnel actions
 tunnel_main_down:
@@ -378,7 +400,7 @@ keypad_press:
 
 	; puzzles
 	.include	"selena_organ_puzzle.s"
-
+	.include	"selena_sound_puzzle.s"
 
 	; linking books
 	.include	"link_book_mist.s"

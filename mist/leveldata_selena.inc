@@ -781,7 +781,7 @@ location42:
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_S	; east exit_dir
-	.byte	DIRECTION_W	; west exit_dir
+	.byte	DIRECTION_W|DIRECTION_SPLIT	; west exit_dir
 	.word	$0000				; north bg
 	.word	$0000				; south bg
 	.word	antenna_e_lzsa			; east bg

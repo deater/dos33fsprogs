@@ -41,7 +41,7 @@
 ; Selena
 .byte LOAD_SELENA	; WHICH_LOAD		= 	$80
 .byte DIRECTION_N	; DIRECTION		= 	$81
-.byte SELENA_WALKWAY1	; LOCATION	=	$82
+.byte SELENA_ANTENNA_STEPS	; LOCATION	=	$82
 .endif
 
 
@@ -121,5 +121,17 @@
 .byte $00	; HOLDING_ITEM		=	$C7
 .byte $00	; BOILER_VALVE		=	$C8
 .byte $00	; TRUNK_STATE		=	$C9
+.byte $00	; SELENA_BUTTON_STATUS	=	$CA
+.byte $00	; SELENA_ANTENNA1	=	$CB
+.byte $00	; SELENA_ANTENNA2	=	$CC
+.byte $00	; SELENA_ANTENNA3	=	$CD
+.byte $00	; SELENA_ANTENNA4	=	$CE
+.byte $00	; SELENA_ANTENNA5	=	$CF
+.byte $00	; SELENA_LOCK1		=	$D0
+.byte $00	; SELENA_LOCK2		=	$D1
+.byte $00	; SELENA_LOCK3		=	$D2
+.byte $00	; SELENA_LOCK4		=	$D3
+.byte $00	; SELENA_LOCK5		=	$D4
+.byte $00	; SELENA_ANTENNA_ACTIVE	=	$D5
 
 .endif

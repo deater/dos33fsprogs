@@ -64,7 +64,9 @@ ENVELOPE_SHAPE  = $7D
 PATTERN_L       = $7E
 PATTERN_H       = $7F
 
-; note: rest are up at $d0
+; note 70-7f also used by disk code
+
+; note: rest are up at $f0
 
 ; We have to save/restore the following values
 ; when loading/storing from disk
@@ -238,23 +240,34 @@ TRUNK_STATE		= $C9		; trunk state in stonsehip
 	TRUNK_KEY_TAKEN	    = $04
 	TRUNK_HATCH_OPEN    = $08
 
-END_OF_SAVE	=	$CA
+SELENA_BUTTON_STATUS	= $CA
+	SELENA_BUTTON1	=	$01
+	SELENA_BUTTON2	=	$02
+	SELENA_BUTTON3	=	$04
+	SELENA_BUTTON4	=	$08
+	SELENA_BUTTON5	=	$10
+
+
+SELENA_ANTENNA1		= $CB
+SELENA_ANTENNA2		= $CC
+SELENA_ANTENNA3		= $CD
+SELENA_ANTENNA4		= $CE
+SELENA_ANTENNA5		= $CF
+
+SELENA_LOCK1		= $D0
+SELENA_LOCK2		= $D1
+SELENA_LOCK3		= $D2
+SELENA_LOCK4		= $D3
+SELENA_LOCK5		= $D4
+
+SELENA_ANTENNA_ACTIVE	= $D5
+
+END_OF_SAVE	=	$D6
 
 
 ; done game puzzle state
 
-; rest of pt3_player
-ORNAMENT_L      = $D0
-ORNAMENT_H      = $D1
-SAMPLE_L        = $D2
-SAMPLE_H        = $D3
-LOOP            = $D4
-MB_VALUE        = $D5
-MB_ADDR_L       = $D6
-MB_ADDR_H       = $D7
-DONE_PLAYING    = $D8
-DONE_SONG       = $D9
-PT3_TEMP        = $DA
+
 
 
 JOYSTICK_ENABLED=	$DD
@@ -273,14 +286,25 @@ LONG_FRAME	=	$E4
 DISP_PAGE	=	$ED	; ALL
 DRAW_PAGE	=	$EE	; ALL
 
+; rest of pt3_player
+PT3_TEMP        = $EF
+ORNAMENT_L      = $F0
+ORNAMENT_H      = $F1
+SAMPLE_L        = $F2
+SAMPLE_H        = $F3
+LOOP            = $F4
+MB_VALUE        = $F5
+MB_ADDR_L       = $F6
+MB_ADDR_H       = $F7
+DONE_PLAYING    = $F8
+DONE_SONG       = $F9
 
-TINL		=	$F0
-TINH		=	$F1
-BINL		=	$F2
-BINH		=	$F3
+;TINL		=	$F0
+;TINH		=	$F1
+;BINL		=	$F2
+;BINH		=	$F3
+;SCROLL_COUNT	=	$F9
 
-
-SCROLL_COUNT	=	$F9
 TEMP		=	$FA
 TEMPY		=	$FB
 INL		=	$FC

@@ -8,8 +8,10 @@ mist_link_book:
 	and	#SOUND_MOCKINGBOARD
 	beq	skip_turn_off_music
 
-	sei
+	sei				; disable interrupts
+
 	jsr	clear_ay_both
+
 skip_turn_off_music:
 
 	; clear screen
