@@ -12,3 +12,41 @@ Compiling:
 		utils to compile
 
 	Then run "make" and hope for the best
+
+
+
+Sizes:
+	sectors on disk = 35*16 = 560
+	three tracks for dos	  -48
+	one track for VTOC	  -16
+				======
+				  496
+
+	disk1:
+		HELLO		  566	->   768 ->   3
+		LOADER		 4006	->  4096 ->  16
+		MIST_TITLE	21008	-> 21248 ->  83
+		MIST		39780	-> 39936 -> 156
+		OCTAGON		32627	-> 32768 -> 128
+		VIEWER		 4834   ->  4864 ->  19
+		DENTIST		 7879   ->  7936 ->  31
+		D'NI		 6863   ->  6912 ->  27
+		SAVE0		   74   ->   256 ->   1
+		SHIP		 5047   ->  5120 ->  20
+						========
+						484+10 = 494 = 126k
+
+	disk2:
+		CHANNEL		34418	-> 34560 -> 135
+		ARBOR		31591	-> 31744 -> 124
+		NIBEL		15467	-> 15616 -> 61
+		CABIN		15398	-> 15616 -> 61
+						========
+						  381+4= 385 = 98k
+	disk3:
+		MECHE		28857	-> 28928 -> 113
+		SELENA		32902	-> 33024 -> 129
+		STONEY		29984	-> 30208 -> 118
+		GENERATOR	 7456	->  7680 -> 30
+						========
+						390+4=394 = 100k

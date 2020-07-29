@@ -527,8 +527,8 @@ location28:
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000				; north bg
 	.word	$0000				; south bg
-	.word	tunnel_steps_e_lzsa		; east bg
-	.word	tunnel_steps_w_lzsa		; west bg
+	.word	tunnel_steps_w_lzsa		; east bg
+	.word	tunnel_steps_e_lzsa		; west bg
 	.byte	BG_EAST|BG_WEST
 	.byte	$ff
 

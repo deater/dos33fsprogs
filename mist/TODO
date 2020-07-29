@@ -7,14 +7,18 @@ For release 1.0
 + MIST
 	-- open door to clock puzzle?
 	-- only allow entering ship if it's up
+	-- maybe another location on dock to ship
 
 + OCTAGON
 	-- load "red page" sound into LC and play it?
 
 + SELENA
+	-- maybe another location on dock to ship
 	-- sounds/door puzzle
 	-- load 1s clip of sounds (4k each) into language card?
 	-- have sub background change
+	-- enable turning on lights
+	-- flame trench has left/right mixed, left view missing
 
 + STONEY
 	-- hook up compass rose

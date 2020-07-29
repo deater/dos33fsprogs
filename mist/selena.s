@@ -32,6 +32,7 @@ selena_start:
 
 	lda	#0
 	sta	DRAW_PAGE
+	sta	LEVEL_OVER
 
 	; init cursor
 
@@ -54,33 +55,15 @@ selena_start:
 
 	; hook up the special functions
 	; these might be disabled if we've been here before
+	; FIXME: this means we cannot save game inside spaceship on selena
 
 	ldy	#LOCATION_SPECIAL_EXIT
-	lda	#DIRECTION_E
-	sta	location1,Y	; enable controls
-	lda	#DIRECTION_W
-	sta	location2,Y     ; enable organ
-	lda	#DIRECTION_N
-	sta	location0,Y     ; enable mist exit
-
-	lda	#0
-	sta	LEVEL_OVER
-
-.if 1
-	lda	#SELENA_INSIDE_SHIP
-	sta	LOCATION
-
-	lda	#DIRECTION_E
-	sta	DIRECTION
-.else
-
-	lda	#SELENA_WALKWAY1
-	sta	LOCATION
-
-	lda	#DIRECTION_N
-	sta	DIRECTION
-
-.endif
+	lda	#DIRECTION_E	; enable controls
+	sta	location1,Y	; SELENA_CONTROLS
+	lda	#DIRECTION_W	; enable organ
+	sta	location2,Y	; SELENA_ELECTRIC_ORGAN
+	lda	#DIRECTION_N	; enable mist exit
+	sta	location0,Y     ; SELENA_INSIDE_SHIP
 
 	; set up initial location
 
@@ -394,7 +377,7 @@ keypad_press:
 	.include	"graphics_selena/selena_graphics.inc"
 
 	; puzzles
-	.include	"organ_puzzle.s"
+	.include	"selena_organ_puzzle.s"
 
 
 	; linking books

@@ -551,6 +551,12 @@ go_to_selena:
 	lda	#LOAD_SELENA		; Selena
 	sta	WHICH_LOAD
 
+	lda	#SELENA_INSIDE_SHIP
+	sta	LOCATION
+
+	lda	#DIRECTION_E
+	sta	DIRECTION
+
 	lda	#$ff
 	sta	LEVEL_OVER
 

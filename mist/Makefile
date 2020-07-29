@@ -203,7 +203,7 @@ selena.o:	selena.s zp.inc hardware.inc common_defines.inc \
 	keyboard.s \
 	draw_pointer.s \
 	speaker_beeps.s \
-	organ_puzzle.s \
+	selena_organ_puzzle.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o selena.o selena.s -l selena.lst
 

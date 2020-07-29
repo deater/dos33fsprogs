@@ -2,6 +2,9 @@
 	; second time switches us to selenetic, plays sound
 	;	disables organ and display
 
+	; FIXME: cannot save game in ship on selena
+	;	as selena.s resets puzzle back to myst on entry
+
 dome_pressed:
 
 	lda	ANIMATE_FRAME
@@ -71,10 +74,6 @@ dome_press_second:
 	jsr	change_location
 
 	rts
-
-
-linking_filename:
-	.byte "LINK_NOISE.BTC",0
 
 
 	;==========================
