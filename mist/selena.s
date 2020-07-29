@@ -412,7 +412,7 @@ keypad_press:
 
 	; sound
 	.include	"speaker_beeps.s"
-
+	.include	"simple_sounds.s"
 
 
 

@@ -25,6 +25,10 @@
 ; press sum button, goes to each in turn (on display and numbers, not yellow)
 ; 15, 153, 212, 130, 55
 ; crystals, pool, tunnel, chasm, clock
+;  flute, water, wind, flame, tick
+
+; press with wrong, it flips between in right order, just doesn't
+; display the sound effect name
 
 
 ; variables
@@ -43,6 +47,14 @@
 
 touch_antenna_panel:
 
+	; don't click things if already animating
+
+	lda	ANIMATE_FRAME
+	beq	actually_handle_touch
+	rts
+
+actually_handle_touch:
+
 	lda	CURSOR_Y
 	cmp	#32
 	bcs	antenna_bottom_row	; bge
@@ -54,9 +66,9 @@ touch_antenna_panel:
 	bcc	decrement_angle
 	cmp	#18
 	bcc	increment_angle
-	cmp	#22
+	cmp	#20
 	bcc	antenna_nothing		; gap
-	cmp	#27
+	cmp	#26
 	bcc	summation
 
 antenna_nothing:
@@ -126,6 +138,15 @@ done_decrement_angle:
 	rts
 
 summation:
+
+	; start animation
+
+	lda	#1
+	sta	ANIMATE_FRAME
+	sta	FRAMEL
+
+	jsr	click_speaker
+
 	rts
 
 
@@ -138,9 +159,53 @@ summation:
 
 draw_antenna_panel:
 
-	; draw lit button
+	; FIXME: hack for testing
+	lda	#$ff
+	sta	SELENA_BUTTON_STATUS
 
 	lda	SELENA_ANTENNA_ACTIVE
+	sta	CURRENT_DISPLAY
+
+	;=======================
+	; handle animation
+	lda	ANIMATE_FRAME
+	beq	not_animating
+
+	; display them in order
+	tay
+	dey
+	lda	animate_order,Y
+	sta	CURRENT_DISPLAY
+
+	; see if should increment
+	lda	FRAMEL
+	and	#$7f
+	bne	not_animating
+
+	; increment
+
+	inc	ANIMATE_FRAME
+	lda	ANIMATE_FRAME
+	cmp	#6
+	bne	animate_click
+
+	lda	#0
+	sta	ANIMATE_FRAME
+	jmp	not_animating
+animate_click:
+
+	jsr	click_speaker
+
+not_animating:
+
+	;======================
+	; draw lit button
+draw_lit_button:
+
+	lda	ANIMATE_FRAME	; don't draw button if animating
+	bne	draw_screen
+
+	lda	CURRENT_DISPLAY
 	tay
 
 	lda	antenna_icon_xs,Y
@@ -157,9 +222,11 @@ draw_antenna_panel:
 
 	jsr	put_sprite_crop
 
+	;======================
 	; draw screen
+draw_screen:
 
-	lda	SELENA_ANTENNA_ACTIVE
+	lda	CURRENT_DISPLAY
 	tay
 	lda	SELENA_ANTENNA1,Y
 	tay
@@ -179,7 +246,7 @@ draw_antenna_panel:
 	jsr	put_sprite_crop
 
 
-
+	;==========================
 	; print angle
 
 	; line 21 is at #$650
@@ -191,7 +258,7 @@ draw_antenna_panel:
 	adc	DRAW_PAGE
 	sta	OUTH
 
-	lda	SELENA_ANTENNA_ACTIVE
+	lda	CURRENT_DISPLAY
 	tay
 	lda	SELENA_ANTENNA1,Y
 	tay
@@ -219,8 +286,78 @@ draw_antenna_panel:
 	ora	#$80
 	sta	(OUTL),Y
 
+
+	;===============================
 	; draw sound effect text
 
+	lda	CURRENT_DISPLAY
+	beq	test_position1
+	cmp	#1
+	beq	test_position2
+	cmp	#2
+	beq	test_position3
+	cmp	#3
+	beq	test_position4
+
+test_position5:
+	lda	SELENA_ANTENNA5
+	cmp	#7
+	bne	antenna_default_sound
+	lda	SELENA_BUTTON_STATUS
+	and	#SELENA_BUTTON5
+	beq	antenna_default_sound
+	lda	#<sound5_tunnel
+	sta	OUTL
+	lda     #>sound5_tunnel
+	jmp	antenna_print_sound
+
+test_position1:
+	lda	SELENA_ANTENNA1
+	cmp	#5
+	bne	antenna_default_sound
+	lda	SELENA_BUTTON_STATUS
+	and	#SELENA_BUTTON1
+	beq	antenna_default_sound
+	lda	#<sound1_water
+	sta	OUTL
+	lda     #>sound1_water
+	jmp	antenna_print_sound
+
+test_position2:
+	lda	SELENA_ANTENNA2
+	cmp	#4
+	bne	antenna_default_sound
+	lda	SELENA_BUTTON_STATUS
+	and	#SELENA_BUTTON2
+	beq	antenna_default_sound
+	lda	#<sound2_flame
+	sta	OUTL
+	lda     #>sound2_flame
+	jmp	antenna_print_sound
+
+test_position3:
+	lda	SELENA_ANTENNA3
+	cmp	#2
+	bne	antenna_default_sound
+	lda	SELENA_BUTTON_STATUS
+	and	#SELENA_BUTTON3
+	beq	antenna_default_sound
+	lda	#<sound3_clocks
+	sta	OUTL
+	lda     #>sound3_clocks
+	jmp	antenna_print_sound
+
+test_position4:
+	lda	SELENA_ANTENNA4
+	cmp	#1
+	bne	antenna_default_sound
+	lda	SELENA_BUTTON_STATUS
+	and	#SELENA_BUTTON4
+	beq	antenna_default_sound
+	lda	#<sound4_crystals
+	sta	OUTL
+	lda     #>sound4_crystals
+	jmp	antenna_print_sound
 
 antenna_default_sound:
 
@@ -235,8 +372,8 @@ antenna_print_sound:
 
 	rts
 
-
-
+animate_order:
+	.byte 3,0,4,1,2
 
 sound_names:
 
