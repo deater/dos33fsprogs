@@ -6,11 +6,17 @@
 
 ;bit2tbl=$dc00		; in loader.s
 
-encbuf=$e00
-frombuff=$d00
+frombuff=$d00		; sector data to write
+
+encbuf=$e00		; nibble buffer must be page alined
 
 
-popwr:
+	;================================
+	; set up the self-modifying code
+	; to point to the proper slot
+	;================================
+	; slot number is in high nibble of A
+popwr_init:
 	lda	#$60
 
 	and	#$70		; the slot number is in the top here
@@ -19,7 +25,16 @@ popwr:
 	sta	slotpatchw3+1
 	sta	slotpatchw4+1
 
-	; convert the input to nibbles?
+	rts
+
+
+	;================================
+	; write a sector
+	;================================
+
+sector_write:
+
+	; convert the input to nibbles
 
 	ldy	#2			; why start at 2?
 aa:
@@ -58,8 +73,14 @@ b3:
 	and	tmpsec		; and with prev nibble?
 	dey
 	bne	b3
-;reqsec:
+
+
+requested_sector:
 	tay
+	; at this point A has the sector number
+	; this code assumes you want sector 0
+
+
 	bne	cmpsecwr	; retry if not what we want?
 
         ;skip tail #$DE #$AA #$EB some #$FFs ...
@@ -82,116 +103,122 @@ b4:
 	; c0e9	slot 6 motor on
 	; c0ea	slot 6 drive 1
 	; c0eb	slot 6 drive 2
-	; c0ec	slot 6 q6 off read
-	; c0ed	slot 6 q6 on  wp sense
-	; c0ee	slot 6 q7 off read/wp sense
-	; c0ef	slot 6 q7 on  write
+	; c0ec	slot 6 q6 off \                   Q6  Q7
+	; c0ed	slot 6 q6 on  |-- state machine    0  0   READ
+	; c0ee	slot 6 q7 off |                    0  1   WRITE
+	; c0ef	slot 6 q7 on  /                    1  0   SENSE WRITE PROTECT
+	;                                          1  1   WRITE LOAD
 
         ; write sector data
 
 slotpatchw1:
-        ldx	#$d1
-        lda	$c08d, x	; prime drive		; c0ed if X=$60
-        lda	$c08e, x	; required by Unidisk	; c0ee
+        ldx	#$d1		; cycle num smc        Q6  Q7
+        lda	$c08d, x	; prime drive		1   X
+        lda	$c08e, x	; required by Unidisk	1   0   ; senese wp?
         tya
-        sta	$c08f, x				; c0ef write
-        ora	$c08c, x				; c0ec read?
+        sta	$c08f, x	;                       1   1   ; write load
+        ora	$c08c, x	;                       0   1   ; write
 
-        ;40 cycles
+        ; 40 cycles
 
-        ldy	#4		; 2 cycles
-        cmp	$ea		; 3 cycles
-        cmp	($ea,x)		; 6 cycles
+        ldy	#4						; 2 cycles
+        cmp	$ea		; nop				; 3 cycles
+        cmp	($ea,x)		; nop				; 6 cycles
 b5:
-	jsr	writenib1	; (29 cycles)
+	jsr	writenib1					; (29 cycles)
 
-				; +6 cycles
-        dey			; 2 cycles
-        bne	b5		; 3 cycles if taken, 2 if not
+								; +6 cycles
+        dey							; 2 cycles
+        bne	b5						; 3/2nt
 
         ; 36 cycles
-                                ; +10 cycles
+                                				; +10 cycles
 	ldy	#(prolog_e-prolog)
-				; 2 cycles
-	cmp	$ea		; 3 cycles
+								; 2 cycles
+	cmp	$ea		; nop				; 3 cycles
 b6:
-	lda	prolog-1, y	; 4 cycles
-	jsr	writenib3	; (17 cycles)
+	lda	prolog-1, y					; 4 cycles
+	jsr	writenib3					; (17 cycles)
 
-        ; 32 cycles if branch taken
-				; +6 cycles
-	dey			; 2 cycles
-	bne	b6		; 3 cycles if taken, 2 if not
+	; 32 cycles if branch taken
+								; +6 cycles
+	dey							; 2 cycles
+	bne	b6						; 3/2nt
 
-        ;36 cycles on first pass
-                                ;+10 cycles
-        tya                     ;2 cycles
-        ldy     #$56            ;2 cycles
-b7:       eor     bit2tbl-1, y    ;5 cycles
-        tax                     ;2 cycles
-        lda     xlattbl, x      ;4 cycles
+        ; 36 cycles on first pass
+								; +10 cycles
+	tya							; 2 cycles
+	ldy	#$56						; 2 cycles
+b7:
+	eor	bit2tbl-1, y					; 5 cycles
+	tax							; 2 cycles
+	lda	xlattbl, x      				; 4 cycles
 slotpatchw2:
-        ldx     #$d1            ;2 cycles
-        sta     $c08d, x        ;5 cycles
-        lda     $c08c, x        ;4 cycles
+        ldx	#$d1		; slot number smc		; 2 cycles
+        sta	$c08d, x	; wp sense			; 5 cycles
+        lda	$c08c, x	; read				; 4 cycles
 
-        ;32 cycles if branch taken
+	; 32 cycles if branch taken
 
-        lda     bit2tbl-1, y    ;5 cycles
-        dey                     ;2 cycles
-        bne     b7               ;3 cycles if taken, 2 if not
+        lda	bit2tbl-1, y					; 5 cycles
+        dey							; 2 cycles
+        bne     b7						; 3/2nt
 
-        ;32 cycles
-                                ;+9 cycles
-        clc                     ;2 cycles
-b88:      eor     encbuf, y       ;4 cycles
-b8:       tax                     ;2 cycles
-        lda     xlattbl, x      ;4 cycles
+        ; 32 cycles
+								; +9 cycles
+        clc							; 2 cycles
+b88:
+	eor	encbuf, y					; 4 cycles
+b8:
+	tax							; 2 cycles
+        lda	xlattbl, x					; 4 cycles
 slotpatchw3:
-        ldx     #$d1            ;2 cycles
-        sta     $c08d, x        ;5 cycles
-        lda     $c08c, x        ;4 cycles
-        bcs     f1               ;3 cycles if taken, 2 if not
+	ldx	#$d1		; slot number smc		; 2 cycles
+	sta	$c08d, x	; wp sense			; 5 cycles
+	lda	$c08c, x	; read				; 4 cycles
+	bcs	f1						; 3/2nt
 
-        ;32 cycles if branch taken
+	; 32 cycles if branch taken
 
-        lda     encbuf, y       ;4 cycles
-        iny                     ;2 cycles
-        bne     b88              ;3 cycles if taken, 2 if not
+	lda	encbuf, y					; 4 cycles
+	iny							; 2 cycles
+	bne	b88						; 3/2nt
 
-        ;32 cycles
-                                ;+10 cycles
-        sec                     ;2 cycles
-        bcs     b8               ;3 cycles
+	; 32 cycles
+								; +10 cycles
+	sec							; 2 cycles
+	bcs	b8						; 3 cycles
 
-        ;32 cycles
-                                ;+3 cycles
-f1:       ldy     #(epilog_e-epilog)
-                                ;2 cycles
-        cmp     ($ea,x)         ;6 cycles
-b9:       lda     epilog-1, y     ;4 cycles
-        jsr     writenib3       ;(17 cycles)
+	; 32 cycles
+								; +3 cycles
+f1:
+	ldy	#(epilog_e-epilog)
+								; 2 cycles
+        cmp	($ea,x)		; nop				; 6 cycles
+b9:
+	lda	epilog-1, y					; 4 cycles
+	jsr	writenib3					; (17 cycles)
 
-        ;32 cycles if branch taken
-                                ;+6 cycles
-        dey                     ;2 cycles
-        bne     b9               ;3 cycles if branch taken, 2 if not
+	; 32 cycles if branch taken
+								; +6 cycles
+        dey							; 2 cycles
+        bne     b9						;3/2nt
 
-        lda     $c08e, x
-        lda     $c08c, x
-        lda     $c088, x
-	rts
+        lda     $c08e, x	; read/wp
+        lda     $c08c, x	; read
+        lda     $c088, x	; motor off
+	rts							; 6 cycles
 
 writenib1:
-        cmp     ($ea,x)         ;6 cycles
-        cmp     ($ea,x)         ;6 cycles
+	cmp     ($ea,x)		; nop				; 6 cycles
+	cmp     ($ea,x)		; nop				; 6 cycles
 writenib3:
 slotpatchw4:
-        ldx     #$d1            ;2 cycles
+	ldx     #$d1		; slot number			; 2 cycles
 writenib4:
-        sta     $c08d, x        ;5 cycles
-        ora     $c08c, x        ;4 cycles
-        rts                     ;6 cycles
+	sta     $c08d, x	; wp sense?			; 5 cycles
+	ora     $c08c, x	; read				; 4 cycles
+	rts							; 6 cycles
 
 prolog:	.byte $ad, $aa, $d5
 prolog_e:
