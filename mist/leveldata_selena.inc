@@ -14,7 +14,7 @@ locations:
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
-	.word location40,location41
+	.word location40,location41,location42
 
 ; SELENA_INSIDE_SHIP		-- Inside Ship
 location0:
@@ -80,7 +80,7 @@ location2:
 
 ; SELENA_WALKWAY1		-- walkway1
 location3:
-	.byte	SELENA_SPACESHIP_PATH	; north exit
+	.byte	SELENA_WALKWAY2		; north exit
 	.byte	SELENA_SPACESHIP_DOOR	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -115,7 +115,7 @@ location4:
 ; SELENA_WALKWAY4		-- walkway4
 location5:
 	.byte	SELENA_BUNKER		; north exit
-	.byte	SELENA_SPACESHIP_PATH	; south exit
+	.byte	SELENA_WALKWAY3		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
@@ -415,20 +415,20 @@ location21:
 	.word	selena_take_red_page-1	; special function
 
 
-; SELENA_SPACESHIP_PATH		-- spaceship path/ walkway3?
+; SELENA_WALKWAY3		-- spaceship path/ walkway3
 location22:
 	.byte	SELENA_WALKWAY4		; north exit
-	.byte	SELENA_WALKWAY1		; south exit
+	.byte	SELENA_WALKWAY2		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	spaceship_path_n_lzsa		; north bg
-	.word	spaceship_path_s_lzsa		; south bg
-	.word	$0000				; east bg
-	.word	$0000				; west bg
+	.word	walkway3_n_lzsa		; north bg
+	.word	walkway3_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff
 
@@ -784,3 +784,20 @@ location41:
 	.byte	12,28		; special x
 	.byte	10,32		; special y
 	.word	keypad_press-1	; special function
+
+; SELENA_WALKWAY2		-- walkway2
+location42:
+	.byte	SELENA_WALKWAY3		; north exit
+	.byte	SELENA_WALKWAY1		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	walkway2_n_lzsa		; north bg
+	.word	walkway2_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff

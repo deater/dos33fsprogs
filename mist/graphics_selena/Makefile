@@ -33,7 +33,8 @@ selena_graphics.inc:	\
 	crystal_path_n.lzsa \
 	crystals_s.lzsa crystals_n.lzsa \
 	crystals_note_e.lzsa \
-	spaceship_path_n.lzsa spaceship_path_s.lzsa \
+	walkway3_n.lzsa walkway3_s.lzsa \
+	walkway2_n.lzsa walkway2_s.lzsa \
 	before_crystals_w.lzsa before_crystals_e.lzsa \
 	tunnel_steps_e.lzsa tunnel_steps_w.lzsa \
 	tunnel_path_s.lzsa tunnel_path_n.lzsa tunnel_path_w.lzsa \
@@ -98,8 +99,10 @@ selena_graphics.inc:	\
 	echo "crystals_s_lzsa: .incbin \"crystals_s.lzsa\"" >> selena_graphics.inc
 	echo "crystals_n_lzsa: .incbin \"crystals_n.lzsa\"" >> selena_graphics.inc
 	echo "crystals_note_e_lzsa: .incbin \"crystals_note_e.lzsa\"" >> selena_graphics.inc
-	echo "spaceship_path_n_lzsa: .incbin \"spaceship_path_n.lzsa\"" >> selena_graphics.inc
-	echo "spaceship_path_s_lzsa: .incbin \"spaceship_path_s.lzsa\"" >> selena_graphics.inc
+	echo "walkway3_n_lzsa: .incbin \"walkway3_n.lzsa\"" >> selena_graphics.inc
+	echo "walkway3_s_lzsa: .incbin \"walkway3_s.lzsa\"" >> selena_graphics.inc
+	echo "walkway2_n_lzsa: .incbin \"walkway2_n.lzsa\"" >> selena_graphics.inc
+	echo "walkway2_s_lzsa: .incbin \"walkway2_s.lzsa\"" >> selena_graphics.inc
 	echo "before_crystals_w_lzsa: .incbin \"before_crystals_w.lzsa\"" >> selena_graphics.inc
 	echo "before_crystals_e_lzsa: .incbin \"before_crystals_e.lzsa\"" >> selena_graphics.inc
 	echo "tunnel_steps_e_lzsa: .incbin \"tunnel_steps_e.lzsa\"" >> selena_graphics.inc
