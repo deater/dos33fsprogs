@@ -772,6 +772,9 @@ location38:
 	.byte	12,30		; special y
 	.word	touch_pillar-1	; special function
 
+; there is a corresponding east background
+; but we are out of room
+
 ; MIST_SPACESHIP_PATH		-- spaceship path
 location39:
 	.byte	$ff			; north exit

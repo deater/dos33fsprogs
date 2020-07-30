@@ -41,7 +41,7 @@ mist_graphics.inc:	\
 	gear_shipup_s.lzsa \
 	gear_base_n.lzsa \
 	spaceship_switch_s.lzsa spaceship_switch_n.lzsa \
-	spaceship_path_w.lzsa \
+	spaceship_path_e.lzsa spaceship_path_w.lzsa \
 	tree4_n.lzsa tree4_s.lzsa tree4_w.lzsa tree4_e.lzsa \
 	clock_island_s.lzsa clock_island_n.lzsa \
 	clock_puzzle_s.lzsa clock_puzzle_bridge.lzsa \
