@@ -592,6 +592,44 @@ done_draw_water_background:
 
 
 	;===========================
+	; draw chasm background #2
+	;===========================
+draw_chasm_background:
+
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_S
+	bne	done_draw_chasm_background
+
+	bit	TEXTGR		; we do this because we aren't a standalone
+				; location
+
+	lda	#<sound2_flame
+	sta	OUTL
+	lda     #>sound2_flame
+	sta	OUTH
+	jsr	move_and_print
+
+	lda	SELENA_BUTTON_STATUS
+	and	#SELENA_BUTTON2
+	beq	done_draw_chasm_background
+
+	lda	#17
+	sta	XPOS
+	lda	#6
+	sta	YPOS
+	lda	#<chasm_bg_sprite
+	sta	INL
+	lda	#>chasm_bg_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+done_draw_chasm_background:
+	rts
+
+
+
+	;===========================
 	; draw tunnel background #5
 	;===========================
 draw_tunnel_background:
@@ -803,6 +841,19 @@ water_bg_sprite:
 	.byte $8d,$8d,$8d,$8d,$8d,$8d,$8d
 	.byte $32,$82,$12,$12,$12,$82,$32
 	.byte $33,$88,$91,$81,$81,$98,$33
+
+chasm_bg_sprite:
+	.byte 7,9
+	.byte $dd,$df,$fd,$dd,$fd,$dd,$dd
+	.byte $dd,$df,$fd,$dd,$fd,$df,$dd
+	.byte $ff,$df,$fd,$dd,$fd,$df,$dd
+	.byte $dd,$ff,$dd,$ff,$dd,$dd,$dd
+	.byte $dd,$dd,$df,$fd,$df,$df,$fd
+	.byte $dd,$dd,$dd,$df,$fd,$ff,$dd
+	.byte $8d,$8d,$8d,$8d,$8d,$8d,$8f
+	.byte $22,$32,$32,$32,$32,$32,$22
+	.byte $33,$98,$11,$11,$11,$98,$33
+
 
 tunnel_bg_sprite:
 	.byte 9,10

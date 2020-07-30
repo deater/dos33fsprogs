@@ -320,9 +320,13 @@ location16:
 	.word	chasm_n_lzsa			; north bg
 	.word	chasm_s_lzsa			; south bg
 	.word	chasm_e_lzsa			; east bg
-	.word	$0000				; west bg
-	.byte	BG_SOUTH|BG_EAST|BG_NORTH
-	.byte	$ff
+	.word	chasm_w_lzsa			; west bg
+	.byte	BG_SOUTH|BG_EAST|BG_NORTH|BG_WEST
+	.byte	DIRECTION_S	; special exit
+	.byte	17,24		; special x
+	.byte	18,26		; special y
+	.word	chasm_button_pressed-1	; special function
+
 
 ; SELENA_CLOCK_PATH			-- path on way to clock
 location17:
