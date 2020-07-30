@@ -116,6 +116,9 @@ game_loop:
 	cmp	#SELENA_CHASM
 	beq	fg_draw_chasm_note
 
+	cmp	#SELENA_CLOCK_CLOSE
+	beq	fg_draw_clock_note
+
 	cmp	#SELENA_TUNNEL_MAIN_CLOSE
 	beq	fg_draw_tunnel_note
 
@@ -199,6 +202,10 @@ fg_draw_water_note:
 
 fg_draw_chasm_note:
 	jsr	draw_chasm_background
+	jmp	nothing_special
+
+fg_draw_clock_note:
+	jsr	draw_clock_background
 	jmp	nothing_special
 
 fg_draw_tunnel_note:

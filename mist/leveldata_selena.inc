@@ -352,7 +352,7 @@ location18:
 	.byte	SELENA_CLOCK_BEFORE	; east exit
 	.byte	SELENA_CLOCK_PATH	; west exit
 	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
+	.byte	DIRECTION_S|DIRECTION_SPLIT	; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	clock_n_lzsa			; north bg
@@ -377,7 +377,10 @@ location19:
 	.word	$0000				; east bg
 	.word	$0000				; west bg
 	.byte	BG_SOUTH
-	.byte	$ff
+	.byte	DIRECTION_S		; special exit
+	.byte	17,22		; special x
+	.byte	20,28		; special y
+	.word	clock_button_pressed-1	; special function
 
 ; SELENA_CLOCK_BEFORE	-- path before clocks, when coming from crystals
 location20:

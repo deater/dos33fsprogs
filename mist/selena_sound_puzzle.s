@@ -628,6 +628,36 @@ done_draw_chasm_background:
 	rts
 
 
+	;===========================
+	; draw clock background #3
+	;===========================
+draw_clock_background:
+
+	lda	#<sound3_clocks
+	sta	OUTL
+	lda     #>sound3_clocks
+	sta	OUTH
+	jsr	move_and_print
+
+	lda	SELENA_BUTTON_STATUS
+	and	#SELENA_BUTTON3
+	beq	done_draw_clock_background
+
+	lda	#17
+	sta	XPOS
+	lda	#6
+	sta	YPOS
+	lda	#<clock_bg_sprite
+	sta	INL
+	lda	#>clock_bg_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+done_draw_clock_background:
+	rts
+
+
+
 
 	;===========================
 	; draw tunnel background #5
@@ -853,6 +883,19 @@ chasm_bg_sprite:
 	.byte $8d,$8d,$8d,$8d,$8d,$8d,$8f
 	.byte $22,$32,$32,$32,$32,$32,$22
 	.byte $33,$98,$11,$11,$11,$98,$33
+
+clock_bg_sprite:
+	.byte 6,10
+	.byte $fd,$dd,$dd,$dd,$dd,$dd
+	.byte $fd,$dd,$dd,$fd,$dd,$dd
+	.byte $ff,$fd,$dd,$dd,$dd,$dd
+	.byte $ff,$ff,$dd,$dd,$dd,$fd
+	.byte $ff,$ff,$dd,$fd,$dd,$dd
+	.byte $ff,$ff,$ff,$df,$dd,$dd
+	.byte $dd,$df,$dd,$dd,$dd,$df
+	.byte $8d,$8d,$8d,$8d,$8d,$8d
+	.byte $82,$82,$82,$82,$82,$82
+	.byte $88,$08,$11,$11,$11,$08
 
 
 tunnel_bg_sprite:
