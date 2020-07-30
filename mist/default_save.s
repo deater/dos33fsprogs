@@ -41,7 +41,7 @@
 ; Selena
 .byte LOAD_SELENA	; WHICH_LOAD		= 	$80
 .byte DIRECTION_N	; DIRECTION		= 	$81
-.byte SELENA_ANTENNA_STEPS	; LOCATION	=	$82
+.byte SELENA_WALKWAY1	; LOCATION	=	$82
 .endif
 
 

@@ -181,7 +181,7 @@ location8:
 	.word	$0000			; west bg
 	.byte	BG_SOUTH
 	.byte   DIRECTION_S		; special exit
-	.byte	7,12	; special x
+	.byte	6,12	; special x
 	.byte	8,18	; special y
 	.word	press_elevator_button-1
 

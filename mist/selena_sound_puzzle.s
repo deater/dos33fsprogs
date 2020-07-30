@@ -554,10 +554,46 @@ antenna_display11_sprite:
 	.byte $55,$86,$86,$86,$86,$86,$86,$86,$66
 	.byte $88,$88,$88,$88,$88,$88,$88,$88,$88
 
+	;===========================
+	; draw water background #1
+	;===========================
+draw_water_background:
 
-	;=========================
-	; draw tunnel background
-	;=========================
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_W
+	bne	done_draw_water_background
+
+	bit	TEXTGR		; we do this because we aren't a standalone
+				; location
+
+	lda	#<sound1_water
+	sta	OUTL
+	lda     #>sound1_water
+	sta	OUTH
+	jsr	move_and_print
+
+	lda	SELENA_BUTTON_STATUS
+	and	#SELENA_BUTTON1
+	beq	done_draw_water_background
+
+	lda	#17
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+	lda	#<water_bg_sprite
+	sta	INL
+	lda	#>water_bg_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+done_draw_water_background:
+	rts
+
+
+	;===========================
+	; draw tunnel background #5
+	;===========================
 draw_tunnel_background:
 
 	lda	#<sound5_tunnel
@@ -585,6 +621,79 @@ done_draw_tunnel_background:
 
 
 	;=========================
+	; water button #1
+	;=========================
+water_button_pressed:
+
+	lda	SELENA_BUTTON_STATUS
+	eor	#SELENA_BUTTON1
+	sta	SELENA_BUTTON_STATUS
+
+	and	#SELENA_BUTTON1
+	beq	done_water_button_pressed
+
+	jsr	play_water_noise
+
+done_water_button_pressed:
+	rts
+
+
+	;=========================
+	; chasm button #2
+	;=========================
+chasm_button_pressed:
+
+	lda	SELENA_BUTTON_STATUS
+	eor	#SELENA_BUTTON2
+	sta	SELENA_BUTTON_STATUS
+
+	and	#SELENA_BUTTON2
+	beq	done_chasm_button_pressed
+
+	jsr	play_chasm_noise
+
+done_chasm_button_pressed:
+	rts
+
+
+	;=========================
+	; clock button #3
+	;=========================
+clock_button_pressed:
+
+	lda	SELENA_BUTTON_STATUS
+	eor	#SELENA_BUTTON3
+	sta	SELENA_BUTTON_STATUS
+
+	and	#SELENA_BUTTON3
+	beq	done_tunnel_button_pressed
+
+	jsr	play_clock_noise
+
+done_clock_button_pressed:
+	rts
+
+
+	;=========================
+	; crystal button #4
+	;=========================
+crystal_button_pressed:
+
+	lda	SELENA_BUTTON_STATUS
+	eor	#SELENA_BUTTON4
+	sta	SELENA_BUTTON_STATUS
+
+	and	#SELENA_BUTTON4
+	beq	done_crystal_button_pressed
+
+	jsr	play_crystal_noise
+
+done_crystal_button_pressed:
+	rts
+
+
+
+	;=========================
 	; tunnel button
 	;=========================
 tunnel_button_pressed:
@@ -601,11 +710,63 @@ tunnel_button_pressed:
 done_tunnel_button_pressed:
 	rts
 
+;===============================
+; play the noises
+;===============================
 
+	; water #1
+play_water_noise:
 
-play_tunnel_noise:
+	lda	#NOTE_E3
+	sta	speaker_frequency
 
-	lda	#NOTE_C3
+	lda	#15
+	sta	speaker_duration
+
+	jsr	speaker_tone
+
+	rts
+
+	; fire #2
+play_chasm_noise:
+
+	lda	#NOTE_D3
+	sta	speaker_frequency
+
+	lda	#15
+	sta	speaker_duration
+
+	jsr	speaker_tone
+
+	rts
+
+	; clock #3
+play_clock_noise:
+
+	ldx	#5
+clock_noise_loop:
+	jsr	click_speaker
+
+	lda	#200
+	jsr	WAIT
+
+	dex
+	bne	clock_noise_loop
+
+	rts
+
+	; whistle #4
+play_crystal_noise:
+
+	lda	#NOTE_E3
+	sta	speaker_frequency
+
+	lda	#10
+	sta	speaker_duration
+
+	jsr	speaker_tone
+
+	lda	#NOTE_E4
 	sta	speaker_frequency
 
 	lda	#10
@@ -615,7 +776,33 @@ play_tunnel_noise:
 
 	rts
 
+	; tunnel #5
+play_tunnel_noise:
 
+	lda	#NOTE_C3
+	sta	speaker_frequency
+
+	lda	#15
+	sta	speaker_duration
+
+	jsr	speaker_tone
+
+	rts
+
+
+water_bg_sprite:
+	.byte 7,11
+	.byte $dd,$dd,$dd,$ff,$dd,$dd,$dd
+	.byte $dd,$dd,$dd,$ff,$ff,$dd,$dd
+	.byte $dd,$dd,$dd,$df,$df,$dd,$dd
+	.byte $dd,$dd,$dd,$ff,$dd,$dd,$dd
+	.byte $dd,$dd,$dd,$ff,$ff,$dd,$dd
+	.byte $dd,$dd,$dd,$df,$df,$dd,$dd
+	.byte $df,$fd,$df,$fd,$df,$fd,$df
+	.byte $dd,$dd,$dd,$dd,$dd,$dd,$dd
+	.byte $8d,$8d,$8d,$8d,$8d,$8d,$8d
+	.byte $32,$82,$12,$12,$12,$82,$32
+	.byte $33,$88,$91,$81,$81,$98,$33
 
 tunnel_bg_sprite:
 	.byte 9,10

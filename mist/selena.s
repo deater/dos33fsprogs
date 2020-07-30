@@ -105,7 +105,7 @@ game_loop:
 	beq	mist_book_animation
 
 	cmp	#SELENA_WATER
-	beq	fg_draw_blue_page
+	beq	fg_draw_blue_page	; and water note
 
 	cmp	#SELENA_CRYSTAL_CLOSE
 	beq	fg_draw_red_page
@@ -115,6 +115,7 @@ game_loop:
 
 	cmp	#SELENA_TUNNEL_MAIN_CLOSE
 	beq	fg_draw_tunnel_note
+
 
 	jmp	nothing_special
 
@@ -187,6 +188,10 @@ fg_draw_red_page:
 
 fg_draw_antenna_panel:
 	jsr	draw_antenna_panel
+	jmp	nothing_special
+
+fg_draw_water_note:
+	jsr	draw_water_background
 	jmp	nothing_special
 
 fg_draw_tunnel_note:
@@ -271,6 +276,15 @@ selena_take_red_page:
 	jmp	take_red_page
 
 selena_take_blue_page:
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_W
+	bne	actually_take_blue_page
+
+	jmp	water_button_pressed
+
+actually_take_blue_page:
+
 	lda	#SELENA_PAGE
 	jmp	take_blue_page
 
@@ -299,7 +313,12 @@ draw_blue_page:
 
 	lda	DIRECTION
 	cmp	#DIRECTION_S
+	beq	do_draw_blue_page
+	cmp	#DIRECTION_W
 	bne	no_draw_page
+	jmp	draw_water_background
+
+do_draw_blue_page:
 
 	lda	BLUE_PAGES_TAKEN
 	and	#SELENA_PAGE
