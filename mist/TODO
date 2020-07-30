@@ -8,6 +8,7 @@ For release 1.0
 	-- open door to clock puzzle?
 	-- only allow entering ship if it's up
 	-- maybe another location on dock to ship
+	-- MIST_ROCKET_PATH_PAD probably missing ship-raised background
 
 + OCTAGON
 	-- load "red page" sound into LC and play it?

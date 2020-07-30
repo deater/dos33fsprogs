@@ -360,18 +360,18 @@ location17:
 ; MIST_SPACESHIP_SWITCH		-- spaceship switch
 location18:
 	.byte	MIST_ROCKET_CLOSE	; north exit
-	.byte	$ff			; south exit
+	.byte	MIST_SPACESHIP_FAR	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	spaceship_switch_n_lzsa	; north bg
-	.word	$0000		; south bg
-	.word	$0000		; east bg
-	.word	$0000		; west bg
-	.byte	BG_NORTH
+	.word	spaceship_switch_n_lzsa		; north bg
+	.word	spaceship_switch_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH
 	.byte	DIRECTION_N	; special exit
 	.byte	22,27		; special x
 	.byte	20,28		; special y
@@ -517,11 +517,11 @@ location25:
 
 ; MIST_ROCKET_CLOSE		-- rocket close in
 location26:
-	.byte	MIST_SPACESHIP_FAR	; north exit
+	.byte	MIST_SPACESHIP_SWITCH	; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	DIRECTION_E	; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
