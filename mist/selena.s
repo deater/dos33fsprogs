@@ -101,9 +101,6 @@ game_loop:
 	cmp	#SELENA_CONTROLS
 	beq	controls_animation
 
-	cmp	#SELENA_BOOK_OPEN
-	beq	mist_book_animation
-
 	cmp	#SELENA_WATER
 	beq	fg_draw_blue_page	; and water note
 
@@ -123,11 +120,6 @@ game_loop:
 	beq	fg_draw_tunnel_note
 
 
-	jmp	nothing_special
-
-mist_book_animation:
-
-	jsr	draw_mist_animation
 	jmp	nothing_special
 
 controls_animation:
@@ -365,46 +357,6 @@ no_draw_page:
         rts
 
 
-	;===============================
-	; draw mist book animation
-	;===============================
-
-draw_mist_animation:
-	; handle animated linking book
-
-	lda	ANIMATE_FRAME
-	cmp	#6
-	bcc	mist_book_good			; blt
-
-	lda	#0
-	sta	ANIMATE_FRAME
-
-mist_book_good:
-
-	asl
-	tay
-	lda	mist_movie,Y
-	sta	INL
-	lda	mist_movie+1,Y
-	sta	INH
-
-	lda	#24
-	sta	XPOS
-	lda	#12
-	sta	YPOS
-
-	jsr	put_sprite_crop
-
-	lda	FRAMEL
-	and	#$f
-	bne	done_animate_mist_book
-
-	inc	ANIMATE_FRAME
-
-done_animate_mist_book:
-	jmp	nothing_special
-
-
 
 	;==============================
 	; tunnel actions
@@ -453,7 +405,7 @@ keypad_press:
 	.include	"selena_sound_puzzle.s"
 
 	; linking books
-	.include	"link_book_mist.s"
+;	.include	"link_book_mist.s"
 
 	.include	"handle_pages.s"
 
@@ -463,7 +415,4 @@ keypad_press:
 	; sound
 	.include	"speaker_beeps.s"
 	.include	"simple_sounds.s"
-
-
-
 

@@ -5,50 +5,50 @@
 opendir_filename	=$1042
 
 ; linking_noise.s
-play_link_noise	=$1591
+play_link_noise	=$1598
 
 ; decompress_fast_v2.s
-decompress_lzsa2_fast	=$15ad
-getsrc_smc	=$16a3
+decompress_lzsa2_fast	=$15b4
+getsrc_smc	=$16aa
 
 ; draw_pointer.s
-draw_pointer	=$16b0
+draw_pointer	=$16b7
 
 ; end_level.s
-end_level	=$181e
+end_level	=$1825
 
 ; gr_copy.s
-gr_copy_to_current	=$1840
+gr_copy_to_current	=$1847
 
 ; gr_fast_clear.s
-clear_bottom	=$1966
-clear_all	=$19a4
-clear_all_color	=$19c9
+clear_bottom	=$196d
+clear_all	=$19ab
+clear_all_color	=$19d0
 
 ; gr_offsets.s
-gr_offsets	=$19e7
+gr_offsets	=$19ee
 
 ; gr_page_flip.s
-page_flip	=$1a17
+page_flip	=$1a1e
 
 ; gr_putsprite_crop.s
-put_sprite_crop	=$1a31
-psc_smc1	=$1a54
-psc_smc2	=$1aec
+put_sprite_crop	=$1a38
+psc_smc1	=$1a5b
+psc_smc2	=$1af3
 
 ; keyboard.s
-handle_keypress	=$1b6d
-change_direction	=$1c31
-change_location	=$1c6a
+handle_keypress	=$1b74
+change_direction	=$1c38
+change_location	=$1c71
 
 ; text_print.s
-move_and_print	=$1d02
-ps_smc1	=$1d2f
+move_and_print	=$1d09
+ps_smc1	=$1d36
 
 ; page_sprites.inc
-blue_page_sprite	=$1e17
-red_page_sprite	=$1e2d
-white_page_sprite	=$1e43
-blue_page_small_sprite	=$1e59
-red_page_small_sprite	=$1e61
+blue_page_sprite	=$1e1e
+red_page_sprite	=$1e34
+white_page_sprite	=$1e4a
+blue_page_small_sprite	=$1e60
+red_page_small_sprite	=$1e68
 

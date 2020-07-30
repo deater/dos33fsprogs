@@ -12,8 +12,7 @@ zip:	mist.dsk mist_side2.dsk mist_side3.dsk
 	zip mist.zip mist.dsk mist_side2.dsk mist_side3.dsk
 
 mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
-		MECHE SELENA CABIN CHANNEL STONEY DENTIST \
-		D\'NI SAVE0 SHIP
+		DENTIST D\'NI SAVE0 SHIP
 	cp empty.dsk mist.dsk
 	$(DOS33) -y mist.dsk SAVE A HELLO
 	$(DOS33) -y mist.dsk BSAVE -a 0x1000 LOADER
@@ -37,13 +36,14 @@ mist_side2.dsk:	HELLO_DISK2 CHANNEL ARBOR NIBEL CABIN
 
 
 
-mist_side3.dsk:	HELLO_DISK2 MECHE SELENA STONEY GENERATOR
+mist_side3.dsk:	HELLO_DISK2 MECHE SELENA STONEY GENERATOR SUB
 	cp empty.dsk mist_side3.dsk
 	$(DOS33) -y mist_side3.dsk SAVE A HELLO_DISK2 HELLO
 	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 MECHE
 	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 SELENA
 	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 STONEY
 	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 GENERATOR
+	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 SUB
 
 
 ###
@@ -207,6 +207,22 @@ selena.o:	selena.s zp.inc hardware.inc common_defines.inc \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o selena.o selena.s -l selena.lst
 
+####
+
+SUB:	sub.o
+	ld65 -o SUB sub.o -C ../linker_scripts/apple2_2000.inc
+
+sub.o:	sub.s zp.inc hardware.inc common_defines.inc \
+	common_routines.inc \
+	graphics_sub/sub_graphics.inc \
+	common_sprites.inc \
+	leveldata_sub.inc \
+	link_book_mist.s \
+	end_level.s \
+	keyboard.s \
+	draw_pointer.s \
+	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	ca65 -o sub.o sub.s -l sub.lst
 
 ####
 

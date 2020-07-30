@@ -153,7 +153,7 @@ filenames:
 	.word mist_filename,meche_filename,selena_filename,octagon_filename
 	.word viewer_filename,stoney_filename,channel_filename,cabin_filename
 	.word dentist_filename,arbor_filename,nibel_filename,ship_filename
-	.word generator_filename,dni_filename
+	.word generator_filename,dni_filename,sub_filename
 
 which_disk:
 	.byte '1'		; MIST_TITLE
@@ -171,6 +171,7 @@ which_disk:
 	.byte '1'		; SHIP
 	.byte '3'		; GENERATOR
 	.byte '1'		; D'NI
+	.byte '3'		; SUB
 
 intro_filename:
 	.byte "MIST_TITLE",0
@@ -202,6 +203,8 @@ generator_filename:
 	.byte "GENERATOR",0
 dni_filename:
 	.byte "D'NI",0
+sub_filename:
+	.byte "SUB",3
 
 
 	;===================================================
