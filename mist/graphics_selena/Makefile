@@ -20,6 +20,8 @@ selena_graphics.inc:	\
 	bunker_n.lzsa bunker_s.lzsa bunker_e.lzsa \
 	water_turn_n.lzsa water_turn_s.lzsa water_turn_w.lzsa \
 	water_path_e.lzsa water_path_w.lzsa \
+	water_path2_e.lzsa water_path2_w.lzsa \
+	water_path3_e.lzsa water_path3_w.lzsa \
 	water_note_n.lzsa water_note_e.lzsa water_note_w.lzsa water_note_s.lzsa \
 	tower_view_n.lzsa tower_view_s.lzsa tower_view_e.lzsa tower_view_w.lzsa \
 	chasm_path_e.lzsa chasm_path_w.lzsa \
@@ -67,6 +69,10 @@ selena_graphics.inc:	\
 	echo "water_turn_w_lzsa: .incbin \"water_turn_w.lzsa\"" >> selena_graphics.inc
 	echo "water_path_w_lzsa: .incbin \"water_path_w.lzsa\"" >> selena_graphics.inc
 	echo "water_path_e_lzsa: .incbin \"water_path_e.lzsa\"" >> selena_graphics.inc
+	echo "water_path2_w_lzsa: .incbin \"water_path2_w.lzsa\"" >> selena_graphics.inc
+	echo "water_path2_e_lzsa: .incbin \"water_path2_e.lzsa\"" >> selena_graphics.inc
+	echo "water_path3_w_lzsa: .incbin \"water_path3_w.lzsa\"" >> selena_graphics.inc
+	echo "water_path3_e_lzsa: .incbin \"water_path3_e.lzsa\"" >> selena_graphics.inc
 	echo "water_note_n_lzsa: .incbin \"water_note_n.lzsa\"" >> selena_graphics.inc
 	echo "water_note_e_lzsa: .incbin \"water_note_e.lzsa\"" >> selena_graphics.inc
 	echo "water_note_w_lzsa: .incbin \"water_note_w.lzsa\"" >> selena_graphics.inc

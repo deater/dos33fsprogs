@@ -14,7 +14,8 @@ locations:
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
-	.word location40,location41,location42
+	.word location40,location41,location42,location43
+	.word location44
 
 ; SELENA_INSIDE_SHIP		-- Inside Ship
 location0:
@@ -151,7 +152,7 @@ location7:
 	.byte	SELENA_TOWER_VIEW		; north exit
 	.byte	SELENA_BUNKER		; south exit
 	.byte	$ff			; east exit
-	.byte	SELENA_WATER_PATH	; west exit
+	.byte	SELENA_WATER_PATH2	; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
@@ -167,11 +168,11 @@ location7:
 location8:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
-	.byte	SELENA_WATER_TURN	; east exit
-	.byte	SELENA_WATER		; west exit
+	.byte	SELENA_WATER_PATH2	; east exit
+	.byte	SELENA_WATER_PATH3	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_S	; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
@@ -184,7 +185,7 @@ location8:
 location9:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
-	.byte	SELENA_WATER_PATH	; east exit
+	.byte	SELENA_WATER_PATH3	; east exit
 	.byte	$ff		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
@@ -801,3 +802,38 @@ location42:
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff
+
+; SELENA_WATER_PATH2		-- more path to water
+location43:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SELENA_WATER_TURN	; east exit
+	.byte	SELENA_WATER_PATH	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	water_path2_e_lzsa	; east bg
+	.word	water_path2_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; SELENA_WATER_PATH3		-- more path to water
+location44:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SELENA_WATER_PATH	; east exit
+	.byte	SELENA_WATER		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	water_path3_e_lzsa	; east bg
+	.word	water_path3_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
