@@ -204,7 +204,7 @@ generator_filename:
 dni_filename:
 	.byte "D'NI",0
 sub_filename:
-	.byte "SUB",3
+	.byte "SUB",0
 
 
 	;===================================================

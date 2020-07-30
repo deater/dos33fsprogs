@@ -12,7 +12,7 @@ location0:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	SUB_HALLWAY		; east exit
-	.byte	SELENA_BUNKER		; west exit
+	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
@@ -22,7 +22,10 @@ location0:
 	.word	bunker_entry_e_lzsa		; east bg
 	.word	bunker_entry_w_lzsa		; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte	$ff
+	.byte	DIRECTION_W		; special exit
+	.byte	15,24		; special x
+	.byte	8,42		; special y
+	.word	goto_selena-1	; special function
 
 ; SUB_HALLWAY	-- hallway to the sub room
 location1:

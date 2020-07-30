@@ -247,6 +247,10 @@ really_exit:
 	jmp	end_level
 
 
+	;===================================
+	; back to mist
+	;	from rocket
+	;===================================
 back_to_mist:
 	lda	#$ff
 	sta	LEVEL_OVER
@@ -262,6 +266,27 @@ back_to_mist:
 	jsr	save_rocket_state
 
 	rts
+
+	;===================================
+	; goto sub
+	;===================================
+
+goto_sub:
+	lda	#$ff
+	sta	LEVEL_OVER
+
+	lda	#SUB_BUNKER_ENTRY	; inside bunker door
+	sta	LOCATION
+
+	lda	#DIRECTION_E
+	sta	DIRECTION
+
+	lda	#LOAD_SUB
+	sta	WHICH_LOAD
+
+	rts
+
+
 
 	; save rocket state
 save_rocket_state:
@@ -405,7 +430,6 @@ keypad_press:
 	.include	"selena_sound_puzzle.s"
 
 	; linking books
-;	.include	"link_book_mist.s"
 
 	.include	"handle_pages.s"
 

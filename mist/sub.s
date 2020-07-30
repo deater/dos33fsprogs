@@ -132,6 +132,28 @@ really_exit:
 
 
 
+	;===================================
+	; goto selena
+	;	go back out bunker door
+        ;===================================
+
+goto_selena:
+	lda	#$ff
+	sta	LEVEL_OVER
+
+	lda     #SELENA_BUNKER		; outside bunker door
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+
+	lda	#LOAD_SELENA
+	sta	WHICH_LOAD
+
+	rts
+
+
+
 	;===============================
 	; draw mist book animation
 	;===============================

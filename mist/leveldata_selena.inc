@@ -749,7 +749,7 @@ location39:
 location40:
 	.byte	SELENA_WATER_TURN	; north exit
 	.byte	SELENA_WALKWAY4		; south exit
-	.byte	$ff	; east exit
+	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
@@ -760,8 +760,10 @@ location40:
 	.word	bunker_open_e_lzsa	; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST
-	.byte	$ff
-
+	.byte	DIRECTION_E		; special exit
+	.byte	15,27		; special x
+	.byte	6,42		; special y
+	.word	goto_sub-1	; special function
 
 ; SELENA_BUNKER_KEYPAD	-- bunker keypad
 location41:
