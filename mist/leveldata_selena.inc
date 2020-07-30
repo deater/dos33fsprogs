@@ -555,7 +555,7 @@ location30:
 	.byte	SELENA_TUNNEL_PATH	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_N|DIRECTION_SPLIT	; north exit_dir
 	.byte	DIRECTION_W	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -584,7 +584,10 @@ location31:
 	.word	$0000				; east bg
 	.word	$0000				; west bg
 	.byte	BG_NORTH
-	.byte	$ff
+	.byte	DIRECTION_N		; special exit
+	.byte	17,22		; special x
+	.byte	26,34		; special y
+	.word	tunnel_button_pressed-1	; special function
 
 ; SELENA_TUNNEL_MAIN_TOP	-- top of the ladder
 location32:

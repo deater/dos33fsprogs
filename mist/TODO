@@ -36,9 +36,6 @@ For release 1.0
 + NIBEL
 	-- turn on sprite crop in the viewer part
 
-+ VIEWER
-	-- have ship up background if ship up
-
 + MECHE
 	-- animations for elevator
 	-- way to click on end puzzle from other angle
@@ -50,6 +47,7 @@ Done:
 + DNI
 + MIST_TITLE
 + SHIP
++ VIEWER
 
 ================================
 TODO Maybe future:
@@ -88,7 +86,6 @@ SELENA age:
 + better colors
 
 Channelwood:
-+ Implement water valves
 + Windmill animation
 + Switch flip animation
 + Open faucet animation
@@ -97,7 +94,7 @@ Channelwood:
 + Animation for book elevator
 + Animation for level1 elevator
 + Animation for level2 elevator
-+ Background soud effects
++ Background sound effects
 
 
 Stoneship age:
@@ -112,10 +109,10 @@ Ending:
 + Atrus at end -- hires?
 
 VIEWER
-+ Add alternate top-of-steps backgrounds if ship is up
++ ?
 
 CABIN
-+ Make match go out gradually when leav
++ Make match go out gradually when leave
 + Make boiler puzzle a bit closer to actual (it has a warm up
 	time in the real game)
 + Allow looking down from whole ride up the tree, not just at top

@@ -113,6 +113,9 @@ game_loop:
 	cmp	#SELENA_ANTENNA_CLOSE
 	beq	fg_draw_antenna_panel
 
+	cmp	#SELENA_TUNNEL_MAIN_CLOSE
+	beq	fg_draw_tunnel_note
+
 	jmp	nothing_special
 
 mist_book_animation:
@@ -184,7 +187,10 @@ fg_draw_red_page:
 
 fg_draw_antenna_panel:
 	jsr	draw_antenna_panel
+	jmp	nothing_special
 
+fg_draw_tunnel_note:
+	jsr	draw_tunnel_background
 	jmp	nothing_special
 
 

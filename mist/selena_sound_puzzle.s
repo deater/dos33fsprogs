@@ -1,7 +1,7 @@
 
 ; the sounds
 
-; click button, it goes in, background of yellow/black glows 
+; click button, it goes in, background of yellow/black glows
 
 ; #1 switch in forest, drips in pool -- running water
 ; #2 switch, chasm with fire -- fire noise
@@ -158,10 +158,6 @@ summation:
 ;=======================================
 
 draw_antenna_panel:
-
-	; FIXME: hack for testing
-	lda	#$ff
-	sta	SELENA_BUTTON_STATUS
 
 	lda	SELENA_ANTENNA_ACTIVE
 	sta	CURRENT_DISPLAY
@@ -559,5 +555,78 @@ antenna_display11_sprite:
 	.byte $88,$88,$88,$88,$88,$88,$88,$88,$88
 
 
+	;=========================
+	; draw tunnel background
+	;=========================
+draw_tunnel_background:
 
+	lda	#<sound5_tunnel
+	sta	OUTL
+	lda     #>sound5_tunnel
+	sta	OUTH
+	jsr	move_and_print
+
+	lda	SELENA_BUTTON_STATUS
+	and	#SELENA_BUTTON5
+	beq	done_draw_tunnel_background
+
+	lda	#16
+	sta	XPOS
+	lda	#12
+	sta	YPOS
+	lda	#<tunnel_bg_sprite
+	sta	INL
+	lda	#>tunnel_bg_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+done_draw_tunnel_background:
+	rts
+
+
+	;=========================
+	; tunnel button
+	;=========================
+tunnel_button_pressed:
+
+	lda	SELENA_BUTTON_STATUS
+	eor	#SELENA_BUTTON5
+	sta	SELENA_BUTTON_STATUS
+
+	and	#SELENA_BUTTON5
+	beq	done_tunnel_button_pressed
+
+	jsr	play_tunnel_noise
+
+done_tunnel_button_pressed:
+	rts
+
+
+
+play_tunnel_noise:
+
+	lda	#NOTE_C3
+	sta	speaker_frequency
+
+	lda	#10
+	sta	speaker_duration
+
+	jsr	speaker_tone
+
+	rts
+
+
+
+tunnel_bg_sprite:
+	.byte 9,10
+	.byte $dd,$dd,$dd,$dd,$dd,$fd,$df,$df,$fd
+	.byte $dd,$fd,$fd,$fd,$dd,$ff,$dd,$fd,$ff
+	.byte $ff,$dd,$dd,$ff,$dd,$ff,$dd,$dd,$dd
+	.byte $ff,$ff,$dd,$ff,$dd,$ff,$dd,$dd,$dd
+	.byte $dd,$fd,$fd,$ff,$fd,$ff,$fd,$dd,$dd
+	.byte $df,$fd,$fd,$ff,$fd,$ff,$fd,$ff,$dd
+	.byte $8d,$8d,$8f,$8f,$8f,$8f,$8d,$8d,$8d
+	.byte $22,$22,$22,$82,$82,$02,$22,$22,$22
+	.byte $88,$80,$88,$88,$88,$88,$80,$88,$11
+	.byte $08,$88,$11,$11,$11,$88,$08,$88,$11
 
