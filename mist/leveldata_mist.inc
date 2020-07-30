@@ -13,7 +13,7 @@ locations:
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
-	.word location36,location37,location38
+	.word location36,location37,location38,location39
 
 ; MIST_ARRIVAL_DOCK	-- dock
 location0:
@@ -497,11 +497,11 @@ location24:
 
 ; MIST_ROCKET_PATH_PAD		-- pad on way to rocket
 location25:
-	.byte	MIST_SPACESHIP_FAR	; north exit
+	.byte	MIST_SPACESHIP_PATH	; north exit
 	.byte	$ff			; south exit
 	.byte	MIST_OUTSIDE_TEMPLE	; east exit
 	.byte	$ff			; west exit
-	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_W	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -772,11 +772,19 @@ location38:
 	.byte	12,30		; special y
 	.word	touch_pillar-1	; special function
 
-
-
-
-
-
-
-
-
+; MIST_SPACESHIP_PATH		-- spaceship path
+location39:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	MIST_SPACESHIP_FAR	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_N	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	spaceship_path_w_lzsa	; west bg
+	.byte	BG_WEST
+	.byte	$ff		; special exit
