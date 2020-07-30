@@ -656,6 +656,35 @@ draw_clock_background:
 done_draw_clock_background:
 	rts
 
+	;===========================
+	; draw crystal background #4
+	;===========================
+draw_crystal_background:
+
+	lda	#<sound4_crystals
+	sta	OUTL
+	lda     #>sound4_crystals
+	sta	OUTH
+	jsr	move_and_print
+
+	lda	SELENA_BUTTON_STATUS
+	and	#SELENA_BUTTON4
+	beq	done_draw_crystal_background
+
+	lda	#16
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+	lda	#<crystal_bg_sprite
+	sta	INL
+	lda	#>crystal_bg_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+done_draw_crystal_background:
+	rts
+
+
 
 
 
@@ -897,6 +926,19 @@ clock_bg_sprite:
 	.byte $82,$82,$82,$82,$82,$82
 	.byte $88,$08,$11,$11,$11,$08
 
+crystal_bg_sprite:
+	.byte 9,11
+	.byte $dd,$dd,$dd,$fd,$df,$fd,$dd,$dd,$dd
+	.byte $dd,$dd,$fd,$df,$fd,$df,$fd,$dd,$dd
+	.byte $dd,$dd,$ff,$dd,$ff,$dd,$ff,$dd,$dd
+	.byte $dd,$dd,$ff,$dd,$ff,$dd,$ff,$dd,$dd
+	.byte $fd,$dd,$ff,$dd,$ff,$dd,$ff,$dd,$fd
+	.byte $dd,$df,$dd,$df,$dd,$df,$dd,$df,$dd
+	.byte $dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd
+	.byte $28,$28,$28,$28,$28,$28,$28,$28,$28
+	.byte $88,$88,$88,$08,$08,$08,$88,$88,$88
+	.byte $88,$88,$00,$18,$18,$18,$00,$88,$88
+	.byte $88,$88,$00,$88,$81,$88,$00,$88,$88
 
 tunnel_bg_sprite:
 	.byte 9,10

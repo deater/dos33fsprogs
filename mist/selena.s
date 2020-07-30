@@ -281,11 +281,19 @@ save_rocket_state:
 	sta	ROCKET_NOTE3
 	lda	rocket_notes+6
 	sta	ROCKET_NOTE4
-
+rocket_save_return:
 	rts
 
 
 selena_take_red_page:
+	lda	CURSOR_Y
+	cmp	#10
+	bcc	actually_take_red_page
+	cmp	#24
+	bcc	rocket_save_return
+	jmp	crystal_button_pressed
+
+actually_take_red_page:
 	lda	#SELENA_PAGE
 	jmp	take_red_page
 
@@ -306,13 +314,16 @@ actually_take_blue_page:
 	;=============================
 draw_red_page:
 
+	; first draw background
+	jsr	draw_crystal_background
+
 	lda	RED_PAGES_TAKEN
 	and	#SELENA_PAGE
 	bne	no_draw_page
 
-	lda	#20
+	lda	#18
 	sta     XPOS
-	lda	#2
+	lda	#0
 	sta	YPOS
 
 	lda	#<red_page_sprite

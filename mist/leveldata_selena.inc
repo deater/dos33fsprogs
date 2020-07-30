@@ -457,7 +457,7 @@ location24:
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
-	.byte	DIRECTION_E	; south exit_dir
+	.byte	DIRECTION_E|DIRECTION_SPLIT	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	crystals_n_lzsa			; north bg
@@ -483,8 +483,8 @@ location25:
 	.word	$0000				; west bg
 	.byte	BG_EAST
 	.byte	DIRECTION_E		; special exit
-	.byte	22,29		; special x
-	.byte	0,10		; special y
+	.byte	14,25		; special x
+	.byte	0,34		; special y
 	.word	selena_take_red_page-1	; special function
 
 
