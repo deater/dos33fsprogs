@@ -263,11 +263,11 @@ location13:
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	$0000				; north bg
+	.word	water_note_n_lzsa		; north bg
 	.word	water_note_s_lzsa		; south bg
 	.word	water_note_e_lzsa		; east bg
 	.word	water_note_w_lzsa		; west bg
-	.byte	BG_SOUTH|BG_EAST|BG_WEST
+	.byte	BG_SOUTH|BG_EAST|BG_WEST|BG_NORTH
 	.byte	DIRECTION_S|DIRECTION_W		; special exit
 	.byte	19,27		; special x
 	.byte	24,34		; special y

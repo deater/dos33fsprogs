@@ -953,3 +953,27 @@ tunnel_bg_sprite:
 	.byte $88,$80,$88,$88,$88,$88,$80,$88,$11
 	.byte $08,$88,$11,$11,$11,$88,$08,$88,$11
 
+
+;	control panel
+;	5 sliders, 10 positions
+;		0 - wind (tunnel)
+;		1 - slide whistle
+;		2 - train whistle
+;		3 - missile launch
+;		4 - electric sparks
+;		5 - flute noise (crystals)
+;		6 - flame (chasm)
+;		7 - clocks (clocks)
+;		8 - clanking metal
+;		9 - water (pool)
+;
+; solution = 5 - 9 - 0 - 6 - 7
+
+; if it's right and press button, plays each sound in turn
+;	while lights up button, then opens door and puts
+;	you in front of it.
+
+; if it's wrong ---> ?
+
+
+

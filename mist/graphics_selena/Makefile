@@ -23,7 +23,7 @@ selena_graphics.inc:	\
 	book_mist_open_s.lzsa book_mist_closed_s.lzsa \
 	water_turn_n.lzsa water_turn_s.lzsa water_turn_w.lzsa \
 	water_path_e.lzsa water_path_w.lzsa \
-	water_note_e.lzsa water_note_w.lzsa water_note_s.lzsa \
+	water_note_n.lzsa water_note_e.lzsa water_note_w.lzsa water_note_s.lzsa \
 	tower_view_n.lzsa tower_view_s.lzsa tower_view_e.lzsa tower_view_w.lzsa \
 	chasm_path_e.lzsa chasm_path_w.lzsa \
 	chasm_e.lzsa chasm_w.lzsa chasm_s.lzsa chasm_n.lzsa \
@@ -79,6 +79,7 @@ selena_graphics.inc:	\
 	echo "water_turn_w_lzsa: .incbin \"water_turn_w.lzsa\"" >> selena_graphics.inc
 	echo "water_path_w_lzsa: .incbin \"water_path_w.lzsa\"" >> selena_graphics.inc
 	echo "water_path_e_lzsa: .incbin \"water_path_e.lzsa\"" >> selena_graphics.inc
+	echo "water_note_n_lzsa: .incbin \"water_note_n.lzsa\"" >> selena_graphics.inc
 	echo "water_note_e_lzsa: .incbin \"water_note_e.lzsa\"" >> selena_graphics.inc
 	echo "water_note_w_lzsa: .incbin \"water_note_w.lzsa\"" >> selena_graphics.inc
 	echo "water_note_s_lzsa: .incbin \"water_note_s.lzsa\"" >> selena_graphics.inc
