@@ -101,6 +101,9 @@ game_loop:
 	cmp	#SELENA_CONTROLS
 	beq	controls_animation
 
+	cmp	#SELENA_BUNKER_KEYPAD
+	beq	fg_draw_door_controls
+
 	cmp	#SELENA_WATER
 	beq	fg_draw_blue_page	; and water note
 
@@ -120,6 +123,10 @@ game_loop:
 	beq	fg_draw_tunnel_note
 
 
+	jmp	nothing_special
+
+fg_draw_door_controls:
+	jsr	door_draw_buttons
 	jmp	nothing_special
 
 controls_animation:
@@ -413,10 +420,10 @@ antenna_mid_down:
 
 	;==============================
 	; keypad actions
-keypad_press:
-	lda	#SELENA_BUNKER_OPEN
-	sta	LOCATION
-	jmp	change_location
+;keypad_press:
+;	lda	#SELENA_BUNKER_OPEN
+;	sta	LOCATION
+;	jmp	change_location
 
 	;==========================
 	; includes

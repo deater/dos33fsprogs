@@ -969,11 +969,329 @@ tunnel_bg_sprite:
 ;
 ; solution = 5 - 9 - 0 - 6 - 7
 
+LOCK_SOLUTION_1 = 5	; flute
+LOCK_SOLUTION_2 = 9	; water
+LOCK_SOLUTION_3 = 0	; wind
+LOCK_SOLUTION_4 = 6	; flame
+LOCK_SOLUTION_5 = 7	; clocks
+
 ; if it's right and press button, plays each sound in turn
 ;	while lights up button, then opens door and puts
 ;	you in front of it.
 
 ; if it's wrong ---> ?
 
+door_sound_table:
+	.word	sound5_tunnel	; [RUSHING WIND]	door0
+	.word	door1_whistle	; [SLIDE WHISTLE]	door1
+	.word	door2_train	; [TRAIN WHISTLE]	door2
+	.word	door3_missile	; [MISSILE LAUNCH]	door3
+	.word	door4_sparks	; [ELECTRIC SPARKS]	door4
+	.word	sound4_crystals	; [FLUTE-LIKE WHISTLE]	door5
+	.word	sound2_flame	; [ROARING FIRE]	door6
+	.word	sound3_clocks	; [CLOCK TICKING]	door7
+	.word	door8_metal	; [CLANKING METAL]	door8
+	.word	sound1_water	; [RUNNING WATER]	door9
+
+door1_whistle:
+	.byte 12,21,"[SLIDE WHISTLE]",0
+
+door2_train:
+	.byte 12,21,"[TRAIN WHISTLE]",0
+
+door3_missile:
+	.byte 12,21,"[MISSILE LAUNCH]",0
+
+door4_sparks:
+	.byte 11,21,"[ELECTRIC SPARKS]",0
+
+door8_metal:
+	.byte 12,21,"[CLANKING METAL]",0
 
 
+
+	;===============================
+	; draw the buttons on door panel
+	;===============================
+
+door_draw_buttons:
+
+	; print last sound pressed
+	lda	ANIMATE_FRAME		; depend on this being 0 at entry
+	bne	no_need_to_init
+
+	lda	#0
+	sta	LAST_PLAYED
+
+	inc	ANIMATE_FRAME
+
+no_need_to_init:
+
+	lda	LAST_PLAYED
+	beq	no_need_to_print
+
+	asl
+	tay
+	dey
+	dey
+	lda	door_sound_table,Y
+	sta	OUTL
+	lda	door_sound_table+1,Y
+	sta	OUTH
+
+	jsr	move_and_print
+
+no_need_to_print:
+
+
+	ldx	#0
+draw_door_buttons_outer_loop:
+	ldy	#10			; 13,10
+
+draw_door_buttons_loop:
+
+	; set the output address for current Y
+
+	lda	gr_offsets,Y
+	clc
+	adc	#13			; 13,10
+	sta	door_buttons_smc+1
+	iny
+	lda	gr_offsets,Y
+	clc
+	adc	DRAW_PAGE
+	sta	door_buttons_smc+2
+	iny
+
+	; if Y==(RN*2) + 10+2 (pre incremented)
+
+	txa
+	lsr
+	tax	; X is *2, convert down to load lock value
+
+	lda	SELENA_LOCK1,X
+
+	asl
+	clc
+	adc	#12
+	sta	TEMP
+
+	txa	; convert X back to *2
+	asl
+	tax
+
+	; see if draw or not
+
+	cpy	TEMP
+	bne	door_button_none
+
+	; we are drawing
+	lda	ROCKET_HANDLE_STEP
+	beq	door_button_plain
+	sta	TEMP
+	dec	TEMP
+	cpx	TEMP
+	beq	door_button_green
+
+door_button_plain:
+	lda	#$48
+	bne	draw_door_button	; bra
+
+door_button_green:
+	lda	#$c8
+	bne	draw_door_button
+
+door_button_none:
+	lda	#$00
+
+draw_door_button:
+
+door_buttons_smc:
+	sta	$400,X
+
+	cpy	#30
+	bne	draw_door_buttons_loop
+
+	inx
+	inx
+	cpx	#10
+	bne	draw_door_buttons_outer_loop
+
+	rts
+
+
+
+
+door_controls_pressed:
+
+	lda	CURSOR_X
+	cmp	#23
+	bcs	door_button_pressed			; bge
+
+door_sliders_pressed:
+
+	sec
+	sbc	#10	; get X to be which slider
+	lsr
+	tax
+
+	; if (CURSOR_Y-10)/2 > selena_lock, increment
+	; if (CURSOR_Y-10)/2 < selena_lock, decrement
+	; 	cursor_y is 10 .. 28
+	;	subtract 10, is 0 to 18
+
+	lda	CURSOR_Y
+	sec
+	sbc	#10
+	lsr
+
+	cmp	SELENA_LOCK1,X
+	beq	door_slider_play_tone	; cliked on it, play tone
+	bpl	door_slider_increment	; clicked above, increment
+
+door_slider_decrement:
+	lda	SELENA_LOCK1,X
+	beq	door_slider_play_tone	; don't make smaller than 0
+	dec	SELENA_LOCK1,X
+	jmp	door_slider_play_tone
+
+door_slider_increment:
+	lda	SELENA_LOCK1,X
+	cmp	#9
+	bcs	door_slider_play_tone	; don't make larger than 9
+	inc	SELENA_LOCK1,X
+
+door_slider_play_tone:
+
+	lda	SELENA_LOCK1,X
+	clc
+	adc	#1			; 0 means no display, so offset by 1
+	sta	LAST_PLAYED
+
+        rts
+
+
+door_button_pressed:
+
+        ;==================================
+        ; turn buttons green one at a time
+
+	lda	#1
+	sta	ROCKET_HANDLE_STEP
+
+door_button_draw_buttons:
+
+
+	ldx	#0
+
+door_buttons_outer_loop:
+
+	lda	SELENA_LOCK1,X
+	sta	LAST_PLAYED
+	inc	LAST_PLAYED	; value we want is 1+value
+
+	txa
+	pha
+
+	jsr	gr_copy_to_current
+
+	lda	#25
+	sta	XPOS
+	lda	#24
+	sta	YPOS
+	lda	#<red_button_sprite
+	sta	INL
+	lda	#>red_button_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+
+;	lda	DRAW_PAGE		; draw to visible screen
+;	eor	#$4
+;	sta	DRAW_PAGE
+
+;	ldx	#0
+
+
+
+
+
+	jsr	door_draw_buttons
+
+;	pla
+;	tax
+;	pha
+
+	jsr	page_flip
+
+	; play sound
+	; we delay instead
+
+	ldx	#10
+long_fake_sound:
+	lda	#200
+	jsr	WAIT
+	dex
+	bne	long_fake_sound
+
+	pla
+	tax
+
+	inc	ROCKET_HANDLE_STEP
+	inc	ROCKET_HANDLE_STEP
+
+check_end:
+	inx
+	cpx	#5
+	bne	door_buttons_outer_loop
+
+;	lda	DRAW_PAGE		; flip back to way it was
+;	eor	#$4
+;	sta	DRAW_PAGE
+
+	lda	#0
+	sta	ROCKET_HANDLE_STEP
+	sta	LAST_PLAYED
+
+	; check to see if right code
+
+	lda	SELENA_LOCK1
+	cmp	#LOCK_SOLUTION_1
+	bne	done_checking_door_code
+
+	lda	SELENA_LOCK2
+	cmp	#LOCK_SOLUTION_2
+	bne	done_checking_door_code
+
+	lda	SELENA_LOCK3
+	cmp	#LOCK_SOLUTION_3
+	bne	done_checking_door_code
+
+	lda	SELENA_LOCK4
+	cmp	#LOCK_SOLUTION_4
+	bne	done_checking_door_code
+
+	lda	SELENA_LOCK5
+	cmp	#LOCK_SOLUTION_5
+	bne	done_checking_door_code
+
+door_correct_code:
+
+	; open door
+
+	lda	#SELENA_BUNKER_OPEN
+	sta	LOCATION
+
+	lda	#DIRECTION_E
+	sta	DIRECTION
+
+	jsr	change_location
+
+done_checking_door_code:
+
+	rts
+
+red_button_sprite:
+	.byte 3,2
+	.byte $19,$11,$19
+	.byte $91,$11,$91

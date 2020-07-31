@@ -283,8 +283,9 @@ LOCATIONS_L	=	$E2
 LOCATIONS_H	=	$E3
 
 ; temp var per-world define
-LONG_FRAME	=	$E4
-CURRENT_DISPLAY	=	$E4
+LONG_FRAME	=	$E4	; nibel
+CURRENT_DISPLAY	=	$E4	; selena
+LAST_PLAYED	=	$E4	; selena
 
 DISP_PAGE	=	$ED	; ALL
 DRAW_PAGE	=	$EE	; ALL

@@ -138,7 +138,7 @@ location6:
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
-	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_E|DIRECTION_SPLIT	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	bunker_n_lzsa		; north bg
 	.word	bunker_s_lzsa		; south bg
@@ -782,9 +782,9 @@ location41:
 	.word	$0000				; west bg
 	.byte	BG_EAST
 	.byte	DIRECTION_E		; special exit
-	.byte	12,28		; special x
-	.byte	10,32		; special y
-	.word	keypad_press-1	; special function
+	.byte	10,30		; special x
+	.byte	8,32		; special y
+	.word	door_controls_pressed-1	; special function
 
 ; SELENA_WALKWAY2		-- walkway2
 location42:
