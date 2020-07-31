@@ -15,7 +15,7 @@ locations:
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
 	.word location40,location41,location42,location43
-	.word location44
+	.word location44,location45
 
 ; SELENA_INSIDE_SHIP		-- Inside Ship
 location0:
@@ -223,11 +223,11 @@ location11:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	SELENA_TOWER_VIEW	; east exit
-	.byte	SELENA_CHASM		; west exit
+	.byte	SELENA_CHASM_PATH2	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
-	.byte	DIRECTION_S	; west exit_dir
+	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000				; north bg
 	.word	$0000				; south bg
 	.word	chasm_path_e_lzsa		; east bg
@@ -237,7 +237,7 @@ location11:
 
 ; SELENA_CHASM			-- chasm
 location12:
-	.byte	SELENA_CHASM_PATH	; north exit
+	.byte	SELENA_CHASM_PATH2	; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -837,3 +837,19 @@ location44:
 	.byte	BG_EAST|BG_WEST
 	.byte	$ff
 
+; SELENA_CHASM_PATH2		-- another path to chasm
+location45:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SELENA_CHASM_PATH	; east exit
+	.byte	SELENA_CHASM		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_S	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	chasm_path2_e_lzsa		; east bg
+	.word	chasm_path2_w_lzsa		; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff

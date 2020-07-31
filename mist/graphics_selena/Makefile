@@ -25,6 +25,7 @@ selena_graphics.inc:	\
 	water_note_n.lzsa water_note_e.lzsa water_note_w.lzsa water_note_s.lzsa \
 	tower_view_n.lzsa tower_view_s.lzsa tower_view_e.lzsa tower_view_w.lzsa \
 	chasm_path_e.lzsa chasm_path_w.lzsa \
+	chasm_path2_e.lzsa chasm_path2_w.lzsa \
 	chasm_e.lzsa chasm_w.lzsa chasm_s.lzsa chasm_n.lzsa \
 	clock_path_e.lzsa clock_path_w.lzsa \
 	clock_n.lzsa clock_s.lzsa clock_e.lzsa clock_w.lzsa \
@@ -83,6 +84,8 @@ selena_graphics.inc:	\
 	echo "tower_view_w_lzsa: .incbin \"tower_view_w.lzsa\"" >> selena_graphics.inc
 	echo "chasm_path_e_lzsa: .incbin \"chasm_path_e.lzsa\"" >> selena_graphics.inc
 	echo "chasm_path_w_lzsa: .incbin \"chasm_path_w.lzsa\"" >> selena_graphics.inc
+	echo "chasm_path2_e_lzsa: .incbin \"chasm_path2_e.lzsa\"" >> selena_graphics.inc
+	echo "chasm_path2_w_lzsa: .incbin \"chasm_path2_w.lzsa\"" >> selena_graphics.inc
 	echo "chasm_e_lzsa: .incbin \"chasm_e.lzsa\"" >> selena_graphics.inc
 	echo "chasm_w_lzsa: .incbin \"chasm_w.lzsa\"" >> selena_graphics.inc
 	echo "chasm_n_lzsa: .incbin \"chasm_n.lzsa\"" >> selena_graphics.inc
