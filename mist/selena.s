@@ -43,6 +43,11 @@ selena_start:
 	;=================
 	; init vars
 
+
+	; update the light background
+
+	jsr	update_tunnel_lights
+
 	; copy in rocket note puzzle state
 	lda	ROCKET_NOTE1
 	sta	rocket_notes

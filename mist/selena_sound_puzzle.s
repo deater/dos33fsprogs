@@ -1304,6 +1304,90 @@ red_button_sprite:
 ; switch up = lights on
 ; switch down = lights off
 ; turning one switch also flips other one
+;
+; technically the bottom of steps gets slightly lighter but we ignore
+; also in game the two bottom locations are slightly different
+; you also can click the switch from multiple angles but we removed
+;	that as it made things a lot easier
+
+tunnel_toggle_lights:
+	lda	SELENA_BUTTON_STATUS
+	eor	#SELENA_LIGHTSWITCH
+	sta	SELENA_BUTTON_STATUS
+
+	jsr	update_tunnel_lights
+	jmp	change_location
+
+
+	;===========================================
+	; update backgrounds based on light switch
+	;===========================================
+
+update_tunnel_lights:
+
+	lda	SELENA_BUTTON_STATUS
+	bmi	tunnel_lights_on
+
+tunnel_lights_off:
+
+	ldy	#LOCATION_EAST_BG
+
+	lda	#<tunnel_e_lzsa
+	sta	location31,Y				; SELENA_TUNNEL
+	lda	#>tunnel_e_lzsa
+	sta	location31+1,Y				; SELENA_TUNNEL
+
+	lda	#<tunnel_basement_lzsa
+	sta	location32,Y				; SELENA_ANTENNA_BASEMENT
+	lda	#>tunnel_basement_lzsa
+	sta	location32+1,Y				; SELENA_ANTENNA_BASEMENT
+
+	ldy	#LOCATION_WEST_BG
+
+	lda	#<tunnel_w_lzsa
+	sta	location31,Y				; SELENA_TUNNEL
+	lda	#>tunnel_w_lzsa
+	sta	location31+1,Y				; SELENA_TUNNEL
+
+	lda	#<tunnel_basement_lzsa
+	sta	location30,Y				; SELENA_TUNNEL_BASEMENT
+	lda	#>tunnel_basement_lzsa
+	sta	location30+1,Y				; SELENA_TUNNEL_BASEMENT
+
+	jmp	done_tunnel_lights
+
+tunnel_lights_on:
+
+	ldy	#LOCATION_EAST_BG
+
+	lda	#<tunnel_middle_lightson_e_lzsa
+	sta	location31,Y				; SELENA_TUNNEL
+	lda	#>tunnel_middle_lightson_e_lzsa
+	sta	location31+1,Y				; SELENA_TUNNEL
+
+	lda	#<tunnel_lightson_e_lzsa
+	sta	location32,Y				; SELENA_ANTENNA_BASEMENT
+	lda	#>tunnel_lightson_e_lzsa
+	sta	location32+1,Y				; SELENA_ANTENNA_BASEMENT
+
+	ldy	#LOCATION_WEST_BG
+
+	lda	#<tunnel_middle_lightson_w_lzsa
+	sta	location31,Y				; SELENA_TUNNEL
+	lda	#>tunnel_middle_lightson_w_lzsa
+	sta	location31+1,Y				; SELENA_TUNNEL
+
+	lda	#<tunnel_lightson_w_lzsa
+	sta	location30,Y				; SELENA_TUNNEL_BASEMENT
+	lda	#>tunnel_lightson_w_lzsa
+	sta	location30+1,Y				; SELENA_TUNNEL_BASEMENT
+
+
+done_tunnel_lights:
+
+	rts
+
+
 
 
 

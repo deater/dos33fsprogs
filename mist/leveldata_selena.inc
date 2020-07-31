@@ -579,7 +579,11 @@ location30:
 	.word	ladder_bottom_lzsa		; east bg
 	.word	tunnel_basement_lzsa		; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte	$ff
+	.byte	DIRECTION_W		; special exit
+	.byte	32,40		; special x
+	.byte	22,36		; special y
+	.word	tunnel_toggle_lights-1	; special function
+
 
 ; SELENA_TUNNEL		-- middle of tunnel (dark for now)
 location31:
@@ -613,7 +617,10 @@ location32:
 	.word	tunnel_basement_lzsa		; east bg
 	.word	ladder_bottom_lzsa		; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte	$ff
+	.byte	DIRECTION_E		; special exit
+	.byte	32,40		; special x
+	.byte	22,36		; special y
+	.word	tunnel_toggle_lights-1	; special function
 
 ; SELENA_ANTENNA_MID	-- antenna ladder, mid
 location33:
