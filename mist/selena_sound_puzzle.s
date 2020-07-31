@@ -1295,3 +1295,21 @@ red_button_sprite:
 	.byte 3,2
 	.byte $19,$11,$19
 	.byte $91,$11,$91
+
+
+
+;================================
+; tunnel lights
+;================================
+; switch up = lights on
+; switch down = lights off
+; turning one switch also flips other one
+
+
+
+
+
+
+
+
+

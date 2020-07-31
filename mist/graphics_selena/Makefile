@@ -32,8 +32,9 @@ selena_graphics.inc:	\
 	clock_note_s.lzsa \
 	clock_before_e.lzsa clock_before_w.lzsa \
 	crystal_turn_n.lzsa crystal_turn_s.lzsa crystal_turn_e.lzsa crystal_turn_w.lzsa \
-	crystal_steps_s.lzsa \
-	crystal_path_n.lzsa \
+	crystal_steps_n.lzsa crystal_steps_s.lzsa \
+	crystal_path_n.lzsa crystal_path_s.lzsa \
+	crystal_path2_n.lzsa crystal_path2_s.lzsa \
 	crystals_s.lzsa crystals_n.lzsa \
 	crystals_note_e.lzsa \
 	walkway3_n.lzsa walkway3_s.lzsa \
@@ -47,6 +48,8 @@ selena_graphics.inc:	\
 	antenna_tunnel_w.lzsa antenna_tunnel_e.lzsa \
 	ladder_top.lzsa ladder_middle.lzsa ladder_bottom.lzsa \
 	tunnel_e.lzsa tunnel_w.lzsa tunnel_basement.lzsa \
+	tunnel_lightson_e.lzsa tunnel_lightson_w.lzsa \
+	tunnel_middle_lightson_e.lzsa tunnel_middle_lightson_w.lzsa \
 	tunnel_note_n.lzsa \
 	tunnel_main_n.lzsa tunnel_main_s.lzsa \
 	bunker_keypad_e.lzsa \
@@ -104,7 +107,11 @@ selena_graphics.inc:	\
 	echo "crystal_turn_e_lzsa: .incbin \"crystal_turn_e.lzsa\"" >> selena_graphics.inc
 	echo "crystal_turn_w_lzsa: .incbin \"crystal_turn_w.lzsa\"" >> selena_graphics.inc
 	echo "crystal_steps_s_lzsa: .incbin \"crystal_steps_s.lzsa\"" >> selena_graphics.inc
+	echo "crystal_steps_n_lzsa: .incbin \"crystal_steps_n.lzsa\"" >> selena_graphics.inc
 	echo "crystal_path_n_lzsa: .incbin \"crystal_path_n.lzsa\"" >> selena_graphics.inc
+	echo "crystal_path_s_lzsa: .incbin \"crystal_path_s.lzsa\"" >> selena_graphics.inc
+	echo "crystal_path2_n_lzsa: .incbin \"crystal_path2_n.lzsa\"" >> selena_graphics.inc
+	echo "crystal_path2_s_lzsa: .incbin \"crystal_path2_s.lzsa\"" >> selena_graphics.inc
 	echo "crystals_s_lzsa: .incbin \"crystals_s.lzsa\"" >> selena_graphics.inc
 	echo "crystals_n_lzsa: .incbin \"crystals_n.lzsa\"" >> selena_graphics.inc
 	echo "crystals_note_e_lzsa: .incbin \"crystals_note_e.lzsa\"" >> selena_graphics.inc
@@ -132,6 +139,10 @@ selena_graphics.inc:	\
 	echo "ladder_bottom_lzsa: .incbin \"ladder_bottom.lzsa\"" >> selena_graphics.inc
 	echo "tunnel_e_lzsa: .incbin \"tunnel_e.lzsa\"" >> selena_graphics.inc
 	echo "tunnel_w_lzsa: .incbin \"tunnel_w.lzsa\"" >> selena_graphics.inc
+	echo "tunnel_lightson_e_lzsa: .incbin \"tunnel_lightson_e.lzsa\"" >> selena_graphics.inc
+	echo "tunnel_lightson_w_lzsa: .incbin \"tunnel_lightson_w.lzsa\"" >> selena_graphics.inc
+	echo "tunnel_middle_lightson_e_lzsa: .incbin \"tunnel_middle_lightson_e.lzsa\"" >> selena_graphics.inc
+	echo "tunnel_middle_lightson_w_lzsa: .incbin \"tunnel_middle_lightson_w.lzsa\"" >> selena_graphics.inc
 	echo "tunnel_basement_lzsa: .incbin \"tunnel_basement.lzsa\"" >> selena_graphics.inc
 	echo "tunnel_note_n_lzsa: .incbin \"tunnel_note_n.lzsa\"" >> selena_graphics.inc
 	echo "tunnel_main_n_lzsa: .incbin \"tunnel_main_n.lzsa\"" >> selena_graphics.inc

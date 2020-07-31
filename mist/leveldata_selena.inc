@@ -15,7 +15,7 @@ locations:
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
 	.word location40,location41,location42,location43
-	.word location44,location45
+	.word location44,location45,location46
 
 ; SELENA_INSIDE_SHIP		-- Inside Ship
 location0:
@@ -346,41 +346,41 @@ location17:
 
 ; SELENA_CRYSTAL_STEPS	-- top of steps
 location18:
-	.byte	$ff			; north exit
-	.byte	SELENA_CRYSTALS		; south exit
+	.byte	SELENA_CRYSTAL_TURN	; north exit
+	.byte	SELENA_CRYSTAL_PATH	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	$0000				; north bg
+	.word	crystal_steps_n_lzsa		; north bg
 	.word	crystal_steps_s_lzsa		; south bg
 	.word	$0000				; east bg
 	.word	$0000				; west bg
-	.byte	BG_SOUTH
+	.byte	BG_SOUTH|BG_NORTH
 	.byte	$ff
 
 ; SELENA_CRYSTAL_PATH	-- bottom of steps
 location19:
-	.byte	SELENA_CRYSTAL_TURN	; north exit
-	.byte	$ff			; south exit
+	.byte	SELENA_CRYSTAL_STEPS	; north exit
+	.byte	SELENA_CRYSTAL_PATH2	; south exit
 	.byte	$ff			; east exit
-	.byte	$ff		; west exit
+	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	crystal_path_n_lzsa		; north bg
-	.word	$0000				; south bg
+	.word	crystal_path_s_lzsa		; south bg
 	.word	$0000				; east bg
 	.word	$0000				; west bg
-	.byte	BG_NORTH
+	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff
 
 ; SELENA_CRYSTALS		-- down by the crystals
 location20:
-	.byte	SELENA_CRYSTAL_PATH	; north exit
+	.byte	SELENA_CRYSTAL_PATH2	; north exit
 	.byte	SELENA_CRYSTAL_CLOSE	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -853,3 +853,21 @@ location45:
 	.word	chasm_path2_w_lzsa		; west bg
 	.byte	BG_EAST|BG_WEST
 	.byte	$ff
+
+; SELENA_CRYSTAL_PATH2		-- another path to crystal
+location46:
+	.byte	SELENA_CRYSTAL_PATH	; north exit
+	.byte	SELENA_CRYSTALS		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	crystal_path2_n_lzsa		; north bg
+	.word	crystal_path2_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
