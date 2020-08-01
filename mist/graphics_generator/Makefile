@@ -13,6 +13,7 @@ generator_graphics.inc:	\
 	generator_n.lzsa generator_s.lzsa \
 	green_house_w.lzsa green_house_e.lzsa \
 	green_steps1_n.lzsa green_steps1_s.lzsa \
+	green_steps3_n.lzsa green_steps3_s.lzsa \
 	gen_door_closed_n.lzsa gen_door_open_n.lzsa gen_door_s.lzsa \
 	green_steps6_n.lzsa green_steps6_w.lzsa \
 	tower1_trail_w.lzsa tower1_trail_e.lzsa \
@@ -25,6 +26,8 @@ generator_graphics.inc:	\
 	echo "green_house_e_lzsa: .incbin \"green_house_e.lzsa\"" >> generator_graphics.inc
 	echo "green_steps1_n_lzsa: .incbin \"green_steps1_n.lzsa\"" >> generator_graphics.inc
 	echo "green_steps1_s_lzsa: .incbin \"green_steps1_s.lzsa\"" >> generator_graphics.inc
+	echo "green_steps3_n_lzsa: .incbin \"green_steps3_n.lzsa\"" >> generator_graphics.inc
+	echo "green_steps3_s_lzsa: .incbin \"green_steps3_s.lzsa\"" >> generator_graphics.inc
 	echo "gen_door_closed_n_lzsa: .incbin \"gen_door_closed_n.lzsa\"" >> generator_graphics.inc
 	echo "gen_door_open_n_lzsa: .incbin \"gen_door_open_n.lzsa\"" >> generator_graphics.inc
 	echo "gen_door_s_lzsa: .incbin \"gen_door_s.lzsa\"" >> generator_graphics.inc

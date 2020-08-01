@@ -6,7 +6,7 @@
 locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
-	.word location8
+	.word location8, location9
 
 ; GEN_GREEN_SHACK
 location0:
@@ -31,8 +31,8 @@ location0:
 
 ; GEN_GREEN_STEPS1		-- green shack steps 1
 location1:
-	.byte	GEN_GREEN_STEPS6	; north exit
-	.byte	GEN_GREEN_SHACK	; south exit
+	.byte	GEN_GREEN_STEPS3	; north exit
+	.byte	GEN_GREEN_SHACK		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
@@ -49,18 +49,18 @@ location1:
 ; GEN_GREEN_STEPS6		-- green shack steps 6
 location2:
 	.byte	GEN_GENERATOR_DOOR	; north exit
-	.byte	$ff			; south exit
+	.byte	GEN_GREEN_STEPS3	; south exit
 	.byte	$ff			; east exit
-	.byte	GEN_GREEN_STEPS1	; west exit
+	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
-	.byte	DIRECTION_S	; west exit_dir
+	.byte	$ff		; west exit_dir
 	.word	green_steps6_n_lzsa	; north bg
-	.word	$0000			; south bg
+	.word	green_steps6_w_lzsa	; south bg
 	.word	$0000			; east bg
-	.word	green_steps6_w_lzsa	; west bg
-	.byte	BG_NORTH | BG_WEST
+	.word	$0000			; west bg
+	.byte	BG_NORTH | BG_SOUTH
 	.byte	$ff
 
 ; GEN_GENERATOR_DOOR		-- generator room door
@@ -70,7 +70,7 @@ location3:
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_W	; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	gen_door_closed_n_lzsa	; north bg
@@ -181,3 +181,19 @@ location8:
 	.byte	10,18		; special y
 	.word	circuit_breaker-1	; special function
 
+; GEN_GREEN_STEPS3		-- green shack steps 3
+location9:
+	.byte	GEN_GREEN_STEPS6	; north exit
+	.byte	GEN_GREEN_STEPS1	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	green_steps3_n_lzsa	; north bg
+	.word	green_steps3_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH | BG_SOUTH
+	.byte	$ff
