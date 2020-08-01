@@ -29,6 +29,38 @@ back_to_mist:
 	rts
 
 
+draw_circuit_breaker:
+	lda	ANIMATE_FRAME
+	beq	done_draw_circuit_breaker
+
+	lda	#17
+	sta	XPOS
+	lda	#12
+	sta	YPOS
+
+	lda	#<breaker_down_sprite
+	sta	INL
+	lda	#>breaker_down_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$1f
+	bne	done_draw_circuit_breaker
+
+	dec	ANIMATE_FRAME
+
+done_draw_circuit_breaker:
+	rts
+
+
+breaker_down_sprite:
+	.byte 3,2
+	.byte $90,$0f,$90
+	.byte $69,$65,$69
+
+
 ;=======================
 ; flip circuit breaker
 
@@ -38,6 +70,9 @@ back_to_mist:
 circuit_breaker:
 
 	jsr	click_speaker		; click speaker
+
+	lda	#2
+	sta	ANIMATE_FRAME
 
 	lda	LOCATION
 	cmp	#MIST_TOWER2_TOP

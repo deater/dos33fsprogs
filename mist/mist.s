@@ -81,10 +81,8 @@ game_loop:
 	; handle special-case forground logic
 	;====================================
 
-
 	; handle marker switch drawing
 	jsr	draw_marker_switch
-
 
 	; handle gear opening
 
@@ -92,11 +90,22 @@ game_loop:
 	beq	not_gear_related
 
 	jsr	check_gear_delete
+
 not_gear_related:
-	; handle pillars
+
 	lda	LOCATION
+
+	; handle circuit breaker
+	cmp	#MIST_TOWER2_TOP
+	bne	check_if_pillars
+
+	jsr	draw_circuit_breaker
+	jmp	nothing_special
+
+	; handle pillars
+check_if_pillars:
 	cmp	#MIST_PILLAR_EYE
-	bcc	check_if_compartment_open
+	bcc	check_if_compartment_open	; hack, depends on order
 
 	jsr	draw_pillar
 

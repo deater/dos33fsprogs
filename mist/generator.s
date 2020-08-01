@@ -70,6 +70,11 @@ game_loop:
 
 	; handle generator puzzle
 	lda	LOCATION
+	cmp	#GEN_TOWER1_TOP
+	bne	location_generator
+	jsr	draw_circuit_breaker
+	jmp	nothing_special
+
 location_generator:
 	cmp	#GEN_GENERATOR_ROOM
 	bne	nothing_special

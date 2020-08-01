@@ -470,6 +470,37 @@ done_pillar:
 
 
 
+draw_circuit_breaker:
+	lda	ANIMATE_FRAME
+	beq	done_draw_circuit_breaker
+
+	lda	#18
+	sta	XPOS
+	lda	#12
+	sta	YPOS
+
+	lda	#<breaker_down_sprite
+	sta	INL
+	lda	#>breaker_down_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$1f
+	bne	done_draw_circuit_breaker
+	dec	ANIMATE_FRAME
+
+done_draw_circuit_breaker:
+	rts
+
+
+breaker_down_sprite:
+	.byte 4,3
+	.byte $00,$ff,$00,$ff
+	.byte $99,$77,$77,$99
+	.byte $69,$67,$67,$69
+
 ;=======================
 ; flip circuit breaker
 
@@ -479,6 +510,9 @@ done_pillar:
 circuit_breaker:
 
 	jsr	click_speaker	; click speaker
+
+	lda	#2
+	sta	ANIMATE_FRAME
 
 	lda	LOCATION
 	cmp	#MIST_TOWER2_TOP
