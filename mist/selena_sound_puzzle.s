@@ -814,75 +814,75 @@ done_tunnel_button_pressed:
 	; water #1
 play_water_noise:
 
-	lda	#NOTE_E3
-	sta	speaker_frequency
+;	lda	#NOTE_E3
+;	sta	speaker_frequency
 
-	lda	#15
-	sta	speaker_duration
+;	lda	#15
+;	sta	speaker_duration
 
-	jsr	speaker_tone
+;	jsr	speaker_tone
 
 	rts
 
 	; fire #2
 play_chasm_noise:
 
-	lda	#NOTE_D3
-	sta	speaker_frequency
+;	lda	#NOTE_D3
+;	sta	speaker_frequency
 
-	lda	#15
-	sta	speaker_duration
+;	lda	#15
+;	sta	speaker_duration
 
-	jsr	speaker_tone
+;	jsr	speaker_tone
 
 	rts
 
 	; clock #3
 play_clock_noise:
 
-	ldx	#5
-clock_noise_loop:
-	jsr	click_speaker
+;	ldx	#5
+;clock_noise_loop:
+;	jsr	click_speaker
 
-	lda	#200
-	jsr	WAIT
+;	lda	#200
+;	jsr	WAIT
 
-	dex
-	bne	clock_noise_loop
+;	dex
+;	bne	clock_noise_loop
 
 	rts
 
 	; whistle #4
 play_crystal_noise:
 
-	lda	#NOTE_E3
-	sta	speaker_frequency
+;	lda	#NOTE_E3
+;	sta	speaker_frequency
 
-	lda	#10
-	sta	speaker_duration
+;	lda	#10
+;	sta	speaker_duration
 
-	jsr	speaker_tone
+;	jsr	speaker_tone
 
-	lda	#NOTE_E4
-	sta	speaker_frequency
+;	lda	#NOTE_E4
+;	sta	speaker_frequency
 
-	lda	#10
-	sta	speaker_duration
+;	lda	#10
+;	sta	speaker_duration
 
-	jsr	speaker_tone
+;	jsr	speaker_tone
 
 	rts
 
 	; tunnel #5
 play_tunnel_noise:
 
-	lda	#NOTE_C3
-	sta	speaker_frequency
+;	lda	#NOTE_C3
+;	sta	speaker_frequency
 
-	lda	#15
-	sta	speaker_duration
+;	lda	#15
+;	sta	speaker_duration
 
-	jsr	speaker_tone
+;	jsr	speaker_tone
 
 	rts
 
@@ -950,8 +950,8 @@ tunnel_bg_sprite:
 	.byte $df,$fd,$fd,$ff,$fd,$ff,$fd,$ff,$dd
 	.byte $8d,$8d,$8f,$8f,$8f,$8f,$8d,$8d,$8d
 	.byte $22,$22,$22,$82,$82,$02,$22,$22,$22
-	.byte $88,$80,$88,$88,$88,$88,$80,$88,$11
-	.byte $08,$88,$11,$11,$11,$88,$08,$88,$11
+	.byte $88,$80,$88,$88,$88,$88,$80,$88,$22
+	.byte $08,$88,$11,$11,$11,$88,$08,$88,$22
 
 
 ;	control panel
