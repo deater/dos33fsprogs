@@ -37,11 +37,18 @@
 .byte OCTAGON_CENTER	; LOCATION	=	$82
 .endif
 
-.if 1
+.if 0
 ; Selena
 .byte LOAD_SELENA	; WHICH_LOAD		= 	$80
 .byte DIRECTION_N	; DIRECTION		= 	$81
 .byte SELENA_WALKWAY1	; LOCATION	=	$82
+.endif
+
+.if 1
+; Sub
+.byte LOAD_SUB		; WHICH_LOAD		= 	$80
+.byte DIRECTION_E	; DIRECTION		= 	$81
+.byte SUB_BUNKER_ENTRY	; LOCATION	=	$82
 .endif
 
 

@@ -16,7 +16,9 @@ sub_graphics.inc:	\
 	book_hallway_n.lzsa book_hallway_s.lzsa \
 	inside_sub_e.lzsa inside_sub_w.lzsa \
 	bunker_entry_e.lzsa bunker_entry_w.lzsa \
-	sub_hallway_e.lzsa sub_hallway_w.lzsa
+	sub_hallway_e.lzsa sub_hallway_w.lzsa \
+	sub_hallway2_e.lzsa sub_hallway2_w.lzsa \
+	sub_close_n.lzsa sub_close_s.lzsa
 	echo "subroom_s_lzsa: .incbin \"subroom_s.lzsa\"" > sub_graphics.inc
 	echo "subroom_n_lzsa: .incbin \"subroom_n.lzsa\"" >> sub_graphics.inc
 	echo "book_table_s_lzsa: .incbin \"book_table_s.lzsa\"" >> sub_graphics.inc
@@ -29,8 +31,12 @@ sub_graphics.inc:	\
 	echo "bunker_entry_w_lzsa: .incbin \"bunker_entry_w.lzsa\"" >> sub_graphics.inc
 	echo "sub_hallway_e_lzsa: .incbin \"sub_hallway_e.lzsa\"" >> sub_graphics.inc
 	echo "sub_hallway_w_lzsa: .incbin \"sub_hallway_w.lzsa\"" >> sub_graphics.inc
+	echo "sub_hallway2_e_lzsa: .incbin \"sub_hallway2_e.lzsa\"" >> sub_graphics.inc
+	echo "sub_hallway2_w_lzsa: .incbin \"sub_hallway2_w.lzsa\"" >> sub_graphics.inc
 	echo "book_hallway_n_lzsa: .incbin \"book_hallway_n.lzsa\"" >> sub_graphics.inc
 	echo "book_hallway_s_lzsa: .incbin \"book_hallway_s.lzsa\"" >> sub_graphics.inc
+	echo "sub_close_n_lzsa: .incbin \"sub_close_n.lzsa\"" >> sub_graphics.inc
+	echo "sub_close_s_lzsa: .incbin \"sub_close_s.lzsa\"" >> sub_graphics.inc
 
 
 %.gr: %.png

@@ -6,6 +6,7 @@
 locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
+	.word location8, location9
 
 ; SUB_BUNKER_ENTRY	-- entryway inside bunker
 location0:
@@ -31,11 +32,11 @@ location0:
 location1:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
-	.byte	SUB_ROOM		; east exit
+	.byte	SUB_HALLWAY2		; east exit
 	.byte	SUB_BUNKER_ENTRY	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_S	; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000				; north bg
 	.word	$0000				; south bg
@@ -46,12 +47,12 @@ location1:
 
 ; SUB_ROOM		-- sub room
 location2:
-	.byte	SUB_HALLWAY		; north exit
-	.byte	SUB_INSIDE_SUB		; south exit
+	.byte	SUB_HALLWAY2		; north exit
+	.byte	SUB_CLOSE		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_W	; north exit_dir
-	.byte	DIRECTION_E	; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	subroom_n_lzsa	; north bg
@@ -148,4 +149,39 @@ location7:
 	.byte	24,32		; special x
 	.byte	12,22		; special y
 	.word	mist_link_book-1		; special function
+
+
+; SUB_HALLWAY2	-- another hallway to the sub room
+location8:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SUB_ROOM		; east exit
+	.byte	SUB_HALLWAY		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	sub_hallway2_e_lzsa		; east bg
+	.word	sub_hallway2_w_lzsa		; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
+
+; SUB_CLOSE	-- standing close to the sub
+location9:
+	.byte	SUB_ROOM		; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	sub_close_n_lzsa		; north bg
+	.word	sub_close_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
 
