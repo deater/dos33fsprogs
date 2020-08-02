@@ -193,6 +193,33 @@ mist_book_good:
 done_animate_mist_book:
 	jmp	nothing_special
 
+
+
+sub_selena_open:
+	lda	#SUB_CLOSE_OPEN
+	sta	LOCATION
+
+	jmp	change_location
+
+sub_selena_close:
+	lda	#SUB_CLOSE
+	sta	LOCATION
+
+	jmp	change_location
+
+sub_door_selena_open:
+	lda	#SUB_INSIDE_BACK_OPEN
+	sta	LOCATION
+
+	jmp	change_location
+
+sub_door_close:
+	lda	#SUB_INSIDE_BACK
+	sta	LOCATION
+
+	jmp	change_location
+
+
 	;==========================
 	; includes
 	;==========================
