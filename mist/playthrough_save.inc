@@ -107,3 +107,5 @@
 .byte $00       ; SELENA_LOCK5          =       $D4
 .byte $00       ; SELENA_ANTENNA_ACTIVE =       $D5
 
+.byte $00	; SUB_DIRECTION		=	$D6
+.byte $00	; SUB_LOCATION		=	$D7

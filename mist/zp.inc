@@ -248,21 +248,25 @@ SELENA_BUTTON_STATUS	= $CA
 	SELENA_BUTTON5	=	$10	; TUNNEL (wind)
 	SELENA_LIGHTSWITCH=	$80	; light in the tunnel
 
-SELENA_ANTENNA1		= $CB
-SELENA_ANTENNA2		= $CC
-SELENA_ANTENNA3		= $CD
-SELENA_ANTENNA4		= $CE
-SELENA_ANTENNA5		= $CF
+SELENA_ANTENNA1		= $CB	; rotation angle for antenna1
+SELENA_ANTENNA2		= $CC	; rotation angle for antenna1
+SELENA_ANTENNA3		= $CD	; rotation angle for antenna1
+SELENA_ANTENNA4		= $CE	; rotation angle for antenna1
+SELENA_ANTENNA5		= $CF	; rotation angle for antenna1
 
-SELENA_LOCK1		= $D0
-SELENA_LOCK2		= $D1
-SELENA_LOCK3		= $D2
-SELENA_LOCK4		= $D3
-SELENA_LOCK5		= $D4
+SELENA_LOCK1		= $D0	; antenna lock slider1
+SELENA_LOCK2		= $D1	; antenna lock slider2
+SELENA_LOCK3		= $D2	; antenna lock slider3
+SELENA_LOCK4		= $D3	; antenna lock slider4
+SELENA_LOCK5		= $D4	; antenna lock slider5
 
-SELENA_ANTENNA_ACTIVE	= $D5
+SELENA_ANTENNA_ACTIVE	= $D5	; which antenna currently selected
 
-END_OF_SAVE	=	$D6
+SUB_LOCATION		= $D6
+SUB_DIRECTION		= $D7
+
+
+END_OF_SAVE	=	$D8
 
 
 ; done game puzzle state

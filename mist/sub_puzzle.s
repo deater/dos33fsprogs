@@ -36,6 +36,75 @@ sub_door_close:
 	; sub controls
 	;=====================
 
+	;======================
+	; sub turn right
+	;======================
+sub_turn_right:
+
+	inc	SUB_DIRECTION
+	lda	SUB_DIRECTION
+	cmp	#8
+	bne	no_turn_right_oflo
+
+	lda	#0
+	sta	SUB_DIRECTION
+
+no_turn_right_oflo:
+
+	rts
+
+	;======================
+	; sub turn left
+	;======================
+sub_turn_left:
+
+	dec	SUB_DIRECTION
+	lda	SUB_DIRECTION
+	bpl	no_turn_left_oflo
+
+	lda	#7
+	sta	SUB_DIRECTION
+
+no_turn_left_oflo:
+
+	rts
+
+	;===============================
+	; sub controls moving
+	;===============================
+sub_controls_moving:
+
+	lda	CURSOR_X
+	cmp	#11
+	bcc	sub_button_pressed
+
+	lda	CURSOR_Y
+	cmp	#28
+	bcc	sub_forward_pressed
+	cmp	#34
+	bcs	sub_backtrack_pressed
+
+	lda	CURSOR_X
+	cmp	#18
+	bcc	sub_turn_left
+	bcs	sub_turn_right
+
+sub_button_pressed:
+	; prints/plays noise again?
+	; not necessary for us?
+
+done_sub_controls_moving:
+	rts
+
+
+
+sub_forward_pressed:
+	rts
+
+sub_backtrack_pressed:
+	rts
+
+
 
 	;====================
 	; toward_book
@@ -85,9 +154,14 @@ sub_controls_move_toward_selena:
 	jmp	change_location
 
 
+
+
 	;===============================
-	; moving
-sub_controls_moving:
+	; sub controls arrival at destination
+	;===============================
+
+
+sub_controls_arrival:
 
 	; re-enable exit button
 	ldy	#LOCATION_SPECIAL_EXIT
@@ -203,94 +277,308 @@ sub_forward:
 
 NOISE_NONE	= $00
 NOISE_N		= $01
+NOISE_NE	= $02
+NOISE_E		= $03
+NOISE_SE	= $04
+NOISE_S		= $05
+NOISE_SW	= $06
+NOISE_W		= $07
+NOISE_NW	= $08
+
+sub_noises:
+.word sub_noise_none
+.word sub_noise_n,sub_noise_ne,sub_noise_e,sub_noise_se
+.word sub_noise_s,sub_noise_sw,sub_noise_w,sub_noise_nw
+
+sub_noise_none:
+.byte	15,22,"           ",0
+sub_noise_n:
+.byte	15,22,"   PLINK   ",0
+sub_noise_ne:
+.byte	15,22,"PLINK-PWING",0
+sub_noise_e:
+.byte	15,22,"   PWING   ",0
+sub_noise_se:
+.byte	15,22," BONK-PWING",0
+sub_noise_s:
+.byte	15,22,"   BONK    ",0
+sub_noise_sw:
+.byte	15,22," BONK-BREET",0
+sub_noise_w:
+.byte	15,22,"   BREET   ",0
+sub_noise_nw:
+.byte	15,22,"PLINK-BREET",0
+
+
+
+BT_N		= $00
+BT_NE		= $01
+BT_E		= $02
+BT_SE		= $03
+BT_S		= $04
+BT_SW		= $05
+BT_W		= $06
+BT_NW		= $07
 
 ; each location
 ;	8 exits, 1 sound, 1 backtrack
 ;	39 locations = 390 bytes???
 ;
 
-sub_loc0:	; entrance
-sub_loc1:	; N(loc2) [backtrack takes us to entrance][N ]
+sub_locations:
+.word	sub_loc0, sub_loc1, sub_loc2, sub_loc3, sub_loc4, sub_loc5
+.word	sub_loc6, sub_loc7, sub_loc8, sub_loc9, sub_loc10,sub_loc11
+.word	sub_loc12,sub_loc13,sub_loc14,sub_loc15,sub_loc16,sub_loc17
+.word	sub_loc18,sub_loc19,sub_loc20,sub_loc21,sub_loc22,sub_loc23
+.word	sub_loc24,sub_loc25,sub_loc26,sub_loc27,sub_loc28,sub_loc29
+.word	sub_loc30,sub_loc31,sub_loc32,sub_loc33,sub_loc34,sub_loc35
+.word	sub_loc36,sub_loc37
+
+BACKTRACK_OFFSET = 8
+NOISE_OFFSET = 10
+
 	; N  NE   E  SE    S  SW   W  NW   backtrack    noise
-.byte	  2,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_N
+	;==============================================================
+sub_loc0:	; entrance
+.byte	  1,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,BT_N,		NOISE_NONE
+
+sub_loc1:	; N(loc2) [backtrack takes us to entrance]	[N ]
+.byte	  2,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,BT_N,		NOISE_N
+
 sub_loc2:	; W(loc3) S(loc1)				[W ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
+.byte	$FF,$FF,$FF,$FF,   1,$FF,  3,$FF,	1,BT_N,		NOISE_W
+
 sub_loc3:	; N(loc4) E(loc2)				[N ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc4:	; E(loc5) S(loc3) N(loc16)		[E ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc5:	; E(loc6) W(loc4) N(loc17)		[E ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc6:	; S(loc7) W(loc5) NE(loc18)		[S bonk]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc7:	; S(loc8) N(loc6) E(loc20)		[S bonk]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc8:	; W(loc9) N(loc7) SE(loc22)		[W]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc9:	; SW(loc10) N(loc8)			[SW]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc10:	; W(loc11) NE(loc9) E(loc25) S(loc26)	[W]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
+.byte	  4,$FF,  2,$FF, $FF,$FF,$FF,$FF,	2,BT_W,		NOISE_N
+
+sub_loc4:	; E(loc5) S(loc3) N(loc16)			[E ]
+.byte	 16,$FF,  5,$FF,   3,$FF,$FF,$FF,	3,BT_N,		NOISE_E
+
+sub_loc5:	; E(loc6) W(loc4) N(loc17)			[E ]
+.byte	 17,$FF,  6,$FF, $FF,$FF,  4,$FF,	4,BT_E,		NOISE_E
+
+sub_loc6:	; S(loc7) W(loc5) NE(loc18)			[S bonk]
+.byte	$FF, 18,$FF,$FF,   7,$FF,  5,$FF,	5,BT_E,		NOISE_S
+
+	; N  NE   E  SE    S  SW   W  NW   backtrack    noise
+	;==============================================================
+sub_loc7:	; S(loc8) N(loc6) E(loc20)			[S bonk]
+.byte	  6,$FF, 20,$FF,   8,$FF,$FF,$FF,	6,BT_S,		NOISE_S
+
+sub_loc8:	; W(loc9) N(loc7) SE(loc22)			[W]
+.byte	  7,$FF,$FF, 22, $FF,$FF,  9,$FF,	7,BT_S,		NOISE_W
+
+sub_loc9:	; SW(loc10) N(loc8)				[SW]
+.byte	  8,$FF,$FF,$FF, $FF, 10,$FF,$FF,	8,BT_W,		NOISE_SW
+
+sub_loc10:	; W(loc11) NE(loc9) E(loc25) S(loc26)		[W]
+.byte	$FF,  9, 25,$FF,  26,$FF, 11,$FF,	9,BT_SW,	NOISE_W
+
 sub_loc11:	; NW(loc12) E(loc10) S(loc27) SW(loc29)	[NW]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc12:	; NE(loc13) SE(loc11) W(loc32)		[NE]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc13:	; N(loc14) SW(loc12) NW(loc35)		[N]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc14:	; SE(loc15) S(loc13)			[SE]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
+.byte	$FF,$FF, 10,$FF,  27,$FF,$FF, 12,	10,BT_W,	NOISE_NW
+
+sub_loc12:	; NE(loc13) SE(loc11) W(loc32)			[NE]
+.byte	$FF, 13,$FF, 11, $FF,$FF, 32,$FF,	11,BT_NW,	NOISE_NE
+
+	; N  NE   E  SE    S  SW   W  NW   backtrack    noise
+	;==============================================================
+sub_loc13:	; N(loc14) SW(loc12) NW(loc35)			[N]
+.byte	 14,$FF,$FF,$FF, $FF, 12,$FF, 35,	12,BT_NE,	NOISE_N
+
+sub_loc14:	; SE(loc15) S(loc13)				[SE]
+.byte	$FF,$FF,$FF, 15,  13,$FF,$FF,$FF,	13,BT_N,	NOISE_SE
+
 sub_loc15:	; exit
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
+.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	14,BT_SE,	NOISE_NONE
+
 
 sub_loc16:	; S(loc4)					[ no noise ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
+.byte	$FF,$FF,$FF,$FF,   4,$FF,$FF,$FF,	4,BT_N,		NOISE_NONE
+
 sub_loc17:	; S(loc5)					[ no noise ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc18:	; SE[SW](loc6)	N (loc19)		[N plink]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc19:	; S(loc18)				[ no noise]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc20:	; W(loc7) SW(loc21)			[SW]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc21:	; NE(loc20)				[ no noise ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc22:	; NW(loc8) SW(loc24) N(loc23)		[SW]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc23:	; S(loc22)				[ no noise ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc24:	; NE(loc22)				[ no noise ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc25:	; W(loc10)				[ no noise ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc26:	; N(loc10)				[ no noise ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc27:	; N(loc11) S(loc28)			[S]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc28:	; W(loc27)				[ no noise ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc29:	; NE(loc11) S(loc30) W(loc31)		[S]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc30:	; N(loc29)				[ no noise ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc31:	; E(loc29)				[ no noise ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
+.byte	$FF,$FF,$FF,$FF,   5,$FF,$FF,$FF,	5,BT_N,		NOISE_NONE
+
+
+	; N  NE   E  SE    S  SW   W  NW   backtrack    noise
+	;==============================================================
+sub_loc18:	; SE[SW](loc6)	N (loc19)			[N plink]
+.byte	 19,$FF,$FF,  6, $FF,$FF,$FF,$FF,	6,BT_SW,	NOISE_N
+
+sub_loc19:	; S(loc18)					[ no noise]
+.byte	$FF,$FF,$FF,$FF,  18,$FF,$FF,$FF,	18,BT_N,	NOISE_NONE
+
+sub_loc20:	; W(loc7) SW(loc21)				[SW]
+.byte	$FF,$FF,$FF,$FF, $FF, 21,  7,$FF,	7,BT_E,		NOISE_SW
+
+sub_loc21:	; NE(loc20)					[ no noise ]
+.byte	$FF, 20,$FF,$FF, $FF,$FF,$FF,$FF,	20,BT_SW,	NOISE_NONE
+
+sub_loc22:	; NW(loc8) SW(loc24) N(loc23)			[SW]
+.byte	 23,$FF,$FF,$FF, $FF, 24,$FF,  8,	8,BT_SE,	NOISE_SW
+
+sub_loc23:	; S(loc22)					[ no noise ]
+.byte	$FF,$FF,$FF,$FF,  22,$FF,$FF,$FF,	22,BT_N,	NOISE_NONE
+
+	; N  NE   E  SE    S  SW   W  NW   backtrack    noise
+	;==============================================================
+sub_loc24:	; NE(loc22)					[ no noise ]
+.byte	$FF, 22,$FF,$FF, $FF,$FF,$FF,$FF,	22,BT_SW,	NOISE_NONE
+
+sub_loc25:	; W(loc10)					[ no noise ]
+.byte	$FF,$FF,$FF,$FF, $FF,$FF, 10,$FF,	10,BT_E,	NOISE_NONE
+
+sub_loc26:	; N(loc10)					[ no noise ]
+.byte	 10,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	10,BT_S,	NOISE_NONE
+
+sub_loc27:	; N(loc11) S(loc28)				[S]
+.byte	 11,$FF,$FF,$FF,  28,$FF,$FF,$FF,	11,BT_S,	NOISE_S
+
+sub_loc28:	; W(loc27)					[ no noise ]
+.byte	$FF,$FF,$FF,$FF, $FF,$FF, 27,$FF,	27,BT_E,	NOISE_NONE
+
+sub_loc29:	; NE(loc11) S(loc30) W(loc31)			[S]
+.byte	$FF, 11,$FF,$FF,  30,$FF, 31,$FF,	11,BT_SW,	NOISE_S
+
+	; N  NE   E  SE    S  SW   W  NW   backtrack    noise
+	;==============================================================
+sub_loc30:	; N(loc29)					[ no noise ]
+.byte	  29,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	29,BT_S,	NOISE_NONE
+
+sub_loc31:	; E(loc29)					[ no noise ]
+.byte	$FF,$FF, 29,$FF, $FF,$FF,$FF,$FF,	29,BT_W,	NOISE_NONE
+
 sub_loc32:	; E(loc12) S(loc33) N(loc34)		[S]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc33:	; N(loc32)				[ no noise ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc34:	; S(loc32)				[ no noise ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc35:	; SE(loc13) N(loc36)  W(loc37)		[W]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc36:	; S(loc35)				[ no noise ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
-sub_loc37:	; E(loc35)				[ no noise ]
-.byte	$FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	0,	NOISE_NONE
+.byte	 34,$FF, 12,$FF,  33,$FF,$FF,$FF,	12,BT_W,	NOISE_S
 
-;	N, W, N, E, E
-;	S, S, W, SW, W
-;	NW, NE, N, SE
+sub_loc33:	; N(loc32)					[ no noise ]
+.byte	 32,$FF,$FF,$FF, $FF,$FF,$FF,$FF,	32,BT_S,	NOISE_NONE
+
+sub_loc34:	; S(loc32)					[ no noise ]
+.byte	$FF,$FF,$FF,$FF,  32,$FF,$FF,$FF,	32,BT_N,	NOISE_NONE
+
+sub_loc35:	; SE(loc13) N(loc36)  W(loc37)			[W]
+.byte	 36,$FF,$FF, 13, $FF,$FF, 37,$FF,	13,BT_NW,	NOISE_W
+
+	; N  NE   E  SE    S  SW   W  NW   backtrack    noise
+	;==============================================================
+sub_loc36:	; S(loc35)					[ no noise ]
+.byte	$FF,$FF,$FF,$FF,  35,$FF,$FF,$FF,	35,BT_N,	NOISE_NONE
+
+sub_loc37:	; E(loc35)					[ no noise ]
+.byte	$FF,$FF, 35,$FF, $FF,$FF,$FF,$FF,	35,BT_W,	NOISE_NONE
 
 
 
+	;============================
+	; draw_sub
+	;============================
 
+draw_sub:
+	; draw direction
+
+	lda	SUB_DIRECTION
+	tay
+	lda	sub_direction_xs,Y
+	sta	XPOS
+
+	lda	#30
+	sta	YPOS
+
+	tya
+	asl
+	tay
+	lda	sub_direction_sprites,Y
+	sta	INL
+	lda	sub_direction_sprites+1,Y
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	; draw oustide (possibly animated)
+
+	; print sound effect
+
+	lda	SUB_LOCATION
+	asl
+	tay
+	lda	sub_locations,Y
+	sta	INL
+	lda	sub_locations+1,Y
+	sta	INH
+
+	ldy	#NOISE_OFFSET
+	lda	(INL),Y
+
+	asl
+	tay
+	lda	sub_noises,Y
+	sta	OUTL
+	lda	sub_noises+1,Y
+	sta	OUTH
+	jsr	move_and_print
+
+	rts
+
+
+sub_direction_xs:
+	.byte 29,27,29,27
+	.byte 29,26,29,26
+
+sub_direction_sprites:
+	.word sub_direction_sprite_n
+	.word sub_direction_sprite_ne
+	.word sub_direction_sprite_e
+	.word sub_direction_sprite_se
+	.word sub_direction_sprite_s
+	.word sub_direction_sprite_sw
+	.word sub_direction_sprite_w
+	.word sub_direction_sprite_nw
+
+sub_direction_sprite_n:
+	.byte 4,3
+	.byte $ff,$F0,$00,$ff
+	.byte $ff,$00,$0f,$ff
+	.byte $0f,$00,$00,$0f
+
+sub_direction_sprite_s:
+	.byte 4,3
+	.byte $f0,$0f,$0f,$0f
+	.byte $00,$0f,$0f,$f0
+	.byte $0f,$0f,$0f,$00
+
+sub_direction_sprite_e:
+	.byte 4,3
+	.byte $ff,$0f,$0f,$0f
+	.byte $ff,$0f,$0f,$00
+	.byte $0f,$0f,$0f,$0f
+
+sub_direction_sprite_w:
+	.byte 5,3
+	.byte $ff,$00,$00,$00,$ff
+	.byte $ff,$f0,$0f,$f0,$ff
+	.byte $0f,$00,$00,$00,$0f
+
+
+sub_direction_sprite_ne:
+	.byte 9,3
+	.byte $ff,$F0,$00,$ff,$00,$ff,$0f,$0f,$0f
+	.byte $ff,$00,$0f,$ff,$00,$ff,$0f,$0f,$00
+	.byte $0f,$00,$00,$0f,$00,$0f,$0f,$0f,$0f
+
+sub_direction_sprite_se:
+	.byte 9,3
+	.byte $f0,$0f,$0f,$0f,$00,$ff,$0f,$0f,$0f
+	.byte $00,$0f,$0f,$f0,$00,$ff,$0f,$0f,$00
+	.byte $0f,$0f,$0f,$00,$00,$0f,$0f,$0f,$0f
+
+sub_direction_sprite_nw:
+	.byte 10,3
+	.byte $ff,$F0,$00,$ff,$ff,$00,$00,$00,$00,$ff
+	.byte $ff,$00,$0f,$ff,$ff,$00,$f0,$0f,$f0,$ff
+	.byte $0f,$00,$00,$0f,$0f,$00,$00,$00,$00,$0f
+
+sub_direction_sprite_sw:
+	.byte 10,3
+	.byte $f0,$0f,$0f,$0f,$ff,$00,$00,$00,$00,$ff
+	.byte $00,$0f,$0f,$f0,$ff,$00,$f0,$0f,$f0,$ff
+	.byte $0f,$0f,$0f,$00,$0f,$00,$00,$00,$00,$0f

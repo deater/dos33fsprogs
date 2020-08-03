@@ -56,6 +56,9 @@ sub_start:
 	lda	#0
 	sta	ANIMATE_FRAME
 
+	; in theory can't be here unless sub is at starting place
+	sta	SUB_LOCATION
+	sta	SUB_DIRECTION
 
 game_loop:
 	;=================
@@ -82,11 +85,18 @@ game_loop:
 	cmp	#SUB_BOOK_OPEN
 	beq	mist_book_animation
 
+	cmp	#SUB_INSIDE_FRONT_MOVING
+	beq	fg_draw_sub
+
 	jmp	nothing_special
 
 mist_book_animation:
 
 	jsr	draw_mist_animation
+	jmp	nothing_special
+
+fg_draw_sub:
+	jsr	draw_sub
 	jmp	nothing_special
 
 nothing_special:
