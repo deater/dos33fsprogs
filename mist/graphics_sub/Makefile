@@ -14,6 +14,7 @@ sub_graphics.inc:	\
 	book_table_n.lzsa book_table_s.lzsa \
 	book_mist_open_s.lzsa book_mist_closed_s.lzsa \
 	book_hallway_n.lzsa book_hallway_s.lzsa \
+	book_hallway2_n.lzsa book_hallway2_s.lzsa \
 	inside_sub_e.lzsa inside_sub_w.lzsa \
 	bunker_entry_e.lzsa bunker_entry_w.lzsa \
 	sub_hallway_e.lzsa sub_hallway_w.lzsa \
@@ -21,8 +22,9 @@ sub_graphics.inc:	\
 	sub_close_n.lzsa sub_close_s.lzsa \
 	sub_close_open_s.lzsa \
 	inside_sub_back_e.lzsa inside_sub_back_closed_s.lzsa \
-	inside_sub_back_selena_s.lzsa \
-	inside_sub_selena_e.lzsa
+	inside_sub_back_selena_s.lzsa inside_sub_back_book_s.lzsa \
+	inside_sub_selena_e.lzsa inside_sub_book_e.lzsa \
+	outside_book_n.lzsa outside_book_s.lzsa
 	echo "subroom_s_lzsa: .incbin \"subroom_s.lzsa\"" > sub_graphics.inc
 	echo "subroom_n_lzsa: .incbin \"subroom_n.lzsa\"" >> sub_graphics.inc
 	echo "book_table_s_lzsa: .incbin \"book_table_s.lzsa\"" >> sub_graphics.inc
@@ -39,13 +41,20 @@ sub_graphics.inc:	\
 	echo "sub_hallway2_w_lzsa: .incbin \"sub_hallway2_w.lzsa\"" >> sub_graphics.inc
 	echo "book_hallway_n_lzsa: .incbin \"book_hallway_n.lzsa\"" >> sub_graphics.inc
 	echo "book_hallway_s_lzsa: .incbin \"book_hallway_s.lzsa\"" >> sub_graphics.inc
+	echo "book_hallway2_n_lzsa: .incbin \"book_hallway2_n.lzsa\"" >> sub_graphics.inc
+	echo "book_hallway2_s_lzsa: .incbin \"book_hallway2_s.lzsa\"" >> sub_graphics.inc
 	echo "sub_close_n_lzsa: .incbin \"sub_close_n.lzsa\"" >> sub_graphics.inc
 	echo "sub_close_s_lzsa: .incbin \"sub_close_s.lzsa\"" >> sub_graphics.inc
 	echo "sub_close_open_s_lzsa: .incbin \"sub_close_open_s.lzsa\"" >> sub_graphics.inc
 	echo "inside_sub_back_e_lzsa: .incbin \"inside_sub_back_e.lzsa\"" >> sub_graphics.inc
 	echo "inside_sub_back_closed_s_lzsa: .incbin \"inside_sub_back_closed_s.lzsa\"" >> sub_graphics.inc
 	echo "inside_sub_back_selena_s_lzsa: .incbin \"inside_sub_back_selena_s.lzsa\"" >> sub_graphics.inc
+	echo "inside_sub_back_book_s_lzsa: .incbin \"inside_sub_back_book_s.lzsa\"" >> sub_graphics.inc
 	echo "inside_sub_selena_e_lzsa: .incbin \"inside_sub_selena_e.lzsa\"" >> sub_graphics.inc
+	echo "inside_sub_book_e_lzsa: .incbin \"inside_sub_book_e.lzsa\"" >> sub_graphics.inc
+	echo "outside_book_n_lzsa: .incbin \"outside_book_n.lzsa\"" >> sub_graphics.inc
+	echo "outside_book_s_lzsa: .incbin \"outside_book_s.lzsa\"" >> sub_graphics.inc
+
 
 %.gr: %.png
 	$(PNG2GR) $< $@
