@@ -41,6 +41,8 @@ sub_door_close:
 	;======================
 sub_turn_right:
 
+	jsr	click_speaker
+
 	inc	SUB_DIRECTION
 	lda	SUB_DIRECTION
 	cmp	#8
@@ -57,6 +59,8 @@ no_turn_right_oflo:
 	; sub turn left
 	;======================
 sub_turn_left:
+
+	jsr	click_speaker
 
 	dec	SUB_DIRECTION
 	lda	SUB_DIRECTION
@@ -99,16 +103,77 @@ done_sub_controls_moving:
 
 
 sub_forward_pressed:
+
+	jsr	click_speaker
+
+	jsr	sub_point_to_struct
+
+	ldy	SUB_DIRECTION
+
+	lda	(INL),Y
+	bmi	cant_get_there_from_here
+
+	; update to new location
+	sta	SUB_LOCATION
+
+	cmp	#15
+	bne	done_forwarding
+
+	jmp	sub_now_at_book
+
+done_forwarding:
+	rts
+
+cant_get_there_from_here:
+	jsr	short_beep
+
 	rts
 
 sub_backtrack_pressed:
+
+	jsr	click_speaker
+
+	jsr	sub_point_to_struct
+
+	ldy	#BACKTRACK_DIR_OFFSET
+	lda	(INL),Y
+	sta	SUB_DIRECTION
+
+	ldy	#BACKTRACK_OFFSET
+	lda	(INL),Y
+	sta	SUB_LOCATION
+
+	bne	done_backtracking
+
+	; if 0, back at selena side
+
+	jmp	sub_back_to_selena
+
+done_backtracking:
+	rts
+
+	;==============================
+	; helper to point to proper sub struct
+sub_point_to_struct:
+
+	lda	SUB_LOCATION
+	asl
+	tay
+	lda	sub_locations,Y
+	sta	INL
+	lda	sub_locations+1,Y
+	sta	INH
+
 	rts
 
 
-
-	;====================
-	; toward_book
+	;===========================================
+	; in selena, pressed forward -- toward_book
 sub_controls_move_toward_book:
+
+	; Enter the maze
+	lda	#1
+	sta	SUB_LOCATION
 
 	; disable exit button
 	ldy	#LOCATION_SPECIAL_EXIT
@@ -161,7 +226,10 @@ sub_controls_move_toward_selena:
 	;===============================
 
 
-sub_controls_arrival:
+sub_back_to_selena:
+
+	;==============
+	; back at selena
 
 	; re-enable exit button
 	ldy	#LOCATION_SPECIAL_EXIT
@@ -173,13 +241,6 @@ sub_controls_arrival:
 	lda	#DIRECTION_E
 	sta	location6,Y				; SUB INSIDE_BACK
 	sta	DIRECTION
-
-	lda	CURSOR_Y
-	cmp	#32
-	bcc	sub_forward	; blt
-
-	; "backward" taks us back to selena
-sub_backward:
 
 	; change destination of open door
 	ldy	#LOCATION_SOUTH_EXIT
@@ -207,8 +268,21 @@ sub_backward:
 	sta	LOCATION
 	jmp	change_location
 
-	; "forward" takes us to book
-sub_forward:
+	;==============
+	; now at book
+
+sub_now_at_book:
+
+	; re-enable exit button
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#DIRECTION_S
+	sta	location6,Y				; SUB_INSIDE_BACK
+
+	; change so we use normal (not split) mode when looking forward
+	ldy	#LOCATION_EAST_EXIT_DIR
+	lda	#DIRECTION_E
+	sta	location6,Y				; SUB INSIDE_BACK
+	sta	DIRECTION
 
 	; change destination of open door
 	ldy	#LOCATION_SOUTH_EXIT
@@ -335,6 +409,7 @@ sub_locations:
 .word	sub_loc36,sub_loc37
 
 BACKTRACK_OFFSET = 8
+BACKTRACK_DIR_OFFSET = 9
 NOISE_OFFSET = 10
 
 	; N  NE   E  SE    S  SW   W  NW   backtrack    noise
@@ -474,6 +549,7 @@ sub_loc37:	; E(loc35)					[ no noise ]
 	;============================
 
 draw_sub:
+	;=================
 	; draw direction
 
 	lda	SUB_DIRECTION
@@ -494,17 +570,34 @@ draw_sub:
 
 	jsr	put_sprite_crop
 
+	;===================================
 	; draw oustide (possibly animated)
+
+	jsr	sub_point_to_struct
+
+	ldy	SUB_DIRECTION
+	lda	(INL),Y
+
+	bpl	regular_path
+
+blocked_path:
+
+	lda	#18
+	sta	XPOS
+	lda	#8
+	sta	YPOS
+
+	lda	#<blocked_sprite
+	sta	INL
+	lda	#>blocked_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+regular_path:
 
 	; print sound effect
 
-	lda	SUB_LOCATION
-	asl
-	tay
-	lda	sub_locations,Y
-	sta	INL
-	lda	sub_locations+1,Y
-	sta	INH
+	jsr	sub_point_to_struct
 
 	ldy	#NOISE_OFFSET
 	lda	(INL),Y
@@ -519,6 +612,12 @@ draw_sub:
 
 	rts
 
+
+blocked_sprite:
+	.byte	3,3
+	.byte	$20,$21,$20
+	.byte	$22,$20,$22
+	.byte	$22,$20,$22
 
 sub_direction_xs:
 	.byte 29,27,29,27
@@ -573,12 +672,12 @@ sub_direction_sprite_se:
 
 sub_direction_sprite_nw:
 	.byte 10,3
-	.byte $ff,$F0,$00,$ff,$ff,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$0f,$ff,$ff,$00,$f0,$0f,$f0,$ff
-	.byte $0f,$00,$00,$0f,$0f,$00,$00,$00,$00,$0f
+	.byte $ff,$F0,$00,$ff,$00,$ff,$00,$00,$00,$ff
+	.byte $ff,$00,$0f,$ff,$00,$ff,$f0,$0f,$f0,$ff
+	.byte $0f,$00,$00,$0f,$00,$0f,$00,$00,$00,$0f
 
 sub_direction_sprite_sw:
 	.byte 10,3
-	.byte $f0,$0f,$0f,$0f,$ff,$00,$00,$00,$00,$ff
-	.byte $00,$0f,$0f,$f0,$ff,$00,$f0,$0f,$f0,$ff
-	.byte $0f,$0f,$0f,$00,$0f,$00,$00,$00,$00,$0f
+	.byte $f0,$0f,$0f,$0f,$00,$ff,$00,$00,$00,$ff
+	.byte $00,$0f,$0f,$f0,$00,$ff,$f0,$0f,$f0,$ff
+	.byte $0f,$0f,$0f,$00,$00,$0f,$00,$00,$00,$0f
