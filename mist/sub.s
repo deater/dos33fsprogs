@@ -194,170 +194,6 @@ done_animate_mist_book:
 	jmp	nothing_special
 
 
-
-sub_selena_open:
-	lda	#SUB_CLOSE_OPEN
-	sta	LOCATION
-
-	jmp	change_location
-
-sub_selena_close:
-	lda	#SUB_CLOSE
-	sta	LOCATION
-
-	jmp	change_location
-
-sub_door_selena_open:
-	lda	#SUB_INSIDE_BACK_OPEN
-	sta	LOCATION
-
-	jmp	change_location
-
-sub_door_close:
-	lda	#SUB_INSIDE_BACK
-	sta	LOCATION
-
-	jmp	change_location
-
-
-	;=====================
-	; sub controls
-	;=====================
-
-
-	;====================
-	; toward_book
-sub_controls_move_toward_book:
-
-	; disable exit button
-	ldy	#LOCATION_SPECIAL_EXIT
-	lda	#$ff
-	sta	location6,Y				; SUB_INSIDE_BACK
-
-	; change so we use split mode when looking E
-	ldy	#LOCATION_EAST_EXIT_DIR
-	lda	#DIRECTION_E|DIRECTION_SPLIT
-	sta	location6,Y				; SUB INSIDE_BACK
-	; any controls take us to moving
-	sta	DIRECTION
-
-	lda	#SUB_INSIDE_FRONT_MOVING
-	sta	LOCATION
-	jmp	change_location
-
-	;====================
-	; toward_selena
-sub_controls_move_toward_selena:
-
-	; disable exit button
-	ldy	#LOCATION_SPECIAL_EXIT
-	lda	#$ff
-	sta	location6,Y				; SUB_INSIDE_BACK
-
-	; change so we use split mode when looking E
-	ldy	#LOCATION_EAST_EXIT_DIR
-	lda	#DIRECTION_E|DIRECTION_SPLIT
-	sta	location6,Y				; SUB INSIDE_BACK
-
-	; any controls take us to moving
-	sta	DIRECTION
-
-	; change destination of front of sub
-	ldy	#LOCATION_EAST_EXIT
-	lda	#SUB_INSIDE_FRONT_MOVING
-	sta	location7,Y				; SUB_INSIDE_BACK_OPEN
-	sta	location6,Y				; SUN_INSIDE_BACK
-
-	lda	#SUB_INSIDE_FRONT_MOVING
-	sta	LOCATION
-	jmp	change_location
-
-
-	;===============================
-	; moving
-sub_controls_moving:
-
-	; re-enable exit button
-	ldy	#LOCATION_SPECIAL_EXIT
-	lda	#DIRECTION_S
-	sta	location6,Y				; SUB_INSIDE_BACK
-
-	; change so we use normal (not split) mode when looking forward
-	ldy	#LOCATION_EAST_EXIT_DIR
-	lda	#DIRECTION_E
-	sta	location6,Y				; SUB INSIDE_BACK
-	sta	DIRECTION
-
-	lda	CURSOR_Y
-	cmp	#32
-	bcc	sub_forward	; blt
-
-	; "backward" taks us back to selena
-sub_backward:
-
-	; change destination of open door
-	ldy	#LOCATION_SOUTH_EXIT
-	lda	#SUB_CLOSE_OPEN
-	sta	location7,Y				; SUB_INSIDE_BACK_OPEN
-
-	ldy	#LOCATION_SOUTH_EXIT_DIR
-	lda	#DIRECTION_N
-	sta	location7,Y				; SUB_INSIDE_BACK_OPEN
-
-	; change destination of front of sub
-	ldy	#LOCATION_EAST_EXIT
-	lda	#SUB_INSIDE_FRONT_SELENA
-	sta	location7,Y				; SUB_INSIDE_BACK_OPEN
-	sta	location6,Y				; SUN_INSIDE_BACK
-
-	; change background of open door
-	ldy	#LOCATION_SOUTH_BG
-	lda	#<inside_sub_back_selena_s_lzsa
-	sta	location7,Y
-	lda	#>inside_sub_back_selena_s_lzsa
-	sta	location7+1,Y				; SUB_INSIDE_BACK_OPEN
-
-	lda	#SUB_INSIDE_FRONT_SELENA
-	sta	LOCATION
-	jmp	change_location
-
-	; "forward" takes us to book
-sub_forward:
-
-	; change destination of open door
-	ldy	#LOCATION_SOUTH_EXIT
-	lda	#SUB_OUTSIDE_BOOK
-	sta	location7,Y				; SUB_INSIDE_BACK_OPEN
-
-	ldy	#LOCATION_SOUTH_EXIT_DIR
-	lda	#DIRECTION_S
-	sta	location7,Y				; SUB_INSIDE_BACK_OPEN
-
-	; change destination of front of sub
-	ldy	#LOCATION_EAST_EXIT
-	lda	#SUB_INSIDE_FRONT_BOOK
-	sta	location7,Y				; SUB_INSIDE_BACK_OPEN
-	sta	location6,Y				; SUN_INSIDE_BACK
-
-	; change background of open door
-	ldy	#LOCATION_SOUTH_BG
-	lda	#<inside_sub_back_book_s_lzsa
-	sta	location7,Y
-	lda	#>inside_sub_back_book_s_lzsa
-	sta	location7+1,Y				; SUB_INSIDE_BACK_OPEN
-
-	lda	#SUB_INSIDE_FRONT_BOOK
-	sta	LOCATION
-	jmp	change_location
-
-
-;         1         2         3
-;123456789012345678901234567890123456789
-; FOR THE SAKE OF ARGUMENT IMAGINE YOU
-; JUST SPENT 45 MINUTES NAVIGATING AN
-; OBSCURE MAZE BASED ON A CLUE YOU WERE
-; SUPPOSED TO NOTICE IN MECHANICAL AGE
-
 	;==========================
 	; includes
 	;==========================
@@ -366,6 +202,7 @@ sub_forward:
 	.include	"graphics_sub/sub_graphics.inc"
 
 	; puzzles
+	.include	"sub_puzzle.s"
 
 	; linking books
 	.include	"link_book_mist.s"
@@ -379,7 +216,4 @@ sub_forward:
 
 
 
-; sub solution
-;	N, W, N, E, E
-;	S, S, W, SW, W
-;	NW, NE, N, SE
+

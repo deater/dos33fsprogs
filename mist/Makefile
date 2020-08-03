@@ -221,6 +221,7 @@ sub.o:	sub.s zp.inc hardware.inc common_defines.inc \
 	end_level.s \
 	keyboard.s \
 	draw_pointer.s \
+	sub_puzzle.s \
 	gr_copy.s audio.s text_print.s decompress_fast_v2.s
 	ca65 -o sub.o sub.s -l sub.lst
 
