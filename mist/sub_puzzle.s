@@ -53,7 +53,11 @@ sub_turn_right:
 
 no_turn_right_oflo:
 
-	rts
+	lda	#SUB_ROTATE_RIGHT_PATH_PATH
+	sta	ANIMATE_FRAME
+
+	jmp	start_animating
+
 
 	;======================
 	; sub turn left
@@ -71,6 +75,23 @@ sub_turn_left:
 
 no_turn_left_oflo:
 
+	lda	#SUB_ROTATE_LEFT_PATH_PATH
+	sta	ANIMATE_FRAME
+
+	jmp	start_animating
+
+
+
+start_animating:
+	; clear frame count
+	lda	#00
+	sta	FRAMEL
+
+	; disable controls
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#$ff
+	sta	location9,Y			; SUB_INSIDE_FRONT_MOVING
+
 	rts
 
 	;===============================
@@ -83,8 +104,8 @@ sub_controls_moving:
 	bcc	sub_button_pressed
 
 	lda	CURSOR_Y
-	cmp	#28
-	bcc	sub_forward_pressed
+	cmp	#30
+	bcc	sub_forward_pressed	; blt
 	cmp	#34
 	bcs	sub_backtrack_pressed
 
@@ -122,7 +143,11 @@ sub_forward_pressed:
 	jmp	sub_now_at_book
 
 done_forwarding:
-	rts
+
+	lda	#SUB_MOVE_FORWARD_PATH_PATH
+	sta	ANIMATE_FRAME
+
+	jmp	start_animating
 
 cant_get_there_from_here:
 	jsr	short_beep
@@ -150,7 +175,11 @@ sub_backtrack_pressed:
 	jmp	sub_back_to_selena
 
 done_backtracking:
-	rts
+
+	lda	#SUB_MOVE_BACKWARD_PATH_PATH
+	sta	ANIMATE_FRAME
+
+	jmp	start_animating
 
 	;==============================
 	; helper to point to proper sub struct
@@ -189,7 +218,12 @@ sub_controls_move_toward_book:
 
 	lda	#SUB_INSIDE_FRONT_MOVING
 	sta	LOCATION
-	jmp	change_location
+	jsr	change_location
+
+	lda	#SUB_DOWN_FROM_SELENA
+	sta	ANIMATE_FRAME
+
+	jmp	start_animating
 
 	;====================
 	; toward_selena
@@ -264,9 +298,14 @@ sub_back_to_selena:
 	lda	#>inside_sub_back_selena_s_lzsa
 	sta	location7+1,Y				; SUB_INSIDE_BACK_OPEN
 
-	lda	#SUB_INSIDE_FRONT_SELENA
-	sta	LOCATION
-	jmp	change_location
+;	lda	#SUB_INSIDE_FRONT_SELENA
+;	sta	LOCATION
+;	jsr	change_location
+
+	lda	#SUB_UP_TO_SELENA
+	sta	ANIMATE_FRAME
+
+	jmp	start_animating
 
 	;==============
 	; now at book
@@ -573,6 +612,69 @@ draw_sub:
 	;===================================
 	; draw oustide (possibly animated)
 
+	; handle animation
+
+	lda	ANIMATE_FRAME
+	beq	done_animate
+
+	asl
+	tay
+
+	lda	sub_animations,Y
+	sta	INL
+	lda	sub_animations+1,Y
+	sta	INH
+
+	lda	#16
+	sta	XPOS
+	lda	#8
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+
+	; see if increment frame
+
+	lda	FRAMEL
+	and	#$f
+
+	bne	dont_increment_animate
+
+	inc	ANIMATE_FRAME
+
+	lda	ANIMATE_FRAME
+	asl
+	tay
+	lda	sub_animations+1,Y		; page number, if 0, done
+	bne	dont_increment_animate
+
+	; re-enable controls
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#DIRECTION_E
+	sta	location9,Y			; SUB_INSIDE_FRONT_MOVING
+
+	; special case at ends
+
+	lda	ANIMATE_FRAME
+	cmp	#58
+	beq	arrive_back_in_selena
+
+	jmp	done_done_animate
+
+arrive_back_in_selena:
+	lda	#SUB_INSIDE_FRONT_SELENA
+	sta	LOCATION
+	jsr	change_location
+
+done_done_animate:
+	lda	#0
+	sta	ANIMATE_FRAME
+
+dont_increment_animate:
+	jmp	regular_path
+
+done_animate:
+
 	jsr	sub_point_to_struct
 
 	ldy	SUB_DIRECTION
@@ -681,3 +783,317 @@ sub_direction_sprite_sw:
 	.byte $f0,$0f,$0f,$0f,$00,$ff,$00,$00,$00,$ff
 	.byte $00,$0f,$0f,$f0,$00,$ff,$f0,$0f,$f0,$ff
 	.byte $0f,$0f,$0f,$00,$00,$0f,$00,$00,$00,$0f
+
+
+; animations
+; 0 means none
+
+SUB_ROTATE_RIGHT_PATH_PATH	=	1
+SUB_ROTATE_LEFT_PATH_PATH	=	6
+SUB_MOVE_FORWARD_PATH_PATH	=	11
+SUB_MOVE_BACKWARD_PATH_PATH	=	21
+SUB_DOWN_FROM_SELENA		=	31
+SUB_UP_TO_SELENA		=	45
+
+sub_animations:
+	.word	$0000		; none		; 0
+
+	.word	rotate_right_path_path_frame1	; 1
+	.word	rotate_right_path_path_frame2	; 2
+	.word	rotate_right_path_path_frame3	; 3
+	.word	rotate_right_path_path_frame4	; 4
+
+	.word	$0000		; none		; 5
+
+	.word	rotate_right_path_path_frame4	; 6
+	.word	rotate_right_path_path_frame3	; 7
+	.word	rotate_right_path_path_frame2	; 8
+	.word	rotate_right_path_path_frame1	; 9
+
+	.word	$0000		; none		; 10
+
+	.word	move_forward_path_path_frame1	; 11
+	.word	move_forward_path_path_frame2	; 12
+	.word	move_forward_path_path_frame3	; 13
+	.word	move_forward_path_path_frame4	; 14
+	.word	draw_nothing_sprite		; 15
+	.word	move_forward_path_path_frame1	; 16
+	.word	move_forward_path_path_frame2	; 17
+	.word	move_forward_path_path_frame3	; 18
+	.word	move_forward_path_path_frame4	; 19
+
+	.word	$0000		; none		; 20
+
+	.word	move_forward_path_path_frame4	; 21
+	.word	move_forward_path_path_frame3	; 22
+	.word	move_forward_path_path_frame2	; 23
+	.word	move_forward_path_path_frame1	; 24
+	.word	draw_nothing_sprite		; 25
+	.word	move_forward_path_path_frame4	; 26
+	.word	move_forward_path_path_frame3	; 27
+	.word	move_forward_path_path_frame2	; 28
+	.word	move_forward_path_path_frame1	; 29
+
+	.word	$0000		; none		; 30
+
+	.word	down_from_selena_frame1		; 31
+	.word	down_from_selena_frame2		; 32
+	.word	down_from_selena_frame3		; 33
+	.word	down_from_selena_frame4		; 34
+	.word	down_from_selena_frame5		; 35
+	.word	down_from_selena_frame6		; 36
+	.word	down_from_selena_frame7		; 37
+	.word	down_from_selena_frame8		; 38
+	.word	down_from_selena_frame9		; 39
+	.word	down_from_selena_frame10	; 40
+	.word	down_from_selena_frame11	; 41
+	.word	down_from_selena_frame12	; 42
+	.word	rotate_right_path_path_frame1	; 43
+
+	.word	$0000		; none		; 44
+
+	.word	rotate_right_path_path_frame1	; 45
+	.word	down_from_selena_frame12	; 46
+	.word	down_from_selena_frame11	; 47
+	.word	down_from_selena_frame10	; 48
+	.word	down_from_selena_frame9		; 49
+	.word	down_from_selena_frame8		; 50
+	.word	down_from_selena_frame7		; 51
+	.word	down_from_selena_frame6		; 52
+	.word	down_from_selena_frame5		; 53
+	.word	down_from_selena_frame4		; 54
+	.word	down_from_selena_frame3		; 55
+	.word	down_from_selena_frame2		; 56
+	.word	down_from_selena_frame1		; 57
+
+	.word	$0000		; none		; 58
+
+
+; move left/right
+; frames 4 5 6 7 DONE
+
+rotate_right_path_path_frame1:
+	.byte 7,7
+	.byte $00,$00,$00,$00,$00,$00,$88
+	.byte $00,$00,$00,$00,$20,$00,$88
+	.byte $00,$00,$00,$00,$22,$00,$88
+	.byte $75,$50,$75,$00,$22,$00,$88
+	.byte $77,$55,$77,$98,$98,$00,$88
+	.byte $77,$55,$77,$88,$00,$00,$88
+;	.byte $55,$55,$55,$77,$00,$00,$88
+	.byte $55,$77,$55,$00,$00,$77,$88
+
+rotate_right_path_path_frame2:
+	.byte 7,7
+	.byte $00,$00,$00,$00,$88,$00,$00
+	.byte $00,$00,$20,$00,$88,$00,$20
+	.byte $00,$00,$22,$00,$88,$00,$22
+	.byte $75,$00,$22,$00,$88,$00,$22
+	.byte $77,$98,$98,$00,$88,$00,$98
+	.byte $77,$88,$00,$00,$88,$00,$00
+;	.byte $55,$77,$00,$00,$88,$00,$00
+	.byte $55,$77,$00,$00,$88,$77,$00
+
+rotate_right_path_path_frame3:
+	.byte 7,7
+	.byte $00,$00,$88,$00,$00,$00,$00
+	.byte $20,$00,$88,$00,$20,$00,$00
+	.byte $22,$00,$88,$00,$22,$00,$00
+	.byte $22,$00,$88,$00,$22,$00,$75
+	.byte $98,$00,$88,$00,$98,$98,$77
+	.byte $00,$00,$88,$00,$00,$88,$77
+;	.byte $00,$00,$88,$00,$00,$77,$55
+	.byte $00,$77,$88,$00,$00,$77,$55
+
+rotate_right_path_path_frame4:
+	.byte 7,7
+	.byte $88,$00,$00,$00,$00,$00,$00
+	.byte $88,$00,$20,$00,$00,$00,$00
+	.byte $88,$00,$22,$00,$00,$00,$00
+	.byte $88,$00,$22,$00,$75,$50,$75
+	.byte $88,$00,$98,$98,$77,$55,$77
+	.byte $88,$00,$00,$88,$77,$55,$77
+;	.byte $88,$00,$00,$77,$55,$55,$55
+	.byte $88,$77,$00,$55,$55,$77,$55
+
+
+; move forward/back
+; frames 12 13 14 15 DONE
+
+move_forward_path_path_frame1:
+	.byte 7,7
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $22,$00,$00,$00,$00,$00,$22
+	.byte $22,$00,$75,$50,$75,$00,$22
+	.byte $22,$00,$77,$55,$77,$00,$22
+	.byte $98,$98,$77,$55,$77,$98,$98
+	.byte $00,$77,$55,$55,$55,$77,$00
+
+move_forward_path_path_frame2:
+	.byte 7,7
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$75,$50,$75,$00,$00
+	.byte $00,$00,$77,$55,$77,$00,$00
+	.byte $00,$00,$77,$55,$77,$00,$00
+	.byte $98,$77,$55,$55,$55,$77,$98
+
+move_forward_path_path_frame3:
+	.byte 7,7
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$20,$00,$20,$00,$00
+	.byte $00,$80,$22,$00,$22,$80,$00
+	.byte $00,$00,$75,$50,$75,$00,$00
+	.byte $00,$00,$77,$55,$77,$00,$00
+	.byte $00,$00,$77,$55,$77,$00,$00
+	.byte $00,$77,$55,$55,$55,$77,$00
+
+move_forward_path_path_frame4:
+	.byte 7,7
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$22,$00,$00,$00,$22,$00
+	.byte $00,$22,$00,$00,$00,$22,$00
+	.byte $08,$98,$75,$50,$75,$98,$08
+	.byte $00,$00,$77,$55,$77,$88,$00
+	.byte $00,$00,$77,$55,$77,$00,$00
+	.byte $00,$77,$55,$55,$55,$77,$00
+
+draw_nothing_sprite:
+	.byte	1,1
+	.byte	$AA
+
+; move down from selena
+
+down_from_selena_frame1:
+	.byte 7,7
+	.byte $00,$50,$50,$70,$50,$50,$00
+	.byte $00,$55,$f0,$77,$f0,$55,$00
+	.byte $00,$55,$f7,$77,$f7,$55,$00
+	.byte $00,$55,$50,$17,$50,$55,$00
+	.byte $20,$20,$20,$20,$20,$20,$20
+	.byte $05,$55,$55,$55,$55,$55,$05
+	.byte $15,$05,$15,$15,$05,$15,$15
+
+down_from_selena_frame2:
+	.byte 7,7
+	.byte $00,$55,$f0,$77,$f0,$55,$00
+	.byte $00,$55,$f7,$77,$f7,$55,$00
+	.byte $00,$55,$50,$17,$50,$55,$00
+	.byte $20,$20,$20,$20,$20,$20,$20
+	.byte $05,$55,$55,$55,$55,$55,$05
+	.byte $15,$05,$15,$15,$05,$15,$15
+	.byte $51,$50,$51,$51,$50,$51,$51
+
+down_from_selena_frame3:
+	.byte 7,7
+	.byte $f7,$55,$00,$55,$f7,$77,$f7
+	.byte $50,$55,$00,$55,$50,$17,$50
+	.byte $20,$20,$20,$20,$20,$20,$20
+	.byte $55,$55,$05,$55,$55,$55,$55
+	.byte $05,$15,$15,$05,$15,$15,$05
+	.byte $50,$51,$51,$50,$51,$51,$50
+	.byte $88,$88,$88,$88,$88,$88,$88
+
+down_from_selena_frame4:
+	.byte 7,7
+	.byte $50,$17,$50,$55,$00,$55,$50
+	.byte $20,$20,$20,$20,$20,$20,$20
+	.byte $55,$55,$55,$55,$05,$55,$55
+	.byte $15,$15,$05,$15,$15,$05,$15
+	.byte $51,$51,$50,$51,$51,$50,$51
+	.byte $88,$88,$88,$88,$88,$88,$88
+	.byte $00,$00,$00,$00,$00,$00,$00
+
+down_from_selena_frame5:
+	.byte 7,7
+	.byte $20,$20,$20,$20,$20,$20,$20
+	.byte $05,$55,$55,$55,$55,$55,$05
+	.byte $15,$05,$15,$15,$05,$15,$15
+	.byte $51,$50,$51,$51,$50,$51,$51
+	.byte $88,$88,$88,$88,$88,$88,$88
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+
+down_from_selena_frame6:
+	.byte 7,7
+	.byte $55,$55,$05,$55,$55,$55,$55
+	.byte $05,$15,$15,$05,$15,$15,$05
+	.byte $50,$51,$51,$50,$51,$51,$50
+	.byte $88,$88,$88,$88,$88,$88,$88
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$88,$88,$88,$00,$00,$00
+
+
+down_from_selena_frame7:
+	.byte 7,7
+	.byte $15,$15,$05,$15,$15,$05,$15
+	.byte $51,$51,$50,$51,$51,$50,$51
+	.byte $88,$88,$88,$88,$88,$88,$88
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$88,$88,$88,$00
+	.byte $00,$00,$00,$00,$88,$00,$00
+
+down_from_selena_frame8:
+	.byte 7,7
+	.byte $51,$50,$51,$51,$50,$51,$51
+	.byte $88,$88,$88,$88,$88,$88,$88
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$88,$88
+	.byte $00,$00,$00,$00,$00,$00,$88
+	.byte $00,$00,$00,$20,$00,$00,$88
+
+down_from_selena_frame9:
+	.byte 7,7
+	.byte $88,$88,$88,$88,$88,$88,$88
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $20,$00,$00,$00,$00,$00,$20
+	.byte $22,$00,$00,$00,$00,$00,$22
+
+
+
+down_from_selena_frame10:
+	.byte 7,7
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $88,$88,$00,$00,$00,$00,$00
+	.byte $88,$00,$20,$00,$00,$00,$00
+	.byte $88,$00,$22,$00,$00,$00,$00
+	.byte $88,$00,$22,$00,$75,$50,$75
+
+down_from_selena_frame11:
+	.byte 7,7
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$88,$88,$88,$00,$00,$00
+	.byte $00,$00,$88,$00,$00,$00,$00
+	.byte $20,$00,$88,$00,$20,$00,$00
+	.byte $22,$00,$88,$00,$22,$00,$00
+	.byte $22,$00,$88,$00,$22,$00,$75
+	.byte $98,$00,$88,$00,$98,$98,$77
+
+down_from_selena_frame12:
+	.byte 7,7
+	.byte $00,$00,$00,$88,$88,$88,$00
+	.byte $00,$00,$00,$00,$88,$00,$00
+	.byte $00,$00,$20,$00,$88,$00,$20
+	.byte $00,$00,$22,$00,$88,$00,$22
+	.byte $75,$00,$22,$00,$88,$00,$22
+	.byte $77,$98,$98,$00,$88,$00,$98
+	.byte $77,$88,$00,$00,$88,$00,$00
+
+
+
+
+
+
+
+
+
+; zoom through tunnels to book
