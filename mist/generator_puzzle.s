@@ -150,6 +150,36 @@ needle_strings:
 
 generator_button_press:
 
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_N
+	beq	really_the_panel
+
+	; otherwise, the sign
+
+	lda	CURSOR_X
+	cmp	#27
+	bcs	draw_sign
+
+	; not draw sign, leave room
+
+	lda	#GEN_GENERATOR_DOOR
+	sta	LOCATION
+	jmp	change_location
+
+draw_sign:
+
+	lda	#GEN_SIGN
+	sta	LOCATION
+
+	lda	#(DIRECTION_S|DIRECTION_SPLIT)
+	sta	DIRECTION
+
+	jmp	change_location
+
+
+really_the_panel:
+
 	lda	CURSOR_Y
 	cmp	#38
 	bcs	button_bottom_row		; bge

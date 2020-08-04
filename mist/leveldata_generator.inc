@@ -6,7 +6,7 @@
 locations:
 	.word location0, location1, location2, location3
 	.word location4, location5, location6, location7
-	.word location8, location9
+	.word location8, location9, location10
 
 ; GEN_GREEN_SHACK
 location0:
@@ -99,7 +99,7 @@ location4:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH | BG_SOUTH
-	.byte	DIRECTION_N
+	.byte	DIRECTION_N|DIRECTION_S
 	.byte	24,36		; special x
 	.byte	34,40		; special y
 	.word	generator_button_press-1	; special function
@@ -197,3 +197,21 @@ location9:
 	.word	$0000			; west bg
 	.byte	BG_NORTH | BG_SOUTH
 	.byte	$ff
+
+; GEN_SIGN		-- sign on the wall
+location10:
+	.byte	$ff			; north exit
+	.byte	GEN_GENERATOR_ROOM	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	generator_sign_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH
+	.byte	$ff
+
