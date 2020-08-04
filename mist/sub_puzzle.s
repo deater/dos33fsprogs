@@ -6,25 +6,37 @@
 
 
 
-
+	;===========================
+	; open door of sub (outside)
+	;===========================
 sub_selena_open:
 	lda	#SUB_CLOSE_OPEN
 	sta	LOCATION
 
 	jmp	change_location
 
+
+	;============================
+	; close door of sub (outside)
+	;============================
 sub_selena_close:
 	lda	#SUB_CLOSE
 	sta	LOCATION
 
 	jmp	change_location
 
+	;===============================
+	; open door of sub (from inside)
+	;===============================
 sub_door_selena_open:
 	lda	#SUB_INSIDE_BACK_OPEN
 	sta	LOCATION
 
 	jmp	change_location
 
+	;================================
+	; close door of sub (from inside)
+	;================================
 sub_door_close:
 	lda	#SUB_INSIDE_BACK
 	sta	LOCATION
@@ -345,9 +357,10 @@ sub_now_at_book:
 	lda	#>inside_sub_back_book_s_lzsa
 	sta	location7+1,Y				; SUB_INSIDE_BACK_OPEN
 
-	lda	#SUB_INSIDE_FRONT_BOOK
-	sta	LOCATION
-	jmp	change_location
+	lda	#SUB_TO_BOOKROOM
+	sta	ANIMATE_FRAME
+
+	jmp	start_animating
 
 
 ; further research shows that the re-use of directions in mechanical
@@ -372,17 +385,16 @@ sub_now_at_book:
 ; E -- PWING
 ; W -- BREETT
 
-; PLINK means you are there?
-
 ; forward goes forward
-; backtrack takes you to previous locations?  has a stack?
+; backtrack takes you to previous location?
+; presumably backwards in the tree (not a stack)
 
 ; 37 locations in maze?
 
 ; red button plays noise again
 ;	red barrier if you can't go a direction, plays burrrrrrrrr
 ;	noise if you can't go
-; if on wrong path, plays no noise at all?
+; if at dead end, plays no noise at all
 ; some paths take you to a direction not the one you left in
 ;	let's not do that to keep things simple
 
@@ -591,6 +603,10 @@ draw_sub:
 	;=================
 	; draw direction
 
+	; only if not animating
+	lda	ANIMATE_FRAME
+	bne	draw_sub_window
+
 	lda	SUB_DIRECTION
 	tay
 	lda	sub_direction_xs,Y
@@ -609,9 +625,28 @@ draw_sub:
 
 	jsr	put_sprite_crop
 
+
+	;=====================
+	; print sound effect
+
+	; only if not animating
+
+	jsr	sub_point_to_struct
+
+	ldy	#NOISE_OFFSET
+	lda	(INL),Y
+
+	asl
+	tay
+	lda	sub_noises,Y
+	sta	OUTL
+	lda	sub_noises+1,Y
+	sta	OUTH
+	jsr	move_and_print
+
 	;===================================
 	; draw oustide (possibly animated)
-
+draw_sub_window:
 	; handle animation
 
 	lda	ANIMATE_FRAME
@@ -658,7 +693,15 @@ draw_sub:
 	lda	ANIMATE_FRAME
 	cmp	#58
 	beq	arrive_back_in_selena
+	cmp	#73
+	beq	arrive_at_bookroom
 
+	jmp	done_done_animate
+
+arrive_at_bookroom:
+	lda	#SUB_INSIDE_FRONT_BOOK
+	sta	LOCATION
+	jsr	change_location
 	jmp	done_done_animate
 
 arrive_back_in_selena:
@@ -697,20 +740,8 @@ blocked_path:
 
 regular_path:
 
-	; print sound effect
 
-	jsr	sub_point_to_struct
 
-	ldy	#NOISE_OFFSET
-	lda	(INL),Y
-
-	asl
-	tay
-	lda	sub_noises,Y
-	sta	OUTL
-	lda	sub_noises+1,Y
-	sta	OUTH
-	jsr	move_and_print
 
 	rts
 
@@ -794,6 +825,7 @@ SUB_MOVE_FORWARD_PATH_PATH	=	11
 SUB_MOVE_BACKWARD_PATH_PATH	=	21
 SUB_DOWN_FROM_SELENA		=	31
 SUB_UP_TO_SELENA		=	45
+SUB_TO_BOOKROOM			=	59
 
 sub_animations:
 	.word	$0000		; none		; 0
@@ -867,6 +899,25 @@ sub_animations:
 	.word	down_from_selena_frame1		; 57
 
 	.word	$0000		; none		; 58
+
+	.word	move_forward_path_path_frame1	; 59
+	.word	move_forward_path_path_frame2	; 60
+	.word	up_to_bookroom_frame1		; 61
+	.word	up_to_bookroom_frame2		; 62
+	.word	up_to_bookroom_frame3		; 63
+	.word	up_to_bookroom_frame4		; 64
+	.word	up_to_bookroom_frame5		; 65
+	.word	up_to_bookroom_frame1		; 66
+	.word	up_to_bookroom_frame2		; 67
+	.word	up_to_bookroom_frame3		; 68
+	.word	up_to_bookroom_frame4		; 69
+	.word	up_to_bookroom_frame5		; 70
+	.word	up_to_bookroom_frame1		; 71
+	.word	up_to_bookroom_frame2		; 72
+
+	.word	$0000		; none		; 73
+
+
 
 
 ; move left/right
@@ -1088,12 +1139,56 @@ down_from_selena_frame12:
 	.byte $77,$98,$98,$00,$88,$00,$98
 	.byte $77,$88,$00,$00,$88,$00,$00
 
-
-
-
-
-
-
-
-
 ; zoom through tunnels to book
+
+up_to_bookroom_frame1:
+	.byte 7,7
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$70,$50,$70,$00,$00
+	.byte $00,$00,$77,$55,$55,$77,$00
+	.byte $00,$77,$55,$55,$55,$55,$77
+	.byte $00,$77,$55,$55,$55,$55,$77
+
+up_to_bookroom_frame2:
+	.byte 7,7
+	.byte $00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$dd,$0d,$dd,$00,$00
+	.byte $00,$00,$dd,$00,$dd,$00,$00
+	.byte $00,$00,$75,$50,$75,$00,$00
+	.byte $00,$00,$77,$55,$55,$77,$00
+	.byte $00,$77,$55,$55,$55,$55,$77
+	.byte $00,$77,$55,$55,$55,$55,$77
+
+up_to_bookroom_frame3:
+	.byte 7,7
+	.byte $00,$00,$dd,$0d,$0d,$dd,$00
+	.byte $00,$00,$dd,$00,$00,$dd,$00
+	.byte $00,$00,$dd,$00,$00,$dd,$00
+	.byte $00,$00,$dd,$50,$70,$dd,$00
+	.byte $00,$00,$75,$55,$55,$75,$00
+	.byte $00,$77,$55,$55,$55,$55,$77
+	.byte $00,$77,$55,$55,$55,$55,$77
+
+up_to_bookroom_frame4:
+	.byte 7,7
+	.byte $00,$dd,$00,$00,$00,$00,$dd
+	.byte $00,$dd,$00,$00,$00,$00,$dd
+	.byte $00,$dd,$00,$00,$00,$00,$dd
+	.byte $00,$dd,$70,$50,$70,$00,$dd
+	.byte $00,$dd,$77,$55,$55,$77,$dd
+	.byte $00,$75,$55,$55,$55,$55,$75
+	.byte $00,$77,$55,$55,$55,$55,$77
+
+up_to_bookroom_frame5:
+	.byte 7,7
+	.byte $dd,$00,$00,$00,$00,$00,$dd
+	.byte $dd,$00,$00,$00,$00,$00,$dd
+	.byte $dd,$00,$00,$00,$00,$00,$dd
+	.byte $dd,$00,$70,$50,$70,$00,$dd
+	.byte $dd,$00,$77,$55,$55,$77,$dd
+	.byte $dd,$77,$55,$55,$55,$55,$dd
+	.byte $5d,$77,$55,$55,$55,$55,$5d
+
+
