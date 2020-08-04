@@ -111,6 +111,14 @@ done_turn_on_breaker:
 
 open_gen_door:
 
+	lda	gen_door_status
+	eor	#$1
+	sta	gen_door_status
+
+	beq	gen_close_door
+
+gen_open_door:
+
 	ldy	#LOCATION_NORTH_EXIT
 	lda	#GEN_GENERATOR_ROOM
 	sta	location3,Y			; GEN_GENERATOR_DOOR
@@ -125,10 +133,32 @@ open_gen_door:
 	lda	#>gen_door_open_n_lzsa
 	sta	location3+1,Y			; GEN_GENERATOR_DOOR
 
-	jsr	change_location
+	jmp	change_location
 
-	rts
+gen_close_door:
 
+	; disable exit
+	ldy	#LOCATION_NORTH_EXIT
+	lda	#$ff
+	sta	location3,Y			; GEN_GENERATOR_DOOR
+
+	ldy	#LOCATION_NORTH_EXIT_DIR
+	lda	#$ff
+	sta	location3,Y			; GEN_GENERATOR_DOOR
+
+	; change background
+
+	ldy	#LOCATION_NORTH_BG
+	lda	#<gen_door_closed_n_lzsa
+	sta	location3,Y			; GEN_GENERATOR_DOOR
+	lda	#>gen_door_closed_n_lzsa
+	sta	location3+1,Y			; GEN_GENERATOR_DOOR
+
+	jmp	change_location
+
+
+gen_door_status:
+	.byte	$00	; closed
 
 button_lookup:
 .byte $10,$8,$4,$2,$1
