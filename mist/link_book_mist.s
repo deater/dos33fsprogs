@@ -1,5 +1,5 @@
 	;======================================
-	; mist link book to the octogon temple
+	; mist link book to the octagon temple
 	;======================================
 mist_link_book:
 

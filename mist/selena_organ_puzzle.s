@@ -1,3 +1,10 @@
+	;==========================
+	; o/` Standing in my yard
+	;	where they tore down the garage
+	;	to make room for the torn down garage o/`
+
+
+
 	; first time changes from book to fly animation
 	; second time switches us to selenetic, plays sound
 	;	disables organ and display
@@ -76,10 +83,7 @@ dome_press_second:
 	rts
 
 
-	;==========================
-	; o/` Standing in my yard
-	;	where they tore down the garage
-	;	to make room for the torn down garage o/`
+
 
 organ_pressed:
 	ldy	#0

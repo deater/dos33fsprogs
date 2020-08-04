@@ -93,7 +93,7 @@ location3:
 	.word	walkway1_s_lzsa		; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
-	.byte	BG_NORTH
+	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff
 
 ; SELENA_SPACESHIP_DOOR		-- spaceship door

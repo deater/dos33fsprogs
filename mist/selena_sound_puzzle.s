@@ -1120,13 +1120,19 @@ door_buttons_smc:
 	rts
 
 
-
+	;============================
+	; door buttons pressed
+	;===========================
 
 door_controls_pressed:
 
 	lda	CURSOR_X
 	cmp	#23
 	bcs	door_button_pressed			; bge
+	cmp	#20			; need to check this
+	bcc	door_sliders_pressed	; otherwise we increment stuff past
+					; lock in zero page
+	rts
 
 door_sliders_pressed:
 

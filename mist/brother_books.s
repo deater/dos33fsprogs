@@ -611,8 +611,8 @@ blue_dialog3:
 blue_dialog4:
 	.byte 0,21
 	.byte "FRIEND, I SEE YOU THINK SIRRUS IS WRONG",0
-	.byte 2,22
-	.byte "HAVE YOU OBSERVED HIS LUST FOR RICHES",0
+	.byte 1,22
+	.byte "HAVE YOU OBSERVED HIS LUST FOR RICHES?",0
 	.byte 6,23
 	.byte "PLEASE BRING MORE BLUE PAGES",0
 	.byte $80

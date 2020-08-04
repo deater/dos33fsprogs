@@ -201,7 +201,7 @@ mist_book_good:
 	inc	ANIMATE_FRAME
 
 done_animate_mist_book:
-	jmp	nothing_special
+	rts
 
 
 	;==========================

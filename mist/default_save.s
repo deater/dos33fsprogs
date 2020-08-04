@@ -2,7 +2,7 @@
 .include "common_defines.inc"
 
 
-.if 0
+.if 1
 ; if doing playthrough
 .include "playthrough_save.inc"
 .endif
@@ -44,7 +44,7 @@
 .byte SELENA_WALKWAY1	; LOCATION	=	$82
 .endif
 
-.if 1
+.if 0
 ; Sub
 .byte LOAD_SUB		; WHICH_LOAD		= 	$80
 .byte DIRECTION_E	; DIRECTION		= 	$81
@@ -52,7 +52,7 @@
 .endif
 
 
-.if 1
+.if 0
 .byte $00	; RED_PAGES_TAKEN	=	$83
 .byte $00	; BLUE_PAGES_TAKEN	=	$84
 .byte $00	; CLOCK_BRIDGE		=	$85
