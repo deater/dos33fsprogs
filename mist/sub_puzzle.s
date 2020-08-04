@@ -166,6 +166,33 @@ cant_get_there_from_here:
 
 	rts
 
+	; current	dest
+	;	0  1  2  3  4  5  6  7
+	;0	N  R  R  R  R  L  L  L
+	;1	L  N  R  R  R  R  L  L
+	;2      L  L  N  R  R  R  R  L
+	;3      L  L  L  N  R  R  R  R
+	;4      R  L  L  L  N  R  R  R
+	;5      R  R  L  L  L  N  R  R
+	;6      R  R  R  L  L  L  N  R
+	;7      R  R  R  R  L  L  L  N
+
+	;	0    1   2   3   4   5   6  7
+	;0	7    6   5   4   3  *2  *1 *0
+	;1	*8   7   6   5   4   3  *2 *1
+	;2      *9  *8   7   6   5   4   3 *2
+	;3      *10 *9  *8   7   6   5   4  3
+	;4      11 *10  *9  *8   7   6   5  4
+	;5      12  11 *10  *9  *8   7   6  5
+	;6      13  12  11 *10  *9  *8   7  6
+	;7      14  13  12  11 *10  *9  *8  7
+
+	; current-dest+7
+
+	; current-dest
+	; <0		0	>0
+	; if <-3 R, else L		if >4 R, else L
+
 sub_backtrack_pressed:
 
 	jsr	click_speaker
@@ -174,7 +201,77 @@ sub_backtrack_pressed:
 
 	ldy	#BACKTRACK_DIR_OFFSET
 	lda	(INL),Y
+	sta	temp_direction
+
+	lda	SUB_DIRECTION
+	sec
+	sbc	temp_direction
+
+	beq	proper_angle_now_go_back
+	bpl	its_positive
+
+its_negative:
+	cmp	#$fd		; -3
+	bcc	setup_decrement	;	if <-3 then turn left
+	bcs	setup_increment ;	if >= -3 then turn right
+
+its_positive:
+	cmp	#4
+	bcc	setup_decrement		; if < 4 then turn left
+	bcs	setup_increment		; if >=4 then turn right
+
+setup_decrement:
+	lda	#SUB_ROTATE_LEFT_PATH_PATH
+	sta	animation_smc+1
+
+	; C6=dec
+	lda	#$C6
+	bne	do_the_smc
+
+setup_increment:
+	lda	#SUB_ROTATE_RIGHT_PATH_PATH
+	sta	animation_smc+1
+
+	; E6=inc
+	lda	#$E6
+do_the_smc:
+	sta	inc_dec_smc
+
+backtrack_rotate_loop:
+	lda	temp_direction
+	cmp	SUB_DIRECTION
+	beq	proper_angle_now_go_back
+
+animation_smc:
+	lda	#SUB_ROTATE_RIGHT_PATH_PATH
+	sta	ANIMATE_FRAME
+
+	jsr	start_animating
+
+	; not the proper angle, so rotate until we are
+
+backup_draw_loop:
+	jsr	gr_copy_to_current
+	jsr	draw_sub
+	jsr	page_flip
+
+	inc	FRAMEL
+
+	lda	ANIMATE_FRAME
+	bne	backup_draw_loop
+
+inc_dec_smc:
+	inc	SUB_DIRECTION
+	lda	SUB_DIRECTION
+	and	#$7
 	sta	SUB_DIRECTION
+
+	jmp	backtrack_rotate_loop
+
+
+proper_angle_now_go_back:
+
+	jsr	sub_point_to_struct
 
 	ldy	#BACKTRACK_OFFSET
 	lda	(INL),Y
@@ -192,6 +289,9 @@ done_backtracking:
 	sta	ANIMATE_FRAME
 
 	jmp	start_animating
+
+temp_direction:
+	.byte	$0
 
 	;==============================
 	; helper to point to proper sub struct
