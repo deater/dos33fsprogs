@@ -408,6 +408,9 @@ graphics_dni/dni_graphics.inc:
 graphics_ship/ship_graphics.inc:
 	cd graphics_ship && make
 
+graphics_sub/ship_gub.inc:
+	cd graphics_sub && make
+
 
 ####
 
@@ -434,4 +437,5 @@ clean:
 	cd graphics_nibel && make clean
 	cd graphics_dni && make clean
 	cd graphics_ship && make clean
+	cd graphics_sub && make clean
 
