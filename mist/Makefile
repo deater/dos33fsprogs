@@ -408,7 +408,7 @@ graphics_dni/dni_graphics.inc:
 graphics_ship/ship_graphics.inc:
 	cd graphics_ship && make
 
-graphics_sub/ship_gub.inc:
+graphics_sub/graphics_sub.inc:
 	cd graphics_sub && make
 
 
