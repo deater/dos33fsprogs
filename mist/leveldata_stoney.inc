@@ -15,7 +15,8 @@ locations:
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
 	.word location40,location41,location42,location43
-	.word location44,location45,location46
+	.word location44,location45,location46,location47
+	.word location48
 
 ; STONEY_ARRIVAL			-- arrival at stoneship
 location0:
@@ -509,7 +510,11 @@ location27:
 	.word	$0000			; east bg
 	.word	left_tunnel2_w_lzsa	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_WEST
-	.byte	$ff
+	.byte   DIRECTION_N
+        .byte   11,18		; special x
+        .byte   22,44		; special y
+        .word   enter_crawlway_left-1 ; special function
+
 
 ; STONEY_LEFT_AIRLOCK		-- airlock to red room
 location28:
@@ -603,11 +608,11 @@ location32:
 location33:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
-	.byte	STONEY_LEFT_TUNNEL2		; east exit
+	.byte	STONEY_CRAWLWAY_ENTRANCE_LEFT	; east exit
 	.byte	STONEY_COMPASS_ROOM_LEFT	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_N	; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
@@ -688,7 +693,10 @@ location37:
 	.word	right_tunnel2_w_lzsa	; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST
-	.byte	$ff
+	.byte   DIRECTION_N
+        .byte   24,30		; special x
+        .byte   22,44		; special y
+        .word   enter_crawlway_right-1 ; special function
 
 ; STONEY_RIGHT_AIRLOCK		-- airlock to blue room
 location38:
@@ -803,11 +811,11 @@ location44:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_COMPASS_ROOM_RIGHT	; east exit
-	.byte	STONEY_RIGHT_TUNNEL2		; west exit
+	.byte	STONEY_CRAWLWAY_ENTRANCE_RIGHT	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_N	; east exit_dir
-	.byte	DIRECTION_N	; west exit_dir
+	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
 	.word	crawlway_w_lzsa		; east bg
@@ -856,3 +864,37 @@ location46:
         .byte   0,46		; special y
         .word   view_compass_right-1 ; special function
 
+
+; STONEY_CRAWLWAY_ENTRANCE_LEFT		-- left_crawlway_entrance
+location47:
+	.byte	STONEY_LEFT_AIRLOCK		; north exit
+	.byte	STONEY_LEFT_TUNNEL1		; south exit
+	.byte	STONEY_LEFT_TUNNEL2		; east exit
+	.byte	STONEY_CRAWLWAY_LEFT		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	DIRECTION_N	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	left_tunnel2_n_lzsa	; north bg
+	.word	left_tunnel2_s_lzsa	; south bg
+	.word	crawlway_entrance_e_lzsa	; east bg
+	.word	left_tunnel2_w_lzsa	; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_WEST|BG_EAST
+	.byte   $ff
+
+; STONEY_CRAWLWAY_ENTRANCE_RIGHT	-- right crawlway entrance
+location48:
+	.byte	STONEY_RIGHT_AIRLOCK		; north exit
+	.byte	STONEY_RIGHT_TUNNEL1		; south exit
+	.byte	STONEY_CRAWLWAY_RIGHT		; east exit
+	.byte	STONEY_RIGHT_TUNNEL2		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_N	; west exit_dir
+	.word	right_tunnel2_n_lzsa		; north bg
+	.word	right_tunnel2_s_lzsa		; south bg
+	.word	right_tunnel2_w_lzsa		; east bg
+	.word	crawlway_entrance_e_lzsa	; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
+	.byte	$ff

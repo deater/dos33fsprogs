@@ -55,6 +55,8 @@
 	;	draw hatch as sprite
 
 
+
+
 	;==================================
 	; compass puzzle
 	;==================================
@@ -62,6 +64,26 @@ compass_puzzle:
 	rts
 
 
+	;===================================
+	; crawlways
+	;===================================
+enter_crawlway_left:
+	lda	#STONEY_CRAWLWAY_ENTRANCE_LEFT
+	sta	LOCATION
+
+	lda	#DIRECTION_W
+	sta	DIRECTION
+
+	jmp	change_location
+
+enter_crawlway_right:
+	lda	#STONEY_CRAWLWAY_ENTRANCE_RIGHT
+	sta	LOCATION
+
+	lda	#DIRECTION_E
+	sta	DIRECTION
+
+	jmp	change_location
 
 
 	;==========================
