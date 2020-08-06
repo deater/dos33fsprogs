@@ -441,7 +441,7 @@ location23:
 location24:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
-	.byte	STONEY_TELESCOPE_VIEW		; east exit
+	.byte	$ff				; east exit
 	.byte	STONEY_TELESCOPE_PATH3		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
@@ -452,7 +452,10 @@ location24:
 	.word	telescope_e_lzsa	; east bg
 	.word	telescope_w_lzsa	; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte	$ff
+	.byte   DIRECTION_E     ; special exit
+	.byte	16,25   ; special x
+	.byte	10,20   ; special y
+	.word	goto_telescope-1
 
 ; STONEY_TELESCOPE_VIEW		-- telescope
 location25:
@@ -657,8 +660,8 @@ location36:
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	left_tunnel1_n_lzsa	; north bg
-	.word	left_tunnel1_s_lzsa	; south bg
+	.word	right_tunnel1_n_lzsa	; north bg
+	.word	right_tunnel1_s_lzsa	; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH
@@ -674,9 +677,9 @@ location37:
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
-	.word	left_tunnel2_n_lzsa	; north bg
-	.word	left_tunnel2_s_lzsa	; south bg
-	.word	left_tunnel2_w_lzsa	; east bg
+	.word	right_tunnel2_n_lzsa	; north bg
+	.word	right_tunnel2_s_lzsa	; south bg
+	.word	right_tunnel2_w_lzsa	; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST
 	.byte	$ff
@@ -691,8 +694,8 @@ location38:
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	left_airlock_n_lzsa	; north bg
-	.word	left_airlock_s_lzsa	; south bg
+	.word	right_airlock_n_lzsa	; north bg
+	.word	right_airlock_s_lzsa	; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH

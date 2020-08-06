@@ -44,7 +44,9 @@ stoney_graphics.inc:	\
 	crawlway_e.lzsa crawlway_w.lzsa \
 	blue_room_n.lzsa blue_room_s.lzsa blue_room_e.lzsa blue_room_w.lzsa \
 	map_case_open_e.lzsa map_case_closed_e.lzsa \
-	right_airlock_open_n.lzsa \
+	right_tunnel1_n.lzsa right_tunnel1_s.lzsa \
+	right_tunnel2_n.lzsa right_tunnel2_s.lzsa right_tunnel2_w.lzsa \
+	right_airlock_n.lzsa right_airlock_s.lzsa right_airlock_open_n.lzsa \
 	left_letter.lzsa
 	echo "arrival_n_lzsa: .incbin \"arrival_n.lzsa\"" > stoney_graphics.inc
 	echo "arrival_s_lzsa: .incbin \"arrival_s.lzsa\"" >> stoney_graphics.inc
@@ -123,6 +125,13 @@ stoney_graphics.inc:	\
 	echo "blue_room_w_lzsa: .incbin \"blue_room_w.lzsa\"" >> stoney_graphics.inc
 	echo "map_case_open_e_lzsa: .incbin \"map_case_open_e.lzsa\"" >> stoney_graphics.inc
 	echo "map_case_closed_e_lzsa: .incbin \"map_case_closed_e.lzsa\"" >> stoney_graphics.inc
+	echo "right_tunnel1_n_lzsa: .incbin \"right_tunnel1_n.lzsa\"" >> stoney_graphics.inc
+	echo "right_tunnel1_s_lzsa: .incbin \"right_tunnel1_s.lzsa\"" >> stoney_graphics.inc
+	echo "right_tunnel2_n_lzsa: .incbin \"right_tunnel2_n.lzsa\"" >> stoney_graphics.inc
+	echo "right_tunnel2_s_lzsa: .incbin \"right_tunnel2_s.lzsa\"" >> stoney_graphics.inc
+	echo "right_tunnel2_w_lzsa: .incbin \"right_tunnel2_w.lzsa\"" >> stoney_graphics.inc
+	echo "right_airlock_n_lzsa: .incbin \"right_airlock_n.lzsa\"" >> stoney_graphics.inc
+	echo "right_airlock_s_lzsa: .incbin \"right_airlock_s.lzsa\"" >> stoney_graphics.inc
 	echo "right_airlock_open_n_lzsa: .incbin \"right_airlock_open_n.lzsa\"" >> stoney_graphics.inc
 	echo "left_letter_lzsa: .incbin \"left_letter.lzsa\"" >> stoney_graphics.inc
 

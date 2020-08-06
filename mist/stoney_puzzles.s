@@ -322,6 +322,20 @@ battery_sprite7:
 ; telescope
 ;======================================
 
+goto_telescope:
+
+	; reset to 0 each time
+	lda	#71
+	sta	telescope_angle
+
+	lda	#STONEY_TELESCOPE_VIEW
+	sta	LOCATION
+
+	lda	#DIRECTION_E|DIRECTION_SPLIT
+	sta	DIRECTION
+
+	jmp	change_location
+
 display_telescope:
 
 	lda	#16
