@@ -15,7 +15,7 @@ locations:
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
 	.word location40,location41,location42,location43
-	.word location44
+	.word location44,location45,location46
 
 ; STONEY_ARRIVAL			-- arrival at stoneship
 location0:
@@ -604,7 +604,7 @@ location33:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_LEFT_TUNNEL2		; east exit
-	.byte	STONEY_COMPASS_ROOM		; west exit
+	.byte	STONEY_COMPASS_ROOM_LEFT	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_N	; east exit_dir
@@ -616,29 +616,32 @@ location33:
 	.byte	BG_EAST|BG_WEST
 	.byte	$ff
 
-; STONEY_COMPASS_ROOM	-- compass room
+; STONEY_COMPASS_ROOM_LEFT	-- compass room from left
 location34:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	STONEY_CRAWLWAY_LEFT		; east exit
-	.byte	STONEY_COMPASS_ROSE		; west exit
+	.byte	$ff				; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
-	.byte	DIRECTION_W	; west exit_dir
+	.byte	$ff		; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
 	.word	compass_room_e_lzsa	; east bg
 	.word	compass_room_w_lzsa	; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte	$ff
+	.byte   DIRECTION_W
+        .byte   12,40		; special x
+        .byte   0,46		; special y
+        .word   view_compass_left-1 ; special function
 
-; STONEY_COMPASS_ROSE	-- compass rose
+; STONEY_COMPASS_ROSE_LEFT	-- compass rose
 location35:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
 	.byte	$ff				; east exit
-	.byte	STONEY_COMPASS_ROOM		; west exit
+	.byte	STONEY_COMPASS_ROOM_LEFT	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
@@ -648,7 +651,10 @@ location35:
 	.word	$0000			; east bg
 	.word	compass_rose_w_lzsa	; west bg
 	.byte	BG_WEST
-	.byte	$ff
+	.byte   DIRECTION_W
+        .byte   6,35		; special x
+        .byte   0,46		; special y
+        .word   view_compass_right-1 ; special function
 
 ; STONEY_RIGHT_TUNNEL1		-- right tunnel to blue room
 location36:
@@ -676,7 +682,7 @@ location37:
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
-	.byte	DIRECTION_W	; west exit_dir
+	.byte	$ff		; west exit_dir
 	.word	right_tunnel2_n_lzsa	; north bg
 	.word	right_tunnel2_s_lzsa	; south bg
 	.word	right_tunnel2_w_lzsa	; east bg
@@ -796,16 +802,57 @@ location43:
 location44:
 	.byte	$ff				; north exit
 	.byte	$ff				; south exit
-	.byte	STONEY_COMPASS_ROOM		; east exit
+	.byte	STONEY_COMPASS_ROOM_RIGHT	; east exit
 	.byte	STONEY_RIGHT_TUNNEL2		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_N	; east exit_dir
-	.byte	DIRECTION_W	; west exit_dir
+	.byte	DIRECTION_N	; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
-	.word	crawlway_e_lzsa		; east bg
-	.word	crawlway_w_lzsa		; west bg
+	.word	crawlway_w_lzsa		; east bg
+	.word	crawlway_e_lzsa		; west bg
 	.byte	BG_EAST|BG_WEST
 	.byte	$ff
+
+; STONEY_COMPASS_ROOM_RIGHT	-- compass room from right
+location45:
+	.byte	$ff				; north exit
+	.byte	STONEY_CRAWLWAY_RIGHT		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_W	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	compass_room_n_lzsa	; north bg
+	.word	compass_room_e_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte   DIRECTION_N
+        .byte   0,28		; special x
+        .byte   0,46		; special y
+        .word   view_compass_right-1 ; special function
+
+
+; STONEY_COMPASS_ROSE_RIGHT	-- compass rose approached from right
+location46:
+	.byte	$ff				; north exit
+	.byte	$ff				; south exit
+	.byte	$ff				; east exit
+	.byte	STONEY_COMPASS_ROOM_RIGHT	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_N	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	compass_rose_w_lzsa	; west bg
+	.byte	BG_WEST
+	.byte   DIRECTION_W
+        .byte   6,35		; special x
+        .byte   0,46		; special y
+        .word   view_compass_right-1 ; special function
 

@@ -39,7 +39,7 @@ stoney_graphics.inc:	\
 	left_airlock_n.lzsa left_airlock_s.lzsa left_airlock_open_n.lzsa \
 	red_room_n.lzsa red_room_s.lzsa red_room_e.lzsa red_room_w.lzsa \
 	dresser_e.lzsa dresser_open_e.lzsa \
-	compass_room_w.lzsa compass_room_e.lzsa \
+	compass_room_n.lzsa compass_room_w.lzsa compass_room_e.lzsa \
 	compass_rose_w.lzsa \
 	crawlway_e.lzsa crawlway_w.lzsa \
 	blue_room_n.lzsa blue_room_s.lzsa blue_room_e.lzsa blue_room_w.lzsa \
@@ -116,6 +116,7 @@ stoney_graphics.inc:	\
 	echo "dresser_open_e_lzsa: .incbin \"dresser_open_e.lzsa\"" >> stoney_graphics.inc
 	echo "compass_room_e_lzsa: .incbin \"compass_room_e.lzsa\"" >> stoney_graphics.inc
 	echo "compass_room_w_lzsa: .incbin \"compass_room_w.lzsa\"" >> stoney_graphics.inc
+	echo "compass_room_n_lzsa: .incbin \"compass_room_n.lzsa\"" >> stoney_graphics.inc
 	echo "compass_rose_w_lzsa: .incbin \"compass_rose_w.lzsa\"" >> stoney_graphics.inc
 	echo "crawlway_e_lzsa: .incbin \"crawlway_e.lzsa\"" >> stoney_graphics.inc
 	echo "crawlway_w_lzsa: .incbin \"crawlway_w.lzsa\"" >> stoney_graphics.inc

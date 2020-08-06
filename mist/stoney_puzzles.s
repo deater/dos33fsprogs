@@ -34,8 +34,11 @@
 	;	charge runs down over time
 
 	; compass rose puzzle
-	;	press wrong one and lights go out?
+	;	press wrong one and lights go out (all energy to zero)
+	;		also siren plays
+	;		blue light at end of corridor
 	;	press right one, lights in the cabin go on
+	;		also light outside the compass window
 
 
 
@@ -51,6 +54,68 @@
 	; idea: baseline with water trunk, water no trunk, nowater
 	;	draw hatch as sprite
 
+
+	;==================================
+	; compass puzzle
+	;==================================
+compass_puzzle:
+	rts
+
+
+
+
+	;==========================
+	; handle compass room right
+
+view_compass_right:
+	lda	CURSOR_X
+	cmp	#12
+	bcs	goto_compass_right		; blt
+
+goto_left_tunnel:
+
+	lda	#DIRECTION_E
+	sta	DIRECTION
+
+	lda	#STONEY_COMPASS_ROOM_LEFT
+	sta	LOCATION
+	jmp	change_location
+
+goto_compass_right:
+
+	lda	#DIRECTION_W
+	sta	DIRECTION
+
+	lda	#STONEY_COMPASS_ROSE_RIGHT
+	sta	LOCATION
+
+	jmp	change_location
+
+
+
+	;==========================
+	; handle compass room left
+
+view_compass_left:
+	lda	CURSOR_X
+	cmp	#28
+	bcc	goto_compass_left		; blt
+
+goto_right_tunnel:
+
+	lda	#DIRECTION_S
+	sta	DIRECTION
+
+	lda	#STONEY_COMPASS_ROOM_RIGHT
+	sta	LOCATION
+	jmp	change_location
+
+goto_compass_left:
+
+	lda	#STONEY_COMPASS_ROSE_LEFT
+	sta	LOCATION
+
+	jmp	change_location
 
 
 	;======================
