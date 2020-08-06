@@ -46,7 +46,7 @@ stoney_graphics.inc:	\
 	map_case_open_e.lzsa map_case_closed_e.lzsa \
 	right_airlock_open_n.lzsa \
 	left_letter.lzsa
-	echo "arrival_n_lzsa: .incbin \"arrival_n.lzsa\"" >> stoney_graphics.inc
+	echo "arrival_n_lzsa: .incbin \"arrival_n.lzsa\"" > stoney_graphics.inc
 	echo "arrival_s_lzsa: .incbin \"arrival_s.lzsa\"" >> stoney_graphics.inc
 	echo "arrival_e_lzsa: .incbin \"arrival_e.lzsa\"" >> stoney_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> stoney_graphics.inc

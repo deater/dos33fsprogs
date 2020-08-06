@@ -469,7 +469,10 @@ location25:
 	.word	telescope_view_lzsa	; east bg
 	.word	$0000			; west bg
 	.byte	BG_EAST
-	.byte	$ff
+	.byte   DIRECTION_E     ; special exit
+	.byte	10,30   ; special x
+	.byte	16,40   ; special y
+	.word	telescope_pan-1
 
 ; STONEY_LEFT_TUNNEL1		-- left tunnel to red room
 location26:

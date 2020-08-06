@@ -315,3 +315,450 @@ battery_sprite7:
 	.byte 1,7
 	.byte $5c,$FF,$FF,$FF,$FF,$FF,$FF
 
+
+
+
+;======================================
+; telescope
+;======================================
+
+display_telescope:
+
+	lda	#16
+	sta	XPOS
+	lda	#18
+	sta	YPOS
+
+	; left tile
+
+	lda	telescope_angle
+	tay
+	lda	telescope_tile_lookup,Y
+	asl
+	tay
+	lda	telescope_sprites,Y
+	sta	INL
+	lda	telescope_sprites+1,Y
+	sta	INH
+	jsr	put_sprite_crop
+
+	; right tile
+	lda	#20
+	sta	XPOS
+	lda	#18
+	sta	YPOS
+
+	lda	telescope_angle
+	tay
+	iny
+	lda	telescope_tile_lookup,Y
+	asl
+	tay
+	lda	telescope_sprites,Y
+	sta	INL
+	lda	telescope_sprites+1,Y
+	sta	INH
+	jsr	put_sprite_crop
+
+	; update angle text
+
+	; want normal text
+	lda	#$09		; ora
+	sta	ps_smc1
+	lda	#$80
+	sta	ps_smc1+1
+
+	; smc the addresses
+	lda	DRAW_PAGE
+	clc
+	adc	#$7
+	sta	dt_smc1+2
+	sta	dt_smc2+2
+	sta	dt_smc3+2
+	sta	dt_smc4+2
+	sta	dt_smc5+2
+	sta	dt_smc6+2
+	sta	dt_smc7+2
+	sta	dt_smc8+2
+	sta	dt_smc9+2
+
+	lda	telescope_angle
+	ror
+	bcc	even_angle
+
+odd_angle:
+	lda	#<telescope_string_odd
+	sta	OUTL
+	lda	#>telescope_string_odd
+	sta	OUTH
+	jsr	move_and_print
+	jsr	move_and_print
+
+	; 0 should print      0         10
+	; 1 should print          10
+	; 2 should prrint    10         20
+
+	lda	telescope_angle
+	tax
+
+	cpx	#71
+	bne	odd_not_zero
+
+	lda	#' '|$80
+dt_smc7:
+	sta	$750+21
+
+odd_not_zero:
+
+	inx
+	lda	telescope_angle_strings,X
+	ora	#$80
+dt_smc1:
+	sta	$750+19
+	lda	telescope_angle_strings+1,X
+	ora	#$80
+dt_smc2:
+	sta	$750+20
+
+
+	jmp	done_display_telescope
+
+even_angle:
+	lda	#<telescope_string_even
+	sta	OUTL
+	lda	#>telescope_string_even
+	sta	OUTH
+	jsr	move_and_print
+	jsr	move_and_print
+
+	; 0 should print      0         10
+	; 1 should print          10
+	; 2 should prrint    10         20
+
+	lda	telescope_angle
+	and	#$fe
+	tax
+
+	bne	not_left_zero
+
+	lda	#' '|$80
+dt_smc8:
+	sta	$750+17
+
+not_left_zero:
+	cpx	#70
+	bne	not_right_zero
+
+	lda	#' '|$80
+dt_smc9:
+	sta	$750+25
+
+not_right_zero:
+
+
+	lda	telescope_angle_strings,X
+	ora	#$80
+dt_smc3:
+	sta	$750+15
+	lda	telescope_angle_strings+1,X
+	ora	#$80
+dt_smc4:
+	sta	$750+16
+
+	inx
+	inx
+	lda	telescope_angle_strings,X
+	ora	#$80
+dt_smc5:
+	sta	$750+23
+	lda	telescope_angle_strings+1,X
+	ora	#$80
+dt_smc6:
+	sta	$750+24
+
+
+done_display_telescope:
+	; restore inverse text
+	lda	#$29
+	sta	ps_smc1
+	lda	#$3f
+	sta	ps_smc1+1
+
+	rts
+
+
+; rotate the telescop
+telescope_pan:
+	lda	CURSOR_X
+	cmp	#20
+	bcs	telescope_right
+
+
+telescope_left:
+	dec	telescope_angle
+	bpl	done_telescope
+	lda	#71
+	bne	store_telescope	; bra
+
+telescope_right:
+	inc	telescope_angle
+	lda	telescope_angle
+	cmp	#72
+	bne	done_telescope
+
+	lda	#0
+store_telescope:
+	sta	telescope_angle
+
+done_telescope:
+	rts
+
+telescope_string_odd:
+	.byte 16,21,"    :    ",0
+	.byte 16,22,"     0   ",0
+
+telescope_string_even:
+	.byte 16,21,":       :",0
+	.byte 16,22," 0       0",0
+
+telescope_angle_strings:
+	.byte " 0"
+	.byte " 1"
+	.byte " 2"
+	.byte " 3"
+	.byte " 4"
+	.byte " 5"
+	.byte " 6"
+	.byte " 7"
+	.byte " 8"
+	.byte " 9"
+	.byte "10"
+	.byte "11"
+	.byte "12"
+	.byte "13"
+	.byte "14"
+	.byte "15"
+	.byte "16"
+	.byte "17"
+	.byte "18"
+	.byte "19"
+	.byte "20"
+	.byte "21"
+	.byte "22"
+	.byte "23"
+	.byte "24"
+	.byte "25"
+	.byte "26"
+	.byte "27"
+	.byte "28"
+	.byte "29"
+	.byte "30"
+	.byte "31"
+	.byte "32"
+	.byte "33"
+	.byte "34"
+	.byte "35"
+	.byte " 0"
+	.byte " 1"
+
+telescope_angle:
+	.byte	$00
+
+
+telescope_tile_lookup:
+	.byte  2, 3, 4, 3, 0, 0		;   0
+	.byte  0, 1, 0, 0, 5, 0		;  30
+	.byte  6, 7, 0, 8, 9, 0		;  60
+	.byte  3,10, 0, 0,11, 0		;  90
+	.byte  0, 0,12,13, 0, 3		; 120
+	.byte 10, 0, 0, 5, 1, 2		; 150
+	.byte 11, 0,14, 0, 2,15		; 180
+	.byte  9, 5, 0, 3,16, 0		; 210
+	.byte 16, 1, 0, 2,16, 0		; 240
+	.byte  4, 0, 0, 0, 0, 0		; 270
+	.byte  3, 7, 0, 0, 0, 0		; 300
+	.byte  0, 0, 2, 2, 0, 1		; 330
+	.byte  2			; 360
+
+
+telescope_sprites:
+	.word telescope_bg0_sprite
+	.word telescope_bg1_sprite
+	.word telescope_bg2_sprite
+	.word telescope_bg3_sprite
+	.word telescope_bg4_sprite
+	.word telescope_bg5_sprite
+	.word telescope_bg6_sprite
+	.word telescope_bg7_sprite
+	.word telescope_bg8_sprite
+	.word telescope_bg9_sprite
+	.word telescope_bg10_sprite
+	.word telescope_bg11_sprite
+	.word telescope_bg12_sprite
+	.word telescope_bg13_sprite
+	.word telescope_bg14_sprite
+	.word telescope_bg15_sprite
+	.word telescope_bg16_sprite
+
+telescope_bg0_sprite:
+	.byte 1,1
+	.byte $aa
+
+telescope_bg1_sprite:
+	.byte 3,6
+	.byte $ff,$ff,$ff
+	.byte $ff,$55,$55
+	.byte $ff,$55,$55
+	.byte $57,$55,$55
+	.byte $55,$55,$55
+	.byte $55,$55,$55
+
+telescope_bg2_sprite:
+	.byte 3,6
+	.byte $ff,$ff,$ff
+	.byte $ff,$ff,$ff
+	.byte $ff,$ff,$ff
+	.byte $67,$67,$67
+	.byte $66,$66,$55
+	.byte $66,$55,$55
+
+telescope_bg3_sprite:
+	.byte 4,6
+	.byte $ff,$ff,$5f,$ff
+	.byte $ff,$ff,$55,$55
+	.byte $ff,$ff,$55,$55
+	.byte $67,$67,$55,$55
+	.byte $66,$66,$55,$55
+	.byte $66,$55,$55,$55
+
+telescope_bg4_sprite:
+	.byte 3,6
+	.byte $ff,$5f,$ff
+	.byte $55,$55,$ff
+	.byte $55,$55,$ff
+	.byte $55,$55,$67
+	.byte $55,$55,$66
+	.byte $55,$55,$55
+
+telescope_bg5_sprite:
+	.byte 3,7
+	.byte $ff,$55,$55
+	.byte $ff,$55,$55
+	.byte $ff,$55,$55
+	.byte $67,$55,$55
+	.byte $66,$55,$55
+	.byte $66,$55,$55
+	.byte $66,$55,$55
+
+telescope_bg6_sprite:
+	.byte 4,7
+	.byte $ff,$ff,$ff,$55
+	.byte $ff,$ff,$ff,$55
+	.byte $ff,$ff,$55,$55
+	.byte $67,$67,$55,$55
+	.byte $66,$55,$55,$55
+	.byte $66,$55,$55,$55
+	.byte $56,$55,$55,$55
+
+telescope_bg7_sprite:
+	.byte 1,7
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
+	.byte $55
+
+telescope_bg8_sprite:
+	.byte 4,7
+	.byte $77,$77,$ff,$ff
+	.byte $77,$77,$ff,$ff
+	.byte $77,$77,$ff,$ff
+	.byte $77,$77,$67,$55
+	.byte $77,$77,$56,$55
+	.byte $77,$57,$55,$55
+	.byte $57,$55,$55,$55
+
+telescope_bg9_sprite:
+	.byte 2,7
+	.byte $ff,$ff
+	.byte $ff,$ff
+	.byte $ff,$ff
+	.byte $55,$67
+	.byte $55,$66
+	.byte $55,$66
+	.byte $55,$55
+
+telescope_bg10_sprite:
+	.byte 4,6
+	.byte $ff,$ff,$ff,$ff
+	.byte $5f,$ff,$ff,$ff
+	.byte $55,$ff,$7f,$ff
+	.byte $55,$67,$77,$67
+	.byte $55,$55,$77,$77
+	.byte $55,$55,$57,$77
+
+
+telescope_bg11_sprite:
+	.byte 4,7
+	.byte $ff,$55,$ff,$5f
+	.byte $ff,$55,$00,$55
+	.byte $ff,$55,$00,$55
+	.byte $67,$55,$00,$55
+	.byte $66,$55,$00,$55
+	.byte $66,$55,$00,$55
+	.byte $66,$55,$00,$55
+
+telescope_bg12_sprite:
+	.byte 4,7
+	.byte $ff,$ff,$ff,$df
+	.byte $ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ee
+	.byte $67,$67,$ee,$ee
+	.byte $66,$ee,$ee,$ee
+	.byte $66,$ee,$ee,$ee
+	.byte $e6,$ee,$ee,$ee
+
+telescope_bg13_sprite:
+	.byte 4,7
+	.byte $df,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ff
+	.byte $ee,$ff,$ff,$ff
+	.byte $ee,$ee,$67,$67
+	.byte $ee,$ee,$ee,$66
+	.byte $ee,$ee,$ee,$66
+	.byte $ee,$ee,$ee,$e6
+
+telescope_bg14_sprite:
+	.byte 4,7
+	.byte $ff,$77,$7f,$77
+	.byte $ff,$77,$77,$77
+	.byte $ff,$77,$77,$77
+	.byte $55,$57,$55,$77
+	.byte $55,$55,$55,$77
+	.byte $55,$55,$55,$77
+	.byte $55,$55,$55,$77
+
+telescope_bg15_sprite:
+	.byte 4,7
+	.byte $ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ff
+	.byte $77,$ff,$ff,$55
+	.byte $77,$77,$67,$55
+	.byte $77,$77,$55,$55
+	.byte $77,$77,$55,$55
+	.byte $66,$66,$55,$55
+
+telescope_bg16_sprite:
+	.byte 4,6
+	.byte $ff,$ff,$ff,$ff
+	.byte $55,$ff,$ff,$ff
+	.byte $55,$55,$55,$ff
+	.byte $55,$55,$55,$67
+	.byte $55,$55,$55,$55
+	.byte $55,$55,$55,$55
+
+
+
+

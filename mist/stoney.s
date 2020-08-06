@@ -1,5 +1,7 @@
 ; The Stone Ship level
 
+; o/~ The monument of granite sent a beam into my eye o/~
+
 ; by deater (Vince Weaver) <vince@deater.net>
 
 ; Zero Page
@@ -73,6 +75,7 @@ game_loop:
 	;====================================
 
 	lda	LOCATION
+
 	cmp	#STONEY_BOOK_TABLE_OPEN
 	beq	animate_mist_book
 	cmp	#STONEY_RED_DRESSER_OPEN
@@ -87,6 +90,8 @@ game_loop:
 	beq	draw_battery_level
 	cmp	#STONEY_BOOK_TABLE
 	beq	animate_magic_table
+	cmp	#STONEY_TELESCOPE_VIEW
+	beq	draw_telescope_view
 
 	jmp	nothing_special
 
@@ -148,6 +153,10 @@ draw_battery_level:
 	jsr	do_draw_battery_level
 	jmp	nothing_special
 
+
+draw_telescope_view:
+	jsr	display_telescope
+	jmp	nothing_special
 
 nothing_special:
 
