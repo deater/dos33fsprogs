@@ -1072,3 +1072,112 @@ lighthouse_beacon_on:
 	sta	telescope_bg12_sprite+13
 	sta	telescope_bg13_sprite+10
 	rts
+
+
+
+draw_doorway1:
+	lda	DIRECTION
+	cmp	#DIRECTION_N
+	bne	done_doorway
+
+	lda	BATTERY_CHARGE
+	bne	done_doorway
+
+	ldx	#0
+	lda	#<doorway1_dark_list
+	sta	INL
+	lda	#>doorway1_dark_list
+	sta	INH
+	jmp	hlin_list
+
+draw_doorway2:
+	lda	DIRECTION
+	cmp	#DIRECTION_N
+	bne	done_doorway
+
+	lda	BATTERY_CHARGE
+	bne	done_doorway
+
+	ldx	#8
+	lda	#<doorway2_dark_list
+	sta	INL
+	lda	#>doorway2_dark_list
+	sta	INH
+	jmp	hlin_list
+
+done_doorway:
+	rts
+
+draw_light_doorway:
+	lda	DIRECTION
+	cmp	#DIRECTION_S
+	bne	done_doorway
+
+	lda	BATTERY_CHARGE
+	bne	done_doorway
+
+	ldx	#12
+	lda	#<doorway_light_list
+	sta	INL
+	lda	#>doorway_light_list
+	sta	INH
+	jmp	hlin_list
+
+	; at 0
+doorway1_dark_list:
+	.byte	$00,15,12
+	.byte	$00,15,12
+	.byte	$00,15,12
+	.byte	$00,16,11
+	.byte	$00,16,11
+	.byte	$00,16,11
+	.byte	$00,16,11
+	.byte	$00,16,11
+	.byte	$00,17,10
+	.byte	$00,17,10
+	.byte	$00,17,10
+	.byte	$00,17,10
+	.byte	$00,17,10
+	.byte	$00,17,10
+	.byte	$00,17,10
+	.byte	$00,17,10
+	.byte	$00,17,9
+	.byte	$00,24,2
+	.byte	$00,24,2
+	.byte	$00,24,2
+	.byte	$00,24,2
+	.byte	$00,24,2
+	.byte	$00,24,2
+	.byte	$00,25,1
+	.byte	$ff,$ff,$ff
+
+	; at 8
+doorway2_dark_list:
+	.byte $00,16,10
+	.byte $00,17,9
+	.byte $00,17,9
+	.byte $00,18,8
+	.byte $00,19,7
+	.byte $00,20,5
+	.byte $00,21,4
+	.byte $00,22,3
+	.byte $00,23,2
+	.byte $00,23,2
+	.byte $55,21,2
+	.byte $55,20,3
+	.byte $55,16,7
+	.byte $55,16,7
+	.byte $55,16,8
+	.byte $55,16,8
+	.byte $ff,$ff,$ff
+
+	; at 12
+doorway_light_list:
+	.byte	$ff,19,2
+	.byte	$ff,19,2
+	.byte	$ff,19,2
+	.byte	$ff,19,2
+	.byte	$ff,19,2
+	.byte	$ff,19,2
+	.byte	$ff,$ff,$ff
+

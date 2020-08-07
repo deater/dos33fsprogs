@@ -80,6 +80,7 @@ check_ship_lights:
 	lda	COMPASS_STATE
 	bne	check_tunnel_lights
 
+	; turn off the ship cabin lights if applicable
 	lda	LOCATION
 	cmp	#STONEY_BOOK_STAIRS1
 	beq	turn_off_the_lights
@@ -127,6 +128,7 @@ turn_off_the_lights:
 
 dont_touch_lights:
 
+
 	;====================================
 	; copy background to current page
 	;====================================
@@ -139,6 +141,32 @@ dont_touch_lights:
 
 	; check to see if draw compass light
 	jsr	compass_draw_light
+
+
+	; check doorways for water/darkness
+	lda	LOCATION
+	cmp	#STONEY_DOORWAY1
+	beq	handle_doorway1
+	cmp	#STONEY_DOORWAY2
+	beq	handle_doorway2
+	cmp	#STONEY_RIGHT_TUNNEL1
+	beq	handle_doorway_light
+	cmp	#STONEY_LEFT_TUNNEL1
+	beq	handle_doorway_light
+	bne	not_a_doorway
+
+handle_doorway1:
+	jsr	draw_doorway1
+	jmp	not_a_doorway
+handle_doorway2:
+	jsr	draw_doorway2
+	jmp	not_a_doorway
+handle_doorway_light:
+	jsr	draw_light_doorway
+	jmp	not_a_doorway
+
+not_a_doorway:
+
 
 	lda	LOCATION
 
@@ -352,6 +380,7 @@ stoney_half_message:
 
 	.include	"lights_off.s"
 	.include	"simple_sounds.s"
+	.include	"hlin_list.s"
 
 	; level data
 	.include	"leveldata_stoney.inc"
