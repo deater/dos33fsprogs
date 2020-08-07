@@ -50,8 +50,9 @@ stoney_start:
 
 	jsr	change_location
 
-	; make sure book access set up right
+	; make sure book access and lights set up right
 	jsr	update_compass_state
+	jsr	update_tunnel_lights
 
 	lda	#1
 	sta	CURSOR_VISIBLE		; visible at first
@@ -73,8 +74,11 @@ game_loop:
 	;====================================
 	; turn lights off (if applicable)
 	;====================================
+
+	; first check ship_lights
+check_ship_lights:
 	lda	COMPASS_STATE
-	bne	dont_touch_lights
+	bne	check_tunnel_lights
 
 	lda	LOCATION
 	cmp	#STONEY_BOOK_STAIRS1
@@ -83,6 +87,39 @@ game_loop:
 	beq	turn_off_the_lights
 	cmp	#STONEY_BOOK_ROOM
 	beq	turn_off_the_lights
+
+check_tunnel_lights:
+	lda	BATTERY_CHARGE
+	bne	dont_touch_lights
+
+	lda	LOCATION
+	cmp	#STONEY_LEFT_TUNNEL1
+	beq	turn_off_the_lights
+	cmp	#STONEY_LEFT_TUNNEL2
+	beq	turn_off_the_lights
+	cmp	#STONEY_LEFT_AIRLOCK
+	beq	turn_off_the_lights
+	cmp	#STONEY_CRAWLWAY_LEFT
+	beq	turn_off_the_lights
+	cmp	#STONEY_COMPASS_ROOM_LEFT
+	beq	turn_off_the_lights
+	cmp	#STONEY_COMPASS_ROSE_LEFT
+	beq	turn_off_the_lights
+	cmp	#STONEY_RIGHT_TUNNEL1
+	beq	turn_off_the_lights
+	cmp	#STONEY_RIGHT_TUNNEL2
+	beq	turn_off_the_lights
+	cmp	#STONEY_RIGHT_AIRLOCK
+	beq	turn_off_the_lights
+	cmp	#STONEY_CRAWLWAY_RIGHT
+	beq	turn_off_the_lights
+	cmp	#STONEY_COMPASS_ROOM_RIGHT
+	beq	turn_off_the_lights
+	cmp	#STONEY_COMPASS_ROSE_RIGHT
+	beq	turn_off_the_lights
+	cmp	#STONEY_CRAWLWAY_ENTRANCE_LEFT
+	beq	turn_off_the_lights
+	cmp	#STONEY_CRAWLWAY_ENTRANCE_RIGHT
 	bne	dont_touch_lights
 
 turn_off_the_lights:

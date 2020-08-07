@@ -55,6 +55,36 @@
 	;	draw hatch as sprite
 
 
+	;==================================
+	; update tunnel lights
+	;==================================
+	; only on when BATTERY_CHARGE is non-zero
+	;
+	; darkening the rooms happens elsewhere
+	;	here is where we change up backgrounds
+	;	and turn the lighthouse on and off
+	;
+	; FIXME:
+	;	+ make the top stairwells dark
+	;	+ make inside top stairwells display outside still
+	;	+ do something about looking backwards from airlocks
+
+update_tunnel_lights:
+
+	lda	BATTERY_CHARGE
+	beq	tunnel_lights_off
+
+tunnel_lights_on:
+
+
+	jmp	done_update_tunnel_lights
+
+tunnel_lights_off:
+	jsr	lighthouse_beacon_off
+
+
+done_update_tunnel_lights:
+	rts
 
 
 	;==================================
@@ -124,6 +154,8 @@ wrong_knob:
 	sta	BATTERY_CHARGE
 
 	jsr	long_beep
+
+	jsr	update_tunnel_lights
 
 	jmp	update_compass_state
 
@@ -327,6 +359,9 @@ handle_crank:
 	beq	skip_charge
 
 	inc	BATTERY_CHARGE
+
+	jsr	update_tunnel_lights
+
 skip_charge:
 
 	rts
@@ -566,7 +601,29 @@ goto_telescope:
 
 	jmp	change_location
 
+
+	;===================================
+	; display telescope
+	;===================================
+
 display_telescope:
+
+	; blink beacon (where applicable)
+	lda	BATTERY_CHARGE
+	beq	done_blink_beacon
+
+	lda	FRAMEL
+	and	#$40
+	beq	beacon_off
+
+	jsr	lighthouse_beacon_on
+	jmp	done_blink_beacon
+
+beacon_off:
+	jsr	lighthouse_beacon_off
+
+done_blink_beacon:
+
 
 	lda	#16
 	sta	XPOS
@@ -956,9 +1013,9 @@ telescope_bg11_sprite:
 
 telescope_bg12_sprite:
 	.byte 4,7
-	.byte $ff,$ff,$ff,$df
 	.byte $ff,$ff,$ff,$ff
-	.byte $ff,$ff,$ff,$ee
+	.byte $ff,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$dd
 	.byte $67,$67,$ee,$ee
 	.byte $66,$ee,$ee,$ee
 	.byte $66,$ee,$ee,$ee
@@ -966,9 +1023,9 @@ telescope_bg12_sprite:
 
 telescope_bg13_sprite:
 	.byte 4,7
-	.byte $df,$ff,$ff,$ff
 	.byte $ff,$ff,$ff,$ff
-	.byte $ee,$ff,$ff,$ff
+	.byte $ff,$ff,$ff,$ff
+	.byte $dd,$ff,$ff,$ff
 	.byte $ee,$ee,$67,$67
 	.byte $ee,$ee,$ee,$66
 	.byte $ee,$ee,$ee,$66
@@ -1004,5 +1061,14 @@ telescope_bg16_sprite:
 	.byte $55,$55,$55,$55
 
 
+lighthouse_beacon_off:
+	lda	#$dd
+	sta	telescope_bg12_sprite+13
+	sta	telescope_bg13_sprite+10
+	rts
 
-
+lighthouse_beacon_on:
+	lda	#$d1
+	sta	telescope_bg12_sprite+13
+	sta	telescope_bg13_sprite+10
+	rts
