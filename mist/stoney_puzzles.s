@@ -1108,6 +1108,19 @@ draw_doorway2:
 done_doorway:
 	rts
 
+draw_airlock_doorknob:
+	lda	DIRECTION
+	cmp	#DIRECTION_N
+	bne	done_doorway
+
+	ldx	#16
+	lda	#<airlock_doorknob_list
+	sta	INL
+	lda	#>airlock_doorknob_list
+	sta	INH
+	jmp	hlin_list
+
+
 draw_light_doorway:
 	lda	DIRECTION
 	cmp	#DIRECTION_S
@@ -1179,5 +1192,11 @@ doorway_light_list:
 	.byte	$ff,19,2
 	.byte	$ff,19,2
 	.byte	$ff,19,2
+	.byte	$ff,$ff,$ff
+
+
+	; at 16
+airlock_doorknob_list:
+	.byte	$d0,19,2
 	.byte	$ff,$ff,$ff
 
