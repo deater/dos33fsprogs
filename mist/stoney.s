@@ -36,6 +36,8 @@ stoney_start:
 	sta	LEVEL_OVER
 
 	; resets if you leave
+	; FIXME: temp debug
+	lda	#$7
 	sta	BATTERY_CHARGE
 
 	; init cursor
@@ -71,6 +73,9 @@ game_loop:
 	;====================================
 	; turn lights off (if applicable)
 	;====================================
+	lda	COMPASS_STATE
+	bne	dont_touch_lights
+
 	lda	LOCATION
 	cmp	#STONEY_BOOK_STAIRS1
 	beq	turn_off_the_lights
@@ -308,7 +313,10 @@ stoney_half_message:
 	.include	"stoney_puzzles.s"
 	.include	"handle_pages.s"
 
+	.include	"lights_off.s"
+	.include	"simple_sounds.s"
+
 	; level data
 	.include	"leveldata_stoney.inc"
 
-	.include	"lights_off.s"
+

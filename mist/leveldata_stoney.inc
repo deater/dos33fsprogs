@@ -659,7 +659,7 @@ location35:
 	.byte   DIRECTION_W
         .byte   6,35		; special x
         .byte   0,46		; special y
-        .word   view_compass_right-1 ; special function
+        .word   compass_puzzle-1 ; special function
 
 ; STONEY_RIGHT_TUNNEL1		-- right tunnel to blue room
 location36:
@@ -862,7 +862,7 @@ location46:
 	.byte   DIRECTION_W
         .byte   6,35		; special x
         .byte   0,46		; special y
-        .word   view_compass_right-1 ; special function
+        .word   compass_puzzle-1 ; special function
 
 
 ; STONEY_CRAWLWAY_ENTRANCE_LEFT		-- left_crawlway_entrance

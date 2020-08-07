@@ -17,13 +17,12 @@ For release 1.0
 	-- load 1s clip of sounds (4k each) into language card?
 
 + STONEY
-	-- proper crawlway exits if we have space
-
 	-- have lights off mean darken the levels
 	-- have lights come on in telescope view
 	-- allow coming at steps from an angle
-	-- allow clicking on tunnel to get there
 	-- hook up compass rose
+	-- if space allows, lighten floor of compass rose when
+		right button pressed
 	-- hook up pump 
 	-- hook up key/trunk puzzle
 

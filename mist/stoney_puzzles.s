@@ -60,7 +60,74 @@
 	;==================================
 	; compass puzzle
 	;==================================
+	; want to click on 135 degrees
+	;	turns on lights (sets COMPASS_STATE to 1), runs update_compas_state
+	; click on other pins
+	;	turns off lights, shorts out power
+	;		COMPASS_STATE to 0
+	;		BATTERY_CHARGE to 0
+	; also puzzle only works if battery charge is > 0
+	;	to keep you from pressing all in dark
+
 compass_puzzle:
+	lda	BATTERY_CHARGE
+	beq	compass_oob
+
+	lda	CURSOR_Y
+	cmp	#7
+	bcc	check_top	; blt
+	cmp	#38
+	bcs	check_bottom	; bge
+
+check_middle:
+	lda	CURSOR_X
+	cmp	#6
+	bcc	compass_oob
+	cmp	#12
+	bcc	wrong_knob
+	cmp	#28
+	bcc	compass_oob
+	cmp	#35
+	bcs	compass_oob
+
+	lda	CURSOR_Y
+	cmp	#32
+	bcs	right_knob
+	bcc	wrong_knob
+
+check_top:
+	lda	CURSOR_X
+	cmp	#10
+	bcc	compass_oob
+	cmp	#30
+	bcs	compass_oob
+	bcc	wrong_knob
+
+check_bottom:
+	lda	CURSOR_X
+	cmp	#13
+	bcc	compass_oob
+	cmp	#28
+	bcs	compass_oob
+	bcc	wrong_knob
+
+right_knob:
+	jsr	click_speaker
+
+	lda	#1
+	sta	COMPASS_STATE
+	jmp	update_compass_state
+
+wrong_knob:
+	lda	#0
+	sta	COMPASS_STATE
+	sta	BATTERY_CHARGE
+
+	jsr	long_beep
+
+	jmp	update_compass_state
+
+compass_oob:
 	rts
 
 
@@ -178,7 +245,7 @@ goto_left_tunnel:
 
 goto_compass_right:
 
-	lda	#DIRECTION_W
+	lda	#DIRECTION_W|DIRECTION_ONLY_POINT
 	sta	DIRECTION
 
 	lda	#STONEY_COMPASS_ROSE_RIGHT
@@ -206,6 +273,9 @@ goto_right_tunnel:
 	jmp	change_location
 
 goto_compass_left:
+
+	lda	#DIRECTION_W|DIRECTION_ONLY_POINT
+	sta	DIRECTION
 
 	lda	#STONEY_COMPASS_ROSE_LEFT
 	sta	LOCATION

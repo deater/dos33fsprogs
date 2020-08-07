@@ -109,7 +109,7 @@
 .byte $00	; SHIP_RAISED		=	$AF
 		; stoneship
 .byte $00	; PUMP_STATE		=	$B0
-.byte $07	; BATTERY_CHARGE	=	$B1
+.byte $00	; BATTERY_CHARGE	=	$B1
 .byte $00	; COMPASS_STATE		=	$B2
 .byte $00	; CRANK_ANGLE		=	$B3
 .byte $00	; WHITE_PAGE_TAKEN	=	$B4
