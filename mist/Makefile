@@ -259,7 +259,7 @@ stoney.o:	stoney.s zp.inc hardware.inc common_defines.inc \
 	link_book_stoney.s \
 	link_book_mist.s \
 	handle_pages.s \
-	stoney_puzzles.s
+	lights_off.s stoney_puzzles.s
 	ca65 -o stoney.o stoney.s -l stoney.lst
 
 ####

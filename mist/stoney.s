@@ -64,6 +64,24 @@ game_loop:
 	sta	IN_RIGHT
 	sta	IN_LEFT
 
+
+	;====================================
+	; turn lights off (if applicable)
+	;====================================
+	lda	LOCATION
+	cmp	#STONEY_BOOK_STAIRS1
+	beq	turn_off_the_lights
+	cmp	#STONEY_BOOK_STAIRS2
+	beq	turn_off_the_lights
+	cmp	#STONEY_BOOK_ROOM
+	beq	turn_off_the_lights
+	bne	dont_touch_lights
+
+turn_off_the_lights:
+	jsr	dark_translate
+
+dont_touch_lights:
+
 	;====================================
 	; copy background to current page
 	;====================================
@@ -286,3 +304,5 @@ stoney_half_message:
 
 	; level data
 	.include	"leveldata_stoney.inc"
+
+	.include	"lights_off.s"
