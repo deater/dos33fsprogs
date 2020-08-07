@@ -48,6 +48,9 @@ stoney_start:
 
 	jsr	change_location
 
+	; make sure book access set up right
+	jsr	update_compass_state
+
 	lda	#1
 	sta	CURSOR_VISIBLE		; visible at first
 
@@ -91,6 +94,9 @@ dont_touch_lights:
 	;====================================
 	; handle special-case forground logic
 	;====================================
+
+	; check to see if draw compass light
+	jsr	compass_draw_light
 
 	lda	LOCATION
 

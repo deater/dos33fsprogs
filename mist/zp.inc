@@ -172,7 +172,9 @@ SHIP_RAISED	=	$AF		; ship raised or not
 
 PUMP_STATE	=	$B0		; stoneship pump state
 BATTERY_CHARGE	=	$B1		; stoneship battery charge
-COMPASS_ANGLE	=	$B2		; stoneship compass angle
+COMPASS_STATE	=	$B2		; stoneship compass state
+	COMPASS_DEFAULT	= 0	; cabin lights off
+	COMPASS_LIGHT_ON= 1	; proper angle selected
 CRANK_ANGLE	=	$B3		; stoneship crank angle
 
 WHITE_PAGE_TAKEN=	$B4		; white page taken

@@ -64,6 +64,79 @@ compass_puzzle:
 	rts
 
 
+	;==================================
+	; draw compass light
+	;==================================
+	; underwater light comes on if compass successful
+
+	; if in room STONEY_COMPASS_ROOM_RIGHT (facing N) or
+	;	     STONEY_COMPASS_ROOM_LEFT (facing W)
+	; and COMPASS_STATE is not 0 then draw the sprite
+
+compass_draw_light:
+	lda	COMPASS_STATE
+	beq	done_compass_draw_light
+
+	lda	LOCATION
+	cmp	#STONEY_COMPASS_ROOM_RIGHT
+	beq	light_room_right
+	cmp	#STONEY_COMPASS_ROOM_LEFT
+	beq	light_room_left
+
+	rts
+
+light_room_right:
+	lda	DIRECTION
+	cmp	#DIRECTION_N
+	beq	actually_draw_light
+	rts
+
+light_room_left:
+	lda	DIRECTION
+	cmp	#DIRECTION_W
+	bne	done_compass_draw_light
+
+actually_draw_light:
+	lda	#17
+	sta	XPOS
+	lda	#14
+	sta	YPOS
+	lda	#<compass_light_sprite
+	sta	INL
+	lda	#>compass_light_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+done_compass_draw_light:
+	rts
+
+compass_light_sprite:
+	.byte 6,4
+	.byte $44,$94,$94,$94,$94,$44
+	.byte $44,$99,$ff,$ff,$99,$44
+	.byte $44,$99,$9f,$9f,$99,$44
+	.byte $24,$24,$24,$24,$24,$24
+
+	;==================================
+	; update compass state
+	;==================================
+	; if COMPASS_STATE is 0:
+	;	disable access to linking book
+	; if COMPASS_STATE is 1:
+	;	enable access to linking book
+update_compass_state:
+	ldy	#LOCATION_NORTH_EXIT
+	lda	COMPASS_STATE
+	bne	enable_book_access
+disable_book_access:
+	lda	#$ff
+	bne	update_book_access	; bra
+enable_book_access:
+	lda	#STONEY_BOOK_TABLE
+update_book_access:
+	sta	location16,Y				; STONEY_BOOK_ROOM
+	rts
+
 	;===================================
 	; crawlways
 	;===================================
