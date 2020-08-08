@@ -359,11 +359,66 @@ center_button_pressed:
 
 done_umbrella:
 	sta	PUMP_STATE
-	rts
+	jmp	update_pump_state
 
 clear_umbrella:
 	lda	#0
 	sta	PUMP_STATE
+	jmp	update_pump_state
+
+
+	;============================
+	; update pump state
+	;============================
+update_pump_state:
+	; default is everything is flooded
+
+	; flood exit
+	; disable entering exit tunnel
+	ldy	#LOCATION_SOUTH_EXIT
+	lda	#$ff
+	sta	location0,Y			; STONEY_ARRIVAL
+
+	; flood tunnel
+	ldy	#LOCATION_NORTH_EXIT
+	lda	#$ff
+	sta	location9,Y			; STONEY_DOORWAY1
+	sta	location20,Y			; STONEY_DOORWAY2
+
+	; flood lighthouse
+	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
+
+	lda	PUMP_STATE
+	beq	done_update_pump_state
+	cmp	#DRAINED_EXIT
+	beq	drain_exit
+	cmp	#DRAINED_TUNNELS
+	beq	drain_tunnels
+	cmp	#DRAINED_LIGHTHOUSE
+	beq	drain_lighthouse
+
+drain_exit:
+	ldy	#LOCATION_SOUTH_EXIT
+	lda	#STONEY_EXIT
+	sta	location0,Y			; STONEY_ARRIVAL
+	jmp	done_update_pump_state
+
+drain_tunnels:
+	ldy	#LOCATION_NORTH_EXIT
+	lda	#STONEY_LEFT_TUNNEL1
+	sta	location9,Y			; STONEY_DOORWAY1
+	lda	#STONEY_RIGHT_TUNNEL1
+	sta	location20,Y			; STONEY_DOORWAY2
+	jmp	done_update_pump_state
+
+drain_lighthouse:
+	ldy	#LOCATION_NORTH_EXIT
+	lda	#$ff				; FIXME
+	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
+	jmp	done_update_pump_state
+
+
+done_update_pump_state:
 	rts
 
 

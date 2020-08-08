@@ -53,6 +53,7 @@ stoney_start:
 	; make sure book access and lights set up right
 	jsr	update_compass_state
 	jsr	update_tunnel_lights
+	jsr	update_pump_state
 
 	lda	#1
 	sta	CURSOR_VISIBLE		; visible at first
