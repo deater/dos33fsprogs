@@ -171,6 +171,10 @@ TOWER_ROTATION	=	$AE		; tower rotation: which
 SHIP_RAISED	=	$AF		; ship raised or not
 
 PUMP_STATE	=	$B0		; stoneship pump state
+	DRAINED_EXIT = $01
+	DRAINED_TUNNELS = $02
+	DRAINED_LIGHTHOUSE=$04
+
 BATTERY_CHARGE	=	$B1		; stoneship battery charge
 COMPASS_STATE	=	$B2		; stoneship compass state
 	COMPASS_DEFAULT	= 0	; cabin lights off

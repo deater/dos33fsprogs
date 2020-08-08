@@ -315,8 +315,11 @@ goto_compass_left:
 	jmp	change_location
 
 
-	;======================
+	;==============================
 	; handle umbrella pump buttons
+	;==============================
+	; if on and pressed, goes all off
+	; if off and pressed, clear all others and set
 
 umbrella_buttons:
 
@@ -327,22 +330,42 @@ umbrella_buttons:
 	bcc	center_button_pressed
 
 right_button_pressed:
-	; drain lighthouse
 
-	lda	#2
-	bne	done_umbrella
+	; drain lighthouse
+	lda	PUMP_STATE
+	and	#DRAINED_LIGHTHOUSE
+	bne	clear_umbrella
+
+	lda	#DRAINED_LIGHTHOUSE
+	bne	done_umbrella		; bra
+
 left_button_pressed:
 	; drain mist tunnel
-	lda	#0
-	beq	done_umbrella
+	lda	PUMP_STATE
+	and	#DRAINED_EXIT
+	bne	clear_umbrella
+
+	lda	#DRAINED_EXIT
+	bne	done_umbrella		; bra
 
 center_button_pressed:
 	; drain room tunnels
-	lda	#1
+	lda	PUMP_STATE
+	and	#DRAINED_TUNNELS
+	bne	clear_umbrella
+
+	lda	#DRAINED_TUNNELS
+	bne	done_umbrella		; bra
 
 done_umbrella:
 	sta	PUMP_STATE
 	rts
+
+clear_umbrella:
+	lda	#0
+	sta	PUMP_STATE
+	rts
+
 
 
 	;========================
@@ -366,24 +389,38 @@ skip_charge:
 
 	rts
 
+	;=========================================
+	; draw umbrella lights
+	;=========================================
 
 do_draw_umbrella_light:
+
 	lda	DIRECTION
 	cmp	#DIRECTION_W
 	bne	done_draw_umbrella
 
 	lda	PUMP_STATE
+	beq	done_draw_umbrella
+
+	lda	#5
+	clc
+	adc	DRAW_PAGE
+	sta	umbrella_smc+2
+
+	lda	PUMP_STATE
+	lsr			; convert from 1,2,4 to 0,1,2
 	asl
 	asl		; *4
 	tay
 
-	lda	#$99	; orange
-
-	sta	$528+15,Y	; page 0
-	sta	$928+15,Y	; page 1
+	lda	#$d9	; orange
 			; 15,20
 			; 19,20
 			; 23,20
+
+umbrella_smc:
+	sta	$528+15,Y
+
 done_draw_umbrella:
 	rts
 
