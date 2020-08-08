@@ -158,8 +158,13 @@ dont_touch_lights:
 	beq	handle_airlock_doorknob
 	cmp	#STONEY_RIGHT_AIRLOCK
 	beq	handle_airlock_doorknob
+	cmp	#STONEY_ARRIVAL
+	beq	handle_exit_tunnel
 
 	bne	not_a_doorway
+handle_exit_tunnel:
+	jsr	draw_exit_tunnel
+	jmp	not_a_doorway
 
 handle_doorway1:
 	jsr	draw_doorway1

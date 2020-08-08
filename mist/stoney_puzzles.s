@@ -1165,7 +1165,21 @@ lighthouse_beacon_on:
 	sta	telescope_bg13_sprite+10
 	rts
 
+draw_exit_tunnel:
+	lda	DIRECTION
+	cmp	#DIRECTION_S
+	bne	done_doorway
 
+	lda	PUMP_STATE
+	cmp	#DRAINED_EXIT
+	beq	done_doorway
+
+	ldx	#32
+	lda	#<exit_water_list
+	sta	INL
+	lda	#>exit_water_list
+	sta	INH
+	jmp	hlin_list
 
 draw_doorway1:
 	lda	DIRECTION
@@ -1173,12 +1187,25 @@ draw_doorway1:
 	bne	done_doorway
 
 	lda	BATTERY_CHARGE
-	bne	done_doorway
+	bne	doorway1_draw_water
 
+doorway1_draw_dark:
 	ldx	#0
 	lda	#<doorway1_dark_list
 	sta	INL
 	lda	#>doorway1_dark_list
+	sta	INH
+	jsr	hlin_list
+
+doorway1_draw_water:
+	lda	PUMP_STATE
+	cmp	#DRAINED_TUNNELS
+	beq	done_doorway
+
+	ldx	#24
+	lda	#<doorway1_water_list
+	sta	INL
+	lda	#>doorway1_water_list
 	sta	INH
 	jmp	hlin_list
 
@@ -1188,14 +1215,27 @@ draw_doorway2:
 	bne	done_doorway
 
 	lda	BATTERY_CHARGE
-	bne	done_doorway
-
+	bne	doorway2_draw_water
+doorway2_draw_dark:
 	ldx	#8
 	lda	#<doorway2_dark_list
 	sta	INL
 	lda	#>doorway2_dark_list
 	sta	INH
+	jsr	hlin_list
+
+doorway2_draw_water:
+	lda	PUMP_STATE
+	cmp	#DRAINED_TUNNELS
+	beq	done_doorway
+
+	ldx	#28
+	lda	#<doorway2_water_list
+	sta	INL
+	lda	#>doorway2_water_list
+	sta	INH
 	jmp	hlin_list
+
 
 done_doorway:
 	rts
@@ -1292,3 +1332,26 @@ airlock_doorknob_list:
 	.byte	$d0,19,2
 	.byte	$ff,$ff,$ff
 
+	; at 32
+exit_water_list:
+	.byte	$26,19,2
+	.byte	$26,18,4
+	.byte	$26,18,4
+	.byte	$26,17,6
+	.byte	$ff,$ff,$ff
+
+	; at 24
+doorway1_water_list:
+	.byte	$62,17,1
+	.byte	$62,17,2
+	.byte	$62,17,3
+	.byte	$62,17,4
+	.byte	$62,17,5
+	.byte	$ff,$ff,$ff
+
+	; at 28
+doorway2_water_list:
+	.byte	$62,21,2
+	.byte	$62,18,5
+	.byte	$62,17,6
+	.byte	$ff,$ff,$ff

@@ -18,17 +18,14 @@ For release 1.0
 
 + STONEY
 	-- Lights out
-		+ somehow have tops of steps have light coming in
-		+ have yellow gem on doors even in dark
-		+ currently if you turn around with doors open
+		+ currently if you turn around from open airlock
 			they aren't blacked out
 
-	-- have lights come on in telescope view
 	-- allow coming at steps from an angle
-	-- hook up compass rose
 	-- if space allows, lighten floor of compass rose when
 		right button pressed
 	-- hook up pump 
+		-- have the bottom blank out and print PUMPING NOISES
 	-- hook up key/trunk puzzle
 
 + CHANNEL
