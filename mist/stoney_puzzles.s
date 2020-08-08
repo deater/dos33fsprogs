@@ -323,6 +323,25 @@ goto_compass_left:
 
 umbrella_buttons:
 
+	; first time you click on it switch to text and print pump message
+	lda	#DIRECTION_W|DIRECTION_SPLIT
+	sta	DIRECTION
+	jsr	change_direction
+
+	lda	#1
+	sta	ANIMATE_FRAME
+
+	lda	DRAW_PAGE
+	pha
+
+	lda	#8
+	sta	DRAW_PAGE
+
+	jsr	clear_bottom
+
+	pla
+	sta	DRAW_PAGE
+
 	lda	CURSOR_X
 	cmp	#15
 	bcc	left_button_pressed
@@ -365,6 +384,10 @@ clear_umbrella:
 	lda	#0
 	sta	PUMP_STATE
 	jmp	update_pump_state
+
+
+pump_message:
+	.byte 13,21,"[PUMP NOISES]",0
 
 
 	;============================
@@ -451,8 +474,20 @@ skip_charge:
 do_draw_umbrella_light:
 
 	lda	DIRECTION
+	and	#$f
 	cmp	#DIRECTION_W
-	bne	done_draw_umbrella
+	bne	done_draw_umbrella_notwest
+
+	lda	ANIMATE_FRAME
+	beq	skip_pump_text
+
+	lda	#<pump_message
+	sta	OUTL
+	lda	#>pump_message
+	sta	OUTH
+	jsr	move_and_print
+
+skip_pump_text:
 
 	lda	PUMP_STATE
 	beq	done_draw_umbrella
@@ -477,6 +512,12 @@ umbrella_smc:
 	sta	$528+15,Y
 
 done_draw_umbrella:
+	rts
+
+	; clear printing pump noise if we rotate
+done_draw_umbrella_notwest:
+	lda	#0
+	sta	ANIMATE_FRAME
 	rts
 
 
