@@ -436,7 +436,7 @@ drain_tunnels:
 
 drain_lighthouse:
 	ldy	#LOCATION_NORTH_EXIT
-	lda	#$ff				; FIXME
+	lda	#STONEY_LIGHTHOUSE_SPIRAL
 	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
 	jmp	done_update_pump_state
 
@@ -1396,3 +1396,15 @@ doorway2_water_list:
 	.byte	$62,18,5
 	.byte	$62,17,6
 	.byte	$ff,$ff,$ff
+
+
+
+;======================================
+; trunk
+;======================================
+
+goto_trunk:
+	lda	#STONEY_TRUNK_CLOSE
+	sta	LOCATION
+
+	jmp	change_location

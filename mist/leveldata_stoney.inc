@@ -16,7 +16,7 @@ locations:
 	.word location36,location37,location38,location39
 	.word location40,location41,location42,location43
 	.word location44,location45,location46,location47
-	.word location48
+	.word location48,location49,location50,location51
 
 ; STONEY_ARRIVAL			-- arrival at stoneship
 location0:
@@ -109,11 +109,11 @@ location4:
 
 ; STONEY_LIGHTHOUSE_INSIDE		-- lighthouse inside
 location5:
-	.byte	$ff			; north exit
-	.byte	$ff			; south exit
-	.byte	STONEY_LIGHTHOUSE_UPSTAIRS; east exit
-	.byte	STONEY_LIGHTHOUSE_DOOR	; west exit
-	.byte	$ff		; north exit_dir
+	.byte	STONEY_LIGHTHOUSE_SPIRAL	; north exit
+	.byte	$ff				; south exit
+	.byte	STONEY_LIGHTHOUSE_UPSTAIRS	; east exit
+	.byte	STONEY_LIGHTHOUSE_DOOR		; west exit
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
@@ -898,3 +898,59 @@ location48:
 	.word	crawlway_entrance_e_lzsa	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
 	.byte	$ff
+
+; STONEY_LIGHTHOUSE_SPIRAL		-- stairs down to trunk
+location49:
+	.byte	STONEY_TRUNK			; north exit
+	.byte	STONEY_LIGHTHOUSE_INSIDE	; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_N	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	lighthouse_inside_n_lzsa	; north bg
+	.word	lighthouse_inside_n_lzsa	; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff
+
+; STONEY_LIGHTHOUSE_TRUNK		-- trunk at bottom
+location50:
+	.byte	STONEY_LIGHTHOUSE_SPIRAL	; north exit
+	.byte	$ff				; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_S	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	trunk_n_lzsa		; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte   DIRECTION_N     ; special exit
+	.byte	8,23   ; special x
+	.byte	20,46   ; special y
+	.word	goto_trunk-1
+
+; STONEY_LIGHTHOUSE_TRUNK_CLOSE		-- closeup of trunk
+location51:
+	.byte	STONEY_TRUNK			; north exit
+	.byte	$ff				; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	trunk_close_n_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	$ff
+
+
