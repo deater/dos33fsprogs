@@ -91,9 +91,10 @@ make_ship_up:
 	sta	location0+1,Y				; MIST_ARRIVAL_DOCK
 	sta	location30+1,Y				; MIST_VIEWER_DOOR
 
-
-	; FIXME: hook up exit on dock to ship
-
+	; hook up exit on dock to ship
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#DIRECTION_E
+	sta	location0,Y				; MIST_ARRIVAL_DOCK
 
 	rts
 
@@ -177,9 +178,10 @@ make_ship_down:
 	sta	location0+1,Y				; MIST_ARRIVAL_DOCK
 	sta	location30+1,Y				; MIST_VIEWER_DOOR
 
-	; FIXME: remove exit on dock to ship
-
-
+	; remove exit on dock to ship
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#$ff
+	sta	location0,Y				; MIST_ARRIVAL_DOCK
 
 	rts
 
