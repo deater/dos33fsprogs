@@ -1493,7 +1493,7 @@ goto_trunk:
 
 pickup_floor_key:
 	lda	TRUNK_STATE
-	and	#~TRUNK_KEY_ON_FLOOR
+	and	#<(~TRUNK_KEY_ON_FLOOR)
 	sta	TRUNK_STATE
 
 	lda	#HOLDING_KEY

@@ -313,7 +313,7 @@ not_holding_key:
 
 	; close lid
 	lda	TRUNK_STATE
-	and	#~(TRUNK_LID_OPEN)
+	and	#<~(TRUNK_LID_OPEN)
 	sta	TRUNK_STATE
 
 	jsr	update_pump_state
