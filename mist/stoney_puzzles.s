@@ -146,7 +146,9 @@ right_knob:
 
 	lda	#1
 	sta	COMPASS_STATE
-	jmp	update_compass_state
+	jsr	update_compass_state
+
+	jmp	change_direction
 
 wrong_knob:
 	lda	#0
@@ -224,16 +226,38 @@ compass_light_sprite:
 	; if COMPASS_STATE is 1:
 	;	enable access to linking book
 update_compass_state:
-	ldy	#LOCATION_NORTH_EXIT
 	lda	COMPASS_STATE
 	bne	enable_book_access
 disable_book_access:
+	; regular compass rose
+	ldy	#LOCATION_WEST_BG
+	lda	#<compass_rose_w_lzsa
+	sta	location35,Y		; STONEY_COMPASS_ROSE_LEFT
+	sta	location46,Y		; STONEY_COMPASS_ROSE_RIGHT
+	lda	#>compass_rose_w_lzsa
+	sta	location35+1,Y		; STONEY_COMPASS_ROSE_LEFT
+	sta	location46+1,Y		; STONEY_COMPASS_ROSE_RIGHT
+
+	ldy	#LOCATION_NORTH_EXIT
 	lda	#$ff
-	bne	update_book_access	; bra
-enable_book_access:
-	lda	#STONEY_BOOK_TABLE
-update_book_access:
 	sta	location16,Y				; STONEY_BOOK_ROOM
+
+	rts
+
+enable_book_access:
+	; lit compass rose
+	ldy	#LOCATION_WEST_BG
+	lda	#<compass_rose_lit_w_lzsa
+	sta	location35,Y		; STONEY_COMPASS_ROSE_LEFT
+	sta	location46,Y		; STONEY_COMPASS_ROSE_RIGHT
+	lda	#>compass_rose_lit_w_lzsa
+	sta	location35+1,Y		; STONEY_COMPASS_ROSE_LEFT
+	sta	location46+1,Y		; STONEY_COMPASS_ROSE_RIGHT
+
+	ldy	#LOCATION_NORTH_EXIT
+	lda	#STONEY_BOOK_TABLE
+	sta	location16,Y				; STONEY_BOOK_ROOM
+
 	rts
 
 	;===================================
