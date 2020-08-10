@@ -936,8 +936,8 @@ location50:
 	.word	$0000			; west bg
 	.byte	BG_NORTH
 	.byte   DIRECTION_N     ; special exit
-	.byte	8,23   ; special x
-	.byte	20,46   ; special y
+	.byte	8,25   ; special x
+	.byte	24,46   ; special y
 	.word	goto_trunk-1
 
 ; STONEY_LIGHTHOUSE_TRUNK_CLOSE		-- closeup of trunk

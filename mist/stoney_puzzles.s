@@ -1452,7 +1452,36 @@ doorway2_water_list:
 ;			water raises: FULL OF WATER, PLUG OPEN
 ;		close plug:	EMPTY OF WATER, PLUG CLOSED
 
+
+	;====================================
+	; goto the trunk close
+	;  OR pickup floor key if applicable
+	;====================================
 goto_trunk:
+	lda	CURSOR_X
+	cmp	#22
+	bcc	goto_the_trunk		; blt
+
+	; pickup floor key?
+	lda	TRUNK_STATE
+	and	#TRUNK_KEY_ON_FLOOR
+	beq	no_floor_key
+
+pickup_floor_key:
+	lda	TRUNK_STATE
+	and	#~TRUNK_KEY_ON_FLOOR
+	sta	TRUNK_STATE
+
+	lda	#HOLDING_KEY
+	sta	HOLDING_ITEM
+
+	jsr	update_inside_lighthouse_action
+
+no_floor_key:
+	rts
+
+goto_the_trunk:
+
 	lda	#STONEY_TRUNK_CLOSE
 	sta	LOCATION
 
@@ -1924,8 +1953,33 @@ unlock_hatch:
 	; unlock the hatch
 	lda	TRUNK_STATE
 	ora	#TRUNK_HATCH_OPEN
+	ora	#TRUNK_KEY_ON_FLOOR	; drop key on floor
 	sta	TRUNK_STATE
 
 	jsr	update_hatch_state
 	jmp	change_direction
 
+
+
+
+	;========================
+	; draw floor key
+	;========================
+draw_floor_key:
+	lda	TRUNK_STATE
+	and	#TRUNK_KEY_ON_FLOOR
+	beq	done_draw_floor_key
+
+	lda	#23
+	sta	XPOS
+	lda	#34
+	sta	YPOS
+
+	lda	#<trunk_key_sprite
+	sta	INL
+	lda	#>trunk_key_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+done_draw_floor_key:
+	rts

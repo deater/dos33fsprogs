@@ -204,6 +204,10 @@ not_a_doorway:
 	beq	fg_draw_trunk_close
 	cmp	#STONEY_LIGHTHOUSE_INSIDE
 	beq	fg_draw_inside_lighthouse
+	cmp	#STONEY_LIGHTHOUSE_DOOR
+	beq	fg_lighthouse_door
+	cmp	#STONEY_TRUNK
+	beq	fg_draw_trunk
 
 	jmp	nothing_special
 
@@ -277,6 +281,32 @@ fg_draw_trunk_close:
 fg_draw_inside_lighthouse:
 	jsr	draw_inside_lighthouse
 	jmp	nothing_special
+
+fg_draw_trunk:
+	jsr	draw_floor_key
+	jmp	nothing_special
+
+fg_lighthouse_door:
+	lda	HOLDING_ITEM
+	beq	not_holding_key
+
+	; if outside door, drop key and close lid
+	lda	#0
+	sta	HOLDING_ITEM
+	jsr	update_inside_lighthouse_action
+
+	lda	TRUNK_STATE
+	ora	#TRUNK_KEY_ON_FLOOR	; drop key on floor
+	sta	TRUNK_STATE
+
+not_holding_key:
+
+	; close lid
+	lda	TRUNK_STATE
+	and	#~(TRUNK_LID_OPEN)
+	sta	TRUNK_STATE
+
+	jsr	update_pump_state
 
 nothing_special:
 

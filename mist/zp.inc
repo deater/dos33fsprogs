@@ -246,6 +246,7 @@ TRUNK_STATE		= $C9		; trunk state in stonsehip
 	TRUNK_KEY_TAKEN	    = $04
 	TRUNK_LID_OPEN	    = $08
 	TRUNK_HATCH_OPEN    = $10
+	TRUNK_KEY_ON_FLOOR  = $20
 
 SELENA_BUTTON_STATUS	= $CA
 	SELENA_BUTTON1	=	$01	; POOL  (water)
