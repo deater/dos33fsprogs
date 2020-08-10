@@ -1469,9 +1469,12 @@ trunk_open_plug:
 	bne	water_already_gone
 
 	lda	#12
-	sta	ANIMATE_FRAME
+	bne	water_water_water	; bra
 
 water_already_gone:
+	lda	#0
+water_water_water:
+	sta	ANIMATE_FRAME
 	lda	TRUNK_STATE
 	eor	#TRUNK_VALVE_OPEN
 	ora	#TRUNK_WATER_DRAINED
@@ -1619,9 +1622,28 @@ inside_and_drained:
 	lda	#STONEY_LIGHTHOUSE_SPIRAL
 	sta	LOCATION
 	jmp	change_location
+
 inside_water_up:
 
+	lda	TRUNK_STATE
+	and	#TRUNK_LID_OPEN
+	beq	inside_water_do_nothing
 
+	; take key
+	lda	TRUNK_STATE
+	ora	#TRUNK_KEY_TAKEN
+	sta	TRUNK_STATE
+
+	; switch cursor to have key
+	lda	#HOLDING_KEY
+	sta	HOLDING_ITEM
+
+	; HACK
+	; swap out so we can open lock now
+
+	jsr	update_inside_lighthouse_action
+
+inside_water_do_nothing:
 	rts
 
 rotate_to_ladder:
@@ -1630,6 +1652,9 @@ rotate_to_ladder:
 	jmp	change_direction
 
 
+	;=============================
+	; draw inside of lighthouse
+	;=============================
 
 draw_inside_lighthouse:
 
@@ -1639,6 +1664,26 @@ draw_inside_lighthouse:
 	bne	done_draw_inside_lighthouse
 
 looking_toward_trunk:
+
+	; if trunk is open and key not taken, draw it
+	lda	TRUNK_STATE
+	and	#(TRUNK_KEY_TAKEN|TRUNK_LID_OPEN)
+	cmp	#TRUNK_LID_OPEN
+	bne	dont_draw_key
+
+	lda	#16
+	sta	XPOS
+	lda	#30
+	sta	YPOS
+
+	lda	#<trunk_key_sprite
+	sta	INL
+	lda	#>trunk_key_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+
+dont_draw_key:
 
 	lda	ANIMATE_FRAME
 
@@ -1766,4 +1811,121 @@ trunk_key_sprite:
 	.byte $AA,$AA,$AA,$0A,$0A
 	.byte $00,$A0,$A0,$00,$A0
 
+
+
+	;============================
+	; update hatch state
+	;============================
+update_hatch_state:
+	; default is locked and can't go to top
+
+	lda	TRUNK_STATE
+	and	#TRUNK_HATCH_OPEN
+	beq	close_hatch
+
+open_hatch:
+	ldy	#LOCATION_EAST_EXIT
+	lda	#STONEY_LIGHTHOUSE_UPSTAIRS
+	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
+
+	ldy	#LOCATION_EAST_BG
+	lda	#<lighthouse_inside_e_lzsa
+	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
+	lda	#>lighthouse_inside_e_lzsa
+	sta	location5+1,Y			; STONEY_LIGHTHOUSE_INSIDE
+
+	rts
+
+close_hatch:
+	ldy	#LOCATION_EAST_EXIT
+	lda	#$ff
+	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
+
+	ldy	#LOCATION_EAST_BG
+	lda	#<lighthouse_inside_locked_e_lzsa
+	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
+	lda	#>lighthouse_inside_locked_e_lzsa
+	sta	location5+1,Y			; STONEY_LIGHTHOUSE_INSIDE
+
+	rts
+
+
+	;========================
+	; update inside lighthouse action
+	;========================
+	; change action behavior if holding key
+update_inside_lighthouse_action:
+
+	lda	HOLDING_ITEM
+	cmp	#HOLDING_KEY
+	bne	normal_action
+
+holding_action:
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#DIRECTION_E
+	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
+	ldy	#LOCATION_SPECIAL_X1
+	lda	#12
+	sta	location5,Y
+	lda	#19
+	sta	location5+1,Y
+	lda	#8
+	sta	location5+2,Y
+	lda	#20
+	sta	location5+3,Y
+
+	ldy	#LOCATION_SPECIAL_FUNC
+	lda	#<(unlock_hatch-1)
+	sta	location5,Y
+	lda	#>(unlock_hatch-1)
+	sta	location5+1,Y
+
+	rts
+
+normal_action:
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#DIRECTION_N
+	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
+	ldy	#LOCATION_SPECIAL_X1
+	lda	#10
+	sta	location5,Y
+	lda	#35
+	sta	location5+1,Y
+	lda	#20
+	sta	location5+2,Y
+	lda	#44
+	sta	location5+3,Y
+
+	ldy	#LOCATION_SPECIAL_FUNC
+	lda	#<(handle_inside_lighthouse-1)
+	sta	location5,Y
+	lda	#>(handle_inside_lighthouse-1)
+	sta	location5+1,Y
+
+	rts
+
+
+
+	;========================
+	; unlock the hatch
+	;========================
+	; FIXME: show animation?
+	; 	drop key?
+	; in actual game you still have to manually open hatch
+	;	after the lock falls off
+unlock_hatch:
+
+	; drop key
+	lda	#0
+	sta	HOLDING_ITEM
+
+	jsr	update_inside_lighthouse_action
+
+	; unlock the hatch
+	lda	TRUNK_STATE
+	ora	#TRUNK_HATCH_OPEN
+	sta	TRUNK_STATE
+
+	jsr	update_hatch_state
+	jmp	change_direction
 

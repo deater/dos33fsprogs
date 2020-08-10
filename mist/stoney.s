@@ -52,6 +52,8 @@ stoney_start:
 	jsr	update_compass_state
 	jsr	update_tunnel_lights
 	jsr	update_pump_state
+	jsr	update_hatch_state
+	jsr	update_inside_lighthouse_action
 
 	lda	#1
 	sta	CURSOR_VISIBLE		; visible at first

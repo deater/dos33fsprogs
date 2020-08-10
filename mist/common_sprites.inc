@@ -58,7 +58,7 @@ finger_match_lit_sprite:
 
 finger_key_sprite:
 	.byte 6,4
-	.byte $aa,$aa,$aa,$aa,$aa,$ba
+	.byte $aa,$aa,$aa,$aa,$aa,$bd
 	.byte $dd,$dd,$dd,$dd,$db,$bb
 	.byte $aa,$ad,$aa,$ab,$bd,$bb
 	.byte $aa,$aa,$aa,$aa,$ab,$ab
