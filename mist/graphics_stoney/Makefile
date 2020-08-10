@@ -17,6 +17,7 @@ stoney_graphics.inc:	\
 	lighthouse_inside_e.lzsa lighthouse_inside_w.lzsa \
 	lighthouse_inside_n.lzsa \
 	lighthouse_inside_nowater_n.lzsa lighthouse_inside_notrunk_n.lzsa \
+	lighthouse_inside_lidup_n.lzsa \
 	lighthouse_upstairs_e.lzsa lighthouse_upstairs_w.lzsa \
 	lighthouse_battery_w.lzsa \
 	lighthouse_downladder_e.lzsa \
@@ -70,6 +71,7 @@ stoney_graphics.inc:	\
 	echo "lighthouse_inside_n_lzsa: .incbin \"lighthouse_inside_n.lzsa\"" >> stoney_graphics.inc
 	echo "lighthouse_inside_nowater_n_lzsa: .incbin \"lighthouse_inside_nowater_n.lzsa\"" >> stoney_graphics.inc
 	echo "lighthouse_inside_notrunk_n_lzsa: .incbin \"lighthouse_inside_notrunk_n.lzsa\"" >> stoney_graphics.inc
+	echo "lighthouse_inside_lidup_n_lzsa: .incbin \"lighthouse_inside_lidup_n.lzsa\"" >> stoney_graphics.inc
 	echo "lighthouse_upstairs_e_lzsa: .incbin \"lighthouse_upstairs_e.lzsa\"" >> stoney_graphics.inc
 	echo "lighthouse_upstairs_w_lzsa: .incbin \"lighthouse_upstairs_w.lzsa\"" >> stoney_graphics.inc
 	echo "lighthouse_battery_w_lzsa: .incbin \"lighthouse_battery_w.lzsa\"" >> stoney_graphics.inc

@@ -428,14 +428,25 @@ draw_notrunk:
 	bne	done_draw_trunk		; bra
 
 draw_trunk:
+	; see if lid is up
+	lda	TRUNK_STATE
+	and	#TRUNK_LID_OPEN
+	bne	draw_trunk_open
+
+draw_trunk_closed:
 	lda	#<lighthouse_inside_n_lzsa
 	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
 	lda	#>lighthouse_inside_n_lzsa
 	sta	location5+1,Y			; STONEY_LIGHTHOUSE_INSIDE
+	jmp	done_draw_trunk
+
+draw_trunk_open:
+	lda	#<lighthouse_inside_lidup_n_lzsa
+	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
+	lda	#>lighthouse_inside_lidup_n_lzsa
+	sta	location5+1,Y			; STONEY_LIGHTHOUSE_INSIDE
 
 done_draw_trunk:
-
-
 
 	lda	PUMP_STATE
 	beq	done_update_pump_state
@@ -1596,6 +1607,21 @@ start_key_animation:
 	rts
 
 inside_other:
+
+	; if water-up-not-open	do nothing
+	; if water-down, go down steps
+	; if water-up-open - grab key
+
+	lda	PUMP_STATE
+	cmp	#DRAINED_LIGHTHOUSE
+	bne	inside_water_up
+inside_and_drained:
+	lda	#STONEY_LIGHTHOUSE_SPIRAL
+	sta	LOCATION
+	jmp	change_location
+inside_water_up:
+
+
 	rts
 
 rotate_to_ladder:
@@ -1646,9 +1672,29 @@ looking_toward_trunk:
 	cmp	#8
 	bne	done_draw_inside_lighthouse
 
+	; done animating
 	lda	#0
 	sta	ANIMATE_FRAME
 
+	; open trunk but only if trunk is up
+	; so if TRUNK_STATE & TRUNK_WATER_DRAINED = 1
+	;	and PUMP_STATE & DRAINED_LIGHTHOUSE = 0
+	lda	PUMP_STATE
+	and	#DRAINED_LIGHTHOUSE
+	bne	dont_open_trunk
+
+	lda	TRUNK_STATE
+	and	#TRUNK_WATER_DRAINED
+	beq	dont_open_trunk
+
+	lda	TRUNK_STATE
+	ora	#TRUNK_LID_OPEN
+	sta	TRUNK_STATE
+
+	; actually change background
+	jsr	update_pump_state
+	jsr	change_direction
+dont_open_trunk:
 
 done_draw_inside_lighthouse:
 	rts
@@ -1712,5 +1758,12 @@ key_frame5_sprite:
 	.byte $AA,$AA,$AA,$AA,$AA,$AA,$00
 	.byte $AA,$AA,$0A,$AA,$AA,$AA,$00
 	.byte $AA,$AA,$A0,$00,$0A,$0A,$A0
+
+
+	; at 16,30
+trunk_key_sprite:
+	.byte 5,2
+	.byte $AA,$AA,$AA,$0A,$0A
+	.byte $00,$A0,$A0,$00,$A0
 
 
