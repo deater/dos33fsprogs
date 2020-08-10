@@ -17,13 +17,7 @@ For release 1.0
 	-- load 1s clip of sounds (4k each) into language card?
 
 + STONEY
-	-- Lights out
-		+ currently if you turn around from open airlock
-			they aren't blacked out
 	-- allow coming at steps from an angle
-	-- if space allows, lighten floor of compass rose when
-		right button pressed
-
 
 + CHANNEL
 	-- from path can still see down elev1 even if up
