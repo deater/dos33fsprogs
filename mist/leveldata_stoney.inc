@@ -909,10 +909,10 @@ location49:
 	.byte	DIRECTION_N	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	lighthouse_inside_n_lzsa	; north bg
-	.word	lighthouse_inside_n_lzsa	; south bg
-	.word	$0000				; east bg
-	.word	$0000				; west bg
+	.word	spiral_n_lzsa		; north bg
+	.word	spiral_s_lzsa		; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff
 

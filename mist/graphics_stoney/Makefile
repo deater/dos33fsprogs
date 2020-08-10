@@ -49,7 +49,8 @@ stoney_graphics.inc:	\
 	right_airlock_n.lzsa right_airlock_s.lzsa right_airlock_open_n.lzsa \
 	left_letter.lzsa \
 	crawlway_entrance_e.lzsa \
-	trunk_n.lzsa trunk_close_n.lzsa
+	trunk_n.lzsa trunk_close_n.lzsa \
+	spiral_n.lzsa spiral_s.lzsa
 	echo "arrival_n_lzsa: .incbin \"arrival_n.lzsa\"" > stoney_graphics.inc
 	echo "arrival_s_lzsa: .incbin \"arrival_s.lzsa\"" >> stoney_graphics.inc
 	echo "arrival_e_lzsa: .incbin \"arrival_e.lzsa\"" >> stoney_graphics.inc
@@ -140,6 +141,9 @@ stoney_graphics.inc:	\
 	echo "crawlway_entrance_e_lzsa: .incbin \"crawlway_entrance_e.lzsa\"" >> stoney_graphics.inc
 	echo "trunk_n_lzsa: .incbin \"trunk_n.lzsa\"" >> stoney_graphics.inc
 	echo "trunk_close_n_lzsa: .incbin \"trunk_close_n.lzsa\"" >> stoney_graphics.inc
+	echo "spiral_n_lzsa: .incbin \"spiral_n.lzsa\"" >> stoney_graphics.inc
+	echo "spiral_s_lzsa: .incbin \"spiral_s.lzsa\"" >> stoney_graphics.inc
+
 
 
 
