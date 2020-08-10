@@ -109,19 +109,19 @@ location4:
 
 ; MIST_STEPS_1ST_LANDING	-- steps 1st landing
 location5:
-	.byte	$ff			; north exit
+	.byte	MIST_ABOVE_DOCK		; north exit
 	.byte	$ff			; south exit
 	.byte	MIST_BASE_STEPS		; east exit
 	.byte	MIST_STEPS_2ND_LANDING	; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_N	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
-	.word	$0000			; north bg
+	.word	step_base_n_lzsa	; north bg
 	.word	$0000			; south bg
 	.word	step_land1_e_lzsa	; east bg
 	.word	step_land1_w_lzsa	; west bg
-	.byte	BG_WEST	| BG_EAST
+	.byte	BG_WEST	| BG_EAST | BG_NORTH
 	.byte	$ff		; special exit
 
 ; MIST_STEPS_2ND_LANDING	-- steps 2nd landing
@@ -326,18 +326,18 @@ location15:
 ; MIST_GEAR_BASE		-- gear base
 location16:
 	.byte	MIST_GEAR		; north exit
-	.byte	$ff			; south exit
+	.byte	MIST_BASE_STEPS		; south exit
 	.byte	MIST_DOCK_SWITCH	; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	DIRECTION_S	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	gear_base_n_lzsa	; north bg
-	.word	$0000			; south bg
+	.word	above_dock_s_lzsa	; south bg
 	.word	above_dock_e_lzsa	; east bg
 	.word	$0000			; west bg
-	.byte	BG_NORTH | BG_EAST
+	.byte	BG_NORTH | BG_EAST | BG_SOUTH
 	.byte	$ff		; special exit
 
 ; MIST_CAT_LETTER	-- catherine letter

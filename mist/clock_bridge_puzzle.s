@@ -483,6 +483,8 @@ check_gear_delete:
 	beq	gear_look2
 	cmp	#MIST_BASE_STEPS
 	beq	gear_look3
+	cmp	#MIST_STEPS_1ST_LANDING
+	beq	gear_look3
 	bne	done_gear_delete
 
 gear_look1:

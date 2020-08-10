@@ -30,9 +30,10 @@ make_ship_up:
 
 	lda	#<above_dock_shipup_s_lzsa
 	sta	location3,Y				; MIST_ABOVE_DOCK
+	sta	location16,Y				; MIST_GEAR_BASE
 	lda	#>above_dock_shipup_s_lzsa
 	sta	location3+1,Y				; MIST_ABOVE_DOCK
-
+	sta	location16+1,Y				; MIST_GEAR_BASE
 
 
 	; update backgrounds north
@@ -120,8 +121,10 @@ make_ship_down:
 
 	lda	#<above_dock_s_lzsa
 	sta	location3,Y				; MIST_ABOVE_DOCK
+	sta	location16,Y				; MIST_GEAR_BASE
 	lda	#>above_dock_s_lzsa
 	sta	location3+1,Y				; MIST_ABOVE_DOCK
+	sta	location16+1,Y				; MIST_GEAR_BASE
 
 	; update backgrounds north
 

@@ -753,7 +753,7 @@ location40:
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
 	.byte   DIRECTION_W
         .byte   17,24		; special x
-        .byte   34,44		; special y
+        .byte   30,40		; special y
         .word   stoney_take_blue_page-1 ; special function
 
 ; STONEY_BLUE_MAPCASE	-- blue room mapcase
