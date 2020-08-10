@@ -200,6 +200,8 @@ not_a_doorway:
 	beq	draw_telescope_view
 	cmp	#STONEY_TRUNK_CLOSE
 	beq	fg_draw_trunk_close
+	cmp	#STONEY_LIGHTHOUSE_INSIDE
+	beq	fg_draw_inside_lighthouse
 
 	jmp	nothing_special
 
@@ -268,6 +270,10 @@ draw_telescope_view:
 
 fg_draw_trunk_close:
 	jsr	draw_trunk_close
+	jmp	nothing_special
+
+fg_draw_inside_lighthouse:
+	jsr	draw_inside_lighthouse
 	jmp	nothing_special
 
 nothing_special:

@@ -122,7 +122,11 @@ location5:
 	.word	lighthouse_inside_e_lzsa	; east bg
 	.word	lighthouse_inside_w_lzsa	; west bg
 	.byte	BG_EAST|BG_WEST|BG_NORTH
-	.byte	$ff
+	.byte   DIRECTION_N     ; special exit
+	.byte	10,35   ; special x
+	.byte	20,44   ; special y
+	.word	handle_inside_lighthouse-1
+
 
 ; STONEY_LIGHTHOUSE_UPSTAIRS		-- lighthouse upstairs
 location6:

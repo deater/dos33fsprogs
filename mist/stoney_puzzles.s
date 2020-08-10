@@ -1564,8 +1564,153 @@ trunk_plug_water1_sprite:
 
 
 
+	;=================================
+	; handle inside lighthouse
+	;=================================
+	; if to right, rotate to ladder
+	; if attached key, animate it
+	; if trunk up and open, pick up key
+	; if trunk up and closed, ignore
+	; if trunk down, go down
+handle_inside_lighthouse:
+
+	lda	CURSOR_X
+	cmp	#27
+	bcs	rotate_to_ladder	; bge
+
+	lda	CURSOR_Y
+	cmp	#37
+	bcc	inside_other		; blt
+	lda	CURSOR_X
+	cmp	#19
+	bcc	inside_other		; blt
+
+start_key_animation:
+
+	lda	#0
+	sta	FRAMEL
+
+	lda	#1
+	sta	ANIMATE_FRAME
+
+	rts
+
+inside_other:
+	rts
+
+rotate_to_ladder:
+	lda	#DIRECTION_E
+	sta	DIRECTION
+	jmp	change_direction
 
 
 
+draw_inside_lighthouse:
+
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_N
+	bne	done_draw_inside_lighthouse
+
+looking_toward_trunk:
+
+	lda	ANIMATE_FRAME
+
+	; since 0 is the static image, we can just treat
+	; as always being animated
+
+	asl
+	tay
+	lda	animate_key_frames,Y
+	sta	INL
+	lda	animate_key_frames+1,Y
+	sta	INH
+
+	lda	#18
+	sta	XPOS
+	lda	#36
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	; increment animation
+	lda	ANIMATE_FRAME
+	beq	done_draw_inside_lighthouse
+
+	lda	FRAMEL
+	and	#$1f
+	bne	done_draw_inside_lighthouse
+
+	inc	ANIMATE_FRAME
+	lda	ANIMATE_FRAME
+	cmp	#8
+	bne	done_draw_inside_lighthouse
+
+	lda	#0
+	sta	ANIMATE_FRAME
+
+
+done_draw_inside_lighthouse:
+	rts
+
+animate_key_frames:
+	.word	key_frame0_sprite	; 0
+	.word	key_frame0_sprite	; 1
+	.word	key_frame1_sprite	; 2
+	.word	key_frame2_sprite	; 3
+	.word	key_frame3_sprite	; 4
+	.word	key_frame4_sprite	; 5
+	.word	key_frame5_sprite	; 6
+	.word	key_frame4_sprite	; 7
+	.word	key_frame5_sprite	; 8
+
+	; at 18, 36
+key_frame0_sprite:
+	.byte 10,5
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$0A,$0A,$0A,$00,$0A,$AA
+	.byte $AA,$AA,$0A,$AA,$A0,$AA,$AA,$00,$A0,$0A
+	.byte $AA,$AA,$A0,$00,$0A,$0A,$0A,$0A,$0A,$A0
+
+key_frame1_sprite:
+	.byte 9,5
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$0A,$AA,$AA
+	.byte $AA,$AA,$AA,$00,$A0,$A0,$00,$00,$AA
+	.byte $AA,$AA,$0A,$AA,$AA,$AA,$A0,$AA,$00
+	.byte $AA,$AA,$A0,$00,$0A,$0A,$0A,$0A,$A0
+
+key_frame2_sprite:
+	.byte 8,5
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte $AA,$AA,$0A,$0A,$0A,$00,$0A,$AA
+	.byte $AA,$AA,$A0,$AA,$AA,$00,$A0,$0A
+	.byte $AA,$AA,$0A,$AA,$AA,$AA,$AA,$00
+	.byte $AA,$AA,$A0,$00,$0A,$0A,$0A,$A0
+
+key_frame3_sprite:
+	.byte 8,5
+	.byte $AA,$AA,$AA,$AA,$0A,$AA,$AA,$AA
+	.byte $AA,$00,$A0,$A0,$00,$00,$AA,$AA
+	.byte $AA,$AA,$AA,$AA,$A0,$AA,$A0,$0A
+	.byte $AA,$AA,$0A,$AA,$AA,$AA,$0A,$A0
+	.byte $AA,$AA,$A0,$00,$0A,$0A,$A0,$AA
+
+key_frame4_sprite:
+	.byte 7,5
+	.byte $0A,$0A,$0A,$00,$0A,$AA,$AA
+	.byte $A0,$AA,$AA,$00,$A0,$0A,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$00
+	.byte $AA,$AA,$0A,$AA,$AA,$AA,$00
+	.byte $AA,$AA,$A0,$00,$0A,$0A,$A0
+
+key_frame5_sprite:
+	.byte 7,5
+	.byte $0A,$0A,$0A,$00,$0A,$AA,$AA
+	.byte $AA,$AA,$AA,$A0,$AA,$00,$AA
+	.byte $AA,$AA,$AA,$AA,$AA,$AA,$00
+	.byte $AA,$AA,$0A,$AA,$AA,$AA,$00
+	.byte $AA,$AA,$A0,$00,$0A,$0A,$A0
 
 
