@@ -198,6 +198,8 @@ not_a_doorway:
 	beq	animate_magic_table
 	cmp	#STONEY_TELESCOPE_VIEW
 	beq	draw_telescope_view
+	cmp	#STONEY_TRUNK_CLOSE
+	beq	fg_draw_trunk_close
 
 	jmp	nothing_special
 
@@ -262,6 +264,10 @@ draw_battery_level:
 
 draw_telescope_view:
 	jsr	display_telescope
+	jmp	nothing_special
+
+fg_draw_trunk_close:
+	jsr	draw_trunk_close
 	jmp	nothing_special
 
 nothing_special:

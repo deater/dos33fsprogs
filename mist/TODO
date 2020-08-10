@@ -21,6 +21,7 @@ For release 1.0
 		+ currently if you turn around from open airlock
 			they aren't blacked out
 
+	-- fix colors on gangplanks
 	-- allow coming at steps from an angle
 	-- if space allows, lighten floor of compass rose when
 		right button pressed

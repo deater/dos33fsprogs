@@ -1452,10 +1452,120 @@ trunk_open_plug:
 	; TOGGLE TRUNK_VALVE_OPEN
 	; CLEAR FULL_OF_WATER
 
-	; FIXME: start animation?
+	; if full of water, start animation
+	lda	TRUNK_STATE
+	and	#TRUNK_WATER_DRAINED
+	bne	water_already_gone
 
+	lda	#12
+	sta	ANIMATE_FRAME
+
+water_already_gone:
 	lda	TRUNK_STATE
 	eor	#TRUNK_VALVE_OPEN
 	ora	#TRUNK_WATER_DRAINED
 	sta	TRUNK_STATE
 	rts
+
+
+	;===============================
+	; draw the close-in-trunk puzzle
+	;===============================
+draw_trunk_close:
+
+	lda	TRUNK_STATE
+	and	#TRUNK_VALVE_OPEN
+	bne	draw_trunk_plug_open
+
+draw_trunk_plug_closed:
+	lda	#7
+	sta	XPOS
+	lda	#40
+	sta	YPOS
+	lda	#<trunk_plug_closed_sprite
+	sta	INL
+	lda	#>trunk_plug_closed_sprite
+	sta	INH
+	jsr	put_sprite_crop
+	jmp	done_draw_trunk_plug
+
+draw_trunk_plug_open:
+
+	lda	#10
+	sta	XPOS
+	lda	#44
+	sta	YPOS
+	lda	#<trunk_plug_open_sprite
+	sta	INL
+	lda	#>trunk_plug_open_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+done_draw_trunk_plug:
+	lda	ANIMATE_FRAME
+	beq	totally_done_draw_trunk_plug
+
+	; animate water coming out
+
+	ror		; get low bit into carry
+	bcc	trunk_water_even
+
+trunk_water_odd:
+	lda	#<trunk_plug_water1_sprite
+	sta	INL
+	lda	#>trunk_plug_water1_sprite
+	sta	INH
+	bne	trunk_water_draw	; bra
+
+trunk_water_even:
+	lda	#<trunk_plug_water0_sprite
+	sta	INL
+	lda	#>trunk_plug_water0_sprite
+	sta	INH
+trunk_water_draw:
+	lda	#7
+	sta	XPOS
+	lda	#44
+	sta	YPOS
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$1f
+	bne	totally_done_draw_trunk_plug
+
+	dec	ANIMATE_FRAME
+
+totally_done_draw_trunk_plug:
+	rts
+
+
+	; at 7,40
+trunk_plug_closed_sprite:
+	.byte 2,2
+	.byte $79,$97
+	.byte $77,$79
+
+	; at 10,44
+trunk_plug_open_sprite:
+	.byte 2,2
+	.byte $9d,$88
+	.byte $79,$98
+
+	; at 7,44
+trunk_plug_water0_sprite:
+	.byte 2,2
+	.byte $67,$72
+	.byte $62,$77
+
+trunk_plug_water1_sprite:
+	.byte 2,2
+	.byte $27,$76
+	.byte $26,$77
+
+
+
+
+
+
+
+
