@@ -951,6 +951,7 @@ location51:
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_NORTH
-	.byte	$ff
-
-
+	.byte   DIRECTION_N     ; special exit
+	.byte	7,13	; special x
+	.byte	36,46	; special y
+	.word	trunk_open_plug-1

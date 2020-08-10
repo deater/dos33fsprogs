@@ -411,6 +411,32 @@ update_pump_state:
 	; flood lighthouse
 	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
 
+	ldy	#LOCATION_NORTH_BG
+
+	; if TRUNK_WATER_DRAINED=1 and TRUNK_VALVE_OPEN=0 then show trunk
+
+	lda	TRUNK_STATE
+	and	#(TRUNK_WATER_DRAINED|TRUNK_VALVE_OPEN)
+	cmp	#(TRUNK_WATER_DRAINED)
+	beq	draw_trunk
+
+draw_notrunk:
+	lda	#<lighthouse_inside_notrunk_n_lzsa
+	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
+	lda	#>lighthouse_inside_notrunk_n_lzsa
+	sta	location5+1,Y			; STONEY_LIGHTHOUSE_INSIDE
+	bne	done_draw_trunk		; bra
+
+draw_trunk:
+	lda	#<lighthouse_inside_n_lzsa
+	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
+	lda	#>lighthouse_inside_n_lzsa
+	sta	location5+1,Y			; STONEY_LIGHTHOUSE_INSIDE
+
+done_draw_trunk:
+
+
+
 	lda	PUMP_STATE
 	beq	done_update_pump_state
 	cmp	#DRAINED_EXIT
@@ -435,6 +461,13 @@ drain_tunnels:
 	jmp	done_update_pump_state
 
 drain_lighthouse:
+
+	ldy	#LOCATION_NORTH_BG
+	lda	#<lighthouse_inside_nowater_n_lzsa
+	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
+	lda	#>lighthouse_inside_nowater_n_lzsa
+	sta	location5+1,Y			; STONEY_LIGHTHOUSE_INSIDE
+
 	ldy	#LOCATION_NORTH_EXIT
 	lda	#STONEY_LIGHTHOUSE_SPIRAL
 	sta	location5,Y			; STONEY_LIGHTHOUSE_INSIDE
@@ -1403,8 +1436,26 @@ doorway2_water_list:
 ; trunk
 ;======================================
 
+;	States:	originally FULL OF WATER, PLUG CLOSED
+;		open plug:	EMPTY OF WATER, PLUG OPEN
+;			water raises: FULL OF WATER, PLUG OPEN
+;		close plug:	EMPTY OF WATER, PLUG CLOSED
+
 goto_trunk:
 	lda	#STONEY_TRUNK_CLOSE
 	sta	LOCATION
 
 	jmp	change_location
+
+
+trunk_open_plug:
+	; TOGGLE TRUNK_VALVE_OPEN
+	; CLEAR FULL_OF_WATER
+
+	; FIXME: start animation?
+
+	lda	TRUNK_STATE
+	eor	#TRUNK_VALVE_OPEN
+	ora	#TRUNK_WATER_DRAINED
+	sta	TRUNK_STATE
+	rts

@@ -35,9 +35,7 @@ stoney_start:
 	sta	DRAW_PAGE
 	sta	LEVEL_OVER
 
-	; resets if you leave
-	; FIXME: temp debug
-	lda	#$7
+	; resets if you leave and come back
 	sta	BATTERY_CHARGE
 
 	; init cursor

@@ -24,9 +24,13 @@ For release 1.0
 	-- allow coming at steps from an angle
 	-- if space allows, lighten floor of compass rose when
 		right button pressed
-	-- hook up pump 
-		-- have the bottom blank out and print PUMPING NOISES
 	-- hook up key/trunk puzzle
+		-- outside looking in can see trunk if up
+			(either add support or remove graphic)
+		-- if click on steps when looking N, move to look at steps
+		-- stop holding key if leave the two rooms where matters
+			[actual game it drops to floor of basement?]
+		-- rotate plug when open/closed
 
 + CHANNEL
 	-- from path can still see down elev1 even if up
@@ -37,6 +41,7 @@ For release 1.0
 
 + NIBEL
 	-- turn on sprite crop in the viewer part
+		[harder to do this than you might think]
 
 + MECHE
 	-- animations for elevator
