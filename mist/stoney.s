@@ -122,6 +122,16 @@ check_tunnel_lights:
 	cmp	#STONEY_CRAWLWAY_ENTRANCE_LEFT
 	beq	turn_off_the_lights
 	cmp	#STONEY_CRAWLWAY_ENTRANCE_RIGHT
+	beq	turn_off_the_lights
+
+	cmp	#STONEY_LEFT_AIRLOCK_OPEN
+	beq	open_airlock_check
+	cmp	#STONEY_RIGHT_AIRLOCK_OPEN
+	bne	dont_touch_lights
+open_airlock_check:
+	; lights only off if facing tunnel
+	lda	DIRECTION
+	cmp	#DIRECTION_S
 	bne	dont_touch_lights
 
 turn_off_the_lights:

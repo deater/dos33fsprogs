@@ -20,18 +20,10 @@ For release 1.0
 	-- Lights out
 		+ currently if you turn around from open airlock
 			they aren't blacked out
-
-	-- fix colors on gangplanks
 	-- allow coming at steps from an angle
 	-- if space allows, lighten floor of compass rose when
 		right button pressed
-	-- hook up key/trunk puzzle
-		-- outside looking in can see trunk if up
-			(either add support or remove graphic)
-		-- if click on steps when looking N, move to look at steps
-		-- stop holding key if leave the two rooms where matters
-			[actual game it drops to floor of basement?]
-		-- rotate plug when open/closed
+
 
 + CHANNEL
 	-- from path can still see down elev1 even if up
@@ -108,12 +100,9 @@ Channelwood:
 
 
 Stoneship age:
-+ Implement floating chest puzzle
-+ Implement compass rose light puzzle
-+ Implement raising/lowering water
-+ Implement telescope
-+ Hook up tunnels into compass room properly
-+ Spheres in red room play animations
++ When standing at door to lighthouse should be able
+	to see trunk is up
++ Spheres in red room should play animations
 
 Ending:
 + Atrus at end -- hires?
