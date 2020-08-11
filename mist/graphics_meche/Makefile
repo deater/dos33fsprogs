@@ -59,7 +59,8 @@ meche_graphics.inc:	\
 	blue_secret_room_n.lzsa blue_secret_room_s.lzsa blue_secret_room_e.lzsa blue_secret_room_w.lzsa \
 	blue_secret_room_jolt_n.lzsa \
 	red_secret_door_s.lzsa \
-	red_secret_room_n.lzsa red_secret_room_s.lzsa red_secret_room_e.lzsa red_secret_room_w.lzsa
+	red_secret_room_n.lzsa red_secret_room_s.lzsa red_secret_room_e.lzsa red_secret_room_w.lzsa \
+	achenar_letter.lzsa
 	echo "departure_e_lzsa: .incbin \"departure_e.lzsa\"" > meche_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> meche_graphics.inc
 	echo "entrance_e_lzsa: .incbin \"entrance_e.lzsa\"" >> meche_graphics.inc
@@ -160,6 +161,8 @@ meche_graphics.inc:	\
 	echo "red_secret_room_s_lzsa: .incbin \"red_secret_room_s.lzsa\"" >> meche_graphics.inc
 	echo "red_secret_room_e_lzsa: .incbin \"red_secret_room_e.lzsa\"" >> meche_graphics.inc
 	echo "red_secret_room_w_lzsa: .incbin \"red_secret_room_w.lzsa\"" >> meche_graphics.inc
+	echo "achenar_letter_lzsa: .incbin \"achenar_letter.lzsa\"" >> meche_graphics.inc
+
 
 %.gr: %.png
 	$(PNG2GR) $< $@

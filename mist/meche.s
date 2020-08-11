@@ -222,6 +222,10 @@ really_exit:
 	;=============================
 draw_red_page:
 
+	lda	DIRECTION
+	cmp	#DIRECTION_N
+	bne	done_draw_red_page
+
 	lda	RED_PAGES_TAKEN
 	and	#MECHE_PAGE
 	bne	no_draw_page
@@ -237,7 +241,8 @@ draw_red_page:
 	sta	INH
 
 	jmp	put_sprite_crop		; tail call
-
+done_draw_red_page:
+	rts
 
 	;========================
 	; draw blue page
@@ -293,9 +298,35 @@ actually_draw_blue_page:
 no_draw_page:
 	rts
 
+	;==============================
+	; Take red page
+	;	or read achenar letter
+	;==============================
+
 meche_take_red_page:
+	lda	DIRECTION
+	cmp	#DIRECTION_N
+	beq	actually_take_red_page
+
+	; otherwise go to read letter
+
+	lda	#MECHE_ACHENAR_LETTER
+	sta	LOCATION
+	jsr	change_location
+
+	bit	SET_TEXT
+	rts
+
+
+actually_take_red_page:
 	lda	#MECHE_PAGE
 	jmp	take_red_page
+
+
+	;=============================
+	; Take blue page
+	;	or jolt the chair
+	;=============================
 
 meche_take_blue_page:
 	lda	DIRECTION

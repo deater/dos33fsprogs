@@ -773,9 +773,9 @@ location41:
 	.word	red_secret_room_e_lzsa	; east bg
 	.word	red_secret_room_w_lzsa	; west bg
 	.byte	BG_NORTH | BG_SOUTH | BG_EAST | BG_WEST
-	.byte   DIRECTION_N
-	.byte	22,29		; special x
-	.byte	14,24		; special y
+	.byte   DIRECTION_N | DIRECTION_S
+	.byte	22,31		; special x
+	.byte	14,32		; special y
 	.word	meche_take_red_page-1	; special function
 
 ; MECHE_TOP_FLOOR_UP			-- looking above elevator
@@ -806,11 +806,9 @@ location43:
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	$0000			; north bg
-	.word	$0000			; south bg
+	.word	achenar_letter_lzsa	; south bg
 	.word	$0000			; east bg
 	.word	$0000			; west bg
 	.byte	BG_SOUTH
 	.byte	$ff		; special exit
-
-
 
