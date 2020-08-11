@@ -1,3 +1,11 @@
+	;===============================
+	; top floor up
+	;===============================
+goto_top_floor_up:
+	lda	#MECHE_TOP_FLOOR_UP
+	sta	LOCATION
+	jmp	change_location
+
 
 	;==============================
 	; book page stuff
@@ -350,14 +358,19 @@ rot_button_press:
 	; change to plain elevator
 	ldy	#LOCATION_WEST_BG
 	lda	#<top_floor_ye_w_lzsa
-	sta	location27,Y
+	sta	location27,Y			; MECHE_TOP_FLOOR
 	lda	#>top_floor_ye_w_lzsa
-	sta	location27+1,Y
+	sta	location27+1,Y			; MECHE_TOP_FLOOR
 
 	; change destination to controls
 	ldy	#LOCATION_WEST_EXIT
 	lda	#MECHE_IN_ELEVATOR
-	sta	location27,Y
+	sta	location27,Y			; MECHE_TOP_FLOOR
+
+	; restore ability to look up
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#DIRECTION_W
+	sta	location27,Y			; MECHE_TOP_FLOOR
 
 	jmp	change_location		; tail call
 
@@ -675,14 +688,19 @@ half_and_controls:
 	; change to elevator roof
 	ldy	#LOCATION_WEST_BG
 	lda	#<top_floor_ne_w_lzsa
-	sta	location27,Y
+	sta	location27,Y			; MECHE_TOP_FLOOR
 	lda	#>top_floor_ne_w_lzsa
-	sta	location27+1,Y
+	sta	location27+1,Y			; MECHE_TOP_FLOOR
 
 	; change destination to controls
 	ldy	#LOCATION_WEST_EXIT
 	lda	#MECHE_ROTATE_CONTROLS
-	sta	location27,Y
+	sta	location27,Y			; MECHE_TOP_FLOOR
+
+	; disable ability to look up
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	#$ff
+	sta	location27,Y			; MECHE_TOP_FLOOR
 
 	jmp	elevator_button_done_no_update
 

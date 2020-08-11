@@ -43,6 +43,7 @@ meche_graphics.inc:	\
 	elevator_top_e.lzsa \
 	elevator_half_e.lzsa \
 	top_floor_e.lzsa \
+	top_floor_up_w.lzsa \
 	top_floor_ye_w.lzsa top_floor_ne_w.lzsa \
 	rotate_controls_e.lzsa \
 	eastturn_e.lzsa eastturn_w.lzsa \
@@ -125,6 +126,7 @@ meche_graphics.inc:	\
 	echo "elevator_half_e_lzsa: .incbin \"elevator_half_e.lzsa\"" >> meche_graphics.inc
 	echo "elevator_top_e_lzsa: .incbin \"elevator_top_e.lzsa\"" >> meche_graphics.inc
 	echo "top_floor_e_lzsa: .incbin \"top_floor_e.lzsa\"" >> meche_graphics.inc
+	echo "top_floor_up_w_lzsa: .incbin \"top_floor_up_w.lzsa\"" >> meche_graphics.inc
 	echo "top_floor_ye_w_lzsa: .incbin \"top_floor_ye_w.lzsa\"" >> meche_graphics.inc
 	echo "top_floor_ne_w_lzsa: .incbin \"top_floor_ne_w.lzsa\"" >> meche_graphics.inc
 	echo "rotate_controls_e_lzsa: .incbin \"rotate_controls_e.lzsa\"" >> meche_graphics.inc

@@ -14,7 +14,7 @@ locations:
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
-	.word location40,location41
+	.word location40,location41,location42
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -520,7 +520,10 @@ location27:
 	.word	top_floor_e_lzsa	; east bg
 	.word	top_floor_ye_w_lzsa	; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte	$ff		; special exit
+	.byte	DIRECTION_W	; special exit
+	.byte	13,25		; special x
+	.byte	0,8		; special y
+	.word	goto_top_floor_up-1	; special function
 
 ; MECHE_ROTATE_CONTROLS			-- elevator rotate controls
 location28:
@@ -536,7 +539,7 @@ location28:
 	.word	$0000			; south bg
 	.word	rotate_controls_e_lzsa	; east bg
 	.word	$0000			; west bg
-	.byte	BG_EAST|BG_WEST
+	.byte	BG_EAST
 	.byte	DIRECTION_E	; special exit
 	.byte	13,28		; special x
 	.byte	18,42		; special y
@@ -774,4 +777,22 @@ location41:
 	.byte	22,29		; special x
 	.byte	14,24		; special y
 	.word	meche_take_red_page-1	; special function
+
+; MECHE_TOP_FLOOR_UP			-- looking above elevator
+location42:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	MECHE_TOP_FLOOR		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	top_floor_up_w_lzsa	; west bg
+	.byte	BG_WEST
+	.byte	$ff		; special exit
+
 
