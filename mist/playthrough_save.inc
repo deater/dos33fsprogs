@@ -53,9 +53,9 @@
 .byte $00	; MECHE_LOCK4		=	$A8
 .byte $00	; HOLDING_PAGE		=	$A9
 
-.byte $3
+.byte $4
 		; RED_PAGE_COUNT	=	$AA
-.byte $3
+.byte $4
 		; BLUE_PAGE_COUNT	=	$AB
 
 

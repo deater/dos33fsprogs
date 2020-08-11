@@ -239,7 +239,40 @@ draw_red_page:
 	jmp	put_sprite_crop		; tail call
 
 
+	;========================
+	; draw blue page
+	;========================
+	; also handle jolt
+
 draw_blue_page:
+	lda	DIRECTION
+	cmp	#DIRECTION_W
+	beq	actually_draw_blue_page
+
+	; else, jolting
+	lda	ANIMATE_FRAME
+	beq	not_done_jolt
+
+	lda	FRAMEL
+	and	#$f
+	bne	not_done_jolt
+
+	lda	#0
+	sta	ANIMATE_FRAME
+
+	ldy	#LOCATION_NORTH_BG
+	lda	#<blue_secret_room_n_lzsa
+	sta	location39,Y			; MECHE_BLUE_SECRET_ROOM
+	lda	#>blue_secret_room_n_lzsa
+	sta	location39+1,Y			; MECHE_BLUE_SECRET_ROOM
+
+	jsr	change_direction
+
+not_done_jolt:
+
+	rts
+
+actually_draw_blue_page:
 
 	lda	BLUE_PAGES_TAKEN
 	and	#MECHE_PAGE
@@ -265,6 +298,27 @@ meche_take_red_page:
 	jmp	take_red_page
 
 meche_take_blue_page:
+	lda	DIRECTION
+	cmp	#DIRECTION_W
+	beq	actually_take_blue_page
+
+	; if not, jolt time
+	lda	#1
+	sta	ANIMATE_FRAME
+	lda	#0
+	sta	FRAMEL
+
+	ldy	#LOCATION_NORTH_BG
+	lda	#<blue_secret_room_jolt_n_lzsa
+	sta	location39,Y			; MECHE_BLUE_SECRET_ROOM
+	lda	#>blue_secret_room_jolt_n_lzsa
+	sta	location39+1,Y			; MECHE_BLUE_SECRET_ROOM
+
+	jmp	change_direction
+
+
+actually_take_blue_page:
+
 	lda	#MECHE_PAGE
 	jmp	take_blue_page
 

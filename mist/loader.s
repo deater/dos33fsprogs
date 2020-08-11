@@ -169,7 +169,7 @@ which_disk:
 	.byte '2'		; ARBOR
 	.byte '2'		; NIBEL
 	.byte '1'		; SHIP
-	.byte '3'		; GENERATOR
+	.byte '2'		; GENERATOR
 	.byte '1'		; D'NI
 	.byte '3'		; SUB
 

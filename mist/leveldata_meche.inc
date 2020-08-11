@@ -725,20 +725,20 @@ location38:
 location39:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
-	.byte	$ff			; east exit
-	.byte	MECHE_BLUE_ROOM_CENTER	; west exit
+	.byte	MECHE_BLUE_ROOM_CENTER	; east exit
+	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	$ff		; east exit_dir
-	.byte	DIRECTION_W	; west exit_dir
-	.word	$0000			; north bg
-	.word	$0000			; south bg
-	.word	$0000			; east bg
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	blue_secret_room_n_lzsa	; north bg
+	.word	blue_secret_room_s_lzsa	; south bg
+	.word	blue_secret_room_e_lzsa	; east bg
 	.word	blue_secret_room_w_lzsa	; west bg
-	.byte	BG_WEST
-	.byte   DIRECTION_W
-	.byte	14,18		; special x
-	.byte	32,40		; special y
+	.byte	BG_NORTH | BG_SOUTH | BG_EAST | BG_WEST
+	.byte   DIRECTION_W|DIRECTION_N
+	.byte	8,18		; special x
+	.byte	22,40		; special y
 	.word	meche_take_blue_page-1	; special function
 
 ; MECHE_RED_SECRET_DOOR		-- red room secret door
