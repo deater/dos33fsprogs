@@ -38,17 +38,13 @@ enter_blue_secret:
 
 	lda	#MECHE_BLUE_SECRET_DOOR
 	sta	LOCATION
-	jsr	change_location
-
-	rts
+	jmp	change_location
 
 enter_red_secret:
 
 	lda	#MECHE_RED_SECRET_DOOR
 	sta	LOCATION
-	jsr	change_location
-
-	rts
+	jmp	change_location
 
 
 	;===============================

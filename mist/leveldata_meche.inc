@@ -14,7 +14,7 @@ locations:
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
-	.word location40,location41,location42
+	.word location40,location41,location42,location43
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -748,7 +748,7 @@ location40:
 	.byte	$ff			; east exit
 	.byte	$ff		; west exit
 	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
+	.byte	DIRECTION_E	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	$0000			; north bg
@@ -761,19 +761,19 @@ location40:
 ; MECHE_RED_SECRET_ROOM			-- red room secret room
 location41:
 	.byte	$ff			; north exit
-	.byte	MECHE_RED_ROOM_CENTER	; south exit
+	.byte	$ff			; south exit
 	.byte	$ff			; east exit
-	.byte	$ff			; west exit
+	.byte	MECHE_RED_ROOM_CENTER	; west exit
 	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
-	.word	$0000			; north bg
+	.byte	DIRECTION_W	; west exit_dir
+	.word	red_secret_room_n_lzsa	; north bg
 	.word	red_secret_room_s_lzsa	; south bg
-	.word	$0000			; east bg
-	.word	$0000			; west bg
-	.byte	BG_SOUTH
-	.byte   DIRECTION_S
+	.word	red_secret_room_e_lzsa	; east bg
+	.word	red_secret_room_w_lzsa	; west bg
+	.byte	BG_NORTH | BG_SOUTH | BG_EAST | BG_WEST
+	.byte   DIRECTION_N
 	.byte	22,29		; special x
 	.byte	14,24		; special y
 	.word	meche_take_red_page-1	; special function
@@ -794,5 +794,23 @@ location42:
 	.word	top_floor_up_w_lzsa	; west bg
 	.byte	BG_WEST
 	.byte	$ff		; special exit
+
+; MECHE_ACHENAR_LETTER			-- letter from Achenar
+location43:
+	.byte	$ff			; north exit
+	.byte	MECHE_RED_SECRET_ROOM	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH
+	.byte	$ff		; special exit
+
 
 
