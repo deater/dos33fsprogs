@@ -7,7 +7,7 @@ locations:
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
-	.word location16,location17,location18
+	.word location16,location17,location18,location19
 
 ; NIBEL_IN_ELEV2_TOP_CLOSED	-- inside elevator2 at top, door closed
 location0:
@@ -110,7 +110,7 @@ location4:
 ; NIBEL_BLUE_PATH2	-- path 2 to blue house
 location5:
 	.byte	NIBEL_BLUE_PATH1		; north exit
-	.byte	NIBEL_BLUE_PATH3		; south exit
+	.byte	NIBEL_BLUE_PATH_2P25		; south exit
 	.byte	$ff				; east exit
 	.byte	$ff				; west exit
 	.byte	DIRECTION_N	; north exit_dir
@@ -126,7 +126,7 @@ location5:
 
 ; NIBEL_BLUE_PATH3	-- path 3 to blue house
 location6:
-	.byte	NIBEL_BLUE_PATH2		; north exit
+	.byte	NIBEL_BLUE_PATH_2P25		; north exit
 	.byte	NIBEL_BLUE_ROOM			; south exit
 	.byte	$ff				; east exit
 	.byte	$ff				; west exit
@@ -360,3 +360,21 @@ location18:
 	.word	$0000				; west bg
 	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff
+
+; NIBEL_BLUE_PATH_2P25	-- path 2.25 with the door to conference room
+location19:
+	.byte	NIBEL_BLUE_PATH2		; north exit
+	.byte	NIBEL_BLUE_PATH3		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	blue_path_2p25_n_lzsa		; north bg
+	.word	blue_path_2p25_s_lzsa		; south bg
+	.word	blue_path_2p25_e_lzsa		; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST
+	.byte	$ff
+
