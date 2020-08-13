@@ -6,12 +6,15 @@ For release 1.0
 
 + MIST
 	-- open door to clock puzzle?
-	-- only allow entering ship if it's up
 	-- another stop on path to spaceship.  Out of room though :(
 	-- MIST_ROCKET_PATH_PAD probably missing ship-raised background
 
 + OCTAGON
 	-- load "red page" sound into LC and play it?
+	-- show "burnt" books if click on non-avail book
+	-- adjust grabbing of actual books
+	-- longer speeches from brothers, most notably the
+		page 5 speeches and ending
 
 + SELENA
 	-- load 1s clip of sounds (4k each) into language card?
@@ -25,6 +28,7 @@ For release 1.0
 
 + ARBOR
 	-- rotate windmill if enabled?
+	-- missing treehouses
 
 + NIBEL
 	-- turn on sprite crop in the viewer part
@@ -33,10 +37,7 @@ For release 1.0
 + MECHE
 	-- animations for elevator
 	-- way to turn around in basement
-	-- ability to look up at top of elevator
-	-- look around in the secret rooms
-		-- note from achenar
-
+	-- more of paths to hints
 
 + SUB
 	-- can walk around outside of sub
@@ -53,12 +54,11 @@ Done:
 TODO Maybe future:
 
 MIST:
-+ some sort of switch animation on circuit breakers?
 + look at catherine's letter from other side of path
 + Make clock puzzle more similar to actual game
 
 OCTAGON:
-+ in tower could have extra window open/closed far backgrounds
++ in tower could have extra window open/closed far backgrounds(?)
 + turning when looking at hint loses the text mode
 + line drawing on map isn't optimal
 + should hints be black on white text?
@@ -80,15 +80,11 @@ SELENA age:
 	maybe not bother with aiming antennas, but sum button plays
 	if switch been pushed
 	filler sounds for others?
-+ That whole rediculous underground sub sequence
-+ light switch in tunnel
 + antenna compartment should open/close when you click on it
 + better colors
 
 Channelwood:
 + Windmill animation
-+ Switch flip animation
-+ Open faucet animation
 + Animation for bridge rising
 + Animation for pipe extending
 + Animation for book elevator

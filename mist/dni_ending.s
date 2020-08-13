@@ -300,20 +300,23 @@ atrus_sprite_book_down:	; at 15,6
 ;
 ; ending, both
 ;
+
+           ;          1         2         3
+           ;0123456789012345678901234567890123456789
 atrus_text_both:
-.byte 0,20,"AH, MY FRIEND.  YOU'VE RETURNED.",0
-.byte 0,21,"WE MEET FACE-TO-FACE.",0
-.byte 0,22,"AND THE PAGE, DID YOU BRING THE PAGE?",0
+.byte 5,20,"AH, MY FRIEND.  YOU'VE RETURNED.",0
+.byte 10,21,"WE MEET FACE-TO-FACE.",0
+.byte 2,22,"AND THE PAGE, DID YOU BRING THE PAGE?",0
 .byte 0,23," ",0
 
 ; ending, no white page
 ;
 
 atrus_text_nopage1:
-.byte 0,20,"YOU DIDN'T BRING THE PAGE.",0
-.byte 0,21,"YOU DIDN'T BRING THE PAGE!",0
-.byte 0,22,"WHAT KIND OF FOOL ARE YOU?!",0
-.byte 0,23,"DID YOU NOT TAKE MY WARNING SERIOUSLY?",0
+.byte 7,20,"YOU DIDN'T BRING THE PAGE.",0
+.byte 7,21,"YOU DIDN'T BRING THE PAGE!",0
+.byte 7,22,"WHAT KIND OF FOOL ARE YOU?!",0
+.byte 1,23,"DID YOU NOT TAKE MY WARNING SERIOUSLY?",0
 
 atrus_text_nopage2:
 .byte 17,20,"*SIGH*",0

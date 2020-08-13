@@ -632,8 +632,8 @@ location33:
 	.word	$0000			; west bg
 	.byte	BG_NORTH
 	.byte	DIRECTION_N	; special exit
-	.byte	6,34		; special x
-	.byte	5,35		; special y
+	.byte	2,37		; special x
+	.byte	5,40		; special y
 	.word	turn_page-1	; special function
 
 ; OCTAGON_IN_FIREPLACE_CLOSED		-- in fireplace, closed
