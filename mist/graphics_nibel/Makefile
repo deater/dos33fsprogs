@@ -16,7 +16,9 @@ nibel_graphics.inc:	\
 	blue_path2_n.lzsa blue_path2_s.lzsa \
 	blue_path_2p25_n.lzsa blue_path_2p25_s.lzsa blue_path_2p25_e.lzsa \
 	blue_path_2p5_n.lzsa blue_path_2p5_s.lzsa \
+	blue_path_2p75_n.lzsa blue_path_2p75_s.lzsa \
 	blue_path3_n.lzsa blue_path3_s.lzsa \
+	blue_house_door_n.lzsa blue_house_door_s.lzsa blue_house_door_open_s.lzsa \
 	blue_house_n.lzsa blue_house_s.lzsa blue_house_e.lzsa blue_house_w.lzsa \
 	projector_e.lzsa \
 	red_path1_e.lzsa red_path1_w.lzsa \
@@ -41,8 +43,13 @@ nibel_graphics.inc:	\
 	echo "blue_path_2p25_e_lzsa: .incbin \"blue_path_2p25_e.lzsa\"" >> nibel_graphics.inc
 	echo "blue_path_2p5_n_lzsa: .incbin \"blue_path_2p5_n.lzsa\"" >> nibel_graphics.inc
 	echo "blue_path_2p5_s_lzsa: .incbin \"blue_path_2p5_s.lzsa\"" >> nibel_graphics.inc
+	echo "blue_path_2p75_n_lzsa: .incbin \"blue_path_2p75_n.lzsa\"" >> nibel_graphics.inc
+	echo "blue_path_2p75_s_lzsa: .incbin \"blue_path_2p75_s.lzsa\"" >> nibel_graphics.inc
 	echo "blue_path3_n_lzsa: .incbin \"blue_path3_n.lzsa\"" >> nibel_graphics.inc
 	echo "blue_path3_s_lzsa: .incbin \"blue_path3_s.lzsa\"" >> nibel_graphics.inc
+	echo "blue_house_door_n_lzsa: .incbin \"blue_house_door_n.lzsa\"" >> nibel_graphics.inc
+	echo "blue_house_door_s_lzsa: .incbin \"blue_house_door_s.lzsa\"" >> nibel_graphics.inc
+	echo "blue_house_door_open_s_lzsa: .incbin \"blue_house_door_open_s.lzsa\"" >> nibel_graphics.inc
 	echo "blue_house_n_lzsa: .incbin \"blue_house_n.lzsa\"" >> nibel_graphics.inc
 	echo "blue_house_s_lzsa: .incbin \"blue_house_s.lzsa\"" >> nibel_graphics.inc
 	echo "blue_house_e_lzsa: .incbin \"blue_house_e.lzsa\"" >> nibel_graphics.inc

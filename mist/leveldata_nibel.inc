@@ -8,7 +8,7 @@ locations:
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
-	.word location20
+	.word location20,location21,location22,location23
 
 ; NIBEL_IN_ELEV2_TOP_CLOSED	-- inside elevator2 at top, door closed
 location0:
@@ -127,8 +127,8 @@ location5:
 
 ; NIBEL_BLUE_PATH3	-- path 3 to blue house
 location6:
-	.byte	NIBEL_BLUE_PATH_2P5		; north exit
-	.byte	NIBEL_BLUE_ROOM			; south exit
+	.byte	NIBEL_BLUE_PATH_2P75		; north exit
+	.byte	NIBEL_BLUE_HOUSE_DOOR		; south exit
 	.byte	$ff				; east exit
 	.byte	$ff				; west exit
 	.byte	DIRECTION_N	; north exit_dir
@@ -144,7 +144,7 @@ location6:
 
 ; NIBEL_BLUE_ROOM	-- blue house
 location7:
-	.byte	NIBEL_BLUE_PATH3		; north exit
+	.byte	NIBEL_BLUE_HOUSE_DOOR		; north exit
 	.byte	$ff				; south exit
 	.byte	NIBEL_BLUE_HOUSE_VIEWER		; east exit
 	.byte	$ff				; west exit
@@ -382,7 +382,7 @@ location19:
 ; NIBEL_BLUE_PATH_2P5	-- path 2.5 along the wall
 location20:
 	.byte	NIBEL_BLUE_PATH_2P25		; north exit
-	.byte	NIBEL_BLUE_PATH3		; south exit
+	.byte	NIBEL_BLUE_PATH_2P75		; south exit
 	.byte	$ff				; east exit
 	.byte	$ff				; west exit
 	.byte	DIRECTION_N	; north exit_dir
@@ -395,5 +395,59 @@ location20:
 	.word	$0000				; west bg
 	.byte	BG_NORTH|BG_SOUTH	
 	.byte	$ff
+
+; NIBEL_BLUE_PATH_2P75	-- path 2.75 along the wall
+location21:
+	.byte	NIBEL_BLUE_PATH_2P5		; north exit
+	.byte	NIBEL_BLUE_PATH3		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	blue_path_2p75_n_lzsa		; north bg
+	.word	blue_path_2p75_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH	
+	.byte	$ff
+
+; NIBEL_BLUE_HOUSE_DOOR	-- door outside blue house
+location22:
+	.byte	NIBEL_BLUE_PATH3		; north exit
+	.byte	NIBEL_BLUE_HOUSE_DOOR_OPEN	; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	blue_house_door_n_lzsa		; north bg
+	.word	blue_house_door_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH	
+	.byte	$ff
+
+; NIBEL_BLUE_PATH_2P75	-- blue house door, open
+location23:
+	.byte	NIBEL_BLUE_PATH3		; north exit
+	.byte	NIBEL_BLUE_ROOM			; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	blue_house_door_n_lzsa		; north bg
+	.word	blue_house_door_open_s_lzsa	; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH	
+	.byte	$ff
+
+
+
 
 
