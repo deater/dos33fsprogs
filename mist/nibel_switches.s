@@ -19,6 +19,48 @@ goto_wall:
 	jmp	change_location
 
 
+scary_entrance:
+	lda	#NIBEL_SHACK_ENTRANCE
+	sta	LOCATION
+
+	lda	#DIRECTION_S
+	sta	DIRECTION
+
+	jsr	change_location
+
+	lda	#1
+	sta	ANIMATE_FRAME
+
+	rts
+
+handle_shack_door:
+
+	lda	CURSOR_X
+	cmp	#17
+	bcc	face_door	; blt
+	cmp	#26
+	bcc	go_straight	; blt
+
+	; swing gate (26,27,28,29)
+
+	lda	#1
+	sta	ANIMATE_FRAME
+
+	rts
+
+go_straight:
+	lda	#NIBEL_BLUE_PATH_2P5
+	sta	LOCATION
+	jmp	change_location
+
+face_door:
+	lda	#DIRECTION_E
+	sta	DIRECTION
+	jmp	change_direction
+
+
+
+
 ;=============================
 ;=============================
 ; elevator2 handle pulled

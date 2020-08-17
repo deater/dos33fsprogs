@@ -10,7 +10,7 @@ locations:
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
-	.word location28,location29
+	.word location28,location29,location30
 
 ; NIBEL_IN_ELEV2_TOP_CLOSED	-- inside elevator2 at top, door closed
 location0:
@@ -371,18 +371,21 @@ location18:
 location19:
 	.byte	NIBEL_BLUE_PATH2		; north exit
 	.byte	NIBEL_BLUE_PATH_2P5		; south exit
-	.byte	$ff				; east exit
+	.byte	NIBEL_SHACK_DOOR_OPEN		; east exit
 	.byte	$ff				; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	blue_path_2p25_n_lzsa		; north bg
 	.word	blue_path_2p25_s_lzsa		; south bg
 	.word	blue_path_2p25_e_lzsa		; east bg
 	.word	$0000				; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST
-	.byte	$ff
+	.byte	DIRECTION_S	; special exit
+	.byte	11,29		; special x
+	.byte	4,44		; special y
+	.word	handle_shack_door-1	; special function
 
 ; NIBEL_BLUE_PATH_2P5	-- path 2.5 along the wall
 location20:
@@ -503,8 +506,8 @@ location26:
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	shack_hallway_n_lzsa		; north bg
-	.word	shack_hallway_s_lzsa		; south bg
+	.word	shack_exit_n_lzsa		; north bg
+	.word	shack_exit_s_lzsa		; south bg
 	.word	$0000				; east bg
 	.word	$0000				; west bg
 	.byte	BG_NORTH|BG_SOUTH	
@@ -520,8 +523,8 @@ location27:
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	shack_hallway_n_lzsa		; north bg
-	.word	shack_hallway_s_lzsa		; south bg
+	.word	shack_center_n_lzsa		; north bg
+	.word	shack_center_s_lzsa		; south bg
 	.word	$0000				; east bg
 	.word	$0000				; west bg
 	.byte	BG_NORTH|BG_SOUTH	
@@ -537,8 +540,8 @@ location28:
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	shack_hallway_n_lzsa		; north bg
-	.word	shack_hallway_s_lzsa		; south bg
+	.word	shack_entrance_n_lzsa		; north bg
+	.word	shack_entrance_s_lzsa		; south bg
 	.word	$0000				; east bg
 	.word	$0000				; west bg
 	.byte	BG_NORTH|BG_SOUTH	
@@ -554,9 +557,30 @@ location29:
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	shack_hallway_n_lzsa		; north bg
-	.word	shack_hallway_s_lzsa		; south bg
+	.word	shack_entrance_open_n_lzsa	; north bg
+	.word	shack_entrance_s_lzsa		; south bg
 	.word	$0000				; east bg
 	.word	$0000				; west bg
 	.byte	BG_NORTH|BG_SOUTH	
 	.byte	$ff
+
+; NIBEL_SHACK_DOOR_OPEN	-- open door to conference room
+location30:
+	.byte	NIBEL_BLUE_PATH2		; north exit
+	.byte	NIBEL_BLUE_PATH_2P5		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	blue_path_2p25_n_lzsa		; north bg
+	.word	blue_path_2p25_s_lzsa		; south bg
+	.word	blue_path_2p25_open_e_lzsa	; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST
+	.byte	DIRECTION_E	; special exit
+	.byte	11,27		; special x
+	.byte	4,44		; special y
+	.word	scary_entrance-1	; special function
+

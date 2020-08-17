@@ -15,6 +15,7 @@ nibel_graphics.inc:	\
 	blue_path1_n.lzsa blue_path1_s.lzsa \
 	blue_path2_n.lzsa blue_path2_s.lzsa \
 	blue_path_2p25_n.lzsa blue_path_2p25_s.lzsa blue_path_2p25_e.lzsa \
+	blue_path_2p25_open_e.lzsa \
 	blue_path_2p5_n.lzsa blue_path_2p5_s.lzsa \
 	blue_path_2p75_n.lzsa blue_path_2p75_s.lzsa \
 	blue_path3_n.lzsa blue_path3_s.lzsa \
@@ -28,7 +29,10 @@ nibel_graphics.inc:	\
 	red_room_bed_w.lzsa red_room_bed_open_w.lzsa \
 	right_letter.lzsa \
 	shack_outside_n.lzsa shack_outside_s.lzsa \
-	shack_hallway_n.lzsa shack_hallway_s.lzsa
+	shack_hallway_n.lzsa shack_hallway_s.lzsa \
+	shack_exit_n.lzsa shack_exit_s.lzsa \
+	shack_center_n.lzsa shack_center_s.lzsa \
+	shack_entrance_n.lzsa shack_entrance_s.lzsa shack_entrance_open_n.lzsa
 	echo "elevator2_open_top_lzsa: .incbin \"elevator2_open_top.lzsa\"" > nibel_graphics.inc
 	echo "elevator2_closed_top_lzsa: .incbin \"elevator2_closed_top.lzsa\"" >> nibel_graphics.inc
 	echo "outside_elevator2_e_lzsa: .incbin \"outside_elevator2_e.lzsa\"" >> nibel_graphics.inc
@@ -43,6 +47,7 @@ nibel_graphics.inc:	\
 	echo "blue_path_2p25_n_lzsa: .incbin \"blue_path_2p25_n.lzsa\"" >> nibel_graphics.inc
 	echo "blue_path_2p25_s_lzsa: .incbin \"blue_path_2p25_s.lzsa\"" >> nibel_graphics.inc
 	echo "blue_path_2p25_e_lzsa: .incbin \"blue_path_2p25_e.lzsa\"" >> nibel_graphics.inc
+	echo "blue_path_2p25_open_e_lzsa: .incbin \"blue_path_2p25_open_e.lzsa\"" >> nibel_graphics.inc
 	echo "blue_path_2p5_n_lzsa: .incbin \"blue_path_2p5_n.lzsa\"" >> nibel_graphics.inc
 	echo "blue_path_2p5_s_lzsa: .incbin \"blue_path_2p5_s.lzsa\"" >> nibel_graphics.inc
 	echo "blue_path_2p75_n_lzsa: .incbin \"blue_path_2p75_n.lzsa\"" >> nibel_graphics.inc
@@ -75,8 +80,13 @@ nibel_graphics.inc:	\
 	echo "shack_outside_s_lzsa: .incbin \"shack_outside_s.lzsa\"" >> nibel_graphics.inc
 	echo "shack_hallway_n_lzsa: .incbin \"shack_hallway_n.lzsa\"" >> nibel_graphics.inc
 	echo "shack_hallway_s_lzsa: .incbin \"shack_hallway_s.lzsa\"" >> nibel_graphics.inc
-
-
+	echo "shack_exit_n_lzsa: .incbin \"shack_exit_n.lzsa\"" >> nibel_graphics.inc
+	echo "shack_exit_s_lzsa: .incbin \"shack_exit_s.lzsa\"" >> nibel_graphics.inc
+	echo "shack_center_n_lzsa: .incbin \"shack_center_n.lzsa\"" >> nibel_graphics.inc
+	echo "shack_center_s_lzsa: .incbin \"shack_center_s.lzsa\"" >> nibel_graphics.inc
+	echo "shack_entrance_n_lzsa: .incbin \"shack_entrance_n.lzsa\"" >> nibel_graphics.inc
+	echo "shack_entrance_open_n_lzsa: .incbin \"shack_entrance_open_n.lzsa\"" >> nibel_graphics.inc
+	echo "shack_entrance_s_lzsa: .incbin \"shack_entrance_s.lzsa\"" >> nibel_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
