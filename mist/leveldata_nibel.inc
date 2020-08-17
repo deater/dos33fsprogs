@@ -9,6 +9,8 @@ locations:
 	.word location12,location13,location14,location15
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
+	.word location24,location25,location26,location27
+	.word location28,location29
 
 ; NIBEL_IN_ELEV2_TOP_CLOSED	-- inside elevator2 at top, door closed
 location0:
@@ -140,7 +142,10 @@ location6:
 	.word	$0000				; east bg
 	.word	$0000				; west bg
 	.byte	BG_NORTH|BG_SOUTH
-	.byte	$ff
+	.byte	DIRECTION_N	; special exit
+	.byte	23,35		; special x
+	.byte	6,42		; special y
+	.word	goto_shack_outside-1	; special function
 
 ; NIBEL_BLUE_ROOM	-- blue house
 location7:
@@ -411,7 +416,10 @@ location21:
 	.word	$0000				; east bg
 	.word	$0000				; west bg
 	.byte	BG_NORTH|BG_SOUTH	
-	.byte	$ff
+	.byte	DIRECTION_S	; special exit
+	.byte	5,16		; special x
+	.byte	6,42		; special y
+	.word	goto_shack_outside-1	; special function
 
 ; NIBEL_BLUE_HOUSE_DOOR	-- door outside blue house
 location22:
@@ -430,7 +438,7 @@ location22:
 	.byte	BG_NORTH|BG_SOUTH	
 	.byte	$ff
 
-; NIBEL_BLUE_PATH_2P75	-- blue house door, open
+; NIBEL_BLUE_HOUSE_DOOR_OPEN	-- blue house door, open
 location23:
 	.byte	NIBEL_BLUE_PATH3		; north exit
 	.byte	NIBEL_BLUE_ROOM			; south exit
@@ -444,10 +452,111 @@ location23:
 	.word	blue_house_door_open_s_lzsa	; south bg
 	.word	$0000				; east bg
 	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$ff			; special function
+
+; NIBEL_SHACK_OUTSIDE	-- outside the weird shack
+location24:
+	.byte	NIBEL_SHACK_HALLWAY		; north exit
+	.byte	NIBEL_BLUE_PATH3		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	shack_outside_n_lzsa		; north bg
+	.word	shack_outside_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH	
+	.byte	DIRECTION_S	; special exit
+	.byte	23,35		; special x
+	.byte	6,42		; special y
+	.word	goto_wall-1	; special function
+
+
+; NIBEL_SHACK_HALLWAY	-- outside the weird shack, in the hallway
+location25:
+	.byte	NIBEL_SHACK_EXIT		; north exit
+	.byte	NIBEL_SHACK_OUTSIDE		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	shack_hallway_n_lzsa		; north bg
+	.word	shack_hallway_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
 	.byte	BG_NORTH|BG_SOUTH	
 	.byte	$ff
 
+; NIBEL_SHACK_EXIT	-- exit of the weird shack
+location26:
+	.byte	NIBEL_SHACK_CENTER		; north exit
+	.byte	NIBEL_SHACK_HALLWAY		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	shack_hallway_n_lzsa		; north bg
+	.word	shack_hallway_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH	
+	.byte	$ff
 
+; NIBEL_SHACK_CENTER	-- center of the weird shack
+location27:
+	.byte	NIBEL_SHACK_ENTRANCE		; north exit
+	.byte	NIBEL_SHACK_EXIT		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	shack_hallway_n_lzsa		; north bg
+	.word	shack_hallway_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH	
+	.byte	$ff
 
+; NIBEL_SHACK_ENTRANCE	-- entranceway of the weird shack
+location28:
+	.byte	NIBEL_SHACK_ENTRANCE_OPEN	; north exit
+	.byte	NIBEL_SHACK_CENTER		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	shack_hallway_n_lzsa		; north bg
+	.word	shack_hallway_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH	
+	.byte	$ff
 
-
+; NIBEL_SHACK_ENTRANCE_OPEN	-- entranceway of the weird shack, door open
+location29:
+	.byte	NIBEL_BLUE_PATH_2P25		; north exit
+	.byte	NIBEL_SHACK_CENTER		; south exit
+	.byte	$ff				; east exit
+	.byte	$ff				; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	shack_hallway_n_lzsa		; north bg
+	.word	shack_hallway_s_lzsa		; south bg
+	.word	$0000				; east bg
+	.word	$0000				; west bg
+	.byte	BG_NORTH|BG_SOUTH	
+	.byte	$ff

@@ -1,20 +1,39 @@
 
 
+goto_shack_outside:
+	lda	#NIBEL_SHACK_OUTSIDE
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+
+	jmp	change_location
+
+goto_wall:
+	lda	#NIBEL_BLUE_PATH_2P75
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+
+	jmp	change_location
+
+
 ;=============================
 ;=============================
 ; elevator2 handle pulled
 ;=============================
 ;=============================
 
-
-; FIXME: check for water power
 ; FIXME: animate
 elevator2_handle:
 
 	; click speaker
 	bit	SPEAKER
 
-	; check for water power
+	; check for water power?
+	; in theory can't get here unless there is water power
+	; so assume it is still active
 
 	lda	#ARBOR_INSIDE_ELEV2_CLOSED
 	sta	LOCATION
