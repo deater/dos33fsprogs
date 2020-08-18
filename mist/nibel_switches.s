@@ -1,3 +1,183 @@
+draw_gate_animation_s:
+	rts
+
+draw_gate_animation_n:
+	rts
+
+close_rts:
+	rts
+
+draw_projection:
+	lda	DIRECTION
+	cmp	#DIRECTION_S
+	bne	close_rts
+
+	lda	ANIMATE_FRAME
+	beq	close_rts
+
+	cmp	#2	; blt
+	bcc	projection_inc_frame	; start with nothing
+	beq	setup_background
+	bne	projector_animation
+
+	; setup light background with text
+setup_background:
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<shack_entrance_playing_s_lzsa
+	sta	location28,Y			; NIBEL_SHACK_ENTRANCE
+	lda	#>shack_entrance_playing_s_lzsa
+	sta	location28+1,Y			; NIBEL_SHACK_ENTRANCE
+
+	lda	#DIRECTION_S|DIRECTION_SPLIT
+	jsr	change_direction
+	bit	TEXTGR
+
+	lda	DRAW_PAGE
+	pha
+
+	lda	#8
+	sta	DRAW_PAGE
+
+	lda	NIBEL_PROJECTOR
+	asl
+	tay
+	lda	viewer_text,Y
+	sta	OUTL
+	lda	viewer_text+1,Y
+	sta	OUTH
+
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+
+	pla
+	sta	DRAW_PAGE
+
+	inc	ANIMATE_FRAME
+
+projector_animation:
+	lda	ANIMATE_FRAME
+	asl
+	tay
+	lda	achenar_projection_sprites,Y
+	sta	INL
+	lda	achenar_projection_sprites+1,Y
+	sta	INH
+	lda	#11
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+
+
+	jsr	put_sprite_crop
+
+
+	; increment animation
+projection_inc_frame:
+	lda	FRAMEL
+	and	#$3f
+	bne	done_projection
+	inc	ANIMATE_FRAME
+	lda	ANIMATE_FRAME
+	cmp	#20
+	bne	done_projection
+
+
+	; reset
+	lda	#0
+	sta	ANIMATE_FRAME
+
+	ldy	#LOCATION_SOUTH_BG
+	lda	#<shack_entrance_s_lzsa
+	sta	location28,Y			; NIBEL_SHACK_ENTRANCE
+	lda	#>shack_entrance_s_lzsa
+	sta	location28+1,Y			; NIBEL_SHACK_ENTRANCE
+
+	lda	#DIRECTION_S
+	jsr	change_location
+
+done_projection:
+
+	rts
+
+
+
+achenar_projection_sprites:
+	.word	achenar_sprite0		; 0	skipped
+	.word	achenar_sprite0		; 1	skipped
+	.word	achenar_sprite0		; 2	only bg
+	.word	achenar_sprite0		; 3
+	.word	achenar_sprite1		; 4
+	.word	achenar_sprite2		; 5
+	.word	achenar_sprite1		; 6
+	.word	achenar_sprite2		; 7
+	.word	achenar_sprite1		; 8
+	.word	achenar_sprite2		; 9
+	.word	achenar_sprite1		; 10
+	.word	achenar_sprite3		; 11
+	.word	achenar_sprite1		; 12
+	.word	achenar_sprite2		; 13
+	.word	achenar_sprite1		; 14
+	.word	achenar_sprite3		; 15
+	.word	achenar_sprite1		; 16
+	.word	achenar_sprite2		; 17
+	.word	achenar_sprite0		; 18
+	.word	empty_sprite		; 19
+
+
+
+
+
+empty_sprite:
+	.byte 1,1
+	.byte $AA
+
+achenar_sprite0:
+	.byte	7,8
+	.byte	$AA,$EA,$A0,$0A,$A0,$0A,$AA
+	.byte	$A5,$EA,$AE,$6A,$A6,$6A,$A0
+	.byte	$AE,$0A,$AE,$FA,$A6,$0A,$A0
+	.byte	$AE,$EA,$A0,$FA,$A0,$6A,$A0
+	.byte	$AE,$EA,$AE,$EA,$A6,$6A,$A0
+	.byte	$AE,$EA,$A0,$0A,$A6,$0A,$A0
+	.byte	$A0,$0A,$A6,$5A,$A0,$0A,$A0
+	.byte	$A6,$0A,$A0,$0A,$A0,$AA,$AA
+
+achenar_sprite1:
+	.byte	7,8
+	.byte	$AA,$E0,$E0,$00,$00,$0A,$AA
+	.byte	$55,$EE,$EE,$66,$66,$66,$00
+	.byte	$EE,$0E,$0E,$F6,$06,$06,$00
+	.byte	$EE,$EE,$E0,$FF,$60,$66,$00
+	.byte	$EE,$EE,$5E,$EF,$66,$66,$00
+	.byte	$0E,$EE,$00,$00,$06,$00,$00
+	.byte	$00,$00,$56,$56,$00,$00,$00
+	.byte	$A6,$00,$00,$00,$00,$A0,$AA
+
+achenar_sprite2:
+	.byte	7,8
+	.byte	$AA,$E0,$E0,$00,$00,$0A,$AA
+	.byte	$55,$EE,$EE,$66,$66,$66,$00
+	.byte	$EE,$EE,$EE,$F6,$66,$66,$00
+	.byte	$EE,$E0,$E0,$FF,$60,$60,$00
+	.byte	$EE,$EE,$0E,$EF,$66,$66,$00
+	.byte	$0E,$0E,$F0,$F0,$06,$00,$00
+	.byte	$00,$00,$E6,$E6,$00,$00,$00
+	.byte	$A6,$00,$00,$00,$00,$A0,$AA
+
+achenar_sprite3:
+	.byte	7,8
+	.byte	$AA,$E0,$E0,$00,$00,$0A,$AA
+	.byte	$55,$EE,$EE,$66,$66,$66,$00
+	.byte	$EE,$E0,$00,$F6,$00,$60,$00
+	.byte	$EE,$EE,$E0,$FF,$60,$66,$00
+	.byte	$EE,$EE,$0E,$0F,$66,$66,$00
+	.byte	$0E,$00,$2F,$2F,$00,$00,$00
+	.byte	$00,$00,$22,$22,$00,$00,$00
+	.byte	$A6,$00,$00,$00,$00,$A0,$AA
+
+
 
 
 goto_shack_outside:
@@ -28,8 +208,10 @@ scary_entrance:
 
 	jsr	change_location
 
-	lda	#1
+	lda	#$1
 	sta	ANIMATE_FRAME
+	lda	#$f
+	sta	FRAMEL
 
 	rts
 
@@ -201,6 +383,9 @@ button0:
 	lda	#>button0_and_2_animation
 	sta	current_button_animation+1
 
+	lda	#0
+	sta	NIBEL_PROJECTOR
+
 	lda	#<viewer1_text
 	sta	OUTL
 	lda	#>viewer1_text
@@ -217,6 +402,9 @@ button1:
 	lda	#>button1_animation
 	sta	current_button_animation+1
 
+	lda	#1
+	sta	NIBEL_PROJECTOR
+
 	lda	#<viewer2_text
 	sta	OUTL
 	lda	#>viewer2_text
@@ -232,6 +420,9 @@ button2:
 	lda	#>button0_and_2_animation
 	sta	current_button_animation+1
 
+	lda	#2
+	sta	NIBEL_PROJECTOR
+
 	lda	#<viewer3_text
 	sta	OUTL
 	lda	#>viewer3_text
@@ -246,6 +437,9 @@ button3:
 	sta	current_button_animation
 	lda	#>button3_animation
 	sta	current_button_animation+1
+
+	lda	#3
+	sta	NIBEL_PROJECTOR
 
 	lda	#<viewer4_text
 	sta	OUTL
@@ -316,23 +510,38 @@ nibel_open_drawer:
 
 
 ; viewer
+viewer_text:
+	.word viewer1_text
+	.word viewer2_text
+	.word viewer3_text
+	.word viewer4_text
+
 
 ; position 1
 ; [talking in another language]
 
 viewer1_text:
 .byte 5,22,"[ WORDS IN ANOTHER LANGUAGE ]",0
+.byte 0,23,0
+.byte 0,23,0
+.byte 0,23,0
 
 ; position 2
 ; [scary talking in another language]
 viewer2_text:
 .byte 1,22,"[ OMINOUS WORDS IN ANOTHER LANGUAGE ]",0
+.byte 0,23,0
+.byte 0,23,0
+.byte 0,23,0
 
 ; position 3
 ; [ more talking in another language]
 
 viewer3_text:
 .byte 9,22,"[ MORE OMINOUS WORDS ]",0
+.byte 0,23,0
+.byte 0,23,0
+.byte 0,23,0
 
 ; position 4
 ; Sirrus: I hope I pushed the right button

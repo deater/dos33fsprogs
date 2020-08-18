@@ -54,7 +54,7 @@ load_loop:
 	lda	$e00,X
 	sta	WHICH_LOAD,X
 	inx
-	cpx	#(END_OF_SAVE-WHICH_LOAD)
+	cpx	#(END_OF_SAVE-WHICH_LOAD+1)
 	bne	load_loop
 
 	lda	#$ff

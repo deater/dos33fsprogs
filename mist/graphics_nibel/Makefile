@@ -32,7 +32,8 @@ nibel_graphics.inc:	\
 	shack_hallway_n.lzsa shack_hallway_s.lzsa \
 	shack_exit_n.lzsa shack_exit_s.lzsa \
 	shack_center_n.lzsa shack_center_s.lzsa \
-	shack_entrance_n.lzsa shack_entrance_s.lzsa shack_entrance_open_n.lzsa
+	shack_entrance_n.lzsa shack_entrance_s.lzsa shack_entrance_open_n.lzsa \
+	shack_entrance_playing_s.lzsa
 	echo "elevator2_open_top_lzsa: .incbin \"elevator2_open_top.lzsa\"" > nibel_graphics.inc
 	echo "elevator2_closed_top_lzsa: .incbin \"elevator2_closed_top.lzsa\"" >> nibel_graphics.inc
 	echo "outside_elevator2_e_lzsa: .incbin \"outside_elevator2_e.lzsa\"" >> nibel_graphics.inc
@@ -87,6 +88,8 @@ nibel_graphics.inc:	\
 	echo "shack_entrance_n_lzsa: .incbin \"shack_entrance_n.lzsa\"" >> nibel_graphics.inc
 	echo "shack_entrance_open_n_lzsa: .incbin \"shack_entrance_open_n.lzsa\"" >> nibel_graphics.inc
 	echo "shack_entrance_s_lzsa: .incbin \"shack_entrance_s.lzsa\"" >> nibel_graphics.inc
+	echo "shack_entrance_playing_s_lzsa: .incbin \"shack_entrance_playing_s.lzsa\"" >> nibel_graphics.inc
+
 
 %.gr: %.png
 	$(PNG2GR) $< $@

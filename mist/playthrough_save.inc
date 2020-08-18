@@ -109,3 +109,4 @@
 
 .byte $00	; SUB_DIRECTION		=	$D6
 .byte $00	; SUB_LOCATION		=	$D7
+.byte $00	; NIBEL_PROJECTOR	=	$D8

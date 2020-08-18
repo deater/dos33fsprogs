@@ -273,8 +273,9 @@ SELENA_ANTENNA_ACTIVE	= $D5	; which antenna currently selected
 SUB_LOCATION		= $D6
 SUB_DIRECTION		= $D7
 
+NIBEL_PROJECTOR		= $D8	; which button on projector in nibel
 
-END_OF_SAVE	=	$D8
+END_OF_SAVE	=	$D9
 
 
 ; done game puzzle state
