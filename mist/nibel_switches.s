@@ -1,4 +1,52 @@
+touch_gate_n:
+	lda	#2
+	sta	ANIMATE_FRAME
+	rts
+
+
 update_gate_n:
+
+	lda	ANIMATE_FRAME
+	beq	open_gate_n
+	bne	close_gate_n
+
+open_gate_n:
+	ldy	#LOCATION_NORTH_BG
+	lda	location20,Y		; NIBEL_BLUE_PATH_2P5
+	cmp	#<blue_path_2p5_n_lzsa
+	beq	done_open_gate_n	; see if already open
+
+	lda	#<blue_path_2p5_n_lzsa
+	sta	location20,Y		; NIBEL_BLUE_PATH_2P5
+	lda	#>blue_path_2p5_n_lzsa
+	sta	location20+1,Y		; NIBEL_BLUE_PATH_2P5
+	jsr	change_direction
+done_open_gate_n:
+	rts
+
+close_gate_n:
+	ldy	#LOCATION_NORTH_BG
+	lda	location20,Y		; NIBEL_BLUE_PATH_2P5
+	cmp	#<blue_path_2p5_gate_n_lzsa
+	beq	done_close_gate_n	; see if already closed
+
+	lda	#<blue_path_2p5_gate_n_lzsa
+	sta	location20,Y		; NIBEL_BLUE_PATH_2P5
+	lda	#>blue_path_2p5_gate_n_lzsa
+	sta	location20+1,Y		; NIBEL_BLUE_PATH_2P5
+
+	jsr	change_direction
+
+done_close_gate_n:
+
+	lda	FRAMEL
+	and	#$3f
+	bne	really_done_close_gate_n
+
+	dec	ANIMATE_FRAME
+
+really_done_close_gate_n:
+
 	rts
 
 update_gate_s:
@@ -54,27 +102,28 @@ really_done_close_gate_s:
 
 
 
-draw_gate_animation_s:
-	lda	DIRECTION
-	cmp	#DIRECTION_S
-	bne	done_gate_s
 
-	lda	ANIMATE_FRAME
-	beq	done_gate_s
+;draw_gate_animation_s:
+;	lda	DIRECTION
+;	cmp	#DIRECTION_S
+;	bne	done_gate_s
 
-done_gate_s:
-	rts
+;	lda	ANIMATE_FRAME
+;	beq	done_gate_s
 
-draw_gate_animation_n:
-	lda	DIRECTION
-	cmp	#DIRECTION_N
-	bne	done_gate_n
+;done_gate_s:
+;	rts
 
-	lda	ANIMATE_FRAME
-	beq	done_gate_n
+;draw_gate_animation_n:
+;	lda	DIRECTION
+;	cmp	#DIRECTION_N
+;	bne	done_gate_n
 
-done_gate_n:
-	rts
+;	lda	ANIMATE_FRAME
+;	beq	done_gate_n
+
+;done_gate_n:
+;	rts
 
 
 	;=================================

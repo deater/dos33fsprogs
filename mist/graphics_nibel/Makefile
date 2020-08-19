@@ -18,6 +18,7 @@ nibel_graphics.inc:	\
 	blue_path_2p25_open_e.lzsa \
 	blue_path_2p25_gate_s.lzsa \
 	blue_path_2p5_n.lzsa blue_path_2p5_s.lzsa \
+	blue_path_2p5_gate_n.lzsa \
 	blue_path_2p75_n.lzsa blue_path_2p75_s.lzsa \
 	blue_path3_n.lzsa blue_path3_s.lzsa \
 	blue_house_door_n.lzsa blue_house_door_s.lzsa blue_house_door_open_s.lzsa \
@@ -53,6 +54,7 @@ nibel_graphics.inc:	\
 	echo "blue_path_2p25_gate_s_lzsa: .incbin \"blue_path_2p25_gate_s.lzsa\"" >> nibel_graphics.inc
 	echo "blue_path_2p5_n_lzsa: .incbin \"blue_path_2p5_n.lzsa\"" >> nibel_graphics.inc
 	echo "blue_path_2p5_s_lzsa: .incbin \"blue_path_2p5_s.lzsa\"" >> nibel_graphics.inc
+	echo "blue_path_2p5_gate_n_lzsa: .incbin \"blue_path_2p5_gate_n.lzsa\"" >> nibel_graphics.inc
 	echo "blue_path_2p75_n_lzsa: .incbin \"blue_path_2p75_n.lzsa\"" >> nibel_graphics.inc
 	echo "blue_path_2p75_s_lzsa: .incbin \"blue_path_2p75_s.lzsa\"" >> nibel_graphics.inc
 	echo "blue_path3_n_lzsa: .incbin \"blue_path3_n.lzsa\"" >> nibel_graphics.inc

@@ -402,7 +402,11 @@ location20:
 	.word	$0000				; east bg
 	.word	$0000				; west bg
 	.byte	BG_NORTH|BG_SOUTH	
-	.byte	$ff
+	.byte	DIRECTION_N	; special exit
+	.byte	11,17		; special x
+	.byte	0,46		; special y
+	.word	touch_gate_n-1	; special function
+
 
 ; NIBEL_BLUE_PATH_2P75	-- path 2.75 along the wall
 location21:
