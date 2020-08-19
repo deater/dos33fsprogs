@@ -586,4 +586,4 @@ location30:
 	.byte	11,27		; special x
 	.byte	4,44		; special y
 	.word	scary_entrance-1	; special function
-
+	; FIXME: we should also still handle south stuff if possible

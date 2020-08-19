@@ -1,3 +1,59 @@
+update_gate_n:
+	rts
+
+update_gate_s:
+
+	lda	ANIMATE_FRAME
+	beq	open_gate_s
+	bne	close_gate_s
+
+open_gate_s:
+	ldy	#LOCATION_SOUTH_BG
+	lda	location19,Y		; NIBEL_BLUE_PATH_2P25
+	cmp	#<blue_path_2p25_s_lzsa
+	beq	done_open_gate_s	; see if already open
+
+	lda	#<blue_path_2p25_s_lzsa
+	sta	location19,Y		; NIBEL_BLUE_PATH_2P25
+	lda	#>blue_path_2p25_s_lzsa
+	sta	location19+1,Y		; NIBEL_BLUE_PATH_2P25
+	jsr	change_direction
+done_open_gate_s:
+	rts
+
+close_gate_s:
+	ldy	#LOCATION_SOUTH_BG
+	lda	location19,Y		; NIBEL_BLUE_PATH_2P25
+	cmp	#<blue_path_2p25_gate_s_lzsa
+	beq	done_close_gate_s	; see if already closed
+
+	lda	#<blue_path_2p25_gate_s_lzsa
+	sta	location19,Y		; NIBEL_BLUE_PATH_2P25
+	lda	#>blue_path_2p25_gate_s_lzsa
+	sta	location19+1,Y		; NIBEL_BLUE_PATH_2P25
+
+;	lda	ANIMATE_FRAME
+;	pha
+
+	jsr	change_direction
+
+;	pla
+;	sta	ANIMATE_FRAME
+
+done_close_gate_s:
+
+	lda	FRAMEL
+	and	#$3f
+	bne	really_done_close_gate_s
+
+	dec	ANIMATE_FRAME
+
+really_done_close_gate_s:
+
+	rts
+
+
+
 draw_gate_animation_s:
 	lda	DIRECTION
 	cmp	#DIRECTION_S
@@ -435,7 +491,7 @@ handle_shack_door:
 
 	; swing gate (26,27,28,29)
 
-	lda	#1
+	lda	#2
 	sta	ANIMATE_FRAME
 
 	rts

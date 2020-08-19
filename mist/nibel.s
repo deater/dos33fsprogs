@@ -83,6 +83,10 @@ game_loop:
 	beq	animate_projector
 	cmp	#NIBEL_SHACK_CENTER
 	beq	animate_trap
+	cmp	#NIBEL_BLUE_PATH_2P25
+	beq	animate_gate_s
+	cmp	#NIBEL_BLUE_PATH_2P5
+	beq	animate_gate_n
 
 	jmp	nothing_special
 
@@ -100,6 +104,14 @@ animate_projector:
 
 animate_trap:
 	jsr	draw_trap
+	jmp	nothing_special
+
+animate_gate_s:
+	jsr	update_gate_s
+	jmp	nothing_special
+
+animate_gate_n:
+	jsr	update_gate_n
 	jmp	nothing_special
 
 animate_viewer:
