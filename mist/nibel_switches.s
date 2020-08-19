@@ -57,12 +57,28 @@ setup_background:
 	inc	ANIMATE_FRAME
 
 projector_animation:
+	lda	NIBEL_PROJECTOR
+	cmp	#3
+	bne	draw_achenar
+
+draw_sirrus:
+	lda	ANIMATE_FRAME
+	asl
+	tay
+	lda	sirrus_projection_sprites,Y
+	sta	INL
+	lda	sirrus_projection_sprites+1,Y
+	jmp	draw_common
+
+draw_achenar:
 	lda	ANIMATE_FRAME
 	asl
 	tay
 	lda	achenar_projection_sprites,Y
 	sta	INL
 	lda	achenar_projection_sprites+1,Y
+
+draw_common:
 	sta	INH
 	lda	#11
 	sta	XPOS
@@ -125,13 +141,79 @@ achenar_projection_sprites:
 	.word	achenar_sprite0		; 18
 	.word	empty_sprite		; 19
 
-
-
-
+sirrus_projection_sprites:
+	.word	sirrus_sprite0		; 0	skipped
+	.word	sirrus_sprite0		; 1	skipped
+	.word	sirrus_sprite0		; 2	only bg
+	.word	sirrus_sprite0		; 3
+	.word	sirrus_sprite1		; 4
+	.word	sirrus_sprite2		; 5
+	.word	sirrus_sprite3		; 6
+	.word	sirrus_sprite2		; 7
+	.word	sirrus_sprite3		; 8
+	.word	sirrus_sprite2		; 9
+	.word	sirrus_sprite3		; 10
+	.word	sirrus_sprite2		; 11
+	.word	sirrus_sprite3		; 12
+	.word	sirrus_sprite2		; 13
+	.word	sirrus_sprite3		; 14
+	.word	sirrus_sprite2		; 15
+	.word	sirrus_sprite1		; 16
+	.word	sirrus_sprite1		; 17
+	.word	sirrus_sprite0		; 18
+	.word	empty_sprite		; 19
 
 empty_sprite:
 	.byte 1,1
 	.byte $AA
+
+sirrus_sprite0:
+	.byte	6,9
+	.byte	$AA,$0A,$A0,$0A,$AA,$AA
+	.byte	$A0,$6A,$A5,$6A,$AE,$AA
+	.byte	$A6,$0A,$A5,$0A,$AE,$AA
+	.byte	$A6,$6A,$A5,$5A,$AE,$AA
+	.byte	$AE,$6A,$AE,$5A,$AE,$AA
+	.byte	$AE,$6A,$AE,$5A,$AE,$AA
+	.byte	$A6,$6A,$AF,$5A,$AE,$AA
+	.byte	$AA,$6A,$A5,$6A,$AA,$AA
+	.byte	$AA,$EA,$A0,$5A,$A5,$5A
+
+sirrus_sprite1:
+	.byte	6,9
+	.byte	$0A,$00,$00,$00,$0A,$AA
+	.byte	$60,$66,$55,$66,$EE,$AA
+	.byte	$06,$06,$55,$06,$0E,$AA
+	.byte	$66,$60,$E5,$50,$EE,$AA
+	.byte	$EE,$66,$EE,$55,$EE,$AA
+	.byte	$EE,$66,$5E,$55,$EE,$AA
+	.byte	$66,$6F,$FF,$5F,$EE,$AA
+	.byte	$AA,$66,$55,$66,$AA,$AA
+	.byte	$AA,$E0,$50,$50,$55,$5A
+
+sirrus_sprite2:
+	.byte	6,9
+	.byte	$0A,$60,$50,$E0,$0A,$AA
+	.byte	$60,$66,$55,$66,$EE,$AA
+	.byte	$66,$60,$55,$60,$EE,$AA
+	.byte	$60,$60,$EE,$50,$E0,$AA
+	.byte	$EE,$66,$EE,$55,$EE,$AA
+	.byte	$EE,$66,$50,$55,$EE,$AA
+	.byte	$66,$60,$00,$50,$EE,$AA
+	.byte	$AA,$06,$55,$06,$AA,$AA
+	.byte	$AA,$EE,$50,$55,$55,$5A
+
+sirrus_sprite3:
+	.byte	6,9
+	.byte	$0A,$00,$00,$00,$0A,$AA
+	.byte	$60,$66,$55,$EE,$00,$AA
+	.byte	$06,$06,$55,$06,$0E,$AA
+	.byte	$66,$60,$E5,$50,$EE,$AA
+	.byte	$EE,$66,$EE,$55,$EE,$AA
+	.byte	$EE,$6E,$5E,$55,$EE,$AA
+	.byte	$66,$60,$60,$55,$EE,$AA
+	.byte	$AA,$06,$05,$06,$AA,$AA
+	.byte	$AA,$EA,$55,$55,$55,$5A
 
 achenar_sprite0:
 	.byte	7,8
