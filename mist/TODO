@@ -29,6 +29,7 @@ For release 1.0
 + ARBOR
 	-- rotate windmill if enabled?
 	-- missing treehouses
+	-- can look down elevator1 shaft if not there
 
 + NIBEL
 	-- turn on sprite crop in the viewer part
@@ -49,6 +50,7 @@ Done:
 + MIST_TITLE
 + SHIP
 + VIEWER
+	-- real game can erase message?
 
 ================================
 TODO Maybe future:
