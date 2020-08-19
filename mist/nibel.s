@@ -81,6 +81,8 @@ game_loop:
 	beq	animate_viewer
 	cmp	#NIBEL_SHACK_ENTRANCE
 	beq	animate_projector
+	cmp	#NIBEL_SHACK_CENTER
+	beq	animate_trap
 
 	jmp	nothing_special
 
@@ -94,6 +96,10 @@ fg_draw_red_page:
 
 animate_projector:
 	jsr	draw_projection
+	jmp	nothing_special
+
+animate_trap:
+	jsr	draw_trap
 	jmp	nothing_special
 
 animate_viewer:

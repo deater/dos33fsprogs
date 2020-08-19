@@ -528,7 +528,10 @@ location27:
 	.word	$0000				; east bg
 	.word	$0000				; west bg
 	.byte	BG_NORTH|BG_SOUTH	
-	.byte	$ff
+	.byte	DIRECTION_S	; special exit
+	.byte	12,29		; special x
+	.byte	20,34		; special y
+	.word	touch_trap-1	; special function
 
 ; NIBEL_SHACK_ENTRANCE	-- entranceway of the weird shack
 location28:
