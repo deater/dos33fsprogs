@@ -59,7 +59,8 @@ int main(int argc, char **argv) {
 	/* write until out of space */
 	while(1) {
 		result=read(file_fd,buffer,256);
-		if (result<0) break;
+		if (result<0) break;	/* error */
+		if (result==0) break;	/* done */
 		result=write(disk_image_fd,buffer,result);
 		if (result<0) {
 			fprintf(stderr,"Error writing image: %s\n",
