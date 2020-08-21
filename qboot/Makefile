@@ -1,12 +1,20 @@
 include ../Makefile.inc
 
+DOS33 = ../dos33fs-utils/dos33
 DOS33_RAW = ../dos33fs-utils/dos33_raw
 
-all:	boot.dsk
+all:	boot.dsk compare.dsk
 
-boot.dsk:	BOOT
+compare.dsk:	THE80S
+	cp empty.dsk compare.dsk
+	$(DOS33) -y compare.dsk BSAVE -a 0x1f00 THE80S
+
+boot.dsk:	BOOT THE80S
 	cp empty.dsk boot.dsk
-	$(DOS33_RAW) boot.dsk 0 0 BOOT
+	$(DOS33_RAW) boot.dsk 0 0 BOOT 0 1
+	$(DOS33_RAW) boot.dsk 0 2 BOOT 1 1
+	$(DOS33_RAW) boot.dsk 0 4 BOOT 2 1
+	$(DOS33_RAW) boot.dsk 3 0 THE80S 0 33
 
 BOOT: boot_sector.o
 	ld65 -o BOOT boot_sector.o -C ../linker_scripts/apple2_800.inc
@@ -14,6 +22,16 @@ BOOT: boot_sector.o
 boot_sector.o:	boot_sector.s stage2.s
 	ca65 -o boot_sector.o boot_sector.s -l boot_sector.lst
 
+
+THE80S:	80s.o
+	ld65 -o THE80S 80s.o -C ../linker_scripts/apple2_1f00.inc
+
+80s.o:	80s.s new_80s.hgr
+	ca65 -o 80s.o 80s.s -l 80s.lst
+
+new_80s.hgr:	new_80s.png
+	../hgr-utils/png2hgr new_80s.png  > new_80s.hgr
+
 clean:		
-		rm -f *~ *.o *.lst BOOT
+		rm -f *~ *.o *.lst BOOT THE80S
 

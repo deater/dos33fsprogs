@@ -1,5 +1,15 @@
-;the following lives on sectors $0E and $0D
-;			????
+; the following lives on sectors $0E and $0D
+; why?
+; request sector 2 and 4, and the interleave is
+
+; beneath apple dos (3-23)
+; Physical (firmware) : 0  1   2  3   4  5   6  7   8  9  10 11 12 13 14  15
+; DOS33 mapping       : 0, 7, 14, 6, 13, 5, 12, 4, 11, 3, 10, 2, 9, 1, 8, 15
+
+
+; Beneath Apple DOS
+; p86 (dos reference)
+;
 
 .org $be00
 
@@ -8,8 +18,8 @@ code_begin:
 	.byte	version
 
 readnib:
-slotpatch1:
-	lda	$c0d1		; ???
+slotpatch1:			; smc
+	lda	$c0d1		; gets set to C08C (Q6L) read
 	bpl	readnib
 	rts
 

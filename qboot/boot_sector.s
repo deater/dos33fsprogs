@@ -1,11 +1,11 @@
 ;	fast seek/multi-read
 ;	copyright (c) Peter Ferrie 2015-16
 
-	sectors   = $d1		; user-defined
-	firsttrk  = $d1		; user-defined, first track to read
-	firstsec  = $d1		; user-defined, first sector to read
-	address   = $d1		; user-defined
-	entry     = $d1d1	; user-defined
+	sectors   = 33		; user-defined
+	firsttrk  = 3		; user-defined, first track to read
+	firstsec  = 0		; user-defined, first sector to read
+	address   = $1f		; user-defined
+	entry     = $1f00	; user-defined
 	version   = 1
 
         ;memory usage:
@@ -13,13 +13,13 @@
         grouped   = $bd00
         ;106 bytes ($xx00-xx69) static table
 	preshift	= code_end
-        zvalue		= $fd         ;only during init
-        znibble		= $fe         ;only during init
-        zmask		= $ff         ;only during init
+        zvalue		= $fd         ; only during init
+        znibble		= $fe         ; only during init
+        zmask		= $ff         ; only during init
 
 
-; $26/$27	sector read location (ROM), scratch space (RWTS)
-; $3D		sector number
+; $26/$27	sector read location (ROM)
+; $3D		sector number (ROM)
 
 
 ; at entry (at least on AppleWin) A=1, X=60, Y=0
@@ -68,19 +68,32 @@ boot_entry:
 	rts
 
 not_three:
+
+	; patch self modifying code for Q6L read
+
 	txa
 	ora	#$8c		; slot to Q6L
 				; Q6L?
-				; 1000 1100
+				; if slot 6, after this A is $EC
 patch_loop:
 	iny
-	ldx	patchtbl-3, y
-	sta	code_begin, x   ;replace placeholders with Q6L
+	ldx	patchtbl-3, Y
+	sta	code_begin, X   ; replace placeholders with Q6L
+				; BE02 = EC? lda c0ec
+				; so sets to c08c (Q6L)
+
 	bne	patch_loop
-	and	#$f8            ;MOTOROFF
+
+	; patch self-modifying code for turning motor off
+
+	and	#$f8            ; MOTOROFF (c088)
 	sta	slotpatch7+1
-	eor	#8              ;PHASEOFF
+
+	; patch self-modifying code for phase off
+
+	eor	#8              ; PHASEOFF (c080)
 	sta	slotpatch8+1
+
 	ldx	#$3f
 	stx	zmask
 	inx
@@ -89,17 +102,21 @@ patch_loop:
 	bne	skip_ahead	; branch always
 
 	; pad with zeros until $839
+	; $839 is the entry point
+	;	adjusts address at $8FE to be entry point
+	;	jumps to boot 2
 .res	$839-*
-;*=$839
+
 	lda	#>(entry-1)
 	pha
 	lda	#<(entry-1)
 	pha
 	jsr	preread
-	jmp	$bf00           ;DOS 3.3 launcher entrypoint
+	jmp	$bf00           ; DOS 3.3 launcher entrypoint
 
 patchtbl:
-	.byte   <(slotpatch1+1), <(slotpatch2+1), <(slotpatch3+1), <(slotpatch4+1), <(slotpatch5+1), <(slotpatch6+1)
+	.byte   <(slotpatch1+1), <(slotpatch2+1), <(slotpatch3+1)
+	.byte	<(slotpatch4+1), <(slotpatch5+1), <(slotpatch6+1)
 indextbl:	;the 0 also terminates the patchtbl list!
 	.byte   0, 2, 1, 3
 
