@@ -24,7 +24,7 @@ static int goto_dos_track_sector(int fd, int track, int sector) {
 
 	result=lseek(fd,(translated_sector*256)+(track*16*256),SEEK_SET);
 
-	printf("going to: T=%d S=%d (%d)\n",track,sector,translated_sector);
+//	printf("going to: T=%d S=%d (%d)\n",track,sector,translated_sector);
 
 	return result;
 }

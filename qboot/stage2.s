@@ -265,3 +265,4 @@ addrtbl:	.res 16
 partial1 = *
 partial2 = partial1+1
 code_end=partial2+1
+
