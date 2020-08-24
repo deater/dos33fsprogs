@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
 		fprintf(stderr,"Warning!  Unusual track number %d\n",track);
 	}
 
-	if (track>15) {
+	if (sector>15) {
 		fprintf(stderr,"Warning!  Unusual sector number %d\n",sector);
 	}
 
