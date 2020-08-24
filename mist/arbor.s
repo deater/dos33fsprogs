@@ -76,11 +76,14 @@ game_loop:
 	; handle special-case forground logic
 	;====================================
 
-;	lda	LOCATION
-;	cmp	#CHANNEL_BOOK_OPEN
-;	beq	animate_mist_book
+	lda	LOCATION
+	cmp	#ARBOR_BRIDGE1
+	bne	not_bridge1
 
-;	jmp	nothing_special
+	jsr	draw_bridge1_bg
+
+not_bridge1:
+	jmp	nothing_special
 
 nothing_special:
 

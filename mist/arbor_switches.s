@@ -212,12 +212,96 @@ update_stair_gate:
 
 
 ;===============================================
+; draw bridge1 bg
+;===============================================
+; if the elevator is down, erase it
+; doing it this way is abour 40 bytes
+; doing it with dedicated bg image would be about 400 bytes
+draw_bridge1_bg:
+
+	; only if bridge down
+	lda	CHANNEL_SWITCHES
+	and	#CHANNEL_ELEVATOR1_UP
+	bne	done_bridge1_bg
+
+	; only if facing east
+
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_E
+	bne	done_bridge1_bg
+
+	lda	#18
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+
+	lda	#<elev_down_patch_sprite
+	sta	INL
+	lda	#>elev_down_patch_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+done_bridge1_bg:
+	rts
+
+elev_down_patch_sprite:
+	.byte	4,6
+	.byte	$55,$00,$00,$55
+	.byte	$55,$00,$00,$55
+	.byte	$55,$00,$00,$55
+	.byte	$55,$00,$00,$55
+	.byte	$55,$00,$00,$55
+	.byte	$58,$08,$08,$58
+
+
+
+
+
+
+;===============================================
 ;===============================================
 ; update all backgrounds based on switch states
 ;===============================================
 ;===============================================
 
 update_arbor_state:
+	; update on elevator1
+	lda	CHANNEL_SWITCHES
+	and	#CHANNEL_ELEVATOR1_UP
+	beq	make_elevator1_down
+make_elevator1_up:
+
+	; change elevator view
+	ldy	#LOCATION_EAST_BG
+	lda	#<arrival_e_lzsa
+	sta	location2,Y				; ARBOR_ARRIVAL_CLOSED
+	lda	#>arrival_e_lzsa
+	sta	location2+1,Y				; ARBOR_ARRIVAL_CLOSED
+
+	; connect elevator exit
+	ldy	#LOCATION_EAST_EXIT
+	lda	#ARBOR_ARRIVAL_OPEN
+	sta	location2,Y				; ARBOR_ARRIVAL_CLOSED
+
+	jmp	make_elevator1_done
+make_elevator1_down:
+
+	; change elevator view
+	ldy	#LOCATION_EAST_BG
+	lda	#<arrival_noelev_e_lzsa
+	sta	location2,Y				; ARBOR_ARRIVAL_CLOSED
+	lda	#>arrival_noelev_e_lzsa
+	sta	location2+1,Y				; ARBOR_ARRIVAL_CLOSED
+
+	; disconnect elevator exit
+	ldy	#LOCATION_EAST_EXIT
+	lda	#ARBOR_ARRIVAL_NOELEV
+	sta	location2,Y				; ARBOR_ARRIVAL_CLOSED
+
+make_elevator1_done:
+
+	; update based on switches
 
 	lda	CHANNEL_SWITCHES
 	and	#CHANNEL_SW_GATE_TOP

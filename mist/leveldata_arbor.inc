@@ -10,7 +10,8 @@ locations:
 	.word location16,location17,location18,location19
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
-	.word location28,location29,location30
+	.word location28,location29,location30,location31
+
 
 ; ARBOR_INSIDE_ELEV1		-- arrival in elevator1
 location0:
@@ -567,3 +568,19 @@ location30:
 	.word	stair_gate-1	; special function
 
 
+; ARBOR_ARRIVAL_NOELEV		-- looking down where elevator was
+location31:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	ARBOR_ARRIVAL_CLOSED	; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	$FF		; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	arrival_down_e_lzsa	; east bg
+	.word	$ff			; west bg
+	.byte	BG_EAST
+	.byte	$ff

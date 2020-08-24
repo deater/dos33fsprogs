@@ -10,6 +10,7 @@ all:	arbor_graphics.inc
 
 arbor_graphics.inc:	\
 	arrival_e.lzsa arrival_w.lzsa arrival_open_e.lzsa \
+	arrival_down_e.lzsa arrival_noelev_e.lzsa \
 	inside_elevator1_closed_w.lzsa inside_elevator1_open_w.lzsa \
 	bridge1_e.lzsa bridge1_w.lzsa \
 	hut1_e.lzsa hut1_w.lzsa \
@@ -40,6 +41,8 @@ arbor_graphics.inc:	\
 	echo "arrival_e_lzsa: .incbin \"arrival_e.lzsa\"" > arbor_graphics.inc
 	echo "arrival_open_e_lzsa: .incbin \"arrival_open_e.lzsa\"" >> arbor_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> arbor_graphics.inc
+	echo "arrival_down_e_lzsa: .incbin \"arrival_down_e.lzsa\"" >> arbor_graphics.inc
+	echo "arrival_noelev_e_lzsa: .incbin \"arrival_noelev_e.lzsa\"" >> arbor_graphics.inc
 	echo "inside_elevator1_open_w_lzsa: .incbin \"inside_elevator1_open_w.lzsa\"" >> arbor_graphics.inc
 	echo "inside_elevator1_closed_w_lzsa: .incbin \"inside_elevator1_closed_w.lzsa\"" >> arbor_graphics.inc
 	echo "bridge1_e_lzsa: .incbin \"bridge1_e.lzsa\"" >> arbor_graphics.inc
