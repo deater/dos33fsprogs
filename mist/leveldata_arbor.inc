@@ -11,7 +11,7 @@ locations:
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
-
+	.word location32
 
 ; ARBOR_INSIDE_ELEV1		-- arrival in elevator1
 location0:
@@ -348,7 +348,7 @@ location18:
 ; ARBOR_LONGSHACK3		-- next longshack
 location19:
 	.byte	ARBOR_BRIDGE5		; north exit
-	.byte	ARBOR_BRIDGE6		; south exit
+	.byte	ARBOR_IN_LONGSHACK3	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
@@ -364,7 +364,7 @@ location19:
 
 ; ARBOR_BRIDGE6		-- the next bridge
 location20:
-	.byte	ARBOR_LONGSHACK3	; north exit
+	.byte	ARBOR_IN_LONGSHACK3	; north exit
 	.byte	ARBOR_SHACK2		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -381,7 +381,7 @@ location20:
 
 ; ARBOR_SHACK2		-- the shack before the elevator
 location21:
-	.byte	ARBOR_LONGSHACK3	; north exit
+	.byte	ARBOR_BRIDGE6		; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	ARBOR_BRIDGE7		; west exit
@@ -583,4 +583,21 @@ location31:
 	.word	arrival_down_e_lzsa	; east bg
 	.word	$ff			; west bg
 	.byte	BG_EAST
+	.byte	$ff
+
+; ARBOR_IN_LONGSHACK3		-- inside longshack3
+location32:
+	.byte	ARBOR_LONGSHACK3	; north exit
+	.byte	ARBOR_BRIDGE6		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	inlongshack3_n_lzsa	; north bg
+	.word	inlongshack3_s_lzsa	; south bg
+	.word	inlongshack3_e_lzsa	; east bg
+	.word	inlongshack3_w_lzsa	; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
 	.byte	$ff

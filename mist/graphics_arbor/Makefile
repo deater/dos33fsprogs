@@ -37,7 +37,8 @@ arbor_graphics.inc:	\
 	steps_top_e.lzsa steps_top_w.lzsa \
 	steps1_e.lzsa steps1_w.lzsa \
 	steps2_e.lzsa steps2_w.lzsa \
-	steps_bottom_e.lzsa steps_bottom_open_w.lzsa steps_bottom_closed_w.lzsa
+	steps_bottom_e.lzsa steps_bottom_open_w.lzsa steps_bottom_closed_w.lzsa \
+	inlongshack3_n.lzsa inlongshack3_s.lzsa inlongshack3_e.lzsa inlongshack3_w.lzsa
 	echo "arrival_e_lzsa: .incbin \"arrival_e.lzsa\"" > arbor_graphics.inc
 	echo "arrival_open_e_lzsa: .incbin \"arrival_open_e.lzsa\"" >> arbor_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> arbor_graphics.inc
@@ -107,6 +108,10 @@ arbor_graphics.inc:	\
 	echo "steps_bottom_e_lzsa: .incbin \"steps_bottom_e.lzsa\"" >> arbor_graphics.inc
 	echo "steps_bottom_open_w_lzsa: .incbin \"steps_bottom_open_w.lzsa\"" >> arbor_graphics.inc
 	echo "steps_bottom_closed_w_lzsa: .incbin \"steps_bottom_closed_w.lzsa\"" >> arbor_graphics.inc
+	echo "inlongshack3_n_lzsa: .incbin \"inlongshack3_n.lzsa\"" >> arbor_graphics.inc
+	echo "inlongshack3_s_lzsa: .incbin \"inlongshack3_s.lzsa\"" >> arbor_graphics.inc
+	echo "inlongshack3_e_lzsa: .incbin \"inlongshack3_e.lzsa\"" >> arbor_graphics.inc
+	echo "inlongshack3_w_lzsa: .incbin \"inlongshack3_w.lzsa\"" >> arbor_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
