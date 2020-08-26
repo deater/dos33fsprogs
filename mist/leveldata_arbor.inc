@@ -11,7 +11,7 @@ locations:
 	.word location20,location21,location22,location23
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
-	.word location32
+	.word location32,location33,location34,location35
 
 ; ARBOR_INSIDE_ELEV1		-- arrival in elevator1
 location0:
@@ -589,11 +589,11 @@ location31:
 location32:
 	.byte	ARBOR_LONGSHACK3	; north exit
 	.byte	ARBOR_BRIDGE6		; south exit
-	.byte	$ff			; east exit
+	.byte	ARBOR_HUT6		; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_N	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	inlongshack3_n_lzsa	; north bg
 	.word	inlongshack3_s_lzsa	; south bg
@@ -601,3 +601,57 @@ location32:
 	.word	inlongshack3_w_lzsa	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
 	.byte	$ff
+
+; ARBOR_HUT6		-- inside hut6
+location33:
+	.byte	ARBOR_HUT5		; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	ARBOR_IN_LONGSHACK3	; west exit
+	.byte	DIRECTION_W	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	hut6_n_lzsa		; north bg
+	.word	$ff			; south bg
+	.word	$ff			; east bg
+	.word	hut6_w_lzsa		; west bg
+	.byte	BG_NORTH|BG_WEST
+	.byte	$ff
+
+; ARBOR_HUT5		-- inside hut5
+location34:
+	.byte	$ff			; north exit
+	.byte	ARBOR_HUT6		; south exit
+	.byte	$ff			; east exit
+	.byte	ARBOR_HUT4		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_W	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$ff			; north bg
+	.word	hut5_s_lzsa		; south bg
+	.word	$ff			; east bg
+	.word	hut5_w_lzsa		; west bg
+	.byte	BG_SOUTH|BG_WEST
+	.byte	$ff
+
+; ARBOR_HUT4		-- inside hut4
+location35:
+	.byte	$ff			; north exit
+	.byte	ARBOR_HUT2_INSIDE	; south exit
+	.byte	ARBOR_HUT5		; east exit
+	.byte	$ff		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	DIRECTION_S	; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	hut4_n_lzsa		; north bg
+	.word	hut4_s_lzsa		; south bg
+	.word	hut4_e_lzsa		; east bg
+	.word	hut4_w_lzsa		; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
+	.byte	$ff
+
+
+
