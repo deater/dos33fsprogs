@@ -23,6 +23,14 @@
 .byte MECHE_ARRIVAL	; LOCATION	=	$82
 .endif
 
+.if 1
+; MECHE
+.byte LOAD_MECHE	; WHICH_LOAD		= 	$80
+.byte DIRECTION_E	; DIRECTION		= 	$81
+.byte MECHE_EAST_PLATFORM	; LOCATION	=	$82
+.endif
+
+
 .if 0
 ; CHANNEL
 .byte LOAD_CHANNEL	; WHICH_LOAD		= 	$80
@@ -58,7 +66,7 @@
 .byte STONEY_ARRIVAL	; LOCATION	=	$82
 .endif
 
-.if 1
+.if 0
 ; NIBEL
 .byte LOAD_NIBEL	; WHICH_LOAD		= 	$80
 .byte DIRECTION_E	; DIRECTION		= 	$81

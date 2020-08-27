@@ -15,6 +15,7 @@ locations:
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
 	.word location40,location41,location42,location43
+	.word location44
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -545,21 +546,21 @@ location28:
 	.byte	18,42		; special y
 	.word	handle_rotation_controls-1	; special function
 
-; MECHE EAST_PLATFORM			-- rotated to east platform
+; MECHE_EAST_PLATFORM			-- rotated to east platform
 location29:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
-	.byte	MECHE_EAST_ARCH		; east exit
+	.byte	MECHE_EAST_PATH		; east exit
 	.byte	MECHE_FORT_ENTRY	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_S	; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_N	; west exit_dir
-	.word	$0000		; north bg
-	.word	$0000		; south bg
+	.word	eastturn_n_lzsa	; north bg
+	.word	eastturn_s_lzsa	; south bg
 	.word	eastturn_e_lzsa	; east bg
 	.word	eastturn_w_lzsa	; west bg
-	.byte	BG_EAST|BG_WEST
+	.byte	BG_EAST|BG_WEST|BG_NORTH|BG_SOUTH
 	.byte	$ff		; special exit
 
 ; MECHE EAST_ARCH			-- cool archway
@@ -567,7 +568,7 @@ location30:
 	.byte	$ff			; north exit
 	.byte	MECHE_EAST_TOP		; south exit
 	.byte	$ff			; east exit
-	.byte	MECHE_EAST_PLATFORM	; west exit
+	.byte	MECHE_EAST_PATH		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	DIRECTION_E	; south exit_dir
 	.byte	$ff		; east exit_dir
@@ -811,4 +812,22 @@ location43:
 	.word	$0000			; west bg
 	.byte	BG_SOUTH
 	.byte	$ff		; special exit
+
+; MECHE_EAST_PATH			-- path to east hint
+location44:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_EAST_ARCH		; east exit
+	.byte	MECHE_EAST_PLATFORM	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	east_path_e_lzsa	; east bg
+	.word	east_path_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff		; special exit
+
 
