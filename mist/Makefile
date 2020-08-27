@@ -24,7 +24,6 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 D\'NI
 	$(DOS33) -y mist.dsk BSAVE -a 0xe00 SAVE0
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 SHIP
-#	$(DOS33) -y mist.dsk BSAVE -a 0x9000 ./audio/link_noise.btc LINK_NOISE.BTC
 
 mist_side2.dsk:	HELLO_DISK2 CHANNEL ARBOR NIBEL CABIN GENERATOR
 	cp empty.dsk mist_side2.dsk
@@ -108,7 +107,7 @@ mist_title.o:	mist_title.s zp.inc hardware.inc common_defines.inc \
 ####
 
 MIST:	mist.o
-	ld65 -o MIST mist.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o MIST mist.o -C ./apple2_2000.inc
 
 mist.o:	mist.s zp.inc hardware.inc common_defines.inc common_routines.inc \
 	graphics_mist/mist_graphics.inc \
@@ -126,7 +125,7 @@ mist.o:	mist.s zp.inc hardware.inc common_defines.inc common_routines.inc \
 ####
 
 GENERATOR:	generator.o
-	ld65 -o GENERATOR generator.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o GENERATOR generator.o -C ./apple2_2000.inc
 
 generator.o:	generator.s zp.inc hardware.inc \
 	common_defines.inc common_routines.inc \
@@ -139,7 +138,7 @@ generator.o:	generator.s zp.inc hardware.inc \
 ####
 
 OCTAGON:	octagon.o
-	ld65 -o OCTAGON octagon.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o OCTAGON octagon.o -C ./apple2_2000.inc
 
 octagon.o:	octagon.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
@@ -157,7 +156,7 @@ octagon.o:	octagon.s zp.inc hardware.inc common_defines.inc \
 ####
 
 D\'NI:	dni.o
-	ld65 -o D\'NI dni.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o D\'NI dni.o -C ./apple2_2000.inc
 
 dni.o:	dni.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
@@ -171,7 +170,7 @@ dni.o:	dni.s zp.inc hardware.inc common_defines.inc \
 ####
 
 MECHE:	meche.o
-	ld65 -o MECHE meche.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o MECHE meche.o -C ./apple2_2000.inc
 
 meche.o:	meche.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
@@ -191,7 +190,7 @@ meche.o:	meche.s zp.inc hardware.inc common_defines.inc \
 ####
 
 SELENA:	selena.o
-	ld65 -o SELENA selena.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o SELENA selena.o -C ./apple2_2000.inc
 
 selena.o:	selena.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
@@ -210,7 +209,7 @@ selena.o:	selena.s zp.inc hardware.inc common_defines.inc \
 ####
 
 SUB:	sub.o
-	ld65 -o SUB sub.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o SUB sub.o -C ./apple2_2000.inc
 
 sub.o:	sub.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
@@ -228,7 +227,7 @@ sub.o:	sub.s zp.inc hardware.inc common_defines.inc \
 ####
 
 VIEWER:	viewer.o
-	ld65 -o VIEWER viewer.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o VIEWER viewer.o -C ./apple2_2000.inc
 
 viewer.o:	viewer.s zp.inc hardware.inc common_defines.inc \
 	graphics_viewer/viewer_graphics.inc \
@@ -246,7 +245,7 @@ viewer.o:	viewer.s zp.inc hardware.inc common_defines.inc \
 ####
 
 STONEY:	stoney.o
-	ld65 -o STONEY stoney.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o STONEY stoney.o -C ./apple2_2000.inc
 
 stoney.o:	stoney.s zp.inc hardware.inc common_defines.inc \
 	graphics_stoney/stoney_graphics.inc \
@@ -266,7 +265,7 @@ stoney.o:	stoney.s zp.inc hardware.inc common_defines.inc \
 ####
 
 SHIP:	ship.o
-	ld65 -o SHIP ship.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o SHIP ship.o -C ./apple2_2000.inc
 
 ship.o:	ship.s zp.inc hardware.inc common_defines.inc \
 	graphics_ship/ship_graphics.inc \
@@ -285,7 +284,7 @@ ship.o:	ship.s zp.inc hardware.inc common_defines.inc \
 ####
 
 CABIN:	cabin.o
-	ld65 -o CABIN cabin.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o CABIN cabin.o -C ./apple2_2000.inc
 
 cabin.o:	cabin.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
@@ -305,7 +304,7 @@ cabin.o:	cabin.s zp.inc hardware.inc common_defines.inc \
 ####
 
 CHANNEL:	channel.o
-	ld65 -o CHANNEL channel.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o CHANNEL channel.o -C ./apple2_2000.inc
 
 channel.o:	channel.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
@@ -324,7 +323,7 @@ channel.o:	channel.s zp.inc hardware.inc common_defines.inc \
 ####
 
 ARBOR:	arbor.o
-	ld65 -o ARBOR arbor.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o ARBOR arbor.o -C ./apple2_2000.inc
 
 arbor.o:	arbor.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
@@ -336,7 +335,7 @@ arbor.o:	arbor.s zp.inc hardware.inc common_defines.inc \
 ####
 
 NIBEL:	nibel.o
-	ld65 -o NIBEL nibel.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o NIBEL nibel.o -C ./apple2_2000.inc
 
 nibel.o:	nibel.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
@@ -348,7 +347,7 @@ nibel.o:	nibel.s zp.inc hardware.inc common_defines.inc \
 ####
 
 DENTIST:	dentist.o
-	ld65 -o DENTIST dentist.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o DENTIST dentist.o -C ./apple2_2000.inc
 
 dentist.o:	dentist.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \

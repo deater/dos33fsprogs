@@ -12,6 +12,7 @@ locations:
 	.word location24,location25,location26,location27
 	.word location28,location29,location30,location31
 	.word location32,location33,location34,location35
+	.word location36,location37
 
 ; ARBOR_INSIDE_ELEV1		-- arrival in elevator1
 location0:
@@ -107,18 +108,18 @@ location4:
 ; ARBOR_HUT1		-- first hut
 location5:
 	.byte	$ff			; north exit
-	.byte	$ff			; south exit
+	.byte	ARBOR_HUT3		; south exit
 	.byte	ARBOR_BRIDGE1	; east exit
 	.byte	ARBOR_BRIDGE2	; west exit
 	.byte	$ff		; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_N	; west exit_dir
 	.word	$0000			; north bg
-	.word	$0000			; south bg
+	.word	hut1_s_lzsa		; south bg
 	.word	hut1_e_lzsa		; east bg
 	.word	hut1_w_lzsa		; west bg
-	.byte	BG_WEST|BG_EAST
+	.byte	BG_WEST|BG_EAST|BG_SOUTH
 	.byte	$ff
 
 ; ARBOR_BRIDGE2		-- second bridge
@@ -313,19 +314,19 @@ location16:
 
 ; ARBOR_HUT2_INSIDE		-- inside next hut
 location17:
-	.byte	$ff			; north exit
+	.byte	ARBOR_HUT4		; north exit
 	.byte	ARBOR_BRIDGE5		; south exit
 	.byte	$ff			; east exit
 	.byte	ARBOR_HUT2		; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
-	.word	$0000			; north bg
+	.word	hut2_inside_n_lzsa	; north bg
 	.word	hut2_inside_s_lzsa	; south bg
 	.word	$0000			; east bg
 	.word	hut2_inside_w_lzsa	; west bg
-	.byte	BG_WEST|BG_SOUTH
+	.byte	BG_WEST|BG_SOUTH|BG_NORTH
 	.byte	$ff
 
 ; ARBOR_BRIDGE5			-- next bridge
@@ -638,11 +639,11 @@ location34:
 
 ; ARBOR_HUT4		-- inside hut4
 location35:
-	.byte	$ff			; north exit
+	.byte	ARBOR_HUT7		; north exit
 	.byte	ARBOR_HUT2_INSIDE	; south exit
 	.byte	ARBOR_HUT5		; east exit
 	.byte	$ff		; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	DIRECTION_S	; east exit_dir
 	.byte	$ff		; west exit_dir
@@ -653,5 +654,37 @@ location35:
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
 	.byte	$ff
 
+; ARBOR_HUT7		-- standalone hut off ring
+location36:
+	.byte	ARBOR_HUT4		; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	hut7_n_lzsa		; north bg
+	.word	$ff			; south bg
+	.word	$ff			; east bg
+	.word	$ff			; west bg
+	.byte	BG_NORTH
+	.byte	$ff
 
+; ARBOR_HUT3		-- standalone hut at arrival
+location37:
+	.byte	$ff			; north exit
+	.byte	ARBOR_HUT1		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$ff			; north bg
+	.word	hut3_s_lzsa		; south bg
+	.word	$ff			; east bg
+	.word	$ff			; west bg
+	.byte	BG_SOUTH
+	.byte	$ff
 
