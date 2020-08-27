@@ -15,7 +15,7 @@ locations:
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
 	.word location40,location41,location42,location43
-	.word location44
+	.word location44,location45,location46
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -566,11 +566,11 @@ location29:
 ; MECHE EAST_ARCH			-- cool archway
 location30:
 	.byte	$ff			; north exit
-	.byte	MECHE_EAST_TOP		; south exit
+	.byte	MECHE_EAST_STEPS	; south exit
 	.byte	$ff			; east exit
 	.byte	MECHE_EAST_PATH		; west exit
 	.byte	$ff		; north exit_dir
-	.byte	DIRECTION_E	; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000			; north bg
@@ -580,12 +580,12 @@ location30:
 	.byte	BG_SOUTH|BG_WEST
 	.byte	$ff		; special exit
 
-; MECHE EAST_TOP			-- top of the world
+; MECHE_EAST_TOP			-- top of the world
 location31:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	MECHE_EAST_HINT		; east exit
-	.byte	MECHE_EAST_ARCH		; west exit
+	.byte	MECHE_EAST_LANDING	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
@@ -605,7 +605,7 @@ location32:
 	.byte	$ff		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_W	; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	$0000			; north bg
 	.word	$0000			; south bg
@@ -830,4 +830,36 @@ location44:
 	.byte	BG_EAST|BG_WEST
 	.byte	$ff		; special exit
 
+; MECHE_EAST_STEPS			-- steps to east hint
+location45:
+	.byte	MECHE_EAST_ARCH		; north exit
+	.byte	MECHE_EAST_LANDING	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_W	; north exit_dir
+	.byte	DIRECTION_E	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	east_steps_n_lzsa	; north bg
+	.word	east_steps_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH|BG_NORTH
+	.byte	$ff		; special exit
 
+; MECHE_EAST_LANDING			-- steps to east hint
+location46:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_EAST_TOP		; east exit
+	.byte	MECHE_EAST_STEPS	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_N	; west exit_dir
+	.word	$0000			; north bg
+	.word	$0000			; south bg
+	.word	east_landing_e_lzsa	; east bg
+	.word	east_landing_w_lzsa	; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff		; special exit

@@ -61,7 +61,9 @@ meche_graphics.inc:	\
 	red_secret_door_s.lzsa \
 	red_secret_room_n.lzsa red_secret_room_s.lzsa red_secret_room_e.lzsa red_secret_room_w.lzsa \
 	achenar_letter.lzsa \
-	east_path_e.lzsa east_path_w.lzsa
+	east_path_e.lzsa east_path_w.lzsa \
+	east_steps_s.lzsa east_steps_n.lzsa \
+	east_landing_e.lzsa east_landing_w.lzsa
 	echo "departure_e_lzsa: .incbin \"departure_e.lzsa\"" > meche_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> meche_graphics.inc
 	echo "entrance_e_lzsa: .incbin \"entrance_e.lzsa\"" >> meche_graphics.inc
@@ -167,6 +169,10 @@ meche_graphics.inc:	\
 	echo "achenar_letter_lzsa: .incbin \"achenar_letter.lzsa\"" >> meche_graphics.inc
 	echo "east_path_e_lzsa: .incbin \"east_path_e.lzsa\"" >> meche_graphics.inc
 	echo "east_path_w_lzsa: .incbin \"east_path_w.lzsa\"" >> meche_graphics.inc
+	echo "east_steps_s_lzsa: .incbin \"east_steps_s.lzsa\"" >> meche_graphics.inc
+	echo "east_steps_n_lzsa: .incbin \"east_steps_n.lzsa\"" >> meche_graphics.inc
+	echo "east_landing_e_lzsa: .incbin \"east_landing_e.lzsa\"" >> meche_graphics.inc
+	echo "east_landing_w_lzsa: .incbin \"east_landing_w.lzsa\"" >> meche_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@
