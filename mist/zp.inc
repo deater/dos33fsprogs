@@ -137,6 +137,10 @@ ROCKET_NOTE4	=	$A1		; organ (note slider 4)
 
 MECHE_ELEVATOR	=	$A2		; fortress elevator state
 MECHE_ROTATION	=	$A3		; fortress rotation state
+	; 0..3  = S
+	; 4..7  = E
+	; 8..11  = N
+	; 12..15 = W
 MECHE_LEVERS	=	$A4		; fortress rotation levers
 	LEFT_LEVER = 1
 	RIGHT_LEVER = 2

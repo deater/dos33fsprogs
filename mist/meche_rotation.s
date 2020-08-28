@@ -1,4 +1,115 @@
 	;===============================
+	; draw hover crystals
+	;===============================
+draw_crystals:
+	lda	DIRECTION
+	cmp	#DIRECTION_N
+	bne	done_draw_crystals
+
+	lda	CURSOR_Y
+	cmp	#15
+	bcc	done_draw_crystals	; blt
+
+	cmp	#24
+	bcs	done_draw_crystals	; bge
+
+	lda	CURSOR_X
+	cmp	#8
+	bcc	done_draw_crystals
+	cmp	#13
+	bcc	draw_yellow_crystal
+	cmp	#17
+	bcc	done_draw_crystals
+	cmp	#22
+	bcc	draw_green_crystal
+	cmp	#25
+	bcc	done_draw_crystals
+	cmp	#31
+	bcc	draw_red_crystal
+	bcs	done_draw_crystals
+
+draw_yellow_crystal:
+	lda	#10
+	sta	XPOS
+
+	lda	#<yellow_crystal_sprite
+	sta	INL
+	lda	#>yellow_crystal_sprite
+
+	jmp	common_draw_crystal
+draw_green_crystal:
+	lda	#18
+	sta	XPOS
+
+	lda	#<green_crystal_sprite
+	sta	INL
+	lda	#>green_crystal_sprite
+
+	jmp	common_draw_crystal
+draw_red_crystal:
+	lda	#27
+	sta	XPOS
+
+	lda	#<red_crystal_sprite
+	sta	INL
+	lda	#>red_crystal_sprite
+
+common_draw_crystal:
+	sta	INH
+
+	lda	#16
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+done_draw_crystals:
+	rts
+
+yellow_crystal_sprite:
+	.byte	2,3
+	.byte	$fd,$d5
+	.byte	$dd,$dd
+	.byte	$df,$0d
+
+green_crystal_sprite:
+
+	.byte	3,3
+	.byte	$c5,$cc,$cc
+	.byte	$dc,$dc,$dc
+	.byte	$cc,$cc,$cc
+
+red_crystal_sprite:
+	.byte	3,3
+	.byte	$88,$35,$dd
+	.byte	$33,$bb,$33
+	.byte	$08,$33,$d3
+
+
+
+	;===============================
+	; view telescope
+	;===============================
+view_telescope:
+
+	lda	MECHE_ROTATION
+	; it's a range
+	lsr
+	lsr
+	cmp	#2
+	bne	no_skeleton
+
+yes_skeleton:
+	lda	#MECHE_TELESCOPE_SKELETON
+	sta	LOCATION
+	jmp	change_location
+
+no_skeleton:
+	lda	#MECHE_TELESCOPE_PLAIN
+	sta	LOCATION
+	jmp	change_location
+
+
+	;===============================
 	; top floor up
 	;===============================
 goto_top_floor_up:
@@ -497,6 +608,11 @@ lever_sprite:
 	; rotate fortress
 
 rotate_fortress:
+
+	; 0  = S
+	; 4  = E
+	; 8  = N
+	; 12 = W
 
 	lda	MECHE_ROTATION
 	lsr

@@ -88,6 +88,8 @@ game_loop:
 	beq	fg_draw_blue_page
 	cmp	#MECHE_RED_SECRET_ROOM
 	beq	fg_draw_red_page
+	cmp	#MECHE_RED_ROOM_EAST
+	beq	fg_draw_crystals
 
 	jmp	nothing_special
 animate_meche_book:
@@ -175,6 +177,10 @@ fg_draw_red_page:
 
 fg_draw_blue_page:
 	jsr	draw_blue_page
+	jmp	nothing_special
+
+fg_draw_crystals:
+	jsr	draw_crystals
 	jmp	nothing_special
 
 nothing_special:

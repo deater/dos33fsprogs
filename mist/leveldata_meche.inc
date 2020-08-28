@@ -16,6 +16,7 @@ locations:
 	.word location36,location37,location38,location39
 	.word location40,location41,location42,location43
 	.word location44,location45,location46,location47
+	.word location48,location49,location50,location51
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -303,11 +304,11 @@ location15:
 ; MECHE_RED_ROOM_CENTER		-- center of red room
 location16:
 	.byte	$ff			; north exit
-	.byte	$ff			; south exit
-	.byte	MECHE_CENTER_HALL	; east exit
+	.byte	MECHE_RED_THRONE	; south exit
+	.byte	MECHE_RED_ROOM_EAST	; east exit
 	.byte	MECHE_LEFT_HALL_CORNER	; west exit
 	.byte	$ff			; north exit_dir
-	.byte	$ff			; south exit_dir
+	.byte	DIRECTION_S		; south exit_dir
 	.byte	DIRECTION_E		; east exit_dir
 	.byte	DIRECTION_S		; west exit_dir
 	.word	red_room_center_n_lzsa	; north bg
@@ -315,17 +316,21 @@ location16:
 	.word	red_room_center_e_lzsa	; east bg
 	.word	red_room_center_w_lzsa	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_WEST|BG_EAST
-	.byte	DIRECTION_S
-	.byte	25,33		; special x
-	.byte	18,38		; special y
-	.word	enter_red_secret-1	; special function
+	.byte	DIRECTION_N
+	.byte	21,28		; special x
+	.byte	12,26		; special y
+	.word	view_telescope-1	; special function
+;	.byte	DIRECTION_S
+;	.byte	25,33		; special x
+;	.byte	18,38		; special y
+;	.word	enter_red_secret-1	; special function
 
 ; MECHE_CENTER_HALL		-- center hall 1
 location17:
 	.byte	$ff			; north exit
 	.byte	MECHE_RED_BUTTON	; south exit
-	.byte	MECHE_CENTER_HALL		; east exit
-	.byte	MECHE_RED_ROOM_CENTER	; west exit
+	.byte	MECHE_CENTER_HALL	; east exit
+	.byte	MECHE_RED_ROOM_EAST	; west exit
 	.byte	$ff			; north exit_dir
 	.byte	DIRECTION_S		; south exit_dir
 	.byte	DIRECTION_S		; east exit_dir
@@ -880,3 +885,77 @@ location47:
 	.word	$0000			; west bg
 	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff		; special exit
+
+; MECHE_RED_THRONE		-- red room throne
+location48:
+	.byte	$ff			; north exit
+	.byte	MECHE_RED_ROOM_CENTER	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff			; north exit_dir
+	.byte	DIRECTION_S		; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	$ff			; west exit_dir
+	.word	$0000			; north bg
+	.word	red_throne_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_SOUTH
+	.byte	DIRECTION_S
+	.byte	28,37		; special x
+	.byte	10,34		; special y
+	.word	enter_red_secret-1	; special function
+
+; MECHE_RED_ROOM_EAST		-- east exit of red room
+location49:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	MECHE_CENTER_HALL	; east exit
+	.byte	MECHE_RED_ROOM_CENTER	; west exit
+	.byte	$ff			; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	DIRECTION_E		; east exit_dir
+	.byte	DIRECTION_W		; west exit_dir
+	.word	red_room_east_n_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	red_room_east_e_lzsa	; east bg
+	.word	red_room_east_w_lzsa	; west bg
+	.byte	BG_NORTH|BG_WEST|BG_EAST
+	.byte	$ff
+
+; MECHE_TELESCOPE_SKELETON		-- some call him "Bob"
+location50:
+	.byte	MECHE_RED_ROOM_CENTER	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	red_skeleton_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	$ff		; special exit
+
+
+; MECHE_TELESCOPE_PLAIN		-- nothing
+location51:
+	.byte	MECHE_RED_ROOM_CENTER	; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	red_no_skeleton_lzsa	; north bg
+	.word	$0000			; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH
+	.byte	$ff		; special exit
+
+
