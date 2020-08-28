@@ -15,7 +15,7 @@ locations:
 	.word location32,location33,location34,location35
 	.word location36,location37,location38,location39
 	.word location40,location41,location42,location43
-	.word location44,location45,location46
+	.word location44,location45,location46,location47
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -217,11 +217,11 @@ location10:
 
 ; MECHE_NORTH_HINT			-- hint plate
 location11:
-	.byte	MECHE_NORTH_TOP		; north exit
+	.byte	MECHE_NORTH_CLOSE	; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	DIRECTION_S		; north exit_dir
+	.byte	DIRECTION_N		; north exit_dir
 	.byte	$ff			; south exit_dir
 	.byte	$ff			; east exit_dir
 	.byte	$ff			; west exit_dir
@@ -234,7 +234,7 @@ location11:
 
 ; MECHE_NORTH_TOP			-- north top
 location12:
-	.byte	MECHE_NORTH_HINT	; north exit
+	.byte	MECHE_NORTH_CLOSE	; north exit
 	.byte	MECHE_NORTH_DIP		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -862,4 +862,21 @@ location46:
 	.word	east_landing_e_lzsa	; east bg
 	.word	east_landing_w_lzsa	; west bg
 	.byte	BG_EAST|BG_WEST
+	.byte	$ff		; special exit
+
+; MECHE_NORTH_CLOSE			-- north close
+location47:
+	.byte	MECHE_NORTH_HINT	; north exit
+	.byte	MECHE_NORTH_TOP		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N		; north exit_dir
+	.byte	DIRECTION_S		; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	$ff			; west exit_dir
+	.word	north_close_n_lzsa	; north bg
+	.word	north_close_s_lzsa	; south bg
+	.word	$0000			; east bg
+	.word	$0000			; west bg
+	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff		; special exit
