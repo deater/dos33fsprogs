@@ -144,10 +144,20 @@ missing_page:
 	rts
 
 
+open_blue_secret:
+	lda	#MECHE_BLUE_THRONE_OPEN
+	sta	LOCATION
+	jmp	change_location
 
 enter_blue_secret:
-
+	lda	CURSOR_Y
+	cmp	#24
+	bcc	close_blue_secret	; blt
 	lda	#MECHE_BLUE_SECRET_DOOR
+	bne	done_blue_secret	; bra
+close_blue_secret:
+	lda	#MECHE_BLUE_THRONE
+done_blue_secret:
 	sta	LOCATION
 	jmp	change_location
 

@@ -17,6 +17,7 @@ locations:
 	.word location40,location41,location42,location43
 	.word location44,location45,location46,location47
 	.word location48,location49,location50,location51
+	.word location52,location53
 
 ; MECHE_INSIDE_GEAR		-- Inside gear on Mist
 location0:
@@ -441,20 +442,21 @@ location23:
 	.byte	MECHE_CENTER_HALL2		; north exit
 	.byte	MECHE_RIGHT_HALL_CORNER		; south exit
 	.byte	$ff				; east exit
-	.byte	$ff				; west exit
+	.byte	MECHE_BLUE_THRONE		; west exit
 	.byte	DIRECTION_N		; north exit_dir
 	.byte	DIRECTION_W		; south exit_dir
 	.byte	$ff			; east exit_dir
-	.byte	$ff			; west exit_dir
+	.byte	DIRECTION_W		; west exit_dir
 	.word	blue_room_center_n_lzsa		; north bg
 	.word	blue_room_center_s_lzsa		; south bg
 	.word	blue_room_center_e_lzsa		; east bg
 	.word	blue_room_center_w_lzsa		; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
-	.byte	DIRECTION_W
-	.byte	9,14		; special x
-	.byte	24,44		; special y
-	.word	enter_blue_secret-1	; special function
+	.byte	$ff
+;	.byte	DIRECTION_W
+;	.byte	9,14		; special x
+;	.byte	24,44		; special y
+;	.word	enter_blue_secret-1	; special function
 
 
 ; MECHE_CENTER_HALL2		-- center hall 2
@@ -957,5 +959,46 @@ location51:
 	.word	$0000			; west bg
 	.byte	BG_NORTH
 	.byte	$ff		; special exit
+
+; MECHE_BLUE_THRONE		-- blue room throne
+location52:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	MECHE_BLUE_ROOM_CENTER	; west exit
+	.byte	$ff			; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	DIRECTION_W		; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	$0000				; east bg
+	.word	blue_throne_closed_w_lzsa	; west bg
+	.byte	BG_WEST
+	.byte	DIRECTION_W
+	.byte	5,13		; special x
+	.byte	16,40		; special y
+	.word	open_blue_secret-1	; special function
+
+; MECHE_BLUE_THRONE_OPEN	-- blue room throne, open passage
+location53:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	$ff			; east exit
+	.byte	MECHE_BLUE_ROOM_CENTER	; west exit
+	.byte	$ff			; north exit_dir
+	.byte	$ff			; south exit_dir
+	.byte	$ff			; east exit_dir
+	.byte	DIRECTION_W		; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	$0000				; east bg
+	.word	blue_throne_open_w_lzsa	; west bg
+	.byte	BG_WEST
+	.byte	DIRECTION_W
+	.byte	5,13		; special x
+	.byte	16,40		; special y
+	.word	enter_blue_secret-1	; special function
+
 
 

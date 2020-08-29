@@ -67,7 +67,8 @@ meche_graphics.inc:	\
 	north_close_n.lzsa north_close_s.lzsa \
 	red_throne_s.lzsa \
 	red_room_east_e.lzsa red_room_east_n.lzsa red_room_east_w.lzsa \
-	red_skeleton.lzsa red_no_skeleton.lzsa
+	red_skeleton.lzsa red_no_skeleton.lzsa \
+	blue_throne_open_w.lzsa blue_throne_closed_w.lzsa
 	echo "departure_e_lzsa: .incbin \"departure_e.lzsa\"" > meche_graphics.inc
 	echo "arrival_w_lzsa: .incbin \"arrival_w.lzsa\"" >> meche_graphics.inc
 	echo "entrance_e_lzsa: .incbin \"entrance_e.lzsa\"" >> meche_graphics.inc
@@ -185,6 +186,8 @@ meche_graphics.inc:	\
 	echo "red_room_east_w_lzsa: .incbin \"red_room_east_w.lzsa\"" >> meche_graphics.inc
 	echo "red_skeleton_lzsa: .incbin \"red_skeleton.lzsa\"" >> meche_graphics.inc
 	echo "red_no_skeleton_lzsa: .incbin \"red_no_skeleton.lzsa\"" >> meche_graphics.inc
+	echo "blue_throne_open_w_lzsa: .incbin \"blue_throne_open_w.lzsa\"" >> meche_graphics.inc
+	echo "blue_throne_closed_w_lzsa: .incbin \"blue_throne_closed_w.lzsa\"" >> meche_graphics.inc
 
 
 
