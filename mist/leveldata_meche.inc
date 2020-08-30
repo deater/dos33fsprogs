@@ -1015,8 +1015,7 @@ location54:
 	.word	blue_room_south_e_lzsa		; east bg
 	.word	$0000				; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST
-	.byte	$ff
 	.byte	DIRECTION_E
-	.byte	21,30		; special x
+	.byte	27,31		; special x
 	.byte	34,46		; special y
 	.word	touch_blue_box-1	; special function

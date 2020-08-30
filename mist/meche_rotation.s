@@ -1,6 +1,200 @@
+	;================================
+	; draw snake
+	;================================
+draw_snake:
+	lda	DIRECTION
+	cmp	#DIRECTION_E
+	bne	done_draw_snake
+
+	lda	ANIMATE_FRAME
+	beq	done_draw_snake
+
+	asl
+	tax
+
+	lda	snake_coords,X
+	sta	XPOS
+
+	lda	snake_coords+1,X
+	sta	YPOS
+
+	lda	snake_sprites,X
+	sta	INL
+
+	lda	snake_sprites+1,X
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	lda	FRAMEL
+	and	#$1f
+	bne	done_draw_snake
+
+	; advance frame
+	inc	ANIMATE_FRAME
+	lda	ANIMATE_FRAME
+	cmp	#23
+	bne	done_draw_snake
+
+	lda	#0
+	sta	ANIMATE_FRAME
+
+done_draw_snake:
+	rts
+
+snake_coords:
+	.byte	28,42			; 0 (handle down)
+	.byte	28,42			; 1 (handle straight)
+	.byte	28,40			; 2 (handle up)
+	.byte	28,42			; 3 (handle straight)
+	.byte	28,42			; 4 (handle down)
+	.byte	28,42			; 5 (handle straight)
+	.byte	28,40			; 6 (handle up)
+	.byte	28,42			; 7 (handle straight)
+	.byte	28,42			; 8 (handle down)
+
+	.byte	22,34			; 9 (lid up)
+	.byte	23,32			; 10 (lid totally up)
+	.byte	23,28			; 11 (snake up)
+	.byte	23,32			; 12 (snake down)
+	.byte	23,28			; 13 (snake up)
+	.byte	23,32			; 14 (snake down)
+
+	.byte	23,30			; 15 (snake lean)
+	.byte	21,32			; 16 (snake strike)
+	.byte	21,32			; 17 (snake over)
+	.byte	22,32			; 18 (snake back)
+	.byte	23,28			; 19 (snake up)
+	.byte	23,32			; 20 (snake down)
+
+	.byte	23,32			; 21 (lid totally up)
+	.byte	22,34			; 22 (lid up)
+
+
+
+snake_sprites:
+	.word	snake_sprite0		; 0 (handle down)
+	.word	snake_sprite1		; 1 (handle straight)
+	.word	snake_sprite2		; 2 (handle up)
+	.word	snake_sprite1		; 3 (handle straight)
+	.word	snake_sprite0		; 4 (handle down)
+	.word	snake_sprite1		; 5 (handle straight)
+	.word	snake_sprite2		; 6 (handle up)
+	.word	snake_sprite1		; 7 (handle straight)
+	.word	snake_sprite0		; 8 (handle down)
+
+	.word	snake_sprite3		; 9 (lid up)
+	.word	snake_sprite4		; 10 (lid totally up)
+	.word	snake_sprite5		; 11 (snake up)
+	.word	snake_sprite6		; 12 (snake down)
+	.word	snake_sprite5		; 13 (snake up)
+	.word	snake_sprite6		; 14 (snake down)
+	.word	snake_sprite7		; 15 (snake lean)
+	.word	snake_sprite8		; 16 (snake strike)
+	.word	snake_sprite9		; 17 (snake over)
+	.word	snake_sprite10		; 18 (snake back)
+	.word	snake_sprite5		; 19 (snake up)
+	.word	snake_sprite6		; 20 (snake down)
+
+	.word	snake_sprite4		; 21 (lid totally up)
+	.word	snake_sprite3		; 22 (lid up)
+
+
+	; 28,42
+snake_sprite0:
+	.byte	1,1
+	.byte	$AA
+
+	; 28,42
+snake_sprite1:
+	.byte	2,1
+	.byte	$90,$90
+
+	; 28,40
+snake_sprite2:
+	.byte	2,2
+	.byte	$92,$02
+	.byte	$90,$99
+
+	; 22,34
+snake_sprite3:	; lid up
+	.byte	5,3
+	.byte	$25,$05,$05,$05,$58
+	.byte	$52,$08,$00,$00,$05
+	.byte	$5d,$d0,$d0,$d0,$58
+
+	; 23,32
+snake_sprite4:	; lid totally up
+	.byte	5,4
+	.byte	$82,$82,$80,$88,$82
+	.byte	$88,$88,$88,$88,$88
+	.byte	$58,$4c,$cc,$48,$d8
+	.byte	$d4,$d4,$d4,$54,$dd
+
+	; 23,28
+snake_sprite5:	; snake up
+	.byte	5,6
+	.byte	$22,$22,$40,$c5,$22
+	.byte	$22,$42,$c4,$4c,$22
+	.byte	$82,$44,$44,$44,$82
+	.byte	$88,$84,$44,$84,$88
+	.byte	$58,$08,$44,$08,$d8
+	.byte	$d0,$d0,$d4,$50,$dd
+
+	; 23,32
+snake_sprite6:	; snake down
+	.byte	5,4
+	.byte	$82,$82,$44,$c8,$82
+	.byte	$88,$48,$c4,$4c,$88
+	.byte	$58,$44,$44,$44,$d8
+	.byte	$d0,$d0,$d4,$50,$dd
+
+	; 23,30
+snake_sprite7:	; snake lean
+	.byte	5,5
+	.byte	$22,$c2,$c4,$48,$22
+	.byte	$82,$4c,$cc,$44,$82
+	.byte	$88,$84,$44,$84,$88
+	.byte	$58,$48,$44,$08,$d8
+	.byte	$d0,$d4,$d4,$50,$dd
+
+	; 21,32
+snake_sprite8:	; snake strike
+	.byte	7,4
+	.byte	$20,$22,$82,$82,$80,$88,$82
+	.byte	$44,$44,$44,$88,$88,$88,$88
+	.byte	$22,$52,$54,$44,$48,$08,$d8
+	.byte	$22,$5d,$d0,$d4,$d4,$50,$dd
+
+	; 21,32
+snake_sprite9:	; snake over
+	.byte	7,8
+	.byte	$20,$22,$82,$82,$80,$88,$82
+	.byte	$22,$22,$88,$88,$88,$88,$88
+	.byte	$22,$52,$58,$44,$44,$08,$d8
+	.byte	$22,$5d,$44,$44,$d4,$50,$dd
+	.byte	$02,$45,$44,$44,$88,$5d,$00
+	.byte	$44,$44,$44,$44,$88,$85,$00
+	.byte	$44,$44,$44,$44,$88,$55,$89
+	.byte	$24,$44,$44,$24,$20,$22,$08
+
+	; 22,32
+snake_sprite10:	; snake back
+	.byte	6,4
+	.byte	$c2,$c4,$c4,$40,$88,$82
+	.byte	$2c,$8c,$44,$44,$88,$88
+	.byte	$52,$58,$44,$44,$08,$d8
+	.byte	$5d,$d0,$d4,$d4,$50,$dd
+
+	;=====================
+	; touch the snake box
+	;=====================
+
 touch_blue_box:
 	lda	#1
 	sta	ANIMATE_FRAME
+	sta	FRAMEL
+
 	rts
 
 	;===============================

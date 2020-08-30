@@ -90,8 +90,27 @@ game_loop:
 	beq	fg_draw_red_page
 	cmp	#MECHE_RED_ROOM_EAST
 	beq	fg_draw_crystals
+	cmp	#MECHE_BLUE_ROOM_SOUTH
+	beq	fg_animate_snake
 
 	jmp	nothing_special
+
+fg_draw_red_page:
+	jsr	draw_red_page
+	jmp	nothing_special
+
+fg_draw_blue_page:
+	jsr	draw_blue_page
+	jmp	nothing_special
+
+fg_draw_crystals:
+	jsr	draw_crystals
+	jmp	nothing_special
+
+fg_animate_snake:
+	jsr	draw_snake
+	jmp	nothing_special
+
 animate_meche_book:
 
 	; handle animated linking book
@@ -171,17 +190,7 @@ done_animate_mist_book:
 	jmp	nothing_special
 
 
-fg_draw_red_page:
-	jsr	draw_red_page
-	jmp	nothing_special
 
-fg_draw_blue_page:
-	jsr	draw_blue_page
-	jmp	nothing_special
-
-fg_draw_crystals:
-	jsr	draw_crystals
-	jmp	nothing_special
 
 nothing_special:
 
