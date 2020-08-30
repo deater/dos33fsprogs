@@ -1,3 +1,8 @@
+touch_blue_box:
+	lda	#1
+	sta	ANIMATE_FRAME
+	rts
+
 	;===============================
 	; draw hover crystals
 	;===============================

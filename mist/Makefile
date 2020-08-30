@@ -26,7 +26,7 @@ mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
 	$(DOS33) -y mist.dsk BSAVE -a 0x2000 SHIP
 
 mist_side2.dsk:	HELLO_DISK2 CHANNEL ARBOR NIBEL CABIN GENERATOR
-	cp empty.dsk mist_side2.dsk
+	cp extra_empty.dsk mist_side2.dsk
 	$(DOS33) -y mist_side2.dsk SAVE A HELLO_DISK2 HELLO
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 CHANNEL
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 ARBOR
@@ -34,15 +34,14 @@ mist_side2.dsk:	HELLO_DISK2 CHANNEL ARBOR NIBEL CABIN GENERATOR
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 CABIN
 	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 GENERATOR
 
-
-
 mist_side3.dsk:	HELLO_DISK2 MECHE SELENA STONEY SUB
-	cp empty.dsk mist_side3.dsk
-	$(DOS33) -y mist_side3.dsk SAVE A HELLO_DISK2 HELLO
+	cp extra_empty.dsk mist_side3.dsk
+#	$(DOS33) -y mist_side3.dsk SAVE A HELLO_DISK2 HELLO
 	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 MECHE
 	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 SELENA
 	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 STONEY
 	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 SUB
+
 
 
 ###
