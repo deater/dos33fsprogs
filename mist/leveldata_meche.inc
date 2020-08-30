@@ -420,7 +420,7 @@ location21:
 
 ; MECHE_RIGHT_HALL_CORNER		-- looks a lot like left hall corner
 location22:
-	.byte	MECHE_BLUE_ROOM_CENTER	; north exit
+	.byte	MECHE_BLUE_ROOM_SOUTH	; north exit
 	.byte	MECHE_RIGHT_HALL_CORNER	; south exit
 	.byte	$ff			; east exit
 	.byte	MECHE_RIGHT_HALL2	; west exit
@@ -462,7 +462,7 @@ location23:
 ; MECHE_CENTER_HALL2		-- center hall 2
 location24:
 	.byte	MECHE_CENTER_HALL2	; north exit
-	.byte	MECHE_BLUE_ROOM_SOUTH	; south exit
+	.byte	MECHE_BLUE_ROOM_CENTER	; south exit
 	.byte	$ff			; east exit
 	.byte	MECHE_RED_BUTTON	; west exit
 	.byte	DIRECTION_W		; north exit_dir
