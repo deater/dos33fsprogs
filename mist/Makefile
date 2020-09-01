@@ -137,7 +137,7 @@ generate_common.o:	generate_common.c
 
 ####
 
-common_routines.inc:	qload.lst loader.lst generate_common
+common_routines.inc:	qload.lst generate_common
 	./generate_common > common_routines.inc
 
 ####
