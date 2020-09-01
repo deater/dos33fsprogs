@@ -57,22 +57,45 @@ tmpadr_loop:
 	dec	partial1
 	bne	tmpadr_loop
 
+	;====================================
+	; read a sector
+	;====================================
+	; first address field
+	;====================================
+	; starts with $D5 $AA $96
+	; then XX YY volume
+	; then XX YY track
+	; then XX YY sector
+	; then XX YY checksum
+	; then ends with $DE $AA $EB
+	;====================================
+	; data field
+	;====================================
+	; starts with $D5 $AA $AD
+	; 342 bytes of data
+	; XX checksum
+	; ends with $DE $AA $EB
 read:
 
 outer_read:
 	jsr	readnib
 inner_read:
-	cmp	#$d5
+	cmp	#$d5			; look for $D5 part of addr field
 	bne	outer_read
-	jsr	readnib
+
+	jsr	readnib			; look for $D5 $AA
 	cmp	#$aa
 	bne	inner_read
+
+					; look for $D5 $AA $AD
+
 	tay			; we need Y=#$AA later
 	jsr	readnib
 	eor	#$ad		; zero A if match
 	beq	check_mode
 
-        ;if not #$AD, then #$96 is assumed
+        ; if not #$AD, then #$96 is assumed
+	; so in address field
 
 	ldy	#2		; volume, track, sector
 another:
@@ -83,9 +106,11 @@ another:
 	and	sector+1
 	dey
 	bpl	another
+
 	tay
 	ldx	addrtbl, Y	; fetch corresponding address
-	beq	read
+	beq	read		; done?
+
 	sta	sector+1	; store index for later
 
 	stx	adrpatch1+2
@@ -104,8 +129,9 @@ another:
 	stx	adrpatch6+2
 
 	ldy	#$fe
-adrpatch1:
+
 loop2:
+adrpatch1:
 	lda	$d102, Y
 	pha
 	iny
@@ -113,6 +139,7 @@ loop2:
 
 branch_read:
         bcs	read		; branch always
+
 check_mode:
 	cpx	#0
 	beq	read		; loop if not expecting #$AD
@@ -188,14 +215,20 @@ adrpatch9:
 	bpl	loop9
 branch_read2:
 	bcs	branch_read	; branch if checksum failure
+
 sector:
 	ldy	#$d1
 	txa
 	sta	addrtbl, Y	; zero corresponding address
 	dec	total+1
-	dec	partial2	; adjust remaining count (faster than looping over array)
+	dec	partial2	; adjust remaining count
+				; (faster than looping over array)
 	sec
 	bne	branch_read2	; read all requested sectors in one track
+
+	sta	startsec+1	; this was missing from original code
+				; leading to trouble on wrap around
+				; it not starting at sector0
 total:
 	ldx	#$d1
 	beq	driveoff

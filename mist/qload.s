@@ -86,8 +86,8 @@ opendir_filename:
 	rts
 
 
-load_new = $119A
-load_address=$11C8
+load_new = $119D
+load_address=$11CB
 load_track=load_address+1
 load_sector=load_address+2
 load_length=load_address+3
