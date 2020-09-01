@@ -1,6 +1,16 @@
 #include <stdio.h>
 #include <string.h>
 
+#if 0
+	/* old, loader.s */
+	static char filename[]="loader.lst";
+	static int routine_offset=0x1000;
+#else
+	/* new, qload */
+	static char filename[]="qload.lst";
+	static int routine_offset=0x1200;
+#endif
+
 
 static FILE *fff;
 
@@ -27,14 +37,14 @@ static void find_address(char *symbol_name) {
 	}
 
 
-	printf("%s\t=$%04x\n",symbol_name,addr+0x1000);
+	printf("%s\t=$%04x\n",symbol_name,addr+routine_offset);
 }
 
 int main(int argc, char **argv) {
 
-	fff=fopen("loader.lst","r");
+	fff=fopen(filename,"r");
 	if (fff==NULL) {
-		fprintf(stderr,"ERROR!  could not open loader.lst\n");
+		fprintf(stderr,"ERROR!  could not open %s\n",filename);
 		return -1;
 	}
 

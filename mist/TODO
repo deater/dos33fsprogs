@@ -1,5 +1,12 @@
 For release 1.0
 
++ QLOAD
+	-- add back in intro text (load to gr page2, switch to, then load?)
+	-- add in 5 load games
+	-- make it which-disk-is-in aware
+	-- code to sanity check right disk is put in?
+		read t0/s0 check fingerprint?
+
 + LOADER 
 	-- save game
 	-- joystick support
@@ -38,7 +45,7 @@ For release 1.0
 + MECHE
 	-- animations for elevator
 	-- way to turn around in basement
-	-- more of paths to hints
+	-- make rotation more similar to actual game?
 
 + SUB
 	-- can walk around outside of sub

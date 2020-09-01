@@ -1,6 +1,7 @@
 include ../Makefile.inc
 
 DOS33 = ../dos33fs-utils/dos33
+DOS33_RAW = ../dos33fs-utils/dos33_raw
 PNG_TO_40x96 = ../gr-utils/png_to_40x96
 PNG_TO_40x48D = ../gr-utils/png_to_40x48d
 PNG2RLE = ../gr-utils/png2rle
@@ -11,37 +12,90 @@ all:	mist.dsk mist_side2.dsk mist_side3.dsk
 zip:	mist.dsk mist_side2.dsk mist_side3.dsk
 	zip mist.zip mist.dsk mist_side2.dsk mist_side3.dsk
 
-mist.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
-		DENTIST D\'NI SAVE0 SHIP
-	cp empty.dsk mist.dsk
-	$(DOS33) -y mist.dsk SAVE A HELLO
-	$(DOS33) -y mist.dsk BSAVE -a 0x1000 LOADER
-	$(DOS33) -y mist.dsk BSAVE -a 0x4000 MIST_TITLE
-	$(DOS33) -y mist.dsk BSAVE -a 0x2000 MIST
-	$(DOS33) -y mist.dsk BSAVE -a 0x2000 OCTAGON
-	$(DOS33) -y mist.dsk BSAVE -a 0x2000 VIEWER
-	$(DOS33) -y mist.dsk BSAVE -a 0x2000 DENTIST
-	$(DOS33) -y mist.dsk BSAVE -a 0x2000 D\'NI
-	$(DOS33) -y mist.dsk BSAVE -a 0xe00 SAVE0
-	$(DOS33) -y mist.dsk BSAVE -a 0x2000 SHIP
+#mist_old.dsk:	HELLO LOADER MIST_TITLE MIST OCTAGON VIEWER \
+#		DENTIST D\'NI SAVE0 SHIP
+#	cp empty.dsk mist_old.dsk
+#	$(DOS33) -y mist_old.dsk SAVE A HELLO
+#	$(DOS33) -y mist_old.dsk BSAVE -a 0x1000 LOADER
+#	$(DOS33) -y mist_old.dsk BSAVE -a 0x4000 MIST_TITLE
+#	$(DOS33) -y mist_old.dsk BSAVE -a 0x2000 MIST
+#	$(DOS33) -y mist_old.dsk BSAVE -a 0x2000 OCTAGON
+#	$(DOS33) -y mist_old.dsk BSAVE -a 0x2000 VIEWER
+#	$(DOS33) -y mist_old.dsk BSAVE -a 0x2000 DENTIST
+#	$(DOS33) -y mist_old.dsk BSAVE -a 0x2000 D\'NI
+#	$(DOS33) -y mist_old.dsk BSAVE -a 0xe00 SAVE0
+#	$(DOS33) -y mist_old.dsk BSAVE -a 0x2000 SHIP
 
-mist_side2.dsk:	HELLO_DISK2 CHANNEL ARBOR NIBEL CABIN GENERATOR
-	cp extra_empty.dsk mist_side2.dsk
-	$(DOS33) -y mist_side2.dsk SAVE A HELLO_DISK2 HELLO
-	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 CHANNEL
-	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 ARBOR
-	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 NIBEL
-	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 CABIN
-	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 GENERATOR
+#mist_side2.dsk:	HELLO_DISK2 CHANNEL ARBOR NIBEL CABIN GENERATOR
+#	cp extra_empty.dsk mist_side2.dsk
+#	$(DOS33) -y mist_side2.dsk SAVE A HELLO_DISK2 HELLO
+#	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 CHANNEL
+#	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 ARBOR
+#	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 NIBEL
+#	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 CABIN
+#	$(DOS33) -y mist_side2.dsk BSAVE -a 0x2000 GENERATOR
 
-mist_side3.dsk:	HELLO_DISK2 MECHE SELENA STONEY SUB
-	cp extra_empty.dsk mist_side3.dsk
+#mist_side3.dsk:	HELLO_DISK2 MECHE SELENA STONEY SUB
+#	cp extra_empty.dsk mist_side3.dsk
 #	$(DOS33) -y mist_side3.dsk SAVE A HELLO_DISK2 HELLO
-	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 MECHE
-	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 SELENA
-	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 STONEY
-	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 SUB
+#	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 MECHE
+#	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 SELENA
+#	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 STONEY
+#	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 SUB
 
+
+mist.dsk:	QBOOT QLOAD MIST_TITLE MIST OCTAGON VIEWER \
+		DENTIST D\'NI SAVE0 SHIP GENERATOR
+	cp extra_empty.dsk mist.dsk
+	$(DOS33_RAW) mist.dsk  0 0 QBOOT      0   1
+	$(DOS33_RAW) mist.dsk  0 2 QBOOT      1   1
+	$(DOS33_RAW) mist.dsk  0 4 QBOOT      2   1
+	$(DOS33_RAW) mist.dsk  0 6 SAVE0      0   1
+	$(DOS33_RAW) mist.dsk  1 0 QLOAD      0  12
+	$(DOS33_RAW) mist.dsk  2 0 MIST_TITLE 0  83
+	$(DOS33_RAW) mist.dsk  8 0 MIST       0 159
+	$(DOS33_RAW) mist.dsk 18 0 OCTAGON    0 128
+	$(DOS33_RAW) mist.dsk 26 0 DENTIST    0  31
+	$(DOS33_RAW) mist.dsk 28 0 D\'NI      0  27
+	$(DOS33_RAW) mist.dsk 30 0 SHIP       0  20
+	$(DOS33_RAW) mist.dsk 31 8 VIEWER     0  19
+	$(DOS33_RAW) mist.dsk 32 12 GENERATOR 0  33
+
+
+mist_side2.dsk:	CHANNEL ARBOR NIBEL CABIN
+	cp extra_empty.dsk mist_side2.dsk
+	$(DOS33_RAW) mist_side2.dsk  1 0 CHANNEL 0 135
+	$(DOS33_RAW) mist_side2.dsk 10 0 ARBOR   0 159
+	$(DOS33_RAW) mist_side2.dsk 20 0 NIBEL   0 109
+	$(DOS33_RAW) mist_side2.dsk 27 0 CABIN   0  61
+
+mist_side3.dsk:	MECHE SELENA STONEY SUB
+	cp extra_empty.dsk mist_side3.dsk
+	$(DOS33_RAW) mist_side3.dsk  1 0 MECHE  0 157
+	$(DOS33_RAW) mist_side3.dsk 11 0 SELENA 0 145
+	$(DOS33_RAW) mist_side3.dsk 21 0 STONEY 0 158
+	$(DOS33_RAW) mist_side3.dsk 31 0 SUB    0  54
+
+
+###
+
+QBOOT:	qboot_sector.o
+	ld65 -o QBOOT qboot_sector.o -C ../linker_scripts/apple2_800.inc
+
+qboot_sector.o:	qboot_sector.s qboot_stage2.s
+	ca65 -o qboot_sector.o qboot_sector.s -l qboot_sector.lst
+
+###
+
+QLOAD: qload.o
+	ld65 -o QLOAD qload.o -C ../linker_scripts/apple2_1200.inc
+
+qload.o:	qload.s \
+	gr_copy.s gr_offsets.s gr_pageflip.s gr_putsprite_crop.s \
+	text_print.s gr_fast_clear.s decompress_fast_v2.s \
+	keyboard.s draw_pointer.s end_level.s audio.s loadstore.s \
+	qkumba_popwr.s
+	ca65 -o qload.o qload.s -l qload.lst
 
 
 ###
@@ -83,7 +137,7 @@ generate_common.o:	generate_common.c
 
 ####
 
-common_routines.inc:	loader.lst generate_common
+common_routines.inc:	qload.lst loader.lst generate_common
 	./generate_common > common_routines.inc
 
 ####
