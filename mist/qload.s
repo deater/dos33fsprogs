@@ -90,6 +90,9 @@ change_disk:
 
 	ldx	WHICH_LOAD
 	lda	which_disk_array,X
+	clc
+	adc	#48
+
 	ldy	#19
 	sta	(OUTL),Y
 

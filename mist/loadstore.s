@@ -8,6 +8,9 @@
 load_game:
 	bit	KEYRESET	; clear keyboard buffer
 
+	;===============================
+	; print "are you sure" message
+
 	bit	SET_TEXT	; set text mode
 
 	lda     #' '|$80
@@ -38,9 +41,36 @@ wait_load_confirmation:
 	cmp	#'Y'
 	bne	done_load
 
-	; actually load it
+	;===============================
+	; print "Which one?"
 
-	lda	#LOAD_SAVE5
+	jsr	clear_all	; clear screen
+
+	lda	#<which_message
+	sta	OUTL
+	lda	#>which_message
+	sta	OUTH
+	jsr	move_and_print
+
+	jsr	page_flip
+
+which_load_confirmation:
+	lda	KEYPRESS
+	bpl	which_load_confirmation
+
+	bit	KEYRESET		; clear keypress
+
+	and	#$7f
+	sec
+	sbc	#'1'
+
+	bmi	done_load
+	cmp	#5
+	bcs	done_load
+
+	; actually load it
+	clc
+	adc	#LOAD_SAVE1
 	sta	WHICH_LOAD
 
 	jsr	load_file
@@ -118,6 +148,8 @@ done_store:
 
 
 
+which_message:
+.byte  9,5,"LOAD WHICH GAME (1-5)?",0
 
 load_message:
 .byte  10,5,"LOAD GAME FROM DISK",0
