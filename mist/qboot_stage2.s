@@ -330,19 +330,16 @@ wait_1s:
 	; setup return on stack
 	; is value - 1
 
-	lda	load_address
-	sec
-	sbc	#1
-	pha
-	lda     #$ff
-	pha
+;	lda	load_address
+;	sec
+;	sbc	#1
+;	pha
+;	lda     #$ff
+;	pha
 
 	lda	load_track
 	asl			; track to start*2
 	sta     phase+1
-
-	lda     load_address		; address to load
-	pha
 
 	lda	load_sector
 	tay			; sector to start
@@ -350,10 +347,11 @@ wait_1s:
 	lda	load_length	; length
 	tax
 
-	pla
+	lda     load_address		; address to load
 
-	jmp     seekread
+	jsr	seekread
 
+	rts
 
 load_address:
 	.byte $00

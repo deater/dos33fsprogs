@@ -52,9 +52,9 @@ int main(int argc, char **argv) {
 	printf("; external routines\n");
 	printf("\n");
 
-	printf("; loader.s\n");
-	find_address("opendir_filename");
-	printf("\n");
+//	printf("; loader.s\n");
+//	find_address("opendir_filename");
+//	printf("\n");
 
 //	printf("; audio.s\n");
 //	find_address("play_audio");

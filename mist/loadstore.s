@@ -40,12 +40,10 @@ wait_load_confirmation:
 
 	; actually load it
 
-	lda	#<save_filename
-	sta	OUTL
-	lda	#>save_filename
-	sta	OUTH
+	lda	#LOAD_SAVE5
+	sta	WHICH_LOAD
 
-	jsr	opendir_filename
+	jsr	load_file
 
 	; copy to zero page
 
@@ -130,5 +128,5 @@ save_message:
 are_you_sure:
 .byte  10,7,"ARE YOU SURE? (Y/N)",0
 
-save_filename:
-.byte "SAVE0",0
+;save_filename:
+;.byte "SAVE0",0

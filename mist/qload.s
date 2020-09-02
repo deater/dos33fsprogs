@@ -18,11 +18,17 @@ qload_start:
 
 main_game_loop:
 	jsr	load_file
+
+	lda	WHICH_LOAD
+	bne	not_title
+
+start_title:
+	jsr	$4000
 	jmp	main_game_loop
 
-
-opendir_filename:
-	rts
+not_title:
+	jsr	$2000
+	jmp	main_game_loop
 
 
 
@@ -30,7 +36,7 @@ opendir_filename:
 
 driveoff =$1122
 load_new = $119D
-load_address=$11CB
+load_address=$11C0
 load_track=load_address+1
 load_sector=load_address+2
 load_length=load_address+3
@@ -58,8 +64,9 @@ load_file:
 	lda	length_array,X
 	sta	load_length
 
-	jmp	load_new
+	jsr	load_new
 
+	rts
 
 	;===================================================
 	;===================================================
@@ -146,7 +153,7 @@ sector_array:
 	.byte  0, 0, 0, 0	; CABIN,DENTIST,ARBOR,NIBEL
 	.byte  0,12, 0, 0	; SHIP,GENERATOR,D'NI,SUB
 	.byte  1		; TEXT_TITLE
-	.byte  1, 1, 1, 1, 1	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
+	.byte 11,12,13,14,15	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
 
 length_array:
         .byte  83,159,157,145	; MIST_TITLE,MIST,MECHE,SELENA
