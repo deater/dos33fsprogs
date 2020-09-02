@@ -1,80 +1,15 @@
+; SAVE1 -- Mechanical Age
+
 .include "zp.inc"
 .include "common_defines.inc"
 
-
-.if 0
-; if doing playthrough
-.include "playthrough_save.inc"
-.endif
-
 ; want to load this to address $80
 
-.if 0
-; ARBOR
-.byte LOAD_ARBOR	; WHICH_LOAD		= 	$80
-.byte DIRECTION_W	; DIRECTION		= 	$81
-.byte ARBOR_ARRIVAL_CLOSED	; LOCATION	=	$82
-.endif
-
-.if 0
 ; MECHE
 .byte LOAD_MECHE	; WHICH_LOAD		= 	$80
 .byte DIRECTION_W	; DIRECTION		= 	$81
 .byte MECHE_ARRIVAL	; LOCATION	=	$82
-.endif
 
-.if 1
-; MECHE
-.byte LOAD_MECHE	; WHICH_LOAD		= 	$80
-.byte DIRECTION_N	; DIRECTION		= 	$81
-.byte MECHE_EAST_PLATFORM	; LOCATION	=	$82
-.endif
-
-
-.if 0
-; CHANNEL
-.byte LOAD_CHANNEL	; WHICH_LOAD		= 	$80
-.byte DIRECTION_S	; DIRECTION		= 	$81
-.byte CHANNEL_ARRIVAL	; LOCATION	=	$82
-.endif
-
-.if 0
-; Octagon (for playthrough)
-.byte LOAD_OCTAGON	; WHICH_LOAD		= 	$80
-.byte DIRECTION_S	; DIRECTION		= 	$81
-.byte OCTAGON_CENTER	; LOCATION	=	$82
-.endif
-
-.if 0
-; Selena
-.byte LOAD_SELENA	; WHICH_LOAD		= 	$80
-.byte DIRECTION_N	; DIRECTION		= 	$81
-.byte SELENA_WALKWAY1	; LOCATION	=	$82
-.endif
-
-.if 0
-; Sub
-.byte LOAD_SUB		; WHICH_LOAD		= 	$80
-.byte DIRECTION_E	; DIRECTION		= 	$81
-.byte SUB_BUNKER_ENTRY	; LOCATION	=	$82
-.endif
-
-.if 0
-; Stoneship
-.byte LOAD_STONEY	; WHICH_LOAD		= 	$80
-.byte DIRECTION_E	; DIRECTION		= 	$81
-.byte STONEY_ARRIVAL	; LOCATION	=	$82
-.endif
-
-.if 0
-; NIBEL
-.byte LOAD_NIBEL	; WHICH_LOAD		= 	$80
-.byte DIRECTION_E	; DIRECTION		= 	$81
-.byte NIBEL_OUTSIDE_ELEV2_OPEN	; LOCATION	=	$82
-.endif
-
-
-.if 1
 .byte $00	; RED_PAGES_TAKEN	=	$83
 .byte $00	; BLUE_PAGES_TAKEN	=	$84
 .byte $00	; CLOCK_BRIDGE		=	$85
@@ -165,5 +100,5 @@
 .byte $00	; SUB_DIRECTION		=	$D6
 .byte $00	; SUB_LOCATION		=	$D7
 .byte $00	; NIBEL_PROJECTOR	=	$D8
-.endif
+
 

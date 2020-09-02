@@ -45,20 +45,25 @@ zip:	mist.dsk mist_side2.dsk mist_side3.dsk
 
 
 mist.dsk:	QBOOT QLOAD MIST_TITLE MIST OCTAGON VIEWER \
-		DENTIST D\'NI SAVE0 SHIP GENERATOR
+		DENTIST D\'NI SHIP GENERATOR \
+		SAVE1 SAVE2 SAVE3 SAVE4 SAVE5
 	cp extra_empty.dsk mist.dsk
-	$(DOS33_RAW) mist.dsk  0 0 QBOOT      0   1
-	$(DOS33_RAW) mist.dsk  0 2 QBOOT      1   1
-	$(DOS33_RAW) mist.dsk  0 4 QBOOT      2   1
-	$(DOS33_RAW) mist.dsk  0 6 SAVE0      0   1
-	$(DOS33_RAW) mist.dsk  1 0 QLOAD      0  12
-	$(DOS33_RAW) mist.dsk  2 0 MIST_TITLE 0  83
-	$(DOS33_RAW) mist.dsk  8 0 MIST       0 159
-	$(DOS33_RAW) mist.dsk 18 0 OCTAGON    0 128
-	$(DOS33_RAW) mist.dsk 26 0 DENTIST    0  31
-	$(DOS33_RAW) mist.dsk 28 0 D\'NI      0  27
-	$(DOS33_RAW) mist.dsk 30 0 SHIP       0  20
-	$(DOS33_RAW) mist.dsk 31 8 VIEWER     0  19
+	$(DOS33_RAW) mist.dsk  0  0 QBOOT      0   1
+	$(DOS33_RAW) mist.dsk  0  2 QBOOT      1   1
+	$(DOS33_RAW) mist.dsk  0  4 QBOOT      2   1
+	$(DOS33_RAW) mist.dsk  0 11 SAVE1      0   1
+	$(DOS33_RAW) mist.dsk  0 12 SAVE2      0   1
+	$(DOS33_RAW) mist.dsk  0 13 SAVE3      0   1
+	$(DOS33_RAW) mist.dsk  0 14 SAVE4      0   1
+	$(DOS33_RAW) mist.dsk  0 15 SAVE5      0   1
+	$(DOS33_RAW) mist.dsk  1  0 QLOAD      0  13
+	$(DOS33_RAW) mist.dsk  2  0 MIST_TITLE 0  83
+	$(DOS33_RAW) mist.dsk  8  0 MIST       0 159
+	$(DOS33_RAW) mist.dsk 18  0 OCTAGON    0 128
+	$(DOS33_RAW) mist.dsk 26  0 DENTIST    0  31
+	$(DOS33_RAW) mist.dsk 28  0 D\'NI      0  27
+	$(DOS33_RAW) mist.dsk 30  0 SHIP       0  20
+	$(DOS33_RAW) mist.dsk 31  8 VIEWER     0  19
 	$(DOS33_RAW) mist.dsk 32 12 GENERATOR 0  33
 
 
@@ -112,12 +117,43 @@ loader.o:	loader.s \
 
 ###
 
-SAVE0: default_save.o
-	ld65 -o SAVE0 default_save.o -C ../linker_scripts/apple2_e00.inc
+SAVE1: save1.o
+	ld65 -o SAVE1 save1.o -C ../linker_scripts/apple2_e00.inc
 
-default_save.o:	default_save.s playthrough_save.inc
-	ca65 -o default_save.o default_save.s -l default_save.lst
+save1.o:	save1.s
+	ca65 -o save1.o save1.s -l save1.lst
 
+###
+
+SAVE2: save2.o
+	ld65 -o SAVE2 save2.o -C ../linker_scripts/apple2_e00.inc
+
+save2.o:	save2.s
+	ca65 -o save2.o save2.s -l save2.lst
+
+###
+
+SAVE3: save3.o
+	ld65 -o SAVE3 save3.o -C ../linker_scripts/apple2_e00.inc
+
+save3.o:	save3.s
+	ca65 -o save3.o save3.s -l save3.lst
+
+###
+
+SAVE4: save4.o
+	ld65 -o SAVE4 save4.o -C ../linker_scripts/apple2_e00.inc
+
+save4.o:	save4.s
+	ca65 -o save4.o save4.s -l save4.lst
+
+###
+
+SAVE5: save5.o
+	ld65 -o SAVE5 save5.o -C ../linker_scripts/apple2_e00.inc
+
+save5.o:	save5.s
+	ca65 -o save5.o save5.s -l save5.lst
 
 ###
 

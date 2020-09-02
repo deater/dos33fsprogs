@@ -21,9 +21,6 @@ main_game_loop:
 	jmp	main_game_loop
 
 
-
-
-
 opendir_filename:
 	rts
 
@@ -79,12 +76,17 @@ change_disk:
 	jsr	TEXT
 	jsr	HOME
 
-	ldy	#0
-
 	lda	#<error_string
 	sta	OUTL
 	lda	#>error_string
 	sta	OUTH
+
+	ldx	WHICH_LOAD
+	lda	which_disk_array,X
+	ldy	#19
+	sta	(OUTL),Y
+
+	ldy	#0
 
 quick_print:
 	lda	(OUTL),Y
@@ -100,7 +102,7 @@ fnf_keypress:
 	bpl	fnf_keypress
 	bit	KEYRESET
 
-	; FIXME: actually verify proper file
+	; FIXME: actually verify proper disk is there
 
 	ldx	WHICH_LOAD
 	lda	which_disk_array,X
@@ -118,30 +120,41 @@ which_disk_array:
 	.byte 1,1,3,2		; OCTAGON,VIEWER,STONEY,CHANNEL
 	.byte 2,1,2,2		; CABIN,DENTIST,ARBOR,NIBEL
 	.byte 1,1,1,3		; SHIP,GENERATOR,D'NI,SUB
+	.byte 1			; TEXT_TITLE
+	.byte 1,1,1,1,1		; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
 
 load_address_array:
         .byte $40,$20,$20,$20	; MIST_TITLE,MIST,MECHE,SELENA
 	.byte $20,$20,$20,$20	; OCTAGON,VIEWER,STONEY,CHANNEL
 	.byte $20,$20,$20,$20	; CABIN,DENTIST,ARBOR,NIBEL
 	.byte $20,$20,$20,$20	; SHIP,GENERATOR,D'NI,SUB
+	.byte $08		; TEXT_TITLE
+	.byte $0E,$0E,$0E,$0E
+	.byte $0E		; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
 
 track_array:
         .byte  2, 8, 1,11	; MIST_TITLE,MIST,MECHE,SELENA
 	.byte 18,31,21, 1	; OCTAGON,VIEWER,STONEY,CHANNEL
 	.byte 27,26,10,20	; CABIN,DENTIST,ARBOR,NIBEL
 	.byte 30,32,28,31	; SHIP,GENERATOR,D'NI,SUB
+	.byte  0		; TEXT_TITLE
+	.byte  0, 0, 0, 0, 0	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
 
 sector_array:
         .byte  0, 0, 0, 0	; MIST_TITLE,MIST,MECHE,SELENA
 	.byte  0, 8, 0, 0	; OCTAGON,VIEWER,STONEY,CHANNEL
 	.byte  0, 0, 0, 0	; CABIN,DENTIST,ARBOR,NIBEL
 	.byte  0,12, 0, 0	; SHIP,GENERATOR,D'NI,SUB
+	.byte  1		; TEXT_TITLE
+	.byte  1, 1, 1, 1, 1	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
 
 length_array:
         .byte  83,159,157,145	; MIST_TITLE,MIST,MECHE,SELENA
 	.byte 128, 19,158,135	; OCTAGON,VIEWER,STONEY,CHANNEL
 	.byte  61, 31,159,109	; CABIN,DENTIST,ARBOR,NIBEL
 	.byte  20, 33, 27, 54	; SHIP,GENERATOR,D'NI,SUB
+	.byte   1		; TEXT_TITLE
+	.byte   1,1,1,1,1	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
 
 ;	.include	"qkumba_popwr.s"
 
@@ -164,4 +177,4 @@ length_array:
 
 qload_end:
 
-.assert (<qload_end - <qload_start) > 14, error, "loader too big"
+.assert (>qload_end - >qload_start) < $e , error, "loader too big"

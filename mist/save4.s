@@ -1,24 +1,19 @@
+.include "zp.inc"
+.include "common_defines.inc"
 
-; Octagon (for playthrough)
-.byte LOAD_OCTAGON	; WHICH_LOAD		= 	$80
-.byte DIRECTION_S	; DIRECTION		= 	$81
-.byte OCTAGON_TEMPLE_CENTER	; LOCATION	=	$82
 
-.byte (OCTAGON_PAGE|MECHE_PAGE|SELENA_PAGE|CHANNEL_PAGE|STONEY_PAGE)
-			; RED_PAGES_TAKEN	=	$83
-.byte (OCTAGON_PAGE|MECHE_PAGE|SELENA_PAGE|CHANNEL_PAGE|STONEY_PAGE)
-			; BLUE_PAGES_TAKEN	=	$84
-.byte $1
-			; CLOCK_BRIDGE		=	$85
-.byte $1
-			; GEAR_OPEN		=	$86
-.byte (MARKER_DOCK|MARKER_GEARS|MARKER_SPACESHIP|MARKER_GENERATOR|MARKER_CLOCK|MARKER_POOL|MARKER_TREE|MARKER_DENTIST)
-			; MARKER_SWITCHES	=	$87
-.byte $2
-			; CLOCK_HOUR		=	$88
-.byte $8
-			; CLOCK_MINUTE		=	$89
+; Stoneship
+.byte LOAD_STONEY	; WHICH_LOAD		= 	$80
+.byte DIRECTION_E	; DIRECTION		= 	$81
+.byte STONEY_ARRIVAL	; LOCATION	=	$82
 
+.byte $00	; RED_PAGES_TAKEN	=	$83
+.byte $00	; BLUE_PAGES_TAKEN	=	$84
+.byte $00	; CLOCK_BRIDGE		=	$85
+.byte $00	; GEAR_OPEN		=	$86
+.byte $ff	; MARKER_SWITCHES	=	$87
+.byte $00	; CLOCK_HOUR		=	$88
+.byte $00	; CLOCK_MINUTE		=	$89
 .byte $00	; TREE_FURNACE_ON	=	$8A
 .byte $00	; FIREPLACE_GRID0	=	$8B
 .byte $00	; FIREPLACE_GRID1	=	$8C
@@ -52,22 +47,16 @@
 .byte $00	; MECHE_LOCK3		=	$A7
 .byte $00	; MECHE_LOCK4		=	$A8
 .byte $00	; HOLDING_PAGE		=	$A9
-
-.byte $5
-		; RED_PAGE_COUNT	=	$AA
-.byte $5
-		; BLUE_PAGE_COUNT	=	$AB
-
-
+.byte $00	; RED_PAGE_COUNT	=	$AA
+.byte $00	; BLUE_PAGE_COUNT	=	$AB
 .byte $00	; VIEWER_CHANNEL	=	$AC
 .byte $00	; VIEWER_LATCHED	=	$AD
-.byte $4
-		; TOWER_ROTATION	=	$AE
+.byte $00	; TOWER_ROTATION	=	$AE
 .byte $00	; SHIP_RAISED		=	$AF
 		; stoneship
 .byte $00	; PUMP_STATE		=	$B0
 .byte $00	; BATTERY_CHARGE	=	$B1
-.byte $00	; COMPASS_ANGLE		=	$B2
+.byte $00	; COMPASS_STATE		=	$B2
 .byte $00	; CRANK_ANGLE		=	$B3
 .byte $00	; WHITE_PAGE_TAKEN	=	$B4
 .byte $00	; CHANNEL_SWITCHES	=	$B5
@@ -93,20 +82,21 @@
 .byte $00	; HOLDING_ITEM		=	$C7
 .byte $00	; BOILER_VALVE		=	$C8
 .byte $00	; TRUNK_STATE		=	$C9
-
-.byte $00       ; SELENA_BUTTON_STATUS  =       $CA
-.byte $00       ; SELENA_ANTENNA1       =       $CB
-.byte $00       ; SELENA_ANTENNA2       =       $CC
-.byte $00       ; SELENA_ANTENNA3       =       $CD
-.byte $00       ; SELENA_ANTENNA4       =       $CE
-.byte $00       ; SELENA_ANTENNA5       =       $CF
-.byte $00       ; SELENA_LOCK1          =       $D0
-.byte $00       ; SELENA_LOCK2          =       $D1
-.byte $00       ; SELENA_LOCK3          =       $D2
-.byte $00       ; SELENA_LOCK4          =       $D3
-.byte $00       ; SELENA_LOCK5          =       $D4
-.byte $00       ; SELENA_ANTENNA_ACTIVE =       $D5
-
+.byte $00	; SELENA_BUTTON_STATUS	=	$CA
+.byte $00	; SELENA_ANTENNA1	=	$CB
+.byte $00	; SELENA_ANTENNA2	=	$CC
+.byte $00	; SELENA_ANTENNA3	=	$CD
+.byte $00	; SELENA_ANTENNA4	=	$CE
+.byte $00	; SELENA_ANTENNA5	=	$CF
+.byte $00	; SELENA_LOCK1		=	$D0
+.byte $00	; SELENA_LOCK2		=	$D1
+.byte $00	; SELENA_LOCK3		=	$D2
+.byte $00	; SELENA_LOCK4		=	$D3
+.byte $00	; SELENA_LOCK5		=	$D4
+.byte $00	; SELENA_ANTENNA_ACTIVE	=	$D5
 .byte $00	; SUB_DIRECTION		=	$D6
 .byte $00	; SUB_LOCATION		=	$D7
 .byte $00	; NIBEL_PROJECTOR	=	$D8
+
+
+

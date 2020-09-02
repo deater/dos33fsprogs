@@ -52,6 +52,12 @@ LOAD_SHIP	= 12
 LOAD_GENERATOR	= 13
 LOAD_DNI	= 14
 LOAD_SUB	= 15
+LOAD_TEXT_TITLE	= 16
+LOAD_SAVE1	= 17
+LOAD_SAVE2	= 18
+LOAD_SAVE3	= 19
+LOAD_SAVE4	= 20
+LOAD_SAVE5	= 21
 
 ;================================
 ; Level definitions
