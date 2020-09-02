@@ -44,13 +44,15 @@ zip:	mist.dsk mist_side2.dsk mist_side3.dsk
 #	$(DOS33) -y mist_side3.dsk BSAVE -a 0x2000 SUB
 
 
-mist.dsk:	QBOOT QLOAD MIST_TITLE MIST OCTAGON VIEWER \
+mist.dsk:	QBOOT TEXT_TITLE QLOAD \
+		MIST_TITLE MIST OCTAGON VIEWER \
 		DENTIST D\'NI SHIP GENERATOR \
 		SAVE1 SAVE2 SAVE3 SAVE4 SAVE5
 	cp extra_empty.dsk mist.dsk
 	$(DOS33_RAW) mist.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) mist.dsk  0  2 QBOOT      1   1
 	$(DOS33_RAW) mist.dsk  0  4 QBOOT      2   1
+	$(DOS33_RAW) mist.dsk  0  6 TEXT_TITLE 0   3
 	$(DOS33_RAW) mist.dsk  0 11 SAVE1      0   1
 	$(DOS33_RAW) mist.dsk  0 12 SAVE2      0   1
 	$(DOS33_RAW) mist.dsk  0 13 SAVE3      0   1
@@ -89,6 +91,15 @@ QBOOT:	qboot_sector.o
 
 qboot_sector.o:	qboot_sector.s qboot_stage2.s
 	ca65 -o qboot_sector.o qboot_sector.s -l qboot_sector.lst
+
+###
+
+TEXT_TITLE:	text_title.o
+	ld65 -o TEXT_TITLE text_title.o -C ../linker_scripts/apple2_800.inc
+
+text_title.o:	text_title.s
+	ca65 -o text_title.o text_title.s -l text_title.lst
+
 
 ###
 

@@ -8,13 +8,20 @@
 qload_start:
 
 	; first time entry
-	; start by loading title
+	; start by loading text title
 
-	lda	#LOAD_TITLE		; load title
+	lda	#LOAD_TEXT_TITLE	; load title
 	sta	WHICH_LOAD
 
 	lda	#1
 	sta	CURRENT_DISK		; current disk number
+
+	jsr	load_file
+
+	jsr	$800
+
+	lda	#LOAD_TITLE		; load title
+	sta	WHICH_LOAD
 
 main_game_loop:
 	jsr	load_file
@@ -155,7 +162,7 @@ sector_array:
 	.byte  0, 8, 0, 0	; OCTAGON,VIEWER,STONEY,CHANNEL
 	.byte  0, 0, 0, 0	; CABIN,DENTIST,ARBOR,NIBEL
 	.byte  0,12, 0, 0	; SHIP,GENERATOR,D'NI,SUB
-	.byte  1		; TEXT_TITLE
+	.byte  6		; TEXT_TITLE
 	.byte 11,12,13,14,15	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
 
 length_array:
@@ -163,7 +170,7 @@ length_array:
 	.byte 128, 19,158,135	; OCTAGON,VIEWER,STONEY,CHANNEL
 	.byte  61, 31,159,109	; CABIN,DENTIST,ARBOR,NIBEL
 	.byte  20, 33, 27, 54	; SHIP,GENERATOR,D'NI,SUB
-	.byte   1		; TEXT_TITLE
+	.byte   3		; TEXT_TITLE
 	.byte   1,1,1,1,1	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
 
 ;	.include	"qkumba_popwr.s"
