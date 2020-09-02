@@ -13,40 +13,68 @@ qload_start:
 	lda	#LOAD_TITLE		; load title
 	sta	WHICH_LOAD
 
+	lda	#1
+	sta	CURRENT_DISK		; current disk number
+
 main_game_loop:
 	jsr	load_file
 	jmp	main_game_loop
 
 
-which_disk:
-	.byte '1'		; MIST_TITLE
-	.byte '1'		; MIST
-	.byte '3'		; MECHE
-	.byte '3'		; SELENA
-	.byte '1'		; OCTAGON
-	.byte '1'		; VIEWER
-	.byte '3'		; STONEY
-	.byte '2'		; CHANNEL
-	.byte '2'		; CABIN
-	.byte '1'		; DENTIST
-	.byte '2'		; ARBOR
-	.byte '2'		; NIBEL
-	.byte '1'		; SHIP
-	.byte '2'		; GENERATOR
-	.byte '1'		; D'NI
-	.byte '3'		; SUB
 
+
+
+opendir_filename:
+	rts
+
+
+
+; FIXME: have to keep these in sync
+
+driveoff =$1122
+load_new = $119D
+load_address=$11CB
+load_track=load_address+1
+load_sector=load_address+2
+load_length=load_address+3
+
+
+	;====================================
+	; loads file specified by WHICH_LOAD
+	;====================================
+load_file:
+	ldx	WHICH_LOAD
+
+	lda	which_disk_array,X
+	cmp	CURRENT_DISK
+	bne	change_disk
+
+	lda	load_address_array,X
+	sta	load_address
+
+	lda	track_array,X
+	sta	load_track
+
+	lda	sector_array,X
+	sta	load_sector
+
+	lda	length_array,X
+	sta	load_length
+
+	jmp	load_new
 
 
 	;===================================================
 	;===================================================
-	; file not found
+	; change disk
 	;===================================================
 	;===================================================
 
-file_not_found:
+change_disk:
 
-mlsmc07:lda	$c0e8		; turn off drive motor?
+	; turn off disk drive light
+
+	jsr	driveoff
 
 	jsr	TEXT
 	jsr	HOME
@@ -66,52 +94,23 @@ quick_print:
 	jmp	quick_print
 
 quick_print_done:
-;	rts
-
-;	jsr	quick_print
 
 fnf_keypress:
 	lda	KEYPRESS
 	bpl	fnf_keypress
 	bit	KEYRESET
 
-;	jmp	which_load_loop
+	; FIXME: actually verify proper file
+
+	ldx	WHICH_LOAD
+	lda	which_disk_array,X
+	sta	CURRENT_DISK
+
+	jmp	load_file
 
 ; offset for disk number is 19
 error_string:
 .byte "PLEASE INSERT DISK 1, PRESS RETURN",0
-
-
-opendir_filename:
-	rts
-
-
-load_new = $119D
-load_address=$11CB
-load_track=load_address+1
-load_sector=load_address+2
-load_length=load_address+3
-
-
-	;====================================
-	; loads file specified by WHICH_LOAD
-	;====================================
-load_file:
-	ldx	WHICH_LOAD
-
-	lda	load_address_array,X
-	sta	load_address
-
-	lda	track_array,X
-	sta	load_track
-
-	lda	sector_array,X
-	sta	load_sector
-
-	lda	length_array,X
-	sta	load_length
-
-	jmp	load_new
 
 
 which_disk_array:
@@ -146,8 +145,6 @@ length_array:
 
 ;	.include	"qkumba_popwr.s"
 
-
-
         .include        "audio.s"
 	.include	"linking_noise.s"
         .include        "decompress_fast_v2.s"
@@ -167,4 +164,4 @@ length_array:
 
 qload_end:
 
-.assert (<qload_end - <qload_start)>14, error, "loader too big"
+.assert (<qload_end - <qload_start) > 14, error, "loader too big"
