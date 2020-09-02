@@ -1,9 +1,7 @@
 For release 1.0
 
 + QLOAD
-	-- add back in intro text (load to gr page2, switch to, then load?)
-	-- add in 5 load games
-	-- make it which-disk-is-in aware
+	-- custom boot messages for disk2 and disk3
 	-- code to sanity check right disk is put in?
 		read t0/s0 check fingerprint?
 
