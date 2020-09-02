@@ -1,7 +1,7 @@
 ;	fast seek/multi-read
 ;	copyright (c) Peter Ferrie 2015-16
 
-	sectors   = 12		; user-defined
+	sectors   = 13		; user-defined
 	firsttrk  = 1		; user-defined, first track to read
 	firstsec  = 0		; user-defined, first sector to read
 	address   = $12		; user-defined

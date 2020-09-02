@@ -504,6 +504,8 @@ really_exit:
 	.include "pt3_lib_mockingboard_setup.s"
 
 
+	.include "wait_a_bit.s"
+
 
 file:
 .incbin "graphics_title_hgr/mist_title.lzsa"
@@ -532,46 +534,6 @@ draw_and_wait:
 	pla
 	jsr	wait_a_bit
 	rts
-
-	;====================================
-	; wait for keypress or a few seconds
-	;====================================
-
-wait_a_bit:
-
-	bit	KEYRESET
-	tax
-
-keyloop:
-	lda	#200			; delay a bit
-	jsr	WAIT
-
-	lda	KEYPRESS
-	bmi	done_keyloop
-
-;	bmi	keypress_exit
-
-	dex
-	bne	keyloop
-
-done_keyloop:
-
-	bit	KEYRESET
-
-	rts
-
-	; just skip whole intro, not just current scene
-
-;keypress_exit:
-
-;	bit	KEYRESET
-
-;	pla			; pop two addresses off the stack
-;	pla
-;	pla
-;	pla
-;	jmp	done_intro
-
 
 
 get_mist_book:

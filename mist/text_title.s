@@ -29,6 +29,10 @@ text_loop:
 	dex
 	bne	text_loop
 
+
+	lda	#40
+	jsr	wait_a_bit
+
 	rts
 
 
@@ -51,3 +55,4 @@ boot_message:
 
 .include	"text_print.s"
 .include	"gr_offsets.s"
+.include	"wait_a_bit.s"
