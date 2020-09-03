@@ -1,3 +1,5 @@
+NOTE: in the end this was a bug in qkumba's qboot, not AppleWin
+
 this is a test case for a possible AppleWin bug
 
 there is possibly a bug in AppleWin 1.29.14.0 when the disk2 drive

@@ -244,8 +244,8 @@ seekret:
 	rts
 
 seek:
-	lda	#0
-	sta	step+1
+	ldx	#0
+	stx	step+1
 copy_cur:
 curtrk:
 	lda	#0
