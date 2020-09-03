@@ -1,0 +1,9 @@
+this is a test case for a possible AppleWin bug
+
+there is possibly a bug in AppleWin 1.29.14.0 when the disk2 drive
+is in "authentic" mode where when you switch disks in the virtual drive,
+the first sector you read after that returns the wrong value.
+
+this can be tested with the two disk images here
+
+
