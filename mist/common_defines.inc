@@ -58,6 +58,7 @@ LOAD_SAVE2	= 18
 LOAD_SAVE3	= 19
 LOAD_SAVE4	= 20
 LOAD_SAVE5	= 21
+LOAD_FIRST_SECTOR= 22
 
 ;================================
 ; Level definitions

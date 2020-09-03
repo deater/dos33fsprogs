@@ -59,6 +59,7 @@ load_file:
 	cmp	CURRENT_DISK
 	bne	change_disk
 
+load_file_no_diskcheck:
 	lda	load_address_array,X
 	sta	load_address
 
@@ -119,7 +120,56 @@ fnf_keypress:
 	bpl	fnf_keypress
 	bit	KEYRESET
 
-	; FIXME: actually verify proper disk is there
+	;==============================================
+	; actually verify proper disk is there
+	; read T0:S0 and verify proper disk
+
+	lda	WHICH_LOAD
+	pha
+
+	ldx	#LOAD_FIRST_SECTOR	; load track 0 sector 0
+	stx	WHICH_LOAD
+
+	jsr	load_file_no_diskcheck
+
+	pla
+	sta	WHICH_LOAD
+	tax
+
+	; first sector now in $c00
+	;	offset 59
+	;		disk1 = $d0
+	;		disk2 = $32 ('2')
+	;		disk3 = $33 ('3')
+
+	lda	$c59
+	cmp	#$d0
+	beq	is_disk1
+	cmp	#$32
+	beq	is_disk2
+	cmp	#$33
+	beq	is_disk3
+	bne	change_disk		; unknown disk
+
+is_disk1:
+	lda	#1
+	bne	disk_compare
+
+is_disk2:
+	lda	#2
+	bne	disk_compare
+
+is_disk3:
+	lda	#3
+
+disk_compare:
+	cmp	which_disk_array,X
+	bne	change_disk		; disk mismatch
+
+	;==============================================
+	; all good, retry original load
+
+	jsr	HOME
 
 	ldx	WHICH_LOAD
 	lda	which_disk_array,X
@@ -139,6 +189,7 @@ which_disk_array:
 	.byte 1,1,1,3		; SHIP,GENERATOR,D'NI,SUB
 	.byte 1			; TEXT_TITLE
 	.byte 1,1,1,1,1		; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
+	.byte $f		; FIRST_SECTOR
 
 load_address_array:
         .byte $40,$20,$20,$20	; MIST_TITLE,MIST,MECHE,SELENA
@@ -148,6 +199,7 @@ load_address_array:
 	.byte $08		; TEXT_TITLE
 	.byte $0E,$0E,$0E,$0E
 	.byte $0E		; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
+	.byte $0C		; FIRST_SECTOR
 
 track_array:
         .byte  2, 8, 1,11	; MIST_TITLE,MIST,MECHE,SELENA
@@ -156,6 +208,7 @@ track_array:
 	.byte 30,32,28,31	; SHIP,GENERATOR,D'NI,SUB
 	.byte  0		; TEXT_TITLE
 	.byte  0, 0, 0, 0, 0	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
+	.byte  0		; FIRST_SECTOR
 
 sector_array:
         .byte  0, 0, 0, 0	; MIST_TITLE,MIST,MECHE,SELENA
@@ -164,6 +217,7 @@ sector_array:
 	.byte  0,12, 0, 0	; SHIP,GENERATOR,D'NI,SUB
 	.byte  6		; TEXT_TITLE
 	.byte 11,12,13,14,15	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
+	.byte  0		; FIRST_SECTOR
 
 length_array:
         .byte  83,159,157,145	; MIST_TITLE,MIST,MECHE,SELENA
@@ -172,6 +226,7 @@ length_array:
 	.byte  20, 33, 27, 54	; SHIP,GENERATOR,D'NI,SUB
 	.byte   3		; TEXT_TITLE
 	.byte   1,1,1,1,1	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
+	.byte   1		; FIRST_SECTOR
 
 ;	.include	"qkumba_popwr.s"
 
