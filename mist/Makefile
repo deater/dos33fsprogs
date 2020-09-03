@@ -69,19 +69,39 @@ mist.dsk:	QBOOT TEXT_TITLE QLOAD \
 	$(DOS33_RAW) mist.dsk 32 12 GENERATOR 0  33
 
 
-mist_side2.dsk:	CHANNEL ARBOR NIBEL CABIN
+mist_side2.dsk:	WBOOT2 CHANNEL ARBOR NIBEL CABIN
 	cp extra_empty.dsk mist_side2.dsk
+	$(DOS33_RAW) mist_side2.dsk  0 0 WBOOT2	 0   1
 	$(DOS33_RAW) mist_side2.dsk  1 0 CHANNEL 0 135
 	$(DOS33_RAW) mist_side2.dsk 10 0 ARBOR   0 159
 	$(DOS33_RAW) mist_side2.dsk 20 0 NIBEL   0 109
 	$(DOS33_RAW) mist_side2.dsk 27 0 CABIN   0  61
 
-mist_side3.dsk:	MECHE SELENA STONEY SUB
+mist_side3.dsk:	WBOOT3 MECHE SELENA STONEY SUB
 	cp extra_empty.dsk mist_side3.dsk
-	$(DOS33_RAW) mist_side3.dsk  1 0 MECHE  0 157
-	$(DOS33_RAW) mist_side3.dsk 11 0 SELENA 0 145
-	$(DOS33_RAW) mist_side3.dsk 21 0 STONEY 0 158
-	$(DOS33_RAW) mist_side3.dsk 31 0 SUB    0  54
+	$(DOS33_RAW) mist_side3.dsk  0 0 WBOOT3	 0   1
+	$(DOS33_RAW) mist_side3.dsk  1 0 MECHE   0 157
+	$(DOS33_RAW) mist_side3.dsk 11 0 SELENA  0 145
+	$(DOS33_RAW) mist_side3.dsk 21 0 STONEY  0 158
+	$(DOS33_RAW) mist_side3.dsk 31 0 SUB     0  54
+
+
+
+###
+
+WBOOT2:	wrong_boot2.o
+	ld65 -o WBOOT2 wrong_boot2.o -C ../linker_scripts/apple2_800.inc
+
+wrong_boot2.o:	wrong_boot2.s
+	ca65 -o wrong_boot2.o wrong_boot2.s -l wrong_boot2.lst
+
+###
+
+WBOOT3:	wrong_boot3.o
+	ld65 -o WBOOT3 wrong_boot3.o -C ../linker_scripts/apple2_800.inc
+
+wrong_boot3.o:	wrong_boot3.s
+	ca65 -o wrong_boot3.o wrong_boot3.s -l wrong_boot3.lst
 
 
 ###
