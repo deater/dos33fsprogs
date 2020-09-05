@@ -37,13 +37,13 @@ text_loop:
 
 
 boot_message:
-.byte	0,0,"LOADING MIST V0.99.5",0
-.byte	0,3,"CONTROLS:",0
-.byte	5,4,"MOVE CURSOR    : ARROWS OR WASD",0
-.byte	5,5,"FORWARD/ACTION : ENTER",0
-.byte	5,7,"JOYSTICK (TODO): J",0
-.byte	5,8,"LOAD GAME      : CONTROL-L",0
-.byte	5,9,"SAVE (TODO)    : CONTROL-S",0
+.byte	0,0, "LOADING MIST V0.99.6",0
+.byte	0,3, "CONTROLS:",0
+.byte	5,4, "MOVE CURSOR    : ARROWS OR WASD",0
+.byte	5,5, "FORWARD/ACTION : ENTER",0
+.byte	5,7, "JOYSTICK (TODO): J",0
+.byte	5,8, "LOAD GAME      : CONTROL-L",0
+.byte	5,9, "SAVE           : CONTROL-S",0
 .byte	5,10,"TOGGLE SOUND   : CONTROL-T",0
 .byte	0,13,"BASED ON MYST BY CYAN INC",0
 .byte	0,14,"APPLE II PORT: VINCE WEAVER",0

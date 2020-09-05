@@ -1,7 +1,9 @@
 ;	fast seek/multi-read
 ;	copyright (c) Peter Ferrie 2015-16
 
-	sectors   = 13		; user-defined
+	; Paramaters for loading QLOAD
+
+	sectors   = 14		; user-defined
 	firsttrk  = 1		; user-defined, first track to read
 	firstsec  = 0		; user-defined, first sector to read
 	address   = $12		; user-defined
@@ -95,7 +97,7 @@ patch_loop:
 
 	; patch self-modifying code for turning motor on
 	clc
-	adc	#1            ; MOTOROFF (c088) -> c0e9
+	adc	#1            ; MOTORON (c089) -> c0e9
 	sta	slotpatch9+1
 
 	; patch self-modifying code for phase off

@@ -4,8 +4,13 @@
 .include "hardware.inc"
 
 .include "common_defines.inc"
+.include "qboot.inc"
 
 qload_start:
+
+	; init the write code
+
+	jsr	popwr_init
 
 	; first time entry
 	; start by loading text title
@@ -36,18 +41,6 @@ start_title:
 not_title:
 	jsr	$2000
 	jmp	main_game_loop
-
-
-
-; FIXME: have to keep these in sync
-
-driveoff =$1122
-load_new = $119D
-load_address=$11C0
-load_track=load_address+1
-load_sector=load_address+2
-load_length=load_address+3
-
 
 	;====================================
 	; loads file specified by WHICH_LOAD
@@ -228,7 +221,7 @@ length_array:
 	.byte   1,1,1,1,1	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
 	.byte   1		; FIRST_SECTOR
 
-;	.include	"qkumba_popwr.s"
+	.include	"qkumba_popwr.s"
 
         .include        "audio.s"
 	.include	"linking_noise.s"

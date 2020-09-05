@@ -1,14 +1,28 @@
 ; popwr -- code provided by qkumba
 
-;	!cpu 6502
-;	!to "popwr",plain
-;	*=$d500
-
-;bit2tbl=$dc00		; in loader.s
 
 frombuff=$d00		; sector data to write
 
+; note these must be contiguous
 encbuf=$e00		; nibble buffer must be page alined
+bit2tbl=$f00
+
+readnib = $1001
+
+
+readd5aa:
+
+try_again:
+        jsr     readnib
+try_for_d5:
+        cmp     #$d5
+        bne     try_again
+        jsr     readnib
+        cmp     #$aa
+        bne     try_for_d5
+
+        jsr     readnib
+        rts
 
 
 	;================================
@@ -76,10 +90,7 @@ b3:
 
 
 requested_sector:
-	tay
-	; at this point A has the sector number
-	; this code assumes you want sector 0
-
+	cmp	#$d1
 
 	bne	cmpsecwr	; retry if not what we want?
 

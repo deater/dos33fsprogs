@@ -58,7 +58,7 @@ mist.dsk:	QBOOT TEXT_TITLE QLOAD \
 	$(DOS33_RAW) mist.dsk  0 13 SAVE3      0   1
 	$(DOS33_RAW) mist.dsk  0 14 SAVE4      0   1
 	$(DOS33_RAW) mist.dsk  0 15 SAVE5      0   1
-	$(DOS33_RAW) mist.dsk  1  0 QLOAD      0  13
+	$(DOS33_RAW) mist.dsk  1  0 QLOAD      0  14
 	$(DOS33_RAW) mist.dsk  2  0 MIST_TITLE 0  83
 	$(DOS33_RAW) mist.dsk  8  0 MIST       0 159
 	$(DOS33_RAW) mist.dsk 18  0 OCTAGON    0 128
@@ -126,7 +126,7 @@ text_title.o:	text_title.s text_print.s wait_a_bit.s
 QLOAD: qload.o
 	ld65 -o QLOAD qload.o -C ../linker_scripts/apple2_1200.inc
 
-qload.o:	qload.s \
+qload.o:	qload.s qboot.inc \
 	gr_copy.s gr_offsets.s gr_pageflip.s gr_putsprite_crop.s \
 	text_print.s gr_fast_clear.s decompress_fast_v2.s \
 	keyboard.s draw_pointer.s end_level.s audio.s loadstore.s \

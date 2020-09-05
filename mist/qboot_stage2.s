@@ -311,12 +311,15 @@ partial2:	.byte $00
 code_end:
 
 
-load_new:
 
+;==========================
 ; enable drive motor
+;==========================
+
+driveon:
 
 slotpatch9:
-        lda     $c0e9           ; fixme, patch
+        lda     $c0d1
 
         ; wait 1s
 
@@ -327,15 +330,11 @@ wait_1s:
         dex
         bne     wait_1s
 
-	; setup return on stack
-	; is value - 1
+	rts
 
-;	lda	load_address
-;	sec
-;	sbc	#1
-;	pha
-;	lda     #$ff
-;	pha
+load_new:
+
+	jsr	driveon
 
 	lda	load_track
 	asl			; track to start*2
@@ -361,5 +360,4 @@ load_sector:
 	.byte $00
 load_length:
 	.byte $00
-
 

@@ -4,68 +4,15 @@
 	; load the game
 	;===================================
 	;===================================
-
 load_game:
-	bit	KEYRESET	; clear keyboard buffer
-
-	;===============================
-	; print "are you sure" message
-
-	bit	SET_TEXT	; set text mode
-
-	lda     #' '|$80
-	sta	clear_all_color+1
-	jsr	clear_all	; clear screen
 
 	lda	#<load_message
 	sta	OUTL
 	lda	#>load_message
 	sta	OUTH
-	jsr	move_and_print
 
-	lda	#<are_you_sure
-	sta	OUTL
-	lda	#>are_you_sure
-	sta	OUTH
-	jsr	move_and_print
+	jsr	confirm_slot
 
-	jsr	page_flip
-
-wait_load_confirmation:
-	lda	KEYPRESS
-	bpl	wait_load_confirmation
-
-	bit	KEYRESET		; clear keypress
-
-	and	#$7f
-	cmp	#'Y'
-	bne	done_load
-
-	;===============================
-	; print "Which one?"
-
-	jsr	clear_all	; clear screen
-
-	lda	#<which_message
-	sta	OUTL
-	lda	#>which_message
-	sta	OUTH
-	jsr	move_and_print
-
-	jsr	page_flip
-
-which_load_confirmation:
-	lda	KEYPRESS
-	bpl	which_load_confirmation
-
-	bit	KEYRESET		; clear keypress
-
-	and	#$7f
-	sec
-	sbc	#'1'
-
-	bmi	done_load
-	cmp	#5
 	bcs	done_load
 
 	; actually load it
@@ -100,10 +47,84 @@ done_load:
 	;===================================
 	;===================================
 
-	; doesn't do anything yet
-
 save_game:
+
+	lda	#<save_message
+	sta	OUTL
+	lda	#>save_message
+	sta	OUTH
+
+	jsr	confirm_slot
+
+	bcs	done_save
+
+	pha
+
+
+	;========================
+	; actually save
+actually_save:
+
+	;===============================
+	; first load something from
+	; disk1/track0 to seek the head there
+
+	lda	WHICH_LOAD
+	pha
+
+	lda	#LOAD_SAVE1
+	sta	WHICH_LOAD
+	jsr	load_file
+
+	pla
+	sta	WHICH_LOAD
+
+	; copy save data to $d00
+
+	ldx	#0
+copy_loop:
+	lda	WHICH_LOAD,X
+	sta	$d00,X
+	inx
+	cpx	#(END_OF_SAVE-WHICH_LOAD+1)
+	bne	copy_loop
+
+	; spin up disk
+	jsr	driveon
+
+	; actually save it
+	pla
+	clc
+	adc	#11
+	sta	requested_sector+1
+
+	jsr	sector_write
+
+	jsr	driveoff
+
+done_save:
+
+	jsr	change_location		; restore graphics
+
+	rts
+
+
+
+
+
+
+	;================================
+	; confirm and get slot number
+	;================================
+	; call with first message in OUTL/OUTH
+	; return: carry set if skipping
+
+confirm_slot:
+
 	bit	KEYRESET	; clear keyboard buffer
+
+	;===============================
+	; print "are you sure" message
 
 	bit	SET_TEXT	; set text mode
 
@@ -111,10 +132,6 @@ save_game:
 	sta	clear_all_color+1
 	jsr	clear_all	; clear screen
 
-	lda	#<save_message
-	sta	OUTL
-	lda	#>save_message
-	sta	OUTH
 	jsr	move_and_print
 
 	lda	#<are_you_sure
@@ -125,31 +142,53 @@ save_game:
 
 	jsr	page_flip
 
-wait_save_confirmation:
+wait_confirmation:
 	lda	KEYPRESS
-	bpl	wait_save_confirmation
+	bpl	wait_confirmation
 
 	bit	KEYRESET		; clear keypress
 
 	and	#$7f
 	cmp	#'Y'
-	bne	done_load
+	bne	dont_do_it
 
-	; actually load it
+	;===============================
+	; print "Which one?"
 
+	jsr	clear_all	; clear screen
 
-done_store:
+	lda	#<which_message
+	sta	OUTL
+	lda	#>which_message
+	sta	OUTH
+	jsr	move_and_print
 
+	jsr	page_flip
 
-	bit	SET_GR			; turn graphics back on
+which_slot:
+	lda	KEYPRESS
+	bpl	which_slot
 
+	bit	KEYRESET		; clear keypress
+
+	and	#$7f
+	sec
+	sbc	#'1'
+
+	bmi	dont_do_it
+	cmp	#5
+	bcs	dont_do_it
+
+	clc
+	rts
+
+dont_do_it:
+	sec
 	rts
 
 
-
-
 which_message:
-.byte  9,5,"LOAD WHICH GAME (1-5)?",0
+.byte  9,5,"WHICH SLOT (1-5)?",0
 
 load_message:
 .byte  10,5,"LOAD GAME FROM DISK",0
