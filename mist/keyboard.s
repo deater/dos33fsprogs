@@ -11,6 +11,8 @@ handle_keypress:
 
 keypress:
 	and	#$7f			; clear high bit
+	cmp	#' '
+	beq	check_sound		; make sure not to lose space
 	and	#$df			; convert uppercase to lower case
 
 check_sound:
