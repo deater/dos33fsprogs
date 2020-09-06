@@ -89,6 +89,8 @@ really_not_special:
 	lda	CURSOR_X
 	cmp	#7
 	bcc	check_cursor_left			; blt
+	cmp	#$f0			; check if off left side of screen
+	bcs	check_cursor_left			; bge
 
 	cmp	#33
 	bcs	check_cursor_right			; bge
