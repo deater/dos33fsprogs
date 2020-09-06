@@ -22,6 +22,7 @@
         znibble		= $fe         ; only during init
         zmask		= $ff         ; only during init
 
+	WHICH_SLOT	= $DA
 
 ; $26/$27	sector read location (ROM)
 ; $3D		sector number (ROM)
@@ -61,6 +62,7 @@ boot_entry:
 	; this routine reads sector in $3D on track in $41
 	;	to address in $26/$27
 	; when it's done it jumps back to $801
+	stx	WHICH_SLOT	; save for later
 
 	txa			; x is slot# << 4
 	lsr

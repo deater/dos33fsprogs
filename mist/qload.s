@@ -9,7 +9,7 @@
 qload_start:
 
 	; init the write code
-
+	lda	WHICH_SLOT
 	jsr	popwr_init
 
 	; first time entry
@@ -131,12 +131,12 @@ fnf_keypress:
 
 	; first sector now in $c00
 	;	offset 59
-	;		disk1 = $d0
+	;		disk1 = $0a
 	;		disk2 = $32 ('2')
 	;		disk3 = $33 ('3')
 
 	lda	$c59
-	cmp	#$d0
+	cmp	#$0a
 	beq	is_disk1
 	cmp	#$32
 	beq	is_disk2
@@ -221,8 +221,6 @@ length_array:
 	.byte   1,1,1,1,1	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
 	.byte   1		; FIRST_SECTOR
 
-	.include	"qkumba_popwr.s"
-
         .include        "audio.s"
 	.include	"linking_noise.s"
         .include        "decompress_fast_v2.s"
@@ -240,6 +238,8 @@ length_array:
 
         .include        "page_sprites.inc"
 	.include        "common_sprites.inc"
+
+	.include	"qkumba_popwr.s"
 
 qload_end:
 

@@ -285,6 +285,7 @@ END_OF_SAVE	=	$D9
 ; done game puzzle state
 
 
+WHICH_SLOT	=	$DA
 JS_BUTTON_STATE	=	$DB
 CURRENT_DISK	=	$DC
 JOYSTICK_ENABLED=	$DD

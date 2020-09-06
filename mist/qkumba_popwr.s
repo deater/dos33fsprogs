@@ -24,15 +24,12 @@ try_for_d5:
         jsr     readnib
         rts
 
-
 	;================================
 	; set up the self-modifying code
 	; to point to the proper slot
 	;================================
 	; slot number is in high nibble of A
 popwr_init:
-	lda	#$60
-
 	and	#$70		; the slot number is in the top here
 	sta	slotpatchw1+1	; self modify the code
 	sta	slotpatchw2+1
@@ -40,7 +37,6 @@ popwr_init:
 	sta	slotpatchw4+1
 
 	rts
-
 
 	;================================
 	; write a sector
@@ -69,6 +65,10 @@ frombuff_smc:
         bne     b1
         tya
         bne     aa
+
+	jmp	cmpsecwr
+
+.align	$100
 
 	; look for the proper sector to write
 

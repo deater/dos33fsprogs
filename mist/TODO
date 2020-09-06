@@ -10,7 +10,8 @@ For release 1.0
 	-- MIST_ROCKET_PATH_PAD probably missing ship-raised background
 
 + OCTAGON
-	-- load "red page" sound into LC and play it?
+	-- animation on the fireplace opening/closing
+	-- load "red page" sound clip into LC and play it?
 	-- show "burnt" books if click on non-avail book
 	-- adjust grabbing of actual books
 	-- longer speeches from brothers, most notably the
