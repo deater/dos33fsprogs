@@ -24,7 +24,8 @@ sub_graphics.inc:	\
 	inside_sub_back_e.lzsa inside_sub_back_closed_s.lzsa \
 	inside_sub_back_selena_s.lzsa inside_sub_back_book_s.lzsa \
 	inside_sub_selena_e.lzsa inside_sub_book_e.lzsa \
-	outside_book_n.lzsa outside_book_s.lzsa
+	outside_book_n.lzsa outside_book_s.lzsa \
+	sub_med_s.lzsa sub_med_n.lzsa sub_med_e.lzsa sub_med_w.lzsa
 	echo "subroom_s_lzsa: .incbin \"subroom_s.lzsa\"" > sub_graphics.inc
 	echo "subroom_n_lzsa: .incbin \"subroom_n.lzsa\"" >> sub_graphics.inc
 	echo "book_table_s_lzsa: .incbin \"book_table_s.lzsa\"" >> sub_graphics.inc
@@ -54,7 +55,10 @@ sub_graphics.inc:	\
 	echo "inside_sub_book_e_lzsa: .incbin \"inside_sub_book_e.lzsa\"" >> sub_graphics.inc
 	echo "outside_book_n_lzsa: .incbin \"outside_book_n.lzsa\"" >> sub_graphics.inc
 	echo "outside_book_s_lzsa: .incbin \"outside_book_s.lzsa\"" >> sub_graphics.inc
-
+	echo "sub_med_n_lzsa: .incbin \"sub_med_n.lzsa\"" >> sub_graphics.inc
+	echo "sub_med_s_lzsa: .incbin \"sub_med_s.lzsa\"" >> sub_graphics.inc
+	echo "sub_med_e_lzsa: .incbin \"sub_med_e.lzsa\"" >> sub_graphics.inc
+	echo "sub_med_w_lzsa: .incbin \"sub_med_w.lzsa\"" >> sub_graphics.inc
 
 %.gr: %.png
 	$(PNG2GR) $< $@

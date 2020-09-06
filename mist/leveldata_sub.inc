@@ -8,7 +8,8 @@ locations:
 	.word location4, location5, location6, location7
 	.word location8, location9, location10,location11
 	.word location12,location13,location14,location15
-	.word location16
+	.word location16,location17,location18,location19
+	.word location20
 
 ; SUB_BUNKER_ENTRY	-- entryway inside bunker
 location0:
@@ -67,7 +68,7 @@ location2:
 ; SUB_ROOM		-- sub room
 location3:
 	.byte	SUB_HALLWAY2		; north exit
-	.byte	SUB_CLOSE		; south exit
+	.byte	SUB_MEDIUM		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_W	; north exit_dir
@@ -83,7 +84,7 @@ location3:
 
 ; SUB_CLOSE	-- standing close to the sub
 location4:
-	.byte	SUB_ROOM		; north exit
+	.byte	SUB_MEDIUM		; north exit
 	.byte	$ff			; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -103,7 +104,7 @@ location4:
 
 ; SUB_CLOSE_OPEN	-- standing close to the sub, door open
 location5:
-	.byte	SUB_ROOM		; north exit
+	.byte	SUB_MEDIUM		; north exit
 	.byte	SUB_INSIDE_BACK		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -327,3 +328,71 @@ location16:
 	.byte	24,32		; special x
 	.byte	12,22		; special y
 	.word	mist_link_book-1		; special function
+
+; SUB_MEDIUM		-- mediumly close to sub
+location17:
+	.byte	SUB_ROOM		; north exit
+	.byte	SUB_CLOSE		; south exit
+	.byte	SUB_WALK_LEFT		; east exit
+	.byte	SUB_WALK_RIGHT		; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	sub_med_n_lzsa	; north bg
+	.word	sub_med_s_lzsa	; south bg
+	.word	sub_med_e_lzsa	; east bg
+	.word	sub_med_w_lzsa	; west bg
+	.byte	BG_SOUTH|BG_NORTH|BG_EAST|BG_WEST
+	.byte	$ff
+
+; SUB_WALK_LEFT		-- left path around sub
+location18:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SUB_WALK_RIGHT		; east exit
+	.byte	SUB_MEDIUM		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_W	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000		; north bg
+	.word	subroom_s_lzsa	; south bg
+	.word	subroom_s_lzsa	; east bg
+	.word	subroom_s_lzsa	; west bg
+	.byte	BG_SOUTH|BG_EAST|BG_WEST
+	.byte	$ff
+
+; SUB_WALK_RIGHT		-- right_path_around_sub
+location19:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SUB_MEDIUM		; east exit
+	.byte	SUB_WALK_LEFT		; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_E	; west exit_dir
+	.word	$0000		; north bg
+	.word	subroom_s_lzsa	; south bg
+	.word	subroom_n_lzsa	; east bg
+	.word	subroom_n_lzsa	; west bg
+	.byte	BG_SOUTH|BG_EAST|BG_WEST
+	.byte	$ff
+
+; SUB_BOTTOM_STAIRS	-- bottom of the bunker stairs
+location20:
+	.byte	$ff			; north exit
+	.byte	$ff			; south exit
+	.byte	SUB_HALLWAY2		; east exit
+	.byte	SUB_BUNKER_ENTRY	; west exit
+	.byte	$ff		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_E	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000				; north bg
+	.word	$0000				; south bg
+	.word	sub_hallway_e_lzsa		; east bg
+	.word	sub_hallway_w_lzsa		; west bg
+	.byte	BG_EAST|BG_WEST
+	.byte	$ff
