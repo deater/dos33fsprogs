@@ -81,11 +81,9 @@ mist_side3.dsk:	WBOOT3 MECHE SELENA STONEY SUB
 	cp extra_empty.dsk mist_side3.dsk
 	$(DOS33_RAW) mist_side3.dsk  0 0 WBOOT3	 0   1
 	$(DOS33_RAW) mist_side3.dsk  1 0 MECHE   0 157
-	$(DOS33_RAW) mist_side3.dsk 11 0 SELENA  0 145
-	$(DOS33_RAW) mist_side3.dsk 21 0 STONEY  0 158
-	$(DOS33_RAW) mist_side3.dsk 31 0 SUB     0  54
-
-
+	$(DOS33_RAW) mist_side3.dsk 11 0 STONEY  0 158
+	$(DOS33_RAW) mist_side3.dsk 21 0 SELENA  0 145
+	$(DOS33_RAW) mist_side3.dsk 30 1 SUB     0  78
 
 ###
 

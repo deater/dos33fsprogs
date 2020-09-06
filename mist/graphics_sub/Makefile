@@ -71,9 +71,6 @@ sub_graphics.inc:	\
 	echo "bottom_stairs_e_lzsa: .incbin \"bottom_stairs_e.lzsa\"" >> sub_graphics.inc
 	echo "bottom_stairs_w_lzsa: .incbin \"bottom_stairs_w.lzsa\"" >> sub_graphics.inc
 
-
-
-
 %.gr: %.png
 	$(PNG2GR) $< $@
 

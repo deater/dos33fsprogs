@@ -3,8 +3,6 @@ For release 1.0
 + QLOAD
 
 + LOADER 
-	-- save game
-	-- joystick support
 
 + MIST
 	-- open door to clock puzzle?
@@ -43,7 +41,7 @@ For release 1.0
 	-- make rotation more similar to actual game?
 
 + SUB
-	-- can walk around outside of sub
+
 
 Done:
 + CABIN
