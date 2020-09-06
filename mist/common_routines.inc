@@ -31,21 +31,21 @@ page_flip	=$1a11
 ; gr_putsprite_crop.s
 put_sprite_crop	=$1a2b
 psc_smc1	=$1a4e
-psc_smc2	=$1ae6
+psc_smc2	=$1ac0
 
 ; keyboard.s
-handle_keypress	=$1b67
-change_direction	=$1c2f
-change_location	=$1c68
+handle_keypress	=$1ac0
+change_direction	=$1bcb
+change_location	=$1bfe
 
 ; text_print.s
-move_and_print	=$1d00
-ps_smc1	=$1d2d
+move_and_print	=$1c96
+ps_smc1	=$1cc3
 
 ; page_sprites.inc
-blue_page_sprite	=$1e4f
-red_page_sprite	=$1e65
-white_page_sprite	=$1e7b
-blue_page_small_sprite	=$1e91
-red_page_small_sprite	=$1e99
+blue_page_sprite	=$1e12
+red_page_sprite	=$1e28
+white_page_sprite	=$1e3e
+blue_page_small_sprite	=$1e54
+red_page_small_sprite	=$1e5c
 

@@ -4,6 +4,62 @@
 	;==============================
 handle_keypress:
 
+	; first handle joystick
+	lda	JOYSTICK_ENABLED
+	beq	actually_handle_keypress
+
+check_button:
+        lda     PADDLE_BUTTON0
+        bpl     button_clear
+
+        lda     JS_BUTTON_STATE
+        bne     js_check
+
+        lda     #1
+        sta     JS_BUTTON_STATE
+        lda     #' '
+        jmp     check_sound
+
+button_clear:
+        lda     #0
+        sta     JS_BUTTON_STATE
+
+js_check:
+        jsr     handle_joystick
+
+js_check_left:
+        lda     value0
+        cmp     #$20
+        bcs     js_check_right  ; if less than 32, left
+        lda     #'A'
+        bne     check_sound
+
+js_check_right:
+        cmp     #$40
+        bcc     js_check_up
+        lda     #'D'
+        bne     check_sound
+
+js_check_up:
+        lda     value1
+        cmp     #$20
+        bcs     js_check_down
+        lda     #'W'
+
+        bne     check_sound
+
+js_check_down:
+        cmp     #$40
+        bcc     done_joystick
+        lda     #'S'
+        bne     check_sound
+
+
+done_joystick:
+
+
+
+actually_handle_keypress:
 	lda	KEYPRESS
 	bmi	keypress
 
@@ -26,7 +82,8 @@ check_sound:
 
 	; can't be ^J as that's the same as down
 check_joystick:
-	cmp	#$10			; control-P
+;	cmp	#$10			; control-P
+	cmp	#'J'
 	bne	check_load
 
 	lda	JOYSTICK_ENABLED
@@ -177,7 +234,7 @@ change_direction:
 	; also change sprite cutoff
 	ldx	#40
 	stx	psc_smc1+1
-	stx	psc_smc2+1
+;	stx	psc_smc2+1
 
 	jmp	done_split
 no_split:
@@ -186,7 +243,7 @@ no_split:
 	; also change sprite cutoff
 	ldx	#48
 	stx	psc_smc1+1
-	stx	psc_smc2+1
+;	stx	psc_smc2+1
 
 done_split:
 	and	#$f			; mask off special flags

@@ -176,6 +176,8 @@ crop_sprite_done:
 ;
 ;
 
+
+.if 0
 	;=============================================
 	; put_sprite_flipped_crop
 	;=============================================
@@ -354,3 +356,4 @@ fcrop_sprite_done:
 	rts				; return			; 6
 
 
+.endif

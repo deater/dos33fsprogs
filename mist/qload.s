@@ -236,6 +236,7 @@ length_array:
         .include        "keyboard.s"
         .include        "text_print.s"
 	.include	"loadstore.s"
+	.include	"joystick.s"
 
         .include        "page_sprites.inc"
 	.include        "common_sprites.inc"
