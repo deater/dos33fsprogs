@@ -27,7 +27,8 @@ sub_graphics.inc:	\
 	outside_book_n.lzsa outside_book_s.lzsa \
 	sub_med_s.lzsa sub_med_n.lzsa sub_med_e.lzsa sub_med_w.lzsa \
 	walk_right_s.lzsa walk_right_e.lzsa walk_right_w.lzsa \
-	walk_left_s.lzsa walk_left_e.lzsa walk_left_w.lzsa
+	walk_left_s.lzsa walk_left_e.lzsa walk_left_w.lzsa \
+	bottom_stairs_e.lzsa bottom_stairs_w.lzsa
 	echo "subroom_s_lzsa: .incbin \"subroom_s.lzsa\"" > sub_graphics.inc
 	echo "subroom_n_lzsa: .incbin \"subroom_n.lzsa\"" >> sub_graphics.inc
 	echo "book_table_s_lzsa: .incbin \"book_table_s.lzsa\"" >> sub_graphics.inc
@@ -67,6 +68,9 @@ sub_graphics.inc:	\
 	echo "walk_left_s_lzsa: .incbin \"walk_left_s.lzsa\"" >> sub_graphics.inc
 	echo "walk_left_e_lzsa: .incbin \"walk_left_e.lzsa\"" >> sub_graphics.inc
 	echo "walk_left_w_lzsa: .incbin \"walk_left_w.lzsa\"" >> sub_graphics.inc
+	echo "bottom_stairs_e_lzsa: .incbin \"bottom_stairs_e.lzsa\"" >> sub_graphics.inc
+	echo "bottom_stairs_w_lzsa: .incbin \"bottom_stairs_w.lzsa\"" >> sub_graphics.inc
+
 
 
 

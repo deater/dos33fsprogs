@@ -15,7 +15,7 @@ locations:
 location0:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
-	.byte	SUB_HALLWAY		; east exit
+	.byte	SUB_BOTTOM_STAIRS	; east exit
 	.byte	$ff			; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
@@ -36,7 +36,7 @@ location1:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
 	.byte	SUB_HALLWAY2		; east exit
-	.byte	SUB_BUNKER_ENTRY	; west exit
+	.byte	SUB_BOTTOM_STAIRS	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
@@ -384,7 +384,7 @@ location19:
 location20:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
-	.byte	SUB_HALLWAY2		; east exit
+	.byte	SUB_HALLWAY		; east exit
 	.byte	SUB_BUNKER_ENTRY	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
@@ -392,7 +392,7 @@ location20:
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000				; north bg
 	.word	$0000				; south bg
-	.word	sub_hallway_e_lzsa		; east bg
-	.word	sub_hallway_w_lzsa		; west bg
+	.word	bottom_stairs_e_lzsa		; east bg
+	.word	bottom_stairs_w_lzsa		; west bg
 	.byte	BG_EAST|BG_WEST
 	.byte	$ff
