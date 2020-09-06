@@ -12,6 +12,7 @@ UPPER_THRESHOLD = 128
 PADDL1 = $C065
 
 handle_joystick:
+	lda	#0
 
         ; Read both paddles simultaneously
         asl                     ; Joystick number -> paddle number
@@ -37,6 +38,8 @@ nop1:                           ;           -   -
         iny
         cpy     #UPPER_THRESHOLD+1
         bne     loop
+
+	rts
 
 value0:	.byte	$00
 value1:	.byte	$00
