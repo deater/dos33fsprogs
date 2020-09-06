@@ -37,7 +37,7 @@ text_loop:
 
 
 boot_message:
-.byte	0,0, "LOADING MIST V0.99.7",0
+.byte	0,0, "LOADING MIST V1.0",0
 .byte	0,3, "CONTROLS:",0
 .byte	5,4, "MOVE CURSOR    : ARROWS OR WASD",0
 .byte	5,5, "FORWARD/ACTION : ENTER",0
