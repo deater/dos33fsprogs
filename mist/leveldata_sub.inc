@@ -354,12 +354,12 @@ location18:
 	.byte	SUB_MEDIUM		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	DIRECTION_W	; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
-	.word	$0000		; north bg
-	.word	subroom_s_lzsa	; south bg
-	.word	subroom_s_lzsa	; east bg
-	.word	subroom_s_lzsa	; west bg
+	.word	$0000			; north bg
+	.word	walk_left_s_lzsa	; south bg
+	.word	walk_left_e_lzsa	; east bg
+	.word	walk_left_w_lzsa	; west bg
 	.byte	BG_SOUTH|BG_EAST|BG_WEST
 	.byte	$ff
 
@@ -372,11 +372,11 @@ location19:
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
-	.byte	DIRECTION_E	; west exit_dir
-	.word	$0000		; north bg
-	.word	subroom_s_lzsa	; south bg
-	.word	subroom_n_lzsa	; east bg
-	.word	subroom_n_lzsa	; west bg
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000			; north bg
+	.word	walk_right_s_lzsa	; south bg
+	.word	walk_right_e_lzsa	; east bg
+	.word	walk_right_w_lzsa	; west bg
 	.byte	BG_SOUTH|BG_EAST|BG_WEST
 	.byte	$ff
 
