@@ -106,6 +106,8 @@ not_gear_related:
 check_if_pillars:
 	cmp	#MIST_PILLAR_EYE
 	bcc	check_if_compartment_open	; hack, depends on order
+	cmp	#MIST_SPACESHIP_PATH
+	bcs	check_if_compartment_open
 
 	jsr	draw_pillar
 
