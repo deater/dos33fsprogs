@@ -1,6 +1,6 @@
 ; note, the clock is a bit different in the real game
 ; can't see face when pressing buttons
-; and the way the hands move is a bit more complex
+; and the way the hands move is a bit more complex (or is it?)
 
 ;======================
 ; reset the puzzle inside the clock
@@ -383,10 +383,10 @@ done_draw_clock_face:
 clock_puzzle:
 	lda	CURSOR_X
 	cmp	#19
-	bcc	clock_puzzle_hours		; blt
+	bcc	clock_puzzle_minutes		; blt
 
 	cmp	#24
-	bcc	clock_puzzle_minutes		; blt
+	bcc	clock_puzzle_hours		; blt
 	bcs	clock_puzzle_button		; bge
 
 clock_puzzle_hours:
