@@ -35,12 +35,12 @@ text_loop:
 
 	rts
 
-
+;             0123456789012345678901234567890123456789
 boot_message:
-.byte	0,0, "LOADING MIST V1.0",0
+.byte	0,0, "LOADING MIST V1.01",0
 .byte	0,3, "CONTROLS:",0
 .byte	5,4, "MOVE CURSOR    : ARROWS OR WASD",0
-.byte	5,5, "FORWARD/ACTION : ENTER",0
+.byte	5,5, "FORWARD/ACTION : RETURN OR SPACE",0
 .byte	5,7, "ENABLE JOYSTICK: J",0
 .byte	5,8, "LOAD GAME      : CONTROL-L",0
 .byte	5,9, "SAVE           : CONTROL-S",0

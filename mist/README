@@ -1,8 +1,11 @@
 MIST -- a reimplementation of MYST from scratch for Apple II computers
+======================================================================
 
-
++ works best on II+/IIe
++ should run on IIc/IIgs though not as well tested
 
 Compiling:
+==========
 	This is a bit tricky
 	First you'll need to install the cc65 package
 		https://github.com/cc65/cc65
@@ -13,6 +16,9 @@ Compiling:
 
 	Then run "make" and hope for the best
 
+
+Notes on Filesize
+=================
 
 Load times of ~8k DENTIST:		MIST ~40k
 	DOS33:		7s		TOO-BIG

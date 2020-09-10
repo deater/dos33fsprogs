@@ -8,6 +8,11 @@ handle_keypress:
 	lda	JOYSTICK_ENABLED
 	beq	actually_handle_keypress
 
+	; only check joystick every-other frame
+	lda	FRAMEL
+	and	#$1
+	beq	actually_handle_keypress
+
 check_button:
         lda     PADDLE_BUTTON0
         bpl     button_clear
@@ -111,7 +116,14 @@ check_left:
 	cmp	#8			; left key
 	bne	check_right
 left_pressed:
+	lda	CURSOR_X		; if 41<x<$FB don't decrement
+	cmp	#41
+	bcc	do_dec_cursor_x
+	cmp	#$FB
+	bcc	done_left_pressed
+do_dec_cursor_x:
 	dec	CURSOR_X
+done_left_pressed:
 	jmp	done_keypress
 
 check_right:
@@ -120,7 +132,14 @@ check_right:
 	cmp	#$15			; right key
 	bne	check_up
 right_pressed:
+	lda	CURSOR_X		; if 40<x<$FA don't increment
+	cmp	#40
+	bcc	do_inc_cursor_x
+	cmp	#$FA
+	bcc	done_right_pressed
+do_inc_cursor_x:
 	inc	CURSOR_X
+done_right_pressed:
 	jmp	done_keypress
 
 check_up:
@@ -129,8 +148,15 @@ check_up:
 	cmp	#$0B			; up key
 	bne	check_down
 up_pressed:
+	lda	CURSOR_Y		; if 49<y<$F0 don't decrement
+	cmp	#49
+	bcc	do_dec_cursor_y
+	cmp	#$F0
+	bcc	done_up_pressed
+do_dec_cursor_y:
 	dec	CURSOR_Y
 	dec	CURSOR_Y
+done_up_pressed:
 	jmp	done_keypress
 
 check_down:
@@ -139,8 +165,15 @@ check_down:
 	cmp	#$0A
 	bne	check_return
 down_pressed:
+	lda	CURSOR_Y		; if 48<y<$EE don't decrement
+	cmp	#48
+	bcc	do_inc_cursor_y
+	cmp	#$EE
+	bcc	done_down_pressed
+do_inc_cursor_y:
 	inc	CURSOR_Y
 	inc	CURSOR_Y
+done_down_pressed:
 	jmp	done_keypress
 
 check_return:
