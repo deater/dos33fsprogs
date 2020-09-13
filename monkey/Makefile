@@ -1,0 +1,43 @@
+include ../Makefile.inc
+
+DOS33 = ../dos33fs-utils/dos33
+DOS33_RAW = ../dos33fs-utils/dos33_raw
+PNG_TO_40x96 = ../gr-utils/png_to_40x96
+PNG_TO_40x48D = ../gr-utils/png_to_40x48d
+PNG2RLE = ../gr-utils/png2rle
+B2D = ../bmp2dhr/b2d
+
+all:	monkey.dsk
+
+monkey.dsk:	HELLO MONKEY
+	cp empty.dsk monkey.dsk
+	$(DOS33) -y monkey.dsk SAVE A HELLO
+	$(DOS33) -y monkey.dsk BSAVE -a 0x1000 MONKEY
+
+###
+
+HELLO:	hello.bas
+	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+
+####
+
+MONKEY:	monkey.o
+	ld65 -o MONKEY monkey.o -C ../linker_scripts/apple2_1000.inc
+
+monkey.o:	monkey.s zp.inc hardware.inc common_defines.inc \
+	graphics/graphics.inc \
+	draw_pointer.s \
+	common_sprites.inc \
+	keyboard.s joystick.s \
+	leveldata_monkey.inc
+	ca65 -o monkey.o monkey.s -l monkey.lst
+
+graphics/graphics.inc:
+	cd graphics && make
+
+####
+
+clean:		
+	rm -f *~ *.o *.lst HELLO MONKEY
+	cd graphics && make clean
+
