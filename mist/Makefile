@@ -65,8 +65,8 @@ mist.dsk:	QBOOT TEXT_TITLE QLOAD \
 	$(DOS33_RAW) mist.dsk 26  0 DENTIST    0  31
 	$(DOS33_RAW) mist.dsk 28  0 D\'NI      0  27
 	$(DOS33_RAW) mist.dsk 30  0 SHIP       0  20
-	$(DOS33_RAW) mist.dsk 31  8 VIEWER     0  19
-	$(DOS33_RAW) mist.dsk 32 12 GENERATOR 0  33
+	$(DOS33_RAW) mist.dsk 31  8 VIEWER     0  20
+	$(DOS33_RAW) mist.dsk 32 13 GENERATOR  0  33
 
 
 mist_side2.dsk:	WBOOT2 CHANNEL ARBOR NIBEL CABIN

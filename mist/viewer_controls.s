@@ -163,36 +163,65 @@ done_marker:
 
 really_display_atrus:
 
-	bit	TEXTGR
+	; Y coming in is animate frame << 2
 
-	lda	atrus_animation,Y
+	bit	TEXTGR				; split screen
+
+	; less than 6, as typical
+	; otherwise special
+
+	cpy	#6
+	bcc	atrus_load_anim	; blt
+
+	tya			; xxxx xx00 / xxxx xx10
+	and	#$03
+	clc
+	adc	#$6
+	tay
+
+atrus_load_anim:
+
+	lda	atrus_animation,Y		; load animation
 	sta	INL
 	lda	atrus_animation+1,Y
 	sta	INH
 
-	lda	#12
+	lda	#12				; x, y pos
 	sta	XPOS
 	lda	#20
 	sta	YPOS
 
-	jsr	put_sprite_crop
+	jsr	put_sprite_crop			; put sprite
 
-	lda	FRAMEL
+	lda	FRAMEL				; only slowly increment
 	and	#$1f
 	bne	done_atrus
 
-	inc	ANIMATE_FRAME
-	lda	ANIMATE_FRAME
-	cmp	#5
+	inc	ANIMATE_FRAME			; animate, but loop
+	lda	ANIMATE_FRAME			; the talking part
+	cmp	#255
 	bne	done_atrus
+				; so we want 0,1,2,3,4,3,4,3,4
 
 	lda	#3
 	sta	ANIMATE_FRAME
 
 done_atrus:
-	lda	#<atrus_message
+	lda	ANIMATE_FRAME
+	and	#$10			; cycle every 32 animation steps
+	beq	do_atrus_message_1
+
+	lda	#<atrus_message2
 	sta	OUTL
-	lda	#>atrus_message
+	lda	#>atrus_message2
+	jmp	do_atrus_message
+
+do_atrus_message_1:
+	lda	#<atrus_message1
+	sta	OUTL
+	lda	#>atrus_message1
+
+do_atrus_message:
 	sta	OUTH
 
 	jsr	move_and_print
@@ -209,6 +238,9 @@ done_atrus:
 enter_viewer:
 
 	bit	FULLGR
+
+	lda	#0
+	sta	CURSOR_VISIBLE
 
 	lda	ANIMATE_FRAME
 	beq	start_animation
@@ -457,12 +489,27 @@ mountain_frame3:
 	.byte $AA,$55,$75,$00,$00,$00,$00,$07,$f5,$f5,$ff,$ff,$70
 	.byte $FA,$ff,$07,$00,$00,$00,$00,$00,$ff,$ff,$ff,$75,$77
 
-atrus_message:
-;      0123456789012345678901234567890123456789
-.byte 0,20,"CATHERINE, SOMETHING IS UP WITH OUR SONS",0
-.byte 0,21,"THEY'VE BEEN MESSING WITH THE AGES.     ",0
-.byte 0,22,"I'VE HIDDEN THE REMAINING LINKING BOOKS.",0
-.byte 0,23,"** HINT: REMEMBER THE TOWER ROTATION  **",0
+
+atrus_message1:
+;           0123456789012345678901234567890123456789
+.byte 0,20,"     CATHERINE, I MUST LEAVE QUICKLY.   ",0
+.byte 0,21,"       MY BOOKS HAVE BEEN DESTROYED.    ",0
+.byte 0,22,"IT'S ONE OF OUR SONS.  I SUSPECT ACHENAR",0
+.byte 0,23,"  BUT I SHOULDN'T LEAP TO CONCLUSIONS.  ",0
+
+atrus_message2:
+.byte 0,20,"  I'VE REMOVED THE REMAINING BOOKS AND  ",0
+.byte 0,21,"PLACED THEM IN THE PLACES OF PROTECTION.",0
+.byte 0,22,"      IF YOU'VE FORGOTTEN THE KEYS,     ",0
+.byte 0,23,"   ** REMEMBER THE TOWER ROTATION **    ",0
+
+
+;.byte 0,20,"CATHERINE, SOMETHING IS UP WITH OUR SONS",0
+;.byte 0,21,"THEY'VE BEEN MESSING WITH THE AGES.     ",0
+;.byte 0,22,"I'VE HIDDEN THE REMAINING LINKING BOOKS.",0
+;.byte 0,23,"** HINT: REMEMBER THE TOWER ROTATION  **",0
+
+
 
 wall_text:
 ;       0AAA035449E73 DD 49D5E39FE1C 9D1752 0AAA
