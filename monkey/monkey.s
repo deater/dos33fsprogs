@@ -28,6 +28,12 @@ monkey_start:
 	lda	#>locations
 	sta	LOCATIONS_H
 
+	lda	#29
+	sta	GUYBRUSH_X
+	lda	#18
+	sta	GUYBRUSH_Y
+
+
 	lda	#0
 	sta	DRAW_PAGE
 	sta	LEVEL_OVER
@@ -42,8 +48,6 @@ monkey_start:
 
 	lda	#MONKEY_LOOKOUT
 	sta	LOCATION
-	lda	#DIRECTION_E
-	sta	DIRECTION
 
 	jsr	change_location
 
@@ -70,7 +74,7 @@ game_loop:
 	jsr	gr_copy_to_current
 
 	;====================================
-	; handle special-case forground logic
+	; draw background sprites
 	;====================================
 
 	lda	LOCATION
@@ -172,6 +176,34 @@ viewer_done:
 nothing_special:
 
 	;====================================
+	; draw guybrush
+	;====================================
+
+	lda	GUYBRUSH_X
+	sta	XPOS
+	lda	GUYBRUSH_Y
+	sta	YPOS
+
+	lda	#<guybrush_back_sprite
+	sta	INL
+	lda	#>guybrush_back_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+
+	;====================================
+	; draw foreground sprites
+	;====================================
+
+
+	;====================================
+	; update bottom bar
+	;====================================
+
+	jsr	update_bottom
+
+	;====================================
 	; draw pointer
 	;====================================
 
@@ -209,6 +241,70 @@ room_frame_no_oflo:
 really_exit:
 	jmp	end_level
 
+
+
+
+
+
+	;====================================
+	;====================================
+	; update bottom of screen
+	;====================================
+	;====================================
+update_bottom:
+
+	ldx	#0
+
+bottom_loop:
+	lda	bottom_strings,X
+	sta	OUTL
+	lda	bottom_strings+1,X
+	sta	OUTH
+
+	jsr	move_and_print
+
+	inx
+	inx
+
+	cpx	#18
+	bne	bottom_loop
+
+	rts
+
+;0123456789012345678901234567890123456789
+;
+;GIVE  PICK UP  USE
+;OPEN  LOOK AT  PUSH
+;CLOSE TALK TO  PULL
+
+bottom_strings:
+.word	bottom_give
+.word	bottom_open
+.word	bottom_close
+.word	bottom_pick_up
+.word	bottom_look_at
+.word	bottom_talk_to
+.word	bottom_use
+.word	bottom_push
+.word	bottom_pull
+
+bottom_give:	.byte 0,21,"GIVE ",0
+bottom_open:	.byte 0,22,"OPEN ",0
+bottom_close:	.byte 0,23,"CLOSE",0
+bottom_pick_up:	.byte 6,21,"PICK UP",0
+bottom_look_at:	.byte 6,22,"LOOK AT",0
+bottom_talk_to:	.byte 6,23,"TALK TO",0
+bottom_use:	.byte 15,21,"USE ",0
+bottom_push:	.byte 15,22,"PUSH",0
+bottom_pull:	.byte 15,23,"PULL",0
+
+
+
+
+
+
+
+
 	;==========================
 	; includes
 	;==========================
@@ -232,3 +328,6 @@ really_exit:
 	.include	"decompress_fast_v2.s"
 	.include	"draw_pointer.s"
 	.include	"common_sprites.inc"
+	.include	"guy.brush"
+
+	.include	"monkey_actions.s"

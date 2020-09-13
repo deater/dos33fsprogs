@@ -29,7 +29,9 @@ monkey.o:	monkey.s zp.inc hardware.inc common_defines.inc \
 	draw_pointer.s \
 	common_sprites.inc \
 	keyboard.s joystick.s \
-	leveldata_monkey.inc
+	leveldata_monkey.inc \
+	monkey_actions.s \
+	guy.brush
 	ca65 -o monkey.o monkey.s -l monkey.lst
 
 graphics/graphics.inc:
