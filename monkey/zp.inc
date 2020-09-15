@@ -76,6 +76,7 @@ LOCATION		= $81		; location on the map
 
 GUYBRUSH_X		= $82		; location of protagonist
 GUYBRUSH_Y		= $83
+CURRENT_VERB		= $84
 
 
 ; done game puzzle state

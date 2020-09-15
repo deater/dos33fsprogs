@@ -1,6 +1,19 @@
 ;=============================
 ; common stuff
 
+VERB_GIVE	= 0
+VERB_OPEN	= 1
+VERB_CLOSE	= 2
+VERB_PICK_UP	= 3
+VERB_LOOK_AT	= 4
+VERB_TALK_TO	= 5
+VERB_USE	= 6
+VERB_PUSH	= 7
+VERB_PULL	= 8 
+VERB_WALK	= 9
+
+
+
 ;===============================================
 ; level data structure definitions
 ;===============================================

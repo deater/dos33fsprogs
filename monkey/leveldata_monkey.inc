@@ -30,7 +30,7 @@ location0:
 
 ; MONKEY_POSTER		-- house with poster
 location1:
-	.word	lookout_lzsa			; background
+	.word	poster_lzsa			; background
 	.byte	18,40				; walking range X
 	.byte	16,48				; walking range Y
 	.byte	4				; num areas
@@ -53,7 +53,7 @@ location1:
 
 ; MONKEY_DOCK		-- dock
 location2:
-	.word	lookout_lzsa			; background
+	.word	dock_lzsa			; background
 	.byte	18,40				; walking range X
 	.byte	16,48				; walking range Y
 	.byte	4				; num areas
@@ -76,7 +76,7 @@ location2:
 
 ; MONKEY_BAR		-- scumm bar
 location3:
-	.word	lookout_lzsa			; background
+	.word	bar_lzsa			; background
 	.byte	18,40				; walking range X
 	.byte	16,48				; walking range Y
 	.byte	4				; num areas
