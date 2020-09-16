@@ -28,8 +28,15 @@ update_bottom:
 	jsr	move_and_print
 
 
-	lda	CURRENT_NOUN
+	lda	VALID_NOUN
 	bmi	no_noun
+
+	lda	NOUN_L
+	sta	OUTL
+	lda	NOUN_H
+	sta	OUTH
+
+	jsr	move_and_print
 
 no_noun:
 

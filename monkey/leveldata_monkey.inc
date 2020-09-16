@@ -10,8 +10,7 @@ location0:
 	.word	lookout_lzsa			; background
 	.byte	18,40				; walking range X
 	.byte	16,48				; walking range Y
-	.byte	4				; num areas
-	.byte	3
+	.byte	3				; num areas
 
 		.byte	12,15	; x
 		.byte	18,28	; y
@@ -33,8 +32,7 @@ location1:
 	.word	poster_lzsa			; background
 	.byte	18,40				; walking range X
 	.byte	16,48				; walking range Y
-	.byte	4				; num areas
-	.byte	3
+	.byte	3				; num areas
 
 		.byte	12,15	; x
 		.byte	18,28	; y
@@ -56,8 +54,7 @@ location2:
 	.word	dock_lzsa			; background
 	.byte	18,40				; walking range X
 	.byte	16,48				; walking range Y
-	.byte	4				; num areas
-	.byte	3
+	.byte	3				; num areas
 
 		.byte	12,15	; x
 		.byte	18,28	; y
@@ -79,8 +76,7 @@ location3:
 	.word	bar_lzsa			; background
 	.byte	18,40				; walking range X
 	.byte	16,48				; walking range Y
-	.byte	4				; num areas
-	.byte	3
+	.byte	3				; num areas
 
 		.byte	12,15	; x
 		.byte	18,28	; y
@@ -101,7 +97,7 @@ location3:
 
 
 string_data:
-lookout_string:	.byte "LOOKOUT",0
-path_string:	.byte "PATH",0
-stairs_string:	.byte "STAIRS",0
+lookout_string:	.byte 20,20,"LOOKOUT",0
+path_string:	.byte 20,20,"PATH",0
+stairs_string:	.byte 20,20,"STAIRS",0
 

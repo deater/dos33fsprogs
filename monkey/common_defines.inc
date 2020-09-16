@@ -19,6 +19,13 @@ VERB_WALK	= 9
 ;===============================================
 
 LOCATION_BACKGROUND=0			; background
+LOCATION_WALK_X_LEFT=2
+LOCATION_WALK_X_RIGHT=3
+LOCATION_WALK_Y_TOP=4
+LOCATION_WALK_Y_BOTTOM=5
+LOCATION_NUM_AREAS=6
+LOCATION_AREAS=7			; each area 8 in size
+
 
 ;================================
 ; Loader definitions

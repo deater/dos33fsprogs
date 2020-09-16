@@ -81,18 +81,6 @@ game_loop:
 	;====================================
 
 	lda	LOCATION
-;	cmp	#NIBEL_BLUE_ROOM
-;	beq	fg_draw_blue_page
-;	cmp	#NIBEL_RED_TABLE_OPEN
-;	beq	fg_draw_red_page
-;	cmp	#NIBEL_BLUE_HOUSE_VIEWER
-;	beq	animate_viewer
-;	cmp	#NIBEL_SHACK_ENTRANCE
-;	beq	animate_projector
-;	cmp	#NIBEL_SHACK_CENTER
-;	beq	animate_trap
-;	cmp	#NIBEL_BLUE_PATH_2P25
-;	beq	animate_gate_s
 ;	cmp	#NIBEL_BLUE_PATH_2P5
 ;	beq	animate_gate_n
 
@@ -104,59 +92,6 @@ animate_gate_n:
 ;	jsr	update_gate_n
 	jmp	nothing_special
 
-animate_viewer:
-	lda	ANIMATE_FRAME
-	beq	nothing_special
-	cmp	#6
-	beq	viewer_done
-
-	sec
-	sbc	#1
-	asl
-	tay
-
-;	lda	current_button_animation
-;	sta	OUTL
-;	lda	current_button_animation+1
-;	sta	OUTH
-	lda	(OUTL),Y
-	sta	INL
-	iny
-	lda	(OUTL),Y
-	sta	INH
-
-	lda	#14
-	sta	XPOS
-
-	lda	#10
-	sta	YPOS
-	jsr	put_sprite_crop
-
-	lda	FRAMEL
-	and	#$f
-	bne	nothing_special
-
-	lda	ANIMATE_FRAME
-	cmp	#5
-	bne	short_frame
-
-long_frame:
-	inc	LONG_FRAME
-	lda	LONG_FRAME
-	cmp	#30
-	bne	nothing_special
-
-short_frame:
-	inc	ANIMATE_FRAME
-
-	lda	#0
-	sta	LONG_FRAME
-	jmp	nothing_special
-
-
-viewer_done:
-	lda	#0
-	sta	ANIMATE_FRAME
 
 nothing_special:
 
@@ -181,6 +116,12 @@ nothing_special:
 	; draw foreground sprites
 	;====================================
 
+
+	;====================================
+	; what are we pointing too
+	;====================================
+
+	jsr	where_do_we_point
 
 	;====================================
 	; update bottom bar

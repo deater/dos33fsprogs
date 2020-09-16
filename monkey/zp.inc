@@ -78,7 +78,11 @@ GUYBRUSH_X		= $82		; location of protagonist
 GUYBRUSH_Y		= $83
 
 CURRENT_VERB		= $84		; current verb
-CURRENT_NOUN		= $85		; current noun
+VALID_NOUN		= $85		; current noun
+NOUN_L			= $86		; pointer to current noun string
+NOUN_H			= $87
+NOUN_VECTOR_L		= $88		; pointer to callback for clicking noun
+NOUN_VECTOR_H		= $89
 
 ; done game puzzle state
 
