@@ -1,3 +1,33 @@
+	;=============================
+	; normal_text
+	;=============================
+	; modify so print normal text
+normal_text:
+
+	; want ora #$80
+	lda	#$09
+	sta	ps_smc1
+
+	lda	#$80
+	sta	ps_smc1+1
+
+	rts
+
+	;=============================
+	; inverse_text
+	;=============================
+	; modify so print inverse text
+inverse_text:
+
+	; want and #$3f
+	lda	#$29
+	sta	ps_smc1
+
+	lda	#$3f
+	sta	ps_smc1+1
+
+	rts
+
 
 	;================================
 	; move_and_print

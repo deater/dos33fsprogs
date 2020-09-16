@@ -57,6 +57,9 @@ monkey_start:
 	lda	#0
 	sta	ANIMATE_FRAME
 
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+
 game_loop:
 	;=================
 	; reset things
@@ -95,25 +98,7 @@ game_loop:
 
 	jmp	nothing_special
 
-fg_draw_blue_page:
-;	jsr	draw_blue_page
-	jmp	nothing_special
 
-fg_draw_red_page:
-;	jsr	draw_red_page
-	jmp	nothing_special
-
-animate_projector:
-;	jsr	draw_projection
-	jmp	nothing_special
-
-animate_trap:
-;	jsr	draw_trap
-	jmp	nothing_special
-
-animate_gate_s:
-;	jsr	update_gate_s
-	jmp	nothing_special
 
 animate_gate_n:
 ;	jsr	update_gate_n
@@ -243,68 +228,6 @@ really_exit:
 
 
 
-
-
-
-	;====================================
-	;====================================
-	; update bottom of screen
-	;====================================
-	;====================================
-update_bottom:
-
-	ldx	#0
-
-bottom_loop:
-	lda	bottom_strings,X
-	sta	OUTL
-	lda	bottom_strings+1,X
-	sta	OUTH
-
-	jsr	move_and_print
-
-	inx
-	inx
-
-	cpx	#18
-	bne	bottom_loop
-
-	rts
-
-;0123456789012345678901234567890123456789
-;
-;GIVE  PICK UP  USE
-;OPEN  LOOK AT  PUSH
-;CLOSE TALK TO  PULL
-
-bottom_strings:
-.word	bottom_give
-.word	bottom_open
-.word	bottom_close
-.word	bottom_pick_up
-.word	bottom_look_at
-.word	bottom_talk_to
-.word	bottom_use
-.word	bottom_push
-.word	bottom_pull
-
-bottom_give:	.byte 0,21,"GIVE ",0
-bottom_open:	.byte 0,22,"OPEN ",0
-bottom_close:	.byte 0,23,"CLOSE",0
-bottom_pick_up:	.byte 6,21,"PICK UP",0
-bottom_look_at:	.byte 6,22,"LOOK AT",0
-bottom_talk_to:	.byte 6,23,"TALK TO",0
-bottom_use:	.byte 15,21,"USE ",0
-bottom_push:	.byte 15,22,"PUSH",0
-bottom_pull:	.byte 15,23,"PULL",0
-
-
-
-
-
-
-
-
 	;==========================
 	; includes
 	;==========================
@@ -331,3 +254,4 @@ bottom_pull:	.byte 15,23,"PULL",0
 	.include	"guy.brush"
 
 	.include	"monkey_actions.s"
+	.include	"update_bottom.s"
