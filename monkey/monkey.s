@@ -85,15 +85,15 @@ game_loop:
 	;====================================
 
 	lda	LOCATION
-;	cmp	#NIBEL_BLUE_PATH_2P5
-;	beq	animate_gate_n
+	cmp	#MONKEY_LOOKOUT
+	beq	animate_flame
 
 	jmp	nothing_special
 
 
 
-animate_gate_n:
-;	jsr	update_gate_n
+animate_flame:
+	jsr	draw_fire
 	jmp	nothing_special
 
 
@@ -171,6 +171,19 @@ done_move_guybrush:
 	;====================================
 	; draw foreground sprites
 	;====================================
+
+	lda	LOCATION
+	cmp	#MONKEY_LOOKOUT
+	beq	do_draw_wall
+
+	jmp	nothing_foreground
+
+do_draw_wall:
+	jsr	draw_wall
+	jmp	nothing_foreground
+
+
+nothing_foreground:
 
 
 	;====================================
@@ -250,5 +263,8 @@ really_exit:
 	.include	"common_sprites.inc"
 	.include	"guy.brush"
 
+	.include	"monkey_lookout.s"
+
 	.include	"monkey_actions.s"
 	.include	"update_bottom.s"
+
