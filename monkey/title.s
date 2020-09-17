@@ -259,6 +259,13 @@ dont_text:
 
 	jsr	inc_frame
 
+	;================
+	; delay
+	;================
+
+	lda	#200
+	jsr	WAIT
+
 	;=========================
 	; update credits sequence
 	;=========================
@@ -280,9 +287,9 @@ dont_text:
 
 loop_again:
 
-	; delay
-	lda	#200
-	jsr	WAIT
+	;===============
+	; move cloud
+	;===============
 
 	lda	FRAMEL
 	and	#$7
@@ -331,14 +338,6 @@ done_with_title:
 	.include	"ym_play.s"
 	.include	"interrupt_handler.s"
 	.include	"mockingboard.s"
-
-;wait_until_keypressed:
-;	lda	KEYPRESS
-;	bpl	wait_until_keypressed
-
-;	bit	KEYRESET
-
-;	rts
 
 
 	;====================================
@@ -461,7 +460,7 @@ credits_sequence:
 .byte	$00,$80,2
 .byte	$00,$A0,ACTION_FULL_SCREEN
 .byte	$00,$B0,0
-.byte	$00,$B6,ACTION_TURN_ON_LOGO
+.byte	$00,$B5,ACTION_TURN_ON_LOGO
 .byte	$00,$B7,ACTION_SPLIT_SCREEN
 
 .byte	$00,$B8,3
@@ -522,53 +521,53 @@ credits2:
 credits3:
 .byte	10,20," ",0
 .byte	 7,21,"TM & (C) 1990 LUCAS ARTS",0
-.byte	10,22,"ALL RIGHTS RESERVED",0
+.byte	   10,22,"ALL RIGHTS RESERVED",0
 
 credits4:
 .byte	10,20," ",0
 .byte	 9,21,"CREATED AND DESIGNED BY",0
-.byte	15,22,"RON GILBERT",0
+.byte	      15,22,"RON GILBERT",0
 
 credits5:
 .byte	 7,21,"WRITTEN AND PROGRAMMED BY",0
 .byte	 7,22,"RON GILBERT, DAVE GROSSMAN",0
-.byte	12,23,"AND TIM SCHAFER",0
+.byte	     12,23,"AND TIM SCHAFER",0
 
 credits6:
-.byte	11,21,"BACKGROUND ART BY",0
+.byte	     11,21,"BACKGROUND ART BY",0
 .byte	 6,22,"STEVE PURCELL, MARK FERRARI",0
-.byte	13,23,"AND MIKE EBERT",0
+.byte	       13,23,"AND MIKE EBERT",0
 
 credits7:
-.byte	14,21,"ANIMATION BY",0
-.byte	 7,22,"STEVE PURCELL, MIKE EBERT",0
+.byte	        13,21,"ANIMATION BY",0
+.byte	   7,22,"STEVE PURCELL, MIKE EBERT",0
 .byte	 5,23,"AND MARTIN CAMERON AS 'BUCKY'",0
 
 credits8:
 .byte	10,20," ",0
 .byte	11,21,"ORIGINAL MUSIC BY",0
-.byte	13,22,"MICHAEL LAND",0
+.byte	  13,22,"MICHAEL LAND",0
 
 credits9:
 .byte	10,20," ",0
 .byte	 6,21,"BARNEY JONES AND ANDY NEWELL",0
-.byte	 8,22,"OF EARWAX PRODUCTIONS...",0
+.byte	   8,22,"OF EARWAX PRODUCTIONS...",0
 
 credits10:
 .byte	10,20," ",0
-.byte	16,21,"... AND",0
+.byte	   16,21,"... AND",0
 .byte	13,22,"PATRICK MUNDY",0
 
 ; TESTERS, PRODUCER, SCUMM
 
 credits11:
 .byte	10,20," ",0
-.byte	11,21,"APPLE II VERSION",0
+.byte	  11,21,"APPLE II VERSION",0
 .byte	 9,22,"VINCE 'DEATER' WEAVER",0
 
 credits12:
 .byte	10,20," ",0
-.byte	10,21,"CPC AY-3-8910 THEME",0
+.byte	 10,21,"CPC AY-3-8910 THEME",0
 .byte	 9,22,"EPYTEOR/SUTEKH/STARKOS",0
 
 credits_nothing:
