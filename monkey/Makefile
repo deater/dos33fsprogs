@@ -36,7 +36,9 @@ loader.o:	loader.s
 TITLE:	title.o
 	ld65 -o TITLE title.o -C ../linker_scripts/apple2_2000.inc
 
-title.o:	title.s
+title.o:	title.s \
+	graphics_intro/title_graphics.inc \
+	interrupt_handler.s mockingboard.s ym_play.s
 	ca65 -o title.o title.s -l title.lst
 
 
@@ -58,6 +60,9 @@ monkey.o:	monkey.s zp.inc hardware.inc common_defines.inc \
 
 graphics/graphics.inc:
 	cd graphics && make
+
+graphics_intro/title_graphics.inc:
+	cd graphics_intro && make
 
 ####
 

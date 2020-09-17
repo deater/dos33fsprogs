@@ -348,3 +348,4 @@ done_split:
 	lda	#$c			; load to page $c00
 	jsr	decompress_lzsa2_fast
 
+	rts
