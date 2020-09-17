@@ -30,13 +30,18 @@ title_start:
 	sta	FRAMEL
 	sta	FRAMEH
 	sta	DISP_PAGE
+	sta	CREDITS_OFFSET
+	sta	CREDITS_LOGO_ON
+	sta	CREDITS_SPLIT_SCREEN
+	sta	CREDITS_DISPLAY_TEXT
 
-	lda	#18
+	lda	#14
 	sta	CLOUD_X
 
 	lda	#4
 	sta	DRAW_PAGE
 
+	jsr	normal_text
 
 	;====================================
 	; load LF logo
@@ -60,7 +65,9 @@ title_start:
 	lda	#$44			; load to page $4800-400=$4400
 	jsr	decompress_lzsa2_fast
 
-
+	;=====================================
+	; setup music
+	;=====================================
 
 setup_music:
 	; decompress music
@@ -173,6 +180,12 @@ do_logo_loop:
 
 
 	;====================================
+	;====================================
+	; Intro
+	;====================================
+	;====================================
+
+	;====================================
 	; load Background logo
 	;====================================
 do_monkey_loop:
@@ -216,19 +229,49 @@ monkey_loop:
 
 
 	; copy title overlay
+	lda	CREDITS_LOGO_ON
+	beq	dont_overlay
 
 	jsr	gr_overlay_40x40_noload
+dont_overlay:
 
+	;=======================
+	; draw text if enabled
+
+	lda	CREDITS_DISPLAY_TEXT
+	beq	dont_text
+
+	jsr	clear_bottom
+	lda	CREDITS_TEXTL
+	sta	OUTL
+	lda	CREDITS_TEXTH
+	sta	OUTH
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+
+dont_text:
+
+	;===========
 	; page flip
 
 	jsr	page_flip
 
 	jsr	inc_frame
 
+	;=========================
+	; update credits sequence
+	;=========================
+
+	jsr	update_credit_sequence
+
+	;============================
 	; early escape if end of song
+
 	lda	DONE_PLAYING
 	bmi	done_with_title
 
+	;===========================
 	; early escape if keypressed
 	lda	KEYPRESS
 	bpl	loop_again
@@ -405,39 +448,211 @@ mountain_top_sprite:
 .byte	$AA,$2A,$22,$22,$00,$00,$22,$07,$70,$00,$AA
 .byte	$2A,$22,$00,$22,$00,$22,$02,$22,$07,$70,$0A
 
+; FRAMEH, FRAMEL, ACTION
+ACTION_SPLIT_SCREEN	=	$80
+ACTION_FULL_SCREEN	=	$81
+ACTION_TURN_ON_LOGO	=	$82
+ACTION_TURN_OFF_LOGO	=	$83
+
+; 1 E0 is roughly end
+credits_sequence:
+.byte	$00,$6F,ACTION_SPLIT_SCREEN
+.byte	$00,$70,1
+.byte	$00,$80,2
+.byte	$00,$A0,ACTION_FULL_SCREEN
+.byte	$00,$B0,0
+.byte	$00,$B6,ACTION_TURN_ON_LOGO
+.byte	$00,$B7,ACTION_SPLIT_SCREEN
+
+.byte	$00,$B8,3
+.byte	$00,$C8,0
+
+.byte	$00,$D0,4
+.byte	$00,$E0,0
+
+.byte	$00,$E8,5
+.byte	$00,$F8,0
+
+.byte	$01,$00,6
+.byte	$01,$10,0
+
+.byte	$01,$18,7
+.byte	$01,$28,0
+
+.byte	$01,$30,8
+.byte	$01,$40,0
+
+.byte	$01,$48,9
+.byte	$01,$58,0
+
+.byte	$01,$60,10
+.byte	$01,$70,0
+
+.byte	$01,$78,11
+.byte	$01,$88,0
+
+.byte	$01,$90,12
+.byte	$01,$A0,0
+
+.byte	$01,$A8,ACTION_FULL_SCREEN
+
+.byte	$01,$B0,ACTION_TURN_OFF_LOGO
+
+.byte	$ff
+
+
 credits_text:
-; DEEP IN THE CARIBBEAN
-;                ^ ,
-; THE ISLAND OF MELEE
+.word	credits_nothing
+.word	credits1,credits2,credits3,credits4
+.word	credits5,credits6,credits7,credits8
+.word	credits9,credits10,credits11,credits12
+
+
+credits1:     ;0123456789012345678901234567890123456789
+.byte	10,21,"DEEP IN THE CARIBBEAN",0
+.byte	10,22," ",0
+.byte	10,23," ",0
+
+credits2:
+.byte	10,20,"               ^ ,",0
+.byte	10,21,"THE ISLAND OF MELEE",0
+.byte	10,22," ",0
 
 ; TITLE CARD APPEARS
-; TM&(C) 1990 LUCAS ARTS
-;       ALL RIGHTS RESERVED
+credits3:
+.byte	10,20," ",0
+.byte	 7,21,"TM & (C) 1990 LUCAS ARTS",0
+.byte	10,22,"ALL RIGHTS RESERVED",0
 
-; CREATED AND DESIGNED BY
-; RON GILBERT
+credits4:
+.byte	10,20," ",0
+.byte	 9,21,"CREATED AND DESIGNED BY",0
+.byte	15,22,"RON GILBERT",0
 
-; WRITTEN AND PROGRAMMED BY
-; RON GILBERT, DAVE GROSSMAN
-; AND TIM SCHAFER
+credits5:
+.byte	 7,21,"WRITTEN AND PROGRAMMED BY",0
+.byte	 7,22,"RON GILBERT, DAVE GROSSMAN",0
+.byte	12,23,"AND TIM SCHAFER",0
 
-; BACKGROUND ART BY
-; STEVE PURCELL, MARK FERRARI
-;  AND MIKE EBERT
+credits6:
+.byte	11,21,"BACKGROUND ART BY",0
+.byte	 6,22,"STEVE PURCELL, MARK FERRARI",0
+.byte	13,23,"AND MIKE EBERT",0
 
-; ANIMATION BY
-; STEVE PURCELL, MIKE EBERT
-; AND MARTIN CAMERON AS "BUCKY"
+credits7:
+.byte	14,21,"ANIMATION BY",0
+.byte	 7,22,"STEVE PURCELL, MIKE EBERT",0
+.byte	 5,23,"AND MARTIN CAMERON AS 'BUCKY'",0
 
-; ORIGINAL MUSIC BY
-; MICHAEL LAND
+credits8:
+.byte	10,20," ",0
+.byte	11,21,"ORIGINAL MUSIC BY",0
+.byte	13,22,"MICHAEL LAND",0
 
-; BARNEY JONES AND ANDY NEWELL
-; OF EARWAX PRODUCTIONS...
+credits9:
+.byte	10,20," ",0
+.byte	 6,21,"BARNEY JONES AND ANDY NEWELL",0
+.byte	 8,22,"OF EARWAX PRODUCTIONS...",0
 
-; ... AND
-; PATRICK MUNDY
+credits10:
+.byte	10,20," ",0
+.byte	16,21,"... AND",0
+.byte	13,22,"PATRICK MUNDY",0
 
 ; TESTERS, PRODUCER, SCUMM
+
+credits11:
+.byte	10,20," ",0
+.byte	11,21,"APPLE II VERSION",0
+.byte	 9,22,"VINCE 'DEATER' WEAVER",0
+
+credits12:
+.byte	10,20," ",0
+.byte	10,21,"CPC AY-3-8910 THEME",0
+.byte	 9,22,"EPYTEOR/SUTEKH/STARKOS",0
+
+credits_nothing:
+.byte	10,20," ",0
+.byte	10,21," ",0
+.byte	10,22," ",0
+
+
+	;=========================
+	; update credits sequence
+	;=========================
+update_credit_sequence:
+
+	ldy	CREDITS_OFFSET
+	cpy	#$ff
+	beq	done_credit_sequence
+
+	; see if we've hit FRAMEH
+	lda	credits_sequence,Y
+	cmp	FRAMEH
+	bne	done_credit_sequence
+
+	lda	credits_sequence+1,Y
+	cmp	FRAMEL
+	bne	done_credit_sequence
+
+	; made it this far, we actually need to update!
+	lda	credits_sequence+2,Y
+	iny
+	iny
+	iny
+	sty	CREDITS_OFFSET
+
+	cmp	#ACTION_SPLIT_SCREEN
+	beq	do_split_screen
+	cmp	#ACTION_FULL_SCREEN
+	beq	do_full_screen
+	cmp	#ACTION_TURN_ON_LOGO
+	beq	do_turn_on_logo
+	cmp	#ACTION_TURN_OFF_LOGO
+	beq	do_turn_off_logo
+	bne	do_update_text
+
+done_credit_sequence:
+	rts
+
+do_split_screen:
+	bit	TEXTGR
+
+	lda	#1
+	sta	CREDITS_DISPLAY_TEXT
+	lda	#<credits_nothing
+	sta	CREDITS_TEXTL
+	lda	#>credits_nothing
+	sta	CREDITS_TEXTH
+
+	rts
+
+do_full_screen:
+	lda	#0
+	sta	CREDITS_DISPLAY_TEXT
+	bit	FULLGR
+	rts
+
+do_turn_on_logo:
+	lda	#1
+	sta	CREDITS_LOGO_ON
+	rts
+
+do_turn_off_logo:
+	lda	#0
+	sta	CREDITS_LOGO_ON
+	rts
+
+do_update_text:
+	; A has string offset
+
+	asl
+	tay
+	lda	credits_text,Y
+	sta	CREDITS_TEXTL
+	lda	credits_text+1,Y
+	sta	CREDITS_TEXTH
+
+	rts
 
 

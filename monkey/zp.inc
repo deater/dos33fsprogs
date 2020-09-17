@@ -90,7 +90,15 @@ NOUN_VECTOR_H		= $89
 DESTINATION_X		= $8A		; where to walk
 DESTINATION_Y		= $8B
 
+; credits stuff
 CLOUD_X			= $8C
+CREDITS_OFFSET		= $8D
+CREDITS_LOGO_ON		= $8E
+CREDITS_SPLIT_SCREEN	= $8F
+CREDITS_DISPLAY_TEXT	= $90
+CREDITS_TEXTL		= $91
+CREDITS_TEXTH		= $92
+
 
 ; done game puzzle state
 
