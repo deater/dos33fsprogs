@@ -29,8 +29,11 @@ title_start:
 	sta	ANIMATE_FRAME
 	sta	FRAMEL
 	sta	FRAMEH
-	sta	DRAW_PAGE
 	sta	DISP_PAGE
+
+	lda	#4
+	sta	DRAW_PAGE
+
 
 setup_music:
 	; decompress music
@@ -57,10 +60,11 @@ title_loop:
 	lda	#$c			; load to page $c00
 	jsr	decompress_lzsa2_fast
 
-
 	jsr	gr_copy_to_current
 
 logo_loop:
+
+	; draw sprites
 
 ;	lda	GUYBRUSH_X
 ;	sta	XPOS
@@ -74,28 +78,33 @@ logo_loop:
 
 ;	jsr	put_sprite_crop
 
+	jsr	gr_copy_to_current
 
-;	jsr	page_flip
+	jsr	page_flip
 
+	; incrememnt frame
+
+	jsr	inc_frame
+
+	; if it's been x seconds then go to next part
+	lda	FRAMEH
+	cmp	#3
+	beq	do_monkey_loop
+
+	; early escape if keypressed
+	lda	KEYPRESS
+	bpl	do_logo_loop
+
+	jmp	done_with_title
+
+do_logo_loop:
+	jmp	logo_loop
 
 
 	;====================================
-	; inc frame count
+	; load Background logo
 	;====================================
-
-	inc	FRAMEL
-	bne	room_frame_no_oflo
-	inc	FRAMEH
-room_frame_no_oflo:
-
-
-	jsr	wait_until_keypressed
-
-
-	;====================================
-	; load LF logo
-	;====================================
-
+do_monkey_loop:
         lda	#<title_lzsa
 	sta	LZSA_SRC_LO
         lda	#>title_lzsa
@@ -103,18 +112,29 @@ room_frame_no_oflo:
 	lda	#$c			; load to page $c00
 	jsr	decompress_lzsa2_fast
 
-
+monkey_loop:
 	jsr	gr_copy_to_current
 
-	jsr	wait_until_keypressed
+	jsr	page_flip
+
+	; early escape if keypressed
+	lda	KEYPRESS
+	bpl	loop_again
+
+	jmp	done_with_title
+
+loop_again:
+	jmp	monkey_loop
+
 
 	;==========================
 	; turn off music
 	;==========================
+done_with_title:
+	bit	KEYRESET	; clear keypress
+	sei			; clear interrupts
 
-	sei		; clear interrupts
-
-	jsr	clear_ay_both
+	jsr	clear_ay_both	; silence ay-3-8910 chips
 
 	;==========================
 	; load main program
@@ -134,33 +154,35 @@ room_frame_no_oflo:
 
 
 
-;	.include	"end_level.s"
-;	.include	"text_print.s"
+	.include	"text_print.s"
 	.include	"gr_offsets.s"
 	.include	"gr_fast_clear.s"
-;	.include	"keyboard.s"
 	.include	"gr_copy.s"
-;	.include	"gr_putsprite_crop.s"
-;	.include	"joystick.s"
-;	.include	"gr_pageflip.s"
+	.include	"gr_putsprite_crop.s"
+	.include	"gr_pageflip.s"
 	.include	"decompress_fast_v2.s"
-;	.include	"draw_pointer.s"
-;	.include	"common_sprites.inc"
-;	.include	"guy.brush"
-
-;	.include	"monkey_actions.s"
-;	.include	"update_bottom.s"
 
 	.include	"ym_play.s"
 	.include	"interrupt_handler.s"
 	.include	"mockingboard.s"
 
-wait_until_keypressed:
-	lda	KEYPRESS
-	bpl	wait_until_keypressed
+;wait_until_keypressed:
+;	lda	KEYPRESS
+;	bpl	wait_until_keypressed
 
-	bit	KEYRESET
+;	bit	KEYRESET
 
+;	rts
+
+
+	;====================================
+	; inc frame count
+	;====================================
+inc_frame:
+	inc	FRAMEL
+	bne	room_frame_no_oflo
+	inc	FRAMEH
+room_frame_no_oflo:
 	rts
 
 
@@ -172,3 +194,42 @@ wait_until_keypressed:
 theme_lzsa:
 .incbin	"music/theme.lzsa"
 
+logo_sprites:
+	.word logo_sprite0
+	.word logo_sprite1
+	.word logo_sprite2
+	.word logo_sprite1
+	.word logo_sprite0
+
+logo_sprite0:
+	.byte 3,2
+	.byte $AA,$AA,$AA
+	.byte $AA,$AF,$AA
+
+logo_sprite1:
+	.byte 3,2
+	.byte $AA,$3A,$AA
+	.byte $A3,$3F,$A3
+
+logo_sprite2:
+	.byte 3,3
+	.byte $AA,$b3,$AA
+	.byte $Ab,$bF,$Ab
+	.byte $Aa,$a3,$Aa
+
+; spark locations  (grow+shrink)
+
+sparks:
+	;      X,Y    timestamp
+	.byte  0,10,	0	; first:	0,10
+	.byte  3,26,	2	; second:	3,26
+	.byte  6,10,	4	; third:	6,10
+	.byte  6,28,	6	; 4th		6,28
+	.byte 10,14,	8	; 5th		10,14
+	.byte 15,22,	10	; 6th		15,22
+	.byte 19,14,	12	; 7th		19,14
+	.byte 25,24,	14	; 8th		25,24
+	.byte 28,10,	16	; 9th 		28,10
+	.byte 32,30,	18	; 10th		32,30
+	.byte 37,10,	20	; 11th		37,10
+	.byte $ff
