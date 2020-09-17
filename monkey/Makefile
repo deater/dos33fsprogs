@@ -9,10 +9,12 @@ B2D = ../bmp2dhr/b2d
 
 all:	monkey.dsk
 
-monkey.dsk:	HELLO MONKEY
+monkey.dsk:	HELLO LOADER TITLE MONKEY
 	cp empty.dsk monkey.dsk
 	$(DOS33) -y monkey.dsk SAVE A HELLO
-	$(DOS33) -y monkey.dsk BSAVE -a 0x1000 MONKEY
+	$(DOS33) -y monkey.dsk BSAVE -a 0x1000 LOADER
+	$(DOS33) -y monkey.dsk BSAVE -a 0x2000 TITLE
+	$(DOS33) -y monkey.dsk BSAVE -a 0x2000 MONKEY
 
 ###
 
@@ -21,8 +23,28 @@ HELLO:	hello.bas
 
 ####
 
+###
+
+LOADER:	loader.o
+	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1000.inc
+
+loader.o:	loader.s
+	ca65 -o loader.o loader.s -l loader.lst
+
+###
+
+TITLE:	title.o
+	ld65 -o TITLE title.o -C ../linker_scripts/apple2_2000.inc
+
+title.o:	title.s
+	ca65 -o title.o title.s -l title.lst
+
+
+####
+
+
 MONKEY:	monkey.o
-	ld65 -o MONKEY monkey.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o MONKEY monkey.o -C ../linker_scripts/apple2_2000.inc
 
 monkey.o:	monkey.s zp.inc hardware.inc common_defines.inc \
 	graphics/graphics.inc \
