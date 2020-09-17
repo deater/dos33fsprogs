@@ -84,6 +84,9 @@ NOUN_H			= $87
 NOUN_VECTOR_L		= $88		; pointer to callback for clicking noun
 NOUN_VECTOR_H		= $89
 
+DESTINATION_X		= $8A		; where to walk
+DESTINATION_Y		= $8B
+
 ; done game puzzle state
 
 

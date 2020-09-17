@@ -1,3 +1,6 @@
+; G = Give   P=Pick up  U=use    M=walk
+; O = Open   L=Look at  H=push
+; C = Close  T=Talk to  N=pull
 
 	;==============================
 	; Handle Keypress
@@ -87,28 +90,99 @@ check_sound:
 
 	; can't be ^J as that's the same as down
 check_joystick:
-;	cmp	#$10			; control-P
-	cmp	#'J'
-	bne	check_load
+	cmp	#'J'			; J
+	bne	check_give
 
 	lda	JOYSTICK_ENABLED
 	eor	#1
 	sta	JOYSTICK_ENABLED
 	jmp	done_keypress
 
-check_load:
-	cmp	#$C			; control-L
-	bne	check_save
+check_give:
+	cmp	#'G'
+	bne	check_open
+	lda	#VERB_GIVE
+	sta	CURRENT_VERB
+	jmp	done_keypress
+
+check_open:
+	cmp	#'O'
+	bne	check_close
+	lda	#VERB_OPEN
+	sta	CURRENT_VERB
+	jmp	done_keypress
+
+check_close:
+	cmp	#'C'
+	bne	check_pick_up
+	lda	#VERB_CLOSE
+	sta	CURRENT_VERB
+	jmp	done_keypress
+
+check_pick_up:
+	cmp	#'P'
+	bne	check_look_at
+	lda	#VERB_PICK_UP
+	sta	CURRENT_VERB
+	jmp	done_keypress
+
+check_look_at:
+	cmp	#'L'
+	bne	check_talk_to
+	lda	#VERB_LOOK_AT
+	sta	CURRENT_VERB
+	jmp	done_keypress
+
+check_talk_to:
+	cmp	#'T'
+	bne	check_use
+	lda	#VERB_TALK_TO
+	sta	CURRENT_VERB
+	jmp	done_keypress
+
+check_use:
+	cmp	#'U'
+	bne	check_push
+	lda	#VERB_USE
+	sta	CURRENT_VERB
+	jmp	done_keypress
+
+check_push:
+	cmp	#'H'
+	bne	check_pull
+	lda	#VERB_PUSH
+	sta	CURRENT_VERB
+	jmp	done_keypress
+
+check_pull:
+	cmp	#'N'
+	bne	check_walk
+	lda	#VERB_PULL
+	sta	CURRENT_VERB
+	jmp	done_keypress
+
+check_walk:
+	cmp	#'M'
+	bne	check_left
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	jmp	done_keypress
+
+
+
+;check_load:
+;	cmp	#$C			; control-L
+;	bne	check_save
 
 ;	jsr	load_game
-	jmp	done_keypress
+;	jmp	done_keypress
 
-check_save:
-	cmp	#$13			; control-S
-	bne	check_left
+;check_save:
+;	cmp	#$13			; control-S
+;	bne	check_left
 
 ;	jsr	save_game
-	jmp	done_keypress
+;	jmp	done_keypress
 
 check_left:
 	cmp	#'A'
@@ -185,7 +259,7 @@ check_return:
 return_pressed:
 
 special_return:
-	jsr	handle_special
+	jsr	handle_return
 
 	; special case, don't make cursor visible
 	jmp	no_keypress
@@ -197,6 +271,21 @@ done_keypress:
 no_keypress:
 	bit	KEYRESET
 	rts
+
+
+	;============================
+	; handle_return
+	;============================
+handle_return:
+
+	lda	CURSOR_X
+	sta	DESTINATION_X
+	lda	CURSOR_Y
+	and	#$FE			; has to be even
+	sta	DESTINATION_Y
+
+	rts
+
 
 	;============================
 	; handle_special
@@ -213,40 +302,7 @@ handle_special:
 	rts
 
 
-	;=============================
-	; change direction
-	;=============================
-change_direction:
 
-	; split text/graphics
-;	bit	TEXTGR
-
-	; also change sprite cutoff
-;	ldx	#40
-;	stx	psc_smc1+1
-;	stx	psc_smc2+1
-
-	jmp	done_split
-;no_split:
-;	bit	FULLGR
-
-	; also change sprite cutoff
-;	ldx	#48
-;	stx	psc_smc1+1
-;	stx	psc_smc2+1
-
-done_split:
-	ldy	#0
-
-	lda	(LOCATION_STRUCT_L),Y
-	sta	LZSA_SRC_LO
-	iny
-	lda	(LOCATION_STRUCT_L),Y
-	sta	LZSA_SRC_HI
-	lda	#$c			; load to page $c00
-	jsr	decompress_lzsa2_fast
-
-	rts
 
 
 	;=============================
@@ -274,13 +330,21 @@ change_location:
 	lda	(LOCATIONS_L),Y
 	sta	LOCATION_STRUCT_H
 
-	jsr	change_direction
 
-	rts
+	;=============================
+	; change direction
+	;=============================
+change_direction:
 
 
+done_split:
+	ldy	#0
 
+	lda	(LOCATION_STRUCT_L),Y
+	sta	LZSA_SRC_LO
+	iny
+	lda	(LOCATION_STRUCT_L),Y
+	sta	LZSA_SRC_HI
+	lda	#$c			; load to page $c00
+	jsr	decompress_lzsa2_fast
 
-log2_table:
-       ;     0 1 2 3 4 5 6 7 8
-;       .byte 0,0,1,1,2,2,2,2,3

@@ -60,6 +60,10 @@ monkey_start:
 	lda	#VERB_WALK
 	sta	CURRENT_VERB
 
+	lda	#$ff
+	sta	DESTINATION_X
+	sta	DESTINATION_Y
+
 game_loop:
 	;=================
 	; reset things
@@ -94,6 +98,58 @@ animate_gate_n:
 
 
 nothing_special:
+
+
+	;====================================
+	; move guybrush
+	;====================================
+
+	; only do it every 4th frame
+	lda	FRAMEL
+	and	#$3
+	bne	done_move_guybrush
+
+move_guybrush_x:
+	lda	DESTINATION_X
+	bmi	move_guybrush_y
+
+	cmp	GUYBRUSH_X
+	beq	guybrush_lr_done
+	bcs	move_guybrush_right
+move_guybrush_left:
+	dec	GUYBRUSH_X
+	jmp	move_guybrush_y
+move_guybrush_right:
+	inc	GUYBRUSH_X
+	jmp	move_guybrush_y
+
+guybrush_lr_done:
+
+	lda	#$ff
+	sta	DESTINATION_X
+
+move_guybrush_y:
+	lda	DESTINATION_Y
+	bmi	done_move_guybrush
+
+	cmp	GUYBRUSH_Y
+	beq	guybrush_ud_done
+	bcs	move_guybrush_up
+move_guybrush_down:
+	dec	GUYBRUSH_Y
+	dec	GUYBRUSH_Y
+	jmp	done_move_guybrush
+move_guybrush_up:
+	inc	GUYBRUSH_Y
+	inc	GUYBRUSH_Y
+	jmp	done_move_guybrush
+
+guybrush_ud_done:
+
+	lda	#$ff
+	sta	DESTINATION_Y
+
+done_move_guybrush:
 
 	;====================================
 	; draw guybrush
