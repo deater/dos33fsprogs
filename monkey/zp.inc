@@ -90,6 +90,8 @@ NOUN_VECTOR_H		= $89
 DESTINATION_X		= $8A		; where to walk
 DESTINATION_Y		= $8B
 
+CLOUD_X			= $8C
+
 ; done game puzzle state
 
 

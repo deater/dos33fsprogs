@@ -31,6 +31,9 @@ title_start:
 	sta	FRAMEH
 	sta	DISP_PAGE
 
+	lda	#18
+	sta	CLOUD_X
+
 	lda	#4
 	sta	DRAW_PAGE
 
@@ -171,7 +174,9 @@ do_monkey_loop:
 monkey_loop:
 	jsr	gr_copy_to_current
 
-	lda	#0
+	; draw cloud
+
+	lda	CLOUD_X
 	sta	XPOS
 	lda	#4
 	sta	YPOS
@@ -183,10 +188,26 @@ monkey_loop:
 
 	jsr	put_sprite_crop
 
+	; draw mountain top back over cloud
 
+	lda	#13
+	sta	XPOS
+	lda	#4
+	sta	YPOS
+
+	lda	#<mountain_top_sprite
+	sta	INL
+	lda	#>mountain_top_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+
+	; page flip
 
 	jsr	page_flip
 
+	jsr	inc_frame
 
 	; early escape if end of song
 	lda	DONE_PLAYING
@@ -199,6 +220,18 @@ monkey_loop:
 	jmp	done_with_title
 
 loop_again:
+
+	; delay
+	lda	#200
+	jsr	WAIT
+
+	lda	FRAMEL
+	and	#$7
+	bne	dont_move_cloud
+
+	dec	CLOUD_X
+dont_move_cloud:
+
 	jmp	monkey_loop
 
 
@@ -348,4 +381,12 @@ cloud_sprite:
 .byte	$A5,$A5,$A5,$A0,$AA,$A5,$55,$55,$55,$55
 .byte	$55,$A5,$A5,$A7,$A5,$A5,$A5,$A5,$A5,$A0
 
+mountain_top_sprite:
+.byte	11,6
+.byte	$AA,$AA,$AA,$AA,$8A,$98,$8A,$AA,$AA,$AA,$AA
+.byte	$AA,$AA,$2A,$20,$25,$2d,$25,$70,$2A,$AA,$AA
+.byte	$AA,$AA,$22,$00,$00,$00,$27,$70,$22,$22,$AA
+.byte	$AA,$AA,$22,$20,$00,$00,$22,$00,$77,$22,$AA
+.byte	$AA,$2A,$22,$22,$00,$00,$22,$07,$70,$00,$AA
+.byte	$2A,$22,$00,$22,$00,$22,$02,$22,$07,$70,$0A
 
