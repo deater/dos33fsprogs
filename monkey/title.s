@@ -171,6 +171,20 @@ do_monkey_loop:
 monkey_loop:
 	jsr	gr_copy_to_current
 
+	lda	#0
+	sta	XPOS
+	lda	#4
+	sta	YPOS
+
+	lda	#<cloud_sprite
+	sta	INL
+	lda	#>cloud_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+
+
 	jsr	page_flip
 
 
@@ -299,3 +313,39 @@ sparks:
 	.byte 32,30,	50	; 10th		32,30
 	.byte 37,10,	52	; 11th		37,10
 	.byte $ff
+
+
+cloud_sprite:
+.byte	40,6
+;line 1
+.byte	$AA,$AA,$AA,$AA,$AA,$AA,$AA,$A5,$AA,$AA
+.byte	$AA,$AA,$AA,$AA,$5A,$5A,$7A,$75,$55,$05
+.byte	$5A,$AA,$AA,$AA,$77,$5A,$AA,$AA,$AA,$AA
+.byte	$AA,$AA,$AA,$AA,$AA,$AA,$5A,$5A,$AA,$AA
+;line 2
+.byte	$7A,$7A,$77,$7A,$7A,$77,$7A,$77,$7A,$AA
+.byte	$AA,$5A,$5A,$57,$07,$77,$55,$05,$50,$05
+.byte	$77,$00,$5A,$AA,$A5,$A5,$AA,$AA,$AA,$AA
+.byte	$7A,$AA,$AA,$AA,$A5,$AA,$77,$07,$77,$AA
+;line 3
+.byte	$A5,$A7,$55,$05,$50,$55,$05,$05,$55,$57
+.byte	$57,$50,$57,$57,$70,$07,$77,$75,$50,$55
+.byte	$55,$55,$00,$07,$7A,$77,$77,$77,$AA,$57
+.byte	$77,$AA,$5A,$77,$7A,$5A,$07,$75,$05,$AA
+;line 4
+.byte	$AA,$AA,$A7,$57,$57,$57,$07,$75,$75,$75
+.byte	$70,$00,$75,$55,$75,$70,$77,$77,$50,$05
+.byte	$07,$55,$75,$75,$07,$57,$50,$00,$50,$05
+.byte	$77,$7A,$70,$07,$77,$77,$75,$70,$75,$5A
+;line 5
+.byte	$AA,$AA,$AA,$AA,$AA,$A5,$A5,$AA,$A0,$A5
+.byte	$A5,$A5,$A5,$A5,$A5,$A5,$05,$55,$57,$55
+.byte	$55,$57,$57,$00,$57,$57,$55,$07,$07,$57
+.byte	$50,$77,$77,$50,$07,$77,$77,$77,$77,$55
+;line 6
+.byte	$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+.byte	$AA,$AA,$AA,$AA,$AA,$AA,$AA,$A0,$A5,$A5
+.byte	$A5,$A5,$A5,$A0,$AA,$A5,$55,$55,$55,$55
+.byte	$55,$A5,$A5,$A7,$A5,$A5,$A5,$A5,$A5,$A0
+
+
