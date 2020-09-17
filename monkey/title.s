@@ -35,6 +35,18 @@ title_start:
 	sta	DRAW_PAGE
 
 
+	;====================================
+	; load LF logo
+	;====================================
+
+        lda	#<logo_lzsa
+	sta	LZSA_SRC_LO
+        lda	#>logo_lzsa
+	sta	LZSA_SRC_HI
+	lda	#$c			; load to page $c00
+	jsr	decompress_lzsa2_fast
+
+
 setup_music:
 	; decompress music
 
@@ -47,38 +59,77 @@ setup_music:
 
 	jsr	mockingboard_detect
 
-title_loop:
 
 	;====================================
-	; load LF logo
 	;====================================
-
-        lda	#<logo_lzsa
-	sta	LZSA_SRC_LO
-        lda	#>logo_lzsa
-	sta	LZSA_SRC_HI
-	lda	#$c			; load to page $c00
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_copy_to_current
+	; Main LOGO loop
+	;====================================
+	;====================================
 
 logo_loop:
 
-	; draw sprites
-
-;	lda	GUYBRUSH_X
-;	sta	XPOS
-;	lda	GUYBRUSH_Y
-;	sta	YPOS
-
-;	lda	#<guybrush_back_sprite
-;	sta	INL
-;	lda	#>guybrush_back_sprite
-;	sta	INH
-
-;	jsr	put_sprite_crop
+	; copy over background
 
 	jsr	gr_copy_to_current
+
+	; draw sparks
+
+	lda	FRAMEH		; only do this once
+	bne	done_sparks
+
+	ldy	#0
+spark_loop:
+	lda	sparks,Y
+	bmi	done_sparks
+
+	sta	XPOS
+	iny
+
+	lda	sparks,Y
+	sta	YPOS
+	iny
+
+	; calc which spark
+
+	lda	sparks,Y
+	sta	TEMPY
+
+	sec
+	lda	FRAMEL
+	sbc	TEMPY		; negative if too soon
+	bmi	draw_empty_sprite
+	cmp	#5		; over 5 if done
+	bcs	draw_empty_sprite
+
+	asl
+	tax
+	lda	spark_sprites,X
+	sta	INL
+	lda	spark_sprites+1,X
+	jmp	draw_spark_sprite
+
+draw_empty_sprite:
+	lda	#<empty_sprite
+	sta	INL
+	lda	#>empty_sprite
+
+draw_spark_sprite:
+	sta	INH
+
+	iny
+	tya
+	pha
+
+	jsr	put_sprite_crop
+
+	pla
+	tay
+
+	jmp	spark_loop
+
+done_sparks:
+
+	; flip page
 
 	jsr	page_flip
 
@@ -87,8 +138,8 @@ logo_loop:
 	jsr	inc_frame
 
 	; if it's been x seconds then go to next part
-	lda	FRAMEH
-	cmp	#3
+	lda	FRAMEL
+	cmp	#$50
 	beq	do_monkey_loop
 
 	; early escape if keypressed
@@ -98,6 +149,11 @@ logo_loop:
 	jmp	done_with_title
 
 do_logo_loop:
+
+	; delay
+	lda	#200
+	jsr	WAIT
+
 	jmp	logo_loop
 
 
@@ -116,6 +172,11 @@ monkey_loop:
 	jsr	gr_copy_to_current
 
 	jsr	page_flip
+
+
+	; early escape if end of song
+	lda	DONE_PLAYING
+	bmi	done_with_title
 
 	; early escape if keypressed
 	lda	KEYPRESS
@@ -194,24 +255,29 @@ room_frame_no_oflo:
 theme_lzsa:
 .incbin	"music/theme.lzsa"
 
-logo_sprites:
-	.word logo_sprite0
-	.word logo_sprite1
-	.word logo_sprite2
-	.word logo_sprite1
-	.word logo_sprite0
+spark_sprites:
+	.word empty_sprite
+	.word spark0_sprite
+	.word spark1_sprite
+	.word spark2_sprite
+	.word spark1_sprite
+	.word spark0_sprite
 
-logo_sprite0:
+empty_sprite:
+	.byte 1,1
+	.byte $AA
+
+spark0_sprite:
 	.byte 3,2
 	.byte $AA,$AA,$AA
 	.byte $AA,$AF,$AA
 
-logo_sprite1:
+spark1_sprite:
 	.byte 3,2
 	.byte $AA,$3A,$AA
 	.byte $A3,$3F,$A3
 
-logo_sprite2:
+spark2_sprite:
 	.byte 3,3
 	.byte $AA,$b3,$AA
 	.byte $Ab,$bF,$Ab
@@ -221,15 +287,15 @@ logo_sprite2:
 
 sparks:
 	;      X,Y    timestamp
-	.byte  0,10,	0	; first:	0,10
-	.byte  3,26,	2	; second:	3,26
-	.byte  6,10,	4	; third:	6,10
-	.byte  6,28,	6	; 4th		6,28
-	.byte 10,14,	8	; 5th		10,14
-	.byte 15,22,	10	; 6th		15,22
-	.byte 19,14,	12	; 7th		19,14
-	.byte 25,24,	14	; 8th		25,24
-	.byte 28,10,	16	; 9th 		28,10
-	.byte 32,30,	18	; 10th		32,30
-	.byte 37,10,	20	; 11th		37,10
+	.byte  0,10,	32	; first:	0,10
+	.byte  3,26,	34	; second:	3,26
+	.byte  6,10,	36	; third:	6,10
+	.byte  6,28,	38	; 4th		6,28
+	.byte 10,14,	40	; 5th		10,14
+	.byte 15,22,	42	; 6th		15,22
+	.byte 19,14,	44	; 7th		19,14
+	.byte 25,24,	46	; 8th		25,24
+	.byte 28,10,	48	; 9th 		28,10
+	.byte 32,30,	50	; 10th		32,30
+	.byte 37,10,	52	; 11th		37,10
 	.byte $ff
