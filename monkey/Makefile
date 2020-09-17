@@ -38,7 +38,7 @@ TITLE:	title.o
 
 title.o:	title.s \
 	graphics_intro/title_graphics.inc \
-	interrupt_handler.s mockingboard.s ym_play.s
+	interrupt_handler.s mockingboard.s ym_play.s gr_overlay.s
 	ca65 -o title.o title.s -l title.lst
 
 

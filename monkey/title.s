@@ -49,6 +49,18 @@ title_start:
 	lda	#$c			; load to page $c00
 	jsr	decompress_lzsa2_fast
 
+	;=====================================
+	; load text overlay
+	;=====================================
+
+        lda	#<monkey_lzsa
+	sta	LZSA_SRC_LO
+        lda	#>monkey_lzsa
+	sta	LZSA_SRC_HI
+	lda	#$44			; load to page $4800-400=$4400
+	jsr	decompress_lzsa2_fast
+
+
 
 setup_music:
 	; decompress music
@@ -203,6 +215,10 @@ monkey_loop:
 	jsr	put_sprite_crop
 
 
+	; copy title overlay
+
+	jsr	gr_overlay_40x40_noload
+
 	; page flip
 
 	jsr	page_flip
@@ -260,14 +276,13 @@ done_with_title:
 	; level graphics
 	.include	"graphics_intro/title_graphics.inc"
 
-
-
 	.include	"text_print.s"
 	.include	"gr_offsets.s"
 	.include	"gr_fast_clear.s"
 	.include	"gr_copy.s"
 	.include	"gr_putsprite_crop.s"
 	.include	"gr_pageflip.s"
+	.include	"gr_overlay.s"
 	.include	"decompress_fast_v2.s"
 
 	.include	"ym_play.s"
@@ -389,4 +404,40 @@ mountain_top_sprite:
 .byte	$AA,$AA,$22,$20,$00,$00,$22,$00,$77,$22,$AA
 .byte	$AA,$2A,$22,$22,$00,$00,$22,$07,$70,$00,$AA
 .byte	$2A,$22,$00,$22,$00,$22,$02,$22,$07,$70,$0A
+
+credits_text:
+; DEEP IN THE CARIBBEAN
+;                ^ ,
+; THE ISLAND OF MELEE
+
+; TITLE CARD APPEARS
+; TM&(C) 1990 LUCAS ARTS
+;       ALL RIGHTS RESERVED
+
+; CREATED AND DESIGNED BY
+; RON GILBERT
+
+; WRITTEN AND PROGRAMMED BY
+; RON GILBERT, DAVE GROSSMAN
+; AND TIM SCHAFER
+
+; BACKGROUND ART BY
+; STEVE PURCELL, MARK FERRARI
+;  AND MIKE EBERT
+
+; ANIMATION BY
+; STEVE PURCELL, MIKE EBERT
+; AND MARTIN CAMERON AS "BUCKY"
+
+; ORIGINAL MUSIC BY
+; MICHAEL LAND
+
+; BARNEY JONES AND ANDY NEWELL
+; OF EARWAX PRODUCTIONS...
+
+; ... AND
+; PATRICK MUNDY
+
+; TESTERS, PRODUCER, SCUMM
+
 
