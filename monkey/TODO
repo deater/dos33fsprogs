@@ -1,10 +1,9 @@
-title:
-+ wait before displaying
-+ display credits
-
 game:
-+ animated flame
-+ foreground rock piles
-+ sprites for all dir
-+ sprites for walking
++ click on verbs
++ actions for all the nouns
+
+
+
+bigger changes:
++ real game, if you action something you're not near, you walk to it first
 

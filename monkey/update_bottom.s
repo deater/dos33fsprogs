@@ -4,7 +4,25 @@
 	;====================================
 	;====================================
 update_bottom:
+	jsr	normal_text
 
+	jsr	clear_bottom
+
+	;=======================
+	; if message, print it
+
+	lda	DISPLAY_MESSAGE
+	beq	no_message
+
+	lda	MESSAGE_L
+	sta	OUTL
+	lda	MESSAGE_H
+	sta	OUTH
+	jsr	move_and_print
+
+	rts
+
+no_message:
 	; draw first line
 	; it's verb followed by noun
 
@@ -40,10 +58,9 @@ update_bottom:
 
 no_noun:
 
-
 	;========================
 	; draw command bars
-
+draw_command_bars:
 	jsr	inverse_text
 
 	ldx	#0

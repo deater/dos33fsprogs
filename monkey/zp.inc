@@ -106,6 +106,9 @@ GUYBRUSH_DIRECTION	= $93
 	DIR_RIGHT= 6
 
 BAR_DOOR_OPEN		= $94
+DISPLAY_MESSAGE		= $95
+MESSAGE_L		= $96
+MESSAGE_H		= $97
 
 ; done game puzzle state
 

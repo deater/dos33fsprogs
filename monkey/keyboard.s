@@ -267,6 +267,8 @@ special_return:
 done_keypress:
 	lda	#1			; make cursor visible
 	sta	CURSOR_VISIBLE
+	lda	#0
+	sta	DISPLAY_MESSAGE
 
 no_keypress:
 	bit	KEYRESET
@@ -279,10 +281,37 @@ no_keypress:
 handle_return:
 
 	; check if walking verb
+	lda	CURRENT_VERB
+	cmp	#VERB_WALK
+	beq	action_walk_to
 
+	; otherwise see if there's a noun
+	lda	VALID_NOUN		; 0 means yes for some reason
+	beq	activate_noun
+
+	; wasn't valid, switch to walk
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	jmp	done_return
+
+activate_noun:
+
+	;============================
+	; handle_special
+	;===========================
+
+	; set up jump table fakery
+	lda	NOUN_VECTOR_H			; h first
+	pha
+	lda	NOUN_VECTOR_L
+	pha
+	rts					; jmp to it
+
+
+action_walk_to:
 	jsr	set_destination
 
-
+done_return:
 	rts
 
 	;==============================
@@ -335,19 +364,7 @@ done_set_destination:
 	rts
 
 
-	;============================
-	; handle_special
-	;===========================
 
-	; set up jump table fakery
-handle_special:
-;	ldy	#LOCATION_SPECIAL_FUNC+1
-;	lda	(LOCATION_STRUCT_L),Y
-;	pha
-;	dey
-;	lda	(LOCATION_STRUCT_L),Y
-;	pha
-	rts
 
 
 

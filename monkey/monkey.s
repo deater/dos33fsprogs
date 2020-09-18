@@ -38,6 +38,8 @@ monkey_start:
 	sta	DRAW_PAGE
 	sta	LEVEL_OVER
 	sta	GUYBRUSH_DIRECTION
+	sta	DISPLAY_MESSAGE
+	sta	BAR_DOOR_OPEN
 
 	; init cursor
 
