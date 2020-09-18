@@ -118,9 +118,13 @@ move_guybrush_x:
 	beq	guybrush_lr_done
 	bcs	move_guybrush_right
 move_guybrush_left:
+	lda	#DIR_LEFT
+	sta	GUYBRUSH_DIRECTION
 	dec	GUYBRUSH_X
 	jmp	move_guybrush_y
 move_guybrush_right:
+	lda	#DIR_RIGHT
+	sta	GUYBRUSH_DIRECTION
 	inc	GUYBRUSH_X
 	jmp	move_guybrush_y
 
@@ -135,12 +139,16 @@ move_guybrush_y:
 
 	cmp	GUYBRUSH_Y
 	beq	guybrush_ud_done
-	bcs	move_guybrush_up
-move_guybrush_down:
+	bcs	move_guybrush_down
+move_guybrush_up:
+	lda	#DIR_UP
+	sta	GUYBRUSH_DIRECTION
 	dec	GUYBRUSH_Y
 	dec	GUYBRUSH_Y
 	jmp	done_move_guybrush
-move_guybrush_up:
+move_guybrush_down:
+	lda	#DIR_DOWN
+	sta	GUYBRUSH_DIRECTION
 	inc	GUYBRUSH_Y
 	inc	GUYBRUSH_Y
 	jmp	done_move_guybrush

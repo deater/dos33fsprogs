@@ -39,7 +39,7 @@ guybrush_down2_sprite:
 .byte	$dA,$dA,$dA
 .byte	$dd,$bb,$dd
 .byte	$fA,$6b,$fA
-.byte	$bf,$00,$bf
+.byte	$bf,$0f,$bf
 .byte	$0b,$00,$Ab
 .byte	$f0,$AA,$f0
 .byte	$A0,$AA,$0f

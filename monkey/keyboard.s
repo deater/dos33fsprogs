@@ -278,11 +278,24 @@ no_keypress:
 	;============================
 handle_return:
 
+	; check if walking verb
+
+	jsr	set_destination
+
+
+	rts
+
+	;==============================
+	; set destination
+	;==============================
+set_destination:
 	lda	CURSOR_X
 	sta	DESTINATION_X
 	lda	CURSOR_Y
 	and	#$FE			; has to be even
 	sta	DESTINATION_Y
+
+	; FIXME: adjust for bounds
 
 	rts
 
@@ -324,6 +337,9 @@ change_location:
 	asl
 	tay
 
+	;==========================
+	; update location pointer
+
 	lda	(LOCATIONS_L),Y
 	sta	LOCATION_STRUCT_L
 	iny
@@ -331,13 +347,9 @@ change_location:
 	sta	LOCATION_STRUCT_H
 
 
-	;=============================
-	; change direction
-	;=============================
-change_direction:
+	;==========================
+	; load new background
 
-
-done_split:
 	ldy	#0
 
 	lda	(LOCATION_STRUCT_L),Y
