@@ -38,6 +38,7 @@ TITLE:	title.o
 
 title.o:	title.s \
 	graphics_intro/title_graphics.inc \
+	music/theme.inc \
 	interrupt_handler.s mockingboard.s ym_play.s gr_overlay.s
 	ca65 -o title.o title.s -l title.lst
 
@@ -65,9 +66,15 @@ graphics/graphics.inc:
 graphics_intro/title_graphics.inc:
 	cd graphics_intro && make
 
+music/theme.inc:
+	cd music && make
+
 ####
 
 clean:		
 	rm -f *~ *.o *.lst HELLO MONKEY
 	cd graphics && make clean
+	cd graphics_intro && make clean
+	cd music && make clean
+
 
