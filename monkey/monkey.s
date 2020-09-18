@@ -256,10 +256,10 @@ check_exit_poster:
 	jsr	poster_check_exit
 	jmp	done_check_exit
 check_exit_dock:
-;	jsr	dock_check_exit
+	jsr	dock_check_exit
 	jmp	done_check_exit
 check_exit_bar:
-;	jsr	bar_check_exit
+	jsr	bar_check_exit
 	jmp	done_check_exit
 
 done_check_exit:
@@ -312,6 +312,8 @@ really_exit:
 
 	.include	"monkey_lookout.s"
 	.include	"monkey_poster.s"
+	.include	"monkey_dock.s"
+	.include	"monkey_bar.s"
 
 	.include	"monkey_actions.s"
 	.include	"update_bottom.s"

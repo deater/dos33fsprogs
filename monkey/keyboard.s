@@ -316,10 +316,10 @@ set_destination_poster:
 	jsr	poster_adjust_destination
 	jmp	done_set_destination
 set_destination_dock:
-;	jsr	dock_adjust_destination
+	jsr	dock_adjust_destination
 	jmp	done_set_destination
 set_destination_bar:
-;	jsr	bar_adjust_destination
+	jsr	bar_adjust_destination
 	jmp	done_set_destination
 
 

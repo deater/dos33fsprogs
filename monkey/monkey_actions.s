@@ -87,3 +87,15 @@ path_action:
 
 stairs_action:
 	rts
+
+door_action:
+	rts
+
+moon_action:
+	rts
+
+cliffside_action:
+	rts
+
+poster_action:
+	rts
