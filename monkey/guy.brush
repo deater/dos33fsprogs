@@ -1,0 +1,89 @@
+guybrush_sprites:
+	.word guybrush_down1_sprite,guybrush_down2_sprite
+	.word guybrush_left1_sprite,guybrush_left2_sprite
+	.word guybrush_up1_sprite,guybrush_up2_sprite
+	.word guybrush_right1_sprite,guybrush_right2_sprite
+
+guybrush_up1_sprite:
+.byte 3,7
+.byte	$dA,$dA,$dA
+.byte	$dd,$8d,$dd
+.byte	$fA,$fb,$fA
+.byte	$bf,$00,$bf
+.byte	$Ab,$00,$0b
+.byte	$f0,$AA,$f0
+.byte	$0f,$AA,$A0
+
+guybrush_up2_sprite:
+.byte 3,7
+.byte	$dA,$dA,$dA
+.byte	$dd,$8d,$dd
+.byte	$fA,$fb,$fA
+.byte	$bf,$00,$bf
+.byte	$0b,$00,$Ab
+.byte	$f0,$AA,$f0
+.byte	$A0,$AA,$0f
+
+guybrush_down1_sprite:
+.byte 3,7
+.byte	$dA,$dA,$dA
+.byte	$dd,$bb,$dd
+.byte	$fA,$6b,$fA
+.byte	$bf,$0f,$bf
+.byte	$Ab,$00,$0b
+.byte	$f0,$AA,$f0
+.byte	$0f,$AA,$A0
+
+guybrush_down2_sprite:
+.byte 3,7
+.byte	$dA,$dA,$dA
+.byte	$dd,$bb,$dd
+.byte	$fA,$6b,$fA
+.byte	$bf,$00,$bf
+.byte	$0b,$00,$Ab
+.byte	$f0,$AA,$f0
+.byte	$A0,$AA,$0f
+
+guybrush_right1_sprite:
+.byte 3,7
+.byte	$AA,$dA,$dA
+.byte	$AA,$dd,$bb
+.byte	$Ad,$fA,$fb
+.byte	$AA,$bf,$0f
+.byte	$AA,$0b,$00
+.byte	$AA,$f0,$ff
+.byte	$AA,$0f,$A0
+
+guybrush_right2_sprite:
+.byte 3,7
+.byte	$AA,$dA,$dA
+.byte	$AA,$dd,$bb
+.byte	$Ad,$fA,$fb
+.byte	$AA,$bf,$0f
+.byte	$AA,$00,$0b
+.byte	$AA,$ff,$f0
+.byte	$AA,$A0,$0f
+
+guybrush_left1_sprite:
+.byte 3,7
+.byte	$dA,$dA,$AA
+.byte	$bb,$dd,$AA
+.byte	$fb,$fA,$Ad
+.byte	$0f,$bf,$AA
+.byte	$00,$0b,$AA
+.byte	$ff,$f0,$AA
+.byte	$A0,$0f,$AA
+
+guybrush_left2_sprite:
+.byte 3,7
+.byte	$dA,$dA,$AA
+.byte	$bb,$dd,$AA
+.byte	$fb,$fA,$Ad
+.byte	$0f,$bf,$AA
+.byte	$0b,$00,$AA
+.byte	$f0,$ff,$AA
+.byte	$0f,$A0,$AA
+
+
+
+

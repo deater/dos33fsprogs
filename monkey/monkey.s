@@ -37,6 +37,7 @@ monkey_start:
 	lda	#0
 	sta	DRAW_PAGE
 	sta	LEVEL_OVER
+	sta	GUYBRUSH_DIRECTION
 
 	; init cursor
 
@@ -160,9 +161,17 @@ done_move_guybrush:
 	lda	GUYBRUSH_Y
 	sta	YPOS
 
-	lda	#<guybrush_back_sprite
+	lda	GUYBRUSH_Y			; always even
+	lsr
+	eor	GUYBRUSH_X
+	and	#$1				; 0 or 1
+	ora	GUYBRUSH_DIRECTION	; 00/01 or 02/03 or 04/05 or 06/07
+	asl
+	tay
+
+	lda	guybrush_sprites,Y
 	sta	INL
-	lda	#>guybrush_back_sprite
+	lda	guybrush_sprites+1,Y
 	sta	INH
 
 	jsr	put_sprite_crop

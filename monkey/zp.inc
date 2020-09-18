@@ -99,6 +99,11 @@ CREDITS_DISPLAY_TEXT	= $90
 CREDITS_TEXTL		= $91
 CREDITS_TEXTH		= $92
 
+GUYBRUSH_DIRECTION	= $93
+	DIR_DOWN = 0	; there's a reason for this
+	DIR_LEFT = 2
+	DIR_UP   = 4
+	DIR_RIGHT= 6
 
 ; done game puzzle state
 
