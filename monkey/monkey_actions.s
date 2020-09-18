@@ -48,7 +48,7 @@ where_loop:
 	lda	(LOCATION_STRUCT_L),Y
 	sta	NOUN_VECTOR_H
 
-	lda	#0
+	lda	#1
 	sta	VALID_NOUN
 	rts
 
@@ -69,12 +69,12 @@ where_notyhigh:
 	iny
 
 	dex
-	bpl	where_loop
+	bne	where_loop
 
 
 
 point_nowhere:
-	lda	#$ff
+	lda	#0
 	sta	VALID_NOUN
 	rts
 

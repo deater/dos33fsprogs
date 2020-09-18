@@ -40,6 +40,7 @@ monkey_start:
 	sta	GUYBRUSH_DIRECTION
 	sta	DISPLAY_MESSAGE
 	sta	BAR_DOOR_OPEN
+	sta	VALID_NOUN
 
 	; init cursor
 

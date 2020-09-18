@@ -280,14 +280,84 @@ no_keypress:
 	;============================
 handle_return:
 
+	; if Y>38 then clicking on verb
+	lda	CURSOR_Y
+	cmp	#38
+	bcc	check_walking	; blt
+
+	lda	CURSOR_X
+	clc
+	adc	#3		; get onto screen
+
+	cmp	#7
+	bcc	menu_col1
+	cmp	#16
+	bcc	menu_col2
+	cmp	#22
+	bcc	menu_col3
+	bcs	done_click_nochange
+
+menu_col1:
+	lda	CURSOR_Y
+	cmp	#40
+	beq	menu_col1_row2
+	bcs	menu_col1_row3
+menu_col1_row1:
+	lda	#VERB_GIVE
+	jmp	done_click_menu
+menu_col1_row2:
+	lda	#VERB_OPEN
+	jmp	done_click_menu
+menu_col1_row3:
+	lda	#VERB_CLOSE
+	jmp	done_click_menu
+
+menu_col2:
+	lda	CURSOR_Y
+	cmp	#40
+	beq	menu_col2_row2
+	bcs	menu_col2_row3
+menu_col2_row1:
+	lda	#VERB_PICK_UP
+	jmp	done_click_menu
+menu_col2_row2:
+	lda	#VERB_LOOK_AT
+	jmp	done_click_menu
+menu_col2_row3:
+	lda	#VERB_TALK_TO
+	jmp	done_click_menu
+
+menu_col3:
+	lda	CURSOR_Y
+	cmp	#40
+	beq	menu_col3_row2
+	bcs	menu_col3_row3
+menu_col3_row1:
+	lda	#VERB_USE
+	jmp	done_click_menu
+menu_col3_row2:
+	lda	#VERB_PUSH
+	jmp	done_click_menu
+menu_col3_row3:
+	lda	#VERB_PULL
+	jmp	done_click_menu
+
+
+done_click_menu:
+	sta	CURRENT_VERB
+done_click_nochange:
+	rts
+
+
+check_walking:
 	; check if walking verb
 	lda	CURRENT_VERB
 	cmp	#VERB_WALK
 	beq	action_walk_to
 
 	; otherwise see if there's a noun
-	lda	VALID_NOUN		; 0 means yes for some reason
-	beq	activate_noun
+	lda	VALID_NOUN
+	bne	activate_noun
 
 	; wasn't valid, switch to walk
 	lda	#VERB_WALK

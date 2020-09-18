@@ -47,7 +47,7 @@ no_message:
 
 
 	lda	VALID_NOUN
-	bmi	no_noun
+	beq	no_noun
 
 	lda	NOUN_L
 	sta	OUTL
