@@ -105,6 +105,8 @@ GUYBRUSH_DIRECTION	= $93
 	DIR_UP   = 4
 	DIR_RIGHT= 6
 
+BAR_DOOR_OPEN		= $94
+
 ; done game puzzle state
 
 

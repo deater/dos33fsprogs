@@ -1,60 +1,55 @@
 ; stuff regarding the dock
 ; guybrush is a friend without pier
 
+	; if x<4 goto MONKEY_POSTER at 28,20
+	; if x>35 goto MONKEY_BAR at 5,20
+
 dock_check_exit:
-;	lda	DESTINATION_Y
-;	cmp	#28
-;	bcc	lookout_no_exit
 
-;	lda	DESTINATION_X
-;	cmp	#28
-;	bcc	lookout_no_exit
-;	cmp	#35
-;	bcs	lookout_no_exit
+	lda	GUYBRUSH_X
+	cmp	#4
+	bcc	dock_to_poster
+	cmp	#35
+	bcs	dock_to_bar
+	bcc	dock_no_exit
 
-;	lda	#MONKEY_POSTER
-;	sta	LOCATION
-;	lda	#2
-;	sta	GUYBRUSH_X
-;	lda	#22
-;	sta	GUYBRUSH_Y
-;	jsr	change_location
+dock_to_poster:
+	lda	#MONKEY_POSTER
+	sta	LOCATION
+	lda	#34
+	sta	GUYBRUSH_X
+	sta	DESTINATION_X
+	lda	#20
+	sta	GUYBRUSH_Y
+	sta	DESTINATION_Y
+	jsr	change_location
+	jmp	dock_no_exit
+
+dock_to_bar:
+	lda	#MONKEY_BAR
+	sta	LOCATION
+	lda	#5
+	sta	GUYBRUSH_X
+	sta	DESTINATION_X
+	lda	#20
+	sta	GUYBRUSH_Y
+	sta	DESTINATION_Y
+	jsr	change_location
+	jmp	dock_no_exit
 
 dock_no_exit:
 	rts
 
 dock_adjust_destination:
-
-dk_check_x:
-;	lda	DESTINATION_X
-;	cmp	#19
-;	bcc	ld_x_too_small
-;	cmp	#35
-;	bcs	ld_x_too_big
-;	jmp	ld_check_y
-
-dk_x_too_big:
-;	lda	#35
-;	sta	DESTINATION_X
-;	bne	ld_check_y
-
-dk_x_too_small:
-;	lda	#18
-;	sta	DESTINATION_X
+	; just make Y always 20
 
 dk_check_y:
 	; if x < 28, Y must be between 16 and 18
 	; if x < 35, Y must be between  8 and 28
 
-;	lda	DESTINATION_Y
-;	cmp	#16
-;	bcc	ld_y_too_small
-
-	rts
-
 dk_y_too_small:
-;	lda	#16
-;	sta	DESTINATION_Y
+	lda	#20
+	sta	DESTINATION_Y
 
 done_dk_adjust:
 	rts

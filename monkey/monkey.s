@@ -88,15 +88,18 @@ game_loop:
 	lda	LOCATION
 	cmp	#MONKEY_LOOKOUT
 	beq	animate_flame
+	cmp	#MONKEY_BAR
+	beq	do_draw_bar_door
 
 	jmp	nothing_special
-
-
 
 animate_flame:
 	jsr	draw_fire
 	jmp	nothing_special
 
+do_draw_bar_door:
+	jsr	draw_bar_door
+	jmp	nothing_special
 
 nothing_special:
 
@@ -192,6 +195,8 @@ done_move_guybrush:
 	lda	LOCATION
 	cmp	#MONKEY_LOOKOUT
 	beq	do_draw_wall
+	cmp	#MONKEY_POSTER
+	beq	do_draw_house
 
 	jmp	nothing_foreground
 
@@ -199,6 +204,9 @@ do_draw_wall:
 	jsr	draw_wall
 	jmp	nothing_foreground
 
+do_draw_house:
+	jsr	draw_house
+	jmp	nothing_foreground
 
 nothing_foreground:
 

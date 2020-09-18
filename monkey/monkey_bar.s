@@ -1,59 +1,55 @@
-
+	; if x<5 goto DOCK at 34,20
 
 bar_check_exit:
-;	lda	DESTINATION_Y
-;	cmp	#28
-;	bcc	lookout_no_exit
 
-;	lda	DESTINATION_X
-;	cmp	#28
-;	bcc	lookout_no_exit
-;	cmp	#35
-;	bcs	lookout_no_exit
+	lda	GUYBRUSH_X
+	cmp	#5
+	bcc	bar_to_dock
+	bcs	bar_no_exit
 
-;	lda	#MONKEY_POSTER
-;	sta	LOCATION
-;	lda	#2
-;	sta	GUYBRUSH_X
-;	lda	#22
-;	sta	GUYBRUSH_Y
-;	jsr	change_location
+bar_to_dock:
+	lda	#MONKEY_DOCK
+	sta	LOCATION
+	lda	#34
+	sta	GUYBRUSH_X
+	sta	DESTINATION_X
+	lda	#20
+	sta	GUYBRUSH_Y
+	sta	DESTINATION_Y
+	jsr	change_location
 
 bar_no_exit:
 	rts
 
 bar_adjust_destination:
 
+	; if x<21, y=20
+	; if x<25, y=18
+	; x can't go past 25
+
 br_check_x:
-;	lda	DESTINATION_X
-;	cmp	#19
-;	bcc	ld_x_too_small
-;	cmp	#35
-;	bcs	ld_x_too_big
-;	jmp	ld_check_y
+	lda	DESTINATION_X
+	cmp	#25
+	bcs	br_x_too_big
+	cmp	#21
+	bcc	br_x_small
+	bcs	br_x_medium
 
 br_x_too_big:
-;	lda	#35
-;	sta	DESTINATION_X
-;	bne	ld_check_y
+	lda	#25
+	sta	DESTINATION_X
+	lda	#18
+	sta	DESTINATION_Y
+	bne	done_br_adjust
 
-br_x_too_small:
-;	lda	#18
-;	sta	DESTINATION_X
+br_x_medium:
+	lda	#18
+	sta	DESTINATION_Y
+	bne	done_br_adjust
 
-br_check_y:
-	; if x < 28, Y must be between 16 and 18
-	; if x < 35, Y must be between  8 and 28
-
-;	lda	DESTINATION_Y
-;	cmp	#16
-;	bcc	ld_y_too_small
-
-	rts
-
-br_y_too_small:
-;	lda	#16
-;	sta	DESTINATION_Y
+br_x_small:
+	lda	#20
+	sta	DESTINATION_Y
 
 done_br_adjust:
 	rts
@@ -61,21 +57,32 @@ done_br_adjust:
 
 
 
-;draw_house:
+draw_bar_door:
 
-;	lda	#<wall_sprite
-;	sta	INL
-;	lda	#>wall_sprite
-;	sta	INH
+	lda	BAR_DOOR_OPEN
+	beq	done_draw_bar_door
 
-;	lda	#18
-;	sta	XPOS
-;	lda	#22
-;	sta	YPOS
+	lda	#<door_sprite
+	sta	INL
+	lda	#>door_sprite
+	sta	INH
 
-;	jsr	put_sprite_crop
+	lda	#11
+	sta	XPOS
+	lda	#22
+	sta	YPOS
 
-;	rts
+	jsr	put_sprite_crop
+done_draw_bar_door:
+	rts
 
-;house_sprite:
+door_sprite:
+	.byte 2,5
+	.byte	$d2,$d2
+	.byte	$88,$DD
+	.byte	$88,$DD
+	.byte	$88,$DD
+	.byte	$5d,$5D
+
+
 

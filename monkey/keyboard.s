@@ -290,8 +290,16 @@ handle_return:
 	;==============================
 set_destination:
 	lda	CURSOR_X
+	bpl	destination_x_is_positive
+	; we are off edge of screen, just say 0
+	lda	#0
+destination_x_is_positive:
 	sta	DESTINATION_X
+
 	lda	CURSOR_Y
+	bpl	destination_y_is_positive
+	lda	#0
+destination_y_is_positive:
 	sec
 	sbc	#7
 	and	#$FE			; has to be even
@@ -356,9 +364,9 @@ change_location:
 	lda	#0
 	sta	ANIMATE_FRAME
 	sta	CURSOR_VISIBLE
-	lda	#20
-	sta	CURSOR_X
-	sta	CURSOR_Y
+;	lda	#20
+;	sta	CURSOR_X
+;	sta	CURSOR_Y
 
 	lda	LOCATION
 	asl

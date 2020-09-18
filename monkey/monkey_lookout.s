@@ -1,13 +1,16 @@
 
-	; if 28<x<35 and y>28
+	; if 28<x<35 and y>=28 and direction==down
 	;	goto MONKEY_POSTER
-	;	at location 2,22
+	;	at location 4,20
 lookout_check_exit:
-	lda	DESTINATION_Y
-	cmp	#28
+	lda	GUYBRUSH_Y
+	cmp	#24
 	bcc	lookout_no_exit
+	lda	GUYBRUSH_DIRECTION
+	cmp	#DIR_DOWN
+	bne	lookout_no_exit
 
-	lda	DESTINATION_X
+	lda	GUYBRUSH_X
 	cmp	#28
 	bcc	lookout_no_exit
 	cmp	#35
@@ -15,10 +18,12 @@ lookout_check_exit:
 
 	lda	#MONKEY_POSTER
 	sta	LOCATION
-	lda	#2
+	lda	#4
 	sta	GUYBRUSH_X
-	lda	#22
+	sta	DESTINATION_X
+	lda	#20
 	sta	GUYBRUSH_Y
+	sta	DESTINATION_Y
 	jsr	change_location
 
 lookout_no_exit:
