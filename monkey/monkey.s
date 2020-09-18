@@ -234,6 +234,36 @@ nothing_foreground:
 	jsr	handle_keypress
 
 	;====================================
+	; check if exiting room
+	;====================================
+
+	; FIXME: this should be a jump table
+
+	lda	LOCATION
+	cmp	#MONKEY_LOOKOUT
+	beq	check_exit_lookout
+	cmp	#MONKEY_POSTER
+	beq	check_exit_poster
+	cmp	#MONKEY_DOCK
+	beq	check_exit_dock
+	cmp	#MONKEY_BAR
+	beq	check_exit_bar
+
+check_exit_lookout:
+	jsr	lookout_check_exit
+	jmp	done_check_exit
+check_exit_poster:
+	jsr	poster_check_exit
+	jmp	done_check_exit
+check_exit_dock:
+;	jsr	dock_check_exit
+	jmp	done_check_exit
+check_exit_bar:
+;	jsr	bar_check_exit
+	jmp	done_check_exit
+
+done_check_exit:
+	;====================================
 	; inc frame count
 	;====================================
 
@@ -281,6 +311,7 @@ really_exit:
 	.include	"guy.brush"
 
 	.include	"monkey_lookout.s"
+	.include	"monkey_poster.s"
 
 	.include	"monkey_actions.s"
 	.include	"update_bottom.s"

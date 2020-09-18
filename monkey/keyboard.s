@@ -292,11 +292,38 @@ set_destination:
 	lda	CURSOR_X
 	sta	DESTINATION_X
 	lda	CURSOR_Y
+	sec
+	sbc	#7
 	and	#$FE			; has to be even
 	sta	DESTINATION_Y
 
-	; FIXME: adjust for bounds
 
+	; FIXME: this should be a jump table
+	lda	LOCATION
+	cmp	#MONKEY_LOOKOUT
+	beq	set_destination_lookout
+	cmp	#MONKEY_POSTER
+	beq	set_destination_poster
+	cmp	#MONKEY_DOCK
+	beq	set_destination_dock
+	cmp	#MONKEY_BAR
+	beq	set_destination_bar
+
+set_destination_lookout:
+	jsr	lookout_adjust_destination
+	jmp	done_set_destination
+set_destination_poster:
+	jsr	poster_adjust_destination
+	jmp	done_set_destination
+set_destination_dock:
+;	jsr	dock_adjust_destination
+	jmp	done_set_destination
+set_destination_bar:
+;	jsr	bar_adjust_destination
+	jmp	done_set_destination
+
+
+done_set_destination:
 	rts
 
 

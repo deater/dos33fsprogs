@@ -56,7 +56,7 @@ monkey.o:	monkey.s zp.inc hardware.inc common_defines.inc \
 	leveldata_monkey.inc \
 	monkey_actions.s update_bottom.s \
 	guy.brush \
-	monkey_lookout.s
+	monkey_lookout.s monkey_poster.s
 	ca65 -o monkey.o monkey.s -l monkey.lst
 
 graphics/graphics.inc:
