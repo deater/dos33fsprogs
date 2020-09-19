@@ -175,6 +175,17 @@ done_move_guybrush:
 	lda	GUYBRUSH_Y
 	sta	YPOS
 
+	lda	LOCATION
+	cmp	#MONKEY_MAP
+	bne	big_guybrush
+map_guybrush:
+	lda	#<guybrush_map_sprite
+	sta	INL
+	lda	#>guybrush_map_sprite
+	sta	INH
+	jmp	really_draw_guybrush
+
+big_guybrush:
 	lda	GUYBRUSH_Y			; always even
 	lsr
 	eor	GUYBRUSH_X
@@ -187,7 +198,7 @@ done_move_guybrush:
 	sta	INL
 	lda	guybrush_sprites+1,Y
 	sta	INH
-
+really_draw_guybrush:
 	jsr	put_sprite_crop
 
 

@@ -4,7 +4,7 @@
 	;	at location 4,20
 	; if 28<x<35 and y<10 and direction==down
 	;	goto MONKEY_MAP
-	;	at location 20,20
+	;	at location 11,20
 lookout_check_exit:
 	lda	GUYBRUSH_X
 	cmp	#28
@@ -42,7 +42,7 @@ lookout_check_arch:
 
 	lda	#MONKEY_MAP
 	sta	LOCATION
-	lda	#4
+	lda	#11
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X
 	lda	#20

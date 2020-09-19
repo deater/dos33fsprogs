@@ -1,20 +1,25 @@
 
 map_check_exit:
-	jmp	map_no_exit
 	lda	GUYBRUSH_X
-	cmp	#5
-	bcc	map_to_dock
-	bcs	map_no_exit
+	cmp	#11
+	bne	map_no_exit
 
-map_to_dock:
-	lda	#MONKEY_DOCK
+	lda	GUYBRUSH_Y
+	cmp	#22
+	bne	map_no_exit
+
+map_to_lookout:
+	lda	#MONKEY_LOOKOUT
 	sta	LOCATION
-	lda	#34
+	lda	#30
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X
-	lda	#20
+	lda	#14
 	sta	GUYBRUSH_Y
+	lda	#22
 	sta	DESTINATION_Y
+	lda	#DIR_DOWN
+	sta	GUYBRUSH_DIRECTION
 	jsr	change_location
 
 map_no_exit:
@@ -22,31 +27,38 @@ map_no_exit:
 
 map_adjust_destination:
 
-	; if x<28, y must be >30
-	; if 28<x<40, y must be  > 26
-	; x can't go past 25
+	; x between 6 and 30
+
+	; y between 2 and 32
 
 mp_check_x:
 	lda	DESTINATION_X
-	cmp	#28
-	bcs	mp_x_left
-	bcc	mp_x_right
-
-mp_x_left:
-	lda	DESTINATION_Y
+	cmp	#6
+	bcc	mp_too_left
 	cmp	#30
-	bcs	done_mp_adjust
-	lda	#30
-	sta	DESTINATION_Y
-	jmp	done_mp_adjust
-mp_x_right:
-	lda	DESTINATION_Y
-	cmp	#26
-	bcs	done_mp_adjust
-	lda	#26
-	sta	DESTINATION_Y
-	jmp	done_mp_adjust
+	bcc	mp_check_y
 
+	lda	#30
+	sta	DESTINATION_X
+	jmp	mp_check_y
+mp_too_left:
+	lda	#6
+	sta	DESTINATION_X
+
+mp_check_y:
+
+	lda	DESTINATION_Y
+	cmp	#2
+	bcc	mp_too_up
+	cmp	#32
+	bcc	done_mp_adjust
+
+	lda	#32
+	sta	DESTINATION_Y
+	jmp	done_mp_adjust
+mp_too_up:
+	lda	#2
+	sta	DESTINATION_Y
 
 done_mp_adjust:
 	rts

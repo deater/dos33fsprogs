@@ -122,16 +122,52 @@ location5:
 	.word	map_lzsa			; background
 	.byte	18,40				; walking range X
 	.byte	16,48				; walking range Y
-	.byte	1				; num areas
+	.byte	7				; num areas
 
-		.byte	9,14	; x
-		.byte	20,32	; y
-		.word	door_string		; name
-		.word	door_action-1		; action
+		.byte	32,33	; x
+		.byte	20,22	; y
+		.word	house_string		; name
+		.word	map_action-1		; action
+
+		.byte	24,27	; x
+		.byte	26,30	; y
+		.word	lights_string		; name
+		.word	map_action-1		; action
+
+		.byte	18,19	; x
+		.byte	16,18	; y
+		.word	clearing_string		; name
+		.word	map_action-1		; action
+
+		.byte	28,29	; x
+		.byte	2,3	; y
+		.word	island_string		; name
+		.word	map_action-1		; action
+
+		.byte	26,27	; x
+		.byte	2,5	; y
+		.word	shore_string		; name
+		.word	map_action-1		; action
+
+		.byte	12,13	; x
+		.byte	22,23	; y
+		.word	lookout_point_string	; name
+		.word	map_action-1		; action
+
+		.byte	10,13	; x
+		.byte	24,28	; y
+		.word	village_string	; name
+		.word	map_action-1		; action
 		
-
-
 string_data:
+house_string:	.byte 18,20,"HOUSE",0
+lights_string:	.byte 17,20,"LIGHTS",0
+clearing_string:.byte 16,20,"CLEARING",0
+island_string:	.byte 17,20,"ISLAND",0
+shore_string:	.byte 18,20,"SHORE",0
+lookout_point_string: .byte 13,20,"LOOKOUT POINT",0
+village_string:	.byte 16,20,"VILLAGE",0
+
 lookout_string:	.byte 20,20,"LOOKOUT",0
 path_string:	.byte 20,20,"PATH",0
 stairs_string:	.byte 20,20,"STAIRS",0

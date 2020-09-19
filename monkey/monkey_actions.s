@@ -372,5 +372,12 @@ town_door_nothing:
 	sta	CURRENT_VERB
 	rts
 
+	;=============================
+map_action:
+map_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
 
 

@@ -8,6 +8,26 @@ update_bottom:
 
 	jsr	clear_bottom
 
+
+	lda	LOCATION
+	cmp	#MONKEY_MAP
+	bne	not_the_map
+
+map_noun:
+	lda	VALID_NOUN
+	beq	done_map_noun
+
+	lda	NOUN_L
+	sta	OUTL
+	lda	NOUN_H
+	sta	OUTH
+
+	jsr	move_and_print
+
+done_map_noun:
+	rts
+
+not_the_map:
 	;=======================
 	; if message, print it
 

@@ -390,6 +390,28 @@ done_return:
 	; set destination
 	;==============================
 set_destination:
+
+	; only adjust Y if we're big guybrush?
+	lda	LOCATION
+	cmp	#MONKEY_MAP
+	bne	set_destination_big
+
+set_destination_on_map:
+
+	lda	CURSOR_X
+	clc
+	adc	#$2
+	sta	DESTINATION_X
+
+	lda	CURSOR_Y
+	clc
+	adc	#$4
+	and	#$FE
+	sta	DESTINATION_Y
+	rts
+
+set_destination_big:
+
 	lda	CURSOR_X
 	bpl	destination_x_is_positive
 	; we are off edge of screen, just say 0

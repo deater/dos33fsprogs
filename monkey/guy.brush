@@ -85,5 +85,6 @@ guybrush_left2_sprite:
 .byte	$0f,$A0,$AA
 
 
-
-
+guybrush_map_sprite:
+.byte	1,1
+.byte	$ff
