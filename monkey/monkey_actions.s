@@ -92,8 +92,7 @@ lookout_action:
 	lda	lookout_actions+1,Y
 	sta	MESSAGE_H
 
-	lda	#1
-	sta	DISPLAY_MESSAGE
+	jmp	do_display_message
 
 lookout_nothing:
 	lda	#VERB_WALK
@@ -176,8 +175,7 @@ door_common:
 	lda	door_actions+1,Y
 	sta	MESSAGE_H
 
-	lda	#1
-	sta	DISPLAY_MESSAGE
+	jmp	do_display_message
 
 door_nothing:
 	lda	#VERB_WALK
@@ -229,8 +227,7 @@ poster_action:
 	lda	poster_actions+1,Y
 	sta	MESSAGE_H
 
-	lda	#1
-	sta	DISPLAY_MESSAGE
+	jmp	do_display_message
 
 poster_nothing:
 	lda	#VERB_WALK
@@ -270,8 +267,7 @@ archway_action:
 	lda	archway_actions+1,Y
 	sta	MESSAGE_H
 
-	lda	#1
-	sta	DISPLAY_MESSAGE
+	jmp	do_display_message
 
 archway_nothing:
 	lda	#VERB_WALK
@@ -304,8 +300,8 @@ clock_action:
 	lda	clock_actions+1,Y
 	sta	MESSAGE_H
 
-	lda	#1
-	sta	DISPLAY_MESSAGE
+	jmp	do_display_message
+
 clock_nothing:
 	lda	#VERB_WALK
 	sta	CURRENT_VERB
@@ -339,8 +335,8 @@ citizen_action:
 	lda	citizen_actions+1,Y
 	sta	MESSAGE_H
 
-	lda	#1
-	sta	DISPLAY_MESSAGE
+	jmp	do_display_message
+
 citizen_nothing:
 	lda	#VERB_WALK
 	sta	CURRENT_VERB
@@ -380,4 +376,13 @@ map_nothing:
 	rts
 
 
+
+do_display_message:
+	lda	#1
+	sta	DISPLAY_MESSAGE
+	lda	#0
+	sta	CURSOR_VISIBLE
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
 

@@ -4,6 +4,8 @@
 	; actual game it sorta pulses colors
 
 draw_pointer:
+	lda	CURSOR_VISIBLE
+	beq	no_draw_pointer
 
 	; point sprite to right location (X,Y)
 
