@@ -1,20 +1,24 @@
 
-	; if 28<x<35 and y>=28 and direction==down
+	; if 28<x<35 and y>=24 and direction==down
 	;	goto MONKEY_POSTER
 	;	at location 4,20
+	; if 28<x<35 and y<10 and direction==down
+	;	goto MONKEY_MAP
+	;	at location 20,20
 lookout_check_exit:
-	lda	GUYBRUSH_Y
-	cmp	#24
-	bcc	lookout_no_exit
-	lda	GUYBRUSH_DIRECTION
-	cmp	#DIR_DOWN
-	bne	lookout_no_exit
-
 	lda	GUYBRUSH_X
 	cmp	#28
 	bcc	lookout_no_exit
 	cmp	#35
 	bcs	lookout_no_exit
+
+lookout_check_stairs:
+	lda	GUYBRUSH_Y
+	cmp	#24
+	bcc	lookout_check_arch
+	lda	GUYBRUSH_DIRECTION
+	cmp	#DIR_DOWN
+	bne	lookout_no_exit
 
 	lda	#MONKEY_POSTER
 	sta	LOCATION
@@ -25,6 +29,27 @@ lookout_check_exit:
 	sta	GUYBRUSH_Y
 	sta	DESTINATION_Y
 	jsr	change_location
+	jmp	lookout_no_exit
+
+lookout_check_arch:
+
+	lda	GUYBRUSH_Y
+	cmp	#12
+	bcs	lookout_no_exit
+	lda	GUYBRUSH_DIRECTION
+	cmp	#DIR_UP
+	bne	lookout_no_exit
+
+	lda	#MONKEY_MAP
+	sta	LOCATION
+	lda	#4
+	sta	GUYBRUSH_X
+	sta	DESTINATION_X
+	lda	#20
+	sta	GUYBRUSH_Y
+	sta	DESTINATION_Y
+	jsr	change_location
+	jmp	lookout_no_exit
 
 lookout_no_exit:
 	rts
@@ -35,12 +60,12 @@ ld_check_x:
 	lda	DESTINATION_X
 	cmp	#19
 	bcc	ld_x_too_small
-	cmp	#35
+	cmp	#34
 	bcs	ld_x_too_big
 	jmp	ld_check_y
 
 ld_x_too_big:
-	lda	#35
+	lda	#34
 	sta	DESTINATION_X
 	bne	ld_check_y
 
@@ -52,6 +77,15 @@ ld_check_y:
 	; if x < 28, Y must be between 16 and 18
 	; if x < 35, Y must be between  8 and 28
 
+	lda	DESTINATION_X
+	cmp	#28
+	bcc	ld_narrow_y
+
+ld_wide_y:
+;	lda	DESTINATON_Y
+	jmp	done_ld_adjust
+
+ld_narrow_y:
 	lda	DESTINATION_Y
 	cmp	#16
 	bcc	ld_y_too_small

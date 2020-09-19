@@ -284,6 +284,8 @@ handle_return:
 	lda	CURSOR_Y
 	cmp	#38
 	bcc	check_walking	; blt
+	cmp	#50
+	bcs	check_walking
 
 	lda	CURSOR_X
 	clc
@@ -397,7 +399,7 @@ destination_x_is_positive:
 
 	lda	CURSOR_Y
 	bpl	destination_y_is_positive
-	lda	#0
+	lda	#7
 destination_y_is_positive:
 	sec
 	sbc	#7
@@ -415,6 +417,10 @@ destination_y_is_positive:
 	beq	set_destination_dock
 	cmp	#MONKEY_BAR
 	beq	set_destination_bar
+	cmp	#MONKEY_TOWN
+	beq	set_destination_town
+	cmp	#MONKEY_MAP
+	beq	set_destination_map
 
 set_destination_lookout:
 	jsr	lookout_adjust_destination
@@ -428,13 +434,16 @@ set_destination_dock:
 set_destination_bar:
 	jsr	bar_adjust_destination
 	jmp	done_set_destination
+set_destination_town:
+	jsr	town_adjust_destination
+	jmp	done_set_destination
+set_destination_map:
+	jsr	map_adjust_destination
+	jmp	done_set_destination
 
 
 done_set_destination:
 	rts
-
-
-
 
 
 

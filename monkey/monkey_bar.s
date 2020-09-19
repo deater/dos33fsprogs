@@ -5,7 +5,9 @@ bar_check_exit:
 	lda	GUYBRUSH_X
 	cmp	#5
 	bcc	bar_to_dock
-	bcs	bar_no_exit
+	cmp	#35
+	bcs	bar_to_town
+	bcc	bar_no_exit
 
 bar_to_dock:
 	lda	#MONKEY_DOCK
@@ -17,6 +19,22 @@ bar_to_dock:
 	sta	GUYBRUSH_Y
 	sta	DESTINATION_Y
 	jsr	change_location
+	jmp	bar_no_exit
+
+bar_to_town:
+	lda	#MONKEY_TOWN
+	sta	LOCATION
+	lda	#34
+	sta	GUYBRUSH_X
+	sta	DESTINATION_X
+	lda	#20
+	sta	GUYBRUSH_Y
+	lda	#26
+	sta	DESTINATION_Y
+	lda	#DIR_DOWN
+	sta	GUYBRUSH_DIRECTION
+	jsr	change_location
+
 
 bar_no_exit:
 	rts
@@ -25,7 +43,7 @@ bar_adjust_destination:
 
 	; if x<21, y=20
 	; if x<25, y=18
-	; x can't go past 25
+	; else y=`6
 
 br_check_x:
 	lda	DESTINATION_X
@@ -36,9 +54,9 @@ br_check_x:
 	bcs	br_x_medium
 
 br_x_too_big:
-	lda	#25
-	sta	DESTINATION_X
-	lda	#18
+;	lda	#25
+;	sta	DESTINATION_X
+	lda	#16
 	sta	DESTINATION_Y
 	bne	done_br_adjust
 

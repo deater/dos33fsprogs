@@ -259,6 +259,10 @@ nothing_foreground:
 	beq	check_exit_dock
 	cmp	#MONKEY_BAR
 	beq	check_exit_bar
+	cmp	#MONKEY_TOWN
+	beq	check_exit_town
+	cmp	#MONKEY_MAP
+	beq	check_exit_map
 
 check_exit_lookout:
 	jsr	lookout_check_exit
@@ -271,6 +275,12 @@ check_exit_dock:
 	jmp	done_check_exit
 check_exit_bar:
 	jsr	bar_check_exit
+	jmp	done_check_exit
+check_exit_town:
+	jsr	town_check_exit
+	jmp	done_check_exit
+check_exit_map:
+	jsr	map_check_exit
 	jmp	done_check_exit
 
 done_check_exit:
@@ -325,6 +335,8 @@ really_exit:
 	.include	"monkey_poster.s"
 	.include	"monkey_dock.s"
 	.include	"monkey_bar.s"
+	.include	"monkey_town.s"
+	.include	"monkey_map.s"
 
 	.include	"monkey_actions.s"
 	.include	"update_bottom.s"

@@ -253,3 +253,124 @@ poster_actions:
 poster_look:
 .byte 8,21,"RE-ELECT GOVERNOR MARLEY.",0
 
+
+
+
+	;=============================
+archway_action:
+	lda	CURRENT_VERB
+	asl
+	tay
+
+	lda	archway_actions,Y
+	cmp	#$ff
+	beq	archway_nothing
+
+	sta	MESSAGE_L
+	lda	archway_actions+1,Y
+	sta	MESSAGE_H
+
+	lda	#1
+	sta	DISPLAY_MESSAGE
+
+archway_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+archway_actions:
+	.word	$FFFF		; give
+	.word	doesnt_open	; open
+	.word	doesnt_work	; close
+	.word	cant_pick_up	; pick_up
+	.word	not_special	; look_at
+	.word	$FFFF		; talk_to
+	.word	doesnt_work	; use
+	.word	icant_move	; push
+	.word	icant_move	; pull
+
+
+	;=============================
+clock_action:
+	lda	CURRENT_VERB
+	asl
+	tay
+
+	lda	clock_actions,Y
+	cmp	#$ff
+	beq	clock_nothing
+
+	sta	MESSAGE_L
+	lda	clock_actions+1,Y
+	sta	MESSAGE_H
+
+	lda	#1
+	sta	DISPLAY_MESSAGE
+clock_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+clock_actions:
+	.word	$FFFF		; give
+	.word	doesnt_open	; open
+	.word	doesnt_work	; close
+	.word	cant_pick_up	; pick_up
+	.word	clock_look	; look_at
+	.word	$FFFF		; talk_to
+	.word	doesnt_work	; use
+	.word	icant_move	; push
+	.word	icant_move	; pull
+
+clock_look:
+.byte 12,21,"IT'S 10 O'CLOCK.",0
+
+	;=============================
+citizen_action:
+	lda	CURRENT_VERB
+	asl
+	tay
+
+	lda	citizen_actions,Y
+	cmp	#$ff
+	beq	citizen_nothing
+
+	sta	MESSAGE_L
+	lda	citizen_actions+1,Y
+	sta	MESSAGE_H
+
+	lda	#1
+	sta	DISPLAY_MESSAGE
+citizen_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+
+citizen_actions:
+	.word	$FFFF		; give
+	.word	$FFFF		; open
+	.word	$FFFF		; close
+	.word	$FFFF		; pick_up
+	.word	citizen_look	; look_at
+	.word	citizen_talk	; talk_to
+	.word	$FFFF		; use
+	.word	$FFFF		; push
+	.word	$FFFF		; pull
+
+citizen_look:
+.byte 9,21,"WHAT'RE YOU LOOKING AT?",0
+
+citizen_talk:
+.byte 4,21,"DO YOU HAVE A COUSIN NAMED SVEN?",0
+
+
+	;=============================
+town_door_action:
+town_door_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+
+
