@@ -368,6 +368,37 @@ town_door_nothing:
 	sta	CURRENT_VERB
 	rts
 
+
+	;=============================
+bar2_door_action:
+bar2_door_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+	;=============================
+curtain_action:
+curtain_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+	;=============================
+fireplace_action:
+fireplace_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+	;=============================
+impt_pirate_action:
+impte_pirate_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+
+
 	;=============================
 map_action:
 map_nothing:
