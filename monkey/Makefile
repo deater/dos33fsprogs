@@ -58,7 +58,9 @@ monkey.o:	monkey.s zp.inc hardware.inc common_defines.inc \
 	monkey_actions.s update_bottom.s \
 	guy.brush \
 	monkey_lookout.s monkey_poster.s monkey_dock.s monkey_bar.s \
-	monkey_town.s monkey_map.s
+	monkey_town.s monkey_map.s monkey_church.s monkey_mansion_path.s \
+	monkey_mansion.s monkey_zipline.s \
+	monkey_bar_inside1.s monkey_bar_inside2.s
 	ca65 -o monkey.o monkey.s -l monkey.lst
 
 graphics/graphics.inc:

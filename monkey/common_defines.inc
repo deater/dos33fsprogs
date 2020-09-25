@@ -12,11 +12,6 @@ VERB_PUSH	= 7
 VERB_PULL	= 8 
 VERB_WALK	= 9
 
-GUYBRUSH_BIG	= 0
-GUYBRUSH_SMALL	= 1
-GUYBRUSH_TINY	= 2
-
-
 ;===============================================
 ; level data structure definitions
 ;===============================================

@@ -50,8 +50,8 @@ monkey_start:
 
 	; set up initial location
 
-	lda	#MONKEY_BAR_INSIDE2
-;	lda	#MONKEY_LOOKOUT
+;	lda	#MONKEY_BAR_INSIDE2
+	lda	#MONKEY_LOOKOUT
 	sta	LOCATION
 
 	jsr	change_location
@@ -260,40 +260,41 @@ nothing_foreground:
 	; check if exiting room
 	;====================================
 
-	; FIXME: this should be a jump table
+check_exit_smc:
+	jsr	$0000
 
-	lda	LOCATION
-	cmp	#MONKEY_LOOKOUT
-	beq	check_exit_lookout
-	cmp	#MONKEY_POSTER
-	beq	check_exit_poster
-	cmp	#MONKEY_DOCK
-	beq	check_exit_dock
-	cmp	#MONKEY_BAR
-	beq	check_exit_bar
-	cmp	#MONKEY_TOWN
-	beq	check_exit_town
-	cmp	#MONKEY_MAP
-	beq	check_exit_map
+;	lda	LOCATION
+;	cmp	#MONKEY_LOOKOUT
+;	beq	check_exit_lookout
+;	cmp	#MONKEY_POSTER
+;	beq	check_exit_poster
+;	cmp	#MONKEY_DOCK
+;	beq	check_exit_dock
+;	cmp	#MONKEY_BAR
+;	beq	check_exit_bar
+;	cmp	#MONKEY_TOWN
+;	beq	check_exit_town
+;	cmp	#MONKEY_MAP
+;	beq	check_exit_map
 
-check_exit_lookout:
-	jsr	lookout_check_exit
-	jmp	done_check_exit
-check_exit_poster:
-	jsr	poster_check_exit
-	jmp	done_check_exit
-check_exit_dock:
-	jsr	dock_check_exit
-	jmp	done_check_exit
-check_exit_bar:
-	jsr	bar_check_exit
-	jmp	done_check_exit
-check_exit_town:
-	jsr	town_check_exit
-	jmp	done_check_exit
-check_exit_map:
-	jsr	map_check_exit
-	jmp	done_check_exit
+;check_exit_lookout:
+;	jsr	lookout_check_exit
+;	jmp	done_check_exit
+;check_exit_poster:
+;	jsr	poster_check_exit
+;	jmp	done_check_exit
+;check_exit_dock:
+;	jsr	dock_check_exit
+;	jmp	done_check_exit
+;check_exit_bar:
+;	jsr	bar_check_exit
+;	jmp	done_check_exit
+;check_exit_town:
+;	jsr	town_check_exit
+;	jmp	done_check_exit
+;check_exit_map:
+;	jsr	map_check_exit
+;	jmp	done_check_exit
 
 done_check_exit:
 	;====================================
@@ -343,12 +344,20 @@ really_exit:
 	.include	"common_sprites.inc"
 	.include	"guy.brush"
 
+	; Locations
+
 	.include	"monkey_lookout.s"
 	.include	"monkey_poster.s"
 	.include	"monkey_dock.s"
 	.include	"monkey_bar.s"
 	.include	"monkey_town.s"
 	.include	"monkey_map.s"
+	.include	"monkey_church.s"
+	.include	"monkey_zipline.s"
+	.include	"monkey_mansion.s"
+	.include	"monkey_mansion_path.s"
+	.include	"monkey_bar_inside1.s"
+	.include	"monkey_bar_inside2.s"
 
 	.include	"monkey_actions.s"
 	.include	"update_bottom.s"

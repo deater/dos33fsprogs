@@ -11,8 +11,8 @@ locations:
 ; MONKEY_LOOKOUT	-- lookout tower
 location0:
 	.word	lookout_lzsa			; background
-	.word	set_destination_lookout-1	; destination
-	.word	check_exit_lookout-1		; exit
+	.word	lookout_adjust_destination	; destination
+	.word	lookout_check_exit		; exit
 	.byte	GUYBRUSH_BIG			; size
 	.byte	3				; num areas
 
@@ -34,8 +34,8 @@ location0:
 ; MONKEY_POSTER		-- house with poster
 location1:
 	.word	poster_lzsa			; background
-	.word	set_destination_lookout-1	; destination
-	.word	check_exit_lookout-1		; exit
+	.word	poster_adjust_destination	; destination
+	.word	poster_check_exit		; exit
 	.byte	GUYBRUSH_BIG			; size
 	.byte	2				; num areas
 
@@ -52,8 +52,8 @@ location1:
 ; MONKEY_DOCK		-- dock
 location2:
 	.word	dock_lzsa			; background
-	.word	set_destination_lookout-1	; destination
-	.word	check_exit_lookout-1		; exit
+	.word	dock_adjust_destination		; destination
+	.word	dock_check_exit			; exit
 	.byte	GUYBRUSH_BIG			; size
 	.byte	1				; num areas
 
@@ -65,8 +65,8 @@ location2:
 ; MONKEY_BAR		-- scumm bar
 location3:
 	.word	bar_lzsa			; background
-	.word	set_destination_lookout-1	; destination
-	.word	check_exit_lookout-1		; exit
+	.word	bar_adjust_destination		; destination
+	.word	bar_check_exit			; exit
 	.byte	GUYBRUSH_BIG			; size
 	.byte	1				; num areas
 
@@ -78,8 +78,8 @@ location3:
 ; MONKEY_TOWN		-- downtown
 location4:
 	.word	town_lzsa			; background
-	.word	set_destination_lookout-1	; destination
-	.word	check_exit_lookout-1		; exit
+	.word	town_adjust_destination		; destination
+	.word	town_check_exit			; exit
 	.byte	GUYBRUSH_BIG			; size
 	.byte	8				; num areas
 
@@ -127,8 +127,8 @@ location4:
 ; MONKEY_MAP		-- melee map
 location5:
 	.word	map_lzsa			; background
-	.word	set_destination_lookout-1	; destination
-	.word	check_exit_lookout-1		; exit
+	.word	map_adjust_destination		; destination
+	.word	map_check_exit			; exit
 	.byte	GUYBRUSH_TINY			; size
 	.byte	7				; num areas
 
@@ -171,8 +171,8 @@ location5:
 ; MONKEY_BAR_INSIDE1	-- inside bar, lots going on
 location6:
 	.word	bar_inside1_lzsa		; background
-	.word	set_destination_lookout-1	; destination
-	.word	check_exit_lookout-1		; exit
+	.word	bar_inside1_adjust_destination	; destination
+	.word	bar_inside1_check_exit		; exit
 	.byte	GUYBRUSH_BIG			; size
 	.byte	4				; num areas
 
@@ -200,8 +200,8 @@ location6:
 ; MONKEY_BAR_INSIDE2	-- three pirates
 location7:
 	.word	bar_inside2_lzsa		; background
-	.word	set_destination_lookout-1	; destination
-	.word	check_exit_lookout-1		; exit
+	.word	bar_inside2_adjust_destination	; destination
+	.word	bar_inside2_check_exit		; exit
 	.byte	GUYBRUSH_BIG			; size
 	.byte	4				; num areas
 
@@ -228,8 +228,8 @@ location7:
 ; MONKEY_CHURCH		-- outside the church
 location8:
 	.word	church_lzsa			; background
-	.word	set_destination_lookout-1	; destination
-	.word	check_exit_lookout-1		; exit
+	.word	church_adjust_destination	; destination
+	.word	church_check_exit		; exit
 	.byte	GUYBRUSH_BIG			; size
 	.byte	1				; num areas
 
@@ -241,8 +241,8 @@ location8:
 ; MONKEY_MANSION_PATH		-- path to the mansion
 location9:
 	.word	mansion_path_lzsa		; background
-	.word	set_destination_lookout-1	; destination
-	.word	check_exit_lookout-1		; exit
+	.word	mansion_path_adjust_destination	; destination
+	.word	mansion_path_check_exit		; exit
 	.byte	GUYBRUSH_BIG			; size
 	.byte	1				; num areas
 
@@ -254,8 +254,8 @@ location9:
 ; MONKEY_MANSION	-- governor's mansion
 location10:
 	.word	mansion_lzsa			; background
-	.word	set_destination_lookout-1	; destination
-	.word	check_exit_lookout-1		; exit
+	.word	mansion_adjust_destination	; destination
+	.word	mansion_check_exit		; exit
 	.byte	GUYBRUSH_BIG			; size
 	.byte	1				; num areas
 
@@ -267,20 +267,46 @@ location10:
 ; MONKEY_ZIPLINE		-- hook's zipline
 location11:
 	.word	zipline_lzsa			; background
-	.word	set_destination_lookout-1	; destination
-	.word	check_exit_lookout-1		; exit
+	.word	zipline_adjust_destination	; destination
+	.word	zipline_check_exit		; exit
 	.byte	GUYBRUSH_BIG			; size
-	.byte	1				; num areas
+	.byte	3				; num areas
 
-		.byte	9,14	; x
-		.byte	20,32	; y
-		.word	door_string		; name
-		.word	door_action-1		; action
+		.byte	30,36	; x
+		.byte	10,36	; y
+		.word	pole_string		; name
+		.word	pole_action-1		; action
+
+		.byte	19,30	; x
+		.byte	4,16	; y
+		.word	cable_string		; name
+		.word	cable_action-1		; action
+
+		.byte	0,15	; x
+		.byte	4,28	; y
+		.word	sign_string		; name
+		.word	sign_action-1		; action
+
+; common strings
+
+door_string:	.byte 20,20,"DOOR",0
+
+
+; zipline strings
+pole_string:	.byte 20,20,"POLE",0
+cable_string:	.byte 20,20,"CABLE",0
+sign_string:	.byte 20,20,"SIGN",0
 
 
 
+; lookout strings
 
-string_data:
+lookout_string:	.byte 20,20,"LOOKOUT",0
+path_string:	.byte 20,20,"PATH",0
+stairs_string:	.byte 20,20,"STAIRS",0
+
+; map strings
+
 house_string:	.byte 18,20,"HOUSE",0
 lights_string:	.byte 17,20,"LIGHTS",0
 clearing_string:.byte 16,20,"CLEARING",0
@@ -289,21 +315,22 @@ shore_string:	.byte 18,20,"SHORE",0
 lookout_point_string: .byte 13,20,"LOOKOUT POINT",0
 village_string:	.byte 16,20,"VILLAGE",0
 
+; inside_bar2 strings
 
 curtain_string:	.byte 20,20,"CURTAIN",0
 impt_pirate_string:	.byte 20,20,"IMPORTANT PIRATES",0
 fireplace_string:	.byte 20,20,"FIREPLACE",0
 
-lookout_string:	.byte 20,20,"LOOKOUT",0
-path_string:	.byte 20,20,"PATH",0
-stairs_string:	.byte 20,20,"STAIRS",0
+; poster strings
 
 cliffside_string:	.byte 20,20,"CLIFFSIDE",0
-poster_string:	.byte 20,20,"POSTER",0
+poster_string:		.byte 20,20,"POSTER",0
+
+; dock strings
 
 moon_string:	.byte 20,20,"MOON",0
 
-door_string:	.byte 20,20,"DOOR",0
+; town strings
 
 archway_string:	.byte 20,20,"ARCHWAY",0
 clock_string:	.byte 20,20,"CLOCK",0
