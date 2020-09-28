@@ -31,16 +31,19 @@ show_map:
 
 	lda	DRAW_PAGE
 	clc
-	adc	#$4
-	sta	BASH
-	lda	#$00
-	sta	BASL
+	adc	#$4		; page to load at?
+				; FIXME: really need to load at 0xc and
+				; copy
+	pha
 
-	lda     #>(map_rle)
-	sta     GBASH
-	lda     #<(map_rle)
-	sta     GBASL
-	jsr     load_rle_gr
+	lda     #<(map_lzsa)
+	sta     getsrc_smc+1
+	lda     #>(map_lzsa)
+	sta     getsrc_smc+2
+
+	pla
+
+	jsr	decompress_lzsa2_fast
 
 
 	; basic_plot(8+((map_x&0x3)*6)+(tfv_x/6),
