@@ -43,25 +43,39 @@ done_zp_adjust:
 	rts
 
 
+draw_sign:
+	lda	FRAMEL
+	and	#$10
+	beq	done_draw_sign
 
 
-;draw_sign:
+	lda	#<sign_sprite
+	sta	INL
+	lda	#>sign_sprite
+	sta	INH
 
-;	lda	#<wall_sprite
-;	sta	INL
-;	lda	#>wall_sprite
-;	sta	INH
+	lda	#0
+	sta	XPOS
+	lda	#4
+	sta	YPOS
 
-;	lda	#18
-;	sta	XPOS
-;	lda	#22
-;	sta	YPOS
+	jsr	put_sprite_crop
+done_draw_sign:
+	rts
 
-;	jsr	put_sprite_crop
-
-;	rts
-
-;house_sprite:
+sign_sprite:
+	.byte	16,11
+	.byte	$dA,$1A,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$d1,$AA,$AA,$AA
+	.byte	$AA,$AA,$Ad,$A1,$Ad,$A1,$dA,$1A,$AA,$AA,$AA,$AA,$1A,$Ad,$1A,$AA
+	.byte	$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$Ad,$A1,$dA,$1A,$Ad,$AA,$Ad,$1A
+	.byte	$AA,$Ad,$1A,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$dA
+	.byte	$AA,$AA,$Ad,$dA,$1A,$dA,$1A,$dA,$AA,$AA,$AA,$AA,$AA,$dA,$1A,$AA
+	.byte	$A1,$Ad,$A1,$1A,$dA,$1A,$AA,$AA,$A1,$Ad,$A1,$Ad,$1A,$AA,$AA,$AA
+	.byte	$AA,$AA,$1d,$AA,$AA,$AA,$1d,$AA,$AA,$dA,$1A,$Ad,$AA,$AA,$AA,$AA
+	.byte	$AA,$AA,$Ad,$A1,$dA,$A1,$Ad,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$A1,$Ad,$AA,$1A,$Ad,$A1,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$dA,$AA,$AA,$AA,$AA,$1d,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+	.byte	$AA,$1A,$dA,$A1,$Ad,$1A,$dA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
 
 ;=============================
 

@@ -94,6 +94,8 @@ game_loop:
 	beq	animate_flame
 	cmp	#MONKEY_BAR
 	beq	do_draw_bar_door
+	cmp	#MONKEY_ZIPLINE
+	beq	do_draw_sign
 
 	jmp	nothing_special
 
@@ -103,6 +105,10 @@ animate_flame:
 
 do_draw_bar_door:
 	jsr	draw_bar_door
+	jmp	nothing_special
+
+do_draw_sign:
+	jsr	draw_sign
 	jmp	nothing_special
 
 nothing_special:
