@@ -1,20 +1,20 @@
 ; stuff regarding the church
 
 
-	; if x<4 goto MONKEY_POSTER at 28,20
-	; if x>35 goto MONKEY_BAR at 5,20
+	; if x<4 goto MONKEY_MANSION_PATH at
+	; if x>35 goto MONKEY_CHURCH at
 
 church_check_exit:
 
 	lda	GUYBRUSH_X
 	cmp	#4
-	bcc	church_to_poster
+	bcc	church_to_mansion_path
 	cmp	#35
-	bcs	church_to_bar
+	bcs	church_to_town
 	bcc	church_no_exit
 
-church_to_poster:
-	lda	#MONKEY_POSTER
+church_to_mansion_path:
+	lda	#MONKEY_MANSION_PATH
 	sta	LOCATION
 	lda	#34
 	sta	GUYBRUSH_X
@@ -25,8 +25,8 @@ church_to_poster:
 	jsr	change_location
 	jmp	church_no_exit
 
-church_to_bar:
-	lda	#MONKEY_BAR
+church_to_town:
+	lda	#MONKEY_TOWN
 	sta	LOCATION
 	lda	#5
 	sta	GUYBRUSH_X

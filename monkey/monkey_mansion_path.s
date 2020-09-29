@@ -1,20 +1,20 @@
 ; stuff regarding path to mansion
 
 
-	; if x<4 goto MONKEY_POSTER at 28,20
-	; if x>35 goto MONKEY_BAR at 5,20
+	; if x<4 goto MONKEY_MANSION
+	; if x>35 goto MONKEY_CHURCH
 
 mansion_path_check_exit:
 
 	lda	GUYBRUSH_X
 	cmp	#4
-	bcc	mansion_path_to_poster
+	bcc	mansion_path_to_mansion
 	cmp	#35
-	bcs	mansion_path_to_bar
+	bcs	mansion_path_to_church
 	bcc	mansion_path_no_exit
 
-mansion_path_to_poster:
-	lda	#MONKEY_POSTER
+mansion_path_to_mansion:
+	lda	#MONKEY_MANSION
 	sta	LOCATION
 	lda	#34
 	sta	GUYBRUSH_X
@@ -25,8 +25,8 @@ mansion_path_to_poster:
 	jsr	change_location
 	jmp	mansion_path_no_exit
 
-mansion_path_to_bar:
-	lda	#MONKEY_BAR
+mansion_path_to_church:
+	lda	#MONKEY_CHURCH
 	sta	LOCATION
 	lda	#5
 	sta	GUYBRUSH_X

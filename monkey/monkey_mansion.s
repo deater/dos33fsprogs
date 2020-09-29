@@ -1,31 +1,16 @@
 ; stuff regarding the governor's mansion
 
-	; if x<4 goto MONKEY_POSTER at 28,20
-	; if x>35 goto MONKEY_BAR at 5,20
+	; if x>35 goto MONKEY_MANSION_PATH at
 
 mansion_check_exit:
 
 	lda	GUYBRUSH_X
-	cmp	#4
-	bcc	mansion_to_poster
 	cmp	#35
-	bcs	mansion_to_bar
+	bcs	mansion_to_mansion_path
 	bcc	mansion_no_exit
 
-mansion_to_poster:
-	lda	#MONKEY_POSTER
-	sta	LOCATION
-	lda	#34
-	sta	GUYBRUSH_X
-	sta	DESTINATION_X
-	lda	#20
-	sta	GUYBRUSH_Y
-	sta	DESTINATION_Y
-	jsr	change_location
-	jmp	mansion_no_exit
-
-mansion_to_bar:
-	lda	#MONKEY_BAR
+mansion_to_mansion_path:
+	lda	#MONKEY_MANSION_PATH
 	sta	LOCATION
 	lda	#5
 	sta	GUYBRUSH_X

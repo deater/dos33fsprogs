@@ -1,7 +1,16 @@
+; right side of downtown village
+
+	;=======================
+	; check exit
+	;=======================
+	;
 
 town_check_exit:
 
 	lda	GUYBRUSH_X
+	cmp	#5		; temporary
+	bcc	town_to_church
+
 	cmp	#32
 	bcc	town_no_exit
 
@@ -26,9 +35,28 @@ town_to_bar:
 	lda	#DIR_LEFT
 	sta	GUYBRUSH_DIRECTION
 	jsr	change_location
+	jmp	town_no_exit
+
+town_to_church:
+	lda	#MONKEY_CHURCH
+	sta	LOCATION
+	lda	#34
+	sta	GUYBRUSH_X
+	sta	DESTINATION_X
+	lda	#20
+	sta	GUYBRUSH_Y
+	sta	DESTINATION_Y
+
+	lda	#DIR_LEFT
+	sta	GUYBRUSH_DIRECTION
+	jsr	change_location
 
 town_no_exit:
 	rts
+
+	;=======================
+	; adjust destination
+	;=======================
 
 town_adjust_destination:
 
@@ -62,6 +90,11 @@ done_tn_adjust:
 	rts
 
 
+	;=======================
+	; adjust bounds
+	;=======================
+town_check_bounds:
+	rts
 
 
 ;draw_town_door:
