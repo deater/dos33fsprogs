@@ -187,27 +187,44 @@ location6:
 	.word	bar_inside1_check_exit		; exit
 	.word	lookout_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
-	.byte	4				; num areas
+	.byte	7				; num areas
 
-		.byte	0,3	; x
-		.byte	12,34	; y
+		.byte	0,10	; x
+		.byte	34,40	; y
+		.word	pirate_string		; name
+		.word	bar1_pirate_action-1	; action
+
+		.byte	4,9	; x
+		.byte	16,32	; y
+		.word	door_string		; name
+		.word	bar1_door_action-1	; action
+
+		.byte	10,15	; x
+		.byte	22,32	; y
+		.word	pirate_string		; name
+		.word	bar1_pirate_action-1	; action
+
+		.byte	16,20	; x
+		.byte	22,34	; y
+		.word	pirates_string		; name
+		.word	bar1_pirate_action-1	; action
+
+		.byte	21,35	; x
+		.byte	22,38	; y
+		.word	pirate_string		; name
+		.word	bar1_pirate_action-1	; action
+
+		.byte	37,40	; x
+		.byte	14,30	; y
 		.word	curtain_string		; name
 		.word	curtain_action-1	; action
 
-		.byte	7,20	; x
-		.byte	22,32	; y
-		.word	impt_pirate_string	; name
-		.word	impt_pirate_action-1	; action
+		.byte	35,40	; x
+		.byte	30,38	; y
+		.word	dog_string		; name
+		.word	bar1_dog_action-1	; action
 
-		.byte	23,28	; x
-		.byte	20,28	; y
-		.word	fireplace_string	; name
-		.word	fireplace_action-1	; action
 
-		.byte	34,38	; x
-		.byte	18,36	; y
-		.word	door_string		; name
-		.word	bar2_door_action-1	; action
 
 
 ; MONKEY_BAR_INSIDE2	-- three pirates
@@ -215,7 +232,7 @@ location7:
 	.word	bar_inside2_lzsa		; background
 	.word	bar_inside2_adjust_destination	; destination
 	.word	bar_inside2_check_exit		; exit
-	.word	lookout_check_bounds		; bounds check
+	.word	bar_inside2_check_bounds	; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	4				; num areas
 
@@ -308,7 +325,8 @@ location11:
 ; common strings
 
 door_string:	.byte 20,20,"DOOR",0
-
+pirate_string:	.byte 20,20,"PIRATE",0
+pirates_string:	.byte 20,20,"PIRATES",0
 
 ; zipline strings
 pole_string:	.byte 20,20,"POLE",0
@@ -332,6 +350,9 @@ island_string:	.byte 17,20,"ISLAND",0
 shore_string:	.byte 18,20,"SHORE",0
 lookout_point_string: .byte 13,20,"LOOKOUT POINT",0
 village_string:	.byte 16,20,"VILLAGE",0
+
+; inside_bar2 strings
+dog_string:	.byte 20,20,"DOG",0
 
 ; inside_bar2 strings
 

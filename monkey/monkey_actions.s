@@ -126,6 +126,8 @@ cant_pick_up:
 .byte 10,21,"I CAN'T PICK THAT UP.",0
 not_special:
 .byte 1,21,"I DON'T SEE ANYTHING SPECIAL ABOUT IT.",0
+for_what:
+.byte 15,21,"FOR WHAT?",0
 
 	;=============================
 	; can't do anything with path
@@ -367,37 +369,6 @@ town_door_nothing:
 	lda	#VERB_WALK
 	sta	CURRENT_VERB
 	rts
-
-
-	;=============================
-bar2_door_action:
-bar2_door_nothing:
-	lda	#VERB_WALK
-	sta	CURRENT_VERB
-	rts
-
-	;=============================
-curtain_action:
-curtain_nothing:
-	lda	#VERB_WALK
-	sta	CURRENT_VERB
-	rts
-
-	;=============================
-fireplace_action:
-fireplace_nothing:
-	lda	#VERB_WALK
-	sta	CURRENT_VERB
-	rts
-
-	;=============================
-impt_pirate_action:
-impte_pirate_nothing:
-	lda	#VERB_WALK
-	sta	CURRENT_VERB
-	rts
-
-
 
 	;=============================
 map_action:

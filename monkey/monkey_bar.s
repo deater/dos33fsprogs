@@ -5,6 +5,7 @@
 	;===========================
 	; if x<5 goto DOCK at 34,20
 	; if x>35 goto TOWN
+	; if 9<x<14 and y<20 and door open, BAR_INSIDE1
 
 bar_check_exit:
 
@@ -13,7 +14,30 @@ bar_check_exit:
 	bcc	bar_to_dock
 	cmp	#35
 	bcs	bar_to_town
+
+	cmp	#9
 	bcc	bar_no_exit
+	cmp	#14
+	bcs	bar_no_exit
+
+bar_to_inside:
+	lda	GUYBRUSH_Y
+	cmp	#20
+	bcs	bar_no_exit
+
+	lda	BAR_DOOR_OPEN
+	beq	bar_no_exit
+
+	lda	#MONKEY_BAR_INSIDE1
+	sta	LOCATION
+	lda	#5
+	sta	GUYBRUSH_X
+	sta	DESTINATION_X
+	lda	#20
+	sta	GUYBRUSH_Y
+	sta	DESTINATION_Y
+	jsr	change_location
+	jmp	bar_no_exit
 
 bar_to_dock:
 	lda	#MONKEY_DOCK
@@ -47,36 +71,42 @@ bar_no_exit:
 
 
 	;===========================
-	; adjust walking destination
+	; adjust bounds
 	;===========================
 bar_keep_in_bounds:
 
 br_force_x:
 	lda	GUYBRUSH_X
 	cmp	#25
-	bcs	br_gb_x_too_big
+	bcs	br_gb_x_far_right
 	cmp	#21
-	bcc	br_gb_x_small
-	bcs	br_gb_x_medium
+	bcs	br_gb_x_right
+	cmp	#9
+	bcc	br_gb_x_left
+	cmp	#14
+	bcc	br_gb_doorway
+	bcs	br_gb_x_left
 
-br_gb_x_too_big:
+br_gb_doorway:
+	lda	GUYBRUSH_Y
+	cmp	#20
+	bcc	br_gb_x_right
+	bcs	br_gb_x_left
+
+br_gb_x_far_right:
 	lda	#16
-	sta	GUYBRUSH_Y
-	sta	DESTINATION_Y
 	bne	done_br_gb_adjust
 
-br_gb_x_medium:
+br_gb_x_right:
 	lda	#18
-	sta	GUYBRUSH_Y
-	sta	DESTINATION_Y
 	bne	done_br_gb_adjust
 
-br_gb_x_small:
+br_gb_x_left:
 	lda	#20
-	sta	GUYBRUSH_Y
-	sta	DESTINATION_Y
 
 done_br_gb_adjust:
+	sta	GUYBRUSH_Y
+	sta	DESTINATION_Y
 	rts
 
 
@@ -87,36 +117,28 @@ done_br_gb_adjust:
 
 bar_adjust_destination:
 
-	; if x<21, y=20
-	; if x<25, y=18
-	; else y=16
+	; just keep Y whatever is in bounds
+	; *except* in doorway 9<x<14
+	; then allow it to be 18
 
-	; also adjust actual Y
+	lda	GUYBRUSH_X
+	cmp	#9
+	bcc	bar_adjust_force_y
+	cmp	#14
+	bcs	bar_adjust_force_y
 
+	lda	CURSOR_Y
+	cmp	#28
+	bcs	done_br_adjust
+
+	lda	#18
+	sta	GUYBRUSH_Y
+	sta	DESTINATION_Y
+
+bar_adjust_force_y:
 	lda	GUYBRUSH_Y
 	sta	DESTINATION_Y
 
-br_check_x:
-;	lda	DESTINATION_X
-;	cmp	#25
-;	bcs	br_x_too_big
-;	cmp	#21
-;	bcc	br_x_small
-;	bcs	br_x_medium
-
-br_x_too_big:
-;	lda	#16
-;	sta	DESTINATION_Y
-;	bne	done_br_adjust
-
-br_x_medium:
-;	lda	#18
-;	sta	DESTINATION_Y
-;	bne	done_br_adjust
-
-br_x_small:
-;	lda	#20
-;	sta	DESTINATION_Y
 
 done_br_adjust:
 	rts
@@ -125,8 +147,9 @@ done_br_adjust:
 
 
 
-
-
+	;=====================
+	; draw bar door
+	;=====================
 draw_bar_door:
 
 	lda	BAR_DOOR_OPEN
