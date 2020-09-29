@@ -127,6 +127,12 @@ bar_adjust_destination:
 	cmp	#14
 	bcs	bar_adjust_force_y
 
+	lda	CURSOR_X
+	cmp	#9
+	bcc	done_br_adjust
+	cmp	#14
+	bcs	done_br_adjust
+
 	lda	CURSOR_Y
 	cmp	#28
 	bcs	done_br_adjust
