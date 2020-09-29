@@ -102,6 +102,10 @@ done_ld_adjust:
 
 
 
+lookout_check_bounds:
+	rts
+
+
 draw_fire:
 	lda	FRAMEL
 	and	#$18

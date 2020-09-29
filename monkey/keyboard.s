@@ -431,41 +431,6 @@ destination_y_is_positive:
 set_destination_smc:
 	jsr	$0000
 
-	; FIXME: this should be a jump table
-;	lda	LOCATION
-;	cmp	#MONKEY_LOOKOUT
-;	beq	set_destination_lookout
-;	cmp	#MONKEY_POSTER
-;	beq	set_destination_poster
-;	cmp	#MONKEY_DOCK
-;	beq	set_destination_dock
-;	cmp	#MONKEY_BAR
-;	beq	set_destination_bar
-;	cmp	#MONKEY_TOWN
-;	beq	set_destination_town
-;	cmp	#MONKEY_MAP
-;	beq	set_destination_map
-
-;set_destination_lookout:
-;	jsr	lookout_adjust_destination
-;	jmp	done_set_destination
-;set_destination_poster:
-;	jsr	poster_adjust_destination
-;	jmp	done_set_destination
-;set_destination_dock:
-;	jsr	dock_adjust_destination
-;	jmp	done_set_destination
-;set_destination_bar:
-;	jsr	bar_adjust_destination
-;	jmp	done_set_destination
-;set_destination_town:
-;	jsr	town_adjust_destination
-;	jmp	done_set_destination
-;set_destination_map:
-;	jsr	map_adjust_destination
-;	jmp	done_set_destination
-
-
 done_set_destination:
 	rts
 
@@ -520,6 +485,14 @@ change_location:
 	iny
 	lda	(LOCATION_STRUCT_L),Y
 	sta	check_exit_smc+2
+
+	ldy	#LOCATION_BOUNDS
+	lda	(LOCATION_STRUCT_L),Y
+	sta	keep_in_bounds_smc+1
+	iny
+	lda	(LOCATION_STRUCT_L),Y
+	sta	keep_in_bounds_smc+2
+
 
 	ldy	#LOCATION_SIZE
 	lda	(LOCATION_STRUCT_L),Y

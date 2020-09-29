@@ -13,6 +13,7 @@ location0:
 	.word	lookout_lzsa			; background
 	.word	lookout_adjust_destination	; destination
 	.word	lookout_check_exit		; exit
+	.word	lookout_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	3				; num areas
 
@@ -36,6 +37,7 @@ location1:
 	.word	poster_lzsa			; background
 	.word	poster_adjust_destination	; destination
 	.word	poster_check_exit		; exit
+	.word	lookout_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	2				; num areas
 
@@ -54,6 +56,7 @@ location2:
 	.word	dock_lzsa			; background
 	.word	dock_adjust_destination		; destination
 	.word	dock_check_exit			; exit
+	.word	lookout_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	1				; num areas
 
@@ -67,19 +70,27 @@ location3:
 	.word	bar_lzsa			; background
 	.word	bar_adjust_destination		; destination
 	.word	bar_check_exit			; exit
+	.word	bar_keep_in_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
-	.byte	1				; num areas
+	.byte	2				; num areas
 
 		.byte	9,14	; x
 		.byte	20,32	; y
 		.word	door_string		; name
 		.word	door_action-1		; action
 
+		.byte	36,40	; x
+		.byte	14,34	; y
+		.word	archway_string		; name
+		.word	archway_action-1	; action
+
+
 ; MONKEY_TOWN		-- downtown
 location4:
 	.word	town_lzsa			; background
 	.word	town_adjust_destination		; destination
 	.word	town_check_exit			; exit
+	.word	lookout_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	8				; num areas
 
@@ -129,6 +140,7 @@ location5:
 	.word	map_lzsa			; background
 	.word	map_adjust_destination		; destination
 	.word	map_check_exit			; exit
+	.word	lookout_check_bounds		; bounds check
 	.byte	GUYBRUSH_TINY			; size
 	.byte	7				; num areas
 
@@ -173,6 +185,7 @@ location6:
 	.word	bar_inside1_lzsa		; background
 	.word	bar_inside1_adjust_destination	; destination
 	.word	bar_inside1_check_exit		; exit
+	.word	lookout_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	4				; num areas
 
@@ -202,6 +215,7 @@ location7:
 	.word	bar_inside2_lzsa		; background
 	.word	bar_inside2_adjust_destination	; destination
 	.word	bar_inside2_check_exit		; exit
+	.word	lookout_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	4				; num areas
 
@@ -230,6 +244,7 @@ location8:
 	.word	church_lzsa			; background
 	.word	church_adjust_destination	; destination
 	.word	church_check_exit		; exit
+	.word	lookout_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	1				; num areas
 
@@ -243,6 +258,7 @@ location9:
 	.word	mansion_path_lzsa		; background
 	.word	mansion_path_adjust_destination	; destination
 	.word	mansion_path_check_exit		; exit
+	.word	lookout_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	1				; num areas
 
@@ -256,6 +272,7 @@ location10:
 	.word	mansion_lzsa			; background
 	.word	mansion_adjust_destination	; destination
 	.word	mansion_check_exit		; exit
+	.word	lookout_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	1				; num areas
 
@@ -269,6 +286,7 @@ location11:
 	.word	zipline_lzsa			; background
 	.word	zipline_adjust_destination	; destination
 	.word	zipline_check_exit		; exit
+	.word	lookout_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	3				; num areas
 
@@ -297,7 +315,7 @@ pole_string:	.byte 20,20,"POLE",0
 cable_string:	.byte 20,20,"CABLE",0
 sign_string:	.byte 20,20,"SIGN",0
 
-
+; bar strings
 
 ; lookout strings
 
