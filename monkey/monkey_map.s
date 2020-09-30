@@ -1,13 +1,22 @@
+	; 11, 22 = lookout
+	; 10, 24 = poster
+	; 25, 4  = zipline
 
 map_check_exit:
 	lda	GUYBRUSH_X
 	cmp	#11
-	bne	map_no_exit
+	beq	check_lookout
+	cmp	#10
+	beq	check_poster
+	cmp	#25
+	beq	check_zipline
 
+	rts
+
+check_lookout:
 	lda	GUYBRUSH_Y
 	cmp	#22
 	bne	map_no_exit
-
 map_to_lookout:
 	lda	#MONKEY_LOOKOUT
 	sta	LOCATION
@@ -22,8 +31,47 @@ map_to_lookout:
 	sta	GUYBRUSH_DIRECTION
 	jsr	change_location
 
+check_poster:
+	lda	GUYBRUSH_Y
+	cmp	#24
+	bne	map_no_exit
+map_to_poster:
+	lda	#MONKEY_POSTER
+	sta	LOCATION
+	lda	#4
+	sta	GUYBRUSH_X
+	sta	DESTINATION_X
+	lda	#20
+	sta	GUYBRUSH_Y
+	sta	DESTINATION_Y
+	lda	#DIR_DOWN
+	sta	GUYBRUSH_DIRECTION
+	jsr	change_location
+
+check_zipline:
+	lda	GUYBRUSH_Y
+	cmp	#4
+	bne	map_no_exit
+map_to_zipline:
+	lda	#MONKEY_ZIPLINE
+	sta	LOCATION
+	lda	#4
+	sta	GUYBRUSH_X
+	sta	DESTINATION_X
+	lda	#26
+	sta	GUYBRUSH_Y
+	sta	DESTINATION_Y
+	lda	#DIR_RIGHT
+	sta	GUYBRUSH_DIRECTION
+	jsr	change_location
+
 map_no_exit:
 	rts
+
+
+
+
+
 
 map_adjust_destination:
 

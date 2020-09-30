@@ -766,11 +766,6 @@ load_map_bg:
 
 	; Set target for the background drawing
 
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL		; load image off-screen 0xc00
-
 	; Check for special cases
 
 	lda	MAP_X
@@ -778,33 +773,44 @@ map_harfco:
 	cmp	#3		; if map_x==3, harfco
 	bne	map_landing
 
-	lda	#>(harfco_rle)
-	sta	GBASH
-        lda	#<(harfco_rle)
-        sta	GBASL
-        jsr	load_rle_gr
+
+	lda	#<(harfco_lzsa)
+	sta	getsrc_smc+1
+        lda	#>(harfco_lzsa)
+        sta	getsrc_smc+2
+
+	lda	#$c
+
+	jsr	decompress_lzsa2_fast
 	rts
 
 map_landing:
 	cmp	#5		; if map_x==5, landing site
 	bne	map_collegep
 
-	lda	#>(landing_rle)
-	sta	GBASH
-        lda	#<(landing_rle)
-        sta	GBASL
-        jsr	load_rle_gr
+
+	lda	#<(landing_lzsa)
+	sta	getsrc_smc+1
+        lda	#>(landing_lzsa)
+	sta	getsrc_smc+2
+
+	lda	#$c
+
+	jsr	decompress_lzsa2_fast
 	rts
 
 map_collegep:
 	cmp	#14		; if map_x==14, collegep
 	bne	map_custom
 
-	lda	#>(collegep_rle)
-	sta	GBASH
-        lda	#<(collegep_rle)
-        sta	GBASL
-        jsr	load_rle_gr
+	lda	#<(collegep_lzsa)
+	sta	getsrc_smc+1
+        lda	#>(collegep_lzsa)
+	sta	getsrc_smc+2
+
+	lda	#$c
+
+	jsr	decompress_lzsa2_fast
 	rts
 
 	;============================

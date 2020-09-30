@@ -5,27 +5,19 @@ title_screen:
 	;===========================
 	; Clear both bottoms
 
-	lda	#$0
-	sta	DRAW_PAGE
-	jsr     clear_bottom
-
-	lda	#$4
-	sta	DRAW_PAGE
-	jsr     clear_bottom
+	jsr     clear_bottoms
 
 	;=============================
-	; Load title_rle
+	; Load title
+
+	lda     #<(title_lzsa)
+        sta     getsrc_smc+1
+	lda     #>(title_lzsa)
+	sta	getsrc_smc+2
 
 	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL			; load image off-screen 0xc00
 
-	lda     #>(title_rle)
-        sta     GBASH
-	lda     #<(title_rle)
-        sta     GBASL
-	jsr	load_rle_gr
+	jsr     decompress_lzsa2_fast
 
 	;=================================
 	; copy to both pages

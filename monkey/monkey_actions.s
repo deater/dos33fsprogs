@@ -126,6 +126,8 @@ cant_pick_up:
 .byte 10,21,"I CAN'T PICK THAT UP.",0
 not_special:
 .byte 1,21,"I DON'T SEE ANYTHING SPECIAL ABOUT IT.",0
+for_what:
+.byte 15,21,"FOR WHAT?",0
 
 	;=============================
 	; can't do anything with path

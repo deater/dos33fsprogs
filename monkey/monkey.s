@@ -50,6 +50,7 @@ monkey_start:
 
 	; set up initial location
 
+;	lda	#MONKEY_BAR_INSIDE2
 	lda	#MONKEY_LOOKOUT
 	sta	LOCATION
 
@@ -93,6 +94,8 @@ game_loop:
 	beq	animate_flame
 	cmp	#MONKEY_BAR
 	beq	do_draw_bar_door
+	cmp	#MONKEY_ZIPLINE
+	beq	do_draw_sign
 
 	jmp	nothing_special
 
@@ -102,6 +105,10 @@ animate_flame:
 
 do_draw_bar_door:
 	jsr	draw_bar_door
+	jmp	nothing_special
+
+do_draw_sign:
+	jsr	draw_sign
 	jmp	nothing_special
 
 nothing_special:
@@ -211,6 +218,8 @@ really_draw_guybrush:
 	beq	do_draw_wall
 	cmp	#MONKEY_POSTER
 	beq	do_draw_house
+	cmp	#MONKEY_BAR
+	beq	do_draw_building
 
 	jmp	nothing_foreground
 
@@ -221,6 +230,11 @@ do_draw_wall:
 do_draw_house:
 	jsr	draw_house
 	jmp	nothing_foreground
+
+do_draw_building:
+	jsr	draw_bar_fg_building
+	jmp	nothing_foreground
+
 
 nothing_foreground:
 
@@ -256,45 +270,19 @@ nothing_foreground:
 	jsr	handle_keypress
 
 	;====================================
+	; keep in bounds
+	;====================================
+
+keep_in_bounds_smc:
+	jsr	$0000
+
+	;====================================
 	; check if exiting room
 	;====================================
 
-	; FIXME: this should be a jump table
+check_exit_smc:
+	jsr	$0000
 
-	lda	LOCATION
-	cmp	#MONKEY_LOOKOUT
-	beq	check_exit_lookout
-	cmp	#MONKEY_POSTER
-	beq	check_exit_poster
-	cmp	#MONKEY_DOCK
-	beq	check_exit_dock
-	cmp	#MONKEY_BAR
-	beq	check_exit_bar
-	cmp	#MONKEY_TOWN
-	beq	check_exit_town
-	cmp	#MONKEY_MAP
-	beq	check_exit_map
-
-check_exit_lookout:
-	jsr	lookout_check_exit
-	jmp	done_check_exit
-check_exit_poster:
-	jsr	poster_check_exit
-	jmp	done_check_exit
-check_exit_dock:
-	jsr	dock_check_exit
-	jmp	done_check_exit
-check_exit_bar:
-	jsr	bar_check_exit
-	jmp	done_check_exit
-check_exit_town:
-	jsr	town_check_exit
-	jmp	done_check_exit
-check_exit_map:
-	jsr	map_check_exit
-	jmp	done_check_exit
-
-done_check_exit:
 	;====================================
 	; inc frame count
 	;====================================
@@ -342,12 +330,20 @@ really_exit:
 	.include	"common_sprites.inc"
 	.include	"guy.brush"
 
+	; Locations
+
 	.include	"monkey_lookout.s"
 	.include	"monkey_poster.s"
 	.include	"monkey_dock.s"
 	.include	"monkey_bar.s"
 	.include	"monkey_town.s"
 	.include	"monkey_map.s"
+	.include	"monkey_church.s"
+	.include	"monkey_zipline.s"
+	.include	"monkey_mansion.s"
+	.include	"monkey_mansion_path.s"
+	.include	"monkey_bar_inside1.s"
+	.include	"monkey_bar_inside2.s"
 
 	.include	"monkey_actions.s"
 	.include	"update_bottom.s"

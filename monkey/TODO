@@ -1,7 +1,28 @@
-game:
-+ click on verbs
-+ actions for all the nouns
+overall:
+	+ have big/small/tiny guybrush
+	+ better bounds checking on paths
 
+hook up actions:
+	+ scumm bar1
+
+animations:
+	+ fire in scumm bar
+	+ impt pirate drinking
+	+ guy on chandelier
+	+ dog?
+
+hookup rooms:
+	+ church
+	+ path to mansion
+	+ mansion
+	+ voodoo lady
+
+cutscenes:
+	+ chapter intro
+	+ lechuck
+
+zipline:
+	+ if you use pole you climb the ladder
 
 
 bigger changes:

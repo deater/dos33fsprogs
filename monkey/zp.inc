@@ -110,6 +110,11 @@ DISPLAY_MESSAGE		= $95
 MESSAGE_L		= $96
 MESSAGE_H		= $97
 
+GUYBRUSH_SIZE		= $98
+	GUYBRUSH_BIG    = 0
+	GUYBRUSH_SMALL  = 1
+	GUYBRUSH_TINY   = 2
+
 ; done game puzzle state
 
 

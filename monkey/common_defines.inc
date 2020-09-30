@@ -12,19 +12,17 @@ VERB_PUSH	= 7
 VERB_PULL	= 8 
 VERB_WALK	= 9
 
-
-
 ;===============================================
 ; level data structure definitions
 ;===============================================
 
 LOCATION_BACKGROUND=0			; background
-LOCATION_WALK_X_LEFT=2
-LOCATION_WALK_X_RIGHT=3
-LOCATION_WALK_Y_TOP=4
-LOCATION_WALK_Y_BOTTOM=5
-LOCATION_NUM_AREAS=6
-LOCATION_AREAS=7			; each area 8 in size
+LOCATION_DESTINATION = 2
+LOCATION_EXIT	= 4
+LOCATION_BOUNDS	= 6
+LOCATION_SIZE	= 8
+LOCATION_NUM_AREAS=9
+LOCATION_AREAS=10			; each area 8 in size
 
 
 ;================================
@@ -46,3 +44,9 @@ MONKEY_DOCK		=	2
 MONKEY_BAR		=	3
 MONKEY_TOWN		=	4
 MONKEY_MAP		=	5
+MONKEY_BAR_INSIDE1	=	6
+MONKEY_BAR_INSIDE2	=	7
+MONKEY_CHURCH		=	8
+MONKEY_MANSION_PATH	=	9
+MONKEY_MANSION		=	10
+MONKEY_ZIPLINE		=	11

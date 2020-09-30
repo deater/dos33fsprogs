@@ -1,4 +1,5 @@
 .include "tfv_zp.inc"
+.include "hardware.inc"
 
 	;================================
 	; Clear screen and setup graphics
@@ -90,7 +91,7 @@ exit:
 .include "tfv_worldmap.s"
 .include "tfv_info.s"
 
-.include "../asm_routines/gr_fast_clear.s"
+.include "gr_fast_clear.s"
 .include "../asm_routines/gr_hlin.s"
 .include "../asm_routines/pageflip.s"
 .include "../asm_routines/gr_setpage.s"
@@ -100,7 +101,8 @@ exit:
 .include "../asm_routines/memset.s"
 .include "../asm_routines/gr_vlin.s"
 .include "../asm_routines/gr_copy.s"
-.include "../asm_routines/gr_unrle.s"
+;.include "../asm_routines/gr_unrle.s"
+.include "decompress_fast_v2.s"
 .include "../asm_routines/gr_offsets.s"
 
 ;===============================================
@@ -115,4 +117,4 @@ name:
 
 
 .include "tfv_sprites.inc"
-.include "tfv_backgrounds.inc"
+.include "graphics_map/tfv_backgrounds.inc"
