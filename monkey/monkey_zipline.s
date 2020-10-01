@@ -187,3 +187,7 @@ pole_actions:
 
 
 pole_look: .byte	6,21,"IT'S JUST LIKE THE OTHER ONE",0
+
+
+zipline_check_bounds:
+	rts

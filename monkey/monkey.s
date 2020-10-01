@@ -50,8 +50,8 @@ monkey_start:
 
 	; set up initial location
 
-;	lda	#MONKEY_BAR_INSIDE2
-	lda	#MONKEY_LOOKOUT
+	lda	#MONKEY_BAR
+;	lda	#MONKEY_LOOKOUT
 	sta	LOCATION
 
 	jsr	change_location
@@ -344,6 +344,13 @@ really_exit:
 	.include	"monkey_mansion_path.s"
 	.include	"monkey_bar_inside1.s"
 	.include	"monkey_bar_inside2.s"
+	.include	"monkey_voodoo1.s"
+	.include	"monkey_voodoo2.s"
+
+
+	; cutscenes
+	.include	"chapter1.s"
+	.include	"cutscene_lechuck.s"
 
 	.include	"monkey_actions.s"
 	.include	"update_bottom.s"

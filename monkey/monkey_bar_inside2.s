@@ -1,6 +1,6 @@
 ; stuff regarding 2nd room of scumm bar
 
-	; if x<4 goto MONKEY_BAR_INSIDE1 at 34,20
+	; if x<4 goto MONKEY_BAR_INSIDE1 at 34,24
 
 bar_inside2_check_exit:
 
@@ -22,7 +22,7 @@ bar_inside2_to_bar_inside1:
 	lda	#34
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X
-	lda	#20
+	lda	#24
 	sta	GUYBRUSH_Y
 	sta	DESTINATION_Y
 	jsr	change_location

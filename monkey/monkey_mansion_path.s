@@ -82,3 +82,5 @@ done_mh_adjust:
 
 ;house_sprite:
 
+mansion_path_check_bounds:
+	rts

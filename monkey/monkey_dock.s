@@ -75,3 +75,5 @@ done_dk_adjust:
 
 ;house_sprite:
 
+dock_check_bounds:
+	rts

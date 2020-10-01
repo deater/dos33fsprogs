@@ -82,3 +82,5 @@ done_ch_adjust:
 
 ;house_sprite:
 
+church_check_bounds:
+	rts

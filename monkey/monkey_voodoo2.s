@@ -1,48 +1,48 @@
-; stuff regarding the governor's mansion
+; voodoo lady
 
-	; if x>35 goto MONKEY_MANSION_PATH at
+	; if x<10 goto MONKEY_VOODOO1
 
-mansion_check_exit:
+voodoo2_check_exit:
 
 	lda	GUYBRUSH_X
-	cmp	#35
-	bcs	mansion_to_mansion_path
-	bcc	mansion_no_exit
+	cmp	#10
+	bcc	voodoo2_to_voodoo1
+	bcs	voodoo2_no_exit
 
-mansion_to_mansion_path:
-	lda	#MONKEY_MANSION_PATH
+voodoo2_to_voodoo1:
+	lda	#MONKEY_VOODOO1
 	sta	LOCATION
-	lda	#5
+	lda	#30
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X
 	lda	#20
 	sta	GUYBRUSH_Y
 	sta	DESTINATION_Y
 	jsr	change_location
-	jmp	mansion_no_exit
+	jmp	voodoo2_no_exit
 
-mansion_no_exit:
+voodoo2_no_exit:
 	rts
 
 
 
 	;==========================
 	;==========================
-	; mansion adjust destination
+	; voodoo2 adjust destination
 	;==========================
 	;==========================
-mansion_adjust_destination:
+voodoo2_adjust_destination:
 	; just make Y always 20
 
-mn_check_y:
+v2_check_y:
 	; if x < 28, Y must be between 16 and 18
 	; if x < 35, Y must be between  8 and 28
 
-mn_y_too_small:
+v2_y_too_small:
 	lda	#20
 	sta	DESTINATION_Y
 
-done_mn_adjust:
+done_v2_adjust:
 	rts
 
 
@@ -66,5 +66,5 @@ done_mn_adjust:
 
 ;house_sprite:
 
-mansion_check_bounds:
+voodoo2_check_bounds:
 	rts

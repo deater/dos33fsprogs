@@ -97,3 +97,5 @@ house_sprite:
 	.byte $77,$AA,$77,$AA,$77,$AA,$AA,$AA
 
 
+poster_check_bounds:
+	rts

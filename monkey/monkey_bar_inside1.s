@@ -50,14 +50,14 @@ bar_inside1_no_exit:
 	;=================================
 	;=================================
 bar_inside1_adjust_destination:
-	; just make Y always 20
+	; just make Y always 22
 
 mb1_check_y:
 	; if x < 28, Y must be between 16 and 18
 	; if x < 35, Y must be between  8 and 28
 
 mb1_y_too_small:
-	lda	#20
+	lda	#24
 	sta	DESTINATION_Y
 
 done_mb1_adjust:
@@ -110,3 +110,5 @@ bar1_dog_action:
 	rts
 
 
+bar_inside1_check_bounds:
+	rts

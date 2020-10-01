@@ -133,3 +133,5 @@ done_mp_adjust:
 ;done_draw_map_door:
 ;	rts
 
+map_check_bounds:
+	rts

@@ -6,7 +6,7 @@ locations:
 	.word location0,location1,location2,location3
 	.word location4,location5,location6,location7
 	.word location8,location9,location10,location11
-
+	.word location12,location13
 
 ; MONKEY_LOOKOUT	-- lookout tower
 location0:
@@ -37,7 +37,7 @@ location1:
 	.word	poster_lzsa			; background
 	.word	poster_adjust_destination	; destination
 	.word	poster_check_exit		; exit
-	.word	lookout_check_bounds		; bounds check
+	.word	poster_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	2				; num areas
 
@@ -56,7 +56,7 @@ location2:
 	.word	dock_lzsa			; background
 	.word	dock_adjust_destination		; destination
 	.word	dock_check_exit			; exit
-	.word	lookout_check_bounds		; bounds check
+	.word	dock_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	1				; num areas
 
@@ -90,7 +90,7 @@ location4:
 	.word	town_lzsa			; background
 	.word	town_adjust_destination		; destination
 	.word	town_check_exit			; exit
-	.word	lookout_check_bounds		; bounds check
+	.word	town_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	8				; num areas
 
@@ -140,7 +140,7 @@ location5:
 	.word	map_lzsa			; background
 	.word	map_adjust_destination		; destination
 	.word	map_check_exit			; exit
-	.word	lookout_check_bounds		; bounds check
+	.word	map_check_bounds		; bounds check
 	.byte	GUYBRUSH_TINY			; size
 	.byte	7				; num areas
 
@@ -185,7 +185,7 @@ location6:
 	.word	bar_inside1_lzsa		; background
 	.word	bar_inside1_adjust_destination	; destination
 	.word	bar_inside1_check_exit		; exit
-	.word	lookout_check_bounds		; bounds check
+	.word	bar_inside1_check_bounds	; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	7				; num areas
 
@@ -261,7 +261,7 @@ location8:
 	.word	church_lzsa			; background
 	.word	church_adjust_destination	; destination
 	.word	church_check_exit		; exit
-	.word	lookout_check_bounds		; bounds check
+	.word	church_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	1				; num areas
 
@@ -275,7 +275,7 @@ location9:
 	.word	mansion_path_lzsa		; background
 	.word	mansion_path_adjust_destination	; destination
 	.word	mansion_path_check_exit		; exit
-	.word	lookout_check_bounds		; bounds check
+	.word	mansion_path_check_bounds	; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	1				; num areas
 
@@ -289,7 +289,7 @@ location10:
 	.word	mansion_lzsa			; background
 	.word	mansion_adjust_destination	; destination
 	.word	mansion_check_exit		; exit
-	.word	lookout_check_bounds		; bounds check
+	.word	mansion_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	1				; num areas
 
@@ -298,12 +298,13 @@ location10:
 		.word	door_string		; name
 		.word	door_action-1		; action
 
+
 ; MONKEY_ZIPLINE		-- hook's zipline
 location11:
 	.word	zipline_lzsa			; background
 	.word	zipline_adjust_destination	; destination
 	.word	zipline_check_exit		; exit
-	.word	lookout_check_bounds		; bounds check
+	.word	zipline_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
 	.byte	3				; num areas
 
@@ -321,6 +322,34 @@ location11:
 		.byte	4,28	; y
 		.word	sign_string		; name
 		.word	sign_action-1		; action
+
+; MONKEY_VOODOO1		-- voodoo shop
+location12:
+	.word	voodoo1_lzsa			; background
+	.word	voodoo1_adjust_destination	; destination
+	.word	voodoo1_check_exit		; exit
+	.word	voodoo1_check_bounds		; bounds check
+	.byte	GUYBRUSH_BIG			; size
+	.byte	1				; num areas
+
+		.byte	30,36	; x
+		.byte	10,36	; y
+		.word	pole_string		; name
+		.word	pole_action-1		; action
+
+; MONKEY_VOODOO2		-- voodoo lady
+location13:
+	.word	voodoo2_lzsa			; background
+	.word	voodoo2_adjust_destination	; destination
+	.word	voodoo2_check_exit		; exit
+	.word	voodoo2_check_bounds		; bounds check
+	.byte	GUYBRUSH_BIG			; size
+	.byte	1				; num areas
+
+		.byte	30,36	; x
+		.byte	10,36	; y
+		.word	pole_string		; name
+		.word	pole_action-1		; action
 
 ; common strings
 
