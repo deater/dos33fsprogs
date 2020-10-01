@@ -17,10 +17,11 @@ voodoo1_check_exit:
 voodoo1_to_voodoo2:
 	lda	#MONKEY_VOODOO2
 	sta	LOCATION
-	lda	#10
+	lda	#8
 	sta	GUYBRUSH_X
+	lda	#12
 	sta	DESTINATION_X
-	lda	#20
+	lda	#18
 	sta	GUYBRUSH_Y
 	sta	DESTINATION_Y
 	jsr	change_location

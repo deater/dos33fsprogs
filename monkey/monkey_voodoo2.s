@@ -1,11 +1,11 @@
 ; voodoo lady
 
-	; if x<10 goto MONKEY_VOODOO1
+	; if x<8 goto MONKEY_VOODOO1
 
 voodoo2_check_exit:
 
 	lda	GUYBRUSH_X
-	cmp	#10
+	cmp	#8
 	bcc	voodoo2_to_voodoo1
 	bcs	voodoo2_no_exit
 
@@ -68,3 +68,40 @@ done_v2_adjust:
 
 voodoo2_check_bounds:
 	rts
+
+
+;=============================
+voodoo_lady_action:
+	lda	CURRENT_VERB
+	asl
+	tay
+
+	lda	voodoo_lady_actions,Y
+	cmp	#$ff
+	beq	voodoo_lady_nothing
+
+	sta	MESSAGE_L
+	lda	voodoo_lady_actions+1,Y
+	sta	MESSAGE_H
+
+	jmp	do_display_message
+
+voodoo_lady_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+voodoo_lady_actions:
+	.word 	$FFFF		; give
+	.word	doesnt_open	; open
+	.word	doesnt_work	; close
+	.word	cant_pick_up	; pick_up
+	.word	$FFFF		; look_at
+	.word	voodoo_talk	; talk_to
+	.word	for_what	; use
+	.word	icant_move	; push
+	.word	icant_move	; pull
+
+voodoo_talk:
+.byte 6,21,"WHAT MAY I HELP YOU WITH SON?",0
+

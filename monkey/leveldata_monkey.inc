@@ -378,16 +378,19 @@ location13:
 	.byte	GUYBRUSH_BIG			; size
 	.byte	1				; num areas
 
-		.byte	30,36	; x
-		.byte	10,36	; y
-		.word	pole_string		; name
-		.word	pole_action-1		; action
+		.byte	21,27	; x
+		.byte	14,26	; y
+		.word	voodoo_lady_string	; name
+		.word	voodoo_lady_action-1	; action
 
 ; common strings
 
 door_string:	.byte 20,20,"DOOR",0
 pirate_string:	.byte 20,20,"PIRATE",0
 pirates_string:	.byte 20,20,"PIRATES",0
+
+; voodoo2 strings
+voodoo_lady_string:	.byte 20,20,"VOODOO LADY",0
 
 ; church strings
 alley_string:	.byte 20,20,"ALLEY",0
