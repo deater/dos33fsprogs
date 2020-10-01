@@ -50,8 +50,9 @@ monkey_start:
 
 	; set up initial location
 
-	lda	#MONKEY_BAR
+;	lda	#MONKEY_BAR
 ;	lda	#MONKEY_LOOKOUT
+	lda	#MONKEY_VOODOO1
 	sta	LOCATION
 
 	jsr	change_location
@@ -182,14 +183,24 @@ done_move_guybrush:
 	lda	GUYBRUSH_Y
 	sta	YPOS
 
-	lda	LOCATION
-	cmp	#MONKEY_MAP
-	bne	big_guybrush
+	lda	GUYBRUSH_SIZE
+	cmp	#GUYBRUSH_BIG
+	beq	big_guybrush
+
+	lda	GUYBRUSH_SIZE
+	cmp	#GUYBRUSH_TINY
+	beq	map_guybrush
+
+small_guybrush:
+	lda	#<guybrush_medium_sprite
+	sta	INL
+	lda	#>guybrush_medium_sprite
+	jmp	really_draw_guybrush
+
 map_guybrush:
 	lda	#<guybrush_map_sprite
 	sta	INL
 	lda	#>guybrush_map_sprite
-	sta	INH
 	jmp	really_draw_guybrush
 
 big_guybrush:
@@ -204,8 +215,9 @@ big_guybrush:
 	lda	guybrush_sprites,Y
 	sta	INL
 	lda	guybrush_sprites+1,Y
-	sta	INH
+
 really_draw_guybrush:
+	sta	INH
 	jsr	put_sprite_crop
 
 

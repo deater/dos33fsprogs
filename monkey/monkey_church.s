@@ -16,10 +16,10 @@ church_check_exit:
 church_to_mansion_path:
 	lda	#MONKEY_MANSION_PATH
 	sta	LOCATION
-	lda	#34
+	lda	#26
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X
-	lda	#20
+	lda	#24
 	sta	GUYBRUSH_Y
 	sta	DESTINATION_Y
 	jsr	change_location
@@ -48,14 +48,14 @@ church_no_exit:
 	;==========================
 	;==========================
 church_adjust_destination:
-	; just make Y always 20
+	; just make Y always 32
 
 ch_check_y:
 	; if x < 28, Y must be between 16 and 18
 	; if x < 35, Y must be between  8 and 28
 
 ch_y_too_small:
-	lda	#20
+	lda	#32
 	sta	DESTINATION_Y
 
 done_ch_adjust:
@@ -84,3 +84,22 @@ done_ch_adjust:
 
 church_check_bounds:
 	rts
+
+
+
+
+
+;=============================
+alley_action:
+alley_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+church_door_action:
+church_door_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+

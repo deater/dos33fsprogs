@@ -262,13 +262,29 @@ location8:
 	.word	church_adjust_destination	; destination
 	.word	church_check_exit		; exit
 	.word	church_check_bounds		; bounds check
-	.byte	GUYBRUSH_BIG			; size
-	.byte	1				; num areas
+	.byte	GUYBRUSH_SMALL			; size
+	.byte	4				; num areas
 
-		.byte	9,14	; x
-		.byte	20,32	; y
+		.byte	6,10	; x
+		.byte	20,28	; y
 		.word	door_string		; name
-		.word	door_action-1		; action
+		.word	church_door_action-1	; action
+
+		.byte	14,18	; x
+		.byte	20,30	; y
+		.word	alley_string		; name
+		.word	alley_action-1		; action
+
+		.byte	22,25	; x
+		.byte	26,34	; y
+		.word	door_string		; name
+		.word	church_door_action-1	; action
+
+		.byte	34,38	; x
+		.byte	16,34	; y
+		.word	archway_string		; name
+		.word	archway_action-1	; action
+
 
 ; MONKEY_MANSION_PATH		-- path to the mansion
 location9:
@@ -276,13 +292,24 @@ location9:
 	.word	mansion_path_adjust_destination	; destination
 	.word	mansion_path_check_exit		; exit
 	.word	mansion_path_check_bounds	; bounds check
-	.byte	GUYBRUSH_BIG			; size
-	.byte	1				; num areas
+	.byte	GUYBRUSH_SMALL			; size
+	.byte	3				; num areas
 
-		.byte	9,14	; x
-		.byte	20,32	; y
-		.word	door_string		; name
-		.word	door_action-1		; action
+		.byte	0,11	; x
+		.byte	0,12	; y
+		.word	mansion_string		; name
+		.word	mansion_action-1	; action
+
+		.byte	9,11	; x
+		.byte	12,13	; y
+		.word	poodles_string		; name
+		.word	poodles_action-1	; action
+
+		.byte	32,40	; x
+		.byte	12,40	; y
+		.word	town_string		; name
+		.word	town_action-1		; action
+
 
 ; MONKEY_MANSION	-- governor's mansion
 location10:
@@ -291,12 +318,17 @@ location10:
 	.word	mansion_check_exit		; exit
 	.word	mansion_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
-	.byte	1				; num areas
+	.byte	2				; num areas
 
-		.byte	9,14	; x
-		.byte	20,32	; y
-		.word	door_string		; name
-		.word	door_action-1		; action
+		.byte	37,40	; x
+		.byte	10,38	; y
+		.word	trail_string		; name
+		.word	trail_action-1		; action
+
+		.byte	5,15	; x
+		.byte	30,38	; y
+		.word	poodles_string		; name
+		.word	poodles_action-1	; action
 
 
 ; MONKEY_ZIPLINE		-- hook's zipline
@@ -356,6 +388,17 @@ location13:
 door_string:	.byte 20,20,"DOOR",0
 pirate_string:	.byte 20,20,"PIRATE",0
 pirates_string:	.byte 20,20,"PIRATES",0
+
+; church strings
+alley_string:	.byte 20,20,"ALLEY",0
+
+; mansion path strings
+mansion_string:	.byte 20,20,"GOVERNOR'S MANSION",0
+town_string:	.byte 20,20,"TOWN",0
+
+; mansion strings
+poodles_string:	.byte 20,20,"PIRANHA POODLES",0
+trail_string:	.byte 20,20,"TRAIL",0
 
 ; zipline strings
 pole_string:	.byte 20,20,"POLE",0

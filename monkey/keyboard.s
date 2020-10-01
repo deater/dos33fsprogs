@@ -493,7 +493,6 @@ change_location:
 	lda	(LOCATION_STRUCT_L),Y
 	sta	keep_in_bounds_smc+2
 
-
 	ldy	#LOCATION_SIZE
 	lda	(LOCATION_STRUCT_L),Y
 	sta	GUYBRUSH_SIZE

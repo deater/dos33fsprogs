@@ -1,3 +1,15 @@
+split title and flying off from map play
+
+new or load game
+
+char selector
+	male/female
+	hair color
+	skin color
+	name
+
+
+
 mode7 speed fixes:
 
 	+  Skip key parsing if no key read

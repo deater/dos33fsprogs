@@ -43,7 +43,7 @@ town_to_church:
 	lda	#34
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X
-	lda	#20
+	lda	#30
 	sta	GUYBRUSH_Y
 	sta	DESTINATION_Y
 
