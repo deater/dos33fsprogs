@@ -6,7 +6,7 @@ TOKENIZE = ../asoft_basic-utils/tokenize_asoft
 all:	entropy.dsk convert_to convert_back
 
 entropy.dsk:	ENTROPY ENTROPY.BAS E2.BAS FLAME.BAS FLAME2.BAS \
-	CIRCLES.BAS AUTUMN.BAS LOAD
+	CIRCLES.BAS AUTUMN.BAS QKUMBA.BAS LOAD
 	$(DOS33) -y entropy.dsk BSAVE -a 0x0C00 ENTROPY
 	$(DOS33) -y entropy.dsk BSAVE -a 0x0300 LOAD
 	$(DOS33) -y entropy.dsk SAVE A ENTROPY.BAS
@@ -15,6 +15,7 @@ entropy.dsk:	ENTROPY ENTROPY.BAS E2.BAS FLAME.BAS FLAME2.BAS \
 	$(DOS33) -y entropy.dsk SAVE A FLAME2.BAS
 	$(DOS33) -y entropy.dsk SAVE A AUTUMN.BAS
 	$(DOS33) -y entropy.dsk SAVE A CIRCLES.BAS
+	$(DOS33) -y entropy.dsk SAVE A QKUMBA.BAS
 
 ###
 
@@ -49,6 +50,10 @@ LOAD:	load.o
 load.o:	load.s
 	ca65 -o load.o load.s -l load.lst
 
+####
+
+QKUMBA.BAS:	qkumba_seasons.bas
+	$(TOKENIZE) < qkumba_seasons.bas > QKUMBA.BAS
 
 ####
 
