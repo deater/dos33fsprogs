@@ -51,6 +51,15 @@ fire_extreme.o:	fire_extreme.s
 
 ####
 
+FIRE_HIGH:	fire_high.o
+	ld65 -o FIRE_HIGH fire_high.o -C ../linker_scripts/apple2_c00.inc
+
+fire_high.o:	fire_high.s
+	ca65 -o fire_high.o fire_high.s -l fire_high.lst
+
+
+####
+
 FIRE_QKUMBA:	fire_qkumba.o
 	ld65 -o FIRE_QKUMBA fire_qkumba.o -C ../linker_scripts/apple2_70.inc
 

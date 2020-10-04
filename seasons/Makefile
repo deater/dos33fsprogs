@@ -8,10 +8,11 @@ B2D = ../bmp2dhr/b2d
 
 all:	seasons.dsk
 
-seasons.dsk:	HELLO SEASONS
+seasons.dsk:	HELLO SEASONS AUTUMN
 	cp empty.dsk seasons.dsk
 	$(DOS33) -y seasons.dsk SAVE A HELLO
 	$(DOS33) -y seasons.dsk BSAVE -a 0x50 SEASONS
+	$(DOS33) -y seasons.dsk BSAVE -a 0x300 AUTUMN
 
 
 SEASONS: seasons.o
@@ -20,6 +21,14 @@ SEASONS: seasons.o
 
 seasons.o:	seasons.s
 	ca65 -o seasons.o seasons.s -l seasons.lst
+
+
+AUTUMN: autumn.o
+	ld65 -o AUTUMN autumn.o -C ../linker_scripts/apple2_300.inc
+
+autumn.o:	autumn.s
+	ca65 -o autumn.o autumn.s -l autumn.lst
+
 
 ###
 
@@ -30,6 +39,6 @@ HELLO:	hello.bas
 ####
 
 clean:	
-		rm -f *~ *.o *.lst HELLO SEASONS
+		rm -f *~ *.o *.lst HELLO SEASONS AUTUMN
 
 
