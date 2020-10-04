@@ -100,9 +100,11 @@ static int get_line_num(int *linenum, int *custom_offset) {
 
 	while (*line_ptr>' ') {
 		if ((*line_ptr<'0')||(*line_ptr>'9')) {
-			fprintf(stderr,"Invalid line number line %d\n",line);
-			show_problem(line_ptr);
-			exit(-1);
+//			fprintf(stderr,"Invalid line number line %d\n",line);
+//			show_problem(line_ptr);
+//			exit(-1);
+			/* not a bug */
+			break;
 		}
 		num*=10;
 		num+=(*line_ptr)-'0';
@@ -286,6 +288,9 @@ int main(int argc, char **argv) {
 
 		/* remarks end at end of line */
 		in_rem=0;
+
+		/* quotes do too */
+		in_quotes=0;
 
 		/* 2 bytes is to ignore size from beginning of file */
 		link_value=0x801+(offset-2);
