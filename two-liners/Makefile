@@ -6,7 +6,7 @@ TOKENIZE = ../asoft_basic-utils/tokenize_asoft
 all:	entropy.dsk convert_to convert_back convert_qkumba
 
 entropy.dsk:	ENTROPY ENTROPY.BAS E2.BAS FLAME.BAS FLAME2.BAS \
-	CIRCLES.BAS AUTUMN.BAS QKUMBA.BAS LOAD
+	CIRCLES.BAS AUTUMN.BAS QKUMBA.BAS ASTEROID.BAS PERSON.BAS SHIP.BAS LOAD
 	$(DOS33) -y entropy.dsk BSAVE -a 0x0C00 ENTROPY
 	$(DOS33) -y entropy.dsk BSAVE -a 0x0300 LOAD
 	$(DOS33) -y entropy.dsk SAVE A ENTROPY.BAS
@@ -16,6 +16,9 @@ entropy.dsk:	ENTROPY ENTROPY.BAS E2.BAS FLAME.BAS FLAME2.BAS \
 	$(DOS33) -y entropy.dsk SAVE A AUTUMN.BAS
 	$(DOS33) -y entropy.dsk SAVE A CIRCLES.BAS
 	$(DOS33) -y entropy.dsk SAVE A QKUMBA.BAS
+	$(DOS33) -y entropy.dsk SAVE A ASTEROID.BAS
+	$(DOS33) -y entropy.dsk SAVE A PERSON.BAS
+	$(DOS33) -y entropy.dsk SAVE A SHIP.BAS
 
 ###
 
@@ -100,6 +103,21 @@ AUTUMN.BAS:	autumn.bas
 
 CIRCLES.BAS:	circles.bas
 	$(TOKENIZE) < circles.bas > CIRCLES.BAS
+
+####
+
+ASTEROID.BAS:	asteroid.bas
+	$(TOKENIZE) < asteroid.bas > ASTEROID.BAS
+
+####
+
+PERSON.BAS:	person.bas
+	$(TOKENIZE) < person.bas > PERSON.BAS
+
+####
+
+SHIP.BAS:	ship.bas
+	$(TOKENIZE) < ship.bas > SHIP.BAS
 
 
 ####
