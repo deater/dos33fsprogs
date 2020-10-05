@@ -3,7 +3,7 @@ include ../Makefile.inc
 DOS33 = ../dos33fs-utils/dos33
 TOKENIZE = ../asoft_basic-utils/tokenize_asoft
 
-all:	entropy.dsk convert_to convert_back
+all:	entropy.dsk convert_to convert_back convert_qkumba
 
 entropy.dsk:	ENTROPY ENTROPY.BAS E2.BAS FLAME.BAS FLAME2.BAS \
 	CIRCLES.BAS AUTUMN.BAS QKUMBA.BAS LOAD
@@ -24,6 +24,14 @@ convert_to:	convert_to.o
 
 convert_to.o:	convert_to.c
 	$(CC) $(CFLAGS) -c convert_to.c
+
+###
+
+convert_qkumba:	convert_qkumba.o
+	$(CC) $(LFLAGS) -o convert_qkumba convert_qkumba.o
+
+convert_qkumba.o:	convert_qkumba.c
+	$(CC) $(CFLAGS) -c convert_qkumba.c
 
 ###
 
@@ -52,8 +60,14 @@ load.o:	load.s
 
 ####
 
-QKUMBA.BAS:	qkumba_seasons.bas
-	$(TOKENIZE) < qkumba_seasons.bas > QKUMBA.BAS
+QKUMBA2.BAS:	qkumba_seasons.bas
+	$(TOKENIZE) < qkumba_seasons.bas > QKUMBA2.BAS
+
+####
+
+QKUMBA.BAS:	qkumba_autumn.bas
+	$(TOKENIZE) < qkumba_autumn.bas > QKUMBA.BAS
+
 
 ####
 
@@ -91,4 +105,4 @@ CIRCLES.BAS:	circles.bas
 ####
 
 clean:	
-	rm -f *~ *.o *.lst ENTROPY LOAD
+	rm -f *~ *.o *.lst convert_to convert_from convert_qkumba ENTROPY LOAD
