@@ -1,7 +1,17 @@
 /* Creates an AppleSoft BASIC shape table                    */
 /* See the AppleSoft manual for info on how this works       */
-/* Other online info (I'm looking at you, atariarchives.org) */
+/* Some online info (I'm looking at you, atariarchives.org)  */
 /* is inaccurate                                             */
+
+/* Format of table is: */
+/*	1 byte -- num shapes */
+/*	1 byte -- don't care */
+/*	offsets (repeats): 2 bytes (low/high) offset from start to each shape */
+/*	Data (repeats), 0 at end of each */
+/* data packed in as XX YYY ZZZ */
+/* ZZZ = first dir, YYY = next, XX = last, can only be no-draw as 2 bits */
+/*	note XX can't be NUP (00) */
+
 
 #include <stdio.h>
 #include <string.h>
@@ -229,6 +239,10 @@ int main(int argc, char **argv) {
 				if (debug) fprintf(stderr,"LT\n");
 				command=7;
 			}
+			else if (!strcmp(string,"NOP")) {
+				if (debug) fprintf(stderr,"NOP\n");
+				command=8;
+			}
 			else {
 				fprintf(stderr,"Unknown command '%s'",string);
 			}
@@ -242,7 +256,9 @@ int main(int argc, char **argv) {
 				sub_pointer=LOC_C;
 			}
 			else {
-				/* Try to fit in LOC_C.  This can only hold no-draw moves */
+				/* Try to fit in LOC_C.  */
+
+				/* This can only hold no-draw moves */
 				/* Also a LOC_C of 0 is ignored                           */
 				if ((command&0x4) || (command==0)) {
 
@@ -256,7 +272,12 @@ int main(int argc, char **argv) {
 				}
 				else {
 					/* write to LOC_C */
-					table[current_offset]|=((command&0x3)<<6);
+
+					if (current_offset==8) {
+					}
+					else {
+						table[current_offset]|=((command&0x3)<<6);
+					}
 
 					warn_if_zero(table[current_offset],line);
 
