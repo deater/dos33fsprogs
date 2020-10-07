@@ -1,31 +1,32 @@
 # Person, shoulders up
 2
 START
-RT RT
-RT UP
-UP LT
-UP UP
-UP RT
-UP RT
-RT DN
+RT RT		# 45
+RT UP		# 37
+UP LT		# 60
+UP UP		# 36
+UP RT		# 44
+UP RT		# 44
+RT DN		# 53
+LT DN		# 55
+LT RT NOP	# 47
+NRT RT		# 41
+UP DN NOP	# 52	
+NDN LT		# 58
+LT LT		# 63
+DN RT		# 46
+RT RT		# 45
+DN NLT		# 30!
 LT DN
-LT RT NRT
-RT UP
-DN NDN
-LT LT
-LT DN NRT
-RT RT
-DN NLT
-LT DN
 RT RT
 RT RT
-RT NDN
+RT NDN		#!
 LT LT
 LT LT
 LT LT
 LT LT
 LT LT
-LT
+LT LT
 STOP
 # Person, raising arm
 START
