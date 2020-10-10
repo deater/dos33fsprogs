@@ -7,7 +7,8 @@ all:	entropy.dsk convert_to convert_back convert_qkumba
 
 entropy.dsk:	ENTROPY ENTROPY.BAS E2.BAS FLAME.BAS FLAME2.BAS \
 	CIRCLES.BAS AUTUMN.BAS QKUMBA.BAS ASTEROID.BAS PERSON.BAS SHIP.BAS \
-	CONCERT.BAS NYAN.BAS RASTER.BAS RASTER2.BAS RASTER3.BAS LOTS.BAS LOAD
+	CONCERT.BAS NYAN.BAS RASTER.BAS RASTER2.BAS RASTER3.BAS LOTS.BAS LOAD \
+	RASTER4.BAS RASTER5.BAS
 	$(DOS33) -y entropy.dsk BSAVE -a 0x0C00 ENTROPY
 	$(DOS33) -y entropy.dsk BSAVE -a 0x0300 LOAD
 	$(DOS33) -y entropy.dsk SAVE A ENTROPY.BAS
@@ -25,6 +26,8 @@ entropy.dsk:	ENTROPY ENTROPY.BAS E2.BAS FLAME.BAS FLAME2.BAS \
 	$(DOS33) -y entropy.dsk SAVE A RASTER.BAS
 	$(DOS33) -y entropy.dsk SAVE A RASTER2.BAS
 	$(DOS33) -y entropy.dsk SAVE A RASTER3.BAS
+	$(DOS33) -y entropy.dsk SAVE A RASTER4.BAS
+	$(DOS33) -y entropy.dsk SAVE A RASTER5.BAS
 	$(DOS33) -y entropy.dsk SAVE A LOTS.BAS
 
 ###
@@ -150,6 +153,17 @@ RASTER2.BAS:	raster2.bas
 
 RASTER3.BAS:	raster3.bas
 	$(TOKENIZE) < raster3.bas > RASTER3.BAS
+
+####
+
+RASTER4.BAS:	raster4.bas
+	$(TOKENIZE) < raster4.bas > RASTER4.BAS
+
+
+####
+
+RASTER5.BAS:	raster5.bas
+	$(TOKENIZE) < raster5.bas > RASTER5.BAS
 
 
 ####

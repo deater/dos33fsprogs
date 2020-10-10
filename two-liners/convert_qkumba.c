@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 	enc[e]=0;
 
 	printf("%s\n",enc);
-	printf("2FORI=0TO%d:C=INT((PEEK(%d+I/3)-32)/4^(I-INT(I/3)*3)):POKE768+I,((PEEK(2054+I)-32)*4)+C-INT(C/4)*4:NEXT:CALL768\n",
+	printf("2FORI=0TO%d:C%%=(PEEK(%d+I/3)-32)/4^(I-INT(I/3)*3):POKE768+I,C%%+4*(PEEK(2054+I)-32-INT(C%%/4)):NEXT:CALL768\n",
 		filesize,2054+filesize);
 
 	return 0;

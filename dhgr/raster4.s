@@ -23,7 +23,7 @@ raster:
 
 	lsr	HGRPAGE		; set to $20 (HGR2 set this to $40)
 
-	ldy	#100
+;	ldy	#100
 
 big_loop:
 	lda	#0		; 2	; blueline
@@ -32,20 +32,18 @@ big_loop:
 	lda	#4		; 2	; redline
 	jsr	one_line	; 3
 
-
 	tya			; YPOS
 	bmi	go_neg		; if >128, flip to go up
 	cmp	#64		; if < 64, flip to go down
-	bcs	do_add		; otherwise, nothing
+	bcs	smc		; otherwise, nothing
 go_pos:
 	ldx	#$c8
 	.byte	$2C	; bit trick
 go_neg:
 	ldx	#$88
 	stx	smc
-do_add:
-	clc			; move the bar
-smc:
+
+smc:				; move the bar
 	iny	;  c8=iny, 88=dey
 
 	bne	big_loop	; bra
@@ -69,7 +67,7 @@ color_loop:			; get right color
 	lda	LINE	;(2)
 	cmp	#$4	;(2)
 	bcc	none	;(2)
-	eor	#$3	;		00 01 10 11 00 01 10 11
+	eor	#$3	; 2		00 01 10 11 00 01 10 11
 none:			;		11 10 01 00
 	and	#$3	;(2)
 
@@ -93,7 +91,7 @@ draw_line_color:
 	ldy	#0
 	jsr	HPOSN		; put into GBASL addr of coord (Y,X),A
 
-	ldy	#39
+;	ldy	#39
 loop_it:
 	; set page2
 	sta	$C055		; 3
@@ -121,7 +119,7 @@ loop_it:
 	;==============================
 next_pixel:
 	lda	COLOR		; 2
-	sta	(GBASL),Y	; 3
+	sta	(GBASL),Y	; 2
 	cmp	#$80		; 2
 	rol	COLOR		; 2
 	rts			; 1
