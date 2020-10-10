@@ -1,0 +1,2 @@
+1REM(X\(V\C7PC#PC PJ(AYA_J!A_I_,!R0L"H +H_C* &: A_I_O: \"K* , &:,A_I_.Y_H H ($]H)C5P(8 C5P(8 B$\Q_,M$SI_D)R@)_8 $(,,($ XP)%%1F=E< &N/5:]@/3W)E $<!> .D10GA#Y;L
+2FORI=0TO115:C=INT((PEEK(2169+I/3)-32)/4^(I-INT(I/3)*3)):POKE768+I,((PEEK(2054+I)-32)*4)+C-INT(C/4)*4:NEXT:CALL768
