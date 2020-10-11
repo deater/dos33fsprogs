@@ -6,7 +6,7 @@ locations:
 	.word location0,location1,location2,location3
 	.word location4,location5,location6,location7
 	.word location8,location9,location10,location11
-	.word location12,location13
+	.word location12,location13,location14
 
 ; MONKEY_LOOKOUT	-- lookout tower
 location0:
@@ -382,6 +382,21 @@ location13:
 		.byte	14,26	; y
 		.word	voodoo_lady_string	; name
 		.word	voodoo_lady_action-1	; action
+
+
+; MONKEY_BAR_INSIDE3	-- kitchen
+location14:
+	.word	bar_inside3_lzsa		; background
+	.word	bar_inside3_adjust_destination	; destination
+	.word	bar_inside3_check_exit		; exit
+	.word	bar_inside3_check_bounds	; bounds check
+	.byte	GUYBRUSH_BIG			; size
+	.byte	1				; num areas
+
+		.byte	0,3	; x
+		.byte	12,34	; y
+		.word	curtain_string		; name
+		.word	curtain_action-1	; action
 
 ; common strings
 

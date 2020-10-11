@@ -1,23 +1,23 @@
-; stuff regarding 2nd room of scumm bar
+; stuff regarding 3d room of scumm bar
 
-	; if x<4 goto MONKEY_BAR_INSIDE1 at 34,24
+	; if x<4 goto MONKEY_BAR_INSIDE2 at 34,24
 
-bar_inside2_check_exit:
+bar_inside3_check_exit:
 
 	lda	GUYBRUSH_X
 	cmp	#4
-	bcc	bar_inside2_to_bar_inside1
-	cmp	#33
-	bcs	bar_inside2_to_bar_inside3
-	bcs	bar_inside2_no_exit
+	bcc	bar_inside3_to_bar_inside2
+;	cmp	#35
+;	bcs	bar_inside3_to_bar
+	bcs	bar_inside3_no_exit
 
 
-bar_inside2_to_bar_inside1:
+bar_inside3_to_bar_inside2:
 	lda	GUYBRUSH_DIRECTION
 	cmp	#DIR_LEFT
-	bne	bar_inside2_no_exit
+	bne	bar_inside3_no_exit
 
-	lda	#MONKEY_BAR_INSIDE1
+	lda	#MONKEY_BAR_INSIDE2
 	sta	LOCATION
 	lda	#34
 	sta	GUYBRUSH_X
@@ -26,57 +26,40 @@ bar_inside2_to_bar_inside1:
 	sta	GUYBRUSH_Y
 	sta	DESTINATION_Y
 	jsr	change_location
-	jmp	bar_inside2_no_exit
+	jmp	bar_inside3_no_exit
 
-bar_inside2_to_bar_inside3:
-	lda	GUYBRUSH_DIRECTION
-	cmp	#DIR_RIGHT
-	bne	bar_inside2_no_exit
-
-	lda	#MONKEY_BAR_INSIDE3
-	sta	LOCATION
-	lda	#5
-	sta	GUYBRUSH_X
-	sta	DESTINATION_X
-	lda	#24
-	sta	GUYBRUSH_Y
-	sta	DESTINATION_Y
-	jsr	change_location
-	jmp	bar_inside2_no_exit
-
-
-bar_inside2_no_exit:
+bar_inside3_no_exit:
 	rts
 
 	;================================
 	;================================
-	; bar_inside2 adjust destination
+	; bar_inside3 adjust destination
 	;================================
 	;================================
-bar_inside2_adjust_destination:
+bar_inside3_adjust_destination:
 	; just make Y always 24
 
 	lda	#24
 	sta	DESTINATION_Y
 
-;	lda	DESTINATION_X
-;	cmp	#33
-	bcc	done_mb2_adjust
+	lda	DESTINATION_X
+	cmp	#33
+	bcc	done_mb3_adjust
 
-;	lda	#33
-;	sta	DESTINATION_X
+	lda	#33
+	sta	DESTINATION_X
 
 
-done_mb2_adjust:
+done_mb3_adjust:
 	rts
 
 
 	;================================
 	;================================
-	; bar_inside2 check bounds
+	; bar_inside3 check bounds
 	;================================
 	;================================
-bar_inside2_check_bounds:
+bar_inside3_check_bounds:
 	; just make Y always 20
 
 	rts
@@ -108,13 +91,13 @@ bar_inside2_check_bounds:
 
 
 ;=============================
-bar2_door_action:
-bar2_door_nothing:
+bar3_door_action:
+bar3_door_nothing:
 	lda	#VERB_WALK
 	sta	CURRENT_VERB
 	rts
 
-
+.if 0
        ;=============================
 fireplace_action:
 	lda	CURRENT_VERB
@@ -218,3 +201,4 @@ curtain_actions:
 	.word   icant_move	; push
 	.word   icant_move	; pull
 
+.endif

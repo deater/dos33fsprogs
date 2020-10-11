@@ -356,6 +356,7 @@ really_exit:
 	.include	"monkey_mansion_path.s"
 	.include	"monkey_bar_inside1.s"
 	.include	"monkey_bar_inside2.s"
+	.include	"monkey_bar_inside3.s"
 	.include	"monkey_voodoo1.s"
 	.include	"monkey_voodoo2.s"
 

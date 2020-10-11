@@ -10,7 +10,8 @@ all:	graphics.inc
 
 graphics.inc:	\
 	lookout.lzsa poster.lzsa dock.lzsa bar.lzsa town.lzsa map.lzsa \
-	bar_inside1.lzsa bar_inside2.lzsa zipline.lzsa \
+	bar_inside1.lzsa bar_inside2.lzsa bar_inside3.lzsa \
+	zipline.lzsa \
 	church.lzsa mansion.lzsa mansion_path.lzsa \
 	voodoo1.lzsa voodoo2.lzsa \
 	part1.lzsa lechuck_ship.lzsa lechuck_cabin.lzsa
@@ -22,6 +23,7 @@ graphics.inc:	\
 	echo "map_lzsa: .incbin \"map.lzsa\"" >> graphics.inc
 	echo "bar_inside1_lzsa: .incbin \"bar_inside1.lzsa\"" >> graphics.inc
 	echo "bar_inside2_lzsa: .incbin \"bar_inside2.lzsa\"" >> graphics.inc
+	echo "bar_inside3_lzsa: .incbin \"bar_inside3.lzsa\"" >> graphics.inc
 	echo "zipline_lzsa: .incbin \"zipline.lzsa\"" >> graphics.inc
 	echo "church_lzsa: .incbin \"church.lzsa\"" >> graphics.inc
 	echo "mansion_lzsa: .incbin \"mansion.lzsa\"" >> graphics.inc
