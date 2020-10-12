@@ -362,12 +362,68 @@ location12:
 	.word	voodoo1_check_exit		; exit
 	.word	voodoo1_check_bounds		; bounds check
 	.byte	GUYBRUSH_BIG			; size
-	.byte	1				; num areas
+	.byte	12				; num areas
 
-		.byte	30,36	; x
-		.byte	10,36	; y
-		.word	pole_string		; name
-		.word	pole_action-1		; action
+		.byte	11,17	; x
+		.byte	12,26	; y
+		.word	door_string		; name
+		.word	voodoo1_door_action-1		; action
+
+		.byte	24,33	; x
+		.byte	20,26	; y
+		.word	couch_string		; name
+		.word	couch_action-1		; action
+
+		.byte	28,33	; x
+		.byte	10,18	; y
+		.word	chickens_string		; name
+		.word	chickens_action-1	; action
+
+		.byte	22,27	; x
+		.byte	10,20	; y
+		.word	voodoo_knicknacks_string	; name
+		.word	voodoo_knicknacks_action-1	; action
+
+		.byte	20,23	; x
+		.byte	16,28	; y
+		.word	statue_string	; name
+		.word	statue_action-1	; action
+
+		.byte	7,14	; x
+		.byte	10,20	; y
+		.word	chickens_string		; name
+		.word	chickens_action-1	; action
+
+		.byte	12,20	; x
+		.byte	30,40	; y
+		.word	baskets_string		; name
+		.word	baskets_action-1	; action
+
+		.byte	22,25	; x
+		.byte	30,38	; y
+		.word	basket_string		; name
+		.word	basket_action-1	; action
+
+		.byte	34,37	; x
+		.byte	32,36	; y
+		.word	bones_string		; name
+		.word	bones_action-1		; action
+
+		.byte	38,40	; x
+		.byte	32,36	; y
+		.word	chalice_string		; name
+		.word	chalice_action-1	; action
+
+		.byte	31,33	; x
+		.byte	30,36	; y
+		.word	chicken_string		; name
+		.word	chicken_pulley_action-1	; action
+
+		.byte	29,39	; x
+		.byte	36,40	; y
+		.word	trunk_string		; name
+		.word	trunk_action-1		; action
+
 
 ; MONKEY_VOODOO2		-- voodoo lady
 location13:
@@ -435,6 +491,18 @@ stew_string:	.byte 20,20,"POT O' STEW",0
 table_string:	.byte 20,20,"TABLE",0
 barrel_string:	.byte 20,20,"BARREL",0
 meat_string:	.byte 20,20,"HUNK OF MEAT",0
+
+; voodoo1 strings
+couch_string:	.byte 20,20,"COUCH",0
+chicken_string:	.byte 20,20,"CHICKEN",0
+chickens_string:.byte 20,20,"CHICKENS",0
+statue_string:	.byte 20,20,"STATUE",0
+basket_string:	.byte 20,20,"BASKET",0
+baskets_string:	.byte 20,20,"BASKETS",0
+bones_string:	.byte 20,20,"BONES",0
+chalice_string:	.byte 20,20,"CHALICE",0
+trunk_string:	.byte 20,20,"TRUNK",0
+voodoo_knicknacks_string:.byte 20,20,"VOODOO KNICKNACKS",0
 
 ; voodoo2 strings
 voodoo_lady_string:	.byte 20,20,"VOODOO LADY",0
