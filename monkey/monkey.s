@@ -97,6 +97,8 @@ game_loop:
 	beq	do_draw_bar_door
 	cmp	#MONKEY_ZIPLINE
 	beq	do_draw_sign
+	cmp	#MONKEY_VOODOO2
+	beq	do_draw_smoke
 
 	jmp	nothing_special
 
@@ -110,6 +112,10 @@ do_draw_bar_door:
 
 do_draw_sign:
 	jsr	draw_sign
+	jmp	nothing_special
+
+do_draw_smoke:
+	jsr	draw_smoke
 	jmp	nothing_special
 
 nothing_special:

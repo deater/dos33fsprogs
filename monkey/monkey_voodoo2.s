@@ -47,24 +47,67 @@ done_v2_adjust:
 
 
 
+draw_smoke:
 
-;draw_house:
+	lda	FRAMEL
+	and	#$10
+	beq	smoke2
 
-;	lda	#<wall_sprite
-;	sta	INL
-;	lda	#>wall_sprite
-;	sta	INH
+smoke1:
+	lda	#<smoke_sprite1
+	sta	INL
+	lda	#>smoke_sprite1
+	jmp	actually_draw_smoke
+smoke2:
+	lda	#<smoke_sprite2
+	sta	INL
+	lda	#>smoke_sprite2
+actually_draw_smoke:
+	sta	INH
 
-;	lda	#18
-;	sta	XPOS
-;	lda	#22
-;	sta	YPOS
+	lda	#18
+	sta	XPOS
+	lda	#0
+	sta	YPOS
 
-;	jsr	put_sprite_crop
+	jmp	put_sprite_crop
 
-;	rts
+smoke_sprite1:
+	.byte 4,14
+	.byte $ff,$cc,$AA,$AA
+	.byte $AA,$ff,$cA,$AA
+	.byte $AA,$ff,$cc,$AA
+	.byte $AA,$ff,$AA,$cc
+	.byte $AA,$ff,$cA,$AA
+	.byte $AA,$ff,$Ac,$AA
+	.byte $AA,$ff,$AA,$AA
+	.byte $cc,$Af,$fA,$AA
+	.byte $cc,$AA,$Af,$fA
+	.byte $AA,$Ac,$cc,$ff
+	.byte $AA,$AA,$cc,$ff
+	.byte $AA,$cc,$fA,$ff
+	.byte $AA,$cc,$ff,$AA
+	.byte $AA,$cc,$ff,$AA
 
-;house_sprite:
+smoke_sprite2:
+	.byte 4,14
+	.byte $AA,$ff,$cA,$AA
+	.byte $ff,$aa,$cc,$AA
+	.byte $ff,$cc,$AA,$AA
+	.byte $ff,$cc,$AA,$AA
+	.byte $ff,$ac,$cA,$AA
+	.byte $AA,$ff,$cc,$AA
+	.byte $AA,$ff,$AA,$cc
+	.byte $AA,$ff,$AA,$cc
+	.byte $AA,$ff,$fc,$AA
+	.byte $AA,$cc,$ff,$AA
+	.byte $cc,$AA,$ff,$AA
+	.byte $Ac,$cA,$ff,$AA
+	.byte $AA,$fc,$cf,$AA
+	.byte $7A,$ff,$cc,$A7
+
+
+
 
 voodoo2_check_bounds:
 	rts
