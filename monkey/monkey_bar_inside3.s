@@ -97,108 +97,144 @@ bar3_door_nothing:
 	sta	CURRENT_VERB
 	rts
 
-.if 0
+
        ;=============================
-fireplace_action:
+barrel_action:
 	lda	CURRENT_VERB
 	asl
 	tay
 
-	lda	fireplace_actions,Y
+	lda	barrel_actions,Y
 	cmp	#$ff
-	beq	fireplace_nothing
+	beq	barrel_nothing
 
 	sta	MESSAGE_L
-	lda	fireplace_actions+1,Y
+	lda	barrel_actions+1,Y
 	sta	MESSAGE_H
 
 	jmp	do_display_message
 
-fireplace_nothing:
+barrel_nothing:
 	lda	#VERB_WALK
 	sta	CURRENT_VERB
 	rts
 
-fireplace_actions:
+barrel_actions:
 	.word   $FFFF		; give
 	.word   doesnt_open	; open
 	.word   doesnt_work	; close
 	.word   cant_pick_up	; pick_up
-	.word   fireplace_look	; look_at
+	.word   barrel_look	; look_at
 	.word   $FFFF		; talk_to
-	.word   for_what	; use
+	.word   $FFFF		; use
 	.word   icant_move	; push
 	.word   icant_move	; pull
 
-fireplace_look:
-.byte 18,21,"COZY.",0
+barrel_look:
+.byte 1,21,"FULL OF THAT FOUL STUFF PIRATES DRINK",0
 
 
-;=============================
-impt_pirate_action:
-	lda	CURRENT_VERB
-	asl
-	tay
-
-	lda	impt_pirate_actions,Y
-	cmp	#$ff
-	beq	impt_pirate_nothing
-
-	sta	MESSAGE_L
-	lda	impt_pirate_actions+1,Y
-	sta	MESSAGE_H
-
-	jmp	do_display_message
-
-impt_pirate_nothing:
-	lda	#VERB_WALK
-	sta	CURRENT_VERB
-	rts
-
-impt_pirate_actions:
-	.word   $FFFF		; give
-	.word   $FFFF		; open
-	.word   $FFFF		; close
-	.word   $FFFF		; pick_up
-	.word   impt_pirate_look	; look_at
-	.word   impt_pirate_look	; talk_to
-	.word   $FFFF		; use
-	.word   $FFFF		; push
-	.word   $FFFF		; pull
-
-impt_pirate_look:
-.byte 8,21,"WHAT BE YE WANTIN' BOY?",0
 
        ;=============================
-curtain_action:
+table_action:
 	lda	CURRENT_VERB
 	asl
 	tay
 
-	lda	curtain_actions,Y
+	lda	table_actions,Y
 	cmp	#$ff
-	beq	curtain_nothing
+	beq	table_nothing
 
 	sta	MESSAGE_L
-	lda	curtain_actions+1,Y
+	lda	table_actions+1,Y
 	sta	MESSAGE_H
 
 	jmp	do_display_message
 
-curtain_nothing:
+table_nothing:
 	lda	#VERB_WALK
 	sta	CURRENT_VERB
 	rts
 
-curtain_actions:
+table_actions:
 	.word   $FFFF		; give
 	.word   doesnt_open	; open
 	.word   doesnt_work	; close
 	.word   cant_pick_up	; pick_up
 	.word   not_special	; look_at
 	.word   $FFFF		; talk_to
-	.word   for_what	; use
+	.word   $FFFF		; use
 	.word   icant_move	; push
 	.word   icant_move	; pull
 
-.endif
+
+
+       ;=============================
+meat_action:
+	lda	CURRENT_VERB
+	asl
+	tay
+
+	lda	meat_actions,Y
+	cmp	#$ff
+	beq	meat_nothing
+
+	sta	MESSAGE_L
+	lda	meat_actions+1,Y
+	sta	MESSAGE_H
+
+	jmp	do_display_message
+
+meat_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+meat_actions:
+	.word   $FFFF		; give
+	.word   doesnt_open	; open
+	.word   doesnt_work	; close
+	.word   $FFFF		; pick_up
+	.word   meat_look	; look_at
+	.word   $FFFF		; talk_to
+	.word   $FFFF		; use
+	.word   icant_move	; push
+	.word   icant_move	; pull
+
+meat_look:	.byte 0,21,"SOME SORT OF MEAT OR MEAT-LIKE SUBSTANCE",0
+
+
+       ;=============================
+stew_action:
+	lda	CURRENT_VERB
+	asl
+	tay
+
+	lda	stew_actions,Y
+	cmp	#$ff
+	beq	stew_nothing
+
+	sta	MESSAGE_L
+	lda	stew_actions+1,Y
+	sta	MESSAGE_H
+
+	jmp	do_display_message
+
+stew_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+stew_actions:
+	.word   $FFFF		; give
+	.word   doesnt_open	; open
+	.word   doesnt_work	; close
+	.word   stew_pick	; pick_up
+	.word   stew_pick	; look_at
+	.word   $FFFF		; talk_to
+	.word   $FFFF		; use
+	.word   stew_pick	; push
+	.word   stew_pick	; pull
+
+stew_pick:	.byte 12,21,"IT'S BOILING HOT",0
+

@@ -391,18 +391,50 @@ location14:
 	.word	bar_inside3_check_exit		; exit
 	.word	bar_inside3_check_bounds	; bounds check
 	.byte	GUYBRUSH_BIG			; size
-	.byte	1				; num areas
+	.byte	6				; num areas
 
-		.byte	0,3	; x
-		.byte	12,34	; y
-		.word	curtain_string		; name
-		.word	curtain_action-1	; action
+		.byte	3,7	; x
+		.byte	20,30	; y
+		.word	door_string		; name
+		.word	bar3_door_action-1	; action
+
+		.byte	1,5	; x
+		.byte	32,40	; y
+		.word	barrel_string		; name
+		.word	barrel_action-1		; action
+
+		.byte	15,20	; x
+		.byte	32,40	; y
+		.word	table_string		; name
+		.word	table_action-1		; action
+
+		.byte	21,23	; x
+		.byte	24,28	; y
+		.word	stew_string		; name
+		.word	stew_action-1		; action
+
+		.byte	24,27	; x
+		.byte	20,36	; y
+		.word	door_string		; name
+		.word	bar3_door_action-1	; action
+
+		.byte	10,14	; x
+		.byte	26,30	; y
+		.word	meat_string		; name
+		.word	meat_action-1	; action
+
 
 ; common strings
 
 door_string:	.byte 20,20,"DOOR",0
 pirate_string:	.byte 20,20,"PIRATE",0
 pirates_string:	.byte 20,20,"PIRATES",0
+
+; bar3 strings
+stew_string:	.byte 20,20,"POT O' STEW",0
+table_string:	.byte 20,20,"TABLE",0
+barrel_string:	.byte 20,20,"BARREL",0
+meat_string:	.byte 20,20,"HUNK OF MEAT",0
 
 ; voodoo2 strings
 voodoo_lady_string:	.byte 20,20,"VOODOO LADY",0
