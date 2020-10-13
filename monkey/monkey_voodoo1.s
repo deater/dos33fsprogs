@@ -33,9 +33,11 @@ voodoo1_to_town:
 	lda	#10
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X
-	lda	#20
+	lda	#18
 	sta	GUYBRUSH_Y
 	sta	DESTINATION_Y
+	lda	#GUYBRUSH_SMALL
+	sta	GUYBRUSH_SIZE
 	jsr	change_location
 	jmp	voodoo1_no_exit
 

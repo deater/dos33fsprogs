@@ -28,12 +28,17 @@ church_to_mansion_path:
 church_to_town:
 	lda	#MONKEY_TOWN
 	sta	LOCATION
-	lda	#5
+	lda	#1
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X
 	lda	#20
 	sta	GUYBRUSH_Y
+	lda	#30
 	sta	DESTINATION_Y
+
+	lda	#GUYBRUSH_SMALL
+	sta	GUYBRUSH_SIZE
+
 	jsr	change_location
 	jmp	church_no_exit
 

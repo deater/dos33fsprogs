@@ -57,7 +57,7 @@ bar_to_town:
 	lda	#34
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X
-	lda	#20
+	lda	#18
 	sta	GUYBRUSH_Y
 	lda	#26
 	sta	DESTINATION_Y

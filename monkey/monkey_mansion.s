@@ -18,6 +18,10 @@ mansion_to_mansion_path:
 	lda	#10
 	sta	GUYBRUSH_Y
 	sta	DESTINATION_Y
+
+	lda	#GUYBRUSH_SMALL
+	sta	GUYBRUSH_SIZE
+
 	jsr	change_location
 	jmp	mansion_no_exit
 

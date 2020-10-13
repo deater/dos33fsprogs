@@ -38,6 +38,7 @@ monkey_start:
 	sta	DRAW_PAGE
 	sta	LEVEL_OVER
 	sta	GUYBRUSH_DIRECTION
+	sta	GUYBRUSH_SIZE
 	sta	DISPLAY_MESSAGE
 	sta	BAR_DOOR_OPEN
 	sta	VALID_NOUN
@@ -190,23 +191,37 @@ done_move_guybrush:
 	sta	YPOS
 
 	lda	GUYBRUSH_SIZE
+
 	cmp	#GUYBRUSH_BIG
 	beq	big_guybrush
 
+	cmp	#GUYBRUSH_MEDIUM
+	beq	medium_guybrush
+
 	lda	GUYBRUSH_SIZE
 	cmp	#GUYBRUSH_TINY
-	beq	map_guybrush
+	beq	tiny_guybrush
 
 small_guybrush:
-	lda	#<guybrush_medium_sprite
+	lda	#<guybrush_small_sprite
 	sta	INL
-	lda	#>guybrush_medium_sprite
+	lda	#>guybrush_small_sprite
 	jmp	really_draw_guybrush
 
-map_guybrush:
-	lda	#<guybrush_map_sprite
+tiny_guybrush:
+	lda	#<guybrush_tiny_sprite
 	sta	INL
-	lda	#>guybrush_map_sprite
+	lda	#>guybrush_tiny_sprite
+	jmp	really_draw_guybrush
+
+medium_guybrush:
+	lda	GUYBRUSH_DIRECTION	; 00/01 or 02/03 or 04/05 or 06/07
+	and	#$fe
+	tay
+
+	lda	guybrush_med_sprites,Y
+	sta	INL
+	lda	guybrush_med_sprites+1,Y
 	jmp	really_draw_guybrush
 
 big_guybrush:

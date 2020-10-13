@@ -84,11 +84,51 @@ guybrush_left2_sprite:
 .byte	$f0,$ff,$AA
 .byte	$0f,$A0,$AA
 
-guybrush_medium_sprite:
+
+
+guybrush_med_sprites:
+	.word guybrush_med_down_sprite
+	.word guybrush_med_left_sprite
+	.word guybrush_med_up_sprite
+	.word guybrush_med_right_sprite
+
+guybrush_med_up_sprite:
+.byte 2,4
+.byte	$dd,$dd
+.byte	$fd,$fd
+.byte	$00,$00
+.byte	$0f,$0f
+
+guybrush_med_down_sprite:
+.byte 2,4
+.byte	$bd,$bd
+.byte	$fb,$fb
+.byte	$00,$00
+.byte	$0f,$0f
+
+guybrush_med_right_sprite:
+.byte 2,4
+.byte	$AA,$bd
+.byte	$Ad,$fb
+.byte	$AA,$00
+.byte	$AA,$0f
+
+guybrush_med_left_sprite:
+.byte 2,4
+.byte	$bd,$AA
+.byte	$fb,$Ad
+.byte	$00,$AA
+.byte	$0f,$AA
+
+;=====
+
+guybrush_small_sprite:
 .byte	1,2
 .byte	$fd
 .byte	$0f
 
-guybrush_map_sprite:
+;=====
+
+guybrush_tiny_sprite:
 .byte	1,1
 .byte	$ff

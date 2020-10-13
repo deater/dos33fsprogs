@@ -22,6 +22,10 @@ mansion_path_to_mansion:
 	lda	#20
 	sta	GUYBRUSH_Y
 	sta	DESTINATION_Y
+
+	lda	#GUYBRUSH_BIG
+	sta	GUYBRUSH_SIZE
+
 	jsr	change_location
 	jmp	mansion_path_no_exit
 
@@ -34,6 +38,10 @@ mansion_path_to_church:
 	lda	#32
 	sta	GUYBRUSH_Y
 	sta	DESTINATION_Y
+
+	lda	#GUYBRUSH_SMALL
+	sta	GUYBRUSH_SIZE
+
 	jsr	change_location
 	jmp	mansion_path_no_exit
 

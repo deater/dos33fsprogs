@@ -391,24 +391,84 @@ done_return:
 	;==============================
 set_destination:
 
-	; only adjust Y if we're big guybrush?
-	lda	LOCATION
-	cmp	#MONKEY_MAP
-	bne	set_destination_big
+	; tiny:  y=cursor_y+6
+	; small: y=cursor_y+2
+	; med:	 y=cursor_y-2
+	; big:   y=cursor_y-7
 
-set_destination_on_map:
+	; adjust differently depending on size
+	lda	GUYBRUSH_SIZE
+	beq	set_destination_big
+	cmp	#GUYBRUSH_MEDIUM
+	beq	set_destination_medium
+	cmp	#GUYBRUSH_SMALL
+	beq	set_destination_small
+
+set_destination_tiny:
 
 	lda	CURSOR_X
+	bpl	destination_tiny_x_is_positive
+	; we are off edge of screen, just say 0
+	lda	#$FE
+destination_tiny_x_is_positive:
 	clc
-	adc	#$2
+	adc	#2
 	sta	DESTINATION_X
 
 	lda	CURSOR_Y
+	bpl	destination_tiny_y_is_positive
+	lda	#0
+destination_tiny_y_is_positive:
 	clc
-	adc	#$4
-	and	#$FE
+	adc	#6
+	and	#$FE			; has to be even
 	sta	DESTINATION_Y
-	rts
+
+	jmp	set_destination_smc
+
+set_destination_small:
+
+	lda	CURSOR_X
+	bpl	destination_small_x_is_positive
+	; we are off edge of screen, just say 0
+	lda	#$FE
+destination_small_x_is_positive:
+	clc
+	adc	#2
+	sta	DESTINATION_X
+
+	lda	CURSOR_Y
+	bpl	destination_small_y_is_positive
+	lda	#0
+destination_small_y_is_positive:
+	clc
+	adc	#2
+	and	#$FE			; has to be even
+	sta	DESTINATION_Y
+
+	jmp	set_destination_smc
+
+set_destination_medium:
+
+	lda	CURSOR_X
+	bpl	destination_medium_x_is_positive
+	; we are off edge of screen, just say 0
+	lda	#$ff
+destination_medium_x_is_positive:
+	clc
+	adc	#1
+	sta	DESTINATION_X
+
+	lda	CURSOR_Y
+	bpl	destination_medium_y_is_positive
+	lda	#0
+destination_medium_y_is_positive:
+	sec
+	sbc	#2
+	and	#$FE			; has to be even
+	sta	DESTINATION_Y
+
+	jmp	set_destination_smc
 
 set_destination_big:
 
@@ -493,9 +553,10 @@ change_location:
 	lda	(LOCATION_STRUCT_L),Y
 	sta	keep_in_bounds_smc+2
 
-	ldy	#LOCATION_SIZE
-	lda	(LOCATION_STRUCT_L),Y
-	sta	GUYBRUSH_SIZE
+	; set on exit as might have multiple entrances
+;	ldy	#LOCATION_SIZE
+;	lda	(LOCATION_STRUCT_L),Y
+;	sta	GUYBRUSH_SIZE
 
 	;==========================
 	; load new background
