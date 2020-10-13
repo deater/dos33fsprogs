@@ -52,8 +52,8 @@ monkey_start:
 	; set up initial location
 
 ;	lda	#MONKEY_BAR
-;	lda	#MONKEY_LOOKOUT
-	lda	#MONKEY_VOODOO1
+	lda	#MONKEY_LOOKOUT
+;	lda	#MONKEY_VOODOO1
 	sta	LOCATION
 
 	jsr	change_location

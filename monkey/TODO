@@ -1,12 +1,11 @@
 overall:
 	+ better bounds checking on paths
+	+ walk slower when tiny?
 
 hook up actions:
 	+ scumm bar1
 
 foreground:
-	+ church
-	+ voodoo chicken
 	+ bar1
 
 animations:

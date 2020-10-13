@@ -48,6 +48,10 @@ lookout_check_arch:
 	lda	#20
 	sta	GUYBRUSH_Y
 	sta	DESTINATION_Y
+
+	lda	#GUYBRUSH_TINY
+	sta	GUYBRUSH_SIZE
+
 	jsr	change_location
 	jmp	lookout_no_exit
 

@@ -30,7 +30,7 @@ voodoo1_to_voodoo2:
 voodoo1_to_town:
 	lda	#MONKEY_TOWN
 	sta	LOCATION
-	lda	#10
+	lda	#8
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X
 	lda	#18
