@@ -72,6 +72,32 @@ done_v1_adjust:
 voodoo1_check_bounds:
 	rts
 
+
+	;==========================
+	;==========================
+	; voodoo1 draw foreground
+	;==========================
+	;==========================
+voodoo1_draw_foreground:
+	lda	#<voodoo1_fg_sprite
+	sta	INL
+	lda	#>voodoo1_fg_sprite
+	sta	INH
+
+	lda	#12
+	sta	XPOS
+	lda	#30
+	sta	YPOS
+	jmp	put_sprite_crop
+
+voodoo1_fg_sprite:
+	.byte	20,2
+	.byte	$AA,$8A,$88,$88,$8A,$AA,$AA,$AA,$AA,$AA
+	.byte	$8A,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$77,$AA
+	.byte	$8A,$08,$08,$80,$80,$88,$8A,$AA,$AA,$08
+	.byte	$08,$08,$AA,$AA,$AA,$AA,$AA,$AA,$87,$57
+
+
 	;==========================
 	;==========================
 	; voodoo1 actions
