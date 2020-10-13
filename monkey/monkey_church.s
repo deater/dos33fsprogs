@@ -62,25 +62,68 @@ done_ch_adjust:
 	rts
 
 
+	;=======================
+	;=======================
+	; draw church foreground
+	;=======================
+	;=======================
+draw_church_foreground:
+
+	lda	GUYBRUSH_X
+	cmp	#19
+	bcc	draw_church_left_sprite
+
+	cmp	#24
+	bcs	draw_church_right_sprite
+
+	bcc	draw_church_no_sprite
+
+draw_church_right_sprite:
+
+	lda	#25
+	sta	XPOS
+
+	lda	#<church_right_sprite
+	sta	INL
+	lda	#>church_right_sprite
+	jmp	draw_church_sprite
+
+draw_church_left_sprite:
+	lda	#9
+	sta	XPOS
+
+	lda	#<church_left_sprite
+	sta	INL
+	lda	#>church_left_sprite
+
+draw_church_sprite:
+	sta	INH
+
+	lda	#32
+	sta	YPOS
+
+	jsr	put_sprite_crop
 
 
-;draw_house:
+draw_church_no_sprite:
+	rts
 
-;	lda	#<wall_sprite
-;	sta	INL
-;	lda	#>wall_sprite
-;	sta	INH
+church_right_sprite:
+	.byte	14,2
+	.byte	$30,$33,$AA,$AA,$55,$00,$AA,$AA,$AA,$05,$55,$55,$55,$55
+	.byte	$bb,$b3,$33,$55,$55,$50,$00,$AA,$AA,$00,$d2,$25,$55,$55
 
-;	lda	#18
-;	sta	XPOS
-;	lda	#22
-;	sta	YPOS
+church_left_sprite:
+	.byte	8,2
+	.byte	$0A,$50,$77,$57,$07,$77,$00,$AA
+	.byte	$00,$55,$07,$55,$00,$07,$00,$55
 
-;	jsr	put_sprite_crop
 
-;	rts
-
-;house_sprite:
+	;=============================
+	;=============================
+	; church check bounds
+	;=============================
+	;=============================
 
 church_check_bounds:
 	rts

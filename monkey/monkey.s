@@ -240,6 +240,8 @@ really_draw_guybrush:
 	beq	do_draw_building
 	cmp	#MONKEY_VOODOO1
 	beq	do_draw_voodoo1
+	cmp	#MONKEY_CHURCH
+	beq	do_draw_church
 
 	jmp	nothing_foreground
 
@@ -257,6 +259,10 @@ do_draw_building:
 
 do_draw_voodoo1:
 	jsr	voodoo1_draw_foreground
+	jmp	nothing_foreground
+
+do_draw_church:
+	jsr	draw_church_foreground
 	jmp	nothing_foreground
 
 
