@@ -1,0 +1,311 @@
+<html>
+<head>
+<title></title>
+</head>
+<body>
+
+<h2>Flame Demo (64-byte assembly)</h2>
+The first attempt was to see if we could get some assembly language going,
+so a good thing to try is my <a href="../apple2_fire/">64B Flame Demo</a>.
+
+<center>
+<img src="flame.png">
+</center>
+
+The first attempt uses the traditional method of entering assembly
+language from BASIC via Applesoft: you have data staements holding the
+raw 8-bit data for the 6502 Machine Language, you poke them to a free
+area of memory (often $300 (which is 768 in decimal)) and then you call
+to it.<br><br>
+Note this code is longer than 256 chars long which means while it is
+a valid Applesoft program, you can't type it in on an actual Apple II
+as it will overflow the keyboard input buffer.  You can however tokenize
+it and load from disk, which must be what the Apple II bot does.
+<br><br>
+<pre>
+1 FOR X=768TO832:READ A:POKE X,A:NEXT:CALL 768:DATA 44,80,192,44,82,192,32,112,252,169,255,145,42,136,16,251,169,22,133,37,32,34,252,160,39,104,240,5,10,240,4,144,2,73,29,72,48,10,177,40,41,7,170,189,57,3,145,40,136,16,230,198,37,16,221,48,205,0,187,0,170,0,153,0,221
+</pre>
+
+This worked, but then 4am got me thinking about more compact ways to try
+and fit larger programs.  I looked into the way that Sellam Abraham did things 
+with his "Mesmerizer Exorciser" Kansasfest 2020 Hackfest entry, but it turns
+out that is a bit too big to fit in a tweet.<br><br>
+
+My fist attempt loads a short assembly language program that then decodes
+a string.  The string is machine code encoded with two values, the first
+shifted left by three then xored with the second to get the value.
+<br><br>
+Why not just include raw 8-bit values?  For one on twitter we're going
+to assume you can only pass in ASCII text, so that limits you to 7-bit values.
+In addition you can't send control characters (the first 32 values) and
+on Apple II+ you can't send lowercase, further reducing things.  In the
+end you are sort of limited to around 6-bits (64 values) and have to
+construct the machine code from that.
+<br><br>
+Also note that by now I had remembered that Applesoft ignores all spaces
+so you can leave them out to get more room.
+<pre>
+1 FOR X=768TO789:READ A:POKE X,A:NEXT:CALL768:DATA162,0,189,106,8,48,12,10,10,10,93,171,8,157,0,12,232,208,239,76,0,12
+9 "MBPMBPLFW]WZMYJW]JXLLLW\LEVHIVHZHAKANI^MMH]_OIZMYJTPLJSNQH_H]H[HSD@@DB@@@DAGAB@@CAFEE@BD@G@@EB@D@BAE@@BA@AGBEADA@@@FFE@E@E@C@B@A@E"+
+</pre>
+
+<hr>
+
+<h2>Circles Demo (101-byte assembly)</h2>
+
+<center>
+<img src="flame.png">
+</center>
+
+This is an unreleased demo of mine based on part of Hellmood's "Memories"
+Demo<br><br>
+In this case we are using 4+4 bit encoding, so it takes two bytes to represent
+each byte.  This is a bit wasteful but it's a lot easier to write a 4+4
+decoder than a more efficient 6+2 one.  Applesoft in particular makes
+this really difficult as it has no shift or bitwise logic functions.
+It's not easy to write decoders in assembly either, so multiplication
+in Applesoft it is.  The A=(A-INT(A)) code is the way to get a
+remainder (modulus) in Applesoft.
+<br><br>
+Note in this case I abandoned using a string.  It has some problems,
+the worst being that you can't include a quote character (ASCII 34).
+Using a REM remark (comment) statement takes slightly more room but
+everything after it is ignored.
+<br><br>
+You might ask how we load values from a REM statement.  In Applseoft the
+whole program is loaded into memory, REM statements and all.  Programs
+are loaded at $800 in tokenized format, but it's fairly easy to poke
+around and find where lines get loaded in memory and then use PEEK to load
+the values in.
+<pre>
+2 GR:FOR X=0TO100:A=(PEEK(2245+X/2)-32)/4:IFJTHENA=(A-INT(A))*4
+3 J=NOTJ:POKE768+X,(PEEK(2144+X)-32)*4+A:NEXT:CALL768:REM+4PY_H&A\RH%A\B&N3 ""?2 29_*'222A^JN8 A,I\B( ^I\( ^I^B( ^I\( ^Y\B$SY\R$P,N)('&&%%$$##""!!!!       5 ="""". ! &.)+)!.*#!'$!( '  . !, ) "."!!+&"""')#)$ $,
+</pre>
+
+<hr>
+
+<h2>Autumn (117 byte demo)</h2>
+
+<center>
+<img src="autumn.png">
+</center>
+
+This is a slightly shorter version of my <a href="../seasons_demo/">
+Seasons</a> demo (without color cycling) that was entered in the Outline
+Online 2020 Demo Party.
+<br><br>
+
+This is using 6+2 coding, with the 6 bit values (with 32 added to get the
+bits up in visible ASCII) first followed by the packed remaining 2 bits
+in chunks of three.  Qkumba figured out the crazy use of the exponent
+to handle the proper shifting of the 2-bit values.
+
+<br><br>
+Because it uses a lot
+of multiplies and shifts, this is fairly slow to decode which is why
+it has a directive to skip 9 seconds.  It should skip more but there
+were only 4 free bytes in the tweet so we couldn't delay more.
+<br><br>
+
+<pre>
+{B9}
+1REM(V\I\I\B.Y\A\FY\R@:A\9\&B9\A\F9\R@:A\9\9]9]9]9]L'Y^T Y^I\:@A
+\D Y\.J Y\A\J Y\A\I^")^1^A^*!" JI\,HI\*\TG([]I\I\I\(5]3  P")90'6"F)=8KBI.)H%1@&1F1WA6%=:S50@"E,\
+2FORI=0TO116:C=INT((PEEK(2171+I/3)-32)/4^(I-INT(I/3)*3)):POKE768+I,((PEEK(2054+I)-32)*4)+C-INT(C/4)*4:NEXT:CALL768
+</pre>
+
+<h2>Spaceship -- Applesoft Shapetable</h2>
+
+<center>
+<img src="ship.png">
+</center>
+
+After managing to fit Autumn in, I gave up on assembly language and went
+back to coding in Applesoft.  One thing Applesoft has going for it is
+"Shapetables" which are a software vector drawing library included
+in the Applesoft BASIC ROMs.
+<br><br>
+To use shapetables, you map out the vectors.  You can only do 
+draw+move UP/DOWN/LEFT/RIGHT and pen-up move (no-draw) UP/DOWN/LEFT/RIGHT.
+Each operating is three bits, you can pack two or sometimes three directives
+per byte and there's a header with the number of shapes and the offset
+of the shapes.
+<br><br>
+Typically you'd POKE the shapetable into memory via data
+statements (there's no easy way to
+load them, though oddly there is a dedicated command to loading them from
+casette tape).  Poking wastes a lot of space, so I thought maybe we
+can stick it in a REM statement like before.  There's a trick here, you
+need to have your shapetable be valid ASCII.  To do that you need the second
+value in each byte to not be a not-draw instruction, and also you can't
+have a third value either.
+<br><br>
+Once you have your shapes, you can DRAW them at a location, or XDRAW
+to xor draw (which makes it easier to draw and erase).  There is ROT
+to rotate and SCALE to scale.
+<br><br>
+This example like 2 tells Applesoft where the shapetable is by POKEing
+in the locations to the proper zero page address.  The shape table
+in the REM depends on being on line 5, because we depend on the
+actual layout of the BASIC program. 
+<br><br>
+This points to address $814.  If you look there in memory you find the values
+<pre>29 08 05 00 B2 37 ...</pre>
+The 29 08 (little endian) is actually part of the linked list of the BASIC
+program in memory pointing to the next line.  The 05 00 is the line number.
+And B2 is the token for REM followed by the data.  By pointing at the
+29 we say we have 29 shapes, but that doesn't matter as we only use
+1.  The next value is ignored.  The next is the offset to 
+the first shape (from the beginning).  Since this is 5 it skips the REM
+and goes to the data.
+<br><br>
+The rest is just regular Applesoft BASIC, it draws some random stars,
+moves the spaceship, and draws some flames and then repeats.
+<br><br>
+
+<pre>
+2POKE232,20:POKE233,8
+5REM7:'%%,5..>'<29'
+6HGR2:FOR X=1 TO 100:HCOLOR=7:HPLOT RND(1)*280,RND(1)*192:NEXT
+7SCALE=5:FORR=0TO16:ROT=R:GOSUB9:GOSUB9:NEXT:FOR X=100TO270:GOSUB9
+8HCOLOR=5:HPLOTX-30,86+RND(1)*16TOX-10,91:X1=X+SQR(X/25):GOSUB9:X=X1:NEXT:GOTO6
+9XDRAW1ATX,91:RETURN
+</pre>
+
+<h2>Nyan Cat -- Shape Tables and Page Flipping</h2>
+
+<center>
+<img src="nyan.png">
+</center>
+
+I wanted to do something wiht page-flipping and shape tables, possibly
+the only two graphics features the Apple II can do better than other
+8-bit computers.  I was thinking something like my
+<a href="../shapetable_party/">Shapetable Party</a> demo.<br><br>
+
+In the end trying to make complex ASCII shape tables was too much.
+But then oddly I had a dream where I made a HGR version of Nyan Cat.
+So here it is, a program that brought a lot of joy.<br><br>
+
+Not much exciting about it, the poptart-cat shapetable is done more or 
+less like in the previous example.  It uses HGR:HGR2 to clear both
+graphics pages and leaves things on PAGE2.  The rainbow and cat are
+first drawn on PAGE2 (the routine at line 8 draws them).  Then
+they are drawn again at a slightly different offset on PAGE1.
+The POKE 230,32 tells the Applesoft routines to draw to PAGE1
+($2000) instead of PAGE2 ($4000).  Ideally we'd switch back to page1
+so we could see both being drawn, in fact when watching it there's
+an annoying pause while PAGE1 is drawn and you can't see it.  However
+I was out of characters to do that.
+<br><br>
+As some have pointed out, I used tail-call optimization here, where instead
+of GOSUB9 one lsat time in line 8 I fall through to line 9 and let the
+return from there return from the GOSUB to line 8.  This is something
+I do a lot in 6502 assembly and it's fun to do it in BASIC too.
+<br><br>
+The actual program is like 7 which just flips pages rapidly.
+The V=0 call was added to slow the animation a bit, it roughly is as slow
+as the GOTO7.  I tried putting slower things (like SQR() square root)
+to slow it even more, but you have to put things twice or the animation
+is unbalanced and there wasn't enough room for two.
+<br><br>
+It was a bit more of a pain than you think to get the HGR colors to
+plot in rainbow order.  Also in size coding like this you run into issues
+where it takes less characters to have things to the upper left part
+of the screen as the coordinates can be less than 3 digits.
+<br><br>
+
+<pre>
+2POKE232,20:POKE233,8
+5REM$,.,6>???$$--5
+6ROT=0:SCALE=5:P=49236:HGR:HGR2:GOSUB8:Q=1:POKE230,32:GOSUB8
+7POKEP+1,0:V=0:POKEP,0:GOTO7
+8C=5:Y=80:XDRAW1AT134,102+Q*2:GOSUB9:C=1:GOSUB9:C=6:GOSUB9:C=2
+9HCOLOR=C:FORZ=YTOY+5:FORX=0TO13:Q=NOTQ:HPLOTX*8,Z+QTOX*8+7,Z+Q:NEXTX,Z:Y=Z:RETURN
+</pre>
+
+<h2>Double Hires Pattern</h2>
+
+<center>
+<img src="dhgr.png">
+</center>
+
+I was interested in seeing if I could get some better colors going.
+I have done demos that do
+<a href="../megademo/">Vapor Lock<a> and
+<a href="../lores-escape">mid-screen race-the beam mode switching</a>
+but I was pretty sure the Linux-based emulator used by the Apple II bot
+can't do that type of cycle-counted effects.<br><br>
+
+The emulator did seem to be emulating Apple IIe, which opened things
+up for double hi-res graphics.  Those are tricky to do and you can't
+easily program them from Applesoft.  I actually tried at first but had
+some issues fitting in a reasonable amount of room, so assembly language
+it is.<br><br>
+
+This was just a first test but it made a neat pattern.  I had a lot of trouble
+just getting horizontal lines drawn.  To do that in double-hires you
+have to draw an increasingly rotated-by-one bit version of the color
+across 4 bytes on two different bank-switched graphics pages, a huge pain.
+<br><br>
+<pre>
+{B10}
+1REM(X\(V\C7PC#PC PJ(AYJ A_J(Y_I_(* Y_I_RPT[3$ H H ($]H)C5P(1 C5P(1 B$\8I_D)R@)_8 XP)%%1&9Z)OF!S+ !7 ' #1GA#
+2FORI=0TO77:C=INT((PEEK(2132+I/3)-32)/4^(I-INT(I/3)*3)):POKE768+I,((PEEK(2054+I)-32)*4)+C-INT(C/4)*4:NEXT:CALL768
+</pre>
+
+<h2>Double Hi-res Rasterbars (126 byte assembly)</h2>
+
+<center>
+<img src="rasterbars.png">
+</center>
+
+My goal was to get two colors of double hi-res rasterbars going.
+It turns out this is much harder than it sounds.  I did get one
+rasterbar moving fairly easily, but getting a second independent bar
+was trouble.  Even then it was 136 bytes which was too big for the loader.
+<br><br>
+So I size optimized the code like crazy, including using the "BIT" trick
+to avoid a jump and various other things and got it down to 126 bytes.
+The pattern ended up being a bit nonsensical, as  I had to use an EOR (xor)
+to calculate the location of the second bar, but there is more than one
+color.
+<br><br>
+Then I optimized down the BASIC loader.  It's still qkumba's 6+2 loader
+but I found some parenthesis I could remove, did some algebra and orders-of-operation
+changes to remove some more parenthesis, and did some tricks with
+integer variables.  Applesoft does everything in floating point, but
+you can specify 16-bit integer values which will truncate, which removes
+the need for an INT (though qkumba later noticed that might not be
+necessary).
+<br><br>
+<pre>
+1REM(X\(V\C7PC#PC P1YJ (+ J!(+ F,!R0L"HR+HBC* RTYA_F2$JJ!A_I_R!D 2 * &9_JO= A_F2Y_H H ($]H)C5P(; C5P(; B$\:JQ_$R8I_D)R@)_8 $(, W[_XP)%%:0'TP!((Z !!=5!V-AY-4"0P%T!T0@QT9X0.Y
+2FORI=768TO894:C%=(PEEK(1924+I/3)-32)/4^(I-INT(I/3)*3):POKEI,C%+4*(PEEK(1286+I)-32-INT(C%/4)):NEXT:CALL768
+</pre>
+
+<h2>The Future</h2>
+
+So am I done for now?<br><br>
+
+There are still a few tricks remaining.  There is some deep magic you can
+do if you call into the Applesoft interpreter direct from assembly language.
+Lots of articles on this from the 1980s.<br><br>
+
+Applesoft supports calls like USR and &amp; besides CALL to call into
+assembly language.  The most useful is &amp; which just does a plain
+jump to $3F5.  If you load your assembly properly you can use this to
+save another few characters by getting rid of the CALL768.  (Also if
+you load your code at $3F5 you can watch it being decoded as it writes
+to the $400 text page).
+<br><br>
+
+So maybe I will come back to this again, but for now there's other
+projects I really need to finish.  It's been fun!
+
+<hr>
+
+<a href="../demos/">Back to Apple II Demos</a>
+
+</body>
+</html>
