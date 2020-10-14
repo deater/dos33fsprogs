@@ -1,6 +1,8 @@
 overall:
 	+ better bounds checking on paths
 	+ walk slower when tiny?
+	+ center the current verb+noun in status area
+	+ allow picking up items
 
 hook up actions:
 	+ scumm bar1
