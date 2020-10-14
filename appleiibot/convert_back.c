@@ -3,7 +3,7 @@
 
 int main(int argc, char **argv) {
 
-	int i,a,x,len;
+	int i,a,len;
 	char buf[BUFSIZ];
 	char out[BUFSIZ];
 
