@@ -9,3 +9,11 @@ For the sources to the assembly language demos:
 	autumn/seasons is in ../seasons
 	the double-hires demos are in ../dhgr
 
+tools:
+	./convert_qkumba will take a 128 byte or smaller binary
+		designed to run at $300 and create a basic loader for it
+
+	../asoft_basic-utils/tokenize_asoft will tokenize your basic program
+
+	../hgr-utils/shape_table lets you edit shape tables as a text file
+
