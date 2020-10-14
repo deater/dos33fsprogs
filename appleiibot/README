@@ -1,6 +1,11 @@
 This is where I develop the various things I send to the twitter
 AppleIIbot.
 
-Fore more info see here:
+For more info see here:
 	http://www.deater.net/weave/vmwprod/appleiibot/
+
+For the sources to the assembly language demos:
+	flame is in ../fire
+	autumn/seasons is in ../seasons
+	the double-hires demos are in ../dhgr
 
