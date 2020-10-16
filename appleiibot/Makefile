@@ -3,12 +3,12 @@ include ../Makefile.inc
 DOS33 = ../dos33fs-utils/dos33
 TOKENIZE = ../asoft_basic-utils/tokenize_asoft
 
-all:	appleiibot.dsk convert_to convert_back convert_qkumba
+all:	appleiibot.dsk convert_to convert_back convert_qkumba make_boxes
 
 appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
 	CIRCLES.BAS AUTUMN.BAS QKUMBA.BAS ASTEROID.BAS PERSON.BAS SHIP.BAS \
 	CONCERT.BAS NYAN.BAS RASTER.BAS RASTER2.BAS RASTER3.BAS LOTS.BAS LOAD \
-	RASTER4.BAS RASTER5.BAS PUMPKIN.BAS
+	RASTER4.BAS RASTER5.BAS PUMPKIN.BAS PUMPKIN_SMALL.BAS
 	cp empty.dsk appleiibot.dsk
 	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
 	$(DOS33) -y appleiibot.dsk SAVE A E2.BAS
@@ -29,6 +29,16 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
 	$(DOS33) -y appleiibot.dsk SAVE A RASTER5.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A LOTS.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A PUMPKIN.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A PUMPKIN_SMALL.BAS
+
+###
+
+make_boxes:	make_boxes.o
+	$(CC) $(LFLAGS) -o make_boxes make_boxes.o
+
+make_boxes.o:	make_boxes.c
+	$(CC) $(CFLAGS) -c make_boxes.c
+
 
 ###
 
@@ -158,10 +168,15 @@ PUMPKIN.BAS:	pumpkin.bas
 
 ####
 
+PUMPKIN_SMALL.BAS:	pumpkin_small.bas
+	$(TOKENIZE) < pumpkin_small.bas > PUMPKIN_SMALL.BAS
+
+####
+
 LOTS.BAS:	lots.bas
 	$(TOKENIZE) < lots.bas > LOTS.BAS
 
 ####
 
 clean:
-	rm -f *~ *.o *.lst convert_to convert_from convert_qkumba convert_back LOAD *.BAS
+	rm -f *~ *.o *.lst convert_to convert_from convert_qkumba make_boxes convert_back LOAD *.BAS
