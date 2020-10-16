@@ -8,7 +8,7 @@ all:	appleiibot.dsk convert_to convert_back convert_qkumba
 appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
 	CIRCLES.BAS AUTUMN.BAS QKUMBA.BAS ASTEROID.BAS PERSON.BAS SHIP.BAS \
 	CONCERT.BAS NYAN.BAS RASTER.BAS RASTER2.BAS RASTER3.BAS LOTS.BAS LOAD \
-	RASTER4.BAS RASTER5.BAS
+	RASTER4.BAS RASTER5.BAS PUMPKIN.BAS
 	cp empty.dsk appleiibot.dsk
 	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
 	$(DOS33) -y appleiibot.dsk SAVE A E2.BAS
@@ -28,6 +28,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
 	$(DOS33) -y appleiibot.dsk SAVE A RASTER4.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A RASTER5.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A LOTS.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A PUMPKIN.BAS
 
 ###
 
@@ -150,12 +151,15 @@ RASTER4.BAS:	raster4.bas
 RASTER5.BAS:	raster5.bas
 	$(TOKENIZE) < raster5.bas > RASTER5.BAS
 
+####
+
+PUMPKIN.BAS:	pumpkin.bas
+	$(TOKENIZE) < pumpkin.bas > PUMPKIN.BAS
 
 ####
 
 LOTS.BAS:	lots.bas
 	$(TOKENIZE) < lots.bas > LOTS.BAS
-
 
 ####
 
