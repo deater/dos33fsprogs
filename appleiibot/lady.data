@@ -1,0 +1,30 @@
+15	0	39	0	47	; background
+9	9	30	8	47	; hair
+9	12	27	4	7	; hair
+9	17	24	2	3	; hair
+0	12	28	32	39	; neck outline
+0	13	25	16	25	; eyebrow
+15	13	25	18	23	; eye white
+4	15	23	18	23	; eye green
+12	22	22	18	23	; right eye
+12	16	16	18	23	; left eye
+11	12	25	26	31	; cheeks
+11	14	23	10	15	; forehead
+11	16	22	8	9	; forehead
+11	18	20	8	35	; long nose
+11	19	21	32	41	; neck
+11	13	24	32	33	; face
+11	15	22	34	35	; lower face
+9	12	17	38	39	; left hair
+9	23	28	38	39	; right hair
+9	24	28	35	37	; right hair
+4	19	21	40	41	; neckline
+12	17	25	42	43	; shirt
+12	14	26	44	45	; shirt
+15	13	27	46	47	; shirt stripe
+3	12	13	26	27	; left cheek
+3	24	25	26	27	; right cheek
+3	18	20	32	33	; mouth bottom
+3	20	22	30	31	; mouth top
+8	30	30	34	47	; hair
+8	8	8	14	44	; hair	

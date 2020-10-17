@@ -25,5 +25,8 @@ int main(int argc, char **argv) {
 	printf("2FORI=0TO%d:C%%=(PEEK(%d+I/3)-32)/4^(I-INT(I/3)*3):POKE768+I,C%%+4*(PEEK(2054+I)-32-INT(C%%/4)):NEXT:CALL768\n",
 		filesize,2054+filesize);
 
+// note, peek/poke truncate?
+//2FORI=1013TO1141:C=(PEEK(1843+I/3)-32)/4^(I-INT(I/3)*3):POKEI,C+4*(PEEK(1041+I)-32-INT(C/4)):NEXT:&
+
 	return 0;
 }
