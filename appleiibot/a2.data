@@ -1,0 +1,30 @@
+15	0	39	0	47	; background
+8	10	27	1	43	; monitor back	
+13	3	20	40	41	; base bottom
+13	3	22	36	39	; base middle
+13	5	23	32	35	; base top
+13	8	24	28	31	; base tip
+8	7	14	35	38	; keyboard
+8	8	18	36	39	; keyboard
+8	13	18	31	31	; logo
+5	3	20	42	43	; base
+5	6	19	44	45	; base
+8	20	23	44	45	; base brown
+8	28	28	8	22	; monitor back
+13	9	24	2	26	; monitor
+8	10	21	4	24	; bezel
+0	11	20	6	23	; screen
+8	34	36	19	40	; drive side
+8	34	34	21	41	; drive side
+5	28	35	19	20	; drive top
+5	27	33	21	22	; drive top
+13	25	33	23	43	; drive outline
+0	26	32	24	32	; drive 1
+0	26	32	34	42	; drive 2
+5	27	32	28	28	; drive 1 slot
+5	27	32	38	38	; drive 2 slot
+3	31	31	31	32	; drive 1 logo
+3	31	31	41	42	; drive 2 logo
+5	29	30	25	30	; drive 1 door
+5	29	30	35	40	; drive 2 door
+12	23	23	2	3	; monitor power
