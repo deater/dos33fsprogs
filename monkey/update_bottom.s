@@ -13,6 +13,10 @@ update_bottom:
 	cmp	#MONKEY_MAP
 	bne	not_the_map
 
+	;===================================
+	; draw map footer
+	; you don't have actions on the map?
+	;===================================
 map_noun:
 	lda	VALID_NOUN
 	beq	done_map_noun
@@ -28,8 +32,10 @@ done_map_noun:
 	rts
 
 not_the_map:
-	;=======================
-	; if message, print it
+	;===========================================================
+	; if footer is disable and instead we are printing a message
+	; then print the message
+	;===========================================================
 
 	lda	DISPLAY_MESSAGE
 	beq	no_message
@@ -43,8 +49,15 @@ not_the_map:
 	rts
 
 no_message:
+	;===============================================
+	; draw the standard footer
+	;===============================================
+
 	; draw first line
 	; it's verb followed by noun
+	; we go through a lot of trouble to center it
+
+	; text is not inverse
 
 	jsr	normal_text
 
@@ -55,28 +68,70 @@ no_message:
 	sta	OUTH
 	jsr	move_and_print
 
+	; set up temp line
+	; already here as we're immediately after clear line?
+
+	lda	#<(temp_line+2)
+	sta	OUTL
+	lda	#>(temp_line+2)
+	sta	OUTH
+
+	; concatenate verb
+
 	lda	CURRENT_VERB
 	asl
 	tay
+
 	lda	verb_names,Y
-	sta	OUTL
+	sta	INL
 	lda	verb_names+1,Y
-	sta	OUTH
+	sta	INH
 
-	jsr	move_and_print
+	jsr	strcat
 
+	; concatenate noun if applicable
 
 	lda	VALID_NOUN
 	beq	no_noun
 
 	lda	NOUN_L
-	sta	OUTL
+	sta	INL
 	lda	NOUN_H
+	sta	INH
+
+	jsr	strcat
+
+no_noun:
+
+	; stick zero at end
+	lda	#0
+	tay
+	sta	(OUTL),Y
+
+	; center it
+	lda	#<(temp_line+2)
+	sta	INL
+	lda	#>(temp_line+2)
+	sta	INH
+
+	jsr	strlen
+	sty	temp_line
+	lda	#40
+	sec
+	sbc	temp_line
+	lsr
+	sta	temp_line
+
+	; now print it
+
+	lda	#<temp_line
+	sta	OUTL
+	lda	#>temp_line
 	sta	OUTH
 
 	jsr	move_and_print
 
-no_noun:
+
 
 	;========================
 	; draw command bars
@@ -142,15 +197,50 @@ verb_names:
 .word	verb_pull
 .word	verb_walk
 
-verb_give:	.byte 15,20,"GIVE ",0
-verb_open:	.byte 15,20,"OPEN ",0
-verb_close:	.byte 14,20,"CLOSE ",0
-verb_pick_up:	.byte 12,20,"PICK UP ",0
-verb_look_at:	.byte 12,20,"LOOK AT ",0
-verb_talk_to:	.byte 12,20,"TALK TO ",0
-verb_use:	.byte 16,20,"USE ",0
-verb_push:	.byte 15,20,"PUSH ",0
-verb_pull:	.byte 15,20,"PULL ",0
-verb_walk:	.byte 12,20,"WALK TO ",0
+verb_give:	.byte "GIVE ",0
+verb_open:	.byte "OPEN ",0
+verb_close:	.byte "CLOSE ",0
+verb_pick_up:	.byte "PICK UP ",0
+verb_look_at:	.byte "LOOK AT ",0
+verb_talk_to:	.byte "TALK TO ",0
+verb_use:	.byte "USE ",0
+verb_push:	.byte "PUSH ",0
+verb_pull:	.byte "PULL ",0
+verb_walk:	.byte "WALK TO ",0
 
-clear_line:	.byte 12,20,"                          ",0
+clear_line:	.byte 0,20,"                                        ",0
+temp_line:	.byte 0,20,"                                        ",0
+
+	;====================================
+	; concatenate (INL) to end of (OUTL)
+	; update (OUTL) to point to end when done
+strcat:
+	ldy	#0
+strcat_loop:
+	lda	(INL),Y
+	beq	strcat_done
+	sta	(OUTL),Y
+	iny
+	bne	strcat_loop
+strcat_done:
+	tya
+	clc
+	adc	OUTL
+	sta	OUTL
+	lda	#0
+	adc	OUTH
+	sta	OUTH
+	rts
+
+	;====================================
+	; calculate length of string in (INL)
+	; returns value in Y
+strlen:
+	ldy	#0
+strlen_loop:
+	lda	(INL),Y
+	beq	strlen_done
+	iny
+	bne	strlen_loop
+strlen_done:
+	rts

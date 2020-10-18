@@ -482,54 +482,54 @@ location14:
 
 ; common strings
 
-door_string:	.byte 20,20,"DOOR",0
-pirate_string:	.byte 20,20,"PIRATE",0
-pirates_string:	.byte 20,20,"PIRATES",0
+door_string:	.byte "DOOR",0
+pirate_string:	.byte "PIRATE",0
+pirates_string:	.byte "PIRATES",0
 
 ; bar3 strings
-stew_string:	.byte 20,20,"POT O' STEW",0
-table_string:	.byte 20,20,"TABLE",0
-barrel_string:	.byte 20,20,"BARREL",0
-meat_string:	.byte 20,20,"HUNK OF MEAT",0
+stew_string:	.byte "POT O' STEW",0
+table_string:	.byte "TABLE",0
+barrel_string:	.byte "BARREL",0
+meat_string:	.byte "HUNK OF MEAT",0
 
 ; voodoo1 strings
-couch_string:	.byte 20,20,"COUCH",0
-chicken_string:	.byte 20,20,"CHICKEN",0
-chickens_string:.byte 20,20,"CHICKENS",0
-statue_string:	.byte 20,20,"STATUE",0
-basket_string:	.byte 20,20,"BASKET",0
-baskets_string:	.byte 20,20,"BASKETS",0
-bones_string:	.byte 20,20,"BONES",0
-chalice_string:	.byte 20,20,"CHALICE",0
-trunk_string:	.byte 20,20,"TRUNK",0
-voodoo_knicknacks_string:.byte 20,20,"VOODOO KNICKNACKS",0
+couch_string:	.byte "COUCH",0
+chicken_string:	.byte "CHICKEN",0
+chickens_string:.byte "CHICKENS",0
+statue_string:	.byte "STATUE",0
+basket_string:	.byte "BASKET",0
+baskets_string:	.byte "BASKETS",0
+bones_string:	.byte "BONES",0
+chalice_string:	.byte "CHALICE",0
+trunk_string:	.byte "TRUNK",0
+voodoo_knicknacks_string:.byte "VOODOO KNICKNACKS",0
 
 ; voodoo2 strings
-voodoo_lady_string:	.byte 20,20,"VOODOO LADY",0
+voodoo_lady_string:	.byte "VOODOO LADY",0
 
 ; church strings
-alley_string:	.byte 20,20,"ALLEY",0
+alley_string:	.byte "ALLEY",0
 
 ; mansion path strings
-mansion_string:	.byte 20,20,"GOVERNOR'S MANSION",0
-town_string:	.byte 20,20,"TOWN",0
+mansion_string:	.byte "GOVERNOR'S MANSION",0
+town_string:	.byte "TOWN",0
 
 ; mansion strings
-poodles_string:	.byte 20,20,"PIRANHA POODLES",0
-trail_string:	.byte 20,20,"TRAIL",0
+poodles_string:	.byte "PIRANHA POODLES",0
+trail_string:	.byte "TRAIL",0
 
 ; zipline strings
-pole_string:	.byte 20,20,"POLE",0
-cable_string:	.byte 20,20,"CABLE",0
-sign_string:	.byte 20,20,"SIGN",0
+pole_string:	.byte "POLE",0
+cable_string:	.byte "CABLE",0
+sign_string:	.byte "SIGN",0
 
 ; bar strings
 
 ; lookout strings
 
-lookout_string:	.byte 20,20,"LOOKOUT",0
-path_string:	.byte 20,20,"PATH",0
-stairs_string:	.byte 20,20,"STAIRS",0
+lookout_string:	.byte "LOOKOUT",0
+path_string:	.byte "PATH",0
+stairs_string:	.byte "STAIRS",0
 
 ; map strings
 
@@ -542,25 +542,25 @@ lookout_point_string: .byte 13,20,"LOOKOUT POINT",0
 village_string:	.byte 16,20,"VILLAGE",0
 
 ; inside_bar2 strings
-dog_string:	.byte 20,20,"DOG",0
+dog_string:	.byte "DOG",0
 
 ; inside_bar2 strings
 
-curtain_string:	.byte 20,20,"CURTAIN",0
-impt_pirate_string:	.byte 20,20,"IMPORTANT PIRATES",0
-fireplace_string:	.byte 20,20,"FIREPLACE",0
+curtain_string:	.byte "CURTAIN",0
+impt_pirate_string:	.byte "IMPORTANT PIRATES",0
+fireplace_string:	.byte "FIREPLACE",0
 
 ; poster strings
 
-cliffside_string:	.byte 20,20,"CLIFFSIDE",0
-poster_string:		.byte 20,20,"POSTER",0
+cliffside_string:	.byte "CLIFFSIDE",0
+poster_string:		.byte "POSTER",0
 
 ; dock strings
 
-moon_string:	.byte 20,20,"MOON",0
+moon_string:	.byte "MOON",0
 
 ; town strings
 
-archway_string:	.byte 20,20,"ARCHWAY",0
-clock_string:	.byte 20,20,"CLOCK",0
-citizen_string: .byte 20,20,"CITIZEN OF MELEE",0
+archway_string:	.byte "ARCHWAY",0
+clock_string:	.byte "CLOCK",0
+citizen_string: .byte "CITIZEN OF MELEE",0
