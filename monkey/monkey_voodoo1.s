@@ -90,14 +90,37 @@ voodoo1_draw_foreground:
 	sta	XPOS
 	lda	#30
 	sta	YPOS
-	jmp	put_sprite_crop
+	jsr	put_sprite_crop
+
+	lda	ITEMS_PICKED_UP
+	and	#IPU_ITEM_PULLEY_CHICKEN
+	bne	done_voodoo1_draw_foreground
+
+	lda	#<chicken_pulley_sprite
+	sta	INL
+	lda	#>chicken_pulley_sprite
+	sta	INH
+
+	lda	#30
+	sta	XPOS
+	lda	#30
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+
+done_voodoo1_draw_foreground:
+	rts
 
 voodoo1_fg_sprite:
-	.byte	20,2
-	.byte	$AA,$8A,$88,$88,$8A,$AA,$AA,$AA,$AA,$AA
-	.byte	$8A,$AA,$AA,$AA,$AA,$AA,$AA,$AA,$77,$AA
-	.byte	$8A,$08,$08,$80,$80,$88,$8A,$AA,$AA,$08
-	.byte	$08,$08,$AA,$AA,$AA,$AA,$AA,$AA,$87,$57
+	.byte	12,2
+	.byte	$AA,$8A,$88,$88,$8A,$AA,$AA,$AA,$AA,$AA,$8A,$AA
+	.byte	$8A,$08,$08,$80,$80,$88,$8A,$AA,$AA,$08,$08,$08
+
+chicken_pulley_sprite:
+	.byte	2,2
+	.byte	$77,$AA
+	.byte	$87,$57
 
 
 	;==========================
@@ -431,6 +454,32 @@ trunk_look:	.byte 8,21,"PROBABLY HAS A BODY IN IT",0
        ;=============================
 chicken_pulley_action:
 	lda	CURRENT_VERB
+
+	cmp     #VERB_PICK_UP
+	bne	chicken_pulley_not_pickup
+
+	; pick up the chicken_pulley
+	lda	ITEMS_PICKED_UP
+	ora	#IPU_ITEM_PULLEY_CHICKEN
+	sta	ITEMS_PICKED_UP
+
+	; add to inventory
+	lda	#INV_ITEM_PULLEY_CHICKEN
+	ldx	INVENTORY_NEXT_SLOT
+	sta	INVENTORY,X
+	inc	INVENTORY_NEXT_SLOT
+
+	; decrement object count in room
+	ldy	#LOCATION_NUM_AREAS
+	lda	location12,Y
+	sec
+	sbc	#1
+	sta	location12,Y
+
+	rts
+
+chicken_pulley_not_pickup:
+
 	asl
 	tay
 

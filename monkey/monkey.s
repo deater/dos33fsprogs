@@ -42,6 +42,15 @@ monkey_start:
 	sta	DISPLAY_MESSAGE
 	sta	BAR_DOOR_OPEN
 	sta	VALID_NOUN
+	sta	ITEMS_PICKED_UP
+	sta	INVENTORY_NEXT_SLOT
+	sta	INVENTORY
+	sta	INVENTORY2
+	sta	INVENTORY3
+	sta	INVENTORY4
+	sta	INVENTORY5
+
+
 
 	; init cursor
 
@@ -51,8 +60,8 @@ monkey_start:
 
 	; set up initial location
 
-;	lda	#MONKEY_BAR
-	lda	#MONKEY_LOOKOUT
+	lda	#MONKEY_BAR
+;	lda	#MONKEY_LOOKOUT
 ;	lda	#MONKEY_VOODOO1
 	sta	LOCATION
 
@@ -100,6 +109,8 @@ game_loop:
 	beq	do_draw_sign
 	cmp	#MONKEY_VOODOO2
 	beq	do_draw_smoke
+	cmp	#MONKEY_BAR_INSIDE3
+	beq	do_draw_meat
 
 	jmp	nothing_special
 
@@ -117,6 +128,10 @@ do_draw_sign:
 
 do_draw_smoke:
 	jsr	draw_smoke
+	jmp	nothing_special
+
+do_draw_meat:
+	jsr	draw_meat
 	jmp	nothing_special
 
 nothing_special:

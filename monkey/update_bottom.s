@@ -104,9 +104,9 @@ no_message:
 no_noun:
 
 	; stick zero at end
-	lda	#0
-	tay
-	sta	(OUTL),Y
+;	lda	#0
+;	tay
+;	sta	(OUTL),Y
 
 	; center it
 	lda	#<(temp_line+2)
@@ -154,13 +154,108 @@ bottom_loop:
 	cpx	#18
 	bne	bottom_loop
 
+	;======================================
+	; draw inventory
+
+	; draw /\
+	; draw ::
+	; draw \/
+
+	lda	#<inv_up
+	sta	OUTL
+	lda	#>inv_up
+	sta	OUTH
+	jsr	move_and_print
+	jsr	move_and_print
+
+	jsr	normal_text
+
+	jsr	move_and_print
+
+	;==============================
+	; print inventory, if any
+
+	lda	INVENTORY
+	beq	done_inventory
+
+	asl
+	tay
+	lda	inventory_names,Y
+	sta	INL
+	lda	inventory_names+1,Y
+	sta	INH
+
+	lda	#<(temp_inv+2)
+	sta	OUTL
+	lda	#>(temp_inv+2)
+	sta	OUTH
+
+	jsr	strcat
+
+
+	lda	#<(temp_inv)
+	sta	OUTL
+	lda	#>(temp_inv)
+	sta	OUTH
+
+	lda	#21
+	sta	temp_inv+1
+
+	jsr	move_and_print
+
+
+	lda	INVENTORY2
+	beq	done_inventory
+
+	asl
+	tay
+	lda	inventory_names,Y
+	sta	INL
+	lda	inventory_names+1,Y
+	sta	INH
+
+	lda	#<(temp_inv+2)
+	sta	OUTL
+	lda	#>(temp_inv+2)
+	sta	OUTH
+
+	jsr	strcat
+
+
+	lda	#<(temp_inv)
+	sta	OUTL
+	lda	#>(temp_inv)
+	sta	OUTH
+
+	lda	#22
+	sta	temp_inv+1
+
+	jsr	move_and_print
+
+
+done_inventory:
 	rts
+
+
+inventory_names:
+	.word	null_string		; NULL
+	.word	meat_string		; HUNK OF MEAT
+	.word	chicken_pulley_string	; CHICKEN PULLEY
+
+
+inv_up:		.byte 22,21,"/\",0
+inv_down:	.byte 22,23,"\/",0
+inv_middle:	.byte 22,22,"::",0
+
+temp_inv:
+	.byte 25,0,"                    ",0
+
 
 ;0123456789012345678901234567890123456789
 ;
-;GIVE  PICK UP  USE
-;OPEN  LOOK AT  PUSH
-;CLOSE TALK TO  PULL
+;GIVE  PICK UP  USE    /\ HUNK O' MEAT
+;OPEN  LOOK AT  PUSH   :: CHICKEN PULLEY
+;CLOSE TALK TO  PULL   \/
 
 bottom_strings:
 .word	bottom_give
@@ -230,6 +325,9 @@ strcat_done:
 	lda	#0
 	adc	OUTH
 	sta	OUTH
+	lda	#0
+	tay
+	sta	(OUTL),Y	; NUL terminate
 	rts
 
 	;====================================

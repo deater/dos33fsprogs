@@ -414,16 +414,15 @@ location12:
 		.word	chalice_string		; name
 		.word	chalice_action-1	; action
 
-		.byte	31,33	; x
-		.byte	30,36	; y
-		.word	chicken_string		; name
-		.word	chicken_pulley_action-1	; action
-
 		.byte	29,39	; x
 		.byte	36,40	; y
 		.word	trunk_string		; name
 		.word	trunk_action-1		; action
 
+		.byte	31,33	; x
+		.byte	30,36	; y
+		.word	chicken_string		; name
+		.word	chicken_pulley_action-1	; action
 
 ; MONKEY_VOODOO2		-- voodoo lady
 location13:
@@ -503,6 +502,8 @@ bones_string:	.byte "BONES",0
 chalice_string:	.byte "CHALICE",0
 trunk_string:	.byte "TRUNK",0
 voodoo_knicknacks_string:.byte "VOODOO KNICKNACKS",0
+chicken_pulley_string:	.byte "CHICKEN PULLEY",0
+null_string:	.byte "NULL",0
 
 ; voodoo2 strings
 voodoo_lady_string:	.byte "VOODOO LADY",0

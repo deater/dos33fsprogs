@@ -64,23 +64,35 @@ bar_inside3_check_bounds:
 
 	rts
 
-;draw_house:
 
-;	lda	#<wall_sprite
-;	sta	INL
-;	lda	#>wall_sprite
-;	sta	INH
+	;================================
+	;================================
+	; draw meat
+	;================================
+	;================================
+draw_meat:
+	lda	ITEMS_PICKED_UP
+	and	#IPU_ITEM_MEAT
+	bne	done_draw_meat
 
-;	lda	#18
-;	sta	XPOS
-;	lda	#22
-;	sta	YPOS
+	lda	#<meat_sprite
+	sta	INL
+	lda	#>meat_sprite
+	sta	INH
 
-;	jsr	put_sprite_crop
+	lda	#9
+	sta	XPOS
+	lda	#26
+	sta	YPOS
 
-;	rts
+	jsr	put_sprite_crop
+done_draw_meat:
+	rts
 
-;house_sprite:
+meat_sprite:
+	.byte	3,2
+	.byte	$3A,$8A,$AA
+	.byte	$A3,$A8,$Af
 
 
 	;===================================
@@ -172,6 +184,31 @@ table_actions:
        ;=============================
 meat_action:
 	lda	CURRENT_VERB
+	cmp	#VERB_PICK_UP
+	bne	meat_not_pickup
+
+	; pick up the meat
+	lda	ITEMS_PICKED_UP
+	ora	#IPU_ITEM_MEAT
+	sta	ITEMS_PICKED_UP
+
+	; add to inventory
+	lda	#INV_ITEM_MEAT
+	ldx	INVENTORY_NEXT_SLOT
+	sta	INVENTORY,X
+	inc	INVENTORY_NEXT_SLOT
+
+	; decrement object count in room
+
+	ldy	#LOCATION_NUM_AREAS
+	lda	location14,Y
+	sec
+	sbc	#1
+	sta	location14,Y
+
+	rts
+
+meat_not_pickup:
 	asl
 	tay
 
