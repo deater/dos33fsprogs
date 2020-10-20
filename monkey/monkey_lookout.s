@@ -20,6 +20,17 @@ lookout_check_stairs:
 	cmp	#DIR_DOWN
 	bne	lookout_no_exit
 
+lookout_to_poster:
+
+	; check to see if first time
+
+	lda	FIRST_TIME
+	and	#FIRST_TIME_LEAVE_LOOKOUT
+	bne	not_first_poster
+
+	jsr	chapter1_transition
+
+not_first_poster:
 	lda	#MONKEY_POSTER
 	sta	LOCATION
 	lda	#4
