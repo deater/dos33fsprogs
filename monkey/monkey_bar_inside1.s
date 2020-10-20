@@ -110,8 +110,26 @@ bar_inside_rightside:
 	; I can't spell chandelier
 bar_animate_ceiling:
 
-bar_inside_done:
-	rts
+	lda	FRAMEL
+	and	#$30
+	lsr
+	lsr
+	lsr
+	tay
+
+	lda	ceiling_sprites,Y
+	sta	INL
+	lda	ceiling_sprites+1,Y
+	sta	INH
+
+	lda	#19
+	sta	XPOS
+	lda	#8
+	sta	YPOS
+
+	jmp	put_sprite_crop
+
+
 
 
 
@@ -129,6 +147,48 @@ bar1_table2_sprite:
 	.byte $8A,$00,$b5,$20,$67,$dd,$db,$7b,$db,$d0,$A0
 	.byte $A8,$88,$26,$66,$db,$d2,$db,$d7,$8d,$8b,$AA
 	.byte $AA,$88,$22,$26,$2b,$88,$A8,$08,$00,$88,$AA
+
+ceiling_sprites:
+	.word	ceiling1_sprite
+	.word	ceiling2_sprite
+	.word	ceiling3_sprite
+	.word	ceiling4_sprite
+
+ceiling1_sprite:
+	.byte	6,6
+	.byte	$AA,$2A,$62,$AA,$9d,$AA
+	.byte	$22,$26,$b8,$88,$A5,$AA
+	.byte	$AA,$00,$00,$28,$88,$9d
+	.byte	$cc,$00,$00,$82,$A8,$85
+	.byte	$AA,$cb,$00,$02,$22,$AA
+	.byte	$AA,$AA,$AA,$00,$08,$AA
+
+ceiling2_sprite:
+	.byte	7,6
+	.byte	$AA,$AA,$9d,$AA,$62,$22,$AA
+	.byte	$AA,$AA,$dA,$88,$8b,$AA,$AA
+	.byte	$AA,$2A,$59,$88,$2b,$AA,$cA
+	.byte	$AA,$A8,$a8,$88,$62,$00,$cc
+	.byte	$AA,$AA,$AA,$88,$66,$AA,$Ac
+	.byte	$AA,$AA,$AA,$08,$00,$AA,$AA
+
+ceiling3_sprite:
+	.byte	8,6
+	.byte	$AA,$9d,$AA,$AA,$AA,$9d,$62,$2A
+	.byte	$dA,$A8,$00,$08,$28,$08,$bb,$62
+	.byte	$59,$2A,$9d,$99,$22,$22,$02,$AA
+	.byte	$A8,$A8,$25,$28,$22,$AA,$00,$cc
+	.byte	$AA,$AA,$02,$88,$66,$AA,$CC,$Ab
+	.byte	$AA,$0A,$00,$A8,$AA,$AA,$AA,$AA
+
+ceiling4_sprite:
+	.byte	6,6
+	.byte	$AA,$AA,$9d,$62,$22,$22
+	.byte	$AA,$dA,$2A,$28,$0b,$A6
+	.byte	$AA,$29,$52,$c2,$00,$AA
+	.byte	$AA,$A8,$28,$cb,$A0,$AA
+	.byte	$AA,$AA,$A2,$00,$AA,$AA
+	.byte	$AA,$AA,$A0,$A0,$AA,$AA
 
 
 	;===================================
