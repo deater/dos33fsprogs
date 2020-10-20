@@ -64,10 +64,10 @@ main_loop:
 	sta	DONE_PLAYING
 	sta	WHICH_CHUNK
 	sta	MB_CHUNK_OFFSET
-	sta	MB_ADDRL		; we are aligned, so should be 0
+	sta	MB_ADDR_L		; we are aligned, so should be 0
 
 	lda	#>music_start
-	sta	MB_ADDRH
+	sta	MB_ADDR_H
 
 	;=====================================
 	; clear register area

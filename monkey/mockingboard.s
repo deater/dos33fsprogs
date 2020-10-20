@@ -127,24 +127,24 @@ clear_ay_left_loop:
 	; Based on code from the French Touch "Pure Noise" Demo
 	; Attempts to time an instruction sequence with a 6522
 	;
-	; MB_ADDRL:MB_ADDRH has address of Mockingboard
+	; MB_ADDR_L:MB_ADDR_H has address of Mockingboard
 	; returns X=0 if not found, X=1 if found
 
 mockingboard_detect_slot4:
 	lda	#0
-	sta	MB_ADDRL
+	sta	MB_ADDR_L
 
 mb4_detect_loop:	; self-modifying
 	lda	#$04	; we're only looking in Slot 4
 	ora	#$C0	; make it start with C
-	sta	MB_ADDRH
+	sta	MB_ADDR_H
 	ldy	#04	; $CX04
 	ldx	#02	; 2 tries?
 mb4_check_cycle_loop:
-	lda	(MB_ADDRL),Y		; timer 6522 (Low Order Counter)
+	lda	(MB_ADDR_L),Y		; timer 6522 (Low Order Counter)
 					; count down
 	sta	TEMP			; 3 cycles
-	lda	(MB_ADDRL),Y		; + 5 cycles = 8 cycles
+	lda	(MB_ADDR_L),Y		; + 5 cycles = 8 cycles
 					; between the two accesses to the timer
 	sec
 	sbc	TEMP			; subtract to see if we had 8 cycles

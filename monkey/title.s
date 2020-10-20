@@ -313,7 +313,7 @@ done_with_title:
 	;==========================
 	; load main program
 	;==========================
-
+totally_done:
 	lda	#LOAD_MONKEY
 	sta	WHICH_LOAD
 

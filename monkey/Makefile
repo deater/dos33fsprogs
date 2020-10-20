@@ -62,7 +62,8 @@ monkey.o:	monkey.s zp.inc hardware.inc common_defines.inc \
 	monkey_mansion.s monkey_zipline.s \
 	monkey_bar_inside1.s monkey_bar_inside2.s monkey_bar_inside3.s \
 	monkey_voodoo1.s monkey_voodoo2.s \
-	cutscene_lechuck.s chapter1.s
+	cutscene_lechuck.s chapter1.s \
+	music/chapter.pt3
 	ca65 -o monkey.o monkey.s -l monkey.lst
 
 graphics/graphics.inc:

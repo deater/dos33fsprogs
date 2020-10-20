@@ -66,6 +66,9 @@ ENVELOPE_SHAPE  = $7D
 COPY_OFFSET     = $7E
 DECODER_STATE   = $7F
 
+PATTERN_L       = $7E
+PATTERN_H       = $7F
+
 
 ; note 70-7f also used by disk code
 
@@ -167,10 +170,22 @@ WHICH_CHUNK	= $F0
 MB_CHUNK_OFFSET	= $F1
 LOOP		= $F4
 MB_VALUE	= $F5
-MB_ADDRL	= $F6
-MB_ADDRH	= $F7
+MB_ADDR_L	= $F6
+MB_ADDR_H	= $F7
 DONE_PLAYING	= $F8
 DONE_SONG	= $F9
+
+; rest of pt3_player
+PT3_TEMP        = $EF
+ORNAMENT_L      = $F0
+ORNAMENT_H      = $F1
+SAMPLE_L        = $F2
+SAMPLE_H        = $F3
+
+
+
+
+
 
 TEMP		=	$FA
 TEMPY		=	$FB

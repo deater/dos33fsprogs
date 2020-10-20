@@ -20,8 +20,31 @@ chapter1_transition:
 	 ; flip page
 	jsr	page_flip
 
-	ldx	#$C0
+
+	;=============================
+	; play music if mockingboard
+	;=============================
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	skip_start_music
+	cli
+
+skip_start_music:
+
+	ldx	#$D0
 	jsr	wait_a_bit
 
+
+	; turn off music
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	skip_turn_off_music
+
+	sei                             ; disable interrupts
+
+	jsr     clear_ay_both
+
+skip_turn_off_music:
 
 	rts

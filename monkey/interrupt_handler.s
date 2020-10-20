@@ -150,81 +150,81 @@ mb_load_values:
 	ldy	MB_CHUNK_OFFSET	; get chunk offset			; 3
 
 	; afine
-	lda	(MB_ADDRL),y		; load register value		; 5
+	lda	(MB_ADDR_L),y		; load register value		; 5
 	sta	A_FINE_TONE						; 3
 	clc				; point to next interleaved	; 2
-	lda	MB_ADDRH		; page by adding CHUNKSIZE	; 3
+	lda	MB_ADDR_H		; page by adding CHUNKSIZE	; 3
 	adc	#CHUNKSIZE						; 3
-	sta	MB_ADDRH						; 3
+	sta	MB_ADDR_H						; 3
 
 	; bfine
-	lda	(MB_ADDRL),y		; load register value		; 5
+	lda	(MB_ADDR_L),y		; load register value		; 5
 	sta	B_FINE_TONE						; 3
 	clc				; point to next interleaved	; 2
-	lda	MB_ADDRH		; page by adding CHUNKSIZE	; 3
+	lda	MB_ADDR_H		; page by adding CHUNKSIZE	; 3
 	adc	#CHUNKSIZE						; 3
-	sta	MB_ADDRH						; 3
+	sta	MB_ADDR_H						; 3
 
 	; cfine
-	lda	(MB_ADDRL),y		; load register value		; 5
+	lda	(MB_ADDR_L),y		; load register value		; 5
 	sta	C_FINE_TONE						; 3
 	clc				; point to next interleaved	; 2
-	lda	MB_ADDRH		; page by adding CHUNKSIZE	; 3
+	lda	MB_ADDR_H		; page by adding CHUNKSIZE	; 3
 	adc	#CHUNKSIZE						; 3
-	sta	MB_ADDRH						; 3
+	sta	MB_ADDR_H						; 3
 
 	; noise
-	lda	(MB_ADDRL),y		; load register value		; 5
+	lda	(MB_ADDR_L),y		; load register value		; 5
 	sta	NOISE							; 3
 	clc				; point to next interleaved	; 2
-	lda	MB_ADDRH		; page by adding CHUNKSIZE	; 3
+	lda	MB_ADDR_H		; page by adding CHUNKSIZE	; 3
 	adc	#CHUNKSIZE						; 3
-	sta	MB_ADDRH						; 3
+	sta	MB_ADDR_H						; 3
 
 	; enable
-	lda	(MB_ADDRL),y		; load register value		; 5
+	lda	(MB_ADDR_L),y		; load register value		; 5
 	sta	ENABLE							; 3
 	clc				; point to next interleaved	; 2
-	lda	MB_ADDRH		; page by adding CHUNKSIZE	; 3
+	lda	MB_ADDR_H		; page by adding CHUNKSIZE	; 3
 	adc	#CHUNKSIZE						; 3
-	sta	MB_ADDRH						; 3
+	sta	MB_ADDR_H						; 3
 
 	; acoarse/bcoarse
-	lda	(MB_ADDRL),y		; load register value		; 5
+	lda	(MB_ADDR_L),y		; load register value		; 5
 	and	#$f							; 2
 	sta	B_COARSE_TONE						; 3
-	lda	(MB_ADDRL),y		; load register value		; 5
+	lda	(MB_ADDR_L),y		; load register value		; 5
 	lsr								; 2
 	lsr								; 2
 	lsr								; 2
 	lsr								; 2
 	sta	A_COARSE_TONE						; 3
 	clc				; point to next interleaved	; 2
-	lda	MB_ADDRH		; page by adding CHUNKSIZE	; 3
+	lda	MB_ADDR_H		; page by adding CHUNKSIZE	; 3
 	adc	#CHUNKSIZE						; 3
-	sta	MB_ADDRH						; 3
+	sta	MB_ADDR_H						; 3
 
 	; CCOARSE/AAMP
-	lda	(MB_ADDRL),y		; load register value		; 5
+	lda	(MB_ADDR_L),y		; load register value		; 5
 	and	#$f							; 2
 	sta	A_VOLUME						; 3
-	lda	(MB_ADDRL),y		; load register value		; 5
+	lda	(MB_ADDR_L),y		; load register value		; 5
 	lsr								; 2
 	lsr								; 2
 	lsr								; 2
 	lsr								; 2
 	sta	C_COARSE_TONE						; 3
 	clc				; point to next interleaved	; 2
-	lda	MB_ADDRH		; page by adding CHUNKSIZE	; 3
+	lda	MB_ADDR_H		; page by adding CHUNKSIZE	; 3
 	adc	#CHUNKSIZE						; 3
-	sta	MB_ADDRH						; 3
+	sta	MB_ADDR_H						; 3
 	inx				; point to next register	; 2
 
 	; BAMP/CAMP
-	lda	(MB_ADDRL),y		; load register value		; 5
+	lda	(MB_ADDR_L),y		; load register value		; 5
 	and	#$f							; 2
 	sta	C_VOLUME						; 3
-	lda	(MB_ADDRL),y		; load register value		; 5
+	lda	(MB_ADDR_L),y		; load register value		; 5
 	lsr								; 2
 	lsr								; 2
 	lsr								; 2
@@ -270,7 +270,7 @@ increment_done:
 	lda	#>music_start
 	clc
 	adc	WHICH_CHUNK
-	sta	MB_ADDRH
+	sta	MB_ADDR_H
 
 	;=================================
 	; Finally done with this interrupt
