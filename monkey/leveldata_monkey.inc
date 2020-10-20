@@ -187,12 +187,12 @@ location6:
 	.word	bar_inside1_check_exit		; exit
 	.word	bar_inside1_check_bounds	; bounds check
 	.byte	GUYBRUSH_BIG			; size
-	.byte	7				; num areas
+	.byte	9				; num areas
 
 		.byte	0,10	; x
 		.byte	34,40	; y
 		.word	pirate_string		; name
-		.word	bar1_pirate_action-1	; action
+		.word	bar1_left_pirate_action-1	; action
 
 		.byte	4,9	; x
 		.byte	16,32	; y
@@ -202,24 +202,34 @@ location6:
 		.byte	10,15	; x
 		.byte	22,32	; y
 		.word	pirate_string		; name
-		.word	bar1_pirate_action-1	; action
+		.word	bar1_red_pirate_action-1	; action
 
 		.byte	16,20	; x
 		.byte	22,34	; y
 		.word	pirates_string		; name
-		.word	bar1_pirate_action-1	; action
+		.word	bar1_right_pirate_action-1	; action
 
-		.byte	21,35	; x
-		.byte	22,38	; y
+		.byte	21,25	; x
+		.byte	26,35	; y
 		.word	pirate_string		; name
-		.word	bar1_pirate_action-1	; action
+		.word	bar1_fg_left_pirate_action-1	; action
+
+		.byte	27,32	; x
+		.byte	26,35	; y
+		.word	pirate_string		; name
+		.word	bar1_fg_busy_pirate_action-1	; action
+
+		.byte	33,36	; x
+		.byte	26,33	; y
+		.word	pirate_string		; name
+		.word	bar1_loom_pirate_action-1	; action
 
 		.byte	37,40	; x
 		.byte	14,30	; y
 		.word	curtain_string		; name
 		.word	curtain_action-1	; action
 
-		.byte	35,40	; x
+		.byte	36,40	; x
 		.byte	30,38	; y
 		.word	dog_string		; name
 		.word	bar1_dog_action-1	; action

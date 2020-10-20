@@ -197,11 +197,259 @@ ceiling4_sprite:
 	;===================================
 	;===================================
 
+
 ;=============================
-bar1_pirate_action:
+bar1_left_pirate_action:
+	lda	CURRENT_VERB
+	asl
+	tay
+
+	lda	left_pirate_actions,Y
+	cmp	#$ff
+	beq	left_pirate_nothing
+
+	sta	MESSAGE_L
+	lda	left_pirate_actions+1,Y
+	sta	MESSAGE_H
+
+	jmp	do_display_message
+
+left_pirate_nothing:
 	lda	#VERB_WALK
 	sta	CURRENT_VERB
 	rts
+
+left_pirate_actions:
+	.word   $FFFF		; give
+	.word   doesnt_open	; open
+	.word   doesnt_work	; close
+	.word   cant_pick_up	; pick_up
+	.word   left_pirate_look; look_at
+	.word   left_pirate_look; talk_to
+	.word   doesnt_work	; use
+	.word   icant_move	; push
+	.word   icant_move	; pull
+
+;                              01234567890123456789012345678901234567890
+left_pirate_look: .byte 00,21,"IT'S NOT WISE TO WAKE A SLEEPING PIRATE",0
+
+; red pirate
+; fancy graphic??
+
+;=============================
+bar1_red_pirate_action:
+	lda	CURRENT_VERB
+	asl
+	tay
+
+	lda	red_pirate_actions,Y
+	cmp	#$ff
+	beq	red_pirate_nothing
+
+	sta	MESSAGE_L
+	lda	red_pirate_actions+1,Y
+	sta	MESSAGE_H
+
+	jmp	do_display_message
+
+red_pirate_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+red_pirate_actions:
+	.word   $FFFF		; give
+	.word   doesnt_open	; open
+	.word   doesnt_work	; close
+	.word   cant_pick_up	; pick_up
+	.word   red_pirate_look	; look_at
+	.word   red_pirate_look	; talk_to
+	.word   doesnt_work	; use
+	.word   icant_move	; push
+	.word   icant_move	; pull
+
+
+red_pirate_look:	.byte 03,21,"AHOY THERE STRANGER, NEW IN TOWN?",0
+
+; pirates at table with red
+;=============================
+bar1_right_pirate_action:
+	lda	CURRENT_VERB
+	asl
+	tay
+
+	lda	right_pirate_actions,Y
+	cmp	#$ff
+	beq	right_pirate_nothing
+
+	sta	MESSAGE_L
+	lda	right_pirate_actions+1,Y
+	sta	MESSAGE_H
+
+	jmp	do_display_message
+
+right_pirate_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+right_pirate_actions:
+	.word   $FFFF		; give
+	.word   doesnt_open	; open
+	.word   doesnt_work	; close
+	.word   cant_pick_up	; pick_up
+	.word   right_pirate_look	; look_at
+	.word   right_pirate_look	; talk_to
+	.word   doesnt_work	; use
+	.word   icant_move	; push
+	.word   icant_move	; pull
+
+right_pirate_look:	.byte 03,21,"THEY'RE BUSY TALKING TO GUY ON LEFT",0
+
+; black foreground
+; zooms in
+
+; pirates at left of fg table
+;=============================
+bar1_fg_left_pirate_action:
+	lda	CURRENT_VERB
+	asl
+	tay
+
+	lda	fg_left_pirate_actions,Y
+	cmp	#$ff
+	beq	fg_left_pirate_nothing
+
+	sta	MESSAGE_L
+	lda	fg_left_pirate_actions+1,Y
+	sta	MESSAGE_H
+
+	jmp	do_display_message
+
+fg_left_pirate_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+fg_left_pirate_actions:
+	.word   $FFFF		; give
+	.word   doesnt_open	; open
+	.word   doesnt_work	; close
+	.word   cant_pick_up	; pick_up
+	.word   fg_left_pirate_look	; look_at
+	.word   fg_left_pirate_look	; talk_to
+	.word   doesnt_work	; use
+	.word   icant_move	; push
+	.word   icant_move	; pull
+
+fg_left_pirate_look:	.byte 05,21,"WHAT'RE YOU LOOKING AT ME FOR?",0
+
+; guy with girl
+;=============================
+bar1_fg_busy_pirate_action:
+	lda	CURRENT_VERB
+	asl
+	tay
+
+	lda	fg_busy_pirate_actions,Y
+	cmp	#$ff
+	beq	fg_busy_pirate_nothing
+
+	sta	MESSAGE_L
+	lda	fg_busy_pirate_actions+1,Y
+	sta	MESSAGE_H
+
+	jmp	do_display_message
+
+fg_busy_pirate_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+fg_busy_pirate_actions:
+	.word   $FFFF		; give
+	.word   doesnt_open	; open
+	.word   doesnt_work	; close
+	.word   cant_pick_up	; pick_up
+	.word   fg_busy_pirate_look	; look_at
+	.word   fg_busy_pirate_look	; talk_to
+	.word   doesnt_work	; use
+	.word   icant_move	; push
+	.word   icant_move	; pull
+
+fg_busy_pirate_look:	.byte 10,21,"I THINK THEY'RE BUSY.",0
+
+; skinny loom guy
+;=============================
+bar1_loom_pirate_action:
+	lda	CURRENT_VERB
+	asl
+	tay
+
+	lda	loom_pirate_actions,Y
+	cmp	#$ff
+	beq	loom_pirate_nothing
+
+	sta	MESSAGE_L
+	lda	loom_pirate_actions+1,Y
+	sta	MESSAGE_H
+
+	jmp	do_display_message
+
+loom_pirate_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+loom_pirate_actions:
+	.word   $FFFF		; give
+	.word   doesnt_open	; open
+	.word   doesnt_work	; close
+	.word   cant_pick_up	; pick_up
+	.word   loom_pirate_look	; look_at
+	.word   loom_pirate_look	; talk_to
+	.word   doesnt_work	; use
+	.word   icant_move	; push
+	.word   icant_move	; pull
+
+loom_pirate_look:	.byte 10,21,"ASK ME ABOUT LOOM",0
+
+; dog
+;=============================
+bar1_dog_action:
+	lda	CURRENT_VERB
+	asl
+	tay
+
+	lda	dog_pirate_actions,Y
+	cmp	#$ff
+	beq	dog_pirate_nothing
+
+	sta	MESSAGE_L
+	lda	dog_pirate_actions+1,Y
+	sta	MESSAGE_H
+
+	jmp	do_display_message
+
+dog_pirate_nothing:
+	lda	#VERB_WALK
+	sta	CURRENT_VERB
+	rts
+
+dog_pirate_actions:
+	.word   $FFFF		; give
+	.word   doesnt_open	; open
+	.word   doesnt_work	; close
+	.word   cant_pick_up	; pick_up
+	.word   dog_look	; look_at
+	.word   dog_look	; talk_to
+	.word   doesnt_work	; use
+	.word   icant_move	; push
+	.word   icant_move	; pull
+
+dog_look:	.byte 18,21,"GRRRRR",0
+
+
 
 ;=============================
 bar1_door_action:
@@ -209,12 +457,11 @@ bar1_door_action:
 	sta	CURRENT_VERB
 	rts
 
-;=============================
-bar1_dog_action:
-	lda	#VERB_WALK
-	sta	CURRENT_VERB
-	rts
-
+	;============================
+	;============================
+	; check bounds
+	;============================
+	;============================
 
 bar_inside1_check_bounds:
 	rts
