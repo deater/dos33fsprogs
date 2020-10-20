@@ -109,6 +109,8 @@ game_loop:
 	beq	do_draw_sign
 	cmp	#MONKEY_VOODOO2
 	beq	do_draw_smoke
+	cmp	#MONKEY_BAR_INSIDE2
+	beq	do_draw_bar2
 	cmp	#MONKEY_BAR_INSIDE3
 	beq	do_draw_meat
 
@@ -128,6 +130,10 @@ do_draw_sign:
 
 do_draw_smoke:
 	jsr	draw_smoke
+	jmp	nothing_special
+
+do_draw_bar2:
+	jsr	bar_inside2_animate
 	jmp	nothing_special
 
 do_draw_meat:

@@ -9,8 +9,7 @@ bar_inside2_check_exit:
 	bcc	bar_inside2_to_bar_inside1
 	cmp	#33
 	bcs	bar_inside2_to_bar_inside3
-	bcs	bar_inside2_no_exit
-
+	bcc	bar_inside2_no_exit
 
 bar_inside2_to_bar_inside1:
 	lda	GUYBRUSH_DIRECTION
@@ -81,23 +80,85 @@ bar_inside2_check_bounds:
 
 	rts
 
-;draw_house:
 
-;	lda	#<wall_sprite
-;	sta	INL
-;	lda	#>wall_sprite
-;	sta	INH
+	;================================
+	;================================
+	; bar inside animations
+	;================================
+	;================================
 
-;	lda	#18
-;	sta	XPOS
-;	lda	#22
-;	sta	YPOS
+bar_inside2_animate:
 
-;	jsr	put_sprite_crop
+	lda	FRAMEL
+	and	#$10
+	beq	bar2_other_fire
 
-;	rts
+	lda	#<bar2_fire1_sprite
+	sta	INL
+	lda	#>bar2_fire1_sprite
+	jmp	bar2_draw_fire
+bar2_other_fire:
+	lda	#<bar2_fire2_sprite
+	sta	INL
+	lda	#>bar2_fire2_sprite
+bar2_draw_fire:
+	sta	INH
 
-;house_sprite:
+	lda	#25
+	sta	XPOS
+	lda	#22
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+
+	lda	FRAMEL
+	and	#$30
+	beq	bar2_other_arm
+
+	lda	#<bar2_pirate_mug1_sprite
+	sta	INL
+	lda	#>bar2_pirate_mug1_sprite
+	jmp	bar2_draw_arm
+bar2_other_arm:
+	lda	#<bar2_pirate_mug2_sprite
+	sta	INL
+	lda	#>bar2_pirate_mug2_sprite
+bar2_draw_arm:
+	sta	INH
+
+	lda	#7
+	sta	XPOS
+	lda	#26
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+
+	rts
+
+bar2_fire1_sprite:
+	.byte	2,2
+	.byte	$dA,$AA
+	.byte	$d1,$dd
+
+bar2_fire2_sprite:
+	.byte	2,2
+	.byte	$AA,$dA
+	.byte	$1d,$dd
+
+bar2_pirate_mug1_sprite:
+	.byte	3,3
+	.byte	$25,$00,$05
+	.byte	$22,$82,$74
+	.byte	$d2,$8b,$77
+
+bar2_pirate_mug2_sprite:
+	.byte	3,3
+	.byte	$25,$b7,$75
+	.byte	$62,$26,$84
+	.byte	$d2,$88,$88
+
 
 
 	;===================================
