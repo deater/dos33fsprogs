@@ -9,7 +9,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
 	CIRCLES.BAS AUTUMN.BAS QKUMBA.BAS ASTEROID.BAS PERSON.BAS SHIP.BAS \
 	CONCERT.BAS NYAN.BAS RASTER.BAS RASTER2.BAS RASTER3.BAS LOTS.BAS LOAD \
 	RASTER4.BAS RASTER5.BAS PUMPKIN.BAS PUMPKIN_SMALL.BAS LADY.BAS \
-	A2.BAS FOURAM.BAS
+	A2.BAS FOURAM.BAS FLOPPY.BAS
 	cp empty.dsk appleiibot.dsk
 	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
 	$(DOS33) -y appleiibot.dsk SAVE A E2.BAS
@@ -34,6 +34,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
 	$(DOS33) -y appleiibot.dsk SAVE A LADY.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A A2.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A FOURAM.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A FLOPPY.BAS
 
 ###
 
@@ -194,6 +195,11 @@ A2.BAS:	a2.bas
 
 FOURAM.BAS:	fouram.bas
 	$(TOKENIZE) < fouram.bas > FOURAM.BAS
+
+####
+
+FLOPPY.BAS:	floppy.bas
+	$(TOKENIZE) < floppy.bas > FLOPPY.BAS
 
 
 ####

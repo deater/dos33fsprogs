@@ -159,6 +159,12 @@ static int find_token(void) {
 	/* don't tokenize if in quotes */
 	if ((!in_quotes)&&(!in_rem)) {
 
+		/* hack: handle ? as a BA PRINT token */
+		if (line_ptr[0]=='?') {
+			line_ptr++;
+			return 0xBA;
+		}
+
 //		fprintf(stderr,"%s",line_ptr);
 		for(i=0;i<NUM_TOKENS;i++) {
 			if (!strncmp(line_ptr,applesoft_tokens[i],
@@ -176,7 +182,7 @@ static int find_token(void) {
 
 				line_ptr+=strlen(applesoft_tokens[i]);
 
-				/* REM is 0x32 */
+				/* REM is 0x32 (0xB2) */
 				if (i==0x32) in_rem=1;
 
 				return 0x80+i;
