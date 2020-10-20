@@ -13,6 +13,16 @@ bar_inside1_check_exit:
 	bcc	bar_inside1_no_exit
 
 bar_inside1_to_bar:
+
+	; check if leave for first time
+	lda	FIRST_TIME
+	and	#FIRST_TIME_LEAVE_BAR
+	bne	left_bar_before
+
+	jsr	lechuck_cutscene
+
+left_bar_before:
+
 	lda	#MONKEY_BAR
 	sta	LOCATION
 	lda	#10

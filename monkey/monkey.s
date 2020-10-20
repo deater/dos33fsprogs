@@ -49,7 +49,7 @@ monkey_start:
 	sta	INVENTORY3
 	sta	INVENTORY4
 	sta	INVENTORY5
-
+	sta	FIRST_TIME
 
 
 	; init cursor
