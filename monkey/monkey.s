@@ -274,6 +274,8 @@ really_draw_guybrush:
 	beq	do_draw_house
 	cmp	#MONKEY_BAR
 	beq	do_draw_building
+	cmp	#MONKEY_BAR_INSIDE1
+	beq	do_draw_bar1
 	cmp	#MONKEY_VOODOO1
 	beq	do_draw_voodoo1
 	cmp	#MONKEY_CHURCH
@@ -291,6 +293,10 @@ do_draw_house:
 
 do_draw_building:
 	jsr	draw_bar_fg_building
+	jmp	nothing_foreground
+
+do_draw_bar1:
+	jsr	bar_inside1_foreground
 	jmp	nothing_foreground
 
 do_draw_voodoo1:

@@ -113,7 +113,7 @@ bar2_draw_fire:
 
 
 	lda	FRAMEL
-	and	#$30
+	and	#$60
 	beq	bar2_other_arm
 
 	lda	#<bar2_pirate_mug1_sprite

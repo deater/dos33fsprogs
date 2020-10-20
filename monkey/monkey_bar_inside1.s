@@ -65,24 +65,70 @@ done_mb1_adjust:
 
 
 
+	;=================================
+	;=================================
+	; bar_inside1 draw foreground
+	;=================================
+	;=================================
 
-;draw_house:
+bar_inside1_foreground:
 
-;	lda	#<wall_sprite
-;	sta	INL
-;	lda	#>wall_sprite
-;	sta	INH
+	lda	GUYBRUSH_X
+	cmp	#12
+	bcs	bar_inside_rightside
 
-;	lda	#18
-;	sta	XPOS
-;	lda	#22
-;	sta	YPOS
+bar_inside_leftside:
 
-;	jsr	put_sprite_crop
+	lda	#<bar1_table_sprite
+	sta	INL
+	lda	#>bar1_table_sprite
+	sta	INH
 
-;	rts
+	lda	#4
+	sta	XPOS
+	lda	#32
+	sta	YPOS
 
-;house_sprite:
+	jsr	put_sprite_crop
+
+	jmp	bar_animate_ceiling
+
+bar_inside_rightside:
+
+	lda	#<bar1_table2_sprite
+	sta	INL
+	lda	#>bar1_table2_sprite
+	sta	INH
+
+	lda	#20
+	sta	XPOS
+	lda	#26
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+	; I can't spell chandelier
+bar_animate_ceiling:
+
+bar_inside_done:
+	rts
+
+
+
+bar1_table_sprite:
+	.byte 6,3
+	.byte $8A,$8A,$1A,$8A,$AA,$AA
+	.byte $b8,$00,$0b,$b8,$88,$88
+	.byte $88,$90,$00,$88,$8b,$A8
+
+bar1_table2_sprite:
+	.byte 11,6
+	.byte $AA,$AA,$0A,$0A,$AA,$AA,$9A,$9A,$AA,$AA,$AA
+	.byte $AA,$00,$0b,$AA,$AA,$AA,$99,$bb,$AA,$b2,$0A
+	.byte $AA,$0A,$6b,$0A,$7A,$5A,$b2,$62,$AA,$9b,$00
+	.byte $8A,$00,$b5,$20,$67,$dd,$db,$7b,$db,$d0,$A0
+	.byte $A8,$88,$26,$66,$db,$d2,$db,$d7,$8d,$8b,$AA
+	.byte $AA,$88,$22,$26,$2b,$88,$A8,$08,$00,$88,$AA
 
 
 	;===================================
