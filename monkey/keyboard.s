@@ -417,7 +417,9 @@ destination_tiny_x_is_positive:
 
 	lda	CURSOR_Y
 	bpl	destination_tiny_y_is_positive
-	lda	#0
+	cmp	#$Fc
+	bcs	destination_tiny_y_is_positive
+	lda	#$Fc
 destination_tiny_y_is_positive:
 	clc
 	adc	#6

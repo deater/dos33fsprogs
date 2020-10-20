@@ -12,6 +12,10 @@ zipline_check_exit:
 zipline_to_map:
 	lda	#MONKEY_MAP
 	sta	LOCATION
+
+	lda	#GUYBRUSH_TINY
+	sta	GUYBRUSH_SIZE
+
 	lda	#23
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X

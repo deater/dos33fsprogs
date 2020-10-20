@@ -8,6 +8,9 @@ map_check_exit:
 	beq	check_lookout
 	cmp	#10
 	beq	check_poster
+
+	cmp	#24
+	beq	check_zipline
 	cmp	#25
 	beq	check_zipline
 
@@ -16,10 +19,17 @@ map_check_exit:
 check_lookout:
 	lda	GUYBRUSH_Y
 	cmp	#22
-	bne	map_no_exit
+	beq	map_to_lookout
+	cmp	#24
+	beq	map_to_lookout
+	jmp	map_no_exit
 map_to_lookout:
 	lda	#MONKEY_LOOKOUT
 	sta	LOCATION
+
+	lda	#GUYBRUSH_BIG
+	sta	GUYBRUSH_SIZE
+
 	lda	#30
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X
@@ -34,15 +44,25 @@ map_to_lookout:
 check_poster:
 	lda	GUYBRUSH_Y
 	cmp	#24
-	bne	map_no_exit
+	beq	map_to_poster
+	cmp	#26
+	beq	map_to_poster
+	jmp	map_no_exit
 map_to_poster:
 	lda	#MONKEY_POSTER
 	sta	LOCATION
-	lda	#4
+
+	lda	#2
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X
+
 	lda	#20
 	sta	GUYBRUSH_Y
+
+	lda	#GUYBRUSH_TINY
+	sta	GUYBRUSH_SIZE
+
+	lda	#34
 	sta	DESTINATION_Y
 	lda	#DIR_DOWN
 	sta	GUYBRUSH_DIRECTION
@@ -51,10 +71,17 @@ map_to_poster:
 check_zipline:
 	lda	GUYBRUSH_Y
 	cmp	#4
-	bne	map_no_exit
+	beq	map_to_zipline
+	cmp	#6
+	beq	map_to_zipline
+	jmp	map_no_exit
 map_to_zipline:
 	lda	#MONKEY_ZIPLINE
 	sta	LOCATION
+
+	lda	#GUYBRUSH_BIG
+	sta	GUYBRUSH_SIZE
+
 	lda	#4
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X
