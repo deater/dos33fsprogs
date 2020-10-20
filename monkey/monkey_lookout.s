@@ -33,11 +33,18 @@ lookout_to_poster:
 not_first_poster:
 	lda	#MONKEY_POSTER
 	sta	LOCATION
-	lda	#4
+
+	lda	#2
 	sta	GUYBRUSH_X
 	sta	DESTINATION_X
+
 	lda	#20
 	sta	GUYBRUSH_Y
+
+	lda	#GUYBRUSH_TINY
+	sta	GUYBRUSH_SIZE
+
+	lda	#34
 	sta	DESTINATION_Y
 	jsr	change_location
 	jmp	lookout_no_exit

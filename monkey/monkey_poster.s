@@ -3,13 +3,22 @@
 
 poster_check_exit:
 	lda	GUYBRUSH_X
-	cmp	#3
+	cmp	#4
 	bcc	poster_to_lookout
 	cmp	#35
 	bcs	poster_to_dock
 	bcc	poster_no_exit
 
 poster_to_lookout:
+
+	; check y position
+	lda	GUYBRUSH_FEET
+	cmp	#22
+	bcs	poster_no_exit
+
+	lda	#GUYBRUSH_BIG
+	sta	GUYBRUSH_SIZE
+
 	lda	#MONKEY_LOOKOUT
 	sta	LOCATION
 	lda	#28
@@ -39,19 +48,16 @@ poster_to_dock:
 poster_no_exit:
 	rts
 
+
+	;===============================
+	;===============================
+	; adjust destination
+	;===============================
+	;===============================
 poster_adjust_destination:
 
-ps_check_x:
-	; can be any X
-
-ps_check_y:
-	; if x>5 Y should be 20
-
-	lda	#20
-	sta	DESTINATION_Y
-
-done_ps_adjust:
 	rts
+
 
 
 
@@ -97,5 +103,69 @@ house_sprite:
 	.byte $77,$AA,$77,$AA,$77,$AA,$AA,$AA
 
 
+	;=================================
+	;=================================
+	; poster check bounds
+	;=================================
+	;=================================
+
 poster_check_bounds:
-	rts
+
+	jsr	update_feet_location
+
+ps_check_x:
+
+	lda     GUYBRUSH_X
+        cmp     #4
+        bcc     ps_x_cliff
+
+	; otherwise normal height, on path
+ps_x_main:
+	lda	#GUYBRUSH_BIG
+	sta	GUYBRUSH_SIZE
+	lda	#20
+	sta	GUYBRUSH_Y
+	sta	DESTINATION_Y
+	jsr	update_feet_location
+	jmp	poster_adjust_height
+
+
+ps_x_cliff:
+
+	jmp     poster_adjust_height
+
+
+;			Y	FEET
+;	20	BIG	20	34
+;	18	MEDIUM	26	32
+;		MEDIUM	24	30
+;		MEDIUM	22	28
+;		SMALL	24	26
+;		SMALL	22	24
+;		SMALL	20	22
+;		TINY	20	22
+
+poster_adjust_height:
+
+	lda     GUYBRUSH_FEET
+        cmp     #34		; if >=$22 (34) then big
+        bcs     poster_big
+        cmp     #28		; >= $1E, (28) then medium
+        bcs     poster_medium
+        cmp     #22		; >= $1A  (22), small
+        bcs     poster_small
+                                ; else, tiny
+poster_tiny:
+        lda     #GUYBRUSH_TINY
+        jmp     poster_done_set_height
+poster_big:
+        lda     #GUYBRUSH_BIG
+        jmp     poster_done_set_height
+poster_medium:
+        lda     #GUYBRUSH_MEDIUM
+        jmp     poster_done_set_height
+poster_small:
+        lda     #GUYBRUSH_SMALL
+poster_done_set_height:
+	jmp	set_height
+
