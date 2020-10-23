@@ -28,8 +28,10 @@ static int debug=0;
    /* Starting at 0x80 */
 char applesoft_tokens[][8]={
 
+/* note applesoft ignores all spaces when parsing */
+/* so OK that we have PR# instead of PR # here */
 /* 80 */ "END","FOR","NEXT","DATA","INPUT","DEL","DIM","READ",
-/* 88 */ "GR","TEXT","PR #","IN #","CALL","PLOT","HLIN","VLIN",
+/* 88 */ "GR","TEXT","PR#","IN#","CALL","PLOT","HLIN","VLIN",
 /* 90 */ "HGR2","HGR","HCOLOR=","HPLOT","DRAW","XDRAW","HTAB","HOME",
 /* 98 */ "ROT=","SCALE=","SHLOAD","TRACE","NOTRACE","NORMAL","INVERSE","FLASH",
 /* A0 */ "COLOR=","POP","VTAB ","HIMEM:","LOMEM:","ONERR","RESUME","RECALL",
