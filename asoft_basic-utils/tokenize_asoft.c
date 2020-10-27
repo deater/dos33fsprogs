@@ -34,7 +34,7 @@ char applesoft_tokens[][8]={
 /* 88 */ "GR","TEXT","PR#","IN#","CALL","PLOT","HLIN","VLIN",
 /* 90 */ "HGR2","HGR","HCOLOR=","HPLOT","DRAW","XDRAW","HTAB","HOME",
 /* 98 */ "ROT=","SCALE=","SHLOAD","TRACE","NOTRACE","NORMAL","INVERSE","FLASH",
-/* A0 */ "COLOR=","POP","VTAB ","HIMEM:","LOMEM:","ONERR","RESUME","RECALL",
+/* A0 */ "COLOR=","POP","VTAB","HIMEM:","LOMEM:","ONERR","RESUME","RECALL",
 /* A8 */ "STORE","SPEED=","LET","GOTO","RUN","IF","RESTORE","&",
 /* B0 */ "GOSUB","RETURN","REM","STOP","ON","WAIT","LOAD","SAVE",
 /* B8 */ "DEF","POKE","PRINT","CONT","LIST","CLEAR","GET","NEW",
