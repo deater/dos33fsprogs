@@ -3,7 +3,7 @@ include ../Makefile.inc
 CFLAGS = -g -Wall -O2
 
 all:	text2gr png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 \
-	png2sixbitmap png2six80
+	png2sixbitmap png2six80 png2sixrle
 
 
 ###
@@ -44,6 +44,15 @@ png2sixbitmap:		png2sixbitmap.o loadpng.o
 
 png2sixbitmap.o:		png2sixbitmap.c loadpng.h
 	$(CC) $(CFLAGS) -c png2sixbitmap.c
+
+###
+
+png2sixrle:		png2sixrle.o loadpng.o
+	$(CC) $(LFLAGS) -o png2sixrle png2sixrle.o loadpng.o -lpng
+
+png2sixrle.o:		png2sixrle.c loadpng.h
+	$(CC) $(CFLAGS) -c png2sixrle.c
+
 
 ###
 
@@ -93,8 +102,8 @@ png_to_40x96.o:		png_to_40x96.c loadpng.h rle_common.h
 ###
 
 install:	
-		cp png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 png2sixbitmap png2six80 $(INSTALL_LOC)
+		cp png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 png2sixbitmap png2sixrle png2six80 $(INSTALL_LOC)
 
 clean:		
-		rm -f *~ *.o png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 png2sixbitmap png2six80
+		rm -f *~ *.o png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 png2sixbitmap png2sixrle png2six80
 
