@@ -22,7 +22,7 @@ static int print_rle(int color, int run) {
 		ret=1;
 	}
 	if (run==1) {
-		printf("%c",(color&0xf)+16);
+		printf("%c",(color&0xf)+16+' ');
 	}
 	else {
 		printf("%c%c",(color&0xf)+' ',run+' ');
