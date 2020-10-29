@@ -99,7 +99,7 @@ done_setup_sound:
 	sta	INVENTORY4
 	sta	INVENTORY5
 	sta	FIRST_TIME
-
+	sta	JOYSTICK_ENABLED
 
 	; init cursor
 
