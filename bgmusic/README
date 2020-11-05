@@ -1,0 +1,9 @@
+plays music in the background via the pt3player
+
+loads high to $6000 to try to stay out of the way of BASIC
+
+disk activity might mess with the interrupts.  Might be OK on
+an Apple IIe but the sound will glitch
+
+Tries to avoid zero page addresses but still uses 8 of them.
+	Hopefully only stomping on Integer BASIC and Sweet-16
