@@ -1,14 +1,14 @@
 ; these need to be in zero page
 ; can we find a location that works?
 
-PATTERN_L	= $06
+PATTERN_L	= $06	; used by sweet-16?
 PATTERN_H	= $07
-ORNAMENT_L	= $08
+ORNAMENT_L	= $08	; used by sweet-16?
 ORNAMENT_H	= $09
-SAMPLE_L	= $0A
-SAMPLE_H	= $0B
-MB_ADDR_L	= $0C
-MB_ADDR_H	= $0D
+SAMPLE_L	= $4A	; lomem integer basic?
+SAMPLE_H	= $4B
+MB_ADDR_L	= $4C	; himem integer basic?
+MB_ADDR_H	= $4D
 
 ;; Zero Page
 .if 0
