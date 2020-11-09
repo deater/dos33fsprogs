@@ -11,20 +11,51 @@ TRACE_	= $D805
 
 load_file:
 
-
+	;=================
+	; run list command
 do_list:
-	lda	#'L'
-	sta	$200
-	lda	#'I'
-	sta	$201
-	lda	#'S'
-	sta	$202
-	lda	#'T'
-	sta	$203
-	lda	#0
-	sta	$204
+	lda	#<list_string
+	sta	cti_smc+1
+	lda	#>list_string
+	sta	cti_smc+2
+	jsr	copy_to_input
+
 	jmp	run_command
 
+	;=================
+	; run run command
+	; a do-run-run, a do-run-run
+do_run:
+	lda	#<run_string
+	sta	cti_smc
+	lda	#>run_string
+	sta	cti_smc+1
+	jsr	copy_to_input
+
+	jmp	run_command
+
+
+	;=====================
+	; copy_to_input
+	;	copies NUL terminator too
+
+copy_to_input:
+	ldx	#0
+cti_loop:
+cti_smc:
+	lda	$1234,X
+	sta	$200,X
+	beq	done_copy
+	inx
+	bne	cti_loop
+done_copy:
+	rts
+
+
+list_string:
+	.byte "LIST",0
+run_string:
+	.byte "RUN",0
 
 run_command:
 	; calls MON_GETLN

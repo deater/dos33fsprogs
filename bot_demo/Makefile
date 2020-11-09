@@ -5,10 +5,28 @@ TOKENIZE = ../asoft_basic-utils/tokenize_asoft
 
 all:	bot_demo.dsk
 
-bot_demo.dsk:	RLE
+bot_demo.dsk:	HELLO BOTDEMO
 	cp empty.dsk bot_demo.dsk
-	$(DOS33) -y bot_demo.dsk BSAVE -a 0x036c RLE
+	$(DOS33) -y bot_demo.dsk BSAVE -a 0x6000 BOTDEMO
+	$(DOS33) -y bot_demo.dsk SAVE A HELLO
 
+
+###
+
+BOTDEMO:	botdemo.o
+	ld65 -o BOTDEMO botdemo.o -C ../linker_scripts/apple2_6000.inc
+
+botdemo.o:	botdemo.s \
+	zp.inc hardware.inc nozp.inc \
+	load.s \
+	interrupt_handler.s
+	ca65 -o botdemo.o botdemo.s -l botdemo.lst
+
+
+###
+
+HELLO:	hello.bas
+	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
 
 ###
 
@@ -21,4 +39,4 @@ rle.o:	rle.s
 ####
 
 clean:	
-	rm -f *~ *.o *.lst RLE
+	rm -f *~ *.o *.lst RLE BOTDEMO
