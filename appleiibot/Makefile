@@ -10,7 +10,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
 	CONCERT.BAS NYAN.BAS RASTER.BAS RASTER2.BAS RASTER3.BAS LOTS.BAS LOAD \
 	RASTER4.BAS RASTER5.BAS PUMPKIN.BAS PUMPKIN_SMALL.BAS LADY.BAS \
 	A2.BAS FOURAM.BAS FLOPPY.BAS QR.BAS A2_4EVER.BAS RLE.BAS RLE2.BAS \
-	RLEASM.BAS HORIZON.BAS FLYER.BAS
+	RLEASM.BAS HORIZON.BAS FLYER.BAS STAR.BAS HYPER.BAS FASTAR.BAS
 	cp empty.dsk appleiibot.dsk
 	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
 	$(DOS33) -y appleiibot.dsk SAVE A E2.BAS
@@ -43,6 +43,9 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
 	$(DOS33) -y appleiibot.dsk SAVE A RLEASM.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A HORIZON.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A FLYER.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A STAR.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A HYPER.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A FASTAR.BAS
 
 ###
 
@@ -245,6 +248,22 @@ HORIZON.BAS:	horizon.bas
 
 FLYER.BAS:	flyer.bas
 	$(TOKENIZE) < flyer.bas > FLYER.BAS
+
+####
+
+STAR.BAS:	star.bas
+	$(TOKENIZE) < star.bas > STAR.BAS
+
+####
+
+FASTAR.BAS:	fastar.bas
+	$(TOKENIZE) < fastar.bas > FASTAR.BAS
+
+
+####
+
+HYPER.BAS:	hyper.bas
+	$(TOKENIZE) < hyper.bas > HYPER.BAS
 
 ####
 
