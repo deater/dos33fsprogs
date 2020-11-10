@@ -11,9 +11,10 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
 	RASTER4.BAS RASTER5.BAS PUMPKIN.BAS PUMPKIN_SMALL.BAS LADY.BAS \
 	A2.BAS FOURAM.BAS FLOPPY.BAS QR.BAS A2_4EVER.BAS RLE.BAS RLE2.BAS \
 	RLEASM.BAS HORIZON.BAS FLYER.BAS STAR.BAS HYPER.BAS FASTAR.BAS \
-	FASTAR2.BAS
+	FASTAR2.BAS FASTAR2
 	cp empty.dsk appleiibot.dsk
 	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
+	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0C00 FASTAR2
 	$(DOS33) -y appleiibot.dsk SAVE A E2.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A FLAME.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A FLAME2.BAS
@@ -90,6 +91,15 @@ LOAD:	load.o
 
 load.o:	load.s
 	ca65 -o load.o load.s -l load.lst
+
+###
+
+FASTAR2:	fastar2.o
+	ld65 -o FASTAR2 fastar2.o -C ../linker_scripts/apple2_c00.inc
+
+fastar2.o:	fastar2.s
+	ca65 -o fastar2.o fastar2.s -l fastar2.lst
+
 
 ####
 

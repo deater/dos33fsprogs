@@ -14,8 +14,8 @@ int main(int argc, char **argv) {
 	double outputx[SIZE][REPEAT];
 	double outputy[SIZE][REPEAT];
 
-	for(j=1;j<REPEAT;j++) {
 	for(i=1;i<SIZE;i++) {
+	for(j=1;j<REPEAT;j++) {
 		a=x[i];
 		b=y[i];
 		c=z[i]*speed;
@@ -24,21 +24,27 @@ int main(int argc, char **argv) {
 		z[i]=z[i]+speed;
 
 		if ((x[i]<0) || (x[i]>279) || (y[i]<0) || (y[i]>191)) {
+			x[i]=0;
+			y[i]=0;
+			i++;
 			x[i]=rand()%279;
 			y[i]=rand()%191;
 			z[i]=0;
 		}
 		else {
-			outputx[i][j]=x[i];
-			outputy[i][j]=y[i];
+//			outputx[i][j]=x[i];
+//			outputy[i][j]=y[i];
+//
 		}
+		printf("%i:%i: %.1f %.1f %.2f\n",i,j,x[i],y[i],z[i]);
+
 	}
 	}
 
-	for(i=1;i<SIZE;i++) {
-		for(j=1;j<REPEAT;j++) {
-			printf("%i:%i: %.1f %.1f\n",i,j,outputx[i][j],outputy[i][j]);
-		}
-	}
+//	for(i=1;i<SIZE;i++) {
+//		for(j=1;j<REPEAT;j++) {
+//			printf("%i:%i: %.1f %.1f\n",i,j,outputx[i][j],outputy[i][j]);
+//		}
+//	}
 	return 0;
 }
