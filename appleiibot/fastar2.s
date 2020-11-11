@@ -30,33 +30,15 @@ HCOLOR	=	$F6F0	; color in X (must be 0..7)
 	sta	XH
 
 	ldx	#0
+
+	jmp	check_bounds
 populate_loop:
 				; Z   = XXYY YYYY
 ; C=Z*.125
 ; A=A+(A-64)*C
 ; B=B+(B-64)*C
 
-	; check to see if out of bounds
 
-	lda	XH
-	bmi	redo_point
-	lda	YH
-	bpl	all_good
-
-redo_point:
-	; store a break in the lines
-	lda	#0
-	sta	$1000,X
-	sta	$1100,X
-	sta	Z	; needed?
-	inx
-
-	jsr	rand16
-	sta	XH
-	jsr	rand16
-	sta	YH
-
-all_good:
 
 				; X is in NUM1 for this
 
@@ -112,7 +94,19 @@ do_mult:
 	lda	RESULT+2	; hight
 	sta	NUM1+1
 
-	; add to AA
+	; add to X; subtract if minus
+	lda	MINUS
+	beq	not_minus
+
+	sec
+	lda	#00
+	sbc	NUM1
+	sta	NUM1
+	lda	#00
+	sbc	NUM1+1
+	sta	NUM1+1
+
+not_minus:
 	clc
 	lda	XL
 	adc	NUM1
@@ -127,6 +121,30 @@ do_mult:
 	lda	Z
 	adc	#$8
 	sta	Z
+
+
+	; check to see if out of bounds
+check_bounds:
+	lda	XH
+	bmi	redo_point
+	lda	YH
+	bpl	all_good
+
+redo_point:
+	; store a break in the lines
+	lda	#0
+	sta	$1000,X
+	sta	$1100,X
+	sta	Z	; needed?
+	inx
+
+	jsr	rand16
+	sta	XH
+	jsr	rand16
+	sta	YH
+
+all_good:
+
 
 	; write out
 

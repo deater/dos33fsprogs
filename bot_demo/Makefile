@@ -8,6 +8,7 @@ all:	bot_demo.dsk
 bot_demo.dsk:	HELLO BOTDEMO
 	cp empty.dsk bot_demo.dsk
 	$(DOS33) -y bot_demo.dsk BSAVE -a 0x6000 BOTDEMO
+	$(DOS33) -y bot_demo.dsk BSAVE -a 0x6000 BOTDEMO MYSTERY
 	$(DOS33) -y bot_demo.dsk SAVE A HELLO
 
 
