@@ -6,6 +6,8 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 
+STROUT = $db3a
+
 DONE	= 0
 DO_LOAD	= 1
 DO_LIST	= 2
@@ -52,43 +54,54 @@ mockingboard_not_found:
 	; init screen
 	jsr	TEXT
 	jsr	HOME
+	bit	SET_GR
+	bit	TEXTGR
 	bit	KEYRESET
-
-	; GR part
-;	bit	PAGE1
-;	bit	LORES							; 4
-;	bit	SET_GR							; 4
-
-;	bit	FULLGR							; 4
 
 	;===================
 	; init vars
 
-;	lda	#0
-;	sta	DRAW_PAGE
-;	lda	#4
-;	sta	DISP_PAGE
-
 	;=============================
-	; Load desire 1st
+	; Load bg
 
-;	lda	#<desire_rle
-;	sta	GBASL
-;	lda	#>desire_rle
-;	sta	GBASH
-;	lda	#$c
-;	jsr	load_rle_gr
+	lda	#<bg_rle
+	sta	GBASL
+	lda	#>bg_rle
+	sta	GBASH
+	lda	#$c
+	jsr	load_rle_gr
+
+	jsr	do_wipe
 
 ;	jsr	gr_copy_to_current	; copy to page1
 
-;	jsr	page_flip
+	;=============================
+	; mockingboard where available
 
-;	jsr	wait_until_keypress
+	lda	#5
+	sta	CH
+	lda	#21
+	sta	CV
+	jsr	VTAB
+
+	lda	#<mock_string
+	ldy	#>mock_string
+
+	jsr	STROUT
+
+	lda	#12
+	sta	CH
+	lda	#22
+	sta	CV
+	jsr	VTAB
+
+	lda	#<mock2_string
+	ldy	#>mock2_string
+
+	jsr	STROUT
 
 
-;	jsr	do_list
 
-;	jsr	do_list
 
 
 done:
@@ -123,30 +136,59 @@ not_trigger:
 	jmp	done
 
 
+mock_string:
+	.byte ") ) ) MOCKINGBOARD SOUND ( ( (",0
+mock2_string:
+	.byte "WHERE AVAILABLE",0
+
 todo_list:
+
+	.byte	DO_LOAD,1
+	.byte	DO_LIST,5
+	.byte	DO_RUN,15	; a2
+
 	.byte	DO_LOAD,1
 	.byte	DO_LIST,4
 	.byte	DO_RUN,10	; flyer
+
 	.byte	DO_LOAD,1
 	.byte	DO_LIST,4
 	.byte	DO_RUN,20	; nyan
+
 	.byte	DO_LOAD,1
 	.byte	DO_LIST,5
 	.byte	DO_RUN,15	; qr
+
+
+
+	.byte	DO_LOAD,1
+	.byte	DO_LIST,5
+	.byte	DO_RUN,15
+
+	.byte	DO_LOAD,1
+	.byte	DO_LIST,5
+	.byte	DO_RUN,15
+
+	.byte	DO_LOAD,1
+	.byte	DO_LIST,5
+	.byte	DO_RUN,15
+
+	.byte	DO_LOAD,1
+	.byte	DO_LIST,5
+	.byte	DO_RUN,15
+
 	.byte	DONE,$FF
 
 command:	.byte $00
 which:		.byte $00
-timeout:	.byte $01
+timeout:	.byte 10
 trigger:	.byte $00
 original_stack:	.byte $00
 
-;	.include "gr_unrle.s"
-;	.include "gr_unrle_large.s"
-;	.include "gr_offsets.s"
+	.include "gr_unrle.s"
+	.include "gr_offsets.s"
 ;	.include "gr_copy.s"
-;	.include "gr_copy_large.s"
-;	.include "gr_pageflip.s"
+	.include "bg.inc"
 
 .include        "pt3_lib_core.s"
 .include        "pt3_lib_init.s"
@@ -155,6 +197,7 @@ original_stack:	.byte $00
 ; if you're self patching, detect has to be after interrupt_handler.s
 .include        "pt3_lib_mockingboard_detect.s"
 
+.include	"wipe.s"
 .include	"load.s"
 
 .include	"nozp.inc"

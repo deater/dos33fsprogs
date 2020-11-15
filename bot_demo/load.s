@@ -8,6 +8,7 @@ CHRGET = $00B1
 
 SCRTCH	=	$D64B
 RESTART	=	$D43C
+FIX_LINKS =	$D4F2
 INLIN2	=	$D52E
 PARSE_INPUT_LINE = $d559
 TRACE_	= $D805
@@ -15,10 +16,19 @@ TRACE_	= $D805
 load_file:
 
 	;=================
+	;=================
 	; run list command
+	;=================
+	;=================
+
 do_list:
+	; try to get things back to normal
 	bit	SET_TEXT
+	bit	LORES
 	bit	PAGE0
+	bit	TEXTGR
+
+	jsr	TEXT
 	jsr	HOME
 
 	lda	#<list_string
@@ -47,9 +57,13 @@ do_list:
 ;
 ;	rts
 
-	;=================
+
+	;=============================
+	;=============================
 	; run run command
 	; a do-run-run, a do-run-run
+	;=============================
+	;=============================
 do_run:
 	jsr	HOME
 
@@ -223,7 +237,8 @@ no_load2_oflo:
 	stx	PRGEND
 	stx	VARTAB
 
-	rts
+	jmp	FIX_LINKS		; FIX_LINKS
+
 
 
 file_size:	.word $dede
@@ -231,9 +246,15 @@ file_size:	.word $dede
 which_file:	.byte	$0
 
 file_list:
+	.word	a2,a2_end
 	.word	flyer,flyer_end
 	.word	nyan,nyan_end
+	.word	autumn,autumn_end
+	.word	rle,rle_end
+	.word	raster,raster_end
 	.word	qr,qr_end
+	.word	flame,flame_end		; flame destroys zero page
+
 
 title_list:
 	.word	flyer_title
@@ -260,4 +281,22 @@ qr:
 .incbin	"QR.BAS"
 qr_end:
 
+flame:
+.incbin	"FLAME2.BAS"
+flame_end:
 
+a2:
+.incbin	"A2.BAS"
+a2_end:
+
+autumn:
+.incbin	"AUTUMN.BAS"
+autumn_end:
+
+rle:
+.incbin "RLE.BAS"
+rle_end:
+
+raster:
+.incbin "RASTER4.BAS"
+raster_end:

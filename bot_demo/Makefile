@@ -35,7 +35,8 @@ BOTDEMO:	botdemo.o
 botdemo.o:	botdemo.s \
 	zp.inc hardware.inc nozp.inc \
 	load.s bg.inc \
-	interrupt_handler.s
+	interrupt_handler.s \
+	wipe.s
 	ca65 -o botdemo.o botdemo.s -l botdemo.lst
 
 
@@ -60,4 +61,4 @@ bg.inc:	bg.png
 ####
 
 clean:	
-	rm -f *~ *.o *.lst RLE BOTDEMO
+	rm -f *~ *.o *.lst RLE BOTDEMO LOADER BOTDEMO.LZ4
