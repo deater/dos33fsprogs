@@ -141,43 +141,6 @@ mock_string:
 mock2_string:
 	.byte "WHERE AVAILABLE",0
 
-todo_list:
-
-	.byte	DO_LOAD,1
-	.byte	DO_LIST,5
-	.byte	DO_RUN,15	; a2
-
-	.byte	DO_LOAD,1
-	.byte	DO_LIST,4
-	.byte	DO_RUN,10	; flyer
-
-	.byte	DO_LOAD,1
-	.byte	DO_LIST,4
-	.byte	DO_RUN,20	; nyan
-
-	.byte	DO_LOAD,1
-	.byte	DO_LIST,5
-	.byte	DO_RUN,15	; qr
-
-
-
-	.byte	DO_LOAD,1
-	.byte	DO_LIST,5
-	.byte	DO_RUN,15
-
-	.byte	DO_LOAD,1
-	.byte	DO_LIST,5
-	.byte	DO_RUN,15
-
-	.byte	DO_LOAD,1
-	.byte	DO_LIST,5
-	.byte	DO_RUN,15
-
-	.byte	DO_LOAD,1
-	.byte	DO_LIST,5
-	.byte	DO_RUN,15
-
-	.byte	DONE,$FF
 
 command:	.byte $00
 which:		.byte $00
@@ -187,7 +150,6 @@ original_stack:	.byte $00
 
 	.include "gr_unrle.s"
 	.include "gr_offsets.s"
-;	.include "gr_copy.s"
 	.include "bg.inc"
 
 .include        "pt3_lib_core.s"
@@ -197,8 +159,10 @@ original_stack:	.byte $00
 ; if you're self patching, detect has to be after interrupt_handler.s
 .include        "pt3_lib_mockingboard_detect.s"
 
+.include	"commands.s"
+.include	"timeline.inc"
+
 .include	"wipe.s"
-.include	"load.s"
 
 .include	"nozp.inc"
 

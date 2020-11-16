@@ -1,3 +1,5 @@
+; modified to avoid using zero-page addresses
+
 ; Apple ][ Lo-res fire animation, size-optimized to 64 bytes
 
 ; by deater (Vince Weaver) <vince@deater.net>

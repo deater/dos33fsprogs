@@ -33,8 +33,8 @@ BOTDEMO:	botdemo.o
 	ld65 -o BOTDEMO botdemo.o -C ../linker_scripts/apple2_6000.inc
 
 botdemo.o:	botdemo.s \
-	zp.inc hardware.inc nozp.inc \
-	load.s bg.inc \
+	zp.inc hardware.inc nozp.inc timeline.inc \
+	commands.s bg.inc \
 	interrupt_handler.s \
 	wipe.s
 	ca65 -o botdemo.o botdemo.s -l botdemo.lst
