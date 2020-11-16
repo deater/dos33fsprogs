@@ -3,16 +3,16 @@
 
 ; Zero Page Addresses
 
-XCOORDL		= $F0
-XCOORDH		= $F1
-YCOORDL		= $F2
-YCOORDH		= $F3
-EBP1		= $F4
-EBP2		= $F5
-EBP3		= $F6
-EBP4		= $F7
-COLORL		= $F8
-COLORH		= $F9
+XCOORDL		= $F6
+XCOORDH		= $F7
+YCOORDL		= $F8
+YCOORDH		= $F9	; shapetable ROT
+EBP1		= $FA
+EBP2		= $FB
+EBP3		= $FC
+EBP4		= $FD
+COLORL		= $FE
+COLORH		= $FF
 
 ; Soft Switches
 KEYPRESS= $C000
