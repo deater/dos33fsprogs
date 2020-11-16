@@ -92,9 +92,9 @@ no_tick_oflo:
 
 	ldx	original_stack
 	txs
-	lda	#>done
+	lda	#>command_loop
 	pha
-	lda	#<done
+	lda	#<command_loop
 	pha
 
 	lda	#0		; program status word

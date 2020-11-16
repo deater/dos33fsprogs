@@ -13,20 +13,19 @@ DO_LOAD	= 1
 DO_LIST	= 2
 DO_RUN	= 3
 
+	;==========================================
+	; we are loaded at $6000
+	;
+	; since we are now decompressed here after load
+	; we don't have to worry about running into DOS3.3 at $9600
+	;
+	; we shouldn't need to set HIMEM as we don't use many vars
+	; and variable memory starts right after the program
 
 bot_demo:
-	;===================
-	; init some stuff
-
-	; we have from $6000 to $9600 (DOS 3.3)
-	; which is $3600 = 12 + 1.5 = 13.5k
-
-	; we don't need to set HIMEM as we don't use many vars
-	; and variable memory starts right after the program it seems
-
 
 	;===================
-	; PT3 Setup
+	; PT3 player Setup
 
 	lda	#0
 	sta	DONE_PLAYING
@@ -52,17 +51,22 @@ mockingboard_not_found:
 
 	;===================
 	; init screen
+	;===================
+
 	jsr	TEXT
-	jsr	HOME
-	bit	SET_GR
-	bit	TEXTGR
+	jsr	SETGR
+;	jsr	HOME
+;	bit	SET_GR
+;	bit	TEXTGR
 	bit	KEYRESET
 
 	;===================
 	; init vars
+	;===================
 
 	;=============================
-	; Load bg
+	; Load title screen
+	;=============================
 
 	lda	#<bg_rle
 	sta	GBASL
@@ -71,40 +75,19 @@ mockingboard_not_found:
 	lda	#$c
 	jsr	load_rle_gr
 
-	jsr	do_wipe
+	;==============================
+	; wipe it to page1 gr
+	;==============================
 
-;	jsr	gr_copy_to_current	; copy to page1
+	jsr	do_wipe
 
 	;=============================
 	; mockingboard where available
+	;=============================
 
-	lda	#5
-	sta	CH
-	lda	#21
-	sta	CV
-	jsr	VTAB
+	jsr	mock_anim
 
-	lda	#<mock_string
-	ldy	#>mock_string
-
-	jsr	STROUT
-
-	lda	#12
-	sta	CH
-	lda	#22
-	sta	CV
-	jsr	VTAB
-
-	lda	#<mock2_string
-	ldy	#>mock2_string
-
-	jsr	STROUT
-
-
-
-
-
-done:
+command_loop:
 	lda	trigger
 	beq	not_trigger
 
@@ -113,7 +96,7 @@ done:
 
 	lda	command
 	cmp	#DONE
-	beq	done
+	beq	command_loop
 
 	cmp	#DO_LIST
 	bne	not_do_list
@@ -133,14 +116,7 @@ not_do_load:
 
 not_trigger:
 
-	jmp	done
-
-
-mock_string:
-	.byte ") ) ) MOCKINGBOARD SOUND ( ( (",0
-mock2_string:
-	.byte "WHERE AVAILABLE",0
-
+	jmp	command_loop
 
 command:	.byte $00
 which:		.byte $00
@@ -163,6 +139,7 @@ original_stack:	.byte $00
 .include	"timeline.inc"
 
 .include	"wipe.s"
+.include	"mock_anim.s"
 
 .include	"nozp.inc"
 

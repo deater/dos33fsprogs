@@ -36,7 +36,7 @@ botdemo.o:	botdemo.s \
 	zp.inc hardware.inc nozp.inc timeline.inc \
 	commands.s bg.inc \
 	interrupt_handler.s \
-	wipe.s
+	wipe.s mock_anim.s
 	ca65 -o botdemo.o botdemo.s -l botdemo.lst
 
 
