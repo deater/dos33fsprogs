@@ -1,6 +1,6 @@
 + music
-+ title screen
 + closing screen/credits
 + titles with border around them?
-+ "In Mockingboard Sound" (where available)
++ code to reset to 40-col text mode after interrupted
+  also reset ROT=0?
 

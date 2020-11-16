@@ -11,12 +11,13 @@ MB_ADDR_L	= $0C
 MB_ADDR_H	= $0D
 
 
+; only used for title screen...
 TEMP            =       $FA
 TEMPY           =       $FB
-INL             =       $FC
-INH             =       $FD
-OUTL            =       $FE
-OUTH            =       $FF
+;INL             =       $FC
+;INH             =       $FD
+;OUTL            =       $FE
+;OUTH            =       $FF
 
 ; pre-defined applesoft vars
 
