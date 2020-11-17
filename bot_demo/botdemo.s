@@ -87,32 +87,45 @@ mockingboard_not_found:
 
 	jsr	mock_anim
 
+
+	;==============================
+	;==============================
+	;==============================
+	; command loop
+	;==============================
+	;==============================
+	;==============================
+
+
 command_loop:
+
+	; check if irq handler has set trigger because we hit limit
+
 	lda	trigger
 	beq	not_trigger
 
-	lda	#0
+	lda	#0		; reset trigger
 	sta	trigger
 
-	lda	command
-	cmp	#DONE
+	lda	command		; load current command (also set in irq)
+	cmp	#DONE		; if done, just loop forever
 	beq	command_loop
 
-	cmp	#DO_LIST
+	cmp	#DO_LIST	; if command is list
 	bne	not_do_list
-	jmp	do_list
+	jmp	do_list		; then do it
 
 not_do_list:
-	cmp	#DO_LOAD
+	cmp	#DO_LOAD	; if command is load
 	bne	not_do_load
-	jsr	do_load
+	jsr	do_load		; then do it
 	jmp	not_trigger
 
 not_do_load:
-	cmp	#DO_RUN
+	cmp	#DO_RUN		; if command is run
 	bne	not_trigger
 
-	jmp	do_run
+	jmp	do_run		; then do it
 
 not_trigger:
 

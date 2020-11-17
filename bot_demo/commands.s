@@ -23,11 +23,16 @@ load_file:
 
 do_list:
 	; try to get things back to normal
+
 	bit	SET_TEXT
 	bit	LORES
 	bit	PAGE0
 	bit	TEXTGR
-
+	lda	#0
+	sta	$C00C	; disable 80 column display
+	sta	$C000	; disable 80 column memory mapping
+	sta	$C05F	; clear annunicator 3 (double hires)
+	jsr	SETNORM
 	jsr	TEXT
 	jsr	HOME
 
@@ -36,6 +41,8 @@ do_list:
 	lda	#>list_string
 	sta	cti_smc+2
 	jsr	copy_to_input
+
+	jsr	display_title
 
 	jmp	run_command
 
@@ -56,6 +63,52 @@ do_list:
 ;	jsr	$d6cc	; LIST_0
 ;
 ;	rts
+
+
+	;=================
+	;=================
+	; display title
+	;=================
+	;=================
+
+display_title:
+
+	lda	#' '
+	ldx	#39
+top_loop:
+	sta	$6d0,X
+	dex
+	bpl	top_loop
+
+	lda	which_file
+	sec
+	sbc	#1		; blurgh hack
+	asl
+	tay
+	lda	title_list,Y
+	sta	middle_smc+1
+	lda	title_list+1,Y
+	sta	middle_smc+2
+
+	ldx	#0
+middle_loop:
+middle_smc:
+	lda	$dede,X
+	eor	#$80
+	sta	$750,X
+
+	inx
+	cpx	#40
+	bne	middle_loop
+
+	lda	#' '
+	ldx	#39
+bottom_loop:
+	sta	$7d0,X
+	dex
+	bpl	bottom_loop
+
+	rts
 
 
 	;=============================
