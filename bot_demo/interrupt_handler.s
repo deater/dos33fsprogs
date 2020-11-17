@@ -75,7 +75,7 @@ no_tick_oflo:
 	lda	todo_list,x
 	sta	command
 	cmp	#DONE
-	beq	done_match
+	beq	handle_credits
 
 	lda	todo_list+1,x
 	sta	timeout
@@ -102,6 +102,9 @@ no_tick_oflo:
 
 	rti
 
+handle_credits:
+	bit	TEXTGR
+	jsr	display_credits
 
 done_match:
 	pla

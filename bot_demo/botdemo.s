@@ -153,6 +153,7 @@ original_stack:	.byte $00
 
 .include	"wipe.s"
 .include	"mock_anim.s"
+.include	"credits.s"
 
 .include	"nozp.inc"
 
@@ -161,4 +162,4 @@ original_stack:	.byte $00
 PT3_LOC = song
 .align	$100
 song:
-.incbin "../pt3_player/music/DF.PT3"
+.incbin "music/Second_Best_2_Nothing.pt3"
