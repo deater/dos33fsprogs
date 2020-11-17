@@ -27,6 +27,12 @@ clear_bottom_loop:
 	rts
 
 
+	;======================================
+	;======================================
+	; display credits
+	;======================================
+	;======================================
+
 display_credits:
 
 	; display music bars
@@ -36,51 +42,101 @@ display_credits:
 	lda	A_VOLUME
 	lsr
 	lsr
-	sta	draw_a_bar_loop+1
+	sta	draw_a_bar_left_loop+1
+	lda	#3
+	sec
+	sbc	draw_a_bar_left_loop+1
+	sta	draw_a_bar_right_loop+1
 
 	ldx	#4
 	lda	#' '|$80
-draw_a_bar_loop:
+draw_a_bar_left_loop:
 	cpx	#$4
-	bne	skip_a_bar
+	bne	skip_al_bar
 	eor	#$80
-skip_a_bar:
+skip_al_bar:
 	sta	$A50,X
-
 	dex
-	bpl	draw_a_bar_loop
+	bpl	draw_a_bar_left_loop
+
+	ldx	#4
+	lda	#' '
+draw_a_bar_right_loop:
+	cpx	#$4
+	bne	skip_ar_bar
+	eor	#$80
+skip_ar_bar:
+	sta	$A50+35,X
+	dex
+	bpl	draw_a_bar_right_loop
+
+
 
 	; b bar
 
 	lda	B_VOLUME
 	lsr
 	lsr
-	sta	draw_b_bar_loop+1
+	sta	draw_b_bar_left_loop+1
+	lda	#3
+	sec
+	sbc	draw_b_bar_left_loop+1
+	sta	draw_b_bar_right_loop+1
+
 	ldx	#4
 	lda	#' '|$80
-draw_b_bar_loop:
+draw_b_bar_left_loop:
 	cpx	#$4
-	bne	skip_b_bar
+	bne	skip_bl_bar
 	eor	#$80
-skip_b_bar:
+skip_bl_bar:
 	sta	$AD0,X
 	dex
-	bpl	draw_b_bar_loop
+	bpl	draw_b_bar_left_loop
+
+	ldx	#4
+	lda	#' '
+draw_b_bar_right_loop:
+	cpx	#$4
+	bne	skip_br_bar
+	eor	#$80
+skip_br_bar:
+	sta	$AD0+35,X
+	dex
+	bpl	draw_b_bar_right_loop
+
+	; c
 
 	lda	C_VOLUME
 	lsr
 	lsr
-	sta	draw_c_bar_loop+1
+	sta	draw_c_bar_left_loop+1
+	lda	#3
+	sec
+	sbc	draw_c_bar_left_loop+1
+	sta	draw_c_bar_right_loop+1
 	ldx	#4
 	lda	#' '|$80
-draw_c_bar_loop:
+draw_c_bar_left_loop:
 	cpx	#$4
-	bne	skip_c_bar
+	bne	skip_cl_bar
 	eor	#$80
-skip_c_bar:
+skip_cl_bar:
 	sta	$B50,X
 	dex
-	bpl	draw_c_bar_loop
+	bpl	draw_c_bar_left_loop
+
+	ldx	#4
+	lda	#' '
+draw_c_bar_right_loop:
+	cpx	#$4
+	bne	skip_cr_bar
+	eor	#$80
+skip_cr_bar:
+	sta	$B50+35,X
+	dex
+	bpl	draw_c_bar_right_loop
+
 
 
 	; write credits
