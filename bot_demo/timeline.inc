@@ -14,7 +14,7 @@ todo_list:
 	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,5	; flame
 	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; a2
 	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,10	; flyer
-	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,10	; nyan
+	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; nyan
 	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; rle
 	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; raster
 	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; qr

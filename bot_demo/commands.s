@@ -36,6 +36,19 @@ do_list:
 	jsr	TEXT
 	jsr	HOME
 
+	; clear HGR/HGR2 to black
+
+	lda	#64	; draw to page2
+	sta	$E6
+	jsr	$F3F2	; clear to black
+
+	lda	#32	; draw to page1
+	sta	$E6
+	jsr	$F3F2	; clear to black
+
+
+
+
 	lda	#<list_string
 	sta	cti_smc+1
 	lda	#>list_string
