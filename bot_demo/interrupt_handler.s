@@ -61,6 +61,11 @@ exit_interrupt:
 
 no_tick_oflo:
 
+	; if done, no timeout
+	lda	command
+	cmp	#DONE
+	beq	handle_credits
+
 	; trigger at timeout value
 
 	lda	seconds

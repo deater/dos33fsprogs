@@ -91,15 +91,9 @@ actual_credits:
 
 	lda	seconds
 
-	cmp	#0
-	beq	next_credit
-	cmp	#4
-	beq	next_credit
-	cmp	#8
-	beq	next_credit
-	cmp	#12
-	beq	next_credit
-	cmp	#16
+	; increment on multiples of 4 seconds
+
+	and	#$3
 	beq	next_credit
 	bne	done_credits
 
@@ -109,6 +103,10 @@ next_credit:
 	; write the credits
 
 write_credits:
+	lda	which_credit
+	cmp	#7
+	beq	done_credits
+
 	ldx	#4
 outer_credit_loop:
 
@@ -159,9 +157,9 @@ done_credits:
 	rts
 
 credits_address:
+	.word	$a50+12
 	.word	$ad0+12
 	.word	$b50+12
-	.word	$bd0+12
 
 credits_table:
 	.word credits1
@@ -169,6 +167,8 @@ credits_table:
 	.word credits3
 	.word credits4
 	.word credits5
+	.word credits6
+	.word credits7
 
 
 credits1:
@@ -183,7 +183,7 @@ credits2:
 
 credits3:
 	.byte "   Algorithms:  "
-	.byte "     Qkumba     "
+	.byte "   F. Sanglard  "
 	.byte "    Hellmood    "
 
 credits4:
@@ -192,6 +192,16 @@ credits4:
 	.byte "   Kay Savetz   "
 
 credits5:
+	.byte "    Magic:      "
+	.byte "                "
+	.byte "    qkumba      "
+
+credits6:
+	.byte "    Greets:     "
+	.byte "      4am       "
+	.byte "  French Touch  "
+
+credits7:
 	.byte "       _        "
 	.byte "    _|(_   _    "
 	.byte "   (_| _) |     "

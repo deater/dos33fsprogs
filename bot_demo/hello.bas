@@ -7,6 +7,6 @@
 45 PRINT "    FIRST TESTED ON THE @APPLEIIBOT"
 50 PRINT
 60 HTAB 15:PRINT "     _    "
-70 HTAB 15:PRINT " _: :_   _"
-80 HTAB 15:PRINT ":_:  _: : "
+70 HTAB 15:PRINT " _: (_   _"
+80 HTAB 15:PRINT "(_:  _) : "
 90 PRINT CHR$(4)"BRUN LOADER"
