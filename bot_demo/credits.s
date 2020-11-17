@@ -1,44 +1,90 @@
+switch_to_credits:
+
+	; clear bottom of page2 and set split
+	bit	TEXTGR
+
+	ldx	#39
+	lda	#' '|$80
+clear_bottom_loop:
+	sta	$A50,X
+	sta	$AD0,X
+	sta	$B50,X
+	sta	$BD0,X
+	dex
+	bpl	clear_bottom_loop
+
+	; set "done"
+
+	lda	#DONE
+	sta	command
+
+	; clear time
+
+	lda	#0
+	sta	seconds
+	sta	ticks
+
+	rts
+
+
 display_credits:
+
 	; display music bars
 
+	; a bar
+
 	lda	A_VOLUME
-	asl
-	asl
+	lsr
+	lsr
 	sta	draw_a_bar_loop+1
 
 	ldx	#4
-	lda	#' '
+	lda	#' '|$80
 draw_a_bar_loop:
 	cpx	#$4
-	beq	skip_a_bar
+	bne	skip_a_bar
 	eor	#$80
-	sta	$A50,X
 skip_a_bar:
+	sta	$A50,X
+
 	dex
 	bpl	draw_a_bar_loop
 
+	; b bar
+
 	lda	B_VOLUME
-	asl
-	asl
-	tax
+	lsr
+	lsr
+	sta	draw_b_bar_loop+1
+	ldx	#4
+	lda	#' '|$80
 draw_b_bar_loop:
-	lda	#' '
-	sta	$Ad0,X
+	cpx	#$4
+	bne	skip_b_bar
+	eor	#$80
+skip_b_bar:
+	sta	$AD0,X
 	dex
 	bpl	draw_b_bar_loop
 
 	lda	C_VOLUME
-	asl
-	asl
-	tax
+	lsr
+	lsr
+	sta	draw_c_bar_loop+1
+	ldx	#4
+	lda	#' '|$80
 draw_c_bar_loop:
-	lda	#' '
+	cpx	#$4
+	bne	skip_c_bar
+	eor	#$80
+skip_c_bar:
 	sta	$B50,X
 	dex
 	bpl	draw_c_bar_loop
 
-	; write credits
 
+	; write credits
+actual_credits:
 	lda	ticks
 	cmp	#25
 	bne	done_credits
@@ -58,23 +104,64 @@ draw_c_bar_loop:
 	bne	done_credits
 
 next_credit:
+
+	;========================
+	; write the credits
+
 write_credits:
+	ldx	#4
+outer_credit_loop:
+
+	; X is proper line
+	; point to start of proper output line
+
+	lda	credits_address,X
+	sta	credits_address_smc+1
+	lda	credits_address+1,X
+	sta	credits_address_smc+2
+
+	; load proper input location
+
 	lda	which_credit
 	asl
 	tay
 
+	txa
+	asl
+	asl
+	asl	; *16 (already *2)
+	clc
+	adc	credits_table,Y
+	sta	write_credit_1_loop+1
+	lda	credits_table+1,Y
+	adc	#0
+	sta	write_credit_1_loop+2
+
+	ldy	#0
 write_credit_1_loop:
 	lda	$dede,Y
-	beq	done_credit1_loop
-	sta	$Ad0+20,Y
+	ora	#$80
+credits_address_smc:
+	sta	$dede,Y
 	iny
-	jmp	write_credit_1_loop
+	cpy	#16
+	bne	write_credit_1_loop
 
 done_credit1_loop:
+	dex
+	dex
+	bpl	outer_credit_loop
+
 
 	inc	which_credit
+
 done_credits:
 	rts
+
+credits_address:
+	.word	$ad0+12
+	.word	$b50+12
+	.word	$bd0+12
 
 credits_table:
 	.word credits1
@@ -85,29 +172,29 @@ credits_table:
 
 
 credits1:
-	.byte "Code:",0
-	.byte " ",0
-	.byte "Deater",0
+	.byte "     Code:      "
+	.byte "                "
+	.byte "     Deater     "
 
 credits2:
-	.byte "Music:",0
-	.byte " ",0
-	.byte "mAZE",0
+	.byte "     Music:     "
+	.byte "                "
+	.byte "      mAZE      "
 
 credits3:
-	.byte "Algorithms:",0
-	.byte " ",0
-	.byte "Hellmood",0
+	.byte "   Algorithms:  "
+	.byte "     Qkumba     "
+	.byte "    Hellmood    "
 
 credits4:
-	.byte "Apple II bot",0
-	.byte " ",0
-	.byte "Kay Savetz",0
+	.byte "  Apple II bot  "
+	.byte "                "
+	.byte "   Kay Savetz   "
 
 credits5:
-	.byte "    _    ",0
-	.byte " _|(_   _",0
-	.byte "(_| _) | ",0
+	.byte "       _        "
+	.byte "    _|(_   _    "
+	.byte "   (_| _) |     "
 
 which_credit:
 	.byte	$0

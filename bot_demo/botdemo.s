@@ -8,10 +8,12 @@
 
 STROUT = $db3a
 
-DONE	= 0
-DO_LOAD	= 1
-DO_LIST	= 2
-DO_RUN	= 3
+NONE		= 0
+DO_LOAD		= 1
+DO_LIST		= 2
+DO_RUN		= 3
+DO_CREDITS	= 4
+DONE		= 5
 
 	;==========================================
 	; we are loaded at $6000
@@ -123,9 +125,15 @@ not_do_list:
 
 not_do_load:
 	cmp	#DO_RUN		; if command is run
-	bne	not_trigger
+	bne	not_do_run
 
 	jmp	do_run		; then do it
+
+not_do_run:
+;	cmp	#DO_CREDITS
+;	bne	not_trigger
+
+;	jmp	switch_to_credits
 
 not_trigger:
 

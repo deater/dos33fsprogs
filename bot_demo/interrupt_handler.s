@@ -65,7 +65,7 @@ no_tick_oflo:
 
 	lda	seconds
 	cmp	timeout
-	bne	done_match
+	bne	handle_credits
 
 	inc	trigger
 
@@ -74,6 +74,14 @@ no_tick_oflo:
 	tax
 	lda	todo_list,x
 	sta	command
+
+	cmp	#DO_CREDITS
+	bne	itsnot
+
+	jsr	switch_to_credits
+	lda	command
+
+itsnot:
 	cmp	#DONE
 	beq	handle_credits
 
@@ -103,7 +111,10 @@ no_tick_oflo:
 	rti
 
 handle_credits:
-	bit	TEXTGR
+	lda	command
+	cmp	#DONE
+	bne	done_match
+
 	jsr	display_credits
 
 done_match:
