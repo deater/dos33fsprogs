@@ -141,7 +141,7 @@ not_trigger:
 
 command:	.byte $00
 which:		.byte $00
-timeout:	.byte 10
+timeout:	.byte 8		; original timeout
 trigger:	.byte $00
 original_stack:	.byte $00
 

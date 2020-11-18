@@ -131,7 +131,16 @@ bottom_loop:
 	;=============================
 	;=============================
 do_run:
+
+	lda	which_file	; is actually +1 at this point
+	cmp	#5		; raster
+	beq	no_home
+
+	cmp	#7
+	bcs	no_home
+
 	jsr	HOME
+no_home:
 
 	lda	#<run_string
 	sta	cti_smc+1

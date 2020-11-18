@@ -15,31 +15,32 @@ todo_list:
 	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; a2
 	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,10	; flyer
 	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,20	; nyan
-;	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; rle
-	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,20	; raster
+	.byte	DO_LOAD,1,	DO_LIST,1,	DO_RUN,20	; raster
 	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,35	; qr
-	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,12	; dhgr
-	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,10	; circles
-	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,10	; autumn
+	.byte	DO_LOAD,1,	DO_LIST,1,	DO_RUN,12	; dhgr
+	.byte	DO_LOAD,1,	DO_LIST,1,	DO_RUN,10	; circles
+	.byte	DO_LOAD,1,	DO_LIST,1,	DO_RUN,10	; autumn
 	.byte	DO_CREDITS,$FF
 	.byte	DONE,$FF
 
 
+;	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; rle
 
 
 
 file_list:
-	.word	flame,flame_end
-	.word	a2,a2_end
-	.word	flyer,flyer_end
-	.word	nyan,nyan_end
-;	.word	rle,rle_end
-	.word	raster,raster_end
-	.word	qr,qr_end
-	.word	dhgr,dhgr_end
-	.word	circles,circles_end
-	.word	autumn,autumn_end
+	.word	flame,flame_end			; 0
+	.word	a2,a2_end			; 1
+	.word	flyer,flyer_end			; 2
+	.word	nyan,nyan_end			; 3
+	.word	raster,raster_end		; 4
+	.word	qr,qr_end			; 5
+	.word	dhgr,dhgr_end			; 6
+	.word	circles,circles_end		; 7
+	.word	autumn,autumn_end		; 8
 
+
+;	.word	rle,rle_end
 
 
 
