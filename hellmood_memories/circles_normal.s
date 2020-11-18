@@ -1,5 +1,7 @@
 ; Zooming Circles, based on the code in Hellmood's Memories
 
+; for use *not* in zero page (for appleii bot)
+
 ; by deater (Vince Weaver) <vince@deater.net>
 
 ; Zero Page
@@ -8,15 +10,15 @@ BASH		= $29
 H2		= $2C
 COLOR		= $30
 
-X1		= $F0
-X2		= $F1
-Y1		= $F2
-Y2		= $F3
+X1		= $F8
+X2		= $F9
+Y1		= $FA
+Y2		= $FB
 
-TEMP		= $FA
-TEMPY		= $FB
-FRAME		= $FC
-TEMPX		= $FD
+TEMP		= $FC
+TEMPY		= $FD
+FRAME		= $FE
+TEMPX		= $FF
 
 
 ; Soft Switches

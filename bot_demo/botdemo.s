@@ -170,4 +170,4 @@ original_stack:	.byte $00
 PT3_LOC = song
 .align	$100
 song:
-.incbin "music/Second_Best_2_Nothing.pt3"
+.incbin "music/A_UpBeat_Thingy.pt3"

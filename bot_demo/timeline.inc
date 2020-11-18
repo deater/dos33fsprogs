@@ -12,19 +12,17 @@
 todo_list:
 
 	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,5	; flame
-
+	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; a2
+	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,10	; flyer
+	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,20	; nyan
+;	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; rle
+	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,20	; raster
+	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,35	; qr
+	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,12	; dhgr
+	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,10	; circles
 	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,10	; autumn
 	.byte	DO_CREDITS,$FF
 	.byte	DONE,$FF
-
-	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; a2
-	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,10	; flyer
-	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; nyan
-;	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; rle
-	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; raster
-	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,15	; qr
-	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,10	; dhgr
-	.byte	DO_LOAD,1,	DO_LIST,4,	DO_RUN,10	; circles
 
 
 
@@ -32,8 +30,6 @@ todo_list:
 
 file_list:
 	.word	flame,flame_end
-	.word	autumn,autumn_end
-
 	.word	a2,a2_end
 	.word	flyer,flyer_end
 	.word	nyan,nyan_end
@@ -42,13 +38,13 @@ file_list:
 	.word	qr,qr_end
 	.word	dhgr,dhgr_end
 	.word	circles,circles_end
+	.word	autumn,autumn_end
+
 
 
 
 title_list:
 	.word	flame_title
-	.word	autumn_title
-
 	.word	a2_title
 	.word	flyer_title
 	.word	nyan_title
@@ -57,6 +53,8 @@ title_list:
 	.word	qr_title
 	.word	dhgr_title
 	.word	circles_title
+	.word	autumn_title
+
 
 
 ;              0123456789012345678901234567890123456789
@@ -65,7 +63,7 @@ flame_title:
 a2_title:
 	.byte "          LO-RES SELF PORTRAIT          "
 flyer_title:
-	.byte "        HI-RES SHAPETABLE FLYER         "
+	.byte "         HI-RES SHAPETABLE FLYER        "
 nyan_title:
 	.byte "        HI-RES ANIMATED NYAN CAT        "
 qr_title:
