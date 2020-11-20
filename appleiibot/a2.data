@@ -14,8 +14,8 @@
 13	9	24	2	26	; monitor
 8	10	21	4	24	; bezel
 0	11	20	6	23	; screen
-8	34	36	19	40	; drive side
 8	34	34	21	41	; drive side
+8	34	36	19	40	; drive side
 5	28	35	19	20	; drive top
 5	27	33	21	22	; drive top
 13	25	33	23	43	; drive outline
