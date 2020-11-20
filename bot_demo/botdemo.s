@@ -57,7 +57,7 @@ mockingboard_not_found:
 
 	jsr	TEXT
 	jsr	SETGR
-;	jsr	HOME
+	jsr	HOME
 ;	bit	SET_GR
 ;	bit	TEXTGR
 	bit	KEYRESET
@@ -170,4 +170,4 @@ original_stack:	.byte $00
 PT3_LOC = song
 .align	$100
 song:
-.incbin "music/A_UpBeat_Thingy.pt3"
+.incbin "music/mAZE_-_The_Upbeated_Eaten_Apple.pt3"
