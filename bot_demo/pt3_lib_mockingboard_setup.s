@@ -109,36 +109,51 @@ reset_ay_smc4:
 	; register in X
 	; value in MB_VALUE
 
+	; note the datasheet says 10,000ns (10 cycle) max hold
+	; time on the write signals.  So interleaving write/left
+	;	write might violate that
+
 write_ay_both:
 	; address
 
+	; write left
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
+	ldy	#MOCK_AY_INACTIVE	; go inactive			; 2
+
 write_ay_smc1:
 	stx	MOCK_6522_ORA1		; put address on PA1		; 4
-	stx	MOCK_6522_ORA2		; put address on PA2		; 4
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
 write_ay_smc2:
 	sta	MOCK_6522_ORB1		; latch_address on PB1		; 4
-	sta	MOCK_6522_ORB2		; latch_address on PB2		; 4
-	ldy	#MOCK_AY_INACTIVE	; go inactive			; 2
 write_ay_smc3:
-	sty	MOCK_6522_ORB1						; 4
+	sty	MOCK_6522_ORB1		; go inactive			; 4
+
+	; write right
+	stx	MOCK_6522_ORA2		; put address on PA2		; 4
+	sta	MOCK_6522_ORB2		; latch_address on PB2		; 4
 	sty	MOCK_6522_ORB2						; 4
 								;===========
-								;        28
+
 	; value
 	lda	MB_VALUE						; 3
+	; write left
 write_ay_smc4:
 	sta	MOCK_6522_ORA1		; put value on PA1		; 4
-	sta	MOCK_6522_ORA2		; put value on PA2		; 4
 	lda	#MOCK_AY_WRITE		;				; 2
 write_ay_smc5:
 	sta	MOCK_6522_ORB1		; write on PB1			; 4
-	sta	MOCK_6522_ORB2		; write on PB2			; 4
 write_ay_smc6:
 	sty	MOCK_6522_ORB1						; 4
+
+
+
+	lda	MB_VALUE						; 3
+	; write right
+	sta	MOCK_6522_ORA2		; put value on PA2		; 4
+	lda	#MOCK_AY_WRITE		;				; 2
+	sta	MOCK_6522_ORB2		; write on PB2			; 4
 	sty	MOCK_6522_ORB2						; 4
 								;===========
-								;        29
+
 
 	rts								; 6
 								;===========
