@@ -52,17 +52,7 @@ duke_loop:
 
 	jsr	gr_copy_to_current
 
-	jsr	normal_text
-	lda	#<help_string
-	sta	OUTL
-	lda	#>help_string
-	sta	OUTH
-	jsr	move_and_print
-	jsr	move_and_print
-	jsr	move_and_print
-
-	jsr	inverse_text
-	jsr	move_and_print
+	jsr	draw_status_bar
 
 	jsr	page_flip
 
@@ -103,13 +93,4 @@ done_with_duke:
 	.include	"gr_pageflip.s"
 	.include	"decompress_fast_v2.s"
 
-
-
-help_string:
-	.byte 11,20,"PRESS ^H FOR HELP",0
-
-score_string:
-	;           012456789012345678901234567890123456789
-	.byte 0,22,"SCORE   HEALTH   FIREPOWER    INVENTORY",0
-	.byte 0,23,"00010  XXXXXXXX  =-=-                  ",0
-	.byte 7,23,"        ",0
+	.include	"status_bar.s"
