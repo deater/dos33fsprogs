@@ -78,65 +78,19 @@ PATTERN_H       = $7F
 ; when loading/storing from disk
 
 WHICH_LOAD		= $80		; which file to load
-LOCATION		= $81		; location on the map
+;LOCATION		= $81		; location on the map
 
-GUYBRUSH_X		= $82		; location of protagonist
-GUYBRUSH_Y		= $83
+DUKE_X			= $82		; location of protagonist
+DUKE_Y			= $83
+DUKE_DIRECTION		= $84
+DUKE_WALKING		= $85
+DUKE_JUMPING		= $86
 
-CURRENT_VERB		= $84		; current verb
-VALID_NOUN		= $85		; current noun
-NOUN_L			= $86		; pointer to current noun string
-NOUN_H			= $87
-NOUN_VECTOR_L		= $88		; pointer to callback for clicking noun
-NOUN_VECTOR_H		= $89
+LASER_OUT		= $87
+LASER_X			= $88
+LASER_Y			= $89
+LASER_DIRECTION		= $8A
 
-DESTINATION_X		= $8A		; where to walk
-DESTINATION_Y		= $8B
-
-; credits stuff
-CLOUD_X			= $8C
-CREDITS_OFFSET		= $8D
-CREDITS_LOGO_ON		= $8E
-CREDITS_SPLIT_SCREEN	= $8F
-CREDITS_DISPLAY_TEXT	= $90
-CREDITS_TEXTL		= $91
-CREDITS_TEXTH		= $92
-
-GUYBRUSH_DIRECTION	= $93
-	DIR_DOWN = 0	; there's a reason for this
-	DIR_LEFT = 2
-	DIR_UP   = 4
-	DIR_RIGHT= 6
-
-BAR_DOOR_OPEN		= $94
-DISPLAY_MESSAGE		= $95
-MESSAGE_L		= $96
-MESSAGE_H		= $97
-
-GUYBRUSH_SIZE		= $98
-	GUYBRUSH_BIG    = 0
-	GUYBRUSH_MEDIUM	= 1
-	GUYBRUSH_SMALL  = 2
-	GUYBRUSH_TINY   = 3
-GUYBRUSH_FEET		= $99
-ITEMS_PICKED_UP		= $9A
-	IPU_ITEM_MEAT = $01
-	IPU_ITEM_PULLEY_CHICKEN = $02
-
-	INV_ITEM_MEAT	=		$1
-	INV_ITEM_PULLEY_CHICKEN	=	$2
-
-INVENTORY		= $9B
-INVENTORY2		= $9C
-INVENTORY3		= $9D
-INVENTORY4		= $9E
-INVENTORY5		= $9F
-
-INVENTORY_NEXT_SLOT	= $A0
-FIRST_TIME		= $A1
-	FIRST_TIME_LEAVE_LOOKOUT=	$1
-	FIRST_TIME_LEAVE_BAR	=	$2
-COUNT			= $A2
 
 ; done game puzzle state
 
