@@ -14,6 +14,10 @@ For release 1.0
 	-- open door to clock puzzle?
 	-- another stop on path to spaceship.  Out of room though :(
 	-- MIST_ROCKET_PATH_PAD probably missing ship-raised background
+	-- (reported by user) the generator entrance/path just shows
+		open hand icon so it's unclear you can take the path in
+		addition to entering the generator.  Not much we can
+		do about that with the current engine though
 
 + OCTAGON
 	-- animation on the fireplace opening/closing
