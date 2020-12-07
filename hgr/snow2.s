@@ -10,6 +10,8 @@
 ; 167 -- remove YBASE ininitialization
 ; 161 -- only fall to 128 then recycle
 ; 156 -- use lookup table
+; 145 -- drop page flipping
+; 142 -- only need one row of zeros
 
 GBASL	= $26
 GBASH	= $27
@@ -30,44 +32,45 @@ HPOSN	= $F411
 
 
 snow:
+;	jsr	HGR
 	jsr	HGR2					; 3
 
 move_snow:
-;	lda	#0					; 2
-;	sta	XIDX					; 2
 
 	; 17 bytes to set page
 
-	bit	HGRPAGE		; V set if $40		; 3
-	bvc	show_page1				; 2
+;	bit	HGRPAGE		; V set if $40		; 3
+;	bvc	show_page1				; 2
 
 show_page2:
-	bit	PAGE1					; 3
-	lsr	HGRPAGE					; 2
-	bne	doit					; 2
+;	bit	PAGE1					; 3
+;	lsr	HGRPAGE					; 2
+;	bne	doit					; 2
 
 show_page1:
-	bit	PAGE0					; 3
-	asl	HGRPAGE					; 2
+;	bit	PAGE0					; 3
+;	asl	HGRPAGE					; 2
 
 doit:
-	jsr	HCLR
+;	jsr	HCLR
 
-	lda	#22
+	lda	#24
 	sta	LINE
 
-	inc	YBASE
-	lda	YBASE
-	sta	YLO
-	and	#$7f
+	lda	YBASE	; be sure gets init at start
+	and	#$7f	; wrap at 128
 	sta	YBASE
+	inc	YBASE
+	sta	YLO
+
 
 snow_loop:
 	ldy	#$0		; xhi
 	ldx	#130		; xlo -- (mult of 16)+2 for code to work
-ylo_smc:
 	lda	YLO		; ylo
 	jsr	HPOSN
+
+	; y is xlo div 7
 
 	ldx	LINE
 	lda	offsets,X
@@ -79,11 +82,13 @@ line_loop:
 
 	inx
 	iny
-	tya
-	and	#$8
-	beq	line_loop
+	cpy	#$18
+;	tya
+;	and	#$8
+	bne	line_loop
 
 	inc	YLO
+inc_smc:
 	dec	LINE
 	bmi	move_snow
 	bpl	snow_loop
@@ -105,22 +110,23 @@ line_loop:
 ;	.byte	$00,$60,$40,$01,$03,$00
 
 flake:
-	.byte	$00,$00,$40,$01,$00,$00	; 0, 4
+	.byte	$00,$00,$00,$00		; 0
+	.byte	$00,$00,$40,$01,$00,$00	; 4,8
 	.byte	$0C,$18,$00,$00		;
 	.byte	$70,$07,$00,$00		;
 	.byte	$43,$61,$00,$00		;
 	.byte	$4C,$19,$00,$00		;
-	.byte	$33,$00,$70,$07,$00,$66	; 22
-	.byte	$30,$06,$40,$01,$30,$06 ; 28
-	.byte	$3f,$06,$40,$01,$30,$7e ; 34
-	.byte	$40,$07,$30,$06,$70,$01 ; 40
-	.byte	$7c,$07,$30,$06,$70,$1f ; 46
-	.byte	$00,$18,$0F,$78,$0C,$00 ; 52
-	.byte	$60,$40,$01,$03
+	.byte	$33,$00,$70,$07,$00,$66	; 26
+	.byte	$30,$06,$40,$01,$30,$06 ; 32
+	.byte	$3f,$06,$40,$01,$30,$7e ; 38
+	.byte	$40,$07,$30,$06,$70,$01 ; 44
+	.byte	$7c,$07,$30,$06,$70,$1f ; 50
+	.byte	$00,$18,$0F,$78,$0C,$00 ; 56
+	.byte	$60,$40,$01,$03		; 61
 
 offsets:
-	.byte 0,4,8,12,16,22,28,34,40,46,52,57
-	.byte 52,46,40,34,28,22,16,12,8,4,0
+	.byte 0,4,8,12,16,20,26,32,38,44,50,56,61
+	.byte 56,50,44,38,32,26,20,16,12,8,4,0
 
 ;floke:
 ;	.byte	$0,$0,$1,$2,$0,$0
