@@ -7,7 +7,7 @@ int main(int argc, char **argv) {
 
 	int i = 0;
 	int e = 0,filesize;
-	int val,pv;
+	int val,pv,final;
 	unsigned char in[1024];
 	unsigned char enc[1024];
 	int third;
@@ -21,13 +21,15 @@ int main(int argc, char **argv) {
 		if (i<filesize) {
 			val=in[i+0];
 			pv=val;
-			val=val+0x100;
+			val=val+0x40;
 			val-=third;
-			val&=0xff;
+//			val&=0xff;
 			val=val>>2;
 			val=val+32;
+			final=((val-32)<<2)+third-0x40;
 			fprintf(stderr,"%d: %x -> %x %x ==> %x\n",
-				i,pv,val,third,((val-32)<<2)+third);
+				i,pv,val,third,final);
+			if (pv!=final) fprintf(stderr,"error0: no match!\n");
 			if (val<0) fprintf(stderr,"error0, negative! in=%x e=%x val=%x\n",
 				in[i+0],third,val);
 			if (val<0x20) fprintf(stderr,"error0, unprintable! in=%x pv=%x e=%x val=%x\n",
@@ -39,14 +41,16 @@ int main(int argc, char **argv) {
 		if (i + 1 < filesize) {
 			val=in[i+1];
 			pv=val;
-			val=val+0x100;
+			val=val+0x40;
 			val-=(third>>2);
-			val&=0xff;
+//			val&=0xff;
 			val=val>>2;
 			val=val+32;
+			final=((val-32)<<2)+(third>>2)-0x40;
 
 			fprintf(stderr,"%d: %x -> %x %x ==> %x\n",
-				i+1,pv,val,third>>2,((val-32)<<2)+(third>>2));
+				i+1,pv,val,third>>2,final);
+			if (pv!=final) fprintf(stderr,"error1: no match!\n");
 			if (val<0) fprintf(stderr,"error1, negative! %x %x\n",
 				in[i+0]&0xfc,third);
 			if (val<0x20) fprintf(stderr,"error1, unprintable! %x %x\n",
@@ -58,15 +62,15 @@ int main(int argc, char **argv) {
 		if (i + 2 < filesize) {
 			val=in[i+2];
 			pv=val;
-			val=val+0x100;
+			val=val+0x40;
 			val-=(third>>4);
-			val&=0xff;
+//			val&=0xff;
 			val=val>>2;
 			val=val+32;
-
+			final=((val-32)<<2)+(third>>4)-0x40;
 			fprintf(stderr,"%d: %x -> %x %x ==> %x\n",
-				i+2,pv,val,third>>4,((val-32)<<2)+(third>>4));
-
+				i+2,pv,val,third>>4,final);
+			if (pv!=final) fprintf(stderr,"error2: no match!\n");
 			if (val<0) fprintf(stderr,"error2, negative! %x %x\n",
 				in[i+0]&0xfc,third);
 			if (val<0x20) fprintf(stderr,"error2, unprintable! %x %x\n",
@@ -79,8 +83,10 @@ int main(int argc, char **argv) {
 	enc[e]=0;
 
 	printf("%s\n",enc);
-	printf("2FORI=0TO%d:C=(PEEK(%d+I/3)-32)/4^(I-INT(I/3)*3):POKE768+I,C+4*(PEEK(2054+I)-32-INT(C/4)):NEXT:CALL768\n",
+	printf("2FORI=0TO%d:POKE768+I,4*PEEK(2054+I)-192+(PEEK(%d+I/3)-32)/4^(I-INT(I/3)*3):NEXT:CALL768\n",
 		filesize,2054+filesize);
+//	printf("2FORI=0TO%d:C=(PEEK(%d+I/3)-32)/4^(I-INT(I/3)*3):POKE768+I,C+4*(PEEK(2054+I)-32-INT(C/4)):NEXT:CALL768\n",
+//		filesize,2054+filesize);
 
 // note, peek/poke truncate?
 //2FORI=1013TO1141:C=(PEEK(1843+I/3)-32)/4^(I-INT(I/3)*3):POKEI,C+4*(PEEK(1041+I)-32-INT(C/4)):NEXT:&

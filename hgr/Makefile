@@ -5,10 +5,11 @@ TOKENIZE = ../asoft_basic-utils/tokenize_asoft
 
 all:	hgr.dsk
 
-hgr.dsk:	SNOW SNOW2
+hgr.dsk:	SNOW SNOW2 SNOW3
 	cp empty.dsk hgr.dsk
 	$(DOS33) -y hgr.dsk BSAVE -a 0x0300 SNOW
 	$(DOS33) -y hgr.dsk BSAVE -a 0x0300 SNOW2
+	$(DOS33) -y hgr.dsk BSAVE -a 0x0367 SNOW3
 
 ###
 
@@ -26,8 +27,16 @@ SNOW2:	snow2.o
 snow2.o:	snow2.s
 	ca65 -o snow2.o snow2.s -l snow2.lst
 
+###
+
+SNOW3:	snow3.o
+	ld65 -o SNOW3 snow3.o -C ./apple2_custom.inc
+
+snow3.o:	snow3.s
+	ca65 -o snow3.o snow3.s -l snow3.lst
+
 
 ###
 
 clean:	
-	rm -f *~ *.o *.lst SNOW SNOW2
+	rm -f *~ *.o *.lst SNOW SNOW2 SNOW3
