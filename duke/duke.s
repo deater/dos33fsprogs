@@ -48,9 +48,9 @@ duke_start:
 	; load duke bg
 	;====================================
 
-        lda	#<duke_lzsa
+        lda	#<duke1_bg_lzsa
 	sta	LZSA_SRC_LO
-        lda	#>duke_lzsa
+        lda	#>duke1_bg_lzsa
 	sta	LZSA_SRC_HI
 	lda	#$c			; load to page $c00
 	jsr	decompress_lzsa2_fast
@@ -116,7 +116,7 @@ done_with_duke:
 	;==========================
 
 	; level graphics
-	.include	"duke.inc"
+	.include	"graphics/duke_graphics.inc"
 
 	.include	"text_print.s"
 	.include	"gr_offsets.s"

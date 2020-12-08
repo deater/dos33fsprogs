@@ -2,9 +2,6 @@ include ../Makefile.inc
 
 DOS33 = ../dos33fs-utils/dos33
 DOS33_RAW = ../dos33fs-utils/dos33_raw
-PNG_TO_40x96 = ../gr-utils/png_to_40x96
-PNG_TO_40x48D = ../gr-utils/png_to_40x48d
-PNG2RLE = ../gr-utils/png2rle
 B2D = ../bmp2dhr/b2d
 PNG2GR = ../gr-utils/png2gr
 LZSA = ~/research/lzsa/lzsa/lzsa
@@ -27,28 +24,21 @@ HELLO:	hello.bas
 DUKE:	duke.o
 	ld65 -o DUKE duke.o -C ../linker_scripts/apple2_2000.inc
 
-duke.o:	duke.s zp.inc hardware.inc duke.s duke.inc \
+duke.o:	duke.s zp.inc hardware.inc duke.s \
+	graphics/duke_graphics.inc \
 	status_bar.s draw_duke.s gr_putsprite_crop.s \
 	keyboard.s handle_laser.s
 	ca65 -o duke.o duke.s -l duke.lst
 
 ####
 
-duke.inc:	duke.lzsa
-	echo "duke_lzsa: .incbin \"duke.lzsa\"" > duke.inc
-
-####
-
-%.gr:	%.png
-	$(PNG2GR) $< $@
-
-%.lzsa:	%.gr
-	$(LZSA) -r -f2 $< $@
+graphics/duke_graphics.inc:
+	cd	graphics && make
 
 ####
 
 clean:		
 	rm -f *~ *.o *.lst HELLO DUKE
-
+	cd graphics && make clean
 
 
