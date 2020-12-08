@@ -38,7 +38,7 @@ duke_start:
 
 	lda	#18
 	sta	DUKE_X
-	lda	#20
+	lda	#18
 	sta	DUKE_Y
 	lda	#1
 	sta	DUKE_DIRECTION
@@ -66,6 +66,10 @@ duke_loop:
 	; copy over background
 
 	jsr	gr_copy_to_current
+
+	; draw tilemap
+
+	jsr	draw_tilemap
 
 	; draw laser
 
@@ -132,5 +136,6 @@ done_with_duke:
 
 	.include	"draw_duke.s"
 	.include	"handle_laser.s"
+	.include	"draw_tilemap.s"
 
-
+	.include	"level1_data.inc"
