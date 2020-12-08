@@ -104,15 +104,6 @@ LOAD:	load.o
 load.o:	load.s
 	ca65 -o load.o load.s -l load.lst
 
-###
-
-FASTAR2:	fastar2.o
-	ld65 -o FASTAR2 fastar2.o -C ../linker_scripts/apple2_c00.inc
-
-fastar2.o:	fastar2.s
-	ca65 -o fastar2.o fastar2.s -l fastar2.lst
-
-
 ####
 
 QKUMBA2.BAS:	qkumba_seasons.bas

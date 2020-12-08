@@ -5,11 +5,30 @@ TOKENIZE = ../asoft_basic-utils/tokenize_asoft
 
 all:	hgr.dsk
 
-hgr.dsk:	SNOW SNOW2 SNOW3
+hgr.dsk:	SNOW SNOW2 SNOW3 STARS FASTAR
 	cp empty.dsk hgr.dsk
 	$(DOS33) -y hgr.dsk BSAVE -a 0x0300 SNOW
 	$(DOS33) -y hgr.dsk BSAVE -a 0x0300 SNOW2
 	$(DOS33) -y hgr.dsk BSAVE -a 0x0367 SNOW3
+	$(DOS33) -y hgr.dsk BSAVE -a 0x0300 STARS
+	$(DOS33) -y hgr.dsk BSAVE -a 0x0C00 FASTAR
+
+###
+
+FASTAR:	fastar.o
+	ld65 -o FASTAR fastar.o -C ../linker_scripts/apple2_c00.inc
+
+fastar.o:	fastar.s
+	ca65 -o fastar.o fastar.s -l fastar.lst
+
+
+###
+
+STARS:	stars.o
+	ld65 -o STARS stars.o -C ../linker_scripts/apple2_300.inc
+
+stars.o:	stars.s
+	ca65 -o stars.o stars.s -l stars.lst
 
 ###
 
