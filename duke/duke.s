@@ -6,6 +6,11 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 
+
+TILES		= $9000
+BIG_TILEMAP	= $9400
+TILEMAP		= $BC00
+
 duke_start:
 	;===================
 	; init screen
@@ -45,7 +50,7 @@ duke_start:
 
 
 	;====================================
-	; load duke bg
+	; load level1 background
 	;====================================
 
         lda	#<duke1_bg_lzsa
@@ -54,6 +59,23 @@ duke_start:
 	sta	LZSA_SRC_HI
 	lda	#$c			; load to page $c00
 	jsr	decompress_lzsa2_fast
+
+	;====================================
+	; load level1 tilemap
+	;====================================
+
+        lda	#<level1_data_lzsa
+	sta	LZSA_SRC_LO
+        lda	#>level1_data_lzsa
+	sta	LZSA_SRC_HI
+	lda	#$90			; load to page $9000
+	jsr	decompress_lzsa2_fast
+
+	;====================================
+	; copy in tilemap subset
+	;====================================
+
+	jsr	copy_tilemap_subset
 
 	;====================================
 	;====================================
@@ -138,4 +160,5 @@ done_with_duke:
 	.include	"handle_laser.s"
 	.include	"draw_tilemap.s"
 
-	.include	"level1_data.inc"
+level1_data_lzsa:
+	.incbin		"maps/level1_map.lzsa"

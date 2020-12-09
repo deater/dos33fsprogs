@@ -1,7 +1,9 @@
 CC = gcc
 CFLAGS = -g -Wall -O2
 
-all:	level1_map.inc png2map
+LZSA = ~/research/lzsa/lzsa/lzsa
+
+all:	level1_map.lzsa png2map
 
 level1_map.inc:	level1_map.png png2map
 	./png2map level1_map.png level1_map.inc
@@ -22,6 +24,9 @@ png2map.o:		png2map.c loadpng.h
 	$(CC) $(CFLAGS) -c png2map.c
 
 ###
+
+%.lzsa: %.inc
+	$(LZSA) -r -f2 $< $@
 
 clean:		
 		rm -f *~ *.o *.inc png2map

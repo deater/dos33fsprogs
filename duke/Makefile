@@ -26,7 +26,7 @@ DUKE:	duke.o
 
 duke.o:	duke.s zp.inc hardware.inc duke.s \
 	graphics/duke_graphics.inc \
-	level1_data.inc \
+	maps/level1_map.lzsa \
 	status_bar.s draw_duke.s gr_putsprite_crop.s \
 	draw_tilemap.s \
 	keyboard.s handle_laser.s
@@ -37,10 +37,14 @@ duke.o:	duke.s zp.inc hardware.inc duke.s \
 graphics/duke_graphics.inc:
 	cd	graphics && make
 
+maps/level1_map.lzsa:
+	cd	maps && make
+
 ####
 
 clean:		
 	rm -f *~ *.o *.lst HELLO DUKE
 	cd graphics && make clean
+	cd maps && make clean
 
 

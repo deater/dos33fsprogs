@@ -1,0 +1,10 @@
+Memory Map:
+
+
+$2000 -- code
+
+$9000 -- tiles
+$9400 -- global tilemap
+$BC00 -- local tilemap subset
+$BD00 -- unused
+$C000 -- ROM
