@@ -5,12 +5,13 @@ update_status_bar:
 
 draw_status_bar:
 
-	jsr	normal_text
+	jsr	inverse_text
 	lda	#<help_string
 	sta	OUTL
 	lda	#>help_string
 	sta	OUTH
 	jsr	move_and_print
+	jsr	normal_text
 	jsr	move_and_print
 	jsr	move_and_print
 
@@ -21,7 +22,7 @@ draw_status_bar:
 
 
 help_string:
-	.byte 11,20,"PRESS ^H FOR HELP",0
+	.byte 3,20,"        PRESS ^H FOR HELP         ",0
 
 score_string:
 	;           012456789012345678901234567890123456789
