@@ -26,7 +26,9 @@ DUKE:	duke.o
 
 duke.o:	duke.s zp.inc hardware.inc duke.s \
 	graphics/duke_graphics.inc \
+	level1_data.inc \
 	status_bar.s draw_duke.s gr_putsprite_crop.s \
+	draw_tilemap.s \
 	keyboard.s handle_laser.s
 	ca65 -o duke.o duke.s -l duke.lst
 

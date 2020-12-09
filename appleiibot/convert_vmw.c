@@ -91,5 +91,9 @@ int main(int argc, char **argv) {
 // note, peek/poke truncate?
 //2FORI=1013TO1141:C=(PEEK(1843+I/3)-32)/4^(I-INT(I/3)*3):POKEI,C+4*(PEEK(1041+I)-32-INT(C/4)):NEXT:&
 
+// from Tom Greene @txgx42
+//1FORI=0TO141:POKE1013+I,4*PEEK(2126+I)-192+(PEEK(2267+I/3)-35)/4^(I-INT(I/3)*3):NEXT
+//2&",clV5QfWo3NQegoQoX&VPYo8,kYf]J+Y_60T9jb`6dkio^o<\2g000000?0003600L100?H0,B6$-<$I1.I<-?0..?-?0:O@):1K0O):1I7033N30H3-0012345.699<>7<<998654321S4J@M$K$DJ;3%#,1E##'##&*3SS+5[5+F'F//#W##E+D+%#
+
 	return 0;
 }
