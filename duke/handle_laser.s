@@ -13,7 +13,7 @@ move_laser:
 	adc	LASER_DIRECTION
 	sta	LASER_X
 
-	cmp	#33
+	cmp	#31
 	bcc	not_too_far_right
 	lda	#0
 	sta	LASER_OUT
