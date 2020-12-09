@@ -74,6 +74,10 @@ duke_start:
 	;====================================
 	; copy in tilemap subset
 	;====================================
+	lda	#13
+	sta	TILEMAP_X
+	lda	#20
+	sta	TILEMAP_Y
 
 	jsr	copy_tilemap_subset
 

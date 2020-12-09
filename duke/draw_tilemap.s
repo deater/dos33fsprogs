@@ -102,7 +102,7 @@ tiley:		.byte $00
 copy_tilemap_subset:
 
 	; set start
-	lda	#20
+	lda	TILEMAP_Y
 	clc
 	adc	#>BIG_TILEMAP
 	sta	cptl1_smc+2		; set proper row in big tilemap
@@ -115,7 +115,7 @@ copy_tilemap_subset:
 
 cp_tilemap_outer_loop:
 
-	ldx	#13
+	ldx	TILEMAP_X
 	ldy	#0
 cp_tilemap_inner_loop:
 

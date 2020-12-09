@@ -90,7 +90,8 @@ LASER_OUT		= $87
 LASER_X			= $88
 LASER_Y			= $89
 LASER_DIRECTION		= $8A
-
+TILEMAP_X		= $8B
+TILEMAP_Y		= $8C
 
 ; done game puzzle state
 
