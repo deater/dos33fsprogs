@@ -185,14 +185,14 @@ done_down_pressed:
 
 check_space:
 	cmp	#' '
-	beq	space_pressed
+	bne	check_return
 space_pressed:
 
 	; jump
 	lda	DUKE_JUMPING
 	bne	done_keypress	; don't jump if already jumping
 
-	lda	#5
+	lda	#6
 	sta	DUKE_JUMPING
 
 	jmp	done_keypress

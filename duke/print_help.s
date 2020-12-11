@@ -3,7 +3,8 @@
 print_help:
 	bit	KEYRESET		; clear keyboard
 	bit	SET_TEXT
-	jsr	HOME
+
+	jsr	clear_all
 
 	lda	#<help_text
 	sta	OUTL

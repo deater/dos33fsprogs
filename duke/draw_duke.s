@@ -93,6 +93,9 @@ check_falling:
 
 	; block index below feet is (y+10)*16/4 + (x/2) + 1
 
+	; if 18,18 -> 28*16/4 = 112 + 9 = 121 = 7R9
+
+
 	lda	DUKE_Y
 	clc
 	adc	#10
@@ -110,17 +113,43 @@ check_falling:
 	tax
 	lda	TILEMAP,X
 
-	; if < 32 then we fall
+	; if tile# < 32 then we fall
 	cmp	#32
-	bcs	done_check_below
+	bcs	feet_on_ground		; bge
 
-	; scroll
+	;=======================
+	; falling
 
+	; scroll but only if Y=18
+
+	lda	DUKE_Y
+	cmp	#18
+	bne	scroll_fall
+
+	inc	DUKE_Y
+	inc	DUKE_Y
+	jmp	done_check_falling
+
+
+scroll_fall:
 	inc	TILEMAP_Y
 
 	jsr	copy_tilemap_subset
+	jmp	done_check_falling
 
-done_check_below:
+feet_on_ground:
+
+	; check to see if Y still hi, if so scroll back down
+
+	lda	DUKE_Y
+	cmp	#18
+	beq	done_check_falling
+
+	inc	DUKE_Y
+	inc	DUKE_Y
+	dec	TILEMAP_Y		; share w above?
+	jsr	copy_tilemap_subset
+
 done_check_falling:
 	rts
 

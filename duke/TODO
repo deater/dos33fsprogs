@@ -1,0 +1,21 @@
+
+collision detection left/right
+collision detection up (hit head on jump)
+	only calculate position once
+
+hook up title screen
+
+mystery level 2
+
+more complete map
+
+status: keep score, proper laser count
+
+Different sprites for left, right, shooting
+When land, kicks up dust
+
+Enemy?  Little robot, green crawly
+
+Sound effects?
+
+Pick up items?  red key inverse-R

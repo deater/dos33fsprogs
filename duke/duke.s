@@ -150,7 +150,7 @@ done_with_duke:
 
 	.include	"text_print.s"
 	.include	"gr_offsets.s"
-;	.include	"gr_fast_clear.s"
+	.include	"gr_fast_clear.s"
 	.include	"gr_copy.s"
 	.include	"gr_pageflip.s"
 	.include	"gr_putsprite_crop.s"
