@@ -12,6 +12,7 @@ duke.dsk:	HELLO DUKE
 	cp empty.dsk duke.dsk
 	$(DOS33) -y duke.dsk SAVE A HELLO
 	$(DOS33) -y duke.dsk BSAVE -a 0x2000 DUKE
+	$(DOS33) -y duke.dsk BSAVE -a 0x4000 ./title/NEW_TITLEC.BIN TITLE
 
 ###
 
@@ -37,6 +38,9 @@ duke.o:	duke.s zp.inc hardware.inc duke.s \
 graphics/duke_graphics.inc:
 	cd	graphics && make
 
+title/new_title.lzsa:
+	cd	title && make
+
 maps/level1_map.lzsa:
 	cd	maps && make
 
@@ -46,5 +50,5 @@ clean:
 	rm -f *~ *.o *.lst HELLO DUKE
 	cd graphics && make clean
 	cd maps && make clean
-
+	cd title && make clean
 

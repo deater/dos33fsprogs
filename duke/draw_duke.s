@@ -1,9 +1,58 @@
+
+	;=========================
+	; move duke
+	;=========================
 move_duke:
+
+	lda	DUKE_WALKING
+	beq	done_move_duke
+
+	lda	DUKE_DIRECTION
+	bmi	move_left
+
+	lda	DUKE_X
+	cmp	#22
+	bcc	duke_walk_right
+
+duke_scroll_right:
+
+	inc	TILEMAP_X
+
+	jsr	copy_tilemap_subset
+
+	jmp	done_move_duke
+
+duke_walk_right:
+	inc	DUKE_X
+
+	jmp	done_move_duke
+
+move_left:
+
+	lda	DUKE_X
+	cmp	#14
+	bcs	duke_walk_left
+
+duke_scroll_left:
+
+	dec	TILEMAP_X
+
+	jsr	copy_tilemap_subset
+
+	jmp	done_move_duke
+
+duke_walk_left:
+	dec	DUKE_X
+
+	jmp	done_move_duke
+
+done_move_duke:
+
 	rts
 
-
+	;=========================
 	; draw duke
-
+	;=========================
 draw_duke:
 
 	lda	DUKE_X
