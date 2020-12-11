@@ -6,6 +6,8 @@ move_duke:
 
 	jsr	check_falling
 
+	jsr	handle_jumping
+
 	lda	DUKE_WALKING
 	beq	done_move_duke
 
@@ -63,10 +65,29 @@ duke_collide:
 
 	rts
 
+
+	;=========================
+	; check_jumping
+	;=========================
+handle_jumping:
+
+	lda	DUKE_JUMPING
+	beq	done_handle_jumping
+
+	dec	DUKE_Y
+	dec	DUKE_Y
+	dec	DUKE_JUMPING
+
+done_handle_jumping:
+	rts
+
 	;=========================
 	; check_falling
 	;=========================
 check_falling:
+
+	lda	DUKE_JUMPING
+	bne	done_check_falling
 
 	; check below feet
 
@@ -100,7 +121,7 @@ check_falling:
 	jsr	copy_tilemap_subset
 
 done_check_below:
-
+done_check_falling:
 	rts
 
 

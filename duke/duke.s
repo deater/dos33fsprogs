@@ -159,6 +159,7 @@ done_with_duke:
 	.include	"status_bar.s"
 	.include	"keyboard.s"
 	.include	"joystick.s"
+	.include	"print_help.s"
 
 	.include	"draw_duke.s"
 	.include	"handle_laser.s"

@@ -78,11 +78,18 @@ keypress:
 
 check_sound:
 	cmp	#$14			; control-T
-	bne	check_joystick
+	bne	check_help
 
 	lda	SOUND_STATUS
 	eor	#SOUND_DISABLED
 	sta	SOUND_STATUS
+	jmp	done_keypress
+
+check_help:
+	cmp	#'H'			; H (^H is same as left)
+	bne	check_joystick
+
+	jsr	print_help
 	jmp	done_keypress
 
 	; can't be ^J as that's the same as down
@@ -163,7 +170,7 @@ check_down:
 	cmp	#'S'
 	beq	down_pressed
 	cmp	#$0A
-	bne	check_return
+	bne	check_space
 down_pressed:
 	lda	CURSOR_Y		; if 48<y<$EE don't decrement
 	cmp	#48
@@ -182,6 +189,11 @@ check_space:
 space_pressed:
 
 	; jump
+	lda	DUKE_JUMPING
+	bne	done_keypress	; don't jump if already jumping
+
+	lda	#5
+	sta	DUKE_JUMPING
 
 	jmp	done_keypress
 

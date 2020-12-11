@@ -26,6 +26,7 @@ DUKE:	duke.o
 	ld65 -o DUKE duke.o -C ../linker_scripts/apple2_2000.inc
 
 duke.o:	duke.s zp.inc hardware.inc duke.s \
+	print_help.s \
 	graphics/duke_graphics.inc \
 	maps/level1_map.lzsa \
 	status_bar.s draw_duke.s gr_putsprite_crop.s \

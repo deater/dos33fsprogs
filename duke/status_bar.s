@@ -22,7 +22,7 @@ draw_status_bar:
 
 
 help_string:
-	.byte 3,20,"        PRESS ^H FOR HELP         ",0
+	.byte 3,20,"        PRESS 'H' FOR HELP        ",0
 
 score_string:
 	;           012456789012345678901234567890123456789
