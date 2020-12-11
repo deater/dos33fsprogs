@@ -4,6 +4,8 @@
 	;=========================
 move_duke:
 
+	jsr	check_falling
+
 	lda	DUKE_WALKING
 	beq	done_move_duke
 
@@ -49,6 +51,60 @@ duke_walk_left:
 done_move_duke:
 
 	rts
+
+
+
+	;=========================
+	; duke collide
+	;=========================
+	; only check above head if jumping
+
+duke_collide:
+
+	rts
+
+	;=========================
+	; check_falling
+	;=========================
+check_falling:
+
+	; check below feet
+
+	; block index below feet is (y+10)*16/4 + (x/2) + 1
+
+	lda	DUKE_Y
+	clc
+	adc	#10
+	asl
+	asl
+	asl
+
+	clc
+	adc	DUKE_X
+	lsr			; have location of head
+
+;	clc
+;	adc	#1		; point under feet
+
+	tax
+	lda	TILEMAP,X
+
+	; if < 32 then we fall
+	cmp	#32
+	bcs	done_check_below
+
+	; scroll
+
+	inc	TILEMAP_Y
+
+	jsr	copy_tilemap_subset
+
+done_check_below:
+
+	rts
+
+
+
 
 	;=========================
 	; draw duke
