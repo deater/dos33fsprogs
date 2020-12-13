@@ -154,11 +154,11 @@ duke_get_feet_location:
 	; 6 = 48 (3)
 	; 7 = 48 (3)
 
-
-
 	lda	DUKE_Y
+
 	clc
-	adc	#8		; +8
+	adc	#6		; +8
+
 	lsr			; / 4 (INT)
 	lsr
 

@@ -1,7 +1,10 @@
-
 collision detection left/right
 collision detection up (hit head on jump)
 	only calculate position once
+only jump if feet on ground
+speed up walking again
+jump slightly higher?
+
 
 hook up title screen
 
