@@ -4,6 +4,8 @@
 	;=========================
 move_duke:
 
+	jsr	duke_get_feet_location	; get location of feet
+
 	jsr	check_falling
 
 	jsr	handle_jumping
@@ -81,34 +83,88 @@ handle_jumping:
 done_handle_jumping:
 	rts
 
+
+
+
+	;=======================
+	; duke_get_feet_location
+	;=======================
+
+	;		xx	0
+	;		xx	1
+	; xx	0	xx	2
+	; xx	1	xx	3
+	;------		-----
+	; xx	2	xx	4
+	; xx	3	xx	5
+	; xx	4	xx	6
+	; xx	5	xx	7
+	;------		-------
+	; xx	6	xx	8
+	; xx	7	xx	9
+	; xx    8
+	; xx	9
+	;-----------------------
+duke_get_feet_location:
+
+	; this is tricky as we are 10 tall but tiles are 4 tall
+
+	; + 1 is because sprite is 4 pixels wide?
+
+	; screen is 16 wide, but ofsset 4 in
+
+	; block index of foot is (feet approximately 8 lower than Y)
+	; INT((y+8)/4)*16 + (x-4+1/2)
+
+	; if 18,18 -> INT(26/4)*16 = 96 + 7 = 103 = 6R7
+
+	; 0 = 32 (2)
+	; 1 = 32 (2)
+	; 2 = 32 (2)
+	; 3 = 32 (2)
+	; 4 = 48 (3)
+	; 5 = 48 (3)
+	; 6 = 48 (3)
+	; 7 = 48 (3)
+
+
+
+	lda	DUKE_Y
+	clc
+	adc	#8		; +8
+	lsr			; / 4 (INT)
+	lsr
+
+	asl			; *4
+	asl
+	asl
+	asl
+
+	sta	DUKE_FOOT_OFFSET
+
+	sec
+	lda	DUKE_X
+	sbc	#3
+	lsr			; (x-3)/2
+
+	clc
+	adc	DUKE_FOOT_OFFSET
+	sta	DUKE_FOOT_OFFSET
+
+	rts
+
+
 	;=========================
 	; check_falling
 	;=========================
 check_falling:
 
 	lda	DUKE_JUMPING
-	bne	done_check_falling
+	bne	done_check_falling	; don't check falling if jumping
 
-	; check below feet
-
-	; block index below feet is (y+10)*16/4 + (x/2) + 1
-
-	; if 18,18 -> 28*16/4 = 112 + 9 = 121 = 7R9
-
-
-	lda	DUKE_Y
+	lda	DUKE_FOOT_OFFSET
 	clc
-	adc	#10
-	asl
-	asl
-	asl
-
-	clc
-	adc	DUKE_X
-	lsr			; have location of head
-
-;	clc
-;	adc	#1		; point under feet
+	adc	#16			; underfoot is 16 more
 
 	tax
 	lda	TILEMAP,X
@@ -143,7 +199,9 @@ feet_on_ground:
 
 	lda	DUKE_Y
 	cmp	#18
-	beq	done_check_falling
+	bcs	done_check_falling	; bge
+
+	; too high up on screen, adjust down ad also adjust tilemap down
 
 	inc	DUKE_Y
 	inc	DUKE_Y

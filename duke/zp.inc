@@ -93,6 +93,8 @@ LASER_DIRECTION		= $8A
 TILEMAP_X		= $8B
 TILEMAP_Y		= $8C
 
+DUKE_FOOT_OFFSET	= $8D
+
 ; done game puzzle state
 
 
