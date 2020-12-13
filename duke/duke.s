@@ -37,6 +37,7 @@ duke_start:
 	sta	DUKE_JUMPING
 	sta	LEVEL_OVER
 	sta	LASER_OUT
+	sta	DUKE_XL
 
 	lda	#4
 	sta	DRAW_PAGE

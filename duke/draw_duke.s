@@ -22,15 +22,28 @@ move_duke:
 
 duke_scroll_right:
 
+	clc
+	lda	DUKE_XL
+	adc	#$40
+	sta	DUKE_XL
+	bcc	skip_duke_scroll_right
+
 	inc	TILEMAP_X
 
 	jsr	copy_tilemap_subset
 
+skip_duke_scroll_right:
+
 	jmp	done_move_duke
 
 duke_walk_right:
+	lda	DUKE_XL
+	clc
+	adc	#$40
+	sta	DUKE_XL
+	bcc	dwr_noflo
 	inc	DUKE_X
-
+dwr_noflo:
 	jmp	done_move_duke
 
 move_left:
@@ -41,15 +54,29 @@ move_left:
 
 duke_scroll_left:
 
+	sec
+	lda	DUKE_XL
+	sbc	#$40
+	sta	DUKE_XL
+	bcs	skip_duke_scroll_left
+
 	dec	TILEMAP_X
 
 	jsr	copy_tilemap_subset
 
+skip_duke_scroll_left:
+
 	jmp	done_move_duke
 
 duke_walk_left:
-	dec	DUKE_X
 
+	lda	DUKE_XL
+	sec
+	sbc	#$40
+	sta	DUKE_XL
+	bcs	dwl_noflo
+	dec	DUKE_X
+dwl_noflo:
 	jmp	done_move_duke
 
 done_move_duke:
@@ -164,7 +191,7 @@ check_falling:
 
 	lda	DUKE_FOOT_OFFSET
 	clc
-	adc	#16			; underfoot is 16 more
+	adc	#16			; underfoot is on next row (+16)
 
 	tax
 	lda	TILEMAP,X
@@ -176,11 +203,11 @@ check_falling:
 	;=======================
 	; falling
 
-	; scroll but only if Y=18
+	; scroll but only if Y>=18
 
 	lda	DUKE_Y
 	cmp	#18
-	bne	scroll_fall
+	bcs	scroll_fall	; bge
 
 	inc	DUKE_Y
 	inc	DUKE_Y
@@ -201,7 +228,7 @@ feet_on_ground:
 	cmp	#18
 	bcs	done_check_falling	; bge
 
-	; too high up on screen, adjust down ad also adjust tilemap down
+	; too high up on screen, adjust down and also adjust tilemap down
 
 	inc	DUKE_Y
 	inc	DUKE_Y

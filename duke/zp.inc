@@ -78,8 +78,8 @@ PATTERN_H       = $7F
 ; when loading/storing from disk
 
 WHICH_LOAD		= $80		; which file to load
-;LOCATION		= $81		; location on the map
 
+DUKE_XL			= $81
 DUKE_X			= $82		; location of protagonist
 DUKE_Y			= $83
 DUKE_DIRECTION		= $84
