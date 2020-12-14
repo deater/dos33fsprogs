@@ -195,6 +195,8 @@ space_pressed:
 	lda	#7
 	sta	DUKE_JUMPING
 
+	jsr	jump_noise
+
 	jmp	done_keypress
 
 check_return:
