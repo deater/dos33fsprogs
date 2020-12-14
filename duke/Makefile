@@ -45,7 +45,7 @@ duke.o:	duke.s zp.inc hardware.inc duke.s \
 	print_help.s gr_fast_clear.s \
 	graphics/duke_graphics.inc \
 	maps/level1_map.lzsa \
-	status_bar.s draw_duke.s gr_putsprite_crop.s \
+	status_bar.s draw_duke.s move_duke.s gr_putsprite_crop.s \
 	draw_tilemap.s \
 	sound_effects.s \
 	keyboard.s handle_laser.s

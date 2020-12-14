@@ -42,6 +42,7 @@ duke_start:
 	sta	SCORE2
 	sta	INVENTORY
 	sta	DUKE_FALLING
+	sta	DUKE_SHOOTING
 
 	lda	#$10
 	sta	SCORE0
@@ -136,6 +137,16 @@ duke_loop:
 
 	jsr	move_laser
 
+
+	;========================
+	; increment frame count
+	;========================
+
+	inc	FRAMEL
+	bne	no_frame_oflo
+	inc	FRAMEH
+no_frame_oflo:
+
 	;===========================
 	; check end of level
 	;===========================
@@ -144,6 +155,8 @@ duke_loop:
 	bpl	do_duke_loop
 
 	jmp	done_with_duke
+
+
 
 
 do_duke_loop:
@@ -181,6 +194,7 @@ done_with_duke:
 	.include	"print_help.s"
 
 	.include	"draw_duke.s"
+	.include	"move_duke.s"
 	.include	"handle_laser.s"
 	.include	"draw_tilemap.s"
 

@@ -56,5 +56,6 @@ done_draw_laser:
 
 laser_sideways_sprite:
 	.byte 4,1
-	.byte $3A,$cA,$3A,$cA
+;	.byte $3A,$cA,$3A,$cA
+	.byte $A3,$Ac,$A3,$Ac
 

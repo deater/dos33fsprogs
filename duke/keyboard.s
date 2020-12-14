@@ -1,3 +1,4 @@
+JUMP_HEIGHT	=	9
 
 	;==============================
 	; Handle Keypress
@@ -195,7 +196,7 @@ space_pressed:
 	lda	DUKE_FALLING
 	bne	done_keypress	; don't jump if falling
 
-	lda	#7
+	lda	#JUMP_HEIGHT
 	sta	DUKE_JUMPING
 
 	jsr	jump_noise
@@ -226,7 +227,7 @@ laser_left:
 laser_right:
 	lda	DUKE_X
 	clc
-	adc	#3
+	adc	#2
 
 laser_assign:
 	sta	LASER_X

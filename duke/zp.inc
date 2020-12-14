@@ -108,6 +108,7 @@ SCORE2			= $93
 UPDATE_STATUS		= $94
 
 DUKE_FALLING		= $95
+DUKE_SHOOTING		= $96
 
 ; done game puzzle state
 
