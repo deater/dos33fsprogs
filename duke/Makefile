@@ -8,11 +8,12 @@ LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	duke.dsk
 
-duke.dsk:	HELLO DUKE
+duke.dsk:	HELLO LOADER DUKE_TITLE DUKE
 	cp empty.dsk duke.dsk
 	$(DOS33) -y duke.dsk SAVE A HELLO
+	$(DOS33) -y duke.dsk BSAVE -a 0x1000 LOADER
 	$(DOS33) -y duke.dsk BSAVE -a 0x2000 DUKE
-	$(DOS33) -y duke.dsk BSAVE -a 0x4000 ./title/NEW_TITLEC.BIN TITLE
+	$(DOS33) -y duke.dsk BSAVE -a 0x4000 DUKE_TITLE
 
 ###
 
@@ -21,6 +22,21 @@ HELLO:	hello.bas
 
 ####
 
+LOADER:	loader.o
+	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1000.inc
+
+loader.o:	loader.s
+	ca65 -o loader.o loader.s -l loader.lst
+
+####
+
+DUKE_TITLE:	duke_title.o
+	ld65 -o DUKE_TITLE duke_title.o -C ../linker_scripts/apple2_4000.inc
+
+duke_title.o:	duke_title.s zp.inc hardware.inc
+	ca65 -o duke_title.o duke_title.s -l duke_title.lst
+
+####
 
 DUKE:	duke.o
 	ld65 -o DUKE duke.o -C ../linker_scripts/apple2_2000.inc
