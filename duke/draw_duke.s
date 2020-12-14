@@ -1,4 +1,6 @@
 
+DUKE_SPEED	=	$80
+
 	;=========================
 	; move duke
 	;=========================
@@ -7,6 +9,8 @@ move_duke:
 	jsr	duke_get_feet_location	; get location of feet
 
 	jsr	check_falling
+
+	jsr	duke_collide
 
 	jsr	handle_jumping
 
@@ -24,7 +28,7 @@ duke_scroll_right:
 
 	clc
 	lda	DUKE_XL
-	adc	#$40
+	adc	#DUKE_SPEED
 	sta	DUKE_XL
 	bcc	skip_duke_scroll_right
 
@@ -39,7 +43,7 @@ skip_duke_scroll_right:
 duke_walk_right:
 	lda	DUKE_XL
 	clc
-	adc	#$40
+	adc	#DUKE_SPEED
 	sta	DUKE_XL
 	bcc	dwr_noflo
 	inc	DUKE_X
@@ -56,7 +60,7 @@ duke_scroll_left:
 
 	sec
 	lda	DUKE_XL
-	sbc	#$40
+	sbc	#DUKE_SPEED
 	sta	DUKE_XL
 	bcs	skip_duke_scroll_left
 
@@ -72,7 +76,7 @@ duke_walk_left:
 
 	lda	DUKE_XL
 	sec
-	sbc	#$40
+	sbc	#DUKE_SPEED
 	sta	DUKE_XL
 	bcs	dwl_noflo
 	dec	DUKE_X
@@ -92,7 +96,47 @@ done_move_duke:
 
 duke_collide:
 
+	lda	DUKE_DIRECTION
+	beq	done_duke_collide
+
+	bmi	check_left_collide
+
+check_right_collide:
+	lda	DUKE_FOOT_OFFSET
+	clc
+	adc	#1			; underfoot is on next row (+16)
+
+	tax
+	lda	TILEMAP,X
+
+	; if tile# < 32 then we are fine
+	cmp	#32
+	bcc	done_duke_collide		; blt
+
+	lda	#0				;
+	sta	DUKE_WALKING
+	jmp	done_duke_collide
+
+check_left_collide:
+
+	lda	DUKE_FOOT_OFFSET
+	sec
+	sbc	#1			; underfoot is on next row (+16)
+
+	tax
+	lda	TILEMAP,X
+
+	; if tile# < 32 then we are fine
+	cmp	#32
+	bcc	done_duke_collide	; blt
+
+	lda	#0				;
+	sta	DUKE_WALKING
+	jmp	done_duke_collide
+
+done_duke_collide:
 	rts
+
 
 
 	;=========================

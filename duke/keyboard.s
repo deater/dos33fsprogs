@@ -192,7 +192,7 @@ space_pressed:
 	lda	DUKE_JUMPING
 	bne	done_keypress	; don't jump if already jumping
 
-	lda	#6
+	lda	#7
 	sta	DUKE_JUMPING
 
 	jmp	done_keypress
