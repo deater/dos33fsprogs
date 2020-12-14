@@ -107,6 +107,8 @@ SCORE1			= $92
 SCORE2			= $93
 UPDATE_STATUS		= $94
 
+DUKE_FALLING		= $95
+
 ; done game puzzle state
 
 

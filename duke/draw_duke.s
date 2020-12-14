@@ -8,11 +8,11 @@ move_duke:
 
 	jsr	duke_get_feet_location	; get location of feet
 
-	jsr	check_falling
+	jsr	check_falling		; check for/handle falling
 
-	jsr	duke_collide
+	jsr	duke_collide		; check for right/left collision
 
-	jsr	handle_jumping
+	jsr	handle_jumping		; handle jumping
 
 	lda	DUKE_WALKING
 	beq	done_move_duke
@@ -150,6 +150,10 @@ handle_jumping:
 	dec	DUKE_Y
 	dec	DUKE_Y
 	dec	DUKE_JUMPING
+	bne	done_handle_jumping
+	lda	#1			; avoid gap before falling triggered
+	sta	DUKE_FALLING
+
 
 done_handle_jumping:
 	rts
@@ -247,6 +251,9 @@ check_falling:
 	;=======================
 	; falling
 
+	lda	#1
+	sta	DUKE_FALLING
+
 	; scroll but only if Y>=18
 
 	lda	DUKE_Y
@@ -265,6 +272,10 @@ scroll_fall:
 	jmp	done_check_falling
 
 feet_on_ground:
+
+	; clear falling
+	lda	#0
+	sta	DUKE_FALLING
 
 	; check to see if Y still hi, if so scroll back down
 

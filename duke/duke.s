@@ -41,6 +41,7 @@ duke_start:
 	sta	SCORE1
 	sta	SCORE2
 	sta	INVENTORY
+	sta	DUKE_FALLING
 
 	lda	#$10
 	sta	SCORE0
