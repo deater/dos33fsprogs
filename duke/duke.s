@@ -61,7 +61,7 @@ duke_start:
 
 	lda	#18
 	sta	DUKE_X
-	lda	#18
+	lda	#20
 	sta	DUKE_Y
 	lda	#1
 	sta	DUKE_DIRECTION

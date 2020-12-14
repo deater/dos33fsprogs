@@ -184,9 +184,11 @@ duke_get_feet_location:
 
 	; + 1 is because sprite is 4 pixels wide?
 
-	; screen is 16 wide, but ofsset 4 in
+	; screen is 16 wide, but offset 4 in
 
-	; block index of foot is (feet approximately 8 lower than Y)
+	; to get to feet add 6 to Y?
+
+	; block index of foot is (feet approximately 6 lower than Y)
 	; INT((y+4)/4)*16 + (x-4+1/2)
 
 	; FIXME: if 18,18 -> INT(26/4)*16 = 96 + 7 = 103 = 6R7
@@ -203,7 +205,7 @@ duke_get_feet_location:
 	lda	DUKE_Y
 
 	clc
-	adc	#6		; +4
+	adc	#4		; +4
 
 	lsr			; / 4 (INT)
 	lsr
