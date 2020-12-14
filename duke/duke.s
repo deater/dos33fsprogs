@@ -38,6 +38,21 @@ duke_start:
 	sta	LEVEL_OVER
 	sta	LASER_OUT
 	sta	DUKE_XL
+	sta	SCORE1
+	sta	SCORE2
+	sta	INVENTORY
+
+	lda	#$10
+	sta	SCORE0
+
+	lda	#1
+	sta	FIREPOWER
+
+	lda	#2			; draw twice (both pages)
+	sta	UPDATE_STATUS
+
+	lda	#7
+	sta	HEALTH
 
 	lda	#4
 	sta	DRAW_PAGE
@@ -49,6 +64,8 @@ duke_start:
 	lda	#1
 	sta	DUKE_DIRECTION
 
+
+	jsr	update_status_bar
 
 	;====================================
 	; load level1 background

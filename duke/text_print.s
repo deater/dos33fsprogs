@@ -29,6 +29,23 @@ inverse_text:
 	rts
 
 
+	;=============================
+	; raw text
+	;=============================
+	; modify so print raw string
+raw_text:
+
+	; want nop nop
+	lda	#$EA
+	sta	ps_smc1
+
+	lda	#$EA
+	sta	ps_smc1+1
+
+	rts
+
+
+
 	;================================
 	; move_and_print
 	;================================

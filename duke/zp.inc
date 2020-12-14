@@ -95,6 +95,18 @@ TILEMAP_Y		= $8C
 
 DUKE_FOOT_OFFSET	= $8D
 
+FIREPOWER		= $8E
+INVENTORY		= $8F
+	INV_RED_KEY		= $80
+	INV_BLUE_KEY		= $20
+	INV_SHOE		= $08
+	INV_GRIP		= $02
+HEALTH			= $90
+SCORE0			= $91
+SCORE1			= $92
+SCORE2			= $93
+UPDATE_STATUS		= $94
+
 ; done game puzzle state
 
 

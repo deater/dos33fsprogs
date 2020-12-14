@@ -1,24 +1,34 @@
-collision detection left/right
+sound:
+~~~~~~
+click on jump
+click on bump head
+fancier PC-style sounds
+
+movement:
+~~~~~~~~~
 collision detection up (hit head on jump)
-	only calculate position once
 only jump if feet on ground
-speed up walking again
+when land from jump, stop walking
 jump slightly higher?
 
-
-hook up title screen
-
+levels:
+~~~~~~~
 mystery level 2
 
-more complete map
+status:
+~~~~~~~
+keep score, proper laser count
 
-status: keep score, proper laser count
-
+sprites:
+~~~~~~~~
 Different sprites for left, right, shooting
 When land, kicks up dust
 
-Enemy?  Little robot, green crawly
+enemies:
+~~~~~~~~
+Little robot
+green crawly
 
-Sound effects?
-
-Pick up items?  red key inverse-R
+items:
+~~~~~~
+red/blue key inverse-R
