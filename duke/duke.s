@@ -5,7 +5,7 @@
 ; Zero Page
 	.include "zp.inc"
 	.include "hardware.inc"
-
+	.include "common_defines.inc"
 
 TILES		= $9000
 BIG_TILEMAP	= $9400
@@ -155,7 +155,7 @@ no_frame_oflo:
 	;===========================
 
 	lda	LEVEL_OVER
-	bpl	do_duke_loop
+	beq	do_duke_loop
 
 	jmp	done_with_duke
 
@@ -174,7 +174,8 @@ do_duke_loop:
 done_with_duke:
 	bit	KEYRESET	; clear keypress
 
-	jmp	done_with_duke
+	rts			; exit back
+
 
 	;==========================
 	; includes
@@ -195,6 +196,7 @@ done_with_duke:
 	.include	"keyboard.s"
 	.include	"joystick.s"
 	.include	"print_help.s"
+	.include	"quit_yn.s"
 
 	.include	"draw_duke.s"
 	.include	"move_duke.s"

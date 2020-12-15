@@ -205,7 +205,7 @@ space_pressed:
 
 check_return:
 	cmp	#13
-	bne	done_keypress
+	bne	check_escape
 
 return_pressed:
 
@@ -244,6 +244,16 @@ laser_assign:
 
 done_return:
 	jmp	no_keypress
+
+check_escape:
+	cmp	#27
+	bne	done_keypress
+
+	jsr	print_quit
+
+	jmp	done_keypress
+
+
 
 done_keypress:
 no_keypress:
