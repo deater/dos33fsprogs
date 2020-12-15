@@ -1,4 +1,4 @@
-JUMP_HEIGHT	=	9
+JUMP_HEIGHT	=	8
 
 	;==============================
 	; Handle Keypress
@@ -215,6 +215,9 @@ return_pressed:
 
 	lda	DUKE_DIRECTION
 	sta	LASER_DIRECTION
+
+	lda	#2
+	sta	DUKE_SHOOTING
 
 	cmp	#1
 	beq	laser_right

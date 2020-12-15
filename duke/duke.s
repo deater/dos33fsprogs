@@ -43,6 +43,7 @@ duke_start:
 	sta	INVENTORY
 	sta	DUKE_FALLING
 	sta	DUKE_SHOOTING
+	sta	KICK_UP_DUST
 
 	lda	#$10
 	sta	SCORE0

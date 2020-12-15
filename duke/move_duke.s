@@ -273,10 +273,25 @@ scroll_fall:
 
 feet_on_ground:
 
+	;===========================
+	; if had been falling
+	; kick up dust, make noise
+	; stop walking?
+
+	lda	DUKE_FALLING
+	beq	was_not_falling
+
 	; clear falling
 	lda	#0
 	sta	DUKE_FALLING
 
+	lda	#2
+	sta	KICK_UP_DUST
+
+	lda	#0
+	sta	DUKE_WALKING
+
+was_not_falling:
 	; check to see if Y still hi, if so scroll back down
 
 	lda	DUKE_Y

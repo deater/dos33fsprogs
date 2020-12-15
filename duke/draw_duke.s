@@ -39,6 +39,7 @@ check_shooting_right:
 draw_shooting_right:
 	ldx	#<duke_sprite_shooting_right
 	lda	#>duke_sprite_shooting_right
+	dec	DUKE_SHOOTING
 	jmp	actually_draw_duke
 
 check_walking_right:
@@ -85,6 +86,7 @@ check_shooting_left:
 draw_shooting_left:
 	ldx	#<duke_sprite_shooting_left
 	lda	#>duke_sprite_shooting_left
+	dec	DUKE_SHOOTING
 	jmp	actually_draw_duke
 
 check_walking_left:
@@ -174,14 +176,14 @@ duke_sprite_falling_left:
 duke_sprite_shooting_right:
 	.byte 4,4
 	.byte $AA,$dd,$bd,$AA
-	.byte $AA,$d3,$Ab,$AA
+	.byte $AA,$3d,$Ab,$AA
 	.byte $AA,$b7,$A7,$AA
 	.byte $AA,$56,$56,$AA
 
 duke_sprite_shooting_left:
 	.byte 4,4
 	.byte $AA,$bd,$dd,$AA
-	.byte $AA,$Ab,$d3,$AA
+	.byte $AA,$Ab,$3d,$AA
 	.byte $AA,$A7,$b7,$AA
 	.byte $AA,$56,$56,$AA
 
