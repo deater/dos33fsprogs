@@ -31,7 +31,8 @@ help_text:
 .byte 0, 5,"CONTROLS:",0
 .byte 3, 6,   "A OR <-      : MOVE LEFT",0
 .byte 3, 7,   "D OR ->      : MOVE RIGHT",0
-.byte 3, 8,   "SPACEBAR     : JUMP",0
+.byte 3, 8,   "W OR UP      : ACTION, ENTER DOOR",0
+.byte 3,10,   "SPACEBAR     : JUMP",0
 .byte 3,11,   "RETURN       : SHOOT LASER",0
 .byte 3,12,   "ESC          : QUITS",0
 .byte 255

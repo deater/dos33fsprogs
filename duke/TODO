@@ -10,7 +10,6 @@ collision detection up (hit head on jump)
 * when land from jump, stop walking
 walking right into objects, stand back one more
 can keep walking in collision, just don't move
-update clear screen to be black not stripes
 enemies
 exit door, blue pillar, red key (all in basement?)
 
