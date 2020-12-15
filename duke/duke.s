@@ -199,6 +199,7 @@ done_with_duke:
 	.include	"text_drawbox.s"
 	.include	"print_help.s"
 	.include	"quit_yn.s"
+	.include	"level_end.s"
 
 	.include	"draw_duke.s"
 	.include	"move_duke.s"
