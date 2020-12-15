@@ -4,11 +4,21 @@ print_quit:
 	bit	KEYRESET		; clear keyboard
 	bit	SET_TEXT
 
-	jsr	normal_text
-
 	lda     #' '|$80
         sta     clear_all_color+1
 	jsr	clear_all
+
+	lda	#6
+	sta	drawbox_x1
+	lda	#33
+	sta	drawbox_x2
+	lda	#8
+	sta	drawbox_y1
+	lda	#13
+	sta	drawbox_y2
+	jsr	drawbox
+
+	jsr	normal_text
 
 	lda	#<quit_text
 	sta	OUTL
