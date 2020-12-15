@@ -3,10 +3,15 @@ DUKE_SPEED	=	$80
 
 YDEFAULT	=	20
 
+HARD_TILES	=	32	; start at 32
+
 	;=========================
 	; move duke
 	;=========================
 move_duke:
+
+	lda	#0
+	sta	SUPPRESS_WALK
 
 	jsr	duke_get_feet_location	; get location of feet
 
@@ -18,6 +23,9 @@ move_duke:
 
 	lda	DUKE_WALKING
 	beq	done_move_duke
+
+	lda	SUPPRESS_WALK
+	bne	done_move_duke
 
 	lda	DUKE_DIRECTION
 	bmi	move_left
@@ -94,9 +102,37 @@ done_move_duke:
 	;=========================
 	; duke collide
 	;=========================
-	; only check above head if jumping
 
 duke_collide:
+
+	;===================
+	; collide with head
+	;===================
+
+	; only check above head if jumping
+	lda	DUKE_JUMPING
+	beq	collide_left_right
+
+	lda	DUKE_FOOT_OFFSET
+	sec
+	sbc	#16			; above head is -2 rows
+	tax
+
+	lda	TILEMAP,X
+
+	; if tile# < HARD_TILES then we are fine
+	cmp	#HARD_TILES
+	bcc	collide_left_right		; blt
+
+	lda	#0
+	sta	DUKE_JUMPING
+	lda	#1
+	sta	DUKE_FALLING
+
+collide_left_right:
+	;===================
+	; collide left/right
+	;===================
 
 	lda	DUKE_DIRECTION
 	beq	done_duke_collide
@@ -106,34 +142,34 @@ duke_collide:
 check_right_collide:
 	lda	DUKE_FOOT_OFFSET
 	clc
-	adc	#1			; underfoot is on next row (+16)
+	adc	#1			; right is one to right
 
 	tax
 	lda	TILEMAP,X
 
-	; if tile# < 32 then we are fine
-	cmp	#32
+	; if tile# < HARD_TILES then we are fine
+	cmp	#HARD_TILES
 	bcc	done_duke_collide		; blt
 
-	lda	#0				;
-	sta	DUKE_WALKING
+	lda	#1				;
+	sta	SUPPRESS_WALK
 	jmp	done_duke_collide
 
 check_left_collide:
 
 	lda	DUKE_FOOT_OFFSET
 	sec
-	sbc	#1			; underfoot is on next row (+16)
+	sbc	#1			; left is one to left
 
 	tax
 	lda	TILEMAP,X
 
-	; if tile# < 32 then we are fine
-	cmp	#32
+	; if tile# < HARD_TILES then we are fine
+	cmp	#HARD_TILES
 	bcc	done_duke_collide	; blt
 
-	lda	#0				;
-	sta	DUKE_WALKING
+	lda	#1
+	sta	SUPPRESS_WALK
 	jmp	done_duke_collide
 
 done_duke_collide:
@@ -244,8 +280,8 @@ check_falling:
 	tax
 	lda	TILEMAP,X
 
-	; if tile# < 32 then we fall
-	cmp	#32
+	; if tile# < HARD_TILES then we fall
+	cmp	#HARD_TILES
 	bcs	feet_on_ground		; bge
 
 	;=======================

@@ -6,11 +6,13 @@ fancier PC-style sounds
 
 movement:
 ~~~~~~~~~
-collision detection up (hit head on jump)
+* collision detection up (hit head on jump)
 * when land from jump, stop walking
-walking right into objects, stand back one more
-can keep walking in collision, just don't move
-enemies
+walking right into objects, stand back one more (maybe and to mask?)
+* can keep walking in collision, just don't move
+
+level1:
+~~~~~~~
 exit door, blue pillar, red key (all in basement?)
 
 

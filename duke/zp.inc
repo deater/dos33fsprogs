@@ -110,6 +110,7 @@ UPDATE_STATUS		= $94
 DUKE_FALLING		= $95
 DUKE_SHOOTING		= $96
 KICK_UP_DUST		= $97
+SUPPRESS_WALK		= $98
 
 ; done game puzzle state
 
