@@ -196,9 +196,13 @@ done_intro:
 
 	.include	"gr_pageflip.s"
 	.include	"gr_copy.s"
-	.include	"wait_a_bit.s"
+;	.include	"wait_a_bit.s"
 	.include	"gr_offsets.s"
 	.include	"decompress_fast_v2.s"
+
+	.include	"print_help.s"
+	.include	"gr_fast_clear.s"
+	.include	"text_print.s"
 
 ;	.include	"init_state.s"
 ;	.include	"graphics_title/title_graphics.inc"
@@ -212,34 +216,54 @@ done_intro:
 ;	.include "pt3_lib_mockingboard_detect.s"
 ;	.include "pt3_lib_mockingboard_setup.s"
 
-
-;	.include "wait_a_bit.s"
-
-
 new_title:
 .incbin "title/new_title.lzsa"
 
 
+
 	;====================================
-	; draw a screen and wait
+	; wait for keypress or a few seconds
 	;====================================
-	; X = low of lzsa
-	; Y = high of lzsa
-	; A = pause delay
 
-draw_and_wait:
-	pha
-	stx	getsrc_smc+1
-	sty	getsrc_smc+2
-	lda	#$c			; load to page $c00
-	jsr	decompress_lzsa2_fast
+wait_a_bit:
 
-	jsr	gr_copy_to_current
+	bit	KEYRESET
+	tax
 
-	jsr	page_flip
-	pla
-	jsr	wait_a_bit
+keyloop:
+	lda	#200			; delay a bit
+	jsr	WAIT
+
+	lda	KEYPRESS
+	bmi	done_keyloop
+
+;	bmi	keypress_exit
+
+	dex
+	bne	keyloop
+
+done_keyloop:
+	bit	KEYRESET
+
+	cmp	#'H'|$80
+	bne	really_done_keyloop
+
+	bit	SET_TEXT
+	jsr	print_help
+	bit	SET_GR
+	bit	PAGE0
+
+	ldx	#100
+
+	jmp	keyloop
+
+really_done_keyloop:
+
+
 	rts
+
+
+
 
 
 

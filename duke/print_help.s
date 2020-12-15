@@ -4,6 +4,10 @@ print_help:
 	bit	KEYRESET		; clear keyboard
 	bit	SET_TEXT
 
+	jsr	normal_text
+
+	lda     #' '|$80
+        sta     clear_all_color+1
 	jsr	clear_all
 
 	lda	#<help_text

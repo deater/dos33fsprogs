@@ -23,6 +23,10 @@ duke_start:
 	bit	LORES
 	bit	TEXTGR
 
+;	lda	#$00
+;	sta	clear_all_color+1
+	jsr	clear_top
+
 	;=====================
 	; init vars
 	;=====================
