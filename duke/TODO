@@ -7,7 +7,7 @@ key pickup noise
 * NO BONUS message
 * back to title screen
 * are you sure message on quit
-scroll bonus message
+* scroll bonus message
 
 sound:
 ~~~~~~
@@ -24,8 +24,7 @@ walking right into objects, stand back one more (maybe and to mask?)
 
 level1:
 ~~~~~~~
-exit door, blue pillar, red key (all in basement?)
-
+blue pillar?
 
 tiles
 ~~~~~
@@ -52,6 +51,7 @@ enemies:
 ~~~~~~~~
 Little robot
 green crawly
+ability to die
 
 items:
 ~~~~~~

@@ -45,6 +45,7 @@ duke_start:
 	sta	DUKE_FALLING
 	sta	DUKE_SHOOTING
 	sta	KICK_UP_DUST
+	sta	DOOR_ACTIVATED
 
 	lda	#<enemy_data
 	sta	ENEMY_DATAL
@@ -139,6 +140,10 @@ duke_loop:
 	; draw duke
 
 	jsr	draw_duke
+
+	; handle door opening
+
+	jsr	check_open_door
 
 	; draw a status bar
 

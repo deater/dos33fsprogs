@@ -113,6 +113,7 @@ KICK_UP_DUST		= $97
 SUPPRESS_WALK		= $98
 ENEMY_DATAL		= $99
 ENEMY_DATAH		= $9A
+DOOR_ACTIVATED		= $9B
 
 ; done game puzzle state
 
