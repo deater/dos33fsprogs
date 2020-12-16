@@ -48,11 +48,15 @@ redkey_x:
 	; check that we have the key
 	lda	INVENTORY
 	and	#INV_RED_KEY
-	beq	done_up_action
+	bne	open_the_wall
+
+no_red_key:
+	jsr	buzzer_noise
+	jmp	done_up_action
 
 	; open the red wall
 	; there has to be a more efficient way of doing this
-
+open_the_wall:
 	; reset smc
 	lda	#>BIG_TILEMAP
 	sta	rwr_smc1+2

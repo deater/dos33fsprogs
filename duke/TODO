@@ -1,26 +1,21 @@
-door
-~~~~
-door animation
-sad noise when not have key
-key in inventory
-key pickup noise
-* NO BONUS message
-* back to title screen
-* are you sure message on quit
-* scroll bonus message
+before release:
+~~~~~~~~~~~~~~~
++ laser collision detection
++ enemies can be killed
++ pick up red key
++ fix collision when walking into things
 
 sound:
 ~~~~~~
 click on jump
 click on bump head
 fancier PC-style sounds
+sad noise when not have key
+
 
 movement:
 ~~~~~~~~~
-* collision detection up (hit head on jump)
-* when land from jump, stop walking
 walking right into objects, stand back one more (maybe and to mask?)
-* can keep walking in collision, just don't move
 
 level1:
 ~~~~~~~
@@ -39,18 +34,13 @@ levels:
 ~~~~~~~
 mystery level 2
 
-status:
-~~~~~~~
-keep score, inventory
-
 sprites:
 ~~~~~~~~
 When land, kicks up dust
 
 enemies:
 ~~~~~~~~
-Little robot
-green crawly
+have them move
 ability to die
 
 items:

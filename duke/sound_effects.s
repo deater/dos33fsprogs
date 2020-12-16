@@ -81,4 +81,23 @@ done_pickup_noise:
 	rts
 
 
+	;======================
+	; buzzer noise
+	;    C, two octaves+C?
+buzzer_noise:
+
+	lda	SOUND_STATUS
+	bmi	done_buzzer_noise
+
+	lda	#NOTE_C3
+	sta	speaker_frequency
+	lda	#10
+	sta	speaker_duration
+	jsr	speaker_tone
+
+done_buzzer_noise:
+	rts
+
+
+
 
