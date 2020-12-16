@@ -40,12 +40,14 @@ duke_start:
 	sta	LEVEL_OVER
 	sta	LASER_OUT
 	sta	DUKE_XL
+	sta	SCORE0
 	sta	SCORE1
 	sta	SCORE2
 	sta	DUKE_FALLING
 	sta	DUKE_SHOOTING
 	sta	KICK_UP_DUST
 	sta	DOOR_ACTIVATED
+	sta	INVENTORY
 
 	lda	#<enemy_data
 	sta	ENEMY_DATAL
@@ -53,11 +55,12 @@ duke_start:
 	sta	ENEMY_DATAH
 
 	; FIXME: temporary
-	lda	#INV_RED_KEY
-	sta	INVENTORY
+;	lda	INVENTORY
+;	ora	#INV_RED_KEY
+;	sta	INVENTORY
 
-	lda	#$10
-	sta	SCORE0
+;	lda	#$10
+;	sta	SCORE0
 
 	lda	#1
 	sta	FIREPOWER

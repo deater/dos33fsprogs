@@ -1,5 +1,7 @@
 	; draw/move laser
 
+	; o/~ carrying a laser, down the road that I must travel o/~
+	; o/~ carrying a laser, in the darkness of the night o/~
 
 	;====================
 	; move laser
@@ -13,15 +15,52 @@ move_laser:
 	adc	LASER_DIRECTION
 	sta	LASER_X
 
-	cmp	#31
-	bcc	not_too_far_right
-	lda	#0
-	sta	LASER_OUT
-	beq	done_move_laser
+laser_check_tiles:
+	; collision detect with tiles
 
-not_too_far_right:
+	; laser location is roughly
+        ; (y/4)*16 + (x/2) - 2
+	lda	LASER_Y
+	lsr
+	lsr
+	asl
+	asl
+	asl
+	asl
+	sta	LASER_TILE
+	lda	LASER_X
+	lsr
+	clc
+	adc	LASER_TILE
+	sec
+	sbc	#2
+	sta	LASER_TILE
+
+	ldx	LASER_TILE
+	lda	TILEMAP,X
+	cmp	#HARD_TILES
+	bcs	destroy_laser
+
+
+laser_check_enemies:
+	; collision detect with enemies
+
+	jsr laser_enemies
+
+
+	; detect if off screen
+laser_check_right:
+	lda	LASER_X
+	cmp	#31
+	bcc	laser_check_left	; not_too_far_right
+	bcs	destroy_laser
+
+laser_check_left:
 	cmp	#6
 	bcs	done_move_laser
+	bcc	destroy_laser
+
+destroy_laser:
 	lda	#0
 	sta	LASER_OUT
 

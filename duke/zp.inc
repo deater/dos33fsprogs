@@ -114,6 +114,8 @@ SUPPRESS_WALK		= $98
 ENEMY_DATAL		= $99
 ENEMY_DATAH		= $9A
 DOOR_ACTIVATED		= $9B
+LASER_TILE		= $9C
+TILE_TEMP		= $9D
 
 ; done game puzzle state
 

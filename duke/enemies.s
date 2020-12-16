@@ -1,5 +1,66 @@
 NUM_ENEMIES = 4
 
+	;=======================
+	; laser enemies
+	;=======================
+	; see if laser hits any enemies
+laser_enemies:
+
+	ldy	#0
+laser_enemies_loop:
+
+	; see if out
+
+	lda	enemy_data+ENEMY_DATA_OUT,Y
+	beq	done_laser_enemy
+
+	; get local tilemap co-ord
+	sec
+	lda	enemy_data+ENEMY_DATA_TILEX,Y
+	sbc	TILEMAP_X
+
+	sta	TILE_TEMP
+
+	sec
+	lda	enemy_data+ENEMY_DATA_TILEY,Y
+	sbc	TILEMAP_Y
+	asl
+	asl
+	asl
+	asl
+	clc
+	adc	TILE_TEMP
+
+	cmp	LASER_TILE
+	bne	done_laser_enemy
+
+; hit something
+hit_something:
+	lda	#0
+	sta	LASER_OUT
+	sta	FRAMEL
+;	sta	enemy_data+ENEMY_DATA_OUT,Y
+	lda	#1
+	sta	enemy_data+ENEMY_DATA_EXPLODING,Y
+
+	jsr	enemy_noise
+
+	jsr	inc_score_by_10
+
+	jmp	exit_laser_enemy
+
+done_laser_enemy:
+
+	tya
+	clc
+	adc	#8
+	tay
+	cpy	#(NUM_ENEMIES*8)
+	bne	laser_enemies_loop
+exit_laser_enemy:
+	rts
+
+
 
 	;=======================
 	; move enemy
@@ -100,9 +161,36 @@ draw_enemies_loop:
 	sta	YPOS
 
 	; see if exploding
+	lda	enemy_data+ENEMY_DATA_EXPLODING,Y
+	beq	draw_proper_enemy
+draw_exploding_enemy:
+	asl
+	tax
+	lda	enemy_explosion_sprites,X
+	sta	INL
+	lda	enemy_explosion_sprites+1,X
+	sta	INH
+
+	lda	FRAMEL
+	and	#$3
+	bne	done_exploding
+
+	; move to next frame
+	lda	enemy_data+ENEMY_DATA_EXPLODING,Y
+	clc
+	adc	#1
+	sta	enemy_data+ENEMY_DATA_EXPLODING,Y
+
+	cmp	#4
+	bne	done_exploding
+	lda	#0
+	sta	enemy_data+ENEMY_DATA_OUT,Y
+
+done_exploding:
+	jmp	draw_enemy
 
 	; otherwise draw proper sprite
-
+draw_proper_enemy:
 	lda	enemy_data+ENEMY_DATA_TYPE,Y
 	tax
 	lda	enemy_sprites,X
@@ -110,6 +198,7 @@ draw_enemies_loop:
 	lda	enemy_sprites+1,X
 	sta	INH
 
+draw_enemy:
 	tya
 	pha
 
@@ -127,8 +216,10 @@ done_draw_enemy:
 	adc	#8
 	tay
 	cpy	#(NUM_ENEMIES*8)
-	bne	draw_enemies_loop
+	beq	exit_draw_enemy
+	jmp	draw_enemies_loop
 
+exit_draw_enemy:
 	rts
 
 enemy_sprites:
@@ -172,6 +263,11 @@ enemy_camera_sprite2:
 	.byte	$76,$AA
 	.byte	$A5,$f7
 
+enemy_explosion_sprites:
+	.word	enemy_explosion_sprite1
+	.word	enemy_explosion_sprite1
+	.word	enemy_explosion_sprite2
+	.word	enemy_explosion_sprite3
 
 enemy_explosion_sprite1:
 	.byte	2,2

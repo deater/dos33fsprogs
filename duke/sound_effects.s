@@ -101,3 +101,25 @@ done_buzzer_noise:
 
 
 
+
+	;======================
+	; enemy noise
+enemy_noise:
+
+	lda	SOUND_STATUS
+	bmi	done_enemy_noise
+
+	lda	#NOTE_A3
+	sta	speaker_frequency
+	lda	#20
+	sta	speaker_duration
+	jsr	speaker_tone
+
+	lda	#NOTE_A4
+	sta	speaker_frequency
+	lda	#10
+	sta	speaker_duration
+	jsr	speaker_tone
+
+done_enemy_noise:
+	rts
