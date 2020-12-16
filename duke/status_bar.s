@@ -107,6 +107,15 @@ update_items:
 
 done_red_key:
 
+	lda	INVENTORY
+
+	and	#INV_BLUE_KEY
+	beq	done_blue_key
+
+	lda	#'B'&$3f
+	sta	status_string+35
+
+done_blue_key:
 
 	rts
 

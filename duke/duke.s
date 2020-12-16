@@ -76,7 +76,7 @@ duke_start:
 
 	lda	#18
 	sta	DUKE_X
-	lda	#20
+	lda	#0
 	sta	DUKE_Y
 	lda	#1
 	sta	DUKE_DIRECTION
@@ -109,9 +109,9 @@ duke_start:
 	;====================================
 	; copy in tilemap subset
 	;====================================
-	lda	#13
+	lda	#28
 	sta	TILEMAP_X
-	lda	#20
+	lda	#0
 	sta	TILEMAP_Y
 
 	jsr	copy_tilemap_subset
