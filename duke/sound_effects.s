@@ -123,3 +123,20 @@ enemy_noise:
 
 done_enemy_noise:
 	rts
+
+	;======================
+	; laser noise
+laser_noise:
+
+	lda	SOUND_STATUS
+	bmi	done_enemy_noise
+
+	lda	#NOTE_D4
+	sta	speaker_frequency
+	lda	#15
+	sta	speaker_duration
+	jsr	speaker_tone
+
+done_laser_noise:
+	rts
+

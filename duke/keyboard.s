@@ -201,6 +201,8 @@ return_pressed:
 	lda	LASER_OUT
 	bne	done_return
 
+	jsr	laser_noise
+
 	lda	DUKE_DIRECTION
 	sta	LASER_DIRECTION
 
