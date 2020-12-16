@@ -46,6 +46,11 @@ duke_start:
 	sta	DUKE_SHOOTING
 	sta	KICK_UP_DUST
 
+	lda	#<enemy_data
+	sta	ENEMY_DATAL
+	lda	#>enemy_data
+	sta	ENEMY_DATAH
+
 	; FIXME: temporary
 	lda	#INV_RED_KEY
 	sta	INVENTORY

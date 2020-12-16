@@ -111,6 +111,8 @@ DUKE_FALLING		= $95
 DUKE_SHOOTING		= $96
 KICK_UP_DUST		= $97
 SUPPRESS_WALK		= $98
+ENEMY_DATAL		= $99
+ENEMY_DATAH		= $9A
 
 ; done game puzzle state
 
