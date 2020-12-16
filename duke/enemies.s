@@ -1,14 +1,54 @@
 NUM_ENEMIES = 4
 
+
 	;=======================
-	; move enemies
+	; move enemy
 	;=======================
-move_enemies:
+	; which one is in Y
+move_enemy:
+
+	lda	enemy_data+ENEMY_DATA_TYPE,Y
+	and	#$fc
+
+	cmp	#ENEMY_CAMERA
+	beq	aim_camera
+
+	; FIXME: actually move them
+move_bot:
+move_crawler:
+	lda	FRAMEL
+	and	#$f
+	bne	done_move_enemy
+
+	lda	enemy_data+ENEMY_DATA_TYPE,Y
+	eor	#$2
+	sta	enemy_data+ENEMY_DATA_TYPE,Y
+	jmp	done_move_enemy
+
+aim_camera:
+	lda	DUKE_X
+	lsr
+	clc
+	adc	TILEMAP_X
+
+	cmp	enemy_data+ENEMY_DATA_TILEX,Y
+	bcc	aim_camera_left
+
+aim_camera_right:
+	lda	#2
+	sta	enemy_data+ENEMY_DATA_TYPE,Y
+	jmp	done_move_enemy
+aim_camera_left:
+	lda	#0
+	sta	enemy_data+ENEMY_DATA_TYPE,Y
+
+done_move_enemy:
 	rts
 
 
+
 	;=======================
-	; draw enemies
+	; draw and move enemies
 	;=======================
 draw_enemies:
 
@@ -78,6 +118,8 @@ draw_enemies_loop:
 	pla
 	tay
 
+	jsr	move_enemy
+
 done_draw_enemy:
 
 	tya
@@ -101,13 +143,13 @@ enemy_sprites:
 
 enemy_bot_sprite1:
 	.byte	2,2
-	.byte	$A5,$53
-	.byte	$65,$05
+	.byte	$Ae,$e3
+	.byte	$6e,$0e
 
 enemy_bot_sprite2:
 	.byte	2,2
-	.byte	$53,$A5
-	.byte	$05,$55
+	.byte	$e3,$Ae
+	.byte	$0e,$6e
 
 enemy_crawler_sprite1:
 	.byte 2,2

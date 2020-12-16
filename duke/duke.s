@@ -150,7 +150,7 @@ duke_loop:
 
 	jsr	move_duke
 
-	jsr	move_enemies
+;	jsr	move_enemies
 
 	jsr	move_laser
 
