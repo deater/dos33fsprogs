@@ -220,6 +220,7 @@ done_with_duke:
 	.include	"handle_laser.s"
 	.include	"draw_tilemap.s"
 	.include	"enemies.s"
+	.include	"actions.s"
 
 	.include	"sound_effects.s"
 

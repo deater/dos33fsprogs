@@ -156,14 +156,9 @@ check_up:
 	cmp	#$0B			; up key
 	bne	check_down
 up_pressed:
-	lda	CURSOR_Y		; if 49<y<$F0 don't decrement
-	cmp	#49
-	bcc	do_dec_cursor_y
-	cmp	#$F0
-	bcc	done_up_pressed
-do_dec_cursor_y:
-	dec	CURSOR_Y
-	dec	CURSOR_Y
+
+	jsr	up_action
+
 done_up_pressed:
 	jmp	done_keypress
 
@@ -173,14 +168,7 @@ check_down:
 	cmp	#$0A
 	bne	check_space
 down_pressed:
-	lda	CURSOR_Y		; if 48<y<$EE don't decrement
-	cmp	#48
-	bcc	do_inc_cursor_y
-	cmp	#$EE
-	bcc	done_down_pressed
-do_inc_cursor_y:
-	inc	CURSOR_Y
-	inc	CURSOR_Y
+
 done_down_pressed:
 	jmp	done_keypress
 

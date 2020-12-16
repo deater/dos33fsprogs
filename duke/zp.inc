@@ -32,8 +32,8 @@ XMAX	= $50
 
 FRAMEL			= $60
 FRAMEH			= $61
-CURSOR_X		= $62
-CURSOR_Y		= $63
+;CURSOR_X		= $62
+;CURSOR_Y		= $63
 XPOS			= $64
 YPOS			= $65
 LOCATION_STRUCT_L	= $66
