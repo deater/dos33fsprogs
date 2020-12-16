@@ -42,10 +42,13 @@ duke_start:
 	sta	DUKE_XL
 	sta	SCORE1
 	sta	SCORE2
-	sta	INVENTORY
 	sta	DUKE_FALLING
 	sta	DUKE_SHOOTING
 	sta	KICK_UP_DUST
+
+	; FIXME: temporary
+	lda	#INV_RED_KEY
+	sta	INVENTORY
 
 	lda	#$10
 	sta	SCORE0
@@ -120,6 +123,10 @@ duke_loop:
 
 	jsr	draw_tilemap
 
+	; draw enemies
+
+	jsr	draw_enemies
+
 	; draw laser
 
 	jsr	draw_laser
@@ -137,6 +144,8 @@ duke_loop:
 	jsr	handle_keypress
 
 	jsr	move_duke
+
+	jsr	move_enemies
 
 	jsr	move_laser
 
@@ -205,6 +214,7 @@ done_with_duke:
 	.include	"move_duke.s"
 	.include	"handle_laser.s"
 	.include	"draw_tilemap.s"
+	.include	"enemies.s"
 
 	.include	"sound_effects.s"
 

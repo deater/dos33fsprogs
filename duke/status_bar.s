@@ -91,6 +91,26 @@ done_health:
 
 	rts
 
+	;===========================
+	; update items
+	;===========================
+
+update_items:
+
+	lda	INVENTORY
+
+	and	#INV_RED_KEY
+	beq	done_red_key
+
+	lda	#'R'&$3f
+	sta	status_string+33
+
+done_red_key:
+
+
+	rts
+
+
 
 
 	;===========================
@@ -101,6 +121,8 @@ update_status_bar:
 	jsr	update_score
 
 	jsr	update_health
+
+	jsr	update_items
 
 	rts
 
