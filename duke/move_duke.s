@@ -104,11 +104,58 @@ done_move_duke:
 	;=========================
 
 duke_collide:
+	;==================
+	; check for item
+	;==================
+duke_check_item:
+	lda	DUKE_FOOT_OFFSET
+	sec
+	sbc	#16
+	tax
+
+check_red_key:
+	lda	TILEMAP,X
+	cmp	#31		; red key
+	bne	check_blue_key
+
+	jsr	pickup_noise
+	lda	INVENTORY
+	ora	#INV_RED_KEY
+	sta	INVENTORY
+
+	; erase red key (304,96)
+	lda	#0
+	sta	$A938	; hack
+
+	jsr	copy_tilemap_subset
+
+	jsr	update_status_bar
+
+	jmp	duke_check_head
+
+check_blue_key:
+	cmp	#30		; blue key
+	bne	duke_check_head
+
+	jsr	pickup_noise
+	lda	INVENTORY
+	ora	#INV_BLUE_KEY
+	sta	INVENTORY
+
+	; erase blue key
+	lda	#0
+	sta	$970c	; hack
+
+	jsr	copy_tilemap_subset
+
+	jsr	update_status_bar
+
+	jmp	duke_check_head
 
 	;===================
 	; collide with head
 	;===================
-
+duke_check_head:
 	; only check above head if jumping
 	lda	DUKE_JUMPING
 	beq	collide_left_right

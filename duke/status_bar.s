@@ -133,6 +133,9 @@ update_status_bar:
 
 	jsr	update_items
 
+	lda	#2
+	sta	UPDATE_STATUS
+
 	rts
 
 	;===========================
