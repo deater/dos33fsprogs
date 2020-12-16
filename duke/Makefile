@@ -48,7 +48,7 @@ duke.o:	duke.s zp.inc hardware.inc duke.s \
 	maps/level1_map.lzsa \
 	status_bar.s draw_duke.s move_duke.s gr_putsprite_crop.s \
 	draw_tilemap.s \
-	sound_effects.s \
+	sound_effects.s speaker_tone.s \
 	keyboard.s handle_laser.s
 	ca65 -o duke.o duke.s -l duke.lst
 

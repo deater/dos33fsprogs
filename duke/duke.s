@@ -228,6 +228,7 @@ done_with_duke:
 	.include	"actions.s"
 
 	.include	"sound_effects.s"
+	.include	"speaker_tone.s"
 
 level1_data_lzsa:
 	.incbin		"maps/level1_map.lzsa"

@@ -83,6 +83,8 @@ not_red_tile:
 
 	jsr	copy_tilemap_subset
 
+	jsr	rumble_noise
+
 	jmp	done_up_action
 
 

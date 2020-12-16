@@ -129,6 +129,8 @@ duke_collide:
 	lda	#1
 	sta	DUKE_FALLING
 
+	jsr	head_noise
+
 collide_left_right:
 	;===================
 	; collide left/right
@@ -326,6 +328,8 @@ feet_on_ground:
 
 	lda	#0
 	sta	DUKE_WALKING
+
+	jsr	land_noise
 
 was_not_falling:
 	; check to see if Y still hi, if so scroll back down
