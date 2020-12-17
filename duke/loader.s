@@ -151,11 +151,14 @@ copy_filename_done:
 filenames:
 	.word intro_filename
 	.word duke1_filename
+	.word duke2_filename
 
 intro_filename:
 	.byte "DUKE_TITLE",0
 duke1_filename:
-	.byte "DUKE",0
+	.byte "DUKE_LEVEL1",0
+duke2_filename:
+	.byte "DUKE_LEVEL2",0
 
 
 	;===================================================

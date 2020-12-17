@@ -3,10 +3,15 @@ CFLAGS = -g -Wall -O2
 
 LZSA = ~/research/lzsa/lzsa/lzsa
 
-all:	level1_map.lzsa png2map
+all:	level1_map.lzsa level2_map.lzsa png2map
+
+###
 
 level1_map.inc:	level1_map.png png2map
 	./png2map level1_map.png level1_map.inc
+
+level2_map.inc:	level2_map.png png2map
+	./png2map level2_map.png level2_map.inc
 
 ###
 

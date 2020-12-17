@@ -8,12 +8,14 @@ LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	duke.dsk
 
-duke.dsk:	HELLO LOADER DUKE_TITLE DUKE
+duke.dsk:	HELLO LOADER DUKE_TITLE DUKE_LEVEL1 DUKE_LEVEL2
 	cp empty.dsk duke.dsk
 	$(DOS33) -y duke.dsk SAVE A HELLO
 	$(DOS33) -y duke.dsk BSAVE -a 0x1000 LOADER
-	$(DOS33) -y duke.dsk BSAVE -a 0x2000 DUKE
 	$(DOS33) -y duke.dsk BSAVE -a 0x4000 DUKE_TITLE
+	$(DOS33) -y duke.dsk BSAVE -a 0x2000 DUKE_LEVEL1
+	$(DOS33) -y duke.dsk BSAVE -a 0x2000 DUKE_LEVEL2
+
 
 ###
 
@@ -38,10 +40,10 @@ duke_title.o:	duke_title.s zp.inc hardware.inc
 
 ####
 
-DUKE:	duke.o
-	ld65 -o DUKE duke.o -C ../linker_scripts/apple2_2000.inc
+DUKE_LEVEL1:	duke_level1.o
+	ld65 -o DUKE_LEVEL1 duke_level1.o -C ../linker_scripts/apple2_2000.inc
 
-duke.o:	duke.s zp.inc hardware.inc duke.s \
+duke_level1.o:	duke_level1.s zp.inc hardware.inc \
 	print_help.s gr_fast_clear.s quit_yn.s text_drawbox.s level_end.s \
 	enemies.s actions.s \
 	graphics/duke_graphics.inc \
@@ -50,7 +52,24 @@ duke.o:	duke.s zp.inc hardware.inc duke.s \
 	draw_tilemap.s \
 	sound_effects.s speaker_tone.s \
 	keyboard.s handle_laser.s
-	ca65 -o duke.o duke.s -l duke.lst
+	ca65 -o duke_level1.o duke_level1.s -l duke_level1.lst
+
+####
+
+DUKE_LEVEL2:	duke_level2.o
+	ld65 -o DUKE_LEVEL2 duke_level2.o -C ../linker_scripts/apple2_2000.inc
+
+duke_level2.o:	duke_level2.s zp.inc hardware.inc \
+	print_help.s gr_fast_clear.s quit_yn.s text_drawbox.s level_end.s \
+	enemies.s actions.s \
+	graphics/duke_graphics.inc \
+	maps/level2_map.lzsa \
+	status_bar.s draw_duke.s move_duke.s gr_putsprite_crop.s \
+	draw_tilemap.s \
+	sound_effects.s speaker_tone.s \
+	keyboard.s handle_laser.s
+	ca65 -o duke_level2.o duke_level2.s -l duke_level2.lst
+
 
 ####
 
