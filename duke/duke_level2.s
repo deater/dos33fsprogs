@@ -173,6 +173,10 @@ do_duke_loop:
 done_with_duke:
 	bit	KEYRESET	; clear keypress
 
+	; FIXME: point to next level
+        lda     #LOAD_TITLE
+        sta     WHICH_LOAD
+
 	rts			; exit back
 
 

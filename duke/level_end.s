@@ -56,10 +56,6 @@ really_end_level:
 	lda	#NEXT_LEVEL
 	sta	LEVEL_OVER
 
-	; FIXME: point to next level
-	lda	#LOAD_TITLE
-	sta	WHICH_LOAD
-
 	jsr	clear_all
 
 	rts

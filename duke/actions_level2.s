@@ -27,93 +27,88 @@ up_action:
 	; $39,$22 = 57,34
 
 	; check if it's a key slot
-check_red_keyhole:
+;check_red_keyhole:
+;
+;
+;	; key slot is 280,148
+;	; 280,148 (-80,-12) -> 200,136 -> (/4,/4) -> 50,34
+;
+;	lda	XPOS
+;	cmp	#50
+;	beq	redkey_x
+;	cmp	#51
+;	bne	check_if_exit
 
-
-	; key slot is 280,148
-	; 280,148 (-80,-12) -> 200,136 -> (/4,/4) -> 50,34
-
-	lda	XPOS
-	cmp	#50
-	beq	redkey_x
-	cmp	#51
-	bne	check_if_exit
-
-redkey_x:
-
-	lda	YPOS
-	cmp	#34
-	bne	check_if_exit
-
-	; check that we have the key
-	lda	INVENTORY
-	and	#INV_RED_KEY
-	bne	open_the_wall
-
-no_red_key:
-	jsr	buzzer_noise
-	jmp	done_up_action
-
+;redkey_x:
+;
+;	lda	YPOS
+;	cmp	#34
+;	bne	check_if_exit
+;
+;	; check that we have the key
+;	lda	INVENTORY
+;	and	#INV_RED_KEY
+;	bne	open_the_wall
+;
+;no_red_key:
+;	jsr	buzzer_noise
+;	jmp	done_up_action
+;
 	; open the red wall
 	; there has to be a more efficient way of doing this
-open_the_wall:
-	; reset smc
-	lda	#>BIG_TILEMAP
-	sta	rwr_smc1+2
-	sta	rwr_smc2+2
+;open_the_wall:
+;	; reset smc
+;	lda	#>BIG_TILEMAP
+;	sta	rwr_smc1+2
+;	sta	rwr_smc2+2
+;
+;remove_red_wall_outer:
+;	ldx	#0
+;remove_red_wall_loop:
+;rwr_smc1:
+;	lda	BIG_TILEMAP,X
+;	cmp	#49			; red key tile
+;	bne	not_red_tile
+;	lda	#2			; lblue bg tile
+;rwr_smc2:
+;	sta	BIG_TILEMAP,X
+;not_red_tile:
+;	inx
+;	bne	remove_red_wall_loop
+;
+;	inc	rwr_smc1+2
+;	inc	rwr_smc2+2
+;
+;	lda	rwr_smc1+2
+;	cmp	#(>BIG_TILEMAP)+40
+;	bne	remove_red_wall_outer
+;
+;	; refresh local tilemap
+;
+;	jsr	copy_tilemap_subset
+;
+;	jsr	rumble_noise
 
-remove_red_wall_outer:
-	ldx	#0
-remove_red_wall_loop:
-rwr_smc1:
-	lda	BIG_TILEMAP,X
-	cmp	#49			; red key tile
-	bne	not_red_tile
-	lda	#2			; lblue bg tile
-rwr_smc2:
-	sta	BIG_TILEMAP,X
-not_red_tile:
-	inx
-	bne	remove_red_wall_loop
-
-	inc	rwr_smc1+2
-	inc	rwr_smc2+2
-
-	lda	rwr_smc1+2
-	cmp	#(>BIG_TILEMAP)+40
-	bne	remove_red_wall_outer
-
-	; refresh local tilemap
-
-	jsr	copy_tilemap_subset
-
-	jsr	rumble_noise
-
-	jmp	done_up_action
+;	jmp	done_up_action
 
 
 	; check if it's the exit
 check_if_exit:
 
-	; exit is 296,148
-	; 296,148 (-80,-12) -> 216,136 -> (/4,/4) -> 54,34
+	; exit is 924,84
+	; 924,84 (-80,-12) -> 844,72 -> (/4,/4) -> 211,18
 
 	lda	XPOS
-	cmp	#54
+	cmp	#211
 	beq	exit_x
 
-	cmp	#55
+	cmp	#212
 	bne	done_up_action
 
 exit_x:
 	lda	YPOS
-	cmp	#34
+	cmp	#18
 	bne	done_up_action
-
-	; check that we have the key
-	lda	INVENTORY
-	and	#INV_RED_KEY
-	beq	done_up_action
 
 	lda	#1
 	sta	DOOR_ACTIVATED
@@ -140,11 +135,11 @@ check_open_door:
 	sta	INH
 
 	; need to find actual door location
-	; it's at 54,34
+	; it's at 211,18
 	; Y is going to be at 20 unless something weird is going on
-	; X is going to be ((54-TILE_X)+2)*2
+	; X is going to be ((211-TILE_X)+2)*2
 
-	lda	#56
+	lda	#213		; +2, edge of screen
 	sec
 	sbc	TILEMAP_X
 	asl

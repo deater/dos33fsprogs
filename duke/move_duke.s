@@ -208,8 +208,8 @@ check_left_collide:
 
 	lda	DUKE_FOOT_OFFSET
 	sec
-	sbc	#1			; left is one to left
-
+	sbc	#2			; left is one to left
+					; +1 fudge factor
 	tax
 	lda	TILEMAP,X
 
@@ -265,6 +265,15 @@ done_handle_jumping:
 	; xx    6
 	; xx	7
 	;-----------------------
+
+
+	; YY = block
+	;========================
+	;     YYYY            YYYY
+	;        -XX-      -XX-
+	;         -XX-    -XX-
+	; left, foot = (X+1)/2
+	; right, foot = (X+2)/2
 duke_get_feet_location:
 
 	; + 1 is because sprite is 4 pixels wide?
@@ -302,10 +311,27 @@ duke_get_feet_location:
 
 	sta	DUKE_FOOT_OFFSET
 
-	sec
+;	lda	DUKE_DIRECTION
+;	bmi	foot_left
+
+foot_right:
+
 	lda	DUKE_X
-	sbc	#3
-	lsr			; (x-3)/2
+	clc
+	adc	#2
+;	jmp	foot_done
+
+;foot_left:
+;	lda	DUKE_X
+;	sec
+;	sbc	#1
+
+foot_done:
+	lsr
+
+	; offset by two block at edge of screen
+	sec
+	sbc	#2
 
 	clc
 	adc	DUKE_FOOT_OFFSET

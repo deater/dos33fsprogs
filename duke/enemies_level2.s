@@ -333,7 +333,7 @@ enemy4:
 	.byte	0		; exploding
 	.byte	ENEMY_TERP	; type
 	.byte	$ff		; direction
-	.byte	114,19		; tilex,tiley
+	.byte	113,19		; tilex,tiley
 	.byte	0,0		; x,y
 
 enemy5:

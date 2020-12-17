@@ -192,6 +192,10 @@ do_duke_loop:
 done_with_duke:
 	bit	KEYRESET	; clear keypress
 
+
+        lda     #LOAD_DUKE2
+        sta     WHICH_LOAD
+
 	rts			; exit back
 
 
