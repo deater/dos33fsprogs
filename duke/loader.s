@@ -54,8 +54,6 @@ loader_start:
 	jsr	init	; unhook DOS, init nibble table
 
 
-	jsr	init_vars
-
 	;===================================================
 	;===================================================
 	; SETUP THE FILENAME

@@ -179,12 +179,14 @@ done_intro:
 	;============================
 	; init vars
 
-;	jsr	init_state
+	jsr	init_vars
+
+
 
 	;============================
 	; set up initial location
 
-	lda	#LOAD_DUKE1
+	lda	#LOAD_DUKE2
 	sta	WHICH_LOAD		; start at first level
 
 	rts
@@ -204,7 +206,7 @@ done_intro:
 	.include	"gr_fast_clear.s"
 	.include	"text_print.s"
 
-;	.include	"init_state.s"
+	.include	"init_vars.s"
 ;	.include	"graphics_title/title_graphics.inc"
 ;	.include	"lc_detect.s"
 

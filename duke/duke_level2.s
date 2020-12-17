@@ -73,7 +73,7 @@ duke_start:
 	jsr	decompress_lzsa2_fast
 
 	;====================================
-	; load level1 tilemap
+	; load level2 tilemap
 	;====================================
 
         lda	#<level2_data_lzsa
@@ -88,7 +88,7 @@ duke_start:
 	;====================================
 	lda	#10
 	sta	TILEMAP_X
-	lda	#18
+	lda	#8
 	sta	TILEMAP_Y
 
 	jsr	copy_tilemap_subset
@@ -201,11 +201,12 @@ done_with_duke:
 	.include	"level_end.s"
 
 	.include	"draw_duke.s"
+	.include	"duke_sprites.inc"
 	.include	"move_duke.s"
 	.include	"handle_laser.s"
 	.include	"draw_tilemap.s"
-	.include	"enemies.s"
-	.include	"actions.s"
+	.include	"enemies_level2.s"
+	.include	"actions_level2.s"
 
 	.include	"sound_effects.s"
 	.include	"speaker_tone.s"

@@ -220,11 +220,12 @@ done_with_duke:
 	.include	"level_end.s"
 
 	.include	"draw_duke.s"
+	.include	"duke_sprites.inc"
 	.include	"move_duke.s"
 	.include	"handle_laser.s"
 	.include	"draw_tilemap.s"
-	.include	"enemies.s"
-	.include	"actions.s"
+	.include	"enemies_level1.s"
+	.include	"actions_level1.s"
 
 	.include	"sound_effects.s"
 	.include	"speaker_tone.s"

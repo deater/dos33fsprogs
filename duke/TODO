@@ -1,7 +1,5 @@
 before release:
 ~~~~~~~~~~~~~~~
-+ laser collision detection
-+ enemies can be killed
 + pick up red key
 + fix collision when walking into things
 

@@ -27,7 +27,7 @@ HELLO:	hello.bas
 LOADER:	loader.o
 	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1000.inc
 
-loader.o:	loader.s init_vars.s
+loader.o:	loader.s
 	ca65 -o loader.o loader.s -l loader.lst
 
 ####
@@ -35,7 +35,7 @@ loader.o:	loader.s init_vars.s
 DUKE_TITLE:	duke_title.o
 	ld65 -o DUKE_TITLE duke_title.o -C ../linker_scripts/apple2_4000.inc
 
-duke_title.o:	duke_title.s zp.inc hardware.inc
+duke_title.o:	duke_title.s zp.inc hardware.inc init_vars.s
 	ca65 -o duke_title.o duke_title.s -l duke_title.lst
 
 ####
@@ -45,8 +45,8 @@ DUKE_LEVEL1:	duke_level1.o
 
 duke_level1.o:	duke_level1.s zp.inc hardware.inc \
 	print_help.s gr_fast_clear.s quit_yn.s text_drawbox.s level_end.s \
-	enemies.s actions.s \
-	graphics/duke_graphics.inc \
+	enemies_level1.s actions_level1.s \
+	graphics/duke_graphics.inc duke_sprites.inc \
 	maps/level1_map.lzsa \
 	status_bar.s draw_duke.s move_duke.s gr_putsprite_crop.s \
 	draw_tilemap.s \
@@ -61,8 +61,8 @@ DUKE_LEVEL2:	duke_level2.o
 
 duke_level2.o:	duke_level2.s zp.inc hardware.inc \
 	print_help.s gr_fast_clear.s quit_yn.s text_drawbox.s level_end.s \
-	enemies.s actions.s \
-	graphics/duke_graphics.inc \
+	enemies_level2.s actions_level2.s \
+	graphics/duke_graphics.inc duke_sprites.inc \
 	maps/level2_map.lzsa \
 	status_bar.s draw_duke.s move_duke.s gr_putsprite_crop.s \
 	draw_tilemap.s \
