@@ -230,6 +230,7 @@ done_with_duke:
 	.include	"draw_tilemap.s"
 	.include	"enemies_level1.s"
 	.include	"actions_level1.s"
+	.include	"item_level1.s"
 
 	.include	"sound_effects.s"
 	.include	"speaker_tone.s"

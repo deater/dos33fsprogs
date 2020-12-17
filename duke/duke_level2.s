@@ -99,6 +99,10 @@ duke_start:
 	;====================================
 	;====================================
 
+	jsr		setup_music
+
+	cli		; start music
+
 duke_loop:
 
 	; copy over background
@@ -211,9 +215,17 @@ done_with_duke:
 	.include	"draw_tilemap.s"
 	.include	"enemies_level2.s"
 	.include	"actions_level2.s"
+	.include	"item_level2.s"
 
 	.include	"sound_effects.s"
 	.include	"speaker_tone.s"
 
 level2_data_lzsa:
 	.incbin		"maps/level2_map.lzsa"
+
+
+	.include	"duke_music.s"
+
+
+
+
