@@ -2,12 +2,17 @@
 PNG2GR = ../../gr-utils/png2gr
 LZSA = ~/research/lzsa/lzsa/lzsa
 
-all:	duke_graphics.inc
+all:	level1_graphics.inc level2_graphics.inc
 
 ####
 
-duke_graphics.inc:	duke1_bg.lzsa
-	echo "duke1_bg_lzsa: .incbin \"duke1_bg.lzsa\"" > duke_graphics.inc
+level1_graphics.inc:	level1_bg.lzsa
+	echo "level1_bg_lzsa: .incbin \"level1_bg.lzsa\"" > level1_graphics.inc
+
+####
+
+level2_graphics.inc:	level2_bg.lzsa
+	echo "level2_bg_lzsa: .incbin \"level2_bg.lzsa\"" > level2_graphics.inc
 
 ####
 
@@ -20,4 +25,4 @@ duke_graphics.inc:	duke1_bg.lzsa
 ####
 
 clean:		
-	rm -f *~ *.o *.lst *.lzsa duke_graphics.inc
+	rm -f *~ *.o *.lst *.lzsa level1_graphics.inc level2_graphics.inc

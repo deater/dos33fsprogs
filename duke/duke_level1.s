@@ -1,4 +1,4 @@
-; Duke PoC
+; Duke PoC Level 1
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -6,10 +6,6 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 	.include "common_defines.inc"
-
-TILES		= $9000
-BIG_TILEMAP	= $9400
-TILEMAP		= $BC00
 
 duke_start:
 	;===================
@@ -88,9 +84,9 @@ duke_start:
 	; load level1 background
 	;====================================
 
-        lda	#<duke1_bg_lzsa
+        lda	#<level1_bg_lzsa
 	sta	LZSA_SRC_LO
-        lda	#>duke1_bg_lzsa
+        lda	#>level1_bg_lzsa
 	sta	LZSA_SRC_HI
 	lda	#$c			; load to page $c00
 	jsr	decompress_lzsa2_fast
@@ -204,7 +200,7 @@ done_with_duke:
 	;==========================
 
 	; level graphics
-	.include	"graphics/duke_graphics.inc"
+	.include	"graphics/level1_graphics.inc"
 
 	.include	"text_print.s"
 	.include	"gr_offsets.s"

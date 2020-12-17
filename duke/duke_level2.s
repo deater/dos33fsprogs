@@ -1,4 +1,4 @@
-; Duke PoC
+; Duke Level2 -- Living Dangerously
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -6,10 +6,6 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 	.include "common_defines.inc"
-
-TILES		= $9000
-BIG_TILEMAP	= $9400
-TILEMAP		= $BC00
 
 duke_start:
 	;===================
@@ -34,42 +30,23 @@ duke_start:
 	sta	FRAMEL
 	sta	FRAMEH
 	sta	DISP_PAGE
-	sta	JOYSTICK_ENABLED
 	sta	DUKE_WALKING
 	sta	DUKE_JUMPING
 	sta	LEVEL_OVER
 	sta	LASER_OUT
 	sta	DUKE_XL
-	sta	SCORE0
-	sta	SCORE1
-	sta	SCORE2
 	sta	DUKE_FALLING
 	sta	DUKE_SHOOTING
 	sta	KICK_UP_DUST
 	sta	DOOR_ACTIVATED
-	sta	INVENTORY
 
 	lda	#<enemy_data
 	sta	ENEMY_DATAL
 	lda	#>enemy_data
 	sta	ENEMY_DATAH
 
-	; FIXME: temporary
-;	lda	INVENTORY
-;	ora	#INV_RED_KEY
-;	sta	INVENTORY
-
-;	lda	#$10
-;	sta	SCORE0
-
-	lda	#1
-	sta	FIREPOWER
-
 	lda	#2			; draw twice (both pages)
 	sta	UPDATE_STATUS
-
-	lda	#7
-	sta	HEALTH
 
 	lda	#4
 	sta	DRAW_PAGE
@@ -88,9 +65,9 @@ duke_start:
 	; load level1 background
 	;====================================
 
-        lda	#<duke1_bg_lzsa
+        lda	#<level2_bg_lzsa
 	sta	LZSA_SRC_LO
-        lda	#>duke1_bg_lzsa
+        lda	#>level2_bg_lzsa
 	sta	LZSA_SRC_HI
 	lda	#$c			; load to page $c00
 	jsr	decompress_lzsa2_fast
@@ -99,9 +76,9 @@ duke_start:
 	; load level1 tilemap
 	;====================================
 
-        lda	#<level1_data_lzsa
+        lda	#<level2_data_lzsa
 	sta	LZSA_SRC_LO
-        lda	#>level1_data_lzsa
+        lda	#>level2_data_lzsa
 	sta	LZSA_SRC_HI
 	lda	#$90			; load to page $9000
 	jsr	decompress_lzsa2_fast
@@ -109,9 +86,9 @@ duke_start:
 	;====================================
 	; copy in tilemap subset
 	;====================================
-	lda	#28
+	lda	#10
 	sta	TILEMAP_X
-	lda	#0
+	lda	#18
 	sta	TILEMAP_Y
 
 	jsr	copy_tilemap_subset
@@ -204,7 +181,7 @@ done_with_duke:
 	;==========================
 
 	; level graphics
-	.include	"graphics/duke_graphics.inc"
+	.include	"graphics/level2_graphics.inc"
 
 	.include	"text_print.s"
 	.include	"gr_offsets.s"
@@ -233,5 +210,5 @@ done_with_duke:
 	.include	"sound_effects.s"
 	.include	"speaker_tone.s"
 
-level1_data_lzsa:
-	.incbin		"maps/level1_map.lzsa"
+level2_data_lzsa:
+	.incbin		"maps/level2_map.lzsa"

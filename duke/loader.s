@@ -54,6 +54,8 @@ loader_start:
 	jsr	init	; unhook DOS, init nibble table
 
 
+	jsr	init_vars
+
 	;===================================================
 	;===================================================
 	; SETUP THE FILENAME
@@ -698,7 +700,11 @@ sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
 
 ;bit2tbl:	.res 86			;	= nibtbl+128
 ;filbuf:		.res 4			;	= bit2tbl+86
+
+
 					;dataend         = filbuf+4
+
+	.include	"init_vars.s"
 
 loader_end:
 

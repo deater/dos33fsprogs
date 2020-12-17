@@ -27,7 +27,7 @@ HELLO:	hello.bas
 LOADER:	loader.o
 	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1000.inc
 
-loader.o:	loader.s
+loader.o:	loader.s init_vars.s
 	ca65 -o loader.o loader.s -l loader.lst
 
 ####
