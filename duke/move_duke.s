@@ -198,8 +198,13 @@ handle_jumping:
 	lda	DUKE_JUMPING
 	beq	done_handle_jumping
 
+	lda	DUKE_Y
+	beq	dont_wrap_jump
+
 	dec	DUKE_Y
 	dec	DUKE_Y
+
+dont_wrap_jump:
 	dec	DUKE_JUMPING
 	bne	done_handle_jumping
 	lda	#1			; avoid gap before falling triggered
