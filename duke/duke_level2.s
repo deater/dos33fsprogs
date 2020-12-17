@@ -201,7 +201,7 @@ done_with_duke:
 	.include	"level_end.s"
 
 	.include	"draw_duke.s"
-	.include	"duke_sprites.inc"
+	.include	"duke_l2_sprites.inc"
 	.include	"move_duke.s"
 	.include	"handle_laser.s"
 	.include	"draw_tilemap.s"

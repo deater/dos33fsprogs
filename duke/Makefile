@@ -46,7 +46,7 @@ DUKE_LEVEL1:	duke_level1.o
 duke_level1.o:	duke_level1.s zp.inc hardware.inc \
 	print_help.s gr_fast_clear.s quit_yn.s text_drawbox.s level_end.s \
 	enemies_level1.s actions_level1.s \
-	graphics/duke_graphics.inc duke_sprites.inc \
+	graphics/duke_graphics.inc duke_l2_sprites.inc \
 	maps/level1_map.lzsa \
 	status_bar.s draw_duke.s move_duke.s gr_putsprite_crop.s \
 	draw_tilemap.s \

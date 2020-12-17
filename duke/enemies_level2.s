@@ -1,4 +1,4 @@
-NUM_ENEMIES = 4
+NUM_ENEMIES = 8
 
 	;=======================
 	; laser enemies
@@ -223,45 +223,33 @@ exit_draw_enemy:
 	rts
 
 enemy_sprites:
-	.word	enemy_camera_sprite1
-	.word	enemy_camera_sprite2
-	.word	enemy_crawler_sprite1
-	.word	enemy_crawler_sprite2
-	.word	enemy_bot_sprite1
-	.word	enemy_bot_sprite2
+	.word	enemy_shroom_sprite1
+	.word	enemy_shroom_sprite2
+	.word	enemy_terp_sprite1
+	.word	enemy_terp_sprite2
 
 
 
-enemy_bot_sprite1:
-	.byte	2,2
-	.byte	$Ae,$e3
-	.byte	$6e,$0e
-
-enemy_bot_sprite2:
-	.byte	2,2
-	.byte	$e3,$Ae
-	.byte	$0e,$6e
-
-enemy_crawler_sprite1:
+enemy_shroom_sprite1:
 	.byte 2,2
-	.byte $f5,$cA
-	.byte $f5,$Ac
+	.byte $11,$11
+	.byte $dd,$dd
 
-enemy_crawler_sprite2:
+enemy_shroom_sprite2:
 	.byte 2,2
-	.byte $5f,$cA
-	.byte $5f,$Ac
+	.byte $11,$11
+	.byte $dd,$dd
 
 
-enemy_camera_sprite1:
+enemy_terp_sprite1:
 	.byte	2,2
-	.byte	$AA,$76
-	.byte	$f7,$A5
+	.byte	$99,$4a
+	.byte	$49,$44
 
-enemy_camera_sprite2:
+enemy_terp_sprite2:
 	.byte	2,2
-	.byte	$76,$AA
-	.byte	$A5,$f7
+	.byte	$99,$4a
+	.byte	$49,$44
 
 enemy_explosion_sprites:
 	.word	enemy_explosion_sprite1
@@ -284,9 +272,10 @@ enemy_explosion_sprite3:
 	.byte	$7A,$5A
 	.byte	$A5,$A7
 
-ENEMY_CAMERA	= 0
-ENEMY_CRAWLER	= 4
-ENEMY_BOT	= 8
+ENEMY_SHROOM	= 0
+ENEMY_TERP	= 4
+ENEMY_CAMERA	= 8
+
 
 ENEMY_DATA_OUT		= 0
 ENEMY_DATA_EXPLODING	= 1
@@ -301,39 +290,78 @@ ENEMY_DATA_Y		= 7
 enemy_data:
 
 enemy0:
-	; 156,92 (-80,-12) -> 76,80 -> (/4,/4) -> 19,20
+	; 196,88 (-80,-12) -> 116,76 -> (/4,/4) -> 29,19
 	.byte	1		; out
 	.byte	0		; exploding
-	.byte	ENEMY_CAMERA	; type
+	.byte	ENEMY_SHROOM	; type
 	.byte	$ff		; direction
-	.byte	19,20		; tilex,tiley
+	.byte	29,19		; tilex,tiley
 	.byte	0,0		; x,y
 
 enemy1:
-	; 272,92 (-80,-12) -> 192,80 -> (/4,/4) -> 48,20
+	; 268,88 (-80,-12) -> 188,76 -> (/4,/4) -> 47,19
 	.byte	1		; out
 	.byte	0		; exploding
-	.byte	ENEMY_CAMERA	; type
+	.byte	ENEMY_SHROOM	; type
 	.byte	$ff		; direction
-	.byte	48,20		; tilex,tiley
+	.byte	47,19		; tilex,tiley
 	.byte	0,0		; x,y
 
 enemy2:
-	; 156,112 (-80,-12) -> 76,100 -> (/4,/4) -> 19,25
+	; 432,56 (-80,-12) -> 352,44 -> (/4,/4) -> 88,11
 	.byte	1		; out
 	.byte	0		; exploding
-	.byte	ENEMY_CRAWLER	; type
+	.byte	ENEMY_SHROOM	; type
 	.byte	$ff		; direction
-	.byte	19,25		; tilex,tiley
+	.byte	88,11		; tilex,tiley
 	.byte	0,0		; x,y
 
 enemy3:
-	; 184,116 (-80,-12) -> 104,104 -> (/4,/4) -> 26,26
+	; 484,88 (-80,-12) -> 404,76 -> (/4,/4) -> 101,19
 	.byte	1		; out
 	.byte	0		; exploding
-	.byte	ENEMY_BOT	; type
+	.byte	ENEMY_SHROOM	; type
 	.byte	$ff		; direction
-	.byte	26,26		; tilex,tiley
+	.byte	101,19		; tilex,tiley
 	.byte	0,0		; x,y
+
+
+
+enemy4:
+	; 536,88 (-80,-12) -> 456,76 -> (/4,/4) -> 114,19
+	.byte	1		; out
+	.byte	0		; exploding
+	.byte	ENEMY_TERP	; type
+	.byte	$ff		; direction
+	.byte	114,19		; tilex,tiley
+	.byte	0,0		; x,y
+
+enemy5:
+	; 604,88 (-80,-12) -> 524,76 -> (/4,/4) -> 131,19
+	.byte	1		; out
+	.byte	0		; exploding
+	.byte	ENEMY_SHROOM	; type
+	.byte	$ff		; direction
+	.byte	131,19		; tilex,tiley
+	.byte	0,0		; x,y
+
+enemy6:
+	; 612,88 (-80,-12) -> 532,76 -> (/4,/4) -> 133,19
+	.byte	1		; out
+	.byte	0		; exploding
+	.byte	ENEMY_SHROOM	; type
+	.byte	$ff		; direction
+	.byte	133,19		; tilex,tiley
+	.byte	0,0		; x,y
+
+enemy7:
+	; 804,88 (-80,-12) -> 724,76 -> (/4,/4) -> 181,19
+	.byte	1		; out
+	.byte	0		; exploding
+	.byte	ENEMY_SHROOM	; type
+	.byte	$ff		; direction
+	.byte	181,19		; tilex,tiley
+	.byte	0,0		; x,y
+
 
 
