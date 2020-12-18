@@ -186,7 +186,7 @@ done_intro:
 	;============================
 	; set up initial location
 
-	lda	#LOAD_DUKE2
+	lda	#LOAD_DUKE1
 	sta	WHICH_LOAD		; start at first level
 
 	rts

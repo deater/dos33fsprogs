@@ -1,7 +1,18 @@
-before release:
-~~~~~~~~~~~~~~~
-+ pick up red key
-+ fix collision when walking into things
+Major Issues
+~~~~~~~~~~~~
++ Fix left/right collisions
+	Not that great still, problem is tiles are two wide but we
+	can actually stand at sub-tile location, and also Duke is 6 pixels
+	wide and it's hard to get this to line up well.
++ Better sound effects
++ Enemy movement/AI
++ Ability to take damage
+
+
+
+
+
+
 
 sound:
 ~~~~~~
