@@ -5,7 +5,7 @@ jump_noise:
 	lda	SOUND_STATUS
 	bmi	done_jump_noise
 
-	bit	$C030
+;	bit	$C030
 
 done_jump_noise:
 	rts
@@ -18,8 +18,15 @@ head_noise:
 	lda	SOUND_STATUS
 	bmi	done_head_noise
 
-	bit	$C030
-	bit	$C030
+	lda	#NOTE_D3
+	sta	speaker_frequency
+	lda	#5
+	sta	speaker_duration
+	jsr	speaker_tone
+
+
+;	bit	$C030
+;	bit	$C030
 
 done_head_noise:
 	rts
@@ -32,7 +39,7 @@ land_noise:
 	lda	SOUND_STATUS
 	bmi	done_land_noise
 
-	bit	$C030
+;	bit	$C030
 
 done_land_noise:
 	rts

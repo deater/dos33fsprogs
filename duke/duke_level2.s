@@ -62,7 +62,7 @@ duke_start:
 	jsr	update_status_bar
 
 	;====================================
-	; load level1 background
+	; load level2 background
 	;====================================
 
         lda	#<level2_bg_lzsa
@@ -99,9 +99,13 @@ duke_start:
 	;====================================
 	;====================================
 
-	jsr		setup_music
+	jsr	setup_music
+
+	lda	SOUND_STATUS
+	bmi	skip_music
 
 	cli		; start music
+skip_music:
 
 duke_loop:
 
@@ -180,6 +184,8 @@ done_with_duke:
 	; FIXME: point to next level
         lda     #LOAD_TITLE
         sta     WHICH_LOAD
+
+	sei		; stop music
 
 	rts			; exit back
 
