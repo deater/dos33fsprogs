@@ -5,11 +5,10 @@ PNG2GR = ../../gr-utils/png2gr
 LZSA = ~/research/lzsa/lzsa/lzsa
 
 tfv_backgrounds.inc:	\
-	title.lzsa map.lzsa landing.lzsa harfco.lzsa \
+	map.lzsa landing.lzsa harfco.lzsa \
 	belair.lzsa math_office.lzsa video_hr.lzsa \
 	collegep.lzsa umcp.lzsa dining.lzsa metro.lzsa \
 	talbot.lzsa
-	echo "title_lzsa: .incbin \"title.lzsa\"" > tfv_backgrounds.inc
 	echo "map_lzsa: .incbin \"map.lzsa\"" >> tfv_backgrounds.inc
 	echo "landing_lzsa: .incbin \"landing.lzsa\"" >> tfv_backgrounds.inc
 	echo "harfco_lzsa: .incbin \"harfco.lzsa\"" >> tfv_backgrounds.inc

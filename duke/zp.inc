@@ -178,7 +178,7 @@ OUTH		=	$FF
 ; read any file slot 6 version
 ; based on FASTLD6 and RTS copyright (c) Peter Ferrie 2011-2013,2018
 
-; modified to assembled with ca64 -- vmw
+; modified to assemble with ca65 -- vmw
 ; added code to patch it to run from current disk slot -- vmw
 
 

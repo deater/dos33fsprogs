@@ -1,7 +1,10 @@
 	;=============================
 	; show VMW splash screen
 	;=============================
+
 opening:
+	jsr	normal_text
+
 	lda	#100
 	sta	MATCH
 	jsr	draw_logo
@@ -27,17 +30,11 @@ shine_loop:
 
 	; Done, print string
 
-	lda	#8
-	sta	CH		; HTAB 9
-
-	lda	#20
-	sta	CV		; VTAB 21
-
-
-	lda     #>(vmwsw_string)
-        sta     OUTH
 	lda     #<(vmwsw_string)
         sta     OUTL
+	lda     #>(vmwsw_string)
+        sta     OUTH
+
 
 	jsr	move_and_print		; print("A VMW SOFTWARE PRODUCTION");
 
@@ -163,5 +160,5 @@ draw_logo:
 	rts
 
 vmwsw_string:
-	.asciiz "A VMW SOFTWARE PRODUCTION"
+	.byte 8,20,"A VMW SOFTWARE PRODUCTION",0
 

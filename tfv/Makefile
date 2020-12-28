@@ -11,21 +11,44 @@ all:	tfv.dsk
 $(DOS33):	
 	cd ../dos33fs-utils && make
 
-tfv.dsk:	$(DOS33) TFV HELLO
+tfv.dsk:	$(DOS33) HELLO LOADER TFV_TITLE TFV
 	$(DOS33) -y tfv.dsk SAVE A HELLO
-	$(DOS33) -y tfv.dsk BSAVE -a 0x1000 TFV
-#	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 HIGHWIND.ED
-#	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 FIGHTING.ED
+	$(DOS33) -y tfv.dsk BSAVE -a 0x1000 LOADER
+	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 TFV_TITLE
+	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 TFV
+
+###
+
+HELLO:	hello.bas
+	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+
+####
+
+LOADER:	loader.o
+	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1000.inc
+
+loader.o:	loader.s init_vars.s common_defines.inc
+	ca65 -o loader.o loader.s -l loader.lst
+
+###
+
+TFV_TITLE:	tfv_title.o
+	ld65 -o TFV_TITLE tfv_title.o -C ../linker_scripts/apple2_2000.inc
+
+tfv_title.o:	tfv_title.s \
+	gr_vlin.s tfv_opener.s \
+	graphics_title/tfv_title.inc
+	ca65 -o tfv_title.o tfv_title.s -l tfv_title.lst
 
 ###
 
 TFV:	tfv.o
-	ld65 -o TFV tfv.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o TFV tfv.o -C ../linker_scripts/apple2_2000.inc
 
 tfv.o:	tfv.s \
-	tfv_flying.s tfv_info.s tfv_opener.s tfv_title.s \
+	tfv_flying.s tfv_info.s \
 	tfv_textentry.s tfv_worldmap.s \
-	graphics_map/tfv_backgrounds.inc tfv_sprites.inc tfv_zp.inc \
+	graphics_map/tfv_backgrounds.inc tfv_sprites.inc zp.inc \
 	../asm_routines/multiply_fast.s \
 	gr_fast_clear.s \
 	../asm_routines/pageflip.s \
@@ -42,14 +65,10 @@ tfv.o:	tfv.s \
 graphics_map/tfv_backgrounds.inc:
 	cd graphics_map && make
 
-###
-
-HELLO:	hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
 
 
 ###
 
 clean:	
-	rm -f *~ TITLE.GR *.o *.lst ED TFV
+	rm -f *~ TITLE.GR *.o *.lst TFV TFV_TITLE HELLO LOADER
 

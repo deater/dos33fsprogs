@@ -3,6 +3,9 @@ clear_screens:
 	; Clear top/bottom of page 0
 	;===================================
 
+	lda	DRAW_PAGE
+	pha
+
 	lda	#$0
 	sta	DRAW_PAGE
 	jsr	clear_top
@@ -16,6 +19,9 @@ clear_screens:
 	sta	DRAW_PAGE
 	jsr	clear_top
 	jsr	clear_bottom
+
+	pla
+	sta	DRAW_PAGE
 
 	rts
 

@@ -1,4 +1,4 @@
-.include "tfv_zp.inc"
+.include "zp.inc"
 .include "hardware.inc"
 
 	;================================
@@ -13,35 +13,6 @@
 				; real hardware and AppleWin default
 				; to different values
 
-	;===================================
-	; zero out the zero page that we use
-	;===================================
-
-	; memset()
-
-	;===================================
-	; Clear top/bottom of page 0 and 1
-	;===================================
-
-	jsr	clear_screens
-
-	;==========================
-	; Do Opening
-	;==========================
-
-	jsr	opening
-
-	;======================
-	; show the title screen
-	;======================
-
-	jsr	title_screen
-
-	;======================
-	; get name
-	;======================
-
-	jsr	enter_name
 
 	;=====================
 	; Flying
@@ -84,8 +55,8 @@ exit:
 ; External modules
 ;===============================================
 
-.include "tfv_opener.s"
-.include "tfv_title.s"
+;.include "tfv_opener.s"
+;.include "tfv_title.s"
 .include "tfv_textentry.s"
 .include "tfv_flying.s"
 .include "tfv_worldmap.s"
