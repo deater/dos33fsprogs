@@ -11,16 +11,13 @@ enter_name:
 	jsr	print_string
 
 	; zero out name
-
-	lda	#<(name)
-	sta	MEMPTRL
-	sta	NAMEL
-	lda	#>(name)
-	sta	MEMPTRH
-	sta	NAMEH
+	ldx	#0
 	lda	#0
-	ldx	#8
-	jsr	memset
+zero_name_loop:
+	sta	name,X
+	inx
+	cpx	#8
+	bne	zero_name_loop
 
 name_loop:
 

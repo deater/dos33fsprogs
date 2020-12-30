@@ -7,8 +7,8 @@ SDL_INCLUDE= `sdl-config --cflags`
 GR_SIM = ../gr-sim.a
 
 PNG2RLE = ../../gr-utils/png2rle
-ARTDIR = ../../tfv/art
-
+ARTDIR = ../../tfv/graphics_map
+TITLEDIR = ../../tfv/graphics_title
 
 all:	tfv
 
@@ -25,7 +25,7 @@ $(PNG2RLE):
 ####
 
 tfv_backgrounds.c:	$(PNG2RLE) \
-			$(ARTDIR)/title.png \
+			$(TITLEDIR)/title.png \
 			$(ARTDIR)/map.png \
 			$(ARTDIR)/landing.png \
 			$(ARTDIR)/harfco.png \
@@ -48,7 +48,7 @@ tfv_backgrounds.c:	$(PNG2RLE) \
 			$(ARTDIR)/patriot_room.png \
 			$(ARTDIR)/jc_office.png \
 			$(ARTDIR)/puzzle.png
-	$(PNG2RLE) c $(ARTDIR)/title.png title_rle > tfv_backgrounds.c
+	$(PNG2RLE) c $(TITLEDIR)/title.png title_rle > tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/map.png map_rle >> tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/landing.png landing_rle >> tfv_backgrounds.c
 	$(PNG2RLE) c $(ARTDIR)/harfco.png harfco_rle >> tfv_backgrounds.c

@@ -69,7 +69,7 @@ exit:
 .include "../asm_routines/keypress.s"
 .include "../asm_routines/gr_putsprite.s"
 .include "../asm_routines/text_print.s"
-.include "../asm_routines/memset.s"
+;.include "../asm_routines/memset.s"
 .include "../asm_routines/gr_vlin.s"
 .include "../asm_routines/gr_copy.s"
 ;.include "../asm_routines/gr_unrle.s"

@@ -1,3 +1,17 @@
+title:
+	timeout if no key pressed at splash/title screen
+
+
+walking around:
+	separate background image that says when you can walk
+	different colors to indicate who you can talk to
+
+battle:
+	spiral intro
+	animated intro
+
+load game support
+
 split title and flying off from map play
 
 new or load game

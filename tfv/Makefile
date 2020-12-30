@@ -37,6 +37,7 @@ TFV_TITLE:	tfv_title.o
 
 tfv_title.o:	tfv_title.s \
 	gr_vlin.s tfv_opener.s \
+	draw_menu.s keyboard.s joystick.s \
 	graphics_title/tfv_title.inc
 	ca65 -o tfv_title.o tfv_title.s -l tfv_title.lst
 

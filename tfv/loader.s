@@ -152,6 +152,7 @@ filenames:
 	.word intro_filename
 	.word flying_filename
 	.word duke2_filename
+	.word credits_filename
 
 intro_filename:
 	.byte "TFV_TITLE",0
@@ -159,6 +160,8 @@ flying_filename:
 	.byte "TFV_FLYING",0
 duke2_filename:
 	.byte "DUKE_LEVEL2",0
+credits_filename:
+	.byte "TFV_CREDITS",0
 
 
 	;===================================================

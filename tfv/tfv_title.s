@@ -70,26 +70,84 @@ title_screen:
 	lda	#20
 	sta	XPOS
 
+
 	;=================================
-	; wait for keypress
+	; title menu loop
+	;=================================
 
-	jsr	wait_until_keypressed
+	lda	#0
+	sta	menu_offset
+	lda	#2
+	sta	menu_max
+title_menu_loop:
+	lda	#<title_menu
+	sta	OUTL
+	lda	#>title_menu
+	sta	OUTH
+
+	jsr	draw_menu
+
+	jsr	page_flip
+
+	jsr	increment_frame
+
+	lda	MENU_RESULT
+	bmi	title_menu_loop
+
+	; space was pressed!
+
+	beq	title_new_game
+	cmp	#1
+	beq	title_load_game
+	bne	title_load_credits
 
 
+	;=================================
+	; new game started!
+	;=================================
+title_new_game:
 
 	;=================================
 	; enter name
 
-	; jsr	enter_name
+	jsr	enter_name
 
-	;=================================
-	; move on to flying
+	; TODO: all rest
 
 	lda	#LOAD_FLYING
 	sta	WHICH_LOAD
 
 	rts
 
+	;=================================
+	; load game!  for now, debugging
+	;=================================
+title_load_game:
+	lda	#LOAD_FLYING
+	sta	WHICH_LOAD
+
+	rts
+
+	;=================================
+	; load credits!
+	;=================================
+title_load_credits:
+	lda	#LOAD_CREDITS
+	sta	WHICH_LOAD
+
+	rts
+
+
+
+	;===============================
+	; increment frame
+	;===============================
+increment_frame:
+	inc	FRAMEL
+	bne	done_increment_frame
+	inc	FRAMEH
+done_increment_frame:
+	rts
 
 ;===============================================
 ; External modules
@@ -105,10 +163,21 @@ title_screen:
 .include "decompress_fast_v2.s"
 .include "gr_offsets.s"
 .include "wait_keypressed.s"
+.include "tfv_textentry.s"
+
+.include "keyboard.s"
+.include "joystick.s"
+.include "draw_menu.s"
 
 ;===============================================
-; Variables
+; Data
 ;===============================================
+
+title_menu:
+	.byte   16,21,"NEW GAME",0
+	.byte   16,22,"LOAD GAME",0
+	.byte   16,23,"CREDITS",0
+	.byte   255
 
 enter_name_string:
 	.asciiz	"PLEASE ENTER A NAME:"
