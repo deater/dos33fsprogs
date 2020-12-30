@@ -52,7 +52,7 @@ TFV_FLYING:	tfv_flying.o
 tfv_flying.o:	tfv_flying.s \
 	gr_hlin.s gr_putsprite.s \
 	tfv_help.s \
-	tfv_sprites.inc
+	flying_mode7.s flying_sprites.inc
 	ca65 -o tfv_flying.o tfv_flying.s -l tfv_flying.lst
 
 ###
