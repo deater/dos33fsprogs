@@ -107,9 +107,9 @@ actually_handle_keypress:
 
 keypress:
 	and	#$7f			; clear high bit
-	cmp	#' '
-	beq	check_sound		; make sure not to lose space
-	and	#$df			; convert uppercase to lower case
+	cmp	#'A'
+	bcc	check_sound		; make sure not to lose space/ctrl
+	and	#$df			; convert lowercase to uppercase
 
 check_sound:
 	cmp	#$14			; control-T
@@ -145,49 +145,34 @@ check_save:
 ;	jmp	done_keypress
 
 check_left:
-;	cmp	#'A'
-;	beq	left_pressed
 	cmp	#8			; left key
 	bne	check_right
 left_pressed:
 	lda	#'A'
-	jmp	done_keypress
+	bne	done_keypress
 
 check_right:
-;	cmp	#'D'
-;	beq	right_pressed
 	cmp	#$15			; right key
 	bne	check_up
 right_pressed:
 	lda	#'D'
-	jmp	done_keypress
+	bne	done_keypress
 
 check_up:
-;	cmp	#'W'
-;	beq	up_pressed
 	cmp	#$0B			; up key
 	bne	check_down
 up_pressed:
 	lda	#'W'
-	jmp	done_keypress
+	bne	done_keypress
 
 check_down:
-;	cmp	#'S'
-;	beq	down_pressed
-	cmp	#$0A
+	cmp	#$0A			; down key
 	bne	check_return
 down_pressed:
 	lda	#'S'
-	jmp	done_keypress
+	bne	done_keypress
 
 check_return:
-;	cmp	#' '
-;	beq	return_pressed
-;	cmp	#13
-;	bne	done_keypress
-;return_pressed:
-
-;	lda	#' '
 	jmp	done_keypress
 
 no_keypress:

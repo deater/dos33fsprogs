@@ -64,6 +64,7 @@ draw_menu:
 	cmp	#'D'
 	beq	inc_menu
 	cmp	#' '
+	beq	menu_select
 	cmp	#13
 	beq	menu_select
 	bne	menu_nothing

@@ -78,6 +78,7 @@ flying_loop:
 flying_keyboard:
 
 	jsr	get_keypress	; get keypress				; 6
+	cmp	#0
 	bne	key_was_pressed
 
 	jmp	check_done
@@ -92,7 +93,7 @@ key_was_pressed:
 
 ;skipskip:
 
-	cmp	#('W')							; 2
+	cmp	#'W'							; 2
 	bne	flying_check_down					; 3/2nt
 
 	;===========
@@ -111,7 +112,7 @@ key_was_pressed:
 	jmp	check_done
 
 flying_check_down:
-	cmp	#('S')
+	cmp	#'S'
 	bne	flying_check_left
 
 	;=============
@@ -134,7 +135,7 @@ done_flying_down:
 	jmp	check_done
 
 flying_check_left:
-	cmp	#('A')
+	cmp	#'A'
 	bne	flying_check_right
 
 	;=============
@@ -157,7 +158,7 @@ turn_left:
 	jmp	check_done
 
 flying_check_right:
-	cmp	#('D')
+	cmp	#'D'
 	bne	check_speedup
 
 	;==============
@@ -178,7 +179,7 @@ turn_right:
 	jmp	check_done
 
 check_speedup:
-	cmp	#('Z')
+	cmp	#'Z'
 	bne	check_speeddown
 
 	;=========
@@ -192,7 +193,7 @@ skip_speedup:
 	jmp	check_done
 
 check_speeddown:
-	cmp	#('X')
+	cmp	#'X'
 	bne	check_brake
 
 	;===========
@@ -206,7 +207,7 @@ skip_speeddown:
 	jmp	check_done
 
 check_brake:
-	cmp	#(' '+128)
+	cmp	#' '
 	bne	check_land
 
 	;============
