@@ -120,7 +120,7 @@ move_and_print_list:
 	rts
 
 
-.if 0
+
 	;================================
 	; move and print a list of lines
 	;================================
@@ -188,4 +188,4 @@ print_both_pages:
 
 
 	rts
-.endif
+

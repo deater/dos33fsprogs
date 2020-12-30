@@ -1,3 +1,10 @@
+; Mode-7 Flying code
+
+.include "zp.inc"
+.include "hardware.inc"
+.include "common_defines.inc"
+
+
 ;===========
 ; CONSTANTS
 ;===========
@@ -15,14 +22,18 @@ CONST_SCALE_F	=	$00
 CONST_LOWRES_HALF_I	=	$ec	; -(LOWRES_W/2)
 CONST_LOWRES_HALF_F	=	$00
 
-flying_start:
+flying:
 
 	;===================
 	; Clear screen/pages
 	;===================
 
 	jsr	clear_screens
-	jsr     set_gr_page0
+	bit	PAGE0
+	lda	#0
+	sta	DISP_PAGE
+	lda	#4
+	sta	DRAW_PAGE
 
 	; Initialize the 2kB of multiply lookup tables
 	jsr	init_multiply_tables
@@ -66,7 +77,7 @@ flying_loop:
 
 flying_keyboard:
 
-	jsr	get_key		; get keypress				; 6
+	jsr	get_keypress	; get keypress				; 6
 
 	lda	LASTKEY							; 3
 
@@ -77,7 +88,7 @@ flying_keyboard:
 ;skipskip:
 
 	cmp	#('W')							; 2
-	bne	check_down						; 3/2nt
+	bne	flying_check_down					; 3/2nt
 
 	;===========
 	; UP PRESSED
@@ -85,7 +96,7 @@ flying_keyboard:
 
 	lda	SHIPY
 	cmp	#17
-	bcc	check_down	; bgt, if shipy>16
+	bcc	flying_check_down	; bgt, if shipy>16
 	dec	SHIPY
 	dec	SHIPY		; move ship up
 	inc	SPACEZ_I	; incement height
@@ -93,9 +104,9 @@ flying_keyboard:
 	lda	#0
 	sta	SPLASH_COUNT
 
-check_down:
+flying_check_down:
 	cmp	#('S')
-	bne	check_left
+	bne	flying_check_left
 
 	;=============
 	; DOWN PRESSED
@@ -108,15 +119,15 @@ check_down:
 	inc	SHIPY		; move ship down
 	dec	SPACEZ_I	; decrement height
 	jsr	update_z_factor
-	bcc	check_left
+	bcc	flying_check_left
 
 splashy:
 	lda	#10
 	sta	SPLASH_COUNT
 
-check_left:
+flying_check_left:
 	cmp	#('A')
-	bne	check_right
+	bne	flying_check_right
 
 	;=============
 	; LEFT PRESSED
@@ -129,7 +140,7 @@ check_left:
 	lda	#$0
 	sta	TURNING
 	clv
-	bvc	check_right
+	bvc	flying_check_right
 
 turn_left:
 	lda	#253	; -3
@@ -137,7 +148,7 @@ turn_left:
 
 	dec	ANGLE
 
-check_right:
+flying_check_right:
 	cmp	#('D')
 	bne	check_speedup
 
@@ -1243,3 +1254,25 @@ horizontal_lookup:
 
 grass_string:
 	.asciiz "NEED TO LAND ON GRASS!"
+
+
+;===============================================
+; External modules
+;===============================================
+
+.include "gr_offsets.s"
+.include "gr_hlin.s"
+.include "gr_pageflip.s"
+.include "gr_putsprite.s"
+.include "gr_fast_clear.s"
+
+.include "keyboard.s"
+.include "joystick.s"
+
+.include "wait_keypressed.s"
+.include "text_print.s"
+
+.include "tfv_help.s"
+
+
+.include "tfv_sprites.inc"

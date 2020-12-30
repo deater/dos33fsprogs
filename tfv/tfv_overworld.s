@@ -20,7 +20,11 @@ world_map:
 	;===================
 
 	jsr     clear_screens
-	jsr     set_gr_page0
+	bit	PAGE0
+	lda	#0
+	sta	DISP_PAGE
+	lda	#4
+	sta	DRAW_PAGE
 
 	;===============
 	; Init Variables
@@ -58,7 +62,7 @@ worldmap_loop:
 
 worldmap_keyboard:
 
-	jsr     get_key			; get keypress
+	jsr     get_keypress		; get keypress
 
 	lda     LASTKEY
 
