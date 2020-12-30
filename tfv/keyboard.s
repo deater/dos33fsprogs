@@ -3,6 +3,15 @@
 	; Get Keypress
 	;==============================
 	; returns 0 if nothing pressed
+
+	; maps joystick to wasd and ' ' and return
+	; maps arrow keys to wasd
+	; handles sound enable and joystick enable
+
+
+JS_BUTTON0	=	1
+JS_BUTTON1	=	2
+
 get_keypress:
 
 	; first handle joystick
@@ -14,21 +23,47 @@ get_keypress:
 	and	#$1
 	beq	actually_handle_keypress
 
-check_button:
-        lda     PADDLE_BUTTON0
-        bpl     button_clear
+check_button0:
+        lda	PADDLE_BUTTON0
+        bpl	button0_clear
 
-        lda     JS_BUTTON_STATE
-        bne     js_check
+        lda	JS_BUTTON_STATE
+	and	#JS_BUTTON0
+        bne	check_button1
 
-        lda     #1			; only register on release
-        sta     JS_BUTTON_STATE
-        lda     #' '
-        jmp     done_keypress
+        lda	#JS_BUTTON0		; only register on release
+	ora	JS_BUTTON_STATE
+	sta	JS_BUTTON_STATE
+	lda	#' '
+	jmp	done_keypress
 
-button_clear:
-        lda     #0
-        sta     JS_BUTTON_STATE
+button0_clear:
+	lda     JS_BUTTON_STATE
+	and	#(~JS_BUTTON0)
+	sta	JS_BUTTON_STATE
+	jmp	js_check
+
+check_button1:
+        lda	PADDLE_BUTTON1
+        bpl	button1_clear
+
+        lda	JS_BUTTON_STATE
+	and	#JS_BUTTON1
+        bne	js_check
+
+        lda	#JS_BUTTON1		; only register on release
+	ora	JS_BUTTON_STATE
+	sta	JS_BUTTON_STATE
+	lda	#13
+	jmp	done_keypress
+
+button1_clear:
+	lda     JS_BUTTON_STATE
+	and	#(~JS_BUTTON1)
+	sta	JS_BUTTON_STATE
+;	jmp	js_check
+
+
 
 js_check:
         jsr     handle_joystick
@@ -110,8 +145,8 @@ check_save:
 ;	jmp	done_keypress
 
 check_left:
-	cmp	#'A'
-	beq	left_pressed
+;	cmp	#'A'
+;	beq	left_pressed
 	cmp	#8			; left key
 	bne	check_right
 left_pressed:
@@ -119,8 +154,8 @@ left_pressed:
 	jmp	done_keypress
 
 check_right:
-	cmp	#'D'
-	beq	right_pressed
+;	cmp	#'D'
+;	beq	right_pressed
 	cmp	#$15			; right key
 	bne	check_up
 right_pressed:
@@ -128,8 +163,8 @@ right_pressed:
 	jmp	done_keypress
 
 check_up:
-	cmp	#'W'
-	beq	up_pressed
+;	cmp	#'W'
+;	beq	up_pressed
 	cmp	#$0B			; up key
 	bne	check_down
 up_pressed:
@@ -137,8 +172,8 @@ up_pressed:
 	jmp	done_keypress
 
 check_down:
-	cmp	#'S'
-	beq	down_pressed
+;	cmp	#'S'
+;	beq	down_pressed
 	cmp	#$0A
 	bne	check_return
 down_pressed:
@@ -146,13 +181,13 @@ down_pressed:
 	jmp	done_keypress
 
 check_return:
-	cmp	#' '
-	beq	return_pressed
-	cmp	#13
-	bne	no_keypress
-return_pressed:
+;	cmp	#' '
+;	beq	return_pressed
+;	cmp	#13
+;	bne	done_keypress
+;return_pressed:
 
-	lda	#' '
+;	lda	#' '
 	jmp	done_keypress
 
 no_keypress:

@@ -78,8 +78,13 @@ flying_loop:
 flying_keyboard:
 
 	jsr	get_keypress	; get keypress				; 6
+	bne	key_was_pressed
 
-	lda	LASTKEY							; 3
+	jmp	check_done
+
+key_was_pressed:
+
+;	lda	LASTKEY							; 3
 
 ;	cmp	#('Q')		; if quit, then return
 ;	bne	skipskip
@@ -103,6 +108,7 @@ flying_keyboard:
 	jsr	update_z_factor
 	lda	#0
 	sta	SPLASH_COUNT
+	jmp	check_done
 
 flying_check_down:
 	cmp	#('S')
@@ -119,11 +125,13 @@ flying_check_down:
 	inc	SHIPY		; move ship down
 	dec	SPACEZ_I	; decrement height
 	jsr	update_z_factor
-	bcc	flying_check_left
+	bcc	done_flying_down
 
 splashy:
 	lda	#10
 	sta	SPLASH_COUNT
+done_flying_down:
+	jmp	check_done
 
 flying_check_left:
 	cmp	#('A')
@@ -139,14 +147,14 @@ flying_check_left:
 
 	lda	#$0
 	sta	TURNING
-	clv
-	bvc	flying_check_right
+	jmp	check_done
 
 turn_left:
 	lda	#253	; -3
 	sta	TURNING
 
 	dec	ANGLE
+	jmp	check_done
 
 flying_check_right:
 	cmp	#('D')
@@ -160,14 +168,14 @@ flying_check_right:
 	bpl	turn_right
 	lda	#0
 	sta	TURNING
-	clv
-	bvc	check_speedup
+	jmp	check_done
 
 turn_right:
 	lda	#3
 	sta	TURNING
 
 	inc	ANGLE
+	jmp	check_done
 
 check_speedup:
 	cmp	#('Z')
@@ -178,8 +186,10 @@ check_speedup:
 	;=========
 	lda	#$8
 	cmp	SPEED
-	beq	check_speeddown
+	beq	skip_speedup
 	inc	SPEED
+skip_speedup:
+	jmp	check_done
 
 check_speeddown:
 	cmp	#('X')
@@ -190,8 +200,10 @@ check_speeddown:
 	;===========
 
 	lda	SPEED
-	beq	check_brake
+	beq	skip_speeddown
 	dec	SPEED
+skip_speeddown:
+	jmp	check_done
 
 check_brake:
 	cmp	#(' '+128)
@@ -202,6 +214,7 @@ check_brake:
 	;============
 	lda	#$0
 	sta	SPEED
+	jmp	check_done
 
 check_land:
 	cmp	#13
@@ -260,6 +273,9 @@ landing_loop:
 
 	bpl	landing_loop
 
+done_flying:
+	lda	#LOAD_WORLD
+	sta	WHICH_LOAD
 
 	rts			; finish flying
 

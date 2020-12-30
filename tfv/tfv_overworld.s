@@ -64,7 +64,7 @@ worldmap_keyboard:
 
 	jsr     get_keypress		; get keypress
 
-	lda     LASTKEY
+;	lda     LASTKEY
 
 worldmap_handle_q:
 	cmp     #('Q')			; if quit, then return
