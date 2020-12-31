@@ -2,6 +2,11 @@
 ; Draw the Mode7 Background
 ;===========================
 
+; opening screen, original code
+;	2d070 cycles = 184,432 = 5.4 fps
+;	2da70 cycles (added in 2 cycle cpx)  a00 = 2560, yes, 32*40=1280
+;	2aec3 cycles (update inner loop) = 175,811 = 5.7 fps
+
 draw_background_mode7:
 
 	; Only draw sky if necessary
@@ -36,7 +41,8 @@ sky_loop:				; draw line across screen
 								; (23+63+(X*16))*5
 	; Draw Hazy Horizon
 
-	lda	#COLOR_BOTH_GREY	; Horizon is Grey		; 2
+;	lda	#COLOR_BOTH_GREY	; Horizon is Grey		; 2
+	lda	#$56			; Horizon is Grey		; 2
 	sta	COLOR							; 3
 	lda	#6			; draw single line at 6/7	; 2
 	ldy	#39							; 2
@@ -69,24 +75,28 @@ screeny_loop:
 
 	eor	#$ff		; setup self-modifying branch later	; 2
 	bmi	odd_branch	; beq is $f0 (too clever FIXME)		; 2nt/3
-	lda	#$d0		; bne is $d0				; 2
+	lda	#$1d		; bit is $2c				; 2
+	bne	ok_branch	; bra					; 3
 odd_branch:
-	sta	mask_branch_label	; actually update branch	; 4
+	lda	#$2c		; ora abs,X				; 2
+ok_branch:
+	sta	innersmc1	; actually update ora/bit		; 4
 								;============
-								;	 27
+								;	 ?27
 
 setup_gr_addr:
 	lda	gr_offsets,Y	; lookup low-res memory row address	; 4
-	sta	GBASL		; store in GBASL zero-page pointer	; 3
-	iny			; point to high part of address		; 2
+	sta	innersmc1+1	; store in GBASL zero-page pointer	; 4
+	sta	innersmc2+1	; store in GBASL zero-page pointer	; 4
 
-	lda	gr_offsets,Y	; load high part of address		; 4
+	lda	gr_offsets+1,Y	; load high part of address		; 4
 	clc			; clear carry for add			; 2
 	adc	DRAW_PAGE       ; add in draw page offset               ; 3
-	sta	GBASH		; store in GBASH zero-page pointer	; 3
+	sta	innersmc1+2	; store in GBASL zero-page pointer	; 4
+	sta	innersmc2+2	; store in GBASL zero-page pointer	; 4
 
 								;=============
-								;	 21
+								;	 29
 
 calc_horizontal_scale:
 
@@ -352,7 +362,7 @@ spacez_shifted:
 								;	 16
 
 
-	ldx	#40	; was SCREEN_X					; 2
+	ldx	#0	; was SCREEN_X					; 2
 								;==========
 								;	  2
 	;===================================================
@@ -424,30 +434,23 @@ update_cache:
 								;===========
 								;	  4
 
-;	rts								; 6
 
-
-
-;	jsr	lookup_map		; get color in A		; 6
-;								;============
-								;	  6
 match:
 
 mask_label:
+	; this is f0 or 0f depending on odd/even
 	and	#0	; COLOR_MASK (self modifying)			; 2
 
-	ldy	#0							; 2
-mask_branch_label:
-	beq	big_bottom	; this branch is modified based on odd/even
-				; F0=beq, D0=bne			; 2nt/3
-
-	ora	(GBASL),Y	; we're odd, or the bottom in		; 5
+	; this is ora or bit depending on odd/even
+innersmc1:
+	ora	$400,X	; we're odd, or the bottom in			; 4
 big_bottom:
 
-	sta	(GBASL),Y	; plot double height pixel		; 6
-	inc	GBASL		; point to next pixel			; 5
+innersmc2:
+	sta	$400,X	; plot double height pixel			; 5
+
 								;============
-								;	22/18
+								;	11
 
 
 
@@ -481,7 +484,8 @@ dyi_label:
 								;============
 								;	 18
 
-	dex	; decrement	SCREEN_X				; 2
+	inx	; increment	SCREEN_X				; 2
+	cpx	#40							; 2
 	beq	done_screenx_loop	; branch until we've done 40	; 2nt/3
 								;=============
 								;	4/5

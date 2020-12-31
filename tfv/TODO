@@ -1,3 +1,6 @@
+help:
+	different help screen for flying than worldmap
+
 title:
 	timeout if no key pressed at splash/title screen
 
