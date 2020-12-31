@@ -384,6 +384,9 @@ nomatch:
 	; returns color in A
 	; CLOBBERS: A,Y
 
+	; island is 8x8
+	; map is 64x64 but anything not island is ocean
+
 	lda	SPACEX_I						; 3
 	sta	spacex_label+1	; self modifying code, LAST_SPACEX_I	; 4
 	and	#CONST_MAP_MASK_X	; wrap at 64			; 2
@@ -402,26 +405,29 @@ nomatch:
 	adc	SPACEX_I		; add in X value		; 3
 					; only valid if x<8 and y<8
 
+
+
 	; SPACEX_I is also in y
 	cpy	#$8							; 2
 								;============
 								;	 39
 
-	bcs	ocean_color		; bgt 8				; 2nt/3
+	bcs	ocean_color		; bge 8				; 2nt/3
 	ldy	SPACEY_I						; 3
 	cpy	#$8							; 2
 								;=============
 								;	  7
 
-	bcs	ocean_color		; bgt 8				; 2nt/3
+	bcs	ocean_color		; bge 8				; 2nt/3
 
 	tay								; 2
 	lda	flying_map,Y		; load from array		; 4
-
-	bcc	update_cache						; 3
+	jmp	update_cache						; 3
 								;============
 								;	11
 ocean_color:
+	; a was spacey<<3+spacex
+
 	and	#$1f							; 2
 	tay								; 2
 	lda	water_map,Y		; the color of the sea		; 4
@@ -433,19 +439,15 @@ update_cache:
 
 								;===========
 								;	  4
-
-
 match:
 
 mask_label:
-	; this is f0 or 0f depending on odd/even
+	; this is f0 or 0f depending on odd/even row
 	and	#0	; COLOR_MASK (self modifying)			; 2
 
 	; this is ora or bit depending on odd/even
 innersmc1:
 	ora	$400,X	; we're odd, or the bottom in			; 4
-big_bottom:
-
 innersmc2:
 	sta	$400,X	; plot double height pixel			; 5
 
@@ -463,6 +465,7 @@ innersmc2:
 dxf_label:
 	adc	#0	; self modifying, is DX_F			; 2
 	sta	SPACEX_F						; 3
+
 	lda	SPACEX_I						; 3
 dxi_label:
 	adc	#0	; self modifying, is DX_I			; 2
