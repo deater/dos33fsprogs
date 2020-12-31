@@ -6,7 +6,7 @@
 ;	2d070 cycles = 184,432 = 5.4 fps
 ;	2da70 cycles (added in 2 cycle cpx)  a00 = 2560, yes, 32*40=1280
 ;	2aec3 cycles (update inner loop) = 175,811 = 5.7 fps
-
+;	29af5 cycles (move things around) = 170,741 = 5.85 fps
 
 ;	flying_loop -> check_done	2040 - 214f		2E
 ;
@@ -22,9 +22,6 @@
 
 
 draw_background_mode7:
-
-
-no_draw_sky:
 
 	; setup initial odd/even color mask
 	lda	#$f0							; 2
@@ -45,12 +42,11 @@ screeny_loop:
 	sta	COLOR_MASK						; 3
 	sta	mask_label+1	; setup self-modifying code		; 4
 
-	eor	#$ff		; setup self-modifying branch later	; 2
-	bmi	odd_branch	; beq is $f0 (too clever FIXME)		; 2nt/3
-	lda	#$1d		; bit is $2c				; 2
+	bpl	odd_branch	; smc for even/odd line			; 2nt/3
+	lda	#$1d		; ora abs,X opcode is $1d		; 2
 	bne	ok_branch	; bra					; 3
 odd_branch:
-	lda	#$2c		; ora abs,X				; 2
+	lda	#$2c		; bit is $2c				; 2
 ok_branch:
 	sta	innersmc1	; actually update ora/bit		; 4
 								;============
@@ -58,14 +54,14 @@ ok_branch:
 
 setup_gr_addr:
 	lda	gr_offsets,Y	; lookup low-res memory row address	; 4
-	sta	innersmc1+1	; store in GBASL zero-page pointer	; 4
-	sta	innersmc2+1	; store in GBASL zero-page pointer	; 4
+	sta	innersmc1+1	; smc low addr				; 4
+	sta	innersmc2+1	; smc low addr				; 4
 
 	lda	gr_offsets+1,Y	; load high part of address		; 4
 	clc			; clear carry for add			; 2
 	adc	DRAW_PAGE       ; add in draw page offset               ; 3
-	sta	innersmc1+2	; store in GBASL zero-page pointer	; 4
-	sta	innersmc2+2	; store in GBASL zero-page pointer	; 4
+	sta	innersmc1+2	; smc high addr				; 4
+	sta	innersmc2+2	; smc high addr				; 4
 
 								;=============
 								;	 29
@@ -427,8 +423,17 @@ innersmc2:
 								;============
 								;	11
 
+	;===================================
+	; incremement column, see if done
 
 
+	inx	; increment	SCREEN_X				; 2
+	cpx	#40							; 2
+	beq	done_screenx_loop	; branch until we've done 40	; 2nt/3
+								;=============
+								;	4/5
+
+	;=======================================
 	; advance to the next position in space
 
 	; fixed_add(&space_x,&dx,&space_x);
@@ -461,15 +466,8 @@ dyi_label:
 								;============
 								;	 18
 
-	inx	; increment	SCREEN_X				; 2
-	cpx	#40							; 2
-	beq	done_screenx_loop	; branch until we've done 40	; 2nt/3
-								;=============
-								;	4/5
-
-
 	; cache color and return if same as last time
-	lda	SPACEY_I						; 3
+;	lda	SPACEY_I						; 3
 spacey_label:
 	cmp	#0	; self modify, LAST_SPACEY_I			; 2
 	bne	nomatch							; 2nt/3
