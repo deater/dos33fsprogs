@@ -3,10 +3,20 @@
 ;===========================
 
 ; opening screen, original code
-;	2d070 cycles = 184,432 = 5.4 fps
-;	2da70 cycles (added in 2 cycle cpx)  a00 = 2560, yes, 32*40=1280
-;	2aec3 cycles (update inner loop) = 175,811 = 5.7 fps
-;	29af5 cycles (move things around) = 170,741 = 5.85 fps
+;	$2d070 cycles = 184,432 = 5.4 fps
+;	$2da70 cycles (added in 2 cycle cpx)  a00 = 2560, yes, 32*40=1280
+;	$2aec3 cycles (update inner loop) = 175,811 = 5.7 fps
+;	$29af5 cycles (move things around) = 170,741 = 5.85 fps
+;	$29988 cycles (save another cycle) = 170,393 = 5.86 fps
+;	$29968 cycles (align lookup tables)
+;	$28FA8 cycles (remove clc) =  167,848 = 5.95 fps
+
+; TODO:
+;	could save cycle running inner X loop backwards, but would
+;		have to redo a lot of the math to start at right of screen
+;	could save avg of 2 cycles on inner X loop if we have special
+;		case odd vs even lines
+
 
 ;	flying_loop -> check_done	2040 - 214f		2E
 ;
@@ -373,36 +383,40 @@ nomatch:
 	adc	SPACEX_I		; add in X value		; 3
 					; only valid if x<8 and y<8
 
-
-
-	; SPACEX_I is also in y
-	cpy	#$8							; 2
 								;============
-								;	 39
+								;	 37
 
+	; SPACEX_I is n y
+	cpy	#$8							; 2
 	bcs	ocean_color		; bge 8				; 2nt/3
-
 	ldy	SPACEY_I						; 3
 	cpy	#$8							; 2
-								;=============
-								;	  7
-
 	bcs	ocean_color		; bge 8				; 2nt/3
+								;=============
+								;	  ??
 
+	;==============
+	; lookup island
+	; A is spacey<<3+spacex
+island_color:
 	tay								; 2
 	lda	flying_map,Y		; load from array		; 4
 	jmp	update_cache						; 3
 								;============
 								;	11
-ocean_color:
-	; a was spacey<<3+spacex
 
+	;=============
+	; lookup ocean
+	; A is spacey<<3+spacex
+ocean_color:
 	and	#$1f							; 2
 	tay								; 2
 	lda	water_map,Y		; the color of the sea		; 4
 								;===========
 								;	  8
 
+	; store cached value
+	; note: this does seem faster than storing in zero page
 update_cache:
 	sta	map_color_label+1	; self-modifying		; 4
 
@@ -411,6 +425,8 @@ update_cache:
 match:
 
 mask_label:
+	; color is in A
+
 	; this is f0 or 0f depending on odd/even row
 	and	#0	; COLOR_MASK (self modifying)			; 2
 
@@ -431,14 +447,16 @@ innersmc2:
 	cpx	#40							; 2
 	beq	done_screenx_loop	; branch until we've done 40	; 2nt/3
 								;=============
-								;	4/5
+								;	6/7
 
 	;=======================================
 	; advance to the next position in space
 
 	; fixed_add(&space_x,&dx,&space_x);
 
-	clc								; 2
+	; state of carry here?  cpx #40 should always be less than so cc?
+
+;	clc								; 2
 	lda	SPACEX_F						; 3
 dxf_label:
 	adc	#0	; self modifying, is DX_F			; 2
@@ -448,9 +466,9 @@ dxf_label:
 dxi_label:
 	adc	#0	; self modifying, is DX_I			; 2
 	sta	SPACEX_I						; 3
-
+	tay		; save for later				; 2
 								;==========
-								;	 18
+								;	 20
 
 	; fixed_add(&space_y,&dy,&space_y);
 
@@ -467,17 +485,24 @@ dyi_label:
 								;	 18
 
 	; cache color and return if same as last time
-;	lda	SPACEY_I						; 3
+	; SPACEY_I is in A from above
 spacey_label:
 	cmp	#0	; self modify, LAST_SPACEY_I			; 2
 	bne	nomatch							; 2nt/3
-	lda	SPACEX_I						; 3
+
+	; SPACEX_I is in Y
 spacex_label:
-	cmp	#0	; self modify, LAST_SPACEX_I			; 2
+	cpy	#0	; self modify, LAST_SPACEX_I			; 2
 	bne	nomatch							; 2nt/3
 map_color_label:
 	lda	#0	; self modify, LAST_MAP_COLOR			; 2
 	jmp	match							; 3
+								;============
+								;	??
+
+	;========================
+	; get here at end of loop
+	;=========================
 
 done_screenx_loop:
 	inc	SCREEN_Y						; 5
@@ -489,6 +514,16 @@ done_screenx_loop:
 								;	 15
 done_screeny:
 	rts								; 6
+
+
+
+
+
+
+
+
+
+
 
 
 	;====================
@@ -580,8 +615,38 @@ horizon_loop:				; draw line across screen
 	rts
 
 
+
+;horizontal_lookup_20:
+;	.byte $0C,$0A,$09,$08,$07,$06,$05,$05,$04,$04,$04,$04,$03,$03,$03,$03
+;	.byte $26,$20,$1B,$18,$15,$13,$11,$10,$0E,$0D,$0C,$0C,$0B,$0A,$0A,$09
+;	.byte $40,$35,$2D,$28,$23,$20,$1D,$1A,$18,$16,$15,$14,$12,$11,$10,$10
+;	.byte $59,$4A,$40,$38,$31,$2C,$28,$25,$22,$20,$1D,$1C,$1A,$18,$17,$16
+;	.byte $73,$60,$52,$48,$40,$39,$34,$30,$2C,$29,$26,$24,$21,$20,$1E,$1C
+;	.byte $8C,$75,$64,$58,$4E,$46,$40,$3A,$36,$32,$2E,$2C,$29,$27,$25,$23
+;	.byte $A6,$8A,$76,$68,$5C,$53,$4B,$45,$40,$3B,$37,$34,$30,$2E,$2B,$29
+
+	; we can guarantee 4 cycle indexed reads if we page-align this
+	; it's 16*14 bytes
+.align 256
+horizontal_lookup:
+	.byte $0C,$0B,$0A,$09,$09,$08,$08,$07,$07,$06,$06,$06,$05,$05,$05,$05
+	.byte $04,$04,$04,$04,$04,$04,$04,$03,$03,$03,$03,$03,$03,$03,$03,$03
+	.byte $26,$22,$20,$1D,$1B,$19,$18,$16,$15,$14,$13,$12,$11,$10,$10,$0F
+	.byte $0E,$0E,$0D,$0D,$0C,$0C,$0C,$0B,$0B,$0A,$0A,$0A,$0A,$09,$09,$09
+	.byte $40,$3A,$35,$31,$2D,$2A,$28,$25,$23,$21,$20,$1E,$1D,$1B,$1A,$19
+	.byte $18,$17,$16,$16,$15,$14,$14,$13,$12,$12,$11,$11,$10,$10,$10,$0F
+	.byte $59,$51,$4A,$44,$40,$3B,$38,$34,$31,$2F,$2C,$2A,$28,$26,$25,$23
+	.byte $22,$21,$20,$1E,$1D,$1C,$1C,$1B,$1A,$19,$18,$18,$17,$16,$16,$15
+	.byte $73,$68,$60,$58,$52,$4C,$48,$43,$40,$3C,$39,$36,$34,$32,$30,$2E
+	.byte $2C,$2A,$29,$27,$26,$25,$24,$22,$21,$20,$20,$1F,$1E,$1D,$1C,$1C
+	.byte $8C,$80,$75,$6C,$64,$5D,$58,$52,$4E,$4A,$46,$43,$40,$3D,$3A,$38
+	.byte $36,$34,$32,$30,$2E,$2D,$2C,$2A,$29,$28,$27,$26,$25,$24,$23,$22
+	.byte $A6,$97,$8A,$80,$76,$6E,$68,$61,$5C,$57,$53,$4F,$4B,$48,$45,$42
+	.byte $40,$3D,$3B,$39,$37,$35,$34,$32,$30,$2F,$2E,$2C,$2B,$2A,$29,$28
+
 ; 8.8 fixed point
 ; should we store as two arrays, one I one F?
+; 32 bytes
 fixed_sin:
 	.byte $00,$00 ;  0.000000=00.00
 	.byte $00,$61 ;  0.382683=00.61
@@ -600,6 +665,7 @@ fixed_sin:
 	.byte $ff,$4b ; -0.707107=ff.4b
 	.byte $ff,$9f ; -0.382683=ff.9f
 
+; 32 bytes
 fixed_sin_scale:
 	.byte $00,$00
 	.byte $00,$0c
@@ -617,31 +683,3 @@ fixed_sin_scale:
 	.byte $ff,$e3
 	.byte $ff,$ea
 	.byte $ff,$f4
-
-;horizontal_lookup_20:
-;	.byte $0C,$0A,$09,$08,$07,$06,$05,$05,$04,$04,$04,$04,$03,$03,$03,$03
-;	.byte $26,$20,$1B,$18,$15,$13,$11,$10,$0E,$0D,$0C,$0C,$0B,$0A,$0A,$09
-;	.byte $40,$35,$2D,$28,$23,$20,$1D,$1A,$18,$16,$15,$14,$12,$11,$10,$10
-;	.byte $59,$4A,$40,$38,$31,$2C,$28,$25,$22,$20,$1D,$1C,$1A,$18,$17,$16
-;	.byte $73,$60,$52,$48,$40,$39,$34,$30,$2C,$29,$26,$24,$21,$20,$1E,$1C
-;	.byte $8C,$75,$64,$58,$4E,$46,$40,$3A,$36,$32,$2E,$2C,$29,$27,$25,$23
-;	.byte $A6,$8A,$76,$68,$5C,$53,$4B,$45,$40,$3B,$37,$34,$30,$2E,$2B,$29
-
-	; we can guarantee 4 cycle indexed reads if we page-aligned this
-;.align 256
-horizontal_lookup:
-	.byte $0C,$0B,$0A,$09,$09,$08,$08,$07,$07,$06,$06,$06,$05,$05,$05,$05
-	.byte $04,$04,$04,$04,$04,$04,$04,$03,$03,$03,$03,$03,$03,$03,$03,$03
-	.byte $26,$22,$20,$1D,$1B,$19,$18,$16,$15,$14,$13,$12,$11,$10,$10,$0F
-	.byte $0E,$0E,$0D,$0D,$0C,$0C,$0C,$0B,$0B,$0A,$0A,$0A,$0A,$09,$09,$09
-	.byte $40,$3A,$35,$31,$2D,$2A,$28,$25,$23,$21,$20,$1E,$1D,$1B,$1A,$19
-	.byte $18,$17,$16,$16,$15,$14,$14,$13,$12,$12,$11,$11,$10,$10,$10,$0F
-	.byte $59,$51,$4A,$44,$40,$3B,$38,$34,$31,$2F,$2C,$2A,$28,$26,$25,$23
-	.byte $22,$21,$20,$1E,$1D,$1C,$1C,$1B,$1A,$19,$18,$18,$17,$16,$16,$15
-	.byte $73,$68,$60,$58,$52,$4C,$48,$43,$40,$3C,$39,$36,$34,$32,$30,$2E
-	.byte $2C,$2A,$29,$27,$26,$25,$24,$22,$21,$20,$20,$1F,$1E,$1D,$1C,$1C
-	.byte $8C,$80,$75,$6C,$64,$5D,$58,$52,$4E,$4A,$46,$43,$40,$3D,$3A,$38
-	.byte $36,$34,$32,$30,$2E,$2D,$2C,$2A,$29,$28,$27,$26,$25,$24,$23,$22
-	.byte $A6,$97,$8A,$80,$76,$6E,$68,$61,$5C,$57,$53,$4F,$4B,$48,$45,$42
-	.byte $40,$3D,$3B,$39,$37,$35,$34,$32,$30,$2F,$2E,$2C,$2B,$2A,$29,$28
-
