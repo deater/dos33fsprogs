@@ -12,8 +12,7 @@
 ; Play music, lightning effects?
 ; TFV only hit for one damage, susie for 100
 
-
-world_map:
+handle_overworld:
 
 	;===================
 	; Clear screen/pages
@@ -241,7 +240,7 @@ worldmap_copy_background:
 	; Copy background
 	;================
 
-	jsr	gr_copy_to_current
+	jsr	gr_copy_to_current_40x40
 
 	;=================================
 	; Handle background ground scatter

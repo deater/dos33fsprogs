@@ -11,10 +11,10 @@
 	;================================
 
 	;=====================
-	; World Map
+	; Handle Overworld
 	;=====================
 
-	jsr	world_map
+	jsr	handle_overworld
 
 	;=====================
 	; Game Over
@@ -36,7 +36,7 @@
 .include "tfv_drawmap.s"
 .include "tfv_overworld.s"
 .include "tfv_game_over.s"
-.include "tfv_help.s"
+.include "help_overworld.s"
 
 
 .include "gr_fast_clear.s"

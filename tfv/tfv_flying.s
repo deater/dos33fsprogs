@@ -657,7 +657,7 @@ grass_string:
 .include "wait_keypressed.s"
 .include "text_print.s"
 
-.include "tfv_help.s"
+.include "help_flying.s"
 
 .include "flying_mode7.s"
 .include "flying_sprites.inc"

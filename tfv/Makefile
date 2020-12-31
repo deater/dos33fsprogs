@@ -52,7 +52,7 @@ TFV_FLYING:	tfv_flying.o
 tfv_flying.o:	tfv_flying.s \
 	zp.inc \
 	gr_putsprite.s \
-	tfv_help.s \
+	help_flying.s \
 	flying_mode7.s flying_sprites.inc
 	ca65 -o tfv_flying.o tfv_flying.s -l tfv_flying.lst
 
@@ -63,6 +63,7 @@ TFV_WORLD:	tfv_world.o
 
 tfv_world.o:	tfv_world.s \
 	tfv_overworld.s tfv_drawmap.s \
+	help_overworld.s \
 	graphics_map/tfv_backgrounds.inc tfv_sprites.inc zp.inc
 	ca65 -o tfv_world.o tfv_world.s -l tfv_world.lst
 
