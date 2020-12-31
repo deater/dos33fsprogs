@@ -280,16 +280,11 @@ done_flying:
 	rts			; finish flying
 
 must_land_on_grass:
-	lda     #10
-	sta	CH		; HTAB 11
-
-	lda	#21
-	sta	CV		; VTAB 22
-
-	lda	#>(grass_string)
-	sta	OUTH
 	lda	#<(grass_string)
 	sta	OUTL
+	lda	#>(grass_string)
+	sta	OUTH
+
 
 	jsr	print_both_pages	; "NEED TO LAND ON GRASS!"
 
@@ -643,7 +638,7 @@ water_map:
 
 
 grass_string:
-	.asciiz "NEED TO LAND ON GRASS!"
+	.byte 10,22,"NEED TO LAND ON GRASS!",0
 
 
 ;===============================================
