@@ -59,8 +59,7 @@ flying:
 	lda	#1		; slightly off North for better view of island
 	sta	ANGLE
 
-	lda	#2		; initialize sky both pages
-	sta	DRAW_SKY
+	jsr	draw_sky
 
 	lda	#4		; starts out at 4.5 altitude
 	sta	SPACEZ_I
@@ -304,8 +303,7 @@ check_help:
 
 	jsr	print_help
 
-	lda	#2
-	sta	DRAW_SKY
+	jsr	draw_sky
 
 check_done:
 
@@ -576,7 +574,7 @@ draw_ship:
 	;==================
 	; loop forever
 	;==================
-
+done_flying_loop:
 	jmp	flying_loop						; 3
 
 
@@ -653,7 +651,7 @@ grass_string:
 ;===============================================
 
 .include "gr_offsets.s"
-.include "gr_hlin.s"
+;.include "gr_hlin.s"
 .include "gr_pageflip.s"
 .include "gr_putsprite.s"
 .include "gr_fast_clear.s"

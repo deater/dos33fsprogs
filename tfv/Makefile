@@ -50,7 +50,8 @@ TFV_FLYING:	tfv_flying.o
 	ld65 -o TFV_FLYING tfv_flying.o -C ../linker_scripts/apple2_2000.inc
 
 tfv_flying.o:	tfv_flying.s \
-	gr_hlin.s gr_putsprite.s \
+	zp.inc \
+	gr_putsprite.s \
 	tfv_help.s \
 	flying_mode7.s flying_sprites.inc
 	ca65 -o tfv_flying.o tfv_flying.s -l tfv_flying.lst

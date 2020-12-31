@@ -63,8 +63,8 @@ NEGATE		=	$86			; UNUSED?
 LAST_SPACEX_I	=	$87
 LAST_SPACEY_I	=	$88
 LAST_MAP_COLOR	=	$89
-DRAW_SKY	=	$8A
-COLOR_MASK	=	$8B
+COLOR_MASK	=	$8A
+
 ;; World Map Only
 
 ODD             =     $7B

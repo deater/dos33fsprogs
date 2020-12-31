@@ -7,50 +7,22 @@
 ;	2da70 cycles (added in 2 cycle cpx)  a00 = 2560, yes, 32*40=1280
 ;	2aec3 cycles (update inner loop) = 175,811 = 5.7 fps
 
+
+;	flying_loop -> check_done	2040 - 214f		2E
+;
+;	check_done -> draw_background	214f - 219b		2E
+;
+;	draw_background -> check_over_water	219b - 219e	298ad
+;
+;	check_over_water -> no_splash	219e - 21d0		5b
+;
+;	no_splash -> done_flying_loop	21d0 - 229b		aa4
+
+
+
+
 draw_background_mode7:
 
-	; Only draw sky if necessary
-	; (at start, or if we have switched to text, we never overwrite it)
-
-	lda	DRAW_SKY						; 3
-	beq	no_draw_sky						;^2nt/3
-								;==============
-								;	  6
-	; Draw Sky
-	; not performance critical as this happens rarely
-
-	dec	DRAW_SKY	; usually 2 as we redraw both pages	; 5
-	lda	#COLOR_BOTH_MEDIUMBLUE	; MEDIUMBLUE color		; 2
-	sta	COLOR							; 3
-	lda	#0							; 2
-								;===========
-								;	 11
-
-sky_loop:				; draw line across screen
-	ldy	#39			; from y=0 to y=6		; 2
-	sty	V2							; 3
-	ldy	#0							; 2
-	pha								; 3
-	jsr	hlin_double		; hlin y,V2 at A	; 63+(X*16)
-	pla								; 4
-	clc								; 2
-	adc	#2							; 2
-	cmp	#6							; 2
-	bne	sky_loop						; 3/2nt
-								;=============
-								; (23+63+(X*16))*5
-	; Draw Hazy Horizon
-
-;	lda	#COLOR_BOTH_GREY	; Horizon is Grey		; 2
-	lda	#$56			; Horizon is Grey		; 2
-	sta	COLOR							; 3
-	lda	#6			; draw single line at 6/7	; 2
-	ldy	#39							; 2
-	sty	V2			; hlin	Y,V2 at A		; 3
-	ldy	#0							; 2
-	jsr	hlin_double		; hlin	0,40 at 6	; 63+(X*16)
-								;===========
-								; 63+(X*16)+14
 
 no_draw_sky:
 
@@ -413,6 +385,7 @@ nomatch:
 								;	 39
 
 	bcs	ocean_color		; bge 8				; 2nt/3
+
 	ldy	SPACEY_I						; 3
 	cpy	#$8							; 2
 								;=============
@@ -470,6 +443,7 @@ dxf_label:
 dxi_label:
 	adc	#0	; self modifying, is DX_I			; 2
 	sta	SPACEX_I						; 3
+
 								;==========
 								;	 18
 
@@ -566,6 +540,47 @@ ocean_color_outline:
 
 update_cache_outline:
 	rts								; 6
+
+
+
+	;======================================
+	; draw sky
+	;======================================
+	; Only draw sky if necessary
+	; (at start, or if we have switched to text, we never overwrite it)
+draw_sky:
+								;	  6
+	; Draw Sky on both pages
+	; lines 0..6
+
+
+	lda	#COLOR_BOTH_MEDIUMBLUE	; MEDIUMBLUE color		; 2
+	ldx	#39
+
+sky_loop:				; draw line across screen
+	sta	$400,X
+	sta	$480,X
+	sta	$500,X
+	sta	$800,X
+	sta	$880,X
+	sta	$900,X
+
+	dex
+	bpl	sky_loop
+
+	; Draw Hazy Horizon
+
+	lda	#$56			; Horizon is blue/grey		; 2
+	ldx	#39
+horizon_loop:				; draw line across screen
+	sta	$580,X
+	sta	$980,X
+
+	dex
+	bpl	horizon_loop
+
+	rts
+
 
 ; 8.8 fixed point
 ; should we store as two arrays, one I one F?
