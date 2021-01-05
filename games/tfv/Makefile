@@ -62,8 +62,8 @@ TFV_WORLD:	tfv_world.o
 	ld65 -o TFV_WORLD tfv_world.o -C ../linker_scripts/apple2_2000.inc
 
 tfv_world.o:	tfv_world.s \
-	tfv_overworld.s tfv_drawmap.s \
-	help_overworld.s \
+	tfv_overworld.s tfv_drawmap.s tfv_battle.s \
+	help_overworld.s rotate_intro.s \
 	graphics_map/tfv_backgrounds.inc tfv_sprites.inc zp.inc
 	ca65 -o tfv_world.o tfv_world.s -l tfv_world.lst
 

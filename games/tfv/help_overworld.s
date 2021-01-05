@@ -27,13 +27,12 @@ print_help:
 	rts
 
 help_message:
-	.byte 1,18,"HELP",0
-	.byte 3,4,"ARROWS  - MOVE",0
-	.byte 3,5,"W/A/S/D - MOVE",0
-	.byte 3,6,"Z/X     - SPEED UP / SLOW DOWN",0
-	.byte 3,7,"SPACE   - STOP",0
-	.byte 3,8,"RETURN  - LAND / ENTER / ACTION",0
-	.byte 3,9,"I       - INVENTORY",0
-	.byte 3,10,"M       - MAP",0
-	.byte 3,11,"ESC     - QUIT",0
+	.byte 18,1,"HELP",0
+	.byte 3,4, "W/A/S/D,ARROWS  - MOVE",0
+	.byte 3,8, "RETURN          - ENTER / ACTION",0
+	.byte 3,9, "I               - INVENTORY",0
+	.byte 3,10,"M               - MAP",0
+	.byte 3,11,"ESC             - QUIT",0
+	.byte 3,12,"J               - JOYSTICK",0
+	.byte 3,13,"CONTROL-T       - TOGGLE SOUND",0
 	.byte $ff

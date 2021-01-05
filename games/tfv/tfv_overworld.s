@@ -63,31 +63,31 @@ worldmap_keyboard:
 
 	jsr     get_keypress		; get keypress
 
-;	lda     LASTKEY
-
 worldmap_handle_q:
-	cmp     #('Q')			; if quit, then return
+	cmp     #'Q'			; if quit, then return
 	bne     worldmap_handle_up
         rts
 
 worldmap_handle_up:
-	cmp	#('W')
+	cmp	#'W'
 	bne	worldmap_handle_down
 
 	dec	NEWY
 	dec	NEWY
 	inc	MOVED
+	jmp	worldmap_done_keyboard
 
 worldmap_handle_down:
-	cmp	#('S')
+	cmp	#'S'
 	bne	worldmap_handle_left
 
 	inc	NEWY
 	inc	NEWY
 	inc	MOVED
+	jmp	worldmap_done_keyboard
 
 worldmap_handle_left:
-	cmp	#('A')
+	cmp	#'A'
 	bne	worldmap_handle_right
 
 	lda	DIRECTION		; 0=left, 1=right
@@ -97,11 +97,13 @@ left_turn:
 	lda	#0			; change direction to left
 	sta	DIRECTION
 	sta	ODD			; stand (not walk) if changing
-	beq	worldmap_handle_right	; skip ahead
+	beq	done_handle_left	; bra skip ahead
 
 go_left:
 	dec	NEWX			; decrement x
 	inc	MOVED			; we moved
+done_handle_left:
+	jmp	worldmap_done_keyboard
 
 worldmap_handle_right:
 	cmp	#('D')
@@ -115,11 +117,14 @@ right_turn:
 	sta	DIRECTION
 	lda	#0			; change to standing
 	sta	ODD
-	beq	worldmap_handle_enter	; skip ahead
+	beq	done_handle_right	; bra skip ahead
 
 go_right:
 	inc	NEWX			; increment X
 	inc	MOVED
+
+done_handle_right:
+	jmp	worldmap_done_keyboard
 
 worldmap_handle_enter:
 	cmp	#13
@@ -127,33 +132,39 @@ worldmap_handle_enter:
 
 	; jsr	city_map
 	inc	REFRESH
+	jmp	worldmap_done_keyboard
 
 worldmap_handle_help:
 	cmp	#('H')
 	bne	worldmap_handle_battle
 
 	jsr	print_help
+	jmp	worldmap_done_keyboard
 
 worldmap_handle_battle:
-	cmp	#('B')
+	cmp	#'B'
 	bne	worldmap_handle_info
 
-	; jsr	do_battle
+	jsr	do_battle
 	inc	REFRESH
+	jmp	worldmap_done_keyboard
 
 worldmap_handle_info:
-	cmp	#('I')
+	cmp	#'I'
 	bne	worldmap_handle_map
 
 	; jsr	print_info
 	inc	REFRESH
+	jmp	worldmap_done_keyboard
 
 worldmap_handle_map:
 	cmp	#('M')
 	bne	worldmap_done_keyboard
 
-	jsr show_map
+	jsr	show_map
 	inc	REFRESH
+
+;	jmp	worldmap_done_keyboard
 
 worldmap_done_keyboard:
 

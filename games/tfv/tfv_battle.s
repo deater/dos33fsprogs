@@ -1,82 +1,205 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
+	;================================
+	; do battle
+	;================================
 
-#include <math.h>
+do_battle:
 
-#include "gr-sim.h"
-#include "tfv_utils.h"
-#include "tfv_zp.h"
-#include "tfv_defines.h"
-#include "tfv_definitions.h"
-
-#include "tfv_sprites.h"
-#include "tfv_backgrounds.h"
+;	int i,ch;
+;	int saved_drawpage;
+;	int ax=34;
+;	int enemy_count=30;
+;	int old;
 
 
-/* Do Battle */
+	jsr	rotate_intro
+
+.if 0
+
+	battle_count=20;
+
+	; Setup Enemy */
+	; enemy_type=X
+	; random, with weight toward proper terrain
+	; 50% completely random, 50% terrain based?
+	enemy_type=random_8()%0x7;
+;	enemy_hp=enemies[enemy_type].hp_base+
+;			(rand()&enemies[enemy_type].hp_mask);
 
 
-/* Metrocat (summon?) */
+	saved_drawpage=ram[DRAW_PAGE];
 
-/* Environment: grass, beach, forest, ice */
+	ram[DRAW_PAGE]=PAGE2;
 
-/* Enemies:          HP		ATTACK          WEAKNESS	RESIST */
-/*   Killer Crab    RND-32	PINCH		MALAISE		FIRE
-     Plain Fish                 BUBBLE          FIRE            ICE
 
-     Evil Tree      RND-16	LEAVE		FIRE		ICE
-     Wood Elf                   SING            MALAISE         BOLT
 
-     Giant Bee	    RND-64	BUZZSAW		ICE		NONE
-     Procrastinon   RND-32	PUTOFF		NONE		MALAISE
+	;******************/
+	; Draw background */
 
-     Ice Fish       RND-32	AUGER		FIRE		ICE
-     EvilPenguin                WADDLE          FIRE            ICE
+	; Draw sky */
+	color_equals(COLOR_MEDIUMBLUE);
+	for(i=0;i<10;i++) {
+		hlin_double(ram[DRAW_PAGE],0,39,i);
+	}
 
-*/
+	; Draw ground */
+	color_equals(ground_color);
+	for(i=10;i<40;i++) {
+		hlin_double(ram[DRAW_PAGE],0,39,i);
+	}
 
-/* Battle.
-Forest? Grassland? Artic? Ocean?
-                       ATTACK    REST
-                       MAGIC     LIMIT
-		       SUMMON    RUN
+	; Draw some background images for variety? */
 
-		SUMMONS -> METROCAT VORTEXCN
-		MAGIC   ->  HEAL    FIRE
-                            ICE     MALAISE
-			    BOLT
-		LIMIT	->  SLICE   ZAP
-                            DROP
+	ram[DRAW_PAGE]=saved_drawpage;
 
-          1         2         3
-0123456789012345678901234567890123456789|
-----------------------------------------|
-            |            HP      LIMIT  |  -> FIGHT/LIMIT       21
-KILLER CRAB | DEATER   128/255    128   |     ZAP               22
-            |                           |     REST              23
-            |                           |     RUN AWAY          24
+	draw_battle_bottom(enemy_type);
 
-Sound effects?
+	while(1) {
 
-List hits
+		gr_copy_to_current(0xc00);
 
-******    **    ****    ****    **  **  ******    ****  ******  ******  ******
-**  **  ****        **      **  **  **  **      **          **  **  **  **  **
-**  **    **      ****  ****    ******  ****    ******    **    ******  ******
-**  **    **    **          **      **      **  **  **    **    **  **      **
-******  ******  ******  ****        **  ****    ******    **    ******      **
+		if (hp==0) {
+			grsim_put_sprite(tfv_defeat,ax-2,24);
+		}
+		else if (running) {
+;			if (battle_count%2) {
+				grsim_put_sprite(tfv_stand_right,ax,20);
+			}
+			else {
+				grsim_put_sprite(tfv_walk_right,ax,20);
+			}
+		}
+		else {
+			grsim_put_sprite(tfv_stand_left,ax,20);
+			grsim_put_sprite(tfv_led_sword,ax-5,20);
+		}
 
-*/
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+		draw_battle_bottom(enemy_type);
+
+		page_flip();
+
+		if (hp==0) {
+			for(i=0;i<15;i++) usleep(100000);
+			break;
+		}
+
+		usleep(100000);
+
+		ch=grsim_input();
+		if (ch=='q') return 0;
+
+		if (enemy_count==0) {
+			; attack and decrement HP
+			enemy_attack(ax);
+			; update limit count
+			if (limit<4) limit++;
+
+			; reset enemy time. FIXME: variable?
+			enemy_count=50;
+		}
+		else {
+			enemy_count--;
+		}
+
+		if (battle_count>=64) {
+
+			; TODO: randomly fail at running? */
+			if (running) {
+				break;
+			}
+
+			if (menu_state==MENU_NONE) menu_state=MENU_MAIN;
+			menu_keypress(ch);
+
+		} else {
+			battle_count++;
+		}
+
+		old=battle_bar;
+		battle_bar=(battle_count/16);
+		if (battle_bar!=old) draw_battle_bottom(enemy_type);
+
+
+		if (enemy_hp==0) {
+			victory_dance();
+			break;
+		}
+
+
+	}
+
+	ram[DRAW_PAGE]=PAGE0;
+	clear_bottom();
+	ram[DRAW_PAGE]=PAGE1;
+	clear_bottom();
+
+	running=0;
+.endif
+
+	rts
+
+.if 0
+
+
+; Do Battle */
+
+
+; Metrocat (summon?) */
+
+; Environment: grass, beach, forest, ice */
+
+; Enemies:          HP		ATTACK          WEAKNESS	RESIST */
+;   Killer Crab    RND-32	PINCH		MALAISE		FIRE
+;   Plain Fish                  BUBBLE          FIRE            ICE
+
+;   Evil Tree      RND-16	LEAVE		FIRE		ICE
+;   Wood Elf                   SING            MALAISE         BOLT
+
+;   Giant Bee	    RND-64	BUZZSAW		ICE		NONE
+;   Procrastinon   RND-32	PUTOFF		NONE		MALAISE
+
+;   Ice Fish       RND-32	AUGER		FIRE		ICE
+;   EvilPenguin                WADDLE          FIRE            ICE
+
+; Battle.
+; Forest? Grassland? Artic? Ocean?
+;                       ATTACK    REST
+;                      MAGIC     LIMIT
+;		       SUMMON    RUN
+;
+;		SUMMONS -> METROCAT VORTEXCN
+;		MAGIC   ->  HEAL    FIRE
+;                            ICE     MALAISE
+;			    BOLT
+;		LIMIT	->  SLICE   ZAP
+;                           DROP
+;
+;          1         2         3
+;0123456789012345678901234567890123456789|
+;----------------------------------------|
+;            |            HP      LIMIT  |  -> FIGHT/LIMIT       21
+;KILLER CRAB | DEATER   128/255    128   |     ZAP               22
+;            |                           |     REST              23
+;            |                           |     RUN AWAY          24
+;
+;Sound effects?
+;
+;List hits
+;
+;******    **    ****    ****    **  **  ******    ****  ******  ******  ******
+;**  **  ****        **      **  **  **  **      **          **  **  **  **  **
+;**  **    **      ****  ****    ******  ****    ******    **    ******  ******
+;**  **    **    **          **      **      **  **  **    **    **  **      **
+;******  ******  ******  ****        **  ****    ******    **    ******      **
 
 static int battle_bar=0;
 static int susie_out=0;
 
-/* Background depend on map location? */
-/* Room for guinea pig in party? */
+; Background depend on map location? */
+; Room for guinea pig in party? */
 
-/* Attacks -> HIT, ZAP, HEAL, RUNAWAY */
+; Attacks -> HIT, ZAP, HEAL, RUNAWAY */
 #define MAGIC_NONE	0
 #define MAGIC_FIRE	1
 #define	MAGIC_ICE	2
@@ -92,89 +215,89 @@ struct enemy_type {
 	unsigned char *sprite;
 };
 
-static struct enemy_type enemies[9]={
-	[0]= {
-		.name="Killer Crab",
-		.hp_base=50,
-		.hp_mask=0x1f,
-		.attack_name="Pinch",
-		.weakness=MAGIC_MALAISE,
-		.resist=MAGIC_FIRE,
-		.sprite=killer_crab,
-	},
-	[1]= {
-		.name="Plain Fish",
-		.hp_base=10,
-		.hp_mask=0x1f,
-		.attack_name="Bubble",
-		.weakness=MAGIC_FIRE,
-		.resist=MAGIC_ICE,
-		.sprite=plain_fish,
-	},
-	[2]= {
-		.name="Evil Tree",
-		.hp_base=10,
-		.hp_mask=0x1f,
-		.attack_name="Leaves",
-		.weakness=MAGIC_FIRE,
-		.resist=MAGIC_ICE,
-		.sprite=evil_tree,
-	},
-	[3]= {
-		.name="Wood Elf",
-		.hp_base=10,
-		.hp_mask=0x1f,
-		.attack_name="Song",
-		.weakness=MAGIC_MALAISE,
-		.resist=MAGIC_BOLT|MAGIC_HEAL,
-		.sprite=wood_elf,
-	},
-	[4]= {
-		.name="Giant Bee",
-		.hp_base=10,
-		.hp_mask=0x1f,
-		.attack_name="Buzzsaw",
-		.weakness=MAGIC_ICE,
-		.resist=MAGIC_NONE,
-		.sprite=giant_bee,
-	},
-	[5]= {
-		.name="Procrastinon",
-		.hp_base=10,
-		.hp_mask=0x1f,
-		.attack_name="Putoff",
-		.weakness=MAGIC_NONE,
-		.resist=MAGIC_MALAISE,
-		.sprite=procrastinon,
-	},
-	[6]= {
-		.name="Ice Fish",
-		.hp_base=10,
-		.hp_mask=0x1f,
-		.attack_name="Auger",
-		.weakness=MAGIC_FIRE,
-		.resist=MAGIC_ICE,
-		.sprite=ice_fish,
-	},
-	[7]= {
-		.name="Evil Penguin",
-		.hp_base=10,
-		.hp_mask=0x1f,
-		.attack_name="Waddle",
-		.weakness=MAGIC_FIRE,
-		.resist=MAGIC_ICE,
-		.sprite=evil_penguin,
-	},
-	[8]= {
-		.name="Act.Principl",
-		.hp_base=10,
-		.hp_mask=0x1f,
-		.attack_name="BIRDIE",
-		.weakness=MAGIC_NONE,
-		.resist=MAGIC_ICE|MAGIC_FIRE,
-		.sprite=roboknee1,
-	},
-};
+;static struct enemy_type enemies[9]={
+;	[0]= {
+;		.name="Killer Crab",
+;		.hp_base=50,
+;		.hp_mask=0x1f,
+;		.attack_name="Pinch",
+;		.weakness=MAGIC_MALAISE,
+;		.resist=MAGIC_FIRE,
+;		.sprite=killer_crab,
+;	},
+;	[1]= {
+;		.name="Plain Fish",
+;		.hp_base=10,
+;		.hp_mask=0x1f,
+;		.attack_name="Bubble",
+;		.weakness=MAGIC_FIRE,
+;		.resist=MAGIC_ICE,
+;		.sprite=plain_fish,
+;	},
+;	[2]= {
+;		.name="Evil Tree",
+;		.hp_base=10,
+;		.hp_mask=0x1f,
+;		.attack_name="Leaves",
+;		.weakness=MAGIC_FIRE,
+;		.resist=MAGIC_ICE,
+;		.sprite=evil_tree,
+;	},
+;	[3]= {
+;		.name="Wood Elf",
+;		.hp_base=10,
+;		.hp_mask=0x1f,
+;		.attack_name="Song",
+;		.weakness=MAGIC_MALAISE,
+;		.resist=MAGIC_BOLT|MAGIC_HEAL,
+;		.sprite=wood_elf,
+;	},
+;	[4]= {
+;		.name="Giant Bee",
+;		.hp_base=10,
+;		.hp_mask=0x1f,
+;		.attack_name="Buzzsaw",
+;		.weakness=MAGIC_ICE,
+;		.resist=MAGIC_NONE,
+;		.sprite=giant_bee,
+;	},
+;	[5]= {
+;		.name="Procrastinon",
+;		.hp_base=10,
+;		.hp_mask=0x1f,
+;		.attack_name="Putoff",
+;		.weakness=MAGIC_NONE,
+;		.resist=MAGIC_MALAISE,
+;		.sprite=procrastinon,
+;	},
+;	[6]= {
+;		.name="Ice Fish",
+;		.hp_base=10,
+;		.hp_mask=0x1f,
+;		.attack_name="Auger",
+;		.weakness=MAGIC_FIRE,
+;		.resist=MAGIC_ICE,
+;		.sprite=ice_fish,
+;	},
+;	[7]= {
+;		.name="Evil Penguin",
+;		.hp_base=10,
+;		.hp_mask=0x1f,
+;		.attack_name="Waddle",
+;		.weakness=MAGIC_FIRE,
+;		.resist=MAGIC_ICE,
+;		.sprite=evil_penguin,
+;	},
+;	[8]= {
+;		.name="Act.Principl",
+;		.hp_base=10,
+;		.hp_mask=0x1f,
+;		.attack_name="BIRDIE",
+;		.weakness=MAGIC_NONE,
+;		.resist=MAGIC_ICE|MAGIC_FIRE,
+;		.sprite=roboknee1,
+;	},
+;};
 
 static int gr_put_num(int xx,int yy,int number) {
 
@@ -201,29 +324,29 @@ static int gr_put_num(int xx,int yy,int number) {
 	return 0;
 }
 
-/*
-                       ATTACK    SKIP
-                       MAGIC     LIMIT
-		       SUMMON    ESCAPE
-
-		SUMMONS -> METROCAT VORTEXCN
-		MAGIC   ->  HEAL    FIRE
-                            ICE     MALAISE
-			    BOLT
-		LIMIT	->  SLICE   ZAP
-                            DROP
-
-	State Machine
-
-		time
-	BOTTOM -------> MAIN_MENU ----->ATTACK
-				------->SKIP
-				------->MAGIC_MENU
-				------->LIMIT_MENU
-				------->SUMMON_MENU
-				------->ESCAPE
-
-*/
+;
+;                       ATTACK    SKIP
+;                      MAGIC     LIMIT
+;		       SUMMON    ESCAPE
+;
+;		SUMMONS -> METROCAT VORTEXCN
+;		MAGIC   ->  HEAL    FIRE
+ ;                           ICE     MALAISE
+;			    BOLT
+;		LIMIT	->  SLICE   ZAP
+ ;                           DROP
+;
+;	State Machine
+;
+;		time
+;	BOTTOM -------> MAIN_MENU ----->ATTACK
+;				------->SKIP
+;				------->MAGIC_MENU
+;				------->LIMIT_MENU
+;				------->SUMMON_MENU
+;				------->ESCAPE
+;
+;
 
 #define MENU_NONE	0
 #define MENU_MAIN	1
@@ -245,20 +368,20 @@ static int draw_battle_bottom(int enemy_type) {
 	vtab(22);
 	htab(1);
 	move_cursor();
-	print(enemies[enemy_type].name);
+;	print(enemies[enemy_type].name);
 
 	if (enemy_attacking) {
 		vtab(24);
 		htab(2);
 		move_cursor();
-		print_inverse(enemies[enemy_type].attack_name);
+;		print_inverse(enemies[enemy_type].attack_name);
 	}
 
 	vtab(22);
 	htab(15);
 	move_cursor();
-	// should print "NAMEO"
-//	print("DEATER");
+	; should print "NAMEO"
+;	print("DEATER");
 	print(nameo);
 
 	if (susie_out) {
@@ -270,7 +393,7 @@ static int draw_battle_bottom(int enemy_type) {
 
 	if (menu_state==MENU_NONE) {
 
-		/* TFV Stats */
+		; TFV Stats */
 
 		vtab(21);
 		htab(25);
@@ -294,7 +417,7 @@ static int draw_battle_bottom(int enemy_type) {
 			print("LIMIT");
 		}
 		else {
-			/* Make if flash? set bit 0x40 */
+			; Make if flash? set bit 0x40 */
 			print_flash("LIMIT");
 		}
 
@@ -310,8 +433,8 @@ static int draw_battle_bottom(int enemy_type) {
 		move_cursor();
 		print_byte(mp);
 
-		/* Draw Time bargraph */
-//		printf("Battle_bar=%d Limit=%d\n",battle_bar,limit);
+		; Draw Time bargraph */
+;		printf("Battle_bar=%d Limit=%d\n",battle_bar,limit);
 		ram[COLOR]=0xa0;
 		hlin_double(ram[DRAW_PAGE],30,34,42);
 		ram[COLOR]=0x20;
@@ -319,7 +442,7 @@ static int draw_battle_bottom(int enemy_type) {
 			hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
 		}
 
-		/* Draw Limit break bargraph */
+		; Draw Limit break bargraph */
 		ram[COLOR]=0xa0;
 		hlin_double(ram[DRAW_PAGE],35,39,42);
 
@@ -327,7 +450,7 @@ static int draw_battle_bottom(int enemy_type) {
 		if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
 
 
-		/* Susie Stats */
+		; Susie Stats */
 		if (susie_out) {
 
 			vtab(23);
@@ -340,7 +463,7 @@ static int draw_battle_bottom(int enemy_type) {
 			move_cursor();
 			print_byte(0);
 #if 0
-			/* Draw Time bargraph */
+			; Draw Time bargraph */
 			ram[COLOR]=0xa0;
 			hlin_double(ram[DRAW_PAGE],30,34,42);
 			ram[COLOR]=0x20;
@@ -348,7 +471,7 @@ static int draw_battle_bottom(int enemy_type) {
 				hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
 			}
 
-			/* Draw Limit break bargraph */
+			; Draw Limit break bargraph */
 			ram[COLOR]=0xa0;
 			hlin_double(ram[DRAW_PAGE],35,39,42);
 
@@ -497,13 +620,13 @@ static int draw_battle_bottom(int enemy_type) {
 		else print("ZAP");
 	}
 
-	/* Draw inverse separator */
+	; Draw inverse separator */
 	ram[COLOR]=0x20;
 	for(i=40;i<50;i+=2) {
 		hlin_double(ram[DRAW_PAGE],12,12,i);
 	}
 
-//	ram[DRAW_PAGE]=saved_page;
+;	ram[DRAW_PAGE]=saved_page;
 
 	return 0;
 }
@@ -555,7 +678,7 @@ static int attack(void) {
 		}
 		grsim_put_sprite(tfv_led_sword,ax-5,20);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 		draw_battle_bottom(enemy_type);
 
@@ -585,21 +708,21 @@ static int enemy_attack(int tfv_x) {
 
 	while(ax<30) {
 
-		// put attack name on
-		// occasionally attack with that enemy's power?
-		// occasionally heal self?
+		; put attack name on
+		; occasionally attack with that enemy's power?
+		; occasionally heal self?
 
 		gr_copy_to_current(0xc00);
 
-		// draw first so behind enemy
+		; draw first so behind enemy
 		grsim_put_sprite(tfv_stand_left,tfv_x,20);
 		grsim_put_sprite(tfv_led_sword,tfv_x-5,20);
 
 		if (ax&1) {
-			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
+;			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
 		}
 		else {
-			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
+;			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
 		}
 
 		draw_battle_bottom(enemy_type);
@@ -632,7 +755,7 @@ static int victory_dance(void) {
 
 	saved_drawpage=ram[DRAW_PAGE];
 
-	ram[DRAW_PAGE]=PAGE2;	// 0xc00
+	ram[DRAW_PAGE]=PAGE2;	; 0xc00
 
 	clear_bottom();
 
@@ -681,10 +804,10 @@ static int rotate_intro(void) {
 
 	gr_copy(0x400,0xc00);
 
-//	gr_copy_to_current(0xc00);
-//	page_flip();
-//	gr_copy_to_current(0xc00);
-//	page_flip();
+;	gr_copy_to_current(0xc00);
+;	page_flip();
+;	gr_copy_to_current(0xc00);
+;	page_flip();
 
 	thetadiff=0;
 
@@ -765,10 +888,10 @@ static void magic_attack(int which) {
 	}
 
 
-	// FIXME: damage based on weakness of enemy
-	// FIXME: disallow if not enough MP
+	; FIXME: damage based on weakness of enemy
+	; FIXME: disallow if not enough MP
 
-	/* cast the magic */
+	; cast the magic */
 	i=0;
 	while(i<10) {
 
@@ -776,7 +899,7 @@ static void magic_attack(int which) {
 
 		grsim_put_sprite(tfv_victory,34,20);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 		draw_battle_bottom(enemy_type);
 
@@ -791,13 +914,13 @@ static void magic_attack(int which) {
 	ay=20;
 	i=0;
 
-	/* Actually put the magic */
+	; Actually put the magic */
 
 	while(i<=20) {
 
 		gr_copy_to_current(0xc00);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 		grsim_put_sprite(tfv_stand_left,ax,ay);
 		grsim_put_sprite(tfv_led_sword,ax-5,ay);
@@ -817,7 +940,7 @@ static void magic_attack(int which) {
 
 	gr_copy_to_current(0xc00);
 
-	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 	grsim_put_sprite(tfv_stand_left,ax,ay);
 	grsim_put_sprite(tfv_led_sword,ax-5,ay);
@@ -840,8 +963,8 @@ static void magic_attack(int which) {
 }
 
 
-/* Limit Break "Drop" */
-/* Jump into sky, drop down and slice enemy in half */
+; Limit Break "Drop" */
+; Jump into sky, drop down and slice enemy in half */
 
 static void limit_break_drop(void) {
 
@@ -856,7 +979,7 @@ static void limit_break_drop(void) {
 		grsim_put_sprite(tfv_stand_left,ax,ay);
 		grsim_put_sprite(tfv_led_sword,ax-5,ay);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 		draw_battle_bottom(enemy_type);
 
@@ -870,13 +993,13 @@ static void limit_break_drop(void) {
 	ax=10;
 	ay=0;
 
-	/* Falling */
+	; Falling */
 
 	while(ay<=20) {
 
 		gr_copy_to_current(0xc00);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 		grsim_put_sprite(tfv_stand_left,ax,ay);
 		grsim_put_sprite(tfv_led_sword,ax-5,ay);
@@ -898,7 +1021,7 @@ static void limit_break_drop(void) {
 
 		gr_copy_to_current(0xc00);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 		grsim_put_sprite(tfv_stand_left,ax,ay);
 		grsim_put_sprite(tfv_led_sword,ax-5,ay);
@@ -919,7 +1042,7 @@ static void limit_break_drop(void) {
 
 	gr_copy_to_current(0xc00);
 
-	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 	grsim_put_sprite(tfv_stand_left,ax,ay);
 	grsim_put_sprite(tfv_led_sword,ax-5,ay);
@@ -939,9 +1062,9 @@ static void limit_break_drop(void) {
 }
 
 
-/* Limit Break "Slice" */
-/* Run up and slap a bunch with sword */
-/* TODO: cause damage value to bounce around more? */
+; Limit Break "Slice" */
+; Run up and slap a bunch with sword */
+; TODO: cause damage value to bounce around more? */
 
 static void limit_break_slice(void) {
 
@@ -956,7 +1079,7 @@ static void limit_break_slice(void) {
 		grsim_put_sprite(tfv_stand_left,tx,ty);
 		grsim_put_sprite(tfv_led_sword,tx-5,ty);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 		draw_battle_bottom(enemy_type);
 
@@ -967,12 +1090,12 @@ static void limit_break_slice(void) {
 		usleep(20000);
 	}
 
-	/* Slicing */
+	; Slicing */
 	for(i=0;i<20;i++) {
 
 		gr_copy_to_current(0xc00);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 		if (i&1) {
 			grsim_put_sprite(tfv_stand_left,tx,20);
@@ -984,7 +1107,7 @@ static void limit_break_slice(void) {
 		}
 
 		damage_enemy(damage);
-		gr_put_num(2+(i%2),10+((i%2)*2),damage);
+;		gr_put_num(2+(i%2),10+((i%2)*2),damage);
 
 		draw_battle_bottom(enemy_type);
 
@@ -998,7 +1121,7 @@ static void limit_break_slice(void) {
 
 	gr_copy_to_current(0xc00);
 
-	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 	grsim_put_sprite(tfv_stand_left,tx,ty);
 	grsim_put_sprite(tfv_led_sword,tx-5,ty);
@@ -1012,8 +1135,8 @@ static void limit_break_slice(void) {
 	}
 }
 
-/* Limit Break "Zap" */
-/* Zap with a laser out of the LED sword */
+; Limit Break "Zap" */
+; Zap with a laser out of the LED sword */
 
 static void limit_break_zap(void) {
 
@@ -1024,16 +1147,16 @@ static void limit_break_zap(void) {
 
 	gr_copy_to_current(0xc00);
 
-	/* Draw background */
+	; Draw background */
 	color_equals(COLOR_AQUA);
 	vlin(12,24,34);
 	hlin_double(ram[DRAW_PAGE],28,38,18);
 
-	/* Sword in air */
+	; Sword in air */
 	grsim_put_sprite(tfv_victory,tx,20);
 	grsim_put_sprite(tfv_led_sword,tx-2,14);
 
-	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 	draw_battle_bottom(enemy_type);
 
@@ -1045,7 +1168,7 @@ static void limit_break_zap(void) {
 
 		gr_copy_to_current(0xc00);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 		color_equals(i%16);
 		hlin_double(ram[DRAW_PAGE],5,30,22);
@@ -1062,7 +1185,7 @@ static void limit_break_zap(void) {
 
 	gr_copy_to_current(0xc00);
 
-	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 	grsim_put_sprite(tfv_stand_left,tx,ty);
 	grsim_put_sprite(tfv_led_sword,tx-5,ty);
@@ -1091,7 +1214,7 @@ static void limit_break(int which) {
 	else if (which==MENU_LIMIT_SLICE) limit_break_slice();
 	else if (which==MENU_LIMIT_ZAP) limit_break_zap();
 
-	/* reset limit counter */
+	; reset limit counter */
 	limit=0;
 
 }
@@ -1111,7 +1234,7 @@ static void summon_metrocat(void) {
 		grsim_put_sprite(tfv_stand_left,tx,ty);
 		grsim_put_sprite(tfv_led_sword,tx-5,ty);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 		grsim_put_sprite(metrocat,ax,ay);
 
@@ -1131,7 +1254,7 @@ static void summon_metrocat(void) {
 		grsim_put_sprite(tfv_stand_left,tx,ty);
 		grsim_put_sprite(tfv_led_sword,tx-5,ty);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 		grsim_put_sprite(metrocat,ax,ay);
 
@@ -1151,7 +1274,7 @@ static void summon_metrocat(void) {
 		grsim_put_sprite(tfv_stand_left,tx,ty);
 		grsim_put_sprite(tfv_led_sword,tx-5,ty);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 		grsim_put_sprite(metrocat,ax,ay);
 
@@ -1173,7 +1296,7 @@ static void summon_metrocat(void) {
 		grsim_put_sprite(tfv_stand_left,tx,ty);
 		grsim_put_sprite(tfv_led_sword,tx-5,ty);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 		grsim_put_sprite(metrocat,ax,ay);
 
@@ -1188,7 +1311,7 @@ static void summon_metrocat(void) {
 
 	gr_copy_to_current(0xc00);
 
-	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 	grsim_put_sprite(tfv_stand_left,tx,ty);
 	grsim_put_sprite(tfv_led_sword,tx-5,ty);
@@ -1210,7 +1333,7 @@ static void summon_vortex_cannon(void) {
 	int i;
 	int ax=20,ay=20;
 
-	/* draw the cannon */
+	; draw the cannon */
 
 	i=0;
 	while(i<30) {
@@ -1220,7 +1343,7 @@ static void summon_vortex_cannon(void) {
 		grsim_put_sprite(tfv_stand_left,tx,ty);
 		grsim_put_sprite(tfv_led_sword,tx-5,ty);
 
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 		grsim_put_sprite(vortex_cannon,ax,ay);
 
@@ -1233,7 +1356,7 @@ static void summon_vortex_cannon(void) {
 		usleep(20000);
 	}
 
-	/* Fire vortices */
+	; Fire vortices */
 
 	ax=20;
 	for(i=0;i<5;i++) {
@@ -1244,7 +1367,7 @@ static void summon_vortex_cannon(void) {
 			grsim_put_sprite(tfv_stand_left,tx,ty);
 			grsim_put_sprite(tfv_led_sword,tx-5,ty);
 
-			grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;			grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 			grsim_put_sprite(vortex_cannon,20,20);
 
@@ -1269,7 +1392,7 @@ static void summon_vortex_cannon(void) {
 
 	gr_copy_to_current(0xc00);
 
-	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
 	grsim_put_sprite(tfv_stand_left,tx,ty);
 	grsim_put_sprite(tfv_led_sword,tx-5,ty);
@@ -1292,7 +1415,7 @@ static void summon(int which) {
 
 
 static void done_attack(void) {
-	// reset battle time
+	; reset battle time
 	battle_count=0;
 	menu_state=MENU_NONE;
 }
@@ -1315,7 +1438,7 @@ void menu_keypress(int ch) {
 
 			switch(menu_position) {
 				case MENU_MAIN_ATTACK:
-					// attack and decrement HP
+					; attack and decrement HP
 					attack();
 					done_attack();
 					break;
@@ -1374,141 +1497,6 @@ void menu_keypress(int ch) {
 }
 
 
-int do_battle(int ground_color) {
-
-	int i,ch;
-
-	int saved_drawpage;
-
-	int ax=34;
-	int enemy_count=30;
-	int old;
-
-	rotate_intro();
-
-	battle_count=20;
-
-	/* Setup Enemy */
-	// enemy_type=X
-	// random, with weight toward proper terrain
-	// 50% completely random, 50% terrain based?
-	enemy_type=random_8()%0x7;
-	enemy_hp=enemies[enemy_type].hp_base+
-			(rand()&enemies[enemy_type].hp_mask);
-
-
-	saved_drawpage=ram[DRAW_PAGE];
-
-	ram[DRAW_PAGE]=PAGE2;
-
-
-
-	/*******************/
-	/* Draw background */
-
-	/* Draw sky */
-	color_equals(COLOR_MEDIUMBLUE);
-	for(i=0;i<10;i++) {
-		hlin_double(ram[DRAW_PAGE],0,39,i);
-	}
-
-	/* Draw ground */
-	color_equals(ground_color);
-	for(i=10;i<40;i++) {
-		hlin_double(ram[DRAW_PAGE],0,39,i);
-	}
-
-	/* Draw some background images for variety? */
-
-	ram[DRAW_PAGE]=saved_drawpage;
-
-	draw_battle_bottom(enemy_type);
-
-	while(1) {
-
-		gr_copy_to_current(0xc00);
-
-		if (hp==0) {
-			grsim_put_sprite(tfv_defeat,ax-2,24);
-		}
-		else if (running) {
-			if (battle_count%2) {
-				grsim_put_sprite(tfv_stand_right,ax,20);
-			}
-			else {
-				grsim_put_sprite(tfv_walk_right,ax,20);
-			}
-		}
-		else {
-			grsim_put_sprite(tfv_stand_left,ax,20);
-			grsim_put_sprite(tfv_led_sword,ax-5,20);
-		}
-
-		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
-
-		draw_battle_bottom(enemy_type);
-
-		page_flip();
-
-		if (hp==0) {
-			for(i=0;i<15;i++) usleep(100000);
-			break;
-		}
-
-		usleep(100000);
-
-		ch=grsim_input();
-		if (ch=='q') return 0;
-
-		if (enemy_count==0) {
-			// attack and decrement HP
-			enemy_attack(ax);
-			// update limit count
-			if (limit<4) limit++;
-
-			// reset enemy time. FIXME: variable?
-			enemy_count=50;
-		}
-		else {
-			enemy_count--;
-		}
-
-		if (battle_count>=64) {
-
-			/* TODO: randomly fail at running? */
-			if (running) {
-				break;
-			}
-
-			if (menu_state==MENU_NONE) menu_state=MENU_MAIN;
-			menu_keypress(ch);
-
-		} else {
-			battle_count++;
-		}
-
-		old=battle_bar;
-		battle_bar=(battle_count/16);
-		if (battle_bar!=old) draw_battle_bottom(enemy_type);
-
-
-		if (enemy_hp==0) {
-			victory_dance();
-			break;
-		}
-
-
-	}
-
-	ram[DRAW_PAGE]=PAGE0;
-	clear_bottom();
-	ram[DRAW_PAGE]=PAGE1;
-	clear_bottom();
-
-	running=0;
-
-	return 0;
-}
 
 
 
@@ -1537,10 +1525,10 @@ int boss_battle(void) {
 
 	ram[DRAW_PAGE]=PAGE2;
 
-	/*******************/
-	/* Draw background */
+	;******************/
+	; Draw background */
 
-	/* Draw sky */
+	; Draw sky */
 	color_equals(COLOR_BLACK);
 	for(i=0;i<20;i++) {
 		hlin_double(ram[DRAW_PAGE],0,39,i);
@@ -1551,9 +1539,9 @@ int boss_battle(void) {
 		hlin_double(ram[DRAW_PAGE],0,39,i);
 	}
 
-	/* Draw horizon */
-//	color_equals(COLOR_GREY);
-//	hlin_double(ram[DRAW_PAGE],0,39,10);
+	; Draw horizon */
+;	color_equals(COLOR_GREY);
+;	hlin_double(ram[DRAW_PAGE],0,39,10);
 
 	ram[DRAW_PAGE]=saved_drawpage;
 
@@ -1567,7 +1555,7 @@ int boss_battle(void) {
 			grsim_put_sprite(tfv_defeat,ax-2,24);
 		}
 		else if (running) {
-			if (battle_count%2) {
+;			if (battle_count%2) {
 				grsim_put_sprite(tfv_stand_right,ax,20);
 			}
 			else {
@@ -1603,12 +1591,12 @@ int boss_battle(void) {
 		if (ch=='q') return 0;
 
 		if (enemy_count==0) {
-			// attack and decrement HP
+			; attack and decrement HP
 			enemy_attack(ax);
-			// update limit count
+			; update limit count
 			if (limit<4) limit++;
 
-			// reset enemy time. FIXME: variable?
+			; reset enemy time. FIXME: variable?
 			enemy_count=50;
 		}
 		else {
@@ -1617,7 +1605,7 @@ int boss_battle(void) {
 
 		if (battle_count>=64) {
 
-			/* TODO: randomly fail at running? */
+			; TODO: randomly fail at running? */
 			if (running) {
 				break;
 			}
@@ -1635,7 +1623,7 @@ int boss_battle(void) {
 
 
 		if (enemy_hp==0) {
-			// FIXME?
+			; FIXME?
 			victory_dance();
 			break;
 		}
@@ -1652,3 +1640,5 @@ int boss_battle(void) {
 
 	return 0;
 }
+
+.endif

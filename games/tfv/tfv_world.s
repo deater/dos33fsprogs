@@ -51,6 +51,9 @@
 .include "gr_offsets.s"
 .include "wait_keypressed.s"
 
+.include "tfv_battle.s"
+.include "rotate_intro.s"
+
 ;===============================================
 ; Variables
 ;===============================================
