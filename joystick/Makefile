@@ -1,11 +1,12 @@
 include ../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-DOS33_RAW = ../dos33fs-utils/dos33_raw
-PNG_TO_40x96 = ../gr-utils/png_to_40x96
-PNG_TO_40x48D = ../gr-utils/png_to_40x48d
-PNG2RLE = ../gr-utils/png2rle
-B2D = ../bmp2dhr/b2d
+DOS33 = ../utils/dos33fs-utils/dos33
+DOS33_RAW = ../utils/dos33fs-utils/dos33_raw
+PNG_TO_40x96 = ../utils/gr-utils/png_to_40x96
+PNG_TO_40x48D = ../utils/gr-utils/png_to_40x48d
+PNG2RLE = ../utils/gr-utils/png2rle
+B2D = ../utils/bmp2dhr/b2d
+TOKENIZE = ../utils/asoft_basic-utils/tokenize_asoft
 
 all:	js.dsk
 
