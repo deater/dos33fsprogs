@@ -1,6 +1,7 @@
-DOS33 = ../dos33fs-utils/dos33
-TXT2BAS = ../asoft_basic-utils/tokenize_asoft
-MAKEB = ../dos33fs-utils/make_b
+DOS33 = ../utils/dos33fs-utils/dos33
+TXT2BAS = ../utils/asoft_basic-utils/tokenize_asoft
+MAKEB = ../utils/dos33fs-utils/make_b
+TOKENIZE = ../utils/asoft_basic-utils/tokenize_asoft
 
 all:	ethernet.dsk
 
