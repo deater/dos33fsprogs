@@ -1,0 +1,9 @@
+some common assembly language routines for Apple II
+
+for a while I was using this as a shared core of common code
+
+however it broke things when I'd improve the code and other locations
+sharing the code would depend on the old behavior.
+
+now I usually have copies of the code in each project, which of course
+can get out of date, but don't run the risk of causing breakage
