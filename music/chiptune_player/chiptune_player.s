@@ -611,17 +611,17 @@ krw_file:
 ;=========
 ;routines
 ;=========
-.include	"../asm_routines/gr_offsets.s"
+.include	"../../asm_routines/gr_offsets.s"
 .include	"text_print.s"
-.include	"../asm_routines/mockingboard_a.s"
-.include	"../asm_routines/gr_fast_clear.s"
-.include	"../asm_routines/pageflip.s"
-;.include	"../asm_routines/gr_unrle.s"
-.include	"../asm_routines/gr_setpage.s"
+.include	"../../asm_routines/mockingboard_a.s"
+.include	"../../asm_routines/gr_fast_clear.s"
+.include	"../../asm_routines/pageflip.s"
+;.include	"../../asm_routines/gr_unrle.s"
+.include	"../../asm_routines/gr_setpage.s"
 .include	"qkumba_rts.s"
-.include	"../asm_routines/gr_hlin.s"
-.include	"../asm_routines/lz4_decode.s"
-.include	"../asm_routines/keypress_minimal.s"
+.include	"../../asm_routines/gr_hlin.s"
+.include	"../../asm_routines/lz4_decode.s"
+.include	"../../asm_routines/keypress_minimal.s"
 .include	"rasterbars.s"
 .include	"volume_bars.s"
 .if .def(UNROLLED)

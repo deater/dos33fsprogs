@@ -291,8 +291,8 @@ gr_offsets:
 	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
 
 
-.include "../asm_routines/gr_unrle.s"
-.include "../asm_routines/keypress.s"
+.include "../../asm_routines/gr_unrle.s"
+.include "../../asm_routines/keypress.s"
 .include "gr_copy.s"
 .include "vapor_lock.s"
 .include "delay_a.s"

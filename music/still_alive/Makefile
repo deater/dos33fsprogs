@@ -1,7 +1,7 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-TOKENIZE = ../asoft_basic-utils/tokenize_asoft
+DOS33 = ../../utils/dos33fs-utils/dos33
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	still_alive.dsk
 
@@ -13,7 +13,7 @@ still_alive.dsk:	SA_COMPRESSED STILL_ALIVE TITLE.BAS ENDING
 #	$(DOS33) -y still_alive.dsk SAVE B GLADOS.HGR
 
 SA_COMPRESSED:	sa_compressed.o
-	ld65 -o SA_COMPRESSED sa_compressed.o -C ../linker_scripts/apple2_5900.inc
+	ld65 -o SA_COMPRESSED sa_compressed.o -C ../../linker_scripts/apple2_5900.inc
 
 sa_compressed.o:	sa_compressed.s \
 	STILL_ALIVE.lz4 ENDING.lz4 SA.ED.lz4 SA.KR4.lz4
@@ -37,7 +37,7 @@ ENDING.lz4:	ENDING
 
 
 STILL_ALIVE:	still_alive.o
-	ld65 -o STILL_ALIVE still_alive.o -C ../linker_scripts/apple2_800.inc
+	ld65 -o STILL_ALIVE still_alive.o -C ../../linker_scripts/apple2_800.inc
 
 still_alive.o:	still_alive.s \
 	mockingboard_a.s lz4_decode.s \
@@ -50,7 +50,7 @@ still_alive.o:	still_alive.s \
 
 
 ENDING:	ending.o
-	ld65 -o ENDING ending.o -C ../linker_scripts/apple2_1800.inc
+	ld65 -o ENDING ending.o -C ../../linker_scripts/apple2_1800.inc
 
 ending.o:	ending.s \
 	GLADOS.HGR

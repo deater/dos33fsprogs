@@ -19,6 +19,8 @@ Hacks:
 	hard-coded to jump into the $F000 range.  IIe/IIc might
 	be smart enough to handle this, but older machines are not.
 
+	so be sure to have your emulator in iie-enhanced mode (not just iie)
+
 	Hack: copy the FXXX range into the language card so it doesn't
 	matter?
 

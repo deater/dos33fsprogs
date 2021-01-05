@@ -1,11 +1,11 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
+DOS33 = ../../utils/dos33fs-utils/dos33
 
 all:	eduet.dsk
 
 $(DOS33):	
-	cd ../dos33fs-utils && make
+	cd ../../utils/dos33fs-utils && make
 
 eduet.dsk:	$(DOS33) ED HIGHWIND.ED FIGHTING.ED SA.ED KERBAL.ED KORO.ED
 	$(DOS33) -y eduet.dsk BSAVE -a 0x0C00 ED
@@ -16,7 +16,7 @@ eduet.dsk:	$(DOS33) ED HIGHWIND.ED FIGHTING.ED SA.ED KERBAL.ED KORO.ED
 	$(DOS33) -y eduet.dsk BSAVE -a 0x2000 KORO.ED
 
 ED:	duet.o
-	ld65 -o ED duet.o -C ../linker_scripts/apple2_c00.inc
+	ld65 -o ED duet.o -C ../../linker_scripts/apple2_c00.inc
 
 duet.o:	duet.s
 	ca65 -o duet.o duet.s -l duet.lst

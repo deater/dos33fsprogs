@@ -1,0 +1,6 @@
+Various utilities that use the "vapor lock" method of cycle-counted
+mid-screen graphics switches
+
+fancy_lores:
+	viewer for 40x96 and 40x48i cycle-counted graphics modes
+

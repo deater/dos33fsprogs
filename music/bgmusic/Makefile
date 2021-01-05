@@ -1,7 +1,7 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-TOKENIZE = ../asoft_basic-utils/tokenize_asoft
+DOS33 = ../../utils/dos33fs-utils/dos33
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	bgmusic.dsk
 
@@ -14,12 +14,12 @@ bgmusic.dsk:	BGMUSIC HELLO
 ###
 
 HELLO:	hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 ###
 
 BGMUSIC:	bgmusic.o
-	ld65 -o BGMUSIC bgmusic.o -C ../linker_scripts/apple2_6000.inc
+	ld65 -o BGMUSIC bgmusic.o -C ../../linker_scripts/apple2_6000.inc
 
 bgmusic.o:	bgmusic.s \
 	zp.inc hardware.inc nozp.inc

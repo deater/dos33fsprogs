@@ -1,7 +1,7 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-PNG2GR = ../gr-utils/png2gr
+DOS33 = ../../utils/dos33fs-utils/dos33
+PNG2GR = ../../utils/gr-utils/png2gr
 
 all:	chiptune_debug.dsk
 
@@ -22,7 +22,7 @@ chiptune_debug.dsk:	CHIPTUNE_IRQ CHIPTUNE_NOIRQ CHIPTUNE_25HZ \
 
 
 CHIPTUNE_IRQ:	chiptune_irq.o
-	ld65 -o CHIPTUNE_IRQ chiptune_irq.o -C ../linker_scripts/apple2_c00.inc
+	ld65 -o CHIPTUNE_IRQ chiptune_irq.o -C ../../linker_scripts/apple2_c00.inc
 
 chiptune_irq.o:	chiptune_player.s \
 	mockingboard_a.s \
@@ -31,7 +31,7 @@ chiptune_irq.o:	chiptune_player.s \
 	ca65 -o chiptune_irq.o chiptune_player.s -l chiptune_irq.lst
 
 CHIPTUNE_NOIRQ:	chiptune_noirq.o
-	ld65 -o CHIPTUNE_NOIRQ chiptune_noirq.o -C ../linker_scripts/apple2_c00.inc
+	ld65 -o CHIPTUNE_NOIRQ chiptune_noirq.o -C ../../linker_scripts/apple2_c00.inc
 
 chiptune_noirq.o:	chiptune_player.s \
 	mockingboard_a.s \
@@ -40,7 +40,7 @@ chiptune_noirq.o:	chiptune_player.s \
 	ca65 -D NOIRQ=1 -o chiptune_noirq.o chiptune_player.s -l chiptune_noirq.lst
 
 CHIPTUNE_25HZ:	chiptune_25Hz.o
-	ld65 -o CHIPTUNE_25HZ chiptune_25Hz.o -C ../linker_scripts/apple2_c00.inc
+	ld65 -o CHIPTUNE_25HZ chiptune_25Hz.o -C ../../linker_scripts/apple2_c00.inc
 
 chiptune_25Hz.o:	chiptune_player.s \
 	mockingboard_a.s \
@@ -50,31 +50,31 @@ chiptune_25Hz.o:	chiptune_player.s \
 
 
 CHIPTUNE_BARE:	chiptune_bare.o
-	ld65 -o CHIPTUNE_BARE chiptune_bare.o -C ../linker_scripts/apple2_c00.inc
+	ld65 -o CHIPTUNE_BARE chiptune_bare.o -C ../../linker_scripts/apple2_c00.inc
 
 chiptune_bare.o:	chiptune_bare.s
 	ca65 -o chiptune_bare.o chiptune_bare.s -l chiptune_bare.lst
 
 CHIPTUNE_MIN:	chiptune_min.o
-	ld65 -o CHIPTUNE_MIN chiptune_min.o -C ../linker_scripts/apple2_c00.inc
+	ld65 -o CHIPTUNE_MIN chiptune_min.o -C ../../linker_scripts/apple2_c00.inc
 
 chiptune_min.o:	chiptune_min.s
 	ca65 -o chiptune_min.o chiptune_min.s -l chiptune_min.lst
 
 CHIPTUNE_TINY:	chiptune_tiny.o
-	ld65 -o CHIPTUNE_TINY chiptune_tiny.o -C ../linker_scripts/apple2_c00.inc
+	ld65 -o CHIPTUNE_TINY chiptune_tiny.o -C ../../linker_scripts/apple2_c00.inc
 
 chiptune_tiny.o:	chiptune_tiny.s
 	ca65 -o chiptune_tiny.o chiptune_tiny.s -l chiptune_tiny.lst
 
 CHIPTUNE_RIGHT:	chiptune_right.o
-	ld65 -o CHIPTUNE_RIGHT chiptune_right.o -C ../linker_scripts/apple2_c00.inc
+	ld65 -o CHIPTUNE_RIGHT chiptune_right.o -C ../../linker_scripts/apple2_c00.inc
 
 chiptune_right.o:	chiptune_right.s
 	ca65 -o chiptune_right.o chiptune_right.s -l chiptune_right.lst
 
 CHIPTUNE_SMALLEST:	chiptune_smallest.o
-	ld65 -o CHIPTUNE_SMALLEST chiptune_smallest.o -C ../linker_scripts/apple2_c00.inc
+	ld65 -o CHIPTUNE_SMALLEST chiptune_smallest.o -C ../../linker_scripts/apple2_c00.inc
 
 chiptune_smallest.o:	chiptune_smallest.s
 	ca65 -o chiptune_smallest.o chiptune_smallest.s -l chiptune_smallest.lst
@@ -82,7 +82,7 @@ chiptune_smallest.o:	chiptune_smallest.s
 
 
 CHIPTUNE_READBACK:	chiptune_readback.o
-	ld65 -o CHIPTUNE_READBACK chiptune_readback.o -C ../linker_scripts/apple2_c00.inc
+	ld65 -o CHIPTUNE_READBACK chiptune_readback.o -C ../../linker_scripts/apple2_c00.inc
 
 chiptune_readback.o:	chiptune_readback.s
 	ca65 -o chiptune_readback.o chiptune_readback.s -l chiptune_readback.lst

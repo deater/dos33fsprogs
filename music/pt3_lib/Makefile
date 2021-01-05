@@ -1,12 +1,13 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-PNG2GR = ../gr-utils/png2gr
+DOS33 = ../../utils/dos33fs-utils/dos33
+PNG2GR = ../../utils/gr-utils/png2gr
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	pt3_lib.dsk
 
 $(DOS33):
-	cd ../dos33fs-utils && make
+	cd ../../utils/dos33fs-utils && make
 
 pt3_lib.dsk:	PT3_TEST HELLO
 	cp empty.dsk pt3_lib.dsk
@@ -14,12 +15,12 @@ pt3_lib.dsk:	PT3_TEST HELLO
 	$(DOS33) -y pt3_lib.dsk BSAVE -a 0x1000 PT3_TEST
 
 HELLO:	hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 #
 
 PT3_TEST:	pt3_test.o
-	ld65 -o PT3_TEST pt3_test.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o PT3_TEST pt3_test.o -C ../../linker_scripts/apple2_1000.inc
 
 pt3_test.o:	pt3_test.s \
 	pt3_lib_init.s pt3_lib_core.s pt3_lib_irq_handler.s \

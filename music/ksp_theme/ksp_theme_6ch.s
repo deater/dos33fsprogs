@@ -567,11 +567,11 @@ done_interrupt:
 ;=========
 ;routines
 ;=========
-.include	"../asm_routines/gr_offsets.s"
-.include	"../asm_routines/text_print.s"
-.include	"../asm_routines/mockingboard.s"
-.include	"../asm_routines/lzss_decompress.s"
-.include	"../asm_routines/gr_fast_clear.s"
+.include	"../../asm_routines/gr_offsets.s"
+.include	"../../asm_routines/text_print.s"
+.include	"../../asm_routines/mockingboard.s"
+.include	"../../asm_routines/lzss_decompress.s"
+.include	"../../asm_routines/gr_fast_clear.s"
 
 ;=======
 ; music

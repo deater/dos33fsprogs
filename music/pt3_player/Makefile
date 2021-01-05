@@ -1,12 +1,13 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-PNG2GR = ../gr-utils/png2gr
+DOS33 = ../../utils/dos33fs-utils/dos33
+PNG2GR = ../../utils/gr-utils/png2gr
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	pt3_player.dsk pt3_debug.dsk
 
 $(DOS33):
-	cd ../dos33fs-utils && make
+	cd ../../utils/dos33fs-utils && make
 
 pt3_player.dsk:	PT3_PLAYER HELLO
 	cp empty.dsk pt3_player.dsk
@@ -65,18 +66,18 @@ pt3_debug.dsk:	PT3_DUMPER PT3_TIMER PT3_TABLE_TEST HELLO_DEBUG DUMP
 	$(DOS33) -y pt3_debug.dsk BSAVE -a 0x4000 ./music/DY.PT3
 
 HELLO:	hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 HELLO_DEBUG:	hello_debug.bas
-	../asoft_basic-utils/tokenize_asoft < hello_debug.bas > HELLO_DEBUG
+	$(TOKENIZE) < hello_debug.bas > HELLO_DEBUG
 
 DUMP:	dump.bas
-	../asoft_basic-utils/tokenize_asoft < dump.bas > DUMP
+	$(TOKENIZE) < dump.bas > DUMP
 
 #
 
 PT3_PLAYER:	pt3_player.o
-	ld65 -o PT3_PLAYER pt3_player.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o PT3_PLAYER pt3_player.o -C ../../linker_scripts/apple2_1000.inc
 
 pt3_player.o:	pt3_player.s \
 	gr_fast_clear.s random16.s fire.s \
@@ -89,7 +90,7 @@ pt3_player.o:	pt3_player.s \
 #
 
 PT3_TIMER:	pt3_timer.o
-	ld65 -o PT3_TIMER pt3_timer.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o PT3_TIMER pt3_timer.o -C ../../linker_scripts/apple2_1000.inc
 
 pt3_timer.o:	pt3_timer.s \
 	gr_fast_clear.s zp.inc \
@@ -99,7 +100,7 @@ pt3_timer.o:	pt3_timer.s \
 #
 
 PT3_DUMPER:	pt3_dumper.o
-	ld65 -o PT3_DUMPER pt3_dumper.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o PT3_DUMPER pt3_dumper.o -C ../../linker_scripts/apple2_1000.inc
 
 pt3_dumper.o:	pt3_dumper.s \
 	gr_fast_clear.s zp.inc \
@@ -109,7 +110,7 @@ pt3_dumper.o:	pt3_dumper.s \
 #
 
 PT3_TABLE_TEST:	pt3_table_test.o
-	ld65 -o PT3_TABLE_TEST pt3_table_test.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o PT3_TABLE_TEST pt3_table_test.o -C ../../linker_scripts/apple2_1000.inc
 
 pt3_table_test.o:	pt3_table_test.s \
 	gr_fast_clear.s pt3_lib_core.s pt3_lib_init.s zp.inc

@@ -118,9 +118,9 @@ interrupt_handler:
 ;=========
 ;routines
 ;=========
-.include	"../asm_routines/gr_offsets.s"
-.include	"../asm_routines/text_print.s"
-.include	"../asm_routines/mockingboard.s"
+.include	"../../asm_routines/gr_offsets.s"
+.include	"../../asm_routines/text_print.s"
+.include	"../../asm_routines/mockingboard.s"
 
 ;=========
 ; strings

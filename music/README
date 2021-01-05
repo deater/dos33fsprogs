@@ -1,0 +1,44 @@
+various utilities/ programs involving Apple II sound/music
+
++ bgmusic
+	play music in the background while running basic programs
+	used in my appleiibot demo
+
++ cd
+	a pt3 file ready for a demo
+
++ chiptune_debug
+	code trying to debug issues with chiptune player
+
++ chiptune_player
+	original ym chiptune player
+
++ dya
+	6-channel ym player, for some of DYA's music
+
++ electric_duet
+	some experiments with Paul Lutus's electric duet 2-channel
+	speaker music
+
++ ksp_theme
+	some initial tests of various ways to access the mockingboard
+	plays the Kerbal Space Program theme with some images
+
++ megamusic
+	code for playing mockingboard music while in vapor-lock/cycle-count
+	mode
+
++ polly
+	trying to reverse the sound effect code from the Pollywog game
+
++ pt3_lib
+	pt3 vortextracker music player library for use in other code
+
++ pt3_player
+	pt3 AY-3-8910 vortextracker player for Apple II / 6502
+
++ sound_effects
+	some attempts at sound effects
+
++ still_alive
+	mockingboard "Still Alive" ending to portal

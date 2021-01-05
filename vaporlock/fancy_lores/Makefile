@@ -1,8 +1,8 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-PNG_TO_40x96 = ../gr-utils/png_to_40x96
-PNG_TO_40x48D = ../gr-utils/png_to_40x48d
+DOS33 = ../../utils/dos33fs-utils/dos33
+PNG_TO_40x96 = ../../utils/gr-utils/png_to_40x96
+PNG_TO_40x48D = ../../utils/gr-utils/png_to_40x48d
 
 
 all:	fancy_lores_viewer.dsk
@@ -17,7 +17,7 @@ fancy_lores_viewer.dsk:	DISP4096 DISP4048D
 ####
 
 DISP4096:	disp4096.o
-	ld65 -o DISP4096 disp4096.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o DISP4096 disp4096.o -C ../../linker_scripts/apple2_1000.inc
 
 disp4096.o:	disp4096.s gr_copy.s \
 	apple_40_96.inc katahdin_40_96.inc df_girl_40_96.inc df_girl2_40_96.inc
@@ -26,7 +26,7 @@ disp4096.o:	disp4096.s gr_copy.s \
 ####
 
 DISP4048D:	disp4048d.o
-	ld65 -o DISP4048D disp4048d.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o DISP4048D disp4048d.o -C ../../linker_scripts/apple2_1000.inc
 
 disp4048d.o:	disp4048d.s gr_copy.s \
 	apple_40_48d.inc katahdin_40_48d.inc spacebars_40_48d.inc df_girl_40_48d.inc k_40_48d.inc
@@ -73,6 +73,4 @@ install:
 		cp png_to_40x96 $(INSTALL_LOC)
 
 clean:		
-		rm -f *~ *.o *.lst *.inc png_to_40x96 png_to_40x48d DISP4096 DISP4048D
-
-
+		rm -f *~ *.o *.lst *.inc png_to_40x96 png_to_40x48d DISP4096 DISP4048D genpal
