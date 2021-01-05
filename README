@@ -1,95 +1,64 @@
-%%%%%%%%%%%%
-dos33fsprogs
-%%%%%%%%%%%%
+DOS33fsprogs	-- v 0.9?
+=========================
 
-    http://www.deater.net/weave/vmwprod/apple/dos33fs.html
+by Vince "deater" Weaver, vince _at_ deater.net
 
-    by Vince Weaver <vince _at_ deater.net>
-    
+A somewhat increasingly innacurately named git repository containing
+most of my Apple II work.
 
-These are some tools for manipulating Apple II disk files that
-I've written over the years while doing Apple 2 hacking.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Originally this just contained the dos33 tools found under ./utils/dos33*
+but now has a lot of other things.
 
 
-make_b : take a machine language blob and give it the size/offset
-         header needed to BLOAD it from DOS3.3
++ asm_routines
+	some common assembly language routines (many are out of date)
 
++ basic
+	Applesoft BASIC and appleiibot code
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	 
++ combo_disk
+	A script to generate a "combo" disk with lots of demos on it
 
-asoft_detoken: takes an applesoft file obtained with dos33
-               and converts it to an ASCII text file
++ compression
+	code compression tests
 
++ demos
+	all of my various demoscene demos
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++ disk
+	disk access code, mostly from qkumba
 
-	       
-tokenize_asoft: takes an ASCII text file and converts it
-                into a tokenized applesoft file
++ docs
+	various text documents
 
++ ethernet
+	code for accessing the Uthernet II, including a webserver in 
+	Applesoft BASIC
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++ games
+	various games and demake games by me
 
++ graphics
+	where I develop/test out graphics code
 
-dos33:		a tool for manipulating dos33 .dsk images
++ joystick
+	where I develop/test out joystick code
 
++ linker_scripts
+	common linker scripts for ca65 assembler
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++ music
+	mockingboard (ay-3-8910) demos/programs/routines
+	including the pt3_lib software
 
++ textmode
+	where I develop/test out textmode code
 
-dos33_text2ascii: convert a dos33 text file to ASCII
++ utils
+	various useful utilities for developing Apple II code under Linux
+	including graphics conversion routines and disk manipulation tools
 
++ vaporlock
+	where I develop/test out race-the-beam, mid-screen switching,
+	floating-bus and vaporlock code
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-integer_detoken: detokenize an Apple Integer BASIC program
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-pcx2hgr:	converts a 140x160 (or 140x192) PCX image file
-                into an Apple II HGR graphics file that can 
-		be loaded with "BLOAD IMAGE,A$2000"
-
-		To get it to work, create an image with the GIMP.
-		Scale to 140x160.  Save as indexed with the 
-		included "hgr.pal" palette.
-
-                It also works with 280x160 but in that case it ignores
-		colors and only generates black and white output.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-mkdos33fs:	create an Apple ][ DOS 3.3 filesystems
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-asoft_presenter:
-
-    creates a slide presentation disk image for use on apple II
-
-    see README.presenter for more documentation
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-shape_table:  create an Apple shape table for use with
-              DRAW and XDRAW commands
-	      
-	      can generate BASIC code to load it (via DATA) or
-	      else a binary version that can be BLOADed
-	      
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-asoft_compact: tries to compress your Applesoft basic program
-               to make it as small as possible
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
