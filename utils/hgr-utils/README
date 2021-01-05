@@ -1,7 +1,5 @@
 These are some tools for manipulating HGR Apple 2 graphics.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 pcx2hgr:	converts a 140x160 (or 140x192) PCX image file
                 into an Apple II HGR graphics file that can 
@@ -15,8 +13,8 @@ pcx2hgr:	converts a 140x160 (or 140x192) PCX image file
 		colors and only generates black and white output.
 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+pcx2dhgr:	converts to Double Hires
+	
 
 shape_table:  create an Apple shape table for use with
               DRAW and XDRAW commands

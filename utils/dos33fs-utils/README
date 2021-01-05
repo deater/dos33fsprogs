@@ -1,30 +1,21 @@
-%%%%%%%%%%%%
+============
 dos33fsprogs
-%%%%%%%%%%%%
+============
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-make_b : take a machine language blob and give it the size/offset
-         header needed to BLOAD it from DOS3.3
+Tools for manipulating an Apple II 140k dos33 filesystem.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-dos33:		a tool for manipulating dos33 .dsk images
++ dos33  : a tool for manipulating dos33 .dsk images
 
++ dos33_raw: put raw track/sectors onto a .dsk image
+	this is used by the Myst demake
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
++ make_b : take a machine language blob and give it the size/offset
+           header needed to BLOAD it from DOS3.3
 
++ dos33_text2ascii: convert a dos33 text file to ASCII
 
-dos33_text2ascii: convert a dos33 text file to ASCII
++ mkdos33fs:	create an Apple ][ DOS 3.3 filesystems
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-mkdos33fs:	create an Apple ][ DOS 3.3 filesystems
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

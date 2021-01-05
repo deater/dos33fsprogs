@@ -11,7 +11,7 @@ all:	nibble
 ####
 
 nibble:	nibble.o $(GR_SIM)
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o nibble nibble.o $(GR_SIM)
+	$(CC) -o nibble nibble.o $(GR_SIM) $(SDL_LIBS) $(LFLAGS)
 
 nibble.o:	nibble.c
 	$(CC) $(CFLAGS) -c nibble.c

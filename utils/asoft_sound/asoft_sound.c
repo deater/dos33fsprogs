@@ -175,7 +175,7 @@ int main(int argc, char **argv) {
 	printf("61 FOR L=770 TO 788:READ V:POKE L,V:NEXT L\n");
 	printf("62 GOTO 100\n");
 
-	/* Darker/lower by Calsson */
+	/* Darker/lower by Carlsson */
 	printf("70 DATA 173,48,192,174,0,3,202,240,247,234,234,234,136,208,247,206,1,3,208,242,96\n");
 	printf("71 FOR L=770 TO 790:READ V:POKE L,V:NEXT L\n");
 	printf("72 GOTO 100\n");

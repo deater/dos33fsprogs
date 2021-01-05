@@ -17,7 +17,7 @@ all:	water
 ####
 
 water:	water.o $(GR_SIM)
-	$(CC) $(LFLAGS) $(SDL_LIBS) -o water water.o $(GR_SIM)
+	$(CC) -o water water.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
 
 water.o:	water.c demo_title.c
 	$(CC) $(CFLAGS) -c water.c

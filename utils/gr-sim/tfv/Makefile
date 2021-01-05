@@ -7,8 +7,8 @@ SDL_INCLUDE= `sdl-config --cflags`
 GR_SIM = ../gr-sim.a
 
 PNG2RLE = ../../gr-utils/png2rle
-ARTDIR = ../../tfv/graphics_map
-TITLEDIR = ../../tfv/graphics_title
+ARTDIR = ../../../games/tfv/graphics_map
+TITLEDIR = ../../../games/tfv/graphics_title
 
 all:	tfv
 

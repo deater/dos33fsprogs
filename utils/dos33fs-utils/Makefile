@@ -1,4 +1,4 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
 all:	dos33 mkdos33fs make_b \
 	dos33_raw \

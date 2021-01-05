@@ -1,4 +1,4 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
 CFLAGS = -g -Wall -O2
 
@@ -123,5 +123,5 @@ install:
 		cp png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 png2sixbitmap png2sixrle png2sixrle2 png2fourrle png2six80 $(INSTALL_LOC)
 
 clean:		
-		rm -f *~ *.o png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 png2sixbitmap png2sixrle png2fourrle png2sixrle2 png2six80
+		rm -f *~ *.o png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 png2sixbitmap png2sixrle png2fourrle png2sixrle2 png2six80 text2gr pnglarge2rle
 

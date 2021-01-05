@@ -10,26 +10,26 @@
 //140 REM MS is max steps, CS is current step, X/Y/X1/Y1/X2/Y2 is rocket position
 //150 REM CL is Apple II hi-res color group
 
-const int ysize=160,xsize=280,margin=24;
-int color_group;
-int max_steps;
-double x_even_older,x_old=0,y_even_older,y_old=0,cs,peak;
-double xpos,ypos,x_velocity,y_velocity;
-double i,n;
+static const int ysize=160,xsize=280,margin=24;
+static int color_group;
+static int max_steps;
+static double x_even_older,x_old=0,y_even_older,y_old=0,cs,peak;
+static double xpos,ypos,x_velocity,y_velocity;
+static double i,nn;
 
 void routine_370(void) {
 
-	hplot(xpos+x_old+n,ypos+y_old+n);		// NE
-	hplot(xpos+x_old-n,ypos+y_old-n);		// SW
+	hplot(xpos+x_old+nn,ypos+y_old+nn);		// NE
+	hplot(xpos+x_old-nn,ypos+y_old-nn);		// SW
 
-	hplot(xpos+x_old+n,ypos+y_old-n);		// SE
-	hplot(xpos+x_old-n,ypos+y_old+n);		// NW
+	hplot(xpos+x_old+nn,ypos+y_old-nn);		// SE
+	hplot(xpos+x_old-nn,ypos+y_old+nn);		// NW
 
-	hplot(xpos+x_old,ypos+y_old+(n*1.5));		// N
-	hplot(xpos+x_old+(n*1.5),ypos+y_old);		// E
+	hplot(xpos+x_old,ypos+y_old+(nn*1.5));		// N
+	hplot(xpos+x_old+(nn*1.5),ypos+y_old);		// E
 
-	hplot(xpos+x_old,ypos+y_old-(n*1.5));		// S
-	hplot(xpos+x_old-(n*1.5),ypos+y_old);		// W
+	hplot(xpos+x_old,ypos+y_old-(nn*1.5));		// S
+	hplot(xpos+x_old-(nn*1.5),ypos+y_old);		// W
 
 }
 
@@ -138,12 +138,12 @@ label_290:
 	for(i=1;i<=9;i++) {
 		/* Draw spreading dots in white */
 		if (i<9) {
-			n=i;
+			nn=i;
 			hcolor_equals(color_group*4+3);
 			routine_370();
 		}
 		/* erase old */
-		n=i-1;
+		nn=i-1;
 		hcolor_equals(color_group*4);
 		routine_370();
 

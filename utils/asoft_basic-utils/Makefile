@@ -1,4 +1,4 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
 all:	asoft_detoken tokenize_asoft integer_detoken asoft_compact bin2data
 
