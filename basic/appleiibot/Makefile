@@ -1,7 +1,7 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-TOKENIZE = ../asoft_basic-utils/tokenize_asoft
+DOS33 = ../../utils/dos33fs-utils/dos33
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	appleiibot.dsk convert_to convert_back convert_qkumba make_boxes convert_vmw
 
@@ -101,7 +101,7 @@ convert_back.o:	convert_back.c
 ###
 
 LOAD:	load.o
-	ld65 -o LOAD load.o -C ../linker_scripts/apple2_300.inc
+	ld65 -o LOAD load.o -C ../../linker_scripts/apple2_300.inc
 
 load.o:	load.s
 	ca65 -o load.o load.s -l load.lst

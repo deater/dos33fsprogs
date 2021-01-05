@@ -1,7 +1,7 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-TOKENIZE = ../asoft_basic-utils/tokenize_asoft
+DOS33 = ../../utils/dos33fs-utils/dos33
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	entropy.dsk
 
@@ -12,7 +12,7 @@ entropy.dsk:	ENTROPY ENTROPY.BAS
 ###
 
 ENTROPY:	entropy.o
-	ld65 -o ENTROPY entropy.o -C ../linker_scripts/apple2_c00.inc
+	ld65 -o ENTROPY entropy.o -C ../../linker_scripts/apple2_c00.inc
 
 entropy.o:	entropy.s
 	ca65 -o entropy.o entropy.s -l entropy.lst

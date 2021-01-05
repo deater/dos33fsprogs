@@ -1,14 +1,16 @@
-DOS33 = ../dos33fs-utils/dos33
-TXT2BAS = ../asoft_basic-utils/tokenize_asoft
+DOS33 = ../../utils/dos33fs-utils/dos33
+TXT2BAS = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	deceptive.dsk
 
-BACKWARD.BAS:	backward.basd
-	$(TXT2BAS) < backward.basd > BACKWARD.BAS
+deceptive.dsk:	HIDDEN.BAS
+	$(DOS33) -y deceptive.dsk SAVE A HIDDEN.BAS
 
-deceptive.dsk:	BACKWARD.BAS
-	$(DOS33) -y deceptive.dsk SAVE A BACKWARD.BAS
+
+HIDDEN.BAS:	hidden.basd
+	$(TXT2BAS) < hidden.basd > HIDDEN.BAS
+
 
 clean:	
-	rm -f *~ *.BAS *.SHAPE sound_test.bas shape_test.bas *.lst
+	rm -f *~ *.BAS *.lst
 
