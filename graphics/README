@@ -1,0 +1,20 @@
+Testbeds for various graphics modes
+
++ dhgr
+	code testing out double-hires
+
++ dhgr_viewer
+	a double-hires image viewer
+
++ gr
+	code for testing lores
+
++ gr_viewer
+	a lo-res image viewer
+
++ hgr
+	code for testing hires
+
++ hgr_viewer
+	a hi-res image viewer
+
