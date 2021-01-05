@@ -1,0 +1,31 @@
+These are various utilities for doing Apple II development
+
++ asoft_basic-utils
+	various tools for manipulating Applesoft and Integer BASIC programs
+
++ asoft_presenter
+	create presentations using your Apple II
+
++ asoft_sound
+	tool to script making music in BASIC
+
++ bmp2dhr
+	a version of Bill Buckels's bmp2hdr modified to compile on Linux
+
++ dos33fs-linux2.4
+	Linux driver for dos33 filesystem, but hasn't worked since Linux 2.4
+
++ dos33fs-utils
+	Tools for manipulating Apple Dos 3.3 filesystem images
+
++ gr-sim
+	Lo-res graphics simulator used to prototype code in C before
+	converting to assembly
+
++ gr-utils
+	Various lo-res graphics conversion routines
+
++ hgr-utils
+	Various hi-res graphics conversion routines
+
+
