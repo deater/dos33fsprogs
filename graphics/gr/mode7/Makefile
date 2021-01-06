@@ -11,16 +11,13 @@ $(DOS33):
 	cd ../../../utils/dos33fs-utils && make
 
 mode7.dsk:	$(DOS33) MODE7_ISLAND MODE7_CHECKERBOARD MODE7_RAINBOW \
-			PLOT_TEST RASTERBARS SKY_DEMO \
-			STARFIELD_DEMO STARFIELD_1K TEXT_DEMO
+			PLOT_TEST RASTERBARS SKY_DEMO TEXT_DEMO
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_ISLAND
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_CHECKERBOARD
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_RAINBOW
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 PLOT_TEST
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 RASTERBARS
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 SKY_DEMO
-	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 STARFIELD_DEMO
-	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 STARFIELD_1K
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 TEXT_DEMO
 
 
@@ -93,17 +90,6 @@ sky_demo.o:	sky_demo.s \
 	gr_setpage.s
 	ca65 -o sky_demo.o sky_demo.s -l sky_demo.lst
 
-STARFIELD_DEMO:	starfield_demo.o
-	ld65 -o STARFIELD_DEMO starfield_demo.o -C ./apple2_1000.inc
-
-starfield_demo.o:	starfield_demo.s \
-	gr_scroll.s \
-	pageflip.s \
-	gr_setpage.s \
-	gr_fast_clear.s
-	ca65 -o starfield_demo.o starfield_demo.s -l starfield_demo.lst
-
-
 RASTERBARS:	rasterbars.o
 	ld65 -o RASTERBARS rasterbars.o -C ./apple2_1000.inc
 
@@ -113,18 +99,6 @@ rasterbars.o:	rasterbars.s \
 	gr_setpage.s \
 	gr_fast_clear.s
 	ca65 -o rasterbars.o rasterbars.s -l rasterbars.lst
-
-
-STARFIELD_1K:	starfield_1k.o
-	ld65 -o STARFIELD_1K starfield_1k.o -C ./apple2_1000.inc
-
-starfield_1k.o:	starfield_1k.s \
-	gr_scroll.s \
-	pageflip.s \
-	gr_setpage.s \
-	gr_fast_clear.s
-	ca65 -o starfield_1k.o starfield_1k.s -l starfield_1k.lst
-
 
 TEXT_DEMO:	text_demo.o
 	ld65 -o TEXT_DEMO text_demo.o -C ./apple2_1000.inc
@@ -151,6 +125,5 @@ background.o:	background.c
 clean:	
 	rm -f *~ *.o scroller background \
 	MODE7 MODE7_ISLAND MODE7_CHECKERBOARD MODE7_RAINBOW \
-	PLOT_TEST RASTERBARS STARFIELD_DEMO STARFIELD_1K \
-	SKY_DEMO TEXT_DEMO *.lst
+	PLOT_TEST RASTERBARS SKY_DEMO TEXT_DEMO *.lst
 
