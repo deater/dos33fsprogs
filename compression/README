@@ -1,3 +1,6 @@
 lzsa_test:
 	some tests of lzsa decompression
 
+plaintext_asm:
+	trying to fit more assembly in basic program
+

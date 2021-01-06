@@ -51,14 +51,13 @@ outer_loop:
 credit_loop:
 
 	ldy	#0
-	lda	(OUTL),Y
 
-	clc
+	lda	(OUTL),Y		; load x offset
+	clc				; and add 7 to it
 	adc	#7
-
 	sta	CH
 
-	lda	#22
+	lda	#22			; y hardcoded at 22
 	sta	CV
 
 	lda	#$f6	; - 10
@@ -67,18 +66,19 @@ inner_loop:
 
 	jsr	htab_vtab
 
-	ldy	#1
+	ldy	#1			; loop through the string
 print_loop:
 	lda	(OUTL),Y
 	beq	done_print
 
 	clc
-	adc	XX
+	adc	XX			; add -10
 
-	ora	#$80
-	sta	(BASL),Y
-	iny
+	ora	#$80			; convert from ASCII
+	sta	(BASL),Y		; write to display
+	iny				; point to next
 	jmp	print_loop
+
 done_print:
 
 

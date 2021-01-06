@@ -12,15 +12,12 @@ $(DOS33):
 	cd ../../../utils/dos33fs-utils && make
 
 mode7.dsk:	$(DOS33) MODE7_ISLAND MODE7_CHECKERBOARD MODE7_RAINBOW \
-			PLOT_TEST SKY_DEMO TEXT_DEMO
+			PLOT_TEST SKY_DEMO
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_ISLAND
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_CHECKERBOARD
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_RAINBOW
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 PLOT_TEST
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 SKY_DEMO
-	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 TEXT_DEMO
-
-
 
 ###
 
@@ -90,16 +87,6 @@ sky_demo.o:	sky_demo.s \
 	gr_setpage.s
 	ca65 -o sky_demo.o sky_demo.s -l sky_demo.lst
 
-TEXT_DEMO:	text_demo.o
-	ld65 -o TEXT_DEMO text_demo.o -C $(LINKERSCRIPTS)/apple2_1000.inc
-
-text_demo.o:	text_demo.s \
-	gr_scroll.s \
-	pageflip.s \
-	gr_setpage.s \
-	gr_fast_clear.s
-	ca65 -o text_demo.o text_demo.s -l text_demo.lst
-
 scroller:	scroller.o
 	$(CC) $(LFLAGS) -o scroller scroller.o
 
@@ -115,5 +102,5 @@ background.o:	background.c
 clean:	
 	rm -f *~ *.o scroller background \
 	MODE7 MODE7_ISLAND MODE7_CHECKERBOARD MODE7_RAINBOW \
-	PLOT_TEST SKY_DEMO TEXT_DEMO *.lst
+	PLOT_TEST SKY_DEMO *.lst
 
