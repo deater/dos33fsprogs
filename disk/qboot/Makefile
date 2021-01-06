@@ -1,7 +1,7 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-DOS33_RAW = ../dos33fs-utils/dos33_raw
+DOS33 = ../../utils/dos33fs-utils/dos33
+DOS33_RAW = ../../utils/dos33fs-utils/dos33_raw
 
 all:	boot.dsk compare.dsk
 
@@ -19,7 +19,7 @@ boot.dsk:	BOOT THE80S LS
 	$(DOS33_RAW) boot.dsk 8 0 LS 0 33
 
 BOOT: boot_sector.o
-	ld65 -o BOOT boot_sector.o -C ../linker_scripts/apple2_800.inc
+	ld65 -o BOOT boot_sector.o -C ../../linker_scripts/apple2_800.inc
 
 boot_sector.o:	boot_sector.s stage2.s
 	ca65 -o boot_sector.o boot_sector.s -l boot_sector.lst
@@ -27,7 +27,7 @@ boot_sector.o:	boot_sector.s stage2.s
 ###
 
 LS:	ls.o
-	ld65 -o LS ls.o -C ../linker_scripts/apple2_1f00.inc
+	ld65 -o LS ls.o -C ../../linker_scripts/apple2_1f00.inc
 
 ls.o:	ls.s lsc.hgr
 	ca65 -o ls.o ls.s -l ls.lst
@@ -35,7 +35,7 @@ ls.o:	ls.s lsc.hgr
 ###
 
 THE80S:	80s.o
-	ld65 -o THE80S 80s.o -C ../linker_scripts/apple2_1f00.inc
+	ld65 -o THE80S 80s.o -C ../../linker_scripts/apple2_1f00.inc
 
 80s.o:	80s.s new_80s.hgr
 	ca65 -o 80s.o 80s.s -l 80s.lst
