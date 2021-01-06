@@ -1,0 +1,17 @@
+Various experiments in lo-res graphics
+
++ mode7
+	mode7 tests, used when making mode7 demo
+
++ rasterbars
+	colored bars (not really rasterbars), used in mode7 demo
+
++ rotozoom
+	rotozoom, used in tfv
+
++ scroll_text
+	some lo-res scroll text
+
++ starfield
+	lo-res starfield
+

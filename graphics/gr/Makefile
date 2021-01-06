@@ -1,9 +1,15 @@
 all:
 	cd mode7 && make
-	cd rotate && make
+	cd rasterbars && make
+	cd rotozoom && make
+	cd scroll_text && make
+	cd starfield && make
 
 clean:
 	cd mode7 && make clean
-	cd rotate && make clean
+	cd rasterbars && make clean
+	cd rotozoom && make clean
+	cd scroll_text && make clean
+	cd starfield && make clean
 	rm -f *~
 
