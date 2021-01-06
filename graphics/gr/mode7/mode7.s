@@ -1114,18 +1114,18 @@ exit:
 ; External modules
 ;===============================================
 
-.include "../../asm_routines/gr_hlin.s"
-.include "../../asm_routines/pageflip.s"
-.include "../../asm_routines/gr_setpage.s"
-.include "../../asm_routines/keypress.s"
-.include "../../asm_routines/gr_putsprite.s"
-.include "../../asm_routines/text_print.s"
-.include "../../asm_routines/gr_offsets.s"
-.include "../../asm_routines/gr_fast_clear.s"
+.include "gr_hlin.s"
+.include "pageflip.s"
+.include "gr_setpage.s"
+.include "keypress.s"
+.include "gr_putsprite.s"
+.include "text_print.s"
+.include "gr_offsets.s"
+.include "gr_fast_clear.s"
 
 .if .def(CHECKERBOARD_MAP)
-.include "../../asm_routines/gr_scroll.s"
-.include "../../asm_routines/bg_scroll.s"
+.include "gr_scroll.s"
+.include "bg_scroll.s"
 .endif
 
 
@@ -1143,7 +1143,7 @@ exit:
 .include "starry_sky.scroll"
 .endif
 
-.include "../../asm_routines/multiply_fast.s"
+.include "multiply_fast.s"
 
 
 ; 8.8 fixed point

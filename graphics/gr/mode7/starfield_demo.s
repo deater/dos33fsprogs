@@ -342,14 +342,14 @@ random_star:
 ; External modules
 ;===============================================
 
-.include "../../asm_routines/pageflip.s"
-.include "../../asm_routines/gr_setpage.s"
-.include "../../asm_routines/keypress.s"
-.include "../../asm_routines/gr_putsprite.s"
-.include "../../asm_routines/gr_offsets.s"
-.include "../../asm_routines/gr_fast_clear.s"
-.include "../../asm_routines/gr_plot.s"
-.include "../../asm_routines/multiply_fast.s"
+.include "pageflip.s"
+.include "gr_setpage.s"
+.include "keypress.s"
+.include "gr_putsprite.s"
+.include "gr_offsets.s"
+.include "gr_fast_clear.s"
+.include "gr_plot.s"
+.include "multiply_fast.s"
 
 
 .include "sprites.inc"
