@@ -2,6 +2,7 @@ include ../../Makefile.inc
 
 DOS33 = ../../utils/dos33fs-utils/dos33
 DOS33_RAW = ../../utils/dos33fs-utils/dos33_raw
+PNG_TO_HGR = ../../utils/hgr-utils/png2hgr
 
 all:	boot.dsk compare.dsk
 
@@ -41,7 +42,7 @@ THE80S:	80s.o
 	ca65 -o 80s.o 80s.s -l 80s.lst
 
 new_80s.hgr:	new_80s.png
-	../hgr-utils/png2hgr new_80s.png  > new_80s.hgr
+	$(PNG_TO_HGR) new_80s.png  > new_80s.hgr
 
 clean:		
 		rm -f *~ *.o *.lst BOOT THE80S

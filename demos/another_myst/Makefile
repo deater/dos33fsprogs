@@ -161,5 +161,5 @@ zip:	ootw.dsk ootw_side2.dsk side3.dsk
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lz4 HELLO ANOTHERMIST
+		rm -f *~ *.o *.lst *.lz4 HELLO ANOTHERMIST INTRO TITLE
 
