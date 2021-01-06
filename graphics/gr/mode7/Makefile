@@ -5,21 +5,19 @@ PNG2GR = ../../../utils/gr-utils/png2gr
 PNG2RLE = ../../../utils/gr-utils/png2rle
 TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 
-
-all:	mode7.dsk scroller background
+all:	mode7.dsk background
 
 $(DOS33):	
 	cd ../../../utils/dos33fs-utils && make
 
 mode7.dsk:	$(DOS33) MODE7_ISLAND MODE7_CHECKERBOARD MODE7_RAINBOW \
-			PLOT_TEST RASTERBARS SCROLL_DEMO SKY_DEMO \
+			PLOT_TEST RASTERBARS SKY_DEMO \
 			STARFIELD_DEMO STARFIELD_1K TEXT_DEMO
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_ISLAND
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_CHECKERBOARD
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 MODE7_RAINBOW
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 PLOT_TEST
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 RASTERBARS
-	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 SCROLL_DEMO
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 SKY_DEMO
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 STARFIELD_DEMO
 	$(DOS33) -y mode7.dsk BSAVE -a 0x1000 STARFIELD_1K
@@ -82,18 +80,6 @@ PLOT_TEST:	plot_test.o
 plot_test.o:	plot_test.s \
 	gr_setpage.s
 	ca65 -o plot_test.o plot_test.s -l plot_test.lst
-
-SCROLL_DEMO:	scroll_demo.o
-	ld65 -o SCROLL_DEMO scroll_demo.o -C ./apple2_1000.inc
-
-scroll_demo.o:	scroll_demo.s \
-	deater_scroll.inc \
-	gr_hlin.s \
-	gr_fast_clear.s \
-	gr_scroll.s \
-	pageflip.s \
-	gr_setpage.s
-	ca65 -o scroll_demo.o scroll_demo.s -l scroll_demo.lst
 
 SKY_DEMO:	sky_demo.o
 	ld65 -o SKY_DEMO sky_demo.o -C ./apple2_1000.inc
@@ -165,6 +151,6 @@ background.o:	background.c
 clean:	
 	rm -f *~ *.o scroller background \
 	MODE7 MODE7_ISLAND MODE7_CHECKERBOARD MODE7_RAINBOW \
-	PLOT_TEST RASTERBARS SCROLL_DEMO STARFIELD_DEMO STARFIELD_1K \
+	PLOT_TEST RASTERBARS STARFIELD_DEMO STARFIELD_1K \
 	SKY_DEMO TEXT_DEMO *.lst
 
