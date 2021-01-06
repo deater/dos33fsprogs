@@ -29,7 +29,7 @@ space_bars.o:	space_bars.s instructions.s \
 ####
 
 HELLO:	hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 ####
 

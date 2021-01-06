@@ -1,7 +1,7 @@
 #include ../Makefile.inc
 
-B2D = ../../bmp2dhr/b2d
-PNG2GR = ../../gr-utils/png2gr
+B2D = ../../../utils/bmp2dhr/b2d
+PNG2GR = ../../../utils/gr-utils/png2gr
 LZSA = ~/research/lzsa/lzsa/lzsa
 
 

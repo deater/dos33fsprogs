@@ -39,7 +39,7 @@ check_button0:
 
 button0_clear:
 	lda     JS_BUTTON_STATE
-	and	#(~JS_BUTTON0)
+	and	#<(~JS_BUTTON0)	; hack
 	sta	JS_BUTTON_STATE
 	jmp	js_check
 
@@ -59,7 +59,7 @@ check_button1:
 
 button1_clear:
 	lda     JS_BUTTON_STATE
-	and	#(~JS_BUTTON1)
+	and	#<(~JS_BUTTON1)
 	sta	JS_BUTTON_STATE
 ;	jmp	js_check
 
