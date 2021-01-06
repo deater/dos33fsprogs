@@ -1,0 +1,31 @@
+Various Apple II demoscne demos and experiments by
+	Vince "deater" Weaver of VMW Productions and DESIRE
+
++ 32b
+	Attepts at an Apple II 32-byte demo
++ another_myst
+	A weird mashup of another world and myst
++ appleiibot_demo
+	Apple II Twitter Bot demo, Demosplash 2020 (1st retro demo)
++ fire
+	PSX doom fire for Apple II lores in 64 bytes
++ hellmood_memories
+	attempts to port hellmood's memories to Apple II
++ kfest2018
+	cycle counting demo, written during hackfest at Kansasfest 2018 (2nd)
++ lores_escape
+	apple ii cycle counting demo, demosplash 2019 (3rd retro demo)
++ megademo
+	apple ii cycle counting megademo, demosplash 2018 (1st retro demo)
++ mode7_demo
+	mode7-esque demo (not released at a party)
++ seasons
+	128 byte outline 2020 demo (6th)
++ shapetable_party
+	256 byte @party 2020 demo (6th)
++ vertical_scroll
+	work on vertical lores scrolling
++ xmas_2018
+	2018 xmas demo, with some subtle cycle-counted vapor lock
++ xmas_2019
+	2019 xmas demo, with cycle-counted vapor lock

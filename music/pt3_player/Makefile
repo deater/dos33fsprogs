@@ -120,5 +120,5 @@ pt3_table_test.o:	pt3_table_test.s \
 
 clean:	
 	rm -f *~ TITLE.GR *.o *.lst \
-		PT3_PLAYER PT3_TIMER PT3_DUMPER PT3_TABLE_TEST
+		PT3_PLAYER PT3_TIMER PT3_DUMPER PT3_TABLE_TEST HELLO
 

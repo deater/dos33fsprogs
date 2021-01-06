@@ -1,0 +1,42 @@
+Apple II Seasons 128B Demo
+-=DESiRE=-  / Outline 2020
+
+Watch as leaves cycle through the colors of the seasons 
+
+Platform: Apple II
+	Requires Apple II+ (1979) or later
+
+Code:	deater
+	hellmood
+	qkumba
+
+Link to video:
+	http://web.eece.maine.edu/~vweaver/junk/appleii_seasons.mkv
+
+	Video captured on AppleWin emulator.  Should run on real
+	hardware but all of my Apple II hardware is on lockdown at work.
+
+Files:
+	SEASONS  -- 127 byte executable
+	seasons.s -- source code, can assemble with ca65 assembler
+	seasons.dsk -- 140k Apple DOS33 disk image suitable for use in emulator
+
+Notes:
+	+ 128 Byte demo for the Apple II (1MHz 6502)
+	+ Written in 6502 assembly language
+	+ Uses "high-resolution" graphics mode which is 280x192 in 6 colors.
+		This mode has lots of complex color-clash and memory-interleave
+		issues which make it a pain to code for.
+	+ The Apple II has very simple graphics.  No hardware sprites, no
+		VBLANK/HBLANK interrupts, no scrolling, no palette
+		changes, no acceleration of any type.  The only feature
+		it has is two graphics pages
+		for page flipping (which is not used in this demo)
+	+ Depends on the Applesoft BASIC ROM for "HPLOT" routine
+		which means it requires at least an Apple II+ (released in
+		1979) or later machine.
+		Should work on a II+/IIe/IIc/IIgs, and even an original
+		Apple II (1977) if you have an Applesoft language card
+		ROM expansion
+	+ Based on Hellmood's 64B DOS demo "Autumn"
+	+ Saves a few bytes by running entirely in the zero page
