@@ -1,8 +1,8 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-TOKENIZE = ../asoft_basic-utils/tokenize_asoft
-PNG2DHGR = ../hgr-utils/png2dhgr
+DOS33 = ../../utils/dos33fs-utils/dos33
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
+PNG2DHGR = ../../utils/hgr-utils/png2dhgr
 
 all:	3d.dsk
 
@@ -31,12 +31,12 @@ CUBE_PINK.BIN:	cube_pink_bg.png
 ###
 
 HELLO:  hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 ###
 
 LOAD:  load.bas
-	../asoft_basic-utils/tokenize_asoft < load.bas > LOAD
+	$(TOKENIZE) < load.bas > LOAD
 
 ####
 

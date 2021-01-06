@@ -1,0 +1,12 @@
+Apple II Twitter bot demo
+
+Won 1st place retro demo at Demosplash 2020
+
+Tricky as it is running small basic programs (that fit in 280 bytes)
+while mockingboard music plays in the background, then manages to stop
+after time, re-load another basic program, and execute, all from
+the interrupt handler
+
+you'll need a IIe and a Mockingboard for this one as it depends on
+the interrupts to work.
+

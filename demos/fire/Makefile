@@ -1,8 +1,8 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-PNG_TO_RLE = ../gr-utils/png2rle
-
+DOS33 = ../../utils/dos33fs-utils/dos33
+PNG_TO_RLE = ../../utils/gr-utils/png2rle
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	fire.dsk
 
@@ -19,7 +19,7 @@ fire.dsk:	FIRE FIRE_TINY FIRE_FIRMWARE FIRE_EXTREME FIRE_QKUMBA HELLO COOL_EFFEC
 ####
 
 FIRE:	fire.o
-	ld65 -o FIRE fire.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o FIRE fire.o -C ../../linker_scripts/apple2_1000.inc
 
 fire.o:	fire.s gr_fast_clear.s vapor_lock.s \
 	delay_a.s
@@ -28,7 +28,7 @@ fire.o:	fire.s gr_fast_clear.s vapor_lock.s \
 ####
 
 FIRE_TINY:	fire_tiny.o
-	ld65 -o FIRE_TINY fire_tiny.o -C ../linker_scripts/apple2_70.inc
+	ld65 -o FIRE_TINY fire_tiny.o -C ../../linker_scripts/apple2_70.inc
 
 fire_tiny.o:	fire_tiny.s
 	ca65 -o fire_tiny.o fire_tiny.s -l fire_tiny.lst
@@ -36,7 +36,7 @@ fire_tiny.o:	fire_tiny.s
 ####
 
 FIRE_FIRMWARE:	fire_firmware.o
-	ld65 -o FIRE_FIRMWARE fire_firmware.o -C ../linker_scripts/apple2_70.inc
+	ld65 -o FIRE_FIRMWARE fire_firmware.o -C ../../linker_scripts/apple2_70.inc
 
 fire_firmware.o:	fire_firmware.s
 	ca65 -o fire_firmware.o fire_firmware.s -l fire_firmware.lst
@@ -44,7 +44,7 @@ fire_firmware.o:	fire_firmware.s
 ####
 
 FIRE_EXTREME:	fire_extreme.o
-	ld65 -o FIRE_EXTREME fire_extreme.o -C ../linker_scripts/apple2_70.inc
+	ld65 -o FIRE_EXTREME fire_extreme.o -C ../../linker_scripts/apple2_70.inc
 
 fire_extreme.o:	fire_extreme.s
 	ca65 -o fire_extreme.o fire_extreme.s -l fire_extreme.lst
@@ -52,7 +52,7 @@ fire_extreme.o:	fire_extreme.s
 ####
 
 FIRE_HIGH:	fire_high.o
-	ld65 -o FIRE_HIGH fire_high.o -C ../linker_scripts/apple2_c00.inc
+	ld65 -o FIRE_HIGH fire_high.o -C ../../linker_scripts/apple2_c00.inc
 
 fire_high.o:	fire_high.s
 	ca65 -o fire_high.o fire_high.s -l fire_high.lst
@@ -61,7 +61,7 @@ fire_high.o:	fire_high.s
 ####
 
 FIRE_QKUMBA:	fire_qkumba.o
-	ld65 -o FIRE_QKUMBA fire_qkumba.o -C ../linker_scripts/apple2_70.inc
+	ld65 -o FIRE_QKUMBA fire_qkumba.o -C ../../linker_scripts/apple2_70.inc
 
 fire_qkumba.o:	fire_qkumba.s
 	ca65 -o fire_qkumba.o fire_qkumba.s -l fire_qkumba.lst
@@ -71,7 +71,7 @@ fire_qkumba.o:	fire_qkumba.s
 ####
 
 COOL_EFFECT:	cool_effect.o
-	ld65 -o COOL_EFFECT cool_effect.o -C ../linker_scripts/apple2_70.inc
+	ld65 -o COOL_EFFECT cool_effect.o -C ../../linker_scripts/apple2_70.inc
 
 cool_effect.o:	cool_effect.s
 	ca65 -o cool_effect.o cool_effect.s -l cool_effect.lst
@@ -81,7 +81,7 @@ cool_effect.o:	cool_effect.s
 
 
 RASTER:	raster.o
-	ld65 -o RASTER raster.o -C ../linker_scripts/apple2_70.inc
+	ld65 -o RASTER raster.o -C ../../linker_scripts/apple2_70.inc
 
 raster.o:	raster.s
 	ca65 -o raster.o raster.s -l raster.lst
@@ -89,13 +89,13 @@ raster.o:	raster.s
 ####
 
 HELLO:  hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 
 #####
 
 clean:		
-		rm -f *~ *.o *.lst FIRE FIRE_TINY FIRE_FIRMWARE COOL_EFFECT HELLO FIRE_EXTREME FIRE_QKUMBA RASTER
+		rm -f *~ *.o *.lst FIRE FIRE_TINY FIRE_FIRMWARE COOL_EFFECT HELLO FIRE_EXTREME FIRE_QKUMBA RASTER idiot_control
 
 
 

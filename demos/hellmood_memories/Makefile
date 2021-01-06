@@ -100,6 +100,6 @@ CIRCLES.BAS:	zooming_circles.bas
 
 clean:		
 		rm -f *~ *.o *.lst HELLO CIRCLES.BAS CIRCLES CHECKERS \
-			CHECKERS_SMALL PLANE SIER TUNNEL TNM \
+			CIRCLES_NORMAL CHECKERS_SMALL PLANE SIER TUNNEL TNM \
 			division_table
 
