@@ -1,8 +1,10 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-PNG2GR = ../gr-utils/png2gr
-PNG2RLE = ../gr-utils/png2rle
+DOS33 = ../../utils/dos33fs-utils/dos33
+PNG2GR = ../../utils/gr-utils/png2gr
+PNG2RLE = ../../utils/gr-utils/png2rle
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
+
 
 all:	mode7_demo.dsk
 
@@ -18,12 +20,12 @@ mode7_demo.dsk:	$(DOS33) MODE7_DEMO MODE7_DEMO_C HELLO
 
 ####
 HELLO:	hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 ###
 
 MODE7_DEMO_C:	mode7_decompress.o
-	ld65 -o MODE7_DEMO_C mode7_decompress.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o MODE7_DEMO_C mode7_decompress.o -C ../../linker_scripts/apple2_2000.inc
 
 mode7_decompress.o:	mode7_decompress.s MODE7_DEMO.lz4 \
 		zp.inc
@@ -36,7 +38,7 @@ MODE7_DEMO.lz4:	MODE7_DEMO
 ###
 
 MODE7_DEMO:	mode7_demo.o
-	ld65 -o MODE7_DEMO mode7_demo.o -C ../linker_scripts/apple2_4000.inc
+	ld65 -o MODE7_DEMO mode7_demo.o -C ../../linker_scripts/apple2_4000.inc
 
 mode7_demo.o:	mode7_demo.s mode7_demo_backgrounds.inc sprites.inc \
 		a2.scrolltext deater.scrolltext wave.krg \
@@ -53,7 +55,7 @@ mode7_demo.o:	mode7_demo.s mode7_demo_backgrounds.inc sprites.inc \
 	ca65 -o mode7_demo.o mode7_demo.s -l mode7_demo.lst
 
 $(PNG2RLE):	
-	cd ../gr-utils && make
+	cd ../../utils/gr-utils && make
 
 
 mode7_demo_backgrounds.inc:	$(PNG2RLE) \
@@ -62,5 +64,5 @@ mode7_demo_backgrounds.inc:	$(PNG2RLE) \
 
 
 clean:	
-	rm -f *~ *.o MODE7_DEMO MODE7_DEMO_C MODE7_DEMO.lz4 *.lst
+	rm -f *~ *.o MODE7_DEMO MODE7_DEMO_C MODE7_DEMO.lz4 *.lst HELLO
 	cd docs && make clean

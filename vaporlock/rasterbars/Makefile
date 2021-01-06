@@ -1,8 +1,9 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-PNG_TO_40x96 = ../gr-utils/png_to_40x96
-PNG_TO_40x48D = ../gr-utils/png_to_40x48d
+DOS33 = ../../utils/dos33fs-utils/dos33
+PNG_TO_40x96 = ../../utils/gr-utils/png_to_40x96
+PNG_TO_40x48D = ../../utils/gr-utils/png_to_40x48d
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 
 all:	interlace.dsk
@@ -17,13 +18,13 @@ interlace.dsk:	INTERLACE RASTERBARS HELLO RASTERBARS_SOUND #SPRITES
 ####
 
 HELLO:  hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 
 ####
 
 INTERLACE:	interlace.o
-	ld65 -o INTERLACE interlace.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o INTERLACE interlace.o -C ../../linker_scripts/apple2_1000.inc
 
 interlace.o:	interlace.s gr_copy.s \
 	k_40_48d.inc
@@ -32,7 +33,7 @@ interlace.o:	interlace.s gr_copy.s \
 ####
 
 RASTERBARS:	rasterbars.o
-	ld65 -o RASTERBARS rasterbars.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o RASTERBARS rasterbars.o -C ../../linker_scripts/apple2_1000.inc
 
 rasterbars.o:	rasterbars.s gr_copy.s \
 	rasterbars_screen.s rasterbars_table.s movement_table.s rb_bg.inc
@@ -41,7 +42,7 @@ rasterbars.o:	rasterbars.s gr_copy.s \
 ####
 
 RASTERBARS_SOUND:	rasterbars_sound.o
-	ld65 -o RASTERBARS_SOUND rasterbars_sound.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o RASTERBARS_SOUND rasterbars_sound.o -C ../../linker_scripts/apple2_1000.inc
 
 rasterbars_sound.o:	rasterbars_sound.s gr_copy.s \
 	rasterbars_screen.s rasterbars_table.s movement_table.s rb_bg.inc \
@@ -55,7 +56,7 @@ rasterbars_sound.o:	rasterbars_sound.s gr_copy.s \
 ####
 
 SPRITES:	sprites.o
-	ld65 -o SPRITES sprites.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o SPRITES sprites.o -C ../../linker_scripts/apple2_1000.inc
 
 sprites.o:	sprites.s gr_copy.s \
 	sprites_screen.s sprites_table.s movement_table.s earth.inc asteroid.inc

@@ -18,17 +18,32 @@
 	; decompress scroll text
 	;=======================
 
-	lda	#10
+	lda	#0
 	sta	CV
+	sta	ANGLE
+
+
+	lda	#>sky_background
+	sta	INH
+	lda	#<sky_background
+	sta	INL
+	jsr	decompress_scroll
 
 scroll_forever:
-	lda	#>deater_scroll
-	sta	INH
-	lda	#<deater_scroll
-	sta	INL
+	jsr	scroll_background
 
+	jsr	page_flip						; 6
 
-	jsr	gr_scroll
+;	lda	#250
+;	jsr	WAIT
+
+	jsr	wait_until_keypressed
+
+	inc	ANGLE
+
+	lda	ANGLE
+	and	#$0f
+	sta	ANGLE
 
 	jmp	scroll_forever
 
@@ -36,15 +51,18 @@ scroll_forever:
 ;===============================================
 ; Routines
 ;===============================================
-.include "../asm_routines/gr_fast_clear.s"
-.include "../asm_routines/gr_scroll.s"
-.include "../asm_routines/pageflip.s"
-.include "../asm_routines/gr_setpage.s"
-.include "../asm_routines/gr_offsets.s"
+.include "../../asm_routines/gr_fast_clear.s"
+.include "../../asm_routines/gr_scroll.s"
+.include "../../asm_routines/pageflip.s"
+.include "../../asm_routines/gr_setpage.s"
+.include "../../asm_routines/keypress.s"
+.include "../../asm_routines/bg_scroll.s"
+.include "../../asm_routines/gr_offsets.s"
 
 ;===============================================
 ; Variables
 ;===============================================
 
-.include "deater_scroll.inc"
+.include "starry_sky.scroll"
+
 

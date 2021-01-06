@@ -1,9 +1,12 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-B2D = ../bmp2dhr/b2d
-PNG_TO_40x48D = ../gr-utils/png_to_40x48d
-PNG_TO_40x96 = ../gr-utils/png_to_40x96
+DOS33 = ../../utils/dos33fs-utils/dos33
+B2D = ../../utils/bmp2dhr/b2d
+PNG_TO_40x48D = ../../utils/gr-utils/png_to_40x48d
+PNG_TO_40x96 = ../../utils/gr-utils/png_to_40x96
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
+
+
 
 all:	xmas2019.dsk sine_table
 
@@ -19,7 +22,7 @@ xmas2019.dsk:	SNOW TREE XMAS2019 XMAS2019_LZ4 LOADER HELLO
 ####
 
 TREE:	tree.o
-	ld65 -o TREE tree.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o TREE tree.o -C ../../linker_scripts/apple2_1000.inc
 
 tree.o:	tree.s
 #gr_copy.s random16.s fw.s hgr.s delay_a.s \
@@ -30,7 +33,7 @@ tree.o:	tree.s
 ####
 
 SNOW:	snow.o
-	ld65 -o SNOW snow.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o SNOW snow.o -C ../../linker_scripts/apple2_1000.inc
 
 snow.o:	snow.s
 #gr_copy.s random16.s fw.s hgr.s delay_a.s \
@@ -41,7 +44,7 @@ snow.o:	snow.s
 ####
 
 LOADER:	loader.o
-	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_800.inc
+	ld65 -o LOADER loader.o -C ../../linker_scripts/apple2_800.inc
 
 loader.o:	loader.s
 	ca65 -o loader.o loader.s -l loader.lst
@@ -50,7 +53,7 @@ loader.o:	loader.s
 ####
 
 XMAS2019:	xmas2019.o
-	ld65 -o XMAS2019 xmas2019.o -C ../linker_scripts/apple2_4000.inc
+	ld65 -o XMAS2019 xmas2019.o -C ../../linker_scripts/apple2_4000.inc
 
 xmas2019.o:	xmas2019.s \
 	delay_a.s vapor_lock.s message.inc gr_unrle.s sines.inc \
@@ -72,7 +75,7 @@ message.inc:      message.png
 ####
 
 HELLO:	hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 ####
 
@@ -85,4 +88,4 @@ sine_table.o:	sine_table.c
 ####
 
 clean:		
-		rm -f *~ *.o *.lst XMAS2019 LOADER
+		rm -f *~ *.o *.lst XMAS2019 LOADER HELLO sine_table

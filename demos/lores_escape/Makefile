@@ -1,11 +1,13 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-PNG2RLE = ../gr-utils/png2rle
-PNG2LZ4 = ../gr-utils/png2lz4
-PNG_TO_40x96 = ../gr-utils/png_to_40x96
-PNG_TO_40x48D = ../gr-utils/png_to_40x48d
-B2D = ../bmp2dhr/b2d
+DOS33 = ../../utils/dos33fs-utils/dos33
+PNG2RLE = ../../utils/gr-utils/png2rle
+PNG2LZ4 = ../../utils/gr-utils/png2lz4
+PNG_TO_40x96 = ../../utils/gr-utils/png_to_40x96
+PNG_TO_40x48D = ../../utils/gr-utils/png_to_40x48d
+B2D = ../../utils/bmp2dhr/b2d
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
+
 
 all:	demosplash2019.dsk
 
@@ -20,13 +22,13 @@ demosplash2019.dsk:	HELLO LOADER DEMOSPLASH
 
 
 HELLO:  hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 
 #####
 
 #DEMOSPLASH:	demosplash.o
-#	ld65 -o DEMOSPLASH demosplash.o -C ../linker_scripts/apple2_1700.inc
+#	ld65 -o DEMOSPLASH demosplash.o -C ../../linker_scripts/apple2_1700.inc
 
 #demosplash.o:	demosplash.s \
 #	zp.inc hardware.inc \
@@ -45,7 +47,7 @@ HELLO:  hello.bas
 #####
 
 DEMOSPLASH:	demosplash.o
-	ld65 -o DEMOSPLASH demosplash.o -C ../linker_scripts/apple2_1400.inc
+	ld65 -o DEMOSPLASH demosplash.o -C ../../linker_scripts/apple2_1400.inc
 
 demosplash.o:	demosplash.s \
 	zp.inc hardware.inc \
@@ -73,7 +75,7 @@ demosplash.o:	demosplash.s \
 #####
 
 LOADER:	loader.o
-	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o LOADER loader.o -C ../../linker_scripts/apple2_1000.inc
 
 loader.o:	loader.s
 	ca65 -o loader.o loader.s -l loader.lst
@@ -112,3 +114,5 @@ k_40_48d.inc:   k_40_48d.png
 clean:		
 		rm -f *~ *.o *.lst *.lz4 HELLO \
 			DEMOSPLASH
+		cd ansi && make clean
+		cd generator && make clean

@@ -1,9 +1,9 @@
-include ../../Makefile.inc
+include ../../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-B2D = ../bmp2dhr/b2d
-PNG_TO_40x96 = ../gr-utils/png_to_40x96
-PNG_TO_RLE = ../gr-utils/png2rle
+DOS33 = ../../utils/dos33fs-utils/dos33
+B2D = ../../utils/bmp2dhr/b2d
+PNG_TO_40x96 = ../../utils/gr-utils/png_to_40x96
+PNG_TO_RLE = ../../utils/gr-utils/png2rle
 
 all:	FASTLD6 RTS
 
@@ -19,7 +19,7 @@ all:	FASTLD6 RTS
 ####
 
 FASTLD6:	fastld6.o
-	ld65 -o FASTLD6 fastld6.o -C ../../linker_scripts/apple2_800.inc
+	ld65 -o FASTLD6 fastld6.o -C ../../../linker_scripts/apple2_800.inc
 
 fastld6.o:	fastld6.s
 	ca65 -o fastld6.o fastld6.s -l fastld6.lst
@@ -27,7 +27,7 @@ fastld6.o:	fastld6.s
 ####
 
 RTS:	rts.o
-	ld65 -o RTS rts.o -C ../../linker_scripts/apple2_800.inc
+	ld65 -o RTS rts.o -C ../../../linker_scripts/apple2_800.inc
 
 rts.o:	rts.s
 	ca65 -o rts.o rts.s -l rts.lst

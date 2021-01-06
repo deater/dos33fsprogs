@@ -1,0 +1,13 @@
+Apple II Lores Escape Demo
+
+presented at Demosplash 2019 (came in 3rd retro demo)
+
+was doing too much that year
+
+had to fix bugs (with memory not being inited to zero) right before
+it was presented
+
+struggled with the sound transition from cycle-counted to interrupt
+driven
+
+bass sound still not 100% great much to Dya's disappointment

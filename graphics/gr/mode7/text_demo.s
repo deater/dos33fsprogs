@@ -318,10 +318,10 @@ thankz:
 ; External modules
 ;===============================================
 
-.include "../asm_routines/pageflip.s"
-.include "../asm_routines/gr_setpage.s"
-;.include "../asm_routines/keypress.s"
-.include "../asm_routines/gr_offsets.s"
-.include "../asm_routines/gr_fast_clear.s"
-.include "../asm_routines/gr_hlin.s"
-.include "../asm_routines/text_print.s"
+.include "../../asm_routines/pageflip.s"
+.include "../../asm_routines/gr_setpage.s"
+;.include "../../asm_routines/keypress.s"
+.include "../../asm_routines/gr_offsets.s"
+.include "../../asm_routines/gr_fast_clear.s"
+.include "../../asm_routines/gr_hlin.s"
+.include "../../asm_routines/text_print.s"

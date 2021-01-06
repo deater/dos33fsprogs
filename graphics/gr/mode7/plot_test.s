@@ -56,12 +56,12 @@ blah:
 ; External modules
 ;===============================================
 
-.include "../asm_routines/pageflip.s"
-.include "../asm_routines/gr_setpage.s"
-;.include "../asm_routines/keypress.s"
-;.include "../asm_routines/gr_putsprite.s"
-.include "../asm_routines/gr_offsets.s"
-.include "../asm_routines/gr_fast_clear.s"
-.include "../asm_routines/gr_plot.s"
+.include "../../asm_routines/pageflip.s"
+.include "../../asm_routines/gr_setpage.s"
+;.include "../../asm_routines/keypress.s"
+;.include "../../asm_routines/gr_putsprite.s"
+.include "../../asm_routines/gr_offsets.s"
+.include "../../asm_routines/gr_fast_clear.s"
+.include "../../asm_routines/gr_plot.s"
 
 

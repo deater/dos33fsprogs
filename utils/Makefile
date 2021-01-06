@@ -4,7 +4,7 @@ all:
 	cd asoft_basic-utils && make
 	cd asoft_presenter && make
 	cd asoft_sound && make
-#	cd bmp2dhr && make
+	cd bmp2dhr && make
 #	cd dos33fs-linux2.4 && make
 	cd dos33fs-utils && make
 #	cd gr-sim && make

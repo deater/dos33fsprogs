@@ -1,7 +1,7 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-PNG_TO_RLE = ../gr-utils/png2rle
+DOS33 = ../../utils/dos33fs-utils/dos33
+PNG_TO_RLE = ../../utils/gr-utils/png2rle
 
 
 all:	waterfall.dsk
@@ -14,7 +14,7 @@ waterfall.dsk:	WATERFALL
 ####
 
 WATERFALL:	waterfall.o
-	ld65 -o WATERFALL waterfall.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o WATERFALL waterfall.o -C ../../linker_scripts/apple2_1000.inc
 
 waterfall.o:	waterfall.s gr_copy.s gr_unrolled_copy.s vapor_lock.s \
 	gr_putsprite.s delay_a.s \

@@ -375,9 +375,9 @@ adjust_xpos:
 	jmp	display_loop				; 3
 
 .include "gr_hline.s"
-.include "../asm_routines/gr_unrle.s"
+.include "../../asm_routines/gr_unrle.s"
 .align	$100
-.include "../asm_routines/keypress.s"
+.include "../../asm_routines/keypress.s"
 .include "gr_copy.s"
 .include "gr_unrolled_copy.s"
 .align $100

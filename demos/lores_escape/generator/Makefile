@@ -23,4 +23,4 @@ offsets2.o:	offsets2.c
 	$(CC) $(CFLAGS) -c offsets2.c
 
 clean:
-	rm -f *.o creator offsets offsets2
+	rm -f *~ *.o creator offsets offsets2
