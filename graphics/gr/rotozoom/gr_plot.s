@@ -36,12 +36,12 @@ plot_write:
 	lda	MASK							; 3
 	eor	#$ff							; 2
 
-	and	(GBASL),Y						; 5
+	and	(GBASL),Y						; 5+
 	sta	COLOR_MASK						; 3
 
 	lda	COLOR							; 3
 	and	MASK							; 3
 	ora	COLOR_MASK						; 3
-	sta	(GBASL),Y						; 5
+	sta	(GBASL),Y						; 6
 
 	rts								; 6

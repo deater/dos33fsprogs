@@ -95,8 +95,8 @@ wait_for_keypress:
 .include "decompress_fast_v2.s"
 .include "gr_offsets.s"
 
-.include "gr_plot.s"
-.include "gr_scrn.s"
+;.include "gr_plot.s"
+;.include "gr_scrn.s"
 
 ;===============================================
 ; Data

@@ -1,5 +1,11 @@
 	; ANGLE in our case it's 0..15?
 
+; optimization (ANGLE=0)
+;	$6BD76=441,718=2.26fps	initial code with external plot and scrn
+;	$62776=403,318=2.48fps	inline plot
+;	$597b6=366,518=2.73fps	inline scrn
+;	$45496=324,758=3.08fps	move plot line calc outside of inner loop
+
 CAL	= $B0
 CAH	= $B1
 SAL	= $B2
@@ -137,6 +143,22 @@ rotozoom_yloop:
 								;===========
 								;	20
 
+
+	; setup self-modifying code for plot
+	lda	YY							; 3
+	and	#$fe	; make even					; 2
+	tay								; 2
+
+	lda	gr_offsets,Y	; lookup low-res memory address		; 4
+	sta	rplot1_smc+1						; 4
+	sta	rplot2_smc+1						; 4
+
+	clc								; 2
+	lda	gr_offsets+1,Y						; 4
+	adc	DRAW_PAGE	; add in draw page offset		; 3
+	sta	rplot1_smc+2						; 4
+	sta	rplot2_smc+2						; 4
+
         ; for(xx=0;xx<40;xx++) {
 	lda	#0							; 2
 	sta	XX							; 3
@@ -160,25 +182,88 @@ rotozoom_xloop:
 
 	; scrn(xp,yp)
 
-	lda	XPH							; 3
-	sta	XPOS							; 3
-	lda	YPH							; 3
-	sta	YPOS							; 3
+;==================================================
 
-	jsr	scrn							; 6+??
+	lda	YPH							; 3
+
+	and	#$fe		; make even				; 2
+	tay								; 2
+
+	lda	gr_offsets,Y	; lookup low-res memory address		; 4
+        clc								; 2
+        adc	XPH							; 3
+        sta	BASL							; 3
+
+        lda	gr_offsets+1,Y						; 4
+        adc	#$8	; assume reading from $c0			; 3
+        sta	BASH							; 3
+
+	ldy	#0							; 2
+
+	lda	YPH							; 3
+	lsr								; 2
+	bcs	rscrn_adjust_even					;2nt/3t
+
+rscrn_adjust_odd:
+	lda	(BASL),Y	; top/bottom color			; 5+
+	jmp	rscrn_done						; 3
+
+rscrn_adjust_even:
+	lda	(BASL),Y	; top/bottom color			; 5+
+
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+
+rscrn_done:
+
+	and	#$f							; 2
+
+;=============================================
+
 
 rotozoom_set_color:
 	; color_equals(color);
 	jsr	SETCOL							; 6+??
 
+
+;=================================================
+
 	; plot(xx,yy);
 
-	lda	XX							; 3
-	sta	XPOS							; 3
 	lda	YY							; 3
-	sta	YPOS							; 3
 
-	jsr	plot							; 6+??
+	lsr			; shift bottom bit into carry		; 2
+
+	bcc	rplot_even						; 2nt/3
+rplot_odd:
+	ldx	#$f0							; 2
+	bcs	rplot_c_done		;bra				; 3
+rplot_even:
+	ldx	#$0f							; 2
+rplot_c_done:
+	stx	MASK							; 3
+
+rplot_write:
+
+	ldy	XX							; 3
+
+	lda	MASK							; 3
+	eor	#$ff							; 2
+
+rplot1_smc:
+	and	$400,Y							; 4+
+	sta	COLOR_MASK						; 3
+
+	lda	COLOR							; 3
+	and	MASK							; 3
+	ora	COLOR_MASK						; 3
+rplot2_smc:
+	sta	$400,Y							; 5+
+
+
+;=======================
 
 	; xp=xp+ca;
 
@@ -205,7 +290,9 @@ rotozoom_end_xloop:
 	inc	XX							; 5
 	lda	XX							; 3
 	cmp	#40							; 2
-	bne	rotozoom_xloop						; 2nt/3
+	beq	rotozoom_xloop_done					; 2nt/3
+	jmp	rotozoom_xloop						; 3
+rotozoom_xloop_done:
 
 	; yca+=ca;
 
