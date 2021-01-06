@@ -34,7 +34,8 @@ rotozoom:
 	sta	CAH							; 3
 	lda	fixed_sin+1,Y	; load integer half			; 4
 	sta	CAL							; 3
-
+								;===========
+								;	27
 	; sa = sin(theta)*scale;
 
 	lda	ANGLE							; 3
@@ -44,179 +45,201 @@ rotozoom:
 	sta	SAH							; 3
 	lda	fixed_sin+1,Y	; load integer half			; 4
 	sta	SAL							; 3
-
+								;==========
+								;	21
 	; cca = -20*ca;
 	; csa = -20*sa;
 
-	lda	#0
-	sta	CCAL
-	sta	CCAH
-	sta	CSAL
-	sta	CSAH
+	lda	#0							; 2
+	sta	CCAL							; 3
+	sta	CCAH							; 3
+	sta	CSAL							; 3
+	sta	CSAH							; 3
+								;===========
+								;	14
 
-	ldx	#20
+	ldx	#20							; 2
 mul20_loop:
-	sec
-	lda	CCAL
-	sbc	CAL
-	sta	CCAL
-	lda	CCAH
-	sbc	CAH
-	sta	CCAH
+	sec								; 2
+	lda	CCAL							; 3
+	sbc	CAL							; 3
+	sta	CCAL							; 3
+	lda	CCAH							; 3
+	sbc	CAH							; 3
+	sta	CCAH							; 3
+								;===========
+								; 	20
 
-	sec
-	lda	CSAL
-	sbc	SAL
-	sta	CSAL
-	lda	CSAH
-	sbc	SAH
-	sta	CSAH
+	sec								; 2
+	lda	CSAL							; 3
+	sbc	SAL							; 3
+	sta	CSAL							; 3
+	lda	CSAH							; 3
+	sbc	SAH							; 3
+	sta	CSAH							; 3
+								;===========
+								; 	20
 
-	dex
-	bne	mul20_loop
+	dex								; 2
+	bne	mul20_loop						;2nt/3
 
+							;===================
+							; total=2+(45*20)-1
+							; 	901 cycles
 
 	; yca=cca+ycenter;
 
-	lda	CCAL
-	sta	YCAL
-	clc
-	lda	CCAH
-	adc	#20
-	sta	YCAH
-
+	lda	CCAL							; 3
+	sta	YCAL							; 3
+	clc								; 2
+	lda	CCAH							; 3
+	adc	#20							; 2
+	sta	YCAH							; 3
+								;===========
+								;	16
 	; ysa=csa+xcenter;
 
-	lda	CSAL
-	sta	YSAL
-	clc
-	lda	CSAH
-	adc	#20
-	sta	YSAH
+	lda	CSAL							; 3
+	sta	YSAL							; 3
+	clc								; 2
+	lda	CSAH							; 3
+	adc	#20							; 2
+	sta	YSAH							; 3
+								;===========
+								;	16
 
 	; for(yy=0;yy<40;yy++) {
 
-	lda	#0
-	sta	YY
+	lda	#0							; 2
+	sta	YY							; 3
 rotozoom_yloop:
 
 	; xp=cca+ysa;
-	clc
-	lda	YSAL
-	adc	CCAL
-	sta	XPL
-	lda	YSAH
-	adc	CCAH
-	sta	XPH
+	clc								; 2
+	lda	YSAL							; 3
+	adc	CCAL							; 3
+	sta	XPL							; 3
+	lda	YSAH							; 3
+	adc	CCAH							; 3
+	sta	XPH							; 3
+								;==========
+								;	20
 
 	; yp=yca-csa;
 
-	sec
-	lda	YCAL
-	sbc	CSAL
-	sta	YPL
-	lda	YCAH
-	sbc	CSAH
-	sta	YPH
+	sec								; 2
+	lda	YCAL							; 3
+	sbc	CSAL							; 3
+	sta	YPL							; 3
+	lda	YCAH							; 3
+	sbc	CSAH							; 3
+	sta	YPH							; 3
+								;===========
+								;	20
 
         ; for(xx=0;xx<40;xx++) {
-	lda	#0
-	sta	XX
+	lda	#0							; 2
+	sta	XX							; 3
 rotozoom_xloop:
 
 	; if ((xp<0) || (xp>39)) color=0;
 	; else if ((yp<0) || (yp>39)) color=0;
 	; else color=scrn_page(xp,yp,PAGE2);
 
-	lda	#0
-	ldx	XPH
-	bmi	rotozoom_set_color
-	cpx	#40
-	bcs	rotozoom_set_color
-	ldx	YPH
-	bmi	rotozoom_set_color
-	cpx	#40
-	bcs	rotozoom_set_color
+	lda	#0							; 2
+
+	ldx	XPH							; 3
+	bmi	rotozoom_set_color					; 2nt/3
+	cpx	#40							; 2
+	bcs	rotozoom_set_color					; 2nt/3
+
+	ldx	YPH							; 3
+	bmi	rotozoom_set_color					; 2nt/3
+	cpx	#40							; 2
+	bcs	rotozoom_set_color					; 2nt/3
 
 	; scrn(xp,yp)
 
-	lda	XPH
-	sta	XPOS
-	lda	YPH
-	sta	YPOS
+	lda	XPH							; 3
+	sta	XPOS							; 3
+	lda	YPH							; 3
+	sta	YPOS							; 3
 
-	jsr	scrn
+	jsr	scrn							; 6+??
 
 rotozoom_set_color:
 	; color_equals(color);
-	jsr	SETCOL
+	jsr	SETCOL							; 6+??
 
 	; plot(xx,yy);
 
-	lda	XX
-	sta	XPOS
-	lda	YY
-	sta	YPOS
+	lda	XX							; 3
+	sta	XPOS							; 3
+	lda	YY							; 3
+	sta	YPOS							; 3
 
-	jsr	plot
+	jsr	plot							; 6+??
 
 	; xp=xp+ca;
 
-	clc
-	lda	CAL
-	adc	XPL
-	sta	XPL
-	lda	CAH
-	adc	XPH
-	sta	XPH
+	clc								; 2
+	lda	CAL							; 3
+	adc	XPL							; 3
+	sta	XPL							; 3
+	lda	CAH							; 3
+	adc	XPH							; 3
+	sta	XPH							; 3
 
 	; yp=yp-sa;
 
-	sec
-	lda	YPL
-	sbc	SAL
-	sta	YPL
-	lda	YPH
-	sbc	SAH
-	sta	YPH
+	sec								; 2
+	lda	YPL							; 3
+	sbc	SAL							; 3
+	sta	YPL							; 3
+	lda	YPH							; 3
+	sbc	SAH							; 3
+	sta	YPH							; 3
 
 
 rotozoom_end_xloop:
-	inc	XX
-	lda	XX
-	cmp	#40
-	bne	rotozoom_xloop
+	inc	XX							; 5
+	lda	XX							; 3
+	cmp	#40							; 2
+	bne	rotozoom_xloop						; 2nt/3
 
 	; yca+=ca;
 
-	clc
-	lda	YCAL
-	adc	CAL
-	sta	YCAL
-	lda	YCAH
-	adc	CAH
-	sta	YCAH
+	clc								; 2
+	lda	YCAL							; 3
+	adc	CAL							; 3
+	sta	YCAL							; 3
+	lda	YCAH							; 3
+	adc	CAH							; 3
+	sta	YCAH							; 3
+								;===========
+								;	20
 
 	; ysa+=sa;
 
-	clc
-	lda	YSAL
-	adc	SAL
-	sta	YSAL
-	lda	YSAH
-	adc	SAH
-	sta	YSAH
-
+	clc								; 2
+	lda	YSAL							; 3
+	adc	SAL							; 3
+	sta	YSAL							; 3
+	lda	YSAH							; 3
+	adc	SAH							; 3
+	sta	YSAH							; 3
+								;==========
+								;	20
 
 rotozoom_end_yloop:
-	inc	YY
-	lda	YY
-	cmp	#40
-	beq	done_rotozoom
-	jmp	rotozoom_yloop	; too far
+	inc	YY							; 5
+	lda	YY							; 3
+	cmp	#40							; 2
+	beq	done_rotozoom						; 2nt/3
+	jmp	rotozoom_yloop	; too far				; 3
 
 done_rotozoom:
-	rts
+	rts								; 6
 
 
 
