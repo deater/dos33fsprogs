@@ -1,0 +1,233 @@
+FAQ.  Some questions shamelessly stolen from the tb_asm FAQ
+
+
+Q. Why?
+
+A.  My friend <A href="http://www.deater.net/john">John</A> got a Gameboy
+    Advance for Christmas.  He suggested I port my game 
+    <A href="http://www.deater.net/weave/vmwprod/tb1">Tom Bombem</A> to it.
+    
+    In actuality the specs of the GBA are similar to the machine I
+    originally wrote TB1 on.  It was on a 386-33 with 320x200x256 graphics
+    and constrained to 640kB of RAM.  The game was written in 16-bit
+    PASCAL with some 32-bit assembly.
+    
+    I somehow got side-tracked into an 8k Linux x86 text-mode version first,
+    and then it seemed obvious to port it to the 6502.  Finally the disks
+    full of poorly written way-to-slow BASIC space games I wrote when
+    I was in elementary school have been vindicated!
+
+
+Q.  The game runs too fast/too slow!  It is unplayable!
+
+A.  The game has been balanced and tested on an actual Apple IIe platinum.
+    If you are running on an emulator, your emulator probably isn't
+       emulating 100% accurately.
+    If you are on a real Apple IIe... well it's probably my fault.
+       If you're clever you can find the timing code in the source
+       and fix it yourself.
+
+
+
+Q.  Why did it take you so long to finish?
+
+A.  I originally rushed to get this game entered in the 2003 Minigames
+    Competition in the 4k game section.  I had to cut down on the 
+    features a lot to get it to fit in 4k.
+    
+    Despite all this work, I finished 53rd or so.  Most of the
+    complaints were negative  because there aren't that many good Apple ][
+    emulators out there, but a highlight was the infamous "blocky graphics" 
+    comment by the Atari 2600 programmer.
+    
+    Anyway this experience burned me out on the whole concept for a bit,
+    plus I started grad school which sucked up most of my time.
+    
+    But anyway I got a chance to finish it this summer.
+
+
+Q.  How did you do the graphics?
+
+A.  With <A href="http://www.thegimp.org">The Gimp</A>.  Used 16 color indexed
+    palette.  Saved as xpm.  Edited with text editor.
+
+
+
+Q.  Why LOW-RES graphics mode?
+
+A.  Because I like 16 colors.  High-res on the Apple ][ really isn't all
+    that great and can only do 4 colors or so with weird placement rules.
+    
+    And all of you people with Atari 800s and Commodore's feel free to laugh.
+    But my code here will run in full 16 color mode even on the Original
+    Apple ][ released in 1977.
+    
+    In any case I like blocky graphics, probably dating to my time doing
+    ANSI graphics for BBS's in the early 90s.
+    
+    And don't think low-res mode was a cheating way out.  The Apple ][
+    framebuffer is _horribly_ convoluted and non-linear.  Apparently
+    this saved some chips on the memory refresh... but man is it a pain
+    to program.
+
+
+Q.  Why is all the text in this game SHOUTING AT ME?
+
+A.  For extra perversity, I want the game to work on all machines
+    back to the original 1977 Apple ][.  Lower-case letters were an
+    optional add-on until the Apple //e came out much later.
+
+
+
+Q.  What is the high score?
+
+A.  A bit of a silly question as its impossible to prove.
+
+    The highest _possible_ score is 9999 I am pretty sure, due
+    to the limitations of a 16 bit BCD number (which is how the
+    score is stored).
+
+
+Q.  Why does the ship have its engines constantly on, even though
+    it is moving at a constant velocity?
+
+A.  Ummmm... friction.  Yeah... space friction.    
+    
+
+
+Q.  Why are the stars moving so quickly?  Are you going faster than light?
+
+A.  If you look closely you'll notice the stars repeat.  Hence you
+    are really flying very fast in a big circle.  Hey, maybe that's
+    why the engine is constantly firing!
+
+
+
+Q.  Where in that tiny ship are all of those missiles stored?
+
+A.  In the seventh dimension.
+
+
+Q.  Why the seventh dimension?
+
+A.  The others were all full.
+
+
+Q.  Why is there a guinea pig in the game?
+
+A.  A local guinea pig threatened me with violence if I did not include
+    a picture of her.
+
+
+Q.  What have you learned from all this assembly programming?
+
+A.  I'm just reminded what Professor Bruce Jacob always said...
+    A computer is just a state machine.
+
+
+
+Q.  Why are there only 6 enemies / 2 missiles / shields go up at 100/ etc?
+
+A.  Game balance.  Just trying to keep it challenging yet not overwhlmingly
+    so.  [For the original tb1 it was "because my 386 can't keep up" but
+    that should be less of a problem these days].
+    
+    If you _must_ have it some other way, feel free to mess with the constants
+    on the first page of the tb_6502.s file, but I cannot guarantee what
+    the consequences might be!
+    
+    
+Q.  Will there be a sequel?
+
+A.  Yes, it will be released shortly before either the release of
+    "Duke Nukem Forever (tm)" or the heat death of the universe,
+    which ever happens first.
+    
+    
+Q.  Why can't Vince stay consitent between "HISCORE" and "HIGH SCORE"
+    including all possibly variations of "HI-SCORE" "HIGH_SCORE" usw?
+    
+A.  The world may never know.
+
+
+Q.  What does "usw" mean?
+
+A.  Und So Weiter.
+
+
+Q.  That wasn't helpful.
+
+A.  This isn't a question.
+
+
+Q.  What's the highest level you can get to?
+
+A.  No matter how you try, once you get to level 7 it will
+    keep repeating.  This is because I multiply the level
+    by 16 in various places for enemy movement, and it it goes
+    above 7 then the byte will be negative causing
+    Bad Things(tm) to happen.
+    
+   
+Q.  Well why don't you modify the code so it doesn't go haywire
+    after level 7?
+    
+A.  I am lazy.  Also it should be too hard to get to level 7 anyway
+    
+    
+Q.  What are the enemies supposed to be?
+
+A.  An envelope, a clip-board, a cigarette, a telephone, a dollar-bill,
+    and an un-identified yellow thing, possibly a banana.  All things
+    malicious marketers might have in excess.
+    The apple II version has in addition a green toothbrush and a
+    purple toupe.  Those wacky marketers!    
+
+Q.  How come the stars appear in straight bands insteas of scattered in the
+    sky?
+    
+A.  Because my pseudo-random number algorithm is at times more pseudo
+    than random.
+
+
+Q.  Why does vince use the stack so often, when it would make much more
+    sense to backup the Y register to the zero page?
+    
+A.  Too much intel x86 programming has warped my mind into thinking
+    stack usage is a good way of mitigating limited register count.
+
+    Must remind myself the zero page is like a 256-byte register file.
+
+
+
+Q.  Why is the 6502 instruction set so obtuse?
+
+A.  I HAVE NO IDEA.  In coding I keep stumbling across instructions
+    that I think would be _so_ useful.  But they don't exist.  But
+    apparently the instructions I pine for are fairly obvious...
+    an enhanced 65C02 was released with "bonus" opcodes.  Sadly
+    I cannot use them because of the aforementioned want of Apple ][
+    compatibility [the 65C02 wasn't around until the //e.
+    
+        ABS (IND), X indexing : would be great working with structs.
+	BRA -- Branch Always  : a great opcode name, but also remove
+	                        the need for 16-bit absolute JMP's when
+				a short branch would do
+	DEA -- Decrement Accumulator :
+	                        That's right, there's no way to decrement
+				the accumulator.  You have to CLC clear
+				carry then ADC $FF.  Yet you can dec
+				X or Y with one-byte.  Weird.
+	INA -- Incrememnt Accumlator:
+	                        See DEA.  Yes, even more perverse.  Taking
+				3 bytes to do what should be a common task.
+	PHX/PLX 
+	PHY/PLY -- Push/Pop X/Y :  
+	                        These would be so useful.  Otherwise
+	                        you can only push/pop the accumulator.
+	STZ -- Store Zero to Memory :
+	                        Would save a lot of LDA #$0 / STA pairs.
+	TRB/TSB -- Test and Set/Reset bit:
+	                        Wow, getting even more CISC here.  Atomic
+				test/set bit instructions.  We're ready
+				for SMP now.    

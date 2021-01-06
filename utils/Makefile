@@ -3,7 +3,7 @@ include ../Makefile.inc
 all:
 	cd asoft_basic-utils && make
 	cd asoft_presenter && make
-#	cd asoft_sound && make
+	cd asoft_sound && make
 #	cd bmp2dhr && make
 #	cd dos33fs-linux2.4 && make
 	cd dos33fs-utils && make
@@ -14,7 +14,7 @@ all:
 install:
 	cd asoft_basic-utils && make install
 	cd asoft_presenter && make install
-#	cd asoft_sound && make install
+	cd asoft_sound && make install
 #	cd bmp2dhr && make install
 #	cd dos33fs-linux2.4 && make install
 	cd dos33fs-utils && make install

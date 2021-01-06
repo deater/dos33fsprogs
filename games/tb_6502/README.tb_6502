@@ -1,0 +1,130 @@
+TOM BOMBEM: Merciless Marauding Malicious Marketers
+              6502 Apple IIe Edition
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+http://www.deater.net/weave/vmwprod/tb1/tb_6502.html
+   
+       by Vince Weaver <vince@deater.net>
+
+       version 1.1 -- 24 July 2004
+
+
+Quotes about tb_6502:
+~~~~~~~~~~~~~~~~~~~~~
+
+  "The graphics are crude and blocky." 
+            -- random Atari 2600 developer
+
+
+System Requirements:
+~~~~~~~~~~~~~~~~~~~~
+  Apple ][ Computer
+  At least 32kB of RAM
+  Disk drive, or Super Serial Card to load game
+
+
+Background:
+~~~~~~~~~~~
+  You are Tom Bombem, a shy new intern on Moonbase Alpha.
+  Somewhat against your will it has become your job to
+  defend Earth!  See the "Story" option in the game
+  for the rest of the story.
+
+  tb_6502 comes before "tb1: Invasion of the Inanimate Objects"
+  chronologically, for those who might care.
+
+
+Keybindings:
+~~~~~~~~~~~
+  Use arrow keys, or i,j,k,m to manuever and navigate menus.
+  ' ' shoots and selects.
+  'h' displays help.  's' toggles sound   'p' pauses
+
+Options/Hiscore File:
+~~~~~~~~~~~~~~~~~~~~~
+   
+   not implemented yet
+    
+Game Play:
+~~~~~~~~~~
+    Manuever your ship avoiding the falling objects.  Shoot them.
+     
+    Only 2 missiles can be in the air at the time [this is _not_ a bug.
+       it's a limit of your ship's missile guidance system].
+	 
+    Every 100 points your shields will increase.
+     
+    There are special bonuses you can earn at the end of each level.
+
+       + No Shields Hit :        going through an entire level without
+                                 having an enemy hit your ship
+       + All Enemies Destroyed : all enemies were destroyed before
+                                 scrolling off the screen.  [Note, 
+				 ramming an enemy with your ship
+				 _DOES_ count as destroying it.  Just
+				 don't let them get by you]
+       + Perfect Shot:           Every missile fired hits an enemy.
+
+
+    At the end each level you fight the boss.  Then the game starts over
+       with the enemies moving faster!
+
+
+Compiling / Running:
+~~~~~~~~~~~~~~~~~~~~
+
+ RUNNING:
+   Just obtain an apple emulator.  Point it to the tb_6502.dsk image.
+   Upon booting it should run!
+   
+   Also, you can get a real Apple II computer and download the disk
+   image to a real floppy.  That is a bit more complicated.
+   
+ COMPILING:  
+
+ The following compile instructions assume you are using Linux.
+
+ * first you need the c65 package from:
+      http://www.cc65.org/
+
+   To install cc65 you need to unpack, and do a
+   "make -f make/gcc.mak" from the cc65/src directory.
+  
+   The utils we need are ca65 and ld65.  Copy them somewhere in your
+   path (ie /usr/local/bin).
+
+ * To make the disk image you will need the dos33fsprogs package
+   of mine, available from:
+      http://www.deater.net/weave/vmwprod/apple/dos33fs.html
+   Unpack and instal.  "make; make install"
+
+ * Now hopefully just type "make" in the tb_6502 directory and
+   the program should be assembled.  "make disk" should copy
+   the new version to the disk image, assuming all the tools
+   are installed properly.
+         
+
+
+About:
+~~~~~~
+    
+    When I was much younger, I would type in BASIC games on the Apple II.
+    I always wanted to write games myself, but the ones I wrote in BASIC
+    were too slow.  I was just starting to learn assembly when we got
+    a 386 and I moved on to other things.
+    
+    But now, only 25 years too late, I finally wrote a playable game!
+        
+    The hope is maybe eventually using this as a stepping-board to
+    creating a Game Boy Advance TomBombem game.
+    
+    This game was originally written for the 4k mini-game competition.
+      It finished embarassingly low in the standings.  I've added some
+      more features now so it is well over the 4k mark.
+    
+Author:
+~~~~~~~
+   Vince Weaver <vince@deater.net>
+   http://www.deater.net/weave/
+   Special Thanks to KRG
+   24 July 2004
+   

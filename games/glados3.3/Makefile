@@ -1,7 +1,10 @@
-DOS33 = ../dos33fs-utils/dos33
-TXT2BAS = ../asoft_basic-utils/tokenize_asoft
-SHAPETABLE = ../hgr-utils/shape_table
-SOUNDCONVERT = ../asoft_sound/asoft_sound
+DOS33 = ../../utils/dos33fs-utils/dos33
+TXT2BAS = ../../utils/asoft_basic-utils/tokenize_asoft
+SHAPETABLE = ../../utils/hgr-utils/shape_table
+SOUNDCONVERT = ../../utils/asoft_sound/asoft_sound
+
+]TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
+
 
 all:	glados33.dsk
 

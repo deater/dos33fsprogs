@@ -1,19 +1,19 @@
-PCX2HGR = ../../hgr-utils/pcx2hgr
-DOS33 = ../../dos33fs-utils/dos33
-TXT2BAS = ../../asoft_basic-utils/tokenize_asoft
-SHAPETABLE = ../../hgr-utils/shape_table
+PCX2HGR = ../../../utils/hgr-utils/pcx2hgr
+DOS33 = ../../../utils/dos33fs-utils/dos33
+TXT2BAS = ../../../utils/asoft_basic-utils/tokenize_asoft
+SHAPETABLE = ../../../utils/hgr-utils/shape_table
 
 all:	ksp.dsk
 
 
 $(TXT2BAS):
-	cd ../../asoft_basic-utils && make
+	cd ../../../utils/asoft_basic-utils && make
 
 $(SHAPETABLE):
-	cd ../../hgr-utils && make
+	cd ../../../utils/hgr-utils && make
 
 $(PCX2HGR):
-	cd ../../hgr-utils && make
+	cd ../../../utils/hgr-utils && make
 
 ACMPLX.BAS:	acmplx.bas $(TXT2BAS)
 	$(TXT2BAS) < acmplx.bas > ACMPLX.BAS

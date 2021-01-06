@@ -1,10 +1,12 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-DOS33_RAW = ../dos33fs-utils/dos33_raw
-B2D = ../bmp2dhr/b2d
-PNG2GR = ../gr-utils/png2gr
+DOS33 = ../../utils/dos33fs-utils/dos33
+DOS33_RAW = ../../utils/dos33fs-utils/dos33_raw
+B2D = ../../utils/bmp2dhr/b2d
+PNG2GR = ../../utils/gr-utils/png2gr
 LZSA = ~/research/lzsa/lzsa/lzsa
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
+
 
 all:	duke.dsk
 
@@ -20,12 +22,12 @@ duke.dsk:	HELLO LOADER DUKE_TITLE DUKE_LEVEL1 DUKE_LEVEL2
 ###
 
 HELLO:	hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 ####
 
 LOADER:	loader.o
-	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o LOADER loader.o -C ../../linker_scripts/apple2_1000.inc
 
 loader.o:	loader.s
 	ca65 -o loader.o loader.s -l loader.lst
@@ -33,7 +35,7 @@ loader.o:	loader.s
 ####
 
 DUKE_TITLE:	duke_title.o
-	ld65 -o DUKE_TITLE duke_title.o -C ../linker_scripts/apple2_4000.inc
+	ld65 -o DUKE_TITLE duke_title.o -C ../../linker_scripts/apple2_4000.inc
 
 duke_title.o:	duke_title.s zp.inc hardware.inc init_vars.s
 	ca65 -o duke_title.o duke_title.s -l duke_title.lst
@@ -41,7 +43,7 @@ duke_title.o:	duke_title.s zp.inc hardware.inc init_vars.s
 ####
 
 DUKE_LEVEL1:	duke_level1.o
-	ld65 -o DUKE_LEVEL1 duke_level1.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o DUKE_LEVEL1 duke_level1.o -C ../../linker_scripts/apple2_2000.inc
 
 duke_level1.o:	duke_level1.s zp.inc hardware.inc \
 	print_help.s gr_fast_clear.s quit_yn.s text_drawbox.s level_end.s \
@@ -57,7 +59,7 @@ duke_level1.o:	duke_level1.s zp.inc hardware.inc \
 ####
 
 DUKE_LEVEL2:	duke_level2.o
-	ld65 -o DUKE_LEVEL2 duke_level2.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o DUKE_LEVEL2 duke_level2.o -C ../../linker_scripts/apple2_2000.inc
 
 duke_level2.o:	duke_level2.s zp.inc hardware.inc \
 	print_help.s gr_fast_clear.s quit_yn.s text_drawbox.s level_end.s \

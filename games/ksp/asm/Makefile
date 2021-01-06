@@ -1,8 +1,8 @@
-PCX2HGR = ../../hgr-utils/pcx2hgr
-DOS33 = ../../dos33fs-utils/dos33
-TXT2BAS = ../../asoft_basic-utils/tokenize_asoft
-SHAPETABLE = ../../hgr-utils/shape_table
-MAKEB = ../../dos33fs-utils/make_b
+PCX2HGR = ../../../utils/hgr-utils/pcx2hgr
+DOS33 = ../../../utils/dos33fs-utils/dos33
+TXT2BAS = ../../../utils/asoft_basic-utils/tokenize_asoft
+SHAPETABLE = ../../../utils/hgr-utils/shape_table
+MAKEB = ../../../utils/dos33fs-utils/make_b
 LD65 = /usr/local/bin/ld65
 CA65 = /usr/local/bin/ca65
 

@@ -1,5 +1,5 @@
 
-PNG2GR = ../../gr-utils/png2gr
+PNG2GR = ../../../utils/gr-utils/png2gr
 LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	level1_graphics.inc level2_graphics.inc

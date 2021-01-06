@@ -1,15 +1,18 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-PNG2GR = ../gr-utils/png2gr
-PNG2RLE = ../gr-utils/png2rle
+DOS33 = ../../utils/dos33fs-utils/dos33
+PNG2GR = ../../utils/gr-utils/png2gr
+PNG2RLE = ../../utils/gr-utils/png2rle
+
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
+
 
 ARTDIR = ./art
 
 all:	tfv.dsk
 
 $(DOS33):	
-	cd ../dos33fs-utils && make
+	cd ../../utils/dos33fs-utils && make
 
 tfv.dsk:	$(DOS33) HELLO LOADER TFV_TITLE TFV_FLYING TFV_WORLD
 	$(DOS33) -y tfv.dsk SAVE A HELLO
@@ -21,12 +24,12 @@ tfv.dsk:	$(DOS33) HELLO LOADER TFV_TITLE TFV_FLYING TFV_WORLD
 ###
 
 HELLO:	hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 ####
 
 LOADER:	loader.o
-	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o LOADER loader.o -C ../../linker_scripts/apple2_1000.inc
 
 loader.o:	loader.s init_vars.s common_defines.inc
 	ca65 -o loader.o loader.s -l loader.lst
@@ -34,7 +37,7 @@ loader.o:	loader.s init_vars.s common_defines.inc
 ###
 
 TFV_TITLE:	tfv_title.o
-	ld65 -o TFV_TITLE tfv_title.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o TFV_TITLE tfv_title.o -C ../../linker_scripts/apple2_2000.inc
 
 tfv_title.o:	tfv_title.s \
 	gr_vlin.s tfv_opener.s \
@@ -47,7 +50,7 @@ tfv_title.o:	tfv_title.s \
 ###
 
 TFV_FLYING:	tfv_flying.o
-	ld65 -o TFV_FLYING tfv_flying.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o TFV_FLYING tfv_flying.o -C ../../linker_scripts/apple2_2000.inc
 
 tfv_flying.o:	tfv_flying.s \
 	zp.inc \
@@ -59,7 +62,7 @@ tfv_flying.o:	tfv_flying.s \
 ###
 
 TFV_WORLD:	tfv_world.o
-	ld65 -o TFV_WORLD tfv_world.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o TFV_WORLD tfv_world.o -C ../../linker_scripts/apple2_2000.inc
 
 tfv_world.o:	tfv_world.s \
 	tfv_overworld.s tfv_drawmap.s tfv_battle.s \

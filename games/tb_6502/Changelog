@@ -1,0 +1,134 @@
+8 April 2003
++ Got simple hello world to compile and run when entered in hex
+  by hand [ od -t x1 hello ] into apple emulator.
++ start work on add-file-to-disk-image program
+
+10 April 2003
++ Add to disk program now lets you add arbitrary files to a disk image.
++ Hello World program now works from "BRUN TB_6502"
+
+11 April 2003
++ Move from default Apple start addy of $800 to $c00 so we can
+  use low-res page flipping (page1 is from $800-$bff)
++ Got print_text_xy routine working
++ Got blit working!  VMW opening screen now comes up!
+
+14 April 2003
++ RLE compress the sprites
++ get title screen displaying after figuring out minor problem
+  [was > 256 bytes]
+
+15 April 2003
++ Add support for in-line x and y on put_text_xy
+
+16 April 2003
++ Worked on dos3.3 utils rather than any useful menu stuff
+
+9 May 2003
++ Have menu partially working, plus the about and phobos sprites loading
+
+15 May 2003
++ Have "ABOUT" running the way I like, and not as cluttered as it was.
+
+28 May 2003
++ Fix up printxy to correctly wrap at 8-byte boundary
++ have the story output text set up correctly.
++ add a "clear_bottom_ function.
+
+1 June 2003
++ Story works
++ Spent 3 hours figuring out why put_text_xy have sporadic problem.
+  Stupid 6502 and no-16-bit addition.  So very tired...
+
+12 June 2003
++ Add arrow key support
++ Faster clear-screen
+
+13 June 2003
++ Fix arrow keys being backwards, add escape key support
+
+21 June 2003
++ Get normal TB left/right support, and clipping.
++ Add missile support
++ Fix various minor bugs.
++ Set up page flipping.  Make clear_screen, clear_bottom, and blit 
+  handle this properly
++ Get preliminary shields/level/score indicator working
++ (yes my gf was out of town, how can you guess)
+
+
+11 July 2003
++ Got an enemy to appear in upper left
+
+14 July 2003
++ Enemy moving back and forth, but major heisenbug.  Why, why, why?
+
+15 July 2003
++ Not heisenbug at all.  Was running the move-enemy routine when
+  no enemy.out.  Glad I didn't post on usenet asking why my code
+  was broken!
+  
+16 July 2003
++ Minimal y movement implemented
+
+17 July 2003
++ Added random number generator
+
+18 July 2003
++ Re structure enemy handling code to do a copy to zero page first,
+  thus streamlining things
++ Have missile <-> enemy collision detection working
++ Have minimal score keeping working
++ Have minimal enemy spawning working
++ (Yes gf was out on work related business, how did you guess)
+
+29 August 2003
++ Long delay due to move to Ithaca
++ Annoying work getting 16-bit BCD printing to work.  Harder than
+  it looks!
+
+30 August 2003
++ Implement Proper Collision detection
++ Enemies can actually damage you
++ Explosions no longer move
++ Have "GAME OVER" print when you die
+
+7 September 2003
++ Have it print "Level 1" at start of level
+
+27 September 2003
++ HUGELY busy with grad school.  Trying to get this
+  done for minigames competition
+  
+28 September 2003
++ Actual varied levels working.  Trying to adjust speed for playability.
++ Added two more enemies, as having 8 is easier to do with mask instructions
+  ;)
++ Attempting to add Boss.
++ Added shield increment every 100 points
++ S now toggles sound
++ P now pauses
++ While waiting for keypress, random number gen seeded
++ Updated timinings.  yae is too slow :(  am trusting
+  xapple2 as it seems to play most other games properly.
+  Should fire up my _real_ IIe.
+  
+11 July 2004
++ Finally got around to uploading on my real IIe.
+  Subjective delay timing, seems to work.
++ Boss seems to act irregularly?
+
+13 July 2004
++ Scrolling stars implemented.
+
+18 July 2004
++ "Ending" for end of level 1 ported over.
++ Bonuses added
++ Hi-score (though not to disk) implemented
++ Final balancing on my Apple IIe Platinum
++ Fix some minor bugs
++ Fixed bug where unitialized memory was causing star scrolling to mess up
++ Bumped version number to 1.0
+
+24 July 2004
++ Added sort-of-working paddle/joystick code.

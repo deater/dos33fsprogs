@@ -1,5 +1,5 @@
-PNG2RLE = ../../gr-utils/png2rle
-PNG2GR = ../../gr-utils/png2gr
+PNG2RLE = ../../../utils/gr-utils/png2rle
+PNG2GR = ../../../utils/gr-utils/png2gr
 LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	dentist_graphics.inc

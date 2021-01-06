@@ -1,8 +1,8 @@
 #include ../Makefile.inc
 
-PNG2RLE = ../../gr-utils/png2rle
-PNG2GR = ../../gr-utils/png2gr
-TEXT2GR = ../../gr-utils/text2gr
+PNG2RLE = ../../../utils/gr-utils/png2rle
+PNG2GR = ../../../utils/gr-utils/png2gr
+TEXT2GR = ../../../utils/gr-utils/text2gr
 LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	octagon_books.inc

@@ -1,11 +1,14 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-DOS33_RAW = ../dos33fs-utils/dos33_raw
-PNG_TO_40x96 = ../gr-utils/png_to_40x96
-PNG_TO_40x48D = ../gr-utils/png_to_40x48d
-PNG2RLE = ../gr-utils/png2rle
-B2D = ../bmp2dhr/b2d
+DOS33 = ../../utils/dos33fs-utils/dos33
+DOS33_RAW = ../../utils/dos33fs-utils/dos33_raw
+PNG_TO_40x96 = ../../utils/gr-utils/png_to_40x96
+PNG_TO_40x48D = ../../utils/gr-utils/png_to_40x48d
+PNG2RLE = ../../utils/gr-utils/png2rle
+B2D = ../../utils/bmp2dhr/b2d
+
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
+
 
 all:	mist.dsk mist_side2.dsk mist_side3.dsk
 
@@ -88,7 +91,7 @@ mist_side3.dsk:	WBOOT3 MECHE SELENA STONEY SUB
 ###
 
 WBOOT2:	wrong_boot2.o
-	ld65 -o WBOOT2 wrong_boot2.o -C ../linker_scripts/apple2_800.inc
+	ld65 -o WBOOT2 wrong_boot2.o -C ../../linker_scripts/apple2_800.inc
 
 wrong_boot2.o:	wrong_boot2.s
 	ca65 -o wrong_boot2.o wrong_boot2.s -l wrong_boot2.lst
@@ -96,7 +99,7 @@ wrong_boot2.o:	wrong_boot2.s
 ###
 
 WBOOT3:	wrong_boot3.o
-	ld65 -o WBOOT3 wrong_boot3.o -C ../linker_scripts/apple2_800.inc
+	ld65 -o WBOOT3 wrong_boot3.o -C ../../linker_scripts/apple2_800.inc
 
 wrong_boot3.o:	wrong_boot3.s
 	ca65 -o wrong_boot3.o wrong_boot3.s -l wrong_boot3.lst
@@ -105,7 +108,7 @@ wrong_boot3.o:	wrong_boot3.s
 ###
 
 QBOOT:	qboot_sector.o
-	ld65 -o QBOOT qboot_sector.o -C ../linker_scripts/apple2_800.inc
+	ld65 -o QBOOT qboot_sector.o -C ../../linker_scripts/apple2_800.inc
 
 qboot_sector.o:	qboot_sector.s qboot_stage2.s
 	ca65 -o qboot_sector.o qboot_sector.s -l qboot_sector.lst
@@ -113,7 +116,7 @@ qboot_sector.o:	qboot_sector.s qboot_stage2.s
 ###
 
 TEXT_TITLE:	text_title.o
-	ld65 -o TEXT_TITLE text_title.o -C ../linker_scripts/apple2_800.inc
+	ld65 -o TEXT_TITLE text_title.o -C ../../linker_scripts/apple2_800.inc
 
 text_title.o:	text_title.s text_print.s wait_a_bit.s
 	ca65 -o text_title.o text_title.s -l text_title.lst
@@ -122,7 +125,7 @@ text_title.o:	text_title.s text_print.s wait_a_bit.s
 ###
 
 QLOAD: qload.o
-	ld65 -o QLOAD qload.o -C ../linker_scripts/apple2_1200.inc
+	ld65 -o QLOAD qload.o -C ../../linker_scripts/apple2_1200.inc
 
 qload.o:	qload.s qboot.inc \
 	gr_copy.s gr_offsets.s gr_pageflip.s gr_putsprite_crop.s \
@@ -135,7 +138,7 @@ qload.o:	qload.s qboot.inc \
 ###
 
 LOADER: loader.o
-	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o LOADER loader.o -C ../../linker_scripts/apple2_1000.inc
 
 loader.o:	loader.s \
 	gr_copy.s gr_offsets.s gr_pageflip.s gr_putsprite_crop.s \
@@ -147,7 +150,7 @@ loader.o:	loader.s \
 ###
 
 SAVE1: save1.o
-	ld65 -o SAVE1 save1.o -C ../linker_scripts/apple2_e00.inc
+	ld65 -o SAVE1 save1.o -C ../../linker_scripts/apple2_e00.inc
 
 save1.o:	save1.s
 	ca65 -o save1.o save1.s -l save1.lst
@@ -155,7 +158,7 @@ save1.o:	save1.s
 ###
 
 SAVE2: save2.o
-	ld65 -o SAVE2 save2.o -C ../linker_scripts/apple2_e00.inc
+	ld65 -o SAVE2 save2.o -C ../../linker_scripts/apple2_e00.inc
 
 save2.o:	save2.s
 	ca65 -o save2.o save2.s -l save2.lst
@@ -163,7 +166,7 @@ save2.o:	save2.s
 ###
 
 SAVE3: save3.o
-	ld65 -o SAVE3 save3.o -C ../linker_scripts/apple2_e00.inc
+	ld65 -o SAVE3 save3.o -C ../../linker_scripts/apple2_e00.inc
 
 save3.o:	save3.s
 	ca65 -o save3.o save3.s -l save3.lst
@@ -171,7 +174,7 @@ save3.o:	save3.s
 ###
 
 SAVE4: save4.o
-	ld65 -o SAVE4 save4.o -C ../linker_scripts/apple2_e00.inc
+	ld65 -o SAVE4 save4.o -C ../../linker_scripts/apple2_e00.inc
 
 save4.o:	save4.s
 	ca65 -o save4.o save4.s -l save4.lst
@@ -179,7 +182,7 @@ save4.o:	save4.s
 ###
 
 SAVE5: save5.o
-	ld65 -o SAVE5 save5.o -C ../linker_scripts/apple2_e00.inc
+	ld65 -o SAVE5 save5.o -C ../../linker_scripts/apple2_e00.inc
 
 save5.o:	save5.s
 	ca65 -o save5.o save5.s -l save5.lst
@@ -208,7 +211,7 @@ common_routines.inc:	qload.lst generate_common
 ####
 
 MIST_TITLE:	mist_title.o
-	ld65 -o MIST_TITLE mist_title.o -C ../linker_scripts/apple2_4000.inc
+	ld65 -o MIST_TITLE mist_title.o -C ../../linker_scripts/apple2_4000.inc
 
 mist_title.o:	mist_title.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \

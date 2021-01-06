@@ -1,8 +1,9 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-PNG2RLE = ../gr-utils/png2rle
-PNG2LZ4 = ../gr-utils/png2lz4
+DOS33 = ../../utils/dos33fs-utils/dos33
+PNG2RLE = ../../utils/gr-utils/png2rle
+PNG2LZ4 = ../../utils/gr-utils/png2lz4
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 
 all:	ootw.dsk ootw_side2.dsk ootw_side3.dsk
@@ -48,7 +49,7 @@ ootw_side3.dsk:	HELLO TITLE ENDING \
 ####
 
 OOTW_C1:	ootw_c1.o
-	ld65 -o OOTW_C1 ootw_c1.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C1 ootw_c1.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c1.o:	ootw_c1.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -79,7 +80,7 @@ ootw_c1.o:	ootw_c1.s \
 ####
 
 OOTW_C2:	ootw_c2.o
-	ld65 -o OOTW_C2 ootw_c2.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C2 ootw_c2.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c2.o:	ootw_c2.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -102,7 +103,7 @@ ootw_c2.o:	ootw_c2.s \
 ####
 
 OOTW_C3:	ootw_c3.o
-	ld65 -o OOTW_C3 ootw_c3.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C3 ootw_c3.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c3.o:	ootw_c3.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -116,7 +117,7 @@ ootw_c3.o:	ootw_c3.s \
 ###
 
 OOTW_C4:	ootw_c4.o
-	ld65 -o OOTW_C4 ootw_c4.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C4 ootw_c4.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c4.o:	ootw_c4.s \
 	gr_copy.s gr_twoscreen_scroll.s gr_fast_clear.s gr_pageflip.s \
@@ -133,7 +134,7 @@ ootw_c4.o:	ootw_c4.s \
 ###
 
 OOTW_C5:	ootw_c5.o
-	ld65 -o OOTW_C5 ootw_c5.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C5 ootw_c5.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c5.o:	ootw_c5.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -147,7 +148,7 @@ ootw_c5.o:	ootw_c5.s \
 ###
 
 OOTW_C6:	ootw_c6.o
-	ld65 -o OOTW_C6 ootw_c6.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C6 ootw_c6.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c6.o:	ootw_c6.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -160,7 +161,7 @@ ootw_c6.o:	ootw_c6.s \
 ###
 
 OOTW_C7:	ootw_c7.o
-	ld65 -o OOTW_C7 ootw_c7.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C7 ootw_c7.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c7.o:	ootw_c7.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -173,7 +174,7 @@ ootw_c7.o:	ootw_c7.s \
 ###
 
 OOTW_C8:	ootw_c8.o
-	ld65 -o OOTW_C8 ootw_c8.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C8 ootw_c8.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c8.o:	ootw_c8.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -187,7 +188,7 @@ ootw_c8.o:	ootw_c8.s \
 ###
 
 OOTW_C9:	ootw_c9.o
-	ld65 -o OOTW_C9 ootw_c9.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C9 ootw_c9.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c9.o:	ootw_c9.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -201,7 +202,7 @@ ootw_c9.o:	ootw_c9.s \
 ###
 
 OOTW_C10:	ootw_c10.o
-	ld65 -o OOTW_C10 ootw_c10.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C10 ootw_c10.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c10.o:	ootw_c10.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -215,7 +216,7 @@ ootw_c10.o:	ootw_c10.s \
 ###
 
 OOTW_C11:	ootw_c11.o
-	ld65 -o OOTW_C11 ootw_c11.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C11 ootw_c11.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c11.o:	ootw_c11.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -229,7 +230,7 @@ ootw_c11.o:	ootw_c11.s \
 ###
 
 OOTW_C12:	ootw_c12.o
-	ld65 -o OOTW_C12 ootw_c12.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C12 ootw_c12.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c12.o:	ootw_c12.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -243,7 +244,7 @@ ootw_c12.o:	ootw_c12.s \
 ###
 
 OOTW_C13:	ootw_c13.o
-	ld65 -o OOTW_C13 ootw_c13.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C13 ootw_c13.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c13.o:	ootw_c13.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -260,7 +261,7 @@ ootw_c13.o:	ootw_c13.s \
 ###
 
 OOTW_C14:	ootw_c14.o
-	ld65 -o OOTW_C14 ootw_c14.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C14 ootw_c14.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c14.o:	ootw_c14.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -274,7 +275,7 @@ ootw_c14.o:	ootw_c14.s \
 ###
 
 OOTW_C15:	ootw_c15.o
-	ld65 -o OOTW_C15 ootw_c15.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o OOTW_C15 ootw_c15.o -C ../../linker_scripts/apple2_1700.inc
 
 ootw_c15.o:	ootw_c15.s \
 	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
@@ -296,7 +297,7 @@ ootw_c15.o:	ootw_c15.s \
 ####
 
 AUDIO_TEST:	audio.o
-	ld65 -o AUDIO_TEST audio.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o AUDIO_TEST audio.o -C ../../linker_scripts/apple2_1700.inc
 
 audio.o:	audio.s
 	ca65 -o audio.o audio.s -l audio.lst
@@ -305,7 +306,7 @@ audio.o:	audio.s
 ####
 
 INTRO:	intro.o
-	ld65 -o INTRO intro.o -C ../linker_scripts/apple2_1700_9000.inc
+	ld65 -o INTRO intro.o -C ../../linker_scripts/apple2_1700_9000.inc
 
 intro.o:	intro.s \
 	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
@@ -352,7 +353,7 @@ intro_data_01.lz4:	intro_data_01
 	truncate -s-8 intro_data_01.lz4
 
 intro_data_01:	intro_data_01.o
-	ld65 -o intro_data_01 intro_data_01.o -C ../linker_scripts/apple2_9000.inc
+	ld65 -o intro_data_01 intro_data_01.o -C ../../linker_scripts/apple2_9000.inc
 
 intro_data_01.o:	intro_data_01.s
 	ca65 -o intro_data_01.o intro_data_01.s -l intro_data_01.lst
@@ -363,7 +364,7 @@ intro_data_04.lz4:	intro_data_04
 	truncate -s-8 intro_data_04.lz4
 
 intro_data_04:	intro_data_04.o
-	ld65 -o intro_data_04 intro_data_04.o -C ../linker_scripts/apple2_9000.inc
+	ld65 -o intro_data_04 intro_data_04.o -C ../../linker_scripts/apple2_9000.inc
 
 intro_data_04.o:	intro_data_04.s
 	ca65 -o intro_data_04.o intro_data_04.s -l intro_data_04.lst
@@ -374,7 +375,7 @@ intro_data_06.lz4:	intro_data_06
 	truncate -s-8 intro_data_06.lz4
 
 intro_data_06:	intro_data_06.o
-	ld65 -o intro_data_06 intro_data_06.o -C ../linker_scripts/apple2_9000.inc
+	ld65 -o intro_data_06 intro_data_06.o -C ../../linker_scripts/apple2_9000.inc
 
 intro_data_06.o:	intro_data_06.s
 	ca65 -o intro_data_06.o intro_data_06.s -l intro_data_06.lst
@@ -385,7 +386,7 @@ intro_data_08.lz4:	intro_data_08
 	truncate -s-8 intro_data_08.lz4
 
 intro_data_08:	intro_data_08.o
-	ld65 -o intro_data_08 intro_data_08.o -C ../linker_scripts/apple2_9000.inc
+	ld65 -o intro_data_08 intro_data_08.o -C ../../linker_scripts/apple2_9000.inc
 
 intro_data_08.o:	intro_data_08.s
 	ca65 -o intro_data_08.o intro_data_08.s -l intro_data_08.lst
@@ -396,7 +397,7 @@ intro_data_09.lz4:	intro_data_09
 	truncate -s-8 intro_data_09.lz4
 
 intro_data_09:	intro_data_09.o
-	ld65 -o intro_data_09 intro_data_09.o -C ../linker_scripts/apple2_9000.inc
+	ld65 -o intro_data_09 intro_data_09.o -C ../../linker_scripts/apple2_9000.inc
 
 intro_data_09.o:	intro_data_09.s
 	ca65 -o intro_data_09.o intro_data_09.s -l intro_data_09.lst
@@ -407,7 +408,7 @@ intro_data_09.o:	intro_data_09.s
 ####
 
 LOADER:	loader.o
-	ld65 -o LOADER loader.o -C ../linker_scripts/apple2_1400.inc
+	ld65 -o LOADER loader.o -C ../../linker_scripts/apple2_1400.inc
 
 loader.o:	loader.s
 	ca65 -o loader.o loader.s -l loader.lst
@@ -415,7 +416,7 @@ loader.o:	loader.s
 ####
 
 LOADER2:	loader2.o
-	ld65 -o LOADER2 loader2.o -C ../linker_scripts/apple2_1400.inc
+	ld65 -o LOADER2 loader2.o -C ../../linker_scripts/apple2_1400.inc
 
 loader2.o:	loader2.s
 	ca65 -o loader2.o loader2.s -l loader2.lst
@@ -423,7 +424,7 @@ loader2.o:	loader2.s
 ####
 
 TITLE:	title.o
-	ld65 -o TITLE title.o -C ../linker_scripts/apple2_d00.inc
+	ld65 -o TITLE title.o -C ../../linker_scripts/apple2_d00.inc
 
 title.o:	title.s loader.s
 	ca65 -o title.o title.s -l title.lst
@@ -434,19 +435,19 @@ title.o:	title.s loader.s
 
 
 HELLO:  hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 ####
 
 
 HELLO2:  hello2.bas
-	../asoft_basic-utils/tokenize_asoft < hello2.bas > HELLO2
+	$(TOKENIZE) < hello2.bas > HELLO2
 
 
 #####
 
 ENDING:	ending.o
-	ld65 -o ENDING ending.o -C ../linker_scripts/apple2_1700.inc
+	ld65 -o ENDING ending.o -C ../../linker_scripts/apple2_1700.inc
 
 ending.o:	ending.s \
 	pt3_lib_core.s pt3_lib_init.s pt3_lib_mockingboard_detect.s \
@@ -462,7 +463,7 @@ compress_test.inc:	intro_graphics/07_soda/drinking01.png
 	$(PNG2LZ4) asm intro_graphics/07_soda/drinking01.png test_lz4 >> compress_test.inc
 
 COMPRESS-TEST:	compress_test.o
-	ld65 -o COMPRESS-TEST compress_test.o -C ../linker_scripts/apple2_2000.inc
+	ld65 -o COMPRESS-TEST compress_test.o -C ../../linker_scripts/apple2_2000.inc
 
 compress_test.o:	compress_test.s lz4_decode.s compress_test.inc
 	ca65 -o compress_test.o compress_test.s -l compress_test.lst

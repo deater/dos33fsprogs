@@ -1,8 +1,9 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-PNG_TO_40x48D = ../gr-utils/png_to_40x48d
-B2D = ../bmp2dhr/b2d
+DOS33 = ../../utils/dos33fs-utils/dos33
+PNG_TO_40x48D = ../../utils/gr-utils/png_to_40x48d
+B2D = ../../utils/bmp2dhr/b2d
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	space_bars.dsk
 
@@ -14,7 +15,7 @@ space_bars.dsk:	SPACE_BARS HELLO
 ####
 
 SPACE_BARS:	space_bars.o
-	ld65 -o SPACE_BARS space_bars.o -C ../linker_scripts/apple2_4000.inc
+	ld65 -o SPACE_BARS space_bars.o -C ../../linker_scripts/apple2_4000.inc
 
 space_bars.o:	space_bars.s instructions.s \
 	level3_earth.s level6_saturn.s \
