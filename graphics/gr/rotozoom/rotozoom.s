@@ -49,6 +49,22 @@ rotozoom:
 	; cca = -20*ca;
 	; csa = -20*sa;
 
+	lda	#0
+	sta	CCAL
+	sta	CCAH
+	sta	CSAL
+	sta	CSAH
+
+
+	ldx	#20
+mul20_loop:
+
+
+
+	dex
+	bne	mul20_loop
+
+
 	; yca=cca+ycenter;
 
 	lda	CCAL
@@ -101,21 +117,21 @@ rotozoom_xloop:
 	; else if ((yp<0) || (yp>39)) color=0;
 	; else color=scrn_page(xp,yp,PAGE2);
 
-;	lda	#0
-;	ldx	XPH
-;	bmi	rotozoom_set_color
-;	cpx	#40
-;	bcs	rotozoom_set_color
-;	ldx	YPH
-;	bmi	rotozoom_set_color
-;	cpx	#40
-;	bcs	rotozoom_set_color
+	lda	#0
+	ldx	XPH
+	bmi	rotozoom_set_color
+	cpx	#40
+	bcs	rotozoom_set_color
+	ldx	YPH
+	bmi	rotozoom_set_color
+	cpx	#40
+	bcs	rotozoom_set_color
 
-	; scrn()
+	; scrn(xp,yp)
 
-	lda	XX
+	lda	XPH
 	sta	XPOS
-	lda	YY
+	lda	YPH
 	sta	YPOS
 
 	jsr	scrn

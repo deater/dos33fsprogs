@@ -5,7 +5,7 @@
 	; Ycoord in YPOS
 	; color in COLOR
 plot:
-	lda	YPOS							; 2
+	lda	YPOS							; 3
 
 	lsr			; shift bottom bit into carry		; 2
 
@@ -19,15 +19,14 @@ plot_c_done:
 	stx	MASK							; 3
 
 	asl			; shift back (now even)			; 2
-	tay
+	tay								; 2
 
 	lda	gr_offsets,Y	; lookup low-res memory address		; 4
         clc								; 2
         adc	XPOS							; 3
         sta	GBASL							; 3
-        iny								; 2
 
-        lda	gr_offsets,Y                                            ; 4
+        lda	gr_offsets+1,Y						; 4
         adc	DRAW_PAGE	; add in draw page offset		; 3
         sta	GBASH							; 3
 

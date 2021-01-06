@@ -7,23 +7,10 @@
 	; assume reading from $c00
 
 scrn:
-	lda	YPOS							; 2
+	lda	YPOS							; 3
 
-;	lsr			; shift bottom bit into carry		; 2
-
-;	bcc	scrn_even						; 2nt/3
-;scrn_odd:
-;	ldx	#$f0							; 2
-;	bcs	scrn_c_done						; 2nt/3
-;scrn_even:
-;	ldx	#$0f							; 2
-;scrn_c_done:
-;	stx	MASK							; 3
-
-;	asl			; shift back (now even)			; 2
-
-	and	#$fe		; make even
-	tay
+	and	#$fe		; make even				; 2
+	tay								; 2
 
 	lda	gr_offsets,Y	; lookup low-res memory address		; 4
         clc								; 2
@@ -34,26 +21,26 @@ scrn:
         adc	#$8	; assume reading from $c0			; 3
         sta	GBASH							; 3
 
-	ldy	#0
+	ldy	#0							; 2
 
-	lda	YPOS
-	lsr
-	bcs	scrn_adjust_even
+	lda	YPOS							; 3
+	lsr								; 2
+	bcs	scrn_adjust_even					;2nt/3t
 
 scrn_adjust_odd:
-	lda	(GBASL),Y	; top/bottom color
-	jmp	scrn_done
+	lda	(GBASL),Y	; top/bottom color			; 5+
+	jmp	scrn_done						; 3
 
 scrn_adjust_even:
-	lda	(GBASL),Y	; top/bottom color
+	lda	(GBASL),Y	; top/bottom color			; 5+
 
-	lsr
-	lsr
-	lsr
-	lsr
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
 
 scrn_done:
 
-	and	#$f
+	and	#$f							; 2
 
-	rts
+	rts								; 6

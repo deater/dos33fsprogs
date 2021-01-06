@@ -75,6 +75,9 @@ wait_for_keypress:
 	bit	KEYRESET
 
 	inc	ANGLE
+	lda	ANGLE
+	and	#$f
+	sta	ANGLE
 
 	jmp	main_loop
 
