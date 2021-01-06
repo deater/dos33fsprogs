@@ -1,0 +1,4 @@
+   5  HOME
+  10  PRINT "SMALL"
+
+
