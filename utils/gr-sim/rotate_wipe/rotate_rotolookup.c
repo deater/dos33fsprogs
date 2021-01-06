@@ -71,12 +71,12 @@ blah:
 		yca=cca+ycenter;
 		ysa=csa+xcenter;
 
-		for(yy=-20;yy<20;yy++) {
+		for(yy=0;yy<40;yy++) {
 
 			xp=cca+ysa;
 			yp=yca-csa;
 
-			for(xx=-20;xx<20;xx++) {
+			for(xx=0;xx<40;xx++) {
 
 				if ((xp<0) || (xp>39)) color=0;
 				else if ((yp<0) || (yp>39)) color=0;
@@ -85,15 +85,15 @@ blah:
 				}
 
 				if (
-					((xx==-20) && (yy==-20)) ||
 					((xx==0) && (yy==0)) ||
-					((xx==19) && (yy==19))
+					((xx==20) && (yy==20)) ||
+					((xx==39) && (yy==39))
 				   ) {
 				printf("%d,%d -> %0.2lf,%0.2lf\n",xx,yy,xp,yp);
 				}
 
 				color_equals(color);
-				plot(xx+20,yy+20);
+				plot(xx,yy);
 				xp=xp+ca;
 				yp=yp-sa;
 			}
