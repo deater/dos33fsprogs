@@ -1,10 +1,12 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-PNG_TO_40x96 = ../gr-utils/png_to_40x96
-PNG_TO_40x48D = ../gr-utils/png_to_40x48d
-PNG2RLE = ../gr-utils/png2rle
-B2D = ../bmp2dhr/b2d
+DOS33 = ../../utils/dos33fs-utils/dos33
+PNG_TO_40x96 = ../../utils/gr-utils/png_to_40x96
+PNG_TO_40x48D = ../../utils/gr-utils/png_to_40x48d
+PNG2RLE = ../../utils/gr-utils/png2rle
+B2D = ../../utils/bmp2dhr/b2d
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
+
 
 all:	dsr_shape.dsk
 
@@ -17,7 +19,7 @@ dsr_shape.dsk:	HELLO DSRSHAPE
 
 
 DSRSHAPE: dsr_shape.o
-	ld65 -o DSRSHAPE dsr_shape.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o DSRSHAPE dsr_shape.o -C ../../linker_scripts/apple2_1000.inc
 
 dsr_shape.o:	dsr_shape.s
 	ca65 -o dsr_shape.o dsr_shape.s -l dsr_shape.lst
@@ -25,12 +27,12 @@ dsr_shape.o:	dsr_shape.s
 ###
 
 HELLO:	hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 ###
 
 DSR.BAS:	dsr.bas
-	../asoft_basic-utils/tokenize_asoft < dsr.bas > DSR.BAS
+	$(TOKENIZE) < dsr.bas > DSR.BAS
 
 ####
 

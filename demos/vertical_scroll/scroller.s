@@ -204,4 +204,4 @@ wait_until_keypress:
 PT3_LOC = song
 .align	$100
 song:
-.incbin "../pt3_player/music/DF.PT3"
+.incbin "../../music/pt3_player/music/DF.PT3"

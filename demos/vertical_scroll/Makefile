@@ -1,9 +1,11 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-PNG_TO_40x96 = ../gr-utils/png_to_40x96
-PNG_TO_40x48D = ../gr-utils/png_to_40x48d
-PNG2RLE = ../gr-utils/png2rle
+DOS33 = ../../utils/dos33fs-utils/dos33
+PNG_TO_40x96 = ../../utils/gr-utils/png_to_40x96
+PNG_TO_40x48D = ../../utils/gr-utils/png_to_40x48d
+PNG2RLE = ../../utils/gr-utils/png2rle
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
+
 
 all:	scroller.dsk
 
@@ -15,12 +17,12 @@ scroller.dsk:	HELLO SCROLLER
 ###
 
 HELLO:	hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 ####
 
 SCROLLER:	scroller.o
-	ld65 -o SCROLLER scroller.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o SCROLLER scroller.o -C ../../linker_scripts/apple2_1000.inc
 
 scroller.o:	scroller.s gr_copy.s gr_unrle.s gr_unrle_large.s \
 	gr_copy_large.s \
@@ -43,4 +45,4 @@ spaceman2.inc:	spaceman_big2.png
 ####
 
 clean:		
-		rm -f *~ *.o *.lst SCROLLER
+		rm -f *~ *.o *.lst SCROLLER HELLO

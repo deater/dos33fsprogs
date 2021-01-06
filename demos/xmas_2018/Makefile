@@ -1,9 +1,9 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-B2D = ../bmp2dhr/b2d
-PNG_TO_40x96 = ../gr-utils/png_to_40x96
-PNG_TO_RLE = ../gr-utils/png2rle
+DOS33 = ../../utils/dos33fs-utils/dos33
+B2D = ../../utils/bmp2dhr/b2d
+PNG_TO_40x96 = ../../utils/gr-utils/png_to_40x96
+PNG_TO_RLE = ../../utils/gr-utils/png2rle
 
 all:	xmas2018.dsk
 
@@ -20,7 +20,7 @@ xmas2018.dsk:	HELLO XMAS2018 wreath.img.lz4t ball.img.lz4 merry.img.lz4t MUSIC.l
 ####
 
 XMAS2018:	xmas2018.o
-	ld65 -o XMAS2018 xmas2018.o -C ../linker_scripts/apple2_c00.inc
+	ld65 -o XMAS2018 xmas2018.o -C ../../linker_scripts/apple2_c00.inc
 
 xmas2018.o:	xmas2018.s \
 	zp.inc hardware.inc \
@@ -48,7 +48,7 @@ MUSIC.lz4:	MUSIC
 	lz4 -16 -f MUSIC
 
 MUSIC:	music.o
-	ld65 -o MUSIC music.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o MUSIC music.o -C ../../linker_scripts/apple2_1000.inc
 
 music.o:	music.s
 	ca65 -o music.o music.s -l music.lst
@@ -56,7 +56,7 @@ music.o:	music.s
 ####
 
 HELLO:	hello.bas
-	../asoft_basic-utils/tokenize_asoft < hello.bas > HELLO
+	$(TOKENIZE) < hello.bas > HELLO
 
 ####
 
@@ -97,5 +97,5 @@ BALLC.BIN:	ball.bmp
 	$(B2D) ball.bmp HGR -d
 
 clean:
-		rm -f *~ *.o *.lst XMAS2018 wreath.img ball.img BALLC.BIN WREATHC.BIN
+		rm -f *~ *.o *.lst XMAS2018 wreath.img ball.img BALLC.BIN WREATHC.BIN HELLO
 

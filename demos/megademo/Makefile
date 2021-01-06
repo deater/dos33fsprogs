@@ -1,9 +1,11 @@
-include ../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../dos33fs-utils/dos33
-B2D = ../bmp2dhr/b2d
-PNG_TO_40x96 = ../gr-utils/png_to_40x96
-PNG_TO_RLE = ../gr-utils/png2rle
+DOS33 = ../../utils/dos33fs-utils/dos33
+B2D = ../../utils/bmp2dhr/b2d
+PNG_TO_40x96 = ../../utils/gr-utils/png_to_40x96
+PNG_TO_RLE = ../../utils/gr-utils/png2rle
+PNG_TO_HGR = ../../utils/hgr-utils/png2hgr
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	megademo.dsk
 
@@ -25,7 +27,7 @@ megademo.dsk:	MEGADEMO MEGALOAD c64.img MUSIC.D000X2 MUSIC.D000 MUSIC.1000
 ####
 
 MEGADEMO:	megademo.o
-	ld65 -o MEGADEMO megademo.o -C ../linker_scripts/apple2_4000.inc
+	ld65 -o MEGADEMO megademo.o -C ../../linker_scripts/apple2_4000.inc
 
 megademo.o:	megademo.s \
 	zp.inc hardware.inc \
@@ -52,7 +54,7 @@ megademo.o:	megademo.s \
 ####
 
 MEGALOAD:        megaload.o
-	ld65 -o MEGALOAD megaload.o -C ../linker_scripts/apple2_800.inc
+	ld65 -o MEGALOAD megaload.o -C ../../linker_scripts/apple2_800.inc
 
 megaload.o:      megaload.s
 	ca65 -o megaload.o megaload.s -l megaload.lst
@@ -60,7 +62,7 @@ megaload.o:      megaload.s
 ####
 
 MUSIC.1000:	music_1000.o
-	ld65 -o MUSIC.1000 music_1000.o -C ../linker_scripts/apple2_1000.inc
+	ld65 -o MUSIC.1000 music_1000.o -C ../../linker_scripts/apple2_1000.inc
 
 music_1000.o:	music_1000.s mockingboard.s
 	ca65 -o music_1000.o music_1000.s -l music_1000.lst
@@ -68,7 +70,7 @@ music_1000.o:	music_1000.s mockingboard.s
 ####
 
 MUSIC.D000:	music_d000.o
-	ld65 -o MUSIC.D000 music_d000.o -C ../linker_scripts/apple2_d000.inc
+	ld65 -o MUSIC.D000 music_d000.o -C ../../linker_scripts/apple2_d000.inc
 
 music_d000.o:	music_d000.s
 	ca65 -o music_d000.o music_d000.s
@@ -76,7 +78,7 @@ music_d000.o:	music_d000.s
 ####
 
 MUSIC.D000X2:	music_2nd_d000.o
-	ld65 -o MUSIC.D000X2 music_2nd_d000.o -C ../linker_scripts/apple2_d000.inc
+	ld65 -o MUSIC.D000X2 music_2nd_d000.o -C ../../linker_scripts/apple2_d000.inc
 
 music_2nd_d000.o:	music_2nd_d000.s
 	ca65 -o music_2nd_d000.o music_2nd_d000.s
@@ -104,7 +106,9 @@ starring3.img.lz4:	starring3.img
 	lz4 -f -16 starring3.img
 
 starring3.img:	./starring_3_hgr.png
-		../hgr-utils/png2hgr starring_3_hgr.png > starring3.img
+	$(PNG_TO_HGR) starring_3_hgr.png > starring3.img
+
+
 
 
 ####
@@ -123,7 +127,7 @@ takeoff.img.lz4:	takeoff.img
 	lz4 -f -16 takeoff.img
 
 takeoff.img:	takeoff_hgr.png
-	../hgr-utils/png2hgr takeoff_hgr.png > takeoff.img
+	$(PNG_TO_HGR) takeoff_hgr.png > takeoff.img
 
 ####
 
@@ -171,7 +175,7 @@ c64.img.lz4:	c64.img
 	lz4 -f -16 c64.img
 
 c64.img:	c64_updated.png
-	../hgr-utils/png2hgr c64_updated.png > c64.img
+	$(PNG_TO_HGR)  c64_updated.png > c64.img
 
 ####
 
@@ -184,4 +188,6 @@ C64C.BIN:	c64.bmp
 
 clean:		
 		rm -f *~ *.o *.lst MEGADEMO MEGALOAD c64.img \
-			MUSIC.1000 MUSIC.D000 MUSIC.D000X2
+			MUSIC.1000 MUSIC.D000 MUSIC.D000X2 destroy_disk
+		cd disk && make clean
+		cd music && make clean

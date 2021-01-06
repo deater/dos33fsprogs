@@ -4,3 +4,19 @@ mid-screen graphics switches
 fancy_lores:
 	viewer for 40x96 and 40x48i cycle-counted graphics modes
 
+fireworks:
+	fancy cycle-counted fireworks display
+	used in the cycle-counting megademo
+
+racebeam:
+	attempt (unsuccessful?) to get dhgr-esque resolution from vapor lock
+
+rasterbars:
+	work on self-modify code for 40x192 cycle-counted graphics
+	most of this work ended up in the lores-escape demo
+
+tfv_credits:
+	riding a chocobo credits scene for Talbot Fantasy
+
+waterfall:
+	transparent waterfall effect

@@ -1,0 +1,10 @@
+working on getting 40x192 cycle-counted mode.  you have to self-modify
+screen contents mid-screen so you ounly get about 12 or so blocks
+across in this mode
+
+really cool rasterbar effect
+
+attempted to get cycle-counted pt3 player going, wasted a lot of time
+on that, didn't get it working in the end
+
+these proofs of concept were used in the Demosplash 2019 lores-escape demo
