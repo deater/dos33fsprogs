@@ -1,6 +1,13 @@
-	; ANGLE in our case it's 0..15?
 
-; optimization (ANGLE=0)
+	; rotozoomer!
+	; takes a lores-formatted image in $c00 and rotozooms it
+	;	by ANGLE and SCALE_I/SCALE_F and draws it to the
+	;	lo-res page in DRAW_PAGE
+
+	; ANGLE in our case is 0..31
+	; SCALE_I/SCALE_F is 8.8 fixed point scale multiplier
+
+; optimization (cycles measured at ANGLE=0)
 ;	$6BD76=441,718=2.26fps	initial code with external plot and scrn
 ;	$62776=403,318=2.48fps	inline plot
 ;	$597b6=366,518=2.73fps	inline scrn
@@ -45,7 +52,7 @@ rotozoom:
 	sta	NUM1L							; 3
 
 	; ca = cos(theta)*scale;
-	;      ca=fixed_sin[(theta+4)&0xf]
+	;      (we use equiv ca=fixed_sin[(theta+8)&0xf] )
 
 	lda	ANGLE							; 3
 	clc								; 2
