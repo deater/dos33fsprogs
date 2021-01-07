@@ -219,6 +219,7 @@ rotozoom_xloop:
 	;	on the edges of the screen?  Tricky due to Apple II
 	;	interlacing
 
+roto_color_even_smc:
 	lda	#0	; default color					; 2
 
 	ldy	XPH							; 3
@@ -413,6 +414,7 @@ rotozoom_xloop2:
 	;	on the edges of the screen?  Tricky due to Apple II
 	;	interlacing
 
+roto_color_odd_smc:
 	lda	#0	; default color					; 2
 
 	ldy	XPH							; 3

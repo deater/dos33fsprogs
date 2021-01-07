@@ -93,6 +93,21 @@ refresh_image:
 
 at_far_end:
 
+	; change bg color
+	lda	roto_color_even_smc+1
+	clc
+	adc	#$01
+	and	#$0f
+	sta	roto_color_even_smc+1
+
+	lda	roto_color_odd_smc+1
+	clc
+	adc	#$10
+	and	#$f0
+	sta	roto_color_odd_smc+1
+
+
+
 	; reverse direction
 	lda	direction
 	eor	#$ff
