@@ -14,6 +14,7 @@
 ;	$39e17=237,079=4.22fps	change the init to also use multiply
 ;	$39dc9=237,001=		change to use common lookup table (outside inner loop)
 ;	$3399f=211,359=4.73fps	unroll the Y loop by one
+;	$2BA83=178,819=5.59fps	optimize unrolled loop
 
 CAL	= $B0
 CAH	= $B1
@@ -143,16 +144,16 @@ rotozoom:
 	; for(yy=0;yy<40;yy++) {
 	;===================================================================
 
-	lda	#0							; 2
-	sta	YY							; 3
+	ldy	#0							; 2
+	sty	YY							; 3
 
 rotozoom_yloop:
 
 	; setup self-modifying code for plot
-	ldy	YY							; 3
+	; YY already in Y from end of loop
+;	ldy	YY							; 3
 
 	lda	common_offsets_l,Y	; lookup low-res memory address	; 4
-	sta	rplot1_smc+1						; 4
 	sta	rplot2_smc+1						; 4
 	sta	rplot12_smc+1						; 4
 	sta	rplot22_smc+1						; 4
@@ -160,7 +161,6 @@ rotozoom_yloop:
 	clc								; 2
 	lda	gr_400_offsets_h,Y					; 4
 	adc	DRAW_PAGE	; add in draw page offset		; 3
-	sta	rplot1_smc+2						; 4
 	sta	rplot2_smc+2						; 4
 	sta	rplot12_smc+2						; 4
 	sta	rplot22_smc+2						; 4
@@ -172,7 +172,7 @@ rotozoom_yloop:
 ;=====================
 
 
-	; xp=cca+ysa;
+	; xp=cca+ysa;	8.8 fixed point
 	clc								; 2
 	lda	YSAL							; 3
 	adc	CCAL							; 3
@@ -183,7 +183,7 @@ rotozoom_yloop:
 								;==========
 								;	20
 
-	; yp=yca-csa;
+	; yp=yca-csa;	8.8 fixed point
 
 	sec								; 2
 	lda	YCAL							; 3
@@ -257,15 +257,16 @@ rotozoom_xloop:
 	; carry was set a bit before to low bit of YPH
 	; hopefully nothing has cleared it
 
-	bcs	rscrn_adjust_odd					; 3
+	bcs	rscrn_adjust_odd					; 2nt/3
 
 rscrn_adjust_even:
 
-	; want bottom
+	; YP was even so want bottom nibble
 	and	#$f							; 2
 	jmp	rscrn_done						; 3
 
 rscrn_adjust_odd:
+	; YP was odd so want top nibble
 	lsr								; 2
 	lsr								; 2
 	lsr								; 2
@@ -279,12 +280,12 @@ rscrn_done:
 
 
 ; always even, want A in bottom of nibble
+; so we are all set
 
 rotozoom_set_color:
 	; want same color in top and bottom nibbles
-	and	#$f
 								;==========
-								;	8
+								;	0
 
 ;=================================================
 
@@ -292,22 +293,23 @@ rplot:
 
 	; plot(xx,yy);	(color is in A)
 
+	; we are in loop unroll0 so always even line here
 
-	; always even line here
+	; meaning we want to load old color, save top nibble, and over-write
+	; bottom nibble with our value
+
+	; but! we don't need to save old as we are re-drawing whole screen!
 
 rplot_even:
-	sta	COLOR							; 3
-	lda	#$f0							; 2
-rplot1_smc:
-	and	$400,X							; 4
-	ora	COLOR							; 3
+
 rplot2_smc:
 	sta	$400,X							; 5
-
+								;============
+								;	5
 
 ;=======================
 
-	; xp=xp+ca;
+	; xp=xp+ca;	fixed point 8.8
 
 	clc								; 2
 	lda	CAL							; 3
@@ -317,7 +319,7 @@ rplot2_smc:
 	adc	XPH							; 3
 	sta	XPH							; 3
 
-	; yp=yp-sa;
+	; yp=yp-sa;	fixed point 8.8
 
 	sec								; 2
 	lda	YPL							; 3
@@ -330,13 +332,12 @@ rplot2_smc:
 rotozoom_end_xloop:
 	inx								; 2
 	cpx	#40							; 2
-	beq	rotozoom_xloop_done					; 2nt/3
-	jmp	rotozoom_xloop						; 3
+	bne	rotozoom_xloop						; 2nt/3
 rotozoom_xloop_done:
 
 
 
-	; yca+=ca;
+	; yca+=ca;	8.8 fixed point
 
 	clc								; 2
 	lda	YCAL							; 3
@@ -348,7 +349,7 @@ rotozoom_xloop_done:
 								;===========
 								;	20
 
-	; ysa+=sa;
+	; ysa+=sa;	8.8 fixed point
 
 	clc								; 2
 	lda	YSAL							; 3
@@ -367,7 +368,7 @@ rotozoom_xloop_done:
 
 ;rotozoom_yloop:
 
-	; xp=cca+ysa;
+	; xp=cca+ysa;	8.8 fixed point
 	clc								; 2
 	lda	YSAL							; 3
 	adc	CCAL							; 3
@@ -378,7 +379,7 @@ rotozoom_xloop_done:
 								;==========
 								;	20
 
-	; yp=yca-csa;
+	; yp=yca-csa;	8.8 fixed point
 
 	sec								; 2
 	lda	YCAL							; 3
@@ -454,15 +455,18 @@ rotozoom_xloop2:
 
 rscrn_adjust_even2:
 
-	; want bottom
-	and	#$f							; 2
+	; want bottom color, but put it in top of A
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+
 	jmp	rscrn_done2						; 3
 
 rscrn_adjust_odd2:
-	lsr								; 2
-	lsr								; 2
-	lsr								; 2
-	lsr								; 2
+	; want top color alone
+
+	and	#$f0							; 2
 
 rscrn_done2:
 
@@ -473,13 +477,9 @@ rscrn_done2:
 
 rotozoom_set_color2:
 	; always odd
-	; want color in top
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
+	; want color in top, which it is from above
 								;==========
-								;	8
+								;	0
 
 ;=================================================
 
@@ -487,21 +487,23 @@ rplot2:
 
 	; plot(xx,yy);	(color is in A)
 
-	; always odd
+	; always odd, so place color in top
+
+	; note!  since we are drawing whole screen, we know the top of
+	; the value is already clear from loop=0 so we don't have to mask
 
 rplot_odd:
-	sta	COLOR							; 3
-	lda	#$0f							; 2
 rplot12_smc:
-	and	$400,X							; 4
-	ora	COLOR							; 3
+	ora	$400,X							; 4
 rplot22_smc:
 	sta	$400,X							; 5
 
+								;============
+								;	9
 
 ;=======================
 
-	; xp=xp+ca;
+	; xp=xp+ca;	8.8 fixed point
 
 	clc								; 2
 	lda	CAL							; 3
@@ -511,7 +513,7 @@ rplot22_smc:
 	adc	XPH							; 3
 	sta	XPH							; 3
 
-	; yp=yp-sa;
+	; yp=yp-sa;	8.8 fixed point
 
 	sec								; 2
 	lda	YPL							; 3
@@ -524,11 +526,10 @@ rplot22_smc:
 rotozoom_end_xloop2:
 	inx								; 2
 	cpx	#40							; 2
-	beq	rotozoom_xloop_done2					; 2nt/3
-	jmp	rotozoom_xloop2						; 3
+	bne	rotozoom_xloop2						; 3
 rotozoom_xloop_done2:
 
-	; yca+=ca;
+	; yca+=ca;		8.8 fixed point
 
 	clc								; 2
 	lda	YCAL							; 3
@@ -540,7 +541,7 @@ rotozoom_xloop_done2:
 								;===========
 								;	20
 
-	; ysa+=sa;
+	; ysa+=sa;		8.8 fixed point
 
 	clc								; 2
 	lda	YSAL							; 3
@@ -554,8 +555,8 @@ rotozoom_xloop_done2:
 
 rotozoom_end_yloop:
 	inc	YY							; 5
-	lda	YY							; 3
-	cmp	#20							; 2
+	ldy	YY							; 3
+	cpy	#20							; 2
 	beq	done_rotozoom						; 2nt/3
 	jmp	rotozoom_yloop	; too far				; 3
 
