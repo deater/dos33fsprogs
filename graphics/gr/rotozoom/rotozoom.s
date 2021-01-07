@@ -12,6 +12,8 @@
 ;	$39e3e=237,118=4.22fps	add scrn address lookup table
 ;	$39fdf=237,535		add two scale multiplies
 ;	$39e17=237,079=4.22fps	change the init to also use multiply
+;	$39dc9=237,001=		change to use common lookup table (outside inner loop)
+
 
 CAL	= $B0
 CAH	= $B1
@@ -177,16 +179,15 @@ smc_even:
 	ldy	#$4c		; jmp					; 2
 smc_write:
 	sty	rplot3_smc						; 4
-	asl		; now even					; 2
 
 	tay								; 2
 
-	lda	gr_offsets,Y	; lookup low-res memory address		; 4
+	lda	common_offsets_l,Y	; lookup low-res memory address	; 4
 	sta	rplot1_smc+1						; 4
 	sta	rplot2_smc+1						; 4
 
 	clc								; 2
-	lda	gr_offsets+1,Y						; 4
+	lda	gr_400_offsets_h,Y					; 4
 	adc	DRAW_PAGE	; add in draw page offset		; 3
 	sta	rplot1_smc+2						; 4
 	sta	rplot2_smc+2						; 4
@@ -235,9 +236,9 @@ rotozoom_xloop:
 	; TODO: put these in zero page?
 	;	also we can share low bytes with other lookup
 
-	lda	c00_scrn_offsets_l,Y	; lookup low-res memory address	; 4
+	lda	common_offsets_l,Y	; lookup low-res memory address	; 4
         sta	BASL							; 3
-        lda	c00_scrn_offsets_h,Y					; 4
+        lda	scrn_c00_offsets_h,Y					; 4
         sta	BASH							; 3
 
 	; carry was set a bit before to low bit of YPH
