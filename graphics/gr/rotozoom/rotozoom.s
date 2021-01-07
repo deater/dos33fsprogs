@@ -13,7 +13,7 @@
 ;	$39fdf=237,535		add two scale multiplies
 ;	$39e17=237,079=4.22fps	change the init to also use multiply
 ;	$39dc9=237,001=		change to use common lookup table (outside inner loop)
-
+;	$3399f=211,359=4.73fps	unroll the Y loop by one
 
 CAL	= $B0
 CAH	= $B1
@@ -138,11 +138,39 @@ rotozoom:
 								;===========
 								;	16
 
+	; yloop, unrolled once
+	;===================================================================
 	; for(yy=0;yy<40;yy++) {
+	;===================================================================
 
 	lda	#0							; 2
 	sta	YY							; 3
+
 rotozoom_yloop:
+
+	; setup self-modifying code for plot
+	ldy	YY							; 3
+
+	lda	common_offsets_l,Y	; lookup low-res memory address	; 4
+	sta	rplot1_smc+1						; 4
+	sta	rplot2_smc+1						; 4
+	sta	rplot12_smc+1						; 4
+	sta	rplot22_smc+1						; 4
+
+	clc								; 2
+	lda	gr_400_offsets_h,Y					; 4
+	adc	DRAW_PAGE	; add in draw page offset		; 3
+	sta	rplot1_smc+2						; 4
+	sta	rplot2_smc+2						; 4
+	sta	rplot12_smc+2						; 4
+	sta	rplot22_smc+2						; 4
+
+
+
+;=====================
+; unroll 0, even line
+;=====================
+
 
 	; xp=cca+ysa;
 	clc								; 2
@@ -168,38 +196,19 @@ rotozoom_yloop:
 								;	20
 
 
-	; setup self-modifying code for plot
-	lda	YY							; 3
-	lsr		; get low bit in carry				; 2
-	bcc	smc_even						; 2nt/3
-smc_odd:
-	ldy	#$2c		; bit					; 2
-	jmp	smc_write						; 3
-smc_even:
-	ldy	#$4c		; jmp					; 2
-smc_write:
-	sty	rplot3_smc						; 4
-
-	tay								; 2
-
-	lda	common_offsets_l,Y	; lookup low-res memory address	; 4
-	sta	rplot1_smc+1						; 4
-	sta	rplot2_smc+1						; 4
-
-	clc								; 2
-	lda	gr_400_offsets_h,Y					; 4
-	adc	DRAW_PAGE	; add in draw page offset		; 3
-	sta	rplot1_smc+2						; 4
-	sta	rplot2_smc+2						; 4
 
         ; for(xx=0;xx<40;xx++) {
 	ldx	#0							; 2
 rotozoom_xloop:
-	;==========================
+
+
+
+	;===================================================================
+	;===================================================================
 	; note: every cycle saved below here
 	;       saves 1600 cycles
-	;==========================
-
+	;===================================================================
+	;===================================================================
 
 	; if ((xp<0) || (xp>39)) color=0;
 	; else if ((yp<0) || (yp>39)) color=0;
@@ -241,23 +250,22 @@ rotozoom_xloop:
         lda	scrn_c00_offsets_h,Y					; 4
         sta	BASH							; 3
 
+
+	ldy	XPH							; 3
+	lda	(BASL),Y	; top/bottom color			; 5+
+
 	; carry was set a bit before to low bit of YPH
 	; hopefully nothing has cleared it
 
 	bcs	rscrn_adjust_odd					; 3
 
 rscrn_adjust_even:
-	ldy	XPH							; 3
+
 	; want bottom
-	lda	(BASL),Y	; top/bottom color			; 5+
 	and	#$f							; 2
 	jmp	rscrn_done						; 3
 
 rscrn_adjust_odd:
-	ldy	XPH							; 3
-	; want top
-	lda	(BASL),Y	; top/bottom color			; 5+
-
 	lsr								; 2
 	lsr								; 2
 	lsr								; 2
@@ -270,16 +278,13 @@ rscrn_done:
 ;=============================================
 
 
+; always even, want A in bottom of nibble
+
 rotozoom_set_color:
 	; want same color in top and bottom nibbles
-	sta	TEMP							; 3
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	ora	TEMP							; 3
+	and	#$f
 								;==========
-								;	14
+								;	8
 
 ;=================================================
 
@@ -287,21 +292,12 @@ rplot:
 
 	; plot(xx,yy);	(color is in A)
 
-	; smc based on if Y is odd or even
-rplot3_smc:
-	jmp	rplot_even						; 3
 
-rplot_odd:
-	and	#$f0							; 2
-	sta	COLOR							; 3
-	lda	#$0f							; 2
-	bne	rplot1_smc		; bra				; 3
+	; always even line here
 
 rplot_even:
-	and	#$0f							; 2
 	sta	COLOR							; 3
 	lda	#$f0							; 2
-
 rplot1_smc:
 	and	$400,X							; 4
 	ora	COLOR							; 3
@@ -331,13 +327,206 @@ rplot2_smc:
 	sbc	SAH							; 3
 	sta	YPH							; 3
 
-
 rotozoom_end_xloop:
 	inx								; 2
 	cpx	#40							; 2
 	beq	rotozoom_xloop_done					; 2nt/3
 	jmp	rotozoom_xloop						; 3
 rotozoom_xloop_done:
+
+
+
+	; yca+=ca;
+
+	clc								; 2
+	lda	YCAL							; 3
+	adc	CAL							; 3
+	sta	YCAL							; 3
+	lda	YCAH							; 3
+	adc	CAH							; 3
+	sta	YCAH							; 3
+								;===========
+								;	20
+
+	; ysa+=sa;
+
+	clc								; 2
+	lda	YSAL							; 3
+	adc	SAL							; 3
+	sta	YSAL							; 3
+	lda	YSAH							; 3
+	adc	SAH							; 3
+	sta	YSAH							; 3
+								;==========
+								;	20
+
+
+;===============
+; loop unroll 1
+;===============
+
+;rotozoom_yloop:
+
+	; xp=cca+ysa;
+	clc								; 2
+	lda	YSAL							; 3
+	adc	CCAL							; 3
+	sta	XPL							; 3
+	lda	YSAH							; 3
+	adc	CCAH							; 3
+	sta	XPH							; 3
+								;==========
+								;	20
+
+	; yp=yca-csa;
+
+	sec								; 2
+	lda	YCAL							; 3
+	sbc	CSAL							; 3
+	sta	YPL							; 3
+	lda	YCAH							; 3
+	sbc	CSAH							; 3
+	sta	YPH							; 3
+								;===========
+								;	20
+
+        ; for(xx=0;xx<40;xx++) {
+	ldx	#0							; 2
+rotozoom_xloop2:
+
+
+
+	;===================================================================
+	;===================================================================
+	; note: every cycle saved below here
+	;       saves 1600 cycles
+	;===================================================================
+	;===================================================================
+
+	; if ((xp<0) || (xp>39)) color=0;
+	; else if ((yp<0) || (yp>39)) color=0;
+	; else color=scrn_page(xp,yp,PAGE2);
+
+	; we know it's never going to go *that* far out of bounds
+	;	so we could avoid the Y check by just having "0"
+	;	on the edges of the screen?  Tricky due to Apple II
+	;	interlacing
+
+	lda	#0	; default color					; 2
+
+	ldy	XPH							; 3
+	bmi	rplot2							; 2nt/3
+	cpy	#40							; 2
+	bcs	rplot2							; 2nt/3
+
+	ldy	YPH							; 3
+	bmi	rplot2							; 2nt/3
+	cpy	#40							; 2
+	bcs	rplot2							; 2nt/3
+
+
+
+;==================================================
+
+	; scrn(xp,yp)
+
+	tya	; YPH							; 2
+
+	lsr		; divide to get index, also low bit in carry	; 2
+	tay								; 2
+
+	; TODO: put these in zero page?
+	;	also we can share low bytes with other lookup
+
+	lda	common_offsets_l,Y	; lookup low-res memory address	; 4
+        sta	BASL							; 3
+        lda	scrn_c00_offsets_h,Y					; 4
+        sta	BASH							; 3
+
+
+	ldy	XPH							; 3
+	lda	(BASL),Y	; top/bottom color			; 5+
+
+	; carry was set a bit before to low bit of YPH
+	; hopefully nothing has cleared it
+
+	bcs	rscrn_adjust_odd2					; 3
+
+rscrn_adjust_even2:
+
+	; want bottom
+	and	#$f							; 2
+	jmp	rscrn_done2						; 3
+
+rscrn_adjust_odd2:
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+
+rscrn_done2:
+
+
+
+;=============================================
+
+
+rotozoom_set_color2:
+	; always odd
+	; want color in top
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+								;==========
+								;	8
+
+;=================================================
+
+rplot2:
+
+	; plot(xx,yy);	(color is in A)
+
+	; always odd
+
+rplot_odd:
+	sta	COLOR							; 3
+	lda	#$0f							; 2
+rplot12_smc:
+	and	$400,X							; 4
+	ora	COLOR							; 3
+rplot22_smc:
+	sta	$400,X							; 5
+
+
+;=======================
+
+	; xp=xp+ca;
+
+	clc								; 2
+	lda	CAL							; 3
+	adc	XPL							; 3
+	sta	XPL							; 3
+	lda	CAH							; 3
+	adc	XPH							; 3
+	sta	XPH							; 3
+
+	; yp=yp-sa;
+
+	sec								; 2
+	lda	YPL							; 3
+	sbc	SAL							; 3
+	sta	YPL							; 3
+	lda	YPH							; 3
+	sbc	SAH							; 3
+	sta	YPH							; 3
+
+rotozoom_end_xloop2:
+	inx								; 2
+	cpx	#40							; 2
+	beq	rotozoom_xloop_done2					; 2nt/3
+	jmp	rotozoom_xloop2						; 3
+rotozoom_xloop_done2:
 
 	; yca+=ca;
 
@@ -366,7 +555,7 @@ rotozoom_xloop_done:
 rotozoom_end_yloop:
 	inc	YY							; 5
 	lda	YY							; 3
-	cmp	#40							; 2
+	cmp	#20							; 2
 	beq	done_rotozoom						; 2nt/3
 	jmp	rotozoom_yloop	; too far				; 3
 
