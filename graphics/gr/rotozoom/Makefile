@@ -4,7 +4,7 @@ DOS33 = ../../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKERSCRIPTS = ../../../linker_scripts
 
-all:	roto.dsk
+all:	roto.dsk make_sine_table
 
 roto.dsk:	HELLO ROTO
 	cp empty.dsk roto.dsk
@@ -26,5 +26,13 @@ roto.o:	roto.s rotozoom.s gr_plot.s gr_scrn.s
 
 ###
 
+make_sine_table:	make_sine_table.o
+	$(CC) -o make_sine_table make_sine_table.o -lm
+
+make_sine_table.o:	make_sine_table.c
+	$(CC) $(CFLAGS) -c make_sine_table.c
+
+###
+
 clean:	
-	rm -f *~ *.o *.lst ROTO
+	rm -f *~ *.o *.lst ROTO make_sine_table
