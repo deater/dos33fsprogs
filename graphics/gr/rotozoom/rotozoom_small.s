@@ -34,12 +34,10 @@ YSAH	= $BF
 
 rotozoom:
 
-	; setup scale for multiply
-
-	lda	SCALE_I							; 3
-	sta	NUM1H							; 3
-	lda	SCALE_F							; 3
-	sta	NUM1L							; 3
+	lda	SCALE_I
+	sta	NUM1H
+	lda	SCALE_F
+	sta	NUM1L
 
 	; ca = cos(theta)*scale;
 	;      ca=fixed_sin[(theta+4)&0xf]
@@ -57,10 +55,10 @@ rotozoom:
 								;===========
 								;	27
 
-	sec			; reload NUM1H/NUM1L			; 2
-	jsr	multiply						; 6+???
-	stx	CAH							; 3
-	sta	CAL							; 3
+	sec
+	jsr	multiply
+	stx	CAH
+	sta	CAL
 
 
 	; sa = sin(theta)*scale;
@@ -75,45 +73,83 @@ rotozoom:
 								;==========
 								;	21
 
+	clc
+	jsr	multiply
 
-	clc			; NUM1H/NUM1L same as last time		; 2
-	jsr	multiply						; 6+???
-
-	stx	SAH							; 3
-	sta	SAL							; 3
+	stx	SAH
+	sta	SAL
 
 
 	; cca = -20*ca;
 
-	lda	#-20							; 2
-	sta	NUM1H							; 3
-	lda	#0							; 2
-	sta	NUM1L							; 3
+	lda	#-20
+	sta	NUM1H
+	lda	#0
+	sta	NUM1L
 
-	lda	CAL							; 3
-	sta	NUM2L							; 3
-	lda	CAH							; 3
-	sta	NUM2H							; 3
+	lda	CAL
+	sta	NUM2L
+	lda	CAH
+	sta	NUM2H
 
-	sec			; reload NUM1H/NUM1L			; 2
-	jsr	multiply						; 6+???
-	stx	CCAH							; 3
-	sta	CCAL							; 3
+	sec
+	jsr	multiply
+	stx	CCAH
+	sta	CCAL
 
 
 	; csa = -20*sa;
 
-	lda	SAL							; 3
-	sta	NUM2L							; 3
-	lda	SAH							; 3
-	sta	NUM2H							; 3
+	lda	SAL
+	sta	NUM2L
+	lda	SAH
+	sta	NUM2H
 
-	clc			; same NUM1H/NUM1L as las time		; 2
-	jsr	multiply						; 6+???
+	clc
+	jsr	multiply
 
-	stx	CSAH							; 3
-	sta	CSAL							; 3
+	stx	CSAH
+	sta	CSAL
 
+
+
+
+;	lda	#0							; 2
+;	sta	CCAL							; 3
+;	sta	CCAH							; 3
+;	sta	CSAL							; 3
+;	sta	CSAH							; 3
+								;===========
+								;	14
+
+;	ldx	#20							; 2
+;mul20_loop:
+;	sec								; 2
+;	lda	CCAL							; 3
+;	sbc	CAL							; 3
+;	sta	CCAL							; 3
+;	lda	CCAH							; 3
+;	sbc	CAH							; 3
+;	sta	CCAH							; 3
+								;===========
+								; 	20
+
+;	sec								; 2
+;	lda	CSAL							; 3
+;	sbc	SAL							; 3
+;	sta	CSAL							; 3
+;	lda	CSAH							; 3
+;	sbc	SAH							; 3
+;	sta	CSAH							; 3
+								;===========
+								; 	20
+
+;	dex								; 2
+;	bne	mul20_loop						;2nt/3
+
+							;===================
+							; total=2+(45*20)-1
+							; 	901 cycles
 
 	; yca=cca+ycenter;
 
