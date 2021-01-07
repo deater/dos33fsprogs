@@ -1,6 +1,108 @@
-testing out rotozoom
+40x40 lo-res rotozoomer for Apple II
 
-doing more complicated one where centered in screen
+by Vince "deater" Weaver	vince _at_ deater.net
+
+Working on this as it's part of a cutscene in my TFV game.
+
+
+Theory:
+~~~~~~~
+
+	In a rotozoomer you scan across the screen (in our case in
+	Apple lo-res, 40x40) and for each pixel do a mapping to find
+	out what color to draw it.
+
+	In this case you have a texture, and to find what point on the
+	texture maps to the screen co-ordinates you do a transform to
+	rotate and scale the co-ordinates.  This usually involves some
+	multiplies and some sin/cos calls.
+
+Optimization:
+~~~~~~~~~~~~~
+	This effect is often done on 8-bit computers, the trick is to
+	take as much work as possible out of the inner loop.
+	For our case, each cycle we save in the innermost loop saves
+	1600 cycles total (40x40).
+
+	The first optimization is to note that the transform is basically
+	a set of straight lines plotted across the texture.  So you can
+	calculate the slope of this at the beginning (using sin/cos),
+	then calculate all the points using simple add instructions.
+
+	The code in C looks something like this.  Some extra transformation
+	is done to have the center of rotation be the center of the screen
+	at 20,20.
+
+
+		ca = cos(theta)*scale;
+		sa = sin(theta)*scale;
+
+		cca = -20*ca;
+		csa = -20*sa;
+
+		yca=cca+ycenter;
+		ysa=csa+xcenter;
+
+		for(yy=0;yy<40;yy++) {
+
+			xp=cca+ysa;
+			yp=yca-csa;
+
+			for(xx=0;xx<40;xx++) {
+
+				if ((xp<0) || (xp>39)) color=0;
+				else if ((yp<0) || (yp>39)) color=0;
+				else {
+					color=scrn_page(xp,yp,PAGE2);
+				}
+
+				color_equals(color);
+				plot(xx,yy);
+				xp=xp+ca;
+				yp=yp-sa;
+			}
+			yca+=ca;
+			ysa+=sa;
+		}
+
+
+
+Apple II/6502 optimizations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	+ We use an optimized multiply routine (using subtractions of
+		squares) to do 8.8 fixed point signed multiply
+	+ We use lookup tables for sin() [and save space by using an
+		offset into the sin() table for cos()]
+	+ We use 8.8 fixed point values for math, even though that's
+		a bit slow on an 8-bit processor like the 6502
+	+ Apple II screen-read/pixel plotting is a pain as memory is not
+		linear and has holes in it.  We use lookup tables
+		to calculate the address for each line
+	+ Apple II lores mode lines are grouped together into the 
+		top/bottom nibbles of a byte.  So typically to draw
+		an arbitrary pixel you have to read the old value, mask
+		off top or bottom, then OR in the new value.
+		Our code avoids this... since we are drawing the entire
+		screen destructively we don't have to save old values
+		when drawing the bytes.
+	+ In addition, we unroll the Y loop by one which allows us to 
+		have custom code for odd/even rows which allow optimizing
+		away a lot of conditional code
+
+
+Notes on making it even faster
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	There are other lo-res rotozoomer implementations.
+	They are faster too, but because they don't usually do full 40x40
+	resolution.
+
+	+ If we used a smaller texture (rather than 40x40) things would
+		be much faster.  Other demos use 20x20 which would be
+		blockier but also 4x faster
+
+	+ If we wrapped the texture at the edges (instead of filling with
+		a solid color out of bounds) we could save at least 20
+		cycles, which would improve the frame rate.
 
 
 
