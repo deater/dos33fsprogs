@@ -11,9 +11,7 @@
 ; 128 -- set color ourselves
 ; 127 -- overlap color lookup with sine table
 ; 119 -- forgot to comment out unused
-
-; 149 -- add page flipping
-; 144 -- optimize a bit
+; 121 -- make full screen
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -28,8 +26,10 @@ SAVEY = $FF
 	;================================
 
 	jsr	SETGR
-	bit	FULLGR
+	bit	FULLGR		; full screen
 
+;	lda	#0
+;	sta	DISP_PAGE
 ;	lda	#4
 ;	sta	DRAW_PAGE
 
@@ -59,7 +59,6 @@ lookup_smc:
 	dey
 	bpl	create_yloop
 
-	; X and Y both $FF
 
 create_lookup_done:
 
@@ -68,10 +67,10 @@ forever_loop:
 cycle_colors:
 	; cycle colors
 
-	; X if $FF when arriving here
+	; X is $FF when arrive here
+	inx
 
 ;	ldx	#0
-	inx	; make X 0
 cycle_loop:
 	inc	lookup,X
 	inx
@@ -79,22 +78,6 @@ cycle_loop:
 
 
 plot_frame:
-
-	; set which page
-	; flip page
-
-;	ldx	#0		; x already 0
-	lda	DRAW_PAGE
-	beq	done_page
-	inx
-done_page:
-	ldy	PAGE0,X
-
-	eor	#$4
-	sta	DRAW_PAGE
-
-
-
 
 	; plot frame
 
@@ -114,12 +97,7 @@ plot_yloop:
 
 	php
 	jsr	GBASCALC	; point GBASL/H to address in A
-				; after, A is GBASL, C is clear
-
-	lda	GBASH
-	adc	DRAW_PAGE
-	sta	GBASH
-
+				; after, A trashed, C is clear
 	plp
 
 	lda	#$0f		; setup mask
@@ -170,7 +148,7 @@ plot_lookup_smc:
 
 ;	iny
 ;	cpy	#40
-;	bne	plot_xlooph
+;	bne	plot_xloop
 
 ;	inx
 ;	cpx	#40
