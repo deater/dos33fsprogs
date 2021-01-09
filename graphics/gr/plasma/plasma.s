@@ -14,6 +14,9 @@
 
 ; 149 -- add page flipping
 ; 144 -- optimize a bit
+; 141 -- smc DRAW_PAGE
+
+; goal=135
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -30,15 +33,11 @@ SAVEY = $FF
 	jsr	SETGR
 	bit	FULLGR
 
-;	lda	#4
-;	sta	DRAW_PAGE
-
 ;col = ( 8.0 + (sintable[xx&0xf])
 ;           + 8.0 + (sintable[yy&0xf])
 ;            ) / 2;
 
 create_lookup:
-
 	ldy	#15
 create_yloop:
 	ldx	#15
@@ -84,17 +83,15 @@ plot_frame:
 	; flip page
 
 ;	ldx	#0		; x already 0
-	lda	DRAW_PAGE
+
+	lda	draw_page_smc+1	; DRAW_PAGE
 	beq	done_page
 	inx
 done_page:
 	ldy	PAGE0,X
 
 	eor	#$4
-	sta	DRAW_PAGE
-
-
-
+	sta	draw_page_smc+1 ; DRAW_PAGE
 
 	; plot frame
 
@@ -117,15 +114,15 @@ plot_yloop:
 				; after, A is GBASL, C is clear
 
 	lda	GBASH
-	adc	DRAW_PAGE
+draw_page_smc:
+	adc	#0
 	sta	GBASH
 
 	plp
 
 	lda	#$0f		; setup mask
 	bcc	plot_mask
-	adc	#$e0
-
+	adc	#$e0		; needlessly clever, from monitor rom src
 plot_mask:
 	sta	MASK
 
@@ -153,6 +150,7 @@ plot_lookup_smc:
 
 	and	#$f
 	lsr
+
 	tax
 	lda	colorlookup,X
 	sta	COLOR
@@ -168,16 +166,6 @@ plot_lookup_smc:
 	bpl	plot_yloop
 	bmi	forever_loop
 
-;	iny
-;	cpy	#40
-;	bne	plot_xlooph
-
-;	inx
-;	cpx	#40
-;	bne	plot_yloop
-;	beq	forever_loop
-
-
 colorlookup:
 bw_color_lookup:
 .byte $55,$22,$66,$77,$ff,$77,$55	; ,$00 shared w sin table
@@ -192,7 +180,7 @@ sinetable:
 ;.byte $00,$55,$77,$ff,$77,$66,$22,$55
 
 
+; make lookup happen at page boundary
 
 .org	$d00
-;.align	$100
 lookup:
