@@ -29,6 +29,8 @@ static unsigned char color_lookup[]={0x0, 0x5, 0x7, 0xf,
 
 static int offscreen[40][40];
 
+static int sintable[16];
+
 int main(int argc, char **argv) {
 
 	int ch,xx,yy,col;
@@ -42,6 +44,12 @@ int main(int argc, char **argv) {
 
 	ram[DRAW_PAGE]=0x0;
 
+	for(xx=0;xx<16;xx++) {
+		sintable[xx]=8.0*sin(xx*PI/8.0);
+//		printf("%2lf\n",(double)sintable[xx]);
+		printf("%02X\n",sintable[xx]);
+	}
+
 	for(yy=0;yy<40;yy++) {
 	for(xx=0;xx<40;xx++) {
 
@@ -50,9 +58,17 @@ int main(int argc, char **argv) {
     //          ) / 2;
 
 
-	col = ( 8.0 + (8.0 * sin(xx *PI/8.0))
-              + 8.0 + (8.0 * sin(yy *PI/8.0))
+//	col = ( 8.0 + (8.0 * sin(xx *PI/8.0))
+//            + 8.0 + (8.0 * sin(yy *PI/8.0))
+//              ) / 2;
+
+
+
+	col = ( 8.0 + (sintable[xx&0xf])
+            + 8.0 + (sintable[yy&0xf])
               ) / 2;
+
+	printf("%d %d: %lf %lf\n",xx,yy,8.0*sin(xx*PI/8.0),(double)sintable[xx&0xf]);
 
 			offscreen[xx][yy]=col;
 		}
