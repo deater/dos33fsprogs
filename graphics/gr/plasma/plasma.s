@@ -6,6 +6,7 @@
 ; 130 -- optimize indexing of lookup
 ; 126 -- run loops backaward
 ; 124 -- notice X already 0 before plot
+; 131 -- use GBASCALC.  much faster, but 7 bytes larger
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -71,39 +72,60 @@ plot_frame:
 
 	; plot frame
 
-	;ldx	#0		; YY=0
+;	ldx	#40		; YY=0
+
 plot_yloop:
 	ldy	#0		; XX = 0
+
+	txa
+	lsr
+
+	php
+	jsr	GBASCALC	; point GBASL/H to address in A
+				; after, A trashed, C is clear
+	plp
+
+	lda	#$0f		; setup mask
+	bcc	plot_mask
+	adc	#$e0
+
+plot_mask:
+	sta	MASK
+
 plot_xloop:
 
 	stx	SAVEX		; SAVE YY
-	sty	SAVEY		; SAVE XX
 
-	tya
+	tya			; get x&0xf
 	and	#$f
 	sta	CTEMP
 
-	txa
-	and	#$f
+	txa			; get y<<4
 	asl
 	asl
 	asl
 	asl
-	ora	CTEMP
+
+	ora	CTEMP		; get (y*15)+x
 	tax
-	lda	lookup,X
+
+plot_lookup:
+
+;	sta	plot_lookup_smc+1
+
+plot_lookup_smc:
+	lda	lookup,X	; load lookup, (y*16)+x
+;	lda	lookup	; load lookup, (y*16)+x
 	and	#$f
 	lsr
 	tax
+
 	lda	colorlookup,X
 
 	jsr	SETCOL
 
-	lda	SAVEX
+	jsr	PLOT1	; plot at GBASL,Y (x co-ord in Y)
 
-	jsr	PLOT	; plot at Y,A
-
-	ldy	SAVEY		; restore XX
 	ldx	SAVEX		; restore YY
 
 	iny
