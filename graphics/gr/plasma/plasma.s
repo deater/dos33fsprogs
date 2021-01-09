@@ -7,6 +7,9 @@
 ; 126 -- run loops backaward
 ; 124 -- notice X already 0 before plot
 ; 131 -- use GBASCALC.  much faster, but 7 bytes larger
+; 129 -- run loop backwards
+; 128 -- set color ourselves
+; 127 -- overlap color lookup with sine table
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -72,10 +75,10 @@ plot_frame:
 
 	; plot frame
 
-;	ldx	#40		; YY=0
+	ldx	#39		; YY=0
 
 plot_yloop:
-	ldy	#0		; XX = 0
+	ldy	#39		; XX = 0
 
 	txa
 	lsr
@@ -100,13 +103,14 @@ plot_xloop:
 	and	#$f
 	sta	CTEMP
 
-	txa			; get y<<4
+	txa			; get (y&0xf)<<4
 	asl
 	asl
 	asl
 	asl
 
 	ora	CTEMP		; get (y*15)+x
+
 	tax
 
 plot_lookup:
@@ -116,36 +120,48 @@ plot_lookup:
 plot_lookup_smc:
 	lda	lookup,X	; load lookup, (y*16)+x
 ;	lda	lookup	; load lookup, (y*16)+x
+
 	and	#$f
 	lsr
 	tax
-
 	lda	colorlookup,X
-
-	jsr	SETCOL
+	sta	COLOR
 
 	jsr	PLOT1	; plot at GBASL,Y (x co-ord in Y)
 
 	ldx	SAVEX		; restore YY
 
-	iny
-	cpy	#40
-	bne	plot_xloop
+	dey
+	bpl	plot_xloop
 
-	inx
-	cpx	#40
-	bne	plot_yloop
-	beq	forever_loop
+	dex
+	bpl	plot_yloop
+	bmi	forever_loop
 
+;	iny
+;	cpy	#40
+;	bne	plot_xloop
+
+;	inx
+;	cpx	#40
+;	bne	plot_yloop
+;	beq	forever_loop
+
+
+colorlookup:
+bw_color_lookup:
+.byte $55,$22,$66,$77,$ff,$77,$55	; ,$00 shared w sin table
 
 sinetable:
 .byte $00,$03,$05,$07,$08,$07,$05,$03
 .byte $00,$FD,$FB,$F9,$F8,$F9,$FB,$FD
 
-colorlookup:
+;colorlookup:
 ;.byte $00,$00,$05,$05,$07,$07,$0f,$0f
 ;.byte $07,$07,$06,$06,$02,$02,$05,$05
-.byte $00,$05,$07,$0f,$07,$06,$02,$05
+;.byte $00,$55,$77,$ff,$77,$66,$22,$55
+
+
 
 .org	$d00
 ;.align	$100
