@@ -1,6 +1,7 @@
 ; do a (hopefully fast) plasma
 
-; 151
+; 151 -- original
+; 137 -- optimize generation
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -22,33 +23,35 @@ SAVEY = $FF
 	sta	DRAW_PAGE
 
 ;col = ( 8.0 + (sintable[xx&0xf])
- ;           + 8.0 + (sintable[yy&0xf])
-  ;            ) / 2;
+;           + 8.0 + (sintable[yy&0xf])
+;            ) / 2;
+
 
 
 	ldy	#0
+	sty	SAVEOFF
 create_yloop:
 	ldx	#0
 create_xloop:
+;	lda	SAVEOFF
+;	and	#$f
+;	tax
+
 	clc
 	lda	#15
 	adc	sinetable,X
 	adc	sinetable,Y
 	lsr
 lookup_smc:
+	stx	SAVEX
+	ldx	SAVEOFF
 	sta	lookup,X
+	ldx	SAVEX
 
+	inc	SAVEOFF
 	inx
 	cpx	#16
 	bne	create_xloop
-
-	clc
-	lda	lookup_smc+1
-	adc	#16
-	sta	lookup_smc+1
-	lda	#0
-	adc	lookup_smc+2
-	sta	lookup_smc+2
 
 	iny
 	cpy	#16
@@ -89,6 +92,7 @@ plot_xloop:
 	tax
 	lda	lookup,X
 	and	#$f
+	lsr
 	tax
 	lda	colorlookup,X
 
@@ -116,7 +120,8 @@ sinetable:
 .byte $00,$FD,$FB,$F9,$F8,$F9,$FB,$FD
 
 colorlookup:
-.byte $00,$00,$05,$05,$07,$07,$0f,$0f
-.byte $07,$07,$06,$06,$02,$02,$05,$05
+;.byte $00,$00,$05,$05,$07,$07,$0f,$0f
+;.byte $07,$07,$06,$06,$02,$02,$05,$05
+.byte $00,$05,$07,$0f,$07,$06,$02,$05
 
 lookup:

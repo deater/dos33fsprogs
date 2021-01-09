@@ -9,7 +9,7 @@ all:	plasma.dsk
 plasma.dsk:	HELLO PLASMA
 	cp empty.dsk plasma.dsk
 	$(DOS33) -y plasma.dsk SAVE A HELLO
-	$(DOS33) -y plasma.dsk BSAVE -a 0x1000 PLASMA
+	$(DOS33) -y plasma.dsk BSAVE -a 0xC00 PLASMA
 
 ###
 
@@ -19,9 +19,9 @@ HELLO:	hello.bas
 ###
 
 PLASMA:	plasma.o
-	ld65 -o PLASMA plasma.o -C $(LINKERSCRIPTS)/apple2_1000.inc
+	ld65 -o PLASMA plasma.o -C $(LINKERSCRIPTS)/apple2_c00.inc
 
-plasma.o:	plasma.s gr_plot.s gr_scrn.s
+plasma.o:	plasma.s
 	ca65 -o plasma.o plasma.s -l plasma.lst
 
 ###
