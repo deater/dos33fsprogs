@@ -2,6 +2,10 @@
 
 ; 151 -- original
 ; 137 -- optimize generation
+; 136 -- align lookup table so we can index it easier
+; 130 -- optimize indexing of lookup
+; 126 -- run loops backaward
+; 124 -- notice X already 0 before plot
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -26,39 +30,34 @@ SAVEY = $FF
 ;           + 8.0 + (sintable[yy&0xf])
 ;            ) / 2;
 
+create_lookup:
 
-
-	ldy	#0
-	sty	SAVEOFF
+	ldy	#15
 create_yloop:
-	ldx	#0
+	ldx	#15
 create_xloop:
-;	lda	SAVEOFF
-;	and	#$f
-;	tax
-
 	clc
 	lda	#15
 	adc	sinetable,X
 	adc	sinetable,Y
 	lsr
 lookup_smc:
-	stx	SAVEX
-	ldx	SAVEOFF
-	sta	lookup,X
-	ldx	SAVEX
+	sta	lookup		; always starts at $d00
 
-	inc	SAVEOFF
-	inx
-	cpx	#16
-	bne	create_xloop
+	inc	lookup_smc+1
 
-	iny
-	cpy	#16
-	bne	create_yloop
+	dex
+	bpl	create_xloop
+
+	dey
+	bpl	create_yloop
+
+
+create_lookup_done:
 
 forever_loop:
 
+cycle_colors:
 	; cycle colors
 
 	ldx	#0
@@ -68,9 +67,11 @@ cycle_loop:
 	bne	cycle_loop
 
 
-	; plot
+plot_frame:
 
-	ldx	#0		; YY=0
+	; plot frame
+
+	;ldx	#0		; YY=0
 plot_yloop:
 	ldy	#0		; XX = 0
 plot_xloop:
@@ -124,4 +125,6 @@ colorlookup:
 ;.byte $07,$07,$06,$06,$02,$02,$05,$05
 .byte $00,$05,$07,$0f,$07,$06,$02,$05
 
+.org	$d00
+;.align	$100
 lookup:
