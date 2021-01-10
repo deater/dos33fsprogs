@@ -1,4 +1,4 @@
-; do a (hopefully fast) plasma
+; do a (hopefully fast) plasma type demo
 
 ; 151 -- original
 ; 137 -- optimize generation
@@ -23,20 +23,24 @@
 .include "hardware.inc"
 
 CTEMP	= $FC
-SAVEOFF = $FD
-SAVEX = $FE
-SAVEY = $FF
+SAVEOFF	= $FD
+SAVEX	= $FE
+SAVEY	= $FF
 
 	;================================
 	; Clear screen and setup graphics
 	;================================
 
-	jsr	SETGR
-	bit	FULLGR
+	jsr	SETGR		; set lo-res 40x40 mode
+	bit	FULLGR		; make it 40x48
 
-;col = ( 16.0 + (sintable[xx&0xf])
-;           + 16.0 + (sintable[yy&0xf])
-;            ) / 2;
+
+
+;	color = ( 8.0 + 8*sin(x) + 8.0 + 8*sin(y) )/2
+;		becomes
+;	color = ( 16 + (sintable[xx&0xf]) + (sintable[yy&0xf])) / 2;
+
+	; we only create a 16x16 texture, which we pattern across 40x48 screen
 
 create_lookup:
 	ldy	#15
@@ -44,7 +48,7 @@ create_yloop:
 	ldx	#15
 create_xloop:
 	clc
-	lda	#15
+	lda	#15		; 8+8 (but 15 works better)
 	adc	sinetable,X
 	adc	sinetable,Y
 	lsr
@@ -68,8 +72,10 @@ forever_loop:
 cycle_colors:
 	; cycle colors
 
-	; X if $FF when arriving here
+	; can't do palette rotate on Apple II so faking it here
+	; just incrementing every entry in texture by 1
 
+	; X if $FF when arriving here
 ;	ldx	#0
 	inx	; make X 0
 cycle_loop:
@@ -78,10 +84,12 @@ cycle_loop:
 	bne	cycle_loop
 
 
-plot_frame:
 
-	; set which page
-	; flip page
+
+	; set/flip pages
+	; we want to flip pages and then draw to the offscreen one
+
+flip_pages:
 
 ;	ldx	#0		; x already 0
 
@@ -94,7 +102,11 @@ done_page:
 	eor	#$4		; flip draw page between $400/$800
 	sta	draw_page_smc+1 ; DRAW_PAGE
 
-	; plot frame
+
+	; plot current frame
+	; scan whole 40x48 screen and plot each point based on
+	; lookup table colors
+plot_frame:
 
 	ldx	#47		; YY=47 (count backwards)
 
@@ -107,19 +119,20 @@ plot_yloop:
 	asl
 	sta	CTEMP		; save for later
 
-	txa
-	lsr
+	txa			; get Y in accumulator
+	lsr			; call actually wants Ycoord/2
 
-	php
-	jsr	GBASCALC	; point GBASL/H to address in (A is ycoord)
+	php			; save shifted-off low bit in C for later
+
+	jsr	GBASCALC	; point GBASL/H to address in (A is ycoord/2)
 				; after, A is GBASL, C is clear
 
-	lda	GBASH
+	lda	GBASH		; adjust to be PAGE1/PAGE2 ($400 or $800)
 draw_page_smc:
 	adc	#0
 	sta	GBASH
 
-	plp
+	plp			; restore C, indicating odd/even row
 
 	lda	#$0f		; setup mask for odd/even line
 	bcc	plot_mask
