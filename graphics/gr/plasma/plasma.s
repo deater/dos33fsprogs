@@ -150,7 +150,8 @@ plot_xloop:
 
 	tya			; get x&0xf
 	and	#$f
-	ora 	CTEMP 		; get ((y&0xf)*16)+x
+	ora 	CTEMP 		; combine with val from earlier
+				; get ((y&0xf)*16)+x
 
 	tax
 
@@ -163,11 +164,11 @@ plot_lookup_smc:
 ;	lda	lookup	; load lookup, (y*16)+x
 
 	and	#$f
-	lsr
+	lsr			; we actually only have 8 colors
 
 	tax
-	lda	colorlookup,X
-	sta	COLOR
+	lda	colorlookup,X	; lookup color
+	sta	COLOR		; each nibble should be same
 
 	jsr	PLOT1		; plot at GBASL,Y (x co-ord goes in Y)
 
