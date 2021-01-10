@@ -11,6 +11,7 @@
 ; 128 -- set color ourselves
 ; 127 -- overlap color lookup with sine table
 ; 119 -- forgot to comment out unused
+; 121 -- make it use full screen (40x48)
 
 ; 149 -- add page flipping
 ; 144 -- optimize a bit
@@ -33,8 +34,8 @@ SAVEY = $FF
 	jsr	SETGR
 	bit	FULLGR
 
-;col = ( 8.0 + (sintable[xx&0xf])
-;           + 8.0 + (sintable[yy&0xf])
+;col = ( 16.0 + (sintable[xx&0xf])
+;           + 16.0 + (sintable[yy&0xf])
 ;            ) / 2;
 
 create_lookup:
@@ -88,14 +89,14 @@ plot_frame:
 	beq	done_page
 	inx
 done_page:
-	ldy	PAGE0,X
+	ldy	PAGE0,X		; set display page to PAGE1 or PAGE2
 
-	eor	#$4
+	eor	#$4		; flip draw page between $400/$800
 	sta	draw_page_smc+1 ; DRAW_PAGE
 
 	; plot frame
 
-	ldx	#47		; YY=0
+	ldx	#47		; YY=47 (count backwards)
 
 plot_yloop:
 
@@ -104,13 +105,13 @@ plot_yloop:
 	asl
 	asl
 	asl
-	sta	CTEMP
+	sta	CTEMP		; save for later
 
 	txa
 	lsr
 
 	php
-	jsr	GBASCALC	; point GBASL/H to address in A
+	jsr	GBASCALC	; point GBASL/H to address in (A is ycoord)
 				; after, A is GBASL, C is clear
 
 	lda	GBASH
@@ -120,7 +121,7 @@ draw_page_smc:
 
 	plp
 
-	lda	#$0f		; setup mask
+	lda	#$0f		; setup mask for odd/even line
 	bcc	plot_mask
 	adc	#$e0		; needlessly clever, from monitor rom src
 plot_mask:
@@ -155,7 +156,7 @@ plot_lookup_smc:
 	lda	colorlookup,X
 	sta	COLOR
 
-	jsr	PLOT1	; plot at GBASL,Y (x co-ord in Y)
+	jsr	PLOT1		; plot at GBASL,Y (x co-ord goes in Y)
 
 	ldx	SAVEX		; restore YY
 
@@ -170,6 +171,7 @@ colorlookup:
 bw_color_lookup:
 .byte $55,$22,$66,$77,$ff,$77,$55	; ,$00 shared w sin table
 
+; this is actually 8*sin(x)
 sinetable:
 .byte $00,$03,$05,$07,$08,$07,$05,$03
 .byte $00,$FD,$FB,$F9,$F8,$F9,$FB,$FD
