@@ -196,6 +196,12 @@ sinetable:
 ;.byte $07,$07,$06,$06,$02,$02,$05,$05
 ;.byte $00,$55,$77,$ff,$77,$66,$22,$55
 
+	; want this to be at 3f5
+	; Lenth is 144 so start at $3f4 - 
+	;			1013 - 144 + 3 = 872 = $368
+
+	jmp	plasma
+
 ; make lookup happen at page boundary
 
 .org	$d00

@@ -3,7 +3,7 @@ include ../../Makefile.inc
 DOS33 = ../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
-all:	appleiibot.dsk convert_to convert_back convert_qkumba make_boxes convert_vmw
+all:	appleiibot.dsk convert_to convert_back convert_qkumba make_boxes convert_vmw convert_tgreene
 
 appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
 	CIRCLES.BAS AUTUMN.BAS QKUMBA.BAS ASTEROID.BAS PERSON.BAS SHIP.BAS \
@@ -88,6 +88,14 @@ convert_vmw:	convert_vmw.o
 
 convert_vmw.o:	convert_vmw.c
 	$(CC) $(CFLAGS) -c convert_vmw.c
+
+###
+
+convert_tgreene:	convert_tgreene.o
+	$(CC) $(LFLAGS) -o convert_tgreene convert_tgreene.o
+
+convert_tgreene.o:	convert_tgreene.c
+	$(CC) $(CFLAGS) -c convert_tgreene.c
 
 
 ###
@@ -323,4 +331,4 @@ HYPER.BAS:	hyper.bas
 ####
 
 clean:
-	rm -f *~ *.o *.lst convert_to convert_from convert_qkumba convert_vmw make_boxes convert_back LOAD *.BAS
+	rm -f *~ *.o *.lst convert_to convert_from convert_qkumba convert_vmw make_boxes convert_back convert_tgreene LOAD *.BAS
