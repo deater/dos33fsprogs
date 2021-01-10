@@ -11,7 +11,7 @@ plasma.dsk:	HELLO PLASMA PLASMA_TINY PLASMA_BOT
 	$(DOS33) -y plasma.dsk SAVE A HELLO
 	$(DOS33) -y plasma.dsk BSAVE -a 0x300 PLASMA
 	$(DOS33) -y plasma.dsk BSAVE -a 0xC00 PLASMA_TINY
-	$(DOS33) -y plasma.dsk BSAVE -a 0x368 PLASMA_BOT
+	$(DOS33) -y plasma.dsk BSAVE -a 0x36B PLASMA_BOT
 
 ###
 
@@ -29,7 +29,7 @@ plasma.o:	plasma.s
 ###
 
 PLASMA_BOT:	plasma_bot.o
-	ld65 -o PLASMA_BOT plasma_bot.o -C ./apple2_368.inc
+	ld65 -o PLASMA_BOT plasma_bot.o -C ./apple2_36b.inc
 
 plasma_bot.o:	plasma_bot.s
 	ca65 -o plasma_bot.o plasma_bot.s -l plasma_bot.lst

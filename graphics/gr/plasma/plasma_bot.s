@@ -17,15 +17,19 @@
 ; 144 -- optimize a bit
 ; 141 -- smc DRAW_PAGE
 
+; 144 -- for bot, backwards jump
+; 142 -- from qkumba, remove php/plp
+; 141 -- from qkumba, remove SAVEX
+
 ; goal=135
 
 .include "zp.inc"
 .include "hardware.inc"
 
 CTEMP	= $FC
-SAVEOFF	= $FD
-SAVEX	= $FE
-SAVEY	= $FF
+;SAVEOFF	= $FD
+;SAVEX	= $FE
+;SAVEY	= $FF
 
 	;================================
 	; Clear screen and setup graphics
@@ -114,6 +118,8 @@ plot_frame:
 plot_yloop:
 
 	txa			; get (y&0xf)<<4
+	pha			; save YY / SAVEX
+
 	asl
 	asl
 	asl
@@ -123,7 +129,12 @@ plot_yloop:
 	txa			; get Y in accumulator
 	lsr			; call actually wants Ycoord/2
 
-	php			; save shifted-off low bit in C for later
+
+	ldy	#$0f		; setup mask for odd/even line
+	bcc	plot_mask
+	ldy	#$f0
+plot_mask:
+	sty	MASK
 
 	jsr	GBASCALC	; point GBASL/H to address in (A is ycoord/2)
 				; after, A is GBASL, C is clear
@@ -133,21 +144,13 @@ draw_page_smc:
 	adc	#0
 	sta	GBASH
 
-	plp			; restore C, indicating odd/even row
-
-	lda	#$0f		; setup mask for odd/even line
-	bcc	plot_mask
-	adc	#$e0		; needlessly clever, from monitor rom src
-plot_mask:
-	sta	MASK
-
 	;==========
 
 	ldy	#39		; XX = 39 (countdown)
 
 plot_xloop:
 
-	stx	SAVEX		; SAVE YY
+;	stx	SAVEX		; SAVE YY
 
 	tya			; get x&0xf
 	and	#$f
@@ -173,10 +176,14 @@ plot_lookup_smc:
 
 	jsr	PLOT1		; plot at GBASL,Y (x co-ord goes in Y)
 
-	ldx	SAVEX		; restore YY
+;	ldx	SAVEX		; restore YY
+
 
 	dey
 	bpl	plot_xloop
+
+	pla
+	tax
 
 	dex
 	bpl	plot_yloop
@@ -184,7 +191,12 @@ plot_lookup_smc:
 
 colorlookup:
 bw_color_lookup:
-.byte $55,$22,$66,$77,$ff,$77,$55	; ,$00 shared w sin table
+
+; blue
+;.byte $55,$22,$66,$77,$ff,$77,$55	; ,$00 shared w sin table
+
+; pink
+.byte $55,$11,$33,$bb,$ff,$bb,$55
 
 ; this is actually 8*sin(x)
 sinetable:
@@ -197,8 +209,8 @@ sinetable:
 ;.byte $00,$55,$77,$ff,$77,$66,$22,$55
 
 	; want this to be at 3f5
-	; Lenth is 144 so start at $3f4 - 
-	;			1013 - 144 + 3 = 872 = $368
+	; Length is 141 so start at $3f4 - 
+	;			1013 - 141 + 3 = 875 = $36B
 
 	jmp	plasma
 

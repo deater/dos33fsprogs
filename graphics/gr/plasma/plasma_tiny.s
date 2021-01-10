@@ -12,14 +12,13 @@
 ; 127 -- overlap color lookup with sine table
 ; 119 -- forgot to comment out unused
 ; 121 -- make full screen
+; 119 -- from qkumba, remove php/plp
+; 118 -- from qkumba, remove SAVEX
 
 .include "zp.inc"
 .include "hardware.inc"
 
 CTEMP	= $FC
-SAVEOFF = $FD
-SAVEX = $FE
-SAVEY = $FF
 
 	;================================
 	; Clear screen and setup graphics
@@ -28,10 +27,6 @@ SAVEY = $FF
 	jsr	SETGR
 	bit	FULLGR		; full screen
 
-;	lda	#0
-;	sta	DISP_PAGE
-;	lda	#4
-;	sta	DRAW_PAGE
 
 ;col = ( 8.0 + (sintable[xx&0xf])
 ;           + 8.0 + (sintable[yy&0xf])
@@ -86,6 +81,7 @@ plot_frame:
 plot_yloop:
 
 	txa			; get (y&0xf)<<4
+	pha			; save YY
 	asl
 	asl
 	asl
@@ -95,25 +91,23 @@ plot_yloop:
 	txa
 	lsr
 
-	php
-	jsr	GBASCALC	; point GBASL/H to address in A
-				; after, A trashed, C is clear
-	plp
-
-	lda	#$0f		; setup mask
+	ldy	#$0f		; setup mask
 	bcc	plot_mask
-	adc	#$e0
+	ldy	#$f0
 
 plot_mask:
-	sta	MASK
+	sty	MASK
+
+
+
+	jsr	GBASCALC	; point GBASL/H to address in A
+				; after, A trashed, C is clear
 
 	;==========
 
 	ldy	#39		; XX = 39 (countdown)
 
 plot_xloop:
-
-	stx	SAVEX		; SAVE YY
 
 	tya			; get x&0xf
 	and	#$f
@@ -137,28 +131,24 @@ plot_lookup_smc:
 
 	jsr	PLOT1	; plot at GBASL,Y (x co-ord in Y)
 
-	ldx	SAVEX		; restore YY
-
 	dey
 	bpl	plot_xloop
+
+	pla
+	tax			; restore YY
 
 	dex
 	bpl	plot_yloop
 	bmi	forever_loop
 
-;	iny
-;	cpy	#40
-;	bne	plot_xloop
-
-;	inx
-;	cpx	#40
-;	bne	plot_yloop
-;	beq	forever_loop
-
-
 colorlookup:
 bw_color_lookup:
+
+; blue
 .byte $55,$22,$66,$77,$ff,$77,$55	; ,$00 shared w sin table
+
+; pink
+;.byte $55,$11,$33,$bb,$ff,$bb,$55	; ,$00 shared w sin table
 
 sinetable:
 .byte $00,$03,$05,$07,$08,$07,$05,$03
