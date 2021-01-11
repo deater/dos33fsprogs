@@ -39,13 +39,17 @@ NORMAL	=	$F273
 
 ;; MONITOR ROUTINES
 
+PLOT	= $F800			;; PLOT AT Y,A
+PLOT1	= $F80E			;; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
 HLINE	= $F819			;; HLINE Y,$2C at A
 VLINE	= $F828			;; VLINE A,$2D at Y
 CLRSCR	= $F832			;; Clear low-res screen
 CLRTOP	= $F836			;; clear only top of low-res screen
+GBASCALC= $F847			;; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 SETCOL	= $F864			;; COLOR=A
 ROM_TEXT2COPY = $F962		;; iigs
-TEXT	= $FB36
+SETTXT	= $FB36
+SETGR	= $FB40
 TABV	= $FB5B			;; VTAB to A
 ROM_MACHINEID = $FBB3		;; iigs
 BELL	= $FBDD			;; ring the bell

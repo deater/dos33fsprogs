@@ -97,6 +97,7 @@ SOUND_STATUS    =       $A6
 	SOUND_MOCKINGBOARD = $02 ; mockingboard detected
 JS_BUTTON_STATE	=	$A7
 
+CTEMP		=	$C0
 COLOR1		=	$E0
 COLOR2		=	$E1
 MATCH		=	$E2
