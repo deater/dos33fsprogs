@@ -41,6 +41,11 @@ cycle_colors:
 	ldx	#0
 cycle_loop:
 	inc	lookup,X
+
+	lda	lookup,X	; slow here but faster than doing it
+	and	#$f		; in the draw routine
+	sta	lookup,X
+
 	inx
 	bne	cycle_loop
 
@@ -121,7 +126,9 @@ plot_lookup_smc:
 which_color:	.byte $0
 
 colorlookup:
-.word	blue_lookup,red_lookup,green_lookup,yellow_lookup
+.word	green_lookup,yellow_lookup,blue_lookup,red_lookup
+
+
 
 ; blue
 blue_lookup:

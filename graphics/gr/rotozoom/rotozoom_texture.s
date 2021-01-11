@@ -9,6 +9,10 @@
 	; ANGLE in our case is 0..31
 	; SCALE_I/SCALE_F is 8.8 fixed point scale multiplier
 
+
+; $2E7CF = 190,415 = 5.25fps	first merging
+; $2D8CF = 186,575 = 5.35fps	move mask to rotate not draw
+
 CAL	= $B0
 CAH	= $B1
 SAL	= $B2
@@ -204,27 +208,29 @@ rotozoom_xloop:
 	;===================================================================
 
 
-	lda	XPH
-	and	#$f
-	sta	CTEMP
+	lda	XPH			; 3
+	and	#$f			; 2
+	sta	CTEMP			; 3
 
-	lda	YPH
-	asl
-	asl
-	asl
-	asl
-	clc
-	adc	CTEMP
-	tay
+	lda	YPH			; 3
+	asl				; 2
+	asl				; 2
+	asl				; 2
+	asl				; 2
+	clc				; 2
+	adc	CTEMP			; 3
+	tay				; 2
 
-	lda	lookup,Y
-	and	#$f
-	lsr
-	tay
+	lda	lookup,Y		; 4
+;	and	#$f			; 2
+	lsr				; 2
+	tay				; 2
+
 colorlookup2_smc:
-	lda	blue_lookup,Y
-	and	#$0f
-
+	lda	green_lookup,Y		; 4
+	and	#$0f			; 2
+				;============
+				;	40
 rscrn_done:
 
 
@@ -380,11 +386,11 @@ rotozoom_xloop2:
 	tay
 
 	lda	lookup,Y
-	and	#$f
+;	and	#$f
 	lsr
 	tay
 colorlookup_smc:
-	lda	blue_lookup,Y
+	lda	green_lookup,Y
 	and	#$f0
 
 ;=============================================
