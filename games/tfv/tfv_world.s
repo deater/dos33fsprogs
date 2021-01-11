@@ -45,6 +45,7 @@
 .include "keyboard.s"
 .include "joystick.s"
 .include "gr_putsprite.s"
+.include "gr_putsprite_crop.s"
 .include "text_print.s"
 .include "gr_copy.s"
 .include "decompress_fast_v2.s"

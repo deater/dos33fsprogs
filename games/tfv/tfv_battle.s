@@ -4,9 +4,13 @@
 
 do_battle:
 
+	lda	#34
+	sta	HERO_X
+	lda	#0
+	sta	HERO_STATE
+
 ;	int i,ch;
 ;	int saved_drawpage;
-;	int ax=34;
 ;	int enemy_count=30;
 ;	int old;
 
@@ -25,69 +29,184 @@ do_battle:
 ;	enemy_hp=enemies[enemy_type].hp_base+
 ;			(rand()&enemies[enemy_type].hp_mask);
 
+.endif
 
-	saved_drawpage=ram[DRAW_PAGE];
+	;==========================
+	; Draw background
 
-	ram[DRAW_PAGE]=PAGE2;
+	;==========================
+	;  Draw sky
+
+	ldx	#0	; blue from 0 .. 10
+battle_sky_loop:
+	lda	gr_offsets,X
+	sta	GBASL
+	lda	gr_offsets+1,X
+	clc
+	adc	#$8		; store to $C00
+	sta	GBASH
+
+	lda	#$66		; COLOR_MEDIUMBLUE
+	ldy	#0
+battle_sky_inner:
+	sta	(GBASL),Y
+	iny
+	cpy	#40
+	bne	battle_sky_inner
+
+	inx
+	inx
+	cpx	#10
+	bne	battle_sky_loop
+
+
+				; green from 10 .. 40
+battle_ground_loop:
+	lda	gr_offsets,X
+	sta	GBASL
+	lda	gr_offsets+1,X
+	clc
+	adc	#$8		; store to $C00
+	sta	GBASH
+
+	lda	#$CC		; COLOR_LIGHTGREEN
+				; FIXME: should be GROUNDCOLOR
+	ldy	#0
+battle_ground_inner:
+	sta	(GBASL),Y
+	iny
+	cpy	#40
+	bne	battle_ground_inner
+
+	inx
+	inx
+	cpx	#40
+	bne	battle_ground_loop
+
+	; Draw some background images for variety?
+
+	jsr	draw_battle_bottom
+
+main_battle_loop:
+
+	jsr	gr_copy_to_current
+
+	;========================================
+	; draw our hero
+	;========================================
+
+	lda	HERO_HP
+	beq	battle_draw_hero_down
+
+	lda	HERO_STATE
+	and	#HERO_STATE_RUNNING
+	bne	battle_draw_hero_running
+
+	jmp	battle_draw_normal_hero
+
+battle_draw_hero_down:
+	; grsim_put_sprite(tfv_defeat,ax-2,24);
+
+	lda	HERO_X
+	sec
+	sbc	#2
+	sta	XPOS
+	lda	#24
+	sta	YPOS
+
+	lda	#<tfv_defeat_sprite
+	sta	INL
+	lda	#>tfv_defeat_sprite
+
+	jmp	battle_actual_draw_hero
+
+battle_draw_hero_running:
+
+	; grsim_put_sprite(tfv_stand_right,ax,20);
+	; grsim_put_sprite(tfv_walk_right,ax,20);
+
+	lda	HERO_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+
+	lda	FRAMEL
+	and	#$8
+	beq	battle_draw_running_walk
+
+battle_draw_running_stand:
+	lda	#<tfv_stand_right_sprite
+	sta	INL
+	lda	#>tfv_stand_right_sprite
+	jmp	battle_actual_draw_hero
+
+battle_draw_running_walk:
+	lda	#<tfv_walk_right_sprite
+	sta	INL
+	lda	#>tfv_walk_right_sprite
+	jmp	battle_actual_draw_hero
+
+battle_draw_normal_hero:
+		; grsim_put_sprite(tfv_stand_left,ax,20);
+		lda	HERO_X
+		sta	XPOS
+		lda	#20
+		sta	YPOS
+
+		lda	#<tfv_stand_left_sprite
+		sta	INL
+		lda	#>tfv_stand_left_sprite
+		sta	INH
+
+		jsr	put_sprite_crop
+
+battle_draw_normal_sword:
+		; grsim_put_sprite(tfv_led_sword,ax-5,20);
+		lda	HERO_X
+		sec
+		sbc	#5
+		sta	XPOS
+		lda	#20
+		sta	YPOS
+
+		lda	#<tfv_led_sword_sprite
+		sta	INL
+		lda	#>tfv_led_sword_sprite
+
+battle_actual_draw_hero:
+		sta	INH
+		jsr	put_sprite_crop
 
 
 
-	;******************/
-	; Draw background */
-
-	; Draw sky */
-	color_equals(COLOR_MEDIUMBLUE);
-	for(i=0;i<10;i++) {
-		hlin_double(ram[DRAW_PAGE],0,39,i);
-	}
-
-	; Draw ground */
-	color_equals(ground_color);
-	for(i=10;i<40;i++) {
-		hlin_double(ram[DRAW_PAGE],0,39,i);
-	}
-
-	; Draw some background images for variety? */
-
-	ram[DRAW_PAGE]=saved_drawpage;
-
-	draw_battle_bottom(enemy_type);
-
-	while(1) {
-
-		gr_copy_to_current(0xc00);
-
-		if (hp==0) {
-			grsim_put_sprite(tfv_defeat,ax-2,24);
-		}
-		else if (running) {
-;			if (battle_count%2) {
-				grsim_put_sprite(tfv_stand_right,ax,20);
-			}
-			else {
-				grsim_put_sprite(tfv_walk_right,ax,20);
-			}
-		}
-		else {
-			grsim_put_sprite(tfv_stand_left,ax,20);
-			grsim_put_sprite(tfv_led_sword,ax-5,20);
-		}
+battle_done_draw_hero:
 
 ;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
-		draw_battle_bottom(enemy_type);
+	jsr	draw_battle_bottom
 
-		page_flip();
+	jsr	page_flip
 
-		if (hp==0) {
-			for(i=0;i<15;i++) usleep(100000);
-			break;
-		}
 
-		usleep(100000);
 
-		ch=grsim_input();
-		if (ch=='q') return 0;
+
+	; pause if dead
+
+	; if (hp==0) {
+	;	for(i=0;i<15;i++) usleep(100000);
+	;	break;
+	; }
+
+	; delay for framerate
+	; usleep(100000);
+
+	; check keypress
+
+	jsr	get_keypress
+	cmp	#'Q'
+	beq	done_battle
+
+.if 0
 
 		if (enemy_count==0) {
 			; attack and decrement HP
@@ -128,14 +247,15 @@ do_battle:
 
 
 	}
-
-	ram[DRAW_PAGE]=PAGE0;
-	clear_bottom();
-	ram[DRAW_PAGE]=PAGE1;
-	clear_bottom();
-
-	running=0;
 .endif
+
+	jmp	main_battle_loop
+
+done_battle:
+
+	jsr	clear_bottoms
+
+	; running=0; ?
 
 	rts
 
@@ -359,277 +479,290 @@ static int menu_state=MENU_NONE;
 static int menu_position=0;
 static int battle_count=0;
 
-static int draw_battle_bottom(int enemy_type) {
 
-	int i;
+.endif
 
-	clear_bottom();
+battle_enemy_string:
+.byte 0,21,"KILLER CRAB",0
+battle_enemy_attack_string:
+.byte 1,23,"PINCHING",0
 
-	vtab(22);
-	htab(1);
-	move_cursor();
-;	print(enemies[enemy_type].name);
+battle_name_string:
+.byte 14,21,"DEATER",0
 
-	if (enemy_attacking) {
-		vtab(24);
-		htab(2);
-		move_cursor();
+; static int draw_battle_bottom(int enemy_type) {
+draw_battle_bottom:
+
+	jsr	clear_bottom
+
+
+	; print(enemies[enemy_type].name);
+	lda	#<battle_enemy_string
+	sta	OUTL
+	lda	#>battle_enemy_string
+	sta	OUTH
+	jsr	move_and_print
+
+
+;	if (enemy_attacking) {
 ;		print_inverse(enemies[enemy_type].attack_name);
-	}
+;	}
 
-	vtab(22);
-	htab(15);
-	move_cursor();
-	; should print "NAMEO"
-;	print("DEATER");
-	print(nameo);
+	; print name string
+	lda	#<battle_name_string
+	sta	OUTL
+	lda	#>battle_name_string
+	sta	OUTH
+	jsr	move_and_print
 
-	if (susie_out) {
-		vtab(23);
-		htab(15);
-		move_cursor();
-		print("SUSIE");
-	}
+;	if (susie_out) {
+;		vtab(23);
+;		htab(15);
+;		move_cursor();
+;		print("SUSIE");
+;	}
 
-	if (menu_state==MENU_NONE) {
+;	if (menu_state==MENU_NONE) {
+;
+;		; TFV Stats */
+;
+;		vtab(21);
+;		htab(25);
+;		move_cursor();
+;		print("HP");
+;
+;		vtab(21);
+;		htab(28);
+;		move_cursor();
+;		print("MP");
 
-		; TFV Stats */
+;		vtab(21);
+;		htab(31);
+;		move_cursor();
+;		print("TIME");
 
-		vtab(21);
-		htab(25);
-		move_cursor();
-		print("HP");
-
-		vtab(21);
-		htab(28);
-		move_cursor();
-		print("MP");
-
-		vtab(21);
-		htab(31);
-		move_cursor();
-		print("TIME");
-
-		vtab(21);
-		htab(36);
-		move_cursor();
-		if (limit<4) {
-			print("LIMIT");
-		}
-		else {
-			; Make if flash? set bit 0x40 */
-			print_flash("LIMIT");
-		}
+;		vtab(21);
+;		htab(36);
+;		move_cursor();
+;		if (limit<4) {
+;			print("LIMIT");
+;		}
+;		else {
+;			; Make if flash? set bit 0x40 */
+;			print_flash("LIMIT");
+;		}
 
 
 
-		vtab(22);
-		htab(24);
-		move_cursor();
-		print_byte(hp);
+;		vtab(22);
+;		htab(24);
+;		move_cursor();
+;		print_byte(hp);
 
-		vtab(22);
-		htab(27);
-		move_cursor();
-		print_byte(mp);
+;		vtab(22);
+;		htab(27);
+;		move_cursor();
+;		print_byte(mp);
 
 		; Draw Time bargraph */
 ;		printf("Battle_bar=%d Limit=%d\n",battle_bar,limit);
-		ram[COLOR]=0xa0;
-		hlin_double(ram[DRAW_PAGE],30,34,42);
-		ram[COLOR]=0x20;
-		if (battle_bar) {
-			hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
-		}
+;		ram[COLOR]=0xa0;
+;		hlin_double(ram[DRAW_PAGE],30,34,42);
+;		ram[COLOR]=0x20;
+;		if (battle_bar) {
+;			hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
+;		}
 
-		; Draw Limit break bargraph */
-		ram[COLOR]=0xa0;
-		hlin_double(ram[DRAW_PAGE],35,39,42);
+;		; Draw Limit break bargraph */
+;		ram[COLOR]=0xa0;
+;		hlin_double(ram[DRAW_PAGE],35,39,42);
 
-		ram[COLOR]=0x20;
-		if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
-
-
-		; Susie Stats */
-		if (susie_out) {
-
-			vtab(23);
-			htab(24);
-			move_cursor();
-			print_byte(255);
-
-			vtab(23);
-			htab(27);
-			move_cursor();
-			print_byte(0);
-#if 0
-			; Draw Time bargraph */
-			ram[COLOR]=0xa0;
-			hlin_double(ram[DRAW_PAGE],30,34,42);
-			ram[COLOR]=0x20;
-			if (battle_bar) {
-				hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
-			}
-
-			; Draw Limit break bargraph */
-			ram[COLOR]=0xa0;
-			hlin_double(ram[DRAW_PAGE],35,39,42);
-
-			ram[COLOR]=0x20;
-			if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
-#endif
-		}
-	}
-
-	if (menu_state==MENU_MAIN) {
-
-		if (limit>3) {
-			if (menu_position>5) menu_position=5;
-		}
-		else {
-			if (menu_position>4) menu_position=4;
-		}
-
-		vtab(21);
-		htab(24);
-		move_cursor();
-		if (menu_position==0) print_inverse("ATTACK");
-		else print("ATTACK");
-
-		vtab(22);
-		htab(24);
-		move_cursor();
-		if (menu_position==2) print_inverse("MAGIC");
-		else print("MAGIC");
-
-		vtab(23);
-		htab(24);
-		move_cursor();
-		if (menu_position==4) print_inverse("SUMMON");
-		else print("SUMMON");
-
-		vtab(21);
-		htab(32);
-		move_cursor();
-		if (menu_position==1) print_inverse("SKIP");
-		else print("SKIP");
-
-		vtab(22);
-		htab(32);
-		move_cursor();
-		if (menu_position==3) print_inverse("ESCAPE");
-		else print("ESCAPE");
-
-		if (limit>3) {
-			vtab(23);
-			htab(32);
-			move_cursor();
-			if (menu_position==5) print_inverse("LIMIT");
-			else print("LIMIT");
-		}
+;		ram[COLOR]=0x20;
+;		if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
 
 
-	}
-	if (menu_state==MENU_SUMMON) {
+;		; Susie Stats */
+;		if (susie_out) {
+;
+;			vtab(23);
+;			htab(24);
+;			move_cursor();
+;			print_byte(255);
+;
+;			vtab(23);
+;			htab(27);
+;			move_cursor();
+;			print_byte(0);
+;#if 0
+;			; Draw Time bargraph */
+;			ram[COLOR]=0xa0;
+;			hlin_double(ram[DRAW_PAGE],30,34,42);
+;			ram[COLOR]=0x20;
+;			if (battle_bar) {
+;				hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
+;			}
+;
+;			; Draw Limit break bargraph */
+;			ram[COLOR]=0xa0;
+;			hlin_double(ram[DRAW_PAGE],35,39,42);
+;
+;			ram[COLOR]=0x20;
+;			if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
+;#endif
+;		}
+;	}
 
-		if (menu_position>1) menu_position=1;
+;	if (menu_state==MENU_MAIN) {
+;
+;		if (limit>3) {
+;			if (menu_position>5) menu_position=5;
+;		}
+;		else {
+;			if (menu_position>4) menu_position=4;
+;		}
+;
+;		vtab(21);
+;		htab(24);
+;		move_cursor();
+;		if (menu_position==0) print_inverse("ATTACK");
+;		else print("ATTACK");
+;
+;		vtab(22);
+;		htab(24);
+;		move_cursor();
+;		if (menu_position==2) print_inverse("MAGIC");
+;		else print("MAGIC");
+;
+;		vtab(23);
+;		htab(24);
+;		move_cursor();
+;		if (menu_position==4) print_inverse("SUMMON");
+;		else print("SUMMON");
+;
+;		vtab(21);
+;		htab(32);
+;		move_cursor();
+;		if (menu_position==1) print_inverse("SKIP");
+;		else print("SKIP");
+;
+;		vtab(22);
+;		htab(32);
+;		move_cursor();
+;		if (menu_position==3) print_inverse("ESCAPE");
+;		else print("ESCAPE");
+;
+;		if (limit>3) {
+;			vtab(23);
+;			htab(32);
+;			move_cursor();
+;			if (menu_position==5) print_inverse("LIMIT");
+;			else print("LIMIT");
+;		}
+;
+;
+;	}
+;	if (menu_state==MENU_SUMMON) {
+;
+;		if (menu_position>1) menu_position=1;
+;
+;		vtab(21);
+;		htab(25);
+;		move_cursor();
+;		print("SUMMONS:");
+;
+;		vtab(22);
+;		htab(25);
+;		move_cursor();
+;		if (menu_position==0) print_inverse("METROCAT");
+;		else print("METROCAT");
+;
+;		vtab(23);
+;		htab(25);
+;		move_cursor();
+;		if (menu_position==1) print_inverse("VORTEXCN");
+;		else print("VORTEXCN");
+;	}
+;	if (menu_state==MENU_MAGIC) {
+;
+;		if (menu_position>4) menu_position=4;
+;
+;		vtab(21);
+;		htab(24);
+;		move_cursor();
+;		print("MAGIC:");
+;
+;		vtab(22);
+;		htab(25);
+;		move_cursor();
+;		if (menu_position==0) print_inverse("HEAL");
+;		else print("HEAL");
+;
+;		vtab(23);
+;		htab(25);
+;		move_cursor();
+;		if (menu_position==2) print_inverse("ICE");
+;		else print("ICE");
+;
+;		vtab(24);
+;		htab(25);
+;		move_cursor();
+;		if (menu_position==4) print_inverse("BOLT");
+;		else print("BOLT");
+;
+;		vtab(22);
+;		htab(32);
+;		move_cursor();
+;		if (menu_position==1) print_inverse("FIRE");
+;		else print("FIRE");
+;
+;		vtab(23);
+;		htab(32);
+;		move_cursor();
+;		if (menu_position==3) print_inverse("MALAISE");
+;		else print("MALAISE");
+;
+;	}
+;
+;	if (menu_state==MENU_LIMIT) {
+;
+;		if (menu_position>2) menu_position=2;
+;
+;		vtab(21);
+;		htab(24);
+;		move_cursor();
+;		print("LIMIT BREAKS:");
+;
+;		vtab(22);
+;		htab(25);
+;		move_cursor();
+;		if (menu_position==0) print_inverse("SLICE");
+;		else print("SLICE");
+;
+;		vtab(23);
+;		htab(25);
+;		move_cursor();
+;		if (menu_position==2) print_inverse("DROP");
+;		else print("DROP");
+;
+;		vtab(22);
+;		htab(32);
+;		move_cursor();
+;		if (menu_position==1) print_inverse("ZAP");
+;		else print("ZAP");
+;	}
+;
+;	; Draw inverse separator */
+;	ram[COLOR]=0x20;
+;	for(i=40;i<50;i+=2) {
+;		hlin_double(ram[DRAW_PAGE],12,12,i);
+;	}
+;
 
-		vtab(21);
-		htab(25);
-		move_cursor();
-		print("SUMMONS:");
 
-		vtab(22);
-		htab(25);
-		move_cursor();
-		if (menu_position==0) print_inverse("METROCAT");
-		else print("METROCAT");
 
-		vtab(23);
-		htab(25);
-		move_cursor();
-		if (menu_position==1) print_inverse("VORTEXCN");
-		else print("VORTEXCN");
-	}
-	if (menu_state==MENU_MAGIC) {
+	rts
+.if 0
 
-		if (menu_position>4) menu_position=4;
-
-		vtab(21);
-		htab(24);
-		move_cursor();
-		print("MAGIC:");
-
-		vtab(22);
-		htab(25);
-		move_cursor();
-		if (menu_position==0) print_inverse("HEAL");
-		else print("HEAL");
-
-		vtab(23);
-		htab(25);
-		move_cursor();
-		if (menu_position==2) print_inverse("ICE");
-		else print("ICE");
-
-		vtab(24);
-		htab(25);
-		move_cursor();
-		if (menu_position==4) print_inverse("BOLT");
-		else print("BOLT");
-
-		vtab(22);
-		htab(32);
-		move_cursor();
-		if (menu_position==1) print_inverse("FIRE");
-		else print("FIRE");
-
-		vtab(23);
-		htab(32);
-		move_cursor();
-		if (menu_position==3) print_inverse("MALAISE");
-		else print("MALAISE");
-
-	}
-
-	if (menu_state==MENU_LIMIT) {
-
-		if (menu_position>2) menu_position=2;
-
-		vtab(21);
-		htab(24);
-		move_cursor();
-		print("LIMIT BREAKS:");
-
-		vtab(22);
-		htab(25);
-		move_cursor();
-		if (menu_position==0) print_inverse("SLICE");
-		else print("SLICE");
-
-		vtab(23);
-		htab(25);
-		move_cursor();
-		if (menu_position==2) print_inverse("DROP");
-		else print("DROP");
-
-		vtab(22);
-		htab(32);
-		move_cursor();
-		if (menu_position==1) print_inverse("ZAP");
-		else print("ZAP");
-	}
-
-	; Draw inverse separator */
-	ram[COLOR]=0x20;
-	for(i=40;i<50;i+=2) {
-		hlin_double(ram[DRAW_PAGE],12,12,i);
-	}
-
-;	ram[DRAW_PAGE]=saved_page;
-
-	return 0;
-}
 
 static int enemy_hp=0,enemy_type=0,enemy_x=0;
 

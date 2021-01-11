@@ -123,6 +123,15 @@ title_new_game:
 	; load game!  for now, debugging
 	;=================================
 title_load_game:
+
+	; this should go in new game, not load
+	lda	#200
+	sta	HERO_HP_MAX
+	lda	#200
+	sta	HERO_HP
+	lda	#100
+	sta	HERO_MP
+
 	lda	#LOAD_FLYING
 	sta	WHICH_LOAD
 

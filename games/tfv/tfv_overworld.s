@@ -429,16 +429,16 @@ walking:
 	bne	walking_right		; if(!0) walk right
 
 walking_left:
-	lda	#>tfv_walk_left
+	lda	#>tfv_walk_left_sprite
 	sta	INH
-	lda	#<tfv_walk_left
+	lda	#<tfv_walk_left_sprite
 	sta	INL
 	bcc	done_walking
 
 walking_right:
-	lda	#>tfv_walk_right
+	lda	#>tfv_walk_right_sprite
 	sta	INH
-	lda	#<tfv_walk_right
+	lda	#<tfv_walk_right_sprite
 	sta	INL
 	bcc	done_walking
 
@@ -446,16 +446,16 @@ standing:
 	lda	DIRECTION
 	bne	standing_right
 standing_left:
-	lda	#>tfv_stand_left
+	lda	#>tfv_stand_left_sprite
 	sta	INH
-	lda	#<tfv_stand_left
+	lda	#<tfv_stand_left_sprite
 	sta	INL
 	bcc	done_walking
 
 standing_right:
-	lda	#>tfv_stand_right
+	lda	#>tfv_stand_right_sprite
 	sta	INH
-	lda	#<tfv_stand_right
+	lda	#<tfv_stand_right_sprite
 	sta	INL
 
 done_walking:

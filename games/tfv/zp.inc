@@ -22,6 +22,8 @@ INVFLG	= $32
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
+XMAX		=	$50	; used by putsprite_crop
+
 ;; Flying Routine Only
 
 TURNING		=	$60
@@ -80,18 +82,28 @@ NEWY            =     $84
 MAP_X           =     $85
 GROUND_COLOR    =     $86
 
+;==================GLOBAL STATE, STORED IN SAVE GAME==========
+WHICH_LOAD	=	$90	; current level
+HERO_HP		=	$91	; hero's hit points
+HERO_HP_MAX	=	$92	; hero's max hit points
+HERO_MP		=	$93	; hero's magic points
 
+
+;==================GAME STATE (not in save game)==============
 LEVEL_OVER	=	$A0
 JOYSTICK_ENABLED=	$A1
 FRAMEL		=	$A2
 FRAMEH		=	$A3
-WHICH_LOAD	=	$A4
 MENU_RESULT	=	$A5
 SOUND_STATUS    =       $A6
 	SOUND_DISABLED  = $80
 	SOUND_IN_LC     = $01 ; $01 sound effects in language card
 	SOUND_MOCKINGBOARD = $02 ; mockingboard detected
 JS_BUTTON_STATE	=	$A7
+
+HERO_X		=	$B0	; used in battle
+HERO_STATE	=	$B1	; used in battle
+	HERO_STATE_RUNNING = $01	; running from battle
 
 COLOR1		=	$E0
 COLOR2		=	$E1
