@@ -12,6 +12,9 @@
 
 ; $2E7CF = 190,415 = 5.25fps	first merging
 ; $2D8CF = 186,575 = 5.35fps	move mask to rotate not draw
+; $29CCF = 171,215 = 5.84fps	do color conversion outside of loop
+; $28DCF = 167,375 = 5.97fps	two lookup tables for hi/low
+; $26FCF = 159,695 = 6.26fps	remove carry set/clear for fixed point adds
 
 CAL	= $B0
 CAH	= $B1
@@ -221,16 +224,10 @@ rotozoom_xloop:
 	adc	CTEMP			; 3
 	tay				; 2
 
-	lda	lookup,Y		; 4
-;	and	#$f			; 2
-	lsr				; 2
-	tay				; 2
+	lda	low_lookup,Y		; 4
 
-colorlookup2_smc:
-	lda	green_lookup,Y		; 4
-	and	#$0f			; 2
 				;============
-				;	40
+				;	30
 rscrn_done:
 
 
@@ -270,7 +267,8 @@ rplot2_smc:
 
 	; xp=xp+ca;	fixed point 8.8
 
-	clc								; 2
+; always set?  also low importance LSB
+;	clc								; 2
 	lda	CAL							; 3
 	adc	XPL							; 3
 	sta	XPL							; 3
@@ -280,7 +278,8 @@ rplot2_smc:
 
 	; yp=yp-sa;	fixed point 8.8
 
-	sec								; 2
+; low importance LSB?
+;	sec								; 2
 	lda	YPL							; 3
 	sbc	SAL							; 3
 	sta	YPL							; 3
@@ -385,13 +384,8 @@ rotozoom_xloop2:
 	adc	CTEMP
 	tay
 
-	lda	lookup,Y
-;	and	#$f
-	lsr
-	tay
-colorlookup_smc:
-	lda	green_lookup,Y
-	and	#$f0
+	lda	high_lookup,Y
+;	and	#$f0
 
 ;=============================================
 
@@ -426,7 +420,7 @@ rplot22_smc:
 
 	; xp=xp+ca;	8.8 fixed point
 
-	clc								; 2
+;	clc								; 2
 	lda	CAL							; 3
 	adc	XPL							; 3
 	sta	XPL							; 3
@@ -436,7 +430,7 @@ rplot22_smc:
 
 	; yp=yp-sa;	8.8 fixed point
 
-	sec								; 2
+;	sec								; 2
 	lda	YPL							; 3
 	sbc	SAL							; 3
 	sta	YPL							; 3

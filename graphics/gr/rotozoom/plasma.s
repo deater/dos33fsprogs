@@ -1,5 +1,7 @@
 
-lookup = $d00
+texture = $d00
+high_lookup = $e00
+low_lookup = $f00
 
 ;col = ( 8.0 + (sintable[xx&0xf])
 ;           + 8.0 + (sintable[yy&0xf])
@@ -17,7 +19,7 @@ create_xloop:
 	adc	sinetable,Y
 	lsr
 lookup_smc:
-	sta	lookup		; always starts at $d00
+	sta	texture		; always starts at $d00
 
 	inc	lookup_smc+1
 
@@ -39,15 +41,34 @@ cycle_colors:
 	; cycle colors
 
 	ldx	#0
-cycle_loop:
-	inc	lookup,X
+cycle_texture_loop:
+	inc	texture,X
 
-	lda	lookup,X	; slow here but faster than doing it
+	lda	texture,X	; slow here but faster than doing it
 	and	#$f		; in the draw routine
-	sta	lookup,X
+	sta	texture,X
 
 	inx
-	bne	cycle_loop
+	bne	cycle_texture_loop
+
+	; make lookup
+
+	ldx	#0
+cycle_lookup_loop:
+	lda	texture,X
+	lsr
+	tay
+color_lookup_smc:
+	lda	green_lookup,Y
+	pha
+	and	#$f0
+	sta	high_lookup,X
+	pla
+	and	#$0f
+	sta	low_lookup,X
+
+	inx
+	bne	cycle_lookup_loop
 
 	rts
 

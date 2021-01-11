@@ -94,11 +94,11 @@ refresh_color:
 	tay
 
 	lda	colorlookup,Y
-	sta	colorlookup_smc+1
-	sta	colorlookup2_smc+1
+	sta	color_lookup_smc+1
+;	sta	colorlookup2_smc+1
 	lda	colorlookup+1,Y
-	sta	colorlookup_smc+2
-	sta	colorlookup2_smc+2
+	sta	color_lookup_smc+2
+;	sta	colorlookup2_smc+2
 
 at_far_end:
 
