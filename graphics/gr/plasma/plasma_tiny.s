@@ -14,6 +14,7 @@
 ; 121 -- make full screen
 ; 119 -- from qkumba, remove php/plp
 ; 118 -- from qkumba, remove SAVEX
+; 109 -- realize we can use PLOT instead of GBASCALC
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -80,6 +81,11 @@ plot_frame:
 
 plot_yloop:
 
+	;==========
+
+	ldy	#39		; XX = 39 (countdown)
+
+
 	txa			; get (y&0xf)<<4
 	pha			; save YY
 	asl
@@ -89,23 +95,26 @@ plot_yloop:
 	sta	CTEMP
 
 	txa
-	lsr
+;	lsr
 
-	ldy	#$0f		; setup mask
-	bcc	plot_mask
-	ldy	#$f0
-
-plot_mask:
-	sty	MASK
+	jsr	PLOT		; this sets up MASK and GBASL/H for us
+				; it plots a point at XX,39 but  doesn't
+				; matter as we overdraw
 
 
+;	ldy	#$0f		; setup mask				; 2
+;	bcc	plot_mask						; 2
+;	ldy	#$f0							; 2
 
-	jsr	GBASCALC	; point GBASL/H to address in A
+;plot_mask:
+;	sty	MASK							; 2
+
+
+
+;	jsr	GBASCALC	; point GBASL/H to address in A		; 3
 				; after, A trashed, C is clear
 
-	;==========
 
-	ldy	#39		; XX = 39 (countdown)
 
 plot_xloop:
 
