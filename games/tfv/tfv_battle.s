@@ -6,30 +6,26 @@ do_battle:
 
 	lda	#34
 	sta	HERO_X
+
 	lda	#0
 	sta	HERO_STATE
+	sta	MENU_STATE
+	sta	MENU_POSITION
 
-;	int i,ch;
-;	int saved_drawpage;
-;	int enemy_count=30;
-;	int old;
-
+	lda	#3
+	sta	HERO_LIMIT
 
 	jsr	rotate_intro
 
-.if 0
+	lda	#20
+	sta	BATTLE_COUNT
 
-	battle_count=20;
 
-	; Setup Enemy */
-	; enemy_type=X
-	; random, with weight toward proper terrain
-	; 50% completely random, 50% terrain based?
-	enemy_type=random_8()%0x7;
-;	enemy_hp=enemies[enemy_type].hp_base+
-;			(rand()&enemies[enemy_type].hp_mask);
+	;=============================
+	; Init Enemy
+	;=============================
 
-.endif
+	jsr	init_enemy
 
 	;==========================
 	; Draw background
@@ -85,6 +81,7 @@ battle_ground_inner:
 
 	; Draw some background images for variety?
 
+	; update bottom of screen
 	jsr	draw_battle_bottom
 
 main_battle_loop:
@@ -147,48 +144,73 @@ battle_draw_running_walk:
 	jmp	battle_actual_draw_hero
 
 battle_draw_normal_hero:
-		; grsim_put_sprite(tfv_stand_left,ax,20);
-		lda	HERO_X
-		sta	XPOS
-		lda	#20
-		sta	YPOS
+	; grsim_put_sprite(tfv_stand_left,ax,20);
+	lda	HERO_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
 
-		lda	#<tfv_stand_left_sprite
-		sta	INL
-		lda	#>tfv_stand_left_sprite
-		sta	INH
+	lda	#<tfv_stand_left_sprite
+	sta	INL
+	lda	#>tfv_stand_left_sprite
+	sta	INH
 
-		jsr	put_sprite_crop
+	jsr	put_sprite_crop
 
 battle_draw_normal_sword:
-		; grsim_put_sprite(tfv_led_sword,ax-5,20);
-		lda	HERO_X
-		sec
-		sbc	#5
-		sta	XPOS
-		lda	#20
-		sta	YPOS
+	; grsim_put_sprite(tfv_led_sword,ax-5,20);
+	lda	HERO_X
+	sec
+	sbc	#5
+	sta	XPOS
+	lda	#20
+	sta	YPOS
 
-		lda	#<tfv_led_sword_sprite
-		sta	INL
-		lda	#>tfv_led_sword_sprite
+	lda	#<tfv_led_sword_sprite
+	sta	INL
+	lda	#>tfv_led_sword_sprite
 
 battle_actual_draw_hero:
-		sta	INH
-		jsr	put_sprite_crop
+	sta	INH
+	jsr	put_sprite_crop
 
 
 
 battle_done_draw_hero:
 
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+	;===========================
+	; draw enemy
+	;===========================
+battle_draw_enemy:
+
+	; grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+
+draw_enemy_smc1:
+	lda	#$a5
+	sta	INL
+draw_enemy_smc2:
+	lda	#$a5
+
+battle_actual_draw_enemy:
+	sta	INH
+	jsr	put_sprite_crop
+
+battle_done_draw_enemy:
+
+	;=======================================
+	; draw bottom status
 
 	jsr	draw_battle_bottom
 
+	;=======================================
+	; page_flip
+
 	jsr	page_flip
-
-
-
 
 	; pause if dead
 
@@ -200,54 +222,93 @@ battle_done_draw_hero:
 	; delay for framerate
 	; usleep(100000);
 
-	; check keypress
+	;=======================
+	; handle keypresses
 
 	jsr	get_keypress
+	sta	LAST_KEY
 	cmp	#'Q'
 	beq	done_battle
 
-.if 0
+	;========================
+	; handle enemy attacks
 
-		if (enemy_count==0) {
-			; attack and decrement HP
-			enemy_attack(ax);
-			; update limit count
-			if (limit<4) limit++;
+	lda	ENEMY_COUNT
+	bne	battle_no_enemy_attack
+battle_start_enemy_attack:
 
-			; reset enemy time. FIXME: variable?
-			enemy_count=50;
-		}
-		else {
-			enemy_count--;
-		}
+	; attack and decrement HP
+	jsr	enemy_attack
 
-		if (battle_count>=64) {
+	; update limit count
+	; max out at 4
+	lda	HERO_LIMIT
+	cmp	#4
+	beq	battle_no_inc_limit
 
-			; TODO: randomly fail at running? */
-			if (running) {
-				break;
-			}
+	inc	HERO_LIMIT
+battle_no_inc_limit:
 
-			if (menu_state==MENU_NONE) menu_state=MENU_MAIN;
-			menu_keypress(ch);
+	; reset enemy time. FIXME: variable?
+	lda	#50
+	sta	ENEMY_COUNT
 
-		} else {
-			battle_count++;
-		}
-
-		old=battle_bar;
-		battle_bar=(battle_count/16);
-		if (battle_bar!=old) draw_battle_bottom(enemy_type);
+battle_no_enemy_attack:
+	dec	ENEMY_COUNT
 
 
-		if (enemy_hp==0) {
-			victory_dance();
-			break;
-		}
+	;===============================
+	; handle battle counter
+update_battle_counter:
+	lda	BATTLE_COUNT
+	cmp	#64
+	bcc	inc_battle_count	; blt
+
+	; battle timer expired, take action
+
+	; If running, escape
+	; TODO: randomly fail at running? */
+	lda	HERO_STATE
+	and	#HERO_STATE_RUNNING
+	beq	battle_no_escape
+
+	; we bravely ran away
+	jmp	done_battle
+
+battle_no_escape:
+
+	; activate menu
+
+	lda	MENU_STATE
+	cmp	#MENU_NONE
+	bne	menu_activated
+
+	; move to main menu
+	lda	#MENU_MAIN
+	sta	MENU_STATE
+
+menu_activated:
+
+	jsr	battle_menu_keypress
+
+	jmp	done_battle_count
+
+inc_battle_count:
+	inc	BATTLE_COUNT
+
+done_battle_count:
+
+	;========================
+	; check enemy defeated
+
+	lda	ENEMY_HP
+	bne	end_battle_loop
+
+	jsr	victory_dance
+	jmp	done_battle
 
 
-	}
-.endif
+end_battle_loop:
 
 	jmp	main_battle_loop
 
@@ -334,6 +395,40 @@ struct enemy_type {
 	int weakness,resist;
 	unsigned char *sprite;
 };
+.endif
+
+	;=============================
+	; Init Enemy
+	;=============================
+init_enemy:
+
+	; select type
+
+	; random, with weight toward proper terrain
+	; 50% completely random, 50% terrain based?
+
+	; enemy_type=random_8()%0x7;
+;	enemy_hp=enemies[enemy_type].hp_base+
+;			(rand()&enemies[enemy_type].hp_mask);
+
+	lda	#0		 ; hardcode crab for now
+	sta	ENEMY_TYPE
+	sta	ENEMY_X
+
+	lda	#200
+	sta	ENEMY_HP
+
+	lda	#30
+	sta	ENEMY_COUNT
+
+	lda	#<killer_crab_sprite
+	sta	draw_enemy_smc1+1
+	lda	#>killer_crab_sprite
+	sta	draw_enemy_smc2+1
+
+	rts
+
+.if 0
 
 ;static struct enemy_type enemies[9]={
 ;	[0]= {
@@ -490,11 +585,36 @@ battle_enemy_attack_string:
 battle_name_string:
 .byte 14,21,"DEATER",0
 
+
+battle_menu_none:
+	.byte 24,20,"HP",0
+	.byte 27,20,"MP",0
+	.byte 30,20,"TIME",0
+	.byte 35,20,"LIMIT",0
+hp_string:
+	.byte 23,21,"100",0
+mp_string:
+	.byte 26,21," 50",0
+
+
+battle_menu_main:
+	.byte 23,20,"ATTACK",0
+	.byte 23,21,"MAGIC",0
+	.byte 23,22,"SUMMON",0
+	.byte 31,20,"SKIP",0
+	.byte 31,21,"ESCAPE",0
+	.byte 31,22,"LIMIT",0
+
+	;========================
+	; draw_battle_bottom
+	;========================
+
 ; static int draw_battle_bottom(int enemy_type) {
 draw_battle_bottom:
 
 	jsr	clear_bottom
 
+	jsr	normal_text
 
 	; print(enemies[enemy_type].name);
 	lda	#<battle_enemy_string
@@ -522,145 +642,191 @@ draw_battle_bottom:
 ;		print("SUSIE");
 ;	}
 
-;	if (menu_state==MENU_NONE) {
+	lda	MENU_STATE
+	cmp	#MENU_NONE
+	beq	draw_battle_menu_none
+	cmp	#MENU_MAIN
+	beq	draw_battle_menu_main
+
+
+
+
+draw_battle_menu_none:
+	;======================
+	; TFV Stats
+
+	lda	#<battle_menu_none
+	sta	OUTL
+	lda	#>battle_menu_none
+	sta	OUTH
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+
+	; make limit label flash if at limit break
+
+	lda	HERO_LIMIT
+	cmp	#4
+	bcc	plain_limit
+	jsr	flash_text
+plain_limit:
+	jsr	move_and_print
+	jsr	normal_text
+
+	jsr	move_and_print	; HP
+	jsr	move_and_print	; MP
+
+	; Draw Time bargraph
+	; start at 30,42 go to battle_bar
+	; Y in X, X in A, max in CH
+
+	; hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
+
+	lda	BATTLE_COUNT
+	lsr
+	lsr
+	lsr
+	lsr
+	sta	CH
+
+	ldx	#42
+	lda	#30
+
+	jsr	draw_bargraph
+
+
+	; Draw Limit bargraph
+	; start at 30,42 go to battle_bar
+	; Y in X, X in A, max in CH
+	; if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
+
+	lda	HERO_LIMIT
+	sta	CH
+
+	ldx	#42
+	lda	#35
+
+	jsr	draw_bargraph
+
+;	; Susie Stats
+;	if (susie_out) {
+;	vtab(23);
+;	htab(24);
+;	move_cursor();
+;	print_byte(255);
 ;
-;		; TFV Stats */
+;	vtab(23);
+;	htab(27);
+;	move_cursor();
+;	print_byte(0);
 ;
-;		vtab(21);
-;		htab(25);
-;		move_cursor();
-;		print("HP");
-;
-;		vtab(21);
-;		htab(28);
-;		move_cursor();
-;		print("MP");
-
-;		vtab(21);
-;		htab(31);
-;		move_cursor();
-;		print("TIME");
-
-;		vtab(21);
-;		htab(36);
-;		move_cursor();
-;		if (limit<4) {
-;			print("LIMIT");
-;		}
-;		else {
-;			; Make if flash? set bit 0x40 */
-;			print_flash("LIMIT");
-;		}
-
-
-
-;		vtab(22);
-;		htab(24);
-;		move_cursor();
-;		print_byte(hp);
-
-;		vtab(22);
-;		htab(27);
-;		move_cursor();
-;		print_byte(mp);
-
-		; Draw Time bargraph */
-;		printf("Battle_bar=%d Limit=%d\n",battle_bar,limit);
-;		ram[COLOR]=0xa0;
-;		hlin_double(ram[DRAW_PAGE],30,34,42);
-;		ram[COLOR]=0x20;
-;		if (battle_bar) {
-;			hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
-;		}
-
-;		; Draw Limit break bargraph */
-;		ram[COLOR]=0xa0;
-;		hlin_double(ram[DRAW_PAGE],35,39,42);
-
-;		ram[COLOR]=0x20;
-;		if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
-
-
-;		; Susie Stats */
-;		if (susie_out) {
-;
-;			vtab(23);
-;			htab(24);
-;			move_cursor();
-;			print_byte(255);
-;
-;			vtab(23);
-;			htab(27);
-;			move_cursor();
-;			print_byte(0);
-;#if 0
-;			; Draw Time bargraph */
-;			ram[COLOR]=0xa0;
-;			hlin_double(ram[DRAW_PAGE],30,34,42);
-;			ram[COLOR]=0x20;
-;			if (battle_bar) {
-;				hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
-;			}
-;
-;			; Draw Limit break bargraph */
-;			ram[COLOR]=0xa0;
-;			hlin_double(ram[DRAW_PAGE],35,39,42);
-;
-;			ram[COLOR]=0x20;
-;			if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
-;#endif
-;		}
+;	; Draw Time bargraph
+;	ram[COLOR]=0xa0;
+;	hlin_double(ram[DRAW_PAGE],30,34,42);
+;	ram[COLOR]=0x20;
+;	if (battle_bar) {
+;		hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
 ;	}
+;
+;	; Draw Limit break bargraph
+;	ram[COLOR]=0xa0;
+;	hlin_double(ram[DRAW_PAGE],35,39,42);
+;
+;	ram[COLOR]=0x20;
+;	if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
 
-;	if (menu_state==MENU_MAIN) {
-;
-;		if (limit>3) {
-;			if (menu_position>5) menu_position=5;
-;		}
-;		else {
-;			if (menu_position>4) menu_position=4;
-;		}
-;
-;		vtab(21);
-;		htab(24);
-;		move_cursor();
-;		if (menu_position==0) print_inverse("ATTACK");
-;		else print("ATTACK");
-;
-;		vtab(22);
-;		htab(24);
-;		move_cursor();
-;		if (menu_position==2) print_inverse("MAGIC");
-;		else print("MAGIC");
-;
-;		vtab(23);
-;		htab(24);
-;		move_cursor();
-;		if (menu_position==4) print_inverse("SUMMON");
-;		else print("SUMMON");
-;
-;		vtab(21);
-;		htab(32);
-;		move_cursor();
-;		if (menu_position==1) print_inverse("SKIP");
-;		else print("SKIP");
-;
-;		vtab(22);
-;		htab(32);
-;		move_cursor();
-;		if (menu_position==3) print_inverse("ESCAPE");
-;		else print("ESCAPE");
-;
-;		if (limit>3) {
-;			vtab(23);
-;			htab(32);
-;			move_cursor();
-;			if (menu_position==5) print_inverse("LIMIT");
-;			else print("LIMIT");
-;		}
-;
-;
-;	}
+	jmp	done_draw_battle_menu
+
+	;======================
+	; draw main battle menu
+draw_battle_menu_main:
+
+	; wrap location
+	lda	HERO_LIMIT
+	cmp	#3
+	bcs	limit3_wrap	; bge
+limit4_wrap:
+	lda	MENU_POSITION
+	cmp	#4
+	bcc	done_menu_wrap
+	lda	#4
+	sta	MENU_POSITION
+	bne	done_menu_wrap	; bra
+
+limit3_wrap:
+	lda	MENU_POSITION
+	cmp	#5
+	bcc	done_menu_wrap
+	lda	#5
+	sta	MENU_POSITION
+	bne	done_menu_wrap	; bra
+
+done_menu_wrap:
+
+	lda	#<battle_menu_main
+	sta	OUTL
+	lda	#>battle_menu_main
+	sta	OUTH
+
+	ldx	MENU_POSITION
+
+	bne	print_menu_attack	; print ATTACK
+	jsr	inverse_text
+print_menu_attack:
+	jsr	move_and_print
+	jsr	normal_text
+
+
+	cpx	#2
+	bne	print_menu_magic	; print MAGIC
+	jsr	inverse_text
+print_menu_magic:
+	jsr	move_and_print
+	jsr	normal_text
+
+
+	cpx	#4
+	bne	print_menu_summon	; print SUMMON
+	jsr	inverse_text
+print_menu_summon:
+	jsr	move_and_print
+	jsr	normal_text
+
+
+	cpx	#1
+	bne	print_menu_skip		; print SKIP
+	jsr	inverse_text
+print_menu_skip:
+	jsr	move_and_print
+	jsr	normal_text
+
+
+	cpx	#3
+	bne	print_menu_escape	; print ESCAPE
+	jsr	inverse_text
+print_menu_escape:
+	jsr	move_and_print
+	jsr	normal_text
+
+
+	lda	HERO_LIMIT
+	cmp	#4
+	bcc	done_battle_draw_menu_main	 ; only draw if limit >=4
+
+	cpx	#5
+	bne	print_menu_limit	; print LIMIT
+	jsr	inverse_text
+print_menu_limit:
+	jsr	move_and_print
+	jsr	normal_text
+
+
+done_battle_draw_menu_main:
+	jmp	done_draw_battle_menu
+
+
+draw_battle_menu_summon:
+
 ;	if (menu_state==MENU_SUMMON) {
 ;
 ;		if (menu_position>1) menu_position=1;
@@ -682,6 +848,10 @@ draw_battle_bottom:
 ;		if (menu_position==1) print_inverse("VORTEXCN");
 ;		else print("VORTEXCN");
 ;	}
+	jmp	done_draw_battle_menu
+
+draw_battle_menu_magic:
+
 ;	if (menu_state==MENU_MAGIC) {
 ;
 ;		if (menu_position>4) menu_position=4;
@@ -722,7 +892,10 @@ draw_battle_bottom:
 ;		else print("MALAISE");
 ;
 ;	}
-;
+	jmp	done_draw_battle_menu
+
+draw_battle_menu_limit:
+
 ;	if (menu_state==MENU_LIMIT) {
 ;
 ;		if (menu_position>2) menu_position=2;
@@ -749,22 +922,77 @@ draw_battle_bottom:
 ;		move_cursor();
 ;		if (menu_position==1) print_inverse("ZAP");
 ;		else print("ZAP");
-;	}
-;
-;	; Draw inverse separator */
-;	ram[COLOR]=0x20;
-;	for(i=40;i<50;i+=2) {
-;		hlin_double(ram[DRAW_PAGE],12,12,i);
-;	}
-;
 
 
+done_draw_battle_menu:
+	;========================
+	; Draw inverse separator
+
+	lda	DRAW_PAGE
+	bne	draw_separator_page1
+draw_separator_page0:
+	lda	#$20
+	sta	$650+12
+	sta	$6d0+12
+	sta	$750+12
+	sta	$7d0+12
+	bne	done_draw_separator	; bra
+
+draw_separator_page1:
+
+	lda	#$20
+	sta	$a50+12
+	sta	$ad0+12
+	sta	$b50+12
+	sta	$bd0+12
+
+done_draw_separator:
 
 	rts
+
+
+        ;===========================
+        ; draw bargraph
+        ;===========================
+	; draw text-mode bargraph
+	;
+	; limit is 0..4
+	; battle_bar is battle_count/16 = 0..4
+	; at 30, 35 both line 42
+
+	; Y in X
+	; X in A
+	; max in CH
+draw_bargraph:
+	clc
+	adc	gr_offsets,X
+	sta	GBASL
+	lda	gr_offsets+1,X
+	clc
+	adc	DRAW_PAGE
+	sta	GBASH
+
+	ldy	#0
+draw_bargraph_loop:
+        cpy	CH
+        bcc	bar_on
+        lda	#' '|$80	; '_' ?
+        bne	done_bar
+bar_on:
+        lda	#' '
+done_bar:
+        sta	(GBASL),Y
+
+        iny
+        cpy	#5
+        bne	draw_bargraph_loop
+
+        rts
+
+
+
 .if 0
 
-
-static int enemy_hp=0,enemy_type=0,enemy_x=0;
 
 static int damage_enemy(int value) {
 
@@ -830,57 +1058,67 @@ static int attack(void) {
 	return 0;
 }
 
+.endif
 
+	;===============================
+	; enemy attack
+	;===============================
+enemy_attack:
 
-static int enemy_attack(int tfv_x) {
+;	int ax=enemy_x;
+;	int damage=10;
 
-	int ax=enemy_x;
-	int damage=10;
+;	enemy_attacking=1;
 
-	enemy_attacking=1;
-
-	while(ax<30) {
+;	while(ax<30) {
 
 		; put attack name on
 		; occasionally attack with that enemy's power?
 		; occasionally heal self?
 
-		gr_copy_to_current(0xc00);
+;		gr_copy_to_current(0xc00);
 
 		; draw first so behind enemy
-		grsim_put_sprite(tfv_stand_left,tfv_x,20);
-		grsim_put_sprite(tfv_led_sword,tfv_x-5,20);
+;		grsim_put_sprite(tfv_stand_left,tfv_x,20);
+;		grsim_put_sprite(tfv_led_sword,tfv_x-5,20);
 
-		if (ax&1) {
+;		if (ax&1) {
 ;			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
-		}
-		else {
+;		}
+;		else {
 ;			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
-		}
+;		}
 
-		draw_battle_bottom(enemy_type);
+;		draw_battle_bottom(enemy_type);
 
-		page_flip();
+;		page_flip();
 
-		ax+=1;
+;		ax+=1;
 
-		usleep(20000);
-	}
-	enemy_attacking=0;
+;		usleep(20000);
+;	}
+;	enemy_attacking=0;
 
-	damage_tfv(damage);
-	gr_put_num(25,10,damage);
-	draw_battle_bottom(enemy_type);
+;	damage_tfv(damage);
+;	gr_put_num(25,10,damage);
+;	draw_battle_bottom(enemy_type);
 
-	page_flip();
-	usleep(250000);
+;	page_flip();
+;	usleep(250000);
 
-	return damage;
-}
+;	return damage;
+;}
+
+	rts
 
 
+	;====================================
+	; victory dance
+	;====================================
 
-static int victory_dance(void) {
+victory_dance:
+
+.if 0
 
 	int ax=34;
 	int i;
@@ -922,61 +1160,11 @@ static int victory_dance(void) {
 		page_flip();
 
 		usleep(200000);
-	}
 
-	return 0;
-}
+.endif
+	rts
 
-
-
-static int rotate_intro(void) {
-
-	int xx,yy,color,x2,y2;
-	double h,theta,dx,dy,theta2,thetadiff,nx,ny;
-	int i;
-
-	gr_copy(0x400,0xc00);
-
-;	gr_copy_to_current(0xc00);
-;	page_flip();
-;	gr_copy_to_current(0xc00);
-;	page_flip();
-
-	thetadiff=0;
-
-	for(i=0;i<8;i++) {
-
-		grsim_update();
-
-		for(yy=0;yy<40;yy++) {
-			for(xx=0;xx<40;xx++) {
-				dx=(xx-20);
-				dy=(yy-20);
-				h=sqrt((dx*dx)+(dy*dy));
-				theta=atan2(dy,dx);
-
-				theta2=theta+thetadiff;
-				nx=h*cos(theta2);
-				ny=h*sin(theta2);
-
-				x2=nx+20;
-				y2=ny+20;
-				if ((x2<0) || (x2>39)) color=0;
-				else if ((y2<0) || (y2>39)) color=0;
-				else color=scrn_page(x2,y2,PAGE2);
-
-				color_equals(color);
-				plot(xx,yy);
-			}
-		}
-		thetadiff+=(6.28/16.0);
-		page_flip();
-
-		usleep(100000);
-	}
-
-	return 0;
-}
+.if 0
 
 #define MENU_MAGIC_HEAL		0
 #define MENU_MAGIC_ICE		1
@@ -1545,94 +1733,123 @@ static void summon(int which) {
 	else summon_vortex_cannon();
 }
 
+.endif
+
+done_attack:
+	lda	#0
+	sta	BATTLE_COUNT
+
+	lda	#MENU_NONE
+	sta	MENU_STATE
 
 
-static void done_attack(void) {
-	; reset battle time
-	battle_count=0;
-	menu_state=MENU_NONE;
-}
+	;=========================
+	; battle menu keypress
+	;=========================
 
-#define MENU_MAIN_ATTACK	0
-#define MENU_MAIN_SKIP		1
-#define MENU_MAIN_MAGIC		2
-#define MENU_MAIN_ESCAPE	3
-#define MENU_MAIN_SUMMON	4
-#define MENU_MAIN_LIMIT		5
+battle_menu_keypress:
+
+	lda	LAST_KEY
+	cmp	#27
+	beq	keypress_escape
+	cmp	#'W'
+	beq	keypress_up
+	cmp	#'S'
+	beq	keypress_down
+	cmp	#'A'
+	beq	keypress_left
+	cmp	#'D'
+	beq	keypress_right
+
+	cmp	#' '
+	beq	keypress_action
+	cmp	#13
+	beq	keypress_action
+
+	rts
+
+keypress_escape:
+	lda	#MENU_MAIN
+	sta	MENU_STATE
+	lda	#0
+	sta	MENU_POSITION
+	rts
+
+keypress_up:
+	lda	MENU_POSITION
+	cmp	#2
+	bcc	done_keypress_up	; blt
+	dec	MENU_POSITION
+	dec	MENU_POSITION
+done_keypress_up:
+	rts
+
+keypress_down:
+	inc	MENU_POSITION
+	inc	MENU_POSITION
+	rts
+
+keypress_right:
+	inc	MENU_POSITION
+	rts
+
+keypress_left:
+	lda	MENU_POSITION
+	beq	done_keypress_left
+	dec	MENU_POSITION
+done_keypress_left:
+	rts
+
+keypress_action:
+;		if (menu_state==MENU_MAIN) {
+;
+;			switch(menu_position) {
+;				case MENU_MAIN_ATTACK:
+;					; attack and decrement HP
+;					attack();
+;					done_attack();
+;					break;
+;				case MENU_MAIN_SKIP:
+;					done_attack();
+;					break;
+;				case MENU_MAIN_MAGIC:
+;					menu_state=MENU_MAGIC;
+;					menu_position=0;
+;					break;
+;				case MENU_MAIN_LIMIT:
+;					menu_state=MENU_LIMIT;
+;					menu_position=0;
+;					break;
+;				case MENU_MAIN_SUMMON:
+;					menu_state=MENU_SUMMON;
+;					menu_position=0;
+;					break;
+;				case MENU_MAIN_ESCAPE:
+;					running=1;
+;					done_attack();
+;					break;
+;			}
+;		}
+;		else if (menu_state==MENU_MAGIC) {
+;			magic_attack(menu_position);
+;			done_attack();
+;		}
+;		else if (menu_state==MENU_LIMIT) {
+;			limit_break(menu_position);
+;			done_attack();
+;		}
+;		else if (menu_state==MENU_SUMMON) {
+;			summon(menu_position);
+;			done_attack();
+;		}
+;	}
+
+	rts
 
 
-static int running=0;
-
-void menu_keypress(int ch) {
-
-	if ((ch==' ') || (ch==13)) {
-
-		if (menu_state==MENU_MAIN) {
-
-			switch(menu_position) {
-				case MENU_MAIN_ATTACK:
-					; attack and decrement HP
-					attack();
-					done_attack();
-					break;
-				case MENU_MAIN_SKIP:
-					done_attack();
-					break;
-				case MENU_MAIN_MAGIC:
-					menu_state=MENU_MAGIC;
-					menu_position=0;
-					break;
-				case MENU_MAIN_LIMIT:
-					menu_state=MENU_LIMIT;
-					menu_position=0;
-					break;
-				case MENU_MAIN_SUMMON:
-					menu_state=MENU_SUMMON;
-					menu_position=0;
-					break;
-				case MENU_MAIN_ESCAPE:
-					running=1;
-					done_attack();
-					break;
-			}
-		}
-		else if (menu_state==MENU_MAGIC) {
-			magic_attack(menu_position);
-			done_attack();
-		}
-		else if (menu_state==MENU_LIMIT) {
-			limit_break(menu_position);
-			done_attack();
-		}
-		else if (menu_state==MENU_SUMMON) {
-			summon(menu_position);
-			done_attack();
-		}
-	}
-
-	if (ch==27) {
-		menu_state=MENU_MAIN;
-		menu_position=0;
-	}
-
-	if (ch==APPLE_UP) {
-		if (menu_position>=2) menu_position-=2;
-	}
-	if (ch==APPLE_DOWN) {
-		menu_position+=2;
-	}
-	if (ch==APPLE_RIGHT) {
-		menu_position++;
-	}
-	if (ch==APPLE_LEFT) {
-		if (menu_position>0) menu_position--;
-	}
-}
 
 
-
-
-
+.if 0
 int boss_battle(void) {
 
 	int i,ch;

@@ -28,6 +28,21 @@ inverse_text:
 
 	rts
 
+	;=============================
+	; flash_text
+	;=============================
+	; modify so print flashing text
+flash_text:
+
+	; want ora #$30
+	lda	#$09
+	sta	ps_smc1
+
+	lda	#$40
+	sta	ps_smc1+1
+
+	rts
+
 
 	;=============================
 	; raw text

@@ -101,9 +101,24 @@ SOUND_STATUS    =       $A6
 	SOUND_MOCKINGBOARD = $02 ; mockingboard detected
 JS_BUTTON_STATE	=	$A7
 
+
 HERO_X		=	$B0	; used in battle
 HERO_STATE	=	$B1	; used in battle
 	HERO_STATE_RUNNING = $01	; running from battle
+BATTLE_COUNT	=	$B2	; battle counter
+ENEMY_TYPE	=	$B3	; used in battle
+ENEMY_HP	=	$B4	; enemy hitpoints
+ENEMY_X		=	$B5	; enemy X position
+ENEMY_COUNT	=	$B6	; enemy countdown to attack
+HERO_LIMIT	=	$B7	; hero limit break count
+MENU_STATE	=	$B8	; battle menu state
+	MENU_NONE	= 0
+	MENU_MAIN	= 1
+	MENU_MAGIC	= 2
+	MENU_SUMMON	= 3
+	MENU_LIMIT	= 4
+MENU_POSITION	=	$B9
+LAST_KEY	=	$BA
 
 COLOR1		=	$E0
 COLOR2		=	$E1
