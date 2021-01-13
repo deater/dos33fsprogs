@@ -79,27 +79,6 @@ tfv_victory_sprite:
 
 
 
-;=========
-; Enemies
-;==========
-
-killer_crab_sprite:
-	.byte $9,$6
-	.byte $99,$AA,$99,$AA,$AA,$AA,$99,$AA,$99
-	.byte $A6,$6A,$A6,$AA,$AA,$AA,$A6,$6A,$A6
-	.byte $AA,$A6,$4A,$49,$44,$49,$4A,$A6,$AA
-	.byte $A6,$A4,$44,$44,$44,$44,$44,$A4,$A6
-	.byte $AA,$6A,$A4,$64,$A4,$64,$A4,$6A,$AA
-	.byte $44,$AA,$4A,$A4,$AA,$A4,$4A,$AA,$44
-
-plain_fish_sprite:
-	.byte $9,$6
-	.byte $6A,$AA,$A9,$69,$6A,$6A,$AA,$AA,$AA
-	.byte $64,$6A,$66,$66,$66,$66,$66,$6A,$AA
-	.byte $64,$66,$66,$66,$46,$66,$64,$66,$AA
-	.byte $64,$66,$66,$44,$66,$66,$66,$66,$ee
-	.byte $64,$66,$66,$66,$64,$66,$66,$6e,$A5
-	.byte $64,$AA,$A6,$66,$66,$66,$A6,$AA,$AA
 
 ;=======================
 ; Background Features
@@ -171,3 +150,4 @@ lightning:
 	.byte $00,$00,$dd,$00,$dd,$00
 	.byte $00,$dd,$00,$00,$dd,$00
 	.byte $dd,$00,$00,$0d,$00,$dd
+

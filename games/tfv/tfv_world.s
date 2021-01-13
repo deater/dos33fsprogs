@@ -60,5 +60,6 @@
 ;===============================================
 
 .include "tfv_sprites.inc"
+.include "battle_sprites.inc"
 .include "number_sprites.inc"
 .include "graphics_map/tfv_backgrounds.inc"

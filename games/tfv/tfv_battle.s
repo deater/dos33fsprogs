@@ -114,8 +114,9 @@ battle_draw_hero_down:
 	lda	#<tfv_defeat_sprite
 	sta	INL
 	lda	#>tfv_defeat_sprite
-
-	jmp	battle_actual_draw_hero
+	sta	INH
+	jsr	put_sprite_crop
+	jmp	battle_done_draw_hero
 
 battle_draw_hero_running:
 
@@ -135,46 +136,22 @@ battle_draw_running_stand:
 	lda	#<tfv_stand_right_sprite
 	sta	INL
 	lda	#>tfv_stand_right_sprite
-	jmp	battle_actual_draw_hero
+	sta	INH
+	jsr	put_sprite_crop
+	jmp	battle_done_draw_hero
 
 battle_draw_running_walk:
 	lda	#<tfv_walk_right_sprite
 	sta	INL
 	lda	#>tfv_walk_right_sprite
-	jmp	battle_actual_draw_hero
+	sta	INH
+	jsr	put_sprite_crop
+	jmp	battle_done_draw_hero
 
 battle_draw_normal_hero:
 	; grsim_put_sprite(tfv_stand_left,ax,20);
-	lda	HERO_X
-	sta	XPOS
-	lda	#20
-	sta	YPOS
 
-	lda	#<tfv_stand_left_sprite
-	sta	INL
-	lda	#>tfv_stand_left_sprite
-	sta	INH
-
-	jsr	put_sprite_crop
-
-battle_draw_normal_sword:
-	; grsim_put_sprite(tfv_led_sword,ax-5,20);
-	lda	HERO_X
-	sec
-	sbc	#5
-	sta	XPOS
-	lda	#20
-	sta	YPOS
-
-	lda	#<tfv_led_sword_sprite
-	sta	INL
-	lda	#>tfv_led_sword_sprite
-
-battle_actual_draw_hero:
-	sta	INH
-	jsr	put_sprite_crop
-
-
+	jsr	draw_hero_and_sword
 
 battle_done_draw_hero:
 
@@ -1797,115 +1774,206 @@ limit_break:
 	sta	HERO_LIMIT
 	rts
 
+
+	;========================
+	; summon metrocat
+	;========================
+summon_metrocat:
+
+	lda	#$17
+	sta	DAMAGE_VAL
+
+	lda	#28
+	sta	MAGIC_X
+	lda	#2
+	sta	MAGIC_Y
+
+	;===========================
+	; draw looming metrocat head
+
+	lda	#30
+	sta	ANIMATE_LOOP
+looming_metrocat_loop:
+
+	jsr	gr_copy_to_current
+
+	; draw hero
+	lda	#34
+	sta	HERO_X
+	jsr	draw_hero_and_sword
+
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
+
+	; draw metrocat's head
+
+	lda	MAGIC_X
+	sta	XPOS
+	lda	MAGIC_Y
+	sta	YPOS
+
+	lda	#<metrocat_sprite
+	sta	INL
+	lda	#>metrocat_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	; draw battle bottom
+
+	jsr	draw_battle_bottom
+
+	jsr	page_flip
+
+	lda	#75
+	jsr	WAIT			; delay a bit
+
+	dec	ANIMATE_LOOP
+	bne	looming_metrocat_loop
+
+move_metrocat_loop:
+
+	jsr	gr_copy_to_current
+
+	jsr	draw_hero_and_sword
+
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
+
+	; draw metrocat's head
+
+	lda	MAGIC_X
+	sta	XPOS
+	lda	MAGIC_Y
+	sta	YPOS
+
+	lda	#<metrocat_sprite
+	sta	INL
+	lda	#>metrocat_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	; draw battle bottom
+
+	jsr	draw_battle_bottom
+
+	jsr	page_flip
+
+	lda	#50	; delay
+	jsr	WAIT
+
+	dec	MAGIC_X
+	lda	MAGIC_X
+
+	cmp	#15
+	bcs	metrocat_no_move_y
+
+	; have to keep even
+
+	and	#1
+	bne	metrocat_no_move_y
+
+	inc	MAGIC_Y
+	inc	MAGIC_Y
+
+metrocat_no_move_y:
+	lda	MAGIC_X
+	cmp	#5			; move until X=5
+	bcs	move_metrocat_loop
+
+
+	lda	#30
+	sta	ANIMATE_LOOP
+
+metrocat_damage_loop:
+	jsr	gr_copy_to_current
+
+	jsr	draw_hero_and_sword
+
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
+
+	; draw metrocat's head
+
+	lda	MAGIC_X
+	sta	XPOS
+	lda	MAGIC_Y
+	sta	YPOS
+
+	lda	#<metrocat_sprite
+	sta	INL
+	lda	#>metrocat_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	jsr	draw_battle_bottom
+
+	jsr	page_flip
+
+	lda	#50
+	jsr	WAIT
+
+	dec	ANIMATE_LOOP
+	bne	metrocat_damage_loop
+
+	jsr	gr_copy_to_current
+
+	; draw enemy
+
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
+
+	; draw hero
+
+	jsr	draw_hero_and_sword
+
+	; draw bottom
+
+	jsr	draw_battle_bottom
+
+	jsr	damage_enemy
+
+	lda	#2
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+
+	jsr	gr_put_num
+
+	jsr	page_flip
+
+	; long wait (2s?)
+	ldx	#200
+	jsr	long_wait
+
+	rts
+
+
+
+	;=========================
+	; Vortex Cannon
+	;=========================
+
+summon_vortex_cannon:
+
 .if 0
-static void summon_metrocat(void) {
-
-	int tx=34,ty=20;
-	int damage=100;
-	int i;
-	int ax=28,ay=2;
-
-	i=0;
-	while(i<30) {
-
-		gr_copy_to_current(0xc00);
-
-		grsim_put_sprite(tfv_stand_left,tx,ty);
-		grsim_put_sprite(tfv_led_sword,tx-5,ty);
-
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
-
-		grsim_put_sprite(metrocat,ax,ay);
-
-		draw_battle_bottom(enemy_type);
-
-		page_flip();
-
-		i++;
-
-		usleep(20000);
-	}
-
-	while(ax>15) {
-
-		gr_copy_to_current(0xc00);
-
-		grsim_put_sprite(tfv_stand_left,tx,ty);
-		grsim_put_sprite(tfv_led_sword,tx-5,ty);
-
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
-
-		grsim_put_sprite(metrocat,ax,ay);
-
-		draw_battle_bottom(enemy_type);
-
-		page_flip();
-
-		ax-=1;
-
-		usleep(20000);
-	}
-
-	while(ax>5) {
-
-		gr_copy_to_current(0xc00);
-
-		grsim_put_sprite(tfv_stand_left,tx,ty);
-		grsim_put_sprite(tfv_led_sword,tx-5,ty);
-
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
-
-		grsim_put_sprite(metrocat,ax,ay);
-
-		draw_battle_bottom(enemy_type);
-
-		page_flip();
-
-		ay+=1;
-		ax-=1;
-
-		usleep(20000);
-	}
-
-	i=0;
-	while(i<30) {
-
-		gr_copy_to_current(0xc00);
-
-		grsim_put_sprite(tfv_stand_left,tx,ty);
-		grsim_put_sprite(tfv_led_sword,tx-5,ty);
-
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
-
-		grsim_put_sprite(metrocat,ax,ay);
-
-		draw_battle_bottom(enemy_type);
-
-		page_flip();
-
-		i++;
-
-		usleep(20000);
-	}
-
-	gr_copy_to_current(0xc00);
-
-;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
-
-	grsim_put_sprite(tfv_stand_left,tx,ty);
-	grsim_put_sprite(tfv_led_sword,tx-5,ty);
-	draw_battle_bottom(enemy_type);
-
-	damage_enemy(damage);
-	gr_put_num(2,10,damage);
-	page_flip();
-
-	for(i=0;i<20;i++) {
-		usleep(100000);
-	}
-}
-
-static void summon_vortex_cannon(void) {
 
 	int tx=34,ty=20;
 	int damage=5;
@@ -1982,17 +2050,21 @@ static void summon_vortex_cannon(void) {
 	for(i=0;i<20;i++) {
 		usleep(100000);
 	}
-
-}
 .endif
+	rts
 
 	;=========================
 	; summon
-
+	;=========================
 summon:
+	lda	MENU_POSITION
+	beq	do_summon_metrocat
+	bne	do_summon_vortex_cannon
 
-;	if (which==0) summon_metrocat();
-;	else summon_vortex_cannon();
+do_summon_metrocat:
+	jmp	summon_metrocat
+do_summon_vortex_cannon:
+	jmp	summon_vortex_cannon
 
 	rts
 
@@ -2176,6 +2248,54 @@ draw_enemy_smc2:
 battle_actual_draw_enemy:
 	sta	INH
 	jmp	put_sprite_crop		; tail call
+
+
+	;============================
+	; draw hero and sword
+	;============================
+	; draws at HERO_X,#20
+
+draw_hero_and_sword:
+
+	lda	HERO_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+
+	lda	#<tfv_stand_left_sprite
+	sta	INL
+	lda	#>tfv_stand_left_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	; grsim_put_sprite(tfv_led_sword,ax-5,20);
+	lda	HERO_X
+	sec
+	sbc	#5
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+
+	lda	#<tfv_led_sword_sprite
+	sta	INL
+	lda	#>tfv_led_sword_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+	rts
+
+
+	;=====================
+	; long(er) wait
+	; waits approximately 10ms * X
+
+long_wait:
+	lda	#64
+	jsr	WAIT		; delay 1/2(26+27A+5A^2) us, 11,117
+	dex
+	bne	long_wait
+	rts
 
 
 
