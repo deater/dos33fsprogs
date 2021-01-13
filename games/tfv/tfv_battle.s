@@ -190,15 +190,7 @@ battle_draw_enemy:
 	lda	#20
 	sta	YPOS
 
-draw_enemy_smc1:
-	lda	#$a5
-	sta	INL
-draw_enemy_smc2:
-	lda	#$a5
-
-battle_actual_draw_enemy:
-	sta	INH
-	jsr	put_sprite_crop
+	jsr	draw_enemy
 
 battle_done_draw_enemy:
 
@@ -320,17 +312,11 @@ done_battle:
 
 	rts
 
-.if 0
+; Metrocat (summon?)
 
+; Environment: grass, beach, forest, ice
 
-; Do Battle */
-
-
-; Metrocat (summon?) */
-
-; Environment: grass, beach, forest, ice */
-
-; Enemies:          HP		ATTACK          WEAKNESS	RESIST */
+; Enemies:          HP		ATTACK          WEAKNESS	RESIST
 ;   Killer Crab    RND-32	PINCH		MALAISE		FIRE
 ;   Plain Fish                  BUBBLE          FIRE            ICE
 
@@ -374,28 +360,25 @@ done_battle:
 ;**  **    **    **          **      **      **  **  **    **    **  **      **
 ;******  ******  ******  ****        **  ****    ******    **    ******      **
 
-static int battle_bar=0;
-static int susie_out=0;
+; Background depend on map location?
+; Room for guinea pig in party?
 
-; Background depend on map location? */
-; Room for guinea pig in party? */
+; Attacks -> HIT, ZAP, HEAL, RUNAWAY
+;#define MAGIC_NONE	0
+;#define MAGIC_FIRE	1
+;#define MAGIC_ICE	2
+;#define MAGIC_MALAISE	4
+;#define MAGIC_BOLT	8
+;#define MAGIC_HEAL	16
 
-; Attacks -> HIT, ZAP, HEAL, RUNAWAY */
-#define MAGIC_NONE	0
-#define MAGIC_FIRE	1
-#define	MAGIC_ICE	2
-#define MAGIC_MALAISE	4
-#define MAGIC_BOLT	8
-#define MAGIC_HEAL	16
+; struct enemy_type {
+;	char *name;
+;	int hp_base,hp_mask;
+;	char *attack_name;
+;	int weakness,resist;
+;	unsigned char *sprite;
+;};
 
-struct enemy_type {
-	char *name;
-	int hp_base,hp_mask;
-	char *attack_name;
-	int weakness,resist;
-	unsigned char *sprite;
-};
-.endif
 
 	;=============================
 	; Init Enemy
@@ -415,7 +398,7 @@ init_enemy:
 	sta	ENEMY_TYPE
 	sta	ENEMY_X
 
-	lda	#200
+	lda	#$30		; BCD
 	sta	ENEMY_HP
 
 	lda	#30
@@ -428,7 +411,6 @@ init_enemy:
 
 	rts
 
-.if 0
 
 ;static struct enemy_type enemies[9]={
 ;	[0]= {
@@ -514,30 +496,66 @@ init_enemy:
 ;	},
 ;};
 
-static int gr_put_num(int xx,int yy,int number) {
 
-	int xt=xx,digit,left,hundreds;
+	;===========================
+	; gr put num
+	;===========================
+	; damage in DAMAGE_VAL (BCD)
+	; location in XPOS,YPOS
 
-	digit=number/100;
-	if ((digit) && (digit<10)) {
-		grsim_put_sprite(numbers[digit],xt,yy);
-		xt+=4;
-	}
-	hundreds=digit;
-	left=number%100;
+gr_put_num:
 
-	digit=left/10;
-	if ((digit) || (hundreds)) {
-		grsim_put_sprite(numbers[digit],xt,yy);
-		xt+=4;
-	}
-	left=number%10;
 
-	digit=left;
-	grsim_put_sprite(numbers[digit],xt,yy);
+;	digit=number/100;
+;	if ((digit) && (digit<10)) {
+;		grsim_put_sprite(numbers[digit],xt,yy);
+;		xt+=4;
+;	}
+;	hundreds=digit;
+;	left=number%100;
 
-	return 0;
-}
+gr_put_num_tens:
+	; print tens digit
+	lda	DAMAGE_VAL
+	lsr
+	lsr
+	lsr
+	lsr
+
+	; leading zero suppression
+	beq	gr_put_num_ones
+
+	asl
+	tay
+	lda	number_sprites,Y
+	sta	INL
+	lda	number_sprites+1,Y
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	; point to next
+	lda	XPOS
+	clc
+	adc	#4
+	sta	XPOS
+
+gr_put_num_ones:
+
+	; print tens digit
+	lda	DAMAGE_VAL
+	and	#$f
+
+	asl
+	tay
+	lda	number_sprites,Y
+	sta	INL
+	lda	number_sprites+1,Y
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	rts
 
 ;
 ;                       ATTACK    SKIP
@@ -546,10 +564,10 @@ static int gr_put_num(int xx,int yy,int number) {
 ;
 ;		SUMMONS -> METROCAT VORTEXCN
 ;		MAGIC   ->  HEAL    FIRE
- ;                           ICE     MALAISE
+;                           ICE     MALAISE
 ;			    BOLT
 ;		LIMIT	->  SLICE   ZAP
- ;                           DROP
+;                           DROP
 ;
 ;	State Machine
 ;
@@ -563,19 +581,8 @@ static int gr_put_num(int xx,int yy,int number) {
 ;
 ;
 
-#define MENU_NONE	0
-#define MENU_MAIN	1
-#define MENU_MAGIC	2
-#define MENU_SUMMON	3
-#define MENU_LIMIT	4
+; static int enemy_attacking=0;
 
-static int enemy_attacking=0;
-static int menu_state=MENU_NONE;
-static int menu_position=0;
-static int battle_count=0;
-
-
-.endif
 
 battle_enemy_string:
 .byte 0,21,"KILLER CRAB",0
@@ -1066,72 +1073,192 @@ done_bar:
 
 
 
-.if 0
+	;=========================
+	; damage enemy
+	;=========================
+	; amount to damage in DAMAGE_VAL
+damage_enemy:
+	lda	DAMAGE_VAL
+	cmp	ENEMY_HP
+	bcs	damage_enemy_too_much		; bge
 
+	; enemy hp is BCD
+	sed
 
-static int damage_enemy(int value) {
+	sec
+	lda	ENEMY_HP
+	sbc	DAMAGE_VAL
 
-	if (enemy_hp>value) enemy_hp-=value;
-	else enemy_hp=0;
+	cld
 
-	return 0;
+	jmp	damage_enemy_update
 
-}
+damage_enemy_too_much:
+	lda	#0
 
-static int heal_self(int value) {
+damage_enemy_update:
+	sta	ENEMY_HP
 
-	hp+=value;
-	if (hp>max_hp) hp=max_hp;
+	rts
 
-	return 0;
+	;===================
+	; heal self
+	;===================
+	; heal amount in DAMAGE_VAL (yes, I know)
 
-}
+heal_self:
+	clc
+	lda	HERO_HP
+	adc	DAMAGE_VAL
 
+	; check if HP went down, if so we wrapped
 
-static int damage_tfv(int value) {
+	cmp	HERO_HP
+	bcc	heal_self_max	; blt
+	bcs	heal_self_update
 
-	if (hp>value) hp-=value;
-	else hp=0;
+heal_self_max:
+	lda	HERO_HP_MAX
 
-	return 0;
+heal_self_update:
+	sta	HERO_HP
 
-}
-.endif
+	rts
+
+	;========================
+	; damage TFV
+	;========================
+	; value in DAMAGE_VAL
+damage_tfv:
+	lda	DAMAGE_VAL
+	cmp	HERO_HP
+	bcs	damage_hero_too_much		; bge
+
+	sec
+	lda	HERO_HP
+	sbc	DAMAGE_VAL
+	jmp	damage_hero_update
+
+damage_hero_too_much:
+	lda	#0
+
+damage_hero_update:
+	sta	HERO_HP
+
+	rts
+
 
 	;=========================
 	; attack
 	;=========================
 attack:
-;	int ax=34;
-;	int damage=10;
+	lda	#34
+	sta	HERO_X
 
-;	while(ax>10) {
+	lda	#$10
+	sta	DAMAGE_VAL
 
-;		gr_copy_to_current(0xc00);
+attack_loop:
 
-;		if (ax&1) {
-;			grsim_put_sprite(tfv_stand_left,ax,20);
-;		}
-;		else {
-;			grsim_put_sprite(tfv_walk_left,ax,20);
-;		}
-;		grsim_put_sprite(tfv_led_sword,ax-5,20);
-;
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
-;
-;		draw_battle_bottom(enemy_type);
-;
-;		page_flip();
-;
-;		ax-=1;
-;
-;		usleep(20000);
-;	}
-;
-;	damage_enemy(damage);
-;	gr_put_num(2,10,damage);
-;	page_flip();
-;	usleep(250000);
+	; copy over background
+
+	jsr	gr_copy_to_current
+
+	; draw hero
+
+	lda	#20
+	sta	YPOS
+
+	lda	HERO_X
+	sta	XPOS
+
+	lsr
+	bcc	attack_draw_walk
+
+attack_draw_stand:
+	lda	#<tfv_stand_left_sprite
+	sta	INL
+	lda	#>tfv_stand_left_sprite
+	jmp	attack_actually_draw
+
+attack_draw_walk:
+	lda	#<tfv_walk_left_sprite
+	sta	INL
+	lda	#>tfv_walk_left_sprite
+
+attack_actually_draw:
+	sta	INH
+	jsr	put_sprite_crop
+
+	;=========================
+	; draw sword
+
+	lda	HERO_X
+	sec
+	sbc	#5
+	sta	XPOS
+	; ypos already 20?
+
+	lda	#<tfv_led_sword_sprite
+	sta	INL
+	lda	#>tfv_led_sword_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+
+	;=========================
+	; draw enemy
+
+	lda	ENEMY_X
+	sta	XPOS
+	; ypos already 20?
+
+	jsr	draw_enemy
+
+	;===========================
+	; draw battle bottom
+
+	jsr	draw_battle_bottom
+
+	;===========================
+	; page flip
+
+	jsr	page_flip
+
+	dec	HERO_X
+	lda	HERO_X
+	cmp	#10			; repeat until 10
+	bne	attack_loop
+
+	;======================
+	; attack done
+
+	;===================
+	; damage the enemy
+
+	jsr	damage_enemy
+
+	; display damage
+
+	lda	#2
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+	jsr	gr_put_num
+
+	;===================
+	; page flip
+
+	jsr	page_flip
+
+	; delay
+	lda	#255
+	jsr	WAIT
+
+	; restore X value
+	lda	#34
+	sta	HERO_X
 
 	rts
 
@@ -1978,6 +2105,23 @@ keypress_summon_action:
 	jsr	done_attack
 
 	rts
+
+	;================================
+	; draw enemy
+	; relies on self-modifying code
+	; position in XPOS,YPOS
+
+draw_enemy:
+
+draw_enemy_smc1:
+	lda	#$a5
+	sta	INL
+draw_enemy_smc2:
+	lda	#$a5
+
+battle_actual_draw_enemy:
+	sta	INH
+	jmp	put_sprite_crop		; tail call
 
 
 

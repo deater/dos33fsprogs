@@ -56,8 +56,9 @@
 .include "rotate_intro.s"
 
 ;===============================================
-; Variables
+; Graphics
 ;===============================================
 
 .include "tfv_sprites.inc"
+.include "number_sprites.inc"
 .include "graphics_map/tfv_backgrounds.inc"

@@ -66,7 +66,7 @@ TFV_WORLD:	tfv_world.o
 tfv_world.o:	tfv_world.s zp.inc \
 	tfv_overworld.s tfv_drawmap.s tfv_battle.s \
 	help_overworld.s rotate_intro.s \
-	graphics_map/tfv_backgrounds.inc tfv_sprites.inc
+	graphics_map/tfv_backgrounds.inc tfv_sprites.inc number_sprites.inc
 	ca65 -o tfv_world.o tfv_world.s -l tfv_world.lst
 
 graphics_map/tfv_backgrounds.inc:
