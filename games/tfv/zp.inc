@@ -88,6 +88,11 @@ HERO_HP		=	$91	; hero's hit points
 HERO_HP_MAX	=	$92	; hero's max hit points
 HERO_MP		=	$93	; hero's magic points
 HERO_LIMIT	=	$94	; hero's limit break count
+HERO_LEVEL	=	$95	; hero's level
+HERO_XP		=	$96	; hero's experience points
+HERO_MONEY	=	$97	; hero's money
+HERO_INVENTORY	=	$98	; hero's inventory
+
 
 
 ;==================GAME STATE (not in save game)==============
@@ -101,7 +106,7 @@ SOUND_STATUS    =       $A6
 	SOUND_IN_LC     = $01 ; $01 sound effects in language card
 	SOUND_MOCKINGBOARD = $02 ; mockingboard detected
 JS_BUTTON_STATE	=	$A7
-
+ANIMATE_LOOP	=	$A8
 
 HERO_X		=	$B0	; used in battle
 HERO_STATE	=	$B1	; used in battle

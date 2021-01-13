@@ -1315,56 +1315,110 @@ enemy_attack:
 	rts
 
 
+victory_string:
+	.byte 13,21,"EXPERIENCE +2",0
+	.byte 16,22,"MONEY +1",0
+
+
 	;====================================
 	; victory dance
 	;====================================
 
 victory_dance:
 
-.if 0
+	lda	#34
+	sta	HERO_X
 
-	int ax=34;
-	int i;
-	int saved_drawpage;
+	; update XP and money
 
-	saved_drawpage=ram[DRAW_PAGE];
+	inc	HERO_XP
+	inc	HERO_XP
 
-	ram[DRAW_PAGE]=PAGE2;	; 0xc00
+	inc	HERO_MONEY
 
-	clear_bottom();
 
-	vtab(21);
-	htab(10);
-	move_cursor();
-	print("EXPERIENCE +2");
-	experience+=2;
+	ldx	#25
+	stx	ANIMATE_LOOP
+victory_dance_loop:
 
-	vtab(22);
-	htab(10);
-	move_cursor();
-	print("MONEY +1");
-	money+=1;
+	jsr	gr_copy_to_current
 
-	ram[DRAW_PAGE]=saved_drawpage;
+	jsr	clear_bottom
 
-	for(i=0;i<25;i++) {
+	lda	#<victory_string
+	sta	OUTL
+	lda	#>victory_string
+	sta	OUTH
+	jsr	move_and_print
+	jsr	move_and_print
 
-		gr_copy_to_current(0xc00);
+	txa
+	and	#1
+	beq	victory_wave
 
-		if (i&1) {
-			grsim_put_sprite(tfv_stand_left,ax,20);
-			grsim_put_sprite(tfv_led_sword,ax-5,20);
-		}
-		else {
-			grsim_put_sprite(tfv_victory,ax,20);
-			grsim_put_sprite(tfv_led_sword,ax-2,14);
-		}
+victory_stand:
+	lda	HERO_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
 
-		page_flip();
+	lda	#<tfv_stand_left_sprite
+	sta	INL
+	lda	#>tfv_stand_left_sprite
+	sta	INH
+	jsr	put_sprite_crop
 
-		usleep(200000);
+	lda	HERO_X
+	sec
+	sbc	#5
+	sta	XPOS
+	lda	#20
+	sta	YPOS
 
-.endif
+	lda	#<tfv_led_sword_sprite
+	sta	INL
+	lda	#>tfv_led_sword_sprite
+	jmp	victory_draw_done
+
+victory_wave:
+
+	lda	HERO_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+
+	lda	#<tfv_victory_sprite
+	sta	INL
+	lda	#>tfv_victory_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+	lda	HERO_X
+	sec
+	sbc	#2
+	sta	XPOS
+	lda	#14
+	sta	YPOS
+
+	lda	#<tfv_led_sword_sprite
+	sta	INL
+	lda	#>tfv_led_sword_sprite
+
+
+victory_draw_done:
+	sta	INH
+	jsr	put_sprite_crop
+
+	jsr	page_flip
+
+
+	; delay
+	lda	#255
+	jsr	WAIT
+
+	dec	ANIMATE_LOOP
+	bne	victory_dance_loop
+
 	rts
 
 	;===========================

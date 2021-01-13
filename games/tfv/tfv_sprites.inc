@@ -61,6 +61,18 @@ tfv_defeat_sprite:
 	.byte $88,$AA,$AA,$22,$bA,$bA,$dA
 	.byte $88,$22,$22,$22,$dd,$db,$dd
 
+tfv_victory_sprite:
+	.byte $4,$6
+	.byte $AA,$BD,$2b,$AA
+	.byte $AB,$DB,$22,$AA
+	.byte $AA,$AA,$22,$AA
+	.byte $AA,$AA,$22,$AA
+	.byte $AA,$2A,$A2,$22
+	.byte $AA,$82,$AA,$82
+
+
+
+
 ;================
 ; Bird Sprites
 ;================
