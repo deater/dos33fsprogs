@@ -127,7 +127,7 @@ battle_draw_hero_running:
 	lda	#20
 	sta	YPOS
 
-	lda	FRAMEL
+	lda	BATTLE_COUNT
 	and	#$8
 	beq	battle_draw_running_walk
 
@@ -605,6 +605,25 @@ battle_menu_main:
 	.byte 31,21,"ESCAPE",0
 	.byte 31,22,"LIMIT",0
 
+battle_menu_summons:
+	.byte 23,20,"SUMMONS:",0
+	.byte 24,21,"METROCAT",0	; 0
+	.byte 24,22,"VORTEXCN",0	; 1
+
+battle_menu_magic:
+	.byte 23,20,"MAGIC:",0
+	.byte 24,21,"HEAL",0		; 0
+	.byte 24,22,"ICE",0		; 2
+	.byte 24,23,"BOLT",0		; 4
+	.byte 31,21,"FIRE",0		; 1
+	.byte 31,22,"MALAISE",0		; 3
+
+battle_menu_limit:
+	.byte 23,20,"LIMIT BREAKS:",0
+	.byte 24,21,"SLICE",0		; 0
+	.byte 24,22,"DROP",0		; 2
+	.byte 31,21,"ZAP",0		; 1
+
 	;========================
 	; draw_battle_bottom
 	;========================
@@ -642,13 +661,31 @@ draw_battle_bottom:
 ;		print("SUSIE");
 ;	}
 
-	lda	MENU_STATE
-	cmp	#MENU_NONE
-	beq	draw_battle_menu_none
-	cmp	#MENU_MAIN
-	beq	draw_battle_menu_main
 
+	; jump to current menu
 
+	; set up jump table fakery
+handle_special:
+	ldy	MENU_STATE
+	lda	battle_menu_jump_table_h,Y
+	pha
+	lda	battle_menu_jump_table_l,Y
+	pha
+	rts
+
+battle_menu_jump_table_l:
+	.byte	<(draw_battle_menu_none-1)
+	.byte	<(draw_battle_menu_main-1)
+	.byte	<(draw_battle_menu_magic-1)
+	.byte	<(draw_battle_menu_summon-1)
+	.byte	<(draw_battle_menu_limit-1)
+
+battle_menu_jump_table_h:
+	.byte	>(draw_battle_menu_none-1)
+	.byte	>(draw_battle_menu_main-1)
+	.byte	>(draw_battle_menu_magic-1)
+	.byte	>(draw_battle_menu_summon-1)
+	.byte	>(draw_battle_menu_limit-1)
 
 
 draw_battle_menu_none:
@@ -770,6 +807,7 @@ done_menu_wrap:
 
 	ldx	MENU_POSITION
 
+	cpx	#MENU_MAIN_ATTACK
 	bne	print_menu_attack	; print ATTACK
 	jsr	inverse_text
 print_menu_attack:
@@ -777,7 +815,7 @@ print_menu_attack:
 	jsr	normal_text
 
 
-	cpx	#2
+	cpx	#MENU_MAIN_MAGIC
 	bne	print_menu_magic	; print MAGIC
 	jsr	inverse_text
 print_menu_magic:
@@ -785,7 +823,7 @@ print_menu_magic:
 	jsr	normal_text
 
 
-	cpx	#4
+	cpx	#MENU_MAIN_SUMMON
 	bne	print_menu_summon	; print SUMMON
 	jsr	inverse_text
 print_menu_summon:
@@ -793,7 +831,7 @@ print_menu_summon:
 	jsr	normal_text
 
 
-	cpx	#1
+	cpx	#MENU_MAIN_SKIP
 	bne	print_menu_skip		; print SKIP
 	jsr	inverse_text
 print_menu_skip:
@@ -801,7 +839,7 @@ print_menu_skip:
 	jsr	normal_text
 
 
-	cpx	#3
+	cpx	#MENU_MAIN_ESCAPE
 	bne	print_menu_escape	; print ESCAPE
 	jsr	inverse_text
 print_menu_escape:
@@ -813,7 +851,7 @@ print_menu_escape:
 	cmp	#4
 	bcc	done_battle_draw_menu_main	 ; only draw if limit >=4
 
-	cpx	#5
+	cpx	#MENU_MAIN_LIMIT
 	bne	print_menu_limit	; print LIMIT
 	jsr	inverse_text
 print_menu_limit:
@@ -824,107 +862,144 @@ print_menu_limit:
 done_battle_draw_menu_main:
 	jmp	done_draw_battle_menu
 
-
+	;=========================
+	; menu summon
 draw_battle_menu_summon:
 
-;	if (menu_state==MENU_SUMMON) {
-;
-;		if (menu_position>1) menu_position=1;
-;
-;		vtab(21);
-;		htab(25);
-;		move_cursor();
-;		print("SUMMONS:");
-;
-;		vtab(22);
-;		htab(25);
-;		move_cursor();
-;		if (menu_position==0) print_inverse("METROCAT");
-;		else print("METROCAT");
-;
-;		vtab(23);
-;		htab(25);
-;		move_cursor();
-;		if (menu_position==1) print_inverse("VORTEXCN");
-;		else print("VORTEXCN");
-;	}
+	lda	#<battle_menu_summons
+	sta	OUTL
+	lda	#>battle_menu_summons
+	sta	OUTH
+
+	; make sure it is 1 or 0
+	ldx	MENU_POSITION
+	cpx	#2
+	bcc	wrap_menu_summon	; blt
+	ldx	#1
+	stx	MENU_POSITION
+wrap_menu_summon:
+
+	jsr	move_and_print		; print SUMMONS:
+
+	cpx	#MENU_SUMMON_METROCAT
+	bne	print_menu_metrocat	; print METROCAT
+	jsr	inverse_text
+print_menu_metrocat:
+	jsr	move_and_print
+	jsr	normal_text
+
+	cpx	#MENU_SUMMON_VORTEX
+	bne	print_menu_vortex	; print VORTEXCN
+	jsr	inverse_text
+print_menu_vortex:
+	jsr	move_and_print
+	jsr	normal_text
+
 	jmp	done_draw_battle_menu
 
+	;=======================
+	; menu magic
 draw_battle_menu_magic:
 
-;	if (menu_state==MENU_MAGIC) {
-;
-;		if (menu_position>4) menu_position=4;
-;
-;		vtab(21);
-;		htab(24);
-;		move_cursor();
-;		print("MAGIC:");
-;
-;		vtab(22);
-;		htab(25);
-;		move_cursor();
-;		if (menu_position==0) print_inverse("HEAL");
-;		else print("HEAL");
-;
-;		vtab(23);
-;		htab(25);
-;		move_cursor();
-;		if (menu_position==2) print_inverse("ICE");
-;		else print("ICE");
-;
-;		vtab(24);
-;		htab(25);
-;		move_cursor();
-;		if (menu_position==4) print_inverse("BOLT");
-;		else print("BOLT");
-;
-;		vtab(22);
-;		htab(32);
-;		move_cursor();
-;		if (menu_position==1) print_inverse("FIRE");
-;		else print("FIRE");
-;
-;		vtab(23);
-;		htab(32);
-;		move_cursor();
-;		if (menu_position==3) print_inverse("MALAISE");
-;		else print("MALAISE");
-;
-;	}
+	lda	#<battle_menu_magic
+	sta	OUTL
+	lda	#>battle_menu_magic
+	sta	OUTH
+
+
+	; make sure it is less than 5
+	ldx	MENU_POSITION
+	cpx	#5
+	bcc	wrap_menu_magic
+	ldx	#4
+	stx	MENU_POSITION
+wrap_menu_magic:
+
+	jsr	move_and_print		; print MAGIC:
+
+	cpx	#MENU_MAGIC_HEAL
+	bne	print_menu_heal		; print HEAL
+	jsr	inverse_text
+print_menu_heal:
+	jsr	move_and_print
+	jsr	normal_text
+
+	cpx	#MENU_MAGIC_ICE
+	bne	print_menu_ice		; print ICE
+	jsr	inverse_text
+print_menu_ice:
+	jsr	move_and_print
+	jsr	normal_text
+
+	cpx	#MENU_MAGIC_BOLT
+	bne	print_menu_bolt		; print BOLT
+	jsr	inverse_text
+print_menu_bolt:
+	jsr	move_and_print
+	jsr	normal_text
+
+	cpx	#MENU_MAGIC_FIRE
+	bne	print_menu_fire		; print FIRE
+	jsr	inverse_text
+print_menu_fire:
+	jsr	move_and_print
+	jsr	normal_text
+
+	cpx	#MENU_MAGIC_MALAISE
+	bne	print_menu_malaise	; print MALAISE
+	jsr	inverse_text
+print_menu_malaise:
+	jsr	move_and_print
+	jsr	normal_text
+
 	jmp	done_draw_battle_menu
+
+	;===============================
+	; menu limit
 
 draw_battle_menu_limit:
 
-;	if (menu_state==MENU_LIMIT) {
-;
-;		if (menu_position>2) menu_position=2;
-;
-;		vtab(21);
-;		htab(24);
-;		move_cursor();
-;		print("LIMIT BREAKS:");
-;
-;		vtab(22);
-;		htab(25);
-;		move_cursor();
-;		if (menu_position==0) print_inverse("SLICE");
-;		else print("SLICE");
-;
-;		vtab(23);
-;		htab(25);
-;		move_cursor();
-;		if (menu_position==2) print_inverse("DROP");
-;		else print("DROP");
-;
-;		vtab(22);
-;		htab(32);
-;		move_cursor();
-;		if (menu_position==1) print_inverse("ZAP");
-;		else print("ZAP");
+	lda	#<battle_menu_limit
+	sta	OUTL
+	lda	#>battle_menu_limit
+	sta	OUTH
+
+
+	; make sure it is less than 3
+	ldx	MENU_POSITION
+	cpx	#3
+	bcc	wrap_limit_magic
+	ldx	#2
+	stx	MENU_POSITION
+wrap_limit_magic:
+
+	jsr	move_and_print		; print LIMIT BREAKS:
+
+	cpx	#MENU_LIMIT_SLICE
+	bne	print_menu_slice	; print SLICE
+	jsr	inverse_text
+print_menu_slice:
+	jsr	move_and_print
+	jsr	normal_text
+
+	cpx	#MENU_LIMIT_DROP
+	bne	print_menu_drop		; print DROP
+	jsr	inverse_text
+print_menu_drop:
+	jsr	move_and_print
+	jsr	normal_text
+
+	cpx	#MENU_LIMIT_ZAP
+	bne	print_menu_zap		; print ZAP
+	jsr	inverse_text
+print_menu_zap:
+	jsr	move_and_print
+	jsr	normal_text
+
 
 
 done_draw_battle_menu:
+
 	;========================
 	; Draw inverse separator
 
@@ -1021,44 +1096,45 @@ static int damage_tfv(int value) {
 	return 0;
 
 }
-
-static int attack(void) {
-
-	int ax=34;
-	int damage=10;
-
-	while(ax>10) {
-
-		gr_copy_to_current(0xc00);
-
-		if (ax&1) {
-			grsim_put_sprite(tfv_stand_left,ax,20);
-		}
-		else {
-			grsim_put_sprite(tfv_walk_left,ax,20);
-		}
-		grsim_put_sprite(tfv_led_sword,ax-5,20);
-
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
-
-		draw_battle_bottom(enemy_type);
-
-		page_flip();
-
-		ax-=1;
-
-		usleep(20000);
-	}
-
-	damage_enemy(damage);
-	gr_put_num(2,10,damage);
-	page_flip();
-	usleep(250000);
-
-	return 0;
-}
-
 .endif
+
+	;=========================
+	; attack
+	;=========================
+attack:
+;	int ax=34;
+;	int damage=10;
+
+;	while(ax>10) {
+
+;		gr_copy_to_current(0xc00);
+
+;		if (ax&1) {
+;			grsim_put_sprite(tfv_stand_left,ax,20);
+;		}
+;		else {
+;			grsim_put_sprite(tfv_walk_left,ax,20);
+;		}
+;		grsim_put_sprite(tfv_led_sword,ax-5,20);
+;
+;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+;
+;		draw_battle_bottom(enemy_type);
+;
+;		page_flip();
+;
+;		ax-=1;
+;
+;		usleep(20000);
+;	}
+;
+;	damage_enemy(damage);
+;	gr_put_num(2,10,damage);
+;	page_flip();
+;	usleep(250000);
+
+	rts
+
 
 	;===============================
 	; enemy attack
@@ -1164,16 +1240,13 @@ victory_dance:
 .endif
 	rts
 
+	;===========================
+	; magic attack
+	;===========================
+
+magic_attack:
+
 .if 0
-
-#define MENU_MAGIC_HEAL		0
-#define MENU_MAGIC_ICE		1
-#define MENU_MAGIC_FIRE		2
-#define MENU_MAGIC_MALAISE	3
-#define MENU_MAGIC_BOLT		4
-
-
-static void magic_attack(int which) {
 
 	int ax=34,ay=20;
 	int mx,my;
@@ -1281,9 +1354,11 @@ static void magic_attack(int which) {
 	for(i=0;i<20;i++) {
 		usleep(100000);
 	}
-}
+.endif
+	rts
 
 
+.if 0
 ; Limit Break "Drop" */
 ; Jump into sky, drop down and slice enemy in half */
 
@@ -1523,23 +1598,25 @@ static void limit_break_zap(void) {
 
 }
 
+.endif
 
-#define MENU_LIMIT_SLICE	0
-#define MENU_LIMIT_ZAP		1
-#define MENU_LIMIT_DROP		2
+	;==========================
+	; limit break
+	;==========================
+limit_break:
 
-
-static void limit_break(int which) {
-
+.if 0
 	if (which==MENU_LIMIT_DROP) limit_break_drop();
 	else if (which==MENU_LIMIT_SLICE) limit_break_slice();
 	else if (which==MENU_LIMIT_ZAP) limit_break_zap();
+.endif
 
-	; reset limit counter */
-	limit=0;
+	; reset limit counter
+	lda	#0
+	sta	HERO_LIMIT
+	rts
 
-}
-
+.if 0
 static void summon_metrocat(void) {
 
 	int tx=34,ty=20;
@@ -1726,14 +1803,22 @@ static void summon_vortex_cannon(void) {
 	}
 
 }
-
-static void summon(int which) {
-
-	if (which==0) summon_metrocat();
-	else summon_vortex_cannon();
-}
-
 .endif
+
+	;=========================
+	; summon
+
+summon:
+
+;	if (which==0) summon_metrocat();
+;	else summon_vortex_cannon();
+
+	rts
+
+
+	;=============================
+	; done attack
+	;=============================
 
 done_attack:
 	lda	#0
@@ -1742,6 +1827,7 @@ done_attack:
 	lda	#MENU_NONE
 	sta	MENU_STATE
 
+	rts
 
 	;=========================
 	; battle menu keypress
@@ -1776,10 +1862,21 @@ keypress_escape:
 	rts
 
 keypress_up:
+	lda	MENU_STATE
+	cmp	#MENU_SUMMON
+	bne	up_the_rest
+up_for_summons:
+	lda	MENU_POSITION
+	cmp	#1
+	bcc	done_keypress_up	; blt
+	bcs	up_dec_menu
+
+up_the_rest:
 	lda	MENU_POSITION
 	cmp	#2
 	bcc	done_keypress_up	; blt
 	dec	MENU_POSITION
+up_dec_menu:
 	dec	MENU_POSITION
 done_keypress_up:
 	rts
@@ -1801,48 +1898,84 @@ done_keypress_left:
 	rts
 
 keypress_action:
-;		if (menu_state==MENU_MAIN) {
-;
-;			switch(menu_position) {
-;				case MENU_MAIN_ATTACK:
-;					; attack and decrement HP
-;					attack();
-;					done_attack();
-;					break;
-;				case MENU_MAIN_SKIP:
-;					done_attack();
-;					break;
-;				case MENU_MAIN_MAGIC:
-;					menu_state=MENU_MAGIC;
-;					menu_position=0;
-;					break;
-;				case MENU_MAIN_LIMIT:
-;					menu_state=MENU_LIMIT;
-;					menu_position=0;
-;					break;
-;				case MENU_MAIN_SUMMON:
-;					menu_state=MENU_SUMMON;
-;					menu_position=0;
-;					break;
-;				case MENU_MAIN_ESCAPE:
-;					running=1;
-;					done_attack();
-;					break;
-;			}
-;		}
-;		else if (menu_state==MENU_MAGIC) {
-;			magic_attack(menu_position);
-;			done_attack();
-;		}
-;		else if (menu_state==MENU_LIMIT) {
-;			limit_break(menu_position);
-;			done_attack();
-;		}
-;		else if (menu_state==MENU_SUMMON) {
-;			summon(menu_position);
-;			done_attack();
-;		}
-;	}
+
+	lda	MENU_STATE
+	cmp	#MENU_MAIN
+	beq	keypress_main_action
+	cmp	#MENU_MAGIC
+	beq	keypress_magic_action
+	cmp	#MENU_LIMIT
+	beq	keypress_limit_action
+	cmp	#MENU_SUMMON
+	beq	keypress_summon_action
+
+keypress_main_action:
+	lda	MENU_POSITION
+	cmp	#MENU_MAIN_ATTACK
+	beq	keypress_main_attack
+	cmp	#MENU_MAIN_SKIP
+	beq	keypress_main_skip
+	cmp	#MENU_MAIN_MAGIC
+	beq	keypress_main_magic
+	cmp	#MENU_MAIN_LIMIT
+	beq	keypress_main_limit
+	cmp	#MENU_MAIN_SUMMON
+	beq	keypress_main_summon
+	cmp	#MENU_MAIN_ESCAPE
+	beq	keypress_main_escape
+
+keypress_main_attack:
+	; attack and decrement HP
+	jsr	attack
+	jsr	done_attack
+	rts
+
+keypress_main_skip:
+	jsr	done_attack
+	rts
+
+keypress_main_magic:
+	lda	#MENU_MAGIC
+	sta	MENU_STATE
+	lda	#0
+	sta	MENU_POSITION
+	rts
+
+keypress_main_limit:
+	lda	#MENU_LIMIT
+	sta	MENU_STATE
+	lda	#0
+	sta	MENU_POSITION
+	rts
+
+keypress_main_summon:
+	lda	#MENU_SUMMON
+	sta	MENU_STATE
+	lda	#0
+	sta	MENU_POSITION
+	rts
+
+keypress_main_escape:
+	lda	#HERO_STATE_RUNNING
+	ora	HERO_STATE
+	sta	HERO_STATE
+
+	jsr	done_attack
+	rts
+
+keypress_magic_action:
+	jsr	magic_attack
+	jsr	done_attack
+	rts
+
+keypress_limit_action:
+	jsr	limit_break
+	jsr	done_attack
+	rts
+
+keypress_summon_action:
+	jsr	summon
+	jsr	done_attack
 
 	rts
 

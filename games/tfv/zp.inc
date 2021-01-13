@@ -87,6 +87,7 @@ WHICH_LOAD	=	$90	; current level
 HERO_HP		=	$91	; hero's hit points
 HERO_HP_MAX	=	$92	; hero's max hit points
 HERO_MP		=	$93	; hero's magic points
+HERO_LIMIT	=	$94	; hero's limit break count
 
 
 ;==================GAME STATE (not in save game)==============
@@ -110,15 +111,34 @@ ENEMY_TYPE	=	$B3	; used in battle
 ENEMY_HP	=	$B4	; enemy hitpoints
 ENEMY_X		=	$B5	; enemy X position
 ENEMY_COUNT	=	$B6	; enemy countdown to attack
-HERO_LIMIT	=	$B7	; hero limit break count
-MENU_STATE	=	$B8	; battle menu state
+MENU_STATE	=	$B7	; battle menu state
 	MENU_NONE	= 0
 	MENU_MAIN	= 1
 	MENU_MAGIC	= 2
 	MENU_SUMMON	= 3
 	MENU_LIMIT	= 4
-MENU_POSITION	=	$B9
-LAST_KEY	=	$BA
+MENU_POSITION	=	$B8
+	MENU_MAIN_ATTACK	= 0
+	MENU_MAIN_SKIP		= 1
+	MENU_MAIN_MAGIC		= 2
+	MENU_MAIN_ESCAPE	= 3
+	MENU_MAIN_SUMMON	= 4
+	MENU_MAIN_LIMIT		= 5
+
+	MENU_SUMMON_METROCAT	= 0
+	MENU_SUMMON_VORTEX	= 1
+
+	MENU_MAGIC_HEAL		= 0
+	MENU_MAGIC_FIRE		= 1
+	MENU_MAGIC_ICE		= 2
+	MENU_MAGIC_MALAISE	= 3
+	MENU_MAGIC_BOLT		= 4
+
+	MENU_LIMIT_SLICE	= 0
+	MENU_LIMIT_ZAP		= 1
+	MENU_LIMIT_DROP		= 2
+
+LAST_KEY	=	$B9
 
 COLOR1		=	$E0
 COLOR2		=	$E1
