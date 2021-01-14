@@ -1973,84 +1973,176 @@ metrocat_damage_loop:
 
 summon_vortex_cannon:
 
-.if 0
+	lda	#5
+	sta	DAMAGE_VAL
 
-	int tx=34,ty=20;
-	int damage=5;
-	int i;
-	int ax=20,ay=20;
-
-	; draw the cannon */
-
-	i=0;
-	while(i<30) {
-
-		gr_copy_to_current(0xc00);
-
-		grsim_put_sprite(tfv_stand_left,tx,ty);
-		grsim_put_sprite(tfv_led_sword,tx-5,ty);
-
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
-
-		grsim_put_sprite(vortex_cannon,ax,ay);
-
-		draw_battle_bottom(enemy_type);
-
-		page_flip();
-
-		i++;
-
-		usleep(20000);
-	}
-
-	; Fire vortices */
-
-	ax=20;
-	for(i=0;i<5;i++) {
-		while(ax>5) {
-
-			gr_copy_to_current(0xc00);
-
-			grsim_put_sprite(tfv_stand_left,tx,ty);
-			grsim_put_sprite(tfv_led_sword,tx-5,ty);
-
-;			grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
-
-			grsim_put_sprite(vortex_cannon,20,20);
-
-			grsim_put_sprite(vortex,ax,24);
-
-			draw_battle_bottom(enemy_type);
-
-			if (ax<10) {
-				gr_put_num(2,10,damage);
-			}
-
-			page_flip();
-
-			ax-=1;
-
-			usleep(50000);
-		}
-		damage_enemy(damage);
-		ax=20;
-	}
+	lda	#20
+	sta	MAGIC_X
+	sta	MAGIC_Y
 
 
-	gr_copy_to_current(0xc00);
+	; draw the cannon
 
-;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+	lda	#30
+	sta	ANIMATE_LOOP
 
-	grsim_put_sprite(tfv_stand_left,tx,ty);
-	grsim_put_sprite(tfv_led_sword,tx-5,ty);
-	draw_battle_bottom(enemy_type);
+vortex_setup_loop:
+	jsr	gr_copy_to_current
 
-	page_flip();
 
-	for(i=0;i<20;i++) {
-		usleep(100000);
-	}
-.endif
+	; draw hero
+	lda	#34
+	sta	HERO_X
+	jsr	draw_hero_and_sword
+
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
+
+	; grsim_put_sprite(vortex_cannon,ax,ay);
+
+	; draw vortex_cannon
+
+	lda	#20
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+
+	lda	#<vortex_cannon_sprite
+	sta	INL
+	lda	#>vortex_cannon_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	; draw bottom
+
+	jsr	draw_battle_bottom
+
+	jsr	page_flip
+
+	lda	#50
+	jsr	WAIT
+
+	dec	ANIMATE_LOOP
+	bne	vortex_setup_loop
+
+
+	; Fire vortices
+
+
+	lda	#5
+	sta	ANIMATE_LOOP
+
+vortex_cannon_fire_loop:
+
+	lda	#20
+	sta	MAGIC_X
+
+vortex_cannon_move_loop:
+;		while(ax>5) {
+
+	jsr	gr_copy_to_current
+
+	; draw hero
+	jsr	draw_hero_and_sword
+
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
+
+	; draw vortex_cannon
+
+	lda	#20
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+
+	lda	#<vortex_cannon_sprite
+	sta	INL
+	lda	#>vortex_cannon_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	; draw vortex
+
+	lda	MAGIC_X
+	sta	XPOS
+	lda	#24
+	sta	YPOS
+
+	lda	#<vortex_sprite
+	sta	INL
+	lda	#>vortex_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	jsr	draw_battle_bottom
+
+
+	; print damage if < 10
+	lda	MAGIC_X
+	cmp	#10
+	bcs	vortex_no_print_damage
+
+	lda	#2
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+
+	jsr	gr_put_num
+
+vortex_no_print_damage:
+
+	jsr	page_flip
+
+	lda	#100
+	jsr	WAIT
+
+	dec	MAGIC_X
+
+	lda	MAGIC_X
+	cmp	#5
+	bcs	vortex_cannon_move_loop
+
+	; damage enemy
+	jsr	damage_enemy
+
+	dec	ANIMATE_LOOP
+	bne	vortex_cannon_fire_loop
+
+
+	; end of summon
+
+
+	jsr	gr_copy_to_current
+
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
+
+	; draw hero
+	jsr	draw_hero_and_sword
+
+	jsr	draw_battle_bottom
+
+	jsr	page_flip
+
+	; wait 2s
+	lda	#20
+	jsr	long_wait
+
 	rts
 
 	;=========================
