@@ -1,5 +1,21 @@
+short-term:
++ Finish mockingboard music (victory and battle)
++ Get credits hooked up
++ Get battle finished
+	- all menu options
+	- properly sync hp/mp with title
+	- hook up name
+	- sound effects (bleep on menu, clicks/tones during battles)
+	- rotate intro
+	- animated fly in
+	- enemy glow pink before dying
++ load game support
+
+
+
+
 get metrocat by running across him on world map
-enemy glow pink before dying
+
 
 proper slowdown/delay in attack
 simple sound effects when selecting menu

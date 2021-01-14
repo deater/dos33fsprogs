@@ -80,12 +80,13 @@ which_load_loop:
 	sta	OUTH
 
 	lda	WHICH_LOAD
+	cmp	#LOAD_CREDITS
 	bne	load_other
 
-load_intro:
-	lda	#<$2000
+load_credits:
+	lda	#<$4000
 	sta	entry_smc+1
-	lda	#>$2000
+	lda	#>$4000
 	sta	entry_smc+2
 	jmp	actual_load
 

@@ -28,8 +28,13 @@ flying:
 	; Clear screen/pages
 	;===================
 
-	jsr	clear_screens
 	bit	PAGE0
+	bit	LORES			; Lo-res graphics
+        bit	TEXTGR			; mixed gr/text mode
+        bit	SET_GR			; set graphics
+
+
+	jsr	clear_screens
 	lda	#0
 	sta	DISP_PAGE
 	lda	#4

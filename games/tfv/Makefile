@@ -14,9 +14,10 @@ all:	tfv.dsk
 $(DOS33):	
 	cd ../../utils/dos33fs-utils && make
 
-tfv.dsk:	$(DOS33) HELLO LOADER TFV_TITLE TFV_FLYING TFV_WORLD
+tfv.dsk:	$(DOS33) HELLO LOADER TFV_CREDITS TFV_TITLE TFV_FLYING TFV_WORLD
 	$(DOS33) -y tfv.dsk SAVE A HELLO
 	$(DOS33) -y tfv.dsk BSAVE -a 0x1000 LOADER
+	$(DOS33) -y tfv.dsk BSAVE -a 0x4000 TFV_CREDITS
 	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 TFV_TITLE
 	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 TFV_FLYING
 	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 TFV_WORLD
@@ -33,6 +34,16 @@ LOADER:	loader.o
 
 loader.o:	loader.s init_vars.s common_defines.inc zp.inc
 	ca65 -o loader.o loader.s -l loader.lst
+
+###
+
+credits.o:	credits.s credits_sprites.inc mockingboard.s \
+	vapor_lock.s gr_putsprite.s move_letters.s \
+	./graphics_credits/KATC.lzsa
+	ca65 -o credits.o credits.s -l credits.lst
+
+TFV_CREDITS:	credits.o
+	ld65 -o TFV_CREDITS credits.o -C ../../linker_scripts/apple2_4000.inc
 
 ###
 
@@ -78,5 +89,5 @@ graphics_map/tfv_backgrounds.inc:
 ###
 
 clean:	
-	rm -f *~ TITLE.GR *.o *.lst TFV TFV_TITLE TFV_FLYING TFV_WORLD HELLO LOADER
+	rm -f *~ TITLE.GR *.o *.lst TFV_CREDITS TFV_TITLE TFV_FLYING TFV_WORLD HELLO LOADER
 
