@@ -560,18 +560,30 @@ loop6:
 
 	jsr	move_letters					; 6+126
 
+
+	; exit if keypressed
+	lda	KEYPRESS			; 4
+	bmi	credits_keypressed		; 3/2nt
+;============================================
+						; 6
+
 	; Blanking time:	 4550
 	; move_letters		 -132
 	; JMP at end		   -3
 	;========================4415 cycles
+			;	- 6
+			;	=======
+			;	4409
+
+	; Try X=14 Y=58 cycles=4409
 
 	; Try X=24 Y=35 cycles=4411 R4
 
-	nop
-	nop
+;	nop
+;	nop
 
-	ldy	#35							; 2
-loop7:	ldx	#24							; 2
+	ldy	#58							; 2
+loop7:	ldx	#14							; 2
 loop8:	dex								; 2
 	bne	loop8							; 2nt/3
 	dey								; 2
@@ -583,6 +595,13 @@ loop8:	dex								; 2
 ;===========================================================
 ;===========================================================
 ;===========================================================
+
+credits_keypressed:
+	bit	KEYRESET
+	lda	#0			; LOAD_TITLE
+	sta	WHICH_LOAD
+	rts
+
 
 ;wait_until_keypressed:
 ;	lda	KEYPRESS			; check if keypressed
