@@ -44,7 +44,7 @@
 .include "gr_pageflip.s"
 .include "keyboard.s"
 .include "joystick.s"
-.include "gr_putsprite.s"
+;.include "gr_putsprite.s"
 .include "gr_putsprite_crop.s"
 .include "text_print.s"
 .include "gr_copy.s"

@@ -367,7 +367,7 @@ back_not_palm2:
 
 back_scatter_sprite:
 
-	jsr	put_sprite
+	jsr	put_sprite_crop
 
 no_back_scatter:
 	;========================
@@ -466,7 +466,7 @@ done_walking:
 	lda	TFV_Y
 	sta	YPOS
 
-	jsr	put_sprite
+	jsr	put_sprite_crop
 
 
 ;	if (direction==-1) {
@@ -593,7 +593,7 @@ fore_not_palm2:
 
 fore_scatter_sprite:
 
-	jsr	put_sprite
+	jsr	put_sprite_crop
 
 no_fore_scatter:
 
@@ -723,7 +723,7 @@ fore_no_forest:
 	lda	#4
 	sta	YPOS
 
-	jsr	put_sprite	; grsim_put_sprite(lightning,25,4);
+	jsr	put_sprite_crop	; grsim_put_sprite(lightning,25,4);
 
 	;=============================
 	; Hurt hit points if in range?
@@ -1154,7 +1154,7 @@ mountain_loop:
 	adc	#2
 	sta	YPOS
 
-	jsr	put_sprite
+	jsr	put_sprite_crop
 
 	pla
 	clc
