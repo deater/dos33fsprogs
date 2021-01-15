@@ -1404,124 +1404,238 @@ victory_draw_done:
 
 magic_attack:
 
-.if 0
+;	int ax=34,ay=20;
+;	int damage=20;
+;	int i;
 
-	int ax=34,ay=20;
-	int mx,my;
-	int damage=20;
-	int i;
+	lda	#34
+	sta	HERO_X
 
-	unsigned char *sprite;
+	lda	#$15
+	sta	DAMAGE_VAL
 
-	if (which==MENU_MAGIC_HEAL) {
-		sprite=magic_health;
-		mx=33;
-		my=20;
-	}
-	if (which==MENU_MAGIC_FIRE) {
-		sprite=magic_fire;
-		mx=2;
-		my=20;
-	}
-	if (which==MENU_MAGIC_ICE) {
-		sprite=magic_ice;
-		mx=2;
-		my=20;
-	}
-	if (which==MENU_MAGIC_BOLT) {
-		sprite=magic_bolt;
-		mx=2;
-		my=20;
-	}
-	if (which==MENU_MAGIC_MALAISE) {
-		sprite=magic_malaise;
-		mx=2;
-		my=20;
-	}
+	lda	MENU_POSITION
+	cmp	#MENU_MAGIC_HEAL
+	beq	do_magic_heal
+	cmp	#MENU_MAGIC_FIRE
+	beq	do_magic_fire
+	cmp	#MENU_MAGIC_ICE
+	beq	do_magic_ice
+	cmp	#MENU_MAGIC_BOLT
+	beq	do_magic_bolt
+	cmp	#MENU_MAGIC_MALAISE
+	beq	do_magic_malaise
+
+do_magic_heal:	; MENU_MAGIC_HEAL
+	lda	#33
+	sta	MAGIC_X
+	lda	#20
+	sta	MAGIC_Y
+
+	jmp	done_magic_setup
+
+do_magic_fire:		; MENU_MAGIC_FIRE
+	lda	#2
+	sta	MAGIC_X
+	lda	#20
+	sta	MAGIC_Y
+
+	jmp	done_magic_setup
+
+do_magic_ice:		; MENU_MAGIC_ICE
+	lda	#2
+	sta	MAGIC_X
+	lda	#20
+	sta	MAGIC_Y
+
+	jmp	done_magic_setup
+
+do_magic_bolt:		; MENU_MAGIC_BOLT
+	lda	#2
+	sta	MAGIC_X
+	lda	#20
+	sta	MAGIC_Y
+
+	jmp	done_magic_setup
+
+do_magic_malaise:	; MENU_MAGIC_MALAISE
+	lda	#2
+	sta	MAGIC_X
+	lda	#20
+	sta	MAGIC_Y
+
+	jmp	done_magic_setup
+
+done_magic_setup:
 
 
+
+	;=========================================
+	; cast the magic
 	; FIXME: damage based on weakness of enemy
 	; FIXME: disallow if not enough MP
 
-	; cast the magic */
-	i=0;
-	while(i<10) {
+cast_the_magic:
 
-		gr_copy_to_current(0xc00);
+	lda	MENU_POSITION
+	sta	MAGIC_TYPE
 
-		grsim_put_sprite(tfv_victory,34,20);
+	lda	#10
+	sta	ANIMATE_LOOP
 
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+cast_magic_loop:
+	jsr	gr_copy_to_current
 
-		draw_battle_bottom(enemy_type);
+	; sprite with hands up
 
-		page_flip();
+	lda	HERO_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
 
-		i++;
+	lda	#<tfv_victory_sprite
+	sta	INL
+	lda	#>tfv_victory_sprite
+	sta	INH
 
-		usleep(20000);
-	}
+	jsr	put_sprite_crop
 
-	ax=34;
-	ay=20;
-	i=0;
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
 
-	; Actually put the magic */
 
-	while(i<=20) {
+	jsr	draw_battle_bottom
 
-		gr_copy_to_current(0xc00);
+	jsr	page_flip
 
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+	; delay a bit
+	lda	#50
+	jsr	WAIT
 
-		grsim_put_sprite(tfv_stand_left,ax,ay);
-		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+	dec	ANIMATE_LOOP
+	bne	cast_magic_loop
 
-		grsim_put_sprite(sprite,mx+(i&1),my);
 
-		draw_battle_bottom(enemy_type);
 
-		page_flip();
+;	ax=34;
+;	ay=20;
+;	i=0;
 
-		i++;
+	;========================
+	; Actually do the magic
 
-		usleep(100000);
-	}
+	lda	#20
+	sta	ANIMATE_LOOP
+magic_happens_loop:
+;	while(i<=20) {
 
-	mp-=5;
+	jsr	gr_copy_to_current
 
-	gr_copy_to_current(0xc00);
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
 
-;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+	; draw hero
+	lda	#34
+	sta	HERO_X
+	jsr	draw_hero_and_sword
 
-	grsim_put_sprite(tfv_stand_left,ax,ay);
-	grsim_put_sprite(tfv_led_sword,ax-5,ay);
+	lda	ANIMATE_LOOP
+	and	#$1
+	clc
+	adc	MAGIC_X
+	sta	XPOS
 
-	draw_battle_bottom(enemy_type);
+	lda	MAGIC_Y
+	sta	YPOS
 
-	if (which!=MENU_MAGIC_HEAL) {
-		damage_enemy(damage);
-		gr_put_num(2,10,damage);
-	}
-	else {
-		heal_self(damage);
-	}
-	draw_battle_bottom(enemy_type);
-	page_flip();
+	lda	MAGIC_TYPE
+	asl
+	tay
+	lda	magic_sprites,Y
+	sta	INL
+	lda	magic_sprites+1,Y
+	sta	INH
 
-	for(i=0;i<20;i++) {
-		usleep(100000);
-	}
-.endif
+	jsr	put_sprite_crop
+
+	jsr	draw_battle_bottom
+
+	jsr	page_flip
+
+	; delay a bit
+	lda	#50
+	jsr	WAIT
+
+	dec	ANIMATE_LOOP
+	bne	magic_happens_loop
+
+
+	;=============================
+
+
+	; decrease magic points
+	; mp-=5;
+
+	jsr	gr_copy_to_current
+
+
+	; draw hero
+	lda	#34
+	sta	HERO_X
+	jsr	draw_hero_and_sword
+
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
+
+	lda	MAGIC_TYPE
+	cmp	#MENU_MAGIC_HEAL
+	beq	was_heal_magic
+
+	jsr	damage_enemy
+	lda	#2
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+	jsr	gr_put_num
+	jmp	done_magic_damage
+
+was_heal_magic:
+	jsr	heal_self
+done_magic_damage:
+
+	jsr	draw_battle_bottom
+
+	jsr	page_flip
+
+	; wait 2s
+	ldx	#200
+	jsr	long_wait
+
 	rts
 
 
+	;======================
+	;======================
+	; Limit Break "Drop"
+	; Jump into sky, drop down and slice enemy in half
+	;======================
+	;======================
+
+limit_break_drop:
+
 .if 0
-; Limit Break "Drop" */
-; Jump into sky, drop down and slice enemy in half */
-
-static void limit_break_drop(void) {
-
 	int ax=34,ay=20;
 	int damage=100;
 	int i;
@@ -1613,14 +1727,19 @@ static void limit_break_drop(void) {
 	for(i=0;i<20;i++) {
 		usleep(100000);
 	}
-}
+.endif
+	rts
 
+	;=========================
+	;=========================
+	; Limit Break "Slice"
+	; Run up and slap a bunch with sword
+	; TODO: cause damage value to bounce around more?
+	;=========================
+	;=========================
 
-; Limit Break "Slice" */
-; Run up and slap a bunch with sword */
-; TODO: cause damage value to bounce around more? */
-
-static void limit_break_slice(void) {
+limit_break_slice:
+.if 0
 
 	int tx=34,ty=20;
 	int damage=5;
@@ -1687,13 +1806,19 @@ static void limit_break_slice(void) {
 	for(i=0;i<20;i++) {
 		usleep(100000);
 	}
-}
+.endif
+	rts
 
-; Limit Break "Zap" */
-; Zap with a laser out of the LED sword */
+	;=========================
+	;========================
+	; Limit Break "Zap"
+	; Zap with a laser out of the LED sword */
+	;=========================
+	;=========================
 
-static void limit_break_zap(void) {
+limit_break_zap:
 
+.if 0
 	int tx=34,ty=20;
 	int damage=100;
 	int i;
@@ -1753,26 +1878,36 @@ static void limit_break_zap(void) {
 	for(i=0;i<20;i++) {
 		usleep(100000);
 	}
-
-}
-
 .endif
+	rts
 
 	;==========================
 	; limit break
 	;==========================
 limit_break:
 
-.if 0
-	if (which==MENU_LIMIT_DROP) limit_break_drop();
-	else if (which==MENU_LIMIT_SLICE) limit_break_slice();
-	else if (which==MENU_LIMIT_ZAP) limit_break_zap();
-.endif
-
 	; reset limit counter
 	lda	#0
 	sta	HERO_LIMIT
-	rts
+
+	; TODO: replace with jump table?
+
+	lda	MENU_POSITION
+	cmp	#MENU_LIMIT_DROP
+	beq	do_limit_drop
+	cmp	#MENU_LIMIT_SLICE
+	beq	do_limit_slice
+	cmp	#MENU_LIMIT_ZAP
+	beq	do_limit_zap
+
+do_limit_drop:
+	jmp	limit_break_drop
+do_limit_slice:
+	jmp	limit_break_slice
+do_limit_zap:
+	jmp	limit_break_zap
+
+
 
 
 	;========================
@@ -2043,7 +2178,6 @@ vortex_cannon_fire_loop:
 	sta	MAGIC_X
 
 vortex_cannon_move_loop:
-;		while(ax>5) {
 
 	jsr	gr_copy_to_current
 
@@ -2140,7 +2274,7 @@ vortex_no_print_damage:
 	jsr	page_flip
 
 	; wait 2s
-	lda	#20
+	ldx	#200
 	jsr	long_wait
 
 	rts
@@ -2379,9 +2513,11 @@ draw_hero_and_sword:
 
 
 	;=====================
+	;=====================
 	; long(er) wait
 	; waits approximately 10ms * X
-
+	;=====================
+	;=====================
 long_wait:
 	lda	#64
 	jsr	WAIT		; delay 1/2(26+27A+5A^2) us, 11,117
@@ -2391,147 +2527,151 @@ long_wait:
 
 
 
+	;====================
+	;====================
+	; Boss Battle
+	;====================
+	;====================
 
-.if 0
-int boss_battle(void) {
+boss_battle:
 
-	int i,ch;
+;	int i,ch;
 
-	int saved_drawpage;
+;	int saved_drawpage;
 
-	int ax=34;
-	int enemy_count=30;
-	int old;
+;	int ax=34;
+;	int enemy_count=30;
+;	int old;
 
 
-	susie_out=1;
+;	susie_out=1;
 
-	rotate_intro();
+;	rotate_intro();
 
-	battle_count=20;
+;	battle_count=20;
 
-	enemy_type=8;
+;	enemy_type=8;
 
-	enemy_hp=255;
+;	enemy_hp=255;
 
-	saved_drawpage=ram[DRAW_PAGE];
+;	saved_drawpage=ram[DRAW_PAGE];
 
-	ram[DRAW_PAGE]=PAGE2;
+;	ram[DRAW_PAGE]=PAGE2;
 
-	;******************/
-	; Draw background */
+	;=====================
+	; Draw background
 
 	; Draw sky */
-	color_equals(COLOR_BLACK);
-	for(i=0;i<20;i++) {
-		hlin_double(ram[DRAW_PAGE],0,39,i);
-	}
+;	color_equals(COLOR_BLACK);
+;	for(i=0;i<20;i++) {
+;		hlin_double(ram[DRAW_PAGE],0,39,i);
+;	}
 
-	color_equals(COLOR_ORANGE);
-	for(i=20;i<39;i++) {
-		hlin_double(ram[DRAW_PAGE],0,39,i);
-	}
+;	color_equals(COLOR_ORANGE);
+;	for(i=20;i<39;i++) {
+;		hlin_double(ram[DRAW_PAGE],0,39,i);
+;	}
 
 	; Draw horizon */
 ;	color_equals(COLOR_GREY);
 ;	hlin_double(ram[DRAW_PAGE],0,39,10);
 
-	ram[DRAW_PAGE]=saved_drawpage;
+;	ram[DRAW_PAGE]=saved_drawpage;
 
-	draw_battle_bottom(enemy_type);
+;	draw_battle_bottom(enemy_type);
 
-	while(1) {
+;	while(1) {
 
-		gr_copy_to_current(0xc00);
-
-		if (hp==0) {
-			grsim_put_sprite(tfv_defeat,ax-2,24);
-		}
-		else if (running) {
+;		gr_copy_to_current(0xc00);
+;
+;		if (hp==0) {
+;			grsim_put_sprite(tfv_defeat,ax-2,24);
+;		}
+;		else if (running) {
 ;			if (battle_count%2) {
-				grsim_put_sprite(tfv_stand_right,ax,20);
-			}
-			else {
-				grsim_put_sprite(tfv_walk_right,ax,20);
-			}
-		}
-		else {
-			grsim_put_sprite(tfv_stand_left,ax,20);
-			grsim_put_sprite(tfv_led_sword,ax-5,20);
-		}
+;				grsim_put_sprite(tfv_stand_right,ax,20);
+;			}
+;			else {
+;				grsim_put_sprite(tfv_walk_right,ax,20);
+;			}
+;		}
+;		else {
+;			grsim_put_sprite(tfv_stand_left,ax,20);
+;			grsim_put_sprite(tfv_led_sword,ax-5,20);
+;		}
+;
+;		grsim_put_sprite(susie_left,28,30);
+;
+;		if ((enemy_count&0xf)<4) {
+;			grsim_put_sprite(roboknee1,enemy_x,16);
+;		}
+;		else {
+;			grsim_put_sprite(roboknee2,enemy_x,16);
+;		}
+;
+;		draw_battle_bottom(enemy_type);
+;
+;		page_flip();
+;
+;		if (hp==0) {
+;			for(i=0;i<15;i++) usleep(100000);
+;			break;
+;		}
+;
+;		usleep(100000);
+;
+;		ch=grsim_input();
+;		if (ch=='q') return 0;
+;
+;		if (enemy_count==0) {
+;			; attack and decrement HP
+;			enemy_attack(ax);
+;			; update limit count
+;			if (limit<4) limit++;
+;
+;			; reset enemy time. FIXME: variable?
+;			enemy_count=50;
+;		}
+;		else {
+;			enemy_count--;
+;		}
+;
+;		if (battle_count>=64) {
+;
+;			; TODO: randomly fail at running? */
+;			if (running) {
+;				break;
+;			}
+;
+;			if (menu_state==MENU_NONE) menu_state=MENU_MAIN;
+;			menu_keypress(ch);
+;
+;		} else {
+;			battle_count++;
+;		}
+;
+;		old=battle_bar;
+;		battle_bar=(battle_count/16);
+;		if (battle_bar!=old) draw_battle_bottom(enemy_type);
+;
+;
+;		if (enemy_hp==0) {
+;			; FIXME?
+;			victory_dance();
+;			break;
+;		}
+;
+;
+;	}
+;
+;	ram[DRAW_PAGE]=PAGE0;
+;	clear_bottom();
+;	ram[DRAW_PAGE]=PAGE1;
+;	clear_bottom();
+;
+;	running=0;
+;
+;	return 0;
+;}
 
-		grsim_put_sprite(susie_left,28,30);
 
-		if ((enemy_count&0xf)<4) {
-			grsim_put_sprite(roboknee1,enemy_x,16);
-		}
-		else {
-			grsim_put_sprite(roboknee2,enemy_x,16);
-		}
-
-		draw_battle_bottom(enemy_type);
-
-		page_flip();
-
-		if (hp==0) {
-			for(i=0;i<15;i++) usleep(100000);
-			break;
-		}
-
-		usleep(100000);
-
-		ch=grsim_input();
-		if (ch=='q') return 0;
-
-		if (enemy_count==0) {
-			; attack and decrement HP
-			enemy_attack(ax);
-			; update limit count
-			if (limit<4) limit++;
-
-			; reset enemy time. FIXME: variable?
-			enemy_count=50;
-		}
-		else {
-			enemy_count--;
-		}
-
-		if (battle_count>=64) {
-
-			; TODO: randomly fail at running? */
-			if (running) {
-				break;
-			}
-
-			if (menu_state==MENU_NONE) menu_state=MENU_MAIN;
-			menu_keypress(ch);
-
-		} else {
-			battle_count++;
-		}
-
-		old=battle_bar;
-		battle_bar=(battle_count/16);
-		if (battle_bar!=old) draw_battle_bottom(enemy_type);
-
-
-		if (enemy_hp==0) {
-			; FIXME?
-			victory_dance();
-			break;
-		}
-
-
-	}
-
-	ram[DRAW_PAGE]=PAGE0;
-	clear_bottom();
-	ram[DRAW_PAGE]=PAGE1;
-	clear_bottom();
-
-	running=0;
-
-	return 0;
-}
-
-.endif

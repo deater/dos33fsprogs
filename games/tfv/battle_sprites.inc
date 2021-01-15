@@ -138,6 +138,19 @@ vortex_sprite:
 	.byte $11,$AA,$11
 	.byte $A1,$1A,$A1
 
+
+;=================================
+; magic sprites
+;=================================
+
+magic_sprites:
+	.word magic_health_sprite
+	.word magic_fire_sprite
+	.word magic_ice_sprite
+	.word magic_malaise_sprite
+	.word magic_bolt_sprite
+
+
 magic_health_sprite:
 	.byte $5,$6
 	.byte $AA,$AA,$AE,$AA,$AC
@@ -149,16 +162,6 @@ magic_health_sprite:
 
 magic_fire_sprite:
 	.byte $5,$6
-	.byte $AA,$AA,$fA,$AA,$AA
-	.byte $fA,$AA,$ff,$AA,$fA
-	.byte $Af,$fA,$ff,$fA,$Af
-	.byte $AA,$ff,$fe,$ff,$AA
-	.byte $ff,$AA,$ff,$AA,$ff
-	.byte $AA,$AA,$ff,$AA,$AA
-
-
-magic_ice_sprite:
-	.byte $5,$6
 	.byte $AA,$Ad,$dA,$AA,$AA
 	.byte $AA,$dd,$dd,$dd,$dA
 	.byte $dA,$dd,$9d,$dd,$dd
@@ -166,6 +169,14 @@ magic_ice_sprite:
 	.byte $AA,$99,$99,$99,$dd
 	.byte $AA,$Ad,$99,$99,$Ad
 
+magic_ice_sprite:
+	.byte $5,$6
+	.byte $AA,$AA,$fA,$AA,$AA
+	.byte $fA,$AA,$ff,$AA,$fA
+	.byte $Af,$fA,$ff,$fA,$Af
+	.byte $AA,$ff,$fe,$ff,$AA
+	.byte $ff,$AA,$ff,$AA,$ff
+	.byte $AA,$AA,$ff,$AA,$AA
 
 magic_bolt_sprite:
 	.byte $5,$6

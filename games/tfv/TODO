@@ -9,6 +9,10 @@ short-term:
 	- rotate intro
 	- animated fly in
 	- enemy glow pink before dying
+	- healing, display numbers in aqua
+	- if not enough magic points, grey out? somehow
+		the ones we can't cast
+	- adjust color of fight background based on ground color
 + load game support
 
 
