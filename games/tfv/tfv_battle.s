@@ -151,6 +151,9 @@ battle_draw_running_walk:
 battle_draw_normal_hero:
 	; grsim_put_sprite(tfv_stand_left,ax,20);
 
+	lda	#20
+	sta	HERO_Y
+
 	jsr	draw_hero_and_sword
 
 battle_done_draw_hero:
@@ -1404,10 +1407,6 @@ victory_draw_done:
 
 magic_attack:
 
-;	int ax=34,ay=20;
-;	int damage=20;
-;	int i;
-
 	lda	#34
 	sta	HERO_X
 
@@ -1520,18 +1519,12 @@ cast_magic_loop:
 	bne	cast_magic_loop
 
 
-
-;	ax=34;
-;	ay=20;
-;	i=0;
-
 	;========================
 	; Actually do the magic
 
 	lda	#20
 	sta	ANIMATE_LOOP
 magic_happens_loop:
-;	while(i<=20) {
 
 	jsr	gr_copy_to_current
 
@@ -1545,6 +1538,8 @@ magic_happens_loop:
 	; draw hero
 	lda	#34
 	sta	HERO_X
+	lda	#20
+	sta	HERO_Y
 	jsr	draw_hero_and_sword
 
 	lda	ANIMATE_LOOP
@@ -1590,6 +1585,8 @@ magic_happens_loop:
 	; draw hero
 	lda	#34
 	sta	HERO_X
+	lda	#20
+	sta	HERO_Y
 	jsr	draw_hero_and_sword
 
 	; draw enemy
@@ -1635,99 +1632,188 @@ done_magic_damage:
 
 limit_break_drop:
 
-.if 0
-	int ax=34,ay=20;
-	int damage=100;
-	int i;
+	lda	#$99
+	sta	DAMAGE_VAL
 
-	while(ay>0) {
+	lda	#34
+	sta	HERO_X
+	lda	#20
+	sta	HERO_Y
 
-		gr_copy_to_current(0xc00);
+drop_jump_loop:
 
-		grsim_put_sprite(tfv_stand_left,ax,ay);
-		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+	; while(ay>0) {
 
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+	jsr	gr_copy_to_current
 
-		draw_battle_bottom(enemy_type);
+	jsr	draw_hero_and_sword
 
-		page_flip();
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
 
-		ay-=1;
+	jsr	draw_battle_bottom
 
-		usleep(20000);
-	}
+	jsr	page_flip
 
-	ax=10;
-	ay=0;
+	lda	#75
+	jsr	WAIT
 
-	; Falling */
+	; must be even
+	dec	HERO_Y
+	dec	HERO_Y
 
-	while(ay<=20) {
+	lda	HERO_Y
+	cmp	#$f6
+	bne	drop_jump_loop
 
-		gr_copy_to_current(0xc00);
 
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+	lda	#10
+	sta	HERO_X
 
-		grsim_put_sprite(tfv_stand_left,ax,ay);
-		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+	;===============
+	; Falling
 
-		draw_battle_bottom(enemy_type);
+drop_falling_loop:
+;	while(ay<=20) {
 
-		color_equals(13);
-		vlin(0,ay,ax-5);
+	jsr	gr_copy_to_current
 
-		page_flip();
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
 
-		ay+=1;
+	jsr	draw_hero_and_sword
 
-		usleep(100000);
-	}
+	jsr	draw_battle_bottom
 
-	i=0;
-	while(i<13) {
+	; draw line
+	; only if HERO_Y>0
+	lda	#$dd	; yellow
+	sta	COLOR
 
-		gr_copy_to_current(0xc00);
+	ldx	HERO_Y
+	bmi	done_drop_vlin
+	stx	V2
+	ldx	#0
 
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+	lda	HERO_X
+	sec
+	sbc	#5
+	tay
 
-		grsim_put_sprite(tfv_stand_left,ax,ay);
-		grsim_put_sprite(tfv_led_sword,ax-5,ay);
+	jsr	vlin	; X,V2 at Y vlin(0,ay,ax-5);
 
-		draw_battle_bottom(enemy_type);
+done_drop_vlin:
 
-		color_equals(COLOR_LIGHTGREEN);
-		vlin(ay,ay+i,ax-5);
+	jsr	page_flip
 
-		page_flip();
-		i++;
+	lda	#100
+	jsr	WAIT
 
-		usleep(100000);
-	}
+	inc	HERO_Y
+	inc	HERO_Y
+	lda	HERO_Y
+	cmp	#20
+	bne	drop_falling_loop
 
-	ax=34;
-	ay=20;
 
-	gr_copy_to_current(0xc00);
+	lda	#0
+	sta	ANIMATE_LOOP
 
-;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+more_drop_loop:
 
-	grsim_put_sprite(tfv_stand_left,ax,ay);
-	grsim_put_sprite(tfv_led_sword,ax-5,ay);
+	jsr	gr_copy_to_current
 
-	draw_battle_bottom(enemy_type);
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
 
-	color_equals(COLOR_LIGHTGREEN);
-	vlin(20,33,5);
+	jsr	draw_hero_and_sword
 
-	damage_enemy(damage);
-	gr_put_num(2,10,damage);
-	page_flip();
+	jsr	draw_battle_bottom
 
-	for(i=0;i<20;i++) {
-		usleep(100000);
-	}
-.endif
+	; draw cut line
+	lda	#$CC
+	sta	COLOR
+
+	lda	HERO_Y
+	clc
+	adc	ANIMATE_LOOP
+	sta	V2
+
+	ldx	HERO_Y
+
+	lda	HERO_X
+	sec
+	sbc	#5
+	tay
+
+	jsr	vlin	; x,v2 at Y vlin(ay,ay+i,ax-5);
+
+	jsr	page_flip
+
+	lda	#75
+	jsr	WAIT
+
+	inc	ANIMATE_LOOP
+	lda	ANIMATE_LOOP
+	cmp	#13
+	bne	more_drop_loop
+
+
+	jsr	gr_copy_to_current
+
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
+
+	; draw hero
+
+	jsr	draw_hero_and_sword
+
+	jsr	draw_battle_bottom
+
+	; slice
+	; FIXME: should this be ground color?
+
+	lda	#$cc	; lightgreen
+	sta	COLOR
+
+	ldx	#33
+	stx	V2
+	ldx	#20
+	lda	#5
+	tay
+
+	jsr	vlin	; x,v2 at Y
+
+	jsr	damage_enemy
+
+	lda	#2
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+	jsr	gr_put_num
+
+	jsr	page_flip
+
+	; wait 2s
+	ldx	#200
+	jsr	long_wait
+
 	rts
 
 	;=========================
@@ -1796,17 +1882,30 @@ limit_break_slice:
 
 ;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
+
+	; draw hero
+
+	jsr	draw_hero_and_sword
+
 	grsim_put_sprite(tfv_stand_left,tx,ty);
 	grsim_put_sprite(tfv_led_sword,tx-5,ty);
 
-	draw_battle_bottom(enemy_type);
-
-	page_flip();
-
-	for(i=0;i<20;i++) {
-		usleep(100000);
-	}
 .endif
+
+	jsr	draw_battle_bottom
+
+	jsr	page_flip
+
+	; wait 2s
+	ldx	#20
+	jsr	long_wait
+
 	rts
 
 	;=========================
@@ -1866,19 +1965,37 @@ limit_break_zap:
 
 ;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
+
+
+	; draw hero
+
+	jsr	draw_hero_and_sword
+
 	grsim_put_sprite(tfv_stand_left,tx,ty);
 	grsim_put_sprite(tfv_led_sword,tx-5,ty);
-
-	draw_battle_bottom(enemy_type);
-
-	damage_enemy(damage);
-	gr_put_num(2,10,damage);
-	page_flip();
-
-	for(i=0;i<20;i++) {
-		usleep(100000);
-	}
 .endif
+	jsr	draw_battle_bottom
+
+	jsr	damage_enemy
+
+	lda	#2
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+	jsr	gr_put_num
+
+	jsr	page_flip
+
+	; wait 2s
+	ldx	#20
+	jsr	long_wait
+
 	rts
 
 	;==========================
@@ -2479,13 +2596,13 @@ battle_actual_draw_enemy:
 	;============================
 	; draw hero and sword
 	;============================
-	; draws at HERO_X,#20
+	; draws at HERO_X,HERO_Y
 
 draw_hero_and_sword:
 
 	lda	HERO_X
 	sta	XPOS
-	lda	#20
+	lda	HERO_Y
 	sta	YPOS
 
 	lda	#<tfv_stand_left_sprite
@@ -2500,7 +2617,7 @@ draw_hero_and_sword:
 	sec
 	sbc	#5
 	sta	XPOS
-	lda	#20
+	lda	HERO_Y
 	sta	YPOS
 
 	lda	#<tfv_led_sword_sprite

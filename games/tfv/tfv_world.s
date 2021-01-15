@@ -41,6 +41,7 @@
 
 .include "gr_fast_clear.s"
 .include "gr_hlin.s"
+.include "gr_vlin.s"
 .include "gr_pageflip.s"
 .include "keyboard.s"
 .include "joystick.s"
