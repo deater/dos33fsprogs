@@ -1308,6 +1308,8 @@ victory_dance:
 
 	lda	#34
 	sta	HERO_X
+	lda	#20
+	sta	HERO_Y
 
 	; update XP and money
 
@@ -1337,57 +1339,15 @@ victory_dance_loop:
 	beq	victory_wave
 
 victory_stand:
-	lda	HERO_X
-	sta	XPOS
-	lda	#20
-	sta	YPOS
 
-	lda	#<tfv_stand_left_sprite
-	sta	INL
-	lda	#>tfv_stand_left_sprite
-	sta	INH
-	jsr	put_sprite_crop
-
-	lda	HERO_X
-	sec
-	sbc	#5
-	sta	XPOS
-	lda	#20
-	sta	YPOS
-
-	lda	#<tfv_led_sword_sprite
-	sta	INL
-	lda	#>tfv_led_sword_sprite
+	jsr	draw_hero_and_sword
 	jmp	victory_draw_done
 
 victory_wave:
 
-	lda	HERO_X
-	sta	XPOS
-	lda	#20
-	sta	YPOS
-
-	lda	#<tfv_victory_sprite
-	sta	INL
-	lda	#>tfv_victory_sprite
-	sta	INH
-	jsr	put_sprite_crop
-
-	lda	HERO_X
-	sec
-	sbc	#2
-	sta	XPOS
-	lda	#14
-	sta	YPOS
-
-	lda	#<tfv_led_sword_sprite
-	sta	INL
-	lda	#>tfv_led_sword_sprite
-
+	jsr	draw_hero_victory
 
 victory_draw_done:
-	sta	INH
-	jsr	put_sprite_crop
 
 	jsr	page_flip
 
@@ -1821,66 +1781,112 @@ more_drop_loop:
 	; Limit Break "Slice"
 	; Run up and slap a bunch with sword
 	; TODO: cause damage value to bounce around more?
+	; TODO: run up to slice, not slide in
 	;=========================
 	;=========================
 
 limit_break_slice:
-.if 0
 
-	int tx=34,ty=20;
-	int damage=5;
-	int i;
+	lda	#34
+	sta	HERO_X
+	lda	#20
+	sta	HERO_Y
 
-	while(tx>10) {
+	lda	#5
+	sta	DAMAGE_VAL
 
-		gr_copy_to_current(0xc00);
+slice_run_loop:
 
-		grsim_put_sprite(tfv_stand_left,tx,ty);
-		grsim_put_sprite(tfv_led_sword,tx-5,ty);
+	jsr	gr_copy_to_current
 
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+	jsr	draw_hero_and_sword
 
-		draw_battle_bottom(enemy_type);
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
 
-		page_flip();
+	jsr	draw_battle_bottom
 
-		tx-=1;
+	jsr	page_flip
 
-		usleep(20000);
-	}
+	lda	#50
+	jsr	WAIT
 
-	; Slicing */
-	for(i=0;i<20;i++) {
+	dec	HERO_X
+	lda	HERO_X
+	cmp	#10
+	bcs	slice_run_loop		; bge
 
-		gr_copy_to_current(0xc00);
+	;==================
+	; Slicing
 
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+	lda	#20
+	sta	ANIMATE_LOOP
+slicing_loop:
 
-		if (i&1) {
-			grsim_put_sprite(tfv_stand_left,tx,20);
-			grsim_put_sprite(tfv_led_sword,tx-5,20);
-		}
-		else {
-			grsim_put_sprite(tfv_victory,tx,20);
-			grsim_put_sprite(tfv_led_sword,tx-2,14);
-		}
+	jsr	gr_copy_to_current
 
-		damage_enemy(damage);
-;		gr_put_num(2+(i%2),10+((i%2)*2),damage);
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
 
-		draw_battle_bottom(enemy_type);
+	lda	ANIMATE_LOOP
+	and	#1
+	bne	slice_raised
 
-		page_flip();
+slice_down:
+	jsr	draw_hero_and_sword
 
-		usleep(100000);
-	}
+	jmp	done_slice_down
 
-	tx=34;
-	ty=20;
+slice_raised:
 
-	gr_copy_to_current(0xc00);
+	jsr	draw_hero_victory
 
-;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+done_slice_down:
+
+	jsr	damage_enemy
+
+	; gr_put_num(2+(i%2),10+((i%2)*2),damage);
+	lda	ANIMATE_LOOP
+	and	#$1
+	clc
+	adc	#2
+	sta	XPOS
+
+	lda	ANIMATE_LOOP
+	and	#$1
+	asl
+	clc
+	adc	#10
+	sta	YPOS
+
+	jsr	gr_put_num
+
+	jsr	draw_battle_bottom
+
+	jsr	page_flip
+
+	lda	#150
+	jsr	WAIT
+
+	dec	ANIMATE_LOOP
+	bne	slicing_loop
+
+
+
+	lda	#34
+	sta	HERO_X
+	lda	#20
+	sta	HERO_Y
+
+	jsr	gr_copy_to_current
 
 	; draw enemy
 	lda	ENEMY_X
@@ -1892,11 +1898,6 @@ limit_break_slice:
 	; draw hero
 
 	jsr	draw_hero_and_sword
-
-	grsim_put_sprite(tfv_stand_left,tx,ty);
-	grsim_put_sprite(tfv_led_sword,tx-5,ty);
-
-.endif
 
 	jsr	draw_battle_bottom
 
@@ -2591,6 +2592,40 @@ draw_enemy_smc2:
 battle_actual_draw_enemy:
 	sta	INH
 	jmp	put_sprite_crop		; tail call
+
+
+
+	;============================
+	; draw hero victory
+	;============================
+	; draws at HERO_X,HERO_Y
+
+draw_hero_victory:
+	lda	HERO_X
+	sta	XPOS
+	lda	HERO_Y
+	sta	YPOS
+
+	lda	#<tfv_victory_sprite
+	sta	INL
+	lda	#>tfv_victory_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+	lda	HERO_X
+	sec
+	sbc	#2
+	sta	XPOS
+	lda	#14
+	sta	YPOS
+
+	lda	#<tfv_led_sword_sprite
+	sta	INL
+	lda	#>tfv_led_sword_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+	rts
 
 
 	;============================
