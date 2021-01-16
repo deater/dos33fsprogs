@@ -1918,54 +1918,103 @@ done_slice_down:
 
 limit_break_zap:
 
-.if 0
-	int tx=34,ty=20;
-	int damage=100;
-	int i;
+
+	lda	#34
+	sta	HERO_X
+	lda	#20
+	sta	HERO_Y
+
+	lda	#$55
+	sta	DAMAGE_VAL
+
+	jsr	gr_copy_to_current
+
+	; Draw crossed line
+
+;	color_equals(COLOR_AQUA);
+	lda	#$ee
+	sta	COLOR
+
+;	vlin(12,24,34);
+
+	ldx	#12
+	lda	#24
+	sta	V2
+	ldy	#34
+
+	jsr	vlin	; X, V2 at Y
+
+;	hlin_double(ram[DRAW_PAGE],28,38,18);
+
+	lda	#38
+	sta	V2
+	lda	#18
+	ldy	#28
+	jsr	hlin_double	; Y, V2 AT A
+
+	; Sword in air
+	jsr	draw_hero_victory
+
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
+
+	jsr	draw_battle_bottom
+
+	jsr	page_flip
+
+	; pause 0.5s
+	ldx	#50
+	jsr	long_wait
 
 
-	gr_copy_to_current(0xc00);
 
-	; Draw background */
-	color_equals(COLOR_AQUA);
-	vlin(12,24,34);
-	hlin_double(ram[DRAW_PAGE],28,38,18);
+	lda	#32
+	sta	ANIMATE_LOOP
 
-	; Sword in air */
-	grsim_put_sprite(tfv_victory,tx,20);
-	grsim_put_sprite(tfv_led_sword,tx-2,14);
+zap_loop:
+	jsr	gr_copy_to_current
 
-;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
 
-	draw_battle_bottom(enemy_type);
+	; rotate color
+;	color_equals(i%16);
+;	hlin_double(ram[DRAW_PAGE],5,30,22);
 
-	page_flip();
+	lda	ANIMATE_LOOP
+	jsr	SETCOL		; set color masked * 17
 
-	usleep(500000);
+	lda	#30
+	sta	V2
+	lda	#22
+	ldy	#5
+	jsr	hlin_double	; Y, V2 AT A
 
-	for(i=0;i<32;i++) {
+	jsr	draw_hero_and_sword
 
-		gr_copy_to_current(0xc00);
+	jsr	draw_battle_bottom
 
-;		grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
+	jsr	page_flip
 
-		color_equals(i%16);
-		hlin_double(ram[DRAW_PAGE],5,30,22);
+	lda	#75
+	jsr	WAIT
 
-		grsim_put_sprite(tfv_stand_left,tx,ty);
-		grsim_put_sprite(tfv_led_sword,tx-5,ty);
+	dec	ANIMATE_LOOP
+	bne	zap_loop
 
-		draw_battle_bottom(enemy_type);
 
-		page_flip();
 
-		usleep(100000);
-	}
+	jsr	gr_copy_to_current
 
-	gr_copy_to_current(0xc00);
-
-;	grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
-
+	; grsim_put_sprite(enemies[enemy_type].sprite,enemy_x,20);
 	; draw enemy
 	lda	ENEMY_X
 	sta	XPOS
@@ -1978,9 +2027,6 @@ limit_break_zap:
 
 	jsr	draw_hero_and_sword
 
-	grsim_put_sprite(tfv_stand_left,tx,ty);
-	grsim_put_sprite(tfv_led_sword,tx-5,ty);
-.endif
 	jsr	draw_battle_bottom
 
 	jsr	damage_enemy
@@ -1994,7 +2040,7 @@ limit_break_zap:
 	jsr	page_flip
 
 	; wait 2s
-	ldx	#20
+	ldx	#200
 	jsr	long_wait
 
 	rts
