@@ -208,7 +208,7 @@ magic_happens_loop:
 	jmp	done_magic_damage
 
 was_heal_magic:
-	jsr	heal_self
+	jsr	heal_hero
 done_magic_damage:
 
 	jsr	draw_battle_bottom

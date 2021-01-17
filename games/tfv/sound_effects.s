@@ -47,6 +47,27 @@ done_menu_error_noise:
 	rts
 
 
+	;======================
+	; noise when battle counter ready
+menu_ready_noise:
+
+	lda	SOUND_STATUS
+	bmi	done_menu_ready_noise
+
+	lda	#NOTE_A4
+	sta	speaker_frequency
+	lda	#5
+	sta	speaker_duration
+	jsr	speaker_tone
+
+	lda	#NOTE_A5
+	sta	speaker_frequency
+	lda	#5
+	sta	speaker_duration
+	jsr	speaker_tone
+
+done_menu_ready_noise:
+	rts
 
 
 	;======================

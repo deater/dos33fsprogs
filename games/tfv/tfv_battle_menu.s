@@ -1,44 +1,56 @@
-
+;
+;	draw the bottom status/battle bar
+;	and associated menus
+;
 
 
 	;========================
 	; draw_battle_bottom
 	;========================
 
-; static int draw_battle_bottom(int enemy_type) {
 draw_battle_bottom:
 
 	jsr	clear_bottom
 
 	jsr	normal_text
 
-	; print(enemies[enemy_type].name);
+	;=========================
+	; print current enemy name
+
 	lda	#<battle_enemy_string
 	sta	OUTL
 	lda	#>battle_enemy_string
 	sta	OUTH
 	jsr	move_and_print
 
+	;===========================
+	; print current enemy attack
+	; only if attacking
 
 ;	if (enemy_attacking) {
 ;		print_inverse(enemies[enemy_type].attack_name);
 ;	}
 
-	; print name string
+	;=======================
+	; print hero name string
+
 	lda	#<battle_name_string
 	sta	OUTL
 	lda	#>battle_name_string
 	sta	OUTH
 	jsr	move_and_print
 
-;	if (susie_out) {
-;		vtab(23);
-;		htab(15);
-;		move_cursor();
-;		print("SUSIE");
-;	}
+	;=============================
+	; print susie name if in party
+
+	; if (susie_out) {
+	;	vtab(23);
+	;	htab(15);
+	;	move_cursor();
+	;	print("SUSIE");
 
 
+	;========================
 	; jump to current menu
 
 	; set up jump table fakery
@@ -65,6 +77,9 @@ battle_menu_jump_table_h:
 	.byte	>(draw_battle_menu_limit-1)
 
 
+	;=============================
+	; just draw stats, not menu
+	;=============================
 draw_battle_menu_none:
 	;======================
 	; TFV Stats
@@ -122,37 +137,29 @@ plain_limit:
 
 	jsr	draw_bargraph
 
-;	; Susie Stats
-;	if (susie_out) {
-;	vtab(23);
-;	htab(24);
-;	move_cursor();
-;	print_byte(255);
-;
-;	vtab(23);
-;	htab(27);
-;	move_cursor();
-;	print_byte(0);
-;
-;	; Draw Time bargraph
-;	ram[COLOR]=0xa0;
-;	hlin_double(ram[DRAW_PAGE],30,34,42);
-;	ram[COLOR]=0x20;
-;	if (battle_bar) {
-;		hlin_double(ram[DRAW_PAGE],30,30+(battle_bar-1),42);
-;	}
-;
-;	; Draw Limit break bargraph
-;	ram[COLOR]=0xa0;
-;	hlin_double(ram[DRAW_PAGE],35,39,42);
-;
-;	ram[COLOR]=0x20;
-;	if (limit) hlin_double(ram[DRAW_PAGE],35,35+limit,42);
+	;========================
+	; draw susie stats if in party
+
+	; Susie Stats
+	;if (susie_out) {
+	;	vtab(23);
+	;	htab(24);
+	;	move_cursor();
+	;	print_byte(255);
+	;	vtab(23);
+	;	htab(27);
+	;	move_cursor();
+	;	print_byte(0);
+	;
+	;	Draw Time bargraph
+	;	Draw Limit break bargraph
 
 	jmp	done_draw_battle_menu
 
+
 	;======================
 	; draw main battle menu
+	;======================
 draw_battle_menu_main:
 
 	; wrap location
@@ -235,12 +242,14 @@ print_menu_limit:
 	jsr	move_and_print
 	jsr	normal_text
 
-
 done_battle_draw_menu_main:
 	jmp	done_draw_battle_menu
 
+
 	;=========================
-	; menu summon
+	; draw summon menu
+	;=========================
+
 draw_battle_menu_summon:
 
 	lda	#<battle_menu_summons
@@ -274,8 +283,10 @@ print_menu_vortex:
 
 	jmp	done_draw_battle_menu
 
+
 	;=======================
-	; menu magic
+	; draw magic menu
+	;=======================
 draw_battle_menu_magic:
 
 	lda	#<battle_menu_magic
@@ -331,8 +342,10 @@ print_menu_malaise:
 
 	jmp	done_draw_battle_menu
 
+
 	;===============================
-	; menu limit
+	; draw limit break menu
+	;===============================
 
 draw_battle_menu_limit:
 
@@ -374,6 +387,9 @@ print_menu_zap:
 	jsr	normal_text
 
 
+	;============================
+	; tidy up after drawing menu
+	;============================
 
 done_draw_battle_menu:
 
@@ -401,6 +417,7 @@ draw_separator_page1:
 done_draw_separator:
 
 	rts
+
 
 
         ;===========================
@@ -447,6 +464,7 @@ done_bar:
 	;=========================
 	; battle menu keypress
 	;=========================
+	; FIXME: help, toggle-sound?
 
 battle_menu_keypress:
 
@@ -464,10 +482,13 @@ battle_menu_keypress:
 
 	cmp	#' '
 	beq	keypress_action
-	cmp	#13
+	cmp	#13		; return key
 	beq	keypress_action
 
 	rts
+
+	;=====================
+	; pressed escape
 
 keypress_escape:
 	lda	#MENU_MAIN
@@ -528,9 +549,14 @@ done_keypress_left:
 	jsr	menu_move_noise
 	rts
 
+	;===================
+	; pressed action key
+
 keypress_action:
 
 	jsr	menu_move_noise
+
+	; handle action based on current menu
 
 	lda	MENU_STATE
 	cmp	#MENU_MAIN
@@ -542,6 +568,9 @@ keypress_action:
 	cmp	#MENU_SUMMON
 	beq	keypress_summon_action
 
+
+	;============================
+	; handle action on main menu
 keypress_main_action:
 	lda	MENU_POSITION
 	cmp	#MENU_MAIN_ATTACK
@@ -611,6 +640,23 @@ keypress_summon_action:
 	jsr	done_attack
 
 	rts
+
+
+
+	;=============================
+	; done attack
+	;=============================
+
+done_attack:
+	lda	#0
+	sta	BATTLE_COUNT
+
+	lda	#MENU_NONE
+	sta	MENU_STATE
+
+	rts
+
+
 
 
 ;=========================

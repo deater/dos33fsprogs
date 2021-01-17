@@ -45,13 +45,13 @@
 .include "gr_pageflip.s"
 .include "keyboard.s"
 .include "joystick.s"
-;.include "gr_putsprite.s"
 .include "gr_putsprite_crop.s"
 .include "text_print.s"
 .include "gr_copy.s"
 .include "decompress_fast_v2.s"
 .include "gr_offsets.s"
 .include "wait_keypressed.s"
+.include "long_wait.s"
 
 ;===============================================
 ; Battle
@@ -64,6 +64,7 @@
 .include "tfv_battle_limit.s"
 .include "tfv_battle_summons.s"
 .include "tfv_battle_boss.s"
+.include "tfv_battle_draw_hero.s"
 
 .include "rotate_intro.s"
 
