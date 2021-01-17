@@ -53,7 +53,12 @@
 .include "gr_offsets.s"
 .include "wait_keypressed.s"
 
+;===============================================
+; Battle
+;===============================================
+
 .include "tfv_battle.s"
+.include "tfv_battle_menu.s"
 .include "rotate_intro.s"
 
 ;===============================================
@@ -64,3 +69,9 @@
 .include "battle_sprites.inc"
 .include "number_sprites.inc"
 .include "graphics_map/tfv_backgrounds.inc"
+
+;===============================================
+; Sound
+;===============================================
+.include "sound_effects.s"
+.include "speaker_tone.s"
