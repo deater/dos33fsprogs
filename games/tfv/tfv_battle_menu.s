@@ -1,49 +1,5 @@
 
-battle_enemy_string:
-.byte 0,21,"KILLER CRAB",0
-battle_enemy_attack_string:
-.byte 1,23,"PINCHING",0
 
-battle_name_string:
-.byte 14,21,"DEATER",0
-
-battle_menu_none:
-	.byte 24,20,"HP",0
-	.byte 27,20,"MP",0
-	.byte 30,20,"TIME",0
-	.byte 35,20,"LIMIT",0
-hp_string:
-	.byte 23,21,"100",0
-mp_string:
-	.byte 26,21," 50",0
-
-
-battle_menu_main:
-	.byte 23,20,"ATTACK",0
-	.byte 23,21,"MAGIC",0
-	.byte 23,22,"SUMMON",0
-	.byte 31,20,"SKIP",0
-	.byte 31,21,"ESCAPE",0
-	.byte 31,22,"LIMIT",0
-
-battle_menu_summons:
-	.byte 23,20,"SUMMONS:",0
-	.byte 24,21,"METROCAT",0	; 0
-	.byte 24,22,"VORTEXCN",0	; 1
-
-battle_menu_magic:
-	.byte 23,20,"MAGIC:",0
-	.byte 24,21,"HEAL",0		; 0
-	.byte 24,22,"ICE",0		; 2
-	.byte 24,23,"BOLT",0		; 4
-	.byte 31,21,"FIRE",0		; 1
-	.byte 31,22,"MALAISE",0		; 3
-
-battle_menu_limit:
-	.byte 23,20,"LIMIT BREAKS:",0
-	.byte 24,21,"SLICE",0		; 0
-	.byte 24,22,"DROP",0		; 2
-	.byte 31,21,"ZAP",0		; 1
 
 	;========================
 	; draw_battle_bottom
@@ -518,7 +474,13 @@ keypress_escape:
 	sta	MENU_STATE
 	lda	#0
 	sta	MENU_POSITION
+
+	jsr	menu_escape_noise
+
 	rts
+
+	;==================
+	; pressed up
 
 keypress_up:
 	lda	MENU_STATE
@@ -538,25 +500,37 @@ up_the_rest:
 up_dec_menu:
 	dec	MENU_POSITION
 done_keypress_up:
+	jsr	menu_move_noise
 	rts
 
+	;=============
+	; pressed down
 keypress_down:
 	inc	MENU_POSITION
 	inc	MENU_POSITION
+	jsr	menu_move_noise
 	rts
 
+	;=============
+	; pressed right
 keypress_right:
 	inc	MENU_POSITION
+	jsr	menu_move_noise
 	rts
 
+	;=============
+	; pressed left
 keypress_left:
 	lda	MENU_POSITION
 	beq	done_keypress_left
 	dec	MENU_POSITION
 done_keypress_left:
+	jsr	menu_move_noise
 	rts
 
 keypress_action:
+
+	jsr	menu_move_noise
 
 	lda	MENU_STATE
 	cmp	#MENU_MAIN
@@ -638,3 +612,66 @@ keypress_summon_action:
 
 	rts
 
+
+;=========================
+; menu strings
+;=========================
+
+; current enemy name to print
+
+battle_enemy_string:
+.byte 0,21,"KILLER CRAB",0
+battle_enemy_attack_string:
+.byte 1,23,"PINCHING",0
+
+; current hero name to print
+
+battle_name_string:
+.byte 14,21,"DEATER",0
+
+; menu status strings
+
+battle_menu_none:
+	.byte 24,20,"HP",0
+	.byte 27,20,"MP",0
+	.byte 30,20,"TIME",0
+	.byte 35,20,"LIMIT",0
+hp_string:
+	.byte 23,21,"100",0
+mp_string:
+	.byte 26,21," 50",0
+
+; main menu strings
+
+battle_menu_main:
+	.byte 23,20,"ATTACK",0
+	.byte 23,21,"MAGIC",0
+	.byte 23,22,"SUMMON",0
+	.byte 31,20,"SKIP",0
+	.byte 31,21,"ESCAPE",0
+	.byte 31,22,"LIMIT",0
+
+; summons menu strings
+
+battle_menu_summons:
+	.byte 23,20,"SUMMONS:",0
+	.byte 24,21,"METROCAT",0	; 0
+	.byte 24,22,"VORTEXCN",0	; 1
+
+; magic menu strings
+
+battle_menu_magic:
+	.byte 23,20,"MAGIC:",0
+	.byte 24,21,"HEAL",0		; 0
+	.byte 24,22,"ICE",0		; 2
+	.byte 24,23,"BOLT",0		; 4
+	.byte 31,21,"FIRE",0		; 1
+	.byte 31,22,"MALAISE",0		; 3
+
+; limit menu strings
+
+battle_menu_limit:
+	.byte 23,20,"LIMIT BREAKS:",0
+	.byte 24,21,"SLICE",0		; 0
+	.byte 24,22,"DROP",0		; 2
+	.byte 31,21,"ZAP",0		; 1

@@ -1,18 +1,52 @@
 	;======================
 	; noise when move menu
-menu_noise:
+menu_move_noise:
 
 	lda	SOUND_STATUS
-	bmi	done_menu_noise
+	bmi	done_menu_move_noise
 
 	lda	#NOTE_C4
 	sta	speaker_frequency
-	lda	#25
+	lda	#10
 	sta	speaker_duration
 	jsr	speaker_tone
 
-done_menu_noise:
+done_menu_move_noise:
 	rts
+
+	;======================
+	; noise when hit escape in menu
+menu_escape_noise:
+
+	lda	SOUND_STATUS
+	bmi	done_menu_escape_noise
+
+	lda	#NOTE_C5
+	sta	speaker_frequency
+	lda	#10
+	sta	speaker_duration
+	jsr	speaker_tone
+
+done_menu_escape_noise:
+	rts
+
+	;======================
+	; noise when error in menu
+menu_error_noise:
+
+	lda	SOUND_STATUS
+	bmi	done_menu_error_noise
+
+	lda	#NOTE_D3
+	sta	speaker_frequency
+	lda	#10
+	sta	speaker_duration
+	jsr	speaker_tone
+
+done_menu_error_noise:
+	rts
+
+
 
 
 	;======================
