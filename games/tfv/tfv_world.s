@@ -60,6 +60,9 @@
 .include "tfv_battle.s"
 .include "tfv_battle_menu.s"
 .include "tfv_battle_limit.s"
+.include "tfv_battle_summons.s"
+.include "tfv_battle_boss.s"
+
 .include "rotate_intro.s"
 
 ;===============================================

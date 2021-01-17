@@ -76,7 +76,8 @@ TFV_WORLD:	tfv_world.o
 
 tfv_world.o:	tfv_world.s zp.inc \
 	tfv_overworld.s tfv_drawmap.s \
-	tfv_battle.s tfv_battle_menu.s tfv_battle_limit.s \
+	tfv_battle.s tfv_battle_menu.s tfv_battle_limit.s tfv_battle_summons.s \
+	tfv_battle_boss.s \
 	help_overworld.s rotate_intro.s \
 	sound_effects.s speaker_tone.s \
 	graphics_map/tfv_backgrounds.inc \
