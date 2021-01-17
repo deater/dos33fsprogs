@@ -675,3 +675,26 @@ battle_menu_limit:
 	.byte 24,21,"SLICE",0		; 0
 	.byte 24,22,"DROP",0		; 2
 	.byte 31,21,"ZAP",0		; 1
+;
+;                       ATTACK    SKIP
+;                      MAGIC     LIMIT
+;		       SUMMON    ESCAPE
+;
+;		SUMMONS -> METROCAT VORTEXCN
+;		MAGIC   ->  HEAL    FIRE
+;                           ICE     MALAISE
+;			    BOLT
+;		LIMIT	->  SLICE   ZAP
+;                           DROP
+;
+;	State Machine
+;
+;		time
+;	BOTTOM -------> MAIN_MENU ----->ATTACK
+;				------->SKIP
+;				------->MAGIC_MENU
+;				------->LIMIT_MENU
+;				------->SUMMON_MENU
+;				------->ESCAPE
+;
+;

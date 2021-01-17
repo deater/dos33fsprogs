@@ -59,6 +59,7 @@
 
 .include "tfv_battle.s"
 .include "tfv_battle_menu.s"
+.include "tfv_battle_enemy.s"
 .include "tfv_battle_magic.s"
 .include "tfv_battle_limit.s"
 .include "tfv_battle_summons.s"
