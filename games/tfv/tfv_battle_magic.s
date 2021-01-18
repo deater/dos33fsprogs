@@ -10,7 +10,9 @@ magic_attack:
 	sta	HERO_X
 
 	lda	#$15
-	sta	DAMAGE_VAL
+	sta	DAMAGE_VAL_LO
+	lda	#$00
+	sta	DAMAGE_VAL_HI
 
 	lda	MAGIC_TYPE
 	cmp	#MENU_MAGIC_HEAL

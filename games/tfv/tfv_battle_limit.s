@@ -10,7 +10,9 @@
 limit_break_drop:
 
 	lda	#$99
-	sta	DAMAGE_VAL
+	sta	DAMAGE_VAL_LO
+	lda	#$00
+	sta	DAMAGE_VAL_HI
 
 	lda	#34
 	sta	HERO_X
@@ -210,7 +212,9 @@ limit_break_slice:
 	sta	HERO_Y
 
 	lda	#5
-	sta	DAMAGE_VAL
+	sta	DAMAGE_VAL_LO
+	lda	#0
+	sta	DAMAGE_VAL_HI
 
 slice_run_loop:
 
@@ -342,7 +346,9 @@ limit_break_zap:
 	sta	HERO_Y
 
 	lda	#$55
-	sta	DAMAGE_VAL
+	sta	DAMAGE_VAL_LO
+	lda	#$00
+	sta	DAMAGE_VAL_HI
 
 	jsr	gr_copy_to_current
 

@@ -112,13 +112,17 @@ main_battle_loop:
 	;========================================
 	; draw our hero
 
-	lda	HERO_HP
-	beq	battle_draw_hero_down
+	; check if hero deal
+	lda	HERO_HP_HI
+	bne	hero_not_dead		; hitpoint hi not zero
+	lda	HERO_HP_LO
+	beq	battle_draw_hero_down	; hitpoint hi && lo zero
 
+	; not dead, so draw running or standing
+hero_not_dead:
 	lda	HERO_STATE
 	and	#HERO_STATE_RUNNING
 	bne	battle_draw_hero_running
-
 	jmp	battle_draw_normal_hero
 
 battle_draw_hero_down:
@@ -194,7 +198,9 @@ battle_done_draw_enemy:
 	;=======================================
 	; handle if dead
 
-	lda	HERO_HP
+	lda	HERO_HP_HI
+	bne	done_battle_handle_dead
+	lda	HERO_HP_LO
 	bne	done_battle_handle_dead
 
 	; pause for 1.5s
@@ -296,7 +302,9 @@ done_battle_count:
 	;========================
 	; check enemy defeated
 
-	lda	ENEMY_HP
+	lda	ENEMY_HP_HI
+	bne	end_battle_loop
+	lda	ENEMY_HP_LO
 	bne	end_battle_loop
 
 	jsr	victory_dance
@@ -324,33 +332,57 @@ battle_game_over:
 ;**  **    **    **          **      **      **  **  **    **    **  **      **
 ;******  ******  ******  ****        **  ****    ******    **    ******      **
 
+gr_put_num_leading_zero:	.byte	$00
+
 	;===========================
 	; gr put num
 	;===========================
-	; damage in DAMAGE_VAL (BCD)
+	; damage in DAMAGE_VAL_LO/HI (BCD)
 	; location in XPOS,YPOS
 
 gr_put_num:
+	lda	#1
+	sta	gr_put_num_leading_zero
 
+	; put high digit first
+	lda	DAMAGE_VAL_HI
+	beq	gr_put_num_bottom_byte
+	jsr	gr_put_num_byte
+gr_put_num_bottom_byte:
+	lda	DAMAGE_VAL_LO
+	; fallthrough
 
-;	digit=number/100;
-;	if ((digit) && (digit<10)) {
-;		grsim_put_sprite(numbers[digit],xt,yy);
-;		xt+=4;
-;	}
-;	hundreds=digit;
-;	left=number%100;
+	;=================================
+	; print two-digit BCD number in A
+gr_put_num_byte:
+	pha				; store on stack
 
 gr_put_num_tens:
+
+	and	#$f0
+	bne	gr_put_num_print_tens
+
+	; was zero, check if we should print
+
+	lda	gr_put_num_leading_zero	; if 1, we skip
+	bne	gr_put_num_ones
+
+	pla	; restore value
+	pha
+
+gr_put_num_print_tens:
+
+	; we were non-zero, notify leading zero
+	ldy	#0
+	sty	gr_put_num_leading_zero
+
+
 	; print tens digit
-	lda	DAMAGE_VAL
 	lsr
 	lsr
 	lsr
 	lsr
 
-	; leading zero suppression
-	beq	gr_put_num_ones
 
 	asl
 	tay
@@ -369,8 +401,8 @@ gr_put_num_tens:
 
 gr_put_num_ones:
 
-	; print tens digit
-	lda	DAMAGE_VAL
+	; print ones digit
+	pla
 	and	#$f
 
 	asl

@@ -125,12 +125,15 @@ title_new_game:
 title_load_game:
 
 	; this should go in new game, not load
-	lda	#200
-	sta	HERO_HP_MAX
-	lda	#200
-	sta	HERO_HP
-	lda	#100
+	lda	#$02
+	sta	HERO_LEVEL
+
+	lda	#$01
+	sta	HERO_HP_HI
+	lda	#$50
+	sta	HERO_HP_LO
 	sta	HERO_MP
+	sta	HERO_MP_MAX
 
 	lda	#LOAD_FLYING
 	sta	WHICH_LOAD

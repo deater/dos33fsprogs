@@ -6,7 +6,9 @@
 summon_metrocat:
 
 	lda	#$17
-	sta	DAMAGE_VAL
+	sta	DAMAGE_VAL_LO
+	lda	#$00
+	sta	DAMAGE_VAL_HI
 
 	lda	#28
 	sta	MAGIC_X
@@ -199,7 +201,9 @@ metrocat_damage_loop:
 summon_vortex_cannon:
 
 	lda	#5
-	sta	DAMAGE_VAL
+	sta	DAMAGE_VAL_LO
+	lda	#0
+	sta	DAMAGE_VAL_HI
 
 	lda	#20
 	sta	MAGIC_X

@@ -63,8 +63,13 @@ init_enemy:
 	sta	ENEMY_TYPE
 	sta	ENEMY_X
 
-	lda	#$30		; BCD
-	sta	ENEMY_HP
+	lda	#$50		; BCD
+	sta	ENEMY_HP_LO
+	lda	#$00		; BCD
+	sta	ENEMY_HP_HI
+
+	lda	#$1		; max HP is 100
+	sta	ENEMY_LEVEL
 
 	lda	#30
 	sta	ENEMY_COUNT
@@ -165,28 +170,41 @@ init_enemy:
 	;=========================
 	; damage enemy
 	;=========================
-	; amount to damage in DAMAGE_VAL
+	; amount to damage in DAMAGE_VAL_LO/HI (BCD)
 damage_enemy:
-	lda	DAMAGE_VAL
-	cmp	ENEMY_HP
-	bcs	damage_enemy_too_much		; bge
 
-	; enemy hp is BCD
-	sed
+	; see if damage < enemy_hp, if so fine to subtract
+	; if not, set enemy_hp to zero
 
-	sec
-	lda	ENEMY_HP
-	sbc	DAMAGE_VAL
-
-	cld
-
-	jmp	damage_enemy_update
+	; 16 bit unsigned compare
+	lda	DAMAGE_VAL_HI	; compare high bytes
+	cmp	ENEMY_HP_HI
+	bcc	damage_enemy_subtract	; if damage_hi<hp_hi then less
+	bne	damage_enemy_too_much	; if damage_hi<>hp_hi then bigger
+	lda	DAMAGE_VAL_LO		; compare low bytes
+	cmp	ENEMY_HP_LO
+	bcc	damage_enemy_subtract	; then damage_hi<hp_hi
 
 damage_enemy_too_much:
 	lda	#0
+	sta	ENEMY_HP_HI
+	sta	ENEMY_HP_LO
+	jmp	damage_enemy_done
 
-damage_enemy_update:
-	sta	ENEMY_HP
+damage_enemy_subtract:
+
+	sed
+	sec
+	lda	ENEMY_HP_LO
+	sbc	DAMAGE_VAL_LO
+	sta	ENEMY_HP_LO
+
+	lda	ENEMY_HP_HI
+	sbc	DAMAGE_VAL_HI
+	sta	ENEMY_HP_HI
+	cld
+
+damage_enemy_done:
 
 	rts
 

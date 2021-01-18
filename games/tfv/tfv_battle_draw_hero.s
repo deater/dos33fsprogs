@@ -97,45 +97,67 @@ draw_hero_and_sword:
 	;===================
 	; heal hero
 	;===================
-	; heal amount in DAMAGE_VAL (yes, I know)
+	; heal amount in DAMAGE_VAL_LO/DAMAGE_VAL_HI (yes, I know)
 
 heal_hero:
+	sed
 	clc
-	lda	HERO_HP
-	adc	DAMAGE_VAL
 
-	; check if HP went down, if so we wrapped
+	lda	HERO_HP_LO
+	adc	DAMAGE_VAL_LO
+	sta	HERO_HP_LO
+	lda	HERO_HP_HI
+	adc	DAMAGE_VAL_HI
+	sta	HERO_HP_HI
+	cld
 
-	cmp	HERO_HP
-	bcc	heal_self_max	; blt
-	bcs	heal_self_update
+	; see if new HP is too high
+	lda	HERO_HP_HI
+	cmp	HERO_LEVEL
+	bcc	health_is_good	; if hp_h < max_h then hp_total < max_total
+	bne	health_too_high	; if hp_h <> max_h, then hp_total > max_total
+	lda	HERO_HP_LO	; compare low bytes
+	cmp	#0
+	bcc	health_is_good	; if hp_l < max_l then hp_total < max_total
 
-heal_self_max:
-	lda	HERO_HP_MAX
-
-heal_self_update:
-	sta	HERO_HP
+health_too_high:
+	lda	HERO_LEVEL
+	sta	HERO_HP_HI
+	lda	#0
+	sta	HERO_HP_LO
+health_is_good:
 
 	rts
 
 	;========================
 	; damage hero
 	;========================
-	; value in DAMAGE_VAL
+	; value in DAMAGE_VAL_LO/HI
 damage_hero:
-	lda	DAMAGE_VAL
-	cmp	HERO_HP
-	bcs	damage_hero_too_much		; bge
-
-	sec
-	lda	HERO_HP
-	sbc	DAMAGE_VAL
-	jmp	damage_hero_update
+	lda	DAMAGE_VAL_HI	; compare high bytes
+	cmp	HERO_HP_HI
+	bcc	damage_hero_do_sub	; if damage_hi<hp_hi then subtract
+	bne	damage_hero_too_much	; if damage_hi<>hp_hi then too hi
+	lda	DAMAGE_VAL_LO		; compare low bytes
+	cmp	HERO_HP_LO
+	bcc	damage_hero_do_sub	; if damage_lo<hp_lo then damage<hp
 
 damage_hero_too_much:
 	lda	#0
+	sta	HERO_HP_HI
+	sta	HERO_HP_LO
+	beq	damage_hero_done	; bra
 
-damage_hero_update:
-	sta	HERO_HP
+damage_hero_do_sub:
+	sed
+	sec
+	lda	HERO_HP_LO
+	sbc	DAMAGE_VAL_LO
+	sta	HERO_HP_LO
+	lda	HERO_HP_HI
+	sbc	DAMAGE_VAL_HI
+	sta	HERO_HP_HI
+	cld
 
+damage_hero_done:
 	rts

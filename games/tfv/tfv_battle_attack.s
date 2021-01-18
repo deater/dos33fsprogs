@@ -6,8 +6,11 @@ attack:
 	lda	#34
 	sta	HERO_X
 
+	lda	#$00
+	sta	DAMAGE_VAL_HI
 	lda	#$10
-	sta	DAMAGE_VAL
+	sta	DAMAGE_VAL_LO
+
 
 attack_loop:
 

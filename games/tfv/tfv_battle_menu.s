@@ -532,20 +532,23 @@ finger_escape:
 	lda	MENU_STATE
 	and	#$7f
 	sta	MENU_STATE
-
+	jsr	menu_escape_noise
 	rts
 
 finger_left:
+	jsr	menu_move_noise
 	lda	#1
 	sta	FINGER_DIRECTION
 	rts
 
 finger_right:
+	jsr	menu_move_noise
 	lda	#0h
 	sta	FINGER_DIRECTION
 	rts
 
 finger_action:
+	jsr	menu_move_noise
 	lda	MENU_SUBMENU
 
 	cmp	#MENU_MAIN_ATTACK
@@ -810,6 +813,9 @@ done_attack:
 
 	lda	#MENU_NONE
 	sta	MENU_STATE
+
+	lda	#34
+	sta	HERO_X
 
 	rts
 
