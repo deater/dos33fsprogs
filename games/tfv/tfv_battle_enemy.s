@@ -62,6 +62,7 @@ init_enemy:
 	lda	#0		 ; hardcode crab for now
 	sta	ENEMY_TYPE
 	sta	ENEMY_X
+	sta	ENEMY_DEAD
 
 	lda	#$50		; BCD
 	sta	ENEMY_HP_LO
@@ -277,9 +278,16 @@ draw_enemy_smc1:
 	sta	INL
 draw_enemy_smc2:
 	lda	#$a5
-
-battle_actual_draw_enemy:
 	sta	INH
+
+	lda	ENEMY_DEAD
+	beq	draw_enemy_alive
+
+	lda	#$99
+	sta	COLOR
+	jmp	put_sprite_mask
+
+draw_enemy_alive:
 	jmp	put_sprite_crop		; tail call
 
 

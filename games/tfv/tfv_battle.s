@@ -8,19 +8,24 @@
 
 do_battle:
 
+	; set start position
 	lda	#34
 	sta	HERO_X
 	lda	#20
 	sta	HERO_Y
 
+	; reset state
 	lda	#0
 	sta	HERO_STATE
 	sta	MENU_STATE
 	sta	MENU_POSITION
+	sta	ENEMY_DEAD
 
+	; FIXME: set limit break
 	lda	#3
 	sta	HERO_LIMIT
 
+	; start battle count part-way in
 	lda	#20
 	sta	BATTLE_COUNT
 
@@ -228,8 +233,8 @@ done_battle_handle_dead:
 	;========================================
 	; delay for framerate
 
-;	lda	#10
-;	jsr	WAIT
+	lda	#20
+	jsr	WAIT
 
 
 
@@ -307,13 +312,27 @@ done_battle_count:
 	;========================
 	; check enemy defeated
 
+	; if enemy_hp zero and enemy dead < 10
+	lda	ENEMY_DEAD
+	beq	battle_enemy_is_not_dead_yet
+
+battle_enemy_is_dead:
+	inc	ENEMY_DEAD
+	lda	ENEMY_DEAD
+	cmp	#15
+	bne	end_battle_loop
+
+	jsr	victory_dance
+	jmp	done_battle
+
+battle_enemy_is_not_dead_yet:
 	lda	ENEMY_HP_HI
 	bne	end_battle_loop
 	lda	ENEMY_HP_LO
 	bne	end_battle_loop
 
-	jsr	victory_dance
-	jmp	done_battle
+	; make enemy dead
+	inc	ENEMY_DEAD
 
 
 end_battle_loop:
