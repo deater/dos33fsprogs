@@ -58,6 +58,28 @@ draw_hero_down:
 	jmp	put_sprite_crop		; tail call
 
 
+
+	;============================
+	; draw hero walk and sword
+	;============================
+	; draws at HERO_X,HERO_Y
+
+draw_hero_walk_and_sword:
+
+	lda	HERO_X
+	sta	XPOS
+	lda	HERO_Y
+	sta	YPOS
+
+	lda	#<tfv_walk_left_sprite
+	sta	INL
+	lda	#>tfv_walk_left_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	jmp	draw_hero_sword
+
 	;============================
 	; draw hero and sword
 	;============================
@@ -77,6 +99,7 @@ draw_hero_and_sword:
 
 	jsr	put_sprite_crop
 
+draw_hero_sword:
 	; grsim_put_sprite(tfv_led_sword,ax-5,20);
 	lda	HERO_X
 	sec

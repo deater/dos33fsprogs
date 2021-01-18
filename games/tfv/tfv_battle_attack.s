@@ -5,6 +5,8 @@
 attack:
 	lda	#34
 	sta	HERO_X
+	lda	#20
+	sta	HERO_Y
 
 	lda	#$00
 	sta	DAMAGE_VAL_HI
@@ -20,45 +22,24 @@ attack_loop:
 
 	; draw hero
 
-	lda	#20
+	lda	HERO_Y
 	sta	YPOS
-
 	lda	HERO_X
 	sta	XPOS
 
+	; walk/run alternate frames
 	lsr
 	bcc	attack_draw_walk
 
 attack_draw_stand:
-	lda	#<tfv_stand_left_sprite
-	sta	INL
-	lda	#>tfv_stand_left_sprite
-	jmp	attack_actually_draw
+	jsr	draw_hero_and_sword
+	jmp	attack_done_draw
 
 attack_draw_walk:
-	lda	#<tfv_walk_left_sprite
-	sta	INL
-	lda	#>tfv_walk_left_sprite
+	jsr	draw_hero_walk_and_sword
 
-attack_actually_draw:
-	sta	INH
-	jsr	put_sprite_crop
 
-	;=========================
-	; draw sword
-
-	lda	HERO_X
-	sec
-	sbc	#5
-	sta	XPOS
-	; ypos already 20?
-
-	lda	#<tfv_led_sword_sprite
-	sta	INL
-	lda	#>tfv_led_sword_sprite
-	sta	INH
-
-	jsr	put_sprite_crop
+attack_done_draw:
 
 
 	;=========================
@@ -84,6 +65,10 @@ attack_actually_draw:
 	lda	HERO_X
 	cmp	#10			; repeat until 10
 	bne	attack_loop
+
+
+
+
 
 	;======================
 	; attack done
@@ -115,5 +100,3 @@ attack_actually_draw:
 	sta	HERO_X
 
 	rts
-
-
