@@ -72,6 +72,10 @@ gr_put_num_print_tens:
 
 gr_put_num_ones:
 
+	; we were non-zero, notify leading zero
+	ldy	#0
+	sty	gr_put_num_leading_zero
+
 	; print ones digit
 	pla
 	and	#$f

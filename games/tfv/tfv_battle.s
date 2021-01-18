@@ -24,6 +24,11 @@ do_battle:
 	lda	#20
 	sta	BATTLE_COUNT
 
+	;======================
+	; update hp and mp
+
+	jsr	update_hero_hp
+	jsr	update_hero_mp
 
 	;========================
 	; rotate intro

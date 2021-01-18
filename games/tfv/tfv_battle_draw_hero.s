@@ -127,6 +127,8 @@ health_too_high:
 	sta	HERO_HP_LO
 health_is_good:
 
+	jsr	update_hero_hp
+
 	rts
 
 	;========================
@@ -160,4 +162,7 @@ damage_hero_do_sub:
 	cld
 
 damage_hero_done:
+
+	jsr	update_hero_hp
+
 	rts

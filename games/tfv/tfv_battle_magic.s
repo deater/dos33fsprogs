@@ -25,6 +25,7 @@ magic_attack:
 	beq	do_magic_bolt
 	cmp	#MENU_MAGIC_MALAISE
 	beq	do_magic_malaise
+	brk
 
 do_magic_heal:	; MENU_MAGIC_HEAL
 	lda	#33
@@ -177,6 +178,20 @@ magic_happens_loop:
 	; decrease magic points
 	; mp-=5;
 
+	lda	HERO_MP
+	cmp	#5
+	bcc	hero_done_dec_mp
+
+	sed
+	sec
+	sbc	#5
+	sta	HERO_MP
+	cld
+
+	jsr	update_hero_mp
+
+hero_done_dec_mp:
+
 	jsr	gr_copy_to_current
 
 
@@ -208,6 +223,17 @@ magic_happens_loop:
 
 was_heal_magic:
 	jsr	heal_hero
+
+	; FIXME: print green
+
+	lda	#30
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+	jsr	gr_put_num
+
+
+
 done_magic_damage:
 
 	jsr	draw_battle_bottom

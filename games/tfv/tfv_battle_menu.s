@@ -822,6 +822,131 @@ done_attack:
 
 
 
+	;===========================
+	; update_hero_mp
+	;===========================
+	; update displayed magic points
+	; one BCD byte
+	; put into mp_string
+
+update_hero_mp:
+	lda	#1
+	sta	convert_bcd_to_string_leading_zero
+
+	lda	#<(mp_string+2)
+	sta	OUTL
+	lda	#>(mp_string+2)
+	sta	OUTH
+
+	lda	HERO_MP
+	jmp	convert_bcd_to_string
+
+
+	;===========================
+	; update_hero_hp
+	;===========================
+	; update displayed hitpoints
+	; two BCD bytes
+	; put into hp_string
+
+update_hero_hp:
+	lda	#1
+	sta	convert_bcd_to_string_leading_zero
+
+	lda	#<(hp_string+2)
+	sta	OUTL
+	lda	#>(hp_string+2)
+	sta	OUTH
+
+	lda	HERO_HP_HI
+	beq	update_hero_hp_bottom_byte
+	jsr	convert_bcd_to_string
+update_hero_hp_bottom_byte:
+	lda	HERO_HP_LO
+	jmp	convert_bcd_to_string
+
+
+	;==========================================
+	;==========================================
+	; print two-digit BCD number into a string
+	;==========================================
+	;==========================================
+convert_bcd_to_string:
+	pha				; store on stack
+
+convert_bcd_tens:
+
+	and	#$f0
+	bne	convert_bcd_print_tens
+
+	; was zero, check if we should print
+
+	lda	convert_bcd_to_string_leading_zero	; if 1, we skip
+	beq	convert_bcd_tens_print_after_all
+
+	lda	#' '|$80
+	bne	convert_bcd_output_tens
+
+
+convert_bcd_tens_print_after_all:
+	pla	; restore value
+	pha
+
+convert_bcd_print_tens:
+
+	; we were non-zero, notify leading zero
+	ldy	#0
+	sty	convert_bcd_to_string_leading_zero
+
+	; print tens digit
+	lsr
+	lsr
+	lsr
+	lsr
+
+	ora	#$B0	; convert to ascii with hi bit set
+
+convert_bcd_output_tens:
+	ldy	#0
+	sta	(OUTL),Y
+
+	inc	OUTL
+	bne	convert_bcd_tens_no_oflo
+	inc	OUTH
+convert_bcd_tens_no_oflo:
+
+
+convert_bcd_num_ones:
+
+	; we were non-zero, notify leading zero
+	ldy	#0
+	sty	convert_bcd_to_string_leading_zero
+
+	; print ones digit
+	pla
+	and	#$f
+
+	ora	#$B0	; convert to ascii with hi bit set
+
+convert_bcd_output_ones:
+	ldy	#0
+	sta	(OUTL),Y
+
+	inc	OUTL
+	bne	convert_bcd_ones_no_oflo
+	inc	OUTH
+convert_bcd_ones_no_oflo:
+
+	rts
+
+
+
+convert_bcd_to_string_leading_zero:	.byte	$01
+
+
+
+
+
 ;=========================
 ; menu strings
 ;=========================
@@ -846,9 +971,9 @@ battle_menu_none:
 	.byte 30,20,"TIME",0
 	.byte 35,20,"LIMIT",0
 hp_string:
-	.byte 23,21,"100",0
+	.byte 22,21," 100",0
 mp_string:
-	.byte 26,21," 50",0
+	.byte 27,21,"50",0
 
 ; main menu strings
 
