@@ -1,6 +1,24 @@
+;===================
+; Selection Pointers
+;===================
+
+finger_left_sprite:
+	.byte 6,4
+	.byte $AA,$AA,$AA,$AB,$BA,$AA
+	.byte $BB,$BB,$BB,$BB,$BB,$BB
+	.byte $AA,$AA,$BB,$BB,$BB,$BB
+	.byte $AA,$AA,$AB,$BB,$BB,$AB
+
+finger_right_sprite:
+	.byte 6,4
+	.byte $AA,$BA,$AB,$AA,$AA,$AA
+	.byte $BB,$BB,$BB,$BB,$BB,$BB
+	.byte $BB,$BB,$BB,$BB,$AA,$AA
+	.byte $AB,$BB,$BB,$AB,$AA,$AA
+
 ;=========
 ; Enemies
-;==========
+;=========
 
 killer_crab_sprite:
 	.byte $9,$6

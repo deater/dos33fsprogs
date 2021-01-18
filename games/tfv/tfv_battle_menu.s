@@ -55,7 +55,9 @@ draw_battle_bottom:
 
 	; set up jump table fakery
 handle_special:
-	ldy	MENU_STATE
+	lda	MENU_STATE
+	and	#$7f		; mask off Finger state
+	tay
 	lda	battle_menu_jump_table_h,Y
 	pha
 	lda	battle_menu_jump_table_l,Y
@@ -393,6 +395,44 @@ print_menu_zap:
 
 done_draw_battle_menu:
 
+	;==============================
+	; draw finger (when applicable)
+
+	lda	MENU_STATE	; MENU finger is top bit
+	bpl	done_draw_finger
+
+	lda	FINGER_DIRECTION
+	bne	draw_finger_left
+
+draw_finger_right:
+
+	lda	#20
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+
+	lda	#<finger_right_sprite
+	sta	INL
+	lda	#>finger_right_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+	jmp	done_draw_finger
+draw_finger_left:
+
+	lda	#12
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+
+	lda	#<finger_left_sprite
+	sta	INL
+	lda	#>finger_left_sprite
+	sta	INH
+	jsr	put_sprite_crop
+
+done_draw_finger:
+
 	;========================
 	; Draw inverse separator
 
@@ -462,11 +502,95 @@ done_bar:
 
 
 	;=========================
+	;=========================
 	; battle menu keypress
+	;=========================
 	;=========================
 	; FIXME: help, toggle-sound?
 
 battle_menu_keypress:
+	lda	MENU_STATE
+	bpl	battle_menu_nofinger_keypress
+
+battle_menu_finger_keypress:
+	lda	LAST_KEY
+	cmp	#27
+	beq	finger_escape
+	cmp	#' '
+	beq	finger_action
+	cmp	#13
+	beq	finger_action
+	cmp	#'A'
+	beq	finger_left
+	cmp	#'D'
+	beq	finger_right
+	; jmp to common routines for others?
+
+	rts
+
+finger_escape:
+	lda	MENU_STATE
+	and	#$7f
+	sta	MENU_STATE
+
+	rts
+
+finger_left:
+	lda	#1
+	sta	FINGER_DIRECTION
+	rts
+
+finger_right:
+	lda	#0h
+	sta	FINGER_DIRECTION
+	rts
+
+finger_action:
+	lda	MENU_SUBMENU
+
+	cmp	#MENU_MAIN_ATTACK
+	beq	finger_attack_action
+	cmp	#MENU_MAIN_MAGIC
+	beq	finger_magic_action
+	cmp	#MENU_MAIN_LIMIT
+	beq	finger_limit_action
+	cmp	#MENU_MAIN_SUMMON
+	beq	finger_summon_action
+	brk
+
+finger_attack_action:
+	lda	#0
+	sta	MENU_STATE
+
+	; attack and decrement HP
+	jsr	attack
+	jsr	done_attack
+
+	rts
+
+finger_magic_action:
+	lda	#0
+	sta	MENU_STATE
+	jsr	magic_attack
+	jsr	done_attack
+	rts
+
+finger_limit_action:
+	lda	#0
+	sta	MENU_STATE
+	jsr	limit_break
+	jsr	done_attack
+	rts
+
+finger_summon_action:
+	lda	#0
+	sta	MENU_STATE
+	jsr	summon
+	jsr	done_attack
+
+	rts
+
+battle_menu_nofinger_keypress:
 
 	lda	LAST_KEY
 	cmp	#27
@@ -568,7 +692,6 @@ keypress_action:
 	cmp	#MENU_SUMMON
 	beq	keypress_summon_action
 
-
 	;============================
 	; handle action on main menu
 keypress_main_action:
@@ -586,11 +709,16 @@ keypress_main_action:
 	cmp	#MENU_MAIN_ESCAPE
 	beq	keypress_main_escape
 
+
 keypress_main_attack:
-	; attack and decrement HP
-	jsr	attack
-	jsr	done_attack
-	rts
+	; move to finger mode
+	; pointing left
+
+	; MENU_MAIN_ATTACK should be in A
+	sta	MENU_SUBMENU
+
+	jmp	keypress_activate_finger_left
+
 
 keypress_main_skip:
 	jsr	done_attack
@@ -625,22 +753,51 @@ keypress_main_escape:
 	jsr	done_attack
 	rts
 
-keypress_magic_action:
-	jsr	magic_attack
-	jsr	done_attack
-	rts
+keypress_summon_action:
+	lda	#MENU_MAIN_SUMMON
+	sta	MENU_SUBMENU
+	lda	MENU_POSITION
+	sta	MAGIC_TYPE
+	jmp	keypress_activate_finger_left
 
 keypress_limit_action:
-	jsr	limit_break
-	jsr	done_attack
+	lda	#MENU_MAIN_LIMIT
+	sta	MENU_SUBMENU
+	lda	MENU_POSITION
+	sta	MAGIC_TYPE
+	jmp	keypress_activate_finger_left
+
+keypress_magic_action:
+	lda	#MENU_MAIN_MAGIC
+	sta	MENU_SUBMENU
+
+	lda	MENU_POSITION
+	sta	MAGIC_TYPE
+	cmp	#MENU_MAGIC_HEAL
+	bne	keypress_magic_action_noheal
+	jmp	keypress_activate_finger_right
+keypress_magic_action_noheal:
+	jmp	keypress_activate_finger_left
+
+
+keypress_activate_finger_right:
+	lda	#0
+	beq	keypress_activate_finger
+keypress_activate_finger_left:
+	; move to finger mode
+	; pointing left
+
+	lda	#1
+keypress_activate_finger:
+	sta	FINGER_DIRECTION
+
+	lda	MENU_STATE
+	ora	#MENU_FINGER
+	sta	MENU_STATE
+
+
+
 	rts
-
-keypress_summon_action:
-	jsr	summon
-	jsr	done_attack
-
-	rts
-
 
 
 	;=============================
@@ -721,26 +878,33 @@ battle_menu_limit:
 	.byte 24,21,"SLICE",0		; 0
 	.byte 24,22,"DROP",0		; 2
 	.byte 31,21,"ZAP",0		; 1
-;
-;                       ATTACK    SKIP
-;                      MAGIC     LIMIT
-;		       SUMMON    ESCAPE
-;
-;		SUMMONS -> METROCAT VORTEXCN
-;		MAGIC   ->  HEAL    FIRE
-;                           ICE     MALAISE
-;			    BOLT
-;		LIMIT	->  SLICE   ZAP
-;                           DROP
-;
+
+
+; Main Menu
+;	ATTACK  SKIP
+;	MAGIC   ESCAPE
+;	SUMMON  LIMIT
+
+; Magic Menu
+;	HEAL	FIRE
+;	ICE	MALAISE
+;	BOLT
+
+; Summon Menu
+;	METROCAT
+;	VORTEXCN
+
+; Limit Menu
+;	SLICE   ZAP
+;	DROP
+
 ;	State Machine
 ;
 ;		time
-;	BOTTOM -------> MAIN_MENU ----->ATTACK
+;	BOTTOM -------> MAIN_MENU ----->ATTACK--------------->FINGER
 ;				------->SKIP
-;				------->MAGIC_MENU
-;				------->LIMIT_MENU
-;				------->SUMMON_MENU
+;				------->MAGIC->MAGIC_MENU---->FINGER
+;				------->LIMIT->LIMIT_MENU---->FINGER
+;				------->SUMMON->SUMMON_MENU-->FINGER
 ;				------->ESCAPE
-;
-;
+

@@ -12,7 +12,7 @@ magic_attack:
 	lda	#$15
 	sta	DAMAGE_VAL
 
-	lda	MENU_POSITION
+	lda	MAGIC_TYPE
 	cmp	#MENU_MAGIC_HEAL
 	beq	do_magic_heal
 	cmp	#MENU_MAGIC_FIRE
@@ -74,9 +74,6 @@ done_magic_setup:
 	; FIXME: disallow if not enough MP
 
 cast_the_magic:
-
-	lda	MENU_POSITION
-	sta	MAGIC_TYPE
 
 	lda	#10
 	sta	ANIMATE_LOOP
