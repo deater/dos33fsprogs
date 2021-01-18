@@ -189,3 +189,30 @@ damage_hero_done:
 	jsr	update_hero_hp
 
 	rts
+
+
+
+
+
+	;========================
+	; hero use magic
+	;========================
+	; value in A
+hero_use_magic:
+
+	lda     HERO_MP
+	cmp	MAGIC_COST
+	bcc	done_hero_use_magic
+
+        sed
+        sec
+        sbc     MAGIC_COST
+        sta     HERO_MP
+        cld
+
+        jsr     update_hero_mp
+
+done_hero_use_magic:
+
+	rts
+

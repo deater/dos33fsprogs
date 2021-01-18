@@ -8,6 +8,8 @@ magic_attack:
 
 	lda	#34
 	sta	HERO_X
+	lda	#20
+	sta	HERO_Y
 
 	lda	#$15
 	sta	DAMAGE_VAL_LO
@@ -121,7 +123,7 @@ cast_magic_loop:
 	;========================
 	; Actually do the magic
 
-	lda	#20
+	lda	#15
 	sta	ANIMATE_LOOP
 magic_happens_loop:
 
@@ -165,7 +167,7 @@ magic_happens_loop:
 	jsr	page_flip
 
 	; delay a bit
-	lda	#50
+	lda	#200
 	jsr	WAIT
 
 	dec	ANIMATE_LOOP
@@ -173,29 +175,21 @@ magic_happens_loop:
 
 
 	;=============================
-
-
 	; decrease magic points
-	; mp-=5;
 
-	lda	HERO_MP
-	cmp	#5
-	bcc	hero_done_dec_mp
+	lda	#5
+	sta	MAGIC_COST
+	jsr	hero_use_magic
 
-	sed
-	sec
-	sbc	#5
-	sta	HERO_MP
-	cld
-
-	jsr	update_hero_mp
-
-hero_done_dec_mp:
+	;=============================
+	; copy to current
 
 	jsr	gr_copy_to_current
 
 
+	;==============================
 	; draw hero
+
 	lda	#34
 	sta	HERO_X
 	lda	#20
@@ -239,8 +233,8 @@ done_magic_damage:
 
 	jsr	page_flip
 
-	; wait 2s
-	ldx	#200
+	; wait 1.5s
+	ldx	#150
 	jsr	long_wait
 
 	rts
