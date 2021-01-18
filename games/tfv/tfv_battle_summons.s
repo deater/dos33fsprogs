@@ -1,3 +1,20 @@
+	;=========================
+	; summon
+	;=========================
+summon:
+	lda	MENU_POSITION
+	beq	do_summon_metrocat
+	bne	do_summon_vortex_cannon
+
+do_summon_metrocat:
+	jmp	summon_metrocat
+do_summon_vortex_cannon:
+	jmp	summon_vortex_cannon
+
+	rts
+
+
+
 
 
 	;========================
@@ -157,6 +174,14 @@ metrocat_damage_loop:
 	dec	ANIMATE_LOOP
 	bne	metrocat_damage_loop
 
+
+	; ending scene
+
+
+	lda	#$07
+	sta	MAGIC_COST
+	jsr	hero_use_magic
+
 	jsr	gr_copy_to_current
 
 	; draw enemy
@@ -186,8 +211,8 @@ metrocat_damage_loop:
 
 	jsr	page_flip
 
-	; long wait (2s?)
-	ldx	#200
+	; long wait (1.5s)
+	ldx	#150
 	jsr	long_wait
 
 	rts
@@ -350,6 +375,9 @@ vortex_no_print_damage:
 
 	; end of summon
 
+	lda	#$10
+	sta	MAGIC_COST
+	jsr	hero_use_magic
 
 	jsr	gr_copy_to_current
 
@@ -367,27 +395,11 @@ vortex_no_print_damage:
 
 	jsr	page_flip
 
-	; wait 2s
-	ldx	#200
+	; wait 1.5s
+	ldx	#150
 	jsr	long_wait
 
 	rts
-
-	;=========================
-	; summon
-	;=========================
-summon:
-	lda	MENU_POSITION
-	beq	do_summon_metrocat
-	bne	do_summon_vortex_cannon
-
-do_summon_metrocat:
-	jmp	summon_metrocat
-do_summon_vortex_cannon:
-	jmp	summon_vortex_cannon
-
-	rts
-
 
 
 

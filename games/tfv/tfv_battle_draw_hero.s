@@ -197,7 +197,7 @@ damage_hero_done:
 	;========================
 	; hero use magic
 	;========================
-	; value in A
+	; value in MAGIC_COST
 hero_use_magic:
 
 	lda     HERO_MP
