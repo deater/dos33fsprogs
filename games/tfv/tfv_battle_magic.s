@@ -224,13 +224,12 @@ hero_done_dec_mp:
 was_heal_magic:
 	jsr	heal_hero
 
-	; FIXME: print green
-
 	lda	#30
 	sta	XPOS
 	lda	#10
 	sta	YPOS
-	jsr	gr_put_num
+	lda	#$ee	; print teal
+	jsr	gr_put_num_color
 
 
 

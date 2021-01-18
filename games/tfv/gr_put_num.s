@@ -12,6 +12,12 @@
 	; location in XPOS,YPOS
 
 gr_put_num:
+	lda	#$ff
+
+	; color should be in A when we get here
+gr_put_num_color:
+	sta	COLOR
+
 	lda	#1
 	sta	gr_put_num_leading_zero
 
@@ -62,7 +68,7 @@ gr_put_num_print_tens:
 	lda	number_sprites+1,Y
 	sta	INH
 
-	jsr	put_sprite_crop
+	jsr	put_sprite_mask
 
 	; point to next
 	lda	XPOS
@@ -87,7 +93,7 @@ gr_put_num_ones:
 	lda	number_sprites+1,Y
 	sta	INH
 
-	jsr	put_sprite_crop
+	jsr	put_sprite_mask
 
 	rts
 
