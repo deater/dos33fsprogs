@@ -75,7 +75,7 @@ TFV_WORLD:	tfv_world.o
 	ld65 -o TFV_WORLD tfv_world.o -C ../../linker_scripts/apple2_2000.inc
 
 tfv_world.o:	tfv_world.s zp.inc \
-	long_wait.s \
+	long_wait.s gr_put_num.s \
 	tfv_overworld.s tfv_drawmap.s \
 	tfv_battle.s tfv_battle_menu.s tfv_battle_limit.s tfv_battle_summons.s \
 	tfv_battle_magic.s tfv_battle_enemy.s tfv_battle_draw_hero.s \
@@ -83,7 +83,7 @@ tfv_world.o:	tfv_world.s zp.inc \
 	help_overworld.s rotate_intro.s \
 	sound_effects.s speaker_tone.s \
 	graphics_map/tfv_backgrounds.inc \
-	tfv_sprites.inc battle_sprites.inc number_sprites.inc
+	tfv_sprites.inc battle_sprites.inc
 	ca65 -o tfv_world.o tfv_world.s -l tfv_world.lst
 
 graphics_map/tfv_backgrounds.inc:

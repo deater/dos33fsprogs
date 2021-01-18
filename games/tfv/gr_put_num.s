@@ -1,3 +1,97 @@
+
+;******    **    ****    ****    **  **  ******    ****  ******  ******  ******
+;**  **  ****        **      **  **  **  **      **          **  **  **  **  **
+;**  **    **      ****  ****    ******  ****    ******    **    ******  ******
+;**  **    **    **          **      **      **  **  **    **    **  **      **
+;******  ******  ******  ****        **  ****    ******    **    ******      **
+
+	;===========================
+	; gr put num
+	;===========================
+	; damage in DAMAGE_VAL_LO/HI (BCD)
+	; location in XPOS,YPOS
+
+gr_put_num:
+	lda	#1
+	sta	gr_put_num_leading_zero
+
+	; put high digit first
+	lda	DAMAGE_VAL_HI
+	beq	gr_put_num_bottom_byte
+	jsr	gr_put_num_byte
+gr_put_num_bottom_byte:
+	lda	DAMAGE_VAL_LO
+	; fallthrough
+
+	;=================================
+	; print two-digit BCD number in A
+gr_put_num_byte:
+	pha				; store on stack
+
+gr_put_num_tens:
+
+	and	#$f0
+	bne	gr_put_num_print_tens
+
+	; was zero, check if we should print
+
+	lda	gr_put_num_leading_zero	; if 1, we skip
+	bne	gr_put_num_ones
+
+	pla	; restore value
+	pha
+
+gr_put_num_print_tens:
+
+	; we were non-zero, notify leading zero
+	ldy	#0
+	sty	gr_put_num_leading_zero
+
+
+	; print tens digit
+	lsr
+	lsr
+	lsr
+	lsr
+
+
+	asl
+	tay
+	lda	number_sprites,Y
+	sta	INL
+	lda	number_sprites+1,Y
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	; point to next
+	lda	XPOS
+	clc
+	adc	#4
+	sta	XPOS
+
+gr_put_num_ones:
+
+	; print ones digit
+	pla
+	and	#$f
+
+	asl
+	tay
+	lda	number_sprites,Y
+	sta	INL
+	lda	number_sprites+1,Y
+	sta	INH
+
+	jsr	put_sprite_crop
+
+	rts
+
+
+
+gr_put_num_leading_zero:	.byte	$01
+
+
 ; Numbers
 
 

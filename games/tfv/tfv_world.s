@@ -43,6 +43,7 @@
 .include "gr_hlin.s"
 .include "gr_vlin.s"
 .include "gr_pageflip.s"
+.include "gr_put_num.s"
 .include "keyboard.s"
 .include "joystick.s"
 .include "gr_putsprite_crop.s"
@@ -75,7 +76,6 @@
 
 .include "tfv_sprites.inc"
 .include "battle_sprites.inc"
-.include "number_sprites.inc"
 .include "graphics_map/tfv_backgrounds.inc"
 
 ;===============================================
