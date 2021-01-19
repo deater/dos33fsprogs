@@ -49,11 +49,41 @@ tfv_walk_left_sprite:
 	.byte $AA,$2A,$A2,$22
 	.byte $AA,$82,$AA,$82
 
+;====================
+; TFV Battle Sprites
+;====================
+
+tfv_battle1_sprite:
+	.byte $4,$6
+	.byte $AA,$BD,$DD,$AA
+	.byte $AB,$DB,$DD,$AA
+	.byte $AA,$AA,$22,$AA
+	.byte $AB,$A2,$22,$AA
+	.byte $AA,$22,$22,$2A
+	.byte $8A,$82,$AA,$82
+
+tfv_battle2_sprite:
+	.byte $4,$6
+	.byte $AA,$DA,$DA,$AA
+	.byte $BA,$BB,$DD,$AA
+	.byte $AA,$AD,$2D,$AA
+	.byte $BA,$2A,$22,$AA
+	.byte $AA,$2A,$22,$22
+	.byte $8A,$82,$AA,$82
+
+
 tfv_led_sword_sprite:
 	.byte $5,$3
 	.byte $1A,$AA,$1A,$AA,$AA
 	.byte $1A,$A1,$1A,$1A,$1A
 	.byte $AA,$AA,$11,$A1,$1A
+
+tfv_led_sword2_sprite:
+	.byte $5,$3
+	.byte $A1,$1A,$A1,$AA,$AA
+	.byte $A1,$AA,$11,$11,$A1
+	.byte $AA,$AA,$A1,$AA,$A1
+
 
 tfv_defeat_sprite:
 	.byte $7,$3

@@ -117,6 +117,90 @@ draw_hero_sword:
 
 
 
+
+
+
+
+
+
+
+	;============================
+	; draw battle hero and sword
+	;============================
+	; bounces in readiness
+	; draws at HERO_X,HERO_Y
+
+draw_battle_hero_and_sword:
+
+	lda	HERO_X
+	sta	XPOS
+	lda	HERO_Y
+	sta	YPOS
+
+	lda	FRAMEL
+	and	#$8
+	beq	hero_bounce1
+
+hero_bounce2:
+
+	lda	#<tfv_battle1_sprite
+	sta	INL
+	lda	#>tfv_battle1_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+hero_sword2:
+	; grsim_put_sprite(tfv_led_sword,ax-5,20);
+	lda	HERO_X
+	sec
+	sbc	#5
+	sta	XPOS
+	lda	HERO_Y
+;	clc
+;	adc	#2
+	sta	YPOS
+
+	lda	#<tfv_led_sword_sprite
+	sta	INL
+	lda	#>tfv_led_sword_sprite
+	sta	INH
+
+	jmp	put_sprite_crop	; tail call
+
+
+hero_bounce1:
+
+	lda	#<tfv_battle2_sprite
+	sta	INL
+	lda	#>tfv_battle2_sprite
+	sta	INH
+
+	jsr	put_sprite_crop
+
+hero_sword1:
+	; grsim_put_sprite(tfv_led_sword,ax-5,20);
+	lda	HERO_X
+	sec
+	sbc	#5
+	sta	XPOS
+	lda	HERO_Y
+	clc
+	adc	#2
+	sta	YPOS
+
+	lda	#<tfv_led_sword2_sprite
+	sta	INL
+	lda	#>tfv_led_sword2_sprite
+	sta	INH
+
+	jmp	put_sprite_crop	; tail call
+
+
+
+
+
+
 	;===================
 	; heal hero
 	;===================

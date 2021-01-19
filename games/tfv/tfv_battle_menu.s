@@ -10,6 +10,14 @@
 
 draw_battle_bottom:
 
+	; increment frame
+	; weird place for this but everything calls this once per frame
+
+	inc	FRAMEL
+	bne	frame_no_oflo
+	inc	FRAMEH
+frame_no_oflo:
+
 	jsr	clear_bottom
 
 	jsr	normal_text

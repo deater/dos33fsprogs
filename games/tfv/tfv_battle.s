@@ -176,7 +176,7 @@ battle_draw_normal_hero:
 	lda	#20
 	sta	HERO_Y
 
-	jsr	draw_hero_and_sword
+	jsr	draw_battle_hero_and_sword
 
 battle_done_draw_hero:
 
