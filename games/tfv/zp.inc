@@ -67,20 +67,13 @@ LAST_SPACEY_I	=	$88
 LAST_MAP_COLOR	=	$89
 COLOR_MASK	=	$8A
 
-;; World Map Only
+;; rotozoom (can overlap with flying routine?)
+SCALE_I		=	$64	; scale of rotozoom
+SCALE_F		=	$65	; 
 
-ODD             =     $7B
-DIRECTION       =     $7C
-REFRESH         =     $7D
-ON_BIRD         =     $7E
-MOVED           =     $7F
-STEPS           =     $80
-TFV_X           =     $81
-TFV_Y           =     $82
-NEWX            =     $83
-NEWY            =     $84
-MAP_X           =     $85
-GROUND_COLOR    =     $86
+
+
+
 
 ;==================GLOBAL STATE, STORED IN SAVE GAME==========
 WHICH_LOAD	=	$90	; current level
@@ -100,6 +93,24 @@ HERO_NAME3	=	$9D	; 7 chars
 HERO_NAME4	=	$9E	; 7 chars
 HERO_NAME5	=	$9F	; 7 chars
 HERO_NAME6	=	$A0	; 7 chars
+HERO_STATE	=	$A1	; state of hero
+	HERO_ON_BIRD	= $01
+	HERO_ODD	= $02	; stand/walk position
+	HERO_DIRECTION	= $04	; 0=left, 1=right
+HERO_STEPS	=	$A2	; number of steps
+
+TFV_X           =     $A3	; location on screen
+TFV_Y           =     $A4	; location on screen
+MAP_X           =     $A5	; which map region we're on
+
+;; World Map Only
+
+;ODD             =     $7B
+;DIRECTION       =     $7C
+;MOVED           =     $7F
+;STEPS           =     $80
+
+
 
 
 ;==================GAME STATE (not in save game)==============
@@ -117,8 +128,8 @@ ANIMATE_LOOP	=	$B7
 
 HERO_X		=	$C0	; used in battle
 HERO_Y		=	$C1	; used in battle
-HERO_STATE	=	$C2	; used in battle
-	HERO_STATE_RUNNING = $01	; running from battle
+BATTLE_STATE	=	$C2	; used in battle
+	BATTLE_STATE_RUNNING = $01	; running from battle
 BATTLE_COUNT	=	$C3	; battle counter
 ENEMY_TYPE	=	$C4	; used in battle
 ENEMY_HP_LO	=	$C5	; enemy hitpoints
@@ -165,6 +176,14 @@ FINGER_DIRECTION=	$D3
 ENEMY_DEAD	=	$D4
 MAGIC_COST	=	$D5
 ENEMY_ATTACKING	=	$D6
+HERO_MOVED	=	$D7
+
+; worldmap
+REFRESH		=	$D8
+NEWX            =	$D9
+NEWY            =	$DA
+GROUND_COLOR    =	$DB
+
 
 COLOR1		=	$E0
 COLOR2		=	$E1

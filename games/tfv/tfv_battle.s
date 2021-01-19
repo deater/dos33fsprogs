@@ -8,6 +8,12 @@
 
 do_battle:
 
+	;========================
+	; rotate intro
+	;	this happens first as it stomps on zero page
+
+	jsr	rotate_intro
+
 	; set start position
 	lda	#34
 	sta	HERO_X
@@ -16,7 +22,7 @@ do_battle:
 
 	; reset state
 	lda	#0
-	sta	HERO_STATE
+	sta	BATTLE_STATE
 	sta	MENU_STATE
 	sta	MENU_POSITION
 	sta	ENEMY_DEAD
@@ -36,10 +42,7 @@ do_battle:
 	jsr	update_hero_hp
 	jsr	update_hero_mp
 
-	;========================
-	; rotate intro
 
-	jsr	rotate_intro
 
 	;========================
 	; zoom to battlefield
@@ -131,8 +134,8 @@ main_battle_loop:
 
 	; not dead, so draw running or standing
 hero_not_dead:
-	lda	HERO_STATE
-	and	#HERO_STATE_RUNNING
+	lda	BATTLE_STATE
+	and	#BATTLE_STATE_RUNNING
 	bne	battle_draw_hero_running
 	jmp	battle_draw_normal_hero
 
@@ -270,8 +273,8 @@ update_battle_counter:
 	; If running, escape
 	; TODO: randomly fail at running?
 
-	lda	HERO_STATE
-	and	#HERO_STATE_RUNNING
+	lda	BATTLE_STATE
+	and	#BATTLE_STATE_RUNNING
 	beq	battle_open_menu
 
 	; we bravely ran away

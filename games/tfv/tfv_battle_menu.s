@@ -766,9 +766,9 @@ keypress_main_summon:
 	rts
 
 keypress_main_escape:
-	lda	#HERO_STATE_RUNNING
-	ora	HERO_STATE
-	sta	HERO_STATE
+	lda	#BATTLE_STATE_RUNNING
+	ora	BATTLE_STATE
+	sta	BATTLE_STATE
 
 	jsr	done_attack
 	rts

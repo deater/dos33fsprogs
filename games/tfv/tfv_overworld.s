@@ -29,12 +29,10 @@ handle_overworld:
 	; Init Variables
 	;===============
 
-	lda	#$0
-	sta	ODD
-	sta	ON_BIRD
+	lda	#HERO_DIRECTION	; have us face right (1)
+	sta	HERO_STATE
 
 	lda	#$1
-	sta	DIRECTION
 	sta	REFRESH
 
 	lda	#5
@@ -52,7 +50,7 @@ handle_overworld:
 
 worldmap_loop:
 	lda	#$0
-	sta	MOVED
+	sta	HERO_MOVED
 	lda	TFV_X
 	sta	NEWX
 	lda	TFV_Y
@@ -74,7 +72,8 @@ worldmap_handle_up:
 
 	dec	NEWY
 	dec	NEWY
-	inc	MOVED
+
+	inc	HERO_MOVED
 	jmp	worldmap_done_keyboard
 
 worldmap_handle_down:
@@ -83,25 +82,27 @@ worldmap_handle_down:
 
 	inc	NEWY
 	inc	NEWY
-	inc	MOVED
+	inc	HERO_MOVED
 	jmp	worldmap_done_keyboard
 
 worldmap_handle_left:
 	cmp	#'A'
 	bne	worldmap_handle_right
 
-	lda	DIRECTION		; 0=left, 1=right
+	lda	HERO_STATE
+	and	#HERO_DIRECTION		; 0=left, 1=right
 	beq	go_left			; if (0) already left, keep going
 
 left_turn:
-	lda	#0			; change direction to left
-	sta	DIRECTION
-	sta	ODD			; stand (not walk) if changing
-	beq	done_handle_left	; bra skip ahead
+	lda	HERO_STATE
+	and	#~HERO_DIRECTION	; change direction to left (0)
+	and	#~HERO_ODD		; stand (not walk) if changing
+	sta	HERO_STATE
+	jmp	done_handle_left	; skip ahead
 
 go_left:
 	dec	NEWX			; decrement x
-	inc	MOVED			; we moved
+	inc	HERO_MOVED		; we moved
 done_handle_left:
 	jmp	worldmap_done_keyboard
 
@@ -109,19 +110,20 @@ worldmap_handle_right:
 	cmp	#('D')
 	bne	worldmap_handle_enter
 
-	lda	DIRECTION		; 0=left, 1=right
+	lda	HERO_STATE
+	and	#HERO_DIRECTION		; 0=left, 1=right
 	bne	go_right		; if (1) already right, keep going
 
 right_turn:
-	lda	#1			; change direction to right
-	sta	DIRECTION
-	lda	#0			; change to standing
-	sta	ODD
-	beq	done_handle_right	; bra skip ahead
+	lda	HERO_STATE
+	ora	#HERO_DIRECTION		; change direction to right (1)
+	and	#~HERO_ODD		; change to standing
+	sta	HERO_STATE
+	jmp	done_handle_right	; skip ahead
 
 go_right:
 	inc	NEWX			; increment X
-	inc	MOVED
+	inc	HERO_MOVED
 
 done_handle_right:
 	jmp	worldmap_done_keyboard
@@ -172,11 +174,14 @@ worldmap_done_keyboard:
 	; Handle Movement
 	;===========================
 
-	lda	MOVED
+	lda	HERO_MOVED
 	beq	worldmap_refresh_screen
 
-	inc	ODD
-	inc	STEPS
+	lda	HERO_STATE	; toggle ODD
+	eor	#HERO_ODD
+	sta	HERO_STATE
+
+	inc	HERO_STEPS
 
 	; Handle Collision Detection
 
@@ -420,12 +425,14 @@ back_no_forest:
 
 	clc
 
-	lda	#1
-	bit	ODD
+	; check if standing
+	lda	HERO_STATE
+	and	#HERO_ODD
 	bne	standing
 
 walking:
-	lda	DIRECTION		; 0=left, 1=right
+	lda	HERO_STATE
+	and	#HERO_DIRECTION		; 0=left, 1=right
 	bne	walking_right		; if(!0) walk right
 
 walking_left:
@@ -443,7 +450,8 @@ walking_right:
 	bcc	done_walking
 
 standing:
-	lda	DIRECTION
+	lda	HERO_STATE
+	and	#HERO_DIRECTION
 	bne	standing_right
 standing_left:
 	lda	#>tfv_stand_left_sprite
@@ -709,7 +717,7 @@ fore_no_forest:
 	cmp	#3
 	bne	no_lightning
 
-	lda	STEPS
+	lda	HERO_STEPS
 	and	#$f
 	bne	no_lightning
 

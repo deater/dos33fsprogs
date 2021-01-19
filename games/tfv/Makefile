@@ -80,7 +80,7 @@ tfv_world.o:	tfv_world.s zp.inc \
 	tfv_battle.s tfv_battle_menu.s tfv_battle_limit.s tfv_battle_summons.s \
 	tfv_battle_magic.s tfv_battle_enemy.s tfv_battle_draw_hero.s \
 	tfv_battle_boss.s tfv_battle_attack.s \
-	help_overworld.s rotate_intro.s \
+	help_overworld.s rotate_intro.s rotozoom.s \
 	sound_effects.s speaker_tone.s \
 	graphics_map/tfv_backgrounds.inc \
 	tfv_sprites.inc battle_sprites.inc

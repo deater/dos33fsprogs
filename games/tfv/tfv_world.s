@@ -70,6 +70,9 @@
 .include "tfv_battle_draw_hero.s"
 
 .include "rotate_intro.s"
+.include "rotozoom.s"
+.include "multiply_fast.s"
+.include "c00_scrn_offsets.s"
 
 ;===============================================
 ; Graphics
