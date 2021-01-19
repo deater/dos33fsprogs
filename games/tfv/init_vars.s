@@ -9,5 +9,6 @@ init_vars:
 	sta	DISP_PAGE
 	sta	JOYSTICK_ENABLED
 	sta	LEVEL_OVER
+	sta	SOUND_STATUS
 
 	rts
