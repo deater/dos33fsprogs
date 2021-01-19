@@ -217,49 +217,107 @@ damage_enemy_done:
 	;===============================
 enemy_attack:
 
-;	int ax=enemy_x;
-;	int damage=10;
+	lda	#$10
+	sta	DAMAGE_VAL_LO
+	lda	#$00
+	sta	DAMAGE_VAL_HI
 
-;	enemy_attacking=1;
+	lda	#1
+	sta	ENEMY_ATTACKING
 
-;	while(ax<30) {
+enemy_attack_loop:
 
-		; put attack name on
-		; occasionally attack with that enemy's power?
-		; occasionally heal self?
+	; put attack name on
+	; occasionally attack with that enemy's power?
+	; occasionally heal self?
 
-;		gr_copy_to_current(0xc00);
+	;======================
+	; copy over background
 
-		; draw first so behind enemy
-;		grsim_put_sprite(tfv_stand_left,tfv_x,20);
-;		grsim_put_sprite(tfv_led_sword,tfv_x-5,20);
+	jsr	gr_copy_to_current
 
-;		if (ax&1) {
-;			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
-;		}
-;		else {
-;			grsim_put_sprite(enemies[enemy_type].sprite,ax,20);
-;		}
+	; draw hero first so behind enemy
 
-;		draw_battle_bottom(enemy_type);
+	jsr	draw_hero_and_sword
 
-;		page_flip();
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
 
-;		ax+=1;
+	;============
+	; draw bottom
 
-;		usleep(20000);
-;	}
-;	enemy_attacking=0;
+	jsr	draw_battle_bottom
 
-;	damage_tfv(damage);
-;	gr_put_num(25,10,damage);
-;	draw_battle_bottom(enemy_type);
+	;============
+	; page flip
 
-;	page_flip();
-;	usleep(250000);
+	jsr	page_flip
 
-;	return damage;
-;}
+	;============
+	; delay a bit
+
+	lda	#50
+	jsr	WAIT
+
+	inc	ENEMY_X
+	lda	ENEMY_X
+	cmp	#30
+	bcc	enemy_attack_loop
+
+enemy_done_charging:
+
+
+	; damage the hero
+
+	jsr	damage_hero
+
+	; update limit count
+        ; max out at 5
+	lda	HERO_LIMIT
+	cmp	#5
+	beq	battle_no_inc_limit
+
+        inc	HERO_LIMIT
+battle_no_inc_limit:
+
+	; print damage
+
+	lda	#25
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+	jsr	gr_put_num
+
+
+	; draw bottom
+	jsr	draw_battle_bottom
+
+	; flip page
+	jsr	page_flip
+
+	; wait 1s
+
+	ldx	#100
+	jsr	long_wait
+
+done_enemy_attack:
+
+	; done attacking
+
+	lda	#0
+	sta	ENEMY_ATTACKING
+
+	; move back to left
+	lda	#0
+	sta	ENEMY_X
+
+	; reset enemy time. FIXME: variable?
+	lda	#100
+	sta	ENEMY_COUNT
 
 	rts
 

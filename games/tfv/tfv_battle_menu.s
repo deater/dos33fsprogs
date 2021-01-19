@@ -35,9 +35,18 @@ frame_no_oflo:
 	; print current enemy attack
 	; only if attacking
 
-;	if (enemy_attacking) {
-;		print_inverse(enemies[enemy_type].attack_name);
-;	}
+	lda	ENEMY_ATTACKING
+	beq	done_print_enemy_attack
+
+	jsr	inverse_text
+	lda	#<battle_enemy_attack_string
+	sta	OUTL
+	lda	#>battle_enemy_attack_string
+	sta	OUTH
+	jsr	move_and_print
+	jsr	normal_text
+
+done_print_enemy_attack:
 
 	;=======================
 	; print hero name string
@@ -105,7 +114,7 @@ draw_battle_menu_none:
 	; make limit label flash if at limit break
 
 	lda	HERO_LIMIT
-	cmp	#4
+	cmp	#5
 	bcc	plain_limit
 	jsr	flash_text
 plain_limit:
@@ -174,21 +183,21 @@ draw_battle_menu_main:
 
 	; wrap location
 	lda	HERO_LIMIT
-	cmp	#3
-	bcs	limit3_wrap	; bge
-limit4_wrap:
-	lda	MENU_POSITION
 	cmp	#4
-	bcc	done_menu_wrap
-	lda	#4
-	sta	MENU_POSITION
-	bne	done_menu_wrap	; bra
-
-limit3_wrap:
+	bcs	limit4_wrap	; bge
+limit5_wrap:
 	lda	MENU_POSITION
 	cmp	#5
 	bcc	done_menu_wrap
 	lda	#5
+	sta	MENU_POSITION
+	bne	done_menu_wrap	; bra
+
+limit4_wrap:
+	lda	MENU_POSITION
+	cmp	#6
+	bcc	done_menu_wrap
+	lda	#6
 	sta	MENU_POSITION
 	bne	done_menu_wrap	; bra
 
@@ -242,7 +251,7 @@ print_menu_escape:
 
 
 	lda	HERO_LIMIT
-	cmp	#4
+	cmp	#5
 	bcc	done_battle_draw_menu_main	 ; only draw if limit >=4
 
 	cpx	#MENU_MAIN_LIMIT
@@ -867,7 +876,24 @@ update_hero_hp:
 	sta	OUTH
 
 	lda	HERO_HP_HI
-	beq	update_hero_hp_bottom_byte
+	bne	update_hero_hp_top_byte
+
+	lda	#' '|$80
+	ldy	#0
+	sta	(OUTL),Y
+	iny
+	sta	(OUTL),Y
+	lda	OUTL
+	clc
+	adc	#2
+	sta	OUTL
+	lda	OUTH
+	adc	#0
+	sta	OUTH
+
+
+	jmp	update_hero_hp_bottom_byte
+update_hero_hp_top_byte:
 	jsr	convert_bcd_to_string
 update_hero_hp_bottom_byte:
 	lda	HERO_HP_LO

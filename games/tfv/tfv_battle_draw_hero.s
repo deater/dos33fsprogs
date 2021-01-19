@@ -37,17 +37,17 @@ draw_hero_victory:
 	;============================
 	; draw hero down
 	;============================
-	; draws at HERO_X-2,24
+	; draws at HERO_X-2,26
 
 draw_hero_down:
 
-	; grsim_put_sprite(tfv_defeat,ax-2,24);
+	; grsim_put_sprite(tfv_defeat,ax-2,26);
 
 	lda	HERO_X
 	sec
 	sbc	#2
 	sta	XPOS
-	lda	#24
+	lda	#26
 	sta	YPOS
 
 	lda	#<tfv_defeat_sprite

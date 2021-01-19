@@ -20,6 +20,7 @@ do_battle:
 	sta	MENU_STATE
 	sta	MENU_POSITION
 	sta	ENEMY_DEAD
+	sta	ENEMY_ATTACKING
 
 	; FIXME: set limit break
 	lda	#3
@@ -233,13 +234,16 @@ done_battle_handle_dead:
 	;========================================
 	; delay for framerate
 
-	lda	#20
+	lda	#50
 	jsr	WAIT
 
 
 
 	;========================
 	; handle enemy attacks
+
+	lda	ENEMY_DEAD
+	bne	battle_done_enemy_attack
 
 	lda	ENEMY_COUNT
 	bne	battle_no_enemy_attack
@@ -248,22 +252,11 @@ battle_start_enemy_attack:
 	; attack and decrement HP
 	jsr	enemy_attack
 
-	; update limit count
-	; max out at 4
-	lda	HERO_LIMIT
-	cmp	#4
-	beq	battle_no_inc_limit
-
-	inc	HERO_LIMIT
-battle_no_inc_limit:
-
-	; reset enemy time. FIXME: variable?
-	lda	#50
-	sta	ENEMY_COUNT
-
 battle_no_enemy_attack:
-	dec	ENEMY_COUNT
 
+	dec	ENEMY_COUNT	; countdown until attack
+
+battle_done_enemy_attack:
 
 	;===============================
 	; handle battle counter
