@@ -27,6 +27,7 @@ do_battle:
 	sta	MENU_POSITION
 	sta	ENEMY_DEAD
 	sta	ENEMY_ATTACKING
+	sta	QUEUED_ATTACK
 
 	; start battle count part-way in
 	lda	#20
@@ -247,8 +248,11 @@ done_battle_handle_dead:
 	jsr	get_keypress
 	sta	LAST_KEY
 	cmp	#'Q'
-	beq	done_battle
+	bne	not_quit
+	jmp	done_battle
 
+
+not_quit:
 	;========================================
 	; delay for framerate
 
@@ -331,20 +335,76 @@ battle_enemy_is_dead:
 	inc	ENEMY_DEAD
 	lda	ENEMY_DEAD
 	cmp	#15
-	bne	end_battle_loop
+	bne	end_check_enemy_dead
 
 	jsr	victory_dance
 	jmp	done_battle
 
 battle_enemy_is_not_dead_yet:
 	lda	ENEMY_HP_HI
-	bne	end_battle_loop
+	bne	end_check_enemy_dead
 	lda	ENEMY_HP_LO
-	bne	end_battle_loop
+	bne	end_check_enemy_dead
 
 	; make enemy dead
 	inc	ENEMY_DEAD
 
+end_check_enemy_dead:
+
+	;====================
+	; run queued attack
+
+	lda	QUEUED_ATTACK
+	beq	end_queued_attack
+
+	cmp	#QUEUED_DO_ATTACK
+	beq	queued_attack_action
+	cmp	#QUEUED_DO_MAGIC
+	beq	queued_magic_action
+	cmp	#QUEUED_DO_LIMIT
+	beq	queued_limit_action
+	cmp	#QUEUED_DO_SUMMON
+	beq	queued_summon_action
+
+
+	jmp	end_queued_attack
+
+queued_attack_action:
+        lda     #0
+        sta     MENU_STATE
+
+        ; attack and decrement HP
+        jsr     attack
+        jsr     done_attack
+	jmp	done_queued_attack
+
+queued_magic_action:
+        lda     #0
+        sta     MENU_STATE
+        jsr     magic_attack
+        jsr     done_attack
+	jmp	done_queued_attack
+
+queued_limit_action:
+        lda     #0
+        sta     MENU_STATE
+        jsr     limit_break
+        jsr     done_attack
+	jmp	done_queued_attack
+
+queued_summon_action:
+        lda     #0
+        sta     MENU_STATE
+        jsr     summon
+        jsr     done_attack
+	jmp	done_queued_attack
+
+done_queued_attack:
+	lda	#0
+	sta	QUEUED_ATTACK
+
+
+end_queued_attack:
 
 end_battle_loop:
 

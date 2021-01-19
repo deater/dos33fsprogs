@@ -579,35 +579,46 @@ finger_action:
 	brk
 
 finger_attack_action:
-	lda	#0
-	sta	MENU_STATE
+;	lda	#0
+;	sta	MENU_STATE
 
 	; attack and decrement HP
-	jsr	attack
-	jsr	done_attack
+;	jsr	attack
+;	jsr	done_attack
+
+	lda	#QUEUED_DO_ATTACK
+	sta	QUEUED_ATTACK
 
 	rts
 
 finger_magic_action:
-	lda	#0
-	sta	MENU_STATE
-	jsr	magic_attack
-	jsr	done_attack
+;	lda	#0
+;	sta	MENU_STATE
+;	jsr	magic_attack
+;	jsr	done_attack
+
+	lda	#QUEUED_DO_MAGIC
+	sta	QUEUED_ATTACK
 	rts
 
 finger_limit_action:
-	lda	#0
-	sta	MENU_STATE
-	jsr	limit_break
-	jsr	done_attack
+;	lda	#0
+;	sta	MENU_STATE
+;	jsr	limit_break
+;	jsr	done_attack
+
+	lda	#QUEUED_DO_LIMIT
+	sta	QUEUED_ATTACK
 	rts
 
 finger_summon_action:
-	lda	#0
-	sta	MENU_STATE
-	jsr	summon
-	jsr	done_attack
+;	lda	#0
+;	sta	MENU_STATE
+;	jsr	summon
+;	jsr	done_attack
 
+	lda	#QUEUED_DO_SUMMON
+	sta	QUEUED_ATTACK
 	rts
 
 battle_menu_nofinger_keypress:

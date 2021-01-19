@@ -225,9 +225,10 @@ enemy_attack:
 	lda	#1
 	sta	ENEMY_ATTACKING
 
+
 enemy_attack_loop:
 
-	; put attack name on
+	; put attack name onh
 	; occasionally attack with that enemy's power?
 	; occasionally heal self?
 
@@ -247,10 +248,24 @@ enemy_attack_loop:
 	sta	YPOS
 	jsr	draw_enemy
 
+	; let you finish menu commands?
+
+	lda     MENU_STATE
+	cmp     #MENU_NONE
+	beq     enemy_no_menu
+
+	jsr	get_keypress
+	sta	LAST_KEY
+	jsr	battle_menu_keypress
+
+enemy_no_menu:
+
 	;============
 	; draw bottom
 
 	jsr	draw_battle_bottom
+
+
 
 	;============
 	; page flip
