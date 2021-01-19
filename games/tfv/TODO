@@ -3,16 +3,13 @@ short-term:
 + Get battle finished
 	- hook up name
 	- sound effects (during battle?  magic specifically)
-	- rotate intro
-	- animated fly in
 	- if not enough magic points, grey out? somehow
 		the ones we can't cast
 	- adjust color of fight background based on ground color
 	- randomize/generic enemy
-	- get limit timer working properly
 	- handle dying properly (game over at bottom of screen)
 + load game support
-
++ merge the credits and battle mockingboard code if possible
 
 
 

@@ -84,7 +84,8 @@ tfv_world.o:	tfv_world.s zp.inc \
 	sound_effects.s speaker_tone.s \
 	graphics_map/tfv_backgrounds.inc \
 	graphics_battle/battle_graphics.inc \
-	tfv_sprites.inc battle_sprites.inc
+	tfv_sprites.inc battle_sprites.inc \
+	play_music.s music/fighting.pt3
 	ca65 -o tfv_world.o tfv_world.s -l tfv_world.lst
 
 graphics_map/tfv_backgrounds.inc:

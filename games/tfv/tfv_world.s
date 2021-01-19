@@ -16,6 +16,12 @@
 
 	jsr	init_multiply_tables
 
+	;================================
+	; Setup sound
+	;================================
+
+	jsr	setup_music
+
 	;=====================
 	; Handle Overworld
 	;=====================
@@ -94,3 +100,6 @@
 ;===============================================
 .include "sound_effects.s"
 .include "speaker_tone.s"
+
+
+.include "play_music.s"

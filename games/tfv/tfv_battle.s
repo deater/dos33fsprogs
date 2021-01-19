@@ -39,6 +39,16 @@ do_battle:
 	jsr	update_hero_mp
 
 
+	; start music
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	no_mockingboard
+
+	jsr	pt3_init_song
+
+	cli
+no_mockingboard:
 
 	;========================
 	; zoom to battlefield
@@ -342,6 +352,18 @@ end_battle_loop:
 done_battle:
 
 	jsr	clear_bottoms
+
+
+	; disable music
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	no_mockingboard_end
+
+	sei
+	jsr	clear_ay_both
+
+no_mockingboard_end:
 
 	rts
 

@@ -51,7 +51,7 @@ shine_loop:
 	;
 draw_segment:
 	lda	#0
-	sta	LOOP
+	sta	LOGO_LOOP
 
 segment_loop:
 	lda	YADD
@@ -115,8 +115,8 @@ skip_bottom:
 
 	inc	XX		; ram[XX]++;
 
-	inc	LOOP
-	lda	LOOP
+	inc	LOGO_LOOP
+	lda	LOGO_LOOP
 	cmp	#4
 	bne	segment_loop
 

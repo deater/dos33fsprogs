@@ -22,7 +22,43 @@ INVFLG	= $32
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
-XMAX		=	$50	; used by putsprite_crop
+; music
+LOOP            = $01
+MB_VALUE        = $02
+MB_ADDR_L       = $03
+MB_ADDR_H       = $04
+DONE_PLAYING    = $05
+DONE_SONG       = $06
+
+; rest of pt3_player
+PT3_TEMP        = $07
+ORNAMENT_L      = $08
+ORNAMENT_H      = $09
+SAMPLE_L        = $0A
+SAMPLE_H        = $0B
+
+; pt3 player registers
+REGISTER_DUMP   = $50
+AY_REGISTERS    = $50
+A_FINE_TONE     = $50
+A_COARSE_TONE   = $51
+B_FINE_TONE     = $52
+B_COARSE_TONE   = $53
+C_FINE_TONE     = $54
+C_COARSE_TONE   = $55
+NOISE           = $56
+ENABLE          = $57
+PT3_MIXER_VAL   = $57
+A_VOLUME        = $58
+B_VOLUME        = $59
+C_VOLUME        = $5A
+ENVELOPE_FINE   = $5B
+ENVELOPE_COARSE = $5C
+ENVELOPE_SHAPE  = $5D
+PATTERN_L       = $5E
+PATTERN_H       = $5F
+
+
 
 ;; Flying Routine Only
 
@@ -66,6 +102,7 @@ LAST_SPACEX_I	=	$87
 LAST_SPACEY_I	=	$88
 LAST_MAP_COLOR	=	$89
 COLOR_MASK	=	$8A
+XMAX		=	$8B	; used by putsprite_crop
 
 ;; rotozoom (can overlap with flying routine?)
 SCALE_I		=	$64	; scale of rotozoom
@@ -102,14 +139,6 @@ HERO_STEPS	=	$A2	; number of steps
 TFV_X           =     $A3	; location on screen
 TFV_Y           =     $A4	; location on screen
 MAP_X           =     $A5	; which map region we're on
-
-;; World Map Only
-
-;ODD             =     $7B
-;DIRECTION       =     $7C
-;MOVED           =     $7F
-;STEPS           =     $80
-
 
 
 
@@ -192,7 +221,7 @@ XX		=	$E3
 YY		=	$E4
 SHIPY           =	$E4
 YADD		=	$E5
-LOOP		=	$E6
+LOGO_LOOP	=	$E6
 ;MEMPTRL		=	$E7
 ;MEMPTRH		=	$E8
 NAMEL		=	$E9
