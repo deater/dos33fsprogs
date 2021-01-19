@@ -6,7 +6,7 @@ rotate_intro:
 
 	; init the multiply routines
 
-	jsr	init_multiply_tables
+;	jsr	init_multiply_tables
 
 	; first copy current screen to background
 
@@ -59,8 +59,8 @@ done_rotate:
 	; gr_copy_current_to_offscreen 40x40
 	;=========================================================
 	; Copy draw page to $c00
-	; Take image in 0xc00
-	; 	Copy to DRAW_PAGE
+	; Take image in DRAW_PAGE
+	; 	Copy to $c00
 	;	Actually copy lines 0..39
 	; Don't over-write bottom 4 lines of text
 gr_copy_current_to_offscreen_40x40:

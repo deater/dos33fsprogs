@@ -29,13 +29,13 @@
 ;                   square2_hi = >(((I-255)*(I-255))/4)
 
 ; Note: DOS3.3 starts at $9600
+; I/O starts at $c000
 
-.ifndef square1_lo
-square1_lo	=	$8E00
-square1_hi	=	$9000
-square2_lo	=	$9200
-square2_hi	=	$9400
-.endif
+square1_lo	=	$B600
+square1_hi	=	$B800
+square2_lo	=	$BA00
+square2_hi	=	$BC00
+
 
 ;	for(i=0;i<512;i++) {
 ;		square1_lo[i]=((i*i)/4)&0xff;
@@ -43,6 +43,10 @@ square2_hi	=	$9400
 ;		square2_lo[i]=( ((i-255)*(i-255))/4)&0xff;
 ;		square2_hi[i]=(( ((i-255)*(i-255))/4)>>8)&0xff;
 ;	}
+
+
+	; note, don't run these more than once?
+	; why not?	oh, smc that we don't reset
 
 init_multiply_tables:
 

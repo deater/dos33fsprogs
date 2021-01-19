@@ -10,6 +10,12 @@
 	; Clear screen and setup graphics
 	;================================
 
+	;================================
+	; Init Variables
+	;================================
+
+	jsr	init_multiply_tables
+
 	;=====================
 	; Handle Overworld
 	;=====================

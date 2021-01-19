@@ -35,6 +35,9 @@ handle_overworld:
 	lda	#$1
 	sta	REFRESH
 
+	lda	#3
+	sta	HERO_LIMIT
+
 	lda	#5
 	sta	MAP_X
 

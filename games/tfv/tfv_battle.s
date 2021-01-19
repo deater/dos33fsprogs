@@ -29,8 +29,8 @@ do_battle:
 	sta	ENEMY_ATTACKING
 
 	; FIXME: set limit break
-	lda	#3
-	sta	HERO_LIMIT
+;	lda	#3
+;	sta	HERO_LIMIT
 
 	; start battle count part-way in
 	lda	#20
