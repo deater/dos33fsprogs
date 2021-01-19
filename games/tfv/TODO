@@ -1,18 +1,15 @@
 short-term:
 + Finish mockingboard music (victory and battle)
-+ Get credits hooked up
 + Get battle finished
-	- all menu options
-	- properly sync hp/mp with title
 	- hook up name
-	- sound effects (bleep on menu, clicks/tones during battles)
+	- sound effects (during battle?  magic specifically)
 	- rotate intro
 	- animated fly in
-	- enemy glow pink before dying
-	- healing, display numbers in aqua
 	- if not enough magic points, grey out? somehow
 		the ones we can't cast
 	- adjust color of fight background based on ground color
+	- enemy can attack
+	- get limit timer working properly
 + load game support
 
 

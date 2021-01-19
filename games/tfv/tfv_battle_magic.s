@@ -136,12 +136,12 @@ magic_happens_loop:
 	sta	YPOS
 	jsr	draw_enemy
 
-	; draw hero
+	; draw hero (no sword while casting)
 	lda	#34
 	sta	HERO_X
 	lda	#20
 	sta	HERO_Y
-	jsr	draw_hero_and_sword
+	jsr	draw_hero
 
 	lda	ANIMATE_LOOP
 	and	#$1
@@ -194,7 +194,8 @@ magic_happens_loop:
 	sta	HERO_X
 	lda	#20
 	sta	HERO_Y
-	jsr	draw_hero_and_sword
+	jsr	draw_hero
+;	jsr	draw_hero_and_sword
 
 	; draw enemy
 	lda	ENEMY_X
