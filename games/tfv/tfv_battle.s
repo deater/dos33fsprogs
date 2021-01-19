@@ -61,9 +61,36 @@ battlefield_zoom_loop:
 
 	jsr	gr_copy_to_current
 
+
+	; sorta zoom in the hero
+
+	; 8  -> 38,28
+	; 9  -> 36,24
+	; 10 -> 34,20
+	lda	ANIMATE_LOOP
+	cmp	#8
+	bcc	battlefield_zoom_done_hero
+
+	sec
+	sbc	#8
+	tay
+
+	lda	hero_zoom_x,Y
+	sta	HERO_X
+	lda	hero_zoom_y,Y
+	sta	HERO_Y
+
+	jsr	draw_hero_and_sword
+
+
+battlefield_zoom_done_hero:
+	; zoom in enemy too?  trickier
+
+
+
 	jsr	page_flip
 
-	lda	#200
+	lda	#240
 	jsr	WAIT
 
 	inc	ANIMATE_LOOP
@@ -468,3 +495,14 @@ plains_animation:
 .word	plains_anim09
 .word	plains_anim10
 .word	plains_battle
+
+	; 8  -> 38,28
+	; 9  -> 36,24
+	; 10 -> 34,20
+
+hero_zoom_x:
+	.byte 38,36,34
+
+hero_zoom_y:
+	.byte 28,24,20
+
