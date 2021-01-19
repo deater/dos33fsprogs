@@ -83,11 +83,15 @@ tfv_world.o:	tfv_world.s zp.inc \
 	help_overworld.s rotate_intro.s rotozoom.s \
 	sound_effects.s speaker_tone.s \
 	graphics_map/tfv_backgrounds.inc \
+	graphics_battle/battle_graphics.inc \
 	tfv_sprites.inc battle_sprites.inc
 	ca65 -o tfv_world.o tfv_world.s -l tfv_world.lst
 
 graphics_map/tfv_backgrounds.inc:
 	cd graphics_map && make
+
+graphics_battle/battle_graphics.inc:
+	cd graphics_battle && make
 
 
 
@@ -95,4 +99,4 @@ graphics_map/tfv_backgrounds.inc:
 
 clean:	
 	rm -f *~ TITLE.GR *.o *.lst TFV_CREDITS TFV_TITLE TFV_FLYING TFV_WORLD HELLO LOADER
-
+	cd graphics_battle && make clean

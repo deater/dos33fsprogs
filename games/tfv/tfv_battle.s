@@ -28,10 +28,6 @@ do_battle:
 	sta	ENEMY_DEAD
 	sta	ENEMY_ATTACKING
 
-	; FIXME: set limit break
-;	lda	#3
-;	sta	HERO_LIMIT
-
 	; start battle count part-way in
 	lda	#20
 	sta	BATTLE_COUNT
@@ -47,7 +43,36 @@ do_battle:
 	;========================
 	; zoom to battlefield
 
-	; jsr	zoom_battlefield
+	lda	#0
+	sta	ANIMATE_LOOP
+battlefield_zoom_loop:
+
+	lda	ANIMATE_LOOP
+	asl
+	tay
+	lda	plains_animation,Y	;	lda	#<(plains_battle)
+	sta	getsrc_smc+1
+	lda	plains_animation+1,Y	;	lda	#>(plains_battle)
+	sta	getsrc_smc+2
+
+	lda	#$c
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	gr_copy_to_current
+
+	jsr	page_flip
+
+	lda	#200
+	jsr	WAIT
+
+	inc	ANIMATE_LOOP
+	lda	ANIMATE_LOOP
+	cmp	#11
+	bne	battlefield_zoom_loop
+
+
+
 
 	;=============================
 	; Init Enemy
@@ -57,56 +82,8 @@ do_battle:
 	;==========================
 	; Draw background
 
-	;==========================
-	;  Draw sky
+;	jsr	draw_battle_background
 
-	ldx	#0	; blue from 0 .. 10
-battle_sky_loop:
-	lda	gr_offsets,X
-	sta	GBASL
-	lda	gr_offsets+1,X
-	clc
-	adc	#$8		; store to $C00
-	sta	GBASH
-
-	lda	#$66		; COLOR_MEDIUMBLUE
-	ldy	#0
-battle_sky_inner:
-	sta	(GBASL),Y
-	iny
-	cpy	#40
-	bne	battle_sky_inner
-
-	inx
-	inx
-	cpx	#10
-	bne	battle_sky_loop
-
-
-				; green from 10 .. 40
-battle_ground_loop:
-	lda	gr_offsets,X
-	sta	GBASL
-	lda	gr_offsets+1,X
-	clc
-	adc	#$8		; store to $C00
-	sta	GBASH
-
-	lda	#$CC		; COLOR_LIGHTGREEN
-				; FIXME: should be GROUNDCOLOR
-	ldy	#0
-battle_ground_inner:
-	sta	(GBASL),Y
-	iny
-	cpy	#40
-	bne	battle_ground_inner
-
-	inx
-	inx
-	cpx	#40
-	bne	battle_ground_loop
-
-	; Draw some background images for variety?
 
 	; update bottom of screen
 	jsr	draw_battle_bottom
@@ -414,3 +391,80 @@ victory_draw_done:
 victory_string:
 	.byte 13,21,"EXPERIENCE +2",0
 	.byte 16,22,"MONEY +1",0
+
+
+.if 0
+	;==========================
+	;==========================
+	;  Draw battle background
+	;==========================
+	;==========================
+draw_battle_background:
+
+	;==========================
+	;  Draw sky
+
+	ldx	#0	; blue from 0 .. 10
+battle_sky_loop:
+	lda	gr_offsets,X
+	sta	GBASL
+	lda	gr_offsets+1,X
+	clc
+	adc	#$8		; store to $C00
+	sta	GBASH
+
+	lda	#$66		; COLOR_MEDIUMBLUE
+	ldy	#0
+battle_sky_inner:
+	sta	(GBASL),Y
+	iny
+	cpy	#40
+	bne	battle_sky_inner
+
+	inx
+	inx
+	cpx	#10
+	bne	battle_sky_loop
+
+
+				; green from 10 .. 40
+battle_ground_loop:
+	lda	gr_offsets,X
+	sta	GBASL
+	lda	gr_offsets+1,X
+	clc
+	adc	#$8		; store to $C00
+	sta	GBASH
+
+	lda	#$CC		; COLOR_LIGHTGREEN
+				; FIXME: should be GROUNDCOLOR
+	ldy	#0
+battle_ground_inner:
+	sta	(GBASL),Y
+	iny
+	cpy	#40
+	bne	battle_ground_inner
+
+	inx
+	inx
+	cpx	#40
+	bne	battle_ground_loop
+
+	; Draw some background images for variety?
+
+	rts
+.endif
+
+
+plains_animation:
+.word	plains_anim01
+.word	plains_anim02
+.word	plains_anim03
+.word	plains_anim04
+.word	plains_anim05
+.word	plains_anim06
+.word	plains_anim07
+.word	plains_anim08
+.word	plains_anim09
+.word	plains_anim10
+.word	plains_battle
