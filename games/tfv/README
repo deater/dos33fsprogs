@@ -29,9 +29,12 @@ $04-$07	lores page 1
 $08-$0b	lores page 2
 $0c-$0f	background graphics
 $10-$1f	??
-$20-???	code			B6-20 = 38.4k
-$B6-$BD multiply tables
-
+$20-???	code			AE-20 = 36.4k
+$AE-$B5 music buffer		2k
+$B6-$BD multiply tables		2k
+$BE-$BF ??
+$C0-$CF I/O
+$D0-$FF ROM
 
 
 

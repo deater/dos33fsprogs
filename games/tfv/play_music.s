@@ -5,6 +5,7 @@ setup_music:
 	;===================================
 	lda	#0
 	sta	DONE_PLAYING
+	lda	#1
 	sta	LOOP
 
 	; detect mockingboard
@@ -37,6 +38,7 @@ mockingboard_found:
 	; init song
 	;==================
 
+	jsr	music_load_fighting
 	jsr     pt3_init_song
 
 	jmp     done_setup_sound
@@ -48,6 +50,33 @@ mockingboard_notfound:
 done_setup_sound:
 
 	rts
+
+
+music_load_fighting:
+
+	lda	#<(fighting_lzsa)
+	sta	getsrc_smc+1
+	lda	#>(fighting_lzsa)
+	sta	getsrc_smc+2
+
+	lda	#$AE
+
+	jsr	decompress_lzsa2_fast
+	rts
+
+
+music_load_victory:
+
+	lda	#<(victory_lzsa)
+	sta	getsrc_smc+1
+	lda	#>(victory_lzsa)
+	sta	getsrc_smc+2
+
+	lda	#$AE
+
+	jsr	decompress_lzsa2_fast
+	rts
+
 
 
 	;==========================
@@ -62,9 +91,6 @@ done_setup_sound:
 	.include "pt3_lib_mockingboard_setup.s"
 
 
-PT3_LOC = still_more_fighting
+PT3_LOC = $AE00
 
-.align $100
-still_more_fighting:
-.incbin "music/fighting.pt3"
-
+	.include "music/battle_music.inc"

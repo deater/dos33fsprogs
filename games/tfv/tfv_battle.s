@@ -45,6 +45,7 @@ do_battle:
 	and	#SOUND_MOCKINGBOARD
 	beq	no_mockingboard
 
+	jsr	music_load_fighting
 	jsr	pt3_init_song
 
 	cli
@@ -380,6 +381,29 @@ battle_game_over:
 	;====================================
 
 victory_dance:
+
+
+	; start music
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	no_mockingboard_victory
+
+	sei
+	jsr	clear_ay_both
+
+	jsr	music_load_victory
+	jsr	pt3_init_song
+
+	cli
+no_mockingboard_victory:
+
+
+
+
+
+
+
 
 	lda	#34
 	sta	HERO_X

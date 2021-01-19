@@ -85,7 +85,7 @@ tfv_world.o:	tfv_world.s zp.inc \
 	graphics_map/tfv_backgrounds.inc \
 	graphics_battle/battle_graphics.inc \
 	tfv_sprites.inc battle_sprites.inc \
-	play_music.s music/fighting.pt3
+	play_music.s music/fighting.pt3 music/victory.pt3 music/battle_music.inc
 	ca65 -o tfv_world.o tfv_world.s -l tfv_world.lst
 
 graphics_map/tfv_backgrounds.inc:
@@ -94,6 +94,9 @@ graphics_map/tfv_backgrounds.inc:
 graphics_battle/battle_graphics.inc:
 	cd graphics_battle && make
 
+music/battle_music.inc:
+	cd battle_music && make
+
 
 
 ###
@@ -101,3 +104,4 @@ graphics_battle/battle_graphics.inc:
 clean:	
 	rm -f *~ TITLE.GR *.o *.lst TFV_CREDITS TFV_TITLE TFV_FLYING TFV_WORLD HELLO LOADER
 	cd graphics_battle && make clean
+	cd music && make clean
