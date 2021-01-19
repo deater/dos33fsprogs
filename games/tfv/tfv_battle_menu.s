@@ -183,21 +183,22 @@ draw_battle_menu_main:
 
 	; wrap location
 	lda	HERO_LIMIT
+	cmp	#5
+	bcs	limit5_wrap	; bge if limit >=5 then stop at 5
+
+limit4_wrap:
+	lda	MENU_POSITION
 	cmp	#4
-	bcs	limit4_wrap	; bge
+	bcc	done_menu_wrap
+	lda	#4
+	sta	MENU_POSITION
+	bne	done_menu_wrap	; bra
+
 limit5_wrap:
 	lda	MENU_POSITION
 	cmp	#5
 	bcc	done_menu_wrap
 	lda	#5
-	sta	MENU_POSITION
-	bne	done_menu_wrap	; bra
-
-limit4_wrap:
-	lda	MENU_POSITION
-	cmp	#6
-	bcc	done_menu_wrap
-	lda	#6
 	sta	MENU_POSITION
 	bne	done_menu_wrap	; bra
 

@@ -285,7 +285,6 @@ enemy_no_menu:
 
 enemy_done_charging:
 
-
 	; damage the hero
 
 	jsr	damage_hero
@@ -297,7 +296,70 @@ enemy_done_charging:
 	beq	battle_no_inc_limit
 
         inc	HERO_LIMIT
+
 battle_no_inc_limit:
+
+
+	;============================
+	;============================
+	;============================
+
+	lda	#50
+	sta	ANIMATE_LOOP
+enemy_end_loop:
+
+
+	;======================
+	; copy over background
+
+	jsr	gr_copy_to_current
+
+	; draw hero first so behind enemy
+
+	jsr	draw_hero_and_sword
+
+	; if == 10 back to left
+	lda	ANIMATE_LOOP
+	cmp	#10
+	bne	not_enemy_back
+
+	lda	#0
+	sta	ENEMY_X
+
+	lda	#0
+	sta	ENEMY_ATTACKING
+
+not_enemy_back:
+
+
+	; draw enemy
+	lda	ENEMY_X
+	sta	XPOS
+	lda	#20
+	sta	YPOS
+	jsr	draw_enemy
+
+	; let you finish menu commands?
+
+	lda     MENU_STATE
+	cmp     #MENU_NONE
+	beq     enemy_no_menu2
+
+	jsr	get_keypress
+	sta	LAST_KEY
+	jsr	battle_menu_keypress
+
+enemy_no_menu2:
+
+	;============
+	; draw bottom
+
+	jsr	draw_battle_bottom
+
+
+	lda	ANIMATE_LOOP
+	cmp	#10
+	bcc	no_enemy_print_damage
 
 	; print damage
 
@@ -307,28 +369,18 @@ battle_no_inc_limit:
 	sta	YPOS
 	jsr	gr_put_num
 
-
-	; draw bottom
-	jsr	draw_battle_bottom
+no_enemy_print_damage:
 
 	; flip page
 	jsr	page_flip
 
-	; wait 1s
+	dec	ANIMATE_LOOP
+	bne	enemy_end_loop
 
-	ldx	#100
-	jsr	long_wait
 
 done_enemy_attack:
 
 	; done attacking
-
-	lda	#0
-	sta	ENEMY_ATTACKING
-
-	; move back to left
-	lda	#0
-	sta	ENEMY_X
 
 	; reset enemy time. FIXME: variable?
 	lda	#100
