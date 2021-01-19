@@ -1,3 +1,29 @@
+	;==========================
+	; limit break
+	;==========================
+limit_break:
+
+	; reset limit counter
+	lda	#0
+	sta	HERO_LIMIT
+
+	; TODO: replace with jump table?
+
+	lda	MENU_POSITION
+	cmp	#MENU_LIMIT_DROP
+	beq	do_limit_drop
+	cmp	#MENU_LIMIT_SLICE
+	beq	do_limit_slice
+	cmp	#MENU_LIMIT_ZAP
+	beq	do_limit_zap
+
+do_limit_drop:
+	jmp	limit_break_drop
+do_limit_slice:
+	jmp	limit_break_slice
+do_limit_zap:
+	jmp	limit_break_zap
+
 
 
 	;======================
@@ -189,8 +215,8 @@ more_drop_loop:
 
 	jsr	page_flip
 
-	; wait 2s
-	ldx	#200
+	; wait 1.5s
+	ldx	#150
 	jsr	long_wait
 
 	rts
@@ -324,8 +350,8 @@ done_slice_down:
 
 	jsr	page_flip
 
-	; wait 2s
-	ldx	#20
+	; wait 1.5s
+	ldx	#150
 	jsr	long_wait
 
 	rts
@@ -462,36 +488,11 @@ zap_loop:
 
 	jsr	page_flip
 
-	; wait 2s
-	ldx	#200
+	; wait 1.5s
+	ldx	#150
 	jsr	long_wait
 
 	rts
 
-	;==========================
-	; limit break
-	;==========================
-limit_break:
-
-	; reset limit counter
-	lda	#0
-	sta	HERO_LIMIT
-
-	; TODO: replace with jump table?
-
-	lda	MENU_POSITION
-	cmp	#MENU_LIMIT_DROP
-	beq	do_limit_drop
-	cmp	#MENU_LIMIT_SLICE
-	beq	do_limit_slice
-	cmp	#MENU_LIMIT_ZAP
-	beq	do_limit_zap
-
-do_limit_drop:
-	jmp	limit_break_drop
-do_limit_slice:
-	jmp	limit_break_slice
-do_limit_zap:
-	jmp	limit_break_zap
 
 
