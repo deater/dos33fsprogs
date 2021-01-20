@@ -21,8 +21,8 @@
 	MBOFFSET = $98
 	WAITING = $99
 
-MB_VALUE        = $91
-DONE_PLAYING    = $92
+;MB_VALUE        = $91
+;DONE_PLAYING    = $92
 MB_ADDRL        = $93
 MB_ADDRH        = $94
 MB_CHUNK_OFFSET = $95

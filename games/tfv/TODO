@@ -10,8 +10,8 @@ short-term:
 	- handle dying properly (game over at bottom of screen)
 + load game support
 + merge the credits and battle mockingboard code if possible
-
-
++ for the victory music, add pause before playing, adjust tempo
++ add "story" of some sort
 
 get metrocat by running across him on world map
 

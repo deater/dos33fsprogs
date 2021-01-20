@@ -37,7 +37,7 @@ loader.o:	loader.s init_vars.s common_defines.inc zp.inc
 
 ###
 
-credits.o:	credits.s credits_sprites.inc mockingboard.s \
+credits.o:	credits.s zp.inc credits_sprites.inc mockingboard.s \
 	vapor_lock.s gr_putsprite.s move_letters.s \
 	./graphics_credits/KATC.lzsa
 	ca65 -o credits.o credits.s -l credits.lst
@@ -53,6 +53,7 @@ TFV_TITLE:	tfv_title.o
 tfv_title.o:	tfv_title.s zp.inc \
 	gr_vlin.s tfv_opener.s \
 	draw_menu.s keyboard.s joystick.s \
+	load_game.s tfv_textentry.s \
 	graphics_title/tfv_title.inc
 	ca65 -o tfv_title.o tfv_title.s -l tfv_title.lst
 
@@ -88,6 +89,9 @@ tfv_world.o:	tfv_world.s zp.inc \
 	play_music.s music/fighting.pt3 music/victory.pt3 music/battle_music.inc
 	ca65 -o tfv_world.o tfv_world.s -l tfv_world.lst
 
+graphics_credits/KATC.lzsa:
+	cd graphics_credits && make
+
 graphics_map/tfv_backgrounds.inc:
 	cd graphics_map && make
 
@@ -95,7 +99,7 @@ graphics_battle/battle_graphics.inc:
 	cd graphics_battle && make
 
 music/battle_music.inc:
-	cd battle_music && make
+	cd music && make
 
 
 
@@ -104,4 +108,5 @@ music/battle_music.inc:
 clean:	
 	rm -f *~ TITLE.GR *.o *.lst TFV_CREDITS TFV_TITLE TFV_FLYING TFV_WORLD HELLO LOADER
 	cd graphics_battle && make clean
+	cd graphics_credits && ake clean
 	cd music && make clean

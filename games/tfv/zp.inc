@@ -219,22 +219,19 @@ QUEUED_ATTACK	=	$DC
 	QUEUED_DO_LIMIT = $03
 	QUEUED_DO_SUMMON = $04
 
+
 COLOR1		=	$E0
 COLOR2		=	$E1
 MATCH		=	$E2
 XX		=	$E3
 YY		=	$E4
-SHIPY           =	$E4
+SHIPY           =	$E4	; same as before
 YADD		=	$E5
 LOGO_LOOP	=	$E6
-;MEMPTRL		=	$E7
-;MEMPTRH		=	$E8
-NAMEL		=	$E9
-NAMEH		=	$EA
-NAMEX		=	$EB
-CHAR		=	$EC
-DISP_PAGE       =	$ED
-DRAW_PAGE       =	$EE
+NAMEX		=	$E7
+CHAR		=	$E8
+DISP_PAGE       =	$E9
+DRAW_PAGE       =	$EA
 
 FIRST		=	$F0
 LASTKEY		=	$F1
