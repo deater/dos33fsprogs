@@ -130,6 +130,9 @@ plot_yloop:
 plot_mask:
 	sty	MASK
 
+	; ugh can't use PLOT trick as it always will draw something
+	; to PAGE1 even if we don't want to
+
 	jsr	GBASCALC	; point GBASL/H to address in (A is ycoord/2)
 				; after, A is GBASL, C is clear
 
