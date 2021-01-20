@@ -64,12 +64,14 @@ init_enemy:
 	sta	ENEMY_X
 	sta	ENEMY_DEAD
 
-	lda	#$50		; BCD
-	sta	ENEMY_HP_LO
+	; FIXME: lower
+
 	lda	#$00		; BCD
+	sta	ENEMY_HP_LO
+	lda	#$03		; BCD
 	sta	ENEMY_HP_HI
 
-	lda	#$1		; max HP is 100
+	lda	#$3		; max HP is 100
 	sta	ENEMY_LEVEL
 
 	lda	#30

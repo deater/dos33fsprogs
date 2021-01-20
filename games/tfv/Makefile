@@ -108,5 +108,5 @@ music/battle_music.inc:
 clean:	
 	rm -f *~ TITLE.GR *.o *.lst TFV_CREDITS TFV_TITLE TFV_FLYING TFV_WORLD HELLO LOADER
 	cd graphics_battle && make clean
-	cd graphics_credits && ake clean
+	cd graphics_credits && make clean
 	cd music && make clean

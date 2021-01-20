@@ -112,7 +112,18 @@ title_new_game:
 
 	jsr	enter_name
 
-	; TODO: all rest
+	; Initial starting values
+	lda	#$1
+	sta	HERO_LEVEL
+
+	lda	#$01
+	sta	HERO_HP_HI
+	lda	#$00
+	sta	HERO_HP_LO
+
+	lda	#$20
+	sta	HERO_MP
+	sta	HERO_MP_MAX
 
 	lda	#LOAD_FLYING
 	sta	WHICH_LOAD
@@ -124,19 +135,7 @@ title_new_game:
 	;=================================
 title_load_game:
 
-	; this should go in new game, not load
-	lda	#$02
-	sta	HERO_LEVEL
-
-	lda	#$01
-	sta	HERO_HP_HI
-	lda	#$50
-	sta	HERO_HP_LO
-	sta	HERO_MP
-	sta	HERO_MP_MAX
-
-	lda	#LOAD_FLYING
-	sta	WHICH_LOAD
+	jsr	load_game
 
 	rts
 
@@ -180,6 +179,7 @@ done_increment_frame:
 .include "keyboard.s"
 .include "joystick.s"
 .include "draw_menu.s"
+.include "load_game.s"
 
 ;===============================================
 ; Data
@@ -190,11 +190,5 @@ title_menu:
 	.byte   16,22,"LOAD GAME",0
 	.byte   16,23,"CREDITS",0
 	.byte   255
-
-enter_name_string:
-	.asciiz	"PLEASE ENTER A NAME:"
-
-name:
-	.byte $0,$0,$0,$0,$0,$0,$0,$0
 
 .include "graphics_title/tfv_title.inc"
