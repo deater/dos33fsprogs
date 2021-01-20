@@ -22,6 +22,7 @@
 ;	$39dc9=237,001=		change to use common lookup table (outside inner loop)
 ;	$3399f=211,359=4.73fps	unroll the Y loop by one
 ;	$2BA83=178,819=5.59fps	optimize unrolled loop
+;       $2B14B=176,459=5.66fps  avoid extra jump (qkumba)
 
 CAL	= $C0
 CAH	= $C1
@@ -263,13 +264,7 @@ roto_color_even_smc:
 	; carry was set a bit before to low bit of YPH
 	; hopefully nothing has cleared it
 
-	bcs	rscrn_adjust_odd					; 2nt/3
-
-rscrn_adjust_even:
-
-	; YP was even so want bottom nibble
-	and	#$f							; 2
-	jmp	rscrn_done						; 3
+	bcc	rscrn_adjust_even					; 2nt/3
 
 rscrn_adjust_odd:
 	; YP was odd so want top nibble
@@ -277,6 +272,13 @@ rscrn_adjust_odd:
 	lsr								; 2
 	lsr								; 2
 	lsr								; 2
+
+	; fall through
+
+rscrn_adjust_even:
+
+	; YP was even so want bottom nibble
+	and	#$f							; 2
 
 rscrn_done:
 
