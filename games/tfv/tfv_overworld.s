@@ -98,8 +98,8 @@ worldmap_handle_left:
 
 left_turn:
 	lda	HERO_STATE
-	and	#~HERO_DIRECTION	; change direction to left (0)
-	and	#~HERO_ODD		; stand (not walk) if changing
+	and	#<(~HERO_DIRECTION)	; change direction to left (0)
+	and	#<(~HERO_ODD)		; stand (not walk) if changing
 	sta	HERO_STATE
 	jmp	done_handle_left	; skip ahead
 
@@ -120,7 +120,7 @@ worldmap_handle_right:
 right_turn:
 	lda	HERO_STATE
 	ora	#HERO_DIRECTION		; change direction to right (1)
-	and	#~HERO_ODD		; change to standing
+	and	#<(~HERO_ODD)		; change to standing
 	sta	HERO_STATE
 	jmp	done_handle_right	; skip ahead
 

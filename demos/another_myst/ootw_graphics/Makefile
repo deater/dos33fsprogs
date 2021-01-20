@@ -1,7 +1,7 @@
-include ../../Makefile.inc
+include ../../../Makefile.inc
 
-PNG2RLE = ../../gr-utils/png2rle
-PNG2LZ4 = ../../gr-utils/png2lz4
+PNG2RLE = ../../../utils/gr-utils/png2rle
+PNG2LZ4 = ../../../utils/gr-utils/png2lz4
 
 all:	ootw_c16_end.inc logo.inc
 

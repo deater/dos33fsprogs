@@ -10,7 +10,7 @@ all:
 	cd mode7_demo && make
 	cd seasons && make
 	cd shapetable_party && make
-	cd vertical_scroll && make
+#	cd vertical_scroll && make
 	cd xmas_2018 && make
 	cd xmas_2019 && make
 
