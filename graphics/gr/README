@@ -1,5 +1,8 @@
 Various experiments in lo-res graphics
 
++ boxes
+	makes lores pictures by drawing boxes
+
 + mode7
 	mode7 tests, used when making mode7 demo
 
