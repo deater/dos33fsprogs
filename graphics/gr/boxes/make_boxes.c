@@ -9,6 +9,8 @@ int main(int argc, char **argv) {
 	int out_ptr=0;
 	int old_color=0xff;
 
+#if 0
+
 	while(1) {
 
 		ptr=fgets(buffer,1024,stdin);
@@ -42,5 +44,28 @@ int main(int argc, char **argv) {
 //	printf("%s\n",output);
 
 	printf("\t.byte $FF\n");
+#endif
+
+
+
+
+	while(1) {
+
+		ptr=fgets(buffer,1024,stdin);
+		if (ptr==NULL) break;
+
+		sscanf(buffer,"%d %d %d %d %d",
+			&color,&x1,&x2,&y1,&y2);
+
+		printf("\t.byte $%02X,$%02X,$%02X,$%02X\n",
+				y1,y2,
+				((color&0x03)<<6)|x1,
+				((color&0x0c)<<4)|x2);
+
+
+	}
+	printf("\t.byte $FF\n");
+
+
 	return 0;
 }

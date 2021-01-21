@@ -8,9 +8,6 @@
 ; 208 -- add subroutine to read byte into A, no need to save Y
 ; 205 -- optimize end loop
 ; 197 -- only update color if changed
-; 194 -- pack color in with the other 4 bytes
-; 191 -- do more common stuff in load_byte
-; 189 -- change how end is detected
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -35,14 +32,21 @@ boxes:
 
 draw_box_loop:
 
-	; get color/Y0
+	; get color
+
 	jsr	load_byte
-	tax			; Y0 is in X
-
-	tya			; check for end
+	bmi	use_old_color
+	cmp	#$7F
 end:
-	bmi	end
+	beq	end		; hit end
 
+	jsr	SETCOL
+
+	jsr	load_byte	; Y0
+
+use_old_color:
+	and	#$3f
+	tax
 
 	jsr	load_byte	; Y1
 	sta	Y1
@@ -50,26 +54,8 @@ end:
 	jsr	load_byte	; X0
 	sta	X0
 
-	tya
-	lsr
-	lsr
-	sta	COLOR
-
-
 	jsr	load_byte	; X1
 	sta	H2
-
-	tya
-	and	#$C0
-	ora	COLOR
-
-	lsr
-	lsr
-	lsr
-	lsr
-
-	jsr	SETCOL
-
 
 inner_loop:
 
@@ -88,48 +74,46 @@ inner_loop:
 	bcs	draw_box_loop
 
 
-
-
 load_byte:
 	inc	load_byte_smc+1	; assume we are always < 256 bytes
 				; so no need to wrap
 load_byte_smc:
 	lda	box_data-1
-	tay
-	and	#$3f
+
 	rts
 
 
 	; 4 6 6 6 6
 box_data:
-	.byte $00,$2F,$C0,$E7
-	.byte $01,$2B,$0A,$9B
-	.byte $28,$29,$43,$D4
-	.byte $24,$27,$43,$D6
-	.byte $20,$23,$45,$D7
-	.byte $1C,$1F,$48,$D8
-	.byte $23,$26,$07,$8E
-	.byte $24,$27,$08,$92
-	.byte $1F,$1F,$0D,$92
-	.byte $2A,$2B,$43,$54
-	.byte $2C,$2D,$46,$53
-	.byte $2C,$2D,$14,$97
-	.byte $08,$16,$1C,$9C
-	.byte $02,$1A,$49,$D8
-	.byte $04,$18,$0A,$95
-	.byte $06,$17,$0B,$14
-	.byte $15,$29,$22,$A2
-	.byte $13,$28,$22,$A4
-	.byte $13,$14,$5C,$63
-	.byte $15,$16,$5B,$61
-	.byte $17,$2B,$59,$E1
-	.byte $18,$20,$1A,$20
-	.byte $22,$2A,$1A,$20
-	.byte $1C,$1C,$5B,$60
-	.byte $26,$26,$5B,$60
-	.byte $1F,$20,$DF,$1F
-	.byte $29,$2A,$DF,$1F
-	.byte $19,$1E,$5D,$5E
-	.byte $23,$28,$5D,$5E
-	.byte $02,$03,$17,$D7
-	.byte $FF
+
+	.byte $0F,$00,$2F,$00,$27
+	.byte $08,$01,$2B,$0A,$1B
+	.byte $0D,$28,$29,$03,$14
+	.byte $A4,$27,$03,$16
+	.byte $A0,$23,$05,$17
+	.byte $9C,$1F,$08,$18
+	.byte $08,$23,$26,$07,$0E
+	.byte $A4,$27,$08,$12
+	.byte $9F,$1F,$0D,$12
+	.byte $05,$2A,$2B,$03,$14
+	.byte $AC,$2D,$06,$13
+	.byte $08,$2C,$2D,$14,$17
+	.byte $88,$16,$1C,$1C
+	.byte $0D,$02,$1A,$09,$18
+	.byte $08,$04,$18,$0A,$15
+	.byte $00,$06,$17,$0B,$14
+	.byte $08,$15,$29,$22,$22
+	.byte $93,$28,$22,$24
+	.byte $05,$13,$14,$1C,$23
+	.byte $95,$16,$1B,$21
+	.byte $0D,$17,$2B,$19,$21
+	.byte $00,$18,$20,$1A,$20
+	.byte $A2,$2A,$1A,$20
+	.byte $05,$1C,$1C,$1B,$20
+	.byte $A6,$26,$1B,$20
+	.byte $03,$1F,$20,$1F,$1F
+	.byte $A9,$2A,$1F,$1F
+	.byte $05,$19,$1E,$1D,$1E
+	.byte $A3,$28,$1D,$1E
+	.byte $0C,$02,$03,$17,$17
+	.byte $7F
