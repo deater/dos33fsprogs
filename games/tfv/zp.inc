@@ -123,22 +123,23 @@ HERO_LEVEL	=	$96	; hero's level, also high byte of max hp
 HERO_XP		=	$97	; hero's experience points
 HERO_MONEY	=	$98	; hero's money
 HERO_INVENTORY	=	$99	; hero's inventory
-HERO_NAME	=	$9A	; 7 chars
-HERO_NAME1	=	$9B	; 7 chars
-HERO_NAME2	=	$9C	; 7 chars
-HERO_NAME3	=	$9D	; 7 chars
-HERO_NAME4	=	$9E	; 7 chars
-HERO_NAME5	=	$9F	; 7 chars
-HERO_NAME6	=	$A0	; 7 chars
-HERO_STATE	=	$A1	; state of hero
+HERO_NAME	=	$9A	; 8 chars
+HERO_NAME1	=	$9B	; 8 chars
+HERO_NAME2	=	$9C	; 8 chars
+HERO_NAME3	=	$9D	; 8 chars
+HERO_NAME4	=	$9E	; 8 chars
+HERO_NAME5	=	$9F	; 8 chars
+HERO_NAME6	=	$A0	; 8 chars
+HERO_NAME7	=	$A1	; 8 chars
+HERO_STATE	=	$A2	; state of hero
 	HERO_ON_BIRD	= $01
 	HERO_ODD	= $02	; stand/walk position
 	HERO_DIRECTION	= $04	; 0=left, 1=right
-HERO_STEPS	=	$A2	; number of steps
+HERO_STEPS	=	$A3	; number of steps
 
-TFV_X           =     $A3	; location on screen
-TFV_Y           =     $A4	; location on screen
-MAP_X           =     $A5	; which map region we're on
+TFV_X           =     $A4	; location on screen
+TFV_Y           =     $A5	; location on screen
+MAP_X           =     $A6	; which map region we're on
 
 
 
