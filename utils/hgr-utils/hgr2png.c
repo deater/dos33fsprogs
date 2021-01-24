@@ -38,159 +38,91 @@ static int hgr_offset(int y) {
 #define COLOR_BLUE	6
 #define COLOR_WHITE1	7
 
-// even = purple blue    01
-// odd =  green  orange  10
-
-//	ODD
-//	0 0X 0	-> Black
-//	0 0X 1  -> Black
-//	0 1X 0  -> Green
-//	0 1X 1  -> White
-//	1 0X 0  -> Black
-//	1 0X 1  -> Green
-//	1 1X 0  -> White
-//	1 1X 1	-> White
 
 
-/* 000 00 00 -> black black black black */
-/* 000 00 01 -> purpl black black black */
-/* 000 00 10 -> black green black black */
-/* 000 00 11 -> white white black black */
+// 00 always black
+// 11 always white
+//
+//
+// GREEN/ORANGE
+// PURPLE/BLUE
 
-/* 000 01 00 -> black black purpl black */
-/* 000 01 01 -> purpl purpl purpl black !!! */
-/* 000 01 10 -> black white white black !!! */
-/* 000 01 11 -> white white white black */
+//   EO
+//00 01 00
+//
+//on screen	in memory
+//00 00 00	0'0 00 00 00	$00
+//
+//what about EVEN
+//                        O P                       PO
+//01 01 00	0'0 00 10 10	$0A	KG GG KK  101 -> G
+//01 01 01	0'0 10 10 10	$2A/42	KG GG GG  101 -> G
+//01 01 10	0'0 01 10 10	$1A/26	KG GW WK  101 -> G
+//01 01 11	0'0 11 10 10	$3A/58	KG GG WW  101 -> G
 
-/* 000 10 00 -> black black black green */
-/* 000 10 01 -> purpl black black green */
-/* 000 10 10 -> black green green black */
-/* 000 10 11 -> white white green green */
-
-/* 000 11 00 -> black black white white */
-/* 000 11 01 -> purpl purpl white white !!! */
-/* 000 11 10 -> black white white white !!! */
-/* 000 11 11 -> white white white white */
+//what about ODD
+//                     N T                           TN
+//01 01 00	0'0 00 10 10	$0A	KG GG KK  010 -> G
+//01 01 01	0'0 10 10 10	$2A/42	KG GG GG  010 -> G
+//01 01 10	0'0 01 10 10	$1A/26	KG GW WK  011 -> W
+//01 01 11	0'0 11 10 10	$3A/58	KG GW WW  011 -> W
 
 
-/*              even  odd */
-/* 000 00 00 -> black black black black */
-/* 000 00 01 -> purpl black black black */
-/* 000 00 10 -> black green black black */
-/* 000 00 11 -> white white black black */
+//what about 11 01 01       10 10 11
 
-/* 000 01 00 -> black black purpl black */
-/* 000 01 01 -> purpl purpl purpl black !!! */
-/* 000 01 10 -> black white white black !!! */
-/* 000 01 11 -> white white white black */
+//-----------------
 
-// 00 00
-// 00 01
-// 00 10
-// 00 11
+//EVEN -- pass in prev, one
+//		        O P                       PO
+//00 01 00	0'0 00 10 00	$08	KK KG KK  001 -> K
+//01 01 00	0'0 00 10 10	$0A	KG GG KK  101 -> G
+//10 01 00	0'0 00 10 01	$09	PK KG KK  001 -> K
+//11 01 00	0'0 00 10 11	$0B	WW GG KK  101 -> G
+//
+//00 10 00	0'0 00 01 00	$04	KK PK KK  010 -> P
+//01 10 00	0'0 00 01 10	$06	KW WK KK  110 -> W
+//10 10 00	0'0 00 01 01	$05	PP PK KK  010 -> P
+//11 10 00	0'0 00 01 11	$07	WW WK KK  110 -> W
 
-// 01 00
-// 01 01
-// 01 10
-// 01 11
-
-// 10 00
-// 10 01
-// 10 10
-// 10 11
-
-// 11 00
-// 11 01
-// 11 10
-// 11 11
+//ODD	-- page in two, next
+//                     N T                           TN
+//00 01 00	0'0 00 10 00	$08	KK KG KK  010 -> G
+//00 01 01	0'0 10 10 00	$28/40	KK KG GG  010 -> G
+//00 01 10	0'0 01 10 00	$18/24	KK KW WK  011 -> W
+//00 01 11	0'0 11 10 00	$38/56	KK KW WW  011 -> W
+//
+//00 10 00	0'0 00 01 00	$04	KK PK KK  100 -> K
+//00 10 01	0'0 10 01 00	$24/36	KK PK KG  100 -> K
+//00 10 10	0'0 01 01 00	$14/20	KK PP PK  101 -> P
+//00 10 11	0'0 11 01 00	$34/52	KK PP WW  101 -> P
 
 
 
+//-------------------------------------------------------------
 
-
-// **
-// 00 ->  KK
-// 01 -> green
-//	00 01 -> black purple     0 0
-//	01 01 -> purple purple    1 0
-//	10 01 -> black purple     0 0
-//	11 01 -> purple purple    1 0
-// 10 -> purple
-//	00 10 -> black green
-//	01 10 -> white black
-//	10 10 -> green green
-//	11 10 -> white green
-// 11 -> WW
-
-
-// 00 01 00  -> ?? KP ??
-// 00 01 01  -> ?? KP ??
-// 00 01 10  -> ?? KW ??
-// 00 01 11  -> ?? KW ??
-
-// 01 01 00  -> ?? PP ??
-// 01 01 01  -> ?? PP ??
-// 01 01 10  -> ?? PW ??
-// 01 01 11  -> ?? PW ??
-
-// 10 01 00  -> ?? KP ??
-// 10 01 01  -> ?? KP ??
-// 10 01 10  -> ?? KW ??
-// 10 01 11  -> ?? KW ??
-
-
-
-
-
-
-
-// even = purple blue
-// odd =  green  orange
-
-//	EVEN
-//	0 X0 0	-> Black
-//	0 X0 1  -> Black
-
-//	0 X1 0  -> Black (green)
-//	0 X1 1  -> White (green)
-
-//	1 X0 0  -> Purple (purple)
-//	1 X0 1  -> Purple (purple)
-
-//	1 X1 0  -> White
-//	1 X1 1	-> White
-
-
-// 00
-// 01
-// 10
-// 11
-
-static int hgr_color_even(int high, int last, int current, int next) {
+static int hgr_color_even(int high, int prev, int one, int two) {
 
 	if (!high) {
-		if ((last==0) && (current==0)) return COLOR_BLACK0;
-		if ((last==0) && (current==1)) {
-			if (next==0) return COLOR_GREEN;
-			else return COLOR_GREEN;
-		}
-		if ((last==1) && (current==0)) {
-			if (next==0) return COLOR_PURPLE;
-			else return COLOR_PURPLE;
-		}
-		if ((last==1) && (current==1)) return COLOR_WHITE0;
+		if ((one==0) && (two==0)) return COLOR_BLACK0;
+		if ((one==1) && (two==1)) return COLOR_WHITE0;
+
+		if ((prev==0) && (one==0)) return COLOR_BLACK0;
+		// PURPLE
+		if ((prev==0) && (one==1)) return COLOR_PURPLE;
+		// GREEN
+		if ((prev==1) && (one==0)) return COLOR_GREEN;
+		if ((prev==1) && (one==1)) return COLOR_WHITE0;
 	}
 	else {
-		if ((last==0) && (current==0)) return COLOR_BLACK1;
-		if ((last==0) && (current==1)) {
-			if (next==0) return COLOR_ORANGE;
-			else return COLOR_ORANGE;
-		}
-		if ((last==1) && (current==0)) {
-			if (next==0) return COLOR_BLUE;
-			else return COLOR_BLUE;
-		}
-		if ((last==1) && (current==1)) return COLOR_WHITE1;
+		if ((one==0) && (two==0)) return COLOR_BLACK1;
+		if ((one==1) && (two==1)) return COLOR_WHITE1;
+
+		if ((prev==0) && (one==0)) return COLOR_BLACK1;
+		// BLUE
+		if ((prev==0) && (one==1)) return COLOR_BLUE;
+		// ORANGE
+		if ((prev==1) && (one==0)) return COLOR_ORANGE;
+		if ((prev==1) && (one==1)) return COLOR_WHITE1;
 	}
 	return 0;
 }
@@ -218,32 +150,27 @@ static int hgr_color_even(int high, int last, int current, int next) {
 //	1 1X 0  -> White
 //	1 1X 1	-> White
 
-static int hgr_color_odd(int high, int last, int current, int next) {
+static int hgr_color_odd(int high, int one, int two, int next) {
 
 	if (!high) {
-		if ((last==0) && (current==0)) return COLOR_BLACK0;
+		if ((one==0) && (two==0)) return COLOR_BLACK0;
+		if ((one==1) && (two==1)) return COLOR_WHITE0;
 
-		if ((last==0) && (current==1)) {
-			if (next==0) return COLOR_GREEN;
-			else return COLOR_GREEN;
-		}
-		if ((last==1) && (current==0)) {
-			if (next==0) return COLOR_PURPLE;
-			else return COLOR_PURPLE;
-		}
-		if ((last==1) && (current==1)) return COLOR_WHITE0;
+		if ((two==0) && (next==0)) return COLOR_BLACK0;
+		// Purple
+		if ((two==0) && (next==1)) return COLOR_PURPLE;
+		// Green
+		if ((two==1) && (next==0)) return COLOR_GREEN;
+		if ((two==1) && (next==1)) return COLOR_WHITE0;
 	}
 	else {
-		if ((last==0) && (current==0)) return COLOR_BLACK1;
-		if ((last==0) && (current==1)) {
-			if (next==0) return COLOR_ORANGE;
-			else return COLOR_ORANGE;
-		}
-		if ((last==1) && (current==0)) {
-			if (next==0) return COLOR_BLUE;
-			else return COLOR_BLUE;
-		}
-		if ((last==1) && (current==1)) return COLOR_WHITE1;
+		if ((one==0) && (two==0)) return COLOR_BLACK1;
+		if ((one==1) && (two==1)) return COLOR_WHITE1;
+
+		if ((two==0) && (next==0)) return COLOR_BLACK1;
+		if ((two==0) && (next==1)) return COLOR_BLUE;
+		if ((two==1) && (next==0)) return COLOR_ORANGE;
+		if ((two==1) && (next==1)) return COLOR_WHITE1;
 	}
 	return 0;
 }
@@ -392,22 +319,23 @@ int main(int argc, char **argv) {
 	/*********************************************/
 	/* do the actual conversion                  */
 	/*********************************************/
-	unsigned char byte1,byte2,byte3;
-	int out_ptr,color1,color2,prev=0;
+	unsigned char byte1,byte2,last_bit,next_bit;
+	int out_ptr,color1,color2;
 	for(y=0;y<height;y++) {
 		out_ptr=0;
+		last_bit=0;
 		for(x=0;x<20;x++) {
 			byte1=screen[hgr_offset(y)+x*2];
 			byte2=screen[hgr_offset(y)+x*2+1];
-			if (x==19) byte3=0;
-			else byte3=screen[hgr_offset(y)+x*2+2];
+			if (x==19) next_bit=0;
+			else next_bit=(screen[hgr_offset(y)+x*2+2])&0x1;
 
 			/* 10 */
 			/* high bit, left_bit, middle_bit, right_bit */
 			color1=hgr_color_even(byte1&0x80,
+					last_bit,
 					(byte1>>0)&0x1,
-					(byte1>>1)&0x1,
-					(byte1>>2)&0x1);
+					(byte1>>1)&0x1);
 			color2=hgr_color_odd(byte1&0x80,
 					(byte1>>0)&0x1,
 					(byte1>>1)&0x1,
@@ -421,9 +349,9 @@ int main(int argc, char **argv) {
 			/* 32 */
 			/* high bit, left_bit, middle_bit, right_bit */
 			color1=hgr_color_even(byte1&0x80,
+					(byte1>>1)&0x1,
 					(byte1>>2)&0x1,
-					(byte1>>3)&0x1,
-					(byte1>>4)&0x1);
+					(byte1>>3)&0x1);
 			color2=hgr_color_odd(byte1&0x80,
 					(byte1>>2)&0x1,
 					(byte1>>3)&0x1,
@@ -437,9 +365,9 @@ int main(int argc, char **argv) {
 			/* 54 */
 			/* high bit, left_bit, middle_bit, right_bit */
 			color1=hgr_color_even(byte1&0x80,
+					(byte1>>3)&0x1,
 					(byte1>>4)&0x1,
-					(byte1>>5)&0x1,
-					(byte1>>6)&0x1);
+					(byte1>>5)&0x1);
 			color2=hgr_color_odd(byte1&0x80,
 					(byte1>>4)&0x1,
 					(byte1>>5)&0x1,
@@ -453,9 +381,9 @@ int main(int argc, char **argv) {
 			/* 06 */
 			/* high bit, left_bit, middle_bit, right_bit */
 			color1=hgr_color_even(byte1&0x80,
+					(byte1>>5)&0x1,
 					(byte1>>6)&0x1,
-					(byte2>>0)&0x1,
-					(byte2>>1)&0x1);
+					(byte2>>0)&0x1);
 			color2=hgr_color_odd(byte2&0x80,
 					(byte1>>6)&0x1,
 					(byte2>>0)&0x1,
@@ -470,9 +398,9 @@ int main(int argc, char **argv) {
 			/* 21 */
 			/* high bit, left_bit, middle_bit, right_bit */
 			color1=hgr_color_even(byte2&0x80,
+					(byte2>>0)&0x1,
 					(byte2>>1)&0x1,
-					(byte2>>2)&0x1,
-					(byte2>>3)&0x1);
+					(byte2>>2)&0x1);
 			color2=hgr_color_odd(byte2&0x80,
 					(byte2>>1)&0x1,
 					(byte2>>2)&0x1,
@@ -486,9 +414,9 @@ int main(int argc, char **argv) {
 			/* 43 */
 			/* high bit, left_bit, middle_bit, right_bit */
 			color1=hgr_color_even(byte2&0x80,
+					(byte2>>2)&0x1,
 					(byte2>>3)&0x1,
-					(byte2>>4)&0x1,
-					(byte2>>5)&0x1);
+					(byte2>>4)&0x1);
 			color2=hgr_color_odd(byte2&0x80,
 					(byte2>>3)&0x1,
 					(byte2>>4)&0x1,
@@ -502,13 +430,15 @@ int main(int argc, char **argv) {
 			/* 65 */
 			/* high bit, left_bit, middle_bit, right_bit */
 			color1=hgr_color_even(byte2&0x80,
+					(byte2>>4)&0x1,
 					(byte2>>5)&0x1,
-					(byte2>>6)&0x1,
-					(byte3>>0)&0x1);
+					(byte2>>6)&0x1);
 			color2=hgr_color_odd(byte2&0x80,
 					(byte2>>5)&0x1,
 					(byte2>>6)&0x1,
-					(byte3>>0)&0x1);
+					next_bit);
+
+			last_bit=(byte2>>6)&0x1;
 
 			row_pointers[y][out_ptr]=color1;
 			out_ptr++;
