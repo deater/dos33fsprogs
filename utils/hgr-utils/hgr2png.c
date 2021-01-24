@@ -38,6 +38,19 @@ static int hgr_offset(int y) {
 #define COLOR_BLUE	6
 #define COLOR_WHITE1	7
 
+// even = purple blue    01
+// odd =  green  orange  10
+
+//	ODD
+//	0 0X 0	-> Black
+//	0 0X 1  -> Black
+//	0 1X 0  -> Green
+//	0 1X 1  -> White
+//	1 0X 0  -> Black
+//	1 0X 1  -> Green
+//	1 1X 0  -> White
+//	1 1X 1	-> White
+
 
 /* 000 00 00 -> black black black black */
 /* 000 00 01 -> purpl black black black */
@@ -71,33 +84,113 @@ static int hgr_offset(int y) {
 /* 000 01 10 -> black white white black !!! */
 /* 000 01 11 -> white white white black */
 
+// 00 00
+// 00 01
+// 00 10
+// 00 11
+
+// 01 00
+// 01 01
+// 01 10
+// 01 11
+
+// 10 00
+// 10 01
+// 10 10
+// 10 11
+
+// 11 00
+// 11 01
+// 11 10
+// 11 11
+
+
+
+
+
+// **
+// 00 ->  KK
+// 01 -> green
+//	00 01 -> black purple     0 0
+//	01 01 -> purple purple    1 0
+//	10 01 -> black purple     0 0
+//	11 01 -> purple purple    1 0
+// 10 -> purple
+//	00 10 -> black green
+//	01 10 -> white black
+//	10 10 -> green green
+//	11 10 -> white green
+// 11 -> WW
+
+
+// 00 01 00  -> ?? KP ??
+// 00 01 01  -> ?? KP ??
+// 00 01 10  -> ?? KW ??
+// 00 01 11  -> ?? KW ??
+
+// 01 01 00  -> ?? PP ??
+// 01 01 01  -> ?? PP ??
+// 01 01 10  -> ?? PW ??
+// 01 01 11  -> ?? PW ??
+
+// 10 01 00  -> ?? KP ??
+// 10 01 01  -> ?? KP ??
+// 10 01 10  -> ?? KW ??
+// 10 01 11  -> ?? KW ??
+
+
+
+
+
+
+
 // even = purple blue
 // odd =  green  orange
-static int hgr_color_even(int high, int first, int second, int next) {
+
+//	EVEN
+//	0 X0 0	-> Black
+//	0 X0 1  -> Black
+
+//	0 X1 0  -> Black (green)
+//	0 X1 1  -> White (green)
+
+//	1 X0 0  -> Purple (purple)
+//	1 X0 1  -> Purple (purple)
+
+//	1 X1 0  -> White
+//	1 X1 1	-> White
+
+
+// 00
+// 01
+// 10
+// 11
+
+static int hgr_color_even(int high, int last, int current, int next) {
 
 	if (!high) {
-		if ((second==0) && (first==0)) return COLOR_BLACK0;
-		if ((second==0) && (first==1)) {
+		if ((last==0) && (current==0)) return COLOR_BLACK0;
+		if ((last==0) && (current==1)) {
+			if (next==0) return COLOR_GREEN;
+			else return COLOR_GREEN;
+		}
+		if ((last==1) && (current==0)) {
 			if (next==0) return COLOR_PURPLE;
 			else return COLOR_PURPLE;
 		}
-		if ((second==1) && (first==0)) {
-			if (next==0) return COLOR_BLACK0;
-			else return COLOR_BLACK0;
-		}
-		if ((second==1) && (first==1)) return COLOR_WHITE0;
+		if ((last==1) && (current==1)) return COLOR_WHITE0;
 	}
 	else {
-		if ((second==0) && (first==0)) return COLOR_BLACK1;
-		if ((second==0) && (first==1)) {
+		if ((last==0) && (current==0)) return COLOR_BLACK1;
+		if ((last==0) && (current==1)) {
+			if (next==0) return COLOR_ORANGE;
+			else return COLOR_ORANGE;
+		}
+		if ((last==1) && (current==0)) {
 			if (next==0) return COLOR_BLUE;
 			else return COLOR_BLUE;
 		}
-		if ((second==1) && (first==0)) {
-			if (next==0) return COLOR_BLACK1;
-			else return COLOR_BLACK1;
-		}
-		if ((second==1) && (first==1)) return COLOR_WHITE1;
+		if ((last==1) && (current==1)) return COLOR_WHITE1;
 	}
 	return 0;
 }
@@ -113,31 +206,44 @@ static int hgr_color_even(int high, int first, int second, int next) {
 /* 000 01 01 -> purpl purpl purpl black !!! */
 /* 000 01 10 -> black white white black !!! */
 /* 000 01 11 -> white white white black */
-static int hgr_color_odd(int high, int first, int second,int next) {
+
+
+//	ODD
+//	0 0X 0	-> Black
+//	0 0X 1  -> Black
+//	0 1X 0  -> Green
+//	0 1X 1  -> White
+//	1 0X 0  -> Black
+//	1 0X 1  -> Green
+//	1 1X 0  -> White
+//	1 1X 1	-> White
+
+static int hgr_color_odd(int high, int last, int current, int next) {
 
 	if (!high) {
-		if ((second==0) && (first==0)) return COLOR_BLACK0;
-		if ((second==0) && (first==1)) {
-			if (next==0) return COLOR_BLACK0;
+		if ((last==0) && (current==0)) return COLOR_BLACK0;
+
+		if ((last==0) && (current==1)) {
+			if (next==0) return COLOR_GREEN;
+			else return COLOR_GREEN;
+		}
+		if ((last==1) && (current==0)) {
+			if (next==0) return COLOR_PURPLE;
 			else return COLOR_PURPLE;
 		}
-		if ((second==1) && (first==0)) {
-			if (next==0) return COLOR_GREEN;
-			else return COLOR_WHITE0;
-		}
-		if ((second==1) && (first==1)) return COLOR_WHITE0;
+		if ((last==1) && (current==1)) return COLOR_WHITE0;
 	}
 	else {
-		if ((second==0) && (first==0)) return COLOR_BLACK1;
-		if ((second==0) && (first==1)) {
-			if (next==0) return COLOR_BLACK1;
+		if ((last==0) && (current==0)) return COLOR_BLACK1;
+		if ((last==0) && (current==1)) {
+			if (next==0) return COLOR_ORANGE;
+			else return COLOR_ORANGE;
+		}
+		if ((last==1) && (current==0)) {
+			if (next==0) return COLOR_BLUE;
 			else return COLOR_BLUE;
 		}
-		if ((second==1) && (first==0)) {
-			if (next==0) return COLOR_ORANGE;
-			else return COLOR_WHITE1;
-		}
-		if ((second==1) && (first==1)) return COLOR_WHITE1;
+		if ((last==1) && (current==1)) return COLOR_WHITE1;
 	}
 	return 0;
 }
@@ -287,7 +393,7 @@ int main(int argc, char **argv) {
 	/* do the actual conversion                  */
 	/*********************************************/
 	unsigned char byte1,byte2,byte3;
-	int out_ptr,color1,color2;
+	int out_ptr,color1,color2,prev=0;
 	for(y=0;y<height;y++) {
 		out_ptr=0;
 		for(x=0;x<20;x++) {
