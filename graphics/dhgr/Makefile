@@ -5,14 +5,21 @@ TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	dhgr.dsk
 
-dhgr.dsk:	RASTER RASTER2 RASTER3 RASTER4 BITS LOTS
+
+dhgr.dsk:	HELLO RASTER RASTER2 RASTER3 RASTER4 BITS LOTS
 	cp empty.dsk dhgr.dsk
+	$(DOS33) -y plasma.dsk SAVE A HELLO
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 RASTER
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 RASTER2
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 RASTER3
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 RASTER4
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 BITS
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 LOTS
+
+###
+
+HELLO:  hello.bas
+	$(TOKENIZE) < hello.bas > HELLO
 
 ###
 

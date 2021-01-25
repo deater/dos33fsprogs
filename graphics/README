@@ -1,6 +1,6 @@
 Testbeds for various graphics modes
 
-+3d
++3d_glasses
 	some attempts at getting anaglyph 3d (3d graphics) working
 	on Apple II.  Didn't work
 
@@ -10,8 +10,8 @@ Testbeds for various graphics modes
 + dhgr
 	code testing out double-hires
 
-+ dhgr_viewer
-	a double-hires image viewer
++ dgr_viewer
+	a double-lores image viewer
 
 + galaxy
 	an implementation of a galaxy algorithm that looked cool
