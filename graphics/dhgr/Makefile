@@ -2,17 +2,20 @@ include ../../Makefile.inc
 
 DOS33 = ../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
+B2D = ../../utils/bmp2dhr/b2d
+LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	dhgr.dsk
 
 
-dhgr.dsk:	HELLO RASTER RASTER2 RASTER3 RASTER4 BITS LOTS
+dhgr.dsk:	HELLO RASTER RASTER2 RASTER3 RASTER4 BITS LOTS DHR_LOAD
 	cp empty.dsk dhgr.dsk
-	$(DOS33) -y plasma.dsk SAVE A HELLO
+	$(DOS33) -y dhgr.dsk SAVE A HELLO
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 RASTER
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 RASTER2
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 RASTER3
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 RASTER4
+	$(DOS33) -y dhgr.dsk BSAVE -a 0x1000 DHR_LOAD
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 BITS
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 LOTS
 
@@ -20,6 +23,20 @@ dhgr.dsk:	HELLO RASTER RASTER2 RASTER3 RASTER4 BITS LOTS
 
 HELLO:  hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
+
+
+###
+
+C64.AUX.lzsa:	C64.AUX
+	$(LZSA) -r -f2 C64.AUX C64.AUX.lzsa
+
+C64.BIN.lzsa:	C64.BIN
+	$(LZSA) -r -f2 C64.BIN C64.BIN.lzsa
+
+###
+
+C64.AUX:	c64.bmp
+	$(B2D) c64.bmp A
 
 ###
 
@@ -54,6 +71,15 @@ RASTER4:	raster4.o
 
 raster4.o:	raster4.s
 	ca65 -o raster4.o raster4.s -l raster4.lst
+
+###
+
+DHR_LOAD:	dhr_load.o
+	ld65 -o DHR_LOAD dhr_load.o -C ../../linker_scripts/apple2_1000.inc
+
+dhr_load.o:	dhr_load.s C64.AUX.lzsa C64.BIN.lzsa
+	ca65 -o dhr_load.o dhr_load.s -l dhr_load.lst
+
 
 
 ###
