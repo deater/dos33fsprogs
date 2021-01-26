@@ -118,6 +118,8 @@ inner_matrix_loop:
 	tya
 	adc	TEMPY
 
+	sta	TEMPY		; save char for later
+
 	; adjust to numbers if ycoord>4
 
 	cpx	#4
@@ -127,8 +129,6 @@ textentry_alpha:
 	clc
 	adc	#$40
 textentry_numbers:
-
-	sta	TEMPY		; save char for later
 
 	; check if Y equal
 	cpx	YY
@@ -165,23 +165,6 @@ textentry_putc:
 
 
 .if 0
-		for(yy=0;yy<8;yy++) {
-                        basic_htab(12);
-                        basic_vtab(yy*2+6);
-                        for(xx=0;xx<8;xx++) {
-                                if (yy<4) sprintf(tempst,"%c ",(yy*8)+xx+64);
-                                else  sprintf(tempst,"%c ",(yy*8)+xx);
-
-                                if ((xx==cursor_x) && (yy==cursor_y)) basic_inverse();
-                                else basic_normal();
-
-                                basic_print(tempst);
-                        }
-                }
-
-                basic_htab(12);
-                basic_vtab(22);
-                basic_normal();
 
 		if ((cursor_y==8) && (cursor_x<4)) basic_inverse();
                 basic_print(" DONE ");
@@ -241,18 +224,30 @@ textentry_right:
 textentry_right_not_bottom:
 	jmp	done_textentry
 
-
 check_textentry_escape:
 	cmp	#27
-	bne	done_textentry_keypress
+	bne	check_textentry_return
 textentry_escape:
 	jmp	done_enter_name
 
+check_textentry_return:
+	cmp	#13
+	bne	done_textentry_keypress
+textentry_return:
 
-done_textentry_keypress:
+	lda	YY
+	cmp	#8
+	bne	textentry_insert_char
+
+textentry_handle_button:
+
+textentry_insert_char:
+	lda	TEMPY
+	ldx	NAMEX
+	sta	HERO_NAME,X
+	inc	NAMEX
 
 .if 0
-			else if (ch==13) {
                                 if (cursor_y==8) {
                                         if (cursor_x<4) {
                                                 ch=27;
@@ -279,6 +274,10 @@ done_textentry_keypress:
 	; if (ch==27) break;
 
 .endif
+
+done_textentry_keypress:
+
+
 	;=======================
 	; keep things in bounds
 
