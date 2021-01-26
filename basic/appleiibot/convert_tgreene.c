@@ -105,12 +105,20 @@ int main(int argc, char **argv) {
 		"192+(PEEK(%d+I/3)-%d)/4^(I-INT(I/3)*3):NEXT\n",
 		filesize-1,2128,2128+filesize,OFFSET2);
 	printf("2CALL768\"%s%s\n",enc2,enc);
-#else
+// if using & to the end then jumping back
 	printf("1FORI=0TO%d:POKE%d+I,4*PEEK(%d+I)-"
 		"192+(PEEK(%d+I/3)-%d)/4^(I-INT(I/3)*3):NEXT\n",
 		filesize-1,
 		0x3f5-filesize+3,
 		2125,2125+filesize,OFFSET2);
+	printf("2&\"%s%s\n",enc2,enc);
+#else
+// if using & to jump to beginning (over-writing text page)
+	printf("1FORI=0TO%d:POKE%d+I,4*PEEK(%d+I)-"
+		"192+(PEEK(%d+I/3)-%d)/4^(I-INT(I/3)*3):NEXT\n",
+		filesize-1,
+		0x3f5,
+		2126,2126+filesize,OFFSET2);
 	printf("2&\"%s%s\n",enc2,enc);
 #endif
 
