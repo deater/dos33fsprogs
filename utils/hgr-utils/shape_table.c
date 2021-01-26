@@ -51,10 +51,11 @@ static void warn_if_zero(unsigned char byte, int line) {
 
 static void print_usage(char *exe) {
 
-	printf("Usage:\t%s [-h] [-a] [-b]\n\n",exe);
+	printf("Usage:\t%s [-h] [-a] [-b] [-x]\n\n",exe);
 	printf("\t-h\tprint this help message\n");
 	printf("\t-a\toutput shape table in applesoft BASIC format\n");
-	printf("\t-b\toutput shape table in binary format for BLOADing\n");
+	printf("\t-b\toutput shape table in binary format for appleiibot\n");
+	printf("\t-x\toutput shape table in hex format for assembly language\n");
 	printf("\n");
 	exit(1);
 }
