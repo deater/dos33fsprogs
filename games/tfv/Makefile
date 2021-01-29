@@ -18,7 +18,7 @@ tfv.dsk:	$(DOS33) HELLO LOADER TFV_CREDITS TFV_TITLE TFV_FLYING TFV_WORLD
 	$(DOS33) -y tfv.dsk SAVE A HELLO
 	$(DOS33) -y tfv.dsk BSAVE -a 0x1000 LOADER
 	$(DOS33) -y tfv.dsk BSAVE -a 0x4000 TFV_CREDITS
-	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 TFV_TITLE
+	$(DOS33) -y tfv.dsk BSAVE -a 0x4000 TFV_TITLE
 	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 TFV_FLYING
 	$(DOS33) -y tfv.dsk BSAVE -a 0x2000 TFV_WORLD
 
@@ -48,7 +48,7 @@ TFV_CREDITS:	credits.o
 ###
 
 TFV_TITLE:	tfv_title.o
-	ld65 -o TFV_TITLE tfv_title.o -C ../../linker_scripts/apple2_2000.inc
+	ld65 -o TFV_TITLE tfv_title.o -C ../../linker_scripts/apple2_4000.inc
 
 tfv_title.o:	tfv_title.s zp.inc \
 	gr_vlin.s tfv_opener.s \

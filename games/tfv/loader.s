@@ -82,7 +82,11 @@ which_load_loop:
 
 	lda	WHICH_LOAD
 	cmp	#LOAD_CREDITS
-	bne	load_other
+	beq	load_credits
+	cmp	#LOAD_TITLE
+	beq	load_credits
+
+	jmp	load_other
 
 load_credits:
 	lda	#<$4000

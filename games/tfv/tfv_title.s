@@ -112,6 +112,26 @@ title_new_game:
 
 	jsr	enter_name
 
+
+	;=================================
+	; display story
+
+	lda     #<(tfv_story_lzsa)
+        sta     getsrc_smc+1
+	lda     #>(tfv_story_lzsa)
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr     decompress_lzsa2_fast
+
+	bit	SET_GR
+	bit	HIRES
+
+	jsr	wait_until_keypressed
+
+
+
 	; Initial starting values
 	lda	#$1
 	sta	HERO_LEVEL
