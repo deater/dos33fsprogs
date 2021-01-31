@@ -3,8 +3,8 @@
 ; x=0..39
 ;  T =0 	XX_T = 0 .. 0
 ;  T =1		XX_T = 0 .. 39 ($0027)
-;  T =2		XX_T = 0 .. 78 ($004E)
-;  T =3		XX_T = 0 .. 117 ($0075)
+;  T =2		XX_T = 0 .. 78 ($0027)
+;  T =3		XX_T = 0 .. 78 ($0027)
 ;  T = 128	XX_T = 0 .. 4992 ($1380)
 ;  T = 255	XX_T = 0 .. 9945 ($26D9)
 
@@ -17,18 +17,15 @@
 GBASH	=	$27
 MASK	=	$2E
 COLOR	=	$30
-XX	=	$F5
-XX_TH	=	$F6
-XX_TL	=	$F7
+;XX	=	$F7
 YY	=	$F8
-YY_TH	=	$F9
-YY_TL	=	$FA
-T_L	=	$FB
-T_H	=	$FC
-FACTOR1	=	$FD
-FACTOR2	=	$FE
-SAVED	=	$FF
-
+T	=	$F9
+FACTOR1	=	$FA
+FACTOR2	=	$FB
+XX_T	=	$FC
+YY_T	=	$FD
+SAVED	=	$FE
+SAVED2	=	$FF
 
 	;================================
 	; Clear screen and setup graphics
@@ -38,37 +35,20 @@ sier:
 	jsr	SETGR		; set lo-res 40x40 mode
 	bit	FULLGR		; make it 40x48
 
-	lda	#0		; start with multiplier 0
-	sta	T_L
-	sta	T_H
-
 sier_outer:
 
-	lda	#0
+	lda	#47
 	sta	YY
-	sta	YY_TL
-	sta	YY_TH
 
 sier_yloop:
 
-	; reset XX to 0
-
-	lda	#0
-	sta	XX
-	sta	XX_TL
-	sta	XX_TH
-
+	ldy	#39
+;	sta	XX
 
 	; calc YY_T
-	clc
-	lda	YY_TL
-	adc	T_L
-	sta	YY_TL
-	lda	YY_TH
-	adc	T_H
-	sta	YY_TH
 
 	lda	YY
+	sta	FACTOR1		; T already in FACTOR2
 
 	lsr
 	bcc	even_mask
@@ -81,40 +61,38 @@ set_mask:
 
 	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
+	jsr	multiply	; finally finish mul from earlier
+	sta	YY_T
+
 	lda	GBASH
 draw_page_smc:
 	adc	#0
 	sta	GBASH
 
 
+
+
+
 sier_xloop:
 
 	; want (YY-(XX*T)) & (XX+(YY*T)
 
-
-	; SAVED = XX+(Y*T)
 	clc
-	lda	XX	; XX
-	adc	YY_TH
+	tya		; XX
+	adc	YY_T
+;	clc
+;	adc	XX
 	sta	SAVED
 
+	; calc XX_T
 
-	; calc XX*T
-	clc
-	lda	XX_TL
-	adc	T_L
-	sta	XX_TL
-	lda	XX_TH
-	adc	T_H
-	sta	XX_TH
+	sty	FACTOR1		; XX, T already in FACTOR2
+	jsr	multiply
+	sta	XX_T
 
-
-	; calc (YY-X_T)
 	lda	YY
 	sec
-	sbc	XX_TH
-
-	; want (YY-(XX*T)) & (XX+(YY*T)
+	sbc	XX_T
 
 	and	SAVED
 
@@ -129,28 +107,20 @@ red:
 
 	sta	COLOR
 
-	ldy	XX
+;	ldy	XX
 
 	jsr	PLOT1		; PLOT AT (GBASL),Y
 
-	inc	XX
-	lda	XX
-	cmp	#40
-	bne	sier_xloop
+	dey
+	bpl	sier_xloop
 
-	inc	YY
-	lda	YY
-	cmp	#48
-	bne	sier_yloop
+	dec	YY
+	bpl	sier_yloop
 
-	; inc T
-	clc
-	lda	T_L
-	adc	#1
-	sta	T_L
-	lda	T_H
-	adc	#0
-	sta	T_H
+	inc	mul_smc+1
+	inc	mul_smc+1
+	inc	mul_smc+1
+	inc	mul_smc+1
 
 flip_pages:
 	; X already 0
@@ -166,3 +136,24 @@ done_page:
 
 	jmp	sier_outer
 
+
+	 ; factors in FACTOR1 and FACTOR2
+multiply:
+	lda	#0
+	ldx	#8
+	lsr	FACTOR1
+mul_loop:
+	bcc	mul_no_add
+	clc
+mul_smc:
+	adc	#$0		; T
+mul_no_add:
+	ror
+	ror	FACTOR1
+	dex
+	bne	mul_loop
+
+	; done, high result in A, low result in FACTOR1
+	; FACTOR2 preserved
+
+	rts
