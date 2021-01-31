@@ -1,5 +1,8 @@
 ; fake sierpinski
 
+; 143 bytes -- sorta working
+
+
 ; x=0..39
 ;  T =0 	XX_T = 0 .. 0
 ;  T =1		XX_T = 0 .. 39 ($0027)
@@ -17,16 +20,14 @@
 GBASH	=	$27
 MASK	=	$2E
 COLOR	=	$30
-XX	=	$F5
-XX_TH	=	$F6
-XX_TL	=	$F7
-YY	=	$F8
-YY_TH	=	$F9
-YY_TL	=	$FA
-T_L	=	$FB
-T_H	=	$FC
-FACTOR1	=	$FD
-FACTOR2	=	$FE
+;XX	=	$F7
+XX_TH	=	$F8
+XX_TL	=	$F9
+;YY	=	$FA
+YY_TH	=	$FB
+YY_TL	=	$FC
+T_L	=	$FD
+T_H	=	$FE
 SAVED	=	$FF
 
 
@@ -44,23 +45,21 @@ sier:
 
 sier_outer:
 
-	lda	#0
-	sta	YY
-	sta	YY_TL
-	sta	YY_TH
+	ldx	#0		; YY
+	stx	YY_TL
+	stx	YY_TH
 
 sier_yloop:
 
 	; reset XX to 0
 
-	lda	#0
-	sta	XX
-	sta	XX_TL
-	sta	XX_TH
+;	ldy	#0		; XX
+;	sty	XX_TL
+;	sty	XX_TH
 
 
-	; calc YY_T
-	clc
+	; calc YY_T (8.8 fixed point add)
+;	clc
 	lda	YY_TL
 	adc	T_L
 	sta	YY_TL
@@ -68,20 +67,30 @@ sier_yloop:
 	adc	T_H
 	sta	YY_TH
 
-	lda	YY
-
+	txa	; YY
 	lsr
-	bcc	even_mask
-	ldx	#$f0
-	bne	set_mask
-even_mask:
-	ldx	#$0f
-set_mask:
-	stx	MASK
 
+	bcc	even_mask
+	ldy	#$f0
+	.byte	$C2	; bit hack
+even_mask:
+	ldy	#$0f
+	sty	MASK
+
+;	txa	;	YY
+;	lsr
 	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
 	lda	GBASH
+
+
+	; reset XX to 0
+
+	ldy	#0		; XX
+	sty	XX_TL
+	sty	XX_TH
+
+
 draw_page_smc:
 	adc	#0
 	sta	GBASH
@@ -93,14 +102,14 @@ sier_xloop:
 
 
 	; SAVED = XX+(Y*T)
-	clc
-	lda	XX	; XX
+;	clc
+	tya		; XX
 	adc	YY_TH
 	sta	SAVED
 
 
 	; calc XX*T
-	clc
+;	clc
 	lda	XX_TL
 	adc	T_L
 	sta	XX_TL
@@ -110,7 +119,7 @@ sier_xloop:
 
 
 	; calc (YY-X_T)
-	lda	YY
+	txa	; lda YY
 	sec
 	sbc	XX_TH
 
@@ -118,42 +127,45 @@ sier_xloop:
 
 	and	SAVED
 
-;	and	#$ff
-	beq	red
+	and	#$f0
 
+	beq	red
 black:
 	lda	#00	; black
 	.byte	$2C	; bit trick
 red:
-	lda	#$11	; red
-
+	lda	#$CC	; red
 	sta	COLOR
 
-	ldy	XX
+
+
+;	ldy	XX
 
 	jsr	PLOT1		; PLOT AT (GBASL),Y
 
-	inc	XX
-	lda	XX
-	cmp	#40
+	iny		;  XX
+	cpy	#40
 	bne	sier_xloop
 
-	inc	YY
-	lda	YY
-	cmp	#48
+	inx
+	cpx	#48
 	bne	sier_yloop
 
 	; inc T
-	clc
+;	clc
 	lda	T_L
+blah_smc:
 	adc	#1
 	sta	T_L
 	lda	T_H
 	adc	#0
 	sta	T_H
 
+	; speed up the zoom
+	inc	blah_smc+1
+
 flip_pages:
-	; X already 0
+	ldx	#0
 
 	lda	draw_page_smc+1 ; DRAW_PAGE
 	beq	done_page
@@ -164,5 +176,8 @@ done_page:
 	eor	#$4             ; flip draw page between $400/$800
 	sta	draw_page_smc+1 ; DRAW_PAGE
 
-	jmp	sier_outer
+	jmp	sier_outer	; just slightly too far???
 
+	; this is at 389
+	; we want to be at 3F5, so load program at 36C?
+	jmp	sier		; entry point from &

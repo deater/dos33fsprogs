@@ -9,7 +9,7 @@ all:	sier.dsk
 sier.dsk:	HELLO SIER SIER_TINY
 	cp empty.dsk sier.dsk
 	$(DOS33) -y sier.dsk SAVE A HELLO
-	$(DOS33) -y sier.dsk BSAVE -a 0x300 SIER
+	$(DOS33) -y sier.dsk BSAVE -a 0x36C SIER
 	$(DOS33) -y sier.dsk BSAVE -a 0x300 SIER_TINY
 
 ###
@@ -20,7 +20,7 @@ HELLO:	hello.bas
 ###
 
 SIER:	sier.o
-	ld65 -o SIER sier.o -C $(LINKERSCRIPTS)/apple2_300.inc
+	ld65 -o SIER sier.o -C ./apple2_36c.inc
 
 sier.o:	sier.s
 	ca65 -o sier.o sier.s -l sier.lst

@@ -12,7 +12,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
 	A2.BAS FOURAM.BAS FLOPPY.BAS QR.BAS A2_4EVER.BAS RLE.BAS RLE2.BAS \
 	RLEASM.BAS HORIZON.BAS FLYER.BAS STAR.BAS HYPER.BAS FASTAR.BAS \
 	FASTAR2.BAS BIN.BAS FALLING.BAS SNOW.BAS XMAS.BAS AN3.BAS PLASMA.BAS \
-	C64.BAS SIERPINSKI.BAS FAKES.BAS
+	C64.BAS SIERPINSKI.BAS FAKES.BAS SIER.BAS
 	cp empty.dsk appleiibot.dsk
 	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
 #	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0C00 FASTAR2
@@ -59,6 +59,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
 	$(DOS33) -y appleiibot.dsk SAVE A C64.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A SIERPINSKI.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A FAKES.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A SIER.BAS
 
 ###
 
@@ -342,6 +343,11 @@ HYPER.BAS:	hyper.bas
 
 FAKES.BAS:	fakes.bas
 	$(TOKENIZE) < fakes.bas > FAKES.BAS
+
+####
+
+SIER.BAS:	sier.bas
+	$(TOKENIZE) < sier.bas > SIER.BAS
 
 
 ####
