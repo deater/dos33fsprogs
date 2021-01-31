@@ -1,20 +1,19 @@
-; fake sierpinski
+; sierpinski-like demo
+; based on the code from Hellmood's Memories demo
 
-; 143 bytes -- sorta working
+; 140 bytes -- enough for appleiibot plus {B11} directive
+;			to allow for decompression time
 
+; the simple sierpinski you more or less just plot
+;		X AND Y
 
-; x=0..39
-;  T =0 	XX_T = 0 .. 0
-;  T =1		XX_T = 0 .. 39 ($0027)
-;  T =2		XX_T = 0 .. 78 ($004E)
-;  T =3		XX_T = 0 .. 117 ($0075)
-;  T = 128	XX_T = 0 .. 4992 ($1380)
-;  T = 255	XX_T = 0 .. 9945 ($26D9)
+; Hellmood's you plot something more or less like
+; 	COLOR = ( (Y-(X*T)) & (X+(Y*T) ) & 0xf0
+; where T is an incrementing frame value
 
+; to get speed on 6502/Apple II we change the multiplies to
+; a series of 16-bit 8.8 fixed point adds
 
-; just plot X AND Y
-
-;.include "zp.inc"
 .include "hardware.inc"
 
 GBASH	=	$27
@@ -45,20 +44,14 @@ sier:
 
 sier_outer:
 
-	ldx	#0		; YY
+	ldx	#0		; YY starts at 0
 	stx	YY_TL
 	stx	YY_TH
 
 sier_yloop:
 
-	; reset XX to 0
-
-;	ldy	#0		; XX
-;	sty	XX_TL
-;	sty	XX_TH
-
-
 	; calc YY_T (8.8 fixed point add)
+	; save space by skipping clc as it's only a slight variation w/o
 ;	clc
 	lda	YY_TL
 	adc	T_L
@@ -67,7 +60,7 @@ sier_yloop:
 	adc	T_H
 	sta	YY_TH
 
-	txa	; YY
+	txa	; YY			; plot call needs Y/2
 	lsr
 
 	bcc	even_mask
@@ -77,11 +70,13 @@ even_mask:
 	ldy	#$0f
 	sty	MASK
 
-;	txa	;	YY
-;	lsr
 	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
 	lda	GBASH
+
+draw_page_smc:
+	adc	#0
+	sta	GBASH		 ; adjust for PAGE1/PAGE2 ($400/$800)
 
 
 	; reset XX to 0
@@ -89,11 +84,6 @@ even_mask:
 	ldy	#0		; XX
 	sty	XX_TL
 	sty	XX_TH
-
-
-draw_page_smc:
-	adc	#0
-	sta	GBASH
 
 
 sier_xloop:
@@ -129,25 +119,23 @@ sier_xloop:
 
 	and	#$f0
 
-	beq	red
+	beq	green
 black:
 	lda	#00	; black
 	.byte	$2C	; bit trick
-red:
-	lda	#$CC	; red
+green:
+	lda	#$CC	; green
 	sta	COLOR
 
-
-
-;	ldy	XX
+	; XX value already in Y
 
 	jsr	PLOT1		; PLOT AT (GBASL),Y
 
-	iny		;  XX
+	iny		; XX
 	cpy	#40
 	bne	sier_xloop
 
-	inx
+	inx		; YY
 	cpx	#48
 	bne	sier_yloop
 
@@ -161,7 +149,7 @@ blah_smc:
 	adc	#0
 	sta	T_H
 
-	; speed up the zoom
+	; speed up the zoom as it goes
 	inc	blah_smc+1
 
 flip_pages:
@@ -177,6 +165,12 @@ done_page:
 	sta	draw_page_smc+1 ; DRAW_PAGE
 
 	jmp	sier_outer	; just slightly too far???
+
+	; for maximum twitter size we enter this program
+	; by using the "&" operator which jumps to $3F5
+
+	; we can't load there though as the code would end up overlapping
+	; $400 which is the graphics area
 
 	; this is at 389
 	; we want to be at 3F5, so load program at 36C?
