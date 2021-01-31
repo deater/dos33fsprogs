@@ -1,0 +1,30 @@
+include ../../../Makefile.inc
+
+DOS33 = ../../../utils/dos33fs-utils/dos33
+TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
+LINKERSCRIPTS = ../../../linker_scripts
+
+all:	sier.dsk
+
+sier.dsk:	HELLO SIER
+	cp empty.dsk sier.dsk
+	$(DOS33) -y sier.dsk SAVE A HELLO
+	$(DOS33) -y sier.dsk BSAVE -a 0x300 SIER
+
+###
+
+HELLO:	hello.bas
+	$(TOKENIZE) < hello.bas > HELLO
+
+###
+
+SIER:	sier.o
+	ld65 -o SIER sier.o -C $(LINKERSCRIPTS)/apple2_300.inc
+
+sier.o:	sier.s
+	ca65 -o sier.o sier.s -l sier.lst
+
+###
+
+clean:	
+	rm -f *~ *.o *.lst HELLO SIER
