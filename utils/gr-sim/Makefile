@@ -9,6 +9,7 @@ SDL_INCLUDE= `sdl-config --cflags`
 all:	gr-sim.a
 	make -C 6502_test
 	make -C dos
+	make -C drops
 	make -C fade
 	make -C fire
 #	make -C fluid
@@ -58,6 +59,7 @@ clean:
 	rm -f *~ *.o *.a
 	make -C 6502_test clean
 	make -C dos clean
+	make -C drops clean
 	make -C fade clean
 	make -C fire clean
 	make -C fluid clean
