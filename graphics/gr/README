@@ -3,6 +3,9 @@ Various experiments in lo-res graphics
 + boxes
 	makes lores pictures by drawing boxes
 
++ drops
+	raindrops
+
 + mode7
 	mode7 tests, used when making mode7 demo
 
@@ -14,6 +17,9 @@ Various experiments in lo-res graphics
 
 + scroll_text
 	some lo-res scroll text
+
++ sier
+	zooming sierpinski
 
 + starfield
 	lo-res starfield

@@ -17,34 +17,40 @@ static unsigned int frame=0;
 
 
 static void update_frame2(void) {
-	int xx,temp;
+	int xx,yy,temp;
 
-	for(xx=1;xx<(XSIZE*YSIZE)-1;xx++) {
-		temp =buffer1[xx+1];
-		temp+=buffer1[xx-1];
-		if (xx>XSIZE) temp+=buffer1[xx-XSIZE];
-		if (xx<(XSIZE-1)*YSIZE) temp+=buffer1[xx+XSIZE];
-		temp/=2;
-		temp-=buffer2[xx];
-		if (temp<0) temp=-temp;
-		buffer2[xx]=temp;
+	for(yy=0;yy<YSIZE;yy++) {
+		for(xx=0;xx<XSIZE;xx++) {
+			temp=0;
+			if (yy>0) temp+=buffer1[(yy-1)*XSIZE+xx];
+			if (yy<YSIZE-1) temp+=buffer1[(yy+1)*XSIZE+xx];
+			if (xx>0) temp+=buffer1[yy*XSIZE+xx-1];
+			if (xx<XSIZE-1) temp+=buffer1[yy*XSIZE+xx+1];
+			temp/=2;
+			temp-=buffer2[yy*XSIZE+xx];
+			if (temp<0) temp=-temp;
+			buffer2[yy*XSIZE+xx]=temp;
+		}
 	}
 	return;
 
 }
 
 static void update_frame1(void) {
-	int xx,temp;
+	int xx,yy,temp;
 
-	for(xx=1;xx<(XSIZE*YSIZE)-1;xx++) {
-		temp =buffer2[xx+1];
-		temp+=buffer2[xx-1];
-		if (xx>XSIZE) temp+=buffer2[xx-XSIZE];
-		if (xx<(XSIZE-1)*YSIZE) temp+=buffer2[xx+XSIZE];
-		temp/=2;
-		temp-=buffer1[xx];
-		if (temp<0) temp=-temp;
-		buffer1[xx]=temp;
+	for(yy=0;yy<YSIZE;yy++) {
+		for(xx=0;xx<XSIZE;xx++) {
+			temp=0;
+			if (yy>0) temp+=buffer2[(yy-1)*XSIZE+xx];
+			if (yy<YSIZE-1) temp+=buffer2[(yy+1)*XSIZE+xx];
+			if (xx>0) temp+=buffer2[yy*XSIZE+xx-1];
+			if (xx<XSIZE-1) temp+=buffer2[yy*XSIZE+xx+1];
+			temp/=2;
+			temp-=buffer1[yy*XSIZE+xx];
+			if (temp<0) temp=-temp;
+			buffer1[yy*XSIZE+xx]=temp;
+		}
 	}
 	return;
 
