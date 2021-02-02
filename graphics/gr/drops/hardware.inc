@@ -35,7 +35,11 @@ PTRIG		=	$C070
 
 ;; BASIC ROUTINES
 
-NORMAL	=	$F273
+NORMAL	= $F273
+HGR	= $F3E2
+HGR2	= $F3D8
+HCLR	= $F3F2
+HPOSN	= $F411
 
 ;; MONITOR ROUTINES
 
@@ -62,6 +66,8 @@ SETINV	= $FE80			;; INVERSE
 SETNORM	= $FE84			;; NORMAL
 COUT	= $FDED			;; output A to screen
 COUT1	= $FDF0			;; output A to screen
+
+
 
 
 

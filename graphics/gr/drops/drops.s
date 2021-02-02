@@ -33,8 +33,9 @@ BUF2H	=	$FF
 	; Clear screen and setup graphics
 	;================================
 drops:
-
-	jsr	SETGR		; set lo-res 40x40 mode
+	jsr	HGR
+	bit	LORES
+;	jsr	SETGR		; set lo-res 40x40 mode
 	bit	FULLGR		; make it 40x48
 
 
@@ -60,10 +61,14 @@ drops_outer:
 
 	lda	#$1f
 
+;	ldy	#1
+;	sta	(BUF1L),Y
 	ldy	#41
 	sta	(BUF1L),Y
 	iny
 	sta	(BUF1L),Y
+;	iny
+;	sta	(BUF1L),Y
 	ldy	#81
 	sta	(BUF1L),Y
 	iny
@@ -76,14 +81,14 @@ no_drop:
 	and	#$1
 	beq	even_frame
 
-even_frame:
+odd_frame:
 	lda	#$20
 	sta	BUF1H
-	lda	#$40
+	lda	#$30
 	sta	BUF2H
 	jmp	done_frame
-odd_frame:
-	lda	#$40
+even_frame:
+	lda	#$30
 	sta	BUF1H
 	lda	#$20
 	sta	BUF2H
@@ -94,7 +99,7 @@ done_frame:
 	sta	BUF1L
 	sta	BUF2L
 
-	lda	#48
+	lda	#47
 	sta	YY
 
 drops_yloop:
@@ -120,7 +125,7 @@ draw_page_smc:
 
 	; reset XX to 0
 
-	lda	#40		; XX
+	lda	#39		; XX
 	sta	XX
 
 drops_xloop:
@@ -155,7 +160,7 @@ no_oflo:
 	; adjust color
 
 	lsr
-	and	#$f
+	and	#$7
 	tay
 	lda	colors,Y
 	sta	COLOR
