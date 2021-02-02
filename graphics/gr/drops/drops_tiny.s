@@ -26,6 +26,8 @@
 ; 148 bytes -- beq instead of jmp
 ; 147 bytes -- reuse color in drop
 ; 145 bytes -- leave out carry setting
+; 142 bytes -- reduce to 4 colors (from 8)
+; 141 bytes -- don't dex at beginning ($FF close enough)
 
 .include "hardware.inc"
 
@@ -59,7 +61,7 @@ drops_outer:
 
 	; in all but first loop X is $FF on arrival
 
-	inx
+;	inx
 	stx	BUF1L
 	stx	BUF2L
 
@@ -68,31 +70,28 @@ drops_outer:
 	;=================================
 
 	inc	FRAME
-
+	lda	FRAME
+	tay			; save frame for later
 
 	; alternate $20/$28 in BUF1H/BUF2H
-
-	lda	FRAME
-	tay
 
 	and	#$1
 	asl
 	asl
-	asl
+	asl			; A now 0 or 8
 
 	ora	#$20
 	sta	BUF1H
 	eor	#$8
 	sta	BUF2H
 
+	; check if we add new raindrop
 
-
-
-	tya	; FRAME
-	and	#$f
+	tya			; reload FRAME
+	and	#$f		; only drop every 16 frames
 	bne	no_drop
 
-	; fake random by reading ROM
+	; fake random number generator by reading ROM
 
 	lda	$E000,Y
 
@@ -104,26 +103,23 @@ drops_outer:
 	ora	#$20
 	sta	DROPH
 
-	lda	#31	; $1f
+	lda	#31	; $1f	value for drop
 
-;	ldy	#41
+	tay		; cheat and draw drop at offset 31 to reuse value
 
-	tay
-
-	sta	(DROPL),Y
+	sta	(DROPL),Y	; draw at offset 31
 	iny
-	sta	(DROPL),Y
+	sta	(DROPL),Y	; draw at offset 32
 
 	ldy	#71
-	sta	(DROPL),Y
+	sta	(DROPL),Y	; draw at offset 71 (y+1)
 	iny
-	sta	(DROPL),Y
+	sta	(DROPL),Y	; draw at offset 72
 
 no_drop:
 
 
-	ldx	#47
-;	sta	YY
+	ldx	#47	 ; load 47 into YY
 
 
 	;=================================
@@ -181,7 +177,8 @@ no_oflo:
 	; adjust color
 
 	lsr
-	and	#$7
+	lsr
+	and	#$3
 	tay
 	lda	colors,Y
 	sta	COLOR
@@ -199,10 +196,11 @@ weird_outer:
 
 	bmi	drops_outer	; small enough now!
 
-
-
 colors:
-.byte $00,$22,$66,$EE,$77,$ff,$ff,$ff
+.byte $22,$66,$77,$ff
+
+;colors:
+;.byte $00,$22,$66,$EE,$77,$ff,$ff,$ff
 
 ; 0       2    6    e    7    f    f    f
 ; 0000 0010 0110 1110 0111 1111 1111 1111
@@ -217,8 +215,8 @@ colors:
 	; we can't load there though as the code would end up overlapping
 	; $400 which is the graphics area
 
-	; this is at 389
-	; we want to be at 3F5, so load program at 36C?
+	; this is at 38A
+	; we want to be at 3F5, so load program at 36B?
 
 	; called by EXECUTE.STATEMENT at $D828
 	; which jumps to CHRGET at $00B1
@@ -234,6 +232,6 @@ colors:
 	;	N=0 V=0 Z=0 C=1
 
 	jmp	drops		; entry point from &
-
+;	bcs	drops
 
 
