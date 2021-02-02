@@ -17,6 +17,15 @@
 ; 208 bytes -- use HGR2 to clear
 ; 204 bytes -- optimize buffer switch
 ; 197 bytes -- inline random8
+; 169 bytes -- rip out page flipping
+; 163 bytes -- use EOR for BUFH setting
+; 159 bytes -- put YY in X
+; 153 bytes -- fake random by reading ROM
+; 151 bytes -- no seed at all, use frame
+; 149 bytes -- FRAME saved in Y
+; 148 bytes -- beq instead of jmp
+; 147 bytes -- reuse color in drop
+; 145 bytes -- leave out carry setting
 
 .include "hardware.inc"
 
@@ -25,9 +34,10 @@ MASK	=	$2E
 COLOR	=	$30
 SEEDL	=	$4E
 
-FRAME	=	$F9
-XX	=	$FA
-YY	=	$FB
+FRAME	=	$F8
+XX	=	$F9
+DROPL	=	$FA
+DROPH	=	$FB
 BUF1L	=	$FC
 BUF1H	=	$FD
 BUF2L	=	$FE
@@ -38,10 +48,20 @@ BUF2H	=	$FF
 	; Clear screen and setup graphics
 	;================================
 drops:
-	jsr	HGR2		; clear $4000-$6000 to zero, full page
+	jsr	HGR		; clear $2000-$4000 to zero
+				; A is $00 after this
+				; Y is $00
+
+	bit	FULLGR		; full page
 	bit	LORES		; switch to LORES
 
 drops_outer:
+
+	; in all but first loop X is $FF on arrival
+
+	inx
+	stx	BUF1L
+	stx	BUF2L
 
 	;=================================
 	; handle new frame
@@ -49,74 +69,61 @@ drops_outer:
 
 	inc	FRAME
 
+
+	; alternate $20/$28 in BUF1H/BUF2H
+
 	lda	FRAME
+	tay
+
+	and	#$1
+	asl
+	asl
+	asl
+
+	ora	#$20
+	sta	BUF1H
+	eor	#$8
+	sta	BUF2H
+
+
+
+
+	tya	; FRAME
 	and	#$f
 	bne	no_drop
 
-	; inline random8
+	; fake random by reading ROM
 
-	;=============================
-	; random8
-	;=============================
-	; 8-bit 6502 Random Number Generator
-	; Linear feedback shift register PRNG by White Flame
-	; http://codebase64.org/doku.php?id=base:small_fast_8-bit_prng
-
-random8:
-	lda	SEEDL                                                   ; 2
-	beq	doEor                                                   ; 2
-	asl                                                             ; 1
-	beq	noEor	; if the input was $80, skip the EOR            ; 2
-	bcc	noEor                                                   ; 2
-doEor:
-	eor	#$1d                                                    ; 2
-noEor:
-	sta	SEEDL
+	lda	$E000,Y
 
 	; buffer is 40x48 = roughly 2k?
 	; so random top bits = 0..7
 
-	sta	BUF1L
+	sta	DROPL
 	and	#$7
-	clc
-	adc	#$40
-	sta	BUF1H
+	ora	#$20
+	sta	DROPH
 
-	lda	#$1f
+	lda	#31	; $1f
 
-	ldy	#41
-	sta	(BUF1L),Y
+;	ldy	#41
+
+	tay
+
+	sta	(DROPL),Y
 	iny
-	sta	(BUF1L),Y
-	ldy	#81
-	sta	(BUF1L),Y
+	sta	(DROPL),Y
+
+	ldy	#71
+	sta	(DROPL),Y
 	iny
-	sta	(BUF1L),Y
+	sta	(DROPL),Y
 
 no_drop:
 
 
-	lda	FRAME
-	and	#$1
-	beq	even_frame
-
-odd_frame:
-	ldy	#$40
-	lda	#$48
-	bne	done_frame
-even_frame:
-	ldy	#$48
-	lda	#$40
-done_frame:
-	sty	BUF1H
-	sta	BUF2H
-
-	lda	#$00
-	sta	BUF1L
-	sta	BUF2L
-
-	lda	#47
-	sta	YY
+	ldx	#47
+;	sta	YY
 
 
 	;=================================
@@ -125,26 +132,13 @@ done_frame:
 
 drops_yloop:
 
-	lda	YY		; plot call needs Y/2
-	lsr
+	txa		; YY
+	tay		; plot YY,YY
 
-	bcc	even_mask
-	ldy	#$f0
-	.byte	$C2		; bit hack
-even_mask:
-	ldy	#$0f
-	sty	MASK
-
-	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
-
-	lda	GBASH
-
-draw_page_smc:
-	adc	#0
-	sta	GBASH		 ; adjust for PAGE1/PAGE2 ($400/$800)
+	jsr	PLOT	; PLOT Y,A, setting up MASK and putting addr in GBASL/H
 
 
-	; reset XX to 0
+	; reset XX to 39
 
 	lda	#39		; XX
 	sta	XX
@@ -167,7 +161,8 @@ drops_xloop:
 	adc	(BUF1L),Y
 	lsr
 	dey
-	sec
+
+;	sec
 	sbc	(BUF2L),Y
 	bpl	done_calc
 	eor	#$ff
@@ -197,32 +192,21 @@ no_oflo:
 	dec	XX
 	bpl	drops_xloop
 
-	dec	YY
+	dex	; YY
 	bpl	drops_yloop
 
+weird_outer:
 
-
-flip_pages:
-	ldx	#0
-
-	lda	draw_page_smc+1 ; DRAW_PAGE
-	beq	done_page
-	inx
-done_page:
-	ldy	PAGE0,X         ; set display page to PAGE1 or PAGE2
-
-	eor	#$4             ; flip draw page between $400/$800
-	sta	draw_page_smc+1 ; DRAW_PAGE
-
-	jmp	drops_outer	; just slightly too far???
+	bmi	drops_outer	; small enough now!
 
 
 
 colors:
-.byte $00,$22,$66,$EE,$77,$FF,$FF,$FF
+.byte $00,$22,$66,$EE,$77,$ff,$ff,$ff
 
-
-
+; 0       2    6    e    7    f    f    f
+; 0000 0010 0110 1110 0111 1111 1111 1111
+;    0    1    2    3    4    5    6    7
 
 
 
@@ -236,9 +220,20 @@ colors:
 	; this is at 389
 	; we want to be at 3F5, so load program at 36C?
 
+	; called by EXECUTE.STATEMENT at $D828
+	; which jumps to CHRGET at $00B1
+	; which does a RTS to $3F4 at end
+
+	; CHRGET sets up state based on the char that follows the &
+	;  Z==C==1 is colon
+	;  Z==1 is EOL (nul)
+	;  C==0 is digit
+
+	; when we call with " following
+	; A=$22 (") X=$FF Y=$5E
+	;	N=0 V=0 Z=0 C=1
+
 	jmp	drops		; entry point from &
-
-
 
 
 

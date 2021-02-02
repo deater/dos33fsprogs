@@ -6,10 +6,11 @@ LINKERSCRIPTS = ../../../linker_scripts
 
 all:	drops.dsk
 
-drops.dsk:	HELLO DROPS
+drops.dsk:	HELLO DROPS DROPS_TINY
 	cp empty.dsk drops.dsk
 	$(DOS33) -y drops.dsk SAVE A HELLO
 	$(DOS33) -y drops.dsk BSAVE -a 0x300 DROPS
+	$(DOS33) -y drops.dsk BSAVE -a 0x300 DROPS_TINY
 
 
 ###
@@ -27,5 +28,14 @@ drops.o:	drops.s
 
 ###
 
+DROPS_TINY:	drops_tiny.o
+	ld65 -o DROPS_TINY drops_tiny.o -C $(LINKERSCRIPTS)/apple2_300.inc
+
+drops_tiny.o:	drops_tiny.s
+	ca65 -o drops_tiny.o drops_tiny.s -l drops_tiny.lst
+
+
+###
+
 clean:	
-	rm -f *~ *.o *.lst HELLO DROPS
+	rm -f *~ *.o *.lst HELLO DROPS DROPS_TINY
