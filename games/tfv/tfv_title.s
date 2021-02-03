@@ -127,6 +127,40 @@ title_new_game:
 
 	bit	SET_GR
 	bit	HIRES
+	lda	#0
+	sta	DRAW_PAGE
+	bit	PAGE0
+
+	; continue the bottom of the "T"
+
+	lda	#' '
+	sta	$651		; 20,1
+
+	lda	#<story_string1
+	sta	OUTL
+	lda	#>story_string1
+	sta	OUTH
+
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+
+	; wait a bit before continuing
+	ldx	#50
+	jsr	long_wait
+	bit	KEYRESET
+
+	jsr	wait_until_keypressed
+
+
+	jsr	move_and_print
+	jsr	move_and_print
+
+
+	; wait a bit before continuing
+	ldx	#50
+	jsr	long_wait
+	bit	KEYRESET
 
 	jsr	wait_until_keypressed
 
@@ -195,6 +229,7 @@ done_increment_frame:
 .include "gr_offsets.s"
 .include "wait_keypressed.s"
 .include "tfv_textentry.s"
+.include "long_wait.s"
 
 .include "keyboard.s"
 .include "joystick.s"
@@ -204,6 +239,16 @@ done_increment_frame:
 ;===============================================
 ; Data
 ;===============================================
+
+story_string1:	;     0123456789012345678901234567890123456789
+	.byte	2,20,  "HE STORY SO FAR...",0
+	.byte	1,22,"THE EVIL DR. ROBO-KNEE HAS KIDNAPPED",0
+	.byte	1,23,"YOUR GUINEA PIG COMPANION.",0
+
+story_string2:	;     0123456789012345678901234567890123456789
+	.byte	1,22,"YOU'VE TRACKED THEM TO THIS LARGE   ",0
+	.byte	1,23,"BLUE PLANET.              ",0
+
 
 title_menu:
 	.byte   16,21,"NEW GAME",0

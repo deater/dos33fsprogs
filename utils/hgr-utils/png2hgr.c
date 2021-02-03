@@ -1,12 +1,5 @@
 /* Converts 280x192 8-bit PNG file with correct palette to Apple II HGR */
 
-
-
-
-
-
-
-
 #define VERSION "0.0.1"
 
 #include <stdio.h>	/* For FILE I/O */
@@ -61,16 +54,19 @@ static int convert_color(int color) {
 		/* These use the questionable palette my older code used */
 		/* Also handle the newer one */
 		/* Bitflipped because HGR is backwards, woz is crazy */
-		case 0x000000:	c=0; break;	/* black */
+		case 0x000000:	c=0; break;	/* black1 */
 		case 0x1bcb01:	c=2; break;	/* bright green */
 		case 0x14f53c:	c=2; break;	/* bright green */
 		case 0xe434fe:	c=1; break;	/* magenta */
 		case 0xe31e60:	c=1; break;	/* magenta */
-		case 0xffffff:	c=3; break;	/* white */
+		case 0xffffff:	c=3; break;	/* white1 */
 		case 0xcd5b01:	c=6; break;	/* orange */
 		case 0xff6a3c:	c=6; break;	/* orange */
 		case 0x1b9afe:	c=5; break;	/* medium blue */
 		case 0x14cffd:	c=5; break;	/* medium blue */
+
+		case 0x010101:	c=4; break;	/* black2 */
+		case 0xfefefe:	c=7; break;	/* white2 */
 
 		default:
 			fprintf(stderr,"Unknown color %x\n",color);
@@ -274,12 +270,12 @@ static int hgr_offset(int y) {
 
 /* Count both black/white variants */
 static int color_high(int color) {
-	if ((color>2) || (color==0)) return 1;
+	if (color>3) return 1;
 	return 0;
 }
 
 static int color_low(int color) {
-	if ((color<4) || (color==7)) return 1;
+	if (color<4) return 1;
 	return 0;
 }
 
