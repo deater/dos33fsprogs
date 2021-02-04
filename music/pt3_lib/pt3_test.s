@@ -33,6 +33,7 @@ pt3_setup:
 
 	lda	#0
 	sta	DONE_PLAYING
+;	lda	#1
 	sta	LOOP		; change to 1 to loop forever
 
 	;=======================
