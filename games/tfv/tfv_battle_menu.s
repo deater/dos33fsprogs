@@ -1007,7 +1007,7 @@ battle_enemy_attack_string:
 ; current hero name to print
 
 battle_name_string:
-.byte 14,21,"DEATER",0
+.byte 14,21,"????????",0
 
 ; menu status strings
 

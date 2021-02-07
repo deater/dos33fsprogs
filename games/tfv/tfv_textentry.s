@@ -395,8 +395,23 @@ done_textentry:
 
 done_enter_name:
 
-	; FIXME: if empty, set to default
+	; copy in default if empty
 
+	; FIXME: use heroine name if applicable
+
+	lda	HERO_NAME
+	bne	really_done_enter_name
+
+	ldx	#0
+copy_name_loop:
+	lda	default_hero,X
+	sta	HERO_NAME,X
+	beq	really_done_enter_name
+	inx
+	cpx	#8
+	bne	copy_name_loop
+
+really_done_enter_name:
 	rts
 
 
