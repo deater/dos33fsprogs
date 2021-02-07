@@ -12,11 +12,12 @@ zero_name_loop:
 	cpx	#8
 	bne	zero_name_loop
 
+	; set up initial conditions
 
 	lda	#0
-	sta	NAMEX
-	sta	XX
-	sta	YY
+	sta	NAMEX		; name ptr
+	sta	XX		; x-coord of grid
+	sta	YY		; y-coord of grid
 
 name_loop:
 	; clear screen
@@ -25,6 +26,8 @@ name_loop:
 	jsr	clear_bottom
 
 	; print entry string at top
+
+	jsr	normal_text
 
 	lda     #>(enter_name_string)
         sta     OUTH
@@ -143,6 +146,7 @@ textentry_normal:
 	jmp	textentry_putc
 
 textentry_inverse:
+	sta	putletter_smc+1
 	and	#$3f		; convert to INVERSE
 	sta	(GBASL),Y
 	lda	#' '
@@ -157,25 +161,64 @@ textentry_putc:
 	cpy	#8
 	bne	inner_matrix_loop
 
-
 	inx
 
 	cpx	#8
 	bne	print_char_selector_loop
 
 
-.if 0
+	; special case bottom buttons
+	lda	YY
+	cmp	#8
+	bne	done_button_normal
+	lda	XX
+	cmp	#4
+	bcs	done_button_normal
+done_button_inverse:
+	jsr	inverse_text
+	jmp	done_button_print
 
-		if ((cursor_y==8) && (cursor_x<4)) basic_inverse();
-                basic_print(" DONE ");
-                basic_normal();
-                basic_print("   ");
-                if ((cursor_y==8) && (cursor_x>=4)) basic_inverse();
-                basic_print(" BACK ");
-.endif
+done_button_normal:
+	jsr	normal_text
+
+done_button_print:
+	lda     #>(done_button_string)
+        sta     OUTH
+	lda     #<(done_button_string)
+        sta     OUTL
+	jsr	move_and_print
+
+
+	lda	YY
+	cmp	#8
+	bne	back_button_normal
+	lda	XX
+	cmp	#4
+	bcc	back_button_normal
+back_button_inverse:
+	jsr	inverse_text
+	jmp	back_button_print
+
+back_button_normal:
+	jsr	normal_text
+
+back_button_print:
+
+	lda     #>(back_button_string)
+        sta     OUTH
+	lda     #<(back_button_string)
+        sta     OUTL
+	jsr	move_and_print
+
+
+done_bottom_buttons:
+
 
 	;=================
+	;=================
 	; handle keypress
+	;=================
+	;=================
 
 	jsr	get_keypress
 
@@ -241,39 +284,32 @@ textentry_return:
 
 textentry_handle_button:
 
+	lda	XX
+	cmp	#4
+	bcc	button_was_done
+
+button_was_back:
+	lda	#0
+	ldx	NAMEX
+	sta	HERO_NAME,X
+	dec	NAMEX
+	bpl	back_not_zero
+	sta	NAMEX
+back_not_zero:
+	jmp	done_textentry_keypress
+
+button_was_done:
+	; done with this, exit routine
+	jmp	done_enter_name
+
+
 textentry_insert_char:
-	lda	TEMPY
+
+putletter_smc:
+	lda	#$d1
 	ldx	NAMEX
 	sta	HERO_NAME,X
 	inc	NAMEX
-
-.if 0
-                                if (cursor_y==8) {
-                                        if (cursor_x<4) {
-                                                ch=27;
-                                                break;
-                                        }
-                                        else {
-                                                nameo[name_x]=0;
-                                                name_x--;
-                                                if (name_x<0) name_x=0;
-                                                break;
-                                        }
-                                }
-
-                                if (cursor_y<4) nameo[name_x]=(cursor_y*8)+
-                                                        cursor_x+64;
-                                else nameo[name_x]=(cursor_y*8)+cursor_x;
-                                name_x++;
-                        }
-			else if ((ch>32) && (ch<128)) {
-                                nameo[name_x]=ch;
-                                name_x++;
-
-                        }
-	; if (ch==27) break;
-
-.endif
 
 done_textentry_keypress:
 
@@ -367,8 +403,15 @@ done_enter_name:
 enter_name_string:
         .byte 0,0,"PLEASE ENTER A NAME:",0
 
+done_button_string:
+	.byte 11,21," DONE ",0
+
+back_button_string:
+	.byte 20,21," BACK ",0
+
 default_hero:
 	.byte "DEATER",0
 
 default_heroine:
 	.byte "FROGGY",0
+

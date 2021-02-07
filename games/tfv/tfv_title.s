@@ -131,6 +131,8 @@ title_new_game:
 	sta	DRAW_PAGE
 	bit	PAGE0
 
+	jsr     clear_bottom
+
 	; continue the bottom of the "T"
 
 	lda	#' '
