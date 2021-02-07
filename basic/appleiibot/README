@@ -17,3 +17,6 @@ tools:
 
 	../hgr-utils/shape_table lets you edit shape tables as a text file
 
+
+See: README.PACKER for how the packers work
+
