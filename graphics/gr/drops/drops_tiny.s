@@ -88,7 +88,7 @@ drops_outer:
 	; check if we add new raindrop
 
 	tya			; reload FRAME
-	and	#$f		; only drop every 16 frames
+	and	#$3		; only drop every 4 frames
 	bne	no_drop
 
 	; fake random number generator by reading ROM
