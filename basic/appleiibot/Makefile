@@ -5,7 +5,7 @@ TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	appleiibot.dsk convert_to convert_back convert_qkumba make_boxes convert_vmw convert_tgreene
 
-appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
+appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	CIRCLES.BAS AUTUMN.BAS QKUMBA.BAS ASTEROID.BAS PERSON.BAS SHIP.BAS \
 	CONCERT.BAS NYAN.BAS RASTER.BAS DHGR.BAS RASTER3.BAS LOTS.BAS LOAD \
 	RASTER4.BAS RASTER5.BAS PUMPKIN.BAS PUMPKIN_SMALL.BAS LADY.BAS \
@@ -15,7 +15,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
 	C64.BAS SIERPINSKI.BAS FAKES.BAS SIER.BAS DROPS.BAS RR.BAS RR_HGR.BAS
 	cp empty.dsk appleiibot.dsk
 	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
-#	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0C00 FASTAR2
+	$(DOS33) -y appleiibot.dsk SAVE A HELLO
 	$(DOS33) -y appleiibot.dsk SAVE A E2.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A FLAME.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A FLAME2.BAS
@@ -63,6 +63,12 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS \
 	$(DOS33) -y appleiibot.dsk SAVE A DROPS.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A RR.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A RR_HGR.BAS
+
+
+####
+
+HELLO:	hello.bas
+	$(TOKENIZE) < hello.bas > HELLO
 
 ###
 
