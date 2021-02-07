@@ -281,9 +281,9 @@ int main(int argc, char **argv) {
 
 	/* 4: black1 */
 	col=&palette[4];
-	col->red=0;
-	col->green=0;
-	col->blue=0;
+	col->red=1;
+	col->green=1;
+	col->blue=1;
 
 	/* 5: orange */
 	col=&palette[5];
@@ -299,9 +299,9 @@ int main(int argc, char **argv) {
 
 	/* 7: white1 */
 	col=&palette[7];
-	col->red=0xff;
-	col->green=0xff;
-	col->blue=0xff;
+	col->red=0xfe;
+	col->green=0xfe;
+	col->blue=0xfe;
 
 	/* ... Set palette colors ... */
 	png_set_PLTE(png_ptr, info_ptr, palette, PAL_LENGTH);
