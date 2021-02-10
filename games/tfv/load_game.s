@@ -23,8 +23,6 @@ load_game:
 	sta	HERO_XP
 	lda	#$25
 	sta	HERO_MONEY
-	lda	#$00
-	sta	HERO_INVENTORY
 	lda	#'D'
 	sta	HERO_NAME
 	lda	#'E'
@@ -47,5 +45,12 @@ load_game:
 	sta	TFV_X
 	sta	TFV_Y
 	sta	MAP_X
+
+	lda	#$ff
+	sta	HERO_INVENTORY1
+	sta	HERO_INVENTORY2
+	lda	#$3
+	sta	HERO_INVENTORY3
+
 
 	rts

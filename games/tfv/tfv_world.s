@@ -45,6 +45,7 @@
 ; External modules
 ;===============================================
 
+.include "tfv_info.s"
 .include "tfv_drawmap.s"
 .include "tfv_overworld.s"
 .include "tfv_game_over.s"

@@ -1,105 +1,115 @@
-;=====================================================================
-;= ROUTINES
-;=====================================================================
+;=============================
+; decently fast hlin routines
+;=============================
+; can also be used to print repeated text if desperate
 
-	;================================
-	; hlin_setup
-	;================================
-	; put address in GBASL/GBASH
-	; Ycoord in A, Xcoord in Y
-hlin_setup:
-	sty	TEMPY							; 3
-	tay			; y=A					; 2
-	lda	gr_offsets,Y	; lookup low-res memory address		; 4
-	clc								; 2
-	adc	TEMPY							; 3
-	sta	GBASL							; 3
-	iny								; 2
 
-	lda	gr_offsets,Y						; 4
-	adc	DRAW_PAGE	; add in draw page offset		; 3
-	sta	GBASH							; 3
-	rts								; 6
-								;===========
-								;	35
+
 	;================================
 	; hlin_double:
 	;================================
 	; HLIN Y, V2 AT A
-	; Y, X, A trashed
-	; start at Y, draw up to and including X
+	;	color in COLOR
+	;	GBASL/GBASH set to proper address
+	;	A, Y trashed
+	;	at end Y points to end of line
+
 hlin_double:
-;int hlin_double(int page, int x1, int x2, int at) {
 
-	jsr	hlin_setup						; 41
+	inc	V2		; drawing inclusive
 
-	sec								; 2
-	lda	V2							; 3
-	sbc	TEMPY							; 3
-
-	tax								; 2
-	inx								; 2
+	sty	TEMPY							; 3
+	and	#$fe		; make even				; 2
+	tay			; y=A					; 2
+	lda	gr_offsets,Y	; lookup low-res memory address		; 4
+	sta	GBASL							; 3
+	clc								; 2
+	lda	gr_offsets+1,Y						; 4
+	adc	DRAW_PAGE	; add in draw page offset		; 3
+	sta	GBASH							; 3
 								;===========
-								;	53
-	; fallthrough
+								;	 26
+
+	lda	COLOR							; 3
+	ldy	TEMPY		; restore				; 3
+hlin_double_loop:
+	sta	(GBASL),Y						; 6
+	iny								; 2
+	cpy	V2							; 3
+	bne	hlin_double_loop					; 2nt/3
+
+	rts								; 6
+
 
 	;=================================
 	; hlin_double_continue:  width
 	;=================================
 	; GBASL has correct offset for row/col
-	; width in X
+	; 	V2=start, width in X
+	;	A, X, Y trashed
+	;	V2=xcoord at end
 
 hlin_double_continue:
 
-	ldy	#0							; 2
+	txa
+	clc
+	adc	V2
+	sta	V2
 	lda	COLOR							; 3
-hlin_double_loop:
+hlin_double_continue_loop:
 	sta	(GBASL),Y						; 6
-	inc	GBASL							; 5
-	dex								; 2
-	bne	hlin_double_loop					; 2nt/3
+	iny								; 2
+	cpy	V2
+	bne	hlin_double_continue_loop				; 2nt/3
 
 	rts								; 6
 								;=============
-								; 53+5+X*16+5
+
 
 	;================================
 	; hlin_single:
 	;================================
 	; HLIN Y, V2 AT A
+	;	color in COLOR
+	;	GBASL/GBASH set to proper address
+	;	A, Y trashed
+	;	at end Y points to end of line
 	; Y, X, A trashed
 hlin_single:
 
-	jsr	hlin_setup
+	inc	V2		; drawing inclusive
 
-	sec
-	lda	V2
-	sbc	TEMPY
+	sty	TEMPY							; 3
+	and	#$fe		; make even				; 2
+	php			; save if zero				; 2
+	tay			; y=A					; 2
+	lda	gr_offsets,Y	; lookup low-res memory address		; 4
+	sta	GBASL							; 3
+	clc								; 2
+	lda	gr_offsets+1,Y						; 4
+	adc	DRAW_PAGE	; add in draw page offset		; 3
+	sta	GBASH							; 3
+								;===========
+								;	 28
 
-	tax
 
-	; fallthrough
+	plp	; restore if 0
+	beq	hlin_single_bottom
 
-	;=================================
-	; hlin_single_continue:  width
-	;=================================
-	; width in X
-
-hlin_single_continue:
 
 hlin_single_top:
 	lda	COLOR
 	and	#$f0
 	sta	COLOR
 
+	ldy	TEMPY
 hlin_single_top_loop:
-	ldy	#0
 	lda	(GBASL),Y
 	and	#$0f
 	ora	COLOR
 	sta	(GBASL),Y
-	inc	GBASL
-	dex
+	iny
+	cpy	V2
 	bne	hlin_single_top_loop
 
 	rts
@@ -110,15 +120,14 @@ hlin_single_bottom:
 	and	#$0f
 	sta	COLOR
 
+	ldy	TEMPY
 hlin_single_bottom_loop:
-	ldy	#0
 	lda	(GBASL),Y
 	and	#$f0
 	sta	(GBASL),Y
-	inc	GBASL
-	dex
+	iny
+	cpy	V2
 	bne	hlin_single_bottom_loop
 
 	rts
-
 

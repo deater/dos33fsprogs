@@ -158,7 +158,7 @@ worldmap_handle_info:
 	cmp	#'I'
 	bne	worldmap_handle_map
 
-	; jsr	print_info
+	jsr	print_info
 	inc	REFRESH
 	jmp	worldmap_done_keyboard
 
