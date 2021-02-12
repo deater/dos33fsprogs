@@ -17,6 +17,26 @@
 	jsr	init_multiply_tables
 
 	;================================
+	; Copy over Name
+	;================================
+	; both battle and info
+
+	ldx     #0
+load_name_loop:
+	lda	HERO_NAME,X
+	bne	load_name_zero
+	lda	#' '
+load_name_zero:
+	sta	battle_name_string+2,X
+	sta	info_name_string+2,X
+	inx
+	cpx	#8
+	bne	load_name_loop
+really_done_load_name:
+
+
+
+	;================================
 	; Setup sound
 	;================================
 

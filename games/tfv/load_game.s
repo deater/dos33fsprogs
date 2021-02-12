@@ -19,7 +19,7 @@ load_game:
 	sta	HERO_LIMIT
 	lda	#$03
 	sta	HERO_LEVEL
-	lda	#$50
+	lda	#$13
 	sta	HERO_XP
 	lda	#$25
 	sta	HERO_MONEY
@@ -45,6 +45,11 @@ load_game:
 	sta	TFV_X
 	sta	TFV_Y
 	sta	MAP_X
+
+	lda	#$05
+	sta	TIME_MINUTES
+	lda	#$00
+	sta	TIME_HOURS
 
 	lda	#$ff
 	sta	HERO_INVENTORY1

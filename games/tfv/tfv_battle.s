@@ -36,24 +36,8 @@ do_battle:
 	;======================
 	; update hp and mp
 
-	jsr	update_hero_hp
-	jsr	update_hero_mp
-
-
-	;======================
-	; copy in player name
-
-        ldx     #0
-load_name_loop:
-        lda     HERO_NAME,X
-	bne	load_name_zero
-	lda	#' '
-load_name_zero:
-        sta     battle_name_string+2,X
-        inx
-        cpx     #8
-        bne     load_name_loop
-really_done_load_name:
+	jsr	update_hero_hp_menu
+	jsr	update_hero_mp_menu
 
 	;=============
 	; start music

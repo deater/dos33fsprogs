@@ -137,11 +137,13 @@ HERO_STATE	=	$A4	; state of hero
 	HERO_ON_BIRD	= $01
 	HERO_ODD	= $02	; stand/walk position
 	HERO_DIRECTION	= $04	; 0=left, 1=right
-HERO_STEPS	=	$A5	; number of steps
+HERO_STEPS	=	$A5	; number of steps (30 steps = minute)
+TIME_MINUTES	=	$A6	; time in minutes
+TIME_HOURS	=	$A7	; time in hours
 
-TFV_X           =	$A6	; location on screen
-TFV_Y           =	$A7	; location on screen
-MAP_X           =	$A8	; which map region we're on
+TFV_X           =	$A8	; location on screen
+TFV_Y           =	$A9	; location on screen
+MAP_X           =	$AA	; which map region we're on
 
 
 

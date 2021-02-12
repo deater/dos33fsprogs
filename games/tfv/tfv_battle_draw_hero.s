@@ -252,7 +252,7 @@ health_too_high:
 	sta	HERO_HP_LO
 health_is_good:
 
-	jsr	update_hero_hp
+	jsr	update_hero_hp_menu
 
 	rts
 
@@ -288,7 +288,7 @@ damage_hero_do_sub:
 
 damage_hero_done:
 
-	jsr	update_hero_hp
+	jsr	update_hero_hp_menu
 
 	rts
 
@@ -312,7 +312,7 @@ hero_use_magic:
         sta     HERO_MP
         cld
 
-        jsr     update_hero_mp
+        jsr     update_hero_mp_menu
 
 done_hero_use_magic:
 

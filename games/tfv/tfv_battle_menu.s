@@ -858,7 +858,7 @@ done_attack:
 	; one BCD byte
 	; put into mp_string
 
-update_hero_mp:
+update_hero_mp_menu:
 	lda	#1
 	sta	convert_bcd_to_string_leading_zero
 
@@ -878,14 +878,23 @@ update_hero_mp:
 	; two BCD bytes
 	; put into hp_string
 
-update_hero_hp:
-	lda	#1
-	sta	convert_bcd_to_string_leading_zero
+update_hero_hp_menu:
+	; point to output
 
 	lda	#<(hp_string+2)
 	sta	OUTL
 	lda	#>(hp_string+2)
 	sta	OUTH
+
+update_hero_hp:
+
+	; reset leading zero count
+
+	lda	#1
+	sta	convert_bcd_to_string_leading_zero
+
+
+	; if top byte is 00 then special case
 
 	lda	HERO_HP_HI
 	bne	update_hero_hp_top_byte
@@ -917,6 +926,11 @@ update_hero_hp_bottom_byte:
 	; print two-digit BCD number into a string
 	;==========================================
 	;==========================================
+	; A is value to convert
+	; OUTL,OUTH points to output
+	; be sure to set convert_bcd_to_string_leading_zero properly
+	; after OUTL,OUTH points to next (useful for 16-bit printing)
+
 convert_bcd_to_string:
 	pha				; store on stack
 

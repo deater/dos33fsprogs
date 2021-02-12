@@ -3,6 +3,124 @@
 	;===========================
 print_info:
 
+	;======================
+	; update the stats
+	;======================
+
+	; level
+
+	lda	#1
+	sta	convert_bcd_to_string_leading_zero
+	lda	#<(info_level_string+8)
+	sta	OUTL
+	lda	#>(info_level_string+8)
+	sta	OUTH
+
+	lda	HERO_LEVEL
+	jsr	convert_bcd_to_string
+
+	; HP
+
+        lda     #<(info_hp_string+7)
+        sta     OUTL
+        lda     #>(info_hp_string+7)
+        sta     OUTH
+	jsr	update_hero_hp
+
+	; HP Max
+
+	lda	#1
+	sta	convert_bcd_to_string_leading_zero
+	lda	#<(info_hp_string+13)
+	sta	OUTL
+	lda	#>(info_hp_string+13)
+	sta	OUTH
+
+	lda	HERO_LEVEL
+	jsr	convert_bcd_to_string
+
+	; MP
+
+	lda	#1
+	sta	convert_bcd_to_string_leading_zero
+	lda	#<(info_mp_string+9)
+	sta	OUTL
+	lda	#>(info_mp_string+9)
+	sta	OUTH
+
+	lda	HERO_MP
+	jsr	convert_bcd_to_string
+
+	; MP_MAX
+
+	lda	#1
+	sta	convert_bcd_to_string_leading_zero
+	lda	#<(info_mp_string+15)
+	sta	OUTL
+	lda	#>(info_mp_string+15)
+	sta	OUTH
+
+	lda	HERO_MP_MAX
+	jsr	convert_bcd_to_string
+
+	; Experience
+
+	lda	#1
+	sta	convert_bcd_to_string_leading_zero
+	lda	#<(info_exp_string+16)
+	sta	OUTL
+	lda	#>(info_exp_string+16)
+	sta	OUTH
+
+	lda	HERO_XP
+	jsr	convert_bcd_to_string
+
+	; Next Lev
+	;	fixed right now
+
+	; Money
+
+	lda	#1
+	sta	convert_bcd_to_string_leading_zero
+	lda	#<(info_money_string+11)
+	sta	OUTL
+	lda	#>(info_money_string+11)
+	sta	OUTH
+
+	lda	HERO_MONEY
+	jsr	convert_bcd_to_string
+
+
+	; Time Hours
+
+	lda	#0
+	sta	convert_bcd_to_string_leading_zero
+	lda	#<(info_time_string+8)
+	sta	OUTL
+	lda	#>(info_time_string+8)
+	sta	OUTH
+
+	lda	TIME_HOURS
+	jsr	convert_bcd_to_string
+
+	; Time Minutes
+
+	lda	#0
+	sta	convert_bcd_to_string_leading_zero
+	lda	#<(info_time_string+11)
+	sta	OUTL
+	lda	#>(info_time_string+11)
+	sta	OUTH
+
+	lda	TIME_MINUTES
+	jsr	convert_bcd_to_string
+
+
+
+	;======================
+	; actually print things
+	;======================
+
 	lda	#$a0
 	jsr	clear_top_a
 
@@ -270,10 +388,10 @@ item3_not_there:
 
 
 info_name_string:
-.byte	 2,1,"DEATER  ",0
+.byte	 2,1,"??????  ",0
 
 info_level_string:
-.byte	22,1,"LEVEL  1",0
+.byte	22,1,"LEVEL  ?",0
 
 info_inventory_string:
 .byte	 2,3,"INVENTORY:",0
@@ -282,22 +400,22 @@ info_stats_string:
 .byte	22,3,"STATS",0
 
 info_hp_string:
-.byte	23,5,"HP:   123 / 456",0
+.byte	23,5,"HP:   ??? / ?00",0
 
 info_mp_string:
-.byte	23,6,"MP:    55 /  99",0
+.byte	23,6,"MP:    ?? /  ??",0
 
 info_exp_string:
-.byte	22,8,"EXPERIENCE:  123",0
+.byte	22,8,"EXPERIENCE:   ??",0
 
 info_nextlev_string:
-.byte	22,9,"NEXT LEVEL:  123",0
+.byte	22,9,"NEXT LEVEL:   30",0
 
 info_money_string:
-.byte	22,11,"MONEY: $123",0
+.byte	22,11,"MONEY:  $??",0
 
 info_time_string:
-.byte	22,13,"TIME: 00:00",0
+.byte	22,13,"TIME: ??:??",0
 
 item1_name_addr:
 	.word	item1_cupcake
