@@ -13,7 +13,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	RLEASM.BAS HORIZON.BAS FLYER.BAS STAR.BAS HYPER.BAS FASTAR.BAS \
 	FASTAR2.BAS BIN.BAS FALLING.BAS SNOW.BAS XMAS.BAS AN3.BAS PLASMA.BAS \
 	C64.BAS SIERPINSKI.BAS FAKES.BAS SIER.BAS DROPS.BAS RR.BAS RR_HGR.BAS \
-	COMBO.BAS
+	COMBO.BAS WIRES.BAS
 	cp empty.dsk appleiibot.dsk
 	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
 	$(DOS33) -y appleiibot.dsk SAVE A HELLO
@@ -65,6 +65,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A RR.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A RR_HGR.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A COMBO.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A WIRES.BAS
 
 
 ####
@@ -379,6 +380,12 @@ RR_HGR.BAS:	rr_hgr.bas
 
 COMBO.BAS:	combo.bas
 	$(TOKENIZE) < combo.bas > COMBO.BAS
+
+####
+
+WIRES.BAS:	wires.bas
+	$(TOKENIZE) < wires.bas > WIRES.BAS
+
 
 
 ####

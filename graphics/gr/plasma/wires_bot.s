@@ -6,8 +6,9 @@
 ; 151 -- another jmp to branch
 ; 148 -- use $10 instead of $ff for black color
 ; 147 -- optimize color code
+; 143 -- use 15x15 grid instead of 7x7
 
-; goal=135
+; goal=141
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -21,47 +22,84 @@ CTEMP	= $FC
 plasma:
 
 ;	jsr	SETGR		; set lo-res 40x40 mode
-	bit	SET_GR
-	bit	FULLGR		; make it 40x48
+;	bit	SET_GR
+;	bit	FULLGR		; make it 40x48
+
+	jsr	$F3D8		; HGR2
+	bit	LORES
+
+;	lda	#$20
+;	sta	HGRPAGE
+	lda	#$10
+;	lsr
+	sta	HGRBITS
+	jsr	$F3F6		; BKGND
 
 	; we only create a 16x16 texture, which we pattern across 40x48 screen
 
-create_lookup:
-	ldy	#15
-create_yloop:
-	ldx	#15
-create_xloop:
 
-	; vertical
+; need to beat 30 bytes
+
+	ldx	#15	; store at 15,x and x,15
+			; 240+x, (x*16),15
+
+write_loop:
+
 	txa
-	and	#$7
-	bne	horiz
+	sta	lookup+240,X
+	sta	lookup+112,X
 
-xnot:
-	tya
-	bne	lookup_smc
+	asl
+	asl
+	asl
+	asl
 
-horiz:
-	; horizontal
-	tya
-	and	#$7
-	beq	ynot
+;	clc
 
-	lda	#$10
-	bne	lookup_smc
-
-ynot:
+	tay
 	txa
-lookup_smc:
-	sta	lookup		; always starts at $d00
-
-	inc	lookup_smc+1
+	sta	lookup,Y
 
 	dex
-	bpl	create_xloop
+	bpl	write_loop
 
-	dey
-	bpl	create_yloop
+
+;create_lookup:
+;	ldy	#15
+;create_yloop:
+;	ldx	#15
+;create_xloop:
+
+;	; vertical
+;	txa
+;;	and	#$7
+;	bne	horiz
+;
+;xnot:
+;	tya
+;	bne	lookup_smc
+;
+;horiz:
+;	; horizontal
+;	tya
+;;	and	#$7
+;	beq	ynot
+;
+;	lda	#$10
+;	bne	lookup_smc
+
+;ynot:
+;	txa
+;lookup_smc:
+;	sta	lookup		; always starts at $d00
+
+;	inc	lookup_smc+1
+
+;	dex
+;	bpl	create_xloop
+
+;	dey
+;	bpl	create_yloop
 
 	; X and Y both $FF
 
@@ -204,5 +242,5 @@ colorlookup:
 
 ; make lookup happen at page boundary
 
-.org	$d00
+.org	$4000
 lookup:
