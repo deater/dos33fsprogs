@@ -6,12 +6,13 @@ LINKERSCRIPTS = ../../../linker_scripts
 
 all:	plasma.dsk
 
-plasma.dsk:	HELLO PLASMA PLASMA_TINY PLASMA_BOT
+plasma.dsk:	HELLO PLASMA PLASMA_TINY PLASMA_BOT WIRES
 	cp empty.dsk plasma.dsk
 	$(DOS33) -y plasma.dsk SAVE A HELLO
 	$(DOS33) -y plasma.dsk BSAVE -a 0x300 PLASMA
 	$(DOS33) -y plasma.dsk BSAVE -a 0xC00 PLASMA_TINY
 	$(DOS33) -y plasma.dsk BSAVE -a 0x36B PLASMA_BOT
+	$(DOS33) -y plasma.dsk BSAVE -a 0xC00 WIRES
 
 ###
 
@@ -42,6 +43,14 @@ PLASMA_TINY:	plasma_tiny.o
 
 plasma_tiny.o:	plasma_tiny.s
 	ca65 -o plasma_tiny.o plasma_tiny.s -l plasma_tiny.lst
+
+###
+
+WIRES:	wires.o
+	ld65 -o WIRES wires.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+wires.o:	wires.s
+	ca65 -o wires.o wires.s -l wires.lst
 
 
 ###
