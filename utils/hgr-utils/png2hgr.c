@@ -25,7 +25,7 @@
 #define DEFAULT_BLACK	1
 #endif
 
-static int debug=0;
+static int debug=0,color_warnings=0;
 
 static int convert_color(int color) {
 
@@ -437,6 +437,7 @@ int main(int argc, char **argv) {
 			}
 			error=colors_to_bytes(colors,&byte1,&byte2);
 			if (error!=0) {
+				color_warnings++;
 				fprintf(stderr,"Warning: mixing colors at %d x %d\n",
 					x*14+error*7,y);
 			}
@@ -448,6 +449,8 @@ int main(int argc, char **argv) {
 	}
 
 	fwrite(apple2_image,8192,sizeof(unsigned char),stdout);
+
+	fprintf(stderr,"Total warnings: %d\n",color_warnings);
 
 	return 0;
 }
