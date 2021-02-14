@@ -11,6 +11,7 @@
 ; 144 -- back to original layout
 ; 142 -- jump to earlier BGND entry point
 ; 141 -- start at $FF even though it misses upper left
+;	 this makes noticable glitches though
 
 ; goal=141
 
@@ -25,110 +26,85 @@ CTEMP	= $FC
 	;================================
 plasma:
 
-;	jsr	SETGR		; set lo-res 40x40 mode
-;	bit	SET_GR
-;	bit	FULLGR		; make it 40x48
-
 	jsr	$F3D8		; HGR2 (and full screen), set HGRPAGE to $40
 				; after, A is #$60
-	lda	#$10		; want to write $10 to memory
-;	sta	HGRBITS
-
+	lda	#$10		; write $10 to the 8k starting at $4000
 	jsr	$F3F4		; does the store, is this allowed?
-
-;	jsr	$F3F6		; BKGND
+				;    stores to HGR.BITS and then runs BKGND
 
 	bit	LORES		; switch to lo-res
 
 
-	; we only create a 16x16 texture, which we pattern across 40x48 screen
+	;================================
+	; create texture
+	;================================
+	; we create a 16x16 texture, which we pattern across 40x48 screen
 
+	ldx	#15
 
-; need to beat 30 bytes
-
-
-	ldx	#15	; store at 15,x 8,x
-			;	and x,15 x,8
-			; 240+x, (x*16),15
+	; store at 15,x 8,x and x,15 x,8
+	;	240+x, (x*16),15
 
 write_loop:
 
-	txa
-	sta	lookup+240,X
-	sta	lookup+112,X
+	txa			; write 0123456789ABCDEF pattern horizontally
+	sta	lookup+64,X	; line at Y=4
+	sta	lookup+192,X	; line at Y=12
 
-	asl
+	asl			; draw vertical line
 	asl
 	asl
 	asl
 
 	tay
 	txa
-	sta	lookup,Y
-	sta	lookup+8,Y
+	sta	lookup+4,Y	; line at X=4
+	sta	lookup+12,Y	; line at X=12
 
 	dex
 	bpl	write_loop
 
-
-;create_lookup:
-;	ldy	#15
-;create_yloop:
-;	ldx	#15
-;create_xloop:
-
-;	; vertical
-;	txa
-;;	and	#$7
-;	bne	horizh
-;
-;xnot:
-;	tya
-;	bne	lookup_smc
-;
-;horiz:
-;	; horizontal
-;	tya
-;;	and	#$7
-;	beq	ynot
-;
-;	lda	#$10
-;	bne	lookup_smc
-
-;ynot:
-;	txa
-;lookup_smc:
-;	sta	lookup		; always starts at $d00
-
-;	inc	lookup_smc+1
-
-;	dex
-;	bpl	create_xloop
-
-;	dey
-;	bpl	create_yloop
-
-	; X is $FF
-
 create_lookup_done:
 
-forever_loop:
+	; X is $FF
+	; Y is $00?
+
+	;=========================
+	; cycle colors
+	;=========================
 
 cycle_colors:
-	; cycle colors
 
 	; can't do palette rotate on Apple II so faking it here
 	; just incrementing every entry in texture by 1
 
+	; for this one we wrap at $f
+	; and we don't touch color $10 which maps to zero (black)
+
 	; X is $FF when arriving here
+	; both from init and from end loop
+
 ;	ldx	#0
 ;	inx	; make X 0
+
+;cycle_loop:
+;	ldy	lookup,X
+;	cpy	#$10		; $10 is black background, don't rotate it
+;	beq	skip_zero
+;	dey
+;	tya
+;	and	#$f
+;	sta	lookup,X
+;skip_zero:
+;	dex
+;	bne	cycle_loop
+
 cycle_loop:
-	ldy	lookup,X
-	cpy	#$10
-	beq	skip_zero
-	iny
-	tya
+	lda	lookup,X
+	cmp	#$10		; $10 is black background, don't rotate it
+	; carry set if >=10
+	bcs	skip_zero
+	sbc	#0
 	and	#$f
 	sta	lookup,X
 skip_zero:
@@ -136,9 +112,9 @@ skip_zero:
 	bne	cycle_loop
 
 
-
-
+	;=========================
 	; set/flip pages
+	;=========================
 	; we want to flip pages and then draw to the offscreen one
 
 flip_pages:
@@ -155,7 +131,9 @@ done_page:
 	sta	draw_page_smc+1 ; DRAW_PAGE
 
 
+	;===================================
 	; plot current frame
+	;===================================
 	; scan whole 40x48 screen and plot each point based on
 	; lookup table colors
 plot_frame:
@@ -178,7 +156,7 @@ plot_yloop:
 
 
 	ldy	#$0f		; setup mask for odd/even line
-	bcc	plot_mask
+	bcc	plot_mask	; set by the lsr
 	ldy	#$f0
 plot_mask:
 	sty	MASK
@@ -205,40 +183,35 @@ plot_xloop:
 	tax
 
 plot_lookup:
-
-plot_lookup_smc:
 	lda	lookup,X	; load lookup, (y*16)+x
-	cmp	#11
-	bcs	color_notblue	; if < 11, blue
 
-color_blue:
-	lda	#$11	; blue offset
+	cmp	#11
+	bcc	color_blue	; if < 11, blue
 
 color_notblue:
 	tax
 	lda	colorlookup-11,X	; lookup color
 
-color_notblack:
+	.byte	$2C		; BIT trick
+color_blue:
+	lda	#$22		; load color blue (skipped if bit trick)
 
 	sta	COLOR		; each nibble should be same
 
 	jsr	PLOT1		; plot at GBASL,Y (x co-ord goes in Y)
 
-	dey
-	bpl	plot_xloop
+	dey			; XX--
+	bpl	plot_xloop	; loop if >=0
 
-	pla
+	pla			; restore YY
 	tax
+	dex			; YY--
+	bpl	plot_yloop	; loop if >=0
 
-	dex
-	bpl	plot_yloop
-	bmi	forever_loop
+	bmi	cycle_colors	; move to next frame
 
 colorlookup:
-
-;.byte	$22,$22,$22,$22,$22,$22,$22,$22
-;.byte	$22,$22,$22,
-.byte	$66,$77,$ff,$77,$66,$00,$22
+.byte	$66,$77,$ff,$77,$66,$00
 
 
 	; want this to be at 3f5
