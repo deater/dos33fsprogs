@@ -84,6 +84,10 @@ cycle_colors:
 	; X is $FF when arriving here
 	; both from init and from end loop
 
+	; we should start at 0, starting at FF means we never
+	; cycle pixel 0.  We worked around this by arranging the texture
+	; so pixel 0 is always black
+
 ;	ldx	#0
 ;	inx	; make X 0
 
