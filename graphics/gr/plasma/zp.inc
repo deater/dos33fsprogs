@@ -3,6 +3,7 @@
 ;; LZSA addresses
 NIBCOUNT	= $00
 
+HGRBITS = $1C
 WNDLFT	= $20
 WNDWDTH	= $21
 WNDTOP	= $22
@@ -18,6 +19,8 @@ V2	= $2D
 MASK	= $2E
 COLOR	= $30
 INVFLG	= $32
+
+HGRPAGE	=	$E6
 
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related

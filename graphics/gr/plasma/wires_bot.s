@@ -7,6 +7,10 @@
 ; 148 -- use $10 instead of $ff for black color
 ; 147 -- optimize color code
 ; 143 -- use 15x15 grid instead of 7x7
+; 138 -- re-wrote clear screen code
+; 144 -- back to original layout
+; 142 -- jump to earlier BGND entry point
+; 141 -- start at $FF even though it misses upper left
 
 ; goal=141
 
@@ -25,22 +29,26 @@ plasma:
 ;	bit	SET_GR
 ;	bit	FULLGR		; make it 40x48
 
-	jsr	$F3D8		; HGR2
-	bit	LORES
+	jsr	$F3D8		; HGR2 (and full screen), set HGRPAGE to $40
+				; after, A is #$60
+	lda	#$10		; want to write $10 to memory
+;	sta	HGRBITS
 
-;	lda	#$20
-;	sta	HGRPAGE
-	lda	#$10
-;	lsr
-	sta	HGRBITS
-	jsr	$F3F6		; BKGND
+	jsr	$F3F4		; does the store, is this allowed?
+
+;	jsr	$F3F6		; BKGND
+
+	bit	LORES		; switch to lo-res
+
 
 	; we only create a 16x16 texture, which we pattern across 40x48 screen
 
 
 ; need to beat 30 bytes
 
-	ldx	#15	; store at 15,x and x,15
+
+	ldx	#15	; store at 15,x 8,x
+			;	and x,15 x,8
 			; 240+x, (x*16),15
 
 write_loop:
@@ -54,11 +62,10 @@ write_loop:
 	asl
 	asl
 
-;	clc
-
 	tay
 	txa
 	sta	lookup,Y
+	sta	lookup+8,Y
 
 	dex
 	bpl	write_loop
@@ -73,7 +80,7 @@ write_loop:
 ;	; vertical
 ;	txa
 ;;	and	#$7
-;	bne	horiz
+;	bne	horizh
 ;
 ;xnot:
 ;	tya
@@ -101,7 +108,7 @@ write_loop:
 ;	dey
 ;	bpl	create_yloop
 
-	; X and Y both $FF
+	; X is $FF
 
 create_lookup_done:
 
@@ -115,7 +122,7 @@ cycle_colors:
 
 	; X is $FF when arriving here
 ;	ldx	#0
-	inx	; make X 0
+;	inx	; make X 0
 cycle_loop:
 	ldy	lookup,X
 	cpy	#$10
@@ -125,7 +132,7 @@ cycle_loop:
 	and	#$f
 	sta	lookup,X
 skip_zero:
-	inx
+	dex
 	bne	cycle_loop
 
 
