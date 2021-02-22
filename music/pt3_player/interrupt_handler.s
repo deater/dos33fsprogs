@@ -21,7 +21,8 @@
 TIME_OFFSET	=	13
 
 interrupt_handler:
-	php
+	php			; save status flags
+	cld			; clear decimal mode
 	pha			; save A				; 3
 				; A is saved in $45 by firmware
 	txa
@@ -207,10 +208,9 @@ exit_interrupt:
 	tay			; restore Y
 	pla
 	tax			; restore X
+	pla			; restore A				; 4
 
-	pla			; restore a				; 4
-
-	; this is needed on II+/IIe not not IIc
+	; on II+/IIe (but not IIc) we need to do this?
 interrupt_smc:
 	lda	$45		; restore A
 	plp
