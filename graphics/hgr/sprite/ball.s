@@ -11,6 +11,13 @@
 ; 143 bytes	-- optimize rounded edges
 ; 137 bytes	-- move XX into X
 ; 136 bytes	-- jmp back to loop
+; 130 bytes	-- paramaterize wall collision
+; 125 bytes	-- turn wall collision into loop
+; 148 bytes	-- add purple line
+; 144 bytes	-- move line to #$55 (same as purple)
+; 142 bytes	-- HCLR has Y at 0 at end
+; 141 bytes	-- hopefully useless CLC?
+
 
 HGR_BITS	= $1C
 GBASL		= $26
@@ -21,12 +28,12 @@ HGR_COLOR	= $E4
 HGRPAGE		= $E6
 
 MX		= $F7
-XC		= $F8
-SPRITE_OFFSET	= $F9
-XDIR		= $FA
-YDIR		= $FB
+MY		= $F8
+XDIR		= $F9
+YDIR		= $FA
+
+XC		= $FB
 YC		= $FC
-MY		= $FD
 ;XX		= $FE
 YY		= $FF
 
@@ -44,9 +51,6 @@ HPOSN	= $F411			;; (Y,X) = X, A = Y
 HPLOT0	= $F457			;; plot at (Y,X), (A)
 HGLIN	= $F53A			;; line to (A,X), (Y)
 
-WAIT    = $FCA8                 ;; delay 1/2(26+27A+5A^2) us
-
-
 	;===============================
 	;===============================
 	;===============================
@@ -57,8 +61,8 @@ ball:
 				; HGRPAGE now $40
 				; A is 0
 	; A is 0
-	lda	#$50
 	sta	MX
+	lda	#$40
 	sta	MY
 
 	; xdir and ydir start at 2?
@@ -98,10 +102,33 @@ clear_screen:
 	;=======================
 
 	jsr	HCLR		; clear screen
+				; X untouched
+				; A and Y are 0?
 
-;	jsr	purple_line
+	;=======================
+	; draw purple line
+	;=======================
+
+purple_line:
+
+	; draw purple line
 
 
+
+;	ldy	#0
+	inx
+;	ldx	#0		; can we assume X is FF?
+
+	lda	#$55		; purple
+	sta	HGR_COLOR
+;	lda	#100		; also line location
+
+	jsr	HPLOT0	;; (Y,X) = X, (A) = Y
+
+	lda	#150
+	ldx	#0
+	ldy	#$55
+	jsr	HGLIN	;; (A,X), (Y)
 
 	;===========================
 	; draw ball
@@ -170,7 +197,6 @@ hplot_time:
 			;; AA is in HGR.Y
 
 	ldx	HGR_X	; restore XX into X
-;	ldy	HGR_Y	; restore YY into Y
 
 	inx		; inc XX
 	dec	XC
@@ -184,61 +210,35 @@ hplot_time:
 	; move sprite
 	;===========================
 
-	lda	MX		; load X location
-	clc
-	adc	XDIR		; add in our direction/speed
+	ldx	#1
+handle_wall_loop:
+
+	;=================================
+	; handle wall
+	;=================================
+
+handle_wall:
+	lda	MX,X		; load X location
+;	clc
+	adc	XDIR,X		; add in our direction/speed
 	bmi	switch_xdir	; if <0 or > 127 then switch direction
 
-	sta	MX
+	sta	MX,X
 	bpl	noswitch_xdir	; otherwise store and skip
 
 switch_xdir:
-	lda	XDIR		; get direction and inverse
+	lda	XDIR,X		; get direction and inverse
 	eor	#$FF
-	sta	XDIR
-	inc	XDIR		; two's complement
+	sta	XDIR,X
+	inc	XDIR,X		; two's complement
 
 noswitch_xdir:
 
-	lda	MY		; load Y location
-	clc
-	adc	YDIR		; add in our direction/speed
-
-	bmi	switch_ydir	; if < 0 or > 127 then switch direction
-
-	sta	MY
-	bpl	move_ball_loop	; otherwise store and skip
-
-switch_ydir:
-	lda	YDIR		; get direction and inverse
-	eor	#$FF
-	sta	YDIR
-	inc	YDIR		; two's complement
-	bne	move_ball_loop	; bne if fits
+	dex
+	bpl	handle_wall_loop
+	bmi	move_ball_loop
 
 
-.if 0
-purple_line:
-
-	; draw purple line
-
-
-	lda	#$55		; purple
-	sta	HGR_COLOR
-
-	ldy	#0
-	ldx	#0
-	lda	#100
-
-	jsr	HPLOT0	;; (Y,X) = X, (A) = Y
-
-	lda	#150
-	ldx	#0
-	ldy	#100
-	jsr	HGLIN	;; (A,X), (Y)
-
-	rts
-.endif
 
 
 ;==============
