@@ -18,7 +18,7 @@ CTEMP	= $FC
 	;================================
 	; Clear screen and setup graphics
 	;================================
-plasma:
+wires:
 
 ;	jsr	SETGR		; set lo-res 40x40 mode
 	bit	SET_GR
@@ -200,7 +200,7 @@ colorlookup:
 	; Length is 141 so start at $3f4 - 
 	;			1013 - 141 + 3 = 875 = $36B
 
-	jmp	plasma
+	jmp	wires
 
 ; make lookup happen at page boundary
 
