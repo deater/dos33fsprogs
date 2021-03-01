@@ -1,5 +1,6 @@
 all:
 	cd boxes && make
+	cd checkers && make
 	cd drops && make
 	cd mode7 && make
 	cd plasma && make
@@ -11,6 +12,7 @@ all:
 
 clean:
 	cd boxes && make clean
+	cd checkers && make clean
 	cd drops && make clean
 	cd mode7 && make clean
 	cd plasma && make clean

@@ -3,6 +3,9 @@ Various experiments in lo-res graphics
 + boxes
 	makes lores pictures by drawing boxes
 
++ checkers
+	some attempts at 32B graphics
+
 + drops
 	raindrops
 
