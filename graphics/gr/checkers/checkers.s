@@ -1,13 +1,14 @@
-; Checkers, based on the code in Hellmood's Memories
+; Checkers
+; vaguely based on a scene in Hellmood's Memories
 
-; 42 bytes
-; could be shorter if you're not picky about colors
+; 32 bytes, for Lovebyte 2021
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
 ; 42 -- original
 ; 39 -- not fullscreen
 ; 36 -- now marches oddly
+; 32 -- colors now rainbow
 
 ; Zero Page
 BASL		= $28
@@ -55,8 +56,7 @@ checkers:
 	; init screen
 	jsr	SETGR				; 3
 ;	bit	FULLGR				; 3
-						;====
-						; 6
+
 checkers_forever:
 
 	inc	FRAME				; 2
@@ -79,7 +79,8 @@ xloop:
 ;	sbc	#0
 
 	eor	X2
-;	ora	#$DB
+
+;	ora	#$DB	; needed for solid colors
 ;	adc	#1
 
 	jsr	SETCOL

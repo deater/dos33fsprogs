@@ -3,11 +3,12 @@ include ../../../Makefile.inc
 DOS33 = ../../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKERSCRIPTS = ../../../linker_scripts
+EMPTY_DISK = ../../../empty_disk/empty.dsk
 
 all:	sier.dsk
 
 sier.dsk:	HELLO SIER SIER_TINY SIER_64
-	cp empty.dsk sier.dsk
+	cp $(EMPTY_DISK) sier.dsk
 	$(DOS33) -y sier.dsk SAVE A HELLO
 	$(DOS33) -y sier.dsk BSAVE -a 0x36C SIER
 	$(DOS33) -y sier.dsk BSAVE -a 0x300 SIER_TINY

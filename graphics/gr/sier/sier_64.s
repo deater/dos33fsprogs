@@ -1,6 +1,7 @@
 ; fake sierpinski
+; 64-byte Apple II demo
 
-; scrolling and colors
+; with scrolling and colors
 
 ; by Vince `deater` Weaver, dSr, Lovebyte 2021
 
@@ -55,30 +56,24 @@ sier_xloop:
 	clc
 	adc	FRAME
 
-;	sta	X2
-;	lda	XX
-;	adc	FRAME
-;	and	X2
-
 	and	XX
 
 	bne	black
-;	lda	#$11	; red
-	lda	FRAME
+	lda	FRAME		; color is based on frame
 	lsr
 	lsr
 	lsr
 	lsr
-	bne	not_zero
-	lda	#3
+	bne	not_zero	; but no color 0 (would be all black)
+	lda	#3		; how about purple instead
 
 not_zero:
 
 	.byte	$2C	; bit trick
 black:
 	lda	#$00
-;	sta	COLOR
-	jsr	SETCOL
+
+	jsr	SETCOL		; set top/bottom nibble same color
 
 	ldy	XX
 	txa

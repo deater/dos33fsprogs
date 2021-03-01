@@ -1,4 +1,10 @@
-; do a (hopefully fast) plasma type demo
+; A 123-byte Apple II Lo-res Fake Palette Rotation Demo
+;	The Apple II has no Palette rotation hardware, so we fake it
+
+; For Lovebyte 2021
+
+; by Vince `deater` Weaver (vince@deater.net) / dSr
+; with some help from qkumba
 
 ; 151 -- original
 ; 137 -- optimize generation
@@ -22,11 +28,14 @@
 ; 132 -- make lookup 8*sin+7
 ; 131 -- re-arrange sine table
 ; 128 -- call into PLOT for MASK seting
+
+; urgh lovebyte wants 124 byte (counts header)
+
 ; 127 -- base YY<<16 by adding smc, not by shifting
 ; 125 -- realize that the top byte wraps so no need to and
 ; 124 -- re-arrange code to make an CLC unnecessary
+; 123 -- qkumba noticed we can use the $FF offset directly in page flip
 
-; urgh lovebyte wants 124 byte (counts header)
 
 ; zero page
 GBASL	= $26
@@ -115,13 +124,15 @@ flip_pages:
 
 ;	ldy	#0
 
-	iny			; y is $FF, make it 0
+;	iny			; y is $FF, make it 0
 
 	lda	draw_page_smc+1	; DRAW_PAGE
-	beq	done_page
-	iny
+	bne	done_page
+	dey
 done_page:
-	ldx	PAGE1,Y		; set display page to PAGE1 or PAGE2
+;	ldx	PAGE1,Y		; set display page to PAGE1 or PAGE2
+
+	ldx	$BF56,Y		; PAGE1 - $FF
 
 	eor	#$4		; flip draw page between $400/$800
 	sta	draw_page_smc+1 ; DRAW_PAGE
