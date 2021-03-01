@@ -3,11 +3,12 @@ include ../../../Makefile.inc
 DOS33 = ../../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKERSCRIPTS = ../../../linker_scripts
+EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	plasma.dsk
 
 plasma.dsk:	HELLO PLASMA PLASMA_128 PLASMA_TINY PLASMA_BOT WIRES WIRES_BOT
-	cp empty.dsk plasma.dsk
+	cp $(EMPTYDISK) plasma.dsk
 	$(DOS33) -y plasma.dsk SAVE A HELLO
 	$(DOS33) -y plasma.dsk BSAVE -a 0x70 PLASMA
 	$(DOS33) -y plasma.dsk BSAVE -a 0x70 PLASMA_128
