@@ -31,6 +31,9 @@ sier:
 	jsr	SETGR		; set lo-res 40x40 mode
 	bit	FULLGR		; make it 40x48
 
+	; note we can save 4 bytes if we don't care about what boundary
+	; we start at??
+
 	lda	#0
 	sta	FRAME
 
