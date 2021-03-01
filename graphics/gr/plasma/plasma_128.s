@@ -22,9 +22,6 @@
 ; 132 -- make lookup 8*sin+7
 ; 131 -- re-arrange sine table
 ; 128 -- call into PLOT for MASK seting
-; 127 -- base YY<<16 by adding smc, not by shifting
-; 125 -- realize that the top byte wraps so no need to and
-; 124 -- re-arrange code to make an CLC unnecessary
 
 ; urgh lovebyte wants 124 byte (counts header)
 
@@ -33,12 +30,11 @@ GBASL	= $26
 GBASH	= $27
 MASK	= $2E
 COLOR	= $30
-;CTEMP	= $68
-YY	= $69
+CTEMP	= $68
 
 ; soft-switches
-FULLGR	= $C052
-PAGE1	= $C054
+FULLGR          =       $C052
+PAGE0           =       $C054
 
 ; ROM routines
 PLOT1	= $F80E		;; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
@@ -49,8 +45,7 @@ SETGR	= $FB40
 
 .zeropage
 
-.globalzp	colorlookup,plot_lookup_smc,draw_page_smc,frame_smc,sinetable
-
+.globalzp	sinetable,colorlookup,draw_page_smc
 
 	;================================
 	; Clear screen and setup graphics
@@ -69,13 +64,10 @@ plasma:
 	; we only create a 16x16 texture, which we pattern across 40x48 screen
 
 
-	; I've tried re-optimizing this about 10 different ways
-	; and it never ends up shorter
-
 create_lookup:
-	ldx	#15
-create_yloop:
 	ldy	#15
+create_yloop:
+	ldx	#15
 create_xloop:
 	sec
 	lda	sinetable,X
@@ -85,11 +77,12 @@ lookup_smc:
 	sta	lookup		; always starts at $d00
 	inc	lookup_smc+1
 
-	dey
+	dex
 	bpl	create_xloop
 
-	dex
+	dey
 	bpl	create_yloop
+
 
 	; X and Y both $FF
 
@@ -98,30 +91,34 @@ create_lookup_done:
 forever_loop:
 
 cycle_colors:
-
 	; cycle colors
-	; instead of advancing entire frame, do slightly slower route
-	; instead now and just incrememnting the frame and doing the
-	; adjustment at plot time.
 
-	; increment frame
+	; can't do palette rotate on Apple II so faking it here
+	; just incrementing every entry in texture by 1
 
-	inc	frame_smc+1
+	; X if $FF when arriving here
+;	ldx	#0
+	inx	; make X 0
+cycle_loop:
+	inc	lookup,X
+	inx
+	bne	cycle_loop
+
+
+
 
 	; set/flip pages
 	; we want to flip pages and then draw to the offscreen one
 
 flip_pages:
 
-;	ldy	#0
-
-	iny			; y is $FF, make it 0
+;	ldx	#0		; x already 0
 
 	lda	draw_page_smc+1	; DRAW_PAGE
 	beq	done_page
-	iny
+	inx
 done_page:
-	ldx	PAGE1,Y		; set display page to PAGE1 or PAGE2
+	ldy	PAGE0,X		; set display page to PAGE1 or PAGE2
 
 	eor	#$4		; flip draw page between $400/$800
 	sta	draw_page_smc+1 ; DRAW_PAGE
@@ -133,10 +130,18 @@ done_page:
 plot_frame:
 
 	ldx	#47		; YY=47 (count backwards)
+
 plot_yloop:
 
-	txa			; get YY into A
-	pha			; save X for later
+	txa			; get (y&0xf)<<4
+	pha			; save YY
+	asl
+	asl
+	asl
+	asl
+	sta	CTEMP		; save for later
+
+	txa			; get Y in accumulator
 	lsr			; call actually wants Ycoord/2
 
 	php			; save C flag for mask handling
@@ -152,11 +157,7 @@ draw_page_smc:
 	adc	#0
 	sta	GBASH
 
-	; increment YY in top nibble of lookup for (yy<<16)+xx
-	; clc	from above, C always 0
-	lda	plot_lookup_smc+1
-	adc	#$10		; no need to mask as it will oflo and be ignored
-	sta	plot_lookup_smc+1
+
 
 	;==========
 
@@ -170,25 +171,22 @@ draw_page_smc:
 
 plot_xloop:
 
-	tya			; get XX & 0x0f
+	tya			; get x&0xf
 	and	#$f
+	ora 	CTEMP 		; combine with val from earlier
+				; get ((y&0xf)*16)+x
+
 	tax
 
+plot_lookup:
 plot_lookup_smc:
-	lda	lookup,X	; load lookup, (YY*16)+XX
-
-	clc
-frame_smc:
-	adc	#$00		; add in frame
+	lda	lookup,X	; load lookup, (y*16)+x
 
 	and	#$f
 	lsr			; we actually only have 8 colors
 
 	tax
-
 	lda	colorlookup,X	; lookup color
-
-
 	sta	COLOR		; each nibble should be same
 
 	jsr	PLOT1		; plot at GBASL,Y (x co-ord goes in Y)
@@ -198,6 +196,7 @@ frame_smc:
 
 	pla			; restore YY
 	tax
+
 	dex
 	bpl	plot_yloop
 	bmi	forever_loop
@@ -211,15 +210,12 @@ colorlookup:
 sinetable:
 ; this is actually (8*sin(x))+7
 ; re-arranged so starts with $00 for colorlookup overlap
-.byte $00,$FF
-HACK:			; use the $0200 here for (HACK),Y addressing?
-			; in the end no way to get Y set properly
-.byte $00,$02,$04
+.byte $00,$FF,$00,$02,$04
 .byte $07,$0A,$0C,$0E,$0F,$0E,$0C,$0A
 .byte $07,$04,$02
 
 
 ; make lookup happen at page boundary
 
-.org	$200
+.org	$d00
 lookup:

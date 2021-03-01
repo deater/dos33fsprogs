@@ -6,11 +6,12 @@ LINKERSCRIPTS = ../../../linker_scripts
 
 all:	sier.dsk
 
-sier.dsk:	HELLO SIER SIER_TINY
+sier.dsk:	HELLO SIER SIER_TINY SIER_64
 	cp empty.dsk sier.dsk
 	$(DOS33) -y sier.dsk SAVE A HELLO
 	$(DOS33) -y sier.dsk BSAVE -a 0x36C SIER
 	$(DOS33) -y sier.dsk BSAVE -a 0x300 SIER_TINY
+	$(DOS33) -y sier.dsk BSAVE -a 0x300 SIER_64
 
 ###
 
@@ -33,8 +34,17 @@ SIER_TINY:	sier_tiny.o
 sier_tiny.o:	sier_tiny.s
 	ca65 -o sier_tiny.o sier_tiny.s -l sier_tiny.lst
 
+###
+
+SIER_64:	sier_64.o
+	ld65 -o SIER_64 sier_64.o -C $(LINKERSCRIPTS)/apple2_300.inc
+
+sier_64.o:	sier_64.s
+	ca65 -o sier_64.o sier_64.s -l sier_64.lst
+
+
 
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO SIER SIER_TINY
+	rm -f *~ *.o *.lst HELLO SIER SIER_TINY SIER_64

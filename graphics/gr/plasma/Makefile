@@ -6,10 +6,11 @@ LINKERSCRIPTS = ../../../linker_scripts
 
 all:	plasma.dsk
 
-plasma.dsk:	HELLO PLASMA PLASMA_TINY PLASMA_BOT WIRES WIRES_BOT
+plasma.dsk:	HELLO PLASMA PLASMA_128 PLASMA_TINY PLASMA_BOT WIRES WIRES_BOT
 	cp empty.dsk plasma.dsk
 	$(DOS33) -y plasma.dsk SAVE A HELLO
-	$(DOS33) -y plasma.dsk BSAVE -a 0x300 PLASMA
+	$(DOS33) -y plasma.dsk BSAVE -a 0x70 PLASMA
+	$(DOS33) -y plasma.dsk BSAVE -a 0x70 PLASMA_128
 	$(DOS33) -y plasma.dsk BSAVE -a 0xC00 PLASMA_TINY
 	$(DOS33) -y plasma.dsk BSAVE -a 0x36B PLASMA_BOT
 	$(DOS33) -y plasma.dsk BSAVE -a 0xC00 WIRES
@@ -23,10 +24,19 @@ HELLO:	hello.bas
 ###
 
 PLASMA:	plasma.o
-	ld65 -o PLASMA plasma.o -C $(LINKERSCRIPTS)/apple2_300.inc
+	ld65 -o PLASMA plasma.o -C ./apple2_70_zp.inc
 
 plasma.o:	plasma.s
 	ca65 -o plasma.o plasma.s -l plasma.lst
+
+###
+
+PLASMA_128:	plasma_128.o
+	ld65 -o PLASMA_128 plasma_128.o -C ./apple2_70_zp.inc
+
+plasma_128.o:	plasma_128.s
+	ca65 -o plasma_128.o plasma_128.s -l plasma_128.lst
+
 
 ###
 
@@ -67,4 +77,4 @@ wires_bot.o:	wires_bot.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst PLASMA PLASMA_TINY PLASMA_BOT WIRES WIRES_BOT
+	rm -f *~ *.o *.lst PLASMA PLASMA_128 PLASMA_TINY PLASMA_BOT WIRES WIRES_BOT
