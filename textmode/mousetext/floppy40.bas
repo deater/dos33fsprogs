@@ -1,0 +1,10 @@
+5 PRINT CHR$(4)"PR#3"
+10 PRINT CHR$(27);CHR$(17)
+20 PRINT " ___"
+30 INVERSE:?"ZA--_"
+40 INVERSE:?"Z";:NORMAL:?" o ";:INVERSE:?"_"
+50 ?"Z";:NORMAL:?"_|_";:INVERSE:?"_":NORMAL
+100 ?" ___"
+110 INVERSE:?"Z";:NORMAL:?"  '";:INVERSE:?"_"
+120 INVERSE:?"ZN\T_":NORMAL
+
