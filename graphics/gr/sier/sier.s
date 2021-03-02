@@ -17,11 +17,15 @@
 
 
 ; 140 bytes -- bot demo version
-; 137 bytes -- remvoe & jump
+; 137 bytes -- remove & jump
 ; 135 bytes -- init with HGR, which sets A=0
-; 133 bytes -- remove ldx #0 in paeg flip code
+; 133 bytes -- remove ldx #0 in page flip code
 ; 130 bytes -- load in zero page
 ; 128 bytes -- init T_L, T_H as part of zero page since we live there
+; 126 bytes -- shorter 16-bit increment of T_L
+; 122 bytes -- use trick of jumping mid-PLOT for MASK calculation
+
+; LoveByte requires 124 bytes
 
 ; zero page
 
@@ -90,28 +94,31 @@ sier_yloop:
 	txa	; YY			; plot call needs Y/2
 	lsr
 
-	bcc	even_mask
-	ldy	#$f0
-	.byte	$2C	; bit hack
-even_mask:
-	ldy	#$0f
-	sty	MASK
+	php
+
+;	bcc	even_mask
+;	ldy	#$f0
+;	.byte	$2C	; bit hack
+;even_mask:
+;	ldy	#$0f
+;	sty	MASK
 
 	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
 	lda	GBASH
-
 draw_page_smc:
 	adc	#0
 	sta	GBASH		 ; adjust for PAGE1/PAGE2 ($400/$800)
 
+	plp
+	jsr	$f806		; trick to calculate MASK by jumping
+				; into middle of PLOT routine
 
 	; reset XX to 0
 
 	ldy	#0		; XX
 	sty	XX_TL
 	sty	XX_TH
-
 
 sier_xloop:
 
@@ -172,9 +179,9 @@ green:
 blah_smc:
 	adc	#1
 	sta	T_L
-	lda	T_H
-	adc	#0
-	sta	T_H
+	bcc	no_carry
+	inc	T_H
+no_carry:
 
 	; speed up the zoom as it goes
 	inc	blah_smc+1
@@ -191,7 +198,6 @@ done_page:
 
 	eor	#$4             ; flip draw page between $400/$800
 	sta	draw_page_smc+1 ; DRAW_PAGE
-
 
 	jmp	sier_outer	; what can we branch on?
 
