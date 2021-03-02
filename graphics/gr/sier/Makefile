@@ -7,10 +7,11 @@ EMPTY_DISK = ../../../empty_disk/empty.dsk
 
 all:	sier.dsk
 
-sier.dsk:	HELLO SIER SIER_TINY SIER_64
+sier.dsk:	HELLO SIER SIER_BOT SIER_TINY SIER_64
 	cp $(EMPTY_DISK) sier.dsk
 	$(DOS33) -y sier.dsk SAVE A HELLO
-	$(DOS33) -y sier.dsk BSAVE -a 0x36C SIER
+	$(DOS33) -y sier.dsk BSAVE -a 0x60 SIER
+	$(DOS33) -y sier.dsk BSAVE -a 0x36C SIER_BOT
 	$(DOS33) -y sier.dsk BSAVE -a 0x300 SIER_TINY
 	$(DOS33) -y sier.dsk BSAVE -a 0x300 SIER_64
 
@@ -22,10 +23,19 @@ HELLO:	hello.bas
 ###
 
 SIER:	sier.o
-	ld65 -o SIER sier.o -C ./apple2_36c.inc
+	ld65 -o SIER sier.o -C ./apple2_60_zp.inc
 
 sier.o:	sier.s
 	ca65 -o sier.o sier.s -l sier.lst
+
+###
+
+SIER_BOT:	sier_bot.o
+	ld65 -o SIER_BOT sier_bot.o -C ./apple2_36c.inc
+
+sier_bot.o:	sier_bot.s
+	ca65 -o sier_bot.o sier_bot.s -l sier_bot.lst
+
 
 ###
 

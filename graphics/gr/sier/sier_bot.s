@@ -1,9 +1,8 @@
 ; sierpinski-like demo
 ; based on the code from Hellmood's Memories demo
 
-; by Vince `deater` Weaver <vince@deater.net>
-
-; for Lovebyte 2021
+; 140 bytes -- enough for appleiibot plus {B11} directive
+;			to allow for decompression time
 
 ; the simple sierpinski you more or less just plot
 ;		X AND Y
@@ -15,63 +14,37 @@
 ; to get speed on 6502/Apple II we change the multiplies to
 ; a series of 16-bit 8.8 fixed point adds
 
-
-; 140 bytes -- bot demo version
-; 137 bytes -- remvoe & jump
-; 135 bytes -- init with HGR, which sets A=0
-; 133 bytes -- remove ldx #0 in paeg flip code
-; 130 bytes -- load in zero page
-; 128 bytes -- init T_L, T_H as part of zero page since we live there
-
-; zero page
+.include "hardware.inc"
 
 GBASH	=	$27
 MASK	=	$2E
 COLOR	=	$30
-
 ;XX	=	$F7
 XX_TH	=	$F8
 XX_TL	=	$F9
 ;YY	=	$FA
 YY_TH	=	$FB
 YY_TL	=	$FC
-;T_L	=	$FD
-;T_H	=	$FE
+T_L	=	$FD
+T_H	=	$FE
 SAVED	=	$FF
 
-; Soft switches
-FULLGR	= $C052
-PAGE1	= $C054
-PAGE2	= $C055
-LORES	= $C056		; Enable LORES graphics
-
-; ROM routines
-HGR	= $F3E2
-HGR2	= $F3D8
-PLOT1	= $F80E		;; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
-GBASCALC= $F847		;; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
-SETGR   = $FB40
-
-
-.zeropage
-.globalzp T_L,T_H
 
 	;================================
 	; Clear screen and setup graphics
 	;================================
 sier:
-	jsr	HGR2		; set FULLGR, sets A=0
-				; be sure to avoid code at E6 if we do this
-	bit	LORES		; drop down to lo-res
 
-;	lda	#0		; start with multiplier 0
-;	sta	T_L
-;	sta	T_H
+	jsr	SETGR		; set lo-res 40x40 mode
+	bit	FULLGR		; make it 40x48
+
+	lda	#0		; start with multiplier 0
+	sta	T_L
+	sta	T_H
 
 sier_outer:
 
 	ldx	#0		; YY starts at 0
-
 	stx	YY_TL
 	stx	YY_TH
 
@@ -179,22 +152,26 @@ blah_smc:
 	; speed up the zoom as it goes
 	inc	blah_smc+1
 
-
-	; x is 48
 flip_pages:
+	ldx	#0
+
 	lda	draw_page_smc+1 ; DRAW_PAGE
 	beq	done_page
 	inx
 done_page:
-	; X=48 ($30)	PAGE1=$C054-$30=$C024
-	ldy	$C024,X		; set display page to PAGE1 or PAGE2
+	ldy	PAGE0,X         ; set display page to PAGE1 or PAGE2
 
 	eor	#$4             ; flip draw page between $400/$800
 	sta	draw_page_smc+1 ; DRAW_PAGE
 
+	jmp	sier_outer	; just slightly too far???
 
-	jmp	sier_outer	; what can we branch on?
+	; for maximum twitter size we enter this program
+	; by using the "&" operator which jumps to $3F5
 
-T_L:	.byte $00
-T_H:	.byte $00
+	; we can't load there though as the code would end up overlapping
+	; $400 which is the graphics area
 
+	; this is at 389
+	; we want to be at 3F5, so load program at 36C?
+	jmp	sier		; entry point from &

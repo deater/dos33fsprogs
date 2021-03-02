@@ -28,8 +28,11 @@
 ; 145 bytes -- leave out carry setting
 ; 142 bytes -- reduce to 4 colors (from 8)
 ; 141 bytes -- don't dex at beginning ($FF close enough)
+; 138 bytes -- no need for jmp at end (not bot)
 
-.include "hardware.inc"
+
+
+; zero page
 
 GBASH	=	$27
 MASK	=	$2E
@@ -44,6 +47,18 @@ BUF1L	=	$FC
 BUF1H	=	$FD
 BUF2L	=	$FE
 BUF2H	=	$FF
+
+; soft switches
+FULLGR	=	$C052
+LORES	=	$C056	; Enable LORES graphics
+
+
+; ROM routines
+HGR	= $F3E2
+HGR2	= $F3D8
+PLOT	= $F800		;; PLOT AT Y,A
+PLOT1	= $F80E		;; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
+
 
 
 	;================================
@@ -71,7 +86,7 @@ drops_outer:
 
 	inc	FRAME
 	lda	FRAME
-	tay			; save frame for later
+	tay			; save frame in Y
 
 	; alternate $20/$28 in BUF1H/BUF2H
 
@@ -93,7 +108,7 @@ drops_outer:
 
 	; fake random number generator by reading ROM
 
-	lda	$E000,Y
+	lda	$E000,Y		; based on FRAME
 
 	; buffer is 40x48 = roughly 2k?
 	; so random top bits = 0..7
@@ -128,16 +143,16 @@ no_drop:
 
 drops_yloop:
 
-	txa		; YY
-	tay		; plot YY,YY
-
-	jsr	PLOT	; PLOT Y,A, setting up MASK and putting addr in GBASL/H
-
-
 	; reset XX to 39
 
-	lda	#39		; XX
+	lda	#39	; XX
 	sta	XX
+
+	tay
+	txa		; YY into A
+
+			; plot 39,YY
+	jsr	PLOT	; PLOT Y,A, setting up MASK and putting addr in GBASL/H
 
 
 	;=================================
@@ -205,33 +220,4 @@ colors:
 ; 0       2    6    e    7    f    f    f
 ; 0000 0010 0110 1110 0111 1111 1111 1111
 ;    0    1    2    3    4    5    6    7
-
-
-
-
-	; for maximum twitter size we enter this program
-	; by using the "&" operator which jumps to $3F5
-
-	; we can't load there though as the code would end up overlapping
-	; $400 which is the graphics area
-
-	; this is at 38A
-	; we want to be at 3F5, so load program at 36B?
-
-	; called by EXECUTE.STATEMENT at $D828
-	; which jumps to CHRGET at $00B1
-	; which does a RTS to $3F4 at end
-
-	; CHRGET sets up state based on the char that follows the &
-	;  Z==C==1 is colon
-	;  Z==1 is EOL (nul)
-	;  C==0 is digit
-
-	; when we call with " following
-	; A=$22 (") X=$FF Y=$5E
-	;	N=0 V=0 Z=0 C=1
-
-	jmp	drops		; entry point from &
-;	bcs	drops
-
 
