@@ -10,7 +10,7 @@
 
 #include "dos33.h"
 
-static int debug=0;
+static int debug=0,ignore_errors=0;
 
 static unsigned char sector_buffer[BYTES_PER_SECTOR];
 
@@ -513,7 +513,7 @@ static int dos33_add_file(int fd, char dos_type,
 	if (apple_filename[0]<64) {
 		fprintf(stderr,"Error!  First char of filename "
 				"must be ASCII 64 or above!\n");
-		return ERROR_INVALID_FILENAME;
+		if (!ignore_errors) return ERROR_INVALID_FILENAME;
 	}
 
 	/* Check for comma in filename */
@@ -1755,9 +1755,10 @@ static void display_help(char *name, int version_only) {
 
 	if (version_only) return;
 
-	printf("Usage: %s [-h] [-y] disk_image COMMAND [options]\n",name);
+	printf("Usage: %s [-h] [-y] [-x] disk_image COMMAND [options]\n",name);
 	printf("\t-h : this help message\n");
 	printf("\t-y : always answer yes for anying warning questions\n");
+	printf("\t-x : ignore errors (useful for making invalid filenames)\n");
 	printf("\n");
 	printf("  Where disk_image is a valid dos3.3 disk image\n"
 		"  and COMMAND is one of the following:\n");
@@ -1868,7 +1869,7 @@ int main(int argc, char **argv) {
 
 
 	/* Check command line arguments */
-	while ((c = getopt (argc, argv,"a:l:t:s:hvy"))!=-1) {
+	while ((c = getopt (argc, argv,"a:l:t:s:hvxy"))!=-1) {
 		switch (c) {
 
 		case 'a':
@@ -1892,6 +1893,9 @@ int main(int argc, char **argv) {
 			return 0;
 		case 'h': display_help(argv[0],0);
 			return 0;
+		case 'x':
+			ignore_errors=1;
+			break;
 		case 'y':
 			always_yes=1;
 			break;
