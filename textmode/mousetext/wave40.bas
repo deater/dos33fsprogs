@@ -1,0 +1,4 @@
+1?CHR$(4)"PR#3"
+2?CHR$(27);CHR$(17)
+3N$=CHR$(14):I$=CHR$(15)
+4?N$"._."I$"SSLLSS";:GOTO 4

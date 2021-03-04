@@ -7,11 +7,13 @@ EMPTYDISK = ../../empty_disk/empty.dsk
 
 all:	mousetext.dsk
 
-mousetext.dsk:	HELLO MT.BAS SW.BAS FLOPPY.BAS FLOPPY
+mousetext.dsk:	HELLO MT.BAS SW.BAS FLOPPY.BAS FLOPPY WAVE.BAS WAVE40.BAS
 	cp $(EMPTYDISK) mousetext.dsk
 	$(DOS33) -y mousetext.dsk SAVE A HELLO
 	$(DOS33) -y mousetext.dsk SAVE A MT.BAS
 	$(DOS33) -y mousetext.dsk SAVE A SW.BAS
+	$(DOS33) -y mousetext.dsk SAVE A WAVE.BAS
+	$(DOS33) -y mousetext.dsk SAVE A WAVE40.BAS
 	$(DOS33) -y mousetext.dsk SAVE A FLOPPY.BAS
 	$(DOS33) -y mousetext.dsk BSAVE -a 0xC00 FLOPPY
 
@@ -32,6 +34,17 @@ SW.BAS:	sw.bas
 
 ###
 
+WAVE.BAS:	wave.bas
+	$(TOKENIZE) < wave.bas > WAVE.BAS
+
+###
+
+WAVE40.BAS:	wave40.bas
+	$(TOKENIZE) < wave40.bas > WAVE40.BAS
+
+
+###
+
 FLOPPY.BAS:	floppy.bas
 	$(TOKENIZE) < floppy.bas > FLOPPY.BAS
 
@@ -46,4 +59,4 @@ floppy.o:       floppy.s
 ####
 
 clean:	
-	rm -f *~ *.o *.lst HELLO MT.BAS SW.BAS FLOPPY.BAS FLOPPY
+	rm -f *~ *.o *.lst HELLO MT.BAS SW.BAS FLOPPY.BAS FLOPPY WAVE.BAS WAVE40.BAS
