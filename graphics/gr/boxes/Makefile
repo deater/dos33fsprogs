@@ -7,11 +7,12 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	boxes.dsk make_boxes
 
-boxes.dsk:	HELLO A2_BOXES BOXES
+boxes.dsk:	HELLO A2_BOXES BOXES RR
 	cp $(EMPTYDISK) boxes.dsk
 	$(DOS33) -y boxes.dsk SAVE A HELLO
 	$(DOS33) -y boxes.dsk BSAVE -a 0x300 BOXES
 	$(DOS33) -y boxes.dsk BSAVE -a 0xC00 A2_BOXES
+	$(DOS33) -y boxes.dsk BSAVE -a 0xC00 RR
 
 ###
 
@@ -25,6 +26,15 @@ A2_BOXES:	a2_boxes.o
 
 a2_boxes.o:	a2_boxes.s
 	ca65 -o a2_boxes.o a2_boxes.s -l a2_boxes.lst
+
+###
+
+RR:	rr.o
+	ld65 -o RR rr.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+rr.o:	rr.s
+	ca65 -o rr.o rr.s -l rr.lst
+
 
 ###
 
@@ -46,4 +56,4 @@ make_boxes.o:	make_boxes.c
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO A2_BOXES BOXES make_boxes
+	rm -f *~ *.o *.lst HELLO A2_BOXES BOXES RR make_boxes

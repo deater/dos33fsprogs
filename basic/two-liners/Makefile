@@ -11,7 +11,7 @@ entropy.dsk:	HELLO ENTROPY.BAS ENTROPY ENTROPY_TINY
 	$(DOS33) -y entropy.dsk SAVE A HELLO
 	$(DOS33) -y entropy.dsk SAVE A ENTROPY.BAS
 	$(DOS33) -y entropy.dsk BSAVE -a 0x0C00 ENTROPY
-	$(DOS33) -y entropy.dsk BSAVE -a 0x0C00 ENTROPY_TINY
+	$(DOS33) -y entropy.dsk BSAVE -a 0x70 ENTROPY_TINY
 
 ####
 
@@ -30,7 +30,7 @@ entropy.o:	entropy.s
 ###
 
 ENTROPY_TINY:	entropy_tiny.o
-	ld65 -o ENTROPY_TINY entropy_tiny.o -C ../../linker_scripts/apple2_c00.inc
+	ld65 -o ENTROPY_TINY entropy_tiny.o -C ./apple2_70_zp.inc
 
 entropy_tiny.o:	entropy_tiny.s
 	ca65 -o entropy_tiny.o entropy_tiny.s -l entropy_tiny.lst
