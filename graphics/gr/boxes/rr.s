@@ -18,7 +18,10 @@ FRAME	= $F2
 Y1	= $F3
 
 ; soft-switches
-FULLGR	= $C052
+KEYPRESS	= $C000
+KEYRESET	= $C010
+FULLGR		= $C052
+
 
 ; ROM routines
 
@@ -99,16 +102,74 @@ inner_loop:
 
 end:
 
-play_music:
-mf_smc:
-	lda	music_frequency
+music_outer_loop:
+	lda	#0
+
+play_music_loop:
+	tax
+try_again:
+	lda	music_sequence,X
+	bmi	long_duration
+	ldy	#$40
+	.byte	$2C		; bit trick
+long_duration:
+	ldy	#$80
+	sty	speaker_duration
+
+	and	#$f
+	cmp	#8
+	bcc	all_good
+
+	and	#$3
+all_done:
+	beq	all_done
+
+	lda	#200
+	jsr	WAIT
+	inx
+	jmp	try_again
+
+
+all_good:
+	tay
+	lda	note_freqs,Y
 	sta	speaker_frequency
-sf_smc:
-	lda	music_duration
-	sta	speaker_duration
-	bmi	all_done
-	inc	mf_smc+1
-	inc	sf_smc+1
+
+	inx
+	txa
+
+
+
+;	lda	#0
+;play_music_loop:
+;	tax
+;	lda	music_sequence,X
+;	sta	speaker_duration
+;	bpl	play_music_continue
+;	cmp	#$ff
+;	beq	all_done
+
+;play_music_continue:
+;	lda	music_sequence+1,X
+;	sta	speaker_frequency
+;	inx
+;	inx
+;	txa
+
+
+;NOTE_A3		= $98	; 152
+;NOTE_B3		= $87	; 135
+;NOTE_CSHARP4	= $79	; 121
+;NOTE_D4		= $72	; 114
+;NOTE_E4		= $66	; 102
+;NOTE_FSHARP4	= $5B	; 91
+
+NOTE_A3		= 0
+NOTE_B3		= 1
+NOTE_CSHARP4	= 2
+NOTE_D4		= 3
+NOTE_E4		= 4
+NOTE_FSHARP4	= 5
 
 
 
@@ -116,54 +177,11 @@ sf_smc:
 ; based on code from here
 ; http://eightbitsoundandfury.ld8.org/programming.html
 
-; half note = 108?
-
-; A,X,Y trashed
+; X,Y trashed
 ; duration also trashed
 
-NOTE_C3		=	255
-NOTE_CSHARP3	=	241
-NOTE_D3		=	227
-NOTE_DSHARP3	=	214
-NOTE_E3		=	202
-NOTE_F3		=	191
-NOTE_FSHARP3	=	180
-NOTE_G3		=	170
-NOTE_GSHARP3	=	161
-NOTE_A3		=	152
-NOTE_ASHARP3	=	143
-NOTE_B3		=	135
-
-NOTE_C4		=	128
-NOTE_CSHARP4	=	121
-NOTE_D4		=	114
-NOTE_DSHARP4	=	108
-NOTE_E4		=	102
-NOTE_F4		=	96
-NOTE_FSHARP4	=	91
-NOTE_G4		=	85
-NOTE_GSHARP4	=	81
-NOTE_A4		=	76
-NOTE_ASHARP4	=	72
-NOTE_B4		=	68
-
-NOTE_C5		=	64
-NOTE_CSHARP5	=	60
-NOTE_D5		=	57
-NOTE_DSHARP5	=	54
-NOTE_E5		=	51
-NOTE_F5		=	48
-NOTE_FSHARP5	=	45
-NOTE_G5		=	43
-NOTE_GSHARP5	=	40
-NOTE_A5		=	38
-NOTE_ASHARP5	=	36
-NOTE_B5		=	34
-
-
-
 speaker_tone:
-	lda	$C030		; click speaker
+	bit	$C030		; click speaker
 speaker_loop:
 	dey			; y never set?
 	bne	slabel1		; duration roughly 256*?
@@ -175,28 +193,54 @@ slabel1:
 	ldx	speaker_frequency	; (Frequency)
 	jmp	speaker_tone
 done_tone:
-	beq	play_music
-
-all_done:
-	jmp	all_done
+	beq	play_music_loop
 
 
-music_duration:
-	.byte	$40,$40, $40,$40, $7f,$7f,$7f
-	.byte	$40,$40, $40,$40, $7f,$7f, $40,$40,$40
-	.byte	$40,$40, $40,$40, $7F, $40, $7F, $40,$40, $7F
-	.byte	$00
-music_frequency:
-	.byte	NOTE_A3,NOTE_B3,NOTE_D4,NOTE_B3,NOTE_FSHARP4,NOTE_FSHARP4,NOTE_E4
-	.byte	NOTE_A3,NOTE_B3,NOTE_D4,NOTE_B3,NOTE_E4,NOTE_E4,NOTE_D4,NOTE_CSHARP4,NOTE_B3
-	.byte	NOTE_A3,NOTE_B3,NOTE_D4,NOTE_B3,NOTE_D4,NOTE_E4,NOTE_CSHARP4,NOTE_A3,NOTE_A3,NOTE_E4,NOTE_D4
-	.byte	$00
 
-speaker_frequency:
-	.byte	$00
 
-speaker_duration:
-	.byte	$ff
+LONG  = $80
+SHORT = $00
+END   = $08
+PAUSE = $09
+
+music_sequence:
+first:;	0000 111X
+	.byte	SHORT|NOTE_A3,	SHORT|NOTE_B3,	SHORT|NOTE_D4,	SHORT|NOTE_B3
+	.byte	LONG|NOTE_FSHARP4,	LONG|NOTE_FSHARP4,	LONG|NOTE_E4,	PAUSE
+second:; 0000 1100 0X
+	.byte	SHORT|NOTE_A3,	SHORT|NOTE_B3,	SHORT|NOTE_D4,	SHORT|NOTE_B3
+	.byte	LONG|NOTE_E4,	LONG|NOTE_E4,	SHORT|NOTE_D4,	SHORT|NOTE_CSHARP4
+	.byte	SHORT|NOTE_B3,	PAUSE
+third:; 00 0010 1001 1XXX
+	.byte					SHORT|NOTE_A3,	SHORT|NOTE_B3
+	.byte	SHORT|NOTE_D4,	SHORT|NOTE_B3,	LONG|NOTE_D4,	SHORT|NOTE_E4
+	.byte	LONG|NOTE_CSHARP4,	SHORT|NOTE_A3,	SHORT|NOTE_A3,	LONG|NOTE_E4
+	.byte	LONG|NOTE_D4,	PAUSE,		END
+
+
+;first:;	0000 111X
+;	.byte	NOTE_A3,	NOTE_B3,	NOTE_D4,	NOTE_B3
+;	.byte	NOTE_FSHARP4,	NOTE_FSHARP4,	NOTE_E4,	PAUSE
+;second:; 0000 1100 0X
+;	.byte	NOTE_A3,	NOTE_B3,	NOTE_D4,	NOTE_B3
+;	.byte	NOTE_E4,	NOTE_E4,	NOTE_D4,	NOTE_CSHARP4
+;	.byte	NOTE_B3,	PAUSE
+;third:; 00 0010 1001 1XXX
+;	.byte					NOTE_A3,	NOTE_B3
+;	.byte	NOTE_D4,	NOTE_B3,	NOTE_D4,	NOTE_E4
+;	.byte	NOTE_CSHARP4,	NOTE_A3,	NOTE_A3,	NOTE_E4
+;	.byte	NOTE_D4,	PAUSE,		PAUSE,		PAUSE
+
+;music_duration:
+;	.byte	$40,$40, $40,$40, $7f,$7f,$7f
+;	.byte	$40,$40, $40,$40, $7f,$7f, $40,$40,$40
+;	.byte	$40,$40, $40,$40, $7F, $40, $7F, $40,$40, $7F,$7F
+;	.byte	$00
+;music_frequency:
+;	.byte	NOTE_A3,NOTE_B3,NOTE_D4,NOTE_B3, NOTE_FSHARP4,NOTE_FSHARP4,NOTE_E4
+;	.byte	NOTE_A3,NOTE_B3,NOTE_D4,NOTE_B3, NOTE_E4,NOTE_E4,NOTE_D4,NOTE_CSHARP4,NOTE_B3
+;	.byte	NOTE_A3,NOTE_B3,NOTE_D4,NOTE_B3, NOTE_D4,NOTE_E4,NOTE_CSHARP4,NOTE_A3,NOTE_A3,NOTE_E4,NOTE_D4
+;	.byte	$00
 
 
 
@@ -234,11 +278,19 @@ box_data:
 	.byte $07,$09,$D5,$96
 	.byte $1A,$21,$0A,$11
 	.byte $19,$1E,$D1,$94
-	.byte $19,$23,$D7,$5A
-	.byte $1E,$24,$16,$1A
-	.byte $20,$23,$DA,$9D
-	.byte $1E,$25,$D7,$63
-	.byte $1E,$24,$17,$1A
-	.byte $19,$1E,$D7,$99
+
+;	.byte $19,$23,$D7,$5A	; erase
+;	.byte $1E,$24,$16,$1A	; arm up
+;	.byte $20,$23,$DA,$9D	; arm up
+
+;	.byte $1E,$25,$D7,$63	; erase
+	.byte $1E,$24,$17,$1A	; arm down
+	.byte $19,$1E,$D7,$99	; arm down
 	.byte $FF
+
+
+note_freqs:	.byte $98,$87,$79,$72,$66,$5B
+
+speaker_frequency:
+speaker_duration = speaker_frequency+1
 
