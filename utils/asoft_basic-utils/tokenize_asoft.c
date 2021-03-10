@@ -23,6 +23,7 @@ static int debug=0;
 /*    a series of bytes either ASCII or tokens (see below)		*/
 /*    a $0 char indicating end of line					*/
 
+/* $9B */
 #define NUM_TOKENS 107
 
    /* Starting at 0x80 */
@@ -166,6 +167,17 @@ static int find_token(void) {
 			line_ptr++;
 			return 0xBA;
 		}
+
+
+	// note, on IIe Applesoft uppercases lowercase
+	// this also extends to the uppper ascii?  except for $60 (`)?
+	// we need to somehow take this into account when comparing
+
+//	if (ch>0x60) {
+//		ch=ch-0x20;
+//	}
+
+
 
 //		fprintf(stderr,"%s",line_ptr);
 		for(i=0;i<NUM_TOKENS;i++) {
