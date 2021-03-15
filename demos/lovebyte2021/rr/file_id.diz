@@ -1,0 +1,11 @@
+NeverGonna
+-
+A 256 byte bootsector demo for the Apple II, Lovebyte 2021
+A lo-res rickroll with some simple music
+by Deater / dSr
+
+The rest of the disk, instead of being left empty,
+has its magnetic flux altered so when viewed with
+a disk scanner it gives the image shown in the included rr_flux.png
+This uses the picturedsk util by Ben Zotto.
+
