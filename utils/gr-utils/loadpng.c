@@ -114,6 +114,10 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 		*xsize=40;
 		xadd=2;
 	}
+	else if (width==16) {
+		*xsize=16;
+		xadd=1;
+	}
 	else {
 		fprintf(stderr,"Unsupported width %d\n",width);
 		return -1;
@@ -133,6 +137,12 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 		*ysize=height/2;
 		ystart=0;
 		yadd=4;
+	}
+	else if (png_type==PNG_RAW) {
+		/* FIXME, not working */
+		*ysize=height;
+		ystart=0;
+		yadd=1;
 	}
 	else {
 		fprintf(stderr,"Unknown PNG type\n");
