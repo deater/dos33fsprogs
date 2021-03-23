@@ -116,7 +116,5 @@ end_message:
 ; room backgrounds
 .include "graphics/l4_city/ootw_c4_city.inc"
 ; sprites
-.include "../ootw_graphics/sprites/physicist.inc"
-.include "../ootw_graphics/sprites/alien.inc"
-
-
+.include "../sprites/physicist.inc"
+.include "../sprites/alien.inc"

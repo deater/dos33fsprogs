@@ -3,8 +3,8 @@
 
 ; by Vince "Deater" Weaver	<vince@deater.net>
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
 
 
 ootw_c5:
@@ -80,40 +80,35 @@ end_message:
 .byte	11,20,"ACCESS CODE: CAVE",0
 
 .include "ootw_c5_cave.s"
-.include "text_print.s"
-.include "gr_pageflip.s"
-.include "gr_unrle.s"
-.include "gr_fast_clear.s"
-.include "gr_copy.s"
-.include "gr_copy_offset.s"
-.include "gr_putsprite.s"
-.include "gr_putsprite_flipped.s"
-.include "gr_putsprite_crop.s"
-.include "gr_offsets.s"
-.include "gr_offsets_hl.s"
-.include "gr_hlin.s"
-;.include "random16.s"
-.include "keyboard.s"
+.include "../text_print.s"
+.include "../gr_pageflip.s"
+.include "../gr_unrle.s"
+.include "../gr_fast_clear.s"
+.include "../gr_copy.s"
+.include "../gr_copy_offset.s"
+.include "../gr_putsprite.s"
+.include "../gr_putsprite_flipped.s"
+.include "../gr_putsprite_crop.s"
+.include "../gr_offsets.s"
+.include "../gr_offsets_hl.s"
+.include "../gr_hlin.s"
+.include "../keyboard.s"
 
-.include "physicist.s"
-.include "alien.s"
-.include "dummy_friend.s"
+.include "../physicist.s"
+.include "../alien.s"
+.include "../dummy_friend.s"
 
-.include "gun.s"
-.include "laser.s"
-.include "alien_laser.s"
-.include "blast.s"
-.include "shield.s"
+.include "../gun.s"
+.include "../laser.s"
+.include "../alien_laser.s"
+.include "../blast.s"
+.include "../shield.s"
 
-.include "door.s"
-.include "collision.s"
+.include "../door.s"
+.include "../collision.s"
 
 ; room backgrounds
-.include "ootw_graphics/l5cave/ootw_c5_cave.inc"
+.include "graphics/l5_cave/ootw_c5_cave.inc"
 ; sprites
-.include "ootw_graphics/sprites/physicist.inc"
-.include "ootw_graphics/sprites/alien.inc"
-
-
-
-; "NOW GO BACK TO ANOTHER EARTH"
+.include "../sprites/physicist.inc"
+.include "../sprites/alien.inc"

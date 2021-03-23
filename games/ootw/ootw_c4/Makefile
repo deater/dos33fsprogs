@@ -2,7 +2,7 @@ include ../../../Makefile.inc
 
 COMMON = ..
 LINKER_SCRIPTS = ../../../linker_scripts
-SPRITES = ../ootw_graphics/sprites
+SPRITES = ../sprites
 
 all:	OOTW_C4
 

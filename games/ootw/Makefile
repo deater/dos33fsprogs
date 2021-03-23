@@ -11,29 +11,28 @@ all:	ootw.dsk ootw_side2.dsk ootw_side3.dsk
 
 ootw.dsk:	HELLO TITLE \
 		./intro/INTRO ./ootw_c1/OOTW_C1 ./ootw_c2/OOTW_C2 \
-		./ootw_c3/OOTW_C3 ./ootw_c4/OOTW_C4 OOTW_C5
+		./ootw_c3/OOTW_C3 ./ootw_c4/OOTW_C4 ./ootw_c5/OOTW_C5
 	cp $(EMPTY_DISK)/empty.dsk ootw.dsk
 	$(DOS33) -y ootw.dsk SAVE A HELLO
 	$(DOS33) -y ootw.dsk BSAVE -a 0xd00 TITLE
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./intro/INTRO INTRO
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c1/OOTW_C1
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c2/OOTW_C2
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c3/OOTW_C3
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c4/OOTW_C4
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C5
-#	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 AUDIO_TEST
-#	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 COMPRESS-TEST
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c1/OOTW_C1 OOTW_C1
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c2/OOTW_C2 OOTW_C2
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c3/OOTW_C3 OOTW_C3
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c4/OOTW_C4 OOTW_C4
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c5/OOTW_C5 OOTW_C5
 
 ootw_side2.dsk:	HELLO TITLE \
-	OOTW_C6 OOTW_C7 OOTW_C8 OOTW_C9 OOTW_C10
+	./ootw_c6/OOTW_C6 ./ootw_c7/OOTW_C7 ./ootw_c8/OOTW_C8 \
+	./ootw_c9/OOTW_C9 ./ootw_c10/OOTW_C10
 	cp $(EMPTY_DISK)/empty.dsk ootw_side2.dsk
 	$(DOS33) -y ootw_side2.dsk SAVE A HELLO HELLO
 	$(DOS33) -y ootw_side2.dsk BSAVE -a 0xd00 TITLE
-	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C6
-	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C7
-	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C8
-	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C9
-	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C10
+	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 ./ootw_c6/OOTW_C6 OOTW_C6
+	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 ./ootw_c7/OOTW_C7 OOTW_C7
+	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 ./ootw_c8/OOTW_C8 OOTW_C8
+	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 ./ootw_c9/OOTW_C9 OOTW_C9
+	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 ./ootw_c10/OOTW_C10 OOTW_C10
 
 ootw_side3.dsk:	HELLO TITLE ENDING \
 	OOTW_C11 OOTW_C12 OOTW_C13 OOTW_C14 OOTW_C15
@@ -48,20 +47,6 @@ ootw_side3.dsk:	HELLO TITLE ENDING \
 	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 ENDING
 
 ####
-
-OOTW_C5:	ootw_c5.o
-	ld65 -o OOTW_C5 ootw_c5.o -C ../../linker_scripts/apple2_1700.inc
-
-ootw_c5.o:	ootw_c5.s \
-	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
-	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
-	keyboard.s gr_run_sequence.s physicist.s ootw_c5_cave.s \
-	collision.s door.s laser.s gun.s blast.s shield.s \
-	ootw_graphics/sprites/physicist.inc \
-	ootw_graphics/l5cave/ootw_c5_cave.inc
-	ca65 -o ootw_c5.o ootw_c5.s -l ootw_c5.lst
-
-###
 
 OOTW_C6:	ootw_c6.o
 	ld65 -o OOTW_C6 ootw_c6.o -C ../../linker_scripts/apple2_1700.inc
@@ -236,6 +221,40 @@ ootw_c3/OOTW_C3:
 ootw_c4/OOTW_C4:
 	cd ootw_c4 && make
 
+ootw_c5/OOTW_C5:
+	cd ootw_c5 && make
+
+ootw_c6/OOTW_C6:
+	cd ootw_c6 && make
+
+ootw_c7/OOTW_C7:
+	cd ootw_c7 && make
+
+ootw_c8/OOTW_C8:
+	cd ootw_c8 && make
+
+ootw_c9/OOTW_C9:
+	cd ootw_c9 && make
+
+ootw_c10/OOTW_C10:
+	cd ootw_c10 && make
+
+ootw_c11/OOTW_C11:
+	cd ootw_c11 && make
+
+ootw_c12/OOTW_C12:
+	cd ootw_c12 & make
+
+ootw_c13/OOTW_C13:
+	cd ootw_c13 && make
+
+ootw_c14/OOTW_C14:
+	cd ootw_c14 && make
+
+ootw_c15/OOTW_C15:
+	cd ootw_c15 && make
+
+
 ####
 
 LOADER:	loader.o
@@ -308,7 +327,6 @@ zip:	ootw.dsk ootw_side2.dsk side3.dsk
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lz4 HELLO TITLE \
-			OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 INTRO LOADER \
+		rm -f *~ *.o *.lst *.lz4 HELLO TITLE INTRO LOADER \
 			COMPRESS-TEST AUDIO_TEST
 

@@ -94,5 +94,5 @@ end_message:
 ; room backgrounds
 .include "graphics/l3_vent/ootw_c3_vent.inc"
 ; sprites
-.include "../ootw_graphics/sprites/physicist_rolling.inc"
+.include "../sprites/physicist_rolling.inc"
 
