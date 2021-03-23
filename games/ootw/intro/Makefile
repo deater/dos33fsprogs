@@ -30,6 +30,7 @@ intro.o:	intro.s \
 	intro_06_console.s \
 	intro_07_soda.s \
 	intro_08_lightning.s \
+	intro_09_tunnel.s \
 	graphics/01_building/intro_car.inc \
 	graphics/01_building/intro_building.inc \
 	graphics/01_building/intro_building_car.inc \

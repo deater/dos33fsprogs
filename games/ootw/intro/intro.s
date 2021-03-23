@@ -73,75 +73,10 @@ repeat_intro:
 
 	jsr	intro_08_lightning
 
+	;===============================
+	; Down in the tunnels
 
-;===============================
-;===============================
-; Tunnel 1
-;===============================
-;===============================
-
-tunnel1:
-
-	lda	#<(tunnel1_lzsa)
-        sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(tunnel1_lzsa)
-	sta     getsrc_smc+2    ; LZSA_SRC_HI
-
-	lda	#$c			; load to off-screen $c00
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_copy_to_current
-	jsr	page_flip
-
-	lda	#<tunnel1_sequence
-	sta	INTRO_LOOPL
-	lda	#>tunnel1_sequence
-	sta	INTRO_LOOPH
-
-	jsr	run_sequence
-
-
-;tunnel1_loop:
-;	lda	KEYPRESS
-;	bpl	tunnel1_loop
-;	bit	KEYRESET
-
-
-
-;===============================
-;===============================
-; Tunnel 2
-;===============================
-;===============================
-
-
-	;=============================
-	; Load background to $c00
-
-	lda	#<(tunnel2_lzsa)
-        sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(tunnel2_lzsa)
-	sta     getsrc_smc+2    ; LZSA_SRC_HI
-
-	lda	#$c			; load to off-screen $c00
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_copy_to_current
-	jsr	page_flip
-
-	lda	#<tunnel2_sequence
-	sta	INTRO_LOOPL
-	lda	#>tunnel2_sequence
-	sta	INTRO_LOOPH
-
-	jsr	run_sequence
-
-
-;tunnel2_loop:
-;	lda	KEYPRESS
-;	bpl	tunnel2_loop
-;	bit	KEYRESET
-
+	jsr	intro_09_tunnel
 
 
 ;===============================
@@ -266,3 +201,4 @@ done_intro:
 	.include "intro_06_console.s"
 	.include "intro_07_soda.s"
 	.include "intro_08_lightning.s"
+	.include "intro_09_tunnel.s"
