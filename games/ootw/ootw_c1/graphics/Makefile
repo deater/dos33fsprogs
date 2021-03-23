@@ -1,16 +1,16 @@
 all:
-	cd l1caves && make
-	cd l1end && make
-	cd l1end_scenes && make
-	cd l1pool && make
-	cd l1rope && make
-	cd l1underwater && make
+	cd l1_caves && make
+	cd l1_end && make
+	cd l1_beast_end && make
+	cd l1_pool && make
+	cd l1_rope && make
+	cd l1_underwater && make
 
 clean:
-	cd l1caves && make clean
-	cd l1end && make clean
-	cd l1end_scenes && make clean
-	cd l1pool && make clean
-	cd l1rope && make clean
-	cd l1underwater && make clean
+	cd l1_caves && make clean
+	cd l1_end && make clean
+	cd l1_beast_end && make clean
+	cd l1_pool && make clean
+	cd l1_rope && make clean
+	cd l1_underwater && make clean
 
