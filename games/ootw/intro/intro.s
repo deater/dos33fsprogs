@@ -58,67 +58,10 @@ repeat_intro:
 
 	jsr	intro_06_console_part1
 
-;===============================
-;===============================
-; Opening Soda
-;===============================
-;===============================
-soda:
-	lda	#<(soda_bg_lzsa)
-        sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(soda_bg_lzsa)
-	sta     getsrc_smc+2    ; LZSA_SRC_HI
+	;===============================
+	; Drinking some Soda
 
-	lda	#$c			; load to off-screen $c00
-	jsr	decompress_lzsa2_fast
-
-	bit	FULLGR
-
-	lda	#<soda_sequence
-	sta	INTRO_LOOPL
-	lda	#>soda_sequence
-	sta	INTRO_LOOPH
-
-	jsr	run_sequence
-
-
-;	ldx	#30
-;	jsr	long_wait
-
-;open_soda_loop:
-;	lda	KEYPRESS
-;	bpl	open_soda_loop
-;	bit	KEYRESET
-
-;===============================
-;===============================
-; Drinking Soda
-;===============================
-;===============================
-
-	lda	#<(drinking02_lzsa)
-        sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(drinking02_lzsa)
-	sta     getsrc_smc+2    ; LZSA_SRC_HI
-
-	lda	#$c			; load to off-screen $c00
-	jsr	decompress_lzsa2_fast
-
-	lda	#<drinking_sequence
-	sta	INTRO_LOOPL
-	lda	#>drinking_sequence
-	sta	INTRO_LOOPH
-
-	jsr	run_sequence
-
-	ldx	#200
-	jsr	long_wait
-
-;drinking_loop:
-;	lda	KEYPRESS
-;	bpl	drinking_loop
-;	bit	KEYRESET
-
+	jsr	intro_07_soda
 
 	;===============================
 	; Nuclear Physics, part 2
@@ -345,11 +288,6 @@ done_intro:
 
 DATA_LOCATION	=	$9000
 
-
-intro6_data_lzsa:
-;	.incbin "intro_data_06.lzsa"
-	.include "intro_data_06.s"
-
 ; intro8
 .if 0
 bolt_sequence		= (DATA_LOCATION+$1484)
@@ -387,3 +325,4 @@ intro9_data_lzsa:
 	.include "intro_04_keypad.s"
 	.include "intro_05_scanner.s"
 	.include "intro_06_console.s"
+	.include "intro_07_soda.s"

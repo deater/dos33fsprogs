@@ -28,6 +28,7 @@ intro.o:	intro.s \
 	intro_04_keypad.s \
 	intro_05_scanner.s \
 	intro_06_console.s \
+	intro_07_soda.s \
 	graphics/01_building/intro_car.inc \
 	graphics/01_building/intro_building.inc \
 	graphics/01_building/intro_building_car.inc \
