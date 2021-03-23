@@ -70,7 +70,7 @@ keypad:
 	lda	#>opening_sequence
 	sta	INTRO_LOOPH
 
-	jmp	run_sequence		; exite for us
+	jmp	run_sequence		; exit for us
 
 
 
