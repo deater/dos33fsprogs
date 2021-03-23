@@ -78,66 +78,11 @@ repeat_intro:
 
 	jsr	intro_09_tunnel
 
+	;===============================
+	; Zapped
 
-;===============================
-;===============================
-; Zappo / Gone
-;===============================
-;===============================
+	jsr	intro_10_gone
 
-	;=========================
-	; zappo
-
-	lda	#<(blue_zappo_lzsa)
-        sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(blue_zappo_lzsa)
-	sta     getsrc_smc+2    ; LZSA_SRC_HI
-
-	lda	#$c			; load to off-screen $c00
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_copy_to_current
-	jsr	page_flip
-
-	lda	#<zappo_sequence
-	sta	INTRO_LOOPL
-	lda	#>zappo_sequence
-	sta	INTRO_LOOPH
-
-	jsr	run_sequence
-
-	;======================
-	; gone
-
-	lda	#<(gone_lzsa)
-        sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(gone_lzsa)
-	sta     getsrc_smc+2    ; LZSA_SRC_HI
-
-	lda	#$c			; load to off-screen $c00
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_copy_to_current
-	jsr	page_flip
-
-	lda	#<gone_sequence
-	sta	INTRO_LOOPL
-	lda	#>gone_sequence
-	sta	INTRO_LOOPH
-
-
-	jsr	run_sequence
-
-	;======================
-	; Pause a bit
-
-	ldx	#180
-	jsr	long_wait
-
-;gone_loop:
-;	lda	KEYPRESS
-;	bpl	gone_loop
-;	bit	KEYRESET
 
 	; see if R pressed, if so, repeat
 	; otherwise, return and indicate we want to start the game
@@ -184,11 +129,6 @@ done_intro:
 .include "gr_run_sequence.s"
 
 
-
-	.include "intro_data_09.s"
-
-
-
 	;========================
 	; load all the sub-parts
 	;========================
@@ -202,3 +142,4 @@ done_intro:
 	.include "intro_07_soda.s"
 	.include "intro_08_lightning.s"
 	.include "intro_09_tunnel.s"
+	.include "intro_10_gone.s"
