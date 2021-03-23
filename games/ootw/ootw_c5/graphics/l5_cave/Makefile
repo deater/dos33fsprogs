@@ -1,18 +1,26 @@
-include ../../../Makefile.inc
+include ../../../../../Makefile.inc
 
-PNG2RLE = ../../../gr-utils/png2rle
-PNG2LZ4 = ../../../gr-utils/png2lz4
+PNG2GR = ../../../../../utils/gr-utils/png2gr
+LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	ootw_c5_cave.inc
 
 #####
 
-ootw_c5_cave.inc:	$(PNG2RLE) \
-	entrance_cave.png
-	$(PNG2RLE) asm entrance_cave.png entrance_rle > ootw_c5_cave.inc
+ootw_c5_cave.inc:	entrance_cave.lzsa
+	echo "entrance_lzsa: .incbin \"entrance_cave.lzsa\"" > ootw_c5_cave.inc
+
+
+#####
+
+%.gr:	%.png
+	$(PNG2GR) $< $@
+
+%.lzsa:	%.gr
+	$(LZSA) -r -f2 $< $@
 
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lzz *.inc
+		rm -f *~ *.o *.lst *.lzsa *.gr *.inc
 

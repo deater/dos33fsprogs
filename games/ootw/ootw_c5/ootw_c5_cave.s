@@ -69,9 +69,9 @@ not_falling_in:
 falling_in:
 
 	; load background
-	lda	#>(entrance_rle)
-	sta	GBASH
-	lda	#<(entrance_rle)
+	lda	#>(entrance_lzsa)
+	sta	getsrc_smc+2	; LZSA_SRC_HI
+	lda	#<(entrance_lzsa)
 
 	jmp	cave_setup_done
 
@@ -105,9 +105,9 @@ cave1:
 
 cave_setup_done:
 
-	sta	GBASL
+	sta	getsrc_smc+1	; LZSA_SRC_LO
 	lda	#$c				; load to page $c00
-	jsr	load_rle_gr			; tail call
+	jsr	decompress_lzsa2_fast		; tail call
 
 	;=====================
 	; setup walk collision
