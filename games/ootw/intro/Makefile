@@ -32,6 +32,7 @@ intro.o:	intro.s \
 	intro_02_outer_door.s \
 	intro_03_elevator.s \
 	intro_04_keypad.s \
+	intro_05_scanner.s \
 	graphics/01_building/intro_car.inc \
 	graphics/01_building/intro_building.inc \
 	graphics/01_building/intro_building_car.inc \
