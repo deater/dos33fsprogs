@@ -54,12 +54,12 @@ ootw_vent:
 
 	;============================
 	; load background
-	lda	#>(vent_rle)
-	sta	GBASH
-	lda	#<(vent_rle)
-	sta	GBASL
+	lda	#<(vent_lzsa)
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda	#>(vent_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#$c				; load to page $c00
-	jsr	load_rle_gr			; tail call
+	jsr	decompress_lzsa2_fast		; tail call
 
 
 
