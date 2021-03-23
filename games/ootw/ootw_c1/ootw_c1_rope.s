@@ -37,21 +37,21 @@ ootw_rope:
 	beq	after_swing_bg
 
 before_swing_bg:
-	lda     #>(rope_rle)
-        sta     GBASH
-	lda     #<(rope_rle)
-        sta     GBASL
+	lda     #<(rope_lzsa)
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda     #>(rope_lzsa)
+	sta     getsrc_smc+2    ; LZSA_SRC_HI
 	jmp	load_swing_bg
 
 after_swing_bg:
-	lda     #>(broke_rope_rle)
-        sta     GBASH
-	lda     #<(broke_rope_rle)
-        sta     GBASL
+	lda     #<(broke_rope_lzsa)
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda     #>(broke_rope_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 
 load_swing_bg:
 	lda	#$c			; load image off-screen $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	;================================
 	; Load quake background to $BC00
@@ -94,12 +94,13 @@ rope_loop:
 	cmp	#80			; only load background on first frame
 	bne	swing_not_first
 
-	lda     #<no_rope_rle
-        sta     GBASL
-	lda	#>no_rope_rle
-        sta     GBASH
+	lda     #<no_rope_lzsa
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda	#>no_rope_lzsa
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+
 	lda	#$C			; load image off-screen $C00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 swing_not_first:
 	dec	SWING_PROGRESS
@@ -107,11 +108,11 @@ swing_not_first:
 
 	ldx	SWING_PROGRESS
 	lda     swing_progression,X
-        sta     GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda     swing_progression+1,X
-        sta     GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay_40x40
 
@@ -382,44 +383,44 @@ done_rope:
 
 
 swing_progression:
-.word	swing25_rle
-.word	swing24_rle
-.word	swing23_rle
-.word	swing22_rle
-.word	swing21_rle
-.word	swing20_rle
-.word	swing19_rle
-.word	swing18_rle
-.word	swing17_rle
-.word	swing16_rle
-.word	swing15_rle
-.word	swing14_rle
-.word	swing13_rle
-.word	swing12_rle
-.word	swing11_rle
-.word	swing10_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing08_rle
-.word	swing06_rle
-.word	swing05_rle
-.word	swing04_rle
-.word	swing03_rle
-.word	swing02_rle
-.word	swing01_rle
+.word	swing25_lzsa
+.word	swing24_lzsa
+.word	swing23_lzsa
+.word	swing22_lzsa
+.word	swing21_lzsa
+.word	swing20_lzsa
+.word	swing19_lzsa
+.word	swing18_lzsa
+.word	swing17_lzsa
+.word	swing16_lzsa
+.word	swing15_lzsa
+.word	swing14_lzsa
+.word	swing13_lzsa
+.word	swing12_lzsa
+.word	swing11_lzsa
+.word	swing10_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing08_lzsa
+.word	swing06_lzsa
+.word	swing05_lzsa
+.word	swing04_lzsa
+.word	swing03_lzsa
+.word	swing02_lzsa
+.word	swing01_lzsa
 
