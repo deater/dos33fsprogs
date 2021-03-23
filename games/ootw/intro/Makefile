@@ -1,11 +1,5 @@
 include ../../../Makefile.inc
 
-#DOS33 = ../../utils/dos33fs-utils/dos33
-#PNG2RLE = ../../utils/gr-utils/png2rle
-#PNG2LZ4 = ../../utils/gr-utils/png2lz4
-#TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
-#LZSA = ~/research/lzsa/lzsa/lzsa
-
 COMMON = ..
 LINKER_SCRIPTS = ../../../linker_scripts
 
@@ -33,6 +27,7 @@ intro.o:	intro.s \
 	intro_03_elevator.s \
 	intro_04_keypad.s \
 	intro_05_scanner.s \
+	intro_06_console.s \
 	graphics/01_building/intro_car.inc \
 	graphics/01_building/intro_building.inc \
 	graphics/01_building/intro_building_car.inc \
