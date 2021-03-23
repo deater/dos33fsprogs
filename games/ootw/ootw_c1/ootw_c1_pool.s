@@ -38,12 +38,12 @@ ootw_pool:
 	;=============================
 	; Load background to $c00
 
-	lda     #>(pool_rle)
-        sta     GBASH
-	lda     #<(pool_rle)
-        sta     GBASL
+	lda     #<(pool_lzsa)
+	sta	getsrc_smc+1	; LZSA_SRC_LO
+	lda     #>(pool_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#$c			; load image off-screen $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 
 	;=================================
@@ -411,12 +411,13 @@ exit_pool:
 	;=============================
 	; Load background to $c00
 
-	lda     #>(pool_rle)
-        sta     GBASH
-	lda     #<(pool_rle)
-        sta     GBASL
+	lda     #<(pool_lzsa)
+	sta	getsrc_smc+1	; LZSA_SRC_LO
+	lda     #>(pool_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_H
+
 	lda	#$c			; load image off-screen $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 
 exit_pool_loop:
