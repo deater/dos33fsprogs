@@ -1,10 +1,6 @@
-;=====================================
-; Another World Intro
-;=====================================
-
-; Notes:
-;	
-
+;==========================
+; OOTW -- The Famous Intro
+;==========================
 
 .include "../zp.inc"
 .include "../hardware.inc"
@@ -32,23 +28,10 @@ repeat_intro:
 
 ;	jmp	tunnel1			; debug, skip ahead
 
-;===============================
-;===============================
-; Opening scene with car
-;===============================
-;===============================
+	;===============================
+	; Opening scene with car
 
-	;==================================
-	; draw the car driving up
-	;==================================
-	; draw getting out of the car
-
-	lda	#<building_sequence
-	sta	INTRO_LOOPL
-	lda	#>building_sequence
-	sta	INTRO_LOOPH
-
-	jsr	run_sequence
+	jsr	intro_01_building
 
 ;===============================
 ;===============================
@@ -1966,3 +1949,11 @@ tunnel1_lzsa		= (DATA_LOCATION+$0000)
 intro9_data_lzsa:
 ;	.incbin "intro_data_09.lzsa"
 	.include "intro_data_09.s"
+
+
+
+	;========================
+	; load all the sub-parts
+	;========================
+
+	.include "intro_01_building.s"
