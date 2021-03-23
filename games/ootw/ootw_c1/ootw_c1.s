@@ -141,6 +141,7 @@ end_message:
 .include "../text_print.s"
 .include "../gr_pageflip.s"
 .include "../gr_unrle.s"
+.include "../decompress_fast_v2.s"
 .include "../gr_fast_clear.s"
 .include "../gr_copy.s"
 .include "../gr_make_quake.s"

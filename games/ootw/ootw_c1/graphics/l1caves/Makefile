@@ -1,23 +1,31 @@
-include ../../../Makefile.inc
+include ../../../../../Makefile.inc
 
-PNG2RLE = ../../../gr-utils/png2rle
-PNG2LZ4 = ../../../gr-utils/png2lz4
+PNG2GR = ../../../../../utils/gr-utils/png2gr
+LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	ootw_cavern.inc ootw_cavern2.inc ootw_cavern3.inc
 
 #####
 
-ootw_cavern.inc:	$(PNG2RLE) another_cave.png
-	$(PNG2RLE) asm another_cave.png cavern_rle > ootw_cavern.inc
+ootw_cavern.inc:	another_cave.lzsa
+	echo "cavern_lzsa: .incbin \"another_cave.lzsa\"" > ootw_cavern.inc
 
-ootw_cavern2.inc:	$(PNG2RLE) another_cave2.png
-	$(PNG2RLE) asm another_cave2.png cavern2_rle > ootw_cavern2.inc
+ootw_cavern2.inc:	another_cave2.lzsa
+	echo "cavern2_lzsa: .incbin \"another_cave2.lzsa\"" > ootw_cavern2.inc
 
-ootw_cavern3.inc:	$(PNG2RLE) another_cave3.png
-	$(PNG2RLE) asm another_cave3.png cavern3_rle > ootw_cavern3.inc
+ootw_cavern3.inc:	another_cave3.lzsa
+	echo "cavern3_lzsa: .incbin \"another_cave3.lzsa\"" > ootw_cavern3.inc
+
+#####
+
+%.gr:	%.png
+	$(PNG2GR) $< $@
+
+%.lzsa:	%.gr
+	$(LZSA) -r -f2 $< $@
 
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lzz *.inc
+		rm -f *~ *.o *.lst *.gr *.inc *.lzsa
 

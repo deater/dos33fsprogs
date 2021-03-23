@@ -252,18 +252,20 @@ cavern_load_background:
 
 cave_bg0:
 	; load background
-	lda     #>(cavern_rle)
-        sta     GBASH
-	lda     #<(cavern_rle)
-        sta     GBASL
+	lda     #<(cavern_lzsa)
+        sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda     #>(cavern_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+
 	jmp	cave_bg_done
 
 cave_bg1:
 	; load background
-	lda     #>(cavern2_rle)
-        sta     GBASH
-	lda     #<(cavern2_rle)
-        sta     GBASL
+	lda     #<(cavern2_lzsa)
+        sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda     #>(cavern2_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+
 cave_bg_done:
 	lda	#$c			; load image off-screen $c00
-	jmp	load_rle_gr		; tail call
+	jmp	decompress_lzsa2_fast	; tail call

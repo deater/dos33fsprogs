@@ -19,12 +19,13 @@ ootw_c1_arrival:
 	;=============================
 	; Load background to $c00
 
-	lda     #>(underwater_rle)
-        sta     GBASH
-	lda     #<(underwater_rle)
-        sta     GBASL
+	lda     #<(underwater_lzsa)
+        sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda     #>(underwater_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+
 	lda	#$c			; load image off-screen $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 
 	;=================================
@@ -470,12 +471,13 @@ first_flash:
 
 	; Load background to $1000
 
-	lda     #>(uboot_flash1_rle)
-        sta     GBASH
-	lda     #<(uboot_flash1_rle)
-        sta     GBASL
+	lda     #<(uboot_flash1_lzsa)
+        sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda     #>(uboot_flash1_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+
 	lda	#$10			; load image off-screen $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 
@@ -484,12 +486,13 @@ second_flash:
 
 	; Load background to $1000
 
-	lda     #>(uboot_flash2_rle)
-        sta     GBASH
-	lda     #<(uboot_flash2_rle)
-        sta     GBASL
+	lda     #<(uboot_flash2_lzsa)
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda     #>(uboot_flash2_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+
 	lda	#$10			; load image off-screen $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 

@@ -41,12 +41,13 @@ mesa_left:
 	;=============================
 	; Load background to $c00
 
-	lda     #>(cavern3_rle)
-        sta     GBASH
-	lda     #<(cavern3_rle)
-        sta     GBASL
+	lda     #<(cavern3_lzsa)
+	sta     getsrc_smc+1    ; LZSA_SRC_LO
+	lda     #>(cavern3_lzsa)
+	sta     getsrc_smc+2    ; LZSA_SRC_HI
+
 	lda	#$c			; load image off-screen $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 
 	;=================================
@@ -334,11 +335,11 @@ check_if_first:
 	cmp	#MAX_PROGRESSION	; only load background on first frame
 	bne	levelend_not_first
 
-	lda	#<cavern3_rle
-	sta	GBASL
-	lda	#>cavern3_rle
+	lda	#<cavern3_lzsa
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda	#>cavern3_lzsa
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 
-	sta	GBASH
 	lda	#$C			; load image off-screen $C00
 	jsr	load_rle_gr
 

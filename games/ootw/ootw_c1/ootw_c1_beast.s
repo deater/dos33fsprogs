@@ -370,10 +370,11 @@ beast_end:
 	;=============================
 	; Restore background to $c00
 
-	lda	#>(cavern3_rle)
-	sta	GBASH
-	lda	#<(cavern3_rle)
-	sta	GBASL
+	lda	#<(cavern3_lzsa)
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda	#>(cavern3_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+
 	lda	#$c			; load image off-screen $c00
 	jmp	load_rle_gr
 
