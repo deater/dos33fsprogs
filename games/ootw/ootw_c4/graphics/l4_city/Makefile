@@ -1,22 +1,30 @@
-include ../../../Makefile.inc
+include ../../../../../Makefile.inc
 
-PNG2RLE = ../../../gr-utils/png2rle
-PNG2LZ4 = ../../../gr-utils/png2lz4
+PNG2GR = ../../../../../utils/gr-utils/png2gr
+LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	ootw_c4_city.inc
 
 #####
 
-ootw_c4_city.inc:	$(PNG2RLE) \
-	recharge.png hallway.png causeway1.png causeway2.png pit.png
-	$(PNG2RLE) asm recharge.png recharge_rle > ootw_c4_city.inc
-	$(PNG2RLE) asm hallway.png hallway_rle >> ootw_c4_city.inc
-	$(PNG2RLE) asm causeway1.png causeway1_rle >> ootw_c4_city.inc
-	$(PNG2RLE) asm causeway2.png causeway2_rle >> ootw_c4_city.inc
-	$(PNG2RLE) asm pit.png pit_rle >> ootw_c4_city.inc
+ootw_c4_city.inc:	\
+	recharge.lzsa hallway.lzsa causeway1.lzsa causeway2.lzsa pit.lzsa
+	echo "recharge_lzsa: .incbin \"recharge.lzsa\"" > ootw_c4_city.inc
+	echo "hallway_lzsa: .incbin \"hallway.lzsa\"" >> ootw_c4_city.inc
+	echo "causeway1_lzsa: .incbin \"causeway1.lzsa\"" >> ootw_c4_city.inc
+	echo "causeway2_lzsa: .incbin \"causeway2.lzsa\"" >> ootw_c4_city.inc
+	echo "pit_lzsa: .incbin \"pit.lzsa\"" >> ootw_c4_city.inc
+
+#####
+
+%.gr:	%.png
+	$(PNG2GR) $< $@
+
+%.lzsa:	%.gr
+	$(LZSA) -r -f2 $< $@
 
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lzz *.inc
+		rm -f *~ *.o *.lst *.inc
 

@@ -153,9 +153,9 @@ room0:
 room0_falling:
 
 	; load background
-	lda	#>(recharge_rle)
-	sta	GBASH
-	lda	#<(recharge_rle)
+	lda	#>(recharge_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(recharge_lzsa)
 
 	jmp	room_setup_done
 
@@ -182,9 +182,9 @@ room1:
 	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(hallway_rle)
-	sta	GBASH
-	lda	#<(hallway_rle)
+	lda	#>(hallway_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(hallway_lzsa)
 
 	jmp	room_setup_done
 
@@ -211,9 +211,9 @@ room2:
 	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(causeway1_rle)
-	sta	GBASH
-	lda	#<(causeway1_rle)
+	lda	#>(causeway1_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(causeway1_lzsa)
 
 	jmp	room_setup_done
 
@@ -247,25 +247,26 @@ room3:
 	sta	PHYSICIST_Y
 
 	; load top high
-	lda	#>(causeway2_rle)
-	sta	GBASH
-	lda	#<(causeway2_rle)
-	sta	GBASL
+	lda	#<(causeway2_lzsa)
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda	#>(causeway2_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+
 	lda	#$10				; load to page $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	; load pit background even higher
-	lda	#>(pit_rle)
-	sta	GBASH
-	lda	#<(pit_rle)
-	sta	GBASL
+	lda	#<(pit_lzsa)
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda	#>(pit_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#$BC				; load to page $BC00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	; load background
-	lda	#>(causeway2_rle)
-	sta	GBASH
-	lda	#<(causeway2_rle)
+	lda	#>(causeway2_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(causeway2_lzsa)
 
 	jmp	room_setup_done
 
@@ -307,9 +308,9 @@ room4:
 
 r4_impaled:
 	; load background
-	lda	#>(pit_rle)
-	sta	GBASH
-	lda	#<(pit_rle)
+	lda	#>(pit_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(pit_lzsa)
 
 	jmp	room_setup_done
 
@@ -317,9 +318,9 @@ r4_impaled:
 room_setup_done:
 
 	; load bg image
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$c				; load to page $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	; setup walk collision
 	jsr	recalc_walk_collision
