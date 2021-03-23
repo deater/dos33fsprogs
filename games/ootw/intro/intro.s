@@ -43,73 +43,11 @@ repeat_intro:
 
 	jsr	intro_03_elevator
 
-;===============================
-;===============================
-; Keycode
-;===============================
-;===============================
+	;===============================
+	; Keypad
 
-keypad:
+	jsr	intro_04_keypad
 
-	;=============================
-	; Load background to $c00
-
-	lda	#<(intro_scanner_door_lzsa)
-        sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(intro_scanner_door_lzsa)
-	sta     getsrc_smc+2    ; LZSA_SRC_HI
-
-	lda	#$c			; load to off-screen $c00
-	jsr	decompress_lzsa2_fast
-
-	lda	#<approach_sequence
-	sta	INTRO_LOOPL
-	lda	#>approach_sequence
-	sta	INTRO_LOOPH
-
-	jsr	run_sequence
-
-
-	;=============================
-	; Load background to $c00
-
-	lda	#<(intro_keypad_bg_lzsa)
-        sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(intro_keypad_bg_lzsa)
-	sta     getsrc_smc+2    ; LZSA_SRC_HI
-
-	lda	#$c			; load to off-screen $c00
-	jsr	decompress_lzsa2_fast
-
-	;==================================
-	; draw keypad sequence
-
-	lda	#<keypad_sequence
-	sta	INTRO_LOOPL
-	lda	#>keypad_sequence
-	sta	INTRO_LOOPH
-
-	jsr	run_sequence
-
-
-	;==================================
-	; doop opening sequence
-
-	lda	#<(intro_scanner_door_lzsa)
-        sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(intro_scanner_door_lzsa)
-	sta     getsrc_smc+2    ; LZSA_SRC_HI
-
-	lda	#$c			; load to off-screen $c00
-	jsr	decompress_lzsa2_fast
-
-
-	lda	#<opening_sequence
-	sta	INTRO_LOOPL
-	lda	#>opening_sequence
-	sta	INTRO_LOOPH
-
-	jsr	run_sequence
 
 
 ;===============================
@@ -1497,3 +1435,4 @@ intro9_data_lzsa:
 	.include "intro_01_building.s"
 	.include "intro_02_outer_door.s"
 	.include "intro_03_elevator.s"
+	.include "intro_04_keypad.s"
