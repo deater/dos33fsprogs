@@ -8,13 +8,15 @@ TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	ootw.dsk ootw_side2.dsk ootw_side3.dsk
 
-ootw.dsk:	HELLO TITLE ./intro/INTRO ./ootw_c1/OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
+ootw.dsk:	HELLO TITLE \
+		./intro/INTRO ./ootw_c1/OOTW_C1 ./ootw_c2/OOTW_C2 \
+		OOTW_C3 OOTW_C4 OOTW_C5
 	cp empty.dsk ootw.dsk
 	$(DOS33) -y ootw.dsk SAVE A HELLO
 	$(DOS33) -y ootw.dsk BSAVE -a 0xd00 TITLE
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./intro/INTRO INTRO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c1/OOTW_C1
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C2
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c2/OOTW_C2
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C3
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C4
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C5
@@ -43,31 +45,6 @@ ootw_side3.dsk:	HELLO TITLE ENDING \
 	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 OOTW_C14
 	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 OOTW_C15
 	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 ENDING
-
-
-
-####
-
-OOTW_C2:	ootw_c2.o
-	ld65 -o OOTW_C2 ootw_c2.o -C ../../linker_scripts/apple2_1700.inc
-
-ootw_c2.o:	ootw_c2.s \
-	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
-	gr_hlin.s gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
-	keyboard.s gr_run_sequence.s audio.s \
-	alien_laser.s \
-	physicist.s alien.s friend.s \
-	collision.s door.s laser.s shield.s blast.s gun.s \
-	ootw_c2_miners.s \
-	ootw_graphics/sprites/physicist.inc \
-	ootw_graphics/sprites/alien.inc \
-	ootw_graphics/sprites/friend.inc \
-	ootw_c2_cage.s ootw_c2_jail.s ootw_c2_elevator.s ootw_c2_intro.s \
-	ootw_graphics/l2cage/ootw_c2_cage.inc \
-	ootw_graphics/l2jail/ootw_c2_jail.inc \
-	ootw_graphics/l2intro/ootw_l2intro.inc \
-	ootw_graphics/l2laser/ootw_c2_laser.inc
-	ca65 -o ootw_c2.o ootw_c2.s -l ootw_c2.lst
 
 ####
 
@@ -280,6 +257,9 @@ intro/INTRO:
 ootw_c1/OOTW_C1:
 	cd ootw_c1 && make
 
+ootw_c2/OOTW_C2:
+	cd ootw_c2 && make
+
 
 ####
 
@@ -355,6 +335,5 @@ zip:	ootw.dsk ootw_side2.dsk side3.dsk
 clean:		
 		rm -f *~ *.o *.lst *.lz4 HELLO TITLE \
 			OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 INTRO LOADER \
-			COMPRESS-TEST AUDIO_TEST \
-			intro_data_01 intro_data_04 intro_data_06 \
-			intro_data_08 intro_data_09
+			COMPRESS-TEST AUDIO_TEST
+

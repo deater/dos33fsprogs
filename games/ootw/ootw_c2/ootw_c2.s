@@ -1,9 +1,12 @@
 ; Ootw for Apple II Lores -- Checkpoint2
 
+; despite all my rage...
+
+
 ; by Vince "Deater" Weaver	<vince@deater.net>
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
 
 
 
@@ -107,52 +110,52 @@ end_message:
 .include "ootw_c2_jail.s"
 .include "ootw_c2_elevator.s"
 .include "ootw_c2_intro.s"
-.include "text_print.s"
-.include "gr_pageflip.s"
-.include "gr_unrle.s"
-.include "gr_fast_clear.s"
-.include "gr_copy.s"
-.include "gr_copy_offset.s"
-.include "gr_putsprite.s"
-.include "gr_putsprite_flipped.s"
-.include "gr_putsprite_crop.s"
-.include "gr_offsets.s"
-.include "gr_offsets_hl.s"
-.include "gr_run_sequence.s"
-.include "gr_overlay.s"
-.include "gr_vlin.s"
-.include "gr_hlin.s"
-;.include "random16.s"
-.include "keyboard.s"
+.include "../text_print.s"
+.include "../gr_pageflip.s"
+.include "../gr_unrle.s"
+.include "../gr_fast_clear.s"
+.include "../gr_copy.s"
+.include "../gr_copy_offset.s"
+.include "../gr_putsprite.s"
+.include "../gr_putsprite_flipped.s"
+.include "../gr_putsprite_crop.s"
+.include "../gr_offsets.s"
+.include "../gr_offsets_hl.s"
+.include "../gr_run_sequence.s"
+.include "../gr_overlay.s"
+.include "../gr_vlin.s"
+.include "../gr_hlin.s"
+;.include "../random16.s"
+.include "../keyboard.s"
 
-.include "physicist.s"
-.include "alien.s"
-.include "friend.s"
+.include "../physicist.s"
+.include "../alien.s"
+.include "../friend.s"
 
-.include "gun.s"
-.include "blast.s"
-.include "laser.s"
-.include "alien_laser.s"
-.include "shield.s"
-.include "door.s"
-.include "collision.s"
+.include "../gun.s"
+.include "../blast.s"
+.include "../laser.s"
+.include "../alien_laser.s"
+.include "../shield.s"
+.include "../door.s"
+.include "../collision.s"
 
 ; background miners
 .include "ootw_c2_miners.s"
 
 ; room backgrounds
-.include "ootw_graphics/l2cage/ootw_c2_cage.inc"
-.include "ootw_graphics/l2jail/ootw_c2_jail.inc"
+.include "graphics/l2_cage/ootw_c2_cage.inc"
+.include "graphics/l2_jail/ootw_c2_jail.inc"
 ; sprites
-.include "ootw_graphics/sprites/physicist.inc"
-.include "ootw_graphics/sprites/alien.inc"
-.include "ootw_graphics/sprites/friend.inc"
+.include "../ootw_graphics/sprites/physicist.inc"
+.include "../ootw_graphics/sprites/alien.inc"
+.include "../ootw_graphics/sprites/friend.inc"
 ; intro
-.include "ootw_graphics/l2intro/ootw_l2intro.inc"
+.include "graphics/l2_intro/ootw_l2intro.inc"
 ; city movie
-.include "ootw_graphics/l2city/city_movie.inc"
+.include "graphics/l2_city/city_movie.inc"
 ; laser movie
-.include "ootw_graphics/l2laser/ootw_c2_laser.inc"
+.include "graphics/l2_laser/ootw_c2_laser.inc"
 
-.include "audio.s"
+.include "../audio.s"
 
