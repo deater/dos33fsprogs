@@ -2,8 +2,8 @@
 
 ; by Vince "Deater" Weaver	<vince@deater.net>
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
 
 
 
@@ -80,24 +80,19 @@ end_message:
 .byte	11,20,"ACCESS CODE: VENT",0
 
 .include "ootw_c3_vent.s"
-.include "text_print.s"
-.include "gr_pageflip.s"
-.include "gr_unrle.s"
-.include "gr_fast_clear.s"
-.include "gr_copy.s"
-;.include "gr_copy_offset.s"
-.include "gr_putsprite.s"
-;.include "gr_putsprite_flipped.s"
-.include "gr_putsprite_crop.s"
-.include "gr_offsets.s"
-.include "gr_offsets_hl.s"
-;.include "gr_run_sequence.s"
-;.include "gr_overlay.s"
-;.include "random16.s"
-.include "keyboard.s"
+.include "../text_print.s"
+.include "../gr_pageflip.s"
+.include "../gr_unrle.s"
+.include "../gr_fast_clear.s"
+.include "../gr_copy.s"
+.include "../gr_putsprite.s"
+.include "../gr_putsprite_crop.s"
+.include "../gr_offsets.s"
+.include "../gr_offsets_hl.s"
+.include "../keyboard.s"
 
 ; room backgrounds
-.include "ootw_graphics/l3vent/ootw_c3_vent.inc"
+.include "graphics/l3_vent/ootw_c3_vent.inc"
 ; sprites
-.include "ootw_graphics/sprites/physicist_rolling.inc"
+.include "../ootw_graphics/sprites/physicist_rolling.inc"
 

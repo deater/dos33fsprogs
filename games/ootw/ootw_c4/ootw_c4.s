@@ -2,8 +2,8 @@
 
 ; by Vince "Deater" Weaver	<vince@deater.net>
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
 
 
 
@@ -85,39 +85,38 @@ end_message:
 .byte	11,20,"ACCESS CODE: RCHG",0
 
 .include "ootw_c4_city.s"
-.include "text_print.s"
-.include "gr_pageflip.s"
-.include "gr_unrle.s"
-.include "gr_fast_clear.s"
-.include "gr_copy.s"
-.include "gr_hlin.s"
-.include "gr_twoscreen_scroll.s"
-.include "gr_putsprite.s"
-.include "gr_putsprite_flipped.s"
-.include "gr_putsprite_crop.s"
-.include "gr_offsets.s"
-;.include "random16.s"
-.include "keyboard.s"
+.include "../text_print.s"
+.include "../gr_pageflip.s"
+.include "../gr_unrle.s"
+.include "../gr_fast_clear.s"
+.include "../gr_copy.s"
+.include "../gr_hlin.s"
+.include "../gr_twoscreen_scroll.s"
+.include "../gr_putsprite.s"
+.include "../gr_putsprite_flipped.s"
+.include "../gr_putsprite_crop.s"
+.include "../gr_offsets.s"
+.include "../keyboard.s"
 
-.include "physicist.s"
-.include "alien.s"
+.include "../physicist.s"
+.include "../alien.s"
 
-.include "door.s"
-.include "charger.s"
-.include "gun.s"
-.include "laser.s"
-.include "shield.s"
-.include "blast.s"
-.include "collision.s"
-.include "dummy_friend.s"
-.include "alien_laser.s"
+.include "../door.s"
+.include "../charger.s"
+.include "../gun.s"
+.include "../laser.s"
+.include "../shield.s"
+.include "../blast.s"
+.include "../collision.s"
+.include "../dummy_friend.s"
+.include "../alien_laser.s"
 
 .include "ootw_c4_action.s"
 
 ; room backgrounds
-.include "ootw_graphics/l4city/ootw_c4_city.inc"
+.include "graphics/l4_city/ootw_c4_city.inc"
 ; sprites
-.include "ootw_graphics/sprites/physicist.inc"
-.include "ootw_graphics/sprites/alien.inc"
+.include "../ootw_graphics/sprites/physicist.inc"
+.include "../ootw_graphics/sprites/alien.inc"
 
 

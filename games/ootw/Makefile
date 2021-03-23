@@ -5,27 +5,28 @@ PNG2RLE = ../../utils/gr-utils/png2rle
 PNG2LZ4 = ../../utils/gr-utils/png2lz4
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
+EMPTY_DISK = ../../empty_disk
 
 all:	ootw.dsk ootw_side2.dsk ootw_side3.dsk
 
 ootw.dsk:	HELLO TITLE \
 		./intro/INTRO ./ootw_c1/OOTW_C1 ./ootw_c2/OOTW_C2 \
-		OOTW_C3 OOTW_C4 OOTW_C5
-	cp empty.dsk ootw.dsk
+		./ootw_c3/OOTW_C3 ./ootw_c4/OOTW_C4 OOTW_C5
+	cp $(EMPTY_DISK)/empty.dsk ootw.dsk
 	$(DOS33) -y ootw.dsk SAVE A HELLO
 	$(DOS33) -y ootw.dsk BSAVE -a 0xd00 TITLE
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./intro/INTRO INTRO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c1/OOTW_C1
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c2/OOTW_C2
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C3
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C4
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c3/OOTW_C3
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c4/OOTW_C4
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C5
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 AUDIO_TEST
 #	$(DOS33) -y ootw.dsk BSAVE -a 0x2000 COMPRESS-TEST
 
 ootw_side2.dsk:	HELLO TITLE \
 	OOTW_C6 OOTW_C7 OOTW_C8 OOTW_C9 OOTW_C10
-	cp empty.dsk ootw_side2.dsk
+	cp $(EMPTY_DISK)/empty.dsk ootw_side2.dsk
 	$(DOS33) -y ootw_side2.dsk SAVE A HELLO HELLO
 	$(DOS33) -y ootw_side2.dsk BSAVE -a 0xd00 TITLE
 	$(DOS33) -y ootw_side2.dsk BSAVE -a 0x1700 OOTW_C6
@@ -36,7 +37,7 @@ ootw_side2.dsk:	HELLO TITLE \
 
 ootw_side3.dsk:	HELLO TITLE ENDING \
 	OOTW_C11 OOTW_C12 OOTW_C13 OOTW_C14 OOTW_C15
-	cp empty.dsk ootw_side3.dsk
+	cp $(EMPTY_DISK)/empty.dsk ootw_side3.dsk
 	$(DOS33) -y ootw_side3.dsk SAVE A HELLO HELLO
 	$(DOS33) -y ootw_side3.dsk BSAVE -a 0xd00 TITLE
 	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 OOTW_C11
@@ -47,37 +48,6 @@ ootw_side3.dsk:	HELLO TITLE ENDING \
 	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 ENDING
 
 ####
-
-OOTW_C3:	ootw_c3.o
-	ld65 -o OOTW_C3 ootw_c3.o -C ../../linker_scripts/apple2_1700.inc
-
-ootw_c3.o:	ootw_c3.s \
-	gr_copy.s gr_copy_offset.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
-	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
-	keyboard.s \
-	ootw_c3_vent.s \
-	ootw_graphics/sprites/physicist_rolling.inc \
-	ootw_graphics/l3vent/ootw_c3_vent.inc
-	ca65 -o ootw_c3.o ootw_c3.s -l ootw_c3.lst
-
-###
-
-OOTW_C4:	ootw_c4.o
-	ld65 -o OOTW_C4 ootw_c4.o -C ../../linker_scripts/apple2_1700.inc
-
-ootw_c4.o:	ootw_c4.s \
-	gr_copy.s gr_twoscreen_scroll.s gr_fast_clear.s gr_pageflip.s \
-	gr_unrle.s gr_hlin.s \
-	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
-	keyboard.s gr_run_sequence.s physicist.s \
-	collision.s alien.s alien_laser.s \
-	ootw_c4_city.s ootw_c4_action.s \
-	door.s laser.s shield.s blast.s gun.s charger.s \
-	ootw_graphics/sprites/physicist.inc \
-	ootw_graphics/l4city/ootw_c4_city.inc
-	ca65 -o ootw_c4.o ootw_c4.s -l ootw_c4.lst
-
-###
 
 OOTW_C5:	ootw_c5.o
 	ld65 -o OOTW_C5 ootw_c5.o -C ../../linker_scripts/apple2_1700.inc
@@ -260,6 +230,11 @@ ootw_c1/OOTW_C1:
 ootw_c2/OOTW_C2:
 	cd ootw_c2 && make
 
+ootw_c3/OOTW_C3:
+	cd ootw_c3 && make
+
+ootw_c4/OOTW_C4:
+	cd ootw_c4 && make
 
 ####
 
