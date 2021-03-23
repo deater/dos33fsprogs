@@ -8,12 +8,12 @@ TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	ootw.dsk ootw_side2.dsk ootw_side3.dsk
 
-ootw.dsk:	HELLO TITLE ./intro/INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
+ootw.dsk:	HELLO TITLE ./intro/INTRO ./ootw_c1/OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
 	cp empty.dsk ootw.dsk
 	$(DOS33) -y ootw.dsk SAVE A HELLO
 	$(DOS33) -y ootw.dsk BSAVE -a 0xd00 TITLE
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./intro/INTRO INTRO
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C1
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c1/OOTW_C1
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C2
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C3
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C4
@@ -45,37 +45,6 @@ ootw_side3.dsk:	HELLO TITLE ENDING \
 	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 ENDING
 
 
-
-####
-
-OOTW_C1:	ootw_c1.o
-	ld65 -o OOTW_C1 ootw_c1.o -C ../../linker_scripts/apple2_1700.inc
-
-ootw_c1.o:	ootw_c1.s \
-	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s \
-	gr_putsprite.s gr_putsprite_flipped.s gr_putsprite_crop.s \
-	gr_hlin.s gr_make_quake.s gr_overlay.s zp.inc keyboard.s \
-	collision.s \
-	ootw_c1_sluggy.s ootw_c1_beast.s \
-	ootw_c1_arrival.s ootw_c1_rope.s earthquake.s ootw_c1_mesa.s \
-	ootw_c1_pool.s ootw_c1_cavern.s physicist.s random16.s \
-	ootw_graphics/l1pool/ootw_pool.inc \
-	ootw_graphics/l1underwater/ootw_underwater.inc \
-	ootw_graphics/l1caves/ootw_cavern.inc \
-	ootw_graphics/l1caves/ootw_cavern2.inc \
-	ootw_graphics/l1caves/ootw_cavern3.inc \
-	ootw_graphics/l1rope/ootw_rope.inc \
-	ootw_graphics/l1rope/ootw_swing.inc \
-	ootw_graphics/l1end/ootw_l1end.inc \
-	ootw_graphics/sprites/physicist.inc \
-	ootw_graphics/sprites/physicist_l1_swim.inc \
-	ootw_graphics/sprites/slugs.inc \
-	ootw_graphics/sprites/l1_background.inc \
-	ootw_graphics/sprites/beast.inc \
-	ootw_graphics/l1end_scenes/ootw_beast_end.inc \
-	ootw_graphics/l1end_scenes/ootw_beast_intro.inc \
-	ootw_graphics/l1end_scenes/ootw_slug_end.inc
-	ca65 -o ootw_c1.o ootw_c1.s -l ootw_c1.lst
 
 ####
 
@@ -307,6 +276,10 @@ audio.o:	audio.s
 
 intro/INTRO:
 	cd intro && make
+
+ootw_c1/OOTW_C1:
+	cd ootw_c1 && make
+
 
 ####
 

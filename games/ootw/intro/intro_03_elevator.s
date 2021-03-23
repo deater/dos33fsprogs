@@ -436,7 +436,7 @@ elevator_inner_loop:
 	jsr	page_flip
 
 	ldx	#80
-	jmp	long_wait		; returns for us
+	jmp	long_wait		; return for us
 
 
 
