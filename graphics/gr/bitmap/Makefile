@@ -7,12 +7,15 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	bitmap.dsk make_bitmap make_bitmap_small
 
-bitmap.dsk:	HELLO EYE EYE.BAS EYE_NEW.BAS EYE_DROP.BAS
+bitmap.dsk:	HELLO EYE EYE.BAS EYE_NEW.BAS EYE_DROP.BAS POTION.BAS SMOLLY.BAS SPHERE.BAS
 	cp $(EMPTYDISK) bitmap.dsk
 	$(DOS33) -y bitmap.dsk SAVE A HELLO
 	$(DOS33) -y bitmap.dsk SAVE A EYE.BAS
 	$(DOS33) -y bitmap.dsk SAVE A EYE_NEW.BAS
 	$(DOS33) -y bitmap.dsk SAVE A EYE_DROP.BAS
+	$(DOS33) -y bitmap.dsk SAVE A POTION.BAS
+	$(DOS33) -y bitmap.dsk SAVE A SMOLLY.BAS
+	$(DOS33) -y bitmap.dsk SAVE A SPHERE.BAS
 	$(DOS33) -y bitmap.dsk BSAVE -a 0xC00 EYE
 
 ###
@@ -34,6 +37,22 @@ EYE_NEW.BAS:	eye_new.bas
 
 EYE_DROP.BAS:	eye_drop.bas
 	$(TOKENIZE) < eye_drop.bas > EYE_DROP.BAS
+
+###
+
+POTION.BAS:	potion.bas
+	$(TOKENIZE) < potion.bas > POTION.BAS
+
+###
+
+SMOLLY.BAS:	smolly.bas
+	$(TOKENIZE) < smolly.bas > SMOLLY.BAS
+
+###
+
+SPHERE.BAS:	sphere.bas
+	$(TOKENIZE) < sphere.bas > SPHERE.BAS
+
 
 ###
 
@@ -63,4 +82,4 @@ make_bitmap_small.o:	make_bitmap_small.c
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO EYE EYE.BAS EYE_NEW.BAS EYE_DROP.BAS make_bitmap make_bitmap_small
+	rm -f *~ *.o *.lst HELLO EYE EYE.BAS EYE_NEW.BAS EYE_DROP.BAS POTION.BAS SMOLLY.BAS SPHERE.BAS make_bitmap make_bitmap_small

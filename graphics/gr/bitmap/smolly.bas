@@ -1,0 +1,7 @@
+1GR:FORI=0TO135:C=PEEK(2161+I)-35:IFI<8THENA(I)=C:NEXT
+4FORX=XTOX+1:COLOR=A(C-INT(C/8)*8):VLIN2*INT(I/8),33ATX+12:C=C/8:NEXT:X=X*(X<15):NEXT:"#%)*&$2.##+,,$###,#4>5$#+-G0U66#4DYJ4A>$,_Yb/>=%DGP`2=5%\,,_R5-%_'SbR4-%HbbJG+-$#_bPP+%$#C_RH+$$##PGO+$###KP#+$##KY_J1##,_XIbX,,5_WYYY55
+
+
+
+
+
