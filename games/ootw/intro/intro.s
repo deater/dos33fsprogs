@@ -68,47 +68,10 @@ repeat_intro:
 
 	jsr	intro_06_console_part2
 
+	;===============================
+	; Lightning outside
 
-
-;===============================
-;===============================
-; Thunderstorm Outside
-;===============================
-;===============================
-
-
-thunderstorm:
-
-	lda	#<(intro_building_car_lzsa)
-        sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(intro_building_car_lzsa)
-	sta     getsrc_smc+2    ; LZSA_SRC_HI
-
-	lda	#$c			; load to off-screen $c00
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_copy_to_current
-	jsr	page_flip
-	bit	FULLGR
-
-	lda	#<lightning_sequence
-	sta	INTRO_LOOPL
-	lda	#>lightning_sequence
-	sta	INTRO_LOOPH
-
-	jsr	run_sequence
-
-	lda	#<bolt_sequence
-	sta	INTRO_LOOPL
-	lda	#>bolt_sequence
-	sta	INTRO_LOOPH
-
-	jsr	run_sequence
-
-;outside_loop:
-;	lda	KEYPRESS
-;	bpl	outside_loop
-;	bit	KEYRESET
+	jsr	intro_08_lightning
 
 
 ;===============================
@@ -286,31 +249,7 @@ done_intro:
 .include "gr_run_sequence.s"
 
 
-DATA_LOCATION	=	$9000
 
-; intro8
-.if 0
-bolt_sequence		= (DATA_LOCATION+$1484)
-lightning_sequence	= (DATA_LOCATION+$13D2)
-building_car_lzsa	= (DATA_LOCATION+$1259)
-.endif
-intro8_data_lzsa:
-;	.incbin "intro_data_08.lzsa"
-	.include "intro_data_08.s"
-
-; intro9, intro10
-.if 0
-gone_sequence		= (DATA_LOCATION+$2C66)
-gone_lzsa		= (DATA_LOCATION+$2039)
-zappo_sequence		= (DATA_LOCATION+$2C1B)
-blue_zappo_lzsa		= (DATA_LOCATION+$1737)
-tunnel2_sequence	= (DATA_LOCATION+$1718)
-tunnel2_lzsa		= (DATA_LOCATION+$0B0F)
-tunnel1_sequence	= (DATA_LOCATION+$16F2)
-tunnel1_lzsa		= (DATA_LOCATION+$0000)
-.endif
-intro9_data_lzsa:
-;	.incbin "intro_data_09.lzsa"
 	.include "intro_data_09.s"
 
 
@@ -326,3 +265,4 @@ intro9_data_lzsa:
 	.include "intro_05_scanner.s"
 	.include "intro_06_console.s"
 	.include "intro_07_soda.s"
+	.include "intro_08_lightning.s"

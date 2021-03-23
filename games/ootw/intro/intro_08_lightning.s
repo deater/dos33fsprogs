@@ -1,3 +1,50 @@
+;===============================
+;===============================
+; Thunderstorm Outside
+;===============================
+;===============================
+; thunderbolt and lightning
+; very vey frightning
+
+intro_08_lightning:
+
+thunderstorm:
+
+	lda	#<(intro_building_car_lzsa)
+        sta     getsrc_smc+1    ; LZSA_SRC_LO
+	lda	#>(intro_building_car_lzsa)
+	sta     getsrc_smc+2    ; LZSA_SRC_HI
+
+	lda	#$c			; load to off-screen $c00
+	jsr	decompress_lzsa2_fast
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+	bit	FULLGR
+
+	lda	#<lightning_sequence
+	sta	INTRO_LOOPL
+	lda	#>lightning_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence
+
+	lda	#<bolt_sequence
+	sta	INTRO_LOOPL
+	lda	#>bolt_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence
+
+;outside_loop:
+;	lda	KEYPRESS
+;	bpl	outside_loop
+;	bit	KEYRESET
+
+
+	rts
+
+
 ;=================================
 ;=================================
 ; Intro Segment 08 Data (Lightning)
@@ -223,6 +270,7 @@ bolt_sequence:
 	.word nothing_lzsa
 	.byte 0
 ;	.word nothing_lzsa
+
 
 
 
