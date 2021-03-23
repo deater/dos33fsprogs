@@ -1,7 +1,7 @@
 ; Title Screen / Menu for OOTW
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
 
 title:
 	lda	#0
@@ -90,8 +90,8 @@ print_help_and_go:
 ready_to_load:
 	jmp	$1400			; LOADER starts here
 
-.include "text_print.s"
-.include "gr_offsets.s"
+.include "../text_print.s"
+.include "../gr_offsets.s"
 
 draw_menu:
 	lda	#<menu_items
