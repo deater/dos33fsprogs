@@ -10,8 +10,8 @@
 
 .include "graphics/09_tunnel/intro_tunnel1.inc"
 .include "graphics/09_tunnel/intro_tunnel2.inc"
-.include "graphics/08_lightning/nothing.inc"
-.include "graphics/08_lightning/whiteblack.inc"
+;.include "graphics/08_lightning/nothing.inc"
+;.include "graphics/08_lightning/whiteblack.inc"
 
 	;=======================
 	; Tunnel1 Sequence

@@ -10,7 +10,7 @@
 .include "graphics/04_keypad/intro_hands.inc"
 .include "graphics/04_keypad/intro_opening.inc"
 
-.include "graphics/08_lightning/nothing.inc"
+;.include "graphics/08_lightning/nothing.inc"
 
 ; Approaching keypad sequence
 

@@ -39,20 +39,6 @@ repeat_intro:
 ;===============================
 
 	;==================================
-	; Uncompress the data
-	;==================================
-
-	lda	#<intro1_data_lzsa
-        sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>intro1_data_lzsa
-        sta     getsrc_smc+2    ; LZSA_SRC_HI
-
-	lda	#$90		; load to $9000
-
-	jsr	decompress_lzsa2_fast
-
-
-	;==================================
 	; draw the car driving up
 	;==================================
 	; draw getting out of the car
@@ -526,24 +512,13 @@ elevator_inner_loop:
 ;===============================
 
 keypad:
-	;==================================
-	; Uncompress the data
-	;==================================
-	lda	#<intro4_data_lzsa
-	sta	LZ4_SRC
-	lda	#>intro4_data_lzsa
-	sta	LZ4_SRC+1
-
-	lda	#$90		; load to $9000
-
-	jsr	decompress_lzsa2_fast
 
 	;=============================
 	; Load background to $c00
 
-	lda	#<(scanner_door_lzsa)
+	lda	#<(intro_scanner_door_lzsa)
         sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(scanner_door_lzsa)
+	lda	#>(intro_scanner_door_lzsa)
 	sta     getsrc_smc+2    ; LZSA_SRC_HI
 
 	lda	#$c			; load to off-screen $c00
@@ -560,9 +535,9 @@ keypad:
 	;=============================
 	; Load background to $c00
 
-	lda	#<(keypad_lzsa)
+	lda	#<(intro_keypad_bg_lzsa)
         sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(keypad_lzsa)
+	lda	#>(intro_keypad_bg_lzsa)
 	sta     getsrc_smc+2    ; LZSA_SRC_HI
 
 	lda	#$c			; load to off-screen $c00
@@ -582,9 +557,9 @@ keypad:
 	;==================================
 	; doop opening sequence
 
-	lda	#<(scanner_door_lzsa)
+	lda	#<(intro_scanner_door_lzsa)
         sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(scanner_door_lzsa)
+	lda	#>(intro_scanner_door_lzsa)
 	sta     getsrc_smc+2    ; LZSA_SRC_HI
 
 	lda	#$c			; load to off-screen $c00
@@ -606,9 +581,9 @@ keypad:
 ;===============================
 
 scanner:
-	lda	#<(scanner_lzsa)
+	lda	#<(intro_scanner_lzsa)
         sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(scanner_lzsa)
+	lda	#>(intro_scanner_lzsa)
 	sta     getsrc_smc+2    ; LZSA_SRC_HI
 
 	lda	#$c			; load to off-screen $c00
@@ -715,18 +690,6 @@ spin_on_key:
 ;===============================
 ; Sitting at Desk
 ;===============================
-
-	;==================================
-	; Uncompress the data
-	;==================================
-	lda	#<intro6_data_lzsa
-	sta	LZ4_SRC
-	lda	#>intro6_data_lzsa
-	sta	LZ4_SRC+1
-
-	lda	#$90		; load to $9000
-
-	jsr	decompress_lzsa2_fast
 
 	;======================
 	; load bg
@@ -1468,21 +1431,9 @@ particle_loop2:
 
 thunderstorm:
 
-	;==================================
-	; Uncompress the data
-	;==================================
-	lda	#<intro8_data_lzsa
-	sta	LZ4_SRC
-	lda	#>intro8_data_lzsa
-	sta	LZ4_SRC+1
-
-	lda	#$90		; load to $9000
-
-	jsr	decompress_lzsa2_fast
-
-	lda	#<(building_car_lzsa)
+	lda	#<(intro_building_car_lzsa)
         sta     getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>(building_car_lzsa)
+	lda	#>(intro_building_car_lzsa)
 	sta     getsrc_smc+2    ; LZSA_SRC_HI
 
 	lda	#$c			; load to off-screen $c00
@@ -1519,19 +1470,6 @@ thunderstorm:
 ;===============================
 
 tunnel1:
-
-	;==================================
-	; Uncompress the data
-	;==================================
-	lda	#<intro9_data_lzsa
-	sta	LZ4_SRC
-	lda	#>intro9_data_lzsa
-	sta	LZ4_SRC+1
-
-	lda	#$90		; load to $9000
-
-	jsr	decompress_lzsa2_fast
-
 
 	lda	#<(tunnel1_lzsa)
         sta     getsrc_smc+1    ; LZSA_SRC_LO
@@ -1929,6 +1867,7 @@ DATA_LOCATION	=	$9000
 ; intro1,intro2,intro3
 ; get these addresses from intro_data_01.lst
 
+.if 0
 building_sequence	= (DATA_LOCATION+$06C9)
 feet_sequence		= (DATA_LOCATION+$0DDD)
 walking_sequence	= (DATA_LOCATION+$1304)
@@ -1937,12 +1876,15 @@ walking00_lzsa		= (DATA_LOCATION+$0F10)
 intro_off_elevator_lzsa	= (DATA_LOCATION+$0ECB)
 indicators		= (DATA_LOCATION+$12FA)
 intro_elevator_lzsa	= (DATA_LOCATION+$0DF9)
+.endif
 
 intro1_data_lzsa:
-	.incbin "intro_data_01.lzsa"
+;	.incbin "intro_data_01.lzsa"
+	.include "intro_data_01.s"
 
 ; intro4,intro5
 
+.if 0
 opening_sequence  =	(DATA_LOCATION+$204E)
 keypad_sequence   =	(DATA_LOCATION+$1FF3)
 keypad_lzsa        =	(DATA_LOCATION+$0496)
@@ -1957,12 +1899,14 @@ ai_sequence	  =	(DATA_LOCATION+$2D0B)
 ai_bg_lzsa	  =	(DATA_LOCATION+$2744)
 scanning_sequence =	(DATA_LOCATION+$2CF2)
 scanner_lzsa       =	(DATA_LOCATION+$2063)
-
+.endif
 intro4_data_lzsa:
-	.incbin "intro_data_04.lzsa"
+;	.incbin "intro_data_04.lzsa"
+	.include "intro_data_04.s"
 
 ; intro6,intro7
 
+.if 0
 experiment		= (DATA_LOCATION+$0D2C)
 practical_verification	= (DATA_LOCATION+$0D0D)
 result			= (DATA_LOCATION+$0CA6)
@@ -1992,22 +1936,24 @@ drinking_sequence	= (DATA_LOCATION+$1C29)
 drinking02_lzsa		= (DATA_LOCATION+$1705)
 soda_sequence		= (DATA_LOCATION+$1C1A)
 soda_bg_lzsa		= (DATA_LOCATION+$0E1A)
-
+.endif
 
 intro6_data_lzsa:
-	.incbin "intro_data_06.lzsa"
+;	.incbin "intro_data_06.lzsa"
+	.include "intro_data_06.s"
 
 ; intro8
-
+.if 0
 bolt_sequence		= (DATA_LOCATION+$1484)
 lightning_sequence	= (DATA_LOCATION+$13D2)
 building_car_lzsa	= (DATA_LOCATION+$1259)
-
+.endif
 intro8_data_lzsa:
-	.incbin "intro_data_08.lzsa"
+;	.incbin "intro_data_08.lzsa"
+	.include "intro_data_08.s"
 
 ; intro9, intro10
-
+.if 0
 gone_sequence		= (DATA_LOCATION+$2C66)
 gone_lzsa		= (DATA_LOCATION+$2039)
 zappo_sequence		= (DATA_LOCATION+$2C1B)
@@ -2016,6 +1962,7 @@ tunnel2_sequence	= (DATA_LOCATION+$1718)
 tunnel2_lzsa		= (DATA_LOCATION+$0B0F)
 tunnel1_sequence	= (DATA_LOCATION+$16F2)
 tunnel1_lzsa		= (DATA_LOCATION+$0000)
-
+.endif
 intro9_data_lzsa:
-	.incbin "intro_data_09.lzsa"
+;	.incbin "intro_data_09.lzsa"
+	.include "intro_data_09.s"

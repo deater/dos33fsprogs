@@ -57,7 +57,7 @@ outtacar_sequence:
 
 .include "graphics/02_outer_door/outer_door.inc"
 .include "graphics/02_outer_door/feet.inc"
-.include "graphics/08_lightning/nothing.inc"
+;.include "graphics/08_lightning/nothing.inc"
 
 ;=============================
 ; Feet going in door sequence

@@ -5,7 +5,7 @@
 ;=================================
 
 .include "graphics/08_lightning/lightning.inc"
-.include "graphics/01_building/intro_building_car.inc"
+;.include "graphics/01_building/intro_building_car.inc"
 
 	; Lightning sequence
 lightning_sequence:
