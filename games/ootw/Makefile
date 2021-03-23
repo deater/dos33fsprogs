@@ -8,11 +8,11 @@ TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	ootw.dsk ootw_side2.dsk ootw_side3.dsk
 
-ootw.dsk:	HELLO TITLE INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
+ootw.dsk:	HELLO TITLE ./intro/INTRO OOTW_C1 OOTW_C2 OOTW_C3 OOTW_C4 OOTW_C5
 	cp empty.dsk ootw.dsk
 	$(DOS33) -y ootw.dsk SAVE A HELLO
 	$(DOS33) -y ootw.dsk BSAVE -a 0xd00 TITLE
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 INTRO
+	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./intro/INTRO INTRO
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C1
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C2
 	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 OOTW_C3
@@ -305,105 +305,8 @@ audio.o:	audio.s
 
 ####
 
-INTRO:	intro.o
-	ld65 -o INTRO intro.o -C ../../linker_scripts/apple2_1700_9000.inc
-
-intro.o:	intro.s \
-	gr_copy.s gr_fast_clear.s gr_pageflip.s gr_unrle.s gr_putsprite.s \
-	gr_overlay.s gr_run_sequence.s \
-	keyboard.s random16.s text_print.s zp.inc \
-	intro_graphics/01_building/intro_car.inc \
-	intro_graphics/01_building/intro_building_car.inc \
-	intro_graphics/01_building/intro_building.inc \
-	intro_graphics/02_outer_door/outer_door.inc \
-	intro_graphics/02_outer_door/feet.inc \
-	intro_graphics/03_elevator/intro_elevator.inc \
-	intro_graphics/03_elevator/intro_off_elevator.inc \
-	intro_graphics/03_elevator/intro_walking.inc \
-	intro_graphics/04_keypad/intro_scanner_door.inc \
-	intro_graphics/04_keypad/intro_approach.inc \
-	intro_graphics/04_keypad/intro_keypad_bg.inc \
-	intro_graphics/04_keypad/intro_hands.inc \
-	intro_graphics/04_keypad/intro_opening.inc \
-	intro_graphics/05_scanner/intro_scanner.inc \
-	intro_graphics/05_scanner/intro_scanning.inc \
-	intro_graphics/05_scanner/intro_ai_bg.inc \
-	intro_graphics/05_scanner/intro_ai.inc \
-	intro_graphics/06_console/intro_desktop.inc \
-	intro_graphics/06_console/intro_cursor.inc \
-	intro_graphics/06_console/intro_collider.inc \
-	intro_graphics/07_soda/intro_open_soda.inc \
-	intro_graphics/07_soda/intro_drinking.inc \
-	intro_graphics/08_lightning/lightning.inc \
-	intro_graphics/09_tunnel/intro_tunnel1.inc \
-	intro_graphics/09_tunnel/intro_tunnel2.inc \
-	intro_graphics/10_gone/intro_zappo.inc \
-	intro_graphics/10_gone/intro_gone.inc \
-	intro_data_01.lz4 \
-	intro_data_04.lz4 \
-	intro_data_06.lz4 \
-	intro_data_08.lz4 \
-	intro_data_09.lz4
-	ca65 -o intro.o intro.s -l intro.lst
-
-####
-
-intro_data_01.lz4:	intro_data_01
-	lz4 -f -16 intro_data_01
-	truncate -s-8 intro_data_01.lz4
-
-intro_data_01:	intro_data_01.o
-	ld65 -o intro_data_01 intro_data_01.o -C ../../linker_scripts/apple2_9000.inc
-
-intro_data_01.o:	intro_data_01.s
-	ca65 -o intro_data_01.o intro_data_01.s -l intro_data_01.lst
-
-
-intro_data_04.lz4:	intro_data_04
-	lz4 -f -16 intro_data_04
-	truncate -s-8 intro_data_04.lz4
-
-intro_data_04:	intro_data_04.o
-	ld65 -o intro_data_04 intro_data_04.o -C ../../linker_scripts/apple2_9000.inc
-
-intro_data_04.o:	intro_data_04.s
-	ca65 -o intro_data_04.o intro_data_04.s -l intro_data_04.lst
-
-
-intro_data_06.lz4:	intro_data_06
-	lz4 -f -16 intro_data_06
-	truncate -s-8 intro_data_06.lz4
-
-intro_data_06:	intro_data_06.o
-	ld65 -o intro_data_06 intro_data_06.o -C ../../linker_scripts/apple2_9000.inc
-
-intro_data_06.o:	intro_data_06.s
-	ca65 -o intro_data_06.o intro_data_06.s -l intro_data_06.lst
-
-
-intro_data_08.lz4:	intro_data_08
-	lz4 -f -16 intro_data_08
-	truncate -s-8 intro_data_08.lz4
-
-intro_data_08:	intro_data_08.o
-	ld65 -o intro_data_08 intro_data_08.o -C ../../linker_scripts/apple2_9000.inc
-
-intro_data_08.o:	intro_data_08.s
-	ca65 -o intro_data_08.o intro_data_08.s -l intro_data_08.lst
-
-
-intro_data_09.lz4:	intro_data_09
-	lz4 -f -16 intro_data_09
-	truncate -s-8 intro_data_09.lz4
-
-intro_data_09:	intro_data_09.o
-	ld65 -o intro_data_09 intro_data_09.o -C ../../linker_scripts/apple2_9000.inc
-
-intro_data_09.o:	intro_data_09.s
-	ca65 -o intro_data_09.o intro_data_09.s -l intro_data_09.lst
-
-
-
+intro/INTRO:
+	cd intro && make
 
 ####
 

@@ -1,5 +1,8 @@
 ;; Zero Page
 
+;; LZSA addresses
+NIBCOUNT	= $00
+
 ;; LZ4 addresses
 
 LZ4_SRC		= $00
