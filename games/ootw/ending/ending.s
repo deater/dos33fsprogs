@@ -5,8 +5,8 @@
 
 ; by Vince "Deater" Weaver	<vince@deater.net>
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
 
 ending:
 
@@ -839,29 +839,29 @@ long_wait:
 
 
 
-.include "text_print.s"
-.include "gr_pageflip.s"
-.include "gr_unrle.s"
-.include "gr_fast_clear.s"
-.include "gr_copy.s"
-.include "gr_offsets.s"
-.include "gr_overlay.s"
+.include "../text_print.s"
+.include "../gr_pageflip.s"
+.include "../gr_unrle.s"
+.include "../gr_fast_clear.s"
+.include "../gr_copy.s"
+.include "../gr_offsets.s"
+.include "../gr_overlay.s"
 
-.include "pt3_lib_core.s"
-.include "pt3_lib_init.s"
-.include "interrupt_handler.s"
-.include "pt3_lib_mockingboard_detect.s"
-.include "pt3_lib_mockingboard_setup.s"
+.include "../pt3_player/pt3_lib_core.s"
+.include "../pt3_player/pt3_lib_init.s"
+.include "../pt3_player/interrupt_handler.s"
+.include "../pt3_player/pt3_lib_mockingboard_detect.s"
+.include "../pt3_player/pt3_lib_mockingboard_setup.s"
 
 
 
 ; backgrounds
 ;.include "ootw_graphics/l15final/ootw_c15_final.inc"
-.include "ootw_graphics/l16end/ootw_c16_end.inc"
+.include "graphics/ending/ootw_c16_end.inc"
 
 PT3_LOC = song
 
 ; must be page aligned
 .align 256
 song:
-.incbin "ootw_audio/ootw_outro.pt3"
+.incbin "audio/ootw_outro.pt3"

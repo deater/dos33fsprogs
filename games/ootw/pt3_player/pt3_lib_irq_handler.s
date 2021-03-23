@@ -34,7 +34,8 @@ pt3_loop_smc:
 	sta	current_subframe_smc+1
 	sta	DONE_SONG		; undo the next song
 
-	beq	done_pt3_irq_handler	; branch always
+;	beq	done_pt3_irq_handler	; branch always
+	beq	pt3_play_music		; branch always
 
 move_to_next:
 	; same as "press right"

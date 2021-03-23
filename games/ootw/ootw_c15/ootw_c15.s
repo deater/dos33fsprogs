@@ -3,8 +3,8 @@
 
 ; by Vince "DEATER" Weaver	<vince@deater.net>
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
 
 ; TODO:
 ;  die if not move and get shot by column (first screen)
@@ -1055,50 +1055,46 @@ end_message:
 .byte	8,10,"PRESS RETURN TO CONTINUE",0
 .byte	11,20,"ACCESS CODE: ANKD",0
 
-.include "text_print.s"
-.include "gr_pageflip.s"
-.include "gr_unrle.s"
-.include "gr_vlin.s"
-;.include "gr_fast_clear.s"
-.include "gr_copy.s"
-;.include "gr_copy_offset.s"
-.include "gr_putsprite.s"
-;.include "gr_putsprite_flipped.s"
-.include "gr_putsprite_crop.s"
-.include "gr_offsets.s"
-;.include "gr_offsets_hl.s"
-.include "gr_hlin.s"
-.include "keyboard.s"
-.include "gr_overlay.s"
-.include "gr_run_sequence.s"
-.include "random16.s"
-.include "gr_trapezoid.s"
+.include "../text_print.s"
+.include "../gr_pageflip.s"
+.include "../gr_unrle.s"
+.include "../gr_vlin.s"
+.include "../gr_copy.s"
+.include "../gr_putsprite.s"
+.include "../gr_putsprite_crop.s"
+.include "../gr_offsets.s"
+.include "../gr_hlin.s"
+.include "../keyboard.s"
+.include "../gr_overlay.s"
+.include "../gr_run_sequence.s"
+.include "../random16.s"
+.include "../gr_trapezoid.s"
 
-.include "physicist.s"
-.include "alien.s"
-.include "friend.s"
+.include "../physicist.s"
+.include "../alien.s"
+.include "../friend.s"
 
-.include "gun.s"
-.include "laser.s"
-.include "alien_laser.s"
-.include "blast.s"
-.include "shield.s"
+.include "../gun.s"
+.include "../laser.s"
+.include "../alien_laser.s"
+.include "../blast.s"
+.include "../shield.s"
 
-.include "door.s"
-.include "collision.s"
+.include "../door.s"
+.include "../collision.s"
 
 ; room backgrounds
-.include "ootw_graphics/l15final/ootw_c15_bath.inc"
-.include "ootw_graphics/l15final/ootw_c15_final.inc"
+.include "graphics/l15_final/ootw_c15_bath.inc"
+.include "graphics/l15_final/ootw_c15_final.inc"
 ; sprites
-.include "ootw_graphics/sprites/physicist.inc"
-.include "ootw_graphics/sprites/alien.inc"
-.include "ootw_graphics/sprites/friend.inc"
+.include "../sprites/physicist.inc"
+.include "../sprites/alien.inc"
+.include "../sprites/friend.inc"
 ; animations
-.include "ootw_graphics/l15final/ootw_c15_walk.inc"
-.include "ootw_graphics/l15final/ootw_c15_walkway.inc"
-.include "ootw_graphics/l15final/ootw_c15_bridge.inc"
-.include "ootw_graphics/l15final/ootw_c15_fall.inc"
+.include "graphics/l15_final/ootw_c15_walk.inc"
+.include "graphics/l15_final/ootw_c15_walkway.inc"
+.include "graphics/l15_final/ootw_c15_bridge.inc"
+.include "graphics/l15_final/ootw_c15_fall.inc"
 
 
 ;=======================
