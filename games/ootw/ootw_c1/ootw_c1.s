@@ -155,13 +155,13 @@ end_message:
 .include "../gr_putsprite_crop.s"
 
 ; room backgrounds
-.include "graphics/l1pool/ootw_pool.inc"
-.include "graphics/l1caves/ootw_cavern.inc"
-.include "graphics/l1caves/ootw_cavern2.inc"
-.include "graphics/l1caves/ootw_cavern3.inc"
-.include "graphics/l1rope/ootw_rope.inc"
-.include "graphics/l1rope/ootw_swing.inc"
-.include "graphics/l1underwater/ootw_underwater.inc"
+.include "graphics/l1_pool/ootw_pool.inc"
+.include "graphics/l1_caves/ootw_cavern.inc"
+.include "graphics/l1_caves/ootw_cavern2.inc"
+.include "graphics/l1_caves/ootw_cavern3.inc"
+.include "graphics/l1_rope/ootw_rope.inc"
+.include "graphics/l1_rope/ootw_swing.inc"
+.include "graphics/l1_underwater/ootw_underwater.inc"
 ; sprites
 .include "../ootw_graphics/sprites/l1_background.inc"
 .include "../ootw_graphics/sprites/physicist.inc"
@@ -169,7 +169,7 @@ end_message:
 .include "../ootw_graphics/sprites/slugs.inc"
 .include "../ootw_graphics/sprites/beast.inc"
 ; cutscene data
-.include "graphics/l1end/ootw_l1end.inc"
-.include "graphics/l1end_scenes/ootw_beast_end.inc"
-.include "graphics/l1end_scenes/ootw_slug_end.inc"
-.include "graphics/l1end_scenes/ootw_beast_intro.inc"
+.include "graphics/l1_end/ootw_l1end.inc"
+.include "graphics/l1_beast_end/ootw_beast_end.inc"
+.include "graphics/l1_slug_end/ootw_slug_end.inc"
+.include "graphics/l1_beast_intro/ootw_beast_intro.inc"

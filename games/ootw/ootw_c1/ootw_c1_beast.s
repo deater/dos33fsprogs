@@ -371,12 +371,12 @@ beast_end:
 	; Restore background to $c00
 
 	lda	#<(cavern3_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
+	sta	getsrc_smc+1	; LZSA_SRC_LO
 	lda	#>(cavern3_lzsa)
 	sta	getsrc_smc+2    ; LZSA_SRC_HI
 
 	lda	#$c			; load image off-screen $c00
-	jmp	load_rle_gr
+	jmp	decompress_lzsa2_fast
 
 beast_frames:
 	.word	beast_frame1		; 0
@@ -404,27 +404,27 @@ beast_frames:
 	;========================
 beast_slash_cutscene:
 
-	lda	#<beast_bg_rle
-	sta	GBASL
-	lda	#>beast_bg_rle
-	sta	GBASH
+	lda	#<beast_bg_lzsa
+	sta	getsrc_smc+1	; LZSA_SRC_LO
+	lda	#>beast_bg_lzsa
+	sta	getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$c
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
-        ldx	#0
+        ldx	#0h
 
 beast_slash_loop:
 	lda	beast_slash_frames,X
-	sta	GBASL
+	sta	getsrc_smc+1	; LZSA_SRC_LO
 	lda	beast_slash_frames+1,X
-	sta	GBASH
+	sta	getsrc_smc+2	; LZSA_SRC_HI
 
 	txa
 	pha
 
 	lda     #$10
-	jsr     load_rle_gr
+	jsr     decompress_lzsa2_fast
 
 	jsr     gr_overlay
 
@@ -452,25 +452,25 @@ beast_slash_end:
 
 
 beast_slash_frames:
-	.word	beast_slash07_rle	; 0
-	.word	beast_slash08_rle	; 1
-	.word	beast_slash09_rle	; 2
-	.word	beast_slash10_rle	; 3
-	.word	beast_slash11_rle	; 4
-	.word	beast_slash12_rle	; 5
-	.word	beast_slash13_rle	; 6
-	.word	beast_slash14_rle	; 7
-	.word	beast_slash15_rle	; 8
-	.word	beast_slash16_rle	; 9
-	.word	beast_slash17_rle	; 10
-	.word	beast_slash18_rle	; 11
-	.word	beast_slash19_rle	; 12
-	.word	beast_slash20_rle	; 13
-	.word	beast_slash20_rle	; 14
-	.word	beast_slash20_rle	; 15
-	.word	beast_slash20_rle	; 16
-	.word	beast_slash20_rle	; 17
-	.word	beast_slash20_rle	; 18
-	.word	beast_slash20_rle	; 19
-	.word	beast_slash20_rle	; 20
+	.word	beast_slash07_lzsa	; 0
+	.word	beast_slash08_lzsa	; 1
+	.word	beast_slash09_lzsa	; 2
+	.word	beast_slash10_lzsa	; 3
+	.word	beast_slash11_lzsa	; 4
+	.word	beast_slash12_lzsa	; 5
+	.word	beast_slash13_lzsa	; 6
+	.word	beast_slash14_lzsa	; 7
+	.word	beast_slash15_lzsa	; 8
+	.word	beast_slash16_lzsa	; 9
+	.word	beast_slash17_lzsa	; 10
+	.word	beast_slash18_lzsa	; 11
+	.word	beast_slash19_lzsa	; 12
+	.word	beast_slash20_lzsa	; 13
+	.word	beast_slash20_lzsa	; 14
+	.word	beast_slash20_lzsa	; 15
+	.word	beast_slash20_lzsa	; 16
+	.word	beast_slash20_lzsa	; 17
+	.word	beast_slash20_lzsa	; 18
+	.word	beast_slash20_lzsa	; 19
+	.word	beast_slash20_lzsa	; 20
 

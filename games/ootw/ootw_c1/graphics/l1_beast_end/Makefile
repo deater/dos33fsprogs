@@ -1,39 +1,45 @@
-include ../../../Makefile.inc
+include ../../../../../Makefile.inc
 
-PNG2RLE = ../../../gr-utils/png2rle
-PNG2LZ4 = ../../../gr-utils/png2lz4
+PNG2GR = ../../../../../utils/gr-utils/png2gr
+LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	ootw_beast_end.inc
 
 #####
 
-ootw_beast_end.inc:	$(PNG2RLE) \
-	beast_bg.png \
-	beast_slash07.png beast_slash08.png beast_slash09.png \
-	beast_slash10.png beast_slash11.png beast_slash12.png \
-	beast_slash13.png beast_slash14.png beast_slash15.png \
-	beast_slash16.png beast_slash17.png beast_slash18.png \
-	beast_slash19.png beast_slash20.png
-	$(PNG2RLE) asm beast_bg.png beast_bg_rle > ootw_beast_end.inc
-	$(PNG2RLE) asm beast_slash07.png beast_slash07_rle >> ootw_beast_end.inc
-	$(PNG2RLE) asm beast_slash08.png beast_slash08_rle >> ootw_beast_end.inc
-	$(PNG2RLE) asm beast_slash09.png beast_slash09_rle >> ootw_beast_end.inc
-	$(PNG2RLE) asm beast_slash10.png beast_slash10_rle >> ootw_beast_end.inc
-	$(PNG2RLE) asm beast_slash11.png beast_slash11_rle >> ootw_beast_end.inc
-	$(PNG2RLE) asm beast_slash12.png beast_slash12_rle >> ootw_beast_end.inc
-	$(PNG2RLE) asm beast_slash13.png beast_slash13_rle >> ootw_beast_end.inc
-	$(PNG2RLE) asm beast_slash14.png beast_slash14_rle >> ootw_beast_end.inc
-	$(PNG2RLE) asm beast_slash15.png beast_slash15_rle >> ootw_beast_end.inc
-	$(PNG2RLE) asm beast_slash16.png beast_slash16_rle >> ootw_beast_end.inc
-	$(PNG2RLE) asm beast_slash17.png beast_slash17_rle >> ootw_beast_end.inc
-	$(PNG2RLE) asm beast_slash18.png beast_slash18_rle >> ootw_beast_end.inc
-	$(PNG2RLE) asm beast_slash19.png beast_slash19_rle >> ootw_beast_end.inc
-	$(PNG2RLE) asm beast_slash20.png beast_slash20_rle >> ootw_beast_end.inc
+ootw_beast_end.inc:	\
+	beast_bg.lzsa \
+	beast_slash07.lzsa beast_slash08.lzsa beast_slash09.lzsa \
+	beast_slash10.lzsa beast_slash11.lzsa beast_slash12.lzsa \
+	beast_slash13.lzsa beast_slash14.lzsa beast_slash15.lzsa \
+	beast_slash16.lzsa beast_slash17.lzsa beast_slash18.lzsa \
+	beast_slash19.lzsa beast_slash20.lzsa
+	echo "beast_bg_lzsa: .incbin \"beast_bg.lzsa\"" > ootw_beast_end.inc
+	echo "beast_slash07_lzsa: .incbin \"beast_slash07.lzsa\"" >> ootw_beast_end.inc
+	echo "beast_slash08_lzsa: .incbin \"beast_slash08.lzsa\"" >> ootw_beast_end.inc
+	echo "beast_slash09_lzsa: .incbin \"beast_slash09.lzsa\"" >> ootw_beast_end.inc
+	echo "beast_slash10_lzsa: .incbin \"beast_slash10.lzsa\"" >> ootw_beast_end.inc
+	echo "beast_slash11_lzsa: .incbin \"beast_slash11.lzsa\"" >> ootw_beast_end.inc
+	echo "beast_slash12_lzsa: .incbin \"beast_slash12.lzsa\"" >> ootw_beast_end.inc
+	echo "beast_slash13_lzsa: .incbin \"beast_slash13.lzsa\"" >> ootw_beast_end.inc
+	echo "beast_slash14_lzsa: .incbin \"beast_slash14.lzsa\"" >> ootw_beast_end.inc
+	echo "beast_slash15_lzsa: .incbin \"beast_slash15.lzsa\"" >> ootw_beast_end.inc
+	echo "beast_slash16_lzsa: .incbin \"beast_slash16.lzsa\"" >> ootw_beast_end.inc
+	echo "beast_slash17_lzsa: .incbin \"beast_slash17.lzsa\"" >> ootw_beast_end.inc
+	echo "beast_slash18_lzsa: .incbin \"beast_slash18.lzsa\"" >> ootw_beast_end.inc
+	echo "beast_slash19_lzsa: .incbin \"beast_slash19.lzsa\"" >> ootw_beast_end.inc
+	echo "beast_slash20_lzsa: .incbin \"beast_slash20.lzsa\"" >> ootw_beast_end.inc
 
+#####
 
+%.gr:	%.png
+	$(PNG2GR) $< $@
+
+%.lzsa:	%.gr
+	$(LZSA) -r -f2 $< $@
 
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lzz ootw_beast_end.inc
+		rm -f *~ *.o *.lst *.lzsa *.gr *.inc
 
