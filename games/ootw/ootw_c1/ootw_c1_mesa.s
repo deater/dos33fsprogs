@@ -285,19 +285,19 @@ long_wait:
 MAX_PROGRESSION = 106
 
 endl1_progression:
-.word	black_rle,black_rle
-.word	l1end51_rle,l1end50_rle,l1end49_rle,l1end48_rle,l1end47_rle
-.word	l1end46_rle,l1end45_rle,l1end44_rle,l1end43_rle,l1end42_rle
-.word	l1end41_rle,l1end40_rle,l1end39_rle,l1end38_rle,l1end37_rle
-.word	l1end36_rle
-.word	gunguy_rle,peace_rle
-.word   l1end33_rle,l1end32_rle,l1end31_rle,l1end30_rle
-.word   l1end29_rle,l1end28_rle,l1end27_rle,l1end26_rle,l1end25_rle
-.word   l1end24_rle,l1end23_rle,l1end22_rle,l1end21_rle,l1end20_rle
-.word   l1end19_rle,l1end18_rle,l1end17_rle,l1end16_rle,l1end15_rle
-.word   l1end14_rle,l1end13_rle,l1end12_rle,l1end11_rle,l1end10_rle
-.word   l1end09_rle,l1end08_rle,l1end07_rle,l1end06_rle,l1end05_rle
-.word   l1end04_rle,l1end03_rle,l1end02_rle,l1end01_rle
+.word	black_lzsa,black_lzsa
+.word	l1end51_lzsa,l1end50_lzsa,l1end49_lzsa,l1end48_lzsa,l1end47_lzsa
+.word	l1end46_lzsa,l1end45_lzsa,l1end44_lzsa,l1end43_lzsa,l1end42_lzsa
+.word	l1end41_lzsa,l1end40_lzsa,l1end39_lzsa,l1end38_lzsa,l1end37_lzsa
+.word	l1end36_lzsa
+.word	gunguy_lzsa,peace_lzsa
+.word   l1end33_lzsa,l1end32_lzsa,l1end31_lzsa,l1end30_lzsa
+.word   l1end29_lzsa,l1end28_lzsa,l1end27_lzsa,l1end26_lzsa,l1end25_lzsa
+.word   l1end24_lzsa,l1end23_lzsa,l1end22_lzsa,l1end21_lzsa,l1end20_lzsa
+.word   l1end19_lzsa,l1end18_lzsa,l1end17_lzsa,l1end16_lzsa,l1end15_lzsa
+.word   l1end14_lzsa,l1end13_lzsa,l1end12_lzsa,l1end11_lzsa,l1end10_lzsa
+.word   l1end09_lzsa,l1end08_lzsa,l1end07_lzsa,l1end06_lzsa,l1end05_lzsa
+.word   l1end04_lzsa,l1end03_lzsa,l1end02_lzsa,l1end01_lzsa
 
 ; pause is *before* image indicated
 endl_pauses:
@@ -341,7 +341,7 @@ check_if_first:
 	sta	getsrc_smc+2    ; LZSA_SRC_HI
 
 	lda	#$C			; load image off-screen $C00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	lda	#0
 	sta	BEAST_DEAD
@@ -378,11 +378,11 @@ not_beginning_of_end:
 
 	ldx	LEVELEND_PROGRESS
 	lda	endl1_progression,X
-	sta	GBASL
+	sta	getsrc_smc+1	; LZSA_SRC_LO
 	lda	endl1_progression+1,X
-	sta	GBASH
+	sta	getsrc_smc+2	; LZSA_SRC_HI
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay_40x40
 
