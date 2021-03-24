@@ -17,7 +17,7 @@ intro.o:	intro.s \
 	$(COMMON)/gr_unrle.s \
 	$(COMMON)/gr_putsprite.s \
 	$(COMMON)/gr_overlay.s \
-	gr_run_sequence.s \
+	$(COMMON)/gr_run_sequence.s \
 	$(COMMON)/keyboard.s \
 	$(COMMON)/random16.s \
 	$(COMMON)/text_print.s \

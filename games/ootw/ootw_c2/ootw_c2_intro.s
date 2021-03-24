@@ -35,93 +35,93 @@ done_intro2:
 
 intro2_sequence:
 	.byte	255
-	.word	cage_01_rle
+	.word	cage_01_lzsa
 	.byte	25
-	.word	cage_01_rle
+	.word	cage_01_lzsa
 	.byte	25
-	.word	cage_02_rle
+	.word	cage_02_lzsa
 	.byte	25
-	.word	cage_03_rle
+	.word	cage_03_lzsa
 	.byte	25
-	.word	cage_04_rle
+	.word	cage_04_lzsa
 	.byte	75
-	.word	cage_03_rle
+	.word	cage_03_lzsa
 	.byte	25
-	.word	cage_02_rle
+	.word	cage_02_lzsa
 	.byte	25
-	.word	cage_01_rle
+	.word	cage_01_lzsa
 	.byte	75
-	.word	cage_02_rle
+	.word	cage_02_lzsa
 	.byte	25
-	.word	cage_03_rle
+	.word	cage_03_lzsa
 ;	.byte	25
-;	.word	cage_03_rle
+;	.word	cage_03_lzsa
 
 ;======================
 ; eyes opening
 
 	.byte	255
-	.word	eyes_bg_rle
+	.word	eyes_bg_lzsa
 	.byte	25
-	.word	eyes_01_rle
+	.word	eyes_01_lzsa
 	.byte	25
-	.word	eyes_02_rle
+	.word	eyes_02_lzsa
 	.byte	25
-	.word	eyes_03_rle
+	.word	eyes_03_lzsa
 	.byte	25
-	.word	eyes_02_rle
+	.word	eyes_02_lzsa
 	.byte	25
-	.word	eyes_01_rle
+	.word	eyes_01_lzsa
 	.byte	100
-	.word	eyes_02_rle
+	.word	eyes_02_lzsa
 	.byte	15
-	.word	eyes_03_rle
+	.word	eyes_03_lzsa
 	.byte	15
-	.word	eyes_04_rle
+	.word	eyes_04_lzsa
 	.byte	15
-	.word	eyes_05_rle
+	.word	eyes_05_lzsa
 	.byte	40
-	.word	eyes_04_rle
+	.word	eyes_04_lzsa
 	.byte	40
-	.word	eyes_03_rle
+	.word	eyes_03_lzsa
 	.byte	40
-	.word	eyes_02_rle
+	.word	eyes_02_lzsa
 	.byte	40
-	.word	eyes_01_rle
+	.word	eyes_01_lzsa
 	.byte	80
-	.word	eyes_03_rle
+	.word	eyes_03_lzsa
 	.byte	15
-	.word	eyes_04_rle
+	.word	eyes_04_lzsa
 	.byte	15
-	.word	eyes_05_rle
+	.word	eyes_05_lzsa
 	.byte	15
-	.word	eyes_bg_rle
+	.word	eyes_bg_lzsa
 
 ;=================
 ; focusing on friend
 
 	.byte	100
-	.word	friend_02_rle
+	.word	friend_02_lzsa
 	.byte	25
-	.word	friend_03_rle
+	.word	friend_03_lzsa
 	.byte	25
-	.word	friend_04_rle
+	.word	friend_04_lzsa
 	.byte	25
-	.word	friend_03_rle
+	.word	friend_03_lzsa
 	.byte	25
-	.word	friend_02_rle
+	.word	friend_02_lzsa
 	.byte	25
-	.word	friend_03_rle
+	.word	friend_03_lzsa
 	.byte	25
-	.word	friend_04_rle
+	.word	friend_04_lzsa
 	.byte	25
-	.word	friend_05_rle
+	.word	friend_05_lzsa
 	.byte	40
-	.word	friend_06_rle
+	.word	friend_06_lzsa
 	.byte	40
-	.word	friend_05_rle
+	.word	friend_05_lzsa
 	.byte	40
-	.word	friend_05_rle
+	.word	friend_05_lzsa
 
 	.byte	0
 

@@ -1,3 +1,6 @@
+
+
+
 	;=================================
 	; Display a sequence of images
 	;=================================
@@ -7,9 +10,7 @@
 	; if time==0, then done
 	; if time==255, reload $C00 with PTR
 	; if time==0..127 wait TIME, then overlay PTR over $C00
-	; if time==128..254, wait TIME-128, then overlay current over $C00
-	;		assumes LZSA pointer points to image
-	;		basically after decoding one, input points to next
+	; if time==128..254, wait TIME-128, then overlay GBASL over $C00
 
 run_sequence:
 	ldy	#0
@@ -24,32 +25,32 @@ run_sequence_loop:
 reload_image:
 	iny
 	lda	(INTRO_LOOPL),Y
-	sta     getsrc_smc+1    ; LZSA_SRC_LO
+	sta	GBASL
 	iny
 	lda	(INTRO_LOOPL),Y
-	sta     getsrc_smc+2    ; LZSA_SRC_HI
+	sta	GBASH
 	iny
 	sty	INTRO_LOOPER		; save for later
 	lda	#$0c			; load to $c00
-	jsr	decompress_lzsa2_fast
+	jsr	load_rle_gr
 	jmp	seq_stuff
 
 not_reload:
 	tax
-	cmp	#$80			; if negative, no need to load pointer
+	cmp	#$80			;if negative, no need to load pointer
 	bcs	no_set_image_ptr	; bge (branch if greater equal)
 
 
 get_image_ptr:
 	iny
 	lda	(INTRO_LOOPL),Y
-	sta     getsrc_smc+1    ; LZSA_SRC_LO
+	sta	GBASL
 	iny
 	lda	(INTRO_LOOPL),Y
-	sta     getsrc_smc+2    ; LZSA_SRC_HI
+	sta	GBASH
 
 no_set_image_ptr:
-	txa			; sleep
+	txa
 	and	#$7f
 	tax
 	cpx	#1
@@ -61,7 +62,7 @@ seq_no_wait:
 	iny
 	sty	INTRO_LOOPER		; save for later
 	lda	#$10			; load to $1000
-	jsr	decompress_lzsa2_fast
+	jsr	load_rle_gr
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -96,16 +97,14 @@ run_sequence_40x40_loop:
 	iny
 
 	lda	(INTRO_LOOPL),Y
-	sta     getsrc_smc+1    ; LZSA_SRC_LO
-
+	sta	GBASL
 	iny
 	lda	(INTRO_LOOPL),Y
-	sta     getsrc_smc+2    ; LZSA_SRC_HI
-
+	sta	GBASH
 	iny
 	sty	INTRO_LOOPER		; save for later
 	lda	#$10			; load to $1000
-	jsr	decompress_lzsa2_fast
+	jsr	load_rle_gr
 
 	jsr	gr_overlay_40x40
 	jsr	page_flip

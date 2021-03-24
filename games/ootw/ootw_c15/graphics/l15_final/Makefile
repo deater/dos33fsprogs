@@ -1,7 +1,7 @@
-include ../../../Makefile.inc
+include ../../../../../Makefile.inc
 
-PNG2RLE = ../../../gr-utils/png2rle
-PNG2LZ4 = ../../../gr-utils/png2lz4
+PNG2GR = ../../../../../utils/gr-utils/png2gr
+LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	ootw_c15_bath.inc ootw_c15_walk.inc ootw_c15_final.inc \
 	ootw_c15_walkway.inc ootw_c15_bridge.inc ootw_c15_fall.inc

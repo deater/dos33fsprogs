@@ -1,25 +1,33 @@
-include ../../../Makefile.inc
+include ../../../../../Makefile.inc
 
-PNG2RLE = ../../../gr-utils/png2rle
-PNG2LZ4 = ../../../gr-utils/png2lz4
+PNG2GR = ../../../../../utils/gr-utils/png2gr
+LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	ootw_c2_jail.inc
 
 #####
 
-ootw_c2_jail.inc:	$(PNG2RLE) \
-	jail2_bg.png jail3_bg.png jail4_bg.png dome.png \
-	room_b2.png room_b3.png room_b4.png
-	$(PNG2RLE) asm jail2_bg.png jail2_rle > ootw_c2_jail.inc
-	$(PNG2RLE) asm jail3_bg.png jail3_rle >> ootw_c2_jail.inc
-	$(PNG2RLE) asm jail4_bg.png jail4_rle >> ootw_c2_jail.inc
-	$(PNG2RLE) asm dome.png dome_rle >> ootw_c2_jail.inc
-	$(PNG2RLE) asm room_b2.png room_b2_rle >> ootw_c2_jail.inc
-	$(PNG2RLE) asm room_b3.png room_b3_rle >> ootw_c2_jail.inc
-	$(PNG2RLE) asm room_b4.png room_b4_rle >> ootw_c2_jail.inc
+ootw_c2_jail.inc:	\
+	jail2_bg.lzsa jail3_bg.lzsa jail4_bg.lzsa dome.lzsa \
+	room_b2.lzsa room_b3.lzsa room_b4.lzsa
+	echo "jail2_lzsa: .incbin \"jail2_bg.lzsa\"" > ootw_c2_jail.inc
+	echo "jail3_lzsa: .incbin \"jail3_bg.lzsa\"" >> ootw_c2_jail.inc
+	echo "jail4_lzsa: .incbin \"jail4_bg.lzsa\"" >> ootw_c2_jail.inc
+	echo "dome_lzsa: .incbin \"dome.lzsa\"" >> ootw_c2_jail.inc
+	echo "room_b2_lzsa: .incbin \"room_b2.lzsa\"" >> ootw_c2_jail.inc
+	echo "room_b3_lzsa: .incbin \"room_b3.lzsa\"" >> ootw_c2_jail.inc
+	echo "room_b4_lzsa: .incbin \"room_b4.lzsa\"" >> ootw_c2_jail.inc
+
+#####
+
+%.gr:	%.png
+	$(PNG2GR) $< $@
+
+%.lzsa:	%.gr
+	$(LZSA) -r -f2 $< $@
 
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lzz *.inc
+		rm -f *~ *.o *.lst *.lzsa *.gr *.inc
 

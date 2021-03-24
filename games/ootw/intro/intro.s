@@ -126,7 +126,7 @@ done_intro:
 .include "../gr_fast_clear.s"
 .include "../gr_putsprite.s"
 .include "../text_print.s"
-.include "gr_run_sequence.s"
+.include "../gr_run_sequence.s"
 
 
 	;========================

@@ -162,9 +162,9 @@ jail0:
 	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(cage_fell_rle)
-	sta	GBASH
-	lda	#<(cage_fell_rle)
+	lda	#>(cage_fell_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(cage_fell_lzsa)
 
 	jmp	jail_setup_done
 
@@ -191,9 +191,9 @@ jail1:
 	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(jail2_rle)
-	sta	GBASH
-	lda	#<(jail2_rle)
+	lda	#>(jail2_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(jail2_lzsa)
 
 	jmp	jail_setup_done
 
@@ -239,9 +239,9 @@ not_first_shield:
 	sta     jel_smc+1
 
 	; load background
-	lda	#>(jail3_rle)
-	sta	GBASH
-	lda	#<(jail3_rle)
+	lda	#>(jail3_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(jail3_lzsa)
 
 	jmp	jail_setup_done
 
@@ -277,9 +277,9 @@ jail3:
 	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(jail4_rle)
-	sta	GBASH
-	lda	#<(jail4_rle)
+	lda	#>(jail4_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(jail4_lzsa)
 
 	jmp	jail_setup_done
 
@@ -350,9 +350,9 @@ jail4_ok:
 
 
 	; load background
-	lda	#>(room_b4_rle)
-	sta	GBASH
-	lda	#<(room_b4_rle)
+	lda	#>(room_b4_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(room_b4_lzsa)
 
 	jmp	jail_setup_done
 
@@ -413,9 +413,9 @@ jail5:
 	sta	tu_right_smc1+1
 
 	; load background
-	lda	#>(room_b3_rle)
-	sta	GBASH
-	lda	#<(room_b3_rle)
+	lda	#>(room_b3_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(room_b3_lzsa)
 
 	jmp	jail_setup_done
 
@@ -435,18 +435,18 @@ jail6:
 	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(room_b2_rle)
-	sta	GBASH
-	lda	#<(room_b2_rle)
+	lda	#>(room_b2_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(room_b2_lzsa)
 
 	jmp	jail_setup_done
 
 
 jail_setup_done:
 
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$c				; load to page $c00
-	jsr	load_rle_gr			; tail call
+	jsr	decompress_lzsa2_fast			; tail call
 
 
 	; setup walk collision
@@ -1157,60 +1157,60 @@ draw_floor_gun:
 	; 40 of blank
 
 laser_movie:
-	.word	laserg_01_rle	; 0
+	.word	laserg_01_lzsa	; 0
 
-	.word	laserg_02_rle	; 1
-	.word	laserg_02_rle	; 2
-	.word	laserg_02_rle	; 3
+	.word	laserg_02_lzsa	; 1
+	.word	laserg_02_lzsa	; 2
+	.word	laserg_02_lzsa	; 3
 
-	.word	laserg_01_rle	; 4
-	.word	laserg_01_rle	; 5
-	.word	laserg_01_rle	; 6
+	.word	laserg_01_lzsa	; 4
+	.word	laserg_01_lzsa	; 5
+	.word	laserg_01_lzsa	; 6
 
-	.word	laserg_02_rle	; 7
-	.word	laserg_02_rle	; 8
-	.word	laserg_02_rle	; 9
+	.word	laserg_02_lzsa	; 7
+	.word	laserg_02_lzsa	; 8
+	.word	laserg_02_lzsa	; 9
 
-	.word	laserg_03_rle	; 10
-	.word	laserg_04_rle	; 11
-	.word	laserg_05_rle	; 12
-	.word	laserg_06_rle	; 13
-	.word	laserg_07_rle	; 14
-	.word	laserg_08_rle	; 15
+	.word	laserg_03_lzsa	; 10
+	.word	laserg_04_lzsa	; 11
+	.word	laserg_05_lzsa	; 12
+	.word	laserg_06_lzsa	; 13
+	.word	laserg_07_lzsa	; 14
+	.word	laserg_08_lzsa	; 15
 
-	.word	laserg_blank_rle	; 16
-	.word	laserg_blank_rle	; 17
-	.word	laserg_blank_rle	; 18
-	.word	laserg_blank_rle	; 19
-	.word	laserg_blank_rle	; 20
-	.word	laserg_blank_rle	; 21
+	.word	laserg_blank_lzsa	; 16
+	.word	laserg_blank_lzsa	; 17
+	.word	laserg_blank_lzsa	; 18
+	.word	laserg_blank_lzsa	; 19
+	.word	laserg_blank_lzsa	; 20
+	.word	laserg_blank_lzsa	; 21
 
 	;==========================
 	; play the gun pickup movie
 	;==========================
 gun_movie:
 
-	lda	#<laser_bg_rle
-	sta	GBASL
-	lda	#>laser_bg_rle
-	sta	GBASH
+	lda	#<laser_bg_lzsa
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda	#>laser_bg_lzsa
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 
         lda     #$c
-        jsr     load_rle_gr
+        jsr     decompress_lzsa2_fast
 
 	ldx	#0
 
 gun_movie_loop:
 	lda     laser_movie,X
-	sta     GBASL
+	sta     getsrc_smc+1    ; LZSA_SRC_LO
 	lda     laser_movie+1,X
-	sta     GBASH
+	sta     getsrc_smc+2    ; LZSA_SRC_HI
 
 	txa
 	pha
 
 	lda     #$10
-	jsr     load_rle_gr
+	jsr     decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -1228,13 +1228,13 @@ gun_movie_loop:
 
 	; restore background
 
-	lda	#<(cage_fell_rle)
-	sta	GBASL
-	lda	#>(cage_fell_rle)
-	sta	GBASH
+	lda	#<(cage_fell_lzsa)
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda	#>(cage_fell_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 
         lda     #$c
-        jsr     load_rle_gr
+        jsr     decompress_lzsa2_fast
 
 	rts
 

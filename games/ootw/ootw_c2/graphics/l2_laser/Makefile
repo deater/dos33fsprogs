@@ -1,30 +1,37 @@
-include ../../../Makefile.inc
+include ../../../../../Makefile.inc
 
-PNG2RLE = ../../../gr-utils/png2rle
-PNG2LZ4 = ../../../gr-utils/png2lz4
+PNG2GR = ../../../../../utils/gr-utils/png2gr
+LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	ootw_c2_laser.inc
 
 #####
 
-ootw_c2_laser.inc:	$(PNG2RLE) \
-	laser_bg.png \
-	laserg01.png laserg02.png laserg03.png laserg04.png \
-	laserg05.png laserg06.png laserg07.png laserg08.png blank.png
-	$(PNG2RLE) asm laser_bg.png laser_bg_rle > ootw_c2_laser.inc
-	$(PNG2RLE) asm laserg01.png laserg_01_rle >> ootw_c2_laser.inc
-	$(PNG2RLE) asm laserg02.png laserg_02_rle >> ootw_c2_laser.inc
-	$(PNG2RLE) asm laserg03.png laserg_03_rle >> ootw_c2_laser.inc
-	$(PNG2RLE) asm laserg04.png laserg_04_rle >> ootw_c2_laser.inc
-	$(PNG2RLE) asm laserg05.png laserg_05_rle >> ootw_c2_laser.inc
-	$(PNG2RLE) asm laserg06.png laserg_06_rle >> ootw_c2_laser.inc
-	$(PNG2RLE) asm laserg07.png laserg_07_rle >> ootw_c2_laser.inc
-	$(PNG2RLE) asm laserg08.png laserg_08_rle >> ootw_c2_laser.inc
-	$(PNG2RLE) asm blank.png laserg_blank_rle >> ootw_c2_laser.inc
+ootw_c2_laser.inc:	\
+	laser_bg.lzsa \
+	laserg01.lzsa laserg02.lzsa laserg03.lzsa laserg04.lzsa \
+	laserg05.lzsa laserg06.lzsa laserg07.lzsa laserg08.lzsa blank.lzsa
+	echo "laser_bg_lzsa: .incbin \"laser_bg.lzsa\"" > ootw_c2_laser.inc
+	echo "laserg_01_lzsa: .incbin \"laserg01.lzsa\"" >> ootw_c2_laser.inc
+	echo "laserg_02_lzsa: .incbin \"laserg02.lzsa\"" >> ootw_c2_laser.inc
+	echo "laserg_03_lzsa: .incbin \"laserg03.lzsa\"" >> ootw_c2_laser.inc
+	echo "laserg_04_lzsa: .incbin \"laserg04.lzsa\"" >> ootw_c2_laser.inc
+	echo "laserg_05_lzsa: .incbin \"laserg05.lzsa\"" >> ootw_c2_laser.inc
+	echo "laserg_06_lzsa: .incbin \"laserg06.lzsa\"" >> ootw_c2_laser.inc
+	echo "laserg_07_lzsa: .incbin \"laserg07.lzsa\"" >> ootw_c2_laser.inc
+	echo "laserg_08_lzsa: .incbin \"laserg08.lzsa\"" >> ootw_c2_laser.inc
+	echo "laserg_blank_lzsa: .incbin \"blank.lzsa\"" >> ootw_c2_laser.inc
 
+#####
+
+%.gr:	%.png
+	$(PNG2GR) $< $@
+
+%.lzsa:	%.gr
+	$(LZSA) -r -f2 $< $@
 
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lzz *.inc
+		rm -f *~ *.o *.lst *.lzsa *.gr *.inc
 

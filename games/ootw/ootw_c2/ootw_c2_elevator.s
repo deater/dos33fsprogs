@@ -5,12 +5,12 @@ ootw_elevator:
 	;===========================
 	; load dome for later
 
-	lda	#>(dome_rle)
-	sta	GBASH
-	lda	#<(dome_rle)
-	sta	GBASL
+	lda	#>(dome_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(dome_lzsa)
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load to page $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 
 	;==============================
@@ -638,9 +638,9 @@ play_city_movie:
 city_loop:
 	; load background
 	lda	city_frames+1,Y
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	city_frames,Y
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 
 	tya
 	pha
@@ -648,7 +648,7 @@ city_loop:
 	lda	#$c
 
 
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr     gr_copy_to_current
         jsr     page_flip
@@ -675,24 +675,24 @@ city_end:
 	rts
 
 city_frames:
-	.word	city01_rle		; 0
-	.word	city02_rle		; 1
-	.word	city03_rle		; 2
-	.word	city04_rle		; 3
-	.word	city05_rle		; 4
-	.word	city06_rle		; 5
-	.word	city07_rle		; 6
-	.word	city08_rle		; 7
-	.word	city09_rle		; 8
-	.word	city10_rle		; 9
-	.word	city11_rle		; 10
-	.word	city12_rle		; 11
-	.word	city13_rle		; 12
-	.word	city14_rle		; 13
-	.word	city14_rle		; 14
-	.word	city14_rle		; 15
-	.word	city14_rle		; 16
-	.word	city14_rle		; 17
+	.word	city01_lzsa		; 0
+	.word	city02_lzsa		; 1
+	.word	city03_lzsa		; 2
+	.word	city04_lzsa		; 3
+	.word	city05_lzsa		; 4
+	.word	city06_lzsa		; 5
+	.word	city07_lzsa		; 6
+	.word	city08_lzsa		; 7
+	.word	city09_lzsa		; 8
+	.word	city10_lzsa		; 9
+	.word	city11_lzsa		; 10
+	.word	city12_lzsa		; 11
+	.word	city13_lzsa		; 12
+	.word	city14_lzsa		; 13
+	.word	city14_lzsa		; 14
+	.word	city14_lzsa		; 15
+	.word	city14_lzsa		; 16
+	.word	city14_lzsa		; 17
 
 
 

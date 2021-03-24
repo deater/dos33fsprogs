@@ -19,12 +19,12 @@ ootw_cage:
 	;=============================
 	; Load background to $c00
 
-	lda     #>(cage_rle)
-        sta     GBASH
-	lda     #<(cage_rle)
-        sta     GBASL
+	lda     #>(cage_lzsa)
+        sta     getsrc_smc+2    ; LZSA_SRC_HI
+	lda     #<(cage_lzsa)
+        sta     getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$c			; load image off-screen $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	;=================================
 	; setup vars
@@ -879,12 +879,12 @@ cage_ending_loop:
 	tay
 
 	lda	debris_list,Y
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	debris_list+1,Y
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 
 	lda     #$10
-        jsr     load_rle_gr
+        jsr     decompress_lzsa2_fast
 
 	jsr	gr_overlay
 
@@ -1496,9 +1496,9 @@ gun_arc:
 
 
 debris_list:
-	.word	debris1_rle
-	.word	debris2_rle
-	.word	debris3_rle
+	.word	debris1_lzsa
+	.word	debris2_lzsa
+	.word	debris3_lzsa
 
 ce_phys_jump:
 .byte	20,28		; 70

@@ -1,7 +1,7 @@
-include ../../../Makefile.inc
+include ../../../../../Makefile.inc
 
-PNG2RLE = ../../../gr-utils/png2rle
-PNG2LZ4 = ../../../gr-utils/png2lz4
+PNG2GR = ../../../../../utils/gr-utils/png2gr
+LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	ootw_c9_swim.inc
 

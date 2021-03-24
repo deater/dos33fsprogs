@@ -1,35 +1,43 @@
-include ../../../Makefile.inc
+include ../../../../../Makefile.inc
 
-PNG2RLE = ../../../gr-utils/png2rle
-PNG2LZ4 = ../../../gr-utils/png2lz4
+PNG2GR = ../../../../../utils/gr-utils/png2gr
+LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	ootw_l2intro.inc
 
 #####
 
-ootw_l2intro.inc:	$(PNG2RLE) \
-	cage_01.png cage_02.png cage_03.png cage_04.png \
-	eyes_bg.png eyes_01.png eyes_02.png eyes_03.png \
-	eyes_04.png eyes_05.png \
-	friend02.png friend03.png friend04.png friend05.png friend06.png
-	$(PNG2RLE) asm cage_01.png cage_01_rle > ootw_l2intro.inc
-	$(PNG2RLE) asm cage_02.png cage_02_rle >> ootw_l2intro.inc
-	$(PNG2RLE) asm cage_03.png cage_03_rle >> ootw_l2intro.inc
-	$(PNG2RLE) asm cage_04.png cage_04_rle >> ootw_l2intro.inc
-	$(PNG2RLE) asm eyes_bg.png eyes_bg_rle >> ootw_l2intro.inc
-	$(PNG2RLE) asm eyes_01.png eyes_01_rle >> ootw_l2intro.inc
-	$(PNG2RLE) asm eyes_02.png eyes_02_rle >> ootw_l2intro.inc
-	$(PNG2RLE) asm eyes_03.png eyes_03_rle >> ootw_l2intro.inc
-	$(PNG2RLE) asm eyes_04.png eyes_04_rle >> ootw_l2intro.inc
-	$(PNG2RLE) asm eyes_05.png eyes_05_rle >> ootw_l2intro.inc
-	$(PNG2RLE) asm friend02.png friend_02_rle >> ootw_l2intro.inc
-	$(PNG2RLE) asm friend03.png friend_03_rle >> ootw_l2intro.inc
-	$(PNG2RLE) asm friend04.png friend_04_rle >> ootw_l2intro.inc
-	$(PNG2RLE) asm friend05.png friend_05_rle >> ootw_l2intro.inc
-	$(PNG2RLE) asm friend06.png friend_06_rle >> ootw_l2intro.inc
+ootw_l2intro.inc:	\
+	cage_01.lzsa cage_02.lzsa cage_03.lzsa cage_04.lzsa \
+	eyes_bg.lzsa eyes_01.lzsa eyes_02.lzsa eyes_03.lzsa \
+	eyes_04.lzsa eyes_05.lzsa \
+	friend02.lzsa friend03.lzsa friend04.lzsa friend05.lzsa friend06.lzsa
+	echo "cage_01_lzsa: .incbin \"cage_01.lzsa\"" > ootw_l2intro.inc
+	echo "cage_02_lzsa: .incbin \"cage_02.lzsa\"" >> ootw_l2intro.inc
+	echo "cage_03_lzsa: .incbin \"cage_03.lzsa\"" >> ootw_l2intro.inc
+	echo "cage_04_lzsa: .incbin \"cage_04.lzsa\"" >> ootw_l2intro.inc
+	echo "eyes_bg_lzsa: .incbin \"eyes_bg.lzsa\"" >> ootw_l2intro.inc
+	echo "eyes_01_lzsa: .incbin \"eyes_01.lzsa\"" >> ootw_l2intro.inc
+	echo "eyes_02_lzsa: .incbin \"eyes_02.lzsa\"" >> ootw_l2intro.inc
+	echo "eyes_03_lzsa: .incbin \"eyes_03.lzsa\"" >> ootw_l2intro.inc
+	echo "eyes_04_lzsa: .incbin \"eyes_04.lzsa\"" >> ootw_l2intro.inc
+	echo "eyes_05_lzsa: .incbin \"eyes_05.lzsa\"" >> ootw_l2intro.inc
+	echo "friend_02_lzsa: .incbin \"friend02.lzsa\"" >> ootw_l2intro.inc
+	echo "friend_03_lzsa: .incbin \"friend03.lzsa\"" >> ootw_l2intro.inc
+	echo "friend_04_lzsa: .incbin \"friend04.lzsa\"" >> ootw_l2intro.inc
+	echo "friend_05_lzsa: .incbin \"friend05.lzsa\"" >> ootw_l2intro.inc
+	echo "friend_06_lzsa: .incbin \"friend06.lzsa\"" >> ootw_l2intro.inc
+
+#####
+
+%.gr:	%.png
+	$(PNG2GR) $< $@
+
+%.lzsa:	%.gr
+	$(LZSA) -r -f2 $< $@
 
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lzz *.inc
+		rm -f *~ *.o *.lst *.lzsa *.inc
 

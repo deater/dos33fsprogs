@@ -1,24 +1,32 @@
-include ../../../Makefile.inc
+include ../../../../../Makefile.inc
 
-PNG2RLE = ../../../gr-utils/png2rle
-PNG2LZ4 = ../../../gr-utils/png2lz4
+PNG2GR = ../../../../../utils/gr-utils/png2gr
+LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	ootw_c2_cage.inc
 
 #####
 
-ootw_c2_cage.inc:	$(PNG2RLE) \
-	ootw_c2_nocage.png ootw_c2_cage_fell.png \
-	debris1.png debris2.png debris3.png
-	$(PNG2RLE) asm ootw_c2_cage_fell.png cage_fell_rle > ootw_c2_cage.inc
-	$(PNG2RLE) asm ootw_c2_nocage.png cage_rle >> ootw_c2_cage.inc
-	$(PNG2RLE) asm debris1.png debris1_rle >> ootw_c2_cage.inc
-	$(PNG2RLE) asm debris2.png debris2_rle >> ootw_c2_cage.inc
-	$(PNG2RLE) asm debris3.png debris3_rle >> ootw_c2_cage.inc
+ootw_c2_cage.inc:	\
+	ootw_c2_nocage.lzsa ootw_c2_cage_fell.lzsa \
+	debris1.lzsa debris2.lzsa debris3.lzsa
+	echo "cage_fell_lzsa: .incbin \"ootw_c2_cage_fell.lzsa\"" > ootw_c2_cage.inc
+	echo "cage_lzsa: .incbin \"ootw_c2_nocage.lzsa\"" >> ootw_c2_cage.inc
+	echo "debris1_lzsa: .incbin \"debris1.lzsa\"" >> ootw_c2_cage.inc
+	echo "debris2_lzsa: .incbin \"debris2.lzsa\"" >> ootw_c2_cage.inc
+	echo "debris3_lzsa: .incbin \"debris3.lzsa\"" >> ootw_c2_cage.inc
+
+#####
+
+%.gr:	%.png
+	$(PNG2GR) $< $@
+
+%.lzsa:	%.gr
+	$(LZSA) -r -f2 $< $@
 
 
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lzz *.inc
+		rm -f *~ *.o *.lst *.lzsa *.gr *.inc
 
