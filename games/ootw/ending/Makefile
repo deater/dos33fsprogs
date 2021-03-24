@@ -19,7 +19,7 @@ ending.o:	ending.s \
 	$(PT3_PLAYER)/interrupt_handler.s \
 	../ootw_c15/graphics/l15_final/ootw_c15_final.inc \
 	graphics/ending/ootw_c16_end.inc \
-	audio/ootw_outro.pt3
+	music/ootw_outro.pt3
 	ca65 -o ending.o ending.s -l ending.lst
 
 #####

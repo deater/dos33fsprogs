@@ -157,5 +157,5 @@ end_message:
 ; laser movie
 .include "graphics/l2_laser/ootw_c2_laser.inc"
 
-.include "../audio.s"
+.include "audio.s"
 

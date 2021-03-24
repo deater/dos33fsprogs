@@ -194,4 +194,4 @@ delay:
 
 
 audio:
-.incbin "ootw_audio/mytuba.btc"
+.incbin "audio/mytuba.btc"
