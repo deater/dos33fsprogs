@@ -91,12 +91,12 @@ repeat_ending:
 	; bath
 	;==================
 
-;	lda	#>(bath_rle)
+;	lda	#>(bath_lzsa)
 ;	sta	GBASH
-;	lda	#<(bath_rle)
+;	lda	#<(bath_lzsa)
 ;	sta	GBASL
 ;	lda	#$c			; load image off-screen $c00
-;	jsr	load_rle_gr
+;	jsr	decompress_lzsa2_fast
 
 
 ;	jsr	gr_copy_to_current
@@ -108,12 +108,12 @@ repeat_ending:
 	; battle
 	;==================
 
-;	lda	#>(battle_rle)
+;	lda	#>(battle_lzsa)
 ;	sta	GBASH
-;	lda	#<(battle_rle)
+;	lda	#<(battle_lzsa)
 ;	sta	GBASL
 ;	lda	#$c			; load image off-screen $c00
-;	jsr	load_rle_gr
+;	jsr	decompress_lzsa2_fast
 
 
 ;	jsr	gr_copy_to_current
@@ -125,12 +125,12 @@ repeat_ending:
 	; grabbed
 	;==================
 
-;	lda	#>(grabbed_rle)
+;	lda	#>(grabbed_lzsa)
 ;	sta	GBASH
-;	lda	#<(grabbed_rle)
+;	lda	#<(grabbed_lzsa)
 ;	sta	GBASL
 ;	lda	#$c			; load image off-screen $c00
-;	jsr	load_rle_gr
+;	jsr	decompress_lzsa2_fast
 
 
 ;	jsr	gr_copy_to_current
@@ -151,22 +151,22 @@ repeat_ending:
 	; set up bg
 	;=========================
 
-	lda	#>(sky_bg_rle)
+	lda	#>(sky_bg_lzsa)
 	sta	GBASH
-	lda	#<(sky_bg_rle)
+	lda	#<(sky_bg_lzsa)
 	sta	GBASL
 	lda	#$0c			; load image off-screen $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	;===================
 	; rooftop00
 
-	lda	#>(rooftop0_rle)
+	lda	#>(rooftop00_lzsa)
 	sta	GBASH
-	lda	#<(rooftop0_rle)
+	lda	#<(rooftop00_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -185,12 +185,12 @@ cli_smc:
 	;===================
 	; rooftop01
 
-	lda	#>(rooftop1_rle)
+	lda	#>(rooftop01_lzsa)
 	sta	GBASH
-	lda	#<(rooftop1_rle)
+	lda	#<(rooftop01_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -203,12 +203,12 @@ cli_smc:
 	;===================
 	; rooftop02
 
-	lda	#>(rooftop2_rle)
+	lda	#>(rooftop02_lzsa)
 	sta	GBASH
-	lda	#<(rooftop2_rle)
+	lda	#<(rooftop02_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -221,12 +221,12 @@ cli_smc:
 	;===================
 	; rooftop03
 
-	lda	#>(rooftop3_rle)
+	lda	#>(rooftop03_lzsa)
 	sta	GBASH
-	lda	#<(rooftop3_rle)
+	lda	#<(rooftop03_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -239,12 +239,12 @@ cli_smc:
 	;===================
 	; onboard
 
-	lda	#>(onboard_rle)
+	lda	#>(onboard_lzsa)
 	sta	GBASH
-	lda	#<(onboard_rle)
+	lda	#<(onboard_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -260,22 +260,22 @@ cli_smc:
 	; set up wing bg
 	;=========================
 
-	lda	#>(wing_bg_rle)
+	lda	#>(wing_bg_lzsa)
 	sta	GBASH
-	lda	#<(wing_bg_rle)
+	lda	#<(wing_bg_lzsa)
 	sta	GBASL
 	lda	#$0c			; load image off-screen $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	;===================
 	; left wing 1
 
-	lda	#>(left_unfurl1_rle)
+	lda	#>(left_unfurl1_lzsa)
 	sta	GBASH
-	lda	#<(left_unfurl1_rle)
+	lda	#<(left_unfurl1_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -288,12 +288,12 @@ cli_smc:
 	;===================
 	; left wing 2
 
-	lda	#>(left_unfurl2_rle)
+	lda	#>(left_unfurl2_lzsa)
 	sta	GBASH
-	lda	#<(left_unfurl2_rle)
+	lda	#<(left_unfurl2_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -306,12 +306,12 @@ cli_smc:
 	;===================
 	; right wing 1
 
-	lda	#>(right_unfurl1_rle)
+	lda	#>(right_unfurl1_lzsa)
 	sta	GBASH
-	lda	#<(right_unfurl1_rle)
+	lda	#<(right_unfurl1_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -324,12 +324,12 @@ cli_smc:
 	;===================
 	; right wing 2
 
-	lda	#>(right_unfurl2_rle)
+	lda	#>(right_unfurl2_lzsa)
 	sta	GBASH
-	lda	#<(right_unfurl2_rle)
+	lda	#<(right_unfurl2_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -343,22 +343,22 @@ cli_smc:
 	; re-set up sky bg
 	;=========================
 
-	lda	#>(sky_bg_rle)
+	lda	#>(sky_bg_lzsa)
 	sta	GBASH
-	lda	#<(sky_bg_rle)
+	lda	#<(sky_bg_lzsa)
 	sta	GBASL
 	lda	#$0c			; load image off-screen $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	;===================
 	; flying01
 
-	lda	#>(flying01_rle)
+	lda	#>(flying01_lzsa)
 	sta	GBASH
-	lda	#<(flying01_rle)
+	lda	#<(flying01_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -371,12 +371,12 @@ cli_smc:
 	;===================
 	; flying03
 
-	lda	#>(flying03_rle)
+	lda	#>(flying03_lzsa)
 	sta	GBASH
-	lda	#<(flying03_rle)
+	lda	#<(flying03_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -389,12 +389,12 @@ cli_smc:
 	;===================
 	; flying05
 
-	lda	#>(flying05_rle)
+	lda	#>(flying05_lzsa)
 	sta	GBASH
-	lda	#<(flying05_rle)
+	lda	#<(flying05_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -407,12 +407,12 @@ cli_smc:
 	;===================
 	; flying07
 
-	lda	#>(flying07_rle)
+	lda	#>(flying07_lzsa)
 	sta	GBASH
-	lda	#<(flying07_rle)
+	lda	#<(flying07_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -425,12 +425,12 @@ cli_smc:
 	;===================
 	; flying09
 
-	lda	#>(flying09_rle)
+	lda	#>(flying09_lzsa)
 	sta	GBASH
-	lda	#<(flying09_rle)
+	lda	#<(flying09_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -443,12 +443,12 @@ cli_smc:
 	;===================
 	; flying11
 
-	lda	#>(flying11_rle)
+	lda	#>(flying11_lzsa)
 	sta	GBASH
-	lda	#<(flying11_rle)
+	lda	#<(flying11_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -461,12 +461,12 @@ cli_smc:
 	;===================
 	; the end01
 
-	lda	#>(the_end01_rle)
+	lda	#>(the_end01_lzsa)
 	sta	GBASH
-	lda	#<(the_end01_rle)
+	lda	#<(the_end01_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -479,12 +479,12 @@ cli_smc:
 	;===================
 	; the end02
 
-	lda	#>(the_end02_rle)
+	lda	#>(the_end02_lzsa)
 	sta	GBASH
-	lda	#<(the_end02_rle)
+	lda	#<(the_end02_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -497,12 +497,12 @@ cli_smc:
 	;===================
 	; the end03
 
-	lda	#>(the_end03_rle)
+	lda	#>(the_end03_lzsa)
 	sta	GBASH
-	lda	#<(the_end03_rle)
+	lda	#<(the_end03_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -515,12 +515,12 @@ cli_smc:
 	;===================
 	; the end04
 
-	lda	#>(the_end04_rle)
+	lda	#>(the_end04_lzsa)
 	sta	GBASH
-	lda	#<(the_end04_rle)
+	lda	#<(the_end04_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -533,12 +533,12 @@ cli_smc:
 	;===================
 	; the end05
 
-	lda	#>(the_end05_rle)
+	lda	#>(the_end05_lzsa)
 	sta	GBASH
-	lda	#<(the_end05_rle)
+	lda	#<(the_end05_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -551,12 +551,12 @@ cli_smc:
 	;===================
 	; the end06
 
-	lda	#>(the_end06_rle)
+	lda	#>(the_end06_lzsa)
 	sta	GBASH
-	lda	#<(the_end06_rle)
+	lda	#<(the_end06_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -569,12 +569,12 @@ cli_smc:
 	;===================
 	; the end07
 
-	lda	#>(the_end07_rle)
+	lda	#>(the_end07_lzsa)
 	sta	GBASH
-	lda	#<(the_end07_rle)
+	lda	#<(the_end07_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -587,12 +587,12 @@ cli_smc:
 	;===================
 	; the end08
 
-	lda	#>(the_end08_rle)
+	lda	#>(the_end08_lzsa)
 	sta	GBASH
-	lda	#<(the_end08_rle)
+	lda	#<(the_end08_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -605,12 +605,12 @@ cli_smc:
 	;===================
 	; the end09
 
-	lda	#>(the_end09_rle)
+	lda	#>(the_end09_lzsa)
 	sta	GBASH
-	lda	#<(the_end09_rle)
+	lda	#<(the_end09_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -623,12 +623,12 @@ cli_smc:
 	;===================
 	; the end10
 
-	lda	#>(the_end10_rle)
+	lda	#>(the_end10_lzsa)
 	sta	GBASH
-	lda	#<(the_end10_rle)
+	lda	#<(the_end10_lzsa)
 	sta	GBASL
 	lda	#$10			; load image off-screen $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay
 	jsr	page_flip
@@ -841,7 +841,7 @@ long_wait:
 
 .include "../text_print.s"
 .include "../gr_pageflip.s"
-.include "../gr_unrle.s"
+.include "../decompress_fast_v2.s"
 .include "../gr_fast_clear.s"
 .include "../gr_copy.s"
 .include "../gr_offsets.s"

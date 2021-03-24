@@ -121,4 +121,22 @@ zip:	ootw.dsk ootw_side2.dsk side3.dsk
 #####
 
 clean:		
-		rm -f *~ *.o *.lst HELLO
+	rm -f *~ *.o *.lst HELLO
+	cd intro && make clean
+	cd ootw_c1 && make clean
+	cd ootw_c2 && make clean
+	cd ootw_c3 && make clean
+	cd ootw_c4 && make clean
+	cd ootw_c5 && make clean
+	cd ootw_c6 && make clean
+	cd ootw_c7 && make clean
+	cd ootw_c8 && make clean
+	cd ootw_c9 && make clean
+	cd ootw_c10 && make clean
+	cd ootw_c11 && make clean
+	cd ootw_c12 && make clean
+	cd ootw_c13 && make clean
+	cd ootw_c14 && make clean
+	cd ootw_c15 && make clean
+	cd ending && make clean
+	cd title && make clean
