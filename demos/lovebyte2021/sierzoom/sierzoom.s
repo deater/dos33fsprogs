@@ -1,19 +1,42 @@
-; sierpinski-like demo
+; 128 byte sierpinski-like rotozoomer intro
 ; based on the code from Hellmood's Memories demo
 
 ; by Vince `deater` Weaver <vince@deater.net>
 
 ; for Lovebyte 2021
 
-; the simple sierpinski you more or less just plot
+; for a simple sierpinski you more or less just plot
 ;		X AND Y
-
 ; Hellmood's you plot something more or less like
 ; 	COLOR = ( (Y-(X*T)) & (X+(Y*T) ) & 0xf0
 ; where T is an incrementing frame value
 
 ; to get speed on 6502/Apple II we change the multiplies to
 ; a series of 16-bit 8.8 fixed point adds
+
+; instead of multiplying X*T and Y*T you know that since you start at 0,0
+;	they both start at 0, and you can find X*T by just having an XT
+;	value that starts at 0 and add T to it as you move across the
+;	screen which is the same result as calculating X*T over and over
+; you can do the same thing with Y*T
+
+; t=0;
+;
+; draw_frame:
+;
+;	y_t=0;
+;	for(y=0;y<48;y++) {
+;		y_t+=t;
+;		x_t=0;
+;		for(x=0;x<40;x++) {
+;			color= ((x+y_t) & (y-x_t))&0xf0;
+;			plot(x,y);
+;			x_t+=t;
+;		}
+;	}
+;	t++;
+; goto draw_frame;
+
 
 
 ; 140 bytes -- bot demo version
@@ -76,7 +99,7 @@ sier_outer:
 
 	ldx	#0		; YY starts at 0
 
-	stx	YY_TL
+	stx	YY_TL		; YY_T also starts at 0
 	stx	YY_TH
 
 sier_yloop:
@@ -116,8 +139,9 @@ draw_page_smc:
 
 	; reset XX to 0
 
-	ldy	#0		; XX
-	sty	XX_TL
+	ldy	#0		; XX=0
+
+	sty	XX_TL		; XX_T also 0
 	sty	XX_TH
 
 sier_xloop:
