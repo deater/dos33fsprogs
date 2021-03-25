@@ -1,4 +1,5 @@
-; 128 byte sierpinski-like rotozoomer intro
+; 122 byte sierpinski-like rotozoomer intro
+;	for Apple II lo-res 40x48 mode
 ; based on the code from Hellmood's Memories demo
 
 ; by Vince `deater` Weaver <vince@deater.net>
@@ -92,8 +93,8 @@ sier:
 	bit	LORES		; drop down to lo-res
 
 ;	lda	#0		; start with multiplier 0
-;	sta	T_L
-;	sta	T_H
+;	sta	T_L		; since we are executing in zero page we
+;	sta	T_H		; don't need to init these
 
 sier_outer:
 
@@ -105,8 +106,8 @@ sier_outer:
 sier_yloop:
 
 	; calc YY_T (8.8 fixed point add)
-	; save space by skipping clc as it's only a slight variation w/o
-;	clc
+;	clc			; save byte by ignoring carry (slightly
+				; changes results but not by much)
 	lda	YY_TL
 	adc	T_L
 	sta	YY_TL
@@ -114,21 +115,15 @@ sier_yloop:
 	adc	T_H
 	sta	YY_TH
 
-	txa	; YY			; plot call needs Y/2
+	txa	; YY		; plot call needs Y/2
 	lsr
 
-	php
+	php			; save the bit we shifted into carry
 
-;	bcc	even_mask
-;	ldy	#$f0
-;	.byte	$2C	; bit hack
-;even_mask:
-;	ldy	#$0f
-;	sty	MASK
+	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H
+				; ( A trashed, C clear)
 
-	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
-
-	lda	GBASH
+	lda	GBASH		; adjust GBASH for draw page
 draw_page_smc:
 	adc	#0
 	sta	GBASH		 ; adjust for PAGE1/PAGE2 ($400/$800)
@@ -150,15 +145,16 @@ sier_xloop:
 
 
 	; SAVED = XX+(Y*T)
-;	clc
-	tya		; XX
-	adc	YY_TH
-	sta	SAVED
+;	clc			; skip setting carry to save byte
 
+	tya			; XX lives in Y
+	adc	YY_TH
+	sta	SAVED		; save XX+YY_T
 
 	; calc XX*T
-;	clc
-	lda	XX_TL
+;	clc			; skip setting carry to save byte
+
+	lda	XX_TL		; XX_T=XX_T+T
 	adc	T_L
 	sta	XX_TL
 	lda	XX_TH
@@ -167,7 +163,7 @@ sier_xloop:
 
 
 	; calc (YY-X_T)
-	txa	; lda YY
+	txa			; YY lives in X
 	sec
 	sbc	XX_TH
 
@@ -207,7 +203,7 @@ blah_smc:
 	inc	T_H
 no_carry:
 
-	; speed up the zoom as it goes
+	; speed up the zoom as time goes on
 	inc	blah_smc+1
 
 
@@ -223,7 +219,8 @@ done_page:
 	eor	#$4             ; flip draw page between $400/$800
 	sta	draw_page_smc+1 ; DRAW_PAGE
 
-	jmp	sier_outer	; what can we branch on?
+	jmp	sier_outer	; can't guarantee a flag value for a 2-byte
+				; branch :(
 
 T_L:	.byte $00
 T_H:	.byte $00
