@@ -7,7 +7,7 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	lines.dsk
 
-lines.dsk:	HELLO LINES LINES_SMALL LINES_ROM LINES_WIKI LINES_BOT
+lines.dsk:	HELLO LINES LINES_SMALL LINES_ROM LINES_WIKI LINES_BOT LINES_RECURSE
 	cp $(EMPTYDISK) lines.dsk
 	$(DOS33) -y lines.dsk SAVE A HELLO
 	$(DOS33) -y lines.dsk BSAVE -a 0xC00 LINES
@@ -15,6 +15,7 @@ lines.dsk:	HELLO LINES LINES_SMALL LINES_ROM LINES_WIKI LINES_BOT
 	$(DOS33) -y lines.dsk BSAVE -a 0xC00 LINES_ROM
 	$(DOS33) -y lines.dsk BSAVE -a 0xC00 LINES_WIKI
 	$(DOS33) -y lines.dsk BSAVE -a 0x36B LINES_BOT
+	$(DOS33) -y lines.dsk BSAVE -a 0xC00 LINES_RECURSE
 
 ###
 
@@ -55,6 +56,14 @@ lines_wiki.o:	lines_wiki.s
 
 ###
 
+LINES_RECURSE:	lines_recurse.o
+	ld65 -o LINES_RECURSE lines_recurse.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+lines_recurse.o:	lines_recurse.s
+	ca65 -o lines_recurse.o lines_recurse.s -l lines_recurse.lst
+
+###
+
 LINES_BOT:	lines_bot.o
 	ld65 -o LINES_BOT lines_bot.o -C ./apple2_36b.inc
 
@@ -64,4 +73,4 @@ lines_bot.o:	lines_bot.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO LINES LINES_SMALL LINES_ROM LINES_WIKI LINES_BOT
+	rm -f *~ *.o *.lst HELLO LINES LINES_SMALL LINES_ROM LINES_WIKI LINES_BOT LINES_RECURSE
