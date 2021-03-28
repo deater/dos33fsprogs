@@ -16,6 +16,9 @@
 ; 161 -- merge absolute_value/negative code
 ; 159 -- merging init X/Y paths
 ; 156 -- more merging X/Y init
+; 154 -- note PLOT doesn't touch Y
+; 152 -- merge into common_inc
+; 151 -- share an RTS
 
 B_X1	= $F0
 B_Y1	= $F1
@@ -43,7 +46,6 @@ lines_loop:
 	lda	#0
 	sta	B_X1
 	lda	#36
-;	lda	#35
 	sta	B_Y2
 
 	lda	COUNT
@@ -99,17 +101,20 @@ init_bresenham:
 	adc	B_DX
 	sta	B_ERR
 
+	;======================
+	; iterative plot points
+
 line_loop:
 
 	; plot X1,Y1
 
 	ldy	B_X1
 	lda	B_Y1
-	jsr	PLOT		; PLOT AT Y,A
+	jsr	PLOT		; PLOT AT Y,A (A colors output, Y preserved)
 
 	; check if hit end
 
-	ldy	B_X1
+;	ldy	B_X1
 	cpy	B_X2
 	bne	line_no_end
 
@@ -133,32 +138,32 @@ step_bresenham:
 	;   err = err + dy
 	;   x1 = x1 + sx
 				; signed compare
+
+	ldx	#0
+
 	clc
 	cmp	B_DY
 	beq	do_x
-
 	sbc	B_DY
 	bvc	blah2
 	eor	#$80
 blah2:
 	bmi	skip_x		; ble
 
-do_x:
-	lda	B_ERR
-	clc
-	adc	B_DY
-	sta	B_ERR
-	lda	B_X1
 
-	clc
-	adc	B_SX
-	sta	B_X1
+do_x:
+	lda	B_DY
+
+	jsr	common_inc
 skip_x:
+
+
 
 	; if err2 <= dx:
 	;   err = err + dx
 	;   y1 = y1 + sy
 	pla			; pop err2
+	inx
 
 	clc			; signed compare
 	sbc	B_DX
@@ -167,28 +172,37 @@ skip_x:
 blah:
 	bpl	skip_y
 
-do_inc_y:
-	clc
-	lda	B_ERR
-	adc	B_DX
-	sta	B_ERR
-
-	clc
-	lda	B_Y1
-	adc	B_SY
-	sta	B_Y1
+do_y:
+	lda	B_DX
+	jsr	common_inc
 
 skip_y:
 
 	jmp	line_loop
 
+
+	;=====================================
+	; common increment
+	;=====================================
+common_inc:
+
+	clc
+	adc	B_ERR
+	sta	B_ERR
+
+	lda	B_X1,X
+	clc
+	adc	B_SX,X
+	sta	B_X1,X
 done_line:
 	rts
 
 
-	; take just subtracted value
-	; if negative, negate it, X=-1
-	; if positive, fine, X=1
+	;=====================================
+	; init, do the abs and sx calculations
+	;	x=0, for X
+	;	x=1, for Y
+	;=====================================
 do_abs:
 	sec
 	lda	B_X1,X
