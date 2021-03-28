@@ -20,6 +20,10 @@
 ; 152 -- merge into common_inc
 ; 151 -- share an RTS
 ; 150 -- use X when plotting
+; 147 -- count down instead of up
+; 144 -- mess around with how count set
+; 142 -- who needs COUNT anyway
+; 139 -- inline draw_line
 
 B_X1	= $F0
 B_Y1	= $F1
@@ -30,40 +34,28 @@ B_DY	= $F5
 B_SX	= $F6
 B_SY	= $F7
 B_ERR	= $F8
-COUNT	= $F9
 
-lines:
+lines_bot:
 
 	jsr	SETGR		; set lo-res 40x40 mode
 				; A=$D0 afterward
 
 restart:
-	lda	#0
-	sta	COUNT
+	lda	#36
+	sta	B_Y2
 lines_loop:
+	pha
+	sta	B_X2
+	sta	B_Y1
 
 	jsr	NEXTCOL
 
 	lda	#0
 	sta	B_X1
-	lda	#36
-	sta	B_Y2
 
-	lda	COUNT
-	cmp	#10
-;end:
-	beq	restart
-
-	asl
-	asl
-	sta	B_Y1
-	sta	B_X2
-
-	jsr	draw_line
-
-	inc	COUNT
-
-	jmp	lines_loop
+;====================================
+; inline draw_line
+;====================================
 
 
 
@@ -86,7 +78,8 @@ init_bresenham:
 	; dx = abs(x2-x1)
 	; sx = x1<x2 ? 1 : -1
 
-	ldx	#0
+	tax		; know this is zero from above
+;	ldx	#0
 	jsr	do_abs
 
 	; dy = -abs(y2-y1)
@@ -122,7 +115,7 @@ line_loop:
 
 ;	lda	B_Y1
 	cpx	B_Y2
-	beq	done_line
+	beq	end_inline_draw_line
 line_no_end:
 
 	;========================
@@ -181,6 +174,26 @@ skip_y:
 
 	jmp	line_loop
 
+;=============================
+;end inline draw_line
+;=============================
+
+;	jsr	draw_line
+
+end_inline_draw_line:
+
+	pla
+	sec
+	sbc	#4		; update count
+
+	bpl	lines_loop
+	bmi	restart
+
+
+
+
+
+
 
 	;=====================================
 	; common increment
@@ -226,4 +239,4 @@ neg_done:
 	sta	B_DX,X
 	rts
 
-
+	jmp	lines_bot

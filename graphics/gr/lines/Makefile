@@ -7,13 +7,14 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	lines.dsk
 
-lines.dsk:	HELLO LINES LINES_SMALL LINES_ROM LINES_WIKI
+lines.dsk:	HELLO LINES LINES_SMALL LINES_ROM LINES_WIKI LINES_BOT
 	cp $(EMPTYDISK) lines.dsk
 	$(DOS33) -y lines.dsk SAVE A HELLO
 	$(DOS33) -y lines.dsk BSAVE -a 0xC00 LINES
 	$(DOS33) -y lines.dsk BSAVE -a 0xC00 LINES_SMALL
 	$(DOS33) -y lines.dsk BSAVE -a 0xC00 LINES_ROM
 	$(DOS33) -y lines.dsk BSAVE -a 0xC00 LINES_WIKI
+	$(DOS33) -y lines.dsk BSAVE -a 0xC00 LINES_BOT
 
 ###
 
@@ -52,8 +53,15 @@ LINES_WIKI:	lines_wiki.o
 lines_wiki.o:	lines_wiki.s
 	ca65 -o lines_wiki.o lines_wiki.s -l lines_wiki.lst
 
+###
+
+LINES_BOT:	lines_bot.o
+	ld65 -o LINES_BOT lines_bot.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+lines_bot.o:	lines_bot.s
+	ca65 -o lines_bot.o lines_bot.s -l lines_bot.lst
 
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO LINES LINES_SMALL LINES_ROM LINES_WIKI
+	rm -f *~ *.o *.lst HELLO LINES LINES_SMALL LINES_ROM LINES_WIKI LINES_BOT
