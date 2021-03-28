@@ -7,10 +7,12 @@
 .include "zp.inc"
 .include "hardware.inc"
 
-B_X1	= $F0
-B_Y1	= $F1
-B_X2	= $F2
-B_Y2	= $F3
+; 144 -- initial working implementation
+
+;B_X1	= $F0
+;B_Y1	= $F1
+;B_X2	= $F2
+;B_Y2	= $F3
 COUNT	= $F9
 
 X1	=	$1000
@@ -93,20 +95,22 @@ draw_recurse:
 
 	; check if done
 
-	lda	X1,X
-	cmp	MIDX,X
+	lda	MIDX,X
+	cmp	X1,X
 	bne	recurse
 
-	lda	Y1,X
-	cmp	MIDY,X
+	lda	MIDY,X
+	cmp	Y1,X
 	beq	done_draw_line
 
 recurse:
-	; draw( ax, ay, midx, midy);
+	; draw( midx, midy, ax, ay);
+
 	lda	MIDX,X
 	sta	X1+1,X
 	lda	MIDY,X
 	sta	Y1+1,X
+
 	lda	X1,X
 	sta	X2+1,X
 	lda	Y1,X

@@ -20,6 +20,7 @@
 ; 152 -- merge into common_inc
 ; 151 -- share an RTS
 ; 150 -- use X when plotting
+; 148 -- re-arrange do abs (thanks to 42BS)
 
 B_X1	= $F0
 B_Y1	= $F1
@@ -205,23 +206,19 @@ done_line:
 	;	x=1, for Y
 	;=====================================
 do_abs:
+	ldy	#$ff
 	sec
 	lda	B_X1,X
 	sbc	B_X2,X			; A = x1 - x2
 
-	bmi	is_neg
+	bpl	is_pos
 
-	ldy	#$ff
-	bmi	neg_done
-
-is_neg:
 	ldy	#$1
 neg:
 	eor	#$ff
 	clc
 	adc	#1
-
-neg_done:
+is_pos:
 	sty	B_SX,X
 	sta	B_DX,X
 	rts
