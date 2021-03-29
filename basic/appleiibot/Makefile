@@ -2,6 +2,7 @@ include ../../Makefile.inc
 
 DOS33 = ../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
+EMPTY_DISK = ../../empty_disk
 
 all:	appleiibot.dsk convert_to convert_back convert_qkumba make_boxes convert_vmw convert_tgreene
 
@@ -14,6 +15,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	FASTAR2.BAS BIN.BAS FALLING.BAS SNOW.BAS XMAS.BAS AN3.BAS PLASMA.BAS \
 	C64.BAS SIERPINSKI.BAS FAKES.BAS SIER.BAS DROPS.BAS RR.BAS RR_HGR.BAS \
 	COMBO.BAS WIRES.BAS PATTERN.BAS BALL.BAS LINES.BAS
+#	cp $(EMPTY_DISK)/empty.dsk  appleiibot.dsk
 	cp empty.dsk appleiibot.dsk
 	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
 	$(DOS33) -y appleiibot.dsk SAVE A HELLO
