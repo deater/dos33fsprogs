@@ -5,6 +5,7 @@
 #include <fcntl.h>    /* O_RDONLY */
 #include <unistd.h>   /* lseek() */
 #include <ctype.h>    /* toupper() */
+#include <errno.h>
 
 #include "version.h"
 
@@ -13,25 +14,6 @@
 static int debug=0,ignore_errors=0;
 
 static unsigned char sector_buffer[BYTES_PER_SECTOR];
-
-static int ones_lookup[16]={
-	/* 0x0 = 0000 */ 0,
-	/* 0x1 = 0001 */ 1,
-	/* 0x2 = 0010 */ 1,
-	/* 0x3 = 0011 */ 2,
-	/* 0x4 = 0100 */ 1,
-	/* 0x5 = 0101 */ 2,
-	/* 0x6 = 0110 */ 2,
-	/* 0x7 = 0111 */ 3,
-	/* 0x8 = 1000 */ 1,
-	/* 0x9 = 1001 */ 2,
-	/* 0xA = 1010 */ 2,
-	/* 0xB = 1011 */ 3,
-	/* 0xC = 1100 */ 2,
-	/* 0xd = 1101 */ 3,
-	/* 0xe = 1110 */ 3,
-	/* 0xf = 1111 */ 4,
-};
 
 static unsigned char get_high_byte(int value) {
 	return (value>>8)&0xff;
@@ -122,23 +104,10 @@ static int dos33_read_vtoc(int fd) {
     /* Calculate available freespace */
 static int dos33_free_space(int fd) {
 
-	unsigned char bitmap[4];
-	int i,sectors_free=0;
-
 	/* Read Vtoc */
 	dos33_read_vtoc(fd);
 
-	for(i=0;i<TRACKS_PER_DISK;i++) {
-		bitmap[0]=sector_buffer[VTOC_FREE_BITMAPS+(i*4)];
-		bitmap[1]=sector_buffer[VTOC_FREE_BITMAPS+(i*4)+1];
-
-		sectors_free+=ones_lookup[bitmap[0]&0xf];
-		sectors_free+=ones_lookup[(bitmap[0]>>4)&0xf];
-		sectors_free+=ones_lookup[bitmap[1]&0xf];
-		sectors_free+=ones_lookup[(bitmap[1]>>4)&0xf];
-	}
-
-	return sectors_free*BYTES_PER_SECTOR;
+	return dos33_vtoc_free_space(sector_buffer);
 }
 
 
@@ -303,21 +272,6 @@ repeat_catalog:
 	return -1;
 }
 
-   /* could be replaced by "find leading 1" instruction */
-   /* if available                                      */
-static int find_first_one(unsigned char byte) {
-
-	int i=0;
-
-	if (byte==0) return -1;
-
-	while((byte& (0x1<<i))==0) {
-		i++;
-	}
-	return i;
-}
-
-
 static int dos33_free_sector(int fd,int track,int sector) {
 
 	unsigned char vtoc[BYTES_PER_SECTOR];
@@ -328,14 +282,7 @@ static int dos33_free_sector(int fd,int track,int sector) {
 	/* read in VTOC */
 	result=read(fd,&vtoc,BYTES_PER_SECTOR);
 
-	/* each bitmap is 32 bits.  With 16-sector tracks only first 16 used */
-	/* 1 indicates free, 0 indicates used */
-	if (sector<8) {
-		vtoc[VTOC_FREE_BITMAPS+(track*4)+1]|=(0x1<<sector);
-	}
-	else {
-		vtoc[VTOC_FREE_BITMAPS+(track*4)]|=(0x1<<(sector-8));
-	}
+	dos33_vtoc_free_sector(vtoc,track,sector);
 
 	/* write modified VTOC back out */
 	lseek(fd,DISK_OFFSET(VTOC_TRACK,VTOC_SECTOR),SEEK_SET);
@@ -349,61 +296,20 @@ static int dos33_free_sector(int fd,int track,int sector) {
 static int dos33_allocate_sector(int fd) {
 
 	int found_track=0,found_sector=0;
-	unsigned char bitmap[4];
-	int i,start_track,track_dir,byte;
 	int result;
 
 	dos33_read_vtoc(fd);
 
-	/* Originally used to keep things near center of disk for speed */
-	/* We can use to avoid fragmentation possibly */
-	start_track=sector_buffer[VTOC_LAST_ALLOC_T]%TRACKS_PER_DISK;
-	track_dir=sector_buffer[VTOC_ALLOC_DIRECT];
+	/* Find an empty sector */
+	result=dos33_vtoc_find_free_sector(sector_buffer,
+			&found_track,&found_sector);
 
-	if (track_dir==255) track_dir=-1;
-
-	if ((track_dir!=1) && (track_dir!=-1)) {
-		fprintf(stderr,"ERROR!  Invalid track dir %i\n",track_dir);
+	if (result<0) {
+		fprintf(stderr,"ERROR: dos33_allocate_sector: Disk full!\n");
+		return -1;
 	}
 
-	if (((start_track>VTOC_TRACK) && (track_dir!=1)) ||
-		((start_track<VTOC_TRACK) && (track_dir!=-1))) {
-		fprintf(stderr,"Warning! Non-optimal values for track dir t=%i d=%i!\n",
-			start_track,track_dir);
-	}
 
-	i=start_track;
-
-	do {
-		for(byte=1;byte>-1;byte--) {
-			bitmap[byte]=sector_buffer[VTOC_FREE_BITMAPS+(i*4)+byte];
-			if (bitmap[byte]!=0x00) {
-				found_sector=find_first_one(bitmap[byte]);
-				found_track=i;
-				/* clear bit indicating in use */
-				sector_buffer[VTOC_FREE_BITMAPS+(i*4)+byte]&=~(0x1<<found_sector);
-				found_sector+=(8*(1-byte));
-				goto found_one;
-			}
-		}
-
-		/* Move to next track, handling overflows */
-		i+=track_dir;
-		if (i<0) {
-			i=VTOC_TRACK;
-			track_dir=1;
-		}
-
-		if (i>=TRACKS_PER_DISK) {
-			i=VTOC_TRACK;
-			track_dir=-1;
-		}
-	} while (i!=start_track);
-
-	fprintf(stderr,"No room left!\n");
-	return -1;
-
-found_one:
 	/* store new track/direction info */
 	sector_buffer[VTOC_LAST_ALLOC_T]=found_track;
 
@@ -429,7 +335,7 @@ static int dos33_force_allocate_sector(int fd) {
 	int found_track=0,found_sector=0;
 	//unsigned char bitmap[4];
 	int i,start_track;//,track_dir,byte;
-	int result,so;
+	int result;
 
 	dos33_read_vtoc(fd);
 
@@ -441,14 +347,13 @@ static int dos33_force_allocate_sector(int fd) {
 	start_track=track;
 
 	i=start_track;
-	so=!(sector/8);
-	found_sector=sector%8;
 
 	// FIXME: check if free
 	//bitmap[so]=sector_buffer[VTOC_FREE_BITMAPS+(i*4)+so];
 	/* clear bit indicating in use */
-	sector_buffer[VTOC_FREE_BITMAPS+(i*4)+so]&=~(0x1<<found_sector);
-	found_sector+=(8*(1-so));
+	dos33_vtoc_reserve_sector(sector_buffer,track,sector);
+
+	found_sector=sector;
 	found_track=i;
 
 	if (debug) {
@@ -690,12 +595,12 @@ static int dos33_add_file(int fd, char dos_type,
 
 continue_parsing_catalog:
 
-          /* Read in Catalog Sector */
+	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
 	if (result!=BYTES_PER_SECTOR) {
-		fprintf(stderr,"Error reading at $%02X:$%02X\n",
-			catalog_track,catalog_sector);
+		fprintf(stderr,"Catalog: Error, only read %d bytes at $%02X:$%02X (%s)\n",
+			result,catalog_track,catalog_sector,strerror(errno));
 		return ERROR_NO_SPACE;
 	}
 
@@ -1343,7 +1248,7 @@ static int dos33_dump(int fd) {
 
 	int num_tracks,catalog_t,catalog_s,file,ts_t,ts_s,ts_total;
 	int track,sector;
-	int i,j;
+	int i;
 	int deleted=0;
 	char temp_string[BUFSIZ];
 	unsigned char tslist[BYTES_PER_SECTOR];
@@ -1390,35 +1295,17 @@ static int dos33_dump(int fd) {
 		(sector_buffer[VTOC_BYTES_PER_SH]<<8)+
 		sector_buffer[VTOC_BYTES_PER_SL]);
 
-	printf("\nFree sector bitmap:\n");
-	printf("\tTrack  FEDCBA98 76543210\n");
-	for(i=0;i<num_tracks;i++) {
-		printf("\t $%02X:  ",i);
-		for(j=0;j<8;j++) {
-			if ((sector_buffer[VTOC_FREE_BITMAPS+(i*4)]<<j)&0x80) {
-				printf(".");
-			}
-			else {
-				printf("U");
-			}
-		}
-		printf(" ");
-		for(j=0;j<8;j++) {
-			if ((sector_buffer[VTOC_FREE_BITMAPS+(i*4)+1]<<j)&0x80) {
-				printf(".");
-			}
-			else {
-				printf("U");
-			}
-		}
-		printf("\n");
-	}
+	dos33_vtoc_dump_bitmap(sector_buffer,num_tracks);
 
 repeat_catalog:
 
 	printf("\nCatalog Sector $%02X/$%02x\n",catalog_t,catalog_s);
 	lseek(fd,DISK_OFFSET(catalog_t,catalog_s),SEEK_SET);
 	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+
+	printf("\tNext track/sector $%02X/$%02X (found at offsets $%02X/$%02X\n",
+		sector_buffer[CATALOG_NEXT_T],sector_buffer[CATALOG_NEXT_S],
+		CATALOG_NEXT_T,CATALOG_NEXT_S);
 
 	dump_sector();
 

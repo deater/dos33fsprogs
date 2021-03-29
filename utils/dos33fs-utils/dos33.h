@@ -52,3 +52,10 @@
     /* Helper Macros */
 #define TS_TO_INT(__x,__y) ((((int)__x)<<8)+__y)
 #define DISK_OFFSET(__track,__sector) ((((__track)*SECTORS_PER_TRACK)+(__sector))*BYTES_PER_SECTOR)
+
+int dos33_vtoc_free_space(unsigned char *vtoc);
+void dos33_vtoc_free_sector(unsigned char *vtoc, int track, int sector);
+void dos33_vtoc_reserve_sector(unsigned char *vtoc, int track, int sector);
+void dos33_vtoc_dump_bitmap(unsigned char *vtoc, int num_tracks);
+int dos33_vtoc_find_free_sector(unsigned char *vtoc,
+	int *found_track, int *found_sector);
