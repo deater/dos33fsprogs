@@ -1029,204 +1029,210 @@ keep_saving:
 
     /* lock a file.  fts=entry/track/sector */
 static int dos33_lock_file(int fd,int fts,int lock) {
- 
-    int catalog_file,catalog_track,catalog_sector;
-    int file_type,result;
-   
-    catalog_file=fts>>16;
-    catalog_track=(fts>>8)&0xff;
-    catalog_sector=(fts&0xff);
+
+	int catalog_file,catalog_track,catalog_sector;
+	int file_type,result;
+
+	catalog_file=fts>>16;
+	catalog_track=(fts>>8)&0xff;
+	catalog_sector=(fts&0xff);
 
 
-       /* Read in Catalog Sector */
-    lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-    result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+	/* Read in Catalog Sector */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
 
-    file_type=sector_buffer[CATALOG_FILE_LIST+
-			    (catalog_file*CATALOG_ENTRY_SIZE)
-                                            +FILE_TYPE];
-   
-    if (lock) file_type|=0x80;
-    else file_type&=0x7f;
-   
-    sector_buffer[CATALOG_FILE_LIST+
-		  (catalog_file*CATALOG_ENTRY_SIZE)
-                                            +FILE_TYPE]=file_type;
+	file_type=sector_buffer[CATALOG_FILE_LIST+
+				(catalog_file*CATALOG_ENTRY_SIZE)
+				+FILE_TYPE];
 
-      /* write back modified catalog sector */
-    lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-    result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+	if (lock) file_type|=0x80;
+	else file_type&=0x7f;
 
-    if (result<0) fprintf(stderr,"Error on I/O\n");
-   
-    return 0;
-   
+	sector_buffer[CATALOG_FILE_LIST+
+				(catalog_file*CATALOG_ENTRY_SIZE)
+				+FILE_TYPE]=file_type;
+
+	/* write back modified catalog sector */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+
+	if (result<0) fprintf(stderr,"Error on I/O\n");
+
+	return 0;
+
 }
 
     /* rename a file.  fts=entry/track/sector */
     /* FIXME: can we rename a locked file?    */
     /* FIXME: validate the new filename is valid */
 static int dos33_rename_file(int fd,int fts,char *new_name) {
- 
-    int catalog_file,catalog_track,catalog_sector;
-    int x,result;
-   
-    catalog_file=fts>>16;
-    catalog_track=(fts>>8)&0xff;
-    catalog_sector=(fts&0xff);
 
-       /* Read in Catalog Sector */
-    lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-    result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+	int catalog_file,catalog_track,catalog_sector;
+	int x,result;
 
-          /* copy over filename */
-    for(x=0;x<strlen(new_name);x++) 
-       sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+
-		     FILE_NAME+x]=new_name[x]^0x80;
-   
-       /* pad out the filename with spaces */
-    for(x=strlen(new_name);x<FILE_NAME_SIZE;x++)
-        sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+
-		      FILE_NAME+x]=' '^0x80;
-      
-      /* write back modified catalog sector */
-    lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-    result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+	catalog_file=fts>>16;
+	catalog_track=(fts>>8)&0xff;
+	catalog_sector=(fts&0xff);
 
-    if (result<0) fprintf(stderr,"Error on I/O\n");
-   
-    return 0;
-   
+	/* Read in Catalog Sector */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+
+	/* copy over filename */
+	for(x=0;x<strlen(new_name);x++) {
+		sector_buffer[CATALOG_FILE_LIST+
+				(catalog_file*CATALOG_ENTRY_SIZE)+
+				FILE_NAME+x]=new_name[x]^0x80;
+	}
+
+	/* pad out the filename with spaces */
+	for(x=strlen(new_name);x<FILE_NAME_SIZE;x++) {
+		sector_buffer[CATALOG_FILE_LIST+
+				(catalog_file*CATALOG_ENTRY_SIZE)+
+				FILE_NAME+x]=' '^0x80;
+	}
+
+	/* write back modified catalog sector */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+
+	if (result<0) {
+		fprintf(stderr,"Error on I/O\n");
+	}
+
+	return 0;
 }
 
-    /* undelete a file.  fts=entry/track/sector */
-    /* FIXME: validate the new filename is valid */
+	/* undelete a file.  fts=entry/track/sector */
+	/* FIXME: validate the new filename is valid */
 static int dos33_undelete_file(int fd,int fts,char *new_name) {
- 
-    int catalog_file,catalog_track,catalog_sector;
-    char replacement_char;
-    int result;
 
-    catalog_file=fts>>16;
-    catalog_track=(fts>>8)&0xff;
-    catalog_sector=(fts&0xff);
+	int catalog_file,catalog_track,catalog_sector;
+	char replacement_char;
+	int result;
 
-       /* Read in Catalog Sector */
-    lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-    result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+	catalog_file=fts>>16;
+	catalog_track=(fts>>8)&0xff;
+	catalog_sector=(fts&0xff);
 
-       /* get the stored track value, and put it back  */
-       /* FIXME: should walk file to see if T/s valild */
-       /* by setting the track value to FF which indicates deleted file */
-    sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)]=
-        sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+
-		      FILE_NAME+29];
+	/* Read in Catalog Sector */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
 
-       /* restore file name if possible */
+	/* get the stored track value, and put it back  */
+	/* FIXME: should walk file to see if T/s valild */
+	/* by setting the track value to FF which indicates deleted file */
+	sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)]=
+		sector_buffer[CATALOG_FILE_LIST+
+		(catalog_file*CATALOG_ENTRY_SIZE)+
+		FILE_NAME+29];
 
-    replacement_char=0xa0;
-    if (strlen(new_name)>29) replacement_char=new_name[29]^0x80;
-   
-    sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+
-		      FILE_NAME+29]=replacement_char;
-      
-      /* write back modified catalog sector */
-    lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-    result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+	/* restore file name if possible */
+	replacement_char=0xa0;
+	if (strlen(new_name)>29) {
+		replacement_char=new_name[29]^0x80;
+	}
 
-    if (result<0) fprintf(stderr,"Error on I/O\n");
-   
-    return 0;
-   
+	sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+
+		FILE_NAME+29]=replacement_char;
+
+	/* write back modified catalog sector */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+
+	if (result<0) fprintf(stderr,"Error on I/O\n");
+
+	return 0;
 }
 
 
 static int dos33_delete_file(int fd,int fsl) {
-   
-    int i;
-    int catalog_track,catalog_sector,catalog_entry;
-    int ts_track,ts_sector;
-    char file_type;
-    int result;
 
-       /* unpack file/track/sector info */
-    catalog_entry=fsl>>16;
-    catalog_track=(fsl>>8)&0xff;
-    catalog_sector=(fsl&0xff);
+	int i;
+	int catalog_track,catalog_sector,catalog_entry;
+	int ts_track,ts_sector;
+	char file_type;
+	int result;
 
-       /* Load in the catalog table for the file */
-    lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-    result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+	/* unpack file/track/sector info */
+	catalog_entry=fsl>>16;
+	catalog_track=(fsl>>8)&0xff;
+	catalog_sector=(fsl&0xff);
 
-    file_type=sector_buffer[CATALOG_FILE_LIST+
-			    (catalog_entry*CATALOG_ENTRY_SIZE)
-                                            +FILE_TYPE];
-    if (file_type&0x80) {
-       fprintf(stderr,"File is locked!  Unlock before deleting!\n");
-       exit(1);
-    }
-   
-   
-       /* get pointer to t/s list */
-    ts_track=sector_buffer[CATALOG_FILE_LIST+catalog_entry*CATALOG_ENTRY_SIZE+
-		    FILE_TS_LIST_T];
-    ts_sector=sector_buffer[CATALOG_FILE_LIST+catalog_entry*CATALOG_ENTRY_SIZE+
-		     FILE_TS_LIST_S];
-   
+	/* Load in the catalog table for the file */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+
+	file_type=sector_buffer[CATALOG_FILE_LIST+
+			(catalog_entry*CATALOG_ENTRY_SIZE)
+			+FILE_TYPE];
+
+	if (file_type&0x80) {
+		fprintf(stderr,"File is locked!  Unlock before deleting!\n");
+		exit(1);
+	}
+
+	/* get pointer to t/s list */
+	ts_track=sector_buffer[CATALOG_FILE_LIST+
+			catalog_entry*CATALOG_ENTRY_SIZE+FILE_TS_LIST_T];
+	ts_sector=sector_buffer[CATALOG_FILE_LIST+
+			catalog_entry*CATALOG_ENTRY_SIZE+FILE_TS_LIST_S];
+
 keep_deleting:
-   
 
-   
-       /* load in the t/s list info */
-    lseek(fd,DISK_OFFSET(ts_track,ts_sector),SEEK_SET);
-    result=read(fd,sector_buffer,BYTES_PER_SECTOR);
-      
-      /* Free each sector listed by t/s list */
-    for(i=0;i<TSL_MAX_NUMBER;i++) {
-          /* If t/s = 0/0 then no need to clear */
-       if ((sector_buffer[TSL_LIST+2*i]==0) && (sector_buffer[TSL_LIST+2*i+1]==0)) {
-       }
-       else {
-          dos33_free_sector(fd,sector_buffer[TSL_LIST+2*i],sector_buffer[TSL_LIST+2*i+1]);
-       }
-    }
+	/* load in the t/s list info */
+	lseek(fd,DISK_OFFSET(ts_track,ts_sector),SEEK_SET);
+	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
 
-          /* free the t/s list */
-    dos33_free_sector(fd,ts_track,ts_sector);
-   
-       /* Point to next t/s list */
-    ts_track=sector_buffer[TSL_NEXT_TRACK];
-    ts_sector=sector_buffer[TSL_NEXT_SECTOR];
-   
-       /* If more tsl lists, keep looping */
-    if ((ts_track==0x0) && (ts_sector==0x0)) {
-    }
-    else {
-       goto keep_deleting;        
-    }
-   
-       /* Erase file from catalog entry */
-   
-       /* First reload proper catalog sector */
-   lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-   result=read(fd,sector_buffer,BYTES_PER_SECTOR);
-      
-      /* save track as last char of name, for undelete purposes */
-   sector_buffer[CATALOG_FILE_LIST+(catalog_entry*CATALOG_ENTRY_SIZE)+
-	  (FILE_NAME+FILE_NAME_SIZE-1)]=
-     sector_buffer[CATALOG_FILE_LIST+(catalog_entry*CATALOG_ENTRY_SIZE)];
-   
-       /* Actually delete the file */
-       /* by setting the track value to FF which indicates deleted file */
-   sector_buffer[CATALOG_FILE_LIST+(catalog_entry*CATALOG_ENTRY_SIZE)]=0xff;
-   
-       /* re seek to catalog position and write out changes */
-   lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-   result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+	/* Free each sector listed by t/s list */
+	for(i=0;i<TSL_MAX_NUMBER;i++) {
+		/* If t/s = 0/0 then no need to clear */
+		if ((sector_buffer[TSL_LIST+2*i]==0) &&
+			(sector_buffer[TSL_LIST+2*i+1]==0)) {
+		}
+		else {
+			dos33_free_sector(fd,sector_buffer[TSL_LIST+2*i],
+				sector_buffer[TSL_LIST+2*i+1]);
+		}
+	}
 
-    if (result<0) fprintf(stderr,"Error on I/O\n");
-   
-   return 0;
+	/* free the t/s list */
+	dos33_free_sector(fd,ts_track,ts_sector);
+
+	/* Point to next t/s list */
+	ts_track=sector_buffer[TSL_NEXT_TRACK];
+	ts_sector=sector_buffer[TSL_NEXT_SECTOR];
+
+	/* If more tsl lists, keep looping */
+	if ((ts_track==0x0) && (ts_sector==0x0)) {
+	}
+	else {
+		goto keep_deleting;
+	}
+
+	/* Erase file from catalog entry */
+
+	/* First reload proper catalog sector */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+
+	/* save track as last char of name, for undelete purposes */
+	sector_buffer[CATALOG_FILE_LIST+(catalog_entry*CATALOG_ENTRY_SIZE)+
+		(FILE_NAME+FILE_NAME_SIZE-1)]=
+		sector_buffer[CATALOG_FILE_LIST+(catalog_entry*CATALOG_ENTRY_SIZE)];
+
+	/* Actually delete the file */
+	/* by setting the track value to FF which indicates deleted file */
+	sector_buffer[CATALOG_FILE_LIST+(catalog_entry*CATALOG_ENTRY_SIZE)]=0xff;
+
+	/* re seek to catalog position and write out changes */
+	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
+	result=write(fd,sector_buffer,BYTES_PER_SECTOR);
+
+	if (result<0) fprintf(stderr,"Error on I/O\n");
+
+	return 0;
 }
 
 static int dump_sector(void) {
