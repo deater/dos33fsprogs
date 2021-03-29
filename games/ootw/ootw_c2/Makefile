@@ -46,6 +46,10 @@ ootw_c2.o:	ootw_c2.s \
 	graphics/l2_laser/ootw_c2_laser.inc
 	ca65 -o ootw_c2.o ootw_c2.s -l ootw_c2.lst
 
+#####
+graphics/l2_cage/ootw_c2_cage.inc:	
+	cd graphics && make
+
 
 #####
 

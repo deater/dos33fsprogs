@@ -48,6 +48,11 @@ ootw_c1.o:	ootw_c1.s \
 	graphics/l1_slug_end/ootw_slug_end.inc
 	ca65 -o ootw_c1.o ootw_c1.s -l ootw_c1.lst
 
+#####
+
+graphics/l1_pool/ootw_pool.inc:	
+	cd graphics && make
+
 
 #####
 

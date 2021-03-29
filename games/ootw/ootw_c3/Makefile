@@ -26,6 +26,10 @@ ootw_c3.o:	ootw_c3.s \
 	graphics/l3_vent/ootw_c3_vent.inc
 	ca65 -o ootw_c3.o ootw_c3.s -l ootw_c3.lst
 
+#####
+
+graphics/l3_vent/ootw_c3_vent.inc:
+	cd graphics && make
 
 #####
 

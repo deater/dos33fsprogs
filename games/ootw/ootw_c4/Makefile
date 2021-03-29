@@ -40,7 +40,15 @@ ootw_c4.o:	ootw_c4.s \
 
 ###
 
+graphics/l4_city/ootw_c4_city.inc:	
+	cd graphics && make
+
+
+###
+
 clean:		
 		rm -f *~ *.o *.lst *.lz4 OOTW_C4
 
 
+distclean:
+	cd graphics && make clean
