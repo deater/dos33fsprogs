@@ -70,3 +70,7 @@ unsigned char dos33_char_to_type(char type, int lock);
 void dos33_catalog(int dos_fd, unsigned char *vtoc);
 char *dos33_filename_to_ascii(char *dest,unsigned char *src,int len);
 unsigned char dos33_file_type(int value);
+
+/* dos33_dump.c */
+int dos33_dump(unsigned char *vtoc, int fd);
+int dos33_showfree(unsigned char *vtoc, int fd);
