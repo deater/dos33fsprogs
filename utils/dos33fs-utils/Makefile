@@ -13,8 +13,12 @@ char2hex.o:		char2hex.c
 
 ###
 
-dos33:			dos33.o dos33_vtoc_bitmap.o
-			$(CC) -o dos33 dos33.o dos33_vtoc_bitmap.o $(LFLAGS)
+dos33:			dos33.o \
+			dos33_catalog.o \
+			dos33_vtoc_bitmap.o
+			$(CC) -o dos33 dos33.o \
+				dos33_catalog.o \
+				dos33_vtoc_bitmap.o $(LFLAGS)
 
 dos33.o:		dos33.c dos33.h
 			$(CC) $(CFLAGS) -g -c dos33.c
@@ -56,6 +60,11 @@ mkdos33fs.o:		mkdos33fs.c dos33.h
 
 dos33_vtoc_bitmap.o:		dos33_vtoc_bitmap.c dos33.h
 			$(CC) $(CFLAGS) -c dos33_vtoc_bitmap.c
+
+###
+
+dos33_catalog.o:		dos33_catalog.c dos33.h
+			$(CC) $(CFLAGS) -c dos33_catalog.c
 
 ###
 

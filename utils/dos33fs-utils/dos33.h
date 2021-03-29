@@ -53,9 +53,20 @@
 #define TS_TO_INT(__x,__y) ((((int)__x)<<8)+__y)
 #define DISK_OFFSET(__track,__sector) ((((__track)*SECTORS_PER_TRACK)+(__sector))*BYTES_PER_SECTOR)
 
+
+#define DOS33_FILE_NORMAL 0
+#define DOS33_FILE_DELETED 1
+
+/* dos33_vtoc_bitmap.c */
 int dos33_vtoc_free_space(unsigned char *vtoc);
 void dos33_vtoc_free_sector(unsigned char *vtoc, int track, int sector);
 void dos33_vtoc_reserve_sector(unsigned char *vtoc, int track, int sector);
 void dos33_vtoc_dump_bitmap(unsigned char *vtoc, int num_tracks);
 int dos33_vtoc_find_free_sector(unsigned char *vtoc,
 	int *found_track, int *found_sector);
+
+/* dos33_catalog.c */
+unsigned char dos33_char_to_type(char type, int lock);
+void dos33_catalog(int dos_fd, unsigned char *vtoc);
+char *dos33_filename_to_ascii(char *dest,unsigned char *src,int len);
+unsigned char dos33_file_type(int value);
