@@ -2,6 +2,9 @@
 
 #include "dos33.h"
 
+/* FIXME: this code assumes that we have 16 sectors pretty much everywhere */
+
+
 static int ones_lookup[16]={
 	/* 0x0 = 0000 */ 0,
 	/* 0x1 = 0001 */ 1,
