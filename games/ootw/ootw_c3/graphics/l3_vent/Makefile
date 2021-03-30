@@ -21,5 +21,5 @@ ootw_c3_vent.inc:	vent.lzsa
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lzsa *.gr
+		rm -f *~ *.o *.lst *.lzsa *.gr *.inc
 

@@ -36,4 +36,10 @@ graphics/l3_vent/ootw_c3_vent.inc:
 clean:		
 		rm -f *~ *.o *.lst *.lz4 OOTW_C3
 
+#####
+
+distclean:		
+	make clean
+	cd graphics && make clean
+
 

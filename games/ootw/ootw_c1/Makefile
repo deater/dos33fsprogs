@@ -58,3 +58,7 @@ graphics/l1_pool/ootw_pool.inc:
 
 clean:		
 		rm -f *~ *.o *.lst *.lz4 OOTW_C1
+
+distclean:
+	make clean
+	cd graphics && make clean

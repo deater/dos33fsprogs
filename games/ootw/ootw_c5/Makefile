@@ -44,3 +44,9 @@ graphics/l5_cave/ootw_c5_cave.inc:
 clean:		
 		rm -f *~ *.o *.lst OOTW_C5
 
+###
+
+distclean:		
+	make clean
+	cd graphics && make clean
+

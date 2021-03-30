@@ -15,5 +15,10 @@ title.o:	title.s loader.s
 #####
 
 clean:		
-		rm -f *~ *.o *.lst TITLE
+	rm -f *~ *.o *.lst TITLE
+
+#####
+
+distclean:		
+	make clean
 

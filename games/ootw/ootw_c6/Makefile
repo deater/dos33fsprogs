@@ -35,6 +35,17 @@ ootw_c6.o:	ootw_c6.s \
 
 #####
 
+graphics/l6_cave/ootw_c6_cave.inc:	
+	cd graphics && make
+
+#####
+
 clean:		
-		rm -f *~ *.o *.lst OOTW_C6
+	rm -f *~ *.o *.lst OOTW_C6
+
+#####
+
+distclean:
+	make clean
+	cd graphics && make clean
 

@@ -7,12 +7,20 @@ all:	ootw_c9_swim.inc
 
 #####
 
-ootw_c9_swim.inc:	$(PNG2RLE) \
-	pool.png
-	$(PNG2RLE) asm pool.png pool_rle > ootw_c9_swim.inc
+ootw_c9_swim.inc:	\
+	pool.lzsa
+	echo "pool_lzsa: .incbin \"pool.lzsa\"" > ootw_c9_swim.inc
+
+#####
+
+%.gr:	%.png
+	$(PNG2GR) $< $@
+
+%.lzsa:	%.gr
+	$(LZSA) -r -f2 $< $@
 
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lzz *.inc
+		rm -f *~ *.o *.lst *.lzsa *.inc
 

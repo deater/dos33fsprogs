@@ -41,6 +41,18 @@ ootw_c15.o:	ootw_c15.s \
 
 #####
 
+graphics/l15_final/ootw_c15_bath.inc:
+	cd graphics && make
+
+#####
+
 clean:		
-		rm -f *~ *.o *.lst OOTW_C15
+	rm -f *~ *.o *.lst OOTW_C15
+
+#####
+
+distclean:		
+	make clean
+	cd graphics && make clean
+
 

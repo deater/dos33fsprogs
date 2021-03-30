@@ -35,6 +35,17 @@ ootw_c8.o:	ootw_c8.s \
 
 #####
 
+graphics/l8_crawl/ootw_c8_crawl.inc:	
+	cd graphics && make
+
+#####
+
 clean:		
-		rm -f *~ *.o *.lst OOTW_C8
+	rm -f *~ *.o *.lst OOTW_C8
+
+#####
+
+distclean:		
+	make clean
+	cd graphics && make clean
 

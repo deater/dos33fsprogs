@@ -140,3 +140,25 @@ clean:
 	cd ootw_c15 && make clean
 	cd ending && make clean
 	cd title && make clean
+
+distclean:
+	make clean
+	cd intro && make distclean
+	cd ootw_c1 && make distclean
+	cd ootw_c2 && make distclean
+	cd ootw_c3 && make distclean
+	cd ootw_c4 && make distclean
+	cd ootw_c5 && make distclean
+	cd ootw_c6 && make distclean
+	cd ootw_c7 && make distclean
+	cd ootw_c8 && make distclean
+	cd ootw_c9 && make distclean
+	cd ootw_c10 && make distclean
+	cd ootw_c11 && make distclean
+	cd ootw_c12 && make distclean
+	cd ootw_c13 && make distclean
+	cd ootw_c14 && make distclean
+	cd ootw_c15 && make distclean
+	cd ending && make distclean
+	cd title && make distclean
+

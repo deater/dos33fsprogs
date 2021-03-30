@@ -47,8 +47,10 @@ graphics/l4_city/ootw_c4_city.inc:
 ###
 
 clean:		
-		rm -f *~ *.o *.lst *.lz4 OOTW_C4
+	rm -f *~ *.o *.lst *.lz4 OOTW_C4
 
+####
 
 distclean:
+	make clean
 	cd graphics && make clean

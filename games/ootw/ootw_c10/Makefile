@@ -36,5 +36,10 @@ ootw_c10.o:	ootw_c10.s \
 #####
 
 clean:		
-		rm -f *~ *.o *.lst OOTW_C10
+	rm -f *~ *.o *.lst OOTW_C10
+
+#####
+
+distclean:		
+	make clean
 

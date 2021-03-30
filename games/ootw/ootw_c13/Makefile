@@ -35,6 +35,18 @@ ootw_c13.o:	ootw_c13.s \
 
 #####
 
+graphics/l13_room/ootw_c13_room.inc:
+	cd graphics && make
+
+#####
+
 clean:		
-		rm -f *~ *.o *.lst OOTW_C13
+	rm -f *~ *.o *.lst OOTW_C13
+
+#####
+
+distclean:		
+	make clean
+	cd graphics && make clean
+
 

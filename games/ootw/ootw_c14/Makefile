@@ -35,6 +35,17 @@ ootw_c14.o:	ootw_c14.s \
 
 #####
 
+graphics/l14_arena/ootw_c14_arena.inc:
+	cd graphics && make
+
+#####
+
 clean:		
-		rm -f *~ *.o *.lst OOTW_C14
+	rm -f *~ *.o *.lst OOTW_C14
+
+#####
+
+distclean:		
+	make clean
+	cd graphics && make clean
 

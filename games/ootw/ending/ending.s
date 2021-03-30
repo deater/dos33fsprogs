@@ -92,9 +92,9 @@ repeat_ending:
 	;==================
 
 ;	lda	#>(bath_lzsa)
-;	sta	GBASH
+;	sta	getsrc_smc+2    ; LZSA_SRC_HI
 ;	lda	#<(bath_lzsa)
-;	sta	GBASL
+;	sta	getsrc_smc+1    ; LZSA_SRC_LO
 ;	lda	#$c			; load image off-screen $c00
 ;	jsr	decompress_lzsa2_fast
 
@@ -109,9 +109,9 @@ repeat_ending:
 	;==================
 
 ;	lda	#>(battle_lzsa)
-;	sta	GBASH
+;	sta	getsrc_smc+2    ; LZSA_SRC_HI
 ;	lda	#<(battle_lzsa)
-;	sta	GBASL
+;	sta	getsrc_smc+1    ; LZSA_SRC_LO
 ;	lda	#$c			; load image off-screen $c00
 ;	jsr	decompress_lzsa2_fast
 
@@ -126,9 +126,9 @@ repeat_ending:
 	;==================
 
 ;	lda	#>(grabbed_lzsa)
-;	sta	GBASH
+;	sta	getsrc_smc+2    ; LZSA_SRC_HI
 ;	lda	#<(grabbed_lzsa)
-;	sta	GBASL
+;	sta	getsrc_smc+1    ; LZSA_SRC_LO
 ;	lda	#$c			; load image off-screen $c00
 ;	jsr	decompress_lzsa2_fast
 
@@ -152,9 +152,9 @@ repeat_ending:
 	;=========================
 
 	lda	#>(sky_bg_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(sky_bg_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$0c			; load image off-screen $c00
 	jsr	decompress_lzsa2_fast
 
@@ -162,9 +162,9 @@ repeat_ending:
 	; rooftop00
 
 	lda	#>(rooftop00_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(rooftop00_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -186,9 +186,9 @@ cli_smc:
 	; rooftop01
 
 	lda	#>(rooftop01_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(rooftop01_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -204,9 +204,9 @@ cli_smc:
 	; rooftop02
 
 	lda	#>(rooftop02_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(rooftop02_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -222,9 +222,9 @@ cli_smc:
 	; rooftop03
 
 	lda	#>(rooftop03_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(rooftop03_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -240,9 +240,9 @@ cli_smc:
 	; onboard
 
 	lda	#>(onboard_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(onboard_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -261,9 +261,9 @@ cli_smc:
 	;=========================
 
 	lda	#>(wing_bg_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(wing_bg_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$0c			; load image off-screen $c00
 	jsr	decompress_lzsa2_fast
 
@@ -271,9 +271,9 @@ cli_smc:
 	; left wing 1
 
 	lda	#>(left_unfurl1_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(left_unfurl1_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -289,9 +289,9 @@ cli_smc:
 	; left wing 2
 
 	lda	#>(left_unfurl2_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(left_unfurl2_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -307,9 +307,9 @@ cli_smc:
 	; right wing 1
 
 	lda	#>(right_unfurl1_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(right_unfurl1_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -325,9 +325,9 @@ cli_smc:
 	; right wing 2
 
 	lda	#>(right_unfurl2_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(right_unfurl2_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -344,9 +344,9 @@ cli_smc:
 	;=========================
 
 	lda	#>(sky_bg_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(sky_bg_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$0c			; load image off-screen $c00
 	jsr	decompress_lzsa2_fast
 
@@ -354,9 +354,9 @@ cli_smc:
 	; flying01
 
 	lda	#>(flying01_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(flying01_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -372,9 +372,9 @@ cli_smc:
 	; flying03
 
 	lda	#>(flying03_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(flying03_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -390,9 +390,9 @@ cli_smc:
 	; flying05
 
 	lda	#>(flying05_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(flying05_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -408,9 +408,9 @@ cli_smc:
 	; flying07
 
 	lda	#>(flying07_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(flying07_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -426,9 +426,9 @@ cli_smc:
 	; flying09
 
 	lda	#>(flying09_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(flying09_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -444,9 +444,9 @@ cli_smc:
 	; flying11
 
 	lda	#>(flying11_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(flying11_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -462,9 +462,9 @@ cli_smc:
 	; the end01
 
 	lda	#>(the_end01_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(the_end01_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -480,9 +480,9 @@ cli_smc:
 	; the end02
 
 	lda	#>(the_end02_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(the_end02_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -498,9 +498,9 @@ cli_smc:
 	; the end03
 
 	lda	#>(the_end03_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(the_end03_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -516,9 +516,9 @@ cli_smc:
 	; the end04
 
 	lda	#>(the_end04_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(the_end04_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -534,9 +534,9 @@ cli_smc:
 	; the end05
 
 	lda	#>(the_end05_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(the_end05_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -552,9 +552,9 @@ cli_smc:
 	; the end06
 
 	lda	#>(the_end06_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(the_end06_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -570,9 +570,9 @@ cli_smc:
 	; the end07
 
 	lda	#>(the_end07_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(the_end07_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -588,9 +588,9 @@ cli_smc:
 	; the end08
 
 	lda	#>(the_end08_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(the_end08_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -606,9 +606,9 @@ cli_smc:
 	; the end09
 
 	lda	#>(the_end09_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(the_end09_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 
@@ -624,9 +624,9 @@ cli_smc:
 	; the end10
 
 	lda	#>(the_end10_lzsa)
-	sta	GBASH
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
 	lda	#<(the_end10_lzsa)
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$10			; load image off-screen $1000
 	jsr	decompress_lzsa2_fast
 

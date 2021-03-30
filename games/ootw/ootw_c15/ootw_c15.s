@@ -215,9 +215,9 @@ room0:
 	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(bath_end_rle)
-	sta	GBASH
-	lda	#<(bath_end_rle)
+	lda	#>(bath_end_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(bath_end_lzsa)
 
 	jmp	room_setup_done
 
@@ -269,9 +269,9 @@ first_shield:
 	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(walkway1_rle)
-	sta	GBASH
-	lda	#<(walkway1_rle)
+	lda	#>(walkway1_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(walkway1_lzsa)
 
 	jmp	room_setup_done
 
@@ -302,17 +302,17 @@ room2:
 	beq	unbroken_background
 
 	; load background
-	lda	#>(walkway2_after_rle)
-	sta	GBASH
-	lda	#<(walkway2_after_rle)
+	lda	#>(walkway2_after_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(walkway2_after_lzsa)
 
 	jmp	room_setup_done
 
 unbroken_background:
 	; load background
-	lda	#>(walkway2_rle)
-	sta	GBASH
-	lda	#<(walkway2_rle)
+	lda	#>(walkway2_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(walkway2_lzsa)
 
 	jmp	room_setup_done
 
@@ -340,9 +340,9 @@ room3:
 	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(walkway3_rle)
-	sta	GBASH
-	lda	#<(walkway3_rle)
+	lda	#>(walkway3_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(walkway3_lzsa)
 
 	jmp	room_setup_done
 
@@ -370,9 +370,9 @@ room4:
 	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(above_pit_rle)
-	sta	GBASH
-	lda	#<(above_pit_rle)
+	lda	#>(above_pit_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(above_pit_lzsa)
 
 	jmp	room_setup_done
 
@@ -400,9 +400,9 @@ room5:
 	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(final_rle)
-	sta	GBASH
-	lda	#<(final_rle)
+	lda	#>(final_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(final_lzsa)
 
 ;	jmp	room_setup_done
 
@@ -414,9 +414,9 @@ room5:
 
 room_setup_done:
 
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$c				; load to page $c00
-	jsr	load_rle_gr			; tail call
+	jsr	decompress_lzsa2_fast			; tail call
 
 	;=====================
 	; setup walk collision
@@ -723,16 +723,16 @@ do_enemy_walk:
 	bne	no_update_enemy_walk
 
 	lda     enemy_walking_sequence,y
-        sta     GBASL
+        sta     getsrc_smc+1    ; LZSA_SRC_LO
         lda     enemy_walking_sequence+1,y
-        sta     GBASH
+        sta     getsrc_smc+2    ; LZSA_SRC_HI
 
 	iny
 	iny
 	sty	FOREGROUND_COUNT
 
 	lda     #$10                    ; load to $1000
-        jsr     load_rle_gr
+        jsr     decompress_lzsa2_fast
 
 no_update_enemy_walk:
 
@@ -830,9 +830,9 @@ break_glass:
 
 	ldy	BROKEN_GLASS
 	lda     glass_breaking_sequence,y
-        sta     GBASL
+        sta     getsrc_smc+1    ; LZSA_SRC_LO
         lda     glass_breaking_sequence+1,y
-        sta     GBASH
+        sta     getsrc_smc+2    ; LZSA_SRC_HI
 
 
 	lda	FRAMEL
@@ -845,7 +845,7 @@ break_glass:
 no_inc_break_glass:
 
 	lda	#$10		; load to $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	jsr	gr_overlay_noload
 
@@ -855,12 +855,12 @@ no_inc_break_glass:
 
 	; load new background at end
 
-	lda	#>(walkway2_after_rle)
-	sta	GBASH
-	lda	#<(walkway2_after_rle)
-	sta	GBASL
+	lda	#>(walkway2_after_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(walkway2_after_lzsa)
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$c		; load to $c00
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 	; activate friend
 	lda	#2
@@ -911,9 +911,9 @@ collapse_bridge:
 
 	ldy	BRIDGE_COLLAPSE
 	lda     bridge_sequence,y
-        sta     GBASL
+        sta     getsrc_smc+1    ; LZSA_SRC_LO
         lda     bridge_sequence+1,y
-        sta     GBASH
+        sta     getsrc_smc+2    ; LZSA_SRC_HI
 
 	lda	FRAMEL
 	and	#$3
@@ -925,7 +925,7 @@ collapse_bridge:
 no_inc_bridge_collapse:
 
 	lda	#$10		; load to $1000
-	jsr	load_rle_gr
+	jsr	decompress_lzsa2_fast
 
 draw_bridge:
 	jsr	gr_overlay_noload
@@ -1057,7 +1057,7 @@ end_message:
 
 .include "../text_print.s"
 .include "../gr_pageflip.s"
-.include "../gr_unrle.s"
+.include "../decompress_fast_v2.s"
 .include "../gr_vlin.s"
 .include "../gr_copy.s"
 .include "../gr_putsprite.s"
@@ -1132,79 +1132,79 @@ bath_intro:
 
 bath_arrival_sequence:
 	.byte 255
-	.word bath_00_rle
+	.word bath_00_lzsa
 	.byte 25
-	.word bath_01_rle
+	.word bath_01_lzsa
 	.byte 25
-	.word bath_02_rle
+	.word bath_02_lzsa
 	.byte 25
-	.word bath_03_rle
+	.word bath_03_lzsa
 	.byte 25
-	.word bath_04_rle
+	.word bath_04_lzsa
 	.byte 25
-	.word bath_05_rle
+	.word bath_05_lzsa
 	.byte 25
-	.word bath_06_rle
+	.word bath_06_lzsa
 	.byte 25
-	.word bath_07_rle
+	.word bath_07_lzsa
 	.byte 25
-	.word bath_08_rle
+	.word bath_08_lzsa
 	.byte 25
-	.word bath_09_rle
+	.word bath_09_lzsa
 	.byte 25
-	.word bath_10_rle
+	.word bath_10_lzsa
 	.byte 25
-	.word bath_11_rle
+	.word bath_11_lzsa
 	.byte 25
-	.word bath_12_rle
+	.word bath_12_lzsa
 	.byte 25
-	.word bath_13_rle
+	.word bath_13_lzsa
 	.byte 25
-	.word bath_14_rle
+	.word bath_14_lzsa
 	.byte 25
-	.word bath_15_rle
+	.word bath_15_lzsa
 	.byte 25
-	.word bath_16_rle
+	.word bath_16_lzsa
 	.byte 25
-	.word bath_17_rle
+	.word bath_17_lzsa
 	.byte 25
-	.word bath_18_rle
+	.word bath_18_lzsa
 	.byte 25
-	.word bath_19_rle
+	.word bath_19_lzsa
 	.byte 25
-	.word bath_20_rle
+	.word bath_20_lzsa
 	.byte 25
-	.word bath_21_rle
+	.word bath_21_lzsa
 	.byte 25
-	.word bath_22_rle
+	.word bath_22_lzsa
 	.byte 25
-	.word bath_23_rle
+	.word bath_23_lzsa
 	.byte 25
-	.word bath_24_rle
+	.word bath_24_lzsa
 	.byte 25
-	.word bath_25_rle
+	.word bath_25_lzsa
 	.byte 25
-	.word bath_26_rle
+	.word bath_26_lzsa
 	.byte 25
-	.word bath_27_rle
+	.word bath_27_lzsa
 	.byte 25
-	.word bath_28_rle
+	.word bath_28_lzsa
 	.byte 25
-	.word bath_29_rle
+	.word bath_29_lzsa
 	.byte 25
-	.word bath_30_rle
+	.word bath_30_lzsa
 	.byte 25
-	.word bath_31_rle
+	.word bath_31_lzsa
 	.byte 25
-	.word bath_32_rle
+	.word bath_32_lzsa
 	.byte 25
-	.word bath_33_rle
+	.word bath_33_lzsa
 	.byte 25
-	.word bath_34_rle
+	.word bath_34_lzsa
 	.byte 25
-	.word bath_35_rle
+	.word bath_35_lzsa
 	.byte 25
-	.word bath_35_rle
+	.word bath_35_lzsa
 	.byte 0
 
 
@@ -1387,40 +1387,40 @@ shot4_hole:
 
 enemy_walking_sequence:
 	.word 0			; makes code easier
-	.word walk00_rle
-	.word walk01_rle
-	.word walk02_rle
-	.word walk03_rle
-	.word walk04_rle
-	.word walk05_rle
-	.word walk06_rle
-	.word walk07_rle
-	.word walk08_rle
-	.word walk09_rle
-	.word walk10_rle
+	.word walk00_lzsa
+	.word walk01_lzsa
+	.word walk02_lzsa
+	.word walk03_lzsa
+	.word walk04_lzsa
+	.word walk05_lzsa
+	.word walk06_lzsa
+	.word walk07_lzsa
+	.word walk08_lzsa
+	.word walk09_lzsa
+	.word walk10_lzsa
 	.word 0
 bigshot_sequence:
-	.word bigshot01_rle
-	.word bigshot02_rle
-	.word bigshot03_rle
-	.word bigshot04_rle
+	.word bigshot01_lzsa
+	.word bigshot02_lzsa
+	.word bigshot03_lzsa
+	.word bigshot04_lzsa
 
 glass_breaking_sequence:
-	.word crash1_rle	; 2
-	.word crash2_rle	; 4
-	.word crash3_rle	; 6
-	.word crash4_rle	; 8
-	.word crash5_rle	; 10
-	.word crash6_rle	; 12
-	.word crash7_rle	; 14
+	.word crash1_lzsa	; 2
+	.word crash2_lzsa	; 4
+	.word crash3_lzsa	; 6
+	.word crash4_lzsa	; 8
+	.word crash5_lzsa	; 10
+	.word crash6_lzsa	; 12
+	.word crash7_lzsa	; 14
 
 bridge_sequence:
-	.word lshot1_rle	; 2
-	.word lshot2_rle	; 4
-	.word lshot3_rle	; 6
-	.word lshot4_rle	; 8
-	.word lshot5_rle	; 10
-	.word lshot6_rle	; 12
+	.word lshot1_lzsa	; 2
+	.word lshot2_lzsa	; 4
+	.word lshot3_lzsa	; 6
+	.word lshot4_lzsa	; 8
+	.word lshot5_lzsa	; 10
+	.word lshot6_lzsa	; 12
 
 
 

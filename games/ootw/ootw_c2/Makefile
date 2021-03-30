@@ -56,3 +56,10 @@ graphics/l2_cage/ootw_c2_cage.inc:
 clean:		
 		rm -f *~ *.o *.lst *.lz4 OOTW_C2
 
+#####
+
+distclean:		
+	make clean
+	cd graphics && make clean
+
+

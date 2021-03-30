@@ -7,9 +7,17 @@ all:	ootw_c11_room.inc
 
 #####
 
-ootw_c11_room.inc:	$(PNG2RLE) \
-	above.png
-	$(PNG2RLE) asm above.png above_rle > ootw_c11_room.inc
+ootw_c11_room.inc:	\
+	above.lzsa
+	echo "above_lzsa: .incbin \"above.lzsa\"" > ootw_c11_room.inc
+
+#####
+
+%.gr:	%.png
+	$(PNG2GR) $< $@
+
+%.lzsa:	%.gr
+	$(LZSA) -r -f2 $< $@
 
 #####
 

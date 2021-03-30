@@ -7,12 +7,20 @@ all:	ootw_c6_cave.inc
 
 #####
 
-ootw_c6_cave.inc:	$(PNG2RLE) \
-	cave.png
-	$(PNG2RLE) asm cave.png cave_rle > ootw_c6_cave.inc
+ootw_c6_cave.inc:	\
+	cave.lzsa
+	echo "cave_lzsa: .incbin \"cave.lzsa\"" > ootw_c6_cave.inc
+
+#####
+
+%.gr:	%.png
+	$(PNG2GR) $< $@
+
+%.lzsa:	%.gr
+	$(LZSA) -r -f2 $< $@
 
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lzz *.inc
+		rm -f *~ *.o *.lst *.lzsa *.inc
 

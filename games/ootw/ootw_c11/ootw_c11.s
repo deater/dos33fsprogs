@@ -169,9 +169,9 @@ room:
 	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(above_rle)
-	sta	GBASH
-	lda	#<(above_rle)
+	lda	#>(above_lzsa)
+	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	lda	#<(above_lzsa)
 
 	jmp	room_setup_done
 
@@ -197,17 +197,17 @@ room1:
 ;	sta	PHYSICIST_Y
 
 	; load background
-;	lda	#>(hallway_rle)
-;	sta	GBASH
-;	lda	#<(hallway_rle)
+;	lda	#>(hallway_lzsa)
+;	sta	getsrc_smc+2    ; LZSA_SRC_HI
+;	lda	#<(hallway_lzsa)
 
 	jmp	room_setup_done
 
 room_setup_done:
 
-	sta	GBASL
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$c				; load to page $c00
-	jsr	load_rle_gr			; tail call
+	jsr	decompress_lzsa2_fast			; tail call
 
 	;=====================
 	; setup walk collision
@@ -492,7 +492,7 @@ end_message:
 
 .include "../text_print.s"
 .include "../gr_pageflip.s"
-.include "../gr_unrle.s"
+.include "../decompress_fast_v2.s"
 .include "../gr_copy.s"
 .include "../gr_putsprite.s"
 .include "../gr_putsprite_crop.s"

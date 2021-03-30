@@ -35,6 +35,17 @@ ootw_c9.o:	ootw_c9.s \
 
 #####
 
+graphics/l9_swim/ootw_c9_swim.inc:
+	cd graphics && make
+
+#####
+
 clean:		
-		rm -f *~ *.o *.lst OOTW_C9
+	rm -f *~ *.o *.lst OOTW_C9
+
+#####
+
+distclean:		
+	make clean
+	cd graphics && make clean
 

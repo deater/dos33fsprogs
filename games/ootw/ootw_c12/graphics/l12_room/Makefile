@@ -7,12 +7,20 @@ all:	ootw_c12_room.inc
 
 #####
 
-ootw_c12_room.inc:	$(PNG2RLE) \
-	house.png
-	$(PNG2RLE) asm house.png house_rle > ootw_c12_room.inc
+ootw_c12_room.inc:	\
+	house.lzsa
+	echo "house_lzsa: .incbin \"house.lzsa\"" > ootw_c12_room.inc
+
+#####
+
+%.gr:	%.png
+	$(PNG2GR) $< $@
+
+%.lzsa:	%.gr
+	$(LZSA) -r -f2 $< $@
 
 #####
 
 clean:		
-		rm -f *~ *.o *.lst *.lzz *.inc
+		rm -f *~ *.o *.lst *.lzsa *.inc
 
