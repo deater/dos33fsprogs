@@ -8,7 +8,7 @@ all:	ootw_c16_end.inc
 #####
 
 ootw_c16_end.inc:	\
-	wing_bg.lzsa \
+	blank.lzsa wing_bg.lzsa \
 	left_unfurl1.lzsa left_unfurl2.lzsa \
 	right_unfurl1.lzsa right_unfurl2.lzsa \
 	sky_bg.lzsa \
@@ -44,6 +44,7 @@ ootw_c16_end.inc:	\
 	echo "the_end08_lzsa: .incbin \"the_end08.lzsa\"" >> ootw_c16_end.inc
 	echo "the_end09_lzsa: .incbin \"the_end09.lzsa\"" >> ootw_c16_end.inc
 	echo "the_end10_lzsa: .incbin \"the_end10.lzsa\"" >> ootw_c16_end.inc
+	echo "blank_lzsa: .incbin \"blank.lzsa\"" >> ootw_c16_end.inc
 
 #####
 

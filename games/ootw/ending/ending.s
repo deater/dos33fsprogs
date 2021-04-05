@@ -82,36 +82,6 @@ repeat_ending:
 ;	sta	DISP_PAGE
 
 
-	;===========================
-	; ending sequence
-	;============================
-
-	;=========================
-	; set up bg
-	;=========================
-
-	lda	#>(sky_bg_lzsa)
-	sta	getsrc_smc+2		; LZSA_SRC_HI
-	lda	#<(sky_bg_lzsa)
-	sta	getsrc_smc+1		; LZSA_SRC_LO
-	lda	#$0c			; load image off-screen $c00
-	jsr	decompress_lzsa2_fast
-
-	;===================
-	; rooftop00
-
-	lda	#>(rooftop00_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(rooftop00_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
 
 	;============
 	; start music
@@ -120,466 +90,38 @@ repeat_ending:
 cli_smc:
 	cli	; enable interrupts
 
-	ldx	#240
-	jsr	long_wait
+	;=====================================
+	; friend arrive, board dragon sequence
+	;=====================================
 
-	;===================
-	; rooftop01
+	lda	#<pickup_sequence
+	sta	INTRO_LOOPL
+	lda	#>pickup_sequence
+	sta	INTRO_LOOPH
 
-	lda	#>(rooftop01_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(rooftop01_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#60
-	jsr	long_wait
-
-	;===================
-	; rooftop02
-
-	lda	#>(rooftop02_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(rooftop02_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#60
-	jsr	long_wait
-
-	;===================
-	; rooftop03
-
-	lda	#>(rooftop03_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(rooftop03_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#50
-	jsr	long_wait
-
-	;===================
-	; onboard
-
-	lda	#>(onboard_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(onboard_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#50
-	jsr	long_wait
-
-
+	jsr	run_sequence
 
 	;=========================
-	; set up wing bg
+	; wing open sequence
 	;=========================
 
-	lda	#>(wing_bg_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(wing_bg_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$0c			; load image off-screen $c00
-	jsr	decompress_lzsa2_fast
+	lda	#<wing_sequence
+	sta	INTRO_LOOPL
+	lda	#>wing_sequence
+	sta	INTRO_LOOPH
 
-	;===================
-	; left wing 1
-
-	lda	#>(left_unfurl1_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(left_unfurl1_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#40
-	jsr	long_wait
-
-	;===================
-	; left wing 2
-
-	lda	#>(left_unfurl2_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(left_unfurl2_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; right wing 1
-
-	lda	#>(right_unfurl1_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(right_unfurl1_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#40
-	jsr	long_wait
-
-	;===================
-	; right wing 2
-
-	lda	#>(right_unfurl2_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(right_unfurl2_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#30
-	jsr	long_wait
+	jsr	run_sequence
 
 	;=========================
-	; re-set up sky bg
+	; flying sequence
 	;=========================
 
-	lda	#>(sky_bg_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(sky_bg_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$0c			; load image off-screen $c00
-	jsr	decompress_lzsa2_fast
-
-	;===================
-	; flying01
-
-	lda	#>(flying01_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(flying01_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; flying03
-
-	lda	#>(flying03_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(flying03_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; flying05
-
-	lda	#>(flying05_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(flying05_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; flying07
-
-	lda	#>(flying07_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(flying07_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; flying09
-
-	lda	#>(flying09_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(flying09_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; flying11
-
-	lda	#>(flying11_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(flying11_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; the end01
-
-	lda	#>(the_end01_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(the_end01_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; the end02
-
-	lda	#>(the_end02_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(the_end02_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; the end03
-
-	lda	#>(the_end03_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(the_end03_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; the end04
-
-	lda	#>(the_end04_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(the_end04_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; the end05
-
-	lda	#>(the_end05_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(the_end05_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; the end06
-
-	lda	#>(the_end06_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(the_end06_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; the end07
-
-	lda	#>(the_end07_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(the_end07_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#200
-	jsr	long_wait
-
-	;===================
-	; the end08
-
-	lda	#>(the_end08_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(the_end08_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; the end09
-
-	lda	#>(the_end09_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(the_end09_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-	;===================
-	; the end10
-
-	lda	#>(the_end10_lzsa)
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(the_end10_lzsa)
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#$10			; load image off-screen $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
-
-;	jsr	wait_until_keypressed
-
-	ldx	#25
-	jsr	long_wait
-
-
+	lda	#<flying_sequence
+	sta	INTRO_LOOPL
+	lda	#>flying_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence
 
 ;===========================
 ; real end
@@ -631,17 +173,57 @@ wait_until_keypressed:
 	rts
 
 
+	;	sequence:	0 = done
+	;			255 reload $C00 with PTR
+	;			0..127 wait TIME, then overlay $C00 with X
+	;			128..254 wait TIME then overlay $C00 with next
+	;	note: pauses *before* flipping to new graphic
 
-        ;=====================
-        ; long(er) wait
-        ; waits approximately ?? ms
+pickup_sequence:
+	.byte   255						; load to bg
+	.word	sky_bg_lzsa					; this
+	.byte	120						; wait 1
+	.word	rooftop00_lzsa					; overlay this
+	.byte	120						; wait 1
+	.word	rooftop00_lzsa					; overlay this
+	.byte	128+110	;	.word	rootfop01_lzsa		; next
+	.byte	128+110	;	.word	rootfop02_lzsa		; next
+	.byte	128+100	;	.word	rootfop03_lzsa		; next
+	.byte	128+100	;	.word	onboard_lzsa		; next
+	.byte	0						; finish
 
-long_wait:
-        lda     #100
-        jsr     WAIT                    ; delay
-        dex
-        bne     long_wait
-        rts
+wing_sequence:
+	.byte   255						; load to bg
+	.word	wing_bg_lzsa					;  this
+	.byte	60
+	.word	left_unfurl1_lzsa
+	.byte	128+40	;	.word	left_unfurl2_lzsa	; next
+	.byte	128+60	;	.word	right_unfurl1_lzsa	; next
+	.byte	128+40	;	.word	right_unfurl2_lzsa	; next
+	.byte	0						; finish
+
+flying_sequence:
+	.byte   255						; load to bg
+	.word	sky_bg_lzsa					;  this
+	.byte	50
+	.word	flying01_lzsa
+	.byte	128+50	;	.word	flying03_lzsa		; next
+	.byte	128+50	;	.word	flying05_lzsa		; next
+	.byte	128+50	;	.word	flying07_lzsa		; next
+	.byte	128+50	;	.word	flying09_lzsa		; next
+	.byte	128+50	;	.word	flying11_lzsa		; next
+	.byte	128+50	;	.word	the_end01_lzsa		; next
+	.byte	128+50	;	.word	the_end02_lzsa		; next
+	.byte	128+50	;	.word	the_end03_lzsa		; next
+	.byte	128+50	;	.word	the_end04_lzsa		; next
+	.byte	128+50	;	.word	the_end05_lzsa		; next
+	.byte	128+50	;	.word	the_end06_lzsa		; next
+	.byte	128+50	;	.word	the_end07_lzsa		; next
+	.byte	128+120	;	.word	the_end08_lzsa		; next
+	.byte	128+50	;	.word	the_end09_lzsa		; next
+	.byte	128+50	;	.word	the_end10_lzsa		; next
+	.byte	128+50	;	.word	blank_lzsa		; next
+	.byte	0						; finish
 
 
 .include "credits.s"
@@ -654,6 +236,7 @@ long_wait:
 .include "../gr_copy.s"
 .include "../gr_offsets.s"
 .include "../gr_overlay.s"
+.include "../gr_run_sequence.s"
 
 .include "../pt3_player/pt3_lib_core.s"
 .include "../pt3_player/pt3_lib_init.s"

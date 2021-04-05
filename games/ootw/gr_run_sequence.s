@@ -10,6 +10,7 @@
 	; if time==128..254, wait TIME-128, then overlay current over $C00
 	;		assumes LZSA pointer points to image
 	;		basically after decoding one, input points to next
+	; note time delay is *before* flipping to next image
 
 run_sequence:
 	ldy	#0
@@ -35,9 +36,9 @@ reload_image:
 	jmp	seq_stuff
 
 not_reload:
-	tax
-	cmp	#$80			; if negative, no need to load pointer
-	bcs	no_set_image_ptr	; bge (branch if greater equal)
+					; load delay
+	tax				; if negative, no need to load pointer
+	bmi	no_set_image_ptr	;
 
 
 get_image_ptr:

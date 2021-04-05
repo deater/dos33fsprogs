@@ -11,6 +11,7 @@ ENDING:	ending.o
 	ld65 -o ENDING ending.o -C $(LINKER_SCRIPTS)/apple2_1700.inc
 
 ending.o:	ending.s \
+		credits.s \
 	$(PT3_PLAYER)/pt3_lib_core.s \
 	$(PT3_PLAYER)/pt3_lib_init.s \
 	$(PT3_PLAYER)/pt3_lib_mockingboard_detect.s \
