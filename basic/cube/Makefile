@@ -6,10 +6,11 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	cube.dsk
 
-cube.dsk:	HELLO CUBE.BAS
+cube.dsk:	HELLO CUBE.BAS CHEAT.BAS
 	cp $(EMPTY_DISK) cube.dsk
 	$(DOS33) -y cube.dsk SAVE A HELLO
 	$(DOS33) -y cube.dsk SAVE A CUBE.BAS
+	$(DOS33) -y cube.dsk SAVE A CHEAT.BAS
 
 ####
 
@@ -23,6 +24,11 @@ CUBE.BAS:	cube.bas
 
 ####
 
+CHEAT.BAS:	cheat.bas
+	$(TOKENIZE) < cheat.bas > CHEAT.BAS
+
+####
+
 clean:
-	rm -f *~ *.o *.lst HELLO CUBE.BAS
+	rm -f *~ *.o *.lst HELLO CUBE.BAS CHEAT.BAS
 
