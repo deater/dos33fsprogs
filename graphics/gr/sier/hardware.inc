@@ -39,7 +39,7 @@ NORMAL	=	$F273
 
 ;; MONITOR ROUTINES
 
-PLOT	= $F800			;; PLOT AT Y,A
+PLOT	= $F800			;; PLOT AT Y,A (A trashed, XY Saved)
 PLOT1	= $F80E			;; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
 HLINE	= $F819			;; HLINE Y,$2C at A
 VLINE	= $F828			;; VLINE A,$2D at Y

@@ -7,18 +7,27 @@ EMPTY_DISK = ../../../empty_disk/empty.dsk
 
 all:	sier.dsk
 
-sier.dsk:	HELLO SIER SIER_BOT SIER_TINY SIER_64
+sier.dsk:	HELLO SIER SIER_BOT SIER_TINY SIER_64 MOD9
 	cp $(EMPTY_DISK) sier.dsk
 	$(DOS33) -y sier.dsk SAVE A HELLO
 	$(DOS33) -y sier.dsk BSAVE -a 0x60 SIER
 	$(DOS33) -y sier.dsk BSAVE -a 0x36C SIER_BOT
 	$(DOS33) -y sier.dsk BSAVE -a 0x300 SIER_TINY
 	$(DOS33) -y sier.dsk BSAVE -a 0x300 SIER_64
+	$(DOS33) -y sier.dsk BSAVE -a 0x375 MOD9
 
 ###
 
 HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
+
+###
+
+MOD9:	mod9.o
+	ld65 -o MOD9 mod9.o -C ./apple2_375.inc
+
+mod9.o:	mod9.s
+	ca65 -o mod9.o mod9.s -l mod9.lst
 
 ###
 
@@ -58,4 +67,4 @@ sier_64.o:	sier_64.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO SIER SIER_TINY SIER_64
+	rm -f *~ *.o *.lst HELLO SIER SIER_TINY SIER_64 MOD9
