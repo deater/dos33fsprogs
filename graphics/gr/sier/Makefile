@@ -7,7 +7,7 @@ EMPTY_DISK = ../../../empty_disk/empty.dsk
 
 all:	sier.dsk
 
-sier.dsk:	HELLO SIER SIER_BOT SIER_TINY SIER_64 MOD9
+sier.dsk:	HELLO SIER SIER_BOT SIER_TINY SIER_64 MOD9 XOR_ZOOM MOD9_ZOOM
 	cp $(EMPTY_DISK) sier.dsk
 	$(DOS33) -y sier.dsk SAVE A HELLO
 	$(DOS33) -y sier.dsk BSAVE -a 0x60 SIER
@@ -15,6 +15,8 @@ sier.dsk:	HELLO SIER SIER_BOT SIER_TINY SIER_64 MOD9
 	$(DOS33) -y sier.dsk BSAVE -a 0x300 SIER_TINY
 	$(DOS33) -y sier.dsk BSAVE -a 0x300 SIER_64
 	$(DOS33) -y sier.dsk BSAVE -a 0x375 MOD9
+	$(DOS33) -y sier.dsk BSAVE -a 0x37C XOR_ZOOM
+	$(DOS33) -y sier.dsk BSAVE -a 0x300 MOD9_ZOOM
 
 ###
 
@@ -36,6 +38,23 @@ SIER:	sier.o
 
 sier.o:	sier.s
 	ca65 -o sier.o sier.s -l sier.lst
+
+###
+
+XOR_ZOOM:	xor_zoom.o
+	ld65 -o XOR_ZOOM xor_zoom.o -C ./apple2_37c.inc
+
+xor_zoom.o:	xor_zoom.s
+	ca65 -o xor_zoom.o xor_zoom.s -l xor_zoom.lst
+
+###
+
+MOD9_ZOOM:	mod9_zoom.o
+	ld65 -o MOD9_ZOOM mod9_zoom.o -C $(LINKERSCRIPTS)/apple2_300.inc
+
+mod9_zoom.o:	mod9_zoom.s
+	ca65 -o mod9_zoom.o mod9_zoom.s -l mod9_zoom.lst
+
 
 ###
 
@@ -67,4 +86,4 @@ sier_64.o:	sier_64.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO SIER SIER_TINY SIER_64 MOD9
+	rm -f *~ *.o *.lst HELLO SIER SIER_TINY SIER_64 MOD9 XOR_ZOOM MOD9_ZOOM SIER_BOT
