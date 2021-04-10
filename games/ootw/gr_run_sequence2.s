@@ -3,14 +3,17 @@
 	;=================================
 	; quit if escape pressed?
 
+	; this version (as opposed to original) the time delay is
+	;	*after* showing the image
+
 	; pattern is TIME, PTR
 	; if time==0, then done
-	; if time==255, reload $C00 with PTR
-	; if time==0..127 wait TIME, then overlay PTR over $C00
-	; if time==128..254, wait TIME-128, then overlay current over $C00
+	; if time==255, reload background $C00 with PTR, no delay
+	; if time==0..127 overlay PTR over $C00, then wait TIME
+	; if time==128..254, overlay current over $C00, then wait TIME-128
 	;		assumes LZSA pointer points to image
 	;		basically after decoding one, input points to next
-	; note time delay is *before* flipping to next image
+
 
 run_sequence:
 	ldy	#0
@@ -22,7 +25,8 @@ run_sequence_loop:
 	cmp	#$ff			; if $ff, then load image to $c00
 	bne	not_reload
 
-reload_image:
+	; reload background
+reload_bg:
 	iny
 	lda	(INTRO_LOOPL),Y
 	sta     getsrc_smc+1    ; LZSA_SRC_LO
@@ -39,6 +43,7 @@ not_reload:
 	tax				; load delay into X
 	bmi	no_set_image_ptr	; if negative, no need to load pointer
 
+	; need to get image pointer from data stream
 get_image_ptr:
 	iny
 	lda	(INTRO_LOOPL),Y
@@ -48,7 +53,24 @@ get_image_ptr:
 	sta     getsrc_smc+2    ; LZSA_SRC_HI
 
 no_set_image_ptr:
-	txa			; sleep
+
+	; decompress image
+
+	txa
+	pha				; save X on stack
+
+	iny
+	sty	INTRO_LOOPER		; save for later
+	lda	#$10			; load to $1000
+	jsr	decompress_lzsa2_fast
+
+	; display image and page flip
+
+	jsr	gr_overlay
+	jsr	page_flip
+
+	pla				; restore X from stack
+
 	and	#$7f
 	tax
 	cpx	#1
@@ -57,13 +79,6 @@ no_set_image_ptr:
 	jsr	long_wait
 seq_no_wait:
 
-	iny
-	sty	INTRO_LOOPER		; save for later
-	lda	#$10			; load to $1000
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_overlay
-	jsr	page_flip
 seq_stuff:
 	ldy	INTRO_LOOPER
 
