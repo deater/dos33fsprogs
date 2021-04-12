@@ -31,7 +31,7 @@ HGR_HMASK	= $30
 HGR_X		= $E0
 HGR_Y		= $E2
 HGR_COLOR	= $E4
-
+HGR_HORIZ	= $E5
 
 SAVEX	=	$F7
 XX_TH	=	$F8
@@ -96,7 +96,7 @@ sier_yloop:
 
 	ldy	#0		; y is x/7
 
-	lda	#$FF
+	lda	#$C0
 	sta	HGR_HMASK
 
 	; calc YY_T (8.8 fixed point add)
@@ -136,38 +136,76 @@ sier_xloop:
 	sta	XX_TH						; 3
 
 	; calc (YY-X_T)
-	lda 	YY						; 3
+	eor	#$ff						; 2
 	sec							; 2
-	sbc	XX_TH						; 3
+	adc	YY						; 3
+
 
 	; want (YY-(XX*T)) & (XX+(YY*T)
 
 	and	SAVED						; 3
 							;============
-							;	37
+							;	36
 
 
-	and	#$f0						; 2
+;	and	#$f8
 
-	beq	white
-black:
-	lda	#0	; black
-	.byte	$2C	; bit trick
+	beq	black						; 2/3
 white:
-	lda	#$ff	; white
+	lda	#$ff	; white					; 2
+;	.byte	$2C	; bit trick
+black:
+								;=====
+								; 4?
+
+
 
 color_ready:
-	sta	HGR_BITS
+;	sta	HGR_BITS
 
 no_shift:
 
-	jsr	HPLOT1		; plot at current position
+	; inline HPLOT1 (starting at $F45C)
+	eor	(GBASL),Y					; 5+
+	and	HGR_HMASK					; 3
+	eor	(GBASL),Y					; 5+
+	sta	(GBASL),Y					; 6
 
-	jsr	MOVE_RIGHT	; move current position right (trashes A)
+; inline move_right
+
+	lda	HGR_HMASK	; get mask
+	asl			; adjust
+	eor	#$80		; toggle top bit
+	bmi	lr_1		; if set, done?
+	lda	#$81		; otherwise set to $81
+	iny			; and move to next multiple of 7
+
+				; no need to check for right boundary
+				; as we do that separately
+
+lr_4:
+;	sta	HGR_HMASK	; save out hmask
+;	sty	HGR_HORIZ
+;	lda	HGR_BITS
+;color_shift:
+;	asl
+;	cmp	#$c0
+;	bpl	cs_1
+;	lda	HGR_BITS
+;	eor	#$7f
+;	sta	HGR_BITS
+cs_1:
+;	jmp	after
+
+lr_1:	sta	HGR_HMASK
+;	jmp	after
+
+after:
+
 
 	;==================================
-	inx
-	bne	sier_xloop
+	inx							; 2
+	bne	sier_xloop					; 3/2
 
 	;==================================
 
