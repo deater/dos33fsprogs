@@ -36,6 +36,7 @@ HGR_Y		= $E2
 HGR_COLOR	= $E4
 HGR_HORIZ	= $E5
 
+NEXTCOL	=	$F6
 SAVEX	=	$F7
 XX_TH	=	$F8
 XX_TL	=	$F9
@@ -155,47 +156,29 @@ yy_th_smc:
 
 
 ;	and	#$f8
-
+	clc							; 2
 	beq	black						; 2/3
 white:
-	lda	#$ff	; white					; 2
-;	.byte	$2C	; bit trick
+	sec							; 2
 black:
 								;=====
 								; 4?
 
+	ror	NEXTCOL						; 5
 
+	txa							; 2
+	and	#$7						; 2
+	bne	not_yet						; 2/3
 
-color_ready:
-;	sta	HGR_BITS
+	ror	NEXTCOL						; 5
 
-no_shift:
-
-	; inline HPLOT1 (starting at $F45C)
-	eor	(GBASL),Y					; 5+
-	and	HGR_HMASK					; 3
-	eor	(GBASL),Y					; 5+
+	lda	NEXTCOL						; 3
 	sta	(GBASL),Y					; 6
+	iny							; 2
 
-								;=======
-								; 19
-; inline MOVE_RIGHT
+not_yet:
 
-	lda	HGR_HMASK	; get mask			; 3
-	asl			; adjust			; 2
-	eor	#$80		; toggle top bit		; 2
-	bmi	lr_1		; if set, done?			; 3/2
-	lda	#$81		; otherwise set to $81		; 2
-	iny			; and move to next mult of 7	; 2
 
-				; no need to check for
-				; right boundary
-				; as we do that separately
-
-lr_1:
-	sta	HGR_HMASK					; 3
-								;======
-								; 16
 
 
 	;==================================
