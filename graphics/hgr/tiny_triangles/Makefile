@@ -7,15 +7,18 @@ EMPTY_DISK = ../../../empty_disk/empty.dsk
 
 all:	triangles.dsk
 
-triangles.dsk:	HELLO TINY_TRIANGLES XOR MOD9 MOD9_64 WRITING MOVE_RIGHT
+triangles.dsk:	HELLO TINY_TRIANGLES XOR MOD9 MOD9_64 WRITING MOVE_RIGHT \
+	SIER_HGR RAINBOW_SQUARES
 	cp $(EMPTY_DISK) triangles.dsk
 	$(DOS33) -y triangles.dsk SAVE A HELLO
 	$(DOS33) -y triangles.dsk BSAVE -a 0x070 TINY_TRIANGLES
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 XOR
-	$(DOS33) -y triangles.dsk BSAVE -a 0x300 MOD9
+	$(DOS33) -y triangles.dsk BSAVE -a 0x3F5 MOD9
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 MOD9_64
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 WRITING
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 MOVE_RIGHT
+	$(DOS33) -y triangles.dsk BSAVE -a 0x300 SIER_HGR
+	$(DOS33) -y triangles.dsk BSAVE -a 0x300 RAINBOW_SQUARES
 
 ###
 
@@ -41,10 +44,28 @@ xor.o:	xor.s
 ###
 
 MOD9:	mod9.o
-	ld65 -o MOD9 mod9.o -C $(LINKER_SCRIPTS)/apple2_300.inc
+	ld65 -o MOD9 mod9.o -C $(LINKER_SCRIPTS)/apple2_3f5.inc
 
 mod9.o:	mod9.s
 	ca65 -o mod9.o mod9.s -l mod9.lst
+
+###
+
+SIER_HGR:	sier_hgr.o
+	ld65 -o SIER_HGR sier_hgr.o -C $(LINKER_SCRIPTS)/apple2_300.inc
+
+sier_hgr.o:	sier_hgr.s
+	ca65 -o sier_hgr.o sier_hgr.s -l sier_hgr.lst
+
+###
+
+RAINBOW_SQUARES:	rainbow_squares.o
+	ld65 -o RAINBOW_SQUARES rainbow_squares.o -C $(LINKER_SCRIPTS)/apple2_3f5.inc
+
+rainbow_squares.o:	rainbow_squares.s
+	ca65 -o rainbow_squares.o rainbow_squares.s -l rainbow_squares.lst
+
+
 
 ###
 
@@ -77,4 +98,4 @@ move_right.o:	move_right.s
 
 clean:	
 	rm -f *~ *.o *.lst HELLO TINY_TRIANGLES XOR MOD9 MOD9_64 WRITING \
-			MOVE_RIGHT
+			MOVE_RIGHT SIER_HGR RAINBOW_SQUARES

@@ -15,7 +15,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	FASTAR2.BAS BIN.BAS FALLING.BAS SNOW.BAS XMAS.BAS AN3.BAS PLASMA.BAS \
 	C64.BAS SIERPINSKI.BAS FAKES.BAS SIER.BAS DROPS.BAS RR.BAS RR_HGR.BAS \
 	COMBO.BAS WIRES.BAS PATTERN.BAS BALL.BAS LINES.BAS MOD9.BAS \
-	XOR_ZOOM.BAS
+	XOR_ZOOM.BAS MOD9_HGR.BAS
 #	cp $(EMPTY_DISK)/empty.dsk  appleiibot.dsk
 	cp empty.dsk appleiibot.dsk
 	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
@@ -74,7 +74,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A LINES.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A MOD9.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A XOR_ZOOM.BAS
-
+	$(DOS33) -y appleiibot.dsk SAVE A MOD9_HGR.BAS
 
 ####
 
@@ -164,6 +164,11 @@ NYAN.BAS:	nyan.bas
 
 MOD9.BAS:	mod9.bas
 	$(TOKENIZE) < mod9.bas > MOD9.BAS
+
+####
+
+MOD9_HGR.BAS:	mod9_hgr.bas
+	$(TOKENIZE) < mod9_hgr.bas > MOD9_HGR.BAS
 
 ####
 

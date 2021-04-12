@@ -9,8 +9,10 @@ all:	ootw_c16_end.inc
 
 ootw_c16_end.inc:	\
 	blank.lzsa wing_bg.lzsa \
-	left_unfurl1.lzsa left_unfurl2.lzsa \
-	right_unfurl1.lzsa right_unfurl2.lzsa \
+	left_unfurl1.lzsa left_unfurl2.lzsa left_unfurl3.lzsa \
+	left_unfurl4.lzsa left_unfurl5.lzsa \
+	right_unfurl1.lzsa right_unfurl2.lzsa right_unfurl3.lzsa \
+	right_unfurl4.lzsa right_unfurl5.lzsa \
 	sky_bg.lzsa \
 	rooftop_bg.lzsa \
 	rooftop01.lzsa rooftop02.lzsa rooftop03.lzsa rooftop04.lzsa \
@@ -59,8 +61,14 @@ ootw_c16_end.inc:	\
 	echo "wing_bg_lzsa: .incbin \"wing_bg.lzsa\"" >> ootw_c16_end.inc
 	echo "left_unfurl1_lzsa: .incbin \"left_unfurl1.lzsa\"" >> ootw_c16_end.inc
 	echo "left_unfurl2_lzsa: .incbin \"left_unfurl2.lzsa\"" >> ootw_c16_end.inc
+	echo "left_unfurl3_lzsa: .incbin \"left_unfurl3.lzsa\"" >> ootw_c16_end.inc
+	echo "left_unfurl4_lzsa: .incbin \"left_unfurl4.lzsa\"" >> ootw_c16_end.inc
+	echo "left_unfurl5_lzsa: .incbin \"left_unfurl5.lzsa\"" >> ootw_c16_end.inc
 	echo "right_unfurl1_lzsa: .incbin \"right_unfurl1.lzsa\"" >> ootw_c16_end.inc
 	echo "right_unfurl2_lzsa: .incbin \"right_unfurl2.lzsa\"" >> ootw_c16_end.inc
+	echo "right_unfurl3_lzsa: .incbin \"right_unfurl3.lzsa\"" >> ootw_c16_end.inc
+	echo "right_unfurl4_lzsa: .incbin \"right_unfurl4.lzsa\"" >> ootw_c16_end.inc
+	echo "right_unfurl5_lzsa: .incbin \"right_unfurl5.lzsa\"" >> ootw_c16_end.inc
 	echo "onboard_lzsa: .incbin \"onboard.lzsa\"" >> ootw_c16_end.inc
 	echo "sky_bg_lzsa: .incbin \"sky_bg.lzsa\"" >> ootw_c16_end.inc
 	echo "flying01_lzsa: .incbin \"flying01.lzsa\"" >> ootw_c16_end.inc

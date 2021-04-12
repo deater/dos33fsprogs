@@ -8,8 +8,14 @@
 
 //#define OFFSET	35
 
+#define END_AT_3F5	0
+#define BEGIN_AT_3F5	1
+
+
 int main(int argc, char **argv) {
 
+//	int mode=END_AT_3F5;
+	int mode=BEGIN_AT_3F5;
 	int i = 0;
 	int e = 0,filesize;
 	int val,pv,final;
@@ -18,7 +24,6 @@ int main(int argc, char **argv) {
 	int third,enc_ptr=0;
 
 //	printf("1REM");
-
 
 	filesize=read(0,in,1024);
 	do {
@@ -107,25 +112,28 @@ int main(int argc, char **argv) {
 	printf("2CALL768\"%s%s\n",enc2,enc);
 #endif
 
-#if 1
-// if using & to the end then jumping back
-	printf("1FORI=0TO%d:POKE%d+I,4*PEEK(%d+I)-"
-		"192+(PEEK(%d+I/3)-%d)/4^(I-INT(I/3)*3):NEXT\n",
-		filesize-1,
-		0x3f5-filesize+3,
-		2125,2125+filesize,OFFSET2);
-	printf("2&\"%s%s\n",enc2,enc);
-#endif
+	if (mode==END_AT_3F5) {
+		fprintf(stderr,"Ending at $3F5\n");
+		printf("1FORI=0TO%d:POKE%d+I,4*PEEK(%d+I)-"
+			"192+(PEEK(%d+I/3)-%d)/4^(I-INT(I/3)*3):NEXT\n",
+			filesize-1,
+			0x3f5-filesize+3,
+			2125,2125+filesize,OFFSET2);
+		printf("2&\"%s%s\n",enc2,enc);
+	}
 
-#if 0
-// if using & to jump to beginning (over-writing text page)
-	printf("1FORI=0TO%d:POKE%d+I,4*PEEK(%d+I)-"
-		"192+(PEEK(%d+I/3)-%d)/4^(I-INT(I/3)*3):NEXT\n",
-		filesize-1,
-		0x3f5,
-		2126,2126+filesize,OFFSET2);
-	printf("2&\"%s%s\n",enc2,enc);
-#endif
+
+	// if using & to jump to beginning (over-writing text page)
+	if (mode==BEGIN_AT_3F5) {
+		fprintf(stderr,"Beginning at $3F5\n");
+
+		printf("1FORI=0TO%d:POKE%d+I,4*PEEK(%d+I)-"
+			"192+(PEEK(%d+I/3)-%d)/4^(I-INT(I/3)*3):NEXT\n",
+			filesize-1,
+			0x3f5,
+			2126,2126+filesize,OFFSET2);
+		printf("2&\"%s%s\n",enc2,enc);
+	}
 
 //	printf("%s\n",enc);
 //	printf("2FORI=0TO%d:POKE768+I,4*PEEK(2054+I)-"
