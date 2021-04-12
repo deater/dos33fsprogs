@@ -23,24 +23,21 @@
 ; zero page
 
 HGR_BITS	= $1C
-GBASL		= $26
 GBASH		= $27
 MASK		= $2E
 COLOR		= $30
-HGR_HMASK	= $30
 HGR_X		= $E0
 HGR_Y		= $E2
 HGR_COLOR	= $E4
 
-
-SAVEX	=	$F7
+;XX	=	$F7
 XX_TH	=	$F8
 XX_TL	=	$F9
-YY	=	$FA
+;YY	=	$FA
 YY_TH	=	$FB
 YY_TL	=	$FC
-T_L	=	$FD
-T_H	=	$FE
+;T_L	=	$FD
+;T_H	=	$FE
 SAVED	=	$FF
 
 ; Soft switches
@@ -52,18 +49,10 @@ LORES	= $C056		; Enable LORES graphics
 ; ROM routines
 HGR	= $F3E2
 HGR2	= $F3D8
-HPOSN		= $F411
-HPLOT0		= $F457
-HPLOT1		= $F45A		; skip the HPOSN call
-COLOR_SHIFT	= $F47E		; shift color for odd/even Y (0..7 or 7..13)
-MOVE_RIGHT	= $F48A		; move next plot location one to the right
-MOVE_DOWN	= $F504		; clc at f504, needed?
-				; f505 is applesoft entry point but assumes c?
-				; move next plot location one to the right
-
-				; note moveright/movedown respect HGR_PAGE
-
-COLORTBL	= $F6F6
+HPLOT0  = $F457
+PLOT1	= $F80E		;; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
+GBASCALC= $F847		;; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
+SETGR   = $FB40
 
 
 ;.zeropage
@@ -76,28 +65,18 @@ sier:
 	jsr	HGR2		; set FULLGR, sets A=0
 
 
-	lda	#0		; start with multiplier 0
-	sta	T_L
-	sta	T_H
+;	lda	#0		; start with multiplier 0
+;	sta	T_L
+;	sta	T_H
 
 sier_outer:
-	ldy	#$40
-	sty	GBASH
-
 
 	ldy	#0		; YY starts at 0
-	sty	YY
-	sty	GBASL
 
 	sty	YY_TL
 	sty	YY_TH
 
 sier_yloop:
-
-	ldy	#0		; y is x/7
-
-	lda	#$FF
-	sta	HGR_HMASK
 
 	; calc YY_T (8.8 fixed point add)
 	; save space by skipping clc as it's only a slight variation w/o
@@ -108,6 +87,29 @@ sier_yloop:
 	lda	YY_TH
 	adc	T_H
 	sta	YY_TH
+
+;	txa	; YY			; plot call needs Y/2
+;	lsr
+
+;	php
+
+;	bcc	even_mask
+;	ldy	#$f0
+;	.byte	$2C	; bit hack
+;even_mask:
+;	ldy	#$0f
+;	sty	MASK
+
+;	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
+
+;	lda	GBASH
+;draw_page_smc:
+;	adc	#0
+;	sta	GBASH		 ; adjust for PAGE1/PAGE2 ($400/$800)
+
+;	plp
+;	jsr	$f806		; trick to calculate MASK by jumping
+				; into middle of PLOT routine
 
 	; reset XX to 0
 
@@ -122,62 +124,62 @@ sier_xloop:
 
 	; SAVED = XX+(Y*T)
 ;	clc
-	txa		; XX					; 2
-	adc	YY_TH						; 3
-	sta	SAVED						; 3
+	txa		; XX
+	adc	YY_TH
+	sta	SAVED
+
 
 	; calc XX*T
 ;	clc
-	lda	XX_TL						; 3
-	adc	T_L						; 3
-	sta	XX_TL						; 3
-	lda	XX_TH						; 3
-	adc	T_H						; 3
-	sta	XX_TH						; 3
+	lda	XX_TL
+	adc	T_L
+	sta	XX_TL
+	lda	XX_TH
+	adc	T_H
+	sta	XX_TH
+
 
 	; calc (YY-X_T)
-	lda 	YY						; 3
-	sec							; 2
-	sbc	XX_TH						; 3
+	tya	; lda YY
+	sec
+	sbc	XX_TH
 
 	; want (YY-(XX*T)) & (XX+(YY*T)
 
-	and	SAVED						; 3
-							;============
-							;	37
+	and	SAVED
 
-
-	and	#$f0						; 2
+	and	#$f0
 
 	beq	white
 black:
-	lda	#0	; black
+	lda	#00	; black
 	.byte	$2C	; bit trick
 white:
-	lda	#$ff	; white
+	lda	#$ff	; green
+	sta	HGR_COLOR
 
-color_ready:
-	sta	HGR_BITS
 
-no_shift:
+	tya			; YY in A
+	ldy	#0
+				; XX in X
 
-	jsr	HPLOT1		; plot at current position
+	jsr	HPLOT0		; plot at (Y,X), (A)
+                                ; at begin, stores A to HGR_Y
+                                ;           X to HGR_X and Y to HGR_X+1
+                                ; destroys X,Y,A
+                                ; Y is XX/7
 
-	jsr	MOVE_RIGHT	; move current position right (trashes A)
 
-	;==================================
-	inx
+	ldy	HGR_Y
+	ldx	HGR_X
+
+	inx		; XX
+	cpx	#255
 	bne	sier_xloop
 
-	;==================================
-
-	jsr	MOVE_DOWN	; X/Y left alone
-
-	inc	YY		; repeat until Y=192
-	ldy	YY
+	iny		; YY
 	cpy	#192
 	bne	sier_yloop
-
 
 	; inc T
 ;	clc
@@ -192,10 +194,21 @@ no_carry:
 	; speed up the zoom as it goes
 	inc	blah_smc+1
 
+
+	; x is 48
 ;flip_pages:
-;	TODO if frame rate ever gets fast enough
+;	lda	draw_page_smc+1 ; DRAW_PAGE
+;	beq	done_page
+;	inx
+;done_page:
+	; X=48 ($30)	PAGE1=$C054-$30=$C024
+;	ldy	$C024,X		; set display page to PAGE1 or PAGE2
+
+;	eor	#$4             ; flip draw page between $400/$800
+;	sta	draw_page_smc+1 ; DRAW_PAGE
 
 	jmp	sier_outer	; what can we branch on?
 
-
+T_L:	.byte $00
+T_H:	.byte $00
 

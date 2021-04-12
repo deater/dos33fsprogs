@@ -8,7 +8,7 @@ EMPTY_DISK = ../../../empty_disk/empty.dsk
 all:	triangles.dsk
 
 triangles.dsk:	HELLO TINY_TRIANGLES XOR MOD9 MOD9_64 WRITING MOVE_RIGHT \
-	SIER_HGR RAINBOW_SQUARES
+	SIER_HGR SIER_HPLOT SIER_MOVERIGHT RAINBOW_SQUARES
 	cp $(EMPTY_DISK) triangles.dsk
 	$(DOS33) -y triangles.dsk SAVE A HELLO
 	$(DOS33) -y triangles.dsk BSAVE -a 0x070 TINY_TRIANGLES
@@ -18,6 +18,8 @@ triangles.dsk:	HELLO TINY_TRIANGLES XOR MOD9 MOD9_64 WRITING MOVE_RIGHT \
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 WRITING
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 MOVE_RIGHT
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 SIER_HGR
+	$(DOS33) -y triangles.dsk BSAVE -a 0x300 SIER_MOVERIGHT
+	$(DOS33) -y triangles.dsk BSAVE -a 0x300 SIER_HPLOT
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 RAINBOW_SQUARES
 
 ###
@@ -56,6 +58,24 @@ SIER_HGR:	sier_hgr.o
 
 sier_hgr.o:	sier_hgr.s
 	ca65 -o sier_hgr.o sier_hgr.s -l sier_hgr.lst
+
+###
+
+SIER_HPLOT:	sier_hplot.o
+	ld65 -o SIER_HPLOT sier_hplot.o -C $(LINKER_SCRIPTS)/apple2_300.inc
+
+sier_hplot.o:	sier_hplot.s
+	ca65 -o sier_hplot.o sier_hplot.s -l sier_hplot.lst
+
+###
+
+SIER_MOVERIGHT:	sier_moveright.o
+	ld65 -o SIER_MOVERIGHT sier_moveright.o -C $(LINKER_SCRIPTS)/apple2_300.inc
+
+sier_moveright.o:	sier_moveright.s
+	ca65 -o sier_moveright.o sier_moveright.s -l sier_moveright.lst
+
+
 
 ###
 
@@ -98,4 +118,5 @@ move_right.o:	move_right.s
 
 clean:	
 	rm -f *~ *.o *.lst HELLO TINY_TRIANGLES XOR MOD9 MOD9_64 WRITING \
-			MOVE_RIGHT SIER_HGR RAINBOW_SQUARES
+			MOVE_RIGHT SIER_HGR SIER_HPLOT SIER_MOVERIGHT \
+			RAINBOW_SQUARES
