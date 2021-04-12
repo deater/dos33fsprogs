@@ -76,27 +76,27 @@ sier:
 	jsr	HGR2		; set FULLGR, sets A=0
 
 
-	lda	#0		; start with multiplier 0
+;	lda	#0		; start with multiplier 0
 	sta	T_L
 	sta	T_H
 
 sier_outer:
-	ldy	#$40
-	sty	GBASH
+	lda	#$40
+	sta	GBASH
 
+	lda	#0		; YY starts at 0
+	sta	YY
+	sta	GBASL
 
-	ldy	#0		; YY starts at 0
-	sty	YY
-	sty	GBASL
+	sta	YY_TL
+	sta	YY_TH
 
-	sty	YY_TL
-	sty	YY_TH
+	sta	YY
+
 
 sier_yloop:
 
-	ldy	#0		; y is x/7
-
-	lda	#$C0
+	lda	#$C0		; 192
 	sta	HGR_HMASK
 
 	; calc YY_T (8.8 fixed point add)
@@ -111,6 +111,7 @@ sier_yloop:
 
 	; reset XX to 0
 
+	ldy	#0		; y is x/7
 	ldx	#0		; XX
 	stx	XX_TL
 	stx	XX_TH
@@ -171,41 +172,38 @@ no_shift:
 	eor	(GBASL),Y					; 5+
 	sta	(GBASL),Y					; 6
 
-; inline move_right
+								;=======
+								; 19
+; inline MOVE_RIGHT
 
-	lda	HGR_HMASK	; get mask
-	asl			; adjust
-	eor	#$80		; toggle top bit
-	bmi	lr_1		; if set, done?
-	lda	#$81		; otherwise set to $81
-	iny			; and move to next multiple of 7
+	lda	HGR_HMASK	; get mask			; 3
+	asl			; adjust			; 2
+	eor	#$80		; toggle top bit		; 2
+	bmi	lr_1		; if set, done?			; 3/2
+	lda	#$81		; otherwise set to $81		; 2
+	iny			; and move to next mult of 7	; 2
 
-				; no need to check for right boundary
+				; no need to check for
+				; right boundary
 				; as we do that separately
 
-lr_4:
-;	sta	HGR_HMASK	; save out hmask
-;	sty	HGR_HORIZ
-;	lda	HGR_BITS
-;color_shift:
-;	asl
-;	cmp	#$c0
-;	bpl	cs_1
-;	lda	HGR_BITS
-;	eor	#$7f
-;	sta	HGR_BITS
-cs_1:
-;	jmp	after
-
-lr_1:	sta	HGR_HMASK
-;	jmp	after
-
-after:
+lr_1:
+	sta	HGR_HMASK					; 3
+								;======
+								; 16
 
 
 	;==================================
 	inx							; 2
 	bne	sier_xloop					; 3/2
+
+
+			;=================
+			; total roughly 36+4+19+16+5 = 80
+			; 49152 per inside *80 = 3,932,160
+			;	apple II cyles/frame = 17,030
+			; 1FPS = 1,021,800
+
 
 	;==================================
 
