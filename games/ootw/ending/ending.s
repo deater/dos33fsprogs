@@ -189,44 +189,50 @@ wait_until_keypressed:
 pickup_sequence:
 	.byte   255						; load to bg
 	.word	rooftop_bg_lzsa					; this
-	.byte	128+110	;	.word	rooftop01_lzsa		; next
-	.byte	128+110	;	.word	rooftop02_lzsa		; next
-	.byte	128+100	;	.word	rooftop03_lzsa		; next
-	.byte	128+110	;	.word	rooftop04_lzsa		; next
-	.byte	128+110	;	.word	rooftop05_lzsa		; next
-	.byte	128+100	;	.word	rooftop06_lzsa		; next
-	.byte	128+110	;	.word	rooftop07_lzsa		; next
-	.byte	128+110	;	.word	rooftop08_lzsa		; next
-	.byte	128+100	;	.word	rooftop09_lzsa		; next
-	.byte	128+100	;	.word	rooftop10_lzsa		; next
-	.byte	128+110	;	.word	rooftop11_lzsa		; next
-	.byte	128+110	;	.word	rooftop12_lzsa		; next
-	.byte	128+100	;	.word	rooftop13_lzsa		; next
-	.byte	128+110	;	.word	rooftop14_lzsa		; next
-	.byte	128+110	;	.word	rooftop15_lzsa		; next
-	.byte	128+100	;	.word	rooftop16_lzsa		; next
-	.byte	128+110	;	.word	rooftop17_lzsa		; next
-	.byte	128+110	;	.word	rooftop18_lzsa		; next
-	.byte	128+100	;	.word	rooftop19_lzsa		; next
-	.byte	128+100	;	.word	rooftop20_lzsa		; next
-	.byte	128+110	;	.word	rooftop21_lzsa		; next
-	.byte	128+110	;	.word	rooftop22_lzsa		; next
-	.byte	128+100	;	.word	rooftop23_lzsa		; next
-	.byte	128+110	;	.word	rooftop24_lzsa		; next
-	.byte	128+110	;	.word	rooftop25_lzsa		; next
-	.byte	128+100	;	.word	rooftop26_lzsa		; next
-	.byte	128+110	;	.word	rooftop27_lzsa		; next
-	.byte	128+110	;	.word	rooftop28_lzsa		; next
-	.byte	128+100	;	.word	rooftop29_lzsa		; next
+	.byte	128+20	;	.word	rooftop01_lzsa		; next
+	.byte	128+20	;	.word	rooftop02_lzsa		; next
+	.byte	128+20	;	.word	rooftop03_lzsa		; next
+	.byte	128+20	;	.word	rooftop04_lzsa		; next
+	.byte	128+20	;	.word	rooftop05_lzsa		; next
+	.byte	128+20	;	.word	rooftop06_lzsa		; next
+	.byte	128+20	;	.word	rooftop07_lzsa		; next
+	.byte	128+20	;	.word	rooftop08_lzsa		; next
+	.byte	128+20	;	.word	rooftop09_lzsa		; next
+	.byte	128+20	;	.word	rooftop10_lzsa		; next
+	.byte	128+20	;	.word	rooftop11_lzsa		; next
+	.byte	128+20	;	.word	rooftop12_lzsa		; next
+	.byte	128+20	;	.word	rooftop13_lzsa		; next
+	.byte	128+20	;	.word	rooftop14_lzsa		; next
+	.byte	128+20	;	.word	rooftop15_lzsa		; next
+	.byte	128+20	;	.word	rooftop16_lzsa		; next
+	.byte	128+20	;	.word	rooftop17_lzsa		; next
+	.byte	128+20	;	.word	rooftop18_lzsa		; next
+	.byte	128+20	;	.word	rooftop19_lzsa		; next
+	.byte	128+20	;	.word	rooftop20_lzsa		; next
+	.byte	128+20	;	.word	rooftop21_lzsa		; next
+	.byte	128+20	;	.word	rooftop22_lzsa		; next
+	.byte	128+20	;	.word	rooftop23_lzsa		; next
+	.byte	128+20	;	.word	rooftop24_lzsa		; next
+	.byte	128+20	;	.word	rooftop25_lzsa		; next
+	.byte	128+20	;	.word	rooftop26_lzsa		; next
+	.byte	128+20	;	.word	rooftop27_lzsa		; next
+	.byte	128+20	;	.word	rooftop28_lzsa		; next
+	.byte	128+20	;	.word	rooftop29_lzsa		; next
 	.byte	0						; finish
 
 wing_sequence:
 	.byte   255						; load to bg
 	.word	wing_bg_lzsa					;  this
-	.byte	128+60	;	.word	left_unfurl1_lzsa	; next
-	.byte	128+40	;	.word	left_unfurl2_lzsa	; next
-	.byte	128+60	;	.word	right_unfurl1_lzsa	; next
-	.byte	128+40	;	.word	right_unfurl2_lzsa	; next
+	.byte	128+50	;	.word	left_unfurl1_lzsa	; next
+	.byte	128+30	;	.word	left_unfurl2_lzsa	; next
+	.byte	128+30	;	.word	left_unfurl3_lzsa	; next
+	.byte	128+30	;	.word	left_unfurl4_lzsa	; next
+	.byte	128+30	;	.word	left_unfurl5_lzsa	; next
+	.byte	128+50	;	.word	right_unfurl1_lzsa	; next
+	.byte	128+30	;	.word	right_unfurl2_lzsa	; next
+	.byte	128+30	;	.word	right_unfurl3_lzsa	; next
+	.byte	128+30	;	.word	right_unfurl4_lzsa	; next
+	.byte	128+30	;	.word	right_unfurl5_lzsa	; next
 	.byte	128+40	;	.word	onboard_lzsa		; next
 	.byte	0						; finish
 
