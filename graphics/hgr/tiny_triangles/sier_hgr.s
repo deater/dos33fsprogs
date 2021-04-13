@@ -36,8 +36,8 @@ HGR_Y		= $E2
 HGR_COLOR	= $E4
 HGR_HORIZ	= $E5
 
-NEXTCOL	=	$F6
-SAVEX	=	$F7
+SEVEN	=	$F6
+NEXTCOL	=	$F7
 XX_TH	=	$F8
 XX_TL	=	$F9
 YY	=	$FA
@@ -88,6 +88,9 @@ sier_outer:
 	lda	#$40		; start on page2 ($4000)
 	sta	GBASH
 
+;	lda	#$7
+;	sta	SEVEN
+
 	ldx	#0		; get X 0 for later
 	stx	YY		; YY starts at 0
 	stx	GBASL		; GBASL is $00
@@ -131,6 +134,11 @@ sier_yloop:
 	ldy	#0		; y is x/7
 	ldx	#0		; XX
 
+
+seven_loop:
+	lda	#7
+	sta	SEVEN
+
 sier_xloop:
 
 	; want (YY-(XX*T)) & (XX+(YY*T)
@@ -166,24 +174,22 @@ black:
 
 	ror	NEXTCOL						; 5
 
-	txa							; 2
-	and	#$7						; 2
-	bne	not_yet						; 2/3
+	inx
 
-	ror	NEXTCOL						; 5
+	dec	SEVEN
+	bne	sier_xloop
 
-	lda	NEXTCOL						; 3
+	lda	NEXTCOL	; sign extend top bit,
+	cmp	#$80	; matches earlier cool colors
+	ror
+
+;	lda	#$7f
+
 	sta	(GBASL),Y					; 6
 	iny							; 2
 
-not_yet:
-
-
-
-
-	;==================================
-	inx							; 2
-	bne	sier_xloop					; 3/2
+	cpy	#36
+	bne	seven_loop					; 3/2
 
 
 			;=================
