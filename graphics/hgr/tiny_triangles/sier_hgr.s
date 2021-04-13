@@ -86,11 +86,6 @@ sier:
 	sta	T_H
 
 sier_outer:
-	lda	#$42		; start on page2 line 32 ($4200)
-	sta	GBASH
-
-	lda	#$1		; center
-	sta	GBASL
 
 	ldx	#0		; get X 0 for later
 	stx	YY		; YY starts at 0
@@ -134,9 +129,25 @@ no_carry:
 	inc	speed_smc+1
 
 
+	lda	#$1		; center
+	sta	GBASL
 
+	lda	#$42		; start on page2 line 32 ($4200)
+	sta	GBASH
 
 sier_yloop:
+
+	; GBASH is in A here
+
+;	lda	GBASH		; update output pointer
+	sta	gb_smc+2
+
+	lda	GBASL		; adjust so centered
+	clc
+	adc	#$1
+	sta	gb_smc+1
+
+
 
 	ldx	YY				; 3
 	stx	add_yy_smc+1			; 4
@@ -217,22 +228,13 @@ gb_smc:
 	jsr	MOVE_DOWN	; X/Y left alone
 				; returns with GBASH in A
 
-;	lda	GBASH		; update output pointer
-	sta	gb_smc+2
-
-	lda	GBASL		; adjust so centered
-	clc
-	adc	#$1
-	sta	gb_smc+1
-
-
 	inc	YY		; repeat until YY=128
 	bpl	sier_yloop
 
 ;flip_pages:
 ;	TODO if frame rate ever gets fast enough
 
-	bmi	sier_outer	; branch always
+	jmp	sier_outer	; branch always
 
 
 	; $386, want to be at $3F5
