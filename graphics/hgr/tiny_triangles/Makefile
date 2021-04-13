@@ -17,7 +17,7 @@ triangles.dsk:	HELLO TINY_TRIANGLES XOR MOD9 MOD9_64 WRITING MOVE_RIGHT \
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 MOD9_64
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 WRITING
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 MOVE_RIGHT
-	$(DOS33) -y triangles.dsk BSAVE -a 0x300 SIER_HGR
+	$(DOS33) -y triangles.dsk BSAVE -a 0x3F5 SIER_HGR
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 SIER_INLINE
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 SIER_MOVERIGHT
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 SIER_HPLOT
@@ -55,7 +55,7 @@ mod9.o:	mod9.s
 ###
 
 SIER_HGR:	sier_hgr.o
-	ld65 -o SIER_HGR sier_hgr.o -C $(LINKER_SCRIPTS)/apple2_300.inc
+	ld65 -o SIER_HGR sier_hgr.o -C $(LINKER_SCRIPTS)/apple2_3f5.inc
 
 sier_hgr.o:	sier_hgr.s
 	ca65 -o sier_hgr.o sier_hgr.s -l sier_hgr.lst

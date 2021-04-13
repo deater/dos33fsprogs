@@ -21,7 +21,8 @@
 ;	INLINE HPLOT		roughly  9s / frame
 ; 	INLINE EVERYTHING	roughly  7s / frame
 ;	XT/YT lookup tables	roughly  6s / frame
-
+;	only write 1/7 of time	roughly  3s / frame
+;	only draw 128 lines	roughly  2s / frame
 
 ; zero page
 
@@ -85,15 +86,14 @@ sier:
 	sta	T_H
 
 sier_outer:
-	lda	#$40		; start on page2 ($4000)
+	lda	#$42		; start on page2 line 32 ($4200)
 	sta	GBASH
 
-;	lda	#$7
-;	sta	SEVEN
+	lda	#$1		; center
+	sta	GBASL
 
 	ldx	#0		; get X 0 for later
 	stx	YY		; YY starts at 0
-	stx	GBASL		; GBASL is $00
 
 	; create XX_T lookup table
 	; note, same as YY_T lookup table?
@@ -104,7 +104,7 @@ sier_outer:
 	; calc XX*T
 	; only really care about XX_TH
 xt_table_loop:
-	clc
+	clc							; 2
 	lda	XX_TL						; 3
 tl_smc:
 	adc	T_L						; 2
@@ -120,24 +120,35 @@ th_smc:
 	bne	xt_table_loop					; 3/2
 
 
+	; inc T
+;	clc
+	lda	T_L
+speed_smc:
+	adc	#2
+	sta	T_L
+	bcc	no_carry
+	inc	T_H
+no_carry:
+
+	; speed up the zoom as it goes
+	inc	speed_smc+1
+
+
+
+
 sier_yloop:
 
-	lda	#$C0		; 192	reset hmask at begin of line
-	sta	HGR_HMASK
-
 	ldx	YY				; 3
+	stx	add_yy_smc+1			; 4
 	lda	YT_LOOKUP_TABLE,X		; 4
 	sta	yy_th_smc+1			; 4
 
 	; reset XX to 0
 
-	ldy	#0		; y is x/7
 	ldx	#0		; XX
 
-
 seven_loop:
-	lda	#7
-	sta	SEVEN
+	ldy	#7
 
 sier_xloop:
 
@@ -145,55 +156,57 @@ sier_xloop:
 
 
 	; SAVED = XX+(Y*T)
-;	clc
+	clc			; needed for colors		; 2
 	txa		; XX					; 2
 yy_th_smc:
-	adc	#00						; 2
+	adc	#$dd						; 2
 	sta	SAVED						; 3
 
 	lda	XT_LOOKUP_TABLE,X	; ~(XX*T)		; 4
 	; calc (YY-XX*T)
 	sec							; 2
-	adc	YY						; 3
+add_yy_smc:
+	adc	#$dd						; 2
 
 	; want (YY-(XX*T)) & (XX+(YY*T)
 
 	and	SAVED						; 3
 							;============
-							;	19
+							;	20
 
-
-;	and	#$f8
 	clc							; 2
 	beq	black						; 2/3
 white:
 	sec							; 2
 black:
 								;=====
-								; 4?
+								; 5/6
 
-	ror	NEXTCOL						; 5
 
-	inx
+	ror	NEXTCOL		; rotate in next bit		; 5
 
-	dec	SEVEN
-	bne	sier_xloop
+	inx			; increment x			; 2
 
-	lda	NEXTCOL	; sign extend top bit,
-	cmp	#$80	; matches earlier cool colors
-	ror
+	dey			; dec seven count		; 2
+	bne	sier_xloop					; 2/3
 
-;	lda	#$7f
+	;===========================================================
 
-	sta	(GBASL),Y					; 6
-	iny							; 2
 
-	cpy	#36
-	bne	seven_loop					; 3/2
+	lda	NEXTCOL	; sign extend top bit,			; 3
+	cmp	#$80	; matches earlier cool colors		; 2
+	ror							; 2
+
+gb_smc:
+	sta	$4000						; 4
+	inc	gb_smc+1	; increase GBASL		; 6
+
+	cpx	#248						; 2
+	bcc	seven_loop					; 3/2
 
 
 			;=================
-			; total roughly 19+4+19+16+5 = 63
+			; total roughly ???
 			; 49152 per inside *80 = 3,145,728
 			;	apple II cyles/frame = 17,030
 			; 1FPS = 1,021,800
@@ -202,30 +215,27 @@ black:
 	;==================================
 
 	jsr	MOVE_DOWN	; X/Y left alone
+				; returns with GBASH in A
 
-	inc	YY		; repeat until Y=192
-	ldy	YY
-	cpy	#192
-	bne	sier_yloop
+;	lda	GBASH		; update output pointer
+	sta	gb_smc+2
+
+	lda	GBASL		; adjust so centered
+	clc
+	adc	#$1
+	sta	gb_smc+1
 
 
-	; inc T
-;	clc
-	lda	T_L
-blah_smc:
-	adc	#1
-	sta	T_L
-	bcc	no_carry
-	inc	T_H
-no_carry:
-
-	; speed up the zoom as it goes
-	inc	blah_smc+1
+	inc	YY		; repeat until YY=128
+	bpl	sier_yloop
 
 ;flip_pages:
 ;	TODO if frame rate ever gets fast enough
 
-	jmp	sier_outer	; what can we branch on?
+	bmi	sier_outer	; branch always
 
 
+	; $386, want to be at $3F5
+	; load at $36F???
 
+;	jmp	sier
