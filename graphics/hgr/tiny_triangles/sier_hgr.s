@@ -52,7 +52,6 @@ SAVED	=	$FF
 FULLGR	= $C052
 PAGE1	= $C054
 PAGE2	= $C055
-LORES	= $C056		; Enable LORES graphics
 
 ; ROM routines
 HGR	= $F3E2
@@ -90,10 +89,9 @@ sier_outer:
 	ldx	#0		; get X 0 for later
 	stx	YY		; YY starts at 0
 
-	; create XX_T lookup table
-	; note, same as YY_T lookup table?
+	; create XX_T and YY_T lookup tables
 
-	stx	XX_TL		; start at 0
+	stx	XX_TL		; always start at 0
 	stx	XX_TH
 
 	; calc XX*T
@@ -101,14 +99,15 @@ sier_outer:
 xt_table_loop:
 	clc							; 2
 	lda	XX_TL						; 3
-tl_smc:
 	adc	T_L						; 2
 	sta	XX_TL						; 3
+
 	lda	XX_TH						; 3
-th_smc:
 	adc	T_H						; 3
 	sta	XX_TH						; 3
+
 	sta	YT_LOOKUP_TABLE,X				; 5
+
 	eor	#$ff		; negate, as we subtract	; 2
 	sta	XT_LOOKUP_TABLE,X				; 5
 	inx							; 2
@@ -128,8 +127,9 @@ no_carry:
 	; speed up the zoom as it goes
 	inc	speed_smc+1
 
+	; set initial position on screen at line 32
 
-	lda	#$1		; center
+	lda	#$0		;
 	sta	GBASL
 
 	lda	#$42		; start on page2 line 32 ($4200)
@@ -147,7 +147,8 @@ sier_yloop:
 	adc	#$1
 	sta	gb_smc+1
 
-
+	; YY*T only needs to be updated once per line
+	; so do it here and then self-modify into place
 
 	ldx	YY				; 3
 	stx	add_yy_smc+1			; 4
@@ -159,7 +160,7 @@ sier_yloop:
 	ldx	#0		; XX
 
 seven_loop:
-	ldy	#7
+	ldy	#7		; apple ii 7 pixels per byte
 
 sier_xloop:
 
@@ -167,7 +168,7 @@ sier_xloop:
 
 
 	; SAVED = XX+(Y*T)
-	clc			; needed for colors		; 2
+	clc			; needed for proper colors	; 2
 	txa		; XX					; 2
 yy_th_smc:
 	adc	#$dd						; 2
@@ -209,7 +210,7 @@ black:
 	ror							; 2
 
 gb_smc:
-	sta	$4000						; 4
+	sta	$4000		; write to hi-res display	; 4
 	inc	gb_smc+1	; increase GBASL		; 6
 
 	cpx	#248						; 2
@@ -218,14 +219,16 @@ gb_smc:
 
 			;=================
 			; total roughly ???
-			; 49152 per inside *80 = 3,145,728
+			; full screen each inner cycle is done 256*192 = 49152
 			;	apple II cyles/frame = 17,030
 			; 1FPS = 1,021,800
 
 
 	;==================================
 
-	jsr	MOVE_DOWN	; X/Y left alone
+	jsr	MOVE_DOWN	; ROM routine to skip the next line
+				; as this is non-trivial on Apple II
+				; X/Y left alone
 				; returns with GBASH in A
 
 	inc	YY		; repeat until YY=128
@@ -234,10 +237,5 @@ gb_smc:
 ;flip_pages:
 ;	TODO if frame rate ever gets fast enough
 
-	jmp	sier_outer	; branch always
+	bmi	sier_outer	; branch always
 
-
-	; $386, want to be at $3F5
-	; load at $36F???
-
-;	jmp	sier
