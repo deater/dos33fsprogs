@@ -25,8 +25,10 @@ ootw_c16_end.inc:	\
 	rooftop29.lzsa \
 	onboard01.lzsa onboard02.lzsa onboard03.lzsa onboard04.lzsa \
 	onboard05.lzsa onboard06.lzsa onboard07.lzsa onboard08.lzsa \
-	flying01.lzsa flying03.lzsa flying05.lzsa flying07.lzsa flying09.lzsa \
-	flying11.lzsa \
+	flying01.lzsa flying02.lzsa flying03.lzsa flying04.lzsa flying05.lzsa \
+	flying06.lzsa flying07.lzsa flying08.lzsa flying09.lzsa flying10.lzsa \
+	flying11.lzsa flying12.lzsa flying13.lzsa flying14.lzsa	flying15.lzsa \
+	flying16.lzsa \
 	the_end01.lzsa the_end02.lzsa the_end03.lzsa the_end04.lzsa the_end05.lzsa \
 	the_end06.lzsa the_end07.lzsa the_end08.lzsa the_end09.lzsa the_end10.lzsa
 	echo "rooftop_bg_lzsa: .incbin \"rooftop_bg.lzsa\"" > ootw_c16_end.inc
@@ -80,11 +82,21 @@ ootw_c16_end.inc:	\
 	echo "onboard08_lzsa: .incbin \"onboard08.lzsa\"" >> ootw_c16_end.inc
 	echo "sky_bg_lzsa: .incbin \"sky_bg.lzsa\"" >> ootw_c16_end.inc
 	echo "flying01_lzsa: .incbin \"flying01.lzsa\"" >> ootw_c16_end.inc
+	echo "flying02_lzsa: .incbin \"flying02.lzsa\"" >> ootw_c16_end.inc
 	echo "flying03_lzsa: .incbin \"flying03.lzsa\"" >> ootw_c16_end.inc
+	echo "flying04_lzsa: .incbin \"flying04.lzsa\"" >> ootw_c16_end.inc
 	echo "flying05_lzsa: .incbin \"flying05.lzsa\"" >> ootw_c16_end.inc
+	echo "flying06_lzsa: .incbin \"flying06.lzsa\"" >> ootw_c16_end.inc
 	echo "flying07_lzsa: .incbin \"flying07.lzsa\"" >> ootw_c16_end.inc
+	echo "flying08_lzsa: .incbin \"flying08.lzsa\"" >> ootw_c16_end.inc
 	echo "flying09_lzsa: .incbin \"flying09.lzsa\"" >> ootw_c16_end.inc
+	echo "flying10_lzsa: .incbin \"flying10.lzsa\"" >> ootw_c16_end.inc
 	echo "flying11_lzsa: .incbin \"flying11.lzsa\"" >> ootw_c16_end.inc
+	echo "flying12_lzsa: .incbin \"flying12.lzsa\"" >> ootw_c16_end.inc
+	echo "flying13_lzsa: .incbin \"flying13.lzsa\"" >> ootw_c16_end.inc
+	echo "flying14_lzsa: .incbin \"flying14.lzsa\"" >> ootw_c16_end.inc
+	echo "flying15_lzsa: .incbin \"flying15.lzsa\"" >> ootw_c16_end.inc
+	echo "flying16_lzsa: .incbin \"flying16.lzsa\"" >> ootw_c16_end.inc
 	echo "the_end01_lzsa: .incbin \"the_end01.lzsa\"" >> ootw_c16_end.inc
 	echo "the_end02_lzsa: .incbin \"the_end02.lzsa\"" >> ootw_c16_end.inc
 	echo "the_end03_lzsa: .incbin \"the_end03.lzsa\"" >> ootw_c16_end.inc

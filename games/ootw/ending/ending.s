@@ -247,11 +247,21 @@ flying_sequence:
 	.byte   255						; load to bg
 	.word	sky_bg_lzsa					;  this
 	.byte	128+50	;	.word	flying01_lzsa		; next
+	.byte	128+50	;	.word	flying02_lzsa		; next
 	.byte	128+50	;	.word	flying03_lzsa		; next
+	.byte	128+50	;	.word	flying04_lzsa		; next
 	.byte	128+50	;	.word	flying05_lzsa		; next
+	.byte	128+50	;	.word	flying06_lzsa		; next
 	.byte	128+50	;	.word	flying07_lzsa		; next
+	.byte	128+50	;	.word	flying08_lzsa		; next
 	.byte	128+50	;	.word	flying09_lzsa		; next
+	.byte	128+50	;	.word	flying10_lzsa		; next
 	.byte	128+50	;	.word	flying11_lzsa		; next
+	.byte	128+50	;	.word	flying12_lzsa		; next
+	.byte	128+50	;	.word	flying13_lzsa		; next
+	.byte	128+50	;	.word	flying14_lzsa		; next
+	.byte	128+50	;	.word	flying15_lzsa		; next
+	.byte	128+50	;	.word	flying16_lzsa		; next
 	.byte	128+50	;	.word	the_end01_lzsa		; next
 	.byte	128+50	;	.word	the_end02_lzsa		; next
 	.byte	128+50	;	.word	the_end03_lzsa		; next
