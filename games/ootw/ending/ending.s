@@ -233,7 +233,14 @@ wing_sequence:
 	.byte	128+30	;	.word	right_unfurl3_lzsa	; next
 	.byte	128+30	;	.word	right_unfurl4_lzsa	; next
 	.byte	128+30	;	.word	right_unfurl5_lzsa	; next
-	.byte	128+40	;	.word	onboard_lzsa		; next
+	.byte	128+20	;	.word	onboard01_lzsa		; next
+	.byte	128+20	;	.word	onboard02_lzsa		; next
+	.byte	128+20	;	.word	onboard03_lzsa		; next
+	.byte	128+20	;	.word	onboard04_lzsa		; next
+	.byte	128+20	;	.word	onboard05_lzsa		; next
+	.byte	128+20	;	.word	onboard06_lzsa		; next
+	.byte	128+20	;	.word	onboard07_lzsa		; next
+	.byte	128+20	;	.word	onboard08_lzsa		; next
 	.byte	0						; finish
 
 flying_sequence:

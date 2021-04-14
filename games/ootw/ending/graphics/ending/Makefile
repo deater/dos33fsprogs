@@ -23,7 +23,8 @@ ootw_c16_end.inc:	\
 	rooftop21.lzsa rooftop22.lzsa rooftop23.lzsa rooftop24.lzsa \
 	rooftop25.lzsa rooftop26.lzsa rooftop27.lzsa rooftop28.lzsa \
 	rooftop29.lzsa \
-	onboard.lzsa \
+	onboard01.lzsa onboard02.lzsa onboard03.lzsa onboard04.lzsa \
+	onboard05.lzsa onboard06.lzsa onboard07.lzsa onboard08.lzsa \
 	flying01.lzsa flying03.lzsa flying05.lzsa flying07.lzsa flying09.lzsa \
 	flying11.lzsa \
 	the_end01.lzsa the_end02.lzsa the_end03.lzsa the_end04.lzsa the_end05.lzsa \
@@ -69,7 +70,14 @@ ootw_c16_end.inc:	\
 	echo "right_unfurl3_lzsa: .incbin \"right_unfurl3.lzsa\"" >> ootw_c16_end.inc
 	echo "right_unfurl4_lzsa: .incbin \"right_unfurl4.lzsa\"" >> ootw_c16_end.inc
 	echo "right_unfurl5_lzsa: .incbin \"right_unfurl5.lzsa\"" >> ootw_c16_end.inc
-	echo "onboard_lzsa: .incbin \"onboard.lzsa\"" >> ootw_c16_end.inc
+	echo "onboard01_lzsa: .incbin \"onboard01.lzsa\"" >> ootw_c16_end.inc
+	echo "onboard02_lzsa: .incbin \"onboard02.lzsa\"" >> ootw_c16_end.inc
+	echo "onboard03_lzsa: .incbin \"onboard03.lzsa\"" >> ootw_c16_end.inc
+	echo "onboard04_lzsa: .incbin \"onboard04.lzsa\"" >> ootw_c16_end.inc
+	echo "onboard05_lzsa: .incbin \"onboard05.lzsa\"" >> ootw_c16_end.inc
+	echo "onboard06_lzsa: .incbin \"onboard06.lzsa\"" >> ootw_c16_end.inc
+	echo "onboard07_lzsa: .incbin \"onboard07.lzsa\"" >> ootw_c16_end.inc
+	echo "onboard08_lzsa: .incbin \"onboard08.lzsa\"" >> ootw_c16_end.inc
 	echo "sky_bg_lzsa: .incbin \"sky_bg.lzsa\"" >> ootw_c16_end.inc
 	echo "flying01_lzsa: .incbin \"flying01.lzsa\"" >> ootw_c16_end.inc
 	echo "flying03_lzsa: .incbin \"flying03.lzsa\"" >> ootw_c16_end.inc
