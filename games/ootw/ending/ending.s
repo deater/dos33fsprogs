@@ -246,31 +246,36 @@ wing_sequence:
 flying_sequence:
 	.byte   255						; load to bg
 	.word	sky_bg_lzsa					;  this
-	.byte	128+50	;	.word	flying01_lzsa		; next
-	.byte	128+50	;	.word	flying02_lzsa		; next
-	.byte	128+50	;	.word	flying03_lzsa		; next
-	.byte	128+50	;	.word	flying04_lzsa		; next
-	.byte	128+50	;	.word	flying05_lzsa		; next
-	.byte	128+50	;	.word	flying06_lzsa		; next
-	.byte	128+50	;	.word	flying07_lzsa		; next
-	.byte	128+50	;	.word	flying08_lzsa		; next
-	.byte	128+50	;	.word	flying09_lzsa		; next
-	.byte	128+50	;	.word	flying10_lzsa		; next
-	.byte	128+50	;	.word	flying11_lzsa		; next
-	.byte	128+50	;	.word	flying12_lzsa		; next
-	.byte	128+50	;	.word	flying13_lzsa		; next
-	.byte	128+50	;	.word	flying14_lzsa		; next
-	.byte	128+50	;	.word	flying15_lzsa		; next
-	.byte	128+50	;	.word	flying16_lzsa		; next
-	.byte	128+50	;	.word	flying17_lzsa		; next
-	.byte	128+50	;	.word	flying18_lzsa		; next
-	.byte	128+50	;	.word	flying19_lzsa		; next
-	.byte	128+50	;	.word	flying20_lzsa		; next
-	.byte	128+50	;	.word	flying21_lzsa		; next
-	.byte	128+50	;	.word	flying22_lzsa		; next
-	.byte	128+50	;	.word	flying23_lzsa		; next
-	.byte	128+50	;	.word	flying24_lzsa		; next
-	.byte	128+50	;	.word	flying25_lzsa		; next
+	.byte	128+30	;	.word	flying01_lzsa		; next
+	.byte	128+30	;	.word	flying02_lzsa		; next
+	.byte	128+30	;	.word	flying03_lzsa		; next
+	.byte	128+30	;	.word	flying04_lzsa		; next
+	.byte	128+30	;	.word	flying05_lzsa		; next
+	.byte	128+30	;	.word	flying06_lzsa		; next
+	.byte	128+30	;	.word	flying07_lzsa		; next
+	.byte	128+30	;	.word	flying08_lzsa		; next
+	.byte	128+30	;	.word	flying09_lzsa		; next
+	.byte	128+30	;	.word	flying10_lzsa		; next
+	.byte	128+30	;	.word	flying11_lzsa		; next
+	.byte	128+30	;	.word	flying12_lzsa		; next
+	.byte	128+30	;	.word	flying13_lzsa		; next
+	.byte	128+30	;	.word	flying14_lzsa		; next
+	.byte	128+30	;	.word	flying15_lzsa		; next
+	.byte	128+30	;	.word	flying16_lzsa		; next
+	.byte	128+30	;	.word	flying17_lzsa		; next
+	.byte	128+30	;	.word	flying18_lzsa		; next
+	.byte	128+30	;	.word	flying19_lzsa		; next
+	.byte	128+30	;	.word	flying20_lzsa		; next
+	.byte	128+30	;	.word	flying21_lzsa		; next
+	.byte	128+30	;	.word	flying22_lzsa		; next
+	.byte	128+30	;	.word	flying23_lzsa		; next
+	.byte	128+30	;	.word	flying24_lzsa		; next
+	.byte	128+30	;	.word	flying25_lzsa		; next
+	.byte	128+30	;	.word	flying26_lzsa		; next
+	.byte	128+30	;	.word	flying27_lzsa		; next
+	.byte	128+30	;	.word	flying28_lzsa		; next
+	.byte	128+30	;	.word	flying29_lzsa		; next
+	.byte	128+30	;	.word	flying30_lzsa		; next
 	.byte	128+50	;	.word	the_end01_lzsa		; next
 	.byte	128+50	;	.word	the_end02_lzsa		; next
 	.byte	128+50	;	.word	the_end03_lzsa		; next
