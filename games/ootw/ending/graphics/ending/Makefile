@@ -31,6 +31,8 @@ ootw_c16_end.inc:	\
 	flying16.lzsa flying17.lzsa flying18.lzsa flying19.lzsa	flying20.lzsa \
 	flying21.lzsa flying22.lzsa flying23.lzsa flying24.lzsa	flying25.lzsa \
 	flying26.lzsa flying27.lzsa flying28.lzsa flying29.lzsa	flying30.lzsa \
+	flying31.lzsa flying32.lzsa flying33.lzsa flying34.lzsa	flying35.lzsa \
+	flying36.lzsa flying37.lzsa flying38.lzsa flying39.lzsa	flying40.lzsa \
 	the_end01.lzsa the_end02.lzsa the_end03.lzsa the_end04.lzsa the_end05.lzsa \
 	the_end06.lzsa the_end07.lzsa the_end08.lzsa the_end09.lzsa the_end10.lzsa
 	echo "rooftop_bg_lzsa: .incbin \"rooftop_bg.lzsa\"" > ootw_c16_end.inc
@@ -113,6 +115,16 @@ ootw_c16_end.inc:	\
 	echo "flying28_lzsa: .incbin \"flying28.lzsa\"" >> ootw_c16_end.inc
 	echo "flying29_lzsa: .incbin \"flying29.lzsa\"" >> ootw_c16_end.inc
 	echo "flying30_lzsa: .incbin \"flying30.lzsa\"" >> ootw_c16_end.inc
+	echo "flying31_lzsa: .incbin \"flying31.lzsa\"" >> ootw_c16_end.inc
+	echo "flying32_lzsa: .incbin \"flying32.lzsa\"" >> ootw_c16_end.inc
+	echo "flying33_lzsa: .incbin \"flying33.lzsa\"" >> ootw_c16_end.inc
+	echo "flying34_lzsa: .incbin \"flying34.lzsa\"" >> ootw_c16_end.inc
+	echo "flying35_lzsa: .incbin \"flying35.lzsa\"" >> ootw_c16_end.inc
+	echo "flying36_lzsa: .incbin \"flying36.lzsa\"" >> ootw_c16_end.inc
+	echo "flying37_lzsa: .incbin \"flying37.lzsa\"" >> ootw_c16_end.inc
+	echo "flying38_lzsa: .incbin \"flying38.lzsa\"" >> ootw_c16_end.inc
+	echo "flying39_lzsa: .incbin \"flying39.lzsa\"" >> ootw_c16_end.inc
+	echo "flying40_lzsa: .incbin \"flying40.lzsa\"" >> ootw_c16_end.inc
 	echo "the_end01_lzsa: .incbin \"the_end01.lzsa\"" >> ootw_c16_end.inc
 	echo "the_end02_lzsa: .incbin \"the_end02.lzsa\"" >> ootw_c16_end.inc
 	echo "the_end03_lzsa: .incbin \"the_end03.lzsa\"" >> ootw_c16_end.inc

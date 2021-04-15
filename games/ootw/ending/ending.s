@@ -276,6 +276,16 @@ flying_sequence:
 	.byte	128+30	;	.word	flying28_lzsa		; next
 	.byte	128+30	;	.word	flying29_lzsa		; next
 	.byte	128+30	;	.word	flying30_lzsa		; next
+	.byte	128+30	;	.word	flying31_lzsa		; next
+	.byte	128+30	;	.word	flying32_lzsa		; next
+	.byte	128+30	;	.word	flying33_lzsa		; next
+	.byte	128+30	;	.word	flying34_lzsa		; next
+	.byte	128+30	;	.word	flying35_lzsa		; next
+	.byte	128+30	;	.word	flying36_lzsa		; next
+	.byte	128+30	;	.word	flying37_lzsa		; next
+	.byte	128+30	;	.word	flying38_lzsa		; next
+	.byte	128+30	;	.word	flying39_lzsa		; next
+	.byte	128+30	;	.word	flying40_lzsa		; next
 	.byte	128+50	;	.word	the_end01_lzsa		; next
 	.byte	128+50	;	.word	the_end02_lzsa		; next
 	.byte	128+50	;	.word	the_end03_lzsa		; next
