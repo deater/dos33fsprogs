@@ -10,6 +10,15 @@
 
 ending:
 
+	; temporary debug
+
+
+	lda	#4
+	sta	DRAW_PAGE
+	lda	#0
+	sta	DISP_PAGE
+	jmp	handle_credits
+
 	;=========================
 	; set up sound
 	;=========================
@@ -132,10 +141,7 @@ cli_smc:
 ; credits
 ;===========================
 
-;quit_level:
-;	jsr	TEXT
-;	jsr	HOME
-;	lda	KEYRESET		; clear strobe
+handle_credits:
 
 	;======================
 	; scroll credits
@@ -165,7 +171,6 @@ sei_smc:
 	jmp	($FFFC)
 
 ;	jmp	repeat_ending
-
 
 
 	;======================
