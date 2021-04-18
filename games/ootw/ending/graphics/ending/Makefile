@@ -43,7 +43,8 @@ ootw_c16_end.inc:	\
 	the_end10.lzsa the_end11.lzsa the_end12.lzsa the_end13.lzsa the_end14.lzsa \
 	the_end15.lzsa the_end16.lzsa the_end17.lzsa the_end18.lzsa the_end19.lzsa \
 	the_end20.lzsa the_end21.lzsa the_end22.lzsa the_end23.lzsa the_end24.lzsa \
-	the_end25.lzsa the_end26.lzsa the_end27.lzsa the_end28.lzsa the_end29.lzsa
+	the_end25.lzsa the_end26.lzsa the_end27.lzsa the_end28.lzsa the_end29.lzsa \
+	black.lzsa
 	echo "rooftop_bg_lzsa: .incbin \"rooftop_bg.lzsa\"" > ootw_c16_end.inc
 	echo "rooftop01_lzsa: .incbin \"rooftop01.lzsa\"" >> ootw_c16_end.inc
 	echo "rooftop02_lzsa: .incbin \"rooftop02.lzsa\"" >> ootw_c16_end.inc
@@ -189,6 +190,7 @@ ootw_c16_end.inc:	\
 	echo "the_end27_lzsa: .incbin \"the_end27.lzsa\"" >> ootw_c16_end.inc
 	echo "the_end28_lzsa: .incbin \"the_end28.lzsa\"" >> ootw_c16_end.inc
 	echo "the_end29_lzsa: .incbin \"the_end29.lzsa\"" >> ootw_c16_end.inc
+	echo "black_lzsa: .incbin \"black.lzsa\"" >> ootw_c16_end.inc
 
 #####
 

@@ -131,13 +131,22 @@ run_sequence_40x40_done:
 
 
 
+	;=====================
+	; WAIT: delay 1/2(26+27A+5A^2) us
+	; A=60 approx  9.823ms
+	; A=61 approx 10.139ms
+	; A=62 approx 10.460ms
+	; A=63 approx 10.786ms
+	; A=64 approx 11.117ms
+	;
 
 	;=====================
 	; long(er) wait
-	; waits approximately ?? ms
-
+	; waits approximately X*10 ms
+	; X=100 1s
+	; X=4 = 40ms= 1/25s
 long_wait:
-	lda	#64
+	lda	#60
 	jsr	WAIT			; delay
 	dex
 	bne	long_wait
