@@ -132,10 +132,10 @@ cli_smc:
 ; credits
 ;===========================
 
-quit_level:
-	jsr	TEXT
-	jsr	HOME
-	lda	KEYRESET		; clear strobe
+;quit_level:
+;	jsr	TEXT
+;	jsr	HOME
+;	lda	KEYRESET		; clear strobe
 
 	;======================
 	; scroll credits
@@ -233,24 +233,24 @@ pickup_sequence:
 wing_sequence:
 	.byte   255						; load to bg
 	.word	wing_bg_lzsa					;  this
-	.byte	128+50	;	.word	left_unfurl1_lzsa	; 31.06-
-	.byte	128+30	;	.word	left_unfurl2_lzsa	; 31.20-
-	.byte	128+30	;	.word	left_unfurl3_lzsa	; 31.23-
-	.byte	128+30	;	.word	left_unfurl4_lzsa	; 32.01-
-	.byte	128+30	;	.word	left_unfurl5_lzsa	; 32.03-
-	.byte	128+50	;	.word	right_unfurl1_lzsa	; 33.01-
-	.byte	128+30	;	.word	right_unfurl2_lzsa	; 33.04-
-	.byte	128+30	;	.word	right_unfurl3_lzsa	; 33.06-
-	.byte	128+30	;	.word	right_unfurl4_lzsa	; 33.09-
-	.byte	128+30	;	.word	right_unfurl5_lzsa	; 33.12-
-	.byte	128+20	;	.word	onboard01_lzsa		; 34.15-
-	.byte	128+20	;	.word	onboard02_lzsa		; 34.18-
-	.byte	128+20	;	.word	onboard03_lzsa		; 34.21-
-	.byte	128+20	;	.word	onboard04_lzsa		; 34.24-
-	.byte	128+20	;	.word	onboard05_lzsa		; 35.01-
-	.byte	128+20	;	.word	onboard06_lzsa		; 35.04-
-	.byte	128+20	;	.word	onboard07_lzsa		; 35.07-
-	.byte	128+20	;	.word	onboard08_lzsa		; 35.10-
+	.byte	128+50	;	.word	left_unfurl1_lzsa	; 31.06 (14)
+	.byte	128+11	;	.word	left_unfurl2_lzsa	; 31.20 (3)
+	.byte	128+11	;	.word	left_unfurl3_lzsa	; 31.23 (3)
+	.byte	128+11	;	.word	left_unfurl4_lzsa	; 32.01 (2)
+	.byte	128+100	;	.word	left_unfurl5_lzsa	; 32.03 (27)
+	.byte	128+11	;	.word	right_unfurl1_lzsa	; 33.01 (3)
+	.byte	128+11	;	.word	right_unfurl2_lzsa	; 33.04 (2)
+	.byte	128+11	;	.word	right_unfurl3_lzsa	; 33.06 (3)
+	.byte	128+11	;	.word	right_unfurl4_lzsa	; 33.09 (3)
+	.byte	128+100	;	.word	right_unfurl5_lzsa	; 33.12 (27)
+	.byte	128+11	;	.word	onboard01_lzsa		; 34.15 (3)
+	.byte	128+11	;	.word	onboard02_lzsa		; 34.18 (3)
+	.byte	128+11	;	.word	onboard03_lzsa		; 34.21 (3)
+	.byte	128+11	;	.word	onboard04_lzsa		; 34.24 (3)
+	.byte	128+11	;	.word	onboard05_lzsa		; 35.01 (2)
+	.byte	128+11	;	.word	onboard06_lzsa		; 35.04 (3)
+	.byte	128+11	;	.word	onboard07_lzsa		; 35.07 (3)
+	.byte	128+11	;	.word	onboard08_lzsa		; 35.10 (2)
 	.byte	0						; 35.12-
 
 flying_sequence:

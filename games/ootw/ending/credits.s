@@ -4,21 +4,32 @@
 
 end_credits:
 
-	;
-	;
+	lda	KEYRESET
+	bit	SET_TEXT		; switch to text mode
+
 	; 0@24
 	; 0@23,1@24
 	; 0@22,1@23,2@24...
 	; 0@0...
 
 
+	; clear to space
+
+	lda	#$a0
+	sta	clear_all_color+1
+
+
+	; X is starting YPOS to print at
+
 	ldx	#46
 
 scroll_loop:
-	jsr	HOME
+;	jsr	HOME
+
+	jsr	clear_all	; trashes A,Y
 
 	ldy	#0
-	stx	XPOS
+	stx	XPOS		; X is YPOS to print at
 print_loop:
 
 	lda	credit_list,Y
@@ -29,33 +40,67 @@ print_loop:
 	tya
 	pha
 
-	ldy	XPOS
-	jsr	gotoy
+	ldy	XPOS			; YPOS on screen
 
+	;============================
+	; set BASL/BASH to offset w Y
+
+	lda	gr_offsets,Y
+	sta	BASL
+	lda	gr_offsets+1,Y
+	clc
+	adc	DRAW_PAGE
+	sta	BASH
+
+	;============================
+	; print the string
 	jsr	print_string
 
 	pla
 	tay
 
-	iny
+	iny			; move to next line
 	iny
 
 	inc	XPOS
 	inc	XPOS
 	lda	XPOS
-	cmp	#48
+
+	cmp	#48		; if off screen, don't print
 	bne	print_loop
+
+	;====================
+	; done printing
+
+	jsr	page_flip	; flip to page
+
+	;====================
+	; delay a bit
 
 	txa
 	pha
-	ldx	#20
-	jsr	long_wait
+	ldx	#40		; time to sleep (X*10ms)
+	jsr	long_wait	; trashes A,X
 	pla
 	tax
+
+	;===================
+	; scroll
 
 	dex
 	dex
 	bpl	scroll_loop
+
+	;============================================
+	; actual games pauses 10s, then scrolls again
+	;============================================
+	; delay 6s?
+
+	ldx	#200
+	jsr	long_wait
+
+	ldx	#200
+	jsr	long_wait
 
 	ldx	#200
 	jsr	long_wait
@@ -140,12 +185,5 @@ credit_list:
 end_message:
 .byte 6,10,"NOW GO BACK TO ANOTHER EARTH",0
 
-	;============================
-	; set BASL/BASH to offset w Y
-gotoy:
-	lda	gr_offsets,Y
-	sta	BASL
-	lda	gr_offsets+1,Y
-	sta	BASH
-	rts
+
 
