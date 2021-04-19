@@ -78,16 +78,14 @@ repeat_ending:
 	bit	FULLGR
 	bit	KEYRESET
 
-	;=================================
-	; Setup pages (is this necessary?)
-	;=================================
+	;============
+	; Setup pages
+	;============
 
-;	lda	#0
-;	sta	DRAW_PAGE
-;	lda	#1
-;	sta	DISP_PAGE
-
-
+	lda	#0
+	sta	DRAW_PAGE
+	lda	#4
+	sta	DISP_PAGE
 
 	;============
 	; start music

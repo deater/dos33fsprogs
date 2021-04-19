@@ -168,7 +168,7 @@ HELLO2:  hello2.bas
 
 #####
 
-zip:	ootw.dsk ootw_side2.dsk side3.dsk
+zip:	ootw.dsk ootw_side2.dsk ootw_side3.dsk
 	zip ootw.zip ootw.dsk ootw_side2.dsk ootw_side3.dsk
 
 #####
