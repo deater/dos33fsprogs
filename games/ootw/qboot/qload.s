@@ -197,7 +197,7 @@ track_array:
 	.byte 26,30, 2, 5	; C4,C5,C6,C7
 	.byte  8,11,14, 2	; C8,C9,C10,C11
 	.byte  5, 8,11,13	; C12,C13,C14,C15
-	.byte 19		; ENDING
+	.byte 20		; ENDING
 	.byte 99,0		; TITLE,FIRST_SECTOR
 
 

@@ -150,6 +150,11 @@ ootw_c15_level_init:
 	lda	#P_STANDING
 	sta	PHYSICIST_STATE
 
+	; set up friend
+
+	lda	#$ff		; not there at start
+	sta	friend_room
+
 	; set up aliens
 
 	jsr	clear_aliens
@@ -701,7 +706,6 @@ start_soldier:
 	ldy	#2
 	sty	FOREGROUND_COUNT
 
-
 not_new_walk:
 
 	ldy	FOREGROUND_COUNT
@@ -1118,7 +1122,7 @@ bath_intro:
 
 	lda	#0
 	sta	DRAW_PAGE
-	lda	#1
+	lda	#4
 	sta	DISP_PAGE
 
 	lda	#<bath_arrival_sequence

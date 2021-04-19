@@ -91,7 +91,7 @@ ootw_side3.dsk:	./qboot/QBOOT_DISK3 ./qboot/QLOAD \
 	$(DOS33_RAW) ootw_side3.dsk  8  0 ./ootw_c13/OOTW_C13	0   39
 	$(DOS33_RAW) ootw_side3.dsk  11 0 ./ootw_c14/OOTW_C14	0   38
 	$(DOS33_RAW) ootw_side3.dsk  13 0 ./ootw_c15/OOTW_C15	0   97
-	$(DOS33_RAW) ootw_side3.dsk  19 0 ./ending/ENDING	0   90
+	$(DOS33_RAW) ootw_side3.dsk  20 0 ./ending/ENDING	0   90
 
 ####
 
@@ -192,7 +192,7 @@ clean:
 	cd ootw_c14 && make clean
 	cd ootw_c15 && make clean
 	cd ending && make clean
-	cd title && make clean
+	cd qboot && make clean
 
 distclean:
 	make clean
