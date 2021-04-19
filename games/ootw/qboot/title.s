@@ -8,6 +8,7 @@ title:
 	sta	MENU_BASE		; start at level0 by default
 	sta	MENU_HIGHLIGHT
 
+redraw_title:
 	bit	TEXT
 	bit	PAGE0
 	jsr	HOME
@@ -27,10 +28,7 @@ title_loop:
 
 	jsr	draw_menu
 
-wait_for_keypress:
-	lda     KEYPRESS
-	bpl	wait_for_keypress
-	bit	KEYRESET
+	jsr	wait_for_keypress
 
 	; $15/$A = right/down
 	cmp	#$15+$80
@@ -48,6 +46,19 @@ wait_for_keypress:
 	cmp	#13+$80
 	beq	all_done
 
+	cmp	#'H'+$80
+	beq	want_help
+	cmp	#'h'+$80
+	bne	key_unknown
+want_help:
+
+	jsr	print_help
+
+	jsr	wait_for_keypress
+
+	jmp	redraw_title
+
+key_unknown:
 	; unknown, ignore
 	jmp	title_loop
 
@@ -81,14 +92,27 @@ all_done:
 print_help_and_go:
 	jsr	HOME
 
+	jsr	print_help
+
+ready_to_load:
+	jmp	$1400			; LOADER starts here
+
+wait_for_keypress:
+	lda     KEYPRESS
+	bpl	wait_for_keypress
+	bit	KEYRESET
+	rts
+
+print_help:
+	jsr	HOME
+
 	lda	#<directions_text
 	sta	OUTL
 	lda	#>directions_text
 	sta	OUTH
 	jsr	move_and_print_list
 
-ready_to_load:
-	jmp	$1400			; LOADER starts here
+	rts
 
 .include "../text_print.s"
 .include "../gr_offsets.s"
@@ -249,7 +273,7 @@ disable_highlight:
 
 
 title_text:
-.byte  1, 0, "//II II--\ II--\ II   II-- ]][[ ]][[",0
+.byte  1, 0, "//II II==\ II==\ II   II== ]][[ ]][[",0
 .byte  0, 1,"//_II II__/ II__/ II   II-   ][   ][",0
 .byte  0, 2,"II II II    II    II__ II__ ]][[ ]][[",0
 .byte  0, 3,"II II II                            _",0
@@ -265,7 +289,7 @@ title_text:
 .byte 10,14,          "A \/\/\/ PRODUCTION",0
 .byte 12,16,            "APPLE ][ FOREVER",0
 
-.byte 1,23, "USE ARROWS TO SELECT, RETURN TO START",0
+.byte 0,23, "ARROWS SELECT, RETURN STARTS, H FOR HELP",0
 .byte 255
 
 
@@ -292,7 +316,6 @@ menu_items:	; 23 wide
 
 
 directions_text:
-.byte 8, 0,"LOADING (BE PATIENT...)",0
 .byte 0, 5,"CONTROLS:",0
 .byte 3, 6,   "A OR <-      : MOVE LEFT",0
 .byte 3, 7,   "D OR ->      : MOVE RIGHT",0
@@ -303,7 +326,5 @@ directions_text:
 .byte 3,12,   "ESC          : QUITS",0
 .byte 255
 
-;.align $100
 
-;.include "qload.s"
 

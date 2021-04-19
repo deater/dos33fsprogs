@@ -42,7 +42,7 @@ qboot_sector_d3.o:	qboot_sector.s qboot_stage2.s
 QLOAD: qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1600.inc
 
-qload.o:        qload.s qboot.inc common_defines.inc
+qload.o:        qload.s qboot.inc common_defines.inc title.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 
