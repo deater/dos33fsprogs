@@ -1,7 +1,5 @@
 ; ootw -- It's the End of the Game as We Know It
 
-; TODO: missing a bunch of frames
-
 
 ; by Vince "Deater" Weaver	<vince@deater.net>
 
@@ -12,12 +10,11 @@ ending:
 
 	; temporary debug
 
-
-	lda	#4
-	sta	DRAW_PAGE
-	lda	#0
-	sta	DISP_PAGE
-	jmp	handle_credits
+;	lda	#4
+;	sta	DRAW_PAGE
+;	lda	#0
+;	sta	DISP_PAGE
+;	jmp	handle_credits
 
 	;=========================
 	; set up sound
@@ -204,35 +201,67 @@ wait_until_keypressed:
 pickup_sequence:
 	.byte   255					; load to bg
 	.word	rooftop_bg_lzsa				; this
-	.byte	128+20	;	.word	rooftop01_lzsa	; 03.22-04.15
-	.byte	128+20	;	.word	rooftop02_lzsa	; 04.15-04.19
-	.byte	128+20	;	.word	rooftop03_lzsa	; 04.19-
-	.byte	128+20	;	.word	rooftop04_lzsa		; next
-	.byte	128+20	;	.word	rooftop05_lzsa		; next
-	.byte	128+20	;	.word	rooftop06_lzsa		; next
-	.byte	128+20	;	.word	rooftop07_lzsa		; next
-	.byte	128+20	;	.word	rooftop08_lzsa		; next
-	.byte	128+20	;	.word	rooftop09_lzsa		; next
-	.byte	128+20	;	.word	rooftop10_lzsa		; next
-	.byte	128+20	;	.word	rooftop11_lzsa		; next
-	.byte	128+20	;	.word	rooftop12_lzsa		; next
-	.byte	128+20	;	.word	rooftop13_lzsa		; next
-	.byte	128+20	;	.word	rooftop14_lzsa		; next
-	.byte	128+20	;	.word	rooftop15_lzsa	; 25.13-25.16 (friend arriving)
-	.byte	128+20	;	.word	rooftop16_lzsa	; 25.16-25.22
-	.byte	128+20	;	.word	rooftop17_lzsa	; 25.22-27.00 (friend stand)
-	.byte	128+20	;	.word	rooftop18_lzsa	; 27.00-27.04
-	.byte	128+20	;	.word	rooftop19_lzsa	; 27.04-27.09
-	.byte	128+20	;	.word	rooftop20_lzsa	; 27.09-27.17
-	.byte	128+20	;	.word	rooftop21_lzsa	; 27.17-27.22
-	.byte	128+20	;	.word	rooftop22_lzsa	; 27.22-
-	.byte	128+20	;	.word	rooftop23_lzsa	; 29.00-      (friend reaching)
-	.byte	128+20	;	.word	rooftop24_lzsa	; 29.11-
-	.byte	128+20	;	.word	rooftop25_lzsa	; 29.17-	(mouth open)
-	.byte	128+20	;	.word	rooftop26_lzsa	; 30.03-	(mouth closed)
-	.byte	128+20	;	.word	rooftop27_lzsa	; 30.14-	(start to pick up)
-	.byte	128+20	;	.word	rooftop28_lzsa	; 30.22-	(halfway up)
-	.byte	128+20	;	.word	rooftop29_lzsa	; 31.00-	(standing)
+	.byte	128+72	;	.word	rooftop01_lzsa	; 03.22 (18)
+	.byte	128+8	;	.word	rooftop02a_lzsa	; 04.15 (2) arrive
+	.byte	128+8	;	.word	rooftop02_lzsa	; 04.17 (2) arrive
+	.byte	128+24	;	.word	rooftop03_lzsa	; 04.19 (6)
+	.byte	128+120	;	.word	rooftop04_lzsa	; 05.00 (44)-> 184
+
+	.byte	64
+				.word	rooftop04_lzsa	; 05.00 (44)-> 184
+
+	.byte	128+50	;	.word	rooftop05_lzsa	; 06.19 (13)
+	.byte	128+72	;	.word	rooftop06_lzsa	; 07.07 (18)
+	.byte	128+64	;	.word	rooftop07_lzsa	; 08.00 (16)
+	.byte	128+120	;	.word	rooftop08_lzsa	; 08.16 (31)
+	.byte	128+56	;	.word	rooftop09_lzsa	; 09.22 (14)
+	.byte	128+76	;	.word	rooftop10_lzsa	; 10.11 (19)
+
+	.byte	128+100	;	.word	rooftop11a_lzsa	; 11.05 (25)
+	.byte	128+100	;	.word	rooftop11b_lzsa	; 12.05 (25)
+	.byte	128+52	;	.word	rooftop11clzsa	; 13.05 (13)
+
+	.byte	100
+	.word	rooftop11a_lzsa				; 13.18 (50)
+	.byte	100
+	.word	rooftop11a_lzsa				; 13.18 (50) -> 200
+	.byte	52
+	.word	rooftop12_lzsa				; 15.17 (13)
+	.byte	128+80	;	.word	rooftop13_lzsa	; 16.05 (20)
+
+	.byte	120
+	.word	rooftop11_lzsa				; 17.00 (40)
+	.byte	128+120	;	.word	rooftop12_lzsa	; 18.15 (30)
+	.byte	128+96	;	.word	rooftop13_lzsa	; 19.20 (24)
+
+	.byte	100
+	.word	rooftop11_lzsa				; 20.19 (50)
+	.byte	100
+	.word	rooftop11_lzsa				; 20.19 (50) ->200
+
+	.byte	128+104	;	.word	rooftop12_lzsa	; 22.19 (26)
+	.byte	128+100	;	.word	rooftop13_lzsa	; 23.20 (25)
+
+	.byte	20
+	.word	rooftop11_lzsa				; 24.20 (5)
+
+	.byte	50
+	.word	rooftop14_lzsa				; 25.00 (13)
+	.byte	128+12	;	.word	rooftop15_lzsa	; 25.13 (3)
+	.byte	128+24	;	.word	rooftop16_lzsa	; 25.16 (6)
+	.byte	128+100	;	.word	rooftop17_lzsa	; 25.22 (28) friend stand
+	.byte	128+16	;	.word	rooftop18_lzsa	; 27.00 (4)
+	.byte	128+20	;	.word	rooftop19_lzsa	; 27.04 (5)
+	.byte	128+32	;	.word	rooftop20_lzsa	; 27.09 (8)
+	.byte	128+20	;	.word	rooftop21_lzsa	; 27.17 (5)
+	.byte	128+100	;	.word	rooftop22_lzsa	; 27.22 (28)
+	.byte	128+44	;	.word	rooftop23_lzsa	; 29.00 (11) friend reaching
+	.byte	128+24	;	.word	rooftop24_lzsa	; 29.11 (6)
+	.byte	128+44	;	.word	rooftop25_lzsa	; 29.17 (11) mouth open
+	.byte	128+44	;	.word	rooftop26_lzsa	; 30.03 (11) mouth closed
+	.byte	128+32	;	.word	rooftop27_lzsa	; 30.14 (8) start to pick up)
+	.byte	128+12	;	.word	rooftop28_lzsa	; 30.22 (3) halfway up
+	.byte	128+24	;	.word	rooftop29_lzsa	; 31.00 (6) standing
 	.byte	0					; 31.06		finish
 
 wing_sequence:

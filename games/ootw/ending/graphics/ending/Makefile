@@ -15,9 +15,12 @@ ootw_c16_end.inc:	\
 	right_unfurl4.lzsa right_unfurl5.lzsa \
 	sky_bg.lzsa \
 	rooftop_bg.lzsa \
-	rooftop01.lzsa rooftop02.lzsa rooftop03.lzsa rooftop04.lzsa \
+	rooftop01.lzsa rooftop02.lzsa \
+	rooftop02a.lzsa rooftop03.lzsa rooftop04.lzsa \
 	rooftop05.lzsa rooftop06.lzsa rooftop07.lzsa rooftop08.lzsa \
-	rooftop09.lzsa rooftop10.lzsa rooftop11.lzsa rooftop12.lzsa \
+	rooftop09.lzsa rooftop10.lzsa rooftop11.lzsa \
+	rooftop11a.lzsa rooftop11b.lzsa rooftop11c.lzsa \
+	rooftop12.lzsa \
 	rooftop13.lzsa rooftop14.lzsa rooftop15.lzsa rooftop16.lzsa \
 	rooftop17.lzsa rooftop18.lzsa rooftop19.lzsa rooftop20.lzsa \
 	rooftop21.lzsa rooftop22.lzsa rooftop23.lzsa rooftop24.lzsa \
@@ -47,6 +50,7 @@ ootw_c16_end.inc:	\
 	black.lzsa
 	echo "rooftop_bg_lzsa: .incbin \"rooftop_bg.lzsa\"" > ootw_c16_end.inc
 	echo "rooftop01_lzsa: .incbin \"rooftop01.lzsa\"" >> ootw_c16_end.inc
+	echo "rooftop02a_lzsa: .incbin \"rooftop02a.lzsa\"" >> ootw_c16_end.inc
 	echo "rooftop02_lzsa: .incbin \"rooftop02.lzsa\"" >> ootw_c16_end.inc
 	echo "rooftop03_lzsa: .incbin \"rooftop03.lzsa\"" >> ootw_c16_end.inc
 	echo "rooftop04_lzsa: .incbin \"rooftop04.lzsa\"" >> ootw_c16_end.inc
@@ -56,6 +60,9 @@ ootw_c16_end.inc:	\
 	echo "rooftop08_lzsa: .incbin \"rooftop08.lzsa\"" >> ootw_c16_end.inc
 	echo "rooftop09_lzsa: .incbin \"rooftop09.lzsa\"" >> ootw_c16_end.inc
 	echo "rooftop10_lzsa: .incbin \"rooftop10.lzsa\"" >> ootw_c16_end.inc
+	echo "rooftop11a_lzsa: .incbin \"rooftop11a.lzsa\"" >> ootw_c16_end.inc
+	echo "rooftop11b_lzsa: .incbin \"rooftop11b.lzsa\"" >> ootw_c16_end.inc
+	echo "rooftop11c_lzsa: .incbin \"rooftop11c.lzsa\"" >> ootw_c16_end.inc
 	echo "rooftop11_lzsa: .incbin \"rooftop11.lzsa\"" >> ootw_c16_end.inc
 	echo "rooftop12_lzsa: .incbin \"rooftop12.lzsa\"" >> ootw_c16_end.inc
 	echo "rooftop13_lzsa: .incbin \"rooftop13.lzsa\"" >> ootw_c16_end.inc
