@@ -92,7 +92,11 @@ all_done:
 print_help_and_go:
 	jsr	HOME
 
-	jsr	print_help
+	lda	#<directions_load
+	sta	OUTL
+	lda	#>directions_load
+	sta	OUTH
+	jsr	move_and_print_list
 
 ready_to_load:
 	jmp	$1400			; LOADER starts here
@@ -314,7 +318,8 @@ menu_items:	; 23 wide
 .byte 8,0,"CHECKPOINT 15 (ANKD)",0		; LFCK
 .byte 8,0,"ENDING              ",0
 
-
+directions_load:
+.byte 0, 0,"LOADING...",0
 directions_text:
 .byte 0, 5,"CONTROLS:",0
 .byte 3, 6,   "A OR <-      : MOVE LEFT",0
