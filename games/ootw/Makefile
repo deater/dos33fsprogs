@@ -2,23 +2,43 @@ include ../../Makefile.inc
 
 DOS33 = ../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
-
+DOS33_RAW = ../../utils/dos33fs-utils/dos33_raw
 EMPTY_DISK = ../../empty_disk
 
 all:	ootw.dsk ootw_side2.dsk ootw_side3.dsk
 
-ootw.dsk:	HELLO ./title/TITLE \
+#ootw.dsk:	HELLO ./title/TITLE \
+#		./intro/INTRO ./ootw_c1/OOTW_C1 ./ootw_c2/OOTW_C2 \
+#		./ootw_c3/OOTW_C3 ./ootw_c4/OOTW_C4 ./ootw_c5/OOTW_C5
+#	cp $(EMPTY_DISK)/empty.dsk ootw.dsk
+#	$(DOS33) -y ootw.dsk SAVE A HELLO
+#	$(DOS33) -y ootw.dsk BSAVE -a 0xd00 ./title/TITLE
+#	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./intro/INTRO INTRO
+#	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c1/OOTW_C1 OOTW_C1
+#	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c2/OOTW_C2 OOTW_C2
+#	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c3/OOTW_C3 OOTW_C3
+#	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c4/OOTW_C4 OOTW_C4
+#	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c5/OOTW_C5 OOTW_C5
+
+ootw.dsk:	./qboot/QBOOT_DISK1 ./qboot/QLOAD \
 		./intro/INTRO ./ootw_c1/OOTW_C1 ./ootw_c2/OOTW_C2 \
 		./ootw_c3/OOTW_C3 ./ootw_c4/OOTW_C4 ./ootw_c5/OOTW_C5
 	cp $(EMPTY_DISK)/empty.dsk ootw.dsk
-	$(DOS33) -y ootw.dsk SAVE A HELLO
-	$(DOS33) -y ootw.dsk BSAVE -a 0xd00 ./title/TITLE
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./intro/INTRO INTRO
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c1/OOTW_C1 OOTW_C1
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c2/OOTW_C2 OOTW_C2
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c3/OOTW_C3 OOTW_C3
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c4/OOTW_C4 OOTW_C4
-	$(DOS33) -y ootw.dsk BSAVE -a 0x1700 ./ootw_c5/OOTW_C5 OOTW_C5
+	$(DOS33_RAW) ootw.dsk  0  0 ./qboot/QBOOT_DISK1	0   1
+	$(DOS33_RAW) ootw.dsk  0  2 ./qboot/QBOOT_DISK1	1   1
+	$(DOS33_RAW) ootw.dsk  0  4 ./qboot/QBOOT_DISK1	2   1
+	$(DOS33_RAW) ootw.dsk  1  0 ./qboot/QLOAD	0   14
+	$(DOS33_RAW) ootw.dsk  2  0 ./intro/INTRO	0   137
+	$(DOS33_RAW) ootw.dsk  11 0 ./ootw_c1/OOTW_C1	0   95
+	$(DOS33_RAW) ootw.dsk  17 0 ./ootw_c2/OOTW_C2	0   125
+	$(DOS33_RAW) ootw.dsk  25 0 ./ootw_c3/OOTW_C3	0   14
+	$(DOS33_RAW) ootw.dsk  26 0 ./ootw_c4/OOTW_C4	0   62
+	$(DOS33_RAW) ootw.dsk  30 0 ./ootw_c5/OOTW_C5	0   41
+
+
+
+
+
 
 ootw_side2.dsk:	HELLO ./title/TITLE \
 	./ootw_c6/OOTW_C6 ./ootw_c7/OOTW_C7 ./ootw_c8/OOTW_C8 \
@@ -44,6 +64,11 @@ ootw_side3.dsk:	HELLO ./title/TITLE ./ending/ENDING \
 	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 ./ootw_c14/OOTW_C14
 	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 ./ootw_c15/OOTW_C15
 	$(DOS33) -y ootw_side3.dsk BSAVE -a 0x1700 ./ending/ENDING
+
+####
+
+qboot/QBOOT:
+	cd qboot && make
 
 ####
 

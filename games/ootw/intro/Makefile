@@ -8,7 +8,7 @@ all:	INTRO
 ####
 
 INTRO:	intro.o
-	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_1700.inc
+	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_1800.inc
 
 intro.o:	intro.s \
 	$(COMMON)/gr_copy.s \

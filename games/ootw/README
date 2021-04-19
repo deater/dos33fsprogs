@@ -240,3 +240,42 @@ In any case, I chose lo-res for the Another World conversion for 3 reasons
 The recent C64 Another World conversion looks much more impressive and hi-res,
 but I think they use a 1MB cartridge just for the intro movie alone
 (which is possible larger than the size of the original game for the Amiga).
+
+
+
+DISK:
+~~~~~
+
+DISK1:
+	TITLE		 2540	10s	0T10S	T1
+	INTRO		35049	137s	8T9S	T2..T10
+	OOTW_C1		24094	95s	5T15S	T11-T16
+	OOTW_C2		31845	125s	7T13S	T17-T24
+	OOTW_C3		 3420	14s	0T14S	T25
+	OOTW_C4		15643	62s	3T14S	T26-T29
+	OOTW_C5		10333	41s	2T9S	T30-T32
+				====
+				484s = 121k
+
+DISK2:
+	TITLE		2540	10s	0T10S	T1
+	OOTW_C6		9605	38s	2T6S	T2-T4
+	OOTW_C7		9704	38s	2T6S	T5-T7
+	OOTW_C8		9823	39s	2T7S	T8-T10
+	OOTW_C9		9646	38s	2T6S	T11-T13
+	OOTW_C10	9646	38s	2T6S	T14-T16
+				====
+				201s = 50k
+
+DISK3:
+	TITLE		 2540	10s	0T10S	T1
+	OOTW_C11	 9643	38s	2T6S	T2-T4
+	OOTW_C12	 9707	38s	2T6S	T5-T7
+	OOTW_C13	 9828	39s	2T7S	T8-T10
+	OOTW_C14	 9749	38s	2T6S	T11-T12
+	OOTW_C15	24658	97s	6T1S	T13-T18
+	ENDING		22899	90s	5T10S	T19-T24
+				====
+				350 = 87.5k
+
+	

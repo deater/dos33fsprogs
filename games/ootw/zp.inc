@@ -4,15 +4,18 @@
 NIBCOUNT	= $00
 
 ;; LZ4 addresses
+;LZ4_SRC		= $00
+;LZ4_DST		= $02
+;LZ4_END		= $04
 
-LZ4_SRC		= $00
-LZ4_DST		= $02
-LZ4_END		= $04
+
+CURRENT_DISK	= $03
+WHICH_SLOT	= $04
 WHICH_LOAD	= $05
-COUNT		= $06
+;COUNT		= $06
 MENU_BASE	= $06
 MENU_HIGHLIGHT	= $07
-DELTA		= $08
+;DELTA		= $08
 
 
 ;; Zero page monitor routines addresses

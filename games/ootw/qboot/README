@@ -1,0 +1,18 @@
+Originally the way things worked:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++ Regular DOS33 filesystem
++ Title BLOADed by HELLO to $D00, was big enough that
+	qkumba's code ended up at $1400-$1700
++ Various levels loaded at $1700
++ We never return to title, so have to reboot at end
+
+Qboot method
+~~~~~~~~~~~~
++ qboot_sector, 1 sector loads at $800
++ Loads second stage (two sectors of disk routines) to
+	$1400/$1500
++ Loads QLOAD (main disk routine) and TITLE to $1600
++	disk routines fit in $1600/$1700
++ All programs load at $1800
+
+
