@@ -9,7 +9,7 @@ all:	OOTW_C8
 ####
 
 OOTW_C8:	ootw_c8.o
-	ld65 -o OOTW_C8 ootw_c8.o -C $(LINKER_SCRIPTS)/apple2_1700.inc
+	ld65 -o OOTW_C8 ootw_c8.o -C $(LINKER_SCRIPTS)/apple2_1800.inc
 
 ootw_c8.o:	ootw_c8.s \
 	$(COMMON)/gr_copy.s \

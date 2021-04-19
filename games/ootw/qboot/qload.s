@@ -132,17 +132,16 @@ fnf_keypress:
 	tax
 
 	; first sector now in $c00
-	;	offset 59
-	;		disk1 = $0a
-	;		disk2 = $32 ('2')
-	;		disk3 = $33 ('3')
+	;		disk1 = $01
+	;		disk2 = $02
+	;		disk3 = $03
 
-	lda	$c59
-	cmp	#$0a
+	lda	$ca5
+	cmp	#$01
 	beq	is_disk1
-	cmp	#$32
+	cmp	#$02
 	beq	is_disk2
-	cmp	#$33
+	cmp	#$03
 	beq	is_disk3
 	bne	change_disk		; unknown disk
 
@@ -195,11 +194,11 @@ load_address_array:
 
 track_array:
         .byte  2,11,17,25	; INTRO,C1,C2,C3
-	.byte 26,30,99,99	; C4,C5,C6,C7
-	.byte 99,99,99,99	; C8,C9,C10,C11
-	.byte 99,99,99,99	; C12,C13,C14,C15
-	.byte 99		; ENDING
-	.byte 99,99		; TITLE,FIRST_SECTOR
+	.byte 26,30, 2, 5	; C4,C5,C6,C7
+	.byte  8,11,14, 2	; C8,C9,C10,C11
+	.byte  5, 8,11,13	; C12,C13,C14,C15
+	.byte 19		; ENDING
+	.byte 99,0		; TITLE,FIRST_SECTOR
 
 
 sector_array:
@@ -213,10 +212,10 @@ sector_array:
 
 length_array:
         .byte 137, 95,125, 14	; INTRO,C1,C2,C3
-	.byte  62, 41,  0,  0	; C4,C5,C6,C7
-	.byte   0,  0,  0,  0	; C8,C9,C10,C11
-	.byte   0,  0,  0,  0	; C12,C13,C14,C15
-	.byte   0		; ENDING
+	.byte  62, 41, 38, 38	; C4,C5,C6,C7
+	.byte  39, 38, 38, 38	; C8,C9,C10,C11
+	.byte  38, 39, 38, 97	; C12,C13,C14,C15
+	.byte  90		; ENDING
 	.byte   1,  1		; TITLE,FIRST_SECTOR
 
 

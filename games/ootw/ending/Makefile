@@ -8,7 +8,7 @@ all:	ENDING
 #####
 
 ENDING:	ending.o
-	ld65 -o ENDING ending.o -C $(LINKER_SCRIPTS)/apple2_1700.inc
+	ld65 -o ENDING ending.o -C $(LINKER_SCRIPTS)/apple2_1800.inc
 
 ending.o:	ending.s \
 		credits.s \
