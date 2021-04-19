@@ -36,7 +36,7 @@ ootw_c15_restart:
 	; run bath intro
 	;===================================
 
-;	jsr	bath_intro
+	jsr	bath_intro
 
 	;===================================
 	; re-initialize level state
@@ -130,7 +130,8 @@ ootw_c15_level_init:
 	sta	BROKEN_GLASS
 	sta	BRIDGE_COLLAPSE
 
-	lda	#2			; REMOVE
+	; DEBUG
+;	lda	#2			; REMOVE
 	sta	WHICH_ROOM
 
 
@@ -138,8 +139,10 @@ ootw_c15_level_init:
 	sta	HAVE_GUN
 	sta	DIRECTION		; right
 
-	lda	#2			; REMOVE
-;	lda	#22
+	; DEBUG
+;	lda	#2			; REMOVE
+	lda	#22
+
 	sta	PHYSICIST_X
 	lda	#10
 	sta	PHYSICIST_Y
