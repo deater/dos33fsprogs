@@ -7,11 +7,10 @@ SEEDL	= $4E
 FACL	= $9D
 FACH	= $9E
 
-COUNT		= $FE
 DRAW_PAGE	= $FF
 
 PAGE0		= $C054
-GETCHAR		= $D72C		; loads (FAC),Y and increments FAC
+GETCHAR		= $D72C
 HGR		= $F3E2
 SETTXT		= $FB39
 TABV		= $FB5B		; store A in CV and call MON_VTAB
@@ -54,32 +53,9 @@ new_text:
 	and	#$f
 	sta	ypos,X
 
-	jsr	random8
-	and	#$7f
-	sta	COUNT
-
-	lda	#$d0		; token table at $D0D0
-	sta	FACL
-	sta	FACH
-
-	ldy	#0
-find_token_loop:
-	dec	COUNT
-	bmi	found_token
-find_token_inner:
-	inc	FACL
-	bne	blargh
-	inc	FACH
-blargh:
-	lda	(FACL),Y
-	bpl	find_token_inner
-	bmi	find_token_loop
-
-found_token:
-	inc	FACL
-	lda	FACL
+	lda	#<text
 	sta	textl,X
-	lda	FACH
+	lda	#>text
 	sta	texth,X
 
 not_new:
@@ -95,26 +71,23 @@ not_new:
 	adc	DRAW_PAGE
 	sta	BASH
 
+
+	ldy	#0
 	lda	textl,X
-	sta	text_smc+1
+	sta	FACL
 	lda	texth,X
-	sta	text_smc+2
+	sta	FACH
 
 	txa
 	pha
 
-	ldx	#0
 print_loop:
-
-text_smc:
-	lda	$dddd,X
+	jsr	GETCHAR
 
 	php
 
 	ora	#$80
-	jsr	STORADV		; trashes Y :(
-
-	inx
+	jsr	STORADV
 
 	plp
 
@@ -128,7 +101,7 @@ big_done:
 	dec	xpos,X
 
 	inx
-	cpx	#32
+	cpx	#20
 	bne	next_text
 
 flip_pages:
@@ -162,7 +135,7 @@ clear_screen_inner:
 	and	#$3
 	bne	clear_screen_outer
 
-	lda	#200
+	lda	#$50
 	jsr	WAIT
 
 	jmp	next_frame
@@ -186,5 +159,6 @@ noEor:  sta     SEEDL                                                   ; 2
 	rts
 
 
-
+text:
+	.byte "HELL",'O'|$80
 
