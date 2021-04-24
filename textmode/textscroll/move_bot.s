@@ -94,10 +94,10 @@ not_new:
 	lda	xpos,X
 	sta	CH
 
-	lda	BASH
-	clc
-	adc	DRAW_PAGE
-	sta	BASH
+;	lda	BASH
+;	clc
+;	adc	DRAW_PAGE
+;	sta	BASH
 
 	lda	which,X
 
@@ -126,31 +126,31 @@ after_token:
 flip_pages:
 ;	ldx	#0
 
-	lda     DRAW_PAGE
-	beq	done_page
-	inx
-done_page:
-	ldy	PAGE0-16,X         ; set display page to PAGE1 or PAGE2
+;	lda     DRAW_PAGE
+;	beq	done_page
+;	inx
+;done_page:
+;	ldy	PAGE0-16,X         ; set display page to PAGE1 or PAGE2
 
-	eor	#$4             ; flip draw page between $400/$800
-        sta	DRAW_PAGE
+;	eor	#$4             ; flip draw page between $400/$800
+;       sta	DRAW_PAGE
 
 	;===============
 	; clear screen
 
-	ldx	#24
+;	ldx	#24
 clear_screen_loop:
-	txa
-	jsr	BASCALC		; A is BASL at end
-	lda	BASH
-	clc
-	adc	DRAW_PAGE
-	sta	BASH
+;	txa
+;	jsr	BASCALC		; A is BASL at end
+;	lda	BASH
+;	clc
+;	adc	DRAW_PAGE
+;	sta	BASH
 
-	ldy	#0
-	jsr	CLREOLZ
-	dex
-	bpl	clear_screen_loop
+;	ldy	#0
+;	jsr	CLREOLZ
+;	dex
+;	bpl	clear_screen_loop
 
 
 	; pause
@@ -158,7 +158,7 @@ clear_screen_loop:
 ;	lda	#100
 ;	jsr	WAIT
 
-	bmi	next_frame
+	jmp	next_frame
 
 
 our_cout:
@@ -197,5 +197,8 @@ noEor:	sta	SEEDL                                                   ; 2
 lowtr_fake:
 	.byte $00,$00	; fake end to BASIC program
 
-
+	; want jump to live at $3F5
+	; currently at $383
+	;	so want to load at $372
+blah:
 	jmp	move
