@@ -7,12 +7,14 @@ EMPTYDISK = ../../empty_disk/empty.dsk
 
 all:	textscroll.dsk
 
-textscroll.dsk:	HELLO MOVE COMET MOVE_BOT
+textscroll.dsk:	HELLO MOVE COMET MOVE_BOT SINE SINE_BOT
 	cp $(EMPTYDISK) textscroll.dsk
 	$(DOS33) -y textscroll.dsk SAVE A HELLO
 	$(DOS33) -y textscroll.dsk BSAVE -a 0xC00 MOVE
 	$(DOS33) -y textscroll.dsk BSAVE -a 0x372 MOVE_BOT
 	$(DOS33) -y textscroll.dsk BSAVE -a 0xC00 COMET
+	$(DOS33) -y textscroll.dsk BSAVE -a 0xC00 SINE
+	$(DOS33) -y textscroll.dsk BSAVE -a 0x372 SINE_BOT
 
 ###
 
@@ -34,6 +36,23 @@ MOVE_BOT: move_bot.o
 
 move_bot.o:       move_bot.s
 	ca65 -o move_bot.o move_bot.s -l move_bot.lst
+
+###
+
+SINE: sine.o
+	ld65 -o SINE sine.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+sine.o:       sine.s
+	ca65 -o sine.o sine.s -l sine.lst
+
+
+###
+
+SINE_BOT: sine_bot.o
+	ld65 -o SINE_BOT sine_bot.o -C ./apple2_372.inc
+
+sine_bot.o:       sine_bot.s
+	ca65 -o sine_bot.o sine_bot.s -l sine_bot.lst
 
 ###
 
