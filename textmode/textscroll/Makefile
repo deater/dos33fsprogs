@@ -7,10 +7,11 @@ EMPTYDISK = ../../empty_disk/empty.dsk
 
 all:	textscroll.dsk
 
-textscroll.dsk:	HELLO MOVE COMET MOVE_BOT SINE SINE_BOT SCROLL.BAS MATRIX.BAS
+textscroll.dsk:	HELLO MOVE COMET MOVE_BOT SINE SINE_BOT SCROLL.BAS MATRIX.BAS BOXES.BAS
 	cp $(EMPTYDISK) textscroll.dsk
 	$(DOS33) -y textscroll.dsk SAVE A HELLO
 	$(DOS33) -y textscroll.dsk SAVE A SCROLL.BAS
+	$(DOS33) -y textscroll.dsk SAVE A BOXES.BAS
 	$(DOS33) -y textscroll.dsk SAVE A MATRIX.BAS
 	$(DOS33) -y textscroll.dsk BSAVE -a 0xC00 MOVE
 	$(DOS33) -y textscroll.dsk BSAVE -a 0x372 MOVE_BOT
@@ -29,6 +30,12 @@ HELLO:	hello.bas
 
 SCROLL.BAS:	scroll.bas
 	$(TOKENIZE) < scroll.bas > SCROLL.BAS
+
+###
+
+BOXES.BAS:	boxes.bas
+	$(TOKENIZE) < boxes.bas > BOXES.BAS
+
 
 ###
 
