@@ -1,5 +1,7 @@
 ; 134 bytes -- start
 ; 127 bytes -- merge ypos into one lookup
+; 119 bytes -- use BASCALC
+; 107 bytes -- use built-in string
 
 CH	= $24
 CV	= $25
@@ -59,53 +61,34 @@ next_frame:
 text_loop:
 
 	tya			; get YY to print at
-	clc
-	adc	FRAME
+;	clc
+;	adc	FRAME
 	and	#$f
 	tax
 
-	lda	cosine,X	; get cosine (need to rol*3 into BASL/BASH)
-	sta	BASL
+	lda	cosine,X	; get cosine value
+	jsr	BASCALC		; convert to BASL/BASH
 
-	asl	BASL
-	rol
-
-	asl	BASL
-	rol
-
-	asl	BASL
-	rol
-
-;	asl	BASL
-;	rol
-
-	and	#$0f
+	lda	BASH		; add so is proper page
 	clc
 	adc	DRAW_PAGE
 	sta	BASH
 
-;	tay
-;	lda	gr_offsetsh,Y
-;	clc
-;	adc	DRAW_PAGE
-;	sta	smc+2
-;	lda	gr_offsetsl,Y
-;	sta	smc+1
-;
-
-	tya
+	tya			; lookup char to print
+	clc
+	adc	FRAME
 	and	#$f
-	taX
+	tax
+;	lda	apple,X
+	lda	$FB09,X		; 8 bytes of apple II
+	cpx	#8
+	bcc	blah2
+;	ora	#$80
+	lda	#$a0
+blah2:
+	sta	(BASL),Y	; print it
 
-	lda	apple,X
-	ora	#$80
-;smc:
-;	sta	$400,X
-
-
-	sta	(BASL),Y
-
-	dey
+	dey			; loop
 	bpl	text_loop
 
 flip_pages:
@@ -161,12 +144,14 @@ clear_screen_loop:
 
 apple:
 ;	.byte "][ ELPPA"
-	.byte " APPLE ][ 4EVER "
+;	.byte " APPLE ][ 4EVER "
 
 cosine:
 ;	.byte 3,3,3,2,2,1,0,0,0,0,0,1,1,2,3,3
+	.byte 23,23,23,22,22,21,20,20,20,20,20,21,21,22,23,23
+
 ;	.byte $7d,$7d,$7d,$75,$75,$6d,$65,$65,$65,$65,$65,$6d,$6d,$75,$7d,$7d
-	.byte $fa,$fa,$fa,$ea,$ea,$da,$ca,$ca,$ca,$ca,$ca,$da,$da,$ea,$fa,$fa
+;	.byte $fa,$fa,$fa,$ea,$ea,$da,$ca,$ca,$ca,$ca,$ca,$da,$da,$ea,$fa,$fa
 	; 0111 1101         0111 0101      0110 0101    0110 1101
 
 ;gr_offsetsh:
