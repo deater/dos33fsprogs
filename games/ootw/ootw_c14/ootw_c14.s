@@ -15,6 +15,28 @@
 ootw_c14:
 	; Initializing when entering level for first time
 
+	;===========================
+	; Enable graphics
+
+	bit	LORES
+	bit	SET_GR
+	bit	FULLGR
+
+	bit	KEYRESET
+
+	;===========================
+	; Setup pages (is this necessary?)
+
+	lda	#0
+	sta	DRAW_PAGE
+	lda	#4
+	sta	DISP_PAGE
+
+	;========================================================
+	; run tank intro
+	;========================================================
+
+	jsr	tank_intro
 
 	;========================================================
 	; RESTART: called when restarting level (after game over)
@@ -513,9 +535,47 @@ end_message:
 .include "../door.s"
 .include "../collision.s"
 
+.include "../gr_overlay.s"
+.include "../gr_run_sequence2.s"
+
 ; room backgrounds
 .include "graphics/l14_arena/ootw_c14_arena.inc"
 ; sprites
 .include "../sprites/physicist.inc"
 .include "../sprites/alien.inc"
+
+
+;==============================
+; tank intro
+
+tank_intro:
+	lda	#<tank_intro_sequence
+	sta	INTRO_LOOPL
+	lda	#>tank_intro_sequence
+	sta	INTRO_LOOPH
+
+	jmp	run_sequence
+
+;       rts
+
+tank_intro_sequence:
+	.byte	255                                     ; load to bg
+	.word	inside_bg_lzsa				; this
+	.byte	128+11	;       .word   inside03_lzsa	; (3)
+	.byte	128+11	;       .word   inside04_lzsa	; (3)
+	.byte	128+11	;       .word   inside05_lzsa	; (3)
+	.byte	128+11	;       .word   inside06_lzsa	; (3)
+	.byte	128+11	;       .word   inside07_lzsa	; (3)
+	.byte	128+11	;       .word   inside08_lzsa	; (3)
+	.byte	128+11	;       .word   inside09_lzsa	; (3)
+	.byte	128+11	;       .word   inside10_lzsa	; (3)
+	.byte	128+11	;       .word   inside11_lzsa	; (3)
+	.byte	128+11	;       .word   inside12_lzsa	; (3)
+	.byte	128+11	;       .word   inside13_lzsa	; (3)
+	.byte	128+11	;       .word   inside14_lzsa	; (3)
+	.byte	128+11	;       .word   inside15_lzsa	; (3)
+	.byte	128+11	;       .word   inside16_lzsa	; (3)
+	.byte	128+11	;       .word   inside17_lzsa	; (3)
+	.byte	128+11	;       .word   inside18_lzsa	; (3)
+	.byte	0	; ending
 
