@@ -5,6 +5,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <sys/stat.h>
+
 /* usage: dos33_raw track sector file */
 static void usage(char *exe_name) {
 	printf("Usage:\n");
@@ -31,13 +33,15 @@ static int goto_dos_track_sector(int fd, int track, int sector) {
 
 int main(int argc, char **argv) {
 
-	unsigned int track,sector,start,count,total;
+	unsigned int track,sector,start,count,total,max_track,filesize;
+	unsigned int max_sector,check_max=0;
 	int disk_image_fd;
 	int file_fd;
 	unsigned char buffer[256];
 	int result,read_result;
+	struct stat statbuf;
 
-	if (argc<6) {
+	if (argc<7) {
 		usage(argv[0]);
 	}
 
@@ -46,7 +50,34 @@ int main(int argc, char **argv) {
 	start=atoi(argv[5]);
 	count=atoi(argv[6]);
 
-	/* FIXME: check limits based on stat of file */
+	if (argc>7) {
+		max_track=atoi(argv[7]);
+		check_max=1;
+	}
+
+	/* check filesize using stat */
+	result=stat(argv[4], &statbuf);
+	if (result<0) {
+		fprintf(stderr,"Error stating %s: %s\n",
+			argv[4],strerror(errno));
+		exit(1);
+	}
+	filesize=statbuf.st_size;
+
+	if (count==0) {
+		count=(filesize/256);
+		if ((filesize%256)!=0) count++;
+	}
+
+	/* sanity check we aren't going off the last track */
+	if (check_max) {
+		max_sector=((track*16)+sector+count);
+		if (max_sector >= max_track*16) {
+			fprintf(stderr,"Error, %d exceeds max_sector of %d\n",
+				max_sector,max_track*16);
+			exit(1);
+		}
+	}
 
 	if (track>34) {
 		fprintf(stderr,"Warning!  Unusual track number %d\n",track);
@@ -108,6 +139,8 @@ int main(int argc, char **argv) {
 
 	close(file_fd);
 	close(disk_image_fd);
+
+	fprintf(stderr,"Wrote %d sectors\n",count);
 
 	return 0;
 }
