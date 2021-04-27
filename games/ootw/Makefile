@@ -89,9 +89,9 @@ ootw_side3.dsk:	./qboot/QBOOT_DISK3 ./qboot/QLOAD \
 	$(DOS33_RAW) ootw_side3.dsk  2  0 ./ootw_c11/OOTW_C11	0   0	5
 	$(DOS33_RAW) ootw_side3.dsk  5  0 ./ootw_c12/OOTW_C12	0   0	8
 	$(DOS33_RAW) ootw_side3.dsk  8  0 ./ootw_c13/OOTW_C13	0   0	11
-	$(DOS33_RAW) ootw_side3.dsk  11 0 ./ootw_c14/OOTW_C14	0   0	15
-	$(DOS33_RAW) ootw_side3.dsk  15 0 ./ootw_c15/OOTW_C15	0   0	22
-	$(DOS33_RAW) ootw_side3.dsk  22 0 ./ending/ENDING	0   0	35
+	$(DOS33_RAW) ootw_side3.dsk  11 0 ./ootw_c14/OOTW_C14	0   0	17
+	$(DOS33_RAW) ootw_side3.dsk  17 0 ./ootw_c15/OOTW_C15	0   0	24
+	$(DOS33_RAW) ootw_side3.dsk  24 0 ./ending/ENDING	0   0	35
 
 ####
 

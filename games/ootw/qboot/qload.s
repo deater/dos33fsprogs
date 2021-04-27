@@ -196,8 +196,8 @@ track_array:
         .byte  2,11,17,25	; INTRO,C1,C2,C3
 	.byte 26,30, 2, 5	; C4,C5,C6,C7
 	.byte  8,11,14, 2	; C8,C9,C10,C11
-	.byte  5, 8,11,15	; C12,C13,C14,C15
-	.byte 22		; ENDING
+	.byte  5, 8,11,17	; C12,C13,C14,C15
+	.byte 24		; ENDING
 	.byte 99,0		; TITLE,FIRST_SECTOR
 
 
@@ -214,7 +214,7 @@ length_array:
         .byte 137, 95,125, 14	; INTRO,C1,C2,C3
 	.byte  62, 41, 38, 38	; C4,C5,C6,C7
 	.byte  39, 38, 38, 38	; C8,C9,C10,C11
-	.byte  38, 39, 44, 97	; C12,C13,C14,C15
+	.byte  38, 39, 75, 97	; C12,C13,C14,C15
 	.byte  90		; ENDING
 	.byte   1,  1		; TITLE,FIRST_SECTOR
 

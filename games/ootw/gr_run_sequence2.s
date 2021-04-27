@@ -7,10 +7,11 @@
 	;	*after* showing the image
 
 	; pattern is TIME, PTR
-	; if time==0, then done
-	; if time==255, reload background $C00 with PTR, no delay
-	; if time==0..127 overlay PTR over $C00, then wait TIME
-	; if time==128..254, overlay current over $C00, then wait TIME-128
+	; if time==       0, then done
+	; if time==1 or 129, then no pause
+	; if time==     255, reload background $C00 with PTR, no delay
+	; if time==  2..127, overlay PTR over $C00, then wait TIME
+	; if time==130..254, overlay current over $C00, then wait TIME-128
 	;		assumes LZSA pointer points to image
 	;		basically after decoding one, input points to next
 
