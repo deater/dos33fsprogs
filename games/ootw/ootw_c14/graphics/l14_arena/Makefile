@@ -26,7 +26,16 @@ ootw_c14_arena.inc:	\
 	lidclose09.lzsa lidclose10.lzsa lidclose11.lzsa lidclose12.lzsa \
 	lidclose13.lzsa lidclose14.lzsa lidclose15.lzsa lidclose16.lzsa \
 	lidclose17.lzsa \
-	door_open_bg.lzsa
+	door_open_bg.lzsa \
+	door_open01.lzsa door_open02.lzsa door_open03.lzsa door_open04.lzsa \
+	door_open05.lzsa door_open06.lzsa door_open07.lzsa door_open08.lzsa \
+	door_open09.lzsa door_open10.lzsa door_open11.lzsa door_open12.lzsa \
+	door_open13.lzsa \
+	entrance_bg.lzsa \
+	entering01.lzsa entering02.lzsa entering03.lzsa entering04.lzsa \
+	entering05.lzsa entering06.lzsa entering07.lzsa entering08.lzsa \
+	entering09.lzsa entering10.lzsa entering11.lzsa entering12.lzsa \
+	entering13.lzsa
 	echo "arena_lzsa: .incbin \"arena.lzsa\"" > ootw_c14_arena.inc
 	echo "inside_bg_lzsa: .incbin \"inside_bg.lzsa\"" >> ootw_c14_arena.inc
 	echo "inside03_lzsa: .incbin \"inside03.lzsa\"" >> ootw_c14_arena.inc
@@ -91,6 +100,33 @@ ootw_c14_arena.inc:	\
 	echo "lidclose16_lzsa: .incbin \"lidclose16.lzsa\"" >> ootw_c14_arena.inc
 	echo "lidclose17_lzsa: .incbin \"lidclose17.lzsa\"" >> ootw_c14_arena.inc
 	echo "door_open_bg_lzsa: .incbin \"door_open_bg.lzsa\"" >> ootw_c14_arena.inc
+	echo "door_open01_lzsa: .incbin \"door_open01.lzsa\"" >> ootw_c14_arena.inc
+	echo "door_open02_lzsa: .incbin \"door_open02.lzsa\"" >> ootw_c14_arena.inc
+	echo "door_open03_lzsa: .incbin \"door_open03.lzsa\"" >> ootw_c14_arena.inc
+	echo "door_open04_lzsa: .incbin \"door_open04.lzsa\"" >> ootw_c14_arena.inc
+	echo "door_open05_lzsa: .incbin \"door_open05.lzsa\"" >> ootw_c14_arena.inc
+	echo "door_open06_lzsa: .incbin \"door_open06.lzsa\"" >> ootw_c14_arena.inc
+	echo "door_open07_lzsa: .incbin \"door_open07.lzsa\"" >> ootw_c14_arena.inc
+	echo "door_open08_lzsa: .incbin \"door_open08.lzsa\"" >> ootw_c14_arena.inc
+	echo "door_open09_lzsa: .incbin \"door_open09.lzsa\"" >> ootw_c14_arena.inc
+	echo "door_open10_lzsa: .incbin \"door_open10.lzsa\"" >> ootw_c14_arena.inc
+	echo "door_open11_lzsa: .incbin \"door_open11.lzsa\"" >> ootw_c14_arena.inc
+	echo "door_open12_lzsa: .incbin \"door_open12.lzsa\"" >> ootw_c14_arena.inc
+	echo "door_open13_lzsa: .incbin \"door_open13.lzsa\"" >> ootw_c14_arena.inc
+	echo "entrance_bg_lzsa: .incbin \"entrance_bg.lzsa\"" >> ootw_c14_arena.inc
+	echo "entering01_lzsa: .incbin \"entering01.lzsa\"" >> ootw_c14_arena.inc
+	echo "entering02_lzsa: .incbin \"entering02.lzsa\"" >> ootw_c14_arena.inc
+	echo "entering03_lzsa: .incbin \"entering03.lzsa\"" >> ootw_c14_arena.inc
+	echo "entering04_lzsa: .incbin \"entering04.lzsa\"" >> ootw_c14_arena.inc
+	echo "entering05_lzsa: .incbin \"entering05.lzsa\"" >> ootw_c14_arena.inc
+	echo "entering06_lzsa: .incbin \"entering06.lzsa\"" >> ootw_c14_arena.inc
+	echo "entering07_lzsa: .incbin \"entering07.lzsa\"" >> ootw_c14_arena.inc
+	echo "entering08_lzsa: .incbin \"entering08.lzsa\"" >> ootw_c14_arena.inc
+	echo "entering09_lzsa: .incbin \"entering09.lzsa\"" >> ootw_c14_arena.inc
+	echo "entering10_lzsa: .incbin \"entering10.lzsa\"" >> ootw_c14_arena.inc
+	echo "entering11_lzsa: .incbin \"entering11.lzsa\"" >> ootw_c14_arena.inc
+	echo "entering12_lzsa: .incbin \"entering12.lzsa\"" >> ootw_c14_arena.inc
+	echo "entering13_lzsa: .incbin \"entering13.lzsa\"" >> ootw_c14_arena.inc
 
 
 #####

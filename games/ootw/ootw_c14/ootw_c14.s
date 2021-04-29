@@ -622,8 +622,35 @@ tank_intro_sequence:
 	.byte	128+2	;       .word   lidclose14_lzsa	; (3)
 	.byte	128+2	;       .word   lidclose15_lzsa	; (3)
 	.byte	128+2	;       .word   lidclose16_lzsa	; (3)
-	.byte	128+2	;       .word   lidclose17_lzsa	; (3)
+	.byte	128+10	;       .word   lidclose17_lzsa	; (3)
 	.byte	255                                     ; load to bg
 	.word	door_open_bg_lzsa			; this
+	.byte	128+3	;       .word  	door_open01_lzsa	; (3)
+	.byte	128+3	;       .word  	door_open02_lzsa	; (3)
+	.byte	128+3	;       .word  	door_open03_lzsa	; (3)
+	.byte	128+3	;       .word  	door_open04_lzsa	; (3)
+	.byte	128+3	;       .word  	door_open05_lzsa	; (3)
+	.byte	128+3	;       .word  	door_open06_lzsa	; (3)
+	.byte	128+3	;       .word  	door_open07_lzsa	; (3)
+	.byte	128+3	;       .word  	door_open08_lzsa	; (3)
+	.byte	128+3	;       .word  	door_open09_lzsa	; (3)
+	.byte	128+3	;       .word  	door_open10_lzsa	; (3)
+	.byte	128+3	;       .word  	door_open11_lzsa	; (3)
+	.byte	128+3	;       .word  	door_open12_lzsa	; (3)
+	.byte	128+3	;       .word  	door_open13_lzsa	; (3)
+	.byte	255                                     ; load to bg
+	.word	entrance_bg_lzsa			; this
+	.byte	128+2	;       .word  	entering01_lzsa	; (3)
+	.byte	128+2	;       .word  	entering02_lzsa	; (3)
+	.byte	128+2	;       .word  	entering03_lzsa	; (3)
+	.byte	128+2	;       .word  	entering04_lzsa	; (3)
+	.byte	128+2	;       .word  	entering05_lzsa	; (3)
+	.byte	128+2	;       .word  	entering06_lzsa	; (3)
+	.byte	128+2	;       .word  	entering07_lzsa	; (3)
+	.byte	128+2	;       .word  	entering08_lzsa	; (3)
+	.byte	128+2	;       .word  	entering09_lzsa	; (3)
+	.byte	128+2	;       .word  	entering10_lzsa	; (3)
+	.byte	128+2	;       .word  	entering11_lzsa	; (3)
+	.byte	128+2	;       .word  	entering12_lzsa	; (3)
+	.byte	128+2	;       .word  	entering13_lzsa	; (3)
 	.byte	0	; ending
-
