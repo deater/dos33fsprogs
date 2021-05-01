@@ -133,19 +133,6 @@ wait_loop:
 ootw_c14_level_init:
 	lda	#0
 	sta	WHICH_ROOM
-	sta	NUM_DOORS
-
-	lda	#1
-	sta	HAVE_GUN
-	sta	DIRECTION		; right
-
-	lda	#0
-	sta	PHYSICIST_X
-	lda	#10
-	sta	PHYSICIST_Y
-
-	lda	#P_STANDING
-	sta	PHYSICIST_STATE
 
 	rts
 
@@ -158,84 +145,21 @@ ootw_c14_level_init:
 
 ootw_c14_setup_room_and_play:
 
-	;==============================
-	; each room init
-
-
-	;==============================
-	; setup per-room variables
-
-	lda	WHICH_ROOM
-	bne	room1
-
-	jsr	init_shields
-
 	;===============================
 	; Room0 -- the arena
 	;===============================
 room:
-	lda	#(0+128)
-	sta	LEFT_LIMIT
-	lda	#(39+128)
-	sta	RIGHT_LIMIT
-
-	; set right exit
-	lda     #$ff			; exit level if exit this way
-	sta     cer_smc+1
-
-	; set left exit
-	lda     #0
-	sta     cel_smc+1
-
-	lda	#28
-	sta	PHYSICIST_Y
 
 	; load background
-	lda	#>(arena_lzsa)
+	lda	#>(arena_main_bg_lzsa)
 	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(arena_lzsa)
-
-	jmp	room_setup_done
-
-	; ????
-room1:
-;	cmp	#1
-;	bne	room2
-
-;	lda	#(-4+128)
-;	sta	LEFT_LIMIT
-;	lda	#(39+128)
-;	sta	RIGHT_LIMIT
-
-	; set right exit
-;	lda     #2
-;	sta     cer_smc+1
-
-	; set left exit
-;	lda     #0
-;	sta     cel_smc+1
-
-;	lda	#8
-;	sta	PHYSICIST_Y
-
-	; load background
-;	lda	#>(hallway_lzsa)
-;	sta	getsrc_smc+2    ; LZSA_SRC_HI
-;	lda	#<(hallway_lzsa)
-
-	jmp	room_setup_done
+	lda	#<(arena_main_bg_lzsa)
 
 room_setup_done:
 
 	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$c				; load to page $c00
 	jsr	decompress_lzsa2_fast			; tail call
-
-	;=====================
-	; setup walk collision
-	jsr	recalc_walk_collision
-
-
 
 ootw_room_already_set:
 	;===========================
@@ -250,14 +174,13 @@ ootw_room_already_set:
 
 	lda	#0
 	sta	DRAW_PAGE
-	lda	#1
+	lda	#4
 	sta	DISP_PAGE
 
 	;=================================
 	; setup vars
 
 	lda	#0
-	sta	GAIT
 	sta	GAME_OVER
 
 	;============================
@@ -275,32 +198,6 @@ room_loop:
 	;==================================
 	; draw background action
 
-	lda	WHICH_CAVE
-
-bg_room0:
-
-;	cmp	#0
-;	bne	c4_no_bg_action
-
-;	lda	FRAMEL
-;	and	#$c
-;	lsr
-;	tay
-
-
-;	lda	#11
-;	sta	XPOS
-;	lda	#24
-;	sta	YPOS
-
-;	lda	recharge_bg_progression,Y
-;	sta	INL
-;	lda	recharge_bg_progression+1,Y
-;	sta	INH
-
-;	jsr	put_sprite
-
-c5_no_bg_action:
 
 	;===============================
 	; check keyboard
@@ -308,72 +205,9 @@ c5_no_bg_action:
 
 	jsr	handle_keypress
 
-	;===============================
-	; move physicist
-	;===============================
-
-	jsr	move_physicist
-
-	;===============================
-	; check room limits
-	;===============================
-
-	jsr	check_screen_limit
-
-	;===============================
-	; adjust floor
-	;===============================
-
-;	lda	PHYSICIST_STATE
-;	cmp	#P_FALLING_DOWN
-;	beq	check_floor0_done
-
-;	lda	WHICH_CAVE
-;	cmp	#0
-;	bne	check_floor1
-
-;	lda	#14
-;	sta	PHYSICIST_Y
-
-;	lda	PHYSICIST_X
-;	cmp	#19
-;	bcc	check_floor0_done
-
-;	lda	#12
-;	sta	PHYSICIST_Y
-
-;	lda	PHYSICIST_X
-;	cmp	#28
-;	bcc	check_floor0_done
-
-;	lda	#10
-;	sta	PHYSICIST_Y
-
-check_floor0_done:
-
-check_floor1:
-
-
-	;=====================================
-	; draw physicist
-	;=====================================
-
-	jsr	draw_physicist
-
-
-	;=====================================
-	; handle gun
-	;=====================================
-
-	jsr	handle_gun
-
 	;=====================================
 	; draw foreground action
 	;=====================================
-
-;	lda	WHICH_CAVE
-;	cmp	#0
-;	bne	c5_no_fg_action
 
 c5_draw_rocks:
 ;	lda	#1
@@ -469,34 +303,6 @@ room_frame_no_oflo:
 	cmp	#$ff			; if $ff, we died
 	beq	done_room
 
-	;===============================
-	; check if exited room to right
-	cmp	#1
-	beq	room_exit_left
-
-	;=================
-	; exit to right
-
-room_right_yes_exit:
-
-	lda	#0
-	sta	PHYSICIST_X
-cer_smc:
-	lda	#$0			; smc+1 = exit location
-	sta	WHICH_ROOM
-	jmp	done_room
-
-	;=====================
-	; exit to left
-
-room_exit_left:
-
-	lda	#37
-	sta	PHYSICIST_X
-cel_smc:
-	lda	#0		; smc+1
-	sta	WHICH_ROOM
-	jmp	done_room
 
 	; loop forever
 still_in_room:
@@ -516,24 +322,24 @@ end_message:
 .include "../gr_pageflip.s"
 .include "../decompress_fast_v2.s"
 .include "../gr_copy.s"
-.include "../gr_putsprite.s"
-.include "../gr_putsprite_crop.s"
+;.include "../gr_putsprite.s"
+;.include "../gr_putsprite_crop.s"
 .include "../gr_offsets.s"
-.include "../gr_hlin.s"
-.include "../keyboard.s"
+;.include "../gr_hlin.s"
+;.include "../keyboard.s"
 
-.include "../physicist.s"
-.include "../alien.s"
-.include "../dummy_friend.s"
+;.include "../physicist.s"
+;.include "../alien.s"
+;.include "../dummy_friend.s"
 
-.include "../gun.s"
-.include "../laser.s"
-.include "../alien_laser.s"
-.include "../blast.s"
-.include "../shield.s"
+;.include "../gun.s"
+;.include "../laser.s"
+;.include "../alien_laser.s"
+;.include "../blast.s"
+;.include "../shield.s"
 
-.include "../door.s"
-.include "../collision.s"
+;.include "../door.s"
+;.include "../collision.s"
 
 .include "../gr_overlay.s"
 .include "../gr_run_sequence2.s"
@@ -542,7 +348,149 @@ end_message:
 .include "graphics/l14_arena/ootw_c14_arena.inc"
 ; sprites
 .include "../sprites/physicist.inc"
-.include "../sprites/alien.inc"
+;.include "../sprites/alien.inc"
+
+
+
+;======================================
+; handle keypress
+;======================================
+
+; A or <-   : start moving left
+; D or ->   : start moving right
+; W or up   : jump or elevator/transporter up
+; S or down : crouch or pickup or elevator/transporter down
+; L         : charge gun
+; space     : action
+; escape    : quit
+
+handle_keypress:
+
+	lda	KEYPRESS						; 4
+	bmi	keypress						; 3
+no_keypress:
+	bit	KEYRESET			; clear
+						; avoid keeping old keys around
+	rts	; nothing pressed, return
+
+keypress:
+									; -1
+
+	and	#$7f		; clear high bit
+
+	;======================
+	; check escape
+
+check_quit:
+	cmp	#27		; quit if ESCAPE pressed
+	bne	check_left
+
+	;=====================
+	; QUIT
+	;=====================
+quit:
+	lda	#$ff		; could just dec
+	sta	GAME_OVER
+	rts
+
+	;======================
+	; check left
+check_left:
+	cmp	#'A'
+	beq	left_pressed
+	cmp	#$8		; left arrow
+	bne	check_right
+
+
+	;====================
+	;====================
+	; Left/A Pressed
+	;====================
+	;====================
+left_pressed:
+;	inc	GUN_FIRE		; fire gun if charging
+
+					; left==0
+;	lda	DIRECTION		; if facing right, turn to face left
+;	bne	left_going_right
+	jmp	done_keypress
+
+
+	;========================
+	; check for right pressed
+
+check_right:
+	cmp	#'D'
+	beq	right_pressed
+	cmp	#$15
+	bne	check_up
+
+	;===================
+	;===================
+	; Right/D Pressed
+	;===================
+	;===================
+right_pressed:
+	jmp	done_keypress
+
+
+	;=====================
+	; check up
+
+check_up:
+	cmp	#'W'
+	beq	up
+	cmp	#$0B
+
+
+	bne	check_down
+
+	;==========================
+	;==========================
+	; UP/W Pressed --
+	;==========================
+	;==========================
+up:
+
+	jmp	done_keypress
+
+
+	;==========================
+check_down:
+	cmp	#'S'
+	beq	down
+	cmp	#$0A
+	bne	check_space
+
+	;==========================
+	;==========================
+	; Down/S Pressed
+	;==========================
+	;==========================
+down:
+	jmp	done_keypress
+
+
+	;==========================
+
+
+check_space:
+	cmp	#' '
+	beq	space
+;	cmp	#$15		; ascii 21=??
+	jmp	unknown
+
+	;======================
+	; SPACE -- Keypress, also look for enter?
+	;======================
+space:
+
+unknown:
+done_keypress:
+	bit	KEYRESET	; clear the keyboard strobe		; 4
+
+	rts								; 6
+
 
 
 ;==============================
@@ -640,17 +588,47 @@ tank_intro_sequence:
 	.byte	128+3	;       .word  	door_open13_lzsa	; (3)
 	.byte	255                                     ; load to bg
 	.word	entrance_bg_lzsa			; this
-	.byte	128+2	;       .word  	entering01_lzsa	; (3)
-	.byte	128+2	;       .word  	entering02_lzsa	; (3)
-	.byte	128+2	;       .word  	entering03_lzsa	; (3)
-	.byte	128+2	;       .word  	entering04_lzsa	; (3)
-	.byte	128+2	;       .word  	entering05_lzsa	; (3)
-	.byte	128+2	;       .word  	entering06_lzsa	; (3)
-	.byte	128+2	;       .word  	entering07_lzsa	; (3)
-	.byte	128+2	;       .word  	entering08_lzsa	; (3)
-	.byte	128+2	;       .word  	entering09_lzsa	; (3)
-	.byte	128+2	;       .word  	entering10_lzsa	; (3)
-	.byte	128+2	;       .word  	entering11_lzsa	; (3)
-	.byte	128+2	;       .word  	entering12_lzsa	; (3)
-	.byte	128+2	;       .word  	entering13_lzsa	; (3)
+	.byte	128+2	;       .word  	entering01_lzsa	; (2)
+	.byte	128+2	;       .word  	entering02_lzsa	; (2)
+	.byte	128+2	;       .word  	entering03_lzsa	; (2)
+	.byte	128+2	;       .word  	entering04_lzsa	; (2)
+	.byte	128+2	;       .word  	entering05_lzsa	; (2)
+	.byte	128+2	;       .word  	entering06_lzsa	; (2)
+	.byte	128+2	;       .word  	entering07_lzsa	; (2)
+	.byte	128+2	;       .word  	entering08_lzsa	; (2)
+	.byte	128+2	;       .word  	entering09_lzsa	; (2)
+	.byte	128+2	;       .word  	entering10_lzsa	; (2)
+	.byte	128+2	;       .word  	entering11_lzsa	; (2)
+	.byte	128+2	;       .word  	entering12_lzsa	; (2)
+	.byte	128+32	;       .word  	entering13_lzsa	; (16) pause a bit
+	.byte	255                                     ; load to bg
+	.word	arena_next_bg_lzsa			; this
+	.byte	128+28	;       .word  	arena_next01_lzsa	; (14)
+	.byte	128+14	;       .word  	arena_next02_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next03_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next04_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next05_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next06_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next07_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next08_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next09_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next10_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next11_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next12_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next13_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next14_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next15_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next16_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next17_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next18_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next19_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next20_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next21_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next22_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next23_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next24_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next25_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next26_lzsa	; (7)
+	.byte	128+14	;       .word  	arena_next27_lzsa	; (7)
+
 	.byte	0	; ending

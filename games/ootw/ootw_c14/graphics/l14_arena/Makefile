@@ -8,7 +8,8 @@ all:	ootw_c14_arena.inc
 #####
 
 ootw_c14_arena.inc:	\
-	arena.lzsa inside_bg.lzsa \
+	arena_main_bg.lzsa \
+	inside_bg.lzsa \
 	inside03.lzsa inside04.lzsa inside05.lzsa inside06.lzsa \
 	inside07.lzsa inside08.lzsa inside09.lzsa inside10.lzsa \
 	inside11.lzsa inside12.lzsa inside13.lzsa inside14.lzsa \
@@ -35,8 +36,16 @@ ootw_c14_arena.inc:	\
 	entering01.lzsa entering02.lzsa entering03.lzsa entering04.lzsa \
 	entering05.lzsa entering06.lzsa entering07.lzsa entering08.lzsa \
 	entering09.lzsa entering10.lzsa entering11.lzsa entering12.lzsa \
-	entering13.lzsa
-	echo "arena_lzsa: .incbin \"arena.lzsa\"" > ootw_c14_arena.inc
+	entering13.lzsa \
+	arena_next_bg.lzsa \
+	arena_next01.lzsa arena_next02.lzsa arena_next03.lzsa arena_next04.lzsa \
+	arena_next05.lzsa arena_next06.lzsa arena_next07.lzsa arena_next08.lzsa \
+	arena_next09.lzsa arena_next10.lzsa arena_next11.lzsa arena_next12.lzsa \
+	arena_next13.lzsa arena_next14.lzsa arena_next15.lzsa arena_next16.lzsa \
+	arena_next17.lzsa arena_next18.lzsa arena_next19.lzsa arena_next20.lzsa \
+	arena_next21.lzsa arena_next22.lzsa arena_next23.lzsa arena_next24.lzsa \
+	arena_next25.lzsa arena_next26.lzsa arena_next27.lzsa
+	echo "arena_main_bg_lzsa: .incbin \"arena_main_bg.lzsa\"" > ootw_c14_arena.inc
 	echo "inside_bg_lzsa: .incbin \"inside_bg.lzsa\"" >> ootw_c14_arena.inc
 	echo "inside03_lzsa: .incbin \"inside03.lzsa\"" >> ootw_c14_arena.inc
 	echo "inside04_lzsa: .incbin \"inside04.lzsa\"" >> ootw_c14_arena.inc
@@ -127,6 +136,36 @@ ootw_c14_arena.inc:	\
 	echo "entering11_lzsa: .incbin \"entering11.lzsa\"" >> ootw_c14_arena.inc
 	echo "entering12_lzsa: .incbin \"entering12.lzsa\"" >> ootw_c14_arena.inc
 	echo "entering13_lzsa: .incbin \"entering13.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next_bg_lzsa: .incbin \"arena_next_bg.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next01_lzsa: .incbin \"arena_next01.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next02_lzsa: .incbin \"arena_next02.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next03_lzsa: .incbin \"arena_next03.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next04_lzsa: .incbin \"arena_next04.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next05_lzsa: .incbin \"arena_next05.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next06_lzsa: .incbin \"arena_next06.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next07_lzsa: .incbin \"arena_next07.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next08_lzsa: .incbin \"arena_next08.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next09_lzsa: .incbin \"arena_next09.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next10_lzsa: .incbin \"arena_next10.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next11_lzsa: .incbin \"arena_next11.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next12_lzsa: .incbin \"arena_next12.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next13_lzsa: .incbin \"arena_next13.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next14_lzsa: .incbin \"arena_next14.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next15_lzsa: .incbin \"arena_next15.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next16_lzsa: .incbin \"arena_next16.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next17_lzsa: .incbin \"arena_next17.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next18_lzsa: .incbin \"arena_next18.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next19_lzsa: .incbin \"arena_next19.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next20_lzsa: .incbin \"arena_next20.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next21_lzsa: .incbin \"arena_next21.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next22_lzsa: .incbin \"arena_next22.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next23_lzsa: .incbin \"arena_next23.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next24_lzsa: .incbin \"arena_next24.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next25_lzsa: .incbin \"arena_next25.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next26_lzsa: .incbin \"arena_next26.lzsa\"" >> ootw_c14_arena.inc
+	echo "arena_next27_lzsa: .incbin \"arena_next27.lzsa\"" >> ootw_c14_arena.inc
+
+
 
 
 #####
