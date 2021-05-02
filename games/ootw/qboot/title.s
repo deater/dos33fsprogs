@@ -284,7 +284,7 @@ title_text:
 .byte  3, 4,   "II II      // //=I\ II==\ II   II \\",0
 .byte  3, 5,   "II II     // //  II II==/ II   II //",0
 .byte  3, 6,   "II II//\\//  \===I/ II \\ II== II//",0
-.byte  0, 8,"OOTW PROOF-OF-CONCEPT V3.0 (19 APR 2021)",0
+.byte  0, 8,"OOTW PROOF-OF-CONCEPT V3.1 (1 MAY 2021)",0
 .byte  0, 9,"CODE: DEATER           DISK,LZ4: QKUMBA",0
 .byte 12,10,            ",",0
 .byte  0,11,"ORIGINAL BY ERIC CHAHI",0

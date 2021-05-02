@@ -198,6 +198,33 @@ room_loop:
 
 	;==================================
 	; draw background action
+	;==================================
+
+	;==============================
+	; blink white button if enabled
+
+	lda	#$6
+	clc
+	adc	DRAW_PAGE
+	sta	wlsmc+2
+	sta	wlsmc+5
+
+	lda	FRAMEL
+	and	#$40
+	beq	white_light_on
+
+	;5,8 and 5,10
+	; $600, $680
+white_light_off:
+	lda	#$0
+	jmp	done_white_light
+white_light_on:
+	lda	#$ff
+
+done_white_light:
+wlsmc:
+	sta	$605
+	sta	$685
 
 
 	;===============================
