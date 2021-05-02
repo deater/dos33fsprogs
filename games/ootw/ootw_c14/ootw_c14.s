@@ -51,21 +51,23 @@ ootw_c14_restart:
 	jsr	ootw_c14_level_init
 
 	;===========================
-	; c14_new_room
+	; c14 startup
 	;===========================
-	; enter new room on level 14
 
-c14_new_room:
 	lda	#0
 	sta	GAME_OVER
+	sta	BUTTON_PRESS
+
+	lda	#6
+	sta	HAND_X
+	lda	#14
+	sta	HAND_Y
 
 	;====================================
-	; Initialize room based on WHICH_ROOM
-	; and then play until we exit
+	; play until we exit
 	;====================================
 
-	jsr	ootw_c14_setup_room_and_play
-
+	jsr	ootw_c14_play
 
 	;====================================
 	; we exited the room
@@ -77,12 +79,15 @@ c14_check_done:
 	beq	quit_level
 
 	;=====================================================
-	; Check to see which room to enter next
-	; If it's a special value, means we succesfully beat the level
+	; we beat the level, run the eject sequence
 c14_defeated:
-	lda     WHICH_ROOM
-	cmp	#$ff
-	bne	c14_new_room
+
+	lda	#<eject_sequence
+	sta	INTRO_LOOPL
+	lda	#>eject_sequence
+	sta	INTRO_LOOPH
+
+	jsr	run_sequence
 
 	; point to next level
 	; and exit to the level loader
@@ -139,31 +144,27 @@ ootw_c14_level_init:
 
 	;===========================
 	;===========================
-	; enter new room
+	; play the arena
 	;===========================
 	;===========================
 
-ootw_c14_setup_room_and_play:
+ootw_c14_play:
 
-	;===============================
-	; Room0 -- the arena
-	;===============================
-room:
 
+	;===================
 	; load background
-	lda	#>(arena_main_bg_lzsa)
+	;===================
+
+	lda	#>(arena_panel_bg_lzsa)
 	sta	getsrc_smc+2    ; LZSA_SRC_HI
-	lda	#<(arena_main_bg_lzsa)
-
-room_setup_done:
-
+	lda	#<(arena_panel_bg_lzsa)
 	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#$c				; load to page $c00
 	jsr	decompress_lzsa2_fast			; tail call
 
-ootw_room_already_set:
 	;===========================
 	; Enable graphics
+	;===========================
 
 	bit	LORES
 	bit	SET_GR
@@ -204,6 +205,34 @@ room_loop:
 	;===============================
 
 	jsr	handle_keypress
+
+
+	;===============================
+	; draw hand
+	;===============================
+
+	lda	HAND_X
+	sta	XPOS
+	lda	HAND_Y
+	sta	YPOS
+
+	lda	BUTTON_PRESS
+	beq	regular_hand
+button_hand:
+	lda	#<hand_press_sprite
+	sta	INL
+	lda	#>hand_press_sprite
+	dec	BUTTON_PRESS
+	jmp	hand_ready
+
+regular_hand:
+	lda	#<hand_sprite
+	sta	INL
+	lda	#>hand_sprite
+hand_ready:
+	sta	INH
+	jsr	put_sprite_crop
+
 
 	;=====================================
 	; draw foreground action
@@ -298,14 +327,14 @@ room_frame_no_oflo:
 	;==========================
 
 	lda	GAME_OVER
-	beq	still_in_room
+	beq	still_in_arena
 
-	cmp	#$ff			; if $ff, we died
-	beq	done_room
+;	cmp	#$ff			; if $ff, we died
+	jmp	done_room
 
 
 	; loop forever
-still_in_room:
+still_in_arena:
 	lda	#0
 	sta	GAME_OVER
 
@@ -323,7 +352,7 @@ end_message:
 .include "../decompress_fast_v2.s"
 .include "../gr_copy.s"
 ;.include "../gr_putsprite.s"
-;.include "../gr_putsprite_crop.s"
+.include "../gr_putsprite_crop.s"
 .include "../gr_offsets.s"
 ;.include "../gr_hlin.s"
 ;.include "../keyboard.s"
@@ -360,7 +389,6 @@ end_message:
 ; D or ->   : start moving right
 ; W or up   : jump or elevator/transporter up
 ; S or down : crouch or pickup or elevator/transporter down
-; L         : charge gun
 ; space     : action
 ; escape    : quit
 
@@ -408,11 +436,13 @@ check_left:
 	;====================
 	;====================
 left_pressed:
-;	inc	GUN_FIRE		; fire gun if charging
+	lda	HAND_X
+	beq	no_hand_left
 
-					; left==0
-;	lda	DIRECTION		; if facing right, turn to face left
-;	bne	left_going_right
+	dec	HAND_X
+	dec	HAND_X
+
+no_hand_left:
 	jmp	done_keypress
 
 
@@ -431,6 +461,15 @@ check_right:
 	;===================
 	;===================
 right_pressed:
+	lda	HAND_X
+	cmp	#12
+	beq	no_hand_right
+
+	inc	HAND_X
+	inc	HAND_X
+
+no_hand_right:
+
 	jmp	done_keypress
 
 
@@ -451,7 +490,16 @@ check_up:
 	;==========================
 	;==========================
 up:
+	lda	HAND_Y
+	cmp	#6
+	beq	no_hand_up
 
+	dec	HAND_Y
+	dec	HAND_Y
+	dec	HAND_Y
+	dec	HAND_Y
+
+no_hand_up:
 	jmp	done_keypress
 
 
@@ -468,6 +516,15 @@ check_down:
 	;==========================
 	;==========================
 down:
+	lda	HAND_Y
+	cmp	#14
+	beq	no_hand_up
+
+	inc	HAND_Y
+	inc	HAND_Y
+	inc	HAND_Y
+	inc	HAND_Y
+
 	jmp	done_keypress
 
 
@@ -477,13 +534,29 @@ down:
 check_space:
 	cmp	#' '
 	beq	space
-;	cmp	#$15		; ascii 21=??
-	jmp	unknown
+	cmp	#$D		; enter
+	bne	unknown
 
 	;======================
 	; SPACE -- Keypress, also look for enter?
 	;======================
 space:
+	lda	#5
+	sta	BUTTON_PRESS
+
+	lda	HAND_X
+	cmp	#4
+	bne	no_eject
+
+	lda	HAND_Y
+	cmp	#10
+	bne	no_eject
+
+	lda	#$01		; done, set so we exit
+	sta	GAME_OVER
+
+no_eject:
+	jmp	done_keypress
 
 unknown:
 done_keypress:
@@ -600,7 +673,8 @@ tank_intro_sequence:
 	.byte	128+2	;       .word  	entering10_lzsa	; (2)
 	.byte	128+2	;       .word  	entering11_lzsa	; (2)
 	.byte	128+2	;       .word  	entering12_lzsa	; (2)
-	.byte	128+32	;       .word  	entering13_lzsa	; (16) pause a bit
+	.byte	128+2	;       .word  	entering13_lzsa	; (2)
+	.byte	128+32	;       .word  	blank_lzsa	; (16) pause a bit
 	.byte	255                                     ; load to bg
 	.word	arena_next_bg_lzsa			; this
 	.byte	128+28	;       .word  	arena_next01_lzsa	; (14)
@@ -630,5 +704,48 @@ tank_intro_sequence:
 	.byte	128+14	;       .word  	arena_next25_lzsa	; (7)
 	.byte	128+14	;       .word  	arena_next26_lzsa	; (7)
 	.byte	128+14	;       .word  	arena_next27_lzsa	; (7)
-
 	.byte	0	; ending
+
+
+eject_sequence:
+	.byte	255                                     ; load to bg
+	.word	arena_main_bg_lzsa			; this
+	.byte	6
+	.word   eject01_lzsa				; (3)
+	.byte	128+6	;       .word  	eject02_lzsa	; (3)
+	.byte	128+10	;       .word  	eject03_lzsa	; (5)
+	.byte	128+4	;       .word  	eject04_lzsa	; (2)
+	.byte	128+6	;       .word  	eject05_lzsa	; (3)
+	.byte	128+12	;       .word  	eject06_lzsa	; (6)
+	.byte	128+4	;       .word  	eject07_lzsa	; (2)
+	.byte	128+10	;       .word  	eject08_lzsa	; (5)
+	.byte	128+4	;       .word  	eject09_lzsa	; (2)
+	.byte	128+6	;       .word  	eject10_lzsa	; (3)
+	.byte	255                                     ; load to bg
+	.word	sky_bg_lzsa				; this
+	.byte	128+8	;       .word  	sky01_lzsa	; (4)
+	.byte	128+10	;       .word  	sky02_lzsa	; (5)
+	.byte	128+20	;       .word  	sky03_lzsa	; (10)
+	.byte	128+16	;       .word  	sky04_lzsa	; (8)
+	.byte	128+12	;       .word  	sky05_lzsa	; (6)
+	.byte	20
+	.word   blank_lzsa				; (10)
+	.byte	0
+
+
+
+hand_sprite:
+	.byte 3,4
+	.byte $AA,$bA,$AA
+	.byte $AA,$bb,$AA
+	.byte $bb,$bb,$bA
+	.byte $bb,$bb,$bb
+
+hand_press_sprite:
+	.byte 3,4
+	.byte $AA,$bb,$AA
+	.byte $bA,$bb,$AA
+	.byte $bb,$bb,$bb
+	.byte $bb,$bb,$bb
+
+

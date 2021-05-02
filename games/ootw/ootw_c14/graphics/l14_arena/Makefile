@@ -8,7 +8,9 @@ all:	ootw_c14_arena.inc
 #####
 
 ootw_c14_arena.inc:	\
+	blank.lzsa \
 	arena_main_bg.lzsa \
+	arena_panel_bg.lzsa \
 	inside_bg.lzsa \
 	inside03.lzsa inside04.lzsa inside05.lzsa inside06.lzsa \
 	inside07.lzsa inside08.lzsa inside09.lzsa inside10.lzsa \
@@ -44,8 +46,13 @@ ootw_c14_arena.inc:	\
 	arena_next13.lzsa arena_next14.lzsa arena_next15.lzsa arena_next16.lzsa \
 	arena_next17.lzsa arena_next18.lzsa arena_next19.lzsa arena_next20.lzsa \
 	arena_next21.lzsa arena_next22.lzsa arena_next23.lzsa arena_next24.lzsa \
-	arena_next25.lzsa arena_next26.lzsa arena_next27.lzsa
+	arena_next25.lzsa arena_next26.lzsa arena_next27.lzsa \
+	eject01.lzsa eject02.lzsa eject03.lzsa eject04.lzsa eject05.lzsa \
+	eject06.lzsa eject07.lzsa eject08.lzsa eject09.lzsa eject10.lzsa \
+	sky_bg.lzsa \
+	sky01.lzsa sky02.lzsa sky03.lzsa sky04.lzsa sky05.lzsa
 	echo "arena_main_bg_lzsa: .incbin \"arena_main_bg.lzsa\"" > ootw_c14_arena.inc
+	echo "arena_panel_bg_lzsa: .incbin \"arena_panel_bg.lzsa\"" >> ootw_c14_arena.inc
 	echo "inside_bg_lzsa: .incbin \"inside_bg.lzsa\"" >> ootw_c14_arena.inc
 	echo "inside03_lzsa: .incbin \"inside03.lzsa\"" >> ootw_c14_arena.inc
 	echo "inside04_lzsa: .incbin \"inside04.lzsa\"" >> ootw_c14_arena.inc
@@ -136,6 +143,7 @@ ootw_c14_arena.inc:	\
 	echo "entering11_lzsa: .incbin \"entering11.lzsa\"" >> ootw_c14_arena.inc
 	echo "entering12_lzsa: .incbin \"entering12.lzsa\"" >> ootw_c14_arena.inc
 	echo "entering13_lzsa: .incbin \"entering13.lzsa\"" >> ootw_c14_arena.inc
+	echo "blank_lzsa: .incbin \"blank.lzsa\"" >> ootw_c14_arena.inc
 	echo "arena_next_bg_lzsa: .incbin \"arena_next_bg.lzsa\"" >> ootw_c14_arena.inc
 	echo "arena_next01_lzsa: .incbin \"arena_next01.lzsa\"" >> ootw_c14_arena.inc
 	echo "arena_next02_lzsa: .incbin \"arena_next02.lzsa\"" >> ootw_c14_arena.inc
@@ -164,9 +172,22 @@ ootw_c14_arena.inc:	\
 	echo "arena_next25_lzsa: .incbin \"arena_next25.lzsa\"" >> ootw_c14_arena.inc
 	echo "arena_next26_lzsa: .incbin \"arena_next26.lzsa\"" >> ootw_c14_arena.inc
 	echo "arena_next27_lzsa: .incbin \"arena_next27.lzsa\"" >> ootw_c14_arena.inc
-
-
-
+	echo "eject01_lzsa: .incbin \"eject01.lzsa\"" >> ootw_c14_arena.inc
+	echo "eject02_lzsa: .incbin \"eject02.lzsa\"" >> ootw_c14_arena.inc
+	echo "eject03_lzsa: .incbin \"eject03.lzsa\"" >> ootw_c14_arena.inc
+	echo "eject04_lzsa: .incbin \"eject04.lzsa\"" >> ootw_c14_arena.inc
+	echo "eject05_lzsa: .incbin \"eject05.lzsa\"" >> ootw_c14_arena.inc
+	echo "eject06_lzsa: .incbin \"eject06.lzsa\"" >> ootw_c14_arena.inc
+	echo "eject07_lzsa: .incbin \"eject07.lzsa\"" >> ootw_c14_arena.inc
+	echo "eject08_lzsa: .incbin \"eject08.lzsa\"" >> ootw_c14_arena.inc
+	echo "eject09_lzsa: .incbin \"eject09.lzsa\"" >> ootw_c14_arena.inc
+	echo "eject10_lzsa: .incbin \"eject10.lzsa\"" >> ootw_c14_arena.inc
+	echo "sky_bg_lzsa: .incbin \"sky_bg.lzsa\"" >> ootw_c14_arena.inc
+	echo "sky01_lzsa: .incbin \"sky01.lzsa\"" >> ootw_c14_arena.inc
+	echo "sky02_lzsa: .incbin \"sky02.lzsa\"" >> ootw_c14_arena.inc
+	echo "sky03_lzsa: .incbin \"sky03.lzsa\"" >> ootw_c14_arena.inc
+	echo "sky04_lzsa: .incbin \"sky04.lzsa\"" >> ootw_c14_arena.inc
+	echo "sky05_lzsa: .incbin \"sky05.lzsa\"" >> ootw_c14_arena.inc
 
 #####
 
