@@ -106,7 +106,14 @@ print_help_and_go:
 	jsr	move_and_print_list
 
 ready_to_load:
-	jmp	$1400			; LOADER starts here
+	;	jmp	$1400			; LOADER starts here
+						; should be $1600?
+	; anyway I think we jsr'd here so we should just rts?
+
+	rts
+
+
+
 
 wait_for_keypress:
 	lda     KEYPRESS

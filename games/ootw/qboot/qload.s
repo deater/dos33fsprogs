@@ -8,10 +8,6 @@
 
 qload_start:
 
-	; init the write code
-;	lda	WHICH_SLOT
-;	jsr	popwr_init
-
 	; first time entry
 	; start by loading text title
 
