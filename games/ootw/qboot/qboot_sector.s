@@ -45,11 +45,16 @@ boot_entry:
 
 	; it's full of qkumba magic so be careful
 
-	lsr			; check sector number
-	tay
-	adc	#$13		; start at sector $14
+	; in theory A=1 here on boot
+	;	A=3 second time we get called after loading $14
+	;	A=5 third time we get called after loading $15
 
-	sta	$27		; set destination for read
+	lsr			; check sector number
+				; A=0, C=1	A=1,C=1		A=2,C=1
+	tay			; Y=0		Y=1		Y=2
+	adc	#$13		; A=$14		A=$15		A=$16
+	sta	$27		; set destination for read to $1400
+
 	cmp	#$16
 				; OLD 10  11  12  (1       1     1)
 				; OLD be, bf, c0  (1011 1011 1100)
@@ -77,7 +82,7 @@ boot_entry:
 	pha
 	lda     #$5b            ;read-1
 	pha
-	rts
+	rts			; return used to call $CX5C in disk II ROM
 
 done_load_2:
 
@@ -87,6 +92,8 @@ done_load_2:
 	ora	#$8c		; slot to Q6L
 				; Q6L?
 				; if slot 6, after this A is $EC
+
+	; Y should be 2 here
 patch_loop:
 	iny
 	ldx	patchtbl-3, Y

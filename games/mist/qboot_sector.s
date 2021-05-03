@@ -14,7 +14,7 @@
         ;256 bytes ($200-2ff) static table
         grouped   = $200
 
-	; stay aware from interrupt vectors at $3fe !!!
+	; stay away from interrupt vectors at $3fe !!!
 
         ;106 bytes ($300-369) static table
 	preshift	= $300
@@ -42,9 +42,13 @@
 boot_entry:
 	; this code loads two sectors up to $10/$11
 
+	; assume A=1 coming in here
+
 	lsr			; check sector number
-	tay
-	adc	#$0f
+				; A=0, carry=1
+	tay			; Y=0
+	adc	#$0f		; A=$10 (destintation)
+
 	sta	$27		; set or update address as needed
 	cmp	#$12
 				; 10  11  12  (1       1     1)
@@ -73,7 +77,7 @@ boot_entry:
 	pha
 	lda     #$5b            ;read-1
 	pha
-	rts
+	rts			; return used to call $CX5C in DISK II ROM
 
 done_load_2:
 
@@ -83,6 +87,7 @@ done_load_2:
 	ora	#$8c		; slot to Q6L
 				; Q6L?
 				; if slot 6, after this A is $EC
+	; Y should be 2 here
 patch_loop:
 	iny
 	ldx	patchtbl-3, Y
