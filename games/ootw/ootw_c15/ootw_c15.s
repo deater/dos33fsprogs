@@ -23,6 +23,17 @@
 	;============================
 
 ootw_c15:
+
+	; blast out zero page trying to find bugs where assume
+	; init to ff or 0
+
+;	lda	#$5a
+;loopy:
+;	ldx	#0
+;	sta	$0,X
+;	inx
+;	bne	loopy
+
 	; Initializing when entering level for first time
 
 
