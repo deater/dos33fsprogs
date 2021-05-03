@@ -1,0 +1,15 @@
+Xdraw testing:
+
+	Size $20
+		D02A
+		D07D-D083 interesting
+		D23C
+		D251-D25D (D256 highlight)
+
+
+
+To try:
+	Cycle colors (clear background, offset X by 1)
+	Ring around dSr logo
+	"Xdraw Xtravaganza"
+	
