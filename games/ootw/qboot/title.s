@@ -7,6 +7,8 @@ title:
 	lda	#0
 	sta	MENU_BASE		; start at level0 by default
 	sta	MENU_HIGHLIGHT
+	sta	DISP_PAGE
+	sta	DRAW_PAGE		; need to be 0 or weird issues
 
 redraw_title:
 	bit	TEXT

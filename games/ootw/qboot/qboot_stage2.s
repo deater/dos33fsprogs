@@ -17,7 +17,8 @@ WAIT    = $FCA8                 ;; delay 1/2(26+27A+5A^2) us
 
 code_begin:
 
-	.byte	version
+	.byte	version		; note this also gets over-written as a
+				; side-effect of the patching code
 
 readnib:
 slotpatch1:			; smc

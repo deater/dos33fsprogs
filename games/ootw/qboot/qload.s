@@ -11,32 +11,19 @@ qload_start:
 	; first time entry
 	; start by loading text title
 
-	jsr	title
+	jsr	title			; display title / get which to load
 
-;	lda	#LOAD_TEXT_TITLE	; load title
-;	sta	WHICH_LOAD
+	; get the current disk we're on
 
 	lda	$8A5			; from boot sector
 	sta	CURRENT_DISK		; current disk number
 
-;	jsr	load_file
-
-;	jsr	$800
-
-;	lda	#LOAD_TITLE		; load title
-;	sta	WHICH_LOAD
 
 main_game_loop:
 	jsr	load_file
 
-;	lda	WHICH_LOAD
-;	bne	not_title
+	; always enter at $1800
 
-;start_title:
-;	jsr	$4000
-;	jmp	main_game_loop
-
-;not_title:
 	jsr	$1800
 	jmp	main_game_loop
 
@@ -63,7 +50,7 @@ load_file_no_diskcheck:
 	lda	length_array,X
 	sta	load_length
 
-	jsr	load_new
+	jsr	load_new		; FIXME: tail call
 
 	rts
 
