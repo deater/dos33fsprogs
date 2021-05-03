@@ -30,25 +30,32 @@ title_loop:
 
 	jsr	wait_for_keypress
 
-	; $15/$A = right/down
-	cmp	#$15+$80
+	; convert to uppercase, remove top bit
+	; 1110 0001 -> 0100 0001
+
+	and	#$5f
+
+	; $15/$A = right/down/S
+	cmp	#$15
 	beq	down_pressed
-	cmp	#$A+$80
+	cmp	#$A
+	beq	down_pressed
+	cmp	#'S'
 	beq	down_pressed
 
-	; 8/B = left/up
-	cmp	#$8+$80
+	; 8/B = left/up/W
+	cmp	#$8
 	beq	up_pressed
-	cmp	#$B+$80
+	cmp	#$B
+	beq	up_pressed
+	cmp	#'W'
 	beq	up_pressed
 
 	; Return = 13
-	cmp	#13+$80
+	cmp	#13
 	beq	all_done
 
-	cmp	#'H'+$80
-	beq	want_help
-	cmp	#'h'+$80
+	cmp	#'H'
 	bne	key_unknown
 want_help:
 
