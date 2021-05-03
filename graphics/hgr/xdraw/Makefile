@@ -8,7 +8,7 @@ LINKERSCRIPTS = ../../../linker_scripts
 
 all:	xdraw.dsk
 
-xdraw.dsk:	HELLO TINY_XDRAW TINY_COOL TINY_LINES TINY_CENTER NYAN
+xdraw.dsk:	HELLO TINY_XDRAW TINY_COOL TINY_LINES TINY_CENTER NYAN XDRAW_TEST
 	cp $(EMPTYDISK) xdraw.dsk
 	$(DOS33) -y xdraw.dsk SAVE A HELLO
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xE7 TINY_XDRAW
@@ -16,6 +16,7 @@ xdraw.dsk:	HELLO TINY_XDRAW TINY_COOL TINY_LINES TINY_CENTER NYAN
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xE7 TINY_LINES
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xE7 TINY_CENTER
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xC00 NYAN
+	$(DOS33) -y xdraw.dsk BSAVE -a 0xE7 XDRAW_TEST
 
 ###
 
@@ -23,6 +24,13 @@ HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
 
 
+###
+
+XDRAW_TEST:	xdraw_test.o
+	ld65 -o XDRAW_TEST xdraw_test.o -C ./apple2_e7_zp.inc
+
+xdraw_test.o:	xdraw_test.s
+	ca65 -o xdraw_test.o xdraw_test.s -l xdraw_test.lst
 
 ###
 
@@ -71,4 +79,4 @@ nyan.o:	nyan.s
 ####
 
 clean:	
-	rm -f *~ *.o *.lst HELLO TINY_COOL TINY_XDRAW TINY_LINES TINY_CENTER NYAN
+	rm -f *~ *.o *.lst HELLO TINY_COOL TINY_XDRAW TINY_LINES TINY_CENTER NYAN XDRAW_TEST
