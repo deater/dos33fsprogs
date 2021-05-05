@@ -9,7 +9,7 @@ all:	triangles.dsk
 
 triangles.dsk:	HELLO TINY_TRIANGLES XOR MOD9 MOD9_64 WRITING MOVE_RIGHT \
 	SIER_HGR SIER_HPLOT SIER_MOVERIGHT SIER_INLINE SIER_INTERLACE \
-	RAINBOW_SQUARES
+	RAINBOW_SQUARES FEATHERS
 	cp $(EMPTY_DISK) triangles.dsk
 	$(DOS33) -y triangles.dsk SAVE A HELLO
 	$(DOS33) -y triangles.dsk BSAVE -a 0x070 TINY_TRIANGLES
@@ -24,6 +24,7 @@ triangles.dsk:	HELLO TINY_TRIANGLES XOR MOD9 MOD9_64 WRITING MOVE_RIGHT \
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 SIER_HPLOT
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 SIER_INTERLACE
 	$(DOS33) -y triangles.dsk BSAVE -a 0x300 RAINBOW_SQUARES
+	$(DOS33) -y triangles.dsk BSAVE -a 0x300 FEATHERS
 
 ###
 
@@ -87,6 +88,16 @@ SIER_HPLOT:	sier_hplot.o
 
 sier_hplot.o:	sier_hplot.s
 	ca65 -o sier_hplot.o sier_hplot.s -l sier_hplot.lst
+
+
+###
+
+FEATHERS:	feathers.o
+	ld65 -o FEATHERS feathers.o -C $(LINKER_SCRIPTS)/apple2_300.inc
+
+feathers.o:	feathers.s
+	ca65 -o feathers.o feathers.s -l feathers.lst
+
 
 ###
 

@@ -8,7 +8,7 @@ LINKERSCRIPTS = ../../../linker_scripts
 
 all:	xdraw.dsk
 
-xdraw.dsk:	HELLO TINY_XDRAW TINY_COOL TINY_LINES TINY_CENTER NYAN XDRAW_TEST SHIMMER
+xdraw.dsk:	HELLO TINY_XDRAW TINY_COOL TINY_LINES TINY_CENTER NYAN XDRAW_TEST SHIMMER SHIMMER_BOT
 	cp $(EMPTYDISK) xdraw.dsk
 	$(DOS33) -y xdraw.dsk SAVE A HELLO
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xE7 TINY_XDRAW
@@ -18,6 +18,7 @@ xdraw.dsk:	HELLO TINY_XDRAW TINY_COOL TINY_LINES TINY_CENTER NYAN XDRAW_TEST SHI
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xC00 NYAN
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xE7 XDRAW_TEST
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xC00 SHIMMER
+	$(DOS33) -y xdraw.dsk BSAVE -a 0x3f5 SHIMMER_BOT
 
 ###
 
@@ -82,6 +83,14 @@ SHIMMER:	shimmer.o
 
 shimmer.o:	shimmer.s
 	ca65 -o shimmer.o shimmer.s -l shimmer.lst
+
+###
+
+SHIMMER_BOT:	shimmer_bot.o
+	ld65 -o SHIMMER_BOT shimmer_bot.o -C $(LINKERSCRIPTS)/apple2_3f5.inc
+
+shimmer_bot.o:	shimmer_bot.s
+	ca65 -o shimmer_bot.o shimmer_bot.s -l shimmer_bot.lst
 
 
 
