@@ -8,7 +8,7 @@ LINKERSCRIPTS = ../../../linker_scripts
 
 all:	xdraw.dsk
 
-xdraw.dsk:	HELLO TINY_XDRAW TINY_COOL TINY_LINES TINY_CENTER NYAN XDRAW_TEST
+xdraw.dsk:	HELLO TINY_XDRAW TINY_COOL TINY_LINES TINY_CENTER NYAN XDRAW_TEST SHIMMER
 	cp $(EMPTYDISK) xdraw.dsk
 	$(DOS33) -y xdraw.dsk SAVE A HELLO
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xE7 TINY_XDRAW
@@ -17,6 +17,7 @@ xdraw.dsk:	HELLO TINY_XDRAW TINY_COOL TINY_LINES TINY_CENTER NYAN XDRAW_TEST
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xE7 TINY_CENTER
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xC00 NYAN
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xE7 XDRAW_TEST
+	$(DOS33) -y xdraw.dsk BSAVE -a 0xC00 SHIMMER
 
 ###
 
@@ -74,9 +75,18 @@ NYAN:	nyan.o
 nyan.o:	nyan.s
 	ca65 -o nyan.o nyan.s -l nyan.lst
 
+###
+
+SHIMMER:	shimmer.o
+	ld65 -o SHIMMER shimmer.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+shimmer.o:	shimmer.s
+	ca65 -o shimmer.o shimmer.s -l shimmer.lst
+
+
 
 
 ####
 
 clean:	
-	rm -f *~ *.o *.lst HELLO TINY_COOL TINY_XDRAW TINY_LINES TINY_CENTER NYAN XDRAW_TEST
+	rm -f *~ *.o *.lst HELLO TINY_COOL TINY_XDRAW TINY_LINES TINY_CENTER NYAN XDRAW_TEST SHIMMER
