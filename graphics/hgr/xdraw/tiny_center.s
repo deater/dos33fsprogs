@@ -43,37 +43,37 @@ RESTORE		=	$FF3F
 
 tiny_tiny:
 
-	jsr	HGR2		; Hi-res, full screen		; 3
-				; Y=0, A=0 after this call
+	jsr	HGR2		; Hi-res, full screen		; E7/E8/E9
+				; Y=0, A=0 after this call	; scale/shape
 
-	lda	#40
-	sta	HGR_SCALE
+	lda	#40						; EA/EB collision
+	sta	HGR_SCALE					; EC ED
 
 tiny_loop:
-	inc	rot_smc+1
+	inc	rot_smc+1					; EE EF
 
 	; setup X and Y co-ords
-	ldy	#0		; Y always 0
-	ldx	#140
-	lda	#96
-	jsr	HPOSN		; X= (y,x) Y=(a)
+	ldy	#0		; Y always 0			; F0 F1
+	ldx	#140						; F2 F3
+	lda	#96						; F4
+	jsr	HPOSN		; X= (y,x) Y=(a)		; F5 F6 F7
 				; saves Y/X/A to HGR_Y, HGR_X, HGR_X+1
 
 				; after, Y = X/7
 				; after, y = $14 = 20, always
 				; A=FF, X=F9
 
-	ldx	#<shape_table	; point to our shape
-	ldy	#0
+	ldx	#<shape_table	; point to our shape		; F8 F9
+	ldy	#0						; FA FB
 rot_smc:
-	lda	#0		; ROT=0
-	jsr	XDRAW0		; XDRAW 1 AT X,Y
+	lda	#0		; ROT=0				; FC FD
+	jsr	XDRAW0		; XDRAW 1 AT X,Y		; FE FF 100
 				; Both A and X are 0 at exit
 				; Z flag set on exit
 
 	beq	tiny_loop	; bra
 
 shape_table:
-	.byte $2D,0	; shape data
-
+;	.byte $2D,0	; shape data
+	.byte $3A,$DB,$0	; accidentally found at addr $0004
 		; RT RT is 00 101 101 = 2D

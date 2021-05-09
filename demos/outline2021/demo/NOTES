@@ -1,0 +1,8 @@
+Memory Usage:
+
+$200
+$1000-$10FF	wires_lookup
+$2000-$3FFF	hires page 1
+$4000-$6000	hires page 2	(24k)
+$6000-?????	code
+$B600-$BDFF	multiply tables (2k)
