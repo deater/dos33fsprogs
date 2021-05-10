@@ -7,7 +7,8 @@ shimmer:
 	;=========================================
 
 
-	jsr	HGR2
+	jsr	HGR
+	bit	FULLGR
 
 	lda	#0
 	sta	FRAME
@@ -94,10 +95,10 @@ do_shimmer_y:
 do_shimmer_x:
 
 blargh:
-	lda	$4000,X
+	lda	$2000,X
 	eor	#$80
 blargh2:
-	sta	$4000,X
+	sta	$2000,X
 	inx
 	bne	do_shimmer_x
 
@@ -106,10 +107,10 @@ blargh2:
 	inc	blargh2+2
 
 	lda	blargh+2
-	cmp	#$60
+	cmp	#$40
 	bne	do_shimmer_y
 
-	lda	#$40
+	lda	#$20
 	sta	blargh+2
 	sta	blargh2+2
 

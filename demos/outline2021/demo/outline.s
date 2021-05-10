@@ -1,4 +1,4 @@
-; Outline 2021?
+; Outline 2021
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -7,6 +7,14 @@
 	.include "hardware.inc"
 
 outline_demo:
+	jmp	$6000
+
+.include	"shimmer.s"
+.include	"a2_inside.s"
+
+
+.align $1000
+
 
 	;=========================
 	; init the multiply tables
@@ -63,8 +71,6 @@ mockingboard_not_found:
 	;=============================
 
 
-	jsr	rocket_away
-
 	jsr	a2_inside
 
 	jsr	wires
@@ -74,6 +80,10 @@ mockingboard_not_found:
 	jsr	drops
 
 	jsr	mode7_flying
+
+	jsr	another_mist
+
+	jsr	rocket_away
 
 	;=============================
 	; Credits
@@ -92,9 +102,8 @@ forever:
 ; if you're self patching, detect has to be after interrupt_handler.s
 .include        "pt3_lib_mockingboard_detect.s"
 
-.include	"shimmer.s"
-.include	"a2_inside.s"
-;.include	"fakepal.s"
+
+
 .include	"tfv_flying.s"
 .include	"drops.s"
 .include	"wires.s"
@@ -113,6 +122,9 @@ forever:
 .include	"c00_scrn_offsets.s"
 .include	"gr_copy.s"
 
+.include	"gr_run_sequence2.s"
+.include	"gr_overlay.s"
+
 .include	"long_wait.s"
 .include	"random16.s"
 
@@ -120,6 +132,9 @@ forever:
 .include	"rocket_away.s"
 .include	"graphics/outline.inc"
 .include	"hgr_pageflip.s"
+
+.include	"anothermist.s"
+.include	"animation/rocket.inc"
 
 PT3_LOC = song
 .align	$100

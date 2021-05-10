@@ -10,9 +10,9 @@ qload_start:
 
 	jsr	load_file
 
-	; always enter at $6000
+	; always enter at $5000
 
-	jmp	$6000
+	jmp	$5000
 
 	;====================================
 	; loads file specified by WHICH_LOAD
@@ -151,7 +151,7 @@ which_disk_array:
 
 
 load_address_array:
-        .byte $60		;
+        .byte $50		;
 
 track_array:
         .byte  2		;
@@ -162,7 +162,7 @@ sector_array:
 
 
 length_array:
-        .byte 80		;
+        .byte 112		;
 
 
 

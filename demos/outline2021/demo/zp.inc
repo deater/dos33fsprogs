@@ -1,16 +1,10 @@
 ;; Zero Page
 
-;; LZ4 addresses
-
-LZ4_SRC		= $00
-LZ4_DST		= $02
-LZ4_END		= $04
+INTRO_LOOPER	= $01
+INTRO_LOOPL	= $02
+INTRO_LOOPH	= $03
 WHICH_LOAD	= $05
-COUNT		= $06
-MENU_BASE	= $06
-MENU_HIGHLIGHT	= $07
-DELTA		= $08
-NIBCOUNT	= $09
+NIBCOUNT	= $09	; lzsa
 
 ; Zero page monitor routines addresses
 
@@ -110,6 +104,62 @@ KEY_COUNT	= $AB
 SCALE_I		= $AC
 SCALE_F		= $AD
 
+
+BOULDER_Y	= $B0
+PHYSICIST_X	= $B1
+PHYSICIST_Y	= $B2
+HAVE_GUN	= $B3
+ON_ELEVATOR	= $B4
+BEAST_OUT	= $B5
+BEFORE_SWING	= $B6
+WHICH_CAVE	= $B7
+GAME_OVER	= $B8
+
+STATE_NO_KEYPRESS               = $80
+STATE_CROUCHING                 = $40
+STATE_RUNNING                   = $20
+
+PHYSICIST_STATE	= $B9
+        P_STANDING              = $00
+        P_WALKING               = $01
+        P_RUNNING               = $02 | STATE_RUNNING
+        P_CROUCHING             = $03 | STATE_CROUCHING
+        P_KICKING               = $04
+        P_JUMPING               = $05 | STATE_NO_KEYPRESS
+        P_COLLAPSING            = $06 | STATE_NO_KEYPRESS
+        P_FALLING_SIDEWAYS      = $07 | STATE_NO_KEYPRESS
+        P_SWINGING              = $08 | STATE_NO_KEYPRESS
+        P_ELEVATING_UP          = $09
+        P_ELEVATING_DOWN        = $0A
+        P_SHOOTING              = $0B
+        P_FALLING_DOWN          = $0C | STATE_NO_KEYPRESS
+        P_IMPALED               = $0D | STATE_NO_KEYPRESS
+        P_CROUCH_SHOOTING       = $0E | STATE_CROUCHING
+        P_CROUCH_KICKING        = $0F | STATE_CROUCHING
+        P_DISINTEGRATING        = $10 | STATE_NO_KEYPRESS
+
+EARTH_OFFSET	= $BA
+EQUAKE_PROGRESS	= $BB
+EXIT_COUNT	= $BC
+TENTACLE_X	= $BD
+TENTACLE_GRAB	= $BE
+TENTACLE_PROGRESS = $BF
+GAIT		= $C0
+MONSTER_AI	= $C1
+MONSTER_WHICH	= $C2
+BG_BEAST	= $C3
+CONSOLE_Y	= $C4
+BUBBLES_Y	= $C5
+MONSTER_GRAB	= $C6
+LEFT_WALK_LIMIT	= $C7
+LEFT_LIMIT	= $C8
+RIGHT_WALK_LIMIT= $C9
+RIGHT_LIMIT	= $CA
+XMAX		= $CB
+
+FRAME		= $CC
+FRAMEH		= $CD
+
 SHIPY		= $E4 ; mode7
 
 HGR_PAGE	= $E6
@@ -118,12 +168,12 @@ HGR_SCALE	= $E7
 DISP_PAGE	= $ED
 DRAW_PAGE	= $EE
 
-FRAME		= $EF
+
 
 TINL		= $F0
 XPOS		= $F0	; shimmer
 XX		= $F0	; a2
-FRAMEH		= $F0	; credits
+
 
 TINH		= $F1
 YPOS		= $F1	; shimmer
