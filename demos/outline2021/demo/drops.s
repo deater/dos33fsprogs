@@ -13,37 +13,6 @@
 ; then flip buffers
 
 
-.if 0
-
-
-; zero page
-
-GBASH	=	$27
-MASK	=	$2E
-COLOR	=	$30
-SEEDL	=	$4E
-
-FRAME	=	$F8
-XX	=	$F9
-DROPL	=	$FA
-DROPH	=	$FB
-BUF1L	=	$FC
-BUF1H	=	$FD
-BUF2L	=	$FE
-BUF2H	=	$FF
-
-; soft switches
-FULLGR	=	$C052
-LORES	=	$C056	; Enable LORES graphics
-
-
-; ROM routines
-HGR	= $F3E2
-HGR2	= $F3D8
-PLOT	= $F800		;; PLOT AT Y,A
-PLOT1	= $F80E		;; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
-
-.endif
 
 	;================================
 	; Clear screen and setup graphics
@@ -52,6 +21,8 @@ drops:
 	jsr	HGR		; clear $2000-$4000 to zero
 				; A is $00 after this
 				; Y is $00
+
+	sta	FRAME
 
 	bit	FULLGR		; full page
 	bit	LORES		; switch to LORES
@@ -193,7 +164,15 @@ no_oflo:
 
 weird_outer:
 
-	bmi	drops_outer	; small enough now!
+;	bmi	drops_outer	; small enough now!
+
+	lda	FRAME
+	cmp	#64
+	beq	drops_done
+	jmp	drops_outer
+drops_done:
+	rts
+
 
 colors:
 .byte $22,$66,$77,$ff

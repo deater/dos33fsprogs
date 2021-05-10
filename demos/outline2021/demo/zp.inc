@@ -10,7 +10,7 @@ COUNT		= $06
 MENU_BASE	= $06
 MENU_HIGHLIGHT	= $07
 DELTA		= $08
-
+NIBCOUNT	= $09
 
 ; Zero page monitor routines addresses
 
@@ -112,6 +112,7 @@ SCALE_F		= $AD
 
 SHIPY		= $E4 ; mode7
 
+HGR_PAGE	= $E6
 HGR_SCALE	= $E7
 
 DISP_PAGE	= $ED

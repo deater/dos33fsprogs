@@ -63,6 +63,8 @@ mockingboard_not_found:
 	;=============================
 
 
+	jsr	rocket_away
+
 	jsr	a2_inside
 
 	jsr	wires
@@ -113,6 +115,11 @@ forever:
 
 .include	"long_wait.s"
 .include	"random16.s"
+
+.include	"decompress_fast_v2.s"
+.include	"rocket_away.s"
+.include	"graphics/outline.inc"
+.include	"hgr_pageflip.s"
 
 PT3_LOC = song
 .align	$100
