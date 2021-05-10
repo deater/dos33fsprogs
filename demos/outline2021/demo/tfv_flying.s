@@ -5,8 +5,8 @@
 ; CONSTANTS
 ;===========
 CONST_SHIPX	=	15
-CONST_TILE_W	=	64
-CONST_TILE_H	=	64
+CONST_TILE_W	=	16
+CONST_TILE_H	=	16
 CONST_MAP_MASK_X	=	(CONST_TILE_W - 1)
 CONST_MAP_MASK_Y	=	(CONST_TILE_H - 1)
 CONST_LOWRES_W	=	40
@@ -35,6 +35,12 @@ mode7_flying:
 	sta	DISP_PAGE
 	lda	#4
 	sta	DRAW_PAGE
+
+	;===============
+	; Init texture
+	;===============
+
+	jsr	wires_create_lookup
 
 	;===============
 	; Init Variables
@@ -238,6 +244,7 @@ check_land:
 	cmp	#13
 	bne	check_help
 
+.if 0
 	;=====
 	; LAND
 	;=====
@@ -298,7 +305,7 @@ done_flying:
 	rts			; finish flying
 
 must_land_on_grass:
-
+.endif
 
 check_help:
 	cmp	#('H')
@@ -382,6 +389,7 @@ speed_loop:
 draw_background:
 	jsr	draw_background_mode7					; 6
 
+.if 0
 check_over_water:
 	;	See if we are over water
 	lda	CX_I							; 3
@@ -424,7 +432,7 @@ no_turning_splash:
 
 	lda	#1							; 2
 	sta	DRAW_SPLASH						; 3
-
+.endif
 no_splash:
 
 	;==============
@@ -627,22 +635,18 @@ update_z_factor:
 
 
 
-flying_map:
-	.byte $22,$ff,$ff,$ff, $ff,$ff,$ff,$22
-	.byte $dd,$cc,$cc,$88, $44,$44,$00,$dd
-	.byte $dd,$cc,$cc,$cc, $88,$44,$44,$dd
-	.byte $dd,$cc,$cc,$88, $44,$44,$44,$dd
-	.byte $dd,$cc,$99,$99, $88,$44,$44,$dd
-	.byte $dd,$cc,$99,$88, $44,$44,$44,$dd
-	.byte $dd,$cc,$99,$99, $11,$44,$44,$dd
-	.byte $22,$dd,$dd,$dd, $dd,$dd,$dd,$22
+;flying_map:
+;	.byte $22,$ff,$ff,$ff, $ff,$ff,$ff,$22
+;	.byte $dd,$cc,$cc,$88, $44,$44,$00,$dd
+;	.byte $dd,$cc,$cc,$cc, $88,$44,$44,$dd
+;	.byte $dd,$cc,$cc,$88, $44,$44,$44,$dd
+;	.byte $dd,$cc,$99,$99, $88,$44,$44,$dd
+;	.byte $dd,$cc,$99,$88, $44,$44,$44,$dd
+;	.byte $dd,$cc,$99,$99, $11,$44,$44,$dd
+;	.byte $22,$dd,$dd,$dd, $dd,$dd,$dd,$22
 
 
-water_map:
-	.byte $22,$22,$22,$22,  $22,$22,$22,$22
-	.byte $ee,$22,$22,$22,  $22,$22,$22,$22
-	.byte $22,$22,$22,$22,  $22,$22,$22,$22
-	.byte $22,$22,$22,$22,  $ee,$22,$22,$22
+
 
 
 ;===============================================

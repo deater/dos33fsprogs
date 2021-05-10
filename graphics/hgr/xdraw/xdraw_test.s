@@ -96,7 +96,8 @@ tiny_loop:
 	;	F0	01 = cool, let's go with it
 
 smc2:
-	ldy	#$d0	; point to top byte of shape address
+;	ldy	#$d0	; point to top byte of shape address
+	ldy	#$d3	; point to top byte of shape address
 
 smc1:
 	ldx	#$00	; point to bottom byte of shape address
@@ -105,7 +106,7 @@ smc1:
 	; ROT in A
 
 	; this will be 0 2nd time through loop, arbitrary otherwise
-;	lda	#0		; ROT=0
+	lda	#0		; ROT=0
 	jsr	XDRAW0		; XDRAW 1 AT X,Y
 				; Both A and X are 0 at exit
 				; Z flag set on exit

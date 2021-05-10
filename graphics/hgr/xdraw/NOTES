@@ -1,12 +1,31 @@
 Xdraw testing:
 
-	Size $20
+Note: try them with various ROT as well
+
+	Size $20, ROT=$0
 		D02A
 		D07D-D083 interesting
 		D23C
 		D251-D25D (D256 highlight)
+		D300 not bad
+		D32D? D336?
+		D33D is nice
+		D347 is OK
 
+		**** D34D ****
+		D34E
+		D34F
+		D350
+		D351
+		**** D352 ****
+		(a few that are soso)
+		D357
+		D35A they end?
+		D35E is good though...
 
+		D3D6 ok
+
+		*** stopped at D4 for now
 
 To try:
 	Cycle colors (clear background, offset X by 1)

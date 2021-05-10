@@ -373,12 +373,13 @@ nomatch:
 
 	lda	SPACEY_I						; 3
 	sta	spacey_label+1	; self modifying code, LAST_SPACEY_I	; 4
-	and	#CONST_MAP_MASK_Y	; wrap to 64x64 grid		; 2
+	and	#CONST_MAP_MASK_Y	; wrap to 16x16 grid		; 2
 	sta	SPACEY_I						; 3
 
 	asl								; 2
 	asl								; 2
-	asl				; multiply by 8			; 2
+	asl				; multiply by 16			; 2
+	asl
 	clc								; 2
 	adc	SPACEX_I		; add in X value		; 3
 					; only valid if x<8 and y<8
@@ -387,11 +388,11 @@ nomatch:
 								;	 37
 
 	; SPACEX_I is n y
-	cpy	#$8							; 2
-	bcs	ocean_color		; bge 8				; 2nt/3
-	ldy	SPACEY_I						; 3
-	cpy	#$8							; 2
-	bcs	ocean_color		; bge 8				; 2nt/3
+;	cpy	#$8							; 2
+;	bcs	ocean_color		; bge 8				; 2nt/3
+;	ldy	SPACEY_I						; 3
+;	cpy	#$8							; 2
+;	bcs	ocean_color		; bge 8				; 2nt/3
 								;=============
 								;	  ??
 
@@ -400,18 +401,36 @@ nomatch:
 	; A is spacey<<3+spacex
 island_color:
 	tay								; 2
-	lda	flying_map,Y		; load from array		; 4
-	jmp	update_cache						; 3
+	lda	wires_lookup,Y		; load from array		; 4
+
+	cmp     #11
+        bcs     mcolor_notblue   ; if < 11, blue
+
+mcolor_blue:
+        lda     #$11    ; blue offset
+
+mcolor_notblue:
+        tay
+        lda     wires_colorlookup-11,Y  ; lookup color
+
+mcolor_notblack:
+
+
+
+
+;	lda	#$bb
+
+;	jmp	update_cache						; 3
 								;============
 								;	11
 
 	;=============
 	; lookup ocean
 	; A is spacey<<3+spacex
-ocean_color:
-	and	#$1f							; 2
-	tay								; 2
-	lda	water_map,Y		; the color of the sea		; 4
+;ocean_color:
+;	and	#$1f							; 2
+;	tay								; 2
+;	lda	water_map,Y		; the color of the sea		; 4
 								;===========
 								;	  8
 
@@ -509,10 +528,17 @@ done_screenx_loop:
 	lda	SCREEN_Y						; 3
 	cmp	#40			; LOWRES height			; 2
 	beq	done_screeny						; 2nt/3
+
 	jmp	screeny_loop		; too far to branch		; 3
 								;=============
 								;	 15
 done_screeny:
+
+
+	jsr	wires_cycle_colors
+
+
+
 	rts								; 6
 
 
@@ -523,8 +549,7 @@ done_screeny:
 
 
 
-
-
+.if 0
 
 	;====================
 	; lookup_map
@@ -541,40 +566,43 @@ lookup_map:
 	tay								; 2
 
 	lda	SPACEY_I						; 3
-	and	#CONST_MAP_MASK_Y	; wrap to 64x64 grid		; 2
+	and	#CONST_MAP_MASK_Y	; wrap to 16x16 grid		; 2
 	sta	SPACEY_I						; 3
 
 	asl								; 2
 	asl								; 2
-	asl				; multiply by 8			; 2
+	asl				; multiply by 16		; 2
+	asl
 	clc								; 2
 	adc	SPACEX_I		; add in X value		; 3
 					; only valid if x<8 and y<8
 
 	; SPACEX_I is in y
-	cpy	#$8							; 2
+;	cpy	#$8							; 2
 								;============
 								;	 31
 
-	bcs	ocean_color_outline	; bgt 8				;^2nt/3
-	ldy	SPACEY_I						; 3
-	cpy	#$8							; 2
-	bcs	ocean_color_outline	; bgt 8				; 2nt/3
+;	bcs	ocean_color_outline	; bgt 8				;^2nt/3
+;	ldy	SPACEY_I						; 3
+;	cpy	#$8							; 2
+;	bcs	ocean_color_outline	; bgt 8				; 2nt/3
 
 	tay								; 2
-	lda	flying_map,Y		; load from array		; 4
+	lda	wires_lookup,Y		; load from array		; 4
+	tay
+	lda	wires_colorlookup,Y
 
-	bcc	update_cache_outline					; 3
+;	bcc	update_cache_outline					; 3
 
-ocean_color_outline:
-	and	#$1f							; 2
-	tay								; 2
-	lda	water_map,Y		; the color of the sea		; 4
+;ocean_color_outline:
+;	and	#$1f							; 2
+;	tay								; 2
+;	lda	water_map,Y		; the color of the sea		; 4
 
 update_cache_outline:
 	rts								; 6
 
-
+.endif
 
 	;======================================
 	; draw sky
@@ -587,7 +615,7 @@ draw_sky:
 	; lines 0..6
 
 
-	lda	#COLOR_BOTH_MEDIUMBLUE	; MEDIUMBLUE color		; 2
+	lda	#COLOR_BOTH_BLACK	; MEDIUMBLUE color		; 2
 	ldx	#39
 
 sky_loop:				; draw line across screen
@@ -603,7 +631,7 @@ sky_loop:				; draw line across screen
 
 	; Draw Hazy Horizon
 
-	lda	#$56			; Horizon is blue/grey		; 2
+	lda	#$50			; Horizon is black/grey		; 2
 	ldx	#39
 horizon_loop:				; draw line across screen
 	sta	$580,X

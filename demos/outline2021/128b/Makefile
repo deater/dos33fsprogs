@@ -7,7 +7,7 @@ EMPTY_DISK = ../../../empty_disk/empty.dsk
 
 all:	xdraw.dsk xdraw128.dsk
 
-submit:	xdraw128.zip
+submit:	xdraw128_submit.zip
 
 xdraw128_submit.zip:	XDRAW128 xdraw128.s file_id.diz xdraw128.dsk
 	mkdir -p outline2021_xdraw128

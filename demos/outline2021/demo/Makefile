@@ -54,6 +54,7 @@ OUTLINE:	outline.o
 
 outline.o:	outline.s zp.inc \
 	shimmer.s a2_inside.s drops.s wires.s \
+	rotoplasma_tiny.s \
 	flying_dir.inc tfv_flying.s flying_mode7.s credits.s
 	ca65 -o outline.o outline.s -l outline.lst
 

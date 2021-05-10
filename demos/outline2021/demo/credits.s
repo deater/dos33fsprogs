@@ -27,10 +27,11 @@
 
 credits:
 
+	jsr	clear_bottom
+
 	jsr	HGR		; Hi-res graphics, no text at bottom
 				; Y=0, A=0 after this call
 
-	jsr	clear_bottom
 
 	sta	LOGO_OFFSET
 	sta	FRAME

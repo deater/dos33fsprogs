@@ -107,6 +107,8 @@ LOAD_WORLD	= $A8
 LASTKEY		= $A9
 KEY_OFFSET	= $AA
 KEY_COUNT	= $AB
+SCALE_I		= $AC
+SCALE_F		= $AD
 
 SHIPY		= $E4 ; mode7
 
@@ -126,6 +128,7 @@ TINH		= $F1
 YPOS		= $F1	; shimmer
 XHIGH		= $F1	; credits
 X0		= $F1	; a2
+YY		= $F1	; plasma
 
 BINL		= $F2
 DIRECTION	= $F2	; shimmer
@@ -133,7 +136,7 @@ Y1		= $F2	; a2
 LOGO_OFFSET	= $F2	; credits
 
 BINH		= $F3
-
+REV_COUNT	= $F4	; plasma
 
 SCROLL_COUNT	= $F9
 

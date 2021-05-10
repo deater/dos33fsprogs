@@ -123,7 +123,7 @@ color_notblack:
 
 	inc	FRAME
 	lda	FRAME
-	cmp	#$40
+	cmp	#$32
 	bne	wires_forever_loop
 
 	rts

@@ -10,6 +10,15 @@ a2_inside:
 	bit	LORES
 	bit	FULLGR		; make it 40x48
 
+
+	;=============================
+	; init wires
+
+	jsr	wires_create_lookup
+
+	;=============================
+	; draw the computer
+
 draw_box_loop:
 
 	; get color/Y0
@@ -18,7 +27,7 @@ draw_box_loop:
 
 	tya			; check for end
 
-	bmi	end
+	bmi	done_computer
 
 
 	jsr	load_byte	; Y1
@@ -64,15 +73,16 @@ inner_loop:
 	bcc	inner_loop
 	bcs	draw_box_loop
 
+done_computer:
 
-	;=========================
-	; draw the demo
-	;=========================
+	;====================================
+	; draw the demo, sierpinski at first
+	;====================================
 	; screen is from (11,6) - (20,23)
 	; so size is 9,17?
-end:
 
-	lda	#128
+
+	lda	#200
 	sta	FRAME
 
 
@@ -137,7 +147,233 @@ black:
 
 	lda	FRAME
 	bne	sier_loop
+;	rts
+
+
+
+	;====================================
+	; draw the demo, wires
+	;====================================
+	; screen is from (11,6) - (20,23)
+	; so size is 9,17?
+
+
+	lda	#200
+	sta	FRAME
+
+
+	; pause a bit at beginning
+	jsr	WAIT
+
+a2_wire_loop:
+
+	jsr	wires_cycle_colors
+
+	lda	#100		; Wait a bit, we're too fast
+	jsr	WAIT
+
+	inc	FRAME		; increment frame
+
+	ldx	#17		; YY
+
+a2_wire_yloop:
+
+	lda	#9		; XX
+	sta	XX
+
+a2_wire_xloop:
+
+	txa
+	and	#$f
+
+	asl
+	asl
+	asl
+	asl
+	ora	XX
+	tay
+
+        lda     wires_lookup,Y          ; load from array               ; 4
+
+        cmp     #11
+        bcs     acolor_notblue   ; if < 11, blue
+
+acolor_blue:
+        lda     #$11    ; blue offset
+
+acolor_notblue:
+        tay
+        lda     wires_colorlookup-11,Y  ; lookup color
+
+acolor_notblack:
+
+
+
+
+	jsr	SETCOL		; set top/bottom nibble same color
+
+	lda	XX		; offset XX to tiny screen
+	clc
+	adc	#11
+	tay			; put into Y
+
+	txa			; offset YY to tiny screen
+	clc
+	adc	#6		; put into A
+
+	jsr	PLOT		; PLOT AT Y,A
+
+	dec	XX
+	bpl	a2_wire_xloop
+
+	dex
+	bpl	a2_wire_yloop
+
+	lda	FRAME
+	bne	a2_wire_loop
+
+
+
+	;=======================================
+	; copy to $c00
+	;=======================================
+
+	lda	#0
+	sta	DRAW_PAGE
+	jsr	gr_copy_from_current
+
+	lda	#4
+	sta	DISP_PAGE
+
+	;============================
+	; rotozoom
+	;============================
+
+	; do a (hopefully fast) roto-zoom
+
+;	jsr	clear_screens
+;	jsr	init_multiply_tables
+
+	jsr	gr_copy_to_current
+	jsr	page_flip
+	jsr	gr_copy_to_current
+
+	;=================================
+	; main loop
+
+	lda	#0
+	sta	ANGLE
+	sta	SCALE_F
+	sta	FRAME
+
+	lda	#1
+	sta	direction
+	lda	#$10
+	sta	scaleaddl
+	lda	#$00
+	sta	scaleaddh
+
+	lda	#1
+	sta	SCALE_I
+
+rz_main_loop:
+
+	jsr	rotozoom_c00
+
+	jsr	page_flip
+
+;wait_for_keypress:
+;	lda	KEYPRESS
+;	bpl	wait_for_keypress
+;	bit	KEYRESET
+
+
+	clc
+	lda	FRAME
+	adc	direction
+	sta	FRAME
+
+	cmp	#$f8
+	beq	rback_at_zero
+	cmp	#33
+	beq	rat_far_end
+	bne	rdone_reverse
+
+rback_at_zero:
+;	inc	which_image
+;	lda	which_image
+;	cmp	#3
+;	bne	refresh_image
+;	lda	#0
+;	sta	which_image
+;refresh_image:
+;	jsr	load_background
+
+rat_far_end:
+
 	rts
+
+	; change bg color
+;	lda	roto_color_even_smc+1
+;	clc
+;	adc	#$01
+;	and	#$0f
+;	sta	roto_color_even_smc+1
+
+;	lda	roto_color_odd_smc+1
+;	clc
+;	adc	#$10
+;	and	#$f0
+;	sta	roto_color_odd_smc+1
+
+
+
+	; reverse direction
+;;	lda	direction
+;	eor	#$ff
+;	clc
+;	adc	#1
+;	sta	direction
+
+;	lda	scaleaddl
+;	eor	#$ff
+;	clc
+;	adc	#1
+;	sta	scaleaddl
+
+;	lda	scaleaddh
+;	eor	#$ff
+;	adc	#0
+;	sta	scaleaddh
+
+rdone_reverse:
+	clc
+	lda	ANGLE
+	adc	direction
+	and	#$1f
+	sta	ANGLE
+
+	clc
+	lda	SCALE_F
+	adc	scaleaddl
+	sta	SCALE_F
+	lda	SCALE_I
+	adc	scaleaddh
+	sta	SCALE_I
+
+	jmp	rz_main_loop
+
+
+;direction:	.byte	$01
+;scaleaddl:	.byte	$10
+;scaleaddh:	.byte	$00
+
+
+
+	rts
+
+
+
 
 	;=========================
 	; load byte routine

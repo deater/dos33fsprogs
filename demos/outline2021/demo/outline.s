@@ -62,15 +62,16 @@ mockingboard_not_found:
 	; a2 plasma
 	;=============================
 
-;	jsr	a2_inside
 
-;	jsr	plasma
-
-;	jsr	drops
+	jsr	a2_inside
 
 	jsr	wires
 
-;	jsr	mode7_flying
+	jsr	rotoplasma
+
+	jsr	drops
+
+	jsr	mode7_flying
 
 	;=============================
 	; Credits
@@ -91,11 +92,15 @@ forever:
 
 .include	"shimmer.s"
 .include	"a2_inside.s"
-.include	"fakepal.s"
+;.include	"fakepal.s"
 .include	"tfv_flying.s"
 .include	"drops.s"
 .include	"wires.s"
 .include	"credits.s"
+.include	"rotoplasma_tiny.s"
+.include	"rotozoom_texture.s"
+.include	"rotozoom.s"
+.include	"plasma.s"
 
 .include	"gr_putsprite.s"
 .include	"gr_pageflip.s"
@@ -103,6 +108,8 @@ forever:
 .include	"multiply_fast.s"
 .include	"gr_fast_clear.s"
 .include	"gr_offsets.s"
+.include	"c00_scrn_offsets.s"
+.include	"gr_copy.s"
 
 .include	"long_wait.s"
 .include	"random16.s"

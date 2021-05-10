@@ -1,7 +1,9 @@
 Memory Usage:
 
 $200
-$1000-$10FF	wires_lookup
+$1000-$10FF	wires_lookup/plasma_lookup
+$1100-$11FF	plasma lookup
+$1200-$12FF	plasma lookup
 $2000-$3FFF	hires page 1
 $4000-$6000	hires page 2	(24k)
 $6000-?????	code
