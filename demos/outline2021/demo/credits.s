@@ -399,7 +399,7 @@ next_credit:
 
 write_credits:
 	lda	which_credit
-	cmp	#7
+	cmp	#8
 	beq	done_credits
 
 	ldx	#4
@@ -464,42 +464,49 @@ credits_table:
 	.word credits5
 	.word credits6
 	.word credits7
+	.word credits8
 
 
 credits1:
-	.byte "     CODE:      "
+	.byte "   CODE:        "
 	.byte "                "
-	.byte "     DEATER     "
+	.byte "       DEATER   "
 
 credits2:
-	.byte "     MUSIC:     "
+	.byte "   MUSIC:       "
 	.byte "                "
-	.byte "      MAZE      "
+	.byte "         MA2E   "
 
 credits3:
-	.byte "   EFFECTS:     "
+	.byte "  EFFECTS:      "
 	.byte "   J. WARWICK   "
 	.byte "   D. MCKELLAR  "
 
 credits4:
-	.byte "  MAGIC:        "
-	.byte "   QKUMBA       "
-	.byte "   4 A.M.       "
+	.byte "   MAGIC:       "
+	.byte "      QKUMBA    "
+	.byte "      4 A.M.    "
 
 credits5:
-	.byte "  GREETS:       "
-	.byte "   FRENCH TOUCH "
-	.byte "   IMPHOBIA     "
+	.byte "GREETS:         "
+	.byte "--> FRENCH TOUCH"
+	.byte "--> IMPHOBIA    "
 
 credits6:
-	.byte "    GROUIK      "
-	.byte "    FENARINARSA "
-	.byte "    WIZ21       "
+	.byte "--> GROUIK      "
+	.byte "--> FENARINARSA "
+	.byte "--> WIZ21       "
 
 credits7:
+	.byte "SCOTT MANLEY    "
+	.byte "                "
+	.byte "    ",34,"FLY SAFE",34,"  "
+
+credits8:
 	.byte "  APPLE ][      "
 	.byte "                "
 	.byte "       FOREVER  "
 
 which_credit:
 	.byte	$0
+

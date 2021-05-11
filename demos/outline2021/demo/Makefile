@@ -19,7 +19,7 @@ outline2021.dsk:	QBOOT QLOAD OUTLINE
 	$(DOS33_RAW) outline2021.dsk  0  2 QBOOT	       1   1
 	$(DOS33_RAW) outline2021.dsk  0  4 QBOOT               2   1
 	$(DOS33_RAW) outline2021.dsk  1  0 QLOAD               0   14
-	$(DOS33_RAW) outline2021.dsk  2  0 OUTLINE             0   96
+	$(DOS33_RAW) outline2021.dsk  2  0 OUTLINE             0   0
 
 
 
@@ -61,5 +61,5 @@ outline.o:	outline.s zp.inc \
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO OUTLINE
+	rm -f *~ *.o *.lst HELLO OUTLINE QLOAD QBOOT
 

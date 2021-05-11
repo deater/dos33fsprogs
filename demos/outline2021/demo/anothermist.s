@@ -36,43 +36,45 @@ another_mist:
 another_sequence:
 	.byte	255					; load to bg
 	.word	ootw_uboot_bg_lzsa			; this
-        .byte	128+5   ;       .word   ootw_uboot_flash1_lzsa   ; (3)
-        .byte	128+5   ;       .word   ootw_uboot_flash2_lzsa   ; (3)
-        .byte	128+8   ;       .word   swim01_lzsa   ; (3)
-        .byte	128+8   ;       .word   swim02_lzsa   ; (3)
-        .byte	128+8   ;       .word   swim03_lzsa   ; (3)
-        .byte	128+8   ;       .word   swim04_lzsa   ; (3)
-        .byte	128+8   ;       .word   swim05_lzsa   ; (3)
-        .byte	128+8   ;       .word   swim06_lzsa   ; (3)
+        .byte	128+5    ;       .word   ootw_uboot_flash1_lzsa   ; (3)
+        .byte	128+5    ;       .word   ootw_uboot_flash2_lzsa   ; (3)
+        .byte	128+30   ;       .word   swim01_lzsa   ; (3)
+        .byte	128+20   ;       .word   swim02_lzsa   ; (3)
+        .byte	128+20  ;       .word   swim03_lzsa   ; (3)
+        .byte	128+20   ;       .word   swim04_lzsa   ; (3)
+        .byte	128+20   ;       .word   swim05_lzsa   ; (3)
+        .byte	128+20   ;       .word   swim06_lzsa   ; (3)
 	.byte	255                                     ; load to bg
 	.word	another_pool_lzsa                       ; this
-	.byte	128+50; 	.word ashore01
-	.byte	128+50; 	.word ashore02
-	.byte	128+50; 	.word ashore03
-	.byte	128+50; 	.word ashore04
-	.byte	128+50; 	.word ashore05
-	.byte	128+50; 	.word ashore06
-	.byte	128+50; 	.word ashore07
-	.byte	128+50; 	.word ashore08
-	.byte	128+50; 	.word ashore09
-	.byte	128+50; 	.word ashore10
-	.byte	128+50; 	.word ashore11
-	.byte	128+50; 	.word ashore12
-	.byte	128+50; 	.word ashore13
-	.byte	128+50; 	.word ashore14
-	.byte	128+50; 	.word ashore15
-	.byte	128+50; 	.word ashore16
-	.byte	128+50; 	.word ashore17
-	.byte	128+50; 	.word ashore18
-	.byte	128+50; 	.word ashore19
-	.byte	128+50; 	.word ashore20
-	.byte	128+50; 	.word ashore21
-	.byte	128+50; 	.word ashore22
-	.byte	128+50; 	.word ashore23
-	.byte	128+50; 	.word ashore24
+	.byte	128+40; 	.word ashore01
+	.byte	128+40; 	.word ashore02
+	.byte	128+40; 	.word ashore03
+	.byte	128+40; 	.word ashore04
+	.byte	128+40; 	.word ashore05
+	.byte	128+40; 	.word ashore06
+	.byte	128+40; 	.word ashore07
+	.byte	128+40; 	.word ashore08
+	.byte	128+40; 	.word ashore09
+	.byte	128+40; 	.word ashore10
+	.byte	128+40; 	.word ashore11
+	.byte	128+40; 	.word ashore12
+	.byte	128+40; 	.word ashore13
+	.byte	128+40; 	.word ashore14
+	.byte	128+40; 	.word ashore15
+	.byte	128+40; 	.word ashore16
+	.byte	128+40; 	.word ashore17
+	.byte	128+40; 	.word ashore18
+	.byte	128+40; 	.word ashore19
+	.byte	128+40; 	.word ashore20
+	.byte	128+40; 	.word ashore21
+	.byte	128+40; 	.word ashore22
+	.byte	128+40; 	.word ashore23
+	.byte	128+40; 	.word ashore24
 
 	.byte	255                                     ; load to bg
-	.word	clock_n_lzsa	                       ; this
+	.word	clock_e_lzsa	                        ; this
+	.byte	128+90;		.word blank
+	.byte	128+90; 	.word clock_n
 	.byte	128+90; 	.word tree5_n
 	.byte	128+80; 	.word tree4_n
 	.byte	128+70; 	.word tree2_n

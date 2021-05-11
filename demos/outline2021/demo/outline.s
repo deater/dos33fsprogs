@@ -12,6 +12,10 @@ outline_demo:
 .include	"shimmer.s"
 .include	"a2_inside.s"
 
+.include	"rotoplasma_tiny.s"
+.include	"rotozoom_texture.s"
+.include	"rotozoom.s"
+.include	"multiply_init.s"
 
 .align $1000
 
@@ -71,15 +75,15 @@ mockingboard_not_found:
 	;=============================
 
 
-	jsr	a2_inside
+;	jsr	a2_inside
 
-	jsr	wires
+;	jsr	wires
 
-	jsr	rotoplasma
+;	jsr	rotoplasma
 
-	jsr	drops
+;	jsr	drops
 
-	jsr	mode7_flying
+;	jsr	mode7_flying
 
 	jsr	another_mist
 
@@ -103,14 +107,10 @@ forever:
 .include        "pt3_lib_mockingboard_detect.s"
 
 
-
 .include	"tfv_flying.s"
 .include	"drops.s"
 .include	"wires.s"
 .include	"credits.s"
-.include	"rotoplasma_tiny.s"
-.include	"rotozoom_texture.s"
-.include	"rotozoom.s"
 .include	"plasma.s"
 
 .include	"gr_putsprite.s"

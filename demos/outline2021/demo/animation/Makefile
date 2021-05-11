@@ -21,7 +21,9 @@ rocket.inc:	\
 	ashore13.lzsa ashore14.lzsa ashore15.lzsa ashore16.lzsa \
 	ashore17.lzsa ashore18.lzsa ashore19.lzsa ashore20.lzsa \
 	ashore21.lzsa ashore22.lzsa ashore23.lzsa ashore24.lzsa \
-	clock_n.lzsa tree5_n.lzsa tree4_n.lzsa tree2_n.lzsa tree1_n.lzsa \
+	clock_e.lzsa blank.lzsa \
+	clock_n.lzsa \
+	tree5_n.lzsa tree4_n.lzsa tree2_n.lzsa tree1_n.lzsa \
 	pool_n.lzsa step_top_n.lzsa pad_n.lzsa spaceship_path_w.lzsa \
 	spaceship_far_n.lzsa spaceship_switch_n.lzsa spaceship_door_n.lzsa \
 	spaceship_door_open.lzsa \
@@ -62,6 +64,8 @@ rocket.inc:	\
 	echo "ashore22_lzsa: .incbin \"ashore22.lzsa\"" >> rocket.inc
 	echo "ashore23_lzsa: .incbin \"ashore23.lzsa\"" >> rocket.inc
 	echo "ashore24_lzsa: .incbin \"ashore24.lzsa\"" >> rocket.inc
+	echo "clock_e_lzsa: .incbin \"clock_e.lzsa\"" >> rocket.inc
+	echo "blank_lzsa: .incbin \"blank.lzsa\"" >> rocket.inc
 	echo "clock_n_lzsa: .incbin \"clock_n.lzsa\"" >> rocket.inc
 	echo "tree5_n_lzsa: .incbin \"tree5_n.lzsa\"" >> rocket.inc
 	echo "tree4_n_lzsa: .incbin \"tree4_n.lzsa\"" >> rocket.inc

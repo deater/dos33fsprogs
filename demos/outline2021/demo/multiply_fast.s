@@ -31,67 +31,6 @@
 ; Note: DOS3.3 starts at $9600
 ; I/O starts at $c000
 
-square1_lo	=	$B600
-square1_hi	=	$B800
-square2_lo	=	$BA00
-square2_hi	=	$BC00
-
-
-;	for(i=0;i<512;i++) {
-;		square1_lo[i]=((i*i)/4)&0xff;
-;		square1_hi[i]=(((i*i)/4)>>8)&0xff;
-;		square2_lo[i]=( ((i-255)*(i-255))/4)&0xff;
-;		square2_hi[i]=(( ((i-255)*(i-255))/4)>>8)&0xff;
-;	}
-
-
-	; note, don't run these more than once?
-	; why not?	oh, smc that we don't reset
-
-init_multiply_tables:
-
-	; Build the add tables
-
-	ldx	#$00
-	txa
-	.byte $c9   ; CMP #immediate - skip TYA and clear carry flag
-lb1:	tya
-	adc	#$00			; 0
-ml1:	sta	square1_hi,x		; square1_hi[0]=0
-	tay				; y=0
-	cmp	#$40			; subtract 64 and update flags (c=0)
-	txa				; a=0
-	ror				; rotate
-ml9:	adc	#$00			; add 0
-	sta	ml9+1			; update add value
-	inx				; x=1
-ml0:	sta	square1_lo,x		; square1_lo[0]=1
-	bne	lb1			; if not zero, loop
-	inc	ml0+2			; increment values
-	inc	ml1+2			; increment values
-	clc				; c=0
-	iny				; y=1
-	bne	lb1			; loop
-
-	; Build the subtract tables based on the existing one
-
-	ldx	#$00
-	ldy	#$ff
-second_table:
-	lda	square1_hi+1,x
-	sta	square2_hi+$100,x
-	lda	square1_hi,x
-	sta	square2_hi,y
-	lda	square1_lo+1,x
-	sta	square2_lo+$100,x
-	lda	square1_lo,x
-	sta	square2_lo,y
-	dey
-	inx
-	bne second_table
-
-
-	rts
 
 
 ; Fast 16x16 bit unsigned multiplication, 32-bit result
