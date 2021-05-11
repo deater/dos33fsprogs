@@ -38,21 +38,21 @@ another_sequence:
 	.word	ootw_uboot_bg_lzsa			; this
         .byte	128+5    ;       .word   ootw_uboot_flash1_lzsa   ; (3)
         .byte	128+5    ;       .word   ootw_uboot_flash2_lzsa   ; (3)
-        .byte	128+30   ;       .word   swim01_lzsa   ; (3)
-        .byte	128+20   ;       .word   swim02_lzsa   ; (3)
-        .byte	128+20  ;       .word   swim03_lzsa   ; (3)
-        .byte	128+20   ;       .word   swim04_lzsa   ; (3)
-        .byte	128+20   ;       .word   swim05_lzsa   ; (3)
-        .byte	128+20   ;       .word   swim06_lzsa   ; (3)
+        .byte	128+60   ;       .word   swim01_lzsa   ; (3)
+        .byte	128+30   ;       .word   swim02_lzsa   ; (3)
+        .byte	128+30   ;       .word   swim03_lzsa   ; (3)
+        .byte	128+30   ;       .word   swim04_lzsa   ; (3)
+        .byte	128+30   ;       .word   swim05_lzsa   ; (3)
+        .byte	128+30   ;       .word   swim06_lzsa   ; (3)
 	.byte	255                                     ; load to bg
 	.word	another_pool_lzsa                       ; this
-	.byte	128+40; 	.word ashore01
+	.byte	128+60; 	.word ashore01
 	.byte	128+40; 	.word ashore02
-	.byte	128+40; 	.word ashore03
+	.byte	128+60; 	.word ashore03
 	.byte	128+40; 	.word ashore04
-	.byte	128+40; 	.word ashore05
+	.byte	128+60; 	.word ashore05
 	.byte	128+40; 	.word ashore06
-	.byte	128+40; 	.word ashore07
+	.byte	128+60; 	.word ashore07
 	.byte	128+40; 	.word ashore08
 	.byte	128+40; 	.word ashore09
 	.byte	128+40; 	.word ashore10
@@ -86,7 +86,7 @@ another_sequence:
 	.byte	128+70; 	.word spaceship_far_n
 	.byte	128+70; 	.word spaceship_switch_n
 	.byte	128+70; 	.word spaceship_door_n
-	.byte	128+90; 	.word spaceship_door_open
+	.byte	128+100; 	.word spaceship_door_open
 	.byte	255                                     ; load to bg
 	.word	spaceship_far_n_lzsa
 	.byte	80
@@ -101,5 +101,5 @@ another_sequence:
 	.byte	128+20; 	.word takeoff_00
 	.byte	128+20; 	.word takeoff_10
 	.byte	128+40; 	.word takeoff_11
-	.byte	128+80; 	.word takeoff_12
+	.byte	128+100; 	.word takeoff_12
 	.byte	0

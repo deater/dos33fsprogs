@@ -10,7 +10,7 @@
 	;================================
 wires:
 
-	jsr	SETGR		; set lo-res 40x40 mode
+;	jsr	SETGR		; set lo-res 40x40 mode
 	bit	SET_GR
 	bit	LORES
 	bit	FULLGR		; make it 40x48

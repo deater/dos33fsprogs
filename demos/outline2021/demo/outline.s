@@ -75,15 +75,15 @@ mockingboard_not_found:
 	;=============================
 
 
-;	jsr	a2_inside
+	jsr	a2_inside
 
-;	jsr	wires
+	jsr	wires
 
-;	jsr	rotoplasma
+	jsr	rotoplasma
 
-;	jsr	drops
+	jsr	drops
 
-;	jsr	mode7_flying
+	jsr	mode7_flying
 
 	jsr	another_mist
 

@@ -51,6 +51,8 @@ rotoplasma:
 	lda	#0
 	sta	ANGLE
 	sta	SCALE_F
+
+	lda	#$f9
 	sta	FRAME
 
 	lda	#1
