@@ -48,7 +48,7 @@ wire_done_page:
 	; lookup table colors
 wire_plot_frame:
 
-	ldx	#47		; YY=47 (count backwards)
+	ldx	#46		; YY=47 (count backwards)
 
 wires_plot_yloop:
 
@@ -81,7 +81,7 @@ wires_draw_page_smc:
 
 	;==========
 
-	ldy	#39		; XX = 39 (countdown)
+	ldy	#38		; XX = 39 (countdown)
 
 wires_plot_xloop:
 
@@ -123,7 +123,7 @@ color_notblack:
 
 	inc	FRAME
 	lda	FRAME
-	cmp	#$40
+	cmp	#$48
 	bne	wires_forever_loop
 
 	rts
