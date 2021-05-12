@@ -49,7 +49,6 @@ mode7_flying:
 	sta	SHIPY
 	lda	#0
 	sta	TURNING
-	sta	ANGLE
 	sta	SPACEX_I
 	sta	SPACEY_I
 	sta	CX_I
@@ -62,7 +61,7 @@ mode7_flying:
 	sta	KEY_COUNT
 	sta	KEY_OFFSET
 
-	lda	#1		; slightly off North for better view of island
+	lda	#0		; slightly off North for better view of island
 	sta	ANGLE
 
 	jsr	draw_sky

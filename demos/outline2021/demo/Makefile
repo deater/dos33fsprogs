@@ -22,6 +22,16 @@ outline2021.dsk:	QBOOT QLOAD OUTLINE
 	$(DOS33_RAW) outline2021.dsk  2  0 OUTLINE             0   0
 
 
+outline2021_island_submit.zip:	OUTLINE file_id.diz outline2021.dsk
+	mkdir -p outline2021_island
+	cp OUTLINE ./outline2021_island
+	cp file_id.diz ./outline2021_island
+	cp outline2021.dsk ./outline2021_island
+	zip -r outline2021_island.zip outline2021_island
+	mkdir -p outlin2021_island_submit
+	cp outline_island_720p.mp4 ./outline2021_island_submit
+	cp outline2021_island.zip ./outline2021_island_submit
+	zip -r outline2021_island_submit.zip outline2021_island_submit
 
 
 ####

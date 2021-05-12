@@ -15,7 +15,7 @@
 	; Clear screen and setup graphics
 	;================================
 rotoplasma:
-	jsr	HOME
+;	jsr	HOME
 	bit	PAGE0			; set page 0
 	bit	LORES			; Lo-res graphics
 	bit	FULLGR			; mixed gr/text mode

@@ -4,6 +4,7 @@ island_flying_directions:
         .byte    8,$00          ; 2 frames, do nothing
         .byte    3,'A'          ; 3 frames left
         .byte   15,$00          ; 8 frames, do nothing
+        .byte    1,'Z'          ; start moving forward
         .byte    2,'A'          ; 3 frames left
         .byte   15,$00          ; 8 frames, do nothing
         .byte    3,'A'          ; 3 frames, turn left
