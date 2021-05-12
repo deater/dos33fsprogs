@@ -87,6 +87,8 @@ another_sequence:
 	.byte	128+70; 	.word spaceship_switch_n
 	.byte	128+70; 	.word spaceship_door_n
 	.byte	128+100; 	.word spaceship_door_open
+	.byte	25
+	.word	spaceship_switch_n_lzsa
 	.byte	255                                     ; load to bg
 	.word	spaceship_far_n_lzsa
 	.byte	80

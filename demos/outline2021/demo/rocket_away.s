@@ -5,6 +5,9 @@ rocket_away:
 	jsr	HGR2		; Hi-res graphics, no text at bottom
 				; Y=0, A=0 after this called
 
+	lda	#1
+	sta	DISP_PAGE
+
 	lda	#<(outline_space_lzsa)
 	sta	getsrc_smc+1
 	lda	#>(outline_space_lzsa)
@@ -165,7 +168,7 @@ herase_xloop:
 donedone:
 ;	jmp	donedone
 
-	ldx	#50
+	ldx	#150
 	jsr	long_wait
 
 	rts

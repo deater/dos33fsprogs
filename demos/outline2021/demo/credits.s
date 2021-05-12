@@ -26,6 +26,8 @@
 
 
 credits:
+	lda	#0
+	sta	DRAW_PAGE
 
 	jsr	clear_bottom
 
@@ -35,6 +37,13 @@ credits:
 
 	sta	LOGO_OFFSET
 	sta	FRAME
+
+	;=================
+	; pause a bit
+
+	ldx	#50
+	jsr	long_wait
+
 
 	lda	#1		; default is 1
 	sta	HGR_SCALE
@@ -399,7 +408,7 @@ next_credit:
 
 write_credits:
 	lda	which_credit
-	cmp	#8
+	cmp	#9
 	beq	done_credits
 
 	ldx	#4
@@ -457,6 +466,7 @@ credits_address:
 	.word	$750+12
 
 credits_table:
+	.word credits0
 	.word credits1
 	.word credits2
 	.word credits3
@@ -466,6 +476,11 @@ credits_table:
 	.word credits7
 	.word credits8
 
+
+credits0:
+	.byte "                "
+	.byte "                "
+	.byte "                "
 
 credits1:
 	.byte "   CODE:        "
