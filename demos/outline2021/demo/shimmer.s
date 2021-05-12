@@ -10,6 +10,9 @@ shimmer:
 	jsr	HGR
 	bit	FULLGR
 
+	ldx	#88
+	jsr	long_wait
+
 	lda	#0
 	sta	FRAME
 
@@ -22,7 +25,7 @@ shimmer:
 	lda	#32
 	sta	DIRECTION
 
-	lda	#22		; only set once, we wrap 
+	lda	#22		; only set once, we wrap
 	sta	XPOS
 
 y_loop:
@@ -66,6 +69,10 @@ add_x:
 	jmp	x_loop
 
 reverse:
+
+	ldx	#26			; 26 is close
+	jsr	long_wait
+
 	lda	DIRECTION		; switch direction
 	eor	#$ff
 	sec
@@ -85,7 +92,7 @@ reverse:
 
 
 do_shimmer:
-	lda	#16
+	lda	#6
 	sta	FRAME
 
 

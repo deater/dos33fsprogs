@@ -78,14 +78,13 @@ mockingboard_not_found:
 	; a2 plasma
 	;=============================
 
+	jsr	a2_inside
 
-;	jsr	a2_inside
+	jsr	wires
 
-;	jsr	wires
+	jsr	rotoplasma
 
-;	jsr	rotoplasma
-
-;	jsr	drops
+	jsr	drops
 
 	jsr	mode7_flying
 

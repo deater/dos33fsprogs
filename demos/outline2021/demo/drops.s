@@ -167,7 +167,7 @@ weird_outer:
 ;	bmi	drops_outer	; small enough now!
 
 	lda	FRAME
-	cmp	#64
+	cmp	#40
 	beq	drops_done
 	jmp	drops_outer
 drops_done:
