@@ -142,4 +142,5 @@ forever:
 PT3_LOC = song
 .align	$100
 song:
-.incbin "mAZE_-_Apple_snapple_Outline.pt3"
+;.incbin "mAZE_-_Apple_snapple_Outline.pt3"
+.incbin "quiet.pt3"

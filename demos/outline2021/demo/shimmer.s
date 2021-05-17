@@ -92,7 +92,7 @@ reverse:
 
 
 do_shimmer:
-	lda	#6
+	lda	#12
 	sta	FRAME
 
 

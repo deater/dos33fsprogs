@@ -228,10 +228,16 @@ done_apple_detect:
 	; Enable 50Hz clock on 6522
 	;============================
 
-	; 4fe7 / 1e6 = .020s, 50Hz
 
-	; 9c40 / 1e6 = .040s, 25Hz
-	; 411a / 1e6 = .016s, 60Hz
+	; Note, on Apple II the clock isn't 1MHz but is actually closer to
+	;       roughly 1.023MHz, and every 65th clock is stretched (it's complicated)
+
+	; 4fe7 / 1.023e6 = .020s, 50Hz
+	; 9c40 / 1.023e6 = .040s, 25Hz
+	; 411a / 1.023e6 = .016s, 60Hz
+
+	; French Touch uses
+	; 4e20 / 1.000e6 = .020s, 50Hz, which assumes 1MHz clock freq
 
 	sei			; disable interrupts just in case
 
@@ -248,10 +254,12 @@ setup_irq_smc3:
 setup_irq_smc4:
 	sta	MOCK_6522_IER	; IER: 1100, enable timer one interrupt
 
-	lda	#$E7
+;	lda	#$E7
+	lda	#$20
 setup_irq_smc5:
 	sta	MOCK_6522_T1CL	; write into low-order latch
-	lda	#$4f
+;	lda	#$4f
+	lda	#$4E
 setup_irq_smc6:
 	sta	MOCK_6522_T1CH	; write into high-order latch,
 				; load both values into counter

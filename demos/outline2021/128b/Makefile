@@ -21,7 +21,7 @@ xdraw128_submit.zip:	XDRAW128 xdraw128.s file_id.diz xdraw128.dsk
 	cp xdraw128.zip ./outline2021_xdraw128_submit
 	zip -r xdraw128_submit.zip outline2021_xdraw128_submit
 
-xdraw.dsk:	HELLO TINY_XDRAW TINY_COOL SPIN.BAS XDRAW128
+xdraw.dsk:	HELLO TINY_XDRAW TINY_COOL SPIN.BAS XDRAW128 XDRAW128_BOT
 	cp $(EMPTY_DISK) xdraw.dsk
 	$(DOS33) -y xdraw.dsk SAVE A HELLO
 	$(DOS33) -y xdraw.dsk SAVE A SPIN.BAS
@@ -82,6 +82,11 @@ TINY_COOL:	tiny_cool.o
 
 tiny_cool.o:	tiny_cool.s
 	ca65 -o tiny_cool.o tiny_cool.s -l tiny_cool.lst
+
+###
+
+XDRAW128_BOT:	xdraw128.o
+	ld65 -o XDRAW128_BOT xdraw128.o -C $(LINKER_SCRIPTS)/apple2_3f5.inc
 
 ###
 
