@@ -101,5 +101,5 @@ xdraw128.o:	xdraw128.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO TINY_XDRAW TINY_COOL XDRAW128
+	rm -f *~ *.o *.lst HELLO HELLO_COMPO TINY_XDRAW TINY_COOL XDRAW128 XDRAW128_BOT SPIN.BAS
 
