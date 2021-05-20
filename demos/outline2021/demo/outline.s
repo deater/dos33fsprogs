@@ -34,6 +34,8 @@ outline_demo:
 	lda	#1
 	sta	LOOP
 
+	jsr	detect_appleii_model
+
 	jsr	mockingboard_detect
 	bcc	mockingboard_not_found
 setup_interrupt:
@@ -102,6 +104,7 @@ forever:
 	jmp	forever
 
 
+.include	"pt3_lib_detect_model.s"
 .include        "pt3_lib_core.s"
 .include        "pt3_lib_init.s"
 .include        "pt3_lib_mockingboard_setup.s"

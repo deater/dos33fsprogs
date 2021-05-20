@@ -4,6 +4,7 @@ INTRO_LOOPER	= $01
 INTRO_LOOPL	= $02
 INTRO_LOOPH	= $03
 WHICH_LOAD	= $05
+APPLEII_MODEL	= $08
 NIBCOUNT	= $09	; lzsa
 
 ; Zero page monitor routines addresses

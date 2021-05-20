@@ -64,6 +64,7 @@ OUTLINE:	outline.o
 	ld65 -o OUTLINE outline.o -C apple2_5000.inc
 
 outline.o:	outline.s zp.inc \
+	pt3_lib_mockingboard_setup.s \
 	shimmer.s a2_inside.s drops.s wires.s \
 	rotoplasma_tiny.s rocket_away.s anothermist.s \
 	flying_dir.inc tfv_flying.s flying_mode7.s credits.s
