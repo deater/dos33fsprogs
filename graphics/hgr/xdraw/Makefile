@@ -8,7 +8,7 @@ LINKERSCRIPTS = ../../../linker_scripts
 
 all:	xdraw.dsk
 
-xdraw.dsk:	HELLO TINY_XDRAW TINY_COOL TINY_LINES TINY_CENTER NYAN XDRAW_TEST SHIMMER SHIMMER_BOT
+xdraw.dsk:	HELLO TINY_XDRAW TINY_COOL TINY_LINES TINY_CENTER NYAN XDRAW_TEST SHIMMER SHIMMER_BOT ENTROPY_TEXT
 	cp $(EMPTYDISK) xdraw.dsk
 	$(DOS33) -y xdraw.dsk SAVE A HELLO
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xE7 TINY_XDRAW
@@ -19,6 +19,7 @@ xdraw.dsk:	HELLO TINY_XDRAW TINY_COOL TINY_LINES TINY_CENTER NYAN XDRAW_TEST SHI
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xE7 XDRAW_TEST
 	$(DOS33) -y xdraw.dsk BSAVE -a 0xC00 SHIMMER
 	$(DOS33) -y xdraw.dsk BSAVE -a 0x3f5 SHIMMER_BOT
+	$(DOS33) -y xdraw.dsk BSAVE -a 0x3f5 ENTROPY_TEXT
 
 ###
 
@@ -91,6 +92,15 @@ SHIMMER_BOT:	shimmer_bot.o
 
 shimmer_bot.o:	shimmer_bot.s
 	ca65 -o shimmer_bot.o shimmer_bot.s -l shimmer_bot.lst
+
+###
+
+ENTROPY_TEXT:	entropy_text.o
+	ld65 -o ENTROPY_TEXT entropy_text.o -C $(LINKERSCRIPTS)/apple2_3f5.inc
+
+entropy_text.o:	entropy_text.s
+	ca65 -o entropy_text.o entropy_text.s -l entropy_text.lst
+
 
 
 
