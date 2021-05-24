@@ -37,6 +37,7 @@ DISP_PAGE       = $ED
 DRAW_PAGE       = $EE
 
 XHIGH           = $F1   ; credits
+LOGO_OFFSET	= $F2
 
 
 HGR             = $F3E2
@@ -53,56 +54,54 @@ entropy_text:
 	jsr	HGR2		; Hi-res graphics, no text at bottom
 				; Y=0, A=0 after this call
 
-
-;	sta	LOGO_OFFSET
 	sta	FRAME
-	sta	XHIGH
+;	sta	XHIGH
 
-	iny			; default is 1
-	sty	HGR_SCALE
-
-
-	ldy	#60		; FOR Y=60 to 102 STEP 6
-logo_yloop:
-
-	ldx	#34		; FOR X=32 to 248 STEP 6
-logo_xloop:
+;	iny			; default is 1
+;	sty	HGR_SCALE
 
 
-logo_offset_smc:
-	asl	desire_boxes
-	bcc	skip_xdraw
+;	ldy	#60		; FOR Y=60 to 102 STEP 6
+;logo_yloop:
 
-	jsr	do_xdraw
+;	ldx	#34		; FOR X=32 to 248 STEP 6
+;logo_xloop:
 
-skip_xdraw:
 
-logo_nextx:				; NEXT X
-	inc	FRAME
-	lda	FRAME
-	and	#$7
-	bne	no_inc_offset
+;logo_offset_smc:
+;	asl	desire_boxes
+;	bcc	skip_xdraw
+;	jsr	do_xdraw
+;skip_xdraw:
 
-	inc	logo_offset_smc+1
+;logo_nextx:				; NEXT X
+;	inc	FRAME
+;	lda	FRAME
+;	and	#$7
+;	asl	FRAME
+;	dec	FRAME
+;	bne	no_inc_offset
 
-no_inc_offset:
-	txa
-	clc								; 1
-	adc	#6		; x+=6					; 2
-	tax
+;	inc	logo_offset_smc+1
 
-	;cmp	#248
-	cmp	#18		; this is 272?
-	bne	logo_xloop
+;no_inc_offset:
+;	txa
+;	clc								; 1
+;	adc	#6		; x+=6					; 2
+;	tax
 
-logo_nexty:
+;	;cmp	#248
+;	cmp	#18		; this is 272?
+;	bne	logo_xloop
 
-	clc
-	tya
-	adc	#6		; y+=6
-	tay
-	cpy	#102
-	bne	logo_yloop		; if so, loop
+;logo_nexty:
+
+;	clc
+;	tya
+;	adc	#6		; y+=6
+;	tay
+;	cpy	#102
+;	bne	logo_yloop		; if so, loop
 
 
 
@@ -112,7 +111,9 @@ logo_nexty:
 	;======================================
 
 eloop:
-	ldy	#6		; Y=0 to 180 STEP 6
+	inc	first_smc+1
+
+	ldy	#6		; Y=6 to 180 STEP 6
 yloop:
 
 	ldx	#0
@@ -127,52 +128,42 @@ xloop:
 	cpy	#54
 	bcc	random_scale	; blt
 	cpy	#108
-	bcc	done_scale	; bge
+	bcs	random_scale	; bge
+
+first_smc:
+	lda	#$ff		; FIRST
+	bne	done_scale
+
+logo_nextx:				; NEXT X
+	inc	FRAME
+	lda	FRAME
+	and	#$7
+	bne	no_inc_offset
+	inc	logo_offset_smc+1
+no_inc_offset:
+
+;	asl	FRAME
+;	dec	FRAME
+;	
+
+
+logo_offset_smc:
+	asl	desire_boxes
+	bcc	skip_xdraw
+	bcs	done_scale
+
+
+;	jmp	done_scale
 
 
 random_scale:
 	lda	$F000
-	bmi	done_scale
 	cmp	#20
 	bcs	done_scale
 
 	inc	HGR_SCALE
 
 done_scale:
-
-	jsr	do_xdraw
-
-nextx:				; NEXT X
-
-	inc	random_scale+1
-
-	; starting at 4 so hit 256, overflow to high bit
-	; finally end at 280 which is 24?
-
-	txa
-	clc								; 1
-	adc	#6		; x+=6					; 2
-	tax
-	beq	xwrap
-	cmp	#24
-	bne	xloop
-	beq	nexty
-xwrap:
-	inc	XHIGH
-	jmp	xloop
-
-nexty:
-	; carry always set if we get here?
-
-	clc
-	tya
-	adc	#6		; y+=6
-	tay
-	cpy	#156
-	bne	yloop		; if so, loop
-	beq	eloop
-
-
 
 do_xdraw:
 	stx	XREG		; save X
@@ -181,6 +172,7 @@ do_xdraw:
 
 	; setup X and Y co-ords
 	tya			; YPOS into A
+xhigh_smc:
 	ldy	XHIGH		; XHIGH in Y
 				; XPOS already in X
 
@@ -195,16 +187,49 @@ do_xdraw:
 				; Both A and X are 0 at exit
 
 
-	jmp	RESTORE		; restore FLAGS/X/Y/A
+	jsr	RESTORE		; restore FLAGS/X/Y/A
 				; we saved X/Y earlier
 
 
 
+;	jsr	do_xdraw
 
+skip_xdraw:
+
+nextx:				; NEXT X
+
+	inc	random_scale+1
+
+	; starting at 4 so hit 256, overflow to high bit
+	; finally end at 280 which is 24?
+
+	txa
+	clc								; 1
+	adc	#6		; x+=6					; 2
+	tax
+	bne	no_xwrap
+	inc	XHIGH
+no_xwrap:
+	cmp	#24
+	bne	xloop
+
+nexty:
+	; carry always set if we get here?
+
+;	clc
+	tya
+	adc	#5		; y+=6
+	tay
+	cpy	#156
+	bne	yloop		; if so, loop
+
+	beq	eloop		; start over
 
 
 shape_table:
-	.byte 18,63,36,36,45,45,54,54,63,0	; shape data (a square)
+	.byte 18,63,36,36,45,45,54,54,63	; shape data (a square)
+;	.byte 0		; we get this from boxes
+
 
 
 ; 280/6= 48 roughly	; 36*6 wide = 216, 280-216/2=32 to 248
