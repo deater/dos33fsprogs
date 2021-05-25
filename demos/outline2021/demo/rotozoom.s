@@ -98,7 +98,7 @@ rotozoom_c00:
 
 	; cca = -20*ca;
 
-	lda	#-20							; 2
+	lda	#<-20							; 2
 	sta	NUM1H							; 3
 	lda	#0							; 2
 	sta	NUM1L							; 3
