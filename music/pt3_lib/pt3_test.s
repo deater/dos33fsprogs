@@ -36,6 +36,15 @@ pt3_setup:
 ;	lda	#1
 	sta	LOOP		; change to 1 to loop forever
 
+
+	;=======================
+	; Detect Apple II Model
+	;========================
+	; IRQ setup is different on IIc
+	; You can possibly skip this if you only care about II+/IIe
+
+	jsr	detect_appleii_model
+
 	;=======================
 	; Detect mockingboard
 	;========================
@@ -124,6 +133,21 @@ forever_loop:
 	;	as we disable ROM (COUT won't work?)
 
 print_mockingboard_detect:
+	lda	APPLEII_MODEL
+	sta	apple_message+17
+
+	; print detection message for Apple II type
+	ldy	#0
+print_apple_message:
+	lda	apple_message,Y		; load loading message
+	beq	done_apple_message
+	ora	#$80
+	jsr	COUT
+	iny
+	jmp	print_apple_message
+done_apple_message:
+	jsr	CROUT1
+
 
 	; print detection message
 	ldy	#0
@@ -168,6 +192,8 @@ done_found_message:
 ;=========
 ; strings
 ;=========
+apple_message:		.asciiz "DETECTED APPLE II  "
+
 mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD: "
 not_message:		.byte "NOT "
 found_message:		.asciiz "FOUND SLOT#4"
@@ -182,6 +208,7 @@ found_message:		.asciiz "FOUND SLOT#4"
 ;routines
 ;=========
 
+.include	"pt3_lib_detect_model.s"
 .include	"pt3_lib_core.s"
 .include	"pt3_lib_init.s"
 .include	"pt3_lib_mockingboard_setup.s"

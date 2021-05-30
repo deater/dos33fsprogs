@@ -1,10 +1,10 @@
-The PT3_player Library	version 0.2
+The PT3_player Library	version 0.3
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	by Vince "Deater" Weaver <vince@deater.net>
 	http://www.deater.net/weave/vmwprod/pt3_lib/
 
-	Last Update: 28 December 2019
+	Last Update: 30 May 2021
 
 	Plays Vortex Tracker II .pt3 files on the Apple II
 
@@ -73,8 +73,46 @@ To get a pt3 file playing:
 	+ If you want the music to Loop then set the LOOP value to 1.
 	
 
-Using the Code (cycle-counted):
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Notes on Using on a IIc
+~~~~~~~~~~~~~~~~~~~~~~~
+I usually test this code mostly on a II+ and IIe.
+
+Version 0.3 adds support for the IIc as well (having Mockingboards in a
+IIc was rare due to the lack of expansion port, but you can get mockingboard
+compatible cards that plug into the CPU socket)
+
+This does involve adding some Apple II model detection code to the pt3 player
+which does increase the size a bit.
+
+Things that are different on IIc:
+	+ For the board to get detected you have to touch the slot4
+		registers for some reason
+	+ IRQ support is much more complex on the IIc.  We support things
+		by switching out the default ROM IRQ handler with
+		language-card RAM and place our own handler where the
+		stock handler would be.
+
+		This does mean if you use ROM routines they will break,
+		so the code also copies the $D000-$F000 ROM into the
+		language card too.  If your code doesn't use ROM routines
+		you can skip this.  The ROM copy hack uses $400 (text page 1)
+		as a temporary buffer for the copy, feel free to use something
+		else if that's a problem.
+
+		Finally we patch out loading the A register from $45 at
+		the end of the IRQ handler.
+		Older Apple IIs needed to do this, but on a IIc this
+		will break things.
+
+
+Notes on Using on a IIgs
+~~~~~~~~~~~~~~~~~~~~~~~~
+I have not tested this on a IIgs with Mockingboard, I'm guessing it probably
+doesn't work.
+
+
+Cycle-counted version (not finished):
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 I started work on a cycle-counted (deterministic cycle count) pt3
 decoder, but it turned out to be large and complex enough to not be
@@ -98,5 +136,6 @@ in the 10% to 15% range when playing back at 50Hz.
 
 The player also uses 26 zero-page locations.  More compact/faster code
 can be generated if you're willing to sacrifice 128+ zero page locations.
+
 
 
