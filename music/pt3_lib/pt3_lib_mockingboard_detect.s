@@ -39,6 +39,7 @@ mockingboard_detect:
 	; I get the impression the Mockingboard 4c activates
 	; when you access any of the 6522 ports in Slot 4
 
+.ifdef PT3_ENABLE_APPLE_IIC
 	lda	APPLEII_MODEL
 	cmp	#'C'
 	bne	not_iic
@@ -49,6 +50,7 @@ mockingboard_detect:
 
         sta	MOCK_6522_DDRA1
 	sta	MOCK_6522_T1CL
+.endif
 
 not_iic:
 	lda	#$00

@@ -170,6 +170,7 @@ clear_ay_end:
 	;=============================
 mockingboard_setup_interrupt:
 
+.ifdef PT3_ENABLE_APPLE_IIC
 	lda	APPLEII_MODEL
 	cmp	#'C'
 	bne	done_iic_hack
@@ -216,6 +217,7 @@ write_rom_loop:
 	lda	#$EA			; nop out the "lda $45" in the irq handler
 	sta	interrupt_smc
 	sta	interrupt_smc+1
+.endif
 
 done_iic_hack:
 

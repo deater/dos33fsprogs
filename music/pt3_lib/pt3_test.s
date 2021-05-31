@@ -20,6 +20,12 @@ PT3_LOC = song
 ; PT3_USE_ZERO_PAGE = 1
 
 
+; Comment this to disable Apple IIc support which will free a small amount
+; of room
+
+PT3_ENABLE_APPLE_IIC = 1
+
+
 	;=============================
 	; Setup
 	;=============================
@@ -43,7 +49,9 @@ pt3_setup:
 	; IRQ setup is different on IIc
 	; You can possibly skip this if you only care about II+/IIe
 
+.ifdef PT3_ENABLE_APPLE_IIC
 	jsr	detect_appleii_model
+.endif
 
 	;=======================
 	; Detect mockingboard
@@ -208,7 +216,10 @@ found_message:		.asciiz "FOUND SLOT#4"
 ;routines
 ;=========
 
+.ifdef PT3_ENABLE_APPLE_IIC
 .include	"pt3_lib_detect_model.s"
+.endif
+
 .include	"pt3_lib_core.s"
 .include	"pt3_lib_init.s"
 .include	"pt3_lib_mockingboard_setup.s"
