@@ -16,7 +16,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	C64.BAS SIERPINSKI.BAS FAKES.BAS SIER.BAS DROPS.BAS RR.BAS RR_HGR.BAS \
 	COMBO.BAS WIRES.BAS PATTERN.BAS BALL.BAS LINES.BAS MOD9.BAS \
 	XOR_ZOOM.BAS MOD9_HGR.BAS SIER_HGR.BAS MOVE.BAS SINE.BAS XDRAW128.BAS \
-	GATOR.BAS
+	GATOR.BAS CURSOR.BAS
 
 #	cp $(EMPTY_DISK)/empty.dsk  appleiibot.dsk
 	cp empty.dsk appleiibot.dsk
@@ -82,6 +82,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A SINE.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A XDRAW128.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A GATOR.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A CURSOR.BAS
 
 ####
 
@@ -249,6 +250,11 @@ BIN.BAS:	bin.bas
 
 GATOR.BAS:	gator.bas
 	$(TOKENIZE) < gator.bas > GATOR.BAS
+
+####
+
+CURSOR.BAS:	cursor.bas
+	$(TOKENIZE) < cursor.bas > CURSOR.BAS
 
 
 

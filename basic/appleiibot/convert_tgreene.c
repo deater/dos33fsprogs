@@ -14,8 +14,8 @@
 
 int main(int argc, char **argv) {
 
-//	int mode=END_AT_3F5;
-	int mode=BEGIN_AT_3F5;
+	int mode=END_AT_3F5;
+//	int mode=BEGIN_AT_3F5;
 	int i = 0;
 	int e = 0,filesize;
 	int val,pv,final;
