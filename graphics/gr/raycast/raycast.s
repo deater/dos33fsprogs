@@ -3,10 +3,12 @@
 ;	coded by huseyin kilic (wisdom)
 ;	copyright (c) 2009-2013 crescent
 
-
 .include "hardware.inc"
 
 ; zero page
+
+V2		= $2D
+COLOR		= $30
 
 RAYPOSX		= $61
 RAYPOSXH	= $62
@@ -66,6 +68,9 @@ main:
 ;---------------------------------------
 ; sin/cos table generator
 ;---------------------------------------
+
+	; first generate sine for 0..63 (0..90 degrees)
+
 	lda	#$00
 	tay
 gensin_loop:
@@ -82,13 +87,18 @@ gensin_loop:
 	; x = $00
 	; y = $40
 
+	; next generate
+
 gensin_loop2:
 	lda	sin_t,X
-	sta	sin_t+$0100,X ; needed for cos extension
-	sta	sin_t-1+$40,Y
-	eor	#$ff
-	sta	sin_t+$80,X
-	sta	sin_t-1+$c0,Y
+
+	sta	sin_t+$0100,X	; copy at $100 so cosine easier
+
+	sta	sin_t-1+$40,Y	; store 90-180 degrees
+
+	eor	#$ff		; invert
+	sta	sin_t+$80,X	; store for 180-270 degrees
+	sta	sin_t-1+$c0,Y	; store for 270-360 degrees
 	inx
 	dey
 	bpl	gensin_loop2
@@ -100,7 +110,7 @@ gensin_loop2:
 loop_main:
 	; cast 40 rays for each screen column
 	; starting with rightmost one
-	; yr is used as global column index
+	; Y is used as global column index
 	; throughout the rest of the program
 	ldy	#39
 
@@ -108,7 +118,7 @@ loop_ray:
 	; determine current ray's direction
 	; by taking player's current direction
 	; and fov into account
-	; fov is 40 brads out of 256 brads
+	; fov is 40 b-rads out of 256 b-rads
 
 	tya
 	clc
@@ -151,27 +161,22 @@ loop_dist:
 	jsr	addsteptopos
 
 	; on return from last call, ar is cell (block) value
-	; ar = 0 means empty cell, so continue tracing
+	; A == 0 means empty cell, so continue tracing
 	beq	loop_dist
 
 skip_dist:
-	; now ar contains the value in reached map position
+	; now A contains the value in reached map position
 	; (or last cell value fetched if max distance is reached)
 
-	; use ar or xr to colorize the block
+	; use A or X to colorize the block
 	; and #$07
 	; ora #$03
-	stx	COLORS+1
+	sta	COLORS+1
 
 	; find out visible block height
 	; according to distance
 	ldx	#$ff
-	txa
-
-	; fill the single char that appears on screen
-	; (as in char $a0 in default charset)
-	; dirty but needed because of size restriction
-	; sta $2900,y
+;	txa
 
 	; calculate visible block height through simple division
 	lda	#<blocksize
@@ -181,120 +186,82 @@ loop_div:
 	sbc	DISTANCE
 	bcs	loop_div
 
-	; xr = half of visible block height
+	; X = half of visible block height
 	txa
 
 ;---------------------------------------
 ; vertical line
 ;---------------------------------------
-	; yr = x position (screen column)
-	; ar = half height (zero height is ok)
-	cmp	#13		; height > 12?
+	; Y = x position (screen column)
+	; A = half height (zero height is ok)
+	cmp	#24		; height > 24?
 	bcc	vline_validheight
-	lda	#12		; make sure max height = 12
+	lda	#23		; make sure max height = 24
 vline_validheight:
 	asl			; calculate full height
 	sta	HEIGHTS+1	; store for looping below
 	eor	#$ff		; subtract full height from screen height
-	; sec			; (24 rows)
-	adc	#24+1		; +1 because of sec
+	; sec			; (48 rows)
+	adc	#48+1		; +1 because of sec
 	lsr			; sky/floor heights are equal to each other
 	sta	HEIGHTS
 	sta	HEIGHTS+2
-.if 0
-;            jsr setheights   ; dirty again, but works
-;F2C1   85 F8      STA $F8
-;F2C3   85 FA      STA $FA
-;F2C5   4C 7D F4   JMP $F47D
-;F47D   38         SEC
-;
-;F47E   A9 F0      LDA #$F0
-;F480   4C 2D FE   JMP $FE2D
-;FE2D   8E 83 02   STX $0283
-;
-;FE30   8C 84 02   STY $0284
-;FE33   60         RTS
-.endif
 
 	; loop through 3 sections of one screen column
 	; i.e. sky - wall - floor
-	ldx	#$02
+;	ldx	#$02
 vline_loop:
 
 	; load color
 ;	lda	COLORS,X
 ;	jsr	SETCOL
 
-	sty	$FE
+	; vline sky, 0 to heights[0]
 
-	; VLINE A,$2D at Y
+	lda	#$77		; sky blue
+	sta	COLOR
 
-	; vline sky
-
-	lda	#$77
-	jsr	SETCOL
-
-	lda	HEIGHTS
-	sta	$2D
+	lda	HEIGHTS+0
+	sta	V2
 	lda	#0
-	ldy	$FE
+;	ldy	$FE
 
-	jsr	VLINE
+	jsr	VLINE		; VLINE A,$2D at Y	(Y preserved, A=V2)
 
-	; vline wall
+	; vline wall, heights[0] to heights[0]+heights[1]
 
-	lda	#$FF
-	jsr	SETCOL
+	ldx	COLORS+1
+	stx	COLOR
 
-	lda	HEIGHTS
+	; A already HEIGHTS+0
+;	lda	HEIGHTS+0
 	clc
 	adc	HEIGHTS+1
-	sta	$2D
-	lda	HEIGHTS
+	sta	V2
 
-	ldy	$FE
+	lda	HEIGHTS+0
+
+;	ldy	$FE
 	jsr	VLINE		; VLINE A,$2D at Y
 
-	; vline floor
+	; vline floor,	heights[0]+heights[1]-47
 
-	lda	#$66
-	jsr	SETCOL
+	ldx	#$88
+	stx	COLOR
 
-	lda	#47
-	sta	$2D
+	ldx	#47
+	stx	V2
 
-	lda	HEIGHTS
-	clc
-	adc	HEIGHTS+1
-	ldy	$FE
+	; A already heights[0]+heights[1]
+
+;	lda	HEIGHTS
+;	clc
+;	adc	HEIGHTS+1
+;	ldy	$FE
 	jsr	VLINE		; VLINE A,$2D at Y
 
-	ldy	$FE
+;	ldy	$FE
 
-.if 0
-	dec	HEIGHTS,X
-            bmi vline_sectioncomplete
-            txs              ; dirty way of saving xr temporarily
-            ldx CURRENTROW   ; this was reset before the distance loop
-            ; there are two ways used in this program to set up
-            ; current row address, either through kernal call ($e549)
-            ; or by directly modifiying zp pointer
-            ;jsr setrowptr ; call $e549 in main if you comment out this line
-            lda linel_t,x
-            sta ROWPTR
-            lda LINEH_T,x
-            sta ROWPTRH
-            tsx
-            lda COLORS,x ; each section can be assigned to a different color
-            sta (ROWPTR),y
-            ; advance to next screen row
-            inc CURRENTROW
-            bne vline_loop ; absolute jump, as CURRENTROW never reaches zero
-vline_sectioncomplete:
-            ; advance to next column section
-            dex
-            bpl vline_loop
-.endif
 
 	;---------------------------------------
 	; advance to next ray/column
