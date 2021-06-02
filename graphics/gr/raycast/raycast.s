@@ -29,8 +29,8 @@ ROWPTR		= $d1
 ROWPTRH		= $d2
 LINEH_T		= $d9
 
-
-HEIGHTS		= $f8 ; 3 bytes consecutively
+WALL_HEIGHT	= $f8
+FLOOR_SKY_HEIGHT= $f9
 
 ; external value dependencies
 HEADING		= $81
@@ -44,13 +44,6 @@ CURRENTROW  = $ff
 sin_t       = $1000
 blocksize   = $28
 
-; basic/kernal calls
-;copyray2plr = $bc0f
-;setrowptr   = $e9f0
-;invertstepx = $bfb8
-;setheights  = $f2c1
-;linel_t     = $ecf0
-
 ;---------------------------------------
 ; main
 ;---------------------------------------
@@ -58,9 +51,6 @@ blocksize   = $28
 main:
 	jsr	SETGR
 	bit	FULLGR
-
-	lda	#3
-	sta	SINADD
 
 	lda	#$20
 	sta	HEADING
@@ -71,13 +61,16 @@ main:
 
 	; first generate sine for 0..63 (0..90 degrees)
 
+	lda	#3
+	sta	SINADD
+
 	lda	#$00
 	tay
 gensin_loop:
 	sta	sin_t,Y
 	iny
 	clc
-	adc	SINADD
+]	adc	SINADD
 	ldx	SINADD
 	dec	sincount_t,X
 	bne	gensin_loop
@@ -160,7 +153,7 @@ loop_dist:
 
 	jsr	addsteptopos
 
-	; on return from last call, ar is cell (block) value
+	; on return from last call, A is cell (block) value
 	; A == 0 means empty cell, so continue tracing
 	beq	loop_dist
 
@@ -176,7 +169,6 @@ skip_dist:
 	; find out visible block height
 	; according to distance
 	ldx	#$ff
-;	txa
 
 	; calculate visible block height through simple division
 	lda	#<blocksize
@@ -199,68 +191,60 @@ loop_div:
 	lda	#23		; make sure max height = 24
 vline_validheight:
 	asl			; calculate full height
-	sta	HEIGHTS+1	; store for looping below
+	sta	WALL_HEIGHT	; store for looping below
 	eor	#$ff		; subtract full height from screen height
 	; sec			; (48 rows)
 	adc	#48+1		; +1 because of sec
 	lsr			; sky/floor heights are equal to each other
-	sta	HEIGHTS
-	sta	HEIGHTS+2
+	sta	FLOOR_SKY_HEIGHT
 
 	; loop through 3 sections of one screen column
 	; i.e. sky - wall - floor
-;	ldx	#$02
+
 vline_loop:
 
+
+
+	;==========
+	; vline sky, 0 to FLOOR_SKY_HEIGHT
+
 	; load color
-;	lda	COLORS,X
-;	jsr	SETCOL
-
-	; vline sky, 0 to heights[0]
-
 	lda	#$77		; sky blue
 	sta	COLOR
 
-	lda	HEIGHTS+0
+	lda	FLOOR_SKY_HEIGHT
 	sta	V2
 	lda	#0
-;	ldy	$FE
 
 	jsr	VLINE		; VLINE A,$2D at Y	(Y preserved, A=V2)
 
-	; vline wall, heights[0] to heights[0]+heights[1]
+	;=================
+	; vline wall, FLOOR_SKY_HEIGHT to FLOOR_SKY_HEIGHT+WALL_HEIGHT
 
 	ldx	COLORS+1
 	stx	COLOR
 
-	; A already HEIGHTS+0
-;	lda	HEIGHTS+0
+	; A already FLOOR_SKY_HEIGHT
 	clc
-	adc	HEIGHTS+1
+	adc	WALL_HEIGHT
 	sta	V2
 
-	lda	HEIGHTS+0
+	lda	FLOOR_SKY_HEIGHT
 
-;	ldy	$FE
 	jsr	VLINE		; VLINE A,$2D at Y
 
-	; vline floor,	heights[0]+heights[1]-47
+	;=============
+	; vline floor,	WALL_HEIGHT+FLOOR_SKY_HEIGHT to 47
 
 	ldx	#$88
 	stx	COLOR
 
+	; A already WALL_HEIGHT+FLOOR_SKY_HEIGHT
+
 	ldx	#47
 	stx	V2
 
-	; A already heights[0]+heights[1]
-
-;	lda	HEIGHTS
-;	clc
-;	adc	HEIGHTS+1
-;	ldy	$FE
 	jsr	VLINE		; VLINE A,$2D at Y
-
-;	ldy	$FE
 
 
 	;---------------------------------------
@@ -308,7 +292,7 @@ skip_j2:
 
 	; turn right
 	dec	HEADING
-	; dec	HEADING
+	dec	HEADING
 
 skip_j3:
 	cmp	#'D'+$80
@@ -316,7 +300,7 @@ skip_j3:
 
 	; turn left
 	inc	HEADING
-	;inc	HEADING
+	inc	HEADING
 
 done_user_input:
 	bit	KEYRESET	; clear keyboard buffer
@@ -335,8 +319,9 @@ addsteptopos:
 loop_stepadd:
 	lda	STEPX,X		; & y
 	ora	#$7f		; sign extend 8 bit step value to 16 bit
-	bmi	*+4
+	bmi	was_neg		; was negative *+4
 	lda	#$00
+was_neg:
 	pha
 	;clc
 	lda	STEPX,x		; & y
@@ -349,13 +334,14 @@ loop_stepadd:
 	dex
 	bpl	loop_stepadd
 
-	; ar = RAYPOSXH
+	; A = RAYPOSXH
 
 	; calculate index to look up the map cell
 	; the map area is 8x8 bytes
-	; instead of the usual y * 8 + x
-	; x * 8 + y done here, to save some bytes
-	; (just causing a flip of the map as a side effect)
+	; + instead of the usual y * 8 + x
+	;   x * 8 + y done here, to save some bytes
+	;   (just causing a flip of the map as a side effect)
+	asl
 	asl
 	asl
 	asl
@@ -376,7 +362,7 @@ step_exit:
 getsincos_copyplr2ray:
 	lda	sin_t,X		; sin(x)
 	sta	STEPX
-	lda	sin_t+$40,x	; cos(x)
+	lda	sin_t+$40,X	; cos(x)
 	sta	STEPY
 
 	; copy player position to ray position for a start
@@ -443,21 +429,36 @@ sincount_t:
 	.byte 6,14,19,25
 ;---------------------------------------
 
+.if 0
+
+map_t:
+	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+	.byte $55,$00,$00,$00,$00,$00,$00,$55
+	.byte $55,$00,$44,$00,$00,$00,$00,$55
+	.byte $55,$00,$00,$00,$00,$11,$00,$55
+	.byte $55,$22,$00,$00,$00,$00,$00,$55
+	.byte $55,$00,$00,$99,$00,$00,$00,$55
+	.byte $55,$00,$00,$00,$00,$00,$00,$55
+	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+
+
+.endif
 
 map_t:
 	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$22,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$33,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$11,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
+	.byte $55,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$55
+	.byte $55,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$55
+	.byte $55,$00,$11,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$55
+	.byte $55,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$55
+	.byte $55,$00,$00,$00,$00,$00,$22,$00,$00,$00,$00,$00,$00,$00,$00,$55
+	.byte $55,$00,$00,$00,$00,$22,$22,$22,$00,$00,$00,$00,$00,$00,$00,$55
+	.byte $55,$00,$00,$00,$00,$00,$22,$00,$00,$00,$00,$00,$00,$00,$00,$55
+	.byte $55,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$55
+	.byte $55,$00,$00,$00,$00,$00,$00,$00,$00,$00,$33,$00,$00,$00,$00,$55
+	.byte $55,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$55
+	.byte $55,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$55
+	.byte $55,$00,$99,$99,$11,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$55
+	.byte $55,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$55
+	.byte $55,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$55
 	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+
