@@ -24,8 +24,11 @@ PLAYERXH	= $6a
 PLAYERY		= $6b
 PLAYERYH	= $6c
 
+DISTANCEL	= $6F
 DISTANCE	= $70
 NEWLOC		= $71
+HEIGHT		= $73
+HEIGHTL		= $74
 
 ROWPTR		= $d1
 ROWPTRH		= $d2
@@ -128,27 +131,34 @@ loop_ray:
 	; reset line row before each column gets drawn
 	; (needed in vertical line section)
 	; X is 0 here?
+	stx	DISTANCEL
 	stx	DISTANCE
 
 loop_dist:
 
 	; step along current ray's path and find distance
+	clc
+	lda	DISTANCEL
+	adc	#$80
+	sta	DISTANCEL
+	bcc	nod
 	inc	DISTANCE
-
+nod:
 	; limit distance when it is needed in larger maps
 	; or open (wrapped) maps
 
 	; max distance = $29
-	; lda DISTANCE
-	; cmp #$29
-	; bcs skip_dist
+	 lda DISTANCE
+	 cmp #$29
+	 bcs skip_dist
 
 	; max distance = $40 (make sure ar is always 0 here)
 	; bit DISTANCE
 	; bvs skip_dist
 
 	; max DISTANCE = $80
-	bmi	skip_dist
+;	lda	DISTANCE
+;	bmi	skip_dist
 
 	jsr	addsteptopos
 
@@ -170,12 +180,31 @@ skip_dist:
 	ldx	#$ff
 
 	; calculate visible block height through simple division
-	lda	#<blocksize
-loop_div:
+
+	lda	#0
+	sta	HEIGHT
+	sta	HEIGHTL
+height_loop:
 	inx
-	; sec
-	sbc	DISTANCE
-	bcs	loop_div
+	lda	HEIGHTL
+	adc	DISTANCEL
+	sta	HEIGHTL
+
+	lda	HEIGHT
+	adc	DISTANCE
+	sta	HEIGHT
+
+	cmp	#<blocksize
+	bcc	height_loop
+
+	;dex
+
+;	lda	#<blocksize
+;loop_div:
+;	inx
+;	; sec
+;	sbc	DISTANCE
+;	bcs	loop_div
 
 	; X = half of visible block height
 	txa
@@ -360,16 +389,20 @@ blah:
 	; + instead of the usual y * 8 + x
 	;   x * 8 + y done here, to save some bytes
 	;   (just causing a flip of the map as a side effect)
-	asl
-	asl
-	asl
-	asl
 
-	adc	RAYPOSYH
-	tax
-	lda	map_t,X
+	and	RAYPOSYH	; sierpinski
 
+	and	#$f0
 	beq	step_exit
+
+	lda	#$CC
+;	jmp	blargh
+
+;make_zero:
+;	lda	#$00
+;	beq	step_exit
+
+;blargh:
 
 	ldx	NEWLOC
 	cpx	#2
@@ -389,9 +422,15 @@ step_exit:
 
 getsincos_copyplr2ray:
 	lda	sin_t,X		; sin(x)
+	cmp	#$80
+	ror
 	sta	STEPX
+
 	lda	sin_t+$40,X	; cos(x)
+	cmp	#$80
+	ror
 	sta	STEPY
+
 
 	; copy player position to ray position for a start
 	; through the basic rom
@@ -458,37 +497,3 @@ r2_loop:
 sincount_t:
 	.byte 6,14,19,25
 ;---------------------------------------
-
-.if 0
-
-map_t:
-	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
-	.byte $55,$00,$00,$00,$00,$00,$00,$55
-	.byte $55,$00,$44,$00,$00,$00,$00,$55
-	.byte $55,$00,$00,$00,$00,$11,$00,$55
-	.byte $55,$22,$00,$00,$00,$00,$00,$55
-	.byte $55,$00,$00,$99,$00,$00,$00,$55
-	.byte $55,$00,$00,$00,$00,$00,$00,$55
-	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
-
-
-.endif
-
-map_t:
-	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$99,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$99,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$CC,$00,$00,$00,$00,$00,$99,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$CC,$CC,$CC,$00,$00,$00,$00,$99,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$CC,$00,$00,$00,$00,$00,$99,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$99,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$99,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$99,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$99,$99,$11,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$EE,$00,$DD,$00,$CC,$00,$BB,$00,$AA,$00,$99,$00,$00,$ff
-	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
-

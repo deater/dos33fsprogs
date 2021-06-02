@@ -24,8 +24,11 @@ PLAYERXH	= $6a
 PLAYERY		= $6b
 PLAYERYH	= $6c
 
+DISTANCEL	= $6F
 DISTANCE	= $70
 NEWLOC		= $71
+HEIGHT		= $73
+HEIGHTL		= $74
 
 ROWPTR		= $d1
 ROWPTRH		= $d2
@@ -128,13 +131,19 @@ loop_ray:
 	; reset line row before each column gets drawn
 	; (needed in vertical line section)
 	; X is 0 here?
+	stx	DISTANCEL
 	stx	DISTANCE
 
 loop_dist:
 
 	; step along current ray's path and find distance
+	clc
+	lda	DISTANCEL
+	adc	#$80
+	sta	DISTANCEL
+	bcc	nod
 	inc	DISTANCE
-
+nod:
 	; limit distance when it is needed in larger maps
 	; or open (wrapped) maps
 
@@ -148,6 +157,7 @@ loop_dist:
 	; bvs skip_dist
 
 	; max DISTANCE = $80
+	lda	DISTANCE
 	bmi	skip_dist
 
 	jsr	addsteptopos
@@ -170,12 +180,31 @@ skip_dist:
 	ldx	#$ff
 
 	; calculate visible block height through simple division
-	lda	#<blocksize
-loop_div:
+
+	lda	#0
+	sta	HEIGHT
+	sta	HEIGHTL
+height_loop:
 	inx
-	; sec
-	sbc	DISTANCE
-	bcs	loop_div
+	lda	HEIGHTL
+	adc	DISTANCEL
+	sta	HEIGHTL
+
+	lda	HEIGHT
+	adc	DISTANCE
+	sta	HEIGHT
+
+	cmp	#<blocksize
+	bcc	height_loop
+
+	dex
+
+;	lda	#<blocksize
+;loop_div:
+;	inx
+;	; sec
+;	sbc	DISTANCE
+;	bcs	loop_div
 
 	; X = half of visible block height
 	txa
@@ -389,9 +418,15 @@ step_exit:
 
 getsincos_copyplr2ray:
 	lda	sin_t,X		; sin(x)
+	cmp	#$80
+	ror
 	sta	STEPX
+
 	lda	sin_t+$40,X	; cos(x)
+	cmp	#$80
+	ror
 	sta	STEPY
+
 
 	; copy player position to ray position for a start
 	; through the basic rom
@@ -487,7 +522,7 @@ map_t:
 	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$99,$00,$00,$ff
 	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$99,$00,$00,$ff
 	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
-	.byte $ff,$00,$99,$99,$11,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
+	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
 	.byte $ff,$00,$EE,$00,$DD,$00,$CC,$00,$BB,$00,$AA,$00,$99,$00,$00,$ff
 	.byte $ff,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$ff
 	.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
