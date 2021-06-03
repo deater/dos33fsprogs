@@ -12,13 +12,14 @@ all:	raycast.dsk
 $(DOS33):	
 	cd ../../utils/dos33fs-utils && make
 
-raycast.dsk:	$(DOS33) HELLO RAYCAST RAYMARCH RAYMARCH_TINY RAY.BAS
+raycast.dsk:	$(DOS33) HELLO RAYCAST RAYMARCH RAYMARCH_TINY RAYMARCH_BOT RAY.BAS
 	cp $(EMPTYDISK)/empty.dsk raycast.dsk
 	$(DOS33) -y raycast.dsk SAVE A HELLO
 	$(DOS33) -y raycast.dsk SAVE A RAY.BAS
 	$(DOS33) -y raycast.dsk BSAVE -a 0xc00 RAYCAST
 	$(DOS33) -y raycast.dsk BSAVE -a 0xc00 RAYMARCH
 	$(DOS33) -y raycast.dsk BSAVE -a 0xc00 RAYMARCH_TINY
+	$(DOS33) -y raycast.dsk BSAVE -a 0xc00 RAYMARCH_BOT
 
 
 
@@ -57,11 +58,19 @@ RAYMARCH_TINY:	raymarch_tiny.o
 raymarch_tiny.o:	raymarch_tiny.s
 	ca65 -o raymarch_tiny.o raymarch_tiny.s -l raymarch_tiny.lst
 
+###
+
+RAYMARCH_BOT:	raymarch_bot.o
+	ld65 -o RAYMARCH_BOT raymarch_bot.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+raymarch_bot.o:	raymarch_bot.s
+	ca65 -o raymarch_bot.o raymarch_bot.s -l raymarch_bot.lst
+
 
 
 ###
 
 
 clean:	
-	rm -f *~ *.o HELLO RAYCAST RAYMARCH RAYMARCH_TINY *.lst
+	rm -f *~ *.o HELLO RAYCAST RAYMARCH RAYMARCH_TINY RAYMARCH_BOT *.lst
 

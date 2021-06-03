@@ -24,27 +24,21 @@ PLAYERXH	= $6a
 PLAYERY		= $6b
 PLAYERYH	= $6c
 
-DISTANCEL	= $6F
 DISTANCE	= $70
-NEWLOC		= $71
-HEIGHT		= $73
-HEIGHTL		= $74
 
-ROWPTR		= $d1
-ROWPTRH		= $d2
-LINEH_T		= $d9
+WALL_HEIGHT	= $72
+FLOOR_SKY_HEIGHT= $73
+HEADING		= $74
+COLORS		= $75
 
-WALL_HEIGHT	= $f8
-FLOOR_SKY_HEIGHT= $f9
+vline_params	= $76
+;	.byte	0,0,0,39
+;	; 0, FLOOR_SKY_HEIGHT, FLOOR_SKY_HEIGHT+WALL_HEIGHT, 39
 
-; external value dependencies
-HEADING		= $81
-SINADD		= $9a
-COLORS		= $b1 ; 3 bytes consecutively
-
+sin_t		= $80
 
 ; constants
-sin_t       = $1000
+;sin_t       = $1000
 blocksize   = $28
 
 cosine_table	= $F5BA
@@ -55,6 +49,7 @@ cosine_table	= $F5BA
 
 main:
 	jsr	SETGR
+;	bit	FULLGR
 
 ;	lda	#$20
 	sta	HEADING
@@ -86,12 +81,16 @@ main:
 
 	; next generate
 
+
+
 	ldx	#$00
+	stx	vline_params
+
 	ldy	#$0f
 
-	lda	#$0
-gensin_loop2:
+	txa
 
+gensin_loop2:
 	lsr
 
 	sta	sin_t+$10+1,Y	; store 90-180 degrees
@@ -106,6 +105,7 @@ gensin_loop2:
 	dey
 	bpl	gensin_loop2
 
+
 ;---------------------------------------
 ; raycaster
 ;---------------------------------------
@@ -115,7 +115,7 @@ loop_main:
 	; Y is used as global column index
 	; throughout the rest of the program
 	ldy	#39
-
+	sty	vline_params+3
 loop_ray:
 	; determine current ray's direction
 	; by taking player's current direction
@@ -137,34 +137,27 @@ loop_ray:
 	; reset line row before each column gets drawn
 	; (needed in vertical line section)
 	; X is 0 here?
-	stx	DISTANCEL
 	stx	DISTANCE
 
 loop_dist:
 
 	; step along current ray's path and find distance
-	clc
-	lda	DISTANCEL
-	adc	#$80
-	sta	DISTANCEL
-	bcc	nod
 	inc	DISTANCE
-nod:
+
 	; limit distance when it is needed in larger maps
 	; or open (wrapped) maps
 
 	; max distance = $29
-	 lda DISTANCE
-	 cmp #$29
-	 bcs skip_dist
+	; lda DISTANCE
+	; cmp #$29
+	; bcs skip_dist
 
 	; max distance = $40 (make sure ar is always 0 here)
 	; bit DISTANCE
 	; bvs skip_dist
 
 	; max DISTANCE = $80
-;	lda	DISTANCE
-;	bmi	skip_dist
+	bmi	skip_dist
 
 	jsr	addsteptopos
 
@@ -179,38 +172,20 @@ skip_dist:
 	; use A or X to colorize the block
 	; and #$07
 	; ora #$03
-	sta	COLORS+1
+
+	sta	colors+1
 
 	; find out visible block height
 	; according to distance
 	ldx	#$ff
 
 	; calculate visible block height through simple division
-
-	lda	#0
-	sta	HEIGHT
-	sta	HEIGHTL
-height_loop:
+	lda	#<blocksize
+loop_div:
 	inx
-	lda	HEIGHTL
-	adc	DISTANCEL
-	sta	HEIGHTL
-
-	lda	HEIGHT
-	adc	DISTANCE
-	sta	HEIGHT
-
-	cmp	#<blocksize
-	bcc	height_loop
-
-	;dex
-
-;	lda	#<blocksize
-;loop_div:
-;	inx
-;	; sec
-;	sbc	DISTANCE
-;	bcs	loop_div
+	; sec
+	sbc	DISTANCE
+	bcs	loop_div
 
 	; X = half of visible block height
 	txa
@@ -220,66 +195,39 @@ height_loop:
 ;---------------------------------------
 	; Y = x position (screen column)
 	; A = half height (zero height is ok)
-	cmp	#24		; height > 24?
+	cmp	#20		; height > 24?
 	bcc	vline_validheight
-	lda	#23		; make sure max height = 24
+	lda	#19		; make sure max height = 24
 vline_validheight:
 	asl			; calculate full height
 	sta	WALL_HEIGHT	; store for looping below
 	eor	#$ff		; subtract full height from screen height
 	; sec			; (48 rows)
-	adc	#48+1		; +1 because of sec
+	adc	#40+1		; +1 because of sec
 	lsr			; sky/floor heights are equal to each other
-	sta	FLOOR_SKY_HEIGHT
+	sta	vline_params+1
+	clc
+	adc	WALL_HEIGHT
+	sta	vline_params+2
 
 	; loop through 3 sections of one screen column
 	; i.e. sky - wall - floor
 
+
+
+	ldx	#2
 vline_loop:
-
-
-
-	;==========
-	; vline sky, 0 to FLOOR_SKY_HEIGHT
-
-	; load color
-	;lda	#$77		; sky blue
-	lda	#$00		; sky black
+	lda	colors,X
 	sta	COLOR
 
-	lda	FLOOR_SKY_HEIGHT
+	lda	vline_params+1,X
 	sta	V2
-	lda	#0
-
-	jsr	VLINE		; VLINE A,$2D at Y	(Y preserved, A=V2)
-
-	;=================
-	; vline wall, FLOOR_SKY_HEIGHT to FLOOR_SKY_HEIGHT+WALL_HEIGHT
-
-	ldx	COLORS+1
-	stx	COLOR
-
-	; A already FLOOR_SKY_HEIGHT
-	clc
-	adc	WALL_HEIGHT
-	sta	V2
-
-	lda	FLOOR_SKY_HEIGHT
-
+	lda	vline_params,X
 	jsr	VLINE		; VLINE A,$2D at Y
 
-	;=============
-	; vline floor,	WALL_HEIGHT+FLOOR_SKY_HEIGHT to 47
+	dex
+	bpl	vline_loop
 
-	ldx	#$88
-	stx	COLOR
-
-	; A already WALL_HEIGHT+FLOOR_SKY_HEIGHT
-
-	ldx	#47
-	stx	V2
-
-	jsr	VLINE		; VLINE A,$2D at Y
 
 
 	;---------------------------------------
@@ -350,8 +298,6 @@ done_user_input:
             ; for x and y components and also because of
             ; brute force approach
 addsteptopos:
-	ldx	#$0
-	stx	NEWLOC
 
 	ldx	#$02
 loop_stepadd:
@@ -367,19 +313,6 @@ was_neg:
 	sta	RAYPOSX,X	; & y
 	pla
 
-	php
-
-	bcc	blah		; no carry
-
-	cpx	#2
-	bne	blah
-
-	stx	NEWLOC
-
-
-blah:
-	plp
-
 	adc	RAYPOSXH,X	; & y
 	sta	RAYPOSXH,X	; & y
 
@@ -391,32 +324,10 @@ blah:
 	; A = RAYPOSXH
 
 	; calculate index to look up the map cell
-	; the map area is 8x8 bytes
-	; + instead of the usual y * 8 + x
-	;   x * 8 + y done here, to save some bytes
-	;   (just causing a flip of the map as a side effect)
+	; just use sierpinski
 
-	and	RAYPOSYH	; sierpinski
-
+	and	RAYPOSYH
 	and	#$f0
-	beq	step_exit
-
-	lda	#$CC
-;	jmp	blargh
-
-;make_zero:
-;	lda	#$00
-;	beq	step_exit
-
-;blargh:
-
-	ldx	NEWLOC
-	cpx	#2
-	bne	step_exit
-
-	sec
-	sbc	#$88
-
 
 step_exit:
 	rts
@@ -432,16 +343,10 @@ getsincos_copyplr2ray:
 	lsr
 	tax
 
-	lda	sin_t,X		; sin(x), 0..16
-	cmp	#$80
-	ror
+	lda	sin_t,X		; sin(x)
 	sta	STEPX
-
 	lda	sin_t+$10,X	; cos(x)
-	cmp	#$80
-	ror
 	sta	STEPY
-
 
 	; copy player position to ray position for a start
 	; through the basic rom
@@ -500,11 +405,8 @@ r2_loop:
 
 	rts
 
-;---------------------------------------
-; data
-;---------------------------------------
 
-	; number of sin additions (backwards)
-sincount_t:
-;	.byte 6,14,19,25
-;---------------------------------------
+colors:
+	.byte	$77,$11,$88
+
+
