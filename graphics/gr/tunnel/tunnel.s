@@ -15,8 +15,6 @@ NEWCOLOR	= $FF
 
 FULLGR		= $C052
 
-
-
 HLINE   = $F819                 ;; HLINE Y,$2C at A
 VLINE   = $F828                 ;; VLINE A,$2D at Y
 SETCOL	= $F864		; COLOR=A
@@ -27,25 +25,28 @@ tunnel:
 	; 10 GR:N=7
 
 	jsr	SETGR
-	bit	FULLGR
+;	bit	FULLGR
 
 	lda	#$7
 	sta	NEWCOLOR
 
-
+outer:
 	; 20 FOR X=0 TO 4
 
 	lda	#0
 	sta	COUNT
 
-	clc
-	adc	#16
-	sta	COUNTMAX
 cycle:
 
 	; 30 FOR I=X TO 15+X STEP 5:COLOR=0
 
-	ldx	COUNT
+	lda	COUNT
+	tax
+
+	clc
+	adc	#16
+	sta	COUNTMAX
+
 iloop:
 	lda	#0
 	sta	COLOR
@@ -80,8 +81,15 @@ iloop:
 	jsr	HLINE
 
 	; VLIN J,W AT I	; VLINE A,$2D at Y
-	; VLIN J,W AT Z	; VLINE A,$2D at Y
+	txa
+	tay
+	lda	J
+	jsr	VLINE
 
+	; VLIN J,W AT Z	; VLINE A,$2D at Y
+	ldy	Z
+	lda	J
+	jsr	VLINE
 
 	; COLOR=N
 	lda	NEWCOLOR
@@ -99,15 +107,22 @@ iloop:
 	jsr	HLINE
 
 	; VLIN J,W AT J ; VLINE A,$2D at Y
+	ldy	J
+	lda	J
+	jsr	VLINE
+
 	; VLIN J,W AT W ; VLINE A,$2D at Y
+	ldy	V2
+	lda	J
+	jsr	VLINE
+
+
+	lda	#150
+	jsr	WAIT
 
 	; N=N+1
 
 	inc	NEWCOLOR
-
-
-	lda	#75
-	jsr	WAIT
 
 	; 50 NEXT:N=N-4
 
@@ -128,7 +143,7 @@ iloop:
 
 	inc	COUNT
 	lda	COUNT
-	cmp	#4
+	cmp	#5
 	bne	cycle
 
 	dec	NEWCOLOR
@@ -140,4 +155,4 @@ iloop:
 end:
 	; 70 GOTO 20
 
-	jmp	cycle
+	jmp	outer

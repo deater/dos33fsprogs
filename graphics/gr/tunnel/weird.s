@@ -1,5 +1,11 @@
 ; 5 REM BY @hisham_hm Mar 7 @AppleIIBot
 
+; buggy version that looks cool
+
+; took a while, but there are two bugs.  COUNT (and thus X) gets the wrong
+;	value and never resets, mostly due to the jmp at the end going
+;	to the wrong place.  The init of COUNTMAX is wrong too
+
 H2		= $2C
 V2		= $2D
 COLOR		= $30
