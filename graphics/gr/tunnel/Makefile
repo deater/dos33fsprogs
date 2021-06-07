@@ -12,12 +12,14 @@ all:	tunnel.dsk
 $(DOS33):	
 	cd ../../utils/dos33fs-utils && make
 
-tunnel.dsk:	$(DOS33) HELLO TUNNEL.BAS TUNNEL WEIRD
+tunnel.dsk:	$(DOS33) HELLO TUNNEL.BAS TUNNEL TUNNEL2 STARGATE T.BAS
 	cp $(EMPTYDISK)/empty.dsk tunnel.dsk
 	$(DOS33) -y tunnel.dsk SAVE A HELLO
 	$(DOS33) -y tunnel.dsk SAVE A TUNNEL.BAS
+	$(DOS33) -y tunnel.dsk SAVE A T.BAS
 	$(DOS33) -y tunnel.dsk BSAVE -a 0xc00 TUNNEL
-	$(DOS33) -y tunnel.dsk BSAVE -a 0x37c WEIRD
+	$(DOS33) -y tunnel.dsk BSAVE -a 0xc00 TUNNEL2
+	$(DOS33) -y tunnel.dsk BSAVE -a 0x37c STARGATE
 
 ###
 
@@ -28,6 +30,12 @@ HELLO:	hello.bas
 
 TUNNEL.BAS:	tunnel.bas
 	$(TOKENIZE) < tunnel.bas > TUNNEL.BAS
+
+###
+
+T.BAS:	t.bas
+	$(TOKENIZE) < t.bas > T.BAS
+
 
 
 ###
@@ -40,16 +48,25 @@ tunnel.o:	tunnel.s
 
 ###
 
-WEIRD:	weird.o
-	ld65 -o WEIRD weird.o -C $(LINKERSCRIPTS)/apple2_37c.inc
+TUNNEL2:	tunnel2.o
+	ld65 -o TUNNEL2 tunnel2.o -C $(LINKERSCRIPTS)/apple2_c00.inc
 
-weird.o:	weird.s
-	ca65 -o weird.o weird.s -l weird.lst
+tunnel2.o:	tunnel2.s
+	ca65 -o tunnel2.o tunnel2.s -l tunnel2.lst
+
+
+###
+
+STARGATE:	stargate.o
+	ld65 -o STARGATE stargate.o -C $(LINKERSCRIPTS)/apple2_37c.inc
+
+stargate.o:	stargate.s
+	ca65 -o stargate.o stargate.s -l stargate.lst
 
 
 ###
 
 
 clean:	
-	rm -f *~ *.o HELLO TUNNEL.BAS TUNNEL WEIRD *.lst
+	rm -f *~ *.o HELLO TUNNEL.BAS TUNNEL TUNNEL2 STARGATE *.lst
 

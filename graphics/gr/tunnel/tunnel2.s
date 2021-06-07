@@ -33,7 +33,7 @@ tunnel:
 outer:
 	; 20 FOR X=0 TO 4
 
-	lda	#0
+	lda	#3
 	sta	COUNT
 
 cycle:
@@ -44,12 +44,15 @@ cycle:
 	tax
 
 	clc
-	adc	#16
+	adc	#15
 	sta	COUNTMAX
 
+;	sta	COUNT
+	tax
+
 iloop:
-	lda	#0
-	sta	COLOR
+;	lda	#0
+;	sta	COLOR
 
 	; 40 Z=39-I:J=I+1:W=Z-1
 
@@ -68,6 +71,11 @@ iloop:
 	adc	#1
 	sta	J
 
+	; COLOR=N
+	lda	NEWCOLOR
+	jsr	SETCOL
+
+.if 1
 	; HLIN J,W AT I	; HLINE Y,$2C at A
 
 	ldy	J
@@ -90,11 +98,11 @@ iloop:
 	ldy	Z
 	lda	J
 	jsr	VLINE
-
+.endif
 	; COLOR=N
 	lda	NEWCOLOR
 	jsr	SETCOL
-
+.if 0
 	; HLIN J,W AT J ; HLINE Y,$2C at A
 
 	ldy	J
@@ -116,8 +124,8 @@ iloop:
 	lda	J
 	jsr	VLINE
 
-
-	lda	#150
+.endif
+	lda	#50
 	jsr	WAIT
 
 	; N=N+1
@@ -126,13 +134,20 @@ iloop:
 
 	; 50 NEXT:N=N-4
 
+;	txa
+;	clc
+;	adc	#5
+;	tax
+
 	txa
-	clc
-	adc	#5
+	sec
+	sbc	#5
 	tax
 
-	cpx	COUNTMAX
-	bcc	iloop
+;	cpx	COUNTMAX
+;	bcc	iloop
+
+	bpl	iloop
 
 	sec
 	lda	NEWCOLOR
@@ -141,10 +156,13 @@ iloop:
 
 	; 60 NEXT:N=N-1:IF N=0 THEN N=12
 
-	inc	COUNT
-	lda	COUNT
-	cmp	#5
-	bne	cycle
+;	inc	COUNT
+;	lda	COUNT
+;	cmp	#5
+;	bne	cycle
+
+	dec	COUNT
+	bpl	cycle
 
 	dec	NEWCOLOR
 	bne	end
