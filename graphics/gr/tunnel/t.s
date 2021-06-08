@@ -5,6 +5,9 @@
 ; 167 bytes -- unnecessary clc
 ; 163 bytes -- no need to init color at beginning
 ; 154 bytes -- optimize some calculations
+; 144 bytes -- compress lookup table
+; 142 bytes -- convert jmp to bne/bmi
+; 141 bytes -- start X at $D0
 
 H2		= $2C
 V2		= $2D
@@ -29,10 +32,40 @@ SETCOL	= $F864		; COLOR=A
 SETGR	= $FB40
 WAIT    = $FCA8                 ;; delay 1/2(26+27A+5A^2) us
 
+lookup	=	$80
+
 tunnel:
 	; 1 GR:N=23
 
 	jsr	SETGR
+
+	; A is now $D0
+
+uncompress_table:
+
+	tax
+
+;	ldx	#0
+uncompress_loop:
+	lda	lookup_compressed
+	beq	uncompress_done
+	pha
+	and	#$7
+	tay
+	pla
+	lsr
+	lsr
+	lsr
+store_loop:
+	sta	<(lookup-$D0),X		; horrible hack to save a byte
+	inx
+	dey
+	bne	store_loop
+	inc	uncompress_loop+1	; assume doesn't cross page boundary
+	bne	uncompress_loop		; assume it was never 0
+
+
+uncompress_done:
 
 .if 0
 make_table:
@@ -77,6 +110,10 @@ qqloop:
 
 forq:
 
+	; wrapping 255 to 0 is OK
+	inc	NEWCOLOR	; moved from end to improve looping
+
+
 	lda	#6
 	sta	Q
 
@@ -91,11 +128,11 @@ fori:
 	tax		; X is 0
 
 iloop:
-	lda	Q
+	lda	P
 	asl
 	asl
 	asl
-	ora	P
+	ora	Q
 	tay
 
 	txa
@@ -168,28 +205,30 @@ blah:
 	dec	Q
 	bpl	qloop
 
-	inc	NEWCOLOR
-
-	; wrapping 255 to 0 is OK
-
 end:
 	; 8 GOTO 2
 
-	jmp	forq
+	bmi	forq
+
+
+
+
+lookup_compressed:
+.byte 20<<3+1,19<<3+1,18<<3+1,17<<3+1,16<<3+1,15<<3+1,14<<3+1
+.byte 13<<3+2,12<<3+2,11<<3+2,10<<3+3, 9<<3+4, 8<<3+4, 7<<3+6
+.byte  6<<3+7, 5<<3+7, 5<<3+5, 4<<3+7, 0
 
 
 ; 0 DIM A(9,9):FOR I=0 TO 8:FOR J=0 TO 8:A(I,J)=40/(2+I+J/7):NEXTJ,I
-lookup:
+;lookup:
 
-
-
-.byte 20,13,10,8,7,6,5,4	; 2.0 3.0 4,0 5,0 6.0 7.0 8.0 9.0
-.byte 19,13,10,8,7,6,5,4	; 2.1 3.1 4.1 5.1 6.1 7.1 8.1 9.1
-.byte 18,12,9,8,6,5,5,4
-.byte 17,12,9,7,6,5,5,4
-.byte 16,11,9,7,6,5,5,4
-.byte 15,11,9,7,6,5,5,4
-.byte 14,10,8,7,6,5,5,4
+;.byte 20,13,10,8,7,6,5,4	; 2.0 3.0 4,0 5,0 6.0 7.0 8.0 9.0
+;.byte 19,13,10,8,7,6,5,4	; 2.1 3.1 4.1 5.1 6.1 7.1 8.1 9.1
+;.byte 18,12,9,8,6,5,5,4
+;.byte 17,12,9,7,6,5,5,4
+;.byte 16,11,9,7,6,5,5,4
+;.byte 15,11,9,7,6,5,5,4
+;.byte 14,10,8,7,6,5,5,4
 
 
 
@@ -214,4 +253,8 @@ lookup:
 
 	; need for bot
 
+	; want this to live at $3F5
+	; originally at 38A, so load at $36B
+
 	jmp	tunnel
+

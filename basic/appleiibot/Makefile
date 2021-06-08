@@ -16,7 +16,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	C64.BAS SIERPINSKI.BAS FAKES.BAS SIER.BAS DROPS.BAS RR.BAS RR_HGR.BAS \
 	COMBO.BAS WIRES.BAS PATTERN.BAS BALL.BAS LINES.BAS MOD9.BAS \
 	XOR_ZOOM.BAS MOD9_HGR.BAS SIER_HGR.BAS MOVE.BAS SINE.BAS XDRAW128.BAS \
-	GATOR.BAS CURSOR.BAS WEIRD.BAS
+	GATOR.BAS CURSOR.BAS STARGATE.BAS TUNNEL.BAS
 
 #	cp $(EMPTY_DISK)/empty.dsk  appleiibot.dsk
 	cp empty.dsk appleiibot.dsk
@@ -83,7 +83,8 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A XDRAW128.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A GATOR.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A CURSOR.BAS
-	$(DOS33) -y appleiibot.dsk SAVE A WEIRD.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A STARGATE.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A TUNNEL.BAS
 
 ####
 
@@ -259,8 +260,13 @@ CURSOR.BAS:	cursor.bas
 
 ####
 
-WEIRD.BAS:	weird.bas
-	$(TOKENIZE) < weird.bas > WEIRD.BAS
+STARGATE.BAS:	stargate.bas
+	$(TOKENIZE) < stargate.bas > STARGATE.BAS
+
+####
+
+TUNNEL.BAS:	tunnel.bas
+	$(TOKENIZE) < tunnel.bas > TUNNEL.BAS
 
 
 

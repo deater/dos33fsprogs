@@ -17,7 +17,7 @@ tunnel.dsk:	$(DOS33) HELLO TUNNEL.BAS TUNNEL TUNNEL2 STARGATE T.BAS T
 	$(DOS33) -y tunnel.dsk SAVE A HELLO
 	$(DOS33) -y tunnel.dsk SAVE A TUNNEL.BAS
 	$(DOS33) -y tunnel.dsk SAVE A T.BAS
-	$(DOS33) -y tunnel.dsk BSAVE -a 0xc00 T
+	$(DOS33) -y tunnel.dsk BSAVE -a 0x36B T
 	$(DOS33) -y tunnel.dsk BSAVE -a 0xc00 TUNNEL
 	$(DOS33) -y tunnel.dsk BSAVE -a 0xc00 TUNNEL2
 	$(DOS33) -y tunnel.dsk BSAVE -a 0x37c STARGATE
@@ -50,7 +50,7 @@ tunnel.o:	tunnel.s
 ###
 
 T:	t.o
-	ld65 -o T t.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+	ld65 -o T t.o -C $(LINKERSCRIPTS)/apple2_36b.inc
 
 t.o:	t.s
 	ca65 -o t.o t.s -l t.lst
