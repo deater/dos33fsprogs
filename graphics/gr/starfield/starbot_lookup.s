@@ -12,13 +12,9 @@
 ; 163 bytes - lose the cool HGR intro
 ; 161 bytes - re-arrange RNG location
 ; 158 bytes - ra-arrange a lot to remove need for XX
-; 133 bytes -- undo opt, no lookup table, just raw divide
-; 145 bytes -- init stars at beginning, so don't initially run bacward if Z=FF
-; 135 bytes -- optimize divide some more
 
 COLOR		= $30
 
-NEGATIVE	= $F9
 QUOTIENT	= $FA
 DIVISOR		= $FB
 DIVIDEND	= $FC
@@ -26,12 +22,11 @@ XX		= $FD
 YY		= $FE
 FRAME		= $FF
 
-star_z		= $60
-oldx		= $70
-oldy		= $80
-star_x		= $90
-star_y		= $A0
-
+oldx		= $80
+oldy		= $90
+star_x		= $A0
+star_y		= $B0
+star_z		= $C0
 
 ;oldx		= $1000
 ;oldy		= $1040
@@ -45,8 +40,6 @@ LORES		= $C056		; Enable LORES graphics
 HGR2		= $F3D8
 HGR		= $F3E2
 PLOT		= $F800		; PLOT AT Y,A (A colors output, Y preserved)
-NEXTCOL		= $F85F
-SETCOL		= $F864		; COLOR=A
 SETGR		= $FB40
 WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
@@ -54,7 +47,59 @@ small_starfield:
 
 	;0GR:DIMV(64,48):FORZ=1TO48:FORX=0TO64:V(X,Z)=(X*4-128)/Z+20:NEXTX,Z
 
-	jsr	SETGR		; A is D0 after?
+	jsr	SETGR
+
+	; init the X/Z tables
+
+	ldy	#63	; Y==z	 for(z=1;z<64;z++) {
+xloop:
+	ldx	#0	; X==x
+zloop:
+	lda	#$ff
+	sta	QUOTIENT
+;	stx	DIVIDEND
+	sty	DIVISOR
+	txa		; DIVIDEND
+div_loop:
+	inc	QUOTIENT
+	sec
+;	lda	DIVIDEND
+	sbc	DIVISOR
+;	sta	DIVIDEND
+	bpl	div_loop
+
+	; write out quotient
+
+	lda	QUOTIENT
+	pha
+	clc
+	adc	#20
+to_smc:
+	sta	$5F80,X
+
+	inx
+	bpl	zloop	; loop until 128
+
+
+	; reverse and write out negative parts
+
+	ldx	#0
+negative_loop:
+	pla
+	eor	#$ff
+	sec
+	adc	#20
+to2_smc:
+	sta	$5F00,X
+	inx
+	bpl	negative_loop
+
+	dec	to_smc+2
+	dec	to2_smc+2
+
+	dey
+	bne	xloop
+
 
 	;===================================
 	; draw the stars
@@ -62,14 +107,6 @@ small_starfield:
 
 ;	bit	LORES
 ;	jsr	SETGR
-
-;	tax
-
-	ldx	#15
-make_orig_stars:
-	jsr	make_new_star
-	dex
-	bpl	make_orig_stars
 
 	;===================================
 	; starloop
@@ -95,11 +132,11 @@ star_loop:
 	;===========================
 	; position Z
 
-;	lda	star_z,X
-;	beq	new_star	; should never happen
-;	sta	DIVISOR
-
-	; DIVISOR always star_z,X
+	lda	star_z,X
+	clc
+	adc	#$20		; tables in $20-$5F
+	sta	xload_smc+2
+	sta	xload2_smc+2
 
 	;==============================
 	; get Y/Z
@@ -107,10 +144,9 @@ star_loop:
 
 	; get YY
 
-	lda	star_y,X	; get Y of star
-
-	jsr	do_divide
-
+	ldy	star_y,X	; get Y of star
+xload2_smc:
+	lda	$5F00,Y		; lookup Y/Z
 	sta	YY		; YY
 
 	bmi	new_star	; if <0
@@ -123,13 +159,10 @@ star_loop:
 	;	X=V(A(P),Z(P))
 
 	; get XX
-
-	lda	star_x,X	; get X of start
-
-	jsr	do_divide
-
-;	sta	XX
-	tay
+	ldy	star_x,X	; get X of start
+xload_smc:
+	lda	$5F00,Y		; lookup X/Z
+	tay			; XX
 
 	bmi	new_star	; if <0
 	cpy	#40
@@ -148,16 +181,6 @@ draw_star:
 
 	; COLOR=15
 	dec	COLOR		; color from $00 (black) to $ff (white)
-	txa
-	ror
-	bcs	not_far
-	jsr	NEXTCOL
-
-;	ror
-;	jsr	NEXTCOL
-;	lda	#$55
-;	sta	COLOR		; FF -> 7F
-not_far:
 
 	;PLOT X,Y
 	; O(P)=X:Q(P)=Y
@@ -169,30 +192,10 @@ not_far:
 	sta	oldy,X		; ;save for next time to erase
 	jsr	PLOT		; PLOT AT Y,A
 
-				; a should be F0/20 or 0F/02 here?
+				; a should be F0 or 0F here?
 	bne	done_star	; bra
 
 new_star:
-	jsr	make_new_star	;
-
-done_star:
-	;7NEXT
-
-	dex
-	bpl	star_loop
-
-	lda	#120
-	jsr	WAIT		; A is 0 after
-
-	; GOTO2
-	beq	big_loop	; bra
-
-
-	;===========================
-	; NEW STAR
-	;===========================
-
-make_new_star:
 	;IFX<0ORX>39ORY<0ORY>39ORZ(P)<1THEN
 	;	A(P)=RND(1)*64
 	;	B(P)=RND(1)*64
@@ -202,8 +205,7 @@ make_new_star:
 	lda	$F000,Y
 	sta	star_x,X	; random XX
 
-color_lookup:
-	lda	$F100,Y
+	lda	$F001,Y
 	sta	star_y,X	; random YY
 
 	lda	$F002,Y
@@ -213,53 +215,21 @@ color_lookup:
 
 	inc	FRAME
 
-	rts
 
-	;=============================
-	; do divide
-	;=============================
-	; Z is in divisor
-	; x/y is in A
+done_star:
+	;7NEXT
 
-do_divide:
-	; A was just loaded so flags still valid
-	php
-	bpl	not_negative
+	dex
+	bpl	star_loop
 
-	eor	#$ff
-	clc
-	adc	#1	; invert
+	lda	#100
+	jsr	WAIT		; A is 0 after
 
-not_negative:
-
-	ldy	#$ff		; QUOTIENT
-div_loop:
-	iny			;	inc	QUOTIENT
-	sec
-	sbc	star_z,X	; DIVIDEND=DIVIDEND-DIVISOR
-	bpl	div_loop
-
-	; write out quotient
-	tya			; lda	QUOTIENT
-
-	plp
-	bpl	pos_add
-
-	eor	#$ff
-	sec
-	bcs	do_add
-
-pos_add:
-	clc
-do_add:
-	adc	#20
-
-early_out:
-	rts
-
+	; GOTO2
+	beq	big_loop	; bra
 
 	; for BASIC bot load
 
 	; need this to be at $3F5
-	; it's at 8A, so 6B
+
 	jmp	small_starfield

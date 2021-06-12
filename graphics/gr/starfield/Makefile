@@ -12,13 +12,16 @@ all:	starfield.dsk
 $(DOS33):	
 	cd ../../../utils/dos33fs-utils && make
 
-starfield.dsk:	$(DOS33) HELLO STARFIELD_DEMO STARFIELD_1K STARFIELD.BAS STARSMALL
+starfield.dsk:	$(DOS33) HELLO STARFIELD_DEMO STARFIELD_1K STARFIELD.BAS \
+	STARSMALL STARBOT STARBOT_LOOKUP
 	cp $(EMPTY_DISK)/empty.dsk starfield.dsk
 	$(DOS33) -y starfield.dsk SAVE A HELLO
 	$(DOS33) -y starfield.dsk SAVE A STARFIELD.BAS
 	$(DOS33) -y starfield.dsk BSAVE -a 0x1000 STARFIELD_DEMO
 	$(DOS33) -y starfield.dsk BSAVE -a 0x1000 STARFIELD_1K
 	$(DOS33) -y starfield.dsk BSAVE -a 0xc00 STARSMALL
+	$(DOS33) -y starfield.dsk BSAVE -a 0xc00 STARBOT_LOOKUP
+	$(DOS33) -y starfield.dsk BSAVE -a 0xc00 STARBOT
 
 ###
 
@@ -62,6 +65,22 @@ STARSMALL:   starsmall.o
 
 starsmall.o: starsmall.s
 	ca65 -o starsmall.o starsmall.s -l starsmall.lst
+
+###
+
+STARBOT:   starbot.o
+	ld65 -o STARBOT starbot.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+starbot.o: starbot.s
+	ca65 -o starbot.o starbot.s -l starbot.lst
+
+###
+
+STARBOT_LOOKUP:   starbot_lookup.o
+	ld65 -o STARBOT_LOOKUP starbot_lookup.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+starbot_lookup.o: starbot_lookup.s
+	ca65 -o starbot_lookup.o starbot_lookup.s -l starbot_lookup.lst
 
 
 ###
