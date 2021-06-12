@@ -20,8 +20,15 @@
 ;	trying all kinds of stuff, including using BELL for WAIT
 ; 139 bytes -- just made math innacurate (remove sec in sign correction)
 
+; zero page locations
 
 COLOR		= $30
+
+star_z		= $60
+oldx		= $70
+oldy		= $80
+star_x		= $90
+star_y		= $A0
 
 NEGATIVE	= $F9
 QUOTIENT	= $FA
@@ -31,21 +38,11 @@ XX		= $FD
 YY		= $FE
 FRAME		= $FF
 
-star_z		= $60
-oldx		= $70
-oldy		= $80
-star_x		= $90
-star_y		= $A0
-
-
-;oldx		= $1000
-;oldy		= $1040
-;star_x		= $2000	; should be 0, not used as we never /0
-;star_y		= $2040
-;star_z		= $2080
-
+; soft-switches
 
 LORES		= $C056		; Enable LORES graphics
+
+; ROM routines
 
 HGR2		= $F3D8
 HGR		= $F3E2
@@ -65,10 +62,8 @@ small_starfield:
 	; draw the stars
 	;===================================
 
-;	bit	LORES
-;	jsr	SETGR
-
-;	tax
+	; there are ways to skip this, but on real hardware there's
+	; no guarantee star_z will be in a valid state, so waste the bytes
 
 	ldx	#15
 make_orig_stars:
@@ -79,19 +74,17 @@ make_orig_stars:
 	;===================================
 	; starloop
 
-	;2FORP=0TO5
+	;2FORP=0TO15
+
 big_loop:
 	ldx	#15
 
-
-;	txa
-;	tay
-;	ldy	#30
-;	jsr	$FBE4	; BEEP
+	; really tried hard not to have to set this value
+	; hard to judge best value for this
 
 	lda	#80
-;	txa
 	jsr	WAIT
+;	jsr	$FBE4	; BEEP delays too
 
 	; A now 0
 
@@ -99,10 +92,10 @@ star_loop:
 	; X=FF
 
 	;===================
-	; erase old
+	; erase old star
 
 	;4 COLOR=0
-	lda	#$00
+	lda	#$00		; color to black
 	sta	COLOR
 
 	;PLOT O(P),Q(P)
@@ -118,7 +111,7 @@ star_loop:
 ;	beq	new_star	; should never happen
 ;	sta	DIVISOR
 
-	; DIVISOR always star_z,X
+	; DIVISOR always star_z,X so can hard code this in divide routine
 
 	;==============================
 	; get Y/Z
@@ -129,6 +122,8 @@ star_loop:
 	lda	star_y,X	; get Y of star
 
 	jsr	do_divide
+
+	; if off-screen then need new star
 
 	bmi	new_star	; if <0
 	cmp	#40
@@ -146,8 +141,9 @@ star_loop:
 
 	jsr	do_divide
 
-;	sta	XX
-	tay
+	tay			; put XX in Y
+
+	; if offscreen then draw new star
 
 	bmi	new_star	; if <0
 	cpy	#40
@@ -166,16 +162,21 @@ draw_star:
 
 	; COLOR=15
 	dec	COLOR		; color from $00 (black) to $ff (white)
+
+	; trouble causing code, wanted it two-tone
+	; this will make it white or blue depending on if odd or even star
+
+	; initially tried distance based color on Z, didn't look as good
+
 	txa
 	ror
 	bcs	not_far
 	jsr	NEXTCOL
 
-;	ror
-;	jsr	NEXTCOL
-;	lda	#$55
-;	sta	COLOR		; FF -> 7F
 not_far:
+
+	;===========================
+	; actually plot the star
 
 	;PLOT X,Y
 	; O(P)=X:Q(P)=Y
@@ -199,14 +200,7 @@ done_star:
 	dex
 	bpl	star_loop
 
-;	lda	#120
-;	jsr	WAIT		; A is 0 after
-
-;	jsr	$FBE2	; BEEP
-;	jsr	$FBE4	; BEEP
-
 	; GOTO2
-;	beq	big_loop	; bra
 	bmi	big_loop	; bra
 
 
@@ -238,7 +232,8 @@ color_lookup:
 	rts
 
 	;=============================
-	; do divide
+	; do signed divide
+	;	the signed part is the pain
 	;=============================
 	; Z is in divisor
 	; x/y is in A
@@ -248,9 +243,9 @@ do_divide:
 	php
 	bpl	not_negative
 
-	eor	#$ff
-	clc
-	adc	#1	; invert
+	eor	#$ff			; make positive for division
+	clc				; is this necessary?
+	adc	#1
 
 not_negative:
 
@@ -268,13 +263,13 @@ div_loop:
 	bpl	pos_add
 
 	eor	#$ff
-;	sec
+;	sec			; FIXME: made math inaccurate to save room
 ;	bcs	do_add
 
 pos_add:
 	clc
 do_add:
-	adc	#20
+	adc	#20		; pre-adjust to have star origin mid screen
 
 early_out:
 	rts
