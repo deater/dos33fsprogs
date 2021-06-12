@@ -44,12 +44,12 @@ LORES		= $C056		; Enable LORES graphics
 
 ; ROM routines
 
-HGR2		= $F3D8
-HGR		= $F3E2
+HGR2		= $F3D8		; set hires page2 and clear $4000-$5fff
+HGR		= $F3E2		; set hires page1 and clear $2000-$3fff
 PLOT		= $F800		; PLOT AT Y,A (A colors output, Y preserved)
-NEXTCOL		= $F85F
+NEXTCOL		= $F85F		; COLOR=COLOR+3
 SETCOL		= $F864		; COLOR=A
-SETGR		= $FB40
+SETGR		= $FB40		; set graphics and clear LO-RES screen
 WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
 small_starfield:
