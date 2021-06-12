@@ -9,6 +9,8 @@
 ; 173 bytes - move variables to 0 page. limits to 16 stars but that's fine?
 ; 171 bytes - adjust random # generator
 ; 170 bytes - can do sty zp,x
+; 163 bytes - lose the cool HGR intro
+; 161 bytes - re-arrange RNG location
 
 COLOR		= $30
 
@@ -44,7 +46,7 @@ small_starfield:
 
 	;0GR:DIMV(64,48):FORZ=1TO48:FORX=0TO64:V(X,Z)=(X*4-128)/Z+20:NEXTX,Z
 
-	jsr	HGR
+	jsr	SETGR
 
 	; init the X/Z tables
 
@@ -102,8 +104,8 @@ to2_smc:
 	; draw the stars
 	;===================================
 
-	bit	LORES
-	jsr	SETGR
+;	bit	LORES
+;	jsr	SETGR
 
 	;===================================
 	; starloop
@@ -151,30 +153,9 @@ xload2_smc:
 
 	;Z(P)=Z(P)-1
 	dec	star_z,X
-	bne	draw_star	; if Z!=0, draw star
+	beq	new_star	; if Z=0 new star
 
-new_star:
-	;IFX<0ORX>39ORY<0ORY>39ORZ(P)<1THEN
-	;	A(P)=RND(1)*64
-	;	B(P)=RND(1)*64
-	;	Z(P)=RND(1)*48+1:GOTO7
-
-	ldy	FRAME
-	lda	$F000,Y
-	sta	star_x,X	; random XX
-
-	lda	$F001,Y
-	sta	star_y,X	; random YY
-
-	lda	$F002,Y
-	and	#$3f		; random ZZ 0..63
-	ora	#$1		; avoid 0
-	sta	star_z,X
-
-	iny
-	sty	FRAME
-
-	jmp	done_star
+	; draw the star
 
 draw_star:
 
@@ -201,6 +182,29 @@ draw_star:
 	sta	oldy,X
 	jsr	PLOT		; PLOT AT Y,A
 
+				; a should be F0 or 0F here?
+	bne	done_star
+
+new_star:
+	;IFX<0ORX>39ORY<0ORY>39ORZ(P)<1THEN
+	;	A(P)=RND(1)*64
+	;	B(P)=RND(1)*64
+	;	Z(P)=RND(1)*48+1:GOTO7
+
+	ldy	FRAME
+	lda	$F000,Y
+	sta	star_x,X	; random XX
+
+	lda	$F001,Y
+	sta	star_y,X	; random YY
+
+	lda	$F002,Y
+	and	#$3f		; random ZZ 0..63
+	ora	#$1		; avoid 0
+	sta	star_z,X
+
+	inc	FRAME
+
 
 done_star:
 	;7NEXT
@@ -209,11 +213,13 @@ done_star:
 	bpl	star_loop
 
 	lda	#100
-	jsr	WAIT
+	jsr	WAIT		; A is 0 after
 
 	; GOTO2
-	jmp	big_loop
+	beq	big_loop	; bra
 
 	; for BASIC bot load
+
+	; need this to be at $3F5
 
 	jmp	small_starfield
