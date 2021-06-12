@@ -21,7 +21,7 @@ starfield.dsk:	$(DOS33) HELLO STARFIELD_DEMO STARFIELD_1K STARFIELD.BAS \
 	$(DOS33) -y starfield.dsk BSAVE -a 0x1000 STARFIELD_1K
 	$(DOS33) -y starfield.dsk BSAVE -a 0xc00 STARSMALL
 	$(DOS33) -y starfield.dsk BSAVE -a 0xc00 STARBOT_LOOKUP
-	$(DOS33) -y starfield.dsk BSAVE -a 0xc00 STARBOT
+	$(DOS33) -y starfield.dsk BSAVE -a 0x36d STARBOT
 
 ###
 
@@ -69,7 +69,7 @@ starsmall.o: starsmall.s
 ###
 
 STARBOT:   starbot.o
-	ld65 -o STARBOT starbot.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+	ld65 -o STARBOT starbot.o -C $(LINKERSCRIPTS)/apple2_36d.inc
 
 starbot.o: starbot.s
 	ca65 -o starbot.o starbot.s -l starbot.lst

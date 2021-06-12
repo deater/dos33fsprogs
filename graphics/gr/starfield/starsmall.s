@@ -1,8 +1,10 @@
-
+; starfield
+; actually too fast
+; original 189 bytes
 
 COLOR		= $30
 
-COUNT		= $FA
+QUOTIENT	= $FA
 DIVISOR		= $FB
 DIVIDEND	= $FC
 XX		= $FD
@@ -24,7 +26,7 @@ HGR2		= $F3D8
 HGR		= $F3E2
 PLOT		= $F800		; PLOT AT Y,A (A colors output, Y preserved)
 SETGR		= $FB40
-
+WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
 small_starfield:
 
@@ -35,31 +37,49 @@ small_starfield:
 	; init the X/Z tables
 
 	ldy	#63	; Y==z	 for(z=1;z<64;z++) {
+xloop:
 	ldx	#0	; X==x
 zloop:
 	lda	#$ff
-	sta	COUNT
+	sta	QUOTIENT
 	stx	DIVIDEND
 	sty	DIVISOR
 div_loop:
-	inc	COUNT
+	inc	QUOTIENT
 	sec
 	lda	DIVIDEND
 	sbc	DIVISOR
 	sta	DIVIDEND
 	bpl	div_loop
 
-	lda	COUNT
+	; write out quotient
+
+	lda	QUOTIENT
+	pha
+	clc
+	adc	#20
 to_smc:
-	sta	$5F00,X
+	sta	$5F80,X
 
 	inx
-	bne	zloop
+	bpl	zloop	; loop until 128
+
+	ldx	#0
+negative_loop:
+	pla
+	eor	#$ff
+	sec
+	adc	#20
+to2_smc:
+	sta	$5F00,X
+	inx
+	bpl	negative_loop
 
 	dec	to_smc+2
+	dec	to2_smc+2
 
 	dey
-	bne	zloop
+	bne	xloop
 
 
 	;===================================
@@ -81,40 +101,41 @@ star_loop:
 	; get X/Z
 	;	X=V(A(P),Z(P))
 
+	; position Z
 	lda	star_z,X
-	asl
-	asl
-	asl
-	asl
-	ora	#$20
+	clc
+	adc	#$20
 	sta	xload_smc+2
 	sta	xload2_smc+2
 
+	; get XX
 	ldy	star_x,X
-
 xload_smc:
 	lda	$5F00,Y
 	sta	XX
-	bmi	new_star
-	cmp	#39
-	bcs	new_star
+
+	bmi	new_star	; if <0
+	cmp	#40
+	bcs	new_star	; bge >40
 
 	;==============================
 	; get Y/Z
 	;	Y=V(B(P),Z(P))
 
-	ldy	star_y,X
+	; get YY
 
+	ldy	star_y,X
 xload2_smc:
 	lda	$5F00,Y
 	sta	YY
-	bmi	new_star
-	cmp	#39
-	bcs	new_star
+
+	bmi	new_star	; if <0
+	cmp	#40
+	bcs	new_star	; bge >39
 
 	;Z(P)=Z(P)-1
 	dec	star_z,X
-	bne	draw_star
+	bne	draw_star	; if Z!=0, draw star
 
 new_star:
 	;IFX<0ORX>39ORY<0ORY>39ORZ(P)<1THEN
@@ -124,16 +145,17 @@ new_star:
 
 	ldy	FRAME
 	lda	$F000,Y
-;	and	#$3f
-	sta	star_x,X
+	sta	star_x,X	; random XX
+
 	lda	$F001,Y
-;	and	#$3f
-	sta	star_y,X
+	sta	star_y,X	; random YY
+
 	lda	$F002,Y
-	and	#$3f
+	and	#$3f		; random ZZ 0..63
 	ora	#$1		; avoid 0
 	sta	star_z,X
-	iny
+
+	iny			; FIXME
 	iny
 	iny
 	sty	FRAME
@@ -149,30 +171,31 @@ draw_star:
 	;PLOT O(P),Q(P)
 
 	ldy	oldx,X
-	lda	oldy,Y
+	lda	oldy,X
 	jsr	PLOT		; PLOT AT Y,A
 
 	; COLOR=15
 	dec	COLOR
 
 	;PLOT X,Y
-
-	ldy	XX
-	lda	YY
-	jsr	PLOT		; PLOT AT Y,A
-
 	; O(P)=X:Q(P)=Y
 
 	lda	XX
 	sta	oldx,X
+	tay
 	lda	YY
 	sta	oldy,X
+	jsr	PLOT		; PLOT AT Y,A
+
 
 done_star:
 	;7NEXT
 
 	dex
 	bpl	star_loop
+
+	lda	#100
+	jsr	WAIT
 
 	; GOTO2
 	jmp	big_loop

@@ -15,6 +15,11 @@
 ; 133 bytes -- undo opt, no lookup table, just raw divide
 ; 145 bytes -- init stars at beginning, so don't initially run bacward if Z=FF
 ; 135 bytes -- optimize divide some more
+; 143 bytes -- add in different color star
+; 142 bytes -- closer :(
+;	trying all kinds of stuff, including using BELL for WAIT
+; 139 bytes -- just made math innacurate (remove sec in sign correction)
+
 
 COLOR		= $30
 
@@ -77,7 +82,21 @@ make_orig_stars:
 	;2FORP=0TO5
 big_loop:
 	ldx	#15
+
+
+;	txa
+;	tay
+;	ldy	#30
+;	jsr	$FBE4	; BEEP
+
+	lda	#80
+;	txa
+	jsr	WAIT
+
+	; A now 0
+
 star_loop:
+	; X=FF
 
 	;===================
 	; erase old
@@ -111,12 +130,11 @@ star_loop:
 
 	jsr	do_divide
 
-	sta	YY		; YY
-
 	bmi	new_star	; if <0
 	cmp	#40
 	bcs	new_star	; bge >39
 
+	sta	YY		; YY
 
 	;==============================
 	; get X/Z
@@ -181,11 +199,15 @@ done_star:
 	dex
 	bpl	star_loop
 
-	lda	#120
-	jsr	WAIT		; A is 0 after
+;	lda	#120
+;	jsr	WAIT		; A is 0 after
+
+;	jsr	$FBE2	; BEEP
+;	jsr	$FBE4	; BEEP
 
 	; GOTO2
-	beq	big_loop	; bra
+;	beq	big_loop	; bra
+	bmi	big_loop	; bra
 
 
 	;===========================
@@ -246,8 +268,8 @@ div_loop:
 	bpl	pos_add
 
 	eor	#$ff
-	sec
-	bcs	do_add
+;	sec
+;	bcs	do_add
 
 pos_add:
 	clc
@@ -261,5 +283,5 @@ early_out:
 	; for BASIC bot load
 
 	; need this to be at $3F5
-	; it's at 8A, so 6B
+	; it's at 8C, so 6D
 	jmp	small_starfield
