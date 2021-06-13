@@ -102,20 +102,20 @@ star_loop:
 
 	;HPLOT O(P),Q(P)
 
-	stx	SAVEX
+;	stx	SAVEX
 
-	ldy	oldx,X		; get X valu into Y
+;	ldy	oldx,X		; get X valu into Y
 ;	tya
 ;	tax
-	sty	TEMP
-	lda	oldy,X
-	ldx	TEMP
+;	sty	TEMP
+;	lda	oldy,X
+;	ldx	TEMP
 
-	ldy	#0
+;	ldy	#0
 
-	jsr	HPLOT0		; plot at (Y,X), (A)
+;	jsr	HPLOT0		; plot at (Y,X), (A)
 
-	ldx	SAVEX
+;	ldx	SAVEX
 
 	;===========================
 	; position Z
@@ -294,5 +294,5 @@ early_out:
 	; for BASIC bot load
 
 	; need this to be at $3F5
-	; it's at 8C, so 6D
+	; it's at 81, so 74
 	jmp	small_starfield
