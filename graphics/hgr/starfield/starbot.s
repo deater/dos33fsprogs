@@ -7,6 +7,8 @@
 ; 155 bytes -- scale to more of full screen
 ; 153 bytes -- blue/orange instead of purple/green
 ; 149 bytes -- optimize 2nd plot arg shuffling
+; 148 bytes -- optimize 1st plot arg shuffling
+; 140 bytes -- turn off all range checking except Z
 
 NUMSTARS	= 27		; 27 good, 28+ not work ($1C)
 
@@ -85,7 +87,7 @@ big_loop:
 ;	lda	#100
 ;	jsr	WAIT
 
-	ldy	#30
+	ldy	#80
 	jsr	BELL2	; BEEP delays too
 
 	; A now 0
@@ -104,12 +106,11 @@ star_loop:
 
 	stx	SAVEX
 
-	ldy	oldx,X		; get X valu into Y
-;	tya
-;	tax
-	sty	TEMP
 	lda	oldy,X
-	ldx	TEMP
+	pha
+	lda	oldx,X		; get X valu into Y
+	tax
+	pla
 
 	ldy	#0
 
@@ -139,10 +140,10 @@ star_loop:
 
 	; if off-screen then need new star
 
-	cmp	#192
-	bcs	new_star	; bge >39
-	cmp	#0
-	bcc	new_star	; if <0
+;	cmp	#192
+;	bcs	new_star	; bge >39
+;	cmp	#0
+;	bcc	new_star	; if <0
 
 
 	sta	YY		; YY
@@ -158,7 +159,7 @@ star_loop:
 	lda	star_x,X	; get X of start
 
 	jsr	do_divide
-	adc	#128
+	adc	#140		; center
 
 	tay			; put XX in Y
 	sty	oldx,X		; save for next time to erase
@@ -239,7 +240,7 @@ color_lookup:
 	sta	star_y,X	; random YY
 
 	lda	$F002,Y
-	and	#$7f		; random ZZ 0..127 (can't go negative or stars move backward)
+	and	#$1f		; random ZZ 0..127 (can't go negative or stars move backward)
 	ora	#$1		; avoid 0
 	sta	star_z,X
 
@@ -294,5 +295,5 @@ early_out:
 	; for BASIC bot load
 
 	; need this to be at $3F5
-	; it's at 8C, so 6D
+	; it's at 89, so 6C
 	jmp	small_starfield

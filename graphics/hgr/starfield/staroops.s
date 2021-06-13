@@ -158,7 +158,7 @@ star_loop:
 	lda	star_x,X	; get X of start
 
 	jsr	do_divide
-	adc	#128
+	adc	#140		; center
 
 	tay			; put XX in Y
 	sty	oldx,X		; save for next time to erase

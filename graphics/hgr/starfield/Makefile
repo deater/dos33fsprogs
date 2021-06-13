@@ -12,7 +12,7 @@ starfield.dsk:	HELLO STARS FASTAR STARBOT STARTINY STAROOPS
 	$(DOS33) -y starfield.dsk SAVE A HELLO
 	$(DOS33) -y starfield.dsk BSAVE -a 0x0300 STARS
 	$(DOS33) -y starfield.dsk BSAVE -a 0x0C00 FASTAR
-	$(DOS33) -y starfield.dsk BSAVE -a 0x0C00 STARBOT
+	$(DOS33) -y starfield.dsk BSAVE -a 0x036C STARBOT
 	$(DOS33) -y starfield.dsk BSAVE -a 0x0C00 STARTINY
 	$(DOS33) -y starfield.dsk BSAVE -a 0x0374 STAROOPS
 
@@ -41,7 +41,7 @@ stars.o:	stars.s
 ###
 
 STARBOT:	starbot.o
-	ld65 -o STARBOT starbot.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+	ld65 -o STARBOT starbot.o -C $(LINKER_SCRIPTS)/apple2_36c.inc
 
 starbot.o:	starbot.s
 	ca65 -o starbot.o starbot.s -l starbot.lst
