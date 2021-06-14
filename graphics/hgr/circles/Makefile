@@ -7,12 +7,17 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	circles.dsk
 
-circles.dsk:	HELLO CIRCLES BRES.BAS BRESBOT.BAS BRESCOOL.BAS
+circles.dsk:	HELLO CIRCLES \
+		BRES.BAS BRESBOT.BAS BRESCOOL.BAS \
+		MID.BAS MIDBOT.BAS MIDCOOL.BAS
 	cp $(EMPTY_DISK)/empty.dsk circles.dsk
 	$(DOS33) -y circles.dsk SAVE A HELLO
 	$(DOS33) -y circles.dsk SAVE A BRES.BAS
 	$(DOS33) -y circles.dsk SAVE A BRESBOT.BAS
 	$(DOS33) -y circles.dsk SAVE A BRESCOOL.BAS
+	$(DOS33) -y circles.dsk SAVE A MID.BAS
+	$(DOS33) -y circles.dsk SAVE A MIDBOT.BAS
+	$(DOS33) -y circles.dsk SAVE A MIDCOOL.BAS
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 CIRCLES
 
 ###
@@ -24,6 +29,22 @@ HELLO:	hello.bas
 
 BRES.BAS:	bres.bas
 	$(TOKENIZE) < bres.bas > BRES.BAS
+
+###
+
+MID.BAS:	mid.bas
+	$(TOKENIZE) < mid.bas > MID.BAS
+
+###
+
+MIDBOT.BAS:	midbot.bas
+	$(TOKENIZE) < midbot.bas > MIDBOT.BAS
+
+###
+
+MIDCOOL.BAS:	midcool.bas
+	$(TOKENIZE) < midcool.bas > MIDCOOL.BAS
+
 
 ###
 
@@ -47,4 +68,6 @@ circles.o:	circles.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst CIRCLES BRES.BAS BRESBOT.BAS BRESCOOL.BAS
+	rm -f *~ *.o *.lst CIRCLES \
+		BRES.BAS BRESBOT.BAS BRESCOOL.BAS \
+		MID.BAS MIDBOT.BAS MIDCOOL.BAS
