@@ -20,7 +20,7 @@ HELLO:	hello.bas
 
 ###
 
-MARTY:	marty.o ./graphics/graphics.inc
+MARTY:	marty.o ./graphics/asteroid.inc
 	ld65 -o MARTY marty.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 marty.o:	marty.s

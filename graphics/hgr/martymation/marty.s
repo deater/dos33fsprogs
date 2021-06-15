@@ -311,4 +311,4 @@ hires_lookup_low:
 	.byte $D0,$D0,$D0,$D0, $D0,$D0,$D0,$D0
 
 .include "decompress_fast_v2.s"
-.include "graphics/new.inc"
+.include "graphics/asteroid.inc"
