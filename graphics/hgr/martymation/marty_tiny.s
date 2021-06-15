@@ -5,16 +5,20 @@
 
 ; by Vince `deater` Weaver
 
+; 6121 bytes -- start
+; 6075 bytes -- first pass of optimizing
+; 6061 bytes -- remove configurable window
+; 5679 bytes -- use HPOSN instead of lookuptable for HGR addresses
+
 ; zero page locations
 
 NIBCOUNT	= $00
+
 HGR_BITS	= $1C
 
-; 1C-40 has some things used by hires
+GBASL		= $26
+GBASH		= $27
 
-
-GBASL		= $80
-GBASH		= $81
 ROW		= $82
 
 ; D0+ used by HGR routines
@@ -34,9 +38,11 @@ HIRES		= $C057
 
 HGR2		= $F3D8		; set hires page2 and clear $4000-$5fff
 HGR		= $F3E2		; set hires page1 and clear $2000-$3fff
+HPOSN		= $F411		; set GBASL/H to (Y,X),A
 HPLOT0		= $F457		; plot at (Y,X), (A)
 HCOLOR1		= $F6F0		; set HGR_COLOR to value in X
 WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
+
 
 martymation:
 
@@ -61,21 +67,10 @@ martymation:
 
 	jsr	decompress_lzsa2_fast
 
-	jmp	start_animation	; at $8503
-
-display_page:				; $8506
-	.byte $00
-frame_countdown:			; $8507
-	.byte $80
-disp_page2:				; $8508
-	.byte $00
-;label_8509:
-;	.byte $20
-
 	;================================
 	; Start Animation
 	;================================
-start_animation:			; $853c
+start_animation:
 
 	ldy	#$40			; set draw page to PAGE2 ($4000)
 	sty	draw_page
@@ -85,11 +80,7 @@ start_animation:			; $853c
 
 	inx				; but move it to PAGE2?
 
-	lda	SET_GR			; set graphics $C050
-	lda	FULLGR			; set fullscreen $C052
-	lda	HIRES			; enable hires $C057
-
-animate_loop:				; $8550
+animate_loop:
 	lda	PAGE1,X			; set page
 
 	txa				; switch display page
@@ -105,81 +96,38 @@ animate_loop:				; $8550
 	lda	#$11
 	jsr	WAIT			; pause a bit
 
-	jsr	cycle_colors
-
-	lda	KEYPRESS		; check keypress
-	bpl	key_not_pressed
-
-key_was_pressed:
-	sta	KEYRESET		; clear keypress
-	cmp	#$81			; check for ^A
-	beq	do_exit			; exit
-	cmp	#$9B			; check for ESC
-	beq	do_exit			; exit
-
-key_not_pressed:
-	ldx	disp_page2		; get which page to display
-	dec	frame_countdown		; count down frame
-	bne	animate_loop
-
-	jmp	animate_loop		; FIXME
-
-	rts				; exit if we hit limit? (why?)
-
-do_exit:
-	lda	PAGE1			; flip back to PAGE1
-	inc	display_page		; increment displayed page? (?)
-	rts
-
-label_858a:
-	.byte	$00
-draw_page:
-	.byte	$20
-odd_start:
-	.byte	$01
-col_start:			; $858d
-	.byte	$00
-row_start:			; $858e
-	.byte	$00
-col_end:			; $858f
-	.byte	$28
-row_end:			; $8590
-	.byte	$C0
-
 	;==============================
 	; cycle colors
 	;==============================
 
 cycle_colors:
-	lda	row_start		; row to start at
-	ora	odd_start		; start at odd or even row?
-	tay
+	ldy	#1			; we always start at row1
 
 row_loop:
 	sty	ROW			; which ROW we are working on
+	tya
+	ldx	#0
+	ldy	#0
 
-	lda	hires_lookup_high,Y	; set high addr value for current ROW
+	jsr	HPOSN			; put GBASL/H from (Y,X),(A)
+
+	lda	GBASH
 	and	#$1f
-	ora	draw_page		; setup for current draw page
+	ora	draw_page
 	sta	GBASH
 
-	lda	hires_lookup_low,Y	; set low addr value for current ROW
-	sta	GBASL
-
-	ldy	col_start
+	ldy	#0			; always start column 0
 col_loop:
 	lda	(GBASL),Y		; get current value
 	tax
 
-	lda	even_table,X		; translate with even column table
+	lda	even_table,X		; translate with even col table
 	sta	(GBASL),Y
 
 	iny				; point to next column
 
 	asl				; shift color left by two
 	asl				; this puts bit 6 into carry
-
-					; FIXME: could use BIT/V for this?
 
 	lda	(GBASL),Y		; get next column
 
@@ -188,22 +136,27 @@ col_loop:
 
 dont_toggle:
 	tax
-	lda	odd_table,X		; translate using odd column table
+	lda	odd_table,X		; translate using odd col table
 
 	sta	(GBASL),Y		; store out
 	iny				; point to next column
 
-	cpy	col_end			; loop until done
+	cpy	#$28			; loop until done
 	bne	col_loop
 
 	ldy	ROW			; ROW=ROW+2
 	iny
 	iny
 
-	cpy	row_end			; see if we are done
+	cpy	#192			; see if we are done
 	bcc	row_loop		; if less than, then loop
 
-	rts
+	; done inline cycle colors
+
+	ldx	disp_page2		; get which page to display
+
+	jmp	animate_loop		; FIXME
+
 
 even_table:		; $85d9 ... $86d8
 .byte $55,$56,$57,$54,$59,$5a,$5b,$58, $5d,$5e,$5f,$5c,$51,$52,$53,$50	; 85d9...85e8
@@ -244,71 +197,15 @@ odd_table:		; $86d9 ... $87d8
 .byte $8a,$8b,$8c,$8d,$8e,$8f,$88,$89, $92,$93,$94,$95,$96,$97,$90,$91	;
 .byte $9a,$9b,$9c,$9d,$9e,$9f,$98,$99, $82,$83,$84,$85,$86,$87,$80,$81	;
 
+draw_page:
+	.byte	$20
 
-hires_lookup_high:				; $9100
-	.byte $20,$24,$28,$2c, $30,$34,$38,$3c
-	.byte $20,$24,$28,$2c, $30,$34,$38,$3c
+display_page:
+	.byte $00
+disp_page2:
+	.byte $00
 
-	.byte $21,$25,$29,$2d, $31,$35,$39,$3d
-	.byte $21,$25,$29,$2d, $31,$35,$39,$3d
-
-	.byte $22,$26,$2a,$2e, $32,$36,$3a,$3e
-	.byte $22,$26,$2a,$2e, $32,$36,$3a,$3e
-
-	.byte $23,$27,$2b,$2f, $33,$37,$3b,$3f
-	.byte $23,$27,$2b,$2f, $33,$37,$3b,$3f
-
-	.byte $20,$24,$28,$2c, $30,$34,$38,$3c
-	.byte $20,$24,$28,$2c, $30,$34,$38,$3c
-
-	.byte $21,$25,$29,$2d, $31,$35,$39,$3d
-	.byte $21,$25,$29,$2d, $31,$35,$39,$3d
-
-	.byte $22,$26,$2a,$2e, $32,$36,$3a,$3e
-	.byte $22,$26,$2a,$2e, $32,$36,$3a,$3e
-
-	.byte $23,$27,$2b,$2f, $33,$37,$3b,$3f
-	.byte $23,$27,$2b,$2f, $33,$37,$3b,$3f
-
-	.byte $20,$24,$28,$2c, $30,$34,$38,$3c
-	.byte $20,$24,$28,$2c, $30,$34,$38,$3c
-
-	.byte $21,$25,$29,$2d, $31,$35,$39,$3d
-	.byte $21,$25,$29,$2d, $31,$35,$39,$3d
-
-	.byte $22,$26,$2a,$2e, $32,$36,$3a,$3e
-	.byte $22,$26,$2a,$2e, $32,$36,$3a,$3e
-
-	.byte $23,$27,$2b,$2f, $33,$37,$3b,$3f
-	.byte $23,$27,$2b,$2f, $33,$37,$3b,$3f
-
-hires_lookup_low:
-	.byte $00,$00,$00,$00, $00,$00,$00,$00
-	.byte $80,$80,$80,$80, $80,$80,$80,$80
-	.byte $00,$00,$00,$00, $00,$00,$00,$00
-	.byte $80,$80,$80,$80, $80,$80,$80,$80
-	.byte $00,$00,$00,$00, $00,$00,$00,$00
-	.byte $80,$80,$80,$80, $80,$80,$80,$80
-	.byte $00,$00,$00,$00, $00,$00,$00,$00
-	.byte $80,$80,$80,$80, $80,$80,$80,$80
-
-	.byte $28,$28,$28,$28, $28,$28,$28,$28
-	.byte $A8,$A8,$A8,$A8, $A8,$A8,$A8,$A8
-	.byte $28,$28,$28,$28, $28,$28,$28,$28
-	.byte $A8,$A8,$A8,$A8, $A8,$A8,$A8,$A8
-	.byte $28,$28,$28,$28, $28,$28,$28,$28
-	.byte $A8,$A8,$A8,$A8, $A8,$A8,$A8,$A8
-	.byte $28,$28,$28,$28, $28,$28,$28,$28
-	.byte $A8,$A8,$A8,$A8, $A8,$A8,$A8,$A8
-
-	.byte $50,$50,$50,$50, $50,$50,$50,$50
-	.byte $D0,$D0,$D0,$D0, $D0,$D0,$D0,$D0
-	.byte $50,$50,$50,$50, $50,$50,$50,$50
-	.byte $D0,$D0,$D0,$D0, $D0,$D0,$D0,$D0
-	.byte $50,$50,$50,$50, $50,$50,$50,$50
-	.byte $D0,$D0,$D0,$D0, $D0,$D0,$D0,$D0
-	.byte $50,$50,$50,$50, $50,$50,$50,$50
-	.byte $D0,$D0,$D0,$D0, $D0,$D0,$D0,$D0
 
 .include "decompress_fast_v2.s"
 .include "graphics/asteroid.inc"
+
