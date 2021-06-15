@@ -5,7 +5,9 @@
 
 ; by Vince `deater` Weaver
 
+; zero page locations
 
+NIBCOUNT	= $00
 HGR_BITS	= $1C
 
 ; 1C-40 has some things used by hires
@@ -33,7 +35,26 @@ WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
 martymation:
 
-	jsr	HGR
+	jsr	HGR2
+
+	; decompress images
+	lda	#<(asteroid0_lzsa)
+	sta	getsrc_smc+1
+	lda	#>(asteroid0_lzsa)
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+	lda	#<(asteroid1_lzsa)
+	sta	getsrc_smc+1
+	lda	#>(asteroid1_lzsa)
+	sta	getsrc_smc+2
+
+	lda	#$40
+
+	jsr	decompress_lzsa2_fast
 
 	jmp	start_animation	; at $8503
 
@@ -255,3 +276,5 @@ label_91c0:
 	.byte $50,$50,$50,$50, $50,$50,$50,$50
 	.byte $D0,$D0,$D0,$D0, $D0,$D0,$D0,$D0
 
+.include "decompress_fast_v2.s"
+.include "graphics/graphics.inc"
