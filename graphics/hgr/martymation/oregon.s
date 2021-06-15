@@ -144,7 +144,7 @@ label_858e:
 col_end:			; $858f
 	.byte	$28
 row_end:			; $8590
-	.byte	$C0
+	.byte	110
 
 	;==============================
 	; cycle colors

@@ -12,11 +12,6 @@ HGR_BITS	= $1C
 
 ; 1C-40 has some things used by hires
 
-
-GBASL		= $80
-GBASH		= $81
-ROW		= $82
-
 ; D0+ used by HGR routines
 
 HGR_COLOR	= $E4
@@ -43,18 +38,18 @@ martymation:
 	jsr	HGR2
 
 	; decompress images
-	lda	#<(page0_lzsa)
+	lda	#<(asteroid0_lzsa)
 	sta	getsrc_smc+1
-	lda	#>(page0_lzsa)
+	lda	#>(asteroid0_lzsa)
 	sta	getsrc_smc+2
 
 	lda	#$20
 
 	jsr	decompress_lzsa2_fast
 
-	lda	#<(page1_lzsa)
+	lda	#<(asteroid1_lzsa)
 	sta	getsrc_smc+1
-	lda	#>(page1_lzsa)
+	lda	#>(asteroid1_lzsa)
 	sta	getsrc_smc+2
 
 	lda	#$40
@@ -63,149 +58,119 @@ martymation:
 
 	jmp	start_animation	; at $8503
 
-display_page:				; $8506
+label_8506:
 	.byte $00
-frame_countdown:			; $8507
+label_8507:
 	.byte $80
-disp_page2:				; $8508
+label_8508:
 	.byte $00
 ;label_8509:
 ;	.byte $20
 
-	;================================
-	; Start Animation
-	;================================
-start_animation:			; $853c
 
-	ldy	#$40			; set draw page to PAGE2 ($4000)
-	sty	draw_page
+start_animation:
+label_853c:
+	ldy	#$40
+	sty	label_858b
 
 	ldx	#$00
-	stx	display_page		; set display page to PAGE1
-
-	inx				; but move it to PAGE2?
-
+	stx	label_8506
+	inx
 	lda	SET_GR			; set graphics $C050
 	lda	FULLGR			; set fullscreen $C052
 	lda	HIRES			; enable hires $C057
-
-animate_loop:				; $8550
+label_8550:
 	lda	PAGE1,X			; set page
 
-	txa				; switch display page
-	eor	#$01			; by flipping low bit
+	txa				; flip low bit (switch page?)
+	eor	#$01
 	tax
 
-	lda	draw_page		; switch draw page $4000 <-> $2000
+	lda	label_858b		; switch draw page
 	eor	#$60			; 0100 -> 0010, 0010 -> 0100
-	sta	draw_page
+	sta	label_858b
 
-	stx	disp_page2		; ???????
+	stx	label_8508
 
 	lda	#$11
-	jsr	WAIT			; pause a bit
+	jsr	WAIT			; pause
 
-	jsr	cycle_colors
+	jsr	label_8597
 
 	lda	KEYPRESS		; check keypress
-	bpl	key_not_pressed
-
-key_was_pressed:
+	bpl	label_857a
+keypressed:
 	sta	KEYRESET		; clear keypress
 	cmp	#$81			; check for ^A
-	beq	do_exit			; exit
+	beq	label_8583		; exit
 	cmp	#$9B			; check for ESC
-	beq	do_exit			; exit
-
-key_not_pressed:
-	ldx	disp_page2		; get which page to display
-	dec	frame_countdown		; count down frame
-	bne	animate_loop
-
-	jmp	animate_loop		; FIXME
-
-	rts				; exit if we hit limit? (why?)
-
-do_exit:
-	lda	PAGE1			; flip back to PAGE1
-	inc	display_page		; increment displayed page? (?)
+	beq	label_8583		; exit
+label_857a:
+	ldx	label_8508
+	dec	label_8507
+	bne	label_8550
 	rts
-
+label_8583:
+	lda	PAGE1
+	inc	label_8506
+	rts
 label_858a:
 	.byte	$00
-draw_page:
+label_858b:
 	.byte	$20
 label_858c:
 	.byte	$01
-col_start:			; $858d
+label_858d:
 	.byte	$00
 label_858e:
 	.byte	$00
-col_end:			; $858f
+label_858f:
 	.byte	$28
-row_end:			; $8590
-	.byte	$C0
+label_8590:
+	.byte	$C0,$80,$55,$2A,$80,$2A,$55
 
-	;==============================
-	; cycle colors
-	;==============================
-
-cycle_colors:
-	lda	label_858e		; ?
-	ora	label_858c		; ?
+label_8597:
+	lda	label_858e
+	ora	label_858c
 	tay
-
-row_loop:
-	sty	ROW			; which ROW we are working on
-
-	lda	hires_lookup_high,Y	; set high addr value for current ROW
+label_859e:
+	sty	$82
+	lda	label_9100,Y
 	and	#$1f
-	ora	draw_page		; setup for current draw page
-	sta	GBASH
-
-	lda	hires_lookup_low,Y	; set low addr value for current ROW
-	sta	GBASL
-
-	ldy	col_start
-col_loop:
-	lda	(GBASL),Y		; get current value
+	ora	label_858b
+	sta	$81
+	lda	label_91c0,Y
+	sta	$80
+	ldy	label_858d
+label_85b2:
+	lda	($80),Y
 	tax
-
-	lda	table1,X		; translate with table1
-	sta	(GBASL),Y
-
-	iny				; point to next column
-
-	asl				; shift color left by two
-	asl				; this puts bit 6 into carry
-
-					; FIXME: could use BIT/V for this?
-
-	lda	(GBASL),Y		; get next column
-
-	bcs	dont_toggle		; if bit 6 set, leave next alone
-	eor	#$01			; otherwise toggle low bit
-
-dont_toggle:
+	lda	label_85d9,X
+	sta	($80),Y
+	iny
+	asl
+	asl
+	lda	($80),Y
+	bcs	label_85c3
+	eor	#$01
+label_85c3:
 	tax
-	lda	table2,X		; translate using table2
+	lda	label_86d9,X
+	sta	($80),Y
+	iny
+	cpy	label_858f
+	bne	label_85b2
 
-	sta	(GBASL),Y		; store out
-	iny				; point to next column
-
-	cpy	col_end			; loop until done
-	bne	col_loop
-
-	ldy	ROW			; ROW=ROW+2
+	ldy	$82
 	iny
 	iny
-
-	cpy	row_end			; see if we are done
-	bcc	row_loop		; if less than, then loop
+	cpy	label_8590
+	bcc	label_859e
 
 	rts
 
 table1:		; $85d9 ... $86d8
+label_85d9:
 .byte $55,$56,$57,$54,$59,$5a,$5b,$58, $5d,$5e,$5f,$5c,$51,$52,$53,$50	; 85d9...85e8
 .byte $65,$66,$67,$64,$69,$6a,$6b,$68, $6d,$6e,$6f,$6c,$61,$62,$63,$60	;
 .byte $75,$76,$77,$74,$79,$7a,$7b,$78, $7d,$7e,$7f,$7c,$71,$72,$73,$70	;
@@ -214,7 +179,6 @@ table1:		; $85d9 ... $86d8
 .byte $25,$26,$27,$24,$29,$2a,$2b,$28, $2d,$2e,$2f,$2c,$21,$22,$23,$20	;
 .byte $35,$36,$37,$34,$39,$3a,$3b,$38, $3d,$3e,$3f,$3c,$31,$32,$33,$30	; ...8648
 .byte $05,$06,$07,$04,$09,$0a,$0b,$08, $0d,$0e,$0f,$0c,$01,$02,$03,$00	;
-
 .byte $d5,$d6,$d7,$d4,$d9,$da,$db,$d8, $dd,$de,$df,$dc,$d1,$d2,$d3,$d0	;
 .byte $e5,$e6,$e7,$e4,$e9,$ea,$eb,$e8, $ed,$ee,$ef,$ec,$e1,$e2,$e3,$e0	; ...8678
 .byte $f5,$f6,$f7,$f4,$f9,$fa,$fb,$f8, $fd,$fe,$ff,$fc,$f1,$f2,$f3,$f0	;
@@ -226,6 +190,7 @@ table1:		; $85d9 ... $86d8
 
 
 table2:		; $86d9 ... $87d8
+label_86d9:
 .byte $2a,$2b,$2c,$2d,$2e,$2f,$28,$29, $32,$33,$34,$35,$36,$37,$30,$31	; 86d9...86e8
 .byte $3a,$3b,$3c,$3d,$3e,$3f,$38,$39, $22,$23,$24,$25,$26,$27,$20,$21	;
 .byte $4a,$4b,$4c,$4d,$4e,$4f,$48,$49, $52,$53,$54,$55,$56,$57,$50,$51	;
@@ -234,7 +199,6 @@ table2:		; $86d9 ... $87d8
 .byte $7a,$7b,$7c,$7d,$7e,$7f,$78,$79, $62,$63,$64,$65,$66,$67,$60,$61	;
 .byte $0a,$0b,$0c,$0d,$0e,$0f,$08,$09, $12,$13,$14,$15,$16,$17,$10,$11	;
 .byte $1a,$1b,$1c,$1d,$1e,$1f,$18,$19, $02,$03,$04,$05,$06,$07,$00,$01	;
-
 .byte $aa,$ab,$ac,$ad,$ae,$af,$a8,$a9, $b2,$b3,$b4,$b5,$b6,$b7,$b0,$b1	;
 .byte $ba,$bb,$bc,$bd,$be,$bf,$b8,$b9, $a2,$a3,$a4,$a5,$a6,$a7,$a0,$a1	;
 .byte $ca,$cb,$cc,$cd,$ce,$cf,$c8,$c9, $d2,$d3,$d4,$d5,$d6,$d7,$d0,$d1	;
@@ -245,7 +209,8 @@ table2:		; $86d9 ... $87d8
 .byte $9a,$9b,$9c,$9d,$9e,$9f,$98,$99, $82,$83,$84,$85,$86,$87,$80,$81	;
 
 
-hires_lookup_high:				; $9100
+hires_lookup_high:
+label_9100:
 	.byte $20,$24,$28,$2c, $30,$34,$38,$3c
 	.byte $20,$24,$28,$2c, $30,$34,$38,$3c
 
@@ -283,6 +248,7 @@ hires_lookup_high:				; $9100
 	.byte $23,$27,$2b,$2f, $33,$37,$3b,$3f
 
 hires_lookup_low:
+label_91c0:
 	.byte $00,$00,$00,$00, $00,$00,$00,$00
 	.byte $80,$80,$80,$80, $80,$80,$80,$80
 	.byte $00,$00,$00,$00, $00,$00,$00,$00
@@ -311,4 +277,4 @@ hires_lookup_low:
 	.byte $D0,$D0,$D0,$D0, $D0,$D0,$D0,$D0
 
 .include "decompress_fast_v2.s"
-.include "graphics/new.inc"
+.include "graphics/graphics.inc"
