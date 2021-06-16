@@ -2,21 +2,21 @@
 3	3	140	0	279	90	; sky right
 1	6	0	90	140	191	; ocean left
 1	6	140	90	279	191	; ocean right
-4	1	157	121	208	191	; tower shadow
+4	2	157	121	208	191	; tower shadow
 0	7	141	116	231	135	; gear base
-0	7	180	17	213	121	; 
+0	0	180	17	213	121	; tower side wall
 7	0	156	20	209	126	; tower
-7	0	145	9	212	20
-0	7	162	0	220	20
-5	0	172	91	187	123
+0	7	145	10	212	20	; roof lower
+0	7	162	0	220	20	; roof higher
+5	0	172	91	187	123	; door
 7	7	169	31	191	63	; clock face tall
 7	7	165	39	194	60	; clock face wide
 5	1	0	163	63	191	; grass
 5	1	63	167	177	191	; grass
 5	1	177	185	230	191	; grass
-5	0	23	0	39	178	; tree
+5	0	23	0	39	178	; far tree
 1	5	1	13	99	44	; leaves
-5	0	0	0	20	188	; tree
+5	0	0	0	18	188	; left tree
 0	5	66	0	81	187	; tree
-1	5	66	1	99	19	; leaves
+;1	5	66	1	99	19	; leaves
 0	0	177	32	181	50	; clock hand
