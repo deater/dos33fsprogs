@@ -9,6 +9,8 @@
 ; 6075 bytes -- first pass of optimizing
 ; 6061 bytes -- remove configurable window
 ; 5679 bytes -- use HPOSN instead of lookuptable for HGR addresses
+; 5478 bytes -- generate even table
+; 5293 bytes -- generate odd table
 
 ; zero page locations
 
@@ -25,6 +27,8 @@ ROW		= $82
 
 HGR_COLOR	= $E4
 HGR_PAGE	= $E6
+
+TEMP		= $FF
 
 ; soft-switches
 KEYPRESS	= $C000
@@ -43,29 +47,92 @@ HPLOT0		= $F457		; plot at (Y,X), (A)
 HCOLOR1		= $F6F0		; set HGR_COLOR to value in X
 WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
+even_table	= $9000
+odd_table	= $9100
 
 martymation:
 
 	jsr	HGR2
 
 	; decompress images
-	lda	#<(page0_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(page0_lzsa)
-	sta	getsrc_smc+2
+;	lda	#<(page0_lzsa)
+;	sta	getsrc_smc+1
+;	lda	#>(page0_lzsa)
+;	sta	getsrc_smc+2
 
-	lda	#$20
+;	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+;	jsr	decompress_lzsa2_fast
 
-	lda	#<(page1_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(page1_lzsa)
-	sta	getsrc_smc+2
+;	lda	#<(page1_lzsa)
+;	sta	getsrc_smc+1
+;	lda	#>(page1_lzsa)
+;	sta	getsrc_smc+2
 
-	lda	#$40
+;	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+;	jsr	decompress_lzsa2_fast
+
+	;================================
+	; Setup Tables
+	;================================
+
+	ldy	#0
+even_loop:
+	tya
+	and	#$f
+	bne	skip_even_inc
+	inc	even_smc+1
+skip_even_inc:
+
+	tax
+	lda	even_helper,X
+even_smc:
+	ora	even_helper2-1
+
+	sta	even_table,Y
+
+	iny
+	bne	even_loop
+
+	;================
+	; odd table
+
+	ldy	#0		; already 0?
+odd_loop:
+	tya
+	and	#$f
+	php
+
+	cmp	#$8
+	bcs	odd_toggle
+
+	ldx	#$00
+	beq	odd_store	; bra
+odd_toggle:
+	ldx	#$10
+odd_store:
+	stx	TEMP
+
+	plp
+	bne	skip_odd_inc
+	inc	odd_smc+1
+skip_odd_inc:
+
+	tax
+	lda	odd_helper,X
+odd_smc:
+	ora	odd_helper2-1
+
+	eor	TEMP
+
+	sta	odd_table,Y
+
+	iny
+	bne	odd_loop
+
+
+
 
 	;================================
 	; Start Animation
@@ -157,45 +224,58 @@ dont_toggle:
 
 	jmp	animate_loop		; FIXME
 
+even_helper:
+.byte $05,$06,$07,$04,$09,$0a,$0b,$08, $0d,$0e,$0f,$0c,$01,$02,$03,$00	; 85d9...85e8
+even_helper2:
+.byte $50,$60,$70,$40,$10,$20,$30,$00, $d0,$e0,$f0,$c0,$90,$a0,$b0,$80
 
-even_table:		; $85d9 ... $86d8
-.byte $55,$56,$57,$54,$59,$5a,$5b,$58, $5d,$5e,$5f,$5c,$51,$52,$53,$50	; 85d9...85e8
-.byte $65,$66,$67,$64,$69,$6a,$6b,$68, $6d,$6e,$6f,$6c,$61,$62,$63,$60	;
-.byte $75,$76,$77,$74,$79,$7a,$7b,$78, $7d,$7e,$7f,$7c,$71,$72,$73,$70	;
-.byte $45,$46,$47,$44,$49,$4a,$4b,$48, $4d,$4e,$4f,$4c,$41,$42,$43,$40	; ...8618
-.byte $15,$16,$17,$14,$19,$1a,$1b,$18, $1d,$1e,$1f,$1c,$11,$12,$13,$10	;
-.byte $25,$26,$27,$24,$29,$2a,$2b,$28, $2d,$2e,$2f,$2c,$21,$22,$23,$20	;
-.byte $35,$36,$37,$34,$39,$3a,$3b,$38, $3d,$3e,$3f,$3c,$31,$32,$33,$30	; ...8648
-.byte $05,$06,$07,$04,$09,$0a,$0b,$08, $0d,$0e,$0f,$0c,$01,$02,$03,$00	;
+;even_table:		; $85d9 ... $86d8
+;.byte $55,$56,$57,$54,$59,$5a,$5b,$58, $5d,$5e,$5f,$5c,$51,$52,$53,$50	; 85d9...85e8
+;.byte $65,$66,$67,$64,$69,$6a,$6b,$68, $6d,$6e,$6f,$6c,$61,$62,$63,$60	;
+;.byte $75,$76,$77,$74,$79,$7a,$7b,$78, $7d,$7e,$7f,$7c,$71,$72,$73,$70	;
+;.byte $45,$46,$47,$44,$49,$4a,$4b,$48, $4d,$4e,$4f,$4c,$41,$42,$43,$40	; ...8618
+;.byte $15,$16,$17,$14,$19,$1a,$1b,$18, $1d,$1e,$1f,$1c,$11,$12,$13,$10	;
+;.byte $25,$26,$27,$24,$29,$2a,$2b,$28, $2d,$2e,$2f,$2c,$21,$22,$23,$20	;
+;.byte $35,$36,$37,$34,$39,$3a,$3b,$38, $3d,$3e,$3f,$3c,$31,$32,$33,$30	; ...8648
+;.byte $05,$06,$07,$04,$09,$0a,$0b,$08, $0d,$0e,$0f,$0c,$01,$02,$03,$00	;
 
-.byte $d5,$d6,$d7,$d4,$d9,$da,$db,$d8, $dd,$de,$df,$dc,$d1,$d2,$d3,$d0	;
-.byte $e5,$e6,$e7,$e4,$e9,$ea,$eb,$e8, $ed,$ee,$ef,$ec,$e1,$e2,$e3,$e0	; ...8678
-.byte $f5,$f6,$f7,$f4,$f9,$fa,$fb,$f8, $fd,$fe,$ff,$fc,$f1,$f2,$f3,$f0	;
-.byte $c5,$c6,$c7,$c4,$c9,$ca,$cb,$c8, $cd,$ce,$cf,$cc,$c1,$c2,$c3,$c0	;
-.byte $95,$96,$97,$94,$99,$9a,$9b,$98, $9d,$9e,$9f,$9c,$91,$92,$93,$90	;
-.byte $a5,$a6,$a7,$a4,$a9,$aa,$ab,$a8, $ad,$ae,$af,$ac,$a1,$a2,$a3,$a0	; ...86b8
-.byte $b5,$b6,$b7,$b4,$b9,$ba,$bb,$b8, $bd,$be,$bf,$bc,$b1,$b2,$b3,$b0	;
-.byte $85,$86,$87,$84,$89,$8a,$8b,$88, $8d,$8e,$8f,$8c,$81,$82,$83,$80	;
+;.byte $d5,$d6,$d7,$d4,$d9,$da,$db,$d8, $dd,$de,$df,$dc,$d1,$d2,$d3,$d0	;
+;.byte $e5,$e6,$e7,$e4,$e9,$ea,$eb,$e8, $ed,$ee,$ef,$ec,$e1,$e2,$e3,$e0	; ...8678
+;.byte $f5,$f6,$f7,$f4,$f9,$fa,$fb,$f8, $fd,$fe,$ff,$fc,$f1,$f2,$f3,$f0	;
+;.byte $c5,$c6,$c7,$c4,$c9,$ca,$cb,$c8, $cd,$ce,$cf,$cc,$c1,$c2,$c3,$c0	;
+;.byte $95,$96,$97,$94,$99,$9a,$9b,$98, $9d,$9e,$9f,$9c,$91,$92,$93,$90	;
+;.byte $a5,$a6,$a7,$a4,$a9,$aa,$ab,$a8, $ad,$ae,$af,$ac,$a1,$a2,$a3,$a0	; ...86b8
+;.byte $b5,$b6,$b7,$b4,$b9,$ba,$bb,$b8, $bd,$be,$bf,$bc,$b1,$b2,$b3,$b0	;
+;.byte $85,$86,$87,$84,$89,$8a,$8b,$88, $8d,$8e,$8f,$8c,$81,$82,$83,$80	;
+
+;.byte $55,$56,$57,$54,$59,$5a,$5b,$58, $5d,$5e,$5f,$5c,$51,$52,$53,$50	; 85d9...85e8
+;0101 0101      0101 0111               0101 1101
+;0010 1010      0010 1100               0011 0010
 
 
-odd_table:		; $86d9 ... $87d8
-.byte $2a,$2b,$2c,$2d,$2e,$2f,$28,$29, $32,$33,$34,$35,$36,$37,$30,$31	; 86d9...86e8
-.byte $3a,$3b,$3c,$3d,$3e,$3f,$38,$39, $22,$23,$24,$25,$26,$27,$20,$21	;
-.byte $4a,$4b,$4c,$4d,$4e,$4f,$48,$49, $52,$53,$54,$55,$56,$57,$50,$51	;
-.byte $5a,$5b,$5c,$5d,$5e,$5f,$58,$59, $42,$43,$44,$45,$46,$47,$40,$41	;
-.byte $6a,$6b,$6c,$6d,$6e,$6f,$68,$69, $72,$73,$74,$75,$76,$77,$70,$71	;
-.byte $7a,$7b,$7c,$7d,$7e,$7f,$78,$79, $62,$63,$64,$65,$66,$67,$60,$61	;
-.byte $0a,$0b,$0c,$0d,$0e,$0f,$08,$09, $12,$13,$14,$15,$16,$17,$10,$11	;
-.byte $1a,$1b,$1c,$1d,$1e,$1f,$18,$19, $02,$03,$04,$05,$06,$07,$00,$01	;
+odd_helper:
+.byte $0a,$0b,$0c,$0d,$0e,$0f,$08,$09, $02,$03,$04,$05,$06,$07,$00,$01	; 85d9...85e8
+odd_helper2:
+.byte $20,$30,$40,$50,$60,$70,$00,$10, $a0,$b0,$c0,$d0,$e0,$f0,$80,$90
 
-.byte $aa,$ab,$ac,$ad,$ae,$af,$a8,$a9, $b2,$b3,$b4,$b5,$b6,$b7,$b0,$b1	;
-.byte $ba,$bb,$bc,$bd,$be,$bf,$b8,$b9, $a2,$a3,$a4,$a5,$a6,$a7,$a0,$a1	;
-.byte $ca,$cb,$cc,$cd,$ce,$cf,$c8,$c9, $d2,$d3,$d4,$d5,$d6,$d7,$d0,$d1	;
-.byte $da,$db,$dc,$dd,$de,$df,$d8,$d9, $c2,$c3,$c4,$c5,$c6,$c7,$c0,$c1	;
-.byte $ea,$eb,$ec,$ed,$ee,$ef,$e8,$e9, $f2,$f3,$f4,$f5,$f6,$f7,$f0,$f1	;
-.byte $fa,$fb,$fc,$fd,$fe,$ff,$f8,$f9, $e2,$e3,$e4,$e5,$e6,$e7,$e0,$e1	;
-.byte $8a,$8b,$8c,$8d,$8e,$8f,$88,$89, $92,$93,$94,$95,$96,$97,$90,$91	;
-.byte $9a,$9b,$9c,$9d,$9e,$9f,$98,$99, $82,$83,$84,$85,$86,$87,$80,$81	;
+;odd_table:		; $86d9 ... $87d8
+;.byte $2a,$2b,$2c,$2d,$2e,$2f,$28,$29, $32,$33,$34,$35,$36,$37,$30,$31	; 86d9...86e8
+;.byte $3a,$3b,$3c,$3d,$3e,$3f,$38,$39, $22,$23,$24,$25,$26,$27,$20,$21	;
+;.byte $4a,$4b,$4c,$4d,$4e,$4f,$48,$49, $52,$53,$54,$55,$56,$57,$50,$51	;
+;.byte $5a,$5b,$5c,$5d,$5e,$5f,$58,$59, $42,$43,$44,$45,$46,$47,$40,$41	;
+;.byte $6a,$6b,$6c,$6d,$6e,$6f,$68,$69, $72,$73,$74,$75,$76,$77,$70,$71	;
+;.byte $7a,$7b,$7c,$7d,$7e,$7f,$78,$79, $62,$63,$64,$65,$66,$67,$60,$61	;
+;.byte $0a,$0b,$0c,$0d,$0e,$0f,$08,$09, $12,$13,$14,$15,$16,$17,$10,$11	;
+;.byte $1a,$1b,$1c,$1d,$1e,$1f,$18,$19, $02,$03,$04,$05,$06,$07,$00,$01	;
+
+;.byte $aa,$ab,$ac,$ad,$ae,$af,$a8,$a9, $b2,$b3,$b4,$b5,$b6,$b7,$b0,$b1	;
+;.byte $ba,$bb,$bc,$bd,$be,$bf,$b8,$b9, $a2,$a3,$a4,$a5,$a6,$a7,$a0,$a1	;
+;.byte $ca,$cb,$cc,$cd,$ce,$cf,$c8,$c9, $d2,$d3,$d4,$d5,$d6,$d7,$d0,$d1	;
+;.byte $da,$db,$dc,$dd,$de,$df,$d8,$d9, $c2,$c3,$c4,$c5,$c6,$c7,$c0,$c1	;
+;.byte $ea,$eb,$ec,$ed,$ee,$ef,$e8,$e9, $f2,$f3,$f4,$f5,$f6,$f7,$f0,$f1	;
+;.byte $fa,$fb,$fc,$fd,$fe,$ff,$f8,$f9, $e2,$e3,$e4,$e5,$e6,$e7,$e0,$e1	;
+;.byte $8a,$8b,$8c,$8d,$8e,$8f,$88,$89, $92,$93,$94,$95,$96,$97,$90,$91	;
+;.byte $9a,$9b,$9c,$9d,$9e,$9f,$98,$99, $82,$83,$84,$85,$86,$87,$80,$81	;
 
 draw_page:
 	.byte	$20
@@ -206,6 +286,6 @@ disp_page2:
 	.byte $00
 
 
-.include "decompress_fast_v2.s"
-.include "graphics/asteroid.inc"
+;.include "decompress_fast_v2.s"
+;.include "graphics/asteroid.inc"
 
