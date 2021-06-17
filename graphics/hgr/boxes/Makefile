@@ -7,13 +7,14 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	boxes.dsk make_boxes_asm
 
-boxes.dsk:	HELLO MYST.BAS MYST_TINY.BAS MYST_TINY COOL_PATTERN
+boxes.dsk:	HELLO MYST.BAS MYST_TINY.BAS MYST_TINY COOL_PATTERN COOL_BOT
 	cp $(EMPTYDISK) boxes.dsk
 	$(DOS33) -y boxes.dsk SAVE A HELLO
 	$(DOS33) -y boxes.dsk SAVE A MYST.BAS
 	$(DOS33) -y boxes.dsk SAVE A MYST_TINY.BAS
 	$(DOS33) -y boxes.dsk BSAVE -a 0xC00 MYST_TINY
 	$(DOS33) -y boxes.dsk BSAVE -a 0xC00 COOL_PATTERN
+	$(DOS33) -y boxes.dsk BSAVE -a 0x36b COOL_BOT
 
 ###
 
@@ -36,6 +37,15 @@ COOL_PATTERN:	cool_pattern.o
 
 cool_pattern.o: cool_pattern.s
 	ca65 -o cool_pattern.o cool_pattern.s -l cool_pattern.lst
+
+###
+
+COOL_BOT:	cool_bot.o
+	ld65 -o COOL_BOT cool_bot.o -C $(LINKERSCRIPTS)/apple2_36b.inc
+
+cool_bot.o: cool_bot.s
+	ca65 -o cool_bot.o cool_bot.s -l cool_bot.lst
+
 
 
 
