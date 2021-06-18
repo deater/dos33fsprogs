@@ -22,6 +22,7 @@ int main(int argc, char **argv) {
 				printf(".byte $%02X,",(type<<4)|2);
 				printf("$%02X\n",color1);
 				break;
+
 			case 1: /* compact rectangle */
 				sscanf(buffer,"%d %d %d %d %d %d %d",
 					&type,
@@ -77,6 +78,20 @@ int main(int argc, char **argv) {
 				printf(".byte $%02X,",(type<<4)|3);
 				printf("$%02X,",x1);
 				printf("$%02X\n",y1);
+				break;
+
+			case 6: /* dithered rectangle */
+				sscanf(buffer,"%d %d %d %d %d %d %d",
+					&type,
+					&color1,&color2,
+					&x1,&y1,&x2,&y2);
+				printf(".byte $%02X,",(type<<4)|7);
+				printf("$%02X,",color1);
+				printf("$%02X,",x1);
+				printf("$%02X,",y1);
+				printf("$%02X,",x2-x1);
+				printf("$%02X,",y2-y1);
+				printf("$%02X\n",color2);
 				break;
 
 			case 15: /* end */

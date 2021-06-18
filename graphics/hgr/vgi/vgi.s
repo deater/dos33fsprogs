@@ -57,7 +57,7 @@ vgi_rts_table:
 	.word vgi_filled_circle-1	; 3 = filled circle
 	.word vgi_point-1		; 4 = dot
 	.word vgi_lineto-1		; 5 = line to
-	.word all_done-1
+	.word vgi_dithered_rectangle-1	; 6 = dithered rectangle
 	.word all_done-1
 	.word all_done-1
 	.word all_done-1
@@ -73,8 +73,8 @@ all_done:
 
 
 .include "vgi_clearscreen.s"
-.include "vgi_rectangle.s"
 .include "vgi_circles.s"
+.include "vgi_rectangle.s"
 .include "vgi_lines.s"
 
 .include "clock.data"
