@@ -51,8 +51,12 @@ no_oflo:
 	rts				; "jump" to subroutine
 
 vgi_rts_table:
-	.word vgi_clearscreen-1
-	.word vgi_simple_rectangle-1
+	.word vgi_clearscreen-1		; 0 = clearscreen
+	.word vgi_simple_rectangle-1	; 1 = simple rectangle
+	.word vgi_circle-1		; 2 = plain circle
+	.word vgi_filled_circle-1	; 3 = filled circle
+	.word all_done-1		; 4 = dot
+	.word all_done-1		; 5 = line to
 	.word all_done-1
 	.word all_done-1
 	.word all_done-1
@@ -62,11 +66,7 @@ vgi_rts_table:
 	.word all_done-1
 	.word all_done-1
 	.word all_done-1
-	.word all_done-1
-	.word all_done-1
-	.word all_done-1
-	.word all_done-1
-	.word all_done-1
+	.word all_done-1		; 15 = done
 
 all_done:
 	jmp	all_done
@@ -74,5 +74,6 @@ all_done:
 
 .include "vgi_clearscreen.s"
 .include "vgi_rectangle.s"
+.include "vgi_circles.s"
 
 .include "clock.data"

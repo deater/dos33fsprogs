@@ -4,7 +4,7 @@ int main(int argc, char **argv) {
 
 	char buffer[1024];
 	char *ptr;
-	int type,color1,color2,x1,x2,y1,y2;
+	int type,color1,color2,x1,x2,y1,y2,r;
 	int line=1;
 
 	while(1) {
@@ -33,6 +33,50 @@ int main(int argc, char **argv) {
 				printf("$%02X,",y1);
 				printf("$%02X,",x2-x1);
 				printf("$%02X\n",y2-y1);
+				break;
+
+			case 2: /* circle */
+				sscanf(buffer,"%d %d %d %d %d",
+					&type,
+					&color1,
+					&x1,&y1,&r);
+				printf(".byte $%02X,",(type<<4)|5);
+				printf("$%02X,",color1);
+				printf("$%02X,",x1);
+				printf("$%02X,",y1);
+				printf("$%02X\n",r);
+				break;
+
+			case 3: /* filled circle */
+				sscanf(buffer,"%d %d %d %d %d",
+					&type,
+					&color1,
+					&x1,&y1,&r);
+				printf(".byte $%02X,",(type<<4)|5);
+				printf("$%02X,",color1);
+				printf("$%02X,",x1);
+				printf("$%02X,",y1);
+				printf("$%02X\n",r);
+				break;
+
+			case 4: /* point */
+				sscanf(buffer,"%d %d %d %d",
+					&type,
+					&color1,
+					&x1,&y1);
+				printf(".byte $%02X,",(type<<4)|4);
+				printf("$%02X,",color1);
+				printf("$%02X,",x1);
+				printf("$%02X\n",y1);
+				break;
+
+			case 5: /* line to */
+				sscanf(buffer,"%d %d %d",
+					&type,
+					&x1,&y1);
+				printf(".byte $%02X,",(type<<4)|3);
+				printf("$%02X,",x1);
+				printf("$%02X\n",y1);
 				break;
 
 			case 15: /* end */

@@ -25,7 +25,7 @@ VGI:	vgi.o
 	ld65 -o VGI vgi.o -C $(LINKERSCRIPTS)/apple2_c00.inc
 
 vgi.o: clock.data \
-	vgi.s vgi_clearscreen.s vgi_rectangle.s
+	vgi.s vgi_clearscreen.s vgi_rectangle.s vgi_circles.s
 	ca65 -o vgi.o vgi.s -l vgi.lst
 
 

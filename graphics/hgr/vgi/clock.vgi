@@ -1,16 +1,23 @@
 ; Clock from Myst
 0	255						; white background
+;
 1	1	6	0	90	140	191	; ocean left
 1	1	6	140	90	279	191	; ocean right
 1	4	1	157	121	208	191	; tower shadow
+;
 1	0	7	141	116	231	135	; gear base
 1	0	7	180	17	213	121	; 
 1	7	0	156	20	209	126	; tower
 1	7	0	145	9	212	20
 1	0	7	162	0	220	20
 1	5	0	172	91	187	123
-1	7	7	169	31	191	63	; clock face tall
-1	7	7	165	39	194	60	; clock face wide
+; clock face
+3	5	179	49	20			; clock face ring
+3	7	179	49	18			; clock face white
+2	5	179	49	10			; clock face inner
+4	0	179	49				; clock hand origin
+5	179	32					; clock hand
+;
 1	5	1	0	163	63	191	; grass
 1	5	1	63	167	177	191	; grass
 1	5	1	177	185	230	191	; grass
@@ -19,5 +26,4 @@
 1	5	0	0	0	20	188	; tree
 1	0	5	66	0	81	187	; tree
 1	1	5	66	1	99	19	; leaves
-1	0	0	177	32	181	50	; clock hand
 15
