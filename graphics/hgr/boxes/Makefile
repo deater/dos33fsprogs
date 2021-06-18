@@ -14,7 +14,7 @@ boxes.dsk:	HELLO MYST.BAS MYST_TINY.BAS MYST_TINY COOL_PATTERN COOL_BOT
 	$(DOS33) -y boxes.dsk SAVE A MYST_TINY.BAS
 	$(DOS33) -y boxes.dsk BSAVE -a 0xC00 MYST_TINY
 	$(DOS33) -y boxes.dsk BSAVE -a 0xC00 COOL_PATTERN
-	$(DOS33) -y boxes.dsk BSAVE -a 0x36b COOL_BOT
+	$(DOS33) -y boxes.dsk BSAVE -a 0x370 COOL_BOT
 
 ###
 
@@ -41,7 +41,7 @@ cool_pattern.o: cool_pattern.s
 ###
 
 COOL_BOT:	cool_bot.o
-	ld65 -o COOL_BOT cool_bot.o -C $(LINKERSCRIPTS)/apple2_36b.inc
+	ld65 -o COOL_BOT cool_bot.o -C $(LINKERSCRIPTS)/apple2_370.inc
 
 cool_bot.o: cool_bot.s
 	ca65 -o cool_bot.o cool_bot.s -l cool_bot.lst
