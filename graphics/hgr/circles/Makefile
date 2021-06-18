@@ -7,7 +7,7 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	circles.dsk
 
-circles.dsk:	HELLO CIRCLES ARCS WEB \
+circles.dsk:	HELLO CIRCLES CIRCLES_FILL ARCS WEB PAC ROSE \
 		BRES.BAS BRESBOT.BAS BRESCOOL.BAS \
 		MID.BAS MIDBOT.BAS MIDCOOL.BAS BRESTEST.BAS
 	cp $(EMPTY_DISK)/empty.dsk circles.dsk
@@ -20,8 +20,11 @@ circles.dsk:	HELLO CIRCLES ARCS WEB \
 	$(DOS33) -y circles.dsk SAVE A MIDCOOL.BAS
 	$(DOS33) -y circles.dsk SAVE A BRESTEST.BAS
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 CIRCLES
+	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 CIRCLES_FILL
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 ARCS
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 WEB
+	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 PAC
+	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 ROSE
 
 ###
 
@@ -73,6 +76,15 @@ CIRCLES:	circles.o
 circles.o:	circles.s
 	ca65 -o circles.o circles.s -l circles.lst
 
+###
+
+CIRCLES_FILL:	circles_fill.o
+	ld65 -o CIRCLES_FILL circles_fill.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+circles_fill.o:	circles_fill.s
+	ca65 -o circles_fill.o circles_fill.s -l circles_fill.lst
+
+
 #
 
 ARCS:	arcs.o
@@ -89,11 +101,28 @@ WEB:	web.o
 web.o:	web.s
 	ca65 -o web.o web.s -l web.lst
 
+#
+
+PAC:	pac.o
+	ld65 -o PAC pac.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+pac.o:	pac.s
+	ca65 -o pac.o pac.s -l pac.lst
+
+#
+
+ROSE:	rose.o
+	ld65 -o ROSE rose.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+rose.o:	rose.s
+	ca65 -o rose.o rose.s -l rose.lst
+
+
 
 
 ###
 
 clean:	
-	rm -f *~ *.o *.lst CIRCLES ARCS WEB \
+	rm -f *~ *.o *.lst CIRCLES ARCS WEB CIRCLES_FILL PAC ROSE \
 		BRES.BAS BRESBOT.BAS BRESCOOL.BAS BRESTEST.BAS \
 		MID.BAS MIDBOT.BAS MIDCOOL.BAS
