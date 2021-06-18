@@ -1,20 +1,37 @@
 ; circles tiny -- Apple II Hires
 
 
+; 229 -- first
+; 228 -- remove shift
+; 190 -- move hplots into two loops
+; 169 -- move hplots into one loop
+; 166 -- small enough we can use bcs again
+; 157 -- some more math
+
 ; D0+ used by HGR routines
 
 HGR_COLOR	= $E4
 HGR_PAGE	= $E6
 
-D		= $F9
-XX		= $FA
-YY		= $FB
+COUNT		= $F6
+
+
+
+XX		= $F7
+MINUSXX		= $F8
+YY		= $F9
+MINUSYY		= $FA
+
+D		= $FB
 R		= $FC
 CX		= $FD
 CY		= $FE
 FRAME		= $FF
 
 ; soft-switches
+
+KEYPRESS	= $C000
+KEYRESET	= $C010
 
 ; ROM routines
 
@@ -32,12 +49,23 @@ WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
 circles:
 
-	jsr	HGR2
+
 
 	lda	#0
 	sta	R
 
 draw_next:
+
+	lda	KEYPRESS
+	bpl	draw_next
+
+	bit	KEYRESET
+
+	jsr	HGR2
+
+
+
+;draw_next:
 .if 0
 	inc	FRAME
 	ldy	FRAME
@@ -78,21 +106,27 @@ draw_next:
 	sta	CY
 
 
+	;===============================
+	; draw circle
+	;===============================
+	; draw circle at (CX,CY) of radius R
+	; signed 8-bit math so problems if R > 64?
+
 
 	; XX=0 YY=R
 	; D=3-2*R
 	; GOTO6
+
 	lda	#0
 	sta	XX
 
 	lda	R
 	sta	YY
 
-	asl
-	sta	D
 	lda	#3
 	sec
-	sbc	D
+	sbc	R
+	sbc	R
 	sta	D
 
 	jmp	do_plots
@@ -130,124 +164,75 @@ store_D:
 	sta	D
 
 do_plots:
+	; setup constants
+
+	lda	XX
+	eor	#$FF
+	sta	MINUSXX
+	inc	MINUSXX
+
+	lda	YY
+	eor	#$FF
+	sta	MINUSYY
+	inc	MINUSYY
+
 	; HPLOT CX+X,CY+Y
-
-	lda	CX
-	clc
-	adc	XX
-	tax
-	ldy	#0
-	lda	CY
-	clc
-	adc	YY
-
-	jsr	HPLOT0		; plot at (Y,X), (A)
-
 	; HPLOT CX-X,CY+Y
-
-	lda	CX
-	sec
-	sbc	XX
-	tax
-	ldy	#0
-	lda	CY
-	clc
-	adc	YY
-
-	jsr	HPLOT0		; plot at (Y,X), (A)
-
 	; HPLOT CX+X,CY-Y
-
-	lda	CX
-	clc
-	adc	XX
-	tax
-	ldy	#0
-	lda	CY
-	sec
-	sbc	YY
-
-	jsr	HPLOT0		; plot at (Y,X), (A)
-
-
 	; HPLOT CX-X,CY-Y
-
-	lda	CX
-	sec
-	sbc	XX
-	tax
-	ldy	#0
-	lda	CY
-	sec
-	sbc	YY
-
-	jsr	HPLOT0		; plot at (Y,X), (A)
-
 	; HPLOT CX+Y,CY+X
-
-	lda	CX
-	clc
-	adc	YY
-	tax
-	ldy	#0
-	lda	CY
-	clc
-	adc	XX
-
-	jsr	HPLOT0		; plot at (Y,X), (A)
-
-
 	; HPLOT CX-Y,CY+X
-
-	lda	CX
-	sec
-	sbc	YY
-	tax
-	ldy	#0
-	lda	CY
-	clc
-	adc	XX
-
-	jsr	HPLOT0		; plot at (Y,X), (A)
-
 	; HPLOT CX+Y,CY-X
-
-	lda	CX
-	clc
-	adc	YY
-	tax
-	ldy	#0
-	lda	CY
-	sec
-	sbc	XX
-
-	jsr	HPLOT0		; plot at (Y,X), (A)
-
 	; HPLOT CX-Y,CY-X
 
+	; calc X co-ord
+
+	lda	#7
+	sta	COUNT
+pos_loop:
+	lda	COUNT
+	and	#$4
+	lsr
+	tay
+
+	lda	COUNT
+	lsr
+	bcc	xnoc
+	iny
+xnoc:
 	lda	CX
-	sec
-	sbc	YY
+	clc
+	adc	XX,Y
 	tax
-	ldy	#0
+
+	; calc y co-ord
+
+	lda	COUNT
+	lsr
+	eor	#$2
+	tay
+
 	lda	CY
-	sec
-	sbc	XX
+	clc
+	adc	XX,Y
+
+	ldy	#0
 
 	jsr	HPLOT0		; plot at (Y,X), (A)
+
+	dec	COUNT
+	bpl	pos_loop
 
 
 	; IFY>=XTHEN4
 	lda	YY
 	cmp	XX
-;	bcs	circle_loop
-	bcc	done
+	bcs	circle_loop
 
-	jmp	circle_loop
 done:
 	lda	R
 	clc
-	adc	#3
+	adc	#1
 	sta	R
 stop:
 	cmp	#90

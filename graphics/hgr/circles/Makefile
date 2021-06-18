@@ -9,7 +9,7 @@ all:	circles.dsk
 
 circles.dsk:	HELLO CIRCLES ARCS WEB \
 		BRES.BAS BRESBOT.BAS BRESCOOL.BAS \
-		MID.BAS MIDBOT.BAS MIDCOOL.BAS
+		MID.BAS MIDBOT.BAS MIDCOOL.BAS BRESTEST.BAS
 	cp $(EMPTY_DISK)/empty.dsk circles.dsk
 	$(DOS33) -y circles.dsk SAVE A HELLO
 	$(DOS33) -y circles.dsk SAVE A BRES.BAS
@@ -18,6 +18,7 @@ circles.dsk:	HELLO CIRCLES ARCS WEB \
 	$(DOS33) -y circles.dsk SAVE A MID.BAS
 	$(DOS33) -y circles.dsk SAVE A MIDBOT.BAS
 	$(DOS33) -y circles.dsk SAVE A MIDCOOL.BAS
+	$(DOS33) -y circles.dsk SAVE A BRESTEST.BAS
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 CIRCLES
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 ARCS
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 WEB
@@ -58,6 +59,11 @@ BRESBOT.BAS:	bresbot.bas
 BRESCOOL.BAS:	brescool.bas
 	$(TOKENIZE) < brescool.bas > BRESCOOL.BAS
 
+###
+
+BRESTEST.BAS:	brestest.bas
+	$(TOKENIZE) < brestest.bas > BRESTEST.BAS
+
 
 ###
 
@@ -89,5 +95,5 @@ web.o:	web.s
 
 clean:	
 	rm -f *~ *.o *.lst CIRCLES ARCS WEB \
-		BRES.BAS BRESBOT.BAS BRESCOOL.BAS \
+		BRES.BAS BRESBOT.BAS BRESCOOL.BAS BRESTEST.BAS \
 		MID.BAS MIDBOT.BAS MIDCOOL.BAS
