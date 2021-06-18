@@ -7,7 +7,7 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	circles.dsk
 
-circles.dsk:	HELLO CIRCLES \
+circles.dsk:	HELLO CIRCLES ARCS \
 		BRES.BAS BRESBOT.BAS BRESCOOL.BAS \
 		MID.BAS MIDBOT.BAS MIDCOOL.BAS
 	cp $(EMPTY_DISK)/empty.dsk circles.dsk
@@ -19,6 +19,7 @@ circles.dsk:	HELLO CIRCLES \
 	$(DOS33) -y circles.dsk SAVE A MIDBOT.BAS
 	$(DOS33) -y circles.dsk SAVE A MIDCOOL.BAS
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 CIRCLES
+	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 ARCS
 
 ###
 
@@ -67,7 +68,16 @@ circles.o:	circles.s
 
 ###
 
+ARCS:	arcs.o
+	ld65 -o ARCS arcs.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+arcs.o:	arcs.s
+	ca65 -o arcs.o arcs.s -l arcs.lst
+
+
+###
+
 clean:	
-	rm -f *~ *.o *.lst CIRCLES \
+	rm -f *~ *.o *.lst CIRCLES ARCS \
 		BRES.BAS BRESBOT.BAS BRESCOOL.BAS \
 		MID.BAS MIDBOT.BAS MIDCOOL.BAS
