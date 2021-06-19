@@ -5,10 +5,9 @@ HGR_BITS	= $1C
 GBASL	= $26
 GBASH	= $27
 
-
-OTHER_MASK = $73
-XRUN	= $74
-COUNT	= $75
+OTHER_MASK	= $73
+XRUN		= $74
+COUNT		= $75
 
 HGR_COLOR = $E4
 
@@ -87,13 +86,13 @@ test:
 end:
 	jmp	end
 
-
+	;==================================
+	; VGI Simple Rectangle
+	;==================================
 
 vgi_simple_rectangle:
 
 simple_rectangle_loop:
-
-
 
 	lda	VGI_RCOLOR
 
@@ -154,8 +153,6 @@ no_shift:
 	cmp	#8
 	bcs	not_corner
 
-;	jmp	not_corner
-
 corner:
 	; want to use MASK of left_mask, MOD7 and 7-XRUN
 
@@ -174,7 +171,7 @@ corner:
 	eor	(GBASL),Y
 	sta	(GBASL),Y
 
-	jmp	done_row
+	jmp	done_row		; that's all
 
 not_corner:
 
@@ -182,6 +179,8 @@ not_corner:
 	ldx	VGI_RX1
 	lda	mod7_table,X
 	beq	draw_run
+
+	; handle not full left border
 
 	tax
 	lda	(GBASL),Y
@@ -192,14 +191,17 @@ not_corner:
 
 	iny			; move to next
 
-	txa			; adjust RUN length
+	; adjust RUN length by 7- mod7
+	txa			; load mod7
 	eor	#$ff
-	clc
-	adc	#1
+	sec
+	adc	#7
+	eor	#$ff
+	sec
 	adc	XRUN
 	sta	XRUN
 
-	lda	HGR_BITS
+	lda	HGR_BITS	; cycle colors for next
 	jsr	COLOR_SHIFT
 
 
@@ -211,17 +213,16 @@ draw_run:
 	cmp	#7
 	bcc	draw_right	; blt
 
-	lda	HGR_BITS
-	sta	(GBASL),Y
-	iny
+	lda	HGR_BITS	; get color
+	sta	(GBASL),Y	; store out
+	jsr	COLOR_SHIFT	; shift colors
 
-	lda	XRUN
+	iny			; move to next block
+
+	lda	XRUN		; take 7 off the run
 	sec
 	sbc	#7
 	sta	XRUN
-
-	lda	HGR_BITS
-	jsr	COLOR_SHIFT
 
 	jmp	draw_run
 
@@ -235,8 +236,8 @@ draw_right:
 
 	; see if not starting on boundary
 	ldx	XRUN
-
 	tax
+
 	lda	(GBASL),Y
 	eor	HGR_BITS
 	and	right_masks,X
