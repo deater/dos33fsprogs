@@ -34,7 +34,11 @@ circles:
 
 	jsr	HGR2
 
+	lda	#0
+	sta	R
+
 draw_next:
+.if 0
 	inc	FRAME
 	ldy	FRAME
 
@@ -64,8 +68,16 @@ draw_next:
 	lda	$F300,Y
 	and	#$3f
 	sta	R
+.endif
 
 	; A=40+RND(1)*200:B=40+RND(1)*100:Y=RND(1)*40
+
+	lda	#128
+	sta	CX
+	lda	#96
+	sta	CY
+
+
 
 	; XX=0 YY=R
 	; D=3-2*R
@@ -233,5 +245,13 @@ do_plots:
 
 	jmp	circle_loop
 done:
+	lda	R
+	clc
+	adc	#3
+	sta	R
+stop:
+	cmp	#90
+	beq	stop
+
 	; GOTO1
 	jmp	draw_next

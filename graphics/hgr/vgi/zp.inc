@@ -17,6 +17,9 @@ P6		= $F7
 VGIL		= $F8
 VGIH		= $F9
 
+OUTL		= $FC
+OUTH		= $FD
+
 COLOR1		= $FE
 COLOR2		= $FF
 

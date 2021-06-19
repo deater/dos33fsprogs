@@ -7,7 +7,8 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	boxes.dsk make_boxes_asm
 
-boxes.dsk:	HELLO MYST.BAS MYST_TINY.BAS MYST_TINY COOL_PATTERN COOL_BOT
+boxes.dsk:	HELLO MYST.BAS MYST_TINY.BAS MYST_TINY COOL_PATTERN COOL_BOT \
+	SLOW_TEST FAST_TEST
 	cp $(EMPTYDISK) boxes.dsk
 	$(DOS33) -y boxes.dsk SAVE A HELLO
 	$(DOS33) -y boxes.dsk SAVE A MYST.BAS
@@ -15,6 +16,8 @@ boxes.dsk:	HELLO MYST.BAS MYST_TINY.BAS MYST_TINY COOL_PATTERN COOL_BOT
 	$(DOS33) -y boxes.dsk BSAVE -a 0xC00 MYST_TINY
 	$(DOS33) -y boxes.dsk BSAVE -a 0xC00 COOL_PATTERN
 	$(DOS33) -y boxes.dsk BSAVE -a 0x370 COOL_BOT
+	$(DOS33) -y boxes.dsk BSAVE -a 0xC00 SLOW_TEST
+	$(DOS33) -y boxes.dsk BSAVE -a 0xC00 FAST_TEST
 
 ###
 
@@ -37,6 +40,24 @@ COOL_PATTERN:	cool_pattern.o
 
 cool_pattern.o: cool_pattern.s
 	ca65 -o cool_pattern.o cool_pattern.s -l cool_pattern.lst
+
+###
+
+SLOW_TEST:	slow_test.o
+	ld65 -o SLOW_TEST slow_test.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+slow_test.o: slow_test.s
+	ca65 -o slow_test.o slow_test.s -l slow_test.lst
+
+###
+
+FAST_TEST:	fast_test.o
+	ld65 -o FAST_TEST fast_test.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+fast_test.o: fast_test.s
+	ca65 -o fast_test.o fast_test.s -l fast_test.lst
+
+
 
 ###
 
@@ -79,4 +100,4 @@ make_boxes_asm.o:	make_boxes_asm.c
 ###
 
 clean:	
-	rm -f *~ *.o *.lst MYST.BAS MYST_TINY.BAS MYST_TINY make_boxes make_boxes_asm COOL_PATTERN
+	rm -f *~ *.o *.lst MYST.BAS MYST_TINY.BAS MYST_TINY make_boxes make_boxes_asm COOL_PATTERN SLOW_TEST

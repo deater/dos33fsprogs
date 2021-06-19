@@ -270,7 +270,7 @@ filled_pos_loop:
 
 	ldy	#0
 
-	pha			; save Y value for later
+;	pha			; save Y value for later
 
 	jsr	HPLOT0		; plot at (Y,X), (A)
 

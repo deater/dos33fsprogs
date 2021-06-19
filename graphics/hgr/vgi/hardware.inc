@@ -32,6 +32,7 @@ PTRIG		=	$C070
 
 NORMAL		= $F273
 HGR2		= $F3D8		; clear PAGE2 to 0
+HGR             = $F3E2         ; set hires page1 and clear $2000-$3fff
 BKGND0		= $F3F4		; clear current page to A
 HPOSN		= $F411		; (Y,X),(A)  (values stores in HGRX,XH,Y)
 HPLOT0		= $F457		; plot at (Y,X), (A)
@@ -49,6 +50,7 @@ CLRTOP	= $F836			; clear only top of low-res screen
 SETCOL	= $F864			; COLOR=A
 ROM_TEXT2COPY = $F962		; iigs
 TEXT	= $FB36
+SETGR   = $FB40			; init lores and clear screen
 TABV	= $FB5B			; VTAB to A
 ROM_MACHINEID = $FBB3		; iigs
 BELL	= $FBDD			; ring the bell
@@ -56,6 +58,8 @@ BASCALC	= $FBC1			;
 VTAB	= $FC22			; VTAB to CV
 HOME	= $FC58			; Clear the text screen
 WAIT	= $FCA8			; delay 1/2(26+27A+5A^2) us
+GETLN	= $FD6A
+GETLN1	= $FD6F
 CROUT1	= $FD8B
 SETINV	= $FE80			; INVERSE
 SETNORM	= $FE84			; NORMAL
