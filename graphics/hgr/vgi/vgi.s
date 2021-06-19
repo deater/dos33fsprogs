@@ -10,6 +10,8 @@ vgi_test:
 	jsr	HGR
 	bit	FULLGR
 
+	jsr	make_tables
+
 	; get pointer to image data
 
 	lda	#<clock_data
