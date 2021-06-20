@@ -113,7 +113,7 @@ simple_rectangle_loop:
 
 	; get ROW into (GBASL)
 
-	ldx	#0		; X1 into X
+	ldx	VGI_RX1		; X1 into X
 	lda	VGI_RY1		; Y1 into A
 	ldy	#0		; always 0
 	jsr	HPOSN		; (Y,X),(A)  (values stores in HGRX,XH,Y)
@@ -127,24 +127,26 @@ simple_rectangle_loop:
 
 
 	; get position of first block (x/7) and put into Y
+	; HPOSN does this for us
 
-	; draw leftmost
-	ldy	VGI_RX1
-	lda	div7_table,Y
-	tay
+;	ldy	VGI_RX1
+;	lda	div7_table,Y
+;	tay
 
 	; set up the color
+	; HPOSN also does this
 
-	and	#$1
-	beq	no_shift
 
-	lda	HGR_BITS
-	jsr	COLOR_SHIFT
+;	and	#$1
+;	beq	no_shift
 
-no_shift:
+;	lda	HGR_BITS
+;	jsr	COLOR_SHIFT
+
+;no_shift:
 
 	; check if narrow corner case where begin and end same block
-	; if RX%7 + XRUN > 8
+	; if RX%7 + XRUN < 8
 
 	ldx	VGI_RX1
 	lda	mod7_table,X
@@ -156,18 +158,14 @@ no_shift:
 corner:
 	; want to use MASK of left_mask, MOD7 and 7-XRUN
 
-	lda	#7
-	sec
-	sbc	XRUN
-	sta	OTHER_MASK
-
 	lda	mod7_table,X
 	tax
 
 	lda	(GBASL),Y
 	eor	HGR_BITS
 	and	left_masks,X
-	and	OTHER_MASK
+	ldx	XRUN
+	and	right_masks,X
 	eor	(GBASL),Y
 	sta	(GBASL),Y
 

@@ -14,17 +14,17 @@ int main(int argc, char **argv) {
 
 		if (buffer[0]==';') continue;
 
-		sscanf(buffer,"%d",&type);
+		sscanf(buffer,"%i",&type);
 
 		switch(type) {
 			case 0: /* clear screen */
-				sscanf(buffer,"%d %d",&type,&color1);
+				sscanf(buffer,"%i %i",&type,&color1);
 				printf(".byte $%02X,",(type<<4)|2);
 				printf("$%02X\n",color1);
 				break;
 
 			case 1: /* compact rectangle */
-				sscanf(buffer,"%d %d %d %d %d %d %d",
+				sscanf(buffer,"%i %i %i %i %i %i %i",
 					&type,
 					&color1,&color2,
 					&x1,&y1,&x2,&y2);
@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
 				break;
 
 			case 2: /* circle */
-				sscanf(buffer,"%d %d %d %d %d",
+				sscanf(buffer,"%i %i %i %i %i",
 					&type,
 					&color1,
 					&x1,&y1,&r);
@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 				break;
 
 			case 3: /* filled circle */
-				sscanf(buffer,"%d %d %d %d %d",
+				sscanf(buffer,"%i %i %i %i %i",
 					&type,
 					&color1,
 					&x1,&y1,&r);
@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
 				break;
 
 			case 4: /* point */
-				sscanf(buffer,"%d %d %d %d",
+				sscanf(buffer,"%i %i %i %i",
 					&type,
 					&color1,
 					&x1,&y1);
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
 				break;
 
 			case 5: /* line to */
-				sscanf(buffer,"%d %d %d",
+				sscanf(buffer,"%i %i %i",
 					&type,
 					&x1,&y1);
 				printf(".byte $%02X,",(type<<4)|3);
@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
 				break;
 
 			case 6: /* dithered rectangle */
-				sscanf(buffer,"%d %d %d %d %d %d %d",
+				sscanf(buffer,"%i %i %i %i %i %i %i",
 					&type,
 					&color1,&color2,
 					&x1,&y1,&x2,&y2);
@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
 				break;
 
 			default:
-				fprintf(stderr,"Unknown type %d\n",type);
+				fprintf(stderr,"Unknown type %i\n",type);
 				break;
 		}
 
