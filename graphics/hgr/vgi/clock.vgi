@@ -1,30 +1,39 @@
 ; Clock from Myst
 0	255						; white background
-;
 1	1	6	0	90	140	191	; ocean left
 1	1	6	140	90	279	191	; ocean right
-;1	4	1	157	121	208	191	; tower shadow
-; 001000 100010
 6	0x8	0x22	157	121	208	165	; tower shadow
 6	0x8	0x22	160	165	204	191	; tower shadow
-;
+; Gear Base
 1	4	0	141	116	209	129	; gear base shade
 1	4	0	147	125	164	134	; gear base shade left
 1	7	3	157	129	176	134	; gear base left
 1	7	3	192	128	212	134	; gear base center
 1	4	0	156	131	171	136	; gear base shade left
-1	7	3	211	115	233	131	; gear base right
+1	7	3	211	115	221	131	; gear base right
+1	7	3	211	120	233	131	; gear base right
 1	4	4	176	130	190	134	; shade center
 1	4	4	193	134	213	137	; shade center right
 1	4	4	212	129	230	134	; shade center-right
 1	4	4	222	122	234	125	; shade base right
-1	0	7	180	17	213	121	; 
-6	76	51	156	20	209	126	; tower
-1	7	0	145	9	212	20
-1	0	7	162	0	220	20
-; door
+; Tower 
+1	0	0	180	17	213	121	; tower right
+6	0x4c	0x33	156	20	209	126	; tower
+6	0x4c	0x33	145	9	212	20	; left roof
+6	0x4c	0x33	154	4	212	20	; left roof
+6	0x4c	0x33	162	0	220	20	; right roof
+4	7	155	28
+5	212	17					; bottom line
+4	0	150	20
+5	214	9					; middle line
+4	0	146	13
+5	219	0					; top line
+1	0	0	214	0	219	23	; right roof
+; Door
 3	7	180	98	12			; doorway top
 1	7	7	168	96	192	127	; doorway
+1	7	7	164	98	195	104	; doorway cross
+1	7	7	177	83	182	88	; doorway top
 3	5	180	98	8			; door circle top
 1	5	5	172	96	188	123	; door
 ; clock face
