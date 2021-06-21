@@ -14,15 +14,15 @@ vgi_test:
 
 	; get pointer to image data
 
-	lda	#<red_book_data
-	sta	VGIL
-	lda	#>red_book_data
-	sta	VGIH
-
-;	lda	#<clock_data
+;	lda	#<red_book_data
 ;	sta	VGIL
-;	lda	#>clock_data
+;	lda	#>red_book_data
 ;	sta	VGIH
+
+	lda	#<clock_data
+	sta	VGIL
+	lda	#>clock_data
+	sta	VGIH
 
 	jsr	play_vgi
 
@@ -57,6 +57,16 @@ loopy:
 
 	bit	TEXTGR
 
+	jsr	CROUT1		; print linefeed/cr
+
+	lda	#<string4
+	sta	OUTL
+	lda	#>string4
+	sta	OUTH
+
+	jsr	fake_input
+
+
 	; Rocket Door
 
 	bit	FULLGR
@@ -71,6 +81,16 @@ loopy:
 	jsr	wait_until_keypress
 
 	bit	TEXTGR
+
+	jsr	CROUT1		; print linefeed/cr
+
+	lda	#<string5
+	sta	OUTL
+	lda	#>string5
+	sta	OUTH
+
+	jsr	fake_input
+	jsr	fake_input
 
 	; Red Book
 
@@ -87,6 +107,17 @@ loopy:
 
 	bit	TEXTGR
 
+
+	jsr	CROUT1		; print linefeed/cr
+
+	lda	#<string7
+	sta	OUTL
+	lda	#>string7
+	sta	OUTH
+
+	jsr	fake_input
+	jsr	fake_input
+	jsr	fake_input
 
 
 ;	jmp	loopy
@@ -191,16 +222,27 @@ string4:
 .byte "     LEFT/RIGHT/FORWARD",13,0
 
 string5:
-.byte "THERE IS A METTALIC DOOR BLOCKING YOU",0
+.byte "YOU ARE CLOSE TO THE SPACESHIP",13
+.byte "YOU SEE A DOOR",13,0
 
 ; OPEN DOOR
 
 string6:
-.byte "THE DOOR IS LOCKED.  ATRUS HATES YOU",0
+.byte "THE DOOR IS LOCKED",13
+.byte "ATRUS HATES YOU",13,0
+
+;string7:
+;.byte "SORRY, I DON'T UNDERSTAND THAT",0
 
 string7:
-.byte "SORRY, I DON'T UNDERSTAND THAT",0
+.byte "YOU SEE A RED BOOK",13
+.byte "NEXT TO IT IS A PAGE",13,0
 
+string8:
+.byte "WHICH PAGE?",13,0
+
+string9:
+.byte "I'D SAY IT'S MORE OF A PURPLE COLOR",13,0
 
 ; PICK UP PAGE
 ; WHICH PAGE?
@@ -216,6 +258,9 @@ string7:
 
 ; REALLY?
 
+; WHICH ONE (0..126)
+
+; NOTHING HAPPENS
 
 	;=========================
 	; print_string
