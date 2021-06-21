@@ -7,7 +7,7 @@ HGR_BITS	= $1C
 GBASL	= $26
 GBASH	= $27
 
-USE_DITHERED	= $72
+COLOR_MODE	= $72
 OTHER_MASK	= $73
 XRUN		= $74
 ;COUNT		= $75
@@ -141,12 +141,15 @@ save_color:
 
 vgi_simple_rectangle:
 	lda	#0
-	sta	USE_DITHERED
+	sta	COLOR_MODE
 
 simple_rectangle_loop:
 
-	lda	USE_DITHERED
-	bne	handle_dither
+	lda	COLOR_MODE
+	beq	simple_colors
+	bmi	striped_colors
+	bpl	handle_dither
+
 
 simple_colors:
 
@@ -182,7 +185,10 @@ dsave_color:
 	sta	HGR_COLOR
 
 	inc	COUNT
+	jmp	done_colors
+striped_colors:
 
+	; don't need to do anything here?
 
 done_colors:
 
@@ -195,6 +201,14 @@ done_colors:
 
 	; Y is already the RX1/7
 
+	; adjust color if in striped mode
+	lda	COLOR_MODE
+	bpl	not_striped
+
+	jsr	swap_colors
+
+not_striped:
+
 	; copy the XRUN
 
 	lda	VGI_RXRUN
@@ -202,23 +216,6 @@ done_colors:
 
 	inc	XRUN	; needed because we compare with beq/bne
 
-
-	; get position of first block (x/7) and put into Y
-
-	; draw leftmost
-;	ldy	VGI_RX1
-;	lda	div7_table,Y
-;	tay
-
-	; set up the color
-
-;	and	#$1
-;	beq	no_shift
-
-;	lda	HGR_BITS
-;	jsr	COLOR_SHIFT
-
-;no_shift:
 
 	; check if narrow corner case where begin and end same block
 	; if RX%7 + XRUN < 8
@@ -274,9 +271,10 @@ not_corner:
 	adc	XRUN
 	sta	XRUN
 
-	lda	HGR_BITS	; cycle colors for next
-	jsr	COLOR_SHIFT
+;	lda	HGR_BITS	; cycle colors for next
+;	jsr	COLOR_SHIFT
 
+	jsr	swap_colors
 
 ;no_shift:
 
@@ -288,9 +286,11 @@ draw_run:
 
 	lda	HGR_BITS	; get color
 	sta	(GBASL),Y	; store out
-	jsr	COLOR_SHIFT	; shift colors
+;	jsr	COLOR_SHIFT	; shift colors
 
 	iny			; move to next block
+
+	jsr	swap_colors
 
 	lda	XRUN		; take 7 off the run
 	sec
@@ -329,6 +329,43 @@ done_done:
 	jmp	vgi_loop
 
 
+
+	;==========================
+	; swap colors
+	;==========================
+swap_colors:
+
+	lda	COLOR_MODE
+	bmi	swap_colors_striped
+
+	lda	HGR_BITS	; get color
+	jsr	COLOR_SHIFT	; shift colors
+
+	rts
+
+swap_colors_striped:
+
+	tya
+	and	#1
+	bne	swap_odd
+
+	lda	VGI_RCOLOR
+	jmp	swap_done
+
+swap_odd:
+	lda	VGI_RCOLOR2
+swap_done:
+	sta	HGR_BITS
+
+	rts
+
+
+
+
+
+
+
+
 	;=================================
 	; Dithered Rectangle
 	;=================================
@@ -341,45 +378,33 @@ done_done:
 
 vgi_dithered_rectangle:
 	lda	#1
-	sta	USE_DITHERED
+	sta	COLOR_MODE
 
 	lda	#0
 	sta	COUNT
 
 	jmp	simple_rectangle_loop
-.if 0
-dithered_rectangle_loop:
-	lda	COUNT
-	and	#$1
-	beq	even_color
-odd_color:
-	lda	VGI_RCOLOR
-	jmp	save_color
-even_color:
-	lda	VGI_RCOLOR2
-save_color:
-	sta	HGR_COLOR
-
-	inc	COUNT
-
-	ldx	VGI_RX1		; X1 into X
-	lda	VGI_RY1		; Y1 into A
-	ldy	#0		; always 0
-	jsr	HPOSN		; (Y,X),(A)  (values stores in HGRX,XH,Y)
 
 
-	lda	VGI_RXRUN	; XRUN into A
-	ldx	#0		; always 0
-	ldy	#0		; relative Y is 0
-	jsr	HLINRL		; (X,A),(Y)
+	;=================================
+	; Vertical Striped Rectangle
+	;=================================
+;	VGI_RCOLOR	= P0
+;	VGI_RX1		= P1
+;	VGI_RY1		= P2
+;	VGI_RXRUN	= P3
+;	VGI_RYRUN	= P4
+;	VGI_RCOLOR2	= P5
 
-	inc	VGI_RY1
-	dec	VGI_RYRUN
-	bne	dithered_rectangle_loop
+vgi_vstripe_rectangle:
+	lda	#128
+	sta	COLOR_MODE
 
-	jmp	vgi_loop
+	lda	#0
+	sta	COUNT
 
-.endif
+	jmp	simple_rectangle_loop
+
 
 .endif
 

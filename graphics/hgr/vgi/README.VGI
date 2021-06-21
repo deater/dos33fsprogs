@@ -133,6 +133,18 @@ VGI Horizontal Triangle (8)
 	The side vertex is at (vx,vy)
 	The opposite side goes from (xr,yt) to (xr,yb)
 
+
+==================================
+VGI Vertical Striped Rectangle (9)
+
+	VSTRP	c1 c2 x1 y1 x2 y2
+
+	Draws a rectangle, but this time the two colors are raw bitmaps
+	for the output colors, but to use even/odd columns.
+	On apple II this allows repeating pattern, but since it's a multiple
+	of 7 you can't get true stripes (for that we'd need a 4-byte
+	repeating pattern)
+
 ============
 VGI End (15)
 

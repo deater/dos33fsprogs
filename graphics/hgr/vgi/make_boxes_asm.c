@@ -11,6 +11,7 @@
 #define VGI_DITHER_RECTANGLE	6
 #define VGI_VERT_TRIANGLE	7
 #define VGI_HORIZ_TRIANGLE	8
+#define VGI_VSTRIPE_RECTANGLE	9
 #define	VGI_END			15
 
 int main(int argc, char **argv) {
@@ -57,6 +58,9 @@ int main(int argc, char **argv) {
 			}
 			if (!strncmp(buffer,"HTRI",4)) {
 				type=VGI_HORIZ_TRIANGLE;
+			}
+			if (!strncmp(buffer,"VSTRP",5)) {
+				type=VGI_VSTRIPE_RECTANGLE;
 			}
 			if (!strncmp(buffer,"END",3)) {
 				type=VGI_END;
@@ -174,6 +178,20 @@ int main(int argc, char **argv) {
 				printf("$%02X,",yt);
 				printf("$%02X,",yb);
 				printf("$%02X\n",xr);
+				size+=7;
+				break;
+
+			case VGI_VSTRIPE_RECTANGLE: /* vstriped rectangle */
+				sscanf(buffer,"%*s %i %i %i %i %i %i",
+					&color1,&color2,
+					&x1,&y1,&x2,&y2);
+				printf(".byte $%02X,",(type<<4)|7);
+				printf("$%02X,",color1);
+				printf("$%02X,",x1);
+				printf("$%02X,",y1);
+				printf("$%02X,",x2-x1);
+				printf("$%02X,",y2-y1);
+				printf("$%02X\n",color2);
 				size+=7;
 				break;
 

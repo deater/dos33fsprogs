@@ -14,9 +14,9 @@ vgi_test:
 
 	; get pointer to image data
 
-	lda	#<rocket_door_data
+	lda	#<red_book_data
 	sta	VGIL
-	lda	#>rocket_door_data
+	lda	#>red_book_data
 	sta	VGIH
 
 ;	lda	#<clock_data
@@ -144,7 +144,7 @@ vgi_rts_table:
 	.word vgi_dithered_rectangle-1	; 6 = dithered rectangle
 	.word vgi_vertical_triangle-1	; 7 = vertical triangle
 	.word vgi_horizontal_triangle-1	; 8 = horizontal triangle
-	.word all_done-1
+	.word vgi_vstripe_rectangle-1	; 9 = vstripe rectangle
 	.word all_done-1
 	.word all_done-1
 	.word all_done-1

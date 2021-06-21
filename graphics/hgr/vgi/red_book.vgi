@@ -1,146 +1,51 @@
-; Rocket from Myst
-CLS	255						; white background
-RECT	1	6	0	122	140	191	; ocean left
-RECT	1	6	140	122	279	191	; ocean right
-; rock
-RECT	1	5	239	171	279	191	; green/orange rock
-VTRI	4	228	162	226	245	171	; black edge
-VTRI	4	228	162	224	244	185	; black edge
-VTRI	4	232	191	224	244	184	; upside down
-VTRI	4	255	165	245	255	171	; black right edge
-VTRI	4	255	178	245	255	171	; black right edge
-RECT	4	4	255	170	279	178	; rock shade
-RECT	4	4	255	163	270	178	; rock shade
-; base
-DRECT	0x8	0x22	86	124	193	191	; green brick dock
-FCIRC	7	97	121	4			; left platform
-FCIRC	7	180	121	4			; right platform
-RECT	7	7	99	119	175	127	; platform
-RECT	4	4	103	114	178	121	; shady platform
-HTRI	4	95	120	115	120	102	; left shady plat
-HTRI	4	185	120	115	120	175	; right shady plat
-RECT	0	0	102	128	116	191	; left shade
-RECT	0	0	156	126	169	191	; center shade
-RECT	0	0	179	126	194	191	; right shade
-RECT	3	3	89	137	93	146	; left light
-RECT	3	3	186	139	190	147	; right light
-; spaceship
-POINT	5	4	94				; nosepipe
-LINETO	26	94					; 
-HTRI	4	25	94	84	105	43	; noscone
-; draw deeper Z body
-HTRI	5	233	103	103	114	179	; behind bottom fin
-; draw tails
-FCIRC	4	217	87	32			; tails
-FCIRC	7	247	87	25			; tails cutout
-RECT	4	4	231	59	263	64	; top fin
-HTRI	4	255	58	54	58	222
-RECT	4	4	230	108	249	120	; bottom fin
-RECT	4	4	240	111	278	115	; bottom fin
-RECT	4	4	220	115	263	120	; bottom fin
-; draw body
-RECT	5	5	44	84	234	101	; body
-HTRI	5	44	84	77	84	69	; left top
-HTRI	5	234	88	75	88	182	; right top
-RECT	5	5	75	76	190	84	; center top	
-HTRI	7	223	84	84	88	234	; right cutout
-RECT	5	5	44	101	185	106	; next strip down
-HTRI	5	228	101	101	107	187	; over bottom fin
-HTRI	5	44	106	106	113	74	; left under
-RECT	5	5	74	106	185	113	; next layer
-HTRI	5	74	113	113	100	102	; next left
-HTRI	5	181	113	113	100	173	; next right
-RECT	5	4	99	113	173	117	; next layer
-; decorations
-RECT	4	4	234	88	239	101	; nozzle
-HTRI	4	173	84	79	88	163	; weird scoop
-HTRI	4	219	88	83	87	210	; another scoop
-DRECT	0xcc	0xb3	67	80	74	110	; left stripe
-DRECT	0xcc	0xb3	70	76	75	80	; left stripe
-DRECT	0xcc	0xb3	70	106	75	114	; left stripe
-DRECT	0xcc	0xb3	183	76	190	112	; right stripe
-; door
-POINT	4	150	80
-LINETO	115	80
-LINETO	115	108
-LINETO	120	111
-LINETO	137	111
-POINT	7	138	81
-LINETO	138	109
-; door lines
-POINT	4	139	96
-LINETO	168	97
-POINT	4	139	100
-LINETO	165	100
-; marker switch
-RECT	6	6	148	116	158	124	; base
-RECT	7	7	147	101	158	117	; border
-RECT	5	1	150	103	155	113	; woodgrain
-VTRI	6	154	95	148	158	101	; top
-POINT	2	151	97				; handle
-LINETO	155	97		
-; walkway
-VTRI	1	128	129	101	109	191	; left path green
-VTRI	3	129	129	109	129	191	; left path white
-RECT	3	3	129	129	151	191	; center path
-VTRI	1	153	129	170	179	191	; right path green
-VTRI	3	152	129	152	170	191	; right path white
-POINT	0	152	129				; right gap
-LINETO	170	191					; right gap
-POINT	0	129	129				; left gap
-LINETO	109	191					; left gap
-; left railing
-POINT	0	127	115				; far left pole
-LINETO	128	133
-POINT	3	127	115				; far left rope
-LINETO	122	129
-POINT	2	123	126				; center left pole
-LINETO	123	147
-POINT	3	120	128				; center left rope
-LINETO	116	144
-LINETO	109	154
-LINETO	99	158
-RECT	2	2	97	164	100	191	; near pole
-FCIRC	2	98	161	4			; near pole circle
-; right railing
-POINT	0	153	117				; far right pole
-LINETO	152	132
-POINT	3	153	118				; far right rope
-LINETO	157	129
-POINT	2	158	126				; center right pole
-LINETO	157	141
-POINT	3	158	127				; center right rope
-LINETO	162	142
-LINETO	168	154
-LINETO	178	160
-RECT	2	2	177	164	181	191	; near pole
-FCIRC	2	179	161	4			; near pole circle
-; wire pole
-RECT	6	6	174	88	179	126	; pole
-RECT	6	6	174	73	179	80	; insulator
-POINT	6	177	90				; thinner pole
-LINETO	177	74					; to top
-; shadow
-POINT	0	129	191
-LINETO	144	187
-POINT	0	139	188
-LINETO	132	180
-LINETO	130	170
-LINETO	129	157
-LINETO	134	149
-LINETO	139	143
-LINETO	135	138
-LINETO	134	132
-LINETO	138	126
-LINETO	131	127
-POINT	0	126	145
-LINETO	143	142
-; power wire
-POINT	6	279	54				; from off screen
-LINETO	238	65
-LINETO	177	74
-LINETO	170	82
-LINETO	173	85
-LINETO	189	88
-LINETO	209	86
+; Red Book from Myst
+CLS	0x80						; white background
+VSTRP	0xA2	0xC4	15	0	55	192	; woodgrain left
+VSTRP	0xA2	0xC4	237	0	270	192	; woodgrain right
+RECT	5	4	56	53	233	60	; top bar
+RECT	5	4	57	143	233	151	; bottom bar
+VSTRP	0xA2	0xC4	58	152	231	191	; bottom pannel
+RECT	5	5	69	83	221	134	; bottom bar
+RECT	5	5	57	135	232	140	; bottom lip
+VTRI	5	69	84	61	69	135	; left triangle
+VTRI	5	219	84	219	228	135	; right triangle
+POINT	4	67	94
+LINETO	223	94
+; upper
+VSTRP	0xA2	0xC4	68	1	231	54	; toppannel
+POINT	4	68	54				; left lines
+LINETO	70	32
+LINETO	79	12
+LINETO	87	0
+POINT	4	73	54
+LINETO	76	33
+LINETO	82	16
+LINETO	94	0
+POINT	4	216	53
+LINETO	216	37
+LINETO	208	17
+LINETO	196	0
+POINT	4	222	54
+LINETO	221	33
+LINETO	213	15
+LINETO	204	0
+POINT	4	234	53
+LINETO	230	34
+LINETO	222	12
+LINETO	216	0
+VTRI	4	69	32	69	84	0
+VTRI	4	230	32	216	230	0
+; light
+RECT	1	1	134	36	159	43	; light
+RECT	1	5	134	43	159	53	; light
+POINT	4	134	50
+LINETO	158	50
+; page
+RECT	2	2	175	89	201	135
+; book
+RECT	4	4	124	132	164	136	; pages
+RECT	2	3	126	77	166	132	; book cover
+RECT	4	4	127	76	133	132	; left bar
+HTRI	4	156	76	75	84	166	; l triangle top
+HTRI	4	158	131	123	132	166	; l triangle bottom
 END
