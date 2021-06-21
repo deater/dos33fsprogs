@@ -2,4 +2,21 @@
 0	255						; white background
 1	1	6	0	122	140	191	; ocean left
 1	1	6	140	122	279	191	; ocean right
+; base
+6	0x8	0x22	86	124	193	191	; green brick dock
+3	7	99	121	4			; left platform
+3	7	180	121	4			; right platform
+1	7	7	99	119	175	125	; platform
+1	0	0	102	128	116	191	; left shade
+1	0	0	179	126	194	191	; right shade
+1	7	7	89	137	93	146	; left light
+1	7	7	186	139	190	147	; right light
+; wire
+1	6	6	174	88	179	126	; pole
+1	6	6	174	73	179	80	; insulator
+4	6	177	90				; thinner pole
+5	177	74					; to top
+5	237	64					; to top
+;5	279	53					; to top
+5	255	60					; to top
 15

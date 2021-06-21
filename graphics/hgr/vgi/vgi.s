@@ -14,10 +14,15 @@ vgi_test:
 
 	; get pointer to image data
 
-	lda	#<clock_data
+	lda	#<rocket_data
 	sta	VGIL
-	lda	#>clock_data
+	lda	#>rocket_data
 	sta	VGIH
+
+;	lda	#<clock_data
+;	sta	VGIL
+;	lda	#>clock_data
+;	sta	VGIH
 
 	jsr	play_vgi
 
@@ -37,11 +42,22 @@ loopy:
 	jsr	fake_input
 	jsr	fake_input
 
-
-
 	bit	FULLGR
 
-	jmp	loopy
+
+	lda	#<rocket_data
+	sta	VGIL
+	lda	#>rocket_data
+	sta	VGIH
+
+	jsr	play_vgi
+
+	jsr	wait_until_keypress
+
+	bit	TEXTGR
+
+
+;	jmp	loopy
 done:
 	jmp	done
 
@@ -114,6 +130,7 @@ all_done:
 .include "vgi_lines.s"
 
 .include "clock.data"
+.include "rocket.data"
 
 
 
