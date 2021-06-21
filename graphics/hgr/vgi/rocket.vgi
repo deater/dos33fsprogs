@@ -1,0 +1,5 @@
+; Rocket from Myst
+0	255						; white background
+1	1	6	0	122	140	191	; ocean left
+1	1	6	140	122	279	191	; ocean right
+15
