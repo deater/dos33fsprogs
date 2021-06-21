@@ -13,14 +13,64 @@ RECT	4	4	255	170	279	178	; rock shade
 RECT	4	4	255	163	270	178	; rock shade
 ; base
 DRECT	0x8	0x22	86	124	193	191	; green brick dock
-FCIRC	7	99	121	4			; left platform
+FCIRC	7	97	121	4			; left platform
 FCIRC	7	180	121	4			; right platform
 RECT	7	7	99	119	175	127	; platform
+RECT	4	4	103	114	178	119	; shady platform
+HTRI	4	95	119	115	119	102	; left shady plat
+HTRI	4	185	119	115	119	175	; right shady plat
 RECT	0	0	102	128	116	191	; left shade
 RECT	0	0	156	126	169	191	; center shade
 RECT	0	0	179	126	194	191	; right shade
 RECT	3	3	89	137	93	146	; left light
 RECT	3	3	186	139	190	147	; right light
+; spaceship
+POINT	5	4	94				; nosepipe
+LINETO	26	94					; 
+HTRI	4	25	94	84	105	43	; noscone
+; draw deeper Z body
+HTRI	5	233	103	103	114	179	; behind bottom fin
+; draw tails
+FCIRC	4	217	87	32			; tails
+FCIRC	7	247	87	25			; tails cutout
+RECT	4	4	231	59	263	64	; top fin
+HTRI	4	255	58	54	58	222
+RECT	4	4	230	108	249	120	; bottom fin
+RECT	4	4	240	111	278	115	; bottom fin
+RECT	4	4	220	115	263	120	; bottom fin
+; draw body
+RECT	5	5	44	84	234	101	; body
+HTRI	5	44	84	77	84	69	; left top
+HTRI	5	234	88	75	88	182	; right top
+RECT	5	5	75	76	190	84	; center top	
+HTRI	7	223	84	84	88	234	; right cutout
+RECT	5	5	44	101	185	106	; next strip down
+HTRI	5	228	101	101	107	187	; over bottom fin
+HTRI	5	44	106	106	113	74	; left under
+RECT	5	5	74	106	185	113	; next layer
+HTRI	5	74	113	113	100	102	; next left
+HTRI	5	181	113	113	100	173	; next right
+RECT	5	4	99	113	173	117	; next layer
+; decorations
+RECT	4	4	234	88	239	101	; nozzle
+HTRI	4	173	84	79	88	163	; weird scoop
+HTRI	4	219	88	83	87	210	; another scoop
+DRECT	0xcc	0xb3	67	80	74	108	; left stripe
+DRECT	0xcc	0xb3	70	75	75	80	; left stripe
+DRECT	0xcc	0xb3	70	106	75	113	; left stripe
+; door
+POINT	4	150	80
+LINETO	115	80
+LINETO	115	108
+LINETO	120	111
+LINETO	137	111
+POINT	7	138	81
+LINETO	138	109
+; door lines
+POINT	4	139	96
+LINETO	168	97
+POINT	4	139	100
+LINETO	165	100
 ; walkway
 VTRI	1	128	129	101	109	191	; left path green
 VTRI	3	129	129	109	129	191	; left path white
@@ -62,6 +112,21 @@ RECT	6	6	174	88	179	126	; pole
 RECT	6	6	174	73	179	80	; insulator
 POINT	6	177	90				; thinner pole
 LINETO	177	74					; to top
+; shadow
+POINT	0	129	191
+LINETO	144	187
+POINT	0	139	188
+LINETO	132	180
+LINETO	130	170
+LINETO	129	157
+LINETO	134	149
+LINETO	139	143
+LINETO	135	138
+LINETO	134	132
+LINETO	138	126
+LINETO	131	127
+POINT	0	126	145
+LINETO	143	142
 ; power wire
 POINT	6	279	54				; from off screen
 LINETO	238	65

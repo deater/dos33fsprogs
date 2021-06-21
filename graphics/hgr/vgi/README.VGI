@@ -54,6 +54,8 @@ VGI Rectangle (1)
 	x1 must be < 255.  relative drawing is used so x2 can go to
 	the edge of the screen (279)
 
+	Unlike the other routines, this one uses custon horizontal-line
+	routines for speed so much faster than the ROM line routine
 
 ==============
 VGI Circle (2)

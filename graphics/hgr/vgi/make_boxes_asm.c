@@ -19,6 +19,7 @@ int main(int argc, char **argv) {
 	char *ptr;
 	int type,color1,color2,x1,x2,y1,y2,r,xl,xr,yt,yb;
 	int line=1;
+	int size=0;
 
 	while(1) {
 
@@ -70,6 +71,7 @@ int main(int argc, char **argv) {
 				sscanf(buffer,"%*s %i",&color1);
 				printf(".byte $%02X,",(type<<4)|2);
 				printf("$%02X\n",color1);
+				size+=2;
 				break;
 
 			case VGI_RECTANGLE: /* compact rectangle */
@@ -82,6 +84,7 @@ int main(int argc, char **argv) {
 				printf("$%02X,",y1);
 				printf("$%02X,",x2-x1);
 				printf("$%02X\n",y2-y1);
+				size+=6;
 				break;
 
 			case VGI_CIRCLE: /* circle */
@@ -93,6 +96,7 @@ int main(int argc, char **argv) {
 				printf("$%02X,",x1);
 				printf("$%02X,",y1);
 				printf("$%02X\n",r);
+				size+=5;
 				break;
 
 			case VGI_FILLED_CIRCLE: /* filled circle */
@@ -104,6 +108,7 @@ int main(int argc, char **argv) {
 				printf("$%02X,",x1);
 				printf("$%02X,",y1);
 				printf("$%02X\n",r);
+				size+=5;
 				break;
 
 			case VGI_POINT: /* point */
@@ -118,6 +123,7 @@ int main(int argc, char **argv) {
 				printf("$%02X,",color1);
 				printf("$%02X,",x1);
 				printf("$%02X\n",y1);
+				size+=4;
 				break;
 
 			case VGI_LINETO: /* line to */
@@ -126,6 +132,7 @@ int main(int argc, char **argv) {
 				printf(".byte $%02X,",(type<<4)|3);
 				printf("$%02X,",x1);
 				printf("$%02X\n",y1);
+				size+=3;
 				break;
 
 			case VGI_DITHER_RECTANGLE: /* dithered rectangle */
@@ -139,6 +146,7 @@ int main(int argc, char **argv) {
 				printf("$%02X,",x2-x1);
 				printf("$%02X,",y2-y1);
 				printf("$%02X\n",color2);
+				size+=7;
 				break;
 
 			case VGI_VERT_TRIANGLE: /* vertical triangle */
@@ -152,6 +160,7 @@ int main(int argc, char **argv) {
 				printf("$%02X,",xl);
 				printf("$%02X,",xr);
 				printf("$%02X\n",yb);
+				size+=7;
 				break;
 
 			case VGI_HORIZ_TRIANGLE: /* horizontal triangle */
@@ -165,10 +174,12 @@ int main(int argc, char **argv) {
 				printf("$%02X,",yt);
 				printf("$%02X,",yb);
 				printf("$%02X\n",xr);
+				size+=7;
 				break;
 
 			case VGI_END: /* end */
 				printf(".byte $FF\n");
+				size+=1;
 				break;
 
 			default:
@@ -182,5 +193,7 @@ int main(int argc, char **argv) {
 	}
 
 	printf("\n");
+
+	fprintf(stderr,"Size is %d bytes\n",size);
 	return 0;
 }

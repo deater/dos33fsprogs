@@ -41,5 +41,43 @@ done_vtri:
 	jmp	vgi_loop
 
 
+
+	;========================
+	; VGI horizontal triangle
+	;========================
+
+;	VGI_TCOLOR	= P0
+;	VGI_VX		= P1
+;	VGI_VY		= P2
+	VGI_THYT	= P3
+	VGI_THYB	= P4
+	VGI_THXR	= P5
+
 vgi_horizontal_triangle:
+
+	ldx	VGI_TCOLOR
+	lda	COLORTBL,X
+	sta	HGR_COLOR
+
+htri_loop:
+	ldy	#0
+	ldx	VGI_VX
+	lda	VGI_VY
+
+	jsr	HPLOT0		; plot at (Y,X), (A)
+
+
+	ldx	#0
+	ldy	VGI_THYT
+	lda	VGI_THXR
+
+	jsr	HGLIN		; line to (X,A),(Y)
+
+	inc	VGI_THYT
+	lda	VGI_THYT
+	cmp	VGI_THYB
+	bcc	htri_loop
+
+done_htri:
 	jmp	vgi_loop
+
