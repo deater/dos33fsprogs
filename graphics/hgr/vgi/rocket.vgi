@@ -16,9 +16,9 @@ DRECT	0x8	0x22	86	124	193	191	; green brick dock
 FCIRC	7	97	121	4			; left platform
 FCIRC	7	180	121	4			; right platform
 RECT	7	7	99	119	175	127	; platform
-RECT	4	4	103	114	178	119	; shady platform
-HTRI	4	95	119	115	119	102	; left shady plat
-HTRI	4	185	119	115	119	175	; right shady plat
+RECT	4	4	103	114	178	121	; shady platform
+HTRI	4	95	120	115	120	102	; left shady plat
+HTRI	4	185	120	115	120	175	; right shady plat
 RECT	0	0	102	128	116	191	; left shade
 RECT	0	0	156	126	169	191	; center shade
 RECT	0	0	179	126	194	191	; right shade
@@ -55,9 +55,10 @@ RECT	5	4	99	113	173	117	; next layer
 RECT	4	4	234	88	239	101	; nozzle
 HTRI	4	173	84	79	88	163	; weird scoop
 HTRI	4	219	88	83	87	210	; another scoop
-DRECT	0xcc	0xb3	67	80	74	108	; left stripe
-DRECT	0xcc	0xb3	70	75	75	80	; left stripe
-DRECT	0xcc	0xb3	70	106	75	113	; left stripe
+DRECT	0xcc	0xb3	67	80	74	110	; left stripe
+DRECT	0xcc	0xb3	70	76	75	80	; left stripe
+DRECT	0xcc	0xb3	70	106	75	114	; left stripe
+DRECT	0xcc	0xb3	183	76	190	112	; right stripe
 ; door
 POINT	4	150	80
 LINETO	115	80
@@ -71,6 +72,13 @@ POINT	4	139	96
 LINETO	168	97
 POINT	4	139	100
 LINETO	165	100
+; marker switch
+RECT	6	6	148	116	158	124	; base
+RECT	7	7	147	101	158	117	; border
+RECT	5	1	150	103	155	113	; woodgrain
+VTRI	6	154	95	148	158	101	; top
+POINT	2	151	97				; handle
+LINETO	155	97		
 ; walkway
 VTRI	1	128	129	101	109	191	; left path green
 VTRI	3	129	129	109	129	191	; left path white
