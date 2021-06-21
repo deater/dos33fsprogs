@@ -1,0 +1,54 @@
+; Rocket Door from Myst
+CLS	255						; white background
+RECT	1	7	0	107	119	192	; ocean left
+; platform
+VTRI	4	105	168	62	140	191	; shady platform
+VTRI	7	95	174	62	114	191	; white platform
+; nosepole
+POINT	5	26	82
+LINETO	38	84
+; ship
+RECT	5	5	153	0	278	192	; left
+FCIRC	5	77	87	42			; nose
+FCIRC	4	89	89	51			; nose
+FCIRC	5	101	91	60			; nose
+VTRI	5	154	0	65	154	47	; left top
+VTRI	5	139	191	65	154	135	; left bottom
+RECT	5	5	139	45	182	192	; left
+; lines
+POINT	4	41	87				; front top
+LINETO	79	94
+POINT	4	44	104				; front bottom
+LINETO	71	120
+; lines
+POINT	4	267	0				; top line
+LINETO	192	15
+POINT	4	279	178				; center line
+LINETO	169	145
+POINT	4	243	191				; bottom line
+LINETO	172	164
+; door
+POINT	7	175	191				; door bottom right
+LINETO	172	180
+LINETO	168	128
+LINETO	174	73
+LINETO	191	16
+LINETO	111	35	
+POINT	4	114	176				; door outline
+LINETO	107	161
+LINETO	99	146
+LINETO	94	113
+LINETO	97	73
+LINETO	110	36
+LINETO	190	17
+POINT	4	99	144				; on door bottom
+LINETO	127	159
+POINT	4	104	56				; on door top
+LINETO	145	49	
+; dark step
+VTRI	4	107	161	117	130	173	; top half
+VTRI	4	130	191	117	130	173	; left third
+VTRI	4	130	173	130	160	191	; right third
+POINT	7	138	191
+LINETO	119	179
+END

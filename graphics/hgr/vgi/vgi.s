@@ -14,9 +14,9 @@ vgi_test:
 
 	; get pointer to image data
 
-	lda	#<rocket_data
+	lda	#<rocket_door_data
 	sta	VGIL
-	lda	#>rocket_data
+	lda	#>rocket_door_data
 	sta	VGIH
 
 ;	lda	#<clock_data
@@ -42,8 +42,9 @@ loopy:
 	jsr	fake_input
 	jsr	fake_input
 
-	bit	FULLGR
+	; Rocket
 
+	bit	FULLGR
 
 	lda	#<rocket_data
 	sta	VGIL
@@ -55,6 +56,37 @@ loopy:
 	jsr	wait_until_keypress
 
 	bit	TEXTGR
+
+	; Rocket Door
+
+	bit	FULLGR
+
+	lda	#<rocket_door_data
+	sta	VGIL
+	lda	#>rocket_door_data
+	sta	VGIH
+
+	jsr	play_vgi
+
+	jsr	wait_until_keypress
+
+	bit	TEXTGR
+
+	; Red Book
+
+	bit	FULLGR
+
+	lda	#<red_book_data
+	sta	VGIL
+	lda	#>red_book_data
+	sta	VGIH
+
+	jsr	play_vgi
+
+	jsr	wait_until_keypress
+
+	bit	TEXTGR
+
 
 
 ;	jmp	loopy
@@ -132,6 +164,8 @@ all_done:
 
 .include "clock.data"
 .include "rocket.data"
+.include "rocket_door.data"
+.include "red_book.data"
 
 
 
