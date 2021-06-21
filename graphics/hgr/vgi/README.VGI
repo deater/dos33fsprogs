@@ -1,0 +1,144 @@
+VGI -- VMW Retro Vector Graphics Interface
+
+This was designed mostly as a proof-of-concept to drawing some Myst
+scenes.  Might not work well for general graphics.
+
+The Apple II Hi-res screen is 280x192 and 6 colors with lots of limitations
+that are a bit complex to get into here.  Some of the limitations in the
+interface here are working around Apple II issues.
+
+
+Apple II Hi-res Colors:
+~~~~~~~~~~~~~~~~~~~~~~~
+	0 = black (for purple/green)
+	1 = green
+	2 = purple
+	3 = white (for purple/green)
+	4 = black (for blue/orange)
+	5 = orange
+	6 = blue
+	7 = white (for blue/orange)
+
+
+	Note Apple II uses NTSC artifact colors, so weird things happens when
+	you try to put colors next to each other:
+  
+	+ Colors need to be two pixels wide, if you draw single width
+		they may not appear depending on even/odd column
+	+ White lines drawn single width will be colored instead
+	+ Two colors of same group next to each other will have white or black
+		border between
+	+ Two colors of different group next to each other will have odd effects
+		as can only change group every 3.5 pixels.
+
+
+The VGI Commands
+~~~~~~~~~~~~~~~~
+
+===================
+VGI Clearscreen (0)
+
+	CLS	color
+
+	clears screen using ROM routine using color
+
+=================
+VGI Rectangle (1)
+
+	RECT	color1 color2 x1 y1 x2 y2
+
+	draw filled rectangle from (x1,y1) to (x2,y2)
+
+	color1 and color2 are drawn as alternating colors (horizontal stripes)
+
+	x1 must be < 255.  relative drawing is used so x2 can go to
+	the edge of the screen (279)
+
+
+==============
+VGI Circle (2)
+
+	CIRC	color cx cy r
+
+	Draw a circle of color with center (cx,cy) and radius r
+
+	Circles with radius 0 will give an interesting non-circle effect.
+	Bresenham circles are drawn and so certain sizes don't look the
+		best.  Also if the radius is too big things might break
+		as the 8-bit unsigned int oveflows
+
+=====================
+VGI Filled Circle (3)
+
+	FCIRC	color cx cy r
+
+	Draw a filled circle of color at location (cx,cy) with radius r
+
+=============
+VGI Point (4)
+
+	POINT	color x y
+
+	Draws a point of color at (x,y)
+
+	Note, X can be up to 279 here (the color is overloaded behind
+		the scenes to support this)
+
+	The last point you draw is the starting point for LINETO
+
+==============
+VGI Lineto (5)
+
+	LINETO	x y
+
+	Draws a line to (x,y).  The starting point and color come from
+	the last POINT command.
+
+	Note X cannot be > 255 so it can be trouble drawing at the right
+	edge of the screen.  POINT can go up to 279, so you might be able
+	to get what you want by drawing from right to left
+
+==========================
+VGI Dithered Rectangle (6)
+
+	DRECT	c1 c2 x1 y1 x2 y2
+
+	Draws a rectangle, but this time the two colors are raw bitmaps
+	for the output colors, not one of the Apple II colors.  This lets
+	you do fancier dithered color patterns, but it's really hard
+	getting dither patterns that look nice.
+
+
+=========================
+VGI Vertical Triangle (7)
+
+	VTRI	color vx vy xl xr yb
+
+	Draw a flat bottom filled triangle of color.
+	The top vertex is at (vx,vy)
+	The bottom goes from (xl,yb) to (xr,yb)
+
+	If your triangle is too tall you might get moire effects.
+
+	This was much simpler than a proper filled triangle routine.
+
+===========================
+VGI Horizontal Triangle (8)
+
+	HTRI	color vx vy yt yb xr
+
+	Draw a flat-sided filled triangle of color.
+	The side vertex is at (vx,vy)
+	The opposite side goes from (xr,yt) to (xr,yb)
+
+============
+VGI End (15)
+
+	END
+
+	this tells the drawing routine that we are done
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+

@@ -4,16 +4,22 @@
 	; VGI point
 	;========================
 
-	VGI_PCOLOR	= P0
+	VGI_PCOLOR	= P0	; if high bit set, then PX=PX+256
 	VGI_PX		= P1
 	VGI_PY		= P2
 
 vgi_point:
-	ldx	VGI_PCOLOR
+	ldy	#0
+
+	lda	VGI_PCOLOR
+	bpl	vgi_point_color
+	iny
+vgi_point_color:
+	and	#$7f
+	tax
 	lda	COLORTBL,X
 	sta	HGR_COLOR
 
-	ldy	#0
 	ldx	VGI_PX
 	lda	VGI_PY
 

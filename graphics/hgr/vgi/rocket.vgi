@@ -2,25 +2,72 @@
 CLS	255						; white background
 RECT	1	6	0	122	140	191	; ocean left
 RECT	1	6	140	122	279	191	; ocean right
+; rock
+RECT	1	5	239	171	279	191	; green/orange rock
+VTRI	4	228	162	226	245	171	; black edge
+VTRI	4	228	162	224	244	185	; black edge
+VTRI	4	232	191	224	244	184	; upside down
+VTRI	4	255	165	245	255	171	; black right edge
+VTRI	4	255	178	245	255	171	; black right edge
+RECT	4	4	255	170	279	178	; rock shade
+RECT	4	4	255	163	270	178	; rock shade
 ; base
 DRECT	0x8	0x22	86	124	193	191	; green brick dock
 FCIRC	7	99	121	4			; left platform
 FCIRC	7	180	121	4			; right platform
-RECT	7	7	99	119	175	125	; platform
+RECT	7	7	99	119	175	127	; platform
 RECT	0	0	102	128	116	191	; left shade
+RECT	0	0	156	126	169	191	; center shade
 RECT	0	0	179	126	194	191	; right shade
-RECT	7	7	89	137	93	146	; left light
-RECT	7	7	186	139	190	147	; right light
+RECT	3	3	89	137	93	146	; left light
+RECT	3	3	186	139	190	147	; right light
 ; walkway
-VTRI	7	129	129	109	129	191	; left path
-RECT	7	7	129	129	151	191	; center path
-VTRI	7	151	129	151	170	191	; right path
-; wire
+VTRI	1	128	129	101	109	191	; left path green
+VTRI	3	129	129	109	129	191	; left path white
+RECT	3	3	129	129	151	191	; center path
+VTRI	1	153	129	170	179	191	; right path green
+VTRI	3	152	129	152	170	191	; right path white
+POINT	0	152	129				; right gap
+LINETO	170	191					; right gap
+POINT	0	129	129				; left gap
+LINETO	109	191					; left gap
+; left railing
+POINT	0	127	115				; far left pole
+LINETO	128	133
+POINT	3	127	115				; far left rope
+LINETO	122	129
+POINT	2	123	126				; center left pole
+LINETO	123	147
+POINT	3	120	128				; center left rope
+LINETO	116	144
+LINETO	109	154
+LINETO	99	158
+RECT	2	2	97	164	100	191	; near pole
+FCIRC	2	98	161	4			; near pole circle
+; right railing
+POINT	0	153	117				; far right pole
+LINETO	152	132
+POINT	3	153	118				; far right rope
+LINETO	157	129
+POINT	2	158	126				; center right pole
+LINETO	157	141
+POINT	3	158	127				; center right rope
+LINETO	162	142
+LINETO	168	154
+LINETO	178	160
+RECT	2	2	177	164	181	191	; near pole
+FCIRC	2	179	161	4			; near pole circle
+; wire pole
 RECT	6	6	174	88	179	126	; pole
 RECT	6	6	174	73	179	80	; insulator
 POINT	6	177	90				; thinner pole
 LINETO	177	74					; to top
-LINETO	237	64					; to top
-;LINETO	279	53					; to top
-LINETO	255	60					; to top
+; power wire
+POINT	6	279	54				; from off screen
+LINETO	238	65
+LINETO	177	74
+LINETO	170	82
+LINETO	173	85
+LINETO	189	88
+LINETO	209	86
 END

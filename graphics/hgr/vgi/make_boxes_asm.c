@@ -111,6 +111,10 @@ int main(int argc, char **argv) {
 					&color1,
 					&x1,&y1);
 				printf(".byte $%02X,",(type<<4)|4);
+				if (x1>255) {
+					x1=x1&0xff;
+					color1|=128;
+				}
 				printf("$%02X,",color1);
 				printf("$%02X,",x1);
 				printf("$%02X\n",y1);
