@@ -1,31 +1,79 @@
 #include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+#define VGI_CLEARSCREEN		0
+#define VGI_RECTANGLE		1
+#define VGI_CIRCLE		2
+#define VGI_FILLED_CIRCLE	3
+#define VGI_POINT		4
+#define VGI_LINETO		5
+#define VGI_DITHER_RECTANGLE	6
+#define VGI_VERT_TRIANGLE	7
+#define VGI_HORIZ_TRIANGLE	8
+#define	VGI_END			15
 
 int main(int argc, char **argv) {
 
 	char buffer[1024];
 	char *ptr;
-	int type,color1,color2,x1,x2,y1,y2,r;
+	int type,color1,color2,x1,x2,y1,y2,r,xl,xr,yt,yb;
 	int line=1;
 
 	while(1) {
+
+		type=0;
 
 		ptr=fgets(buffer,1024,stdin);
 		if (ptr==NULL) break;
 
 		if (buffer[0]==';') continue;
 
-		sscanf(buffer,"%i",&type);
+		if (isalpha(buffer[0])) {
+			if (!strncmp(buffer,"CLS",3)) {
+				type=VGI_CLEARSCREEN;
+			}
+			if (!strncmp(buffer,"RECT",4)) {
+				type=VGI_RECTANGLE;
+			}
+			if (!strncmp(buffer,"CIRC",4)) {
+				type=VGI_CIRCLE;
+			}
+			if (!strncmp(buffer,"FCIRC",5)) {
+				type=VGI_FILLED_CIRCLE;
+			}
+			if (!strncmp(buffer,"POINT",5)) {
+				type=VGI_POINT;
+			}
+			if (!strncmp(buffer,"LINETO",6)) {
+				type=VGI_LINETO;
+			}
+			if (!strncmp(buffer,"DRECT",5)) {
+				type=VGI_DITHER_RECTANGLE;
+			}
+			if (!strncmp(buffer,"VTRI",4)) {
+				type=VGI_VERT_TRIANGLE;
+			}
+			if (!strncmp(buffer,"HTRI",4)) {
+				type=VGI_HORIZ_TRIANGLE;
+			}
+			if (!strncmp(buffer,"END",3)) {
+				type=VGI_END;
+			}
+		}
+		else {
+			sscanf(buffer,"%i",&type);
+		}
 
 		switch(type) {
-			case 0: /* clear screen */
-				sscanf(buffer,"%i %i",&type,&color1);
+			case VGI_CLEARSCREEN: /* clear screen */
+				sscanf(buffer,"%*s %i",&color1);
 				printf(".byte $%02X,",(type<<4)|2);
 				printf("$%02X\n",color1);
 				break;
 
-			case 1: /* compact rectangle */
-				sscanf(buffer,"%i %i %i %i %i %i %i",
-					&type,
+			case VGI_RECTANGLE: /* compact rectangle */
+				sscanf(buffer,"%*s %i %i %i %i %i %i",
 					&color1,&color2,
 					&x1,&y1,&x2,&y2);
 				printf(".byte $%02X,",(type<<4)|6);
@@ -36,9 +84,8 @@ int main(int argc, char **argv) {
 				printf("$%02X\n",y2-y1);
 				break;
 
-			case 2: /* circle */
-				sscanf(buffer,"%i %i %i %i %i",
-					&type,
+			case VGI_CIRCLE: /* circle */
+				sscanf(buffer,"%*s %i %i %i %i",
 					&color1,
 					&x1,&y1,&r);
 				printf(".byte $%02X,",(type<<4)|5);
@@ -48,9 +95,8 @@ int main(int argc, char **argv) {
 				printf("$%02X\n",r);
 				break;
 
-			case 3: /* filled circle */
-				sscanf(buffer,"%i %i %i %i %i",
-					&type,
+			case VGI_FILLED_CIRCLE: /* filled circle */
+				sscanf(buffer,"%*s %i %i %i %i",
 					&color1,
 					&x1,&y1,&r);
 				printf(".byte $%02X,",(type<<4)|5);
@@ -60,9 +106,8 @@ int main(int argc, char **argv) {
 				printf("$%02X\n",r);
 				break;
 
-			case 4: /* point */
-				sscanf(buffer,"%i %i %i %i",
-					&type,
+			case VGI_POINT: /* point */
+				sscanf(buffer,"%*s %i %i %i",
 					&color1,
 					&x1,&y1);
 				printf(".byte $%02X,",(type<<4)|4);
@@ -71,18 +116,16 @@ int main(int argc, char **argv) {
 				printf("$%02X\n",y1);
 				break;
 
-			case 5: /* line to */
-				sscanf(buffer,"%i %i %i",
-					&type,
+			case VGI_LINETO: /* line to */
+				sscanf(buffer,"%*s %i %i",
 					&x1,&y1);
 				printf(".byte $%02X,",(type<<4)|3);
 				printf("$%02X,",x1);
 				printf("$%02X\n",y1);
 				break;
 
-			case 6: /* dithered rectangle */
-				sscanf(buffer,"%i %i %i %i %i %i %i",
-					&type,
+			case VGI_DITHER_RECTANGLE: /* dithered rectangle */
+				sscanf(buffer,"%*s %i %i %i %i %i %i",
 					&color1,&color2,
 					&x1,&y1,&x2,&y2);
 				printf(".byte $%02X,",(type<<4)|7);
@@ -94,12 +137,39 @@ int main(int argc, char **argv) {
 				printf("$%02X\n",color2);
 				break;
 
-			case 15: /* end */
+			case VGI_VERT_TRIANGLE: /* vertical triangle */
+				sscanf(buffer,"%*s %i %i %i %i %i %i",
+					&color1,
+					&x1,&y1,&xl,&xr,&yb);
+				printf(".byte $%02X,",(type<<4)|7);
+				printf("$%02X,",color1);
+				printf("$%02X,",x1);
+				printf("$%02X,",y1);
+				printf("$%02X,",xl);
+				printf("$%02X,",xr);
+				printf("$%02X\n",yb);
+				break;
+
+			case VGI_HORIZ_TRIANGLE: /* horizontal triangle */
+				sscanf(buffer,"%*s %i %i %i %i %i %i",
+					&color1,
+					&x1,&y1,&yt,&yb,&xr);
+				printf(".byte $%02X,",(type<<4)|7);
+				printf("$%02X,",color1);
+				printf("$%02X,",x1);
+				printf("$%02X,",y1);
+				printf("$%02X,",yt);
+				printf("$%02X,",yb);
+				printf("$%02X\n",xr);
+				break;
+
+			case VGI_END: /* end */
 				printf(".byte $FF\n");
 				break;
 
 			default:
-				fprintf(stderr,"Unknown type %i\n",type);
+				fprintf(stderr,"Unknown type %i line %d\n",
+					type,line);
 				break;
 		}
 

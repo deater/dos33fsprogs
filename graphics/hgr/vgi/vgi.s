@@ -110,8 +110,8 @@ vgi_rts_table:
 	.word vgi_point-1		; 4 = dot
 	.word vgi_lineto-1		; 5 = line to
 	.word vgi_dithered_rectangle-1	; 6 = dithered rectangle
-	.word all_done-1
-	.word all_done-1
+	.word vgi_vertical_triangle-1	; 7 = vertical triangle
+	.word vgi_horizontal_triangle-1	; 8 = horizontal triangle
 	.word all_done-1
 	.word all_done-1
 	.word all_done-1
@@ -128,6 +128,7 @@ all_done:
 .include "vgi_circles.s"
 .include "vgi_rectangle.s"
 .include "vgi_lines.s"
+.include "vgi_triangles.s"
 
 .include "clock.data"
 .include "rocket.data"
