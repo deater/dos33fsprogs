@@ -5,12 +5,12 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKERSCRIPTS = ../../../linker_scripts
 EMPTYDISK = ../../../empty_disk/empty.dsk
 
-all:	vgi.dsk make_boxes_asm
+all:	vgi_myst.dsk make_boxes_asm
 
-vgi.dsk:	HELLO VGI
-	cp $(EMPTYDISK) vgi.dsk
-	$(DOS33) -y vgi.dsk SAVE A HELLO
-	$(DOS33) -y vgi.dsk BSAVE -a 0xC00 VGI
+vgi_myst.dsk:	HELLO VGI-MYST
+	cp $(EMPTYDISK) vgi_myst.dsk
+	$(DOS33) -y vgi_myst.dsk SAVE A HELLO
+	$(DOS33) -y vgi_myst.dsk BSAVE -a 0xC00 VGI-MYST
 
 
 ###
@@ -21,13 +21,13 @@ HELLO:	hello.bas
 
 ###
 
-VGI:	vgi.o
-	ld65 -o VGI vgi.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+VGI-MYST:	myst_vgi.o
+	ld65 -o VGI-MYST myst_vgi.o -C $(LINKERSCRIPTS)/apple2_c00.inc
 
-vgi.o: clock.data rocket.data rocket_door.data red_book.data fireplace.data \
-	vgi.s vgi_clearscreen.s vgi_rectangle.s vgi_circles.s vgi_lines.s \
+myst_vgi.o: clock.data rocket.data rocket_door.data red_book.data fireplace.data \
+	myst_vgi.s vgi_clearscreen.s vgi_rectangle.s vgi_circles.s vgi_lines.s \
 	vgi_triangles.s
-	ca65 -o vgi.o vgi.s -l vgi.lst
+	ca65 -o myst_vgi.o myst_vgi.s -l myst_vgi.lst
 
 
 ###
@@ -73,4 +73,4 @@ make_boxes_asm.o:	make_boxes_asm.c
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO VGI make_boxes_asm *.data
+	rm -f *~ *.o *.lst HELLO VGI-MYST make_boxes_asm *.data
