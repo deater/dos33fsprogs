@@ -24,7 +24,7 @@ HELLO:	hello.bas
 VGI:	vgi.o
 	ld65 -o VGI vgi.o -C $(LINKERSCRIPTS)/apple2_c00.inc
 
-vgi.o: clock.data rocket.data rocket_door.data red_book.data \
+vgi.o: clock.data rocket.data rocket_door.data red_book.data fireplace.data \
 	vgi.s vgi_clearscreen.s vgi_rectangle.s vgi_circles.s vgi_lines.s \
 	vgi_triangles.s
 	ca65 -o vgi.o vgi.s -l vgi.lst
@@ -54,6 +54,12 @@ rocket_door.data:	make_boxes_asm rocket_door.vgi
 red_book.data:	make_boxes_asm red_book.vgi
 	echo "red_book_data:" > red_book.data
 	./make_boxes_asm < red_book.vgi >> red_book.data
+
+###
+
+fireplace.data:	make_boxes_asm fireplace.vgi
+	echo "fireplace_data:" > fireplace.data
+	./make_boxes_asm < fireplace.vgi >> fireplace.data
 
 
 ###

@@ -14,9 +14,9 @@ vgi_test:
 
 	; get pointer to image data
 
-;	lda	#<red_book_data
+;	lda	#<fireplace_data
 ;	sta	VGIL
-;	lda	#>red_book_data
+;	lda	#>fireplace_data
 ;	sta	VGIH
 
 	lda	#<clock_data
@@ -120,6 +120,36 @@ loopy:
 	jsr	fake_input
 
 
+	;==========================
+	; Fireplace
+
+	bit	FULLGR
+
+	lda	#<fireplace_data
+	sta	VGIL
+	lda	#>fireplace_data
+	sta	VGIH
+
+	jsr	play_vgi
+
+	jsr	wait_until_keypress
+
+	bit	TEXTGR
+
+
+	jsr	CROUT1		; print linefeed/cr
+
+	lda	#<string10
+	sta	OUTL
+	lda	#>string10
+	sta	OUTH
+
+	jsr	fake_input
+	jsr	fake_input
+	jsr	fake_input
+
+
+
 ;	jmp	loopy
 done:
 	jmp	done
@@ -197,7 +227,7 @@ all_done:
 .include "rocket.data"
 .include "rocket_door.data"
 .include "red_book.data"
-
+.include "fireplace.data"
 
 
 ; string data
@@ -243,6 +273,16 @@ string8:
 
 string9:
 .byte "I'D SAY IT'S MORE OF A PURPLE COLOR",13,0
+
+string10:
+.byte "THIS IS A MOST UNUSUAL FIREPLACE",13
+.byte "THERE ARE MANY BUTTONS HERE",13,0
+
+string11:
+.byte "WHICH BUTTON?",13,0
+
+string12:
+.byte "THAT WAS NOT THE RIGHT ONE",13,0
 
 ; PICK UP PAGE
 ; WHICH PAGE?
