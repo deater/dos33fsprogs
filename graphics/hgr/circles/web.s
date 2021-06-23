@@ -1,4 +1,5 @@
-; circles tiny -- Apple II Hires
+; web -- Apple II Hires
+
 
 
 ; D0+ used by HGR routines
@@ -6,15 +7,26 @@
 HGR_COLOR	= $E4
 HGR_PAGE	= $E6
 
-D		= $F9
-XX		= $FA
-YY		= $FB
+BLAH		= $F5
+COUNT		= $F6
+
+
+
+XX		= $F7
+MINUSXX		= $F8
+YY		= $F9
+MINUSYY		= $FA
+
+D		= $FB
 R		= $FC
 CX		= $FD
 CY		= $FE
 FRAME		= $FF
 
 ; soft-switches
+
+KEYPRESS	= $C000
+KEYRESET	= $C010
 
 ; ROM routines
 
@@ -30,69 +42,44 @@ SETGR		= $FB40		; set graphics and clear LO-RES screen
 BELL2		= $FBE4
 WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
-circles:
+web:
 
 	jsr	HGR2
 
-	lda	#0
-	sta	R
+	ldx	#90
 
 draw_next:
-.if 0
-	inc	FRAME
-	ldy	FRAME
 
-	; Random Color
-	; HCOLOR=1+RND(1)*7
-	lda	$F000,Y
-	and	#$7		; mask to 0...7
-	tax
-	lda	COLORTBL,X
-	sta	HGR_COLOR
+	stx	R
 
-	; CX
-	lda	$F100,Y
-	and	#$7f
-	clc
-	adc	#$40
-	sta	CX
+	; center
 
-	; CY
-	lda	$F200,Y
-	and	#$7f
-	clc
-	adc	#$20
-	sta	CY
+;	lda	#128
+;	sta	CX
+;	lda	#96
+;	sta	CY
 
-	; R
-	lda	$F300,Y
-	and	#$3f
-	sta	R
-.endif
-
-	; A=40+RND(1)*200:B=40+RND(1)*100:Y=RND(1)*40
-
-	lda	#128
-	sta	CX
-	lda	#96
-	sta	CY
-
+	;===============================
+	; draw circle
+	;===============================
+	; draw circle at (CX,CY) of radius R
+	; signed 8-bit math so problems if R > 64?
 
 
 	; XX=0 YY=R
 	; D=3-2*R
 	; GOTO6
+
 	lda	#0
 	sta	XX
 
-	lda	R
-	sta	YY
+;	lda	R
+	stx	YY
 
-	asl
-	sta	D
 	lda	#3
 	sec
-	sbc	D
+	sbc	R
+	sbc	R
 	sta	D
 
 	jmp	do_plots
@@ -114,7 +101,6 @@ circle_loop:
 	asl
 	asl
 	clc
-	adc	D
 	adc	#10
 	jmp	store_D
 
@@ -124,134 +110,95 @@ else:
 	asl
 	asl
 	clc
-	adc	D
 	adc	#6
 store_D:
+	adc	D
 	sta	D
 
 do_plots:
+	; setup constants
+
+	lda	XX
+	eor	#$FF
+	sta	MINUSXX
+	inc	MINUSXX
+
+	lda	YY
+	eor	#$FF
+	sta	MINUSYY
+	inc	MINUSYY
+
 	; HPLOT CX+X,CY+Y
-
-	lda	CX
-	clc
-	adc	XX
-	tax
-	ldy	#0
-	lda	CY
-	clc
-	adc	YY
-
-	jsr	HPLOT0		; plot at (Y,X), (A)
-
 	; HPLOT CX-X,CY+Y
-
-	lda	CX
-	sec
-	sbc	XX
-	tax
-	ldy	#0
-	lda	CY
-	clc
-	adc	YY
-
-	jsr	HPLOT0		; plot at (Y,X), (A)
-
 	; HPLOT CX+X,CY-Y
-
-	lda	CX
-	clc
-	adc	XX
-	tax
-	ldy	#0
-	lda	CY
-	sec
-	sbc	YY
-
-	jsr	HPLOT0		; plot at (Y,X), (A)
-
-
 	; HPLOT CX-X,CY-Y
-
-	lda	CX
-	sec
-	sbc	XX
-	tax
-	ldy	#0
-	lda	CY
-	sec
-	sbc	YY
-
-	jsr	HPLOT0		; plot at (Y,X), (A)
-
 	; HPLOT CX+Y,CY+X
-
-	lda	CX
-	clc
-	adc	YY
-	tax
-	ldy	#0
-	lda	CY
-	clc
-	adc	XX
-
-	jsr	HPLOT0		; plot at (Y,X), (A)
-
-
 	; HPLOT CX-Y,CY+X
-
-	lda	CX
-	sec
-	sbc	YY
-	tax
-	ldy	#0
-	lda	CY
-	clc
-	adc	XX
-
-	jsr	HPLOT0		; plot at (Y,X), (A)
-
 	; HPLOT CX+Y,CY-X
-
-	lda	CX
-	clc
-	adc	YY
-	tax
-	ldy	#0
-	lda	CY
-	sec
-	sbc	XX
-
-	jsr	HPLOT0		; plot at (Y,X), (A)
-
 	; HPLOT CX-Y,CY-X
 
-	lda	CX
-	sec
-	sbc	YY
+	; calc X co-ord
+
+	lda	#7
+	sta	COUNT
+pos_loop:
+	lda	COUNT
+	and	#$4
+	lsr
+	tay
+
+	lda	COUNT
+	lsr
+	bcc	xnoc
+	iny
+xnoc:
+;	lda	CX
+	lda	#128
+	clc
+	adc	XX,Y
 	tax
+
+	; calc y co-ord
+
+	lda	COUNT
+	lsr
+	eor	#$2
+	tay
+
+;	lda	CY
+	lda	#96
+	clc
+	adc	XX,Y
+
 	ldy	#0
-	lda	CY
-	sec
-	sbc	XX
 
 	jsr	HPLOT0		; plot at (Y,X), (A)
+
+	dec	COUNT
+	bpl	pos_loop
 
 
 	; IFY>=XTHEN4
 	lda	YY
 	cmp	XX
-;	bcs	circle_loop
-	bcc	done
+	bcs	circle_loop
 
-	jmp	circle_loop
 done:
-	lda	R
-	clc
-	adc	#3
-	sta	R
-stop:
-	cmp	#90
-	beq	stop
+	ldx	R
+;	sec
+;	sbc	#3
 
-	; GOTO1
-	jmp	draw_next
+	dex
+	dex
+	dex
+
+	bpl	draw_next
+
+stop:
+	jsr	WAIT
+	txa
+	jsr	WAIT
+
+	; for once we get this for free, even though we don't need it
+
+	jmp	web

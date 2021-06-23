@@ -156,3 +156,12 @@ VGI End (15)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+Size comparison:
+
+	VGI data	Captured+Compressed	compressed autoconvert
+	========	===================	======================
+clock	385B		1228B
+rocket	623B
+door	189B
+book	212B
+firep	486B

@@ -22,7 +22,7 @@ circles.dsk:	HELLO CIRCLES CIRCLES_FILL ARCS WEB PAC ROSE \
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 CIRCLES
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 CIRCLES_FILL
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 ARCS
-	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 WEB
+	$(DOS33) -y circles.dsk BSAVE -a 0x03f5 WEB
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 PAC
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 ROSE
 
@@ -96,7 +96,7 @@ arcs.o:	arcs.s
 #
 
 WEB:	web.o
-	ld65 -o WEB web.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+	ld65 -o WEB web.o -C $(LINKER_SCRIPTS)/apple2_3f5.inc
 
 web.o:	web.s
 	ca65 -o web.o web.s -l web.lst
