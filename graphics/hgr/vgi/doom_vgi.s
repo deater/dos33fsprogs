@@ -113,7 +113,7 @@ start_interrupts:
 
 	jsr	play_vgi
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
 
 
@@ -126,6 +126,10 @@ loopy:
 	sta	OUTH
 
 	jsr	fake_input
+
+;	lda	#21
+;	sta	$22
+
 	jsr	fake_input
 	jsr	fake_input
 
@@ -207,12 +211,19 @@ all_done:
 ;
 
 string1:
-.byte "YOU SEE A CLOCK TOWER READING 12:00",13
-.byte "     LEFT/RIGHT/FORWARD",13,0
+;      01234567890123456789012345678901234567890
+.byte "  ====> AMMO: 50  HEALTH: 100% <====",13,0
 
-; SWIM TO TOWER
+string99:
+.byte "  ====> AMMO: 50  HEALTH: 100% <====",13
+.byte "YOU ARE SOME SORT OF SPACE MARINE",13
+.byte "YOU HEAR SOME ROCKING CHIPTUNES",0
+
+; FORWARD
 string2:
-.byte "YOU DON'T KNOW HOW TO ",34,"SWIM",34,13,0
+.byte "  ====> AMMO: 50  HEALTH: 100% <====",13
+.byte "ARE YOU SURE YOU WANT TO MOVE?",13
+.byte "IT TOOK A BIT TO RENDER THAT LAST FRAME",13,0
 
 ; WADE TO TOWER
 string3:
