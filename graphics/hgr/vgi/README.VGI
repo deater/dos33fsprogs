@@ -161,6 +161,15 @@ VGI Line (10)
 
 	The last point you draw is the starting point for LINETO
 
+=============
+VGI Line Far (11)
+
+	LINE	color x1 y1 x2 y2
+
+	Draws a line from (x1,y1)
+
+	In this one X2 must be > 255
+
 ============
 VGI End (15)
 

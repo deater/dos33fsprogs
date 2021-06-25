@@ -72,3 +72,24 @@ vgi_line:
 	jsr	HGLIN		; line to (X,A),(Y)
 
 	jmp	vgi_loop
+
+	;========================
+	; VGI LINE FAR
+	;========================
+	; assume second x-coord is > 256
+;	VGI_LX	= P0
+;	VGI_LY	= P1
+;	VGI_LX2 = P3
+;	VGI_LY2	= P4
+
+vgi_line_far:
+	jsr	vgi_point_common
+
+	ldx	#1
+	ldy	VGI_LY2
+	lda	VGI_LX2
+
+	jsr	HGLIN		; line to (X,A),(Y)
+
+	jmp	vgi_loop
+

@@ -7,10 +7,11 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	vgi_myst.dsk make_boxes_asm
 
-vgi_myst.dsk:	HELLO VGI-MYST
+vgi_myst.dsk:	HELLO VGI-MYST VGI-DOOM
 	cp $(EMPTYDISK) vgi_myst.dsk
 	$(DOS33) -y vgi_myst.dsk SAVE A HELLO
 	$(DOS33) -y vgi_myst.dsk BSAVE -a 0xC00 VGI-MYST
+	$(DOS33) -y vgi_myst.dsk BSAVE -a 0x4000 VGI-DOOM
 
 
 ###
@@ -29,6 +30,23 @@ myst_vgi.o: clock.data rocket.data rocket_door.data red_book.data fireplace.data
 	vgi_triangles.s
 	ca65 -o myst_vgi.o myst_vgi.s -l myst_vgi.lst
 
+###
+
+VGI-DOOM:	doom_vgi.o
+	ld65 -o VGI-DOOM doom_vgi.o -C $(LINKERSCRIPTS)/apple2_4000.inc
+
+doom_vgi.o: doom.data \
+	doom_vgi.s vgi_clearscreen.s vgi_rectangle.s vgi_circles.s vgi_lines.s \
+	vgi_triangles.s
+	ca65 -o doom_vgi.o doom_vgi.s -l doom_vgi.lst
+
+
+
+###
+
+doom.data:	make_boxes_asm doom.vgi
+	echo "doom_data:" > doom.data
+	./make_boxes_asm < doom.vgi >> doom.data
 
 ###
 
@@ -79,4 +97,4 @@ make_boxes_asm.o:	make_boxes_asm.c
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO VGI-MYST make_boxes_asm *.data
+	rm -f *~ *.o *.lst HELLO VGI-MYST VGI-DOOM make_boxes_asm *.data

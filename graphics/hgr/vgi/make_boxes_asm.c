@@ -13,6 +13,7 @@
 #define VGI_HORIZ_TRIANGLE	8
 #define VGI_VSTRIPE_RECTANGLE	9
 #define VGI_LINE		10
+#define VGI_LINE_FAR		11
 #define	VGI_END			15
 
 /* non-encoded pseudo-values */
@@ -54,6 +55,9 @@ int main(int argc, char **argv) {
 			}
 			if (!strncmp(buffer,"LINETO",6)) {
 				type=VGI_LINETO;
+			}
+			else if (!strncmp(buffer,"LINEF",5)) {
+				type=VGI_LINE_FAR;
 			}
 			else if (!strncmp(buffer,"LINE",4)) {
 				type=VGI_LINE;
@@ -235,6 +239,28 @@ int main(int argc, char **argv) {
 				printf("$%02X\n",y2);
 				size+=6;
 				break;
+
+			case VGI_LINE_FAR: /* line */
+				sscanf(buffer,"%*s %i %i %i %i %i",
+					&color1,
+					&x1,&y1,&x2,&y2);
+				printf(".byte $%02X,",(type<<4)|6);
+				if (x1>255) {
+					x1=x1&0xff;
+					color1|=128;
+				}
+				if (x2<256) {
+					fprintf(stderr,"Error!  X2 too small %d on line %d\n",x2,line);
+				}
+				x2=x2&0xff;
+				printf("$%02X,",color1);
+				printf("$%02X,",x1);
+				printf("$%02X,",y1);
+				printf("$%02X,",x2);
+				printf("$%02X\n",y2);
+				size+=6;
+				break;
+
 
 			case VGI_END: /* end */
 				printf(".byte $FF\n");

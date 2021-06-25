@@ -207,6 +207,7 @@ vgi_rts_table:
 	.word vgi_horizontal_triangle-1	; 8 = horizontal triangle
 	.word vgi_vstripe_rectangle-1	; 9 = vstripe rectangle
 	.word vgi_line-1		;10 = line
+	.word vgi_line_far-1		;11 = line far
 	.word all_done-1
 	.word all_done-1
 	.word all_done-1
