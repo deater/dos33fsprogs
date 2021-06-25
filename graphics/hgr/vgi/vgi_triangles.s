@@ -1,5 +1,6 @@
 ; VGI Triangles
 
+SKIP	= $70
 
 	;========================
 	; VGI vertical triangle
@@ -13,8 +14,16 @@
 	VGI_TYB		= P5
 
 vgi_vertical_triangle:
+	lda	VGI_TCOLOR
+	lsr
+	lsr
+	lsr
+	lsr
+	sta	SKIP
 
-	ldx	VGI_TCOLOR
+	lda	VGI_TCOLOR
+	and	#$f
+	tax
 	lda	COLORTBL,X
 	sta	HGR_COLOR
 
@@ -32,13 +41,17 @@ vtri_loop:
 
 	jsr	HGLIN		; line to (X,A),(Y)
 
-	inc	VGI_TXL
 	lda	VGI_TXL
+	clc
+	adc	SKIP
+	sta	VGI_TXL
+;	inc	VGI_TXL
+;	lda	VGI_TXL
 	cmp	VGI_TXR
 	bcc	vtri_loop
 
 done_vtri:
-	jmp	vgi_loop
+	jmp	vgi_loop	; bra
 
 
 

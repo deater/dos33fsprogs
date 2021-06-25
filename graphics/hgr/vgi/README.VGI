@@ -115,6 +115,7 @@ VGI Dithered Rectangle (6)
 VGI Vertical Triangle (7)
 
 	VTRI	color vx vy xl xr yb
+	VTRISK	color vx vy xl xr yb skip
 
 	Draw a flat bottom filled triangle of color.
 	The top vertex is at (vx,vy)
@@ -123,6 +124,9 @@ VGI Vertical Triangle (7)
 	If your triangle is too tall you might get moire effects.
 
 	This was much simpler than a proper filled triangle routine.
+
+	The skip variant adds SKIP as an X increment instead of 1
+	In memoy the skip is encoded in the high nibble of color
 
 ===========================
 VGI Horizontal Triangle (8)
@@ -144,6 +148,18 @@ VGI Vertical Striped Rectangle (9)
 	On apple II this allows repeating pattern, but since it's a multiple
 	of 7 you can't get true stripes (for that we'd need a 4-byte
 	repeating pattern)
+
+=============
+VGI Line (10)
+
+	LINE	color x1 y1 x2 y2
+
+	Draws a line from (x1,y1)
+
+	Note, X1 can be up to 279 here (the color is overloaded behind
+		the scenes to support this)
+
+	The last point you draw is the starting point for LINETO
 
 ============
 VGI End (15)

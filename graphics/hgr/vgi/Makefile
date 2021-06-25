@@ -24,7 +24,7 @@ HELLO:	hello.bas
 VGI-MYST:	myst_vgi.o
 	ld65 -o VGI-MYST myst_vgi.o -C $(LINKERSCRIPTS)/apple2_c00.inc
 
-myst_vgi.o: clock.data rocket.data rocket_door.data red_book.data fireplace.data \
+myst_vgi.o: clock.data rocket.data rocket_door.data red_book.data fireplace.data path.data \
 	myst_vgi.s vgi_clearscreen.s vgi_rectangle.s vgi_circles.s vgi_lines.s \
 	vgi_triangles.s
 	ca65 -o myst_vgi.o myst_vgi.s -l myst_vgi.lst
@@ -35,6 +35,12 @@ myst_vgi.o: clock.data rocket.data rocket_door.data red_book.data fireplace.data
 clock.data:	make_boxes_asm clock.vgi
 	echo "clock_data:" > clock.data
 	./make_boxes_asm < clock.vgi >> clock.data
+
+###
+
+path.data:	make_boxes_asm path.vgi
+	echo "path_data:" > path.data
+	./make_boxes_asm < path.vgi >> path.data
 
 ###
 

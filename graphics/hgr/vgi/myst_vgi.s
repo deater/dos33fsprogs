@@ -14,15 +14,15 @@ vgi_test:
 
 	; get pointer to image data
 
-;	lda	#<fireplace_data
-;	sta	VGIL
-;	lda	#>fireplace_data
-;	sta	VGIH
-
-	lda	#<clock_data
+	lda	#<path_data
 	sta	VGIL
-	lda	#>clock_data
+	lda	#>path_data
 	sta	VGIH
+
+;	lda	#<clock_data
+;	sta	VGIL
+;	lda	#>clock_data
+;	sta	VGIH
 
 	jsr	play_vgi
 
@@ -228,7 +228,7 @@ all_done:
 .include "rocket_door.data"
 .include "red_book.data"
 .include "fireplace.data"
-
+.include "path.data"
 
 ; string data
 ;

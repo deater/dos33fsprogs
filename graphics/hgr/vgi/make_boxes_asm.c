@@ -14,6 +14,9 @@
 #define VGI_VSTRIPE_RECTANGLE	9
 #define	VGI_END			15
 
+/* non-encoded pseudo-values */
+#define VGI_VERT_TRIANGLE_SKIP	128+7
+
 int main(int argc, char **argv) {
 
 	char buffer[1024];
@@ -21,6 +24,7 @@ int main(int argc, char **argv) {
 	int type,color1,color2,x1,x2,y1,y2,r,xl,xr,yt,yb;
 	int line=1;
 	int size=0;
+	int skip=0;
 
 	while(1) {
 
@@ -53,7 +57,9 @@ int main(int argc, char **argv) {
 			if (!strncmp(buffer,"DRECT",5)) {
 				type=VGI_DITHER_RECTANGLE;
 			}
-			if (!strncmp(buffer,"VTRI",4)) {
+			if (!strncmp(buffer,"VTRISK",6)) {
+				type=VGI_VERT_TRIANGLE_SKIP;
+			} else if (!strncmp(buffer,"VTRI",4)) {
 				type=VGI_VERT_TRIANGLE;
 			}
 			if (!strncmp(buffer,"HTRI",4)) {
@@ -158,7 +164,21 @@ int main(int argc, char **argv) {
 					&color1,
 					&x1,&y1,&xl,&xr,&yb);
 				printf(".byte $%02X,",(type<<4)|7);
-				printf("$%02X,",color1);
+				printf("$%02X,",(1<<4)|color1);	/* skip=1 */
+				printf("$%02X,",x1);
+				printf("$%02X,",y1);
+				printf("$%02X,",xl);
+				printf("$%02X,",xr);
+				printf("$%02X\n",yb);
+				size+=7;
+				break;
+
+			case VGI_VERT_TRIANGLE_SKIP: /* vertical triangle w skip*/
+				sscanf(buffer,"%*s %i %i %i %i %i %i %i",
+					&color1,
+					&x1,&y1,&xl,&xr,&yb,&skip);
+				printf(".byte $%02X,",(VGI_VERT_TRIANGLE<<4)|7);
+				printf("$%02X,",(skip<<4)|color1);
 				printf("$%02X,",x1);
 				printf("$%02X,",y1);
 				printf("$%02X,",xl);
