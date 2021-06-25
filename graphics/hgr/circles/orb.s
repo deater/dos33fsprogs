@@ -1,12 +1,8 @@
-; circles tiny -- Apple II Hires
+; rose -- Apple II Hires
 
+; filled circles with an interesting start
 
-; 229 -- first
-; 228 -- remove shift
-; 190 -- move hplots into two loops
-; 169 -- move hplots into one loop
-; 166 -- small enough we can use bcs again
-; 157 -- some more math
+; FIXME: assume hcolor is 3 somehow?
 
 ; D0+ used by HGR routines
 
@@ -50,57 +46,19 @@ WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
 circles:
 
-
-
-	lda	#0
-	sta	R
-
-draw_next:
-
-
 	jsr	HGR2
 
+	ldx	#0
 
+draw_next:
+	stx	R
 
-;draw_next:
-.if 0
-	inc	FRAME
-	ldy	FRAME
+	; center
 
-	; Random Color
-	; HCOLOR=1+RND(1)*7
-	lda	$F000,Y
-	and	#$7		; mask to 0...7
-	tax
-	lda	COLORTBL,X
-	sta	HGR_COLOR
-
-	; CX
-	lda	$F100,Y
-	and	#$7f
-	clc
-	adc	#$40
-	sta	CX
-
-	; CY
-	lda	$F200,Y
-	and	#$7f
-	clc
-	adc	#$20
-	sta	CY
-
-	; R
-	lda	$F300,Y
-	and	#$3f
-	sta	R
-.endif
-
-	; A=40+RND(1)*200:B=40+RND(1)*100:Y=RND(1)*40
-
-	lda	#128
-	sta	CX
-	lda	#96
-	sta	CY
+;	lda	#128
+;	sta	CX
+;	lda	#96
+;	sta	CY
 
 
 	;===============================
@@ -117,8 +75,8 @@ draw_next:
 	lda	#0
 	sta	XX
 
-	lda	R
-	sta	YY
+;	lda	R
+	stx	YY
 
 	lda	#3
 	sec
@@ -145,7 +103,6 @@ circle_loop:
 	asl
 	asl
 	clc
-	adc	D
 	adc	#10
 	jmp	store_D
 
@@ -155,9 +112,9 @@ else:
 	asl
 	asl
 	clc
-	adc	D
 	adc	#6
 store_D:
+	adc	D
 	sta	D
 
 do_plots:
@@ -197,7 +154,8 @@ pos_loop:
 	ora	#$1
 	eor	#$2
 	tay
-	lda	CX
+;	lda	CX
+	lda	#128
 	clc
 	adc	XX,Y
 	tax
@@ -205,13 +163,14 @@ pos_loop:
 	; calc y co-ord
 
 	ldy	COUNT
-	lda	CY
+;	lda	CY
+	lda	#96
 	clc
 	adc	XX,Y
 
 	ldy	#0
 
-	pha			; save Y value for later
+;	pha			; save Y value for later
 
 	jsr	HPLOT0		; plot at (Y,X), (A)
 
@@ -242,15 +201,10 @@ pos_loop:
 	bcs	circle_loop
 
 done:
-
-
-	lda	KEYPRESS
-	bpl	done
-
-	bit	KEYRESET
-
-
-	inc	R
+	ldx	R
+	inx
+	jsr	HCOLOR1
 stop:
 	; GOTO1
 	jmp	draw_next
+
