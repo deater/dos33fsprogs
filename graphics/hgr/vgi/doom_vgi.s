@@ -85,6 +85,7 @@ setup_interrupt:
 
 	jsr	SETGR
 	jsr	HGR
+	jsr	HOME
 ;	bit	FULLGR
 
 	jsr	make_tables

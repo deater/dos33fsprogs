@@ -13,15 +13,15 @@ vgi_myst:
 
 	; get pointer to image data
 
-	lda	#<path_data
-	sta	VGIL
-	lda	#>path_data
-	sta	VGIH
-
-;	lda	#<clock_data
+;	lda	#<path_data
 ;	sta	VGIL
-;	lda	#>clock_data
+;	lda	#>path_data
 ;	sta	VGIH
+
+	lda	#<clock_data
+	sta	VGIL
+	lda	#>clock_data
+	sta	VGIH
 
 	jsr	play_vgi
 
