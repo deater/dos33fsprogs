@@ -279,65 +279,64 @@ static int color_low(int color) {
 	return 0;
 }
 
+/* also count any black/white */
+static int color_high_bw(int color) {
+	if (color>3) return 1;
+	if ((color==0) || (color==3)) return 1;
+	return 0;
+}
+
+static int color_low_bw(int color) {
+	if (color<4) return 1;
+	if ((color==4) || (color==7)) return 1;
+	return 0;
+}
 
 static int colors_to_bytes(unsigned char colors[14],
 			unsigned char *byte1,
 			unsigned char *byte2) {
 
+	int i;
 	int highbit1=0,highbit2=0,lowbit1=0,lowbit2=0;
+	int bwhigh1=0,bwlow1=0;
+	int bwhigh2=0,bwlow2=0;
 	int hb1,hb2;
 	int error=0;
 
 	*byte1=0;
 	*byte2=0;
 
-	highbit1+=color_high(colors[0]);
-	highbit1+=color_high(colors[1]);
-	highbit1+=color_high(colors[2]);
-	highbit1+=color_high(colors[3]);
-	highbit1+=color_high(colors[4]);
-	highbit1+=color_high(colors[5]);
-	highbit1+=color_high(colors[6]);
+	for(i=0;i<7;i++) {
+		highbit1+=color_high(colors[i]);
+		lowbit1+=color_low(colors[i]);
+		bwhigh1+=color_high_bw(colors[i]);
+		bwlow1+=color_low_bw(colors[i]);
+	}
 
-	highbit2+=color_high(colors[7]);
-	highbit2+=color_high(colors[8]);
-	highbit2+=color_high(colors[9]);
-	highbit2+=color_high(colors[10]);
-	highbit2+=color_high(colors[11]);
-	highbit2+=color_high(colors[12]);
-	highbit2+=color_high(colors[13]);
+	for(i=7;i<14;i++) {
+		highbit2+=color_high(colors[i]);
+		lowbit2+=color_low(colors[i]);
+		bwhigh2+=color_high_bw(colors[i]);
+		bwlow2+=color_low_bw(colors[i]);
+	}
 
-	lowbit1+=color_low(colors[0]);
-	lowbit1+=color_low(colors[1]);
-	lowbit1+=color_low(colors[2]);
-	lowbit1+=color_low(colors[3]);
-	lowbit1+=color_low(colors[4]);
-	lowbit1+=color_low(colors[5]);
-	lowbit1+=color_low(colors[6]);
-
-	lowbit2+=color_low(colors[7]);
-	lowbit2+=color_low(colors[8]);
-	lowbit2+=color_low(colors[9]);
-	lowbit2+=color_low(colors[10]);
-	lowbit2+=color_low(colors[11]);
-	lowbit2+=color_low(colors[12]);
-	lowbit2+=color_low(colors[13]);
-
-
-
-	if (highbit1==7) hb1=1;
-	else if (lowbit1==7) hb1=0;
+	if (highbit1==7) hb1=1;			// all were high bit set
+	else if (lowbit1==7) hb1=0;		// all were lo bit set
+	else if (bwhigh1==7) hb1=1;		// ignore black/white
+	else if (bwlow1==7) hb1=0;
 	else {
 		error=1;
-		if (highbit1>lowbit1) hb1=1;
+		if (bwhigh1>bwlow1) hb1=1;
 		else hb1=0;
 	}
 
-	if (highbit2==7) hb2=1;
-	else if (lowbit2==7) hb2=0;
+	if (highbit2==7) hb2=1;			// all were high bit set
+	else if (lowbit2==7) hb2=0;		// all were lo bit set
+	else if (bwhigh2==7) hb2=1;		// ignore black/white
+	else if (bwlow2==7) hb2=0;
 	else {
-		error=2;
-		if (highbit2>lowbit2) hb2=1;
+		error=1;
+		if (bwhigh2>bwlow2) hb2=1;
 		else hb2=0;
 	}
 
