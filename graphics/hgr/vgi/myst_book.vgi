@@ -1,0 +1,15 @@
+; Path from Myst
+CLS	0x80						; black background
+; TODO, rounded edges?
+RECT	7	7	3	85	239	188	; glow
+; book
+; link
+RECT	7	7	161	40	227	91	; sky
+RECT	6	6	202	70	227	91	; ocean
+RECT	5	5	180	55	208	74	; mountain
+RECT	5	5	208	66	219	74	; mountain
+VTRI	5	180	55	176	182	66	; mountain left
+LINE	6	225	78	213	83		; mast
+LINETO	212	75					; mast
+LINE	0	226	85	214	68		; mast
+END

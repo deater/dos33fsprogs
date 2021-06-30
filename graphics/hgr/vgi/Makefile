@@ -6,13 +6,14 @@ LINKERSCRIPTS = ../../../linker_scripts
 EMPTYDISK = ../../../empty_disk/empty.dsk
 MAKEVGI	= ./make_vgi_asm
 
-all:	vgi_myst.dsk make_vgi_asm
+all:	vgi_myst.dsk make_vgi_asm make_color_test
 
-vgi_myst.dsk:	HELLO VGI-MYST VGI-DOOM
+vgi_myst.dsk:	HELLO VGI-MYST VGI-DOOM COLOR-TEST
 	cp $(EMPTYDISK) vgi_myst.dsk
 	$(DOS33) -y vgi_myst.dsk SAVE A HELLO
 	$(DOS33) -y vgi_myst.dsk BSAVE -a 0xC00 VGI-MYST
 	$(DOS33) -y vgi_myst.dsk BSAVE -a 0x4000 VGI-DOOM
+	$(DOS33) -y vgi_myst.dsk BSAVE -a 0x4000 COLOR-TEST
 
 
 ###
@@ -40,6 +41,16 @@ doom_vgi.o: doom.data \
 	doom_vgi.s vgi_clearscreen.s vgi_rectangle.s vgi_circles.s vgi_lines.s \
 	vgi_triangles.s
 	ca65 -o doom_vgi.o doom_vgi.s -l doom_vgi.lst
+
+###
+
+COLOR-TEST:	color_test.o
+	ld65 -o COLOR-TEST color_test.o -C $(LINKERSCRIPTS)/apple2_4000.inc
+
+color_test.o: color_test.data \
+	color_test.s vgi_clearscreen.s vgi_rectangle.s vgi_circles.s vgi_lines.s \
+	vgi_triangles.s
+	ca65 -o color_test.o color_test.s -l color_test.lst
 
 
 
@@ -86,6 +97,15 @@ fireplace.data:	make_vgi_asm fireplace.vgi
 	echo "fireplace_data:" > fireplace.data
 	./make_vgi_asm < fireplace.vgi >> fireplace.data
 
+###
+
+color_test.vgi:	make_color_test
+	./make_color_test > color_test.vgi
+
+color_test.data:	make_vgi_asm color_test.vgi
+	echo "color_test_data:" > color_test.data
+	./make_vgi_asm < color_test.vgi >> color_test.data
+
 
 ###
 
@@ -97,5 +117,15 @@ make_vgi_asm.o:	make_vgi_asm.c
 
 ###
 
+make_color_test:	make_color_test.o
+	$(CC) -o make_color_test make_color_test.o $(LFLAGS)
+
+make_color_test.o:	make_color_test.c
+	$(CC) $(CFLAGS) -c make_color_test.c
+
+
+###
+
 clean:	
-	rm -f *~ *.o *.lst HELLO VGI-MYST VGI-DOOM make_vgi_asm *.data
+	rm -f *~ *.o *.lst HELLO VGI-MYST VGI-DOOM COLOR-TEST \
+		make_vgi_asm make_color_test *.data
