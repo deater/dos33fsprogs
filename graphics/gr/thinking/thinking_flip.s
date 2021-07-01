@@ -5,10 +5,6 @@
 .include "zp.inc"
 .include "hardware.inc"
 
-; 161 -- original with page flip removed
-; 159 -- remove extraneous store to YY
-; 158 -- cond jump for jmp
-
 COL	= $F0
 XSTART	= $F1
 XSTOP	= $F2
@@ -43,12 +39,10 @@ yloop:
 	txa
 	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
-.if 0
 	lda	GBASH
 draw_page_smc:
 	adc	#0
 	sta	GBASH
-.endif
 
 	lda	COL
 	and	#$7
@@ -86,13 +80,12 @@ xloop:
 	;==========================
 
 thinking_loop:
-	lda	#7		; YY
+	lda	#7
+	sta	YY
 	ldx	#0
 
 thinking_yloop:
-	sta	YY		; YY in A here
-
-;	lda	YY
+	lda	YY
 	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
 	ldy	#0
@@ -123,7 +116,7 @@ no_draw:
 	;==========================
 	; flip pages
 	;==========================
-.if 0
+
 flip_pages:
 
 	ldy	#1
@@ -135,9 +128,11 @@ done_page:
 
 	eor	#$4		; flip draw page between $400/$800
 	sta	draw_page_smc+1	; DRAW_PAGE
-.endif
 
 
+
+	lda	#255
+	jsr	WAIT
 
 	;===================
 	; increment color
@@ -145,13 +140,7 @@ done_page:
 	;	so -1 actually means increment 1 (because we mod 8 it)
 	dec	COL
 
-	;===================
-	; WAIT
-
-	lda	#255
-	jsr	WAIT			; A = 0 at end
-
-	beq	big_loop
+	jmp	big_loop
 
 
 ;0          1          2          3         3

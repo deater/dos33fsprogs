@@ -5,10 +5,6 @@
 .include "zp.inc"
 .include "hardware.inc"
 
-; 161 -- original with page flip removed
-; 159 -- remove extraneous store to YY
-; 158 -- cond jump for jmp
-
 COL	= $F0
 XSTART	= $F1
 XSTOP	= $F2
@@ -17,65 +13,72 @@ YSTOP	= $F4
 OFFSET	= $F5
 CURRENT	= $F6
 YY	= $F7
+XR	= $F8
+XL	= $F9
+YT	= $FA
+YB	= $FB
 
 thinking:
 
 	jsr	SETGR		; set lo-res 40x40 mode
 				; A=$D0 afterward
 
-big_loop:
-
-	; COL value doesn't matter?
+	lda	#1
+	sta	COL
 
 	lda	#0
-	sta	YSTART
-	sta	XSTART
+	sta	XL
+	sta	YT
 
-	lda	#20
-	sta	YSTOP
-	asl
-	sta	XSTOP
+	lda	#39
+	sta	XR
+	sta	YB
 
-box_loop:
-
-	ldx	YSTART
-yloop:
-	txa
-	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
-
-.if 0
-	lda	GBASH
-draw_page_smc:
-	adc	#0
-	sta	GBASH
-.endif
-
+big_loop:
 	lda	COL
-	and	#$7
-	tay
-	lda	color_lookup,Y
+	jsr	SETCOL
 
-	ldy	XSTART
-xloop:
-	sta	(GBASL),Y
-	iny
-	cpy	XSTOP
-	bne	xloop
+	; FOR Y=0 TO 20 STEP 2
+	; X=Y/2
+	; HLIN X,39-X AT Y
+	; HLIN X,39-X AT 39-Y
+	; VLIN Y,39-Y AT X
+	; VLIN Y,39-Y AT 39-X
 
-	inx
-	cpx	YSTOP
-	bne	yloop
 
-	inc	COL
+	; HLIN X,39-X AT Y
+	; HLIN X,39-X AT 39-Y
+	ldy	XL
+	lda	XR
+	sta	$2C
+	lda	YT
+	jsr	HLINE			; HLINE Y,$2C at A
 
-	inc	XSTART
-	dec	XSTOP
+	ldy	XL
+	lda	YB
+	jsr	HLINE			; HLINE Y,$2C at A
 
-	inc	YSTART
-	dec	YSTOP
-	lda	YSTOP
-	cmp	#10
-	bne	box_loop
+
+
+
+	; VLIN Y,39-Y AT X
+	; VLIN Y,39-Y AT 39-X
+
+	ldy	XR
+	lda	YB
+	sta	$2D
+	lda	YT
+
+	jsr	VLINE			; VLINE A,$2D at Y
+
+
+	ldy	XL
+	lda	YB
+	sta	$2D
+	lda	YT
+
+	jsr	VLINE			; VLINE A,$2D at Y
+
 
 	;==========================
 	; done drawing rainbow box
@@ -86,13 +89,12 @@ xloop:
 	;==========================
 
 thinking_loop:
-	lda	#7		; YY
+	lda	#7
+	sta	YY
 	ldx	#0
 
 thinking_yloop:
-	sta	YY		; YY in A here
-
-;	lda	YY
+	lda	YY
 	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
 	ldy	#0
@@ -120,24 +122,10 @@ no_draw:
 	cmp	#14
 	bne	thinking_yloop
 
-	;==========================
-	; flip pages
-	;==========================
-.if 0
-flip_pages:
-
-	ldy	#1
-	lda	draw_page_smc+1	; DRAW_PAGE
-	bne	done_page
-	dey
-done_page:
-	ldx	PAGE1,Y		; set display page to PAGE1 or PAGE2
-
-	eor	#$4		; flip draw page between $400/$800
-	sta	draw_page_smc+1	; DRAW_PAGE
-.endif
 
 
+	lda	#255
+	jsr	WAIT
 
 	;===================
 	; increment color
@@ -145,13 +133,10 @@ done_page:
 	;	so -1 actually means increment 1 (because we mod 8 it)
 	dec	COL
 
-	;===================
-	; WAIT
+done:
+	jmp	done
 
-	lda	#255
-	jsr	WAIT			; A = 0 at end
-
-	beq	big_loop
+	jmp	big_loop
 
 
 ;0          1          2          3         3

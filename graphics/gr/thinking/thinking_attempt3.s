@@ -5,10 +5,6 @@
 .include "zp.inc"
 .include "hardware.inc"
 
-; 161 -- original with page flip removed
-; 159 -- remove extraneous store to YY
-; 158 -- cond jump for jmp
-
 COL	= $F0
 XSTART	= $F1
 XSTOP	= $F2
@@ -17,6 +13,7 @@ YSTOP	= $F4
 OFFSET	= $F5
 CURRENT	= $F6
 YY	= $F7
+XS	= $F8
 
 thinking:
 
@@ -43,24 +40,54 @@ yloop:
 	txa
 	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
-.if 0
-	lda	GBASH
-draw_page_smc:
-	adc	#0
-	sta	GBASH
-.endif
 
 	lda	COL
 	and	#$7
 	tay
 	lda	color_lookup,Y
+	sta	COLOR
+
+	;======================
+	;======================
+	; inner loop begin
+	;	Y=xx
+	;	X=yy
+
 
 	ldy	XSTART
 xloop:
+	stx	XS
+	tya
+	lsr
+	lsr
+	lsr
+	tax
+	lda	thinking_data,X
+	sta	CURRENT
+
+	tya
+	and	#$7
+	tax
+bloop:
+	ror	CURRENT
+	dex
+	bne	bloop
+	ldx	XS
+
+	bcs	dont_draw
+
+	lda	COLOR
 	sta	(GBASL),Y
+
+dont_draw:
 	iny
 	cpy	XSTOP
 	bne	xloop
+
+	; inner loop end
+	;======================
+	;======================
+
 
 	inx
 	cpx	YSTOP
@@ -82,62 +109,11 @@ xloop:
 	;==========================
 
 	;==========================
-	; write THINKING
+	; wait a bit
 	;==========================
 
-thinking_loop:
-	lda	#7		; YY
-	ldx	#0
-
-thinking_yloop:
-	sta	YY		; YY in A here
-
-;	lda	YY
-	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
-
-	ldy	#0
-inc_pointer:
-	inx
-	lda	thinking_data-1,X
-	sta	CURRENT
-thinking_xloop:
-	ror	CURRENT
-	bcc	no_draw
-
-	lda	#$00
-	sta	(GBASL),Y
-no_draw:
-	iny
-	tya
-	and	#$7
-	beq	inc_pointer
-
-	cpy	#39
-	bne	thinking_xloop
-
-	inc	YY
-	lda	YY
-	cmp	#14
-	bne	thinking_yloop
-
-	;==========================
-	; flip pages
-	;==========================
-.if 0
-flip_pages:
-
-	ldy	#1
-	lda	draw_page_smc+1	; DRAW_PAGE
-	bne	done_page
-	dey
-done_page:
-	ldx	PAGE1,Y		; set display page to PAGE1 or PAGE2
-
-	eor	#$4		; flip draw page between $400/$800
-	sta	draw_page_smc+1	; DRAW_PAGE
-.endif
-
-
+	lda	#255
+	jsr	WAIT
 
 	;===================
 	; increment color
@@ -145,13 +121,7 @@ done_page:
 	;	so -1 actually means increment 1 (because we mod 8 it)
 	dec	COL
 
-	;===================
-	; WAIT
-
-	lda	#255
-	jsr	WAIT			; A = 0 at end
-
-	beq	big_loop
+	jmp	big_loop
 
 
 ;0          1          2          3         3

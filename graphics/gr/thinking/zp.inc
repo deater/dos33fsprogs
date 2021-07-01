@@ -101,7 +101,6 @@ COLOR1		=	$E0
 COLOR2		=	$E1
 MATCH		=	$E2
 XX		=	$E3
-YY		=	$E4
 SHIPY           =	$E4
 YADD		=	$E5
 LOOP		=	$E6
