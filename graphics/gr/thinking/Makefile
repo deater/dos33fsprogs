@@ -7,11 +7,22 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	thinking.dsk
 
-thinking.dsk:	HELLO THINKING RAINBOW_BOX
+thinking.dsk:	HELLO THINKING RAINBOW_BOX T2 THINKING_FLIP T3 THINKING_SLOW \
+	THINKING_ATTEMPT2 THINKING_ATTEMPT3 THINKING_ATTEMPT4 THINKING_ATTEMPT5 \
+	THINKING_ATTEMPT6
 	cp $(EMPTYDISK) thinking.dsk
 	$(DOS33) -y thinking.dsk SAVE A HELLO
 	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING
+	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_FLIP
+	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_SLOW
+	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_ATTEMPT2
+	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_ATTEMPT3
+	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_ATTEMPT4
+	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_ATTEMPT5
+	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_ATTEMPT6
 	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 RAINBOW_BOX
+	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 T2
+	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 T3
 
 ###
 
@@ -26,6 +37,67 @@ THINKING:	thinking.o
 thinking.o:	thinking.s
 	ca65 -o thinking.o thinking.s -l thinking.lst
 
+
+###
+
+THINKING_FLIP:	thinking_flip.o
+	ld65 -o THINKING_FLIP thinking_flip.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+thinking_flip.o:	thinking_flip.s
+	ca65 -o thinking_flip.o thinking_flip.s -l thinking_flip.lst
+
+###
+
+THINKING_SLOW:	thinking_slow.o
+	ld65 -o THINKING_SLOW thinking_slow.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+thinking_slow.o:	thinking_slow.s
+	ca65 -o thinking_slow.o thinking_slow.s -l thinking_slow.lst
+
+
+###
+
+THINKING_ATTEMPT2:	thinking_attempt2.o
+	ld65 -o THINKING_ATTEMPT2 thinking_attempt2.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+thinking_attempt2.o:	thinking_attempt2.s
+	ca65 -o thinking_attempt2.o thinking_attempt2.s -l thinking_attempt2.lst
+
+###
+
+THINKING_ATTEMPT3:	thinking_attempt3.o
+	ld65 -o THINKING_ATTEMPT3 thinking_attempt3.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+thinking_attempt3.o:	thinking_attempt3.s
+	ca65 -o thinking_attempt3.o thinking_attempt3.s -l thinking_attempt3.lst
+
+###
+
+THINKING_ATTEMPT4:	thinking_attempt4.o
+	ld65 -o THINKING_ATTEMPT4 thinking_attempt4.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+thinking_attempt4.o:	thinking_attempt4.s
+	ca65 -o thinking_attempt4.o thinking_attempt4.s -l thinking_attempt4.lst
+
+
+###
+
+THINKING_ATTEMPT5:	thinking_attempt5.o
+	ld65 -o THINKING_ATTEMPT5 thinking_attempt5.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+thinking_attempt5.o:	thinking_attempt5.s
+	ca65 -o thinking_attempt5.o thinking_attempt5.s -l thinking_attempt5.lst
+
+###
+
+THINKING_ATTEMPT6:	thinking_attempt6.o
+	ld65 -o THINKING_ATTEMPT6 thinking_attempt6.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+thinking_attempt6.o:	thinking_attempt6.s
+	ca65 -o thinking_attempt6.o thinking_attempt6.s -l thinking_attempt6.lst
+
+
+
 ###
 
 RAINBOW_BOX:	rainbow_box.o
@@ -36,5 +108,22 @@ rainbow_box.o:	rainbow_box.s
 
 ###
 
+T2:	t2.o
+	ld65 -o T2 t2.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+t2.o:	t2.s
+	ca65 -o t2.o t2.s -l t2.lst
+
+###
+
+T3:	t3.o
+	ld65 -o T3 t3.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+t3.o:	t3.s
+	ca65 -o t3.o t3.s -l t3.lst
+
+###
+
 clean:	
-	rm -f *~ *.o *.lst HELLO THINKING RAINBOW_BOX
+	rm -f *~ *.o *.lst HELLO THINKING RAINBOW_BOX T2 THINKING_FLIP T3 THINKING_SLOW \
+		THINKING_ATTEMPT2 THINKING_ATTEMPT3 THINKING_ATTEMPT4 THINKING_ATTEMPT5 THINKING_ATTEMPT6

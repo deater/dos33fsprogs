@@ -2,10 +2,19 @@
 
 ; by Vince `deater` Weaver <vince@deater.net>
 
-; 158 bytes -- blargh
-
 .include "zp.inc"
 .include "hardware.inc"
+
+; 161 -- original with page flip removed
+; 159 -- remove extraneous store to YY
+; 158 -- cond jump for jmp
+
+; 0-------------------------
+; 0 1111111111111111111111 0
+; 0 1 22222222222222222221 0
+
+; if XX < YY COL++
+
 
 COL	= $F0
 XSTART	= $F1
@@ -15,8 +24,13 @@ YSTOP	= $F4
 OFFSET	= $F5
 CURRENT	= $F6
 YY	= $F7
-BLARGH	= $F8
-BLARGHH	= $F9
+BASE	= $F8
+
+X0	= $F9
+Y1	= $FA
+Y0	= $FB
+X1	= $FC
+
 
 thinking:
 
@@ -25,65 +39,55 @@ thinking:
 
 big_loop:
 
-	; COL value doesn't matter?
-
-	; 0,0 to 39,39
-	; 1,2 to 38,37
-
-
 	lda	#0
-	sta	YSTART
-	sta	XSTART
+;	sta	COLOR
+	sta	X0	; X0
+	tax
 
-	lda	#20
-	sta	YSTOP
-	asl
-	sta	XSTOP
+	lda	#39
+	sta	H2	; X1
+	sta	Y1
 
-box_loop:
+draw_box_loop:
 
-	ldx	YSTART
-yloop:
-	txa
-	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H
-;				; ( a trashed, C clear)
-	lda	GBASL
-	sta	BLARGH
-	lda	GBASH
-	clc
-	adc	#4
-	sta	BLARGHH
-
+	stx	Y0
 
 	lda	COL
 	and	#$7
 	tay
 	lda	color_lookup,Y
+
 	sta	COLOR
 
-	ldy	XSTART
-xloop:
-	lda	COLOR
-	and	(BLARGH),Y
-	sta	(GBASL),Y
-	iny
-	cpy	XSTOP
-	bne	xloop
+inner_loop:
+	;; HLINE Y,H2 at A
+	;; X left alone, carry set on exit
+	;; H2 left alone
+	;; Y and A trashed
 
+	ldy	X0
+	txa
+	jsr	HLINE	; y, H2 at A
+
+	cpx	Y1
 	inx
-	cpx	YSTOP
-	bne	yloop
+	bcc	inner_loop
 
 	inc	COL
 
-	inc	XSTART
-	dec	XSTOP
+	ldx	Y0
+	inx		; Y0
+	inx
+	dec	Y1
+	dec	Y1
 
-	inc	YSTART
-	dec	YSTOP
-	lda	YSTOP
-	cmp	#10
-	bne	box_loop
+	inc	X0
+	dec	H2
+
+	cpx	#20
+	bne	draw_box_loop
+
+
 
 	;==========================
 	; done drawing rainbow box
@@ -92,13 +96,14 @@ xloop:
 	;==========================
 	; write THINKING
 	;==========================
-.if 0
+
 thinking_loop:
-	lda	#7
+	lda	#7		; YY
 	ldx	#0
 
 thinking_yloop:
-	sta	YY
+	sta	YY		; YY in A here
+
 ;	lda	YY
 	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
@@ -126,12 +131,10 @@ no_draw:
 	lda	YY
 	cmp	#14
 	bne	thinking_yloop
-.endif
+
 	;==========================
 	; flip pages
 	;==========================
-
-
 
 
 	;===================
@@ -140,12 +143,11 @@ no_draw:
 	;	so -1 actually means increment 1 (because we mod 8 it)
 	dec	COL
 
-
 	;===================
-	; wait
+	; WAIT
 
 	lda	#255
-	jsr	WAIT
+	jsr	WAIT			; A = 0 at end
 
 	beq	big_loop
 

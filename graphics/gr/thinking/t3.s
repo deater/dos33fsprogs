@@ -2,10 +2,9 @@
 
 ; by Vince `deater` Weaver <vince@deater.net>
 
-; 158 bytes -- blargh
-
 .include "zp.inc"
 .include "hardware.inc"
+
 
 COL	= $F0
 XSTART	= $F1
@@ -15,8 +14,13 @@ YSTOP	= $F4
 OFFSET	= $F5
 CURRENT	= $F6
 YY	= $F7
-BLARGH	= $F8
-BLARGHH	= $F9
+BASE	= $F8
+
+X0	= $F9
+Y1	= $FA
+Y0	= $FB
+X1	= $FC
+
 
 thinking:
 
@@ -24,66 +28,49 @@ thinking:
 				; A=$D0 afterward
 
 big_loop:
-
-	; COL value doesn't matter?
-
-	; 0,0 to 39,39
-	; 1,2 to 38,37
-
-
-	lda	#0
-	sta	YSTART
-	sta	XSTART
-
-	lda	#20
-	sta	YSTOP
-	asl
-	sta	XSTOP
-
-box_loop:
-
-	ldx	YSTART
-yloop:
-	txa
-	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H
-;				; ( a trashed, C clear)
-	lda	GBASL
-	sta	BLARGH
-	lda	GBASH
-	clc
-	adc	#4
-	sta	BLARGHH
-
-
-	lda	COL
-	and	#$7
-	tay
-	lda	color_lookup,Y
+	lda	#1
 	sta	COLOR
 
-	ldy	XSTART
-xloop:
-	lda	COLOR
-	and	(BLARGH),Y
-	sta	(GBASL),Y
-	iny
-	cpy	XSTOP
-	bne	xloop
+	lda	#0
+	sta	X0	; X0
+	tax
 
+	lda	#39
+	sta	H2	; X1
+	sta	Y1
+
+draw_box_loop:
+
+	stx	Y0
+
+
+inner_loop:
+	;; HLINE Y,H2 at A
+	;; X left alone, carry set on exit
+	;; H2 left alone
+	;; Y and A trashed
+
+	ldy	X0
+	txa
+	jsr	HLINE	; y, H2 at A
+
+	cpx	Y1
 	inx
-	cpx	YSTOP
-	bne	yloop
+	bcc	inner_loop
 
-	inc	COL
+	inc	COLOR
 
-	inc	XSTART
-	dec	XSTOP
+	ldx	Y0
+	inx		; Y0
+	inx
+	dec	Y1
+	dec	Y1
 
-	inc	YSTART
-	dec	YSTOP
-	lda	YSTOP
-	cmp	#10
-	bne	box_loop
+	inc	X0
+	dec	H2
+
+	cpx	#20
+	bne	draw_box_loop
 
 	;==========================
 	; done drawing rainbow box
@@ -92,13 +79,14 @@ xloop:
 	;==========================
 	; write THINKING
 	;==========================
-.if 0
+
 thinking_loop:
-	lda	#7
+	lda	#7		; YY
 	ldx	#0
 
 thinking_yloop:
-	sta	YY
+	sta	YY		; YY in A here
+
 ;	lda	YY
 	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
@@ -126,28 +114,53 @@ no_draw:
 	lda	YY
 	cmp	#14
 	bne	thinking_yloop
-.endif
+
 	;==========================
 	; flip pages
 	;==========================
+	bit	PAGE2
+forever_loop:
 
+	ldy	#0
+copy_loop:
 
+c_smc1:
+	lda	$400,Y
+	beq	blah
+	clc
+	adc	COL
+	and	#$7
+	tax
+	lda	color_lookup,X
+blah:
+c_smc2:
+	sta	$800,Y
+	iny
+	bne	copy_loop
 
+	inc	c_smc1+2
+	inc	c_smc2+2
+	lda	c_smc1+2
+	cmp	#$08
+	bne	copy_loop
+
+	sta	c_smc2+2
+	lsr
+	sta	c_smc1+2
 
 	;===================
 	; increment color
 	;	after loop we are +10
 	;	so -1 actually means increment 1 (because we mod 8 it)
-	dec	COL
-
+	inc	COL
 
 	;===================
-	; wait
+	; WAIT
 
 	lda	#255
-	jsr	WAIT
+	jsr	WAIT			; A = 0 at end
 
-	beq	big_loop
+	beq	forever_loop
 
 
 ;0          1          2          3         3

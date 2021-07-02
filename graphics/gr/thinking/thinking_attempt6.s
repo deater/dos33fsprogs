@@ -2,10 +2,19 @@
 
 ; by Vince `deater` Weaver <vince@deater.net>
 
-; 158 bytes -- blargh
-
 .include "zp.inc"
 .include "hardware.inc"
+
+; 161 -- original with page flip removed
+; 159 -- remove extraneous store to YY
+; 158 -- cond jump for jmp
+
+; 0-------------------------
+; 0 1111111111111111111111 0
+; 0 1 22222222222222222221 0
+
+; if XX < YY COL++
+
 
 COL	= $F0
 XSTART	= $F1
@@ -15,8 +24,7 @@ YSTOP	= $F4
 OFFSET	= $F5
 CURRENT	= $F6
 YY	= $F7
-BLARGH	= $F8
-BLARGHH	= $F9
+BASE	= $F8
 
 thinking:
 
@@ -25,11 +33,38 @@ thinking:
 
 big_loop:
 
+	ldx	#19
+yloop:
+	txa
+	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
+
+	lda	COL
+	and	#$7
+	tay
+	lda	color_lookup,Y
+
+
+	ldy	#39
+xloop:
+	sta	(GBASL),Y
+	dey
+	bpl	xloop
+
+	cpx	#10
+	beq	blarch
+	bcc	blurgh
+	inc	COL
+	jmp	blarch
+blurgh:
+	dec	COL
+blarch:
+	dex
+	bpl	yloop
+
+
+
+.if 0
 	; COL value doesn't matter?
-
-	; 0,0 to 39,39
-	; 1,2 to 38,37
-
 
 	lda	#0
 	sta	YSTART
@@ -45,26 +80,15 @@ box_loop:
 	ldx	YSTART
 yloop:
 	txa
-	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H
-;				; ( a trashed, C clear)
-	lda	GBASL
-	sta	BLARGH
-	lda	GBASH
-	clc
-	adc	#4
-	sta	BLARGHH
-
+	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
 	lda	COL
 	and	#$7
 	tay
 	lda	color_lookup,Y
-	sta	COLOR
 
 	ldy	XSTART
 xloop:
-	lda	COLOR
-	and	(BLARGH),Y
 	sta	(GBASL),Y
 	iny
 	cpy	XSTOP
@@ -84,7 +108,7 @@ xloop:
 	lda	YSTOP
 	cmp	#10
 	bne	box_loop
-
+.endif
 	;==========================
 	; done drawing rainbow box
 	;==========================
@@ -92,13 +116,14 @@ xloop:
 	;==========================
 	; write THINKING
 	;==========================
-.if 0
+
 thinking_loop:
-	lda	#7
+	lda	#7		; YY
 	ldx	#0
 
 thinking_yloop:
-	sta	YY
+	sta	YY		; YY in A here
+
 ;	lda	YY
 	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
@@ -126,26 +151,24 @@ no_draw:
 	lda	YY
 	cmp	#14
 	bne	thinking_yloop
-.endif
+
 	;==========================
 	; flip pages
 	;==========================
-
-
 
 
 	;===================
 	; increment color
 	;	after loop we are +10
 	;	so -1 actually means increment 1 (because we mod 8 it)
-	dec	COL
-
+	inc	COL
+	inc	COL
 
 	;===================
-	; wait
+	; WAIT
 
 	lda	#255
-	jsr	WAIT
+	jsr	WAIT			; A = 0 at end
 
 	beq	big_loop
 
