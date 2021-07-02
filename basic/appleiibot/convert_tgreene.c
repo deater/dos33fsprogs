@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define OFFSET	32
+#define OFFSET	35
 #define OFFSET2	35
 
 //#define OFFSET	35
@@ -48,6 +48,7 @@ int main(int argc, char **argv) {
 				in[i+0],pv,third,val);
 			if (val>0x7e) fprintf(stderr,"error0, too big! in=%x pv=%x e=%x val=%x\n",
 				in[i+0],pv,third,val);
+			if (val=='\"') fprintf(stderr,"error0, additional quotation marks\n");
 //			printf("%c",val); //(in[i + 0] >> 2) + OFFSET);
 			//printf("%c",val); //(in[i + 0] >> 2) + OFFSET);
 			enc2[enc_ptr]=val;
@@ -115,10 +116,12 @@ int main(int argc, char **argv) {
 	if (mode==END_AT_3F5) {
 		fprintf(stderr,"Ending at $3F5\n");
 		printf("1FORI=0TO%d:POKE%d+I,4*PEEK(%d+I)-"
-			"192+(PEEK(%d+I/3)-%d)/4^(I-INT(I/3)*3):NEXT\n",
+			"%d+(PEEK(%d+I/3)-%d)/4^(I-INT(I/3)*3):NEXT\n",
 			filesize-1,
 			0x3f5-filesize+3,
-			2125,2125+filesize,OFFSET2);
+			2125,
+			64+4*OFFSET,
+			2125+filesize,OFFSET2);
 		printf("2&\"%s%s\n",enc2,enc);
 	}
 
@@ -128,10 +131,12 @@ int main(int argc, char **argv) {
 		fprintf(stderr,"Beginning at $3F5\n");
 
 		printf("1FORI=0TO%d:POKE%d+I,4*PEEK(%d+I)-"
-			"192+(PEEK(%d+I/3)-%d)/4^(I-INT(I/3)*3):NEXT\n",
+			"%d+(PEEK(%d+I/3)-%d)/4^(I-INT(I/3)*3):NEXT\n",
 			filesize-1,
 			0x3f5,
-			2126,2126+filesize,OFFSET2);
+			2126,
+			4*OFFSET+64,
+			2126+filesize,OFFSET2);
 		printf("2&\"%s%s\n",enc2,enc);
 	}
 

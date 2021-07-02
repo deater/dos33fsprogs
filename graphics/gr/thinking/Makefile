@@ -12,7 +12,7 @@ thinking.dsk:	HELLO THINKING RAINBOW_BOX T2 THINKING_FLIP T3 THINKING_SLOW \
 	THINKING_ATTEMPT6
 	cp $(EMPTYDISK) thinking.dsk
 	$(DOS33) -y thinking.dsk SAVE A HELLO
-	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING
+	$(DOS33) -y thinking.dsk BSAVE -a 0x36b THINKING
 	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_FLIP
 	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_SLOW
 	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_ATTEMPT2
@@ -32,7 +32,7 @@ HELLO:	hello.bas
 ###
 
 THINKING:	thinking.o
-	ld65 -o THINKING thinking.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+	ld65 -o THINKING thinking.o -C $(LINKERSCRIPTS)/apple2_36b.inc
 
 thinking.o:	thinking.s
 	ca65 -o thinking.o thinking.s -l thinking.lst

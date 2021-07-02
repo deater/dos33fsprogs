@@ -2,10 +2,19 @@
 
 ; by Vince `deater` Weaver <vince@deater.net>
 
-; 158 bytes -- blargh
-
 .include "zp.inc"
 .include "hardware.inc"
+
+; 161 -- original with page flip removed
+; 159 -- remove extraneous store to YY
+; 158 -- cond jump for jmp
+
+; 0-------------------------
+; 0 1111111111111111111111 0
+; 0 1 22222222222222222221 0
+
+; if XX < YY COL++
+
 
 COL	= $F0
 XSTART	= $F1
@@ -15,8 +24,8 @@ YSTOP	= $F4
 OFFSET	= $F5
 CURRENT	= $F6
 YY	= $F7
-BLARGH	= $F8
-BLARGHH	= $F9
+BASE	= $F8
+XS	= $F9
 
 thinking:
 
@@ -25,35 +34,13 @@ thinking:
 
 big_loop:
 
-	; COL value doesn't matter?
-
-	; 0,0 to 39,39
-	; 1,2 to 38,37
-
-
 	lda	#0
-	sta	YSTART
-	sta	XSTART
+	sta	YY
 
-	lda	#20
-	sta	YSTOP
-	asl
-	sta	XSTOP
-
-box_loop:
-
-	ldx	YSTART
+	ldx	#0
 yloop:
 	txa
-	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H
-;				; ( a trashed, C clear)
-	lda	GBASL
-	sta	BLARGH
-	lda	GBASH
-	clc
-	adc	#4
-	sta	BLARGHH
-
+	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
 	lda	COL
 	and	#$7
@@ -61,91 +48,90 @@ yloop:
 	lda	color_lookup,Y
 	sta	COLOR
 
-	ldy	XSTART
-xloop:
-	lda	COLOR
-	and	(BLARGH),Y
-	sta	(GBASL),Y
-	iny
-	cpy	XSTOP
-	bne	xloop
+	;=======================
 
+	ldy	#0
+xloop:
+
+
+inc_pointer:
+	inc	YY
+	stx	XS
+
+	; skip if out of range
+	cpx	#7
+	bcc	draw_color
+	cpx	#14
+	bcs	draw_color
+
+
+
+	ldx	YY
+	lda	thinking_data-1-35,X
+	sta	CURRENT
+thinking_xloop:
+	ror	CURRENT
+	bcs	skip_color
+
+
+draw_color:
+	lda	COLOR
+	sta	(GBASL),Y
+skip_color:
+no_draw:
+	ldx	XS
+
+	iny
+
+	cpy	#40
+	beq	done_done
+
+	tya
+	and	#$7
+	beq	inc_pointer
+	bne	thinking_xloop
+done_done:
+
+
+
+	;=======================
+
+	cpx	#9
+	beq	blarch
+	bcc	blurgh
+	inc	COL
+	jmp	blarch
+blurgh:
+	dec	COL
+blarch:
 	inx
-	cpx	YSTOP
+	cpx	#20
 	bne	yloop
 
-	inc	COL
-
-	inc	XSTART
-	dec	XSTOP
-
-	inc	YSTART
-	dec	YSTOP
-	lda	YSTOP
-	cmp	#10
-	bne	box_loop
 
 	;==========================
 	; done drawing rainbow box
 	;==========================
 
 	;==========================
-	; write THINKING
-	;==========================
-.if 0
-thinking_loop:
-	lda	#7
-	ldx	#0
-
-thinking_yloop:
-	sta	YY
-;	lda	YY
-	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
-
-	ldy	#0
-inc_pointer:
-	inx
-	lda	thinking_data-1,X
-	sta	CURRENT
-thinking_xloop:
-	ror	CURRENT
-	bcc	no_draw
-
-	lda	#$00
-	sta	(GBASL),Y
-no_draw:
-	iny
-	tya
-	and	#$7
-	beq	inc_pointer
-
-	cpy	#39
-	bne	thinking_xloop
-
-	inc	YY
-	lda	YY
-	cmp	#14
-	bne	thinking_yloop
-.endif
-	;==========================
 	; flip pages
 	;==========================
-
-
 
 
 	;===================
 	; increment color
 	;	after loop we are +10
 	;	so -1 actually means increment 1 (because we mod 8 it)
+;	inc	COL
+;	inc	COL
+	dec	COL
 	dec	COL
 
-
 	;===================
-	; wait
+	; WAIT
 
 	lda	#255
-	jsr	WAIT
+	jsr	WAIT			; A = 0 at end
 
 	beq	big_loop
 
@@ -162,6 +148,10 @@ no_draw:
 ;
 ; 7*5 bytes = 35 bytes
 
+color_lookup:
+	; magenta, pink, orange, yellow, lgreen, aqua, mblue, lblue
+.byte	$33,$BB,$99,$DD,$CC,$EE,$66,$77
+
 thinking_data:
 .byte	$BE,$54,$14,$15,$39
 .byte	$88,$D4,$94,$34,$45
@@ -173,11 +163,11 @@ thinking_data:
 
 
 
-color_lookup:
-	; magenta, pink, orange, yellow, lgreen, aqua, mblue, lblue
-.byte	$33,$BB,$99,$DD,$CC,$EE,$66,$77
+
 
 
 	; for apple II bot entry at $3F5
+
+	; at +8A, so 36B
 
 	jmp	thinking
