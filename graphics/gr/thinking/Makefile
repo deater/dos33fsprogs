@@ -9,10 +9,11 @@ all:	thinking.dsk
 
 thinking.dsk:	HELLO THINKING RAINBOW_BOX T2 THINKING_FLIP T3 THINKING_SLOW \
 	THINKING_ATTEMPT2 THINKING_ATTEMPT3 THINKING_ATTEMPT4 THINKING_ATTEMPT5 \
-	THINKING_ATTEMPT6
+	THINKING_ATTEMPT6 CRACKING
 	cp $(EMPTYDISK) thinking.dsk
 	$(DOS33) -y thinking.dsk SAVE A HELLO
 	$(DOS33) -y thinking.dsk BSAVE -a 0x36b THINKING
+	$(DOS33) -y thinking.dsk BSAVE -a 0x36b CRACKING
 	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_FLIP
 	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_SLOW
 	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_ATTEMPT2
@@ -36,6 +37,15 @@ THINKING:	thinking.o
 
 thinking.o:	thinking.s
 	ca65 -o thinking.o thinking.s -l thinking.lst
+
+###
+
+CRACKING:	cracking.o
+	ld65 -o CRACKING cracking.o -C $(LINKERSCRIPTS)/apple2_36b.inc
+
+cracking.o:	cracking.s
+	ca65 -o cracking.o cracking.s -l cracking.lst
+
 
 
 ###
@@ -126,4 +136,4 @@ t3.o:	t3.s
 
 clean:	
 	rm -f *~ *.o *.lst HELLO THINKING RAINBOW_BOX T2 THINKING_FLIP T3 THINKING_SLOW \
-		THINKING_ATTEMPT2 THINKING_ATTEMPT3 THINKING_ATTEMPT4 THINKING_ATTEMPT5 THINKING_ATTEMPT6
+		THINKING_ATTEMPT2 THINKING_ATTEMPT3 THINKING_ATTEMPT4 THINKING_ATTEMPT5 THINKING_ATTEMPT6 CRACKING
