@@ -5,13 +5,20 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKERSCRIPTS = ../../../linker_scripts
 EMPTYDISK = ../../../empty_disk/empty.dsk
 
-all:	thinking.dsk
+all:	thinking.dsk cracking.dsk
+
+cracking.dsk:	COMBO_BOOT
+	dd if=COMBO_BOOT of=cracking.dsk bs=256 count=1
+	dd if=/dev/zero of=rr2.dsk bs=256 count=559
+	cat rr2.dsk >> cracking.dsk
+
 
 thinking.dsk:	HELLO THINKING RAINBOW_BOX T2 THINKING_FLIP T3 THINKING_SLOW \
 	THINKING_ATTEMPT2 THINKING_ATTEMPT3 THINKING_ATTEMPT4 THINKING_ATTEMPT5 \
-	THINKING_ATTEMPT6 CRACKING CRACKING_BOT THINKING_BOT
+	THINKING_ATTEMPT6 CRACKING CRACKING_BOT THINKING_BOT COMBO
 	cp $(EMPTYDISK) thinking.dsk
 	$(DOS33) -y thinking.dsk SAVE A HELLO
+	$(DOS33) -y thinking.dsk BSAVE -a 0xc00 COMBO
 	$(DOS33) -y thinking.dsk BSAVE -a 0xc00 THINKING
 	$(DOS33) -y thinking.dsk BSAVE -a 0x36b THINKING_BOT
 	$(DOS33) -y thinking.dsk BSAVE -a 0xc00 CRACKING
@@ -39,6 +46,23 @@ THINKING:	thinking.o
 
 thinking.o:	thinking.s
 	ca65 -o thinking.o thinking.s -l thinking.lst
+
+###
+
+COMBO:	combo.o
+	ld65 -o COMBO combo.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+combo.o:	combo.s
+	ca65 -o combo.o combo.s -l combo.lst
+
+###
+
+COMBO_BOOT:	combo_boot.o
+	ld65 -o COMBO_BOOT combo_boot.o -C $(LINKERSCRIPTS)/apple2_800.inc
+
+combo_boot.o:	combo_boot.s
+	ca65 -o combo_boot.o combo_boot.s -l combo_boot.lst
+
 
 ###
 
@@ -155,4 +179,4 @@ t3.o:	t3.s
 clean:	
 	rm -f *~ *.o *.lst HELLO THINKING RAINBOW_BOX T2 THINKING_FLIP T3 THINKING_SLOW \
 		THINKING_ATTEMPT2 THINKING_ATTEMPT3 THINKING_ATTEMPT4 THINKING_ATTEMPT5 THINKING_ATTEMPT6 CRACKING \
-		THINKING_BOT
+		THINKING_BOT COMBO
