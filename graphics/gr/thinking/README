@@ -1,0 +1,66 @@
+Re-implementation of the Print Shop "Thinking / Printing" animated banner.
+
+Was struggling to get this to fit in 141 bytes for the Apple II Basic Bot.
+Managed in the end to get a version that had animated bars instead of boxes.
+
+
+****************
+"Proper" Version
+****************
+
+	See the thinking_flip.s / THINKING_FLIP code.
+
+	This draws offscreen.  First the boxes, cascading inward,
+	(using direct RAM writes to draw the boxes).
+	A separate loop then overwrites with the bitmap.
+	Page flipping is used, so it alternates PAGE1/PAGE2.
+
+	The code is callable as a function so you can add hooks into
+	it from existing code as a progress indicator.
+
+	Downsides: lots of over-writing (speed), also you need to
+	have the 1k of RAM at $800 free for PAGE2 use.
+
+	Total size approaches 256 bytes
+
+**************
+Other attempts
+**************
+
+Various other attempts tried:
+
++ Drawing the boxes using Applesoft/Monitor ROM routines for a box
+	(4 sides), then drawing the bitmap on top.
+	This is too slow and makes flicker, also the code is large.
+	(some preliminary attempt to this is in THINKING_ATTEMPT4)
+
++ Drawing the boxes using HLINE instead of direct mem writes.
+	Slower, so very noticable that you're drawing things.
+	Still couldn't get below 153 bytes.
+	See thinking_slow.s / THINKING_SLOW
+
++ Using box drawing code from my various box-drawing demos.
+	This ends up being too large
+
++ RLE encoding the image.  Too big
+
++ Looking for the color progression in ROM (Didn't have to be exact,
+	just low bytes the same).  Sadly not there
+
++ Drawing the boxes/text offscreen and basically do a palette-shifting
+	type thing.  This is possible (though tricky as there are 10
+	boxes but only 8 colors so it's not a straight up palette shift).
+	This has the same limitations that page-flipping does in that
+	you need an offscreen area.
+	See t3.s / T3 for implementation.  Still large (192 bytes)
+
++ BOT version
+	Fits in 141 bytes.
+
+	See thinking_bot.s THINKING_BOT
+	Only draws lines that rotate, not boxes.
+	Draws bitmap at same time as drawing lines, meaning there is no
+	overdraw so no flicker.
+
+
+

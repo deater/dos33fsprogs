@@ -1,29 +1,81 @@
 ; Print-shop Style THINKING
 
+; this one uses page flipping for smoother animation
+
 ; by Vince `deater` Weaver <vince@deater.net>
 
-.include "zp.inc"
 .include "hardware.inc"
 
-COL	= $F0
-XSTART	= $F1
+; zero page locations
+
+GBASL   = $26
+GBASH   = $27
+
+COL	= $F0	; current start color of animated boxes
+XSTART	= $F1	; co-ords of current block being drawn
 XSTOP	= $F2
 YSTART	= $F3
 YSTOP	= $F4
-OFFSET	= $F5
-CURRENT	= $F6
-YY	= $F7
+
+CURRENT	= $F3	; current bitmap block
+YY	= $F4	; bitmap Y value
 
 thinking:
 
 	jsr	SETGR		; set lo-res 40x40 mode
 				; A=$D0 afterward
 
-big_loop:
+	;=========================================
+	; clear Lo-res PAGE2 to " "
+	; technically just need to do that for bottom 4 lines
+	; but easier(?) to just do it for whole screen
 
-	; COL value doesn't matter?
+	ldy	#0
+	lda	#$A0		; space
+clear_page2_inner_loop:
+cp2_smc:
+	sta	$800,Y
+	iny
+	bne	clear_page2_inner_loop
+
+	inc	cp2_smc+2	; want $800..$C00
+	ldx	cp2_smc+2
+	cpx	#$c
+	bne	clear_page2_inner_loop
+
+
+	; COL value doesn't matter, can be skipped if you don't care about
+	; starting place in color animation
 
 	lda	#0
+	sta	COL
+
+
+thinking_loop:
+
+	jsr	thinking_next_frame
+
+	; pause a bit
+
+	lda	#255
+	jsr	WAIT	; A==0 at end
+
+	beq	thinking_loop
+
+
+
+	;===========================
+	; thinking next frame
+	;===========================
+	; draws and displays next frame
+thinking_next_frame:
+
+	; draw the next frame of the animation
+	; draw a box from 0,0 to 40,20*2
+	; then next at 1,1*2 to 39,19*2
+	; etc
+
+	lda	#0		; starting points
 	sta	YSTART
 	sta	XSTART
 
@@ -37,38 +89,41 @@ box_loop:
 	ldx	YSTART
 yloop:
 	txa
-	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
-	lda	GBASH
+	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
+				; would be faster with lookup table
+
+	lda	GBASH		; adjust for PAGE1/PAGE2
 draw_page_smc:
 	adc	#0
 	sta	GBASH
 
-	lda	COL
+	lda	COL		; take start color, wrap, lookup in table
 	and	#$7
 	tay
 	lda	color_lookup,Y
 
-	ldy	XSTART
+	ldy	XSTART		; draw horizontal line
 xloop:
 	sta	(GBASL),Y
 	iny
 	cpy	XSTOP
 	bne	xloop
 
-	inx
+	inx			; move to next Y, repeat until done
 	cpx	YSTOP
 	bne	yloop
 
-	inc	COL
+	inc	COL		; move to next color
 
-	inc	XSTART
+	inc	XSTART		; adjust boundaries for next box
 	dec	XSTOP
 
 	inc	YSTART
 	dec	YSTOP
 	lda	YSTOP
-	cmp	#10
+
+	cmp	#10		; see if reached middle
 	bne	box_loop
 
 	;==========================
@@ -79,16 +134,22 @@ xloop:
 	; write THINKING
 	;==========================
 
-thinking_loop:
-	lda	#7
+thinking_bitmap_loop:
+	lda	#7		; text is from lines 7 to 14
 	sta	YY
-	ldx	#0
+	ldx	#0		; X is offset into the bitmap
 
 thinking_yloop:
 	lda	YY
 	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
-	ldy	#0
+
+	lda	GBASH		; adjust for PAGE1/PAGE2
+draw_bitmap_smc:
+	adc	#$0
+	sta	GBASH
+
+	ldy	#0		; bump to next part of bitmap each 8 pixels
 inc_pointer:
 	inx
 	lda	thinking_data-1,X
@@ -97,16 +158,20 @@ thinking_xloop:
 	ror	CURRENT
 	bcc	no_draw
 
-	lda	#$00
+	lda	#$00			; draw black if bit set, otherwise skip
 	sta	(GBASL),Y
 no_draw:
 	iny
-	tya
-	and	#$7
-	beq	inc_pointer
 
-	cpy	#39
-	bne	thinking_xloop
+	cpy	#40			; if it's been 40 bits, next line
+	beq	done_line
+
+	tya
+	and	#$7			; if it's been 8 bits, move on
+	beq	inc_pointer
+	bne	thinking_xloop		; otherwise, keep drawing
+
+done_line:
 
 	inc	YY
 	lda	YY
@@ -128,11 +193,10 @@ done_page:
 
 	eor	#$4		; flip draw page between $400/$800
 	sta	draw_page_smc+1	; DRAW_PAGE
+	sta	draw_bitmap_smc+1
 
 
 
-	lda	#255
-	jsr	WAIT
 
 	;===================
 	; increment color
@@ -140,7 +204,7 @@ done_page:
 	;	so -1 actually means increment 1 (because we mod 8 it)
 	dec	COL
 
-	jmp	big_loop
+	rts
 
 
 ;0          1          2          3         3
@@ -170,7 +234,3 @@ color_lookup:
 	; magenta, pink, orange, yellow, lgreen, aqua, mblue, lblue
 .byte	$33,$BB,$99,$DD,$CC,$EE,$66,$77
 
-
-	; for apple II bot entry at $3F5
-
-	jmp	thinking

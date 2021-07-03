@@ -1,5 +1,8 @@
 ; Print-shop Style THINKING
 
+; this one draws pattern and bitmap once, offscreen
+; then copies/color rotates each frame
+
 ; by Vince `deater` Weaver <vince@deater.net>
 
 .include "zp.inc"
@@ -115,11 +118,20 @@ no_draw:
 	cmp	#14
 	bne	thinking_yloop
 
+
+
+
 	;==========================
-	; flip pages
+	; Animate
 	;==========================
-	bit	PAGE2
+
+
+	bit	PAGE2		; always on PAGE2
 forever_loop:
+
+	;
+	; Copy image from PAGE1 to PAGE2
+	;	rotating colors as necessary
 
 	ldy	#0
 copy_loop:

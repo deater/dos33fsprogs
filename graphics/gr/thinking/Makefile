@@ -9,11 +9,13 @@ all:	thinking.dsk
 
 thinking.dsk:	HELLO THINKING RAINBOW_BOX T2 THINKING_FLIP T3 THINKING_SLOW \
 	THINKING_ATTEMPT2 THINKING_ATTEMPT3 THINKING_ATTEMPT4 THINKING_ATTEMPT5 \
-	THINKING_ATTEMPT6 CRACKING
+	THINKING_ATTEMPT6 CRACKING CRACKING_BOT THINKING_BOT
 	cp $(EMPTYDISK) thinking.dsk
 	$(DOS33) -y thinking.dsk SAVE A HELLO
 	$(DOS33) -y thinking.dsk BSAVE -a 0x36b THINKING
+	$(DOS33) -y thinking.dsk BSAVE -a 0x36b THINKING_BOT
 	$(DOS33) -y thinking.dsk BSAVE -a 0x36b CRACKING
+	$(DOS33) -y thinking.dsk BSAVE -a 0x36b CRACKING_BOT
 	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_FLIP
 	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_SLOW
 	$(DOS33) -y thinking.dsk BSAVE -a 0xC00 THINKING_ATTEMPT2
@@ -40,11 +42,27 @@ thinking.o:	thinking.s
 
 ###
 
+THINKING_BOT:	thinking_bot.o
+	ld65 -o THINKING_BOT thinking_bot.o -C $(LINKERSCRIPTS)/apple2_36b.inc
+
+thinking_bot.o:	thinking_bot.s
+	ca65 -o thinking_bot.o thinking_bot.s -l thinking_bot.lst
+
+###
+
 CRACKING:	cracking.o
 	ld65 -o CRACKING cracking.o -C $(LINKERSCRIPTS)/apple2_36b.inc
 
 cracking.o:	cracking.s
 	ca65 -o cracking.o cracking.s -l cracking.lst
+
+###
+
+CRACKING_BOT:	cracking_bot.o
+	ld65 -o CRACKING_BOT cracking_bot.o -C $(LINKERSCRIPTS)/apple2_36b.inc
+
+cracking_bot.o:	cracking_bot.s
+	ca65 -o cracking_bot.o cracking_bot.s -l cracking_bot.lst
 
 
 
@@ -136,4 +154,5 @@ t3.o:	t3.s
 
 clean:	
 	rm -f *~ *.o *.lst HELLO THINKING RAINBOW_BOX T2 THINKING_FLIP T3 THINKING_SLOW \
-		THINKING_ATTEMPT2 THINKING_ATTEMPT3 THINKING_ATTEMPT4 THINKING_ATTEMPT5 THINKING_ATTEMPT6 CRACKING
+		THINKING_ATTEMPT2 THINKING_ATTEMPT3 THINKING_ATTEMPT4 THINKING_ATTEMPT5 THINKING_ATTEMPT6 CRACKING \
+		THINKING_BOT

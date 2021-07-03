@@ -1,8 +1,5 @@
 ; Print-shop Style THINKING
 
-; this one tries to save space by using HLIN instead of open-coded hline routine
-; ends up being really slow but also not small enough
-
 ; by Vince `deater` Weaver <vince@deater.net>
 
 .include "zp.inc"
@@ -28,12 +25,7 @@ OFFSET	= $F5
 CURRENT	= $F6
 YY	= $F7
 BASE	= $F8
-
-X0	= $F9
-Y1	= $FA
-Y0	= $FB
-X1	= $FC
-
+XS	= $F9
 
 thinking:
 
@@ -43,97 +35,83 @@ thinking:
 big_loop:
 
 	lda	#0
-;	sta	COLOR
-	sta	X0	; X0
-	tax
+	sta	YY
 
-	lda	#39
-	sta	H2	; X1
-	sta	Y1
-
-draw_box_loop:
-
-	stx	Y0
+	ldx	#0
+yloop:
+	txa
+	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
 	lda	COL
 	and	#$7
 	tay
 	lda	color_lookup,Y
-
 	sta	COLOR
 
-inner_loop:
-	;; HLINE Y,H2 at A
-	;; X left alone, carry set on exit
-	;; H2 left alone
-	;; Y and A trashed
+	;=======================
 
-	ldy	X0
-	txa
-	jsr	HLINE	; y, H2 at A
+	ldy	#0
+xloop:
 
-	cpx	Y1
-	inx
-	bcc	inner_loop
 
+inc_pointer:
+	inc	YY
+	stx	XS
+
+	; skip if out of range
+	cpx	#7
+	bcc	draw_color
+	cpx	#14
+	bcs	draw_color
+
+
+
+	ldx	YY
+	lda	thinking_data-1-35,X
+	sta	CURRENT
+thinking_xloop:
+	ror	CURRENT
+	bcs	skip_color
+
+
+draw_color:
+	lda	COLOR
+	sta	(GBASL),Y
+skip_color:
+no_draw:
+	ldx	XS
+
+	iny
+
+	cpy	#40
+	beq	done_done
+
+	tya
+	and	#$7
+	beq	inc_pointer
+	bne	thinking_xloop
+done_done:
+
+
+
+	;=======================
+
+	cpx	#9
+	beq	blarch
+	bcc	blurgh
 	inc	COL
-
-	ldx	Y0
-	inx		; Y0
+	jmp	blarch
+blurgh:
+	dec	COL
+blarch:
 	inx
-	dec	Y1
-	dec	Y1
-
-	inc	X0
-	dec	H2
-
 	cpx	#20
-	bne	draw_box_loop
-
+	bne	yloop
 
 
 	;==========================
 	; done drawing rainbow box
 	;==========================
-
-	;==========================
-	; write THINKING
-	;==========================
-
-thinking_loop:
-	lda	#7		; YY
-	ldx	#0
-
-thinking_yloop:
-	sta	YY		; YY in A here
-
-;	lda	YY
-	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
-
-	ldy	#0
-inc_pointer:
-	inx
-	lda	thinking_data-1,X
-	sta	CURRENT
-thinking_xloop:
-	ror	CURRENT
-	bcc	no_draw
-
-	lda	#$00
-	sta	(GBASL),Y
-no_draw:
-	iny
-	tya
-	and	#$7
-	beq	inc_pointer
-
-	cpy	#39
-	bne	thinking_xloop
-
-	inc	YY
-	lda	YY
-	cmp	#14
-	bne	thinking_yloop
 
 	;==========================
 	; flip pages
@@ -144,6 +122,9 @@ no_draw:
 	; increment color
 	;	after loop we are +10
 	;	so -1 actually means increment 1 (because we mod 8 it)
+;	inc	COL
+;	inc	COL
+	dec	COL
 	dec	COL
 
 	;===================
@@ -167,6 +148,10 @@ no_draw:
 ;
 ; 7*5 bytes = 35 bytes
 
+color_lookup:
+	; magenta, pink, orange, yellow, lgreen, aqua, mblue, lblue
+.byte	$33,$BB,$99,$DD,$CC,$EE,$66,$77
+
 thinking_data:
 .byte	$BE,$54,$14,$15,$39
 .byte	$88,$D4,$94,$34,$45
@@ -178,11 +163,11 @@ thinking_data:
 
 
 
-color_lookup:
-	; magenta, pink, orange, yellow, lgreen, aqua, mblue, lblue
-.byte	$33,$BB,$99,$DD,$CC,$EE,$66,$77
+
 
 
 	; for apple II bot entry at $3F5
+
+	; at +8A, so 36B
 
 	jmp	thinking
