@@ -21,7 +21,7 @@ XSAVE	= $F9
 SAVED_YY= $F9
 YSAVE	= $FA
 SAVED_XX= $FA
-
+ADJUSTED_YY = $FB
 
 thinking:
 
@@ -72,7 +72,7 @@ inc_pointer:
 
 	stx	XSAVE
 	ldx	BITMAP_PTR
-	lda	thinking_data-1-35,X
+	lda	thinking_data-1-30,X
 	sta	CURRENT_BITMAP
 	ldx	XSAVE
 
@@ -82,10 +82,10 @@ thinking_xloop:
 	stx	XSAVE		; save X (YY)
 	sty	YSAVE		; save Y (XX)
 
-	; if YY <7 or YY > 14 then don't draw bitmap
-	cpx	#7
+	; if YY <6 or YY > 13 then don't draw bitmap
+	cpx	#6
 	bcc	do_plot
-	cpx	#14
+	cpx	#13
 	bcs	do_plot
 
 handle_bitmap:
@@ -119,19 +119,30 @@ skip_plot:
 	ldx	SAVED_YY	; YY
 	ldy	SAVED_XX	; XX
 
+
+	; if YY is < 10 do following, otherwise reverse
+
 	cpx	#10
 	bcc	counting_up
 
 counting_down:
+	; now doing the reverse
 
-;	cpy	#30			; is XX < 10
-;	bcc	color_adjust_up		; then potentially adjust UP
-;	cpy	#10			; is XX > 30
-;	bcs	color_adjust_down	; then potentially adjust down
-;	bcc	color_adjust_none	; else, do nothing
+	lda	#19
+	sec
+	sbc	SAVED_YY
+	sta	ADJUSTED_YY
+
+	; YY now going from 10..0
+
+	jmp	detect_adjust_dir
 
 
 counting_up:
+	lda	SAVED_YY
+	sta	ADJUSTED_YY
+
+detect_adjust_dir:
 	; if YY is < 10 do following, otherwise reverse
 
 	; if XX is < 10, check for inc
@@ -150,7 +161,7 @@ color_adjust_up:
 	; if XX < YY then inc color
 	; if XX >= YY then do nothing
 
-	cpy	SAVED_YY		; compare XX to YY
+	cpy	ADJUSTED_YY		; compare XX to YY
 	bcs	col_same		; bge do nothing
 
 col_inc:
@@ -163,10 +174,10 @@ color_adjust_down:
 
 	lda	#39
 	sec
-	sbc	XSAVE
-	sta	XSAVE
+	sbc	ADJUSTED_YY
+	sta	ADJUSTED_YY
 
-	cpy	XSAVE		; compare XX to YY
+	cpy	ADJUSTED_YY		; compare XX to YY
 
 	; if XX > 39-YY then inc color
 	bcc	col_down_same
@@ -198,14 +209,14 @@ done_done:
 	;=============================================
 	; reverse the colors on bottom half of screen
 
-	cpx	#9
-	beq	blarch
-	bcc	blurgh
-	dec	COL
-	jmp	blarch
-blurgh:
+;	cpx	#10
+;	beq	blarch
+;	bcc	blurgh
 	inc	COL
-blarch:
+;	jmp	blarch
+;blurgh:
+;	inc	COL
+;blarch:
 
 
 	;=======================
@@ -231,10 +242,10 @@ done_yloop:
 	; increment color
 	;	after loop we are +10
 	;	so -1 actually means increment 1 (because we mod 8 it)
+	inc	COL
 ;	inc	COL
-;	inc	COL
-	dec	COL
-	dec	COL
+;	dec	COL
+;	dec	COL
 
 
 
