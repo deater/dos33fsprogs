@@ -4,24 +4,25 @@
 
 ; by Vince `deater` Weaver <vince@deater.net>
 
-.include "zp.inc"
-.include "hardware.inc"
+; zero page addresses
+
+GBASL		= $26
+GBASH		= $27
+
+COL		= $F0
+CURRENT_BITMAP	= $F1
+BITMAP_PTR	= $F2
+XSAVE		= $F3
+SAVED_YY	= $F3
+YSAVE		= $F4
+SAVED_XX	= $F4
+ADJUSTED_YY	= $F5
 
 
-COL	= $F0
-XSTART	= $F1
-XSTOP	= $F2
-YSTART	= $F3
-YSTOP	= $F4
-OFFSET	= $F5
-CURRENT_BITMAP	= $F6
-BITMAP_PTR	= $F7
-BASE	= $F8
-XSAVE	= $F9
-SAVED_YY= $F9
-YSAVE	= $FA
-SAVED_XX= $FA
-ADJUSTED_YY = $FB
+; monitor routines
+GBASCALC	= $F847		; take Y-coord/2 in A, put address in GBASL/H ( A trashed, C clear)
+SETGR		= $FB40		; Init graphics, clear screen, A is $D0 after
+WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
 thinking:
 
@@ -46,9 +47,10 @@ print_thinking_loop:
 
 
 	;=============================
-	; print thinking
 	;=============================
-
+	; print thinking frame
+	;=============================
+	;=============================
 print_thinking_frame:
 
 	ldx	#0		; reset YY to 0
@@ -122,7 +124,8 @@ skip_plot:
 
 	; if YY is < 10 do following, otherwise reverse
 
-	cpx	#10
+	txa				; put YY in A (saved bytes later)
+	cmp	#10
 	bcc	counting_up
 
 counting_down:
@@ -131,15 +134,10 @@ counting_down:
 	lda	#19
 	sec
 	sbc	SAVED_YY
-	sta	ADJUSTED_YY
 
-	; YY now going from 10..0
-
-	jmp	detect_adjust_dir
-
+	; YY (in A) now going from 10..0
 
 counting_up:
-	lda	SAVED_YY
 	sta	ADJUSTED_YY
 
 detect_adjust_dir:
@@ -186,8 +184,6 @@ col_dec:
 	dec	COL
 col_down_same:
 
-;	ldy	YSAVE
-
 	; fallthrough
 
 color_adjust_none:
@@ -195,59 +191,34 @@ color_adjust_none:
 	;============================
 	; inc XX for next pixel
 
-	iny
+	iny				; inc XX
 
-	cpy	#40
+	cpy	#40			; if we hit 40, done line
 	beq	done_done
 
-	tya
-	and	#$7
+	tya				; if we are multiple of 8
+	and	#$7			; then need to increment bitmap ptr
 	beq	inc_pointer
 	bne	thinking_xloop
 done_done:
 
 	;=============================================
-	; reverse the colors on bottom half of screen
+	; adjust color for next line
 
-;	cpx	#10
-;	beq	blarch
-;	bcc	blurgh
 	inc	COL
-;	jmp	blarch
-;blurgh:
-;	inc	COL
-;blarch:
-
 
 	;=======================
 	; move to next line
 
 	inx
 	cpx	#20
-	beq	done_yloop
+	bne	yloop
 
-	jmp	yloop
-done_yloop:
+	;============================================
+	; done frame, increment color for next round
+	;============================================
 
-	;==========================
-	; done drawing rainbow box
-	;==========================
-
-	;==========================
-	; flip pages
-	;==========================
-
-
-	;===================
-	; increment color
-	;	after loop we are +10
-	;	so -1 actually means increment 1 (because we mod 8 it)
 	inc	COL
-;	inc	COL
-;	dec	COL
-;	dec	COL
-
-
 
 	rts
 
@@ -264,10 +235,6 @@ done_yloop:
 ;
 ; 7*5 bytes = 35 bytes
 
-color_lookup:
-	; magenta, pink, orange, yellow, lgreen, aqua, mblue, lblue
-.byte	$33,$BB,$99,$DD,$CC,$EE,$66,$77
-
 thinking_data:
 .byte	$BE,$54,$14,$15,$39
 .byte	$88,$D4,$94,$34,$45
@@ -276,3 +243,9 @@ thinking_data:
 .byte	$88,$54,$56,$94,$65
 .byte	$88,$54,$96,$94,$45
 .byte	$88,$54,$14,$15,$79
+
+color_lookup:
+	; magenta, pink, orange, yellow, lgreen, aqua, mblue, lblue
+.byte	$33,$BB,$99,$DD,$CC,$EE,$66,$77
+
+
