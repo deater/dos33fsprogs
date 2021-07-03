@@ -1,20 +1,13 @@
 ; Print-shop Style THINKING
 
+; size optimized to fit 141 bytes for Apple II bot
+
+; uses lines rather than boxes for size reasons
+
 ; by Vince `deater` Weaver <vince@deater.net>
 
 .include "zp.inc"
 .include "hardware.inc"
-
-; 161 -- original with page flip removed
-; 159 -- remove extraneous store to YY
-; 158 -- cond jump for jmp
-
-; 0-------------------------
-; 0 1111111111111111111111 0
-; 0 1 22222222222222222221 0
-
-; if XX < YY COL++
-
 
 COL	= $F0
 XSTART	= $F1

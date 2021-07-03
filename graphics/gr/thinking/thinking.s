@@ -5,16 +5,13 @@
 .include "zp.inc"
 .include "hardware.inc"
 
-; 161 -- original with page flip removed
-; 159 -- remove extraneous store to YY
-; 158 -- cond jump for jmp
 
 ; 0-------------------------
 ; 0 1111111111111111111111 0
 ; 0 1 22222222222222222221 0
 
 ; if XX < YY COL++
-
+ ;if XX > 39-YY COL--
 
 COL	= $F0
 XSTART	= $F1
@@ -23,9 +20,10 @@ YSTART	= $F3
 YSTOP	= $F4
 OFFSET	= $F5
 CURRENT	= $F6
-YY	= $F7
+BITMAP_PTR	= $F7
 BASE	= $F8
-XS	= $F9
+XSAVE	= $F9
+YSAVE	= $FA
 
 thinking:
 
@@ -34,19 +32,13 @@ thinking:
 
 big_loop:
 
-	lda	#0
-	sta	YY
+	ldx	#0		; reset YY
+	stx	BITMAP_PTR	; reset bitmap pointer to 0
 
-	ldx	#0
 yloop:
 	txa
 	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
-	lda	COL
-	and	#$7
-	tay
-	lda	color_lookup,Y
-	sta	COLOR
 
 	;=======================
 
@@ -54,9 +46,11 @@ yloop:
 xloop:
 
 
+
+	; this is only jumped to every 8th XX
 inc_pointer:
-	inc	YY
-	stx	XS
+	inc	BITMAP_PTR
+	stx	XSAVE
 
 	; skip if out of range
 	cpx	#7
@@ -64,22 +58,41 @@ inc_pointer:
 	cpx	#14
 	bcs	draw_color
 
-
-
-	ldx	YY
+	ldx	BITMAP_PTR
 	lda	thinking_data-1-35,X
 	sta	CURRENT
 thinking_xloop:
+	; this is called every XX
+
+	; XX is in Y
+	; YY is in X (currently saved in XSAVE)
+
+;	cpx	XSAVE
+
+	; if XX < YY then inc color
+;	bcs	col_same
+
+col_inc:
+;	inc	COL
+col_same:
+
+
 	ror	CURRENT
 	bcs	skip_color
 
 
 draw_color:
-	lda	COLOR
+
+	sty	YSAVE		; save Y
+	lda	COL		; set starting color
+	and	#$7
+	tay
+	lda	color_lookup,Y	; lookup color
+	ldy	YSAVE		; restore Y
 	sta	(GBASL),Y
 skip_color:
 no_draw:
-	ldx	XS
+	ldx	XSAVE
 
 	iny
 
