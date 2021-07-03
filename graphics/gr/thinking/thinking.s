@@ -1,17 +1,12 @@
 ; Print-shop Style THINKING
 
+; without pageflip
+
 ; by Vince `deater` Weaver <vince@deater.net>
 
 .include "zp.inc"
 .include "hardware.inc"
 
-
-; 0-------------------------
-; 0 1111111111111111111111 0
-; 0 1 22222222222222222221 0
-
-; if XX < YY COL++
- ;if XX > 39-YY COL--
 
 COL	= $F0
 XSTART	= $F1
@@ -19,69 +14,96 @@ XSTOP	= $F2
 YSTART	= $F3
 YSTOP	= $F4
 OFFSET	= $F5
-CURRENT	= $F6
+CURRENT_BITMAP	= $F6
 BITMAP_PTR	= $F7
 BASE	= $F8
 XSAVE	= $F9
 SAVED_YY= $F9
 YSAVE	= $FA
 SAVED_XX= $FA
+
+
 thinking:
 
 	jsr	SETGR		; set lo-res 40x40 mode
 				; A=$D0 afterward
 
-big_loop:
+	lda	#0
+	sta	COL		; consistent starting color
+				; not technically needed
 
-	ldx	#0		; reset YY
-	stx	BITMAP_PTR	; reset bitmap pointer to 0
+print_thinking_loop:
+
+	jsr	print_thinking_frame
+
+	;===================
+	; WAIT
+
+	lda	#255
+	jsr	WAIT			; A = 0 at end
+
+	beq	print_thinking_loop
+
+
+	;=============================
+	; print thinking
+	;=============================
+
+print_thinking_frame:
+
+	ldx	#0		; reset YY to 0
+	stx	BITMAP_PTR	; also reset bitmap pointer to 0
 
 yloop:
-	txa
-	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
-
+	txa			; load YY
+	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H
 
 	;=======================
 
-	ldy	#0
+	ldy	#0		; reset XX to 0
 xloop:
-
-
 
 	; this is only jumped to every 8th XX
 inc_pointer:
 	inc	BITMAP_PTR
 
+	; load current bitmap ptr into CURRENT_BITMAP
+	; is a don't care if not between 7 and 14
+
 	stx	XSAVE
 	ldx	BITMAP_PTR
 	lda	thinking_data-1-35,X
-	sta	CURRENT
+	sta	CURRENT_BITMAP
 	ldx	XSAVE
 
 thinking_xloop:
 	; this is called every XX
 
-	stx	XSAVE
+	stx	XSAVE		; save X (YY)
 	sty	YSAVE		; save Y (XX)
 
-	; skip if out of range
+	; if YY <7 or YY > 14 then don't draw bitmap
 	cpx	#7
-	bcc	draw_color
+	bcc	do_plot
 	cpx	#14
-	bcs	draw_color
+	bcs	do_plot
 
-	ror	CURRENT
-	bcs	skip_color
+handle_bitmap:
+	ror	CURRENT_BITMAP	; rotate next bit from bitmap in
+	bcs	skip_plot	; skip plotting (assume BG is black)
 
-draw_color:
+do_plot:
+
 	lda	COL		; set starting color
 	and	#$7
 	tay
-	lda	color_lookup,Y	; lookup color
+	lda	color_lookup,Y	; lookup color in table
+
 	ldy	YSAVE		; restore Y (XX)
 	sta	(GBASL),Y
-skip_color:
-no_draw:
+
+skip_plot:
+
 
 	;==================================
 	; adjust colors to make boxes
@@ -93,13 +115,28 @@ no_draw:
 	; XX is in Y (currently also in YSAVE)
 	; YY is in X (currently also in XSAVE)
 
+
+	ldx	SAVED_YY	; YY
+	ldy	SAVED_XX	; XX
+
+	cpx	#10
+	bcc	counting_up
+
+counting_down:
+
+;	cpy	#30			; is XX < 10
+;	bcc	color_adjust_up		; then potentially adjust UP
+;	cpy	#10			; is XX > 30
+;	bcs	color_adjust_down	; then potentially adjust down
+;	bcc	color_adjust_none	; else, do nothing
+
+
+counting_up:
+	; if YY is < 10 do following, otherwise reverse
+
 	; if XX is < 10, check for inc
 	; if XX is > 30 check for dex
 	; else, no adjust
-
-	ldx	SAVED_YY	; YY
-
-	ldy	SAVED_XX	; XX
 
 	cpy	#10			; is XX < 10
 	bcc	color_adjust_up		; then potentially adjust UP
@@ -138,7 +175,7 @@ col_dec:
 	dec	COL
 col_down_same:
 
-	ldy	YSAVE
+;	ldy	YSAVE
 
 	; fallthrough
 
@@ -158,28 +195,28 @@ color_adjust_none:
 	bne	thinking_xloop
 done_done:
 
+	;=============================================
+	; reverse the colors on bottom half of screen
 
-
-	;=======================
-
-;	cpx	#9
-;	beq	blarch
-;	bcc	blurgh
-;	inc	COL
-;	jmp	blarch
-;blurgh:
-;	dec	COL
-;blarch:
+	cpx	#9
+	beq	blarch
+	bcc	blurgh
+	dec	COL
+	jmp	blarch
+blurgh:
+	inc	COL
+blarch:
 
 
 	;=======================
 	; move to next line
-	inc	COL
 
 	inx
 	cpx	#20
-	bne	yloop
+	beq	done_yloop
 
+	jmp	yloop
+done_yloop:
 
 	;==========================
 	; done drawing rainbow box
@@ -199,13 +236,9 @@ done_done:
 	dec	COL
 	dec	COL
 
-	;===================
-	; WAIT
 
-	lda	#255
-	jsr	WAIT			; A = 0 at end
 
-	beq	big_loop
+	rts
 
 
 ;0          1          2          3         3
@@ -232,14 +265,3 @@ thinking_data:
 .byte	$88,$54,$56,$94,$65
 .byte	$88,$54,$96,$94,$45
 .byte	$88,$54,$14,$15,$79
-
-
-
-
-
-
-	; for apple II bot entry at $3F5
-
-	; at +8A, so 36B
-
-	jmp	thinking
