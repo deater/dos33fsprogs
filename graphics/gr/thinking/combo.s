@@ -1,3 +1,5 @@
+; SPDX-License-Identifier: MIT
+
 ; Print-shop Style THINKING/CRACKING demo
 
 ; without pageflip
