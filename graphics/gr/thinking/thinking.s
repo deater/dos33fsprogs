@@ -23,8 +23,9 @@ CURRENT	= $F6
 BITMAP_PTR	= $F7
 BASE	= $F8
 XSAVE	= $F9
+SAVED_YY= $F9
 YSAVE	= $FA
-
+SAVED_XX= $FA
 thinking:
 
 	jsr	SETGR		; set lo-res 40x40 mode
@@ -50,7 +51,18 @@ xloop:
 	; this is only jumped to every 8th XX
 inc_pointer:
 	inc	BITMAP_PTR
+
 	stx	XSAVE
+	ldx	BITMAP_PTR
+	lda	thinking_data-1-35,X
+	sta	CURRENT
+	ldx	XSAVE
+
+thinking_xloop:
+	; this is called every XX
+
+	stx	XSAVE
+	sty	YSAVE		; save Y (XX)
 
 	; skip if out of range
 	cpx	#7
@@ -58,41 +70,82 @@ inc_pointer:
 	cpx	#14
 	bcs	draw_color
 
-	ldx	BITMAP_PTR
-	lda	thinking_data-1-35,X
-	sta	CURRENT
-thinking_xloop:
-	; this is called every XX
-
-	; XX is in Y
-	; YY is in X (currently saved in XSAVE)
-
-;	cpx	XSAVE
-
-	; if XX < YY then inc color
-;	bcs	col_same
-
-col_inc:
-;	inc	COL
-col_same:
-
-
 	ror	CURRENT
 	bcs	skip_color
 
-
 draw_color:
-
-	sty	YSAVE		; save Y
 	lda	COL		; set starting color
 	and	#$7
 	tay
 	lda	color_lookup,Y	; lookup color
-	ldy	YSAVE		; restore Y
+	ldy	YSAVE		; restore Y (XX)
 	sta	(GBASL),Y
 skip_color:
 no_draw:
-	ldx	XSAVE
+
+	;==================================
+	; adjust colors to make boxes
+
+	; 0000000000000000
+	; 0111111111111110
+	; 0122222222222210
+
+	; XX is in Y (currently also in YSAVE)
+	; YY is in X (currently also in XSAVE)
+
+	; if XX is < 10, check for inc
+	; if XX is > 30 check for dex
+	; else, no adjust
+
+	ldx	SAVED_YY	; YY
+
+	ldy	SAVED_XX	; XX
+
+	cpy	#10			; is XX < 10
+	bcc	color_adjust_up		; then potentially adjust UP
+	cpy	#30			; is XX > 30
+	bcs	color_adjust_down	; then potentially adjust down
+	bcc	color_adjust_none	; else, do nothing
+
+
+color_adjust_up:
+
+	; if XX < YY then inc color
+	; if XX >= YY then do nothing
+
+	cpy	SAVED_YY		; compare XX to YY
+	bcs	col_same		; bge do nothing
+
+col_inc:
+	inc	COL
+col_same:
+
+	jmp	color_adjust_none
+
+color_adjust_down:
+
+	lda	#39
+	sec
+	sbc	XSAVE
+	sta	XSAVE
+
+	cpy	XSAVE		; compare XX to YY
+
+	; if XX > 39-YY then inc color
+	bcc	col_down_same
+
+col_dec:
+	dec	COL
+col_down_same:
+
+	ldy	YSAVE
+
+	; fallthrough
+
+color_adjust_none:
+
+	;============================
+	; inc XX for next pixel
 
 	iny
 
@@ -109,14 +162,20 @@ done_done:
 
 	;=======================
 
-	cpx	#9
-	beq	blarch
-	bcc	blurgh
+;	cpx	#9
+;	beq	blarch
+;	bcc	blurgh
+;	inc	COL
+;	jmp	blarch
+;blurgh:
+;	dec	COL
+;blarch:
+
+
+	;=======================
+	; move to next line
 	inc	COL
-	jmp	blarch
-blurgh:
-	dec	COL
-blarch:
+
 	inx
 	cpx	#20
 	bne	yloop
