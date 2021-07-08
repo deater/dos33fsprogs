@@ -549,7 +549,7 @@ really_exit:
 
 	.include	"link_book_mist_dock.s"
 
-	.include	"common_sprites.inc"
+;	.include	"common_sprites.inc"
 
 	.include	"leveldata_title.inc"
 

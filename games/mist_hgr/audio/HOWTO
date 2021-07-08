@@ -1,0 +1,8 @@
+pt3 file
+
+	found a theme.mid somewhere
+	ran it through 
+		ptmid -d6 theme.mid theme.mod
+	on Dosbox
+	then manually converted from mod to pt3
+
