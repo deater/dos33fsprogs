@@ -97,9 +97,9 @@ QLOAD: qload.o
 	ld65 -o QLOAD qload.o -C ../../linker_scripts/apple2_1200.inc
 
 qload.o:	qload.s qboot.inc \
-	gr_copy.s gr_offsets.s gr_pageflip.s gr_putsprite_crop.s \
+	gr_offsets.s \
 	text_print.s gr_fast_clear.s decompress_fast_v2.s \
-	keyboard.s draw_pointer.s end_level.s audio.s loadstore.s \
+	keyboard.s audio.s loadstore.s \
 	qkumba_popwr.s
 	ca65 -o qload.o qload.s -l qload.lst
 
@@ -177,9 +177,9 @@ MIST_TITLE:	mist_title.o
 mist_title.o:	mist_title.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
 	graphics_title_hgr/mist_title.lzsa graphics_title/title_graphics.inc \
-	gr_copy.s gr_offsets.s gr_pageflip.s gr_putsprite_crop.s \
+	gr_copy.s gr_offsets.s \
 	text_print.s gr_fast_clear.s decompress_fast_v2.s \
-	keyboard.s draw_pointer.s end_level.s audio.s \
+	keyboard.s audio.s \
 	init_state.s wait_a_bit.s \
 	link_book_mist_dock.s common_sprites.inc leveldata_title.inc \
 	pt3_lib_core.s pt3_lib_init.s pt3_lib_mockingboard_detect.s \
