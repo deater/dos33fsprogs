@@ -10,7 +10,7 @@
 /* usage: dos33_raw track sector file */
 static void usage(char *exe_name) {
 	printf("Usage:\n");
-	printf("\t%s disk_image track sector file start count\n\n",exe_name);
+	printf("\t%s disk_image track sector file start count [max_track]\n\n",exe_name);
 	exit(1);
 }
 
