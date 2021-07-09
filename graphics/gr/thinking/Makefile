@@ -9,6 +9,7 @@ all:	thinking.dsk cracking.dsk
 
 cracking.dsk:	COMBO_BOOT
 	dd if=COMBO_BOOT of=cracking.dsk bs=256 count=1
+	truncate -s 256 cracking.dsk
 	dd if=/dev/zero of=rr2.dsk bs=256 count=559
 	cat rr2.dsk >> cracking.dsk
 
