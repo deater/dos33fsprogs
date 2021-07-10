@@ -31,7 +31,8 @@ mist_hgr.dsk:	QBOOT TEXT_TITLE QLOAD \
 	$(DOS33_RAW) mist_hgr.dsk  0 14 SAVE4      0   1
 	$(DOS33_RAW) mist_hgr.dsk  0 15 SAVE5      0   1
 	$(DOS33_RAW) mist_hgr.dsk  1  0 QLOAD      0  14
-	$(DOS33_RAW) mist_hgr.dsk  2  0 MIST_TITLE 0  84
+	$(DOS33_RAW) mist_hgr.dsk  2  0 MIST_TITLE 0  0
+# 84
 #	$(DOS33_RAW) mist_hgr.dsk  8  0 MIST       0 159
 #	$(DOS33_RAW) mist_hgr.dsk 18  0 OCTAGON    0 128
 #	$(DOS33_RAW) mist_hgr.dsk 26  0 DENTIST    0  31

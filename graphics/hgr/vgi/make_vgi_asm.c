@@ -40,9 +40,7 @@ static int output_bytes(int mode, unsigned char *bytes, int count) {
 		}
 	}
 	else {
-		for(i=0;i<count;i++) {
-			fwrite(bytes,1,count,stdout);
-		}
+		fwrite(bytes,1,count,stdout);
 	}
 
 	return count;

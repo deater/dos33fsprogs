@@ -14,6 +14,15 @@
 mist_start:
 
 	;===================
+	; init vgi
+	;===================
+
+	lda	#$20
+	sta	HGR_PAGE	; put this somewhere else?
+
+	jsr	vgi_init
+
+	;===================
 	; detect model
 	;===================
 
@@ -247,14 +256,14 @@ reload_everything:
 	; init screen
 	;===================
 
-	jsr	TEXT
-	jsr	HOME
-	bit	KEYRESET
+;	jsr	TEXT
+;	jsr	HOME
+;	bit	KEYRESET
 
-	bit	SET_GR
-	bit	PAGE0
-	bit	LORES
-	bit	FULLGR
+;	bit	SET_GR
+;	bit	PAGE0
+;	bit	LORES
+;	bit	FULLGR
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -588,9 +597,16 @@ draw_and_wait:
 	lda	#$c			; load to page $c00
 	jsr	decompress_lzsa2_fast
 
-	jsr	gr_copy_to_current
+	lda	#$0
+	sta	VGIL
+	lda	#$c
+	sta	VGIH
 
-	jsr	page_flip
+	jsr	play_vgi
+
+;	jsr	gr_copy_to_current
+;	jsr	page_flip
+
 	pla
 	jsr	wait_a_bit
 	rts
@@ -674,3 +690,6 @@ config_string:
 ;             0123456789012345678901234567890123456789
 .byte   0,23,"APPLE II?, 48K RAM, MOCKINGBOARD: SLOT ?",0
 ;                                 MOCKINGBOARD: NONE
+
+
+.include	"vgi_common.s"

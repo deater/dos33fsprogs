@@ -2,7 +2,30 @@
 
 ;; LZSA addresses
 NIBCOUNT	= $00
+
 APPLEII_MODEL	= $01
+
+VGI_BUFFER	= $02
+VGI_TYPE	= $02
+P0		= $03
+P1		= $04
+P2		= $05
+P3		= $06
+P4		= $07
+P5		= $08
+VGIL		= $09
+VGIH		= $0A
+
+TEMP0		= $10
+TEMP1		= $11
+TEMP2		= $12
+TEMP3		= $13
+TEMP4		= $14
+TEMP5		= $15
+
+HGR_SHAPE	= $1A	; also used in BKGND0
+HGR_SHAPE2	= $1B
+HGR_BITS	= $1C
 
 ;; Zero page monitor routines addresses
 
@@ -296,15 +319,24 @@ SOUND_STATUS	=	$DE
 	SOUND_MOCKINGBOARD = $02 ; mockingboard detected
 
 GRID_PAGE	=	$DF
-ANIMATE_FRAME	=	$E0
-LEVEL_OVER	=	$E1
-LOCATIONS_L	=	$E2
-LOCATIONS_H	=	$E3
+
+
+; HGR routines (ROM)
+HGR_X           = $E0
+HGR_XH          = $E1
+HGR_Y           = $E2
+HGR_COLOR       = $E4
+HGR_PAGE	= $E6
+
+ANIMATE_FRAME	=	$E8
+LEVEL_OVER	=	$E9
+LOCATIONS_L	=	$EA
+LOCATIONS_H	=	$EB
 
 ; temp var per-world define
-LONG_FRAME	=	$E4	; nibel
-CURRENT_DISPLAY	=	$E4	; selena
-LAST_PLAYED	=	$E4	; selena
+LONG_FRAME	=	$EC	; nibel
+CURRENT_DISPLAY	=	$EC	; selena
+LAST_PLAYED	=	$EC	; selena
 
 DISP_PAGE	=	$ED	; ALL
 DRAW_PAGE	=	$EE	; ALL

@@ -2,12 +2,13 @@
 
 ; VGI Rectangle test
 
-COLOR_MODE	= TEMP0
-OTHER_MASK	= TEMP1
-XRUN		= TEMP2
+COLOR_MODE	= TEMP1
+OTHER_MASK	= TEMP2
+XRUN		= TEMP3
 
-div7_table	= $9000
-mod7_table	= $9100
+
+div7_table	= $BE00
+mod7_table	= $BF00
 
 USE_FAST = 1
 
@@ -450,13 +451,4 @@ left_masks:
 
 right_masks:
 	.byte $81,$83,$87, $8F,$9F,$BF,$FF
-
-
-
-
-
-
-
-
-
 

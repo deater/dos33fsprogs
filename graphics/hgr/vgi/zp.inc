@@ -1,6 +1,18 @@
 ; zero page
 
+TEMP0		= $10
+TEMP1		= $11
+TEMP2		= $12
+TEMP3		= $13
+TEMP4		= $14
+TEMP5		= $15
+
 ;; Zero page addresses
+
+HGR_BITS	= $1C
+
+GBASL		= $26
+GBASH		= $27
 
 ORNAMENT_L      = $60
 ORNAMENT_H      = $61
@@ -42,9 +54,10 @@ HGR_X		= $E0
 HGR_XH		= $E1
 HGR_Y		= $E2
 HGR_COLOR	= $E4
+HGR_PAGE	= $E6
 
 VGI_BUFFER	= $F0
-TYPE		= $F0
+VGI_TYPE	= $F0
 P0		= $F1
 P1		= $F2
 P2		= $F3
