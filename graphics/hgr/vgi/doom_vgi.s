@@ -88,7 +88,7 @@ setup_interrupt:
 	jsr	HOME
 ;	bit	FULLGR
 
-	jsr	make_tables
+	jsr	vgi_make_tables
 
 
 	;============================

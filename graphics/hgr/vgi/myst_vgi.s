@@ -9,7 +9,7 @@ vgi_myst:
 	jsr	HGR
 	bit	FULLGR
 
-	jsr	make_tables
+	jsr	vgi_make_tables
 
 	; get pointer to image data
 
