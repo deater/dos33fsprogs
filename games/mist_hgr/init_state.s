@@ -7,6 +7,7 @@ init_state:
 	; global game state
 	lda	#0
 	sta	JOYSTICK_ENABLED
+	sta	UPDATE_POINTER
 
 	; game state in saves init
 

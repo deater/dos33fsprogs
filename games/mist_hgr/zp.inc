@@ -15,6 +15,7 @@ P4		= $07
 P5		= $08
 VGIL		= $09
 VGIH		= $0A
+UPDATE_POINTER	= $0B
 
 TEMP0		= $10
 TEMP1		= $11

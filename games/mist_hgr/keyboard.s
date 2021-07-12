@@ -23,7 +23,7 @@ check_button:
         lda     #1
         sta     JS_BUTTON_STATE
         lda     #' '
-        jmp     check_sound
+        jmp     handle_input
 
 button_clear:
         lda     #0
@@ -37,13 +37,13 @@ js_check_left:
         cmp     #$20
         bcs     js_check_right  ; if less than 32, left
         lda     #'A'
-        bne     check_sound
+        bne     handle_input
 
 js_check_right:
         cmp     #$40
         bcc     js_check_up
         lda     #'D'
-        bne     check_sound
+        bne     handle_input
 
 js_check_up:
         lda     value1
@@ -51,13 +51,13 @@ js_check_up:
         bcs     js_check_down
         lda     #'W'
 
-        bne     check_sound
+        bne     handle_input
 
 js_check_down:
         cmp     #$40
         bcc     done_joystick
         lda     #'S'
-        bne     check_sound
+        bne     handle_input
 
 
 done_joystick:
@@ -73,8 +73,16 @@ actually_handle_keypress:
 keypress:
 	and	#$7f			; clear high bit
 	cmp	#' '
-	beq	check_sound		; make sure not to lose space
+	beq	handle_input		; make sure not to lose space
 	and	#$df			; convert uppercase to lower case
+
+
+handle_input:
+
+	pha
+	jsr	restore_bg_14x14	; restore old background
+	inc	UPDATE_POINTER
+	pla
 
 check_sound:
 	cmp	#$14			; control-T
@@ -116,10 +124,10 @@ check_left:
 	cmp	#8			; left key
 	bne	check_right
 left_pressed:
-	lda	CURSOR_X		; if 41<x<$FB don't decrement
+	lda	CURSOR_X		; if 41<x<$FE don't decrement
 	cmp	#41
 	bcc	do_dec_cursor_x
-	cmp	#$FB
+	cmp	#$FE
 	bcc	done_left_pressed
 do_dec_cursor_x:
 	dec	CURSOR_X
@@ -132,10 +140,10 @@ check_right:
 	cmp	#$15			; right key
 	bne	check_up
 right_pressed:
-	lda	CURSOR_X		; if 40<x<$FA don't increment
+	lda	CURSOR_X		; if 40<x<$FE don't increment
 	cmp	#40
 	bcc	do_inc_cursor_x
-	cmp	#$FA
+	cmp	#$FE
 	bcc	done_right_pressed
 do_inc_cursor_x:
 	inc	CURSOR_X
@@ -148,14 +156,17 @@ check_up:
 	cmp	#$0B			; up key
 	bne	check_down
 up_pressed:
-	lda	CURSOR_Y		; if 49<y<$F0 don't decrement
-	cmp	#49
+	lda	CURSOR_Y		; if 191<y<$F0 don't decrement
+	cmp	#191
 	bcc	do_dec_cursor_y
 	cmp	#$F0
 	bcc	done_up_pressed
 do_dec_cursor_y:
 	dec	CURSOR_Y
 	dec	CURSOR_Y
+	dec	CURSOR_Y
+	dec	CURSOR_Y
+
 done_up_pressed:
 	jmp	done_keypress
 
@@ -165,12 +176,14 @@ check_down:
 	cmp	#$0A
 	bne	check_return
 down_pressed:
-	lda	CURSOR_Y		; if 48<y<$EE don't decrement
-	cmp	#48
+	lda	CURSOR_Y		; if 191<y<$EE don't decrement
+	cmp	#191
 	bcc	do_inc_cursor_y
 	cmp	#$EE
 	bcc	done_down_pressed
 do_inc_cursor_y:
+	inc	CURSOR_Y
+	inc	CURSOR_Y
 	inc	CURSOR_Y
 	inc	CURSOR_Y
 done_down_pressed:

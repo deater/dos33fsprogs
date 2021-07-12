@@ -4,6 +4,14 @@
 
 
 draw_pointer:
+	lda	UPDATE_POINTER
+	bne	really_draw_pointer
+
+	rts
+
+really_draw_pointer:
+
+	jsr	save_bg_14x14		; save old bg
 
 	; for now assume the only 14x14 sprites are the pointers
 
@@ -242,6 +250,9 @@ finger_draw:
 	jsr	hgr_draw_sprite_14x14
 
 no_draw_pointer:
+	lda	#0
+	sta	UPDATE_POINTER
+
 	rts
 
 ; 0 = point

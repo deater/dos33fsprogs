@@ -181,7 +181,7 @@ mist_title.o:	mist_title.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
 	graphics_title_hgr/mist_title.lzsa graphics_title/title_graphics.inc \
 	gr_offsets.s \
-	text_print.s gr_fast_clear.s decompress_fast_v2.s \
+	draw_pointer.s text_print.s gr_fast_clear.s decompress_fast_v2.s \
 	keyboard.s audio.s \
 	init_state.s wait_a_bit.s \
 	link_book_mist_dock.s common_sprites.inc leveldata_title.inc \
