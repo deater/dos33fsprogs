@@ -44,4 +44,4 @@ title_graphics.inc:	\
 ####
 
 clean:		
-		rm -f *~ *.o *.lst *.data *.lzsa
+		rm -f *~ *.o *.lst *.data *.lzsa title_graphics.inc

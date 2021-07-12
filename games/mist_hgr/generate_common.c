@@ -97,8 +97,16 @@ int main(int argc, char **argv) {
 	find_address("page_flip");
 	printf("\n");
 
-	printf("; gr_putsprite_crop.s\n");
-	find_address("put_sprite_crop");
+//	printf("; gr_putsprite_crop.s\n");
+//	find_address("put_sprite_crop");
+//	find_address("psc_smc1");
+//	find_address("psc_smc2");
+//	printf("\n");
+
+	printf("; hgr_14x14_sprite.s\n");
+	find_address("hgr_draw_sprite_14x14");
+	find_address("save_bg_14x14");
+	find_address("restore_bg_14x14");
 	find_address("psc_smc1");
 	find_address("psc_smc2");
 	printf("\n");

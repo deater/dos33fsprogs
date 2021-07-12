@@ -224,13 +224,13 @@ length_array:
         .include        "audio.s"
 	.include	"linking_noise.s"
         .include        "decompress_fast_v2.s"
-;	.include        "draw_pointer.s"
+	.include        "draw_pointer.s"
 ;	.include        "end_level.s"
 ;	.include        "gr_copy.s"
 	.include        "gr_fast_clear.s"
 	.include        "gr_offsets.s"
 ;	.include        "gr_pageflip.s"
-;	.include        "gr_putsprite_crop.s"
+	.include        "hgr_14x14_sprite.s"
 	.include        "keyboard.s"
 	.include        "text_print.s"
 	.include	"loadstore.s"
@@ -238,7 +238,7 @@ length_array:
 	.include	"log_table.s"
 
 ;	.include        "page_sprites.inc"
-;	.include        "common_sprites.inc"
+	.include        "common_sprites.inc"
 
 	.include	"qkumba_popwr.s"
 

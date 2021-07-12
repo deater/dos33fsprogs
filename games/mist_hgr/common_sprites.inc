@@ -1,88 +1,862 @@
 finger_point_sprite:
-	.byte 5,5
-	.byte $AA,$BB,$AA,$AA,$AA
-	.byte $AA,$BB,$AA,$AA,$AA
-	.byte $BA,$BB,$BB,$BB,$BB
-	.byte $AB,$BB,$BB,$BB,$BB
-	.byte $AA,$BB,$BB,$BB,$AA
+
+;===============
+; point sprite
+;===============
+
+point_sprite_l:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$63			; 0 110 0 011
+.byte	$66			; 0 110 0 110
+.byte	$2c			; 0 010 1 100
+.byte	$6c			; 0 110 1 100
+.byte	$78			; 0 111 1 000
+.byte	$70			; 0 111 0 000
+.byte	$70			; 0 111 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+
+point_sprite_r:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$0A			; 0 000 1 010
+.byte	$2A			; 0 010 1 010
+.byte	$2D			; 0 010 1 101
+.byte	$37			; 0 011 0 111
+.byte	$3F			; 0 011 1 111
+.byte	$3F			; 0 011 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+
+point_mask_l:			; X 654 3 210
+.byte	$9f			; 1 001 1 111
+.byte	$8f			; 1 000 1 111
+.byte	$8f			; 1 000 1 111
+.byte	$8f			; 1 000 1 111
+.byte	$88			; 1 000 1 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$81			; 1 000 0 001
+.byte	$81			; 1 000 0 001
+.byte	$83			; 1 000 0 011
+.byte	$87			; 1 000 0 111
+.byte	$8f			; 1 000 1 111
+.byte	$8f			; 1 000 1 111
+
+point_mask_r:			; X 654 3 210
+.byte	$ff			; 1 111 1 111
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$e0			; 1 110 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$c0			; 1 100 0 000
+.byte	$c0			; 1 100 0 000
+
 
 finger_grab_sprite:
-	.byte 5,5
-	.byte $AA,$AA,$BB,$AA,$AA
-	.byte $BB,$AA,$BB,$AA,$BB
-	.byte $BB,$BA,$BB,$BA,$BB
-	.byte $AB,$BB,$BB,$BB,$BB
-	.byte $AA,$BB,$BB,$BB,$AA
+;===============
+; grab sprite
+;===============
+
+grab_sprite_l:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$4c			; 0 100 1 100
+.byte	$4c			; 0 100 1 100
+.byte	$58			; 0 101 1 000
+.byte	$58			; 0 101 1 000
+.byte	$70			; 0 111 0 000
+.byte	$73			; 0 111 0 011
+.byte	$77			; 0 111 0 111
+.byte	$7e			; 0 111 1 110
+.byte	$7c			; 0 111 1 100
+.byte	$7c			; 0 111 1 100
+.byte	$78			; 0 111 1 000
+.byte	$70			; 0 111 0 000
+.byte	$60			; 0 110 0 000
+
+grab_sprite_r:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$0d			; 0 000 1 101
+.byte	$0d			; 0 000 1 101
+.byte	$0d			; 0 000 1 101
+.byte	$6d			; 0 110 1 101
+.byte	$6f			; 0 110 1 111
+.byte	$7f			; 0 111 1 111
+.byte	$3f			; 0 011 1 111
+.byte	$3f			; 0 011 1 111
+.byte	$3f			; 0 011 1 111
+.byte	$1f			; 0 001 1 111
+.byte	$1f			; 0 001 1 111
+.byte	$0f			; 0 000 1 111
+.byte	$0f			; 0 000 1 111
+
+grab_mask_l:			; X 654 3 210
+.byte	$b3			; 1 011 0 011
+.byte	$81			; 1 000 0 001
+.byte	$81			; 1 000 0 001
+.byte	$83			; 1 000 0 011
+.byte	$83			; 1 000 0 011
+.byte	$84			; 1 000 0 100
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$81			; 1 000 0 001
+.byte	$81			; 1 000 0 001
+.byte	$83			; 1 000 0 011
+.byte	$c7			; 1 100 0 111
+.byte	$c7			; 1 100 1 111
+
+grab_mask_r:			; X 654 3 210
+.byte	$f2			; 1 111 0 010
+.byte	$e0			; 1 110 0 000
+.byte	$e0			; 1 110 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 100 0 000
+.byte	$c0			; 1 100 0 000
+.byte	$e0			; 1 110 0 000
+.byte	$e0			; 1 110 0 000
+
+
+;======================
+; finger left
+;======================
+; TODO
 
 finger_left_sprite:
-	.byte 6,4
-	.byte $AA,$AA,$AA,$AB,$BA,$AA
-	.byte $BB,$BB,$BB,$BB,$BB,$BB
-	.byte $AA,$AA,$BB,$BB,$BB,$BB
-	.byte $AA,$AA,$AB,$BB,$BB,$AB
+
+finger_left_sprite_l:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$63			; 0 110 0 011
+.byte	$66			; 0 110 0 110
+.byte	$2c			; 0 010 1 100
+.byte	$6c			; 0 110 1 100
+.byte	$78			; 0 111 1 000
+.byte	$70			; 0 111 0 000
+.byte	$70			; 0 111 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+
+finger_left_sprite_r:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$0A			; 0 000 1 010
+.byte	$2A			; 0 010 1 010
+.byte	$2D			; 0 010 1 101
+.byte	$37			; 0 011 0 111
+.byte	$3F			; 0 011 1 111
+.byte	$3F			; 0 011 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+
+finger_left_mask_l:			; X 654 3 210
+.byte	$ff			; 1 001 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 011
+.byte	$ff			; 1 000 0 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+
+finger_left_mask_r:			; X 654 3 210
+.byte	$ff			; 1 111 1 111
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$e0			; 1 110 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$c0			; 1 100 0 000
+.byte	$c0			; 1 100 0 000
+
+
+;====================
+; finger right
+;====================
+; TODO
 
 finger_right_sprite:
-	.byte 6,4
-	.byte $AA,$BA,$AB,$AA,$AA,$AA
-	.byte $BB,$BB,$BB,$BB,$BB,$BB
-	.byte $BB,$BB,$BB,$BB,$AA,$AA
-	.byte $AB,$BB,$BB,$AB,$AA,$AA
+finger_right_sprite_l:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$63			; 0 110 0 011
+.byte	$66			; 0 110 0 110
+.byte	$2c			; 0 010 1 100
+.byte	$6c			; 0 110 1 100
+.byte	$78			; 0 111 1 000
+.byte	$70			; 0 111 0 000
+.byte	$70			; 0 111 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
 
+finger_right_sprite_r:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$0A			; 0 000 1 010
+.byte	$2A			; 0 010 1 010
+.byte	$2D			; 0 010 1 101
+.byte	$37			; 0 011 0 111
+.byte	$3F			; 0 011 1 111
+.byte	$3F			; 0 011 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+
+finger_right_mask_l:			; X 654 3 210
+.byte	$ff			; 1 001 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 011
+.byte	$ff			; 1 000 0 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+
+finger_right_mask_r:			; X 654 3 210
+.byte	$ff			; 1 111 1 111
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$e0			; 1 110 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$c0			; 1 100 0 000
+.byte	$c0			; 1 100 0 000
+
+
+;====================
+; Finger turn left
+;====================
 finger_turn_left_sprite:
-	.byte 6,4
-	.byte $aa,$aa,$ba,$bb,$aa,$aa
-	.byte $ba,$bb,$bb,$bb,$bb,$ba
-	.byte $aa,$ab,$bb,$bb,$ab,$bb
-	.byte $aa,$aa,$aa,$ab,$aa,$ab
+
+finger_turn_left_sprite_l:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$63			; 0 110 0 011
+.byte	$66			; 0 110 0 110
+.byte	$2c			; 0 010 1 100
+.byte	$6c			; 0 110 1 100
+.byte	$78			; 0 111 1 000
+.byte	$70			; 0 111 0 000
+.byte	$70			; 0 111 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+
+finger_turn_left_sprite_r:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$0A			; 0 000 1 010
+.byte	$2A			; 0 010 1 010
+.byte	$2D			; 0 010 1 101
+.byte	$37			; 0 011 0 111
+.byte	$3F			; 0 011 1 111
+.byte	$3F			; 0 011 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+
+finger_turn_left_mask_l:			; X 654 3 210
+.byte	$ff			; 1 001 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 011
+.byte	$ff			; 1 000 0 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+
+finger_turn_left_mask_r:			; X 654 3 210
+.byte	$ff			; 1 111 1 111
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$e0			; 1 110 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$c0			; 1 100 0 000
+.byte	$c0			; 1 100 0 000
+
+;=====================
+; Finger turn right
+;=====================
+; TODO
 
 finger_turn_right_sprite:
-	.byte 6,4
-	.byte $aa,$aa,$bb,$ba,$aa,$aa
-	.byte $ba,$bb,$bb,$bb,$bb,$ba
-	.byte $bb,$ab,$bb,$bb,$ab,$aa
-	.byte $ab,$aa,$ab,$aa,$aa,$aa
+
+finger_turn_right_sprite_l:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$63			; 0 110 0 011
+.byte	$66			; 0 110 0 110
+.byte	$2c			; 0 010 1 100
+.byte	$6c			; 0 110 1 100
+.byte	$78			; 0 111 1 000
+.byte	$70			; 0 111 0 000
+.byte	$70			; 0 111 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+
+finger_turn_right_sprite_r:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$0A			; 0 000 1 010
+.byte	$2A			; 0 010 1 010
+.byte	$2D			; 0 010 1 101
+.byte	$37			; 0 011 0 111
+.byte	$3F			; 0 011 1 111
+.byte	$3F			; 0 011 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+
+finger_turn_right_mask_l:			; X 654 3 210
+.byte	$ff			; 1 001 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 011
+.byte	$ff			; 1 000 0 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+
+finger_turn_right_mask_r:			; X 654 3 210
+.byte	$ff			; 1 111 1 111
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$e0			; 1 110 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$c0			; 1 100 0 000
+.byte	$c0			; 1 100 0 000
+
+
+;=====================
+; finger match
+;=====================
+; TODO
 
 finger_match_sprite:
-	.byte 6,4
-	.byte $aa,$aa,$aa,$aa,$ba,$ba
-	.byte $1a,$da,$da,$db,$db,$db
-	.byte $a1,$ad,$ad,$bd,$bd,$ad
-	.byte $aa,$aa,$aa,$aa,$ab,$bb
+.if 0
+finger_match_sprite_l:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$63			; 0 110 0 011
+.byte	$66			; 0 110 0 110
+.byte	$2c			; 0 010 1 100
+.byte	$6c			; 0 110 1 100
+.byte	$78			; 0 111 1 000
+.byte	$70			; 0 111 0 000
+.byte	$70			; 0 111 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+
+finger_match_sprite_r:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$0A			; 0 000 1 010
+.byte	$2A			; 0 010 1 010
+.byte	$2D			; 0 010 1 101
+.byte	$37			; 0 011 0 111
+.byte	$3F			; 0 011 1 111
+.byte	$3F			; 0 011 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+
+finger_match_mask_l:			; X 654 3 210
+.byte	$ff			; 1 001 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 011
+.byte	$ff			; 1 000 0 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+
+finger_match_mask_r:			; X 654 3 210
+.byte	$ff			; 1 111 1 111
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$e0			; 1 110 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$c0			; 1 100 0 000
+.byte	$c0			; 1 100 0 000
+.endif
+
+;======================
+; finger match lit
+;======================
+; TODO
 
 finger_match_lit_sprite:
-	.byte 6,4
-	.byte $9a,$a9,$aa,$aa,$ba,$ba
-	.byte $19,$da,$da,$db,$db,$db
-	.byte $a9,$ad,$ad,$bd,$bd,$ad
-	.byte $aa,$aa,$aa,$aa,$ab,$bb
+.if 0
+finger_match_lit_sprite_l:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$63			; 0 110 0 011
+.byte	$66			; 0 110 0 110
+.byte	$2c			; 0 010 1 100
+.byte	$6c			; 0 110 1 100
+.byte	$78			; 0 111 1 000
+.byte	$70			; 0 111 0 000
+.byte	$70			; 0 111 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+
+finger_match_lit_sprite_r:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$0A			; 0 000 1 010
+.byte	$2A			; 0 010 1 010
+.byte	$2D			; 0 010 1 101
+.byte	$37			; 0 011 0 111
+.byte	$3F			; 0 011 1 111
+.byte	$3F			; 0 011 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+
+finger_match_lit_mask_l:			; X 654 3 210
+.byte	$ff			; 1 001 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 011
+.byte	$ff			; 1 000 0 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+
+finger_match_lit_mask_r:			; X 654 3 210
+.byte	$ff			; 1 111 1 111
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$e0			; 1 110 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$c0			; 1 100 0 000
+.byte	$c0			; 1 100 0 000
+.endif
+
+;=========================
+; finger key sprite
+;=========================
+; TODO
 
 finger_key_sprite:
-	.byte 6,4
-	.byte $aa,$aa,$aa,$aa,$aa,$bd
-	.byte $dd,$dd,$dd,$dd,$db,$bb
-	.byte $aa,$ad,$aa,$ab,$bd,$bb
-	.byte $aa,$aa,$aa,$aa,$ab,$ab
+.if 0
+finger_key_sprite_l:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$63			; 0 110 0 011
+.byte	$66			; 0 110 0 110
+.byte	$2c			; 0 010 1 100
+.byte	$6c			; 0 110 1 100
+.byte	$78			; 0 111 1 000
+.byte	$70			; 0 111 0 000
+.byte	$70			; 0 111 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+
+finger_key_sprite_r:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$0A			; 0 000 1 010
+.byte	$2A			; 0 010 1 010
+.byte	$2D			; 0 010 1 101
+.byte	$37			; 0 011 0 111
+.byte	$3F			; 0 011 1 111
+.byte	$3F			; 0 011 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+
+finger_key_mask_l:			; X 654 3 210
+.byte	$ff			; 1 001 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 011
+.byte	$ff			; 1 000 0 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+
+finger_key_mask_r:			; X 654 3 210
+.byte	$ff			; 1 111 1 111
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$e0			; 1 110 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$c0			; 1 100 0 000
+.byte	$c0			; 1 100 0 000
+.endif
+
+;===========================
+; finger red sprite
+;===========================
+; TODO
 
 finger_red_page_sprite:
-	.byte 5,5
-	.byte $3a,$33,$33,$aa,$aa
-	.byte $33,$33,$33,$ba,$aa
-	.byte $33,$b3,$33,$bb,$ba
-	.byte $33,$3b,$bb,$bb,$bb
-	.byte $a3,$a3,$bb,$bb,$bb
+
+finger_red_sprite_l:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$63			; 0 110 0 011
+.byte	$66			; 0 110 0 110
+.byte	$2c			; 0 010 1 100
+.byte	$6c			; 0 110 1 100
+.byte	$78			; 0 111 1 000
+.byte	$70			; 0 111 0 000
+.byte	$70			; 0 111 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+
+finger_red_sprite_r:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$0A			; 0 000 1 010
+.byte	$2A			; 0 010 1 010
+.byte	$2D			; 0 010 1 101
+.byte	$37			; 0 011 0 111
+.byte	$3F			; 0 011 1 111
+.byte	$3F			; 0 011 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+
+finger_red_mask_l:			; X 654 3 210
+.byte	$ff			; 1 001 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 011
+.byte	$ff			; 1 000 0 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+
+finger_red_mask_r:			; X 654 3 210
+.byte	$ff			; 1 111 1 111
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$e0			; 1 110 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$c0			; 1 100 0 000
+.byte	$c0			; 1 100 0 000
+
+;=====================
+; finger blue sprite
+;=====================
+; TODO
 
 finger_blue_page_sprite:
-	.byte 5,5
-	.byte $6a,$66,$66,$aa,$aa
-	.byte $66,$66,$66,$ba,$aa
-	.byte $66,$b6,$66,$bb,$ba
-	.byte $66,$6b,$bb,$bb,$bb
-	.byte $a6,$a6,$bb,$bb,$bb
+
+finger_blue_sprite_l:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$63			; 0 110 0 011
+.byte	$66			; 0 110 0 110
+.byte	$2c			; 0 010 1 100
+.byte	$6c			; 0 110 1 100
+.byte	$78			; 0 111 1 000
+.byte	$70			; 0 111 0 000
+.byte	$70			; 0 111 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+
+finger_blue_sprite_r:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$0A			; 0 000 1 010
+.byte	$2A			; 0 010 1 010
+.byte	$2D			; 0 010 1 101
+.byte	$37			; 0 011 0 111
+.byte	$3F			; 0 011 1 111
+.byte	$3F			; 0 011 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+
+finger_blue_mask_l:			; X 654 3 210
+.byte	$ff			; 1 001 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 011
+.byte	$ff			; 1 000 0 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+
+finger_blue_mask_r:			; X 654 3 210
+.byte	$ff			; 1 111 1 111
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$e0			; 1 110 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$c0			; 1 100 0 000
+.byte	$c0			; 1 100 0 000
+
+
+;========================
+; finger white page
+;========================
+; TODO
 
 finger_white_page_sprite:
-	.byte 5,5
-	.byte $fa,$ff,$ff,$aa,$aa
-	.byte $ff,$ff,$ff,$ba,$aa
-	.byte $ff,$bf,$ff,$bb,$ba
-	.byte $ff,$fb,$bb,$bb,$bb
-	.byte $af,$af,$bb,$bb,$bb
+
+finger_white_sprite_l:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+.byte	$63			; 0 110 0 011
+.byte	$66			; 0 110 0 110
+.byte	$2c			; 0 010 1 100
+.byte	$6c			; 0 110 1 100
+.byte	$78			; 0 111 1 000
+.byte	$70			; 0 111 0 000
+.byte	$70			; 0 111 0 000
+.byte	$60			; 0 110 0 000
+.byte	$60			; 0 110 0 000
+
+finger_white_sprite_r:			; X 654 3 210
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$00			; 0 000 0 000
+.byte	$0A			; 0 000 1 010
+.byte	$2A			; 0 010 1 010
+.byte	$2D			; 0 010 1 101
+.byte	$37			; 0 011 0 111
+.byte	$3F			; 0 011 1 111
+.byte	$3F			; 0 011 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+.byte	$1F			; 0 001 1 111
+
+finger_white_mask_l:			; X 654 3 210
+.byte	$ff			; 1 001 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 000
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 001
+.byte	$ff			; 1 000 0 011
+.byte	$ff			; 1 000 0 111
+.byte	$ff			; 1 000 1 111
+.byte	$ff			; 1 000 1 111
+
+finger_white_mask_r:			; X 654 3 210
+.byte	$ff			; 1 111 1 111
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$fe			; 1 111 1 110
+.byte	$e0			; 1 110 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$80			; 1 000 0 000
+.byte	$c0			; 1 100 0 000
+.byte	$c0			; 1 100 0 000
+
+
+
+
+
+
+
+

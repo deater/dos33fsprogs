@@ -6,6 +6,7 @@ PNG_TO_40x96 = ../../utils/gr-utils/png_to_40x96
 PNG_TO_40x48D = ../../utils/gr-utils/png_to_40x48d
 PNG2RLE = ../../utils/gr-utils/png2rle
 B2D = ../../utils/bmp2dhr/b2d
+EMPTY_DISK = ../../empty_disk/empty.dsk
 
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
@@ -17,19 +18,20 @@ all:	mist_hgr.dsk
 #	zip mist.zip mist_hgr.dsk mist_side2.dsk mist_side3.dsk
 
 mist_hgr.dsk:	QBOOT TEXT_TITLE QLOAD \
-		MIST_TITLE MIST OCTAGON VIEWER \
-		DENTIST D\'NI SHIP GENERATOR \
-		SAVE1 SAVE2 SAVE3 SAVE4 SAVE5
-	cp extra_empty.dsk mist_hgr.dsk
+		MIST_TITLE
+#MIST OCTAGON VIEWER \
+#		DENTIST D\'NI SHIP GENERATOR \
+#		SAVE1 SAVE2 SAVE3 SAVE4 SAVE5
+	cp $(EMPTY_DISK) mist_hgr.dsk
 	$(DOS33_RAW) mist_hgr.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) mist_hgr.dsk  0  2 QBOOT      1   1
 	$(DOS33_RAW) mist_hgr.dsk  0  4 QBOOT      2   1
 	$(DOS33_RAW) mist_hgr.dsk  0  6 TEXT_TITLE 0   3
-	$(DOS33_RAW) mist_hgr.dsk  0 11 SAVE1      0   1
-	$(DOS33_RAW) mist_hgr.dsk  0 12 SAVE2      0   1
-	$(DOS33_RAW) mist_hgr.dsk  0 13 SAVE3      0   1
-	$(DOS33_RAW) mist_hgr.dsk  0 14 SAVE4      0   1
-	$(DOS33_RAW) mist_hgr.dsk  0 15 SAVE5      0   1
+#	$(DOS33_RAW) mist_hgr.dsk  0 11 SAVE1      0   1
+#	$(DOS33_RAW) mist_hgr.dsk  0 12 SAVE2      0   1
+#	$(DOS33_RAW) mist_hgr.dsk  0 13 SAVE3      0   1
+#	$(DOS33_RAW) mist_hgr.dsk  0 14 SAVE4      0   1
+#	$(DOS33_RAW) mist_hgr.dsk  0 15 SAVE5      0   1
 	$(DOS33_RAW) mist_hgr.dsk  1  0 QLOAD      0  14
 	$(DOS33_RAW) mist_hgr.dsk  2  0 MIST_TITLE 0  0
 # 84
@@ -98,7 +100,7 @@ QLOAD: qload.o
 	ld65 -o QLOAD qload.o -C ../../linker_scripts/apple2_1200.inc
 
 qload.o:	qload.s qboot.inc \
-	gr_offsets.s \
+	gr_offsets.s hgr_14x14_sprite.s common_sprites.inc \
 	text_print.s gr_fast_clear.s decompress_fast_v2.s \
 	keyboard.s audio.s loadstore.s \
 	qkumba_popwr.s
@@ -505,20 +507,20 @@ clean:
 			GENERATOR \
 			generate_common
 	cd graphics_title && make clean
-	cd graphics_mist && make clean
-	cd graphics_octagon && make clean
-	cd books && make clean
-	cd graphics_viewer && make clean
-	cd graphics_meche && make clean
-	cd graphics_selena && make clean
-	cd graphics_cabin && make clean
-	cd graphics_channel && make clean
-	cd graphics_stoney && make clean
-	cd graphics_dentist && make clean
-	cd graphics_generator && make clean
-	cd graphics_arbor && make clean
-	cd graphics_nibel && make clean
-	cd graphics_dni && make clean
-	cd graphics_ship && make clean
-	cd graphics_sub && make clean
+#	cd graphics_mist && make clean
+#	cd graphics_octagon && make clean
+#	cd books && make clean
+#	cd graphics_viewer && make clean
+#	cd graphics_meche && make clean
+#	cd graphics_selena && make clean
+#	cd graphics_cabin && make clean
+#	cd graphics_channel && make clean
+#	cd graphics_stoney && make clean
+#	cd graphics_dentist && make clean
+#	cd graphics_generator && make clean
+#	cd graphics_arbor && make clean
+#	cd graphics_nibel && make clean
+#	cd graphics_dni && make clean
+#	cd graphics_ship && make clean
+#	cd graphics_sub && make clean
 

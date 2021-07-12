@@ -472,6 +472,9 @@ done_intro:
 	lda	#1
 	sta	CURSOR_VISIBLE		; visible at first
 
+
+	jsr	save_bg_14x14		; save initial bg
+
 game_loop:
 	;=================
 	; reset things
@@ -560,20 +563,13 @@ nothing_special:
 	; draw pointer
 	;====================================
 
-;	jsr	draw_pointer
-
-	;====================================
-	; page flip
-	;====================================
-
-;	jsr	page_flip
+	jsr	draw_pointer				; draw pointer
 
 	;====================================
 	; handle keypress/joystick
 	;====================================
 
 	jsr	handle_keypress
-
 
 	;====================================
 	; inc frame count
