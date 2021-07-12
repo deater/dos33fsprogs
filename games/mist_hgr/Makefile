@@ -111,7 +111,7 @@ LOADER: loader.o
 	ld65 -o LOADER loader.o -C ../../linker_scripts/apple2_1000.inc
 
 loader.o:	loader.s \
-	gr_copy.s gr_offsets.s gr_pageflip.s gr_putsprite_crop.s \
+	gr_offsets.s \
 	text_print.s gr_fast_clear.s decompress_fast_v2.s \
 	keyboard.s draw_pointer.s end_level.s audio.s loadstore.s \
 	qkumba_popwr.s
@@ -178,7 +178,7 @@ MIST_TITLE:	mist_title.o
 mist_title.o:	mist_title.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \
 	graphics_title_hgr/mist_title.lzsa graphics_title/title_graphics.inc \
-	gr_copy.s gr_offsets.s \
+	gr_offsets.s \
 	text_print.s gr_fast_clear.s decompress_fast_v2.s \
 	keyboard.s audio.s \
 	init_state.s wait_a_bit.s \
@@ -267,7 +267,7 @@ meche.o:	meche.s zp.inc hardware.inc common_defines.inc \
 	handle_pages.s \
 	keyboard.s \
 	draw_pointer.s \
-	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	audio.s text_print.s decompress_fast_v2.s
 	ca65 -o meche.o meche.s -l meche.lst
 
 ####
@@ -286,7 +286,7 @@ selena.o:	selena.s zp.inc hardware.inc common_defines.inc \
 	draw_pointer.s \
 	speaker_beeps.s \
 	selena_organ_puzzle.s selena_sound_puzzle.s \
-	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	audio.s text_print.s decompress_fast_v2.s
 	ca65 -o selena.o selena.s -l selena.lst
 
 ####
@@ -304,7 +304,7 @@ sub.o:	sub.s zp.inc hardware.inc common_defines.inc \
 	keyboard.s \
 	draw_pointer.s \
 	sub_puzzle.s \
-	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	audio.s text_print.s decompress_fast_v2.s
 	ca65 -o sub.o sub.s -l sub.lst
 
 ####
@@ -322,7 +322,7 @@ viewer.o:	viewer.s zp.inc hardware.inc common_defines.inc \
 	viewer_controls.s \
 	keyboard.s \
 	draw_pointer.s \
-	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	audio.s text_print.s decompress_fast_v2.s
 	ca65 -o viewer.o viewer.s -l viewer.lst
 
 ####
@@ -361,7 +361,7 @@ ship.o:	ship.s zp.inc hardware.inc common_defines.inc \
 	link_book_stoney.s \
 	link_book_mist.s \
 	handle_pages.s \
-	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	audio.s text_print.s decompress_fast_v2.s
 	ca65 -o ship.o ship.s -l ship.lst
 
 ####
@@ -400,7 +400,7 @@ channel.o:	channel.s zp.inc hardware.inc common_defines.inc \
 	draw_pointer.s \
 	link_book_channel.s \
 	link_book_mist.s \
-	gr_copy.s audio.s text_print.s decompress_fast_v2.s
+	audio.s text_print.s decompress_fast_v2.s
 	ca65 -o channel.o channel.s -l channel.lst
 
 ####
