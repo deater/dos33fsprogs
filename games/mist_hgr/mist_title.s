@@ -322,6 +322,15 @@ reload_everything:
 
 	bit	TEXTGR			; split text/gr
 
+	jsr	clear_bottom
+	lda	#<narration1
+	sta	OUTL
+	lda	#>narration1
+	sta	OUTH
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+
 	ldx	#<fissure_lzsa
 	ldy	#>fissure_lzsa
 	lda	#50
@@ -332,6 +341,11 @@ reload_everything:
 	; FISSURE_BOOK_SMALL: starry expanse...
 	;===================================
 
+	jsr	clear_bottom
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+
 	ldx	#<fissure_book_small_lzsa
 	ldy	#>fissure_book_small_lzsa
 	lda	#50
@@ -340,6 +354,11 @@ reload_everything:
 	;===================================
 	; FISSURE_BOOK_BIG: I have tried to speculate...
 	;===================================
+
+	jsr	clear_bottom
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
 
 	ldx	#<fissure_book_big_lzsa
 	ldy	#>fissure_book_big_lzsa
@@ -350,6 +369,11 @@ reload_everything:
 	; FALLING_LEFT: Still, the question...
 	;===================================
 
+	jsr	clear_bottom
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+
 	ldx	#<falling_left_lzsa
 	ldy	#>falling_left_lzsa
 	lda	#50
@@ -358,6 +382,11 @@ reload_everything:
 	;===================================
 	; FALLING_RIGHT: I know my aprehensions...
 	;===================================
+
+	jsr	clear_bottom
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
 
 	ldx	#<falling_right_lzsa
 	ldy	#>falling_right_lzsa
@@ -368,6 +397,9 @@ reload_everything:
 	; BOOK_AIR : The ending...
 	;===================================
 
+	jsr	clear_bottom
+	jsr	move_and_print
+
 	ldx	#<book_air_lzsa
 	ldy	#>book_air_lzsa
 	lda	#15
@@ -377,6 +409,8 @@ reload_everything:
 	; BOOK_SPARKS : has not yet...
 	;===================================
 
+	jsr	move_and_print
+
 	ldx	#<book_sparks_lzsa
 	ldy	#>book_sparks_lzsa
 	lda	#15
@@ -385,6 +419,8 @@ reload_everything:
 	;===================================
 	; BOOK_GLOW : been written...
 	;===================================
+
+	jsr	move_and_print
 
 	ldx	#<book_glow_lzsa
 	ldy	#>book_glow_lzsa
@@ -406,7 +442,7 @@ done_intro:
 	; restore to full screen (no text)
 
 	bit	FULLGR
-	bit	LORES
+;	bit	LORES
 
 	; init cursor
 
@@ -450,7 +486,7 @@ game_loop:
 	; copy background to current page
 	;====================================
 
-	jsr	gr_copy_to_current
+;	jsr	gr_copy_to_current
 
 	;====================================
 	; handle special-case forground logic
@@ -465,6 +501,7 @@ game_loop:
 	cmp	#32		; if done animating, skip
 	bcs	nothing_special
 
+.if 0
 animate_ocean:
 	cmp	#26
 	bcs	animate_actual
@@ -515,6 +552,7 @@ if_smc:
 	inc	ANIMATE_FRAME
 
 done_inc_frame:
+.endif
 
 nothing_special:
 
@@ -522,13 +560,13 @@ nothing_special:
 	; draw pointer
 	;====================================
 
-	jsr	draw_pointer
+;	jsr	draw_pointer
 
 	;====================================
 	; page flip
 	;====================================
 
-	jsr	page_flip
+;	jsr	page_flip
 
 	;====================================
 	; handle keypress/joystick
@@ -664,44 +702,47 @@ theme_music:
 narration1:
 ;                1         2         3
 ;      0123456789012345678901234567890123456789
-.byte 0,20," I REALIZED, THE MOMENT I FELL INTO THE",0
-.byte 0,21,"  FISSURE, THAT THE BOOK WOULD NOT BE",0
-.byte 0,22,"       DESTROYED AS I HAD PLANNED.",0
+.byte 1,20,"I REALIZED, THE MOMENT I FELL INTO THE",0
+.byte 2,21,"FISSURE, THAT THE BOOK WOULD NOT BE",0
+.byte 7,22,"DESTROYED AS I HAD PLANNED.",0
 
 ; FISSURE_BOOK: _starry expanse (book tiny)
 
 narration2:
 ;      0123456789012345678901234567890123456789
-.byte 0,20," IT CONTINUED FALLING INTO THAT STARRY",0
-.byte 0,21,"     EXPANSE OF WHICH I HAD ONLY A",0
-.byte 0,22,"            FLEETING GLIMPSE.",0
+.byte 1,20,"IT CONTINUED FALLING INTO THAT STARRY",0
+.byte 5,21,"EXPANSE OF WHICH I HAD ONLY A",0
+.byte 12,22,"FLEETING GLIMPSE.",0
 
 ; FALLING_BOOK: (book big) falling by starscape (I have tried to speculate)
 
 narration3:
 ;      0123456789012345678901234567890123456789
 .byte 0,20,"I HAVE TRIED TO SPECULATE WHERE IT MIGHT",0
-.byte 0,21,"     HAVE LANDED, BUT I MUST ADMIT,",0
-.byte 0,22,"  HOWEVER-- SUCH CONJECTURE IS FUTILE.",0
+.byte 5,21,"HAVE LANDED, BUT I MUST ADMIT,",0
+.byte 2,22,"HOWEVER-- SUCH CONJECTURE IS FUTILE.",0
 
 narration4:
 ; FALLING_LEFT (still, the question) /(left)
 ;      0123456789012345678901234567890123456789
-.byte 0,20," STILL, THE QUESTION ABOUT WHOSE HANDS",0
-.byte 0,21,"  MIGHT SOMEDAY HOLD MY MYST BOOK ARE",0
-.byte 0,22,"            UNSETTLING TO ME.",0
+.byte 1,20,"STILL, THE QUESTION ABOUT WHOSE HANDS",0
+.byte 2,21,"MIGHT SOMEDAY HOLD MY MYST BOOK ARE",0
+.byte 12,22,"UNSETTLING TO ME.",0
 
 narration5:
 ; FALLING_RIGHT I know my aprehensions (right)
 ;      0123456789012345678901234567890123456789
-.byte 0,20,"   I KNOW THAT MY APPREHENSIONS MIGHT",0
-.byte 0,21,"    NEVER BE ALLAYED, AND SO I CLOSE,",0
-.byte 0,22,"          REALIZING THAT PERHAPS,",0
+.byte 3,20,"I KNOW THAT MY APPREHENSIONS MIGHT",0
+.byte 4,21,"NEVER BE ALLAYED, AND SO I CLOSE,",0
+.byte 10,22,"REALIZING THAT PERHAPS,",0
 
 narration6:
 ; BOOK_GROUND the ending has not yet been written (falls, blue sparks)
 ;      0123456789012345678901234567890123456789
-.byte 0,20,"  THE ENDING HAS NOT YET BEEN WRITTEN",0
+;.byte 2,20,"  THE ENDING HAS NOT YET BEEN WRITTEN",0
+.byte 2,20,"THE ENDING",0
+.byte 13,20,"HAS NOT YET",0
+.byte 25,20,"BEEN WRITTEN",0
 
 
 

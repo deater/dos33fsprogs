@@ -12,25 +12,25 @@ all:	title_graphics.inc
 title_graphics.inc:	\
 	cyan1.lzsa cyan2.lzsa \
 	m_title_m.lzsa m_title_y.lzsa m_title_s.lzsa m_title_t.lzsa \
-	clock.lzsa
+	fissure_stars.lzsa
 	echo "cyan1_lzsa: .incbin \"cyan1.lzsa\"" > title_graphics.inc
 	echo "cyan2_lzsa: .incbin \"cyan2.lzsa\"" >> title_graphics.inc
-	echo "m_link_book_lzsa: .incbin \"clock.lzsa\"" >> title_graphics.inc
+	echo "m_link_book_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
 	echo "m_title_m_lzsa: .incbin \"m_title_m.lzsa\"" >> title_graphics.inc
 	echo "m_title_y_lzsa: .incbin \"m_title_y.lzsa\"" >> title_graphics.inc
 	echo "m_title_s_lzsa: .incbin \"m_title_s.lzsa\"" >> title_graphics.inc
 	echo "m_title_t_lzsa: .incbin \"m_title_t.lzsa\"" >> title_graphics.inc
-	echo "fissure_lzsa: .incbin \"clock.lzsa\"" >> title_graphics.inc
-	echo "fissure_book_small_lzsa: .incbin \"clock.lzsa\"" >> title_graphics.inc
-	echo "fissure_book_big_lzsa: .incbin \"clock.lzsa\"" >> title_graphics.inc
-	echo "falling_right_lzsa: .incbin \"clock.lzsa\"" >> title_graphics.inc
-	echo "falling_left_lzsa: .incbin \"clock.lzsa\"" >> title_graphics.inc
-	echo "book_air_lzsa: .incbin \"clock.lzsa\"" >> title_graphics.inc
-	echo "book_sparks_lzsa: .incbin \"clock.lzsa\"" >> title_graphics.inc
-	echo "book_glow_lzsa: .incbin \"clock.lzsa\"" >> title_graphics.inc
-	echo "book_ground_lzsa: .incbin \"clock.lzsa\"" >> title_graphics.inc
-	echo "book_ground_n_lzsa: .incbin \"clock.lzsa\"" >> title_graphics.inc
-	echo "book_closed_n_lzsa: .incbin \"clock.lzsa\"" >> title_graphics.inc
+	echo "fissure_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
+	echo "fissure_book_small_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
+	echo "fissure_book_big_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
+	echo "falling_right_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
+	echo "falling_left_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
+	echo "book_air_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
+	echo "book_sparks_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
+	echo "book_glow_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
+	echo "book_ground_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
+	echo "book_ground_n_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
+	echo "book_closed_n_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
 
 ####
 
