@@ -1,0 +1,8 @@
+; Cyan logo 1
+CLS	0x80						; black2 background
+FCIRC	6	140	91	22			; blue circle
+RECT	7	7       118	88	161     95	; white bar
+FCIRC	5	140	82	8			; orange circle
+LINE	4	140	92	129	109		; left of pyramid
+VTRI	4	140	92	145	154	114	; pyramid
+END
