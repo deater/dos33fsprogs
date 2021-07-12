@@ -22,7 +22,8 @@ HELLO:	hello.bas
 SPRITE:	sprite.o
 	ld65 -o SPRITE sprite.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-sprite.o:	sprite.s graphics/graphics.inc
+sprite.o:	sprite.s graphics/graphics.inc hand_sprites.inc \
+	hgr_14x14_sprite.s
 	ca65 -o sprite.o sprite.s -l sprite.lst
 
 ###
