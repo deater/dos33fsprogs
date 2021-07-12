@@ -269,6 +269,23 @@ reload_everything:
 	sta	DRAW_PAGE
 
 	;===================================
+	; Cyan Logo
+	;===================================
+	; missing most of the animation
+
+	; First
+	ldx	#<cyan1_lzsa
+	ldy	#>cyan1_lzsa
+	lda	#25
+	jsr	draw_and_wait
+
+	; Second
+	ldx	#<cyan2_lzsa
+	ldy	#>cyan2_lzsa
+	lda	#50
+	jsr	draw_and_wait
+
+	;===================================
 	; M Y S T letters
 	;===================================
 	; missing the dramatic music
@@ -277,19 +294,19 @@ reload_everything:
 	; M
 	ldx	#<m_title_m_lzsa
 	ldy	#>m_title_m_lzsa
-	lda	#4
+	lda	#10
 	jsr	draw_and_wait
 
 	; Y
 	ldx	#<m_title_y_lzsa
 	ldy	#>m_title_y_lzsa
-	lda	#4
+	lda	#10
 	jsr	draw_and_wait
 
 	; S
 	ldx	#<m_title_s_lzsa
 	ldy	#>m_title_s_lzsa
-	lda	#4
+	lda	#10
 	jsr	draw_and_wait
 
 	; T
@@ -604,9 +621,6 @@ draw_and_wait:
 
 	jsr	play_vgi
 
-;	jsr	gr_copy_to_current
-;	jsr	page_flip
-
 	pla
 	jsr	wait_a_bit
 	rts
@@ -636,7 +650,7 @@ theme_music:
 
 
 
-.if 0
+
 
 
 ; click on book, plays theme
@@ -647,44 +661,50 @@ theme_music:
 
 ; FISSURE: I realized the momemnt
 
+narration1:
 ;                1         2         3
 ;      0123456789012345678901234567890123456789
-.byte " I REALIZED, THE MOMENT I FELL INTO THE"
-.byte "  FISSURE, THAT THE BOOK WOULD NOT BE"
-.byte "       DESTROYED AS I HAD PLANNED."
+.byte 0,20," I REALIZED, THE MOMENT I FELL INTO THE",0
+.byte 0,21,"  FISSURE, THAT THE BOOK WOULD NOT BE",0
+.byte 0,22,"       DESTROYED AS I HAD PLANNED.",0
 
 ; FISSURE_BOOK: _starry expanse (book tiny)
 
+narration2:
 ;      0123456789012345678901234567890123456789
-.byte " IT CONTINUED FALLING INTO THAT STARRY"
-.byte "     EXPANSE OF WHICH I HAD ONLY A"
-.byte "            FLEETING GLIMPSE."
+.byte 0,20," IT CONTINUED FALLING INTO THAT STARRY",0
+.byte 0,21,"     EXPANSE OF WHICH I HAD ONLY A",0
+.byte 0,22,"            FLEETING GLIMPSE.",0
 
 ; FALLING_BOOK: (book big) falling by starscape (I have tried to speculate)
 
+narration3:
 ;      0123456789012345678901234567890123456789
-.byte "I HAVE TRIED TO SPECULATE WHERE IT MIGHT"
-.byte "     HAVE LANDED, BUT I MUST ADMIT,"
-.byte "  HOWEVER-- SUCH CONJECTURE IS FUTILE."
+.byte 0,20,"I HAVE TRIED TO SPECULATE WHERE IT MIGHT",0
+.byte 0,21,"     HAVE LANDED, BUT I MUST ADMIT,",0
+.byte 0,22,"  HOWEVER-- SUCH CONJECTURE IS FUTILE.",0
 
+narration4:
 ; FALLING_LEFT (still, the question) /(left)
 ;      0123456789012345678901234567890123456789
-.byte " STILL, THE QUESTION ABOUT WHOSE HANDS"
-.byte "  MIGHT SOMEDAY HOLD MY MYST BOOK ARE"
-.byte "            UNSETTLING TO ME."
+.byte 0,20," STILL, THE QUESTION ABOUT WHOSE HANDS",0
+.byte 0,21,"  MIGHT SOMEDAY HOLD MY MYST BOOK ARE",0
+.byte 0,22,"            UNSETTLING TO ME.",0
 
+narration5:
 ; FALLING_RIGHT I know my aprehensions (right)
 ;      0123456789012345678901234567890123456789
-.byte "   I KNOW THAT MY APPREHENSIONS MIGHT"
-.byte "    NEVER BE ALLAYED, AND SO I CLOSE,"
-.byte "          REALIZING THAT PERHAPS,"
+.byte 0,20,"   I KNOW THAT MY APPREHENSIONS MIGHT",0
+.byte 0,21,"    NEVER BE ALLAYED, AND SO I CLOSE,",0
+.byte 0,22,"          REALIZING THAT PERHAPS,",0
 
+narration6:
 ; BOOK_GROUND the ending has not yet been written (falls, blue sparks)
 ;      0123456789012345678901234567890123456789
-.byte "  THE ENDING HAS NOT YET BEEN WRITTEN"
+.byte 0,20,"  THE ENDING HAS NOT YET BEEN WRITTEN",0
 
 
-.endif
+
 
 config_string:
 ;             0123456789012345678901234567890123456789

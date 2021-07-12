@@ -1,0 +1,9 @@
+; MYST S
+HTRI	5	158	87	87	90	166	; top
+LINE	5	165	87	165	90		; top serif
+HTRI	5	166	101	89	93	155	; bar
+HTRI	5	162	105	103	105	155	; bottom
+LINE	5	155	102	155	105		; bottom serif
+LINE	5	160	87	156	90		; top left
+LINE	5	163	104	166	100		; bottom right
+END

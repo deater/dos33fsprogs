@@ -1,0 +1,8 @@
+; MYST Y
+RECT	5	5	124	96	128	104	; center bar
+LINE	5	123	104	131	104		; base
+VTRI	5	127	97	118	122	87	; left
+LINE	5	115	87	124	87		; left serif
+LINE	5	127	97	136	87		; right
+LINE	5	132	87	139	87		; right serif
+END

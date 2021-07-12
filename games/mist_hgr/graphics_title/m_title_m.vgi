@@ -1,0 +1,11 @@
+; MYST M
+CLS	0x80						; black2 background
+VTRI	5	87	104	74	80	87	; left V
+LINE	5	87	104	96	87		; right V
+LINETO	101	87					; right serif
+LINE	5	73	87	79	87		; left serif
+RECT	5	5	75	87	77	105	; left bar
+LINE	5	73	104	80	104		; left foot
+RECT	5	5	94	87	98	104	; right bar
+LINE	5	93	104	101	104		; right foot
+END

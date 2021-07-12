@@ -1,0 +1,7 @@
+; MYST T
+RECT	5	5	193	87	197	105	; bar
+LINE	5	191	105	199	105		; base
+LINE	5	185	87	205	87		; top
+LINE	5	185	87	185	90		; l serif
+LINE	5	205	87	205	90		; r serif
+END
