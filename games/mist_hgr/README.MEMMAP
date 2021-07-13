@@ -1,0 +1,17 @@
+
+$00	- zero page
+$01	- stack
+$02	- disk lookup table
+$03	- disk lookup ($300-$369)
+$04-$07 - text page1
+$08-$0B - (danger, text page2)
+$0C-$0F	- current background data, temp savegame workplace ($E)
+$10-$11 - QBOOT stage2
+$12-$1F - QLOAD, common routines
+$20-$3f	- HIRES page1
+$40-$??	- gameplay/data/code all loaded here
+$BE	- hires lookup
+$BF	- hires lookup
+$C0-$CF - I/O
+$D0-$FF	- ROM	(bankswitch with language card, sound effect here too)
+
