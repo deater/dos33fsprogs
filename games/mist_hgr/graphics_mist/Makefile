@@ -8,7 +8,10 @@ all:	mist_graphics.inc
 ####
 
 mist_graphics.inc:	\
-	todo.lzsa
+	todo.lzsa \
+	clock_s.lzsa \
+	spaceship_far_n.lzsa \
+	spaceship_door_n.lzsa
 #	dock_n.lzsa dock_s.lzsa dock_e.lzsa dock_w.lzsa dock_w_open.lzsa \
 #	dock_shipup_e.lzsa dock_shipup_n.lzsa \
 #	dock_switch_n.lzsa dock_switch_s.lzsa \
@@ -94,11 +97,11 @@ mist_graphics.inc:	\
 	echo "pool_e_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "pool_w_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "pool_shipup_s_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
-	echo "clock_s_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
+	echo "clock_s_lzsa: .incbin \"clock_s.lzsa\"" >> mist_graphics.inc
 	echo "clock_n_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "clock_e_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "clock_bridge_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
-	echo "spaceship_far_n_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
+	echo "spaceship_far_n_lzsa: .incbin \"spaceship_far_n.lzsa\"" >> mist_graphics.inc
 	echo "spaceship_far_e_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "tree1_n_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "tree1_s_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
@@ -133,7 +136,7 @@ mist_graphics.inc:	\
 	echo "gear_open_e_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "pad_n_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "pad_e_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
-	echo "spaceship_door_n_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
+	echo "spaceship_door_n_lzsa: .incbin \"spaceship_door_n.lzsa\"" >> mist_graphics.inc
 	echo "spaceship_door_open_n_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "tower2_base_w_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "tower2_top_w_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
