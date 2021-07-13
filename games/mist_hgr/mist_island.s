@@ -16,13 +16,17 @@ mist_start:
 	; init screen
 	;===================
 
-	jsr	TEXT
-	jsr	HOME
+;	jsr	TEXT
+;	jsr	HOME
 	bit	KEYRESET
+
+;	bit	SET_GR
+;	bit	PAGE0
+;	bit	LORES
 
 	bit	SET_GR
 	bit	PAGE0
-	bit	LORES
+	bit	HIRES
 	bit	FULLGR
 
 	;=================
@@ -42,6 +46,7 @@ mist_start:
 
 	lda	#20
 	sta	CURSOR_X
+	lda	#89
 	sta	CURSOR_Y
 
 	; init the clock bridge
@@ -61,20 +66,22 @@ mist_start:
 	lda	#1
 	sta	CURSOR_VISIBLE		; visible at first
 
+	jsr     save_bg_14x14           ; save initial bg
+
 game_loop:
 	;=================
 	; reset things
 	;=================
 
-	lda	#0
-	sta	IN_RIGHT
-	sta	IN_LEFT
+;	lda	#0
+;	sta	IN_RIGHT
+;	sta	IN_LEFT
 
 	;====================================
 	; copy background to current page
 	;====================================
 
-	jsr	gr_copy_to_current
+;	jsr	gr_copy_to_current
 
 	;====================================
 	; handle special-case forground logic
@@ -151,7 +158,7 @@ nothing_special:
 	; page flip
 	;====================================
 
-	jsr	page_flip
+;	jsr	page_flip
 
 
 	;=================

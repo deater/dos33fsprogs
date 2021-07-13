@@ -657,12 +657,12 @@ draw_and_wait:
 	pha
 	stx	getsrc_smc+1
 	sty	getsrc_smc+2
-	lda	#$c			; load to page $c00
+	lda	#$8			; load to page $800
 	jsr	decompress_lzsa2_fast
 
 	lda	#$0
 	sta	VGIL
-	lda	#$c
+	lda	#$8
 	sta	VGIH
 
 	jsr	play_vgi

@@ -20,10 +20,10 @@ skip_turn_off_music:
 	sta	clear_all_color+1
 
 	jsr	clear_all
-	jsr	page_flip
+;	jsr	page_flip
 
-	jsr	clear_all
-	jsr	page_flip
+;	jsr	clear_all
+;	jsr	page_flip
 
 	; play sound effect
 
