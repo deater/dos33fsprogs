@@ -1,0 +1,4 @@
+; Fissure with falling small book
+RECT	7	7	129	85	152	104	; erase old guy
+RECT	4	4	141	94	146	98	; tiny book
+END

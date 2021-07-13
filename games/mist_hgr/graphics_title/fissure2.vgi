@@ -1,0 +1,10 @@
+; Fissure with falling guy
+RECT	7	7	118	90	129	98	; erase old guy
+LINE	4	132	90	137	95		; left leg
+LINE	4	135	88	138	92		; right leg
+RECT	4	4	137	92	143	96	; body
+LINE	4	144	96	147	102		; left arm
+LINE	4	146	100	147	102		; book
+LINE	4	143	93	150	97		; spine/head
+LINE	4	142	92	149	98		; spine/head
+END

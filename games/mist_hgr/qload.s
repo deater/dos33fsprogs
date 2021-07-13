@@ -225,7 +225,7 @@ length_array:
 	.include	"linking_noise.s"
         .include        "decompress_fast_v2.s"
 	.include        "draw_pointer.s"
-;	.include        "end_level.s"
+	.include        "end_level.s"
 ;	.include        "gr_copy.s"
 	.include        "gr_fast_clear.s"
 	.include        "gr_offsets.s"

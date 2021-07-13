@@ -1,0 +1,26 @@
+; Fissure
+VTRI	6	142	8	134	140	26	; top
+RECT	6	6	134	26	140	43	; top next
+HTRI	6	133	43	45	52	154	; top next
+HTRI	6	133	43	53	69	156	;
+HTRI	6	156	68	44	59	131	; top next
+HTRI	6	158	70	56	74	128	; top next
+VTRI	6	143	185	135	140	171	; bottom
+VTRI	6	150	150	137	143	172	; bottom next
+RECT	6	6	127	124	145	160	; bottom next
+HTRI	6	121	130	124	141	127	; bottom left
+VTRI	6	160	110	137	154	131	; bottom right
+RECT	7	7	128	73	147	124	; center
+VTRI	7	147	123	147	160	111	; center right
+VTRI	7	147	79	146	166	112	; center right
+VTRI	7	154	89	148	161	78	; center right
+VTRI	7	153	87	146	161	78	; center right
+RECT	7	7	146	71	157	78	; center top
+RECT	7	7	118	83	128	101	; center left
+VTRI	7	129	73	119	128	83	; center left
+RECT	4	4	120	91	125	96	; person
+LINE	4	118	92	125	92		; person
+LINETO	126	94
+LINETO	125	96
+LINETO	118	96
+END

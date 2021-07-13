@@ -1,0 +1,4 @@
+; Fissure with large small book
+RECT	4	4	129	78	157	116	; big book
+HTRI	4	130	78	73	78	153	; part open
+END

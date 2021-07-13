@@ -320,6 +320,16 @@ reload_everything:
 	;===================================
 	; touch linking book as fissure pulses
 
+	ldx	#<fissure_stars_lzsa
+	ldy	#>fissure_stars_lzsa
+	lda	#10
+	jsr	draw_and_wait
+
+	ldx	#<fissure_crescent_lzsa
+	ldy	#>fissure_crescent_lzsa
+	lda	#10
+	jsr	draw_and_wait
+
 	bit	TEXTGR			; split text/gr
 
 	jsr	clear_bottom
@@ -333,6 +343,11 @@ reload_everything:
 
 	ldx	#<fissure_lzsa
 	ldy	#>fissure_lzsa
+	lda	#50
+	jsr	draw_and_wait
+
+	ldx	#<fissure2_lzsa
+	ldy	#>fissure2_lzsa
 	lda	#50
 	jsr	draw_and_wait
 
