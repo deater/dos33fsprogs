@@ -315,10 +315,15 @@ done_split:
 	iny
 	lda	(LOCATION_STRUCT_L),Y
 	sta	LZSA_SRC_HI
-	lda	#$c			; load to page $c00
+	lda	#$8			; load to page $c00
 	jsr	decompress_lzsa2_fast
 
 	; draw background
+
+	lda     #$0
+        sta     VGIL
+        lda     #$8
+        sta     VGIH
 
 	jsr	play_vgi
 
@@ -332,8 +337,14 @@ change_location:
 	; reset graphics
 	bit	SET_GR
 
-	; reset pointer to not visible, centered
+	; clear IN_SPECIAL
 	lda	#0
+	sta	IN_SPECIAL
+	sta	IN_RIGHT
+	sta	IN_LEFT
+
+	; reset pointer to not visible, centered
+
 	sta	ANIMATE_FRAME
 	sta	CURSOR_VISIBLE
 	lda	#20

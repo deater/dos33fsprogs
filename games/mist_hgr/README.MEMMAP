@@ -5,8 +5,8 @@ $02	- disk lookup table
 $03	- disk lookup ($300-$369)
 $04-$07 - text page1
 $08-$0B - (danger, text page2) initial boot sector $8
-	- current background data, temp savegame workplace ($E)
-$0C-$0D - QBOOT stage2
+	- current background data, temp savegame workplace ($8/$9/$A)
+$0C-$0D - QBOOT stage2 (disk routines)
 $0E-$1F - QLOAD, common routines
 $20-$3f	- HIRES page1
 $40-$??	- gameplay/data/code all loaded here

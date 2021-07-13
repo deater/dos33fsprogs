@@ -11,6 +11,11 @@ draw_pointer:
 
 really_draw_pointer:
 
+	lda	#0
+	sta	IN_SPECIAL
+	sta	IN_LEFT
+	sta	IN_RIGHT
+
 	jsr	save_bg_14x14		; save old bg
 
 	; for now assume the only 14x14 sprites are the pointers

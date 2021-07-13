@@ -463,6 +463,7 @@ done_intro:
 
 	lda	#20
 	sta	CURSOR_X
+	lda	#89
 	sta	CURSOR_Y
 
 	lda	#0
@@ -495,10 +496,6 @@ game_loop:
 	; reset things
 	;=================
 
-	lda	#0
-	sta	IN_SPECIAL
-	sta	IN_RIGHT
-	sta	IN_LEFT
 
 	;====================================
 	; copy background to current page
@@ -776,5 +773,3 @@ config_string:
 .byte   0,23,"APPLE II?, 48K RAM, MOCKINGBOARD: SLOT ?",0
 ;                                 MOCKINGBOARD: NONE
 
-
-;.include	"vgi_common.s"
