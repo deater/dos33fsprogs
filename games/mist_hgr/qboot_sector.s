@@ -3,11 +3,11 @@
 
 	; Paramaters for loading QLOAD
 
-	sectors   = 14		; user-defined
+	sectors   = 18		; user-defined
 	firsttrk  = 1		; user-defined, first track to read
 	firstsec  = 0		; user-defined, first sector to read
-	address   = $12		; user-defined
-	entry     = $1200	; user-defined
+	address   = $0E		; user-defined
+	entry     = $E00	; user-defined
 	version   = 1
 
         ;memory usage:
@@ -40,20 +40,18 @@
 	.byte	1		; number of sectors for ROM to load
 
 boot_entry:
-	; this code loads two sectors up to $10/$11
+	; this code loads two sectors up to $C0/$D0
 
 	; assume A=1 coming in here
 
 	lsr			; check sector number
 				; A=0, carry=1
 	tay			; Y=0
-	adc	#$0f		; A=$10 (destintation)
+	adc	#$0B		; A=$C (destintation)
 
 	sta	$27		; set or update address as needed
-	cmp	#$12
-				; 10  11  12  (1       1     1)
-				; be, bf, c0  (1011 1011 1100)
-				; so if hit $c000 we are done
+	cmp	#$0E
+				; so if hit $0e00 we are done
 
 	beq	done_load_2	; branch if loaded 2
 
@@ -236,9 +234,11 @@ end_code:
 .res	$8fe-*
 
 ; traditionally, entry point to jump to at end of loading
-;	$1000 in this case
+;	$c00 in this case
 ;*=$8fe
-	.byte   $10, $00
+	.byte   $C, $00
 
 
 .include "qboot_stage2.s"
+
+

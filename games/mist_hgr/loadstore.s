@@ -1,3 +1,5 @@
+loadsave_addr_load	= $a00		; was $e00
+loadsave_addr_save	= $900		; was $d00
 
 	;===================================
 	;===================================
@@ -26,7 +28,7 @@ load_game:
 
 	ldx	#0
 load_loop:
-	lda	$e00,X
+	lda	loadsave_addr_load,X
 	sta	WHICH_LOAD,X
 	inx
 	cpx	#(END_OF_SAVE-WHICH_LOAD+1)
@@ -79,12 +81,12 @@ actually_save:
 	pla
 	sta	WHICH_LOAD
 
-	; copy save data to $d00
+	; copy save data to $900
 
 	ldx	#0
 copy_loop:
 	lda	WHICH_LOAD,X
-	sta	$d00,X
+	sta	loadsave_addr_save,X
 	inx
 	cpx	#(END_OF_SAVE-WHICH_LOAD+1)
 	bne	copy_loop

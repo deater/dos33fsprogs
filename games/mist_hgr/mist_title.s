@@ -672,6 +672,19 @@ draw_and_wait:
 
 	pla
 	jsr	wait_a_bit
+
+	; check if escape was pressed, skip into in that case
+	lda	LAST_KEY
+	cmp	#27|$80				; check for ESCAPE
+	bne	no_escape
+
+	pla
+	pla	; get return value off stack
+
+	jmp	done_intro
+
+no_escape:
+
 	rts
 
 
@@ -764,4 +777,4 @@ config_string:
 ;                                 MOCKINGBOARD: NONE
 
 
-.include	"vgi_common.s"
+;.include	"vgi_common.s"

@@ -21,6 +21,8 @@ keyloop:
 
 done_keyloop:
 
+	sta	LAST_KEY
+
 	bit	KEYRESET
 
 	rts

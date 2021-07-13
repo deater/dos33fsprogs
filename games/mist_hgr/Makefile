@@ -9,7 +9,7 @@ B2D = ../../utils/bmp2dhr/b2d
 EMPTY_DISK = ../../empty_disk/empty.dsk
 
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
-
+LINKER_SCRIPTS = ../../linker_scripts
 
 all:	mist_hgr.dsk
 # mist_side2.dsk mist_side3.dsk
@@ -18,22 +18,22 @@ all:	mist_hgr.dsk
 #	zip mist.zip mist_hgr.dsk mist_side2.dsk mist_side3.dsk
 
 mist_hgr.dsk:	QBOOT TEXT_TITLE QLOAD \
-		MIST_TITLE
+		MIST_TITLE \
+		SAVE1 SAVE2 SAVE3 SAVE4 SAVE5
 #MIST OCTAGON VIEWER \
 #		DENTIST D\'NI SHIP GENERATOR \
-#		SAVE1 SAVE2 SAVE3 SAVE4 SAVE5
 	cp $(EMPTY_DISK) mist_hgr.dsk
 	$(DOS33_RAW) mist_hgr.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) mist_hgr.dsk  0  2 QBOOT      1   1
 	$(DOS33_RAW) mist_hgr.dsk  0  4 QBOOT      2   1
 	$(DOS33_RAW) mist_hgr.dsk  0  6 TEXT_TITLE 0   3
-#	$(DOS33_RAW) mist_hgr.dsk  0 11 SAVE1      0   1
-#	$(DOS33_RAW) mist_hgr.dsk  0 12 SAVE2      0   1
-#	$(DOS33_RAW) mist_hgr.dsk  0 13 SAVE3      0   1
-#	$(DOS33_RAW) mist_hgr.dsk  0 14 SAVE4      0   1
-#	$(DOS33_RAW) mist_hgr.dsk  0 15 SAVE5      0   1
-	$(DOS33_RAW) mist_hgr.dsk  1  0 QLOAD      0  14
-	$(DOS33_RAW) mist_hgr.dsk  2  0 MIST_TITLE 0  0
+	$(DOS33_RAW) mist_hgr.dsk  0 11 SAVE1      0   1
+	$(DOS33_RAW) mist_hgr.dsk  0 12 SAVE2      0   1
+	$(DOS33_RAW) mist_hgr.dsk  0 13 SAVE3      0   1
+	$(DOS33_RAW) mist_hgr.dsk  0 14 SAVE4      0   1
+	$(DOS33_RAW) mist_hgr.dsk  0 15 SAVE5      0   1
+	$(DOS33_RAW) mist_hgr.dsk  1  0 QLOAD      0  0
+	$(DOS33_RAW) mist_hgr.dsk  3  0 MIST_TITLE 0  0
 # 84
 #	$(DOS33_RAW) mist_hgr.dsk  8  0 MIST       0 159
 #	$(DOS33_RAW) mist_hgr.dsk 18  0 OCTAGON    0 128
@@ -63,7 +63,7 @@ mist_hgr.dsk:	QBOOT TEXT_TITLE QLOAD \
 ###
 
 #WBOOT2:	wrong_boot2.o
-#	ld65 -o WBOOT2 wrong_boot2.o -C ../../linker_scripts/apple2_800.inc
+#	ld65 -o WBOOT2 wrong_boot2.o -C $(LINKER_SCRIPTS)/apple2_800.inc
 
 #wrong_boot2.o:	wrong_boot2.s
 #	ca65 -o wrong_boot2.o wrong_boot2.s -l wrong_boot2.lst
@@ -71,7 +71,7 @@ mist_hgr.dsk:	QBOOT TEXT_TITLE QLOAD \
 ###
 
 #WBOOT3:	wrong_boot3.o
-#	ld65 -o WBOOT3 wrong_boot3.o -C ../../linker_scripts/apple2_800.inc
+#	ld65 -o WBOOT3 wrong_boot3.o -C $(LINKER_SCRIPTS)/apple2_800.inc
 
 #wrong_boot3.o:	wrong_boot3.s
 #	ca65 -o wrong_boot3.o wrong_boot3.s -l wrong_boot3.lst
@@ -80,7 +80,7 @@ mist_hgr.dsk:	QBOOT TEXT_TITLE QLOAD \
 ###
 
 QBOOT:	qboot_sector.o
-	ld65 -o QBOOT qboot_sector.o -C ../../linker_scripts/apple2_800.inc
+	ld65 -o QBOOT qboot_sector.o -C $(LINKER_SCRIPTS)/apple2_800.inc
 
 qboot_sector.o:	qboot_sector.s qboot_stage2.s
 	ca65 -o qboot_sector.o qboot_sector.s -l qboot_sector.lst
@@ -88,7 +88,7 @@ qboot_sector.o:	qboot_sector.s qboot_stage2.s
 ###
 
 TEXT_TITLE:	text_title.o
-	ld65 -o TEXT_TITLE text_title.o -C ../../linker_scripts/apple2_800.inc
+	ld65 -o TEXT_TITLE text_title.o -C $(LINKER_SCRIPTS)/apple2_800.inc
 
 text_title.o:	text_title.s text_print.s wait_a_bit.s
 	ca65 -o text_title.o text_title.s -l text_title.lst
@@ -97,7 +97,7 @@ text_title.o:	text_title.s text_print.s wait_a_bit.s
 ###
 
 QLOAD: qload.o
-	ld65 -o QLOAD qload.o -C ../../linker_scripts/apple2_1200.inc
+	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_e00.inc
 
 qload.o:	qload.s qboot.inc \
 	gr_offsets.s hgr_14x14_sprite.s common_sprites.inc \
@@ -110,7 +110,7 @@ qload.o:	qload.s qboot.inc \
 ###
 
 LOADER: loader.o
-	ld65 -o LOADER loader.o -C ../../linker_scripts/apple2_1000.inc
+	ld65 -o LOADER loader.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
 
 loader.o:	loader.s \
 	gr_offsets.s \
@@ -122,7 +122,7 @@ loader.o:	loader.s \
 ###
 
 SAVE1: save1.o
-	ld65 -o SAVE1 save1.o -C ../../linker_scripts/apple2_e00.inc
+	ld65 -o SAVE1 save1.o -C $(LINKER_SCRIPTS)/apple2_a00.inc
 
 save1.o:	save1.s
 	ca65 -o save1.o save1.s -l save1.lst
@@ -130,7 +130,7 @@ save1.o:	save1.s
 ###
 
 SAVE2: save2.o
-	ld65 -o SAVE2 save2.o -C ../../linker_scripts/apple2_e00.inc
+	ld65 -o SAVE2 save2.o -C $(LINKER_SCRIPTS)/apple2_a00.inc
 
 save2.o:	save2.s
 	ca65 -o save2.o save2.s -l save2.lst
@@ -138,7 +138,7 @@ save2.o:	save2.s
 ###
 
 SAVE3: save3.o
-	ld65 -o SAVE3 save3.o -C ../../linker_scripts/apple2_e00.inc
+	ld65 -o SAVE3 save3.o -C $(LINKER_SCRIPTS)/apple2_a00.inc
 
 save3.o:	save3.s
 	ca65 -o save3.o save3.s -l save3.lst
@@ -146,7 +146,7 @@ save3.o:	save3.s
 ###
 
 SAVE4: save4.o
-	ld65 -o SAVE4 save4.o -C ../../linker_scripts/apple2_e00.inc
+	ld65 -o SAVE4 save4.o -C $(LINKER_SCRIPTS)/apple2_a00.inc
 
 save4.o:	save4.s
 	ca65 -o save4.o save4.s -l save4.lst
@@ -154,7 +154,7 @@ save4.o:	save4.s
 ###
 
 SAVE5: save5.o
-	ld65 -o SAVE5 save5.o -C ../../linker_scripts/apple2_e00.inc
+	ld65 -o SAVE5 save5.o -C $(LINKER_SCRIPTS)/apple2_a00.inc
 
 save5.o:	save5.s
 	ca65 -o save5.o save5.s -l save5.lst
@@ -175,7 +175,7 @@ common_routines.inc:	qload.lst generate_common
 ####
 
 MIST_TITLE:	mist_title.o
-	ld65 -o MIST_TITLE mist_title.o -C ../../linker_scripts/apple2_4000.inc
+	ld65 -o MIST_TITLE mist_title.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 mist_title.o:	mist_title.s zp.inc hardware.inc common_defines.inc \
 	common_routines.inc \

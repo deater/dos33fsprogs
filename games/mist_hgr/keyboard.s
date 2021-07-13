@@ -189,6 +189,14 @@ do_inc_cursor_y:
 done_down_pressed:
 	jmp	done_keypress
 
+;check_escape:
+;	cmp	#27
+;	bne	check_return
+;escape_pressed:
+;	inc	ESCAPE_PRESSED
+
+;	jmp	done_keypress
+
 check_return:
 	cmp	#' '
 	beq	return_pressed
@@ -278,7 +286,9 @@ change_direction:
 	bit	TEXTGR
 
 	; also change sprite cutoff
-	ldx	#40
+	; not needed for HGR
+
+;	ldx	#40
 ;	stx	psc_smc1+1
 ;;	stx	psc_smc2+1
 
@@ -287,7 +297,7 @@ no_split:
 	bit	FULLGR
 
 	; also change sprite cutoff
-	ldx	#48
+;	ldx	#48
 ;	stx	psc_smc1+1
 ;;	stx	psc_smc2+1
 
@@ -308,6 +318,10 @@ done_split:
 	lda	#$c			; load to page $c00
 	jsr	decompress_lzsa2_fast
 
+	; draw background
+
+	jsr	play_vgi
+
 	rts
 
 
@@ -324,6 +338,7 @@ change_location:
 	sta	CURSOR_VISIBLE
 	lda	#20
 	sta	CURSOR_X
+	lda	#89
 	sta	CURSOR_Y
 
 	lda	LOCATION

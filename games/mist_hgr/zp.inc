@@ -24,6 +24,9 @@ TEMP3		= $13
 TEMP4		= $14
 TEMP5		= $15
 
+LAST_KEY	= $16
+
+
 HGR_SHAPE	= $1A	; also used in BKGND0
 HGR_SHAPE2	= $1B
 HGR_BITS	= $1C

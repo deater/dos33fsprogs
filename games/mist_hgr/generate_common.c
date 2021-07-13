@@ -7,8 +7,10 @@
 	static int routine_offset=0x1000;
 #else
 	/* new, qload */
+//	static char filename[]="qload.lst";
+//	static int routine_offset=0x1200;
 	static char filename[]="qload.lst";
-	static int routine_offset=0x1200;
+	static int routine_offset=0xe00;
 #endif
 
 
@@ -115,6 +117,11 @@ int main(int argc, char **argv) {
 	find_address("handle_keypress");
 	find_address("change_direction");
 	find_address("change_location");
+	printf("\n");
+
+	printf("; vgi_*.s\n");
+	find_address("vgi_init");
+	find_address("play_vgi");
 	printf("\n");
 
 	printf("; text_print.s\n");

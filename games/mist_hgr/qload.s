@@ -31,16 +31,18 @@ qload_start:
 main_game_loop:
 	jsr	load_file
 
-	lda	WHICH_LOAD
-	bne	not_title
+;	lda	WHICH_LOAD
+;	bne	not_title
+
+	; on hgr, we all start at $4000
 
 start_title:
 	jsr	$4000
 	jmp	main_game_loop
 
-not_title:
-	jsr	$2000
-	jmp	main_game_loop
+;not_title:
+;	jsr	$2000
+;	jmp	main_game_loop
 
 	;====================================
 	; loads file specified by WHICH_LOAD
@@ -129,13 +131,13 @@ fnf_keypress:
 	sta	WHICH_LOAD
 	tax
 
-	; first sector now in $c00
+	; first sector now in $800
 	;	offset 59
 	;		disk1 = $0a
 	;		disk2 = $32 ('2')
 	;		disk3 = $33 ('3')
 
-	lda	$c59
+	lda	$859
 	cmp	#$0a
 	beq	is_disk1
 	cmp	#$32
@@ -185,17 +187,17 @@ which_disk_array:
 	.byte $f		; FIRST_SECTOR
 
 load_address_array:
-        .byte $40,$20,$20,$20	; MIST_TITLE,MIST,MECHE,SELENA
-	.byte $20,$20,$20,$20	; OCTAGON,VIEWER,STONEY,CHANNEL
-	.byte $20,$20,$20,$20	; CABIN,DENTIST,ARBOR,NIBEL
-	.byte $20,$20,$20,$20	; SHIP,GENERATOR,D'NI,SUB
+	.byte $40,$40,$40,$40	; MIST_TITLE,MIST,MECHE,SELENA
+	.byte $40,$40,$40,$40	; OCTAGON,VIEWER,STONEY,CHANNEL
+	.byte $40,$40,$40,$40	; CABIN,DENTIST,ARBOR,NIBEL
+	.byte $40,$40,$40,$40	; SHIP,GENERATOR,D'NI,SUB
 	.byte $08		; TEXT_TITLE
-	.byte $0E,$0E,$0E,$0E
-	.byte $0E		; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
-	.byte $0C		; FIRST_SECTOR
+	.byte $0A,$0A,$0A,$0A
+	.byte $0A		; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
+	.byte $08		; FIRST_SECTOR
 
 track_array:
-        .byte  2, 8, 1,21	; MIST_TITLE,MIST,MECHE,SELENA
+        .byte  3, 8, 1,21	; MIST_TITLE,MIST,MECHE,SELENA
 	.byte 18,31,11, 1	; OCTAGON,VIEWER,STONEY,CHANNEL
 	.byte 27,26,10,20	; CABIN,DENTIST,ARBOR,NIBEL
 	.byte 30,32,28,30	; SHIP,GENERATOR,D'NI,SUB
@@ -242,6 +244,9 @@ length_array:
 
 	.include	"qkumba_popwr.s"
 
+	.include	"vgi_common.s"
+
 qload_end:
 
-.assert (>qload_end - >qload_start) < $e , error, "loader too big"
+;.assert (>qload_end - >qload_start) < $e , error, "loader too big"
+.assert (>qload_end - >qload_start) < $12 , error, "loader too big"
