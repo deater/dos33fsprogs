@@ -516,7 +516,6 @@ game_loop:
 	cmp	#32		; if done animating, skip
 	bcs	nothing_special
 
-.if 0
 animate_ocean:
 	cmp	#26
 	bcs	animate_actual
@@ -552,11 +551,7 @@ animate_actual:
 draw_animation:
 
 	sta	INH
-	lda	#24
-	sta	XPOS
-	lda	#12
-	sta	YPOS
-	jsr	put_sprite_crop
+	jsr	animate_book
 
 inc_frame:
 	lda	FRAMEL
@@ -567,7 +562,7 @@ if_smc:
 	inc	ANIMATE_FRAME
 
 done_inc_frame:
-.endif
+
 
 nothing_special:
 
@@ -770,3 +765,59 @@ config_string:
 .byte   0,23,"APPLE II?, 48K RAM, MOCKINGBOARD: SLOT ?",0
 ;                                 MOCKINGBOARD: NONE
 
+
+	;==============================
+	; animate book
+	;==============================
+	; animate a 9x12 animation at fixed location 161,41 (161/7=23)
+	; sprite is in INL:INH
+animate_book:
+
+	lda	#40
+	sta	YPOS
+
+animate_book_yloop:
+
+	ldy	#0
+	ldx	#0
+	lda	YPOS
+	jsr	HPOSN	; (Y,X),(A)  (values stores in HGRX,XH,Y)
+
+	clc
+	lda	GBASL
+	adc	#23
+	sta	GBASL
+
+	ldy	#0
+animate_xloop:
+
+	lda	(INL),Y
+	sta	(GBASL),Y
+
+	iny
+	cpy	#9
+	bne	animate_xloop
+
+	inc	YPOS
+	lda	YPOS
+
+	cmp	#88
+	beq	done_animate_book
+
+	and	#$3
+	bne	animate_book_yloop
+
+	; only move to next line every 4 lines
+
+	clc
+	lda	INL
+	adc	#9
+	sta	INL
+	lda	INH
+	adc	#0
+	sta	INH
+
+	jmp	animate_book_yloop
+
+done_animate_book:
+	rts
