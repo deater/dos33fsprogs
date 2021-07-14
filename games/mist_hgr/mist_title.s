@@ -513,7 +513,7 @@ game_loop:
 	bne	nothing_special
 
 	lda	ANIMATE_FRAME
-	cmp	#32		; if done animating, skip
+	cmp	#37		; if done animating, skip
 	bcs	nothing_special
 
 animate_ocean:
