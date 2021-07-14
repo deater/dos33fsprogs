@@ -61,7 +61,7 @@ mist_start:
 
 	; set up initial location
 
-	jsr	change_location
+;	jsr	change_location
 
 	lda	#1
 	sta	CURSOR_VISIBLE		; visible at first

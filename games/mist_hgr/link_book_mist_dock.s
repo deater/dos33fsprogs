@@ -16,6 +16,10 @@ skip_turn_off_music:
 
 	; clear screen
 
+        ; clear to black
+	lda	#$80
+	jsr	BKGND0
+
 	lda	#0
 	sta	clear_all_color+1
 

@@ -1,0 +1,118 @@
+; TODO
+CLS	0xff						; white2 background
+RECT	6	7	167	108	279	191	; ocean
+VTRI	1	39	20	30	80	97	; left bg mountain
+; gear
+DRECT	0x41	0x41	142	50	171	62	; sideways gear
+LINE	0	142	50	171	50		; top of sideways
+FCIRC	2	130	54	16			; big gear
+CIRC	0	128	59	8			; inner circle
+RECT	3	3	113	48	117	52	; notch1
+RECT	3	3	121	39	125	43	; notch2
+RECT	0	0	130	38	133	43	; notch3
+RECT	0	0	139	42	143	48	; notch4
+RECT	0	0	144	48	148	56	; notch5
+RECT	5	5	104	52	108	60	; marker switch
+LINE	0	98	59	98	56		; fence1
+LINETO	110	52
+LINETO	133	53
+LINETO	142	54
+LINE	0	109	52	110	51
+; plateau
+VTRI	5	95	61	78	102	95	; left triangle
+DRECT	0xA2	0xA2	97	60	191	130	; main plateau
+LINE	0	97	60	191	60		; top of plateau
+DRECT	0xA2	0xA2	188	95	214	127	; right
+VTRI	5	213	97	218	234	125	; far right
+; temple
+RECT	2	2	0	60	71	95	; purple base
+DRECT	0x5d	0x54	62	60	71	95	; edge
+RECT	2	2	0	0	42	61	; purple side
+HTRI	2	70	61	40	61	42	; purple side
+LINE	0	41	39	0	26		; base line
+RECT	0	0	41	0	58	7	; underhang
+VTRI	0	41	19	41	58	7	; underhang
+DRECT	0x52	0x52	47	6	53	48	; l pillar
+DRECT	0x52	0x52	15	0	23	32	; r pillar
+VTRI	1	0	60	0	27	98	; green triangle
+; general darkness
+RECT	4	4	0	97	146	191	; general darkness
+; steps
+HTRI	7	117	101	110	124	141	; bottom steps
+LINE	7	116	119	136	119		; bottom step
+LINE	7	116	116	130	112		; next step
+RECT	7	7	103	74	142	82	; upper white
+HTRI	7	118	74	60	74	153	; upper white
+RECT	7	7	137	60	151	70	; upper white
+RECT	4	4	103	80	124	98	; upper black
+HTRI	4	146	81	81	98	124	; upper black
+HTRI	4	124	80	68	81	155	; upper black
+VTRI	4	150	93	137	159	81	; upper black
+LINE	4	123	80	123	74		; railing
+LINE	4	113	73	113	82		; edge
+LINE	4	113	74	138	67		; edge
+LINETO	143	70
+LINETO	152	64
+LINE	4	143	69	144	74
+; dock area
+VTRI	1	97	107	19	106	132	; green ness
+VTRI	1	65	191	36	111	132	; bottom green ness
+HTRI	1	18	133	132	157	47	; last green ness
+DRECT   0xA8    0xAA	159	117	167	137	; far pile
+RECT	4	4	159	116	166	121	; cap
+DRECT   0xA8    0xAA	171	133	184	164	; middle pile
+RECT	4	4	172	128	185	136	; cap
+RECT	4	4	214	177	248	191	; close cap
+VTRI	4	225	172	215	245	178	; close cap
+VTRI	4	248	177	248	255	191	; close cap
+VTRI	5	115	126	66	116	191	; left dock
+RECT	5	5	116	125	160	191	; center docl
+VTRI	5	157	126	159	205	191	; right dock
+LINE	4	158	126	198	191		; dock edge
+; masts
+VTRI	5	191	59	204	208	154	; skinny mast
+LINE	5	279	126	211	154		; sideways mast
+LINE	5	279	126	213	156		; sideways mast
+LINE	4	222	155	279	155		; shadow
+LINE	4	275	130	277	153		; line
+LINE	4	232	140	251	127		; cable
+LINETO	279	102
+LINE	5	212	112	268	191		; tall mast
+LINE	5	211	113	266	191		; tall mast
+LINE	4	210	112	263	191		; tall mast
+LINE	4	217	127	221	129		; top ring
+LINETO	226	124
+LINETO	223	123
+LINE	4	222	136	227	136		; middle ring
+LINETO	231	131
+LINE	4	241	162	245	163		; bottom ring
+LINETO	249	160
+LINETO	247	159
+; wall line
+LINE	7	0	97	103	96		; wall line
+; door
+LINE	7	0	141	13	135		; door line
+LINE	7	5	191	43	164
+LINE	5	0	105	17	105		; door outline orange
+LINETO	17	135
+LINETO	47	159
+LINETO	63	191
+LINE	7	0	104	17	104		; door outline white
+LINETO	16	135
+LINETO	46	159
+LINETO	62	191
+; planks
+LINE	4	117	191	85	168
+LINE	4	160	191	95	153
+LINE	4	196	188	101	147
+LINE	4	184	170	107	142
+LINE	4	175	156	113	135
+LINE	4	165	139	122	127
+; shadows
+;HTRI	4	142	152	163	178	77	; tree shadow
+; marker switch
+RECT	7	7	147	104	155	113	; box
+RECT	5	5	148	105	154	112	; woodgrain
+VTRI	6	151	98	147	156	104	; top
+DRECT   0x4c     0x33	146	113	159	127	; base	
+END

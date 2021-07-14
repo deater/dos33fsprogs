@@ -56,6 +56,8 @@ int main(int argc, char **argv) {
 	int size=0;
 	int skip=0;
 	int mode=MODE_ASM;
+	int lastx=0,lasty=0,lastcolor=0;
+	int tempx,tempcolor;
 
 	if (argc>1) {
 		if ((argv[1][0]=='-') && (argv[1][1]=='b')) {
@@ -191,6 +193,11 @@ int main(int argc, char **argv) {
 					&color1,
 					&x1,&y1);
 //				printf(".byte $%02X,",(type<<4)|4);
+
+				lastx=x1;
+				lasty=y1;
+				lastcolor=color1;
+
 				if (x1>255) {
 					x1=x1&0xff;
 					color1|=128;
@@ -212,11 +219,44 @@ int main(int argc, char **argv) {
 //				printf(".byte $%02X,",(type<<4)|3);
 //				printf("$%02X,",x1);
 //				printf("$%02X\n",y1);
-				output[0]=(type<<4)|3;
-				output[1]=x1;
-				output[2]=y1;
-				output_bytes(mode,output,3);
-				size+=3;
+
+				tempx=lastx;
+				tempcolor=lastcolor;
+
+				if (lastx>255) {
+					tempx=tempx&0xff;
+					tempcolor=tempcolor|128;
+				}
+
+				if (x1>255) {
+					output[0]=(VGI_LINE_FAR<<4)|6;
+					output[1]=tempcolor;
+					output[2]=tempx;
+					output[3]=lasty;
+					output[4]=(x1&0xff);
+					output[5]=y1;
+					output_bytes(mode,output,6);
+					size+=6;
+#if 0
+					fprintf(stderr,"ADJUSTING %d %d %d %d %d %d\n",
+						output[0],
+						output[1],
+						output[2],
+						output[3],
+						output[4],
+						output[5]);
+#endif
+				}
+				else {
+					output[0]=(type<<4)|3;
+					output[1]=x1;
+					output[2]=y1;
+					output_bytes(mode,output,3);
+					size+=3;
+				}
+				lastx=x1;
+				lasty=y1;
+
 				break;
 
 			case VGI_DITHER_RECTANGLE: /* dithered rectangle */
@@ -330,10 +370,16 @@ int main(int argc, char **argv) {
 				break;
 
 			case VGI_LINE: /* line */
+			case VGI_LINE_FAR: /* line far */
 				sscanf(buffer,"%*s %i %i %i %i %i",
 					&color1,
 					&x1,&y1,&x2,&y2);
 //				printf(".byte $%02X,",(type<<4)|6);
+
+				lastx=x2;
+				lasty=y2;
+				lastcolor=color1;
+
 				if (x1>255) {
 					x1=x1&0xff;
 					color1|=128;
@@ -343,6 +389,11 @@ int main(int argc, char **argv) {
 //				printf("$%02X,",y1);
 //				printf("$%02X,",x2);
 //				printf("$%02X\n",y2);
+				if (x2>255) {
+					type=VGI_LINE_FAR;
+					x2=x2&0xff;
+				}
+
 				output[0]=(type<<4)|6;
 				output[1]=color1;
 				output[2]=x1;
@@ -353,7 +404,7 @@ int main(int argc, char **argv) {
 				size+=6;
 				break;
 
-			case VGI_LINE_FAR: /* line */
+#if 0
 				sscanf(buffer,"%*s %i %i %i %i %i",
 					&color1,
 					&x1,&y1,&x2,&y2);
@@ -380,7 +431,7 @@ int main(int argc, char **argv) {
 				output_bytes(mode,output,6);
 				size+=6;
 				break;
-
+#endif
 
 			case VGI_END: /* end */
 //				printf(".byte $FF\n");

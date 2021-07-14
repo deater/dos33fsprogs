@@ -22,7 +22,7 @@ location0:
 	.byte	BG_NORTH	; only north bg
 	.byte	DIRECTION_N	; special exit
 	.byte	16,24		; special x
-	.byte	26,36		; special y
+	.byte	104,144		; special y
 	.word	get_mist_book-1		; special function
 
 ; TITLE_BOOK_CLOSED -- myst linking book closed
@@ -59,6 +59,6 @@ location2:
 	.word	$0000		; west bg
 	.byte	BG_NORTH	; only north bg
 	.byte	DIRECTION_N	; special exit
-	.byte	22,33		; special x
-	.byte	12,26		; special y
+	.byte	23,34		; special x
+	.byte	40,92		; special y
 	.word	mist_link_book-1		; special function

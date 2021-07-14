@@ -10,6 +10,7 @@ all:	mist_graphics.inc
 mist_graphics.inc:	\
 	todo.lzsa \
 	clock_s.lzsa \
+	dock_n.lzsa \
 	spaceship_far_n.lzsa \
 	spaceship_door_n.lzsa
 #	dock_n.lzsa dock_s.lzsa dock_e.lzsa dock_w.lzsa dock_w_open.lzsa \
@@ -55,7 +56,7 @@ mist_graphics.inc:	\
 #	tower2_path_e.lzsa tower2_path_n.lzsa \
 #	pillar_cross.lzsa pillar_eye.lzsa pillar_snake.lzsa pillar_emu.lzsa \
 #	pillar_bug.lzsa pillar_anchor.lzsa pillar_arrow.lzsa pillar_leaf.lzsa
-	echo "dock_n_lzsa: .incbin \"todo.lzsa\"" > mist_graphics.inc
+	echo "dock_n_lzsa: .incbin \"dock_n.lzsa\"" > mist_graphics.inc
 	echo "dock_s_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "dock_e_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "dock_w_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc

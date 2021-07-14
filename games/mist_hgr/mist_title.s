@@ -601,6 +601,12 @@ room_frame_no_oflo:
 	jmp	game_loop
 
 really_exit:
+
+	; clear to black
+;	lda     #$80
+;	jsr     BKGND0
+
+
 	jmp	end_level
 
 
@@ -707,16 +713,7 @@ theme_music:
 .incbin "audio/theme.pt3"
 
 
-
-
-
-
-
 ; click on book, plays theme
-
-
-
-
 
 ; FISSURE: I realized the momemnt
 

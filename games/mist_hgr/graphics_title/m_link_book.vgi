@@ -1,15 +1,21 @@
-; Path from Myst
-CLS	0x80						; black background
+; Open MYST book
+;CLS	0x80						; black background
 ; TODO, rounded edges?
-RECT	7	7	3	85	239	188	; glow
+RECT	7	7	36	5	239	187	; glow
+POINT	4	36	5
+POINT	4	240	5
+POINT	4	36	186
+POINT	4	240	186	
 ; book
-; link
-RECT	7	7	161	40	227	91	; sky
-RECT	6	6	202	70	227	91	; ocean
-RECT	5	5	180	55	208	74	; mountain
-RECT	5	5	208	66	219	74	; mountain
-VTRI	5	180	55	176	182	66	; mountain left
-LINE	6	225	78	213	83		; mast
-LINETO	212	75					; mast
-LINE	0	226	85	214	68		; mast
+RECT	4	4	37	6	237	186	; black
+RECT	7	7	39	10	235	184	; big pages
+LINE	5	37	154	36	39		; orange binding
+HTRI	7	125	10	6	11	50	; part turned page
+LINE	5	140	182	44	178		; part turned page
+LINE	4	44	178	50	7
+LINE	5	50	7	142	10
+LINE	5	40	181	42	10		; page edge
+DRECT	0xAB	0xAE	139	10	149	183	; crease
+; link area
+RECT	4	4	161	41	224	90
 END

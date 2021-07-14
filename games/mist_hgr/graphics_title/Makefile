@@ -14,7 +14,7 @@ title_graphics.inc:	\
 	m_title_m.lzsa m_title_y.lzsa m_title_s.lzsa m_title_t.lzsa \
 	fissure_stars.lzsa fissure_crescent.lzsa fissure.lzsa fissure2.lzsa \
 	fissure_book_small.lzsa fissure_book_big.lzsa \
-	m_link_book.lzsa
+	m_link_book.lzsa book_closed_n.lzsa
 	echo "cyan1_lzsa: .incbin \"cyan1.lzsa\"" > title_graphics.inc
 	echo "cyan2_lzsa: .incbin \"cyan2.lzsa\"" >> title_graphics.inc
 	echo "m_link_book_lzsa: .incbin \"m_link_book.lzsa\"" >> title_graphics.inc
@@ -35,7 +35,7 @@ title_graphics.inc:	\
 	echo "book_glow_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
 	echo "book_ground_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
 	echo "book_ground_n_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
-	echo "book_closed_n_lzsa: .incbin \"m_link_book.lzsa\"" >> title_graphics.inc
+	echo "book_closed_n_lzsa: .incbin \"book_closed_n.lzsa\"" >> title_graphics.inc
 
 ####
 
