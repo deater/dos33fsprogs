@@ -1,0 +1,16 @@
+; Falling left, bottom
+RECT	4	4	74	63	107	102	; erase old
+DRECT   0xa3    0xae	72	124	107	168	; cover
+VTRI	4	72	137	72	84	124	; upper left
+VTRI	4	72	132	72	95	168	; bottom left	
+VTRI	7	108	158	84	108	124	; pages
+VTRI	4	108	153	89	108	168	; bottom right
+VTRI	4	108	152	91	108	124	; upper right
+LINE	7	73	138	84	125		; outline
+LINETO	104	154
+LINETO	91	167
+LINETO	73	138
+LINE	7	106	154	108	150		; pages
+LINETO	90	124
+LINETO	85	126
+END

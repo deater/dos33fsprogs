@@ -14,7 +14,11 @@ title_graphics.inc:	\
 	m_title_m.lzsa m_title_y.lzsa m_title_s.lzsa m_title_t.lzsa \
 	fissure_stars.lzsa fissure_crescent.lzsa fissure.lzsa fissure2.lzsa \
 	fissure_book_small.lzsa fissure_book_big.lzsa \
-	m_link_book.lzsa book_closed_n.lzsa book_ground_n.lzsa
+	m_link_book.lzsa book_closed_n.lzsa book_ground_n.lzsa \
+	starfield.lzsa \
+	falling_left_top.lzsa falling_left_center.lzsa falling_left_bottom.lzsa \
+	falling_right_top.lzsa falling_right_bottom.lzsa \
+	erase_left_bottom.lzsa erase_right_bottom.lzsa
 	echo "cyan1_lzsa: .incbin \"cyan1.lzsa\"" > title_graphics.inc
 	echo "cyan2_lzsa: .incbin \"cyan2.lzsa\"" >> title_graphics.inc
 	echo "m_link_book_lzsa: .incbin \"m_link_book.lzsa\"" >> title_graphics.inc
@@ -28,14 +32,20 @@ title_graphics.inc:	\
 	echo "fissure2_lzsa: .incbin \"fissure2.lzsa\"" >> title_graphics.inc
 	echo "fissure_book_small_lzsa: .incbin \"fissure_book_small.lzsa\"" >> title_graphics.inc
 	echo "fissure_book_big_lzsa: .incbin \"fissure_book_big.lzsa\"" >> title_graphics.inc
-	echo "falling_right_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
-	echo "falling_left_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
 	echo "book_air_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
 	echo "book_sparks_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
 	echo "book_glow_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
 	echo "book_ground_lzsa: .incbin \"fissure_stars.lzsa\"" >> title_graphics.inc
 	echo "book_ground_n_lzsa: .incbin \"book_ground_n.lzsa\"" >> title_graphics.inc
 	echo "book_closed_n_lzsa: .incbin \"book_closed_n.lzsa\"" >> title_graphics.inc
+	echo "starfield_lzsa: .incbin \"starfield.lzsa\"" >> title_graphics.inc
+	echo "falling_left_top_lzsa: .incbin \"falling_left_top.lzsa\"" >> title_graphics.inc
+	echo "falling_left_center_lzsa: .incbin \"falling_left_center.lzsa\"" >> title_graphics.inc
+	echo "falling_left_bottom_lzsa: .incbin \"falling_left_bottom.lzsa\"" >> title_graphics.inc
+	echo "erase_left_bottom_lzsa: .incbin \"erase_left_bottom.lzsa\"" >> title_graphics.inc
+	echo "falling_right_top_lzsa: .incbin \"falling_right_top.lzsa\"" >> title_graphics.inc
+	echo "falling_right_bottom_lzsa: .incbin \"falling_right_bottom.lzsa\"" >> title_graphics.inc
+	echo "erase_right_bottom_lzsa: .incbin \"erase_right_bottom.lzsa\"" >> title_graphics.inc
 
 ####
 

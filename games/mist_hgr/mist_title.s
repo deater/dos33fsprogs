@@ -207,7 +207,7 @@ done_setup_sound:
 	; setup HGR
 	;===================
 
-	; we could just call HGR2 here instead?
+	; we could just call HGR here instead?
 
 	bit	SET_GR
 	bit	PAGE0
@@ -242,8 +242,8 @@ reload_everything:
 	;===================================
 
 	; SKIP: broderbund logo (w music)
-	; SKIP: cyan logo (with cyan theme)
 
+	; instead do a MYST screen (not in original)
 
 	; wait a bit at MYST screen
 
@@ -256,15 +256,6 @@ reload_everything:
 	; init screen
 	;===================
 
-;	jsr	TEXT
-;	jsr	HOME
-;	bit	KEYRESET
-
-;	bit	SET_GR
-;	bit	PAGE0
-;	bit	LORES
-;	bit	FULLGR
-
 	lda	#0
 	sta	DRAW_PAGE
 
@@ -272,17 +263,18 @@ reload_everything:
 	; Cyan Logo
 	;===================================
 	; missing most of the animation
+	; also missing music
 
 	; First
 	ldx	#<cyan1_lzsa
 	ldy	#>cyan1_lzsa
-	lda	#25
+	lda	#20
 	jsr	draw_and_wait
 
 	; Second
 	ldx	#<cyan2_lzsa
 	ldy	#>cyan2_lzsa
-	lda	#50
+	lda	#40
 	jsr	draw_and_wait
 
 	;===================================
@@ -318,7 +310,11 @@ reload_everything:
 	;===================================
 	; FISSURE: I realized the moment...
 	;===================================
-	; touch linking book as fissure pulses
+	; "I REALIZED, THE MOMENT I FELL INTO THE"
+	; "FISSURE, THAT THE BOOK WOULD NOT BE"
+	; "DESTROYED AS I HAD PLANNED."
+
+	; touch linking book as fissure pulses (says "Fissure")
 
 	ldx	#<fissure_stars_lzsa
 	ldy	#>fissure_stars_lzsa
@@ -355,6 +351,12 @@ reload_everything:
 	;===================================
 	; FISSURE_BOOK_SMALL: starry expanse...
 	;===================================
+	; "Expanse" -> tiny book
+	; "Glimpse" -> big book
+	;
+	; "IT CONTINUED FALLING INTO THAT STARRY",0
+	; "EXPANSE OF WHICH I HAD ONLY A",0
+	; "FLEETING GLIMPSE.",0
 
 	jsr	clear_bottom
 	jsr	move_and_print
@@ -363,17 +365,8 @@ reload_everything:
 
 	ldx	#<fissure_book_small_lzsa
 	ldy	#>fissure_book_small_lzsa
-	lda	#50
+	lda	#25
 	jsr	draw_and_wait
-
-	;===================================
-	; FISSURE_BOOK_BIG: I have tried to speculate...
-	;===================================
-
-	jsr	clear_bottom
-	jsr	move_and_print
-	jsr	move_and_print
-	jsr	move_and_print
 
 	ldx	#<fissure_book_big_lzsa
 	ldy	#>fissure_book_big_lzsa
@@ -381,31 +374,109 @@ reload_everything:
 	jsr	draw_and_wait
 
 	;===================================
-	; FALLING_LEFT: Still, the question...
+	; FALLING_LEFT: I have tried to speculate...
 	;===================================
+	; screen goes black at "I"
+	; falling book on left through landed
+	; then fade out at "futile"
+	;
+	; "I HAVE TRIED TO SPECULATE WHERE IT MIGHT"
+	; "HAVE LANDED, BUT I MUST ADMIT,"
+	; "HOWEVER-- SUCH CONJECTURE IS FUTILE."
+
+	ldx	#<starfield_lzsa
+	ldy	#>starfield_lzsa
+	lda	#1
+	jsr	draw_and_wait
 
 	jsr	clear_bottom
 	jsr	move_and_print
 	jsr	move_and_print
 	jsr	move_and_print
 
-	ldx	#<falling_left_lzsa
-	ldy	#>falling_left_lzsa
-	lda	#50
+	ldx	#<falling_left_top_lzsa
+	ldy	#>falling_left_top_lzsa
+	lda	#15
+	jsr	draw_and_wait
+
+	ldx	#<falling_left_center_lzsa
+	ldy	#>falling_left_center_lzsa
+	lda	#15
+	jsr	draw_and_wait
+
+	ldx	#<falling_left_bottom_lzsa
+	ldy	#>falling_left_bottom_lzsa
+	lda	#15
+	jsr	draw_and_wait
+
+	ldx	#<erase_left_bottom_lzsa
+	ldy	#>erase_left_bottom_lzsa
+	lda	#20
 	jsr	draw_and_wait
 
 	;===================================
-	; FALLING_RIGHT: I know my aprehensions...
+	; FALLING_RIGHT: Still, the question...
 	;===================================
+	; "STILL, THE QUESTION ABOUT WHOSE HANDS"
+	; "MIGHT SOMEDAY HOLD MY MYST BOOK ARE"
+	; "UNSETTLING TO ME."
+
+	ldx	#<starfield_lzsa
+	ldy	#>starfield_lzsa
+	lda	#1
+	jsr	draw_and_wait
 
 	jsr	clear_bottom
 	jsr	move_and_print
 	jsr	move_and_print
 	jsr	move_and_print
 
-	ldx	#<falling_right_lzsa
-	ldy	#>falling_right_lzsa
-	lda	#50
+	ldx	#<falling_right_top_lzsa
+	ldy	#>falling_right_top_lzsa
+	lda	#20
+	jsr	draw_and_wait
+
+	ldx	#<falling_right_bottom_lzsa
+	ldy	#>falling_right_bottom_lzsa
+	lda	#20
+	jsr	draw_and_wait
+
+	ldx	#<erase_right_bottom_lzsa
+	ldy	#>erase_right_bottom_lzsa
+	lda	#20
+	jsr	draw_and_wait
+
+	;===================================
+	; FALLING_LEFT_AGAIN: I know my aprehensions...
+	;===================================
+	; "I KNOW THAT MY APPREHENSIONS MIGHT"
+	; "NEVER BE ALLAYED, AND SO I CLOSE,"
+	; "REALIZING THAT PERHAPS,"
+
+	jsr	clear_bottom
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+
+
+	ldx	#<falling_left_top_lzsa
+	ldy	#>falling_left_top_lzsa
+	lda	#15
+	jsr	draw_and_wait
+
+	ldx	#<falling_left_center_lzsa
+	ldy	#>falling_left_center_lzsa
+	lda	#15
+	jsr	draw_and_wait
+
+	ldx	#<falling_left_bottom_lzsa
+	ldy	#>falling_left_bottom_lzsa
+	lda	#15
+	jsr	draw_and_wait
+
+	ldx	#<erase_left_bottom_lzsa
+	ldy	#>erase_left_bottom_lzsa
+	lda	#20
 	jsr	draw_and_wait
 
 	;===================================
@@ -718,6 +789,9 @@ narration1:
 .byte 1,20,"I REALIZED, THE MOMENT I FELL INTO THE",0
 .byte 2,21,"FISSURE, THAT THE BOOK WOULD NOT BE",0
 .byte 7,22,"DESTROYED AS I HAD PLANNED.",0
+;.byte 1,20,"I realized, the moment I fell into the",0
+;.byte 2,21,"fissure, that the book would not be",0
+;.byte 7,22,"destroyed as I had planned.",0
 
 ; FISSURE_BOOK: _starry expanse (book tiny)
 
@@ -728,7 +802,6 @@ narration2:
 .byte 12,22,"FLEETING GLIMPSE.",0
 
 ; FALLING_BOOK: (book big) falling by starscape (I have tried to speculate)
-
 narration3:
 ;      0123456789012345678901234567890123456789
 .byte 0,20,"I HAVE TRIED TO SPECULATE WHERE IT MIGHT",0
@@ -736,14 +809,14 @@ narration3:
 .byte 2,22,"HOWEVER-- SUCH CONJECTURE IS FUTILE.",0
 
 narration4:
-; FALLING_LEFT (still, the question) /(left)
+; FALLING_RIGHT (still, the question) /(left)
 ;      0123456789012345678901234567890123456789
 .byte 1,20,"STILL, THE QUESTION ABOUT WHOSE HANDS",0
 .byte 2,21,"MIGHT SOMEDAY HOLD MY MYST BOOK ARE",0
 .byte 12,22,"UNSETTLING TO ME.",0
 
 narration5:
-; FALLING_RIGHT I know my aprehensions (right)
+; FALLING_LEFT_AGAIN I know my aprehensions (right)
 ;      0123456789012345678901234567890123456789
 .byte 3,20,"I KNOW THAT MY APPREHENSIONS MIGHT",0
 .byte 4,21,"NEVER BE ALLAYED, AND SO I CLOSE,",0

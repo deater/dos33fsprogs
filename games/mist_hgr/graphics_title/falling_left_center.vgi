@@ -1,0 +1,15 @@
+; Falling left, center
+RECT	4	4	76	11	103	55	; erase old
+DRECT   0xa3    0xae	84	66	105	92	; cover
+VTRI	4	105	92	96	105	65	; isometric
+VTRI	4	83	67	80	87	93	; spine
+HTRI	4	100	91	87	92	105	; bottom left tri
+HTRI	4	96	66	65	69	101	; upper right tri	
+LINE	7	105	99	81	99		; edge
+LINETO	78	68
+LINETO	81	65
+LINETO	101	65
+LINETO	105	92
+LINETO	103	93
+LINETO	105	99
+END
