@@ -1,0 +1,12 @@
+; MYST Book on ground glowing
+FCIRC	7	135	135	18
+FCIRC	7	147	135	18
+; book
+DRECT	0xa3	0xae	132	119	154	135	; cover
+VTRI	4	155	135	151	156	119	; make isometric
+RECT	4	7	132	137	154	143	; pages
+VTRI	4	132	118	132	136	137	; left edge
+VTRI	4	131	137	127	132	138	; upper spine
+VTRI	4	154	131	148	155	136	; lower triangle
+LINE	4	135	136	155	136		; cover edge
+END

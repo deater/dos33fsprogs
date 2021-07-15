@@ -1,0 +1,15 @@
+; MYST Book almost on the ground
+; book
+RECT	4	4	122	63	164	94	; erase old
+DRECT	0xa3	0xae	128	102	156	119	; cover
+HTRI	4	144	102	102	112	157	; make isometric tr
+HTRI	4	144	102	102	104	128	; tl
+VTRI	4	128	105	129	142	119	; bottom left
+HTRI	4	144	119	115	119	157	; bottom right
+LINE	7	124	105	138	121		; spine
+LINE	7	137	130	141	130
+LINETO	158	124
+;LINE	7	136	123	137	130		; spine
+;LINE	7	136	133	122	117
+;LINETO	124	108
+END

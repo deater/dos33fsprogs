@@ -1,3 +1,3 @@
 ; ERASE left, bottom
-RECT	4	4	71	122	109	169	; erase old
+RECT	4	4	179	102	222	127	; erase old
 END

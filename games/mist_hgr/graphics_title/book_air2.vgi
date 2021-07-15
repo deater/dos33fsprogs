@@ -1,0 +1,6 @@
+; MYST Book falling, up in air, step 2
+RECT	4	4	126	35	162	66	; erase old
+HTRI	5	130	66	67	78	144	; cover
+HTRI	5	158	77	67	78	144	; cover
+LINE	5	141	89	158	88		; base line
+END

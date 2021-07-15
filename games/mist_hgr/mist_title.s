@@ -359,14 +359,18 @@ reload_everything:
 	; "FLEETING GLIMPSE.",0
 
 	jsr	clear_bottom
+
+	ldx	#<fissure_book_small_lzsa
+	ldy	#>fissure_book_small_lzsa
+	lda	#1
+	jsr	draw_and_wait
+
 	jsr	move_and_print
 	jsr	move_and_print
 	jsr	move_and_print
 
-	ldx	#<fissure_book_small_lzsa
-	ldy	#>fissure_book_small_lzsa
-	lda	#25
-	jsr	draw_and_wait
+	lda	#24
+	jsr	wait_a_bit
 
 	ldx	#<fissure_book_big_lzsa
 	ldy	#>fissure_book_big_lzsa
@@ -384,12 +388,14 @@ reload_everything:
 	; "HAVE LANDED, BUT I MUST ADMIT,"
 	; "HOWEVER-- SUCH CONJECTURE IS FUTILE."
 
+	jsr	clear_bottom
+
 	ldx	#<starfield_lzsa
 	ldy	#>starfield_lzsa
 	lda	#1
 	jsr	draw_and_wait
 
-	jsr	clear_bottom
+
 	jsr	move_and_print
 	jsr	move_and_print
 	jsr	move_and_print
@@ -421,12 +427,13 @@ reload_everything:
 	; "MIGHT SOMEDAY HOLD MY MYST BOOK ARE"
 	; "UNSETTLING TO ME."
 
+	jsr	clear_bottom
+
 	ldx	#<starfield_lzsa
 	ldy	#>starfield_lzsa
 	lda	#1
 	jsr	draw_and_wait
 
-	jsr	clear_bottom
 	jsr	move_and_print
 	jsr	move_and_print
 	jsr	move_and_print
@@ -454,15 +461,19 @@ reload_everything:
 	; "REALIZING THAT PERHAPS,"
 
 	jsr	clear_bottom
-	jsr	move_and_print
-	jsr	move_and_print
-	jsr	move_and_print
 
 
 	ldx	#<falling_left_top_lzsa
 	ldy	#>falling_left_top_lzsa
-	lda	#15
+	lda	#1
 	jsr	draw_and_wait
+
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+
+	lda	#14
+	jsr	wait_a_bit
 
 	ldx	#<falling_left_center_lzsa
 	ldy	#>falling_left_center_lzsa
@@ -483,19 +494,40 @@ reload_everything:
 	; BOOK_AIR : The ending...
 	;===================================
 
+	ldx	#<book_ground_stars_lzsa
+	ldy	#>book_ground_stars_lzsa
+	lda	#1
+	jsr	draw_and_wait
+
+	; the ending
+
 	jsr	clear_bottom
 	jsr	move_and_print
 
 	ldx	#<book_air_lzsa
 	ldy	#>book_air_lzsa
-	lda	#15
+	lda	#10
+	jsr	draw_and_wait
+
+	; has not yet
+	jsr	move_and_print
+
+	ldx	#<book_air2_lzsa
+	ldy	#>book_air2_lzsa
+	lda	#10
+	jsr	draw_and_wait
+
+	; been written
+	jsr	move_and_print
+
+	ldx	#<book_air3_lzsa
+	ldy	#>book_air3_lzsa
+	lda	#10
 	jsr	draw_and_wait
 
 	;===================================
 	; BOOK_SPARKS : has not yet...
 	;===================================
-
-	jsr	move_and_print
 
 	ldx	#<book_sparks_lzsa
 	ldy	#>book_sparks_lzsa
@@ -505,8 +537,6 @@ reload_everything:
 	;===================================
 	; BOOK_GLOW : been written...
 	;===================================
-
-	jsr	move_and_print
 
 	ldx	#<book_glow_lzsa
 	ldy	#>book_glow_lzsa
@@ -519,9 +549,18 @@ reload_everything:
 
 	ldx	#<book_ground_lzsa
 	ldy	#>book_ground_lzsa
-	lda	#50
+	lda	#15
 	jsr	draw_and_wait
 
+;	jmp	done_intro
+
+
+skip_intro:
+
+;	ldx	#<book_ground_n_lzsa
+;	ldy	#>book_ground_n_lzsa
+;	lda	#1
+;	jsr	draw_and_wait
 
 done_intro:
 
@@ -539,6 +578,7 @@ done_intro:
 
 	lda	#0
 	sta	LEVEL_OVER
+
 
 	;============================
 	; init vars
@@ -750,7 +790,7 @@ draw_and_wait:
 	pla
 	pla	; get return value off stack
 
-	jmp	done_intro
+	jmp	skip_intro
 
 no_escape:
 

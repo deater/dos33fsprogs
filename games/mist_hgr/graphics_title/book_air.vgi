@@ -1,0 +1,6 @@
+; MYST Book falling, up in air
+; book
+HTRI	5	131	39	39	48	145
+HTRI	5	159	49	39	48	145
+LINE	5	140	59	157	60
+END
