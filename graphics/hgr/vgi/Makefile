@@ -8,13 +8,13 @@ MAKEVGI	= ./make_vgi_asm
 
 all:	vgi_myst.dsk make_vgi_asm make_color_test
 
-vgi_myst.dsk:	HELLO VGI-MYST VGI-DOOM COLOR-TEST
+vgi_myst.dsk:	HELLO VGI-MYST VGI-DOOM COLOR-TEST VGI-TEST
 	cp $(EMPTYDISK) vgi_myst.dsk
 	$(DOS33) -y vgi_myst.dsk SAVE A HELLO
 	$(DOS33) -y vgi_myst.dsk BSAVE -a 0xC00 VGI-MYST
 	$(DOS33) -y vgi_myst.dsk BSAVE -a 0x4000 VGI-DOOM
 	$(DOS33) -y vgi_myst.dsk BSAVE -a 0x4000 COLOR-TEST
-
+	$(DOS33) -y vgi_myst.dsk BSAVE -a 0x4000 VGI-TEST
 
 ###
 
@@ -31,6 +31,17 @@ myst_vgi.o: clock.data rocket.data rocket_door.data red_book.data fireplace.data
 	myst_vgi.s vgi_clearscreen.s vgi_rectangle.s vgi_circles.s vgi_lines.s \
 	vgi_triangles.s
 	ca65 -o myst_vgi.o myst_vgi.s -l myst_vgi.lst
+
+###
+
+VGI-TEST:	test_vgi.o
+	ld65 -o VGI-TEST test_vgi.o -C $(LINKERSCRIPTS)/apple2_4000.inc
+
+test_vgi.o:	new.data \
+	test_vgi.s vgi_clearscreen.s vgi_rectangle.s vgi_circles.s vgi_lines.s \
+	vgi_triangles.s
+	ca65 -o test_vgi.o test_vgi.s -l test_vgi.lst
+
 
 ###
 
@@ -84,6 +95,12 @@ rocket_door.data:	make_vgi_asm rocket_door.vgi
 	echo "rocket_door_data:" > rocket_door.data
 	./make_vgi_asm < rocket_door.vgi >> rocket_door.data
 
+
+###
+
+new.data:	make_vgi_asm new.vgi
+	echo "new_data:" > new.data
+	./make_vgi_asm < new.vgi >> new.data
 
 ###
 
