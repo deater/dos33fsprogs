@@ -1,3 +1,17 @@
+KNOWN BUGS
++ The bounding box for the button in the fireplace should probably be at least
+	two pixels higher, it's hard to hit
++ For the white page, in the actual game the dock switch you possibly have
+	to toggle it at least once before the door opens
+	(currently if it's down and the rest up it's auto open)
++ Maybe not fixable, but at the cabin if you open the door then you can't
+	exit to the south
++ During the mysterium playthrough, the machine rebooted when going up
+	the steps in stoneship, not sure why
++ Would be nice someday if we could speedrun w/o having to swap disks
+	(though for humor value it's fun)
+
+
 mockingboard on IIc?
 Need to set the values in detect so it's detected
 with that though it instantly blazes through the song, as if sei isn't
