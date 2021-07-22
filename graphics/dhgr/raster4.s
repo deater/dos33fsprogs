@@ -1,3 +1,5 @@
+; Double hi-res Rasterbars
+
 GBASL	= $26
 GBASH	= $27
 HGRPAGE = $E6
@@ -91,7 +93,7 @@ draw_line_color:
 	ldy	#0
 	jsr	HPOSN		; put into GBASL addr of coord (Y,X),A
 
-;	ldy	#39
+	ldy	#39
 loop_it:
 	; set page2
 	sta	$C055		; 3

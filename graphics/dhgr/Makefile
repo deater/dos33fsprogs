@@ -5,16 +5,19 @@ TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 B2D = ../../utils/bmp2dhr/b2d
 LZSA = ~/research/lzsa/lzsa/lzsa
 
+EMPTY_DISK = ../../empty_disk/empty.dsk
+
 all:	dhgr.dsk
 
 
-dhgr.dsk:	HELLO RASTER RASTER2 RASTER3 RASTER4 BITS LOTS DHR_LOAD
-	cp empty.dsk dhgr.dsk
+dhgr.dsk:	HELLO RASTER RASTER2 RASTER3 RASTER4 RASTER4_GOOD BITS LOTS DHR_LOAD
+	cp $(EMPTY_DISK) dhgr.dsk
 	$(DOS33) -y dhgr.dsk SAVE A HELLO
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 RASTER
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 RASTER2
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 RASTER3
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 RASTER4
+	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 RASTER4_GOOD
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x1000 DHR_LOAD
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 BITS
 	$(DOS33) -y dhgr.dsk BSAVE -a 0x0300 LOTS
@@ -71,6 +74,15 @@ RASTER4:	raster4.o
 
 raster4.o:	raster4.s
 	ca65 -o raster4.o raster4.s -l raster4.lst
+
+###
+
+RASTER4_GOOD:	raster4.o
+	ld65 -o RASTER4_GOOD raster4.o -C ../../linker_scripts/apple2_300.inc
+
+raster4.o:	raster4.s
+	ca65 -o raster4.o raster4.s -l raster4.lst
+
 
 ###
 
