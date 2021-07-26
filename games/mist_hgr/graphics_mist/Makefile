@@ -11,6 +11,7 @@ mist_graphics.inc:	\
 	todo.lzsa \
 	clock_s.lzsa \
 	dock_n.lzsa \
+	dock_switch_n.lzsa \
 	spaceship_far_n.lzsa \
 	spaceship_door_n.lzsa
 #	dock_n.lzsa dock_s.lzsa dock_e.lzsa dock_w.lzsa dock_w_open.lzsa \
@@ -63,7 +64,7 @@ mist_graphics.inc:	\
 	echo "dock_shipup_e_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "dock_shipup_n_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "dock_w_open_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
-	echo "dock_switch_n_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
+	echo "dock_switch_n_lzsa: .incbin \"dock_switch_n.lzsa\"" >> mist_graphics.inc
 	echo "dock_switch_s_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "dock_switch_shipup_s_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
 	echo "dock_steps_w_lzsa: .incbin \"todo.lzsa\"" >> mist_graphics.inc
