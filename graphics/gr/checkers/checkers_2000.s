@@ -1,4 +1,7 @@
 ; Checkers
+
+; loading from LOGO so random stuff we got to do
+
 ; vaguely based on a scene in Hellmood's Memories
 
 ; 32 bytes, for Lovebyte 2021
@@ -48,13 +51,16 @@ WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
 HLINE	= $F819
 
 
-.zeropage
+;.zeropage
 
 checkers:
 
 	;===================
 	; init screen
-	jsr	SETGR				; 3
+
+	lda	$C082			; Disable language card
+
+;	jsr	SETGR				; 3
 ;	bit	FULLGR				; 3
 
 checkers_forever:
