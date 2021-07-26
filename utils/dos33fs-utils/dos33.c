@@ -904,25 +904,29 @@ int main(int argc, char **argv) {
 	unsigned char vtoc[BYTES_PER_SECTOR];
 
 	/* Check command line arguments */
-	while ((c = getopt (argc, argv,"a:l:t:s:hvxy"))!=-1) {
+	while ((c = getopt (argc, argv,"a:l:t:s:dhvxy"))!=-1) {
 		switch (c) {
 
+		case 'd':
+			fprintf(stderr,"DEBUG enabled\n");
+			debug=1;
+			break;
 		case 'a':
 			address=strtol(optarg,&endptr,0);
-			if (debug) printf("Address=%d\n",address);
+			if (debug) fprintf(stderr,"Address=%d\n",address);
 			break;
 		case 'l':
 			length=strtol(optarg,&endptr,0);
-			if (debug) printf("Length=%d\n",address);
+			if (debug) fprintf(stderr,"Length=%d\n",address);
 			break;
 #if 0
 		case 't':
 			track=strtol(optarg,&endptr,0);
-			if (debug) printf("Track=%d\n",address);
+			if (debug) fprintf(stderr,"Track=%d\n",address);
 			break;
 		case 's':
 			sector=strtol(optarg,&endptr,0);
-			if (debug) printf("Sector=%d\n",address);
+			if (debug) fprintf(stderr,"Sector=%d\n",address);
 			break;
 #endif
 		case 'v':

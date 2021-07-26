@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include "dos33.h"
+
+static int debug=0;
 
 unsigned char dos33_file_type(int value) {
 
@@ -81,11 +84,21 @@ static int dos33_find_next_file(int fd,int catalog_tsf,unsigned char *vtoc) {
 	catalog_track=(catalog_tsf>>8)&0xff;
 	catalog_sector=(catalog_tsf&0xff);
 
+	if (debug) {
+		fprintf(stderr,"CATALOG FIND NEXT, "
+			"CURRENT FILE=%X TRACK=%X SECTOR=%X\n",
+			catalog_file,catalog_track,catalog_sector);
+	}
+
 catalog_loop:
 
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+	if (result<0) {
+		fprintf(stderr,"Error on I/O %s\n",strerror(errno));
+		return -1;
+	}
 
 	i=catalog_file;
 	while(i<7) {
@@ -94,19 +107,36 @@ catalog_loop:
 						(i*CATALOG_ENTRY_SIZE)];
 		/* 0xff means file deleted */
 		/* 0x0 means empty */
+		if (debug) {
+			if (file_track==0xff) fprintf(stderr,"\tFILE %d DELETED\n",i);
+			if (file_track==0x00) fprintf(stderr,"\tFILE %d UNALLOCATED\n",i);
+		}
+
 		if ((file_track!=0xff) && (file_track!=0x0)) {
+			if (debug) fprintf(stderr,"\tFOUND FILE %X TRACK $%X SECTOR $%X\n",i,catalog_track,catalog_sector);
 			return ((i<<16)+(catalog_track<<8)+catalog_sector);
 		}
 		i++;
 	}
+
 	catalog_track=sector_buffer[CATALOG_NEXT_T];
 	catalog_sector=sector_buffer[CATALOG_NEXT_S];
+
+	if (debug) fprintf(stderr,"\tTRYING NEXT SECTOR T=$%X S=$%X\n",
+		catalog_track,catalog_sector);
+
+	/* FIXME: this wouldn't happen on 140k disks */
+	/* but who knows if you're doing something fancy? */
+	if ((catalog_track<0) || (catalog_track>40)) {
+		return -1;
+	}
+
 	if (catalog_sector!=0) {
 		catalog_file=0;
 		goto catalog_loop;
 	}
 
-	if (result<0) fprintf(stderr,"Error on I/O\n");
+
 
 	return -1;
 }
@@ -121,6 +151,9 @@ static int dos33_print_file_info(int fd,int catalog_tsf) {
 	catalog_file=catalog_tsf>>16;
 	catalog_track=(catalog_tsf>>8)&0xff;
 	catalog_sector=(catalog_tsf&0xff);
+
+	if (debug) fprintf(stderr,"CATALOG FILE=%X TRACK=%X SECTOR=%X\n",
+		catalog_file,catalog_track,catalog_sector);
 
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
@@ -167,6 +200,7 @@ void dos33_catalog(int dos_fd, unsigned char *vtoc) {
 	printf("\nDISK VOLUME %i\n\n",vtoc[VTOC_DISK_VOLUME]);
 	while(catalog_entry>0) {
 		catalog_entry=dos33_find_next_file(dos_fd,catalog_entry,vtoc);
+		if (debug) fprintf(stderr,"CATALOG entry=$%X\n",catalog_entry);
 		if (catalog_entry>0) {
 			dos33_print_file_info(dos_fd,catalog_entry);
 			/* why 1<<16 ? */
