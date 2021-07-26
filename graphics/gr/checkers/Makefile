@@ -9,7 +9,7 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 all:	checkers32.dsk
 
 checkers32.dsk:	HELLO CHECKERS CHECKERS_SMALL CHECKERS_SMALL2 CHECKERS_LINE \
-	CHECKERS_QUESTION CHECKERS_RAINBOW CHECKERS_ORIG
+	CHECKERS_QUESTION CHECKERS_RAINBOW CHECKERS_ORIG CHECKERS_2000
 	cp $(EMPTY_DISK) checkers32.dsk
 	$(DOS33) -y checkers32.dsk SAVE A HELLO
 	$(DOS33) -y checkers32.dsk BSAVE -a 0x070 CHECKERS
@@ -19,6 +19,7 @@ checkers32.dsk:	HELLO CHECKERS CHECKERS_SMALL CHECKERS_SMALL2 CHECKERS_LINE \
 	$(DOS33) -y checkers32.dsk BSAVE -a 0x070 CHECKERS_RAINBOW
 	$(DOS33) -y checkers32.dsk BSAVE -a 0x070 CHECKERS_QUESTION
 	$(DOS33) -y checkers32.dsk BSAVE -a 0x070 CHECKERS_ORIG
+	$(DOS33) -y checkers32.dsk BSAVE -a 0x2000 CHECKERS_2000
 
 
 ###
@@ -28,6 +29,15 @@ CHECKERS: checkers.o
 
 checkers.o:	checkers.s
 	ca65 -o checkers.o checkers.s -l checkers.lst
+
+###
+
+CHECKERS_2000: checkers_2000.o
+	ld65 -o CHECKERS_2000 checkers_2000.o -C $(LINKER_DIR)/apple2_2000.inc
+
+checkers_2000.o:	checkers_2000.s
+	ca65 -o checkers_2000.o checkers_2000.s -l checkers_2000.lst
+
 
 ###
 

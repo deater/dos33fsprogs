@@ -1,0 +1,154 @@
+; defualt screen is -140,120 to 140,-120 with SCRUNCH .8
+;			96? -80 if splitscreen
+
+SCREEN
+~~~~~~
+CLEAN	-- erase screen
+TEXTSCREEN (TS) -- show full screen text
+SPLITSCREEN
+FULLSCREEN
+SETCURSOR	x y
+CLEARTEXT (CT)
+CLEARSCREEN (CS)
+FENCE -- enforce screen bounds
+WINDOW -- no wrap no bounds
+WRAP -- turtle wraps around edge
+SETBG	-- set background color
+SETWIDTH -- 40 or 80
+
+GRAPHICS
+~~~~~~~~
+BACK	(BK)
+FORWARD (FD)
+HIDETURTLE (HT)
+HOME		-- move to center (0,0)
+LEFT	(LT)
+RIGHT	(RT)
+SETHEADING (SETH) -- set direction
+SETPOS [x y] -- move to X, Y (drawing if appropriate)
+SETX
+SETY
+SHOWTURTLE (ST)
+DOT [x y] -- put dot at x,y w/o moving turtle
+SETPC		-- set pen color
+FILL		fill area bounded by color by current color
+PENDOWN	(PD)
+PENERASE (PE)	-- erase instead of draw
+PENREVERSE (PX) -- xor
+PENUP	(PU)	-- pen up
+
+LOAD/SAVE
+~~~~~~~~~
+CATALOG p 194 -- lists files in current PREFIX
+SETPREFIX "BLAH	-- sort of like chdir
+ERASEFILE (ERF) p 196:	ERF "RR
+PR ONLINE shows list of volumes
+
+
+READ STATE
+~~~~~~~~~~
+POS		-- shows position
+TOWARDS [X Y] -- returns direction you'd need to point at x,y
+XCOR		-- print x 
+YCOR		-- print y
+BACKGROUND
+PEN
+PENCOLOR	(PC) -- prints pencolor
+CURSOR		-- get cursor location
+
+
+SCRUNCH factor .8 by default 280x240?
+
+TOOT	= freq duration, duration is 1/60th of second
+
+
+VARIABLES
+~~~~~~~~~
+MAKE "A 5	- define var A with value 5
+PR :A		- print value of variable A
+
+FUNCTIONS
+~~~~~~~~~
+TO BLAH :PARAM
+END
+
+
+TEXT (p67)
+~~~~
+( a lot, TODO)
+CHAR -- like CHR$ in BASIC
+
+ASSEMBLY
+~~~~~~~~
+- note, PRODOS puts things in language card, have to switch back on
+	to use ROM routines
+.AUXDEPOSIT loc byte - store to AUX mem
+.AUXEXAMINE loc
+.BLOAD pathname loc
+.BSAVE pathname loc len
+.CALL loc
+.DEPOSIT loc byte
+.EXAMINE loc
+.QUIT exit back to ProDOS
+
+STARTUP
+~~~~~~~
+	can create a file called STARTUP that starts at startup
+	whatever is in the STARTUP function is run
+
+FREESPACE
+~~~~~~~~~
+	internally in nodes.  5 Bytes?
+	RECYCLE PRINT NODES shows free
+
+EDITOR
+~~~~~~
+	EDIT "FUNCTION
+	open apple-A (ALT-A on applewin)  accept
+
+
+References:
+https://archive.org/details/Apple_Logo_II_Reference_Manual/page/n260/mode/1up
+https://archive.org/details/Learning_With_Apple_Logo_by_Daniel_Watt_1984/page/209/mode/2up
+
+
+Memory Map
+
+$00	-- zero page
+$04-$07	-- text page 1
+$08-$1f -- edit buffer
+$20-$3f -- hi-res page1
+$40-$43 -- load/save buffer
+$44-$47 -- dribble buffer
+$48-$4b -- file buffer 0
+$4c-$4f -- file buffer 1
+$50-$53 -- file buffer 2
+$54-$57 -- file buffer 3
+$58-$5b -- file buffer 4
+$5c-$5f -- file buffer 5
+$60	-- logo data
+$61-$BE	-- logo code
+$BF	-- free space / prodos
+$C0-$CF -- I/O
+$D0-$FF	-- ProDOS
+
+AUX
+$00	-- zero page
+$20-$3f	-- ProDOS
+$40-$7f -- text page1 (80 col)
+$80-$b6	-- node space?
+$b7-$Ba -- main help
+$BB-$BE	-- editor help
+$BF	-- prodos
+$C0-$CF	-- I/O
+$D0-$DF	-- Logo code 
+$E0-$FF	-- ProDOS
+
+Info
+$300 = max num data files *9  (usually 54)
+$10  = pointer to first page beyond node space (usually $B7)
+$301 = flag for invalid edit buffer
+
+Can use edit buffer for temp storage, but mark as invalid when done
+Can use the file buffer area, be sure to adjust the max data size
+Can adjust node space but have to do it right at startup

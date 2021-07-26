@@ -1,10 +1,10 @@
 MEMORY {
        ZP: start = $00, size = $1A, type = rw;
-       RAM: start = $2000, size = $A000, file = %O;
+       RAM: start = $2000, size = $8000, file = %O;
 }
 
 SEGMENTS {
-CODE: load = RAM, type = ro, align=$100;
+CODE: load = RAM, type = ro, align = $100;
 RODATA: load = RAM, type = ro;
 DATA: load = RAM, type = rw;
 BSS: load = RAM, type = bss, define = yes;
