@@ -1,0 +1,10 @@
+=============
+prodos-utils
+=============
+
+Tools for manipulating an Apple II 140k prodos filesystem.
+
++ prodos  : a tool for manipulating prodos .po / .dsk images
+
++ mkprodosfs:	create an Apple ][ ProDOS filesystems
+
