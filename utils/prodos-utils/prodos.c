@@ -21,22 +21,63 @@ static unsigned char get_low_byte(int value) {
 	return (value&0xff);
 }
 
-
-
-    /* Read volume directory into a buffer */
-static int prodos_read_voldir(int fd, unsigned char *voldir) {
+int prodos_read_block(int fd,unsigned char *block, int blocknum) {
 
 	int result;
 
+	/* Note, we need to handle interleave, etc */
+	/* For now assume it's linear */
+
 	/* Seek to VOLDIR */
-	lseek(fd,DISK_OFFSET(VOLDIR_TRACK,VOLDIR_BLOCK),SEEK_SET);
+	lseek(fd,blocknum*PRODOS_BYTES_PER_BLOCK,SEEK_SET);
+	result=read(fd,block,PRODOS_BYTES_PER_BLOCK);
+
+	if (result<PRODOS_BYTES_PER_BLOCK) {
+		fprintf(stderr,"Error reading block %d\n",blocknum);
+		return -1;
+	}
+	return 0;
+}
+
+
+
+    /* Read volume directory into a buffer */
+static int prodos_read_voldir(int fd, struct voldir_t *voldir) {
+
+	int result;
+	unsigned char voldir_buffer[PRODOS_BYTES_PER_BLOCK];
 
 	/* read in VOLDIR */
-	result=read(fd,voldir,BYTES_PER_BLOCK);
+	result=prodos_read_block(fd,voldir_buffer,PRODOS_VOLDIR_BLOCK);
 
 	if (result<0) {
-		fprintf(stderr,"Error reading VOLDIR: %s\n",strerror(errno));
+		fprintf(stderr,"Error reading VOLDIR\n");
+		return -1;
 	}
+
+	voldir->storage_type=(voldir_buffer[0x4]>>4)&0xf;
+	voldir->name_length=(voldir_buffer[0x4]&0xf);
+	if (voldir->storage_type!=0xf) {
+		fprintf(stderr,"ERROR! Expected storage type F\n");
+	}
+
+	memcpy(voldir->volume_name,&voldir_buffer[0x5],voldir->name_length);
+	voldir->volume_name[voldir->name_length]=0;
+
+	voldir->creation_time=(voldir_buffer[0x1c]<<24)|
+			(voldir_buffer[0x1d]<<16)|
+			(voldir_buffer[0x1e]<<8)|
+			(voldir_buffer[0x1f]<<0);
+
+	voldir->version=voldir_buffer[0x20];
+	voldir->min_version=voldir_buffer[0x21];
+	voldir->access=voldir_buffer[0x22];
+	voldir->entry_length=voldir_buffer[0x23];
+	voldir->entries_per_block=voldir_buffer[0x24];
+	voldir->file_count=voldir_buffer[0x25]|(voldir_buffer[0x26]<<8);
+	voldir->bit_map_pointer=voldir_buffer[0x27]|(voldir_buffer[0x28]<<8);
+	voldir->total_blocks=voldir_buffer[0x29]|(voldir_buffer[0x2A]<<8);
+
 
 	return 0;
 }
@@ -52,12 +93,12 @@ static int dos33_check_file_exists(int fd,
 	int i,file_track;
 	char file_name[31];
 	int result;
-	unsigned char voldir[BYTES_PER_BLOCK];
-	unsigned char catalog_buffer[BYTES_PER_BLOCK];
+	struct voldir_t voldir;
+	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
 
 	/* read the VOLDIR into buffer */
-	prodos_read_voldir(fd,voldir);
-
+	prodos_read_voldir(fd,&voldir);
+#if 0
 	/* FIXME: we have a function for this */
 	/* get the catalog track and sector from the VTOC */
 	catalog_track=voldir[VTOC_CATALOG_T];
@@ -67,7 +108,7 @@ repeat_catalog:
 
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,catalog_buffer,BYTES_PER_BLOCK);
+	result=read(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	/* scan all file entries in catalog sector */
 	for(i=0;i<7;i++) {
@@ -105,7 +146,7 @@ repeat_catalog:
 	if (catalog_sector!=0) goto repeat_catalog;
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
-
+#endif
 	return -1;
 }
 
@@ -117,8 +158,8 @@ static int dos33_free_sector(unsigned char *voldir,int fd,int track,int sector) 
 	dos33_vtoc_free_sector(voldir,track,sector);
 
 	/* write modified VTOC back out */
-	lseek(fd,DISK_OFFSET(VOLDIR_TRACK,VOLDIR_BLOCK),SEEK_SET);
-	result=write(fd,&voldir,BYTES_PER_BLOCK);
+	lseek(fd,DISK_OFFSET(PRODOS_VOLDIR_TRACK,PRODOS_VOLDIR_BLOCK),SEEK_SET);
+	result=write(fd,&voldir,PRODOS_BYTES_PER_BLOCK);
 
 	if (result<0) {
 		fprintf(stderr,"Error on I/O\n");
@@ -144,14 +185,14 @@ static int dos33_allocate_sector(int fd, unsigned char *voldir) {
 	/* store new track/direction info */
 	voldir[VTOC_LAST_ALLOC_T]=found_track;
 
-//	if (found_track>VOLDIR_TRACK) vtoc[VTOC_ALLOC_DIRECT]=1;
+//	if (found_track>PRODOS_VOLDIR_TRACK) vtoc[VTOC_ALLOC_DIRECT]=1;
 //	else vtoc[VTOC_ALLOC_DIRECT]=-1;
 
 	/* Seek to VTOC */
-	lseek(fd,DISK_OFFSET(VOLDIR_TRACK,VOLDIR_BLOCK),SEEK_SET);
+	lseek(fd,DISK_OFFSET(PRODOS_VOLDIR_TRACK,PRODOS_VOLDIR_BLOCK),SEEK_SET);
 
 	/* Write out VTOC */
-	result=write(fd,voldir,BYTES_PER_BLOCK);
+	result=write(fd,voldir,PRODOS_BYTES_PER_BLOCK);
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
 
@@ -170,7 +211,7 @@ static int dos33_allocate_sector(int fd, unsigned char *voldir) {
 
 	/* creates file apple_filename on the image from local file filename */
 	/* returns ?? */
-static int dos33_add_file(unsigned char *voldir,
+static int prodos_add_file(struct voldir_t *voldir,
 		int fd, char dos_type,
 		int file_type, int address, int length,
 		char *filename, char *apple_filename) {
@@ -183,9 +224,9 @@ static int dos33_add_file(unsigned char *voldir,
 	int input_fd;
 	int result;
 	int first_write=1;
-	unsigned char ts_buffer[BYTES_PER_BLOCK];
-	unsigned char catalog_buffer[BYTES_PER_BLOCK];
-	unsigned char data_buffer[BYTES_PER_BLOCK];
+	unsigned char ts_buffer[PRODOS_BYTES_PER_BLOCK];
+	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
+	unsigned char data_buffer[PRODOS_BYTES_PER_BLOCK];
 
 	if (apple_filename[0]<64) {
 		fprintf(stderr,"Error!  First char of filename "
@@ -221,29 +262,29 @@ static int dos33_add_file(unsigned char *voldir,
 		if (length==0) length=file_size;
 		file_size+=4;
 	}
-
+#if 0
 	/* We need to round up to nearest sector size */
 	/* Add an extra sector for the T/S list */
 	/* Then add extra sector for a T/S list every 122*256 bytes (~31k) */
-	needed_sectors=(file_size/BYTES_PER_BLOCK)+ /* round sectors */
-			((file_size%BYTES_PER_BLOCK)!=0)+/* tail if needed */
+	needed_sectors=(file_size/PRODOS_BYTES_PER_BLOCK)+ /* round sectors */
+			((file_size%PRODOS_BYTES_PER_BLOCK)!=0)+/* tail if needed */
 			1+/* first T/S list */
-			(file_size/(122*BYTES_PER_BLOCK)); /* extra t/s lists */
+			(file_size/(122*PRODOS_BYTES_PER_BLOCK)); /* extra t/s lists */
 
 	/* Get free space on device */
 	free_space=dos33_vtoc_free_space(voldir);
 
 	/* Check for free space */
-	if (needed_sectors*BYTES_PER_BLOCK>free_space) {
+	if (needed_sectors*PRODOS_BYTES_PER_BLOCK>free_space) {
 		fprintf(stderr,"Error!  Not enough free space "
 				"on disk image (need %d have %d)\n",
-				needed_sectors*BYTES_PER_BLOCK,free_space);
+				needed_sectors*PRODOS_BYTES_PER_BLOCK,free_space);
 		return ERROR_NO_SPACE;
 	}
 
 	/* plus one because we need a sector for the tail */
-	size_in_sectors=(file_size/BYTES_PER_BLOCK)+
-		((file_size%BYTES_PER_BLOCK)!=0);
+	size_in_sectors=(file_size/PRODOS_BYTES_PER_BLOCK)+
+		((file_size%PRODOS_BYTES_PER_BLOCK)!=0);
 	if (debug) printf("Need to allocate %i data sectors\n",size_in_sectors);
 	if (debug) printf("Need to allocate %i total sectors\n",needed_sectors);
 
@@ -267,10 +308,10 @@ static int dos33_add_file(unsigned char *voldir,
 			if (ts_list<0) return -1;
 
 			/* clear the t/s sector */
-			memset(ts_buffer,0,BYTES_PER_BLOCK);
+			memset(ts_buffer,0,PRODOS_BYTES_PER_BLOCK);
 
 			lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
-			result=write(fd,ts_buffer,BYTES_PER_BLOCK);
+			result=write(fd,ts_buffer,PRODOS_BYTES_PER_BLOCK);
 
 			if (i==0) {
 				initial_ts_list=ts_list;
@@ -284,7 +325,7 @@ static int dos33_add_file(unsigned char *voldir,
 					get_low_byte(old_ts_list)),
 					SEEK_SET);
 
-				result=read(fd,ts_buffer,BYTES_PER_BLOCK);
+				result=read(fd,ts_buffer,PRODOS_BYTES_PER_BLOCK);
 
 				/* point from old ts list to new one we just made */
 				ts_buffer[TSL_NEXT_TRACK]=get_high_byte(ts_list);
@@ -300,7 +341,7 @@ static int dos33_add_file(unsigned char *voldir,
 					get_low_byte(old_ts_list)),
 					SEEK_SET);
 
-				result=write(fd,ts_buffer,BYTES_PER_BLOCK);
+				result=write(fd,ts_buffer,PRODOS_BYTES_PER_BLOCK);
 			}
 		}
 
@@ -311,7 +352,7 @@ static int dos33_add_file(unsigned char *voldir,
 		if (data_ts<0) return -1;
 
 		/* clear data sector */
-		memset(data_buffer,0,BYTES_PER_BLOCK);
+		memset(data_buffer,0,PRODOS_BYTES_PER_BLOCK);
 
 		/* read from input */
 		if ((first_write) && (file_type==ADD_BINARY)) {
@@ -321,12 +362,12 @@ static int dos33_add_file(unsigned char *voldir,
 			data_buffer[2]=(length)&0xff;
 			data_buffer[3]=((length)>>8)&0xff;
 			bytes_read=read(input_fd,data_buffer+4,
-					BYTES_PER_BLOCK-4);
+					PRODOS_BYTES_PER_BLOCK-4);
 			bytes_read+=4;
 		}
 		else {
 			bytes_read=read(input_fd,data_buffer,
-					BYTES_PER_BLOCK);
+					PRODOS_BYTES_PER_BLOCK);
 		}
 		first_write=0;
 
@@ -334,7 +375,7 @@ static int dos33_add_file(unsigned char *voldir,
 
 		/* write to disk image */
 		lseek(fd,DISK_OFFSET((data_ts>>8)&0xff,data_ts&0xff),SEEK_SET);
-		result=write(fd,data_buffer,BYTES_PER_BLOCK);
+		result=write(fd,data_buffer,PRODOS_BYTES_PER_BLOCK);
 
 		if (debug) {
 			printf("Writing %i bytes to %i/%i\n",
@@ -345,7 +386,7 @@ static int dos33_add_file(unsigned char *voldir,
 
 		/* read in t/s list */
 		lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
-		result=read(fd,ts_buffer,BYTES_PER_BLOCK);
+		result=read(fd,ts_buffer,PRODOS_BYTES_PER_BLOCK);
 
 		/* point to new data sector */
 		ts_buffer[((i%TSL_MAX_NUMBER)*2)+TSL_LIST]=(data_ts>>8)&0xff;
@@ -353,7 +394,7 @@ static int dos33_add_file(unsigned char *voldir,
 
 		/* write t/s list back out */
 		lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
-		result=write(fd,ts_buffer,BYTES_PER_BLOCK);
+		result=write(fd,ts_buffer,PRODOS_BYTES_PER_BLOCK);
 
 		i++;
 	}
@@ -367,8 +408,8 @@ continue_parsing_catalog:
 
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,catalog_buffer,BYTES_PER_BLOCK);
-	if (result!=BYTES_PER_BLOCK) {
+	result=read(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
+	if (result!=PRODOS_BYTES_PER_BLOCK) {
 		fprintf(stderr,"Catalog: Error, only read %d bytes at $%02X:$%02X (%s)\n",
 			result,catalog_track,catalog_sector,strerror(errno));
 		return ERROR_NO_SPACE;
@@ -435,10 +476,10 @@ got_a_dentry:
 
 	/* write out catalog sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=write(fd,catalog_buffer,BYTES_PER_BLOCK);
+	result=write(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
-
+#endif
 	return 0;
 }
 
@@ -449,8 +490,8 @@ static int dos33_load_file(int fd,int fts,char *filename) {
 	int output_fd;
 	int catalog_file,catalog_track,catalog_sector;
 	int file_type,file_size=-1,tsl_track,tsl_sector,data_t,data_s;
-	unsigned char data_sector[BYTES_PER_BLOCK];
-	unsigned char sector_buffer[BYTES_PER_BLOCK];
+	unsigned char data_sector[PRODOS_BYTES_PER_BLOCK];
+	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
 	int tsl_pointer=0,output_pointer=0;
 	int result;
 
@@ -469,7 +510,7 @@ static int dos33_load_file(int fd,int fts,char *filename) {
 
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,sector_buffer,BYTES_PER_BLOCK);
+	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	tsl_track=sector_buffer[CATALOG_FILE_LIST+
 			(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TS_LIST_T];
@@ -483,7 +524,7 @@ static int dos33_load_file(int fd,int fts,char *filename) {
 keep_saving:
 	/* Read in TSL Sector */
 	lseek(fd,DISK_OFFSET(tsl_track,tsl_sector),SEEK_SET);
-	result=read(fd,sector_buffer,BYTES_PER_BLOCK);
+	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
 	tsl_pointer=0;
 
 	/* check each track/sector pair in the list */
@@ -498,7 +539,7 @@ keep_saving:
 		}
 		else {
 			lseek(fd,DISK_OFFSET(data_t,data_s),SEEK_SET);
-			result=read(fd,&data_sector,BYTES_PER_BLOCK);
+			result=read(fd,&data_sector,PRODOS_BYTES_PER_BLOCK);
 
 			/* some file formats have the size in the first sector */
 			/* so cheat and get real file size from file itself    */
@@ -517,8 +558,8 @@ keep_saving:
 			}
 
 			/* write the block read in out to the output file */
-			lseek(output_fd,output_pointer*BYTES_PER_BLOCK,SEEK_SET);
-			result=write(output_fd,&data_sector,BYTES_PER_BLOCK);
+			lseek(output_fd,output_pointer*PRODOS_BYTES_PER_BLOCK,SEEK_SET);
+			result=write(output_fd,&data_sector,PRODOS_BYTES_PER_BLOCK);
 		}
 		output_pointer++;
 		tsl_pointer++;
@@ -529,7 +570,7 @@ keep_saving:
 	tsl_sector=sector_buffer[TSL_NEXT_SECTOR];
 
 //	printf("Next track/sector=%d/%d op=%d\n",tsl_track,tsl_sector,
-//		output_pointer*BYTES_PER_BLOCK);
+//		output_pointer*PRODOS_BYTES_PER_BLOCK);
 
 	if ((tsl_track==0) && (tsl_sector==0)) {
 	}
@@ -552,7 +593,7 @@ static int dos33_lock_file(int fd,int fts,int lock) {
 
 	int catalog_file,catalog_track,catalog_sector;
 	int file_type,result;
-	unsigned char sector_buffer[BYTES_PER_BLOCK];
+	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
 
 	catalog_file=fts>>16;
 	catalog_track=(fts>>8)&0xff;
@@ -561,7 +602,7 @@ static int dos33_lock_file(int fd,int fts,int lock) {
 
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,sector_buffer,BYTES_PER_BLOCK);
+	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	file_type=sector_buffer[CATALOG_FILE_LIST+
 				(catalog_file*CATALOG_ENTRY_SIZE)
@@ -576,7 +617,7 @@ static int dos33_lock_file(int fd,int fts,int lock) {
 
 	/* write back modified catalog sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=write(fd,sector_buffer,BYTES_PER_BLOCK);
+	result=write(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
 
@@ -591,7 +632,7 @@ static int dos33_rename_file(int fd,int fts,char *new_name) {
 
 	int catalog_file,catalog_track,catalog_sector;
 	int x,result;
-	unsigned char sector_buffer[BYTES_PER_BLOCK];
+	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
 
 	catalog_file=fts>>16;
 	catalog_track=(fts>>8)&0xff;
@@ -599,7 +640,7 @@ static int dos33_rename_file(int fd,int fts,char *new_name) {
 
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,sector_buffer,BYTES_PER_BLOCK);
+	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	/* copy over filename */
 	for(x=0;x<strlen(new_name);x++) {
@@ -617,7 +658,7 @@ static int dos33_rename_file(int fd,int fts,char *new_name) {
 
 	/* write back modified catalog sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=write(fd,sector_buffer,BYTES_PER_BLOCK);
+	result=write(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	if (result<0) {
 		fprintf(stderr,"Error on I/O\n");
@@ -628,12 +669,12 @@ static int dos33_rename_file(int fd,int fts,char *new_name) {
 
 	/* undelete a file.  fts=entry/track/sector */
 	/* FIXME: validate the new filename is valid */
-static int dos33_undelete_file(int fd,int fts,char *new_name) {
+static int prodos_undelete_file(int fd,int fts,char *new_name) {
 
 	int catalog_file,catalog_track,catalog_sector;
 	char replacement_char;
 	int result;
-	unsigned char sector_buffer[BYTES_PER_BLOCK];
+	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
 
 	catalog_file=fts>>16;
 	catalog_track=(fts>>8)&0xff;
@@ -641,7 +682,7 @@ static int dos33_undelete_file(int fd,int fts,char *new_name) {
 
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,sector_buffer,BYTES_PER_BLOCK);
+	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	/* get the stored track value, and put it back  */
 	/* FIXME: should walk file to see if T/s valild */
@@ -662,7 +703,7 @@ static int dos33_undelete_file(int fd,int fts,char *new_name) {
 
 	/* write back modified catalog sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=write(fd,sector_buffer,BYTES_PER_BLOCK);
+	result=write(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
 
@@ -670,23 +711,24 @@ static int dos33_undelete_file(int fd,int fts,char *new_name) {
 }
 
 
-static int dos33_delete_file(unsigned char *voldir,int fd,int fsl) {
+static int prodos_delete_file(struct voldir_t *voldir,int fd,int fsl) {
 
 	int i;
 	int catalog_track,catalog_sector,catalog_entry;
 	int ts_track,ts_sector;
 	char file_type;
 	int result;
-	unsigned char catalog_buffer[BYTES_PER_BLOCK];
+	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
 
 	/* unpack file/track/sector info */
 	catalog_entry=fsl>>16;
 	catalog_track=(fsl>>8)&0xff;
 	catalog_sector=(fsl&0xff);
 
+#if 0
 	/* Load in the catalog table for the file */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,catalog_buffer,BYTES_PER_BLOCK);
+	result=read(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	file_type=catalog_buffer[CATALOG_FILE_LIST+
 			(catalog_entry*CATALOG_ENTRY_SIZE)
@@ -707,7 +749,7 @@ keep_deleting:
 
 	/* load in the t/s list info */
 	lseek(fd,DISK_OFFSET(ts_track,ts_sector),SEEK_SET);
-	result=read(fd,catalog_buffer,BYTES_PER_BLOCK);
+	result=read(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	/* Free each sector listed by t/s list */
 	for(i=0;i<TSL_MAX_NUMBER;i++) {
@@ -739,7 +781,7 @@ keep_deleting:
 
 	/* First reload proper catalog sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,catalog_buffer,BYTES_PER_BLOCK);
+	result=read(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	/* save track as last char of name, for undelete purposes */
 	catalog_buffer[CATALOG_FILE_LIST+(catalog_entry*CATALOG_ENTRY_SIZE)+
@@ -752,21 +794,21 @@ keep_deleting:
 
 	/* re seek to catalog position and write out changes */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=write(fd,catalog_buffer,BYTES_PER_BLOCK);
+	result=write(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
-
+#endif
 	return 0;
 }
 
 /* ??? */
 static int dos33_rename_hello(int fd, char *new_name) {
 
-	char buffer[BYTES_PER_BLOCK];
+	char buffer[PRODOS_BYTES_PER_BLOCK];
 	int i;
 
 	lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
-	read(fd,buffer,BYTES_PER_BLOCK);
+	read(fd,buffer,PRODOS_BYTES_PER_BLOCK);
 
 	for(i=0;i<30;i++) {
 		if (i<strlen(new_name)) {
@@ -778,7 +820,7 @@ static int dos33_rename_hello(int fd, char *new_name) {
 	}
 
 	lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
-	write(fd,buffer,BYTES_PER_BLOCK);
+	write(fd,buffer,PRODOS_BYTES_PER_BLOCK);
 
 	return 0;
 }
@@ -901,7 +943,7 @@ int main(int argc, char **argv) {
 	char *temp,*endptr;
 	int c;
 	int address=0, length=0;
-	unsigned char voldir[BYTES_PER_BLOCK];
+	struct voldir_t voldir;
 
 	/* Check command line arguments */
 	while ((c = getopt (argc, argv,"a:l:t:s:dhvxy"))!=-1) {
@@ -955,7 +997,7 @@ int main(int argc, char **argv) {
 		fprintf(stderr,"Error opening disk_image: %s\n",image);
 		return -1;
 	}
-	prodos_read_voldir(dos_fd,voldir);
+	prodos_read_voldir(dos_fd,&voldir);
 
 	/* Move to next argument */
 	optind++;
@@ -1032,8 +1074,8 @@ int main(int argc, char **argv) {
 		break;
 
        case COMMAND_CATALOG:
-		prodos_read_voldir(dos_fd,voldir);
-		dos33_catalog(dos_fd,voldir);
+		prodos_read_voldir(dos_fd,&voldir);
+		prodos_catalog(dos_fd,&voldir);
 
 		break;
 
@@ -1121,12 +1163,12 @@ int main(int argc, char **argv) {
 			dos33_delete_file(voldir,dos_fd,catalog_entry);
 		}
 		if (command==COMMAND_SAVE) {
-			dos33_add_file(voldir,dos_fd,type,
+			prodos_add_file(&voldir,dos_fd,type,
 				ADD_RAW, address, length,
 				local_filename,apple_filename);
 		}
 		else {
-			dos33_add_file(voldir,dos_fd,type,
+			prodos_add_file(&voldir,dos_fd,type,
 				ADD_BINARY, address, length,
 				local_filename,apple_filename);
 		}
@@ -1159,18 +1201,18 @@ int main(int argc, char **argv) {
 					apple_filename);
 			goto exit_and_close;
 		}
-		dos33_delete_file(voldir,dos_fd,catalog_entry);
+		prodos_delete_file(&voldir,dos_fd,catalog_entry);
 
 		break;
 
 	case COMMAND_DUMP:
 		printf("Dumping %s!\n",image);
-		dos33_dump(voldir,dos_fd);
+		prodos_dump(&voldir,dos_fd);
 		break;
 
 	case COMMAND_SHOWFREE:
 		printf("Showing Free %s!\n",image);
-		dos33_showfree(voldir,dos_fd);
+		prodos_showfree(&voldir,dos_fd);
 		break;
 
 	case COMMAND_LOCK:
@@ -1261,7 +1303,7 @@ int main(int argc, char **argv) {
 			goto exit_and_close;
 		}
 
-		dos33_undelete_file(dos_fd,catalog_entry,apple_filename);
+		prodos_undelete_file(dos_fd,catalog_entry,apple_filename);
 
 		break;
 

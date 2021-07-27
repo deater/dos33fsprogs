@@ -3,10 +3,26 @@
     /* On dos3.2 disks, or larger filesystems */
 #define TRACKS_PER_DISK 0x23
 #define BLOCKS_PER_TRACK 0x8
-#define BYTES_PER_BLOCK 0x200
+#define PRODOS_BYTES_PER_BLOCK 0x200
 
-#define VOLDIR_TRACK  0x0
-#define VOLDIR_BLOCK 0x200
+#define PRODOS_VOLDIR_TRACK  0x0
+#define PRODOS_VOLDIR_BLOCK 2
+
+struct voldir_t {
+	unsigned char storage_type;
+	unsigned char name_length;
+	unsigned char version;
+	unsigned char min_version;
+	unsigned char access;
+	unsigned char entry_length;
+	unsigned char entries_per_block;
+	unsigned short file_count;
+	unsigned short bit_map_pointer;
+	unsigned short total_blocks;
+	unsigned char volume_name[16];
+	unsigned int creation_time;
+};
+
 
     /* VTOC Values */
 #define VTOC_CATALOG_T     0x1
@@ -51,7 +67,7 @@
 
     /* Helper Macros */
 #define TS_TO_INT(__x,__y) ((((int)__x)<<8)+__y)
-#define DISK_OFFSET(__track,__sector) ((((__track)*BLOCKS_PER_TRACK)+(__sector))*BYTES_PER_BLOCK)
+#define DISK_OFFSET(__track,__sector) ((((__track)*BLOCKS_PER_TRACK)+(__sector))*PRODOS_BYTES_PER_BLOCK)
 
 
 #define DOS33_FILE_NORMAL 0
@@ -67,10 +83,13 @@ int dos33_vtoc_find_free_sector(unsigned char *vtoc,
 
 /* prodos_catalog.c */
 unsigned char dos33_char_to_type(char type, int lock);
-void dos33_catalog(int dos_fd, unsigned char *vtoc);
+void prodos_catalog(int dos_fd, struct voldir_t *voldir);
 char *dos33_filename_to_ascii(char *dest,unsigned char *src,int len);
 unsigned char dos33_file_type(int value);
 
 /* prodos_dump.c */
-int dos33_dump(unsigned char *vtoc, int fd);
-int dos33_showfree(unsigned char *vtoc, int fd);
+int prodos_dump(struct voldir_t *voldir, int fd);
+int prodos_showfree(struct voldir_t *voldir, int fd);
+
+/* prodos.c */
+int prodos_read_block(int fd,unsigned char *block, int blocknum);

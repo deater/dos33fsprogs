@@ -78,7 +78,7 @@ static int dos33_find_next_file(int fd,int catalog_tsf,unsigned char *voldir) {
 	int catalog_track,catalog_sector,catalog_file;
 	int file_track,i;
 	int result;
-	unsigned char sector_buffer[BYTES_PER_BLOCK];
+	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
 
 	catalog_file=catalog_tsf>>16;
 	catalog_track=(catalog_tsf>>8)&0xff;
@@ -94,7 +94,7 @@ catalog_loop:
 
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,sector_buffer,BYTES_PER_BLOCK);
+	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
 	if (result<0) {
 		fprintf(stderr,"Error on I/O %s\n",strerror(errno));
 		return -1;
@@ -146,7 +146,7 @@ static int dos33_print_file_info(int fd,int catalog_tsf) {
 	int catalog_track,catalog_sector,catalog_file,i;
 	char temp_string[BUFSIZ];
 	int result;
-	unsigned char sector_buffer[BYTES_PER_BLOCK];
+	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
 
 	catalog_file=catalog_tsf>>16;
 	catalog_track=(catalog_tsf>>8)&0xff;
@@ -157,7 +157,7 @@ static int dos33_print_file_info(int fd,int catalog_tsf) {
 
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,sector_buffer,BYTES_PER_BLOCK);
+	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	if (sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TYPE]>0x7f) {
 		printf("*");
@@ -190,10 +190,11 @@ static int dos33_print_file_info(int fd,int catalog_tsf) {
 	return 0;
 }
 
-void dos33_catalog(int dos_fd, unsigned char *voldir) {
+void prodos_catalog(int dos_fd, struct voldir_t *voldir) {
 
 	int catalog_entry;
 
+#if 0
 	/* get first catalog */
 	catalog_entry=dos33_get_catalog_ts(voldir);
 
@@ -208,5 +209,6 @@ void dos33_catalog(int dos_fd, unsigned char *voldir) {
 			/* dos33_find_next_file() handles wrapping issues */
 		}
 	}
+#endif
 	printf("\n");
 }

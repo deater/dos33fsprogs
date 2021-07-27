@@ -9,81 +9,85 @@
 #include "prodos.h"
 
 
-static int dump_sector(unsigned char *sector_buffer) {
+static int dump_block(unsigned char *block_buffer) {
 
 	int i,j;
 
-	for(i=0;i<16;i++) {
-		printf("$%02X : ",i*16);
+	for(i=0;i<32;i++) {
+		printf("$%03X : ",i*16);
 		for(j=0;j<16;j++) {
-			printf("%02X ",sector_buffer[i*16+j]);
+			printf("%02X ",block_buffer[i*16+j]);
 		}
 		printf("\n");
 	}
 	return 0;
 }
 
-static void dump_voldir(unsigned char *voldir) {
+static unsigned char month_names[12][4]={
+	"Jan","Feb","Mar","Apr","May","Jun",
+	"Jul","Aug","Sep","Oct","Nov","Dec",
+};
 
-	int num_tracks,catalog_t,catalog_s,ts_total;
+static void prodos_print_time(int t) {
+	int year,month,day,hour,minute;
 
-	printf("\nVTOC Sector:\n");
-	dump_sector(voldir);
+	/* epoch seems to be 1900 */
+	year=(t>>25)&0x7f;
+	month=(t>>20)&0xf;
+	day=(t>>16)&0x1f;
+	hour=(t>>8)&0x1f;
+	minute=t&0x3f;
 
+	printf("%d:%02d %d %s %d",hour,minute,
+		day+1,month_names[month],1900+year);
+
+}
+
+static void dump_voldir(struct voldir_t *voldir) {
+
+	unsigned char volume_name[16];
+	int storage_type,name_length;
+	int creation_time;
+	unsigned char voldir_buffer[PRODOS_BYTES_PER_BLOCK];
+
+//	printf("\nVOLDIR Block:\n");
+//	dump_block(voldir);
 	printf("\n\n");
-	printf("VTOC INFORMATION:\n");
-	catalog_t=voldir[VTOC_CATALOG_T];
-	catalog_s=voldir[VTOC_CATALOG_S];
-	printf("\tFirst Catalog = %02X/%02X\n",catalog_t,catalog_s);
-	printf("\tDOS RELEASE = 3.%i\n",voldir[VTOC_DOS_RELEASE]);
-	printf("\tDISK VOLUME = %i\n",voldir[VTOC_DISK_VOLUME]);
-	ts_total=voldir[VTOC_MAX_TS_PAIRS];
-	printf("\tT/S pairs that will fit in T/S List = %i\n",ts_total);
 
-	printf("\tLast track where sectors were allocated = $%02X\n",
-		voldir[VTOC_LAST_ALLOC_T]);
-	printf("\tDirection of track allocation = %i\n",
-		voldir[VTOC_ALLOC_DIRECT]);
+	printf("VOLDIR INFORMATION:\n");
+	printf("\tStorage Type: %02X\n",voldir->storage_type);
+	printf("\tName Length: %d\n",voldir->name_length);
+	printf("\tVolume Name: %s\n",voldir->volume_name);
+	printf("\tCreation Time: ");
+	prodos_print_time(voldir->creation_time);
+	printf("\n");
 
-	num_tracks=voldir[VTOC_NUM_TRACKS];
-	printf("\tNumber of tracks per disk = %i\n",num_tracks);
-	printf("\tNumber of sectors per track = %i\n",
-		voldir[VTOC_S_PER_TRACK]);
-	printf("\tNumber of bytes per sector = %i\n",
-		(voldir[VTOC_BYTES_PER_SH]<<8)+
-		voldir[VTOC_BYTES_PER_SL]);
+	printf("\tVersion: %d\n",voldir->version);
+	printf("\tMin Version: %d\n",voldir->min_version);
+	printf("\tAccess: %d\n",voldir->access);
+	printf("\tEntry Length: %d\n",voldir->entry_length);
+	printf("\tEntries per block: %d\n",voldir->entries_per_block);
+	printf("\tFile Count: %d\n",voldir->file_count);
+	printf("\tBitmap Pointer: %d\n",voldir->bit_map_pointer);
+	printf("\tTotal Blocks: %d\n",voldir->total_blocks);
+
 
 }
 
 
-int dos33_dump(unsigned char *voldir, int fd) {
+int prodos_dump(struct voldir_t *voldir, int fd) {
 
 	int num_tracks,catalog_t,catalog_s,file,ts_t,ts_s,ts_total;
 	int track,sector;
 	int i;
 	int deleted=0;
 	char temp_string[BUFSIZ];
-	unsigned char tslist[BYTES_PER_BLOCK];
-	unsigned char catalog_buffer[BYTES_PER_BLOCK];
-	unsigned char data[BYTES_PER_BLOCK];
+	unsigned char tslist[PRODOS_BYTES_PER_BLOCK];
+	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
 	int result;
 
-	/* Read Track 1 Sector 9 */
-	lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
-	result=read(fd,data,BYTES_PER_BLOCK);
-
-	printf("Finding name of startup file, Track 1 Sector 9 offset $75\n");
-
-	if (data[0x75]!=0) {
-		printf("Startup Filename: ");
-		for(i=0;i<30;i++) {
-			printf("%c",data[0x75+i]&0x7f);
-		}
-		printf("\n");
-	}
-
 	dump_voldir(voldir);
-
+#if 0
 	catalog_t=voldir[VTOC_CATALOG_T];
 	catalog_s=voldir[VTOC_CATALOG_S];
 	ts_total=voldir[VTOC_MAX_TS_PAIRS];
@@ -95,13 +99,13 @@ repeat_catalog:
 
 	printf("\nCatalog Sector $%02X/$%02x\n",catalog_t,catalog_s);
 	lseek(fd,DISK_OFFSET(catalog_t,catalog_s),SEEK_SET);
-	result=read(fd,catalog_buffer,BYTES_PER_BLOCK);
+	result=read(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
 
 	printf("\tNext track/sector $%02X/$%02X (found at offsets $%02X/$%02X\n",
 		catalog_buffer[CATALOG_NEXT_T],catalog_buffer[CATALOG_NEXT_S],
 		CATALOG_NEXT_T,CATALOG_NEXT_S);
 
-	dump_sector(catalog_buffer);
+	dump_block(catalog_buffer);
 
 	for(file=0;file<7;file++) {
 		printf("\n\n");
@@ -148,7 +152,7 @@ repeat_tsl:
 		printf("\tT/S List $%02X/$%02X:\n",ts_t,ts_s);
 		if (deleted) goto continue_dump;
 		lseek(fd,DISK_OFFSET(ts_t,ts_s),SEEK_SET);
-		result=read(fd,&tslist,BYTES_PER_BLOCK);
+		result=read(fd,&tslist,PRODOS_BYTES_PER_BLOCK);
 
 		for(i=0;i<ts_total;i++) {
 			track=tslist[TSL_LIST+(i*TSL_ENTRY_SIZE)];
@@ -174,19 +178,19 @@ continue_dump:;
 	printf("\n");
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
-
+#endif
 	return 0;
 }
 
-int dos33_showfree(unsigned char *voldir, int fd) {
+int prodos_showfree(struct voldir_t *voldir, int fd) {
 
 	int num_tracks,catalog_t,catalog_s,file,ts_t,ts_s,ts_total;
 	int track,sector;
 	int i,j;
 	int deleted=0;
 	char temp_string[BUFSIZ];
-	unsigned char tslist[BYTES_PER_BLOCK];
-	unsigned char catalog_buffer[BYTES_PER_BLOCK];
+	unsigned char tslist[PRODOS_BYTES_PER_BLOCK];
+	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
 	int result;
 
 	int sectors_per_track;
@@ -204,7 +208,7 @@ int dos33_showfree(unsigned char *voldir, int fd) {
 	for(i=0;i<35;i++) for(j=0;j<16;j++) usage[i][j]=0;
 
 	dump_voldir(voldir);
-
+#if 0
 	catalog_t=voldir[VTOC_CATALOG_T];
 	catalog_s=voldir[VTOC_CATALOG_S];
 	ts_total=voldir[VTOC_MAX_TS_PAIRS];
@@ -227,10 +231,10 @@ repeat_catalog:
 
 //	printf("\nCatalog Sector $%02X/$%02x\n",catalog_t,catalog_s);
 	lseek(fd,DISK_OFFSET(catalog_t,catalog_s),SEEK_SET);
-	result=read(fd,catalog_buffer,BYTES_PER_BLOCK);
+	result=read(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
 
 
-//	dump_sector();
+//	dump_block();
 
 	for(file=0;file<7;file++) {
 //		printf("\n\n");
@@ -291,7 +295,7 @@ repeat_tsl:
 
 
 		lseek(fd,DISK_OFFSET(ts_t,ts_s),SEEK_SET);
-		result=read(fd,&tslist,BYTES_PER_BLOCK);
+		result=read(fd,&tslist,PRODOS_BYTES_PER_BLOCK);
 
 		for(i=0;i<ts_total;i++) {
 			track=tslist[TSL_LIST+(i*TSL_ENTRY_SIZE)];
@@ -343,7 +347,7 @@ continue_dump:;
 	for(i=0;i<num_files;i++) {
 		printf("\t%c %s\n",file_key[i].ch,file_key[i].filename);
 	}
-
+#endif
 	return 0;
 }
 

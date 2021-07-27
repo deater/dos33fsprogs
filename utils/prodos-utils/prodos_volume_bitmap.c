@@ -56,7 +56,7 @@ int dos33_vtoc_free_space(unsigned char *vtoc) {
 		sectors_free+=ones_lookup[(bitmap[1]>>4)&0xf];
 	}
 
-	return sectors_free*BYTES_PER_BLOCK;
+	return sectors_free*PRODOS_BYTES_PER_BLOCK;
 }
 
 /* free a sector from the sector bitmap */
@@ -154,8 +154,8 @@ int dos33_vtoc_find_free_sector(unsigned char *vtoc,
 		fprintf(stderr,"ERROR!  Invalid track dir %i\n",track_dir);
 	}
 
-	if (((start_track>VOLDIR_TRACK) && (track_dir!=1)) ||
-		((start_track<VOLDIR_TRACK) && (track_dir!=-1))) {
+	if (((start_track>PRODOS_VOLDIR_TRACK) && (track_dir!=1)) ||
+		((start_track<PRODOS_VOLDIR_TRACK) && (track_dir!=-1))) {
 		fprintf(stderr,"Warning! Non-optimal values for track dir t=%i d=%i\n",
 			start_track,track_dir);
 	}
@@ -184,11 +184,11 @@ int dos33_vtoc_find_free_sector(unsigned char *vtoc,
 		/* Move to next track, handling overflows */
 		i+=track_dir;
 		if (i<0) {
-			i=VOLDIR_TRACK;
+			i=PRODOS_VOLDIR_TRACK;
 			track_dir=1;
 		}
 		if (i>=TRACKS_PER_DISK) {
-			i=VOLDIR_TRACK;
+			i=PRODOS_VOLDIR_TRACK;
 			track_dir=-1;
 		}
 	} while (i!=start_track);
