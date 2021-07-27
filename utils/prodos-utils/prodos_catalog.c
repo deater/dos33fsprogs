@@ -7,7 +7,7 @@
 
 static int debug=0;
 
-unsigned char dos33_file_type(int value) {
+unsigned char prodos_file_type(int value) {
 
 	unsigned char result;
 
@@ -26,10 +26,10 @@ unsigned char dos33_file_type(int value) {
 }
 
 
-unsigned char dos33_char_to_type(char type, int lock) {
+unsigned char prodos_char_to_type(char type, int lock) {
 
-	unsigned char result,temp_type;
-
+	unsigned char result=0,temp_type;
+#if 0
 	temp_type=type;
 	/* Covert to upper case */
 	if (temp_type>='a') temp_type=temp_type-0x20;
@@ -46,12 +46,13 @@ unsigned char dos33_char_to_type(char type, int lock) {
 		default: result=0x0;
 	}
 	if (lock) result|=0x80;
+#endif
 	return result;
 }
 
-	/* dos33 filenames have top bit set on ascii chars */
+	/* prodos filenames have top bit set on ascii chars */
 	/* and are padded with spaces */
-char *dos33_filename_to_ascii(char *dest,unsigned char *src,int len) {
+char *prodos_filename_to_ascii(char *dest,unsigned char *src,int len) {
 
 	int i=0,last_nonspace=0;
 
@@ -66,14 +67,15 @@ char *dos33_filename_to_ascii(char *dest,unsigned char *src,int len) {
 }
 
 	/* Get a T/S value from a Catalog Sector */
-static int dos33_get_catalog_ts(unsigned char *voldir) {
+static int prodos_get_catalog_ts(struct voldir_t *voldir) {
 
-	return TS_TO_INT(voldir[VTOC_CATALOG_T],voldir[VTOC_CATALOG_S]);
+//	return TS_TO_INT(voldir[VTOC_CATALOG_T],voldir[VTOC_CATALOG_S]);
+	return 0;
 }
 
 	/* returns the next valid catalog entry */
 	/* after the one passed in */
-static int dos33_find_next_file(int fd,int catalog_tsf,unsigned char *voldir) {
+static int prodos_find_next_file(int fd,int catalog_tsf,unsigned char *voldir) {
 
 	int catalog_track,catalog_sector,catalog_file;
 	int file_track,i;
@@ -89,7 +91,7 @@ static int dos33_find_next_file(int fd,int catalog_tsf,unsigned char *voldir) {
 			"CURRENT FILE=%X TRACK=%X SECTOR=%X\n",
 			catalog_file,catalog_track,catalog_sector);
 	}
-
+#if 0
 catalog_loop:
 
 	/* Read in Catalog Sector */
@@ -137,11 +139,11 @@ catalog_loop:
 	}
 
 
-
+#endif
 	return -1;
 }
 
-static int dos33_print_file_info(int fd,int catalog_tsf) {
+static int prodos_print_file_info(int fd,int catalog_tsf) {
 
 	int catalog_track,catalog_sector,catalog_file,i;
 	char temp_string[BUFSIZ];
@@ -154,7 +156,7 @@ static int dos33_print_file_info(int fd,int catalog_tsf) {
 
 	if (debug) fprintf(stderr,"CATALOG FILE=%X TRACK=%X SECTOR=%X\n",
 		catalog_file,catalog_track,catalog_sector);
-
+#if 0
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
@@ -166,12 +168,12 @@ static int dos33_print_file_info(int fd,int catalog_tsf) {
 		printf(" ");
 	}
 
-	printf("%c",dos33_file_type(sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TYPE]));
+	printf("%c",prodos_file_type(sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TYPE]));
 	printf(" ");
 	printf("%.3i ",sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE+FILE_SIZE_L)]+
 		(sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE+FILE_SIZE_H)]<<8));
 
-	dos33_filename_to_ascii(temp_string,sector_buffer+(CATALOG_FILE_LIST+
+	prodos_filename_to_ascii(temp_string,sector_buffer+(CATALOG_FILE_LIST+
 			(catalog_file*CATALOG_ENTRY_SIZE+FILE_NAME)),30);
 
 	for(i=0;i<strlen(temp_string);i++) {
@@ -186,7 +188,7 @@ static int dos33_print_file_info(int fd,int catalog_tsf) {
 	printf("\n");
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
-
+#endif
 	return 0;
 }
 
@@ -196,17 +198,17 @@ void prodos_catalog(int dos_fd, struct voldir_t *voldir) {
 
 #if 0
 	/* get first catalog */
-	catalog_entry=dos33_get_catalog_ts(voldir);
+	catalog_entry=prodos_get_catalog_ts(voldir);
 
 	printf("\nDISK VOLUME %i\n\n",voldir[VTOC_DISK_VOLUME]);
 	while(catalog_entry>0) {
-		catalog_entry=dos33_find_next_file(dos_fd,catalog_entry,voldir);
+		catalog_entry=prodos_find_next_file(dos_fd,catalog_entry,voldir);
 		if (debug) fprintf(stderr,"CATALOG entry=$%X\n",catalog_entry);
 		if (catalog_entry>0) {
-			dos33_print_file_info(dos_fd,catalog_entry);
+			prodos_print_file_info(dos_fd,catalog_entry);
 			/* why 1<<16 ? */
 			catalog_entry+=(1<<16);
-			/* dos33_find_next_file() handles wrapping issues */
+			/* prodos_find_next_file() handles wrapping issues */
 		}
 	}
 #endif

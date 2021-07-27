@@ -21,26 +21,6 @@ static unsigned char get_low_byte(int value) {
 	return (value&0xff);
 }
 
-int prodos_read_block(int fd,unsigned char *block, int blocknum) {
-
-	int result;
-
-	/* Note, we need to handle interleave, etc */
-	/* For now assume it's linear */
-
-	/* Seek to VOLDIR */
-	lseek(fd,blocknum*PRODOS_BYTES_PER_BLOCK,SEEK_SET);
-	result=read(fd,block,PRODOS_BYTES_PER_BLOCK);
-
-	if (result<PRODOS_BYTES_PER_BLOCK) {
-		fprintf(stderr,"Error reading block %d\n",blocknum);
-		return -1;
-	}
-	return 0;
-}
-
-
-
     /* Read volume directory into a buffer */
 static int prodos_read_voldir(int fd, struct voldir_t *voldir) {
 
@@ -48,12 +28,15 @@ static int prodos_read_voldir(int fd, struct voldir_t *voldir) {
 	unsigned char voldir_buffer[PRODOS_BYTES_PER_BLOCK];
 
 	/* read in VOLDIR */
-	result=prodos_read_block(fd,voldir_buffer,PRODOS_VOLDIR_BLOCK);
+	voldir->fd=fd;
+	result=prodos_read_block(voldir,voldir_buffer,PRODOS_VOLDIR_BLOCK);
 
 	if (result<0) {
 		fprintf(stderr,"Error reading VOLDIR\n");
 		return -1;
 	}
+
+	voldir->fd=fd;
 
 	voldir->storage_type=(voldir_buffer[0x4]>>4)&0xf;
 	voldir->name_length=(voldir_buffer[0x4]&0xf);
@@ -85,7 +68,7 @@ static int prodos_read_voldir(int fd, struct voldir_t *voldir) {
 
 	/* Checks if "filename" exists */
 	/* returns entry/track/sector  */
-static int dos33_check_file_exists(int fd,
+static int prodos_check_file_exists(int fd,
 					char *filename,
 					int file_deleted) {
 
@@ -118,7 +101,7 @@ repeat_catalog:
 		if (file_track!=0x0) {
 
 			if (file_track==0xff) {
-				dos33_filename_to_ascii(file_name,
+				prodos_filename_to_ascii(file_name,
 					catalog_buffer+(CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE+FILE_NAME)),29);
 
 				if (file_deleted) {
@@ -129,7 +112,7 @@ repeat_catalog:
 				}
 			}
 			else {
-				dos33_filename_to_ascii(file_name,
+				prodos_filename_to_ascii(file_name,
 					catalog_buffer+(CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE+FILE_NAME)),30);
 				/* return if we found the file */
 				if (!strncmp(filename,file_name,30)) {
@@ -150,13 +133,13 @@ repeat_catalog:
 	return -1;
 }
 
-static int dos33_free_sector(unsigned char *voldir,int fd,int track,int sector) {
+static int prodos_free_sector(struct voldir_t *voldir,int fd,int track,int sector) {
 
 	int result;
 
 	/* mark as free in VTOC */
-	dos33_vtoc_free_sector(voldir,track,sector);
-
+	prodos_voldir_free_sector(voldir,track,sector);
+#if 0
 	/* write modified VTOC back out */
 	lseek(fd,DISK_OFFSET(PRODOS_VOLDIR_TRACK,PRODOS_VOLDIR_BLOCK),SEEK_SET);
 	result=write(fd,&voldir,PRODOS_BYTES_PER_BLOCK);
@@ -164,24 +147,24 @@ static int dos33_free_sector(unsigned char *voldir,int fd,int track,int sector) 
 	if (result<0) {
 		fprintf(stderr,"Error on I/O\n");
 	}
-
+#endif
 	return 0;
 }
 
-static int dos33_allocate_sector(int fd, unsigned char *voldir) {
+static int prodos_allocate_sector(int fd, struct voldir_t *voldir) {
 
 	int found_track=0,found_sector=0;
 	int result;
 
 	/* Find an empty sector */
-	result=dos33_vtoc_find_free_sector(voldir,&found_track,&found_sector);
+	result=prodos_voldir_find_free_sector(voldir,&found_track,&found_sector);
 
 	if (result<0) {
-		fprintf(stderr,"ERROR: dos33_allocate_sector: Disk full!\n");
+		fprintf(stderr,"ERROR: prodos_allocate_sector: Disk full!\n");
 		return -1;
 	}
 
-
+#if 0
 	/* store new track/direction info */
 	voldir[VTOC_LAST_ALLOC_T]=found_track;
 
@@ -195,7 +178,7 @@ static int dos33_allocate_sector(int fd, unsigned char *voldir) {
 	result=write(fd,voldir,PRODOS_BYTES_PER_BLOCK);
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
-
+#endif
 	return ((found_track<<8)+found_sector);
 }
 
@@ -272,7 +255,7 @@ static int prodos_add_file(struct voldir_t *voldir,
 			(file_size/(122*PRODOS_BYTES_PER_BLOCK)); /* extra t/s lists */
 
 	/* Get free space on device */
-	free_space=dos33_vtoc_free_space(voldir);
+	free_space=prodos_vtoc_free_space(voldir);
 
 	/* Check for free space */
 	if (needed_sectors*PRODOS_BYTES_PER_BLOCK>free_space) {
@@ -303,7 +286,7 @@ static int prodos_add_file(struct voldir_t *voldir,
 			old_ts_list=ts_list;
 
 			/* allocate a sector for the new list */
-			ts_list=dos33_allocate_sector(fd,voldir);
+			ts_list=prodos_allocate_sector(fd,voldir);
 			sectors_used++;
 			if (ts_list<0) return -1;
 
@@ -346,7 +329,7 @@ static int prodos_add_file(struct voldir_t *voldir,
 		}
 
 		/* allocate a sector */
-		data_ts=dos33_allocate_sector(fd,voldir);
+		data_ts=prodos_allocate_sector(fd,voldir);
 		sectors_used++;
 
 		if (data_ts<0) return -1;
@@ -453,7 +436,7 @@ got_a_dentry:
 	catalog_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+1]=(initial_ts_list&0xff);
 	/* set file type */
 	catalog_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_TYPE]=
-		dos33_char_to_type(dos_type,0);
+		prodos_char_to_type(dos_type,0);
 
 //	printf("Pointing T/S to %x/%x\n",(initial_ts_list>>8)&0xff,initial_ts_list&0xff);
 
@@ -485,7 +468,7 @@ got_a_dentry:
 
 
     /* load a file.  fts=entry/track/sector */
-static int dos33_load_file(int fd,int fts,char *filename) {
+static int prodos_load_file(int fd,int fts,char *filename) {
 
 	int output_fd;
 	int catalog_file,catalog_track,catalog_sector;
@@ -516,7 +499,7 @@ static int dos33_load_file(int fd,int fts,char *filename) {
 			(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TS_LIST_T];
 	tsl_sector=sector_buffer[CATALOG_FILE_LIST+
 			(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TS_LIST_S];
-	file_type=dos33_file_type(sector_buffer[CATALOG_FILE_LIST+
+	file_type=prodos_file_type(sector_buffer[CATALOG_FILE_LIST+
 			(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TYPE]);
 
 //	printf("file_type: %c\n",file_type);
@@ -589,7 +572,7 @@ keep_saving:
 }
 
     /* lock a file.  fts=entry/track/sector */
-static int dos33_lock_file(int fd,int fts,int lock) {
+static int prodos_lock_file(int fd,int fts,int lock) {
 
 	int catalog_file,catalog_track,catalog_sector;
 	int file_type,result;
@@ -628,7 +611,7 @@ static int dos33_lock_file(int fd,int fts,int lock) {
     /* rename a file.  fts=entry/track/sector */
     /* FIXME: can we rename a locked file?    */
     /* FIXME: validate the new filename is valid */
-static int dos33_rename_file(int fd,int fts,char *new_name) {
+static int prodos_rename_file(int fd,int fts,char *new_name) {
 
 	int catalog_file,catalog_track,catalog_sector;
 	int x,result;
@@ -758,13 +741,13 @@ keep_deleting:
 			(catalog_buffer[TSL_LIST+2*i+1]==0)) {
 		}
 		else {
-			dos33_free_sector(voldir,fd,catalog_buffer[TSL_LIST+2*i],
+			prodos_free_sector(voldir,fd,catalog_buffer[TSL_LIST+2*i],
 				catalog_buffer[TSL_LIST+2*i+1]);
 		}
 	}
 
 	/* free the t/s list */
-	dos33_free_sector(voldir,fd,ts_track,ts_sector);
+	prodos_free_sector(voldir,fd,ts_track,ts_sector);
 
 	/* Point to next t/s list */
 	ts_track=catalog_buffer[TSL_NEXT_TRACK];
@@ -802,7 +785,7 @@ keep_deleting:
 }
 
 /* ??? */
-static int dos33_rename_hello(int fd, char *new_name) {
+static int prodos_rename_hello(int fd, char *new_name) {
 
 	char buffer[PRODOS_BYTES_PER_BLOCK];
 	int i;
@@ -826,7 +809,7 @@ static int dos33_rename_hello(int fd, char *new_name) {
 }
 
 static void display_help(char *name, int version_only) {
-	printf("\ndos33 version %s\n",VERSION);
+	printf("\nprodos version %s\n",VERSION);
 	printf("by Vince Weaver <vince@deater.net>\n");
 	printf("\n");
 
@@ -1060,7 +1043,7 @@ int main(int argc, char **argv) {
 
 
 		/* get the entry/track/sector for file */
-		catalog_entry=dos33_check_file_exists(dos_fd,
+		catalog_entry=prodos_check_file_exists(dos_fd,
 							apple_filename,
 							DOS33_FILE_NORMAL);
 		if (catalog_entry<0) {
@@ -1069,7 +1052,7 @@ int main(int argc, char **argv) {
 			goto exit_and_close;
 		}
 
-		dos33_load_file(dos_fd,catalog_entry,local_filename);
+		prodos_load_file(dos_fd,catalog_entry,local_filename);
 
 		break;
 
@@ -1098,7 +1081,7 @@ int main(int argc, char **argv) {
 	case COMMAND_BSAVE:
 
 		if (debug) printf("\ttype=%c\n",type);
-
+#if 0
 		if (argc==optind) {
 			fprintf(stderr,"Error! Need file_name\n");
 
@@ -1146,7 +1129,7 @@ int main(int argc, char **argv) {
 
 		if (debug) printf("\tApple filename: %s\n",apple_filename);
 
-		catalog_entry=dos33_check_file_exists(dos_fd,apple_filename,
+		catalog_entry=prodos_check_file_exists(dos_fd,apple_filename,
 							DOS33_FILE_NORMAL);
 
 		if (catalog_entry>=0) {
@@ -1160,7 +1143,7 @@ int main(int argc, char **argv) {
 				}
 			}
 			fprintf(stderr,"Deleting previous version...\n");
-			dos33_delete_file(voldir,dos_fd,catalog_entry);
+			prodos_delete_file(voldir,dos_fd,catalog_entry);
 		}
 		if (command==COMMAND_SAVE) {
 			prodos_add_file(&voldir,dos_fd,type,
@@ -1172,6 +1155,7 @@ int main(int argc, char **argv) {
 				ADD_BINARY, address, length,
 				local_filename,apple_filename);
 		}
+#endif
 		break;
 
 
@@ -1193,7 +1177,7 @@ int main(int argc, char **argv) {
 
 		truncate_filename(apple_filename,argv[optind]);
 
-		catalog_entry=dos33_check_file_exists(dos_fd,
+		catalog_entry=prodos_check_file_exists(dos_fd,
 						apple_filename,
 						DOS33_FILE_NORMAL);
 		if (catalog_entry<0) {
@@ -1228,7 +1212,7 @@ int main(int argc, char **argv) {
 		truncate_filename(apple_filename,argv[optind]);
 
 		/* get the entry/track/sector for file */
-		catalog_entry=dos33_check_file_exists(dos_fd,
+		catalog_entry=prodos_check_file_exists(dos_fd,
 							apple_filename,
 							DOS33_FILE_NORMAL);
 		if (catalog_entry<0) {
@@ -1237,7 +1221,7 @@ int main(int argc, char **argv) {
 			goto exit_and_close;
 		}
 
-		dos33_lock_file(dos_fd,catalog_entry,command==COMMAND_LOCK);
+		prodos_lock_file(dos_fd,catalog_entry,command==COMMAND_LOCK);
 
 		break;
 
@@ -1266,7 +1250,7 @@ int main(int argc, char **argv) {
 		truncate_filename(new_filename,argv[optind]);
 
 		/* get the entry/track/sector for file */
-		catalog_entry=dos33_check_file_exists(dos_fd,
+		catalog_entry=prodos_check_file_exists(dos_fd,
 						apple_filename,
 						DOS33_FILE_NORMAL);
 		if (catalog_entry<0) {
@@ -1275,7 +1259,7 @@ int main(int argc, char **argv) {
 			goto exit_and_close;
 		}
 
-		dos33_rename_file(dos_fd,catalog_entry,new_filename);
+		prodos_rename_file(dos_fd,catalog_entry,new_filename);
 
 		break;
 
@@ -1294,7 +1278,7 @@ int main(int argc, char **argv) {
 		truncate_filename(apple_filename,argv[optind]);
 
 		/* get the entry/track/sector for file */
-		catalog_entry=dos33_check_file_exists(dos_fd,
+		catalog_entry=prodos_check_file_exists(dos_fd,
 						apple_filename,
 						DOS33_FILE_DELETED);
 		if (catalog_entry<0) {
@@ -1317,7 +1301,7 @@ int main(int argc, char **argv) {
 
 		truncate_filename(apple_filename,argv[optind]);
 
-		catalog_entry=dos33_check_file_exists(dos_fd,
+		catalog_entry=prodos_check_file_exists(dos_fd,
 						apple_filename,
 						DOS33_FILE_NORMAL);
 
@@ -1326,11 +1310,11 @@ int main(int argc, char **argv) {
 				"Warning!  File %s does not exist\n",
 					apple_filename);
 		}
-		dos33_rename_hello(dos_fd,apple_filename);
+		prodos_rename_hello(dos_fd,apple_filename);
 		break;
 
 	case COMMAND_INIT:
-		/* use common code from mkdos33fs? */
+		/* use common code from mkprodosfs? */
 	case COMMAND_COPY:
 		/* use temp file?  Walking a sector at a time seems a pain */
 	default:

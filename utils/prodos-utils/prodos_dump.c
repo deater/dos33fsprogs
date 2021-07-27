@@ -43,6 +43,15 @@ static void prodos_print_time(int t) {
 
 }
 
+static void prodos_print_access(int access) {
+
+	if (access&0x80) printf("DESTROY ");
+	if (access&0x40) printf("RENAME ");
+	if (access&0x20) printf("VOLDIR_NEW ");
+	if (access&0x2) printf("VOLDIR_WRITE ");
+	if (access&0x1) printf("VOLDIR_READ ");
+
+}
 static void dump_voldir(struct voldir_t *voldir) {
 
 	unsigned char volume_name[16];
@@ -64,7 +73,9 @@ static void dump_voldir(struct voldir_t *voldir) {
 
 	printf("\tVersion: %d\n",voldir->version);
 	printf("\tMin Version: %d\n",voldir->min_version);
-	printf("\tAccess: %d\n",voldir->access);
+	printf("\tAccess: $%X ",voldir->access);
+	prodos_print_access(voldir->access);
+	printf("\n");
 	printf("\tEntry Length: %d\n",voldir->entry_length);
 	printf("\tEntries per block: %d\n",voldir->entries_per_block);
 	printf("\tFile Count: %d\n",voldir->file_count);
@@ -87,14 +98,10 @@ int prodos_dump(struct voldir_t *voldir, int fd) {
 	int result;
 
 	dump_voldir(voldir);
+
+	prodos_voldir_dump_bitmap(voldir);
+
 #if 0
-	catalog_t=voldir[VTOC_CATALOG_T];
-	catalog_s=voldir[VTOC_CATALOG_S];
-	ts_total=voldir[VTOC_MAX_TS_PAIRS];
-	num_tracks=voldir[VTOC_NUM_TRACKS];
-
-	dos33_vtoc_dump_bitmap(voldir,num_tracks);
-
 repeat_catalog:
 
 	printf("\nCatalog Sector $%02X/$%02x\n",catalog_t,catalog_s);
@@ -215,7 +222,7 @@ int prodos_showfree(struct voldir_t *voldir, int fd) {
 	num_tracks=voldir[VTOC_NUM_TRACKS];
 	sectors_per_track=voldir[VTOC_S_PER_TRACK];
 
-	dos33_vtoc_dump_bitmap(voldir,num_tracks);
+	prodos_voldir_dump_bitmap(voldir);
 
 	/* Reserve DOS */
 	for(i=0;i<3;i++) for(j=0;j<16;j++) usage[i][j]='$';

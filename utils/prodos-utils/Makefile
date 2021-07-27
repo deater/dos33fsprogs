@@ -5,10 +5,12 @@ all:	prodos mkprodosfs
 ###
 
 prodos:			prodos.o \
+			prodos_read.o \
 			prodos_catalog.o \
 			prodos_dump.o \
 			prodos_volume_bitmap.o
 			$(CC) -o prodos prodos.o \
+				prodos_read.o \
 				prodos_catalog.o \
 				prodos_dump.o \
 				prodos_volume_bitmap.o $(LFLAGS)
@@ -19,9 +21,9 @@ prodos.o:		prodos.c prodos.h
 
 ###
 
-mkprodosfs:		mkprodosfs.o prodos_volume_bitmap.o
+mkprodosfs:		mkprodosfs.o prodos_read.o prodos_volume_bitmap.o
 			$(CC) $(LFLAGS) -o mkprodosfs mkprodosfs.o \
-				prodos_volume_bitmap.o
+				prodos_read.o prodos_volume_bitmap.o
 
 mkprodosfs.o:		mkprodosfs.c prodos.h
 			$(CC) $(CFLAGS) -c mkprodosfs.c
@@ -40,6 +42,11 @@ prodos_catalog.o:	prodos_catalog.c prodos.h
 
 prodos_dump.o:		prodos_dump.c prodos.h
 			$(CC) $(CFLAGS) -c prodos_dump.c
+
+###
+
+prodos_read.o:		prodos_read.c prodos.h
+			$(CC) $(CFLAGS) -c prodos_read.c
 
 ###
 

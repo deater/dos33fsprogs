@@ -9,6 +9,7 @@
 #define PRODOS_VOLDIR_BLOCK 2
 
 struct voldir_t {
+	int fd;
 	unsigned char storage_type;
 	unsigned char name_length;
 	unsigned char version;
@@ -22,21 +23,6 @@ struct voldir_t {
 	unsigned char volume_name[16];
 	unsigned int creation_time;
 };
-
-
-    /* VTOC Values */
-#define VTOC_CATALOG_T     0x1
-#define VTOC_CATALOG_S     0x2
-#define VTOC_DOS_RELEASE   0x3
-#define VTOC_DISK_VOLUME   0x6
-#define VTOC_MAX_TS_PAIRS 0x27
-#define VTOC_LAST_ALLOC_T 0x30
-#define VTOC_ALLOC_DIRECT 0x31
-#define VTOC_NUM_TRACKS   0x34
-#define VTOC_S_PER_TRACK  0x35
-#define VTOC_BYTES_PER_SL 0x36
-#define VTOC_BYTES_PER_SH 0x37
-#define VTOC_FREE_BITMAPS 0x38
 
     /* CATALOG_VALUES */
 #define CATALOG_NEXT_T     0x01
@@ -74,22 +60,22 @@ struct voldir_t {
 #define DOS33_FILE_DELETED 1
 
 /* prodos_volume_bitmap.c */
-int dos33_vtoc_free_space(unsigned char *vtoc);
-void dos33_vtoc_free_sector(unsigned char *vtoc, int track, int sector);
-void dos33_vtoc_reserve_sector(unsigned char *vtoc, int track, int sector);
-void dos33_vtoc_dump_bitmap(unsigned char *vtoc, int num_tracks);
-int dos33_vtoc_find_free_sector(unsigned char *vtoc,
+int prodos_voldir_free_space(struct voldir_t *voldir);
+void prodos_voldir_free_sector(struct voldir_t *voldir, int track, int sector);
+void prodos_voldir_reserve_sector(struct voldir_t *voldir, int track, int sector);
+void prodos_voldir_dump_bitmap(struct voldir_t *voldir);
+int prodos_voldir_find_free_sector(struct voldir_t *voldir,
 	int *found_track, int *found_sector);
 
 /* prodos_catalog.c */
-unsigned char dos33_char_to_type(char type, int lock);
+unsigned char prodos_char_to_type(char type, int lock);
 void prodos_catalog(int dos_fd, struct voldir_t *voldir);
-char *dos33_filename_to_ascii(char *dest,unsigned char *src,int len);
-unsigned char dos33_file_type(int value);
+char *prodos_filename_to_ascii(char *dest,unsigned char *src,int len);
+unsigned char prodos_file_type(int value);
 
 /* prodos_dump.c */
 int prodos_dump(struct voldir_t *voldir, int fd);
 int prodos_showfree(struct voldir_t *voldir, int fd);
 
-/* prodos.c */
-int prodos_read_block(int fd,unsigned char *block, int blocknum);
+/* prodos_read.c */
+int prodos_read_block(struct voldir_t *voldir,unsigned char *block, int blocknum);

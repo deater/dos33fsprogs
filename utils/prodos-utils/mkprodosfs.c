@@ -148,6 +148,7 @@ int main(int argc, char **argv) {
 		goto end_of_program;
 	}
 
+#if 0
 	/* zero out file */
 	for(i=0;i<num_tracks*num_sectors;i++) {
 		result=write(fd,vtoc_buffer,sector_size);
@@ -339,7 +340,7 @@ int main(int argc, char **argv) {
 		fprintf(stderr,"Error writing VTOC (%s)!\n",strerror(errno));
 	}
 
-
+#endif
 
 	close(fd);
 
