@@ -10,7 +10,14 @@
 HGR_COLOR	= $E4
 HGR_PAGE	= $E6
 
-
+X1_L	= $A0
+X1_H	= $A1
+Y1	= $A2
+X2_L	= $A3
+X2_H	= $A4
+Y2	= $A5
+B_ERR2_L = $EE
+B_ERR2_H = $EF
 B_X1_L	= $F0
 B_X1_H	= $F1
 B_Y1	= $F2
@@ -56,31 +63,31 @@ reset:
 	ldx	#0
 	stx	COUNT
 
-	stx	B_X1_H
-	stx	B_X1_L
-	stx	B_Y1
+	stx	X1_H		; 0:0,0
+	stx	X1_L
+	stx	Y1
 
-	stx	B_X2_H
-	stx	B_X2_L
+	stx	X2_H		; 0:0,191
+	stx	X2_L
 
 	lda	#191
-	sta	B_Y2
+	sta	Y2
 
 left_lines_loop:
 
 	jsr	draw_line
 
-	lda	B_Y1
+	lda	Y1
 	clc
 	adc	#8
-	sta	B_Y1
+	sta	Y1
 
-	lda	B_X2_L		; 280/24 = 140/12 = 70/6 = 11 
+	lda	X2_L		; 280/24 = 140/12 = 70/6 = 11 
 	clc
 	adc	#11
-	sta	B_X2_L
+	sta	X2_L
 	bcc	noc
-	inc	B_X2_H
+	inc	X2_H
 noc:
 	inc	COUNT
 	inc	FRAME
@@ -100,28 +107,28 @@ end:
 	; want x2,y2 to go from 264,192 to 264,0
 
 	ldx	#0
-	stx	B_Y1
+	stx	Y1
 
-	ldx	B_X2_L
-	stx	B_X1_L
-	ldx	B_X2_H
-	stx	B_X1_H
+	ldx	X2_L
+	stx	X1_L
+	ldx	X2_H
+	stx	X1_H
 
 right_lines_loop:
 
 	jsr	draw_line
 
-	lda	B_Y2
+	lda	Y2
 	sec
 	sbc	#8
-	sta	B_Y2
+	sta	Y2
 
-	lda	B_X1_L
+	lda	X1_L
 	sec
 	sbc	#11
-	sta	B_X1_L
+	sta	X1_L
 	bcs	noc2
-	dec	B_X1_H
+	dec	X1_H
 noc2:
 	dec	COUNT
 	inc	FRAME
@@ -146,6 +153,20 @@ draw_line:
 	ldx	#7
 	jsr	HCOLOR1		; set color
 
+
+	lda	X1_L
+	sta	B_X1_L
+	lda	X1_H
+	sta	B_X1_H
+	lda	Y1
+	sta	B_Y1
+
+	lda	X2_L
+	sta	B_X2_L
+	lda	X2_H
+	sta	B_X2_H
+	lda	Y2
+	sta	B_Y2
 
 
 
@@ -202,7 +223,7 @@ do_abs_y:
 	lda	B_Y1
 	sbc	B_Y2			; A = y1 - y2
 	sta	B_DY_L
-	lda	#0
+	lda	#0			; need to sign extend?
 	sbc	#0
 	sta	B_DY_H
 
@@ -216,6 +237,7 @@ yneg:
 	adc	#1
 	sta	B_DY_L
 	lda	B_DY_H
+	eor	#$ff
 	adc	#0
 	sta	B_DY_H
 
@@ -272,24 +294,30 @@ line_no_end:
 
 	; err2 = 2*err
 	lda	B_ERR_L
-	asl
-	rol	B_ERR_H
+	sta	B_ERR2_L
+	lda	B_ERR_H
+	sta	B_ERR2_H
+
+	clc
+	rol	B_ERR2_L
+	rol	B_ERR2_H
 
 	; if err2 >= dy:
 	;   err = err + dy
 	;   x1 = x1 + sx
 
+	; http://6502.org/tutorials/compare_beyond.html#5
 	; 16 bit signed compare
-	lda	B_ERR_L		; ERR2-DY
+	lda	B_ERR2_L	; ERR2-DY
 	cmp	B_DY_L
-	lda	B_ERR_H
+	lda	B_ERR2_H
 	sbc	B_DY_H
 	bvc	blah
 	eor	#$80		; N eor V
 blah:
-	bmi	check_dx
+	bmi	check_dx	; branch if less than
 
-	; FIXME: convert ERR2 back to ERR
+	;   err = err + dy
 
 	clc
 	lda	B_ERR_L
@@ -299,11 +327,22 @@ blah:
 	adc	B_DY_H
 	sta	B_ERR_H
 
-	lda	B_X1_L
-	adc	B_SX
+	;   x1 = x1 + sx
+	clc
+	lda	B_SX
+	bmi	x1_neg
+x1_pos:
+	adc	B_X1_L
 	sta	B_X1_L
 	lda	B_X1_H
 	adc	#0
+	sta	B_X1_H
+	jmp	check_dx
+x1_neg:
+	adc	B_X1_L
+	sta	B_X1_L
+	lda	B_X1_H
+	adc	#$ff
 	sta	B_X1_H
 
 check_dx:
@@ -311,16 +350,27 @@ check_dx:
 	;   err = err + dx
 	;   y1 = y1 + sy
 
+	lda	B_DX_L
+	cmp	B_ERR2_L
+	bne	check_less
+	lda	B_DX_H
+	cmp	B_ERR2_H
+	beq	doit
+
+check_less:
+
 	; 16 bit signed compare
-	lda	B_ERR_L		; ERR2-DX
-	cmp	B_DX_L
-	lda	B_ERR_H
-	sbc	B_DX_H
+	lda	B_DX_L
+	cmp	B_ERR2_L
+	lda	B_DX_H
+	sbc	B_ERR2_H
 	bvc	blah2
 	eor	#$80		; N eor V
 blah2:
-	bmi	skip_y
+	bmi	skip_y		; if minus than dx<err2 (i.e. err2>=dx)
 
+	;   err = err + dx
+doit:
 	clc
 	lda	B_ERR_L
 	adc	B_DX_L
@@ -329,6 +379,8 @@ blah2:
 	adc	B_DX_H
 	sta	B_ERR_H
 
+	;   y1 = y1 + sy
+	clc
 	lda	B_Y1
 	adc	B_SY
 	sta	B_Y1
