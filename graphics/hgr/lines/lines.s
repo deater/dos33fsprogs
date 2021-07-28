@@ -5,6 +5,8 @@
 ; based on pseudo-code from
 ;	https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 
+; 361 bytes -- first working code
+
 ; D0+ used by HGR routines
 
 HGR_COLOR	= $E4
@@ -75,6 +77,12 @@ reset:
 
 left_lines_loop:
 
+	lda	FRAME
+	and	#$7
+	tax
+;	ldx	#7
+	jsr	HCOLOR1		; set color
+
 	jsr	draw_line
 
 	lda	Y1
@@ -82,7 +90,7 @@ left_lines_loop:
 	adc	#8
 	sta	Y1
 
-	lda	X2_L		; 280/24 = 140/12 = 70/6 = 11 
+	lda	X2_L		; 280/24 = 140/12 = 70/6 = 11
 	clc
 	adc	#11
 	sta	X2_L
@@ -140,19 +148,13 @@ noc2:
 	bne	right_lines_loop
 
 
-	;============================
+	;=========================================
 	; draw line
 	;	from x1,y1 to x2,y2
-	;============================
+	;=========================================
+	; note: x1,y1 points to x2,y2 at the end?
+	;	x2,y2 unchanged
 draw_line:
-
-
-;	lda	FRAME
-;	and	#$7
-;	tax
-	ldx	#7
-	jsr	HCOLOR1		; set color
-
 
 	lda	X1_L
 	sta	B_X1_L
@@ -167,8 +169,6 @@ draw_line:
 	sta	B_X2_H
 	lda	Y2
 	sta	B_Y2
-
-
 
 	; from wikipedia
 
@@ -384,10 +384,6 @@ doit:
 	lda	B_Y1
 	adc	B_SY
 	sta	B_Y1
-;	lda	B_Y1_H
-;	adc	#0
-;	sta	B_Y1_H
-
 
 skip_y:
 
