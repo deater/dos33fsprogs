@@ -45,25 +45,20 @@ int prodos_voldir_free_space(struct voldir_t *voldir) {
 
 	int volblocks;
 	unsigned char temp_block[PRODOS_BYTES_PER_BLOCK];
-	unsigned char bitmap[4];
-	int i,sectors_free=0;
+	int i,j,blocks_free=0;
 
 	volblocks=1+voldir->total_blocks/(PRODOS_BYTES_PER_BLOCK*8);
 
-	prodos_read_block(voldir,temp_block,voldir->bit_map_pointer);
+	for(j=0;j<volblocks;j++) {
+		prodos_read_block(voldir,temp_block,j+voldir->bit_map_pointer);
 
-#if 0
-	for(i=0;i<TRACKS_PER_DISK;i++) {
-		bitmap[0]=vtoc[VTOC_FREE_BITMAPS+(i*4)];
-		bitmap[1]=vtoc[VTOC_FREE_BITMAPS+(i*4)+1];
-
-		sectors_free+=ones_lookup[bitmap[0]&0xf];
-		sectors_free+=ones_lookup[(bitmap[0]>>4)&0xf];
-		sectors_free+=ones_lookup[bitmap[1]&0xf];
-		sectors_free+=ones_lookup[(bitmap[1]>>4)&0xf];
+		for(i=0;i<PRODOS_BYTES_PER_BLOCK;i++) {
+			blocks_free+=ones_lookup[temp_block[i]&0xf];
+			blocks_free+=ones_lookup[(temp_block[i]>>4)&0xf];
+		}
 	}
-#endif
-	return sectors_free*PRODOS_BYTES_PER_BLOCK;
+
+	return blocks_free*PRODOS_BYTES_PER_BLOCK;
 }
 
 /* free a sector from the sector bitmap */
@@ -117,34 +112,45 @@ void prodos_voldir_reserve_sector(struct voldir_t *voldir, int track, int sector
 
 void prodos_voldir_dump_bitmap(struct voldir_t *voldir) {
 
-	int i,j;
+	int volblocks;
+	unsigned char temp_block[PRODOS_BYTES_PER_BLOCK];
+	int i,j,k;
 
-	printf("\nFree sector bitmap:\n");
-	printf("\tU=used, .=free\n");
-	printf("\tTrack  FEDCBA98 76543210\n");
-#if 0
-	for(i=0;i<num_tracks;i++) {
-		printf("\t $%02X:  ",i);
-		for(j=0;j<8;j++) {
-			if ((vtoc[VTOC_FREE_BITMAPS+(i*4)]<<j)&0x80) {
-				printf(".");
+	volblocks=1+voldir->total_blocks/(PRODOS_BYTES_PER_BLOCK*8);
+
+	for(k=0;k<volblocks;k++) {
+
+		printf("\nFree block bitmap Block %d (block %d/%d):\n",
+			k+voldir->bit_map_pointer,k+1,volblocks);
+		printf("\tU=used, .=free\n");
+		printf("\tBlock          01234567 89ABCDEF\n");
+
+		prodos_read_block(voldir,temp_block,k+voldir->bit_map_pointer);
+
+		for(i=0;i<(512/16);i++) {
+			printf("\t $%03X: %02X %02X : ",i,
+				temp_block[(i*2)],
+				temp_block[(1+i*2)]);
+			for(j=0;j<8;j++) {
+				if ((temp_block[i*2]>>(7-j))&0x1) {
+					printf(".");
+				}
+				else {
+					printf("U");
+				}
 			}
-			else {
-				printf("U");
+			printf(" ");
+			for(j=0;j<8;j++) {
+				if ((temp_block[(1+i*2)]>>(7-j))&0x1) {
+					printf(".");
+				}
+				else {
+					printf("U");
+				}
 			}
+			printf("\n");
 		}
-		printf(" ");
-		for(j=0;j<8;j++) {
-			if ((vtoc[VTOC_FREE_BITMAPS+(i*4)+1]<<j)&0x80) {
-				printf(".");
-			}
-			else {
-				printf("U");
-			}
-		}
-		printf("\n");
 	}
-#endif
 }
 
 
@@ -152,10 +158,11 @@ void prodos_voldir_dump_bitmap(struct voldir_t *voldir) {
 int prodos_voldir_find_free_sector(struct voldir_t *voldir,
 	int *found_track, int *found_sector) {
 
+#if 0
 	int start_track,track_dir,i;
 	int bitmap;
 	int found=0;
-#if 0
+
 	/* Originally used to keep things near center of disk for speed */
 	/* We can use to avoid fragmentation possibly */
 	start_track=vtoc[VTOC_LAST_ALLOC_T]%TRACKS_PER_DISK;
