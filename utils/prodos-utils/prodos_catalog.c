@@ -75,7 +75,7 @@ static int prodos_get_catalog_ts(struct voldir_t *voldir) {
 
 	/* returns the next valid catalog entry */
 	/* after the one passed in */
-static int prodos_find_next_file(int fd,int catalog_tsf,unsigned char *voldir) {
+static int prodos_find_next_file(int catalog_tsf,struct voldir_t *voldir) {
 
 	int catalog_track,catalog_sector,catalog_file;
 	int file_track,i;
@@ -194,23 +194,29 @@ static int prodos_print_file_info(int fd,int catalog_tsf) {
 
 void prodos_catalog(int dos_fd, struct voldir_t *voldir) {
 
-	int catalog_entry;
+	int catalog_block,catalog_offset;
+	int blocks_free=0;
 
-#if 0
-	/* get first catalog */
-	catalog_entry=prodos_get_catalog_ts(voldir);
+	blocks_free=prodos_voldir_free_space(voldir);
 
-	printf("\nDISK VOLUME %i\n\n",voldir[VTOC_DISK_VOLUME]);
-	while(catalog_entry>0) {
-		catalog_entry=prodos_find_next_file(dos_fd,catalog_entry,voldir);
-		if (debug) fprintf(stderr,"CATALOG entry=$%X\n",catalog_entry);
-		if (catalog_entry>0) {
-			prodos_print_file_info(dos_fd,catalog_entry);
-			/* why 1<<16 ? */
-			catalog_entry+=(1<<16);
-			/* prodos_find_next_file() handles wrapping issues */
-		}
+	printf("\n");
+	printf("/%s\n\n",voldir->volume_name);
+
+	printf(" NAME           TYPE  BLOCKS  MODIFIED        CREATED          ENDFILE SUBTYPE\n");
+	printf("\n");
+
+	catalog_block=PRODOS_VOLDIR_KEY_BLOCK;
+	catalog_offset=1;	/* skip the header */
+
+	while(1) {
+		catalog_offset=prodos_find_next_file(catalog_offset,voldir);
+		if (catalog_offset<0) break;
 	}
-#endif
+
+	printf("\n");
+	printf("BLOCKS FREE: % 3d ",blocks_free);
+	printf("    BLOCKS USED: % 3d ",voldir->total_blocks-blocks_free);
+	printf("    TOTAL BLOCKS: % 3d ",voldir->total_blocks);
+
 	printf("\n");
 }

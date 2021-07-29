@@ -1071,7 +1071,7 @@ int main(int argc, char **argv) {
 		break;
 
        case COMMAND_CATALOG:
-		prodos_read_voldir(dos_fd,&voldir,interleave);
+
 		prodos_catalog(dos_fd,&voldir);
 
 		break;

@@ -55,7 +55,7 @@ int prodos_voldir_free_space(struct voldir_t *voldir) {
 		}
 	}
 
-	return blocks_free*PRODOS_BYTES_PER_BLOCK;
+	return blocks_free;
 }
 
 /* free a sector from the sector bitmap */
