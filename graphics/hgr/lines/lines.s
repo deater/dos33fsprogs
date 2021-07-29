@@ -5,8 +5,11 @@
 ; based on pseudo-code from
 ;	https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 
+; goal: ROM is 120 bytes 43c3/44a4/4599
+
 ; 361 bytes / D799/D23A/CE55 -- first working code
 ; 346 bytes / D7D6/D17C/CCE7 -- make X2 always > X1
+; 347 bytes / D718/D0C6/CC39 -- make D_SY self modifying code
 
 ; D0+ used by HGR routines
 
@@ -32,7 +35,7 @@ B_DX_H	= $F7
 B_DY_L	= $F8
 B_DY_H	= $F9
 ;B_SX	= $FA
-B_SY	= $FB
+;B_SY	= $FB
 B_ERR_L	= $FC
 B_ERR_H	= $FD
 COUNT	= $FE
@@ -254,7 +257,7 @@ yneg:
 	sta	B_DY_H
 
 yis_neg:
-	sty	B_SY
+	sty	b_sy_smc+1		; B_SY
 
 
 	; err = dx+dy
@@ -380,7 +383,8 @@ doit:
 	;   y1 = y1 + sy
 	clc
 	lda	B_Y1
-	adc	B_SY
+b_sy_smc:
+	adc	#0
 	sta	B_Y1
 
 skip_y:
