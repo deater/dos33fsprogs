@@ -5,8 +5,7 @@
 ; based on pseudo-code from
 ;	https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 
-; 361 bytes / D799/D23A/CE55 -- first working code
-; 346 bytes / D7D6/D17C/CCE7 -- make X2 always > X1
+; 361 bytes -- first working code
 
 ; D0+ used by HGR routines
 
@@ -31,7 +30,7 @@ B_DX_L	= $F6
 B_DX_H	= $F7
 B_DY_L	= $F8
 B_DY_H	= $F9
-;B_SX	= $FA
+B_SX	= $FA
 B_SY	= $FB
 B_ERR_L	= $FC
 B_ERR_H	= $FD
@@ -184,45 +183,34 @@ init_bresenham:
 	; dx = abs(x2-x1)
 	; sx = x1<x2 ? 1 : -1
 
-	; we force x2 to always be greater than x1
-	; now dx=x2-x1, sx fixed at 1
 
-	; 16 bit unsigned compare x1 vs x2
+do_abs_x:
+	ldy	#$ff
 
-	ldx	B_X1_H
-	ldy	B_X1_L
-
-	cpx	B_X2_H		; compare high bytes
-	bne	dx_done_check
-	cpy	B_X2_L
-dx_done_check:
-
-	bcc	calc_dx		; blt skip swap if x1<x2
-
-	; swap X1/X2, Y1/Y2
-
-	lda	B_X2_H
-	sta	B_X1_H
-
-	lda	B_X2_L
-	sta	B_X1_L
-
-	stx	B_X2_H
-	sty	B_X2_L
-
-	ldx	B_Y1
-	ldy	B_Y2
-	stx	B_Y2
-	sty	B_Y1
-
-calc_dx:
 	sec
-	lda	B_X2_L
-	sbc	B_X1_L			; x2 - x1
+	lda	B_X1_L
+	sbc	B_X2_L			; A = x1 - x2
 	sta	B_DX_L
-	lda	B_X2_H
-	sbc	B_X1_H
+	lda	B_X1_H
+	sbc	B_X2_H
 	sta	B_DX_H
+
+	bpl	xis_pos
+
+	ldy	#$1
+xneg:
+	lda	B_DX_L
+	eor	#$ff
+	clc
+	adc	#1
+	sta	B_DX_L
+	lda	B_DX_H
+	eor	#$ff
+	adc	#0
+	sta	B_DX_H
+
+xis_pos:
+	sty	B_SX
 
 
 	; dy = -abs(y2-y1)
@@ -256,6 +244,10 @@ yneg:
 yis_neg:
 	sty	B_SY
 
+					; FIXME: just reverse earlier
+;	eor	#$ff			; dy = -abs(y2-y1)
+;	clc
+;	adc	#1
 
 	; err = dx+dy
 
@@ -335,13 +327,23 @@ blah:
 	adc	B_DY_H
 	sta	B_ERR_H
 
-	; SX is always 1
 	;   x1 = x1 + sx
-
-	inc	B_X1_L
-	bne	done_inc_x1
-	inc	B_X1_H
-done_inc_x1:
+	clc
+	lda	B_SX
+	bmi	x1_neg
+x1_pos:
+	adc	B_X1_L
+	sta	B_X1_L
+	lda	B_X1_H
+	adc	#0
+	sta	B_X1_H
+	jmp	check_dx
+x1_neg:
+	adc	B_X1_L
+	sta	B_X1_L
+	lda	B_X1_H
+	adc	#$ff
+	sta	B_X1_H
 
 check_dx:
 	; if err2 <= dx:
