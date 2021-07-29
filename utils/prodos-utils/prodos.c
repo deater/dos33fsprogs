@@ -22,14 +22,16 @@ static unsigned char get_low_byte(int value) {
 }
 
     /* Read volume directory into a buffer */
-static int prodos_read_voldir(int fd, struct voldir_t *voldir) {
+static int prodos_read_voldir(int fd, struct voldir_t *voldir, int interleave) {
 
 	int result;
 	unsigned char voldir_buffer[PRODOS_BYTES_PER_BLOCK];
 
-	/* read in VOLDIR */
+	voldir->interleave=interleave;
+
+	/* read in VOLDIR KEY Block*/
 	voldir->fd=fd;
-	result=prodos_read_block(voldir,voldir_buffer,PRODOS_VOLDIR_BLOCK);
+	result=prodos_read_block(voldir,voldir_buffer,PRODOS_VOLDIR_KEY_BLOCK);
 
 	if (result<0) {
 		fprintf(stderr,"Error reading VOLDIR\n");
@@ -56,18 +58,24 @@ static int prodos_read_voldir(int fd, struct voldir_t *voldir) {
 	voldir->min_version=voldir_buffer[0x21];
 	voldir->access=voldir_buffer[0x22];
 	voldir->entry_length=voldir_buffer[0x23];
+
+	if (voldir->entry_length!=PRODOS_FILE_DESC_LEN) {
+		printf("Error!  Unexpected desc len %d\n",
+			voldir->entry_length);
+	}
+
 	voldir->entries_per_block=voldir_buffer[0x24];
 	voldir->file_count=voldir_buffer[0x25]|(voldir_buffer[0x26]<<8);
 	voldir->bit_map_pointer=voldir_buffer[0x27]|(voldir_buffer[0x28]<<8);
 	voldir->total_blocks=voldir_buffer[0x29]|(voldir_buffer[0x2A]<<8);
-
+	voldir->next_block=voldir_buffer[0x2]|(voldir_buffer[0x3]<<8);
 
 	return 0;
 }
 
 
 	/* Checks if "filename" exists */
-	/* returns entry/track/sector  */
+	/* returns entry/block  */
 static int prodos_check_file_exists(int fd,
 					char *filename,
 					int file_deleted) {
@@ -79,9 +87,10 @@ static int prodos_check_file_exists(int fd,
 	struct voldir_t voldir;
 	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
 
-	/* read the VOLDIR into buffer */
-	prodos_read_voldir(fd,&voldir);
 #if 0
+	/* read the VOLDIR into buffer */
+	prodos_read_voldir(fd,&voldir,interleave);
+
 	/* FIXME: we have a function for this */
 	/* get the catalog track and sector from the VTOC */
 	catalog_track=voldir[VTOC_CATALOG_T];
@@ -133,12 +142,13 @@ repeat_catalog:
 	return -1;
 }
 
-static int prodos_free_sector(struct voldir_t *voldir,int fd,int track,int sector) {
+static int prodos_free_block(struct voldir_t *voldir,int block) {
 
 	int result;
 
-	/* mark as free in VTOC */
-	prodos_voldir_free_sector(voldir,track,sector);
+	/* mark as free using VOLDIR */
+	result=prodos_voldir_free_block(voldir,block);
+
 #if 0
 	/* write modified VTOC back out */
 	lseek(fd,DISK_OFFSET(PRODOS_VOLDIR_TRACK,PRODOS_VOLDIR_BLOCK),SEEK_SET);
@@ -148,6 +158,7 @@ static int prodos_free_sector(struct voldir_t *voldir,int fd,int track,int secto
 		fprintf(stderr,"Error on I/O\n");
 	}
 #endif
+
 	return 0;
 }
 
@@ -916,6 +927,7 @@ int main(int argc, char **argv) {
 	char image[BUFSIZ];
 	unsigned char type='b';
 	int dos_fd=0,i;
+	int interleave=PRODOS_INTERLEAVE_PRODOS;
 
 	int command,catalog_entry;
 	char temp_string[BUFSIZ];
@@ -944,16 +956,6 @@ int main(int argc, char **argv) {
 			length=strtol(optarg,&endptr,0);
 			if (debug) fprintf(stderr,"Length=%d\n",address);
 			break;
-#if 0
-		case 't':
-			track=strtol(optarg,&endptr,0);
-			if (debug) fprintf(stderr,"Track=%d\n",address);
-			break;
-		case 's':
-			sector=strtol(optarg,&endptr,0);
-			if (debug) fprintf(stderr,"Sector=%d\n",address);
-			break;
-#endif
 		case 'v':
 			display_help(argv[0],1);
 			return 0;
@@ -980,7 +982,19 @@ int main(int argc, char **argv) {
 		fprintf(stderr,"Error opening disk_image: %s\n",image);
 		return -1;
 	}
-	prodos_read_voldir(dos_fd,&voldir);
+
+	if (debug) {
+		printf("checking extension: %s\n",&image[strlen(image)-4]);
+	}
+
+	if (strlen(image)>4) {
+		if (!strncmp(&image[strlen(image)-4],".dsk",4)) {
+			if (debug) printf("Detected DOS33\n");
+			interleave=PRODOS_INTERLEAVE_DOS33;
+		}
+	}
+
+	prodos_read_voldir(dos_fd,&voldir,interleave);
 
 	/* Move to next argument */
 	optind++;
@@ -1057,7 +1071,7 @@ int main(int argc, char **argv) {
 		break;
 
        case COMMAND_CATALOG:
-		prodos_read_voldir(dos_fd,&voldir);
+		prodos_read_voldir(dos_fd,&voldir,interleave);
 		prodos_catalog(dos_fd,&voldir);
 
 		break;

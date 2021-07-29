@@ -2,9 +2,6 @@
 
 #include "prodos.h"
 
-/* FIXME: this code assumes that we have 16 sectors pretty much everywhere */
-
-
 static int ones_lookup[16]={
 	/* 0x0 = 0000 */ 0,
 	/* 0x1 = 0001 */ 1,
@@ -62,7 +59,7 @@ int prodos_voldir_free_space(struct voldir_t *voldir) {
 }
 
 /* free a sector from the sector bitmap */
-void prodos_voldir_free_sector(struct voldir_t *voldir, int track, int sector) {
+int prodos_voldir_free_block(struct voldir_t *voldir, int block) {
 
 #if 0
 	/* each bitmap is 32 bits.  With 16-sector tracks only first 16 used */
@@ -86,7 +83,7 @@ void prodos_voldir_free_sector(struct voldir_t *voldir, int track, int sector) {
 }
 
 /* reserve a sector in the sector bitmap */
-void prodos_voldir_reserve_sector(struct voldir_t *voldir, int track, int sector) {
+int prodos_voldir_reserve_block(struct voldir_t *voldir, int block) {
 
 #if 0
 	/* each bitmap is 32 bits.  With 16-sector tracks only first 16 used */
@@ -155,8 +152,8 @@ void prodos_voldir_dump_bitmap(struct voldir_t *voldir) {
 
 
 /* reserve a sector in the sector bitmap */
-int prodos_voldir_find_free_sector(struct voldir_t *voldir,
-	int *found_track, int *found_sector) {
+int prodos_voldir_find_free_block(struct voldir_t *voldir,
+	int *found_block) {
 
 #if 0
 	int start_track,track_dir,i;
@@ -219,7 +216,22 @@ int prodos_voldir_find_free_sector(struct voldir_t *voldir,
 
 		return 0;
 	}
+
+
+#if 0
+        /* write modified VTOC back out */
+        lseek(fd,DISK_OFFSET(PRODOS_VOLDIR_TRACK,PRODOS_VOLDIR_BLOCK),SEEK_SET);
+        result=write(fd,&voldir,PRODOS_BYTES_PER_BLOCK);
+
+        if (result<0) {
+                fprintf(stderr,"Error on I/O\n");
+        }
 #endif
+
+#endif
+
+
+
 	/* no room */
         return -1;
 

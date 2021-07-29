@@ -52,6 +52,96 @@ static void prodos_print_access(int access) {
 	if (access&0x1) printf("VOLDIR_READ ");
 
 }
+
+
+static void prodos_print_storage_type(int type) {
+
+	switch(type) {
+
+		case PRODOS_FILE_DELETED:
+			printf("Deleted\n");
+			break;
+		case PRODOS_FILE_SEEDLING:
+			printf("Seedling\n");
+			break;
+		case PRODOS_FILE_SAPLING:
+			printf("Sapling\n");
+			break;
+		case PRODOS_FILE_TREE:
+			printf("Tree\n");
+			break;
+		case PRODOS_FILE_SUBDIR:
+			printf("Subdir\n");
+			break;
+		case PRODOS_FILE_SUBDIR_HDR:
+			printf("Subdir Header\n");
+			break;
+		case PRODOS_FILE_VOLUME_HDR:
+			printf("Volume Header\n");
+			break;
+		default:
+			printf("Unknown\n");
+			break;
+	}
+}
+
+static void prodos_print_file_type(int type) {
+
+	switch(type) {
+		case 0x00:
+			printf("Typeless\n");
+			break;
+		case 0x01:
+			printf("BAD: Bad Blocks\n");
+			break;
+		case 0x04:
+			printf("TXT: ASCII Text\n");
+			break;
+		case 0x06:
+			printf("BIN: Binary\n");
+			break;
+		case 0x0f:
+			printf("DIR: Directory\n");
+			break;
+		case 0x19:
+			printf("ADB: AppleWorks Database\n");
+			break;
+		case 0x1A:
+			printf("AWP: AppleWorks Word Processing\n");
+			break;
+		case 0x1B:
+			printf("ASP: AppleWorks Spreadsheet\n");
+			break;
+		case 0xEF:
+			printf("PAS: PASCAL\n");
+			break;
+		case 0xF0:
+			printf("CMD: Command\n");
+			break;
+		case 0xF1: case 0xF2: case 0xF3: case 0xF4:
+		case 0xF5: case 0xF6: case 0xF7: case 0xF8:
+			printf("User defined %x\n",type);
+			break;
+		case 0xFC:
+			printf("BAS: Applesoft BASIC\n");
+			break;
+		case 0xFD:
+			printf("VAR: Applesoft variables\n");
+			break;
+		case 0xFE:
+			printf("REL: Relocatable Object\n");
+			break;
+		case 0xFF:
+			printf("SYS: ProDOS system\n");
+			break;
+
+		default:
+			printf("Unknown\n");
+			break;
+	}
+}
+
+
 static void dump_voldir(struct voldir_t *voldir) {
 
 	unsigned char volume_name[16];
@@ -88,104 +178,82 @@ static void dump_voldir(struct voldir_t *voldir) {
 
 int prodos_dump(struct voldir_t *voldir, int fd) {
 
-	int num_tracks,catalog_t,catalog_s,file,ts_t,ts_s,ts_total;
-	int track,sector;
+	int catalog_block,catalog_offset,file;
 	int i;
 	int deleted=0;
 	char temp_string[BUFSIZ];
-	unsigned char tslist[PRODOS_BYTES_PER_BLOCK];
 	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
+	unsigned char file_desc[PRODOS_FILE_DESC_LEN];
 	int result;
+	struct file_entry_t file_entry;
 
 	dump_voldir(voldir);
 
 	prodos_voldir_dump_bitmap(voldir);
 
+	catalog_block=PRODOS_VOLDIR_KEY_BLOCK;
+	catalog_offset=1;	/* skip the header */
+
+	while(1) {
+
+		result=prodos_read_block(voldir,catalog_buffer,catalog_block);
+		if (result<0) fprintf(stderr,"Error on I/O\n");
+
+		// dump_block(catalog_buffer);
+
+		for(file=catalog_offset;
+			file<voldir->entries_per_block;file++) {
+
+			memcpy(file_desc,
+				catalog_buffer+4+file*PRODOS_FILE_DESC_LEN,
+				PRODOS_FILE_DESC_LEN);
+
+			file_entry.storage_type=(file_desc[0]>>4)&0xf;
+			file_entry.name_length=file_desc[0]&0xf;
+			memcpy(&file_entry.file_name[0],&file_desc[1],
+				file_entry.name_length);
+			file_entry.file_name[file_entry.name_length]=0;
+
+			if (file_entry.storage_type==PRODOS_FILE_DELETED) continue;
+
+			printf("\n\n");
+			printf("FILE %d: %s\n",file,file_entry.file_name);
+			printf("\t");
+			prodos_print_storage_type(file_entry.storage_type);
+
+			printf("\t");
+			file_entry.file_type=file_desc[0x10];
+			prodos_print_file_type(file_entry.file_type);
+
 #if 0
-repeat_catalog:
 
-	printf("\nCatalog Sector $%02X/$%02x\n",catalog_t,catalog_s);
-	lseek(fd,DISK_OFFSET(catalog_t,catalog_s),SEEK_SET);
-	result=read(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
+struct file_entry_t {
+        unsigned char file_type;
+        unsigned short key_pointer;
+        unsigned short blocks_used;
+        int eof;
+        int creation_time;
+        unsigned char version;
+        unsigned char min_version;
+        unsigned char access;
+        unsigned short aux_type;
+        int last_mod;
+        unsigned short header_pointer;
+};
+#endif
 
-	printf("\tNext track/sector $%02X/$%02X (found at offsets $%02X/$%02X\n",
-		catalog_buffer[CATALOG_NEXT_T],catalog_buffer[CATALOG_NEXT_S],
-		CATALOG_NEXT_T,CATALOG_NEXT_S);
-
-	dump_block(catalog_buffer);
-
-	for(file=0;file<7;file++) {
-		printf("\n\n");
-
-		ts_t=catalog_buffer[(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_TS_LIST_T))];
-		ts_s=catalog_buffer[(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_TS_LIST_S))];
-
-		printf("%i+$%02X/$%02X - ",file,catalog_t,catalog_s);
-		deleted=0;
-
-		if (ts_t==0xff) {
-			printf("**DELETED** ");
-			deleted=1;
-			ts_t=catalog_buffer[(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_NAME+0x1e))];
 		}
 
-		if (ts_t==0x00) {
-			printf("UNUSED!\n");
-			goto continue_dump;
-		}
-
-		dos33_filename_to_ascii(temp_string,
-			catalog_buffer+(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_NAME)),30);
-
-		for(i=0;i<strlen(temp_string);i++) {
-			if (temp_string[i]<0x20) {
-				printf("^%c",temp_string[i]+0x40);
-			}
-			else {
-				printf("%c",temp_string[i]);
-			}
-		}
-		printf("\n");
-		printf("\tLocked = %s\n",
-			catalog_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE)+FILE_TYPE]>0x7f?
-			"YES":"NO");
-		printf("\tType = %c\n",
-			dos33_file_type(catalog_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE)+FILE_TYPE]));
-		printf("\tSize in sectors = %i\n",
-			catalog_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_SIZE_L)]+
-			(catalog_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_SIZE_H)]<<8));
-
-repeat_tsl:
-		printf("\tT/S List $%02X/$%02X:\n",ts_t,ts_s);
-		if (deleted) goto continue_dump;
-		lseek(fd,DISK_OFFSET(ts_t,ts_s),SEEK_SET);
-		result=read(fd,&tslist,PRODOS_BYTES_PER_BLOCK);
-
-		for(i=0;i<ts_total;i++) {
-			track=tslist[TSL_LIST+(i*TSL_ENTRY_SIZE)];
-			sector=tslist[TSL_LIST+(i*TSL_ENTRY_SIZE)+1];
-			if ((track==0) && (sector==0)) printf(".");
-			else printf("\n\t\t%02X/%02X",track,sector);
-		}
-		ts_t=tslist[TSL_NEXT_TRACK];
-		ts_s=tslist[TSL_NEXT_SECTOR];
-
-		if (!((ts_s==0) && (ts_t==0))) goto repeat_tsl;
-continue_dump:;
-	}
-
-	catalog_t=catalog_buffer[CATALOG_NEXT_T];
-	catalog_s=catalog_buffer[CATALOG_NEXT_S];
-
-	if (catalog_s!=0) {
-		file=0;
-		goto repeat_catalog;
+		/* move to next */
+		catalog_block=catalog_buffer[0x2]|(catalog_buffer[0x3]<<8);
+		if (catalog_block==0) break;
+		catalog_offset=0;
 	}
 
 	printf("\n");
 
-	if (result<0) fprintf(stderr,"Error on I/O\n");
-#endif
+
+
 	return 0;
 }
 

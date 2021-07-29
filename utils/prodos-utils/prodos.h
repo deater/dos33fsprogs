@@ -5,11 +5,25 @@
 #define BLOCKS_PER_TRACK 0x8
 #define PRODOS_BYTES_PER_BLOCK 0x200
 
-#define PRODOS_VOLDIR_TRACK  0x0
-#define PRODOS_VOLDIR_BLOCK 2
+#define PRODOS_INTERLEAVE_PRODOS	0x0
+#define PRODOS_INTERLEAVE_DOS33		0x1
+
+
+#define PRODOS_VOLDIR_KEY_BLOCK 0x02		// key block
+
+#define PRODOS_FILE_DESC_LEN	0x27
+
+#define PRODOS_FILE_DELETED	0x00
+#define PRODOS_FILE_SEEDLING	0x01
+#define PRODOS_FILE_SAPLING	0x02
+#define PRODOS_FILE_TREE	0x03
+#define PRODOS_FILE_SUBDIR	0x0d
+#define PRODOS_FILE_SUBDIR_HDR	0x0e
+#define PRODOS_FILE_VOLUME_HDR	0x0f
 
 struct voldir_t {
 	int fd;
+	int interleave;
 	unsigned char storage_type;
 	unsigned char name_length;
 	unsigned char version;
@@ -17,11 +31,29 @@ struct voldir_t {
 	unsigned char access;
 	unsigned char entry_length;
 	unsigned char entries_per_block;
+	unsigned short next_block;
 	unsigned short file_count;
 	unsigned short bit_map_pointer;
 	unsigned short total_blocks;
 	unsigned char volume_name[16];
 	unsigned int creation_time;
+};
+
+struct file_entry_t {
+	unsigned char storage_type;
+	unsigned char name_length;
+	unsigned char file_name[16];
+	unsigned char file_type;
+	unsigned short key_pointer;
+	unsigned short blocks_used;
+	int eof;
+	int creation_time;
+	unsigned char version;
+	unsigned char min_version;
+	unsigned char access;
+	unsigned short aux_type;
+	int last_mod;
+	unsigned short header_pointer;
 };
 
     /* CATALOG_VALUES */
@@ -61,11 +93,11 @@ struct voldir_t {
 
 /* prodos_volume_bitmap.c */
 int prodos_voldir_free_space(struct voldir_t *voldir);
-void prodos_voldir_free_sector(struct voldir_t *voldir, int track, int sector);
-void prodos_voldir_reserve_sector(struct voldir_t *voldir, int track, int sector);
+int prodos_voldir_free_block(struct voldir_t *voldir, int block);
+int prodos_voldir_reserve_block(struct voldir_t *voldir, int block);
 void prodos_voldir_dump_bitmap(struct voldir_t *voldir);
-int prodos_voldir_find_free_sector(struct voldir_t *voldir,
-	int *found_track, int *found_sector);
+int prodos_voldir_find_free_block(struct voldir_t *voldir,
+	int *found_block);
 
 /* prodos_catalog.c */
 unsigned char prodos_char_to_type(char type, int lock);
