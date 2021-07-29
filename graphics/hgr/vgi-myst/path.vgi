@@ -1,0 +1,25 @@
+; Path from Myst
+CLS	255						; white background
+RECT	1	5	0	85	140	191	; ground left
+RECT	1	5	140	85	279	191	; ground right
+; tower
+;DRECT	0x4c	0x33	216	22	235	33	; tower
+DRECT	0x4c	216	216	22	235	33	; tower
+;RECT	6	6	216	22	235	33	; tower
+RECT	5	5	216	33	236	56	; mountain
+VTRI	5	216	33	207	216	60	; mountain
+; temple
+DRECT	0x4c	0x33	181	56	237	96	; tower
+VTRI	0	204	53	186	225	60	; triangle
+RECT	0	0	203	68	211	81	; door
+LINE	7	189	68	189	82		; columns
+LINE	7	197	67	197	84
+LINE	7	214	80	214	66
+LINE	7	224	78	223	65	
+; marker switch
+RECT	5	5	209	76	217	86	; marker switch
+; trees
+RECT	5	5	98	0	101	114	; tree ?
+VTRISK	1	97	0	88	110	87	4	; leaves?
+VTRISK	1	101	0	88	110	87	4	; leaves?
+END
