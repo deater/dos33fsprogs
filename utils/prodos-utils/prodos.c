@@ -49,10 +49,10 @@ static int prodos_read_voldir(int fd, struct voldir_t *voldir, int interleave) {
 	memcpy(voldir->volume_name,&voldir_buffer[0x5],voldir->name_length);
 	voldir->volume_name[voldir->name_length]=0;
 
-	voldir->creation_time=(voldir_buffer[0x1c]<<24)|
-			(voldir_buffer[0x1d]<<16)|
-			(voldir_buffer[0x1e]<<8)|
-			(voldir_buffer[0x1f]<<0);
+	voldir->creation_time=(voldir_buffer[0x1c]<<16)|
+			(voldir_buffer[0x1d]<<24)|
+			(voldir_buffer[0x1e]<<0)|
+			(voldir_buffer[0x1f]<<8);
 
 	voldir->version=voldir_buffer[0x20];
 	voldir->min_version=voldir_buffer[0x21];

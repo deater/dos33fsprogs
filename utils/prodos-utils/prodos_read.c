@@ -13,18 +13,6 @@
 
 static int debug=0;
 
-#if 0
-static int debug=0,ignore_errors=0;
-
-static unsigned char get_high_byte(int value) {
-	return (value>>8)&0xff;
-}
-
-static unsigned char get_low_byte(int value) {
-	return (value&0xff);
-}
-#endif
-
 /* we want block 2 -> 0xb */
 static int dos_interleave[16]= {
 //	0,7,14,6,13,5,12,4,11,3,10,2,9,1,8,15,

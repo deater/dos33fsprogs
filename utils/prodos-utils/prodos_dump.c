@@ -31,15 +31,23 @@ static unsigned char month_names[12][4]={
 static void prodos_print_time(int t) {
 	int year,month,day,hour,minute;
 
+	/* babb0f08: 15:08 28 Dec 1993 should be 27 May 1993 15:08 */
+
+	/* 1011 1010 - yyyy yyym, y=101 1101 = 0x5d = 93 */
+	/* 1011 1011 - mmmd dddd, m=0101  = 0x05 = May */
+	/*                        d=1 1011 = 0x1b = 27 */
+	/* 0000 1111 - 000h hhhh, h=15 */
+	/* 0000 1000 - 00mm mmmm, m=8 */
+
 	/* epoch seems to be 1900 */
 	year=(t>>25)&0x7f;
-	month=(t>>20)&0xf;
+	month=(t>>21)&0xf;
 	day=(t>>16)&0x1f;
 	hour=(t>>8)&0x1f;
 	minute=t&0x3f;
 
 	printf("%d:%02d %d %s %d",hour,minute,
-		day+1,month_names[month],1900+year);
+		day,month_names[month-1],1900+year);
 
 }
 
@@ -225,22 +233,55 @@ int prodos_dump(struct voldir_t *voldir, int fd) {
 			file_entry.file_type=file_desc[0x10];
 			prodos_print_file_type(file_entry.file_type);
 
-#if 0
+			file_entry.key_pointer=file_desc[0x11]|
+					file_desc[0x12]<<8;
+			printf("\tKey pointer: $%x\n",file_entry.key_pointer);
 
-struct file_entry_t {
-        unsigned char file_type;
-        unsigned short key_pointer;
-        unsigned short blocks_used;
-        int eof;
-        int creation_time;
-        unsigned char version;
-        unsigned char min_version;
-        unsigned char access;
-        unsigned short aux_type;
-        int last_mod;
-        unsigned short header_pointer;
-};
-#endif
+			file_entry.blocks_used=file_desc[0x13]|
+					file_desc[0x14]<<8;
+			printf("\tBlocks Used: %d\n",file_entry.blocks_used);
+
+			file_entry.eof=file_desc[0x15]|
+					file_desc[0x16]<<8|
+					file_desc[0x17]<<16;
+			printf("\tFile size (eof): %d\n",file_entry.eof);
+
+			file_entry.creation_time=(file_desc[0x18]<<16)|
+	                        (file_desc[0x19]<<24)|
+        	                (file_desc[0x1a]<<0)|
+                	        (file_desc[0x1b]<<8);
+
+			printf("\tCreation Time (%x): ",file_entry.creation_time);
+			prodos_print_time(file_entry.creation_time);
+			printf("\n");
+
+			file_entry.version=file_desc[0x1c];
+			printf("\tVersion: %d\n",file_entry.version);
+
+			file_entry.min_version=file_desc[0x1d];
+			printf("\tMin Version: %d\n",file_entry.min_version);
+
+			file_entry.access=file_desc[0x1e];
+			printf("\tAccess (%x): ",file_entry.access);
+			prodos_print_access(file_entry.access);
+			printf("\n");
+
+			file_entry.aux_type=file_desc[0x1f]|
+					file_desc[0x20]<<8;
+			printf("\tAux Type: %x\n",file_entry.aux_type);
+
+			file_entry.last_mod=(file_desc[0x21]<<16)|
+	                        (file_desc[0x22]<<24)|
+        	                (file_desc[0x23]<<0)|
+                	        (file_desc[0x24]<<8);
+
+			printf("\tLast mod Time: (%x) ",file_entry.last_mod);
+			prodos_print_time(file_entry.last_mod);
+			printf("\n");
+
+			file_entry.header_pointer=file_desc[0x25]|
+					file_desc[0x26]<<8;
+			printf("\tHeader pointer: %x\n",file_entry.header_pointer);
 
 		}
 
