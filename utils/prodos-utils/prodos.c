@@ -13,6 +13,7 @@
 
 static int debug=0,ignore_errors=0;
 
+#if 0
 static unsigned char get_high_byte(int value) {
 	return (value>>8)&0xff;
 }
@@ -20,6 +21,7 @@ static unsigned char get_high_byte(int value) {
 static unsigned char get_low_byte(int value) {
 	return (value&0xff);
 }
+#endif
 
     /* Read volume directory into a buffer */
 static int prodos_read_voldir(int fd, struct voldir_t *voldir, int interleave) {
@@ -80,6 +82,8 @@ static int prodos_check_file_exists(int fd,
 					char *filename,
 					int file_deleted) {
 
+#if 0
+
 	int catalog_track,catalog_sector;
 	int i,file_track;
 	char file_name[31];
@@ -87,7 +91,7 @@ static int prodos_check_file_exists(int fd,
 	struct voldir_t voldir;
 	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
 
-#if 0
+
 	/* read the VOLDIR into buffer */
 	prodos_read_voldir(fd,&voldir,interleave);
 
@@ -144,12 +148,14 @@ repeat_catalog:
 
 static int prodos_free_block(struct voldir_t *voldir,int block) {
 
+#if 0
+
 	int result;
 
 	/* mark as free using VOLDIR */
 	result=prodos_voldir_free_block(voldir,block);
 
-#if 0
+
 	/* write modified VTOC back out */
 	lseek(fd,DISK_OFFSET(PRODOS_VOLDIR_TRACK,PRODOS_VOLDIR_BLOCK),SEEK_SET);
 	result=write(fd,&voldir,PRODOS_BYTES_PER_BLOCK);
@@ -164,6 +170,8 @@ static int prodos_free_block(struct voldir_t *voldir,int block) {
 
 static int prodos_allocate_sector(int fd, struct voldir_t *voldir) {
 
+#if 0
+
 	int found_track=0,found_sector=0;
 	int result;
 
@@ -175,7 +183,7 @@ static int prodos_allocate_sector(int fd, struct voldir_t *voldir) {
 		return -1;
 	}
 
-#if 0
+
 	/* store new track/direction info */
 	voldir[VTOC_LAST_ALLOC_T]=found_track;
 
@@ -189,8 +197,10 @@ static int prodos_allocate_sector(int fd, struct voldir_t *voldir) {
 	result=write(fd,voldir,PRODOS_BYTES_PER_BLOCK);
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
-#endif
+
 	return ((found_track<<8)+found_sector);
+#endif
+	return 0;
 }
 
 
@@ -210,6 +220,7 @@ static int prodos_add_file(struct voldir_t *voldir,
 		int file_type, int address, int length,
 		char *filename, char *apple_filename) {
 
+#if 0
 	int free_space,file_size,needed_sectors;
 	struct stat file_info;
 	int size_in_sectors=0;
@@ -256,7 +267,7 @@ static int prodos_add_file(struct voldir_t *voldir,
 		if (length==0) length=file_size;
 		file_size+=4;
 	}
-#if 0
+
 	/* We need to round up to nearest sector size */
 	/* Add an extra sector for the T/S list */
 	/* Then add extra sector for a T/S list every 122*256 bytes (~31k) */
@@ -481,6 +492,7 @@ got_a_dentry:
     /* load a file.  fts=entry/track/sector */
 static int prodos_load_file(int fd,int fts,char *filename) {
 
+#if 0
 	int output_fd;
 	int catalog_file,catalog_track,catalog_sector;
 	int file_type,file_size=-1,tsl_track,tsl_sector,data_t,data_s;
@@ -577,53 +589,19 @@ keep_saving:
 	}
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
-
+#endif
 	return 0;
 
 }
 
-    /* lock a file.  fts=entry/track/sector */
-static int prodos_lock_file(int fd,int fts,int lock) {
 
-	int catalog_file,catalog_track,catalog_sector;
-	int file_type,result;
-	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
-
-	catalog_file=fts>>16;
-	catalog_track=(fts>>8)&0xff;
-	catalog_sector=(fts&0xff);
-
-
-	/* Read in Catalog Sector */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
-
-	file_type=sector_buffer[CATALOG_FILE_LIST+
-				(catalog_file*CATALOG_ENTRY_SIZE)
-				+FILE_TYPE];
-
-	if (lock) file_type|=0x80;
-	else file_type&=0x7f;
-
-	sector_buffer[CATALOG_FILE_LIST+
-				(catalog_file*CATALOG_ENTRY_SIZE)
-				+FILE_TYPE]=file_type;
-
-	/* write back modified catalog sector */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=write(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
-
-	if (result<0) fprintf(stderr,"Error on I/O\n");
-
-	return 0;
-
-}
 
     /* rename a file.  fts=entry/track/sector */
     /* FIXME: can we rename a locked file?    */
     /* FIXME: validate the new filename is valid */
 static int prodos_rename_file(int fd,int fts,char *new_name) {
 
+#if 0
 	int catalog_file,catalog_track,catalog_sector;
 	int x,result;
 	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
@@ -657,55 +635,14 @@ static int prodos_rename_file(int fd,int fts,char *new_name) {
 	if (result<0) {
 		fprintf(stderr,"Error on I/O\n");
 	}
-
-	return 0;
-}
-
-	/* undelete a file.  fts=entry/track/sector */
-	/* FIXME: validate the new filename is valid */
-static int prodos_undelete_file(int fd,int fts,char *new_name) {
-
-	int catalog_file,catalog_track,catalog_sector;
-	char replacement_char;
-	int result;
-	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
-
-	catalog_file=fts>>16;
-	catalog_track=(fts>>8)&0xff;
-	catalog_sector=(fts&0xff);
-
-	/* Read in Catalog Sector */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
-
-	/* get the stored track value, and put it back  */
-	/* FIXME: should walk file to see if T/s valild */
-	/* by setting the track value to FF which indicates deleted file */
-	sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)]=
-		sector_buffer[CATALOG_FILE_LIST+
-		(catalog_file*CATALOG_ENTRY_SIZE)+
-		FILE_NAME+29];
-
-	/* restore file name if possible */
-	replacement_char=0xa0;
-	if (strlen(new_name)>29) {
-		replacement_char=new_name[29]^0x80;
-	}
-
-	sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+
-		FILE_NAME+29]=replacement_char;
-
-	/* write back modified catalog sector */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=write(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
-
-	if (result<0) fprintf(stderr,"Error on I/O\n");
-
+#endif
 	return 0;
 }
 
 
 static int prodos_delete_file(struct voldir_t *voldir,int fd,int fsl) {
+
+#if 0
 
 	int i;
 	int catalog_track,catalog_sector,catalog_entry;
@@ -719,7 +656,7 @@ static int prodos_delete_file(struct voldir_t *voldir,int fd,int fsl) {
 	catalog_track=(fsl>>8)&0xff;
 	catalog_sector=(fsl&0xff);
 
-#if 0
+
 	/* Load in the catalog table for the file */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
@@ -795,29 +732,6 @@ keep_deleting:
 	return 0;
 }
 
-/* ??? */
-static int prodos_rename_hello(int fd, char *new_name) {
-
-	char buffer[PRODOS_BYTES_PER_BLOCK];
-	int i;
-
-	lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
-	read(fd,buffer,PRODOS_BYTES_PER_BLOCK);
-
-	for(i=0;i<30;i++) {
-		if (i<strlen(new_name)) {
-			buffer[0x75+i]=new_name[i]|0x80;
-		}
-		else {
-			buffer[0x75+i]=' '|0x80;
-		}
-	}
-
-	lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
-	write(fd,buffer,PRODOS_BYTES_PER_BLOCK);
-
-	return 0;
-}
 
 static void display_help(char *name, int version_only) {
 	printf("\nprodos version %s\n",VERSION);
@@ -826,28 +740,26 @@ static void display_help(char *name, int version_only) {
 
 	if (version_only) return;
 
-	printf("Usage: %s [-h] [-y] [-x] disk_image COMMAND [options]\n",name);
+	printf("Usage: %s [-h] [i interleave] [-y] [-x] disk_image COMMAND [options]\n",name);
 	printf("\t-h : this help message\n");
-	printf("\t-y : always answer yes for anying warning questions\n");
+	printf("\t-i : interleave (prodos or dos33)\n");
+	printf("\t-y : always answer yes for warning questions\n");
 	printf("\t-x : ignore errors (useful for making invalid filenames)\n");
 	printf("\n");
-	printf("  Where disk_image is a valid dos3.3 disk image\n"
+	printf("  Where disk_image is a valid PRODOS disk image\n"
 		"  and COMMAND is one of the following:\n");
-	printf("\tCATALOG\n");
-	printf("\tLOAD     apple_file <local_file>\n");
-	printf("\tSAVE     type local_file <apple_file>\n");
-	printf("\tBSAVE    [-a addr] [-l len] local_file <apple_file>\n");
-	printf("\tDELETE   apple_file\n");
-	printf("\tLOCK     apple_file\n");
-	printf("\tUNLOCK   apple_file\n");
-	printf("\tRENAME   apple_file_old apple_file_new\n");
-	printf("\tUNDELETE apple_file\n");
+	printf("\tCATALOG   [dir]\n");
+	printf("\tLOAD      apple_file <local_file>\n");
+	printf("\tSAVE      type local_file <apple_file>\n");
+	printf("\tBSAVE     [-a addr] [-l len] local_file <apple_file>\n");
+	printf("\tDELETE    apple_file\n");
+	printf("\tRENAME    apple_file_old apple_file_new\n");
 	printf("\tDUMP\n");
-	printf("\tHELLO    apple_file\n");
-#if 0
-	printf("\tINIT\n");
-	printf("\tCOPY\n");
-#endif
+	printf("\tTYPE      TODO: set type\n");
+	printf("\tAUX       TODO: set aux\n");
+	printf("\tTIMESTAMP TODO: set timestamp\n");
+	printf("\tACCESS    TODO: set access\n");
+
 	printf("\n");
 	return;
 }
@@ -856,20 +768,13 @@ static void display_help(char *name, int version_only) {
 #define COMMAND_SAVE	 1
 #define COMMAND_CATALOG	 2
 #define COMMAND_DELETE	 3
-#define COMMAND_UNDELETE 4
-#define COMMAND_LOCK	 5
-#define COMMAND_UNLOCK	 6
-#define COMMAND_INIT	 7
-#define COMMAND_RENAME	 8
-#define COMMAND_COPY	 9
-#define COMMAND_DUMP	10
-#define COMMAND_HELLO	11
-#define COMMAND_BSAVE	12
-#define COMMAND_BLOAD	13
-#define COMMAND_SHOWFREE	14
-#define COMMAND_RAW_WRITE	15
+#define COMMAND_RENAME	 4
+#define COMMAND_DUMP	 5
+#define COMMAND_BSAVE	 6
+#define COMMAND_BLOAD	 7
+#define COMMAND_SHOWFREE	8
 
-#define MAX_COMMAND	15
+#define MAX_COMMAND	9
 #define COMMAND_UNKNOWN	255
 
 static struct command_type {
@@ -880,17 +785,11 @@ static struct command_type {
 	{COMMAND_SAVE,"SAVE"},
 	{COMMAND_CATALOG,"CATALOG"},
 	{COMMAND_DELETE,"DELETE"},
-	{COMMAND_UNDELETE,"UNDELETE"},
-	{COMMAND_LOCK,"LOCK"},
-	{COMMAND_UNLOCK,"UNLOCK"},
-	{COMMAND_INIT,"INIT"},
 	{COMMAND_RENAME,"RENAME"},
-	{COMMAND_COPY,"COPY"},
 	{COMMAND_DUMP,"DUMP"},
-	{COMMAND_HELLO,"HELLO"},
 	{COMMAND_BSAVE,"BSAVE"},
+	{COMMAND_BLOAD,"BLOAD"},
 	{COMMAND_SHOWFREE,"SHOWFREE"},
-	{COMMAND_RAW_WRITE,"RAWWRITE"},
 };
 
 static int lookup_command(char *name) {
@@ -912,12 +811,12 @@ static int truncate_filename(char *out, char *in) {
 	int truncated=0;
 
 	/* Truncate filename if too long */
-	if (strlen(in)>30) {
-		fprintf(stderr,"Warning!  Truncating %s to 30 chars\n",in);
+	if (strlen(in)>15) {
+		fprintf(stderr,"Warning!  Truncating %s to 15 chars\n",in);
 		truncated=1;
 	}
-	strncpy(out,in,30);
-	out[30]='\0';
+	strncpy(out,in,15);
+	out[15]='\0';
 
 	return truncated;
 }
@@ -926,8 +825,8 @@ int main(int argc, char **argv) {
 
 	char image[BUFSIZ];
 	unsigned char type='b';
-	int dos_fd=0,i;
-	int interleave=PRODOS_INTERLEAVE_PRODOS;
+	int prodos_fd=0,i;
+	int interleave=PRODOS_INTERLEAVE_PRODOS,arg_interleave=0;
 
 	int command,catalog_entry;
 	char temp_string[BUFSIZ];
@@ -941,7 +840,7 @@ int main(int argc, char **argv) {
 	struct voldir_t voldir;
 
 	/* Check command line arguments */
-	while ((c = getopt (argc, argv,"a:l:t:s:dhvxy"))!=-1) {
+	while ((c = getopt (argc, argv,"a:i:l:t:s:dhvxy"))!=-1) {
 		switch (c) {
 
 		case 'd':
@@ -951,6 +850,15 @@ int main(int argc, char **argv) {
 		case 'a':
 			address=strtol(optarg,&endptr,0);
 			if (debug) fprintf(stderr,"Address=%d\n",address);
+			break;
+		case 'i':
+			if (!strncmp(optarg,"prodos",6)) {
+				arg_interleave=1;
+			}
+			if (!strncmp(optarg,"dos33",5)) {
+				arg_interleave=2;
+			}
+			if (debug) fprintf(stderr,"Interleave=%d\n",arg_interleave);
 			break;
 		case 'l':
 			length=strtol(optarg,&endptr,0);
@@ -977,8 +885,8 @@ int main(int argc, char **argv) {
 
 	/* get argument 1, which is image name */
 	strncpy(image,argv[optind],BUFSIZ-1);
-	dos_fd=open(image,O_RDWR);
-	if (dos_fd<0) {
+	prodos_fd=open(image,O_RDWR);
+	if (prodos_fd<0) {
 		fprintf(stderr,"Error opening disk_image: %s\n",image);
 		return -1;
 	}
@@ -987,14 +895,19 @@ int main(int argc, char **argv) {
 		printf("checking extension: %s\n",&image[strlen(image)-4]);
 	}
 
+	/* Try to autodetch interleave based on filename */
 	if (strlen(image)>4) {
 		if (!strncmp(&image[strlen(image)-4],".dsk",4)) {
 			if (debug) printf("Detected DOS33\n");
 			interleave=PRODOS_INTERLEAVE_DOS33;
 		}
 	}
+	/* override inteleave if set */
+	if (arg_interleave) {
+		interleave=arg_interleave-1;
+	}
 
-	prodos_read_voldir(dos_fd,&voldir,interleave);
+	prodos_read_voldir(prodos_fd,&voldir,interleave);
 
 	/* Move to next argument */
 	optind++;
@@ -1057,7 +970,7 @@ int main(int argc, char **argv) {
 
 
 		/* get the entry/track/sector for file */
-		catalog_entry=prodos_check_file_exists(dos_fd,
+		catalog_entry=prodos_check_file_exists(prodos_fd,
 							apple_filename,
 							DOS33_FILE_NORMAL);
 		if (catalog_entry<0) {
@@ -1066,13 +979,13 @@ int main(int argc, char **argv) {
 			goto exit_and_close;
 		}
 
-		prodos_load_file(dos_fd,catalog_entry,local_filename);
+		prodos_load_file(prodos_fd,catalog_entry,local_filename);
 
 		break;
 
        case COMMAND_CATALOG:
 
-		prodos_catalog(dos_fd,&voldir);
+		prodos_catalog(prodos_fd,&voldir);
 
 		break;
 
@@ -1095,7 +1008,7 @@ int main(int argc, char **argv) {
 	case COMMAND_BSAVE:
 
 		if (debug) printf("\ttype=%c\n",type);
-#if 0
+//#if 0
 		if (argc==optind) {
 			fprintf(stderr,"Error! Need file_name\n");
 
@@ -1143,7 +1056,7 @@ int main(int argc, char **argv) {
 
 		if (debug) printf("\tApple filename: %s\n",apple_filename);
 
-		catalog_entry=prodos_check_file_exists(dos_fd,apple_filename,
+		catalog_entry=prodos_check_file_exists(prodos_fd,apple_filename,
 							DOS33_FILE_NORMAL);
 
 		if (catalog_entry>=0) {
@@ -1157,28 +1070,21 @@ int main(int argc, char **argv) {
 				}
 			}
 			fprintf(stderr,"Deleting previous version...\n");
-			prodos_delete_file(voldir,dos_fd,catalog_entry);
+			prodos_delete_file(&voldir,prodos_fd,catalog_entry);
 		}
 		if (command==COMMAND_SAVE) {
-			prodos_add_file(&voldir,dos_fd,type,
+			prodos_add_file(&voldir,prodos_fd,type,
 				ADD_RAW, address, length,
 				local_filename,apple_filename);
 		}
 		else {
-			prodos_add_file(&voldir,dos_fd,type,
+			prodos_add_file(&voldir,prodos_fd,type,
 				ADD_BINARY, address, length,
 				local_filename,apple_filename);
 		}
-#endif
+//#endif
 		break;
 
-
-	case COMMAND_RAW_WRITE:
-
-		fprintf(stderr,"ERROR!  Not implemented!\n\n");
-		goto exit_and_close;
-
-		break;
 
 	case COMMAND_DELETE:
 
@@ -1191,7 +1097,7 @@ int main(int argc, char **argv) {
 
 		truncate_filename(apple_filename,argv[optind]);
 
-		catalog_entry=prodos_check_file_exists(dos_fd,
+		catalog_entry=prodos_check_file_exists(prodos_fd,
 						apple_filename,
 						DOS33_FILE_NORMAL);
 		if (catalog_entry<0) {
@@ -1199,44 +1105,18 @@ int main(int argc, char **argv) {
 					apple_filename);
 			goto exit_and_close;
 		}
-		prodos_delete_file(&voldir,dos_fd,catalog_entry);
+		prodos_delete_file(&voldir,prodos_fd,catalog_entry);
 
 		break;
 
 	case COMMAND_DUMP:
 		printf("Dumping %s!\n",image);
-		prodos_dump(&voldir,dos_fd);
+		prodos_dump(&voldir,prodos_fd);
 		break;
 
 	case COMMAND_SHOWFREE:
 		printf("Showing Free %s!\n",image);
-		prodos_showfree(&voldir,dos_fd);
-		break;
-
-	case COMMAND_LOCK:
-	case COMMAND_UNLOCK:
-		/* check and make sure we have apple_filename */
-		if (argc==optind) {
-			fprintf(stderr,"Error! Need apple file_name\n");
-			fprintf(stderr,"%s %s %s apple_filename\n",
-				argv[0],image,temp_string);
-			goto exit_and_close;
-		}
-
-		truncate_filename(apple_filename,argv[optind]);
-
-		/* get the entry/track/sector for file */
-		catalog_entry=prodos_check_file_exists(dos_fd,
-							apple_filename,
-							DOS33_FILE_NORMAL);
-		if (catalog_entry<0) {
-			fprintf(stderr,"Error!  %s not found!\n",
-				apple_filename);
-			goto exit_and_close;
-		}
-
-		prodos_lock_file(dos_fd,catalog_entry,command==COMMAND_LOCK);
-
+		prodos_showfree(&voldir,prodos_fd);
 		break;
 
 	case COMMAND_RENAME:
@@ -1264,7 +1144,7 @@ int main(int argc, char **argv) {
 		truncate_filename(new_filename,argv[optind]);
 
 		/* get the entry/track/sector for file */
-		catalog_entry=prodos_check_file_exists(dos_fd,
+		catalog_entry=prodos_check_file_exists(prodos_fd,
 						apple_filename,
 						DOS33_FILE_NORMAL);
 		if (catalog_entry<0) {
@@ -1273,71 +1153,17 @@ int main(int argc, char **argv) {
 			goto exit_and_close;
 		}
 
-		prodos_rename_file(dos_fd,catalog_entry,new_filename);
+		prodos_rename_file(prodos_fd,catalog_entry,new_filename);
 
 		break;
 
-	case COMMAND_UNDELETE:
-		/* check and make sure we have apple_filename */
-		if (argc==optind) {
-			fprintf(stderr,"Error! Need apple file_name\n");
-			fprintf(stderr,"%s %s UNDELETE apple_filename\n\n",
-				argv[0],image);
-			goto exit_and_close;
-		}
-
-		/* Truncate filename if too long */
-		/* what to do about last char ? */
-
-		truncate_filename(apple_filename,argv[optind]);
-
-		/* get the entry/track/sector for file */
-		catalog_entry=prodos_check_file_exists(dos_fd,
-						apple_filename,
-						DOS33_FILE_DELETED);
-		if (catalog_entry<0) {
-			fprintf(stderr,"Error!  %s not found!\n",
-				apple_filename);
-			goto exit_and_close;
-		}
-
-		prodos_undelete_file(dos_fd,catalog_entry,apple_filename);
-
-		break;
-
-	case COMMAND_HELLO:
-		if (argc==optind) {
-			fprintf(stderr,"Error! Need file_name\n");
-			fprintf(stderr,"%s %s HELLO apple_filename\n\n",
-				argv[0],image);
-			goto exit_and_close;
-		}
-
-		truncate_filename(apple_filename,argv[optind]);
-
-		catalog_entry=prodos_check_file_exists(dos_fd,
-						apple_filename,
-						DOS33_FILE_NORMAL);
-
-		if (catalog_entry<0) {
-			fprintf(stderr,
-				"Warning!  File %s does not exist\n",
-					apple_filename);
-		}
-		prodos_rename_hello(dos_fd,apple_filename);
-		break;
-
-	case COMMAND_INIT:
-		/* use common code from mkprodosfs? */
-	case COMMAND_COPY:
-		/* use temp file?  Walking a sector at a time seems a pain */
 	default:
 		fprintf(stderr,"Sorry, unsupported command %s\n\n",temp_string);
 		goto exit_and_close;
 	}
 
 exit_and_close:
-	close(dos_fd);
+	close(prodos_fd);
 
 	return 0;
 }

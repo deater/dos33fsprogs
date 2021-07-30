@@ -5,7 +5,7 @@
 
 #include "prodos.h"
 
-static int debug=0;
+//static int debug=0;
 
 
 	/* returns the next valid catalog entry */
