@@ -13,15 +13,6 @@
 
 static int debug=0,ignore_errors=0;
 
-#if 0
-static unsigned char get_high_byte(int value) {
-	return (value>>8)&0xff;
-}
-
-static unsigned char get_low_byte(int value) {
-	return (value&0xff);
-}
-#endif
 
     /* Read volume directory into a buffer */
 static int prodos_read_voldir(int fd, struct voldir_t *voldir, int interleave) {
@@ -77,73 +68,25 @@ static int prodos_read_voldir(int fd, struct voldir_t *voldir, int interleave) {
 
 
 	/* Checks if "filename" exists */
-	/* returns entry/block  */
-static int prodos_check_file_exists(int fd,
+	/* returns file type  */
+static int prodos_check_file_exists(struct voldir_t *voldir,
 					char *filename,
-					int file_deleted) {
-
-#if 0
-
-	int catalog_track,catalog_sector;
-	int i,file_track;
-	char file_name[31];
-	int result;
-	struct voldir_t voldir;
-	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
+					struct file_entry_t *file) {
 
 
-	/* read the VOLDIR into buffer */
-	prodos_read_voldir(fd,&voldir,interleave);
+	int catalog_block,catalog_offset,catalog_inode;
 
-	/* FIXME: we have a function for this */
-	/* get the catalog track and sector from the VTOC */
-	catalog_track=voldir[VTOC_CATALOG_T];
-	catalog_sector=voldir[VTOC_CATALOG_S];
+	catalog_block=PRODOS_VOLDIR_KEY_BLOCK;
+	catalog_offset=0;       /* skip the header */
+	catalog_inode=(catalog_block<<8)|catalog_offset;
 
-repeat_catalog:
 
-	/* Read in Catalog Sector */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
-
-	/* scan all file entries in catalog sector */
-	for(i=0;i<7;i++) {
-		file_track=catalog_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)];
-		/* 0xff means file deleted */
-		/* 0x0 means empty */
-		if (file_track!=0x0) {
-
-			if (file_track==0xff) {
-				prodos_filename_to_ascii(file_name,
-					catalog_buffer+(CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE+FILE_NAME)),29);
-
-				if (file_deleted) {
-					/* return if we found the file */
-					if (!strncmp(filename,file_name,29)) {
-						return ((i<<16)+(catalog_track<<8)+catalog_sector);
-					}
-				}
-			}
-			else {
-				prodos_filename_to_ascii(file_name,
-					catalog_buffer+(CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE+FILE_NAME)),30);
-				/* return if we found the file */
-				if (!strncmp(filename,file_name,30)) {
-					return ((i<<16)+(catalog_track<<8)+catalog_sector);
-				}
-			}
-		}
+	while(1) {
+		catalog_inode=prodos_find_next_file(catalog_inode,voldir);
+		if (catalog_inode==-1) break;
 	}
 
-	/* point to next catalog track/sector */
-	catalog_track=catalog_buffer[CATALOG_NEXT_T];
-	catalog_sector=catalog_buffer[CATALOG_NEXT_S];
-
-	if (catalog_sector!=0) goto repeat_catalog;
-
-	if (result<0) fprintf(stderr,"Error on I/O\n");
-#endif
-	return -1;
+	return 0;
 }
 
 static int prodos_free_block(struct voldir_t *voldir,int block) {
@@ -489,10 +432,10 @@ got_a_dentry:
 }
 
 
-    /* load a file.  fts=entry/track/sector */
-static int prodos_load_file(int fd,int fts,char *filename) {
+    /* load a file from the disk image.  */
+static int prodos_load_file(struct voldir_t *voldir,
+		int inode,char *filename) {
 
-#if 0
 	int output_fd;
 	int catalog_file,catalog_track,catalog_sector;
 	int file_type,file_size=-1,tsl_track,tsl_sector,data_t,data_s;
@@ -509,24 +452,7 @@ static int prodos_load_file(int fd,int fts,char *filename) {
 		return -1;
 	}
 
-	catalog_file=fts>>16;
-	catalog_track=(fts>>8)&0xff;
-	catalog_sector=(fts&0xff);
-
-
-	/* Read in Catalog Sector */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
-
-	tsl_track=sector_buffer[CATALOG_FILE_LIST+
-			(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TS_LIST_T];
-	tsl_sector=sector_buffer[CATALOG_FILE_LIST+
-			(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TS_LIST_S];
-	file_type=prodos_file_type(sector_buffer[CATALOG_FILE_LIST+
-			(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TYPE]);
-
-//	printf("file_type: %c\n",file_type);
-
+#if 0
 keep_saving:
 	/* Read in TSL Sector */
 	lseek(fd,DISK_OFFSET(tsl_track,tsl_sector),SEEK_SET);
@@ -838,6 +764,7 @@ int main(int argc, char **argv) {
 	int c;
 	int address=0, length=0;
 	struct voldir_t voldir;
+	struct file_entry_t file;
 
 	/* Check command line arguments */
 	while ((c = getopt (argc, argv,"a:i:l:t:s:dhvxy"))!=-1) {

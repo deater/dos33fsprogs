@@ -215,12 +215,7 @@ int prodos_dump(struct voldir_t *voldir, int fd) {
 			memcpy(file_desc,
 				catalog_buffer+4+file*PRODOS_FILE_DESC_LEN,
 				PRODOS_FILE_DESC_LEN);
-
-			file_entry.storage_type=(file_desc[0]>>4)&0xf;
-			file_entry.name_length=file_desc[0]&0xf;
-			memcpy(&file_entry.file_name[0],&file_desc[1],
-				file_entry.name_length);
-			file_entry.file_name[file_entry.name_length]=0;
+			prodos_populate_filedesc(&file_desc,&file_entry);
 
 			if (file_entry.storage_type==PRODOS_FILE_DELETED) continue;
 
@@ -230,57 +225,32 @@ int prodos_dump(struct voldir_t *voldir, int fd) {
 			prodos_print_storage_type(file_entry.storage_type);
 
 			printf("\t");
-			file_entry.file_type=file_desc[0x10];
 			prodos_print_file_type(file_entry.file_type);
 
-			file_entry.key_pointer=file_desc[0x11]|
-					file_desc[0x12]<<8;
 			printf("\tKey pointer: $%x\n",file_entry.key_pointer);
 
-			file_entry.blocks_used=file_desc[0x13]|
-					file_desc[0x14]<<8;
 			printf("\tBlocks Used: %d\n",file_entry.blocks_used);
 
-			file_entry.eof=file_desc[0x15]|
-					file_desc[0x16]<<8|
-					file_desc[0x17]<<16;
 			printf("\tFile size (eof): %d\n",file_entry.eof);
-
-			file_entry.creation_time=(file_desc[0x18]<<16)|
-	                        (file_desc[0x19]<<24)|
-        	                (file_desc[0x1a]<<0)|
-                	        (file_desc[0x1b]<<8);
 
 			printf("\tCreation Time (%x): ",file_entry.creation_time);
 			prodos_print_time(file_entry.creation_time);
 			printf("\n");
 
-			file_entry.version=file_desc[0x1c];
 			printf("\tVersion: %d\n",file_entry.version);
 
-			file_entry.min_version=file_desc[0x1d];
 			printf("\tMin Version: %d\n",file_entry.min_version);
 
-			file_entry.access=file_desc[0x1e];
 			printf("\tAccess (%x): ",file_entry.access);
 			prodos_print_access(file_entry.access);
 			printf("\n");
 
-			file_entry.aux_type=file_desc[0x1f]|
-					file_desc[0x20]<<8;
 			printf("\tAux Type: %x\n",file_entry.aux_type);
-
-			file_entry.last_mod=(file_desc[0x21]<<16)|
-	                        (file_desc[0x22]<<24)|
-        	                (file_desc[0x23]<<0)|
-                	        (file_desc[0x24]<<8);
 
 			printf("\tLast mod Time: (%x) ",file_entry.last_mod);
 			prodos_print_time(file_entry.last_mod);
 			printf("\n");
 
-			file_entry.header_pointer=file_desc[0x25]|
-					file_desc[0x26]<<8;
 			printf("\tHeader pointer: %x\n",file_entry.header_pointer);
 
 		}

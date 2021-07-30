@@ -106,10 +106,13 @@ int prodos_voldir_find_free_block(struct voldir_t *voldir,
 	int *found_block);
 
 /* prodos_catalog.c */
-unsigned char prodos_char_to_type(char type, int lock);
+int prodos_find_next_file(int inode, struct voldir_t *voldir);
+int prodos_populate_filedesc(unsigned char *file_desc,
+                struct file_entry_t *file_entry);
+//unsigned char prodos_char_to_type(char type, int lock);
 void prodos_catalog(int dos_fd, struct voldir_t *voldir);
-char *prodos_filename_to_ascii(char *dest,unsigned char *src,int len);
-unsigned char prodos_file_type(int value);
+//char *prodos_filename_to_ascii(char *dest,unsigned char *src,int len);
+//unsigned char prodos_file_type(int value);
 
 /* prodos_dump.c */
 int prodos_dump(struct voldir_t *voldir, int fd);

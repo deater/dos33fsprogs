@@ -13,7 +13,7 @@
 
 	/* inode = block<<8|entry */
 
-static int prodos_find_next_file(int inode, struct voldir_t *voldir) {
+int prodos_find_next_file(int inode, struct voldir_t *voldir) {
 
 	int result,catalog_block,catalog_offset;
 	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
@@ -112,7 +112,8 @@ static int prodos_print_short_filetype(int type) {
 	return 0;
 }
 
-static unsigned char prodos_capital_month_names[12][4]={
+static unsigned char prodos_capital_month_names[13][4]={
+	"???",
         "JAN","FEB","MAR","APR","MAY","JUN",
         "JUL","AUG","SEP","OCT","NOV","DEC",
 };
@@ -128,7 +129,7 @@ static int prodos_text_timestamp(int t, unsigned char *timestamp) {
 	minute=t&0x3f;
 
 	sprintf((char *)timestamp,"%2d-%s-%02d %2d:%02d",
-		day,prodos_capital_month_names[month-1],year,hour,minute);
+		day,prodos_capital_month_names[month],year,hour,minute);
 	timestamp[16]=0;
 
 	return 0;
