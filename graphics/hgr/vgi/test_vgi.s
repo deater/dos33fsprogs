@@ -27,7 +27,7 @@ vgi_test:
 done:
 	jmp	done
 
-.include "vgi_common.s"
+.include "./vgi_fast/vgi_common.s"
 
 .include "new.data"
 
