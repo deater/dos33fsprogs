@@ -7,194 +7,209 @@
 
 static int debug=0;
 
-unsigned char prodos_file_type(int value) {
-
-	unsigned char result;
-
-	switch(value&0x7f) {
-		case 0x0: result='T'; break;
-		case 0x1: result='I'; break;
-		case 0x2: result='A'; break;
-		case 0x4: result='B'; break;
-		case 0x8: result='S'; break;
-		case 0x10: result='R'; break;
-		case 0x20: result='N'; break;
-		case 0x40: result='L'; break;
-		default: result='?'; break;
-	}
-	return result;
-}
-
-
-unsigned char prodos_char_to_type(char type, int lock) {
-
-	unsigned char result=0,temp_type;
-#if 0
-	temp_type=type;
-	/* Covert to upper case */
-	if (temp_type>='a') temp_type=temp_type-0x20;
-
-	switch(temp_type) {
-		case 'T': result=0x0; break;
-		case 'I': result=0x1; break;
-		case 'A': result=0x2; break;
-		case 'B': result=0x4; break;
-		case 'S': result=0x8; break;
-		case 'R': result=0x10; break;
-		case 'N': result=0x20; break;
-		case 'L': result=0x40; break;
-		default: result=0x0;
-	}
-	if (lock) result|=0x80;
-#endif
-	return result;
-}
-
-	/* prodos filenames have top bit set on ascii chars */
-	/* and are padded with spaces */
-char *prodos_filename_to_ascii(char *dest,unsigned char *src,int len) {
-
-	int i=0,last_nonspace=0;
-
-	for(i=0;i<len;i++) if (src[i]!=0xA0) last_nonspace=i;
-
-	for(i=0;i<last_nonspace+1;i++) {
-		dest[i]=src[i]^0x80; /* toggle top bit */
-	}
-
-	dest[i]='\0';
-	return dest;
-}
-
-	/* Get a T/S value from a Catalog Sector */
-static int prodos_get_catalog_ts(struct voldir_t *voldir) {
-
-//	return TS_TO_INT(voldir[VTOC_CATALOG_T],voldir[VTOC_CATALOG_S]);
-	return 0;
-}
 
 	/* returns the next valid catalog entry */
 	/* after the one passed in */
-static int prodos_find_next_file(int catalog_tsf,struct voldir_t *voldir) {
 
-	int catalog_track,catalog_sector,catalog_file;
-	int file_track,i;
-	int result;
-	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
+	/* inode = block<<8|entry */
 
-	catalog_file=catalog_tsf>>16;
-	catalog_track=(catalog_tsf>>8)&0xff;
-	catalog_sector=(catalog_tsf&0xff);
+static int prodos_find_next_file(int inode, struct voldir_t *voldir) {
 
-	if (debug) {
-		fprintf(stderr,"CATALOG FIND NEXT, "
-			"CURRENT FILE=%X TRACK=%X SECTOR=%X\n",
-			catalog_file,catalog_track,catalog_sector);
-	}
-#if 0
-catalog_loop:
+	int result,catalog_block,catalog_offset;
+	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
+	int storage_type,file;
 
-	/* Read in Catalog Sector */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
-	if (result<0) {
-		fprintf(stderr,"Error on I/O %s\n",strerror(errno));
-		return -1;
-	}
+	catalog_block=inode>>8;
+	catalog_offset=inode&0xff;
 
-	i=catalog_file;
-	while(i<7) {
+	catalog_offset++;
 
-		file_track=sector_buffer[CATALOG_FILE_LIST+
-						(i*CATALOG_ENTRY_SIZE)];
-		/* 0xff means file deleted */
-		/* 0x0 means empty */
-		if (debug) {
-			if (file_track==0xff) fprintf(stderr,"\tFILE %d DELETED\n",i);
-			if (file_track==0x00) fprintf(stderr,"\tFILE %d UNALLOCATED\n",i);
+	while(1) {
+
+		/* Read in Sector */
+		result=prodos_read_block(voldir,catalog_buffer,catalog_block);
+                if (result<0) {
+			fprintf(stderr,"Error on I/O\n");
+			return -1;
 		}
 
-		if ((file_track!=0xff) && (file_track!=0x0)) {
-			if (debug) fprintf(stderr,"\tFOUND FILE %X TRACK $%X SECTOR $%X\n",i,catalog_track,catalog_sector);
-			return ((i<<16)+(catalog_track<<8)+catalog_sector);
+		for(file=catalog_offset;
+                        file<voldir->entries_per_block;file++) {
+
+			storage_type=(catalog_buffer[4+file*PRODOS_FILE_DESC_LEN]>>4)&0xf;
+
+			if (storage_type!=PRODOS_FILE_DELETED) {
+
+				return (catalog_block<<8)|file;
+			}
 		}
-		i++;
+
+		catalog_offset=0;
+		catalog_block=catalog_buffer[2]|
+				(catalog_buffer[3]<<8);
+		if (catalog_block==0) break;
+
 	}
 
-	catalog_track=sector_buffer[CATALOG_NEXT_T];
-	catalog_sector=sector_buffer[CATALOG_NEXT_S];
-
-	if (debug) fprintf(stderr,"\tTRYING NEXT SECTOR T=$%X S=$%X\n",
-		catalog_track,catalog_sector);
-
-	/* FIXME: this wouldn't happen on 140k disks */
-	/* but who knows if you're doing something fancy? */
-	if ((catalog_track<0) || (catalog_track>40)) {
-		return -1;
-	}
-
-	if (catalog_sector!=0) {
-		catalog_file=0;
-		goto catalog_loop;
-	}
-
-
-#endif
 	return -1;
 }
 
-static int prodos_print_file_info(int fd,int catalog_tsf) {
+int prodos_populate_filedesc(unsigned char *file_desc,
+		struct file_entry_t *file_entry) {
 
-	int catalog_track,catalog_sector,catalog_file,i;
-	char temp_string[BUFSIZ];
-	int result;
-	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
+	file_entry->storage_type=(file_desc[0]>>4)&0xf;
+	file_entry->name_length=file_desc[0]&0xf;
+	memcpy(&file_entry->file_name[0],&file_desc[1],
+		file_entry->name_length);
+	file_entry->file_name[file_entry->name_length]=0;
 
-	catalog_file=catalog_tsf>>16;
-	catalog_track=(catalog_tsf>>8)&0xff;
-	catalog_sector=(catalog_tsf&0xff);
+	file_entry->file_type=file_desc[0x10];
+	file_entry->key_pointer=file_desc[0x11]|file_desc[0x12]<<8;
+	file_entry->blocks_used=file_desc[0x13]|file_desc[0x14]<<8;
+	file_entry->eof=file_desc[0x15]|file_desc[0x16]<<8|
+		file_desc[0x17]<<16;
+	file_entry->creation_time=(file_desc[0x18]<<16)|
+			(file_desc[0x19]<<24)|
+			(file_desc[0x1a]<<0)|
+			(file_desc[0x1b]<<8);
+	file_entry->version=file_desc[0x1c];
+	file_entry->min_version=file_desc[0x1d];
+	file_entry->access=file_desc[0x1e];
+	file_entry->aux_type=file_desc[0x1f]|file_desc[0x20]<<8;
+	file_entry->last_mod=(file_desc[0x21]<<16)|
+			(file_desc[0x22]<<24)|
+			(file_desc[0x23]<<0)|
+			(file_desc[0x24]<<8);
+	file_entry->header_pointer=file_desc[0x25]|file_desc[0x26]<<8;
 
-	if (debug) fprintf(stderr,"CATALOG FILE=%X TRACK=%X SECTOR=%X\n",
-		catalog_file,catalog_track,catalog_sector);
-#if 0
-	/* Read in Catalog Sector */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
+	return 0;
+}
 
-	if (sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TYPE]>0x7f) {
-		printf("*");
+static int prodos_print_short_filetype(int type) {
+
+	switch(type) {
+		case 0x01: printf("BAD"); break;	/* Bad Blocks */
+		case 0x04: printf("TXT"); break;	/* ASCII Text */
+		case 0x06: printf("BIN"); break;	/* Binary */
+		case 0x0f: printf("DIR"); break;	/* Directory */
+		case 0x19: printf("ADB"); break;	/* Appleworks Database */
+		case 0x1A: printf("AWP"); break;	/* Appleworks Word Processing */
+		case 0x1B: printf("ASP"); break;	/* AppleWorks Spreadsheet */
+		case 0xEF: printf("PAS"); break;	/* PASCAL */
+		case 0xF0: printf("CMD"); break;	/* Command */
+                case 0xF1: case 0xF2: case 0xF3: case 0xF4:
+                case 0xF5: case 0xF6: case 0xF7: case 0xF8:
+				printf("USR"); break;
+		case 0xFC: printf("BAS"); break;	/* Applesoft BASIC */
+		case 0xFD: printf("VAR"); break;	/* Applesoft variables */
+                case 0xFE: printf("REL"); break;	/* Relocatable Object */
+                case 0xFF: printf("SYS"); break;	/* ProDOS system */
+		default:
+		case 0x00: printf("???"); break;
 	}
-	else {
-		printf(" ");
+
+
+	return 0;
+}
+
+static unsigned char prodos_capital_month_names[12][4]={
+        "JAN","FEB","MAR","APR","MAY","JUN",
+        "JUL","AUG","SEP","OCT","NOV","DEC",
+};
+
+static int prodos_text_timestamp(int t, unsigned char *timestamp) {
+
+	int year,month,day,hour,minute;
+
+	year=(t>>25)&0x7f;
+	month=(t>>21)&0xf;
+	day=(t>>16)&0x1f;
+	hour=(t>>8)&0x1f;
+	minute=t&0x3f;
+
+	sprintf((char *)timestamp,"%2d-%s-%02d %2d:%02d",
+		day,prodos_capital_month_names[month-1],year,hour,minute);
+	timestamp[16]=0;
+
+	return 0;
+
+}
+
+
+static int prodos_print_file_info(int inode, struct voldir_t *voldir) {
+
+	int result,catalog_block,catalog_offset;
+	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
+	unsigned char file_desc[PRODOS_FILE_DESC_LEN];
+	struct file_entry_t file_entry;
+	unsigned char timestamp[17];
+
+	catalog_block=inode>>8;
+	catalog_offset=inode&0xff;
+
+	/* Read in Sector */
+	result=prodos_read_block(voldir,catalog_buffer,catalog_block);
+	if (result<0) {
+		fprintf(stderr,"Error on I/O\n");
+		return -1;
 	}
 
-	printf("%c",prodos_file_type(sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TYPE]));
-	printf(" ");
-	printf("%.3i ",sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE+FILE_SIZE_L)]+
-		(sector_buffer[CATALOG_FILE_LIST+(catalog_file*CATALOG_ENTRY_SIZE+FILE_SIZE_H)]<<8));
+	memcpy(file_desc,
+		catalog_buffer+4+catalog_offset*PRODOS_FILE_DESC_LEN,
+		PRODOS_FILE_DESC_LEN);
 
-	prodos_filename_to_ascii(temp_string,sector_buffer+(CATALOG_FILE_LIST+
-			(catalog_file*CATALOG_ENTRY_SIZE+FILE_NAME)),30);
+	prodos_populate_filedesc(file_desc,&file_entry);
 
-	for(i=0;i<strlen(temp_string);i++) {
-		if (temp_string[i]<0x20) {
-			printf("^%c",temp_string[i]+0x40);
-		}
-		else {
-			printf("%c",temp_string[i]);
-		}
+	/* name */
+	printf(" %-16s",file_entry.file_name);
+
+	/* type */
+	prodos_print_short_filetype(file_entry.file_type);
+
+	/* blocks used */
+	printf("%8d  ",file_entry.blocks_used);
+
+	/* modified timestamp */
+	prodos_text_timestamp(file_entry.last_mod,timestamp);
+	printf("%s  ",timestamp);
+
+	/* creation timestamp */
+	prodos_text_timestamp(file_entry.creation_time,timestamp);
+	printf("%s ",timestamp);
+
+	/* eof */
+	printf("%8d ",file_entry.eof);
+
+	switch(file_entry.file_type) {
+
+//		case PRODOS_TYPE_TXT:
+//			printf("L=$%04X",file_entry.aux_type);
+//			break;
+		case PRODOS_TYPE_BIN:
+			printf("A=$%04X",file_entry.aux_type);
+			break;
+//		case PRODOS_TYPE_BAS:
+//			printf("A=$%04X",file_entry.aux_type);
+//			break;
+//		case PRODOS_TYPE_VAR:
+//			printf("A=$%04X",file_entry.aux_type);
+//			break;
+//		case PRODOS_TYPE_SYS:
+//			printf("A=$%04X",file_entry.aux_type);
+//			break;
+
+		default: break;
 	}
 
 	printf("\n");
 
-	if (result<0) fprintf(stderr,"Error on I/O\n");
-#endif
+
 	return 0;
 }
 
 void prodos_catalog(int dos_fd, struct voldir_t *voldir) {
 
-	int catalog_block,catalog_offset;
+	int catalog_block,catalog_offset,catalog_inode;
 	int blocks_free=0;
 
 	blocks_free=prodos_voldir_free_space(voldir);
@@ -202,21 +217,23 @@ void prodos_catalog(int dos_fd, struct voldir_t *voldir) {
 	printf("\n");
 	printf("/%s\n\n",voldir->volume_name);
 
-	printf(" NAME           TYPE  BLOCKS  MODIFIED        CREATED          ENDFILE SUBTYPE\n");
+	printf(" NAME           TYPE  BLOCKS  MODIFIED         CREATED          ENDFILE SUBTYPE\n");
 	printf("\n");
 
 	catalog_block=PRODOS_VOLDIR_KEY_BLOCK;
-	catalog_offset=1;	/* skip the header */
+	catalog_offset=0;	/* skip the header */
+	catalog_inode=(catalog_block<<8)|catalog_offset;
 
 	while(1) {
-		catalog_offset=prodos_find_next_file(catalog_offset,voldir);
-		if (catalog_offset<0) break;
+		catalog_inode=prodos_find_next_file(catalog_inode,voldir);
+		if (catalog_inode==-1) break;
+		prodos_print_file_info(catalog_inode,voldir);
 	}
 
 	printf("\n");
-	printf("BLOCKS FREE: % 3d ",blocks_free);
+	printf("BLOCKS FREE:  % 3d ",blocks_free);
 	printf("    BLOCKS USED: % 3d ",voldir->total_blocks-blocks_free);
 	printf("    TOTAL BLOCKS: % 3d ",voldir->total_blocks);
 
-	printf("\n");
+	printf("\n\n");
 }

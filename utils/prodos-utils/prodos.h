@@ -21,6 +21,12 @@
 #define PRODOS_FILE_SUBDIR_HDR	0x0e
 #define PRODOS_FILE_VOLUME_HDR	0x0f
 
+#define PRODOS_TYPE_TXT		0x04
+#define PRODOS_TYPE_BIN		0x06
+#define PRODOS_TYPE_BAS		0xFC
+#define PRODOS_TYPE_VAR		0xFD
+#define PRODOS_TYPE_SYS		0xFF
+
 struct voldir_t {
 	int fd;
 	int interleave;
