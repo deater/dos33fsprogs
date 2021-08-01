@@ -509,8 +509,9 @@ static int prodos_load_file(struct voldir_t *voldir,
 
 	int output_fd;
 	unsigned char data[PRODOS_BYTES_PER_BLOCK];
+	unsigned char index_block[PRODOS_BYTES_PER_BLOCK];
 	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
-	int result;
+	int result,chunk,chunk_block;
 	struct file_entry_t file;
 
 	/* FIXME!  Warn if overwriting file! */
@@ -546,9 +547,41 @@ static int prodos_load_file(struct voldir_t *voldir,
 			break;
 
 		case PRODOS_FILE_SAPLING:
-		case PRODOS_FILE_TREE:
-		case PRODOS_FILE_SUBDIR:
+			/* Just a single block */
+			if (debug) fprintf(stderr,"Loading index "
+					"block $%x\n",
+					file.key_pointer);
+			result=prodos_read_block(voldir,index_block,
+					file.key_pointer);
+			if (result<0) {
+				return result;
+			}
 
+			for(chunk=0;chunk<file.blocks_used;chunk++) {
+				chunk_block=(index_block[chunk])|(index_block[chunk+256]<<8);
+
+				result=prodos_read_block(voldir,data,
+						chunk_block);
+				if (result<0) {
+					return result;
+				}
+
+
+				result=write(output_fd,data,PRODOS_BYTES_PER_BLOCK);
+				if (result!=PRODOS_BYTES_PER_BLOCK) {
+					fprintf(stderr,"Error writing file!\n");
+					return -1;
+				}
+			}
+			/* truncate to actual size of file */
+			ftruncate(output_fd,file.eof);
+
+			break;
+
+		case PRODOS_FILE_TREE:
+
+
+		case PRODOS_FILE_SUBDIR:
 		case PRODOS_FILE_DELETED:
 		case PRODOS_FILE_SUBDIR_HDR:
 		case PRODOS_FILE_VOLUME_HDR:
@@ -559,70 +592,8 @@ static int prodos_load_file(struct voldir_t *voldir,
 			break;
 	}
 
-#if 0
-keep_saving:
-	/* Read in TSL Sector */
-	lseek(fd,DISK_OFFSET(tsl_track,tsl_sector),SEEK_SET);
-	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
-	tsl_pointer=0;
+	close(output_fd);
 
-	/* check each track/sector pair in the list */
-	while(tsl_pointer<TSL_MAX_NUMBER) {
-
-		/* get the t/s value */
-		data_t=sector_buffer[TSL_LIST+(tsl_pointer*TSL_ENTRY_SIZE)];
-		data_s=sector_buffer[TSL_LIST+(tsl_pointer*TSL_ENTRY_SIZE)+1];
-
-		if ((data_s==0) && (data_t==0)) {
-			/* empty */
-		}
-		else {
-			lseek(fd,DISK_OFFSET(data_t,data_s),SEEK_SET);
-			result=read(fd,&data_sector,PRODOS_BYTES_PER_BLOCK);
-
-			/* some file formats have the size in the first sector */
-			/* so cheat and get real file size from file itself    */
-			if (output_pointer==0) {
-				switch(file_type) {
-				case 'A':
-				case 'I':
-					file_size=data_sector[0]+(data_sector[1]<<8)+2;
-					break;
-				case 'B':
-					file_size=data_sector[2]+(data_sector[3]<<8)+4;
-					break;
-				default:
-					file_size=-1;
-				}
-			}
-
-			/* write the block read in out to the output file */
-			lseek(output_fd,output_pointer*PRODOS_BYTES_PER_BLOCK,SEEK_SET);
-			result=write(output_fd,&data_sector,PRODOS_BYTES_PER_BLOCK);
-		}
-		output_pointer++;
-		tsl_pointer++;
-	}
-
-	/* finished with TSL sector, see if we have another */
-	tsl_track=sector_buffer[TSL_NEXT_TRACK];
-	tsl_sector=sector_buffer[TSL_NEXT_SECTOR];
-
-//	printf("Next track/sector=%d/%d op=%d\n",tsl_track,tsl_sector,
-//		output_pointer*PRODOS_BYTES_PER_BLOCK);
-
-	if ((tsl_track==0) && (tsl_sector==0)) {
-	}
-	else goto keep_saving;
-
-	/* Correct the file size */
-	if (file_size>=0) {
-//		printf("Truncating file size to %d\n",file_size);
-		result=ftruncate(output_fd,file_size);
-	}
-
-	if (result<0) fprintf(stderr,"Error on I/O\n");
-#endif
 	return 0;
 
 }
