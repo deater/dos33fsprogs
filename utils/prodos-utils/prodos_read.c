@@ -11,7 +11,7 @@
 
 #include "prodos.h"
 
-static int debug=0;
+extern int debug;
 
 /* we want block 2 -> 0xb */
 static int dos_interleave[16]= {
@@ -35,30 +35,35 @@ int prodos_read_block(struct voldir_t *voldir,
 		result=read(voldir->fd,block,PRODOS_BYTES_PER_BLOCK);
 
 		if (result<PRODOS_BYTES_PER_BLOCK) {
-			fprintf(stderr,"Error reading block %d\n",blocknum);
+			fprintf(stderr,"Error reading block $%X\n",blocknum);
 			return -1;
 		}
 	}
 	else if (voldir->interleave==PRODOS_INTERLEAVE_DOS33) {
-		if (debug) printf("DOS33! reading %d\n",blocknum);
-		track=blocknum&(~0xf);
-		sector1=dos_interleave[(blocknum&0xf)*2];
-		sector2=dos_interleave[(blocknum&0xf)*2+1];
+		if (debug) printf("Using DOS33 interleave, finding block $%X\n",blocknum);
+		track=(blocknum>>3);
+		sector1=dos_interleave[(blocknum&0x7)*2];
+		sector2=dos_interleave[(blocknum&0x7)*2+1];
+		if (debug) printf("Remapping block $%X to T%d S%d and T%d S%d\n",
+			blocknum,track,sector1,track,sector2);
 
-		if (debug) printf("Seeking to %x\n",(track+sector1)*256);
-		lseek(voldir->fd,(track+sector1)*256,SEEK_SET);
+		if (debug) printf("Seeking to %x\n",((track<<4)+sector1)*256);
+		lseek(voldir->fd,((track<<4)+sector1)*256,SEEK_SET);
 		result=read(voldir->fd,block,PRODOS_BYTES_PER_BLOCK/2);
 
 		if (result<PRODOS_BYTES_PER_BLOCK/2) {
-			fprintf(stderr,"Error reading block %d\n",blocknum);
+			fprintf(stderr,"Error reading block $%X (%X)\n",
+				blocknum,((track<<4)+sector1));
 			return -1;
 		}
 
-		lseek(voldir->fd,(track+sector2)*256,SEEK_SET);
+		if (debug) printf("Seeking to %x\n",((track<<4)+sector2)*256);
+		lseek(voldir->fd,((track<<4)+sector2)*256,SEEK_SET);
 		result=read(voldir->fd,block+256,PRODOS_BYTES_PER_BLOCK/2);
 
 		if (result<PRODOS_BYTES_PER_BLOCK/2) {
-			fprintf(stderr,"Error reading block %d\n",blocknum);
+			fprintf(stderr,"Error reading block $%X (%X)\n",
+				blocknum,((track<<4)+sector2));
 			return -1;
 		}
 

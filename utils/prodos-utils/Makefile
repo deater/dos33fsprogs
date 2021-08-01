@@ -1,5 +1,7 @@
 include ../../Makefile.inc
 
+CFLAGS := $(CFLAGS) -g
+
 all:	prodos mkprodosfs
 
 ###

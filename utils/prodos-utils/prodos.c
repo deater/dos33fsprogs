@@ -11,8 +11,8 @@
 
 #include "prodos.h"
 
-static int debug=0,ignore_errors=0;
-
+static int ignore_errors=0;
+int debug=1;
 
     /* Read volume directory into a buffer */
 static int prodos_read_voldir(int fd, struct voldir_t *voldir, int interleave) {
@@ -65,6 +65,52 @@ static int prodos_read_voldir(int fd, struct voldir_t *voldir, int interleave) {
 
 	return 0;
 }
+
+
+	/* Given filename, return voldir/offset */
+static int prodos_lookup_file(struct voldir_t *voldir,
+					char *filename) {
+
+	int voldir_block,voldir_offset;
+	struct file_entry_t file_entry;
+	unsigned char voldir_buffer[PRODOS_BYTES_PER_BLOCK];
+	int result,file;
+
+	voldir_block=PRODOS_VOLDIR_KEY_BLOCK;
+	voldir_offset=1;       /* skip the header */
+
+	while(1) {
+
+		/* Read in Block */
+		result=prodos_read_block(voldir,
+				voldir_buffer,voldir_block);
+		if (result<0) {
+			fprintf(stderr,"Error on I/O\n");
+			return -1;
+		}
+
+		for(file=voldir_offset;
+			file<voldir->entries_per_block;file++) {
+
+			prodos_populate_filedesc(
+				voldir_buffer+4+file*PRODOS_FILE_DESC_LEN,
+				&file_entry);
+
+			/* FIXME: case insensitive? */
+			if (!strncmp(filename,(char *)file_entry.file_name,15)) {
+				return (voldir_block<<8)|file;
+			}
+		}
+
+		voldir_offset=0;
+		voldir_block=voldir_buffer[2]|(voldir_buffer[3]<<8);
+		if (voldir_block==0) break;
+
+	}
+
+	return -1;
+}
+
 
 
 	/* Checks if "filename" exists */
@@ -432,17 +478,40 @@ got_a_dentry:
 }
 
 
-    /* load a file from the disk image.  */
+int prodos_get_file_entry(struct voldir_t *voldir,
+			int inode, struct file_entry_t *file) {
+
+	unsigned char voldir_buffer[PRODOS_BYTES_PER_BLOCK];
+	int block,offset;
+	int result;
+
+	block=(inode>>8);
+	offset=(inode&0xff);
+
+
+	result=prodos_read_block(voldir,voldir_buffer,block);
+	if (result<0) {
+		return result;
+	}
+
+	prodos_populate_filedesc(voldir_buffer+4+offset*PRODOS_FILE_DESC_LEN,
+			file);
+
+	return 0;
+
+
+}
+
+	/* load a file from the disk image.  */
+	/* inode = voldirblock<<8 | entry */
 static int prodos_load_file(struct voldir_t *voldir,
 		int inode,char *filename) {
 
 	int output_fd;
-	int catalog_file,catalog_track,catalog_sector;
-	int file_type,file_size=-1,tsl_track,tsl_sector,data_t,data_s;
-	unsigned char data_sector[PRODOS_BYTES_PER_BLOCK];
+	unsigned char data[PRODOS_BYTES_PER_BLOCK];
 	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
-	int tsl_pointer=0,output_pointer=0;
 	int result;
+	struct file_entry_t file;
 
 	/* FIXME!  Warn if overwriting file! */
 	output_fd=open(filename,O_WRONLY|O_CREAT|O_TRUNC,0666);
@@ -450,6 +519,44 @@ static int prodos_load_file(struct voldir_t *voldir,
 		fprintf(stderr,"Error! could not open %s for local save\n",
 			filename);
 		return -1;
+	}
+
+	if (prodos_get_file_entry(voldir,inode,&file)<0) {
+		fprintf(stderr,"Error opening inode %x\n",inode);
+		return -1;
+	}
+
+
+	switch(file.storage_type) {
+		case PRODOS_FILE_SEEDLING:
+			/* Just a single block */
+			if (debug) fprintf(stderr,"Loading %d bytes from "
+					"block $%x\n",
+					file.eof,file.key_pointer);
+			result=prodos_read_block(voldir,data,
+					file.key_pointer);
+			if (result<0) {
+				return result;
+			}
+			result=write(output_fd,data,file.eof);
+			if (result!=file.eof) {
+				fprintf(stderr,"Error writing file!\n");
+				return -1;
+			}
+			break;
+
+		case PRODOS_FILE_SAPLING:
+		case PRODOS_FILE_TREE:
+		case PRODOS_FILE_SUBDIR:
+
+		case PRODOS_FILE_DELETED:
+		case PRODOS_FILE_SUBDIR_HDR:
+		case PRODOS_FILE_VOLUME_HDR:
+		default:
+			fprintf(stderr,"Error!  "
+				"Cannot load this type of file: %x\n",
+				file.storage_type);
+			break;
 	}
 
 #if 0
@@ -762,6 +869,7 @@ int main(int argc, char **argv) {
 	int always_yes=0;
 	char *temp,*endptr;
 	int c;
+	int inode;
 	int address=0, length=0;
 	struct voldir_t voldir;
 	struct file_entry_t file;
@@ -825,7 +933,7 @@ int main(int argc, char **argv) {
 	/* Try to autodetch interleave based on filename */
 	if (strlen(image)>4) {
 		if (!strncmp(&image[strlen(image)-4],".dsk",4)) {
-			if (debug) printf("Detected DOS33\n");
+			if (debug) printf("Detected DOS33 interleave\n");
 			interleave=PRODOS_INTERLEAVE_DOS33;
 		}
 	}
@@ -895,18 +1003,18 @@ int main(int argc, char **argv) {
 
 		if (debug) printf("\tOutput filename: %s\n",local_filename);
 
+		/* get the voldir/entry for file */
+		inode=prodos_lookup_file(&voldir,apple_filename);
 
-		/* get the entry/track/sector for file */
-		catalog_entry=prodos_check_file_exists(prodos_fd,
-							apple_filename,
-							DOS33_FILE_NORMAL);
-		if (catalog_entry<0) {
+		if (inode<0) {
 			fprintf(stderr,"Error!  %s not found!\n",
 				apple_filename);
 			goto exit_and_close;
 		}
 
-		prodos_load_file(prodos_fd,catalog_entry,local_filename);
+
+		/* Load the file */
+		prodos_load_file(&voldir,inode,local_filename);
 
 		break;
 
@@ -983,7 +1091,7 @@ int main(int argc, char **argv) {
 
 		if (debug) printf("\tApple filename: %s\n",apple_filename);
 
-		catalog_entry=prodos_check_file_exists(prodos_fd,apple_filename,
+		catalog_entry=prodos_check_file_exists(&voldir,apple_filename,
 							DOS33_FILE_NORMAL);
 
 		if (catalog_entry>=0) {
@@ -1024,7 +1132,7 @@ int main(int argc, char **argv) {
 
 		truncate_filename(apple_filename,argv[optind]);
 
-		catalog_entry=prodos_check_file_exists(prodos_fd,
+		catalog_entry=prodos_check_file_exists(&voldir,
 						apple_filename,
 						DOS33_FILE_NORMAL);
 		if (catalog_entry<0) {
@@ -1071,7 +1179,7 @@ int main(int argc, char **argv) {
 		truncate_filename(new_filename,argv[optind]);
 
 		/* get the entry/track/sector for file */
-		catalog_entry=prodos_check_file_exists(prodos_fd,
+		catalog_entry=prodos_check_file_exists(&voldir,
 						apple_filename,
 						DOS33_FILE_NORMAL);
 		if (catalog_entry<0) {
