@@ -825,6 +825,7 @@ static void display_help(char *name, int version_only) {
 	printf("\tDELETE    apple_file\n");
 	printf("\tRENAME    apple_file_old apple_file_new\n");
 	printf("\tDUMP\n");
+	printf("\tVOLUME    volume_name\n");
 	printf("\tTYPE      TODO: set type\n");
 	printf("\tAUX       TODO: set aux\n");
 	printf("\tTIMESTAMP TODO: set timestamp\n");
@@ -834,18 +835,19 @@ static void display_help(char *name, int version_only) {
 	return;
 }
 
-#define COMMAND_LOAD	 0
-#define COMMAND_SAVE	 1
-#define COMMAND_CATALOG	 2
-#define COMMAND_DELETE	 3
-#define COMMAND_RENAME	 4
-#define COMMAND_DUMP	 5
-#define COMMAND_BSAVE	 6
-#define COMMAND_BLOAD	 7
+#define COMMAND_LOAD		0
+#define COMMAND_SAVE		1
+#define COMMAND_CATALOG		2
+#define COMMAND_DELETE		3
+#define COMMAND_RENAME		4
+#define COMMAND_DUMP		5
+#define COMMAND_BSAVE		6
+#define COMMAND_BLOAD		7
 #define COMMAND_SHOWFREE	8
+#define COMMAND_VOLNAME		9
 
-#define MAX_COMMAND	9
-#define COMMAND_UNKNOWN	255
+#define MAX_COMMAND		10
+#define COMMAND_UNKNOWN		255
 
 static struct command_type {
 	int type;
@@ -860,6 +862,7 @@ static struct command_type {
 	{COMMAND_BSAVE,"BSAVE"},
 	{COMMAND_BLOAD,"BLOAD"},
 	{COMMAND_SHOWFREE,"SHOWFREE"},
+	{COMMAND_VOLNAME,"VOLNAME"},
 };
 
 static int lookup_command(char *name) {
@@ -891,6 +894,67 @@ static int truncate_filename(char *out, char *in) {
 	return truncated;
 }
 
+static int prodos_sync_voldir(struct voldir_t *voldir) {
+
+	unsigned char newvoldir[PRODOS_BYTES_PER_BLOCK];
+
+	memset(newvoldir,0,PRODOS_BYTES_PER_BLOCK);
+
+	newvoldir[0x4]=(voldir->storage_type<<4)|(voldir->name_length&0xf);
+	memcpy(&newvoldir[0x5],voldir->volume_name,voldir->name_length);
+
+	/* FIXME: probably endianess issues */
+
+	newvoldir[0x1c]=(voldir->creation_time>>16)&0xff;
+	newvoldir[0x1d]=(voldir->creation_time>>24)&0xff;
+	newvoldir[0x1e]=(voldir->creation_time>>0)&0xff;
+	newvoldir[0x1f]=(voldir->creation_time>>8)&0xff;
+
+	newvoldir[0x20]=voldir->version;
+	newvoldir[0x21]=voldir->min_version;
+	newvoldir[0x22]=voldir->access;
+	newvoldir[0x23]=voldir->entry_length;
+
+	newvoldir[0x24]=voldir->entries_per_block;
+
+	newvoldir[0x25]=voldir->file_count&0xff;
+	newvoldir[0x26]=(voldir->file_count>>8)&0xff;
+
+	newvoldir[0x27]=voldir->bit_map_pointer&0xff;
+	newvoldir[0x28]=(voldir->bit_map_pointer>>8)&0xff;
+
+	newvoldir[0x29]=voldir->total_blocks&0xff;
+	newvoldir[0x2A]=(voldir->total_blocks>>8)&0xff;
+
+	newvoldir[0x2]=voldir->next_block&0xff;
+	newvoldir[0x3]=(voldir->next_block>>8)&0xff;
+
+	prodos_write_block(voldir,newvoldir,PRODOS_VOLDIR_KEY_BLOCK);
+
+	return 0;
+
+}
+
+static int change_volume_name(struct voldir_t *voldir, char *volname) {
+
+	int volname_len;
+
+	volname_len=strlen(volname);
+	if (volname_len>15) {
+		printf("Warning!  Volume name %s is too long, truncating\n",
+				volname);
+		volname_len=15;
+	}
+
+	memcpy(voldir->volume_name,volname,15);
+	voldir->name_length=volname_len;
+
+	prodos_sync_voldir(voldir);
+
+	return 0;
+
+}
+
 int main(int argc, char **argv) {
 
 	char image[BUFSIZ];
@@ -912,7 +976,7 @@ int main(int argc, char **argv) {
 	struct voldir_t voldir;
 
 	/* Check command line arguments */
-	while ((c = getopt (argc, argv,"a:i:l:t:s:dhvxy"))!=-1) {
+	while ((c = getopt (argc, argv,"a:i:l:dhvxy"))!=-1) {
 		switch (c) {
 
 		case 'd':
@@ -1324,6 +1388,23 @@ int main(int argc, char **argv) {
 		}
 
 		prodos_rename_file(prodos_fd,catalog_entry,new_filename);
+
+		break;
+
+
+	/* Change the volume name */
+	case COMMAND_VOLNAME:
+
+
+		/* check and make sure we have a volume name */
+		if (argc==optind) {
+			fprintf(stderr,"Error! Need apple volume_name\n");
+			fprintf(stderr,"%s %s VOLUME volume_name\n",
+				argv[0],image);
+			goto exit_and_close;
+		}
+
+		change_volume_name(&voldir,argv[optind]);
 
 		break;
 

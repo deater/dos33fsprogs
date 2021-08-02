@@ -1,0 +1,5 @@
+Tests:
+	+ check dump before/after VOLUME change be sure only len/name change
+
+	+ store/load various sized files, md5sum or compare results
+

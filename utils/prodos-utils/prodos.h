@@ -121,3 +121,4 @@ int prodos_showfree(struct voldir_t *voldir, int fd);
 
 /* prodos_read.c */
 int prodos_read_block(struct voldir_t *voldir,unsigned char *block, int blocknum);
+int prodos_write_block(struct voldir_t *voldir,unsigned char *block, int blocknum);
