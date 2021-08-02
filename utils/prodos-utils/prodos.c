@@ -12,7 +12,7 @@
 #include "prodos.h"
 
 static int ignore_errors=0;
-int debug=1;
+int debug=0;
 
     /* Read volume directory into a buffer */
 static int prodos_read_voldir(int fd, struct voldir_t *voldir,
@@ -967,7 +967,7 @@ int main(int argc, char **argv) {
 		printf("checking extension: %s\n",&image[strlen(image)-4]);
 	}
 
-	/* Try to autodetch interleave based on filename */
+	/* Try to autodetect interleave based on filename */
 	if (strlen(image)>4) {
 
 		if (!strncmp(&image[strlen(image)-4],".dsk",4)) {
@@ -983,9 +983,15 @@ int main(int argc, char **argv) {
 
 			read(prodos_fd,header,64);
 
-			image_offset=(header[8]|(header[9]<<8));
+			image_offset=	(header[24])|
+					(header[25]<<8)|
+					(header[26]<<16)|
+					(header[27]<<24);
 
-			image_format=header[12];
+			image_format=(header[12])|
+					(header[13]<<8)|
+					(header[14]<<16)|
+					(header[15]<<24);
 
 			if (image_format==0) {
 				interleave=PRODOS_INTERLEAVE_DOS33;
@@ -1011,9 +1017,57 @@ int main(int argc, char **argv) {
 				string[4]=0;
 				printf("creator: %s\n",string);
 
-				printf("Header size: %d\n",image_offset);
+				printf("Header size: %d\n",
+					(header[8]|(header[9]<<8)));
+
 				printf("Version: %d\n",
 						(header[10]|(header[11]<<8)));
+
+				printf("Flags: $%X\n",
+					(header[16])|
+					(header[17]<<8)|
+					(header[18]<<16)|
+					(header[19]<<24));
+
+				printf("ProDOS blocks: $%X\n",
+					(header[20])|
+					(header[21]<<8)|
+					(header[22]<<16)|
+					(header[23]<<24));
+
+				printf("Image offset: $%X\n",image_offset);
+
+				printf("Bytes of data: %d\n",
+					(header[28])|
+					(header[29]<<8)|
+					(header[30]<<16)|
+					(header[31]<<24));
+
+				printf("Offset to comment: $%X\n",
+					(header[32])|
+					(header[33]<<8)|
+					(header[34]<<16)|
+					(header[35]<<24));
+
+				printf("Length of comment: %d\n",
+					(header[36])|
+					(header[37]<<8)|
+					(header[38]<<16)|
+					(header[39]<<24));
+
+				printf("Offset to creator comment: $%X\n",
+					(header[40])|
+					(header[41]<<8)|
+					(header[42]<<16)|
+					(header[43]<<24));
+
+				printf("Length of creator comment: %d\n",
+					(header[44])|
+					(header[45]<<8)|
+					(header[46]<<16)|
+					(header[47]<<24));
+
+
 			}
 		}
 	}
