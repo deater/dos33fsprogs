@@ -31,7 +31,8 @@ int prodos_read_block(struct voldir_t *voldir,
 	if (voldir->interleave==PRODOS_INTERLEAVE_PRODOS) {
 
 		/* Seek to VOLDIR */
-		lseek(voldir->fd,blocknum*PRODOS_BYTES_PER_BLOCK,SEEK_SET);
+		lseek(voldir->fd,voldir->image_offset+
+				blocknum*PRODOS_BYTES_PER_BLOCK,SEEK_SET);
 		result=read(voldir->fd,block,PRODOS_BYTES_PER_BLOCK);
 
 		if (result<PRODOS_BYTES_PER_BLOCK) {
@@ -48,7 +49,8 @@ int prodos_read_block(struct voldir_t *voldir,
 			blocknum,track,sector1,track,sector2);
 
 		if (debug) printf("Seeking to %x\n",((track<<4)+sector1)*256);
-		lseek(voldir->fd,((track<<4)+sector1)*256,SEEK_SET);
+		lseek(voldir->fd,voldir->image_offset+
+				((track<<4)+sector1)*256,SEEK_SET);
 		result=read(voldir->fd,block,PRODOS_BYTES_PER_BLOCK/2);
 
 		if (result<PRODOS_BYTES_PER_BLOCK/2) {
@@ -58,7 +60,8 @@ int prodos_read_block(struct voldir_t *voldir,
 		}
 
 		if (debug) printf("Seeking to %x\n",((track<<4)+sector2)*256);
-		lseek(voldir->fd,((track<<4)+sector2)*256,SEEK_SET);
+		lseek(voldir->fd,voldir->image_offset+
+				((track<<4)+sector2)*256,SEEK_SET);
 		result=read(voldir->fd,block+256,PRODOS_BYTES_PER_BLOCK/2);
 
 		if (result<PRODOS_BYTES_PER_BLOCK/2) {

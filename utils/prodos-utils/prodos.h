@@ -30,6 +30,7 @@
 struct voldir_t {
 	int fd;
 	int interleave;
+	int image_offset;
 	unsigned char storage_type;
 	unsigned char name_length;
 	unsigned char version;

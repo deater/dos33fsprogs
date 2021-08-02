@@ -12,15 +12,17 @@
 #include "prodos.h"
 
 static int ignore_errors=0;
-int debug=0;
+int debug=1;
 
     /* Read volume directory into a buffer */
-static int prodos_read_voldir(int fd, struct voldir_t *voldir, int interleave) {
+static int prodos_read_voldir(int fd, struct voldir_t *voldir,
+				int interleave, int image_offset) {
 
 	int result;
 	unsigned char voldir_buffer[PRODOS_BYTES_PER_BLOCK];
 
 	voldir->interleave=interleave;
+	voldir->image_offset=image_offset;
 
 	/* read in VOLDIR KEY Block*/
 	voldir->fd=fd;
@@ -895,6 +897,7 @@ int main(int argc, char **argv) {
 	unsigned char type='b';
 	int prodos_fd=0,i;
 	int interleave=PRODOS_INTERLEAVE_PRODOS,arg_interleave=0;
+	int image_offset=0;
 
 	int command,catalog_entry;
 	char temp_string[BUFSIZ];
@@ -966,17 +969,61 @@ int main(int argc, char **argv) {
 
 	/* Try to autodetch interleave based on filename */
 	if (strlen(image)>4) {
+
 		if (!strncmp(&image[strlen(image)-4],".dsk",4)) {
 			if (debug) printf("Detected DOS33 interleave\n");
 			interleave=PRODOS_INTERLEAVE_DOS33;
 		}
+
+		/* FIXME: detect this based on magic number */
+		else if (!strncmp(&image[strlen(image)-4],".2mg",4)) {
+
+			char header[64];
+			int image_format;
+
+			read(prodos_fd,header,64);
+
+			image_offset=(header[8]|(header[9]<<8));
+
+			image_format=header[12];
+
+			if (image_format==0) {
+				interleave=PRODOS_INTERLEAVE_DOS33;
+			}
+			else if (image_format==1) {
+				interleave=PRODOS_INTERLEAVE_PRODOS;
+			}
+			else {
+				fprintf(stderr,"Unsupported 2MG format\n");
+				return -1;
+			}
+
+			if (debug) {
+				char string[5];
+
+				printf("Detected 2MG format\n");
+
+				memcpy(string,header,4);
+				string[4]=0;
+				printf("magic: %s\n",string);
+
+				memcpy(string,header+4,4);
+				string[4]=0;
+				printf("creator: %s\n",string);
+
+				printf("Header size: %d\n",image_offset);
+				printf("Version: %d\n",
+						(header[10]|(header[11]<<8)));
+			}
+		}
 	}
+
 	/* override inteleave if set */
 	if (arg_interleave) {
 		interleave=arg_interleave-1;
 	}
 
-	prodos_read_voldir(prodos_fd,&voldir,interleave);
+	prodos_read_voldir(prodos_fd,&voldir,interleave,image_offset);
 
 	/* Move to next argument */
 	optind++;
