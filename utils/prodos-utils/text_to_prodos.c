@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
 	while(1) {
 		result=fgetc(fff);
 		if (result<0) break;
-		if (result==13) putchar('\n');
+		if (result=='\n') putchar('\r');
 		else putchar(result);
 
 	}

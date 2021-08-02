@@ -2,7 +2,7 @@ include ../../Makefile.inc
 
 CFLAGS := $(CFLAGS) -g
 
-all:	prodos mkprodosfs prodos_cat
+all:	prodos mkprodosfs prodos_cat text_to_prodos
 
 ###
 
@@ -30,6 +30,18 @@ prodos_cat:	prodos_cat.o
 
 prodos_cat.o:	prodos_cat.c
 	$(CC) $(CFLAGS) -c prodos_cat.c
+
+
+###
+
+text_to_prodos:	text_to_prodos.o
+	$(CC) $(LFLAGS) -o text_to_prodos text_to_prodos.o
+
+####
+
+text_to_prodos.o:	text_to_prodos.c
+	$(CC) $(CFLAGS) -c text_to_prodos.c
+
 
 
 ###
@@ -65,8 +77,8 @@ prodos_read.o:		prodos_read.c prodos.h
 
 
 install:	
-		cp prodos prodos_raw mkprodosfs make_b prodos_text2ascii char2hex $(INSTALL_LOC)
+		cp prodos mkprodosfs prodoscat text_to_prodos $(INSTALL_LOC)
 
 clean:		
-		rm -f *~ *.o prodos prodos_raw mkprodosfs make_b prodos_text2ascii char2hex
-		cd tests && make clean
+		rm -f *~ *.o prodos mkprodosfs prodoscat text_to_prodos
+
