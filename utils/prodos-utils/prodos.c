@@ -12,7 +12,7 @@
 #include "prodos.h"
 
 static int ignore_errors=0;
-int debug=0;
+int debug=1;
 
     /* Read volume directory into a buffer */
 static int prodos_read_voldir(int fd, struct voldir_t *voldir,
@@ -118,23 +118,14 @@ static int prodos_lookup_file(struct voldir_t *voldir,
 	/* Checks if "filename" exists */
 	/* returns file type  */
 static int prodos_check_file_exists(struct voldir_t *voldir,
-					char *filename,
-					struct file_entry_t *file) {
+					char *filename) {
 
 
-	int catalog_block,catalog_offset,catalog_inode;
+	int result;
 
-	catalog_block=PRODOS_VOLDIR_KEY_BLOCK;
-	catalog_offset=0;       /* skip the header */
-	catalog_inode=(catalog_block<<8)|catalog_offset;
+	result=prodos_lookup_file(voldir,filename);
 
-
-	while(1) {
-		catalog_inode=prodos_find_next_file(catalog_inode,voldir);
-		if (catalog_inode==-1) break;
-	}
-
-	return 0;
+	return result;
 }
 
 static int prodos_free_block(struct voldir_t *voldir,int block) {
@@ -194,25 +185,24 @@ static int prodos_allocate_sector(int fd, struct voldir_t *voldir) {
 	return 0;
 }
 
+#define ERROR_MYSTERY		1
+#define ERROR_INVALID_FILENAME	2
+#define ERROR_FILE_NOT_FOUND	3
+#define ERROR_NO_SPACE		4
+#define ERROR_IMAGE_NOT_FOUND	5
+#define ERROR_CATALOG_FULL	6
+#define ERROR_FILE_TOO_BIG	7
 
-#define ERROR_INVALID_FILENAME	1
-#define ERROR_FILE_NOT_FOUND	2
-#define ERROR_NO_SPACE		3
-#define ERROR_IMAGE_NOT_FOUND	4
-#define ERROR_CATALOG_FULL	5
-
-#define ADD_RAW		0
-#define ADD_BINARY	1
 
 	/* creates file apple_filename on the image from local file filename */
 	/* returns ?? */
 static int prodos_add_file(struct voldir_t *voldir,
-		int fd, char dos_type,
-		int file_type, int address, int length,
+		int fd, char *type,
+		int address, int length,
 		char *filename, char *apple_filename) {
 
-#if 0
-	int free_space,file_size,needed_sectors;
+
+	int free_blocks,file_size,needed_blocks,total_blocks,file_type;
 	struct stat file_info;
 	int size_in_sectors=0;
 	int initial_ts_list=0,ts_list=0,i,data_ts,x,bytes_read=0,old_ts_list;
@@ -224,24 +214,26 @@ static int prodos_add_file(struct voldir_t *voldir,
 	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
 	unsigned char data_buffer[PRODOS_BYTES_PER_BLOCK];
 
-	if (apple_filename[0]<64) {
-		fprintf(stderr,"Error!  First char of filename "
-				"must be ASCII 64 or above!\n");
-		if (!ignore_errors) return ERROR_INVALID_FILENAME;
-	}
+	/* check for valid filename */
 
-	/* Check for comma in filename */
+	/* Filename rules for Prodos: */
+	/*	Only letters, numbers, and periods */
+	/*	no special chars */
+	/* Traditionally only uppercase (for II+).  Upper/lowercase */
+	/*	data later stored in the VERSION/MAX_VERSION fields */
+
 	for(i=0;i<strlen(apple_filename);i++) {
-		if (apple_filename[i]==',') {
-			fprintf(stderr,"Error!  "
-				"Cannot have , in a filename!\n");
-			return ERROR_INVALID_FILENAME;
+		if ( (!isalnum(apple_filename[i])) &&
+			(apple_filename[i]!='.') ) {
+			fprintf(stderr,"Warning!  Invalid char in filename!\n");
+			//return ERROR_INVALID_FILENAME;
+		}
+		if ( (isalpha(apple_filename[i])) &&
+				(islower(apple_filename[i])) ) {
+			fprintf(stderr,"Warning, lowercase filename support not really implemented\n");
+			//return ERROR_INVALID_FILENAME;
 		}
 	}
-
-	/* FIXME */
-	/* check type */
-	/* and sanity check a/b filesize is set properly */
 
 	/* Determine size of file to upload */
 	if (stat(filename,&file_info)<0) {
@@ -251,38 +243,52 @@ static int prodos_add_file(struct voldir_t *voldir,
 
 	file_size=(int)file_info.st_size;
 
-	if (debug) printf("Filesize: %d\n",file_size);
+	/* We need to round up to nearest block size */
+	needed_blocks=1+((file_size-1)/PRODOS_BYTES_PER_BLOCK);
 
-	if (file_type==ADD_BINARY) {
-		if (debug) printf("Adding 4 bytes for size/offset\n");
-		if (length==0) length=file_size;
-		file_size+=4;
+	if (debug) printf("Filesize: %d (need %d blocks)\n",
+			file_size,needed_blocks);
+
+
+	if (needed_blocks==0) {
+		fprintf(stderr,"Error!  invalid blocksize %d\n",needed_blocks);
+		return -ERROR_MYSTERY;
 	}
-
-	/* We need to round up to nearest sector size */
-	/* Add an extra sector for the T/S list */
-	/* Then add extra sector for a T/S list every 122*256 bytes (~31k) */
-	needed_sectors=(file_size/PRODOS_BYTES_PER_BLOCK)+ /* round sectors */
-			((file_size%PRODOS_BYTES_PER_BLOCK)!=0)+/* tail if needed */
-			1+/* first T/S list */
-			(file_size/(122*PRODOS_BYTES_PER_BLOCK)); /* extra t/s lists */
+	else if (needed_blocks==1) {
+		/* seedling */
+		if (debug) printf("File seedling\n");
+		file_type=PRODOS_FILE_SEEDLING;
+		total_blocks=needed_blocks;
+	}
+	else if (needed_blocks<=256) {
+		/* sapling */
+		if (debug) printf("File sapling\n");
+		file_type=PRODOS_FILE_SAPLING;
+		total_blocks=needed_blocks+1;	/* for index block */
+	}
+	else if (needed_blocks<=65536) {
+		/* tree */
+		if (debug) printf("File tree\n");
+		file_type=PRODOS_FILE_TREE;
+		total_blocks=needed_blocks+1 /* for key index block */
+			+(1+needed_blocks/256);	/* for index blocks */
+						/* FIXME: -1? */
+	}
+	else {
+		fprintf(stderr,"Error, file too big: %d\n",file_size);
+		return -ERROR_FILE_TOO_BIG;
+	}
 
 	/* Get free space on device */
-	free_space=prodos_vtoc_free_space(voldir);
+	free_blocks=prodos_voldir_free_space(voldir);
 
 	/* Check for free space */
-	if (needed_sectors*PRODOS_BYTES_PER_BLOCK>free_space) {
+	if (total_blocks>free_blocks) {
 		fprintf(stderr,"Error!  Not enough free space "
 				"on disk image (need %d have %d)\n",
-				needed_sectors*PRODOS_BYTES_PER_BLOCK,free_space);
+				total_blocks,free_blocks);
 		return ERROR_NO_SPACE;
 	}
-
-	/* plus one because we need a sector for the tail */
-	size_in_sectors=(file_size/PRODOS_BYTES_PER_BLOCK)+
-		((file_size%PRODOS_BYTES_PER_BLOCK)!=0);
-	if (debug) printf("Need to allocate %i data sectors\n",size_in_sectors);
-	if (debug) printf("Need to allocate %i total sectors\n",needed_sectors);
 
 	/* Open the local file */
 	input_fd=open(filename,O_RDONLY);
@@ -291,6 +297,7 @@ static int prodos_add_file(struct voldir_t *voldir,
 		return ERROR_IMAGE_NOT_FOUND;
 	}
 
+#if 0
 	i=0;
 	while (i<size_in_sectors) {
 
@@ -476,6 +483,9 @@ got_a_dentry:
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
 #endif
+
+	close(input_fd);
+
 	return 0;
 }
 
@@ -669,7 +679,7 @@ static int prodos_load_file(struct voldir_t *voldir,
     /* rename a file.  fts=entry/track/sector */
     /* FIXME: can we rename a locked file?    */
     /* FIXME: validate the new filename is valid */
-static int prodos_rename_file(int fd,int fts,char *new_name) {
+static int prodos_rename_file(int fd,char *old_name,char *new_name) {
 
 #if 0
 	int catalog_file,catalog_track,catalog_sector;
@@ -710,7 +720,7 @@ static int prodos_rename_file(int fd,int fts,char *new_name) {
 }
 
 
-static int prodos_delete_file(struct voldir_t *voldir,int fd,int fsl) {
+static int prodos_delete_file(struct voldir_t *voldir,char *apple_filename) {
 
 #if 0
 
@@ -820,8 +830,7 @@ static void display_help(char *name, int version_only) {
 		"  and COMMAND is one of the following:\n");
 	printf("\tCATALOG   [dir]\n");
 	printf("\tLOAD      apple_file <local_file>\n");
-	printf("\tSAVE      type local_file <apple_file>\n");
-	printf("\tBSAVE     [-a addr] [-l len] local_file <apple_file>\n");
+	printf("\tSAVE      [-t type] [-a addr] [-l len] local_file <apple_file>\n");
 	printf("\tDELETE    apple_file\n");
 	printf("\tRENAME    apple_file_old apple_file_new\n");
 	printf("\tDUMP\n");
@@ -841,12 +850,10 @@ static void display_help(char *name, int version_only) {
 #define COMMAND_DELETE		3
 #define COMMAND_RENAME		4
 #define COMMAND_DUMP		5
-#define COMMAND_BSAVE		6
-#define COMMAND_BLOAD		7
-#define COMMAND_SHOWFREE	8
-#define COMMAND_VOLNAME		9
+#define COMMAND_SHOWFREE	6
+#define COMMAND_VOLNAME		7
 
-#define MAX_COMMAND		10
+#define MAX_COMMAND		8
 #define COMMAND_UNKNOWN		255
 
 static struct command_type {
@@ -859,8 +866,6 @@ static struct command_type {
 	{COMMAND_DELETE,"DELETE"},
 	{COMMAND_RENAME,"RENAME"},
 	{COMMAND_DUMP,"DUMP"},
-	{COMMAND_BSAVE,"BSAVE"},
-	{COMMAND_BLOAD,"BLOAD"},
 	{COMMAND_SHOWFREE,"SHOWFREE"},
 	{COMMAND_VOLNAME,"VOLNAME"},
 };
@@ -958,12 +963,12 @@ static int change_volume_name(struct voldir_t *voldir, char *volname) {
 int main(int argc, char **argv) {
 
 	char image[BUFSIZ];
-	unsigned char type='b';
+	char type[4];
 	int prodos_fd=0,i;
 	int interleave=PRODOS_INTERLEAVE_PRODOS,arg_interleave=0;
 	int image_offset=0;
 
-	int command,catalog_entry;
+	int command,file_exists;
 	char temp_string[BUFSIZ];
 	char apple_filename[31],new_filename[31];
 	char local_filename[BUFSIZ];
@@ -976,7 +981,7 @@ int main(int argc, char **argv) {
 	struct voldir_t voldir;
 
 	/* Check command line arguments */
-	while ((c = getopt (argc, argv,"a:i:l:dhvxy"))!=-1) {
+	while ((c = getopt (argc, argv,"a:i:l:t:dhvxy"))!=-1) {
 		switch (c) {
 
 		case 'd':
@@ -986,6 +991,17 @@ int main(int argc, char **argv) {
 		case 'a':
 			address=strtol(optarg,&endptr,0);
 			if (debug) fprintf(stderr,"Address=%d\n",address);
+			break;
+		case 't':
+			if (strlen(optarg)!=3) {
+				fprintf(stderr,"Type %s too long, should be 3 chars\n",optarg);
+				return -1;
+			}
+			for(i=0;i<3;i++) {
+				type[i]=toupper(optarg[i]);
+			}
+			type[3]=0;
+			if (debug) fprintf(stderr,"Type=%s\n",type);
 			break;
 		case 'i':
 			if (!strncmp(optarg,"prodos",6)) {
@@ -1217,46 +1233,23 @@ int main(int argc, char **argv) {
 
 		break;
 
-       case COMMAND_CATALOG:
+	case COMMAND_CATALOG:
 
 		prodos_catalog(prodos_fd,&voldir);
 
 		break;
 
 	case COMMAND_SAVE:
-		/* argv3 == type == A,B,T,I,N,L etc */
-		/* argv4 == name of local file */
-		/* argv5 == optional name of file on disk image */
 
-		if (argc==optind) {
-			fprintf(stderr,"Error! Need type and file_name\n");
-			fprintf(stderr,"%s %s SAVE type "
-					"file_name apple_filename\n\n",
-					argv[0],image);
-			goto exit_and_close;
-		}
+		if (debug) printf("\ttype=%s\n",type);
 
-		type=argv[optind][0];
-		optind++;
-
-	case COMMAND_BSAVE:
-
-		if (debug) printf("\ttype=%c\n",type);
-//#if 0
 		if (argc==optind) {
 			fprintf(stderr,"Error! Need file_name\n");
 
-			if (command==COMMAND_BSAVE) {
-				fprintf(stderr,"%s %s BSAVE "
-						"file_name apple_filename\n\n",
-						argv[0],image);
+			fprintf(stderr,"%s %s SAVE "
+					"file_name apple_filename\n\n",
+					argv[0],image);
 
-			}
-			else {
-				fprintf(stderr,"%s %s SAVE type "
-						"file_name apple_filename\n\n",
-						argv[0],image);
-			}
 			goto exit_and_close;
 		}
 
@@ -1290,10 +1283,9 @@ int main(int argc, char **argv) {
 
 		if (debug) printf("\tApple filename: %s\n",apple_filename);
 
-		catalog_entry=prodos_check_file_exists(&voldir,apple_filename,
-							DOS33_FILE_NORMAL);
+		file_exists=prodos_check_file_exists(&voldir,apple_filename);
 
-		if (catalog_entry>=0) {
+		if (file_exists>=0) {
 			fprintf(stderr,"Warning!  %s exists!\n",apple_filename);
 			if (!always_yes) {
 				printf("Over-write (y/n)?");
@@ -1304,19 +1296,13 @@ int main(int argc, char **argv) {
 				}
 			}
 			fprintf(stderr,"Deleting previous version...\n");
-			prodos_delete_file(&voldir,prodos_fd,catalog_entry);
+			prodos_delete_file(&voldir,apple_filename);
 		}
-		if (command==COMMAND_SAVE) {
-			prodos_add_file(&voldir,prodos_fd,type,
-				ADD_RAW, address, length,
+
+		prodos_add_file(&voldir,prodos_fd,type,
+				address, length,
 				local_filename,apple_filename);
-		}
-		else {
-			prodos_add_file(&voldir,prodos_fd,type,
-				ADD_BINARY, address, length,
-				local_filename,apple_filename);
-		}
-//#endif
+
 		break;
 
 
@@ -1331,15 +1317,13 @@ int main(int argc, char **argv) {
 
 		truncate_filename(apple_filename,argv[optind]);
 
-		catalog_entry=prodos_check_file_exists(&voldir,
-						apple_filename,
-						DOS33_FILE_NORMAL);
-		if (catalog_entry<0) {
+		file_exists=prodos_check_file_exists(&voldir,apple_filename);
+		if (file_exists<0) {
 			fprintf(stderr, "Error!  File %s does not exist\n",
 					apple_filename);
 			goto exit_and_close;
 		}
-		prodos_delete_file(&voldir,prodos_fd,catalog_entry);
+		prodos_delete_file(&voldir,apple_filename);
 
 		break;
 
@@ -1378,16 +1362,14 @@ int main(int argc, char **argv) {
 		truncate_filename(new_filename,argv[optind]);
 
 		/* get the entry/track/sector for file */
-		catalog_entry=prodos_check_file_exists(&voldir,
-						apple_filename,
-						DOS33_FILE_NORMAL);
-		if (catalog_entry<0) {
+		file_exists=prodos_check_file_exists(&voldir,apple_filename);
+		if (file_exists<0) {
 			fprintf(stderr,"Error!  %s not found!\n",
 							apple_filename);
 			goto exit_and_close;
 		}
 
-		prodos_rename_file(prodos_fd,catalog_entry,new_filename);
+		prodos_rename_file(prodos_fd,apple_filename,new_filename);
 
 		break;
 

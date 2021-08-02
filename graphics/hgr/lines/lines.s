@@ -9,7 +9,7 @@
 
 ; 361 bytes / D799/D23A/CE55 -- first working code
 ; 346 bytes / D7D6/D17C/CCE7 -- make X2 always > X1
-; 347 bytes / D718/D0C6/CC39 -- make D_SY self modifying code
+; 347 bytes / D718/D0C6/CC39 -- make B_SY self modifying code
 
 ; D0+ used by HGR routines
 
