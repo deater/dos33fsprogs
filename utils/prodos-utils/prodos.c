@@ -12,7 +12,7 @@
 #include "prodos.h"
 
 static int ignore_errors=0;
-int debug=1;
+int debug=0;
 
     /* Read volume directory into a buffer */
 static int prodos_read_voldir(int fd, struct voldir_t *voldir, int interleave) {
@@ -510,8 +510,8 @@ static int prodos_load_file(struct voldir_t *voldir,
 	int output_fd;
 	unsigned char data[PRODOS_BYTES_PER_BLOCK];
 	unsigned char index_block[PRODOS_BYTES_PER_BLOCK];
-	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
-	int result,chunk,chunk_block;
+	unsigned char master_index_block[PRODOS_BYTES_PER_BLOCK];
+	int result,chunk,chunk_block,index,blocks_left,read_blocks;
 	struct file_entry_t file;
 
 	/* FIXME!  Warn if overwriting file! */
@@ -547,7 +547,9 @@ static int prodos_load_file(struct voldir_t *voldir,
 			break;
 
 		case PRODOS_FILE_SAPLING:
-			/* Just a single block */
+			/* Index block points to up to 256 blocks */
+			/* Addresses are stored low-byte (256 bytes) then hi-byte */
+			/* Address of zero means file hole, all zeros */
 			if (debug) fprintf(stderr,"Loading index "
 					"block $%x\n",
 					file.key_pointer);
@@ -560,12 +562,19 @@ static int prodos_load_file(struct voldir_t *voldir,
 			for(chunk=0;chunk<file.blocks_used;chunk++) {
 				chunk_block=(index_block[chunk])|(index_block[chunk+256]<<8);
 
-				result=prodos_read_block(voldir,data,
-						chunk_block);
-				if (result<0) {
-					return result;
+				if (chunk_block==0) {
+					/* FILE hole */
+					lseek(output_fd,
+						PRODOS_BYTES_PER_BLOCK,
+						SEEK_CUR);
 				}
-
+				else {
+					result=prodos_read_block(voldir,data,
+							chunk_block);
+					if (result<0) {
+						return result;
+					}
+				}
 
 				result=write(output_fd,data,PRODOS_BYTES_PER_BLOCK);
 				if (result!=PRODOS_BYTES_PER_BLOCK) {
@@ -579,6 +588,61 @@ static int prodos_load_file(struct voldir_t *voldir,
 			break;
 
 		case PRODOS_FILE_TREE:
+			/* Master Index block points to up to 256 index blocks */
+			/* Addresses are stored low-byte (256 bytes) then hi-byte */
+			/* Index block points to up to 256 blocks */
+			/* Addresses are stored low-byte (256 bytes) then hi-byte */
+			/* Address of zero means file hole, all zeros */
+
+			blocks_left=file.blocks_used;
+
+			if (debug) fprintf(stderr,"Loading master index "
+					"block $%x\n",
+					file.key_pointer);
+			result=prodos_read_block(voldir,master_index_block,
+					file.key_pointer);
+			if (result<0) {
+				return result;
+			}
+
+			for(index=0;index<file.blocks_used/256;index++) {
+				result=prodos_read_block(voldir,
+					index_block,
+					(master_index_block[index])|
+					(master_index_block[256+index]<<8));
+				if (result<0) {
+					return result;
+				}
+
+				if (blocks_left<256) {
+					read_blocks=blocks_left;
+				}
+				else {
+					read_blocks=256;
+				}
+
+				for(chunk=0;chunk<read_blocks;chunk++) {
+					chunk_block=(index_block[chunk])|
+						(index_block[chunk+256]<<8);
+
+					result=prodos_read_block(voldir,data,
+							chunk_block);
+					if (result<0) {
+						return result;
+					}
+
+
+					result=write(output_fd,data,PRODOS_BYTES_PER_BLOCK);
+					if (result!=PRODOS_BYTES_PER_BLOCK) {
+						fprintf(stderr,"Error writing file!\n");
+						return -1;
+					}
+				}
+			}
+			/* truncate to actual size of file */
+			ftruncate(output_fd,file.eof);
+
+			break;
 
 
 		case PRODOS_FILE_SUBDIR:
@@ -843,7 +907,6 @@ int main(int argc, char **argv) {
 	int inode;
 	int address=0, length=0;
 	struct voldir_t voldir;
-	struct file_entry_t file;
 
 	/* Check command line arguments */
 	while ((c = getopt (argc, argv,"a:i:l:t:s:dhvxy"))!=-1) {
