@@ -174,22 +174,14 @@ static int prodos_check_file_exists(struct voldir_t *voldir,
 
 static int prodos_free_block(struct voldir_t *voldir,int block) {
 
-#if 0
-
 	int result;
 
 	/* mark as free using VOLDIR */
 	result=prodos_voldir_free_block(voldir,block);
 
-
-	/* write modified VTOC back out */
-	lseek(fd,DISK_OFFSET(PRODOS_VOLDIR_TRACK,PRODOS_VOLDIR_BLOCK),SEEK_SET);
-	result=write(fd,&voldir,PRODOS_BYTES_PER_BLOCK);
-
 	if (result<0) {
 		fprintf(stderr,"Error on I/O\n");
 	}
-#endif
 
 	return 0;
 }
@@ -678,46 +670,53 @@ static int prodos_load_file(struct voldir_t *voldir,
 
 
 
-    /* rename a file.  fts=entry/track/sector */
+    /* rename a file */
     /* FIXME: validate the new filename is valid */
 static int prodos_rename_file(struct voldir_t *voldir,
-	char *old_name,char *new_name) {
+	char *old_filename,char *new_filename) {
 
-#if 0
-	int catalog_file,catalog_track,catalog_sector;
-	int x,result;
-	unsigned char sector_buffer[PRODOS_BYTES_PER_BLOCK];
+	int result;
+	int inode;
+	struct file_entry_t file;
+	unsigned char data_buffer[PRODOS_BYTES_PER_BLOCK];
+	int newlen;
 
-	catalog_file=fts>>16;
-	catalog_track=(fts>>8)&0xff;
-	catalog_sector=(fts&0xff);
+	/* get the voldir/entry for file */
+	inode=prodos_lookup_file(voldir,old_filename);
 
-	/* Read in Catalog Sector */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
-
-	/* copy over filename */
-	for(x=0;x<strlen(new_name);x++) {
-		sector_buffer[CATALOG_FILE_LIST+
-				(catalog_file*CATALOG_ENTRY_SIZE)+
-				FILE_NAME+x]=new_name[x]^0x80;
+	if (inode<0) {
+		fprintf(stderr,"Error!  %s not found!\n",
+				old_filename);
+		return -1;
 	}
 
-	/* pad out the filename with spaces */
-	for(x=strlen(new_name);x<FILE_NAME_SIZE;x++) {
-		sector_buffer[CATALOG_FILE_LIST+
-				(catalog_file*CATALOG_ENTRY_SIZE)+
-				FILE_NAME+x]=' '^0x80;
+	/* get the file entry */
+	if (prodos_get_file_entry(voldir,inode,&file)<0) {
+		fprintf(stderr,"Error opening inode %x\n",inode);
+		return -1;
 	}
 
-	/* write back modified catalog sector */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=write(fd,sector_buffer,PRODOS_BYTES_PER_BLOCK);
+	/* change the filename */
+	newlen=strlen(new_filename);
+	memset(file.file_name,0,15);
+	memcpy(file.file_name,new_filename,newlen);
 
+	file.name_length=newlen;
+
+	/* read in existing voldir entry */
+	result=prodos_read_block(voldir,data_buffer,inode>>8);
+
+	/* copy in new data */
+	prodos_writeout_filedesc(voldir,&file,
+		data_buffer+4+(inode&0xff)*PRODOS_FILE_DESC_LEN);
+
+	/* write back existing voldir entry */
+	result=prodos_write_block(voldir,data_buffer,inode>>8);
 	if (result<0) {
-		fprintf(stderr,"Error on I/O\n");
+		fprintf(stderr,"I/O Error!\n");
+		return result;
 	}
-#endif
+
 	return 0;
 }
 
@@ -1343,7 +1342,7 @@ int main(int argc, char **argv) {
 		/* check and make sure we have apple_filename */
 		if (argc==optind) {
 			fprintf(stderr,"Error! Need two filenames\n");
-			fprintf(stderr,"%s %s LOCK apple_filename_old "
+			fprintf(stderr,"%s %s RENAME apple_filename_old "
 				"apple_filename_new\n",
 				argv[0],image);
 	     		goto exit_and_close;
@@ -1355,7 +1354,7 @@ int main(int argc, char **argv) {
 
 		if (argc==optind) {
 			fprintf(stderr,"Error! Need two filenames\n");
-			fprintf(stderr,"%s %s LOCK apple_filename_old "
+			fprintf(stderr,"%s %s RENAME apple_filename_old "
 				"apple_filename_new\n",
 				argv[0],image);
 	     		goto exit_and_close;

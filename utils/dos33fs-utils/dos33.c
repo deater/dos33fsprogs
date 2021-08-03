@@ -1203,7 +1203,7 @@ int main(int argc, char **argv) {
 		/* check and make sure we have apple_filename */
 		if (argc==optind) {
 			fprintf(stderr,"Error! Need two filenames\n");
-			fprintf(stderr,"%s %s LOCK apple_filename_old "
+			fprintf(stderr,"%s %s RENAME apple_filename_old "
 				"apple_filename_new\n",
 				argv[0],image);
 	     		goto exit_and_close;
@@ -1215,7 +1215,7 @@ int main(int argc, char **argv) {
 
 		if (argc==optind) {
 			fprintf(stderr,"Error! Need two filenames\n");
-			fprintf(stderr,"%s %s LOCK apple_filename_old "
+			fprintf(stderr,"%s %s RENAME apple_filename_old "
 				"apple_filename_new\n",
 				argv[0],image);
 	     		goto exit_and_close;
