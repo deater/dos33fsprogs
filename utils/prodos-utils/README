@@ -8,6 +8,9 @@ Tools for manipulating Apple II prodos filesystems
 
 + mkprodosfs:	create an Apple ][ ProDOS filesystems
 
++ prodos_cat : allow cat'ing (listing) prodos text files with \r (CR)
+	line endings on a machine like Linux that's expecting \n (LF)
+
 NOTE: subdirectory support is currently not implemented
 
 TODO:

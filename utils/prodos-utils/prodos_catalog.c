@@ -2,6 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
+#include <time.h>
 
 #include "prodos.h"
 
@@ -129,7 +130,7 @@ static int prodos_text_timestamp(int t, unsigned char *timestamp) {
 	minute=t&0x3f;
 
 	sprintf((char *)timestamp,"%2d-%s-%02d %2d:%02d",
-		day,prodos_capital_month_names[month],year,hour,minute);
+		day,prodos_capital_month_names[month],year%100,hour,minute);
 	timestamp[16]=0;
 
 	return 0;

@@ -91,5 +91,9 @@ int prodos_write_block(struct voldir_t *voldir,unsigned char *block, int blocknu
 /* prodos_voldir.c */
 int prodos_sync_voldir(struct voldir_t *voldir);
 int prodos_change_volume_name(struct voldir_t *voldir, char *volname);
-int prodos_read_voldir(int fd, struct voldir_t *voldir,
+int prodos_init_voldir(int fd, struct voldir_t *voldir,
                                 int interleave, int image_offset);
+int prodos_read_voldir(struct voldir_t *voldir);
+
+/* prodos_time.c */
+int prodos_time(time_t t);

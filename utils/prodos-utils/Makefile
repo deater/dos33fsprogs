@@ -11,13 +11,15 @@ prodos:			prodos.o \
 			prodos_catalog.o \
 			prodos_dump.o \
 			prodos_volume_bitmap.o \
-			prodos_voldir.o
+			prodos_voldir.o \
+			prodos_time.o
 			$(CC) -o prodos prodos.o \
 				prodos_read.o \
 				prodos_catalog.o \
 				prodos_dump.o \
 				prodos_volume_bitmap.o \
-				prodos_voldir.o $(LFLAGS)
+				prodos_voldir.o \
+				prodos_time.o $(LFLAGS)
 
 prodos.o:		prodos.c prodos.h
 			$(CC) $(CFLAGS) -g -c prodos.c
@@ -49,10 +51,10 @@ text_to_prodos.o:	text_to_prodos.c
 ###
 
 mkprodosfs:		mkprodosfs.o prodos_read.o prodos_volume_bitmap.o \
-				prodos_voldir.o
+				prodos_voldir.o prodos_time.o
 			$(CC) $(LFLAGS) -o mkprodosfs mkprodosfs.o \
 				prodos_read.o prodos_volume_bitmap.o \
-				prodos_voldir.o
+				prodos_voldir.o prodos_time.o
 
 mkprodosfs.o:		mkprodosfs.c prodos.h
 			$(CC) $(CFLAGS) -c mkprodosfs.c
@@ -81,6 +83,11 @@ prodos_read.o:		prodos_read.c prodos.h
 
 prodos_voldir.o:	prodos_voldir.c prodos.h
 			$(CC) $(CFLAGS) -c prodos_voldir.c
+
+###
+
+prodos_time.o:	prodos_time.c prodos.h
+			$(CC) $(CFLAGS) -c prodos_time.c
 
 
 ###

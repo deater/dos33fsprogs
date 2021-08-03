@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 
 #include "prodos.h"
 

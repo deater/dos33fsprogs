@@ -13,26 +13,20 @@
 
 extern int debug;
 
+
     /* Read volume directory into a buffer */
-int prodos_read_voldir(int fd, struct voldir_t *voldir,
-				int interleave, int image_offset) {
+int prodos_read_voldir(struct voldir_t *voldir) {
 
 	int result;
 	unsigned char voldir_buffer[PRODOS_BYTES_PER_BLOCK];
 
-	voldir->interleave=interleave;
-	voldir->image_offset=image_offset;
-
 	/* read in VOLDIR KEY Block*/
-	voldir->fd=fd;
 	result=prodos_read_block(voldir,voldir_buffer,PRODOS_VOLDIR_KEY_BLOCK);
 
 	if (result<0) {
 		fprintf(stderr,"Error reading VOLDIR\n");
 		return -1;
 	}
-
-	voldir->fd=fd;
 
 	voldir->storage_type=(voldir_buffer[0x4]>>4)&0xf;
 	voldir->name_length=(voldir_buffer[0x4]&0xf);
@@ -68,12 +62,38 @@ int prodos_read_voldir(int fd, struct voldir_t *voldir,
 }
 
 
+    /* Read volume directory into a buffer */
+int prodos_init_voldir(int fd, struct voldir_t *voldir,
+				int interleave, int image_offset) {
+
+
+	voldir->interleave=interleave;
+	voldir->image_offset=image_offset;
+
+	/* read in VOLDIR KEY Block*/
+	voldir->fd=fd;
+
+	prodos_read_voldir(voldir);
+
+	return 0;
+}
+
+
+
+
+	/* write out the voldir */
+	/* This is tricky as the superblock-type info is entry 0 */
+	/* but the rest are directory entries */
+	/* and we sort of treat these as separate but not */
 
 int prodos_sync_voldir(struct voldir_t *voldir) {
 
 	unsigned char newvoldir[PRODOS_BYTES_PER_BLOCK];
 
-	memset(newvoldir,0,PRODOS_BYTES_PER_BLOCK);
+	/* read in existing voldir */
+	prodos_read_block(voldir,newvoldir,PRODOS_VOLDIR_KEY_BLOCK);
+
+//	memset(newvoldir,0,PRODOS_BYTES_PER_BLOCK);
 
 	newvoldir[0x4]=(voldir->storage_type<<4)|(voldir->name_length&0xf);
 	memcpy(&newvoldir[0x5],voldir->volume_name,voldir->name_length);

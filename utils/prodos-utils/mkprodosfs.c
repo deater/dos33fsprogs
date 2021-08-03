@@ -4,12 +4,13 @@
 #include <unistd.h> /* close() */
 #include <stdlib.h> /* strtol() */
 #include <errno.h>
+#include <time.h>
 
 #include "version.h"
 
 #include "prodos.h"
 
-int debug=1;
+int debug=0;
 
 static int ones_lookup[8]={
 	0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE, 0xFF,
@@ -134,7 +135,7 @@ int main(int argc, char **argv) {
 
 	voldir.bit_map_pointer=6;
 
-	voldir.creation_time=0;
+	voldir.creation_time=prodos_time(time(NULL));
 
 	voldir.file_count=0;
 

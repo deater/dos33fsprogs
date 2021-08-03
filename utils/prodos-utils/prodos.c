@@ -6,14 +6,14 @@
 #include <unistd.h>   /* lseek() */
 #include <ctype.h>    /* toupper() */
 #include <errno.h>
+#include <time.h>
 
 #include "version.h"
 
 #include "prodos.h"
 
 static int ignore_errors=0;
-int debug=1;
-
+int debug=0;
 
 	/* Given filename, return voldir/offset */
 static int prodos_lookup_file(struct voldir_t *voldir,
@@ -207,6 +207,21 @@ static int prodos_writeout_filedesc(struct voldir_t *voldir,
 #define ERROR_FILE_TOO_BIG	7
 
 
+
+#define PRODOS_NUM_FILE_TYPES 5
+
+static struct prodos_file_type {
+	int type;
+	char name[4];
+} file_types[PRODOS_NUM_FILE_TYPES] = {
+	{PRODOS_TYPE_TXT,"TXT"},
+	{PRODOS_TYPE_BIN,"BIN"},
+	{PRODOS_TYPE_BAS,"BAS"},
+	{PRODOS_TYPE_VAR,"VAR"},
+	{PRODOS_TYPE_SYS,"SYS"},
+};
+
+
 	/* creates file apple_filename on the image from local file filename */
 	/* returns ?? */
 static int prodos_add_file(struct voldir_t *voldir,
@@ -215,7 +230,7 @@ static int prodos_add_file(struct voldir_t *voldir,
 		char *filename, char *apple_filename) {
 
 
-	int free_blocks,file_size,needed_blocks,total_blocks,file_type;
+	int free_blocks,file_size,needed_blocks,total_blocks,storage_type;
 	int block,i,j,needed_limit;
 	struct stat file_info;
 	int input_fd;
@@ -225,6 +240,8 @@ static int prodos_add_file(struct voldir_t *voldir,
 	unsigned char data_buffer[PRODOS_BYTES_PER_BLOCK];
 	int key_block,index,inode;
 	struct file_entry_t file;
+	int file_type=0;
+
 
 	/* check for valid filename */
 
@@ -244,6 +261,14 @@ static int prodos_add_file(struct voldir_t *voldir,
 				(islower(apple_filename[i])) ) {
 			fprintf(stderr,"Warning, lowercase filename support not really implemented\n");
 			//return ERROR_INVALID_FILENAME;
+		}
+	}
+
+	/* get file type */
+	for(i=0;i<PRODOS_NUM_FILE_TYPES;i++) {
+		if (!strncmp(type,file_types[i].name,3)) {
+			file_type=file_types[i].type;
+			if (debug) printf("Found type %s=%d\n",type,file_type);
 		}
 	}
 
@@ -269,19 +294,19 @@ static int prodos_add_file(struct voldir_t *voldir,
 	else if (needed_blocks==1) {
 		/* seedling */
 		if (debug) printf("File seedling\n");
-		file_type=PRODOS_FILE_SEEDLING;
+		storage_type=PRODOS_FILE_SEEDLING;
 		total_blocks=needed_blocks;
 	}
 	else if (needed_blocks<=256) {
 		/* sapling */
 		if (debug) printf("File sapling\n");
-		file_type=PRODOS_FILE_SAPLING;
+		storage_type=PRODOS_FILE_SAPLING;
 		total_blocks=needed_blocks+1;	/* for index block */
 	}
 	else if (needed_blocks<=65536) {
 		/* tree */
 		if (debug) printf("File tree\n");
-		file_type=PRODOS_FILE_TREE;
+		storage_type=PRODOS_FILE_TREE;
 		total_blocks=needed_blocks+1 /* for key index block */
 			+(1+needed_blocks/256);	/* for index blocks */
 						/* FIXME: -1? */
@@ -309,7 +334,7 @@ static int prodos_add_file(struct voldir_t *voldir,
 		return ERROR_IMAGE_NOT_FOUND;
 	}
 
-	if (file_type==PRODOS_FILE_SEEDLING) {
+	if (storage_type==PRODOS_FILE_SEEDLING) {
 		block=prodos_allocate_block(voldir);
 		key_block=block;
 
@@ -322,7 +347,7 @@ static int prodos_add_file(struct voldir_t *voldir,
 		prodos_write_block(voldir,data_buffer,block);
 	}
 
-	if (file_type==PRODOS_FILE_SAPLING) {
+	if (storage_type==PRODOS_FILE_SAPLING) {
 		/* allocate index */
 		index=prodos_allocate_block(voldir);
 		key_block=index;
@@ -348,7 +373,7 @@ static int prodos_add_file(struct voldir_t *voldir,
 	}
 
 
-	if (file_type==PRODOS_FILE_TREE) {
+	if (storage_type==PRODOS_FILE_TREE) {
 		/* allocate key index */
 		key_block=prodos_allocate_block(voldir);
 		memset(key_buffer,0,PRODOS_BYTES_PER_BLOCK);
@@ -395,19 +420,19 @@ static int prodos_add_file(struct voldir_t *voldir,
 
 
 	/* FIXME */
-	file.storage_type=file_type;
+	file.storage_type=storage_type;
 	file.name_length=strlen(apple_filename);
 	memcpy(file.file_name,apple_filename,file.name_length);
-	file.file_type=0;
+	file.file_type=file_type;
 	file.key_pointer=key_block;
 	file.blocks_used=total_blocks;	/* includes index blocks */
 	file.eof=file_size;
-	file.creation_time=0;
+	file.creation_time=prodos_time(time(NULL));
 	file.version=0;
 	file.min_version=0;
 	file.access=0;
 	file.aux_type=0;
-	file.last_mod=0;
+	file.last_mod=prodos_time(time(NULL));
 	file.header_pointer=PRODOS_VOLDIR_KEY_BLOCK;
 
 
@@ -415,6 +440,8 @@ static int prodos_add_file(struct voldir_t *voldir,
 	if (inode<0) {
 		return inode;
 	}
+
+	if (debug) printf("Found inode $%x\n",inode);
 
 	/* read in existing voldir entry */
 	result=prodos_read_block(voldir,data_buffer,inode>>8);
@@ -427,6 +454,7 @@ static int prodos_add_file(struct voldir_t *voldir,
 	result=prodos_write_block(voldir,data_buffer,inode>>8);
 
 	/* update file count */
+	if (debug) printf("Updating file count...\n");
 	voldir->file_count++;
 	prodos_sync_voldir(voldir);
 
@@ -1048,7 +1076,7 @@ int main(int argc, char **argv) {
 		interleave=arg_interleave-1;
 	}
 
-	prodos_read_voldir(prodos_fd,&voldir,interleave,image_offset);
+	prodos_init_voldir(prodos_fd,&voldir,interleave,image_offset);
 
 	/* Move to next argument */
 	optind++;
