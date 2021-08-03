@@ -2,9 +2,25 @@
 prodos-utils
 =============
 
-Tools for manipulating an Apple II 140k prodos filesystem.
+Tools for manipulating Apple II prodos filesystems
 
-+ prodos  : a tool for manipulating prodos .po / .dsk images
++ prodos  : a tool for manipulating prodos .po / .dsk / 2mg images
 
 + mkprodosfs:	create an Apple ][ ProDOS filesystems
+
+NOTE: subdirectory support is currently not implemented
+
+TODO:
+	mkprodosfs:
+		test!  Especially edge cases
+		test images big enough for extra bitmap table
+		Options for setting vol header stuff
+		Option to make 2mg image?
+
+	prodos:
+		test!  especially tree (files bigger than 128k)
+		subdirectory support
+		delete support
+		support for setting attributes
+		
 
