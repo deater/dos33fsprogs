@@ -9,6 +9,7 @@
 #include "prodos.h"
 
 
+#if 0
 static int dump_block(unsigned char *block_buffer) {
 
 	int i,j;
@@ -22,6 +23,7 @@ static int dump_block(unsigned char *block_buffer) {
 	}
 	return 0;
 }
+#endif
 
 static unsigned char month_names[12][4]={
 	"Jan","Feb","Mar","Apr","May","Jun",
@@ -152,10 +154,6 @@ static void prodos_print_file_type(int type) {
 
 static void dump_voldir(struct voldir_t *voldir) {
 
-	unsigned char volume_name[16];
-	int storage_type,name_length;
-	int creation_time;
-	unsigned char voldir_buffer[PRODOS_BYTES_PER_BLOCK];
 
 //	printf("\nVOLDIR Block:\n");
 //	dump_block(voldir);
@@ -187,9 +185,6 @@ static void dump_voldir(struct voldir_t *voldir) {
 int prodos_dump(struct voldir_t *voldir, int fd) {
 
 	int catalog_block,catalog_offset,file;
-	int i;
-	int deleted=0;
-	char temp_string[BUFSIZ];
 	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
 	unsigned char file_desc[PRODOS_FILE_DESC_LEN];
 	int result;
@@ -215,7 +210,7 @@ int prodos_dump(struct voldir_t *voldir, int fd) {
 			memcpy(file_desc,
 				catalog_buffer+4+file*PRODOS_FILE_DESC_LEN,
 				PRODOS_FILE_DESC_LEN);
-			prodos_populate_filedesc(&file_desc,&file_entry);
+			prodos_populate_filedesc(file_desc,&file_entry);
 
 			if (file_entry.storage_type==PRODOS_FILE_DELETED) continue;
 
@@ -269,7 +264,7 @@ int prodos_dump(struct voldir_t *voldir, int fd) {
 }
 
 int prodos_showfree(struct voldir_t *voldir, int fd) {
-
+#if 0
 	int num_tracks,catalog_t,catalog_s,file,ts_t,ts_s,ts_total;
 	int track,sector;
 	int i,j;
@@ -294,7 +289,7 @@ int prodos_showfree(struct voldir_t *voldir, int fd) {
 	for(i=0;i<35;i++) for(j=0;j<16;j++) usage[i][j]=0;
 
 	dump_voldir(voldir);
-#if 0
+
 	catalog_t=voldir[VTOC_CATALOG_T];
 	catalog_s=voldir[VTOC_CATALOG_S];
 	ts_total=voldir[VTOC_MAX_TS_PAIRS];
