@@ -1,9 +1,10 @@
     /* For now hard-coded */
     /* Could be made dynamic if we want to be useful */
     /* On dos3.2 disks, or larger filesystems */
-#define TRACKS_PER_DISK 0x23
-#define BLOCKS_PER_TRACK 0x8
+
 #define PRODOS_BYTES_PER_BLOCK 0x200
+#define PRODOS_VOLNAME_LEN	15
+#define PRODOS_FILENAME_LEN	15
 
 #define PRODOS_INTERLEAVE_PRODOS	0x0
 #define PRODOS_INTERLEAVE_DOS33		0x1
@@ -86,3 +87,9 @@ int prodos_showfree(struct voldir_t *voldir, int fd);
 /* prodos_read.c */
 int prodos_read_block(struct voldir_t *voldir,unsigned char *block, int blocknum);
 int prodos_write_block(struct voldir_t *voldir,unsigned char *block, int blocknum);
+
+/* prodos_voldir.c */
+int prodos_sync_voldir(struct voldir_t *voldir);
+int prodos_change_volume_name(struct voldir_t *voldir, char *volname);
+int prodos_read_voldir(int fd, struct voldir_t *voldir,
+                                int interleave, int image_offset);
