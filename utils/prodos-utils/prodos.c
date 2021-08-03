@@ -114,6 +114,50 @@ static int prodos_lookup_file(struct voldir_t *voldir,
 }
 
 
+	/* Given filename, return voldir/offset */
+	/* FIXME: allocate new voldir block if all full */
+static int prodos_allocate_directory_entry(struct voldir_t *voldir) {
+
+	int voldir_block,voldir_offset;
+	struct file_entry_t file_entry;
+	unsigned char voldir_buffer[PRODOS_BYTES_PER_BLOCK];
+	int result,file;
+
+	voldir_block=PRODOS_VOLDIR_KEY_BLOCK;
+	voldir_offset=1;       /* skip the header */
+
+	while(1) {
+
+		/* Read in Block */
+		result=prodos_read_block(voldir,
+				voldir_buffer,voldir_block);
+		if (result<0) {
+			fprintf(stderr,"Error on I/O\n");
+			return -1;
+		}
+
+		for(file=voldir_offset;
+			file<voldir->entries_per_block;file++) {
+
+			prodos_populate_filedesc(
+				voldir_buffer+4+file*PRODOS_FILE_DESC_LEN,
+				&file_entry);
+
+			if (file_entry.storage_type==PRODOS_FILE_DELETED) {
+				return (voldir_block<<8)|file;
+			}
+		}
+
+		voldir_offset=0;
+		voldir_block=voldir_buffer[2]|(voldir_buffer[3]<<8);
+		if (voldir_block==0) break;
+
+	}
+
+	return -1;
+}
+
+
 
 	/* Checks if "filename" exists */
 	/* returns file type  */
@@ -150,40 +194,71 @@ static int prodos_free_block(struct voldir_t *voldir,int block) {
 	return 0;
 }
 
-static int prodos_allocate_sector(int fd, struct voldir_t *voldir) {
+static int prodos_allocate_block(struct voldir_t *voldir) {
 
-#if 0
+	int found_block=0;
 
-	int found_track=0,found_sector=0;
-	int result;
+	/* Find an empty block */
+	found_block=prodos_voldir_find_free_block(voldir);
+	if (debug) printf("Found free block %x\n",found_block);
 
-	/* Find an empty sector */
-	result=prodos_voldir_find_free_sector(voldir,&found_track,&found_sector);
-
-	if (result<0) {
+	if (found_block<0) {
 		fprintf(stderr,"ERROR: prodos_allocate_sector: Disk full!\n");
 		return -1;
 	}
 
+	prodos_voldir_reserve_block(voldir,found_block);
 
-	/* store new track/direction info */
-	voldir[VTOC_LAST_ALLOC_T]=found_track;
+	return found_block;
 
-//	if (found_track>PRODOS_VOLDIR_TRACK) vtoc[VTOC_ALLOC_DIRECT]=1;
-//	else vtoc[VTOC_ALLOC_DIRECT]=-1;
+}
 
-	/* Seek to VTOC */
-	lseek(fd,DISK_OFFSET(PRODOS_VOLDIR_TRACK,PRODOS_VOLDIR_BLOCK),SEEK_SET);
 
-	/* Write out VTOC */
-	result=write(fd,voldir,PRODOS_BYTES_PER_BLOCK);
+static int prodos_writeout_filedesc(struct voldir_t *voldir,
+				struct file_entry_t *file_entry,
+				unsigned char *dest) {
 
-	if (result<0) fprintf(stderr,"Error on I/O\n");
+	/* clear it out */
+	memset(dest,0,PRODOS_FILE_DESC_LEN);
 
-	return ((found_track<<8)+found_sector);
-#endif
+	dest[0x00]=(file_entry->storage_type<<4)|(file_entry->name_length&0xf);
+        memcpy(&dest[0x01],&file_entry->file_name[0],file_entry->name_length);
+
+	dest[0x10]=file_entry->file_type;
+
+	dest[0x11]=file_entry->key_pointer&0xff;
+	dest[0x12]=(file_entry->key_pointer>>8)&0xff;
+
+	dest[0x13]=file_entry->blocks_used&0xff;
+	dest[0x14]=(file_entry->blocks_used>>8)&0xff;
+
+	dest[0x15]=file_entry->eof&0xff;
+	dest[0x16]=(file_entry->eof>>8)&0xff;
+	dest[0x17]=(file_entry->eof>>16)&0xff;
+
+	dest[0x18]=(file_entry->creation_time>>16)&0xff;
+	dest[0x19]=(file_entry->creation_time>>24)&0xff;
+	dest[0x1a]=(file_entry->creation_time>>0)&0xff;
+	dest[0x1b]=(file_entry->creation_time>>8)&0xff;
+
+	dest[0x1c]=file_entry->version;
+	dest[0x1d]=file_entry->min_version;
+	dest[0x1e]=file_entry->access;
+
+	dest[0x1f]=file_entry->aux_type&0xff;
+	dest[0x20]=(file_entry->aux_type>>8)&0xff;
+
+	dest[0x21]=(file_entry->last_mod>>16)&0xff;
+	dest[0x22]=(file_entry->last_mod>>24)&0xff;
+	dest[0x23]=(file_entry->last_mod>>0)&0xff;
+	dest[0x24]=(file_entry->last_mod>>8)&0xff;
+
+	dest[0x25]=file_entry->header_pointer&0xff;
+	dest[0x26]=(file_entry->header_pointer>>8)&0xff;
+
 	return 0;
 }
+
 
 #define ERROR_MYSTERY		1
 #define ERROR_INVALID_FILENAME	2
@@ -203,16 +278,15 @@ static int prodos_add_file(struct voldir_t *voldir,
 
 
 	int free_blocks,file_size,needed_blocks,total_blocks,file_type;
+	int block,i,j,needed_limit;
 	struct stat file_info;
-	int size_in_sectors=0;
-	int initial_ts_list=0,ts_list=0,i,data_ts,x,bytes_read=0,old_ts_list;
-	int catalog_track,catalog_sector,sectors_used=0;
 	int input_fd;
 	int result;
-	int first_write=1;
-	unsigned char ts_buffer[PRODOS_BYTES_PER_BLOCK];
-	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
+	unsigned char key_buffer[PRODOS_BYTES_PER_BLOCK];
+	unsigned char index_buffer[PRODOS_BYTES_PER_BLOCK];
 	unsigned char data_buffer[PRODOS_BYTES_PER_BLOCK];
+	int key_block,index,inode;
+	struct file_entry_t file;
 
 	/* check for valid filename */
 
@@ -297,194 +371,122 @@ static int prodos_add_file(struct voldir_t *voldir,
 		return ERROR_IMAGE_NOT_FOUND;
 	}
 
-#if 0
-	i=0;
-	while (i<size_in_sectors) {
+	if (file_type==PRODOS_FILE_SEEDLING) {
+		block=prodos_allocate_block(voldir);
+		key_block=block;
 
-		/* Create new T/S list if necessary */
-		if (i%TSL_MAX_NUMBER==0) {
-			old_ts_list=ts_list;
+		memset(data_buffer,0,PRODOS_BYTES_PER_BLOCK);
+		result=read(input_fd,data_buffer,PRODOS_BYTES_PER_BLOCK);
+		if (result<0) {
+			fprintf(stderr,"Error reading\n");
+			return -ERROR_MYSTERY;
+		}
+		prodos_write_block(voldir,data_buffer,block);
+	}
 
-			/* allocate a sector for the new list */
-			ts_list=prodos_allocate_sector(fd,voldir);
-			sectors_used++;
-			if (ts_list<0) return -1;
+	if (file_type==PRODOS_FILE_SAPLING) {
+		/* allocate index */
+		index=prodos_allocate_block(voldir);
+		key_block=index;
 
-			/* clear the t/s sector */
-			memset(ts_buffer,0,PRODOS_BYTES_PER_BLOCK);
+		memset(index_buffer,0,PRODOS_BYTES_PER_BLOCK);
 
-			lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
-			result=write(fd,ts_buffer,PRODOS_BYTES_PER_BLOCK);
+		for(i=0;i<needed_blocks;i++) {
+			block=prodos_allocate_block(voldir);
 
-			if (i==0) {
-				initial_ts_list=ts_list;
+			index_buffer[i]=block&0xff;
+			index_buffer[i+256]=(block>>8)&0xff;
+
+			memset(data_buffer,0,PRODOS_BYTES_PER_BLOCK);
+
+			result=read(input_fd,data_buffer,PRODOS_BYTES_PER_BLOCK);
+			if (result<0) {
+				fprintf(stderr,"Error reading\n");
+				return -ERROR_MYSTERY;
+			}
+			prodos_write_block(voldir,data_buffer,block);
+		}
+		prodos_write_block(voldir,index_buffer,index);
+	}
+
+
+	if (file_type==PRODOS_FILE_TREE) {
+		/* allocate key index */
+		key_block=prodos_allocate_block(voldir);
+		memset(key_buffer,0,PRODOS_BYTES_PER_BLOCK);
+
+		for(j=0;j<(1+needed_blocks/256);j++) {
+			index=prodos_allocate_block(voldir);
+			memset(index_buffer,0,PRODOS_BYTES_PER_BLOCK);
+
+			key_buffer[j]=index&0xff;
+			key_buffer[j+256]=(index>>8)&0xff;
+
+			if (j==needed_blocks/256) {
+				needed_limit=needed_blocks%256;
 			}
 			else {
-				/* we aren't the first t/s list so do special stuff */
-
-				/* load in the old t/s list */
-				lseek(fd,
-					DISK_OFFSET(get_high_byte(old_ts_list),
-					get_low_byte(old_ts_list)),
-					SEEK_SET);
-
-				result=read(fd,ts_buffer,PRODOS_BYTES_PER_BLOCK);
-
-				/* point from old ts list to new one we just made */
-				ts_buffer[TSL_NEXT_TRACK]=get_high_byte(ts_list);
-				ts_buffer[TSL_NEXT_SECTOR]=get_low_byte(ts_list);
-
-				/* set offset into file */
-				ts_buffer[TSL_OFFSET_H]=get_high_byte((i-122)*256);
-				ts_buffer[TSL_OFFSET_L]=get_low_byte((i-122)*256);
-
-				/* write out the old t/s list with updated info */
-				lseek(fd,
-					DISK_OFFSET(get_high_byte(old_ts_list),
-					get_low_byte(old_ts_list)),
-					SEEK_SET);
-
-				result=write(fd,ts_buffer,PRODOS_BYTES_PER_BLOCK);
+				needed_limit=256;
 			}
+
+			for(i=0;i<needed_limit;i++) {
+				block=prodos_allocate_block(voldir);
+
+				index_buffer[i]=block&0xff;
+				index_buffer[i+256]=(block>>8)&0xff;
+
+				memset(data_buffer,0,PRODOS_BYTES_PER_BLOCK);
+
+				result=read(input_fd,data_buffer,PRODOS_BYTES_PER_BLOCK);
+				if (result<0) {
+					fprintf(stderr,"Error reading\n");
+					return -ERROR_MYSTERY;
+				}
+				prodos_write_block(voldir,data_buffer,block);
+			}
+			prodos_write_block(voldir,index_buffer,index);
 		}
-
-		/* allocate a sector */
-		data_ts=prodos_allocate_sector(fd,voldir);
-		sectors_used++;
-
-		if (data_ts<0) return -1;
-
-		/* clear data sector */
-		memset(data_buffer,0,PRODOS_BYTES_PER_BLOCK);
-
-		/* read from input */
-		if ((first_write) && (file_type==ADD_BINARY)) {
-			first_write=0;
-			data_buffer[0]=address&0xff;
-			data_buffer[1]=(address>>8)&0xff;
-			data_buffer[2]=(length)&0xff;
-			data_buffer[3]=((length)>>8)&0xff;
-			bytes_read=read(input_fd,data_buffer+4,
-					PRODOS_BYTES_PER_BLOCK-4);
-			bytes_read+=4;
-		}
-		else {
-			bytes_read=read(input_fd,data_buffer,
-					PRODOS_BYTES_PER_BLOCK);
-		}
-		first_write=0;
-
-		if (bytes_read<0) fprintf(stderr,"Error reading bytes!\n");
-
-		/* write to disk image */
-		lseek(fd,DISK_OFFSET((data_ts>>8)&0xff,data_ts&0xff),SEEK_SET);
-		result=write(fd,data_buffer,PRODOS_BYTES_PER_BLOCK);
-
-		if (debug) {
-			printf("Writing %i bytes to %i/%i\n",
-				bytes_read,(data_ts>>8)&0xff,data_ts&0xff);
-		}
-
-		/* add to T/s table */
-
-		/* read in t/s list */
-		lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
-		result=read(fd,ts_buffer,PRODOS_BYTES_PER_BLOCK);
-
-		/* point to new data sector */
-		ts_buffer[((i%TSL_MAX_NUMBER)*2)+TSL_LIST]=(data_ts>>8)&0xff;
-		ts_buffer[((i%TSL_MAX_NUMBER)*2)+TSL_LIST+1]=(data_ts&0xff);
-
-		/* write t/s list back out */
-		lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
-		result=write(fd,ts_buffer,PRODOS_BYTES_PER_BLOCK);
-
-		i++;
+		prodos_write_block(voldir,key_buffer,key_block);
 	}
-
-	/* Add new file to Catalog */
-
-	catalog_track=voldir[VTOC_CATALOG_T];
-	catalog_sector=voldir[VTOC_CATALOG_S];
-
-continue_parsing_catalog:
-
-	/* Read in Catalog Sector */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
-	if (result!=PRODOS_BYTES_PER_BLOCK) {
-		fprintf(stderr,"Catalog: Error, only read %d bytes at $%02X:$%02X (%s)\n",
-			result,catalog_track,catalog_sector,strerror(errno));
-		return ERROR_NO_SPACE;
-	}
-
-	/* Find empty directory entry */
-	i=0;
-	while(i<7) {
-		/* for undelete purposes might want to skip 0xff */
-		/* (deleted) files first and only use if no room */
-
-		if ((catalog_buffer[CATALOG_FILE_LIST+
-				(i*CATALOG_ENTRY_SIZE)]==0xff) ||
-			(catalog_buffer[CATALOG_FILE_LIST+
-				(i*CATALOG_ENTRY_SIZE)]==0x00)) {
-			goto got_a_dentry;
-		}
-		i++;
-	}
-
-	if ((catalog_track=0x11) && (catalog_sector==1)) {
-		/* in theory can only have 105 files */
-		/* if full, we have no recourse!     */
-		/* can we allocate new catalog sectors */
-		/* and point to them?? */
-		fprintf(stderr,"Error!  No more room for files!\n");
-		return ERROR_CATALOG_FULL;
-	}
-
-	catalog_track=catalog_buffer[CATALOG_NEXT_T];
-	catalog_sector=catalog_buffer[CATALOG_NEXT_S];
-
-	goto continue_parsing_catalog;
-
-got_a_dentry:
-//	printf("Adding file at entry %i of catalog 0x%x:0x%x\n",
-//		i,catalog_track,catalog_sector);
-
-	/* Point entry to initial t/s list */
-	catalog_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)]=(initial_ts_list>>8)&0xff;
-	catalog_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+1]=(initial_ts_list&0xff);
-	/* set file type */
-	catalog_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_TYPE]=
-		prodos_char_to_type(dos_type,0);
-
-//	printf("Pointing T/S to %x/%x\n",(initial_ts_list>>8)&0xff,initial_ts_list&0xff);
-
-	/* copy over filename */
-	for(x=0;x<strlen(apple_filename);x++) {
-		catalog_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_NAME+x]=
-		apple_filename[x]^0x80;
-	}
-
-	/* pad out the filename with spaces */
-	for(x=strlen(apple_filename);x<FILE_NAME_SIZE;x++) {
-		catalog_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_NAME+x]=' '^0x80;
-	}
-
-	/* fill in filesize in sectors */
-	catalog_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_SIZE_L]=
-		sectors_used&0xff;
-	catalog_buffer[CATALOG_FILE_LIST+(i*CATALOG_ENTRY_SIZE)+FILE_SIZE_H]=
-		(sectors_used>>8)&0xff;
-
-	/* write out catalog sector */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=write(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
-
-	if (result<0) fprintf(stderr,"Error on I/O\n");
-#endif
 
 	close(input_fd);
+
+	/* now that file is on disk, hook up the directory image */
+
+	memset(&file,0,sizeof(struct file_entry_t));
+
+
+	/* FIXME */
+	file.storage_type=file_type;
+	file.name_length=strlen(apple_filename);
+	memcpy(file.file_name,apple_filename,file.name_length);
+	file.file_type=0;
+	file.key_pointer=key_block;
+	file.blocks_used=total_blocks;	/* includes index blocks */
+	file.eof=file_size;
+	file.creation_time=0;
+	file.version=0;
+	file.min_version=0;
+	file.access=0;
+	file.aux_type=0;
+	file.last_mod=0;
+	file.header_pointer=PRODOS_VOLDIR_KEY_BLOCK;
+
+
+	inode=prodos_allocate_directory_entry(voldir);
+	if (inode<0) {
+		return inode;
+	}
+
+	/* read in existing voldir entry */
+	result=prodos_read_block(voldir,data_buffer,inode>>8);
+
+	/* copy in new data */
+	prodos_writeout_filedesc(voldir,&file,
+		data_buffer+4+(inode&0xff)*PRODOS_FILE_DESC_LEN);
+
+	/* write back existing voldir entry */
+	result=prodos_write_block(voldir,data_buffer,inode>>8);
 
 	return 0;
 }
@@ -677,9 +679,9 @@ static int prodos_load_file(struct voldir_t *voldir,
 
 
     /* rename a file.  fts=entry/track/sector */
-    /* FIXME: can we rename a locked file?    */
     /* FIXME: validate the new filename is valid */
-static int prodos_rename_file(int fd,char *old_name,char *new_name) {
+static int prodos_rename_file(struct voldir_t *voldir,
+	char *old_name,char *new_name) {
 
 #if 0
 	int catalog_file,catalog_track,catalog_sector;
@@ -1369,7 +1371,7 @@ int main(int argc, char **argv) {
 			goto exit_and_close;
 		}
 
-		prodos_rename_file(prodos_fd,apple_filename,new_filename);
+		prodos_rename_file(&voldir,apple_filename,new_filename);
 
 		break;
 

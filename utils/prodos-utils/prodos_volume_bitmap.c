@@ -2,6 +2,12 @@
 
 #include "prodos.h"
 
+extern int debug;
+
+/* Note: PRODOS seems to label things this way */
+/* block  0123 4567	*/
+/* 0x0f = 0000 1111	*/
+
 static int ones_lookup[16]={
 	/* 0x0 = 0000 */ 0,
 	/* 0x1 = 0001 */ 1,
@@ -22,6 +28,7 @@ static int ones_lookup[16]={
 };
 
 	/* could be replaced by "find leading 1" instruction */
+	/* Note we are reverse from usual, wanting MSB first */
 	/* if available                                      */
 static int find_first_one(unsigned char byte) {
 
@@ -29,7 +36,7 @@ static int find_first_one(unsigned char byte) {
 
 	if (byte==0) return -1;
 
-	while((byte & (0x1<<i))==0) {
+	while((byte & (0x80>>i))==0) {
 		i++;
 	}
 	return i;
@@ -58,52 +65,84 @@ int prodos_voldir_free_space(struct voldir_t *voldir) {
 	return blocks_free;
 }
 
-/* free a sector from the sector bitmap */
+/* free a block from the block bitmap */
 int prodos_voldir_free_block(struct voldir_t *voldir, int block) {
 
-#if 0
-	/* each bitmap is 32 bits.  With 16-sector tracks only first 16 used */
-	/* 1 indicates free, 0 indicates used */
-	if (sector<8) {
-		vtoc[VTOC_FREE_BITMAPS+(track*4)+1]|=(0x1<<sector);
+	/* each volblock holds 512*8=4k entries */
+	/* block location = block%4096 */
+	/* which byte=remainder/8 */
+
+	int volblock;
+	unsigned char temp_block[PRODOS_BYTES_PER_BLOCK];
+	unsigned char bitmap;
+	int which_bitmap;
+
+	volblock=block/(PRODOS_BYTES_PER_BLOCK*8);
+
+	prodos_read_block(voldir,temp_block,volblock+voldir->bit_map_pointer);
+
+	which_bitmap=(block%(PRODOS_BYTES_PER_BLOCK*8))/8;
+
+	bitmap=temp_block[which_bitmap];
+
+	if (debug) {
+		printf("Free: $%X Using volblock %d (%d), flip b[%d]#%d $%X ",
+			block,volblock,volblock+voldir->bit_map_pointer,
+			which_bitmap,block&7,bitmap);
 	}
-	else if (sector<16) {
-		vtoc[VTOC_FREE_BITMAPS+(track*4)+0]|=(0x1<<(sector-8));
+
+	/* set bit to 1 to mark free */
+	bitmap|=(0x80>>(block&7));
+
+	if (debug) {
+		printf("-> $%X\n",bitmap);
 	}
-	else if (sector<24) {
-		vtoc[VTOC_FREE_BITMAPS+(track*4)+3]|=(0x1<<(sector-16));
-	}
-	else if (sector<32) {
-		vtoc[VTOC_FREE_BITMAPS+(track*4)+2]|=(0x1<<(sector-24));
-	}
-	else {
-		fprintf(stderr,"Error vtoc_free_sector!  sector too big %d\n",sector);
-	}
-#endif
+
+	temp_block[which_bitmap]=bitmap;
+
+	prodos_write_block(voldir,temp_block,volblock+voldir->bit_map_pointer);
+
+	return 0;
 }
 
-/* reserve a sector in the sector bitmap */
+/* reserve a block in the block bitmap */
 int prodos_voldir_reserve_block(struct voldir_t *voldir, int block) {
 
-#if 0
-	/* each bitmap is 32 bits.  With 16-sector tracks only first 16 used */
-	/* 1 indicates free, 0 indicates used */
-	if (sector<8) {
-		vtoc[VTOC_FREE_BITMAPS+(track*4)+1]&=~(0x1<<sector);
+	/* each volblock holds 512*8=4k entries */
+	/* block location = block%4096 */
+	/* which byte=remainder/8 */
+
+	int volblock;
+	unsigned char temp_block[PRODOS_BYTES_PER_BLOCK];
+	unsigned char bitmap;
+	int which_bitmap;
+
+	volblock=block/(PRODOS_BYTES_PER_BLOCK*8);
+
+	prodos_read_block(voldir,temp_block,volblock+voldir->bit_map_pointer);
+
+	which_bitmap=(block%(PRODOS_BYTES_PER_BLOCK*8))/8;
+
+	bitmap=temp_block[which_bitmap];
+
+	if (debug) {
+		printf("Reserve: $%X Using volblock %d (%d), flip b[%d]#%d $%X ",
+			block,volblock,volblock+voldir->bit_map_pointer,
+			which_bitmap,block&7,bitmap);
 	}
-	else if (sector<16) {
-		vtoc[VTOC_FREE_BITMAPS+(track*4)+0]&=~(0x1<<(sector-8));
+
+	/* clear bit to 0 to mark used */
+	bitmap&=~(0x80>>(block&7));
+
+	if (debug) {
+		printf("-> $%X\n",bitmap);
 	}
-	else if (sector<24) {
-		vtoc[VTOC_FREE_BITMAPS+(track*4)+3]&=~(0x1<<(sector-16));
-	}
-	else if (sector<32) {
-		vtoc[VTOC_FREE_BITMAPS+(track*4)+2]&=~(0x1<<(sector-24));
-	}
-	else {
-		fprintf(stderr,"Error vtoc_reserve_sector!  sector too big %d\n",sector);
-	}
-#endif
+
+	temp_block[which_bitmap]=bitmap;
+
+	prodos_write_block(voldir,temp_block,volblock+voldir->bit_map_pointer);
+
+	return 0;
 }
 
 
@@ -151,86 +190,31 @@ void prodos_voldir_dump_bitmap(struct voldir_t *voldir) {
 }
 
 
-/* reserve a sector in the sector bitmap */
-int prodos_voldir_find_free_block(struct voldir_t *voldir,
-	int *found_block) {
+/* find a free block in the block bitmap */
+/* FIXME: for speed, remember last found block and start from there */
+int prodos_voldir_find_free_block(struct voldir_t *voldir) {
 
-#if 0
-	int start_track,track_dir,i;
-	int bitmap;
-	int found=0;
+	int volblocks;
+	unsigned char temp_block[PRODOS_BYTES_PER_BLOCK];
+	int i,k,result;
 
-	/* Originally used to keep things near center of disk for speed */
-	/* We can use to avoid fragmentation possibly */
-	start_track=vtoc[VTOC_LAST_ALLOC_T]%TRACKS_PER_DISK;
-	track_dir=vtoc[VTOC_ALLOC_DIRECT];
+	volblocks=1+voldir->total_blocks/(PRODOS_BYTES_PER_BLOCK*8);
 
-	if (track_dir==255) track_dir=-1;
+	for(k=0;k<volblocks;k++) {
 
-	if ((track_dir!=1) && (track_dir!=-1)) {
-		fprintf(stderr,"ERROR!  Invalid track dir %i\n",track_dir);
+		prodos_read_block(voldir,temp_block,k+voldir->bit_map_pointer);
+
+		for(i=0;i<(512/16);i++) {
+			result=find_first_one(temp_block[i*2]);
+			if (result>=0) {
+				return (k<<4)+result;
+			}
+			result=find_first_one(temp_block[(1+i*2)]);
+			if (result>=0) {
+				return (k<<4)+result+8;
+			}
+		}
 	}
-
-	if (((start_track>PRODOS_VOLDIR_TRACK) && (track_dir!=1)) ||
-		((start_track<PRODOS_VOLDIR_TRACK) && (track_dir!=-1))) {
-		fprintf(stderr,"Warning! Non-optimal values for track dir t=%i d=%i\n",
-			start_track,track_dir);
-	}
-
-	i=start_track;
-	do {
-
-		/* i+1 = sector 0..7 */
-		bitmap=vtoc[VTOC_FREE_BITMAPS+(i*4)+1];
-		if (bitmap!=0x00) {
-			*found_sector=find_first_one(bitmap);
-			*found_track=i;
-			found++;
-			break;
-		}
-
-		/* i+0 = sector 8..15 */
-		bitmap=vtoc[VTOC_FREE_BITMAPS+(i*4)];
-		if (bitmap!=0x00) {
-			*found_sector=find_first_one(bitmap)+8;
-			*found_track=i;
-			found++;
-			break;
-		}
-
-		/* Move to next track, handling overflows */
-		i+=track_dir;
-		if (i<0) {
-			i=PRODOS_VOLDIR_TRACK;
-			track_dir=1;
-		}
-		if (i>=TRACKS_PER_DISK) {
-			i=PRODOS_VOLDIR_TRACK;
-			track_dir=-1;
-		}
-	} while (i!=start_track);
-
-	if (found) {
-		/* clear bit indicating in use */
-		prodos_voldir_reserve_sector(voldir, *found_track, *found_sector);
-
-		return 0;
-	}
-
-
-#if 0
-        /* write modified VTOC back out */
-        lseek(fd,DISK_OFFSET(PRODOS_VOLDIR_TRACK,PRODOS_VOLDIR_BLOCK),SEEK_SET);
-        result=write(fd,&voldir,PRODOS_BYTES_PER_BLOCK);
-
-        if (result<0) {
-                fprintf(stderr,"Error on I/O\n");
-        }
-#endif
-
-#endif
-
-
 
 	/* no room */
         return -1;

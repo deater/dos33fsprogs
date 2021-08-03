@@ -63,48 +63,12 @@ struct file_entry_t {
 	unsigned short header_pointer;
 };
 
-    /* CATALOG_VALUES */
-#define CATALOG_NEXT_T     0x01
-#define CATALOG_NEXT_S     0x02
-#define CATALOG_FILE_LIST  0x0b
-
-#define CATALOG_ENTRY_SIZE 0x23
-
-    /* CATALOG ENTRY */
-#define FILE_TS_LIST_T     0x0
-#define FILE_TS_LIST_S     0x1
-#define FILE_TYPE          0x2
-#define FILE_NAME          0x3
-#define FILE_SIZE_L        0x21
-#define FILE_SIZE_H        0x22
-
-#define FILE_NAME_SIZE     0x1e
-
-    /* TSL */
-#define TSL_NEXT_TRACK     0x1
-#define TSL_NEXT_SECTOR    0x2
-#define TSL_OFFSET_L       0x5
-#define TSL_OFFSET_H       0x6
-#define TSL_LIST           0xC
-
-#define TSL_ENTRY_SIZE      0x2
-#define TSL_MAX_NUMBER      122
-
-    /* Helper Macros */
-#define TS_TO_INT(__x,__y) ((((int)__x)<<8)+__y)
-#define DISK_OFFSET(__track,__sector) ((((__track)*BLOCKS_PER_TRACK)+(__sector))*PRODOS_BYTES_PER_BLOCK)
-
-
-#define DOS33_FILE_NORMAL 0
-#define DOS33_FILE_DELETED 1
-
 /* prodos_volume_bitmap.c */
 int prodos_voldir_free_space(struct voldir_t *voldir);
 int prodos_voldir_free_block(struct voldir_t *voldir, int block);
 int prodos_voldir_reserve_block(struct voldir_t *voldir, int block);
 void prodos_voldir_dump_bitmap(struct voldir_t *voldir);
-int prodos_voldir_find_free_block(struct voldir_t *voldir,
-	int *found_block);
+int prodos_voldir_find_free_block(struct voldir_t *voldir);
 
 /* prodos_catalog.c */
 int prodos_find_next_file(int inode, struct voldir_t *voldir);
