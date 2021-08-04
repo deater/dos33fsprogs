@@ -507,18 +507,18 @@ static int prodos_get_directory(struct voldir_t *voldir,char *string) {
 
 	if (debug) printf("Looking up directory %s\n",string);
 
-	/* see if leading '/' */
-	if (string[pointer]=='/') {
-		pointer++;
-		/* special case "/" */
-		if (string[pointer]==0) return PRODOS_VOLDIR_KEY_BLOCK;
-	}
 
 	while(1) {
 		path_pointer=0;
 
-		/* FIXME: make this a loop? */
-		if (string[pointer]=='/') pointer++;
+		/* see if leading '/' */
+		/* also handles the plain "/" case */
+		/* FIXME: eat multiple //// */
+		if (string[pointer]=='/') {
+			pointer++;
+			/* special case "/" */
+			if (string[pointer]==0) return subdir_block;
+		}
 
 		while(string[pointer]!=0) {
 			if (string[pointer]=='/') break;
@@ -1009,17 +1009,25 @@ static int lookup_command(char *name) {
 
 }
 
-static int truncate_filename(char *out, char *in) {
+static int truncate_filename(char *out, char *path, char *in) {
 
 	int truncated=0;
+	int last_slash=0;
+	int i;
+
+	for(i=0;i<strlen(in);i++) {
+		if (in[i]=='/') last_slash=i+1;
+	}
+
+	strncpy(path,in,last_slash);
 
 	/* Truncate filename if too long */
-	if (strlen(in)>15) {
-		fprintf(stderr,"Warning!  Truncating %s to 15 chars\n",in);
+	if (strlen(in+last_slash)>PRODOS_FILENAME_LEN) {
+		fprintf(stderr,"Warning!  Truncating %s to 15 chars\n",in+last_slash);
 		truncated=1;
 	}
-	strncpy(out,in,15);
-	out[15]='\0';
+	strncpy(out,in+last_slash,PRODOS_FILENAME_LEN);
+	out[PRODOS_FILENAME_LEN]='\0';
 
 	return truncated;
 }
@@ -1036,6 +1044,7 @@ int main(int argc, char **argv) {
 	int command,file_exists;
 	char temp_string[BUFSIZ];
 	char apple_filename[31],new_filename[31];
+	char apple_path[BUFSIZ];
 	char local_filename[BUFSIZ];
 	char *result_string;
 	int always_yes=0;
@@ -1265,9 +1274,10 @@ int main(int argc, char **argv) {
 			goto exit_and_close;
 		}
 
-		truncate_filename(apple_filename,argv[optind]);
+		truncate_filename(apple_filename,apple_path,argv[optind]);
 
-		if (debug) printf("\tApple filename: %s\n",apple_filename);
+		if (debug) printf("\tApple filename: %s, path %s\n",
+			apple_filename,apple_path);
 
 		/* get output filename */
 		optind++;
@@ -1284,9 +1294,20 @@ int main(int argc, char **argv) {
 
 		if (debug) printf("\tOutput filename: %s\n",local_filename);
 
+		if (apple_path[0]==0) {
+			dir_block=PRODOS_VOLDIR_KEY_BLOCK;
+		}
+		else {
+			dir_block=prodos_get_directory(&voldir,apple_path);
+			if (dir_block<0) {
+				fprintf(stderr,"Error, couldn't open directory %s\n",argv[optind]);
+				return -1;
+			}
+		}
+
 		/* get the voldir/entry for file */
 		inode=prodos_lookup_file(&voldir,
-				PRODOS_VOLDIR_KEY_BLOCK,apple_filename);
+				dir_block,apple_filename);
 
 		if (inode<0) {
 			fprintf(stderr,"Error!  %s not found!\n",
@@ -1341,7 +1362,7 @@ int main(int argc, char **argv) {
 
 		if (argc>optind) {
 			/* apple filename specified */
-			truncate_filename(apple_filename,argv[optind]);
+			truncate_filename(apple_filename,apple_path,argv[optind]);
 		}
 		else {
 			/* If no filename specified for apple name    */
@@ -1359,7 +1380,7 @@ int main(int argc, char **argv) {
 				}
 			}
 
-			truncate_filename(apple_filename,temp);
+			truncate_filename(apple_filename,apple_path,temp);
 		}
 
 		if (debug) printf("\tApple filename: %s\n",apple_filename);
@@ -1396,7 +1417,7 @@ int main(int argc, char **argv) {
 			goto exit_and_close;
 		}
 
-		truncate_filename(apple_filename,argv[optind]);
+		truncate_filename(apple_filename,apple_path,argv[optind]);
 
 		file_exists=prodos_check_file_exists(&voldir,apple_filename);
 		if (file_exists<0) {
@@ -1429,7 +1450,7 @@ int main(int argc, char **argv) {
 		}
 
 		/* Truncate filename if too long */
-		truncate_filename(apple_filename,argv[optind]);
+		truncate_filename(apple_filename,apple_path,argv[optind]);
 		optind++;
 
 		if (argc==optind) {
@@ -1440,7 +1461,7 @@ int main(int argc, char **argv) {
 	     		goto exit_and_close;
 		}
 
-		truncate_filename(new_filename,argv[optind]);
+		truncate_filename(new_filename,apple_path,argv[optind]);
 
 		/* get the entry/track/sector for file */
 		file_exists=prodos_check_file_exists(&voldir,apple_filename);
