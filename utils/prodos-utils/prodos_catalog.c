@@ -209,7 +209,7 @@ static int prodos_print_file_info(int inode, struct voldir_t *voldir) {
 	return 0;
 }
 
-void prodos_catalog(int dos_fd, struct voldir_t *voldir) {
+void prodos_catalog(struct voldir_t *voldir, int dir_block) {
 
 	int catalog_block,catalog_offset,catalog_inode;
 	int blocks_free=0;
@@ -222,7 +222,7 @@ void prodos_catalog(int dos_fd, struct voldir_t *voldir) {
 	printf(" NAME           TYPE  BLOCKS  MODIFIED         CREATED          ENDFILE SUBTYPE\n");
 	printf("\n");
 
-	catalog_block=PRODOS_VOLDIR_KEY_BLOCK;
+	catalog_block=dir_block;
 	catalog_offset=0;	/* skip the header */
 	catalog_inode=(catalog_block<<8)|catalog_offset;
 

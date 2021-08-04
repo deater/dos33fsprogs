@@ -873,7 +873,7 @@ static void display_help(char *name, int version_only) {
 	printf("\n");
 	printf("  Where disk_image is a valid PRODOS disk image\n"
 		"  and COMMAND is one of the following:\n");
-	printf("\tCATALOG   [dir]\n");
+	printf("\tCATALOG   [dir_name]\n");
 	printf("\tLOAD      apple_file <local_file>\n");
 	printf("\tSAVE      [-t type] [-a addr] [-l len] local_file <apple_file>\n");
 	printf("\tDELETE    apple_file\n");
@@ -970,6 +970,7 @@ int main(int argc, char **argv) {
 	int inode;
 	int address=0, length=0;
 	struct voldir_t voldir;
+	int dir_block;
 
 	/* Check command line arguments */
 	while ((c = getopt (argc, argv,"a:i:l:t:dhvxy"))!=-1) {
@@ -1226,7 +1227,9 @@ int main(int argc, char **argv) {
 
 	case COMMAND_CATALOG:
 
-		prodos_catalog(prodos_fd,&voldir);
+		dir_block=PRODOS_VOLDIR_KEY_BLOCK;
+
+		prodos_catalog(&voldir,dir_block);
 
 		break;
 

@@ -290,6 +290,10 @@ int prodos_dump_subdir(struct voldir_t *voldir, int subdir_key_block) {
 
 			printf("\tHeader pointer: %x\n",file_entry.header_pointer);
 
+			if (file_entry.storage_type==PRODOS_FILE_SUBDIR) {
+				prodos_dump_subdir(voldir,file_entry.key_pointer);
+			}
+
 		}
 
 		/* move to next */
