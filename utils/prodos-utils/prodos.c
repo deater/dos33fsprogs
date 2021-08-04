@@ -432,7 +432,7 @@ static int prodos_add_file(struct voldir_t *voldir,
 	file.creation_time=prodos_time(time(NULL));
 	file.version=0;
 	file.min_version=0;
-	file.access=0;
+	file.access=0xe3;	// 0x21?
 	file.aux_type=0;
 	file.last_mod=prodos_time(time(NULL));
 	file.header_pointer=PRODOS_VOLDIR_KEY_BLOCK;
@@ -880,6 +880,8 @@ static void display_help(char *name, int version_only) {
 	printf("\tRENAME    apple_file_old apple_file_new\n");
 	printf("\tDUMP\n");
 	printf("\tVOLUME    volume_name\n");
+	printf("\tMKDIR     dir_name\n");
+	printf("\tRMDIR     dir_name\n");
 	printf("\tTYPE      TODO: set type\n");
 	printf("\tAUX       TODO: set aux\n");
 	printf("\tTIMESTAMP TODO: set timestamp\n");
@@ -897,8 +899,10 @@ static void display_help(char *name, int version_only) {
 #define COMMAND_DUMP		5
 #define COMMAND_SHOWFREE	6
 #define COMMAND_VOLNAME		7
+#define COMMAND_MKDIR		8
+#define COMMAND_RMDIR		9
 
-#define MAX_COMMAND		8
+#define MAX_COMMAND		10
 #define COMMAND_UNKNOWN		255
 
 static struct command_type {
@@ -913,6 +917,8 @@ static struct command_type {
 	{COMMAND_DUMP,"DUMP"},
 	{COMMAND_SHOWFREE,"SHOWFREE"},
 	{COMMAND_VOLNAME,"VOLNAME"},
+	{COMMAND_MKDIR,"MKDIR"},
+	{COMMAND_RMDIR,"RMDIR"},
 };
 
 static int lookup_command(char *name) {
@@ -1314,12 +1320,12 @@ int main(int argc, char **argv) {
 
 	case COMMAND_DUMP:
 		printf("Dumping %s!\n",image);
-		prodos_dump(&voldir,prodos_fd);
+		prodos_dump(&voldir);
 		break;
 
 	case COMMAND_SHOWFREE:
 		printf("Showing Free %s!\n",image);
-		prodos_showfree(&voldir,prodos_fd);
+		prodos_showfree(&voldir);
 		break;
 
 	case COMMAND_RENAME:

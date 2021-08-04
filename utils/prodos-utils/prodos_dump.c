@@ -10,6 +10,8 @@
 #include "prodos.h"
 
 
+extern int debug;
+
 #if 0
 static int dump_block(unsigned char *block_buffer) {
 
@@ -56,11 +58,11 @@ static void prodos_print_time(int t) {
 
 static void prodos_print_access(int access) {
 
-	if (access&0x80) printf("DESTROY ");
-	if (access&0x40) printf("RENAME ");
-	if (access&0x20) printf("VOLDIR_NEW ");
-	if (access&0x2) printf("VOLDIR_WRITE ");
-	if (access&0x1) printf("VOLDIR_READ ");
+	if (access&PRODOS_ACCESS_DESTROY) printf("DESTROY ");
+	if (access&PRODOS_ACCESS_RENAME) printf("RENAME ");
+	if (access&PRODOS_ACCESS_CHANGED) printf("CHANGED ");
+	if (access&PRODOS_ACCESS_WRITE) printf("WRITE ");
+	if (access&PRODOS_ACCESS_READ) printf("READ ");
 
 }
 
@@ -183,40 +185,79 @@ static void dump_voldir(struct voldir_t *voldir) {
 }
 
 
-int prodos_dump(struct voldir_t *voldir, int fd) {
+int prodos_dump_subdir(struct voldir_t *voldir, int subdir_key_block) {
 
-	int catalog_block,catalog_offset,file;
-	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
+	unsigned char subdir_buffer[PRODOS_BYTES_PER_BLOCK];
 	unsigned char file_desc[PRODOS_FILE_DESC_LEN];
 	int result;
 	struct file_entry_t file_entry;
+	struct subdir_t subdir;
+	int subdir_block,subdir_offset,file;
 
-	dump_voldir(voldir);
+	printf("\n");
+	printf("Dumping subdir at $%X\n",subdir_key_block);
 
-	prodos_voldir_dump_bitmap(voldir);
+	result=prodos_read_block(voldir,subdir_buffer,subdir_key_block);
 
-	catalog_block=PRODOS_VOLDIR_KEY_BLOCK;
-	catalog_offset=1;	/* skip the header */
+	subdir.storage_type=subdir_buffer[0x04]>>4;
+	subdir.name_length=subdir_buffer[0x04]&0xf;
+	memcpy(subdir.subdir_name,&subdir_buffer[0x05],15);
+	subdir.subdir_name[subdir.name_length]=0;
+	/* note 0x14 must be $75??? */
+	subdir.creation_time=(subdir_buffer[0x1c]<<16)|
+                        (subdir_buffer[0x1d]<<24)|
+                        (subdir_buffer[0x1e]<<0)|
+                        (subdir_buffer[0x1f]<<8);
+	subdir.version=subdir_buffer[0x20];
+	subdir.min_version=subdir_buffer[0x21];
+	subdir.access=subdir_buffer[0x22];
+	subdir.entry_length=subdir_buffer[0x23];
+	subdir.entries_per_block=subdir_buffer[0x24];
+	subdir.file_count=(subdir_buffer[0x25]|(subdir_buffer[0x26]<<8));
+	subdir.parent_pointer=(subdir_buffer[0x27]|(subdir_buffer[0x28]<<8));
+	subdir.parent_entry=subdir_buffer[0x29];
+	subdir.parent_entry_length=subdir_buffer[0x2A];
+
+
+	printf("\tStorage type: ($%x): ",subdir.storage_type);
+	prodos_print_storage_type(subdir.storage_type);
+	printf("\tName length: $%x\n",subdir.name_length);
+	printf("\tName: %s\n",subdir.subdir_name);
+	printf("\tCreation Time (%x): ",subdir.creation_time);
+	prodos_print_time(subdir.creation_time);
+	printf("\n");
+	printf("\tVersion: %d\n",subdir.version);
+	printf("\tMin Version: %d\n",subdir.min_version);
+	printf("\tAccess (%x): ",subdir.access);
+	prodos_print_access(subdir.access);
+	printf("\n");
+	printf("\tEntry length: %d\n",subdir.entry_length);
+	printf("\tEntries per block: %d\n",subdir.entries_per_block);
+	printf("\tFile count: %d\n",subdir.file_count);
+	printf("\tParent Pointer: $%x\n",subdir.parent_pointer);
+	printf("\tParent Entry: $%x\n",subdir.parent_entry);
+	printf("\tParent Entry Length: $%x\n",subdir.parent_entry_length);
+
+	subdir_block=subdir_key_block;
+	subdir_offset=1;	/* skip the header */
 
 	while(1) {
 
-		result=prodos_read_block(voldir,catalog_buffer,catalog_block);
+		result=prodos_read_block(voldir,subdir_buffer,subdir_block);
 		if (result<0) fprintf(stderr,"Error on I/O\n");
 
-		// dump_block(catalog_buffer);
-
-		for(file=catalog_offset;
-			file<voldir->entries_per_block;file++) {
+		for(file=subdir_offset;
+			file<subdir.entries_per_block;file++) {
 
 			memcpy(file_desc,
-				catalog_buffer+4+file*PRODOS_FILE_DESC_LEN,
+				subdir_buffer+4+file*PRODOS_FILE_DESC_LEN,
 				PRODOS_FILE_DESC_LEN);
 			prodos_populate_filedesc(file_desc,&file_entry);
 
 			if (file_entry.storage_type==PRODOS_FILE_DELETED) continue;
 
 			printf("\n\n");
-			printf("FILE %d: %s\n",file,file_entry.file_name);
+			printf("FILE $%X-%d: %s\n",subdir_block,file,file_entry.file_name);
 			printf("\t");
 			prodos_print_storage_type(file_entry.storage_type);
 
@@ -252,6 +293,92 @@ int prodos_dump(struct voldir_t *voldir, int fd) {
 		}
 
 		/* move to next */
+		subdir_block=subdir_buffer[0x2]|(subdir_buffer[0x3]<<8);
+		if (subdir_block==0) break;
+		subdir_offset=0;
+
+	}
+
+	printf("\n");
+
+
+
+	return 0;
+}
+
+int prodos_dump(struct voldir_t *voldir) {
+
+	int catalog_block,catalog_offset,file;
+	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
+	unsigned char file_desc[PRODOS_FILE_DESC_LEN];
+	int result;
+	struct file_entry_t file_entry;
+
+	dump_voldir(voldir);
+
+	prodos_voldir_dump_bitmap(voldir);
+
+	catalog_block=PRODOS_VOLDIR_KEY_BLOCK;
+	catalog_offset=1;	/* skip the header */
+
+	while(1) {
+
+		result=prodos_read_block(voldir,catalog_buffer,catalog_block);
+		if (result<0) fprintf(stderr,"Error on I/O\n");
+
+		// dump_block(catalog_buffer);
+
+		for(file=catalog_offset;
+			file<voldir->entries_per_block;file++) {
+
+			memcpy(file_desc,
+				catalog_buffer+4+file*PRODOS_FILE_DESC_LEN,
+				PRODOS_FILE_DESC_LEN);
+			prodos_populate_filedesc(file_desc,&file_entry);
+
+			if (file_entry.storage_type==PRODOS_FILE_DELETED) continue;
+
+			printf("\n\n");
+			printf("FILE %d: %s\n",file,file_entry.file_name);
+			printf("\t($%X): ",file_entry.storage_type);
+			prodos_print_storage_type(file_entry.storage_type);
+
+			printf("\t");
+			prodos_print_file_type(file_entry.file_type);
+
+			printf("\tKey pointer: $%x\n",file_entry.key_pointer);
+
+			printf("\tBlocks Used: %d\n",file_entry.blocks_used);
+
+			printf("\tFile size (eof): %d\n",file_entry.eof);
+
+			printf("\tCreation Time (%x): ",file_entry.creation_time);
+			prodos_print_time(file_entry.creation_time);
+			printf("\n");
+
+			printf("\tVersion: %d\n",file_entry.version);
+
+			printf("\tMin Version: %d\n",file_entry.min_version);
+
+			printf("\tAccess (%x): ",file_entry.access);
+			prodos_print_access(file_entry.access);
+			printf("\n");
+
+			printf("\tAux Type: %x\n",file_entry.aux_type);
+
+			printf("\tLast mod Time: (%x) ",file_entry.last_mod);
+			prodos_print_time(file_entry.last_mod);
+			printf("\n");
+
+			printf("\tHeader pointer: %x\n",file_entry.header_pointer);
+
+			if (file_entry.storage_type==PRODOS_FILE_SUBDIR) {
+				prodos_dump_subdir(voldir,file_entry.key_pointer);
+			}
+
+		}
+
+		/* move to next */
 		catalog_block=catalog_buffer[0x2]|(catalog_buffer[0x3]<<8);
 		if (catalog_block==0) break;
 		catalog_offset=0;
@@ -264,7 +391,9 @@ int prodos_dump(struct voldir_t *voldir, int fd) {
 	return 0;
 }
 
-int prodos_showfree(struct voldir_t *voldir, int fd) {
+
+
+int prodos_showfree(struct voldir_t *voldir) {
 #if 0
 	int num_tracks,catalog_t,catalog_s,file,ts_t,ts_s,ts_total;
 	int track,sector;

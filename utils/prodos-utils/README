@@ -23,7 +23,6 @@ TODO:
 	prodos:
 		test!  especially tree (files bigger than 128k)
 		subdirectory support
-		delete support
 		support for setting attributes
 		
 

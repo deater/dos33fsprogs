@@ -28,6 +28,15 @@
 #define PRODOS_TYPE_VAR		0xFD
 #define PRODOS_TYPE_SYS		0xFF
 
+/* Normal access is $C3 */
+/* Locked file is $01 */
+/* Non-empty directories often locked? */
+#define PRODOS_ACCESS_DESTROY	0x80	// can be deleted
+#define PRODOS_ACCESS_RENAME	0x40
+#define PRODOS_ACCESS_CHANGED	0x20	// has been changed since last backup
+#define PRODOS_ACCESS_WRITE	0x02
+#define PRODOS_ACCESS_READ	0x01
+
 struct voldir_t {
 	int fd;
 	int interleave;
@@ -46,6 +55,26 @@ struct voldir_t {
 	unsigned char volume_name[16];
 	unsigned int creation_time;
 };
+
+struct subdir_t {
+	unsigned char storage_type;
+	unsigned char name_length;
+	unsigned char version;
+	unsigned char min_version;
+	unsigned char access;
+	unsigned char entry_length;
+	unsigned char entries_per_block;
+	unsigned char parent_entry;
+	unsigned char parent_entry_length;
+	unsigned short file_count;
+	unsigned short parent_pointer;
+//	unsigned short next_block;
+//	unsigned short bit_map_pointer;
+//	unsigned short total_blocks;
+	unsigned char subdir_name[16];
+	unsigned int creation_time;
+};
+
 
 struct file_entry_t {
 	unsigned char storage_type;
@@ -81,8 +110,8 @@ void prodos_catalog(int dos_fd, struct voldir_t *voldir);
 //unsigned char prodos_file_type(int value);
 
 /* prodos_dump.c */
-int prodos_dump(struct voldir_t *voldir, int fd);
-int prodos_showfree(struct voldir_t *voldir, int fd);
+int prodos_dump(struct voldir_t *voldir);
+int prodos_showfree(struct voldir_t *voldir);
 
 /* prodos_read.c */
 int prodos_read_block(struct voldir_t *voldir,unsigned char *block, int blocknum);
