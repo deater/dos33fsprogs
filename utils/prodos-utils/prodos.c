@@ -44,6 +44,8 @@ static int prodos_lookup_file(struct voldir_t *voldir,
 				voldir_buffer+4+file*PRODOS_FILE_DESC_LEN,
 				&file_entry);
 
+			if (file_entry.storage_type==PRODOS_FILE_DELETED) continue;
+
 			/* FIXME: case insensitive? */
 			if (!strncmp(filename,(char *)file_entry.file_name,15)) {
 				return (voldir_block<<8)|file;
@@ -701,93 +703,157 @@ static int prodos_rename_file(struct voldir_t *voldir,
 
 static int prodos_delete_file(struct voldir_t *voldir,char *apple_filename) {
 
-#if 0
-
-	int i;
-	int catalog_track,catalog_sector,catalog_entry;
-	int ts_track,ts_sector;
-	char file_type;
-	int result;
-	unsigned char catalog_buffer[PRODOS_BYTES_PER_BLOCK];
-
-	/* unpack file/track/sector info */
-	catalog_entry=fsl>>16;
-	catalog_track=(fsl>>8)&0xff;
-	catalog_sector=(fsl&0xff);
+	unsigned char data_buffer[PRODOS_BYTES_PER_BLOCK];
+	unsigned char index_block[PRODOS_BYTES_PER_BLOCK];
+	unsigned char master_index_block[PRODOS_BYTES_PER_BLOCK];
+	int result,chunk,chunk_block,index,blocks_left,read_blocks,mblock;
+	struct file_entry_t file;
+	int inode;
 
 
-	/* Load in the catalog table for the file */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
+	/* get the voldir/entry for file */
+	inode=prodos_lookup_file(voldir,apple_filename);
 
-	file_type=catalog_buffer[CATALOG_FILE_LIST+
-			(catalog_entry*CATALOG_ENTRY_SIZE)
-			+FILE_TYPE];
-
-	if (file_type&0x80) {
-		fprintf(stderr,"File is locked!  Unlock before deleting!\n");
-		exit(1);
+	if (inode<0) {
+		fprintf(stderr,"Error!  %s not found!\n",
+				apple_filename);
+		return -1;
 	}
 
-	/* get pointer to t/s list */
-	ts_track=catalog_buffer[CATALOG_FILE_LIST+
-			catalog_entry*CATALOG_ENTRY_SIZE+FILE_TS_LIST_T];
-	ts_sector=catalog_buffer[CATALOG_FILE_LIST+
-			catalog_entry*CATALOG_ENTRY_SIZE+FILE_TS_LIST_S];
+	result=prodos_read_block(voldir,data_buffer,inode>>8);
 
-keep_deleting:
-
-	/* load in the t/s list info */
-	lseek(fd,DISK_OFFSET(ts_track,ts_sector),SEEK_SET);
-	result=read(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
-
-	/* Free each sector listed by t/s list */
-	for(i=0;i<TSL_MAX_NUMBER;i++) {
-		/* If t/s = 0/0 then no need to clear */
-		if ((catalog_buffer[TSL_LIST+2*i]==0) &&
-			(catalog_buffer[TSL_LIST+2*i+1]==0)) {
-		}
-		else {
-			prodos_free_sector(voldir,fd,catalog_buffer[TSL_LIST+2*i],
-				catalog_buffer[TSL_LIST+2*i+1]);
-		}
+	if (prodos_get_file_entry(voldir,inode,&file)<0) {
+		fprintf(stderr,"Error opening inode %x\n",inode);
+		return -1;
 	}
 
-	/* free the t/s list */
-	prodos_free_sector(voldir,fd,ts_track,ts_sector);
+	/******************************/
+	/* delete all the file blocks */
+	/******************************/
 
-	/* Point to next t/s list */
-	ts_track=catalog_buffer[TSL_NEXT_TRACK];
-	ts_sector=catalog_buffer[TSL_NEXT_SECTOR];
+	switch(file.storage_type) {
+		case PRODOS_FILE_SEEDLING:
+			/* Just a single block */
+			if (debug) fprintf(stderr,"Deleting block $%x\n",
+				file.key_pointer);
 
-	/* If more tsl lists, keep looping */
-	if ((ts_track==0x0) && (ts_sector==0x0)) {
+			result=prodos_free_block(voldir,file.key_pointer);
+			if (result<0) {
+				return result;
+			}
+			break;
+
+		case PRODOS_FILE_SAPLING:
+			/* Index block points to up to 256 blocks */
+			/* Addresses are stored low-byte (256 bytes) then hi-byte */
+			/* Address of zero means file hole, all zeros */
+			if (debug) fprintf(stderr,"Freeing index "
+					"block $%x\n",
+					file.key_pointer);
+			result=prodos_read_block(voldir,index_block,
+					file.key_pointer);
+			if (result<0) {
+				return result;
+			}
+
+			for(chunk=0;chunk<file.blocks_used;chunk++) {
+				chunk_block=(index_block[chunk])|(index_block[chunk+256]<<8);
+
+				if (chunk_block==0) {
+					/* FILE hole */
+				}
+				else {
+					result=prodos_free_block(voldir,chunk_block);
+					if (result<0) {
+						return result;
+					}
+				}
+			}
+			result=prodos_free_block(voldir,file.key_pointer);
+			break;
+
+		case PRODOS_FILE_TREE:
+			/* Master Index block points to up to 256 index blocks */
+			/* Addresses are stored low-byte (256 bytes) then hi-byte */
+			/* Index block points to up to 256 blocks */
+			/* Addresses are stored low-byte (256 bytes) then hi-byte */
+			/* Address of zero means file hole, all zeros */
+
+			blocks_left=file.blocks_used;
+
+			if (debug) fprintf(stderr,"Deleting master index "
+					"block $%x\n",
+					file.key_pointer);
+			result=prodos_read_block(voldir,master_index_block,
+					file.key_pointer);
+			if (result<0) {
+				return result;
+			}
+
+			for(index=0;index<file.blocks_used/256;index++) {
+				mblock=(master_index_block[index])|
+					(master_index_block[256+index]<<8);
+				result=prodos_read_block(voldir,
+					index_block,
+					mblock);
+				if (result<0) {
+					return result;
+				}
+
+				if (blocks_left<256) {
+					read_blocks=blocks_left;
+				}
+				else {
+					read_blocks=256;
+				}
+
+				for(chunk=0;chunk<read_blocks;chunk++) {
+					chunk_block=(index_block[chunk])|
+						(index_block[chunk+256]<<8);
+
+					result=prodos_free_block(voldir,chunk_block);
+					if (result<0) {
+						return result;
+					}
+				}
+				result=prodos_free_block(voldir,mblock);
+			}
+			result=prodos_free_block(voldir,file.key_pointer);
+			break;
+
+
+		case PRODOS_FILE_SUBDIR:
+		case PRODOS_FILE_DELETED:
+		case PRODOS_FILE_SUBDIR_HDR:
+		case PRODOS_FILE_VOLUME_HDR:
+		default:
+			fprintf(stderr,"Error!  "
+				"Cannot delete this type of file: %x\n",
+				file.storage_type);
+			break;
 	}
-	else {
-		goto keep_deleting;
-	}
 
-	/* Erase file from catalog entry */
 
-	/* First reload proper catalog sector */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=read(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
+	/* now that file is gone, disconnect the directory image */
 
-	/* save track as last char of name, for undelete purposes */
-	catalog_buffer[CATALOG_FILE_LIST+(catalog_entry*CATALOG_ENTRY_SIZE)+
-		(FILE_NAME+FILE_NAME_SIZE-1)]=
-		catalog_buffer[CATALOG_FILE_LIST+(catalog_entry*CATALOG_ENTRY_SIZE)];
+	/* should we clear it out? */
+	/* makes undelete harder */
+	// memset(&file,0,sizeof(struct file_entry_t));
 
-	/* Actually delete the file */
-	/* by setting the track value to FF which indicates deleted file */
-	catalog_buffer[CATALOG_FILE_LIST+(catalog_entry*CATALOG_ENTRY_SIZE)]=0xff;
+	file.storage_type=PRODOS_FILE_DELETED;
 
-	/* re seek to catalog position and write out changes */
-	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
-	result=write(fd,catalog_buffer,PRODOS_BYTES_PER_BLOCK);
+	/* copy in new data */
+	prodos_writeout_filedesc(voldir,&file,
+		data_buffer+4+(inode&0xff)*PRODOS_FILE_DESC_LEN);
 
-	if (result<0) fprintf(stderr,"Error on I/O\n");
-#endif
+	/* write back existing voldir entry */
+	result=prodos_write_block(voldir,data_buffer,inode>>8);
+
+	/* update file count */
+	if (debug) printf("Updating file count...\n");
+	voldir->file_count--;
+	prodos_sync_voldir(voldir);
+
 	return 0;
 }
 
