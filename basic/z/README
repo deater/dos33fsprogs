@@ -1,0 +1,90 @@
+Executable ASCII decoding.
+Here's the encoder source.
+It requires a 65C02, though, to save one byte.  I would like to fix
+that somehow.
+
+How it works:
+
+On entry:
+- X=$9D;
+- Y is the low byte of the CALL target;
+- carry is clear;
+- $7D-7E is $800;
+- $B8-B9 points to the token after the CALL;
+- $73-74 points to $9600;
+- $6F-70 points to $9600.
+
+        dex                     ca              *
+        dex                     ca              *
+        dex                     ca              *
+        dex                     ca              *
+        dex                     ca              *
+        dex                     ca              *
+
+Sets X to $97, so we can use it later.
+
+        dey                     88              GR
+
+Skip the opening quote (it's read backwards) in the 6-bit table.
+
+--      inc     $b8             e6      b8      ASC     DEF
+
+Skip the opening quote in the 2-bit table.
+
+        lda     ($21,x)         a1      21      POP     !
+
+Read from 2-bit table (at $B8).
+
+        adc     #$5c            69      5c      i       \
+
+Move into $80+ range, guarantees a bit is set so we don't exit early.
+
+        sta     $30             85      30      DEL     0
+
+Save for later.
+
+-       dey                     88              GR
+        lda     ($7d),y         b1      7d      RETURN  }
+
+Read from 6-bit table.
+
+        adc     #$5c            69      5d      i       \
+
+Move into $80+ range, always sets V flag because bit 6 and bit 7 are
+inverted in our data (V will be cleared when we read a value < $24,
+specifically the closing quote).
+        lsr     $30             46      30      F       0
+        ror                     6a              j
+        ror                     6a              j
+        ror                     6a              j
+        ror                     6a              j
+        ror                     6a              j
+        ror                     6a              j
+        ror                     6a              j
+        lsr     $30             46      30      F       0
+        ror                     6a              j
+
+2-bit table carries bits 7 and 0.
+
+        sta     ($dc,x)         81      dc      FOR     LOG
+
+Write through ($73).
+
+        inc     $73             e6      73      ASC     s
+
+Move next.
+
+        lda     $30             a5      30      ONERR   0
+        dec                     3a              :
+        dec                     3a              :
+        bne     -               d0      e5      =       VAL
+
+Loop while a bit is set.
+
+        bvs     --              70      db      p       RND
+
+Loop while our data are read.
+
+        jmp     ($6f)           6c      6f      l       o
+
+Jump $9600.
