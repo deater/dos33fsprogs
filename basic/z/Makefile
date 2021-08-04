@@ -6,14 +6,21 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	z.dsk z
 
-z.dsk:	HELLO
+z.dsk:	HELLO ARCS.BAS
 	cp $(EMPTY_DISK) z.dsk
 	$(DOS33) -y z.dsk SAVE A HELLO
+	$(DOS33) -y z.dsk SAVE A ARCS.BAS
 
 ####
 
 HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
+
+####
+
+ARCS.BAS:	arcs.bas
+	$(TOKENIZE) < arcs.bas > ARCS.BAS
+
 ####
 
 z:	z.o

@@ -1,17 +1,25 @@
+/* by qkumba */
+
 #include <fcntl.h>
-#include <io.h>
+//#include <io.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+
+#ifndef O_BINARY
+#define O_BINARY  0
+#define O_TEXT    0
+#endif
 
 static unsigned char decoder[] = "\"******GRASCDEFPOP!i\\DEL0GRRETURN}i\\F0jjjjjjjF0jFORLOGASCsONERR0::=VALpRNDlo";
 
-void main(int argc, char *argv[])
-{
+int main(int argc, char **argv) {
+
 	int i, l, j, b2, b6;
 	unsigned char b[150];
 	unsigned char bb2[150];
 	unsigned char bb6[150];
-	unsigned char call[10];
+	char call[32];
 
 	memset(b, 0, sizeof(b));
 	i = open(argv[1], O_RDONLY | O_BINARY);
@@ -43,11 +51,14 @@ void main(int argc, char *argv[])
 	while (++j < l);
 
 	sprintf(call, "0CALL%d\"", 2049+10+b2+6+(int)sizeof(bb6)-b6+1);
-	i = open("out", O_WRONLY | O_BINARY | O_CREAT | O_TRUNC, 0x80);
+	i = open("out", O_WRONLY | O_BINARY | O_CREAT | O_TRUNC, 0666);
 	write(i, call, strlen(call));
 	write(i, bb2, b2);
 	write(i, "\r\n1\"", sizeof("\r\n1\"")-1);
 	write(i, bb6 + b6, sizeof(bb6) - b6);
 	write(i, decoder, sizeof(decoder)-1);
+	write(i,"\n",1);
 	close(i);
+
+	return 0;
 }
