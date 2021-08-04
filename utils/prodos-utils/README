@@ -1,6 +1,7 @@
 =============
 prodos-utils
 =============
+	by Vince `deater` Weaver <vince @ deater.net>
 
 Tools for manipulating Apple II prodos filesystems
 
@@ -22,7 +23,8 @@ TODO:
 
 	prodos:
 		test!  especially tree (files bigger than 128k)
-		subdirectory support
+		test! subdirectory support
+			subdir currently broken if have to grow the directory
 		support for setting attributes
 		
 

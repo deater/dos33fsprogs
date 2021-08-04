@@ -71,14 +71,15 @@ static int prodos_lookup_file(struct voldir_t *voldir,
 
 	/* Given filename, return voldir/offset */
 	/* FIXME: allocate new voldir block if all full */
-static int prodos_allocate_directory_entry(struct voldir_t *voldir) {
+static int prodos_allocate_directory_entry(
+		struct voldir_t *voldir,int dir_block) {
 
 	int voldir_block,voldir_offset;
 	struct file_entry_t file_entry;
 	unsigned char voldir_buffer[PRODOS_BYTES_PER_BLOCK];
 	int result,file;
 
-	voldir_block=PRODOS_VOLDIR_KEY_BLOCK;
+	voldir_block=dir_block;
 	voldir_offset=1;       /* skip the header */
 
 	while(1) {
@@ -117,12 +118,13 @@ static int prodos_allocate_directory_entry(struct voldir_t *voldir) {
 	/* Checks if "filename" exists */
 	/* returns file type  */
 static int prodos_check_file_exists(struct voldir_t *voldir,
+					int dir_block,
 					char *filename) {
 
 
 	int result;
 
-	result=prodos_lookup_file(voldir,PRODOS_VOLDIR_KEY_BLOCK,filename);
+	result=prodos_lookup_file(voldir,dir_block,filename);
 
 	return result;
 }
@@ -234,7 +236,7 @@ static struct prodos_file_type {
 	/* creates file apple_filename on the image from local file filename */
 	/* returns ?? */
 static int prodos_add_file(struct voldir_t *voldir,
-		int fd, char *type,
+		int dir_block, char *type,
 		int address, int length,
 		char *filename, char *apple_filename) {
 
@@ -442,10 +444,10 @@ static int prodos_add_file(struct voldir_t *voldir,
 	file.access=0xe3;	// 0x21?
 	file.aux_type=0;
 	file.last_mod=prodos_time(time(NULL));
-	file.header_pointer=PRODOS_VOLDIR_KEY_BLOCK;
+	file.header_pointer=dir_block;
 
 
-	inode=prodos_allocate_directory_entry(voldir);
+	inode=prodos_allocate_directory_entry(voldir,dir_block);
 	if (inode<0) {
 		return inode;
 	}
@@ -775,7 +777,8 @@ static int prodos_rename_file(struct voldir_t *voldir,
 }
 
 
-static int prodos_delete_file(struct voldir_t *voldir,char *apple_filename) {
+static int prodos_delete_file(struct voldir_t *voldir,
+			int dir_block,char *apple_filename) {
 
 	unsigned char data_buffer[PRODOS_BYTES_PER_BLOCK];
 	unsigned char index_block[PRODOS_BYTES_PER_BLOCK];
@@ -786,7 +789,7 @@ static int prodos_delete_file(struct voldir_t *voldir,char *apple_filename) {
 
 
 	/* get the voldir/entry for file */
-	inode=prodos_lookup_file(voldir,PRODOS_VOLDIR_KEY_BLOCK,apple_filename);
+	inode=prodos_lookup_file(voldir,dir_block,apple_filename);
 
 	if (inode<0) {
 		fprintf(stderr,"Error!  %s not found!\n",
@@ -1383,9 +1386,22 @@ int main(int argc, char **argv) {
 			truncate_filename(apple_filename,apple_path,temp);
 		}
 
-		if (debug) printf("\tApple filename: %s\n",apple_filename);
+		if (apple_path[0]==0) {
+			dir_block=PRODOS_VOLDIR_KEY_BLOCK;
+		}
+		else {
+			dir_block=prodos_get_directory(&voldir,apple_path);
+			if (dir_block<0) {
+				fprintf(stderr,"Error, couldn't open directory %s\n",argv[optind]);
+				return -1;
+			}
+		}
 
-		file_exists=prodos_check_file_exists(&voldir,apple_filename);
+		if (debug) printf("\tApple filename: %s, path: %s\n",
+			apple_filename,apple_path);
+
+		file_exists=prodos_check_file_exists(&voldir,
+			dir_block,apple_filename);
 
 		if (file_exists>=0) {
 			fprintf(stderr,"Warning!  %s exists!\n",apple_filename);
@@ -1398,7 +1414,7 @@ int main(int argc, char **argv) {
 				}
 			}
 			fprintf(stderr,"Deleting previous version...\n");
-			prodos_delete_file(&voldir,apple_filename);
+			prodos_delete_file(&voldir,dir_block,apple_filename);
 		}
 
 		prodos_add_file(&voldir,prodos_fd,type,
@@ -1419,13 +1435,25 @@ int main(int argc, char **argv) {
 
 		truncate_filename(apple_filename,apple_path,argv[optind]);
 
-		file_exists=prodos_check_file_exists(&voldir,apple_filename);
+		if (apple_path[0]==0) {
+			dir_block=PRODOS_VOLDIR_KEY_BLOCK;
+		}
+		else {
+			dir_block=prodos_get_directory(&voldir,apple_path);
+			if (dir_block<0) {
+				fprintf(stderr,"Error, couldn't open directory %s\n",argv[optind]);
+				return -1;
+			}
+		}
+
+		file_exists=prodos_check_file_exists(&voldir,
+				dir_block,apple_filename);
 		if (file_exists<0) {
 			fprintf(stderr, "Error!  File %s does not exist\n",
 					apple_filename);
 			goto exit_and_close;
 		}
-		prodos_delete_file(&voldir,apple_filename);
+		prodos_delete_file(&voldir,dir_block,apple_filename);
 
 		break;
 
@@ -1463,8 +1491,20 @@ int main(int argc, char **argv) {
 
 		truncate_filename(new_filename,apple_path,argv[optind]);
 
+		if (apple_path[0]==0) {
+			dir_block=PRODOS_VOLDIR_KEY_BLOCK;
+		}
+		else {
+			dir_block=prodos_get_directory(&voldir,apple_path);
+			if (dir_block<0) {
+				fprintf(stderr,"Error, couldn't open directory %s\n",argv[optind]);
+				return -1;
+			}
+		}
+
 		/* get the entry/track/sector for file */
-		file_exists=prodos_check_file_exists(&voldir,apple_filename);
+		file_exists=prodos_check_file_exists(&voldir,
+					dir_block,apple_filename);
 		if (file_exists<0) {
 			fprintf(stderr,"Error!  %s not found!\n",
 							apple_filename);
