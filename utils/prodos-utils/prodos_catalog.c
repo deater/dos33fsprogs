@@ -163,7 +163,8 @@ static int prodos_print_file_info(int inode, struct voldir_t *voldir) {
 	prodos_populate_filedesc(file_desc,&file_entry);
 
 	/* name */
-	printf(" %-16s",file_entry.file_name);
+	printf("%c%-16s",(file_entry.access&PRODOS_ACCESS_WRITE)?' ':'*',
+		file_entry.file_name);
 
 	/* type */
 	prodos_print_short_filetype(file_entry.file_type);
@@ -209,7 +210,7 @@ static int prodos_print_file_info(int inode, struct voldir_t *voldir) {
 	return 0;
 }
 
-void prodos_catalog(struct voldir_t *voldir, int dir_block) {
+void prodos_catalog(struct voldir_t *voldir, int dir_block,char *path) {
 
 	int catalog_block,catalog_offset,catalog_inode;
 	int blocks_free=0;
@@ -217,7 +218,13 @@ void prodos_catalog(struct voldir_t *voldir, int dir_block) {
 	blocks_free=prodos_voldir_free_space(voldir);
 
 	printf("\n");
-	printf("/%s\n\n",voldir->volume_name);
+
+	if (path==NULL) {
+		printf("/%s\n\n",voldir->volume_name);
+	}
+	else {
+		printf("/%s/%s\n\n",voldir->volume_name,path);
+	}
 
 	printf(" NAME           TYPE  BLOCKS  MODIFIED         CREATED          ENDFILE SUBTYPE\n");
 	printf("\n");

@@ -15,8 +15,11 @@
 static int ignore_errors=0;
 int debug=0;
 
+
+
 	/* Given filename, return voldir/offset */
 static int prodos_lookup_file(struct voldir_t *voldir,
+					int subdir_block,
 					char *filename) {
 
 	int voldir_block,voldir_offset;
@@ -24,7 +27,7 @@ static int prodos_lookup_file(struct voldir_t *voldir,
 	unsigned char voldir_buffer[PRODOS_BYTES_PER_BLOCK];
 	int result,file;
 
-	voldir_block=PRODOS_VOLDIR_KEY_BLOCK;
+	voldir_block=subdir_block;
 	voldir_offset=1;       /* skip the header */
 
 	while(1) {
@@ -60,6 +63,10 @@ static int prodos_lookup_file(struct voldir_t *voldir,
 
 	return -1;
 }
+
+
+
+
 
 
 	/* Given filename, return voldir/offset */
@@ -115,7 +122,7 @@ static int prodos_check_file_exists(struct voldir_t *voldir,
 
 	int result;
 
-	result=prodos_lookup_file(voldir,filename);
+	result=prodos_lookup_file(voldir,PRODOS_VOLDIR_KEY_BLOCK,filename);
 
 	return result;
 }
@@ -488,6 +495,73 @@ int prodos_get_file_entry(struct voldir_t *voldir,
 
 }
 
+
+
+static int prodos_get_directory(struct voldir_t *voldir,char *string) {
+
+	char path[4096];
+	int pointer=0,path_pointer=0;
+	int inode,final_pointer=-1;
+	struct file_entry_t file;
+	int subdir_block=PRODOS_VOLDIR_KEY_BLOCK;
+
+	if (debug) printf("Looking up directory %s\n",string);
+
+	/* see if leading '/' */
+	if (string[pointer]=='/') {
+		pointer++;
+		/* special case "/" */
+		if (string[pointer]==0) return PRODOS_VOLDIR_KEY_BLOCK;
+	}
+
+	while(1) {
+		path_pointer=0;
+
+		/* FIXME: make this a loop? */
+		if (string[pointer]=='/') pointer++;
+
+		while(string[pointer]!=0) {
+			if (string[pointer]=='/') break;
+			path[path_pointer]=string[pointer];
+			pointer++;
+			path_pointer++;
+		}
+		path[path_pointer]=0;	/* NUL terminate */
+
+		if (debug) printf("Found subdir %s\n",path);
+
+		/* get the voldir/entry for file */
+		inode=prodos_lookup_file(voldir,subdir_block,path);
+		if (inode<0) {
+			fprintf(stderr,"Error!  %s not found!\n",
+					path);
+			return -1;
+		}
+
+		/* get the file entry */
+		if (prodos_get_file_entry(voldir,inode,&file)<0) {
+			fprintf(stderr,"Error opening inode %x\n",inode);
+			return -1;
+		}
+
+		if (file.storage_type!=PRODOS_FILE_SUBDIR) {
+			fprintf(stderr,"Error!  %s is not a subdir!\n",path);
+			return -1;
+		}
+		else {
+			final_pointer=file.key_pointer;
+		}
+
+		subdir_block=final_pointer;
+
+		if (string[pointer]==0) break;
+	}
+
+	return final_pointer;
+
+}
+
+
 	/* load a file from the disk image.  */
 	/* inode = voldirblock<<8 | entry */
 static int prodos_load_file(struct voldir_t *voldir,
@@ -662,7 +736,7 @@ static int prodos_rename_file(struct voldir_t *voldir,
 	int newlen;
 
 	/* get the voldir/entry for file */
-	inode=prodos_lookup_file(voldir,old_filename);
+	inode=prodos_lookup_file(voldir,PRODOS_VOLDIR_KEY_BLOCK,old_filename);
 
 	if (inode<0) {
 		fprintf(stderr,"Error!  %s not found!\n",
@@ -712,7 +786,7 @@ static int prodos_delete_file(struct voldir_t *voldir,char *apple_filename) {
 
 
 	/* get the voldir/entry for file */
-	inode=prodos_lookup_file(voldir,apple_filename);
+	inode=prodos_lookup_file(voldir,PRODOS_VOLDIR_KEY_BLOCK,apple_filename);
 
 	if (inode<0) {
 		fprintf(stderr,"Error!  %s not found!\n",
@@ -1211,7 +1285,8 @@ int main(int argc, char **argv) {
 		if (debug) printf("\tOutput filename: %s\n",local_filename);
 
 		/* get the voldir/entry for file */
-		inode=prodos_lookup_file(&voldir,apple_filename);
+		inode=prodos_lookup_file(&voldir,
+				PRODOS_VOLDIR_KEY_BLOCK,apple_filename);
 
 		if (inode<0) {
 			fprintf(stderr,"Error!  %s not found!\n",
@@ -1227,9 +1302,21 @@ int main(int argc, char **argv) {
 
 	case COMMAND_CATALOG:
 
-		dir_block=PRODOS_VOLDIR_KEY_BLOCK;
+		if (argc>optind) {
+			dir_block=prodos_get_directory(&voldir,argv[optind]);
+			if (dir_block<0) {
+				fprintf(stderr,"Error, couldn't open directory %s\n",argv[optind]);
+				return -1;
+			}
+			prodos_catalog(&voldir,dir_block,argv[optind]);
+		}
+		else {
+			/* use root dir */
+			dir_block=PRODOS_VOLDIR_KEY_BLOCK;
+			prodos_catalog(&voldir,dir_block,NULL);
+		}
 
-		prodos_catalog(&voldir,dir_block);
+
 
 		break;
 

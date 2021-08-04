@@ -105,7 +105,7 @@ int prodos_find_next_file(int inode, struct voldir_t *voldir);
 int prodos_populate_filedesc(unsigned char *file_desc,
                 struct file_entry_t *file_entry);
 //unsigned char prodos_char_to_type(char type, int lock);
-void prodos_catalog(struct voldir_t *voldir, int dir_block);
+void prodos_catalog(struct voldir_t *voldir, int dir_block, char *path);
 //char *prodos_filename_to_ascii(char *dest,unsigned char *src,int len);
 //unsigned char prodos_file_type(int value);
 
