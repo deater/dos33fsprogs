@@ -9,7 +9,7 @@ all:	circles.dsk
 
 circles.dsk:	HELLO CIRCLES CIRCLES_FILL ARCS WEB PAC ORB \
 		BRES.BAS BRESBOT.BAS BRESCOOL.BAS \
-		MID.BAS MIDBOT.BAS MIDCOOL.BAS BRESTEST.BAS
+		MID.BAS MIDBOT.BAS MIDCOOL.BAS BRESTEST.BAS ARCS_BOT
 	cp $(EMPTY_DISK)/empty.dsk circles.dsk
 	$(DOS33) -y circles.dsk SAVE A HELLO
 	$(DOS33) -y circles.dsk SAVE A BRES.BAS
@@ -21,10 +21,11 @@ circles.dsk:	HELLO CIRCLES CIRCLES_FILL ARCS WEB PAC ORB \
 	$(DOS33) -y circles.dsk SAVE A BRESTEST.BAS
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 CIRCLES
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 CIRCLES_FILL
-	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 ARCS
+	$(DOS33) -y circles.dsk BSAVE -a 0x0c00 ARCS
 	$(DOS33) -y circles.dsk BSAVE -a 0x03f5 WEB
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 PAC
 	$(DOS33) -y circles.dsk BSAVE -a 0x03f5 ORB
+	$(DOS33) -y circles.dsk BSAVE -a 0x9600 ARCS_BOT
 
 ###
 
@@ -92,6 +93,11 @@ ARCS:	arcs.o
 
 arcs.o:	arcs.s
 	ca65 -o arcs.o arcs.s -l arcs.lst
+
+#
+
+ARCS_BOT:	arcs.o
+	ld65 -o ARCS_BOT arcs.o -C $(LINKER_SCRIPTS)/apple2_9600.inc
 
 #
 
