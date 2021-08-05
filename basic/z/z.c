@@ -1,3 +1,11 @@
+/* by qkumba */
+
+/* plaintext machine language for 6+2 encoding suitable for basic bot */
+
+/* unfortunately the tokenizer has apple II enhanced behavior */
+/*	where lowercase letters outside of quotes/rem are uppercased */
+
+
 #include <fcntl.h>
 //#include <io.h>
 #include <stdio.h>
