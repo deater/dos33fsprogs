@@ -79,7 +79,7 @@ static int prodos_lookup_file(struct voldir_t *voldir,
 
 
 
-	/* Given filename, return voldir/offset */
+	/* Given dir_block fine an empty entry */
 	/* FIXME: allocate new voldir block if all full */
 static int prodos_allocate_directory_entry(
 		struct voldir_t *voldir,int dir_block) {
@@ -88,6 +88,8 @@ static int prodos_allocate_directory_entry(
 	struct file_entry_t file_entry;
 	unsigned char voldir_buffer[PRODOS_BYTES_PER_BLOCK];
 	int result,file;
+
+	if (debug) printf("*** Looking for empty file entry in $%X\n",dir_block);
 
 	voldir_block=dir_block;
 	voldir_offset=1;       /* skip the header */
@@ -109,6 +111,9 @@ static int prodos_allocate_directory_entry(
 				voldir_buffer+4+file*PRODOS_FILE_DESC_LEN,
 				&file_entry);
 
+			if (debug) printf("\tTrying $%X status %X\n",
+					(voldir_block<<8)|file,
+					file_entry.storage_type);
 			if (file_entry.storage_type==PRODOS_FILE_DELETED) {
 				return (voldir_block<<8)|file;
 			}
@@ -116,6 +121,7 @@ static int prodos_allocate_directory_entry(
 
 		voldir_offset=0;
 		voldir_block=voldir_buffer[2]|(voldir_buffer[3]<<8);
+
 		if (voldir_block==0) break;
 
 	}
@@ -1441,7 +1447,7 @@ int main(int argc, char **argv) {
 			prodos_delete_file(&voldir,dir_block,apple_filename);
 		}
 
-		prodos_add_file(&voldir,prodos_fd,type,
+		prodos_add_file(&voldir,dir_block,type,
 				address, length,
 				local_filename,apple_filename);
 
