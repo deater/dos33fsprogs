@@ -145,6 +145,12 @@ static int find_token(void) {
 		return 0;
 	}
 
+	/* end quote if end of line */
+	if (in_quotes && (ch=='\n')) {
+		in_quotes=0;
+		return 0;
+	}
+
 	/* don't skip whitespace in quotes or remarks */
 	if ((!in_quotes)&&(!in_rem)) {
 		while(ch<=' ') {
