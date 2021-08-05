@@ -208,11 +208,15 @@ int prodos_voldir_find_free_block(struct voldir_t *voldir) {
 		for(i=0;i<(512/16);i++) {
 			result=find_first_one(temp_block[i*2]);
 			if (result>=0) {
-				return (k<<4)+result;
+				if (debug) printf("Found free block %x\n",
+					(k<<12)+(i<<4)+result);
+				return (k<<12)+(i<<4)+result;
 			}
 			result=find_first_one(temp_block[(1+i*2)]);
 			if (result>=0) {
-				return (k<<4)+result+8;
+				if (debug) printf("Found free block %x\n",
+					(k<<12)+(i<<4)+result+8);
+				return (k<<12)+(i<<4)+result+8;
 			}
 		}
 	}

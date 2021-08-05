@@ -27,6 +27,8 @@ static int prodos_lookup_file(struct voldir_t *voldir,
 	unsigned char voldir_buffer[PRODOS_BYTES_PER_BLOCK];
 	int result,file;
 
+	if (debug) printf("\t*** Looking for %s in block $%X\n",filename,subdir_block);
+
 	voldir_block=subdir_block;
 	voldir_offset=1;       /* skip the header */
 
@@ -44,13 +46,21 @@ static int prodos_lookup_file(struct voldir_t *voldir,
 			file<voldir->entries_per_block;file++) {
 
 			prodos_populate_filedesc(
-				voldir_buffer+4+file*PRODOS_FILE_DESC_LEN,
+				voldir_buffer+4+(file*PRODOS_FILE_DESC_LEN),
 				&file_entry);
 
 			if (file_entry.storage_type==PRODOS_FILE_DELETED) continue;
 
+
+			if (debug) printf("\tTrying $%X = %s\n",
+				(voldir_block<<8)|file,
+				file_entry.file_name);
+
 			/* FIXME: case insensitive? */
 			if (!strncmp(filename,(char *)file_entry.file_name,15)) {
+				if (debug) printf("*** MATCH: %s = %s at inode $%X\n",
+						filename,file_entry.file_name,
+						(voldir_block<<8)|file);
 				return (voldir_block<<8)|file;
 			}
 		}
@@ -362,6 +372,7 @@ static int prodos_add_file(struct voldir_t *voldir,
 		/* allocate index */
 		index=prodos_allocate_block(voldir);
 		key_block=index;
+		if (debug) printf("**** ALLOCATING SAPLING key_block=$%X\n",key_block);
 
 		memset(index_buffer,0,PRODOS_BYTES_PER_BLOCK);
 
@@ -442,7 +453,12 @@ static int prodos_add_file(struct voldir_t *voldir,
 	file.version=0;
 	file.min_version=0;
 	file.access=0xe3;	// 0x21?
-	file.aux_type=0;
+	if (file.file_type==PRODOS_TYPE_BIN) {
+		file.aux_type=address;
+	}
+	else {
+		file.aux_type=0;
+	}
 	file.last_mod=prodos_time(time(NULL));
 	file.header_pointer=dir_block;
 
@@ -787,9 +803,11 @@ static int prodos_delete_file(struct voldir_t *voldir,
 	struct file_entry_t file;
 	int inode;
 
+	if (debug) printf("*** DELETING FILE %s\n",apple_filename);
 
 	/* get the voldir/entry for file */
 	inode=prodos_lookup_file(voldir,dir_block,apple_filename);
+	if (debug) printf("\t*** Found inode $%X for file %s\n",inode,apple_filename);
 
 	if (inode<0) {
 		fprintf(stderr,"Error!  %s not found!\n",
@@ -804,6 +822,9 @@ static int prodos_delete_file(struct voldir_t *voldir,
 		return -1;
 	}
 
+	if (debug) printf("*** PERMANENTLY DELETING %s (inode: $%X)\n",
+		file.file_name,inode);
+
 	/******************************/
 	/* delete all the file blocks */
 	/******************************/
@@ -811,7 +832,7 @@ static int prodos_delete_file(struct voldir_t *voldir,
 	switch(file.storage_type) {
 		case PRODOS_FILE_SEEDLING:
 			/* Just a single block */
-			if (debug) fprintf(stderr,"Deleting block $%x\n",
+			if (debug) fprintf(stderr,"*** SEEDLING Deleting block $%x\n",
 				file.key_pointer);
 
 			result=prodos_free_block(voldir,file.key_pointer);
@@ -824,8 +845,8 @@ static int prodos_delete_file(struct voldir_t *voldir,
 			/* Index block points to up to 256 blocks */
 			/* Addresses are stored low-byte (256 bytes) then hi-byte */
 			/* Address of zero means file hole, all zeros */
-			if (debug) fprintf(stderr,"Freeing index "
-					"block $%x\n",
+			if (debug) printf("*** SAPLING "
+					"Freeing index block $%x\n",
 					file.key_pointer);
 			result=prodos_read_block(voldir,index_block,
 					file.key_pointer);
@@ -858,8 +879,8 @@ static int prodos_delete_file(struct voldir_t *voldir,
 
 			blocks_left=file.blocks_used;
 
-			if (debug) fprintf(stderr,"Deleting master index "
-					"block $%x\n",
+			if (debug) fprintf(stderr,"*** TREE: "
+					"Deleting master index block $%x\n",
 					file.key_pointer);
 			result=prodos_read_block(voldir,master_index_block,
 					file.key_pointer);
@@ -915,9 +936,12 @@ static int prodos_delete_file(struct voldir_t *voldir,
 
 	/* should we clear it out? */
 	/* makes undelete harder */
+	/* ProDOS 1.0.1 clears filename but leaves rest */
 	// memset(&file,0,sizeof(struct file_entry_t));
 
 	file.storage_type=PRODOS_FILE_DELETED;
+	file.name_length=0;
+	memset(file.file_name,0,PRODOS_FILENAME_LEN);
 
 	/* copy in new data */
 	prodos_writeout_filedesc(voldir,&file,

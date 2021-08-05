@@ -340,10 +340,13 @@ int prodos_dump(struct voldir_t *voldir) {
 				PRODOS_FILE_DESC_LEN);
 			prodos_populate_filedesc(file_desc,&file_entry);
 
-			if (file_entry.storage_type==PRODOS_FILE_DELETED) continue;
+//			if (file_entry.storage_type==PRODOS_FILE_DELETED) continue;
 
 			printf("\n\n");
-			printf("FILE %d: %s\n",file,file_entry.file_name);
+			printf("FILE $%x: %s\n",
+				(catalog_block<<8)|file,
+				file_entry.file_name);
+			printf("\tFilename len: %d\n",file_entry.name_length);
 			printf("\t($%X): ",file_entry.storage_type);
 			prodos_print_storage_type(file_entry.storage_type);
 

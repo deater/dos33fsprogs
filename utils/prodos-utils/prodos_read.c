@@ -41,14 +41,14 @@ int prodos_read_block(struct voldir_t *voldir,
 		}
 	}
 	else if (voldir->interleave==PRODOS_INTERLEAVE_DOS33) {
-		if (debug) printf("Using DOS33 interleave, finding block $%X\n",blocknum);
+		if (debug) printf("\tUsing DOS33 interleave, finding block $%X\n",blocknum);
 		track=(blocknum>>3);
 		sector1=dos_interleave[(blocknum&0x7)*2];
 		sector2=dos_interleave[(blocknum&0x7)*2+1];
-		if (debug) printf("Remapping block $%X to T%d S%d and T%d S%d\n",
+		if (debug) printf("\tRemapping block $%X to T%d S%d and T%d S%d\n",
 			blocknum,track,sector1,track,sector2);
 
-		if (debug) printf("Seeking to %x\n",((track<<4)+sector1)*256);
+		if (debug) printf("\tSeeking to %x\n",((track<<4)+sector1)*256);
 		lseek(voldir->fd,voldir->image_offset+
 				((track<<4)+sector1)*256,SEEK_SET);
 		result=read(voldir->fd,block,PRODOS_BYTES_PER_BLOCK/2);
@@ -59,7 +59,7 @@ int prodos_read_block(struct voldir_t *voldir,
 			return -1;
 		}
 
-		if (debug) printf("Seeking to %x\n",((track<<4)+sector2)*256);
+		if (debug) printf("\tSeeking to %x\n",((track<<4)+sector2)*256);
 		lseek(voldir->fd,voldir->image_offset+
 				((track<<4)+sector2)*256,SEEK_SET);
 		result=read(voldir->fd,block+256,PRODOS_BYTES_PER_BLOCK/2);
@@ -101,14 +101,14 @@ int prodos_write_block(struct voldir_t *voldir,
 		}
 	}
 	else if (voldir->interleave==PRODOS_INTERLEAVE_DOS33) {
-		if (debug) printf("Using DOS33 interleave, finding block $%X\n",blocknum);
+		if (debug) printf("\tUsing DOS33 interleave, finding block $%X\n",blocknum);
 		track=(blocknum>>3);
 		sector1=dos_interleave[(blocknum&0x7)*2];
 		sector2=dos_interleave[(blocknum&0x7)*2+1];
-		if (debug) printf("Remapping block $%X to T%d S%d and T%d S%d\n",
+		if (debug) printf("\tRemapping block $%X to T%d S%d and T%d S%d\n",
 			blocknum,track,sector1,track,sector2);
 
-		if (debug) printf("Seeking to %x\n",((track<<4)+sector1)*256);
+		if (debug) printf("\tSeeking to %x\n",((track<<4)+sector1)*256);
 		lseek(voldir->fd,voldir->image_offset+
 				((track<<4)+sector1)*256,SEEK_SET);
 		result=write(voldir->fd,block,PRODOS_BYTES_PER_BLOCK/2);
@@ -119,7 +119,7 @@ int prodos_write_block(struct voldir_t *voldir,
 			return -1;
 		}
 
-		if (debug) printf("Seeking to %x\n",((track<<4)+sector2)*256);
+		if (debug) printf("\tSeeking to %x\n",((track<<4)+sector2)*256);
 		lseek(voldir->fd,voldir->image_offset+
 				((track<<4)+sector2)*256,SEEK_SET);
 		result=write(voldir->fd,block+256,PRODOS_BYTES_PER_BLOCK/2);
