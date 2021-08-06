@@ -46,7 +46,7 @@ MUSIC:	music.o
 
 music.o:	music.s \
 	zp.inc hardware.inc nozp.inc \
-	interrupt_handler.s
+	interrupt_handler.s pt3_lib_mockingboard_setup.s
 	ca65 -o music.o music.s -l music.lst
 
 ####
