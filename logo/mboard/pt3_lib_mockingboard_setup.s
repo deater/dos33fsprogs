@@ -241,10 +241,16 @@ done_apple_detect:
 ;	lda	#>interrupt_handler
 ;	sta	$03ff
 
+
+	; logo has us in AUX mode???
+
+	sta	$C008		; switch to main memory
+
 	jsr	$BF00		; prodos MLI interface
 	.byte	$40		; ALLOC_INTERRUPT
 	.word	interrupt_parms
 
+	sta	$C009		; return to main memory
 
 	;============================
 	; Enable 50Hz clock on 6522
