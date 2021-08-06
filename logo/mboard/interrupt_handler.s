@@ -18,13 +18,18 @@
 	;	to be sure status flag and accumulator set properly
 
 interrupt_handler:
-	php			; save status flags
-	pha			; save A				; 3
+	cld			; must be first in ProDOS handler
+
+	; no need to save, ProDOS does it for us?
+
+
+;	php			; save status flags
+;	pha			; save A				; 3
 				; A is saved in $45 by firmware
-	txa
-	pha			; save X
-	tya
-	pha			; save Y
+;	txa
+;	pha			; save X
+;	tya
+;	pha			; save Y
 
 
 
@@ -122,19 +127,26 @@ itsnot:
 
 ;	jsr	display_credits
 
+
 done_match:
-	pla
-	tay			; restore Y
-	pla
-	tax			; restore X
-	pla			; restore a				; 4
+
+	clc			; tell ProDOS we handled things
+
+	rts			; ProDOS handles rti?
+
+
+;	pla
+;	tay			; restore Y
+;	pla
+;	tax			; restore X
+;	pla			; restore a				; 4
 
 	; on II+/IIe (but not IIc) we need to do this?
 interrupt_smc:
-	lda	$45		; restore A
-	plp
+;	lda	$45		; restore A
+;	plp
 
-	rti			; return from interrupt			; 6
+;	rti			; return from interrupt			; 6
 
 								;============
 								; typical

@@ -190,14 +190,16 @@ mockingboard_setup_interrupt:
 	;===========================
 	; it does interrupts differently
 
-	lda	$FBB3           ; IIe and newer is $06
-	cmp	#6
-	beq	apple_iie_or_newer
+	; there's other ways to detect this on ProDOS?
 
-	jmp	done_apple_detect
+;	lda	$FBB3           ; IIe and newer is $06
+;	cmp	#6
+;	beq	apple_iie_or_newer
+
+;	jmp	done_apple_detect
 apple_iie_or_newer:
-	lda	$FBC0		; 0 on a IIc
-	bne	done_apple_detect
+;	lda	$FBC0		; 0 on a IIc
+;	bne	done_apple_detect
 apple_iic:
 	; activate IIc mockingboard?
 	; this might only be necessary to allow detection
@@ -213,17 +215,17 @@ apple_iic:
 	; bypass the firmware interrupt handler
 	; should we do this on IIe too? probably faster
 
-	sei				; disable interrupts
-	lda	$c08b			; disable ROM (enable language card)
-	lda	$c08b
-	lda	#<interrupt_handler
-	sta	$fffe
-	lda	#>interrupt_handler
-	sta	$ffff
+;	sei				; disable interrupts
+;	lda	$c08b			; disable ROM (enable language card)
+;	lda	$c08b
+;	lda	#<interrupt_handler
+;	sta	$fffe
+;	lda	#>interrupt_handler
+;	sta	$ffff
 
-	lda	#$EA			; nop out the "lda $45" in the irq hand
-	sta	interrupt_smc
-	sta	interrupt_smc+1
+;	lda	#$EA			; nop out the "lda $45" in the irq hand
+;	sta	interrupt_smc
+;	sta	interrupt_smc+1
 
 done_apple_detect:
 
@@ -234,10 +236,15 @@ done_apple_detect:
 	; Vector address goes to 0x3fe/0x3ff
 	; FIXME: should chain any existing handler
 
-	lda	#<interrupt_handler
-	sta	$03fe
-	lda	#>interrupt_handler
-	sta	$03ff
+;	lda	#<interrupt_handler
+;	sta	$03fe
+;	lda	#>interrupt_handler
+;	sta	$03ff
+
+	jsr	$BF00		; prodos MLI interface
+	.byte	$40		; ALLOC_INTERRUPT
+	.word	interrupt_parms
+
 
 	;============================
 	; Enable 50Hz clock on 6522
@@ -273,3 +280,8 @@ setup_irq_smc6:
 				; clear interrupt and start counting
 
 	rts
+
+interrupt_parms:
+	.byte	$02		; number of paramaters
+	.byte	$00		; priority
+	.word	interrupt_handler

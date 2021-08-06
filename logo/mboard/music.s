@@ -5,9 +5,7 @@
 ; Zero Page
 	.include "zp.inc"
 	.include "hardware.inc"
-	.include "nozp.inc"
 
-STROUT = $db3a
 
 NONE		= 0
 DO_LOAD		= 1
@@ -17,15 +15,11 @@ DO_CREDITS	= 4
 DONE		= 5
 
 	;==========================================
-	; we are loaded at $6000
-	;
-	; since we are now decompressed here after load
-	; we don't have to worry about running into DOS3.3 at $9600
-	;
-	; we shouldn't need to set HIMEM as we don't use many vars
-	; and variable memory starts right after the program
 
-bot_demo:
+logo_music:
+
+	;===================
+	;
 
 	;===================
 	; PT3 player Setup
@@ -50,6 +44,8 @@ start_interrupts:
 
 	cli
 
+	rts
+
 mockingboard_not_found:
 
 .include        "pt3_lib_core.s"
@@ -59,9 +55,12 @@ mockingboard_not_found:
 ; if you're self patching, detect has to be after interrupt_handler.s
 .include        "pt3_lib_mockingboard_detect.s"
 
-PT3_LOC = song
-.align	$100
+	.include "nozp.inc"
+
+
+PT3_LOC = $2000
+;.align	$100
 song:
 ;.incbin "../../demos/applebot_demo/music/mAZE_-_The_Upbeated_Eaten_Apple.pt3"
 ;.incbin "../../demos/outline2021/demo/mAZE_-_Apple_snapple_Outline.pt3"
-.incbin "./music/Fret.pt3"
+;.incbin "./music/Fret.pt3"
