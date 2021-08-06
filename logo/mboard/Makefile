@@ -8,7 +8,7 @@ LINKER_SCRIPTS = ../../linker_scripts
 
 all:	mboard_logo.dsk mboard_prodos.dsk
 
-mboard_logo.dsk:	LOGO3 MUSIC
+mboard_logo.dsk:	LOGO3 MUSIC DEMO
 	cp ../dsks/apple_logo_ii.dsk ./mboard_logo.dsk
 	$(PRODOS) -y mboard_logo.dsk -t BIN -a 0x2000 SAVE LOGO3
 	$(PRODOS) -y mboard_logo.dsk DELETE FORMAT
@@ -24,7 +24,7 @@ mboard_logo.dsk:	LOGO3 MUSIC
 #	$(PRODOS) -y mboard_logo.dsk DELETE SAMPLES/LOGO.SINGS
 	$(PRODOS) -y mboard_logo.dsk -t BIN -a 0x4C00 SAVE MUSIC
 	$(PRODOS) -y mboard_logo.dsk -t BIN -a 0x2000 SAVE ./music/Fret.pt3 FRET.PT3
-
+	$(PRODOS) -y mboard_logo.dsk SAVE -t TXT DEMO
 
 mboard_prodos.dsk:	MUSIC
 	cp ../dsks/ProDOS_2_4_2.dsk ./mboard_prodos.dsk
@@ -51,8 +51,8 @@ music.o:	music.s \
 
 ####
 
-#RR:	rr.logo
-#	$(TEXT_TO_PRODOS) < rr.logo > RR
+DEMO:	demo.logo
+	$(TEXT_TO_PRODOS) < demo.logo > DEMO
 
 ####
 

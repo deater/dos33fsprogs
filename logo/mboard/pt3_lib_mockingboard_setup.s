@@ -254,6 +254,8 @@ done_apple_detect:
 ;	sta	$C005
 	sta	$C009		; return to main memory
 
+	; manually set IRQ vector as LOGO leaves this with empty AUX pages?
+
 	lda	#$C3
 	sta	$FFFF
 	lda	#$FA
