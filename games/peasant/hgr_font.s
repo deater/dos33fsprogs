@@ -7,17 +7,77 @@
 
 
 
-
-hgr_put_char:
-
-	lda	#10
+	;===================
+	; in OUTL/OUTH
+	;	first byte X, next byte Y, then string (NUL terminated)
+hgr_put_string:
+	ldy	#0
+	lda	(OUTL),Y
 	sta	CURSOR_X
-	lda	#10
+	jsr	inc_outl
+	lda	(OUTL),Y
 	sta	CURSOR_Y
+	jsr	inc_outl
+hgr_put_string_loop:
+	ldy	#0
+	lda	(OUTL),Y
+	beq	hgr_put_string_done
 
-	lda	#<(hgr_font+(('A'-$20)*8))
+	jsr	hgr_put_char_cursor
+
+	inc	CURSOR_X
+	jsr	inc_outl
+	jmp	hgr_put_string_loop
+
+hgr_put_string_done:
+	rts
+
+
+
+inc_outl:
+	inc	OUTL
+	bne	outl_no_oflo
+	inc	OUTH
+outl_no_oflo:
+	rts
+
+	;==================
+	; X in X
+	; Y in Y
+	; Char in A
+hgr_put_char:
+	stx	CURSOR_X
+	sty	CURSOR_Y
+hgr_put_char_cursor:
+	and	#$7f			; strip high bit
+	sec
+	sbc	#$20
+	bpl	char_positive
+
+	; control char, just print space
+	lda	#$0
+
+char_positive:
+
+	ldx	#$0
+	stx	put_char_smc1+1
+	clc
+
+	rol
+	rol	put_char_smc1+1
+
+	rol
+	rol	put_char_smc1+1
+
+	rol
+	rol	put_char_smc1+1
+
+	clc
+	adc	#<(hgr_font)
 	sta	INL
-	lda	#>(hgr_font+(('A'-$20)*8))
+	lda	#>(hgr_font)
+put_char_smc1:
+	adc	#$d0
 	sta	INH
 
 	jsr	hgr_draw_sprite_1x8
