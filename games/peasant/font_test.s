@@ -28,6 +28,14 @@ font_test:
 
 	jsr	hgr_put_string
 
+	lda	#<test2
+	sta	OUTL
+	lda	#>test2
+	sta	OUTH
+
+	jsr	hgr_put_string
+
+
 end:
 	jmp end
 
@@ -35,6 +43,9 @@ end:
 test1:
 	;           0123456789012345678901234567890123456789
 	.byte 0,10,"PACK MY BOX WITH FIVE DOZEN LIQUOR JUGS!",0
+
+test2:
+	.byte 0,30,"pack my box with five dozen liquor jugs@",0
 
 
 .include "hgr_font.s"
