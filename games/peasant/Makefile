@@ -8,10 +8,12 @@ EMPTY_DISK = ../../empty_disk
 
 all:	peasant.dsk
 
-peasant.dsk:	HELLO PEASANT
+peasant.dsk:	HELLO PEASANT FONT_TEST
 	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
 	$(DOS33) -y peasant.dsk SAVE A HELLO
 	$(DOS33) -y peasant.dsk BSAVE -a 0x6000 PEASANT
+	$(DOS33) -y peasant.dsk BSAVE -a 0x6000 FONT_TEST
+
 ###
 
 HELLO:	hello.bas
@@ -27,6 +29,15 @@ peasant.o:	peasant.s graphics/graphics.inc
 
 ###
 
+FONT_TEST:	font_test.o
+	ld65 -o FONT_TEST font_test.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+font_test.o:	font_test.s hgr_font.s hgr_1x8_sprite.s
+	ca65 -o font_test.o font_test.s -l font_test.lst
+
+
+###
+
 clean:	
-	rm -f *~ *.o *.lst HELLO PEASANT
+	rm -f *~ *.o *.lst HELLO PEASANT FONT_TEST
 

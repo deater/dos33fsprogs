@@ -29,7 +29,8 @@ PTRIG		=	$C070
 ; APPLESOFT BASIC ROUTINES
 
 NORMAL		= $F273
-HGR2            = $F3D8
+HGR2		= $F3D8
+HGR		= $F3E2
 BKGND0		= $F3F4		; clear current page to A
 HPOSN		= $F411		; (Y,X),(A)  (values stores in HGRX,XH,Y)
 HPLOT0		= $F457		; plot at (Y,X), (A)
