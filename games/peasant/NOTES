@@ -1,0 +1,32 @@
+280x192
+ *4
+1120x768
+
+Our capture: 300x142 roughly
+		292x142 to center it
+
+Odd is Orange
+Even is blue
+
+	EO EO EO EO EO		if draw black at odd, nothing
+blue	10 10 10 10 10		if draw black at even, two-wide(?) black
+
+
+
+10 10 10 10 10 blue
+01 01 01 01 01 orange
+
+EO EO
+10 01	blue->orange has black gap
+
+01 10	orange->blue has white gap
+
+
+
+10 10 01 01 = blue
+
+
+
+6|----c>>>-----------c------c-------|
+5|-aaa----aaab>>>aaa---a-b-a---------|
+
