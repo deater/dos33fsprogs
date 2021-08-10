@@ -25,7 +25,7 @@ PEASANT:	peasant.o
 	ld65 -o PEASANT peasant.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 peasant.o:	peasant.s graphics/graphics.inc \
-		directions.s
+		directions.s cottage.s
 	ca65 -o peasant.o peasant.s -l peasant.lst
 
 ###

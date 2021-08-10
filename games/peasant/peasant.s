@@ -71,19 +71,9 @@ hgr_display:
 	; Cottage
 	;************************
 
-	lda	#<(cottage_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(cottage_lzsa)
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-	jsr	wait_until_keypress
+	jsr	cottage
 
 
-.if 0
 	;************************
 	; Lake West
 	;************************
@@ -99,6 +89,8 @@ hgr_display:
 
 	jsr	wait_until_keypress
 
+
+.if 0
 
 	;************************
 	; Lake East
@@ -156,6 +148,8 @@ forever:
 .include "wait_keypress.s"
 
 .include "directions.s"
+.include "cottage.s"
+
 .include "hgr_font.s"
 
 .include "graphics/graphics.inc"

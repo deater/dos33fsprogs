@@ -21,10 +21,10 @@ graphics.inc:	\
 	echo "title_lzsa: .incbin \"peasant_title.lzsa\"" >> graphics.inc
 	echo "tips_lzsa: .incbin \"tips.lzsa\"" >> graphics.inc
 	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" >> graphics.inc
-	echo "lake_e_lzsa: .incbin \"lake_e.lzsa\"" >> graphics.inc
 	echo "lake_w_lzsa: .incbin \"lake_w.lzsa\"" >> graphics.inc
-	echo "river_lzsa: .incbin \"river.lzsa\"" >> graphics.inc
-	echo "knight_lzsa: .incbin \"knight.lzsa\"" >> graphics.inc
+#	echo "lake_e_lzsa: .incbin \"lake_e.lzsa\"" >> graphics.inc
+#	echo "river_lzsa: .incbin \"river.lzsa\"" >> graphics.inc
+#	echo "knight_lzsa: .incbin \"knight.lzsa\"" >> graphics.inc
 
 
 ###
