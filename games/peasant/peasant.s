@@ -78,49 +78,22 @@ hgr_display:
 	; Lake West
 	;************************
 
-	lda	#<(lake_w_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(lake_w_lzsa)
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-	jsr	wait_until_keypress
-
-
-.if 0
+	jsr	lake_west
 
 	;************************
 	; Lake East
 	;************************
 
-	lda	#<(lake_e_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(lake_e_lzsa)
-	sta	getsrc_smc+2
+	jsr	lake_east
 
-	lda	#$40
+.if 0
 
-	jsr	decompress_lzsa2_fast
-
-	jsr	wait_until_keypress
 
 	;************************
 	; River
 	;************************
 
-	lda	#<(river_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(river_lzsa)
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-	jsr	wait_until_keypress
+	jsr	river
 
 
 	;************************
@@ -149,6 +122,10 @@ forever:
 
 .include "directions.s"
 .include "cottage.s"
+.include "lake_w.s"
+.include "lake_e.s"
+;.include "river.s"
+
 
 .include "hgr_font.s"
 
