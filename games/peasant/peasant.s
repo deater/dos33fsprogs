@@ -7,6 +7,23 @@
 .include "hardware.inc"
 
 NIBCOUNT	= $09
+GBASL		= $26
+GBASH		= $27
+CURSOR_X	= $62
+CURSOR_Y	= $63
+HGR_COLOR	= $E4
+P0      = $F1
+P1      = $F2
+P2      = $F3
+P3      = $F4
+P4      = $F5
+P5      = $F6
+
+INL		= $FC
+INH		= $FD
+OUTL		= $FE
+OUTH		= $FF
+
 
 
 hgr_display:
@@ -48,17 +65,7 @@ hgr_display:
 	; Tips
 	;************************
 
-	lda	#<(tips_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(tips_lzsa)
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-	jsr	wait_until_keypress
-
+	jsr	directions
 
 	;************************
 	; Cottage
@@ -76,6 +83,7 @@ hgr_display:
 	jsr	wait_until_keypress
 
 
+.if 0
 	;************************
 	; Lake West
 	;************************
@@ -138,7 +146,7 @@ hgr_display:
 
 	jsr	wait_until_keypress
 
-
+.endif
 
 forever:
 	jmp	forever
@@ -146,5 +154,8 @@ forever:
 
 .include "decompress_fast_v2.s"
 .include "wait_keypress.s"
+
+.include "directions.s"
+.include "hgr_font.s"
 
 .include "graphics/graphics.inc"
