@@ -86,14 +86,15 @@ hgr_display:
 
 	jsr	lake_east
 
-.if 0
-
-
 	;************************
 	; River
 	;************************
 
 	jsr	river
+
+.if 0
+
+
 
 
 	;************************
@@ -124,7 +125,7 @@ forever:
 .include "cottage.s"
 .include "lake_w.s"
 .include "lake_e.s"
-;.include "river.s"
+.include "river.s"
 
 
 .include "hgr_font.s"
