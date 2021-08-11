@@ -24,3 +24,12 @@ river:
 	jsr	wait_until_keypress
 
 	rts
+
+
+; walk up a bit
+
+river_message1:
+	.byte 0,0,"You can start playing in a",0
+	.byte 0,0,"second here.",0
+
+; walks behind tree

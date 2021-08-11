@@ -24,3 +24,13 @@ lake_east:
 	jsr	wait_until_keypress
 
 	rts
+
+
+
+; walk sideways, near corner
+
+lake_e_message1:
+	.byte 0,0,"That's a nice looking lake.",0
+
+; nearly hit head on sign, it goes away, walk off screen
+

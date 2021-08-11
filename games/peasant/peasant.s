@@ -34,16 +34,7 @@ hgr_display:
 	; Title
 	;************************
 
-	lda	#<(title_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(title_lzsa)
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-	jsr	wait_until_keypress
+	jsr	title
 
 
 	;************************
@@ -83,6 +74,13 @@ hgr_display:
 
 	jsr knight
 
+	;************************
+	; Ending
+	;************************
+
+	jsr ending
+
+
 forever:
 	jmp	forever
 
@@ -90,12 +88,14 @@ forever:
 .include "decompress_fast_v2.s"
 .include "wait_keypress.s"
 
+.include "title.s"
 .include "directions.s"
 .include "cottage.s"
 .include "lake_w.s"
 .include "lake_e.s"
 .include "river.s"
 .include "knight.s"
+.include "ending.s"
 
 .include "hgr_font.s"
 

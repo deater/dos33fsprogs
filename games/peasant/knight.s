@@ -24,3 +24,13 @@ knight:
 	jsr	wait_until_keypress
 
 	rts
+
+
+; continues displaying previous message
+
+; stops as approach knight
+
+knight_message1:
+	.byte 0,0,"OK go for it.",0
+
+

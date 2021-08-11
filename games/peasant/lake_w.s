@@ -24,3 +24,13 @@ lake_west:
 	jsr	wait_until_keypress
 
 	rts
+
+; same message as end of cottage
+
+; walk halfway across the screen
+
+lake_w_message1:
+	.byte	0,0,"You head east toward the",0
+	.byte	0,0,"mountain atop which TROGDOR lives.",0
+
+; walk to edge

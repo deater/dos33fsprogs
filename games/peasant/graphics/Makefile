@@ -15,7 +15,9 @@ graphics.inc:	\
 	lake_e.lzsa \
 	lake_w.lzsa \
 	river.lzsa \
-	knight.lzsa
+	knight.lzsa \
+	trogdor.lzsa \
+	game_over.lzsa
 	echo "title_lzsa: .incbin \"peasant_title.lzsa\"" > graphics.inc
 	echo "tips_lzsa: .incbin \"tips.lzsa\"" >> graphics.inc
 	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" >> graphics.inc
@@ -23,6 +25,8 @@ graphics.inc:	\
 	echo "lake_e_lzsa: .incbin \"lake_e.lzsa\"" >> graphics.inc
 	echo "river_lzsa: .incbin \"river.lzsa\"" >> graphics.inc
 	echo "knight_lzsa: .incbin \"knight.lzsa\"" >> graphics.inc
+	echo "trogdor_lzsa: .incbin \"trogdor.lzsa\"" >> graphics.inc
+	echo "game_over_lzsa: .incbin \"game_over.lzsa\"" >> graphics.inc
 
 
 ###
@@ -88,6 +92,23 @@ knight.lzsa:	knight.hgr
 
 knight.hgr:	knight.png
 	$(PNG2HGR) knight.png > knight.hgr
+
+###
+
+trogdor.lzsa:	trogdor.hgr
+	$(LZSA) -r -f2 trogdor.hgr trogdor.lzsa
+
+trogdor.hgr:	trogdor.png
+	$(PNG2HGR) trogdor.png > trogdor.hgr
+
+###
+
+game_over.lzsa:	game_over.hgr
+	$(LZSA) -r -f2 game_over.hgr game_over.lzsa
+
+game_over.hgr:	game_over.png
+	$(PNG2HGR) game_over.png > game_over.hgr
+
 
 
 
