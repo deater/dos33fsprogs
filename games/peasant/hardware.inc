@@ -4,8 +4,8 @@ KEYPRESS	=	$C000
 KEYRESET	=	$C010
 
 ; SOFT SWITCHES
-CLR80COL	=	$C000	; PAGE0/PAGE1 normal
-SET80COL	=	$C001	; PAGE0/PAGE1 switches PAGE0 in Aux instead
+CLR80COL	=	$C000	; PAGE1/PAGE1 normal
+SET80COL	=	$C001	; PAGE1/PAGE2 switches PAGE1 in Aux instead
 EIGHTYCOLOFF	=	$C00C
 EIGHTYCOLON	=	$C00D
 TBCOLOR		=	$C022	; IIgs text foreground / background colors
@@ -16,8 +16,8 @@ SET_GR		=	$C050
 SET_TEXT	=	$C051
 FULLGR		=	$C052
 TEXTGR		=	$C053
-PAGE0		=	$C054
-PAGE1		=	$C055
+PAGE1		=	$C054
+PAGE2		=	$C055
 LORES		=	$C056	; Enable LORES graphics
 HIRES		=	$C057	; Enable HIRES graphics
 AN3		=	$C05E	; Annunciator 3

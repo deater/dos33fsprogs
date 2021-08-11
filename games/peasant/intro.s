@@ -14,6 +14,10 @@ GBASH		= $27
 CURSOR_X	= $62
 CURSOR_Y	= $63
 HGR_COLOR	= $E4
+HGR_PAGE	= $E6
+DISP_PAGE	= $F0
+DRAW_PAGE	= $F1
+
 P0      = $F1
 P1      = $F2
 P2      = $F3
@@ -31,25 +35,53 @@ OUTH		= $FF
 hgr_display:
 	jsr	HGR2		; Hi-res graphics, no text at bottom
 				; Y=0, A=0 after this called
+				; HGR_PAGE=$40
+
+	lda	#$40
+	sta	DISP_PAGE
+	lda	#$20
+	sta	DRAW_PAGE
 
 	;************************
-	; Opening
+	; Intro
 	;************************
+
+
+	; Load logo offscreen at $9000
 
 	lda	#<(videlectrix_lzsa)
 	sta	getsrc_smc+1
 	lda	#>(videlectrix_lzsa)
 	sta	getsrc_smc+2
 
-	lda	#$40
+	lda	#$90
 
 	jsr	decompress_lzsa2_fast
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
 
 	ldy	#0
 animation_loop:
+
+	lda	DRAW_PAGE
+	cmp	#$40
+	beq	show_page2
+
+show_page1:
+	bit	PAGE1
+	lda	#$40
+	bne	done_page	; bra
+
+show_page2:
+	bit	PAGE2
+	lda	#$20
+
+done_page:
+	sta	DRAW_PAGE
+	eor	#$60
+	sta	DISP_PAGE
+
 
 	lda	delays,Y
 	bmi	done_loop
@@ -62,9 +94,11 @@ animation_loop:
 	tya
 	pha
 
-	lda	#$40
+	lda	DRAW_PAGE
 
 	jsr	decompress_lzsa2_fast
+
+	jsr	hgr_overlay
 
 	pla
 	tay
@@ -74,6 +108,9 @@ animation_loop:
 	jmp	animation_loop
 
 done_loop:
+
+	jsr	wait_until_keypress
+
 	rts
 
 ;forever:
@@ -191,6 +228,9 @@ delays:
 
 
 .include "decompress_fast_v2.s"
+;.include "decompress_overlay.s"
+.include "hgr_overlay.s"
+
 .include "wait_keypress.s"
 
 .include "graphics_intro/intro_graphics.inc"

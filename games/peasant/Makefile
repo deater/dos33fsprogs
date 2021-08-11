@@ -46,7 +46,8 @@ qload.o:	qload.s qboot.inc
 INTRO:	intro.o
 	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-intro.o:	intro.s graphics_intro/intro_graphics.inc
+intro.o:	intro.s decompress_fast_v2.s hgr_overlay.s \
+		graphics_intro/intro_graphics.inc
 	ca65 -o intro.o intro.s -l intro.lst
 
 ###
