@@ -47,8 +47,147 @@ hgr_display:
 
 	jsr	wait_until_keypress
 
-forever:
-	jmp	forever
+
+	ldy	#0
+animation_loop:
+
+	lda	delays,Y
+	bmi	done_loop
+
+	lda	animation_low,Y
+	sta	getsrc_smc+1
+	lda	animation_high,Y
+	sta	getsrc_smc+2
+
+	tya
+	pha
+
+	lda	#$40
+
+	jsr	decompress_lzsa2_fast
+
+	pla
+	tay
+
+	iny
+
+	jmp	animation_loop
+
+done_loop:
+	rts
+
+;forever:
+;	jmp	forever
+
+animation_low:
+	.byte	<title_anim01_lzsa
+	.byte	<title_anim02_lzsa
+	.byte	<title_anim03_lzsa
+	.byte	<title_anim04_lzsa
+	.byte	<title_anim05_lzsa
+	.byte	<title_anim06_lzsa
+	.byte	<title_anim07_lzsa
+	.byte	<title_anim08_lzsa
+	.byte	<title_anim09_lzsa
+	.byte	<title_anim10_lzsa
+	.byte	<title_anim11_lzsa
+	.byte	<title_anim12_lzsa
+	.byte	<title_anim13_lzsa
+	.byte	<title_anim14_lzsa
+	.byte	<title_anim15_lzsa
+	.byte	<title_anim16_lzsa
+	.byte	<title_anim17_lzsa
+	.byte	<title_anim18_lzsa
+	.byte	<title_anim19_lzsa
+	.byte	<title_anim20_lzsa
+	.byte	<title_anim21_lzsa
+	.byte	<title_anim22_lzsa
+	.byte	<title_anim23_lzsa
+	.byte	<title_anim24_lzsa
+	.byte	<title_anim25_lzsa
+	.byte	<title_anim26_lzsa
+	.byte	<title_anim27_lzsa
+	.byte	<title_anim28_lzsa
+	.byte	<title_anim29_lzsa
+	.byte	<title_anim30_lzsa
+	.byte	<title_anim31_lzsa
+	.byte	<title_anim32_lzsa
+	.byte	<title_anim33_lzsa
+	.byte	<title_anim34_lzsa
+
+animation_high:
+	.byte	>title_anim01_lzsa
+	.byte	>title_anim02_lzsa
+	.byte	>title_anim03_lzsa
+	.byte	>title_anim04_lzsa
+	.byte	>title_anim05_lzsa
+	.byte	>title_anim06_lzsa
+	.byte	>title_anim07_lzsa
+	.byte	>title_anim08_lzsa
+	.byte	>title_anim09_lzsa
+	.byte	>title_anim10_lzsa
+	.byte	>title_anim11_lzsa
+	.byte	>title_anim12_lzsa
+	.byte	>title_anim13_lzsa
+	.byte	>title_anim14_lzsa
+	.byte	>title_anim15_lzsa
+	.byte	>title_anim16_lzsa
+	.byte	>title_anim17_lzsa
+	.byte	>title_anim18_lzsa
+	.byte	>title_anim19_lzsa
+	.byte	>title_anim20_lzsa
+	.byte	>title_anim21_lzsa
+	.byte	>title_anim22_lzsa
+	.byte	>title_anim23_lzsa
+	.byte	>title_anim24_lzsa
+	.byte	>title_anim25_lzsa
+	.byte	>title_anim26_lzsa
+	.byte	>title_anim27_lzsa
+	.byte	>title_anim28_lzsa
+	.byte	>title_anim29_lzsa
+	.byte	>title_anim30_lzsa
+	.byte	>title_anim31_lzsa
+	.byte	>title_anim32_lzsa
+	.byte	>title_anim33_lzsa
+	.byte	>title_anim34_lzsa
+
+delays:
+	.byte	1	; 1
+	.byte	1	; 2
+	.byte	1	; 3
+	.byte	1	; 4
+	.byte	1	; 5
+	.byte	1	; 6
+	.byte	1	; 7
+	.byte	1	; 8
+	.byte	1	; 9
+	.byte	1	; 10
+	.byte	1	; 11
+	.byte	1	; 12
+	.byte	1	; 13
+	.byte	1	; 14
+	.byte	1	; 15
+	.byte	1	; 16
+	.byte	1	; 17
+	.byte	1	; 18
+	.byte	1	; 19
+	.byte	1	; 20
+	.byte	1	; 21
+	.byte	1	; 22
+	.byte	1	; 23
+	.byte	1	; 24
+	.byte	1	; 25
+	.byte	1	; 26
+	.byte	1	; 27
+	.byte	1	; 28
+	.byte	1	; 29
+	.byte	1	; 30
+	.byte	1	; 31
+	.byte	1	; 32
+	.byte	1	; 33
+	.byte	1	; 34
+	.byte	$FF
+
 
 
 .include "decompress_fast_v2.s"

@@ -13,7 +13,8 @@ OUTL = $FE
 OUTH = $FF
 
 
-LOAD_TITLE = 0
+LOAD_INTRO = 0
+LOAD_PEASANT = 1
 
 .include "hardware.inc"
 
@@ -29,7 +30,7 @@ qload_start:
 	; first time entry
 	; start by loading text title
 
-	lda	#LOAD_TEXT_TITLE	; load title
+	lda	#LOAD_INTRO		; load intro
 	sta	WHICH_LOAD
 
 	lda	#1
@@ -37,9 +38,9 @@ qload_start:
 
 	jsr	load_file
 
-	jsr	$800
+	jsr	$6000
 
-	lda	#LOAD_TITLE		; load title
+	lda	#LOAD_PEASANT		; load peasant
 	sta	WHICH_LOAD
 
 main_game_loop:
@@ -191,50 +192,50 @@ error_string:
 
 
 which_disk_array:
-	.byte 1,1,3,3		; MIST_TITLE,MIST,MECHE,SELENA
-	.byte 1,1,3,2		; OCTAGON,VIEWER,STONEY,CHANNEL
-	.byte 2,1,2,2		; CABIN,DENTIST,ARBOR,NIBEL
-	.byte 1,1,1,3		; SHIP,GENERATOR,D'NI,SUB
-	.byte 1			; TEXT_TITLE
-	.byte 1,1,1,1,1		; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
-	.byte $f		; FIRST_SECTOR
+	.byte 1,1,3,3		; INTRO, PEASANT
+	.byte 1,1,3,2		;
+	.byte 2,1,2,2		;
+	.byte 1,1,1,3		;
+	.byte 1			;
+	.byte 1,1,1,1,1		;
+	.byte $f		;
 
 load_address_array:
-	.byte $60,$40,$40,$40	; MIST_TITLE,MIST,MECHE,SELENA
-	.byte $40,$40,$40,$40	; OCTAGON,VIEWER,STONEY,CHANNEL
-	.byte $40,$40,$40,$40	; CABIN,DENTIST,ARBOR,NIBEL
-	.byte $40,$40,$40,$40	; SHIP,GENERATOR,D'NI,SUB
-	.byte $08		; TEXT_TITLE
-	.byte $0A,$0A,$0A,$0A
-	.byte $0A		; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
-	.byte $08		; FIRST_SECTOR
+	.byte $60,$60,$40,$40	; INTRO, PEASANT
+	.byte $40,$40,$40,$40	;
+	.byte $40,$40,$40,$40	;
+	.byte $40,$40,$40,$40	;
+	.byte $08		;
+	.byte $0A,$0A,$0A,$0A	;
+	.byte $0A		;
+	.byte $08		;
 
 track_array:
-        .byte  3, 9, 1,21	; MIST_TITLE,MIST,MECHE,SELENA
-	.byte 18,31,11, 1	; OCTAGON,VIEWER,STONEY,CHANNEL
-	.byte 27,26,10,20	; CABIN,DENTIST,ARBOR,NIBEL
-	.byte 30,32,28,30	; SHIP,GENERATOR,D'NI,SUB
-	.byte  0		; TEXT_TITLE
-	.byte  0, 0, 0, 0, 0	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
-	.byte  0		; FIRST_SECTOR
+        .byte  3,10, 1,21	; INTRO, PEASANT
+	.byte 18,31,11, 1	;
+	.byte 27,26,10,20	;
+	.byte 30,32,28,30	;
+	.byte  0		;
+	.byte  0, 0, 0, 0, 0	;
+	.byte  0		;
 
 sector_array:
-        .byte  0, 0, 0, 0	; MIST_TITLE,MIST,MECHE,SELENA
-	.byte  0, 8, 0, 0	; OCTAGON,VIEWER,STONEY,CHANNEL
-	.byte  0, 0, 0, 0	; CABIN,DENTIST,ARBOR,NIBEL
-	.byte  0,13, 0, 1	; SHIP,GENERATOR,D'NI,SUB
-	.byte  6		; TEXT_TITLE
-	.byte 11,12,13,14,15	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
-	.byte  0		; FIRST_SECTOR
+        .byte  0, 0, 0, 0	; INTRO, PEASANT
+	.byte  0, 8, 0, 0	;
+	.byte  0, 0, 0, 0	;
+	.byte  0,13, 0, 1	;
+	.byte  6		;
+	.byte 11,12,13,14,15	;
+	.byte  0		;
 
 length_array:
-        .byte  88, 99,157,145	; MIST_TITLE,MIST,MECHE,SELENA
-	.byte 128, 20,158,135	; OCTAGON,VIEWER,STONEY,CHANNEL
-	.byte  61, 31,159,109	; CABIN,DENTIST,ARBOR,NIBEL
-	.byte  20, 33, 27, 78	; SHIP,GENERATOR,D'NI,SUB
-	.byte   3		; TEXT_TITLE
-	.byte   1,1,1,1,1	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
-	.byte   1		; FIRST_SECTOR
+        .byte  88, 88,157,145	; INTRO, PEASANT
+	.byte 128, 20,158,135	;
+	.byte  61, 31,159,109	;
+	.byte  20, 33, 27, 78	;
+	.byte   3		;
+	.byte   1,1,1,1,1	;
+	.byte   1		;
 
 .include "qkumba_popwr.s"
 

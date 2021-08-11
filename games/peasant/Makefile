@@ -16,7 +16,7 @@ peasant.dsk:	QBOOT QLOAD INTRO PEASANT
 	$(DOS33_RAW) peasant.dsk  0  4 QBOOT      2   1
 	$(DOS33_RAW) peasant.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) peasant.dsk  3  0 INTRO      0   0
-#	$(DOS33_RAW) peasant.dsk  3  0 PEASANT    0   0
+	$(DOS33_RAW) peasant.dsk  10 0 PEASANT    0   0
 
 ###
 
