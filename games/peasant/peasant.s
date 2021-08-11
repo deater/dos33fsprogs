@@ -31,21 +31,6 @@ hgr_display:
 				; Y=0, A=0 after this called
 
 	;************************
-	; Opening
-	;************************
-
-	lda	#<(videlectrix_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(videlectrix_lzsa)
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-	jsr	wait_until_keypress
-
-	;************************
 	; Title
 	;************************
 
@@ -92,27 +77,11 @@ hgr_display:
 
 	jsr	river
 
-.if 0
-
-
-
-
 	;************************
 	; Knight
 	;************************
 
-	lda	#<(knight_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(knight_lzsa)
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-	jsr	wait_until_keypress
-
-.endif
+	jsr knight
 
 forever:
 	jmp	forever
@@ -126,7 +95,7 @@ forever:
 .include "lake_w.s"
 .include "lake_e.s"
 .include "river.s"
-
+.include "knight.s"
 
 .include "hgr_font.s"
 

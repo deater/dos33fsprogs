@@ -9,7 +9,6 @@ all:	graphics.inc
 
 
 graphics.inc:	\
-	videlectrix.lzsa \
 	peasant_title.lzsa \
 	tips.lzsa \
 	cottage.lzsa \
@@ -17,8 +16,7 @@ graphics.inc:	\
 	lake_w.lzsa \
 	river.lzsa \
 	knight.lzsa
-	echo "videlectrix_lzsa: .incbin \"videlectrix.lzsa\"" > graphics.inc
-	echo "title_lzsa: .incbin \"peasant_title.lzsa\"" >> graphics.inc
+	echo "title_lzsa: .incbin \"peasant_title.lzsa\"" > graphics.inc
 	echo "tips_lzsa: .incbin \"tips.lzsa\"" >> graphics.inc
 	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" >> graphics.inc
 	echo "lake_w_lzsa: .incbin \"lake_w.lzsa\"" >> graphics.inc
