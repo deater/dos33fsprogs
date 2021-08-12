@@ -41,7 +41,7 @@ cottage:
 	jsr	hgr_put_string
 
 
-	jsr	display_cottage_text3
+;	jsr	display_cottage_text3
 
 	;====================
 	; save background
@@ -56,8 +56,28 @@ cottage:
 
 	jsr	save_bg_7x30
 
-walk_loop:
+cottage_walk_loop:
 	jsr	restore_bg_7x30
+
+	lda	FRAME
+check_cottage_action1:
+	cmp	#0
+	bne	check_cottage_action2
+	jsr	display_cottage_text1
+	jmp	done_cottage_action
+
+check_cottage_action2:
+	cmp	#1
+	bne	check_cottage_action3
+	jsr	display_cottage_text2
+	jmp	done_cottage_action
+
+check_cottage_action3:
+	cmp	#13
+	bne	done_cottage_action
+	jsr	display_cottage_text3
+
+done_cottage_action:
 
 	lda	FRAME
 	asl
@@ -81,7 +101,7 @@ walk_loop:
 
 	inc	FRAME
 
-	jmp	walk_loop
+	jmp	cottage_walk_loop
 
 
 	;===================
@@ -116,17 +136,14 @@ display_cottage_text1:
 
 	jsr	draw_box
 
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
-
 	lda	#<cottage_text1
 	sta	OUTL
 	lda	#>cottage_text1
 	sta	OUTH
 
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+	jsr	hgr_put_string
 	jsr	hgr_put_string
 
 	rts
