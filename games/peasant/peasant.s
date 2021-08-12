@@ -28,7 +28,7 @@ peasant_quest:
 	; Lake West
 	;************************
 
-	jsr	lake_west
+;	jsr	lake_west
 
 	;************************
 	; Lake East
@@ -72,5 +72,6 @@ peasant_quest:
 .include "hgr_rectangle.s"
 .include "hgr_7x30_sprite.s"
 .include "hgr_1x5_sprite.s"
+.include "hgr_save_restore.s"
 
 .include "graphics/graphics.inc"
