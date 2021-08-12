@@ -40,7 +40,7 @@ peasant_quest:
 	; River
 	;************************
 
-	jsr	river
+;	jsr	river
 
 	;************************
 	; Knight
@@ -73,5 +73,6 @@ peasant_quest:
 .include "hgr_7x30_sprite.s"
 .include "hgr_1x5_sprite.s"
 .include "hgr_save_restore.s"
+.include "hgr_input.s"
 
 .include "graphics/graphics.inc"
