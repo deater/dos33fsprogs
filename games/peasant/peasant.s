@@ -34,7 +34,7 @@ peasant_quest:
 	; Lake East
 	;************************
 
-	jsr	lake_east
+;	jsr	lake_east
 
 	;************************
 	; River
