@@ -8,7 +8,7 @@ EMPTY_DISK = ../../empty_disk
 
 all:	peasant.dsk
 
-peasant.dsk:	QBOOT QLOAD INTRO PEASANT
+peasant.dsk:	QBOOT QLOAD INTRO TITLE PEASANT
 	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
 #	$(DOS33) -y peasant.dsk BSAVE -a 0x6000 PEASANT
 	$(DOS33_RAW) peasant.dsk  0  0 QBOOT      0   1
@@ -16,7 +16,8 @@ peasant.dsk:	QBOOT QLOAD INTRO PEASANT
 	$(DOS33_RAW) peasant.dsk  0  4 QBOOT      2   1
 	$(DOS33_RAW) peasant.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) peasant.dsk  3  0 INTRO      0   0
-	$(DOS33_RAW) peasant.dsk  10 0 PEASANT    0   0
+	$(DOS33_RAW) peasant.dsk  10  0 TITLE     0   0
+	$(DOS33_RAW) peasant.dsk  17 0 PEASANT    0   0
 
 ###
 
@@ -49,6 +50,15 @@ INTRO:	intro.o
 intro.o:	intro.s decompress_fast_v2.s hgr_overlay.s \
 		graphics_intro/intro_graphics.inc
 	ca65 -o intro.o intro.s -l intro.lst
+
+###
+
+TITLE:	title.o
+	ld65 -o TITLE title.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+title.o:	title.s graphics_title/title_graphics.inc \
+		title.s directions.s
+	ca65 -o title.o title.s -l title.lst
 
 ###
 

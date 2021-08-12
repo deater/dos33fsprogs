@@ -1,0 +1,32 @@
+NIBCOUNT	= $09
+
+GBASL		= $26
+GBASH		= $27
+
+CURSOR_X	= $62
+CURSOR_Y	= $63
+
+WHICH_LOAD=$80
+
+WHICH_SLOT	= $DA
+CURRENT_DISK	= $DC
+HGR_COLOR	= $E4
+
+
+P0		= $F1
+P1		= $F2
+P2		= $F3
+P3		= $F4
+P4		= $F5
+P5		= $F6
+
+INL		= $FC
+INH		= $FD
+OUTL		= $FE
+OUTH		= $FF
+
+LOAD_INTRO      = 0
+LOAD_TITLE      = 1
+LOAD_PEASANT    = 2
+LOAD_ENDING     = 3
+

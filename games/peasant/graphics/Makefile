@@ -9,8 +9,6 @@ all:	graphics.inc
 
 
 graphics.inc:	\
-	peasant_title.lzsa \
-	tips.lzsa \
 	cottage.lzsa \
 	lake_e.lzsa \
 	lake_w.lzsa \
@@ -18,9 +16,7 @@ graphics.inc:	\
 	knight.lzsa \
 	trogdor.lzsa \
 	game_over.lzsa
-	echo "title_lzsa: .incbin \"peasant_title.lzsa\"" > graphics.inc
-	echo "tips_lzsa: .incbin \"tips.lzsa\"" >> graphics.inc
-	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" >> graphics.inc
+	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" > graphics.inc
 	echo "lake_w_lzsa: .incbin \"lake_w.lzsa\"" >> graphics.inc
 	echo "lake_e_lzsa: .incbin \"lake_e.lzsa\"" >> graphics.inc
 	echo "river_lzsa: .incbin \"river.lzsa\"" >> graphics.inc
@@ -116,5 +112,5 @@ game_over.hgr:	game_over.png
 
 
 clean:	
-	rm -f *~ outline.inc *.lzsa *.gr *.hgr
+	rm -f *~ graphics.inc *.lzsa *.gr *.hgr
 

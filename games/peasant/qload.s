@@ -1,20 +1,22 @@
 ; Loader for MIST
 
-;.include "zp.inc"
+.include "zp.inc"
 
 LOAD_TEXT_TITLE = 16 ; ???
 LOAD_FIRST_SECTOR = 22 ; ???
 
 tmpsec = $3C
-WHICH_LOAD=$80
-WHICH_SLOT=$DA
-CURRENT_DISK=$DC
-OUTL = $FE
-OUTH = $FF
+;WHICH_LOAD=$80
+;WHICH_SLOT=$DA
+;CURRENT_DISK=$DC
+;OUTL = $FE
+;OUTH = $FF
 
 
-LOAD_INTRO = 0
-LOAD_PEASANT = 1
+;LOAD_INTRO	= 0
+;LOAD_TITLE	= 1
+;LOAD_PEASANT	= 2
+;LOAD_ENDING	= 3
 
 .include "hardware.inc"
 
@@ -40,7 +42,7 @@ qload_start:
 
 	jsr	$6000
 
-	lda	#LOAD_PEASANT		; load peasant
+	lda	#LOAD_TITLE		; load title
 	sta	WHICH_LOAD
 
 main_game_loop:
@@ -192,7 +194,7 @@ error_string:
 
 
 which_disk_array:
-	.byte 1,1,3,3		; INTRO, PEASANT
+	.byte 1,1,1,1		; INTRO, TITLE, PEASANT. ENDING
 	.byte 1,1,3,2		;
 	.byte 2,1,2,2		;
 	.byte 1,1,1,3		;
@@ -201,7 +203,7 @@ which_disk_array:
 	.byte $f		;
 
 load_address_array:
-	.byte $60,$60,$40,$40	; INTRO, PEASANT
+	.byte $60,$60,$60,$60	; INTRO, TITLE, PEASANT, ENDING
 	.byte $40,$40,$40,$40	;
 	.byte $40,$40,$40,$40	;
 	.byte $40,$40,$40,$40	;
@@ -211,7 +213,7 @@ load_address_array:
 	.byte $08		;
 
 track_array:
-        .byte  3,10, 1,21	; INTRO, PEASANT
+        .byte  3,10,17,24	; INTRO, TITLE, PEASANT, ENDING
 	.byte 18,31,11, 1	;
 	.byte 27,26,10,20	;
 	.byte 30,32,28,30	;
@@ -220,7 +222,7 @@ track_array:
 	.byte  0		;
 
 sector_array:
-        .byte  0, 0, 0, 0	; INTRO, PEASANT
+        .byte  0, 0, 0, 0	; INTRO, TITLE, PEASANT, ENDING
 	.byte  0, 8, 0, 0	;
 	.byte  0, 0, 0, 0	;
 	.byte  0,13, 0, 1	;
@@ -229,7 +231,7 @@ sector_array:
 	.byte  0		;
 
 length_array:
-        .byte  88, 88,157,145	; INTRO, PEASANT
+        .byte  88, 88,88,88	; INTRO, TITLE, PEASANT, ENDING
 	.byte 128, 20,158,135	;
 	.byte  61, 31,159,109	;
 	.byte  20, 33, 27, 78	;
