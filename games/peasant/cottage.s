@@ -18,6 +18,9 @@ cottage:
 	lda	#117
 	sta	PEASANT_Y
 
+	lda	#PEASANT_DIR_RIGHT
+	sta	PEASANT_DIR
+
 	;==================
 	; draw background
 

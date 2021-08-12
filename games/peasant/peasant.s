@@ -22,7 +22,7 @@ peasant_quest:
 	; Cottage
 	;************************
 
-	jsr	cottage
+;	jsr	cottage
 
 	;************************
 	; Lake West
@@ -71,5 +71,6 @@ peasant_quest:
 .include "draw_box.s"
 .include "hgr_rectangle.s"
 .include "hgr_7x30_sprite.s"
+.include "hgr_1x5_sprite.s"
 
 .include "graphics/graphics.inc"
