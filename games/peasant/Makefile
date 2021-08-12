@@ -8,7 +8,7 @@ EMPTY_DISK = ../../empty_disk
 
 all:	peasant.dsk
 
-peasant.dsk:	QBOOT QLOAD INTRO TITLE PEASANT
+peasant.dsk:	QBOOT QLOAD INTRO TITLE PEASANT ENDING
 	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
 #	$(DOS33) -y peasant.dsk BSAVE -a 0x6000 PEASANT
 	$(DOS33_RAW) peasant.dsk  0  0 QBOOT      0   1
@@ -16,8 +16,9 @@ peasant.dsk:	QBOOT QLOAD INTRO TITLE PEASANT
 	$(DOS33_RAW) peasant.dsk  0  4 QBOOT      2   1
 	$(DOS33_RAW) peasant.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) peasant.dsk  3  0 INTRO      0   0
-	$(DOS33_RAW) peasant.dsk  10  0 TITLE     0   0
+	$(DOS33_RAW) peasant.dsk  10 0 TITLE      0   0
 	$(DOS33_RAW) peasant.dsk  17 0 PEASANT    0   0
+	$(DOS33_RAW) peasant.dsk  24 0 ENDING     0   0
 
 ###
 
@@ -74,6 +75,17 @@ peasant.o:	peasant.s graphics/graphics.inc \
 
 ###
 
+ENDING:	ending.o
+	ld65 -o ENDING ending.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+ending.o:	ending.s graphics_end/end_graphics.inc \
+		draw_box.s hgr_rectangle.s hgr_font.s \
+		ending.s
+	ca65 -o ending.o ending.s -l ending.lst
+
+
+###
+
 FONT_TEST:	font_test.o
 	ld65 -o FONT_TEST font_test.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
@@ -84,5 +96,5 @@ font_test.o:	font_test.s hgr_font.s hgr_1x8_sprite.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO PEASANT FONT_TEST
+	rm -f *~ *.o *.lst HELLO INTRO TITLE PEASANT ENDING
 

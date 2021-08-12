@@ -52,11 +52,10 @@ peasant_quest:
 	; Ending
 	;************************
 
-	jsr ending
+	lda	#LOAD_ENDING
+	sta	WHICH_LOAD
 
-
-forever:
-	jmp	forever
+	rts
 
 
 .include "decompress_fast_v2.s"
@@ -67,7 +66,6 @@ forever:
 .include "lake_e.s"
 .include "river.s"
 .include "knight.s"
-.include "ending.s"
 
 .include "hgr_font.s"
 .include "draw_box.s"
