@@ -26,8 +26,8 @@ tmpsec = $3C
 qload_start:
 
 	; init the write code
-	lda	WHICH_SLOT
-	jsr	popwr_init
+;	lda	WHICH_SLOT
+;	jsr	popwr_init
 
 	; first time entry
 	; start by loading text title
@@ -239,7 +239,26 @@ length_array:
 	.byte   1,1,1,1,1	;
 	.byte   1		;
 
-.include "qkumba_popwr.s"
+;.include "qkumba_popwr.s"
+
+	; pt3 player
+	.include "pt3_lib_detect_model.s"
+	.include "pt3_lib_core.s"
+	.include "pt3_lib_init.s"
+	.include "pt3_lib_mockingboard_setup.s"
+	.include "interrupt_handler.s"
+	.include "pt3_lib_mockingboard_detect.s"
+
+
+
+.align $100
+PT3_LOC:
+peasant_pt3:
+.incbin "music/peasant.pt3"
+;.align $100
+;peasant2_pt3:
+;.incbin "music/peasant2.pt3"
+
 
 qload_end:
 

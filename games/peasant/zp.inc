@@ -23,7 +23,44 @@ CURSOR_X	= $63
 CURSOR_Y	= $64
 FRAME		= $65
 
-WHICH_LOAD=$80
+; pt3 player registers
+AY_REGISTERS    = $70
+A_FINE_TONE     = $70
+A_COARSE_TONE   = $71
+B_FINE_TONE     = $72
+B_COARSE_TONE   = $73
+C_FINE_TONE     = $74
+C_COARSE_TONE   = $75
+NOISE           = $76
+ENABLE          = $77
+PT3_MIXER_VAL   = $77
+A_VOLUME        = $78
+B_VOLUME        = $79
+C_VOLUME        = $7A
+ENVELOPE_FINE   = $7B
+ENVELOPE_COARSE = $7C
+ENVELOPE_SHAPE  = $7D
+PATTERN_L       = $7E
+PATTERN_H       = $7F
+
+WHICH_LOAD	= $80
+
+; rest of pt3_player
+PT3_TEMP        = $81
+ORNAMENT_L      = $82
+ORNAMENT_H      = $83
+SAMPLE_L        = $84
+SAMPLE_H        = $85
+LOOP            = $86
+MB_VALUE        = $87
+MB_ADDR_L       = $88
+MB_ADDR_H       = $89
+DONE_PLAYING    = $8A
+DONE_SONG       = $8B
+APPLEII_MODEL	= $8C
+
+
+
 
 ; D0-D? used by HGR?
 
