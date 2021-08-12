@@ -98,7 +98,10 @@ done_knight_action:
 
 	jsr	draw_peasant
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
+
+	lda	#3
+	jsr	wait_a_bit
 
 	inc	FRAME
 
@@ -112,6 +115,12 @@ done_knight:
 
 	; OK stuff goes on here
 
+	jsr	draw_peasant
+
+	; wait a bit
+
+	lda	#10
+	jsr	wait_a_bit
 
 	; restore bg
 

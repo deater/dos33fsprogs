@@ -38,7 +38,7 @@ lake_west:
 
 	jsr	hgr_put_string
 
-;	jsr	display_cottage_text3
+	jsr	hgr_save
 
 	;====================
 	; save background
@@ -66,6 +66,7 @@ check_lake_w_action1:
 check_lake_w_action2:
 	cmp	#20
 	bne	done_lake_w_action
+	jsr	hgr_restore
 	jsr	display_lake_w_text1
 
 done_lake_w_action:
@@ -92,7 +93,10 @@ done_lake_w_action:
 
 	jsr	draw_peasant
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
+
+	lda	#3
+	jsr	wait_a_bit
 
 	inc	FRAME
 

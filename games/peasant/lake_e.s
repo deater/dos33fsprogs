@@ -92,7 +92,10 @@ done_lake_e_action:
 
 	jsr	draw_peasant
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
+
+	lda	#3
+	jsr	wait_a_bit
 
 	inc	FRAME
 

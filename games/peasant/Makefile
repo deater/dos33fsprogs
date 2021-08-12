@@ -69,6 +69,7 @@ PEASANT:	peasant.o
 peasant.o:	peasant.s graphics/graphics.inc sprites/peasant_sprite.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_7x30_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
+		wait_a_bit.s \
 		title.s directions.s \
 		cottage.s lake_w.s lake_e.s river.s knight.s \
 		ending.s

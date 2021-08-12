@@ -43,8 +43,7 @@ cottage:
 
 	jsr	hgr_put_string
 
-
-;	jsr	display_cottage_text3
+	jsr	hgr_save
 
 	;====================
 	; save background
@@ -72,12 +71,14 @@ check_cottage_action1:
 check_cottage_action2:
 	cmp	#1
 	bne	check_cottage_action3
+	jsr	hgr_restore
 	jsr	display_cottage_text2
 	jmp	done_cottage_action
 
 check_cottage_action3:
 	cmp	#13
 	bne	done_cottage_action
+	jsr	hgr_restore
 	jsr	display_cottage_text3
 
 done_cottage_action:
@@ -100,7 +101,22 @@ done_cottage_action:
 
 	jsr	draw_peasant
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
+
+	lda	FRAME
+	bne	special2
+	lda	#25
+	jmp	now_wait
+special2:
+	cmp	#1
+	bne	regular_wait
+	lda	#12
+	jmp	now_wait
+
+regular_wait:
+	lda	#3
+now_wait:
+	jsr	wait_a_bit
 
 	inc	FRAME
 

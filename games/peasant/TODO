@@ -1,2 +1,9 @@
+TODO:
+- Music
+- Animate Title
 - walk behind objects (like reeds?)
+- More frames/directions in peasant sprites
+- Replace HPOSN with lookup table
+- Wait instead of keyboard to progress
+- Better animation of River
 

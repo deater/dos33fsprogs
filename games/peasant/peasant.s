@@ -22,25 +22,25 @@ peasant_quest:
 	; Cottage
 	;************************
 
-;	jsr	cottage
+	jsr	cottage
 
 	;************************
 	; Lake West
 	;************************
 
-;	jsr	lake_west
+	jsr	lake_west
 
 	;************************
 	; Lake East
 	;************************
 
-;	jsr	lake_east
+	jsr	lake_east
 
 	;************************
 	; River
 	;************************
 
-;	jsr	river
+	jsr	river
 
 	;************************
 	; Knight
@@ -74,5 +74,6 @@ peasant_quest:
 .include "hgr_1x5_sprite.s"
 .include "hgr_save_restore.s"
 .include "hgr_input.s"
+.include "wait_a_bit.s"
 
 .include "graphics/graphics.inc"
