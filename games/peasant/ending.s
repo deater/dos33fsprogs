@@ -40,6 +40,36 @@ trogdor_question:
 	jsr	hgr_input
 
 	;=============================
+	; draw WRONG! box
+	;=============================
+	lda     #0
+        sta     BOX_X1H
+        lda     #97
+        sta     BOX_X1L
+        lda     #69
+        sta     BOX_Y1
+
+        lda     #0
+        sta     BOX_X2H
+        lda     #184
+        sta     BOX_X2L
+        lda     #109
+        sta     BOX_Y2
+
+	jsr	draw_box
+
+	; print WRONG! at 16, 84
+
+	lda	#<wrong_text
+	sta	OUTL
+	lda	#>wrong_text
+	sta	OUTH
+
+	jsr	hgr_put_string
+
+	jsr	wait_until_keypress
+
+	;=============================
 	; game over man
 	;=============================
 
@@ -87,6 +117,8 @@ peasant_text:
 score_text:
 	.byte 0,2,"Score: 0 of 150",0
 
+wrong_text:
+	.byte 16,84,"WRONG!!!",0
 
                    ; 0123456789012345678901234567890123456789
 copy_protection_text:
