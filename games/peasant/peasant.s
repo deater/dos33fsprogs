@@ -70,5 +70,6 @@ peasant_quest:
 .include "hgr_font.s"
 .include "draw_box.s"
 .include "hgr_rectangle.s"
+.include "hgr_7x30_sprite.s"
 
 .include "graphics/graphics.inc"

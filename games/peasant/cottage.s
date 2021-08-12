@@ -45,6 +45,31 @@ cottage:
 	jsr	hgr_put_string
 
 
+	;============================
+	; draw peasant
+
+	; draw at 70,117
+
+	lda	#10
+	sta	CURSOR_X
+	lda	#117
+	sta	CURSOR_Y
+
+	jsr	save_bg_7x30
+
+	lda	#10
+	sta	CURSOR_X
+	lda	#117
+	sta	CURSOR_Y
+
+	lda	#<peasant_right1_sprite
+	sta	INL
+	lda	#>peasant_right1_sprite
+	sta	INH
+
+	jsr	hgr_draw_sprite_7x30
+
+
 	jsr	wait_until_keypress
 
 	rts
@@ -83,8 +108,4 @@ cottage_text3:
 ; Walk to edge of screen
 
 
-
-
-
-
-
+.include "sprites/peasant_sprite.inc"

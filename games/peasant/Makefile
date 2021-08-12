@@ -66,8 +66,9 @@ title.o:	title.s graphics_title/title_graphics.inc \
 PEASANT:	peasant.o
 	ld65 -o PEASANT peasant.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant.o:	peasant.s graphics/graphics.inc \
+peasant.o:	peasant.s graphics/graphics.inc sprites/peasant_sprite.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
+		hgr_7x30_sprite.s \
 		title.s directions.s \
 		cottage.s lake_w.s lake_e.s river.s knight.s \
 		ending.s
