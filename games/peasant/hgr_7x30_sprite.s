@@ -95,10 +95,10 @@ save_yloop:
 	rts
 
 	;======================
-	; restore bg 14x14
+	; restore bg 7x30
 	;======================
 
-restore_bg_14x14:
+restore_bg_7x30:
 
 	ldx	#0
 restore_yloop:
