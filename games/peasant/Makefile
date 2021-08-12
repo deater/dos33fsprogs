@@ -94,6 +94,22 @@ font_test.o:	font_test.s hgr_font.s hgr_1x8_sprite.s
 	ca65 -o font_test.o font_test.s -l font_test.lst
 
 
+####
+
+graphics_intro/intro_graphics.inc:
+	cd graphics_intro && make
+
+graphics_title/title_graphics.inc:
+	cd graphics_title && make
+
+
+graphics/graphics.inc:
+	cd graphics && make
+
+graphics_end/end_graphics.inc:
+	cd graphics_end && make
+
+
 ###
 
 clean:	
