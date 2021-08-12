@@ -17,7 +17,16 @@ CURSOR_Y	= $63
 
 WHICH_LOAD=$80
 
-INPUT_X		= $D0
+; D0-D? used by HGR?
+
+INPUT_X		= $C0
+BOX_X1L		= $C1
+BOX_X1H		= $C2
+BOX_Y1		= $C3
+BOX_X2L		= $C4
+BOX_X2H		= $C5
+BOX_Y2		= $C6
+
 WHICH_SLOT	= $DA
 CURRENT_DISK	= $DC
 HGR_COLOR	= $E4

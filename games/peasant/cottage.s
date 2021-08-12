@@ -23,7 +23,22 @@ cottage:
 	jsr	hgr_put_string
 
 
+	lda	#0
+	sta	BOX_X1H
+	lda	#53
+	sta	BOX_X1L
+	lda	#24
+	sta	BOX_Y1
+
+	lda	#0
+	sta	BOX_X2H
+	lda	#253
+	sta	BOX_X2L
+	lda	#82
+	sta	BOX_Y2
+
 	jsr	draw_box
+
 	jsr	hgr_put_string
 	jsr	hgr_put_string
 	jsr	hgr_put_string
