@@ -23,6 +23,13 @@ cottage:
 	jsr	hgr_put_string
 
 
+	jsr	draw_box
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+
 	jsr	wait_until_keypress
 
 	rts
@@ -33,10 +40,10 @@ peasant_text:
 
 
 cottage_text1:
-	.byte 0,0,"YOU are Rather Dashing, a",0
-	.byte 0,0,"humble peasant living in",0
-	.byte 0,0,"the peasant kingdom of",0
-	.byte 0,0,"Peasantry.",0
+	.byte 9,35,"YOU are Rather Dashing, a",0
+	.byte 9,44,"humble peasant living in",0
+	.byte 9,53,"the peasant kingdom of",0
+	.byte 9,62,"Peasantry.",0
 
 ; wait a few seconds
 

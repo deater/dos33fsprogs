@@ -254,9 +254,7 @@ swap_done:
 	; make /7 %7 tables
 	;=====================
 
-vgi_init:
-
-vgi_make_tables:
+hgr_make_tables:
 
 	ldy	#0
 	lda	#0

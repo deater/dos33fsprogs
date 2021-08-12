@@ -12,6 +12,8 @@
 
 peasant_quest:
 
+	jsr	hgr_make_tables
+
 	jsr	HGR2		; Hi-res graphics, no text at bottom
 				; Y=0, A=0 after this called
 
@@ -21,7 +23,6 @@ peasant_quest:
 	;************************
 
 	jsr	cottage
-
 
 	;************************
 	; Lake West
@@ -69,5 +70,7 @@ forever:
 .include "ending.s"
 
 .include "hgr_font.s"
+.include "draw_box.s"
+.include "hgr_rectangle.s"
 
 .include "graphics/graphics.inc"
