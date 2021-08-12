@@ -42,7 +42,7 @@ outl_no_oflo:
 	rts
 
 	;==================
-	;  in X
+	; X in X
 	; Y in Y
 	; Char in A
 hgr_put_char:

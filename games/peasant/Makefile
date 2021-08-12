@@ -67,7 +67,7 @@ PEASANT:	peasant.o
 	ld65 -o PEASANT peasant.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 peasant.o:	peasant.s graphics/graphics.inc \
-		draw_box.s hgr_rectangle.s hgr_font.s \
+		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		title.s directions.s \
 		cottage.s lake_w.s lake_e.s river.s knight.s \
 		ending.s
@@ -79,6 +79,7 @@ ENDING:	ending.o
 	ld65 -o ENDING ending.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 ending.o:	ending.s graphics_end/end_graphics.inc \
+		hgr_input.s \
 		draw_box.s hgr_rectangle.s hgr_font.s \
 		ending.s
 	ca65 -o ending.o ending.s -l ending.lst

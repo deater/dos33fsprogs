@@ -28,7 +28,20 @@ trogdor_question:
 
 	jsr	decompress_lzsa2_fast
 
-	jsr	wait_until_keypress
+	lda	#<copy_protection_text
+	sta	OUTL
+	lda	#>copy_protection_text
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_input
+
+	;=============================
+	; game over man
+	;=============================
 
 game_over:
 
@@ -64,6 +77,7 @@ forever:
 .include "hgr_font.s"
 .include "draw_box.s"
 .include "hgr_rectangle.s"
+.include "hgr_input.s"
 
 .include "graphics_end/end_graphics.inc"
 
@@ -72,3 +86,11 @@ peasant_text:
 
 score_text:
 	.byte 0,2,"Score: 0 of 150",0
+
+
+                   ; 0123456789012345678901234567890123456789
+copy_protection_text:
+	.byte 0,160,"Before proceeding, don thy red glasses",0
+	.byte 0,168,"spin the wheel on p27 and answer this:",0
+	.byte 0,176,"+ Who is Trogdor's cousin's brother?",0
+
