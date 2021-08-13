@@ -126,6 +126,8 @@ do_title:
 	jsr	decompress_lzsa2_fast
 
 
+	bit	KEYRESET
+
 	;=====================
 	; main loop
 
