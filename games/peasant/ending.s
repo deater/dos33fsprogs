@@ -108,6 +108,7 @@ forever:
 .include "draw_box.s"
 .include "hgr_rectangle.s"
 .include "hgr_input.s"
+.include "hgr_tables.s"
 
 .include "graphics_end/end_graphics.inc"
 

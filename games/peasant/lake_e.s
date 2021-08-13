@@ -63,7 +63,7 @@ check_lake_e_action1:
 	jmp	done_lake_e_action
 
 check_lake_e_action2:
-	cmp	#27
+	cmp	#28
 	bne	done_lake_e_action
 	jsr	hgr_restore
 	lda	#PEASANT_DIR_UP

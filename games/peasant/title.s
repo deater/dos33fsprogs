@@ -77,7 +77,19 @@ mockingboard_found:
 
 mockingboard_notfound:
 
+	;=========================
+	; set up hgr lookup tables
+	;=========================
+
+	jsr	hgr_make_tables
+
+
+	;=======================
+	; start music
+	;=======================
+
 	cli
+
 
 	;************************
 	; Title
@@ -119,5 +131,6 @@ do_title:
 .include "directions.s"
 
 .include "hgr_font.s"
+.include "hgr_tables.s"
 
 .include "graphics_title/title_graphics.inc"

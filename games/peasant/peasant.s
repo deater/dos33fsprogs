@@ -74,6 +74,8 @@ peasant_quest:
 .include "hgr_1x5_sprite.s"
 .include "hgr_save_restore.s"
 .include "hgr_input.s"
+.include "hgr_tables.s"
+
 .include "wait_a_bit.s"
 
 .include "graphics/graphics.inc"

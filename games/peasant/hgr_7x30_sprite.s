@@ -38,7 +38,13 @@ hgr_7x30_sprite_yloop:
 	ldy	#0
 
 	; calc GBASL/GBASH
-	jsr	HPOSN	; (Y,X),(A)  (values stored in HGRX,XH,Y)
+;	jsr	HPOSN	; (Y,X),(A)  (values stored in HGRX,XH,Y)
+
+	tax
+	lda	hposn_low,X
+	sta	GBASL
+	lda	hposn_high,X
+	sta	GBASH
 
 	pla
 	tax
@@ -78,7 +84,13 @@ save_yloop:
 	ldy	#0
 
 	; calc GBASL/GBASH
-	jsr	HPOSN	; (Y,X),(A)  (values stored in HGRX,XH,Y)
+;	jsr	HPOSN	; (Y,X),(A)  (values stored in HGRX,XH,Y)
+
+	tax
+	lda	hposn_low,X
+	sta	GBASL
+	lda	hposn_high,X
+	sta	GBASH
 
 	pla
 	tax
@@ -112,7 +124,13 @@ restore_yloop:
 	ldy	#0
 
 	; calc GBASL/GBASH
-	jsr	HPOSN	; (Y,X),(A)  (values stored in HGRX,XH,Y)
+;	jsr	HPOSN	; (Y,X),(A)  (values stored in HGRX,XH,Y)
+
+	tax
+	lda	hposn_low,X
+	sta	GBASL
+	lda	hposn_high,X
+	sta	GBASH
 
 	pla
 	tax

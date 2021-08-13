@@ -6,10 +6,6 @@ COLOR_MODE	= TEMP0
 OTHER_MASK	= TEMP1
 XRUN		= TEMP2
 
-div7_table	= $B000
-mod7_table	= $B100
-
-
 	; FAST
 	;=================================
 	; Simple Rectangle
@@ -80,10 +76,16 @@ done_colors:
 
 	; get ROW into (GBASL)
 
-	ldx	VGI_RX1		; X1 into X
-	lda	VGI_RY1		; Y1 into A
-	ldy	#0		; always 0
-	jsr	HPOSN		; (Y,X),(A)  (values stores in HGRX,XH,Y)
+;	ldx	VGI_RX1		; X1 into X
+;	lda	VGI_RY1		; Y1 into A
+;	ldy	#0		; always 0
+;	jsr	HPOSN		; (Y,X),(A)  (values stores in HGRX,XH,Y)
+
+	; urgh we depend on HGR_BITS being properly set
+
+	jsr	fast_hposn
+
+
 
 	; Y is already the RX1/7
 
@@ -243,59 +245,6 @@ swap_done:
 	sta	HGR_BITS
 
 	rts
-
-
-
-
-
-
-
-	;=====================
-	; make /7 %7 tables
-	;=====================
-
-hgr_make_tables:
-
-	ldy	#0
-	lda	#0
-	ldx	#0
-div7_loop:
-	sta	div7_table,Y
-
-	inx
-	cpx	#7
-	bne	div7_not7
-
-	clc
-	adc	#1
-	ldx	#0
-div7_not7:
-	iny
-	bne	div7_loop
-
-
-	ldy	#0
-	lda	#0
-mod7_loop:
-	sta	mod7_table,Y
-	clc
-	adc	#1
-	cmp	#7
-	bne	mod7_not7
-	lda	#0
-mod7_not7:
-	iny
-	bne	mod7_loop
-
-	rts
-
-left_masks:
-	.byte $FF,$FE,$FC,$F8, $F0,$E0,$C0
-
-right_masks:
-	.byte $81,$83,$87, $8F,$9F,$BF,$FF
-
-
 
 
 
