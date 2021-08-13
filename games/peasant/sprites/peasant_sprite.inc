@@ -29,8 +29,8 @@ peasant_right1_sprite:
 	.byte $0F
 	.byte $0F
 	.byte $1C
-	.byte $FF
-	.byte $FF
+	.byte $00
+	.byte $00
 
 ; hgr_make_sprite peasant_sprites.png  21 1 21 31
 peasant_right1_mask:
@@ -62,5 +62,202 @@ peasant_right1_mask:
 	.byte $70
 	.byte $70
 	.byte $63
+	.byte $FF
+	.byte $FF
+
+; hgr_make_sprite ./peasant_sprites.png  35 34 35 64
+peasant_right2_sprite:
+	.byte $80
+	.byte $80
+	.byte $80
+	.byte $C0
+	.byte $C0
+	.byte $C0
+	.byte $F0
+	.byte $0C
 	.byte $00
 	.byte $00
+	.byte $00
+	.byte $0C
+	.byte $0C
+	.byte $0D
+	.byte $7D
+	.byte $71
+	.byte $95
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $80
+	.byte $80
+	.byte $8C
+	.byte $1C
+	.byte $67
+	.byte $63
+	.byte $63
+	.byte $6F
+	.byte $00
+	.byte $00
+
+; 21 34 21 64
+peasant_right2_mask:
+	.byte $03
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $73
+	.byte $61
+	.byte $61
+	.byte $61
+	.byte $61
+	.byte $61
+	.byte $60
+	.byte $00
+	.byte $00
+	.byte $60
+	.byte $E1
+	.byte $E1
+	.byte $E3
+	.byte $83
+	.byte $83
+	.byte $83
+	.byte $03
+	.byte $18
+	.byte $1C
+	.byte $1C
+	.byte $10
+	.byte $FF
+	.byte $FF
+
+; 35 68 35 98
+peasant_up1_sprite:
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $0C
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $B7
+	.byte $03
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $30
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $03
+	.byte $00
+	.byte $00
+; 21 68 21 98
+peasant_up1_mask:
+	.byte $73
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $73
+	.byte $61
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $4C
+	.byte $4C
+	.byte $4C
+	.byte $4C
+	.byte $4C
+	.byte $7C
+	.byte $7F
+	.byte $7F
+
+; 35 102 35 132
+peasant_up2_sprite:
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $0C
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $B7
+	.byte $30
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $03
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $30
+	.byte $00
+	.byte $00
+
+; 21 102 21 132
+peasant_up2_mask:
+	.byte $73
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $73
+	.byte $61
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $4C
+	.byte $4C
+	.byte $4C
+	.byte $4C
+	.byte $4C
+	.byte $4F
+	.byte $7F
+	.byte $7F
