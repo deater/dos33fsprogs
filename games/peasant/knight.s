@@ -113,7 +113,10 @@ done_knight_action:
 
 done_knight:
 
-	; OK stuff goes on here
+	; after OK stuff goes on here
+
+	sei	; turn off music
+	jsr	pt3_clear_ay_both
 
 	jsr	draw_peasant
 

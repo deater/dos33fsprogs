@@ -107,7 +107,10 @@ do_title:
 
 	jsr	wait_until_keypress
 
+
 	sei	; disable music
+
+	jsr	clear_ay_both
 
 	;************************
 	; Tips

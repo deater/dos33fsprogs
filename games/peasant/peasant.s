@@ -18,6 +18,26 @@ peasant_quest:
 				; Y=0, A=0 after this called
 
 
+	;*******************************
+	; restart music, only drum loop
+	;******************************
+
+	; hack! modify the PT3 file to ignore the latter half
+
+	PT3_LOC=$E00+$E00
+	pt3_init_song=$e00+$A56
+	pt3_clear_ay_both=$e00+$CDF
+
+	lda	#$ff			; end after 4 patterns
+	sta	PT3_LOC+$C9+$4
+
+	lda	#$0			; set LOOP to 0
+	sta	PT3_LOC+$66
+
+	jsr	pt3_init_song
+
+	cli
+
 	;************************
 	; Cottage
 	;************************
