@@ -10,8 +10,10 @@ all:	title_graphics.inc
 
 title_graphics.inc:	\
 	peasant_title.lzsa \
+	peasant_title_trogfree.lzsa \
 	tips.lzsa
 	echo "title_lzsa: .incbin \"peasant_title.lzsa\"" > title_graphics.inc
+	echo "title_trogfree_lzsa: .incbin \"peasant_title_trogfree.lzsa\"" >> title_graphics.inc
 	echo "tips_lzsa: .incbin \"tips.lzsa\"" >> title_graphics.inc
 
 ###
@@ -21,6 +23,15 @@ peasant_title.lzsa:	peasant_title.hgr
 
 peasant_title.hgr:	peasant_title.png
 	$(PNG2HGR) peasant_title.png > peasant_title.hgr
+
+###
+
+peasant_title_trogfree.lzsa:	peasant_title_trogfree.hgr
+	$(LZSA) -r -f2 peasant_title_trogfree.hgr peasant_title_trogfree.lzsa
+
+peasant_title_trogfree.hgr:	peasant_title_trogfree.png
+	$(PNG2HGR) peasant_title_trogfree.png > peasant_title_trogfree.hgr
+
 
 ###
 

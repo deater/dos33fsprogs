@@ -96,16 +96,120 @@ mockingboard_notfound:
 	;************************
 
 do_title:
-	lda	#<(title_lzsa)
+
+	lda	#0
+	sta	FRAME
+
+	;======================
+	; load regular to $40
+
+	lda	#<(title_trogfree_lzsa)
 	sta	getsrc_smc+1
-	lda	#>(title_lzsa)
+	lda	#>(title_trogfree_lzsa)
 	sta	getsrc_smc+2
 
 	lda	#$40
 
 	jsr	decompress_lzsa2_fast
 
-	jsr	wait_until_keypress
+
+	;======================
+	; load trogdor to $20
+
+	lda	#<(title_lzsa)
+	sta	getsrc_smc+1
+	lda	#>(title_lzsa)
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+
+	;=====================
+	; main loop
+
+	; we're supposed to animate flame, flash the "CLICK ANYWHERE" sign
+	; and show trogdor when his music plays
+
+reset_altfire:
+	lda	#50
+	sta	ALTFIRE
+
+	lda	#<altfire_sprite
+	sta	alt_smc1+1
+	sta	alt_smc2+1
+
+	lda	#>altfire_sprite
+	sta	alt_smc1+2
+	sta	alt_smc2+2
+
+title_loop:
+
+	lda	C_VOLUME	; see if volume on trogdor channel
+beq	no_trog
+
+	bit	PAGE1
+	jmp	done_trog
+
+no_trog:
+	bit	PAGE2
+done_trog:
+
+	lda	FRAME		; skip most of time
+	and	#$3f
+	bne	altfire_good
+
+
+	; do altfire loop
+
+	ldx	ALTFIRE
+	lda	hposn_high,X
+	sta	GBASH
+	lda	hposn_low,X
+	sta	GBASL
+
+	ldy	#34
+inner_altfire:
+
+	lda	(GBASL),Y
+	pha
+alt_smc1:
+	lda	$d000
+	sta	(GBASL),Y
+	pla
+alt_smc2:
+	sta	$d000
+
+	inc	alt_smc1+1
+	inc	alt_smc2+1
+	bne	alt_noflo
+
+	inc	alt_smc1+2
+	inc	alt_smc2+2
+
+
+alt_noflo:
+	iny
+	cpy	#40
+	bne	inner_altfire
+
+
+	inc	ALTFIRE
+	lda	ALTFIRE
+	cmp	#135
+	beq	reset_altfire
+
+altfire_good:
+
+	inc	FRAME
+
+	lda	KEYPRESS				; 4
+	bpl	title_loop				; 3
+	bit	KEYRESET	; clear the keyboard buffer
+
+
+	bit	PAGE2			; return to viewing PAGE2
 
 
 	sei	; disable music
@@ -137,3 +241,5 @@ do_title:
 .include "hgr_tables.s"
 
 .include "graphics_title/title_graphics.inc"
+altfire:
+.include "graphics_title/altfire.inc"

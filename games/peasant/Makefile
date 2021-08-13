@@ -57,8 +57,10 @@ intro.o:	intro.s decompress_fast_v2.s hgr_overlay.s \
 TITLE:	title.o
 	ld65 -o TITLE title.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-title.o:	title.s graphics_title/title_graphics.inc \
-		title.s directions.s
+title.o:	title.s \
+		graphics_title/title_graphics.inc \
+		graphics_title/altfire.inc \
+		directions.s
 	ca65 -o title.o title.s -l title.lst
 
 ###

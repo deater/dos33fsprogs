@@ -22,6 +22,9 @@ PEASANT_DIR	= $62
 CURSOR_X	= $63
 CURSOR_Y	= $64
 FRAME		= $65
+ALTFIRE		= $66
+ALTL		= $67
+ALTH		= $68
 
 ; pt3 player registers
 AY_REGISTERS    = $70
