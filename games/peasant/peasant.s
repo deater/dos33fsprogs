@@ -87,6 +87,8 @@ peasant_quest:
 .include "river.s"
 .include "knight.s"
 
+.include "draw_peasant.s"
+
 .include "hgr_font.s"
 .include "draw_box.s"
 .include "hgr_rectangle.s"
