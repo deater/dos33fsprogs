@@ -40,18 +40,18 @@
 	.byte	1		; number of sectors for ROM to load
 
 boot_entry:
-	; this code loads two sectors up to $C0/$D0
+	; this code loads two sectors up to $09/$0A
 
 	; assume A=1 coming in here
 
 	lsr			; check sector number
 				; A=0, carry=1
 	tay			; Y=0
-	adc	#$0B		; A=$C (destintation)
+	adc	#$08		; A=$9 (destintation)
 
 	sta	$27		; set or update address as needed
-	cmp	#$0E
-				; so if hit $0e00 we are done
+	cmp	#$0B
+				; so if hit $0b00 we are done
 
 	beq	done_load_2	; branch if loaded 2
 
@@ -234,9 +234,9 @@ end_code:
 .res	$8fe-*
 
 ; traditionally, entry point to jump to at end of loading
-;	$c00 in this case
+;	$900 in this case
 ;*=$8fe
-	.byte   $C, $00
+	.byte   $9, $00
 
 
 .include "qboot_stage2.s"

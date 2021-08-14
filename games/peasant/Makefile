@@ -17,7 +17,7 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK
 	$(DOS33_RAW) peasant.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) peasant.dsk  3  0 VID_LOGO   0   0
 	$(DOS33_RAW) peasant.dsk  5  0 TITLE      0   0
-	$(DOS33_RAW) peasant.dsk  8  0 INTRO    0   0
+	$(DOS33_RAW) peasant.dsk  8  0 INTRO      0   0
 	$(DOS33_RAW) peasant.dsk  12 0 COPY_CHECK 0   0
 
 ###

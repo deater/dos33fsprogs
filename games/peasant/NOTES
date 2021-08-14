@@ -4,13 +4,12 @@ Memory Map
 ; notes -- VID_LOGO loads title at $9000 - $AFFF
 
 $00	Zero Page
-$01	???
-$02	???
-$03	???, IRQ vectors
+$01	Stack
+$02	Disk Lookup
+$03	Disk Lookup, IRQ vectors
 $04-$07 Text/GR page 1 (not used?)
-$08-$0B Text/GR page 2 (not used?)
-$0C-$0D	??
-$0E-$1F QLOAD disk routines and Mockingboard sound routines here
+$08-$0B Text/GR page 2.  $08=boot, $09-$0A = qboot stage2
+$0B-$1F QLOAD disk routines and Mockingboard sound routines here
 $20-$3F HGR Page 1
 $40-$5f HGR Page 2
 $60-$?? Programs	(roughly 22k available?)

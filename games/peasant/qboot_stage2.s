@@ -13,7 +13,7 @@
 
 WAIT    = $FCA8                 ;; delay 1/2(26+27A+5A^2) us
 
-.org $c00
+.org $900
 
 code_begin:
 
