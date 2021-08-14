@@ -1,9 +1,9 @@
 TODO:
-- Music
-- Animate Title
+- Speaker music for title if no Mockingboard
 - walk behind objects (like reeds?)
 - More frames/directions in peasant sprites
-- Replace HPOSN with lookup table
-- Wait instead of keyboard to progress
 - Better animation of River
+- Walk around all areas
+- Text parser, backspace
+- only save part of screen behind the sign
 

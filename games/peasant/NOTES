@@ -1,3 +1,32 @@
+Memory Map
+~~~~~~~~~~
+
+$00	Zero Page
+$01	???
+$02	???
+$03	???, IRQ vectors
+$04-$07 Text/GR page 1 (not used?)
+$08-$0B Text/GR page 2 (not used?)
+$0C-$0D	??
+$0E-$1F QLOAD disk routines and Mockingboard sound routines here
+$20-$3F HGR Page 1
+$40-$5f HGR Page 2
+$60-$?? Programs	(roughly 22k available?)
+$B8-$BB Hi-res lookup tables
+$BC-$BF ???
+$C0-$CF	I/O
+$D0-$FF	ROM
+
+Disk Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T	  0 = Qboot
+T	  1 = QLOAD	 4301 bytes	17S = 1T1S
+T	  3 = INTRO	10422 bytes	41S = 2T9S
+T	 10 = TITLE      9662 bytes	38S = 2T16S
+T	 17 = PEASANT	14265 bytes	56S = 3T8S
+T	 24 = ENDING	 4642 bytes	18S = 1T2S
+
+
 
 238, to 280 (6)
 50 to 135 (85)   6*85=510
