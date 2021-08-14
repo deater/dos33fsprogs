@@ -38,7 +38,7 @@ qboot_sector.o:	qboot_sector.s	qboot_stage2.s
 ###
 
 QLOAD:	qload.o
-	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_e00.inc
+	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_b00.inc
 
 qload.o:	qload.s qboot.inc
 	ca65 -o qload.o qload.s -l qload.lst

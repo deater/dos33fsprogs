@@ -109,3 +109,4 @@ VGI_RXRUN       = P3
 VGI_RYRUN       = P4
 VGI_RCOLOR2     = P5    ; only for dither
 COUNT		= TEMP5
+

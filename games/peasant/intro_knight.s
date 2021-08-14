@@ -116,7 +116,7 @@ done_knight:
 	; after OK stuff goes on here
 
 	sei	; turn off music
-	jsr	pt3_clear_ay_both
+	jsr	clear_ay_both
 
 	jsr	draw_peasant
 

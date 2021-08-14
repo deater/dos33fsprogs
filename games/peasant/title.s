@@ -5,6 +5,7 @@
 .include "hardware.inc"
 .include "zp.inc"
 
+.include "qload.inc"
 
 title:
 	jsr	HGR2		; Hi-res graphics, no text at bottom
@@ -14,13 +15,6 @@ title:
 	; Music
 	;========================
 
-pt3_init_song=$e00+$A56
-clear_ay_both=$e00+$CDF
-reset_ay_both=$e00+$C9D
-mockingboard_setup_interrupt=$e00+$CEC
-mockingboard_init=$e00+$C8E
-mockingboard_patch=$e00+$DC4
-mockingboard_detect=$e00+$D95
 
 	;===================================
 	; Setup Mockingboard
