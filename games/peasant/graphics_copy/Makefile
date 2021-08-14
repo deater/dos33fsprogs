@@ -5,14 +5,14 @@ PNG2HGR = ../../../utils/hgr-utils/png2hgr
 LZSA = ~/research/lzsa/lzsa/lzsa
 B2D = ../../../utils/bmp2dhr/b2d
 
-all:	end_graphics.inc
+all:	copy_graphics.inc
 
 
-end_graphics.inc:	\
+copy_graphics.inc:	\
 	trogdor.lzsa \
 	game_over.lzsa
-	echo "trogdor_lzsa: .incbin \"trogdor.lzsa\"" > end_graphics.inc
-	echo "game_over_lzsa: .incbin \"game_over.lzsa\"" >> end_graphics.inc
+	echo "trogdor_lzsa: .incbin \"trogdor.lzsa\"" > copy_graphics.inc
+	echo "game_over_lzsa: .incbin \"game_over.lzsa\"" >> copy_graphics.inc
 
 
 ###
@@ -38,5 +38,5 @@ game_over.hgr:	game_over.png
 
 
 clean:	
-	rm -f *~ end_graphics.inc *.lzsa *.gr *.hgr
+	rm -f *~ copy_graphics.inc *.lzsa *.gr *.hgr
 

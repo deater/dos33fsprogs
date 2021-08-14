@@ -244,9 +244,8 @@ delays:
 
 
 .include "decompress_fast_v2.s"
-;.include "decompress_overlay.s"
 .include "hgr_overlay.s"
 
 ;.include "wait_keypress.s"
 
-.include "graphics_intro/intro_graphics.inc"
+.include "graphics_vid/vid_graphics.inc"

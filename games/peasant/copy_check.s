@@ -1,3 +1,10 @@
+; Fake copy protection check
+
+; As Strongbad Actual pointed out, this is anachronistic
+;	though if that's what you're worried about maybe you
+;	shouldn't be playing Peasant's Quest
+
+
 ; o/~ Bread is a good time for me o/~
 
 ; by Vince `deater` Weaver	vince@deater.net
@@ -10,7 +17,7 @@
 	; Ending
 	;************************
 
-ending:
+copy_check:
 
 	jsr	hgr_make_tables
 
@@ -110,7 +117,7 @@ forever:
 .include "hgr_input.s"
 .include "hgr_tables.s"
 
-.include "graphics_end/end_graphics.inc"
+.include "graphics_copy/copy_graphics.inc"
 
 peasant_text:
         .byte 25,2,"Peasant's Quest",0

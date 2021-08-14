@@ -21,7 +21,7 @@ Disk Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T	  0 = Qboot
 T	  1 = QLOAD	 4301 bytes	17S = 1T1S
-T	  3 = INTRO	10422 bytes	41S = 2T9S
+T	  3 = INTRO	 6911 bytes	27S = 1T11S
 T	 10 = TITLE      9662 bytes	38S = 2T16S
 T	 17 = PEASANT	14265 bytes	56S = 3T8S
 T	 24 = ENDING	 4642 bytes	18S = 1T2S
