@@ -8,17 +8,17 @@ EMPTY_DISK = ../../empty_disk
 
 all:	peasant.dsk
 
-peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE PEASANT COPY_CHECK
+peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK
 	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
-#	$(DOS33) -y peasant.dsk BSAVE -a 0x6000 PEASANT
+#	$(DOS33) -y peasant.dsk BSAVE -a 0x6000 INTRO
 	$(DOS33_RAW) peasant.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant.dsk  0  2 QBOOT      1   1
 	$(DOS33_RAW) peasant.dsk  0  4 QBOOT      2   1
 	$(DOS33_RAW) peasant.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) peasant.dsk  3  0 VID_LOGO   0   0
-	$(DOS33_RAW) peasant.dsk  10 0 TITLE      0   0
-	$(DOS33_RAW) peasant.dsk  17 0 PEASANT    0   0
-	$(DOS33_RAW) peasant.dsk  24 0 COPY_CHECK 0   0
+	$(DOS33_RAW) peasant.dsk  5  0 TITLE      0   0
+	$(DOS33_RAW) peasant.dsk  8  0 INTRO    0   0
+	$(DOS33_RAW) peasant.dsk  12 0 COPY_CHECK 0   0
 
 ###
 
@@ -45,12 +45,12 @@ qload.o:	qload.s qboot.inc
 
 ###
 
-VID_LOGO:	intro.o
-	ld65 -o VID_LOGO intro.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+VID_LOGO:	vid_logo.o
+	ld65 -o VID_LOGO vid_logo.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-intro.o:	vid_logo.s decompress_fast_v2.s hgr_overlay.s \
+vid_logo.o:	vid_logo.s decompress_fast_v2.s hgr_overlay.s \
 		graphics_vid/vid_graphics.inc
-	ca65 -o intro.o vid_logo.s -l intro.lst
+	ca65 -o vid_logo.o vid_logo.s -l vid_logo.lst
 
 ###
 
@@ -65,16 +65,17 @@ title.o:	title.s \
 
 ###
 
-PEASANT:	peasant.o
-	ld65 -o PEASANT peasant.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+INTRO:	intro.o
+	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant.o:	peasant.s graphics/graphics.inc sprites/peasant_sprite.inc \
+intro.o:	intro.s graphics/graphics.inc sprites/peasant_sprite.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_7x30_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s \
 		title.s directions.s \
-		cottage.s lake_w.s lake_e.s river.s knight.s
-	ca65 -o peasant.o peasant.s -l peasant.lst
+		intro_cottage.s intro_lake_w.s intro_lake_e.s \
+		intro_river.s intro_knight.s
+	ca65 -o intro.o intro.s -l intro.lst
 
 ###
 
@@ -116,5 +117,5 @@ graphics_copy/copy_graphics.inc:
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE PEASANT COPY_CHECK
+	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE INTRO COPY_CHECK
 

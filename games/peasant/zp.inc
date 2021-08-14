@@ -94,11 +94,13 @@ INH		= $FD
 OUTL		= $FE
 OUTH		= $FF
 
-LOAD_INTRO      = 0
-LOAD_TITLE      = 1
-LOAD_PEASANT    = 2
-LOAD_ENDING     = 3
+; constants
 
+LOAD_VID_LOGO   = 0
+LOAD_TITLE      = 1
+LOAD_INTRO      = 2
+LOAD_COPY_CHECK = 3
+LOAD_PEASANT    = 4
 
 VGI_RCOLOR      = P0
 VGI_RX1         = P1

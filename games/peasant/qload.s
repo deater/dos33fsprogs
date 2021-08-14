@@ -12,12 +12,6 @@ tmpsec = $3C
 ;OUTL = $FE
 ;OUTH = $FF
 
-
-;LOAD_INTRO	= 0
-;LOAD_TITLE	= 1
-;LOAD_PEASANT	= 2
-;LOAD_ENDING	= 3
-
 .include "hardware.inc"
 
 ;.include "common_defines.inc"
@@ -32,7 +26,7 @@ qload_start:
 	; first time entry
 	; start by loading text title
 
-	lda	#LOAD_INTRO		; load intro
+	lda	#LOAD_VID_LOGO		; load intro
 	sta	WHICH_LOAD
 
 	lda	#1
@@ -194,8 +188,8 @@ error_string:
 
 
 which_disk_array:
-	.byte 1,1,1,1		; INTRO, TITLE, PEASANT. ENDING
-	.byte 1,1,3,2		;
+	.byte 1,1,1,1		; VID_LOGO, TITLE, INTRO. COPY_CHECK
+	.byte 1,1,3,2		; PEASANT
 	.byte 2,1,2,2		;
 	.byte 1,1,1,3		;
 	.byte 1			;
@@ -203,8 +197,8 @@ which_disk_array:
 	.byte $f		;
 
 load_address_array:
-	.byte $60,$60,$60,$60	; INTRO, TITLE, PEASANT, ENDING
-	.byte $40,$40,$40,$40	;
+	.byte $60,$60,$60,$60	; VID_LOGO, TITLE, INTRO, COPY_CHECK
+	.byte $60,$40,$40,$40	; PEASANT
 	.byte $40,$40,$40,$40	;
 	.byte $40,$40,$40,$40	;
 	.byte $08		;
@@ -213,8 +207,8 @@ load_address_array:
 	.byte $08		;
 
 track_array:
-        .byte  3,10,17,24	; INTRO, TITLE, PEASANT, ENDING
-	.byte 18,31,11, 1	;
+        .byte  3, 5, 8,12	; VID_LOGO, TITLE, INTRO, COPY_CHECK
+	.byte 18,31,11, 1	; PEASANT
 	.byte 27,26,10,20	;
 	.byte 30,32,28,30	;
 	.byte  0		;
@@ -222,8 +216,8 @@ track_array:
 	.byte  0		;
 
 sector_array:
-        .byte  0, 0, 0, 0	; INTRO, TITLE, PEASANT, ENDING
-	.byte  0, 8, 0, 0	;
+        .byte  0, 0, 0, 0	; VID_LOGO, TITLE, INTRO, COPY_CHECK
+	.byte  0, 8, 0, 0	; PEASANT
 	.byte  0, 0, 0, 0	;
 	.byte  0,13, 0, 1	;
 	.byte  6		;
@@ -231,8 +225,8 @@ sector_array:
 	.byte  0		;
 
 length_array:
-        .byte  88, 88,88,88	; INTRO, TITLE, PEASANT, ENDING
-	.byte 128, 20,158,135	;
+        .byte  28, 50, 60, 20	; VID_LOGO, TITLE, INTRO, COPY_CHECK
+	.byte  88, 20,158,135	; PEASANT
 	.byte  61, 31,159,109	;
 	.byte  20, 33, 27, 78	;
 	.byte   3		;
@@ -250,14 +244,13 @@ length_array:
 	.include "pt3_lib_mockingboard_detect.s"
 
 
+; only load one music track, self modify to make other
 
 .align $100
 PT3_LOC:
 peasant_pt3:
 .incbin "music/peasant.pt3"
-;.align $100
-;peasant2_pt3:
-;.incbin "music/peasant2.pt3"
+
 
 
 qload_end:

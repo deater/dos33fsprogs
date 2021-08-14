@@ -1,5 +1,7 @@
 ; Videlectrix Intro
 
+; o/~ Make Good Graphics o/~
+
 ; HGR is a pain
 
 ; by Vince `deater` Weaver	vince@deater.net

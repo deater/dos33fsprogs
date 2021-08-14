@@ -225,7 +225,7 @@ altfire_good:
 	jsr	directions
 
 
-	lda	#LOAD_PEASANT
+	lda	#LOAD_INTRO
 	sta	WHICH_LOAD
 
 

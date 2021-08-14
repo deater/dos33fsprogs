@@ -72,7 +72,7 @@ peasant_quest:
 	; Ending
 	;************************
 
-	lda	#LOAD_ENDING
+	lda	#LOAD_COPY_CHECK
 	sta	WHICH_LOAD
 
 	rts
@@ -81,11 +81,11 @@ peasant_quest:
 .include "decompress_fast_v2.s"
 .include "wait_keypress.s"
 
-.include "cottage.s"
-.include "lake_w.s"
-.include "lake_e.s"
-.include "river.s"
-.include "knight.s"
+.include "intro_cottage.s"
+.include "intro_lake_w.s"
+.include "intro_lake_e.s"
+.include "intro_river.s"
+.include "intro_knight.s"
 
 .include "draw_peasant.s"
 
