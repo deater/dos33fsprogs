@@ -28,7 +28,7 @@ ALTH		= $68
 SAVED_X		= $69
 PEASANT_XADD	= $6A
 PEASANT_YADD	= $6B
-
+GAME_OVER	= $6C
 
 ; pt3 player registers
 AY_REGISTERS    = $70

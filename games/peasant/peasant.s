@@ -10,8 +10,12 @@
 .include "qload.inc"
 
 
+ENDING_COPY = 1
+
 
 peasant_quest:
+	lda	#0
+	sta	GAME_OVER
 
 	jsr	hgr_make_tables
 
@@ -70,32 +74,7 @@ peasant_quest:
 
 	; draw rectangle on bottom
 
-; draw rectangle
-
-	lda     #$00            ; color is black1
-	sta     VGI_RCOLOR
-
-	lda     #0
-	sta     VGI_RX1
-	lda     #183
-	sta     VGI_RY1
-	lda	#140
-	sta	VGI_RXRUN
-	lda	#9
-        sta     VGI_RYRUN
-
-        jsr     vgi_simple_rectangle
-
-	lda     #140
-	sta     VGI_RX1
-	lda     #183
-	sta     VGI_RY1
-	lda	#140
-	sta	VGI_RXRUN
-	lda	#9
-        sta     VGI_RYRUN
-
-        jsr     vgi_simple_rectangle
+	jsr	clear_bottom
 
 	jsr	hgr_save
 
@@ -172,8 +151,22 @@ peasant_the_same:
 
 	jsr	check_keyboard
 
+	lda	GAME_OVER
+	bne	game_over
+
 	jmp	game_loop
 
+
+
+	;************************
+	; copy protection check
+	;************************
+game_over:
+exit_copy_check:
+	lda	#LOAD_COPY_CHECK
+	sta	WHICH_LOAD
+
+	rts
 
 
 
@@ -207,7 +200,7 @@ check_up:
 	cmp	#'W'
 	bne	check_down
 
-	lda	#$1
+	lda	#$FF
 	sta	PEASANT_YADD
 	jmp	done_check_keyboard
 
@@ -215,7 +208,7 @@ check_down:
 	cmp	#'S'
 	bne	check_enter
 
-	lda	#$FF
+	lda	#$1
 	sta	PEASANT_YADD
 	jmp	done_check_keyboard
 
@@ -225,19 +218,16 @@ check_enter:
 	cmp	#' '
 	bne	done_check_keyboard
 enter_pressed:
+	jsr	clear_bottom
+	jsr	hgr_input
 
+	jsr	parse_input
+
+	jsr	clear_bottom
 
 done_check_keyboard:
 
 	bit	KEYRESET
-
-	rts
-
-
-
-	; read input
-
-	jsr	hgr_input
 
 	rts
 
@@ -250,14 +240,51 @@ score_text:
 	.byte 0,2,"Score: 0 of 150",0
 
 
-	;************************
-	; copy protection check
-	;************************
-exit_copy_check:
-	lda	#LOAD_COPY_CHECK
-	sta	WHICH_LOAD
+
+
+parse_input:
+	jsr	hgr_save
+
+	lda	input_buffer		; get first char FIXME
+	and	#$DF			; make uppercase 0110 0001 -> 0100 0001
+
+parse_copy:
+	cmp	#'C'
+	bne	parse_version
+
+	; want copy
+	lda	#ENDING_COPY
+	sta	GAME_OVER
+	jmp	done_parse_message
+
+
+parse_version:
+	cmp	#'V'
+        bne     parse_help
+
+        lda     #<version_message
+        sta     OUTL
+        lda     #>version_message
+	jmp	finish_parse_message
+
+parse_help:
+	lda	#<help_message
+	sta	OUTL
+	lda	#>help_message
+
+finish_parse_message:
+        sta     OUTH
+        jsr     hgr_text_box
+
+	jsr	wait_until_keypress
+
+done_parse_message:
+	jsr	hgr_restore
 
 	rts
+
+
+
 
 
 .include "decompress_fast_v2.s"
@@ -284,3 +311,40 @@ help_message:
 .byte   0,43,24, 0,253,82
 .byte   8,41,"I don't understand. Type",13
 .byte	     "HELP for assistances.",0
+
+version_message:
+.byte   0,43,24, 0,253,82
+.byte   8,41,"APPLE ][ PEASANT'S QUEST",13
+.byte	     "version 0.2",0
+
+
+
+clear_bottom:
+	; draw rectangle
+
+	lda     #$00            ; color is black1
+	sta     VGI_RCOLOR
+
+	lda     #0
+	sta     VGI_RX1
+	lda     #183
+	sta     VGI_RY1
+	lda	#140
+	sta	VGI_RXRUN
+	lda	#9
+        sta     VGI_RYRUN
+
+        jsr     vgi_simple_rectangle
+
+	lda     #140
+	sta     VGI_RX1
+	lda     #183
+	sta     VGI_RY1
+	lda	#140
+	sta	VGI_RXRUN
+	lda	#9
+        sta     VGI_RYRUN
+
+        jsr     vgi_simple_rectangle
+
+	rts
