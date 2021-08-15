@@ -90,6 +90,7 @@ peasant_quest:
 	; draw initial peasant
 
 	jsr	save_bg_7x30
+
 	jsr	draw_peasant
 
 game_loop:
@@ -101,6 +102,12 @@ game_loop:
 	beq	peasant_the_same
 
 	; restore bg behind peasant
+
+	lda	PEASANT_X
+	sta	CURSOR_X
+
+	lda	PEASANT_Y
+	sta	CURSOR_Y
 
 	jsr	restore_bg_7x30
 
@@ -136,6 +143,12 @@ done_movex:
 
 	; save behind new position
 
+	lda	PEASANT_X
+	sta	CURSOR_X
+
+	lda	PEASANT_Y
+	sta	CURSOR_Y
+
 	jsr	save_bg_7x30
 
 	; draw peasant
@@ -153,6 +166,13 @@ peasant_the_same:
 
 	lda	GAME_OVER
 	bne	game_over
+
+
+	; delay
+
+	lda	#200
+	jsr	WAIT
+
 
 	jmp	game_loop
 
@@ -181,17 +201,21 @@ key_was_pressed:
 	and	#$7f		 ; strip off high bit
 
 check_left:
+	cmp	#$8
+	beq	left_pressed
 	cmp	#'A'
 	bne	check_right
-
+left_pressed:
 	lda	#$FF		; move left
 	sta	PEASANT_XADD
 	jmp	done_check_keyboard
 
 check_right:
+	cmp	#$15
+	beq	right_pressed
 	cmp	#'D'
 	bne	check_up
-
+right_pressed:
 	lda	#$1
 	sta	PEASANT_XADD
 	jmp	done_check_keyboard
