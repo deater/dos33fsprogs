@@ -62,7 +62,14 @@ knight_walk_loop:
 check_knight_action1:
 	cmp	#0
 	bne	check_knight_action2
-	jsr	display_river_text1
+
+	lda	#<river_message1
+	sta	OUTL
+	lda	#>river_message1
+	sta	OUTH
+
+	jsr	hgr_text_box
+
 	jmp	done_knight_action
 
 check_knight_action2:
@@ -74,7 +81,13 @@ check_knight_action2:
 check_knight_action3:
 	cmp	#17
 	bne	done_knight_action
-	jsr	display_knight_text1
+
+	lda	#<knight_message1
+	sta	OUTL
+	lda	#>knight_message1
+	sta	OUTH
+
+	jsr	hgr_text_box
 
 
 done_knight_action:
@@ -186,40 +199,10 @@ done_knight:
 ; stops as approach knight
 
 knight_message1:
+	.byte 0,35,34, 0,253,72
 	.byte 7,49,"OK go for it.",0
 
 
-	;============================
-	; display lake_e text 1
-	;============================
-display_knight_text1:
-
-	;====================
-	; draw text box
-
-	lda	#0
-	sta	BOX_X1H
-	lda	#35
-	sta	BOX_X1L
-	lda	#34
-	sta	BOX_Y1
-
-	lda	#0
-	sta	BOX_X2H
-	lda	#253
-	sta	BOX_X2L
-	lda	#72
-	sta	BOX_Y2
-
-	jsr	draw_box
-
-	lda	#<knight_message1
-	sta	OUTL
-	lda	#>knight_message1
-	sta	OUTH
-	jsr	hgr_put_string
-
-	rts
 
 knight_path:
 	.byte 0,107

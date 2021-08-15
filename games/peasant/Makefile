@@ -71,7 +71,7 @@ INTRO:	intro.o
 intro.o:	intro.s graphics/graphics.inc sprites/peasant_sprite.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_7x30_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s \
+		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		title.s directions.s \
 		intro_cottage.s intro_lake_w.s intro_lake_e.s \
 		intro_river.s intro_knight.s

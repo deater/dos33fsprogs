@@ -94,6 +94,7 @@ peasant_quest:
 .include "hgr_save_restore.s"
 .include "hgr_input.s"
 .include "hgr_tables.s"
+.include "hgr_text_box.s"
 
 .include "wait_a_bit.s"
 

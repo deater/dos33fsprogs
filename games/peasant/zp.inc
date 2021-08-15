@@ -25,6 +25,7 @@ FRAME		= $65
 ALTFIRE		= $66
 ALTL		= $67
 ALTH		= $68
+SAVED_X		= $69
 
 ; pt3 player registers
 AY_REGISTERS    = $70

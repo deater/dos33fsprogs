@@ -59,7 +59,13 @@ lake_e_walk_loop:
 check_lake_e_action1:
 	cmp	#10
 	bne	check_lake_e_action2
-	jsr	display_lake_e_text1
+
+	lda	#<lake_e_message1
+	sta	OUTL
+	lda	#>lake_e_message1
+	sta	OUTH
+	jsr	hgr_text_box
+
 	jmp	done_lake_e_action
 
 check_lake_e_action2:
@@ -113,42 +119,13 @@ done_lake_e:
 ; walk sideways, near corner
 
 lake_e_message1:
+	.byte 0,35,34, 0,253,72
 	.byte 7,49,"That's a nice looking lake.",0
 
 ; nearly hit head on sign, it goes away, walk off screen
 
 
-	;============================
-	; display lake_e text 1
-	;============================
-display_lake_e_text1:
 
-	;====================
-	; draw text box
-
-	lda	#0
-	sta	BOX_X1H
-	lda	#35
-	sta	BOX_X1L
-	lda	#34
-	sta	BOX_Y1
-
-	lda	#0
-	sta	BOX_X2H
-	lda	#253
-	sta	BOX_X2L
-	lda	#72
-	sta	BOX_Y2
-
-	jsr	draw_box
-
-	lda	#<lake_e_message1
-	sta	OUTL
-	lda	#>lake_e_message1
-	sta	OUTH
-	jsr	hgr_put_string
-
-	rts
 
 lake_e_path:
 	.byte 7,151

@@ -1,4 +1,5 @@
 ; THATCHED ROOF COTTAGES
+; More specifically, the Dashing Residence
 
 cottage:
 
@@ -65,21 +66,42 @@ cottage_walk_loop:
 check_cottage_action1:
 	cmp	#0
 	bne	check_cottage_action2
-	jsr	display_cottage_text1
-	jmp	done_cottage_action
+
+	; display cottage text 1
+
+	lda	#<cottage_text1
+	sta	OUTL
+	lda	#>cottage_text1
+
+	jmp	finish_cottage_action
 
 check_cottage_action2:
 	cmp	#1
 	bne	check_cottage_action3
 	jsr	hgr_restore
-	jsr	display_cottage_text2
-	jmp	done_cottage_action
+
+	; display cottage text 2
+
+	lda	#<cottage_text2
+	sta	OUTL
+	lda	#>cottage_text2
+
+	jmp	finish_cottage_action
 
 check_cottage_action3:
 	cmp	#13
 	bne	done_cottage_action
 	jsr	hgr_restore
-	jsr	display_cottage_text3
+
+	; display cottage text 3
+
+	lda	#<cottage_text3
+	sta	OUTL
+	lda	#>cottage_text3
+
+finish_cottage_action:
+	sta	OUTH
+	jsr	hgr_text_box
 
 done_cottage_action:
 
@@ -131,150 +153,44 @@ done_cottage:
 	rts
 
 
-	;============================
-	; display cottage text 1
-	;============================
-display_cottage_text1:
-
-	;====================
-	; draw text box
-
-	lda	#0
-	sta	BOX_X1H
-	lda	#53
-	sta	BOX_X1L
-	lda	#24
-	sta	BOX_Y1
-
-	lda	#0
-	sta	BOX_X2H
-	lda	#253
-	sta	BOX_X2L
-	lda	#82
-	sta	BOX_Y2
-
-	jsr	draw_box
-
-	lda	#<cottage_text1
-	sta	OUTL
-	lda	#>cottage_text1
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
-	rts
-
-
-	;============================
-	; display cottage text 2
-	;============================
-display_cottage_text2:
-
-	;====================
-	; draw text box
-
-	lda	#0
-	sta	BOX_X1H
-	lda	#40
-	sta	BOX_X1L
-	lda	#15
-	sta	BOX_Y1
-
-	lda	#0
-	sta	BOX_X2H
-	lda	#255
-	sta	BOX_X2L
-	lda	#96
-	sta	BOX_Y2
-
-	jsr	draw_box
-
-	lda	#<cottage_text2
-	sta	OUTL
-	lda	#>cottage_text2
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
-	rts
-
-	;============================
-	; display cottage text 3
-	;============================
-display_cottage_text3:
-
-	;====================
-	; draw text box
-
-	lda	#0
-	sta	BOX_X1H
-	lda	#30
-	sta	BOX_X1L
-	lda	#20
-	sta	BOX_Y1
-
-	lda	#0
-	sta	BOX_X2H
-	lda	#253
-	sta	BOX_X2L
-	lda	#86
-	sta	BOX_Y2
-
-	jsr	draw_box
 
 
 
-	lda	#<cottage_text3
-	sta	OUTL
-	lda	#>cottage_text3
-	sta	OUTH
 
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
 
-	rts
 
 peasant_text:
 	.byte 25,2,"Peasant's Quest",0
 
 
 cottage_text1:
-	.byte 9,35,"YOU are Rather Dashing, a",0
-	.byte 9,44,"humble peasant living in",0
-	.byte 9,53,"the peasant kingdom of",0
-	.byte 9,62,"Peasantry.",0
+	.byte 0,53,24,  0,253,82
+	.byte 9,35,"YOU are Rather Dashing, a",13
+	.byte	   "humble peasant living in",13
+	.byte      "the peasant kingdom of",13
+	.byte      "Peasantry.",0
 
 ; wait a few seconds
 
 cottage_text2:
-	.byte 8,25,"You return home from a",0
-	.byte 8,33,"vacation on Scalding Lake",0
-	.byte 8,41,"only to find that TROGDOR",0
-	.byte 8,49,"THE BURNINATOR has",0
-	.byte 8,57,"burninated your thatched",0
-	.byte 8,65,"roof cottage along with all",0
-	.byte 8,73,"your goods and services.",0
+	.byte 0,40,15, 0,255,96
+	.byte 8,25,"You return home from a",13
+	.byte	    "vacation on Scalding Lake",13
+	.byte	    "only to find that TROGDOR",13
+	.byte	    "THE BURNINATOR has",13
+	.byte	    "burninated your thatched",13
+	.byte	    "roof cottage along with all",13
+	.byte	    "your goods and services.",0
 
 ; wait a few seconds, then start walking toward cottage
 
 cottage_text3:
-	.byte 7,33,"With nothing left to lose,",0
-	.byte 7,41,"you swear to get revenge on",0
-	.byte 7,49,"the Wingaling Dragon in the",0
-	.byte 7,57,"name of burninated peasants",0
-	.byte 7,65,"everywhere.",0
+	.byte	0,30,20, 0,253,86
+	.byte 7,33,"With nothing left to lose,",13
+	.byte	   "you swear to get revenge on",13
+	.byte	   "the Wingaling Dragon in the",13
+	.byte	   "name of burninated peasants",13
+	.byte	   "everywhere.",0
 
 ; Walk to edge of screen
 

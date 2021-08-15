@@ -62,7 +62,14 @@ river_walk_loop:
 check_river_action1:
 	cmp	#10
 	bne	check_river_action2
-	jsr	display_river_text1
+
+	lda	#<river_message1
+	sta	OUTL
+	lda	#>river_message1
+	sta	OUTH
+
+	jsr	hgr_text_box
+
 	jmp	done_river_action
 
 check_river_action2:
@@ -117,45 +124,13 @@ done_river:
 ; walk up a bit
 
 river_message1:
-	.byte 7,49,"You can start playing in a",0
-	.byte 7,57,"second here.",0
+	.byte 0,35,34, 0,253,82
+	.byte 7,49,"You can start playing in a",13
+	.byte	   "second here.",0
 
 ; walks behind tree
 
 
-	;============================
-	; display river text 1
-	;============================
-display_river_text1:
-
-	;====================
-	; draw text box
-
-	lda	#0
-	sta	BOX_X1H
-	lda	#35
-	sta	BOX_X1L
-	lda	#34
-	sta	BOX_Y1
-
-	lda	#0
-	sta	BOX_X2H
-	lda	#253
-	sta	BOX_X2L
-	lda	#82
-	sta	BOX_Y2
-
-	jsr	draw_box
-
-	lda	#<river_message1
-	sta	OUTL
-	lda	#>river_message1
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
-	rts
 
 river_path:
 	.byte 32,157

@@ -60,7 +60,13 @@ lake_w_walk_loop:
 check_lake_w_action1:
 	cmp	#0
 	bne	check_lake_w_action2
-	jsr	display_cottage_text3
+
+	; re-display cottage text 3
+	lda	#<cottage_text3
+	sta	OUTL
+	lda	#>cottage_text3
+        sta	OUTH
+        jsr	hgr_text_box
 	jmp	done_lake_w_action
 
 check_lake_w_action2:
@@ -116,9 +122,10 @@ done_lake_w:
 ; walk halfway across the screen
 
 lake_w_message1:
-	.byte	8,41,"You head east toward the",0
-	.byte	8,49,"mountain atop which",0
-	.byte	8,57,"TROGDOR lives.",0
+	.byte	0,43,24, 0,253,82
+	.byte	8,41,"You head east toward the",13
+	.byte	     "mountain atop which",13
+	.byte	     "TROGDOR lives.",0
 
 ; walk to edge
 
@@ -128,33 +135,12 @@ lake_w_message1:
 	;============================
 display_lake_w_text1:
 
-	;====================
-	; draw text box
-
-	lda	#0
-	sta	BOX_X1H
-	lda	#43
-	sta	BOX_X1L
-	lda	#24
-	sta	BOX_Y1
-
-	lda	#0
-	sta	BOX_X2H
-	lda	#253
-	sta	BOX_X2L
-	lda	#82
-	sta	BOX_Y2
-
-	jsr	draw_box
-
 	lda	#<lake_w_message1
 	sta	OUTL
 	lda	#>lake_w_message1
 	sta	OUTH
 
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
+	jsr	hgr_text_box
 
 	rts
 
