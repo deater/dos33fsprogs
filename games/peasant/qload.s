@@ -208,7 +208,7 @@ load_address_array:
 
 track_array:
         .byte  3, 5, 8,12	; VID_LOGO, TITLE, INTRO, COPY_CHECK
-	.byte 18,31,11, 1	; PEASANT
+	.byte 14,31,11, 1	; PEASANT
 	.byte 27,26,10,20	;
 	.byte 30,32,28,30	;
 	.byte  0		;
@@ -217,7 +217,7 @@ track_array:
 
 sector_array:
         .byte  0, 0, 0, 0	; VID_LOGO, TITLE, INTRO, COPY_CHECK
-	.byte  0, 8, 0, 0	; PEASANT
+	.byte  0, 0, 0, 0	; PEASANT
 	.byte  0, 0, 0, 0	;
 	.byte  0,13, 0, 1	;
 	.byte  6		;

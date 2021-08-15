@@ -1,4 +1,4 @@
-; A Peasant's Quest????
+; Peasant's Quest Intro Sequence
 
 ; by Vince `deater` Weaver	vince@deater.net
 
@@ -11,7 +11,7 @@
 
 
 
-peasant_quest:
+peasant_quest_intro:
 
 	jsr	hgr_make_tables
 
@@ -66,10 +66,22 @@ peasant_quest:
 	jsr knight
 
 	;************************
-	; Ending
+	; Start actual game
 	;************************
 
-	lda	#LOAD_COPY_CHECK
+	sei				; turn off music
+	jsr	clear_ay_both		; clear AY state
+
+	jsr	draw_peasant
+
+	; wait a bit
+
+	lda	#10
+	jsr	wait_a_bit
+
+	; start game
+
+	lda	#LOAD_PEASANT
 	sta	WHICH_LOAD
 
 	rts

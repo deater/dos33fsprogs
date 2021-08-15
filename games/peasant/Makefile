@@ -8,7 +8,7 @@ EMPTY_DISK = ../../empty_disk
 
 all:	peasant.dsk
 
-peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK
+peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK PEASANT
 	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
 #	$(DOS33) -y peasant.dsk BSAVE -a 0x6000 INTRO
 	$(DOS33_RAW) peasant.dsk  0  0 QBOOT      0   1
@@ -19,6 +19,7 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK
 	$(DOS33_RAW) peasant.dsk  5  0 TITLE      0   0
 	$(DOS33_RAW) peasant.dsk  8  0 INTRO      0   0
 	$(DOS33_RAW) peasant.dsk  12 0 COPY_CHECK 0   0
+	$(DOS33_RAW) peasant.dsk  14 0 PEASANT	  0   0
 
 ###
 
@@ -76,6 +77,21 @@ intro.o:	intro.s graphics/graphics.inc sprites/peasant_sprite.inc \
 		intro_cottage.s intro_lake_w.s intro_lake_e.s \
 		intro_river.s intro_knight.s
 	ca65 -o intro.o intro.s -l intro.lst
+
+###
+
+PEASANT:	peasant.o
+	ld65 -o PEASANT peasant.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+peasant.o:	peasant.s graphics/graphics.inc sprites/peasant_sprite.inc \
+		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
+		hgr_7x30_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
+		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		title.s directions.s \
+		intro_cottage.s intro_lake_w.s intro_lake_e.s \
+		intro_river.s intro_knight.s
+	ca65 -o peasant.o peasant.s -l intro.lst
+
 
 ###
 
