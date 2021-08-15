@@ -261,3 +261,270 @@ peasant_up2_mask:
 	.byte $4F
 	.byte $7F
 	.byte $7F
+
+
+; 84 1 90 31
+peasant_left1_sprite:
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $01
+	.byte $01
+	.byte $01
+	.byte $07
+	.byte $18
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $18
+	.byte $18
+	.byte $18
+	.byte $1C
+	.byte $07
+	.byte $AB
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $18
+	.byte $1E
+	.byte $78
+	.byte $78
+	.byte $78
+	.byte $1C
+	.byte $00
+	.byte $00
+
+; 70 1 76 31
+peasant_left1_mask:
+	.byte $60
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $67
+	.byte $07
+	.byte $07
+	.byte $07
+	.byte $07
+	.byte $07
+	.byte $07
+	.byte $03
+	.byte $00
+	.byte $00
+	.byte $07
+	.byte $07
+	.byte $60
+	.byte $60
+	.byte $60
+	.byte $60
+	.byte $61
+	.byte $07
+	.byte $07
+	.byte $07
+	.byte $63
+	.byte $7F
+	.byte $7F
+
+
+
+; 84 34 90 65
+peasant_left2_sprite:
+	.byte $80
+	.byte $80
+	.byte $80
+	.byte $81
+	.byte $81
+	.byte $81
+	.byte $87
+	.byte $18
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $18
+	.byte $18
+	.byte $58
+	.byte $5F
+	.byte $47
+	.byte $E8
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $80
+	.byte $80
+	.byte $98
+	.byte $1C
+	.byte $73
+	.byte $63
+	.byte $63
+	.byte $7B
+	.byte $00
+	.byte $00
+
+; 70 34 76 65
+peasant_left2_mask:
+	.byte $60
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $67
+	.byte $43
+	.byte $43
+	.byte $43
+	.byte $43
+	.byte $43
+	.byte $03
+	.byte $00
+	.byte $00
+	.byte $03
+	.byte $C3
+	.byte $C3
+	.byte $E3
+	.byte $E0
+	.byte $E0
+	.byte $E0
+	.byte $60
+	.byte $0C
+	.byte $1C
+	.byte $1C
+	.byte $04
+	.byte $7F
+	.byte $7F
+
+; 84 68 90 99
+peasant_down1_sprite:
+	.byte $00
+	.byte $00
+	.byte $1E
+	.byte $0C
+	.byte $1E
+	.byte $12
+	.byte $1E
+	.byte $0C
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $BB
+	.byte $03
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $30
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $03
+	.byte $00
+	.byte $00
+
+; 70 68 76 99
+peasant_down1_mask:
+	.byte $73
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $73
+	.byte $61
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $4C
+	.byte $4C
+	.byte $4C
+	.byte $4C
+	.byte $4C
+	.byte $7C
+	.byte $7F
+	.byte $7F
+
+; 84 102 90 133
+peasant_down2_sprite:
+	.byte $00
+	.byte $00
+	.byte $1E
+	.byte $0C
+	.byte $1E
+	.byte $12
+	.byte $1E
+	.byte $0C
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $BB
+	.byte $30
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $00
+	.byte $03
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $33
+	.byte $30
+	.byte $00
+	.byte $00
+
+; 70 102 76 133
+peasant_down2_mask:
+	.byte $73
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $73
+	.byte $61
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $40
+	.byte $4C
+	.byte $4C
+	.byte $4C
+	.byte $4C
+	.byte $4C
+	.byte $4F
+	.byte $7F
+	.byte $7F

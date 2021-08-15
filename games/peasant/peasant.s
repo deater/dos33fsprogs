@@ -189,74 +189,6 @@ exit_copy_check:
 	rts
 
 
-
-check_keyboard:
-
-	lda	KEYPRESS
-	bmi	key_was_pressed
-	rts
-
-key_was_pressed:
-
-	and	#$7f		 ; strip off high bit
-
-check_left:
-	cmp	#$8
-	beq	left_pressed
-	cmp	#'A'
-	bne	check_right
-left_pressed:
-	lda	#$FF		; move left
-	sta	PEASANT_XADD
-	jmp	done_check_keyboard
-
-check_right:
-	cmp	#$15
-	beq	right_pressed
-	cmp	#'D'
-	bne	check_up
-right_pressed:
-	lda	#$1
-	sta	PEASANT_XADD
-	jmp	done_check_keyboard
-
-check_up:
-	cmp	#'W'
-	bne	check_down
-
-	lda	#$FF
-	sta	PEASANT_YADD
-	jmp	done_check_keyboard
-
-check_down:
-	cmp	#'S'
-	bne	check_enter
-
-	lda	#$1
-	sta	PEASANT_YADD
-	jmp	done_check_keyboard
-
-check_enter:
-	cmp	#13
-	beq	enter_pressed
-	cmp	#' '
-	bne	done_check_keyboard
-enter_pressed:
-	jsr	clear_bottom
-	jsr	hgr_input
-
-	jsr	parse_input
-
-	jsr	clear_bottom
-
-done_check_keyboard:
-
-	bit	KEYRESET
-
-	rts
-
-
-
 peasant_text:
 	.byte 25,2,"Peasant's Quest",0
 
@@ -325,6 +257,8 @@ done_parse_message:
 .include "hgr_input.s"
 .include "hgr_tables.s"
 .include "hgr_text_box.s"
+
+.include "keyboard.s"
 
 .include "wait_a_bit.s"
 
