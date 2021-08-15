@@ -107,6 +107,9 @@ done_river_action:
 	lda	#3
 	jsr	wait_a_bit
 
+	lda	ESC_PRESSED
+	bne	done_river
+
 	inc	FRAME
 
 	jmp	river_walk_loop

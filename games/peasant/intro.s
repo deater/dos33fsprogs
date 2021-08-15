@@ -13,6 +13,9 @@
 
 peasant_quest_intro:
 
+	lda	#0
+	sta	ESC_PRESSED
+
 	jsr	hgr_make_tables
 
 	jsr	HGR2		; Hi-res graphics, no text at bottom
@@ -41,11 +44,17 @@ peasant_quest_intro:
 
 	jsr	cottage
 
+	lda	ESC_PRESSED
+	bne	escape_handler
+
 	;************************
 	; Lake West
 	;************************
 
 	jsr	lake_west
+
+	lda	ESC_PRESSED
+	bne	escape_handler
 
 	;************************
 	; Lake East
@@ -53,11 +62,17 @@ peasant_quest_intro:
 
 	jsr	lake_east
 
+	lda	ESC_PRESSED
+	bne	escape_handler
+
 	;************************
 	; River
 	;************************
 
 	jsr	river
+
+	lda	ESC_PRESSED
+	bne	escape_handler
 
 	;************************
 	; Knight
@@ -69,15 +84,19 @@ peasant_quest_intro:
 	; Start actual game
 	;************************
 
+	; wait a bit
+
+	lda	#10
+	jsr	wait_a_bit
+
+escape_handler:
+
 	sei				; turn off music
 	jsr	clear_ay_both		; clear AY state
 
 	jsr	draw_peasant
 
-	; wait a bit
 
-	lda	#10
-	jsr	wait_a_bit
 
 	; start game
 

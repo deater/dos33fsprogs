@@ -90,7 +90,7 @@ peasant.o:	peasant.s graphics/graphics.inc sprites/peasant_sprite.inc \
 		title.s directions.s \
 		intro_cottage.s intro_lake_w.s intro_lake_e.s \
 		intro_river.s intro_knight.s
-	ca65 -o peasant.o peasant.s -l intro.lst
+	ca65 -o peasant.o peasant.s -l peasant.lst
 
 
 ###

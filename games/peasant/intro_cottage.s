@@ -140,6 +140,9 @@ regular_wait:
 now_wait:
 	jsr	wait_a_bit
 
+	lda	ESC_PRESSED
+	bne	done_cottage
+
 	inc	FRAME
 
 	jmp	cottage_walk_loop

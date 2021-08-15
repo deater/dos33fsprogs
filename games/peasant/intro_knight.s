@@ -116,6 +116,9 @@ done_knight_action:
 	lda	#3
 	jsr	wait_a_bit
 
+	lda	ESC_PRESSED
+	bne	done_knight
+
 	inc	FRAME
 
 	jmp	knight_walk_loop

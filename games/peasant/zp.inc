@@ -62,8 +62,7 @@ MB_ADDR_H       = $89
 DONE_PLAYING    = $8A
 DONE_SONG       = $8B
 APPLEII_MODEL	= $8C
-
-
+ESC_PRESSED	= $8D
 
 
 ; D0-D? used by HGR?

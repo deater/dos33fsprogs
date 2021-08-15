@@ -17,8 +17,18 @@ keyloop:
 
 	dex
 	bne	keyloop
+	beq	no_escape
 
 done_keyloop:
+
+	and	#$7f
+	cmp	#27
+	bne	no_escape
+
+	lda	#1
+	sta	ESC_PRESSED
+
+no_escape:
 
 	bit	KEYRESET
 

@@ -103,6 +103,9 @@ done_lake_e_action:
 	lda	#3
 	jsr	wait_a_bit
 
+	lda	ESC_PRESSED
+	bne	done_lake_e
+
 	inc	FRAME
 
 	jmp	lake_e_walk_loop
