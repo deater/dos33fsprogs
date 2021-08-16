@@ -120,6 +120,7 @@ forever:
 .include "hgr_input.s"
 .include "hgr_tables.s"
 .include "hgr_text_box.s"
+.include "hgr_partial_save.s"
 
 .include "graphics_copy/copy_graphics.inc"
 

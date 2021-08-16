@@ -84,6 +84,8 @@ peasant_quest_intro:
 	; Start actual game
 	;************************
 
+	jsr	draw_peasant
+
 	; wait a bit
 
 	lda	#10
@@ -94,9 +96,7 @@ escape_handler:
 	sei				; turn off music
 	jsr	clear_ay_both		; clear AY state
 
-	jsr	draw_peasant
-
-
+;	jsr	draw_peasant
 
 	; start game
 
@@ -122,7 +122,8 @@ escape_handler:
 .include "hgr_rectangle.s"
 .include "hgr_7x30_sprite.s"
 .include "hgr_1x5_sprite.s"
-.include "hgr_save_restore.s"
+;.include "hgr_save_restore.s"
+.include "hgr_partial_save.s"
 .include "hgr_input.s"
 .include "hgr_tables.s"
 .include "hgr_text_box.s"

@@ -32,6 +32,8 @@ hgr_text_box:
 	lda	(OUTL),Y
 	sta	BOX_Y2
 
+	jsr	hgr_partial_save
+
 	jsr	draw_box
 
 	clc

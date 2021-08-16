@@ -36,7 +36,7 @@ lake_east:
 
 	jsr	hgr_put_string
 
-	jsr	hgr_save
+;	jsr	hgr_save
 
 
 	;====================
@@ -53,32 +53,15 @@ lake_east:
 	jsr	save_bg_7x30
 
 lake_e_walk_loop:
+
+	lda	PEASANT_X
+	sta	CURSOR_X
+	lda	PEASANT_Y
+	sta	CURSOR_Y
+
 	jsr	restore_bg_7x30
 
-	lda	FRAME
-check_lake_e_action1:
-	cmp	#10
-	bne	check_lake_e_action2
-
-	lda	#<lake_e_message1
-	sta	OUTL
-	lda	#>lake_e_message1
-	sta	OUTH
-	jsr	hgr_text_box
-
-	jmp	done_lake_e_action
-
-check_lake_e_action2:
-	cmp	#28
-	bne	done_lake_e_action
-	jsr	hgr_restore
-	lda	#PEASANT_DIR_UP
-	sta	PEASANT_DIR
-
-done_lake_e_action:
-
-	jsr	update_bubbles_e
-
+	; draw peasant
 
 	lda	FRAME
 	asl
@@ -97,6 +80,34 @@ done_lake_e_action:
 	jsr	save_bg_7x30
 
 	jsr	draw_peasant
+
+
+	lda	FRAME
+check_lake_e_action1:
+	cmp	#10
+	bne	check_lake_e_action2
+
+	lda	#<lake_e_message1
+	sta	OUTL
+	lda	#>lake_e_message1
+	sta	OUTH
+	jsr	hgr_text_box
+
+	jmp	done_lake_e_action
+
+check_lake_e_action2:
+	cmp	#28
+	bne	done_lake_e_action
+	jsr	hgr_partial_restore
+	lda	#PEASANT_DIR_UP
+	sta	PEASANT_DIR
+
+done_lake_e_action:
+
+	jsr	update_bubbles_e
+
+
+
 
 ;	jsr	wait_until_keypress
 

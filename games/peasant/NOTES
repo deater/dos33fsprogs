@@ -21,12 +21,12 @@ $D0-$FF	ROM
 Disk Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T	  0 = Qboot
-T	  1 = QLOAD	 4301 bytes	17S = 1T1S
+T	  1 = QLOAD	 4813 bytes	19S = 1T3S
 T	  3 = VID_LOGO	 6911 bytes	27S = 1T11S
 T	  5 = TITLE      9662 bytes	38S = 2T6S
-T	  8 = INTRO	14265 bytes	56S = 3T8S
-T	 12 = COPY_CHECK 4642 bytes	18S = 1T2S
-T	 14 = PEASANT   15332 bytes	60S = 3T12S	; 88 is max?
+T	  8 = INTRO	16040 bytes	63S = 3T15S
+T	 12 = COPY_CHECK 4922 bytes	20S = 1T4S
+T	 14 = PEASANT   18501 bytes	73S = 4T9S	; 88 is max?
 
 
 238, to 280 (6)

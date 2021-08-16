@@ -80,13 +80,13 @@ BOX_Y1		= $C3
 BOX_X2L		= $C4
 BOX_X2H		= $C5
 BOX_Y2		= $C6
+SAVED_Y1	= $C7
+SAVED_Y2	= $C8
 
 WHICH_SLOT	= $DA
 CURRENT_DISK	= $DC
 HGR_COLOR	= $E4
 HGR_PAGE	= $E6
-
-
 
 P0		= $F1
 P1		= $F2
@@ -94,6 +94,7 @@ P2		= $F3
 P3		= $F4
 P4		= $F5
 P5		= $F6
+
 
 INL		= $FC
 INH		= $FD

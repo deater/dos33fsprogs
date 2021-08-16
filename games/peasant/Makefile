@@ -69,9 +69,11 @@ title.o:	title.s \
 INTRO:	intro.o
 	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-intro.o:	intro.s graphics/graphics_intro.inc sprites/peasant_sprite.inc \
+intro.o:	intro.s zp.inc \
+		graphics/graphics_intro.inc sprites/peasant_sprite.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_7x30_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
+		hgr_partial_save.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		title.s directions.s \
 		intro_cottage.s intro_lake_w.s intro_lake_e.s \
@@ -83,7 +85,8 @@ intro.o:	intro.s graphics/graphics_intro.inc sprites/peasant_sprite.inc \
 PEASANT:	peasant.o
 	ld65 -o PEASANT peasant.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant.o:	peasant.s graphics/graphics.inc sprites/peasant_sprite.inc \
+peasant.o:	peasant.s zp.inc \
+		graphics/graphics.inc sprites/peasant_sprite.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_7x30_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \

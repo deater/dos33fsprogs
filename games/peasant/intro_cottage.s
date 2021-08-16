@@ -44,7 +44,7 @@ cottage:
 
 	jsr	hgr_put_string
 
-	jsr	hgr_save
+;	jsr	hgr_save
 
 	;====================
 	; save background
@@ -60,50 +60,18 @@ cottage:
 	jsr	save_bg_7x30
 
 cottage_walk_loop:
+
+	lda	PEASANT_X
+	sta	CURSOR_X
+	lda	PEASANT_Y
+	sta	CURSOR_Y
+
 	jsr	restore_bg_7x30
 
-	lda	FRAME
-check_cottage_action1:
-	cmp	#0
-	bne	check_cottage_action2
 
-	; display cottage text 1
+	;=======================
+	; draw peasant
 
-	lda	#<cottage_text1
-	sta	OUTL
-	lda	#>cottage_text1
-
-	jmp	finish_cottage_action
-
-check_cottage_action2:
-	cmp	#1
-	bne	check_cottage_action3
-	jsr	hgr_restore
-
-	; display cottage text 2
-
-	lda	#<cottage_text2
-	sta	OUTL
-	lda	#>cottage_text2
-
-	jmp	finish_cottage_action
-
-check_cottage_action3:
-	cmp	#13
-	bne	done_cottage_action
-	jsr	hgr_restore
-
-	; display cottage text 3
-
-	lda	#<cottage_text3
-	sta	OUTL
-	lda	#>cottage_text3
-
-finish_cottage_action:
-	sta	OUTH
-	jsr	hgr_text_box
-
-done_cottage_action:
 
 	lda	FRAME
 	asl
@@ -122,6 +90,56 @@ done_cottage_action:
 	jsr	save_bg_7x30
 
 	jsr	draw_peasant
+
+
+	;========================
+	; handle special
+
+
+	lda	FRAME
+check_cottage_action1:
+	cmp	#0
+	bne	check_cottage_action2
+
+	; display cottage text 1
+
+	lda	#<cottage_text1
+	sta	OUTL
+	lda	#>cottage_text1
+
+	jmp	finish_cottage_action
+
+check_cottage_action2:
+	cmp	#1
+	bne	check_cottage_action3
+	jsr	hgr_partial_restore
+
+	; display cottage text 2
+
+	lda	#<cottage_text2
+	sta	OUTL
+	lda	#>cottage_text2
+
+	jmp	finish_cottage_action
+
+check_cottage_action3:
+	cmp	#13
+	bne	done_cottage_action
+	jsr	hgr_partial_restore
+
+	; display cottage text 3
+
+	lda	#<cottage_text3
+	sta	OUTL
+	lda	#>cottage_text3
+
+finish_cottage_action:
+	sta	OUTH
+	jsr	hgr_text_box
+
+done_cottage_action:
+
+
 
 ;	jsr	wait_until_keypress
 
@@ -188,7 +206,7 @@ cottage_text2:
 ; wait a few seconds, then start walking toward cottage
 
 cottage_text3:
-	.byte	0,30,20, 0,253,86
+	.byte	0,28,20, 0,252,86
 	.byte 7,33,"With nothing left to lose,",13
 	.byte	   "you swear to get revenge on",13
 	.byte	   "the Wingaling Dragon in the",13

@@ -38,7 +38,7 @@ lake_west:
 
 	jsr	hgr_put_string
 
-	jsr	hgr_save
+;	jsr	hgr_save
 
 	;====================
 	; save background
@@ -54,32 +54,15 @@ lake_west:
 	jsr	save_bg_7x30
 
 lake_w_walk_loop:
+
+	lda	PEASANT_X
+	sta	CURSOR_X
+	lda	PEASANT_Y
+	sta	CURSOR_Y
+
 	jsr	restore_bg_7x30
 
-	lda	FRAME
-check_lake_w_action1:
-	cmp	#0
-	bne	check_lake_w_action2
-
-	; re-display cottage text 3
-	lda	#<cottage_text3
-	sta	OUTL
-	lda	#>cottage_text3
-        sta	OUTH
-        jsr	hgr_text_box
-	jmp	done_lake_w_action
-
-check_lake_w_action2:
-	cmp	#20
-	bne	done_lake_w_action
-	jsr	hgr_restore
-	jsr	display_lake_w_text1
-
-done_lake_w_action:
-
-
-	jsr	update_bubbles
-
+	; draw peasant
 
 	lda	FRAME
 	asl
@@ -98,6 +81,36 @@ done_lake_w_action:
 	jsr	save_bg_7x30
 
 	jsr	draw_peasant
+
+
+
+
+	lda	FRAME
+check_lake_w_action1:
+	cmp	#0
+	bne	check_lake_w_action2
+
+	; re-display cottage text 3
+	lda	#<cottage_text3
+	sta	OUTL
+	lda	#>cottage_text3
+        sta	OUTH
+        jsr	hgr_text_box
+	jmp	done_lake_w_action
+
+check_lake_w_action2:
+	cmp	#20
+	bne	done_lake_w_action
+	jsr	hgr_partial_restore
+	jsr	display_lake_w_text1
+
+done_lake_w_action:
+
+
+	jsr	update_bubbles
+
+
+
 
 ;	jsr	wait_until_keypress
 
@@ -125,7 +138,7 @@ done_lake_w:
 ; walk halfway across the screen
 
 lake_w_message1:
-	.byte	0,43,24, 0,253,82
+	.byte	0,42,24, 0,252,82
 	.byte	8,41,"You head east toward the",13
 	.byte	     "mountain atop which",13
 	.byte	     "TROGDOR lives.",0
@@ -344,10 +357,4 @@ bubble_sprite5:
 	.byte $22	; 001X XX10
 	.byte $88	; 1XX0 10XX
 	.byte $2A	; 0010 1010
-
-
-
-
-
-
 

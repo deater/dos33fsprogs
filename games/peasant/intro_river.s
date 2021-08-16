@@ -56,7 +56,34 @@ river:
 	jsr	save_bg_7x30
 
 river_walk_loop:
+
+	lda	PEASANT_X
+	sta	CURSOR_X
+	lda	PEASANT_Y
+	sta	CURSOR_Y
+
 	jsr	restore_bg_7x30
+
+	; draw peasant
+
+	lda	FRAME
+	asl
+	tax
+
+	lda	river_path,X
+	bmi	done_river
+	sta	PEASANT_X
+	sta	CURSOR_X
+
+	inx
+	lda	river_path,X
+	sta	PEASANT_Y
+	sta	CURSOR_Y
+
+	jsr	save_bg_7x30
+
+	jsr	draw_peasant
+
 
 	lda	FRAME
 check_river_action1:
@@ -84,23 +111,7 @@ done_river_action:
 	jsr	update_bubbles_r
 
 
-	lda	FRAME
-	asl
-	tax
 
-	lda	river_path,X
-	bmi	done_river
-	sta	PEASANT_X
-	sta	CURSOR_X
-
-	inx
-	lda	river_path,X
-	sta	PEASANT_Y
-	sta	CURSOR_Y
-
-	jsr	save_bg_7x30
-
-	jsr	draw_peasant
 
 ;	jsr	wait_until_keypress
 

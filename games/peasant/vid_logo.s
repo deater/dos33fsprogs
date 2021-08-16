@@ -20,12 +20,12 @@ HGR_PAGE	= $E6
 DISP_PAGE	= $F0
 DRAW_PAGE	= $F1
 
-P0      = $F1
-P1      = $F2
-P2      = $F3
-P3      = $F4
-P4      = $F5
-P5      = $F6
+;P0      = $F1
+;P1      = $F2
+;P2      = $F3
+;P3      = $F4
+;P4      = $F5
+;P5      = $F6
 
 INL		= $FC
 INH		= $FD

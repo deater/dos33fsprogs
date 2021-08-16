@@ -100,7 +100,7 @@ new_location:
 
 ;	jsr	clear_bottom
 
-	jsr	hgr_save
+;	jsr	hgr_save
 
 	;====================
 	; save background
@@ -275,7 +275,7 @@ score_text:
 
 
 parse_input:
-	jsr	hgr_save
+;	jsr	hgr_save
 
 	lda	input_buffer		; get first char FIXME
 	and	#$DF			; make uppercase 0110 0001 -> 0100 0001
@@ -331,13 +331,9 @@ finish_parse_message:
 	jsr	wait_until_keypress
 
 done_parse_message:
-	jsr	hgr_restore
+	jsr	hgr_partial_restore
 
 	rts
-
-
-
-
 
 .include "decompress_fast_v2.s"
 .include "wait_keypress.s"
@@ -349,7 +345,8 @@ done_parse_message:
 .include "hgr_rectangle.s"
 .include "hgr_7x30_sprite.s"
 .include "hgr_1x5_sprite.s"
-.include "hgr_save_restore.s"
+;.include "hgr_save_restore.s"
+.include "hgr_partial_save.s"
 .include "hgr_input.s"
 .include "hgr_tables.s"
 .include "hgr_text_box.s"

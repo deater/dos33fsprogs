@@ -39,7 +39,7 @@ knight:
 
 	jsr	hgr_put_string
 
-	jsr	hgr_save
+;	jsr	hgr_save
 
 
 	;====================
@@ -56,42 +56,15 @@ knight:
 	jsr	save_bg_7x30
 
 knight_walk_loop:
+
+	lda	PEASANT_X
+	sta	CURSOR_X
+	lda	PEASANT_Y
+	sta	CURSOR_Y
+
 	jsr	restore_bg_7x30
 
-	lda	FRAME
-check_knight_action1:
-	cmp	#0
-	bne	check_knight_action2
-
-	lda	#<river_message1
-	sta	OUTL
-	lda	#>river_message1
-	sta	OUTH
-
-	jsr	hgr_text_box
-
-	jmp	done_knight_action
-
-check_knight_action2:
-	cmp	#8
-	bne	check_knight_action3
-	jsr	hgr_restore
-	jmp	done_knight_action
-
-check_knight_action3:
-	cmp	#17
-	bne	done_knight_action
-
-	lda	#<knight_message1
-	sta	OUTL
-	lda	#>knight_message1
-	sta	OUTH
-
-	jsr	hgr_text_box
-
-
-done_knight_action:
-
+	; draw peasant
 
 	lda	FRAME
 	asl
@@ -110,6 +83,45 @@ done_knight_action:
 	jsr	save_bg_7x30
 
 	jsr	draw_peasant
+
+
+
+
+	lda	FRAME
+check_knight_action1:
+	cmp	#0
+	bne	check_knight_action2
+
+	lda	#<river_message1
+	sta	OUTL
+	lda	#>river_message1
+	sta	OUTH
+
+	jsr	hgr_text_box
+
+	jmp	done_knight_action
+
+check_knight_action2:
+	cmp	#8
+	bne	check_knight_action3
+	jsr	hgr_partial_restore
+	jmp	done_knight_action
+
+check_knight_action3:
+	cmp	#17
+	bne	done_knight_action
+
+	lda	#<knight_message1
+	sta	OUTL
+	lda	#>knight_message1
+	sta	OUTH
+
+	jsr	hgr_text_box
+
+
+done_knight_action:
+
+
 
 ;	jsr	wait_until_keypress
 
