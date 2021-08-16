@@ -46,33 +46,36 @@ trogdor_question:
 
 	jsr	hgr_input
 
+	; check for right results ("Doug the dino")
+
+	lda	input_buffer
+	cmp	#'D'
+	bne	wrong
+
+	lda	#<correct_text
+	sta	OUTL
+	lda	#>correct_text
+	sta	OUTH
+
+	jsr	hgr_text_box
+
+	jsr	wait_until_keypress
+
+	lda	#LOAD_PEASANT
+	sta	WHICH_LOAD
+	rts
+
+
 	;=============================
 	; draw WRONG! box
 	;=============================
-	lda     #0
-        sta     BOX_X1H
-        lda     #97
-        sta     BOX_X1L
-        lda     #69
-        sta     BOX_Y1
-
-        lda     #0
-        sta     BOX_X2H
-        lda     #184
-        sta     BOX_X2L
-        lda     #109
-        sta     BOX_Y2
-
-	jsr	draw_box
-
-	; print WRONG! at 16, 84
-
+wrong:
 	lda	#<wrong_text
 	sta	OUTL
 	lda	#>wrong_text
 	sta	OUTH
 
-	jsr	hgr_put_string
+	jsr	hgr_text_box
 
 	jsr	wait_until_keypress
 
@@ -116,6 +119,7 @@ forever:
 .include "hgr_rectangle.s"
 .include "hgr_input.s"
 .include "hgr_tables.s"
+.include "hgr_text_box.s"
 
 .include "graphics_copy/copy_graphics.inc"
 
@@ -126,7 +130,12 @@ score_text:
 	.byte 0,2,"Score: 0 of 150",0
 
 wrong_text:
+	.byte 0,97,69, 0,184,109
 	.byte 16,84,"WRONG!!!",0
+
+correct_text:
+	.byte 0,97,69, 0,184,109
+	.byte 16,84,"CORRECT!",0
 
                    ; 0123456789012345678901234567890123456789
 copy_protection_text:

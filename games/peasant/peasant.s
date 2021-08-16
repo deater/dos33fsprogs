@@ -98,7 +98,7 @@ new_location:
 
 	; draw rectangle on bottom
 
-	jsr	clear_bottom
+;	jsr	clear_bottom
 
 	jsr	hgr_save
 
@@ -282,12 +282,32 @@ parse_input:
 
 parse_copy:
 	cmp	#'C'
-	bne	parse_version
+	bne	parse_look
 
 	; want copy
 	lda	#ENDING_COPY
 	sta	GAME_OVER
 	jmp	done_parse_message
+
+
+parse_look:
+	cmp	#'L'
+        bne     parse_talk
+
+        lda     #<fake_error1
+        sta     OUTL
+        lda     #>fake_error1
+	jmp	finish_parse_message
+
+
+parse_talk:
+	cmp	#'T'
+        bne     parse_version
+
+        lda     #<fake_error2
+        sta     OUTL
+        lda     #>fake_error2
+	jmp	finish_parse_message
 
 
 parse_version:
@@ -351,6 +371,16 @@ version_message:
 .byte   8,41,"APPLE ][ PEASANT'S QUEST",13
 .byte	     "version 0.2",0
 
+
+fake_error1:
+.byte   0,43,24, 0,253,82
+.byte   8,41,"?SYNTAX ERROR IN 1020",13
+.byte	     "]",127,0
+
+fake_error2:
+.byte   0,43,24, 0,253,82
+.byte   8,41,"?UNDEF'D STATEMENT ERROR",13
+.byte	     "]",127,0
 
 
 clear_bottom:
@@ -438,7 +468,7 @@ map_backgrounds_low:
 	.byte	<todo_lzsa	; 0
 	.byte	<todo_lzsa	; 1
 	.byte	<todo_lzsa	; 2
-	.byte	<todo_lzsa	; 3
+	.byte	<waterfall_lzsa	; 3	-- temp intentional bug
 	.byte	<waterfall_lzsa	; 4	-- waterfall
 	.byte	<todo_lzsa	; 5
 	.byte	<todo_lzsa	; 6
@@ -449,7 +479,7 @@ map_backgrounds_low:
 	.byte	<cottage_lzsa	; 11	-- cottage
 	.byte	<lake_w_lzsa	; 12	-- lake west
 	.byte	<lake_e_lzsa	; 13	-- lake east
-	.byte	<todo_lzsa	; 14
+	.byte	<inn_lzsa	; 14	-- inn
 	.byte	<todo_lzsa	; 15
 	.byte	<todo_lzsa	; 16
 	.byte	<todo_lzsa	; 17
@@ -471,13 +501,10 @@ map_backgrounds_hi:
 	.byte	>cottage_lzsa	; 11	-- cottage
 	.byte	>lake_w_lzsa	; 12	-- lake west
 	.byte	>lake_e_lzsa	; 13	-- lake east
-	.byte	>todo_lzsa	; 14
+	.byte	>inn_lzsa	; 14	-- inn
 	.byte	>todo_lzsa	; 15
 	.byte	>todo_lzsa	; 16
 	.byte	>todo_lzsa	; 17
 	.byte	>todo_lzsa	; 18
 	.byte	>todo_lzsa	; 19
-
-
-
 

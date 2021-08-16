@@ -30,6 +30,7 @@ graphics.inc:	\
 	river.lzsa \
 	knight.lzsa \
 	waterfall.lzsa \
+	inn.lzsa \
 	todo.lzsa
 	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" > graphics.inc
 	echo "lake_w_lzsa: .incbin \"lake_w.lzsa\"" >> graphics.inc
@@ -37,6 +38,7 @@ graphics.inc:	\
 	echo "river_lzsa: .incbin \"river.lzsa\"" >> graphics.inc
 	echo "knight_lzsa: .incbin \"knight.lzsa\"" >> graphics.inc
 	echo "waterfall_lzsa: .incbin \"waterfall.lzsa\"" >> graphics.inc
+	echo "inn_lzsa: .incbin \"inn.lzsa\"" >> graphics.inc
 	echo "todo_lzsa: .incbin \"todo.lzsa\"" >> graphics.inc
 
 
@@ -111,6 +113,14 @@ waterfall.lzsa:	waterfall.hgr
 
 waterfall.hgr:	waterfall.png
 	$(PNG2HGR) waterfall.png > waterfall.hgr
+
+###
+
+inn.lzsa:	inn.hgr
+	$(LZSA) -r -f2 inn.hgr inn.lzsa
+
+inn.hgr:	inn.png
+	$(PNG2HGR) inn.png > inn.hgr
 
 ###
 
