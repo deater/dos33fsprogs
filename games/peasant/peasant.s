@@ -24,6 +24,8 @@ peasant_quest:
 
 
 
+
+
 	lda	#0
 	sta	FRAME
 
@@ -43,17 +45,39 @@ peasant_quest:
 	sta	PEASANT_XADD
 	sta	PEASANT_YADD
 
+	; setup map location
+
+	lda	#4
+	sta	MAP_X
+	lda	#1
+	sta	MAP_Y
+	jsr	update_map_location
+
+
+	;=============================
+	;=============================
+	; new screen location
+	;=============================
+	;=============================
+
+new_location:
+	lda	#0
+	sta	GAME_OVER
+
 	;=====================
 	; load bg
 
-	lda	#<(knight_lzsa)
+	ldx	MAP_LOCATION
+	lda	map_backgrounds_low,X
 	sta	getsrc_smc+1
-	lda	#>(knight_lzsa)
+	lda	map_backgrounds_hi,X
 	sta	getsrc_smc+2
 
 	lda	#$40
 
 	jsr	decompress_lzsa2_fast
+
+	; put peasant text
 
 	lda	#<peasant_text
 	sta	OUTL
@@ -121,25 +145,74 @@ game_loop:
 	bcs	peasant_x_toobig		; bge
 	bcc	done_movex
 
+	;============================
 peasant_x_toobig:
-	lda	#0
-	sta	PEASANT_XADD
-	lda	#39
+
+	inc	MAP_X
+
+	jsr	new_map_location
+
+	lda	#0		; new X location
+
 	jmp	done_movex
 
+	;============================
 peasant_x_negative:
-	lda	#0
-	sta	PEASANT_XADD
+
+	dec	MAP_X
+
+	jsr	new_map_location
+
+	lda	#39		; new X location
+
 	jmp	done_movex
 
 	; check edge of screen
 done_movex:
 	sta	PEASANT_X
 
+
+	; Move Peasant Y
+
 	clc
 	lda	PEASANT_Y
 	adc	PEASANT_YADD
+	cmp	#45
+	bcc	peasant_y_negative		; blt
+	cmp	#150
+	bcs	peasant_y_toobig		; bge
+	bcc	done_movey
+
+
+	;============================
+peasant_y_toobig:
+
+	inc	MAP_Y
+
+	jsr	new_map_location
+
+	lda	#45		; new X location
+
+	jmp	done_movey
+
+
+	;============================
+peasant_y_negative:
+
+	dec	MAP_Y
+
+	jsr	new_map_location
+
+	lda	#150		; new X location
+
+	jmp	done_movey
+
+	; check edge of screen
+done_movey:
 	sta	PEASANT_Y
+
+
+
 
 	; save behind new position
 
@@ -165,6 +238,7 @@ peasant_the_same:
 	jsr	check_keyboard
 
 	lda	GAME_OVER
+	bmi	oops_new_location
 	bne	game_over
 
 
@@ -176,6 +250,8 @@ peasant_the_same:
 
 	jmp	game_loop
 
+oops_new_location:
+	jmp	new_location
 
 
 	;************************
@@ -306,3 +382,102 @@ clear_bottom:
         jsr     vgi_simple_rectangle
 
 	rts
+
+
+	;=====================
+	;
+	;=====================
+new_map_location:
+	lda	#$FF
+	sta	GAME_OVER
+
+	; fall through
+
+	;==================
+	; update map
+	;	on main map, it's (MAP_Y*5)+MAP_X
+update_map_location:
+	; put in map
+
+map_wrap_x:
+	; wrap X (0..4)
+	lda	MAP_X
+	bmi	map_x_went_negative
+	cmp	#5
+	bcc	map_wrap_y		; blt
+
+	lda	#0
+	beq	update_map_x		; bra
+
+map_x_went_negative:
+	lda	#4
+
+update_map_x:
+	sta	MAP_X
+
+map_wrap_y:
+
+	; wrap Y (0..3)
+	lda	MAP_Y
+	and	#$3
+	sta	MAP_Y
+
+	clc
+	lda	MAP_Y
+	asl
+	asl
+	adc	MAP_Y
+	adc	MAP_X
+
+	sta	MAP_LOCATION
+
+	rts
+
+
+map_backgrounds_low:
+	.byte	<todo_lzsa	; 0
+	.byte	<todo_lzsa	; 1
+	.byte	<todo_lzsa	; 2
+	.byte	<todo_lzsa	; 3
+	.byte	<waterfall_lzsa	; 4	-- waterfall
+	.byte	<todo_lzsa	; 5
+	.byte	<todo_lzsa	; 6
+	.byte	<todo_lzsa	; 7
+	.byte	<river_lzsa	; 8	-- river
+	.byte	<knight_lzsa	; 9	-- knight
+	.byte	<todo_lzsa	; 10
+	.byte	<cottage_lzsa	; 11	-- cottage
+	.byte	<lake_w_lzsa	; 12	-- lake west
+	.byte	<lake_e_lzsa	; 13	-- lake east
+	.byte	<todo_lzsa	; 14
+	.byte	<todo_lzsa	; 15
+	.byte	<todo_lzsa	; 16
+	.byte	<todo_lzsa	; 17
+	.byte	<todo_lzsa	; 18
+	.byte	<todo_lzsa	; 19
+
+map_backgrounds_hi:
+	.byte	>todo_lzsa	; 0
+	.byte	>todo_lzsa	; 1
+	.byte	>todo_lzsa	; 2
+	.byte	>todo_lzsa	; 3
+	.byte	>waterfall_lzsa	; 4	-- waterfall
+	.byte	>todo_lzsa	; 5
+	.byte	>todo_lzsa	; 6
+	.byte	>todo_lzsa	; 7
+	.byte	>river_lzsa	; 8	-- river
+	.byte	>knight_lzsa	; 9	-- knight
+	.byte	>todo_lzsa	; 10
+	.byte	>cottage_lzsa	; 11	-- cottage
+	.byte	>lake_w_lzsa	; 12	-- lake west
+	.byte	>lake_e_lzsa	; 13	-- lake east
+	.byte	>todo_lzsa	; 14
+	.byte	>todo_lzsa	; 15
+	.byte	>todo_lzsa	; 16
+	.byte	>todo_lzsa	; 17
+	.byte	>todo_lzsa	; 18
+	.byte	>todo_lzsa	; 19
+
+
+
+

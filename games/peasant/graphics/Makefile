@@ -5,20 +5,40 @@ PNG2HGR = ../../../utils/hgr-utils/png2hgr
 LZSA = ~/research/lzsa/lzsa/lzsa
 B2D = ../../../utils/bmp2dhr/b2d
 
-all:	graphics.inc
+all:	graphics_intro.inc graphics.inc
 
+
+graphics_intro.inc:	\
+	cottage.lzsa \
+	lake_e.lzsa \
+	lake_w.lzsa \
+	river.lzsa \
+	knight.lzsa
+	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" > graphics_intro.inc
+	echo "lake_w_lzsa: .incbin \"lake_w.lzsa\"" >> graphics_intro.inc
+	echo "lake_e_lzsa: .incbin \"lake_e.lzsa\"" >> graphics_intro.inc
+	echo "river_lzsa: .incbin \"river.lzsa\"" >> graphics_intro.inc
+	echo "knight_lzsa: .incbin \"knight.lzsa\"" >> graphics_intro.inc
+	echo "waterfall_lzsa: .incbin \"waterfall.lzsa\"" >> graphics_intro.inc
+
+###
 
 graphics.inc:	\
 	cottage.lzsa \
 	lake_e.lzsa \
 	lake_w.lzsa \
 	river.lzsa \
-	knight.lzsa
+	knight.lzsa \
+	waterfall.lzsa \
+	todo.lzsa
 	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" > graphics.inc
 	echo "lake_w_lzsa: .incbin \"lake_w.lzsa\"" >> graphics.inc
 	echo "lake_e_lzsa: .incbin \"lake_e.lzsa\"" >> graphics.inc
 	echo "river_lzsa: .incbin \"river.lzsa\"" >> graphics.inc
 	echo "knight_lzsa: .incbin \"knight.lzsa\"" >> graphics.inc
+	echo "waterfall_lzsa: .incbin \"waterfall.lzsa\"" >> graphics.inc
+	echo "todo_lzsa: .incbin \"todo.lzsa\"" >> graphics.inc
+
 
 ###
 
@@ -86,21 +106,19 @@ knight.hgr:	knight.png
 
 ###
 
-trogdor.lzsa:	trogdor.hgr
-	$(LZSA) -r -f2 trogdor.hgr trogdor.lzsa
+waterfall.lzsa:	waterfall.hgr
+	$(LZSA) -r -f2 waterfall.hgr waterfall.lzsa
 
-trogdor.hgr:	trogdor.png
-	$(PNG2HGR) trogdor.png > trogdor.hgr
+waterfall.hgr:	waterfall.png
+	$(PNG2HGR) waterfall.png > waterfall.hgr
 
 ###
 
-game_over.lzsa:	game_over.hgr
-	$(LZSA) -r -f2 game_over.hgr game_over.lzsa
+todo.lzsa:	todo.hgr
+	$(LZSA) -r -f2 todo.hgr todo.lzsa
 
-game_over.hgr:	game_over.png
-	$(PNG2HGR) game_over.png > game_over.hgr
-
-
+todo.hgr:	todo.png
+	$(PNG2HGR) todo.png > todo.hgr
 
 
 ###

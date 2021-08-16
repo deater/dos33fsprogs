@@ -29,6 +29,9 @@ SAVED_X		= $69
 PEASANT_XADD	= $6A
 PEASANT_YADD	= $6B
 GAME_OVER	= $6C
+MAP_X		= $6D
+MAP_Y		= $6E
+MAP_LOCATION	= $6F
 
 ; pt3 player registers
 AY_REGISTERS    = $70

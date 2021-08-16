@@ -129,4 +129,4 @@ escape_handler:
 
 .include "wait_a_bit.s"
 
-.include "graphics/graphics.inc"
+.include "graphics/graphics_intro.inc"
