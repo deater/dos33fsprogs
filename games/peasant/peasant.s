@@ -366,7 +366,7 @@ help_message:
 version_message:
 .byte   0,43,24, 0,253,82
 .byte   8,41,"APPLE ][ PEASANT'S QUEST",13
-.byte	     "version 0.2",0
+.byte	     "version 0.3",0
 
 
 fake_error1:
