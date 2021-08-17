@@ -31,6 +31,7 @@ graphics.inc:	\
 	knight.lzsa \
 	waterfall.lzsa \
 	inn.lzsa \
+	crooked_tree.lzsa \
 	todo.lzsa
 	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" > graphics.inc
 	echo "lake_w_lzsa: .incbin \"lake_w.lzsa\"" >> graphics.inc
@@ -39,32 +40,9 @@ graphics.inc:	\
 	echo "knight_lzsa: .incbin \"knight.lzsa\"" >> graphics.inc
 	echo "waterfall_lzsa: .incbin \"waterfall.lzsa\"" >> graphics.inc
 	echo "inn_lzsa: .incbin \"inn.lzsa\"" >> graphics.inc
+	echo "crooked_tree_lzsa: .incbin \"crooked_tree.lzsa\"" >> graphics.inc
 	echo "todo_lzsa: .incbin \"todo.lzsa\"" >> graphics.inc
 
-
-###
-
-videlectrix.lzsa:	videlectrix.hgr
-	$(LZSA) -r -f2 videlectrix.hgr videlectrix.lzsa
-
-videlectrix.hgr:	videlectrix.png
-	$(PNG2HGR) videlectrix.png > videlectrix.hgr
-
-###
-
-peasant_title.lzsa:	peasant_title.hgr
-	$(LZSA) -r -f2 peasant_title.hgr peasant_title.lzsa
-
-peasant_title.hgr:	peasant_title.png
-	$(PNG2HGR) peasant_title.png > peasant_title.hgr
-
-###
-
-tips.lzsa:	tips.hgr
-	$(LZSA) -r -f2 tips.hgr tips.lzsa
-
-tips.hgr:	tips.png
-	$(PNG2HGR) tips.png > tips.hgr
 
 ###
 
@@ -73,6 +51,15 @@ cottage.lzsa:	cottage.hgr
 
 cottage.hgr:	cottage.png
 	$(PNG2HGR) cottage.png > cottage.hgr
+
+###
+
+crooked_tree.lzsa:	crooked_tree.hgr
+	$(LZSA) -r -f2 crooked_tree.hgr crooked_tree.lzsa
+
+crooked_tree.hgr:	crooked_tree.png
+	$(PNG2HGR) crooked_tree.png > crooked_tree.hgr
+
 
 ###
 

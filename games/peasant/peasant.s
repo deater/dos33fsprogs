@@ -462,46 +462,46 @@ map_wrap_y:
 
 
 map_backgrounds_low:
-	.byte	<todo_lzsa	; 0
-	.byte	<todo_lzsa	; 1
-	.byte	<todo_lzsa	; 2
-	.byte	<waterfall_lzsa	; 3	-- temp intentional bug
-	.byte	<waterfall_lzsa	; 4	-- waterfall
-	.byte	<todo_lzsa	; 5
-	.byte	<todo_lzsa	; 6
-	.byte	<todo_lzsa	; 7
-	.byte	<river_lzsa	; 8	-- river
-	.byte	<knight_lzsa	; 9	-- knight
-	.byte	<todo_lzsa	; 10
-	.byte	<cottage_lzsa	; 11	-- cottage
-	.byte	<lake_w_lzsa	; 12	-- lake west
-	.byte	<lake_e_lzsa	; 13	-- lake east
-	.byte	<inn_lzsa	; 14	-- inn
-	.byte	<todo_lzsa	; 15
-	.byte	<todo_lzsa	; 16
-	.byte	<todo_lzsa	; 17
-	.byte	<todo_lzsa	; 18
-	.byte	<todo_lzsa	; 19
+	.byte	<todo_lzsa		; 0
+	.byte	<todo_lzsa		; 1
+	.byte	<todo_lzsa		; 2
+	.byte	<waterfall_lzsa		; 3	-- temp intentional bug
+	.byte	<waterfall_lzsa		; 4	-- waterfall
+	.byte	<todo_lzsa		; 5
+	.byte	<todo_lzsa		; 6
+	.byte	<todo_lzsa		; 7
+	.byte	<river_lzsa		; 8	-- river
+	.byte	<knight_lzsa		; 9	-- knight
+	.byte	<todo_lzsa		; 10
+	.byte	<cottage_lzsa		; 11	-- cottage
+	.byte	<lake_w_lzsa		; 12	-- lake west
+	.byte	<lake_e_lzsa		; 13	-- lake east
+	.byte	<inn_lzsa		; 14	-- inn
+	.byte	<todo_lzsa		; 15
+	.byte	<todo_lzsa		; 16
+	.byte	<todo_lzsa		; 17
+	.byte	<todo_lzsa		; 18
+	.byte	<crooked_tree_lzsa	; 19	-- crooked tree
 
 map_backgrounds_hi:
-	.byte	>todo_lzsa	; 0
-	.byte	>todo_lzsa	; 1
-	.byte	>todo_lzsa	; 2
-	.byte	>todo_lzsa	; 3
-	.byte	>waterfall_lzsa	; 4	-- waterfall
-	.byte	>todo_lzsa	; 5
-	.byte	>todo_lzsa	; 6
-	.byte	>todo_lzsa	; 7
-	.byte	>river_lzsa	; 8	-- river
-	.byte	>knight_lzsa	; 9	-- knight
-	.byte	>todo_lzsa	; 10
-	.byte	>cottage_lzsa	; 11	-- cottage
-	.byte	>lake_w_lzsa	; 12	-- lake west
-	.byte	>lake_e_lzsa	; 13	-- lake east
-	.byte	>inn_lzsa	; 14	-- inn
-	.byte	>todo_lzsa	; 15
-	.byte	>todo_lzsa	; 16
-	.byte	>todo_lzsa	; 17
-	.byte	>todo_lzsa	; 18
-	.byte	>todo_lzsa	; 19
+	.byte	>todo_lzsa		; 0
+	.byte	>todo_lzsa		; 1
+	.byte	>todo_lzsa		; 2
+	.byte	>todo_lzsa		; 3
+	.byte	>waterfall_lzsa		; 4	-- waterfall
+	.byte	>todo_lzsa		; 5
+	.byte	>todo_lzsa		; 6
+	.byte	>todo_lzsa		; 7
+	.byte	>river_lzsa		; 8	-- river
+	.byte	>knight_lzsa		; 9	-- knight
+	.byte	>todo_lzsa		; 10
+	.byte	>cottage_lzsa		; 11	-- cottage
+	.byte	>lake_w_lzsa		; 12	-- lake west
+	.byte	>lake_e_lzsa		; 13	-- lake east
+	.byte	>inn_lzsa		; 14	-- inn
+	.byte	>todo_lzsa		; 15
+	.byte	>todo_lzsa		; 16
+	.byte	>todo_lzsa		; 17
+	.byte	>todo_lzsa		; 18
+	.byte	>crooked_tree_lzsa	; 19	-- crooked tree
 
