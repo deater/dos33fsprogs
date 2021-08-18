@@ -5,7 +5,7 @@ PNG2HGR = ../../../utils/hgr-utils/png2hgr
 LZSA = ~/research/lzsa/lzsa/lzsa
 B2D = ../../../utils/bmp2dhr/b2d
 
-all:	graphics_intro.inc graphics.inc \
+all:	graphics_intro.inc \
 	graphics_peasant1.inc graphics_peasant2.inc graphics_peasant3.inc \
 	graphics_peasant4.inc
 

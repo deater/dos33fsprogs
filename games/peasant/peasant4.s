@@ -193,6 +193,11 @@ done_movey:
 
 
 
+	lda     GAME_OVER
+        bne     game_over
+
+
+
 
 	; save behind new position
 

@@ -190,6 +190,9 @@ done_movey:
 	sta	PEASANT_Y
 
 
+	lda     GAME_OVER
+        bne     game_over
+
 
 
 	; save behind new position
