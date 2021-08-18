@@ -61,7 +61,7 @@ trogdor_question:
 
 	jsr	wait_until_keypress
 
-	lda	#LOAD_PEASANT
+	lda	#LOAD_PEASANT3
 	sta	WHICH_LOAD
 	rts
 

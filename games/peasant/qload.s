@@ -189,7 +189,7 @@ error_string:
 
 which_disk_array:
 	.byte 1,1,1,1		; VID_LOGO, TITLE, INTRO. COPY_CHECK
-	.byte 1,1,3,2		; PEASANT
+	.byte 1,1,1,1		; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte 2,1,2,2		;
 	.byte 1,1,1,3		;
 	.byte 1			;
@@ -198,7 +198,7 @@ which_disk_array:
 
 load_address_array:
 	.byte $60,$60,$60,$60	; VID_LOGO, TITLE, INTRO, COPY_CHECK
-	.byte $60,$40,$40,$40	; PEASANT
+	.byte $60,$60,$60,$60	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte $40,$40,$40,$40	;
 	.byte $40,$40,$40,$40	;
 	.byte $08		;
@@ -208,7 +208,7 @@ load_address_array:
 
 track_array:
         .byte  3, 5, 8,12	; VID_LOGO, TITLE, INTRO, COPY_CHECK
-	.byte 14,31,11, 1	; PEASANT
+	.byte 14,19,24,29	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte 27,26,10,20	;
 	.byte 30,32,28,30	;
 	.byte  0		;
@@ -217,7 +217,7 @@ track_array:
 
 sector_array:
         .byte  0, 0, 0, 0	; VID_LOGO, TITLE, INTRO, COPY_CHECK
-	.byte  0, 0, 0, 0	; PEASANT
+	.byte  0, 0, 0, 0	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte  0, 0, 0, 0	;
 	.byte  0,13, 0, 1	;
 	.byte  6		;
@@ -226,7 +226,7 @@ sector_array:
 
 length_array:
         .byte  28, 50, 60, 20	; VID_LOGO, TITLE, INTRO, COPY_CHECK
-	.byte  88, 20,158,135	; PEASANT
+	.byte  80, 80, 80, 80	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte  61, 31,159,109	;
 	.byte  20, 33, 27, 78	;
 	.byte   3		;

@@ -96,12 +96,34 @@ escape_handler:
 	sei				; turn off music
 	jsr	clear_ay_both		; clear AY state
 
-;	jsr	draw_peasant
 
-	; start game
+	;=============================
+	; start new game
+	;=============================
 
-	lda	#LOAD_PEASANT
+	lda	#LOAD_PEASANT2
 	sta	WHICH_LOAD
+
+	;=========================
+	; init peasant position
+	; draw at 18,107
+
+	lda	#18
+	sta	PEASANT_X
+	lda	#107
+	sta	PEASANT_Y
+
+	lda	#PEASANT_DIR_RIGHT
+	sta	PEASANT_DIR
+
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+
+	lda	#4
+	sta	MAP_X
+	lda	#1
+	sta	MAP_Y
 
 	rts
 

@@ -5,7 +5,9 @@ PNG2HGR = ../../../utils/hgr-utils/png2hgr
 LZSA = ~/research/lzsa/lzsa/lzsa
 B2D = ../../../utils/bmp2dhr/b2d
 
-all:	graphics_intro.inc graphics.inc
+all:	graphics_intro.inc graphics.inc \
+	graphics_peasant1.inc graphics_peasant2.inc graphics_peasant3.inc \
+	graphics_peasant4.inc
 
 
 graphics_intro.inc:	\
@@ -23,28 +25,48 @@ graphics_intro.inc:	\
 
 ###
 
-graphics.inc:	\
+graphics_peasant1.inc:	\
+	todo.lzsa \
+	waterfall.lzsa
+	echo "todo_lzsa: .incbin \"todo.lzsa\"" > graphics_peasant1.inc
+	echo "waterfall_lzsa: .incbin \"waterfall.lzsa\"" >> graphics_peasant1.inc
+
+###
+
+graphics_peasant2.inc:	\
+	todo.lzsa \
+	river.lzsa \
+	knight.lzsa
+	echo "todo_lzsa: .incbin \"todo.lzsa\"" > graphics_peasant2.inc
+	echo "river_lzsa: .incbin \"river.lzsa\"" >> graphics_peasant2.inc
+	echo "knight_lzsa: .incbin \"knight.lzsa\"" >> graphics_peasant2.inc
+
+###
+
+graphics_peasant3.inc:	\
+	todo.lzsa \
 	cottage.lzsa \
 	lake_e.lzsa \
 	lake_w.lzsa \
-	river.lzsa \
-	knight.lzsa \
-	waterfall.lzsa \
-	inn.lzsa \
-	crooked_tree.lzsa \
-	todo.lzsa
-	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" > graphics.inc
-	echo "lake_w_lzsa: .incbin \"lake_w.lzsa\"" >> graphics.inc
-	echo "lake_e_lzsa: .incbin \"lake_e.lzsa\"" >> graphics.inc
-	echo "river_lzsa: .incbin \"river.lzsa\"" >> graphics.inc
-	echo "knight_lzsa: .incbin \"knight.lzsa\"" >> graphics.inc
-	echo "waterfall_lzsa: .incbin \"waterfall.lzsa\"" >> graphics.inc
-	echo "inn_lzsa: .incbin \"inn.lzsa\"" >> graphics.inc
-	echo "crooked_tree_lzsa: .incbin \"crooked_tree.lzsa\"" >> graphics.inc
-	echo "todo_lzsa: .incbin \"todo.lzsa\"" >> graphics.inc
-
+	inn.lzsa
+	echo "todo_lzsa: .incbin \"todo.lzsa\"" > graphics_peasant3.inc
+	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" >> graphics_peasant3.inc
+	echo "lake_w_lzsa: .incbin \"lake_w.lzsa\"" >> graphics_peasant3.inc
+	echo "lake_e_lzsa: .incbin \"lake_e.lzsa\"" >> graphics_peasant3.inc
+	echo "inn_lzsa: .incbin \"inn.lzsa\"" >> graphics_peasant3.inc
 
 ###
+
+graphics_peasant4.inc:	\
+	todo.lzsa \
+	lady_cottage.lzsa \
+	crooked_tree.lzsa
+	echo "todo_lzsa: .incbin \"todo.lzsa\"" > graphics_peasant4.inc
+	echo "lady_cottage_lzsa: .incbin \"lady_cottage.lzsa\"" >> graphics_peasant4.inc
+	echo "crooked_tree_lzsa: .incbin \"crooked_tree.lzsa\"" >> graphics_peasant4.inc
+
+###
+
 
 cottage.lzsa:	cottage.hgr
 	$(LZSA) -r -f2 cottage.hgr cottage.lzsa
@@ -59,6 +81,14 @@ crooked_tree.lzsa:	crooked_tree.hgr
 
 crooked_tree.hgr:	crooked_tree.png
 	$(PNG2HGR) crooked_tree.png > crooked_tree.hgr
+
+###
+
+lady_cottage.lzsa:	lady_cottage.hgr
+	$(LZSA) -r -f2 lady_cottage.hgr lady_cottage.lzsa
+
+lady_cottage.hgr:	lady_cottage.png
+	$(PNG2HGR) lady_cottage.png > lady_cottage.hgr
 
 
 ###

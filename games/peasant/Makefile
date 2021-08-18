@@ -8,7 +8,8 @@ EMPTY_DISK = ../../empty_disk
 
 all:	peasant.dsk
 
-peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK PEASANT
+peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK \
+	PEASANT1 PEASANT2 PEASANT3 PEASANT4
 	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
 #	$(DOS33) -y peasant.dsk BSAVE -a 0x6000 INTRO
 	$(DOS33_RAW) peasant.dsk  0  0 QBOOT      0   1
@@ -19,7 +20,10 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK PEASANT
 	$(DOS33_RAW) peasant.dsk  5  0 TITLE      0   0
 	$(DOS33_RAW) peasant.dsk  8  0 INTRO      0   0
 	$(DOS33_RAW) peasant.dsk  12 0 COPY_CHECK 0   0
-	$(DOS33_RAW) peasant.dsk  14 0 PEASANT	  0   0
+	$(DOS33_RAW) peasant.dsk  14 0 PEASANT1	  0   0
+	$(DOS33_RAW) peasant.dsk  19 0 PEASANT2	  0   0
+	$(DOS33_RAW) peasant.dsk  24 0 PEASANT3	  0   0
+	$(DOS33_RAW) peasant.dsk  29 0 PEASANT4	  0   0
 
 ###
 
@@ -82,16 +86,58 @@ intro.o:	intro.s zp.inc \
 
 ###
 
-PEASANT:	peasant.o
-	ld65 -o PEASANT peasant.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+PEASANT1:	peasant1.o
+	ld65 -o PEASANT1 peasant1.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant.o:	peasant.s zp.inc \
-		graphics/graphics.inc sprites/peasant_sprite.inc \
+peasant1.o:	peasant1.s zp.inc \
+		graphics/graphics_peasant1.inc sprites/peasant_sprite.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_7x30_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s
-	ca65 -o peasant.o peasant.s -l peasant.lst
+		keyboard.s parse_input.s new_map_location.s
+	ca65 -o peasant1.o peasant1.s -l peasant1.lst
+
+###
+
+PEASANT2:	peasant2.o
+	ld65 -o PEASANT2 peasant2.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+peasant2.o:	peasant2.s zp.inc \
+		graphics/graphics_peasant2.inc sprites/peasant_sprite.inc \
+		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
+		hgr_7x30_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
+		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		keyboard.s parse_input.s new_map_location.s
+	ca65 -o peasant2.o peasant2.s -l peasant2.lst
+
+###
+
+PEASANT3:	peasant3.o
+	ld65 -o PEASANT3 peasant3.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+peasant3.o:	peasant3.s zp.inc \
+		graphics/graphics_peasant3.inc sprites/peasant_sprite.inc \
+		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
+		hgr_7x30_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
+		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		keyboard.s parse_input.s new_map_location.s
+	ca65 -o peasant3.o peasant3.s -l peasant3.lst
+
+###
+
+PEASANT4:	peasant4.o
+	ld65 -o PEASANT4 peasant4.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+peasant4.o:	peasant4.s zp.inc \
+		graphics/graphics_peasant4.inc sprites/peasant_sprite.inc \
+		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
+		hgr_7x30_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
+		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		keyboard.s parse_input.s new_map_location.s
+	ca65 -o peasant4.o peasant4.s -l peasant4.lst
+
+
+
 
 
 ###
@@ -124,7 +170,7 @@ graphics_title/title_graphics.inc:
 	cd graphics_title && make
 
 
-graphics/graphics.inc:
+graphics/graphics_peasant1.inc:
 	cd graphics && make
 
 graphics_copy/copy_graphics.inc:
@@ -134,5 +180,6 @@ graphics_copy/copy_graphics.inc:
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE INTRO COPY_CHECK
+	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE INTRO COPY_CHECK \
+			PEASANT1 PEASANT2 PEASANT3 PEASANT4
 

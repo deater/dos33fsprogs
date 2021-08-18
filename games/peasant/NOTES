@@ -26,8 +26,10 @@ T	  3 = VID_LOGO	 6911 bytes	27S = 1T11S
 T	  5 = TITLE      9662 bytes	38S = 2T6S
 T	  8 = INTRO	16040 bytes	63S = 3T15S
 T	 12 = COPY_CHECK 4922 bytes	20S = 1T4S
-T	 14 = PEASANT   18501 bytes	73S = 4T9S	; 88 is max?
-
+T	 14 = PEASANT1  22501 bytes	79S = 4T15S	; 88 is max?
+T	 19 = PEASANT2					; 79 = 20224
+T        24 = PEASANT3
+T	 29 = PEASANT4
 
 238, to 280 (6)
 50 to 135 (85)   6*85=510
