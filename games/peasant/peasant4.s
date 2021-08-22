@@ -322,7 +322,7 @@ map_backgrounds_low:
 ;	.byte	<inn_lzsa		; 14	-- inn
 	.byte	<todo_lzsa		; 15
 	.byte	<todo_lzsa		; 16
-	.byte	<todo_lzsa		; 17
+	.byte	<bottom_prints_lzsa	; 17	-- bottom footprints
 	.byte	<lady_cottage_lzsa	; 18	-- cottage lady
 	.byte	<crooked_tree_lzsa	; 19	-- crooked tree
 
@@ -344,7 +344,7 @@ map_backgrounds_hi:
 ;	.byte	>inn_lzsa		; 14	-- inn
 	.byte	>todo_lzsa		; 15
 	.byte	>todo_lzsa		; 16
-	.byte	>todo_lzsa		; 17
+	.byte	>bottom_prints_lzsa	; 17	-- bottom footprints
 	.byte	>lady_cottage_lzsa	; 18	-- cottage lady
 	.byte	>crooked_tree_lzsa	; 19	-- crooked tree
 

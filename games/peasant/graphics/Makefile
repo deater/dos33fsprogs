@@ -27,8 +27,14 @@ graphics_intro.inc:	\
 
 graphics_peasant1.inc:	\
 	todo.lzsa \
+	gary.lzsa \
+	top_prints.lzsa \
+	leaning_tree.lzsa \
 	waterfall.lzsa
 	echo "todo_lzsa: .incbin \"todo.lzsa\"" > graphics_peasant1.inc
+	echo "gary_lzsa: .incbin \"gary.lzsa\"" >> graphics_peasant1.inc
+	echo "top_prints_lzsa: .incbin \"top_prints.lzsa\"" >> graphics_peasant1.inc
+	echo "leaning_tree_lzsa: .incbin \"leaning_tree.lzsa\"" >> graphics_peasant1.inc
 	echo "waterfall_lzsa: .incbin \"waterfall.lzsa\"" >> graphics_peasant1.inc
 
 ###
@@ -59,14 +65,23 @@ graphics_peasant3.inc:	\
 
 graphics_peasant4.inc:	\
 	todo.lzsa \
+	bottom_prints.lzsa \
 	lady_cottage.lzsa \
 	crooked_tree.lzsa
 	echo "todo_lzsa: .incbin \"todo.lzsa\"" > graphics_peasant4.inc
+	echo "bottom_prints_lzsa: .incbin \"bottom_prints.lzsa\"" >> graphics_peasant4.inc
 	echo "lady_cottage_lzsa: .incbin \"lady_cottage.lzsa\"" >> graphics_peasant4.inc
 	echo "crooked_tree_lzsa: .incbin \"crooked_tree.lzsa\"" >> graphics_peasant4.inc
 
 ###
 
+bottom_prints.lzsa:	bottom_prints.hgr
+	$(LZSA) -r -f2 bottom_prints.hgr bottom_prints.lzsa
+
+bottom_prints.hgr:	bottom_prints.png
+	$(PNG2HGR) bottom_prints.png > bottom_prints.hgr
+
+###
 
 cottage.lzsa:	cottage.hgr
 	$(LZSA) -r -f2 cottage.hgr cottage.lzsa
@@ -81,6 +96,15 @@ crooked_tree.lzsa:	crooked_tree.hgr
 
 crooked_tree.hgr:	crooked_tree.png
 	$(PNG2HGR) crooked_tree.png > crooked_tree.hgr
+
+
+###
+
+gary.lzsa:	gary.hgr
+	$(LZSA) -r -f2 gary.hgr gary.lzsa
+
+gary.hgr:	gary.png
+	$(PNG2HGR) gary.png > gary.hgr
 
 ###
 
@@ -109,11 +133,28 @@ lake_e.hgr:	lake_e.png
 
 ###
 
+leaning_tree.lzsa:	leaning_tree.hgr
+	$(LZSA) -r -f2 leaning_tree.hgr leaning_tree.lzsa
+
+leaning_tree.hgr:	leaning_tree.png
+	$(PNG2HGR) leaning_tree.png > leaning_tree.hgr
+
+###
+
 river.lzsa:	river.hgr
 	$(LZSA) -r -f2 river.hgr river.lzsa
 
 river.hgr:	river.png
 	$(PNG2HGR) river.png > river.hgr
+
+###
+
+top_prints.lzsa:	top_prints.hgr
+	$(LZSA) -r -f2 top_prints.hgr top_prints.lzsa
+
+top_prints.hgr:	top_prints.png
+	$(PNG2HGR) top_prints.png > top_prints.hgr
+
 
 ###
 

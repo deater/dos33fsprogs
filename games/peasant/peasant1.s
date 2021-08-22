@@ -303,10 +303,10 @@ fake_error2:
 
 
 map_backgrounds_low:
-	.byte	<todo_lzsa		; 0
-	.byte	<todo_lzsa		; 1
+	.byte	<gary_lzsa		; 0	-- gary the horse
+	.byte	<top_prints_lzsa	; 1	-- top footprints
 	.byte	<todo_lzsa		; 2
-	.byte	<todo_lzsa		; 3	--
+	.byte	<leaning_tree_lzsa	; 3	-- leaning tree
 	.byte	<waterfall_lzsa		; 4	-- waterfall
 ;	.byte	<todo_lzsa		; 5
 ;	.byte	<todo_lzsa		; 6
@@ -325,10 +325,10 @@ map_backgrounds_low:
 ;	.byte	<crooked_tree_lzsa	; 19	-- crooked tree
 
 map_backgrounds_hi:
-	.byte	>todo_lzsa		; 0
-	.byte	>todo_lzsa		; 1
+	.byte	>gary_lzsa		; 0	-- gary the horse
+	.byte	>top_prints_lzsa	; 1	-- top footprints
 	.byte	>todo_lzsa		; 2
-	.byte	>todo_lzsa		; 3
+	.byte	>leaning_tree_lzsa	; 3	-- leaning tree
 	.byte	>waterfall_lzsa		; 4	-- waterfall
 ;	.byte	>todo_lzsa		; 5
 ;	.byte	>todo_lzsa		; 6
