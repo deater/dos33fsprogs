@@ -26,38 +26,40 @@ graphics_intro.inc:	\
 ###
 
 graphics_peasant1.inc:	\
-	todo.lzsa \
 	gary.lzsa \
 	top_prints.lzsa \
+	wishing_well.lzsa \
 	leaning_tree.lzsa \
 	waterfall.lzsa
-	echo "todo_lzsa: .incbin \"todo.lzsa\"" > graphics_peasant1.inc
-	echo "gary_lzsa: .incbin \"gary.lzsa\"" >> graphics_peasant1.inc
+	echo "gary_lzsa: .incbin \"gary.lzsa\"" > graphics_peasant1.inc
 	echo "top_prints_lzsa: .incbin \"top_prints.lzsa\"" >> graphics_peasant1.inc
+	echo "wishing_well_lzsa: .incbin \"wishing_well.lzsa\"" >> graphics_peasant1.inc
 	echo "leaning_tree_lzsa: .incbin \"leaning_tree.lzsa\"" >> graphics_peasant1.inc
 	echo "waterfall_lzsa: .incbin \"waterfall.lzsa\"" >> graphics_peasant1.inc
 
 ###
 
 graphics_peasant2.inc:	\
-	todo.lzsa \
+	haystack.lzsa \
 	puddle.lzsa \
+	archery.lzsa \
 	river.lzsa \
 	knight.lzsa
-	echo "todo_lzsa: .incbin \"todo.lzsa\"" > graphics_peasant2.inc
+	echo "haystack_lzsa: .incbin \"haystack.lzsa\"" > graphics_peasant2.inc
 	echo "puddle_lzsa: .incbin \"puddle.lzsa\"" >> graphics_peasant2.inc
+	echo "archery_lzsa: .incbin \"archery.lzsa\"" >> graphics_peasant2.inc
 	echo "river_lzsa: .incbin \"river.lzsa\"" >> graphics_peasant2.inc
 	echo "knight_lzsa: .incbin \"knight.lzsa\"" >> graphics_peasant2.inc
 
 ###
 
 graphics_peasant3.inc:	\
-	todo.lzsa \
+	jhonka.lzsa \
 	cottage.lzsa \
 	lake_e.lzsa \
 	lake_w.lzsa \
 	inn.lzsa
-	echo "todo_lzsa: .incbin \"todo.lzsa\"" > graphics_peasant3.inc
+	echo "jhonka_lzsa: .incbin \"jhonka.lzsa\"" > graphics_peasant3.inc
 	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" >> graphics_peasant3.inc
 	echo "lake_w_lzsa: .incbin \"lake_w.lzsa\"" >> graphics_peasant3.inc
 	echo "lake_e_lzsa: .incbin \"lake_e.lzsa\"" >> graphics_peasant3.inc
@@ -76,6 +78,14 @@ graphics_peasant4.inc:	\
 	echo "bottom_prints_lzsa: .incbin \"bottom_prints.lzsa\"" >> graphics_peasant4.inc
 	echo "lady_cottage_lzsa: .incbin \"lady_cottage.lzsa\"" >> graphics_peasant4.inc
 	echo "crooked_tree_lzsa: .incbin \"crooked_tree.lzsa\"" >> graphics_peasant4.inc
+
+###
+
+archery.lzsa:	archery.hgr
+	$(LZSA) -r -f2 archery.hgr archery.lzsa
+
+archery.hgr:	archery.png
+	$(PNG2HGR) archery.png > archery.hgr
 
 ###
 
@@ -117,6 +127,30 @@ gary.lzsa:	gary.hgr
 
 gary.hgr:	gary.png
 	$(PNG2HGR) gary.png > gary.hgr
+
+###
+
+haystack.lzsa:	haystack.hgr
+	$(LZSA) -r -f2 haystack.hgr haystack.lzsa
+
+haystack.hgr:	haystack.png
+	$(PNG2HGR) haystack.png > haystack.hgr
+
+###
+
+jhonka.lzsa:	jhonka.hgr
+	$(LZSA) -r -f2 jhonka.hgr jhonka.lzsa
+
+jhonka.hgr:	jhonka.png
+	$(PNG2HGR) jhonka.png > jhonka.hgr
+
+###
+
+knight.lzsa:	knight.hgr
+	$(LZSA) -r -f2 knight.hgr knight.lzsa
+
+knight.hgr:	knight.png
+	$(PNG2HGR) knight.png > knight.hgr
 
 ###
 
@@ -186,19 +220,19 @@ top_prints.hgr:	top_prints.png
 
 ###
 
-knight.lzsa:	knight.hgr
-	$(LZSA) -r -f2 knight.hgr knight.lzsa
-
-knight.hgr:	knight.png
-	$(PNG2HGR) knight.png > knight.hgr
-
-###
-
 waterfall.lzsa:	waterfall.hgr
 	$(LZSA) -r -f2 waterfall.hgr waterfall.lzsa
 
 waterfall.hgr:	waterfall.png
 	$(PNG2HGR) waterfall.png > waterfall.hgr
+
+###
+
+wishing_well.lzsa:	wishing_well.hgr
+	$(LZSA) -r -f2 wishing_well.hgr wishing_well.lzsa
+
+wishing_well.hgr:	wishing_well.png
+	$(PNG2HGR) wishing_well.png > wishing_well.hgr
 
 ###
 

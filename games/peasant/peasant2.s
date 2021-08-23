@@ -309,9 +309,9 @@ map_backgrounds_low:
 ;	.byte	<todo_lzsa		; 2
 ;	.byte	<waterfall_lzsa		; 3	-- temp intentional bug
 ;	.byte	<waterfall_lzsa		; 4	-- waterfall
-	.byte	<todo_lzsa		; 5
+	.byte	<haystack_lzsa		; 5	-- haystack
 	.byte	<puddle_lzsa		; 6	-- puddle
-	.byte	<todo_lzsa		; 7
+	.byte	<archery_lzsa		; 7	-- archery
 	.byte	<river_lzsa		; 8	-- river
 	.byte	<knight_lzsa		; 9	-- knight
 ;	.byte	<todo_lzsa		; 10
@@ -331,9 +331,9 @@ map_backgrounds_hi:
 ;	.byte	>todo_lzsa		; 2
 ;	.byte	>todo_lzsa		; 3
 ;	.byte	>waterfall_lzsa		; 4	-- waterfall
-	.byte	>todo_lzsa		; 5
+	.byte	>haystack_lzsa		; 5	-- haystack
 	.byte	>puddle_lzsa		; 6	-- puddle
-	.byte	>todo_lzsa		; 7
+	.byte	>archery_lzsa		; 7	-- archery
 	.byte	>river_lzsa		; 8	-- river
 	.byte	>knight_lzsa		; 9	-- knight
 ;	.byte	>todo_lzsa		; 10

@@ -314,7 +314,7 @@ map_backgrounds_low:
 ;	.byte	<todo_lzsa		; 7
 ;	.byte	<river_lzsa		; 8	-- river
 ;	.byte	<knight_lzsa		; 9	-- knight
-	.byte	<todo_lzsa		; 10
+	.byte	<jhonka_lzsa		; 10	-- jhonka
 	.byte	<cottage_lzsa		; 11	-- cottage
 	.byte	<lake_w_lzsa		; 12	-- lake west
 	.byte	<lake_e_lzsa		; 13	-- lake east
@@ -336,7 +336,7 @@ map_backgrounds_hi:
 ;	.byte	>todo_lzsa		; 7
 ;	.byte	>river_lzsa		; 8	-- river
 ;	.byte	>knight_lzsa		; 9	-- knight
-	.byte	>todo_lzsa		; 10
+	.byte	>jhonka_lzsa		; 10	-- jhonka
 	.byte	>cottage_lzsa		; 11	-- cottage
 	.byte	>lake_w_lzsa		; 12	-- lake west
 	.byte	>lake_e_lzsa		; 13	-- lake east
