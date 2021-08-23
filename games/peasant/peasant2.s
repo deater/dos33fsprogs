@@ -310,7 +310,7 @@ map_backgrounds_low:
 ;	.byte	<waterfall_lzsa		; 3	-- temp intentional bug
 ;	.byte	<waterfall_lzsa		; 4	-- waterfall
 	.byte	<todo_lzsa		; 5
-	.byte	<todo_lzsa		; 6
+	.byte	<puddle_lzsa		; 6	-- puddle
 	.byte	<todo_lzsa		; 7
 	.byte	<river_lzsa		; 8	-- river
 	.byte	<knight_lzsa		; 9	-- knight
@@ -332,7 +332,7 @@ map_backgrounds_hi:
 ;	.byte	>todo_lzsa		; 3
 ;	.byte	>waterfall_lzsa		; 4	-- waterfall
 	.byte	>todo_lzsa		; 5
-	.byte	>todo_lzsa		; 6
+	.byte	>puddle_lzsa		; 6	-- puddle
 	.byte	>todo_lzsa		; 7
 	.byte	>river_lzsa		; 8	-- river
 	.byte	>knight_lzsa		; 9	-- knight

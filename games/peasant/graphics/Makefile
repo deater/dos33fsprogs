@@ -41,9 +41,11 @@ graphics_peasant1.inc:	\
 
 graphics_peasant2.inc:	\
 	todo.lzsa \
+	puddle.lzsa \
 	river.lzsa \
 	knight.lzsa
 	echo "todo_lzsa: .incbin \"todo.lzsa\"" > graphics_peasant2.inc
+	echo "puddle_lzsa: .incbin \"puddle.lzsa\"" >> graphics_peasant2.inc
 	echo "river_lzsa: .incbin \"river.lzsa\"" >> graphics_peasant2.inc
 	echo "knight_lzsa: .incbin \"knight.lzsa\"" >> graphics_peasant2.inc
 
@@ -64,11 +66,13 @@ graphics_peasant3.inc:	\
 ###
 
 graphics_peasant4.inc:	\
-	todo.lzsa \
+	empty_hut.lzsa \
+	ned.lzsa \
 	bottom_prints.lzsa \
 	lady_cottage.lzsa \
 	crooked_tree.lzsa
-	echo "todo_lzsa: .incbin \"todo.lzsa\"" > graphics_peasant4.inc
+	echo "empty_hut_lzsa: .incbin \"empty_hut.lzsa\"" > graphics_peasant4.inc
+	echo "ned_lzsa: .incbin \"ned.lzsa\"" >> graphics_peasant4.inc
 	echo "bottom_prints_lzsa: .incbin \"bottom_prints.lzsa\"" >> graphics_peasant4.inc
 	echo "lady_cottage_lzsa: .incbin \"lady_cottage.lzsa\"" >> graphics_peasant4.inc
 	echo "crooked_tree_lzsa: .incbin \"crooked_tree.lzsa\"" >> graphics_peasant4.inc
@@ -96,6 +100,14 @@ crooked_tree.lzsa:	crooked_tree.hgr
 
 crooked_tree.hgr:	crooked_tree.png
 	$(PNG2HGR) crooked_tree.png > crooked_tree.hgr
+
+###
+
+empty_hut.lzsa:	empty_hut.hgr
+	$(LZSA) -r -f2 empty_hut.hgr empty_hut.lzsa
+
+empty_hut.hgr:	empty_hut.png
+	$(PNG2HGR) empty_hut.png > empty_hut.hgr
 
 
 ###
@@ -138,6 +150,22 @@ leaning_tree.lzsa:	leaning_tree.hgr
 
 leaning_tree.hgr:	leaning_tree.png
 	$(PNG2HGR) leaning_tree.png > leaning_tree.hgr
+
+###
+
+ned.lzsa:	ned.hgr
+	$(LZSA) -r -f2 ned.hgr ned.lzsa
+
+ned.hgr:	ned.png
+	$(PNG2HGR) ned.png > ned.hgr
+
+###
+
+puddle.lzsa:	puddle.hgr
+	$(LZSA) -r -f2 puddle.hgr puddle.lzsa
+
+puddle.hgr:	puddle.png
+	$(PNG2HGR) puddle.png > puddle.hgr
 
 ###
 

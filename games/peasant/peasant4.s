@@ -320,8 +320,8 @@ map_backgrounds_low:
 ;	.byte	<lake_w_lzsa		; 12	-- lake west
 ;	.byte	<lake_e_lzsa		; 13	-- lake east
 ;	.byte	<inn_lzsa		; 14	-- inn
-	.byte	<todo_lzsa		; 15
-	.byte	<todo_lzsa		; 16
+	.byte	<empty_hut_lzsa		; 15	-- empty hut
+	.byte	<ned_lzsa		; 16	-- ned
 	.byte	<bottom_prints_lzsa	; 17	-- bottom footprints
 	.byte	<lady_cottage_lzsa	; 18	-- cottage lady
 	.byte	<crooked_tree_lzsa	; 19	-- crooked tree
@@ -342,8 +342,8 @@ map_backgrounds_hi:
 ;	.byte	>lake_w_lzsa		; 12	-- lake west
 ;	.byte	>lake_e_lzsa		; 13	-- lake east
 ;	.byte	>inn_lzsa		; 14	-- inn
-	.byte	>todo_lzsa		; 15
-	.byte	>todo_lzsa		; 16
+	.byte	>empty_hut_lzsa		; 15	-- empty hut
+	.byte	>ned_lzsa		; 16	-- ned
 	.byte	>bottom_prints_lzsa	; 17	-- bottom footprints
 	.byte	>lady_cottage_lzsa	; 18	-- cottage lady
 	.byte	>crooked_tree_lzsa	; 19	-- crooked tree
