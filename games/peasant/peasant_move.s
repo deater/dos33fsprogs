@@ -6,7 +6,11 @@ move_peasant:
 
 	lda	PEASANT_XADD
 	ora	PEASANT_YADD
-	beq	peasant_the_same
+	bne	really_move_peasant
+
+	jmp	peasant_the_same
+
+really_move_peasant:
 
 	; restore bg behind peasant
 
@@ -22,11 +26,28 @@ move_peasant:
 
 	clc
 	lda	PEASANT_X
-	adc	PEASANT_XADD
-	bmi	peasant_x_negative
+	adc	PEASANT_XADD			; A = new X
+
+	bmi	peasant_x_negative		; if newx <0, handle
+
 	cmp	#40
-	bcs	peasant_x_toobig		; bge
-	bcc	done_movex
+	bcs	peasant_x_toobig		; if newx>=40, hanfle (bge)
+
+	pha
+
+	tay
+	ldx	PEASANT_Y
+	jsr	peasant_collide
+
+	pla
+
+	bcc	done_movex			; no collide
+
+	jsr	stop_peasant			; stop moving
+
+	lda	PEASANT_X			; leave same
+
+	jmp	done_movex
 
 	;============================
 peasant_x_toobig:
@@ -59,12 +80,31 @@ done_movex:
 
 	clc
 	lda	PEASANT_Y
-	adc	PEASANT_YADD
-	cmp	#45
+	adc	PEASANT_YADD			; newy in A
+
+	cmp	#45				; if <45 then off screen
 	bcc	peasant_y_negative		; blt
-	cmp	#150
+
+	cmp	#150				; if >=150 then off screen
 	bcs	peasant_y_toobig		; bge
-	bcc	done_movey
+
+	; check collide
+
+	pha
+
+	ldy	PEASANT_X
+	tax	; newy
+	jsr	peasant_collide
+
+	pla
+
+	bcc	done_movey			; no collide
+
+	jsr	stop_peasant			; stop moving
+
+	lda	PEASANT_Y			; leave same
+
+	jmp	done_movey
 
 
 	;============================
@@ -117,3 +157,65 @@ peasant_the_same:
 
 	rts
 
+
+
+; when peasants collide
+
+	;===================
+	; peasant_collide
+	;===================
+	; newx/7 in Y
+	; newy in X
+	; returns C=0 if no collide
+	;	  C=1 if collide
+peasant_collide:
+			; rrrr rtii	top 5 bits row, bit 2 top/bottom
+
+	; add 28 to collide with feet
+	txa
+	clc
+	adc	#28
+	tax
+
+	txa
+	and	#$04	; see if odd/even
+	beq	peasant_collide_even
+
+peasant_collide_odd:
+	lda	#$f0
+	bne	peasant_collide_mask		; bra
+
+peasant_collide_even:
+	lda	#$0f
+peasant_collide_mask:
+
+	sta	MASK
+
+	txa
+	lsr
+	lsr		; need to divide by 8 then * 2
+	lsr		; can't just div by 4 as we need to mask bottom bit
+	asl
+	tax
+
+	lda	gr_offsets,X
+	sta	INL
+	lda	gr_offsets+1,X
+	sta	INH
+
+	lda	(INL),Y
+	and	MASK
+	beq	collide_true		; true if color 0
+	;bne	collide_false
+
+collide_false:
+	clc
+	rts
+
+collide_true:
+	sec
+	rts
+
+
+
+.include "gr_offsets.s"

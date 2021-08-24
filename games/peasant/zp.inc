@@ -11,6 +11,7 @@ HGR_BITS	= $1C
 
 GBASL		= $26
 GBASH		= $27
+MASK		= $2E
 
 PEASANT_X	= $60
 PEASANT_Y	= $61
