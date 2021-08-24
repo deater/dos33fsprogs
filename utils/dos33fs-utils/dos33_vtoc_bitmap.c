@@ -62,6 +62,11 @@ int dos33_vtoc_free_space(unsigned char *vtoc) {
 /* free a sector from the sector bitmap */
 void dos33_vtoc_free_sector(unsigned char *vtoc, int track, int sector) {
 
+	if (debug) {
+		fprintf(stderr,"vtoc_free: freeing T=%d S=%d\n",
+			track,sector);
+	}
+
 	/* each bitmap is 32 bits.  With 16-sector tracks only first 16 used */
 	/* 1 indicates free, 0 indicates used */
 	if (sector<8) {

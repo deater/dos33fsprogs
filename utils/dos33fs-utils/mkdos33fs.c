@@ -9,6 +9,8 @@
 
 #include "dos33.h"
 
+int debug=0;
+
 static void usage(char *binary,int help) {
 
 	printf("\n%s - version %s\n",binary,VERSION);

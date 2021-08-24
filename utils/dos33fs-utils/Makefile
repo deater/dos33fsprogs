@@ -1,5 +1,7 @@
 include ../../Makefile.inc
 
+CFLAGS := $(CFLAGS) -g
+
 all:	dos33 mkdos33fs make_b \
 	dos33_raw \
 	dos33_text2ascii char2hex
@@ -23,7 +25,7 @@ dos33:			dos33.o \
 				dos33_vtoc_bitmap.o $(LFLAGS)
 
 dos33.o:		dos33.c dos33.h
-			$(CC) $(CFLAGS) -g -c dos33.c
+			$(CC) $(CFLAGS) -c dos33.c
 
 ###
 
@@ -31,7 +33,7 @@ dos33_raw:		dos33_raw.o
 			$(CC) -o dos33_raw dos33_raw.o $(LFLAGS)
 
 dos33_raw.o:		dos33_raw.c
-			$(CC) $(CFLAGS) -g -c dos33_raw.c
+			$(CC) $(CFLAGS) -c dos33_raw.c
 
 ###
 
@@ -66,7 +68,7 @@ dos33_vtoc_bitmap.o:		dos33_vtoc_bitmap.c dos33.h
 ###
 
 dos33_catalog.o:	dos33_catalog.c dos33.h
-			$(CC) $(CFLAGS) -g -c dos33_catalog.c
+			$(CC) $(CFLAGS) -c dos33_catalog.c
 
 ###
 

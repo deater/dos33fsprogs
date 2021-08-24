@@ -11,7 +11,7 @@
 
 #include "dos33.h"
 
-int debug=1;
+int debug=0;
 
 static int ignore_errors=0;
 
@@ -120,10 +120,10 @@ static int dos33_free_sector(unsigned char *vtoc,int fd,int track,int sector) {
 
 	/* write modified VTOC back out */
 	lseek(fd,DISK_OFFSET(VTOC_TRACK,VTOC_SECTOR),SEEK_SET);
-	result=write(fd,&vtoc,BYTES_PER_SECTOR);
+	result=write(fd,vtoc,BYTES_PER_SECTOR);
 
 	if (result<0) {
-		fprintf(stderr,"Error on I/O\n");
+		fprintf(stderr,"dos33_free_sector: error writing VTOC\n");
 	}
 
 	return 0;
@@ -767,6 +767,10 @@ keep_deleting:
 	/* Erase file from catalog entry */
 
 	/* First reload proper catalog sector */
+	if (debug) {
+		fprintf(stderr,"\treloading T=%d S=%d\n",
+				catalog_track,catalog_sector);
+	}
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,catalog_buffer,BYTES_PER_SECTOR);
 	if (result<0) {
