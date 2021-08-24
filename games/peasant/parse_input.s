@@ -32,13 +32,26 @@ parse_look:
 
 parse_talk:
 	cmp	#'T'
-        bne     parse_version
+        bne     parse_show
 
         lda     #<fake_error2
         sta     OUTL
         lda     #>fake_error2
 	jmp	finish_parse_message
 
+parse_show:
+	cmp	#'S'
+        bne     parse_version
+
+	bit	LORES
+	bit	PAGE1
+
+	jsr	wait_until_keypress
+
+	bit	PAGE2
+	bit	HIRES
+
+	jmp	done_parse_message
 
 parse_version:
 	cmp	#'V'
@@ -60,10 +73,9 @@ finish_parse_message:
 
 	jsr	wait_until_keypress
 
-done_parse_message:
 	jsr	hgr_partial_restore
 
+done_parse_message:
+
+
 	rts
-
-
-

@@ -64,6 +64,24 @@ new_location:
 
 	jsr	decompress_lzsa2_fast
 
+	; load priority
+
+	lda	MAP_LOCATION
+	sec
+	sbc	#15
+	tax
+
+	lda	map_priority_low,X
+	sta	getsrc_smc+1
+	lda	map_priority_hi,X
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	gr_copy_to_page1
+
 	; put peasant text
 
 	lda	#<peasant_text
@@ -271,6 +289,8 @@ score_text:
 .include "hgr_text_box.s"
 .include "clear_bottom.s"
 
+.include "gr_copy.s"
+
 .include "new_map_location.s"
 
 .include "parse_input.s"
@@ -280,6 +300,7 @@ score_text:
 .include "wait_a_bit.s"
 
 .include "graphics/graphics_peasant4.inc"
+.include "graphics/priority_peasant4.inc"
 
 .include "version.inc"
 
@@ -342,4 +363,21 @@ map_backgrounds_hi:
 	.byte	>bottom_prints_lzsa	; 17	-- bottom footprints
 	.byte	>lady_cottage_lzsa	; 18	-- cottage lady
 	.byte	>crooked_tree_lzsa	; 19	-- crooked tree
+
+
+
+map_priority_low:
+	.byte	<empty_hut_priority_lzsa	; 15	-- empty hut
+	.byte	<ned_priority_lzsa		; 16	-- ned
+	.byte	<bottom_prints_priority_lzsa	; 17	-- bottom footprints
+	.byte	<lady_cottage_priority_lzsa	; 18	-- cottage lady
+	.byte	<crooked_tree_priority_lzsa	; 19	-- crooked tree
+
+map_priority_hi:
+	.byte	>empty_hut_priority_lzsa	; 15	-- empty hut
+	.byte	>ned_priority_lzsa		; 16	-- ned
+	.byte	>bottom_prints_priority_lzsa	; 17	-- bottom footprints
+	.byte	>lady_cottage_priority_lzsa	; 18	-- cottage lady
+	.byte	>crooked_tree_priority_lzsa	; 19	-- crooked tree
+
 

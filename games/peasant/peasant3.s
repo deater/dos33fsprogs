@@ -64,6 +64,24 @@ new_location:
 
 	jsr	decompress_lzsa2_fast
 
+	; Load priority
+
+	lda	MAP_LOCATION
+	sec
+	sbc	#10
+	tax
+
+	lda	map_priority_low,X
+	sta	getsrc_smc+1
+	lda	map_priority_hi,X
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	gr_copy_to_page1
+
 	; put peasant text
 
 	lda	#<peasant_text
@@ -269,6 +287,8 @@ score_text:
 .include "hgr_text_box.s"
 .include "clear_bottom.s"
 
+.include "gr_copy.s"
+
 .include "new_map_location.s"
 
 .include "parse_input.s"
@@ -278,6 +298,7 @@ score_text:
 .include "wait_a_bit.s"
 
 .include "graphics/graphics_peasant3.inc"
+.include "graphics/priority_peasant3.inc"
 
 .include "version.inc"
 
@@ -342,3 +363,17 @@ map_backgrounds_hi:
 ;	.byte	>lady_cottage_lzsa	; 18	-- cottage lady
 ;	.byte	>crooked_tree_lzsa	; 19	-- crooked tree
 
+
+map_priority_low:
+	.byte	<jhonka_priority_lzsa		; 10	-- jhonka
+	.byte	<cottage_priority_lzsa		; 11	-- cottage
+	.byte	<lake_w_priority_lzsa		; 12	-- lake west
+	.byte	<lake_e_priority_lzsa		; 13	-- lake east
+	.byte	<inn_priority_lzsa		; 14	-- inn
+
+map_priority_hi:
+	.byte	>jhonka_priority_lzsa		; 10	-- jhonka
+	.byte	>cottage_priority_lzsa		; 11	-- cottage
+	.byte	>lake_w_priority_lzsa		; 12	-- lake west
+	.byte	>lake_e_priority_lzsa		; 13	-- lake east
+	.byte	>inn_priority_lzsa		; 14	-- inn

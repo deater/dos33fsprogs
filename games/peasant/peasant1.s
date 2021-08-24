@@ -62,6 +62,27 @@ new_location:
 
 	jsr	decompress_lzsa2_fast
 
+	; load priority to $400
+	; indirectly as we can't trash screen holes
+
+
+	ldx	MAP_LOCATION
+
+	lda	map_priority_low,X
+	sta	getsrc_smc+1
+	lda	map_priority_hi,X
+	sta	getsrc_smc+2
+
+	lda	#$20			; temporarily load to $2000
+
+	jsr	decompress_lzsa2_fast
+
+	; copy to $400
+
+	jsr	gr_copy_to_page1
+
+
+
 	; put peasant text
 
 	lda	#<peasant_text
@@ -267,6 +288,8 @@ score_text:
 .include "hgr_text_box.s"
 .include "clear_bottom.s"
 
+.include "gr_copy.s"
+
 .include "new_map_location.s"
 
 .include "parse_input.s"
@@ -276,6 +299,7 @@ score_text:
 .include "wait_a_bit.s"
 
 .include "graphics/graphics_peasant1.inc"
+.include "graphics/priority_peasant1.inc"
 
 .include "version.inc"
 
@@ -341,3 +365,18 @@ map_backgrounds_hi:
 ;	.byte	>lady_cottage_lzsa	; 18	-- cottage lady
 ;	.byte	>crooked_tree_lzsa	; 19	-- crooked tree
 
+
+
+map_priority_low:
+	.byte	<gary_priority_lzsa		; 0	-- gary the horse
+	.byte	<top_prints_priority_lzsa	; 1	-- top footprints
+	.byte	<wishing_well_priority_lzsa	; 2	-- wishing well
+	.byte	<leaning_tree_priority_lzsa	; 3	-- leaning tree
+	.byte	<waterfall_priority_lzsa	; 4	-- waterfall
+
+map_priority_hi:
+	.byte	>gary_priority_lzsa		; 0	-- gary the horse
+	.byte	>top_prints_priority_lzsa	; 1	-- top footprints
+	.byte	>wishing_well_priority_lzsa	; 2	-- wishing well
+	.byte	>leaning_tree_priority_lzsa	; 3	-- leaning tree
+	.byte	>waterfall_priority_lzsa	; 4	-- waterfall

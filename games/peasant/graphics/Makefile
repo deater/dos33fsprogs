@@ -6,9 +6,17 @@ LZSA = ~/research/lzsa/lzsa/lzsa
 B2D = ../../../utils/bmp2dhr/b2d
 
 all:	graphics_intro.inc \
-	graphics_peasant1.inc graphics_peasant2.inc graphics_peasant3.inc \
-	graphics_peasant4.inc
+	graphics_peasant1.inc \
+	graphics_peasant2.inc \
+	graphics_peasant3.inc \
+	graphics_peasant4.inc \
+	priority_peasant1.inc \
+	priority_peasant2.inc \
+	priority_peasant3.inc \
+	priority_peasant4.inc
 
+
+###
 
 graphics_intro.inc:	\
 	cottage.lzsa \
@@ -80,6 +88,50 @@ graphics_peasant4.inc:	\
 	echo "bottom_prints_lzsa: .incbin \"bottom_prints.lzsa\"" >> graphics_peasant4.inc
 	echo "lady_cottage_lzsa: .incbin \"lady_cottage.lzsa\"" >> graphics_peasant4.inc
 	echo "crooked_tree_lzsa: .incbin \"crooked_tree.lzsa\"" >> graphics_peasant4.inc
+
+###########
+###########
+
+priority_peasant1.inc:	\
+	todo_priority.lzsa
+	echo "gary_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_peasant1.inc
+	echo "top_prints_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant1.inc
+	echo "wishing_well_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant1.inc
+	echo "leaning_tree_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant1.inc
+	echo "waterfall_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant1.inc
+
+
+###
+
+priority_peasant2.inc:	\
+	todo_priority.lzsa
+	echo "haystack_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_peasant2.inc
+	echo "puddle_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant2.inc
+	echo "archery_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant2.inc
+	echo "river_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant2.inc
+	echo "knight_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant2.inc
+
+###
+
+priority_peasant3.inc:	\
+	todo_priority.lzsa
+	echo "jhonka_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_peasant3.inc
+	echo "cottage_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant3.inc
+	echo "lake_w_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant3.inc
+	echo "lake_e_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant3.inc
+	echo "inn_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant3.inc
+
+###
+
+priority_peasant4.inc:	\
+	todo_priority.lzsa \
+	lady_cottage_priority.lzsa
+	echo "empty_hut_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_peasant4.inc
+	echo "ned_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant4.inc
+	echo "bottom_prints_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant4.inc
+	echo "lady_cottage_priority_lzsa: .incbin \"lady_cottage_priority.lzsa\"" >> priority_peasant4.inc
+	echo "crooked_tree_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant4.inc
+
 
 ###
 
@@ -263,6 +315,26 @@ todo.lzsa:	todo.hgr
 todo.hgr:	todo.png
 	$(PNG2HGR) todo.png > todo.hgr
 
+
+###########################################
+###########################################
+
+
+###
+
+lady_cottage_priority.lzsa:	lady_cottage_priority.hgr
+	$(LZSA) -r -f2 lady_cottage_priority.hgr lady_cottage_priority.lzsa
+
+lady_cottage_priority.hgr:	lady_cottage_priority.png
+	$(PNG2GR) lady_cottage_priority.png lady_cottage_priority.hgr
+
+####
+
+todo_priority.lzsa:	todo_priority.gr
+	$(LZSA) -r -f2 todo_priority.gr todo_priority.lzsa
+
+todo_priority.gr:	todo_priority.png
+	$(PNG2GR) todo_priority.png todo_priority.gr
 
 ###
 

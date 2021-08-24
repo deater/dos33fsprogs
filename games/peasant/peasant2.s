@@ -64,6 +64,25 @@ new_location:
 
 	jsr	decompress_lzsa2_fast
 
+
+	; we are PEASANT2 so locations 5...9 map to 0...4
+
+	lda	MAP_LOCATION
+	sec
+	sbc	#5
+	tax
+
+	lda	map_priority_low,X
+	sta	getsrc_smc+1
+	lda	map_priority_hi,X
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	gr_copy_to_page1
+
 	; put peasant text
 
 	lda	#<peasant_text
@@ -269,6 +288,8 @@ score_text:
 .include "hgr_text_box.s"
 .include "clear_bottom.s"
 
+.include "gr_copy.s"
+
 .include "new_map_location.s"
 
 .include "parse_input.s"
@@ -278,6 +299,7 @@ score_text:
 .include "wait_a_bit.s"
 
 .include "graphics/graphics_peasant2.inc"
+.include "graphics/priority_peasant2.inc"
 
 .include "version.inc"
 
@@ -342,3 +364,17 @@ map_backgrounds_hi:
 ;	.byte	>lady_cottage_lzsa	; 18	-- cottage lady
 ;	.byte	>crooked_tree_lzsa	; 19	-- crooked tree
 
+
+map_priority_low:
+	.byte	<haystack_priority_lzsa		; 5	-- haystack
+	.byte	<puddle_priority_lzsa		; 6	-- puddle
+	.byte	<archery_priority_lzsa		; 7	-- archery
+	.byte	<river_priority_lzsa		; 8	-- river
+	.byte	<knight_priority_lzsa		; 9	-- knight
+
+map_priority_hi:
+	.byte	>haystack_priority_lzsa		; 5	-- haystack
+	.byte	>puddle_priority_lzsa		; 6	-- puddle
+	.byte	>archery_priority_lzsa		; 7	-- archery
+	.byte	>river_priority_lzsa		; 8	-- river
+	.byte	>knight_priority_lzsa		; 9	-- knight
