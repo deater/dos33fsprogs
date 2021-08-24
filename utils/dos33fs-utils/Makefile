@@ -66,7 +66,7 @@ dos33_vtoc_bitmap.o:		dos33_vtoc_bitmap.c dos33.h
 ###
 
 dos33_catalog.o:	dos33_catalog.c dos33.h
-			$(CC) $(CFLAGS) -c dos33_catalog.c
+			$(CC) $(CFLAGS) -g -c dos33_catalog.c
 
 ###
 

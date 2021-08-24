@@ -74,3 +74,6 @@ unsigned char dos33_file_type(int value);
 /* dos33_dump.c */
 int dos33_dump(unsigned char *vtoc, int fd);
 int dos33_showfree(unsigned char *vtoc, int fd);
+
+
+extern int debug;

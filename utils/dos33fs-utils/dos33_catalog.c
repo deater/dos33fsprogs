@@ -5,8 +5,6 @@
 
 #include "dos33.h"
 
-static int debug=0;
-
 unsigned char dos33_file_type(int value) {
 
 	unsigned char result;

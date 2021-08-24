@@ -11,7 +11,9 @@
 
 #include "dos33.h"
 
-static int debug=0,ignore_errors=0;
+int debug=1;
+
+static int ignore_errors=0;
 
 static unsigned char get_high_byte(int value) {
 	return (value>>8)&0xff;
@@ -684,6 +686,11 @@ static int dos33_delete_file(unsigned char *vtoc,int fd,int fsl) {
 	catalog_track=(fsl>>8)&0xff;
 	catalog_sector=(fsl&0xff);
 
+	if (debug) {
+		fprintf(stderr,"DELETE: deleting file T=%d S=%d E=%d\n",
+			catalog_track,catalog_sector,catalog_entry);
+	}
+
 	/* Load in the catalog table for the file */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,catalog_buffer,BYTES_PER_SECTOR);
@@ -705,9 +712,17 @@ static int dos33_delete_file(unsigned char *vtoc,int fd,int fsl) {
 
 keep_deleting:
 
+	if (debug) {
+		fprintf(stderr,"\tLoading T/S list T=%d S=%d\n",
+			ts_track,ts_sector);
+	}
+
 	/* load in the t/s list info */
 	lseek(fd,DISK_OFFSET(ts_track,ts_sector),SEEK_SET);
 	result=read(fd,catalog_buffer,BYTES_PER_SECTOR);
+	if (result<0) {
+		fprintf(stderr,"delete: error reading catalog\n");
+	}
 
 	/* Free each sector listed by t/s list */
 	for(i=0;i<TSL_MAX_NUMBER;i++) {
@@ -716,6 +731,11 @@ keep_deleting:
 			(catalog_buffer[TSL_LIST+2*i+1]==0)) {
 		}
 		else {
+			if (debug) {
+				fprintf(stderr,"\tfreeing T=%d S=%d\n",
+					catalog_buffer[TSL_LIST+2*i],
+					catalog_buffer[TSL_LIST+2*i+1]);
+			}
 			dos33_free_sector(vtoc,fd,catalog_buffer[TSL_LIST+2*i],
 				catalog_buffer[TSL_LIST+2*i+1]);
 		}
@@ -723,10 +743,19 @@ keep_deleting:
 
 	/* free the t/s list */
 	dos33_free_sector(vtoc,fd,ts_track,ts_sector);
+	if (debug) {
+		fprintf(stderr,"\tfreeing T/S list T=%d S=%d\n",
+			ts_track,ts_sector);
+	}
 
 	/* Point to next t/s list */
 	ts_track=catalog_buffer[TSL_NEXT_TRACK];
 	ts_sector=catalog_buffer[TSL_NEXT_SECTOR];
+
+	if (debug) {
+		fprintf(stderr,"\tNext T/S list T=%d S=%d\n",
+			ts_track,ts_sector);
+	}
 
 	/* If more tsl lists, keep looping */
 	if ((ts_track==0x0) && (ts_sector==0x0)) {
@@ -740,6 +769,9 @@ keep_deleting:
 	/* First reload proper catalog sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,catalog_buffer,BYTES_PER_SECTOR);
+	if (result<0) {
+		fprintf(stderr,"delete: error reading catalog\n");
+	}
 
 	/* save track as last char of name, for undelete purposes */
 	catalog_buffer[CATALOG_FILE_LIST+(catalog_entry*CATALOG_ENTRY_SIZE)+
@@ -748,13 +780,15 @@ keep_deleting:
 
 	/* Actually delete the file */
 	/* by setting the track value to FF which indicates deleted file */
-	catalog_buffer[CATALOG_FILE_LIST+(catalog_entry*CATALOG_ENTRY_SIZE)]=0xff;
+	catalog_buffer[CATALOG_FILE_LIST+(catalog_entry*CATALOG_ENTRY_SIZE)]=
+		0xff;
 
 	/* re seek to catalog position and write out changes */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=write(fd,catalog_buffer,BYTES_PER_SECTOR);
-
-	if (result<0) fprintf(stderr,"Error on I/O\n");
+	if (result<0) {
+		fprintf(stderr,"delete: error writing catalog\n");
+	}
 
 	return 0;
 }
