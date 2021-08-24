@@ -1,4 +1,5 @@
 /* Loads a 80x48 (or 40x48) PNG image into a 40x48 Apple II layout */
+/* Also supports 280x192 */
 /* It's not interleaved like an actual Apple II */
 /* But the top/bottom are pre-packed into a naive 40x24 array */
 
@@ -46,12 +47,15 @@ static int convert_color(int color, char *filename) {
 	return c;
 }
 
-/* expects a PNG where the xsize is either 40 or 80 */
+/* expects a PNG where the xsize is either 40 or 80 or 280 */
 /* if it is 80, it skips every other */
+/* if 280, it skips every 7 */
 
 /* why do that?  when editing an image the aspect ratio looks better if */
 /* it is an 80 wide picture */
 
+/* xsize, ysize is the size of the result, not size of */
+/* the input image */
 int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 	int png_type) {
 
@@ -106,17 +110,26 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 	width = png_get_image_width(png_ptr, info_ptr);
 	height = png_get_image_height(png_ptr, info_ptr);
 
+	/* get the xadd */
 	if (width==40) {
 		*xsize=40;
 		xadd=1;
+		yadd=1;
 	}
 	else if (width==80) {
 		*xsize=40;
 		xadd=2;
+		yadd=1;
+	}
+	else if (width==280) {
+		*xsize=40;
+		xadd=7;
+		yadd=4; /* FIXME: check we are 192 in ysize */
 	}
 	else if (width==16) {
 		*xsize=16;
 		xadd=1;
+		yadd=1;
 	}
 	else {
 		fprintf(stderr,"Unsupported width %d\n",width);
@@ -126,17 +139,17 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 	if (png_type==PNG_WHOLETHING) {
 		*ysize=height;
 		ystart=0;
-		yadd=2;
+		yadd*=2;
 	}
 	else if (png_type==PNG_ODDLINES) {
 		*ysize=height/2;
 		ystart=1;
-		yadd=4;
+		yadd*=4;
 	}
 	else if (png_type==PNG_EVENLINES) {
 		*ysize=height/2;
 		ystart=0;
-		yadd=4;
+		yadd*=4;
 	}
 	else if (png_type==PNG_RAW) {
 		/* FIXME, not working */
