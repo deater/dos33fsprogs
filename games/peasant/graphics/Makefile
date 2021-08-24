@@ -57,12 +57,14 @@ graphics_peasant3.inc:	\
 	jhonka.lzsa \
 	cottage.lzsa \
 	lake_e.lzsa \
+	lake_e_boat.lzsa \
 	lake_w.lzsa \
 	inn.lzsa
 	echo "jhonka_lzsa: .incbin \"jhonka.lzsa\"" > graphics_peasant3.inc
 	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" >> graphics_peasant3.inc
 	echo "lake_w_lzsa: .incbin \"lake_w.lzsa\"" >> graphics_peasant3.inc
 	echo "lake_e_lzsa: .incbin \"lake_e.lzsa\"" >> graphics_peasant3.inc
+	echo "lake_e_boat_lzsa: .incbin \"lake_e_boat.lzsa\"" >> graphics_peasant3.inc
 	echo "inn_lzsa: .incbin \"inn.lzsa\"" >> graphics_peasant3.inc
 
 ###
@@ -163,19 +165,30 @@ lady_cottage.hgr:	lady_cottage.png
 
 ###
 
+lake_e.lzsa:	lake_e.hgr
+	$(LZSA) -r -f2 lake_e.hgr lake_e.lzsa
+
+lake_e.hgr:	lake_e.png
+	$(PNG2HGR) lake_e.png > lake_e.hgr
+
+
+###
+
+lake_e_boat.lzsa:	lake_e_boat.hgr
+	$(LZSA) -r -f2 lake_e_boat.hgr lake_e_boat.lzsa
+
+lake_e_boat.hgr:	lake_e_boat.png
+	$(PNG2HGR) lake_e_boat.png > lake_e_boat.hgr
+
+
+###
+
 lake_w.lzsa:	lake_w.hgr
 	$(LZSA) -r -f2 lake_w.hgr lake_w.lzsa
 
 lake_w.hgr:	lake_w.png
 	$(PNG2HGR) lake_w.png > lake_w.hgr
 
-###
-
-lake_e.lzsa:	lake_e.hgr
-	$(LZSA) -r -f2 lake_e.hgr lake_e.lzsa
-
-lake_e.hgr:	lake_e.png
-	$(PNG2HGR) lake_e.png > lake_e.hgr
 
 ###
 

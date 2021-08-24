@@ -277,17 +277,12 @@ score_text:
 
 .include "graphics/graphics_peasant1.inc"
 
+.include "version.inc"
 
 help_message:
 .byte   0,43,24, 0,253,82
 .byte   8,41,"I don't understand. Type",13
 .byte	     "HELP for assistances.",0
-
-version_message:
-.byte   0,43,24, 0,253,82
-.byte   8,41,"APPLE ][ PEASANT'S QUEST",13
-.byte	     "version 0.3",0
-
 
 fake_error1:
 .byte   0,43,24, 0,253,82

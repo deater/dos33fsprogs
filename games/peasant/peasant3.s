@@ -279,17 +279,12 @@ score_text:
 
 .include "graphics/graphics_peasant3.inc"
 
+.include "version.inc"
 
 help_message:
 .byte   0,43,24, 0,253,82
 .byte   8,41,"I don't understand. Type",13
 .byte	     "HELP for assistances.",0
-
-version_message:
-.byte   0,43,24, 0,253,82
-.byte   8,41,"APPLE ][ PEASANT'S QUEST",13
-.byte	     "version 0.3",0
-
 
 fake_error1:
 .byte   0,43,24, 0,253,82
@@ -317,7 +312,7 @@ map_backgrounds_low:
 	.byte	<jhonka_lzsa		; 10	-- jhonka
 	.byte	<cottage_lzsa		; 11	-- cottage
 	.byte	<lake_w_lzsa		; 12	-- lake west
-	.byte	<lake_e_lzsa		; 13	-- lake east
+	.byte	<lake_e_boat_lzsa		; 13	-- lake east
 	.byte	<inn_lzsa		; 14	-- inn
 ;	.byte	<todo_lzsa		; 15
 ;	.byte	<todo_lzsa		; 16
@@ -339,7 +334,7 @@ map_backgrounds_hi:
 	.byte	>jhonka_lzsa		; 10	-- jhonka
 	.byte	>cottage_lzsa		; 11	-- cottage
 	.byte	>lake_w_lzsa		; 12	-- lake west
-	.byte	>lake_e_lzsa		; 13	-- lake east
+	.byte	>lake_e_boat_lzsa		; 13	-- lake east
 	.byte	>inn_lzsa		; 14	-- inn
 ;	.byte	>todo_lzsa		; 15
 ;	.byte	>todo_lzsa		; 16
