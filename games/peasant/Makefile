@@ -91,8 +91,9 @@ PEASANT1:	peasant1.o
 
 peasant1.o:	peasant1.s zp.inc \
 		graphics/graphics_peasant1.inc sprites/peasant_sprite.inc \
+		graphics/priority_peasant1.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_7x28_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
+		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
 		peasant_move.s
@@ -105,6 +106,7 @@ PEASANT2:	peasant2.o
 
 peasant2.o:	peasant2.s zp.inc \
 		graphics/graphics_peasant2.inc sprites/peasant_sprite.inc \
+		graphics/priority_peasant2.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
@@ -120,8 +122,9 @@ PEASANT3:	peasant3.o
 
 peasant3.o:	peasant3.s zp.inc \
 		graphics/graphics_peasant3.inc sprites/peasant_sprite.inc \
+		graphics/priority_peasant3.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_7x28_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
+		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
 		peasant_move.s
@@ -134,8 +137,9 @@ PEASANT4:	peasant4.o
 
 peasant4.o:	peasant4.s zp.inc \
 		graphics/graphics_peasant4.inc sprites/peasant_sprite.inc \
+		graphics/priority_peasant4.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_7x28_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
+		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
 		peasant_move.s

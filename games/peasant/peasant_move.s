@@ -203,8 +203,23 @@ peasant_collide_mask:
 	lda	gr_offsets+1,X
 	sta	INH
 
-	lda	(INL),Y
+	lda	(INL),Y			; get value
+
 	and	MASK
+
+;	ldy	MASK
+;	cpy	#$f0
+;	beq	in_top
+;in_bottom:
+;	and	#$0f
+;	jmp	done_feet
+;in_top:
+;	lsr
+;	lsr
+;	lsr
+;	lsr
+;done_feet:
+
 	beq	collide_true		; true if color 0
 	;bne	collide_false
 
