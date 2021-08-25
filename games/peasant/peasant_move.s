@@ -20,7 +20,7 @@ really_move_peasant:
 	lda	PEASANT_Y
 	sta	CURSOR_Y
 
-	jsr	restore_bg_7x30
+	jsr	restore_bg_7x28
 
 	; move peasant
 
@@ -147,7 +147,7 @@ done_movey:
 	lda	PEASANT_Y
 	sta	CURSOR_Y
 
-	jsr	save_bg_7x30
+	jsr	save_bg_7x28
 
 	; draw peasant
 

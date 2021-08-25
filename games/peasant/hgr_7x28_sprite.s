@@ -1,6 +1,6 @@
 
 	;===============================================
-	; hgr 7x30 draw sprite
+	; hgr 7x28 draw sprite
 	;===============================================
 	; SPRITE in INL/INH
 	; Location at CURSOR_X CURSOR_Y
@@ -10,24 +10,24 @@
 	; left mask at INL/INH + 28
 	; right mask at INL/INH + 42
 
-hgr_draw_sprite_7x30:
+hgr_draw_sprite_7x28:
 
 	; set up pointers
 	lda	INL
-	sta	h730_smc1+1
+	sta	h728_smc1+1
 	lda	INH
-	sta	h730_smc1+2
+	sta	h728_smc1+2
 
 	clc
 	lda	INL
-	adc	#30
-	sta	h730_smc3+1
+	adc	#28
+	sta	h728_smc3+1
 	lda	INH
 	adc	#0
-	sta	h730_smc3+2
+	sta	h728_smc3+2
 
 	ldx	#0			; X is row counter
-hgr_7x30_sprite_yloop:
+hgr_7x28_sprite_yloop:
 	txa				; X is current row
 
 	clc
@@ -44,24 +44,24 @@ hgr_7x30_sprite_yloop:
 	ldy	CURSOR_X
 
 	lda	(GBASL),Y	; load background
-h730_smc3:
+h728_smc3:
 	and	$d000,X		; mask with sprite mask
-h730_smc1:
+h728_smc1:
 	ora	$d000,X		; or in sprite
 	sta	(GBASL),Y	; store out
 
 	inx
-	cpx	#30
-	bne	hgr_7x30_sprite_yloop
+	cpx	#28
+	bne	hgr_7x28_sprite_yloop
 
 	rts
 
 
 	;======================
-	; save bg 7x30
+	; save bg 7x28
 	;======================
 
-save_bg_7x30:
+save_bg_7x28:
 
 	ldx	#0
 save_yloop:
@@ -86,19 +86,19 @@ save_yloop:
 	ldy	CURSOR_X
 
 	lda	(GBASL),Y
-	sta	save_sprite_7x30,X
+	sta	save_sprite_7x28,X
 
 	inx
-	cpx	#30
+	cpx	#28
 	bne	save_yloop
 
 	rts
 
 	;======================
-	; restore bg 7x30
+	; restore bg 7x28
 	;======================
 
-restore_bg_7x30:
+restore_bg_7x28:
 
 	ldx	#0
 restore_yloop:
@@ -116,11 +116,11 @@ restore_yloop:
 
 	ldy	CURSOR_X
 
-	lda	save_sprite_7x30,X
+	lda	save_sprite_7x28,X
 	sta	(GBASL),Y
 
 	inx
-	cpx	#30
+	cpx	#28
 	bne	restore_yloop
 
 	rts
@@ -130,6 +130,6 @@ restore_yloop:
 ; save area
 ;====================
 
-save_sprite_7x30:
+save_sprite_7x28:
 .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00

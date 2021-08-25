@@ -29,8 +29,6 @@ peasant_right1_sprite:
 	.byte $0F
 	.byte $0F
 	.byte $1C
-	.byte $00
-	.byte $00
 
 ; hgr_make_sprite peasant_sprites.png  21 1 21 31
 peasant_right1_mask:
@@ -62,8 +60,6 @@ peasant_right1_mask:
 	.byte $70
 	.byte $70
 	.byte $63
-	.byte $FF
-	.byte $FF
 
 ; hgr_make_sprite ./peasant_sprites.png  35 34 35 64
 peasant_right2_sprite:
@@ -95,8 +91,6 @@ peasant_right2_sprite:
 	.byte $63
 	.byte $63
 	.byte $6F
-	.byte $00
-	.byte $00
 
 ; 21 34 21 64
 peasant_right2_mask:
@@ -128,8 +122,6 @@ peasant_right2_mask:
 	.byte $1C
 	.byte $1C
 	.byte $10
-	.byte $FF
-	.byte $FF
 
 ; 35 68 35 98
 peasant_up1_sprite:
@@ -161,8 +153,7 @@ peasant_up1_sprite:
 	.byte $33
 	.byte $33
 	.byte $03
-	.byte $00
-	.byte $00
+
 ; 21 68 21 98
 peasant_up1_mask:
 	.byte $73
@@ -193,8 +184,7 @@ peasant_up1_mask:
 	.byte $4C
 	.byte $4C
 	.byte $7C
-	.byte $7F
-	.byte $7F
+
 
 ; 35 102 35 132
 peasant_up2_sprite:
@@ -226,8 +216,7 @@ peasant_up2_sprite:
 	.byte $33
 	.byte $33
 	.byte $30
-	.byte $00
-	.byte $00
+
 
 ; 21 102 21 132
 peasant_up2_mask:
@@ -259,8 +248,6 @@ peasant_up2_mask:
 	.byte $4C
 	.byte $4C
 	.byte $4F
-	.byte $7F
-	.byte $7F
 
 
 ; 84 1 90 31
@@ -293,8 +280,6 @@ peasant_left1_sprite:
 	.byte $78
 	.byte $78
 	.byte $1C
-	.byte $00
-	.byte $00
 
 ; 70 1 76 31
 peasant_left1_mask:
@@ -326,9 +311,6 @@ peasant_left1_mask:
 	.byte $07
 	.byte $07
 	.byte $63
-	.byte $7F
-	.byte $7F
-
 
 
 ; 84 34 90 65
@@ -361,8 +343,6 @@ peasant_left2_sprite:
 	.byte $63
 	.byte $63
 	.byte $7B
-	.byte $00
-	.byte $00
 
 ; 70 34 76 65
 peasant_left2_mask:
@@ -394,8 +374,6 @@ peasant_left2_mask:
 	.byte $1C
 	.byte $1C
 	.byte $04
-	.byte $7F
-	.byte $7F
 
 ; 84 68 90 99
 peasant_down1_sprite:
@@ -427,8 +405,6 @@ peasant_down1_sprite:
 	.byte $33
 	.byte $33
 	.byte $03
-	.byte $00
-	.byte $00
 
 ; 70 68 76 99
 peasant_down1_mask:
@@ -460,8 +436,6 @@ peasant_down1_mask:
 	.byte $4C
 	.byte $4C
 	.byte $7C
-	.byte $7F
-	.byte $7F
 
 ; 84 102 90 133
 peasant_down2_sprite:
@@ -493,8 +467,6 @@ peasant_down2_sprite:
 	.byte $33
 	.byte $33
 	.byte $30
-	.byte $00
-	.byte $00
 
 ; 70 102 76 133
 peasant_down2_mask:
@@ -526,5 +498,4 @@ peasant_down2_mask:
 	.byte $4C
 	.byte $4C
 	.byte $4F
-	.byte $7F
-	.byte $7F
+

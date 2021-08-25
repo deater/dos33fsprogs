@@ -57,7 +57,7 @@ cottage:
 	;=======================
 	; walking
 
-	jsr	save_bg_7x30
+	jsr	save_bg_7x28
 
 cottage_walk_loop:
 
@@ -66,7 +66,7 @@ cottage_walk_loop:
 	lda	PEASANT_Y
 	sta	CURSOR_Y
 
-	jsr	restore_bg_7x30
+	jsr	restore_bg_7x28
 
 
 	;=======================
@@ -87,7 +87,7 @@ cottage_walk_loop:
 	sta	PEASANT_Y
 	sta	CURSOR_Y
 
-	jsr	save_bg_7x30
+	jsr	save_bg_7x28
 
 	jsr	draw_peasant
 
