@@ -1,0 +1,320 @@
+
+# Intro 0
+YOU are Rather Dashing, a humble peasant living in the peasant kingdom of Peasantry.
+You return home from a vacation on Scalding Lake only to find that TROGDOR THE BURNINATOR has burninated your thatched roof cottage along with all your goods and services.
+With nothing left to lose, you swear to get revenge on the Wingaling Dragon in the name of burninated peasants everywhere.
+# Intro 1
+You head east towards the mountain atop which TROGDOR lives.
+#Intro 2
+That's a nice looking lake.
+#Intro 3
+You can start playing in a second here.
+#Intro 4
+Okay, go for it.
+
+# Gameplay
+
+# Your Burninated Cottage (B3)
+# + look
+The remains of your thatched-roof cottage lie before you. You swear revenge against Trogdor.
+
+# Pebble Lake West
+# + look
+There's definitely half a lake here with a sandy shore.
+# + get pebbles
+You grab up a handful of fairly substantial pebbles. You make sure to get an even mix of sedentary, igneous, and, um, sureptitious rocks.
+# + throw baby
+Something tells you this is a good idea and you lob the little one into the lake.
+You won't be arrested after all! The little guy has resurfaced safely, carrying an old bottle of soda. You take the soda and stow your swaddling buddy for takeoff.
+
+# Old Well
+# + look
+There's a really generic well here. Oh, and apparently it's autumn on this screen.
+# + put pebbles in bucket
+You plunk all your pebbles into the bucket. The weight causes it to descend to the bottom of the well with a quickness!
+# + turn crank (pebbles)
+The crank seems to have loosened and you haul the bucket back up. What's this? Why there's a monster maskus in there! No doubt leftover from some pagan ritual. Silly pagans.
+You grab up the scary moster maskus. Man, this thing could scare a horse!
+# + put baby in bucket
+Okay, Father of the Year. You put a baby in a bucket and it quickly descends deep into the well. Yours is a black, black heart.
+# + turn crank (baby)
+You haul the bucket back up. Lucky for you, the baby is still in it and appears to be unscathed. As a bonus, it looks like he found a Meatball sub down there. Score! You take the sub.
+Oh, and the baby. You take the baby.
+
+
+# Archery Range
+# + look
+You've come across some kind of shooting gallery. There's a depressed looking archer at the desk there.
+# + talk man
+"Oh, hi. I'm Mendelev," says the archer. "I used to run a shooting range here with my brother Dongolev. But we don't talk so much anymore. I haven't seen him in a Jhonka's age. If you ever run into him, tell him I said 'haldo'.
+"You mean 'hello,'" you ask?
+"Oh, um. No. Shut up. I said 'haldo' and I meant 'haldo.' Tell him I said 'haldo.'"
+# + give super trinket
+"That'll work," says Mendelev. Just hit 3 bullseyes and you win the SuperTime FunBow TM!"
+"The ARROW KEYS aim left and right and the SPACE BAR operates the bow. You'll need to press it a couple of times to get a nice shot off but we don't give lessons so you're on your own."
+# (get [X]=3-5 bullseyes)
+"Nice shootin! [X] hits." Says Mendelev. "Here's your prize!" You got the SuperTime FunBow TM! We don't sell ammo, so you'll have to find your own arrows for it.
+
+# Poor Gary's Glen
+# + look
+Hey! There's a rotten ol' horse over there!
+# + wear mask
+You slip on the hideous monster maskus.
+You scared the crap outta Poor Gary! He broke on through to the other side!
+
+# Hidden Glen
+# + haldo
+the archer stops arching and turns to you. "My brother told you to tell me haldo? He must want to start the old business back up!"
+# + get arrow
+You pick out a really good one and yank it from the tree. Hooray! Now you have an arrow!
+# + look (with Dongolev)
+Well, looky here! A hidden glen! You LOVE hidden glens. This one has some kinda archer in it.
+# + look (w/o Dongolev)
+You're in a hidden glen. There's a tree with zillions of arrows in it. 
+
+
+
+
+
+# Outside Baby Lady Cottage
+# + look
+There's a ranch-style thatched roof cottage here. There are also what appear to be four crunch berry bushes but you can't be sure.
+# + open door
+You open er up and head on in.
+# + get berries (first bush)
+You reach into the bush to snag some berries but they all just squish in your hand.
+# + get berries (second bush)
+Man, nothing in this bush but squished berries either.
+# + get berries (third bush)
+Too bad you don't want any squished berries, cuz hey: jackpot!
+# + get berries (fourth bush)
+You reach into the bush to snag you some berries but instead find a Super Trinket! These things are awesome! You have a sneaking suspicion that SOMEONE in this game will need this thing.
+
+# Inside Baby Lady Cottage
+# + look
+What a depressing little cottage. It reeks of single parent. A lady rocks her baby in a chair. A mostly empty shelf sits against one wall.
+# + look (after lady leaves)        
+What a depressing little cottage. It reeks of single parent. There is one of those self-rocking chairs. A mostly empty shelf sits against one wall. 
+# + get chicken feed
+You used to eat this stuff like crazy when you were a kid and your parents weren't watching (which was all too often). You grab several large handfuls.
+# + give riches
+"My riches!!" she screams and snatches up every last gold coin. "Thanks, sucker! Here you go!" she shoves the baby into your hands and bolts out the door.
+You later learn that she does this all the time and is wanted throughout the countryside. Those riches probably WERE the Jhonka's and who knows whose baby that is. Well, it's yours now. 	Baby lady cottage
+# + (leaving)
+the baby lady calls after you, "Hey, you're on some quest right? Well, the little squirt here lost something of mine in the yard the other day. It's yours if you can find it."
+# + (leaving after she's gone)
+This place is dead anyway.
+
+
+# Pebble Lake East
+# + look
+Why it's half a lake.
+# + look (when the old man is fishing)
+Why it's half a lake.With a fisherman in it. And he's fishing! 
+# + throw chicken feed
+You toss the feed into the lake. You shed a tear for each one. "Goodbye, Monty" you sniff. "Bye Delga, Rasputin. Farewell, Combledon!" and so forth.
+Woah! That crotchety old man just caught a pantload of fish! "Now I can get back to running the inn," he says and rows to shore and hauls his boat out and cleans, guts, and filets all the fish and a buncha other stuff we didn't animate.
+
+# Kerrek Tracks 1/2 (top or bottom footprints?)
+# + shoot Kerrek with bow
+Here goes nothin', Kid Icarus
+ARROWED!! Nice shot. You smote the Kerrek! He lay there stinking.
+A light rain heralds the washing free of the Kerrek's grip on the land. You're feeling pretty good, though, so the artless symbolism doesn't bug you.
+# + get belt
+You strap the Kerrek's belt buckle around your waist. Oh boy. You sure stink now.
+# + look
+There are large hoof prints in the grass here.
+# + look (no Kerrek)
+There are large hoof prints in the the grass here. And it smells like a public latrine.
+# + look (living Kerrek)
+It's the Kerrek, you moron! Get outta here!
+# + look (dead Kerrek)
+There are large hoof prints in the grass here. There is a large Kerrek-shaped mound on the grass.
+# + look (rotting Kerrek)
+There are large hoof prints in the grass here. Part of the ground looks just like a rotting kerrek.
+# + look (skeletal Kerrek)
+There are large hoof prints in the grass here. Looks like someone left their spare bones here. 
+
+# Puddle
+# + (walk into puddle when raining)
+Now you've done it! You're covered in sticky, albeit fine smelling, mud. Your "Scalding Lake" T-shirt is all soiled, too. You just washed it last harvest!
+# + look (dry)
+There's a dried out mud puddle. It's all caked and cracked like the kind rock stars are always standing on.
+# + look (wet)
+Not much to see. 'Sides that big mud puddle. 
+
+
+# That Hay Bale
+# + look
+Well, there's that big bale of hay over there.
+# + jump into hay
+You've not known much better than a roll in the hay alone.
+You leap in the hay like a two years old boy. Uh oh. The hay sticks to your muddy body. You're a walking hay bale! Just like that one guy from that one show!
+
+# Jhonka cave
+# + look
+There's a little cave with a little door with a little note on it.
+# + look (kerrek dead, before riches)
+There's a disgusting little Jhonka hopping around outside a little cave.A fat pile of riches lies next to him.
+# + look (after kerrek dead, after take riches)
+There's a disgusting little Jhonka hopping around outside a little cave. 
+# + (walk in haystack)
+Hey, nice disguise! The Jhonka doesn't seem to notice you.
+# + steal riches
+Oh OH! A stiff breeze blew all the hay and, surprisingly, the mud off of you! "You take my riches?!" growls the Jhonka.
+# + no
+"Okay. Lemme know if you see riches anywhere," he grunts and goes back to his hopping. You smooth talker, you.
+
+# Outside Giant Inn
+# + look
+There's a giant Inn here. It takes up, like, the entire screen.
+# + open door
+You open the door and step inside the inn.
+
+# Inside Giant Inn
+# + look
+What a dump! Only one bed and no minibar? The Innkeeper stands behind the desk and there's a door that's closed.
+# + look (night)
+It's still dark out. The grimey old Innkeeper is gone and he left the pantry open. 
+
+# + give baby
+"Well lookit that little guy!" says the Innkeeper. "You want a treat, do ya? What do babies like?" He fishes around in his pockets.
+"Um, how bout my medication!" You grab the bottle of pills before he can force them on the baby. "Hey, those were for him!"
+# + get room
+"Okay, youngster," says the decrepit old person. "Just bed on down for the night and I'm sure I'll remember to collect the fee come morning."
+Night falls like a bad power point presentation.
+What an uncomfortable bed! You sleep for maybe 20 minutes before the extreme pain in your spine forces you to get up.
+# + get pot
+You reach way up to the top shelf.
+Oh great! Now you can't see a thing and your head is covered in highly flammable horse grease. You better get out of here before that disgusting old man comes back.
+# + (exiting inn with pot on head)
+Phew! You discard the big black pot and wipe the horse grease from your eyes. The hood of your robe is still covered in highly flammable horse grease, though.
+
+# Wavy Tree (Ned)
+# + look
+Nothing special here except for that weird wavy tree.
+
+# Outside Mysterious (Ned's) Cottage
+# + look
+There's a run-of-the-mill non-burninated thatched-roof cottage here. Its stonework looks a little shoddy.
+# + move rock
+You slide the stone over to reveal a little hole. If only you could cut off your arms, legs, and head you might be able to squeeze through!
+# + put baby into the hole
+Deploying Q-Baby...
+Way to go, baby! It got the cottage door opened and headed off to a new life. He becomes Valedictorian of his graduating class, goes to Scalding Lake State, gets a degree in Advanced Peasantry and lands a job at Thatch-Pro: building better cottages for a better tomorrow.
+You grow apart and the letters from him become fewer and fewer. He develops a severe mead problem and blames you for never being there.
+
+# Inside Mysterious (Ned's) Cottage
+# + look
+This place could use some serious sprucing of the 'up' variety. There's a dresser over there and a broom kind of silhouetted all mysterious like. 
+# + open drawer
+There's a vintage peasant robe in there! Just like grampa used to wear.
+# + get robe
+Yeah! Get that robe!
+# + close drawer
+Aww, how thoughtful and boring of you. Break into this peasant's home, steal his clothes, but remember to tidy up after yourself. You're a real saint. 	Mysterious cottage
+
+
+# Anywhere
+# + wear robe
+You slip into the vintage robe. It smells like grampa's lap. Now you're lookin like a serious peasant.
+# + look (when in hay disguise)
+Right now, you see a bunch of hay. 
+
+
+# Burninated Trees / Lantern
+# + look
+A signal lantern of some kind hangs from a burninated tree.
+# + look (night)
+A burning signal lantern hangs from a severely burninated tree. 
+# + (walking under candle in burninated trees)
+Whoa! The horse grease on your robe caught fire! You're a for-real peasant now.
+# + (exiting on fire)
+Man, screens sure get light fast around here.
+
+# Mountain Pass / Knight
+# + look
+You've reached the mountain pass that leads to Trogdor's lair. A royal knight blocks the entrance.
+# + talk knight
+Lookin good, Mr. Peasant. Good luck with ol' Beefy Arm up there.
+This is it! You can finally get revenge on Trogdor! Nice work so far, stupid!
+Please insert floppy disk 2 into Drive B and press enter.
+Disk read error. Please insert floppy disk 2 into Drive B and press enter.
+
+
+# River and Stone
+# + look
+Not much to see. River's got a rock in it.
+
+# Yellow Tree
+# + look
+Rushing river b/w yellow tree.
+
+# Waterfall
+# + look
+There's a beautiful, magical waterfall cascading down the cliff side.
+
+# Cliff Base
+# + look 
+You're at the base of a very climbable cliff that leads to Trogdor's lair. This cliff is huge - the kind where rocks start falling down the minute you try to climb it.
+# + climb
+With a new determination you dig your fingers into the cliff face and begin to haul yourself up the mountain like you were in a sports drink commercial
+The mountain starts rumbling and big loose boulders start tumblin down. You'd best avoid thems.
+
+# Cliffland Heights
+# + look
+Wow! It sure gets creepy fast around here! What with all the lightning and scary cave entrances.
+# +  (successfully climbing the cliff without dying)
+Nice jorb climbing the cliff. You have a real way with those arrow keys.
+
+# Trogdor's Outer Sanctum / Outer Cave
+# + look
+There are 3 openings with a little cliff in front of each. A beaded curtain hangs in a doorway on the far wall.
+# + (approached by first keeper)
+Foolish peasant! How dare you enter this fairly sacred chamber!
+You explain that you're here to smote Trogdor and if he doesn't get outta your way, him too!
+You cannot vanquish Trogdor! Only the Three Keepers of Trogdor hold the tools with which to destroy the Burninator. The Trog-Shield, the Trog-Helmet, and the Trog-Sword.
+And the only way we'll give them up is if you answer the three Trog-Trivia questions correctly.
+Unless you happen to have something to eat on ya. Then we could forego my question.
+# + give sandwich
+No way! I was just kidding but you've really got a meatball sub. This rules! Here, you can have the Trog-Shield.
+# + (approached by second keeper)
+Hold, peasant! You must answer the second dreaded Trog-Trivia question!
+Or we could call it even if I had an ice cold drink right now.
+# + give soda
+Sweet deal, peasant. I underestimated you. Wear this Trog-Helmet with style.
+# + (approached by third keeper)
+Think you're pretty hot stuff, eh? Let's see you answer the deadly and pretty impossible THIRD TROG-TRIVIA QUESTION!
+That is, unless you've got something for my lower back. Man, it's killin me!
+# + give pills
+Whoa! Where'd you find this stuff? I don't think this is even legal anymore. These babies'll definitely smote LUMBAGO the, um, LOWER BACKINATOR!!
+The fabled Trog-Sword is yours. You now have the means to strike down Trogdor. Good luck, peasant.
+
+# Trogdor's Posh Lair / Inner Cave
+# + look
+You're in a giant cavern which houses a giant dragon. You didn't shrink or anything. 
+# + (enter Trogdor's cave)
+the beaded curtain slams shut behind you. There's no turning back now.
+# + throw sword
+This is it! You hurl the Trog-Sword with all your might at the sleeping Burninator.
+Now you've done it! Trogdor's awake and the Trog-Sword doesn't seem to be doing a whole lot.
+Your legs lock in fear, your eyes glaze over and you wish for some Depeasant adult undergarments. But you think you hear Trogdor whimpering!
+Aw crap, that's you whimpering. At least your voice still works, I guess.
+# + talk trogdor
+You scream that your name is Rather Dashing and that Trogdor burninated your cottage and you're here for revenge!
+"Sup, mortal," booms Trogdor. "I really appreciate you making the effort to come all the way up here and vanquish me and all. But, I'm kinda indestructible."
+"Yeah, I can't be killed. I'm surprised nobody mentioned that to you. I'll admit though, you've gotten farther than anybody else ever has. I bet they'll make a statue or something in honor of you somewheres."
+"I can honestly say it'll be a pleasure and an honor to burninate you, Rather Dashing."
+Aw that sure was nice of him!
+Congratulations! You've won! No one can kill Trogdor but you came closer than anybody ever! Way to go!
+
+# Credits
+Peasant's Quest
+Written by Matt, Jonathan, and Mike
+Programmed by Jonathan
+Graphics by Mike and Matt
+Quality Assurance Types:
+Neal Stamper,
+Don Chapman, and John Radle
+Nice work on winning and everything.
+THE END
