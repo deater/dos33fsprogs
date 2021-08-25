@@ -1,4 +1,3 @@
-
 # Intro 0
 YOU are Rather Dashing, a humble peasant living in the peasant kingdom of Peasantry.
 You return home from a vacation on Scalding Lake only to find that TROGDOR THE BURNINATOR has burninated your thatched roof cottage along with all your goods and services.
@@ -17,6 +16,8 @@ Okay, go for it.
 # Your Burninated Cottage (B3)
 # + look
 The remains of your thatched-roof cottage lie before you. You swear revenge against Trogdor.
+# + get map (in right spot?)
+You tuck it nice-like into your short, short pants. Type MAP at nearly any time to check the map.
 
 # Pebble Lake West
 # + look
@@ -95,6 +96,9 @@ You reach into the bush to snag you some berries but instead find a Super Trinke
 What a depressing little cottage. It reeks of single parent. A lady rocks her baby in a chair. A mostly empty shelf sits against one wall.
 # + look (after lady leaves)        
 What a depressing little cottage. It reeks of single parent. There is one of those self-rocking chairs. A mostly empty shelf sits against one wall. 
+# + talk lady
+"Hello, I'm-" you start but the lady cuts you off
+"Okay, here's why I let you in here," she explains. "My husband got squished by Trogdor. And to make matters worse, the insurance riches I got were stolen by Jhonka. Go steal them back for us and I'll give you something great."
 # + get chicken feed
 You used to eat this stuff like crazy when you were a kid and your parents weren't watching (which was all too often). You grab several large handfuls.
 # + give riches
@@ -111,6 +115,8 @@ This place is dead anyway.
 Why it's half a lake.
 # + look (when the old man is fishing)
 Why it's half a lake.With a fisherman in it. And he's fishing! 
+# + talk man (before throwing chicken feed in lake)
+You holler at the old man about Trogdor, but he just grumbles about the fish not biting. "Must be using the wrong bait..." he says, suggestively.
 # + throw chicken feed
 You toss the feed into the lake. You shed a tear for each one. "Goodbye, Monty" you sniff. "Bye Delga, Rasputin. Farewell, Combledon!" and so forth.
 Woah! That crotchety old man just caught a pantload of fish! "Now I can get back to running the inn," he says and rows to shore and hauls his boat out and cleans, guts, and filets all the fish and a buncha other stuff we didn't animate.
@@ -158,6 +164,8 @@ There's a little cave with a little door with a little note on it.
 There's a disgusting little Jhonka hopping around outside a little cave.A fat pile of riches lies next to him.
 # + look (after kerrek dead, after take riches)
 There's a disgusting little Jhonka hopping around outside a little cave. 
+# read note (before killing Kerrek)
++ It says "scared of kerrek. go way. -j"
 # + (walk in haystack)
 Hey, nice disguise! The Jhonka doesn't seem to notice you.
 # + steal riches
@@ -168,6 +176,8 @@ Oh OH! A stiff breeze blew all the hay and, surprisingly, the mud off of you! "Y
 # Outside Giant Inn
 # + look
 There's a giant Inn here. It takes up, like, the entire screen.
+# + read note (before feed in lake)
+It says, "Gone Fishin" just like that grog coozie your cousin got you.
 # + open door
 You open the door and step inside the inn.
 
@@ -176,11 +186,14 @@ You open the door and step inside the inn.
 What a dump! Only one bed and no minibar? The Innkeeper stands behind the desk and there's a door that's closed.
 # + look (night)
 It's still dark out. The grimey old Innkeeper is gone and he left the pantry open. 
-
+# + talk man
+"If you're interested in staying the night, just type 'get a room.'"
 # + give baby
 "Well lookit that little guy!" says the Innkeeper. "You want a treat, do ya? What do babies like?" He fishes around in his pockets.
 "Um, how bout my medication!" You grab the bottle of pills before he can force them on the baby. "Hey, those were for him!"
-# + get room
+# + get a room (without robe)	
+"I only serve peasants here, fancypants!" barks the old guy. "Where's your robe?"
+# + get room (with robe)
 "Okay, youngster," says the decrepit old person. "Just bed on down for the night and I'm sure I'll remember to collect the fee come morning."
 Night falls like a bad power point presentation.
 What an uncomfortable bed! You sleep for maybe 20 minutes before the extreme pain in your spine forces you to get up.
@@ -235,7 +248,22 @@ Man, screens sure get light fast around here.
 # Mountain Pass / Knight
 # + look
 You've reached the mountain pass that leads to Trogdor's lair. A royal knight blocks the entrance.
-# + talk knight
+# + talk knight (beginning)
+You explain your situation to the knight. That Trogdor burninated your cottage and you've sworn revenge. You ask for passage up the mountain to settle your score. (Press RETURN to advance through conversations)
+"Hang on there, Trogdorkilla," says the knight. "I can only allow actual peasants up the mountain pass to face Trogdor. And you CLEARLY are not one."
+"Look, Dragonheart..."
+"You don't STINK like a peasant."
+"You don't DRESS like a peasant."
+"And you're definitely not ON FIRE like a peasant."
+"Once you're those 3 things, come back and maybe we can talk."
+"Be sure to LOOK around lots. Talk to everyone you see and ASK ABOUT stuff. Type HELP if you get confused and INVENTORY to see your worldly stuff. Type SAVE or LOAD to save or load your game. Duh."
+# + talk knight (with kerrek's belt)
+"Frankly, Matthew Broderick, you sure stink like a peasant. But you still don't DRESS like a peasant and you're not ON FIRE like a peasant."
+# + talk knight (with ned's robe, on fire or not)
+"My dear Adso, you are dressed well but you don't STINK and you're not ON FIRE. Let us instead exercise our brains and try to solve this tantalizing conundrum."
+# + talk knight (after acquiring Kerrek's belt and Naked Ned's robe)
+"Almost there, Dirk the Daring. You stink like a peasant and you dress like one too. But you're clearly still not ON FIRE."
+# + talk knight (after have all three)
 Lookin good, Mr. Peasant. Good luck with ol' Beefy Arm up there.
 This is it! You can finally get revenge on Trogdor! Nice work so far, stupid!
 Please insert floppy disk 2 into Drive B and press enter.
