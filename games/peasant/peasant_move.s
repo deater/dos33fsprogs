@@ -85,7 +85,7 @@ done_movex:
 	cmp	#45				; if <45 then off screen
 	bcc	peasant_y_negative		; blt
 
-	cmp	#150				; if >=150 then off screen
+	cmp	#160				; if >=150 then off screen
 	bcs	peasant_y_toobig		; bge
 
 	; check collide
@@ -126,7 +126,7 @@ peasant_y_negative:
 
 	jsr	new_map_location
 
-	lda	#150		; new X location
+	lda	#160		; new X location
 
 	jmp	done_movey
 

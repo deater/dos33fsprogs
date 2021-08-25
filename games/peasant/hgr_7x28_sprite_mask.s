@@ -15,6 +15,9 @@
 
 hgr_draw_sprite_7x28:
 
+	lda	#0
+	sta	MASK_COUNTDOWN
+
 	; set up pointers
 	lda	INL
 	sta	h728_smc1+1
@@ -31,6 +34,30 @@ hgr_draw_sprite_7x28:
 
 	ldx	#0			; X is row counter
 hgr_7x28_sprite_yloop:
+	lda	MASK_COUNTDOWN
+	and	#$3			; only update every 4th
+	bne	mask_good
+
+	txa
+	pha				; save X
+
+	; recalculate mask
+	txa
+	clc
+	adc	CURSOR_Y
+	tax
+	ldy	CURSOR_X
+	jsr	update_bg_mask
+
+
+        pla				; restore X
+	tax
+
+mask_good:
+	lda	MASK
+	bne	draw_sprite_skip
+
+
 	txa				; X is current row
 
 	clc
@@ -52,6 +79,11 @@ h728_smc3:
 h728_smc1:
 	ora	$d000,X		; or in sprite
 	sta	(GBASL),Y	; store out
+
+
+draw_sprite_skip:
+
+	inc	MASK_COUNTDOWN
 
 	inx
 	cpx	#28
@@ -125,6 +157,73 @@ restore_yloop:
 	inx
 	cpx	#28
 	bne	restore_yloop
+
+	rts
+
+
+	;===================
+	; update_bg_mask
+	;===================
+	; newx/7 in Y
+	; newy in X
+	; updates MASK
+update_bg_mask:
+
+			; rrrr rtii	top 5 bits row, bit 2 top/bottom
+
+	txa
+	and	#$04	; see if odd/even
+	beq	bg_mask_even
+
+bg_mask_odd:
+	lda	#$f0
+	bne	bg_mask_mask		; bra
+
+bg_mask_even:
+	lda	#$0f
+bg_mask_mask:
+
+	sta	MASK
+
+	txa
+	lsr
+	lsr		; need to divide by 8 then * 2
+	lsr		; can't just div by 4 as we need to mask bottom bit
+	asl
+	tax
+
+	lda	gr_offsets,X
+	sta	BASL
+	lda	gr_offsets+1,X
+	sta	BASH
+
+	lda	(BASL),Y
+	and	MASK
+
+	cmp	#$30
+	beq	mask_false		; true if color 3
+
+	cmp	#$03
+	beq	mask_false
+
+	;bne	mask_false
+
+mask_true:
+	lda	#$ff
+	sta	MASK
+	rts
+
+mask_false:
+	lda	#$00
+	sta	MASK
+	rts
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 
 	rts
 

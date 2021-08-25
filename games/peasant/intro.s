@@ -106,11 +106,11 @@ escape_handler:
 
 	;=========================
 	; init peasant position
-	; draw at 18,107
+	; draw at 18,108
 
 	lda	#18
 	sta	PEASANT_X
-	lda	#107
+	lda	#108
 	sta	PEASANT_Y
 
 	lda	#PEASANT_DIR_RIGHT
