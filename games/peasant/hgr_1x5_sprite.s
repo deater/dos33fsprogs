@@ -17,26 +17,17 @@ hgr_draw_sprite_1x5:
 
 	ldx	#0
 hgr_1x5_sprite_yloop:
-	txa
-	pha
-
+	txa				; row
 	clc
-	adc	CURSOR_Y
+	adc	CURSOR_Y		; add in y offset
 
-	ldx	#0
-	ldy	#0
+	; calc GBASL/GBASH from lookup table
 
-	; calc GBASL/GBASH
-;	jsr	HPOSN	; (Y,X),(A)  (values stored in HGRX,XH,Y)
-
-	tax
-	lda	hposn_low,X
+	tay
+	lda	hposn_low,Y
 	sta	GBASL
-	lda	hposn_high,X
+	lda	hposn_high,Y
 	sta	GBASH
-
-	pla
-	tax
 
 	ldy	CURSOR_X
 

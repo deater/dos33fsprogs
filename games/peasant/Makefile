@@ -106,7 +106,7 @@ PEASANT2:	peasant2.o
 peasant2.o:	peasant2.s zp.inc \
 		graphics/graphics_peasant2.inc sprites/peasant_sprite.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_7x30_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
+		hgr_7x30_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
 		peasant_move.s

@@ -1,9 +1,12 @@
 
 	;===============================================
-	; hgr 7x30 draw sprite
+	; hgr 7x30 draw sprite, with bg mask in GR $400
 	;===============================================
 	; SPRITE in INL/INH
 	; Location at CURSOR_X CURSOR_Y
+
+	; for now, BG mask is only all or nothing
+	; so we just skip drawing if behind
 
 	; left sprite AT INL/INH
 	; right sprite at INL/INH + 14

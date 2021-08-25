@@ -167,7 +167,7 @@ score_text:
 .include "hgr_font.s"
 .include "draw_box.s"
 .include "hgr_rectangle.s"
-.include "hgr_7x30_sprite.s"
+.include "hgr_7x30_sprite_mask.s"
 .include "hgr_1x5_sprite.s"
 ;.include "hgr_save_restore.s"
 .include "hgr_partial_save.s"
