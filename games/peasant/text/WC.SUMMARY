@@ -1,0 +1,18 @@
+Lines:	630
+Words:	7896
+Bytes:	43694	gzip: 17097 lzsa: 18915
+
+    272 the	    220 a	    188 you	    170 to	    166 You
+    147 and	     97 that	     97 of	     93 in	     77 your
+     77 it	     67 on	     60 is	     57 I	     53 like
+     48 for	     44 this	     42 with	     40 here	     39 have
+     38 don't	     37 up	     37 but	     36 are	     34 get
+     34 be	     34 all	     33 from	     32 there	     32 one
+     32 not	     30 little	     30 It	     28 There's	     28 just
+     28 '	     27 Trogdor	     27 The	     27 some	     27 A
+     26 peasant	     26 out	     26 now	     26 got	     25 baby
+     25 at	     24 He	     24 already	     23 That	     23 says
+
+
+./dump_text  < responses_peasantry.txt    | sort | uniq -c | sort -rn 
+column -x < top50.txt

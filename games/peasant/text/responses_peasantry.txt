@@ -251,8 +251,8 @@ Your attempts at conversation are met with horse grunts and tail flaps. Which is
 
 # (Walk in the path of Dongolev's arrows)
 Hopefully this guy will have some sense and not shoot you.
-# {Dongolev shoots you in the head} That
-guy has no sense. He shot you. Dumb, dumb, dumb. Nice one, William Tell. You dead. Thanks for playing.
+# {Dongolev shoots you in the head}
+That guy has no sense. He shot you. Dumb, dumb, dumb. Nice one, William Tell. You dead. Thanks for playing.
 # + haldo
 the archer stops arching and turns to you. "My brother told you to tell me haldo? He must want to start the old business back up!"
 # + haldo (before talking to Mendelev)
@@ -507,9 +507,9 @@ He dead. He wasn't fat, he was just big boned! Poor pig-man.
 'Me llamo Julio,' you begin... It seems only to further anger the already tempramental Kerrek. That stupid 'Learn Kerrek in 3 Weeks' cassette did nothing for you!
 
 
-#########
+##############
 # Mud Puddle
-#########
+##############
 
 # + (walk into puddle when raining)
 Now you've done it! You're covered in sticky, albeit fine smelling, mud. Your "Scalding Lake" T-shirt is all soiled, too. You just washed it last harvest!
@@ -1208,3 +1208,98 @@ Right now, you see a bunch of hay.
 You used to have one, before the great item blight of 402. Check your INVENTORY to read about it.
 # + look (at something currently in your inventory)
 You've totally got one of those! Check your INVENTORY to give'r a serious looksee.
+
+#################
+# Inventory
+#################
+
+# arrow
+Boy, you sure know how to pick
+em! This arrow's kinda pointy even!!
+# baby
+Awww! Peasant babies are
+adorable. No wonder they fetch
+such a pretty penny on the black
+market.
+# kerrek belt
+Phew! This thing stinks like all
+getout. Why couldn't the Kerrek
+have kidnapped a hot wench or
+something that you coulda saved?
+# chicken feed
+Woah! Gold nuggets! Oh
+wait...This is just chicken
+feed. Crap.
+# SuperTime FunBow TM
+This is a pretty fancy bow.
+You're suprised those shady
+archers give away such decent
+prizes. You half-expected gold
+fish in a bag.
+# monster maskus
+Man, those pagans sure can make
+a freaky lookin mask when they
+want to.  It's like those theatre
+masks' evil uncle or something
+# pebbles
+Woah! Gray chicken feed! Oh
+wait... those are just pebbles.
+Heavier than they look, though.
+# pills
+The innkeeper's medication says
+it's supposed to tread "general
+oldness.  May cause checkers 
+playing, hiked-up pants, and
+overall pee smell."
+# riches
+Riches, dude. Riches. That
+peasant lady totally has to
+share some of this with you,
+right? At least that shiny,
+clawed sceptre thing.
+# robe
+A propa peasant robe. It smells
+freshly washed and has the
+initials 'N.N' sewn onto the
+tag.
+# soda
+A full bottle of popular soda.
+# meatball sub
+A piping hot meatball sub fresh
+from the bottom of a dingy old
+well.  All you need is a bag of
+chips and you've got a combo
+meal!
+# super trinket
+This super trinket is weird. It
+looks like it could either kill
+you or make you the hit of your
+Christmas party.
+# TrogHelmet
+The TrogHelmet is not screwing
+around.  It's a serious helmet.
+It also protects against
+harmful UV rays.
+# TrogShield
+Behold the TrogSheild! No
+seriously, behold it.  There's
+no way Trogdor's fire breath can
+penetrate this thing.
+# TrogSword
+The TrogSword is for real.
+Hands-down the coolest item in
+this whole game. You can't wait
+to lop off that beefy arm of
+Trogdor's with this guy.
+# ???
+# t-shirt
+This has got to be your favorite
+T-Shirt ever. Oh, the times you
+had at Scalding Lake. Canoeing,
+fishing, stoning heathens. What
+a Blast!
+#
+# Note, greyed out could maybe print ---- for strikethrough
+You no longer has this item.
+Hit return to go back to list
+Press ESC or Backspace to exit
