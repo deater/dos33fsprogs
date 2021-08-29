@@ -93,12 +93,13 @@ graphics_peasant4.inc:	\
 ###########
 
 priority_peasant1.inc:	\
+	waterfall_priority.lzsa \
 	todo_priority.lzsa
 	echo "gary_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_peasant1.inc
 	echo "top_prints_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant1.inc
 	echo "wishing_well_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant1.inc
 	echo "leaning_tree_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant1.inc
-	echo "waterfall_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant1.inc
+	echo "waterfall_priority_lzsa: .incbin \"waterfall_priority.lzsa\"" >> priority_peasant1.inc
 
 
 ###
@@ -335,6 +336,15 @@ todo_priority.lzsa:	todo_priority.gr
 
 todo_priority.gr:	todo_priority.png
 	$(PNG2GR) todo_priority.png todo_priority.gr
+
+####
+
+waterfall_priority.lzsa:	waterfall_priority.gr
+	$(LZSA) -r -f2 waterfall_priority.gr waterfall_priority.lzsa
+
+waterfall_priority.gr:	waterfall_priority.png
+	$(PNG2GR) waterfall_priority.png waterfall_priority.gr
+
 
 ###
 
