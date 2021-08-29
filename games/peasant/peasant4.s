@@ -34,6 +34,9 @@ peasant_quest:
 
 	jsr	update_map_location
 
+	; update score
+
+	jsr 	update_score
 
 	;=============================
 	;=============================
@@ -93,12 +96,7 @@ new_location:
 
 	; put score
 
-	lda	#<score_text
-	sta	OUTL
-	lda	#>score_text
-	sta	OUTH
-
-	jsr	hgr_put_string
+	jsr	print_score
 
 	;====================
 	; save background
@@ -151,9 +149,6 @@ game_over:
 peasant_text:
 	.byte 25,2,"Peasant's Quest",0
 
-score_text:
-	.byte 0,2,"Score: 0 of 150",0
-
 
 
 
@@ -178,6 +173,8 @@ score_text:
 .include "gr_copy.s"
 
 .include "peasant_move.s"
+
+.include "score.s"
 
 .include "new_map_location.s"
 

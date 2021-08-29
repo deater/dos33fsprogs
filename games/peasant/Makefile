@@ -96,7 +96,7 @@ peasant1.o:	peasant1.s zp.inc \
 		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
-		peasant_move.s
+		peasant_move.s score.s
 	ca65 -o peasant1.o peasant1.s -l peasant1.lst
 
 ###
@@ -111,7 +111,7 @@ peasant2.o:	peasant2.s zp.inc \
 		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
-		peasant_move.s
+		peasant_move.s score.s
 
 	ca65 -o peasant2.o peasant2.s -l peasant2.lst
 
@@ -127,7 +127,7 @@ peasant3.o:	peasant3.s zp.inc \
 		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
-		peasant_move.s
+		peasant_move.s score.s
 	ca65 -o peasant3.o peasant3.s -l peasant3.lst
 
 ###
@@ -142,12 +142,8 @@ peasant4.o:	peasant4.s zp.inc \
 		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
-		peasant_move.s
+		peasant_move.s score.s
 	ca65 -o peasant4.o peasant4.s -l peasant4.lst
-
-
-
-
 
 ###
 

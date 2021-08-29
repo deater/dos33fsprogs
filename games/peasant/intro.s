@@ -120,6 +120,10 @@ escape_handler:
 	sta	PEASANT_XADD
 	sta	PEASANT_YADD
 
+	sta	SCORE_HUNDREDS
+	sta	SCORE_TENS
+	sta	SCORE_ONES
+
 	lda	#4
 	sta	MAP_X
 	lda	#1

@@ -25,9 +25,6 @@ peasant_quest:
 				; Y=0, A=0 after this called
 
 
-
-
-
 	lda	#0
 	sta	FRAME
 
@@ -35,6 +32,9 @@ peasant_quest:
 
 	jsr	update_map_location
 
+	; update score
+
+	jsr	update_score
 
 	;=============================
 	;=============================
@@ -94,12 +94,7 @@ new_location:
 
 	; put score
 
-	lda	#<score_text
-	sta	OUTL
-	lda	#>score_text
-	sta	OUTH
-
-	jsr	hgr_put_string
+	jsr	print_score
 
 	;====================
 	; save background
@@ -152,12 +147,6 @@ game_over:
 peasant_text:
 	.byte 25,2,"Peasant's Quest",0
 
-score_text:
-	.byte 0,2,"Score: 0 of 150",0
-
-
-
-
 
 .include "decompress_fast_v2.s"
 .include "wait_keypress.s"
@@ -183,6 +172,8 @@ score_text:
 .include "peasant_move.s"
 
 .include "parse_input.s"
+
+.include "score.s"
 
 .include "keyboard.s"
 
