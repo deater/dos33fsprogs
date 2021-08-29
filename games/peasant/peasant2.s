@@ -188,6 +188,8 @@ peasant_text:
 
 .include "version.inc"
 
+.include "inventory.s"
+
 help_message:
 .byte   0,43,24, 0,253,82
 .byte   8,41,"I don't understand. Type",13

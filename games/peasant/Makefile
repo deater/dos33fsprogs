@@ -111,7 +111,7 @@ peasant2.o:	peasant2.s zp.inc \
 		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
-		peasant_move.s score.s
+		peasant_move.s score.s inventory.s
 
 	ca65 -o peasant2.o peasant2.s -l peasant2.lst
 
