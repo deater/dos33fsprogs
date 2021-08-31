@@ -177,6 +177,8 @@ peasant_text:
 
 .include "parse_input.s"
 
+.include "inventory.s"
+
 .include "keyboard.s"
 
 .include "wait_a_bit.s"

@@ -44,23 +44,29 @@ hgr_text_box:
 	adc	#0
 	sta	OUTH
 
-;
-;
-;
+	; fallthrough
 
+	;=======================
+	; disp_put_string
+	;	OUTL:OUTH has co-ords followed by string
+	;	CR (13) goes to next line
+disp_put_string:
         ldy     #0
         lda     (OUTL),Y
         sta     CURSOR_X
 	sta	SAVED_X
 
-        jsr     inc_outl
-        lda     (OUTL),Y
-        sta     CURSOR_Y
-        jsr     inc_outl
+	jsr     inc_outl
+	lda     (OUTL),Y
+	sta     CURSOR_Y
+	jsr     inc_outl
+
+disp_one_line:
+
 disp_put_string_loop:
-        ldy     #0
-        lda     (OUTL),Y
-        beq     disp_put_string_done
+	ldy     #0
+	lda     (OUTL),Y
+	beq     disp_put_string_done
 	cmp	#13
 	beq	disp_end_of_line
 

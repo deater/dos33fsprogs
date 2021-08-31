@@ -8,7 +8,7 @@ parse_input:
 
 parse_copy:
 	cmp	#'C'
-	bne	parse_look
+	bne	parse_inventory
 
 	; want copy
 	lda	#NEW_FROM_DISK
@@ -19,6 +19,14 @@ parse_copy:
 
 	jmp	done_parse_message
 
+
+parse_inventory:
+	cmp	#'I'
+	bne	parse_look
+
+	jsr	show_inventory
+
+	jmp	restore_parse_message
 
 parse_look:
 	cmp	#'L'
@@ -72,6 +80,9 @@ finish_parse_message:
         jsr     hgr_text_box
 
 	jsr	wait_until_keypress
+
+
+restore_parse_message:
 
 	jsr	hgr_partial_restore
 

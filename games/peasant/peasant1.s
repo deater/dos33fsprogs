@@ -173,6 +173,8 @@ peasant_text:
 
 .include "parse_input.s"
 
+.include "inventory.s"
+
 .include "score.s"
 
 .include "keyboard.s"
