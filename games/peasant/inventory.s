@@ -5,6 +5,10 @@
 	;=====================
 show_inventory:
 
+	lda	#0
+	sta	INVENTORY_X
+	sta	INVENTORY_Y
+
 	;====================
 	; draw text box
 
@@ -36,12 +40,15 @@ show_inventory:
 
 	jsr	disp_put_string
 
+	;===============
 	; left column
 
 	lda	#28
 	sta	CURSOR_Y
 
 	ldy	#0
+	lda	#1
+	sta	INVENTORY_MASK
 left_column_loop:
 
 	lda	#4
@@ -50,12 +57,25 @@ left_column_loop:
 	tya
 	pha
 
+	lda	INVENTORY_MASK
+	and	INVENTORY_1
+	beq	left_questionmarks
+
+left_have_item:
 	clc
 	lda	left_item_offsets,Y
 	adc	#<item_strings
 	sta	OUTL
 	lda	#0
 	adc	#>item_strings
+	jmp	left_print_item
+
+left_questionmarks:
+	lda	#<unknown_string
+	sta	OUTL
+	lda	#>unknown_string
+
+left_print_item:
 	sta	OUTH
 
 	jsr	disp_one_line
@@ -65,6 +85,8 @@ left_column_loop:
 	adc	#8
 	sta	CURSOR_Y
 
+	asl	INVENTORY_MASK
+
 	pla
 	tay
 	iny
@@ -72,6 +94,8 @@ left_column_loop:
 	bne	left_column_loop
 
 	; extra for riches
+
+
 
 
 	;================

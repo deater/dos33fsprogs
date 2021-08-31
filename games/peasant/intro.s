@@ -129,6 +129,9 @@ escape_handler:
 	lda	#1
 	sta	MAP_Y
 
+	lda	#$AA
+	sta	INVENTORY_1
+
 	rts
 
 
