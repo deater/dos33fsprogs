@@ -459,6 +459,9 @@ int main(int argc, char **argv) {
 		fprintf(stderr,"Warning!  x1 should be a multiple of 7\n");
 	}
 
+	printf("; %d %d %d %d\n",x1,y1,x2,y2);
+	printf("sprite:\n");
+
 	for(y=y1;y<y2;y++) {
 		printf("\t.byte ");
 		for(x=x1/7;x<=x2/7;x++) {

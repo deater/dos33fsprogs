@@ -43,6 +43,10 @@ hgr_1x8_sprite_yloop:
 	lda	(GBASL),Y
 hds_smc1:
 	eor	$D000,X		; not $0000 or it will make it ZP
+
+invert_smc1:
+	eor	#$00		; invert
+
 	sta	(GBASL),Y
 
 	inx
