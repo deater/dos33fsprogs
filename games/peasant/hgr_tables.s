@@ -75,34 +75,3 @@ right_masks:
 	.byte $81,$83,$87, $8F,$9F,$BF,$FF
 
 
-
-
-
-
-
-fast_hposn:
-
-
-	lda	VGI_RY1
-	tax
-	lda	hposn_low,X
-	sta	GBASL
-	lda	hposn_high,X
-	sta	GBASH
-
-	lda	VGI_RX1
-	tax
-	ldy	div7_table,X
-
-	tya
-	lsr
-
-	lda	HGR_COLOR	; if on odd byte rotate bits
-	sta	HGR_BITS
-	bcc	done_hposn
-
-	jsr	COLOR_SHIFT
-
-done_hposn:
-	rts
-

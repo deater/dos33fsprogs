@@ -30,7 +30,7 @@ draw_box:
 	; draw lines
 
 	ldx	#2			; color is purple
-	lda     COLORTBL,X
+	lda     colortbl,X
         sta     HGR_COLOR
 
 	; draw outer rectangle, x+6, y+5      x-6, y-5

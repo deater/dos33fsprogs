@@ -26,9 +26,6 @@ vgi_simple_rectangle:
 
 simple_rectangle_loop:
 
-	; FIXME: if not black/white probably need to run
-	;	color swap based on what column we are in
-
 	lda	VGI_RCOLOR
 
 	and	#$f
@@ -38,19 +35,13 @@ simple_rectangle_loop:
 
 	sta	HGR_COLOR
 
-done_colors:
-
 	; get ROW into (GBASL)
-
-	; urgh we depend on HGR_BITS being properly set
+	; fast_hposn shifts color for us too
 
 	jsr	fast_hposn
 
 	; Y is already the RX1/7
 
-	; adjust color if in striped mode
-
-not_striped:
 
 	; copy the XRUN
 
@@ -189,4 +180,36 @@ colortbl:
 	; black1, green, purple, white1
 	; black2, orange, blue, white2
 .byte	$00,$2A,$55,$7F,$80,$aa,$D5,$FF
+
+
+
+	;========================
+	; fast hposn
+	;========================
+	; like HPOSN but faster (uses lookup tables)
+	; need to set up lookup tables before using
+fast_hposn:
+
+	lda	VGI_RY1
+	tax
+	lda	hposn_low,X
+	sta	GBASL
+	lda	hposn_high,X
+	sta	GBASH
+
+	lda	VGI_RX1
+	tax
+	ldy	div7_table,X
+
+	tya
+	lsr
+
+	lda	HGR_COLOR	; if on odd byte rotate bits
+	sta	HGR_BITS
+	bcc	done_hposn
+
+	jsr	colorshift
+
+done_hposn:
+	rts
 

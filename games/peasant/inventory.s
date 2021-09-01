@@ -39,9 +39,6 @@ draw_inv_box:
 	lda	#135
 	sta	BOX_Y2
 
-
-
-
 	jsr	draw_box
 
 	;===================
