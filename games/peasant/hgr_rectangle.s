@@ -1,12 +1,12 @@
 ; HGR Rectangle
 
-; VGI Rectangle test
+; Note: based on VGI code, but stripped out all the fancy features
+;	like dithering
 
-COLOR_MODE	= TEMP0
+
 OTHER_MASK	= TEMP1
 XRUN		= TEMP2
 
-	; FAST
 	;=================================
 	; Simple Rectangle
 	;=================================
@@ -18,82 +18,37 @@ XRUN		= TEMP2
 ;	VGI_RCOLOR2	= P5	; only for dither
 
 	;==================================
-	; VGI Simple Rectangle
+	; Simple Rectangle
 	;==================================
+	; assume solid color
 
 vgi_simple_rectangle:
-	lda	#0
-	sta	COLOR_MODE
 
 simple_rectangle_loop:
 
-	lda	COLOR_MODE
-	beq	simple_colors
-	bmi	striped_colors
-	bpl	handle_dither
-
-
-simple_colors:
+	; FIXME: if not black/white probably need to run
+	;	color swap based on what column we are in
 
 	lda	VGI_RCOLOR
-
-	asl		; nibble swap by david galloway
-	adc	#$80
-	rol
-	asl
-	adc	#$80
-	rol
-
-	sta	VGI_RCOLOR
 
 	and	#$f
 	tax
 
-	lda	COLORTBL,X
+	lda	colortbl,X
+
 	sta	HGR_COLOR
-	jmp	done_colors
-
-handle_dither:
-
-	lda	COUNT
-	and	#$1
-	beq	deven_color
-dodd_color:
-	lda	VGI_RCOLOR
-	jmp	dsave_color
-deven_color:
-	lda	VGI_RCOLOR2
-dsave_color:
-	sta	HGR_COLOR
-
-	inc	COUNT
-	jmp	done_colors
-striped_colors:
-
-	; don't need to do anything here?
 
 done_colors:
 
 	; get ROW into (GBASL)
 
-;	ldx	VGI_RX1		; X1 into X
-;	lda	VGI_RY1		; Y1 into A
-;	ldy	#0		; always 0
-;	jsr	HPOSN		; (Y,X),(A)  (values stores in HGRX,XH,Y)
-
 	; urgh we depend on HGR_BITS being properly set
 
 	jsr	fast_hposn
 
-
-
 	; Y is already the RX1/7
 
 	; adjust color if in striped mode
-	lda	COLOR_MODE
-	bpl	not_striped
-
-	jsr	swap_colors
 
 not_striped:
 
@@ -103,7 +58,6 @@ not_striped:
 	sta	XRUN
 
 	inc	XRUN	; needed because we compare with beq/bne
-
 
 	; check if narrow corner case where begin and end same block
 	; if RX%7 + XRUN < 8
@@ -159,12 +113,7 @@ not_corner:
 	adc	XRUN
 	sta	XRUN
 
-;	lda	HGR_BITS	; cycle colors for next
-;	jsr	COLOR_SHIFT
-
 	jsr	swap_colors
-
-;no_shift:
 
 	; draw common
 draw_run:
@@ -174,7 +123,6 @@ draw_run:
 
 	lda	HGR_BITS	; get color
 	sta	(GBASL),Y	; store out
-;	jsr	COLOR_SHIFT	; shift colors
 
 	iny			; move to next block
 
@@ -192,9 +140,6 @@ draw_right:
 
 	beq	done_row
 
-;	lda	HGR_BITS
-;	jsr	COLOR_SHIFT
-
 	; see if not starting on boundary
 	ldx	XRUN
 	tax
@@ -209,7 +154,7 @@ done_row:
 
 	inc	VGI_RY1
 	dec	VGI_RYRUN
-	;bne	simple_rectangle_loop
+;	bne	simple_rectangle_loop
 	beq	done_done
 	jmp	simple_rectangle_loop
 
@@ -222,34 +167,26 @@ done_done:
 	;==========================
 swap_colors:
 
-	lda	COLOR_MODE
-	bmi	swap_colors_striped
-
 	lda	HGR_BITS	; get color
-	jsr	COLOR_SHIFT	; shift colors
 
-	rts
+	; based on code from the ROM at F47F
+colorshift:
+	asl			; shift to fix even/odd
+	cmp	#$c0
+	bpl	done_colorshift
 
-swap_colors_striped:
-
-	tya
-	and	#1
-	bne	swap_odd
-
-	lda	VGI_RCOLOR
-	jmp	swap_done
-
-swap_odd:
-	lda	VGI_RCOLOR2
-swap_done:
+	lda	HGR_BITS
+	eor	#$7f		; invert bottom bits
 	sta	HGR_BITS
-
+done_colorshift:
 	rts
 
-
-
-
-
-
-
+	;===========================
+	; colortbl
+	;===========================
+	; lives in ROM at F6F6 but we might have that swapped out
+colortbl:
+	; black1, green, purple, white1
+	; black2, orange, blue, white2
+.byte	$00,$2A,$55,$7F,$80,$aa,$D5,$FF
 
