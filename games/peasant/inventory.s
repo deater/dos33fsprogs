@@ -53,6 +53,7 @@ draw_inv_text:
 
 	;===============
 	; draw text
+	;===============
 
 	lda	#28
 	sta	CURSOR_Y
@@ -98,6 +99,7 @@ have_item:
 	sta	OUTL
 	lda	#0
 	adc	#>item_strings
+
 	jmp	print_item
 
 questionmarks:
@@ -135,78 +137,91 @@ inv_cursory_good:
 	cpy	#18
 	bne	draw_inv_loop
 
+	;=================
+	; draw strikeouts
+	;=================
 
-	;================
-	; right column
+	lda	#28
+	sta	CURSOR_Y
 
-;	lda	#28
-;	sta	CURSOR_Y
+	ldy	#0
 
-;	ldy	#0
-;	lda	#1
-;	sta	INVENTORY_MASK
-;right_column_loop:
+strikeout_reset_mask:
+	lda	#1
+	sta	INVENTORY_MASK
 
-;	lda	INVENTORY_X		; we are column 1
-;	beq	not_right_inverted
+draw_strikeout_loop:
 
-;	lda	CURSOR_Y
-;	cmp	INVENTORY_Y
-;	bne	not_right_inverted
+	cpy	#9
+	bcs	strike_right_column		; bge
 
-;	lda	#$7f
-;	sta	invert_smc1+1
+strike_left_column:
+	lda	#4
+	bne	strike_done_column		; bra
+strike_right_column:
+	lda	#23
+strike_done_column:
+	sta	CURSOR_X
 
-;not_right_inverted:
+	tya
+	pha
 
-;	lda	#23
-;	sta	CURSOR_X
 
-;	tya
-;	pha
+	lsr
+	lsr
+	lsr		; Y/8
+	tax
 
-;	lda	INVENTORY_MASK
-;	and	INVENTORY_2
-;	beq	right_questionmarks
+	lda	INVENTORY_1_GONE,X
 
-;right_have_item:
-;	clc
-;	lda	right_item_offsets,Y
-;	adc	#<item_strings
-;	sta	OUTL
-;	lda	#0
-;	adc	#>item_strings
-;	jmp	right_print_item
+	and	INVENTORY_MASK
 
-;right_questionmarks:
-;	lda	#<unknown_string
-;	sta	OUTL
-;	lda	#>unknown_string
+	beq	strike_not_gone
 
-;right_print_item:
-;	sta	OUTH
+item_gone:
+	ldx	item_string_lens,Y
+item_gone_loop:
+	txa
+	pha
+	lda	#127
+	jsr	hgr_put_char_cursor
+	inc	CURSOR_X
+	pla
+	tax
+	dex
+	bne	item_gone_loop
 
-;	jsr	disp_one_line
 
-;	lda	CURSOR_Y
-;	clc
-;	adc	#9
-;	sta	CURSOR_Y
+strike_not_gone:
 
-;	asl	INVENTORY_MASK
+	lda	CURSOR_Y	; incrememnt cursor location
+	clc
+	adc	#8
 
-	; reset inverse
+	cmp	#100
+	bne	strike_cursory_good
+	lda	#28
+strike_cursory_good:
+	sta	CURSOR_Y
 
-;	lda	#$00
-;	sta	invert_smc1+1
+	asl	INVENTORY_MASK
 
-;	pla
+	pla
 
-;	tay
-;	iny
-;	cpy	#8
-;	bne	right_column_loop
+	tay
+	iny
 
+	tya
+	and	#$7
+	beq	strikeout_reset_mask
+
+	cpy	#18
+	bne	draw_strikeout_loop
+
+
+	;===========================
+	; handle inventory keypress
+	;===========================
 
 handle_inv_keypress:
 
@@ -340,6 +355,28 @@ item_offsets:
 .byte	(item_trogsword-item_strings)
 .byte	(item_impossible-item_strings)
 .byte	(item_shirt-item_strings)
+
+
+
+item_string_lens:
+.byte	5	; arrow
+.byte	4	; baby
+.byte	11	; kerrek belt
+.byte	12	; chicken feed
+.byte	18	; SuprTime FunBow TM
+.byte	14	; monster maskus
+.byte	7	; pebbles
+.byte	5	; pills
+.byte	6	; riches
+.byte	4	; robe
+.byte	4	; soda
+.byte	12	; meatball sub
+.byte	13	; super trinket
+.byte	10	; TrogHelmet
+.byte	10	; TrogShield
+.byte	9	; TrogSword
+.byte	3	; ???
+.byte	5	; shirt
 
 item_strings:
 
