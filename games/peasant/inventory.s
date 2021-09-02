@@ -6,8 +6,6 @@
 show_inventory:
 
 	lda	#0
-	sta	INVENTORY_X
-	lda	#0
 	sta	INVENTORY_Y
 
 	;=================
@@ -141,83 +139,13 @@ inv_cursory_good:
 	; draw strikeouts
 	;=================
 
-	lda	#28
-	sta	CURSOR_Y
 
-	ldy	#0
+	;=======================
+	; draw initial highlight
+	;=======================
 
-strikeout_reset_mask:
-	lda	#1
-	sta	INVENTORY_MASK
-
-draw_strikeout_loop:
-
-	cpy	#9
-	bcs	strike_right_column		; bge
-
-strike_left_column:
-	lda	#4
-	bne	strike_done_column		; bra
-strike_right_column:
-	lda	#23
-strike_done_column:
-	sta	CURSOR_X
-
-	tya
-	pha
-
-
-	lsr
-	lsr
-	lsr		; Y/8
-	tax
-
-	lda	INVENTORY_1_GONE,X
-
-	and	INVENTORY_MASK
-
-	beq	strike_not_gone
-
-item_gone:
-	ldx	item_string_lens,Y
-item_gone_loop:
-	txa
-	pha
-	lda	#127
-	jsr	hgr_put_char_cursor
-	inc	CURSOR_X
-	pla
-	tax
-	dex
-	bne	item_gone_loop
-
-
-strike_not_gone:
-
-	lda	CURSOR_Y	; incrememnt cursor location
-	clc
-	adc	#8
-
-	cmp	#100
-	bne	strike_cursory_good
-	lda	#28
-strike_cursory_good:
-	sta	CURSOR_Y
-
-	asl	INVENTORY_MASK
-
-	pla
-
-	tay
-	iny
-
-	tya
-	and	#$7
-	beq	strikeout_reset_mask
-
-	cpy	#18
-	bne	draw_strikeout_loop
-
+	ldy	INVENTORY_Y
+	jsr	overwrite_entry
 
 	;===========================
 	; handle inventory keypress
@@ -230,8 +158,17 @@ handle_inv_keypress:
 
 	bit	KEYRESET		; clear keyboard strobe
 
-	and	#$7f			; clear top bit
+	pha
 
+	;=================
+	; erase old
+
+	ldy	INVENTORY_Y
+	jsr	overwrite_entry
+
+	pla
+
+	and	#$7f			; clear top bit
 
 	cmp	#27
 	beq	done_inv_keypress	; ESCAPE
@@ -244,10 +181,24 @@ inv_check_down:
 	cmp	#'S'
 	bne	inv_check_up
 inv_handle_down:
-	lda	INVENTORY_Y
-	clc
-	adc	#$8
-	sta	INVENTORY_Y
+
+	ldx	INVENTORY_Y
+	cpx	#8
+	beq	inv_down_wrap
+	cpx	#17
+	beq	inv_down_wrap
+
+	inx
+
+	jmp	inv_down_done
+inv_down_wrap:
+	txa
+	sec
+	sbc	#8
+	tax
+
+inv_down_done:
+	stx	INVENTORY_Y
 	jmp	inv_done_moving
 
 inv_check_up:
@@ -256,11 +207,25 @@ inv_check_up:
 	cmp	#'W'
 	bne	inv_check_left_right
 inv_handle_up:
-	lda	INVENTORY_Y
-	sec
-	sbc	#$8
-	sta	INVENTORY_Y
+
+	ldx	INVENTORY_Y
+	beq	inv_up_wrap
+	cpx	#9
+	beq	inv_up_wrap
+
+	dex
+	jmp	inv_up_done
+
+inv_up_wrap:
+	txa
+	clc
+	adc	#8
+	tax
+
+inv_up_done:
+	stx	INVENTORY_Y
 	jmp	inv_done_moving
+
 
 inv_check_left_right:
 	cmp	#$15
@@ -272,42 +237,32 @@ inv_check_left_right:
 	cmp	#'A'
 	bne	inv_check_return
 inv_handle_left_right:
-	lda	INVENTORY_X
-	eor	#$1
-	sta	INVENTORY_X
+	lda	INVENTORY_Y
+	clc
+	adc	#9
+	cmp	#18
+	bcc	inv_lr_good
+	sec
+	sbc	#18
+
+inv_lr_good:
+	sta	INVENTORY_Y
 	jmp	inv_done_moving
 
 inv_check_return:
 
 
 inv_done_moving:
-	;================
-	; check bounds
-
-	lda	INVENTORY_Y
-	cmp	#28
-	bcc	inv_y_set_top		; blt too small
-	cmp	#100
-	bcs	inv_y_set_bottom	; bge
-	bcc	inv_y_done		; bra
-
-inv_y_set_top:
-	lda	#100
-	jmp	inv_y_done
-
-inv_y_set_bottom:
-	lda	#28
-
-inv_y_done:
-	sta	INVENTORY_Y
 
 	;================
-	; clear box
+	; draw new
+	ldy	INVENTORY_Y
+	jsr	overwrite_entry
 
 	;================
 	; repeat
 
-	jmp	draw_inv_box
+	jmp	handle_inv_keypress
 
 done_inv_keypress:
 
@@ -533,3 +488,98 @@ super_trinket_description:
 .byte "fishing, stoning heathens. What",13
 .byte "a Blast!",0
 
+
+
+	;========================
+	; overwrite entry
+	;========================
+	; Y = which
+
+overwrite_entry:
+
+	lda	#$7f
+	sta	invert_smc1+1
+
+overwrite_set_mask:
+	tya
+	and	#$7
+	tax
+	lda	masks,X
+	sta	INVENTORY_MASK
+
+	;==============
+	; set X
+
+	cpy	#9
+	bcs	overwrite_right_column		; bge
+
+overwrite_left_column:
+	lda	#4
+	sta	CURSOR_X
+
+	tya
+
+	jmp	overwrite_done_column
+
+
+overwrite_right_column:
+	lda	#23
+	sta	CURSOR_X
+
+	tya
+	sec
+	sbc	#9
+
+
+overwrite_done_column:
+	asl
+	asl
+	asl
+	clc
+	adc	#28
+
+	sta	CURSOR_Y
+
+	tya
+;	pha
+
+
+	lsr
+	lsr
+	lsr		; Y/8
+	tax
+
+	lda	INVENTORY_1,X
+
+	and	INVENTORY_MASK
+
+	beq	overwrite_not_have
+
+overwrite_have:
+	ldx	item_string_lens,Y
+	bne	overwrite_have_loop
+
+overwrite_not_have:
+	ldx	#3
+
+overwrite_have_loop:
+	txa
+	pha
+overwite_char_smc:
+	lda	#$20
+	jsr	hgr_put_char_cursor
+	inc	CURSOR_X
+	pla
+	tax
+	dex
+	bne	overwrite_have_loop
+
+
+	lda	#$00
+	sta	invert_smc1+1
+
+	rts
+
+
+masks:
+	.byte $01,$02,$04,$08, $10,$20,$40,$80
