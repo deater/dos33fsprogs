@@ -7,7 +7,7 @@ show_inventory:
 
 	lda	#0
 	sta	INVENTORY_X
-	lda	#28
+	lda	#0
 	sta	INVENTORY_Y
 
 	;=================
@@ -52,65 +52,73 @@ draw_inv_text:
 	jsr	disp_put_string
 
 	;===============
-	; left column
+	; draw text
 
 	lda	#28
 	sta	CURSOR_Y
 
 	ldy	#0
+
+inv_reset_mask:
 	lda	#1
 	sta	INVENTORY_MASK
-left_column_loop:
 
-	lda	INVENTORY_X		; we are column 0
-	bne	not_left_inverted
+draw_inv_loop:
 
-	lda	CURSOR_Y
-	cmp	INVENTORY_Y
-	bne	not_left_inverted
+	cpy	#9
+	bcs	right_column		; bge
 
-	lda	#$7f
-	sta	invert_smc1+1
-
-not_left_inverted:
-
+left_column:
 	lda	#4
+	bne	done_column		; bra
+right_column:
+	lda	#23
+done_column:
 	sta	CURSOR_X
 
 	tya
 	pha
 
-	lda	INVENTORY_MASK
-	and	INVENTORY_1
-	beq	left_questionmarks
 
-left_have_item:
+	lsr
+	lsr
+	lsr		; Y/8
+	tax
+
+	lda	INVENTORY_1,X
+
+	and	INVENTORY_MASK
+
+	beq	questionmarks
+
+have_item:
 	clc
-	lda	left_item_offsets,Y
+	lda	item_offsets,Y
 	adc	#<item_strings
 	sta	OUTL
 	lda	#0
 	adc	#>item_strings
-	jmp	left_print_item
+	jmp	print_item
 
-left_questionmarks:
+questionmarks:
 	lda	#<unknown_string
 	sta	OUTL
 	lda	#>unknown_string
 
-left_print_item:
+print_item:
 	sta	OUTH
 
 	jsr	disp_one_line
 
-	; reset inverse
 
-	lda	#$00
-	sta	invert_smc1+1
-
-	lda	CURSOR_Y
+	lda	CURSOR_Y	; incrememnt cursor location
 	clc
 	adc	#8
+
+	cmp	#100
+	bne	inv_cursory_good
+	lda	#28
+inv_cursory_good:
 	sta	CURSOR_Y
 
 	asl	INVENTORY_MASK
@@ -119,84 +127,85 @@ left_print_item:
 
 	tay
 	iny
-	cpy	#8
-	bne	left_column_loop
 
-	; extra for riches
+	tya
+	and	#$7
+	beq	inv_reset_mask
 
-
+	cpy	#18
+	bne	draw_inv_loop
 
 
 	;================
 	; right column
 
-	lda	#28
-	sta	CURSOR_Y
+;	lda	#28
+;	sta	CURSOR_Y
 
-	ldy	#0
-	lda	#1
-	sta	INVENTORY_MASK
-right_column_loop:
+;	ldy	#0
+;	lda	#1
+;	sta	INVENTORY_MASK
+;right_column_loop:
 
-	lda	INVENTORY_X		; we are column 1
-	beq	not_right_inverted
+;	lda	INVENTORY_X		; we are column 1
+;	beq	not_right_inverted
 
-	lda	CURSOR_Y
-	cmp	INVENTORY_Y
-	bne	not_right_inverted
+;	lda	CURSOR_Y
+;	cmp	INVENTORY_Y
+;	bne	not_right_inverted
 
-	lda	#$7f
-	sta	invert_smc1+1
+;	lda	#$7f
+;	sta	invert_smc1+1
 
-not_right_inverted:
+;not_right_inverted:
 
-	lda	#23
-	sta	CURSOR_X
+;	lda	#23
+;	sta	CURSOR_X
 
-	tya
-	pha
+;	tya
+;	pha
 
-	lda	INVENTORY_MASK
-	and	INVENTORY_2
-	beq	right_questionmarks
+;	lda	INVENTORY_MASK
+;	and	INVENTORY_2
+;	beq	right_questionmarks
 
-right_have_item:
-	clc
-	lda	right_item_offsets,Y
-	adc	#<item_strings
-	sta	OUTL
-	lda	#0
-	adc	#>item_strings
-	jmp	right_print_item
+;right_have_item:
+;	clc
+;	lda	right_item_offsets,Y
+;	adc	#<item_strings
+;	sta	OUTL
+;	lda	#0
+;	adc	#>item_strings
+;	jmp	right_print_item
 
-right_questionmarks:
-	lda	#<unknown_string
-	sta	OUTL
-	lda	#>unknown_string
+;right_questionmarks:
+;	lda	#<unknown_string
+;	sta	OUTL
+;	lda	#>unknown_string
 
-right_print_item:
-	sta	OUTH
+;right_print_item:
+;	sta	OUTH
 
-	jsr	disp_one_line
+;	jsr	disp_one_line
 
-	lda	CURSOR_Y
-	clc
-	adc	#8
-	sta	CURSOR_Y
+;	lda	CURSOR_Y
+;	clc
+;	adc	#9
+;	sta	CURSOR_Y
 
-	asl	INVENTORY_MASK
+;	asl	INVENTORY_MASK
 
 	; reset inverse
 
-	lda	#$00
-	sta	invert_smc1+1
+;	lda	#$00
+;	sta	invert_smc1+1
 
-	pla
+;	pla
 
-	tay
-	iny
-	cpy	#8
-	bne	right_column_loop
+;	tay
+;	iny
+;	cpy	#8
+;	bne	right_column_loop
 
 
 handle_inv_keypress:
@@ -312,7 +321,7 @@ inventory_message:
 unknown_string:
 .byte	"???",0
 
-left_item_offsets:
+item_offsets:
 .byte	(item_arrow-item_strings)
 .byte	(item_baby-item_strings)
 .byte	(item_kerrek_belt-item_strings)
@@ -321,8 +330,7 @@ left_item_offsets:
 .byte	(item_monster_mask-item_strings)
 .byte	(item_pebbles-item_strings)
 .byte	(item_pills-item_strings)
-
-right_item_offsets:
+.byte	(item_riches-item_strings)
 .byte	(item_robe-item_strings)
 .byte	(item_soda-item_strings)
 .byte	(item_meatball_sub-item_strings)
@@ -331,10 +339,7 @@ right_item_offsets:
 .byte	(item_trogshield-item_strings)
 .byte	(item_trogsword-item_strings)
 .byte	(item_impossible-item_strings)
-
-
-
-
+.byte	(item_shirt-item_strings)
 
 item_strings:
 

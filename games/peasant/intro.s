@@ -132,6 +132,18 @@ escape_handler:
 	lda	#$AA
 	sta	INVENTORY_1
 
+	lda	#$FF
+	sta	INVENTORY_2
+
+	lda	#INV3_SHIRT
+	sta	INVENTORY_3
+
+	lda	#0
+	sta	INVENTORY_1_GONE
+	sta	INVENTORY_3_GONE
+	lda	#$AA
+	sta	INVENTORY_2_GONE
+
 	rts
 
 
