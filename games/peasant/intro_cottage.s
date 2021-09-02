@@ -176,8 +176,8 @@ done_cottage:
 
 
 
-
-
+; even      odd
+; 01234567 01234567
 
 
 peasant_text:
@@ -185,7 +185,7 @@ peasant_text:
 
 
 cottage_text1:
-	.byte 0,53,24,  0,253,82
+	.byte 0,52,24,  0,253,82
 	.byte 9,35,"YOU are Rather Dashing, a",13
 	.byte	   "humble peasant living in",13
 	.byte      "the peasant kingdom of",13
@@ -194,7 +194,7 @@ cottage_text1:
 ; wait a few seconds
 
 cottage_text2:
-	.byte 0,40,15, 0,255,96
+	.byte 0,41,15, 0,255,96
 	.byte 8,25,"You return home from a",13
 	.byte	    "vacation on Scalding Lake",13
 	.byte	    "only to find that TROGDOR",13

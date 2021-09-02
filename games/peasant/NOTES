@@ -66,3 +66,25 @@ EO EO
 6|----c>>>-----------c------c-------|
 5|-aaa----aaab>>>aaa---a-b-a---------|
 
+
+
+46, XRUN=2
+
+46/7= 6R4 			; RUN of 0=1 wide, run of 1=2 wide
+
+start at 4, end at 5
+						
+start at 4 (left) = $F0	1111 0000
+end at 5 (Right) = $BF	1011 1111
+			=========
+			x011 0000
+OR them!!!!
+
+left_masks:
+        .byte $FF,$FE,$FC,$F8, $F0,$E0,$C0
+
+right_masks:
+        .byte $81,$83,$87, $8F,$9F,$BF,$FF
+
+
+

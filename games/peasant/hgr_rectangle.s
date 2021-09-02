@@ -61,16 +61,30 @@ simple_rectangle_loop:
 	bcs	not_corner
 
 corner:
-	; want to use MASK of left_mask, MOD7 and 7-XRUN
+	; left=(RX1 MOD 7) right=(RX1 MOD 7)+XRUN
+	; mask is left AND right
 
+	ldx	VGI_RX1
 	lda	mod7_table,X
 	tax
+	lda	left_masks,X
+	sta	OTHER_MASK
+
+	txa
+	clc
+	adc	XRUN
+	tax
+	lda	right_masks,X
+	and	OTHER_MASK
+	sta	OTHER_MASK
+
+	; actual
 
 	lda	(GBASL),Y
 	eor	HGR_BITS
-	and	left_masks,X
-	ldx	XRUN
-	and	right_masks,X
+
+	and	OTHER_MASK
+
 	eor	(GBASL),Y
 	sta	(GBASL),Y
 

@@ -68,9 +68,25 @@ hposn_loop:
 
 	rts
 
+	; left masks
+	;	in memory	on screen
+	;	x111 1111	1111111		start at 0
+	;	x111 1110	0111111		start at 1
+	;	x111 1100	0011111		start at 2
+	; ...
+	;	x100 0000	0000001		start at 6
+
 left_masks:
 	.byte $FF,$FE,$FC,$F8, $F0,$E0,$C0
 
+	; right masks
+	;	in memory	on screen
+	;	x000 0001	1000000		end at 0
+	;	x000 0011	1100000		end at 1
+	;	x000 0111	1110000		end at 2
+	; ...
+	;	x011 1111	1111110		end at 5
+	;	x111 1111	1111111		end at 6
 right_masks:
 	.byte $81,$83,$87, $8F,$9F,$BF,$FF
 
