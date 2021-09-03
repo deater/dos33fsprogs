@@ -54,12 +54,15 @@ disp_put_string:
         ldy     #0
         lda     (OUTL),Y
         sta     CURSOR_X
-	sta	SAVED_X
 
 	jsr     inc_outl
 	lda     (OUTL),Y
 	sta     CURSOR_Y
 	jsr     inc_outl
+
+disp_put_string_cursor:
+	lda	CURSOR_X
+	sta	SAVED_X
 
 disp_one_line:
 

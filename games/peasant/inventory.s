@@ -49,6 +49,15 @@ draw_inv_text:
 
 	jsr	disp_put_string
 
+
+	lda	#<press_esc_message
+	sta	OUTL
+	lda	#>press_esc_message
+	sta	OUTH
+
+	jsr	disp_put_string
+
+
 	;===============
 	; draw text
 	;===============
@@ -250,7 +259,8 @@ inv_lr_good:
 	jmp	inv_done_moving
 
 inv_check_return:
-
+	jsr	show_item
+	jmp	draw_inv_box
 
 inv_done_moving:
 
@@ -269,6 +279,73 @@ done_inv_keypress:
 	rts
 
 
+	;====================
+	;====================
+	; show item
+	;====================
+	;====================
+show_item:
+
+	lda	#0
+	sta	BOX_X1H
+	lda	#14
+	sta	BOX_X1L
+	lda	#20
+	sta	BOX_Y1
+
+	lda	#1
+	sta	BOX_X2H
+	lda	#5		; ?
+	sta	BOX_X2L
+	lda	#135
+	sta	BOX_Y2
+
+	jsr	draw_box
+
+
+	lda	#<item_message
+	sta	OUTL
+	lda	#>item_message
+	sta	OUTH
+
+	jsr	disp_put_string
+
+	lda	#<press_esc_message
+	sta	OUTL
+	lda	#>press_esc_message
+	sta	OUTH
+
+	jsr	disp_put_string
+
+	ldy	INVENTORY_Y
+
+	lda	descriptions_low,Y
+	sta	OUTL
+	lda	descriptions_high,Y
+	sta	OUTH
+
+	lda	#4
+	sta	CURSOR_X
+	lda	#32
+	sta	CURSOR_Y
+
+	jsr	disp_put_string_cursor
+
+
+
+
+
+handle_item_keypress:
+
+	lda	KEYPRESS
+	bpl	handle_item_keypress	; no keypress
+
+	bit	KEYRESET		; clear keyboard strobe
+
+
+	rts
+
+
 ;======================
 ; text
 ;======================
@@ -276,13 +353,17 @@ done_inv_keypress:
 ; Note, greyed out could maybe print ---- for strikethrough
 
 ; printed after description
-.byte	"You no longer has this item.",0
-.byte	"Hit return to go back to list",0
+no_longer_message:
+.byte	4,90,"You no longer has this item.",0
+
+item_message:
+.byte	5,106,"Hit RETURN to go back to list",0
 
 ; first is only printed if have in inventory, though still can
 inventory_message:
-.byte	5,106," Press return for description",13
-.byte 	      " Press ESC or DELETE to exit",0
+.byte	6,106,"Press RETURN for description",0
+press_esc_message:
+.byte 	6,115,"Press ESC or DELETE to exit",0
 
 ;====================
 ; Inventory Strings
@@ -372,10 +453,52 @@ item_impossible:
 item_shirt:
 .byte	"shirt",0
 
+descriptions_low:
+	.byte <arrow_description
+	.byte <baby_description
+	.byte <kerrek_belt_description
+	.byte <chicken_feed_description
+	.byte <funbow_description
+	.byte <monster_maskus_description
+	.byte <pebbles_description
+	.byte <pills_description
+	.byte <riches_description
+	.byte <robe_description
+	.byte <soda_description
+	.byte <meatball_sub_description
+	.byte <super_trinket_description
+	.byte <troghelmet_description
+	.byte <trogshield_description
+	.byte <trogsword_description
+	.byte <map_description
+	.byte <tshirt_description
+
+descriptions_high:
+	.byte >arrow_description
+	.byte >baby_description
+	.byte >kerrek_belt_description
+	.byte >chicken_feed_description
+	.byte >funbow_description
+	.byte >monster_maskus_description
+	.byte >pebbles_description
+	.byte >pills_description
+	.byte >riches_description
+	.byte >robe_description
+	.byte >soda_description
+	.byte >meatball_sub_description
+	.byte >super_trinket_description
+	.byte >troghelmet_description
+	.byte >trogshield_description
+	.byte >trogsword_description
+	.byte >map_description
+	.byte >tshirt_description
+
+
 ; arrow
 arrow_description:
 .byte "Boy, you sure know how to pick",13
-.byte "em! This arrow's kinda pointy even!!",0
+.byte "em! This arrow's kinda pointy",13
+.byte "even!!",0
 
 ; baby
 baby_description:
@@ -409,8 +532,8 @@ funbow_description:
 monster_maskus_description:
 .byte "Man, those pagans sure can make",13
 .byte "a freaky lookin mask when they",13
-.byte "want to.  It's like those theatre",13
-.byte "masks' evil uncle or something",0
+.byte "want to. It's like those theatre",13
+.byte "masks' evil uncle or something.",0
 
 ; pebbles
 pebbles_description:
@@ -421,7 +544,7 @@ pebbles_description:
 ; pills
 pills_description:
 .byte "The innkeeper's medication says",13
-.byte "it's supposed to tread ",34,"general",13
+.byte "it's supposed to treat ",34,"general",13
 .byte "oldness.  May cause checkers",13
 .byte "playing, hiked-up pants, and",13
 .byte "overall pee smell.",34,0
@@ -449,7 +572,7 @@ soda_description:
 meatball_sub_description:
 .byte "A piping hot meatball sub fresh",13
 .byte "from the bottom of a dingy old",13
-.byte "well.  All you need is a bag of",13
+.byte "well. All you need is a bag of",13
 .byte "chips and you've got a combo",13
 .byte "meal!",0
 
@@ -461,18 +584,21 @@ super_trinket_description:
 .byte "Christmas party.",0
 
 ; TrogHelmet
+troghelmet_description:
 .byte "The TrogHelmet is not screwing",13
-.byte "around.  It's a serious helmet.",13
+.byte "around. It's a serious helmet.",13
 .byte "It also protects against",13
 .byte "harmful UV rays.",0
 
 ; TrogShield
+trogshield_description:
 .byte "Behold the TrogSheild! No",13
-.byte "seriously, behold it.  There's",13
+.byte "seriously, behold it. There's",13
 .byte "no way Trogdor's fire breath can",13
 .byte "penetrate this thing.",0
 
 ; TrogSword
+trogsword_description:
 .byte "The TrogSword is for real.",13
 .byte "Hands-down the coolest item in",13
 .byte "this whole game. You can't wait",13
@@ -480,8 +606,10 @@ super_trinket_description:
 .byte "Trogdor's with this guy.",0
 
 ; ???
+map_description:
 
 ; t-shirt
+tshirt_description:
 .byte "This has got to be your favorite",13
 .byte "T-Shirt ever. Oh, the times you",13
 .byte "had at Scalding Lake. Canoeing,",13
