@@ -180,9 +180,12 @@ handle_inv_keypress:
 	and	#$7f			; clear top bit
 
 	cmp	#27
-	beq	done_inv_keypress	; ESCAPE
+	beq	urgh_done		; ESCAPE
 	cmp	#$7f
-	beq	done_inv_keypress	; DELETE
+	bne	inv_check_down		; DELETE
+
+urgh_done:
+	jmp	done_inv_keypress
 
 inv_check_down:
 	cmp	#$0A
@@ -268,6 +271,24 @@ inv_done_moving:
 	; draw new
 	ldy	INVENTORY_Y
 	jsr	overwrite_entry
+
+	;================
+	; draw item
+
+;	ldy	INVENTORY_Y
+
+	lda	#<arrow_sprite
+	sta	INL
+	lda	#>arrow_sprite
+	sta	INH
+
+	lda	#18
+	sta	CURSOR_X
+	lda	#88
+	sta	CURSOR_Y
+
+	jsr	hgr_draw_sprite_2x16
+
 
 	;================
 	; repeat
@@ -711,3 +732,20 @@ overwite_char_smc:
 
 masks:
 	.byte $01,$02,$04,$08, $10,$20,$40,$80
+
+
+
+arrow_sprite:
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+
+no_sprite:
+	.byte $7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f
+	.byte $7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f
+	.byte $7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f
+	.byte $7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f
+
+
+.include "hgr_2x16_sprite.s"
