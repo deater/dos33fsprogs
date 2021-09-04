@@ -12,13 +12,25 @@ hgr_draw_sprite_2x16:
 	; set up pointers
 	lda	INL
 	sta	hds2_smc1+1
+	sta	hds2_smc2+1
 	lda	INH
 	sta	hds2_smc1+2
+	sta	hds2_smc2+2
+
+;	clc
+;	lda	INL
+;	adc	#1
+;	sta	hds2_smc2+1
+;	lda	#0
+;	adc	INH
+;	sta	hds2_smc2+2
 
 	ldx	#0
 hgr_2x16_sprite_yloop:
 	txa
 	pha
+
+	lsr
 
 	clc
 	adc	CURSOR_Y
@@ -34,11 +46,18 @@ hgr_2x16_sprite_yloop:
 
 	ldy	CURSOR_X
 hds2_smc1:
-	lda	$D000
+	lda	$D000,X
 	sta	(GBASL),Y
 
 	inx
-	cpx	#16
+	iny
+
+hds2_smc2:
+	lda	$D000,X
+	sta	(GBASL),Y
+
+	inx
+	cpx	#32
 	bne	hgr_2x16_sprite_yloop
 
 	rts

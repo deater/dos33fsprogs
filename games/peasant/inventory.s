@@ -275,11 +275,11 @@ inv_done_moving:
 	;================
 	; draw item
 
-;	ldy	INVENTORY_Y
+	ldy	INVENTORY_Y
 
-	lda	#<arrow_sprite
+	lda	inv_sprite_table_low,Y
 	sta	INL
-	lda	#>arrow_sprite
+	lda	inv_sprite_table_high,Y
 	sta	INH
 
 	lda	#18
@@ -733,19 +733,55 @@ overwite_char_smc:
 masks:
 	.byte $01,$02,$04,$08, $10,$20,$40,$80
 
-
-
-arrow_sprite:
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-
 no_sprite:
 	.byte $7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f
 	.byte $7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f
 	.byte $7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f
 	.byte $7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f
 
+inv_sprite_table_low:
+	.byte	<arrow_sprite
+	.byte	<baby_sprite
+	.byte	<kerrek_belt_sprite
+	.byte	<chicken_feed_sprite
+	.byte	<bow_sprite
+	.byte	<mask_sprite
+	.byte	<pebbles_sprite
+	.byte	<pills_sprite
+	.byte	<riches_sprite
+	.byte	<robe_sprite
+	.byte	<soda_sprite
+	.byte	<sub_sprite
+	.byte	<trinket_sprite
+	.byte	<troghelm_sprite
+	.byte	<trogshield_sprite
+	.byte	<trogsword_sprite
+	.byte	<no_sprite
+	.byte	<tshirt_sprite
+
+inv_sprite_table_high:
+	.byte	>arrow_sprite
+	.byte	>baby_sprite
+	.byte	>kerrek_belt_sprite
+	.byte	>chicken_feed_sprite
+	.byte	>bow_sprite
+	.byte	>mask_sprite
+	.byte	>pebbles_sprite
+	.byte	>pills_sprite
+	.byte	>riches_sprite
+	.byte	>robe_sprite
+	.byte	>soda_sprite
+	.byte	>sub_sprite
+	.byte	>trinket_sprite
+	.byte	>troghelm_sprite
+	.byte	>trogshield_sprite
+	.byte	>trogsword_sprite
+	.byte	>no_sprite
+	.byte	>tshirt_sprite
+
+
+
+
+.include "sprites/inventory_sprites.inc"
 
 .include "hgr_2x16_sprite.s"

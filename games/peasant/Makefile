@@ -107,6 +107,7 @@ PEASANT2:	peasant2.o
 peasant2.o:	peasant2.s zp.inc \
 		graphics/graphics_peasant2.inc sprites/peasant_sprite.inc \
 		graphics/priority_peasant2.inc \
+		sprites/inventory_sprites.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
@@ -181,6 +182,9 @@ graphics/graphics_peasant1.inc:
 graphics_copy/copy_graphics.inc:
 	cd graphics_copy && make
 
+
+sprites/inventory_sprites.inc:
+	cd sprites && make
 
 ###
 
