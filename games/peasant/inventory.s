@@ -87,19 +87,11 @@ done_column:
 	tya
 	pha
 
-
-	lsr
-	lsr
-	lsr		; Y/8
-	tax
-
-	lda	INVENTORY_1,X
-
-	and	INVENTORY_MASK
+	jsr	have_item_y
 
 	beq	questionmarks
 
-have_item:
+we_have_item:
 	clc
 	lda	item_offsets,Y
 	adc	#<item_strings
@@ -161,6 +153,11 @@ inv_cursory_good:
 	;===========================
 
 handle_inv_keypress:
+
+	;================
+	; draw item
+
+	jsr	draw_inv_sprite
 
 	lda	KEYPRESS
 	bpl	handle_inv_keypress	; no keypress
@@ -262,6 +259,9 @@ inv_lr_good:
 	jmp	inv_done_moving
 
 inv_check_return:
+	jsr	have_item
+	beq	inv_done_moving
+
 	jsr	show_item
 	jmp	draw_inv_box
 
@@ -273,13 +273,63 @@ inv_done_moving:
 	jsr	overwrite_entry
 
 	;================
-	; draw item
+	; repeat
 
+	jmp	handle_inv_keypress
+
+done_inv_keypress:
+
+	rts
+
+
+	;==================
+	; have_item
+	;==================
+	; do we have Inventory Y
+	; ZERO if no
+	; not zero if yes
+have_item:
 	ldy	INVENTORY_Y
+have_item_y:
+	tya
+	and	#$3
+	tax
+	lda	masks,X
+	sta	INVENTORY_MASK
 
+	tya
+
+	lsr
+	lsr
+	lsr		; Y/8
+	tax
+
+	lda	INVENTORY_1,X
+	and	INVENTORY_MASK
+
+	rts
+
+
+	;=======================
+	; draw inventory sprite
+	;=======================
+draw_inv_sprite:
+
+	jsr	have_item
+
+	bne	do_draw_inv_sprite
+
+no_draw_inv_sprite:
+	lda	#<no_sprite
+	sta	INL
+	lda	#>no_sprite
+	jmp	done_draw_inv_sprite
+
+do_draw_inv_sprite:
 	lda	inv_sprite_table_low,Y
 	sta	INL
 	lda	inv_sprite_table_high,Y
+done_draw_inv_sprite:
 	sta	INH
 
 	lda	#18
@@ -288,14 +338,6 @@ inv_done_moving:
 	sta	CURSOR_Y
 
 	jsr	hgr_draw_sprite_2x16
-
-
-	;================
-	; repeat
-
-	jmp	handle_inv_keypress
-
-done_inv_keypress:
 
 	rts
 
@@ -352,8 +394,7 @@ show_item:
 
 	jsr	disp_put_string_cursor
 
-
-
+	jsr	draw_inv_sprite
 
 
 handle_item_keypress:
