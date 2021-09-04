@@ -30,7 +30,11 @@ update_hundreds:
 	inx
 
 update_tens:
-	lda	SCORE_TENS
+	lda	SCORE_TENSONES
+	lsr
+	lsr
+	lsr
+	lsr
 	beq	update_ones
 	clc
 	adc	#'0'
@@ -38,7 +42,8 @@ update_tens:
 	inx
 
 update_ones:
-	lda	SCORE_ONES
+	lda	SCORE_TENSONES
+	and	#$f
 	clc
 	adc	#'0'
 	sta	score_text,X

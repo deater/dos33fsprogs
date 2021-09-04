@@ -139,6 +139,50 @@ inv_cursory_good:
 	;=================
 	; draw strikeouts
 	;=================
+draw_strikeouts:
+
+	ldy	#0
+draw_strikeouts_loop:
+
+	tya
+	pha
+
+	jsr	lost_item_y
+
+	pla
+	tay
+
+	bcs	draw_strikeouts_continue
+
+
+	; actually strike it out
+	tya
+	pha
+
+	lda	#$7f
+	sta	overwrite_char_smc+1
+
+	lda	invert_smc1+1
+	eor	#$7f
+	sta	invert_smc1+1
+
+	jsr	overwrite_entry
+
+	lda	invert_smc1+1
+	eor	#$7f
+	sta	invert_smc1+1
+
+	lda	#$20
+	sta	overwrite_char_smc+1
+
+	pla
+	tay
+
+draw_strikeouts_continue:
+	iny
+	cpy	#18
+	bne	draw_strikeouts_loop
+
 
 
 	;=======================
@@ -310,6 +354,41 @@ have_item_y:
 	rts
 
 
+	;==================
+	; lost_item
+	;==================
+	; do we no longer have Inventory Y
+	; CC if no
+	; CS if yes
+lost_item:
+	ldy	INVENTORY_Y
+lost_item_y:
+	tya
+	and	#$7
+	tax
+	lda	masks,X
+	sta	INVENTORY_MASK
+
+	tya
+
+	lsr
+	lsr
+	lsr		; Y/8
+	tax
+
+	lda	INVENTORY_1_GONE,X
+	and	INVENTORY_MASK
+	beq	really_gone
+
+	clc
+	rts
+
+really_gone:
+	sec
+	rts
+
+
+
 	;=======================
 	; draw inventory sprite
 	;=======================
@@ -394,7 +473,25 @@ show_item:
 
 	jsr	disp_put_string_cursor
 
+	;==========================
+	; print no longer message
+
+	jsr	lost_item
+	bcs	skip_no_longer
+
+	lda	#<no_longer_message
+	sta	OUTL
+	lda	#>no_longer_message
+	sta	OUTH
+	jsr	disp_put_string
+
+skip_no_longer:
+
+	;=======================
+	; display sprite
+
 	jsr	draw_inv_sprite
+
 
 
 handle_item_keypress:
@@ -416,7 +513,7 @@ handle_item_keypress:
 
 ; printed after description
 no_longer_message:
-.byte	4,90,"You no longer has this item.",0
+.byte	4,86,"You no longer    has this item.",0
 
 item_message:
 .byte	5,106,"Hit RETURN to go back to list",0
@@ -687,15 +784,14 @@ tshirt_description:
 
 overwrite_entry:
 
-	lda	#$7f
+;	lda	#$7f
+;	sta	invert_smc1+1
+
+	lda	invert_smc1+1
+	eor	#$7f
 	sta	invert_smc1+1
 
 overwrite_set_mask:
-	tya
-	and	#$7
-	tax
-	lda	masks,X
-	sta	INVENTORY_MASK
 
 	;==============
 	; set X
@@ -731,17 +827,11 @@ overwrite_done_column:
 	sta	CURSOR_Y
 
 	tya
-;	pha
 
+	;===================
+	; check if have item
 
-	lsr
-	lsr
-	lsr		; Y/8
-	tax
-
-	lda	INVENTORY_1,X
-
-	and	INVENTORY_MASK
+	jsr	have_item_y
 
 	beq	overwrite_not_have
 
@@ -755,7 +845,7 @@ overwrite_not_have:
 overwrite_have_loop:
 	txa
 	pha
-overwite_char_smc:
+overwrite_char_smc:
 	lda	#$20
 	jsr	hgr_put_char_cursor
 	inc	CURSOR_X
@@ -765,7 +855,11 @@ overwite_char_smc:
 	bne	overwrite_have_loop
 
 
-	lda	#$00
+;	lda	#$00
+;	sta	invert_smc1+1
+
+	lda	invert_smc1+1
+	eor	#$7f
 	sta	invert_smc1+1
 
 	rts

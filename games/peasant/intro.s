@@ -120,29 +120,34 @@ escape_handler:
 	sta	PEASANT_XADD
 	sta	PEASANT_YADD
 
+	lda	#1
 	sta	SCORE_HUNDREDS
-	sta	SCORE_TENS
-	sta	SCORE_ONES
+
+	lda	#$33
+	sta	SCORE_TENSONES
 
 	lda	#4
 	sta	MAP_X
 	lda	#1
 	sta	MAP_Y
 
-	lda	#$AA
-	sta	INVENTORY_1
-
 	lda	#$FF
+	sta	INVENTORY_1
 	sta	INVENTORY_2
-
 	lda	#INV3_SHIRT
 	sta	INVENTORY_3
 
-	lda	#0
+	; 1100 1011
+	lda	#$CB
 	sta	INVENTORY_1_GONE
-	sta	INVENTORY_3_GONE
-	lda	#$AA
+	; 0001 1101
+	lda	#$1d
 	sta	INVENTORY_2_GONE
+	;
+	lda	#$0
+	sta	INVENTORY_3_GONE
+
+
 
 	rts
 

@@ -121,8 +121,7 @@ KERREK_STATE	= $9B
 ARROW_SCORE	= $9C	; bottom=score, top=random num needed 3-5?
 
 SCORE_HUNDREDS	= $9D
-SCORE_TENS	= $9E	
-SCORE_ONES	= $9F
+SCORE_TENSONES	= $9E	
 
 
 INVENTORY_1	= $A0
