@@ -6,10 +6,10 @@ TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../linker_scripts
 EMPTY_DISK = ../../empty_disk
 
-all:	peasant.dsk
+all:	peasant.dsk peasant_side2.dsk
 
 peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK \
-	PEASANT1 PEASANT2 PEASANT3 PEASANT4
+	PEASANT1 PEASANT2 PEASANT3 PEASANT4 ENDING
 	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
 #	$(DOS33) -y peasant.dsk BSAVE -a 0x6000 INTRO
 	$(DOS33_RAW) peasant.dsk  0  0 QBOOT      0   1
@@ -21,14 +21,20 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK \
 	$(DOS33_RAW) peasant.dsk  8  0 INTRO      0   0
 	$(DOS33_RAW) peasant.dsk  12 0 COPY_CHECK 0   0
 	$(DOS33_RAW) peasant.dsk  14 0 PEASANT1	  0   0
-	$(DOS33_RAW) peasant.dsk  19 0 PEASANT2	  0   0
+#	$(DOS33_RAW) peasant.dsk  19 0 PEASANT2	  0   0
+	$(DOS33_RAW) peasant.dsk  19 0 ENDING	  0   0
 	$(DOS33_RAW) peasant.dsk  24 0 PEASANT3	  0   0
 	$(DOS33_RAW) peasant.dsk  29 0 PEASANT4	  0   0
 
+peasant_side2.dsk:	ENDING
+	cp $(EMPTY_DISK)/empty.dsk peasant_side2.dsk
+	$(DOS33_RAW) peasant.dsk  14 0 ENDING	  0   0
+
+
 ###
 
-HELLO:	hello.bas
-	$(TOKENIZE) < hello.bas > HELLO
+#HELLO:	hello.bas
+#	$(TOKENIZE) < hello.bas > HELLO
 
 ###
 
@@ -148,6 +154,23 @@ peasant4.o:	peasant4.s zp.inc \
 
 ###
 
+ENDING:	ending.o
+	ld65 -o ENDING ending.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+ending.o:	ending.s zp.inc \
+		graphics_end/ending_graphics.inc sprites/peasant_sprite.inc \
+		sprites/inventory_sprites.inc \
+		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
+		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
+		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		keyboard.s parse_input.s new_map_location.s \
+		peasant_move.s score.s inventory.s
+
+	ca65 -o ending.o ending.s -l ending.lst
+
+
+###
+
 COPY_CHECK:	copy_check.o
 	ld65 -o COPY_CHECK copy_check.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
@@ -190,5 +213,6 @@ sprites/inventory_sprites.inc:
 
 clean:	
 	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE INTRO COPY_CHECK \
-			PEASANT1 PEASANT2 PEASANT3 PEASANT4
+			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
+			ENDING
 
