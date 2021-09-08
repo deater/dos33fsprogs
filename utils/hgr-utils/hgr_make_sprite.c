@@ -242,7 +242,7 @@ static void print_help(char *name,int version) {
 
 	if (version) exit(1);
 
-	printf("\nUsage: %s [-h] [-v] [-d] PNGFILE x1 y1 x2 y2\n\n",name);
+	printf("\nUsage: %s [-h] [-v] [-d] [-l label] PNGFILE x1 y1 x2 y2\n\n",name);
 	printf("\t[-d] debug\n");
 	printf("\n");
 
@@ -383,14 +383,17 @@ int main(int argc, char **argv) {
 	int c,x,y,z,color1;
 	unsigned char *image;
 	unsigned char byte1,byte2,colors[14];
+	char label_string[BUFSIZ];
 
 	int x1,y1,x2,y2;
 
 	char *filename;
 
+	strncpy(label_string,"sprite",BUFSIZ);
+
 	/* Parse command line arguments */
 
-	while ( (c=getopt(argc, argv, "hvd") ) != -1) {
+	while ( (c=getopt(argc, argv, "hvdl:") ) != -1) {
 
 		switch(c) {
 
@@ -402,6 +405,9 @@ int main(int argc, char **argv) {
 				break;
                         case 'd':
 				debug=1;
+				break;
+			case 'l':
+				strncpy(label_string,optarg,BUFSIZ-1);
 				break;
 			default:
 				print_help(argv[0],0);
@@ -460,7 +466,7 @@ int main(int argc, char **argv) {
 	}
 
 	printf("; %d %d %d %d\n",x1,y1,x2,y2);
-	printf("sprite:\n");
+	printf("%s:\n",label_string);
 
 	for(y=y1;y<y2;y++) {
 		printf("\t.byte ");
