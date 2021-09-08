@@ -10,11 +10,13 @@ all:	ending_graphics.inc
 
 ending_graphics.inc:	\
 	trogdor_cave.lzsa \
+	lake_e_boat.lzsa \
 	waterfall.lzsa \
 	jhonka.lzsa \
 	cottage.lzsa \
 	the_end.lzsa
 	echo "trogdor_cave_lzsa: .incbin \"trogdor_cave.lzsa\"" > ending_graphics.inc
+	echo "lake_e_boat_lzsa: .incbin \"lake_e_boat.lzsa\"" >> ending_graphics.inc
 	echo "waterfall_lzsa: .incbin \"waterfall.lzsa\"" >> ending_graphics.inc
 	echo "jhonka_lzsa: .incbin \"jhonka.lzsa\"" >> ending_graphics.inc
 	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" >> ending_graphics.inc
@@ -28,6 +30,14 @@ trogdor_cave.lzsa:	trogdor_cave.hgr
 
 trogdor_cave.hgr:	trogdor_cave.png
 	$(PNG2HGR) trogdor_cave.png > trogdor_cave.hgr
+
+###
+
+lake_e_boat.lzsa:	lake_e_boat.hgr
+	$(LZSA) -r -f2 lake_e_boat.hgr lake_e_boat.lzsa
+
+lake_e_boat.hgr:	lake_e_boat.png
+	$(PNG2HGR) lake_e_boat.png > lake_e_boat.hgr
 
 ###
 

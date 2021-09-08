@@ -42,6 +42,20 @@ trogdor_cave:
 
 	jsr	wait_until_keypress
 
+boat:
+
+	lda	#<lake_e_boat_lzsa
+	sta	getsrc_smc+1
+	lda	#>lake_e_boat_lzsa
+	sta	getsrc_smc+2
+
+	lda	#$40
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	wait_until_keypress
+
+
 waterfall:
 
 	lda	#<waterfall_lzsa
