@@ -29,4 +29,4 @@ inventory_sprites.inc:	inventory.png
 
 
 clean:
-	rm *~ inventory_sprites.inc
+	rm -f *~ inventory_sprites.inc

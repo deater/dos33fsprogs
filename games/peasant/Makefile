@@ -205,6 +205,9 @@ graphics/graphics_peasant1.inc:
 graphics_copy/copy_graphics.inc:
 	cd graphics_copy && make
 
+graphics_end/ending_graphics.inc:
+	cd graphics_end && make
+
 
 sprites/inventory_sprites.inc:
 	cd sprites && make
