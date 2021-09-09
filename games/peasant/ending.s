@@ -108,9 +108,13 @@ final_screen:
 
 	jsr	decompress_lzsa2_fast
 
+	jsr	wait_until_keypress
+
 game_over:
 
-	jsr	game_over
+;	jsr	game_over
+
+	jsr	trogdor_cave
 
 
 peasant_text:
@@ -144,3 +148,40 @@ peasant_text:
 .include "version.inc"
 
 .include "graphics_end/ending_graphics.inc"
+
+trogdor_string:
+	.byte 34,"I can honestly say it'll",13
+	.byte "be a pleasure and an honor",13
+	.byte "to burninate you, Rather",13
+	.byte "Dashing.",0
+
+trogdor_string2:
+	.byte "Aw that sure was nice of",13
+	.byte "him!",0
+
+trogdor_string3:
+	.byte "Congratulations! You've",13
+	.byte "won! No one can kill",13
+	.byte "Trogdor but you came closer",13
+	.byte "than anybody ever! Way to",13
+	.byte "go!",0
+
+boat_string:
+	.byte "         Peasant's Quest",13
+	.byte "Written by Matt, Jonathan, and Mike",0
+
+waterfall_string:
+	.byte "  Programmed by Jonathan",13
+	.byte "Apple ][ support by Deater",0
+
+jhonka_string:
+	.byte "Graphcis by Mike and Matt",0
+
+cottage_string:
+	.byte " Quality Assurance Types:",13
+	.byte "      Neal Stamper,",13
+	.byte "Don Chapman, and John Radle",0
+
+cottage_string2:
+	.byte "Nice work on winning and everything.",0
+
