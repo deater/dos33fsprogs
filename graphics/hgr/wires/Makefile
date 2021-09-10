@@ -7,11 +7,12 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	wires.dsk
 
-wires.dsk:	HELLO WIRES BLUEORANGE
+wires.dsk:	HELLO WIRES BLUEORANGE BLUEORANGEZ
 	cp $(EMPTY_DISK)/empty.dsk wires.dsk
 	$(DOS33) -y wires.dsk SAVE A HELLO
 	$(DOS33) -y wires.dsk BSAVE -a 0x0C00 WIRES
 	$(DOS33) -y wires.dsk BSAVE -a 0x0373 BLUEORANGE
+	$(DOS33) -y wires.dsk BSAVE -a 0x0C00 BLUEORANGEZ
 
 ###
 
@@ -33,6 +34,12 @@ BLUEORANGE:	blueorange.o
 
 blueorange.o:	blueorange.s
 	ca65 -o blueorange.o blueorange.s -l blueorange.lst
+
+####
+
+BLUEORANGEZ:	blueorange.o
+	ld65 -o BLUEORANGEZ blueorange.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
 
 ######
 
