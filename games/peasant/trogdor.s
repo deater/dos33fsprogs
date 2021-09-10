@@ -9,7 +9,7 @@
 
 .include "qload.inc"
 
-ending:
+trogdor:
 	lda	#0
 	sta	GAME_OVER
 
@@ -29,11 +29,24 @@ ending:
 	; start music?
 
 
-boat:
+trogdor_cave:
 
-	lda	#<lake_e_boat_lzsa
+	lda	#<trogdor_cave_lzsa
 	sta	getsrc_smc+1
-	lda	#>lake_e_boat_lzsa
+	lda	#>trogdor_cave_lzsa
+	sta	getsrc_smc+2
+
+	lda	#$40
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	wait_until_keypress
+
+trogdor_open:
+
+	lda	#<trogdor_open_lzsa
+	sta	getsrc_smc+1
+	lda	#>trogdor_open_lzsa
 	sta	getsrc_smc+2
 
 	lda	#$40
@@ -43,11 +56,11 @@ boat:
 	jsr	wait_until_keypress
 
 
-waterfall:
+trogdor_flame1:
 
-	lda	#<waterfall_lzsa
+	lda	#<trogdor_flame1_lzsa
 	sta	getsrc_smc+1
-	lda	#>waterfall_lzsa
+	lda	#>trogdor_flame1_lzsa
 	sta	getsrc_smc+2
 
 	lda	#$40
@@ -56,11 +69,11 @@ waterfall:
 
 	jsr	wait_until_keypress
 
-jhonka:
+trogdor_flame2:
 
-	lda	#<jhonka_lzsa
+	lda	#<trogdor_flame2_lzsa
 	sta	getsrc_smc+1
-	lda	#>jhonka_lzsa
+	lda	#>trogdor_flame2_lzsa
 	sta	getsrc_smc+2
 
 	lda	#$40
@@ -69,39 +82,12 @@ jhonka:
 
 	jsr	wait_until_keypress
 
-cottage:
-
-	lda	#<cottage_lzsa
-	sta	getsrc_smc+1
-	lda	#>cottage_lzsa
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-	jsr	wait_until_keypress
-
-
-
-final_screen:
-
-	lda	#<the_end_lzsa
-	sta	getsrc_smc+1
-	lda	#>the_end_lzsa
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-	jsr	wait_until_keypress
 
 game_over:
 
 ;	jsr	game_over
 
-	jsr	boat
+	jsr	trogdor_cave
 
 
 peasant_text:
@@ -134,25 +120,22 @@ peasant_text:
 
 .include "version.inc"
 
-.include "graphics_end/ending_graphics.inc"
+.include "graphics_trogdor/trogdor_graphics.inc"
 
+trogdor_string:
+	.byte 34,"I can honestly say it'll",13
+	.byte "be a pleasure and an honor",13
+	.byte "to burninate you, Rather",13
+	.byte "Dashing.",0
 
-boat_string:
-	.byte "         Peasant's Quest",13
-	.byte "Written by Matt, Jonathan, and Mike",0
+trogdor_string2:
+	.byte "Aw that sure was nice of",13
+	.byte "him!",0
 
-waterfall_string:
-	.byte "  Programmed by Jonathan",13
-	.byte "Apple ][ support by Deater",0
-
-jhonka_string:
-	.byte "Graphcis by Mike and Matt",0
-
-cottage_string:
-	.byte " Quality Assurance Types:",13
-	.byte "      Neal Stamper,",13
-	.byte "Don Chapman, and John Radle",0
-
-cottage_string2:
-	.byte "Nice work on winning and everything.",0
+trogdor_string3:
+	.byte "Congratulations! You've",13
+	.byte "won! No one can kill",13
+	.byte "Trogdor but you came closer",13
+	.byte "than anybody ever! Way to",13
+	.byte "go!",0
 

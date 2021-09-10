@@ -9,7 +9,7 @@ EMPTY_DISK = ../../empty_disk
 all:	peasant.dsk peasant_side2.dsk
 
 peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK \
-	PEASANT1 PEASANT2 PEASANT3 PEASANT4 ENDING
+	PEASANT1 PEASANT2 PEASANT3 PEASANT4 ENDING TROGDOR
 	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
 #	$(DOS33) -y peasant.dsk BSAVE -a 0x6000 INTRO
 	$(DOS33_RAW) peasant.dsk  0  0 QBOOT      0   1
@@ -22,13 +22,15 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK \
 	$(DOS33_RAW) peasant.dsk  12 0 COPY_CHECK 0   0
 	$(DOS33_RAW) peasant.dsk  14 0 PEASANT1	  0   0
 #	$(DOS33_RAW) peasant.dsk  19 0 PEASANT2	  0   0
-	$(DOS33_RAW) peasant.dsk  19 0 ENDING	  0   0
-	$(DOS33_RAW) peasant.dsk  24 0 PEASANT3	  0   0
+	$(DOS33_RAW) peasant.dsk  19 0 TROGDOR	  0   0
+#	$(DOS33_RAW) peasant.dsk  24 0 PEASANT3	  0   0
+	$(DOS33_RAW) peasant.dsk  24 0 ENDING	  0   0
 	$(DOS33_RAW) peasant.dsk  29 0 PEASANT4	  0   0
 
-peasant_side2.dsk:	ENDING
+peasant_side2.dsk:	TROGDOR ENDING
 	cp $(EMPTY_DISK)/empty.dsk peasant_side2.dsk
-	$(DOS33_RAW) peasant.dsk  14 0 ENDING	  0   0
+	$(DOS33_RAW) peasant.dsk  19 0 TROGDOR	  0   0
+	$(DOS33_RAW) peasant.dsk  24 0 ENDING	  0   0
 
 
 ###
@@ -154,6 +156,22 @@ peasant4.o:	peasant4.s zp.inc \
 
 ###
 
+TROGDOR:	trogdor.o
+	ld65 -o TROGDOR trogdor.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+trogdor.o:	trogdor.s zp.inc \
+		graphics_trogdor/trogdor_graphics.inc sprites/peasant_sprite.inc \
+		sprites/inventory_sprites.inc \
+		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
+		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
+		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		keyboard.s parse_input.s new_map_location.s \
+		peasant_move.s score.s inventory.s
+
+	ca65 -o trogdor.o trogdor.s -l trogdor.lst
+
+###
+
 ENDING:	ending.o
 	ld65 -o ENDING ending.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
@@ -205,6 +223,9 @@ graphics/graphics_peasant1.inc:
 graphics_copy/copy_graphics.inc:
 	cd graphics_copy && make
 
+graphics_trogdor/trogdor_graphics.inc:
+	cd graphics_trogdor && make
+
 graphics_end/ending_graphics.inc:
 	cd graphics_end && make
 
@@ -217,5 +238,5 @@ sprites/inventory_sprites.inc:
 clean:	
 	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE INTRO COPY_CHECK \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
-			ENDING
+			TROGDOR ENDING
 
