@@ -144,6 +144,13 @@ waterfall:
 
 	jsr	wait_until_keypress
 
+
+	;=========================
+	;=========================
+	; jhonka
+	;=========================
+	;=========================
+
 jhonka:
 
 	lda	#<jhonka_lzsa
@@ -162,11 +169,11 @@ jhonka:
 	lda     #$80            ; color is black2
 	sta     VGI_RCOLOR
 
-	lda     #42
+	lda     #44
 	sta     VGI_RX1
 	lda     #58
 	sta     VGI_RY1
-	lda	#182
+	lda	#180
 	sta	VGI_RXRUN
 	lda	#12
         sta     VGI_RYRUN
@@ -194,6 +201,12 @@ jhonka:
 	; animate jhonka
 
 	jsr	wait_until_keypress
+
+	;========================
+	;========================
+	; cottage
+	;========================
+	;========================
 
 cottage:
 
@@ -232,7 +245,11 @@ cottage:
 
 	jsr	disp_put_string
 
-	jsr	wait_until_keypress
+	lda	#42
+	jsr	wait_a_bit
+
+	;====================
+	; second message
 
 	lda     #11
 	sta     VGI_RX1
@@ -262,7 +279,9 @@ cottage:
 
 	jsr	disp_put_string
 
-	jsr	wait_until_keypress
+	lda	#42
+	jsr	wait_a_bit
+
 
 	;========================
 	;========================
@@ -286,9 +305,7 @@ final_screen:
 
 game_over:
 
-;	jsr	game_over
-
-	jsr	boat
+	jmp	boat
 
 
 peasant_text:
@@ -298,28 +315,27 @@ peasant_text:
 .include "decompress_fast_v2.s"
 .include "wait_keypress.s"
 
-;.include "draw_peasant.s"
-
 .include "hgr_font.s"
 .include "draw_box.s"
 .include "hgr_rectangle.s"
-;.include "hgr_7x28_sprite_mask.s"
+
 .include "hgr_1x5_sprite.s"
-;.include "hgr_save_restore.s"
 .include "hgr_partial_save.s"
 .include "hgr_input.s"
 .include "hgr_tables.s"
 .include "hgr_text_box.s"
-.include "clear_bottom.s"
-.include "gr_offsets.s"
 
-.include "gr_copy.s"
+;.include "draw_peasant.s"
+;.include "hgr_save_restore.s"
+;.include "hgr_7x28_sprite_mask.s"
+;.include "clear_bottom.s"
+;.include "gr_offsets.s"
+;.include "gr_copy.s"
+;.include "version.inc"
 
 .include "score.s"
 
 .include "wait_a_bit.s"
-
-.include "version.inc"
 
 .include "graphics_end/ending_graphics.inc"
 
