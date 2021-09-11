@@ -1,6 +1,6 @@
 ; Peasant's Quest Ending
 
-; From when the sword hits Trogdor on
+; The credits scenes
 
 ; by Vince `deater` Weaver	vince@deater.net
 
@@ -10,8 +10,8 @@
 .include "qload.inc"
 
 ending:
-	lda	#0
-	sta	GAME_OVER
+;	lda	#0
+;	sta	GAME_OVER
 
 	jsr	hgr_make_tables
 
@@ -26,9 +26,24 @@ ending:
 
 	jsr	update_score
 
-	; start music?
+
+	;=====================
+	; re-start music
+	;=====================
+	; need to un-do any patching
+	; reset to beginning of song
+	; and start interrupts
+
+	; FIXME: only if mockingboard enabled
+
+	cli
 
 
+	;=====================
+	;=====================
+	; boat scene
+	;=====================
+	;=====================
 boat:
 
 	lda	#<lake_e_boat_lzsa
@@ -40,8 +55,54 @@ boat:
 
 	jsr	decompress_lzsa2_fast
 
+	jsr	update_top
+
+	; draw rectangle
+
+	lda     #$80            ; color is black2
+	sta     VGI_RCOLOR
+
+	lda     #12
+	sta     VGI_RX1
+	lda     #38
+	sta     VGI_RY1
+	lda	#202
+	sta	VGI_RXRUN
+	lda	#20
+        sta     VGI_RYRUN
+        jsr     vgi_simple_rectangle
+
+	lda     #214
+	sta     VGI_RX1
+	lda     #38
+	sta     VGI_RY1
+	lda	#45
+	sta	VGI_RXRUN
+	lda	#20
+        sta     VGI_RYRUN
+        jsr     vgi_simple_rectangle
+
+
+	lda	#<boat_string
+	sta	OUTL
+	lda	#>boat_string
+	sta	OUTH
+
+	jsr	disp_put_string
+
+
+	;======================
+	; animate catching fish
+
+
 	jsr	wait_until_keypress
 
+
+	;=======================
+	;=======================
+	; waterfall
+	;=======================
+	;=======================
 
 waterfall:
 
@@ -53,6 +114,33 @@ waterfall:
 	lda	#$40
 
 	jsr	decompress_lzsa2_fast
+
+	jsr	update_top
+
+	; draw rectangle
+
+	lda     #$80            ; color is black2
+	sta     VGI_RCOLOR
+
+	lda     #44
+	sta     VGI_RX1
+	lda     #48
+	sta     VGI_RY1
+	lda	#192
+	sta	VGI_RXRUN
+	lda	#20
+        sta     VGI_RYRUN
+        jsr     vgi_simple_rectangle
+
+	lda	#<waterfall_string
+	sta	OUTL
+	lda	#>waterfall_string
+	sta	OUTH
+
+	jsr	disp_put_string
+
+	;=========================
+	; animate baby
 
 	jsr	wait_until_keypress
 
@@ -67,6 +155,44 @@ jhonka:
 
 	jsr	decompress_lzsa2_fast
 
+	jsr	update_top
+
+	; draw rectangle
+
+	lda     #$80            ; color is black2
+	sta     VGI_RCOLOR
+
+	lda     #42
+	sta     VGI_RX1
+	lda     #58
+	sta     VGI_RY1
+	lda	#182
+	sta	VGI_RXRUN
+	lda	#12
+        sta     VGI_RYRUN
+        jsr     vgi_simple_rectangle
+
+;	lda     #214
+;	sta     VGI_RX1
+;	lda     #58
+;	sta     VGI_RY1
+;	lda	#8
+;	sta	VGI_RXRUN
+;	lda	#20
+ ;       sta     VGI_RYRUN
+  ;      jsr     vgi_simple_rectangle
+
+
+	lda	#<jhonka_string
+	sta	OUTL
+	lda	#>jhonka_string
+	sta	OUTH
+
+	jsr	disp_put_string
+
+	;=================
+	; animate jhonka
+
 	jsr	wait_until_keypress
 
 cottage:
@@ -80,10 +206,69 @@ cottage:
 
 	jsr	decompress_lzsa2_fast
 
+	jsr	update_top
+
+
+	; draw rectangle
+
+	lda     #$80            ; color is black2
+	sta     VGI_RCOLOR
+
+	lda     #40
+	sta     VGI_RX1
+	lda     #48
+	sta     VGI_RY1
+	lda	#192
+	sta	VGI_RXRUN
+	lda	#32
+        sta     VGI_RYRUN
+        jsr     vgi_simple_rectangle
+
+
+	lda	#<cottage_string
+	sta	OUTL
+	lda	#>cottage_string
+	sta	OUTH
+
+	jsr	disp_put_string
+
 	jsr	wait_until_keypress
 
+	lda     #11
+	sta     VGI_RX1
+	lda     #48
+	sta     VGI_RY1
+	lda	#192
+	sta	VGI_RXRUN
+	lda	#32
+        sta     VGI_RYRUN
+        jsr     vgi_simple_rectangle
+
+	lda     #203
+	sta     VGI_RX1
+	lda     #48
+	sta     VGI_RY1
+	lda	#60
+	sta	VGI_RXRUN
+	lda	#32
+        sta     VGI_RYRUN
+        jsr     vgi_simple_rectangle
 
 
+	lda	#<cottage_string2
+	sta	OUTL
+	lda	#>cottage_string2
+	sta	OUTH
+
+	jsr	disp_put_string
+
+	jsr	wait_until_keypress
+
+	;========================
+	;========================
+	; final screen
+	;========================
+	;========================
 final_screen:
 
 	lda	#<the_end_lzsa
@@ -94,6 +279,8 @@ final_screen:
 	lda	#$40
 
 	jsr	decompress_lzsa2_fast
+
+	jsr	update_top
 
 	jsr	wait_until_keypress
 
@@ -138,21 +325,47 @@ peasant_text:
 
 
 boat_string:
+	.byte 2,40
 	.byte "         Peasant's Quest",13
 	.byte "Written by Matt, Jonathan, and Mike",0
 
 waterfall_string:
+	.byte 7,50
 	.byte "  Programmed by Jonathan",13
 	.byte "Apple ][ support by Deater",0
 
 jhonka_string:
-	.byte "Graphcis by Mike and Matt",0
+	.byte 7,60
+	.byte "Graphics by Mike and Matt",0
 
 cottage_string:
+	.byte 6,50
 	.byte " Quality Assurance Types:",13
 	.byte "      Neal Stamper,",13
 	.byte "Don Chapman, and John Radle",0
 
 cottage_string2:
+	.byte 2,58
 	.byte "Nice work on winning and everything.",0
+
+
+
+update_top:
+	; put peasant text
+
+	lda	#<peasant_text
+	sta	OUTL
+	lda	#>peasant_text
+	sta	OUTH
+
+	jsr	hgr_put_string
+
+	; put score
+
+	jsr	print_score
+
+	rts
+
+
+
 

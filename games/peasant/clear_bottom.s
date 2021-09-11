@@ -7,6 +7,7 @@ clear_bottom:
 
 	lda     #0
 	sta     VGI_RX1
+cb_smc1:
 	lda     #183
 	sta     VGI_RY1
 	lda	#140
@@ -18,6 +19,7 @@ clear_bottom:
 
 	lda     #140
 	sta     VGI_RX1
+cb_smc2:
 	lda     #183
 	sta     VGI_RY1
 	lda	#140
