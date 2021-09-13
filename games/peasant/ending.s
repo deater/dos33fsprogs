@@ -142,6 +142,41 @@ waterfall:
 	;=========================
 	; animate baby
 
+	lda	#10
+	sta	CURSOR_X
+	lda	#120
+	sta	CURSOR_Y
+
+	ldx	#0
+	stx	BABY_COUNT
+baby_loop:
+
+	; baby 0
+
+	jsr	save_bg_14x14
+
+	ldx	BABY_COUNT
+	lda	baby_pointers_l,X
+	sta	INL
+	lda	baby_pointers_h,X
+	sta	INH
+
+	jsr	hgr_draw_sprite_14x14
+
+	jsr	wait_until_keypress
+
+	jsr	restore_bg_14x14
+
+	jsr	wait_until_keypress
+
+	inc	BABY_COUNT
+	lda	BABY_COUNT
+	cmp	#11
+	bne	baby_loop
+
+	;
+	;===========================
+
 	jsr	wait_until_keypress
 
 
@@ -327,11 +362,12 @@ peasant_text:
 
 ;.include "draw_peasant.s"
 ;.include "hgr_save_restore.s"
-;.include "hgr_7x28_sprite_mask.s"
 ;.include "clear_bottom.s"
 ;.include "gr_offsets.s"
 ;.include "gr_copy.s"
 ;.include "version.inc"
+
+.include "hgr_14x14_sprite_mask.s"
 
 .include "score.s"
 
@@ -339,6 +375,7 @@ peasant_text:
 
 .include "graphics_end/ending_graphics.inc"
 
+.include "sprites/ending_sprites.inc"
 
 boat_string:
 	.byte 2,40
@@ -365,6 +402,32 @@ cottage_string2:
 	.byte "Nice work on winning and everything.",0
 
 
+baby_pointers_l:
+	.byte	<baby0_sprite
+	.byte	<baby1_sprite
+	.byte	<baby2_sprite
+	.byte	<baby3_sprite
+	.byte	<baby4_sprite
+	.byte	<baby5_sprite
+	.byte	<baby6_sprite
+	.byte	<baby7_sprite
+	.byte	<baby8_sprite
+	.byte	<baby9_sprite
+	.byte	<baby10_sprite
+
+baby_pointers_h:
+	.byte	>baby0_sprite
+	.byte	>baby1_sprite
+	.byte	>baby2_sprite
+	.byte	>baby3_sprite
+	.byte	>baby4_sprite
+	.byte	>baby5_sprite
+	.byte	>baby6_sprite
+	.byte	>baby7_sprite
+	.byte	>baby8_sprite
+	.byte	>baby9_sprite
+	.byte	>baby10_sprite
+
 
 update_top:
 	; put peasant text
@@ -381,7 +444,3 @@ update_top:
 	jsr	print_score
 
 	rts
-
-
-
-

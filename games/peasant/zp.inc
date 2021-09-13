@@ -164,6 +164,9 @@ BOX_Y2		= $C6
 SAVED_Y1	= $C7
 SAVED_Y2	= $C8
 
+; temp for animations, etc
+BABY_COUNT	= $C9
+
 ; D0-D? used by HGR?
 
 WHICH_SLOT	= $DA
