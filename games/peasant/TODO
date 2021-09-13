@@ -1,9 +1,29 @@
 TODO:
-- Speaker music for title if no Mockingboard
-- walk behind objects (like reeds?)
-- More frames/directions in peasant sprites
-- Better animation of River
-- Walk around all areas
-- Text parser, backspace
-- only save part of screen behind the sign
 
+General:
+- More frames in peasant sprites
+- Hook up text parser
+- Move music to language card?
+
+Intro:
+- Speaker music for title if no Mockingboard
+
+Peasantry:
+- Better animation of River
+- Priorities for all rooms
+- Hook up hidden glen, inside of cottage and inn
+
+Tower:
+- Tower level
+
+Trogdor:
+- All the rest
+- Trogdor's speech
+
+Ending:
+- Fish animation
+- Jhonka animation
+- Waterfall animation
+- Smoother baby animation?  Use page-flipping?
+  Modify sprite routine to auto-shift colors so we can have more
+  of an arc on baby trajectory?
