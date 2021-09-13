@@ -105,6 +105,8 @@ boat:
 	;=======================
 
 waterfall:
+	lda	#0
+	sta	FRAME
 
 	lda	#<waterfall_lzsa
 	sta	getsrc_smc+1
@@ -142,20 +144,40 @@ waterfall:
 	;=========================
 	; animate baby
 
-	lda	#10
-	sta	CURSOR_X
-	lda	#120
-	sta	CURSOR_Y
-
 	ldx	#0
 	stx	BABY_COUNT
-baby_loop:
 
-	; baby 0
+baby_loop:
+	ldx	BABY_COUNT
+	lda	baby_progress,X
+	bmi	done_baby
+	cmp	FRAME
+	bne	same_baby
+
+	lda	BABY_COUNT
+	clc
+	adc	#4		; point to next
+	sta	BABY_COUNT
+
+;	jsr	wait_until_keypress
+
+same_baby:
+
+	ldx	BABY_COUNT
+
+	lda	baby_progress+2,X
+	sta	CURSOR_X
+	lda	baby_progress+3,X
+	sta	CURSOR_Y
 
 	jsr	save_bg_14x14
 
 	ldx	BABY_COUNT
+
+	lda	baby_progress+1,X
+	bmi	no_draw_baby
+	tax
+
 	lda	baby_pointers_l,X
 	sta	INL
 	lda	baby_pointers_h,X
@@ -163,17 +185,20 @@ baby_loop:
 
 	jsr	hgr_draw_sprite_14x14
 
-	jsr	wait_until_keypress
+no_draw_baby:
+
+	lda	#200
+	jsr	WAIT
+
+;	jsr	wait_until_keypress
 
 	jsr	restore_bg_14x14
 
-	jsr	wait_until_keypress
+	inc	FRAME
 
-	inc	BABY_COUNT
-	lda	BABY_COUNT
-	cmp	#11
-	bne	baby_loop
+	jmp	baby_loop
 
+done_baby:
 	;
 	;===========================
 
@@ -403,17 +428,17 @@ cottage_string2:
 
 
 baby_pointers_l:
-	.byte	<baby0_sprite
-	.byte	<baby1_sprite
-	.byte	<baby2_sprite
-	.byte	<baby3_sprite
-	.byte	<baby4_sprite
-	.byte	<baby5_sprite
-	.byte	<baby6_sprite
-	.byte	<baby7_sprite
-	.byte	<baby8_sprite
-	.byte	<baby9_sprite
-	.byte	<baby10_sprite
+	.byte	<baby0_sprite	; head left
+	.byte	<baby1_sprite	; head down
+	.byte	<baby2_sprite	; head right
+	.byte	<baby3_sprite	; head up
+	.byte	<baby4_sprite	; splash head
+	.byte	<baby5_sprite	; splash ring
+	.byte	<baby6_sprite	; baby ring
+	.byte	<baby7_sprite	; baby ring2
+	.byte	<baby8_sprite	; baby ring3
+	.byte	<baby9_sprite	; baby high
+	.byte	<baby10_sprite	; baby low
 
 baby_pointers_h:
 	.byte	>baby0_sprite
@@ -427,6 +452,37 @@ baby_pointers_h:
 	.byte	>baby8_sprite
 	.byte	>baby9_sprite
 	.byte	>baby10_sprite
+
+
+baby_progress:
+	.byte 33,  $FF, 0, 0	; nothing at first?
+	.byte 36, 1, 38, 53	; frame 33, head down 266,53
+	.byte 38, 2, 38, 56	; frame 36, head right, 266,56
+	.byte 40, 3, 38, 73	; frame 38, head up, 266,73
+	.byte 42, 0, 37, 79	; frame 40, head left, 259,79
+	.byte 44, 1, 37, 85	; frame 42, head down, 259,85
+	.byte 46, 2, 37, 97	; frame 44, head right, 259,97
+	.byte 48, 3, 37, 98	; frame 46, head up, 259, 98
+	.byte 51, 4, 37, 113	; frame 48, baby in water, 259, 113
+	.byte 52, 5, 37, 113	; frame 51, splash
+	.byte 66, $FF, 37, 113	; frame 52, nothing
+	.byte 68, 5, 34, 120	; frame 66, splash, 238,120
+	.byte 70, 6, 34, 120	; frame 68, head coming out 238,120
+	.byte 75, 7, 34, 120	; frame 70, head more out 238,120
+	.byte 77, 8, 34, 121	; frame 75, head down, 238,120
+	.byte 81, 9, 33, 122	; frame 77, frame 79, moving left same
+	.byte 85, 10,32, 122	; frame 81, frame 83, moving left up
+	.byte 89, 9, 31, 123	; 12 frames up
+	.byte 93, 10,30, 123
+	.byte 97, 9, 29, 124
+	.byte 101,10,28, 124
+	.byte 105,9, 27, 125
+	.byte 109,10,26, 125
+	.byte 113,9, 25, 126
+	.byte 117,10,24, 126
+	.byte 121,9, 23, 127
+	.byte 125,10,22, 127	; 154,127 end
+	.byte $FF,$FF,0,0
 
 
 update_top:

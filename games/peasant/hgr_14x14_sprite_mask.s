@@ -105,13 +105,14 @@ save_yloop:
 	txa
 	pha
 
+	lsr
+
 	clc
 	adc	CURSOR_Y
 
 	; calc GBASL/GBASH
 
 	tax
-	lsr
 	lda	hposn_low,X
 	sta	GBASL
 	lda	hposn_high,X
