@@ -88,6 +88,7 @@ h1414_smc2:
 	inc	MASK
 	lda	MASK
 
+h1414_smc_len:
 	cmp	#14
 	bne	hgr_14x14_sprite_yloop
 
