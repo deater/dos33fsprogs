@@ -60,6 +60,11 @@ ssi263_speech_init:
 	ldx	#SSI263_I
 	jsr	ssi263_write_chip
 
+	; Set the busy flag
+	lda	#$00
+	sta	speech_busy
+
+
 	cli				; enable interrupts
 
 	rts
@@ -84,6 +89,7 @@ ssi263_speech_shutdown:
 ssi263_speak:
 
 	sei		; disable interrupts
+
 
 	; Set the busy flag
 	lda	#$FF
@@ -135,7 +141,7 @@ ssi263_speech_irq:
 	tya
 	pha			; save Y
 
-	inc	$0404		; irq indicator on screen
+;	inc	$0404		; irq indicator on screen
 
 	; be sure it was a 6522#2 interrupt
 	ldx	#VIA6522_IFR2
@@ -205,7 +211,7 @@ speech_end:
 	sta	speech_busy
 	sta	speech_playing
 
-	; Re-enable interrupt in 6522
+	; Disable interrupt in 6522
 	lda	#VIA6522_IER2_CA1
 	ldx	#VIA6522_IER2
 	jsr	ssi263_write_chip

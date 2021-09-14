@@ -205,7 +205,7 @@ speech_end:
 	sta	speech_busy
 	sta	speech_playing
 
-	; Re-enable interrupt in 6522
+	; Disable interrupt in 6522
 	lda	#VIA6522_IER2_CA1
 	ldx	#VIA6522_IER2
 	jsr	ssi263_write_chip

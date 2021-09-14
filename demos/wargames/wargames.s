@@ -11,9 +11,16 @@ VGI_CY          = P2
 VGI_CR          = P3
 
 NIBCOUNT	= $09
+CH		= $24
+CV		= $25
+BASL		= $27
+BASH		= $28
 
 HGR_COLOR	= $E4
 
+DRAW_PAGE	= $FA
+OUTL		= $FB
+OUTH		= $FC
 MISSILE_LOW	= $FD
 MISSILE_HIGH	= $FE
 FRAME		= $FF
@@ -42,6 +49,47 @@ MISSILE_RADIUS = 12
 
 
 wargames:
+	;===========================
+	;===========================
+	; initial message
+	;===========================
+	;===========================
+
+	jsr	HOME
+
+	lda	#<header
+	sta	OUTL
+	lda	#>header
+	sta	OUTH
+
+	jsr	normal_text
+
+	jsr	move_and_print
+	jsr	move_and_print
+
+	; USSR FIRST STRIKE
+
+	jsr	next_step
+
+	; US FIRST STRIKE
+
+	jsr	next_step
+
+	; NATO / WARSAW PACT
+
+	jsr	next_step
+
+	; FAR EAST STRATEGY
+
+	jsr	move_and_print
+
+	jsr	wait_1s
+
+	;===========================
+	;===========================
+	; exchange
+	;===========================
+	;===========================
 
 	jsr	HGR
 
@@ -171,7 +219,7 @@ missile_explode:
 
 	sta	VGI_CR
 
-	cmp	#15
+	cmp	#12
 	bcc	not_done_explosion
 
 	lda	#STATUS_DONE
@@ -204,17 +252,37 @@ done_missile_loop:
 
 done_missiles:
 
+	;============================
+	; print WINNER: NONE
+
+	jsr	move_and_print
+
+	jsr	wait_1s
+
+
 	;=========================================
+	; print flashing code
 
 	jsr	HOME
 
+	bit	SET_TEXT
+
+	jsr	flash_text
+
+	jsr	move_and_print
+
+	jsr	wait_1s
+
+	jsr	normal_text
+
+	;=========================================
+	; final message
+
+	jsr	HOME
+
+
 	lda	#4			; assume slot #4 for now
 	jsr	detect_ssi263
-
-	lda	irq_count
-	clc
-	adc	#'A'			; hack to show if detected or not
-	sta	$400			; (B is detected, A is not)
 
 	lda	#4			; assume slot #4 for now
 	jsr	ssi263_speech_init
@@ -222,19 +290,77 @@ done_missiles:
 
 speech_loop:
 
-	; trogdor
+	; greetings
 
-	lda	#<trogdor
+	; adjust text speed
+	lda	#150
+	sta	delay_smc+1
+
+	lda	#<greetings
 	sta	SPEECH_PTRL
-	lda	#>trogdor
+	lda	#>greetings
 	sta	SPEECH_PTRH
 
 	jsr	ssi263_speak
 
+	jsr	move_and_print
+
+	; wait for it to complete
+
+wait1:
+	lda	speech_busy
+	bne	wait1
+
+	jsr	wait_1s
+
+	; strange
+
+	lda	#<strange
+	sta	SPEECH_PTRL
+	lda	#>strange
+	sta	SPEECH_PTRH
+
+	jsr	ssi263_speak
+
+	jsr	move_and_print
+
+wait2:
+	lda	speech_busy
+	bne	wait2
+
+	jsr	wait_1s
+
+	; winning
+
+	lda	#<winning
+	sta	SPEECH_PTRL
+	lda	#>winning
+	sta	SPEECH_PTRH
+
+	jsr	ssi263_speak
+
+	jsr	move_and_print
+	jsr	move_and_print
+
+wait3:
+	lda	speech_busy
+	bne	wait3
+
+	bit	KEYRESET
+
 	jsr	wait_until_keypress
 
-	jmp	speech_loop
+	; restore text delay to 0
 
+	lda	#0
+	sta	delay_smc+1
+
+	jmp	wargames
+
+
+	;======================
+	; wait until keypress
+	;======================
 wait_until_keypress:
 
 	lda	KEYPRESS
@@ -253,12 +379,15 @@ wait_until_keypress:
 
 .include "circles.s"
 
+.include "text_print.s"
+.include "gr_offsets.s"
+
 	; the document
 	; "Phonetic Speech Dictionary for the SC-01 Speech Synthesizer"
 	; sc01-dictionary.pdf
 	; was very helpful here
 
-trogdor:
+greetings:
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
 
@@ -295,14 +424,9 @@ trogdor:
 	.byte PHONEME_UH1	; UH1
 	.byte PHONEME_N		; N
 
-	.byte PHONEME_PAUSE	; PA
-	.byte PHONEME_PAUSE	; PA
-	.byte PHONEME_PAUSE	; PA
-	.byte PHONEME_PAUSE	; PA
-	.byte PHONEME_PAUSE	; PA
-	.byte PHONEME_PAUSE	; PA
-	.byte PHONEME_PAUSE	; PA
-	.byte PHONEME_PAUSE	; PA
+	.byte $FF
+
+strange:
 
 	; A strange game.
 
@@ -332,9 +456,9 @@ trogdor:
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
 
-	.byte PHONEME_PAUSE	; PA
-	.byte PHONEME_PAUSE	; PA
+	.byte $FF
 
+winning:
 	; The only winning move is not to play.
 
 	.byte PHONEME_THV	; THV	; The
@@ -405,22 +529,29 @@ map_lzsa:
 
 
 header:
-	.byte "STRATEGY:                WINNER:",0
-	.byte "USSR FIRST STRIKE",0
-	.byte "U.S. FIRST STRIKE",0
-	.byte "NATO / WARSAW PACT",0
-	.byte "FAR EAST STRATEGY",0
-
-
-ending:
-	.byte "GREETINGS PROFESSOR FALKEN",0
-	.byte "A STRANGE GAME",0
-	.byte "THE ONLY WINNING MOVE IS"
-	.byte "NOT TO PLAY.",0
-
+	.byte 0,0,"STRATEGY:",0
+	.byte 24,0,"WINNER:",0
+	.byte 0,1,"USSR FIRST STRIKE",0
+	.byte 27,1,"NONE",0
+	.byte 0,2,"U.S. FIRST STRIKE",0
+	.byte 27,2,"NONE",0
+	.byte 0,3,"NATO / WARSAW PACT",0
+	.byte 27,3,"NONE",0
+	.byte 0,4,"FAR EAST STRATEGY",0
+winner:
+	.byte 14,21,"WINNER: NONE",0
 
 code:
-	.byte "CPE1704TKS",0
+	.byte 15,21,"CPE1704TKS",0
+
+ending:
+	.byte 0,0,"GREETINGS PROFESSOR FALKEN",0
+	.byte 0,10,"A STRANGE GAME",0
+	.byte 0,11,"THE ONLY WINNING MOVE IS",0
+	.byte 0,12,"NOT TO PLAY.",0
+
+;	.byte "HOW ABOUT A NICE GAME OF CHESS",0
+
 
 
 
@@ -436,3 +567,31 @@ missiles:
 	.byte $00	; radius
 	.byte $00,$00,$00	; padding
 
+	;===================
+	; next step
+	;===================
+next_step:
+	jsr	move_and_print
+
+	jsr	wait_1s
+
+	jsr	move_and_print
+
+	jsr	wait_1s
+
+	rts
+
+	;==================
+	; wait 1s
+	;==================
+wait_1s:
+	ldx	#10
+
+wait_1s_loop:
+	lda	#200
+	jsr	WAIT
+
+	dex
+	bne	wait_1s_loop
+
+	rts
