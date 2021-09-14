@@ -1,3 +1,9 @@
+; This code detects a SSI263 chip on a Mockingboard
+;	it does this by trying to enable the chip and waiting for
+;	the SSI-263 to signal an interrupt when done.
+;	If the interrupt never comes then assume no SSI-263 is present
+; The code assumes the SSI-263 is hooked to VIA6522 #2 (?)
+
 	;=============================
 	;=============================
 	; detect SSI263
