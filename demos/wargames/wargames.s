@@ -5,6 +5,9 @@
 
 .include "hardware.inc"
 
+FRAME_ADD	= $40
+EXPLOSION_RADIUS= 10
+
 VGI_CCOLOR      = P0
 VGI_CX          = P1
 VGI_CY          = P2
@@ -18,12 +21,15 @@ BASH		= $28
 
 HGR_COLOR	= $E4
 
-DRAW_PAGE	= $FA
-OUTL		= $FB
-OUTH		= $FC
-MISSILE_LOW	= $FD
-MISSILE_HIGH	= $FE
-FRAME		= $FF
+FRAMEL		= $F8
+FRAMEH		= $F9
+CURRENT_MISSILE = $FA
+DRAW_PAGE	= $FB
+OUTL		= $FC
+OUTH		= $FD
+MISSILE_LOW	= $FE
+MISSILE_HIGH	= $FF
+
 
 STATUS_WAITING		= $00
 STATUS_MOVING		= $01
@@ -42,7 +48,12 @@ MISSILE_DY_H = 8
 MISSILE_DY_L = 9
 MISSILE_DEST_X = 10
 MISSILE_DEST_Y = 11
-MISSILE_RADIUS = 12
+MISSILE_RADIUS = 11
+
+MISSILE_P_DY_H = 6
+MISSILE_P_DY_L = 7
+MISSILE_P_DDY_H = 8
+MISSILE_P_DDY_L = 9
 
 
 .include "ssi263.inc"
@@ -54,6 +65,8 @@ wargames:
 	; initial message
 	;===========================
 	;===========================
+
+;	jmp	exchange	; debug
 
 	jsr	HOME
 
@@ -90,7 +103,7 @@ wargames:
 	; exchange
 	;===========================
 	;===========================
-
+exchange:
 	jsr	HGR
 
 	lda	#<map_lzsa
@@ -104,18 +117,30 @@ wargames:
 
 
 	lda	#0
-	sta	FRAME
-missile_loop:
+	sta	FRAMEL
+	sta	FRAMEH
+
+	jsr	move_and_print
+
+outer_missile_loop:
 
 	lda	#<missiles
 	sta	MISSILE_LOW
 	lda	#>missiles
 	sta	MISSILE_HIGH
 
-	ldy	#0
+inner_missile_loop:
+
+	ldy	#MISSILE_STATUS
 	lda	(MISSILE_LOW),Y
 
+	cmp	#$FE			; means all done
+	bne	more_missiles
+	jmp	really_done_missile
+
+more_missiles:
 	; see if totally done
+	lda	(MISSILE_LOW),Y
 	bpl	keep_going
 	jmp	done_missile_loop
 keep_going:
@@ -128,7 +153,7 @@ keep_going:
 
 	ldy	#MISSILE_START_FRAME
 	lda	(MISSILE_LOW),Y
-	cmp	FRAME
+	cmp	FRAMEH
 	beq	missile_activate
 	jmp	done_missile_loop		; not ready
 
@@ -155,55 +180,16 @@ missile_draw:
 
 	jsr	HPLOT0		; plot at (Y,X), (A)
 
-missile_move:
-
-	; add X
-	clc
-	ldy	#MISSILE_DX_L
-	lda	(MISSILE_LOW),Y
-	ldy	#MISSILE_X_FRAC
-	adc	(MISSILE_LOW),Y
-	sta	(MISSILE_LOW),Y
-
-	ldy	#MISSILE_DX_H
-	lda	(MISSILE_LOW),Y
-	ldy	#MISSILE_X
-	adc	(MISSILE_LOW),Y
-	sta	(MISSILE_LOW),Y
-
-	; add Y
-	clc
-	ldy	#MISSILE_DY_L
-	lda	(MISSILE_LOW),Y
-	ldy	#MISSILE_Y_FRAC
-	adc	(MISSILE_LOW),Y
-	sta	(MISSILE_LOW),Y
-
-	ldy	#MISSILE_DY_H
-	lda	(MISSILE_LOW),Y
-	ldy	#MISSILE_Y
-	adc	(MISSILE_LOW),Y
-	sta	(MISSILE_LOW),Y
-
-
-	; see if at end
-	ldy	#MISSILE_Y
-	lda	(MISSILE_LOW),Y
 	ldy	#MISSILE_DEST_Y
-	cmp	(MISSILE_LOW),Y
-	bne	not_match
-
-	ldy	#MISSILE_X
 	lda	(MISSILE_LOW),Y
-	ldy	#MISSILE_DEST_X
-	cmp	(MISSILE_LOW),Y
-	bne	not_match
+	cmp	#$FF
+	beq	a_parab
 
-is_match:
-	lda	#STATUS_EXPLODING
-	ldy	#MISSILE_STATUS
-	sta	(MISSILE_LOW),Y
-not_match:
+	jsr	missile_move_line
+	jmp	done_missile_loop
+
+a_parab:
+	jsr	missile_move_parab
 	jmp	done_missile_loop
 
 missile_explode:
@@ -219,7 +205,7 @@ missile_explode:
 
 	sta	VGI_CR
 
-	cmp	#12
+	cmp	#EXPLOSION_RADIUS
 	bcc	not_done_explosion
 
 	lda	#STATUS_DONE
@@ -241,22 +227,43 @@ not_done_explosion:
 
 
 done_missile_loop:
+	clc
+	lda	MISSILE_LOW
+	adc	#12
+	sta	MISSILE_LOW
+	lda	#0
+	adc	MISSILE_HIGH
+	sta	MISSILE_HIGH
 
+	jmp	inner_missile_loop
+
+really_done_missile:
 	lda	#50
 	jsr	WAIT
 
-	inc	FRAME
-	beq	done_missiles
+	clc
+	lda	FRAMEL
+	adc	#FRAME_ADD
+	sta	FRAMEL
+	lda	FRAMEH
+	adc	#0
+	sta	FRAMEH
 
-	jmp	missile_loop
+	cmp	#$90
+	bcs	done_missiles
+
+	jmp	outer_missile_loop
 
 done_missiles:
 
 	;============================
 	; print WINNER: NONE
 
+	jsr	HOME
+
 	jsr	move_and_print
 
+	jsr	wait_1s
 	jsr	wait_1s
 
 
@@ -271,6 +278,7 @@ done_missiles:
 
 	jsr	move_and_print
 
+	jsr	wait_1s
 	jsr	wait_1s
 
 	jsr	normal_text
@@ -538,6 +546,10 @@ header:
 	.byte 0,3,"NATO / WARSAW PACT",0
 	.byte 27,3,"NONE",0
 	.byte 0,4,"FAR EAST STRATEGY",0
+
+far_east:
+	.byte 11,21,"FAR EAST STRATEGY",0
+
 winner:
 	.byte 14,21,"WINNER: NONE",0
 
@@ -552,20 +564,6 @@ ending:
 
 ;	.byte "HOW ABOUT A NICE GAME OF CHESS",0
 
-
-
-
-
-missiles:
-	.byte $00	; status
-	.byte $10	; start frame
-	.byte 10,$10	; x-location
-	.byte 50,$10	; y-location
-	.byte $01,$00	; deltax
-	.byte $00,$00	; deltay
-	.byte 100,50	; destination
-	.byte $00	; radius
-	.byte $00,$00,$00	; padding
 
 	;===================
 	; next step
@@ -595,3 +593,138 @@ wait_1s_loop:
 	bne	wait_1s_loop
 
 	rts
+
+	;============================
+	; missile move line
+	;============================
+
+missile_move_line:
+
+	; add X
+	clc
+	ldy	#MISSILE_DX_L
+	lda	(MISSILE_LOW),Y
+	ldy	#MISSILE_X_FRAC
+	adc	(MISSILE_LOW),Y
+	sta	(MISSILE_LOW),Y
+
+	ldy	#MISSILE_DX_H
+	lda	(MISSILE_LOW),Y
+	ldy	#MISSILE_X
+	adc	(MISSILE_LOW),Y
+	sta	(MISSILE_LOW),Y
+
+	; add Y
+	clc
+	ldy	#MISSILE_DY_L
+	lda	(MISSILE_LOW),Y
+	ldy	#MISSILE_Y_FRAC
+	adc	(MISSILE_LOW),Y
+	sta	(MISSILE_LOW),Y
+
+	ldy	#MISSILE_DY_H
+	lda	(MISSILE_LOW),Y
+	ldy	#MISSILE_Y
+	adc	(MISSILE_LOW),Y
+	sta	(MISSILE_LOW),Y
+
+
+	; see if at end
+	ldy	#MISSILE_Y
+	lda	(MISSILE_LOW),Y
+	ldy	#MISSILE_DEST_Y
+	cmp	(MISSILE_LOW),Y
+	bne	not_match
+
+	ldy	#MISSILE_X
+	lda	(MISSILE_LOW),Y
+	ldy	#MISSILE_DEST_X
+	cmp	(MISSILE_LOW),Y
+	bne	not_match
+
+is_match:
+	lda	#STATUS_EXPLODING
+	ldy	#MISSILE_STATUS
+	sta	(MISSILE_LOW),Y
+
+	lda	#0
+	ldy	#MISSILE_RADIUS
+	sta	(MISSILE_LOW),Y
+not_match:
+	rts
+
+
+
+	;============================
+	; missile move parabola
+	;============================
+
+missile_move_parab:
+
+	; add X
+	clc
+	ldy	#MISSILE_X_FRAC
+	lda	(MISSILE_LOW),Y
+	ldy	#MISSILE_X
+	adc	(MISSILE_LOW),Y
+	sta	(MISSILE_LOW),Y
+
+	; add Y
+	clc
+	ldy	#MISSILE_P_DY_L
+	lda	(MISSILE_LOW),Y
+	ldy	#MISSILE_Y_FRAC
+	adc	(MISSILE_LOW),Y
+	sta	(MISSILE_LOW),Y
+
+	ldy	#MISSILE_P_DY_H
+	lda	(MISSILE_LOW),Y
+	ldy	#MISSILE_Y
+	adc	(MISSILE_LOW),Y
+	sta	(MISSILE_LOW),Y
+
+	; add dY
+	clc
+	ldy	#MISSILE_P_DDY_L
+	lda	(MISSILE_LOW),Y
+	ldy	#MISSILE_P_DY_L
+	adc	(MISSILE_LOW),Y
+	sta	(MISSILE_LOW),Y
+
+	ldy	#MISSILE_P_DDY_H
+	lda	(MISSILE_LOW),Y
+	ldy	#MISSILE_P_DY_H
+	adc	(MISSILE_LOW),Y
+	sta	(MISSILE_LOW),Y
+
+
+	; see if at end
+	ldy	#MISSILE_X
+	lda	(MISSILE_LOW),Y
+	ldy	#MISSILE_DEST_X
+	cmp	(MISSILE_LOW),Y
+	bne	not_parab_match
+
+is_parab_match:
+	lda	#STATUS_EXPLODING
+	ldy	#MISSILE_STATUS
+	sta	(MISSILE_LOW),Y
+
+	lda	#0
+	ldy	#MISSILE_RADIUS
+	sta	(MISSILE_LOW),Y
+not_parab_match:
+	rts
+
+
+
+	; status frame    x/x    y/y    dx/dx dy/dy destx desty/radius
+missiles:
+
+parabolas:
+;.byte $00, 4, 164,$00, 75,$00, $FC,$8C, $00,$16, 80,255
+
+.include "coords.inc"
+
+;  status grame x/x     y/y      dy/dy    ddy/ddy destx/desty
+
