@@ -6,11 +6,12 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	speech.dsk
 
-speech.dsk:	HELLO SSI263_TEST TROGDOR
+speech.dsk:	HELLO SSI263_TEST TROGDOR MYST
 	cp $(EMPTY_DISK) speech.dsk
 	$(DOS33) -y speech.dsk SAVE A HELLO
 	$(DOS33) -y speech.dsk BSAVE -a 0x1000 SSI263_TEST
 	$(DOS33) -y speech.dsk BSAVE -a 0x1000 TROGDOR
+	$(DOS33) -y speech.dsk BSAVE -a 0x1000 MYST
 
 ###
 
@@ -28,6 +29,14 @@ TROGDOR: trogdor.o
 trogdor.o:	trogdor.s ssi263.inc ssi263_detect.s ssi263_simple_speech.s
 	ca65 -o trogdor.o trogdor.s -l trogdor.lst
 
+###
+
+MYST: myst.o
+	ld65 -o MYST myst.o -C ../../linker_scripts/apple2_1000.inc
+
+myst.o:	myst.s ssi263.inc ssi263_detect.s ssi263_simple_speech.s
+	ca65 -o myst.o myst.s -l myst.lst
+
 
 ###
 
@@ -38,6 +47,6 @@ HELLO:	hello.bas
 ####
 
 clean:	
-		rm -f *~ *.o *.lst HELLO SSI263_TEST TROGDOR
+		rm -f *~ *.o *.lst HELLO SSI263_TEST TROGDOR MYST
 
 
