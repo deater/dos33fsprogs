@@ -252,17 +252,6 @@ jhonka:
         sta     VGI_RYRUN
         jsr     vgi_simple_rectangle
 
-;	lda     #214
-;	sta     VGI_RX1
-;	lda     #58
-;	sta     VGI_RY1
-;	lda	#8
-;	sta	VGI_RXRUN
-;	lda	#20
- ;       sta     VGI_RYRUN
-  ;      jsr     vgi_simple_rectangle
-
-
 	lda	#<jhonka_string
 	sta	OUTL
 	lda	#>jhonka_string
@@ -273,7 +262,32 @@ jhonka:
 	;=================
 	; animate jhonka
 
+	lda	#19
+	sta	CURSOR_X
+	lda	#83
+	sta	CURSOR_Y
+
+animation_loop:
+
+	lda	#<jhonka1
+	sta	INL
+	lda	#>jhonka1
+	sta	INH
+
+	jsr	hgr_draw_sprite_42x31
+
 	jsr	wait_until_keypress
+
+	lda	#<jhonka2
+	sta	INL
+	lda	#>jhonka2
+	sta	INH
+
+	jsr	hgr_draw_sprite_42x31
+
+	jsr	wait_until_keypress
+
+	jmp	animation_loop
 
 	;========================
 	;========================
@@ -406,6 +420,7 @@ peasant_text:
 ;.include "version.inc"
 
 .include "hgr_14x14_sprite_mask.s"
+.include "hgr_42x31_sprite.s"
 
 .include "score.s"
 

@@ -46,6 +46,8 @@ ending_sprites.inc:	end_sprites.png
 	$(HGR_SPRITE) -l baby9_mask end_sprites.png 42 156 55 170 >> ending_sprites.inc
 	$(HGR_SPRITE) -l baby10_sprite end_sprites.png 14 173 27 187 >> ending_sprites.inc
 	$(HGR_SPRITE) -l baby10_mask end_sprites.png 42 173 55 187 >> ending_sprites.inc
+	$(HGR_SPRITE) -l jhonka1 end_sprites.png 105 84 145 115 >> ending_sprites.inc
+	$(HGR_SPRITE) -l jhonka2 end_sprites.png 105 121 145 152 >> ending_sprites.inc
 
 clean:
 	rm -f *~ inventory_sprites.inc ending_sprites.inc

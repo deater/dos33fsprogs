@@ -180,7 +180,8 @@ ending.o:	ending.s zp.inc \
 		graphics_end/ending_graphics.inc sprites/peasant_sprite.inc \
 		sprites/ending_sprites.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_14x14_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
+		hgr_14x14_sprite_mask.s hgr_1x5_sprite.s \
+		hgr_42x31_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
 		peasant_move.s score.s inventory.s
