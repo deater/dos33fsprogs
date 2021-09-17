@@ -34,6 +34,15 @@ ending:
 
 	; FIXME: only if mockingboard enabled
 
+	lda	#$09			; don't end after 4
+	sta	PT3_LOC+$C9+$4
+
+	; 2??
+	lda	#$3			; set LOOP to 2
+	sta	PT3_LOC+$66
+
+	jsr	pt3_init_song
+
 	cli
 
 
@@ -101,6 +110,62 @@ boat:
 	lda	#0
 	sta	BABY_COUNT
 boat_loop:
+
+	; play sound effect
+	lda	BABY_COUNT
+	cmp	#7
+	bcc	no_sound
+	cmp	#11
+	bcs	no_sound
+
+	cmp	#10
+	beq	bloop
+
+click:
+	lda	#NOTE_C3
+	sta	speaker_frequency
+	lda	#6
+	sta	speaker_duration
+	jsr	speaker_beep
+	jmp	no_sound
+
+bloop:
+	lda	#10
+	sta	speaker_duration
+	lda	#NOTE_C4
+	sta	speaker_frequency
+	jsr	speaker_beep
+
+	lda	#10
+	sta	speaker_duration
+	lda	#NOTE_D4
+	sta	speaker_frequency
+	jsr	speaker_beep
+
+	lda	#10
+	sta	speaker_duration
+	lda	#NOTE_E4
+	sta	speaker_frequency
+	jsr	speaker_beep
+
+	lda	#10
+	sta	speaker_duration
+	lda	#NOTE_D4
+	sta	speaker_frequency
+	jsr	speaker_beep
+
+	lda	#10
+	sta	speaker_duration
+	lda	#NOTE_C4
+	sta	speaker_frequency
+	jsr	speaker_beep
+	jmp	no_sound
+
+
+
+no_sound:
+
+
 	ldy	BABY_COUNT
 	lda	boat_progress_l,Y
 	sta	INL
@@ -494,6 +559,8 @@ peasant_text:
 .include "score.s"
 
 .include "wait_a_bit.s"
+
+.include "speaker_beeps.s"
 
 .include "graphics_end/ending_graphics.inc"
 
