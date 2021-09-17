@@ -96,6 +96,7 @@ escape_handler:
 	sei				; turn off music
 	jsr	clear_ay_both		; clear AY state
 
+	jsr	mockingboard_disable_interrupt
 
 	;=============================
 	; start new game
@@ -177,3 +178,4 @@ escape_handler:
 .include "wait_a_bit.s"
 
 .include "graphics/graphics_intro.inc"
+

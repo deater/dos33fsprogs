@@ -275,3 +275,117 @@ setup_irq_smc6:
 				; clear interrupt and start counting
 
 	rts
+
+
+
+	;=============================
+	; Setup
+	;=============================
+mockingboard_disable_interrupt:
+
+;.ifdef PT3_ENABLE_APPLE_IIC
+;	lda	APPLEII_MODEL
+;	cmp	#'C'
+;	bne	done_iic_hack
+;
+;	; bypass the firmware interrupt handler
+;	; should we do this on IIe too? probably faster
+;
+;	; first we have to copy the ROM to the language card
+;
+;	sei				; disable interrupts
+;
+;
+;
+;copy_rom_loop:
+;	lda	$c089			; read ROM, write RAM1
+;	lda	$c089
+
+;	ldy	#0
+;read_rom_loop:
+;	lda	$D000,Y
+;	sta	$400,Y			; note this uses text page as
+					; temporary data store
+;	iny
+;	bne	read_rom_loop
+
+;	lda	$c08B			; read/write RAM1
+;	lda	$c08B			;
+
+;write_rom_loop:
+;	lda	$400,Y
+;	sta	$D000,Y
+;	iny
+;	bne	write_rom_loop
+
+;	inc	read_rom_loop+2
+;	inc	write_rom_loop+5
+;	bne	copy_rom_loop
+
+;	lda	#<interrupt_handler
+;	sta	$fffe
+;	lda	#>interrupt_handler
+;	sta	$ffff
+
+;	lda	#$EA			; nop out the "lda $45" in the irq handler
+;	sta	interrupt_smc
+;	sta	interrupt_smc+1
+;.endif
+;
+;done_iic_hack:
+
+
+	;=========================
+	; Setup Interrupt Handler
+	;=========================
+	; Vector address goes to 0x3fe/0x3ff
+	; FIXME: should chain any existing handler
+
+;	lda	#<interrupt_handler
+;	sta	$03fe
+;	lda	#>interrupt_handler
+;	sta	$03ff
+
+	;============================
+	; Enable 50Hz clock on 6522
+	;============================
+
+
+	; Note, on Apple II the clock isn't 1MHz but is actually closer to
+	;       roughly 1.023MHz, and every 65th clock is stretched (it's complicated)
+
+	; 4fe7 / 1.023e6 = .020s, 50Hz
+	; 9c40 / 1.023e6 = .040s, 25Hz
+	; 411a / 1.023e6 = .016s, 60Hz
+
+	; French Touch uses
+	; 4e20 / 1.000e6 = .020s, 50Hz, which assumes 1MHz clock freq
+
+	sei			; disable interrupts just in case
+
+	lda	#$40		; Continuous interrupts, don't touch PB7
+disable_irq_smc1:
+	sta	MOCK_6522_ACR	; ACR register
+	lda	#$7F		; clear all interrupt flags
+disable_irq_smc2:
+	sta	MOCK_6522_IER	; IER register (interrupt enable)
+
+;	lda	#$C0
+;setup_irq_smc3:
+;	sta	MOCK_6522_IFR	; IFR: 1100, enable interrupt on timer one oflow
+;setup_irq_smc4:
+;	sta	MOCK_6522_IER	; IER: 1100, enable timer one interrupt
+
+;	lda	#$E7
+;	lda	#$20
+;setup_irq_smc5:
+;	sta	MOCK_6522_T1CL	; write into low-order latch
+;	lda	#$4f
+;	lda	#$4E
+;setup_irq_smc6:
+;	sta	MOCK_6522_T1CH	; write into high-order latch,
+;				; load both values into counter
+;				; clear interrupt and start counting
+
+	rts
+

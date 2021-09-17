@@ -13,6 +13,8 @@ trogdor:
 	lda	#0
 	sta	GAME_OVER
 
+	jsr	setup_speech
+
 	jsr	hgr_make_tables
 
 	jsr	HGR2		; Hi-res graphics, no text at bottom
@@ -56,7 +58,23 @@ trogdor_cave:
 	;==================================
 	; text to speech, where available!
 
-	jsr	wait_until_keypress
+speech_loop:
+
+        ; trogdor
+
+        lda     #<trogdor_honestly
+        sta     SPEECH_PTRL
+        lda     #>trogdor_honestly
+        sta     SPEECH_PTRH
+
+        jsr     ssi263_speak
+
+wait_for_speech:
+	lda	speech_busy
+	bmi	wait_for_speech
+
+
+;	jsr	wait_until_keypress
 
 	jsr	hgr_partial_restore
 
@@ -254,7 +272,12 @@ peasant_text:
 
 .include "speaker_beeps.s"
 
+.include "ssi263_simple_speech.s"
+.include "trogdor_speech.s"
+
 .include "graphics_trogdor/trogdor_graphics.inc"
+
+.include "sprites/trogdor_sprites.inc"
 
 trogdor_string:
 	.byte   0,43,32, 0,253,82

@@ -35,6 +35,8 @@ GAME_OVER	= $6C
 	NEW_LOCATION	= $FF
 	NEW_FROM_DISK	= $01
 
+SPEECH_PTRL    = $70
+SPEECH_PTRH    = $71
 
 ; pt3 player registers
 AY_REGISTERS    = $70

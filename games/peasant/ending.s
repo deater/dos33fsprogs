@@ -11,6 +11,8 @@
 
 ending:
 
+	jsr	mockingboard_setup_interrupt
+
 	jsr	hgr_make_tables
 
 	jsr	HGR2		; Hi-res graphics, no text at bottom
