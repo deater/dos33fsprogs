@@ -23,7 +23,7 @@ inventory_sprites.inc:	inventory.png
 	$(HGR_SPRITE) -l tshirt_sprite inventory.png 42 139 55 155 >> inventory_sprites.inc
 
 
-ending_sprites.inc:	end_sprites.png
+ending_sprites.inc:	end_sprites.png boat_sprites.png
 	$(HGR_SPRITE) -l baby0_sprite end_sprites.png 14 3 27 17 > ending_sprites.inc
 	$(HGR_SPRITE) -l baby0_mask end_sprites.png 42 3 55 17 >> ending_sprites.inc
 	$(HGR_SPRITE) -l baby1_sprite end_sprites.png 14 20 27 34 >> ending_sprites.inc
@@ -46,8 +46,17 @@ ending_sprites.inc:	end_sprites.png
 	$(HGR_SPRITE) -l baby9_mask end_sprites.png 42 156 55 170 >> ending_sprites.inc
 	$(HGR_SPRITE) -l baby10_sprite end_sprites.png 14 173 27 187 >> ending_sprites.inc
 	$(HGR_SPRITE) -l baby10_mask end_sprites.png 42 173 55 187 >> ending_sprites.inc
-	$(HGR_SPRITE) -l jhonka1 end_sprites.png 105 84 145 115 >> ending_sprites.inc
-	$(HGR_SPRITE) -l jhonka2 end_sprites.png 105 121 145 152 >> ending_sprites.inc
+	$(HGR_SPRITE) -s -l jhonka1 end_sprites.png 105 84 145 115 >> ending_sprites.inc
+	$(HGR_SPRITE) -s -l jhonka2 end_sprites.png 105 121 145 152 >> ending_sprites.inc
+	$(HGR_SPRITE) -s -l boat0 boat_sprites.png  7   1 81   45 >> ending_sprites.inc
+	$(HGR_SPRITE) -s -l boat1 boat_sprites.png  7  47 81   91 >> ending_sprites.inc
+	$(HGR_SPRITE) -s -l boat2 boat_sprites.png  7  93 81  137 >> ending_sprites.inc
+	$(HGR_SPRITE) -s -l boat3 boat_sprites.png  7 139 81  183 >> ending_sprites.inc
+	$(HGR_SPRITE) -s -l boat4 boat_sprites.png 91   1 165  45 >> ending_sprites.inc
+	$(HGR_SPRITE) -s -l boat5 boat_sprites.png 91  47 165  91 >> ending_sprites.inc
+	$(HGR_SPRITE) -s -l boat6 boat_sprites.png 91  93 165 137 >> ending_sprites.inc
+	$(HGR_SPRITE) -s -l boat7 boat_sprites.png 91 139 165 183 >> ending_sprites.inc
+
 
 clean:
 	rm -f *~ inventory_sprites.inc ending_sprites.inc

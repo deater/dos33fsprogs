@@ -10,8 +10,6 @@
 .include "qload.inc"
 
 ending:
-;	lda	#0
-;	sta	GAME_OVER
 
 	jsr	hgr_make_tables
 
@@ -64,7 +62,7 @@ boat:
 
 	lda     #12
 	sta     VGI_RX1
-	lda     #38
+	lda     #98
 	sta     VGI_RY1
 	lda	#202
 	sta	VGI_RXRUN
@@ -74,7 +72,7 @@ boat:
 
 	lda     #214
 	sta     VGI_RX1
-	lda     #38
+	lda     #98
 	sta     VGI_RY1
 	lda	#45
 	sta	VGI_RXRUN
@@ -95,8 +93,31 @@ boat:
 	; animate catching fish
 
 
-	jsr	wait_until_keypress
+	lda	#1
+	sta	CURSOR_X
+	lda	#52
+	sta	CURSOR_Y
 
+	lda	#0
+	sta	BABY_COUNT
+boat_loop:
+	ldy	BABY_COUNT
+	lda	boat_progress_l,Y
+	sta	INL
+	lda	boat_progress_h,Y
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+	lda	#4
+	jsr	wait_a_bit
+
+;	jsr	wait_until_keypress
+
+	inc	BABY_COUNT
+	lda	BABY_COUNT
+	cmp	#14
+	bne	boat_loop
 
 	;=======================
 	;=======================
@@ -262,10 +283,15 @@ jhonka:
 	;=================
 	; animate jhonka
 
+	; repeats 12 times
+
 	lda	#19
 	sta	CURSOR_X
 	lda	#83
 	sta	CURSOR_Y
+
+	lda	#13
+	sta	BABY_COUNT
 
 animation_loop:
 
@@ -274,20 +300,25 @@ animation_loop:
 	lda	#>jhonka1
 	sta	INH
 
-	jsr	hgr_draw_sprite_42x31
+	jsr	hgr_draw_sprite
 
-	jsr	wait_until_keypress
+	lda	#2
+	jsr	wait_a_bit
 
 	lda	#<jhonka2
 	sta	INL
 	lda	#>jhonka2
 	sta	INH
 
-	jsr	hgr_draw_sprite_42x31
+	jsr	hgr_draw_sprite
 
-	jsr	wait_until_keypress
+	lda	#2
+	jsr	wait_a_bit
 
-	jmp	animation_loop
+
+	dec	BABY_COUNT
+
+	bne	animation_loop
 
 	;========================
 	;========================
@@ -420,7 +451,7 @@ peasant_text:
 ;.include "version.inc"
 
 .include "hgr_14x14_sprite_mask.s"
-.include "hgr_42x31_sprite.s"
+.include "hgr_sprite.s"
 
 .include "score.s"
 
@@ -431,7 +462,7 @@ peasant_text:
 .include "sprites/ending_sprites.inc"
 
 boat_string:
-	.byte 2,40
+	.byte 2,100
 	.byte "         Peasant's Quest",13
 	.byte "Written by Matt, Jonathan, and Mike",0
 
@@ -516,6 +547,21 @@ baby_progress:
 	.byte 119,9, 21, 128	; 154,127 end
 	.byte 123,10,20, 128	; 154,127 end
 	.byte $FF,$FF,0,0
+
+
+boat_progress_l:
+	.byte <boat0,<boat1
+	.byte <boat0,<boat1
+	.byte <boat0,<boat1
+	.byte <boat2,<boat3,<boat3
+	.byte <boat4,<boat5,<boat6,<boat7,<boat7
+
+boat_progress_h:
+	.byte >boat0,>boat1
+	.byte >boat0,>boat1
+	.byte >boat0,>boat1
+	.byte >boat2,>boat3,>boat3
+	.byte >boat4,>boat5,>boat6,>boat7,>boat7
 
 
 update_top:

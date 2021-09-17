@@ -1,17 +1,31 @@
-	;===============================
-	; hgr 42x31 draw sprite
-	;===============================
+	;===========================================
+	; hgr draw sprite (only at 7-bit boundaries)
+	;===========================================
 	; SPRITE in INL/INH
 	; Location at CURSOR_X CURSOR_Y
 
+	; xsize, ysize  in first two bytes
+
 	; sprite AT INL/INH
 
-hgr_draw_sprite_42x31:
+hgr_draw_sprite:
+	ldy	#0
+	lda	(INL),Y
+	clc
+	adc	CURSOR_X
+	sta	h4231_width_end_smc+1	; self modify for end of output
+
+	iny
+	lda	(INL),Y
+	sta	h4231_ysize_smc+1
 
 	; set up sprite pointers
+	clc
 	lda	INL
+	adc	#2
 	sta	h4231_smc1+1
 	lda	INH
+	adc	#0
 	sta	h4231_smc1+2
 
 	ldx	#0			; X is pointer offset
@@ -34,21 +48,24 @@ hgr_42x31_sprite_yloop:
 	sta	GBASH
 
 	ldy	CURSOR_X
-	tya
-	clc
-	adc	#6
-	sta	h4231_width_smc+1
 
 h3231_inner_loop:
 
 h4231_smc1:
-	lda	$d000,X		; or in sprite
+	lda	$d000		; get sprite pattern
 	sta	(GBASL),Y	; store out
 
 	inx
 	iny
 
-h4231_width_smc:
+
+	inc	h4231_smc1+1
+	bne	h4231_noflo
+	inc	h4231_smc1+2
+
+h4231_noflo:
+
+h4231_width_end_smc:
 	cpy	#6
 	bne	h3231_inner_loop
 
@@ -56,6 +73,7 @@ h4231_width_smc:
 	inc	MASK		; row
 	lda	MASK		; row
 
+h4231_ysize_smc:
 	cmp	#31
 	bne	hgr_42x31_sprite_yloop
 
