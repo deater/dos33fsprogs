@@ -56,6 +56,9 @@ ending_sprites.inc:	end_sprites.png boat_sprites.png
 	$(HGR_SPRITE) -s -l boat5 boat_sprites.png 91  47 165  91 >> ending_sprites.inc
 	$(HGR_SPRITE) -s -l boat6 boat_sprites.png 91  93 165 137 >> ending_sprites.inc
 	$(HGR_SPRITE) -s -l boat7 boat_sprites.png 91 139 165 183 >> ending_sprites.inc
+	$(HGR_SPRITE) -s -l foam0 end_sprites.png 155  38 165 85 >> ending_sprites.inc
+	$(HGR_SPRITE) -s -l foam1 end_sprites.png 183  38 195 85 >> ending_sprites.inc
+
 
 
 clean:

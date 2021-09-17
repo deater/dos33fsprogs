@@ -177,6 +177,44 @@ waterfall:
 	jsr	save_bg_14x14
 
 baby_loop:
+	;====================
+	; also animate waterfall
+
+	lda	CURSOR_X
+	pha
+	lda	CURSOR_Y
+	pha
+
+	lda	#36
+	sta	CURSOR_X
+	lda	#93
+	sta	CURSOR_Y
+
+	lda	FRAME
+	and	#$4
+	beq	do_foam1
+
+do_foam0:
+	lda	#<foam0
+	sta	INL
+	lda	#>foam0
+	jmp	do_foam
+do_foam1:
+	lda	#<foam1
+	sta	INL
+	lda	#>foam1
+do_foam:
+	sta	INH
+	jsr	hgr_draw_sprite
+
+	pla
+	sta	CURSOR_Y
+	pla
+	sta	CURSOR_X
+
+	;====================
+	; actually draw baby
+
 	ldx	BABY_COUNT
 	lda	baby_progress,X
 	bmi	done_baby
