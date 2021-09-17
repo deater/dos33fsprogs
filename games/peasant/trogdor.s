@@ -39,6 +39,22 @@ trogdor_cave:
 
 	jsr	decompress_lzsa2_fast
 
+	;======================
+	; draw rather dashing
+
+	lda	#12
+	sta	CURSOR_X
+	lda	#142
+	sta	CURSOR_Y
+
+	lda	#<dashing0_sprite
+	sta	INL
+	lda	#>dashing0_sprite
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+
 	jsr	update_top
 
 	jsr	wait_until_keypress
@@ -135,6 +151,21 @@ trogdor_open:
 
 	jsr	decompress_lzsa2_fast
 
+	;======================
+	; draw rather dashing
+
+	lda	#12
+	sta	CURSOR_X
+	lda	#142
+	sta	CURSOR_Y
+
+	lda	#<dashing0_sprite
+	sta	INL
+	lda	#>dashing0_sprite
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
 	jsr	update_top
 
 ;	jsr	wait_until_keypress
@@ -209,6 +240,48 @@ burninate_loop:
 
 	jsr	update_top
 
+	;======================
+	; draw rather dashing
+
+	lda	#12
+	sta	CURSOR_X
+	lda	#142
+	sta	CURSOR_Y
+
+	lda	#1
+	sta	BABY_COUNT
+
+dashing_loop:
+
+	ldy	BABY_COUNT
+	lda	dashing_progress_l,Y
+	sta	INL
+	lda	dashing_progress_h,Y
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+	lda	#220
+	jsr	WAIT
+
+	ldy	BABY_COUNT
+	cpy	#7
+	bne	no_boom
+
+	lda     #64
+        sta     speaker_duration
+        lda     #NOTE_C3
+        sta     speaker_frequency
+        jsr     speaker_beep
+
+no_boom:
+
+	inc	BABY_COUNT
+	lda	BABY_COUNT
+	cmp	#9
+	bne	dashing_loop
+
+
 	; collapse with boom
 
 	;==================
@@ -272,6 +345,8 @@ peasant_text:
 
 .include "speaker_beeps.s"
 
+.include "hgr_sprite.s"
+
 .include "ssi263_simple_speech.s"
 .include "trogdor_speech.s"
 
@@ -318,3 +393,16 @@ update_top:
         jsr     print_score
 
         rts
+
+
+dashing_progress_l:
+	.byte <dashing0_sprite,<dashing1_sprite,<dashing2_sprite
+	.byte <dashing3_sprite,<dashing4_sprite,<dashing5_sprite
+	.byte <dashing6_sprite,<dashing7_sprite,<dashing8_sprite
+
+dashing_progress_h:
+	.byte >dashing0_sprite,>dashing1_sprite,>dashing2_sprite
+	.byte >dashing3_sprite,>dashing4_sprite,>dashing5_sprite
+	.byte >dashing6_sprite,>dashing7_sprite,>dashing8_sprite
+
+

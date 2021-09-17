@@ -61,15 +61,15 @@ ending_sprites.inc:	end_sprites.png boat_sprites.png
 
 
 trogdor_sprites.inc:	trogdor_sprites.png
-	$(HGR_SPRITE) -l dashing0_sprite trogdor_sprites.png 14 6 20 45 > trogdor_sprites.inc
-	$(HGR_SPRITE) -l dashing1_sprite trogdor_sprites.png 28 6 34 45 >> trogdor_sprites.inc
-	$(HGR_SPRITE) -l dashing2_sprite trogdor_sprites.png 42 6 48 45 >> trogdor_sprites.inc
-	$(HGR_SPRITE) -l dashing3_sprite trogdor_sprites.png 56 6 62 45 >> trogdor_sprites.inc
-	$(HGR_SPRITE) -l dashing4_sprite trogdor_sprites.png 70 6 76 45 >> trogdor_sprites.inc
-	$(HGR_SPRITE) -l dashing5_sprite trogdor_sprites.png 84 6 90 45 >> trogdor_sprites.inc
-	$(HGR_SPRITE) -l dashing6_sprite trogdor_sprites.png 98 6 104 45 >> trogdor_sprites.inc
-	$(HGR_SPRITE) -l dashing7_sprite trogdor_sprites.png 112 6 118 45 >> trogdor_sprites.inc
-	$(HGR_SPRITE) -l dashing8_sprite trogdor_sprites.png 126 6 132 45 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l dashing0_sprite trogdor_sprites.png 14 6 20 45 > trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l dashing1_sprite trogdor_sprites.png 28 6 34 45 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l dashing2_sprite trogdor_sprites.png 42 6 48 45 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l dashing3_sprite trogdor_sprites.png 56 6 62 45 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l dashing4_sprite trogdor_sprites.png 70 6 76 45 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l dashing5_sprite trogdor_sprites.png 84 6 90 45 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l dashing6_sprite trogdor_sprites.png 98 6 104 45 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l dashing7_sprite trogdor_sprites.png 112 6 118 45 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l dashing8_sprite trogdor_sprites.png 126 6 132 45 >> trogdor_sprites.inc
 
 clean:
 	rm -f *~ inventory_sprites.inc ending_sprites.inc trogdor_sprites.inc
