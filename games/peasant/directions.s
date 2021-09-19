@@ -36,17 +36,17 @@ directions_loop:
 directions_text:
 	    ;0123456789012345678901234567890123456789
 .byte  4,46,"Here's how things work round here:",0
-.byte  0,60,"-Look around by typing stuff like",0
-.byte  1,69,"'look tree' or just plain 'look'",0
-.byte  0,78,"-Talk to folks by typing stuff like",0
-.byte  1,87,"'talk man'",0
-.byte  0,96,"-Take items by typing 'get (item)'",0
-.byte 0,105,"-Use items by typing 'use (item)' You",0
-.byte 1,114,"can also 'give (item)' 'throw (item)'",0
-.byte 1,123,"or some other action words",0
-.byte 0,132,"-Type 'inv' to see your INVENTORY",0
-.byte 0,141,"-Type 'save' to save your game and",0
-.byte 1,150,"'load' to load one.",0
-.byte 0,159,"-press + and - to speed up or slow down",0
-.byte 1,168,"your character",0
-.byte 7,180,"click anywheres to start game",0
+.byte  0,60,"Use ARROWS or W,A,S,D to move",0
+.byte  0,69,"Press RETURN to enter commands",0
+.byte  0,78,"-Look around by typing stuff like",0
+.byte  1,87,"'look tree' or just plain 'look'",0
+.byte  0,96,"-Talk to folks by typing stuff like",0
+.byte 1,105,"'talk man'",0
+.byte 0,114,"-Take items by typing 'get (item)'",0
+.byte 0,123,"-Use items by typing 'use (item)' You",0
+.byte 1,132,"can also 'give (item)' 'throw (item)'",0
+.byte 1,141,"or some other action words",0
+.byte 0,150,"-Type 'inv' to see your INVENTORY",0
+.byte 0,159,"-Type 'save' to save your game and",0
+.byte 1,168,"'load' to load one.",0
+.byte 7,180,"press any key to start game",0
