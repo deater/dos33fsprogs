@@ -190,6 +190,8 @@ peasant_text:
 
 .include "inventory.s"
 
+.include "loadsave_menu.s"
+
 help_message:
 .byte   0,43,24, 0,253,82
 .byte   8,41,"I don't understand. Type",13

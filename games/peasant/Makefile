@@ -22,9 +22,7 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK \
 	$(DOS33_RAW) peasant.dsk  12 0 COPY_CHECK 0   0
 	$(DOS33_RAW) peasant.dsk  14 0 PEASANT1	  0   0
 	$(DOS33_RAW) peasant.dsk  19 0 PEASANT2	  0   0
-	$(DOS33_RAW) peasant.dsk  19 0 TROGDOR	  0   0
 	$(DOS33_RAW) peasant.dsk  24 0 PEASANT3	  0   0
-	$(DOS33_RAW) peasant.dsk  24 0 ENDING	  0   0
 	$(DOS33_RAW) peasant.dsk  29 0 PEASANT4	  0   0
 
 peasant_side2.dsk:	WBOOT2 TROGDOR ENDING
@@ -133,8 +131,7 @@ peasant2.o:	peasant2.s zp.inc \
 		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
-		peasant_move.s score.s inventory.s
-
+		peasant_move.s score.s inventory.s loadsave_menu.s
 	ca65 -o peasant2.o peasant2.s -l peasant2.lst
 
 ###

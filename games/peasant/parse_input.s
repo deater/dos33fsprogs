@@ -22,15 +22,26 @@ parse_copy:
 
 parse_inventory:
 	cmp	#'I'
-	bne	parse_look
+	bne	parse_l
 
 	jsr	show_inventory
 
 	jmp	restore_parse_message
 
-parse_look:
+parse_l:
 	cmp	#'L'
         bne     parse_talk
+
+	lda	input_buffer+2
+	and	#$DF			; make uppercase 0110 0001 -> 0100 0001
+	cmp	#'O'
+	beq	parse_look
+parse_load:
+	jsr	load_menu
+
+	jmp	finish_parse_message
+
+parse_look:
 
         lda     #<fake_error1
         sta     OUTL

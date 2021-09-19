@@ -187,6 +187,7 @@ peasant_text:
 .include "graphics/priority_peasant3.inc"
 
 .include "version.inc"
+.include "loadsave_menu.s"
 
 help_message:
 .byte   0,43,24, 0,253,82
