@@ -21,9 +21,6 @@ Trogdor:
 - Trogdor's speech
 
 Ending:
-- Fish animation
-- Jhonka animation
-- Waterfall animation
 - Smoother baby animation?  Use page-flipping?
   Modify sprite routine to auto-shift colors so we can have more
   of an arc on baby trajectory?

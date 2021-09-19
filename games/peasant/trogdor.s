@@ -1,4 +1,4 @@
-; Peasant's Quest Ending
+; Peasant's Quest Trgodor scene
 
 ; From when the sword hits Trogdor on
 
@@ -300,10 +300,9 @@ game_over:
 
 
 
+	; go to end credits
 
-	; FIXME
-
-	lda     #LOAD_PEASANT3
+	lda     #LOAD_ENDING
         sta     WHICH_LOAD
 
         rts

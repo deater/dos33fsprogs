@@ -21,15 +21,15 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK \
 	$(DOS33_RAW) peasant.dsk  8  0 INTRO      0   0
 	$(DOS33_RAW) peasant.dsk  12 0 COPY_CHECK 0   0
 	$(DOS33_RAW) peasant.dsk  14 0 PEASANT1	  0   0
-#	$(DOS33_RAW) peasant.dsk  19 0 PEASANT2	  0   0
+	$(DOS33_RAW) peasant.dsk  19 0 PEASANT2	  0   0
 	$(DOS33_RAW) peasant.dsk  19 0 TROGDOR	  0   0
-#	$(DOS33_RAW) peasant.dsk  19 0 ENDING	  0   0
-#	$(DOS33_RAW) peasant.dsk  24 0 PEASANT3	  0   0
+	$(DOS33_RAW) peasant.dsk  24 0 PEASANT3	  0   0
 	$(DOS33_RAW) peasant.dsk  24 0 ENDING	  0   0
 	$(DOS33_RAW) peasant.dsk  29 0 PEASANT4	  0   0
 
-peasant_side2.dsk:	TROGDOR ENDING
+peasant_side2.dsk:	WBOOT2 TROGDOR ENDING
 	cp $(EMPTY_DISK)/empty.dsk peasant_side2.dsk
+	$(DOS33_RAW) peasant_side2.dsk  0 0  WBOOT2       0   1
 	$(DOS33_RAW) peasant_side2.dsk  19 0 TROGDOR	  0   0
 	$(DOS33_RAW) peasant_side2.dsk  24 0 ENDING	  0   0
 
@@ -56,6 +56,18 @@ QLOAD:	qload.o
 
 qload.o:	qload.s qboot.inc
 	ca65 -o qload.o qload.s -l qload.lst
+
+###
+
+WBOOT2:	wrong_boot2.o
+	ld65 -o WBOOT2 wrong_boot2.o -C ../../linker_scripts/apple2_800.inc
+
+wrong_boot2.o: 	wrong_boot2.s
+	ca65 -o wrong_boot2.o wrong_boot2.s -l wrong_boot2.lst
+
+###
+
+
 
 ###
 
