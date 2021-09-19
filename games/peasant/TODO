@@ -19,6 +19,7 @@ Tower:
 Trogdor:
 - All the rest
 - Trogdor's speech
+- Properly detect if SSI-263 is available and skip if not
 
 Ending:
 - Smoother baby animation?  Use page-flipping?
