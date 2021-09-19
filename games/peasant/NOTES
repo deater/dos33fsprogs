@@ -1,3 +1,9 @@
+Notes
+~~~~~
+Some people would like actual S.A.M. support like the original game,
+but that takes 9kB!  Is there room in TROGDOR for that?
+
+
 Memory Map
 ~~~~~~~~~~
 
@@ -18,7 +24,7 @@ $BC-$BF ???
 $C0-$CF	I/O
 $D0-$FF	ROM
 
-Disk Map (disk has 35 tracks, each 4k in size)
+Disk1 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T	  0 = Qboot
 T	  1 = QLOAD	 4813 bytes	19S = 1T3S
@@ -30,6 +36,13 @@ T	 14 = PEASANT1  22501 bytes	79S = 4T15S	; 88 is max?
 T	 19 = PEASANT2					; 79 = 20224
 T        24 = PEASANT3
 T	 29 = PEASANT4
+
+Disk2 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T	 19 = TROGDOR	13673 bytes	
+T        24 = ENDING	19690 bytes	77S = 4T13S
+
+
 
 238, to 280 (6)
 50 to 135 (85)   6*85=510

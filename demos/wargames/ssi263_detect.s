@@ -10,6 +10,7 @@
 	;=============================
 	;=============================
 	; A = slot of mockingboard
+	; carry set if found
 
 detect_ssi263:
 	and	#$7
@@ -68,9 +69,13 @@ wait_irq:
 	bne	wait_irq
 	inx			;
 	bne	wait_irq
+	sei
+	clc			; not found
+	rts
 
 got_irq:
 	sei			; disable interrupts
+	sec			; found
 
 	rts
 

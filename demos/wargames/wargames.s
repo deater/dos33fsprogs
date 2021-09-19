@@ -13,6 +13,7 @@ VGI_CX          = P1
 VGI_CY          = P2
 VGI_CR          = P3
 
+SSI_FOUND	= $08
 NIBCOUNT	= $09
 CH		= $24
 CV		= $25
@@ -67,6 +68,9 @@ wargames:
 	;===========================
 
 ;	jmp	exchange	; debug
+
+	lda	#0
+	sta	DRAW_PAGE
 
 	jsr	HOME
 
@@ -288,13 +292,21 @@ done_missiles:
 
 	jsr	HOME
 
+	lda	#0
+	sta	SSI_FOUND
+
 
 	lda	#4			; assume slot #4 for now
 	jsr	detect_ssi263
+	bcc	no_ssi
+
+	lda	#1
+	sta	SSI_FOUND
 
 	lda	#4			; assume slot #4 for now
 	jsr	ssi263_speech_init
 
+no_ssi:
 
 speech_loop:
 
@@ -314,10 +326,7 @@ speech_loop:
 	jsr	move_and_print
 
 	; wait for it to complete
-
-wait1:
-	lda	speech_busy
-	bne	wait1
+	jsr	wait_for_ssi_done
 
 	jsr	wait_1s
 
@@ -332,9 +341,7 @@ wait1:
 
 	jsr	move_and_print
 
-wait2:
-	lda	speech_busy
-	bne	wait2
+	jsr	wait_for_ssi_done
 
 	jsr	wait_1s
 
@@ -350,9 +357,7 @@ wait2:
 	jsr	move_and_print
 	jsr	move_and_print
 
-wait3:
-	lda	speech_busy
-	bne	wait3
+	jsr	wait_for_ssi_done
 
 	bit	KEYRESET
 
@@ -728,3 +733,12 @@ parabolas:
 
 ;  status grame x/x     y/y      dy/dy    ddy/ddy destx/desty
 
+wait_for_ssi_done:
+	lda	SSI_FOUND
+	beq	ssi_no_need
+wait1:
+	lda	speech_busy
+	bne	wait1
+
+ssi_no_need:
+	rts
