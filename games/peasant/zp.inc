@@ -58,38 +58,39 @@ ENVELOPE_SHAPE  = $7D
 PATTERN_L       = $7E
 PATTERN_H       = $7F
 
-WHICH_LOAD	= $80
 
 ; rest of pt3_player
-PT3_TEMP        = $81
-ORNAMENT_L      = $82
-ORNAMENT_H      = $83
-SAMPLE_L        = $84
-SAMPLE_H        = $85
-LOOP            = $86
-MB_VALUE        = $87
-MB_ADDR_L       = $88
-MB_ADDR_H       = $89
-DONE_PLAYING    = $8A
-DONE_SONG       = $8B
-APPLEII_MODEL	= $8C
-ESC_PRESSED	= $8D
+PT3_TEMP        = $80
+ORNAMENT_L      = $81
+ORNAMENT_H      = $82
+SAMPLE_L        = $83
+SAMPLE_H        = $84
+LOOP            = $85
+MB_VALUE        = $86
+MB_ADDR_L       = $87
+MB_ADDR_H       = $88
+DONE_PLAYING    = $89
+DONE_SONG       = $8A
+APPLEII_MODEL	= $8B
+ESC_PRESSED	= $8C
 
 ;=======================
 ; savegame state
 ;=======================
-PEASANT_X	= $90
-PEASANT_Y	= $91
-PEASANT_DIR	= $92
+
+WHICH_LOAD	= $90
+PEASANT_X	= $91
+PEASANT_Y	= $92
+PEASANT_DIR	= $93
 	PEASANT_DIR_UP		= 0
 	PEASANT_DIR_RIGHT	= 1
 	PEASANT_DIR_LEFT	= 2
 	PEASANT_DIR_DOWN	= 3
-MAP_X		= $93
-MAP_Y		= $94
-MAP_LOCATION	= $95
+MAP_X		= $94
+MAP_Y		= $95
+MAP_LOCATION	= $96
 
-GAME_STATE_0	= $96
+GAME_STATE_0	= $97
 	BABY_IN_WELL=$00
 	TURN_WELL_CRANK=$00
 	TALK_TO_MENDELEV=$00
@@ -98,6 +99,7 @@ GAME_STATE_0	= $96
 	GARY_SCARED=$00
 	LADY_GONE=$00
 	TRINKET_GIVEN=$00
+GAME_STATE_1 = $98
 	FISH_FED=$00		; also implies man gone and inn open
 	PUDDLE_WET=$00
 	HAY_BALE=$00
@@ -106,25 +108,24 @@ GAME_STATE_0	= $96
 	NIGHT=$00
 	POT_ON_HEAD=$00
 	WEARING_ROBE=$00
+GAME_STATE_2 = $99
 	ON_FIRE	= $00
 	COTTAGE_ROCK_MOVED=$00
 	KNUCKLES_BLEED=$00
 	DRESSER_OPEN=$00
 
-
-NED_STATUS	= $99
-BUSH_STATUS	= $9A	; status of bush search
+NED_STATUS	= $9A
+BUSH_STATUS	= $9B	; status of bush search
 	
-KERREK_STATE	= $9B
+KERREK_STATE	= $9C
 	KERREK_ALIVE	= $00
 	KERREK_DEAD	= $01
 	KERREK_DECOMPOSING = $02
 	KERREK_SKELETON	= $03
-ARROW_SCORE	= $9C	; bottom=score, top=random num needed 3-5?
+ARROW_SCORE	= $9D	; bottom=score, top=random num needed 3-5?
 
-SCORE_HUNDREDS	= $9D
-SCORE_TENSONES	= $9E	
-
+SCORE_HUNDREDS	= $9E
+SCORE_TENSONES	= $9F	
 
 INVENTORY_1	= $A0
 	INV1_ARROW		= $01

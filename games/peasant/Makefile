@@ -9,12 +9,15 @@ EMPTY_DISK = ../../empty_disk
 all:	peasant.dsk peasant_side2.dsk
 
 peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK \
-	PEASANT1 PEASANT2 PEASANT3 PEASANT4 ENDING TROGDOR
+	PEASANT1 PEASANT2 PEASANT3 PEASANT4 ENDING TROGDOR \
+	SAVE1 SAVE2 SAVE3
 	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
-#	$(DOS33) -y peasant.dsk BSAVE -a 0x6000 INTRO
 	$(DOS33_RAW) peasant.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant.dsk  0  2 QBOOT      1   1
 	$(DOS33_RAW) peasant.dsk  0  4 QBOOT      2   1
+	$(DOS33_RAW) peasant.dsk  0 11 SAVE1      0   1
+	$(DOS33_RAW) peasant.dsk  0 12 SAVE2      0   1
+	$(DOS33_RAW) peasant.dsk  0 13 SAVE3      0   1
 	$(DOS33_RAW) peasant.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) peasant.dsk  3  0 VID_LOGO   0   0
 	$(DOS33_RAW) peasant.dsk  5  0 TITLE      0   0
@@ -219,6 +222,30 @@ FONT_TEST:	font_test.o
 font_test.o:	font_test.s hgr_font.s hgr_1x8_sprite.s
 	ca65 -o font_test.o font_test.s -l font_test.lst
 
+
+###
+
+SAVE1:	save1.o
+	ld65 -o SAVE1 save1.o -C ../../linker_scripts/apple2_e00.inc
+
+save1.o:	save1.s
+	ca65 -o save1.o save1.s -l save1.lst
+
+###
+
+SAVE2:	save2.o
+	ld65 -o SAVE2 save2.o -C ../../linker_scripts/apple2_e00.inc
+
+save2.o:	save2.s
+	ca65 -o save2.o save2.s -l save2.lst
+
+###
+
+SAVE3:	save3.o
+	ld65 -o SAVE3 save3.o -C ../../linker_scripts/apple2_e00.inc
+
+save3.o:	save3.s
+	ca65 -o save3.o save3.s -l save3.lst
 
 ####
 
