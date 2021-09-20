@@ -94,6 +94,8 @@ disp_end_of_line:
 
 disp_put_string_done:
 
+	jsr	inc_outl		; put to next
+
 	rts
 
 
