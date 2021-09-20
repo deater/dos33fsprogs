@@ -29,14 +29,27 @@ speech_loop:
 
 	; myst
 
-	lda	#<myst_fissure
+;	lda	#<myst_fissure
+;	sta	SPEECH_PTRL
+;	lda	#>myst_fissure
+;	sta	SPEECH_PTRH
+
+;	jsr	ssi263_speak
+
+;	jsr	wait_until_keypress
+
+
+	lda	#<myst_starry
 	sta	SPEECH_PTRL
-	lda	#>myst_fissure
+	lda	#>myst_starry
 	sta	SPEECH_PTRH
 
 	jsr	ssi263_speak
 
 	jsr	wait_until_keypress
+
+
+
 
 	jmp	speech_loop
 
@@ -209,6 +222,7 @@ myst_starry:
 	.byte PHONEME_T		; T
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
+
 	.byte PHONEME_K		; K	; continued
 	.byte PHONEME_UH1	; UH1
 	.byte PHONEME_N		; N
@@ -222,7 +236,15 @@ myst_starry:
 	.byte PHONEME_D		; D
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
-;falling
+
+	.byte PHONEME_F		; F	; falling
+	.byte PHONEME_AW	; AW
+	.byte PHONEME_L		; L
+	.byte PHONEME_I		; I
+	.byte PHONEME_NG	; NG
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
 	.byte PHONEME_I		; I1/I3	; into
 	.byte PHONEME_N		; N
 	.byte PHONEME_T		; T
@@ -230,30 +252,93 @@ myst_starry:
 	.byte PHONEME_IU	; UI/UI
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
+
 	.byte PHONEME_THV	; THV	; that
 	.byte PHONEME_AE1	; AE1
 	.byte PHONEME_EH	; EH3
 	.byte PHONEME_T		; T
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
-; starry
-; espanse
-; of
-; which
+
+	.byte PHONEME_S		; S	; starry
+	.byte PHONEME_T		; T
+	.byte PHONEME_AH1	; AH1
+	.byte PHONEME_UH3	; UH3
+	.byte PHONEME_R		; R
+	.byte PHONEME_E1	; E1
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_EH1	; EH1	; expanse
+	.byte PHONEME_EH	; EH3
+	.byte PHONEME_K		; K
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_S		; S
+	.byte PHONEME_P		; P
+	.byte PHONEME_AE1	; AE1
+	.byte PHONEME_N		; N
+	.byte PHONEME_Z		; Z
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_UH1	; UH1	; of
+	.byte PHONEME_UH3	; UH3
+	.byte PHONEME_V		; V
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_W		; W	; which
+	.byte PHONEME_I		; I1
+;	.byte PHONEME_I3	; I3
+	.byte PHONEME_T		; T
+	.byte PHONEME_SCH	; SCH
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
 	.byte PHONEME_AH1	; AH1	; I
 	.byte PHONEME_Y		; Y
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
+
 	.byte PHONEME_HF	; H	; had
 	.byte PHONEME_AE1	; AE1
 	.byte PHONEME_EH1	; EH3
 	.byte PHONEME_D		; D
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
-; only
-; a
-; fleeting
-; glimpse
+
+	.byte PHONEME_O		; O1	; only
+;	.byte PHONEME_O2	; O2
+	.byte PHONEME_N		; N
+	.byte PHONEME_L		; L
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_UH2	; UH2	; a
+	.byte PHONEME_UH3	; UH3
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_F		; F	; fleeting
+	.byte PHONEME_L		; L
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_T		; T
+	.byte PHONEME_I		; I
+	.byte PHONEME_NG	; NG
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_KV	; G	; glimpse
+	.byte PHONEME_L		; L
+	.byte PHONEME_I		; I
+	.byte PHONEME_M		; M
+	.byte PHONEME_P		; P
+	.byte PHONEME_Z		; Z
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
 	.byte $FF
 
 	; "I HAVE TRIED TO SPECULATE WHERE IT MIGHT"
@@ -275,7 +360,7 @@ myst_speculate:
 	.byte PHONEME_PAUSE	; PA
 ; speculate
 ; where
-' it
+; it
 ; might
 ; have
 ; landed,
