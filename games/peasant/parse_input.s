@@ -39,7 +39,7 @@ parse_l:
 parse_load:
 	jsr	load_menu
 
-	jmp	finish_parse_message
+	jmp	restore_parse_message
 
 parse_look:
 

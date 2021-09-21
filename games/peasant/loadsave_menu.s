@@ -26,8 +26,6 @@ load_menu:
 	; TODO
 
 
-
-
 	lda	#0
 	sta	INVENTORY_Y
 
@@ -99,7 +97,8 @@ draw_loadstore_text:
 	jsr	disp_put_string
 	jsr	disp_put_string
 
-
+	ldy	#0
+	jsr	overwrite_entry_ls
 
 	;===========================
 	; handle inventory keypress
@@ -112,122 +111,94 @@ handle_loadsave_keypress:
 
 	bit	KEYRESET			; clear keyboard strobe
 
-
-.if 0
 	pha
 
 	;=================
 	; erase old
 
 	ldy	INVENTORY_Y
-	jsr	overwrite_entry
+	jsr	overwrite_entry_ls
 
 	pla
 
 	and	#$7f			; clear top bit
 
 	cmp	#27
-	beq	urgh_done		; ESCAPE
+	beq	urgh_done_ls		; ESCAPE
 	cmp	#$7f
-	bne	inv_check_down		; DELETE
+	bne	ls_check_down		; DELETE
 
-urgh_done:
-	jmp	done_inv_keypress
+urgh_done_ls:
+	jmp	done_ls_keypress
 
-inv_check_down:
+ls_check_down:
 	cmp	#$0A
-	beq	inv_handle_down
+	beq	ls_handle_down
 	cmp	#'S'
-	bne	inv_check_up
-inv_handle_down:
+	bne	ls_check_up
+ls_handle_down:
 
 	ldx	INVENTORY_Y
-	cpx	#8
-	beq	inv_down_wrap
-	cpx	#17
-	beq	inv_down_wrap
+	cpx	#3
+	beq	ls_down_wrap
 
 	inx
 
-	jmp	inv_down_done
-inv_down_wrap:
-	txa
-	sec
-	sbc	#8
-	tax
+	jmp	ls_down_done
+ls_down_wrap:
+	ldx	#0
 
-inv_down_done:
+ls_down_done:
 	stx	INVENTORY_Y
-	jmp	inv_done_moving
+	jmp	ls_done_moving
 
-inv_check_up:
+ls_check_up:
 	cmp	#$0B
-	beq	inv_handle_up
+	beq	ls_handle_up
 	cmp	#'W'
-	bne	inv_check_left_right
-inv_handle_up:
+	bne	ls_check_return
+ls_handle_up:
 
 	ldx	INVENTORY_Y
-	beq	inv_up_wrap
-	cpx	#9
-	beq	inv_up_wrap
+	beq	ls_up_wrap
 
 	dex
-	jmp	inv_up_done
+	jmp	ls_up_done
 
-inv_up_wrap:
-	txa
-	clc
-	adc	#8
-	tax
+ls_up_wrap:
+	ldx	#3
 
-inv_up_done:
+ls_up_done:
 	stx	INVENTORY_Y
-	jmp	inv_done_moving
+	jmp	ls_done_moving
 
 
-inv_check_left_right:
-	cmp	#$15
-	beq	inv_handle_left_right
-	cmp	#'D'
-	beq	inv_handle_left_right
-	cmp	#$08
-	beq	inv_handle_left_right
-	cmp	#'A'
-	bne	inv_check_return
-inv_handle_left_right:
-	lda	INVENTORY_Y
-	clc
-	adc	#9
-	cmp	#18
-	bcc	inv_lr_good
-	sec
-	sbc	#18
+ls_check_return:
 
-inv_lr_good:
-	sta	INVENTORY_Y
-	jmp	inv_done_moving
+	cmp	#13
+	beq	ls_return
+	cmp	#' '
+	bne	ls_done_moving
 
-inv_check_return:
-	jsr	have_item
-	beq	inv_done_moving
+ls_return:
+	; do actual load
+	rts
 
-	jsr	show_item
-	jmp	draw_inv_box
+;	jmp	draw_inv_box
 
-inv_done_moving:
+ls_done_moving:
 
 	;================
 	; draw new
 	ldy	INVENTORY_Y
-	jsr	overwrite_entry
-.endif
+	jsr	overwrite_entry_ls
+
 	;================
 	; repeat
 
 	jmp	handle_loadsave_keypress
 
-done_loadsave_keypress:
+done_ls_keypress:
 
 	rts
 
@@ -261,4 +232,48 @@ save_titles:
 .byte	6,92, "SAVE 3",0
 .byte	6,116,"BACK",0
 
+
+        ;========================
+        ; overwrite entry_ls
+        ;========================
+        ; Y = which
+
+overwrite_entry_ls:
+	lda	invert_smc1+1
+	eor	#$7f
+	sta	invert_smc1+1
+
+	lda	#6
+	sta	CURSOR_X
+
+	; y=44+(3*Y)*8
+	sty	CURSOR_Y
+	tya
+	asl
+	clc
+	adc	CURSOR_Y
+	asl
+	asl
+	asl
+	adc	#44
+	sta	CURSOR_Y
+
+	ldx	#6	; assume 6 chars wide
+overwrite_loop_ls:
+        txa
+        pha
+
+	lda	#$20
+	jsr	hgr_put_char_cursor
+	inc	CURSOR_X
+	pla
+	tax
+	dex
+	bne	overwrite_loop_ls
+
+	lda	invert_smc1+1
+	eor	#$7f
+	sta	invert_smc1+1
+
+        rts
 
