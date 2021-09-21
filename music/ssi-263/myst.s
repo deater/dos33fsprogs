@@ -57,12 +57,20 @@ speech_loop:
 
 ;	jsr	wait_until_keypress
 
-	lda	#<myst_unsettling
+;	lda	#<myst_unsettling
+;	sta	SPEECH_PTRL
+;	lda	#>myst_unsettling
+;	sta	SPEECH_PTRH
+
+;	jsr	ssi263_speak
+
+	lda	#<myst_allayed
 	sta	SPEECH_PTRL
-	lda	#>myst_unsettling
+	lda	#>myst_allayed
 	sta	SPEECH_PTRH
 
 	jsr	ssi263_speak
+
 
 	jsr	wait_until_keypress
 
@@ -561,16 +569,58 @@ myst_unsettling:
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
 
-; still,
+	.byte PHONEME_S		; S	; still
+	.byte PHONEME_T		; T
+	.byte PHONEME_I		; I
+	.byte PHONEME_L		; L
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_PAUSE	; PA	; ,
+
 	.byte PHONEME_THV	; THV	; the
 	.byte PHONEME_UH1	; UH1
 	.byte PHONEME_UH3	; UH3
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
-; question
-; about
-; whose
-; hands
+
+	.byte PHONEME_K		; K	; question
+	.byte PHONEME_W		; W
+	.byte PHONEME_EH1	; EH1
+;	.byte PHONEME_EH3	; EH3
+	.byte PHONEME_S		; S
+	.byte PHONEME_T		; T
+	.byte PHONEME_SCH	; SCH
+	.byte PHONEME_UH3	; UH3
+	.byte PHONEME_N		; N
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_UH1	; UH1	; about
+	.byte PHONEME_B		; B
+	.byte PHONEME_UH2	; UH2
+	.byte PHONEME_AH	; AH2
+	.byte PHONEME_U1	; U1
+	.byte PHONEME_T		; T
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_HF	; H	; whose
+	.byte PHONEME_IU	; IU
+	.byte PHONEME_U1	; U1
+	.byte PHONEME_U1	; U1
+	.byte PHONEME_Z		; Z
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_HF	; HF	; hands
+	.byte PHONEME_AE1	; AE1
+	.byte PHONEME_EH	; EH3
+	.byte PHONEME_N		; N
+	.byte PHONEME_D		; D
+	.byte PHONEME_Z		; Z
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
 
 	.byte PHONEME_M		; M	; might
 	.byte PHONEME_UH3	; UH3
@@ -580,13 +630,64 @@ myst_unsettling:
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
 
-; someday
-; hold
-; my
-; MYST
-; book
-; are
-; unsettling
+	.byte PHONEME_S		; S	; someday
+	.byte PHONEME_UH1	; UH1
+	.byte PHONEME_UH2	; UH2
+	.byte PHONEME_M		; M
+	.byte PHONEME_D		; D
+	.byte PHONEME_AI	; A1
+	.byte PHONEME_I		; I3
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_HF	; HF	; hold
+	.byte PHONEME_O		; O2
+	.byte PHONEME_O		; O2
+	.byte PHONEME_L		; L
+	.byte PHONEME_L		; L
+	.byte PHONEME_D		; D
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_M		; M	; my
+	.byte PHONEME_UH3	; UH3
+	.byte PHONEME_AH	; AH2
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_M		; M	; MYST
+	.byte PHONEME_I		; I
+	.byte PHONEME_S		; S
+	.byte PHONEME_T		; T
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_B		; B	; book
+	.byte PHONEME_OO	; OO1
+	.byte PHONEME_OO	; OO1
+	.byte PHONEME_K		; K
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_AH1	; AH1	; are
+	.byte PHONEME_UH2	; UH2
+	.byte PHONEME_ER	; ER
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_UH1	; UH1	; unsettling
+	.byte PHONEME_N		; N
+	.byte PHONEME_S		; S
+	.byte PHONEME_EH1	; EH1
+	.byte PHONEME_T		; T
+	.byte PHONEME_L		; L
+	.byte PHONEME_I		; I
+	.byte PHONEME_NG	; NG
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
 
 	.byte PHONEME_T		; T	; to
 	.byte PHONEME_IU	; IU
@@ -594,8 +695,11 @@ myst_unsettling:
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
 
-; me.
-
+	.byte PHONEME_M		; M	; me
+	.byte PHONEME_E1	; E1
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
 
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
@@ -621,13 +725,35 @@ myst_allayed:
 	.byte PHONEME_T		; T
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
-; my
+
+	.byte PHONEME_M		; M	; my
+	.byte PHONEME_UH3	; UH3
+	.byte PHONEME_AH	; AH2
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
 ; apprehensions
-; might
+
+	.byte PHONEME_M		; M	; might
+	.byte PHONEME_UH3	; UH3
+	.byte PHONEME_AH	; AH2
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_T		; T
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
 ; never
 ; be
 ; allayed,
-; and
+
+	.byte PHONEME_AE1	; AE1	; and
+	.byte PHONEME_EH	; EH3
+	.byte PHONEME_N		; N
+	.byte PHONEME_D		; D
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
 ; so
 	.byte PHONEME_AH1	; AH1	; I
 	.byte PHONEME_Y		; Y
