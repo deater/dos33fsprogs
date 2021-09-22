@@ -12,18 +12,12 @@
 	.include "common_routines.inc"
 
 mist_start:
+
 	;===================
-	; init screen
+	; detect model
 	;===================
 
-	jsr	TEXT
-	jsr	HOME
-	bit	KEYRESET
-
-	bit	SET_GR
-	bit	PAGE0
-	bit	HIRES
-	bit	FULLGR
+	jsr	detect_appleii_model
 
 	;===================
 	; machine workarounds
@@ -59,29 +53,33 @@ mist_start:
 	sta   CLOCKCTL			; set twice for VidHD
 
 not_a_iigs:
-
 	;===================
-	; setup location
+	; print config
 	;===================
 
-	lda	#<locations
-	sta	LOCATIONS_L
-	lda	#>locations
-	sta	LOCATIONS_H
+	; print non-inverse
+	jsr	set_normal
 
-	;===================
-	; Load hires graphics
-	;===================
-reload_everything:
+	lda	#<config_string
+	sta	OUTL
+	lda	#>config_string
+	sta	OUTH
 
-	lda     #<file
-	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     #>file
-	sta     getsrc_smc+2	; LZSA_SRC_HI
+	jsr	move_and_print
 
-	lda	#$20
+	; print detected model
 
-	jsr	decompress_lzsa2_fast
+	lda	APPLEII_MODEL
+	ora	#$80
+	sta	$7d0+8		; 23,8
+
+	; if GS print the extra S
+	cmp	#'G'|$80
+	bne	not_gs
+	lda	#'S'|$80
+	sta	$7d0+9
+
+not_gs:
 
 	;===================================
 	; detect if we have a language card
@@ -93,6 +91,13 @@ reload_everything:
 
 	jsr	detect_language_card
 	bcs	no_language_card
+
+yes_language_card:
+	; update status
+	lda	#'6'|$80
+	sta	$7d0+11		; 23,11
+	lda	#'4'|$80
+	sta	$7d0+12		; 23,12
 
 	; update sound status
 	lda	SOUND_STATUS
@@ -124,6 +129,9 @@ no_language_card:
 	;===================================
 	; Setup Mockingboard
 	;===================================
+
+PT3_ENABLE_APPLEIIC = 1
+
 	lda	#0
 	sta	DONE_PLAYING
 	sta	LOOP
@@ -134,11 +142,44 @@ no_language_card:
 	bcc	mockingboard_notfound
 
 mockingboard_found:
-;       jsr     mockingboard_patch      ; patch to work in slots other than 4?
+
+	; print detected location
+
+	lda	#'S'+$80		; change NO to slot
+	sta	$7d0+30
+
+	lda	MB_ADDR_H		; $C4 = 4, want $B4 1100 -> 1011
+	and	#$87
+	ora	#$30
+
+	sta	$7d0+31         ; 23,31
 
 	lda	SOUND_STATUS
 	ora	#SOUND_MOCKINGBOARD
 	sta	SOUND_STATUS
+
+	;===========================
+	; detect SSI-263 too
+	;===========================
+;detect_ssi:
+;	lda	MB_ADDR_H
+;	and	#$87			; slot
+;	jsr	detect_ssi263
+;
+;	lda	irq_count
+;	beq	ssi_not_found
+;
+;	lda	#'Y'+$80
+;	sta	$7d0+39		; 23,39
+;
+;	lda	#SOUND_SSI263
+;	ora	SOUND_STATUS
+;	sta	SOUND_STATUS
+
+ssi_not_found:
+
+        jsr     mockingboard_patch      ; patch to work in slots other than 4?
+
 
 	;=======================
 	; Set up 50Hz interrupt
@@ -167,6 +208,54 @@ mockingboard_notfound:
 
 
 done_setup_sound:
+
+	;==========================
+	; wait a bit at text title
+	;==========================
+
+	lda	#40
+	jsr	wait_a_bit
+
+
+	;===================
+	; init screen
+	;===================
+
+	jsr	TEXT
+	jsr	HOME
+	bit	KEYRESET
+
+	bit	SET_GR
+	bit	PAGE0
+	bit	HIRES
+	bit	FULLGR
+
+
+	;===================
+	; setup location
+	;===================
+
+	lda	#<locations
+	sta	LOCATIONS_L
+	lda	#>locations
+	sta	LOCATIONS_H
+
+	;===================
+	; Load hires graphics
+	;===================
+reload_everything:
+
+	lda     #<file
+	sta     getsrc_smc+1	; LZSA_SRC_LO
+	lda     #>file
+	sta     getsrc_smc+2	; LZSA_SRC_HI
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+
+
 
 
 
@@ -497,11 +586,13 @@ really_exit:
 
 
 	; pt3 player
+	.include "pt3_lib_detect_model.s"
 	.include "pt3_lib_core.s"
 	.include "pt3_lib_init.s"
+	.include "pt3_lib_mockingboard_setup.s"
 	.include "interrupt_handler.s"
 	.include "pt3_lib_mockingboard_detect.s"
-	.include "pt3_lib_mockingboard_setup.s"
+
 
 
 	.include "wait_a_bit.s"
@@ -607,5 +698,29 @@ theme_music:
 ;      0123456789012345678901234567890123456789
 .byte "  THE ENDING HAS NOT YET BEEN WRITTEN"
 
-
 .endif
+
+config_string:
+;             0123456789012345678901234567890123456789
+.byte	0,23,"APPLE II?, 48K, MOCKINGBOARD: NO, SSI: N",0
+;                             MOCKINGBOARD: NONE
+
+
+; set normal text
+set_normal:
+        lda     #$80
+        sta     ps_smc1+1
+
+        lda     #09             ; ora
+        sta     ps_smc1
+
+        rts
+
+        ; restore inverse text
+set_inverse:
+        lda     #$29
+        sta     ps_smc1
+        lda     #$3f
+        sta     ps_smc1+1
+
+        rts

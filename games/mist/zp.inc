@@ -2,6 +2,7 @@
 
 ;; LZSA addresses
 NIBCOUNT	= $00
+APPLEII_MODEL	= $01
 
 ;; Zero page monitor routines addresses
 

@@ -155,6 +155,9 @@ mockingboard_found:
 
 	; print detected location
 
+	lda	#'S'+$80		; change NO to Slot
+	sta	$7d0+30
+
 	lda	MB_ADDR_H		; $C4 = 4, want $B4 1100 -> 1011
 	and	#$87
 	ora	#$30
@@ -1048,7 +1051,7 @@ narration6:
 
 config_string:
 ;             0123456789012345678901234567890123456789
-.byte   0,23,"APPLE II?, 48K, MOCKINGBOARD: S?, SSI: N",0
+.byte   0,23,"APPLE II?, 48K, MOCKINGBOARD: NO, SSI: N",0
 ;                             MOCKINGBOARD: NONE
 
 

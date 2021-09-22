@@ -170,47 +170,56 @@ clear_ay_end:
 	;=============================
 mockingboard_setup_interrupt:
 
-	;===========================
-	; Check for Apple IIc
-	;===========================
-	; it does interrupts differently
-
-	lda	$FBB3           ; IIe and newer is $06
-	cmp	#6
-	beq	apple_iie_or_newer
-
-	jmp	done_apple_detect
-apple_iie_or_newer:
-	lda	$FBC0		; 0 on a IIc
-	bne	done_apple_detect
-apple_iic:
-	; activate IIc mockingboard?
-	; this might only be necessary to allow detection
-	; I get the impression the Mockingboard 4c activates
-	; when you access any of the 6522 ports in Slot 4
-	lda	#$ff
-
-	; don't bother patching these, IIc mockingboard always slot 4?
-
-	sta	MOCK_6522_DDRA1
-	sta	MOCK_6522_T1CL
+.ifdef PT3_ENABLE_APPLE_IIC
+	lda	APPLEII_MODEL
+	cmp	#'C'
+	bne	done_iic_hack
 
 	; bypass the firmware interrupt handler
 	; should we do this on IIe too? probably faster
 
+	; first we have to copy the ROM to the language card
+
 	sei				; disable interrupts
-	lda	$c08b			; disable ROM (enable language card)
-	lda	$c08b
+
+
+
+copy_rom_loop:
+	lda	$c089			; read ROM, write RAM1
+	lda	$c089
+
+	ldy	#0
+read_rom_loop:
+	lda	$D000,Y
+	sta	$400,Y			; note this uses text page as
+					; temporary data store
+	iny
+	bne	read_rom_loop
+
+	lda	$c08B			; read/write RAM1
+	lda	$c08B			;
+
+write_rom_loop:
+	lda	$400,Y
+	sta	$D000,Y
+	iny
+	bne	write_rom_loop
+
+	inc	read_rom_loop+2
+	inc	write_rom_loop+5
+	bne	copy_rom_loop
+
 	lda	#<interrupt_handler
 	sta	$fffe
 	lda	#>interrupt_handler
 	sta	$ffff
 
-	lda	#$EA			; nop out the "lda $45" in the irq hand
+	lda	#$EA			; nop out the "lda $45" in the irq handler
 	sta	interrupt_smc
 	sta	interrupt_smc+1
+.endif
 
-done_apple_detect:
+done_iic_hack:
 
 
 	;=========================
@@ -228,10 +237,16 @@ done_apple_detect:
 	; Enable 50Hz clock on 6522
 	;============================
 
-	; 4fe7 / 1e6 = .020s, 50Hz
 
-	; 9c40 / 1e6 = .040s, 25Hz
-	; 411a / 1e6 = .016s, 60Hz
+	; Note, on Apple II the clock isn't 1MHz but is actually closer to
+	;       roughly 1.023MHz, and every 65th clock is stretched (it's complicated)
+
+	; 4fe7 / 1.023e6 = .020s, 50Hz
+	; 9c40 / 1.023e6 = .040s, 25Hz
+	; 411a / 1.023e6 = .016s, 60Hz
+
+	; French Touch uses
+	; 4e20 / 1.000e6 = .020s, 50Hz, which assumes 1MHz clock freq
 
 	sei			; disable interrupts just in case
 
@@ -249,12 +264,33 @@ setup_irq_smc4:
 	sta	MOCK_6522_IER	; IER: 1100, enable timer one interrupt
 
 	lda	#$E7
+;	lda	#$20
 setup_irq_smc5:
 	sta	MOCK_6522_T1CL	; write into low-order latch
 	lda	#$4f
+;	lda	#$4E
 setup_irq_smc6:
 	sta	MOCK_6522_T1CH	; write into high-order latch,
 				; load both values into counter
 				; clear interrupt and start counting
 
 	rts
+
+
+
+	;=============================
+	; Disable Interrupt
+	;=============================
+mockingboard_disable_interrupt:
+
+	sei			; disable interrupts just in case
+
+	lda	#$40		; Continuous interrupts, don't touch PB7
+disable_irq_smc1:
+	sta	MOCK_6522_ACR	; ACR register
+	lda	#$7F		; clear all interrupt flags
+disable_irq_smc2:
+	sta	MOCK_6522_IER	; IER register (interrupt enable)
+
+	rts
+

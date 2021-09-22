@@ -62,7 +62,7 @@ mist.dsk:	QBOOT TEXT_TITLE QLOAD \
 	$(DOS33_RAW) mist.dsk  0 14 SAVE4      0   1
 	$(DOS33_RAW) mist.dsk  0 15 SAVE5      0   1
 	$(DOS33_RAW) mist.dsk  1  0 QLOAD      0  14
-	$(DOS33_RAW) mist.dsk  2  0 MIST_TITLE 0  83
+	$(DOS33_RAW) mist.dsk  2  0 MIST_TITLE 0   0
 	$(DOS33_RAW) mist.dsk  8  0 MIST       0 159
 	$(DOS33_RAW) mist.dsk 18  0 OCTAGON    0 128
 	$(DOS33_RAW) mist.dsk 26  0 DENTIST    0  31
@@ -542,6 +542,8 @@ clean:
 			MECHE SELENA SHIP STONEY CHANNEL ARBOR NIBEL \
 			GENERATOR \
 			generate_common
+
+distclean:	clean
 	cd graphics_title && make clean
 	cd graphics_mist && make clean
 	cd graphics_octagon && make clean
