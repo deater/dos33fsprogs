@@ -416,12 +416,12 @@ fissure_no_speech:
 
 	ldx	#<fissure_lzsa
 	ldy	#>fissure_lzsa
-	lda	#50
+	lda	#60
 	jsr	draw_and_wait
 
 	ldx	#<fissure2_lzsa
 	ldy	#>fissure2_lzsa
-	lda	#50
+	lda	#60
 	jsr	draw_and_wait
 
 
@@ -459,12 +459,12 @@ starry_no_speech:
 	jsr	move_and_print
 	jsr	move_and_print
 
-	lda	#24
+	lda	#40
 	jsr	wait_a_bit
 
 	ldx	#<fissure_book_big_lzsa
 	ldy	#>fissure_book_big_lzsa
-	lda	#50
+	lda	#75
 	jsr	draw_and_wait
 
 	;===================================
@@ -505,22 +505,22 @@ speculate_no_speech:
 
 	ldx	#<falling_left_top_lzsa
 	ldy	#>falling_left_top_lzsa
-	lda	#15
+	lda	#31
 	jsr	draw_and_wait
 
 	ldx	#<falling_left_center_lzsa
 	ldy	#>falling_left_center_lzsa
-	lda	#15
+	lda	#31
 	jsr	draw_and_wait
 
 	ldx	#<falling_left_bottom_lzsa
 	ldy	#>falling_left_bottom_lzsa
-	lda	#15
+	lda	#31
 	jsr	draw_and_wait
 
 	ldx	#<erase_left_bottom_lzsa
 	ldy	#>erase_left_bottom_lzsa
-	lda	#20
+	lda	#50
 	jsr	draw_and_wait
 
 	;===================================
@@ -548,7 +548,7 @@ unsettling_no_speech:
 
 	ldx	#<starfield_lzsa
 	ldy	#>starfield_lzsa
-	lda	#1
+	lda	#30
 	jsr	draw_and_wait
 
 	jsr	move_and_print
@@ -557,17 +557,17 @@ unsettling_no_speech:
 
 	ldx	#<falling_right_top_lzsa
 	ldy	#>falling_right_top_lzsa
-	lda	#20
+	lda	#30
 	jsr	draw_and_wait
 
 	ldx	#<falling_right_bottom_lzsa
 	ldy	#>falling_right_bottom_lzsa
-	lda	#20
+	lda	#30
 	jsr	draw_and_wait
 
 	ldx	#<erase_right_bottom_lzsa
 	ldy	#>erase_right_bottom_lzsa
-	lda	#20
+	lda	#35
 	jsr	draw_and_wait
 
 	;===================================
@@ -602,22 +602,22 @@ allayed_no_speech:
 	jsr	move_and_print
 	jsr	move_and_print
 
-	lda	#14
+	lda	#20
 	jsr	wait_a_bit
 
 	ldx	#<falling_left_center_lzsa
 	ldy	#>falling_left_center_lzsa
-	lda	#15
+	lda	#30
 	jsr	draw_and_wait
 
 	ldx	#<falling_left_bottom_lzsa
 	ldy	#>falling_left_bottom_lzsa
-	lda	#15
+	lda	#30
 	jsr	draw_and_wait
 
 	ldx	#<erase_left_bottom_lzsa
 	ldy	#>erase_left_bottom_lzsa
-	lda	#20
+	lda	#45
 	jsr	draw_and_wait
 
 	;===================================
