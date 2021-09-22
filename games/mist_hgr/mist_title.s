@@ -185,6 +185,15 @@ mockingboard_found:
 	; init song
 	;==================
 
+	lda	#<cyan_music_compressed
+	sta	getsrc_smc+1
+	lda	#>cyan_music_compressed
+	sta	getsrc_smc+2
+
+        lda	#$BA	; decompress to $BA00
+
+	jsr	decompress_lzsa2_fast
+
 	jsr     pt3_init_song
 
 	jmp     done_setup_sound
@@ -263,7 +272,18 @@ reload_everything:
 	; Cyan Logo
 	;===================================
 	; missing most of the animation
-	; also missing music
+	; also missing (good) music
+
+	; play music if mockingboard
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	cyan_title_nomb
+
+
+cyan_title_mb:
+
+	cli
 
 	; First
 	ldx	#<cyan1_lzsa
@@ -276,6 +296,26 @@ reload_everything:
 	ldy	#>cyan2_lzsa
 	lda	#40
 	jsr	draw_and_wait
+
+	sei				; disable music
+	jsr	clear_ay_both
+
+	jmp	cyan_title_done
+
+cyan_title_nomb:
+
+	; First
+	ldx	#<cyan1_lzsa
+	ldy	#>cyan1_lzsa
+	lda	#20
+	jsr	draw_and_wait
+
+	; Second
+	ldx	#<cyan2_lzsa
+	ldy	#>cyan2_lzsa
+	lda	#40
+	jsr	draw_and_wait
+cyan_title_done:
 
 	;===================================
 	; M Y S T letters
@@ -804,6 +844,21 @@ get_mist_book:
 	lda	SOUND_STATUS
 	and	#SOUND_MOCKINGBOARD
 	beq	skip_start_music
+
+	lda	#$00
+	sta	DONE_PLAYING
+
+	lda	#<theme_music_compressed
+	sta	getsrc_smc+1
+	lda	#>theme_music_compressed
+	sta	getsrc_smc+2
+
+        lda	#$BA	; decompress to $BA00
+
+	jsr	decompress_lzsa2_fast
+
+	jsr     pt3_init_song
+
 	cli
 skip_start_music:
 
@@ -812,11 +867,14 @@ skip_start_music:
 	jmp	change_location
 
 
-PT3_LOC = theme_music
+PT3_LOC = $BA00
 
-.align $100
-theme_music:
-.incbin "audio/theme.pt3"
+;.align $100
+;theme_music:
+cyan_music_compressed:
+.incbin "audio/cyan.pt3.lzsa"
+theme_music_compressed:
+.incbin "audio/theme.pt3.lzsa"
 
 
 ; click on book, plays theme
