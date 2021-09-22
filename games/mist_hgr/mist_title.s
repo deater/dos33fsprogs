@@ -159,7 +159,7 @@ mockingboard_found:
 	and	#$87
 	ora	#$30
 
-	sta	$7d0+39		; 23,39
+	sta	$7d0+31		; 23,31
 
 	jsr	mockingboard_patch	; patch to work in slots other than 4?
 
@@ -288,13 +288,13 @@ cyan_title_mb:
 	; First
 	ldx	#<cyan1_lzsa
 	ldy	#>cyan1_lzsa
-	lda	#20
+	lda	#$FF
 	jsr	draw_and_wait
 
 	; Second
 	ldx	#<cyan2_lzsa
 	ldy	#>cyan2_lzsa
-	lda	#40
+	lda	#$FE
 	jsr	draw_and_wait
 
 	sei				; disable music
@@ -820,6 +820,7 @@ draw_and_wait:
 	jsr	play_vgi
 
 	pla
+
 	jsr	wait_a_bit
 
 	; check if escape was pressed, skip into in that case
@@ -933,8 +934,8 @@ narration6:
 
 config_string:
 ;             0123456789012345678901234567890123456789
-.byte   0,23,"APPLE II?, 48K RAM, MOCKINGBOARD: SLOT ?",0
-;                                 MOCKINGBOARD: NONE
+.byte   0,23,"APPLE II?, 48K, MOCKINGBOARD: S?, SSI: N",0
+;                             MOCKINGBOARD: NONE
 
 
 	;==============================
