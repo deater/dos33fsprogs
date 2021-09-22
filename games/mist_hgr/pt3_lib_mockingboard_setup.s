@@ -275,3 +275,22 @@ setup_irq_smc6:
 				; clear interrupt and start counting
 
 	rts
+
+
+
+	;=============================
+	; Disable Interrupt
+	;=============================
+mockingboard_disable_interrupt:
+
+	sei			; disable interrupts just in case
+
+	lda	#$40		; Continuous interrupts, don't touch PB7
+disable_irq_smc1:
+	sta	MOCK_6522_ACR	; ACR register
+	lda	#$7F		; clear all interrupt flags
+disable_irq_smc2:
+	sta	MOCK_6522_IER	; IER register (interrupt enable)
+
+	rts
+

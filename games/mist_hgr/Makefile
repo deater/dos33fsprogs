@@ -183,6 +183,7 @@ mist_title.o:	mist_title.s \
 	gr_offsets.s end_level.s \
 	draw_pointer.s text_print.s gr_fast_clear.s decompress_fast_v2.s \
 	keyboard.s audio.s \
+	ssi263_detect.s ssi263_simple_speech.s title_speech.s \
 	init_state.s wait_a_bit.s \
 	link_book_mist_dock.s common_sprites.inc leveldata_title.inc \
 	pt3_lib_core.s pt3_lib_init.s pt3_lib_mockingboard_detect.s \

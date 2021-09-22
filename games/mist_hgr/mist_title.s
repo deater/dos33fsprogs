@@ -161,11 +161,31 @@ mockingboard_found:
 
 	sta	$7d0+31		; 23,31
 
-	jsr	mockingboard_patch	; patch to work in slots other than 4?
-
 	lda	SOUND_STATUS
 	ora	#SOUND_MOCKINGBOARD
 	sta	SOUND_STATUS
+
+	;===========================
+	; detect SSI-263 too
+	;===========================
+detect_ssi:
+	lda	MB_ADDR_H
+	and	#$87			; slot
+	jsr	detect_ssi263
+
+	lda	irq_count
+	beq	ssi_not_found
+
+	lda	#'Y'+$80
+	sta	$7d0+39		; 23,39
+
+	lda	#SOUND_SSI263
+	ora	SOUND_STATUS
+	sta	SOUND_STATUS
+
+ssi_not_found:
+
+	jsr	mockingboard_patch	; patch to work in slots other than 4?
 
 	;=======================
 	; Set up 50Hz interrupt
@@ -297,7 +317,8 @@ cyan_title_mb:
 	lda	#$FE
 	jsr	draw_and_wait
 
-	sei				; disable music
+	jsr	mockingboard_disable_interrupt	; disable music
+
 	jsr	clear_ay_both
 
 	jmp	cyan_title_done
@@ -356,6 +377,22 @@ cyan_title_done:
 
 	; touch linking book as fissure pulses (says "Fissure")
 
+fissure_speech:
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	fissure_no_speech
+
+	lda	ssi263_slot
+	jsr	ssi263_speech_init
+
+	lda	#<myst_fissure
+	sta	SPEECH_PTRL
+	lda	#>myst_fissure
+	sta	SPEECH_PTRH
+
+	jsr	ssi263_speak
+fissure_no_speech:
+
 	ldx	#<fissure_stars_lzsa
 	ldy	#>fissure_stars_lzsa
 	lda	#10
@@ -398,6 +435,19 @@ cyan_title_done:
 	; "EXPANSE OF WHICH I HAD ONLY A",0
 	; "FLEETING GLIMPSE.",0
 
+starry_speech:
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	starry_no_speech
+
+	lda	#<myst_starry
+	sta	SPEECH_PTRL
+	lda	#>myst_starry
+	sta	SPEECH_PTRH
+
+	jsr	ssi263_speak
+starry_no_speech:
+
 	jsr	clear_bottom
 
 	ldx	#<fissure_book_small_lzsa
@@ -427,6 +477,19 @@ cyan_title_done:
 	; "I HAVE TRIED TO SPECULATE WHERE IT MIGHT"
 	; "HAVE LANDED, BUT I MUST ADMIT,"
 	; "HOWEVER-- SUCH CONJECTURE IS FUTILE."
+
+speculate_speech:
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	speculate_no_speech
+
+	lda	#<myst_speculate
+	sta	SPEECH_PTRL
+	lda	#>myst_speculate
+	sta	SPEECH_PTRH
+
+	jsr	ssi263_speak
+speculate_no_speech:
 
 	jsr	clear_bottom
 
@@ -467,6 +530,20 @@ cyan_title_done:
 	; "MIGHT SOMEDAY HOLD MY MYST BOOK ARE"
 	; "UNSETTLING TO ME."
 
+	unsettling_speech:
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	unsettling_no_speech
+
+	lda	#<myst_unsettling
+	sta	SPEECH_PTRL
+	lda	#>myst_unsettling
+	sta	SPEECH_PTRH
+
+	jsr	ssi263_speak
+unsettling_no_speech:
+
+
 	jsr	clear_bottom
 
 	ldx	#<starfield_lzsa
@@ -499,6 +576,19 @@ cyan_title_done:
 	; "I KNOW THAT MY APPREHENSIONS MIGHT"
 	; "NEVER BE ALLAYED, AND SO I CLOSE,"
 	; "REALIZING THAT PERHAPS,"
+
+allayed_speech:
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	allayed_no_speech
+
+	lda	#<myst_allayed
+	sta	SPEECH_PTRL
+	lda	#>myst_allayed
+	sta	SPEECH_PTRH
+
+	jsr	ssi263_speak
+allayed_no_speech:
 
 	jsr	clear_bottom
 
@@ -533,6 +623,20 @@ cyan_title_done:
 	;===================================
 	; BOOK_AIR : The ending...
 	;===================================
+
+written_speech:
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	written_no_speech
+
+	lda	#<myst_written
+	sta	SPEECH_PTRL
+	lda	#>myst_written
+	sta	SPEECH_PTRH
+
+	jsr	ssi263_speak
+written_no_speech:
+
 
 	ldx	#<book_ground_stars_lzsa
 	ldy	#>book_ground_stars_lzsa
@@ -652,7 +756,7 @@ game_loop:
 	; copy background to current page
 	;====================================
 
-;	jsr	gr_copy_to_current
+;	jsr	gr_copyg_to_current
 
 	;====================================
 	; handle special-case forground logic
@@ -786,7 +890,11 @@ really_exit:
 	.include "interrupt_handler.s"
 	.include "pt3_lib_mockingboard_detect.s"
 
-
+	; ssi-263 code
+	.include "ssi263.inc"
+	.include "ssi263_simple_speech.s"
+	.include "ssi263_detect.s"
+	.include "title_speech.s"
 
 	.include "wait_a_bit.s"
 
@@ -857,6 +965,12 @@ get_mist_book:
         lda	#$BA	; decompress to $BA00
 
 	jsr	decompress_lzsa2_fast
+
+	; re-enable interrupts as SSI code probably broke things
+
+	jsr	mockingboard_init
+	jsr	reset_ay_both
+	jsr     mockingboard_setup_interrupt
 
 	jsr     pt3_init_song
 
