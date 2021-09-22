@@ -22,7 +22,7 @@ mist_hgr.dsk:	QBOOT TEXT_TITLE QLOAD \
 		SAVE1 SAVE2 SAVE3 SAVE4 SAVE5 \
 		MIST
 #		OCTAGON VIEWER \
-#		DENTIST D\'NI SHIP GENERATOR \
+#		DENTIST D\'NI SHIP GENERATOR
 	cp $(EMPTY_DISK) mist_hgr.dsk
 	$(DOS33_RAW) mist_hgr.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) mist_hgr.dsk  0  2 QBOOT      1   1
