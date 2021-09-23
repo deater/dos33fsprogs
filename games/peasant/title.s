@@ -11,6 +11,13 @@ title:
 	jsr	HGR2		; Hi-res graphics, no text at bottom
 				; Y=0, A=0 after this called
 
+	;=========================
+	; set up hgr lookup tables
+	;=========================
+
+	jsr	hgr_make_tables
+
+
 	;========================
 	; Music
 	;========================
@@ -22,32 +29,17 @@ title:
 
 PT3_ENABLE_APPLE_IIC = 1
 
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	mockingboard_notfound
+
 	lda	#0
 	sta	DONE_PLAYING
 
 	lda	#1
 	sta	LOOP
 
-	; detect mockingboard
-	jsr     mockingboard_detect
-
-	bcc     mockingboard_notfound
-
-mockingboard_found:
-
-	; print detected location
-
-;	lda     MB_ADDR_H               ; $C4 = 4, want $B4 1100 -> 1011
-;	and     #$87
-;	ora     #$30
-
-;	sta     $7d0+39         ; 23,39
-
 	jsr     mockingboard_patch      ; patch to work in slots other than 4?
-
-;	lda     SOUND_STATUS
-;	ora     #SOUND_MOCKINGBOARD
-;	sta     SOUND_STATUS
 
 	;=======================
 	; Set up 50Hz interrupt
@@ -69,20 +61,13 @@ mockingboard_found:
 
 	jsr	pt3_init_song
 
-mockingboard_notfound:
-
-	;=========================
-	; set up hgr lookup tables
-	;=========================
-
-	jsr	hgr_make_tables
-
-
 	;=======================
 	; start music
 	;=======================
 
 	cli
+
+mockingboard_notfound:
 
 
 	;************************

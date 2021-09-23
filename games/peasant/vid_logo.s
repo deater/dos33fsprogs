@@ -138,10 +138,6 @@ no_language_card:
 
 PT3_ENABLE_APPLE_IIC = 1
 
-	lda	#0
-	sta	DONE_PLAYING
-	sta	LOOP
-
 	; detect mockingboard
 	jsr	mockingboard_detect
 

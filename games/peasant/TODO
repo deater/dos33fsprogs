@@ -4,6 +4,10 @@ General:
 - More frames in peasant sprites
 - Hook up text parser
 - Move music to language card?
+- Remove mockingboard detect from qload, move other things in?
+
+Videlectrix Title:
+- Can we make it faster?
 
 Intro:
 - Speaker music for title if no Mockingboard
@@ -12,14 +16,15 @@ Peasantry:
 - Better animation of River
 - Priorities for all rooms
 - Hook up hidden glen, inside of cottage and inn
+- Archery minigame
 
 Tower:
 - Tower level
 
 Trogdor:
 - All the rest
-- Trogdor's speech
-- Properly detect if SSI-263 is available and skip if not
+- Rest of Trogdor's speech
+- Properly disable speech if SSI-263 is available
 
 Ending:
 - Smoother baby animation?  Use page-flipping?
