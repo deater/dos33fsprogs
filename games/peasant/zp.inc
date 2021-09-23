@@ -1,3 +1,13 @@
+
+JS_BUTTON_STATE	=	$04
+JOYSTICK_ENABLED=	$05
+SOUND_STATUS	=	$06
+	SOUND_DISABLED  = $80
+	SOUND_IN_LC     = $01		; sound in language card
+	SOUND_MOCKINGBOARD = $02	; mockingboard detected
+	SOUND_SSI263    = $04		; SSI-263 speech chip detected
+DISP_PAGE	= $07		; only in videlectrix intro?
+DRAW_PAGE	= $08
 NIBCOUNT	= $09
 
 TEMP0   = $10
@@ -9,6 +19,8 @@ TEMP5   = $15
 
 HGR_BITS	= $1C
 
+CH		= $24
+CV		= $25
 GBASL		= $26
 GBASH		= $27
 BASL		= $28

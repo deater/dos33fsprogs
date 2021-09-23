@@ -9,32 +9,186 @@
 ; with apologies to everyone
 
 .include "hardware.inc"
-
-NIBCOUNT	= $09
-GBASL		= $26
-GBASH		= $27
-CURSOR_X	= $62
-CURSOR_Y	= $63
-HGR_COLOR	= $E4
-HGR_PAGE	= $E6
-DISP_PAGE	= $F0
-DRAW_PAGE	= $F1
-
-;P0      = $F1
-;P1      = $F2
-;P2      = $F3
-;P3      = $F4
-;P4      = $F5
-;P5      = $F6
-
-INL		= $FC
-INH		= $FD
-OUTL		= $FE
-OUTH		= $FF
+.include "zp.inc"
 
 
+intro_text:
 
-hgr_display:
+	jsr	TEXT
+	jsr	HOME
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	; print non-inverse
+	lda	#$80
+	sta	ps_smc1+1
+
+	lda	#09		; ora
+	sta	ps_smc1
+
+	lda	#<boot_message
+	sta	OUTL
+	lda	#>boot_message
+	sta	OUTH
+
+	ldx	#7
+text_loop:
+
+	jsr	move_and_print
+
+	dex
+	bne	text_loop
+
+
+	;===================
+	; detect model
+	;===================
+
+	jsr	detect_appleii_model
+
+	;===================
+	; machine workarounds
+	;===================
+	; mostly IIgs
+	;===================
+	; thanks to 4am who provided this code from Total Replay
+
+	lda	ROM_MACHINEID
+	cmp	#$06
+	bne	not_a_iigs
+	sec
+	jsr	$FE1F			; check for IIgs
+	bcs	not_a_iigs
+
+	; gr/text page2 handling broken on early IIgs models
+	; in theory this game we don't need that?
+
+        ;jsr	ROM_TEXT2COPY		; set alternate display mode on IIgs
+        cli                             ; enable VBL interrupts
+
+	; also set background color to black instead of blue
+	lda	NEWVIDEO
+	and	#%00011111	; bit 7 = 0 -> IIgs Apple II-compat video modes
+				; bit 6 = 0 -> IIgs 128K memory map same as IIe
+				; bit 5 = 0 -> IIgs DHGR is color, not mono
+				; bits 0-4 unchanged
+	sta	NEWVIDEO
+	lda	#$F0
+	sta	TBCOLOR			; white text on black background
+	lda	#$00
+	sta	CLOCKCTL		; black border
+	sta	CLOCKCTL		; set twice for VidHD
+
+not_a_iigs:
+
+	;===================
+	; print config
+	;===================
+
+	lda	#<config_string
+	sta	OUTL
+	lda	#>config_string
+	sta	OUTH
+
+	jsr	move_and_print
+
+	; print detected model
+
+	lda	APPLEII_MODEL
+	ora	#$80
+	sta	$7d0+8			; 23,8
+
+	; if GS print the extra S
+	cmp	#'G'|$80
+	bne	not_gs
+	lda	#'S'|$80
+	sta	$7d0+9
+
+not_gs:
+
+	;=========================================
+	; detect if we have a language card (64k)
+	; and load sound into it if possible
+	;===================================
+
+	lda	#0
+	sta	SOUND_STATUS		; clear out, sound enabled
+
+	jsr	detect_language_card
+	bcs	no_language_card
+
+yes_language_card:
+	; update status
+	lda	#'6'|$80
+	sta	$7d0+11		; 23,11
+	lda	#'4'|$80
+	sta	$7d0+12		; 23,12
+
+	; update sound status
+	lda	SOUND_STATUS
+	ora	#SOUND_IN_LC
+	sta	SOUND_STATUS
+
+no_language_card:
+
+	;===================================
+	; Detect Mockingboard
+	;===================================
+
+PT3_ENABLE_APPLE_IIC = 1
+
+	lda	#0
+	sta	DONE_PLAYING
+	sta	LOOP
+
+	; detect mockingboard
+	jsr	mockingboard_detect
+
+	bcc	mockingboard_notfound
+
+mockingboard_found:
+	; print detected location
+
+	lda	#'S'+$80		; change NO to slot
+	sta	$7d0+30
+
+	lda	MB_ADDR_H		; $C4 = 4, want $B4 1100 -> 1011
+	and	#$87
+	ora	#$30
+
+	sta	$7d0+31			; 23,31
+
+	lda	SOUND_STATUS
+	ora	#SOUND_MOCKINGBOARD
+	sta	SOUND_STATUS
+
+	;===========================
+	; detect SSI-263 too
+	;===========================
+detect_ssi:
+	lda	MB_ADDR_H
+	and	#$87			; slot
+	jsr	detect_ssi263
+
+	lda	irq_count
+	beq	ssi_not_found
+
+	lda	#'Y'+$80
+	sta	$7d0+39			; 23,39
+
+	lda	#SOUND_SSI263
+	ora	SOUND_STATUS
+	sta	SOUND_STATUS
+
+ssi_not_found:
+
+mockingboard_notfound:
+
+	lda	#30
+	jsr	wait_a_bit
+
+videlectrix_intro:
 	jsr	HGR2		; Hi-res graphics, no text at bottom
 				; Y=0, A=0 after this called
 				; HGR_PAGE=$40
@@ -142,35 +296,21 @@ done_loop:
 ;	jmp	forever
 
 animation_low:
-	.byte	<videlectrix_lzsa
-;	.byte	<title_anim01_lzsa
+	.byte	<videlectrix_lzsa	;	.byte	<title_anim01_lzsa
 	.byte	<title_anim02_lzsa
-	.byte	<title_anim03_lzsa
-;	.byte	<title_anim04_lzsa
-	.byte	<title_anim05_lzsa
-;	.byte	<title_anim06_lzsa
-	.byte	<title_anim07_lzsa
-;	.byte	<title_anim08_lzsa
-	.byte	<title_anim09_lzsa
-;	.byte	<title_anim10_lzsa
-	.byte	<title_anim11_lzsa
-;	.byte	<title_anim12_lzsa
-	.byte	<title_anim13_lzsa
-;	.byte	<title_anim14_lzsa
-	.byte	<title_anim15_lzsa
-;	.byte	<title_anim16_lzsa
-	.byte	<title_anim17_lzsa
-;	.byte	<title_anim18_lzsa
-	.byte	<title_anim19_lzsa
-;	.byte	<title_anim20_lzsa
-	.byte	<title_anim21_lzsa
-;	.byte	<title_anim22_lzsa
-	.byte	<title_anim23_lzsa
-;	.byte	<title_anim24_lzsa
-	.byte	<title_anim25_lzsa
-;	.byte	<title_anim26_lzsa
-	.byte	<title_anim27_lzsa
-;	.byte	<title_anim28_lzsa
+	.byte	<title_anim03_lzsa	;	.byte	<title_anim04_lzsa
+	.byte	<title_anim05_lzsa	;	.byte	<title_anim06_lzsa
+	.byte	<title_anim07_lzsa	;	.byte	<title_anim08_lzsa
+	.byte	<title_anim09_lzsa	;	.byte	<title_anim10_lzsa
+	.byte	<title_anim11_lzsa	;	.byte	<title_anim12_lzsa
+	.byte	<title_anim13_lzsa	;	.byte	<title_anim14_lzsa
+	.byte	<title_anim15_lzsa	;	.byte	<title_anim16_lzsa
+	.byte	<title_anim17_lzsa	;	.byte	<title_anim18_lzsa
+	.byte	<title_anim19_lzsa	;	.byte	<title_anim20_lzsa
+	.byte	<title_anim21_lzsa	;	.byte	<title_anim22_lzsa
+	.byte	<title_anim23_lzsa	;	.byte	<title_anim24_lzsa
+	.byte	<title_anim25_lzsa	;	.byte	<title_anim26_lzsa
+	.byte	<title_anim27_lzsa	;	.byte	<title_anim28_lzsa
 	.byte	<title_anim29_lzsa
 	.byte	<title_anim30_lzsa
 	.byte	<title_anim31_lzsa
@@ -182,35 +322,21 @@ animation_low:
 	.byte	<title_anim34_lzsa
 
 animation_high:
-	.byte	>videlectrix_lzsa
-;	.byte	>title_anim01_lzsa
+	.byte	>videlectrix_lzsa	;	.byte	>title_anim01_lzsa
 	.byte	>title_anim02_lzsa
-	.byte	>title_anim03_lzsa
-;	.byte	>title_anim04_lzsa
-	.byte	>title_anim05_lzsa
-;	.byte	>title_anim06_lzsa
-	.byte	>title_anim07_lzsa
-;	.byte	>title_anim08_lzsa
-	.byte	>title_anim09_lzsa
-;	.byte	>title_anim10_lzsa
-	.byte	>title_anim11_lzsa
-;	.byte	>title_anim12_lzsa
-	.byte	>title_anim13_lzsa
-;	.byte	>title_anim14_lzsa
-	.byte	>title_anim15_lzsa
-;	.byte	>title_anim16_lzsa
-	.byte	>title_anim17_lzsa
-;	.byte	>title_anim18_lzsa
-	.byte	>title_anim19_lzsa
-;	.byte	>title_anim20_lzsa
-	.byte	>title_anim21_lzsa
-;	.byte	>title_anim22_lzsa
-	.byte	>title_anim23_lzsa
-;	.byte	>title_anim24_lzsa
-	.byte	>title_anim25_lzsa
-;	.byte	>title_anim26_lzsa
-	.byte	>title_anim27_lzsa
-;	.byte	>title_anim28_lzsa
+	.byte	>title_anim03_lzsa	;	.byte	>title_anim04_lzsa
+	.byte	>title_anim05_lzsa	;	.byte	>title_anim06_lzsa
+	.byte	>title_anim07_lzsa	;	.byte	>title_anim08_lzsa
+	.byte	>title_anim09_lzsa	;	.byte	>title_anim10_lzsa
+	.byte	>title_anim11_lzsa	;	.byte	>title_anim12_lzsa
+	.byte	>title_anim13_lzsa	;	.byte	>title_anim14_lzsa
+	.byte	>title_anim15_lzsa	;	.byte	>title_anim16_lzsa
+	.byte	>title_anim17_lzsa	;	.byte	>title_anim18_lzsa
+	.byte	>title_anim19_lzsa	;	.byte	>title_anim20_lzsa
+	.byte	>title_anim21_lzsa	;	.byte	>title_anim22_lzsa
+	.byte	>title_anim23_lzsa	;	.byte	>title_anim24_lzsa
+	.byte	>title_anim25_lzsa	;	.byte	>title_anim26_lzsa
+	.byte	>title_anim27_lzsa	;	.byte	>title_anim28_lzsa
 	.byte	>title_anim29_lzsa
 	.byte	>title_anim30_lzsa
 	.byte	>title_anim31_lzsa
@@ -251,35 +377,21 @@ notes:
 
 
 delays:
-	.byte	1	; title
-;	.byte	1	; 1
+	.byte	1	; title		;	.byte	1	; 1
 	.byte	1	; 2
-	.byte	1	; 3
-;	.byte	1	; 4
-	.byte	1	; 5
-;	.byte	1	; 6
-	.byte	1	; 7
-;	.byte	1	; 8
-	.byte	1	; 9
-;	.byte	1	; 10
-	.byte	1	; 11
-;	.byte	1	; 12
-	.byte	1	; 13
-;	.byte	1	; 14
-	.byte	1	; 15
-;	.byte	1	; 16
-	.byte	1	; 17
-;	.byte	1	; 18
-	.byte	1	; 19
-;	.byte	1	; 20
-	.byte	1	; 21
-;	.byte	1	; 22
-	.byte	1	; 23
-;	.byte	1	; 24
-	.byte	1	; 25
-;	.byte	1	; 26
-	.byte	1	; 27
-;	.byte	1	; 28
+	.byte	1	; 3		;	.byte	1	; 4
+	.byte	1	; 5		;	.byte	1	; 6
+	.byte	1	; 7		;	.byte	1	; 8
+	.byte	1	; 9		;	.byte	1	; 10
+	.byte	1	; 11		;	.byte	1	; 12
+	.byte	1	; 13		;	.byte	1	; 14
+	.byte	1	; 15		;	.byte	1	; 16
+	.byte	1	; 17		;	.byte	1	; 18
+	.byte	1	; 19		;	.byte	1	; 20
+	.byte	1	; 21		;	.byte	1	; 22
+	.byte	1	; 23		;	.byte	1	; 24
+	.byte	1	; 25		;	.byte	1	; 26
+	.byte	1	; 27		;	.byte	1	; 28
 	.byte	1	; 29
 	.byte	1	; 30
 	.byte	1	; 31
@@ -298,7 +410,35 @@ delays:
 
 .include "speaker_beeps.s"
 
-;.include "wait_keypress.s"
+.include "text_print.s"
+.include "gr_offsets.s"
+
+.include "wait_a_bit.s"
+
+.include "lc_detect.s"
+
+.include "pt3_lib_mockingboard.inc"
+.include "pt3_lib_detect_model.s"
+.include "pt3_lib_mockingboard_detect.s"
+
+.include "ssi263.inc"
+.include "ssi263_detect.s"
 
 .include "graphics_vid/vid_graphics.inc"
+
+
+;             0123456789012345678901234567890123456789
+boot_message:
+.byte	0,0, "LOADING PEASANT'S QUEST V0.7",0
+.byte	0,3,"ORIGINAL BY VIDELECTRIX",0
+.byte	0,5,"APPLE II PORT: VINCE WEAVER",0
+.byte	0,6,"DISK CODE    : QKUMBA",0
+.byte	0,7,"LZSA CODE    : EMMANUEL MARTY",0
+.byte	7,19,"______",0
+.byte	5,20,"A \/\/\/ SOFTWARE PRODUCTION",0
+
+config_string:
+;             0123456789012345678901234567890123456789
+.byte   0,23,"APPLE II?, 48K, MOCKINGBOARD: NO, SSI: N",0
+;                             MOCKINGBOARD: NONE
 

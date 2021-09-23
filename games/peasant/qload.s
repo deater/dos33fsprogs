@@ -225,7 +225,7 @@ sector_array:
 	.byte  0		;
 
 length_array:
-        .byte  28, 50, 60, 20	; VID_LOGO, TITLE, INTRO, COPY_CHECK
+        .byte  32, 50, 60, 20	; VID_LOGO, TITLE, INTRO, COPY_CHECK
 	.byte  80, 80, 80, 80	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte  80, 80,159,109	; TROGDOR, ENDING
 	.byte  20, 33, 27, 78	;

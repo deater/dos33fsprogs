@@ -182,8 +182,6 @@ mockingboard_setup_interrupt:
 
 	sei				; disable interrupts
 
-
-
 copy_rom_loop:
 	lda	$c089			; read ROM, write RAM1
 	lda	$c089
@@ -214,11 +212,12 @@ write_rom_loop:
 	lda	#>interrupt_handler
 	sta	$ffff
 
-	lda	#$EA			; nop out the "lda $45" in the irq handler
+
+	; nop out the "lda $45" in the irq handler
+	lda	#$EA
 	sta	interrupt_smc
 	sta	interrupt_smc+1
 .endif
-
 done_iic_hack:
 
 
@@ -279,87 +278,9 @@ setup_irq_smc6:
 
 
 	;=============================
-	; Setup
+	; Disable Interrupt
 	;=============================
 mockingboard_disable_interrupt:
-
-;.ifdef PT3_ENABLE_APPLE_IIC
-;	lda	APPLEII_MODEL
-;	cmp	#'C'
-;	bne	done_iic_hack
-;
-;	; bypass the firmware interrupt handler
-;	; should we do this on IIe too? probably faster
-;
-;	; first we have to copy the ROM to the language card
-;
-;	sei				; disable interrupts
-;
-;
-;
-;copy_rom_loop:
-;	lda	$c089			; read ROM, write RAM1
-;	lda	$c089
-
-;	ldy	#0
-;read_rom_loop:
-;	lda	$D000,Y
-;	sta	$400,Y			; note this uses text page as
-					; temporary data store
-;	iny
-;	bne	read_rom_loop
-
-;	lda	$c08B			; read/write RAM1
-;	lda	$c08B			;
-
-;write_rom_loop:
-;	lda	$400,Y
-;	sta	$D000,Y
-;	iny
-;	bne	write_rom_loop
-
-;	inc	read_rom_loop+2
-;	inc	write_rom_loop+5
-;	bne	copy_rom_loop
-
-;	lda	#<interrupt_handler
-;	sta	$fffe
-;	lda	#>interrupt_handler
-;	sta	$ffff
-
-;	lda	#$EA			; nop out the "lda $45" in the irq handler
-;	sta	interrupt_smc
-;	sta	interrupt_smc+1
-;.endif
-;
-;done_iic_hack:
-
-
-	;=========================
-	; Setup Interrupt Handler
-	;=========================
-	; Vector address goes to 0x3fe/0x3ff
-	; FIXME: should chain any existing handler
-
-;	lda	#<interrupt_handler
-;	sta	$03fe
-;	lda	#>interrupt_handler
-;	sta	$03ff
-
-	;============================
-	; Enable 50Hz clock on 6522
-	;============================
-
-
-	; Note, on Apple II the clock isn't 1MHz but is actually closer to
-	;       roughly 1.023MHz, and every 65th clock is stretched (it's complicated)
-
-	; 4fe7 / 1.023e6 = .020s, 50Hz
-	; 9c40 / 1.023e6 = .040s, 25Hz
-	; 411a / 1.023e6 = .016s, 60Hz
-
-	; French Touch uses
-	; 4e20 / 1.000e6 = .020s, 50Hz, which assumes 1MHz clock freq
 
 	sei			; disable interrupts just in case
 
@@ -370,22 +291,126 @@ disable_irq_smc1:
 disable_irq_smc2:
 	sta	MOCK_6522_IER	; IER register (interrupt enable)
 
-;	lda	#$C0
-;setup_irq_smc3:
-;	sta	MOCK_6522_IFR	; IFR: 1100, enable interrupt on timer one oflow
-;setup_irq_smc4:
-;	sta	MOCK_6522_IER	; IER: 1100, enable timer one interrupt
+	rts
 
-;	lda	#$E7
-;	lda	#$20
-;setup_irq_smc5:
-;	sta	MOCK_6522_T1CL	; write into low-order latch
-;	lda	#$4f
-;	lda	#$4E
-;setup_irq_smc6:
-;	sta	MOCK_6522_T1CH	; write into high-order latch,
-;				; load both values into counter
-;				; clear interrupt and start counting
 
+
+
+;===================================================================
+; code to patch mockingboard if not in slot#4
+;===================================================================
+; this is the brute force version, we have to patch 39 locations
+; see further below if you want to try a smaller, more dangerous, patch
+
+.if 0
+mockingboard_patch:
+
+	lda	MB_ADDR_H
+
+	sta	pt3_irq_smc1+2		; 1
+
+	sta	pt3_irq_smc2+2		; 2
+	sta	pt3_irq_smc2+5		; 3
+
+	sta	pt3_irq_smc3+2		; 4
+	sta	pt3_irq_smc3+5		; 5
+
+	sta	pt3_irq_smc4+2		; 6
+	sta	pt3_irq_smc4+5		; 7
+
+	sta	pt3_irq_smc5+2		; 8
+	sta	pt3_irq_smc5+5		; 9
+
+	sta	pt3_irq_smc6+2		; 10
+	sta	pt3_irq_smc6+5		; 11
+
+	sta	pt3_irq_smc7+2		; 12
+	sta	pt3_irq_smc7+5		; 13
+
+	sta	mock_init_smc1+2	; 14
+	sta	mock_init_smc1+5	; 15
+
+	sta	mock_init_smc2+2	; 16
+	sta	mock_init_smc2+5	; 17
+
+	sta	reset_ay_smc1+2		; 18
+	sta	reset_ay_smc2+2		; 19
+	sta	reset_ay_smc3+2		; 20
+	sta	reset_ay_smc4+2		; 21
+
+	sta	write_ay_smc1+2		; 22
+	sta	write_ay_smc1+5		; 23
+
+	sta	write_ay_smc2+2		; 24
+	sta	write_ay_smc2+5		; 25
+
+	sta	write_ay_smc3+2		; 26
+	sta	write_ay_smc3+5		; 27
+
+	sta	write_ay_smc4+2		; 28
+	sta	write_ay_smc4+5		; 29
+
+	sta	write_ay_smc5+2		; 30
+	sta	write_ay_smc5+5		; 31
+
+	sta	write_ay_smc6+2		; 32
+	sta	write_ay_smc6+5		; 33
+
+	sta	setup_irq_smc1+2	; 34
+	sta	setup_irq_smc2+2	; 35
+	sta	setup_irq_smc3+2	; 36
+	sta	setup_irq_smc4+2	; 37
+	sta	setup_irq_smc5+2	; 38
+	sta	setup_irq_smc6+2	; 39
+
+	rts
+.endif
+
+;===================================================================
+; dangerous code to patch mockingboard if not in slot#4
+;===================================================================
+; this code patches any $C4 value to the proper slot# if not slot4
+; this can be dangerous, it might over-write other important values
+;	that should be $C4
+
+; safer ways to do this:
+;	only do this if 2 bytes after a LDA/STA/LDX/STX
+;	count total and if not 39 then print error message
+
+mockingboard_patch:
+	; from mockingboard_init 	$1BBF
+	;   to done_pt3_irq_handler	$1D85
+
+	ldx	MB_ADDR_H
+	ldy	#0
+
+	lda	#<mockingboard_init
+	sta	MB_ADDR_L
+	lda	#>mockingboard_init
+	sta	MB_ADDR_H
+
+mb_patch_loop:
+	lda	(MB_ADDR_L),Y
+	cmp	#$C4
+	bne	mb_patch_nomatch
+
+	txa
+	sta	(MB_ADDR_L),Y
+mb_patch_nomatch:
+
+	inc	MB_ADDR_L
+	lda	MB_ADDR_L
+	bne	mb_patch_oflo
+	inc	MB_ADDR_H
+
+mb_patch_oflo:
+	lda	MB_ADDR_H
+	cmp	#>done_pt3_irq_handler
+	bne	mb_patch_loop
+	lda	MB_ADDR_L
+	cmp	#<done_pt3_irq_handler
+	bne	mb_patch_loop
+
+mb_patch_done:
 	rts
 
