@@ -8,11 +8,42 @@ mist_link_book:
 	and	#SOUND_MOCKINGBOARD
 	beq	skip_turn_off_music
 
-	sei				; disable interrupts
+	; disable interrupts
+	jsr	mockingboard_disable_interrupt
+
+	sei
 
 	jsr	clear_ay_both
 
 skip_turn_off_music:
+
+	; load sound effect into language card
+	; do this late as IIc mockingboard support messes with language card
+
+	 ; update sound status
+        lda     SOUND_STATUS
+        and     #SOUND_IN_LC
+        beq     skip_load_linking_noise
+
+        ; load sounds into LC
+
+        ; read ram, write ram, use $d000 bank1
+        bit     $C08B
+        bit     $C08B
+
+        lda     #<linking_noise_compressed
+        sta     getsrc_smc+1
+        lda     #>linking_noise_compressed
+        sta     getsrc_smc+2
+
+        lda     #$D0    ; decompress to $D000
+
+        jsr     decompress_lzsa2_fast
+
+   ; read rom, nowrite, use $d000 bank1
+        bit     $C08A
+
+skip_load_linking_noise:
 
 	; clear screen
 

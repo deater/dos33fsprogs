@@ -34,10 +34,17 @@
 
 mockingboard_detect:
 
-	; activate IIc mockingboard?
-	; this might only be necessary to allow detection
-	; I get the impression the Mockingboard 4c activates
-	; when you access any of the 6522 ports in Slot 4
+	; activate Mockingboard IIc
+	; + the Mockingboard has to take over Slot#4 (IIc has no slots)
+	;   in theory any write to the firmware area in $C400 will
+	;   activate it, but that might not be fast enough when detecting
+	;   so writing $FF to $C403/$C404 is official way to enable
+	; + Note this disables permanently the mouse firmware in $C400
+	;   so "normal" interrupts are broken :(  The hack to fix things
+	;   is to switch in RAM for $F000 and just replace the IRQ
+	;   vectors at $FFFE/$FFFF instead of $3FE/$3FF but that makes
+	;   it difficult if you actually wanted to use any
+	;   Applesoft/Monitor ROM routines
 
 .ifdef PT3_ENABLE_APPLE_IIC
 	lda	APPLEII_MODEL
@@ -46,10 +53,10 @@ mockingboard_detect:
 
 	lda	#$ff
 
-	; don't bother patching these, IIc mockingboard always slot 4?
+	; don't bother patching these, IIc mockingboard always slot 4
 
-        sta	MOCK_6522_DDRA1
-	sta	MOCK_6522_T1CL
+        sta	MOCK_6522_DDRA1		; $C403
+	sta	MOCK_6522_T1CL		; $C404
 .endif
 
 not_iic:

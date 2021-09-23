@@ -104,33 +104,13 @@ yes_language_card:
 	ora	#SOUND_IN_LC
 	sta	SOUND_STATUS
 
-	; load sounds into LC
-
-	; read ram, write ram, use $d000 bank1
-	bit	$C08B
-	bit	$C08B
-
-	lda	#<linking_noise_compressed
-	sta	getsrc_smc+1
-	lda	#>linking_noise_compressed
-	sta	getsrc_smc+2
-
-	lda	#$D0	; decompress to $D000
-
-	jsr	decompress_lzsa2_fast
-
-blah:
-
-	; read rom, nowrite, use $d000 bank1
-	bit	$C08A
-
 no_language_card:
 
 	;===================================
 	; Setup Mockingboard
 	;===================================
 
-PT3_ENABLE_APPLEIIC = 1
+PT3_ENABLE_APPLE_IIC = 1
 
 	lda	#0
 	sta	DONE_PLAYING
@@ -811,7 +791,11 @@ get_mist_book:
 
 	jsr	mockingboard_init
 	jsr	reset_ay_both
-	jsr	mockingboard_setup_interrupt
+
+;	jsr	mockingboard_setup_interrupt
+
+	; to make it work on IIc?
+	jsr	done_iic_hack
 
 	jsr	pt3_init_song
 
@@ -910,4 +894,5 @@ set_inverse:
         sta     ps_smc1+1
 
         rts
+
 

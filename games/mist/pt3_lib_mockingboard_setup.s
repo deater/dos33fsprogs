@@ -182,8 +182,6 @@ mockingboard_setup_interrupt:
 
 	sei				; disable interrupts
 
-
-
 copy_rom_loop:
 	lda	$c089			; read ROM, write RAM1
 	lda	$c089
@@ -214,11 +212,12 @@ write_rom_loop:
 	lda	#>interrupt_handler
 	sta	$ffff
 
-	lda	#$EA			; nop out the "lda $45" in the irq handler
+
+	; nop out the "lda $45" in the irq handler
+	lda	#$EA
 	sta	interrupt_smc
 	sta	interrupt_smc+1
 .endif
-
 done_iic_hack:
 
 
