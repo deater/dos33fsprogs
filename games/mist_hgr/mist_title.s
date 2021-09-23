@@ -533,7 +533,7 @@ speculate_no_speech:
 	; "MIGHT SOMEDAY HOLD MY MYST BOOK ARE"
 	; "UNSETTLING TO ME."
 
-	unsettling_speech:
+unsettling_speech:
 	lda	SOUND_STATUS
 	and	#SOUND_SSI263
 	beq	unsettling_no_speech

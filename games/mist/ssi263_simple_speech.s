@@ -70,8 +70,6 @@ ssi263_speech_init:
 	ldx	#SSI263_I
 	jsr	ssi263_write_chip
 
-	
-
 	cli				; enable interrupts
 
 	rts

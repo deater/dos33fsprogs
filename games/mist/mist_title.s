@@ -161,20 +161,20 @@ mockingboard_found:
 	;===========================
 	; detect SSI-263 too
 	;===========================
-;detect_ssi:
-;	lda	MB_ADDR_H
-;	and	#$87			; slot
-;	jsr	detect_ssi263
-;
-;	lda	irq_count
-;	beq	ssi_not_found
-;
-;	lda	#'Y'+$80
-;	sta	$7d0+39		; 23,39
-;
-;	lda	#SOUND_SSI263
-;	ora	SOUND_STATUS
-;	sta	SOUND_STATUS
+detect_ssi:
+	lda	MB_ADDR_H
+	and	#$87			; slot
+	jsr	detect_ssi263
+
+	lda	irq_count
+	beq	ssi_not_found
+
+	lda	#'Y'+$80
+	sta	$7d0+39		; 23,39
+
+	lda	#SOUND_SSI263
+	ora	SOUND_STATUS
+	sta	SOUND_STATUS
 
 ssi_not_found:
 
@@ -290,6 +290,58 @@ reload_everything:
 	lda	#0
 	sta	DRAW_PAGE
 
+
+	;===================================
+	; Cyan Logo
+	;===================================
+	; missing most of the animation
+	; also missing (good) music
+
+	; play music if mockingboard
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	cyan_title_nomb
+
+cyan_title_mb:
+
+;	cli
+
+	; First
+;	ldx	#<cyan1_lzsa
+;	ldy	#>cyan1_lzsa
+;	lda	#$FF
+;	jsr	draw_and_wait
+
+	; Second
+;	ldx	#<cyan2_lzsa
+;	ldy	#>cyan2_lzsa
+;	lda	#$FE
+;	jsr	draw_and_wait
+
+        jsr     mockingboard_disable_interrupt  ; disable music
+
+        jsr     clear_ay_both
+
+        jmp     cyan_title_done
+
+cyan_title_nomb:
+	; First
+;	ldx	#<cyan1_lzsa
+;	ldy	#>cyan1_lzsa
+;	lda	#20
+;	jsr	draw_and_wait
+
+	; Second
+;	ldx	#<cyan2_lzsa
+;	ldy	#>cyan2_lzsa
+;	lda	#40
+;	jsr	draw_and_wait
+cyan_title_done:
+
+
+
+
 	;===================================
 	; M Y S T letters
 	;===================================
@@ -327,9 +379,25 @@ reload_everything:
 
 	bit	TEXTGR			; split text/gr
 
+fissure_speech:
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	fissure_no_speech
+
+	lda	ssi263_slot
+	jsr	ssi263_speech_init
+
+	lda	#<myst_fissure
+	sta	SPEECH_PTRL
+	lda	#>myst_fissure
+	sta	SPEECH_PTRH
+
+	jsr	ssi263_speak
+fissure_no_speech:
+
 	ldx	#<fissure_lzsa
 	ldy	#>fissure_lzsa
-	lda	#50
+	lda	#150
 	jsr	draw_and_wait
 
 
@@ -337,41 +405,106 @@ reload_everything:
 	; FISSURE_BOOK_SMALL: starry expanse...
 	;===================================
 
+starry_speech:
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	starry_no_speech
+
+	lda	#<myst_starry
+	sta	SPEECH_PTRL
+	lda	#>myst_starry
+	sta	SPEECH_PTRH
+
+	jsr	ssi263_speak
+starry_no_speech:
+
 	ldx	#<fissure_book_small_lzsa
 	ldy	#>fissure_book_small_lzsa
-	lda	#50
+	lda	#115
 	jsr	draw_and_wait
 
 	;===================================
 	; FISSURE_BOOK_BIG: I have tried to speculate...
 	;===================================
 
+speculate_speech:
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	speculate_no_speech
+
+	lda	#<myst_speculate
+	sta	SPEECH_PTRL
+	lda	#>myst_speculate
+	sta	SPEECH_PTRH
+
+	jsr	ssi263_speak
+speculate_no_speech:
+
 	ldx	#<fissure_book_big_lzsa
 	ldy	#>fissure_book_big_lzsa
-	lda	#50
+	lda	#150
 	jsr	draw_and_wait
 
 	;===================================
 	; FALLING_LEFT: Still, the question...
 	;===================================
 
+unsettling_speech:
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	unsettling_no_speech
+
+	lda	#<myst_unsettling
+	sta	SPEECH_PTRL
+	lda	#>myst_unsettling
+	sta	SPEECH_PTRH
+
+	jsr	ssi263_speak
+unsettling_no_speech:
+
 	ldx	#<falling_left_lzsa
 	ldy	#>falling_left_lzsa
-	lda	#50
+	lda	#128
 	jsr	draw_and_wait
 
 	;===================================
 	; FALLING_RIGHT: I know my aprehensions...
 	;===================================
 
+allayed_speech:
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	allayed_no_speech
+
+	lda	#<myst_allayed
+	sta	SPEECH_PTRL
+	lda	#>myst_allayed
+	sta	SPEECH_PTRH
+
+	jsr	ssi263_speak
+allayed_no_speech:
+
 	ldx	#<falling_right_lzsa
 	ldy	#>falling_right_lzsa
-	lda	#50
+	lda	#143
 	jsr	draw_and_wait
 
 	;===================================
 	; BOOK_AIR : The ending...
 	;===================================
+
+written_speech:
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	written_no_speech
+
+	lda	#<myst_written
+	sta	SPEECH_PTRL
+	lda	#>myst_written
+	sta	SPEECH_PTRH
+
+	jsr	ssi263_speak
+written_no_speech:
 
 	ldx	#<book_air_lzsa
 	ldy	#>book_air_lzsa
@@ -593,6 +726,12 @@ really_exit:
 	.include "interrupt_handler.s"
 	.include "pt3_lib_mockingboard_detect.s"
 
+	; ssi-263 code
+	.include "ssi263.inc"
+	.include "ssi263_simple_speech.s"
+	.include "ssi263_detect.s"
+	.include "title_speech.s"
+
 
 
 	.include "wait_a_bit.s"
@@ -634,6 +773,27 @@ get_mist_book:
 	lda	SOUND_STATUS
 	and	#SOUND_MOCKINGBOARD
 	beq	skip_start_music
+
+	lda	#$00
+	sta	DONE_PLAYING
+
+;	lda	#<theme_music_compressed
+;	sta	getsrc_smc+1
+;	lda	#>theme_music_compressed
+;	sta	getsrc_smc+2
+
+;	lda	#$BA    ; decompress to $BA00
+
+;	jsr	decompress_lzsa2_fast
+
+; re-enable interrupts as SSI code probably broke things
+
+	jsr	mockingboard_init
+	jsr	reset_ay_both
+	jsr	mockingboard_setup_interrupt
+
+	jsr	pt3_init_song
+
 	cli
 skip_start_music:
 

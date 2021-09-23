@@ -4,6 +4,10 @@
 NIBCOUNT	= $00
 APPLEII_MODEL	= $01
 
+
+SPEECH_PTRL	= $17
+SPEECH_PTRH	= $18
+
 ;; Zero page monitor routines addresses
 
 WNDLFT	= $20
@@ -292,8 +296,9 @@ CURRENT_DISK	=	$DC
 JOYSTICK_ENABLED=	$DD
 SOUND_STATUS	=	$DE
 	SOUND_DISABLED	= $80
-	SOUND_IN_LC	= $01 ; $01 sound effects in language card
-	SOUND_MOCKINGBOARD = $02 ; mockingboard detected
+	SOUND_IN_LC	= $01		; $01 sound effects in language card
+	SOUND_MOCKINGBOARD = $02	; mockingboard detected
+	SOUND_SSI263	= $04		; SSI-263 speech chip detected
 
 GRID_PAGE	=	$DF
 ANIMATE_FRAME	=	$E0
