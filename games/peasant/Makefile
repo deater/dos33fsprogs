@@ -75,7 +75,7 @@ wrong_boot2.o: 	wrong_boot2.s
 VID_LOGO:	vid_logo.o
 	ld65 -o VID_LOGO vid_logo.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-vid_logo.o:	vid_logo.s decompress_fast_v2.s hgr_overlay.s \
+vid_logo.o:	vid_logo.s decompress_fast_v2.s hgr_overlay.s speaker_beeps.s \
 		graphics_vid/vid_graphics.inc
 	ca65 -o vid_logo.o vid_logo.s -l vid_logo.lst
 

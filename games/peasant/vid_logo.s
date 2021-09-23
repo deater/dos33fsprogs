@@ -66,6 +66,8 @@ hgr_display:
 	ldy	#0
 animation_loop:
 
+	; flip between the two pages
+
 	lda	DRAW_PAGE
 	cmp	#$40
 	beq	show_page2
@@ -84,6 +86,8 @@ done_page:
 	eor	#$60
 	sta	DISP_PAGE
 
+	; load delays
+	; $FF means we are done
 
 	lda	delays,Y
 	bmi	done_loop
@@ -104,17 +108,32 @@ done_page:
 
 	pla
 	tay
+	pha
+
+	; play sound if needed?
+	lda	notes,Y
+	beq	no_note
+
+	sta	speaker_frequency
+
+	lda	#50
+	sta	speaker_duration
+
+	jsr	speaker_beep
+
+no_note:
+	pla				; restore Y
+	tay
 
 	iny
+
+	; exit if keypressed
 
 	lda	KEYPRESS
 	bpl	animation_loop
 
-;	jmp	animation_loop
-
 done_loop:
 
-;	jsr	wait_until_keypress
 	bit	KEYRESET
 
 	rts
@@ -202,6 +221,35 @@ animation_high:
 	.byte	>title_anim34_lzsa
 	.byte	>title_anim34_lzsa
 
+
+notes:
+	.byte	0	; title		;	.byte	0	; 1
+	.byte	0	; 2
+	.byte	0	; 3		;	.byte	0	; 4
+	.byte	0	; 5		;	.byte	0	; 6
+	.byte	0	; 7		;	.byte	0	; 8
+	.byte	0	; 9		;	.byte	0	; 10
+	.byte	0	; 11		;	.byte	0	; 12
+	.byte	0	; 13		;	.byte	0	; 14
+	.byte	NOTE_E4	; 15		;	.byte	0	; 16
+	.byte	NOTE_D4	; 17		;	.byte	0	; 18
+	.byte	NOTE_F4	; 19		;	.byte	0	; 20
+	.byte	0	; 21		;	.byte	0	; 22
+	.byte	0	; 23		;	.byte	0	; 24
+	.byte	0	; 25		;	.byte	0	; 26
+	.byte	NOTE_C4	; 27		;	.byte	0	; 28
+	.byte	0	; 29
+	.byte	0	; 30
+	.byte	0	; 31
+	.byte	NOTE_C5	; 32
+	.byte	NOTE_C5	; 33
+	.byte	0	; 33
+	.byte	0	; 33
+	.byte	NOTE_C4	; 34
+	.byte	0	; 34
+
+
+
 delays:
 	.byte	1	; title
 ;	.byte	1	; 1
@@ -248,6 +296,9 @@ delays:
 .include "decompress_fast_v2.s"
 .include "hgr_overlay.s"
 
+.include "speaker_beeps.s"
+
 ;.include "wait_keypress.s"
 
 .include "graphics_vid/vid_graphics.inc"
+
