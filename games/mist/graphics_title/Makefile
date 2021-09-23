@@ -15,7 +15,8 @@ title_graphics.inc:	m_link_book.lzsa \
 	falling_right.lzsa falling_left.lzsa \
 	book_air.lzsa book_sparks.lzsa book_glow.lzsa \
 	book_ground.lzsa book_ground_n.lzsa \
-	book_closed_n.lzsa
+	book_closed_n.lzsa \
+	cyan1.lzsa cyan2.lzsa cyan3.lzsa
 	echo "m_link_book_lzsa: .incbin \"m_link_book.lzsa\"" > title_graphics.inc
 	echo "m_title_m_lzsa: .incbin \"m_title_m.lzsa\"" >> title_graphics.inc
 	echo "m_title_y_lzsa: .incbin \"m_title_y.lzsa\"" >> title_graphics.inc
@@ -32,6 +33,10 @@ title_graphics.inc:	m_link_book.lzsa \
 	echo "book_ground_lzsa: .incbin \"book_ground.lzsa\"" >> title_graphics.inc
 	echo "book_ground_n_lzsa: .incbin \"book_ground_n.lzsa\"" >> title_graphics.inc
 	echo "book_closed_n_lzsa: .incbin \"book_closed_n.lzsa\"" >> title_graphics.inc
+	echo "cyan1_lzsa: .incbin \"cyan1.lzsa\"" >> title_graphics.inc
+	echo "cyan2_lzsa: .incbin \"cyan2.lzsa\"" >> title_graphics.inc
+	echo "cyan3_lzsa: .incbin \"cyan3.lzsa\"" >> title_graphics.inc
+
 
 
 

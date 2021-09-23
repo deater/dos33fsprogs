@@ -199,7 +199,16 @@ ssi_not_found:
 	; init song
 	;==================
 
-	jsr     pt3_init_song
+	lda	#<cyan_music_compressed
+	sta	getsrc_smc+1
+	lda	#>cyan_music_compressed
+	sta	getsrc_smc+2
+
+	lda	#$BA	; decompress to $BA00
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	pt3_init_song
 
 	jmp     done_setup_sound
 
@@ -305,19 +314,25 @@ reload_everything:
 
 cyan_title_mb:
 
-;	cli
+	cli
 
 	; First
-;	ldx	#<cyan1_lzsa
-;	ldy	#>cyan1_lzsa
-;	lda	#$FF
-;	jsr	draw_and_wait
+	ldx	#<cyan1_lzsa
+	ldy	#>cyan1_lzsa
+	lda	#$20
+	jsr	draw_and_wait
 
 	; Second
-;	ldx	#<cyan2_lzsa
-;	ldy	#>cyan2_lzsa
-;	lda	#$FE
-;	jsr	draw_and_wait
+	ldx	#<cyan2_lzsa
+	ldy	#>cyan2_lzsa
+	lda	#$FF
+	jsr	draw_and_wait
+
+	; Third
+	ldx	#<cyan3_lzsa
+	ldy	#>cyan3_lzsa
+	lda	#$FE
+	jsr	draw_and_wait
 
         jsr     mockingboard_disable_interrupt  ; disable music
 
@@ -327,16 +342,22 @@ cyan_title_mb:
 
 cyan_title_nomb:
 	; First
-;	ldx	#<cyan1_lzsa
-;	ldy	#>cyan1_lzsa
-;	lda	#20
-;	jsr	draw_and_wait
+	ldx	#<cyan1_lzsa
+	ldy	#>cyan1_lzsa
+	lda	#20
+	jsr	draw_and_wait
 
 	; Second
-;	ldx	#<cyan2_lzsa
-;	ldy	#>cyan2_lzsa
-;	lda	#40
-;	jsr	draw_and_wait
+	ldx	#<cyan2_lzsa
+	ldy	#>cyan2_lzsa
+	lda	#20
+	jsr	draw_and_wait
+
+	; Third
+	ldx	#<cyan3_lzsa
+	ldy	#>cyan3_lzsa
+	lda	#40
+	jsr	draw_and_wait
 cyan_title_done:
 
 
@@ -777,14 +798,14 @@ get_mist_book:
 	lda	#$00
 	sta	DONE_PLAYING
 
-;	lda	#<theme_music_compressed
-;	sta	getsrc_smc+1
-;	lda	#>theme_music_compressed
-;	sta	getsrc_smc+2
+	lda	#<theme_music_compressed
+	sta	getsrc_smc+1
+	lda	#>theme_music_compressed
+	sta	getsrc_smc+2
 
-;	lda	#$BA    ; decompress to $BA00
+	lda	#$BA    ; decompress to $BA00
 
-;	jsr	decompress_lzsa2_fast
+	jsr	decompress_lzsa2_fast
 
 ; re-enable interrupts as SSI code probably broke things
 
@@ -802,14 +823,19 @@ skip_start_music:
 	jmp	change_location
 
 
-PT3_LOC = theme_music
+;PT3_LOC = theme_music
+;
+;.align $100
+;theme_music:
+;.incbin "audio/theme.pt3"
 
-.align $100
-theme_music:
-.incbin "audio/theme.pt3"
 
+PT3_LOC = $BA00
 
-
+cyan_music_compressed:
+.incbin "audio/cyan.pt3.lzsa"
+theme_music_compressed:
+.incbin "audio/theme.pt3.lzsa"
 
 .if 0
 
@@ -884,3 +910,4 @@ set_inverse:
         sta     ps_smc1+1
 
         rts
+

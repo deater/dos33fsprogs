@@ -54,4 +54,4 @@ boot_message:
 
 .include	"text_print.s"
 .include	"gr_offsets.s"
-.include	"wait_a_bit.s"
+;.include	"wait_a_bit.s"
