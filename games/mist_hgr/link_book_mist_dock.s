@@ -8,11 +8,25 @@ mist_link_book:
 	and	#SOUND_MOCKINGBOARD
 	beq	skip_turn_off_music
 
-	sei				; disable interrupts
+	; disable interrupts
+	jsr	mockingboard_disable_interrupt
 
 	jsr	clear_ay_both
 
 skip_turn_off_music:
+
+	; load link noise if IIc
+	; we have to load it late due to IIc needing ROM copy in AUX
+	; until done playing music
+	; this makes an awkward pause but seems best compromise
+
+	lda	APPLEII_MODEL
+	cmp	#'C'
+	bne	link_noise_already_loaded
+
+	jsr	load_linking_noise
+link_noise_already_loaded:
+
 
 	; clear screen
 

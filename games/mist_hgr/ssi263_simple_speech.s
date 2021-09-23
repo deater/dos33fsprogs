@@ -70,8 +70,6 @@ ssi263_speech_init:
 	ldx	#SSI263_I
 	jsr	ssi263_write_chip
 
-	
-
 	cli				; enable interrupts
 
 	rts
@@ -83,6 +81,8 @@ ssi263_speech_init:
 
 ssi263_speech_shutdown:
 	sei
+
+	jsr	ssi263_disable
 
 	rts
 
@@ -195,6 +195,27 @@ no_oflo:
 
 speech_end:
 
+	jsr	ssi263_disable
+
+end_interrupt:
+
+	pla
+	tay				; restore Y
+	pla
+	tax				; restore X
+
+	pla				; restore A
+
+ssi_interrupt_smc:
+	lda	$45			; restore A (II+/IIe)
+
+	plp				; restore flags
+
+	rti				; return from interrupt
+
+
+
+ssi263_disable:
 	; If at the end, turn everything off
 
 	; Toggle CTL while DR set to disable A/!R
@@ -222,21 +243,8 @@ speech_end:
 	ldx	#VIA6522_IER2
 	jsr	ssi263_write_chip
 
-end_interrupt:
+	rts
 
-	pla
-	tay				; restore Y
-	pla
-	tax				; restore X
-
-	pla				; restore A
-
-ssi_interrupt_smc:
-	lda	$45			; restore A (II+/IIe)
-
-	plp				; restore flags
-
-	rti				; return from interrupt
 
 speech_busy:	.byte   $00
 speech_playing:	.byte   $00

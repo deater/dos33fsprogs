@@ -113,27 +113,6 @@ yes_language_card:
 	lda	SOUND_STATUS
 	ora	#SOUND_IN_LC
 	sta	SOUND_STATUS
-
-	; load sounds into LC
-
-	; read ram, write ram, use $d000 bank1
-	bit	$C08B
-	bit	$C08B
-
-	lda	#<linking_noise_compressed
-	sta	getsrc_smc+1
-	lda	#>linking_noise_compressed
-	sta	getsrc_smc+2
-
-	lda	#$D0	; decompress to $D000
-
-	jsr	decompress_lzsa2_fast
-
-blah:
-
-	; read rom, nowrite, use $d000 bank1
-	bit	$C08A
-
 no_language_card:
 
 	;===================================
@@ -226,6 +205,13 @@ mockingboard_notfound:
 
 
 done_setup_sound:
+
+	lda	APPLEII_MODEL
+	cmp	#'C'
+	beq	link_noise_not_yet
+
+	jsr	load_linking_noise
+link_noise_not_yet:
 
 
 	;==========================
@@ -709,6 +695,19 @@ skip_intro:
 ;	lda	#1
 ;	jsr	draw_and_wait
 
+
+	;================================
+	; shut off speech if still going
+	;================================
+
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	no_not_speeking
+
+	jsr	ssi263_speech_shutdown
+no_not_speeking:
+
+
 done_intro:
 
 	; restore to full screen (no text)
@@ -973,7 +972,12 @@ get_mist_book:
 
 	jsr	mockingboard_init
 	jsr	reset_ay_both
-	jsr     mockingboard_setup_interrupt
+
+;	jsr     mockingboard_setup_interrupt
+
+	; to make it work on IIc?
+	jsr	done_iic_hack
+
 
 	jsr     pt3_init_song
 
@@ -1109,4 +1113,37 @@ animate_xloop:
 	jmp	animate_book_yloop
 
 done_animate_book:
+	rts
+
+
+
+
+load_linking_noise:
+	; load sound effect into language card
+	; do this late as IIc mockingboard support messes with language card
+
+	; update sound status
+	lda	SOUND_STATUS
+	and	#SOUND_IN_LC
+	beq	skip_load_linking_noise
+
+	; load sounds into LC
+
+	; read ram, write ram, use $d000 bank1
+	bit	$C08B
+	bit	$C08B
+
+	lda	#<linking_noise_compressed
+	sta	getsrc_smc+1
+	lda	#>linking_noise_compressed
+	sta	getsrc_smc+2
+
+	lda	#$D0	; decompress to $D000
+
+	jsr	decompress_lzsa2_fast
+
+	; read rom, nowrite, use $d000 bank1
+	bit	$C08A
+
+skip_load_linking_noise:
 	rts
