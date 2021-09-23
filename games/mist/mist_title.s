@@ -194,9 +194,16 @@ ssi_not_found:
 
 
 mockingboard_notfound:
-
-
 done_setup_sound:
+
+
+	lda	APPLEII_MODEL
+	cmp	#'C'
+	beq	link_noise_not_yet
+
+	jsr	load_linking_noise
+link_noise_not_yet:
+
 
 	;==========================
 	; wait a bit at text title
@@ -324,19 +331,19 @@ cyan_title_nomb:
 	; First
 	ldx	#<cyan1_lzsa
 	ldy	#>cyan1_lzsa
-	lda	#20
+	lda	#5
 	jsr	draw_and_wait
 
 	; Second
 	ldx	#<cyan2_lzsa
 	ldy	#>cyan2_lzsa
-	lda	#20
+	lda	#5
 	jsr	draw_and_wait
 
 	; Third
 	ldx	#<cyan3_lzsa
 	ldy	#>cyan3_lzsa
-	lda	#40
+	lda	#30
 	jsr	draw_and_wait
 cyan_title_done:
 
@@ -539,6 +546,17 @@ written_no_speech:
 	lda	#50
 	jsr	draw_and_wait
 
+	;================================
+	; shut off speech if still going
+	;================================
+
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	no_not_speeking
+
+	jsr	ssi263_speech_shutdown
+no_not_speeking:
+
 
 done_intro:
 
@@ -579,7 +597,6 @@ game_loop:
 	;=================
 	; reset things
 	;=================
-
 	lda	#0
 	sta	IN_SPECIAL
 	sta	IN_RIGHT
@@ -787,7 +804,7 @@ get_mist_book:
 
 	jsr	decompress_lzsa2_fast
 
-; re-enable interrupts as SSI code probably broke things
+	; re-enable interrupts as SSI code probably broke things
 
 	jsr	mockingboard_init
 	jsr	reset_ay_both
@@ -896,3 +913,34 @@ set_inverse:
         rts
 
 
+
+
+load_linking_noise:
+	; load sound effect into language card
+	; do this late as IIc mockingboard support messes with language card
+
+	 ; update sound status
+        lda     SOUND_STATUS
+        and     #SOUND_IN_LC
+        beq     skip_load_linking_noise
+
+        ; load sounds into LC
+
+        ; read ram, write ram, use $d000 bank1
+        bit     $C08B
+        bit     $C08B
+
+        lda     #<linking_noise_compressed
+        sta     getsrc_smc+1
+        lda     #>linking_noise_compressed
+        sta     getsrc_smc+2
+
+        lda     #$D0    ; decompress to $D000
+
+        jsr     decompress_lzsa2_fast
+
+   ; read rom, nowrite, use $d000 bank1
+        bit     $C08A
+
+skip_load_linking_noise:
+	rts

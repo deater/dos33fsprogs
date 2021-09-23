@@ -17,33 +17,18 @@ mist_link_book:
 
 skip_turn_off_music:
 
-	; load sound effect into language card
-	; do this late as IIc mockingboard support messes with language card
+	; load link noise if IIc
+	; we have to load it late due to IIc needing ROM copy in AUX
+	; until done playing music
+	; this makes an awkward pause but seems best compromise
 
-	 ; update sound status
-        lda     SOUND_STATUS
-        and     #SOUND_IN_LC
-        beq     skip_load_linking_noise
+	lda	APPLEII_MODEL
+	cmp	#'C'
+	bne	link_noise_already_loaded
 
-        ; load sounds into LC
+	jsr	load_linking_noise
+link_noise_already_loaded:
 
-        ; read ram, write ram, use $d000 bank1
-        bit     $C08B
-        bit     $C08B
-
-        lda     #<linking_noise_compressed
-        sta     getsrc_smc+1
-        lda     #>linking_noise_compressed
-        sta     getsrc_smc+2
-
-        lda     #$D0    ; decompress to $D000
-
-        jsr     decompress_lzsa2_fast
-
-   ; read rom, nowrite, use $d000 bank1
-        bit     $C08A
-
-skip_load_linking_noise:
 
 	; clear screen
 
