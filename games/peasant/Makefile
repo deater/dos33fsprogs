@@ -10,7 +10,7 @@ all:	peasant.dsk peasant_side2.dsk
 
 peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK \
 	PEASANT1 PEASANT2 PEASANT3 PEASANT4 ENDING TROGDOR \
-	SAVE1 SAVE2 SAVE3
+	SAVE1 SAVE2 SAVE3 MUSIC
 	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
 	$(DOS33_RAW) peasant.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant.dsk  0  2 QBOOT      1   1
@@ -19,14 +19,15 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK \
 	$(DOS33_RAW) peasant.dsk  0 12 SAVE2      0   1
 	$(DOS33_RAW) peasant.dsk  0 13 SAVE3      0   1
 	$(DOS33_RAW) peasant.dsk  1  0 QLOAD      0   0
-	$(DOS33_RAW) peasant.dsk  3  0 VID_LOGO   0   0
-	$(DOS33_RAW) peasant.dsk  5  0 TITLE      0   0
-	$(DOS33_RAW) peasant.dsk  8  0 INTRO      0   0
-	$(DOS33_RAW) peasant.dsk  12 0 COPY_CHECK 0   0
-	$(DOS33_RAW) peasant.dsk  14 0 PEASANT1	  0   0
-	$(DOS33_RAW) peasant.dsk  19 0 PEASANT2	  0   0
-	$(DOS33_RAW) peasant.dsk  24 0 PEASANT3	  0   0
-	$(DOS33_RAW) peasant.dsk  29 0 PEASANT4	  0   0
+	$(DOS33_RAW) peasant.dsk  3  0 MUSIC      0   0
+	$(DOS33_RAW) peasant.dsk  4  0 VID_LOGO   0   0
+	$(DOS33_RAW) peasant.dsk  6  0 TITLE      0   0
+	$(DOS33_RAW) peasant.dsk  9  0 INTRO      0   0
+	$(DOS33_RAW) peasant.dsk  13 0 COPY_CHECK 0   0
+	$(DOS33_RAW) peasant.dsk  15 0 PEASANT1	  0   0
+	$(DOS33_RAW) peasant.dsk  20 0 PEASANT2	  0   0
+	$(DOS33_RAW) peasant.dsk  25 0 PEASANT3	  0   0
+	$(DOS33_RAW) peasant.dsk  30 0 PEASANT4	  0   0
 
 peasant_side2.dsk:	WBOOT2 TROGDOR ENDING
 	cp $(EMPTY_DISK)/empty.dsk peasant_side2.dsk
@@ -107,6 +108,24 @@ intro.o:	intro.s zp.inc \
 	ca65 -o intro.o intro.s -l intro.lst
 
 ###
+
+MUSIC:	music.o
+	ld65 -o MUSIC music.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+music.o:	music.s zp.inc \
+		music/peasant.pt3 \
+		pt3_lib_core.s \
+		pt3_lib_mockingboard_detect.s \
+		pt3_lib_detect_model.s \
+		pt3_lib_mockingboard.inc \
+		pt3_lib_init.s \
+		pt3_lib_mockingboard_setup.s \
+		pt3_lib_irq_handler.s
+	ca65 -o music.o music.s -l music.lst
+
+
+###
+
 
 PEASANT1:	peasant1.o
 	ld65 -o PEASANT1 peasant1.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
