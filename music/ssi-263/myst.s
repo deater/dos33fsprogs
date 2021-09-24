@@ -16,13 +16,29 @@ speech_test:
 	lda	#4			; assume slot #4 for now
 	jsr	detect_ssi263
 
+	lda	#'S'+$80
+	sta	$400
+	sta	$401
+	lda	#'I'+$80
+	sta	$402
+	lda	#':'+$80
+	sta	$403
+
 	lda	irq_count
-	clc
-	adc	#'A'			; hack to show if detected or not
-	sta	$400			; (B is detected, A is not)
+	beq	not_found
+
+	lda	#'Y'+$80		; hack to show if detected or not
+	sta	$405			; (B is detected, A is not)
 
 	lda	#4			; assume slot #4 for now
 	jsr	ssi263_speech_init
+
+	jmp	speech_loop
+
+not_found:
+	lda	#'N'+$80
+	sta	$405
+	jmp	not_found
 
 
 speech_loop:
@@ -37,7 +53,6 @@ speech_loop:
 	jsr	ssi263_speak
 
 	jsr	wait_until_keypress
-
 
 	lda	#<myst_starry
 	sta	SPEECH_PTRL
@@ -93,9 +108,9 @@ speech_loop:
 
 
 
-
-
 	jmp	speech_loop
+
+
 
 wait_until_keypress:
 

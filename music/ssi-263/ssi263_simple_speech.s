@@ -37,29 +37,6 @@ ssi263_speech_init:
 	lda	#>ssi263_speech_irq
 	sta	$3ff
 
-
-	; set defaults
-
-	; filter frequency
-	lda	#$E9
-	ldx	#SSI263_F
-	jsr	ssi263_write_chip
-
-	; control / articulation/ amplitude
-	lda	#$5C
-	ldx	#SSI263_CAA
-	jsr	ssi263_write_chip
-
-	; rate/inflection
-	lda	#$A8
-	ldx	#SSI263_RI
-	jsr	ssi263_write_chip
-
-	; inflection
-	lda	#$50
-	ldx	#SSI263_I
-	jsr	ssi263_write_chip
-
 	cli				; enable interrupts
 
 	rts
@@ -135,7 +112,7 @@ ssi263_speech_irq:
 	tya
 	pha			; save Y
 
-	inc	$0404		; irq indicator on screen
+	inc	$0408		; irq indicator on screen
 
 	; be sure it was a 6522#2 interrupt
 	ldx	#VIA6522_IFR2
@@ -164,6 +141,28 @@ not_end:
 	; Set the speech playing flag
 	lda	#$ff
 	sta	speech_playing
+
+	; set defaults
+
+	; filter frequency
+	lda	#$E9
+	ldx	#SSI263_F
+	jsr	ssi263_write_chip
+
+	; control / articulation/ amplitude
+	lda	#$5C
+	ldx	#SSI263_CAA
+	jsr	ssi263_write_chip
+
+	; rate/inflection
+	lda	#$A8
+	ldx	#SSI263_RI
+	jsr	ssi263_write_chip
+
+	; inflection
+	lda	#$50
+	ldx	#SSI263_I
+	jsr	ssi263_write_chip
 
 
 	ldy	#$00

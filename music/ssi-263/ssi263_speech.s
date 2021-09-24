@@ -68,7 +68,7 @@ ssi263_speak:
 	ldx	#VIA6522_PCR2
 	jsr	ssi263_write_chip
 
-	; Se transitioned inflection by setting value while toggling CTL
+	; Set transitioned inflection by setting value while toggling CTL
 
 	lda	#SSI263_CAA_CTL
 	ldx	#SSI263_CAA
