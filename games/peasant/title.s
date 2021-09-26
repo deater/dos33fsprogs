@@ -246,10 +246,10 @@ altfire_good:
 
 .include "directions.s"
 
-.include "hgr_font.s"
-.include "hgr_tables.s"
+;.include "hgr_font.s"
+;.include "hgr_tables.s"
 
-.include "hgr_hgr2.s"
+;.include "hgr_hgr2.s"
 
 .include "pt3_lib_mockingboard_patch.s"
 

@@ -1,3 +1,7 @@
+peasant2	18302
+		18043 (decompress fast moved)
+		15899 (much of hgr code moved to qload)
+
 Notes
 ~~~~~
 Some people would like actual S.A.M. support like the original game,

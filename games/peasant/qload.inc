@@ -1,6 +1,24 @@
 load_file	=$0b20
-
 decompress_lzsa2_fast	=$0de6
-
 getsrc_smc	=$0edc
-
+hgr2	=$16d1
+hgr_make_tables	=$15c0
+hgr_put_string	=$0ee9
+save_bg_7x28	=$1417
+restore_bg_7x28	=$1438
+hgr_draw_sprite_7x28	=$13bd
+input_buffer	=$1598
+hgr_text_box	=$1636
+hgr_partial_restore	=$1516
+clear_bottom	=$16a6
+hgr_input	=$153e
+hgr_partial_save	=$14e7
+draw_box	=$126e
+disp_put_string	=$1668
+disp_one_line	=$167c
+invert_smc1	=$0f64
+disp_put_string_cursor	=$1678
+hgr_put_char_cursor	=$0f15
+vgi_simple_rectangle	=$12ef
+hposn_high = $BA00
+hposn_low = $BB00

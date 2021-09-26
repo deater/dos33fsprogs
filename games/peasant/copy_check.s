@@ -114,14 +114,14 @@ forever:
 ;.include "decompress_fast_v2.s"
 .include "wait_keypress.s"
 
-.include "hgr_font.s"
-.include "draw_box.s"
-.include "hgr_rectangle.s"
-.include "hgr_input.s"
-.include "hgr_tables.s"
-.include "hgr_text_box.s"
-.include "hgr_partial_save.s"
-.include "hgr_hgr2.s"
+;.include "hgr_font.s"
+;.include "draw_box.s"
+;.include "hgr_rectangle.s"
+;.include "hgr_input.s"
+;.include "hgr_tables.s"
+;.include "hgr_text_box.s"
+;.include "hgr_partial_save.s"
+;.include "hgr_hgr2.s"
 
 .include "graphics_copy/copy_graphics.inc"
 

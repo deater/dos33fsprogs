@@ -67,7 +67,6 @@ int main(int argc, char **argv) {
 	}
 
 	find_address(symbol,routine_offset);
-	printf("\n");
 
 	fclose(fff);
 

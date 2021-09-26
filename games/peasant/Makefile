@@ -57,7 +57,19 @@ QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_b00.inc
 
 qload.o:	qload.s qboot.inc \
-		decompress_fast_v2.s
+		decompress_fast_v2.s \
+		hgr_font.s \
+		draw_box.s \
+		hgr_rectangle.s \
+		hgr_7x28_sprite_mask.s \
+		hgr_1x5_sprite.s \
+		hgr_partial_save.s \
+		hgr_input.s \
+		hgr_tables.s \
+		hgr_text_box.s \
+		clear_bottom.s \
+		hgr_hgr2.s \
+		gr_offsets.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ###
@@ -82,6 +94,27 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s load_file qload.lst > qload.inc
 	./generate_common -a 0xb00 -s decompress_lzsa2_fast qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s getsrc_smc qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s hgr2 qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s hgr_make_tables qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s hgr_put_string qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s save_bg_7x28 qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s restore_bg_7x28 qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s hgr_draw_sprite_7x28 qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s input_buffer qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s hgr_text_box qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s hgr_partial_restore qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s clear_bottom qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s hgr_input qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s hgr_partial_save qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s draw_box qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s disp_put_string qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s disp_one_line qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s invert_smc1 qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s disp_put_string_cursor qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s hgr_put_char_cursor qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s vgi_simple_rectangle qload.lst >> qload.inc
+	echo "hposn_high = \$$BA00" >> qload.inc
+	echo "hposn_low = \$$BB00" >> qload.inc
 
 ####
 
@@ -100,7 +133,8 @@ music.inc:	generate_common MUSIC
 VID_LOGO:	vid_logo.o
 	ld65 -o VID_LOGO vid_logo.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-vid_logo.o:	vid_logo.s decompress_fast_v2.s hgr_overlay.s speaker_beeps.s \
+vid_logo.o:	vid_logo.s qload.inc \
+		decompress_fast_v2.s hgr_overlay.s speaker_beeps.s \
 		graphics_vid/vid_graphics.inc
 	ca65 -o vid_logo.o vid_logo.s -l vid_logo.lst
 

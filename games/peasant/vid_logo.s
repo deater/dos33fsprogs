@@ -11,6 +11,7 @@
 .include "hardware.inc"
 .include "zp.inc"
 
+.include "qload.inc"
 
 intro_text:
 
@@ -408,7 +409,7 @@ delays:
 
 
 
-.include "decompress_fast_v2.s"
+;.include "decompress_fast_v2.s"
 .include "hgr_overlay.s"
 
 .include "speaker_beeps.s"
@@ -429,7 +430,7 @@ delays:
 
 .include "wait.s"
 
-.include "hgr_hgr2.s"
+;.include "hgr_hgr2.s"
 
 .include "graphics_vid/vid_graphics.inc"
 

@@ -1,3 +1,4 @@
+
 ; Peasant's Quest Ending
 
 ; The credits scenes
@@ -538,26 +539,18 @@ peasant_text:
 ;.include "decompress_fast_v2.s"
 .include "wait_keypress.s"
 
-.include "hgr_font.s"
-.include "draw_box.s"
-.include "hgr_rectangle.s"
-
-.include "hgr_1x5_sprite.s"
-.include "hgr_partial_save.s"
-.include "hgr_input.s"
-.include "hgr_tables.s"
-.include "hgr_text_box.s"
-
-;.include "draw_peasant.s"
-;.include "hgr_save_restore.s"
-;.include "clear_bottom.s"
-;.include "gr_offsets.s"
-;.include "gr_copy.s"
-;.include "version.inc"
+;.include "hgr_font.s"
+;.include "draw_box.s"
+;.include "hgr_rectangle.s"
+;.include "hgr_1x5_sprite.s"
+;.include "hgr_partial_save.s"
+;.include "hgr_input.s"
+;.include "hgr_tables.s"
+;.include "hgr_text_box.s"
 
 .include "hgr_14x14_sprite_mask.s"
 .include "hgr_sprite.s"
-.include "hgr_hgr2.s"
+;.include "hgr_hgr2.s"
 
 .include "score.s"
 
