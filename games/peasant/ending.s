@@ -8,6 +8,7 @@
 .include "zp.inc"
 
 .include "qload.inc"
+.include "music.inc"
 
 ending:
 
@@ -15,8 +16,7 @@ ending:
 
 	jsr	hgr_make_tables
 
-	jsr	HGR2		; Hi-res graphics, no text at bottom
-				; Y=0, A=0 after this called
+	jsr	hgr2
 
 
 	lda	#0
@@ -331,7 +331,7 @@ same_baby:
 no_draw_baby:
 
 	lda	#150
-	jsr	WAIT
+	jsr	wait
 
 	inc	FRAME
 
@@ -557,9 +557,11 @@ peasant_text:
 
 .include "hgr_14x14_sprite_mask.s"
 .include "hgr_sprite.s"
+.include "hgr_hgr2.s"
 
 .include "score.s"
 
+.include "wait.s"
 .include "wait_a_bit.s"
 
 .include "speaker_beeps.s"

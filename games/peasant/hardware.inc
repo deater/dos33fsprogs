@@ -29,10 +29,10 @@ PTRIG		=	$C070
 ; APPLESOFT BASIC ROUTINES
 
 ;NORMAL		= $F273
-HGR2		= $F3D8
+;HGR2		= $F3D8
 ;HGR		= $F3E2
 ;BKGND0		= $F3F4		; clear current page to A
-HPOSN		= $F411		; (Y,X),(A)  (values stores in HGRX,XH,Y)
+;HPOSN		= $F411		; (Y,X),(A)  (values stores in HGRX,XH,Y)
 HPLOT0		= $F457		; plot at (Y,X), (A)
 ;COLOR_SHIFT	= $F47E
 ;HLINRL		= $F530         ; (X,A),(Y)
@@ -55,7 +55,7 @@ ROM_MACHINEID = $FBB3		; iigs
 ;BASCALC	= $FBC1			;
 ;VTAB	= $FC22			; VTAB to CV
 HOME	= $FC58			; Clear the text screen		; qboot
-WAIT	= $FCA8			; delay 1/2(26+27A+5A^2) us
+;WAIT	= $FCA8			; delay 1/2(26+27A+5A^2) us
 ;CROUT1	= $FD8B
 ;SETINV	= $FE80			; INVERSE
 ;SETNORM	= $FE84			; NORMAL

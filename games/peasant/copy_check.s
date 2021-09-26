@@ -21,8 +21,7 @@ copy_check:
 
 	jsr	hgr_make_tables
 
-	jsr	HGR2		; Hi-res graphics, no text at bottom
-				; Y=0, A=0 after this called
+	jsr	hgr2
 
 
 trogdor_question:
@@ -121,6 +120,7 @@ forever:
 .include "hgr_tables.s"
 .include "hgr_text_box.s"
 .include "hgr_partial_save.s"
+.include "hgr_hgr2.s"
 
 .include "graphics_copy/copy_graphics.inc"
 

@@ -8,8 +8,7 @@
 .include "zp.inc"
 
 .include "qload.inc"
-
-
+.include "music.inc"
 
 peasant_quest_intro:
 
@@ -18,8 +17,7 @@ peasant_quest_intro:
 
 	jsr	hgr_make_tables
 
-	jsr	HGR2		; Hi-res graphics, no text at bottom
-				; Y=0, A=0 after this called
+	jsr	hgr2
 
 
 	;*******************************
@@ -174,7 +172,9 @@ escape_handler:
 .include "hgr_input.s"
 .include "hgr_tables.s"
 .include "hgr_text_box.s"
+.include "hgr_hgr2.s"
 
+.include "wait.s"
 .include "wait_a_bit.s"
 
 .include "graphics/graphics_intro.inc"

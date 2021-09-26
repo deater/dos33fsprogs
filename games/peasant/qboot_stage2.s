@@ -11,7 +11,7 @@
 ; p86 (dos reference)
 ;
 
-WAIT    = $FCA8                 ;; delay 1/2(26+27A+5A^2) us
+;WAIT    = $FCA8                 ;; delay 1/2(26+27A+5A^2) us
 
 .org $900
 
@@ -326,7 +326,7 @@ slotpatch9:
         ldx     #6
 wait_1s:
         lda     #255
-        jsr     WAIT
+        jsr     wait
         dex
         bne     wait_1s
 
@@ -361,3 +361,4 @@ load_sector:
 load_length:
 	.byte $00
 
+.include "wait.s"

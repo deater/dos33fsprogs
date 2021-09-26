@@ -155,9 +155,18 @@ mockingboard_found:
 
 	sta	$7d0+31			; 23,31
 
+	; NOTE: in this game we need both language card && mockingboard
+	;	to enable mockingboard music
+
+	lda	SOUND_STATUS
+	and	#SOUND_IN_LC
+	beq	dont_enable_mc
+
 	lda	SOUND_STATUS
 	ora	#SOUND_MOCKINGBOARD
 	sta	SOUND_STATUS
+
+dont_enable_mc:
 
 	;===========================
 	; detect SSI-263 too
@@ -185,9 +194,7 @@ mockingboard_notfound:
 	jsr	wait_a_bit
 
 videlectrix_intro:
-	jsr	HGR2		; Hi-res graphics, no text at bottom
-				; Y=0, A=0 after this called
-				; HGR_PAGE=$40
+	jsr	hgr2				; HGR_PAGE=$40
 
 	lda	#$20
 	sta	DISP_PAGE
@@ -419,6 +426,10 @@ delays:
 
 .include "ssi263.inc"
 .include "ssi263_detect.s"
+
+.include "wait.s"
+
+.include "hgr_hgr2.s"
 
 .include "graphics_vid/vid_graphics.inc"
 

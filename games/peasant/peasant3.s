@@ -20,9 +20,7 @@ peasant_quest:
 
 	jsr	hgr_make_tables
 
-	jsr	HGR2		; Hi-res graphics, no text at bottom
-				; Y=0, A=0 after this called
-
+	jsr	hgr2
 
 
 
@@ -130,8 +128,7 @@ game_loop:
 	; delay
 
 	lda	#200
-	jsr	WAIT
-
+	jsr	wait
 
 	jmp	game_loop
 
@@ -167,6 +164,7 @@ peasant_text:
 .include "hgr_tables.s"
 .include "hgr_text_box.s"
 .include "clear_bottom.s"
+.include "hgr_hgr2.s"
 
 .include "gr_copy.s"
 
@@ -181,6 +179,7 @@ peasant_text:
 
 .include "keyboard.s"
 
+.include "wait.s"
 .include "wait_a_bit.s"
 
 .include "graphics/graphics_peasant3.inc"

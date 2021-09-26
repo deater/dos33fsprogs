@@ -10,7 +10,7 @@ wait_a_bit:
 
 keyloop:
 	lda	#200			; delay a bit
-	jsr	WAIT
+	jsr	wait
 
 	lda	KEYPRESS
 	bmi	done_keyloop

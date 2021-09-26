@@ -50,7 +50,7 @@ hposn_loop:
 	ldy	#0
 	ldx	#0
 	pha
-	jsr	HPOSN	; (Y,X),(A)
+	jsr	hposn	; (Y,X),(A)
 	pla
 	tax
 
@@ -90,4 +90,52 @@ left_masks:
 right_masks:
 	.byte $81,$83,$87, $8F,$9F,$BF,$FF
 
+
+
+
+	; from the Apple II firmware
+hposn:
+;	sta	HGR_Y			; save Y and X positions
+;	stx	HGR_X
+;	sty	HGR_X+1
+
+	pha				; Y pos on stack
+
+	and	#$C0			; calc base addr for Y-pos
+
+	sta	GBASL
+	lsr
+	lsr
+	ora	GBASL
+	sta	GBASL
+	pla
+
+	sta	GBASH
+	asl
+	asl
+	asl
+	rol	GBASH
+	asl
+	rol	GBASH
+	asl
+	ror	GBASL
+	lda	GBASH
+
+	and	#$1F
+
+	ora	HGR_PAGE
+	sta	GBASH
+
+;	txa
+;	cpy	#0
+;	beq	xpos_lessthan_256
+;	ldy	#35
+;	adc	#4
+;label_1:
+;	iny
+;xpos_lessthan_256:
+;	sbc	#7
+;	bcs	label_1
+
+	rts
 

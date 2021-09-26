@@ -6,10 +6,10 @@
 .include "zp.inc"
 
 .include "qload.inc"
+.include "music.inc"
 
 title:
-	jsr	HGR2		; Hi-res graphics, no text at bottom
-				; Y=0, A=0 after this called
+	jsr	hgr2
 
 	;=========================
 	; set up hgr lookup tables
@@ -33,6 +33,27 @@ PT3_ENABLE_APPLE_IIC = 1
 	and	#SOUND_MOCKINGBOARD
 	beq	mockingboard_notfound
 
+	;==================================
+	; load music into the language card
+	;	into $D000 set 2
+	;==================================
+
+	; switch in language card
+	; read/write RAM, $d000 bank 2
+
+	lda	$C083
+	lda	$C083
+
+;	lda	$C081		; enable ROM
+;	lda	$C081		; enable write
+
+	; actually load it
+	lda	#LOAD_MUSIC
+	sta	WHICH_LOAD
+
+	jsr	load_file
+
+
 	lda	#0
 	sta	DONE_PLAYING
 
@@ -48,6 +69,9 @@ PT3_ENABLE_APPLE_IIC = 1
 	jsr     mockingboard_init
 	jsr     mockingboard_setup_interrupt
 
+
+zurg:
+
 	;============================
 	; Init the Mockingboard
 	;============================
@@ -61,6 +85,8 @@ PT3_ENABLE_APPLE_IIC = 1
 
 	jsr	pt3_init_song
 
+
+
 	;=======================
 	; start music
 	;=======================
@@ -70,9 +96,11 @@ PT3_ENABLE_APPLE_IIC = 1
 mockingboard_notfound:
 
 
-	;************************
+	;=========================
+	;=========================
 	; Title
-	;************************
+	;=========================
+	;=========================
 
 do_title:
 
@@ -128,7 +156,7 @@ reset_altfire:
 title_loop:
 
 	lda	C_VOLUME	; see if volume on trogdor channel
-beq	no_trog
+	beq	no_trog
 
 	bit	PAGE1
 	jmp	done_trog
@@ -221,6 +249,11 @@ altfire_good:
 .include "hgr_font.s"
 .include "hgr_tables.s"
 
+.include "hgr_hgr2.s"
+
+.include "pt3_lib_mockingboard_patch.s"
+
 .include "graphics_title/title_graphics.inc"
+
 altfire:
 .include "graphics_title/altfire.inc"

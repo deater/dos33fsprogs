@@ -27,8 +27,6 @@ interrupt_handler:
 	tya
 	pha			; save Y
 
-
-
 ;	inc	$0404		; debug (flashes char onscreen)
 
 
@@ -66,4 +64,6 @@ interrupt_smc:
 								;============
 								; typical
 								; ???? cycles
+
+
 

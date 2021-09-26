@@ -69,7 +69,16 @@ wrong_boot2.o: 	wrong_boot2.s
 
 ###
 
+generate_common:	generate_common.o
+	$(CC) $(LFLAGS) -o generate_common generate_common.o
 
+generate_common.o:	generate_common.c
+	$(CC) $(CFLAGS) -c generate_common.c
+
+####
+
+music.inc:	generate_common MUSIC
+	./generate_common > music.inc
 
 ###
 
@@ -85,10 +94,11 @@ vid_logo.o:	vid_logo.s decompress_fast_v2.s hgr_overlay.s speaker_beeps.s \
 TITLE:	title.o
 	ld65 -o TITLE title.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-title.o:	title.s \
+title.o:	title.s music.inc \
 		graphics_title/title_graphics.inc \
 		graphics_title/altfire.inc \
-		directions.s
+		directions.s \
+		pt3_lib_mockingboard_patch.s
 	ca65 -o title.o title.s -l title.lst
 
 ###
@@ -96,7 +106,7 @@ title.o:	title.s \
 INTRO:	intro.o
 	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-intro.o:	intro.s zp.inc \
+intro.o:	intro.s zp.inc qload.inc music.inc \
 		graphics/graphics_intro.inc sprites/peasant_sprite.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_7x28_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
@@ -208,7 +218,7 @@ trogdor.o:	trogdor.s zp.inc \
 ENDING:	ending.o
 	ld65 -o ENDING ending.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-ending.o:	ending.s zp.inc \
+ending.o:	ending.s zp.inc qload.inc music.inc \
 		graphics_end/ending_graphics.inc sprites/peasant_sprite.inc \
 		sprites/ending_sprites.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
@@ -299,5 +309,5 @@ sprites/trogdor_sprites.inc:
 clean:	
 	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE INTRO COPY_CHECK \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
-			TROGDOR ENDING
+			TROGDOR ENDING MUSIC
 

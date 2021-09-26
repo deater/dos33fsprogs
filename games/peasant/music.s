@@ -8,6 +8,10 @@
 ;.include "qload.inc"
 
 music_lib:
+
+	nop		; urgh to keep interrupt_handler from starting at $C4
+			; which broke auto-patcher
+
 	; pt3 player
 ;	.include "pt3_lib_detect_model.s"
 	.include "pt3_lib_core.s"

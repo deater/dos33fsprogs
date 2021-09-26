@@ -17,8 +17,7 @@ trogdor:
 
 	jsr	hgr_make_tables
 
-	jsr	HGR2		; Hi-res graphics, no text at bottom
-				; Y=0, A=0 after this called
+	jsr	hgr2
 
 
 	lda	#0
@@ -262,7 +261,7 @@ dashing_loop:
 	jsr	hgr_draw_sprite
 
 	lda	#220
-	jsr	WAIT
+	jsr	wait
 
 	ldy	BABY_COUNT
 	cpy	#7
@@ -333,11 +332,13 @@ peasant_text:
 .include "hgr_text_box.s"
 .include "clear_bottom.s"
 .include "gr_offsets.s"
+.include "hgr_hgr2.s"
 
 .include "gr_copy.s"
 
 .include "score.s"
 
+.include "wait.s"
 .include "wait_a_bit.s"
 
 .include "version.inc"
