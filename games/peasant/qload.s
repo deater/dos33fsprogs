@@ -235,23 +235,7 @@ length_array:
 
 .include "qkumba_popwr.s"
 
-	; pt3 player
-;	.include "pt3_lib_detect_model.s"
-;	.include "pt3_lib_core.s"
-;	.include "pt3_lib_init.s"
-;	.include "pt3_lib_mockingboard_setup.s"
-;	.include "interrupt_handler.s"
-;	.include "pt3_lib_mockingboard_patch.s"
-;	.include "pt3_lib_mockingboard_detect.s"
-
-
-; only load one music track, self modify to make other
-
-;.align $100
-;PT3_LOC:
-;peasant_pt3:
-;.incbin "music/peasant.pt3"
-
+.include "decompress_fast_v2.s"
 
 
 qload_end:

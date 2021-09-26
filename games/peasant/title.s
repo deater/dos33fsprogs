@@ -241,7 +241,7 @@ altfire_good:
 
 
 
-.include "decompress_fast_v2.s"
+;.include "decompress_fast_v2.s"
 .include "wait_keypress.s"
 
 .include "directions.s"

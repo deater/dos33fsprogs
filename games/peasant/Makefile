@@ -56,7 +56,8 @@ qboot_sector.o:	qboot_sector.s	qboot_stage2.s
 QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_b00.inc
 
-qload.o:	qload.s qboot.inc
+qload.o:	qload.s qboot.inc \
+		decompress_fast_v2.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ###
@@ -74,6 +75,13 @@ generate_common:	generate_common.o
 
 generate_common.o:	generate_common.c
 	$(CC) $(CFLAGS) -c generate_common.c
+
+####
+
+qload.inc:	generate_common QLOAD
+	./generate_common -a 0xb00 -s load_file qload.lst > qload.inc
+	./generate_common -a 0xb00 -s decompress_lzsa2_fast qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s getsrc_smc qload.lst >> qload.inc
 
 ####
 
@@ -101,7 +109,7 @@ vid_logo.o:	vid_logo.s decompress_fast_v2.s hgr_overlay.s speaker_beeps.s \
 TITLE:	title.o
 	ld65 -o TITLE title.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-title.o:	title.s music.inc \
+title.o:	title.s qload.inc music.inc \
 		graphics_title/title_graphics.inc \
 		graphics_title/altfire.inc \
 		directions.s \

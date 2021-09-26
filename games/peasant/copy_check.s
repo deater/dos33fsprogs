@@ -12,6 +12,7 @@
 .include "hardware.inc"
 .include "zp.inc"
 
+.include "qload.inc"
 
 	;************************
 	; Ending
@@ -110,7 +111,7 @@ forever:
 	jmp	forever
 
 
-.include "decompress_fast_v2.s"
+;.include "decompress_fast_v2.s"
 .include "wait_keypress.s"
 
 .include "hgr_font.s"

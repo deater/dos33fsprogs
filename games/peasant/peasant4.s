@@ -151,7 +151,7 @@ peasant_text:
 
 
 
-.include "decompress_fast_v2.s"
+;.include "decompress_fast_v2.s"
 .include "wait_keypress.s"
 
 .include "draw_peasant.s"

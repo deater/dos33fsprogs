@@ -311,7 +311,7 @@ peasant_text:
 	.byte 25,2,"Peasant's Quest",0
 
 
-.include "decompress_fast_v2.s"
+;.include "decompress_fast_v2.s"
 .include "wait_keypress.s"
 
 
