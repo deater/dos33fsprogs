@@ -1,21 +1,21 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
 
-/* music */
-static char filename[]="music.lst";
-static int routine_offset=0xD000;
 
 
 static FILE *fff;
 
 
-static void find_address(char *symbol_name) {
+static void find_address(char *symbol_name, int routine_offset) {
 
 	unsigned int addr=0;
 	char string[BUFSIZ],*result;
 	char temp_name[BUFSIZ];
 
-	sprintf(temp_name,"%s:",symbol_name);
+	strncpy(temp_name,symbol_name,BUFSIZ);
+	strncat(temp_name,":",2);
 
 	while(1) {
 
@@ -36,54 +36,37 @@ static void find_address(char *symbol_name) {
 
 int main(int argc, char **argv) {
 
+	int c;
+	char *filename;
+	char symbol[BUFSIZ];
+	int routine_offset=0xd000;
+
+	while ( (c=getopt(argc, argv, "a:s:") ) != -1) {
+
+		switch(c) {
+
+			case 'a':
+				routine_offset=strtol(optarg, NULL, 0);
+                                break;
+			case 's':
+				strncpy(symbol,optarg,BUFSIZ-1);
+				break;
+			default:
+				fprintf(stderr,"Unknown option %c\n",c);
+				exit(-1);
+                                break;
+		}
+	}
+
+	filename=strdup(argv[optind]);
+
 	fff=fopen(filename,"r");
 	if (fff==NULL) {
 		fprintf(stderr,"ERROR!  could not open %s\n",filename);
 		return -1;
 	}
 
-	printf(";=============================\n");
-	printf("; external routines\n");
-	printf("\n");
-
-//	printf("; loader.s\n");
-//	find_address("opendir_filename");
-//	printf("\n");
-
-//	printf("; audio.s\n");
-//	find_address("play_audio");
-//	printf("\n");
-
-	printf(";\n");
-	find_address("pt3_init_song");
-	printf("\n");
-
-	printf(";\n");
-	find_address("mockingboard_init");
-	printf("\n");
-
-	printf(";\n");
-	find_address("reset_ay_both");
-	printf("\n");
-
-	printf(";\n");
-	find_address("clear_ay_both");
-	printf("\n");
-
-	printf(";\n");
-	find_address("mockingboard_setup_interrupt");
-	printf("\n");
-
-	printf(";\n");
-	find_address("mockingboard_disable_interrupt");
-	printf("\n");
-
-	printf(";\n");
-	find_address("done_pt3_irq_handler");
-	printf("\n");
-
-	printf(";\n");
-	find_address("PT3_LOC");
+	find_address(symbol,routine_offset);
 	printf("\n");
 
 	fclose(fff);

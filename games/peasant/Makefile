@@ -78,7 +78,14 @@ generate_common.o:	generate_common.c
 ####
 
 music.inc:	generate_common MUSIC
-	./generate_common > music.inc
+	./generate_common -a 0xd000 -s pt3_init_song music.lst > music.inc
+	./generate_common -a 0xd000 -s mockingboard_init music.lst >> music.inc
+	./generate_common -a 0xd000 -s reset_ay_both music.lst >> music.inc
+	./generate_common -a 0xd000 -s clear_ay_both music.lst >> music.inc
+	./generate_common -a 0xd000 -s mockingboard_setup_interrupt music.lst >> music.inc
+	./generate_common -a 0xd000 -s mockingboard_disable_interrupt music.lst >> music.inc
+	./generate_common -a 0xd000 -s done_pt3_irq_handler music.lst >> music.inc
+	./generate_common -a 0xd000 -s PT3_LOC music.lst >> music.inc
 
 ###
 
@@ -310,4 +317,6 @@ clean:
 	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE INTRO COPY_CHECK \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
 			TROGDOR ENDING MUSIC
+
+
 
