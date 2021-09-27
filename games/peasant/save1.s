@@ -11,7 +11,7 @@
 .byte PEASANT_DIR_UP	; PEASANT_DIR	=	$93
 .byte 0			; MAP_X		=	$94
 .byte 1			; MAP_Y		=	$95
-.byte 5			; MAP_LOCATION	=	$96
+.byte LOCATION_HAY_BALE	; MAP_LOCATION	=	$96
 .byte $ff		; GAME_STATE_0	=	$97
 .byte $00		; GAME_STATE_1	=	$98
 .byte $00		; GAME_STATE_2	=	$99

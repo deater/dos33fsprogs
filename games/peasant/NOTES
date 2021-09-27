@@ -17,16 +17,17 @@ $00	Zero Page
 $01	Stack
 $02	Disk Lookup
 $03	Disk Lookup, IRQ vectors
-$04-$07 Text/GR page 1 (not used?)
+$04-$07 Text/GR page 1 (priority map)
 $08-$0B Text/GR page 2.  $08=boot, $09-$0A = qboot stage2
-$0B-$1F QLOAD disk routines and Mockingboard sound routines here
+$0B-$1F QLOAD disk routines and HGR drawing routines
 $20-$3F HGR Page 1
 $40-$5f HGR Page 2
 $60-$?? Programs	(roughly 22k available?)
 $B8-$BB Hi-res lookup tables
-$BC-$BF ???
+$BC     temp area for load/save files
+$BD-$BF ???
 $C0-$CF	I/O
-$D0-$FF	ROM
+$D0-$DF (BANK2)	Mockingboard music/PT3-routines
 
 Disk1 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

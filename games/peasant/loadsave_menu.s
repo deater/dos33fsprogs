@@ -287,10 +287,19 @@ ls_check_return:
 	bne	ls_done_moving
 
 ls_return:
-	; do actual load
+
+	ldy	INVENTORY_Y
+	cpy	#3
+	bne	do_actual_load
+
+	; back was hit
+
 	rts
 
-;	jmp	draw_inv_box
+do_actual_load:
+	jmp	load_game
+
+
 
 ls_done_moving:
 
@@ -401,16 +410,14 @@ overwrite_loop_ls:
         rts
 
 
-
-
-.if 0
-
 	;===================================
 	;===================================
 	; load the game
 	;===================================
 	;===================================
 load_game:
+
+	; FIXME: print are you sure message
 
 ;	lda	#<load_message
 ;	sta	OUTL
@@ -422,6 +429,7 @@ load_game:
 ;	bcs	done_load
 
 	; actually load it
+	tya
 	clc
 	adc	#LOAD_SAVE1
 	sta	WHICH_LOAD
@@ -432,21 +440,20 @@ load_game:
 
 	ldx	#0
 load_loop:
-	lda	$e00,X
+	lda	$BC00,X
 	sta	WHICH_LOAD,X
 	inx
 	cpx	#(END_OF_SAVE-WHICH_LOAD+1)
 	bne	load_loop
 
 	lda	#$ff
-	sta	LEVEL_OVER
+	sta	GAME_OVER
 
 done_load:
 
-	bit	SET_GR			; turn graphics back on
-
 	rts
 
+.if 0
 	;===================================
 	;===================================
 	; save the game

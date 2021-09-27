@@ -193,7 +193,7 @@ which_disk_array:
 	.byte 2,2,1,1		; TROGDOR, ENDING, MUSIC
 	.byte 1,1,1,1		;
 	.byte 1			;
-	.byte 1,1,1,1,1		;
+	.byte 1,1,1,1,1		; SAVE1, SAVE2, SAVE3
 	.byte $f		;
 
 load_address_array:
@@ -202,7 +202,7 @@ load_address_array:
 	.byte $60,$60,$D0,$40	; TROGDOR, ENDING, MUSIC
 	.byte $40,$40,$40,$40	;
 	.byte $08		;
-	.byte $0A,$0A,$0A,$0A	;
+	.byte $BC,$BC,$BC,$0A	; SAVE1, SAVE2, SAVE3
 	.byte $0A		;
 	.byte $08		;
 
@@ -212,7 +212,7 @@ track_array:
 	.byte 24,29, 3,20	; TROGDOR, ENDING, MUSIC
 	.byte 30,32,28,30	;
 	.byte  0		;
-	.byte  0, 0, 0, 0, 0	;
+	.byte  0, 0, 0, 0, 0	; SAVE1, SAVE2, SAVE3
 	.byte  0		;
 
 sector_array:
@@ -221,7 +221,7 @@ sector_array:
 	.byte  0, 0, 0, 0	; TROGDOR, ENDING, MUSIC
 	.byte  0,13, 0, 1	;
 	.byte  6		;
-	.byte 11,12,13,14,15	;
+	.byte 11,12,13,14,15	; SAVE1, SAVE2, SAVE3
 	.byte  0		;
 
 length_array:
@@ -230,7 +230,7 @@ length_array:
 	.byte  80, 80, 16,109	; TROGDOR, ENDING, MUSIC
 	.byte  20, 33, 27, 78	;
 	.byte   3		;
-	.byte   1,1,1,1,1	;
+	.byte   1,1,1,1,1	; SAVE1, SAVE2, SAVE3
 	.byte   1		;
 
 .include "qkumba_popwr.s"
