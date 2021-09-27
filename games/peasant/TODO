@@ -3,8 +3,7 @@ TODO:
 General:
 - More frames in peasant sprites
 - Hook up text parser
-- Move music to language card?
-- Remove mockingboard detect from qload, move other things in?
+- When load game, stop walking
 
 Videlectrix Title:
 - Can we make it faster?

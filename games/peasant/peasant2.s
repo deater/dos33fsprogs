@@ -17,14 +17,10 @@ WHICH_PEASANTRY=1
 peasant_quest:
 	lda	#0
 	sta	GAME_OVER
-
-	jsr	hgr_make_tables
-
-	jsr	hgr2
-
-
-	lda	#0
 	sta	FRAME
+
+	jsr	hgr_make_tables		; necessary?
+	jsr	hgr2			; necessary?
 
 	; update map location
 

@@ -446,7 +446,7 @@ load_loop:
 	cpx	#(END_OF_SAVE-WHICH_LOAD+1)
 	bne	load_loop
 
-	lda	#$ff
+	lda	#$1		; 1 means exit to loader?
 	sta	GAME_OVER
 
 done_load:
