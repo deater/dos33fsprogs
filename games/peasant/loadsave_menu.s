@@ -1,18 +1,6 @@
 ; load/save menu
 
-
-; it's a save game menu
-
-; SAVE 1  ?? 115 PTS
-;         ?? Cliff base
-;
-; SAVE 2  ?? 133 PTS
-;         ?? Trogdor's outer sanctum
-;
-; SAVE 3  ??  34 PTS
-;         ?? That hay bale
-;
-; BACK
+; o/~ It's the Loading Screen o/~
 
 	;=====================
 	; load_menu
@@ -21,9 +9,127 @@ load_menu:
 
 	;============================
 	; first read all three saves
-	; updating the text box
+	; updating the save info
 
 	; TODO
+
+	;============================
+	; Next update the save message
+
+	ldx	#0
+
+	lda	#<(save_pts1+7)
+	sta	OUTL
+	lda	#>(save_pts1+7)
+	sta	OUTH
+
+update_save_loop:
+
+	;======================
+	; print points
+
+
+	ldy	#0
+
+	sty	usl_leading_zero_smc+1
+
+usl_hundreds:
+	lda	load_slot_pts_high,X		; get the points high
+	beq	usl_no_hundreds
+
+	inc	usl_leading_zero_smc+1
+
+	clc
+	adc	#'0'+$80
+	bne	usl_print_hundreds		; bra
+
+usl_no_hundreds:
+	lda	#' '+$80
+usl_print_hundreds:
+	sta	(OUTL),Y
+
+	iny
+
+usl_tens:
+	lda	load_slot_pts_low,X		; get the points low
+	lsr
+	lsr
+	lsr
+	lsr
+
+	bne	usl_go_tens
+
+usl_leading_zero_smc:
+	cmp	#0
+	beq	usl_no_tens
+
+usl_go_tens:
+	adc	#'0'+$80
+	bne	usl_print_tens		; bra
+
+usl_no_tens:
+	lda	#' '+$80
+
+usl_print_tens:
+	sta	(OUTL),Y
+
+	iny
+
+usl_ones:
+	lda	load_slot_pts_low,X		; get the points low
+
+	and	#$f
+	clc
+	adc	#'0'+$80
+	sta	(OUTL),Y
+
+	; move to text line
+
+	clc
+	lda	OUTL
+	adc	#8
+	sta	OUTL
+	lda	OUTH
+	adc	#0
+	sta	OUTH
+
+
+	;========================
+	; clear out the old name
+
+	ldy	#25
+	lda	#' '+$80
+save_memset:
+	sta	(OUTL),Y
+	dey
+	bpl	save_memset
+
+	;=========================
+	; load the name
+
+	ldy	load_slot_levels,X		; get the level
+
+	lda	location_names_l,Y
+	sta	INL
+	lda	location_names_h,Y
+	sta	INH
+
+	jsr	strcat
+
+	;==========================
+	; move out pointer to next
+
+	clc
+	lda	OUTL
+	adc	#35
+	sta	OUTL
+	lda	OUTH
+	adc	#0
+	sta	OUTH
+
+	inx
+	cpx	#3
+	bne	update_save_loop
 
 
 	lda	#0
@@ -206,6 +312,19 @@ done_ls_keypress:
 ; text
 ;======================
 
+; it's a save game menu
+
+; SAVE 1  ?? 115 PTS
+;         ?? Cliff base
+;
+; SAVE 2  ?? 133 PTS
+;         ?? Trogdor's outer sanctum
+;
+; SAVE 3  ??  34 PTS
+;         ?? That hay bale
+;
+; BACK
+
 load_message:
 .byte 10,28
 .byte	"it's a load game menu",0
@@ -215,15 +334,19 @@ save_message:
 .byte	"it's a save game menu",0
 
 save_details:
-.byte	13,44
-.byte	"    115 PTS",13
-.byte	"Cliff base             ",13
+.byte	10,44
+save_pts1:
+.byte	"       115 PTS",13
+save_name1:
+.byte	"Cliff base                ",13
 .byte	13
-.byte	"    133 PTS",13
-.byte	"Trogdor's outer sanctum",13
+.byte	"       133 PTS",13
+save_name2:
+.byte	"Trogdor's outer sanctum   ",13
 .byte	13
-.byte	"     34 PTS",13
-.byte	"That hay bale          ",13
+.byte	"        34 PTS",13
+save_name3:
+.byte	"That hay bale             ",13
 .byte  0
 
 save_titles:
@@ -277,3 +400,343 @@ overwrite_loop_ls:
 
         rts
 
+
+
+
+.if 0
+
+	;===================================
+	;===================================
+	; load the game
+	;===================================
+	;===================================
+load_game:
+
+;	lda	#<load_message
+;	sta	OUTL
+;	lda	#>load_message
+;	sta	OUTH
+
+;	jsr	confirm_slot
+
+;	bcs	done_load
+
+	; actually load it
+	clc
+	adc	#LOAD_SAVE1
+	sta	WHICH_LOAD
+
+	jsr	load_file
+
+	; copy to zero page
+
+	ldx	#0
+load_loop:
+	lda	$e00,X
+	sta	WHICH_LOAD,X
+	inx
+	cpx	#(END_OF_SAVE-WHICH_LOAD+1)
+	bne	load_loop
+
+	lda	#$ff
+	sta	LEVEL_OVER
+
+done_load:
+
+	bit	SET_GR			; turn graphics back on
+
+	rts
+
+	;===================================
+	;===================================
+	; save the game
+	;===================================
+	;===================================
+
+save_game:
+
+;	lda	#<save_message
+;	sta	OUTL
+;	lda	#>save_message
+;	sta	OUTH
+
+;	jsr	confirm_slot
+
+;	bcs	done_save
+
+	pha
+
+
+	;========================
+	; actually save
+actually_save:
+
+	;===============================
+	; first load something from
+	; disk1/track0 to seek the head there
+
+	lda	WHICH_LOAD
+	pha
+
+	lda	#LOAD_SAVE1
+	sta	WHICH_LOAD
+	jsr	load_file
+
+	pla
+	sta	WHICH_LOAD
+
+	; copy save data to $d00
+
+	ldx	#0
+copy_loop:
+	lda	WHICH_LOAD,X
+	sta	$d00,X
+	inx
+	cpx	#(END_OF_SAVE-WHICH_LOAD+1)
+	bne	copy_loop
+
+	; spin up disk
+	jsr	driveon
+
+	; actually save it
+	pla
+	clc
+	adc	#11
+	sta	requested_sector+1
+
+	jsr	sector_write
+
+	jsr	driveoff
+
+done_save:
+
+	jsr	change_location		; restore graphics
+
+	rts
+
+
+
+
+
+
+	;================================
+	; confirm and get slot number
+	;================================
+	; call with first message in OUTL/OUTH
+	; return: carry set if skipping
+
+confirm_slot:
+
+	bit	KEYRESET	; clear keyboard buffer
+
+	;===============================
+	; print "are you sure" message
+
+	bit	SET_TEXT	; set text mode
+
+	lda     #' '|$80
+	sta	clear_all_color+1
+	jsr	clear_all	; clear screen
+
+	jsr	move_and_print
+
+	lda	#<are_you_sure
+	sta	OUTL
+	lda	#>are_you_sure
+	sta	OUTH
+	jsr	move_and_print
+
+	jsr	page_flip
+
+wait_confirmation:
+	lda	KEYPRESS
+	bpl	wait_confirmation
+
+	bit	KEYRESET		; clear keypress
+
+	and	#$7f
+	cmp	#'Y'
+	bne	dont_do_it
+
+	;===============================
+	; print "Which one?"
+
+	jsr	clear_all	; clear screen
+
+	lda	#<which_message
+	sta	OUTL
+	lda	#>which_message
+	sta	OUTH
+	jsr	move_and_print
+
+	jsr	page_flip
+
+which_slot:
+	lda	KEYPRESS
+	bpl	which_slot
+
+	bit	KEYRESET		; clear keypress
+
+	and	#$7f
+	sec
+	sbc	#'1'
+
+	bmi	dont_do_it
+	cmp	#5
+	bcs	dont_do_it
+
+	clc
+	rts
+
+dont_do_it:
+	sec
+	rts
+
+
+which_message:
+.byte  9,5,"WHICH SLOT (1-5)?",0
+
+;load_message:
+;.byte  10,5,"LOAD GAME FROM DISK",0
+
+;save_message:
+;.byte  11,5,"SAVE GAME TO DISK",0
+
+are_you_sure:
+.byte  10,7,"ARE YOU SURE? (Y/N)",0
+
+;save_filename:
+;.byte "SAVE0",0
+.endif
+
+
+load_slot_levels:
+	.byte	LOCATION_EMPTY		; location
+	.byte	LOCATION_WAVY_TREE	; location
+	.byte	LOCATION_TROGDOR_LAIR	; location
+
+load_slot_pts_high:
+	.byte	$0			; points_high
+	.byte	$0			; points_high
+	.byte	$1			; points_high
+
+load_slot_pts_low:
+	.byte	$00			; points_low
+	.byte	$45			; points_low
+	.byte	$10			; points_low
+
+
+location_names_l:
+	.byte <lname_poor_gary
+	.byte <lname_kerrek_1
+	.byte <lname_old_well
+	.byte <lname_yellow_tree
+	.byte <lname_waterfall
+	.byte <lname_hay_bale
+	.byte <lname_mud_puddle
+	.byte <lname_archery
+	.byte <lname_river_stone
+	.byte <lname_mountain_pass
+	.byte <lname_jhonka_cave
+	.byte <lname_your_cottage
+	.byte <lname_lake_west
+	.byte <lname_lake_east
+	.byte <lname_outside_inn
+	.byte <lname_outside_nn
+	.byte <lname_wavy_tree
+	.byte <lname_kerrek_2
+	.byte <lname_outside_lady
+	.byte <lname_burn_tree
+	.byte <lname_hidden_glen
+	.byte <lname_cliff_base
+	.byte <lname_cliffland_heights
+	.byte <lname_trogdor_outer
+	.byte <lname_trogdor_posh
+	.byte <lname_inside_lady
+	.byte <lname_inside_inn
+	.byte <lname_inside_nn
+	.byte <lname_empty
+
+location_names_h:
+	.byte >lname_poor_gary
+	.byte >lname_kerrek_1
+	.byte >lname_old_well
+	.byte >lname_yellow_tree
+	.byte >lname_waterfall
+	.byte >lname_hay_bale
+	.byte >lname_mud_puddle
+	.byte >lname_archery
+	.byte >lname_river_stone
+	.byte >lname_mountain_pass
+	.byte >lname_jhonka_cave
+	.byte >lname_your_cottage
+	.byte >lname_lake_west
+	.byte >lname_lake_east
+	.byte >lname_outside_inn
+	.byte >lname_outside_nn
+	.byte >lname_wavy_tree
+	.byte >lname_kerrek_2
+	.byte >lname_outside_lady
+	.byte >lname_burn_tree
+	.byte >lname_hidden_glen
+	.byte >lname_cliff_base
+	.byte >lname_cliffland_heights
+	.byte >lname_trogdor_outer
+	.byte >lname_trogdor_posh
+	.byte >lname_inside_lady
+	.byte >lname_inside_inn
+	.byte >lname_inside_nn
+	.byte >lname_empty
+
+
+location_names:
+lname_poor_gary:	.byte "Poor Gary's Glen",0	; A1 LOCATION_POOR_GARY
+lname_kerrek_1:		.byte "Kerrek Tracks 1",0	; B1 LOCATION_KERREK_1
+lname_old_well:		.byte "Old Well",0		; C1 LOCATION_OLD_WELL
+lname_yellow_tree:	.byte "Yellow Tree",0		; D1 LOCATION_YELLOW_TREE
+lname_waterfall:	.byte "Waterfall",0		; E1 LOCATION_WATERFALL
+lname_hay_bale:		.byte "That Hay Bale",0		; A2 LOCATION_HAY_BALE
+lname_mud_puddle:	.byte "That Mud Puddle",0	; B2 LOCATION_MUD_PUDDLE
+lname_archery:		.byte "Archery Range",0		; C2 LOCATION_ARCHERY
+lname_river_stone:	.byte "River and Stone",0	; D2 LOCATION_RIVER_STONE
+lname_mountain_pass:	.byte "Mountain Pass",0		; E2 LOCATION_MOUNTAIN_PASS
+lname_jhonka_cave:	.byte "Jhonka's Cave",0			; A3 LOCATION_JHONKA_CAVE
+lname_your_cottage:	.byte "Your Burninated Cottage",0	; B3 LOCATION_YOUR_COTTAGE
+lname_lake_west:	.byte "Pebble Lake West",0		; C3 LOCATION_LAKE_WEST
+lname_lake_east:	.byte "Pebble Lake East",0		; D3 LOCATION_LAKE_EAST
+lname_outside_inn:	.byte "Outside Giant Inn",0		; E3 LOCATION_OUTSIDE_INN
+lname_outside_nn:	.byte "Outside Mysterious Cottage",0	; A4 LOCATION_OUTSIDE_NN
+lname_wavy_tree:	.byte "Wavy Tree",0			; B4 LOCATION_WAVY_TREE
+lname_kerrek_2:		.byte "Kerrek Tracks 2",0		; C4 LOCATION_KERREK_2
+lname_outside_lady:	.byte "Outside Baby Lady Cottage",0	; D4 LOCATION_OUTSIDE_LADY
+lname_burn_tree:	.byte "Burninated Trees",0		; E4 LOCATION_BURN_TREES
+
+lname_hidden_glen:	.byte "Hidden Glen",0			; LOCATION_HIDDEN_GLEN
+lname_cliff_base:	.byte "Cliff Base",0			; LOCATION_CLIFF_BASE
+lname_cliffland_heights:.byte "Cliffland Heights",0		; LOCATION_CLIFF_HEIGHTS
+lname_trogdor_outer:	.byte "Trogdor's Outer Sanctum",0	; LOCATION_TROGDOR_OUTER
+lname_trogdor_posh:	.byte "Trogdor's Posh Lair",0		; LOCATION_TROGDOR_LAIR
+
+lname_inside_lady:	.byte "Inside Baby Lady Cottage",0	; LOCATION_INSIDE_LADY
+lname_inside_inn:	.byte "Inside Giant Inn",0		; LOCATION_INSIDE_INN
+lname_inside_nn:	.byte "Inside Mysterious Cottage",0	; LOCATION_INSIDE_NN
+
+lname_empty:		.byte "Empty",0
+location_names_end:
+
+
+	;===================
+	; strcat
+	;===================
+	; input in INL
+	; output in OUTL
+strcat:
+	ldy	#0
+strcat_loop:
+	lda	(INL),Y
+	beq	strcat_done
+	sta	(OUTL),Y
+	iny
+	jmp	strcat_loop
+strcat_done:
+	rts

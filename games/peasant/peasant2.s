@@ -147,24 +147,10 @@ peasant_text:
 	.byte 25,2,"Peasant's Quest",0
 
 
-;.include "decompress_fast_v2.s"
+
 .include "wait_keypress.s"
 
 .include "draw_peasant.s"
-
-;.include "hgr_font.s"
-;.include "draw_box.s"
-;.include "hgr_rectangle.s"
-;.include "hgr_7x28_sprite_mask.s"
-;.include "hgr_1x5_sprite.s"
-;.include "hgr_partial_save.s"
-;.include "hgr_input.s"
-;.include "hgr_tables.s"
-;.include "hgr_text_box.s"
-;.include "clear_bottom.s"
-;.include "hgr_hgr2.s"
-
-;.include "hgr_save_restore.s"
 
 .include "gr_copy.s"
 
@@ -188,6 +174,25 @@ peasant_text:
 .include "inventory.s"
 
 .include "loadsave_menu.s"
+
+
+; moved to QLOAD
+
+;.include "decompress_fast_v2.s"
+;.include "hgr_font.s"
+;.include "draw_box.s"
+;.include "hgr_rectangle.s"
+;.include "hgr_7x28_sprite_mask.s"
+;.include "hgr_1x5_sprite.s"
+;.include "hgr_partial_save.s"
+;.include "hgr_input.s"
+;.include "hgr_tables.s"
+;.include "hgr_text_box.s"
+;.include "clear_bottom.s"
+;.include "hgr_hgr2.s"
+
+
+
 
 help_message:
 .byte   0,43,24, 0,253,82

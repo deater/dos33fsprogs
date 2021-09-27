@@ -247,7 +247,7 @@ length_array:
 .include "hgr_tables.s"
 .include "hgr_text_box.s"
 .include "clear_bottom.s"
-.include "hgr_hgr2.s"
+.include "hgr_hgr2.s"		; this one is maybe only needed once?
 .include "gr_offsets.s"
 
 qload_end:
