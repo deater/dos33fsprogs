@@ -12,16 +12,11 @@
 trogdor:
 	lda	#0
 	sta	GAME_OVER
-
-	jsr	setup_speech
-
-	jsr	hgr_make_tables
-
-	jsr	hgr2
-
-
-	lda	#0
 	sta	FRAME
+
+	jsr	hgr_make_tables		; needed?
+
+	jsr	hgr2			; needed?
 
 	; update score
 
@@ -73,9 +68,16 @@ trogdor_cave:
 	;==================================
 	; text to speech, where available!
 
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	skip_speech
+
 speech_loop:
 
         ; trogdor
+
+	lda	#4			; assume slot #4 for now
+	jsr	ssi263_speech_init
 
         lda     #<trogdor_honestly
         sta     SPEECH_PTRL
@@ -87,10 +89,12 @@ speech_loop:
 wait_for_speech:
 	lda	speech_busy
 	bmi	wait_for_speech
+	bpl	done_speech
 
+skip_speech:
+	jsr	wait_until_keypress
 
-;	jsr	wait_until_keypress
-
+done_speech:
 	jsr	hgr_partial_restore
 
 

@@ -174,7 +174,7 @@ dont_enable_mc:
 	;===========================
 detect_ssi:
 	lda	MB_ADDR_H
-	and	#$87			; slot
+	and	#$07			; slot
 	jsr	detect_ssi263
 
 	lda	irq_count

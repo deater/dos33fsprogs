@@ -1,24 +1,3 @@
-setup_speech:
-
-;	jsr	HOME
-
-;	lda	#4			; assume slot #4 for now
-;	jsr	detect_ssi263
-
-;	lda	irq_count
-;	clc
-;	adc	#'A'			; hack to show if detected or not
-;	sta	$400			; (B is detected, A is not)
-
-	lda	#4			; assume slot #4 for now
-	jsr	ssi263_speech_init
-
-	rts
-
-
-;.include "ssi263_detect.s"
-
-;.include "ssi263_simple_speech.s"
 
 	; the document
 	; "Phonetic Speech Dictionary for the SC-01 Speech Synthesizer"

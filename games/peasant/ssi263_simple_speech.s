@@ -30,6 +30,7 @@ rc_smc1:
 ssi263_speech_init:
 	sei			; disable interrupts
 
+	lda	MOCKINGBOARD_SLOT
 	and	#$7
 	ora	#$c0		; turn slot number into address
 	sta	wc_smc1+2	; update the read/write routines
@@ -70,7 +71,6 @@ ssi263_speech_init:
 	ldx	#SSI263_I
 	jsr	ssi263_write_chip
 
-	
 
 	cli				; enable interrupts
 
@@ -147,7 +147,7 @@ ssi263_speech_irq:
 	tya
 	pha			; save Y
 
-	inc	$0404		; irq indicator on screen
+;	inc	$0404		; irq indicator on screen
 
 	; be sure it was a 6522#2 interrupt
 	ldx	#VIA6522_IFR2
@@ -232,7 +232,7 @@ end_interrupt:
 	pla				; restore A
 
 interrupt_smc:
-	lda	$45			; restore A (II+/IIe)
+;	lda	$45			; restore A (II+/IIe)
 
 	plp				; restore flags
 

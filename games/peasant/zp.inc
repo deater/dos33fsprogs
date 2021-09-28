@@ -1,11 +1,12 @@
 
-JS_BUTTON_STATE	=	$04
-JOYSTICK_ENABLED=	$05
-SOUND_STATUS	=	$06
+JS_BUTTON_STATE	=	$03
+JOYSTICK_ENABLED=	$04
+SOUND_STATUS	=	$05
 	SOUND_DISABLED  = $80
 	SOUND_IN_LC     = $01		; sound in language card
 	SOUND_MOCKINGBOARD = $02	; mockingboard detected
 	SOUND_SSI263    = $04		; SSI-263 speech chip detected
+MOCKINGBOARD_SLOT	= $06
 DISP_PAGE	= $07		; only in videlectrix intro?
 DRAW_PAGE	= $08
 NIBCOUNT	= $09

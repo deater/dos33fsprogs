@@ -12,7 +12,7 @@
 	; A = slot of mockingboard
 
 detect_ssi263:
-	sta	ssi263_slot	; store for later
+	sta	MOCKINGBOARD_SLOT	; store for later
 
 	and	#$7
 	ora	#$c0		; turn slot number into address
@@ -134,4 +134,4 @@ ssid_wc_smc1:
 irq_count:	.byte $00
 irq1backup:	.byte $00
 irq2backup:	.byte $00
-ssi263_slot:	.byte $00
+
