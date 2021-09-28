@@ -4,6 +4,10 @@ General:
 - More frames in peasant sprites
 - Hook up text parser
 - When load game, stop walking
+- Load the names of saves from disk
+- Let disk 2 live in the 2nd drive?  
+	LDA $C08A,X to select first drive
+	LDA $C08B,X to select second drive
 
 Videlectrix Title:
 - Can we make it faster?

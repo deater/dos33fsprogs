@@ -1,6 +1,7 @@
 peasant2	18302
 		18043 (decompress fast moved)
 		15899 (much of hgr code moved to qload)
+		16653 (work on load/save support)
 
 Notes
 ~~~~~
