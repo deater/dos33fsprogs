@@ -13,8 +13,6 @@
 
 ending:
 
-	jsr	mockingboard_setup_interrupt
-
 	jsr	hgr_make_tables
 
 	jsr	hgr2
@@ -35,7 +33,12 @@ ending:
 	; reset to beginning of song
 	; and start interrupts
 
-	; FIXME: only if mockingboard enabled
+	; only if mockingboard enabled
+	lda     SOUND_STATUS
+        and     #SOUND_MOCKINGBOARD
+        beq     skip_end_music
+
+	jsr	mockingboard_setup_interrupt
 
 	lda	#$09			; don't end after 4
 	sta	PT3_LOC+$C9+$4
@@ -47,7 +50,7 @@ ending:
 	jsr	pt3_init_song
 
 	cli
-
+skip_end_music:
 
 	;=====================
 	;=====================
