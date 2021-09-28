@@ -429,7 +429,7 @@ load_game:
 ;	bcs	done_load
 
 	; actually load it
-	tya
+	lda	INVENTORY_Y
 	clc
 	adc	#LOAD_SAVE1
 	sta	WHICH_LOAD

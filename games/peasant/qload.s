@@ -2,7 +2,7 @@
 
 .include "zp.inc"
 
-LOAD_TEXT_TITLE = 16 ; ???
+;LOAD_TEXT_TITLE = 16 ; ???
 LOAD_FIRST_SECTOR = 22 ; ???
 
 tmpsec = $3C
@@ -93,12 +93,12 @@ change_disk:
 
 	jsr	driveoff
 
-	jsr	TEXT
-	jsr	HOME
+	;==============================
+	; print "insert disk" message
 
-	lda	#<error_string
+	lda	#<insert_disk_string
 	sta	OUTL
-	lda	#>error_string
+	lda	#>insert_disk_string
 	sta	OUTH
 
 	ldx	WHICH_LOAD
@@ -106,19 +106,23 @@ change_disk:
 	clc
 	adc	#48
 
-	ldy	#19
+	; patch error string to say correct disk to insert
+
+	ldy	#27
 	sta	(OUTL),Y
 
-	ldy	#0
+	jsr	hgr_text_box
 
-quick_print:
-	lda	(OUTL),Y
-	beq	quick_print_done
-	jsr	COUT1
-	iny
-	jmp	quick_print
+;	ldy	#0
 
-quick_print_done:
+;quick_print:
+;	lda	(OUTL),Y
+;	beq	quick_print_done
+;	jsr	COUT1
+;	iny
+;	jmp	quick_print
+
+;quick_print_done:
 
 fnf_keypress:
 	lda	KEYPRESS
@@ -141,14 +145,14 @@ fnf_keypress:
 	sta	WHICH_LOAD
 	tax
 
-	; first sector now in $800
-	;	offset 59
-	;		disk1 = $0a
+	; first sector now in $BC00
+	;	offset 5B
+	;		disk1 = $d0
 	;		disk2 = $32 ('2')
 	;		disk3 = $33 ('3')
 
-	lda	$859
-	cmp	#$0a
+	lda	$BC5B
+	cmp	#$d0
 	beq	is_disk1
 	cmp	#$32
 	beq	is_disk2
@@ -158,11 +162,11 @@ fnf_keypress:
 
 is_disk1:
 	lda	#1
-	bne	disk_compare
+	bne	disk_compare		; bra
 
 is_disk2:
 	lda	#2
-	bne	disk_compare
+	bne	disk_compare		; bra
 
 is_disk3:
 	lda	#3
@@ -174,17 +178,18 @@ disk_compare:
 	;==============================================
 	; all good, retry original load
 
-	jsr	HOME
-
 	ldx	WHICH_LOAD
 	lda	which_disk_array,X
 	sta	CURRENT_DISK
 
 	jmp	load_file
 
-; offset for disk number is 19
-error_string:
-.byte "PLEASE INSERT DISK 1, PRESS RETURN",0
+; offset for disk number is 27
+insert_disk_string:
+.byte   0,43,24, 0,240,74
+.byte   10,41
+.byte "PLEASE INSERT DISK 1",13
+.byte " THEN PRESS RETURN",0
 
 
 which_disk_array:
@@ -194,7 +199,7 @@ which_disk_array:
 	.byte 1,1,1,1		;
 	.byte 1			;
 	.byte 1,1,1,1,1		; SAVE1, SAVE2, SAVE3
-	.byte $f		;
+	.byte $f		; disk detect
 
 load_address_array:
 	.byte $60,$60,$60,$60	; VID_LOGO, TITLE, INTRO, COPY_CHECK
@@ -204,16 +209,16 @@ load_address_array:
 	.byte $08		;
 	.byte $BC,$BC,$BC,$0A	; SAVE1, SAVE2, SAVE3
 	.byte $0A		;
-	.byte $08		;
+	.byte $BC		; disk detect
 
 track_array:
         .byte  4, 6, 9,13	; VID_LOGO, TITLE, INTRO, COPY_CHECK
 	.byte 15,20,25,30	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
-	.byte 24,29, 3,20	; TROGDOR, ENDING, MUSIC
+	.byte 19,24, 3,20	; TROGDOR, ENDING, MUSIC
 	.byte 30,32,28,30	;
 	.byte  0		;
 	.byte  0, 0, 0, 0, 0	; SAVE1, SAVE2, SAVE3
-	.byte  0		;
+	.byte  0		; disk detect
 
 sector_array:
         .byte  0, 0, 0, 0	; VID_LOGO, TITLE, INTRO, COPY_CHECK
@@ -222,7 +227,7 @@ sector_array:
 	.byte  0,13, 0, 1	;
 	.byte  6		;
 	.byte 11,12,13,14,15	; SAVE1, SAVE2, SAVE3
-	.byte  0		;
+	.byte  0		; disk detect
 
 length_array:
         .byte  32, 50, 60, 20	; VID_LOGO, TITLE, INTRO, COPY_CHECK
@@ -231,7 +236,7 @@ length_array:
 	.byte  20, 33, 27, 78	;
 	.byte   3		;
 	.byte   1,1,1,1,1	; SAVE1, SAVE2, SAVE3
-	.byte   1		;
+	.byte   1		; disk detect
 
 .include "qkumba_popwr.s"
 
