@@ -72,7 +72,7 @@ graphics_peasant3.inc:	\
 	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" >> graphics_peasant3.inc
 	echo "lake_w_lzsa: .incbin \"lake_w.lzsa\"" >> graphics_peasant3.inc
 	echo "lake_e_lzsa: .incbin \"lake_e.lzsa\"" >> graphics_peasant3.inc
-	echo "lake_e_boat_lzsa: .incbin \"lake_e_boat.lzsa\"" >> graphics_peasant3.inc
+#	echo "lake_e_boat_lzsa: .incbin \"lake_e_boat.lzsa\"" >> graphics_peasant3.inc
 	echo "inn_lzsa: .incbin \"inn.lzsa\"" >> graphics_peasant3.inc
 
 ###

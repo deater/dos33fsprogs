@@ -51,27 +51,34 @@ parse_look:
 
 parse_talk:
 	cmp	#'T'
-        bne     parse_show
+        bne     parse_s
 
         lda     #<fake_error2
         sta     OUTL
         lda     #>fake_error2
 	jmp	finish_parse_message
 
-parse_show:
+parse_s:
 	cmp	#'S'
         bne     parse_version
 
-;	bit	LORES
-;	bit	PAGE1
+	lda	input_buffer+2
+	and	#$DF			; make uppercase 0110 0001 -> 0100 0001
+	cmp	#'A'
+	beq	parse_save
+parse_show:
 
-;	jsr	wait_until_keypress
+	bit	LORES
+	bit	PAGE1
 
-;	bit	PAGE2
-;	bit	HIRES
+	jsr	wait_until_keypress
 
-;	jmp	done_parse_message
+	bit	PAGE2
+	bit	HIRES
 
+	jmp	done_parse_message
+
+parse_save:
 	jsr	save_menu
 
 	jmp	restore_parse_message

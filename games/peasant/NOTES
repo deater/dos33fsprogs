@@ -26,22 +26,26 @@ $40-$5f HGR Page 2
 $60-$?? Programs	(roughly 22k available?)
 $B8-$BB Hi-res lookup tables
 $BC     temp area for load/save files
-$BD-$BF ???
+$BD-$BE temp area when saving game
+$BF	 ???
 $C0-$CF	I/O
-$D0-$DF (BANK2)	Mockingboard music/PT3-routines
+$D0-$DF (Language Card BANK1) ?????
+$D0-$DF (Language Card BANK2)	Mockingboard music/PT3-routines
+$E0-$FF (Language Card) ?????
 
 Disk1 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T	  0 = Qboot
 T	  1 = QLOAD	 4813 bytes	19S = 1T3S
-T	  3 = VID_LOGO	 6911 bytes	27S = 1T11S
-T	  5 = TITLE      9662 bytes	38S = 2T6S
-T	  8 = INTRO	16040 bytes	63S = 3T15S
-T	 12 = COPY_CHECK 4922 bytes	20S = 1T4S
-T	 14 = PEASANT1  22501 bytes	79S = 4T15S	; 88 is max?
-T	 19 = PEASANT2					; 79 = 20224
-T        24 = PEASANT3
-T	 29 = PEASANT4
+T	  3 = MUSIC	 4045 bytes	16S = 1T0S
+T	  4 = VID_LOGO	 6911 bytes	27S = 1T11S
+T	  6 = TITLE      9662 bytes	38S = 2T6S
+T	  9 = INTRO	16040 bytes	63S = 3T15S
+T	 13 = COPY_CHECK 4922 bytes	20S = 1T4S
+T	 15 = PEASANT1  22501 bytes	79S = 4T15S	; 88 is max?
+T	 20 = PEASANT2					; 79 = 20224
+T        25 = PEASANT3
+T	 30 = PEASANT4
 
 Disk2 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

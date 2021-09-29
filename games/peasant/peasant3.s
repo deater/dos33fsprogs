@@ -181,9 +181,6 @@ peasant_text:
 .include "wait.s"
 .include "wait_a_bit.s"
 
-.include "graphics/graphics_peasant3.inc"
-.include "graphics/priority_peasant3.inc"
-
 .include "version.inc"
 .include "loadsave_menu.s"
 
@@ -203,51 +200,25 @@ fake_error2:
 .byte	     "]",127,0
 
 
+.include "graphics/graphics_peasant3.inc"
+
+.include "sprites/boat_sprites.inc"
 
 map_backgrounds_low:
-;	.byte	<todo_lzsa		; 0
-;	.byte	<todo_lzsa		; 1
-;	.byte	<todo_lzsa		; 2
-;	.byte	<waterfall_lzsa		; 3	-- temp intentional bug
-;	.byte	<waterfall_lzsa		; 4	-- waterfall
-;	.byte	<todo_lzsa		; 5
-;	.byte	<todo_lzsa		; 6
-;	.byte	<todo_lzsa		; 7
-;	.byte	<river_lzsa		; 8	-- river
-;	.byte	<knight_lzsa		; 9	-- knight
 	.byte	<jhonka_lzsa		; 10	-- jhonka
 	.byte	<cottage_lzsa		; 11	-- cottage
 	.byte	<lake_w_lzsa		; 12	-- lake west
-	.byte	<lake_e_boat_lzsa		; 13	-- lake east
+	.byte	<lake_e_lzsa		; 13	-- lake east
 	.byte	<inn_lzsa		; 14	-- inn
-;	.byte	<todo_lzsa		; 15
-;	.byte	<todo_lzsa		; 16
-;	.byte	<todo_lzsa		; 17
-;	.byte	<lady_cottage_lzsa	; 18	-- cottage lady
-;	.byte	<crooked_tree_lzsa	; 19	-- crooked tree
 
 map_backgrounds_hi:
-;	.byte	>todo_lzsa		; 0
-;	.byte	>todo_lzsa		; 1
-;	.byte	>todo_lzsa		; 2
-;	.byte	>todo_lzsa		; 3
-;	.byte	>waterfall_lzsa		; 4	-- waterfall
-;	.byte	>todo_lzsa		; 5
-;	.byte	>todo_lzsa		; 6
-;	.byte	>todo_lzsa		; 7
-;	.byte	>river_lzsa		; 8	-- river
-;	.byte	>knight_lzsa		; 9	-- knight
 	.byte	>jhonka_lzsa		; 10	-- jhonka
 	.byte	>cottage_lzsa		; 11	-- cottage
 	.byte	>lake_w_lzsa		; 12	-- lake west
-	.byte	>lake_e_boat_lzsa		; 13	-- lake east
+	.byte	>lake_e_lzsa		; 13	-- lake east
 	.byte	>inn_lzsa		; 14	-- inn
-;	.byte	>todo_lzsa		; 15
-;	.byte	>todo_lzsa		; 16
-;	.byte	>todo_lzsa		; 17
-;	.byte	>lady_cottage_lzsa	; 18	-- cottage lady
-;	.byte	>crooked_tree_lzsa	; 19	-- crooked tree
 
+.include "graphics/priority_peasant3.inc"
 
 map_priority_low:
 	.byte	<jhonka_priority_lzsa		; 10	-- jhonka

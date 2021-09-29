@@ -1,9 +1,9 @@
 ; Peasant's Quest
 
 ; Peasantry Part 1 (top line of map)
+; 	Gary, Kerrek 1, Well, Yellow Tree, Waterfall
 
 WHICH_PEASANTRY = 0
-
 
 ; by Vince `deater` Weaver	vince@deater.net
 
@@ -182,8 +182,6 @@ peasant_text:
 .include "wait.s"
 .include "wait_a_bit.s"
 
-.include "graphics/graphics_peasant1.inc"
-.include "graphics/priority_peasant1.inc"
 
 .include "version.inc"
 .include "loadsave_menu.s"
@@ -204,7 +202,7 @@ fake_error2:
 .byte	     "]",127,0
 
 
-
+.include "graphics/graphics_peasant1.inc"
 
 map_backgrounds_low:
 	.byte	<gary_lzsa		; 0	-- gary the horse
@@ -212,21 +210,6 @@ map_backgrounds_low:
 	.byte	<wishing_well_lzsa	; 2	-- wishing well
 	.byte	<leaning_tree_lzsa	; 3	-- leaning tree
 	.byte	<waterfall_lzsa		; 4	-- waterfall
-;	.byte	<todo_lzsa		; 5
-;	.byte	<todo_lzsa		; 6
-;	.byte	<todo_lzsa		; 7
-;	.byte	<river_lzsa		; 8	-- river
-;	.byte	<knight_lzsa		; 9	-- knight
-;	.byte	<todo_lzsa		; 10
-;	.byte	<cottage_lzsa		; 11	-- cottage
-;	.byte	<lake_w_lzsa		; 12	-- lake west
-;	.byte	<lake_e_lzsa		; 13	-- lake east
-;	.byte	<inn_lzsa		; 14	-- inn
-;	.byte	<todo_lzsa		; 15
-;	.byte	<todo_lzsa		; 16
-;	.byte	<todo_lzsa		; 17
-;	.byte	<lady_cottage_lzsa	; 18	-- cottage lady
-;	.byte	<crooked_tree_lzsa	; 19	-- crooked tree
 
 map_backgrounds_hi:
 	.byte	>gary_lzsa		; 0	-- gary the horse
@@ -234,23 +217,9 @@ map_backgrounds_hi:
 	.byte	>wishing_well_lzsa	; 2	-- wishing well
 	.byte	>leaning_tree_lzsa	; 3	-- leaning tree
 	.byte	>waterfall_lzsa		; 4	-- waterfall
-;	.byte	>todo_lzsa		; 5
-;	.byte	>todo_lzsa		; 6
-;	.byte	>todo_lzsa		; 7
-;	.byte	>river_lzsa		; 8	-- river
-;	.byte	>knight_lzsa		; 9	-- knight
-;	.byte	>todo_lzsa		; 10
-;	.byte	>cottage_lzsa		; 11	-- cottage
-;	.byte	>lake_w_lzsa		; 12	-- lake west
-;	.byte	>lake_e_lzsa		; 13	-- lake east
-;	.byte	>inn_lzsa		; 14	-- inn
-;	.byte	>todo_lzsa		; 15
-;	.byte	>todo_lzsa		; 16
-;	.byte	>todo_lzsa		; 17
-;	.byte	>lady_cottage_lzsa	; 18	-- cottage lady
-;	.byte	>crooked_tree_lzsa	; 19	-- crooked tree
 
 
+.include "graphics/priority_peasant1.inc"
 
 map_priority_low:
 	.byte	<gary_priority_lzsa		; 0	-- gary the horse
