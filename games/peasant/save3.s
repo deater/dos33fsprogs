@@ -20,7 +20,7 @@
 .byte $00		; KERREK_STATE	=	$9C
 .byte $00		; ARROW_SCORE	=	$9D
 .byte $01		; SCORE_HUNDREDS=	$9E
-.byte $09		; SCORE_TENSONES=	$9F
+.byte $39		; SCORE_TENSONES=	$9F
 .byte $FF		; INVENTORY_1	=	$A0
 .byte $FF		; INVENTORY_2	=	$A1
 .byte $FF		; INVENTORY_3	=	$A2

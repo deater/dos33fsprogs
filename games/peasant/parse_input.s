@@ -62,15 +62,19 @@ parse_show:
 	cmp	#'S'
         bne     parse_version
 
-	bit	LORES
-	bit	PAGE1
+;	bit	LORES
+;	bit	PAGE1
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
-	bit	PAGE2
-	bit	HIRES
+;	bit	PAGE2
+;	bit	HIRES
 
-	jmp	done_parse_message
+;	jmp	done_parse_message
+
+	jsr	save_menu
+
+	jmp	restore_parse_message
 
 parse_version:
 	cmp	#'V'

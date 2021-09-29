@@ -69,7 +69,8 @@ qload.o:	qload.s qboot.inc \
 		hgr_text_box.s \
 		clear_bottom.s \
 		hgr_hgr2.s \
-		gr_offsets.s
+		gr_offsets.s \
+		qkumba_popwr.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ###
@@ -92,6 +93,8 @@ generate_common.o:	generate_common.c
 
 qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s load_file qload.lst > qload.inc
+	./generate_common -a 0xb00 -s sector_write qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s requested_sector qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s decompress_lzsa2_fast qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s getsrc_smc qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr2 qload.lst >> qload.inc
@@ -116,6 +119,8 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s vgi_simple_rectangle qload.lst >> qload.inc
 	echo "hposn_high = \$$BA00" >> qload.inc
 	echo "hposn_low = \$$BB00" >> qload.inc
+	echo "driveoff = \$$A22" >> qload.inc
+	echo "driveon = \$$A9D" >> qload.inc
 
 ####
 

@@ -1,4 +1,6 @@
 load_file	=$0b20
+sector_write	=$0c63
+requested_sector	=$0d17
 decompress_lzsa2_fast	=$0de6
 getsrc_smc	=$0edc
 hgr2	=$16e3
@@ -23,3 +25,5 @@ hgr_put_char_cursor	=$0f15
 vgi_simple_rectangle	=$12ef
 hposn_high = $BA00
 hposn_low = $BB00
+driveoff = $A22
+driveon = $A9D

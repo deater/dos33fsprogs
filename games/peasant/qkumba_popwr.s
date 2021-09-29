@@ -1,13 +1,13 @@
 ; popwr -- code provided by qkumba
 
 
-frombuff=$d00		; sector data to write
+frombuff=$bc00		; sector data to write
 
 ; note these must be contiguous
-encbuf=$e00		; nibble buffer must be page alined
-bit2tbl=$f00
+encbuf=$2000		; nibble buffer must be page alined
+bit2tbl=$2100
 
-readnib = $1001
+readnib = $901
 
 
 readd5aa:
@@ -68,7 +68,7 @@ frombuff_smc:
 
 	jmp	cmpsecwr
 
-.align	$100
+.align	$100			; why do we align?  to ensure timing?
 
 	; look for the proper sector to write
 
@@ -85,9 +85,10 @@ b3:
 	sta	tmpsec
 	jsr	readnib
 	and	tmpsec		; and with prev nibble?
-	dey
-	bne	b3
-
+	dey			; sector value is two bytes
+	bne	b3		; 1 D7 1 D5 1 D3 1 D1
+				; 1 D6 1 D4 1 D2 1 D0
+				; so you shift left and AND to get value
 
 requested_sector:
 	cmp	#$d1

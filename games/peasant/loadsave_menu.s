@@ -2,10 +2,33 @@
 
 ; o/~ It's the Loading Screen o/~
 
+	; FIXME: we can share some of the code here a bit more
+
 	;=====================
 	; load_menu
 	;=====================
 load_menu:
+	lda	#0
+	sta	loadsave_smc1+1
+	sta	loadsave_smc2+1
+
+	jmp	common_menu
+
+	;=====================
+	; save_menu
+	;=====================
+save_menu:
+	lda	#1
+	sta	loadsave_smc1+1
+	sta	loadsave_smc2+1
+
+	jmp	common_menu
+
+
+	;=====================
+	; common_menu
+	;=====================
+common_menu:
 
 	;============================
 	; first read all three saves
@@ -148,7 +171,7 @@ save_memset:
 
 	;====================
 	; draw text box
-draw_loadstore_box:
+draw_loadsave_box:
 
 	lda	#0
 	sta	BOX_X1H
@@ -168,13 +191,26 @@ draw_loadstore_box:
 
 	;===================
 	; draw main text
-draw_loadstore_text:
+draw_loadsave_text:
 
-	; TODO: use SAVE message if we're saving instead
+loadsave_smc1:
+	lda	#0
+	bne	do_save_message
 
+do_load_message:
+	; load message
 	lda	#<load_message
 	sta	OUTL
 	lda	#>load_message
+	jmp	loadsave_ready
+
+do_save_message:
+	; save message
+	lda	#<save_message
+	sta	OUTL
+	lda	#>save_message
+
+loadsave_ready:
 	sta	OUTH
 
 	jsr	disp_put_string
@@ -297,8 +333,16 @@ ls_return:
 	rts
 
 do_actual_load:
+
+loadsave_smc2:
+	lda	#0
+	bne	go_for_save
+
+go_for_load:
 	jmp	load_game
 
+go_for_save:
+	jmp	save_game
 
 
 ls_done_moving:
@@ -457,17 +501,22 @@ done_load:
 
 save_game:
 
-.if 0
-;	lda	#<save_message
-;	sta	OUTL
-;	lda	#>save_message
-;	sta	OUTH
+	; print are you sure message
 
-;	jsr	confirm_action
 
-;	bcs	done_save
+	jsr	confirm_action
 
-	pha
+	bcs	done_save
+
+	; put which save into A
+
+	lda	INVENTORY_Y
+
+	pha			; save slot for later on stack
+
+;	clc
+;	adc	#LOAD_SAVE1
+;	sta	WHICH_LOAD	; get proper WHICH_LOAD value
 
 
 	;========================
@@ -478,22 +527,24 @@ actually_save:
 	; first load something from
 	; disk1/track0 to seek the head there
 
-	lda	WHICH_LOAD
+	lda	WHICH_LOAD		; save this value as we
+					; destroy it for load
 	pha
 
-	lda	#LOAD_SAVE1
+	lda	#LOAD_SAVE1		; use SAVE1 as it's on track 0
 	sta	WHICH_LOAD
 	jsr	load_file
 
 	pla
+
 	sta	WHICH_LOAD
 
-	; copy save data to $d00
+	; copy save data to $BC00
 
 	ldx	#0
 copy_loop:
 	lda	WHICH_LOAD,X
-	sta	$d00,X
+	sta	$BC00,X
 	inx
 	cpx	#(END_OF_SAVE-WHICH_LOAD+1)
 	bne	copy_loop
@@ -512,9 +563,9 @@ copy_loop:
 	jsr	driveoff
 
 done_save:
+	lda	#$FF		; reload level as we scrawled on $2000
+	sta	GAME_OVER
 
-	jsr	change_location		; restore graphics
-.endif
 	rts
 
 
@@ -571,6 +622,9 @@ are_you_sure:
 	;=========================
 update_save_info:
 
+	lda	WHICH_LOAD
+	pha
+
 	ldx	#0
 update_save_info_loop:
 	clc
@@ -594,6 +648,9 @@ update_save_info_loop:
 	inx
 	cpx	#3
 	bne	update_save_info_loop
+
+	pla
+	sta	WHICH_LOAD
 
 	rts
 

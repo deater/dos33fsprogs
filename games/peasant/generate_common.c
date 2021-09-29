@@ -20,7 +20,10 @@ static void find_address(char *symbol_name, int routine_offset) {
 	while(1) {
 
 		result=fgets(string,BUFSIZ,fff);
-		if (result==NULL) break;
+		if (result==NULL) {
+			fprintf(stderr,"Error: %s not found!\n",symbol_name);
+			exit(-1);
+		}
 
 		result=strstr(string,temp_name);
 		if (result!=NULL) {
