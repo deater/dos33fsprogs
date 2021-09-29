@@ -417,16 +417,11 @@ overwrite_loop_ls:
 	;===================================
 load_game:
 
-	; FIXME: print are you sure message
+	; print are you sure message
 
-;	lda	#<load_message
-;	sta	OUTL
-;	lda	#>load_message
-;	sta	OUTH
+	jsr	confirm_action
 
-;	jsr	confirm_slot
-
-;	bcs	done_load
+	bcs	done_load
 
 	; actually load it
 	lda	INVENTORY_Y
@@ -453,7 +448,7 @@ done_load:
 
 	rts
 
-.if 0
+
 	;===================================
 	;===================================
 	; save the game
@@ -462,12 +457,13 @@ done_load:
 
 save_game:
 
+.if 0
 ;	lda	#<save_message
 ;	sta	OUTL
 ;	lda	#>save_message
 ;	sta	OUTH
 
-;	jsr	confirm_slot
+;	jsr	confirm_action
 
 ;	bcs	done_save
 
@@ -518,7 +514,7 @@ copy_loop:
 done_save:
 
 	jsr	change_location		; restore graphics
-
+.endif
 	rts
 
 
@@ -526,34 +522,25 @@ done_save:
 
 
 
-	;================================
-	; confirm and get slot number
-	;================================
+	;=======================================
+	; confirm action
+	;=======================================
 	; call with first message in OUTL/OUTH
 	; return: carry set if skipping
 
-confirm_slot:
+confirm_action:
 
 	bit	KEYRESET	; clear keyboard buffer
 
 	;===============================
 	; print "are you sure" message
 
-	bit	SET_TEXT	; set text mode
-
-	lda     #' '|$80
-	sta	clear_all_color+1
-	jsr	clear_all	; clear screen
-
-	jsr	move_and_print
-
 	lda	#<are_you_sure
 	sta	OUTL
 	lda	#>are_you_sure
 	sta	OUTH
-	jsr	move_and_print
 
-	jsr	page_flip
+	jsr	hgr_text_box_nosave
 
 wait_confirmation:
 	lda	KEYPRESS
@@ -565,33 +552,6 @@ wait_confirmation:
 	cmp	#'Y'
 	bne	dont_do_it
 
-	;===============================
-	; print "Which one?"
-
-	jsr	clear_all	; clear screen
-
-	lda	#<which_message
-	sta	OUTL
-	lda	#>which_message
-	sta	OUTH
-	jsr	move_and_print
-
-	jsr	page_flip
-
-which_slot:
-	lda	KEYPRESS
-	bpl	which_slot
-
-	bit	KEYRESET		; clear keypress
-
-	and	#$7f
-	sec
-	sbc	#'1'
-
-	bmi	dont_do_it
-	cmp	#5
-	bcs	dont_do_it
-
 	clc
 	rts
 
@@ -600,21 +560,10 @@ dont_do_it:
 	rts
 
 
-which_message:
-.byte  9,5,"WHICH SLOT (1-5)?",0
-
-;load_message:
-;.byte  10,5,"LOAD GAME FROM DISK",0
-
-;save_message:
-;.byte  11,5,"SAVE GAME TO DISK",0
-
 are_you_sure:
-.byte  10,7,"ARE YOU SURE? (Y/N)",0
-
-;save_filename:
-;.byte "SAVE0",0
-.endif
+.byte  0,43,40, 0,240,90
+.byte  10,61
+.byte  "ARE YOU SURE? (Y/N)",0
 
 
 load_slot_levels:

@@ -1,3 +1,5 @@
+
+
 	;===========================
 	; hgr text box
 	;===========================
@@ -32,7 +34,12 @@ hgr_text_box:
 	lda	(OUTL),Y
 	sta	BOX_Y2
 
+skip_box_save_smc:
+	lda	#1
+	beq	skip_box_save
+
 	jsr	hgr_partial_save
+skip_box_save:
 
 	jsr	draw_box
 
@@ -99,3 +106,14 @@ disp_put_string_done:
 	rts
 
 
+
+	;============================
+	; like above, but don't save
+	;============================
+hgr_text_box_nosave:
+	lda	#0
+	sta	skip_box_save_smc+1
+	jsr	hgr_text_box
+	lda	#1
+	sta	skip_box_save_smc+1
+	rts
