@@ -21,9 +21,14 @@ update_score:
 	ldx	#9		; offset of first digit in string
 	sed			; set decimal mode
 
+	lda	#0
+	sta	update_leading_zero_smc+1
+
 update_hundreds:
 	lda	SCORE_HUNDREDS
 	beq	update_tens
+
+	inc	update_leading_zero_smc+1
 	clc
 	adc	#'0'
 	sta	score_text,X
@@ -35,7 +40,13 @@ update_tens:
 	lsr
 	lsr
 	lsr
+	bne	update_go_tens
+
+update_leading_zero_smc:
+	cmp	#0
 	beq	update_ones
+
+update_go_tens:
 	clc
 	adc	#'0'
 	sta	score_text,X
